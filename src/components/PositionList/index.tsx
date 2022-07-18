@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import PositionListItem from 'components/PositionListItem'
-import SimpleToggle from 'components/Toggle/SimpleToggle'
+import Toggle from 'components/Toggle'
 import React from 'react'
 import styled from 'styled-components/macro'
 import { MEDIA_WIDTHS } from 'theme'
@@ -83,7 +83,7 @@ export default function PositionList({
           <ToggleLabel>
             <Trans>Show closed positions</Trans>
           </ToggleLabel>
-          <SimpleToggle
+          <Toggle
             id="desktop-hide-closed-positions"
             isActive={!userHideClosedPositions}
             toggle={() => {
@@ -99,7 +99,7 @@ export default function PositionList({
             <Trans>Show closed positions</Trans>
           </ToggleLabel>
           <MobileTogglePosition>
-            <SimpleToggle
+            <Toggle
               id="mobile-hide-closed-positions"
               isActive={!userHideClosedPositions}
               toggle={() => {

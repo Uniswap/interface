@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
-import { CHAIN_INFO, L2ChainInfo } from 'constants/chainInfo'
+import { useWeb3React } from '@web3-react/core'
+import { getChainInfoOrDefault, L2ChainInfo } from 'constants/chainInfo'
 import { SupportedChainId } from 'constants/chains'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { AlertOctagon } from 'react-feather'
 import styled from 'styled-components/macro'
 import { ExternalLink, MEDIA_WIDTHS } from 'theme'
@@ -45,8 +45,8 @@ const Wrapper = styled.div`
 `
 
 export function ChainConnectivityWarning() {
-  const { chainId } = useActiveWeb3React()
-  const info = CHAIN_INFO[chainId ?? SupportedChainId.MAINNET]
+  const { chainId } = useWeb3React()
+  const info = getChainInfoOrDefault(chainId)
   const label = info?.label
 
   return (

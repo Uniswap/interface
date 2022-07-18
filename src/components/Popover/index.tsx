@@ -26,6 +26,7 @@ const Arrow = styled.div`
     position: absolute;
     width: 8px;
     height: 8px;
+    box-sizing: border-box;
     z-index: 9998;
 
     content: '';
@@ -35,7 +36,7 @@ const Arrow = styled.div`
   }
 
   &.arrow-top {
-    bottom: -5px;
+    bottom: -4px;
     ::before {
       border-top: none;
       border-left: none;
@@ -43,7 +44,7 @@ const Arrow = styled.div`
   }
 
   &.arrow-bottom {
-    top: -5px;
+    top: -4px;
     ::before {
       border-bottom: none;
       border-right: none;
@@ -51,7 +52,7 @@ const Arrow = styled.div`
   }
 
   &.arrow-left {
-    right: -5px;
+    right: -4px;
 
     ::before {
       border-bottom: none;
@@ -60,7 +61,7 @@ const Arrow = styled.div`
   }
 
   &.arrow-right {
-    left: -5px;
+    left: -4px;
     ::before {
       border-right: none;
       border-top: none;

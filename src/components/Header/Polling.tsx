@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
+import { useWeb3React } from '@web3-react/core'
 import { RowFixed } from 'components/Row'
-import { CHAIN_INFO } from 'constants/chainInfo'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
+import { getChainInfo } from 'constants/chainInfo'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import useGasPrice from 'hooks/useGasPrice'
 import useMachineTimeMs from 'hooks/useMachineTime'
@@ -100,7 +100,7 @@ const DEFAULT_MS_BEFORE_WARNING = ms`10m`
 const NETWORK_HEALTH_CHECK_MS = ms`10s`
 
 export default function Polling() {
-  const { chainId } = useActiveWeb3React()
+  const { chainId } = useWeb3React()
   const blockNumber = useBlockNumber()
   const [isMounting, setIsMounting] = useState(false)
   const [isHover, setIsHover] = useState(false)
@@ -112,7 +112,7 @@ export default function Polling() {
   const priceGwei = ethGasPrice ? JSBI.divide(ethGasPrice, JSBI.BigInt(1000000000)) : undefined
 
   const waitMsBeforeWarning =
-    (chainId ? CHAIN_INFO[chainId]?.blockWaitMsBeforeWarning : DEFAULT_MS_BEFORE_WARNING) ?? DEFAULT_MS_BEFORE_WARNING
+    (chainId ? getChainInfo(chainId)?.blockWaitMsBeforeWarning : DEFAULT_MS_BEFORE_WARNING) ?? DEFAULT_MS_BEFORE_WARNING
 
   const warning = Boolean(!!blockTime && machineTime - blockTime.mul(1000).toNumber() > waitMsBeforeWarning)
 

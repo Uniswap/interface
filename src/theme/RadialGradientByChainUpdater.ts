@@ -1,4 +1,4 @@
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
+import { useWeb3React } from '@web3-react/core'
 import { useEffect } from 'react'
 import { useDarkModeManager } from 'state/user/hooks'
 
@@ -27,7 +27,7 @@ const setBackground = (newValues: TargetBackgroundStyles) =>
     }
   })
 export default function RadialGradientByChainUpdater(): null {
-  const { chainId } = useActiveWeb3React()
+  const { chainId } = useWeb3React()
   const [darkMode] = useDarkModeManager()
   // manage background color
   useEffect(() => {
@@ -58,6 +58,15 @@ export default function RadialGradientByChainUpdater(): null {
         const polygonDarkGradient =
           'radial-gradient(150.6% 98.22% at 48.06% 0%, rgba(130, 71, 229, 0.6) 0%, rgba(200, 168, 255, 0) 100%), #1F2128'
         backgroundRadialGradientElement.style.background = darkMode ? polygonDarkGradient : polygonLightGradient
+        backgroundRadialGradientElement.style.backgroundBlendMode = darkMode ? 'overlay,normal' : 'multiply,normal'
+        break
+      case SupportedChainId.CELO:
+      case SupportedChainId.CELO_ALFAJORES:
+        setBackground(backgroundResetStyles)
+        const celoLightGradient = 'radial-gradient(150% 100% at 50% 0%,#35D07F35 0, #FBCC5C35 100%)'
+        const celoDarkGradient =
+          'radial-gradient(150% 100% at 50% 0%, rgb(2 80 47) 2%, rgb(12 41 28) 53%, rgb(31, 33, 40) 100%)'
+        backgroundRadialGradientElement.style.background = darkMode ? celoDarkGradient : celoLightGradient
         backgroundRadialGradientElement.style.backgroundBlendMode = darkMode ? 'overlay,normal' : 'multiply,normal'
         break
       default:

@@ -1,9 +1,9 @@
 import { Trans } from '@lingui/macro'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
+import { useWeb3React } from '@web3-react/core'
 import Card from 'components/Card'
 import { LoadingRows } from 'components/Loader/styled'
 import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { useContext, useMemo } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
@@ -24,7 +24,6 @@ interface AdvancedSwapDetailsProps {
   trade?: InterfaceTrade<Currency, Currency, TradeType>
   allowedSlippage: Percent
   syncing?: boolean
-  hideRouteDiagram?: boolean
   hideInfoTooltips?: boolean
 }
 
@@ -53,7 +52,7 @@ export function AdvancedSwapDetails({
   hideInfoTooltips = false,
 }: AdvancedSwapDetailsProps) {
   const theme = useContext(ThemeContext)
-  const { chainId } = useActiveWeb3React()
+  const { chainId } = useWeb3React()
   const nativeCurrency = useNativeCurrency()
 
   const { expectedOutputAmount, priceImpact } = useMemo(() => {

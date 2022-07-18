@@ -1,17 +1,17 @@
 import { Trans } from '@lingui/macro'
 import useScrollPosition from '@react-hook/window-scroll'
-import { CHAIN_INFO } from 'constants/chainInfo'
+import { useWeb3React } from '@web3-react/core'
+import { getChainInfoOrDefault } from 'constants/chainInfo'
 import { SupportedChainId } from 'constants/chains'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import useTheme from 'hooks/useTheme'
 import { darken } from 'polished'
 import { NavLink } from 'react-router-dom'
 import { Text } from 'rebass'
 import { useShowClaimPopup, useToggleSelfClaimModal } from 'state/application/hooks'
 import { useUserHasAvailableClaim } from 'state/claim/hooks'
+import { useNativeCurrencyBalances } from 'state/connection/hooks'
 import { useUserHasSubmittedClaim } from 'state/transactions/hooks'
 import { useDarkModeManager } from 'state/user/hooks'
-import { useNativeCurrencyBalances } from 'state/wallet/hooks'
 import styled from 'styled-components/macro'
 
 import { ReactComponent as Logo } from '../../assets/svg/logo.svg'
@@ -76,7 +76,7 @@ const HeaderElement = styled.div`
     margin-left: 0.5em;
   }
 
-  /* addresses safari's lack of support for "gap" */
+  /* addresses safaris lack of support for "gap" */
   & > *:not(:first-child) {
     margin-left: 8px;
   }
@@ -98,7 +98,7 @@ const HeaderLinks = styled(Row)`
   overflow: auto;
   align-items: center;
   ${({ theme }) => theme.mediaWidth.upToLarge`
-    justify-self: start;  
+    justify-self: start;
     `};
   ${({ theme }) => theme.mediaWidth.upToMedium`
     justify-self: center;
@@ -246,7 +246,7 @@ const StyledExternalLink = styled(ExternalLink).attrs({
 `
 
 export default function Header() {
-  const { account, chainId } = useActiveWeb3React()
+  const { account, chainId } = useWeb3React()
 
   const userEthBalance = useNativeCurrencyBalances(account ? [account] : [])?.[account ?? '']
   const [darkMode] = useDarkModeManager()
@@ -265,7 +265,7 @@ export default function Header() {
   const {
     infoLink,
     nativeCurrency: { symbol: nativeCurrencySymbol },
-  } = CHAIN_INFO[chainId ? chainId : SupportedChainId.MAINNET]
+  } = getChainInfoOrDefault(chainId)
 
   return (
     <HeaderFrame showBackground={scrollY > 45}>
@@ -281,6 +281,7 @@ export default function Header() {
           <Trans>Swap</Trans>
         </StyledNavLink>
         <StyledNavLink
+          data-cy="pool-nav-link"
           id={`pool-nav-link`}
           to={'/pool'}
           isActive={(match, { pathname }) =>

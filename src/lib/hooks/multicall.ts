@@ -1,4 +1,4 @@
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
+import { useWeb3React } from '@web3-react/core'
 import useBlockNumber from 'lib/hooks/useBlockNumber'
 import multicall from 'lib/state/multicall'
 import { SkipFirst } from 'types/tuple'
@@ -37,7 +37,7 @@ export function useSingleContractWithCallData(
 }
 
 function useCallContext() {
-  const { chainId } = useActiveWeb3React()
+  const { chainId } = useWeb3React()
   const latestBlock = useBlockNumber()
   return { chainId, latestBlock }
 }

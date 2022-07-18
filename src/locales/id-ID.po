@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-06-03 22:06\n"
+"PO-Revision-Date: 2022-07-12 23:04\n"
 "Last-Translator: \n"
 "Language: id_ID\n"
 "Language-Team: Indonesian\n"
@@ -164,8 +164,8 @@ msgid "Add more liquidity"
 msgstr "Tambahkan lebih banyak likuiditas"
 
 #: src/components/TransactionConfirmationModal/index.tsx
-msgid "Add {0} to Metamask <0/>"
-msgstr "Tambahkan {0} ke Metamask <0/>"
+msgid "Add {0}"
+msgstr "Tambahkan {0}"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Add {0}-{1} liquidity"
@@ -178,6 +178,10 @@ msgstr "Tambahkan {0}/{1} likuiditas V3"
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Added {0}"
 msgstr "Ditambahkan {0}"
+
+#: src/components/vote/QueueModal.tsx
+msgid "Adding this proposal to the queue will allow it to be executed, after a delay."
+msgstr "Menambahkan proposal ini ke antrean akan memungkinkannya untuk dieksekusi, setelah penundaan."
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Address has no available claim"
@@ -315,6 +319,10 @@ msgstr "Alamat yang Diblokir"
 #: src/components/Blocklist/index.tsx
 msgid "Blocked address"
 msgstr "Alamat diblokir"
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Blockscout"
+msgstr "Blockscout"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Bridge"
@@ -481,6 +489,8 @@ msgstr "Konfirmasikan Swap"
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
+#: src/components/vote/ExecuteModal.tsx
+#: src/components/vote/QueueModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Confirm this transaction in your wallet"
 msgstr "Konfirmasikan transaksi ini di dompet Anda"
@@ -523,8 +533,8 @@ msgid "Connect to a wallet to view your liquidity."
 msgstr "Hubungkan ke dompet untuk melihat likuiditas Anda."
 
 #: src/components/AccountDetails/index.tsx
-msgid "Connected with {name}"
-msgstr "Terhubung dengan {name}"
+msgid "Connected with"
+msgstr "Terhubung dengan"
 
 #: src/components/WalletModal/PendingView.tsx
 msgid "Connecting..."
@@ -735,13 +745,8 @@ msgid "Error"
 msgstr "Kesalahan"
 
 #: src/components/WalletModal/PendingView.tsx
-#: src/components/WalletModal/index.tsx
 msgid "Error connecting"
 msgstr "Terjadi kesalahan saat menyambungkan"
-
-#: src/components/WalletModal/index.tsx
-msgid "Error connecting. Try refreshing the page."
-msgstr "Terjadi kesalahan saat menyambungkan. Coba muat ulang halaman."
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Error importing list"
@@ -759,9 +764,34 @@ msgstr "Perkiraan biaya jaringan"
 msgid "Etherscan"
 msgstr "Etherscan"
 
+#: src/components/vote/ExecuteModal.tsx
+#: src/pages/Vote/VotePage.tsx
+msgid "Execute"
+msgstr "Menjalankan"
+
+#: src/components/vote/ExecuteModal.tsx
+msgid "Execute Proposal {proposalId}"
+msgstr "Jalankan Proposal {proposalId}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Execute proposal {proposalKey}."
+msgstr "Jalankan proposal {proposalKey}."
+
 #: src/pages/Vote/styled.tsx
 msgid "Executed"
 msgstr "Dieksekusi"
+
+#: src/components/vote/ExecuteModal.tsx
+msgid "Executing"
+msgstr "Pelaksana"
+
+#: src/components/vote/ExecuteModal.tsx
+msgid "Executing this proposal will enact the calldata on-chain."
+msgstr "Menjalankan proposal ini akan memberlakukan calldata on-chain."
+
+#: src/components/vote/ExecuteModal.tsx
+msgid "Execution Submitted"
+msgstr "Eksekusi Dikirim"
 
 #: src/components/SearchModal/CurrencyList/index.tsx
 msgid "Expanded results from inactive Token Lists"
@@ -897,9 +927,9 @@ msgstr "Harga awal dan bagian pool"
 msgid "Input is estimated. You will sell at most <0>{0} {1}</0> or the transaction will revert."
 msgstr "Input diperkirakan. Anda akan menjual paling banyak <0>{0} {1}</0> atau transaksi akan dikembalikan."
 
-#: src/components/WalletModal/index.tsx
-msgid "Install Metamask"
-msgstr "Pasang Metamask"
+#: src/components/WalletModal/InjectedOption.tsx
+msgid "Install MetaMask"
+msgstr "Instal MetaMask"
 
 #: src/pages/Swap/index.tsx
 msgid "Insufficient liquidity for this trade."
@@ -961,7 +991,6 @@ msgstr "Pelajari lebih lanjut"
 
 #: src/components/Menu/index.tsx
 #: src/components/PrivacyPolicy/index.tsx
-#: src/components/WalletModal/index.tsx
 msgid "Legal & Privacy"
 msgstr "Hukum & Privasi"
 
@@ -1161,25 +1190,9 @@ msgstr "Hasil tidak ditemukan."
 msgid "Not created"
 msgstr "Tidak dibuat"
 
-#: src/components/Toggle/ListToggle.tsx
-msgid "OFF"
-msgstr "MATI"
-
-#: src/components/Toggle/ListToggle.tsx
-msgid "ON"
-msgstr "HIDUP"
-
 #: src/components/Settings/index.tsx
 msgid "ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING."
 msgstr "GUNAKAN MODE INI HANYA JIKA ANDA TAHU APA YANG ANDA LAKUKAN."
-
-#: src/components/Toggle/index.tsx
-msgid "Off"
-msgstr "Mati"
-
-#: src/components/Toggle/index.tsx
-msgid "On"
-msgstr "Hidup"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Once you are happy with the rate click supply to review."
@@ -1188,10 +1201,6 @@ msgstr "Setelah Anda puas dengan penawaran harga klik untuk meninjau."
 #: src/pages/Vote/VotePage.tsx
 msgid "Only UNI votes that were self delegated or delegated to another address before block {0} are eligible for voting."
 msgstr "Hanya suara UNI yang didelegasikan sendiri atau didelegasikan ke alamat lain sebelum blok {0} yang memenuhi syarat untuk memberi suara."
-
-#: src/components/Web3ReactManager/index.tsx
-msgid "Oops! An unknown error occurred. Please refresh the page, or visit from another browser or device."
-msgstr "Ups! Terjadi kesalahan yang tidak diketahui. Harap segarkan halaman, atau kunjungi dari browser atau perangkat lain."
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Optimism Bridge"
@@ -1242,10 +1251,6 @@ msgstr "Konfirmasikan bahwa Anda ingin menghapus daftar ini dengan mengetik HAPU
 msgid "Please connect to Layer 1 Ethereum"
 msgstr "Silakan hubungkan ke Layer 1 Ethereum"
 
-#: src/components/WalletModal/index.tsx
-msgid "Please connect to a supported network in the dropdown menu or in your wallet."
-msgstr "Harap sambungkan ke jaringan yang didukung di menu tarik-turun atau di dompet Anda."
-
 #: src/components/Settings/index.tsx
 msgid "Please type the word \"{confirmWord}\" to enable expert mode."
 msgstr "Ketik kata \"{confirmWord}\" untuk mengaktifkan mode ahli."
@@ -1292,8 +1297,13 @@ msgid "Pooled {0}:"
 msgstr "Dikumpulkan {0}:"
 
 #: src/pages/Pool/index.tsx
+#: src/pages/Pool/index.tsx
 msgid "Pools Overview"
 msgstr "Gambaran Umum Pool"
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Portal Bridge"
+msgstr "Jembatan Portal"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Preview"
@@ -1363,9 +1373,26 @@ msgstr "Pengusul"
 msgid "Protocol Disclaimer"
 msgstr "Penafian Protokol"
 
+#: src/components/vote/QueueModal.tsx
+#: src/pages/Vote/VotePage.tsx
+msgid "Queue"
+msgstr "Antre"
+
+#: src/components/vote/QueueModal.tsx
+msgid "Queue Proposal {proposalId}"
+msgstr "Proposal Antrian {proposalId}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Queue proposal {proposalKey}."
+msgstr "Usulan antrian {proposalKey}."
+
 #: src/pages/Vote/styled.tsx
 msgid "Queued"
 msgstr "Mengantri"
+
+#: src/components/vote/QueueModal.tsx
+msgid "Queueing"
+msgstr "mengantri"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Rates"
@@ -1594,10 +1621,6 @@ msgstr "Menukar {0} {1} untuk {2} {3}"
 msgid "Take a 10 minute survey to help us improve your experience in the Uniswap app."
 msgstr "Ikuti survei 10 menit untuk membantu kami meningkatkan pengalaman Anda di aplikasi Uniswap."
 
-#: src/components/WalletModal/index.tsx
-msgid "Tally"
-msgstr "Menghitung"
-
 #: src/components/Popups/SurveyPopup.tsx
 msgid "Tell us what you think ↗"
 msgstr "Beri tahu kami pendapat Anda"
@@ -1718,6 +1741,10 @@ msgstr "Aplikasi ini menggunakan API pihak ketiga berikut:"
 msgid "This pool must be initialized before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount. Gas fees will be higher than usual due to the initialization transaction."
 msgstr "Pool ini harus diinisialisasi sebelum Anda dapat menambahkan likuiditas. Untuk menginisialisasi, pilih harga awal untuk pool. Kemudian, masukkan kisaran harga likuiditas dan jumlah deposit Anda. Biaya gas akan lebih tinggi dari biasanya karena transaksi inisialisasi."
 
+#: src/pages/Vote/VotePage.tsx
+msgid "This proposal may be executed after {0}."
+msgstr "Proposal ini dapat dieksekusi setelah {0}."
+
 #: src/components/swap/SwapRoute.tsx
 msgid "This route optimizes your total output by considering split routes, multiple hops, and the gas cost of each step."
 msgstr "Rute ini mengoptimalkan total output Anda dengan mempertimbangkan rute terpisah, beberapa lompatan, dan biaya bahan bakar untuk setiap langkah."
@@ -1795,6 +1822,7 @@ msgstr "Pengaturan Transaksi"
 #: src/components/earn/StakingModal.tsx
 #: src/components/earn/UnstakingModal.tsx
 #: src/components/vote/DelegateModal.tsx
+#: src/components/vote/QueueModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Transaction Submitted"
 msgstr "Transaksi Dikirim"
@@ -1949,8 +1977,8 @@ msgid "User"
 msgstr "Pengguna"
 
 #: src/pages/Pool/v2.tsx
-msgid "V2 is not available on Layer 2. Switch to Layer 1 Ethereum."
-msgstr "V2 tidak tersedia di Layer 2. Beralih ke Layer 1 Ethereum."
+msgid "V2 Pool is not available on Layer 2. Switch to Layer 1 Ethereum."
+msgstr "V2 Pool tidak tersedia di Layer 2. Beralih ke Layer 1 Ethereum."
 
 #: src/pages/Pool/index.tsx
 msgid "V2 liquidity"
@@ -1983,6 +2011,8 @@ msgstr "Lihat di Explorer"
 #: src/components/ModalViews/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
+#: src/components/vote/ExecuteModal.tsx
+#: src/components/vote/QueueModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "View transaction on Explorer"
 msgstr "Lihat transaksi di Explorer"
@@ -2107,7 +2137,6 @@ msgstr "Wrap"
 msgid "Wrap <0/> to {0}"
 msgstr "Bungkus <0/> hingga {0}"
 
-#: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx
 msgid "Wrong Network"
 msgstr "Jaringan Salah"
@@ -2188,6 +2217,10 @@ msgstr "Likuiditas V2 Anda"
 #: src/pages/Pool/index.tsx
 msgid "Your active V3 liquidity positions will appear here."
 msgstr "Posisi likuiditas V3 aktif Anda akan muncul di sini."
+
+#: src/pages/Pool/index.tsx
+msgid "Your connected network is unsupported. Request support <0>here</0>."
+msgstr "Jaringan Anda yang terhubung tidak didukung. Minta dukungan <0>di sini</0>."
 
 #: src/pages/Earn/Manage.tsx
 msgid "Your liquidity deposits"

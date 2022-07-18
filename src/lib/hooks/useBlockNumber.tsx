@@ -1,4 +1,4 @@
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
+import { useWeb3React } from '@web3-react/core'
 import useIsWindowVisible from 'hooks/useIsWindowVisible'
 import { createContext, ReactNode, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 
@@ -29,7 +29,7 @@ export function useFastForwardBlockNumber(): (block: number) => void {
 }
 
 export function BlockNumberProvider({ children }: { children: ReactNode }) {
-  const { chainId: activeChainId, library } = useActiveWeb3React()
+  const { chainId: activeChainId, provider } = useWeb3React()
   const [{ chainId, block }, setChainBlock] = useState<{ chainId?: number; block?: number }>({ chainId: activeChainId })
 
   const onBlock = useCallback(
@@ -48,24 +48,31 @@ export function BlockNumberProvider({ children }: { children: ReactNode }) {
 
   const windowVisible = useIsWindowVisible()
   useEffect(() => {
-    if (library && activeChainId && windowVisible) {
+    let stale = false
+
+    if (provider && activeChainId && windowVisible) {
       // If chainId hasn't changed, don't clear the block. This prevents re-fetching still valid data.
       setChainBlock((chainBlock) => (chainBlock.chainId === activeChainId ? chainBlock : { chainId: activeChainId }))
 
-      library
+      provider
         .getBlockNumber()
-        .then(onBlock)
+        .then((block) => {
+          if (!stale) onBlock(block)
+        })
         .catch((error) => {
           console.error(`Failed to get block number for chainId ${activeChainId}`, error)
         })
 
-      library.on('block', onBlock)
+      provider.on('block', onBlock)
+
       return () => {
-        library.removeListener('block', onBlock)
+        stale = true
+        provider.removeListener('block', onBlock)
       }
     }
-    return undefined
-  }, [activeChainId, library, onBlock, setChainBlock, windowVisible])
+
+    return void 0
+  }, [activeChainId, provider, onBlock, setChainBlock, windowVisible])
 
   const value = useMemo(
     () => ({

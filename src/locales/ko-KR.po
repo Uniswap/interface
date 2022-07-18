@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-06-03 22:06\n"
+"PO-Revision-Date: 2022-07-12 23:04\n"
 "Last-Translator: \n"
 "Language: ko_KR\n"
 "Language-Team: Korean\n"
@@ -164,8 +164,8 @@ msgid "Add more liquidity"
 msgstr "더 많은 유동성 추가"
 
 #: src/components/TransactionConfirmationModal/index.tsx
-msgid "Add {0} to Metamask <0/>"
-msgstr "{0}을(를) Metamask에 추가<0/>"
+msgid "Add {0}"
+msgstr "{0}추가"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Add {0}-{1} liquidity"
@@ -178,6 +178,10 @@ msgstr "{0}/{1} V3 유동성 추가"
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Added {0}"
 msgstr "{0} 추가됨"
+
+#: src/components/vote/QueueModal.tsx
+msgid "Adding this proposal to the queue will allow it to be executed, after a delay."
+msgstr "이 제안을 대기열에 추가하면 지연 후 실행할 수 있습니다."
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Address has no available claim"
@@ -315,6 +319,10 @@ msgstr "차단된 주소"
 #: src/components/Blocklist/index.tsx
 msgid "Blocked address"
 msgstr "차단된 주소"
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Blockscout"
+msgstr "블록스카우트"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Bridge"
@@ -481,6 +489,8 @@ msgstr "스왑 확인"
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
+#: src/components/vote/ExecuteModal.tsx
+#: src/components/vote/QueueModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Confirm this transaction in your wallet"
 msgstr "지갑에서 이 거래를 확인하세요"
@@ -523,8 +533,8 @@ msgid "Connect to a wallet to view your liquidity."
 msgstr "유동성을 보려면 지갑에 연결하십시오."
 
 #: src/components/AccountDetails/index.tsx
-msgid "Connected with {name}"
-msgstr "{name}와(과) 연결됨"
+msgid "Connected with"
+msgstr "와 연결되다"
 
 #: src/components/WalletModal/PendingView.tsx
 msgid "Connecting..."
@@ -735,13 +745,8 @@ msgid "Error"
 msgstr "오류"
 
 #: src/components/WalletModal/PendingView.tsx
-#: src/components/WalletModal/index.tsx
 msgid "Error connecting"
 msgstr "연결 오류"
-
-#: src/components/WalletModal/index.tsx
-msgid "Error connecting. Try refreshing the page."
-msgstr "연결 오류. 페이지를 새로 고침 해보세요."
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Error importing list"
@@ -759,9 +764,34 @@ msgstr "예상 네트워크 수수료"
 msgid "Etherscan"
 msgstr "Etherscan"
 
+#: src/components/vote/ExecuteModal.tsx
+#: src/pages/Vote/VotePage.tsx
+msgid "Execute"
+msgstr "실행하다"
+
+#: src/components/vote/ExecuteModal.tsx
+msgid "Execute Proposal {proposalId}"
+msgstr "제안 실행 {proposalId}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Execute proposal {proposalKey}."
+msgstr "제안 실행 {proposalKey}."
+
 #: src/pages/Vote/styled.tsx
 msgid "Executed"
 msgstr "실행"
+
+#: src/components/vote/ExecuteModal.tsx
+msgid "Executing"
+msgstr "실행 중"
+
+#: src/components/vote/ExecuteModal.tsx
+msgid "Executing this proposal will enact the calldata on-chain."
+msgstr "이 제안을 실행하면 호출 데이터가 온체인에 적용됩니다."
+
+#: src/components/vote/ExecuteModal.tsx
+msgid "Execution Submitted"
+msgstr "실행 제출됨"
 
 #: src/components/SearchModal/CurrencyList/index.tsx
 msgid "Expanded results from inactive Token Lists"
@@ -897,9 +927,9 @@ msgstr "초기 가격 및 풀 쉐어"
 msgid "Input is estimated. You will sell at most <0>{0} {1}</0> or the transaction will revert."
 msgstr "입력이 추정됩니다. 최대 <0>{0} {1}</0>을(를) 팔거나 그렇지 않으면 거래가 취소됩니다."
 
-#: src/components/WalletModal/index.tsx
-msgid "Install Metamask"
-msgstr "메타 마스크 설치"
+#: src/components/WalletModal/InjectedOption.tsx
+msgid "Install MetaMask"
+msgstr "메타마스크 설치"
 
 #: src/pages/Swap/index.tsx
 msgid "Insufficient liquidity for this trade."
@@ -961,7 +991,6 @@ msgstr "더 알아보기"
 
 #: src/components/Menu/index.tsx
 #: src/components/PrivacyPolicy/index.tsx
-#: src/components/WalletModal/index.tsx
 msgid "Legal & Privacy"
 msgstr "법률 및 개인 정보 보호"
 
@@ -1161,25 +1190,9 @@ msgstr "결과가 없습니다."
 msgid "Not created"
 msgstr "생성되지 않음"
 
-#: src/components/Toggle/ListToggle.tsx
-msgid "OFF"
-msgstr "OFF"
-
-#: src/components/Toggle/ListToggle.tsx
-msgid "ON"
-msgstr "ON"
-
 #: src/components/Settings/index.tsx
 msgid "ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING."
 msgstr "수행중인 작업을 알고 있는 경우에만 이 모드를 사용하십시오."
-
-#: src/components/Toggle/index.tsx
-msgid "Off"
-msgstr "Off"
-
-#: src/components/Toggle/index.tsx
-msgid "On"
-msgstr "On"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Once you are happy with the rate click supply to review."
@@ -1188,10 +1201,6 @@ msgstr "요율에 만족하면 공급을 클릭하여 검토하십시오."
 #: src/pages/Vote/VotePage.tsx
 msgid "Only UNI votes that were self delegated or delegated to another address before block {0} are eligible for voting."
 msgstr "{0} 차단 이전에 자체 위임되었거나 다른 주소로 위임 된 UNI 투표만 투표할 수 있습니다."
-
-#: src/components/Web3ReactManager/index.tsx
-msgid "Oops! An unknown error occurred. Please refresh the page, or visit from another browser or device."
-msgstr "죄송합니다! 알 수없는 오류가 발생했습니다. 페이지를 새로 고침하거나 다른 브라우저 또는 기기에서 방문하세요."
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Optimism Bridge"
@@ -1242,10 +1251,6 @@ msgstr "REMOVE를 입력하여 이 목록을 제거할 것인지 확인해주세
 msgid "Please connect to Layer 1 Ethereum"
 msgstr "레이어 1 Ethereum에 연결하세요"
 
-#: src/components/WalletModal/index.tsx
-msgid "Please connect to a supported network in the dropdown menu or in your wallet."
-msgstr "드롭다운 메뉴 또는 지갑에서 지원되는 네트워크에 연결하십시오."
-
 #: src/components/Settings/index.tsx
 msgid "Please type the word \"{confirmWord}\" to enable expert mode."
 msgstr "전문가 모드를 사용하려면{confirmWord}\"이라는 단어를 입력하십시오."
@@ -1292,8 +1297,13 @@ msgid "Pooled {0}:"
 msgstr "{0} 풀링 됨:"
 
 #: src/pages/Pool/index.tsx
+#: src/pages/Pool/index.tsx
 msgid "Pools Overview"
 msgstr "풀 개요"
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Portal Bridge"
+msgstr "포털 브리지"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Preview"
@@ -1363,9 +1373,26 @@ msgstr "제안자"
 msgid "Protocol Disclaimer"
 msgstr "프로토콜 면책 조항"
 
+#: src/components/vote/QueueModal.tsx
+#: src/pages/Vote/VotePage.tsx
+msgid "Queue"
+msgstr "대기줄"
+
+#: src/components/vote/QueueModal.tsx
+msgid "Queue Proposal {proposalId}"
+msgstr "대기열 제안 {proposalId}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Queue proposal {proposalKey}."
+msgstr "대기열 제안 {proposalKey}."
+
 #: src/pages/Vote/styled.tsx
 msgid "Queued"
 msgstr "대기 중"
+
+#: src/components/vote/QueueModal.tsx
+msgid "Queueing"
+msgstr "큐잉"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Rates"
@@ -1594,10 +1621,6 @@ msgstr "{0} {1} 을 {2} {3}(으)로 스왑"
 msgid "Take a 10 minute survey to help us improve your experience in the Uniswap app."
 msgstr "Uniswap 앱 경험을 개선하는 데 도움이 되는 10분 설문조사에 참여하세요."
 
-#: src/components/WalletModal/index.tsx
-msgid "Tally"
-msgstr "계정"
-
 #: src/components/Popups/SurveyPopup.tsx
 msgid "Tell us what you think ↗"
 msgstr "↗ 생각을 알려주세요."
@@ -1718,6 +1741,10 @@ msgstr "이 앱은 다음 타사 API를 사용합니다."
 msgid "This pool must be initialized before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount. Gas fees will be higher than usual due to the initialization transaction."
 msgstr "유동성을 추가하려면 이 풀을 초기화해야 합니다. 초기화하려면 풀의 시작 가격을 선택하십시오. 그런 다음 유동성 가격 범위와 예금 금액을 입력하십시오. 초기화 트랜잭션으로 인해 가스 요금이 평소보다 높아집니다."
 
+#: src/pages/Vote/VotePage.tsx
+msgid "This proposal may be executed after {0}."
+msgstr "이 제안은 {0}이후에 실행될 수 있습니다."
+
 #: src/components/swap/SwapRoute.tsx
 msgid "This route optimizes your total output by considering split routes, multiple hops, and the gas cost of each step."
 msgstr "이 경로는 분할 경로, 다중 홉 및 각 단계의 가스 비용을 고려하여 총 출력을 최적화합니다."
@@ -1795,6 +1822,7 @@ msgstr "거래 설정"
 #: src/components/earn/StakingModal.tsx
 #: src/components/earn/UnstakingModal.tsx
 #: src/components/vote/DelegateModal.tsx
+#: src/components/vote/QueueModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Transaction Submitted"
 msgstr "제출된 거래"
@@ -1949,8 +1977,8 @@ msgid "User"
 msgstr "사용자"
 
 #: src/pages/Pool/v2.tsx
-msgid "V2 is not available on Layer 2. Switch to Layer 1 Ethereum."
-msgstr "V2는 레이어 2에서 사용할 수 없습니다. 레이어 1 이더 리움으로 전환합니다."
+msgid "V2 Pool is not available on Layer 2. Switch to Layer 1 Ethereum."
+msgstr "V2 풀은 레이어 2에서 사용할 수 없습니다. 레이어 1 이더리움으로 전환하십시오."
 
 #: src/pages/Pool/index.tsx
 msgid "V2 liquidity"
@@ -1983,6 +2011,8 @@ msgstr "Explorer에서 보기"
 #: src/components/ModalViews/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
+#: src/components/vote/ExecuteModal.tsx
+#: src/components/vote/QueueModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "View transaction on Explorer"
 msgstr "Explorer에서 거래 보기"
@@ -2107,7 +2137,6 @@ msgstr "랩"
 msgid "Wrap <0/> to {0}"
 msgstr "<0/> 에서 {0}바꿈"
 
-#: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx
 msgid "Wrong Network"
 msgstr "잘못된 네트워크"
@@ -2188,6 +2217,10 @@ msgstr "V2 유동성"
 #: src/pages/Pool/index.tsx
 msgid "Your active V3 liquidity positions will appear here."
 msgstr "활성 V3 유동성 위치가 여기에 표시됩니다."
+
+#: src/pages/Pool/index.tsx
+msgid "Your connected network is unsupported. Request support <0>here</0>."
+msgstr "연결된 네트워크가 지원되지 않습니다. 지원 요청 <0>여기</0>."
 
 #: src/pages/Earn/Manage.tsx
 msgid "Your liquidity deposits"

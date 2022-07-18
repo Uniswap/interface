@@ -1,7 +1,7 @@
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
-import { AUTO_ROUTER_SUPPORTED_CHAINS } from 'lib/hooks/routing/clientSideSmartOrderRouter'
+import { useWeb3React } from '@web3-react/core'
+import { isSupportedChainId } from 'lib/hooks/routing/clientSideSmartOrderRouter'
 
 export default function useAutoRouterSupported(): boolean {
-  const { chainId } = useActiveWeb3React()
-  return Boolean(chainId && AUTO_ROUTER_SUPPORTED_CHAINS.includes(chainId))
+  const { chainId } = useWeb3React()
+  return isSupportedChainId(chainId)
 }

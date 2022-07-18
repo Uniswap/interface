@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-06-03 22:06\n"
+"PO-Revision-Date: 2022-07-12 23:04\n"
 "Last-Translator: \n"
 "Language: sr_SP\n"
 "Language-Team: Serbian (Cyrillic)\n"
@@ -164,8 +164,8 @@ msgid "Add more liquidity"
 msgstr "Додајте више ликвидности"
 
 #: src/components/TransactionConfirmationModal/index.tsx
-msgid "Add {0} to Metamask <0/>"
-msgstr "Додајте {0} у Метамаск <0/>"
+msgid "Add {0}"
+msgstr "Додајте {0}"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Add {0}-{1} liquidity"
@@ -178,6 +178,10 @@ msgstr "Додај {0}/{1} В3 ликвидност"
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Added {0}"
 msgstr "Додато {0}"
+
+#: src/components/vote/QueueModal.tsx
+msgid "Adding this proposal to the queue will allow it to be executed, after a delay."
+msgstr "Додавање овог предлога у ред чекања ће омогућити његово извршење, након одлагања."
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Address has no available claim"
@@ -315,6 +319,10 @@ msgstr "Блокирана адреса"
 #: src/components/Blocklist/index.tsx
 msgid "Blocked address"
 msgstr "Блокирана адреса"
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Blockscout"
+msgstr "Блоцксцоут"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Bridge"
@@ -481,6 +489,8 @@ msgstr "Потврдите размену"
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
+#: src/components/vote/ExecuteModal.tsx
+#: src/components/vote/QueueModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Confirm this transaction in your wallet"
 msgstr "Потврдите ову трансакцију у новчанику"
@@ -523,8 +533,8 @@ msgid "Connect to a wallet to view your liquidity."
 msgstr "Повежите се са новчаником да бисте видели своју ликвидност."
 
 #: src/components/AccountDetails/index.tsx
-msgid "Connected with {name}"
-msgstr "Повезано са {name}"
+msgid "Connected with"
+msgstr "Повезан са"
 
 #: src/components/WalletModal/PendingView.tsx
 msgid "Connecting..."
@@ -735,13 +745,8 @@ msgid "Error"
 msgstr "Грешка"
 
 #: src/components/WalletModal/PendingView.tsx
-#: src/components/WalletModal/index.tsx
 msgid "Error connecting"
 msgstr "Грешка при повезивању"
-
-#: src/components/WalletModal/index.tsx
-msgid "Error connecting. Try refreshing the page."
-msgstr "Грешка при повезивању. Покушајте да освежите страницу."
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Error importing list"
@@ -759,9 +764,34 @@ msgstr "Процењена мрежна накнада"
 msgid "Etherscan"
 msgstr "Етхерсцан"
 
+#: src/components/vote/ExecuteModal.tsx
+#: src/pages/Vote/VotePage.tsx
+msgid "Execute"
+msgstr "Извршити"
+
+#: src/components/vote/ExecuteModal.tsx
+msgid "Execute Proposal {proposalId}"
+msgstr "Изврши предлог {proposalId}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Execute proposal {proposalKey}."
+msgstr "Изврши предлог {proposalKey}."
+
 #: src/pages/Vote/styled.tsx
 msgid "Executed"
 msgstr "Погубљен"
+
+#: src/components/vote/ExecuteModal.tsx
+msgid "Executing"
+msgstr "Извршавање"
+
+#: src/components/vote/ExecuteModal.tsx
+msgid "Executing this proposal will enact the calldata on-chain."
+msgstr "Извршење овог предлога ће активирати податке о позивима у ланцу."
+
+#: src/components/vote/ExecuteModal.tsx
+msgid "Execution Submitted"
+msgstr "Екецутион Субмиттед"
 
 #: src/components/SearchModal/CurrencyList/index.tsx
 msgid "Expanded results from inactive Token Lists"
@@ -897,9 +927,9 @@ msgstr "Почетне цене и удео у базену"
 msgid "Input is estimated. You will sell at most <0>{0} {1}</0> or the transaction will revert."
 msgstr "Улаз се процењује. Продаћете највише <0>{0} {1}</0> или ће се трансакција вратити."
 
-#: src/components/WalletModal/index.tsx
-msgid "Install Metamask"
-msgstr "Инсталирајте Метамаск"
+#: src/components/WalletModal/InjectedOption.tsx
+msgid "Install MetaMask"
+msgstr "Инсталирајте МетаМаск"
 
 #: src/pages/Swap/index.tsx
 msgid "Insufficient liquidity for this trade."
@@ -961,7 +991,6 @@ msgstr "Сазнајте више"
 
 #: src/components/Menu/index.tsx
 #: src/components/PrivacyPolicy/index.tsx
-#: src/components/WalletModal/index.tsx
 msgid "Legal & Privacy"
 msgstr "Pravo i privatnost"
 
@@ -1161,25 +1190,9 @@ msgstr "Нема резултата."
 msgid "Not created"
 msgstr "Није створено"
 
-#: src/components/Toggle/ListToggle.tsx
-msgid "OFF"
-msgstr "ИСК"
-
-#: src/components/Toggle/ListToggle.tsx
-msgid "ON"
-msgstr "УКЉ"
-
 #: src/components/Settings/index.tsx
 msgid "ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING."
 msgstr "ОВАЈ РЕЖИМ КОРИСТИТЕ САМО АКО ЗНАТЕ ШТА РАДИТЕ."
-
-#: src/components/Toggle/index.tsx
-msgid "Off"
-msgstr "Иск"
-
-#: src/components/Toggle/index.tsx
-msgid "On"
-msgstr "Укљ"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Once you are happy with the rate click supply to review."
@@ -1188,10 +1201,6 @@ msgstr "Једном када сте задовољни курсом, кликн
 #: src/pages/Vote/VotePage.tsx
 msgid "Only UNI votes that were self delegated or delegated to another address before block {0} are eligible for voting."
 msgstr "Само УНИ гласови који су самостално или делегирани на другу адресу пре блока {0} испуњавају услове за гласање."
-
-#: src/components/Web3ReactManager/index.tsx
-msgid "Oops! An unknown error occurred. Please refresh the page, or visit from another browser or device."
-msgstr "Упс! Дошло је до непознате грешке. Освежите страницу или је посетите из другог прегледача или уређаја."
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Optimism Bridge"
@@ -1242,10 +1251,6 @@ msgstr "Потврдите да желите да уклоните ову лис
 msgid "Please connect to Layer 1 Ethereum"
 msgstr "Повежите се са слојем 1 Етхереум"
 
-#: src/components/WalletModal/index.tsx
-msgid "Please connect to a supported network in the dropdown menu or in your wallet."
-msgstr "Повежите се на подржану мрежу у падајућем менију или у свом новчанику."
-
 #: src/components/Settings/index.tsx
 msgid "Please type the word \"{confirmWord}\" to enable expert mode."
 msgstr "Унесите реч „{confirmWord}“ да бисте омогућили експертни режим."
@@ -1292,8 +1297,13 @@ msgid "Pooled {0}:"
 msgstr "Сакупљено {0}:"
 
 #: src/pages/Pool/index.tsx
+#: src/pages/Pool/index.tsx
 msgid "Pools Overview"
 msgstr "Преглед фондова"
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Portal Bridge"
+msgstr "Портал Бридге"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Preview"
@@ -1363,9 +1373,26 @@ msgstr "Предлагач"
 msgid "Protocol Disclaimer"
 msgstr "Protocol Disclaimer"
 
+#: src/components/vote/QueueModal.tsx
+#: src/pages/Vote/VotePage.tsx
+msgid "Queue"
+msgstr "Куеуе"
+
+#: src/components/vote/QueueModal.tsx
+msgid "Queue Proposal {proposalId}"
+msgstr "Предлог реда {proposalId}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Queue proposal {proposalKey}."
+msgstr "Предлог за ред чекања {proposalKey}."
+
 #: src/pages/Vote/styled.tsx
 msgid "Queued"
 msgstr "У реду"
+
+#: src/components/vote/QueueModal.tsx
+msgid "Queueing"
+msgstr "Стати у ред"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Rates"
@@ -1594,10 +1621,6 @@ msgstr "Замена {0} {1} за {2} {3}"
 msgid "Take a 10 minute survey to help us improve your experience in the Uniswap app."
 msgstr "Попуните 10-минутну анкету да бисте нам помогли да побољшамо ваше искуство у апликацији Унисвап."
 
-#: src/components/WalletModal/index.tsx
-msgid "Tally"
-msgstr "Талли"
-
 #: src/components/Popups/SurveyPopup.tsx
 msgid "Tell us what you think ↗"
 msgstr "Реците нам шта мислите ↗"
@@ -1718,6 +1741,10 @@ msgstr "Ova aplikacija koristi sledeće API-je treće strane:"
 msgid "This pool must be initialized before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount. Gas fees will be higher than usual due to the initialization transaction."
 msgstr "Овај фонд мора бити иницијализован да бисте могли да додате ликвидност. Да бисте иницијализирали, одаберите почетну цену за базен. Затим унесите опсег цена ликвидности и износ депозита. Накнаде за плин биће веће него обично због трансакције иницијализације."
 
+#: src/pages/Vote/VotePage.tsx
+msgid "This proposal may be executed after {0}."
+msgstr "Овај предлог се може извршити након {0}."
+
 #: src/components/swap/SwapRoute.tsx
 msgid "This route optimizes your total output by considering split routes, multiple hops, and the gas cost of each step."
 msgstr "Ова рута оптимизује ваш укупни учинак узимајући у обзир подељене руте, више скокова и цену гаса за сваки корак."
@@ -1795,6 +1822,7 @@ msgstr "Поставке трансакције"
 #: src/components/earn/StakingModal.tsx
 #: src/components/earn/UnstakingModal.tsx
 #: src/components/vote/DelegateModal.tsx
+#: src/components/vote/QueueModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Transaction Submitted"
 msgstr "Трансакција је предата"
@@ -1949,8 +1977,8 @@ msgid "User"
 msgstr "Корисник"
 
 #: src/pages/Pool/v2.tsx
-msgid "V2 is not available on Layer 2. Switch to Layer 1 Ethereum."
-msgstr "В2 није доступан на слоју 2. Пребаците се на слој 1 Етхереум."
+msgid "V2 Pool is not available on Layer 2. Switch to Layer 1 Ethereum."
+msgstr "В2 фонд није доступан на слоју 2. Пређите на слој 1 Етхереум."
 
 #: src/pages/Pool/index.tsx
 msgid "V2 liquidity"
@@ -1983,6 +2011,8 @@ msgstr "Поглед на Екплореру"
 #: src/components/ModalViews/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
+#: src/components/vote/ExecuteModal.tsx
+#: src/components/vote/QueueModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "View transaction on Explorer"
 msgstr "Погледајте трансакцију у Екплореру"
@@ -2107,7 +2137,6 @@ msgstr "Упакујте"
 msgid "Wrap <0/> to {0}"
 msgstr "Замотајте <0/> до {0}"
 
-#: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx
 msgid "Wrong Network"
 msgstr "Погрешна мрежа"
@@ -2188,6 +2217,10 @@ msgstr "Ваша V2 ликвидност"
 #: src/pages/Pool/index.tsx
 msgid "Your active V3 liquidity positions will appear here."
 msgstr "Овде ће се појавити ваше активне В3 позиције ликвидности."
+
+#: src/pages/Pool/index.tsx
+msgid "Your connected network is unsupported. Request support <0>here</0>."
+msgstr "Ваша повезана мрежа није подржана. Затражите подршку <0>овде</0>."
 
 #: src/pages/Earn/Manage.tsx
 msgid "Your liquidity deposits"

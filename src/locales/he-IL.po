@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-06-03 22:06\n"
+"PO-Revision-Date: 2022-07-12 23:04\n"
 "Last-Translator: \n"
 "Language: he_IL\n"
 "Language-Team: Hebrew\n"
@@ -164,8 +164,8 @@ msgid "Add more liquidity"
 msgstr "הוסף עוד נזילות"
 
 #: src/components/TransactionConfirmationModal/index.tsx
-msgid "Add {0} to Metamask <0/>"
-msgstr "הוסף {0} למטא-מסכה <0/>"
+msgid "Add {0}"
+msgstr "הוסף {0}"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Add {0}-{1} liquidity"
@@ -178,6 +178,10 @@ msgstr "להוסיף {0}/{1} נזילות V3"
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Added {0}"
 msgstr "נוסף {0}"
+
+#: src/components/vote/QueueModal.tsx
+msgid "Adding this proposal to the queue will allow it to be executed, after a delay."
+msgstr "הוספת הצעה זו לתור תאפשר את ביצועה, לאחר עיכוב."
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Address has no available claim"
@@ -315,6 +319,10 @@ msgstr "כתובת חסומה"
 #: src/components/Blocklist/index.tsx
 msgid "Blocked address"
 msgstr "כתובת חסומה"
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Blockscout"
+msgstr "בלוסקאוט"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Bridge"
@@ -481,6 +489,8 @@ msgstr "אשר החלפה"
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
+#: src/components/vote/ExecuteModal.tsx
+#: src/components/vote/QueueModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Confirm this transaction in your wallet"
 msgstr "אשר את העסקה בארנק שלך"
@@ -523,8 +533,8 @@ msgid "Connect to a wallet to view your liquidity."
 msgstr "התחבר לארנק כדי להציג את הנזילות שלך."
 
 #: src/components/AccountDetails/index.tsx
-msgid "Connected with {name}"
-msgstr "מחובר עם {name}"
+msgid "Connected with"
+msgstr "מחובר עם"
 
 #: src/components/WalletModal/PendingView.tsx
 msgid "Connecting..."
@@ -735,13 +745,8 @@ msgid "Error"
 msgstr "שְׁגִיאָה"
 
 #: src/components/WalletModal/PendingView.tsx
-#: src/components/WalletModal/index.tsx
 msgid "Error connecting"
 msgstr "שגיאה בהתחברות"
-
-#: src/components/WalletModal/index.tsx
-msgid "Error connecting. Try refreshing the page."
-msgstr "שגיאה בהתחברות. נסה לרענן את הדף."
 
 #: src/components/SearchModal/ManageLists.tsx
 msgid "Error importing list"
@@ -759,9 +764,34 @@ msgstr "עמלת רשת משוערת"
 msgid "Etherscan"
 msgstr "Etherscan"
 
+#: src/components/vote/ExecuteModal.tsx
+#: src/pages/Vote/VotePage.tsx
+msgid "Execute"
+msgstr "לבצע"
+
+#: src/components/vote/ExecuteModal.tsx
+msgid "Execute Proposal {proposalId}"
+msgstr "בצע הצעה {proposalId}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Execute proposal {proposalKey}."
+msgstr "בצע הצעה {proposalKey}."
+
 #: src/pages/Vote/styled.tsx
 msgid "Executed"
 msgstr "יצא לפועל"
+
+#: src/components/vote/ExecuteModal.tsx
+msgid "Executing"
+msgstr "מְבַצֵעַ"
+
+#: src/components/vote/ExecuteModal.tsx
+msgid "Executing this proposal will enact the calldata on-chain."
+msgstr "ביצוע הצעה זו יחוקק את נתוני השיחות על השרשרת."
+
+#: src/components/vote/ExecuteModal.tsx
+msgid "Execution Submitted"
+msgstr "ביצוע הוגש"
 
 #: src/components/SearchModal/CurrencyList/index.tsx
 msgid "Expanded results from inactive Token Lists"
@@ -897,9 +927,9 @@ msgstr "מחירים ראשוניים ונתח בריכה"
 msgid "Input is estimated. You will sell at most <0>{0} {1}</0> or the transaction will revert."
 msgstr "הקלט מוערך. אתה תמכור לכל היותר <0>{0} {1}</0> או שהעסקה תחזור."
 
-#: src/components/WalletModal/index.tsx
-msgid "Install Metamask"
-msgstr "התקן את Metamask"
+#: src/components/WalletModal/InjectedOption.tsx
+msgid "Install MetaMask"
+msgstr "התקן את MetaMask"
 
 #: src/pages/Swap/index.tsx
 msgid "Insufficient liquidity for this trade."
@@ -961,7 +991,6 @@ msgstr "למד עוד"
 
 #: src/components/Menu/index.tsx
 #: src/components/PrivacyPolicy/index.tsx
-#: src/components/WalletModal/index.tsx
 msgid "Legal & Privacy"
 msgstr "משפטי ופרטיות"
 
@@ -1161,25 +1190,9 @@ msgstr "לא נמצאו תוצאות."
 msgid "Not created"
 msgstr "לא נוצר"
 
-#: src/components/Toggle/ListToggle.tsx
-msgid "OFF"
-msgstr "כבוי"
-
-#: src/components/Toggle/ListToggle.tsx
-msgid "ON"
-msgstr "דלוק"
-
 #: src/components/Settings/index.tsx
 msgid "ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING."
 msgstr "השתמש במצב זה בלבד אם אתה יודע מה אתה עושה."
-
-#: src/components/Toggle/index.tsx
-msgid "Off"
-msgstr "כבוי"
-
-#: src/components/Toggle/index.tsx
-msgid "On"
-msgstr "דלוק"
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Once you are happy with the rate click supply to review."
@@ -1188,10 +1201,6 @@ msgstr "ברגע שאתה מרוצה מההספק לחץ על האספקה לב�
 #: src/pages/Vote/VotePage.tsx
 msgid "Only UNI votes that were self delegated or delegated to another address before block {0} are eligible for voting."
 msgstr "זכאים להצביע רק קולות של UNI שהועברו בעצמם או הועברו לכתובת אחרת לפני גוש {0}"
-
-#: src/components/Web3ReactManager/index.tsx
-msgid "Oops! An unknown error occurred. Please refresh the page, or visit from another browser or device."
-msgstr "אופס! אירעה שגיאה לא ידועה. אנא רענן את הדף, או בקר בדפדפן או במכשיר אחר."
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Optimism Bridge"
@@ -1242,10 +1251,6 @@ msgstr "אנא אשר שברצונך להסיר רשימה זו על ידי הק
 msgid "Please connect to Layer 1 Ethereum"
 msgstr "אנא התחבר לאתריום של שכבה 1"
 
-#: src/components/WalletModal/index.tsx
-msgid "Please connect to a supported network in the dropdown menu or in your wallet."
-msgstr "אנא התחבר לרשת נתמכת בתפריט הנפתח או בארנק שלך."
-
 #: src/components/Settings/index.tsx
 msgid "Please type the word \"{confirmWord}\" to enable expert mode."
 msgstr "אנא הקלד את המילה \"{confirmWord}\" כדי להפעיל מצב מומחה."
@@ -1292,8 +1297,13 @@ msgid "Pooled {0}:"
 msgstr "מאוגד {0}:"
 
 #: src/pages/Pool/index.tsx
+#: src/pages/Pool/index.tsx
 msgid "Pools Overview"
 msgstr "סקירת מאגרים"
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Portal Bridge"
+msgstr "גשר פורטל"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Preview"
@@ -1363,9 +1373,26 @@ msgstr "מציע"
 msgid "Protocol Disclaimer"
 msgstr "כתב ויתור פרוטוקול"
 
+#: src/components/vote/QueueModal.tsx
+#: src/pages/Vote/VotePage.tsx
+msgid "Queue"
+msgstr "תוֹר"
+
+#: src/components/vote/QueueModal.tsx
+msgid "Queue Proposal {proposalId}"
+msgstr "הצעה לתור {proposalId}"
+
+#: src/components/AccountDetails/TransactionSummary.tsx
+msgid "Queue proposal {proposalKey}."
+msgstr "הצעת תור {proposalKey}."
+
 #: src/pages/Vote/styled.tsx
 msgid "Queued"
 msgstr "בתור"
+
+#: src/components/vote/QueueModal.tsx
+msgid "Queueing"
+msgstr "הִזדַנְבוּת"
 
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Rates"
@@ -1594,10 +1621,6 @@ msgstr "החלפת {0} {1} ב- {2} {3}"
 msgid "Take a 10 minute survey to help us improve your experience in the Uniswap app."
 msgstr "השתתף בסקר של 10 דקות כדי לעזור לנו לשפר את החוויה שלך באפליקציית Uniswap."
 
-#: src/components/WalletModal/index.tsx
-msgid "Tally"
-msgstr "לִסְפּוֹר"
-
 #: src/components/Popups/SurveyPopup.tsx
 msgid "Tell us what you think ↗"
 msgstr "ספר לנו מה אתה חושב ↗"
@@ -1718,6 +1741,10 @@ msgstr "אפליקציה זו משתמשת בממשקי ה-API של צד שלי�
 msgid "This pool must be initialized before you can add liquidity. To initialize, select a starting price for the pool. Then, enter your liquidity price range and deposit amount. Gas fees will be higher than usual due to the initialization transaction."
 msgstr "יש לאתחל את המאגר הזה לפני שתוכל להוסיף נזילות. כדי לאתחל, בחר מחיר התחלתי לבריכה. לאחר מכן, הזן את טווח מחירי הנזילות ואת סכום ההפקדה. דמי הגז יהיו גבוהים מהרגיל עקב עסקת האתחול."
 
+#: src/pages/Vote/VotePage.tsx
+msgid "This proposal may be executed after {0}."
+msgstr "הצעה זו עשויה להתבצע לאחר {0}."
+
 #: src/components/swap/SwapRoute.tsx
 msgid "This route optimizes your total output by considering split routes, multiple hops, and the gas cost of each step."
 msgstr "מסלול זה מייעל את התפוקה הכוללת שלך על ידי התחשבות במסלולים מפוצלים, ריבוי דילוגים ועלות הגז של כל שלב."
@@ -1795,6 +1822,7 @@ msgstr "הגדרות עסקה"
 #: src/components/earn/StakingModal.tsx
 #: src/components/earn/UnstakingModal.tsx
 #: src/components/vote/DelegateModal.tsx
+#: src/components/vote/QueueModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "Transaction Submitted"
 msgstr "העסקה הוגשה"
@@ -1949,8 +1977,8 @@ msgid "User"
 msgstr "מִשׁתַמֵשׁ"
 
 #: src/pages/Pool/v2.tsx
-msgid "V2 is not available on Layer 2. Switch to Layer 1 Ethereum."
-msgstr "V2 אינו זמין בשכבה 2. עבור לשכבה 1 אתריום."
+msgid "V2 Pool is not available on Layer 2. Switch to Layer 1 Ethereum."
+msgstr "V2 Pool אינו זמין בשכבה 2. עבור אל Layer 1 Ethereum."
 
 #: src/pages/Pool/index.tsx
 msgid "V2 liquidity"
@@ -1983,6 +2011,8 @@ msgstr "צפה ב- Explorer"
 #: src/components/ModalViews/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
+#: src/components/vote/ExecuteModal.tsx
+#: src/components/vote/QueueModal.tsx
 #: src/components/vote/VoteModal.tsx
 msgid "View transaction on Explorer"
 msgstr "צפה בעסקה ב- Explorer"
@@ -2107,7 +2137,6 @@ msgstr "לַעֲטוֹף"
 msgid "Wrap <0/> to {0}"
 msgstr "עטוף <0/> ל {0}"
 
-#: src/components/WalletModal/index.tsx
 #: src/components/Web3Status/index.tsx
 msgid "Wrong Network"
 msgstr "רשת לא נכונה"
@@ -2188,6 +2217,10 @@ msgstr "נזילות ה- V2 שלך"
 #: src/pages/Pool/index.tsx
 msgid "Your active V3 liquidity positions will appear here."
 msgstr "עמדות הנזילות הפעילות V3 שלך יופיעו כאן."
+
+#: src/pages/Pool/index.tsx
+msgid "Your connected network is unsupported. Request support <0>here</0>."
+msgstr "הרשת המחוברת שלך אינה נתמכת. בקש תמיכה <0>כאן</0>."
 
 #: src/pages/Earn/Manage.tsx
 msgid "Your liquidity deposits"

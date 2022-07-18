@@ -1,18 +1,18 @@
 import { Trans } from '@lingui/macro'
 import { Currency } from '@uniswap/sdk-core'
+import { useWeb3React } from '@web3-react/core'
 import Badge from 'components/Badge'
-import { CHAIN_INFO } from 'constants/chainInfo'
-import { L2_CHAIN_IDS, SupportedL2ChainId } from 'constants/chains'
-import useActiveWeb3React from 'hooks/useActiveWeb3React'
-import useAddTokenToMetamask from 'hooks/useAddTokenToMetamask'
-import { ReactNode, useContext } from 'react'
+import { getChainInfo } from 'constants/chainInfo'
+import { SupportedL2ChainId } from 'constants/chains'
+import useCurrencyLogoURIs from 'lib/hooks/useCurrencyLogoURIs'
+import { ReactNode, useCallback, useContext, useState } from 'react'
 import { AlertCircle, AlertTriangle, ArrowUpCircle, CheckCircle } from 'react-feather'
 import { Text } from 'rebass'
 import { useIsTransactionConfirmed, useTransaction } from 'state/transactions/hooks'
 import styled, { ThemeContext } from 'styled-components/macro'
+import { isL2ChainId } from 'utils/chains'
 
 import Circle from '../../assets/images/blue-loader.svg'
-import MetaMaskLogo from '../../assets/images/metamask.png'
 import { ExternalLink } from '../../theme'
 import { CloseIcon, CustomLightSpinner } from '../../theme'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
@@ -97,9 +97,25 @@ function TransactionSubmittedContent({
 }) {
   const theme = useContext(ThemeContext)
 
-  const { library } = useActiveWeb3React()
+  const { connector } = useWeb3React()
 
-  const { addToken, success } = useAddTokenToMetamask(currencyToAdd)
+  const token = currencyToAdd?.wrapped
+  const logoURL = useCurrencyLogoURIs(token)[0]
+
+  const [success, setSuccess] = useState<boolean | undefined>()
+
+  const addToken = useCallback(() => {
+    if (!token?.symbol || !connector.watchAsset) return
+    connector
+      .watchAsset({
+        address: token.address,
+        symbol: token.symbol,
+        decimals: token.decimals,
+        image: logoURL,
+      })
+      .then(() => setSuccess(true))
+      .catch(() => setSuccess(false))
+  }, [connector, logoURL, token])
 
   return (
     <Wrapper>
@@ -124,13 +140,11 @@ function TransactionSubmittedContent({
               </Text>
             </ExternalLink>
           )}
-          {currencyToAdd && library?.provider?.isMetaMask && (
+          {currencyToAdd && connector.watchAsset && (
             <ButtonLight mt="12px" padding="6px 12px" width="fit-content" onClick={addToken}>
               {!success ? (
                 <RowFixed>
-                  <Trans>
-                    Add {currencyToAdd.symbol} to Metamask <StyledLogo src={MetaMaskLogo} />
-                  </Trans>
+                  <Trans>Add {currencyToAdd.symbol}</Trans>
                 </RowFixed>
               ) : (
                 <RowFixed>
@@ -219,7 +233,7 @@ function L2Content({
 }: {
   onDismiss: () => void
   hash: string | undefined
-  chainId: number
+  chainId: SupportedL2ChainId
   currencyToAdd?: Currency | undefined
   pendingText: ReactNode
   inline?: boolean // not in modal
@@ -235,7 +249,7 @@ function L2Content({
     ? (transaction.confirmedTime - transaction.addedTime) / 1000
     : undefined
 
-  const info = CHAIN_INFO[chainId as SupportedL2ChainId]
+  const info = getChainInfo(chainId)
 
   return (
     <Wrapper>
@@ -329,16 +343,14 @@ export default function TransactionConfirmationModal({
   content,
   currencyToAdd,
 }: ConfirmationModalProps) {
-  const { chainId } = useActiveWeb3React()
-
-  const isL2 = Boolean(chainId && L2_CHAIN_IDS.includes(chainId))
+  const { chainId } = useWeb3React()
 
   if (!chainId) return null
 
   // confirmation screen
   return (
     <Modal isOpen={isOpen} onDismiss={onDismiss} maxHeight={90}>
-      {isL2 && (hash || attemptingTxn) ? (
+      {isL2ChainId(chainId) && (hash || attemptingTxn) ? (
         <L2Content chainId={chainId} hash={hash} onDismiss={onDismiss} pendingText={pendingText} />
       ) : attemptingTxn ? (
         <ConfirmationPendingContent onDismiss={onDismiss} pendingText={pendingText} />

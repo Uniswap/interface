@@ -3,8 +3,8 @@ import styled from 'styled-components/macro'
 
 import { ExternalLink } from '../../theme'
 
-const InfoCard = styled.button<{ active?: boolean }>`
-  background-color: ${({ theme, active }) => (active ? theme.bg3 : theme.bg2)};
+const InfoCard = styled.button<{ isActive?: boolean }>`
+  background-color: ${({ theme, isActive }) => (isActive ? theme.bg3 : theme.bg2)};
   padding: 1rem;
   outline: none;
   border: 1px solid;
@@ -13,7 +13,7 @@ const InfoCard = styled.button<{ active?: boolean }>`
   &:focus {
     box-shadow: 0 0 0 1px ${({ theme }) => theme.primary1};
   }
-  border-color: ${({ theme, active }) => (active ? 'transparent' : theme.bg3)};
+  border-color: ${({ theme, isActive }) => (isActive ? 'transparent' : theme.bg3)};
 `
 
 const OptionCard = styled(InfoCard as any)`
@@ -95,9 +95,9 @@ export default function Option({
   onClick = null,
   color,
   header,
-  subheader = null,
+  subheader,
   icon,
-  active = false,
+  isActive = false,
   id,
 }: {
   link?: string | null
@@ -106,16 +106,22 @@ export default function Option({
   onClick?: null | (() => void)
   color: string
   header: React.ReactNode
-  subheader: React.ReactNode | null
+  subheader?: React.ReactNode
   icon: string
-  active?: boolean
+  isActive?: boolean
   id: string
 }) {
   const content = (
-    <OptionCardClickable id={id} onClick={onClick} clickable={clickable && !active} active={active}>
+    <OptionCardClickable
+      id={id}
+      onClick={onClick}
+      clickable={clickable && !isActive}
+      active={isActive}
+      data-testid="wallet-modal-option"
+    >
       <OptionCardLeft>
         <HeaderText color={color}>
-          {active ? (
+          {isActive ? (
             <CircleWrapper>
               <GreenCircle>
                 <div />

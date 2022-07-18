@@ -1,0 +1,103 @@
+name: Test
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  # manual trigger
+  workflow_dispatch:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/setup
+      - run: yarn lint
+
+  deps-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/setup
+      # Test that deps satisfy both "fewer" and "highest" strategies. This is to ensure we are
+      # up-to-date ("highest") while avoiding increasing package size ("fewer").
+      # These are readonly (--list) and explicitly exclude packages which only satisfy one strategy.
+      - run: npx yarn-deduplicate --strategy=fewer --list --fail --exclude commander safe-buffer
+      - run: npx yarn-deduplicate --strategy=highest --list --fail --exclude commander safe-buffer
+
+  unit-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/setup
+      - run: yarn prepare
+      - run: yarn test
+
+  cypress-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/setup
+      - run: yarn prepare
+
+      - run: yarn build
+      - uses: actions/upload-artifact@v2
+        with:
+          name: build
+          path: build
+          if-no-files-found: error
+
+      - uses: actions/cache@v3
+        id: cypress-cache
+        with:
+          path: /home/runner/.cache/Cypress
+          key: ${{ runner.os }}-cypress-${{ hashFiles('node_modules/cypress') }}
+      - if: steps.cypress-cache.outputs.cache-hit != 'true'
+        run: yarn cypress install
+
+  cypress-test-matrix:
+    needs: cypress-build
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        containers: [1, 2, 3, 4]
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/setup
+
+      - uses: actions/download-artifact@v2
+        with:
+          name: build
+          path: build
+
+      - uses: actions/cache@v3
+        id: cypress-cache
+        with:
+          path: /home/runner/.cache/Cypress
+          key: ${{ runner.os }}-cypress-${{ hashFiles('node_modules/cypress') }}
+      - if: steps.cypress-cache.outputs.cache-hit != 'true'
+        run: yarn cypress install
+
+      - uses: cypress-io/github-action@v4
+        with:
+          install: false
+          start: yarn serve
+          wait-on: 'http://localhost:3000'
+          browser: chrome
+          record: true
+          parallel: true
+        env:
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # Included as a single job to check against for cypress test success, as cypress runs in a matrix.
+  cypress-tests:
+    needs: cypress-test-matrix
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo 'Finished cypress tests https\://dashboard.cypress.io/projects/yp82ef'
