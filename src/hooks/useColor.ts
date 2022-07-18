@@ -46,7 +46,13 @@ async function getColorFromToken(token: Token): Promise<string | null> {
 async function getColorFromUriPath(uri: string): Promise<string | null> {
   const formattedPath = uriToHttp(uri)[0]
 
-  const palette = await Vibrant.from(formattedPath).getPalette()
+  let palette
+
+  try {
+    palette = await Vibrant.from(formattedPath).getPalette()
+  } catch (err) {
+    return null
+  }
   if (!palette?.Vibrant) {
     return null
   }
