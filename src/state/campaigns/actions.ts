@@ -60,7 +60,7 @@ export interface CampaignLeaderboard {
 export interface CampaignLuckyWinner {
   userAddress: string
   rewardAmount: string
-  tokenAddress: string
+  tokenSymbol: string
 }
 
 export interface CampaignData {

@@ -4,6 +4,7 @@ import { useCallback, useMemo } from 'react'
 import {
   setSelectedCampaignLeaderboardLookupAddress,
   setSelectedCampaignLeaderboardPageNumber,
+  setSelectedCampaignLuckyWinnersLookupAddress,
 } from 'state/campaigns/actions'
 
 export function useSelectedCampaignLeaderboardPageNumberManager() {
@@ -41,5 +42,24 @@ export function useSelectedCampaignLeaderboardLookupAddressManager() {
   return useMemo(
     () => [selectedCampaignLeaderboardLookupAddress, updateSelectedCampaignLeaderboardLookupAddressCallback] as const,
     [selectedCampaignLeaderboardLookupAddress, updateSelectedCampaignLeaderboardLookupAddressCallback],
+  )
+}
+
+export function useSelectedCampaignLuckyWinnersLookupAddressManager() {
+  const selectedCampaignLuckyWinnersLookupAddress = useSelector(
+    (state: AppState) => state.campaigns.selectedCampaignLuckyWinnersLookupAddress,
+  )
+  const dispatch = useDispatch()
+
+  const updateSelectedCampaignLuckyWinnersLookupAddressCallback = useCallback(
+    (newLookupAddress: string) => {
+      dispatch(setSelectedCampaignLuckyWinnersLookupAddress(newLookupAddress))
+    },
+    [dispatch],
+  )
+
+  return useMemo(
+    () => [selectedCampaignLuckyWinnersLookupAddress, updateSelectedCampaignLuckyWinnersLookupAddressCallback] as const,
+    [selectedCampaignLuckyWinnersLookupAddress, updateSelectedCampaignLuckyWinnersLookupAddressCallback],
   )
 }

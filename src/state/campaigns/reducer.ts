@@ -3,14 +3,19 @@ import { createReducer } from '@reduxjs/toolkit'
 import {
   CampaignData,
   CampaignLeaderboard,
+  CampaignLuckyWinner,
   setCampaignData,
   setLoadingCampaignData,
   setLoadingCampaignDataError,
   setLoadingSelectedCampaignLeaderboard,
+  setLoadingSelectedCampaignLuckyWinners,
   setSelectedCampaign,
   setSelectedCampaignLeaderboard,
   setSelectedCampaignLeaderboardLookupAddress,
   setSelectedCampaignLeaderboardPageNumber,
+  setSelectedCampaignLuckyWinners,
+  setSelectedCampaignLuckyWinnersLookupAddress,
+  setSelectedCampaignLuckyWinnersPageNumber,
 } from './actions'
 
 export interface CampaignsState {
@@ -21,8 +26,14 @@ export interface CampaignsState {
   readonly selectedCampaign: CampaignData | undefined
 
   readonly selectedCampaignLeaderboard: CampaignLeaderboard | undefined
+  readonly loadingCampaignLeaderboard: boolean
   readonly selectedCampaignLeaderboardPageNumber: number
   readonly selectedCampaignLeaderboardLookupAddress: string
+
+  readonly selectedCampaignLuckyWinners: CampaignLuckyWinner[]
+  readonly loadingCampaignLuckyWinners: boolean
+  readonly selectedCampaignLuckyWinnersPageNumber: number
+  readonly selectedCampaignLuckyWinnersLookupAddress: string
 }
 
 const initialState: CampaignsState = {
@@ -33,8 +44,14 @@ const initialState: CampaignsState = {
   selectedCampaign: undefined,
 
   selectedCampaignLeaderboard: undefined,
+  loadingCampaignLeaderboard: false,
   selectedCampaignLeaderboardPageNumber: 0,
   selectedCampaignLeaderboardLookupAddress: '',
+
+  selectedCampaignLuckyWinners: [],
+  loadingCampaignLuckyWinners: false,
+  selectedCampaignLuckyWinnersPageNumber: 0,
+  selectedCampaignLuckyWinnersLookupAddress: '',
 }
 
 export default createReducer<CampaignsState>(initialState, builder =>
@@ -69,7 +86,7 @@ export default createReducer<CampaignsState>(initialState, builder =>
     .addCase(setLoadingSelectedCampaignLeaderboard, (state, { payload: loading }) => {
       return {
         ...state,
-        setLoadingSelectedCampaignLeaderboard: loading,
+        loadingCampaignLeaderboard: loading,
       }
     })
     .addCase(setSelectedCampaignLeaderboardPageNumber, (state, { payload: pageNumber }) => {
@@ -82,6 +99,30 @@ export default createReducer<CampaignsState>(initialState, builder =>
       return {
         ...state,
         selectedCampaignLeaderboardLookupAddress: lookupAddress,
+      }
+    })
+    .addCase(setSelectedCampaignLuckyWinners, (state, { payload: { luckyWinners } }) => {
+      return {
+        ...state,
+        selectedCampaignLuckyWinners: luckyWinners,
+      }
+    })
+    .addCase(setLoadingSelectedCampaignLuckyWinners, (state, { payload: loading }) => {
+      return {
+        ...state,
+        loadingCampaignLuckyWinners: loading,
+      }
+    })
+    .addCase(setSelectedCampaignLuckyWinnersPageNumber, (state, { payload: pageNumber }) => {
+      return {
+        ...state,
+        selectedCampaignLuckyWinnersPageNumber: pageNumber,
+      }
+    })
+    .addCase(setSelectedCampaignLuckyWinnersLookupAddress, (state, { payload: lookupAddress }) => {
+      return {
+        ...state,
+        selectedCampaignLuckyWinnersLookupAddress: lookupAddress,
       }
     }),
 )

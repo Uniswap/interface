@@ -19,9 +19,11 @@ import { AppState } from 'state'
 import {
   useSelectedCampaignLeaderboardLookupAddressManager,
   useSelectedCampaignLeaderboardPageNumberManager,
+  useSelectedCampaignLuckyWinnersLookupAddressManager,
 } from 'state/campaigns/hooks'
 import InfoHelper from 'components/InfoHelper'
 import { CampaignState } from 'state/campaigns/actions'
+import BigNumberJS from 'bignumber.js'
 
 const leaderboardTableBodyBackgroundColorsByRank: { [p: string]: string } = {
   1: `linear-gradient(90deg, rgba(255, 204, 102, 0.25) 0%, rgba(255, 204, 102, 0) 54.69%, rgba(255, 204, 102, 0) 100%)`,
@@ -29,7 +31,13 @@ const leaderboardTableBodyBackgroundColorsByRank: { [p: string]: string } = {
   3: `linear-gradient(90deg, rgba(255, 152, 56, 0.25) 0%, rgba(255, 152, 56, 0) 54.69%, rgba(255, 152, 56, 0) 100%)`,
 }
 
-export default function LeaderboardLayout({ refreshIn }: { refreshIn: number }) {
+export default function LeaderboardLayout({
+  type,
+  refreshIn,
+}: {
+  type: 'leaderboard' | 'lucky_winner'
+  refreshIn: number
+}) {
   const above1200 = useMedia('(min-width: 1200px)')
   const theme = useTheme()
   const [rank, { width: rankWidth }] = useSize(() => (
@@ -39,15 +47,104 @@ export default function LeaderboardLayout({ refreshIn }: { refreshIn: number }) 
   ))
 
   const selectedCampaignLeaderboard = useSelector((state: AppState) => state.campaigns.selectedCampaignLeaderboard)
+  const selectedCampaignLuckyWinners = useSelector((state: AppState) => state.campaigns.selectedCampaignLuckyWinners)
 
   const [currentPage, setCurrentPage] = useSelectedCampaignLeaderboardPageNumberManager()
-  const [searchValue, setSearchValue] = useSelectedCampaignLeaderboardLookupAddressManager()
+  const [leaderboardSearchValue, setLeaderboardSearchValue] = useSelectedCampaignLeaderboardLookupAddressManager()
+  const [luckyWinnersSearchValue, setLuckyWinnersSearchValue] = useSelectedCampaignLuckyWinnersLookupAddressManager()
+  const [searchValue, setSearchValue] =
+    type === 'leaderboard'
+      ? [leaderboardSearchValue, setLeaderboardSearchValue]
+      : [luckyWinnersSearchValue, setLuckyWinnersSearchValue]
+
+  let totalItems = 0
+  if (type === 'leaderboard') {
+    totalItems = selectedCampaignLeaderboard
+      ? leaderboardSearchValue
+        ? 1
+        : selectedCampaignLeaderboard.numberOfParticipants
+      : 0
+  } else {
+    // TODO nguyenhuudungz: Fix when backend return total lucky winners.
+    totalItems = searchValue ? 1 : 500
+  }
 
   const refreshInMinute = Math.floor(refreshIn / 60)
   const refreshInSecond = refreshIn - refreshInMinute * 60
   const selectedCampaign = useSelector((state: AppState) => state.campaigns.selectedCampaign)
 
-  const showRewards = Boolean(selectedCampaign && selectedCampaign.isRewardShown)
+  const isRewardShown = Boolean(selectedCampaign && selectedCampaign.isRewardShown)
+  const showRewardsColumn = (type === 'leaderboard' && isRewardShown) || type === 'lucky_winner'
+
+  const leaderboardTableBody = (selectedCampaignLeaderboard?.rankings ?? []).map((data, index) => {
+    const isThisRankingEligible = Boolean(selectedCampaign && data.totalPoint >= selectedCampaign.tradingVolumeRequired)
+    return (
+      <LeaderboardTableBody
+        key={index}
+        noColumns={isRewardShown ? 4 : 3}
+        showMedal={data.rankNo <= 3}
+        style={{
+          background: leaderboardTableBodyBackgroundColorsByRank[data.rankNo.toString()] ?? 'transparent',
+        }}
+      >
+        <LeaderboardTableBodyItem
+          align="center"
+          style={{ width: (rankWidth === Infinity ? 33 : rankWidth) + 'px', maxHeight: '24px' }}
+          isThisRankingEligible={isThisRankingEligible}
+        >
+          {data.rankNo === 1 ? (
+            <MedalImg src={Gold} />
+          ) : data.rankNo === 2 ? (
+            <MedalImg src={Silver} />
+          ) : data.rankNo === 3 ? (
+            <MedalImg src={Bronze} />
+          ) : isThisRankingEligible ? (
+            data.rankNo
+          ) : (
+            <InfoHelperWrapper>
+              <InfoHelper size={14} text={t`Not enough trading volume`} placement="top" style={{ margin: 0 }} />
+            </InfoHelperWrapper>
+          )}
+        </LeaderboardTableBodyItem>
+        <LeaderboardTableBodyItem isThisRankingEligible={isThisRankingEligible}>
+          {getShortenAddress(data.userAddress, above1200)}
+        </LeaderboardTableBodyItem>
+        <LeaderboardTableBodyItem align="right" isThisRankingEligible={isThisRankingEligible}>
+          {formatNumberWithPrecisionRange(Number(data.totalPoint), 0, 2)}
+        </LeaderboardTableBodyItem>
+        {showRewardsColumn && (
+          <LeaderboardTableBodyItem align="right" isThisRankingEligible={isThisRankingEligible}>
+            {formatNumberWithPrecisionRange(data.rewardAmount, 0, 2)} {data.tokenSymbol}
+          </LeaderboardTableBodyItem>
+        )}
+      </LeaderboardTableBody>
+    )
+  })
+
+  const luckyWinnersTableBody = selectedCampaignLuckyWinners.map((luckyWinner, index) => {
+    return (
+      <LeaderboardTableBody key={index} noColumns={3} showMedal={false} style={{ background: 'transparent' }}>
+        <LeaderboardTableBodyItem
+          align="center"
+          style={{ width: (rankWidth === Infinity ? 33 : rankWidth) + 'px', maxHeight: '24px' }}
+          isThisRankingEligible={true}
+        >
+          {index + 1}
+        </LeaderboardTableBodyItem>
+        <LeaderboardTableBodyItem isThisRankingEligible={true}>
+          {getShortenAddress(luckyWinner.userAddress, above1200)}
+        </LeaderboardTableBodyItem>
+        <LeaderboardTableBodyItem align="right" isThisRankingEligible={true}>
+          {formatNumberWithPrecisionRange(
+            new BigNumberJS(luckyWinner.rewardAmount).div(new BigNumberJS(10).pow(18)).toNumber(), // TODO nguyenhuudungz: Refactor backend return decimals.
+            0,
+            2,
+          )}{' '}
+          {luckyWinner.tokenSymbol}
+        </LeaderboardTableBodyItem>
+      </LeaderboardTableBody>
+    )
+  })
 
   if (selectedCampaign === undefined || selectedCampaign.status === 'Upcoming')
     return (
@@ -59,7 +156,7 @@ export default function LeaderboardLayout({ refreshIn }: { refreshIn: number }) 
   return (
     <LeaderboardContainer>
       <RefreshTextAndSearchContainer>
-        {selectedCampaign.campaignState !== CampaignState.CampaignStateDistributedRewards ? (
+        {selectedCampaign.campaignState === CampaignState.CampaignStateReady ? (
           <RefreshTextContainer>
             <RefreshText>
               <Trans>Leaderboard refresh in</Trans>
@@ -83,70 +180,27 @@ export default function LeaderboardLayout({ refreshIn }: { refreshIn: number }) 
         />
       </RefreshTextAndSearchContainer>
       <LeaderboardTable>
-        <LeaderboardTableHeader showRewards={showRewards}>
+        <LeaderboardTableHeader noColumns={type === 'leaderboard' && isRewardShown ? 4 : 3}>
           <LeaderboardTableHeaderItem>{rank}</LeaderboardTableHeaderItem>
           <LeaderboardTableHeaderItem>
             <Trans>Wallet</Trans>
           </LeaderboardTableHeaderItem>
-          <LeaderboardTableHeaderItem align="right">
-            <Trans>Points</Trans>
-          </LeaderboardTableHeaderItem>
-          {showRewards && (
+          {type === 'leaderboard' && (
+            <LeaderboardTableHeaderItem align="right">
+              <Trans>Points</Trans>
+            </LeaderboardTableHeaderItem>
+          )}
+          {showRewardsColumn && (
             <LeaderboardTableHeaderItem align="right">
               <Trans>Rewards</Trans>
             </LeaderboardTableHeaderItem>
           )}
         </LeaderboardTableHeader>
-        {(selectedCampaignLeaderboard?.rankings ?? []).map((data, index) => {
-          const isThisRankingEligible = selectedCampaign && data.totalPoint >= selectedCampaign.tradingVolumeRequired
-          return (
-            <LeaderboardTableBody
-              key={index}
-              showRewards={showRewards}
-              showMedal={data.rankNo <= 3}
-              style={{
-                background: leaderboardTableBodyBackgroundColorsByRank[data.rankNo.toString()] ?? 'transparent',
-              }}
-            >
-              <LeaderboardTableBodyItem
-                align="center"
-                style={{ width: (rankWidth === Infinity ? 33 : rankWidth) + 'px', maxHeight: '24px' }}
-                isThisRankingEligible={isThisRankingEligible}
-              >
-                {data.rankNo === 1 ? (
-                  <MedalImg src={Gold} />
-                ) : data.rankNo === 2 ? (
-                  <MedalImg src={Silver} />
-                ) : data.rankNo === 3 ? (
-                  <MedalImg src={Bronze} />
-                ) : isThisRankingEligible ? (
-                  data.rankNo
-                ) : (
-                  <InfoHelperWrapper>
-                    <InfoHelper size={14} text={t`Not enough trading volume`} placement="top" style={{ margin: 0 }} />
-                  </InfoHelperWrapper>
-                )}
-              </LeaderboardTableBodyItem>
-              <LeaderboardTableBodyItem isThisRankingEligible={isThisRankingEligible}>
-                {getShortenAddress(data.userAddress, above1200)}
-              </LeaderboardTableBodyItem>
-              <LeaderboardTableBodyItem align="right" isThisRankingEligible={isThisRankingEligible}>
-                {formatNumberWithPrecisionRange(Number(data.totalPoint), 0, 2)}
-              </LeaderboardTableBodyItem>
-              {showRewards && (
-                <LeaderboardTableBodyItem align="right" isThisRankingEligible={isThisRankingEligible}>
-                  {formatNumberWithPrecisionRange(data.rewardAmount, 0, 2)} {data.tokenSymbol}
-                </LeaderboardTableBodyItem>
-              )}
-            </LeaderboardTableBody>
-          )
-        })}
+        {type === 'leaderboard' ? leaderboardTableBody : luckyWinnersTableBody}
       </LeaderboardTable>
       <Pagination
         onPageChange={pageNumber => setCurrentPage(pageNumber - 1)}
-        totalCount={
-          selectedCampaignLeaderboard ? (searchValue ? 1 : selectedCampaignLeaderboard.numberOfParticipants) : 0
-        }
+        totalCount={totalItems}
         currentPage={currentPage + 1}
         pageSize={CAMPAIGN_LEADERBOARD_ITEM_PER_PAGE}
         style={{ padding: '0' }}
@@ -198,7 +252,7 @@ const CountdownContainer = styled.div`
 
 const LeaderboardTable = styled.div``
 
-const LeaderboardTableHeader = styled.div<{ showRewards: boolean }>`
+const LeaderboardTableHeader = styled.div<{ noColumns: 3 | 4 }>`
   padding: 19px 20px;
   display: grid;
   align-items: center;
@@ -206,8 +260,8 @@ const LeaderboardTableHeader = styled.div<{ showRewards: boolean }>`
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
 
-  ${({ showRewards }) =>
-    showRewards
+  ${({ noColumns }) =>
+    noColumns === 4
       ? css`
           grid-template-columns: 7.5fr 52.6fr 19.9fr 19.9fr;
         `
@@ -215,9 +269,9 @@ const LeaderboardTableHeader = styled.div<{ showRewards: boolean }>`
           grid-template-columns: 7.5fr 52.6fr 39.8fr;
         `}
 
-  ${({ theme, showRewards }) => theme.mediaWidth.upToMedium`
+  ${({ theme, noColumns }) => theme.mediaWidth.upToMedium`
     ${
-      showRewards
+      noColumns === 4
         ? css`
             grid-template-columns: 1fr 2fr 2fr 2fr;
           `

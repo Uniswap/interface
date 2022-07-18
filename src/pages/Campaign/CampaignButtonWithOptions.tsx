@@ -38,7 +38,7 @@ export default function CampaignButtonWithOptions({
   const { mixpanelHandler } = useMixpanel()
 
   const chainIds: ChainId[] = campaign
-    ? campaign[type === 'enter_now' ? 'chainIds' : 'rewardChainIds'].split(',').map(item => +item)
+    ? campaign[type === 'enter_now' ? 'chainIds' : 'rewardChainIds'].split(',').map(Number)
     : []
 
   const { account, library } = useActiveWeb3React()
@@ -88,8 +88,6 @@ export default function CampaignButtonWithOptions({
     if (response.data.code === 200000) {
       const rewardContractAddress = response.data.data.ContractAddress
       const encodedData = response.data.data.EncodedData
-      console.log(`rewardContractAddress`, rewardContractAddress)
-      console.log(`encodedData`, encodedData)
       try {
         await sendTransaction(rewardContractAddress, encodedData, BigNumber.from(0), transactionResponse => {
           return onClaimRewardSuccess(transactionResponse, selectedCampaign.name, selectedCampaignLeaderboard)

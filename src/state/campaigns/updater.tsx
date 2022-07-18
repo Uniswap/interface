@@ -8,13 +8,17 @@ import {
   CampaignLeaderboard,
   CampaignLeaderboardRankings,
   CampaignLeaderboardRewards,
+  CampaignLuckyWinner,
+  CampaignState,
   RewardDistribution,
   setCampaignData,
   setLoadingCampaignData,
   setLoadingCampaignDataError,
   setLoadingSelectedCampaignLeaderboard,
+  setLoadingSelectedCampaignLuckyWinners,
   setSelectedCampaign,
   setSelectedCampaignLeaderboard,
+  setSelectedCampaignLuckyWinners,
 } from 'state/campaigns/actions'
 import { AppState } from 'state/index'
 import { useActiveWeb3React } from 'hooks'
@@ -165,9 +169,10 @@ export default function CampaignsUpdater(): null {
     dispatch(setLoadingCampaignDataError(loadingCampaignDataError))
   }, [dispatch, loadingCampaignDataError])
 
+  const selectedCampaign = useSelector((state: AppState) => state.campaigns.selectedCampaign)
+
   /**********************CAMPAIGN LEADERBOARD**********************/
 
-  const selectedCampaign = useSelector((state: AppState) => state.campaigns.selectedCampaign)
   const selectedCampaignLeaderboardPageNumber = useSelector(
     (state: AppState) => state.campaigns.selectedCampaignLeaderboardPageNumber,
   )
@@ -254,6 +259,58 @@ export default function CampaignsUpdater(): null {
   }, [dispatch, isLoadingLeaderboard])
 
   /**********************CAMPAIGN LUCKY WINNERS**********************/
+
+  const selectedCampaignLuckyWinnersPageNumber = useSelector(
+    (state: AppState) => state.campaigns.selectedCampaignLeaderboardPageNumber,
+  )
+  const selectedCampaignLuckyWinnersLookupAddress = useSelector(
+    (state: AppState) => state.campaigns.selectedCampaignLuckyWinnersLookupAddress,
+  )
+  const { data: luckyWinners, isValidating: isLoadingLuckyWinners } = useSWRImmutable(
+    selectedCampaign
+      ? [
+          SWR_KEYS.getLuckyWinners(selectedCampaign.id),
+          selectedCampaignLuckyWinnersPageNumber,
+          selectedCampaignLuckyWinnersLookupAddress,
+        ]
+      : null,
+    async () => {
+      if (selectedCampaign === undefined || selectedCampaign.campaignState === CampaignState.CampaignStateReady)
+        return []
+
+      try {
+        const response = await axios({
+          method: 'GET',
+          url: SWR_KEYS.getLuckyWinners(selectedCampaign.id),
+          params: {
+            pageSize: CAMPAIGN_LEADERBOARD_ITEM_PER_PAGE,
+            pageNumber: selectedCampaignLuckyWinnersPageNumber,
+            lookupAddress: selectedCampaignLuckyWinnersLookupAddress.toLowerCase(),
+          },
+        })
+        const data = response.data.data
+        const luckyWinners: CampaignLuckyWinner[] = data.map(
+          (item: any): CampaignLuckyWinner => ({
+            userAddress: item.userAddress,
+            rewardAmount: item.rewardAmount,
+            tokenSymbol: item.tokenSymbol,
+          }),
+        )
+        return luckyWinners
+      } catch (err) {
+        console.error(err)
+        return []
+      }
+    },
+  )
+
+  useEffect(() => {
+    dispatch(setSelectedCampaignLuckyWinners({ luckyWinners: luckyWinners ?? [] }))
+  }, [dispatch, luckyWinners])
+
+  useEffect(() => {
+    dispatch(setLoadingSelectedCampaignLuckyWinners(isLoadingLuckyWinners))
+  }, [dispatch, isLoadingLuckyWinners])
 
   return null
 }

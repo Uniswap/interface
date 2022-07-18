@@ -20,7 +20,7 @@ import ModalSelectCampaign from './ModalSelectCampaign'
 import CampaignListAndSearch from 'pages/Campaign/CampaignListAndSearch'
 import { ApplicationModal } from 'state/application/actions'
 import ShareModal from 'components/ShareModal'
-import { CampaignData, setSelectedCampaign } from 'state/campaigns/actions'
+import { CampaignData, CampaignState, setCampaignData, setSelectedCampaign } from 'state/campaigns/actions'
 import { useSelector } from 'react-redux'
 import { AppState } from 'state'
 import { getFormattedTimeFromSecond } from 'utils/formatTime'
@@ -219,9 +219,35 @@ export default function Campaign() {
   useInterval(
     () => {
       if (selectedCampaign && selectedCampaign.status === 'Upcoming' && selectedCampaign.startTime < now + 1000) {
+        dispatch(
+          setCampaignData({
+            campaigns: campaigns.map(campaign => {
+              if (campaign.id === selectedCampaign.id) {
+                return {
+                  ...campaign,
+                  status: 'Ongoing',
+                }
+              }
+              return campaign
+            }),
+          }),
+        )
         dispatch(setSelectedCampaign({ campaign: { ...selectedCampaign, status: 'Ongoing' } }))
       }
       if (selectedCampaign && selectedCampaign.status === 'Ongoing' && selectedCampaign.endTime < now + 1000) {
+        dispatch(
+          setCampaignData({
+            campaigns: campaigns.map(campaign => {
+              if (campaign.id === selectedCampaign.id) {
+                return {
+                  ...campaign,
+                  status: 'Ended',
+                }
+              }
+              return campaign
+            }),
+          }),
+        )
         dispatch(setSelectedCampaign({ campaign: { ...selectedCampaign, status: 'Ended' } }))
       }
       setCampaignsRefreshIn(prev => {
@@ -231,7 +257,7 @@ export default function Campaign() {
         return prev - 1
       })
     },
-    1000,
+    selectedCampaign && selectedCampaign.campaignState === CampaignState.CampaignStateReady ? 1000 : null,
     true,
   )
 
@@ -249,6 +275,7 @@ export default function Campaign() {
         selectedCampaignLeaderboardLookupAddress,
         account,
       ])
+      mutate(SWR_KEYS.getListCampaign)
     }
   }, [
     mutate,
@@ -429,16 +456,21 @@ export default function Campaign() {
               <CampaignDetailTab active={activeTab === 'leaderboard'} onClick={() => setActiveTab('leaderboard')}>
                 <Trans>Leaderboard</Trans>
               </CampaignDetailTab>
-              {/*<CampaignDetailTab active={activeTab === 'lucky_winners'} onClick={() => setActiveTab('lucky_winners')}>*/}
-              {/*  <Trans>Lucky Winners</Trans>*/}
-              {/*</CampaignDetailTab>*/}
+              {/* TODO nguyenhuudungz: Check có leaderboard mới show. */}
+              {selectedCampaign && selectedCampaign.campaignState !== CampaignState.CampaignStateReady && (
+                <CampaignDetailTab active={activeTab === 'lucky_winners'} onClick={() => setActiveTab('lucky_winners')}>
+                  <Trans>Lucky Winners</Trans>
+                </CampaignDetailTab>
+              )}
             </CampaignDetailTabRow>
 
             <CampaignDetailContent>
               {activeTab === 'how_to_win' && <TabHowToWinContent />}
               {activeTab === 'rewards' && <TabRewardsContent />}
-              {activeTab === 'leaderboard' && <LeaderboardLayout refreshIn={campaignsRefreshIn} />}
-              {activeTab === 'lucky_winners' && <LeaderboardLayout refreshIn={campaignsRefreshIn} />}
+              {activeTab === 'leaderboard' && <LeaderboardLayout type="leaderboard" refreshIn={campaignsRefreshIn} />}
+              {activeTab === 'lucky_winners' && (
+                <LeaderboardLayout type="lucky_winner" refreshIn={campaignsRefreshIn} />
+              )}
             </CampaignDetailContent>
           </CampaignDetail>
         </CampaignContainer>

@@ -15,6 +15,7 @@ import { ChainId } from '@kyberswap/ks-sdk-core'
 import { BigNumber } from '@ethersproject/bignumber'
 import { CAMPAIGN_NATIVE_TOKEN_SYMBOL } from 'constants/index'
 import BigNumberJS from 'bignumber.js'
+import { formatNumberWithPrecisionRange } from 'utils'
 
 export default function CampaignListAndSearch({
   onSelectCampaign,
@@ -52,10 +53,9 @@ export default function CampaignListAndSearch({
             const valueBn = new BigNumberJS(value.amount ?? 0)
             return acc.plus(valueBn)
           }, new BigNumberJS(0))
-          // TODO nguyenhuudungz: Wait for backend refactoring.
           const totalRewardAmount = totalRewardAmountInWei.div(
             BigNumber.from(10)
-              .pow(18)
+              .pow(18) // TODO nguyenhuudungz: Wait for backend refactoring.
               .toString(),
           )
           return (
@@ -87,7 +87,7 @@ export default function CampaignListAndSearch({
                 </Flex>
                 {totalRewardAmount.gt(0) && (
                   <Text fontSize="14px">
-                    {totalRewardAmount.toString()}{' '}
+                    {formatNumberWithPrecisionRange(totalRewardAmount.toNumber(), 0, 2)}{' '}
                     {campaign.rewardDistribution[0].tokenSymbol === CAMPAIGN_NATIVE_TOKEN_SYMBOL
                       ? NETWORKS_INFO[(campaign.rewardChainIds as unknown) as ChainId].nativeToken.symbol
                       : campaign.rewardDistribution[0].tokenSymbol}

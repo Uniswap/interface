@@ -966,6 +966,7 @@ const CAMPAIGN_BASE_URL = `${process.env.REACT_APP_CAMPAIGN_BASE_URL}/api/v1/cam
 export const SWR_KEYS = {
   getListCampaign: CAMPAIGN_BASE_URL,
   getLeaderboard: (id: number) => CAMPAIGN_BASE_URL + '/' + id + '/leaderboard',
+  getLuckyWinners: (id: number) => CAMPAIGN_BASE_URL + '/' + id + '/lucky-winners',
   getCampaignTransactions: (campaignId: number, limit: number, offset: number, account: string) =>
     `${CAMPAIGN_BASE_URL}/${campaignId}/proofs?limit=${limit}&offset=${offset}&userAddress=${account}`,
 }
