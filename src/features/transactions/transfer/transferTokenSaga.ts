@@ -4,7 +4,6 @@ import ERC20_ABI from 'src/abis/erc20.json'
 import ERC721_ABI from 'src/abis/erc721.json'
 import { Erc1155, Erc20, Erc721 } from 'src/abis/types'
 import { getContractManager, getProvider } from 'src/app/walletContext'
-import { NATIVE_ADDRESS } from 'src/constants/addresses'
 import { AssetType } from 'src/entities/assets'
 import { ContractManager } from 'src/features/contracts/ContractManager'
 import { sendTransaction } from 'src/features/transactions/sendTransaction'
@@ -18,6 +17,7 @@ import {
   TransactionOptions,
   TransactionType,
 } from 'src/features/transactions/types'
+import { isNativeCurrencyAddress } from 'src/utils/currencyId'
 import { logger } from 'src/utils/logger'
 import { createMonitoredSaga } from 'src/utils/saga'
 import { call } from 'typed-redux-saga'
@@ -58,7 +58,7 @@ export function* createTransactionRequest(params: TransferTokenParams) {
       transactionRequest = yield* call(prepareNFTTransfer, params, provider, contractManager)
       break
     case AssetType.Currency:
-      if (tokenAddress === NATIVE_ADDRESS) {
+      if (isNativeCurrencyAddress(tokenAddress)) {
         transactionRequest = yield* call(prepareNativeTransfer, params, provider)
       } else {
         transactionRequest = yield* call(prepareTokenTransfer, params, provider, contractManager)
@@ -97,10 +97,7 @@ export function* createTypeInfo(params: TransferTokenParams) {
   return typeInfo
 }
 
-export async function prepareNativeTransfer(
-  params: TransferCurrencyParams,
-  provider: providers.Provider
-) {
+async function prepareNativeTransfer(params: TransferCurrencyParams, provider: providers.Provider) {
   const { account, toAddress, amountInWei } = params
   const currentBalance = await provider.getBalance(account.address)
   validateTransferAmount(amountInWei, currentBalance)
@@ -112,7 +109,7 @@ export async function prepareNativeTransfer(
   return transactionRequest
 }
 
-export async function prepareTokenTransfer(
+async function prepareTokenTransfer(
   params: TransferCurrencyParams,
   provider: providers.Provider,
   contractManager: ContractManager
@@ -134,7 +131,7 @@ export async function prepareTokenTransfer(
   return transactionRequest
 }
 
-export async function prepareNFTTransfer(
+async function prepareNFTTransfer(
   params: TransferNFTParams,
   provider: providers.Provider,
   contractManager: ContractManager

@@ -15,15 +15,15 @@ import { formatUSDPrice } from 'src/utils/format'
 
 export function TransferDetails({
   chainId,
-  gasSpendEstimate,
+  gasFee,
 }: {
   chainId: ChainId | undefined
-  gasSpendEstimate: string | undefined
+  gasFee: string | undefined
 }) {
   const { t } = useTranslation()
   const activeAddress = useActiveAccountAddressWithThrow()
-  const price = useUSDGasPrice(chainId, gasSpendEstimate)
 
+  const price = useUSDGasPrice(chainId, gasFee)
   const totalNetworkFee = price ? formatUSDPrice(price.toString()) : undefined
 
   return (

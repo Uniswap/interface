@@ -20,11 +20,7 @@ import {
   transferTokenActions,
   transferTokenSagaName,
 } from 'src/features/transactions/transfer/transferTokenSaga'
-import {
-  TransferCurrencyParams,
-  TransferNFTParams,
-  TransferTokenParams,
-} from 'src/features/transactions/transfer/types'
+import { TransferTokenParams } from 'src/features/transactions/transfer/types'
 import { getTransferWarnings } from 'src/features/transactions/transfer/validate'
 import { TransactionType } from 'src/features/transactions/types'
 import { useActiveAccount, useActiveAccountWithThrow } from 'src/features/wallet/hooks'
@@ -220,6 +216,7 @@ export function useUpdateTransferGasEstimate(
 
     let params: TransferTokenParams
     if (isNFT) {
+      if (!tokenId) return // already checked this but ts is dumb
       params = {
         account,
         chainId,
@@ -227,7 +224,7 @@ export function useUpdateTransferGasEstimate(
         tokenAddress,
         type: assetType,
         tokenId,
-      } as TransferNFTParams
+      }
     } else {
       params = {
         account,
@@ -236,7 +233,7 @@ export function useUpdateTransferGasEstimate(
         tokenAddress,
         type: AssetType.Currency,
         amountInWei: amount || '1',
-      } as TransferCurrencyParams
+      }
     }
 
     dispatch(

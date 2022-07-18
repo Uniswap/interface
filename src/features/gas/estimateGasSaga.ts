@@ -1,7 +1,7 @@
 import { MaxUint256 } from '@ethersproject/constants'
 import { AnyAction, createAction } from '@reduxjs/toolkit'
 import { SwapRouter } from '@uniswap/router-sdk'
-import { BigNumber, FixedNumber, providers } from 'ethers'
+import { BigNumber, providers } from 'ethers'
 import { Dispatch } from 'react'
 import ERC20_ABI from 'src/abis/erc20.json'
 import { Erc20 } from 'src/abis/types'
@@ -9,9 +9,8 @@ import { appSelect } from 'src/app/hooks'
 import { getContractManager, getProvider } from 'src/app/walletContext'
 import { SWAP_ROUTER_ADDRESSES } from 'src/constants/addresses'
 import { ChainId } from 'src/constants/chains'
-import { GAS_INFLATION_FACTOR } from 'src/constants/gas'
 import { computeGasFee } from 'src/features/gas/computeGasFee'
-import { FeeType } from 'src/features/gas/types'
+import { getGasAfterInflation, getGasPrice } from 'src/features/gas/utils'
 import { PermitOptions, signPermitMessage } from 'src/features/transactions/approve/permitSaga'
 import { PERMITTABLE_TOKENS } from 'src/features/transactions/approve/permittableTokens'
 import { DEFAULT_SLIPPAGE_TOLERANCE_PERCENT } from 'src/features/transactions/swap/hooks'
@@ -27,7 +26,7 @@ import { TransactionType } from 'src/features/transactions/types'
 import { selectActiveAccountAddress } from 'src/features/wallet/selectors'
 import { currencyAddress, isNativeCurrencyAddress } from 'src/utils/currencyId'
 import { logger } from 'src/utils/logger'
-import { fixedNumberToInt, isZero } from 'src/utils/number'
+import { isZero } from 'src/utils/number'
 import { call, takeEvery } from 'typed-redux-saga'
 
 export type GasEstimateParams = SwapGasEstimateParams | TransferGasEstimateParams
@@ -140,6 +139,7 @@ export function* estimateGas({ payload }: ReturnType<typeof estimateGasAction>) 
             gasEstimates: {
               [TransactionType.Send]: transferData.gasEstimates[TransactionType.Send],
             },
+            gasPrice: transferData.gasPrice,
           })
         )
         break
@@ -201,11 +201,7 @@ function* estimateApproveGasLimit(params: EstiamteApproveGasInfo) {
     allowance,
     exactApproveRequired,
     gasEstimates: {
-      [TransactionType.Approve]: fixedNumberToInt(
-        FixedNumber.from(approveGasEstimate).mulUnsafe(
-          FixedNumber.from(GAS_INFLATION_FACTOR.toString())
-        )
-      ),
+      [TransactionType.Approve]: getGasAfterInflation(approveGasEstimate),
     },
   }
 }
@@ -225,10 +221,13 @@ function* estimateTransferGasLimit(provider: providers.Provider, params: Transfe
     provider as providers.JsonRpcProvider
   )
 
+  const gasPrice = getGasPrice(transferGasInfo)
+
   return {
     gasEstimates: {
-      [TransactionType.Send]: transferGasInfo.fee.urgent,
+      [TransactionType.Send]: getGasAfterInflation(transferGasInfo.gasLimit),
     },
+    gasPrice,
   }
 }
 
@@ -264,22 +263,13 @@ function* estimateSwapGasInfo(params: EstimateSwapGasInfo) {
     provider as providers.JsonRpcProvider,
     trade.quote.gasUseEstimate
   )
-  const gasPrice =
-    swapGasInfo.type === FeeType.Eip1559
-      ? BigNumber.from(swapGasInfo.feeDetails.maxBaseFeePerGas)
-          .add(swapGasInfo.feeDetails.maxPriorityFeePerGas.urgent)
-          .toString()
-      : swapGasInfo.gasPrice
+  const gasPrice = getGasPrice(swapGasInfo)
 
   const methodParameters = calldata && value ? { calldata, value } : undefined
 
   return {
     gasEstimates: {
-      [TransactionType.Swap]: fixedNumberToInt(
-        FixedNumber.from(swapGasInfo.gasLimit).mulUnsafe(
-          FixedNumber.from(GAS_INFLATION_FACTOR.toString())
-        )
-      ),
+      [TransactionType.Swap]: getGasAfterInflation(swapGasInfo.gasLimit),
     },
     gasPrice,
     methodParameters,

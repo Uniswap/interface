@@ -11,6 +11,7 @@ export enum CurrencyField {
   OUTPUT,
 }
 
+// the string is gasLimit denoted in wei
 export type GasSpendEstimate = Partial<Record<TransactionType, string>>
 
 export enum WarningModalType {

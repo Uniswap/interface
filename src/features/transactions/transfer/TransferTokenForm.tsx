@@ -15,6 +15,7 @@ import { AssetType } from 'src/entities/assets'
 import { NFTAsset } from 'src/features/nfts/types'
 import { ElementName } from 'src/features/telemetry/constants'
 import { useSwapActionHandlers, useUSDTokenUpdater } from 'src/features/transactions/swap/hooks'
+import { SwapWarningAction } from 'src/features/transactions/swap/validate'
 import {
   CurrencyField,
   TransactionState,
@@ -66,11 +67,16 @@ export function TransferTokenForm({ state, dispatch, onNext }: TransferTokenProp
     currencyIn ?? undefined
   )
 
+  const actionButtonDisabled = warnings.some(
+    (warning) => warning.action === SwapWarningAction.DisableSwapReview
+  )
+
+  // if action button is diabled, make amount undefined so that gas estimate doesn't run
   useUpdateTransferGasEstimate(
     dispatch,
     isNFT ? nftIn?.chainId : currencyIn?.chainId,
     isNFT ? nftIn?.asset_contract.address : currencyIn ? currencyAddress(currencyIn) : undefined,
-    currencyAmounts[CurrencyField.INPUT]?.quotient.toString(),
+    !actionButtonDisabled ? currencyAmounts[CurrencyField.INPUT]?.quotient.toString() : undefined,
     recipient,
     nftIn?.token_id,
     currencyTypes[CurrencyField.INPUT]

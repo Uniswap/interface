@@ -1,5 +1,6 @@
 import { AnyAction } from '@reduxjs/toolkit'
 import { Currency } from '@uniswap/sdk-core'
+import { FixedNumber } from 'ethers'
 import { notificationAsync } from 'expo-haptics'
 import React, { Dispatch } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -27,8 +28,10 @@ import {
   useUpdateTransferGasEstimate,
 } from 'src/features/transactions/transfer/hooks'
 import { TransferDetails } from 'src/features/transactions/transfer/TransferDetails'
+import { TransactionType } from 'src/features/transactions/types'
 import { dimensions } from 'src/styles/sizing'
 import { currencyAddress } from 'src/utils/currencyId'
+import { fixedNumberToInt } from 'src/utils/number'
 
 interface TransferFormProps {
   state: TransactionState
@@ -67,7 +70,15 @@ export function TransferReview({ state, dispatch, onNext, onPrev }: TransferForm
     nftIn?.token_id,
     currencyTypes[CurrencyField.INPUT]
   )
-  const { gasSpendEstimate } = state
+  const { gasSpendEstimate, gasPrice } = state
+  const gasFee =
+    gasSpendEstimate && gasPrice
+      ? fixedNumberToInt(
+          FixedNumber.from(gasSpendEstimate[TransactionType.Send]).mulUnsafe(
+            FixedNumber.from(gasPrice)
+          )
+        )
+      : undefined
 
   const transferERC20Callback = useTransferERC20Callback(
     currencyIn?.chainId,
@@ -145,10 +156,7 @@ export function TransferReview({ state, dispatch, onNext, onPrev }: TransferForm
         <AddressDisplay address={recipient} size={24} variant="headlineMedium" />
       </Flex>
       <Flex flexGrow={1} gap="sm" justifyContent="flex-end" mb="xl" mt="xs" px="sm">
-        <TransferDetails
-          chainId={currencyIn?.chainId || nftIn?.chainId}
-          gasSpendEstimate={gasSpendEstimate?.send}
-        />
+        <TransferDetails chainId={currencyIn?.chainId || nftIn?.chainId} gasFee={gasFee} />
         <Flex row gap="xs">
           <Button
             alignItems="center"
