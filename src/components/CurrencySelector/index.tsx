@@ -67,7 +67,7 @@ export function CurrencySelector({
               <Text color="accentTextLightPrimary" lineHeight={20} variant="mediumLabel">
                 {t('Choose token')}
               </Text>
-              <Chevron color="accentTextLightPrimary" direction="e" />
+              <Chevron color={theme.colors.textPrimary} direction="e" />
             </Flex>
           )}
         </CenterBox>
