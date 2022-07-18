@@ -1,13 +1,11 @@
 import { Trans } from '@lingui/macro'
 import useScrollPosition from '@react-hook/window-scroll'
 import { useWeb3React } from '@web3-react/core'
-import { PageName } from 'components/AmplitudeAnalytics/constants'
-import { Trace } from 'components/AmplitudeAnalytics/Trace'
 import { getChainInfoOrDefault } from 'constants/chainInfo'
 import { SupportedChainId } from 'constants/chains'
 import useTheme from 'hooks/useTheme'
 import { darken } from 'polished'
-import { NavLink, useLocation } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 import { Text } from 'rebass'
 import { useShowClaimPopup, useToggleSelfClaimModal } from 'state/application/hooks'
 import { useUserHasAvailableClaim } from 'state/claim/hooks'
@@ -247,23 +245,8 @@ const StyledExternalLink = styled(ExternalLink).attrs({
   }
 `
 
-function getCurrentPageFromLocation(locationPathname: string): PageName | undefined {
-  switch (locationPathname) {
-    case '/swap':
-      return PageName.SWAP_PAGE
-    case '/vote':
-      return PageName.VOTE_PAGE
-    case '/pool':
-      return PageName.POOL_PAGE
-    default:
-      return undefined
-  }
-}
-
 export default function Header() {
   const { account, chainId } = useWeb3React()
-  const location = useLocation()
-  const currentPage = getCurrentPageFromLocation(location.pathname)
 
   const userEthBalance = useNativeCurrencyBalances(account ? [account] : [])?.[account ?? '']
   const [darkMode] = useDarkModeManager()
@@ -351,9 +334,7 @@ export default function Header() {
                 </Trans>
               </BalanceText>
             ) : null}
-            <Trace page={currentPage}>
-              <Web3Status />
-            </Trace>
+            <Web3Status />
           </AccountElement>
         </HeaderElement>
         <HeaderElement>
