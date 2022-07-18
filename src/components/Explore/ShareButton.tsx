@@ -99,7 +99,9 @@ export default function ShareButton({ tokenName, tokenSymbol }: { tokenName: Rea
   const shareTweet = () => {
     toggleShare()
     window.open(
-      `https://twitter.com/intent/tweet?text=Check%20out%20${tokenName}%20(${tokenSymbol})%20https://app.uniswap.org/%23/tokens/${tokenSymbol}%20via%20@uniswap`
+      `https://twitter.com/intent/tweet?text=Check%20out%20${tokenName}%20(${tokenSymbol})%20https://app.uniswap.org/%23/tokens/${tokenSymbol}%20via%20@uniswap`,
+      'newwindow',
+      `width=558, height=480`
     )
   }
   const copyLink = () => {
