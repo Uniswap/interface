@@ -29,6 +29,7 @@ const FiltersContainer = styled.div`
   margin-left: auto;
   margin-right: auto;
 `
+
 const Explore = () => {
   return (
     <ExploreContainer>
