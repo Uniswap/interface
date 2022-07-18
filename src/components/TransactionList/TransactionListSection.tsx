@@ -32,7 +32,7 @@ export function TransactionListSection({
   return (
     <BaseCard.Container>
       <BaseCard.Header
-        title={t('Transactions ({{totalCount}})', { totalCount: transactions.length })}
+        title={t('Transactions')}
         onPress={() => {
           navigation.navigate(Screens.UserTransactions, { owner })
         }}
