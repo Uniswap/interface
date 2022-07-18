@@ -4,8 +4,10 @@ import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
+import { ElementName, Event, EventName } from 'components/AmplitudeAnalytics/constants'
 import { PageName, SectionName } from 'components/AmplitudeAnalytics/constants'
 import { Trace } from 'components/AmplitudeAnalytics/Trace'
+import { TraceEvent } from 'components/AmplitudeAnalytics/TraceEvent'
 import { sendEvent } from 'components/analytics'
 import { NetworkAlert } from 'components/NetworkAlert/NetworkAlert'
 import SwapDetailsDropdown from 'components/swap/SwapDetailsDropdown'
@@ -15,9 +17,12 @@ import { useSwapCallback } from 'hooks/useSwapCallback'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import JSBI from 'jsbi'
 import { Context, useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import { ReactNode } from 'react'
 import { ArrowDown, CheckCircle, HelpCircle } from 'react-feather'
 import { RouteComponentProps } from 'react-router-dom'
 import { Text } from 'rebass'
+import { useToggleWalletModal } from 'state/application/hooks'
+import { InterfaceTrade } from 'state/routing/types'
 import { TradeState } from 'state/routing/types'
 import styled, { DefaultTheme, ThemeContext } from 'styled-components/macro'
 
@@ -44,7 +49,6 @@ import useIsArgentWallet from '../../hooks/useIsArgentWallet'
 import { useIsSwapUnsupported } from '../../hooks/useIsSwapUnsupported'
 import { useStablecoinValue } from '../../hooks/useStablecoinPrice'
 import useWrapCallback, { WrapErrorText, WrapType } from '../../hooks/useWrapCallback'
-import { useToggleWalletModal } from '../../state/application/hooks'
 import { Field } from '../../state/swap/actions'
 import {
   useDefaultsFromURLSearch,
@@ -64,6 +68,14 @@ const AlertWrapper = styled.div`
   max-width: 460px;
   width: 100%;
 `
+
+export function getIsValidSwapQuote(
+  trade: InterfaceTrade<Currency, Currency, TradeType> | undefined,
+  tradeState: TradeState,
+  swapInputError?: ReactNode
+): boolean {
+  return !!swapInputError && !!trade && (tradeState === TradeState.VALID || tradeState === TradeState.SYNCING)
+}
 
 export default function Swap({ history }: RouteComponentProps) {
   const { account, chainId } = useWeb3React()
@@ -510,9 +522,16 @@ export default function Swap({ history }: RouteComponentProps) {
                     </ThemedText.Main>
                   </ButtonPrimary>
                 ) : !account ? (
-                  <ButtonLight onClick={toggleWalletModal}>
-                    <Trans>Connect Wallet</Trans>
-                  </ButtonLight>
+                  <TraceEvent
+                    events={[Event.onClick]}
+                    name={EventName.CONNECT_WALLET_BUTTON_CLICKED}
+                    properties={{ received_swap_quote: getIsValidSwapQuote(trade, tradeState, swapInputError) }}
+                    element={ElementName.CONNECT_WALLET_BUTTON}
+                  >
+                    <ButtonLight onClick={toggleWalletModal}>
+                      <Trans>Connect Wallet</Trans>
+                    </ButtonLight>
+                  </TraceEvent>
                 ) : showWrap ? (
                   <ButtonPrimary disabled={Boolean(wrapInputError)} onClick={onWrap}>
                     {wrapInputError ? (
