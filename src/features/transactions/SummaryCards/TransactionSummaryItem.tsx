@@ -1,7 +1,9 @@
 import dayjs from 'dayjs'
-import { default as React, memo, useState } from 'react'
+import { default as React, memo, useCallback, useState } from 'react'
+import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { i18n } from 'src/app/i18n'
 import { Button } from 'src/components/buttons/Button'
+import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { CurrencyLogoOrPlaceholder } from 'src/components/CurrencyLogo/CurrencyLogoOrPlaceholder'
 import { LogoWithTxStatus } from 'src/components/CurrencyLogo/LogoWithTxStatus'
 import { Box } from 'src/components/layout/Box'
@@ -10,8 +12,11 @@ import { Text } from 'src/components/Text'
 import { ChainId, CHAIN_INFO } from 'src/constants/chains'
 import { AssetType } from 'src/entities/assets'
 import { useSpotPrices } from 'src/features/dataApi/prices'
+import { openModal } from 'src/features/modals/modalSlice'
 import { createBalanceUpdate, getCurrencySymbol } from 'src/features/notifications/utils'
+import { ModalName } from 'src/features/telemetry/constants'
 import { useCurrency } from 'src/features/tokens/useCurrency'
+import { useCreateSwapFormState } from 'src/features/transactions/hooks'
 import TransactionActionsModal from 'src/features/transactions/SummaryCards/TransactionActionsModal'
 import {
   TransactionDetails,
@@ -61,8 +66,17 @@ function TransactionSummaryItem({
     status,
     otherTokenAddress,
     nftMetaData,
+    fullDetails,
   } = transactionSummaryInfo
+  const theme = useAppTheme()
+
   const [showActionsModal, setShowActionsModal] = useState(false)
+  const dispatch = useAppDispatch()
+  const swapFormState = useCreateSwapFormState(
+    fullDetails?.from,
+    fullDetails?.chainId,
+    fullDetails?.hash
+  )
 
   const currencyId = buildCurrencyId(chainId, tokenAddress ?? '')
   const otherCurrencyId = buildCurrencyId(chainId, otherTokenAddress ?? '')
@@ -73,6 +87,10 @@ function TransactionSummaryItem({
   const failed = status === TransactionStatus.Failed
   const explorerUrl = CHAIN_INFO[chainId].explorer
   const dateAdded = dayjs(msTimestampAdded).format('MMM D')
+
+  const onRetrySwap = useCallback(() => {
+    dispatch(openModal({ name: ModalName.Swap, initialState: swapFormState }))
+  }, [dispatch, swapFormState])
 
   // Only need a balance update on these 3 types of transactions.
   let balanceUpdate
@@ -149,13 +167,7 @@ function TransactionSummaryItem({
           gap="xs"
           justifyContent="space-between"
           padding="md">
-          <Flex
-            row
-            shrink
-            alignItems="center"
-            flexBasis={balanceUpdate ? '75%' : '100%'}
-            gap="xs"
-            justifyContent="flex-start">
+          <Flex row shrink alignItems="center" flexGrow={1} gap="xs" justifyContent="flex-start">
             {icon && (
               <Flex centered height={TXN_HISTORY_ICON_SIZE} width={TXN_HISTORY_ICON_SIZE}>
                 {icon}
@@ -171,7 +183,7 @@ function TransactionSummaryItem({
             </Flex>
           </Flex>
           {balanceUpdate && (
-            <Flex alignItems="flex-end" flexBasis="25%" gap="xs">
+            <Flex alignItems="flex-end" gap="xs">
               <>
                 <Text adjustsFontSizeToFit numberOfLines={1} variant="body">
                   {balanceUpdate.assetIncrease}
@@ -188,12 +200,26 @@ function TransactionSummaryItem({
               </>
             </Flex>
           )}
+          {fullDetails?.typeInfo.type === TransactionType.Swap &&
+            fullDetails.status === TransactionStatus.Failed && (
+              <PrimaryButton
+                label="Retry"
+                px="none"
+                py="none"
+                style={{ borderWidth: theme.spacing.none }}
+                textColor="accentAction"
+                textVariant="subhead"
+                variant="transparent"
+                onPress={onRetrySwap}
+              />
+            )}
         </Flex>
       </Button>
       <TransactionActionsModal
         hash={hash}
         isVisible={showActionsModal}
         showCancelButton={status === TransactionStatus.Pending}
+        transactionDetails={fullDetails}
         onClose={() => {
           setShowActionsModal(false)
         }}

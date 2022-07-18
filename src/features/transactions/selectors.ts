@@ -17,8 +17,9 @@ export const makeSelectAddressTransactions = (address: Address | null) => (state
 }
 
 export const makeSelectTransaction =
-  (address: Address | null, chainId: ChainId, txHash: string) => (state: RootState) => {
-    if (!address || !state.transactions[address]) return undefined
+  (address: Address | null, chainId: ChainId | undefined, txHash: string | undefined) =>
+  (state: RootState) => {
+    if (!address || !state.transactions[address] || !chainId || !txHash) return undefined
     const transactions = state.transactions[address]?.[chainId]
     if (!transactions) return undefined
     return Object.values(transactions).find(

@@ -171,6 +171,7 @@
   "Copy transaction ID": "Copy transaction ID",
   "Get help": "Get help",
   "Cancel transaction": "Cancel transaction",
+  "Retry swap": "Retry swap",
   "Submitted on July 12, 2022": "Submitted on July 12, 2022",
   "Cancel this transaction?": "Cancel this transaction?",
   "If you cancel this transaction before it’s processed by the network, you’ll pay a new network fee instead of the original one.": "If you cancel this transaction before it’s processed by the network, you’ll pay a new network fee instead of the original one.",

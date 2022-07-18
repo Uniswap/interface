@@ -31,7 +31,6 @@ interface TransactionActionModalProps {
   onExplore: () => void
   onClose: () => void
   showCancelButton?: boolean
-  showRetryButton?: boolean
   transactionDetails?: TransactionDetails
 }
 

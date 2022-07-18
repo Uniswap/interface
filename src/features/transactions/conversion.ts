@@ -70,6 +70,7 @@ function parseLocalTransactionItem(transaction: TransactionDetails): Transaction
     amountRaw,
     assetType,
     msTimestampAdded,
+    fullDetails: transaction,
   }
 }
 

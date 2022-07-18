@@ -51,7 +51,11 @@ export function useSortedPendingTransactions(address: Address | null) {
   }, [transactions])
 }
 
-export function useSelectTransaction(address: Address | null, chainId: ChainId, txHash: string) {
+export function useSelectTransaction(
+  address: Address | null,
+  chainId: ChainId | undefined,
+  txHash: string | undefined
+) {
   return useAppSelector(
     useMemo(() => makeSelectTransaction(address, chainId, txHash), [address, chainId, txHash])
   )
@@ -63,8 +67,8 @@ export function useSelectAddressTransactions(address: Address | null) {
 
 export function useCreateSwapFormState(
   address: Address | undefined,
-  chainId: ChainId,
-  txHash: string
+  chainId: ChainId | undefined,
+  txHash: string | undefined
 ) {
   const transaction = useSelectTransaction(address ?? null, chainId, txHash)
 
@@ -80,6 +84,8 @@ export function useCreateSwapFormState(
 
   const inputCurrency = useCurrency(inputCurrencyId)
   const outputCurrency = useCurrency(outputCurrencyId)
+
+  if (!chainId || !txHash) return undefined
 
   try {
     if (!transaction) {
@@ -150,7 +156,7 @@ export function useCreateSwapFormState(
     return swapFormState
   } catch (error: any) {
     logger.info('hooks', 'useRecreateSwapFormState', error?.message)
-    return null
+    return undefined
   }
 }
 
