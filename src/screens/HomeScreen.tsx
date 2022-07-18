@@ -92,7 +92,7 @@ function ContentHeader() {
   }, [dispatch])
 
   const onPressAccountHeader = useCallback(() => {
-    navigation.dispatch(DrawerActions.toggleDrawer())
+    navigation.dispatch(DrawerActions.openDrawer())
   }, [navigation])
 
   const activeAccount = useActiveAccountWithThrow()

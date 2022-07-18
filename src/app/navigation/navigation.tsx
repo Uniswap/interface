@@ -179,6 +179,10 @@ export function DrawerNavigator() {
   const theme = useAppTheme()
   return (
     <Drawer.Navigator
+      // useLegacyImplementation seems to fix a bug with the drawer sometimes opening or
+      // closing twice, or sometimes not opening the first time you tap on it
+      // https://stackoverflow.com/questions/71703096/drawer-reopen-sometime-when-change-screen
+      useLegacyImplementation
       drawerContent={(props) => <AccountDrawer {...props} />}
       screenOptions={{
         drawerStyle: {
