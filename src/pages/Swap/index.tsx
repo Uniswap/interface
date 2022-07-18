@@ -16,7 +16,7 @@ import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import JSBI from 'jsbi'
 import { Context, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { ArrowDown, CheckCircle, HelpCircle } from 'react-feather'
-import { RouteComponentProps } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import { Text } from 'rebass'
 import { TradeState } from 'state/routing/types'
 import styled, { DefaultTheme, ThemeContext } from 'styled-components/macro'
@@ -65,7 +65,8 @@ const AlertWrapper = styled.div`
   width: 100%;
 `
 
-export default function Swap({ history }: RouteComponentProps) {
+export default function Swap() {
+  const history = useHistory()
   const { account, chainId } = useWeb3React()
   const loadedUrlParams = useDefaultsFromURLSearch()
 

@@ -7,9 +7,15 @@ import VotePage from './VotePage'
 export default function Vote() {
   return (
     <>
-      <Route exact strict path="/vote/:governorIndex/:id" component={VotePage} />
-      <Route exact strict path="/vote/create-proposal" component={CreateProposal} />
-      <Route exact strict path="/vote" component={Landing} />
+      <Route exact strict path="/vote/:governorIndex/:id">
+        <VotePage />
+      </Route>
+      <Route exact strict path="/vote/create-proposal">
+        <CreateProposal />
+      </Route>
+      <Route exact strict path="/vote">
+        <Landing />
+      </Route>
     </>
   )
 }
