@@ -24,6 +24,7 @@ import { useActiveChainIds } from 'src/features/chains/utils'
 import { useAllBalancesByChainId } from 'src/features/dataApi/balances'
 import { openModal } from 'src/features/modals/modalSlice'
 import { promptPushPermission } from 'src/features/notifications/Onesignal'
+import { PendingNotificationBadge } from 'src/features/notifications/PendingNotificationBadge'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { useTestAccount } from 'src/features/wallet/accounts/useTestAccount'
 import {
@@ -99,11 +100,14 @@ function ContentHeader() {
   return (
     <Box alignItems="center" flexDirection="row" justifyContent="space-between" px="xs" py="sm">
       <AccountHeader onPress={onPressAccountHeader} />
-      {isWalletConnectSupportedAccount(activeAccount) && (
-        <Button name={ElementName.WalletConnectScan} onPress={onPressScan}>
-          <ScanQRIcon color={theme.colors.textSecondary} height={24} width={24} />
-        </Button>
-      )}
+      <Flex row gap="xs">
+        <PendingNotificationBadge />
+        {isWalletConnectSupportedAccount(activeAccount) && (
+          <Button name={ElementName.WalletConnectScan} onPress={onPressScan}>
+            <ScanQRIcon color={theme.colors.textSecondary} height={24} width={24} />
+          </Button>
+        )}
+      </Flex>
     </Box>
   )
 }
