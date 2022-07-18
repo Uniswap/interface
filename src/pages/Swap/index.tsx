@@ -17,10 +17,12 @@ import { useSwapCallback } from 'hooks/useSwapCallback'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import JSBI from 'jsbi'
 import { Context, useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import { ReactNode } from 'react'
 import { ArrowDown, CheckCircle, HelpCircle } from 'react-feather'
 import { RouteComponentProps } from 'react-router-dom'
 import { Text } from 'rebass'
 import { useToggleWalletModal } from 'state/application/hooks'
+import { InterfaceTrade } from 'state/routing/types'
 import { TradeState } from 'state/routing/types'
 import styled, { DefaultTheme, ThemeContext } from 'styled-components/macro'
 
@@ -66,6 +68,14 @@ const AlertWrapper = styled.div`
   max-width: 460px;
   width: 100%;
 `
+
+export function getIsValidSwapQuote(
+  trade: InterfaceTrade<Currency, Currency, TradeType> | undefined,
+  tradeState: TradeState,
+  swapInputError?: ReactNode
+): boolean {
+  return !!swapInputError && !!trade && (tradeState === TradeState.VALID || tradeState === TradeState.SYNCING)
+}
 
 export default function Swap({ history }: RouteComponentProps) {
   const { account, chainId } = useWeb3React()
@@ -165,9 +175,6 @@ export default function Swap({ history }: RouteComponentProps) {
   const { onSwitchTokens, onCurrencySelection, onUserInput, onChangeRecipient } = useSwapActionHandlers()
   const isValid = !swapInputError
   const dependentField: Field = independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT
-
-  const validSwapQuote =
-    !routeNotFound && !routeIsLoading && !routeIsSyncing && isValid && !!fiatValueOutput && !!priceImpact
 
   const handleTypeInput = useCallback(
     (value: string) => {
@@ -518,7 +525,7 @@ export default function Swap({ history }: RouteComponentProps) {
                   <TraceEvent
                     events={[Event.onClick]}
                     name={EventName.CONNECT_WALLET_BUTTON_CLICKED}
-                    properties={{ received_swap_quote: validSwapQuote }}
+                    properties={{ received_swap_quote: getIsValidSwapQuote(trade, tradeState, swapInputError) }}
                     element={ElementName.CONNECT_WALLET_BUTTON}
                   >
                     <ButtonLight onClick={toggleWalletModal}>
