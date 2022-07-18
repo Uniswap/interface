@@ -6,6 +6,9 @@ import { useModalIsOpen, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import styled, { useTheme } from 'styled-components/macro'
 
+const TWITTER_WIDTH = 560
+const TWITTER_HEIGHT = 480
+
 const ShareButtonDisplay = styled.div`
   display: flex;
   cursor: pointer;
@@ -95,13 +98,15 @@ export default function ShareButton({ tokenName, tokenSymbol }: { tokenName: Rea
   const toggleShare = useToggleModal(ApplicationModal.SHARE)
   useOnClickOutside(node, open ? toggleShare : undefined)
   const [showCopied, setShowCopied] = useState(false)
+  const positionX = (window.screen.width - TWITTER_WIDTH) / 2
+  const positionY = (window.screen.height - TWITTER_HEIGHT) / 2
 
   const shareTweet = () => {
     toggleShare()
     window.open(
       `https://twitter.com/intent/tweet?text=Check%20out%20${tokenName}%20(${tokenSymbol})%20https://app.uniswap.org/%23/tokens/${tokenSymbol}%20via%20@uniswap`,
       'newwindow',
-      `width=558, height=480`
+      `left=${positionX}, top=${positionY}, width=${TWITTER_WIDTH}, height=${TWITTER_HEIGHT}`
     )
   }
   const copyLink = () => {
