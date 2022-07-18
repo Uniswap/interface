@@ -39,7 +39,8 @@ export default function EnterNowOrClaimButton() {
       <CampaignButtonWithOptions
         campaign={selectedCampaign}
         type="claim_rewards"
-        disabled={!isUserClaimedRewardsInThisCampaign}
+        // disabled={!isUserClaimedRewardsInThisCampaign}
+        disabled={true}
       />
     )
   }
