@@ -1,6 +1,6 @@
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { darken } from 'polished'
-import { ReactNode, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import { Check, Link, Share, Twitter } from 'react-feather'
 import { useModalIsOpen, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
@@ -8,6 +8,7 @@ import styled, { useTheme } from 'styled-components/macro'
 
 const TWITTER_WIDTH = 560
 const TWITTER_HEIGHT = 480
+const SHADOW = '0px 1px 6px rgba(0, 0, 0, 0.9), 0px 8px 12px rgba(13, 14, 14, 0.8)'
 
 const ShareButtonDisplay = styled.div`
   display: flex;
@@ -29,7 +30,7 @@ const ShareActions = styled.div`
   overflow: auto;
   background-color: ${({ theme }) => theme.bg0};
   border: 1px solid ${({ theme }) => theme.bg1};
-  box-shadow: 0px 1px 6px rgba(0, 0, 0, 0.9), 0px 8px 12px rgba(13, 14, 14, 0.8);
+  box-shadow: ${SHADOW};
   border-radius: 12px;
 `
 const ShareAction = styled.div`
@@ -37,7 +38,6 @@ const ShareAction = styled.div`
   align-items: center;
   padding: 12px 16px;
   gap: 8px;
-
   width: 200px;
   height: 48px;
   color: ${({ theme }) => theme.text1};
@@ -63,15 +63,9 @@ const LinkCopied = styled.div<{ show: boolean }>`
   font-size: 14px;
   gap: 8px;
   border: 1px solid rgba(153, 161, 189, 0.08);
-  box-shadow: 0px 1px 6px rgba(0, 0, 0, 0.9), 0px 8px 12px rgba(13, 14, 14, 0.8);
+  box-shadow: ${SHADOW};
   border-radius: 20px;
-
-  -moz-animation: cssAnimation 0s ease-in 3s forwards;
-  -webkit-animation: cssAnimation 0s ease-in 3s forwards;
-  -o-animation: cssAnimation 0s ease-in 3s forwards;
   animation: cssAnimation 0s ease-in 3s forwards;
-  -webkit-animation-fill-mode: forwards;
-  animation-fill-mode: forwards;
 
   @keyframes cssAnimation {
     to {
@@ -81,17 +75,13 @@ const LinkCopied = styled.div<{ show: boolean }>`
       display: none;
     }
   }
-  @-webkit-keyframes cssAnimation {
-    to {
-      width: 0;
-      height: 0;
-      visibility: hidden;
-      display: none;
-    }
-  }
 `
+export interface tokenInfo {
+  tokenName: string
+  tokenSymbol: string
+}
 
-export default function ShareButton({ tokenName, tokenSymbol }: { tokenName: ReactNode; tokenSymbol: ReactNode }) {
+export default function ShareButton(tokenInfo: { tokenName: string; tokenSymbol: string }) {
   const theme = useTheme()
   const node = useRef<HTMLDivElement | null>(null)
   const open = useModalIsOpen(ApplicationModal.SHARE)
@@ -104,16 +94,22 @@ export default function ShareButton({ tokenName, tokenSymbol }: { tokenName: Rea
   const shareTweet = () => {
     toggleShare()
     window.open(
-      `https://twitter.com/intent/tweet?text=Check%20out%20${tokenName}%20(${tokenSymbol})%20https://app.uniswap.org/%23/tokens/${tokenSymbol}%20via%20@uniswap`,
+      `https://twitter.com/intent/tweet?text=Check%20out%20${tokenInfo.tokenName}%20(${tokenInfo.tokenSymbol})%20https://app.uniswap.org/%23/tokens/${tokenInfo.tokenSymbol}%20via%20@uniswap`,
       'newwindow',
       `left=${positionX}, top=${positionY}, width=${TWITTER_WIDTH}, height=${TWITTER_HEIGHT}`
     )
   }
   const copyLink = () => {
-    navigator.clipboard.writeText(window.location.href)
-    setShowCopied(true)
-    toggleShare()
-    setTimeout(() => setShowCopied(false), 3000)
+    navigator.clipboard.writeText(window.location.href).then(
+      function () {
+        setShowCopied(true)
+        toggleShare()
+        setTimeout(() => setShowCopied(false), 3000)
+      },
+      function () {
+        console.log('Clipboard copy failed.')
+      }
+    )
   }
 
   return (
