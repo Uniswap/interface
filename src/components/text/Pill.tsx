@@ -1,6 +1,7 @@
 import React, { ReactNode } from 'react'
 import { Flex, FlexProps } from 'src/components/layout'
 import { Text } from 'src/components/Text'
+import { Theme } from 'src/styles/theme'
 
 type PillProps = {
   customBackgroundColor?: string
@@ -8,19 +9,21 @@ type PillProps = {
   foregroundColor?: string
   icon?: ReactNode
   label?: ReactNode
+  textVariant?: keyof Theme['textVariants']
 } & FlexProps
 
 export function Pill({
-  customBackgroundColor,
-  children,
-  customBorderColor,
   borderRadius = 'full',
-  foregroundColor,
+  children,
+  customBackgroundColor,
+  customBorderColor,
   flexDirection = 'row',
+  foregroundColor,
   icon,
   label,
   px = 'sm',
   py = 'xs',
+  textVariant = 'bodySmall',
   ...rest
 }: PillProps) {
   return (
@@ -42,7 +45,7 @@ export function Pill({
       {...rest}>
       {icon ?? null}
       {label ? (
-        <Text style={{ color: foregroundColor }} variant="bodySmall">
+        <Text style={{ color: foregroundColor }} variant={textVariant}>
           {label}
         </Text>
       ) : null}

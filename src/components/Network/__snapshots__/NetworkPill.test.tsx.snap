@@ -185,3 +185,48 @@ exports[`renders a NetworkPill without image 1`] = `
   </Text>
 </View>
 `;
+
+exports[`renders an InlineNetworkPill 1`] = `
+<View
+  style={
+    Array [
+      Object {
+        "alignItems": "center",
+        "backgroundColor": "#F4F6FE",
+        "borderColor": "transparent",
+        "borderRadius": 4,
+        "borderWidth": 1,
+        "display": "flex",
+        "flexDirection": "row",
+        "height": 20,
+        "justifyContent": "center",
+        "paddingHorizontal": 8,
+        "paddingVertical": 0,
+      },
+      Object {
+        "backgroundColor": "#EF368E1a",
+        "borderColor": "transparent",
+      },
+    ]
+  }
+>
+  <Text
+    style={
+      Array [
+        Object {
+          "color": "#070A15",
+          "display": "flex",
+          "fontFamily": "Inter-SemiBold",
+          "fontSize": 10,
+          "lineHeight": 12,
+        },
+        Object {
+          "color": "#EF368E",
+        },
+      ]
+    }
+  >
+    Rinkeby
+  </Text>
+</View>
+`;

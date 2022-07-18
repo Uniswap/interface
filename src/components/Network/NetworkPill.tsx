@@ -5,7 +5,13 @@ import { Pill } from 'src/components/text/Pill'
 import { CHAIN_INFO } from 'src/constants/chains'
 import { useNetworkColors } from 'src/utils/colors'
 
-export function NetworkPill({ chainId, showBorder = false }: NetworkLabelProps) {
+export function NetworkPill({
+  chainId,
+  showBorder,
+  showIcon = true,
+  height = 36,
+  ...rest
+}: NetworkLabelProps) {
   const info = CHAIN_INFO[chainId]
   const colors = useNetworkColors(chainId)
 
@@ -14,9 +20,24 @@ export function NetworkPill({ chainId, showBorder = false }: NetworkLabelProps) 
       customBackgroundColor={colors?.background}
       customBorderColor={showBorder ? colors.foreground : 'transparent'}
       foregroundColor={colors.foreground}
-      height={36}
-      icon={<NetworkLogo chainId={chainId} mr="xs" size={16} />}
+      height={height}
+      icon={showIcon ? <NetworkLogo chainId={chainId} mr="xs" size={16} /> : null}
       label={info.label}
+      {...rest}
+    />
+  )
+}
+
+export function InlineNetworkPill(props: NetworkLabelProps) {
+  return (
+    <NetworkPill
+      borderRadius="xs"
+      height={20}
+      px="xs"
+      py="none"
+      showIcon={false}
+      textVariant="badge"
+      {...props}
     />
   )
 }

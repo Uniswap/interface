@@ -1,10 +1,11 @@
 import { selectionAsync } from 'expo-haptics'
-import React from 'react'
+import React, { ComponentProps } from 'react'
 import { ScrollView, StyleSheet } from 'react-native'
 import { Button } from 'src/components/buttons/Button'
 import { Flex } from 'src/components/layout'
 import { NetworkBox } from 'src/components/Network/NetworkBox'
 import { NetworkPill } from 'src/components/Network/NetworkPill'
+import { Pill } from 'src/components/text/Pill'
 import { ChainId } from 'src/constants/chains'
 import { useActiveChainIds } from 'src/features/chains/utils'
 import { ElementName } from 'src/features/telemetry/constants'
@@ -16,8 +17,10 @@ export enum NetworkButtonType {
 
 export type NetworkLabelProps = {
   chainId: ChainId
+  height?: number
   showBorder?: boolean
-}
+  showIcon?: boolean
+} & ComponentProps<typeof Pill>
 
 interface NetworkButtonGroupProps {
   onPress: (chainId: ChainId) => void

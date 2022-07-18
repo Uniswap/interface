@@ -4,8 +4,10 @@ import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { Button } from 'src/components/buttons/Button'
 import { CurrencyLogo } from 'src/components/CurrencyLogo'
 import { AnimatedFlex, Box, Flex } from 'src/components/layout'
+import { InlineNetworkPill } from 'src/components/Network/NetworkPill'
 import { Text } from 'src/components/Text'
 import { RelativeChange } from 'src/components/text/RelativeChange'
+import { ChainId } from 'src/constants/chains'
 import { PortfolioBalance } from 'src/features/dataApi/types'
 import { formatCurrencyAmount, formatUSDPrice } from 'src/utils/format'
 
@@ -45,9 +47,14 @@ export function TokenBalanceItem({ balance, onPressToken }: TokenBalanceItemProp
           <Text ellipsizeMode="tail" numberOfLines={1} variant="subhead">
             {currency.name ?? currency.symbol}
           </Text>
-          <Text color="textSecondary" numberOfLines={1} variant="caption">
-            {`${formatCurrencyAmount(amount)}`} {currency.symbol}
-          </Text>
+          <Flex row alignItems="center" gap="xs" height={20}>
+            <Text color="textSecondary" numberOfLines={1} variant="caption">
+              {`${formatCurrencyAmount(amount)}`} {currency.symbol}
+            </Text>
+            {currency.chainId !== ChainId.Mainnet && (
+              <InlineNetworkPill chainId={currency.chainId} />
+            )}
+          </Flex>
         </Flex>
       </AnimatedFlex>
       <AnimatedFlex entering={FadeIn} exiting={FadeOut} justifyContent="space-between">
