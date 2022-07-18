@@ -54,7 +54,7 @@ const SearchInput = styled.input<{ expanded: boolean }>`
 
 export default function SearchBar() {
   const [filterString, setFilterString] = useAtom(filterStringAtom)
-  const [isExpanded, setExpanded] = useState(false)
+  const [isExpanded, setExpanded] = useState(filterString.length !== 0)
 
   return (
     <SearchBarContainer>
