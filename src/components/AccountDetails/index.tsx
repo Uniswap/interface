@@ -1,7 +1,13 @@
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
 import CopyHelper from 'components/AccountDetails/Copy'
-import { getConnection, getConnectionName, getIsCoinbaseWallet, getIsMetaMask, getIsOperaInjected } from 'connection/utils'
+import {
+  getConnection,
+  getConnectionName,
+  getIsCoinbaseWallet,
+  getIsMetaMask,
+  getIsOperaInjected,
+} from 'connection/utils'
 import { Context, useCallback, useContext } from 'react'
 import { ExternalLink as LinkIcon } from 'react-feather'
 import { useAppDispatch } from 'state/hooks'
