@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next'
 import { FadeInUp, FadeOut } from 'react-native-reanimated'
 import { useAppTheme } from 'src/app/hooks'
 import { Button } from 'src/components/buttons/Button'
-import { LongPressButton } from 'src/components/buttons/LongPressButton'
+import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { TransferArrowButton } from 'src/components/buttons/TransferArrowButton'
 import { CurrencyLogo } from 'src/components/CurrencyLogo'
 import { Arrow } from 'src/components/icons/Arrow'
@@ -89,7 +89,11 @@ export function SwapReview({ dispatch, onNext, onPrev, derivedSwapInfo }: SwapFo
     swapCallback()
   }
 
-  const { wrapCallback } = useWrapCallback(currencyAmounts[CurrencyField.INPUT], wrapType, onNext)
+  const { wrapCallback: onWrap } = useWrapCallback(
+    currencyAmounts[CurrencyField.INPUT],
+    wrapType,
+    onNext
+  )
 
   if (
     !currencies[CurrencyField.OUTPUT] ||
@@ -193,14 +197,13 @@ export function SwapReview({ dispatch, onNext, onPrev, derivedSwapInfo }: SwapFo
           </Button>
           <Flex grow>
             <ActionButton
-              callback={isWrapAction(wrapType) ? wrapCallback : onSwap}
               disabled={swapDisabled}
               label={
                 wrapType === WrapType.Wrap
-                  ? t('Hold to wrap')
+                  ? t('Wrap')
                   : wrapType === WrapType.Unwrap
-                  ? t('Hold to unwrap')
-                  : t('Hold to swap')
+                  ? t('Unwrap')
+                  : t('Swap')
               }
               name={
                 wrapType === WrapType.Wrap
@@ -209,6 +212,7 @@ export function SwapReview({ dispatch, onNext, onPrev, derivedSwapInfo }: SwapFo
                   ? ElementName.Unwrap
                   : ElementName.Swap
               }
+              onPress={isWrapAction(wrapType) ? onWrap : onSwap}
             />
           </Flex>
         </Flex>
@@ -221,19 +225,20 @@ type ActionButtonProps = {
   disabled: boolean
   name: ElementName
   label: string
-  callback: () => void
+  onPress: () => void
 }
 
-export function ActionButton({ callback, disabled, label, name }: ActionButtonProps) {
-  const { trigger: actionButtonTrigger, modal: BiometricModal } = useBiometricPrompt(callback)
+export function ActionButton({ onPress, disabled, label, name }: ActionButtonProps) {
+  const { trigger: actionButtonTrigger, modal: BiometricModal } = useBiometricPrompt(onPress)
 
   return (
     <>
-      <LongPressButton
+      <PrimaryButton
         disabled={disabled}
         label={label}
         name={name}
-        onComplete={() => {
+        py="md"
+        onPress={() => {
           notificationAsync()
           actionButtonTrigger()
         }}
