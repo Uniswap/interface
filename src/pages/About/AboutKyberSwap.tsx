@@ -44,9 +44,6 @@ import { ExternalLink, StyledInternalLink } from 'theme'
 import { useDarkModeManager } from 'state/user/hooks'
 import githubImg from 'assets/svg/about_icon_github.png'
 import githubImgLight from 'assets/svg/about_icon_github_light.png'
-import { KNC } from 'constants/index'
-import { ChainId } from '@kyberswap/ks-sdk-core'
-import { useActiveWeb3React } from 'hooks'
 import { useGlobalData } from 'state/about/hooks'
 import { formatBigLiquidity } from 'utils/formatBalance'
 import {
@@ -81,29 +78,8 @@ import { dexListConfig } from 'constants/dexes'
 import { MAINNET_NETWORKS } from 'constants/networks'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import Banner from 'components/Banner'
-// import { Swiper, SwiperSlide } from 'swiper/react/swiper-react'
-// import { Pagination, FreeMode } from 'swiper'
-import { nativeOnChain } from 'constants/tokens'
 import AntiSnippingAttack from 'components/Icons/AntiSnippingAttack'
 import { VERSION } from 'constants/v2'
-
-const KNC_NOT_AVAILABLE_IN = [
-  ChainId.CRONOS,
-  ChainId.AVAXMAINNET,
-  ChainId.FANTOM,
-  ChainId.BTTC,
-  ChainId.ARBITRUM,
-  ChainId.AURORA,
-  ChainId.VELAS,
-  ChainId.OASIS,
-  ChainId.OPTIMISM,
-]
-
-const getPoolsMenuLink = (chainId?: ChainId, path?: string) => {
-  const pathname = path || 'pools'
-  if (chainId && KNC_NOT_AVAILABLE_IN.includes(chainId)) return `/${pathname}/${nativeOnChain(chainId).symbol}`
-  return `/${pathname}/${nativeOnChain(chainId as ChainId).symbol || 'ETH'}/${KNC[chainId as ChainId].address}`
-}
 
 export const KSStatistic = () => {
   const theme = useTheme()
@@ -170,9 +146,6 @@ function AboutKyberSwap() {
   const above768 = useMedia('(min-width: 768px)')
   const above500 = useMedia('(min-width: 500px)')
 
-  const { chainId } = useActiveWeb3React()
-  const poolsMenuLink = getPoolsMenuLink(chainId)
-  const createPoolLink = getPoolsMenuLink(chainId, 'create')
   const data = useGlobalData()
 
   const globalData = data && data.dmmFactories[0]
@@ -483,7 +456,7 @@ function AboutKyberSwap() {
             </BtnPrimary>
             <BtnOutlined
               as={Link}
-              to={poolsMenuLink}
+              to={'/pools?tab=elastic'}
               onClick={() => mixpanelHandler(MIXPANEL_TYPE.ABOUT_START_EARNING_CLICKED)}
             >
               <MoneyBag color={theme.btnOutline} />
@@ -816,7 +789,7 @@ function AboutKyberSwap() {
           >
             <BtnPrimary
               as={Link}
-              to={poolsMenuLink}
+              to={activeTab === VERSION.ELASTIC ? '/pools?tab=elastic' : '/pools?tab=classic'}
               onClick={() => mixpanelHandler(MIXPANEL_TYPE.ABOUT_START_EARNING_CLICKED)}
             >
               <MoneyBag size={20} color={theme.textReverse} />
@@ -824,7 +797,11 @@ function AboutKyberSwap() {
                 <Trans>Start Earning</Trans>
               </Text>
             </BtnPrimary>
-            <BtnOutlined as={Link} to="/farms" onClick={() => mixpanelHandler(MIXPANEL_TYPE.ABOUT_VIEW_FARMS_CLICKED)}>
+            <BtnOutlined
+              as={Link}
+              to={activeTab === VERSION.ELASTIC ? '/farms?farmType=elastic' : '/farms?farmType=classic'}
+              onClick={() => mixpanelHandler(MIXPANEL_TYPE.ABOUT_VIEW_FARMS_CLICKED)}
+            >
               <FarmIcon size={20} color={theme.btnOutline} />
               <Text fontSize="16px" marginLeft="8px">
                 <Trans>View Farms</Trans>
@@ -893,7 +870,7 @@ function AboutKyberSwap() {
           >
             <BtnPrimary
               as={Link}
-              to={createPoolLink}
+              to={'/pools?tab=elastic&highlightCreateButton=true'}
               onClick={() => mixpanelHandler(MIXPANEL_TYPE.ABOUT_CREATE_NEW_POOL_CLICKED)}
             >
               <Plus size={20} />
