@@ -98,7 +98,7 @@
     "eslint-plugin-react-hooks": "^4.0.0",
     "eslint-plugin-simple-import-sort": "^7.0.0",
     "eslint-plugin-unused-imports": "^2.0.0",
-    "jest-styled-components": "^7.0.5",
+    "jest-styled-components": "7.0.7",
     "ms.macro": "^2.0.0",
     "prettier": "^2.7.1",
     "react-scripts": "^4.0.3",
