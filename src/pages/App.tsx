@@ -99,12 +99,9 @@ export default function App() {
               <Route strict path="/vote">
                 <Vote />
               </Route>
-              <Route
-                exact
-                strict
-                path="/create-proposal"
-                render={() => <Redirect to="/vote/create-proposal" />}
-              ></Route>
+              <Route exact strict path="/create-proposal">
+                <Redirect to="/vote/create-proposal" />
+              </Route>
               <Route exact strict path="/claim">
                 <OpenClaimAddressModalAndRedirectToSwap />
               </Route>
