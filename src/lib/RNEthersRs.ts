@@ -28,6 +28,10 @@ export function generateAndStorePrivateKey(
   return RNEthersRS.generateAndStorePrivateKey(mnemonicId, derivationIndex)
 }
 
+export function backupMnemonicToICloud(mnemonicId: string, pin: string): Promise<boolean> {
+  return RNEthersRS.backupMnemonicToICloud(mnemonicId, pin)
+}
+
 export function signTransactionHashForAddress(
   address: string,
   hash: string,

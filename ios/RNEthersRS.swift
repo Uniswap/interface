@@ -20,6 +20,12 @@ let privateKeyPrefix = ".privateKey."
 let entireMnemonicPrefix = prefix + mnemonicPrefix
 let entirePrivateKeyPrefix = prefix + privateKeyPrefix
 
+enum RNEthersRSError: Error {
+  case storeMnemonicError
+  case retrieveMnemonicError
+  case iCloudError
+}
+
 @objc(RNEthersRS)
 
 class RNEthersRS: NSObject {
@@ -30,12 +36,12 @@ class RNEthersRS: NSObject {
   @objc static func requiresMainQueueSetup() -> Bool {
     return false
   }
-
+  
   /**
    Fetches all mnemonic IDs, which are used as keys to access the actual mnemonics in the native keychain secure key-value store.
-  
+   
    - returns: array of mnemonic IDs
-  */
+   */
   @objc(getMnemonicIds:reject:)
   func getMnemonicIds(resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
     let mnemonicIds = keychain.allKeys.filter { key in
@@ -45,7 +51,7 @@ class RNEthersRS: NSObject {
     }
     resolve(mnemonicIds)
   }
-
+  
   /**
    Derives private key from mnemonic with derivation index 0 and retrieves associated public address. Stores imported mnemonic in native keychain with the mnemonic ID key as the public address.
    
@@ -60,7 +66,7 @@ class RNEthersRS: NSObject {
     let private_key = private_key_from_mnemonic(
       mnemonic, UInt32(exactly: 0)!)
     let address = String(cString: private_key.address!)
-
+    
     let res = storeNewMnemonic(mnemonic: mnemonic, address: address)
     if res != nil {
       resolve(res)
@@ -70,10 +76,10 @@ class RNEthersRS: NSObject {
     reject("error", "error", err)
     return
   }
-
+  
   /**
    Generates a new mnemonic and retrieves associated public address. Stores new mnemonic in native keychain with the mnemonic ID key as the public address.
-
+   
    - returns: public address from the mnemonic's first derived private key
    */
   @objc(generateAndStoreMnemonic:reject:)
@@ -85,35 +91,35 @@ class RNEthersRS: NSObject {
     mnemonic_free(mnemonic_ptr)
     resolve(res)
   }
-
+  
   /**
    Stores mnemonic phrase in Native Keychain under the address
-
+   
    - returns: public address if successfully stored in native keychain
    */
   func storeNewMnemonic(mnemonic: String, address: String) -> String? {
     let newMnemonicKey = keychainKeyForMnemonicId(mnemonicId: address);
     let checkStored = retrieveMnemonic(mnemonicId: newMnemonicKey)
-
+    
     if checkStored == nil {
       keychain.set(mnemonic, forKey: newMnemonicKey)
       return address
     }
-
+    
     return nil
   }
-
+  
   func keychainKeyForMnemonicId(mnemonicId: String) -> String {
     return mnemonicPrefix + mnemonicId
   }
-
+  
   func retrieveMnemonic(mnemonicId: String) -> String? {
     return keychain.get(keychainKeyForMnemonicId(mnemonicId: mnemonicId))
   }
-
+  
   /**
    Fetches all public addresses from private keys stored under `privateKeyPrefix` in native keychain. Used from React Native to verify the native keychain has the private key for an account that is attempting create a NativeSigner that calls native signing methods
-
+   
    - returns: public addresses for all stored private keys
    */
   @objc(getAddressesForStoredPrivateKeys:reject:)
@@ -127,15 +133,15 @@ class RNEthersRS: NSObject {
     }
     resolve(addresses)
   }
-
+  
   func storeNewPrivateKey(address: String, privateKey: String) {
     let newKey = keychainKeyForPrivateKey(address: address);
     keychain.set(privateKey, forKey: newKey)
   }
-
+  
   /**
    Derives private key and public address from mnemonic associated with `mnemonicId` for given `derivationIndex`. Stores the private key in native keychain with key.
-
+   
    - parameter mnemonicId: key string associated with mnemonic to generate private key for (currently convention is to use public address associated with mnemonic)
    - parameter derivationIndex: number used to specify a which derivation index to use for deriving a private key from the mnemonic
    - returns: public address associated with private key generated from the mnemonic at given derivation index
@@ -154,7 +160,56 @@ class RNEthersRS: NSObject {
     private_key_free(private_key)
     resolve(address)
   }
-
+  
+  /**
+   Stores mnemonic to iCloud Documents
+   
+   - parameter mnemonicId: key string associated with mnemonic to backup
+   - parameter pin: optional user provided pin to encrypt the mnemonic, interprets as no pin if empty string 
+   - returns: boolean for success
+   */
+  @objc(backupMnemonicToICloud:pin:resolve:reject:)
+  func backupMnemonicToICloud(
+    mnemonicId: String, pin: String, resolve: RCTPromiseResolveBlock,
+    reject: RCTPromiseRejectBlock
+  ) {
+    guard let mnemonic = retrieveMnemonic(mnemonicId: mnemonicId) else {
+      return reject("retrieve-mnemonic-error", "Failed to retrieve mnemonic", RNEthersRSError.retrieveMnemonicError)
+    }
+    
+    let isPinEncrypted = pin != ""
+    if (isPinEncrypted) {
+      // TODO: encrypt mnemonic with pin
+    }
+    
+    // Access iCloud Documents container
+    // TODO: Temporarily appending "Documents" path to make file visible in iCloud Files for easier debugging
+    guard let containerUrl = FileManager.default.url(forUbiquityContainerIdentifier: nil)?.appendingPathComponent("Documents") else {
+      return reject("icloud-error", "Failed to find iCloud container", RNEthersRSError.iCloudError)
+    }
+    
+    // Create iCloud container if empty
+    if !FileManager.default.fileExists(atPath: containerUrl.path, isDirectory: nil) {
+      do {
+        try FileManager.default.createDirectory(at: containerUrl, withIntermediateDirectories: true, attributes: nil)
+      }
+      catch {
+        return reject("icloud-error", "Failed to create iCloud container", RNEthersRSError.iCloudError)
+      }
+    }
+    
+    // Write backup file to iCloud
+    let iCloudFileURL = containerUrl.appendingPathComponent("\(mnemonicId).json")
+    do {
+      let backup = ICloudMnemonicBackup(mnemonicId: mnemonicId, mnemonic: mnemonic, isPinEncrypted: isPinEncrypted, createdAt: Date().timeIntervalSince1970)
+      try JSONEncoder().encode(backup).write(to: iCloudFileURL)
+      return resolve(true)
+    }
+    catch {
+      return reject("icloud-error", "Failed to write backup file to iCloud", RNEthersRSError.iCloudError)
+    }
+  }
+  
   @objc(signTransactionHashForAddress:hash:chainId:resolve:reject:)
   func signTransactionForAddress(
     address: String, hash: String, chainId: NSNumber, resolve: RCTPromiseResolveBlock,
@@ -189,7 +244,7 @@ class RNEthersRS: NSObject {
     string_free(signedHash)
     resolve(result)
   }
-
+  
   func retrieveOrCreateWalletForAddress(address: String) -> OpaquePointer {
     if walletCache[address] != nil {
       return walletCache[address]!
@@ -199,11 +254,11 @@ class RNEthersRS: NSObject {
     walletCache[address] = wallet
     return wallet!
   }
-
+  
   func retrievePrivateKey(address: String) -> String? {
     return keychain.get(keychainKeyForPrivateKey(address: address))
   }
-
+  
   func keychainKeyForPrivateKey(address: String) -> String {
     return privateKeyPrefix + address
   }

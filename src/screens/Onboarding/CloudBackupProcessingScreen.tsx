@@ -1,7 +1,7 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import React, { useEffect, useReducer } from 'react'
+import React, { useCallback, useEffect, useReducer } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ActivityIndicator } from 'react-native'
+import { ActivityIndicator, Alert } from 'react-native'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { CheckmarkCircle } from 'src/components/icons/CheckmarkCircle'
@@ -11,18 +11,20 @@ import { Text } from 'src/components/Text'
 import { BackupType } from 'src/features/wallet/accounts/types'
 import { EditAccountAction, editAccountActions } from 'src/features/wallet/editAccountSaga'
 import { useActiveAccount } from 'src/features/wallet/hooks'
+import { backupMnemonicToICloud } from 'src/lib/RNEthersRs'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { dimensions } from 'src/styles/sizing'
+import { logger } from 'src/utils/logger'
 type Props = NativeStackScreenProps<
   OnboardingStackParamList,
   OnboardingScreens.BackupCloudProcessing
 >
 
-/** Screen to perform secure recovery phrase backup/restore to Cloud  */
+/** Screen to perform secure recovery phrase backup to Cloud  */
 export function CloudBackupProcessingScreen({
   navigation,
   route: {
-    params: { importType },
+    params: { pin, importType },
   },
 }: Props) {
   const { t } = useTranslation()
@@ -32,6 +34,27 @@ export function CloudBackupProcessingScreen({
 
   const [processing, doneProcessing] = useReducer(() => false, true)
 
+  const handleBackupError = useCallback(() => {
+    Alert.alert(
+      t('iCloud error'),
+      t(
+        'Unable to backup recovery phrase to iCloud. Please ensure you have iCloud enabled with available storage space and try again.'
+      ),
+      [
+        {
+          text: t('OK'),
+          style: 'default',
+        },
+      ]
+    )
+    navigation.navigate({
+      name: OnboardingScreens.Backup,
+      params: { importType },
+      merge: true,
+    })
+  }, [t, importType, navigation])
+
+  // Handle finished backing up to Cloud
   useEffect(() => {
     if (activeAccount?.backups?.includes(BackupType.Cloud)) {
       doneProcessing()
@@ -43,19 +66,28 @@ export function CloudBackupProcessingScreen({
     }
   }, [activeAccount?.backups, importType, navigation])
 
+  // Handle backup to Cloud when screen appears
   useEffect(() => {
     if (!activeAccount?.address) return
 
-    // TODO: perform backup with native module
+    const backup = async () => {
+      try {
+        await backupMnemonicToICloud(activeAccount.address, pin ?? '')
+        dispatch(
+          editAccountActions.trigger({
+            type: EditAccountAction.AddBackupMethod,
+            address: activeAccount.address,
+            backupMethod: BackupType.Cloud,
+          })
+        )
+      } catch (error) {
+        logger.debug('CloudBackupProcessingScreen', 'backupMnemonicToICloud', 'Error', error)
+        handleBackupError()
+      }
+    }
 
-    dispatch(
-      editAccountActions.trigger({
-        type: EditAccountAction.AddBackupMethod,
-        address: activeAccount.address,
-        backupMethod: BackupType.Cloud,
-      })
-    )
-  }, [activeAccount?.address, dispatch])
+    backup()
+  }, [activeAccount?.address, dispatch, handleBackupError, pin])
 
   return (
     <Screen>

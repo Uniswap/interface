@@ -1,8 +1,9 @@
 import { CompositeScreenProps } from '@react-navigation/native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { StackScreenProps } from '@react-navigation/stack'
-import React, { ReactNode } from 'react'
+import React, { ReactNode, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Alert } from 'react-native'
 import { useAppTheme } from 'src/app/hooks'
 import {
   AppStackParamList,
@@ -24,6 +25,7 @@ import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { ElementName } from 'src/features/telemetry/constants'
 import { BackupType } from 'src/features/wallet/accounts/types'
 import { useActiveAccount } from 'src/features/wallet/hooks'
+import { isICloudAvailable } from 'src/lib/RNICloudBackupsManager'
 import { OnboardingScreens, Screens } from 'src/screens/Screens'
 
 type Props = CompositeScreenProps<
@@ -84,8 +86,17 @@ function BackupOptions({
 }) {
   const { t } = useTranslation()
   const theme = useAppTheme()
+  const [iCloudAvailable, setICloudAvailable] = useState<boolean>()
 
   const { navigate } = useOnboardingStackNavigation()
+
+  useEffect(() => {
+    async function checkICloudAvailable() {
+      const available = await isICloudAvailable()
+      setICloudAvailable(available)
+    }
+    checkICloudAvailable()
+  }, [])
 
   return (
     <Flex gap="lg">
@@ -96,11 +107,42 @@ function BackupOptions({
         label={t('iCloud backup')}
         name={ElementName.AddiCloudBackup}
         onPress={() => {
-          navigate({
-            name: OnboardingScreens.BackupCloud,
-            params: { importType: params?.importType },
-            merge: true,
-          })
+          if (!iCloudAvailable) {
+            Alert.alert(
+              t('iCloud Not Available'),
+              t('Please verify you are logged into an Apple ID with iCloud enabled and try again.'),
+              [
+                {
+                  text: t('OK'),
+                  style: 'default',
+                },
+              ]
+            )
+            return
+          }
+
+          // TODO: Remove alert when tested and reviewed
+          Alert.alert(
+            'iCloud Backup Warning',
+            'iCloud backup is currently in development and currently stores your recovery phrase in plain text in iCloud. It is recommended to only use this feature with test wallets for now.',
+            [
+              {
+                text: t('Continue'),
+                style: 'default',
+                onPress: () => {
+                  navigate({
+                    name: OnboardingScreens.BackupCloud,
+                    params: { importType: params?.importType },
+                    merge: true,
+                  })
+                },
+              },
+              {
+                text: t('Cancel'),
+                style: 'cancel',
+              },
+            ]
+          )
         }}
       />
       <BackupOptionButton

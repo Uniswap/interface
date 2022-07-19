@@ -91,5 +91,17 @@
 		<key>SHAKE_CLIENT_SECRET</key>
 		<string>LcZeccXtiLuo4O0T5pwdFXysmdpsY25JsIKExd3XzABh4VoDEzXpe30</string>
 	</dict>
+  <key>NSUbiquitousContainers</key>
+   <dict>
+       <key>iCloud.Uniswap.UserBackups</key>
+       <dict>
+           <key>NSUbiquitousContainerIsDocumentScopePublic</key>
+           <true/>
+           <key>NSUbiquitousContainerName</key>
+           <string>Uniswap</string>
+           <key>NSUbiquitousContainerSupportedFolderLevels</key>
+           <string>Any</string>
+       </dict>
+   </dict>
 </dict>
 </plist>
