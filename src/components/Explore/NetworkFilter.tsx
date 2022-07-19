@@ -7,13 +7,6 @@ import { useModalIsOpen, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import styled, { css, useTheme } from 'styled-components/macro'
 
-export const NETWORK_DISPLAYS: { [key: string]: string } = {
-  Ethereum: 'Ethereum',
-  Arbitrum: 'Arbitrum',
-  Optimism: 'Optimism',
-  Polygon: 'Polygon',
-}
-
 const NETWORKS = [
   SupportedChainId.MAINNET,
   SupportedChainId.ARBITRUM_ONE,
@@ -171,7 +164,6 @@ export default function NetworkFilter() {
           </Chevron>
         </StyledMenuContent>
       </StyledMenuButton>
-      {/* handles the actual flyout of the menu*/}
       {open && (
         <MenuTimeFlyout flyoutAlignment={FlyoutAlignment.LEFT}>
           {NETWORKS.map((network) => (
