@@ -4,12 +4,12 @@ import { Pair } from '@uniswap/v2-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { AutoColumn } from 'components/Column'
 import { LoadingOpacityContainer, loadingOpacityMixin } from 'components/Loader/styled'
+import { isSupportedChain } from 'constants/chains'
 import { darken } from 'polished'
 import { ReactNode, useCallback, useState } from 'react'
 import { Lock } from 'react-feather'
 import styled from 'styled-components/macro'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
-import { isChainAllowed } from 'utils/switchChain'
 
 import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
 import useTheme from '../../hooks/useTheme'
@@ -46,15 +46,19 @@ const FixedContainer = styled.div`
   z-index: 2;
 `
 
-const Container = styled.div<{ hideInput: boolean }>`
+const Container = styled.div<{ hideInput: boolean; disabled: boolean }>`
   border-radius: ${({ hideInput }) => (hideInput ? '16px' : '20px')};
   border: 1px solid ${({ theme }) => theme.bg0};
   background-color: ${({ theme }) => theme.bg1};
   width: ${({ hideInput }) => (hideInput ? '100%' : 'initial')};
-  :focus,
-  :hover {
-    border: 1px solid ${({ theme, hideInput }) => (hideInput ? ' transparent' : theme.bg3)};
-  }
+  ${({ theme, hideInput, disabled }) =>
+    !disabled &&
+    `
+    :focus,
+    :hover {
+      border: 1px solid ${hideInput ? ' transparent' : theme.bg3};
+    }
+  `}
 `
 
 const CurrencySelect = styled(ButtonGray)<{
@@ -209,7 +213,7 @@ export default function CurrencyInputPanel({
   ...rest
 }: CurrencyInputPanelProps) {
   const [modalOpen, setModalOpen] = useState(false)
-  const { account, connector, chainId } = useWeb3React()
+  const { account, chainId } = useWeb3React()
   const selectedCurrencyBalance = useCurrencyBalance(account ?? undefined, currency ?? undefined)
   const theme = useTheme()
 
@@ -217,7 +221,7 @@ export default function CurrencyInputPanel({
     setModalOpen(false)
   }, [setModalOpen])
 
-  const chainAllowed = isChainAllowed(connector, chainId!)
+  const chainAllowed = isSupportedChain(chainId)
 
   return (
     <InputPanel id={id} hideInput={hideInput} {...rest}>
@@ -231,13 +235,14 @@ export default function CurrencyInputPanel({
           </AutoColumn>
         </FixedContainer>
       )}
-      <Container hideInput={hideInput}>
+      <Container hideInput={hideInput} disabled={!chainAllowed}>
         <InputRow style={hideInput ? { padding: '0', borderRadius: '8px' } : {}} selected={!onCurrencySelect}>
           {!hideInput && (
             <StyledNumericalInput
               className="token-amount-input"
               value={value}
               onUserInput={onUserInput}
+              disabled={!chainAllowed}
               $loading={loading}
             />
           )}

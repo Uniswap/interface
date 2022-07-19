@@ -1,7 +1,7 @@
+import * as chains from 'constants/chains'
 import * as useV3Positions from 'hooks/useV3Positions'
 import { BrowserRouter as Router } from 'react-router-dom'
 import { render, screen } from 'test-utils'
-import * as switchChain from 'utils/switchChain'
 
 import Pool from '.'
 
@@ -17,7 +17,7 @@ jest.mock('@web3-react/core', () => {
 
 describe('networks', () => {
   it('renders error card when unsupported chain is selected', () => {
-    jest.spyOn(switchChain, 'isChainAllowed').mockReturnValue(false)
+    jest.spyOn(chains, 'isSupportedChain').mockReturnValue(false)
     jest.spyOn(useV3Positions, 'useV3Positions').mockImplementation(() => {
       return { loading: false, positions: undefined }
     })
@@ -33,7 +33,7 @@ describe('networks', () => {
   })
 
   it('renders empty positions card when on supported chain with no positions', () => {
-    jest.spyOn(switchChain, 'isChainAllowed').mockReturnValue(true)
+    jest.spyOn(chains, 'isSupportedChain').mockReturnValue(true)
     jest.spyOn(useV3Positions, 'useV3Positions').mockImplementation(() => {
       return { loading: false, positions: undefined }
     })

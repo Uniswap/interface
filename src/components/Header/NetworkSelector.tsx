@@ -1,6 +1,5 @@
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
-import { ButtonSecondary } from 'components/Button'
 import { getConnection } from 'connection/utils'
 import { getChainInfo } from 'constants/chainInfo'
 import { CHAIN_IDS_TO_NAMES, SupportedChainId } from 'constants/chains'
@@ -157,28 +156,6 @@ const SelectorWrapper = styled.div`
 `
 const StyledChevronDown = styled(ChevronDown)`
   width: 16px;
-`
-const Web3StatusGeneric = styled(ButtonSecondary)`
-  ${({ theme }) => theme.flexRowNoWrap}
-  width: 100%;
-  align-items: center;
-  border-radius: 14px;
-  cursor: pointer;
-  user-select: none;
-  height: 36px;
-  :focus {
-    outline: none;
-  }
-`
-const Web3StatusError = styled(Web3StatusGeneric)`
-  background-color: ${({ theme }) => theme.red1};
-  border: 1px solid ${({ theme }) => theme.red1};
-  color: ${({ theme }) => theme.white};
-  font-weight: 500;
-  :hover,
-  :focus {
-    background-color: ${({ theme }) => darken(0.1, theme.red1)};
-  }
 `
 
 const NetworkIcon = styled(AlertTriangle)`
@@ -338,8 +315,6 @@ export default function NetworkSelector() {
   const toggleModal = useToggleModal(ApplicationModal.NETWORK_SELECTOR)
   const history = useHistory()
 
-  const info = getChainInfo(chainId)
-
   const onSelectChain = useCallback(
     async (targetChain: SupportedChainId, skipClose?: boolean) => {
       if (!connector) return
@@ -390,14 +365,16 @@ export default function NetworkSelector() {
     return null
   }
 
-  const currentChainAllowed = isChainAllowed(connector, chainId)
+  const chainInfo = getChainInfo(chainId)
+  const onSupportedChain = chainInfo !== undefined
+
   return (
     <SelectorWrapper ref={node} onMouseEnter={openModal} onMouseLeave={closeModal} onClick={toggleModal}>
-      <SelectorControls interactive supportedChain={currentChainAllowed}>
-        {currentChainAllowed ? (
+      <SelectorControls interactive supportedChain={onSupportedChain}>
+        {onSupportedChain ? (
           <>
-            <SelectorLogo interactive src={info!.logoUrl} />
-            <SelectorLabel>{info!.label}</SelectorLabel>
+            <SelectorLogo interactive src={chainInfo.logoUrl} />
+            <SelectorLabel>{chainInfo.label}</SelectorLabel>
             <StyledChevronDown />
           </>
         ) : (
@@ -414,7 +391,7 @@ export default function NetworkSelector() {
         <FlyoutMenu>
           <FlyoutMenuContents>
             <FlyoutHeader>
-              <Trans>Select a {!currentChainAllowed ? ' supported ' : ''}network</Trans>
+              <Trans>Select a {!onSupportedChain ? ' supported ' : ''}network</Trans>
             </FlyoutHeader>
             {NETWORK_SELECTOR_CHAINS.map((chainId: SupportedChainId) =>
               isChainAllowed(connector, chainId) ? (

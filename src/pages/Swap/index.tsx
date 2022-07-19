@@ -11,6 +11,7 @@ import { NetworkAlert } from 'components/NetworkAlert/NetworkAlert'
 import SwapDetailsDropdown from 'components/swap/SwapDetailsDropdown'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 import { MouseoverTooltip } from 'components/Tooltip'
+import { isSupportedChain } from 'constants/chains'
 import { useSwapCallback } from 'hooks/useSwapCallback'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import JSBI from 'jsbi'
@@ -448,7 +449,7 @@ export default function Swap({ history }: RouteComponentProps) {
                     loading={independentField === Field.OUTPUT && routeIsSyncing}
                   />
                 </Trace>
-                <ArrowWrapper clickable>
+                <ArrowWrapper clickable={isSupportedChain(chainId)}>
                   <ArrowDown
                     size="16"
                     onClick={() => {

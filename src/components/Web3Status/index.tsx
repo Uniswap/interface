@@ -4,10 +4,9 @@ import { useWeb3React } from '@web3-react/core'
 import { getConnection } from 'connection/utils'
 import { darken } from 'polished'
 import { useMemo } from 'react'
-import { AlertTriangle, ChevronDown } from 'react-feather'
+import { AlertTriangle } from 'react-feather'
 import { useAppSelector } from 'state/hooks'
 import styled, { css } from 'styled-components/macro'
-import { isChainAllowed } from 'utils/switchChain'
 
 import { useHasSocks } from '../../hooks/useSocksBalance'
 import { useToggleWalletModal } from '../../state/application/hooks'
@@ -107,10 +106,6 @@ const NetworkIcon = styled(AlertTriangle)`
   height: 16px;
 `
 
-const StyledChevronDown = styled(ChevronDown)`
-  width: 16px;
-`
-
 // we want the latest one to come first, so return negative if a is after b
 function newTransactionsFirst(a: TransactionDetails, b: TransactionDetails) {
   return b.addedTime - a.addedTime
@@ -129,8 +124,6 @@ function Web3StatusInner() {
   const connectionType = getConnection(connector).type
 
   const error = useAppSelector((state) => state.connection.errorByConnectionType[getConnection(connector).type])
-
-  const chainAllowed = chainId && isChainAllowed(connector, chainId)
 
   const allTransactions = useAllTransactions()
 

@@ -9,6 +9,7 @@ import { SwapPoolTabs } from 'components/NavigationTabs'
 import PositionList from 'components/PositionList'
 import { RowBetween, RowFixed } from 'components/Row'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
+import { isSupportedChain } from 'constants/chains'
 import { useV3Positions } from 'hooks/useV3Positions'
 import { useContext } from 'react'
 import { Activity, BookOpen, ChevronDown, ChevronsRight, Inbox, Layers, PlusCircle } from 'react-feather'
@@ -18,7 +19,6 @@ import { useUserHideClosedPositions } from 'state/user/hooks'
 import styled, { css, ThemeContext } from 'styled-components/macro'
 import { ExternalLink, HideSmall, ThemedText } from 'theme'
 import { PositionDetails } from 'types/position'
-import { isChainAllowed } from 'utils/switchChain'
 
 import { V2_FACTORY_ADDRESSES } from '../../constants/addresses'
 import CTACards from './CTACards'
@@ -186,7 +186,7 @@ function WrongNetworkCard() {
 }
 
 export default function Pool() {
-  const { account, chainId, connector } = useWeb3React()
+  const { account, chainId } = useWeb3React()
   const toggleWalletModal = useToggleWalletModal()
 
   const theme = useContext(ThemeContext)
@@ -194,7 +194,7 @@ export default function Pool() {
 
   const { positions, loading: positionsLoading } = useV3Positions(account)
 
-  if (chainId && !isChainAllowed(connector, chainId)) {
+  if (!isSupportedChain(chainId)) {
     return <WrongNetworkCard />
   }
 
@@ -208,7 +208,7 @@ export default function Pool() {
 
   const filteredPositions = [...openPositions, ...(userHideClosedPositions ? [] : closedPositions)]
   const showConnectAWallet = Boolean(!account)
-  const showV2Features = Boolean(chainId && V2_FACTORY_ADDRESSES[chainId])
+  const showV2Features = Boolean(V2_FACTORY_ADDRESSES[chainId])
 
   const menuItems = [
     {
