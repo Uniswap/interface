@@ -17,7 +17,7 @@ export default function ConfirmHarvestingModal() {
     dispatch(setShowConfirm(false))
     dispatch(setAttemptingTxn(false))
     dispatch(setTxHash(''))
-    dispatch(setYieldPoolsError(''))
+    dispatch(setYieldPoolsError(null))
   }, [dispatch])
 
   const confirmationContent = useCallback(

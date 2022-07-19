@@ -17,7 +17,7 @@ export default function ConfirmVestingModal() {
     dispatch(setShowConfirm(false))
     dispatch(setAttemptingTxn(false))
     dispatch(setTxHash(''))
-    dispatch(setVestingError(''))
+    dispatch(setVestingError(null))
   }, [dispatch])
 
   const confirmationContent = useCallback(

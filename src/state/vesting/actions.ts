@@ -11,4 +11,4 @@ export const setSchedulesByRewardLocker = createAction<{
 export const setShowConfirm = createAction<boolean>('vesting/setShowConfirm')
 export const setAttemptingTxn = createAction<boolean>('vesting/setAttemptingTxn')
 export const setTxHash = createAction<string>('vesting/setTxHash')
-export const setVestingError = createAction<string>('vesting/setVestingError')
+export const setVestingError = createAction<Error | null>('vesting/setVestingError')

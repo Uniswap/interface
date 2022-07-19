@@ -91,6 +91,7 @@ import { checkPairInWhiteList, convertSymbol } from 'utils/tokenInfo'
 import { filterTokensWithExactKeyword } from 'components/SearchModal/filtering'
 import { useRef } from 'react'
 import { nativeOnChain } from 'constants/tokens'
+import * as Sentry from '@sentry/react'
 
 import Footer from 'components/Footer/Footer'
 import usePrevious from 'hooks/usePrevious'
@@ -308,6 +309,7 @@ export default function Swap({ history }: RouteComponentProps) {
         setSwapState({ attemptingTxn: false, tradeToConfirm, showConfirm, swapErrorMessage: undefined, txHash: hash })
       })
       .catch(error => {
+        Sentry.captureException(error)
         setSwapState({
           attemptingTxn: false,
           tradeToConfirm,

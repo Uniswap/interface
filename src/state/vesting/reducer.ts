@@ -11,7 +11,7 @@ import {
   setVestingError,
 } from './actions'
 import { RewardLockerVersion } from 'state/farms/types'
-
+import * as Sentry from '@sentry/react'
 export interface VestingState {
   readonly loading: boolean
   readonly schedulesByRewardLocker: {
@@ -50,6 +50,7 @@ export default createReducer<VestingState>(initialState, builder =>
       state.txHash = txHash
     })
     .addCase(setVestingError, (state, { payload: error }) => {
-      state.error = error
+      if (error) Sentry.captureException(error)
+      state.error = error ? error?.message : ''
     }),
 )

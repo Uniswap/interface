@@ -131,7 +131,7 @@ const Schedule = ({
       dispatch(setTxHash(txHash))
     } catch (err) {
       console.error(err)
-      dispatch(setVestingError((err as Error).message))
+      dispatch(setVestingError(err as Error))
     }
 
     dispatch(setAttemptingTxn(false))

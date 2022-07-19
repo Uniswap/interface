@@ -265,7 +265,7 @@ export const useFarmsData = (isIncludeOutsideFarms = true) => {
       } catch (err) {
         if (!cancelled) {
           console.error(err)
-          dispatch(setYieldPoolsError((err as Error).message))
+          dispatch(setYieldPoolsError(err as Error))
         }
       }
 

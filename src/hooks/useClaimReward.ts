@@ -8,7 +8,7 @@ import { useAllTransactions, useTransactionAdder } from 'state/transactions/hook
 import useSWR from 'swr'
 import { getClaimRewardContract } from 'utils'
 import { t } from '@lingui/macro'
-
+import * as Sentry from '@sentry/react'
 export interface IReward {
   index: number
   amounts: string[]
@@ -165,6 +165,7 @@ export default function useClaimReward() {
         .catch((err: any) => {
           //on invalid claim reward
           setAttemptingTxn(false)
+          Sentry.captureException(err)
           setError(err.message || t`Something is wrong. Please try again later!`)
         })
     }

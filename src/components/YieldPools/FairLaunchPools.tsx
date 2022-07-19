@@ -78,7 +78,7 @@ const FairLaunchPools = ({ fairLaunchAddress, farms }: FarmsListProps) => {
       dispatch(setTxHash(txHash))
     } catch (err) {
       console.error(err)
-      dispatch(setYieldPoolsError((err as Error).message))
+      dispatch(setYieldPoolsError(err as Error))
     }
 
     dispatch(setAttemptingTxn(false))
