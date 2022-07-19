@@ -20,9 +20,11 @@ import {
 import DiscoverIcon from 'src/assets/icons/discover.svg'
 import ProfileIcon from 'src/assets/icons/profile.svg'
 import WalletIcon from 'src/assets/icons/wallet.svg'
+import { Box, Flex } from 'src/components/layout'
+import { useSelectAddressNotificationCount } from 'src/features/notifications/hooks'
 import { OnboardingHeader } from 'src/features/onboarding/OnboardingHeader'
 import { OnboardingEntryPoint } from 'src/features/onboarding/utils'
-import { selectFinishedOnboarding } from 'src/features/wallet/selectors'
+import { selectActiveAccountAddress, selectFinishedOnboarding } from 'src/features/wallet/selectors'
 import { CurrencySelectorScreen } from 'src/screens/CurrencySelectorScreen'
 import { DevScreen } from 'src/screens/DevScreen'
 import { EducationScreen } from 'src/screens/EducationScreen'
@@ -85,6 +87,14 @@ const TAB_NAVIGATOR_HEIGHT = 90
 function TabNavigator() {
   const { t } = useTranslation()
   const theme = useAppTheme()
+
+  const activeAccountAddress = useAppSelector(selectActiveAccountAddress)
+  const addressNotificationCount = useSelectAddressNotificationCount(activeAccountAddress)
+  const hasUnreadNotifications = !!(addressNotificationCount && addressNotificationCount > 0)
+
+  const iconTopPaddingMd = theme.spacing.md
+  const iconTopPaddingSm = theme.spacing.sm
+
   return (
     <Tab.Navigator
       screenOptions={{
@@ -110,7 +120,7 @@ function TabNavigator() {
             <WalletIcon color={focused ? theme.colors.userThemeColor : color} height={24} />
           ),
           tabBarIconStyle: {
-            paddingTop: theme.spacing.md,
+            paddingTop: iconTopPaddingMd,
           },
         }}
       />
@@ -124,7 +134,7 @@ function TabNavigator() {
             <DiscoverIcon color={focused ? theme.colors.userThemeColor : color} height={24} />
           ),
           tabBarIconStyle: {
-            paddingTop: theme.spacing.md,
+            paddingTop: iconTopPaddingMd,
           },
         }}
       />
@@ -134,10 +144,23 @@ function TabNavigator() {
         options={{
           tabBarLabel: t('Me'),
           tabBarIcon: ({ focused, color }) => (
-            <ProfileIcon color={focused ? theme.colors.userThemeColor : color} height={24} />
+            <Flex alignItems="center" gap="xxs">
+              <ProfileIcon color={focused ? theme.colors.userThemeColor : color} height={24} />
+              {hasUnreadNotifications && (
+                <Box
+                  backgroundColor="accentAction"
+                  borderRadius="full"
+                  bottom={iconTopPaddingSm - iconTopPaddingMd}
+                  height={4}
+                  position="absolute"
+                  width={4}
+                />
+              )}
+            </Flex>
           ),
+          // the notifications button pushes the icon up so use smaller padding in that case and offset the button by the difference in padding on this icon compared to the other icons
           tabBarIconStyle: {
-            paddingTop: theme.spacing.md,
+            paddingTop: hasUnreadNotifications ? iconTopPaddingSm : iconTopPaddingMd,
           },
         }}
       />
