@@ -1,4 +1,4 @@
-import { CHAIN_INFO } from 'constants/chainInfo'
+import { getChainInfo } from 'constants/chainInfo'
 import { SupportedChainId } from 'constants/chains'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { useRef, useState } from 'react'
@@ -150,7 +150,7 @@ export default function NetworkFilter() {
   const toggleMenu = useToggleModal(ApplicationModal.NETWORK_FILTER)
   useOnClickOutside(node, open ? toggleMenu : undefined)
   const [activeNetwork, setNetwork] = useState(SupportedChainId.MAINNET)
-  const { label, logoUrl } = CHAIN_INFO[activeNetwork]
+  const { label, logoUrl } = getChainInfo(activeNetwork)
 
   return (
     <StyledMenu ref={node}>
@@ -175,11 +175,11 @@ export default function NetworkFilter() {
               }}
             >
               <NetworkLabel>
-                <Logo src={CHAIN_INFO[network].logoUrl} /> {CHAIN_INFO[network].label}
+                <Logo src={getChainInfo(network).logoUrl} /> {getChainInfo(network).label}
               </NetworkLabel>
               {network === activeNetwork && (
                 <CheckContainer>
-                  <Check size={16} color={theme.primary1} />{' '}
+                  <Check size={16} color={theme.primary1} />
                 </CheckContainer>
               )}
             </InternalLinkMenuItem>
