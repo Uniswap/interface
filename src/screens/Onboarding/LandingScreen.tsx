@@ -83,7 +83,7 @@ export function LandingScreen({ navigation }: Props) {
             testID={ElementName.OnboardingImportWallet}
             onPress={onPressImportWallet}>
             <Text color="textPrimary" variant="mediumLabel">
-              {t('I Already Have a Wallet')}
+              {t('I already have a wallet')}
             </Text>
           </TextButton>
           <DevelopmentOnly>

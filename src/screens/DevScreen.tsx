@@ -120,21 +120,21 @@ export function DevScreen({ navigation }: any) {
             />
           </Flex>
           <TextButton mt="md" name="DEBUG_Create" textColor="textPrimary" onPress={onPressCreate}>
-            Create Account
+            Create account
           </TextButton>
           <TextButton
             mt="sm"
             name="DEBUG_ToggleTestnets"
             textColor="textPrimary"
             onPress={onPressToggleTestnets}>
-            Toggle Testnets
+            Toggle testnets
           </TextButton>
           <TextButton
             mt="sm"
             name="DEBUG_ResetTokenWarnings"
             textColor="textPrimary"
             onPress={onPressResetTokenWarnings}>
-            Reset Token Warnings
+            Reset token warnings
           </TextButton>
           <TextButton
             mt="sm"

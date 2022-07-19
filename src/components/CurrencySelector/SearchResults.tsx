@@ -38,7 +38,7 @@ export function CurrencySearchResultList({
             name={ElementName.ClearSearch}
             textColor="accentActive"
             onPress={onClearSearchFilter}>
-            {t('Clear Search')}
+            {t('Clear search')}
           </TextButton>
         </Flex>
       }
