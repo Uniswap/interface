@@ -4,7 +4,6 @@ import { ListRenderItemInfo } from 'react-native'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { FavoritesEmptyState } from 'src/components/explore/FavoriteTokensCard'
 import { TokenItem } from 'src/components/explore/TokenItem'
-import { Heart } from 'src/components/icons/Heart'
 import { Box, Flex } from 'src/components/layout'
 import { BackHeader } from 'src/components/layout/BackHeader'
 import { HeaderListScreen } from 'src/components/layout/screens/HeaderListScreen'
@@ -13,8 +12,6 @@ import { Loading } from 'src/components/loading'
 import { Text } from 'src/components/Text'
 import { CoingeckoMarketCoin } from 'src/features/dataApi/coingecko/types'
 import { useFavoriteTokenInfo, useTokenMetadataDisplayType } from 'src/features/explore/hooks'
-
-const HEART_SIZE = 20
 
 export function ExploreFavoritesScreen() {
   const { t } = useTranslation()
@@ -53,7 +50,6 @@ export function ExploreFavoritesScreen() {
           <BackButton showButtonLabel />
           <Flex row alignItems="center" gap="xs" my="xs">
             <Text variant="headlineSmall">{t('Favorite tokens')}</Text>
-            <Heart active={true} size={HEART_SIZE} />
           </Flex>
         </Flex>
       }

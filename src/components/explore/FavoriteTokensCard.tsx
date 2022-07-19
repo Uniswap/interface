@@ -5,15 +5,12 @@ import { FadeInUp } from 'react-native-reanimated'
 import { useExploreStackNavigation } from 'src/app/navigation/types'
 import { BaseTokensCardProps, GenericTokensCard } from 'src/components/explore/GenericTokensCard'
 import { TokenItemBox } from 'src/components/explore/TokenItem'
-import { Heart } from 'src/components/icons/Heart'
 import { AnimatedBox } from 'src/components/layout'
 import { BaseCard } from 'src/components/layout/BaseCard'
 import { CoingeckoMarketCoin } from 'src/features/dataApi/coingecko/types'
 
 import { useFavoriteTokenInfo } from 'src/features/explore/hooks'
 import { Screens } from 'src/screens/Screens'
-
-const HEART_SIZE_MINIMIZED = 16
 
 /** Renders the favorite tokens card on the Explore page */
 export function FavoriteTokensCard(props: BaseTokensCardProps) {
@@ -43,7 +40,6 @@ export function FavoriteTokensCard(props: BaseTokensCardProps) {
         horizontal
         ListEmptyComponent={<FavoritesEmptyState />}
         assets={favorites}
-        icon={<Heart active={true} size={HEART_SIZE_MINIMIZED} />}
         id="explore-favorites-header"
         loading={isLoading}
         renderItem={renderItem}
