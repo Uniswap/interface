@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert } from 'react-native'
 import { useAppSelector } from 'src/app/hooks'
@@ -59,7 +59,7 @@ export function useActiveAccountWithThrow(): Account {
 }
 
 export function useSelectLocalPfp(address: Address) {
-  return useAppSelector(useMemo(() => makeSelectLocalPfp(address), [address]))
+  return useAppSelector(makeSelectLocalPfp(address))
 }
 
 export function useDisplayName(address: Nullable<string>):

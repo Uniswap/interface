@@ -11,21 +11,23 @@ import {
 } from 'src/features/transactions/types'
 import { flattenObjectOfObjects } from 'src/utils/objects'
 
-export const makeSelectAddressTransactions = (address: Address | null) => (state: RootState) => {
-  if (!address || !state.transactions[address]) return undefined
-  return useMemo(() => flattenObjectOfObjects(state.transactions[address]), [state.transactions])
-}
+export const makeSelectAddressTransactions = (address: Address | null) => (state: RootState) =>
+  useMemo(() => {
+    if (!address || !state.transactions[address]) return undefined
+    return flattenObjectOfObjects(state.transactions[address])
+  }, [state.transactions])
 
 export const makeSelectTransaction =
   (address: Address | null, chainId: ChainId | undefined, txHash: string | undefined) =>
-  (state: RootState) => {
-    if (!address || !state.transactions[address] || !chainId || !txHash) return undefined
-    const transactions = state.transactions[address]?.[chainId]
-    if (!transactions) return undefined
-    return Object.values(transactions).find(
-      (txDetails) => txDetails.hash.toLowerCase() === txHash.toLowerCase()
-    )
-  }
+  (state: RootState) =>
+    useMemo(() => {
+      if (!address || !state.transactions[address] || !chainId || !txHash) return undefined
+      const transactions = state.transactions[address]?.[chainId]
+      if (!transactions) return undefined
+      return Object.values(transactions).find(
+        (txDetails) => txDetails.hash.toLowerCase() === txHash.toLowerCase()
+      )
+    }, [state.transactions])
 
 // Returns a list of past recipients ordered from most to least recent
 // TODO: either revert this to return addresses or keep but also return

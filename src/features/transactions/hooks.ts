@@ -56,9 +56,7 @@ export function useSelectTransaction(
   chainId: ChainId | undefined,
   txHash: string | undefined
 ) {
-  return useAppSelector(
-    useMemo(() => makeSelectTransaction(address, chainId, txHash), [address, chainId, txHash])
-  )
+  return useAppSelector(makeSelectTransaction(address, chainId, txHash))
 }
 
 export function useSelectAddressTransactions(address: Address | null) {
