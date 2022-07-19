@@ -24,6 +24,11 @@
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/@amplitude/analytics-types/-/analytics-types-0.3.0.tgz#3626f2907e4dd353f0ca3a21b847d7560a1c4da9"
   integrity sha512-Hu/emt6mEpSGmOnLyqZGe75a5BNH3j9WJWBDFMBOZ1gLsbrxKtrb6w3EQy6yRROZ8Uyn04wC0veVUYyETwH3vg==
+  
+  "@amplitude/ua-parser-js@^0.7.31":
+  version "0.7.31"
+  resolved "https://registry.yarnpkg.com/@amplitude/ua-parser-js/-/ua-parser-js-0.7.31.tgz#749bf7cb633cfcc7ff3c10805bad7c5f6fbdbc61"
+  integrity sha512-+z8UGRaj13Pt5NDzOnkTBy49HE2CX64jeL0ArB86HAtilpnfkPB7oqkigN7Lf2LxscMg4QhFD7mmCfedh3rqTg==
 
 "@ampproject/remapping@^2.1.0":
   version "2.2.0"
