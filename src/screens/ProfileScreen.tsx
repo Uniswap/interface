@@ -1,6 +1,6 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { selectionAsync } from 'expo-haptics'
-import React, { useCallback, useMemo } from 'react'
+import React, { useCallback, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { AppStackParamList } from 'src/app/navigation/types'
@@ -16,6 +16,7 @@ import { TransactionList } from 'src/components/TransactionList/TransactionList'
 import { WalletConnectModalState } from 'src/components/WalletConnect/ScanSheet/WalletConnectModal'
 import SessionsButton from 'src/components/WalletConnect/SessionsButton'
 import { openModal } from 'src/features/modals/modalSlice'
+import { clearNotificationCount } from 'src/features/notifications/notificationSlice'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { useAllFormattedTransactions } from 'src/features/transactions/hooks'
 import { useActiveAccountWithThrow } from 'src/features/wallet/hooks'
@@ -59,6 +60,10 @@ export function ProfileScreen({ navigation }: Props) {
       navigation.navigate(Screens.SettingsWalletManageConnection, { address })
     }
   }, [address, navigation])
+
+  useEffect(() => {
+    dispatch(clearNotificationCount({ address }))
+  }, [dispatch, address])
 
   const ContentHeader = useMemo(
     () => (
