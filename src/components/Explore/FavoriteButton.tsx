@@ -19,6 +19,10 @@ const StyledFavoriteButton = styled.button<{ active: boolean }>`
   color: ${({ theme, active }) => (active ? theme.blue200 : theme.textPrimary)};
   font-size: 16px;
   cursor: pointer;
+
+  :hover {
+    background-color: ${({ theme }) => theme.backgroundContainer};
+  }
 `
 
 export default function FavoriteButton() {

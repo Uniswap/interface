@@ -28,6 +28,11 @@ const SearchInput = styled.input<{ expanded: boolean }>`
   color: ${({ theme }) => theme.textPrimary};
   transition: width 0.75s cubic-bezier(0, 0.795, 0, 1);
 
+  :hover {
+    cursor: pointer;
+    background-color: ${({ theme }) => theme.backgroundContainer};
+  }
+
   :focus {
     outline: none;
     background-color: ${({ theme }) => theme.backgroundContainer};

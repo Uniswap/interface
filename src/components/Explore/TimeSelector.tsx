@@ -87,20 +87,18 @@ const StyledMenuButton = styled.button<{ open: boolean }>`
   border: none;
   background-color: transparent;
   margin: 0;
-  background-color: ${({ theme }) => theme.none};
-  border: 1px solid ${({ theme }) => theme.backgroundOutline};
+  background-color: ${({ theme, open }) => (open ? theme.accentActionSoft : theme.none)};
+  border: 1px solid ${({ theme, open }) => (open ? theme.accentActiveSoft : theme.backgroundOutline)};
   padding: 6px 12px 6px 12px;
   border-radius: 16px;
   font-size: 16px;
   line-height: 24px;
   font-weight: 400;
 
-  :hover,
-  :focus {
+  :hover {
     cursor: pointer;
     outline: none;
-    background-color: ${({ theme, open }) => (open ? theme.accentActionSoft : theme.none)};
-    border: 1px solid ${({ theme, open }) => (open ? theme.accentActiveSoft : theme.backgroundOutline)};
+    background-color: ${({ theme }) => theme.backgroundContainer};
     color: ${({ theme }) => theme.blue200};
   }
 
