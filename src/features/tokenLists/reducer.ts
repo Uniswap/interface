@@ -33,13 +33,13 @@ export const BY_URL_DEFAULT_LISTS = DEFAULT_LIST_OF_LISTS.reduce(
   {}
 )
 
-const initialState: TokenListsState = {
+export const initialTokenListsState: TokenListsState = {
   lastInitializedDefaultListOfLists: DEFAULT_LIST_OF_LISTS,
   byUrl: BY_URL_DEFAULT_LISTS,
   activeListUrls: DEFAULT_ACTIVE_LIST_URLS,
 }
 
-export const tokenListsReducer = createReducer(initialState, (builder) =>
+export const tokenListsReducer = createReducer(initialTokenListsState, (builder) =>
   builder
     .addCase(fetchTokenList.pending, (state, { payload: { requestId, url } }) => {
       const current = state.byUrl[url]?.current ?? null
@@ -141,8 +141,8 @@ export const tokenListsReducer = createReducer(initialState, (builder) =>
     .addCase(updateVersion, (state) => {
       // state loaded from localStorage, but new lists have never been initialized
       if (!state.lastInitializedDefaultListOfLists) {
-        state.byUrl = initialState.byUrl
-        state.activeListUrls = initialState.activeListUrls
+        state.byUrl = initialTokenListsState.byUrl
+        state.activeListUrls = initialTokenListsState.activeListUrls
       } else if (state.lastInitializedDefaultListOfLists) {
         const lastInitializedSet = state.lastInitializedDefaultListOfLists.reduce<Set<string>>(
           (s, l) => s.add(l),

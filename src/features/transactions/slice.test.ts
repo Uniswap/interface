@@ -4,7 +4,7 @@ import {
   addTransaction,
   cancelTransaction,
   finalizeTransaction,
-  initialState,
+  initialTransactionsState,
   replaceTransaction,
   resetTransactions,
   transactionReducer,
@@ -39,7 +39,7 @@ describe('transaction reducer', () => {
   let store: Store<TransactionState>
 
   beforeEach(() => {
-    store = createStore(transactionReducer, initialState)
+    store = createStore(transactionReducer, initialTransactionsState)
   })
 
   describe('addTransaction', () => {

@@ -4,13 +4,13 @@ interface ProviderState {
   isInitialized: boolean
 }
 
-const initialState: ProviderState = {
+export const initialProvidersState: ProviderState = {
   isInitialized: false,
 }
 
 const slice = createSlice({
   name: 'providers',
-  initialState,
+  initialState: initialProvidersState,
   reducers: {
     initialized: (state) => {
       state.isInitialized = true

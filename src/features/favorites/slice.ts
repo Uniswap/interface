@@ -8,14 +8,14 @@ export interface FavoritesState {
   // add other types of assets here, e.g. nfts
 }
 
-const initialState: FavoritesState = {
+export const initialFavoritesState: FavoritesState = {
   tokens: [],
   watchedAddresses: [],
 }
 
 export const slice = createSlice({
   name: 'favorites',
-  initialState,
+  initialState: initialFavoritesState,
   reducers: {
     addFavoriteToken: (
       state,

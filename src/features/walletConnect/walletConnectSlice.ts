@@ -50,7 +50,7 @@ export interface WalletConnectState {
   pendingRequests: WalletConnectRequest[]
 }
 
-const initialWalletConnectState: Readonly<WalletConnectState> = {
+export const initialWalletConnectState: Readonly<WalletConnectState> = {
   byAccount: {},
   pendingSession: null,
   pendingRequests: [],

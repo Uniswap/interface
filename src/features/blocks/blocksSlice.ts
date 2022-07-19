@@ -8,13 +8,13 @@ interface BlockState {
   }
 }
 
-const initialState: BlockState = {
+export const initialBlockState: BlockState = {
   byChainId: {},
 }
 
 const slice = createSlice({
   name: 'blocks',
-  initialState,
+  initialState: initialBlockState,
   reducers: {
     updateLatestBlocks: (state, action: PayloadAction<BlockState['byChainId']>) => {
       state.byChainId = {
@@ -31,7 +31,7 @@ const slice = createSlice({
         latestBlockNumber,
       }
     },
-    resetBlocks: () => initialState,
+    resetBlocks: () => initialBlockState,
   },
 })
 

@@ -1,10 +1,13 @@
+import { ACTIVE_CHAINS } from 'react-native-dotenv'
 import {
   DEFAULT_ACTIVE_LIST_URLS,
   DEFAULT_LIST_OF_LISTS,
 } from 'src/constants/tokenLists/tokenLists'
 import { DEFAULT_WATCHED_TOKENS } from 'src/constants/watchedTokens'
+import { chainListToStateMap } from 'src/features/chains/utils'
 import { ModalName } from 'src/features/telemetry/constants'
 import { BY_URL_DEFAULT_LISTS } from 'src/features/tokenLists/reducer'
+import { parseActiveChains } from 'src/utils/chainId'
 
 export const initialSchema = {
   balances: {
@@ -14,7 +17,7 @@ export const initialSchema = {
     byChainId: {},
   },
   chains: {
-    byChainId: {},
+    byChainId: chainListToStateMap(parseActiveChains(ACTIVE_CHAINS)),
   },
   favorites: {
     tokens: [],
@@ -127,6 +130,24 @@ export const v5Schema = {
   },
 }
 
+const v5IntermediateSchema = {
+  ...v5Schema,
+  wallet: {
+    ...v5Schema.wallet,
+    bluetooth: undefined,
+  },
+}
+
+delete v5IntermediateSchema.wallet.bluetooth
+
+export const v6Schema = {
+  ...v5IntermediateSchema,
+  wallet: {
+    ...v5IntermediateSchema.wallet,
+    settings: {},
+  },
+}
+
 // TODO: use function with typed output when API reducers are removed from rootReducer
 // export const getSchema = (): RootState => v0Schema
-export const getSchema = () => v5Schema
+export const getSchema = () => v6Schema

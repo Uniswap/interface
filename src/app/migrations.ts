@@ -47,7 +47,6 @@ export const migrations = {
     return newState
   },
 
-  // This is an unncessary migration
   3: (state: any) => {
     const newState = { ...state }
     newState.searchHistory = { results: [] }
@@ -86,6 +85,15 @@ export const migrations = {
     }
 
     delete newState?.balances
+    return newState
+  },
+
+  6: (state: any) => {
+    const newState = { ...state }
+    newState.walletConnect = { ...newState.walletConnect, pendingSession: null }
+    newState.wallet = { ...newState.wallet, settings: null }
+
+    delete newState?.wallet?.bluetooth
     return newState
   },
 }

@@ -23,7 +23,7 @@ interface Wallet {
   }
 }
 
-const initialState: Wallet = {
+export const initialWalletState: Wallet = {
   accounts: {},
   activeAccountAddress: null,
   flashbotsEnabled: false,
@@ -34,7 +34,7 @@ const initialState: Wallet = {
 
 const slice = createSlice({
   name: 'wallet',
-  initialState,
+  initialState: initialWalletState,
   reducers: {
     addAccount: (state, action: PayloadAction<Account>) => {
       const { address } = action.payload
@@ -104,7 +104,7 @@ const slice = createSlice({
         next(tokensMetadataDisplayTypes, state.settings.tokensMetadataDisplayType) ??
         tokensMetadataDisplayTypes[0]
     },
-    resetWallet: () => initialState,
+    resetWallet: () => initialWalletState,
   },
 })
 

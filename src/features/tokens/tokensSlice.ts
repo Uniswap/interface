@@ -28,7 +28,7 @@ interface Tokens {
   }
 }
 
-const initialState: Tokens = {
+export const initialTokensState: Tokens = {
   watchedTokens: DEFAULT_WATCHED_TOKENS,
   customTokens: {},
   tokenPairs: {},
@@ -37,7 +37,7 @@ const initialState: Tokens = {
 
 const slice = createSlice({
   name: 'tokens',
-  initialState,
+  initialState: initialTokensState,
   reducers: {
     addWatchedToken: (state, action: PayloadAction<{ address: Address; chainId: number }>) => {
       const { chainId, address } = action.payload
@@ -91,7 +91,7 @@ const slice = createSlice({
     resetDismissedWarnings: (state) => {
       state.dismissedWarningTokens = {}
     },
-    resetTokens: () => initialState,
+    resetTokens: () => initialTokensState,
   },
 })
 

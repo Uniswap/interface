@@ -7,13 +7,13 @@ interface ChainsState {
   byChainId: ChainIdTo<ChainState>
 }
 
-const initialState: ChainsState = {
+export const initialChainsState: ChainsState = {
   byChainId: config.activeChains,
 }
 
 const slice = createSlice({
   name: 'chains',
-  initialState,
+  initialState: initialChainsState,
   reducers: {
     setChainActiveStatus: (
       state,
@@ -23,7 +23,7 @@ const slice = createSlice({
       state.byChainId[chainId] ??= { isActive }
       state.byChainId[chainId]!.isActive = isActive
     },
-    resetNetwork: () => initialState,
+    resetNetwork: () => initialChainsState,
   },
 })
 

@@ -103,13 +103,13 @@ const deletedSliceFile = danger.git.deleted_files.find((file) =>
 
 if (modifiedSliceFile && (!updatedSchemaFile || !updatedMigrationsFile)) {
   warn(
-    'You modified a slice file. If you only added properties to state, then make sure to also add it to the latest schema version. If you removed or edited properties, make sure to define a new schema and a new migration.'
+    'You modified a slice file. If you added, renamed, or deleted required properties from state, then make sure to define a new schema and a create a migration.'
   )
 }
 
 if (updatedSchemaFile && !updatedMigrationsFile) {
   warn(
-    'You updated the schema file but not the migrations file. This is ok so long as you only added properties to state. Otherwise, you must also define a migration.'
+    'You updated the schema file but not the migrations file. Make sure to also define a migration.'
   )
 }
 
@@ -119,14 +119,14 @@ if (!updatedSchemaFile && updatedMigrationsFile) {
   )
 }
 
-if (createdSliceFile && !updatedSchemaFile) {
+if (createdSliceFile && (!updatedMigrationsFile || !updatedSchemaFile)) {
   fail(
-    'You created a new slice file. Please update the latest schema with the new state properties.'
+    'You created a new slice file. Please write a migration, update initialState in the `migrations.test.ts` file, and create a new schema.'
   )
 }
 
 if (deletedSliceFile && (!updatedSchemaFile || !updatedMigrationsFile)) {
-  fail('You deleted a slice file. Make sure to define a new schema and a new migration.')
+  fail('You deleted a slice file. Make sure to define a new schema and and create a migration.')
 }
 
 if (updatedMigrationsFile && !updatedMigrationsTestFile) {

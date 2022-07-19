@@ -50,7 +50,7 @@ export interface SearchHistoryState {
   results: SearchResult[]
 }
 
-const initialSearchHistoryState: Readonly<SearchHistoryState> = {
+export const initialSearchHistoryState: Readonly<SearchHistoryState> = {
   results: [],
 }
 

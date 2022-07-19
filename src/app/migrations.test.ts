@@ -7,13 +7,39 @@ import { persistConfig } from 'src/app/store'
 import { WalletConnectModalState } from 'src/components/WalletConnect/ScanSheet/WalletConnectModal'
 import { SWAP_ROUTER_ADDRESSES } from 'src/constants/addresses'
 import { ChainId } from 'src/constants/chains'
+import { initialBlockState } from 'src/features/blocks/blocksSlice'
+import { initialChainsState } from 'src/features/chains/chainsSlice'
+import { initialSearchHistoryState } from 'src/features/explore/searchHistorySlice'
+import { initialFavoritesState } from 'src/features/favorites/slice'
+import { initialModalState } from 'src/features/modals/modalSlice'
+import { initialNotificationsState } from 'src/features/notifications/notificationSlice'
+import { initialProvidersState } from 'src/features/providers/providerSlice'
 import { ModalName } from 'src/features/telemetry/constants'
+import { initialTokenListsState } from 'src/features/tokenLists/reducer'
+import { initialTokensState } from 'src/features/tokens/tokensSlice'
+import { initialTransactionsState } from 'src/features/transactions/slice'
 import {
   TransactionDetails,
   TransactionStatus,
   TransactionType,
 } from 'src/features/transactions/types'
 import { AccountType } from 'src/features/wallet/accounts/types'
+import { initialWalletState } from 'src/features/wallet/walletSlice'
+import { initialWalletConnectState } from 'src/features/walletConnect/walletConnectSlice'
+
+const getAllKeysOfNestedObject = (obj: any, prefix = ''): string[] => {
+  const keys = Object.keys(obj)
+  if (!keys.length && prefix !== '') return [prefix.slice(0, -1)]
+  return keys.reduce<string[]>((res, el) => {
+    if (Array.isArray(obj[el])) return [...res]
+
+    if (typeof obj[el] === 'object' && obj[el] !== null) {
+      return [...res, ...getAllKeysOfNestedObject(obj[el], prefix + el + '.')]
+    }
+
+    return [...res, prefix + el]
+  }, [])
+}
 
 describe('Redux state migrations', () => {
   it('is able to perform all migrations starting from the initial schema', async () => {
@@ -25,18 +51,52 @@ describe('Redux state migrations', () => {
     const migrate = createMigrate(migrations)
     const migratedSchema = await migrate(intialSchemaStub, persistConfig.version)
     expect(typeof migratedSchema).toBe('object')
+  })
 
-    const migratedSchemaKeys = new Set(Object.keys(migratedSchema as any))
-    const latestSchemaKeys = new Set(Object.keys(getSchema()))
-
-    for (const key of migratedSchemaKeys) {
-      if (latestSchemaKeys.has(key)) latestSchemaKeys.delete(key)
-      migratedSchemaKeys.delete(key)
+  // If this test fails then it's likely a required property was added to the Redux state but a migration was not defined
+  it('migrates all the properties correctly', async () => {
+    const intialSchemaStub = {
+      ...initialSchema,
+      _persist: { version: -1, rehydrated: false },
     }
 
-    // if this fails then it's likely a slice was added but a migration was not created for it
+    const migrate = createMigrate(migrations)
+    const migratedSchema = await migrate(intialSchemaStub, persistConfig.version)
+
+    // Add new slices here!
+    const initialState = {
+      blocks: initialBlockState,
+      chains: initialChainsState,
+      favorites: initialFavoritesState,
+      modals: initialModalState,
+      notifications: initialNotificationsState,
+      providers: initialProvidersState,
+      saga: {},
+      searchHistory: initialSearchHistoryState,
+      tokenLists: initialTokenListsState,
+      tokens: initialTokensState,
+      transactions: initialTransactionsState,
+      wallet: initialWalletState,
+      walletConnect: initialWalletConnectState,
+      _persist: {
+        version: persistConfig.version,
+        rehydrated: true,
+      },
+    }
+
+    const migratedSchemaKeys = new Set(getAllKeysOfNestedObject(migratedSchema as any))
+    const latestSchemaKeys = new Set(getAllKeysOfNestedObject(getSchema()))
+    const initialStateKeys = new Set(getAllKeysOfNestedObject(initialState))
+
+    for (const key of initialStateKeys) {
+      if (latestSchemaKeys.has(key)) latestSchemaKeys.delete(key)
+      if (migratedSchemaKeys.has(key)) migratedSchemaKeys.delete(key)
+      initialStateKeys.delete(key)
+    }
+
     expect(migratedSchemaKeys.size).toBe(0)
     expect(latestSchemaKeys.size).toBe(0)
+    expect(initialStateKeys.size).toBe(0)
   })
 
   // This is a precaution to ensure we do not attempt to access undefined properties during migrations

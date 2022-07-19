@@ -10,7 +10,7 @@ interface NotificationState {
   lastTxNotificationUpdate: { [address: Address]: ChainIdTo<number> }
 }
 
-const initialState: NotificationState = {
+export const initialNotificationsState: NotificationState = {
   notificationQueue: [],
   notificationCount: {},
   lastTxNotificationUpdate: {},
@@ -18,7 +18,7 @@ const initialState: NotificationState = {
 
 const slice = createSlice({
   name: 'notifications',
-  initialState,
+  initialState: initialNotificationsState,
   reducers: {
     pushNotification: (state, action: PayloadAction<AppNotification>) => {
       state.notificationQueue.push(action.payload)
@@ -34,7 +34,7 @@ const slice = createSlice({
         if (indexToRemove !== -1) state.notificationQueue.splice(indexToRemove, 1)
       }
     },
-    resetNotifications: () => initialState,
+    resetNotifications: () => initialNotificationsState,
     addToNotificationCount: (state, action: PayloadAction<{ address: Address; count: number }>) => {
       const { address, count } = action.payload
       state.notificationCount[address] = (state.notificationCount[address] ?? 0) + count

@@ -13,11 +13,11 @@ export interface TransactionState {
   [address: Address]: ChainIdToTxIdToDetails
 }
 
-export const initialState: TransactionState = {}
+export const initialTransactionsState: TransactionState = {}
 
 const slice = createSlice({
   name: 'transactions',
-  initialState,
+  initialState: initialTransactionsState,
   reducers: {
     addTransaction: (state, { payload: transaction }: PayloadAction<TransactionDetails>) => {
       const { chainId, id, from } = transaction
@@ -75,7 +75,7 @@ const slice = createSlice({
       )
       state[address][chainId]![id].status = TransactionStatus.Replacing
     },
-    resetTransactions: () => initialState,
+    resetTransactions: () => initialTransactionsState,
   },
 })
 
