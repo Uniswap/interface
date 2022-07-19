@@ -295,7 +295,7 @@ export default function NetworkSelector() {
   const closeModal = useCloseModal(ApplicationModal.NETWORK_SELECTOR)
   const toggleModal = useToggleModal(ApplicationModal.NETWORK_SELECTOR)
 
-  useOnClickOutside(node, open ? toggle : undefined)
+  useOnClickOutside(node, isOpen ? toggle : undefined)
 
   const info = getChainInfo(chainId)
 
