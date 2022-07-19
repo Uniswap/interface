@@ -79,8 +79,7 @@ export type OnboardingStackParamList = {
     pin?: string
   } & OnboardingStackBaseParams
   [OnboardingScreens.BackupCloudProcessing]: {
-    pin: string
-    type: 'restore' | 'backup'
+    pin: string | null
   } & OnboardingStackBaseParams
   [OnboardingScreens.BackupManual]: OnboardingStackBaseParams
   [OnboardingScreens.Backup]: OnboardingStackBaseParams

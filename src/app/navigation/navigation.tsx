@@ -20,7 +20,7 @@ import {
 import DiscoverIcon from 'src/assets/icons/discover.svg'
 import ProfileIcon from 'src/assets/icons/profile.svg'
 import WalletIcon from 'src/assets/icons/wallet.svg'
-import OnboardingHeader from 'src/features/onboarding/OnboardingHeader'
+import { OnboardingHeader } from 'src/features/onboarding/OnboardingHeader'
 import { OnboardingEntryPoint } from 'src/features/onboarding/utils'
 import { selectFinishedOnboarding } from 'src/features/wallet/selectors'
 import { CurrencySelectorScreen } from 'src/screens/CurrencySelectorScreen'
@@ -270,6 +270,8 @@ export function OnboardingStackNavigator() {
             shadowColor: theme.colors.none,
           },
           headerTintColor: theme.colors.textSecondary,
+          headerLeftContainerStyle: { paddingLeft: theme.spacing.md },
+          headerRightContainerStyle: { paddingRight: theme.spacing.md },
         }}>
         <OnboardingStack.Screen
           component={LandingScreen}

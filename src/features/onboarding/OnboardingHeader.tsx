@@ -6,7 +6,7 @@ import { getFlow, getStepNumber, OnboardingEntryPoint } from 'src/features/onboa
 import { useIsBiometricAuthEnabled, useNativeAccountExists } from 'src/features/wallet/hooks'
 import { OnboardingScreens } from 'src/screens/Screens'
 
-const OnboardingHeader = ({ children: routeName }: HeaderTitleProps) => {
+export const OnboardingHeader = ({ children: routeName }: HeaderTitleProps) => {
   const navigation = useOnboardingStackNavigation()
   const navigationState = navigation.getState()
   const importType = navigationState.routes[navigationState.index]?.params?.importType
@@ -27,5 +27,3 @@ const OnboardingHeader = ({ children: routeName }: HeaderTitleProps) => {
   }
   return null
 }
-
-export default OnboardingHeader
