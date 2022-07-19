@@ -21,6 +21,7 @@ import DiscoverIcon from 'src/assets/icons/discover.svg'
 import ProfileIcon from 'src/assets/icons/profile.svg'
 import WalletIcon from 'src/assets/icons/wallet.svg'
 import OnboardingHeader from 'src/features/onboarding/OnboardingHeader'
+import { OnboardingEntryPoint } from 'src/features/onboarding/utils'
 import { selectFinishedOnboarding } from 'src/features/wallet/selectors'
 import { CurrencySelectorScreen } from 'src/screens/CurrencySelectorScreen'
 import { DevScreen } from 'src/screens/DevScreen'
@@ -332,11 +333,18 @@ export function AppStackNavigator() {
   const finishedOnboarding = useAppSelector(selectFinishedOnboarding)
   return (
     <AppStack.Navigator screenOptions={{ headerShown: false }}>
-      {finishedOnboarding ? (
+      {finishedOnboarding && (
         <AppStack.Screen component={TabNavigator} name={Screens.TabNavigator} />
-      ) : (
-        <AppStack.Screen component={OnboardingStackNavigator} name={Screens.OnboardingStack} />
       )}
+      <AppStack.Screen
+        component={OnboardingStackNavigator}
+        name={Screens.OnboardingStack}
+        navigationKey={
+          finishedOnboarding
+            ? OnboardingEntryPoint.Sidebar.valueOf()
+            : OnboardingEntryPoint.FreshInstall.valueOf()
+        }
+      />
       <AppStack.Group screenOptions={navOptions.presentationModal}>
         <AccountStack.Screen component={ImportAccountScreen} name={Screens.ImportAccount} />
       </AppStack.Group>
