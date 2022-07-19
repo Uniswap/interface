@@ -3,7 +3,6 @@ import arbitrumLogoUrl from 'assets/svg/arbitrum_logo.svg'
 import celoLogo from 'assets/svg/celo_logo.svg'
 import optimismLogoUrl from 'assets/svg/optimistic_ethereum.svg'
 import polygonMaticLogo from 'assets/svg/polygon-matic-logo.svg'
-import { NetworkAlertChains } from 'components/NetworkAlert/NetworkAlert'
 import ms from 'ms.macro'
 
 import { SupportedChainId, SupportedL1ChainId, SupportedL2ChainId } from './chains'
@@ -47,18 +46,7 @@ export type ChainInfoMap = { readonly [chainId: number]: L1ChainInfo | L2ChainIn
   readonly [chainId in SupportedL2ChainId]: L2ChainInfo
 } & { readonly [chainId in SupportedL1ChainId]: L1ChainInfo }
 
-export const TEXT_COLORS: { [chainId in NetworkAlertChains]: string } = {
-  [SupportedChainId.POLYGON]: 'rgba(130, 71, 229)',
-  [SupportedChainId.POLYGON_MUMBAI]: 'rgba(130, 71, 229)',
-  [SupportedChainId.OPTIMISM]: '#ff3856',
-  [SupportedChainId.OPTIMISTIC_KOVAN]: '#ff3856',
-  [SupportedChainId.ARBITRUM_ONE]: '#0490ed',
-  [SupportedChainId.ARBITRUM_RINKEBY]: '#0490ed',
-  [SupportedChainId.CELO]: 'rgba(53, 178, 97)',
-  [SupportedChainId.CELO_ALFAJORES]: 'rgba(53, 178, 97)',
-}
-
-export const CHAIN_INFO: ChainInfoMap = {
+const CHAIN_INFO: ChainInfoMap = {
   [SupportedChainId.MAINNET]: {
     networkType: NetworkType.L1,
     docs: 'https://docs.uniswap.org/',
@@ -204,4 +192,31 @@ export const CHAIN_INFO: ChainInfoMap = {
     nativeCurrency: { name: 'Celo', symbol: 'CELO', decimals: 18 },
     defaultListUrl: CELO_LIST,
   },
+}
+
+export function getChainInfo(chainId: SupportedL1ChainId): L1ChainInfo
+export function getChainInfo(chainId: SupportedL2ChainId): L2ChainInfo
+export function getChainInfo(chainId: SupportedChainId): L1ChainInfo | L2ChainInfo
+export function getChainInfo(
+  chainId: SupportedChainId | SupportedL1ChainId | SupportedL2ChainId | number | undefined
+): L1ChainInfo | L2ChainInfo | undefined
+
+/**
+ * Overloaded method for returning ChainInfo given a chainID
+ * Return type varies depending on input type:
+ * number | undefined -> returns chaininfo | undefined
+ * SupportedChainId -> returns L1ChainInfo | L2ChainInfo
+ * SupportedL1ChainId -> returns L1ChainInfo
+ * SupportedL2ChainId -> returns L2ChainInfo
+ */
+export function getChainInfo(chainId: any): any {
+  if (chainId) {
+    return CHAIN_INFO[chainId] ?? undefined
+  }
+  return undefined
+}
+
+export const MAINNET_INFO = CHAIN_INFO[SupportedChainId.MAINNET]
+export function getChainInfoOrDefault(chainId: number | undefined) {
+  return getChainInfo(chainId) ?? MAINNET_INFO
 }

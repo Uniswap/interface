@@ -1,8 +1,7 @@
 name: Release
 on:
-  # Auto-deploy is disabled while react 18 upgrade is tested further.
-  # schedule:
-  #   - cron:  '0 12 * * 1-4' # every day 12:00 UTC Monday-Thursday
+  schedule:
+    - cron: '0 12 * * 1-4' # every day 12:00 UTC Monday-Thursday
   # manual trigger
   workflow_dispatch:
 
