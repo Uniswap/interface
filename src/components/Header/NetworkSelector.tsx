@@ -1,23 +1,23 @@
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
-import { getWalletForConnector } from 'connectors'
-import { CHAIN_INFO } from 'constants/chainInfo'
+import { getConnection } from 'connection/utils'
+import { getChainInfo } from 'constants/chainInfo'
 import { CHAIN_IDS_TO_NAMES, SupportedChainId } from 'constants/chains'
-import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import useParsedQueryString from 'hooks/useParsedQueryString'
 import usePrevious from 'hooks/usePrevious'
 import { ParsedQs } from 'qs'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { ArrowDownCircle, ChevronDown } from 'react-feather'
 import { useHistory } from 'react-router-dom'
-import { useModalOpen, useToggleModal } from 'state/application/hooks'
+import { useCloseModal, useModalIsOpen, useOpenModal, useToggleModal } from 'state/application/hooks'
 import { addPopup, ApplicationModal } from 'state/application/reducer'
+import { updateConnectionError } from 'state/connection/reducer'
 import { useAppDispatch } from 'state/hooks'
-import { updateWalletError } from 'state/wallet/reducer'
 import styled from 'styled-components/macro'
 import { ExternalLink, MEDIA_WIDTHS } from 'theme'
 import { replaceURLParam } from 'utils/routes'
 import { isChainAllowed, switchChain } from 'utils/switchChain'
+import { isMobile } from 'utils/userAgent'
 
 const ActiveRowLinkList = styled.div`
   display: flex;
@@ -121,20 +121,18 @@ const SelectorLabel = styled(NetworkLabel)`
     margin-right: 8px;
   }
 `
-const SelectorControls = styled.div<{ interactive: boolean }>`
+const SelectorControls = styled.div`
   align-items: center;
   background-color: ${({ theme }) => theme.bg0};
   border: 2px solid ${({ theme }) => theme.bg0};
   border-radius: 16px;
   color: ${({ theme }) => theme.text1};
-  cursor: ${({ interactive }) => (interactive ? 'pointer' : 'auto')};
   display: flex;
   font-weight: 500;
   justify-content: space-between;
   padding: 6px 8px;
 `
-const SelectorLogo = styled(Logo)<{ interactive?: boolean }>`
-  margin-right: ${({ interactive }) => (interactive ? 8 : 0)}px;
+const SelectorLogo = styled(Logo)`
   @media screen and (min-width: ${MEDIA_WIDTHS.upToSmall}px) {
     margin-right: 8px;
   }
@@ -158,6 +156,9 @@ const BridgeLabel = ({ chainId }: { chainId: SupportedChainId }) => {
     case SupportedChainId.POLYGON:
     case SupportedChainId.POLYGON_MUMBAI:
       return <Trans>Polygon Bridge</Trans>
+    case SupportedChainId.CELO:
+    case SupportedChainId.CELO_ALFAJORES:
+      return <Trans>Portal Bridge</Trans>
     default:
       return <Trans>Bridge</Trans>
   }
@@ -173,6 +174,9 @@ const ExplorerLabel = ({ chainId }: { chainId: SupportedChainId }) => {
     case SupportedChainId.POLYGON:
     case SupportedChainId.POLYGON_MUMBAI:
       return <Trans>Polygonscan</Trans>
+    case SupportedChainId.CELO:
+    case SupportedChainId.CELO_ALFAJORES:
+      return <Trans>Blockscout</Trans>
     default:
       return <Trans>Etherscan</Trans>
   }
@@ -190,7 +194,7 @@ function Row({
     return null
   }
   const active = chainId === targetChain
-  const { helpCenterUrl, explorer, bridge, label, logoUrl } = CHAIN_INFO[targetChain]
+  const { helpCenterUrl, explorer, bridge, label, logoUrl } = getChainInfo(targetChain)
 
   const rowContent = (
     <FlyoutRow onClick={() => onSelectChain(targetChain)} active={active}>
@@ -263,6 +267,7 @@ const NETWORK_SELECTOR_CHAINS = [
   SupportedChainId.POLYGON,
   SupportedChainId.OPTIMISM,
   SupportedChainId.ARBITRUM_ONE,
+  SupportedChainId.CELO,
 ]
 
 export default function NetworkSelector() {
@@ -284,13 +289,15 @@ export default function NetworkSelector() {
 
   const history = useHistory()
 
-  const node = useRef<HTMLDivElement>()
-  const open = useModalOpen(ApplicationModal.NETWORK_SELECTOR)
-  const toggle = useToggleModal(ApplicationModal.NETWORK_SELECTOR)
+  const node = useRef<HTMLDivElement>(null)
+  const isOpen = useModalIsOpen(ApplicationModal.NETWORK_SELECTOR)
+  const openModal = useOpenModal(ApplicationModal.NETWORK_SELECTOR)
+  const closeModal = useCloseModal(ApplicationModal.NETWORK_SELECTOR)
+  const toggleModal = useToggleModal(ApplicationModal.NETWORK_SELECTOR)
 
   useOnClickOutside(node, open ? toggle : undefined)
 
-  const info = chainId ? CHAIN_INFO[chainId] : undefined
+  const info = getChainInfo(chainId)
 
   const replaceURLChainParam = useCallback(() => {
     if (chainId) {
@@ -299,29 +306,29 @@ export default function NetworkSelector() {
   }, [chainId, history])
 
   const onSelectChain = useCallback(
-    async (targetChain: number, skipToggle?: boolean) => {
+    async (targetChain: SupportedChainId, skipClose?: boolean) => {
       if (!connector) return
 
-      const wallet = getWalletForConnector(connector)
+      const connectionType = getConnection(connector).type
 
       try {
-        dispatch(updateWalletError({ wallet, error: undefined }))
+        dispatch(updateConnectionError({ connectionType, error: undefined }))
         await switchChain(connector, targetChain)
       } catch (error) {
         console.error('Failed to switch networks', error)
 
-        dispatch(updateWalletError({ wallet, error: error.message }))
+        dispatch(updateConnectionError({ connectionType, error: error.message }))
         dispatch(addPopup({ content: { failedSwitchNetwork: targetChain }, key: `failed-network-switch` }))
 
         // If we activate a chain and it fails, reset the query param to the current chainId
         replaceURLChainParam()
       }
 
-      if (!skipToggle) {
-        toggle()
+      if (!skipClose) {
+        closeModal()
       }
     },
-    [connector, toggle, dispatch, replaceURLChainParam]
+    [connector, closeModal, dispatch, replaceURLChainParam]
   )
 
   // If there is no chain query param, set it to the current chain
@@ -354,13 +361,18 @@ export default function NetworkSelector() {
   }
 
   return (
-    <SelectorWrapper ref={node as any} onMouseEnter={toggle} onMouseLeave={toggle}>
-      <SelectorControls interactive>
-        <SelectorLogo interactive src={info.logoUrl} />
+    <SelectorWrapper
+      ref={node}
+      onMouseEnter={openModal}
+      onMouseLeave={closeModal}
+      onClick={isMobile ? toggleModal : undefined}
+    >
+      <SelectorControls>
+        <SelectorLogo src={info.logoUrl} />
         <SelectorLabel>{info.label}</SelectorLabel>
         <StyledChevronDown />
       </SelectorControls>
-      {open && (
+      {isOpen && (
         <FlyoutMenu>
           <FlyoutMenuContents>
             <FlyoutHeader>

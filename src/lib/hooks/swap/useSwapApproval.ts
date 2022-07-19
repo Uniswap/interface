@@ -71,8 +71,7 @@ export default function useSwapApproval(
   )
   const spender = useSwapRouterAddress(trade)
 
-  const approval = useApproval(amountToApprove, spender, useIsPendingApproval)
-  return approval
+  return useApproval(amountToApprove, spender, useIsPendingApproval)
 }
 
 export function useSwapApprovalOptimizedTrade(
@@ -110,7 +109,7 @@ export function useSwapApprovalOptimizedTrade(
           return V3Trade.createUncheckedTradeWithMultipleRoutes({
             routes: trade.swaps.map(({ route, inputAmount, outputAmount }) => ({
               route: new V3Route(
-                route.pools.filter((p) => p instanceof Pool) as Pool[],
+                route.pools.filter((p): p is Pool => p instanceof Pool),
                 inputAmount.currency,
                 outputAmount.currency
               ),

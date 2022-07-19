@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-06-30 17:10\n"
+"PO-Revision-Date: 2022-07-12 23:04\n"
 "Last-Translator: \n"
 "Language: af_ZA\n"
 "Language-Team: Afrikaans\n"
@@ -321,6 +321,10 @@ msgid "Blocked address"
 msgstr "Adres geblokkeer"
 
 #: src/components/Header/NetworkSelector.tsx
+msgid "Blockscout"
+msgstr "Blokverkenner"
+
+#: src/components/Header/NetworkSelector.tsx
 msgid "Bridge"
 msgstr "Brug"
 
@@ -529,8 +533,8 @@ msgid "Connect to a wallet to view your liquidity."
 msgstr "Koppel aan 'n beursie om u likiditeit te sien."
 
 #: src/components/AccountDetails/index.tsx
-msgid "Connected with {name}"
-msgstr "Gekoppel met {name}"
+msgid "Connected with"
+msgstr "Gekonnekteer met"
 
 #: src/components/WalletModal/PendingView.tsx
 msgid "Connecting..."
@@ -923,7 +927,7 @@ msgstr "Aanvanklike pryse en swembadaandeel"
 msgid "Input is estimated. You will sell at most <0>{0} {1}</0> or the transaction will revert."
 msgstr "Inset word geskat. U sal hoogstens <0>{0} {1}</0> anders gaan die transaksie terug."
 
-#: src/components/WalletModal/index.tsx
+#: src/components/WalletModal/InjectedOption.tsx
 msgid "Install MetaMask"
 msgstr "Installeer MetaMask"
 
@@ -1293,8 +1297,13 @@ msgid "Pooled {0}:"
 msgstr "Gepoel {0}:"
 
 #: src/pages/Pool/index.tsx
+#: src/pages/Pool/index.tsx
 msgid "Pools Overview"
 msgstr "Poele Oorsig"
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Portal Bridge"
+msgstr "Portaalbrug"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Preview"
@@ -1611,10 +1620,6 @@ msgstr "Ruil {0} {1} vir {2} {3}"
 #: src/components/Popups/SurveyPopup.tsx
 msgid "Take a 10 minute survey to help us improve your experience in the Uniswap app."
 msgstr "Neem 'n 10 minute opname om ons te help om jou ervaring in die Uniswap-toepassing te verbeter."
-
-#: src/components/WalletModal/index.tsx
-msgid "Tally"
-msgstr "Tally"
 
 #: src/components/Popups/SurveyPopup.tsx
 msgid "Tell us what you think ↗"
@@ -2212,6 +2217,10 @@ msgstr "U V2-likiditeit"
 #: src/pages/Pool/index.tsx
 msgid "Your active V3 liquidity positions will appear here."
 msgstr "Jou aktiewe V3-likiditeitsposisies sal hier verskyn."
+
+#: src/pages/Pool/index.tsx
+msgid "Your connected network is unsupported. Request support <0>here</0>."
+msgstr "Jou gekoppelde netwerk word nie ondersteun nie. Versoek ondersteuning <0>hier</0>."
 
 #: src/pages/Earn/Manage.tsx
 msgid "Your liquidity deposits"

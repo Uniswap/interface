@@ -1,17 +1,16 @@
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
-import { Connector } from '@web3-react/types'
 import CopyHelper from 'components/AccountDetails/Copy'
-import { useCallback, useContext } from 'react'
+import { getConnection, getConnectionName, getIsCoinbaseWallet, getIsMetaMask } from 'connection/utils'
+import { Context, useCallback, useContext } from 'react'
 import { ExternalLink as LinkIcon } from 'react-feather'
 import { useAppDispatch } from 'state/hooks'
 import { updateSelectedWallet } from 'state/user/reducer'
+import { DefaultTheme } from 'styled-components/macro'
 import styled, { ThemeContext } from 'styled-components/macro'
 import { isMobile } from 'utils/userAgent'
 
 import { ReactComponent as Close } from '../../assets/images/x.svg'
-import { coinbaseWallet, injected } from '../../connectors'
-import { SUPPORTED_WALLETS } from '../../constants/wallet'
 import { clearAllTransactions } from '../../state/transactions/reducer'
 import { ExternalLink, LinkStyledButton, ThemedText } from '../../theme'
 import { shortenAddress } from '../../utils'
@@ -163,29 +162,6 @@ const WalletName = styled.div`
   color: ${({ theme }) => theme.text3};
 `
 
-const IconWrapper = styled.div<{ size?: number }>`
-  ${({ theme }) => theme.flexColumnNoWrap};
-  align-items: center;
-  justify-content: center;
-  margin-right: 8px;
-  & > img,
-  span {
-    height: ${({ size }) => (size ? size + 'px' : '32px')};
-    width: ${({ size }) => (size ? size + 'px' : '32px')};
-  }
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    align-items: flex-end;
-  `};
-`
-
-function WrappedStatusIcon({ connector }: { connector: Connector }) {
-  return (
-    <IconWrapper size={16}>
-      <StatusIcon connector={connector} />
-    </IconWrapper>
-  )
-}
-
 const TransactionListWrapper = styled.div`
   ${({ theme }) => theme.flexColumnNoWrap};
 `
@@ -228,25 +204,19 @@ export default function AccountDetails({
   openOptions,
 }: AccountDetailsProps) {
   const { chainId, account, connector } = useWeb3React()
-  const theme = useContext(ThemeContext)
+  const connectionType = getConnection(connector).type
+
+  const theme = useContext(ThemeContext as Context<DefaultTheme>)
   const dispatch = useAppDispatch()
 
-  const isMetaMask = !!window.ethereum?.isMetaMask
-  const isCoinbaseWallet = !!window.ethereum?.isCoinbaseWallet
+  const isMetaMask = getIsMetaMask()
+  const isCoinbaseWallet = getIsCoinbaseWallet()
   const isInjectedMobileBrowser = (isMetaMask || isCoinbaseWallet) && isMobile
 
   function formatConnectorName() {
-    const { ethereum } = window
-    const isMetaMask = !!(ethereum && ethereum.isMetaMask)
-    const name = Object.keys(SUPPORTED_WALLETS)
-      .filter(
-        (k) =>
-          SUPPORTED_WALLETS[k].connector === connector && (connector !== injected || isMetaMask === (k === 'METAMASK'))
-      )
-      .map((k) => SUPPORTED_WALLETS[k].name)[0]
     return (
       <WalletName>
-        <Trans>Connected with {name}</Trans>
+        <Trans>Connected with</Trans> {getConnectionName(connectionType, isMetaMask)}
       </WalletName>
     )
   }
@@ -277,13 +247,6 @@ export default function AccountDetails({
                         onClick={() => {
                           if (connector.deactivate) {
                             connector.deactivate()
-
-                            // Coinbase Wallet SDK does not emit a disconnect event to the provider,
-                            // which is what web3-react uses to reset state. As a workaround we manually
-                            // reset state.
-                            if (connector === coinbaseWallet) {
-                              connector.resetState()
-                            }
                           } else {
                             connector.resetState()
                           }
@@ -308,21 +271,10 @@ export default function AccountDetails({
               </AccountGroupingRow>
               <AccountGroupingRow data-testid="web3-account-identifier-row">
                 <AccountControl>
-                  {ENSName ? (
-                    <>
-                      <div>
-                        {connector && <WrappedStatusIcon connector={connector} />}
-                        <p> {ENSName}</p>
-                      </div>
-                    </>
-                  ) : (
-                    <>
-                      <div>
-                        {connector && <WrappedStatusIcon connector={connector} />}
-                        <p> {account && shortenAddress(account)}</p>
-                      </div>
-                    </>
-                  )}
+                  <div>
+                    <StatusIcon connectionType={connectionType} />
+                    <p>{ENSName ? ENSName : account && shortenAddress(account)}</p>
+                  </div>
                 </AccountControl>
               </AccountGroupingRow>
               <AccountGroupingRow>

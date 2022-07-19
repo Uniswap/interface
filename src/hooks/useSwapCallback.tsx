@@ -33,7 +33,13 @@ export function useSwapCallback(
     state,
     callback: libCallback,
     error,
-  } = useLibSwapCallBack({ trade, allowedSlippage, recipientAddressOrName: recipient, signatureData, deadline })
+  } = useLibSwapCallBack({
+    trade,
+    allowedSlippage,
+    recipientAddressOrName: recipient,
+    signatureData,
+    deadline,
+  })
 
   const callback = useMemo(() => {
     if (!libCallback || !trade) {

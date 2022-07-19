@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-06-30 17:10\n"
+"PO-Revision-Date: 2022-07-12 23:04\n"
 "Last-Translator: \n"
 "Language: ca_ES\n"
 "Language-Team: Catalan\n"
@@ -321,6 +321,10 @@ msgid "Blocked address"
 msgstr "Adreça bloquejada"
 
 #: src/components/Header/NetworkSelector.tsx
+msgid "Blockscout"
+msgstr "Blockscout"
+
+#: src/components/Header/NetworkSelector.tsx
 msgid "Bridge"
 msgstr "Pont"
 
@@ -529,8 +533,8 @@ msgid "Connect to a wallet to view your liquidity."
 msgstr "Connecteu-vos a una cartera per veure la vostra liquiditat."
 
 #: src/components/AccountDetails/index.tsx
-msgid "Connected with {name}"
-msgstr "Connectat amb {name}"
+msgid "Connected with"
+msgstr "Connectat amb"
 
 #: src/components/WalletModal/PendingView.tsx
 msgid "Connecting..."
@@ -923,7 +927,7 @@ msgstr "Preus inicials i quota de grup"
 msgid "Input is estimated. You will sell at most <0>{0} {1}</0> or the transaction will revert."
 msgstr "S’estima l’entrada. Vindràs com a màxim <0>{0} {1}</0> o la transacció es revertirà."
 
-#: src/components/WalletModal/index.tsx
+#: src/components/WalletModal/InjectedOption.tsx
 msgid "Install MetaMask"
 msgstr "Instal·leu MetaMask"
 
@@ -1293,8 +1297,13 @@ msgid "Pooled {0}:"
 msgstr "Agrupat {0}:"
 
 #: src/pages/Pool/index.tsx
+#: src/pages/Pool/index.tsx
 msgid "Pools Overview"
 msgstr "Visió general dels grups"
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Portal Bridge"
+msgstr "Pont del Portal"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Preview"
@@ -1611,10 +1620,6 @@ msgstr "Intercanvi de {0} {1} per {2} {3}"
 #: src/components/Popups/SurveyPopup.tsx
 msgid "Take a 10 minute survey to help us improve your experience in the Uniswap app."
 msgstr "Fes una enquesta de 10 minuts per ajudar-nos a millorar la teva experiència a l'aplicació Uniswap."
-
-#: src/components/WalletModal/index.tsx
-msgid "Tally"
-msgstr "Tally"
 
 #: src/components/Popups/SurveyPopup.tsx
 msgid "Tell us what you think ↗"
@@ -2212,6 +2217,10 @@ msgstr "La vostra liquiditat V2"
 #: src/pages/Pool/index.tsx
 msgid "Your active V3 liquidity positions will appear here."
 msgstr "Les vostres posicions de liquiditat V3 actives apareixeran aquí."
+
+#: src/pages/Pool/index.tsx
+msgid "Your connected network is unsupported. Request support <0>here</0>."
+msgstr "La vostra xarxa connectada no és compatible. Demaneu suport <0>aquí</0>."
 
 #: src/pages/Earn/Manage.tsx
 msgid "Your liquidity deposits"

@@ -1,17 +1,20 @@
 // eslint-disable-next-line no-restricted-imports
 import { t, Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
-import { Connector } from '@web3-react/types'
-import { getWalletForConnector } from 'connectors'
+import { ElementName, Event, EventName } from 'components/AmplitudeAnalytics/constants'
+import { TraceEvent } from 'components/AmplitudeAnalytics/TraceEvent'
+import { getConnection } from 'connection/utils'
+import { getIsValidSwapQuote } from 'pages/Swap'
 import { darken } from 'polished'
 import { useMemo } from 'react'
 import { Activity } from 'react-feather'
 import { useAppSelector } from 'state/hooks'
+import { useDerivedSwapInfo } from 'state/swap/hooks'
 import styled, { css } from 'styled-components/macro'
 import { isChainAllowed } from 'utils/switchChain'
 
 import { useHasSocks } from '../../hooks/useSocksBalance'
-import { useWalletModalToggle } from '../../state/application/hooks'
+import { useToggleWalletModal } from '../../state/application/hooks'
 import { isTransactionRecent, useAllTransactions } from '../../state/transactions/hooks'
 import { TransactionDetails } from '../../state/transactions/types'
 import { shortenAddress } from '../../utils'
@@ -20,16 +23,6 @@ import StatusIcon from '../Identicon/StatusIcon'
 import Loader from '../Loader'
 import { RowBetween } from '../Row'
 import WalletModal from '../WalletModal'
-
-const IconWrapper = styled.div<{ size?: number }>`
-  ${({ theme }) => theme.flexColumnNoWrap};
-  align-items: center;
-  justify-content: center;
-  & > * {
-    height: ${({ size }) => (size ? size + 'px' : '32px')};
-    width: ${({ size }) => (size ? size + 'px' : '32px')};
-  }
-`
 
 const Web3StatusGeneric = styled(ButtonSecondary)`
   ${({ theme }) => theme.flexRowNoWrap}
@@ -131,18 +124,16 @@ function Sock() {
   )
 }
 
-function WrappedStatusIcon({ connector }: { connector: Connector }) {
-  return (
-    <IconWrapper size={16}>
-      <StatusIcon connector={connector} />
-    </IconWrapper>
-  )
-}
-
 function Web3StatusInner() {
   const { account, connector, chainId, ENSName } = useWeb3React()
+  const connectionType = getConnection(connector).type
+  const {
+    trade: { state: tradeState, trade },
+    inputError: swapInputError,
+  } = useDerivedSwapInfo()
+  const validSwapQuote = getIsValidSwapQuote(trade, tradeState, swapInputError)
 
-  const error = useAppSelector((state) => state.wallet.errorByWallet[getWalletForConnector(connector)])
+  const error = useAppSelector((state) => state.connection.errorByConnectionType[getConnection(connector).type])
 
   const chainAllowed = chainId && isChainAllowed(connector, chainId)
 
@@ -157,7 +148,7 @@ function Web3StatusInner() {
 
   const hasPendingTransactions = !!pending.length
   const hasSocks = useHasSocks()
-  const toggleWalletModal = useWalletModalToggle()
+  const toggleWalletModal = useToggleWalletModal()
 
   if (!chainId) {
     return null
@@ -199,16 +190,23 @@ function Web3StatusInner() {
             <Text>{ENSName || shortenAddress(account)}</Text>
           </>
         )}
-        {!hasPendingTransactions && connector && <WrappedStatusIcon connector={connector} />}
+        {!hasPendingTransactions && <StatusIcon connectionType={connectionType} />}
       </Web3StatusConnected>
     )
   } else {
     return (
-      <Web3StatusConnect onClick={toggleWalletModal} faded={!account}>
-        <Text>
-          <Trans>Connect Wallet</Trans>
-        </Text>
-      </Web3StatusConnect>
+      <TraceEvent
+        events={[Event.onClick]}
+        name={EventName.CONNECT_WALLET_BUTTON_CLICKED}
+        properties={{ received_swap_quote: validSwapQuote }}
+        element={ElementName.CONNECT_WALLET_BUTTON}
+      >
+        <Web3StatusConnect onClick={toggleWalletModal} faded={!account}>
+          <Text>
+            <Trans>Connect Wallet</Trans>
+          </Text>
+        </Web3StatusConnect>
+      </TraceEvent>
     )
   }
 }

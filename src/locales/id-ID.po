@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-06-30 17:10\n"
+"PO-Revision-Date: 2022-07-12 23:04\n"
 "Last-Translator: \n"
 "Language: id_ID\n"
 "Language-Team: Indonesian\n"
@@ -321,6 +321,10 @@ msgid "Blocked address"
 msgstr "Alamat diblokir"
 
 #: src/components/Header/NetworkSelector.tsx
+msgid "Blockscout"
+msgstr "Blockscout"
+
+#: src/components/Header/NetworkSelector.tsx
 msgid "Bridge"
 msgstr "Menjembatani"
 
@@ -529,8 +533,8 @@ msgid "Connect to a wallet to view your liquidity."
 msgstr "Hubungkan ke dompet untuk melihat likuiditas Anda."
 
 #: src/components/AccountDetails/index.tsx
-msgid "Connected with {name}"
-msgstr "Terhubung dengan {name}"
+msgid "Connected with"
+msgstr "Terhubung dengan"
 
 #: src/components/WalletModal/PendingView.tsx
 msgid "Connecting..."
@@ -923,7 +927,7 @@ msgstr "Harga awal dan bagian pool"
 msgid "Input is estimated. You will sell at most <0>{0} {1}</0> or the transaction will revert."
 msgstr "Input diperkirakan. Anda akan menjual paling banyak <0>{0} {1}</0> atau transaksi akan dikembalikan."
 
-#: src/components/WalletModal/index.tsx
+#: src/components/WalletModal/InjectedOption.tsx
 msgid "Install MetaMask"
 msgstr "Instal MetaMask"
 
@@ -1293,8 +1297,13 @@ msgid "Pooled {0}:"
 msgstr "Dikumpulkan {0}:"
 
 #: src/pages/Pool/index.tsx
+#: src/pages/Pool/index.tsx
 msgid "Pools Overview"
 msgstr "Gambaran Umum Pool"
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Portal Bridge"
+msgstr "Jembatan Portal"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Preview"
@@ -1611,10 +1620,6 @@ msgstr "Menukar {0} {1} untuk {2} {3}"
 #: src/components/Popups/SurveyPopup.tsx
 msgid "Take a 10 minute survey to help us improve your experience in the Uniswap app."
 msgstr "Ikuti survei 10 menit untuk membantu kami meningkatkan pengalaman Anda di aplikasi Uniswap."
-
-#: src/components/WalletModal/index.tsx
-msgid "Tally"
-msgstr "Menghitung"
 
 #: src/components/Popups/SurveyPopup.tsx
 msgid "Tell us what you think ↗"
@@ -2212,6 +2217,10 @@ msgstr "Likuiditas V2 Anda"
 #: src/pages/Pool/index.tsx
 msgid "Your active V3 liquidity positions will appear here."
 msgstr "Posisi likuiditas V3 aktif Anda akan muncul di sini."
+
+#: src/pages/Pool/index.tsx
+msgid "Your connected network is unsupported. Request support <0>here</0>."
+msgstr "Jaringan Anda yang terhubung tidak didukung. Minta dukungan <0>di sini</0>."
 
 #: src/pages/Earn/Manage.tsx
 msgid "Your liquidity deposits"

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-06-30 17:10\n"
+"PO-Revision-Date: 2022-07-12 23:04\n"
 "Last-Translator: \n"
 "Language: cs_CZ\n"
 "Language-Team: Czech\n"
@@ -321,6 +321,10 @@ msgid "Blocked address"
 msgstr "Blokovaná adresa"
 
 #: src/components/Header/NetworkSelector.tsx
+msgid "Blockscout"
+msgstr "Blockscout"
+
+#: src/components/Header/NetworkSelector.tsx
 msgid "Bridge"
 msgstr "Most"
 
@@ -529,8 +533,8 @@ msgid "Connect to a wallet to view your liquidity."
 msgstr "Chcete-li si zobrazit svou likviditu, připojte se k peněžence."
 
 #: src/components/AccountDetails/index.tsx
-msgid "Connected with {name}"
-msgstr "Propojeno s {name}"
+msgid "Connected with"
+msgstr "Spojen s"
 
 #: src/components/WalletModal/PendingView.tsx
 msgid "Connecting..."
@@ -923,7 +927,7 @@ msgstr "Počáteční ceny a podíl na fondu"
 msgid "Input is estimated. You will sell at most <0>{0} {1}</0> or the transaction will revert."
 msgstr "Vstup je odhadnutý. Prodáte nejvýše <0>{0} {1}</0> nebo se transakce vrátí."
 
-#: src/components/WalletModal/index.tsx
+#: src/components/WalletModal/InjectedOption.tsx
 msgid "Install MetaMask"
 msgstr "Nainstalujte MetaMask"
 
@@ -1293,8 +1297,13 @@ msgid "Pooled {0}:"
 msgstr "Sestaveno do fondu {0}:"
 
 #: src/pages/Pool/index.tsx
+#: src/pages/Pool/index.tsx
 msgid "Pools Overview"
 msgstr "Přehled fondů"
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Portal Bridge"
+msgstr "Portálový most"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Preview"
@@ -1611,10 +1620,6 @@ msgstr "Výměna {0} {1} za {2} {3}"
 #: src/components/Popups/SurveyPopup.tsx
 msgid "Take a 10 minute survey to help us improve your experience in the Uniswap app."
 msgstr "Udělejte si 10minutový průzkum, který nám pomůže zlepšit vaši zkušenost s aplikací Uniswap."
-
-#: src/components/WalletModal/index.tsx
-msgid "Tally"
-msgstr "Tally"
 
 #: src/components/Popups/SurveyPopup.tsx
 msgid "Tell us what you think ↗"
@@ -2212,6 +2217,10 @@ msgstr "Vaše likvidita V2"
 #: src/pages/Pool/index.tsx
 msgid "Your active V3 liquidity positions will appear here."
 msgstr "Zde se zobrazí vaše aktivní pozice likvidity V3."
+
+#: src/pages/Pool/index.tsx
+msgid "Your connected network is unsupported. Request support <0>here</0>."
+msgstr "Vaše připojená síť není podporována. Požádejte o podporu <0>zde</0>."
 
 #: src/pages/Earn/Manage.tsx
 msgid "Your liquidity deposits"

@@ -7,6 +7,7 @@ import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { L2_CHAIN_IDS } from '../../constants/chains'
 import { useAddPopup } from '../application/hooks'
 import { checkedTransaction, finalizeTransaction } from './reducer'
+import { SerializableTransactionReceipt } from './types'
 
 export default function Updater() {
   const { chainId } = useWeb3React()
@@ -16,11 +17,12 @@ export default function Updater() {
 
   const dispatch = useAppDispatch()
   const onCheck = useCallback(
-    ({ chainId, hash, blockNumber }) => dispatch(checkedTransaction({ chainId, hash, blockNumber })),
+    ({ chainId, hash, blockNumber }: { chainId: number; hash: string; blockNumber: number }) =>
+      dispatch(checkedTransaction({ chainId, hash, blockNumber })),
     [dispatch]
   )
   const onReceipt = useCallback(
-    ({ chainId, hash, receipt }) => {
+    ({ chainId, hash, receipt }: { chainId: number; hash: string; receipt: SerializableTransactionReceipt }) => {
       dispatch(
         finalizeTransaction({
           chainId,

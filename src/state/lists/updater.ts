@@ -1,12 +1,13 @@
 import { getVersionUpgrade, minVersionBump, VersionUpgrade } from '@uniswap/token-lists'
 import { useWeb3React } from '@web3-react/core'
 import { SupportedChainId } from 'constants/chains'
-import { ARBITRUM_LIST, OPTIMISM_LIST, UNSUPPORTED_LIST_URLS } from 'constants/lists'
+import { ARBITRUM_LIST, CELO_LIST, OPTIMISM_LIST, UNSUPPORTED_LIST_URLS } from 'constants/lists'
 import useInterval from 'lib/hooks/useInterval'
 import { useCallback, useEffect } from 'react'
 import { useAppDispatch } from 'state/hooks'
 import { useAllLists } from 'state/lists/hooks'
 
+import { isCelo } from '../../constants/tokens'
 import { useFetchListCallback } from '../../hooks/useFetchListCallback'
 import useIsWindowVisible from '../../hooks/useIsWindowVisible'
 import { acceptListUpdate, enableList } from './actions'
@@ -35,6 +36,9 @@ export default function Updater(): null {
     }
     if (chainId && [SupportedChainId.ARBITRUM_ONE, SupportedChainId.ARBITRUM_RINKEBY].includes(chainId)) {
       dispatch(enableList(ARBITRUM_LIST))
+    }
+    if (chainId && isCelo(chainId)) {
+      dispatch(enableList(CELO_LIST))
     }
   }, [chainId, dispatch])
   // fetch all lists every 10 minutes, but only after we initialize provider

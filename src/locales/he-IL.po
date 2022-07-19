@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-06-30 17:10\n"
+"PO-Revision-Date: 2022-07-12 23:04\n"
 "Last-Translator: \n"
 "Language: he_IL\n"
 "Language-Team: Hebrew\n"
@@ -321,6 +321,10 @@ msgid "Blocked address"
 msgstr "כתובת חסומה"
 
 #: src/components/Header/NetworkSelector.tsx
+msgid "Blockscout"
+msgstr "בלוסקאוט"
+
+#: src/components/Header/NetworkSelector.tsx
 msgid "Bridge"
 msgstr "לְגַשֵׁר"
 
@@ -529,8 +533,8 @@ msgid "Connect to a wallet to view your liquidity."
 msgstr "התחבר לארנק כדי להציג את הנזילות שלך."
 
 #: src/components/AccountDetails/index.tsx
-msgid "Connected with {name}"
-msgstr "מחובר עם {name}"
+msgid "Connected with"
+msgstr "מחובר עם"
 
 #: src/components/WalletModal/PendingView.tsx
 msgid "Connecting..."
@@ -923,7 +927,7 @@ msgstr "מחירים ראשוניים ונתח בריכה"
 msgid "Input is estimated. You will sell at most <0>{0} {1}</0> or the transaction will revert."
 msgstr "הקלט מוערך. אתה תמכור לכל היותר <0>{0} {1}</0> או שהעסקה תחזור."
 
-#: src/components/WalletModal/index.tsx
+#: src/components/WalletModal/InjectedOption.tsx
 msgid "Install MetaMask"
 msgstr "התקן את MetaMask"
 
@@ -1293,8 +1297,13 @@ msgid "Pooled {0}:"
 msgstr "מאוגד {0}:"
 
 #: src/pages/Pool/index.tsx
+#: src/pages/Pool/index.tsx
 msgid "Pools Overview"
 msgstr "סקירת מאגרים"
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Portal Bridge"
+msgstr "גשר פורטל"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Preview"
@@ -1611,10 +1620,6 @@ msgstr "החלפת {0} {1} ב- {2} {3}"
 #: src/components/Popups/SurveyPopup.tsx
 msgid "Take a 10 minute survey to help us improve your experience in the Uniswap app."
 msgstr "השתתף בסקר של 10 דקות כדי לעזור לנו לשפר את החוויה שלך באפליקציית Uniswap."
-
-#: src/components/WalletModal/index.tsx
-msgid "Tally"
-msgstr "לִסְפּוֹר"
 
 #: src/components/Popups/SurveyPopup.tsx
 msgid "Tell us what you think ↗"
@@ -2212,6 +2217,10 @@ msgstr "נזילות ה- V2 שלך"
 #: src/pages/Pool/index.tsx
 msgid "Your active V3 liquidity positions will appear here."
 msgstr "עמדות הנזילות הפעילות V3 שלך יופיעו כאן."
+
+#: src/pages/Pool/index.tsx
+msgid "Your connected network is unsupported. Request support <0>here</0>."
+msgstr "הרשת המחוברת שלך אינה נתמכת. בקש תמיכה <0>כאן</0>."
 
 #: src/pages/Earn/Manage.tsx
 msgid "Your liquidity deposits"

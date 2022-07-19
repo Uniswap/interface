@@ -4,11 +4,13 @@ import { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
 import { Currency, Percent } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import { ElementName, Event, EventName } from 'components/AmplitudeAnalytics/constants'
+import { TraceEvent } from 'components/AmplitudeAnalytics/TraceEvent'
 import { sendEvent } from 'components/analytics'
 import { useV2LiquidityTokenPermit } from 'hooks/useV2LiquidityTokenPermit'
 import { useCallback, useContext, useMemo, useState } from 'react'
 import { ArrowDown, Plus } from 'react-feather'
-import { RouteComponentProps } from 'react-router'
+import { useHistory, useParams } from 'react-router-dom'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components/macro'
 
@@ -30,7 +32,7 @@ import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallbac
 import { usePairContract, useV2RouterContract } from '../../hooks/useContract'
 import useDebouncedChangeHandler from '../../hooks/useDebouncedChangeHandler'
 import useTransactionDeadline from '../../hooks/useTransactionDeadline'
-import { useWalletModalToggle } from '../../state/application/hooks'
+import { useToggleWalletModal } from '../../state/application/hooks'
 import { Field } from '../../state/burn/actions'
 import { useBurnActionHandlers, useBurnState, useDerivedBurnInfo } from '../../state/burn/hooks'
 import { useTransactionAdder } from '../../state/transactions/hooks'
@@ -45,12 +47,9 @@ import { ClickableText, MaxButton, Wrapper } from '../Pool/styleds'
 
 const DEFAULT_REMOVE_LIQUIDITY_SLIPPAGE_TOLERANCE = new Percent(5, 100)
 
-export default function RemoveLiquidity({
-  history,
-  match: {
-    params: { currencyIdA, currencyIdB },
-  },
-}: RouteComponentProps<{ currencyIdA: string; currencyIdB: string }>) {
+export default function RemoveLiquidity() {
+  const history = useHistory()
+  const { currencyIdA, currencyIdB } = useParams<{ currencyIdA: string; currencyIdB: string }>()
   const [currencyA, currencyB] = [useCurrency(currencyIdA) ?? undefined, useCurrency(currencyIdB) ?? undefined]
   const { account, chainId, provider } = useWeb3React()
   const [tokenA, tokenB] = useMemo(() => [currencyA?.wrapped, currencyB?.wrapped], [currencyA, currencyB])
@@ -58,7 +57,7 @@ export default function RemoveLiquidity({
   const theme = useContext(ThemeContext)
 
   // toggle wallet when disconnected
-  const toggleWalletModal = useWalletModalToggle()
+  const toggleWalletModal = useToggleWalletModal()
 
   // burn state
   const { independentField, typedValue } = useBurnState()
@@ -625,9 +624,16 @@ export default function RemoveLiquidity({
             )}
             <div style={{ position: 'relative' }}>
               {!account ? (
-                <ButtonLight onClick={toggleWalletModal}>
-                  <Trans>Connect Wallet</Trans>
-                </ButtonLight>
+                <TraceEvent
+                  events={[Event.onClick]}
+                  name={EventName.CONNECT_WALLET_BUTTON_CLICKED}
+                  properties={{ received_swap_quote: false }}
+                  element={ElementName.CONNECT_WALLET_BUTTON}
+                >
+                  <ButtonLight onClick={toggleWalletModal}>
+                    <Trans>Connect Wallet</Trans>
+                  </ButtonLight>
+                </TraceEvent>
               ) : (
                 <RowBetween>
                   <ButtonConfirmed
