@@ -35,7 +35,7 @@ const TokenImportCard = ({ list, token }: TokenImportCardProps) => {
   const theme = useTheme()
   const { chainId } = useWeb3React()
   return (
-    <Card backgroundColor={theme.bg2} padding="2rem">
+    <Card backgroundColor={theme.deprecated_bg2} padding="2rem">
       <AutoColumn gap="10px" justify="center">
         <CurrencyLogo currency={token} size={'32px'} />
         <AutoColumn gap="4px" justify="center">

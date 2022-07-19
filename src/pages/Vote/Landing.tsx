@@ -52,12 +52,12 @@ const Proposal = styled(Button)`
   cursor: pointer;
   color: ${({ theme }) => theme.deprecated_text1};
   text-decoration: none;
-  background-color: ${({ theme }) => theme.bg1};
+  background-color: ${({ theme }) => theme.deprecated_bg1};
   &:focus {
-    background-color: ${({ theme }) => darken(0.05, theme.bg1)};
+    background-color: ${({ theme }) => darken(0.05, theme.deprecated_bg1)};
   }
   &:hover {
-    background-color: ${({ theme }) => darken(0.05, theme.bg1)};
+    background-color: ${({ theme }) => darken(0.05, theme.deprecated_bg1)};
   }
 `
 
@@ -96,7 +96,7 @@ const TextButton = styled(ThemedText.Main)`
 `
 
 const AddressButton = styled.div`
-  border: 1px solid ${({ theme }) => theme.bg3};
+  border: 1px solid ${({ theme }) => theme.deprecated_bg3};
   padding: 2px 4px;
   border-radius: 8px;
   display: flex;

@@ -761,7 +761,9 @@ export default function AddLiquidity() {
                               onUserInput={onStartPriceInput}
                             />
                           </OutlineCard>
-                          <RowBetween style={{ backgroundColor: theme.bg1, padding: '12px', borderRadius: '12px' }}>
+                          <RowBetween
+                            style={{ backgroundColor: theme.deprecated_bg1, padding: '12px', borderRadius: '12px' }}
+                          >
                             <ThemedText.Main>
                               <Trans>Current {baseCurrency?.symbol} Price:</Trans>
                             </ThemedText.Main>

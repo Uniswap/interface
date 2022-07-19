@@ -16,13 +16,13 @@ export interface Colors {
   deprecated_text5: Color
 
   // backgrounds / greys
-  bg0: Color
-  bg1: Color
-  bg2: Color
-  bg3: Color
-  bg4: Color
-  bg5: Color
-  bg6: Color
+  deprecated_bg0: Color
+  deprecated_bg1: Color
+  deprecated_bg2: Color
+  deprecated_bg3: Color
+  deprecated_bg4: Color
+  deprecated_bg5: Color
+  deprecated_bg6: Color
 
   modalBG: Color
   advancedBG: Color

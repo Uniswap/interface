@@ -13,7 +13,7 @@ const Wrapper = styled(AutoColumn)`
 const Grouping = styled(AutoColumn)`
   width: fit-content;
   padding: 4px;
-  /* background-color: ${({ theme }) => theme.bg2}; */
+  /* background-color: ${({ theme }) => theme.deprecated_bg2}; */
   border-radius: 16px;
 `
 
@@ -21,7 +21,7 @@ const Circle = styled.div<{ confirmed?: boolean; disabled?: boolean }>`
   width: 48px;
   height: 48px;
   background-color: ${({ theme, confirmed, disabled }) =>
-    disabled ? theme.bg3 : confirmed ? theme.green1 : theme.primary1};
+    disabled ? theme.deprecated_bg3 : confirmed ? theme.green1 : theme.primary1};
   border-radius: 50%;
   color: ${({ theme, disabled }) => (disabled ? theme.deprecated_text3 : theme.deprecated_text1)};
   display: flex;

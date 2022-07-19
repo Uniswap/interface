@@ -50,8 +50,8 @@ const StyledMenuButton = styled.button`
   margin: 0;
   padding: 0;
   height: 40px;
-  background-color: ${({ theme }) => theme.bg0};
-  border: 1px solid ${({ theme }) => theme.bg0};
+  background-color: ${({ theme }) => theme.deprecated_bg0};
+  border: 1px solid ${({ theme }) => theme.deprecated_bg0};
   padding: 0.15rem 0.5rem;
   border-radius: 16px;
 
@@ -59,7 +59,7 @@ const StyledMenuButton = styled.button`
   :focus {
     cursor: pointer;
     outline: none;
-    border: 1px solid ${({ theme }) => theme.bg3};
+    border: 1px solid ${({ theme }) => theme.deprecated_bg3};
   }
 
   svg {
@@ -68,7 +68,7 @@ const StyledMenuButton = styled.button`
 `
 
 const UNIbutton = styled(ButtonPrimary)`
-  background-color: ${({ theme }) => theme.bg3};
+  background-color: ${({ theme }) => theme.deprecated_bg3};
   background: radial-gradient(174.47% 188.91% at 1.84% 0%, #ff007a 0%, #2172e5 100%), #edeef2;
   border: none;
 `
@@ -86,10 +86,10 @@ const MenuFlyout = styled.span<{ flyoutAlignment?: FlyoutAlignment }>`
   min-width: 196px;
   max-height: 350px;
   overflow: auto;
-  background-color: ${({ theme }) => theme.bg1};
+  background-color: ${({ theme }) => theme.deprecated_bg1};
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
     0px 24px 32px rgba(0, 0, 0, 0.01);
-  border: 1px solid ${({ theme }) => theme.bg0};
+  border: 1px solid ${({ theme }) => theme.deprecated_bg0};
   border-radius: 12px;
   padding: 0.5rem;
   display: flex;

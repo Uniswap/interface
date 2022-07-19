@@ -25,8 +25,8 @@ export const ArrowWrapper = styled.div<{ clickable: boolean }>`
   margin-bottom: -14px;
   left: calc(50% - 16px);
   /* transform: rotate(90deg); */
-  background-color: ${({ theme }) => theme.bg1};
-  border: 4px solid ${({ theme }) => theme.bg0};
+  background-color: ${({ theme }) => theme.deprecated_bg1};
+  border: 4px solid ${({ theme }) => theme.deprecated_bg0};
   z-index: 2;
   ${({ clickable }) =>
     clickable
@@ -42,7 +42,7 @@ export const ArrowWrapper = styled.div<{ clickable: boolean }>`
 export const SectionBreak = styled.div`
   height: 1px;
   width: 100%;
-  background-color: ${({ theme }) => theme.bg3};
+  background-color: ${({ theme }) => theme.deprecated_bg3};
 `
 
 export const ErrorText = styled(Text)<{ severity?: 0 | 1 | 2 | 3 | 4 }>`
@@ -134,13 +134,13 @@ export const SwapShowAcceptChanges = styled(AutoColumn)`
 `
 
 export const TransactionDetailsLabel = styled(ThemedText.Black)`
-  border-bottom: 1px solid ${({ theme }) => theme.bg2};
+  border-bottom: 1px solid ${({ theme }) => theme.deprecated_bg2};
   padding-bottom: 0.5rem;
 `
 
 export const ResponsiveTooltipContainer = styled(TooltipContainer)<{ origin?: string; width?: string }>`
-  background-color: ${({ theme }) => theme.bg0};
-  border: 1px solid ${({ theme }) => theme.bg2};
+  background-color: ${({ theme }) => theme.deprecated_bg0};
+  border: 1px solid ${({ theme }) => theme.deprecated_bg2};
   padding: 1rem;
   width: ${({ width }) => width ?? 'auto'};
 

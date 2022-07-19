@@ -16,7 +16,7 @@ const QuestionWrapper = styled.div`
   cursor: default;
   border-radius: 36px;
   font-size: 12px;
-  background-color: ${({ theme }) => theme.bg2};
+  background-color: ${({ theme }) => theme.deprecated_bg2};
   color: ${({ theme }) => theme.deprecated_text2};
 
   :hover,

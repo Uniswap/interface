@@ -90,7 +90,7 @@ export function ImportList({ listURL, list, setModalView, onDismiss }: ImportPro
       <SectionBreak />
       <PaddedColumn gap="md">
         <AutoColumn gap="md">
-          <Card backgroundColor={theme.bg2} padding="12px 20px">
+          <Card backgroundColor={theme.deprecated_bg2} padding="12px 20px">
             <RowBetween>
               <RowFixed>
                 {list.logoURI && <ListLogo logoURI={list.logoURI} size="40px" />}

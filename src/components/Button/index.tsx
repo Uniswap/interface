@@ -67,7 +67,7 @@ export const ButtonPrimary = styled(BaseButton)`
   }
   &:disabled {
     background-color: ${({ theme, altDisabledStyle, disabled }) =>
-      altDisabledStyle ? (disabled ? theme.primary1 : theme.bg2) : theme.bg2};
+      altDisabledStyle ? (disabled ? theme.primary1 : theme.deprecated_bg2) : theme.deprecated_bg2};
     color: ${({ altDisabledStyle, disabled, theme }) =>
       altDisabledStyle ? (disabled ? theme.deprecated_white : theme.deprecated_text2) : theme.deprecated_text2};
     cursor: auto;
@@ -106,16 +106,16 @@ export const ButtonLight = styled(BaseButton)`
 `
 
 export const ButtonGray = styled(BaseButton)`
-  background-color: ${({ theme }) => theme.bg1};
+  background-color: ${({ theme }) => theme.deprecated_bg1};
   color: ${({ theme }) => theme.deprecated_text2};
   font-size: 16px;
   font-weight: 500;
 
   &:hover {
-    background-color: ${({ theme, disabled }) => !disabled && darken(0.05, theme.bg2)};
+    background-color: ${({ theme, disabled }) => !disabled && darken(0.05, theme.deprecated_bg2)};
   }
   &:active {
-    background-color: ${({ theme, disabled }) => !disabled && darken(0.1, theme.bg2)};
+    background-color: ${({ theme, disabled }) => !disabled && darken(0.1, theme.deprecated_bg2)};
   }
 `
 
@@ -148,17 +148,17 @@ export const ButtonSecondary = styled(BaseButton)`
 `
 
 export const ButtonOutlined = styled(BaseButton)`
-  border: 1px solid ${({ theme }) => theme.bg2};
+  border: 1px solid ${({ theme }) => theme.deprecated_bg2};
   background-color: transparent;
   color: ${({ theme }) => theme.deprecated_text1};
   &:focus {
-    box-shadow: 0 0 0 1px ${({ theme }) => theme.bg4};
+    box-shadow: 0 0 0 1px ${({ theme }) => theme.deprecated_bg4};
   }
   &:hover {
-    box-shadow: 0 0 0 1px ${({ theme }) => theme.bg4};
+    box-shadow: 0 0 0 1px ${({ theme }) => theme.deprecated_bg4};
   }
   &:active {
-    box-shadow: 0 0 0 1px ${({ theme }) => theme.bg4};
+    box-shadow: 0 0 0 1px ${({ theme }) => theme.deprecated_bg4};
   }
   &:disabled {
     opacity: 50%;
@@ -232,13 +232,13 @@ export const ButtonText = styled(BaseButton)`
 `
 
 const ButtonConfirmedStyle = styled(BaseButton)`
-  background-color: ${({ theme }) => theme.bg3};
+  background-color: ${({ theme }) => theme.deprecated_bg3};
   color: ${({ theme }) => theme.deprecated_text1};
   /* border: 1px solid ${({ theme }) => theme.green1}; */
 
   &:disabled {
     opacity: 50%;
-    background-color: ${({ theme }) => theme.bg2};
+    background-color: ${({ theme }) => theme.deprecated_bg2};
     color: ${({ theme }) => theme.deprecated_text2};
     cursor: auto;
   }

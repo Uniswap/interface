@@ -20,8 +20,8 @@ const ProposalEditorContainer = styled.div`
   margin-top: 10px;
   padding: 0.75rem 1rem 0.75rem 1rem;
   border-radius: 20px;
-  border: 1px solid ${({ theme }) => theme.bg2};
-  background-color: ${({ theme }) => theme.bg1};
+  border: 1px solid ${({ theme }) => theme.deprecated_bg2};
+  background-color: ${({ theme }) => theme.deprecated_bg1};
 `
 
 export const ProposalEditor = ({

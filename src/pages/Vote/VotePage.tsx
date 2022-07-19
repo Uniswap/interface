@@ -60,7 +60,7 @@ const PageWrapper = styled(AutoColumn)`
 `
 
 const ProposalInfo = styled(AutoColumn)`
-  background: ${({ theme }) => theme.bg0};
+  background: ${({ theme }) => theme.deprecated_bg0};
   border-radius: 12px;
   padding: 1.5rem;
   position: relative;
@@ -93,7 +93,7 @@ const CardWrapper = styled.div`
 const StyledDataCard = styled(DataCard)`
   width: 100%;
   background: none;
-  background-color: ${({ theme }) => theme.bg1};
+  background-color: ${({ theme }) => theme.deprecated_bg1};
   height: fit-content;
   z-index: 2;
 `
@@ -103,7 +103,7 @@ const ProgressWrapper = styled.div`
   margin-top: 1rem;
   height: 4px;
   border-radius: 4px;
-  background-color: ${({ theme }) => theme.bg3};
+  background-color: ${({ theme }) => theme.deprecated_bg3};
   position: relative;
 `
 

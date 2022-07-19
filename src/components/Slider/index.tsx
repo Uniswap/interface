@@ -23,7 +23,7 @@ const StyledRangeInput = styled.input<{ size: number }>`
     border-radius: 100%;
     border: none;
     transform: translateY(-50%);
-    color: ${({ theme }) => theme.bg1};
+    color: ${({ theme }) => theme.deprecated_bg1};
 
     &:hover,
     &:focus {
@@ -38,7 +38,7 @@ const StyledRangeInput = styled.input<{ size: number }>`
     background-color: #565a69;
     border-radius: 100%;
     border: none;
-    color: ${({ theme }) => theme.bg1};
+    color: ${({ theme }) => theme.deprecated_bg1};
 
     &:hover,
     &:focus {
@@ -52,7 +52,7 @@ const StyledRangeInput = styled.input<{ size: number }>`
     width: ${({ size }) => size}px;
     background-color: #565a69;
     border-radius: 100%;
-    color: ${({ theme }) => theme.bg1};
+    color: ${({ theme }) => theme.deprecated_bg1};
 
     &:hover,
     &:focus {
@@ -67,7 +67,7 @@ const StyledRangeInput = styled.input<{ size: number }>`
   }
 
   &::-moz-range-track {
-    background: linear-gradient(90deg, ${({ theme }) => theme.bg5}, ${({ theme }) => theme.bg3});
+    background: linear-gradient(90deg, ${({ theme }) => theme.deprecated_bg5}, ${({ theme }) => theme.deprecated_bg3});
     height: 2px;
   }
 
@@ -76,14 +76,14 @@ const StyledRangeInput = styled.input<{ size: number }>`
     border-color: transparent;
     color: transparent;
 
-    background: ${({ theme }) => theme.bg5};
+    background: ${({ theme }) => theme.deprecated_bg5};
     height: 2px;
   }
   &::-ms-fill-lower {
-    background: ${({ theme }) => theme.bg5};
+    background: ${({ theme }) => theme.deprecated_bg5};
   }
   &::-ms-fill-upper {
-    background: ${({ theme }) => theme.bg3};
+    background: ${({ theme }) => theme.deprecated_bg3};
   }
 `
 

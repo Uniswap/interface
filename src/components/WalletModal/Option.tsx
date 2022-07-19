@@ -6,7 +6,7 @@ import styled from 'styled-components/macro'
 import { ExternalLink } from '../../theme'
 
 const InfoCard = styled.button<{ isActive?: boolean }>`
-  background-color: ${({ theme, isActive }) => (isActive ? theme.bg3 : theme.bg2)};
+  background-color: ${({ theme, isActive }) => (isActive ? theme.deprecated_bg3 : theme.deprecated_bg2)};
   padding: 1rem;
   outline: none;
   border: 1px solid;
@@ -15,7 +15,7 @@ const InfoCard = styled.button<{ isActive?: boolean }>`
   &:focus {
     box-shadow: 0 0 0 1px ${({ theme }) => theme.primary1};
   }
-  border-color: ${({ theme, isActive }) => (isActive ? 'transparent' : theme.bg3)};
+  border-color: ${({ theme, isActive }) => (isActive ? 'transparent' : theme.deprecated_bg3)};
 `
 
 const OptionCard = styled(InfoCard as any)`

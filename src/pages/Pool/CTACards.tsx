@@ -28,7 +28,7 @@ const CTA1 = styled(ExternalLink)`
   justify-content: center;
   align-items: center;
   overflow: hidden;
-  border: 1px solid ${({ theme }) => theme.bg3};
+  border: 1px solid ${({ theme }) => theme.deprecated_bg3};
 
   * {
     color: ${({ theme }) => theme.deprecated_text1};
@@ -36,7 +36,7 @@ const CTA1 = styled(ExternalLink)`
   }
 
   :hover {
-    border: 1px solid ${({ theme }) => theme.bg4};
+    border: 1px solid ${({ theme }) => theme.deprecated_bg4};
 
     text-decoration: none;
     * {
@@ -53,7 +53,7 @@ const CTA2 = styled(ExternalLink)`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  border: 1px solid ${({ theme }) => theme.bg3};
+  border: 1px solid ${({ theme }) => theme.deprecated_bg3};
 
   * {
     color: ${({ theme }) => theme.deprecated_text1};
@@ -61,7 +61,7 @@ const CTA2 = styled(ExternalLink)`
   }
 
   :hover {
-    border: 1px solid ${({ theme }) => theme.bg4};
+    border: 1px solid ${({ theme }) => theme.deprecated_bg4};
     text-decoration: none !important;
     * {
       text-decoration: none !important;

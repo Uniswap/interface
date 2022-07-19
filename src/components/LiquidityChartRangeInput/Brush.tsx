@@ -28,7 +28,7 @@ const LabelGroup = styled.g<{ visible: boolean }>`
 `
 
 const TooltipBackground = styled.rect`
-  fill: ${({ theme }) => theme.bg2};
+  fill: ${({ theme }) => theme.deprecated_bg2};
 `
 
 const Tooltip = styled.text`
