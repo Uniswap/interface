@@ -183,6 +183,7 @@ export interface Palette {
   accentActive: string
   accentSuccess: string
   accentWarning: string
+  // TODO: update to accentCritical
   accentFailure: string
 
   accentActionSoft: string

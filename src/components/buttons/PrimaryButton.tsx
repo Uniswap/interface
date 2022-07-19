@@ -36,7 +36,7 @@ function _PrimaryButton({ label, icon, textVariant, disabled, style, ...rest }: 
       disabled={disabled}
       flexDirection="row"
       justifyContent="center"
-      opacity={disabled ? 0.5 : 1}
+      opacity={disabled ? 0.6 : 1}
       px="md"
       py="sm"
       style={style}

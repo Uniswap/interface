@@ -18,7 +18,7 @@ export const parameters = {
       ...theme.dark,
       barSelectedColor: darkTheme.colors.accentAction,
       appBg: darkTheme.colors.backgroundBackdrop,
-      appContentBg: darkTheme.colors.backgroundSurface,
+      appContentBg: darkTheme.colors.backgroundOutline,
       barBg: darkTheme.colors.backgroundSurface,
       textColor: darkTheme.colors.textPrimary,
       colorPrimary: darkTheme.colors.accentAction,
