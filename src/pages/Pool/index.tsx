@@ -1,7 +1,9 @@
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
 import { PageName } from 'components/AmplitudeAnalytics/constants'
+import { ElementName, Event, EventName } from 'components/AmplitudeAnalytics/constants'
 import { Trace } from 'components/AmplitudeAnalytics/Trace'
+import { TraceEvent } from 'components/AmplitudeAnalytics/TraceEvent'
 import { ButtonGray, ButtonPrimary, ButtonText } from 'components/Button'
 import { AutoColumn } from 'components/Column'
 import { FlyoutAlignment, NewMenu } from 'components/Menu'
@@ -311,9 +313,16 @@ export default function Pool() {
                       </ButtonText>
                     )}
                     {showConnectAWallet && (
-                      <ButtonPrimary style={{ marginTop: '2em', padding: '8px 16px' }} onClick={toggleWalletModal}>
-                        <Trans>Connect a wallet</Trans>
-                      </ButtonPrimary>
+                      <TraceEvent
+                        events={[Event.onClick]}
+                        name={EventName.CONNECT_WALLET_BUTTON_CLICKED}
+                        properties={{ received_swap_quote: false }}
+                        element={ElementName.CONNECT_WALLET_BUTTON}
+                      >
+                        <ButtonPrimary style={{ marginTop: '2em', padding: '8px 16px' }} onClick={toggleWalletModal}>
+                          <Trans>Connect a wallet</Trans>
+                        </ButtonPrimary>
+                      </TraceEvent>
                     )}
                   </ErrorContainer>
                 )}

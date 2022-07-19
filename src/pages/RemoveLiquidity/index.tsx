@@ -4,6 +4,8 @@ import { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
 import { Currency, Percent } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import { ElementName, Event, EventName } from 'components/AmplitudeAnalytics/constants'
+import { TraceEvent } from 'components/AmplitudeAnalytics/TraceEvent'
 import { sendEvent } from 'components/analytics'
 import { useV2LiquidityTokenPermit } from 'hooks/useV2LiquidityTokenPermit'
 import { useCallback, useContext, useMemo, useState } from 'react'
@@ -625,9 +627,16 @@ export default function RemoveLiquidity({
             )}
             <div style={{ position: 'relative' }}>
               {!account ? (
-                <ButtonLight onClick={toggleWalletModal}>
-                  <Trans>Connect Wallet</Trans>
-                </ButtonLight>
+                <TraceEvent
+                  events={[Event.onClick]}
+                  name={EventName.CONNECT_WALLET_BUTTON_CLICKED}
+                  properties={{ received_swap_quote: false }}
+                  element={ElementName.CONNECT_WALLET_BUTTON}
+                >
+                  <ButtonLight onClick={toggleWalletModal}>
+                    <Trans>Connect Wallet</Trans>
+                  </ButtonLight>
+                </TraceEvent>
               ) : (
                 <RowBetween>
                   <ButtonConfirmed
