@@ -78,7 +78,7 @@ const LinkCopied = styled.div<{ show: boolean }>`
     }
   }
 `
-export interface TokenInfo {
+interface TokenInfo {
   tokenName: string
   tokenSymbol: string
 }

@@ -196,7 +196,7 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
             {tokenName} <TokenSymbol>{tokenSymbol}</TokenSymbol>
           </TokenNameCell>
           <TokenActions>
-            {<ShareButton tokenName={tokenName} tokenSymbol={tokenSymbol} />}
+            <ShareButton tokenName={tokenName} tokenSymbol={tokenSymbol} />
             <ClickFavorited onClick={toggleFavorite}>
               <Heart
                 size={15}
