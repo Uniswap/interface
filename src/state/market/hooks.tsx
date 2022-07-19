@@ -3,7 +3,6 @@ import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
-import { TWO_PERCENT } from 'constants/misc'
 import { useBestMarketTrade, useBestV3Trade } from 'hooks/useBestV3Trade'
 import JSBI from 'jsbi'
 import { ParsedQs } from 'qs'
@@ -132,6 +131,8 @@ export function useDerivedMarketInfo(
   }
   bestTrade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType> | undefined
   allowedSlippage: Percent
+  paymentToken: Token | null | undefined
+  paymentFee: number | undefined
 } {
   const { account } = useActiveWeb3React()
 
@@ -167,11 +168,18 @@ export function useDerivedMarketInfo(
   )
 
   const bestTrade = v2Trade == undefined ? undefined : v2Trade.trade
+  // const currencyBalances = useMemo(
+  //   () => ({
+  //     [Field.INPUT]: relevantTokenBalances[0],
+  //     [Field.OUTPUT]: relevantTokenBalances[1],
+  //   }),
+  //   [relevantTokenBalances]
+  // )
 
   const currencyBalances = useMemo(
     () => ({
-      [Field.INPUT]: relevantTokenBalances[0],
-      [Field.OUTPUT]: relevantTokenBalances[1],
+      [Field.INPUT]: v2Trade?.trade?.inputAmount,
+      [Field.OUTPUT]: v2Trade?.trade?.outputAmount,
     }),
     [relevantTokenBalances]
   )
@@ -226,6 +234,8 @@ export function useDerivedMarketInfo(
     v2Trade,
     bestTrade: bestTrade ?? undefined,
     allowedSlippage,
+    paymentToken: v2Trade ? v2Trade.paymentToken : undefined,
+    paymentFee: v2Trade ? v2Trade.paymentFee : undefined,
   }
 }
 

@@ -1,5 +1,5 @@
 import { skipToken } from '@reduxjs/toolkit/query/react'
-import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
 import { Route } from '@uniswap/v2-sdk'
 import { Route as RouteV3, Trade as TradeV3 } from '@uniswap/v3-sdk'
 import { INCH_ROUTER_ADDRESS, V2_ROUTER_ADDRESS } from 'constants/addresses'
@@ -17,6 +17,7 @@ import { SwapTransaction, V3TradeState } from 'state/validator/types'
 import { v2StylePool } from 'state/validator/utils'
 
 import { useGetGaslessQuoteQuery, useGetQuoteQuery } from './slice'
+import { GetValidatorGaslessQuoteResult } from './types'
 
 const DEFAULT_REMOVE_LIQUIDITY_SLIPPAGE_TOLERANCE = new Percent(50, 10_000)
 
@@ -93,7 +94,8 @@ export function useGaslessAPITrade(
   trade: TradeV3<Currency, Currency, TradeType> | undefined
   tx: SwapTransaction | undefined
   uniswapAmount: CurrencyAmount<Currency> | undefined
-  paymentFees: CurrencyAmount<Currency> | undefined
+  paymentFees: number | undefined
+  paymentToken: Token | null | undefined
 } {
   const [currencyIn, currencyOut]: [Currency | undefined, Currency | undefined] = useMemo(
     () =>
@@ -115,12 +117,12 @@ export function useGaslessAPITrade(
     signaturePermitData,
   })
 
-  const { isLoading, isError, data } = useGetGaslessQuoteQuery(!skipRequest && queryArgs ? queryArgs : skipToken, {
-    pollingInterval: ms`30s`,
+  const { isLoading, isError, data } = useGetGaslessQuoteQuery(queryArgs ? queryArgs : skipToken, {
+    pollingInterval: ms`10s`,
     refetchOnFocus: true,
   })
 
-  const quoteResult = data
+  const quoteResult: GetValidatorGaslessQuoteResult | undefined = data
 
   const gasAmount = useNetworkGasPrice()
   const priceGwei =
@@ -141,6 +143,7 @@ export function useGaslessAPITrade(
         tx: undefined,
         uniswapAmount: undefined,
         paymentFees: undefined,
+        paymentToken: undefined,
       }
     }
 
@@ -152,6 +155,7 @@ export function useGaslessAPITrade(
         tx: undefined,
         uniswapAmount: undefined,
         paymentFees: undefined,
+        paymentToken: undefined,
       }
     }
 
@@ -171,6 +175,7 @@ export function useGaslessAPITrade(
         tx: undefined,
         uniswapAmount: undefined,
         paymentFees: undefined,
+        paymentToken: undefined,
       }
     }
 
@@ -183,6 +188,7 @@ export function useGaslessAPITrade(
           tx: undefined,
           uniswapAmount: undefined,
           paymentFees: undefined,
+          paymentToken: undefined,
         }
       }
       const inputAmount = CurrencyAmount.fromRawAmount(currencyIn, quoteResult.quote?.sellAmount)
@@ -210,9 +216,8 @@ export function useGaslessAPITrade(
           allowanceTarget: quoteResult?.quote?.allowanceTarget,
         },
         uniswapAmount: CurrencyAmount.fromRawAmount(currencyOut, quoteResult.quote?.uniswapAmount),
-        paymentFees: paymentToken
-          ? CurrencyAmount.fromRawAmount(paymentToken as Currency, quoteResult.paymentFee)
-          : undefined,
+        paymentFees: quoteResult ? quoteResult.paymentFee : undefined,
+        paymentToken,
       }
     } catch (error) {
       console.log(error)
@@ -222,6 +227,7 @@ export function useGaslessAPITrade(
         tx: undefined,
         uniswapAmount: undefined,
         paymentFees: undefined,
+        paymentToken: undefined,
       }
     }
   }, [
@@ -294,9 +300,9 @@ export function useValidatorAPITrade(
 
   const gasAmount = useNetworkGasPrice()
   const priceGwei =
-    gasAmount && data?.estimatedGas
+    gasAmount && data?.quote?.estimatedGas
       ? gasAmount
-          .multiply(JSBI.BigInt(data?.estimatedGas))
+          .multiply(JSBI.BigInt(data?.quote?.estimatedGas))
           .multiply(ONE_HUNDRED_PERCENT.subtract(new Percent(JSBI.BigInt(1500), JSBI.BigInt(10000))))
       : undefined
   const gasUseEstimateUSD = useUSDCValue(priceGwei) ?? null
@@ -324,10 +330,10 @@ export function useValidatorAPITrade(
     const otherAmount =
       tradeType === TradeType.EXACT_INPUT
         ? currencyIn && quoteResult
-          ? CurrencyAmount.fromRawAmount(currencyIn, quoteResult.sellAmount)
+          ? CurrencyAmount.fromRawAmount(currencyIn, quoteResult.quote?.sellAmount)
           : undefined
         : currencyOut && quoteResult
-        ? CurrencyAmount.fromRawAmount(currencyOut, quoteResult.buyAmount)
+        ? CurrencyAmount.fromRawAmount(currencyOut, quoteResult.quote?.buyAmount)
         : undefined
 
     if (isError || !otherAmount || !queryArgs) {
@@ -349,8 +355,8 @@ export function useValidatorAPITrade(
           uniswapAmount: undefined,
         }
       }
-      const inputAmount = CurrencyAmount.fromRawAmount(currencyIn, quoteResult.sellAmount)
-      const outputAmount = CurrencyAmount.fromRawAmount(currencyOut, quoteResult.buyAmount)
+      const inputAmount = CurrencyAmount.fromRawAmount(currencyIn, quoteResult.quote?.sellAmount)
+      const outputAmount = CurrencyAmount.fromRawAmount(currencyOut, quoteResult.quote?.buyAmount)
       const route = new RouteV3([v2StylePool(inputAmount.wrapped, outputAmount.wrapped)], currencyIn, currencyOut)
       const bestTrade = TradeV3.createUncheckedTrade({
         route,
@@ -365,17 +371,17 @@ export function useValidatorAPITrade(
         trade: bestTrade,
         tx: {
           from: account?.toString() ?? '',
-          to: quoteResult?.to ?? '',
-          data: quoteResult?.data ?? '',
-          value: quoteResult?.value ?? '',
-          gas: quoteResult?.estimatedGas ?? '',
+          to: quoteResult?.quote?.to ?? '',
+          data: quoteResult?.quote?.data ?? '',
+          value: quoteResult?.quote?.value ?? '',
+          gas: quoteResult?.quote?.estimatedGas ?? '',
           type: 1,
           gasUseEstimateUSD: gasUseEstimateUSD ? gasUseEstimateUSD.toFixed(2) : '0',
-          allowanceTarget: quoteResult?.allowanceTarget,
-          paymentToken: null,
-          paymentFees: null,
+          allowanceTarget: quoteResult?.quote?.allowanceTarget,
+          paymentToken: quoteResult?.paymentTokenAddress ?? '',
+          paymentFees: quoteResult?.paymentFee ?? '',
         },
-        uniswapAmount: CurrencyAmount.fromRawAmount(currencyOut, quoteResult.uniswapAmount),
+        uniswapAmount: CurrencyAmount.fromRawAmount(currencyOut, quoteResult.quote?.uniswapAmount),
       }
     } catch (error) {
       console.log(error)

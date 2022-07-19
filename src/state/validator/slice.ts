@@ -12,10 +12,10 @@ import { GetValidatorGaslessQuoteResult, GetValidatorQuoteResult } from './types
 
 export const routingApiKromatika = createApi({
   reducerPath: 'routingApiKromatika',
-  baseQuery: fetchBaseQuery({ baseUrl: 'https://api.kromatika.finance/v1.0' }),
+  baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:3146/1.0' }),
   endpoints: (build) => ({
     getQuote: build.query<
-      GetValidatorQuoteResult,
+      GetValidatorGaslessQuoteResult,
       {
         chainId: string
         queryArg: {
@@ -34,7 +34,7 @@ export const routingApiKromatika = createApi({
     >({
       query: (args) => {
         const { chainId, queryArg } = args
-        return `/${chainId}/quote?${qs.stringify(queryArg, { skipNulls: true })}`
+        return `/137/getMockData`
       },
       extraOptions: { maxRetries: 3 }, // You can o
     }),
@@ -58,7 +58,7 @@ export const routingApiKromatika = createApi({
     >({
       query: (args) => {
         const { chainId, queryArg } = args
-        return `/${chainId}/quoteGasless?${qs.stringify(queryArg, { skipNulls: true })}`
+        return `/${chainId}/getMockData`
       },
       extraOptions: { maxRetries: 3 }, // You can o
     }),

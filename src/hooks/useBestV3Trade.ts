@@ -1,3 +1,4 @@
+import { clippingParents } from '@popperjs/core'
 import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
@@ -23,23 +24,25 @@ export function useBestMarketTrade(
   trade: V3Trade<Currency, Currency, typeof tradeType> | undefined
   tx: SwapTransaction | undefined
   savings: CurrencyAmount<Token> | null
+  paymentToken: Token | null | undefined
+  paymentFee: number | undefined
 } {
   const isWindowVisible = useIsWindowVisible()
 
   const debouncedAmount = useDebounce(amountSpecified, 100)
 
   const routingAPIEnabled = useRoutingAPIEnabled()
-  const quoteTrade = useValidatorAPITrade(
-    tradeType,
-    null,
-    null,
-    true,
-    !gasless,
-    routingAPIEnabled && isWindowVisible ? debouncedAmount : undefined,
-    otherCurrency
-  )
+  // const quoteTrade = useValidatorAPITrade(
+  //   tradeType,
+  //   null,
+  //   null,
+  //   true,
+  //   !gasless,
+  //   routingAPIEnabled && isWindowVisible ? debouncedAmount : undefined,
+  //   otherCurrency
+  // )
 
-  const gaslessTrade = useGaslessAPITrade(
+  const gaslessTradeOriginal = useGaslessAPITrade(
     tradeType,
     null,
     null,
@@ -49,7 +52,17 @@ export function useBestMarketTrade(
     otherCurrency
   )
 
-  const betterTrade = gasless ? gaslessTrade : quoteTrade
+  const gaslessTrade = useValidatorAPITrade(
+    tradeType,
+    null,
+    null,
+    true,
+    !gasless,
+    routingAPIEnabled && isWindowVisible ? debouncedAmount : undefined,
+    otherCurrency
+  )
+
+  const betterTrade = gaslessTradeOriginal //gasless ? gaslessTrade : quoteTrade
   const isLoading = betterTrade.state === V3TradeState.LOADING
 
   const debouncing =
@@ -62,19 +75,20 @@ export function useBestMarketTrade(
       : !betterTrade?.trade.outputAmount.equalTo(amountSpecified) ||
         !amountSpecified.currency.equals(betterTrade?.trade.outputAmount.currency) ||
         !otherCurrency?.equals(betterTrade?.trade.inputAmount.currency))
-
-  const savings = useUSDCValue(betterTrade.uniswapAmount)
-
+  //const savings = useUSDCValue(betterTrade.uniswapAmount)
+  const savings = betterTrade.uniswapAmount as CurrencyAmount<Token>
   return useMemo(
     () => ({
-      state: betterTrade ? betterTrade.state : V3TradeState.LOADING,
+      state: betterTrade ? betterTrade?.state : V3TradeState.LOADING, //: V3TradeState.LOADING,
       trade: betterTrade?.trade,
       tx: betterTrade?.tx,
       savings,
-      ...(debouncing ? { state: V3TradeState.SYNCING } : {}),
-      ...(isLoading ? { state: V3TradeState.LOADING } : {}),
+      paymentToken: betterTrade.paymentToken,
+      paymentFee: betterTrade ? betterTrade.paymentFees : undefined,
+      // ...(debouncing ? { state: V3TradeState.SYNCING } : {}),
+      // ...(isLoading ? { state: V3TradeState.LOADING } : {}),
     }),
-    [betterTrade, debouncing, isLoading, savings]
+    [betterTrade, savings]
   )
 }
 

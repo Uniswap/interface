@@ -320,6 +320,7 @@ export function useMarketCallback(
 ): { state: MarketCallbackState; callback: null | (() => Promise<string>); error: ReactNode | null } {
   const { account, chainId, library } = useActiveWeb3React()
 
+  console.log('i am here')
   const { gaslessCallback } = useGaslessCallback()
 
   const swapCalls = useMarketCallArguments(
