@@ -61,7 +61,7 @@ const CurrencySelect = styled(ButtonGray)<{ visible: boolean; selected: boolean;
   background-color: ${({ selected, theme }) => (selected ? theme.bg2 : theme.primary1)};
   box-shadow: ${({ selected }) => (selected ? 'none' : '0px 6px 10px rgba(0, 0, 0, 0.075)')};
   box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.075);
-  color: ${({ selected, theme }) => (selected ? theme.text1 : theme.white)};
+  color: ${({ selected, theme }) => (selected ? theme.text1 : theme.deprecated_white)};
   cursor: pointer;
   border-radius: 16px;
   outline: none;
@@ -118,7 +118,7 @@ const StyledDropDown = styled(DropDown)<{ selected: boolean }>`
   height: 35%;
 
   path {
-    stroke: ${({ selected, theme }) => (selected ? theme.text1 : theme.white)};
+    stroke: ${({ selected, theme }) => (selected ? theme.text1 : theme.deprecated_white)};
     stroke-width: 1.5px;
   }
 `

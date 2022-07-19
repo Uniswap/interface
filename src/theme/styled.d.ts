@@ -5,8 +5,8 @@ export interface Colors {
   darkMode: boolean
 
   // base
-  white: Color
-  black: Color
+  deprecated_white: Color
+  deprecated_black: Color
 
   // text
   text1: Color

@@ -48,15 +48,15 @@ const mediaWidthTemplates: { [width in keyof typeof MEDIA_WIDTHS]: typeof css } 
   {}
 ) as any
 
-const white = '#FFFFFF'
-const black = '#000000'
+const deprecated_white = '#FFFFFF'
+const deprecated_black = '#000000'
 
 function colors(darkMode: boolean): Colors {
   return {
     darkMode,
     // base
-    white,
-    black,
+    deprecated_white,
+    deprecated_black,
 
     // text
     text1: darkMode ? '#FFFFFF' : '#000000',

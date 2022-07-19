@@ -69,7 +69,7 @@ export const ButtonPrimary = styled(BaseButton)`
     background-color: ${({ theme, altDisabledStyle, disabled }) =>
       altDisabledStyle ? (disabled ? theme.primary1 : theme.bg2) : theme.bg2};
     color: ${({ altDisabledStyle, disabled, theme }) =>
-      altDisabledStyle ? (disabled ? theme.white : theme.text2) : theme.text2};
+      altDisabledStyle ? (disabled ? theme.deprecated_white : theme.text2) : theme.text2};
     cursor: auto;
     box-shadow: none;
     border: 1px solid transparent;
@@ -354,7 +354,7 @@ export function ButtonRadioChecked({ active = false, children, ...rest }: { acti
             {children}
             <CheckboxWrapper>
               <Circle>
-                <ResponsiveCheck size={13} stroke={theme.white} />
+                <ResponsiveCheck size={13} stroke={theme.deprecated_white} />
               </Circle>
             </CheckboxWrapper>
           </RowBetween>

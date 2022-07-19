@@ -73,12 +73,12 @@ const StyledTitleText = styled.div<{ active: boolean }>`
   overflow: hidden;
   text-overflow: ellipsis;
   font-weight: 600;
-  color: ${({ theme, active }) => (active ? theme.white : theme.text2)};
+  color: ${({ theme, active }) => (active ? theme.deprecated_white : theme.text2)};
 `
 
 const StyledListUrlText = styled(ThemedText.Main)<{ active: boolean }>`
   font-size: 12px;
-  color: ${({ theme, active }) => (active ? theme.white : theme.text2)};
+  color: ${({ theme, active }) => (active ? theme.deprecated_white : theme.text2)};
 `
 
 const RowWrapper = styled(Row)<{ bgColor: string; active: boolean; hasActiveTokens: boolean }>`

@@ -765,7 +765,7 @@ export function PositionPage() {
                               </ThemedText.Main>
                             ) : (
                               <>
-                                <ThemedText.Main color={theme.white}>
+                                <ThemedText.Main color={theme.deprecated_white}>
                                   <Trans>Collect fees</Trans>
                                 </ThemedText.Main>
                               </>

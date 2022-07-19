@@ -43,7 +43,7 @@ const ToggleElementHoverStyle = (hasBgColor: boolean, theme: any, isActive?: boo
       }
     : {
         background: isActive ? darken(0.05, theme.primary1) : darken(0.05, theme.bg4),
-        color: isActive ? theme.white : theme.text3,
+        color: isActive ? theme.deprecated_white : theme.text3,
       }
 
 const ToggleElement = styled.span<{ isActive?: boolean; bgColor?: string; isInitialToggleLoad?: boolean }>`
