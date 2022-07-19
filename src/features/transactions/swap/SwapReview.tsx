@@ -65,7 +65,9 @@ export function SwapReview({ dispatch, onNext, onPrev, derivedSwapInfo }: SwapFo
   const swapDisabled = Boolean(
     !(isWrapAction(wrapType) || trade) ||
       warnings.some(
-        (warning) => warning.action === WarningAction.DisableSubmit || WarningAction.DisableReview
+        (warning) =>
+          warning.action === WarningAction.DisableSubmit ||
+          warning.action === WarningAction.DisableReview
       )
   )
 
