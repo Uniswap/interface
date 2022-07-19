@@ -5,11 +5,12 @@ import { TimePeriod } from 'hooks/useTopTokens'
 import { useAtom } from 'jotai'
 import { darken } from 'polished'
 import { useState } from 'react'
-import { ArrowDownRight, ArrowLeft, ArrowUpRight, Copy, Heart, Share } from 'react-feather'
+import { ArrowDownRight, ArrowLeft, ArrowUpRight, Copy, Heart } from 'react-feather'
 import { Link } from 'react-router-dom'
 import styled, { useTheme } from 'styled-components/macro'
 
 import Resource from './Resource'
+import ShareButton from './ShareButton'
 import { favoritesAtom, useToggleFavorite } from './state'
 import { ClickFavorited } from './TokenRow'
 
@@ -167,7 +168,7 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
   const toggleFavorite = useToggleFavorite(address)
 
   // catch token error and loading state
-  if (!token) {
+  if (!token || !token.name || !token.symbol) {
     return <div>No Token</div>
   }
   const tokenName = token.name
@@ -195,7 +196,7 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
             {tokenName} <TokenSymbol>{tokenSymbol}</TokenSymbol>
           </TokenNameCell>
           <TokenActions>
-            <Share size={18} />
+            <ShareButton tokenName={tokenName} tokenSymbol={tokenSymbol} />
             <ClickFavorited onClick={toggleFavorite}>
               <Heart
                 size={15}
