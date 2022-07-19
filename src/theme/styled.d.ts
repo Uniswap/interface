@@ -57,6 +57,58 @@ export interface Colors {
   deprecated_error: Color
   deprecated_success: Color
   deprecated_warning: Color
+
+  /* UPDATED PALETTE */
+  userThemeColor: string
+
+  backgroundBackdrop: string
+  backgroundSurface: string
+  backgroundContainer: string
+  backgroundAction: string
+  backgroundOutline: string
+  backgroundScrim: string
+
+  textPrimary: string
+  textSecondary: string
+  textTertiary: string
+
+  accentAction: string
+  accentActive: string
+  accentSuccess: string
+  accentWarning: string
+  accentFailure: string
+
+  accentActionSoft: string
+  accentActiveSoft: string
+  accentSuccessSoft: string
+  accentWarningSoft: string
+  accentFailureSoft: string
+
+  accentTextDarkPrimary: string
+  accentTextDarkSecondary: string
+  accentTextDarkTertiary: string
+
+  accentTextLightPrimary: string
+  accentTextLightSecondary: string
+  accentTextLightTertiary: string
+
+  white: string
+  black: string
+  none: string
+
+  chain_1: string
+  chain_3: string
+  chain_4: string
+  chain_5: string
+  chain_10: string
+  chain_137: string
+  chain_42: string
+  chain_69: string
+  chain_42161: string
+  chain_421611: string
+  chain_80001: string
+
+  blue200: string
 }
 
 declare module 'styled-components/macro' {
