@@ -1,4 +1,6 @@
 import { initializeAnalytics } from 'components/AmplitudeAnalytics'
+import { PageName } from 'components/AmplitudeAnalytics/constants'
+import { Trace } from 'components/AmplitudeAnalytics/Trace'
 import Loader from 'components/Loader'
 import TopLevelModals from 'components/TopLevelModals'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
@@ -64,8 +66,23 @@ const Marginer = styled.div`
   margin-top: 5rem;
 `
 
+function getCurrentPageFromLocation(locationPathname: string): PageName | undefined {
+  switch (locationPathname) {
+    case '/swap':
+      return PageName.SWAP_PAGE
+    case '/vote':
+      return PageName.VOTE_PAGE
+    case '/pool':
+      return PageName.POOL_PAGE
+    default:
+      return undefined
+  }
+}
+
 export default function App() {
   const history = useHistory()
+  const location = useLocation()
+  const currentPage = getCurrentPageFromLocation(location.pathname)
   useAnalyticsReporter()
   initializeAnalytics()
 
@@ -87,86 +104,88 @@ export default function App() {
         <ApeModeQueryParamReader />
       </Route>
       <AppWrapper>
-        <HeaderWrapper>
-          <Header />
-        </HeaderWrapper>
-        <BodyWrapper>
-          <Popups />
-          <Polling />
-          <TopLevelModals />
-          <Suspense fallback={<Loader />}>
-            <Switch>
-              <Route strict path="/vote">
-                <Vote />
-              </Route>
-              <Route exact strict path="/create-proposal">
-                <Redirect to="/vote/create-proposal" />
-              </Route>
-              <Route exact strict path="/claim">
-                <OpenClaimAddressModalAndRedirectToSwap />
-              </Route>
-              <Route exact strict path="/uni">
-                <Earn />
-              </Route>
-              <Route exact strict path="/uni/:currencyIdA/:currencyIdB">
-                <Manage />
-              </Route>
+        <Trace page={currentPage}>
+          <HeaderWrapper>
+            <Header />
+          </HeaderWrapper>
+          <BodyWrapper>
+            <Popups />
+            <Polling />
+            <TopLevelModals />
+            <Suspense fallback={<Loader />}>
+              <Switch>
+                <Route strict path="/vote">
+                  <Vote />
+                </Route>
+                <Route exact strict path="/create-proposal">
+                  <Redirect to="/vote/create-proposal" />
+                </Route>
+                <Route exact strict path="/claim">
+                  <OpenClaimAddressModalAndRedirectToSwap />
+                </Route>
+                <Route exact strict path="/uni">
+                  <Earn />
+                </Route>
+                <Route exact strict path="/uni/:currencyIdA/:currencyIdB">
+                  <Manage />
+                </Route>
 
-              <Route exact strict path="/send">
-                <RedirectPathToSwapOnly />
-              </Route>
-              <Route exact strict path="/swap/:outputCurrency">
-                <RedirectToSwap />
-              </Route>
-              <Route exact strict path="/swap">
-                <Swap />
-              </Route>
+                <Route exact strict path="/send">
+                  <RedirectPathToSwapOnly />
+                </Route>
+                <Route exact strict path="/swap/:outputCurrency">
+                  <RedirectToSwap />
+                </Route>
+                <Route exact strict path="/swap">
+                  <Swap />
+                </Route>
 
-              <Route exact strict path="/pool/v2/find">
-                <PoolFinder />
-              </Route>
-              <Route exact strict path="/pool/v2">
-                <PoolV2 />
-              </Route>
-              <Route exact strict path="/pool">
-                <Pool />
-              </Route>
-              <Route exact strict path="/pool/:tokenId">
-                <PositionPage />
-              </Route>
+                <Route exact strict path="/pool/v2/find">
+                  <PoolFinder />
+                </Route>
+                <Route exact strict path="/pool/v2">
+                  <PoolV2 />
+                </Route>
+                <Route exact strict path="/pool">
+                  <Pool />
+                </Route>
+                <Route exact strict path="/pool/:tokenId">
+                  <PositionPage />
+                </Route>
 
-              <Route exact strict path="/add/v2/:currencyIdA?/:currencyIdB?">
-                <RedirectDuplicateTokenIdsV2 />
-              </Route>
-              <Route exact strict path="/add/:currencyIdA?/:currencyIdB?/:feeAmount?">
-                <RedirectDuplicateTokenIds />
-              </Route>
+                <Route exact strict path="/add/v2/:currencyIdA?/:currencyIdB?">
+                  <RedirectDuplicateTokenIdsV2 />
+                </Route>
+                <Route exact strict path="/add/:currencyIdA?/:currencyIdB?/:feeAmount?">
+                  <RedirectDuplicateTokenIds />
+                </Route>
 
-              <Route exact strict path="/increase/:currencyIdA?/:currencyIdB?/:feeAmount?/:tokenId?">
-                <AddLiquidity />
-              </Route>
+                <Route exact strict path="/increase/:currencyIdA?/:currencyIdB?/:feeAmount?/:tokenId?">
+                  <AddLiquidity />
+                </Route>
 
-              <Route exact strict path="/remove/v2/:currencyIdA/:currencyIdB">
-                <RemoveLiquidity />
-              </Route>
-              <Route exact strict path="/remove/:tokenId">
-                <RemoveLiquidityV3 />
-              </Route>
+                <Route exact strict path="/remove/v2/:currencyIdA/:currencyIdB">
+                  <RemoveLiquidity />
+                </Route>
+                <Route exact strict path="/remove/:tokenId">
+                  <RemoveLiquidityV3 />
+                </Route>
 
-              <Route exact strict path="/migrate/v2">
-                <MigrateV2 />
-              </Route>
-              <Route exact strict path="/migrate/v2/:address">
-                <MigrateV2Pair />
-              </Route>
+                <Route exact strict path="/migrate/v2">
+                  <MigrateV2 />
+                </Route>
+                <Route exact strict path="/migrate/v2/:address">
+                  <MigrateV2Pair />
+                </Route>
 
-              <Route>
-                <RedirectPathToSwapOnly />
-              </Route>
-            </Switch>
-          </Suspense>
-          <Marginer />
-        </BodyWrapper>
+                <Route>
+                  <RedirectPathToSwapOnly />
+                </Route>
+              </Switch>
+            </Suspense>
+            <Marginer />
+          </BodyWrapper>
+        </Trace>
       </AppWrapper>
     </ErrorBoundary>
   )
