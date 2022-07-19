@@ -5,7 +5,7 @@ exports[`renders a relative change 1`] = `
   style={
     Array [
       Object {
-        "alignItems": "stretch",
+        "alignItems": "center",
         "display": "flex",
         "flexDirection": "row",
         "justifyContent": "flex-start",
@@ -28,6 +28,7 @@ exports[`renders a relative change 1`] = `
   >
     12.0%
      
+    
   </Text>
   <View
     style={
@@ -42,11 +43,43 @@ exports[`renders a relative change 1`] = `
       ]
     }
   />
+  <svg
+    color="#1A9550"
+    data-file-name="SvgArrowDown"
+    height={16}
+    strokeWidth={2}
+    style={
+      Object {
+        "transform": Array [
+          Object {
+            "rotate": "225deg",
+          },
+        ],
+      }
+    }
+    width={16}
+  />
+</View>
+`;
+
+exports[`renders placeholders with absolute change 1`] = `
+<View
+  style={
+    Array [
+      Object {
+        "alignItems": "center",
+        "display": "flex",
+        "flexDirection": "row",
+        "justifyContent": "flex-start",
+      },
+    ]
+  }
+>
   <Text
     style={
       Array [
         Object {
-          "color": "#1A9550",
+          "color": "#5F667D",
           "display": "flex",
           "fontFamily": "Inter-Regular",
           "fontSize": 12,
@@ -55,8 +88,39 @@ exports[`renders a relative change 1`] = `
       ]
     }
   >
-    ↗
+    12.0%
+     
+    ($100.00)
   </Text>
+  <View
+    style={
+      Array [
+        Object {
+          "display": "flex",
+          "flexGrow": 0,
+          "flexShrink": 0,
+          "height": 0,
+          "width": 0,
+        },
+      ]
+    }
+  />
+  <svg
+    color="#1A9550"
+    data-file-name="SvgArrowDown"
+    height={16}
+    strokeWidth={2}
+    style={
+      Object {
+        "transform": Array [
+          Object {
+            "rotate": "225deg",
+          },
+        ],
+      }
+    }
+    width={16}
+  />
 </View>
 `;
 
@@ -65,7 +129,7 @@ exports[`renders placeholders without a change 1`] = `
   style={
     Array [
       Object {
-        "alignItems": "stretch",
+        "alignItems": "center",
         "display": "flex",
         "flexDirection": "row",
         "justifyContent": "flex-start",
@@ -88,33 +152,6 @@ exports[`renders placeholders without a change 1`] = `
   >
     -
      
-  </Text>
-  <View
-    style={
-      Array [
-        Object {
-          "display": "flex",
-          "flexGrow": 0,
-          "flexShrink": 0,
-          "height": 0,
-          "width": 0,
-        },
-      ]
-    }
-  />
-  <Text
-    style={
-      Array [
-        Object {
-          "color": "#5F667D",
-          "display": "flex",
-          "fontFamily": "Inter-Regular",
-          "fontSize": 12,
-          "lineHeight": 16,
-        },
-      ]
-    }
-  >
     
   </Text>
 </View>

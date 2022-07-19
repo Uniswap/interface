@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ce1253f93eb42fc6989c83f6ca323e5b>>
+ * @generated SignedSource<<c795bb6d53c8ecc3ef67d78b92f47c30>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,6 +14,7 @@ export type TotalBalanceQuery$variables = {
 };
 export type TotalBalanceQuery$data = {
   readonly portfolio: {
+    readonly absoluteChange24H: number | null;
     readonly relativeChange24H: number | null;
   } | null;
 };
@@ -41,6 +42,13 @@ v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
+  "name": "absoluteChange24H",
+  "storageKey": null
+},
+v3 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
   "name": "relativeChange24H",
   "storageKey": null
 };
@@ -59,7 +67,8 @@ return {
         "name": "portfolio",
         "plural": false,
         "selections": [
-          (v2/*: any*/)
+          (v2/*: any*/),
+          (v3/*: any*/)
         ],
         "storageKey": null
       }
@@ -82,6 +91,7 @@ return {
         "plural": false,
         "selections": [
           (v2/*: any*/),
+          (v3/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -95,16 +105,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "c6db95acf19b84ebe5b3f1f6f851cc84",
+    "cacheID": "b0370369957244776db4bfc9e2d1a186",
     "id": null,
     "metadata": {},
     "name": "TotalBalanceQuery",
     "operationKind": "query",
-    "text": "query TotalBalanceQuery(\n  $owner: String!\n) {\n  portfolio(ownerAddress: $owner) {\n    relativeChange24H\n    id\n  }\n}\n"
+    "text": "query TotalBalanceQuery(\n  $owner: String!\n) {\n  portfolio(ownerAddress: $owner) {\n    absoluteChange24H\n    relativeChange24H\n    id\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "8d1854c8840d3185730ff934b61a3da9";
+(node as any).hash = "2c52d7390a486e9264260b1c23777371";
 
 export default node;

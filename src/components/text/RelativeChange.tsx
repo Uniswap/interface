@@ -1,31 +1,38 @@
 import React from 'react'
+import { useAppTheme } from 'src/app/hooks'
+import { Arrow } from 'src/components/icons/Arrow'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { Theme } from 'src/styles/theme'
+import { formatPrice } from 'src/utils/format'
 
 interface RelativeChangeProps {
   change?: number
+  absoluteChange?: number
   variant?: keyof Theme['textVariants']
 }
 
-export function RelativeChange({ change, variant = 'caption' }: RelativeChangeProps) {
-  const direction: 'up' | 'down' | undefined = change ? (change > 0 ? 'up' : 'down') : undefined
+export function RelativeChange({
+  absoluteChange,
+  change,
+  variant = 'caption',
+}: RelativeChangeProps) {
+  const theme = useAppTheme()
+  const isPositiveChange = change ? change > 0 : undefined
+
   return (
-    <Flex row gap="none">
+    <Flex row alignItems="center" gap="none">
       <Text color="textSecondary" variant={variant}>
         {change ? `${change.toFixed(1)}%` : '-'}{' '}
+        {absoluteChange ? `(${formatPrice(absoluteChange)})` : ''}
       </Text>
-      <Text
-        color={
-          direction === 'up'
-            ? 'accentSuccess'
-            : direction === 'down'
-            ? 'accentFailure'
-            : 'textSecondary'
-        }
-        variant={variant}>
-        {direction === 'up' ? '↗' : direction === 'down' ? '↘' : ''}
-      </Text>
+      {isPositiveChange === undefined ? null : (
+        <Arrow
+          color={isPositiveChange ? theme.colors.accentSuccess : theme.colors.accentFailure}
+          direction={isPositiveChange ? 'ne' : 'se'}
+          size={16}
+        />
+      )}
     </Flex>
   )
 }

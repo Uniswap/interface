@@ -150,6 +150,7 @@
     "hardhat": "^2.6.8",
     "i18next-parser": "^4.7.0",
     "jest": "^27.5.1",
+    "jest-svg-transformer": "^1.0.0",
     "jest-transform-stub": "^2.0.0",
     "metro-react-native-babel-preset": "^0.66.2",
     "patch-package": "^6.4.7",

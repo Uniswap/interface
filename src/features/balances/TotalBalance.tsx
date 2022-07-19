@@ -58,6 +58,7 @@ function BalanceRelativeChange({
     graphql`
       query TotalBalanceQuery($owner: String!) {
         portfolio(ownerAddress: $owner) {
+          absoluteChange24H
           relativeChange24H
         }
       }
@@ -65,5 +66,11 @@ function BalanceRelativeChange({
     { owner }
   )
 
-  return <RelativeChange change={balance.portfolio?.relativeChange24H ?? 0} variant="body" />
+  return (
+    <RelativeChange
+      absoluteChange={balance?.portfolio?.absoluteChange24H ?? undefined}
+      change={balance.portfolio?.relativeChange24H ?? undefined}
+      variant="bodySmall"
+    />
+  )
 }
