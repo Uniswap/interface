@@ -1,3 +1,5 @@
+import { ElementName, Event, EventName } from 'components/AmplitudeAnalytics/constants'
+import { TraceEvent } from 'components/AmplitudeAnalytics/TraceEvent'
 import React from 'react'
 import styled from 'styled-components/macro'
 
@@ -112,32 +114,39 @@ export default function Option({
   id: string
 }) {
   const content = (
-    <OptionCardClickable
-      id={id}
-      onClick={onClick}
-      clickable={clickable && !isActive}
-      active={isActive}
-      data-testid="wallet-modal-option"
+    <TraceEvent
+      events={[Event.onClick]}
+      name={EventName.WALLET_SELECTED}
+      properties={{ wallet_type: header }}
+      element={ElementName.WALLET_TYPE_OPTION}
     >
-      <OptionCardLeft>
-        <HeaderText color={color}>
-          {isActive ? (
-            <CircleWrapper>
-              <GreenCircle>
-                <div />
-              </GreenCircle>
-            </CircleWrapper>
-          ) : (
-            ''
-          )}
-          {header}
-        </HeaderText>
-        {subheader && <SubHeader>{subheader}</SubHeader>}
-      </OptionCardLeft>
-      <IconWrapper size={size}>
-        <img src={icon} alt={'Icon'} />
-      </IconWrapper>
-    </OptionCardClickable>
+      <OptionCardClickable
+        id={id}
+        onClick={onClick}
+        clickable={clickable && !isActive}
+        active={isActive}
+        data-testid="wallet-modal-option"
+      >
+        <OptionCardLeft>
+          <HeaderText color={color}>
+            {isActive ? (
+              <CircleWrapper>
+                <GreenCircle>
+                  <div />
+                </GreenCircle>
+              </CircleWrapper>
+            ) : (
+              ''
+            )}
+            {header}
+          </HeaderText>
+          {subheader && <SubHeader>{subheader}</SubHeader>}
+        </OptionCardLeft>
+        <IconWrapper size={size}>
+          <img src={icon} alt={'Icon'} />
+        </IconWrapper>
+      </OptionCardClickable>
+    </TraceEvent>
   )
   if (link) {
     return <ExternalLink href={link}>{content}</ExternalLink>
