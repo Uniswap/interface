@@ -30,22 +30,21 @@ describe('Swap', () => {
     cy.get('#swap-currency-output .token-amount-input').clear().type('0.0').should('have.value', '0.0')
   })
 
-  it.skip('can swap ETH for DAI', () => {
+  it('can swap ETH for DAI', () => {
     cy.get('#swap-currency-output .open-currency-select-button').click()
-    cy.get('.token-item-0xc7AD46e0b8a400Bb3C915120d284AafbA8fc4735').should('be.visible')
     cy.get('.token-item-0xc7AD46e0b8a400Bb3C915120d284AafbA8fc4735').click()
-    cy.get('#swap-currency-input .token-amount-input').should('be.visible')
-    cy.get('#swap-currency-input .token-amount-input').clear().type('0.001')
+    cy.get('#swap-currency-input .token-amount-input').clear().type('0.0000001')
     cy.get('#swap-currency-output .token-amount-input').should('not.equal', '')
     cy.get('#swap-button').click()
     cy.get('#confirm-swap-or-send').should('contain', 'Confirm Swap')
+    cy.get('[data-cy="confirmation-close-icon"]').click()
   })
 
-  it.skip('add a recipient does not exist unless in expert mode', () => {
+  it('add a recipient does not exist unless in expert mode', () => {
     cy.get('#add-recipient-button').should('not.exist')
   })
 
-  it.skip('ETH to wETH is same value (wrapped swaps have no price impact)', () => {
+  it('ETH to wETH is same value (wrapped swaps have no price impact)', () => {
     cy.get('#swap-currency-output .open-currency-select-button').click()
     cy.get('.token-item-0xc778417E063141139Fce010982780140Aa0cD5Ab').click()
     cy.get('#swap-currency-input .token-amount-input').clear().type('0.01')
