@@ -168,7 +168,7 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
   const toggleFavorite = useToggleFavorite(address)
 
   // catch token error and loading state
-  if (!token) {
+  if (!token || !token.name || !token.symbol) {
     return <div>No Token</div>
   }
   const tokenName = token.name
@@ -196,7 +196,7 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
             {tokenName} <TokenSymbol>{tokenSymbol}</TokenSymbol>
           </TokenNameCell>
           <TokenActions>
-            {tokenName && tokenSymbol && <ShareButton tokenName={tokenName} tokenSymbol={tokenSymbol} />}
+            {<ShareButton tokenName={tokenName} tokenSymbol={tokenSymbol} />}
             <ClickFavorited onClick={toggleFavorite}>
               <Heart
                 size={15}

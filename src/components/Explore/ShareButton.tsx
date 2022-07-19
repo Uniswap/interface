@@ -48,6 +48,8 @@ const ShareAction = styled.div`
     background-color: ${({ theme }) => darken(0.08, theme.bg1)};
   }
 `
+
+// TODO: create component in shared location
 const LinkCopied = styled.div<{ show: boolean }>`
   display: ${({ show }) => (show ? 'flex' : 'none')};
   width: 328px;
@@ -65,9 +67,9 @@ const LinkCopied = styled.div<{ show: boolean }>`
   border: 1px solid rgba(153, 161, 189, 0.08);
   box-shadow: ${SHADOW};
   border-radius: 20px;
-  animation: cssAnimation 0s ease-in 3s forwards;
+  animation: floatIn 0s ease-in 3s forwards;
 
-  @keyframes cssAnimation {
+  @keyframes floatIn {
     to {
       width: 0;
       height: 0;
@@ -76,7 +78,7 @@ const LinkCopied = styled.div<{ show: boolean }>`
     }
   }
 `
-export interface tokenInfo {
+export interface TokenInfo {
   tokenName: string
   tokenSymbol: string
 }
@@ -101,13 +103,13 @@ export default function ShareButton(tokenInfo: { tokenName: string; tokenSymbol:
   }
   const copyLink = () => {
     navigator.clipboard.writeText(window.location.href).then(
-      function () {
+      function handleClipboardWriteSuccess() {
         setShowCopied(true)
         toggleShare()
         setTimeout(() => setShowCopied(false), 3000)
       },
-      function () {
-        console.log('Clipboard copy failed.')
+      function error() {
+        console.error('Clipboard copy failed.')
       }
     )
   }
