@@ -95,6 +95,7 @@ function EmptyState({
       {buttonLabel && (
         <PrimaryButton
           borderColor="backgroundOutline"
+          borderRadius="md"
           label={buttonLabel}
           textVariant="smallLabel"
           variant="transparent"
@@ -104,6 +105,7 @@ function EmptyState({
       {additionalButtonLabel && (
         <PrimaryButton
           borderColor="backgroundOutline"
+          borderRadius="md"
           label={additionalButtonLabel}
           textVariant="smallLabel"
           variant="transparent"
