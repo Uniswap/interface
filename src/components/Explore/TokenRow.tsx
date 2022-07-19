@@ -108,7 +108,7 @@ const ClickableName = styled(Link)`
 `
 const FavoriteCell = styled(Cell)`
   min-width: 40px;
-  color: ${({ theme }) => theme.deprecated_text2};
+  color: ${({ theme }) => theme.textSecondary};
   fill: none;
 
   @media only screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
@@ -509,7 +509,7 @@ export default function LoadedRow({
     </>
   )
 
-  const heartColor = isFavorited ? theme.accentAction : undefined
+  const heartColor = isFavorited ? theme.accentActive : undefined
   // TODO: currency logo sizing mobile (32px) vs. desktop (24px)
   // TODO: fix listNumber as number on most popular (should be fixed)
   return (
