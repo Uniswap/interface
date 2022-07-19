@@ -99,6 +99,7 @@ export function NFTItemScreen({
           {/* Action buttons */}
           <Flex centered row gap="xs">
             <PrimaryButton
+              borderRadius="md"
               flex={1}
               icon={<OpenSeaIcon color={theme.colors.textPrimary} height={20} width={20} />}
               label="OpenSea"
@@ -109,6 +110,7 @@ export function NFTItemScreen({
             />
             {isMyNFT && (
               <PrimaryButton
+                borderRadius="md"
                 flex={1}
                 icon={
                   <SendIcon
