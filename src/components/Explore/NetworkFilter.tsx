@@ -5,7 +5,7 @@ import { useRef, useState } from 'react'
 import { Check, ChevronDown, ChevronUp } from 'react-feather'
 import { useModalIsOpen, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
-import styled, { css, useTheme } from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components/macro'
 
 const NETWORKS = [
   SupportedChainId.MAINNET,
@@ -46,7 +46,7 @@ const InternalLinkMenuItem = styled(InternalMenuItem)`
     text-decoration: none;
   }
 `
-const MenuTimeFlyout = styled.span<{ flyoutAlignment?: FlyoutAlignment }>`
+const MenuTimeFlyout = styled.span`
   min-width: 200px;
   max-height: 350px;
   overflow: auto;
@@ -62,15 +62,8 @@ const MenuTimeFlyout = styled.span<{ flyoutAlignment?: FlyoutAlignment }>`
   position: absolute;
   top: 48px;
   z-index: 100;
+  left: 0px;
 
-  ${({ flyoutAlignment = FlyoutAlignment.RIGHT }) =>
-    flyoutAlignment === FlyoutAlignment.RIGHT
-      ? css`
-          right: 0px;
-        `
-      : css`
-          left: 0px;
-        `};
   ${({ theme }) => theme.mediaWidth.upToMedium`
     bottom: unset;
     right: 0;
@@ -165,7 +158,7 @@ export default function NetworkFilter() {
         </StyledMenuContent>
       </StyledMenuButton>
       {open && (
-        <MenuTimeFlyout flyoutAlignment={FlyoutAlignment.LEFT}>
+        <MenuTimeFlyout>
           {NETWORKS.map((network) => (
             <InternalLinkMenuItem
               key={network}

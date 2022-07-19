@@ -26,8 +26,7 @@ const FiltersContainer = styled.div`
   gap: 8px;
   height: 44px;
   max-width: 960px;
-  margin-left: auto;
-  margin-right: auto;
+  margin: 0 auto;
 `
 
 const Explore = () => {
