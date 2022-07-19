@@ -1,7 +1,7 @@
 import { useWeb3React } from '@web3-react/core'
 import { useEffect } from 'react'
 import { UaEventOptions } from 'react-ga4/types/ga4'
-import { RouteComponentProps } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 import { isMobile } from 'utils/userAgent'
 import { getCLS, getFCP, getFID, getLCP, Metric } from 'web-vitals'
 
@@ -63,7 +63,8 @@ function reportWebVitals({ name, delta, id }: Metric) {
 }
 
 // tracks web vitals and pageviews
-export function useAnalyticsReporter({ pathname, search }: RouteComponentProps['location']) {
+export function useAnalyticsReporter() {
+  const { pathname, search } = useLocation()
   useEffect(() => {
     getFCP(reportWebVitals)
     getFID(reportWebVitals)
