@@ -5,11 +5,11 @@ import { useTranslation } from 'react-i18next'
 import { StyleSheet } from 'react-native'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { TransferArrowButton } from 'src/components/buttons/TransferArrowButton'
+import { NFTViewer } from 'src/components/images/NFTViewer'
 import { CurrencyInputPanel } from 'src/components/input/CurrencyInputPanel'
 import { DecimalPad } from 'src/components/input/DecimalPad'
 import { RecipientInputPanel } from 'src/components/input/RecipientInputPanel'
 import { Box, Flex } from 'src/components/layout'
-import { NFTAssetItem } from 'src/components/NFT/NFTAssetItem'
 import { WarningAction } from 'src/components/warnings/types'
 import { AssetType } from 'src/entities/assets'
 import { NFTAsset } from 'src/features/nfts/types'
@@ -86,7 +86,7 @@ export function TransferTokenForm({ state, dispatch, onNext }: TransferTokenProp
       <Flex gap="md">
         {isNFT ? (
           <Flex centered mx="xl">
-            <NFTAssetItem autoplay={false} nft={nftIn} />
+            {nftIn && <NFTViewer uri={nftIn.image_url} />}
           </Flex>
         ) : (
           <CurrencyInputPanel

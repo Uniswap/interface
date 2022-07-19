@@ -7,7 +7,6 @@ import { Chevron } from 'src/components/icons/Chevron'
 import { NFTViewer } from 'src/components/images/NFTViewer'
 import { Flex } from 'src/components/layout'
 import { Box } from 'src/components/layout/Box'
-import { NFTAssetItem } from 'src/components/NFT/NFTAssetItem'
 import { Text } from 'src/components/Text'
 import { NFTAsset } from 'src/features/nfts/types'
 import { ElementName } from 'src/features/telemetry/constants'
@@ -26,7 +25,7 @@ export function NFTCollectionItem({ nftAssets, onPressCollection, onPressNFT }: 
   const renderItem = ({ item }: ListRenderItemInfo<NFTAsset.Asset>) => (
     <Button mx="sm" onPress={() => onPressNFT(item)}>
       width={dimensions.fullWidth / 3}
-      <NFTAssetItem nft={item} />
+      <NFTViewer uri={item.image_url} />
     </Button>
   )
 

@@ -10,9 +10,9 @@ import { Button } from 'src/components/buttons/Button'
 import { TransferArrowButton } from 'src/components/buttons/TransferArrowButton'
 import { CurrencyLogo } from 'src/components/CurrencyLogo'
 import { Arrow } from 'src/components/icons/Arrow'
+import { NFTViewer } from 'src/components/images/NFTViewer'
 import { AmountInput } from 'src/components/input/AmountInput'
 import { Box, Flex } from 'src/components/layout'
-import { NFTAssetItem } from 'src/components/NFT/NFTAssetItem'
 import { Text } from 'src/components/Text'
 import { WarningAction } from 'src/components/warnings/types'
 import { AssetType } from 'src/entities/assets'
@@ -153,7 +153,7 @@ export function TransferReview({ state, dispatch, onNext, onPrev }: TransferForm
               maxHeight={dimensions.fullHeight * 0.35}
               maxWidth={dimensions.fullWidth}
               mx="xl">
-              <NFTAssetItem nft={nftIn} />
+              {nftIn && <NFTViewer uri={nftIn.image_url} />}
             </Flex>
           )}
           <TransferArrowButton disabled borderColor="none" />

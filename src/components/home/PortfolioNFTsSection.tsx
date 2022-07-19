@@ -4,9 +4,9 @@ import React, { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useHomeStackNavigation } from 'src/app/navigation/types'
 import { Button } from 'src/components/buttons/Button'
+import { NFTViewer } from 'src/components/images/NFTViewer'
 import { BaseCard } from 'src/components/layout/BaseCard'
 import { Masonry } from 'src/components/layout/Masonry'
-import { NFTAssetItem } from 'src/components/NFT/NFTAssetItem'
 import { PollingInterval } from 'src/constants/misc'
 import { useNftBalancesQuery } from 'src/features/nfts/api'
 import { NFTAsset } from 'src/features/nfts/types'
@@ -47,7 +47,7 @@ export function PortfolioNFTsSection({ count, owner }: { count?: number; owner?:
     (asset: NFTAsset.Asset) => {
       return (
         <Button activeOpacity={1} onPress={() => onPressItem(asset)}>
-          <NFTAssetItem nft={asset} />
+          <NFTViewer uri={asset.image_url} />
         </Button>
       )
     },

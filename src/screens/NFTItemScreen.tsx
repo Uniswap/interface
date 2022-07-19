@@ -10,7 +10,6 @@ import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { NFTViewer } from 'src/components/images/NFTViewer'
 import { Box, Flex } from 'src/components/layout'
 import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollScreen'
-import { NFTAssetItem } from 'src/components/NFT/NFTAssetItem'
 import { Text } from 'src/components/Text'
 import { ChainId } from 'src/constants/chains'
 import { AssetType } from 'src/entities/assets'
@@ -65,7 +64,7 @@ export function NFTItemScreen({
       fixedHeader={<BackButton showButtonLabel />}>
       <Flex my="sm">
         <Flex centered>
-          <NFTAssetItem autoplay maxHeight={MAX_NFT_IMAGE_SIZE} nft={asset} />
+          <NFTViewer autoplay maxHeight={MAX_NFT_IMAGE_SIZE} uri={asset.image_url} />
         </Flex>
 
         <Flex mx="md">

@@ -6,11 +6,11 @@ import { HomeStackScreenProp, useHomeStackNavigation } from 'src/app/navigation/
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { Button } from 'src/components/buttons/Button'
+import { NFTViewer } from 'src/components/images/NFTViewer'
 import { Flex } from 'src/components/layout'
 import { BackHeader } from 'src/components/layout/BackHeader'
 import { Masonry } from 'src/components/layout/Masonry'
 import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollScreen'
-import { NFTAssetItem } from 'src/components/NFT/NFTAssetItem'
 import { Text } from 'src/components/Text'
 import { PollingInterval } from 'src/constants/misc'
 import { useNftBalancesQuery } from 'src/features/nfts/api'
@@ -53,7 +53,7 @@ export function PortfolioNFTsScreen({
     (asset: NFTAsset.Asset) => {
       return (
         <Button activeOpacity={1} alignItems="center" onPress={() => onPressItem(asset)}>
-          <NFTAssetItem maxHeight={MAX_NFT_IMAGE_SIZE} nft={asset} />
+          <NFTViewer maxHeight={MAX_NFT_IMAGE_SIZE} uri={asset.image_url} />
         </Button>
       )
     },

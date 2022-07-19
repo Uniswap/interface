@@ -13,7 +13,6 @@ import { NFTViewer } from 'src/components/images/NFTViewer'
 import { Flex } from 'src/components/layout'
 import { Box } from 'src/components/layout/Box'
 import { Screen } from 'src/components/layout/Screen'
-import { NFTAssetItem } from 'src/components/NFT/NFTAssetItem'
 import { NFTAssetModal } from 'src/components/NFT/NFTAssetModal'
 import { Text } from 'src/components/Text'
 import { PollingInterval } from 'src/constants/misc'
@@ -193,7 +192,7 @@ export function NFTCollectionScreen({ route }: AppStackScreenProp<Screens.NFTCol
   const renderItem = useCallback(
     ({ item }: ListRenderItemInfo<NFTAsset.Asset>) => (
       <Button mx="sm" my="sm" onPress={() => onPressNFT(item)}>
-        <NFTAssetItem nft={item} />
+        <NFTViewer uri={item.image_url} />
       </Button>
     ),
     []
