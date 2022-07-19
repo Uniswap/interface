@@ -166,7 +166,7 @@ export default function LiquidityChartRangeInput({
       {isUninitialized ? (
         <InfoBox
           message={<Trans>Your position will appear here.</Trans>}
-          icon={<Inbox size={56} stroke={theme.text1} />}
+          icon={<Inbox size={56} stroke={theme.deprecated_text1} />}
         />
       ) : isLoading ? (
         <InfoBox icon={<Loader size="40px" stroke={theme.text4} />} />

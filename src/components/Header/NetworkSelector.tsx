@@ -25,7 +25,7 @@ const ActiveRowLinkList = styled.div`
   padding: 0 8px;
   & > a {
     align-items: center;
-    color: ${({ theme }) => theme.text2};
+    color: ${({ theme }) => theme.deprecated_text2};
     display: flex;
     flex-direction: row;
     font-size: 14px;
@@ -48,7 +48,7 @@ const ActiveRowWrapper = styled.div`
   width: 100%;
 `
 const FlyoutHeader = styled.div`
-  color: ${({ theme }) => theme.text2};
+  color: ${({ theme }) => theme.deprecated_text2};
   font-weight: 400;
 `
 const FlyoutMenu = styled.div`
@@ -126,7 +126,7 @@ const SelectorControls = styled.div`
   background-color: ${({ theme }) => theme.bg0};
   border: 2px solid ${({ theme }) => theme.bg0};
   border-radius: 16px;
-  color: ${({ theme }) => theme.text1};
+  color: ${({ theme }) => theme.deprecated_text1};
   display: flex;
   font-weight: 500;
   justify-content: space-between;

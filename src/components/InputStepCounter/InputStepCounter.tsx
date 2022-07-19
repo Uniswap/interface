@@ -58,13 +58,13 @@ const StyledInput = styled(NumericalInput)<{ usePercent?: boolean }>`
 `
 
 const InputTitle = styled(ThemedText.Small)`
-  color: ${({ theme }) => theme.text2};
+  color: ${({ theme }) => theme.deprecated_text2};
   font-size: 12px;
   font-weight: 500;
 `
 
 const ButtonLabel = styled(ThemedText.White)<{ disabled: boolean }>`
-  color: ${({ theme, disabled }) => (disabled ? theme.text2 : theme.text1)} !important;
+  color: ${({ theme, disabled }) => (disabled ? theme.deprecated_text2 : theme.deprecated_text1)} !important;
 `
 
 interface StepCounterProps {

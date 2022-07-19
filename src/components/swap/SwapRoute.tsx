@@ -33,7 +33,7 @@ const OpenCloseIcon = styled(Plus)<{ open?: boolean }>`
   stroke-width: 2px;
   transition: transform 0.1s;
   transform: ${({ open }) => (open ? 'rotate(45deg)' : 'none')};
-  stroke: ${({ theme }) => theme.text3};
+  stroke: ${({ theme }) => theme.deprecated_text3};
   cursor: pointer;
   :hover {
     opacity: 0.8;

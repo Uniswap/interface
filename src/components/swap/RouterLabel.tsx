@@ -19,7 +19,7 @@ const StyledStaticRouterIcon = styled(StaticRouterIcon)`
   height: 16px;
   width: 16px;
 
-  fill: ${({ theme }) => theme.text3};
+  fill: ${({ theme }) => theme.deprecated_text3};
 
   :hover {
     filter: brightness(1.3);

@@ -227,7 +227,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
         </RowBetween>
         {feeValue0?.greaterThan(0) || feeValue1?.greaterThan(0) ? (
           <>
-            <ThemedText.Italic fontSize={12} color={theme.text2} textAlign="left" padding={'8px 0 0 0'}>
+            <ThemedText.Italic fontSize={12} color={theme.deprecated_text2} textAlign="left" padding={'8px 0 0 0'}>
               <Trans>You will also collect fees earned from this position.</Trans>
             </ThemedText.Italic>
             <RowBetween>

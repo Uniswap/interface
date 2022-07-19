@@ -50,7 +50,7 @@ const PopoverContainer = styled.div<{ show: boolean }>`
   border: 1px solid ${({ theme }) => theme.bg3};
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
     0px 24px 32px rgba(0, 0, 0, 0.01);
-  color: ${({ theme }) => theme.text2};
+  color: ${({ theme }) => theme.deprecated_text2};
   border-radius: 0.5rem;
   padding: 1rem;
   display: grid;
@@ -73,12 +73,12 @@ const StyledTitleText = styled.div<{ active: boolean }>`
   overflow: hidden;
   text-overflow: ellipsis;
   font-weight: 600;
-  color: ${({ theme, active }) => (active ? theme.deprecated_white : theme.text2)};
+  color: ${({ theme, active }) => (active ? theme.deprecated_white : theme.deprecated_text2)};
 `
 
 const StyledListUrlText = styled(ThemedText.Main)<{ active: boolean }>`
   font-size: 12px;
-  color: ${({ theme, active }) => (active ? theme.deprecated_white : theme.text2)};
+  color: ${({ theme, active }) => (active ? theme.deprecated_white : theme.deprecated_text2)};
 `
 
 const RowWrapper = styled(Row)<{ bgColor: string; active: boolean; hasActiveTokens: boolean }>`
@@ -193,7 +193,7 @@ const ListRow = memo(function ListRow({ listUrl }: { listUrl: string }) {
           </StyledListUrlText>
           <StyledMenu ref={node as any}>
             <ButtonEmpty onClick={toggle} ref={setReferenceElement} padding="0">
-              <Settings stroke={isActive ? theme.bg1 : theme.text1} size={12} />
+              <Settings stroke={isActive ? theme.bg1 : theme.deprecated_text1} size={12} />
             </ButtonEmpty>
             {open && (
               <PopoverContainer show={true} ref={setPopperElement as any} style={styles.popper} {...attributes.popper}>
@@ -382,10 +382,10 @@ export function ManageLists({
               </RowFixed>
               {isImported ? (
                 <RowFixed>
-                  <IconWrapper stroke={theme.text2} size="16px" marginRight={'10px'}>
+                  <IconWrapper stroke={theme.deprecated_text2} size="16px" marginRight={'10px'}>
                     <CheckCircle />
                   </IconWrapper>
-                  <ThemedText.Body color={theme.text2}>
+                  <ThemedText.Body color={theme.deprecated_text2}>
                     <Trans>Loaded</Trans>
                   </ThemedText.Body>
                 </RowFixed>

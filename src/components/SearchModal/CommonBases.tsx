@@ -28,7 +28,7 @@ const BaseWrapper = styled.div<{ disable?: boolean }>`
     background-color: ${({ theme, disable }) => !disable && theme.bg2};
   }
 
-  color: ${({ theme, disable }) => disable && theme.text3};
+  color: ${({ theme, disable }) => disable && theme.deprecated_text3};
   background-color: ${({ theme, disable }) => disable && theme.bg3};
   filter: ${({ disable }) => disable && 'grayscale(1)'};
 `

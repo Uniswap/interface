@@ -301,13 +301,13 @@ function L2Content({
           ) : (
             <div style={{ height: '17px' }} />
           )}
-          <Text color={theme.text3} style={{ margin: '20px 0 0 0' }} fontSize={'14px'}>
+          <Text color={theme.deprecated_text3} style={{ margin: '20px 0 0 0' }} fontSize={'14px'}>
             {!secondsToConfirm ? (
               <div style={{ height: '24px' }} />
             ) : (
               <div>
                 <Trans>Transaction completed in </Trans>
-                <span style={{ fontWeight: 500, marginLeft: '4px', color: theme.text1 }}>
+                <span style={{ fontWeight: 500, marginLeft: '4px', color: theme.deprecated_text1 }}>
                   {secondsToConfirm} seconds 🎉
                 </span>
               </div>

@@ -30,7 +30,7 @@ const StyledInfoIcon = styled(Info)`
   height: 16px;
   width: 16px;
   margin-right: 4px;
-  color: ${({ theme }) => theme.text3};
+  color: ${({ theme }) => theme.deprecated_text3};
 `
 
 const StyledCard = styled(OutlineCard)`
@@ -63,7 +63,7 @@ const StyledPolling = styled.div`
   margin-right: 2px;
   margin-left: 10px;
   align-items: center;
-  color: ${({ theme }) => theme.text1};
+  color: ${({ theme }) => theme.deprecated_text1};
   transition: 250ms ease color;
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
@@ -97,7 +97,7 @@ const Spinner = styled.div`
   border-top: 1px solid transparent;
   border-right: 1px solid transparent;
   border-bottom: 1px solid transparent;
-  border-left: 2px solid ${({ theme }) => theme.text1};
+  border-left: 2px solid ${({ theme }) => theme.deprecated_text1};
   background: transparent;
   width: 14px;
   height: 14px;
@@ -159,7 +159,7 @@ export default function SwapDetailsDropdown({
                   placement="bottom"
                   disableHover={showDetails}
                 >
-                  <StyledInfoIcon color={trade ? theme.text3 : theme.bg3} />
+                  <StyledInfoIcon color={trade ? theme.deprecated_text3 : theme.bg3} />
                 </MouseoverTooltipContent>
               </HideSmall>
             )}
@@ -189,7 +189,7 @@ export default function SwapDetailsDropdown({
                 disableHover={showDetails}
               />
             )}
-            <RotatingArrow stroke={trade ? theme.text3 : theme.bg3} open={Boolean(trade && showDetails)} />
+            <RotatingArrow stroke={trade ? theme.deprecated_text3 : theme.bg3} open={Boolean(trade && showDetails)} />
           </RowFixed>
         </StyledHeaderRow>
         <AnimatedDropdown open={showDetails}>

@@ -178,7 +178,7 @@ export default function Pool() {
             <AutoColumn gap="lg" justify="center">
               <AutoColumn gap="md" style={{ width: '100%' }}>
                 <Layer2Prompt>
-                  <ThemedText.Body color={theme.text3} textAlign="center">
+                  <ThemedText.Body color={theme.deprecated_text3} textAlign="center">
                     <Trans>V2 Pool is not available on Layer 2. Switch to Layer 1 Ethereum.</Trans>
                   </ThemedText.Body>
                 </Layer2Prompt>
@@ -212,13 +212,13 @@ export default function Pool() {
 
                 {!account ? (
                   <Card padding="40px">
-                    <ThemedText.Body color={theme.text3} textAlign="center">
+                    <ThemedText.Body color={theme.deprecated_text3} textAlign="center">
                       <Trans>Connect to a wallet to view your liquidity.</Trans>
                     </ThemedText.Body>
                   </Card>
                 ) : v2IsLoading ? (
                   <EmptyProposals>
-                    <ThemedText.Body color={theme.text3} textAlign="center">
+                    <ThemedText.Body color={theme.deprecated_text3} textAlign="center">
                       <Dots>
                         <Trans>Loading</Trans>
                       </Dots>
@@ -269,7 +269,7 @@ export default function Pool() {
                   </>
                 ) : (
                   <EmptyProposals>
-                    <ThemedText.Body color={theme.text3} textAlign="center">
+                    <ThemedText.Body color={theme.deprecated_text3} textAlign="center">
                       <Trans>No liquidity found.</Trans>
                     </ThemedText.Body>
                   </EmptyProposals>

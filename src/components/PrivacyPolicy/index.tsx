@@ -33,7 +33,7 @@ const StyledExternalCard = styled(Card)`
 
 const HoverText = styled.div`
   text-decoration: none;
-  color: ${({ theme }) => theme.text1};
+  color: ${({ theme }) => theme.deprecated_text1};
   display: flex;
   align-items: center;
 

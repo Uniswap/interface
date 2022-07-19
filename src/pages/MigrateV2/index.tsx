@@ -134,13 +134,13 @@ export default function MigrateV2() {
 
           {!account ? (
             <LightCard padding="40px">
-              <ThemedText.Body color={theme.text3} textAlign="center">
+              <ThemedText.Body color={theme.deprecated_text3} textAlign="center">
                 <Trans>Connect to a wallet to view your V2 liquidity.</Trans>
               </ThemedText.Body>
             </LightCard>
           ) : v2IsLoading ? (
             <LightCard padding="40px">
-              <ThemedText.Body color={theme.text3} textAlign="center">
+              <ThemedText.Body color={theme.deprecated_text3} textAlign="center">
                 <Dots>
                   <Trans>Loading</Trans>
                 </Dots>

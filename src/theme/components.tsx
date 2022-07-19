@@ -49,7 +49,7 @@ export const LinkStyledButton = styled.button<{ disabled?: boolean }>`
   background: none;
 
   cursor: ${({ disabled }) => (disabled ? 'default' : 'pointer')};
-  color: ${({ theme, disabled }) => (disabled ? theme.text2 : theme.primary1)};
+  color: ${({ theme, disabled }) => (disabled ? theme.deprecated_text2 : theme.primary1)};
   font-weight: 500;
 
   :hover {
@@ -140,7 +140,7 @@ export const TrashIcon = styled(Trash)`
   height: 16px;
   width: 18px;
   margin-left: 10px;
-  stroke: ${({ theme }) => theme.text3};
+  stroke: ${({ theme }) => theme.deprecated_text3};
 
   cursor: pointer;
   align-items: center;
@@ -228,7 +228,7 @@ const Spinner = styled.img`
 `
 
 const BackArrowLink = styled(StyledInternalLink)`
-  color: ${({ theme }) => theme.text1};
+  color: ${({ theme }) => theme.deprecated_text1};
 `
 export function BackArrow({ to }: { to: string }) {
   return (

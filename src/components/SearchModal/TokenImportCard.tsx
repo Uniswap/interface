@@ -54,7 +54,7 @@ const TokenImportCard = ({ list, token }: TokenImportCardProps) => {
         {list !== undefined ? (
           <RowFixed>
             {list.logoURI && <ListLogo logoURI={list.logoURI} size="16px" />}
-            <ThemedText.Small ml="6px" fontSize={14} color={theme.text3}>
+            <ThemedText.Small ml="6px" fontSize={14} color={theme.deprecated_text3}>
               <Trans>via {list.name} token list</Trans>
             </ThemedText.Small>
           </RowFixed>

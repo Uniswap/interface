@@ -31,7 +31,7 @@ const LinkRow = styled(Link)`
   flex-direction: column;
 
   justify-content: space-between;
-  color: ${({ theme }) => theme.text1};
+  color: ${({ theme }) => theme.deprecated_text1};
   margin: 8px 0;
   padding: 16px;
   text-decoration: none;
@@ -87,7 +87,7 @@ const RangeLineItem = styled(DataLineItem)`
 
 const DoubleArrow = styled.span`
   margin: 0 2px;
-  color: ${({ theme }) => theme.text3};
+  color: ${({ theme }) => theme.deprecated_text3};
   ${({ theme }) => theme.mediaWidth.upToSmall`
     margin: 4px;
     padding: 20px;
@@ -101,7 +101,7 @@ const RangeText = styled.span`
 `
 
 const ExtentsText = styled.span`
-  color: ${({ theme }) => theme.text3};
+  color: ${({ theme }) => theme.deprecated_text3};
   font-size: 14px;
   margin-right: 4px;
   ${({ theme }) => theme.mediaWidth.upToSmall`

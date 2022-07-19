@@ -23,7 +23,7 @@ const Circle = styled.div<{ confirmed?: boolean; disabled?: boolean }>`
   background-color: ${({ theme, confirmed, disabled }) =>
     disabled ? theme.bg3 : confirmed ? theme.green1 : theme.primary1};
   border-radius: 50%;
-  color: ${({ theme, disabled }) => (disabled ? theme.text3 : theme.text1)};
+  color: ${({ theme, disabled }) => (disabled ? theme.deprecated_text3 : theme.deprecated_text1)};
   display: flex;
   align-items: center;
   justify-content: center;

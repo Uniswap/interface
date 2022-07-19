@@ -74,7 +74,7 @@ export default function ImportRow({
         </AutoRow>
         {list && list.logoURI && (
           <RowFixed>
-            <ThemedText.Small mr="4px" color={theme.text3}>
+            <ThemedText.Small mr="4px" color={theme.deprecated_text3}>
               <Trans>via {list.name} </Trans>
             </ThemedText.Small>
             <ListLogo logoURI={list.logoURI} size="12px" />

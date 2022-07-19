@@ -50,7 +50,7 @@ const Proposal = styled(Button)`
   text-align: left;
   outline: none;
   cursor: pointer;
-  color: ${({ theme }) => theme.text1};
+  color: ${({ theme }) => theme.deprecated_text1};
   text-decoration: none;
   background-color: ${({ theme }) => theme.bg1};
   &:focus {
@@ -105,7 +105,7 @@ const AddressButton = styled.div`
 `
 
 const StyledExternalLink = styled(ExternalLink)`
-  color: ${({ theme }) => theme.text1};
+  color: ${({ theme }) => theme.deprecated_text1};
 `
 
 export default function Landing() {

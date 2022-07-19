@@ -17,7 +17,7 @@ const handleColorType = (status: ProposalState, theme: DefaultTheme) => {
     case ProposalState.CANCELED:
     case ProposalState.EXPIRED:
     default:
-      return theme.text3
+      return theme.deprecated_text3
   }
 }
 

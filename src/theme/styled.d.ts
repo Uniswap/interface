@@ -9,11 +9,11 @@ export interface Colors {
   deprecated_black: Color
 
   // text
-  text1: Color
-  text2: Color
-  text3: Color
-  text4: Color
-  text5: Color
+  deprecated_text1: Color
+  deprecated_text2: Color
+  deprecated_text3: Color
+  deprecated_text4: Color
+  deprecated_text5: Color
 
   // backgrounds / greys
   bg0: Color

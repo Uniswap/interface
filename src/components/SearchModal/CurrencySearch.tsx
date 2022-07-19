@@ -251,7 +251,7 @@ export function CurrencySearch({
           </div>
         ) : (
           <Column style={{ padding: '20px', height: '100%' }}>
-            <ThemedText.Main color={theme.text3} textAlign="center" mb="20px">
+            <ThemedText.Main color={theme.deprecated_text3} textAlign="center" mb="20px">
               <Trans>No results found.</Trans>
             </ThemedText.Main>
           </Column>

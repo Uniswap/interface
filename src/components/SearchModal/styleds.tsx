@@ -7,7 +7,7 @@ import { RowBetween } from '../Row'
 export const TextDot = styled.div`
   height: 3px;
   width: 3px;
-  background-color: ${({ theme }) => theme.text2};
+  background-color: ${({ theme }) => theme.deprecated_text2};
   border-radius: 50%;
 `
 
@@ -46,7 +46,7 @@ export const SearchInput = styled.input`
   border: none;
   outline: none;
   border-radius: 20px;
-  color: ${({ theme }) => theme.text1};
+  color: ${({ theme }) => theme.deprecated_text1};
   border-style: solid;
   border: 1px solid ${({ theme }) => theme.bg3};
   -webkit-appearance: none;
@@ -54,7 +54,7 @@ export const SearchInput = styled.input`
   font-size: 18px;
 
   ::placeholder {
-    color: ${({ theme }) => theme.text3};
+    color: ${({ theme }) => theme.deprecated_text3};
   }
   transition: border 100ms;
   :focus {

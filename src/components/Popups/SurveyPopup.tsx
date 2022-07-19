@@ -19,7 +19,7 @@ const Wrapper = styled(AutoColumn)`
   padding: 18px;
   max-width: 360px;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-  color: ${({ theme }) => theme.text1};
+  color: ${({ theme }) => theme.deprecated_text1};
   overflow: hidden;
 
   ${({ theme }) => theme.mediaWidth.upToSmall`

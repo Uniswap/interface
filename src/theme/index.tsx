@@ -59,11 +59,11 @@ function colors(darkMode: boolean): Colors {
     deprecated_black,
 
     // text
-    text1: darkMode ? '#FFFFFF' : '#000000',
-    text2: darkMode ? '#C3C5CB' : '#565A69',
-    text3: darkMode ? '#8F96AC' : '#6E727D',
-    text4: darkMode ? '#B2B9D2' : '#C3C5CB',
-    text5: darkMode ? '#2C2F36' : '#EDEEF2',
+    deprecated_text1: darkMode ? '#FFFFFF' : '#000000',
+    deprecated_text2: darkMode ? '#C3C5CB' : '#565A69',
+    deprecated_text3: darkMode ? '#8F96AC' : '#6E727D',
+    deprecated_text4: darkMode ? '#B2B9D2' : '#C3C5CB',
+    deprecated_text5: darkMode ? '#2C2F36' : '#EDEEF2',
 
     // backgrounds / greys
     bg0: darkMode ? '#191B1F' : '#FFF',
@@ -209,7 +209,7 @@ export const ThemedText = {
 
 export const ThemedGlobalStyle = createGlobalStyle`
 html {
-  color: ${({ theme }) => theme.text1};
+  color: ${({ theme }) => theme.deprecated_text1};
   background-color: ${({ theme }) => theme.bg1} !important;
 }
 

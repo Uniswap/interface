@@ -58,7 +58,7 @@ const StyledPollingDot = styled.div<{ warning: boolean }>`
 `
 
 const StyledGasDot = styled.div`
-  background-color: ${({ theme }) => theme.text3};
+  background-color: ${({ theme }) => theme.deprecated_text3};
   border-radius: 50%;
   height: 4px;
   min-height: 4px;
@@ -143,7 +143,7 @@ export default function Polling() {
           <ExternalLink href={'https://etherscan.io/gastracker'}>
             {priceGwei ? (
               <RowFixed style={{ marginRight: '8px' }}>
-                <ThemedText.Main fontSize="11px" mr="8px" color={theme.text3}>
+                <ThemedText.Main fontSize="11px" mr="8px" color={theme.deprecated_text3}>
                   <MouseoverTooltip
                     text={
                       <Trans>

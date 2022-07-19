@@ -8,7 +8,7 @@ import styled from 'styled-components/macro'
 const ProposalEditorHeader = styled(Text)`
   font-size: 14px;
   font-weight: 500;
-  color: ${({ theme }) => theme.text2};
+  color: ${({ theme }) => theme.deprecated_text2};
 `
 
 const ProposalTitle = memo(styled(TextInput)`

@@ -19,7 +19,7 @@ const Wrapper = styled.div`
 `
 
 const StyledInfoIcon = styled(Info)`
-  stroke: ${({ theme }) => theme.text3};
+  stroke: ${({ theme }) => theme.deprecated_text3};
 `
 
 /**
