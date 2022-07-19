@@ -62,6 +62,7 @@ function colors(darkMode: boolean): Colors {
     deprecated_white,
     deprecated_black,
 
+    /* DEPRICATED */
     // text
     deprecated_text1: darkMode ? '#FFFFFF' : '#000000',
     deprecated_text2: darkMode ? '#C3C5CB' : '#565A69',
