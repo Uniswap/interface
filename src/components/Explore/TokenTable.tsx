@@ -30,7 +30,7 @@ const NoTokenDisplay = styled.div`
   padding: 0px 28px;
 `
 const TokenRowsContainer = styled.div`
-  padding: 4px 12px;
+  padding: 4px 0px;
 `
 const LOADING_ROWS = Array(10)
   .fill(0)

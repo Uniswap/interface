@@ -41,6 +41,7 @@ const Cell = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
 `
 const StyledTokenRow = styled.div`
   width: 100%;
@@ -52,11 +53,16 @@ const StyledTokenRow = styled.div`
 
   max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT};
   min-width: 390px;
+  padding: 0px 12px;
+
+  &:hover {
+    background-color: ${({ theme }) => theme.backgroundContainer};
+  }
 
   @media only screen and (max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT}) {
     grid-template-columns: 1.7fr 1fr 6.5fr 4.5fr 4.5fr 4.5fr 4.5fr;
     width: fit-content;
-    padding-right: 12px;
+    padding-right: 24px;
   }
 
   @media only screen and (max-width: ${LARGE_MEDIA_BREAKPOINT}) {
@@ -100,11 +106,6 @@ const ClickableName = styled(Link)`
   gap: 8px;
   text-decoration: none;
   color: ${({ theme }) => theme.textPrimary};
-
-  &:hover,
-  &:focus {
-    background-color: ${({ theme }) => theme.backgroundContainer};
-  }
 `
 const FavoriteCell = styled(Cell)`
   min-width: 40px;
@@ -125,6 +126,10 @@ const StyledHeaderRow = styled(StyledTokenRow)`
   border-color: ${({ theme }) => theme.backgroundOutline};
   border-radius: 8px 8px 0px 0px;
   padding: 0px 12px;
+
+  &:hover {
+    background-color: ${({ theme }) => theme.backgroundSurface};
+  }
 
   @media only screen and (max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT}) {
     padding-right: 24px;
