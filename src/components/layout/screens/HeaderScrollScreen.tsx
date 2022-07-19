@@ -75,7 +75,7 @@ export function HeaderScrollScreen({
 
   const ContentHeader = useMemo(
     () => (
-      <AnimatedFlex mt="lg" mx="md" style={contentHeaderStyle}>
+      <AnimatedFlex mx="md" style={contentHeaderStyle}>
         {contentHeader}
       </AnimatedFlex>
     ),

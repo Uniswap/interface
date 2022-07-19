@@ -44,7 +44,7 @@ export function TotalBalance({
   return (
     <Suspense fallback={<Loading type="header" />}>
       <Flex gap="xxs">
-        <Text variant={variant}>{`${formatUSDPrice(totalBalance)}`}</Text>
+        <Text fontWeight="400" variant={variant}>{`${formatUSDPrice(totalBalance)}`}</Text>
         {showRelativeChange && <BalanceRelativeChange owner={owner} />}
       </Flex>
     </Suspense>
