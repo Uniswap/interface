@@ -50,30 +50,4 @@ describe('Swap', () => {
     cy.get('#swap-currency-input .token-amount-input').clear().type('0.01')
     cy.get('#swap-currency-output .token-amount-input').should('have.value', '0.01')
   })
-
-  describe('expert mode', () => {
-    beforeEach(() => {
-      cy.window().then((win) => {
-        cy.stub(win, 'prompt').returns('confirm')
-      })
-      cy.get('#open-settings-dialog-button').click()
-      cy.get('#toggle-expert-mode-button').click()
-      cy.get('#confirm-expert-mode').click()
-    })
-
-    it.skip('add a recipient is visible', () => {
-      cy.get('#add-recipient-button').should('be.visible')
-    })
-
-    it.skip('add a recipient', () => {
-      cy.get('#add-recipient-button').click()
-      cy.get('#recipient').should('exist')
-    })
-
-    it.skip('remove recipient', () => {
-      cy.get('#add-recipient-button').click()
-      cy.get('#remove-recipient-button').click()
-      cy.get('#recipient').should('not.exist')
-    })
-  })
 })
