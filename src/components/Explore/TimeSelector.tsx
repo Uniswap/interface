@@ -4,7 +4,7 @@ import { useRef, useState } from 'react'
 import { Check, ChevronDown, ChevronUp } from 'react-feather'
 import { useModalIsOpen, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
-import styled, { css } from 'styled-components/macro'
+import styled, { css, useTheme } from 'styled-components/macro'
 
 export const TIME_DISPLAYS: { [key: string]: string } = {
   hour: '1H',
@@ -39,13 +39,13 @@ const InternalLinkMenuItem = styled(InternalMenuItem)`
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding: 8px;
+  padding: 12px 16px;
   justify-content: space-between;
   text-decoration: none;
   cursor: pointer;
 
   :hover {
-    color: ${({ theme }) => theme.deprecated_text1};
+    background-color: ${({ theme }) => theme.backgroundContainer};
     text-decoration: none;
   }
 `
@@ -53,12 +53,12 @@ const MenuTimeFlyout = styled.span<{ flyoutAlignment?: FlyoutAlignment }>`
   min-width: 150px;
   max-height: 350px;
   overflow: auto;
-  background-color: ${({ theme }) => theme.deprecated_bg1};
+  background-color: ${({ theme }) => theme.backgroundSurface};
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
     0px 24px 32px rgba(0, 0, 0, 0.01);
-  border: 1px solid ${({ theme }) => theme.deprecated_bg0};
-  border-radius: 12px;
-  padding: 8px;
+  border: 1px solid ${({ theme }) => theme.backgroundOutline};
+  border-radius: 16px;
+  padding: 8px 0px;
   display: flex;
   flex-direction: column;
   font-size: 16px;
@@ -81,16 +81,16 @@ const MenuTimeFlyout = styled.span<{ flyoutAlignment?: FlyoutAlignment }>`
   `};
 `
 
-const StyledMenuButton = styled.button`
+const StyledMenuButton = styled.button<{ open: boolean }>`
   width: 100%;
   height: 100%;
   border: none;
   background-color: transparent;
   margin: 0;
-  background-color: ${({ theme }) => theme.deprecated_bg0};
-  border: 1px solid ${({ theme }) => theme.deprecated_bg0};
+  background-color: ${({ theme }) => theme.none};
+  border: 1px solid ${({ theme }) => theme.backgroundOutline};
   padding: 6px 12px 6px 12px;
-  border-radius: 12px;
+  border-radius: 16px;
   font-size: 16px;
   line-height: 24px;
   font-weight: 400;
@@ -99,7 +99,9 @@ const StyledMenuButton = styled.button`
   :focus {
     cursor: pointer;
     outline: none;
-    border: 1px solid ${({ theme }) => theme.deprecated_bg3};
+    background-color: ${({ theme, open }) => (open ? theme.accentActionSoft : theme.none)};
+    border: 1px solid ${({ theme, open }) => (open ? theme.accentActiveSoft : theme.backgroundOutline)};
+    color: ${({ theme }) => theme.blue200};
   }
 
   svg {
@@ -124,15 +126,17 @@ const StyledMenuContent = styled.div`
   border: none;
   width: 100%;
   vertical-align: middle;
-  color: ${({ theme }) => theme.deprecated_text1};
+  color: ${({ theme }) => theme.textPrimary};
 `
 
-const Chevron = styled.span`
-  color: ${({ theme }) => theme.deprecated_text2};
+const Chevron = styled.span<{ open: boolean }>`
+  padding-top: 2px;
+  color: ${({ open, theme }) => (open ? theme.blue200 : theme.textPrimary)};
 `
 
 // TODO: change this to reflect data pipeline
 export default function TimeSelector() {
+  const theme = useTheme()
   const node = useRef<HTMLDivElement | null>(null)
   const open = useModalIsOpen(ApplicationModal.TIME_SELECTOR)
   const toggleMenu = useToggleModal(ApplicationModal.TIME_SELECTOR)
@@ -141,10 +145,10 @@ export default function TimeSelector() {
 
   return (
     <StyledMenu ref={node}>
-      <StyledMenuButton onClick={toggleMenu} aria-label={`timeSelector`}>
+      <StyledMenuButton onClick={toggleMenu} aria-label={`timeSelector`} open={open}>
         <StyledMenuContent>
           {TIME_DISPLAYS[activeTime]}
-          <Chevron>
+          <Chevron open={open}>
             {open ? <ChevronUp size={15} viewBox="0 0 24 20" /> : <ChevronDown size={15} viewBox="0 0 24 20" />}
           </Chevron>
         </StyledMenuContent>
@@ -161,7 +165,7 @@ export default function TimeSelector() {
               }}
             >
               <div>{TIME_DISPLAYS[time]}</div>
-              {time === activeTime && <Check opacity={0.6} size={16} />}
+              {time === activeTime && <Check color={theme.accentAction} size={16} />}
             </InternalLinkMenuItem>
           ))}
         </MenuTimeFlyout>
