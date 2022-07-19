@@ -2,7 +2,15 @@ import { BigNumber } from 'ethers'
 import mockdate from 'mockdate'
 import createMigrate from 'src/app/createMigrate'
 import { migrations } from 'src/app/migrations'
-import { getSchema, initialSchema, v1Schema, v2Schema, v3Schema, v4Schema } from 'src/app/schema'
+import {
+  getSchema,
+  initialSchema,
+  v1Schema,
+  v2Schema,
+  v3Schema,
+  v4Schema,
+  v5Schema,
+} from 'src/app/schema'
 import { persistConfig } from 'src/app/store'
 import { WalletConnectModalState } from 'src/components/WalletConnect/ScanSheet/WalletConnectModal'
 import { SWAP_ROUTER_ADDRESSES } from 'src/constants/addresses'
@@ -283,5 +291,16 @@ describe('Redux state migrations', () => {
 
     expect(v5.modals[ModalName.Swap].isOpen).toEqual(false)
     expect(v5.modals[ModalName.Send].isOpen).toEqual(false)
+  })
+
+  it('migrates from v5 to v6', () => {
+    const v6 = migrations[6](v5Schema)
+
+    expect(v6.walletConnect.pendingSession).toBe(null)
+
+    expect(typeof v6.wallet.settings).toBe('object')
+
+    expect(v5Schema.wallet.bluetooth).toBeDefined()
+    expect(v6.wallet.bluetooth).toBeUndefined()
   })
 })

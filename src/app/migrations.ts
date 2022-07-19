@@ -91,7 +91,7 @@ export const migrations = {
   6: (state: any) => {
     const newState = { ...state }
     newState.walletConnect = { ...newState.walletConnect, pendingSession: null }
-    newState.wallet = { ...newState.wallet, settings: null }
+    newState.wallet = { ...newState.wallet, settings: {} }
 
     delete newState?.wallet?.bluetooth
     return newState

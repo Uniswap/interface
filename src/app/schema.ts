@@ -90,10 +90,6 @@ export const v1Schema = {
       initialState: undefined,
     },
   },
-  wallet: {
-    ...v0Schema.wallet,
-    settings: {},
-  },
 }
 
 export const v2Schema = {
@@ -121,14 +117,7 @@ const { balances, ...restV4Schema } = v4Schema
 delete restV4Schema.favorites.followedAddresses
 
 // adding in missed properties
-export const v5Schema = {
-  ...restV4Schema,
-  walletConnect: { ...restV4Schema.walletConnect, pendingSession: null },
-  wallet: {
-    ...restV4Schema.wallet,
-    settings: { tokensOrderBy: undefined, tokensMetadataDisplayType: undefined },
-  },
-}
+export const v5Schema = { ...restV4Schema }
 
 const v5IntermediateSchema = {
   ...v5Schema,
@@ -142,6 +131,7 @@ delete v5IntermediateSchema.wallet.bluetooth
 
 export const v6Schema = {
   ...v5IntermediateSchema,
+  walletConnect: { ...v5IntermediateSchema.walletConnect, pendingSession: null },
   wallet: {
     ...v5IntermediateSchema.wallet,
     settings: {},
