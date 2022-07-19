@@ -17,6 +17,7 @@ import styled from 'styled-components/macro'
 import { ExternalLink, MEDIA_WIDTHS } from 'theme'
 import { replaceURLParam } from 'utils/routes'
 import { isChainAllowed, switchChain } from 'utils/switchChain'
+import { isMobile } from 'utils/userAgent'
 
 const ActiveRowLinkList = styled.div`
   display: flex;
@@ -120,20 +121,18 @@ const SelectorLabel = styled(NetworkLabel)`
     margin-right: 8px;
   }
 `
-const SelectorControls = styled.div<{ interactive: boolean }>`
+const SelectorControls = styled.div`
   align-items: center;
   background-color: ${({ theme }) => theme.bg0};
   border: 2px solid ${({ theme }) => theme.bg0};
   border-radius: 16px;
   color: ${({ theme }) => theme.text1};
-  cursor: ${({ interactive }) => (interactive ? 'pointer' : 'auto')};
   display: flex;
   font-weight: 500;
   justify-content: space-between;
   padding: 6px 8px;
 `
-const SelectorLogo = styled(Logo)<{ interactive?: boolean }>`
-  margin-right: ${({ interactive }) => (interactive ? 8 : 0)}px;
+const SelectorLogo = styled(Logo)`
   @media screen and (min-width: ${MEDIA_WIDTHS.upToSmall}px) {
     margin-right: 8px;
   }
@@ -338,9 +337,14 @@ export default function NetworkSelector() {
   }
 
   return (
-    <SelectorWrapper ref={node} onMouseEnter={openModal} onMouseLeave={closeModal} onClick={toggleModal}>
-      <SelectorControls interactive>
-        <SelectorLogo interactive src={info.logoUrl} />
+    <SelectorWrapper
+      ref={node}
+      onMouseEnter={openModal}
+      onMouseLeave={closeModal}
+      onClick={isMobile ? toggleModal : undefined}
+    >
+      <SelectorControls>
+        <SelectorLogo src={info.logoUrl} />
         <SelectorLabel>{info.label}</SelectorLabel>
         <StyledChevronDown />
       </SelectorControls>
