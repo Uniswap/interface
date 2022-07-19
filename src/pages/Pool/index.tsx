@@ -14,12 +14,12 @@ import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import { isSupportedChain } from 'constants/chains'
 import { useV3Positions } from 'hooks/useV3Positions'
 import { useContext } from 'react'
-import { Activity, BookOpen, ChevronDown, ChevronsRight, Inbox, Layers, PlusCircle } from 'react-feather'
+import { AlertTriangle, BookOpen, ChevronDown, ChevronsRight, Inbox, Layers, PlusCircle } from 'react-feather'
 import { Link } from 'react-router-dom'
 import { useToggleWalletModal } from 'state/application/hooks'
 import { useUserHideClosedPositions } from 'state/user/hooks'
 import styled, { css, ThemeContext } from 'styled-components/macro'
-import { ExternalLink, HideSmall, ThemedText } from 'theme'
+import { HideSmall, ThemedText } from 'theme'
 import { PositionDetails } from 'types/position'
 
 import { V2_FACTORY_ADDRESSES } from '../../constants/addresses'
@@ -107,7 +107,7 @@ const IconStyle = css`
   margin-bottom: 0.5rem;
 `
 
-const NetworkIcon = styled(Activity)`
+const NetworkIcon = styled(AlertTriangle)`
   ${IconStyle}
 `
 
@@ -171,10 +171,7 @@ function WrongNetworkCard() {
                 <ThemedText.Body color={theme.text3} textAlign="center">
                   <NetworkIcon strokeWidth={1.2} />
                   <div data-testid="pools-unsupported-err">
-                    <Trans>
-                      Your connected network is unsupported. Request support{' '}
-                      <ExternalLink href="https://uniswap.canny.io/feature-requests">here</ExternalLink>.
-                    </Trans>
+                    <Trans>Your connected network is unsupported.</Trans>
                   </div>
                 </ThemedText.Body>
               </ErrorContainer>

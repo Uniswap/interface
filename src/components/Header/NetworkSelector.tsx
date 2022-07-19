@@ -121,6 +121,19 @@ const SelectorLabel = styled(NetworkLabel)`
     margin-right: 8px;
   }
 `
+const NetworkAlertLabel = styled(NetworkLabel)`
+  display: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin: 0 0.5rem 0 0.4rem;
+  font-size: 1rem;
+  width: fit-content;
+  font-weight: 500;
+  @media screen and (min-width: ${MEDIA_WIDTHS.upToSmall}px) {
+    display: block;
+  }
+`
 const SelectorControls = styled.div<{ interactive: boolean; supportedChain: boolean }>`
   align-items: center;
   background-color: ${({ theme }) => theme.bg0};
@@ -160,20 +173,9 @@ const StyledChevronDown = styled(ChevronDown)`
 
 const NetworkIcon = styled(AlertTriangle)`
   margin-left: 0.25rem;
-  margin-right: 0.5rem;
+  margin-right: 0.25rem;
   width: 16px;
   height: 16px;
-`
-
-const Text = styled.p`
-  flex: 1 1 auto;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  margin: 0 0.5rem 0 0.25rem;
-  font-size: 1rem;
-  width: fit-content;
-  font-weight: 500;
 `
 
 const BridgeLabel = ({ chainId }: { chainId: SupportedChainId }) => {
@@ -380,9 +382,7 @@ export default function NetworkSelector() {
         ) : (
           <>
             <NetworkIcon />
-            <Text>
-              <Trans>Switch Network</Trans>
-            </Text>
+            <NetworkAlertLabel>Switch Network</NetworkAlertLabel>
             <StyledChevronDown />
           </>
         )}
