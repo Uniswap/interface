@@ -23,17 +23,29 @@ function getDurationTillTimestampSinceEpoch(futureTimestampSinceEpoch?: number):
 
 const getFormattedNumber = (initialValue: Percent | CurrencyAmount<Token>) => parseFloat(initialValue.toFixed(2))
 
-const formatAnalyticsEventProperties = (
-  trade: InterfaceTrade<Currency, Currency, TradeType>,
-  txHash: string | undefined,
-  allowedSlippage: Percent,
-  transactionDeadlineSecondsSinceEpoch: number | undefined,
-  isAutoSlippage: boolean,
-  isAutoRouterApi: boolean,
-  tokenInAmountUsd: string | undefined,
-  tokenOutAmountUsd: string | undefined,
+interface AnalyticsEventProps {
+  trade: InterfaceTrade<Currency, Currency, TradeType>
+  txHash: string | undefined
+  allowedSlippage: Percent
+  transactionDeadlineSecondsSinceEpoch: number | undefined
+  isAutoSlippage: boolean
+  isAutoRouterApi: boolean
+  tokenInAmountUsd: string | undefined
+  tokenOutAmountUsd: string | undefined
   lpFeePercent: Percent
-) => ({
+}
+
+const formatAnalyticsEventProperties = ({
+  trade,
+  txHash,
+  allowedSlippage,
+  transactionDeadlineSecondsSinceEpoch,
+  isAutoSlippage,
+  isAutoRouterApi,
+  tokenInAmountUsd,
+  tokenOutAmountUsd,
+  lpFeePercent,
+}: AnalyticsEventProps) => ({
   estimated_network_fee_usd: trade.gasUseEstimateUSD ? getFormattedNumber(trade.gasUseEstimateUSD) : undefined,
   transaction_hash: txHash,
   transaction_deadline_seconds: getDurationTillTimestampSinceEpoch(transactionDeadlineSecondsSinceEpoch),
@@ -85,17 +97,17 @@ export default function SwapModalFooter({
           events={[Event.onClick]}
           element={ElementName.CONFIRM_SWAP_BUTTON}
           name={EventName.SWAP_SUBMITTED}
-          properties={formatAnalyticsEventProperties(
+          properties={formatAnalyticsEventProperties({
             trade,
             txHash,
             allowedSlippage,
             transactionDeadlineSecondsSinceEpoch,
             isAutoSlippage,
-            /** isAutoRouterApi= */ !clientSideRouter,
+            isAutoRouterApi: !clientSideRouter,
             tokenInAmountUsd,
             tokenOutAmountUsd,
-            lpFeePercent
-          )}
+            lpFeePercent,
+          })}
         >
           <ButtonError
             onClick={onConfirm}
