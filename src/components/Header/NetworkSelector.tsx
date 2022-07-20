@@ -5,9 +5,10 @@ import { getChainInfo } from 'constants/chainInfo'
 import { CHAIN_IDS_TO_NAMES, SupportedChainId } from 'constants/chains'
 import useParsedQueryString from 'hooks/useParsedQueryString'
 import usePrevious from 'hooks/usePrevious'
+import { darken } from 'polished'
 import { ParsedQs } from 'qs'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { ArrowDownCircle, ChevronDown } from 'react-feather'
+import { AlertTriangle, ArrowDownCircle, ChevronDown } from 'react-feather'
 import { useHistory } from 'react-router-dom'
 import { useCloseModal, useModalIsOpen, useOpenModal, useToggleModal } from 'state/application/hooks'
 import { addPopup, ApplicationModal } from 'state/application/reducer'
@@ -121,7 +122,20 @@ const SelectorLabel = styled(NetworkLabel)`
     margin-right: 8px;
   }
 `
-const SelectorControls = styled.div`
+const NetworkAlertLabel = styled(NetworkLabel)`
+  display: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin: 0 0.5rem 0 0.4rem;
+  font-size: 1rem;
+  width: fit-content;
+  font-weight: 500;
+  @media screen and (min-width: ${MEDIA_WIDTHS.upToSmall}px) {
+    display: block;
+  }
+`
+const SelectorControls = styled.div<{ supportedChain: boolean }>`
   align-items: center;
   background-color: ${({ theme }) => theme.deprecated_bg0};
   border: 2px solid ${({ theme }) => theme.deprecated_bg0};
@@ -131,6 +145,16 @@ const SelectorControls = styled.div`
   font-weight: 500;
   justify-content: space-between;
   padding: 6px 8px;
+  ${({ supportedChain, theme }) =>
+    !supportedChain &&
+    `
+    color: ${theme.deprecated_white};
+    background-color: ${theme.deprecated_red1};
+    border: 2px solid ${theme.deprecated_red1};
+  `}
+  :focus {
+    background-color: ${({ theme }) => darken(0.1, theme.deprecated_red1)};
+  }
 `
 const SelectorLogo = styled(Logo)`
   @media screen and (min-width: ${MEDIA_WIDTHS.upToSmall}px) {
@@ -145,6 +169,14 @@ const SelectorWrapper = styled.div`
 const StyledChevronDown = styled(ChevronDown)`
   width: 16px;
 `
+
+const NetworkIcon = styled(AlertTriangle)`
+  margin-left: 0.25rem;
+  margin-right: 0.25rem;
+  width: 16px;
+  height: 16px;
+`
+
 const BridgeLabel = ({ chainId }: { chainId: SupportedChainId }) => {
   switch (chainId) {
     case SupportedChainId.ARBITRUM_ONE:
@@ -354,9 +386,11 @@ export default function NetworkSelector() {
     }
   }, [onSelectChain, urlChainId, previousUrlChainId, isActive])
 
-  if (!chainId || !info || !provider) {
+  if (!chainId || !provider) {
     return null
   }
+
+  const onSupportedChain = info !== undefined
 
   return (
     <SelectorWrapper
@@ -365,16 +399,26 @@ export default function NetworkSelector() {
       onMouseLeave={closeModal}
       onClick={isMobile ? toggleModal : undefined}
     >
-      <SelectorControls>
-        <SelectorLogo src={info.logoUrl} />
-        <SelectorLabel>{info.label}</SelectorLabel>
-        <StyledChevronDown />
+      <SelectorControls supportedChain={onSupportedChain}>
+        {onSupportedChain ? (
+          <>
+            <SelectorLogo src={info.logoUrl} />
+            <SelectorLabel>{info.label}</SelectorLabel>
+            <StyledChevronDown />
+          </>
+        ) : (
+          <>
+            <NetworkIcon />
+            <NetworkAlertLabel>Switch Network</NetworkAlertLabel>
+            <StyledChevronDown />
+          </>
+        )}
       </SelectorControls>
       {isOpen && (
         <FlyoutMenu>
           <FlyoutMenuContents>
             <FlyoutHeader>
-              <Trans>Select a network</Trans>
+              <Trans>Select a {!onSupportedChain ? ' supported ' : ''}network</Trans>
             </FlyoutHeader>
             {NETWORK_SELECTOR_CHAINS.map((chainId: SupportedChainId) =>
               isChainAllowed(connector, chainId) ? (

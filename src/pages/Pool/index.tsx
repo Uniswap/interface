@@ -11,16 +11,16 @@ import { SwapPoolTabs } from 'components/NavigationTabs'
 import PositionList from 'components/PositionList'
 import { RowBetween, RowFixed } from 'components/Row'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
+import { isSupportedChain } from 'constants/chains'
 import { useV3Positions } from 'hooks/useV3Positions'
 import { useContext } from 'react'
-import { Activity, BookOpen, ChevronDown, ChevronsRight, Inbox, Layers, PlusCircle } from 'react-feather'
+import { AlertTriangle, BookOpen, ChevronDown, ChevronsRight, Inbox, Layers, PlusCircle } from 'react-feather'
 import { Link } from 'react-router-dom'
 import { useToggleWalletModal } from 'state/application/hooks'
 import { useUserHideClosedPositions } from 'state/user/hooks'
 import styled, { css, ThemeContext } from 'styled-components/macro'
-import { ExternalLink, HideSmall, ThemedText } from 'theme'
+import { HideSmall, ThemedText } from 'theme'
 import { PositionDetails } from 'types/position'
-import { isChainAllowed } from 'utils/switchChain'
 
 import { V2_FACTORY_ADDRESSES } from '../../constants/addresses'
 import CTACards from './CTACards'
@@ -107,7 +107,7 @@ const IconStyle = css`
   margin-bottom: 0.5rem;
 `
 
-const NetworkIcon = styled(Activity)`
+const NetworkIcon = styled(AlertTriangle)`
   ${IconStyle}
 `
 
@@ -171,10 +171,7 @@ function WrongNetworkCard() {
                 <ThemedText.Body color={theme.deprecated_text3} textAlign="center">
                   <NetworkIcon strokeWidth={1.2} />
                   <div data-testid="pools-unsupported-err">
-                    <Trans>
-                      Your connected network is unsupported. Request support{' '}
-                      <ExternalLink href="https://uniswap.canny.io/feature-requests">here</ExternalLink>.
-                    </Trans>
+                    <Trans>Your connected network is unsupported.</Trans>
                   </div>
                 </ThemedText.Body>
               </ErrorContainer>
@@ -188,7 +185,7 @@ function WrongNetworkCard() {
 }
 
 export default function Pool() {
-  const { account, chainId, connector } = useWeb3React()
+  const { account, chainId } = useWeb3React()
   const toggleWalletModal = useToggleWalletModal()
 
   const theme = useContext(ThemeContext)
@@ -196,7 +193,7 @@ export default function Pool() {
 
   const { positions, loading: positionsLoading } = useV3Positions(account)
 
-  if (chainId && !isChainAllowed(connector, chainId)) {
+  if (!isSupportedChain(chainId)) {
     return <WrongNetworkCard />
   }
 
@@ -210,7 +207,7 @@ export default function Pool() {
 
   const filteredPositions = [...openPositions, ...(userHideClosedPositions ? [] : closedPositions)]
   const showConnectAWallet = Boolean(!account)
-  const showV2Features = Boolean(chainId && V2_FACTORY_ADDRESSES[chainId])
+  const showV2Features = Boolean(V2_FACTORY_ADDRESSES[chainId])
 
   const menuItems = [
     {

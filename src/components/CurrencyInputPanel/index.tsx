@@ -4,6 +4,7 @@ import { Pair } from '@uniswap/v2-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { AutoColumn } from 'components/Column'
 import { LoadingOpacityContainer, loadingOpacityMixin } from 'components/Loader/styled'
+import { isSupportedChain } from 'constants/chains'
 import { darken } from 'polished'
 import { ReactNode, useCallback, useState } from 'react'
 import { Lock } from 'react-feather'
@@ -45,20 +46,30 @@ const FixedContainer = styled.div`
   z-index: 2;
 `
 
-const Container = styled.div<{ hideInput: boolean }>`
+const Container = styled.div<{ hideInput: boolean; disabled: boolean }>`
   border-radius: ${({ hideInput }) => (hideInput ? '16px' : '20px')};
   border: 1px solid ${({ theme }) => theme.deprecated_bg0};
   background-color: ${({ theme }) => theme.deprecated_bg1};
   width: ${({ hideInput }) => (hideInput ? '100%' : 'initial')};
-  :focus,
-  :hover {
-    border: 1px solid ${({ theme, hideInput }) => (hideInput ? ' transparent' : theme.deprecated_bg3)};
-  }
+  ${({ theme, hideInput, disabled }) =>
+    !disabled &&
+    `
+    :focus,
+    :hover {
+      border: 1px solid ${hideInput ? ' transparent' : theme.deprecated_bg3};
+    }
+  `}
 `
 
-const CurrencySelect = styled(ButtonGray)<{ visible: boolean; selected: boolean; hideInput?: boolean }>`
+const CurrencySelect = styled(ButtonGray)<{
+  visible: boolean
+  selected: boolean
+  hideInput?: boolean
+  disabled?: boolean
+}>`
   align-items: center;
   background-color: ${({ selected, theme }) => (selected ? theme.deprecated_bg2 : theme.deprecated_primary1)};
+  opacity: ${({ disabled }) => (!disabled ? 1 : 0.4)};
   box-shadow: ${({ selected }) => (selected ? 'none' : '0px 6px 10px rgba(0, 0, 0, 0.075)')};
   box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.075);
   color: ${({ selected, theme }) => (selected ? theme.deprecated_text1 : theme.deprecated_white)};
@@ -203,13 +214,15 @@ export default function CurrencyInputPanel({
   ...rest
 }: CurrencyInputPanelProps) {
   const [modalOpen, setModalOpen] = useState(false)
-  const { account } = useWeb3React()
+  const { account, chainId } = useWeb3React()
   const selectedCurrencyBalance = useCurrencyBalance(account ?? undefined, currency ?? undefined)
   const theme = useTheme()
 
   const handleDismissSearch = useCallback(() => {
     setModalOpen(false)
   }, [setModalOpen])
+
+  const chainAllowed = isSupportedChain(chainId)
 
   return (
     <InputPanel id={id} hideInput={hideInput} {...rest}>
@@ -223,18 +236,20 @@ export default function CurrencyInputPanel({
           </AutoColumn>
         </FixedContainer>
       )}
-      <Container hideInput={hideInput}>
+      <Container hideInput={hideInput} disabled={!chainAllowed}>
         <InputRow style={hideInput ? { padding: '0', borderRadius: '8px' } : {}} selected={!onCurrencySelect}>
           {!hideInput && (
             <StyledNumericalInput
               className="token-amount-input"
               value={value}
               onUserInput={onUserInput}
+              disabled={!chainAllowed}
               $loading={loading}
             />
           )}
 
           <CurrencySelect
+            disabled={!chainAllowed}
             visible={currency !== undefined}
             selected={!!currency}
             hideInput={hideInput}
