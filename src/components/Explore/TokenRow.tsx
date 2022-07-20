@@ -9,7 +9,6 @@ import ExploreTokenWarningModal from 'pages/Explore/ExploreTokenWarningModal'
 import { darken } from 'polished'
 import { ReactNode, useCallback, useMemo, useState } from 'react'
 import { ArrowDown, ArrowDownRight, ArrowUp, ArrowUpRight, Heart } from 'react-feather'
-import { Link } from 'react-router-dom'
 import { useHistory } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import { formatAmount, formatDollarAmount } from 'utils/formatDollarAmt'
@@ -98,7 +97,7 @@ export const ClickFavorited = styled.span`
     color: ${({ theme }) => theme.primary1};
   }
 `
-const ClickableName = styled(Link)`
+const ClickableName = styled.div`
   display: flex;
   gap: 8px;
   text-decoration: none;
@@ -555,8 +554,9 @@ export default function LoadedRow({
       listNumber={listNumber}
       tokenInfo={
         // <ClickableName to={`tokens/${tokenAddress}`}>
-        <div onClick={selectToken}>
+        <ClickableName onClick={selectToken}>
           <ExploreTokenWarningModal
+            tokenAddress={tokenAddress}
             currency={currency}
             onCancel={handleDismissWarning}
             onProceed={navigateToToken}
@@ -567,7 +567,7 @@ export default function LoadedRow({
             <TokenName>{tokenName}</TokenName>
             <TokenSymbol>{tokenSymbol}</TokenSymbol>
           </TokenInfoCell>
-        </div>
+        </ClickableName>
       }
       price={
         <PriceInfoCell>

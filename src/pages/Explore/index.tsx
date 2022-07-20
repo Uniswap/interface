@@ -2,8 +2,6 @@ import FavoriteButton from 'components/Explore/FavoriteButton'
 import SearchBar from 'components/Explore/SearchBar'
 import TimeSelector from 'components/Explore/TimeSelector'
 import TokenTable from 'components/Explore/TokenTable'
-import TokenWarningLabel from 'components/TokenWarningLabel'
-import { WarningTypes } from 'constants/tokenWarnings'
 import styled from 'styled-components/macro'
 
 const ExploreContainer = styled.div`
@@ -26,15 +24,11 @@ const FiltersContainer = styled.div`
 const Explore = () => {
   return (
     <ExploreContainer>
-      <TokenWarningLabel warningType={WarningTypes.MEDIUM} />
-      <TokenWarningLabel warningType={WarningTypes.STRONG} />
-      <TokenWarningLabel warningType={WarningTypes.BLOCKED} />
       <FiltersContainer>
         <FavoriteButton />
         <TimeSelector />
         <SearchBar />
       </FiltersContainer>
-
       <TokenTableContainer>
         <TokenTable />
       </TokenTableContainer>
