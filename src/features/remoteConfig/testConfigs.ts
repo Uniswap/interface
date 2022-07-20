@@ -21,7 +21,7 @@ export enum TestConfig {
 }
 
 export const TestConfigValues: Record<TestConfig, ConfigValue> = {
-  [TestConfig.TokenBalancesQualityFilter]: 'disabled',
+  [TestConfig.TokenBalancesQualityFilter]: 'enabled',
   [TestConfig.BiometricPrompt]: __DEV__ ? 'disabled' : 'enabled',
   [TestConfig.RinkebyNFTs]: 'disabled',
   [TestConfig.ShowDevSettings]: __DEV__ ? 'enabled' : 'disabled',
