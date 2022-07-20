@@ -1,11 +1,17 @@
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
 import { Connector } from '@web3-react/types'
+import { sendAnalyticsEvent } from 'components/AmplitudeAnalytics'
+import { EventName, WALLET_CONNECTION_RESULT } from 'components/AmplitudeAnalytics/constants'
 import { sendEvent } from 'components/analytics'
 import { AutoColumn } from 'components/Column'
 import { AutoRow } from 'components/Row'
 import { ConnectionType } from 'connection'
+<<<<<<< HEAD
 import { getConnection, getIsCoinbaseWallet, getIsInjected, getIsMetaMask } from 'connection/utils'
+=======
+import { getConnection, getConnectionName, getIsCoinbaseWallet, getIsInjected, getIsMetaMask } from 'connection/utils'
+>>>>>>> main
 import { useCallback, useEffect, useState } from 'react'
 import { ArrowLeft } from 'react-feather'
 import { updateConnectionError } from 'state/connection/reducer'
@@ -124,6 +130,7 @@ export default function WalletModal({
   const { account } = useWeb3React()
 
   const [walletView, setWalletView] = useState(WALLET_VIEWS.ACCOUNT)
+  const [lastActiveWalletAddress, setLastActiveWalletAddress] = useState<string | undefined>(account)
 
   const [pendingConnector, setPendingConnector] = useState<Connector | undefined>()
   const pendingError = useAppSelector((state) =>
@@ -149,6 +156,19 @@ export default function WalletModal({
       setPendingConnector(undefined)
     }
   }, [pendingConnector, walletView])
+
+  // When new wallet is successfully set by the user, trigger logging of Amplitude analytics event.
+  useEffect(() => {
+    if (account && account !== lastActiveWalletAddress) {
+      sendAnalyticsEvent(EventName.WALLET_CONNECT_TXN_COMPLETED, {
+        result: WALLET_CONNECTION_RESULT.SUCCEEDED,
+        wallet_address: account,
+        wallet_type: getConnectionName(getConnection(connector).type, getIsMetaMask()),
+        // TODO(lynnshaoyu): Send correct is_reconnect value after modifying user state.
+      })
+    }
+    setLastActiveWalletAddress(account)
+  }, [lastActiveWalletAddress, account, connector])
 
   const tryActivation = useCallback(
     async (connector: Connector) => {
@@ -178,6 +198,11 @@ export default function WalletModal({
       } catch (error) {
         console.debug(`web3-react connection error: ${error}`)
         dispatch(updateConnectionError({ connectionType, error: error.message }))
+
+        sendAnalyticsEvent(EventName.WALLET_CONNECT_TXN_COMPLETED, {
+          result: WALLET_CONNECTION_RESULT.FAILED,
+          wallet_type: getConnectionName(connectionType, getIsMetaMask()),
+        })
       }
     },
     [dispatch, toggleWalletModal]

@@ -4,12 +4,14 @@ import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { FeeAmount, NonfungiblePositionManager } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
+import { ElementName, Event, EventName } from 'components/AmplitudeAnalytics/constants'
+import { TraceEvent } from 'components/AmplitudeAnalytics/TraceEvent'
 import { sendEvent } from 'components/analytics'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 import useParsedQueryString from 'hooks/useParsedQueryString'
 import { useCallback, useContext, useEffect, useState } from 'react'
 import { AlertTriangle } from 'react-feather'
-import { RouteComponentProps } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import { Text } from 'rebass'
 import {
   useRangeHopCallbacks,
@@ -75,12 +77,14 @@ import {
 
 const DEFAULT_ADD_IN_RANGE_SLIPPAGE_TOLERANCE = new Percent(50, 10_000)
 
-export default function AddLiquidity({
-  match: {
-    params: { currencyIdA, currencyIdB, feeAmount: feeAmountFromUrl, tokenId },
-  },
-  history,
-}: RouteComponentProps<{ currencyIdA?: string; currencyIdB?: string; feeAmount?: string; tokenId?: string }>) {
+export default function AddLiquidity() {
+  const history = useHistory()
+  const {
+    currencyIdA,
+    currencyIdB,
+    feeAmount: feeAmountFromUrl,
+    tokenId,
+  } = useParams<{ currencyIdA?: string; currencyIdB?: string; feeAmount?: string; tokenId?: string }>()
   const { account, chainId, provider } = useWeb3React()
   const theme = useContext(ThemeContext)
   const toggleWalletModal = useToggleWalletModal() // toggle wallet when disconnected
@@ -433,9 +437,16 @@ export default function AddLiquidity({
         </ThemedText.Main>
       </ButtonPrimary>
     ) : !account ? (
-      <ButtonLight onClick={toggleWalletModal} $borderRadius="12px" padding={'12px'}>
-        <Trans>Connect Wallet</Trans>
-      </ButtonLight>
+      <TraceEvent
+        events={[Event.onClick]}
+        name={EventName.CONNECT_WALLET_BUTTON_CLICKED}
+        properties={{ received_swap_quote: false }}
+        element={ElementName.CONNECT_WALLET_BUTTON}
+      >
+        <ButtonLight onClick={toggleWalletModal} $borderRadius="12px" padding={'12px'}>
+          <Trans>Connect Wallet</Trans>
+        </ButtonLight>
+      </TraceEvent>
     ) : (
       <AutoColumn gap={'md'}>
         {(approvalA === ApprovalState.NOT_APPROVED ||
