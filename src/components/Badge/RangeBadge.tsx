@@ -17,7 +17,7 @@ const BadgeText = styled.div`
 `
 
 const ActiveDot = styled.span`
-  background-color: ${({ theme }) => theme.success};
+  background-color: ${({ theme }) => theme.deprecated_success};
   border-radius: 50%;
   height: 8px;
   width: 8px;

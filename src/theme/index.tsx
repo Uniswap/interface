@@ -48,67 +48,67 @@ const mediaWidthTemplates: { [width in keyof typeof MEDIA_WIDTHS]: typeof css } 
   {}
 ) as any
 
-const white = '#FFFFFF'
-const black = '#000000'
+const deprecated_white = '#FFFFFF'
+const deprecated_black = '#000000'
 
 function colors(darkMode: boolean): Colors {
   return {
     darkMode,
     // base
-    white,
-    black,
+    deprecated_white,
+    deprecated_black,
 
     // text
-    text1: darkMode ? '#FFFFFF' : '#000000',
-    text2: darkMode ? '#C3C5CB' : '#565A69',
-    text3: darkMode ? '#8F96AC' : '#6E727D',
-    text4: darkMode ? '#B2B9D2' : '#C3C5CB',
-    text5: darkMode ? '#2C2F36' : '#EDEEF2',
+    deprecated_text1: darkMode ? '#FFFFFF' : '#000000',
+    deprecated_text2: darkMode ? '#C3C5CB' : '#565A69',
+    deprecated_text3: darkMode ? '#8F96AC' : '#6E727D',
+    deprecated_text4: darkMode ? '#B2B9D2' : '#C3C5CB',
+    deprecated_text5: darkMode ? '#2C2F36' : '#EDEEF2',
 
     // backgrounds / greys
-    bg0: darkMode ? '#191B1F' : '#FFF',
-    bg1: darkMode ? '#212429' : '#F7F8FA',
-    bg2: darkMode ? '#2C2F36' : '#EDEEF2',
-    bg3: darkMode ? '#40444F' : '#CED0D9',
-    bg4: darkMode ? '#565A69' : '#888D9B',
-    bg5: darkMode ? '#6C7284' : '#888D9B',
-    bg6: darkMode ? '#1A2028' : '#6C7284',
+    deprecated_bg0: darkMode ? '#191B1F' : '#FFF',
+    deprecated_bg1: darkMode ? '#212429' : '#F7F8FA',
+    deprecated_bg2: darkMode ? '#2C2F36' : '#EDEEF2',
+    deprecated_bg3: darkMode ? '#40444F' : '#CED0D9',
+    deprecated_bg4: darkMode ? '#565A69' : '#888D9B',
+    deprecated_bg5: darkMode ? '#6C7284' : '#888D9B',
+    deprecated_bg6: darkMode ? '#1A2028' : '#6C7284',
 
     //specialty colors
-    modalBG: darkMode ? 'rgba(0,0,0,.425)' : 'rgba(0,0,0,0.3)',
-    advancedBG: darkMode ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.6)',
+    deprecated_modalBG: darkMode ? 'rgba(0,0,0,.425)' : 'rgba(0,0,0,0.3)',
+    deprecated_advancedBG: darkMode ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.6)',
 
     //primary colors
-    primary1: darkMode ? '#2172E5' : '#E8006F',
-    primary2: darkMode ? '#3680E7' : '#FF8CC3',
-    primary3: darkMode ? '#4D8FEA' : '#FF99C9',
-    primary4: darkMode ? '#376bad70' : '#F6DDE8',
-    primary5: darkMode ? '#153d6f70' : '#FDEAF1',
+    deprecated_primary1: darkMode ? '#2172E5' : '#E8006F',
+    deprecated_primary2: darkMode ? '#3680E7' : '#FF8CC3',
+    deprecated_primary3: darkMode ? '#4D8FEA' : '#FF99C9',
+    deprecated_primary4: darkMode ? '#376bad70' : '#F6DDE8',
+    deprecated_primary5: darkMode ? '#153d6f70' : '#FDEAF1',
 
     // color text
-    primaryText1: darkMode ? '#5090ea' : '#D50066',
+    deprecated_primaryText1: darkMode ? '#5090ea' : '#D50066',
 
     // secondary colors
-    secondary1: darkMode ? '#2172E5' : '#E8006F',
-    secondary2: darkMode ? '#17000b26' : '#F6DDE8',
-    secondary3: darkMode ? '#17000b26' : '#FDEAF1',
+    deprecated_secondary1: darkMode ? '#2172E5' : '#E8006F',
+    deprecated_secondary2: darkMode ? '#17000b26' : '#F6DDE8',
+    deprecated_secondary3: darkMode ? '#17000b26' : '#FDEAF1',
 
     // other
-    red1: darkMode ? '#FF4343' : '#DA2D2B',
-    red2: darkMode ? '#F82D3A' : '#DF1F38',
-    red3: '#D60000',
-    green1: darkMode ? '#27AE60' : '#007D35',
-    yellow1: '#E3A507',
-    yellow2: '#FF8F00',
-    yellow3: '#F3B71E',
-    blue1: darkMode ? '#2172E5' : '#0068FC',
-    blue2: darkMode ? '#5199FF' : '#0068FC',
-    error: darkMode ? '#FD4040' : '#DF1F38',
-    success: darkMode ? '#27AE60' : '#007D35',
-    warning: '#FF8F00',
+    deprecated_red1: darkMode ? '#FF4343' : '#DA2D2B',
+    deprecated_red2: darkMode ? '#F82D3A' : '#DF1F38',
+    deprecated_red3: '#D60000',
+    deprecated_green1: darkMode ? '#27AE60' : '#007D35',
+    deprecated_yellow1: '#E3A507',
+    deprecated_yellow2: '#FF8F00',
+    deprecated_yellow3: '#F3B71E',
+    deprecated_blue1: darkMode ? '#2172E5' : '#0068FC',
+    deprecated_blue2: darkMode ? '#5199FF' : '#0068FC',
+    deprecated_error: darkMode ? '#FD4040' : '#DF1F38',
+    deprecated_success: darkMode ? '#27AE60' : '#007D35',
+    deprecated_warning: '#FF8F00',
 
     // dont wanna forget these blue yet
-    blue4: darkMode ? '#153d6f70' : '#C4D9F8',
+    deprecated_blue4: darkMode ? '#153d6f70' : '#C4D9F8',
     // blue5: darkMode ? '#153d6f70' : '#EBF4FF',
   }
 }
@@ -158,22 +158,22 @@ const TextWrapper = styled(Text)<{ color: keyof Colors }>`
  */
 export const ThemedText = {
   Main(props: TextProps) {
-    return <TextWrapper fontWeight={500} color={'text2'} {...props} />
+    return <TextWrapper fontWeight={500} color={'deprecated_text2'} {...props} />
   },
   Link(props: TextProps) {
-    return <TextWrapper fontWeight={500} color={'primary1'} {...props} />
+    return <TextWrapper fontWeight={500} color={'deprecated_primary1'} {...props} />
   },
   Label(props: TextProps) {
-    return <TextWrapper fontWeight={600} color={'text1'} {...props} />
+    return <TextWrapper fontWeight={600} color={'deprecated_text1'} {...props} />
   },
   Black(props: TextProps) {
-    return <TextWrapper fontWeight={500} color={'text1'} {...props} />
+    return <TextWrapper fontWeight={500} color={'deprecated_text1'} {...props} />
   },
   White(props: TextProps) {
-    return <TextWrapper fontWeight={500} color={'white'} {...props} />
+    return <TextWrapper fontWeight={500} color={'deprecated_white'} {...props} />
   },
   Body(props: TextProps) {
-    return <TextWrapper fontWeight={400} fontSize={16} color={'text1'} {...props} />
+    return <TextWrapper fontWeight={400} fontSize={16} color={'deprecated_text1'} {...props} />
   },
   LargeHeader(props: TextProps) {
     return <TextWrapper fontWeight={600} fontSize={24} {...props} />
@@ -188,32 +188,32 @@ export const ThemedText = {
     return <TextWrapper fontWeight={500} fontSize={11} {...props} />
   },
   Blue(props: TextProps) {
-    return <TextWrapper fontWeight={500} color={'blue1'} {...props} />
+    return <TextWrapper fontWeight={500} color={'deprecated_blue1'} {...props} />
   },
   Yellow(props: TextProps) {
-    return <TextWrapper fontWeight={500} color={'yellow3'} {...props} />
+    return <TextWrapper fontWeight={500} color={'deprecated_yellow3'} {...props} />
   },
   DarkGray(props: TextProps) {
-    return <TextWrapper fontWeight={500} color={'text3'} {...props} />
+    return <TextWrapper fontWeight={500} color={'deprecated_text3'} {...props} />
   },
   Gray(props: TextProps) {
-    return <TextWrapper fontWeight={500} color={'bg3'} {...props} />
+    return <TextWrapper fontWeight={500} color={'deprecated_bg3'} {...props} />
   },
   Italic(props: TextProps) {
-    return <TextWrapper fontWeight={500} fontSize={12} fontStyle={'italic'} color={'text2'} {...props} />
+    return <TextWrapper fontWeight={500} fontSize={12} fontStyle={'italic'} color={'deprecated_text2'} {...props} />
   },
   Error({ error, ...props }: { error: boolean } & TextProps) {
-    return <TextWrapper fontWeight={500} color={error ? 'red1' : 'text2'} {...props} />
+    return <TextWrapper fontWeight={500} color={error ? 'deprecated_red1' : 'deprecated_text2'} {...props} />
   },
 }
 
 export const ThemedGlobalStyle = createGlobalStyle`
 html {
-  color: ${({ theme }) => theme.text1};
-  background-color: ${({ theme }) => theme.bg1} !important;
+  color: ${({ theme }) => theme.deprecated_text1};
+  background-color: ${({ theme }) => theme.deprecated_bg1} !important;
 }
 
 a {
- color: ${({ theme }) => theme.blue1}; 
+ color: ${({ theme }) => theme.deprecated_blue1}; 
 }
 `

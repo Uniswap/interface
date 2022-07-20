@@ -469,7 +469,11 @@ export default function Swap() {
                       setApprovalSubmitted(false) // reset 2 step UI for approvals
                       onSwitchTokens()
                     }}
-                    color={currencies[Field.INPUT] && currencies[Field.OUTPUT] ? theme.text1 : theme.text3}
+                    color={
+                      currencies[Field.INPUT] && currencies[Field.OUTPUT]
+                        ? theme.deprecated_text1
+                        : theme.deprecated_text3
+                    }
                   />
                 </ArrowWrapper>
                 <Trace section={SectionName.CURRENCY_OUTPUT_PANEL}>
@@ -497,7 +501,7 @@ export default function Swap() {
                 <>
                   <AutoRow justify="space-between" style={{ padding: '0 1rem' }}>
                     <ArrowWrapper clickable={false}>
-                      <ArrowDown size="16" color={theme.text2} />
+                      <ArrowDown size="16" color={theme.deprecated_text2} />
                     </ArrowWrapper>
                     <LinkStyledButton id="remove-recipient-button" onClick={() => onChangeRecipient(null)}>
                       <Trans>- Remove recipient</Trans>
@@ -585,7 +589,7 @@ export default function Swap() {
                             <Loader stroke="white" />
                           ) : (approvalSubmitted && approvalState === ApprovalState.APPROVED) ||
                             signatureState === UseERC20PermitState.SIGNED ? (
-                            <CheckCircle size="20" color={theme.green1} />
+                            <CheckCircle size="20" color={theme.deprecated_green1} />
                           ) : (
                             <MouseoverTooltip
                               text={
@@ -595,7 +599,7 @@ export default function Swap() {
                                 </Trans>
                               }
                             >
-                              <HelpCircle size="20" color={'white'} style={{ marginLeft: '8px' }} />
+                              <HelpCircle size="20" color={'deprecated_white'} style={{ marginLeft: '8px' }} />
                             </MouseoverTooltip>
                           )}
                         </AutoRow>

@@ -20,7 +20,7 @@ export default function FailedNetworkSwitchPopup({ chainId }: { chainId: Support
   return (
     <RowNoFlex>
       <div style={{ paddingRight: 16 }}>
-        <AlertCircle color={theme.red1} size={24} />
+        <AlertCircle color={theme.deprecated_red1} size={24} />
       </div>
       <AutoColumn gap="8px">
         <ThemedText.Body fontWeight={500}>

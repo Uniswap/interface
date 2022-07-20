@@ -48,7 +48,7 @@ export default function AnimatedConfirmation() {
         <Circle
           className="path circle"
           fill="none"
-          stroke={theme.green1}
+          stroke={theme.deprecated_green1}
           strokeWidth="6"
           strokeMiterlimit="10"
           cx="65.1"
@@ -58,7 +58,7 @@ export default function AnimatedConfirmation() {
         <PolyLine
           className="path check"
           fill="none"
-          stroke={theme.green1}
+          stroke={theme.deprecated_green1}
           strokeWidth="6"
           strokeLinecap="round"
           strokeMiterlimit="10"

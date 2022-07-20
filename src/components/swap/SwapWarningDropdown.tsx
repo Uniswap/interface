@@ -10,7 +10,7 @@ import { ThemedText } from 'theme'
 import { ResponsiveTooltipContainer } from './styleds'
 
 const Wrapper = styled.div`
-  background-color: ${({ theme }) => theme.bg1};
+  background-color: ${({ theme }) => theme.deprecated_bg1};
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
   padding: 14px;
@@ -19,7 +19,7 @@ const Wrapper = styled.div`
 `
 
 const StyledInfoIcon = styled(Info)`
-  stroke: ${({ theme }) => theme.text3};
+  stroke: ${({ theme }) => theme.deprecated_text3};
 `
 
 /**

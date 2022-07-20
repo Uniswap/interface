@@ -86,7 +86,7 @@ exports[`renders currency rows correctly when currencies list is non-empty 1`] =
             DAI
           </div>
           <div
-            class="c5 css-165qfk5"
+            class="c5 css-1j6a53a"
           >
             Dai Stablecoin
           </div>
@@ -109,7 +109,7 @@ exports[`renders currency rows correctly when currencies list is non-empty 1`] =
             USDC
           </div>
           <div
-            class="c5 css-165qfk5"
+            class="c5 css-1j6a53a"
           >
             USD//C
           </div>
@@ -132,7 +132,7 @@ exports[`renders currency rows correctly when currencies list is non-empty 1`] =
             WBTC
           </div>
           <div
-            class="c5 css-165qfk5"
+            class="c5 css-1j6a53a"
           >
             Wrapped BTC
           </div>
