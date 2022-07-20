@@ -10,7 +10,7 @@ import { sendEvent } from 'components/analytics'
 import { useV2LiquidityTokenPermit } from 'hooks/useV2LiquidityTokenPermit'
 import { useCallback, useContext, useMemo, useState } from 'react'
 import { ArrowDown, Plus } from 'react-feather'
-import { useHistory, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components/macro'
 
@@ -48,7 +48,7 @@ import { ClickableText, MaxButton, Wrapper } from '../Pool/styleds'
 const DEFAULT_REMOVE_LIQUIDITY_SLIPPAGE_TOLERANCE = new Percent(5, 100)
 
 export default function RemoveLiquidity() {
-  const history = useHistory()
+  const navigate = useNavigate()
   const { currencyIdA, currencyIdB } = useParams<{ currencyIdA: string; currencyIdB: string }>()
   const [currencyA, currencyB] = [useCurrency(currencyIdA) ?? undefined, useCurrency(currencyIdB) ?? undefined]
   const { account, chainId, provider } = useWeb3React()
@@ -396,22 +396,22 @@ export default function RemoveLiquidity() {
   const handleSelectCurrencyA = useCallback(
     (currency: Currency) => {
       if (currencyIdB && currencyId(currency) === currencyIdB) {
-        history.push(`/remove/v2/${currencyId(currency)}/${currencyIdA}`)
+        navigate(`/remove/v2/${currencyId(currency)}/${currencyIdA}`)
       } else {
-        history.push(`/remove/v2/${currencyId(currency)}/${currencyIdB}`)
+        navigate(`/remove/v2/${currencyId(currency)}/${currencyIdB}`)
       }
     },
-    [currencyIdA, currencyIdB, history]
+    [currencyIdA, currencyIdB, navigate]
   )
   const handleSelectCurrencyB = useCallback(
     (currency: Currency) => {
       if (currencyIdA && currencyId(currency) === currencyIdA) {
-        history.push(`/remove/v2/${currencyIdB}/${currencyId(currency)}`)
+        navigate(`/remove/v2/${currencyIdB}/${currencyId(currency)}`)
       } else {
-        history.push(`/remove/v2/${currencyIdA}/${currencyId(currency)}`)
+        navigate(`/remove/v2/${currencyIdA}/${currencyId(currency)}`)
       }
     },
-    [currencyIdA, currencyIdB, history]
+    [currencyIdA, currencyIdB, navigate]
   )
 
   const handleDismissConfirmation = useCallback(() => {

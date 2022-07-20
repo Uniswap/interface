@@ -6,7 +6,7 @@ import TopLevelModals from 'components/TopLevelModals'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
 import { lazy, Suspense } from 'react'
 import { useEffect } from 'react'
-import { Navigate, Route, Routes, useHistory, useLocation } from 'react-router-dom'
+import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
 import { useAnalyticsReporter } from '../components/analytics'
@@ -80,20 +80,14 @@ function getCurrentPageFromLocation(locationPathname: string): PageName | undefi
 }
 
 export default function App() {
-  const history = useHistory()
-  const location = useLocation()
-  const currentPage = getCurrentPageFromLocation(location.pathname)
+  const { pathname } = useLocation()
+  const currentPage = getCurrentPageFromLocation(pathname)
   useAnalyticsReporter()
   initializeAnalytics()
 
   useEffect(() => {
-    const unlisten = history.listen(() => {
-      window.scrollTo(0, 0)
-    })
-    return () => {
-      unlisten()
-    }
-  }, [history])
+    window.scrollTo(0, 0)
+  }, [pathname])
 
   return (
     <ErrorBoundary>
