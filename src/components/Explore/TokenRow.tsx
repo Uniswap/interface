@@ -5,10 +5,12 @@ import useTheme from 'hooks/useTheme'
 import { TimePeriod, TokenData } from 'hooks/useTopTokens'
 import { useAtom } from 'jotai'
 import { useAtomValue } from 'jotai/utils'
+import ExploreTokenWarningModal from 'pages/Explore/ExploreTokenWarningModal'
 import { darken } from 'polished'
-import { ReactNode, useMemo } from 'react'
+import { ReactNode, useCallback, useMemo, useState } from 'react'
 import { ArrowDown, ArrowDownRight, ArrowUp, ArrowUpRight, Heart } from 'react-feather'
 import { Link } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import { formatAmount, formatDollarAmount } from 'utils/formatDollarAmt'
 
@@ -491,6 +493,12 @@ export default function LoadedRow({
   const [favoriteTokens] = useAtom(favoritesAtom)
   const isFavorited = favoriteTokens.includes(tokenAddress)
   const toggleFavorite = useToggleFavorite(tokenAddress)
+  const [warningModalOpen, setWarningModalOpen] = useState(false)
+  const history = useHistory()
+
+  const handleDismissWarning = useCallback(() => {
+    setWarningModalOpen(false)
+  }, [setWarningModalOpen])
 
   const showRow = useMemo(() => {
     if (!filterString) {
@@ -519,6 +527,19 @@ export default function LoadedRow({
     </>
   )
 
+  const navigateToToken = () => {
+    history.push(`tokens/${tokenAddress}`)
+  }
+
+  const selectToken = () => {
+    const tokenIsWarning = true
+    if (tokenIsWarning) {
+      setWarningModalOpen(true)
+    } else {
+      navigateToToken()
+    }
+  }
+
   const heartColor = isFavorited ? theme.primary1 : undefined
   // TODO: currency logo sizing mobile (32px) vs. desktop (24px)
   // TODO: fix listNumber as number on most popular (should be fixed)
@@ -533,13 +554,20 @@ export default function LoadedRow({
       }
       listNumber={listNumber}
       tokenInfo={
-        <ClickableName to={`tokens/${tokenAddress}`}>
+        // <ClickableName to={`tokens/${tokenAddress}`}>
+        <div onClick={selectToken}>
+          <ExploreTokenWarningModal
+            currency={currency}
+            onCancel={handleDismissWarning}
+            onProceed={navigateToToken}
+            isOpen={warningModalOpen}
+          />
           <CurrencyLogo currency={currency} />
           <TokenInfoCell>
             <TokenName>{tokenName}</TokenName>
             <TokenSymbol>{tokenSymbol}</TokenSymbol>
           </TokenInfoCell>
-        </ClickableName>
+        </div>
       }
       price={
         <PriceInfoCell>

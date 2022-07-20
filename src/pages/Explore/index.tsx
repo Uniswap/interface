@@ -2,9 +2,9 @@ import FavoriteButton from 'components/Explore/FavoriteButton'
 import SearchBar from 'components/Explore/SearchBar'
 import TimeSelector from 'components/Explore/TimeSelector'
 import TokenTable from 'components/Explore/TokenTable'
+import TokenWarningLabel from 'components/TokenWarningLabel'
+import { WarningTypes } from 'constants/tokenWarnings'
 import styled from 'styled-components/macro'
-
-import ExploreTokenWarningModal from './ExploreTokenWarningModal'
 
 const ExploreContainer = styled.div`
   width: 100%;
@@ -23,14 +23,12 @@ const FiltersContainer = styled.div`
   margin-left: auto;
   margin-right: auto;
 `
-
-const noop = () => {
-  //nothing
-}
 const Explore = () => {
   return (
     <ExploreContainer>
-      <ExploreTokenWarningModal onCancel={noop} onProceed={noop} isOpen={true} />
+      <TokenWarningLabel warningType={WarningTypes.MEDIUM} />
+      <TokenWarningLabel warningType={WarningTypes.STRONG} />
+      <TokenWarningLabel warningType={WarningTypes.BLOCKED} />
       <FiltersContainer>
         <FavoriteButton />
         <TimeSelector />
