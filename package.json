@@ -28,7 +28,8 @@
     "test:e2e:packager": "RN_SRC_EXT=e2e.js,e2e.ts yarn start:production --no-interactive",
     "test:e2e:run": "RN_SRC_EXT=e2e.js detox test -c ios.sim.debug",
     "tsc:compile": "tsc --project .",
-    "unicons": "cd scripts && python3 populate_svgs.py && cd .. && yarn lint --fix"
+    "unicons": "cd scripts && python3 populate_svgs.py && cd .. && yarn lint --fix",
+    "pod": "./podinstall.sh"
   },
   "dependencies": {
     "@ethersproject/shims": "^5.5.0",

@@ -29,7 +29,11 @@ We do not check in Flipper into source. To prevent `pod install` from adding Fli
 export USE_FLIPPER=1
 ```
 
-Run `yarn` to install packages, then run `pod install` in the `/ios` directory.
+We currently have CI exclude arm64 builds given it is not using the M1 architecture. Because of this we have a discrepancy between our pbxproj file in CI vs development when we run `pod install`. To avoid this please DON'T use the regular `pod install` command, instead always run: `yarn pod`.
+
+- Run `chmod +x ./podinstall.sh` in the mobile folder
+
+- Run `yarn` to install packages, then run `yarn pod` in the main directory.
 
 ### Important Libraries
 
@@ -76,8 +80,6 @@ Anytime a required property is added or any property is renamed or deleted to/fr
 ### Troubleshooting
 
 - `unable to open file (in target "OneSignalNotificationServiceExtension" in project "Uniswap")`. Resolve this issue by navigating to the `ios/` directory and running `pod update`.
-
-- `Uniswap.xcodeproj/project.pbxproj` changes when running `pod install`: Since CI is not using the M1 architecture we have a discrepancy between our pbxproj file in CI vs development. Please, don't merge changes related to `EXCLUDED_ARCHS` in your PRs if you need to update this file.
 
 ### I18n
 
