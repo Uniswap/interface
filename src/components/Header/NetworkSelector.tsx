@@ -148,12 +148,12 @@ const SelectorControls = styled.div<{ supportedChain: boolean }>`
   ${({ supportedChain, theme }) =>
     !supportedChain &&
     `
-    color: ${theme.white};
-    background-color: ${theme.red1};
-    border: 2px solid ${theme.red1};
+    color: ${theme.deprecated_white};
+    background-color: ${theme.deprecated_red1};
+    border: 2px solid ${theme.deprecated_red1};
   `}
   :focus {
-    background-color: ${({ theme }) => darken(0.1, theme.red1)};
+    background-color: ${({ theme }) => darken(0.1, theme.deprecated_red1)};
   }
 `
 const SelectorLogo = styled(Logo)`
