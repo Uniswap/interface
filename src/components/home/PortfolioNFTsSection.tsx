@@ -47,7 +47,7 @@ export function PortfolioNFTsSection({ count, owner }: { count?: number; owner?:
     (asset: NFTAsset.Asset) => {
       return (
         <Button activeOpacity={1} onPress={() => onPressItem(asset)}>
-          <NFTViewer uri={asset.image_url} />
+          <NFTViewer placeholderContent={asset.name} uri={asset.image_url} />
         </Button>
       )
     },

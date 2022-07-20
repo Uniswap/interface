@@ -192,7 +192,7 @@ export function NFTCollectionScreen({ route }: AppStackScreenProp<Screens.NFTCol
   const renderItem = useCallback(
     ({ item }: ListRenderItemInfo<NFTAsset.Asset>) => (
       <Button mx="sm" my="sm" onPress={() => onPressNFT(item)}>
-        <NFTViewer uri={item.image_url} />
+        <NFTViewer placeholderContent={item.name} uri={item.image_url} />
       </Button>
     ),
     []
