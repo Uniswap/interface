@@ -3,8 +3,7 @@ import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import JSBI from 'jsbi'
 import { useCallback, useState } from 'react'
-import { Link } from 'react-router-dom'
-import { RouteComponentProps } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import { CountUp } from 'use-count-up'
 
@@ -86,11 +85,8 @@ const DataRow = styled(RowBetween)`
   `};
 `
 
-export default function Manage({
-  match: {
-    params: { currencyIdA, currencyIdB },
-  },
-}: RouteComponentProps<{ currencyIdA: string; currencyIdB: string }>) {
+export default function Manage() {
+  const { currencyIdA, currencyIdB } = useParams<{ currencyIdA: string; currencyIdB: string }>()
   const { account } = useWeb3React()
 
   // get currencies and pair
