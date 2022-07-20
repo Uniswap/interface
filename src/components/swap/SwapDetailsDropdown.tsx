@@ -190,7 +190,10 @@ export default function SwapDetailsDropdown({
                 disableHover={showDetails}
               />
             )}
-            <RotatingArrow stroke={trade ? theme.deprecated_text3 : theme.deprecated_bg3} open={Boolean(trade && showDetails)} />
+            <RotatingArrow
+              stroke={trade ? theme.deprecated_text3 : theme.deprecated_bg3}
+              open={Boolean(trade && showDetails)}
+            />
           </RowFixed>
         </StyledHeaderRow>
         <AnimatedDropdown open={showDetails}>

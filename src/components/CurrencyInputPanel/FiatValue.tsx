@@ -31,13 +31,13 @@ export function FiatValue({
   const visibleDecimalPlaces = p < 1.05 ? 4 : 2
 
   return (
-    <ThemedText.Body fontSize={14} color={fiatValue ? theme.deprecated_text3 : theme.text4}>
+    <ThemedText.Body fontSize={14} color={fiatValue ? theme.deprecated_text3 : theme.deprecated_text4}>
       {fiatValue ? (
         <Trans>
           $
           <HoverInlineText
             text={fiatValue?.toFixed(visibleDecimalPlaces, { groupSeparator: ',' })}
-            textColor={fiatValue ? theme.deprecated_text3 : theme.text4}
+            textColor={fiatValue ? theme.deprecated_text3 : theme.deprecated_text4}
           />
         </Trans>
       ) : (

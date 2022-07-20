@@ -69,7 +69,9 @@ const OptionCustom = styled(FancyButton)<{ active?: boolean; warning?: boolean }
   padding: 0 0.75rem;
   flex: 1;
   border: ${({ theme, active, warning }) =>
-    active ? `1px solid ${warning ? theme.deprecated_red1 : theme.deprecated_primary1}` : warning && `1px solid ${theme.deprecated_red1}`};
+    active
+      ? `1px solid ${warning ? theme.deprecated_red1 : theme.deprecated_primary1}`
+      : warning && `1px solid ${theme.deprecated_red1}`};
   :hover {
     border: ${({ theme, active, warning }) =>
       active && `1px solid ${warning ? darken(0.1, theme.deprecated_red1) : darken(0.1, theme.deprecated_primary1)}`};

@@ -65,7 +65,7 @@ export default function ProgressCircles({ steps, disabled = false, ...rest }: Pr
               <Circle confirmed={step} disabled={disabled || (!steps[i - 1] && i !== 0)}>
                 {step ? '✓' : i + 1 + '.'}
               </Circle>
-              <ThemedText.Main color={theme.text4}>|</ThemedText.Main>
+              <ThemedText.Main color={theme.deprecated_text4}>|</ThemedText.Main>
             </CircleRow>
           )
         })}

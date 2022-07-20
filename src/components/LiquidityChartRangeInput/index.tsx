@@ -169,16 +169,16 @@ export default function LiquidityChartRangeInput({
           icon={<Inbox size={56} stroke={theme.deprecated_text1} />}
         />
       ) : isLoading ? (
-        <InfoBox icon={<Loader size="40px" stroke={theme.text4} />} />
+        <InfoBox icon={<Loader size="40px" stroke={theme.deprecated_text4} />} />
       ) : isError ? (
         <InfoBox
           message={<Trans>Liquidity data not available.</Trans>}
-          icon={<CloudOff size={56} stroke={theme.text4} />}
+          icon={<CloudOff size={56} stroke={theme.deprecated_text4} />}
         />
       ) : !formattedData || formattedData === [] || !price ? (
         <InfoBox
           message={<Trans>There is no liquidity data.</Trans>}
-          icon={<BarChart2 size={56} stroke={theme.text4} />}
+          icon={<BarChart2 size={56} stroke={theme.deprecated_text4} />}
         />
       ) : (
         <ChartWrapper>

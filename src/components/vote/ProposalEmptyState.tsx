@@ -5,7 +5,7 @@ import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
 const EmptyProposals = styled.div`
-  border: 1px solid ${({ theme }) => theme.text4};
+  border: 1px solid ${({ theme }) => theme.deprecated_text4};
   padding: 16px 12px;
   border-radius: 12px;
   display: flex;

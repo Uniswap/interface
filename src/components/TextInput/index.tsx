@@ -27,7 +27,7 @@ const Input = styled.input<{ error?: boolean; fontSize?: string }>`
   }
 
   ::placeholder {
-    color: ${({ theme }) => theme.text4};
+    color: ${({ theme }) => theme.deprecated_text4};
   }
 `
 
@@ -59,7 +59,7 @@ const TextAreaInput = styled.textarea<{ error?: boolean; fontSize?: string }>`
   }
 
   ::placeholder {
-    color: ${({ theme }) => theme.text4};
+    color: ${({ theme }) => theme.deprecated_text4};
   }
 `
 

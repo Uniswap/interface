@@ -250,7 +250,7 @@ export default function Header() {
 
   const userEthBalance = useNativeCurrencyBalances(account ? [account] : [])?.[account ?? '']
   const [darkMode] = useDarkModeManager()
-  const { white, black } = useTheme()
+  const { deprecated_white, deprecated_black } = useTheme()
 
   const toggleClaimModal = useToggleSelfClaimModal()
 
@@ -272,7 +272,7 @@ export default function Header() {
       <ClaimModal />
       <Title href=".">
         <UniIcon>
-          <Logo fill={darkMode ? white : black} width="24px" height="100%" title="logo" />
+          <Logo fill={darkMode ? deprecated_white : deprecated_black} width="24px" height="100%" title="logo" />
           <HolidayOrnament />
         </UniIcon>
       </Title>
