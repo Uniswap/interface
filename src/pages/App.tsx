@@ -6,7 +6,7 @@ import TopLevelModals from 'components/TopLevelModals'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
 import { lazy, Suspense } from 'react'
 import { useEffect } from 'react'
-import { Redirect, Route, Switch, useHistory, useLocation } from 'react-router-dom'
+import { Navigate, Route, Switch, useHistory, useLocation } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
 import { useAnalyticsReporter } from '../components/analytics'
@@ -118,7 +118,7 @@ export default function App() {
                   <Vote />
                 </Route>
                 <Route exact strict path="/create-proposal">
-                  <Redirect to="/vote/create-proposal" />
+                  <Navigate to="/vote/create-proposal" replace />
                 </Route>
                 <Route exact strict path="/claim">
                   <OpenClaimAddressModalAndRedirectToSwap />

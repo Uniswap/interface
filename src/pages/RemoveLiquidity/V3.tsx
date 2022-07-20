@@ -25,7 +25,7 @@ import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import { useV3PositionFromTokenId } from 'hooks/useV3Positions'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { useCallback, useMemo, useState } from 'react'
-import { Redirect, useLocation, useParams } from 'react-router-dom'
+import { Navigate, useLocation, useParams } from 'react-router-dom'
 import { Text } from 'rebass'
 import { useBurnV3ActionHandlers, useBurnV3State, useDerivedV3BurnInfo } from 'state/burn/v3/hooks'
 import { useTransactionAdder } from 'state/transactions/hooks'
@@ -55,7 +55,7 @@ export default function RemoveLiquidityV3() {
   }, [tokenId])
 
   if (parsedTokenId === null || parsedTokenId.eq(0)) {
-    return <Redirect to={{ ...location, pathname: '/pool' }} />
+    return <Navigate to={{ ...location, pathname: '/pool' }} replace />
   }
 
   return <Remove tokenId={parsedTokenId} />

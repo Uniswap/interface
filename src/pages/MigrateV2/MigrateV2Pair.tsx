@@ -24,8 +24,7 @@ import JSBI from 'jsbi'
 import { NEVER_RELOAD, useSingleCallResult } from 'lib/hooks/multicall'
 import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
 import { AlertCircle, AlertTriangle, ArrowDown } from 'react-feather'
-import { Redirect } from 'react-router'
-import { useParams } from 'react-router-dom'
+import { Navigate, useParams } from 'react-router-dom'
 import { Text } from 'rebass'
 import { useAppDispatch } from 'state/hooks'
 import { Bound, resetMintState } from 'state/mint/v3/actions'
@@ -719,7 +718,7 @@ export default function MigrateV2Pair() {
       !token0Address)
   ) {
     console.error('Invalid pair address')
-    return <Redirect to="/migrate/v2" />
+    return <Navigate to="/migrate/v2" replace />
   }
 
   return (
