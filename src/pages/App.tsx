@@ -6,7 +6,7 @@ import TopLevelModals from 'components/TopLevelModals'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
 import { lazy, Suspense } from 'react'
 import { useEffect } from 'react'
-import { Navigate, Route, Switch, useHistory, useLocation } from 'react-router-dom'
+import { Navigate, Route, Routes, useHistory, useLocation } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
 import { useAnalyticsReporter } from '../components/analytics'
@@ -113,7 +113,7 @@ export default function App() {
             <Polling />
             <TopLevelModals />
             <Suspense fallback={<Loader />}>
-              <Switch>
+              <Routes>
                 <Route strict path="/vote">
                   <Vote />
                 </Route>
@@ -181,7 +181,7 @@ export default function App() {
                 <Route>
                   <RedirectPathToSwapOnly />
                 </Route>
-              </Switch>
+              </Routes>
             </Suspense>
             <Marginer />
           </BodyWrapper>
