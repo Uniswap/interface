@@ -27,7 +27,11 @@ export default function TransactionPopup({ hash }: { hash: string }) {
   return (
     <RowNoFlex>
       <div style={{ paddingRight: 16 }}>
-        {success ? <CheckCircle color={theme.green1} size={24} /> : <AlertCircle color={theme.red1} size={24} />}
+        {success ? (
+          <CheckCircle color={theme.deprecated_green1} size={24} />
+        ) : (
+          <AlertCircle color={theme.deprecated_red1} size={24} />
+        )}
       </div>
       <AutoColumn gap="8px">
         <ThemedText.Body fontWeight={500}>

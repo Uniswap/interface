@@ -17,7 +17,7 @@ const RightPanel = styled.div`
 const Widget = styled.div`
   height: 354px;
   width: 284px;
-  background-color: ${({ theme }) => theme.bg2};
+  background-color: ${({ theme }) => theme.deprecated_bg2};
   border-radius: 12px;
   border: 1px solid rgba(153, 161, 189, 0.24);
 `

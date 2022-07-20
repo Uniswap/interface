@@ -38,8 +38,8 @@ const StyledBalanceText = styled(Text)`
 `
 
 const Tag = styled.div`
-  background-color: ${({ theme }) => theme.bg3};
-  color: ${({ theme }) => theme.text2};
+  background-color: ${({ theme }) => theme.deprecated_bg3};
+  color: ${({ theme }) => theme.deprecated_text2};
   font-size: 14px;
   border-radius: 4px;
   padding: 0.25rem 0.3rem 0.25rem 0.3rem;
@@ -180,7 +180,7 @@ function BreakLineComponent({ style }: { style: CSSProperties }) {
         <RowBetween>
           <RowFixed>
             <TokenListLogoWrapper src={TokenListLogo} />
-            <ThemedText.Main ml="6px" fontSize="12px" color={theme.text1}>
+            <ThemedText.Main ml="6px" fontSize="12px" color={theme.deprecated_text1}>
               <Trans>Expanded results from inactive Token Lists</Trans>
             </ThemedText.Main>
           </RowFixed>

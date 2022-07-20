@@ -16,18 +16,13 @@ const NETWORKS = [
   SupportedChainId.OPTIMISM,
 ]
 
-enum FlyoutAlignment {
-  LEFT = 'LEFT',
-  RIGHT = 'RIGHT',
-}
-
 const InternalMenuItem = styled.div`
   flex: 1;
   padding: 12px 16px;
-  color: ${({ theme }) => theme.text2};
+  color: ${({ theme }) => theme.deprecated_text2};
 
   :hover {
-    color: ${({ theme }) => theme.text1};
+    color: ${({ theme }) => theme.deprecated_text1};
     cursor: pointer;
     text-decoration: none;
   }
@@ -44,7 +39,7 @@ const InternalLinkMenuItem = styled(InternalMenuItem)`
   cursor: pointer;
 
   :hover {
-    background-color: ${({ theme }) => theme.bg2};
+    background-color: ${({ theme }) => theme.deprecated_bg2};
     text-decoration: none;
   }
 `
@@ -52,10 +47,10 @@ const MenuTimeFlyout = styled.span`
   min-width: 200px;
   max-height: 350px;
   overflow: auto;
-  background-color: ${({ theme }) => theme.bg1};
+  background-color: ${({ theme }) => theme.deprecated_bg1};
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
     0px 24px 32px rgba(0, 0, 0, 0.01);
-  border: 1px solid ${({ theme }) => theme.bg0};
+  border: 1px solid ${({ theme }) => theme.deprecated_bg0};
   border-radius: 12px;
   padding: 8px 0px;
   display: flex;
@@ -79,8 +74,8 @@ const StyledMenuButton = styled.button`
   border: none;
   background-color: transparent;
   margin: 0;
-  background-color: ${({ theme }) => theme.bg0};
-  border: 1px solid ${({ theme }) => theme.bg0};
+  background-color: ${({ theme }) => theme.deprecated_bg0};
+  border: 1px solid ${({ theme }) => theme.deprecated_bg0};
   padding: 6px 12px 6px 12px;
   border-radius: 12px;
   font-size: 16px;
@@ -91,7 +86,7 @@ const StyledMenuButton = styled.button`
   :focus {
     cursor: pointer;
     outline: none;
-    border: 1px solid ${({ theme }) => theme.bg3};
+    border: 1px solid ${({ theme }) => theme.deprecated_bg3};
   }
 
   svg {
@@ -121,11 +116,11 @@ const StyledMenuContent = styled.div`
   width: 100%;
   font-weight: 600;
   vertical-align: middle;
-  color: ${({ theme }) => theme.text1};
+  color: ${({ theme }) => theme.deprecated_text1};
 `
 
 const Chevron = styled.span`
-  color: ${({ theme }) => theme.text2};
+  color: ${({ theme }) => theme.deprecated_text2};
 `
 const NetworkLabel = styled.div`
   display: flex;
@@ -178,7 +173,7 @@ export default function NetworkFilter() {
               </NetworkLabel>
               {network === activeNetwork && (
                 <CheckContainer>
-                  <Check size={16} color={theme.primary1} />
+                  <Check size={16} color={theme.deprecated_primary1} />
                 </CheckContainer>
               )}
             </InternalLinkMenuItem>

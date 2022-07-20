@@ -5,12 +5,20 @@
  * and logged.
  */
 export enum EventName {
+  CONNECT_WALLET_BUTTON_CLICKED = 'Connect Wallet Button Clicked',
   PAGE_VIEWED = 'Page Viewed',
   SWAP_SUBMITTED = 'Swap Submitted',
   TOKEN_IMPORTED = 'Token Imported',
   TOKEN_SELECTED = 'Token Selected',
   TOKEN_SELECTOR_OPENED = 'Token Selector Opened',
+  WALLET_CONNECT_TXN_COMPLETED = 'Wallet Connect Transaction Completed',
+  WALLET_SELECTED = 'Wallet Selected',
   // alphabetize additional event names.
+}
+
+export enum WALLET_CONNECTION_RESULT {
+  SUCCEEDED = 'Succeeded',
+  FAILED = 'Failed',
 }
 
 /**
@@ -49,9 +57,11 @@ export const enum ModalName {
 export const enum ElementName {
   COMMON_BASES_CURRENCY_BUTTON = 'common-bases-currency-button',
   CONFIRM_SWAP_BUTTON = 'confirm-swap-or-send',
+  CONNECT_WALLET_BUTTON = 'connect-wallet-button',
   IMPORT_TOKEN_BUTTON = 'import-token-button',
   SWAP_BUTTON = 'swap-button',
   TOKEN_SELECTOR_ROW = 'token-selector-row',
+  WALLET_TYPE_OPTION = 'wallet-type-option',
   // alphabetize additional element names.
 }
 
