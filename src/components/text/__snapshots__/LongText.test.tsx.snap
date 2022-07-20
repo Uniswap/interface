@@ -1,0 +1,30 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders a LongText 1`] = `
+<View
+  style={
+    Array [
+      Object {
+        "alignItems": "stretch",
+        "display": "flex",
+        "flexDirection": "column",
+        "justifyContent": "flex-start",
+      },
+    ]
+  }
+>
+  <Text
+    numberOfLines={3}
+    onTextLayout={[Function]}
+    style={
+      Array [
+        Object {
+          "display": "flex",
+        },
+      ]
+    }
+  >
+    Some very long text
+  </Text>
+</View>
+`;

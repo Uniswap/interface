@@ -11,6 +11,7 @@ import { NFTViewer } from 'src/components/images/NFTViewer'
 import { Box, Flex } from 'src/components/layout'
 import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollScreen'
 import { Text } from 'src/components/Text'
+import { LongText } from 'src/components/text/LongText'
 import { ChainId } from 'src/constants/chains'
 import { AssetType } from 'src/entities/assets'
 import { openModal } from 'src/features/modals/modalSlice'
@@ -134,9 +135,12 @@ export function NFTItemScreen({
               <Text color="textSecondary" variant="headlineSmall">
                 {t('Description')}
               </Text>
-              <Text color="textPrimary" variant="bodySmall">
-                {asset.collection.description}
-              </Text>
+              <LongText
+                color="textPrimary"
+                initialDisplayedLines={5}
+                text={asset.collection.description}
+                variant="bodySmall"
+              />
             </Flex>
           </Flex>
         </Flex>
