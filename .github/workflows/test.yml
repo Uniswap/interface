@@ -23,8 +23,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
-      # These are readonly (--list) and explicitly exclude packages which only satisfy one strategy.
-      - run: npx yarn-deduplicate --strategy=highest --list --fail --exclude commander safe-buffer
+      - run: npx yarn-deduplicate --strategy=highest --list --fail
 
   unit-tests:
     runs-on: ubuntu-latest
