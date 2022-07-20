@@ -305,7 +305,7 @@ export default function CampaignsUpdater(): null {
   )
 
   useEffect(() => {
-    if (luckyWinners !== undefined && luckyWinners.length) {
+    if (luckyWinners !== undefined) {
       dispatch(setSelectedCampaignLuckyWinners({ luckyWinners: luckyWinners }))
     }
   }, [dispatch, luckyWinners])

@@ -107,9 +107,9 @@ export function shortenAddress(address: string, chars = 4): string {
  */
 export function calculateGasMargin(value: BigNumber): BigNumber {
   const defaultGasLimitMargin = BigNumber.from(DEFAULT_GAS_LIMIT_MARGIN)
-  const gasMagin = value.mul(BigNumber.from(2000)).div(BigNumber.from(10000))
+  const gasMargin = value.mul(BigNumber.from(2000)).div(BigNumber.from(10000))
 
-  return gasMagin.gte(defaultGasLimitMargin) ? value.add(gasMagin) : value.add(defaultGasLimitMargin)
+  return gasMargin.gte(defaultGasLimitMargin) ? value.add(gasMargin) : value.add(defaultGasLimitMargin)
 }
 
 // converts a basis points value to a sdk percent
