@@ -1,6 +1,7 @@
 import { useHeaderHeight } from '@react-navigation/elements'
 import React, { PropsWithChildren } from 'react'
 import { KeyboardAvoidingView, StyleSheet } from 'react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { Flex } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
 import { Text } from 'src/components/Text'
@@ -16,13 +17,14 @@ export function OnboardingScreen({
   children,
 }: PropsWithChildren<OnboardingScreenProps>) {
   const headerHeight = useHeaderHeight()
+  const insets = useSafeAreaInsets()
 
   return (
-    <Screen edges={['right', 'left', 'bottom']}>
+    <Screen edges={['right', 'left']}>
       <KeyboardAvoidingView
         behavior="padding"
         keyboardVerticalOffset={headerHeight}
-        style={WrapperStyle.base}>
+        style={[WrapperStyle.base, { marginBottom: insets.bottom }]}>
         <Flex grow pb="md" px="md">
           {/* Text content */}
           <Flex centered gap="sm" m="sm">
