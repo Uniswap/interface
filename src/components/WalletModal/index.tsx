@@ -7,7 +7,14 @@ import { sendEvent } from 'components/analytics'
 import { AutoColumn } from 'components/Column'
 import { AutoRow } from 'components/Row'
 import { ConnectionType } from 'connection'
-import { getConnection, getConnectionName, getIsCoinbaseWallet, getIsInjected, getIsMetaMask, getIsOperaInjected } from 'connection/utils'
+import {
+  getConnection,
+  getConnectionName,
+  getIsCoinbaseWallet,
+  getIsInjected,
+  getIsMetaMask,
+  getIsOperaInjected,
+} from 'connection/utils'
 import { useCallback, useEffect, useState } from 'react'
 import { ArrowLeft } from 'react-feather'
 import { updateConnectionError } from 'state/connection/reducer'
