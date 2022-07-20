@@ -28,7 +28,7 @@ import { useV3PositionFromTokenId } from 'hooks/useV3Positions'
 import { useSingleCallResult } from 'lib/hooks/multicall'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { useCallback, useMemo, useRef, useState } from 'react'
-import { Link, RouteComponentProps } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { Bound } from 'state/mint/v3/actions'
 import { useIsTransactionPending, useTransactionAdder } from 'state/transactions/hooks'
 import styled from 'styled-components/macro'
@@ -315,11 +315,8 @@ const useInverter = ({
   }
 }
 
-export function PositionPage({
-  match: {
-    params: { tokenId: tokenIdFromUrl },
-  },
-}: RouteComponentProps<{ tokenId?: string }>) {
+export function PositionPage() {
+  const { tokenId: tokenIdFromUrl } = useParams<{ tokenId?: string }>()
   const { chainId, account, provider } = useWeb3React()
   const theme = useTheme()
 
