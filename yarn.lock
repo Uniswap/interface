@@ -17774,10 +17774,10 @@ use-elapsed-time@^2.1.6:
   resolved "https://registry.npmjs.org/use-elapsed-time/-/use-elapsed-time-2.1.8.tgz"
   integrity sha512-lNLTDffKHdHWweQNvnch9tFI2eRP3tXccSLrwE7U6xrfyWFNEgNQZWWsGhQvtwKa0kJ6L+7E5wKbi3jg86opjg==
 
-use-resize-observer@^8.0.0:
-  version "8.0.0"
-  resolved "https://registry.yarnpkg.com/use-resize-observer/-/use-resize-observer-8.0.0.tgz#69bd80c1ddd94f3758563fe107efb25fed85067a"
-  integrity sha512-n0iKSeiQpJCyaFh5JA0qsVLBIovsF4EIIR1G6XiBwKJN66ZrD4Oj62bjcuTAATPKiSp6an/2UZZxCf/67fk3sQ==
+use-resize-observer@^9.0.2:
+  version "9.0.2"
+  resolved "https://registry.yarnpkg.com/use-resize-observer/-/use-resize-observer-9.0.2.tgz#25830221933d9b6e931850023305eb9d24379a6b"
+  integrity sha512-JOzsmF3/IDmtjG7OE5qXOP69LEpBpwhpLSiT1XgSr+uFRX0ftJHQnDaP7Xq+uhbljLYkJt67sqsbnyXBjiY8ig==
   dependencies:
     "@juggle/resize-observer" "^3.3.1"
 

@@ -190,7 +190,7 @@
     "tiny-invariant": "^1.2.0",
     "ua-parser-js": "^0.7.28",
     "use-count-up": "^2.2.5",
-    "use-resize-observer": "^8.0.0",
+    "use-resize-observer": "^9.0.2",
     "wcag-contrast": "^3.0.0",
     "web-vitals": "^2.1.0",
     "workbox-core": "^6.1.0",
