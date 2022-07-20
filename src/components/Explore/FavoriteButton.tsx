@@ -15,23 +15,23 @@ const FavoriteButtonContent = styled.div`
 const StyledFavoriteButton = styled.button<{ active: boolean }>`
   padding: 0px 16px;
   border-radius: 12px;
-  background-color: ${({ theme }) => theme.deprecate_bg0};
-  border: 1px solid ${({ theme, active }) => (active ? theme.primary1 : theme.deprecate_bg1)};
-  color: ${({ theme, active }) => (active ? theme.blue5 : theme.deprecate_text1)};
+  background-color: ${({ theme }) => theme.deprecated_bg0};
+  border: 1px solid ${({ theme, active }) => (active ? theme.deprecated_primary1 : theme.deprecated_bg1)};
+  color: ${({ theme, active }) => (active ? theme.deprecated_blue5 : theme.deprecated_text1)};
   font-size: 16px;
   cursor: pointer;
 
   &:hover,
   &:focus {
     outline: none;
-    color: ${({ theme, active }) => (active ? theme.blue5 : darken(0.08, theme.deprecate_text1))};
+    color: ${({ theme, active }) => (active ? theme.deprecated_blue5 : darken(0.08, theme.deprecated_text1))};
   }
 `
 
 export default function FavoriteButton() {
   const theme = useTheme()
   const [showFavorites, setShowFavorites] = useAtom(showFavoritesAtom)
-  const heartColor = showFavorites ? theme.blue5 : theme.deprecate_text1
+  const heartColor = showFavorites ? theme.deprecated_blue5 : theme.deprecated_text1
   return (
     <StyledFavoriteButton onClick={() => setShowFavorites(!showFavorites)} active={showFavorites}>
       <FavoriteButtonContent>

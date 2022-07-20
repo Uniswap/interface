@@ -113,7 +113,7 @@ function colors(darkMode: boolean): Colors {
     // dont wanna forget these blue yet
     deprecated_blue4: darkMode ? '#153d6f70' : '#C4D9F8',
     // blue5: darkMode ? '#153d6f70' : '#EBF4FF',
-    blue5: '#869EFF',
+    deprecated_blue5: '#869EFF',
   }
 }
 
