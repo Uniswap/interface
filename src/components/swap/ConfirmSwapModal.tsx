@@ -59,11 +59,13 @@ export default function ConfirmSwapModal({
       <SwapModalFooter
         onConfirm={onConfirm}
         trade={trade}
+        txHash={txHash}
+        allowedSlippage={allowedSlippage}
         disabledConfirm={showAcceptChanges}
         swapErrorMessage={swapErrorMessage}
       />
     ) : null
-  }, [onConfirm, showAcceptChanges, swapErrorMessage, trade])
+  }, [onConfirm, showAcceptChanges, swapErrorMessage, trade, allowedSlippage, txHash])
 
   // text to show while loading
   const pendingText = (
