@@ -141,7 +141,7 @@ export default function VoteModal({ isOpen, onDismiss, proposalId, voteOption }:
             <StyledClosed onClick={wrappedOnDismiss} />
           </RowBetween>
           <ConfirmedIcon>
-            <ArrowUpCircle strokeWidth={0.5} size={90} color={theme.primary1} />
+            <ArrowUpCircle strokeWidth={0.5} size={90} color={theme.deprecated_primary1} />
           </ConfirmedIcon>
           <AutoColumn gap="100px" justify={'center'}>
             <AutoColumn gap="12px" justify={'center'}>

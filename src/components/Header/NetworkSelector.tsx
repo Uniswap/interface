@@ -25,7 +25,7 @@ const ActiveRowLinkList = styled.div`
   padding: 0 8px;
   & > a {
     align-items: center;
-    color: ${({ theme }) => theme.text2};
+    color: ${({ theme }) => theme.deprecated_text2};
     display: flex;
     flex-direction: row;
     font-size: 14px;
@@ -41,14 +41,14 @@ const ActiveRowLinkList = styled.div`
   }
 `
 const ActiveRowWrapper = styled.div`
-  background-color: ${({ theme }) => theme.bg1};
+  background-color: ${({ theme }) => theme.deprecated_bg1};
   border-radius: 8px;
   cursor: pointer;
   padding: 8px;
   width: 100%;
 `
 const FlyoutHeader = styled.div`
-  color: ${({ theme }) => theme.text2};
+  color: ${({ theme }) => theme.deprecated_text2};
   font-weight: 400;
 `
 const FlyoutMenu = styled.div`
@@ -63,7 +63,7 @@ const FlyoutMenu = styled.div`
 `
 const FlyoutMenuContents = styled.div`
   align-items: flex-start;
-  background-color: ${({ theme }) => theme.bg0};
+  background-color: ${({ theme }) => theme.deprecated_bg0};
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
     0px 24px 32px rgba(0, 0, 0, 0.01);
   border-radius: 20px;
@@ -78,7 +78,7 @@ const FlyoutMenuContents = styled.div`
 `
 const FlyoutRow = styled.div<{ active: boolean }>`
   align-items: center;
-  background-color: ${({ active, theme }) => (active ? theme.bg1 : 'transparent')};
+  background-color: ${({ active, theme }) => (active ? theme.deprecated_bg1 : 'transparent')};
   border-radius: 8px;
   cursor: pointer;
   display: flex;
@@ -89,7 +89,7 @@ const FlyoutRow = styled.div<{ active: boolean }>`
   width: 100%;
 `
 const FlyoutRowActiveIndicator = styled.div`
-  background-color: ${({ theme }) => theme.green1};
+  background-color: ${({ theme }) => theme.deprecated_green1};
   border-radius: 50%;
   height: 9px;
   width: 9px;
@@ -123,10 +123,10 @@ const SelectorLabel = styled(NetworkLabel)`
 `
 const SelectorControls = styled.div`
   align-items: center;
-  background-color: ${({ theme }) => theme.bg0};
-  border: 2px solid ${({ theme }) => theme.bg0};
+  background-color: ${({ theme }) => theme.deprecated_bg0};
+  border: 2px solid ${({ theme }) => theme.deprecated_bg0};
   border-radius: 16px;
-  color: ${({ theme }) => theme.text1};
+  color: ${({ theme }) => theme.deprecated_text1};
   display: flex;
   font-weight: 500;
   justify-content: space-between;

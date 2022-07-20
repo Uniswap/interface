@@ -60,7 +60,7 @@ export default function TradePrice({ price, showInverted, setShowInverted }: Tra
       }}
       title={text}
     >
-      <Text fontWeight={500} color={theme.text1}>
+      <Text fontWeight={500} color={theme.deprecated_text1}>
         {text}
       </Text>{' '}
       {usdcPrice && (

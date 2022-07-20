@@ -13,6 +13,7 @@ import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import Toggle from 'components/Toggle'
 import DelegateModal from 'components/vote/DelegateModal'
 import ProposalEmptyState from 'components/vote/ProposalEmptyState'
+import useTheme from 'hooks/useTheme'
 import JSBI from 'jsbi'
 import { darken } from 'polished'
 import { useState } from 'react'
@@ -50,14 +51,14 @@ const Proposal = styled(Button)`
   text-align: left;
   outline: none;
   cursor: pointer;
-  color: ${({ theme }) => theme.text1};
+  color: ${({ theme }) => theme.deprecated_text1};
   text-decoration: none;
-  background-color: ${({ theme }) => theme.bg1};
+  background-color: ${({ theme }) => theme.deprecated_bg1};
   &:focus {
-    background-color: ${({ theme }) => darken(0.05, theme.bg1)};
+    background-color: ${({ theme }) => darken(0.05, theme.deprecated_bg1)};
   }
   &:hover {
-    background-color: ${({ theme }) => darken(0.05, theme.bg1)};
+    background-color: ${({ theme }) => darken(0.05, theme.deprecated_bg1)};
   }
 `
 
@@ -88,7 +89,7 @@ const WrapSmall = styled(RowBetween)`
 `
 
 const TextButton = styled(ThemedText.Main)`
-  color: ${({ theme }) => theme.primary1};
+  color: ${({ theme }) => theme.deprecated_primary1};
   :hover {
     cursor: pointer;
     text-decoration: underline;
@@ -96,7 +97,7 @@ const TextButton = styled(ThemedText.Main)`
 `
 
 const AddressButton = styled.div`
-  border: 1px solid ${({ theme }) => theme.bg3};
+  border: 1px solid ${({ theme }) => theme.deprecated_bg3};
   padding: 2px 4px;
   border-radius: 8px;
   display: flex;
@@ -105,10 +106,11 @@ const AddressButton = styled.div`
 `
 
 const StyledExternalLink = styled(ExternalLink)`
-  color: ${({ theme }) => theme.text1};
+  color: ${({ theme }) => theme.deprecated_text1};
 `
 
 export default function Landing() {
+  const theme = useTheme()
   const { account, chainId } = useWeb3React()
 
   const [hideCancelled, setHideCancelled] = useState(true)
@@ -161,7 +163,10 @@ export default function Landing() {
                     </ThemedText.White>
                   </RowBetween>
                   <ExternalLink
-                    style={{ color: 'white', textDecoration: 'underline' }}
+                    style={{
+                      color: theme.deprecated_white,
+                      textDecoration: 'underline',
+                    }}
                     href="https://uniswap.org/blog/uni"
                     target="_blank"
                   >

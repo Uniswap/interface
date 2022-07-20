@@ -19,7 +19,7 @@ const Wrapper = styled(AutoColumn)`
   padding: 18px;
   max-width: 360px;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-  color: ${({ theme }) => theme.text1};
+  color: ${({ theme }) => theme.deprecated_text1};
   overflow: hidden;
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
@@ -90,13 +90,18 @@ export default function SurveyPopup() {
           <BGOrb src={BGImage} />
           <ExternalLink href="https://www.surveymonkey.com/r/YGWV9VD">
             <RowFixed>
-              <MessageCircle stroke={theme.black} size="20px" strokeWidth="1px" />
-              <ThemedText.White fontWeight={600} color={theme.black} ml="6px">
+              <MessageCircle stroke={theme.deprecated_black} size="20px" strokeWidth="1px" />
+              <ThemedText.White fontWeight={600} color={theme.deprecated_black} ml="6px">
                 <Trans>Tell us what you think ↗</Trans>
               </ThemedText.White>
             </RowFixed>
           </ExternalLink>
-          <ThemedText.Black style={{ zIndex: Z_INDEX.fixed }} fontWeight={400} fontSize="12px" color={theme.black}>
+          <ThemedText.Black
+            style={{ zIndex: Z_INDEX.fixed }}
+            fontWeight={400}
+            fontSize="12px"
+            color={theme.deprecated_black}
+          >
             <Trans>Take a 10 minute survey to help us improve your experience in the Uniswap app.</Trans>
           </ThemedText.Black>
         </Wrapper>

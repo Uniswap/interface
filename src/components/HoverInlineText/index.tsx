@@ -10,7 +10,7 @@ const TextWrapper = styled.span<{
   textColor?: string
 }>`
   margin-left: ${({ margin }) => margin && '4px'};
-  color: ${({ theme, link, textColor }) => (link ? theme.blue1 : textColor ?? theme.text1)};
+  color: ${({ theme, link, textColor }) => (link ? theme.deprecated_blue1 : textColor ?? theme.deprecated_text1)};
   font-size: ${({ fontSize }) => fontSize ?? 'inherit'};
 
   @media screen and (max-width: 600px) {
