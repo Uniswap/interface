@@ -31,12 +31,12 @@ const LinkRow = styled(Link)`
   flex-direction: column;
 
   justify-content: space-between;
-  color: ${({ theme }) => theme.text1};
+  color: ${({ theme }) => theme.deprecated_text1};
   margin: 8px 0;
   padding: 16px;
   text-decoration: none;
   font-weight: 500;
-  background-color: ${({ theme }) => theme.bg1};
+  background-color: ${({ theme }) => theme.deprecated_bg1};
 
   &:last-of-type {
     margin: 8px 0 0 0;
@@ -45,7 +45,7 @@ const LinkRow = styled(Link)`
     text-align: center;
   }
   :hover {
-    background-color: ${({ theme }) => theme.bg2};
+    background-color: ${({ theme }) => theme.deprecated_bg2};
   }
 
   @media screen and (min-width: ${MEDIA_WIDTHS.upToSmall}px) {
@@ -79,7 +79,7 @@ const RangeLineItem = styled(DataLineItem)`
   width: 100%;
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
-  background-color: ${({ theme }) => theme.bg2};
+  background-color: ${({ theme }) => theme.deprecated_bg2};
     border-radius: 12px;
     padding: 8px 0;
 `};
@@ -87,7 +87,7 @@ const RangeLineItem = styled(DataLineItem)`
 
 const DoubleArrow = styled.span`
   margin: 0 2px;
-  color: ${({ theme }) => theme.text3};
+  color: ${({ theme }) => theme.deprecated_text3};
   ${({ theme }) => theme.mediaWidth.upToSmall`
     margin: 4px;
     padding: 20px;
@@ -95,13 +95,13 @@ const DoubleArrow = styled.span`
 `
 
 const RangeText = styled.span`
-  /* background-color: ${({ theme }) => theme.bg2}; */
+  /* background-color: ${({ theme }) => theme.deprecated_bg2}; */
   padding: 0.25rem 0.5rem;
   border-radius: 8px;
 `
 
 const ExtentsText = styled.span`
-  color: ${({ theme }) => theme.text3};
+  color: ${({ theme }) => theme.deprecated_text3};
   font-size: 14px;
   margin-right: 4px;
   ${({ theme }) => theme.mediaWidth.upToSmall`

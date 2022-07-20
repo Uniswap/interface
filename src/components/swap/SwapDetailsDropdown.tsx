@@ -30,24 +30,25 @@ const StyledInfoIcon = styled(Info)`
   height: 16px;
   width: 16px;
   margin-right: 4px;
-  color: ${({ theme }) => theme.text3};
+  color: ${({ theme }) => theme.deprecated_text3};
 `
 
 const StyledCard = styled(OutlineCard)`
   padding: 12px;
-  border: 1px solid ${({ theme }) => theme.bg2};
+  border: 1px solid ${({ theme }) => theme.deprecated_bg2};
 `
 
 const StyledHeaderRow = styled(RowBetween)<{ disabled: boolean; open: boolean }>`
   padding: 4px 8px;
   border-radius: 12px;
-  background-color: ${({ open, theme }) => (open ? theme.bg1 : 'transparent')};
+  background-color: ${({ open, theme }) => (open ? theme.deprecated_bg1 : 'transparent')};
   align-items: center;
   cursor: ${({ disabled }) => (disabled ? 'initial' : 'pointer')};
   min-height: 40px;
 
   :hover {
-    background-color: ${({ theme, disabled }) => (disabled ? theme.bg1 : darken(0.015, theme.bg1))};
+    background-color: ${({ theme, disabled }) =>
+      disabled ? theme.deprecated_bg1 : darken(0.015, theme.deprecated_bg1)};
   }
 `
 
@@ -63,7 +64,7 @@ const StyledPolling = styled.div`
   margin-right: 2px;
   margin-left: 10px;
   align-items: center;
-  color: ${({ theme }) => theme.text1};
+  color: ${({ theme }) => theme.deprecated_text1};
   transition: 250ms ease color;
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
@@ -78,7 +79,7 @@ const StyledPollingDot = styled.div`
   min-width: 8px;
   border-radius: 50%;
   position: relative;
-  background-color: ${({ theme }) => theme.bg2};
+  background-color: ${({ theme }) => theme.deprecated_bg2};
   transition: 250ms ease background-color;
 `
 
@@ -97,7 +98,7 @@ const Spinner = styled.div`
   border-top: 1px solid transparent;
   border-right: 1px solid transparent;
   border-bottom: 1px solid transparent;
-  border-left: 2px solid ${({ theme }) => theme.text1};
+  border-left: 2px solid ${({ theme }) => theme.deprecated_text1};
   background: transparent;
   width: 14px;
   height: 14px;
@@ -159,7 +160,7 @@ export default function SwapDetailsDropdown({
                   placement="bottom"
                   disableHover={showDetails}
                 >
-                  <StyledInfoIcon color={trade ? theme.text3 : theme.bg3} />
+                  <StyledInfoIcon color={trade ? theme.deprecated_text3 : theme.deprecated_bg3} />
                 </MouseoverTooltipContent>
               </HideSmall>
             )}
@@ -189,7 +190,10 @@ export default function SwapDetailsDropdown({
                 disableHover={showDetails}
               />
             )}
-            <RotatingArrow stroke={trade ? theme.text3 : theme.bg3} open={Boolean(trade && showDetails)} />
+            <RotatingArrow
+              stroke={trade ? theme.deprecated_text3 : theme.deprecated_bg3}
+              open={Boolean(trade && showDetails)}
+            />
           </RowFixed>
         </StyledHeaderRow>
         <AnimatedDropdown open={showDetails}>

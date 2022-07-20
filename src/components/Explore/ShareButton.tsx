@@ -83,7 +83,7 @@ interface TokenInfo {
   tokenSymbol: string
 }
 
-export default function ShareButton(tokenInfo: { tokenName: string; tokenSymbol: string }) {
+export default function ShareButton(tokenInfo: TokenInfo) {
   const theme = useTheme()
   const node = useRef<HTMLDivElement | null>(null)
   const open = useModalIsOpen(ApplicationModal.SHARE)

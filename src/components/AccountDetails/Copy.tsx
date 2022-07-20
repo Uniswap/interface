@@ -6,7 +6,7 @@ import styled from 'styled-components/macro'
 import { LinkStyledButton } from 'theme'
 
 const CopyIcon = styled(LinkStyledButton)`
-  color: ${({ color, theme }) => color || theme.text3};
+  color: ${({ color, theme }) => color || theme.deprecated_text3};
   flex-shrink: 0;
   display: flex;
   text-decoration: none;
@@ -14,7 +14,7 @@ const CopyIcon = styled(LinkStyledButton)`
   :active,
   :focus {
     text-decoration: none;
-    color: ${({ color, theme }) => color || theme.text2};
+    color: ${({ color, theme }) => color || theme.deprecated_text2};
   }
 `
 const StyledText = styled.span`

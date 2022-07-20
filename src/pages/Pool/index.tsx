@@ -1,7 +1,9 @@
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
 import { PageName } from 'components/AmplitudeAnalytics/constants'
+import { ElementName, Event, EventName } from 'components/AmplitudeAnalytics/constants'
 import { Trace } from 'components/AmplitudeAnalytics/Trace'
+import { TraceEvent } from 'components/AmplitudeAnalytics/TraceEvent'
 import { ButtonGray, ButtonPrimary, ButtonText } from 'components/Button'
 import { AutoColumn } from 'components/Column'
 import { FlyoutAlignment, NewMenu } from 'components/Menu'
@@ -37,7 +39,7 @@ const PageWrapper = styled(AutoColumn)`
   `};
 `
 const TitleRow = styled(RowBetween)`
-  color: ${({ theme }) => theme.text2};
+  color: ${({ theme }) => theme.deprecated_text2};
   ${({ theme }) => theme.mediaWidth.upToSmall`
     flex-wrap: wrap;
     gap: 12px;
@@ -80,7 +82,7 @@ const MoreOptionsButton = styled(ButtonGray)`
   flex: 1 1 auto;
   padding: 6px 8px;
   width: 100%;
-  background-color: ${({ theme }) => theme.bg0};
+  background-color: ${({ theme }) => theme.deprecated_bg0};
   margin-right: 8px;
 `
 
@@ -124,7 +126,7 @@ const ResponsiveButtonPrimary = styled(ButtonPrimary)`
 `
 
 const MainContentWrapper = styled.main`
-  background-color: ${({ theme }) => theme.bg0};
+  background-color: ${({ theme }) => theme.deprecated_bg0};
   padding: 8px;
   border-radius: 20px;
   display: flex;
@@ -166,7 +168,7 @@ function WrongNetworkCard() {
 
             <MainContentWrapper>
               <ErrorContainer>
-                <ThemedText.Body color={theme.text3} textAlign="center">
+                <ThemedText.Body color={theme.deprecated_text3} textAlign="center">
                   <NetworkIcon strokeWidth={1.2} />
                   <div data-testid="pools-unsupported-err">
                     <Trans>
@@ -296,7 +298,7 @@ export default function Pool() {
                   />
                 ) : (
                   <ErrorContainer>
-                    <ThemedText.Body color={theme.text3} textAlign="center">
+                    <ThemedText.Body color={theme.deprecated_text3} textAlign="center">
                       <InboxIcon strokeWidth={1} />
                       <div>
                         <Trans>Your active V3 liquidity positions will appear here.</Trans>
@@ -311,9 +313,16 @@ export default function Pool() {
                       </ButtonText>
                     )}
                     {showConnectAWallet && (
-                      <ButtonPrimary style={{ marginTop: '2em', padding: '8px 16px' }} onClick={toggleWalletModal}>
-                        <Trans>Connect a wallet</Trans>
-                      </ButtonPrimary>
+                      <TraceEvent
+                        events={[Event.onClick]}
+                        name={EventName.CONNECT_WALLET_BUTTON_CLICKED}
+                        properties={{ received_swap_quote: false }}
+                        element={ElementName.CONNECT_WALLET_BUTTON}
+                      >
+                        <ButtonPrimary style={{ marginTop: '2em', padding: '8px 16px' }} onClick={toggleWalletModal}>
+                          <Trans>Connect a wallet</Trans>
+                        </ButtonPrimary>
+                      </TraceEvent>
                     )}
                   </ErrorContainer>
                 )}

@@ -16,11 +16,6 @@ const NETWORKS = [
   SupportedChainId.OPTIMISM,
 ]
 
-enum FlyoutAlignment {
-  LEFT = 'LEFT',
-  RIGHT = 'RIGHT',
-}
-
 const InternalMenuItem = styled.div`
   flex: 1;
   padding: 12px 16px;
