@@ -1,4 +1,5 @@
 import '@testing-library/jest-dom' // jest custom assertions
+import 'jest-styled-components'
 
 import { Readable } from 'stream'
 import { TextDecoder, TextEncoder } from 'util'
