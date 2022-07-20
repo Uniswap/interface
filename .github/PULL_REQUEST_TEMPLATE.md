@@ -1,12 +1,12 @@
-# Description
+**Description**
 
-Fixes MOB-#
+**Fixes MOB-#**
 
-Summary of the change, motivation and context:
+**Summary of the change, motivation and context**
 
-Screen capture:
+**Before and After Screen capture**
 
-# How Has This Been Tested?
+**How Has This Been Tested?**
 
 - [ ] E2E Test
 - [ ] Unit Test
