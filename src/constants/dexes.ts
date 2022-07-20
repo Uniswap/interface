@@ -270,6 +270,10 @@ export const dexListConfig: DexList = {
     name: 'ZipSwap',
     icon: 'https://zipswap.fi/static/media/logo.414dd3f8.png',
   },
+  '1inch': {
+    name: '1inch',
+    icon: 'https://s2.coinmarketcap.com/static/img/coins/64x64/8104.png',
+  },
   //todo namgold: optimism add dex
 }
 
