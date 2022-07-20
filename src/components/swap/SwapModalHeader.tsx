@@ -67,7 +67,7 @@ export default function SwapModalHeader({
               <TruncatedText
                 fontSize={24}
                 fontWeight={500}
-                color={showAcceptChanges && trade.tradeType === TradeType.EXACT_OUTPUT ? theme.primary1 : ''}
+                color={showAcceptChanges && trade.tradeType === TradeType.EXACT_OUTPUT ? theme.deprecated_primary1 : ''}
               >
                 {trade.inputAmount.toSignificant(6)}
               </TruncatedText>
@@ -123,7 +123,7 @@ export default function SwapModalHeader({
           <RowBetween>
             <RowFixed>
               <AlertTriangle size={20} style={{ marginRight: '8px', minWidth: 24 }} />
-              <ThemedText.Main color={theme.primary1}>
+              <ThemedText.Main color={theme.deprecated_primary1}>
                 <Trans>Price Updated</Trans>
               </ThemedText.Main>
             </RowFixed>

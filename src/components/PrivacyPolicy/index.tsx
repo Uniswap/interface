@@ -20,14 +20,14 @@ const Wrapper = styled.div`
 `
 
 const StyledExternalCard = styled(Card)`
-  background-color: ${({ theme }) => theme.primary5};
+  background-color: ${({ theme }) => theme.deprecated_primary5};
   padding: 0.5rem;
   width: 100%;
 
   :hover,
   :focus,
   :active {
-    background-color: ${({ theme }) => theme.primary4};
+    background-color: ${({ theme }) => theme.deprecated_primary4};
   }
 `
 

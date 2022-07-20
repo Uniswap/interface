@@ -36,9 +36,9 @@ const SmallButton = styled(ButtonGray)`
 `
 
 const FocusedOutlineCard = styled(OutlineCard)<{ active?: boolean; pulsing?: boolean }>`
-  border-color: ${({ active, theme }) => active && theme.blue1};
+  border-color: ${({ active, theme }) => active && theme.deprecated_blue1};
   padding: 12px;
-  animation: ${({ pulsing, theme }) => pulsing && pulse(theme.blue1)} 0.8s linear;
+  animation: ${({ pulsing, theme }) => pulsing && pulse(theme.deprecated_blue1)} 0.8s linear;
 `
 
 const StyledInput = styled(NumericalInput)<{ usePercent?: boolean }>`

@@ -733,7 +733,7 @@ export function PositionPage() {
                             <Trans>Unclaimed fees</Trans>
                           </Label>
                           {fiatValueOfFees?.greaterThan(new Fraction(1, 100)) ? (
-                            <ThemedText.LargeHeader color={theme.green1} fontSize="36px" fontWeight={500}>
+                            <ThemedText.LargeHeader color={theme.deprecated_green1} fontSize="36px" fontWeight={500}>
                               <Trans>${fiatValueOfFees.toFixed(2, { groupSeparator: ',' })}</Trans>
                             </ThemedText.LargeHeader>
                           ) : (

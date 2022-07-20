@@ -21,7 +21,7 @@ const Circle = styled.div<{ confirmed?: boolean; disabled?: boolean }>`
   width: 48px;
   height: 48px;
   background-color: ${({ theme, confirmed, disabled }) =>
-    disabled ? theme.deprecated_bg3 : confirmed ? theme.green1 : theme.primary1};
+    disabled ? theme.deprecated_bg3 : confirmed ? theme.deprecated_green1 : theme.deprecated_primary1};
   border-radius: 50%;
   color: ${({ theme, disabled }) => (disabled ? theme.deprecated_text3 : theme.deprecated_text1)};
   display: flex;

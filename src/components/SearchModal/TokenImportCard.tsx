@@ -15,7 +15,7 @@ import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 const WarningWrapper = styled(Card)<{ highWarning: boolean }>`
   background-color: ${({ theme, highWarning }) =>
-    highWarning ? transparentize(0.8, theme.red1) : transparentize(0.8, theme.yellow2)};
+    highWarning ? transparentize(0.8, theme.deprecated_red1) : transparentize(0.8, theme.deprecated_yellow2)};
   width: fit-content;
 `
 
@@ -61,8 +61,8 @@ const TokenImportCard = ({ list, token }: TokenImportCardProps) => {
         ) : (
           <WarningWrapper $borderRadius="4px" padding="4px" highWarning={true}>
             <RowFixed>
-              <AlertCircle stroke={theme.red1} size="10px" />
-              <ThemedText.Body color={theme.red1} ml="4px" fontSize="10px" fontWeight={500}>
+              <AlertCircle stroke={theme.deprecated_red1} size="10px" />
+              <ThemedText.Body color={theme.deprecated_red1} ml="4px" fontSize="10px" fontWeight={500}>
                 <Trans>Unknown Source</Trans>
               </ThemedText.Body>
             </RowFixed>

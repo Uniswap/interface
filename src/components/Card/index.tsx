@@ -36,12 +36,12 @@ export const OutlineCard = styled(Card)`
 
 export const YellowCard = styled(Card)`
   background-color: rgba(243, 132, 30, 0.05);
-  color: ${({ theme }) => theme.yellow3};
+  color: ${({ theme }) => theme.deprecated_yellow3};
   font-weight: 500;
 `
 
 export const BlueCard = styled(Card)`
-  background-color: ${({ theme }) => theme.primary5};
-  color: ${({ theme }) => theme.blue2};
+  background-color: ${({ theme }) => theme.deprecated_primary5};
+  color: ${({ theme }) => theme.deprecated_blue2};
   border-radius: 12px;
 `

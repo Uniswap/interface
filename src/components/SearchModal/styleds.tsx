@@ -12,7 +12,7 @@ export const TextDot = styled.div`
 `
 
 export const Checkbox = styled.input`
-  border: 1px solid ${({ theme }) => theme.red3};
+  border: 1px solid ${({ theme }) => theme.deprecated_red3};
   height: 20px;
   margin: 0;
 `
@@ -58,7 +58,7 @@ export const SearchInput = styled.input`
   }
   transition: border 100ms;
   :focus {
-    border: 1px solid ${({ theme }) => theme.primary1};
+    border: 1px solid ${({ theme }) => theme.deprecated_primary1};
     outline: none;
   }
 `

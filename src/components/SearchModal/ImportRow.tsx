@@ -29,7 +29,7 @@ const CheckIcon = styled(CheckCircle)`
   height: 16px;
   width: 16px;
   margin-right: 6px;
-  stroke: ${({ theme }) => theme.green1};
+  stroke: ${({ theme }) => theme.deprecated_green1};
 `
 
 const NameOverflow = styled.div`
@@ -97,7 +97,7 @@ export default function ImportRow({
       ) : (
         <RowFixed style={{ minWidth: 'fit-content' }}>
           <CheckIcon />
-          <ThemedText.Main color={theme.green1}>
+          <ThemedText.Main color={theme.deprecated_green1}>
             <Trans>Active</Trans>
           </ThemedText.Main>
         </RowFixed>

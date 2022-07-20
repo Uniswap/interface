@@ -35,7 +35,7 @@ const CodeBlockWrapper = styled.div`
 `
 
 const LinkWrapper = styled.div`
-  color: ${({ theme }) => theme.blue1};
+  color: ${({ theme }) => theme.deprecated_blue1};
   padding: 6px 24px;
 `
 

@@ -110,7 +110,7 @@ const ProgressWrapper = styled.div`
 const Progress = styled.div<{ status: 'for' | 'against'; percentageString?: string }>`
   height: 4px;
   border-radius: 4px;
-  background-color: ${({ theme, status }) => (status === 'for' ? theme.green1 : theme.red1)};
+  background-color: ${({ theme, status }) => (status === 'for' ? theme.deprecated_green1 : theme.deprecated_red1)};
   width: ${({ percentageString }) => percentageString ?? '0%'};
 `
 

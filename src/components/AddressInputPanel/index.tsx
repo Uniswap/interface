@@ -25,7 +25,7 @@ const ContainerRow = styled.div<{ error: boolean }>`
   justify-content: center;
   align-items: center;
   border-radius: 1.25rem;
-  border: 1px solid ${({ error, theme }) => (error ? theme.red1 : theme.deprecated_bg2)};
+  border: 1px solid ${({ error, theme }) => (error ? theme.deprecated_red1 : theme.deprecated_bg2)};
   transition: border-color 300ms ${({ error }) => (error ? 'step-end' : 'step-start')},
     color 500ms ${({ error }) => (error ? 'step-end' : 'step-start')};
   background-color: ${({ theme }) => theme.deprecated_bg1};
@@ -44,7 +44,7 @@ const Input = styled.input<{ error?: boolean }>`
   width: 0;
   background-color: ${({ theme }) => theme.deprecated_bg1};
   transition: color 300ms ${({ error }) => (error ? 'step-end' : 'step-start')};
-  color: ${({ error, theme }) => (error ? theme.red1 : theme.deprecated_text1)};
+  color: ${({ error, theme }) => (error ? theme.deprecated_red1 : theme.deprecated_text1)};
   overflow: hidden;
   text-overflow: ellipsis;
   font-weight: 500;

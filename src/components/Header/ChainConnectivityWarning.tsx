@@ -31,7 +31,7 @@ const TitleText = styled.div`
   margin: 0px 12px;
 `
 const Wrapper = styled.div`
-  background-color: ${({ theme }) => theme.yellow3};
+  background-color: ${({ theme }) => theme.deprecated_yellow3};
   border-radius: 12px;
   bottom: 60px;
   display: none;

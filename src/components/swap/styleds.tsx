@@ -48,9 +48,9 @@ export const SectionBreak = styled.div`
 export const ErrorText = styled(Text)<{ severity?: 0 | 1 | 2 | 3 | 4 }>`
   color: ${({ theme, severity }) =>
     severity === 3 || severity === 4
-      ? theme.red1
+      ? theme.deprecated_red1
       : severity === 2
-      ? theme.yellow2
+      ? theme.deprecated_yellow2
       : severity === 1
       ? theme.deprecated_text1
       : theme.deprecated_text2};
@@ -86,7 +86,7 @@ export const Dots = styled.span`
 `
 
 const SwapCallbackErrorInner = styled.div`
-  background-color: ${({ theme }) => transparentize(0.9, theme.red1)};
+  background-color: ${({ theme }) => transparentize(0.9, theme.deprecated_red1)};
   border-radius: 1rem;
   display: flex;
   align-items: center;
@@ -94,7 +94,7 @@ const SwapCallbackErrorInner = styled.div`
   width: 100%;
   padding: 3rem 1.25rem 1rem 1rem;
   margin-top: -2rem;
-  color: ${({ theme }) => theme.red1};
+  color: ${({ theme }) => theme.deprecated_red1};
   z-index: -1;
   p {
     padding: 0;
@@ -104,7 +104,7 @@ const SwapCallbackErrorInner = styled.div`
 `
 
 const SwapCallbackErrorInnerAlertTriangle = styled.div`
-  background-color: ${({ theme }) => transparentize(0.9, theme.red1)};
+  background-color: ${({ theme }) => transparentize(0.9, theme.deprecated_red1)};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -126,8 +126,8 @@ export function SwapCallbackError({ error }: { error: ReactNode }) {
 }
 
 export const SwapShowAcceptChanges = styled(AutoColumn)`
-  background-color: ${({ theme }) => transparentize(0.95, theme.primary3)};
-  color: ${({ theme }) => theme.primaryText1};
+  background-color: ${({ theme }) => transparentize(0.95, theme.deprecated_primary3)};
+  color: ${({ theme }) => theme.deprecated_primaryText1};
   padding: 0.5rem;
   border-radius: 12px;
   margin-top: 8px;

@@ -564,7 +564,7 @@ function V2PairMigration({
           {outOfRange ? (
             <YellowCard padding="8px 12px" $borderRadius="12px">
               <RowBetween>
-                <AlertTriangle stroke={theme.yellow3} size="16px" />
+                <AlertTriangle stroke={theme.deprecated_yellow3} size="16px" />
                 <ThemedText.Yellow ml="12px" fontSize="12px">
                   <Trans>
                     Your position will not earn fees or be used in trades until the market price moves into your range.
@@ -577,7 +577,7 @@ function V2PairMigration({
           {invalidRange ? (
             <YellowCard padding="8px 12px" $borderRadius="12px">
               <RowBetween>
-                <AlertTriangle stroke={theme.yellow3} size="16px" />
+                <AlertTriangle stroke={theme.deprecated_yellow3} size="16px" />
                 <ThemedText.Yellow ml="12px" fontSize="12px">
                   <Trans>Invalid range selected. The min price must be lower than the max price.</Trans>
                 </ThemedText.Yellow>

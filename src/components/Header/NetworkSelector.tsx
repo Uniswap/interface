@@ -89,7 +89,7 @@ const FlyoutRow = styled.div<{ active: boolean }>`
   width: 100%;
 `
 const FlyoutRowActiveIndicator = styled.div`
-  background-color: ${({ theme }) => theme.green1};
+  background-color: ${({ theme }) => theme.deprecated_green1};
   border-radius: 50%;
   height: 9px;
   width: 9px;

@@ -24,39 +24,39 @@ export interface Colors {
   deprecated_bg5: Color
   deprecated_bg6: Color
 
-  modalBG: Color
-  advancedBG: Color
+  deprecated_modalBG: Color
+  deprecated_advancedBG: Color
 
   //blues
-  primary1: Color
-  primary2: Color
-  primary3: Color
-  primary4: Color
-  primary5: Color
+  deprecated_primary1: Color
+  deprecated_primary2: Color
+  deprecated_primary3: Color
+  deprecated_primary4: Color
+  deprecated_primary5: Color
 
-  primaryText1: Color
+  deprecated_primaryText1: Color
 
   // pinks
-  secondary1: Color
-  secondary2: Color
-  secondary3: Color
+  deprecated_secondary1: Color
+  deprecated_secondary2: Color
+  deprecated_secondary3: Color
 
   // other
-  red1: Color
-  red2: Color
-  red3: Color
-  green1: Color
-  yellow1: Color
-  yellow2: Color
-  yellow3: Color
-  blue1: Color
-  blue2: Color
+  deprecated_red1: Color
+  deprecated_red2: Color
+  deprecated_red3: Color
+  deprecated_green1: Color
+  deprecated_yellow1: Color
+  deprecated_yellow2: Color
+  deprecated_yellow3: Color
+  deprecated_blue1: Color
+  deprecated_blue2: Color
 
-  blue4: Color
+  deprecated_blue4: Color
 
-  error: Color
-  success: Color
-  warning: Color
+  deprecated_error: Color
+  deprecated_success: Color
+  deprecated_warning: Color
 }
 
 declare module 'styled-components/macro' {
