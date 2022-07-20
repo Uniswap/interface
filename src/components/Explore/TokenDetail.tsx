@@ -39,7 +39,7 @@ const ArrowCell = styled.div`
 `
 export const BreadcrumbNavLink = styled(Link)`
   display: flex;
-  color: ${({ theme }) => theme.text2};
+  color: ${({ theme }) => theme.deprecate_text2};
   font-size: 14px;
   line-height: 20px;
   align-items: center;
@@ -48,20 +48,20 @@ export const BreadcrumbNavLink = styled(Link)`
   margin-bottom: 16px;
 
   &:hover {
-    color: ${({ theme }) => darken(0.1, theme.text2)};
+    color: ${({ theme }) => darken(0.1, theme.deprecate_text2)};
   }
 `
 export const ChartHeader = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
-  color: ${({ theme }) => theme.text1};
+  color: ${({ theme }) => theme.deprecate_text1};
   gap: 4px;
   margin-bottom: 24px;
 `
 const ContractAddress = styled.button`
   display: flex;
-  color: ${({ theme }) => theme.text1};
+  color: ${({ theme }) => theme.deprecate_text1};
   gap: 10px;
   align-items: center;
   background: transparent;
@@ -70,7 +70,7 @@ const ContractAddress = styled.button`
   cursor: pointer;
 
   &:hover {
-    color: ${({ theme }) => darken(0.08, theme.text1)};
+    color: ${({ theme }) => darken(0.08, theme.deprecate_text1)};
   }
 `
 export const ContractAddressSection = styled.div`
@@ -79,14 +79,14 @@ export const ContractAddressSection = styled.div`
 const Contract = styled.div`
   display: flex;
   flex-direction: column;
-  color: ${({ theme }) => theme.text2};
+  color: ${({ theme }) => theme.deprecate_text2};
   font-size: 14px;
   gap: 4px;
 `
 export const ChartContainer = styled.div`
   display: flex;
   height: 332px;
-  border-bottom: 1px solid ${({ theme }) => theme.bg3};
+  border-bottom: 1px solid ${({ theme }) => theme.deprecate_bg3};
   align-items: center;
   overflow: hidden;
 `
@@ -97,14 +97,14 @@ export const DeltaContainer = styled.div`
 const Stat = styled.div`
   display: flex;
   flex-direction: column;
-  color: ${({ theme }) => theme.text2};
+  color: ${({ theme }) => theme.deprecate_text2};
   font-size: 14px;
   width: 168px;
   gap: 4px;
 `
 const StatPrice = styled.span`
   font-size: 28px;
-  color: ${({ theme }) => theme.text1};
+  color: ${({ theme }) => theme.deprecate_text1};
 `
 export const StatsSection = styled.div`
   display: flex;
@@ -119,7 +119,7 @@ const TimeButton = styled.button<{ active: boolean }>`
   border-radius: 12px;
   border: none;
   cursor: pointer;
-  color: ${({ theme }) => theme.text1};
+  color: ${({ theme }) => theme.deprecate_text1};
 `
 export const TimeOptionsContainer = styled.div`
   display: flex;
@@ -136,7 +136,7 @@ const TokenNameCell = styled.div`
 const TokenActions = styled.div`
   display: flex;
   gap: 24px;
-  color: ${({ theme }) => theme.text2};
+  color: ${({ theme }) => theme.deprecate_text2};
 `
 export const TokenInfoContainer = styled.div`
   display: flex;
@@ -148,7 +148,7 @@ export const TokenPrice = styled.span`
   line-height: 44px;
 `
 const TokenSymbol = styled.span`
-  color: ${({ theme }) => theme.text2};
+  color: ${({ theme }) => theme.deprecate_text2};
 `
 export const TopArea = styled.div`
   width: 832px;
@@ -200,7 +200,7 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
             <ClickFavorited onClick={toggleFavorite}>
               <Heart
                 size={15}
-                color={isFavorited ? theme.primary1 : theme.text2}
+                color={isFavorited ? theme.primary1 : theme.deprecate_text2}
                 fill={isFavorited ? theme.primary1 : 'transparent'}
               />
             </ClickFavorited>
@@ -255,7 +255,7 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
         <Contract>
           Contract Address
           <ContractAddress onClick={() => navigator.clipboard.writeText(address)}>
-            {address} <Copy size={13} color={theme.text2} />
+            {address} <Copy size={13} color={theme.deprecate_text2} />
           </ContractAddress>
         </Contract>
       </ContractAddressSection>

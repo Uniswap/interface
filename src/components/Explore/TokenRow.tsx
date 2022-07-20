@@ -79,7 +79,7 @@ const StyledTokenRow = styled.div`
     grid-template-columns: 1fr 12fr 6fr;
     width: fit-content;
     min-width: unset;
-    border-bottom: 0.5px solid ${({ theme }) => theme.bg3};
+    border-bottom: 0.5px solid ${({ theme }) => theme.deprecate_bg3};
     padding: 0px;
 
     :last-of-type {
@@ -100,16 +100,16 @@ const ClickableName = styled(Link)`
   display: flex;
   gap: 8px;
   text-decoration: none;
-  color: ${({ theme }) => theme.text1};
+  color: ${({ theme }) => theme.deprecate_text1};
 
   &:hover,
   &:focus {
-    color: ${({ theme }) => darken(0.1, theme.text1)};
+    color: ${({ theme }) => darken(0.1, theme.deprecate_text1)};
   }
 `
 const FavoriteCell = styled(Cell)`
   min-width: 40px;
-  color: ${({ theme }) => theme.text2};
+  color: ${({ theme }) => theme.deprecate_text2};
   fill: none;
 
   @media only screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
@@ -119,11 +119,11 @@ const FavoriteCell = styled(Cell)`
 const StyledHeaderRow = styled(StyledTokenRow)`
   width: 100%;
   height: 48px;
-  color: ${({ theme }) => theme.text2};
+  color: ${({ theme }) => theme.deprecate_text2};
   font-size: 12px;
   line-height: 16px;
   border-bottom: 1px solid;
-  border-color: ${({ theme }) => theme.bg3};
+  border-color: ${({ theme }) => theme.deprecate_bg3};
   border-radius: 8px 8px 0px 0px;
   padding: 0px 12px;
 
@@ -136,7 +136,7 @@ const StyledHeaderRow = styled(StyledTokenRow)`
   }
 `
 const ListNumberCell = styled(Cell)`
-  color: ${({ theme }) => theme.text2};
+  color: ${({ theme }) => theme.deprecate_text2};
   min-width: 32px;
 
   @media only screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
@@ -155,8 +155,8 @@ const MarketCapCell = styled(Cell)<{ sortable: boolean }>`
   }
 
   &:hover {
-    color: ${({ theme, sortable }) => sortable && theme.text1};
-    background-color: ${({ theme, sortable }) => sortable && darken(0.08, theme.bg0)};
+    color: ${({ theme, sortable }) => sortable && theme.deprecate_text1};
+    background-color: ${({ theme, sortable }) => sortable && darken(0.08, theme.deprecate_bg0)};
   }
 `
 const NameCell = styled(Cell)`
@@ -181,8 +181,8 @@ const PercentChangeCell = styled(Cell)<{ sortable: boolean }>`
   }
 
   &:hover {
-    color: ${({ theme, sortable }) => sortable && theme.text1};
-    background-color: ${({ theme, sortable }) => sortable && darken(0.08, theme.bg0)};
+    color: ${({ theme, sortable }) => sortable && theme.deprecate_text1};
+    background-color: ${({ theme, sortable }) => sortable && darken(0.08, theme.deprecate_bg0)};
   }
 `
 const PercentChangeInfoCell = styled(Cell)`
@@ -190,7 +190,7 @@ const PercentChangeInfoCell = styled(Cell)`
 
   @media only screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
     display: flex;
-    color: ${({ theme }) => theme.text3};
+    color: ${({ theme }) => theme.deprecate_text3};
     font-size: 12px;
     line-height: 16px;
   }
@@ -205,8 +205,8 @@ const PriceCell = styled(Cell)<{ sortable: boolean }>`
   }
 
   &:hover {
-    color: ${({ theme, sortable }) => sortable && theme.text1};
-    background-color: ${({ theme, sortable }) => sortable && darken(0.08, theme.bg0)};
+    color: ${({ theme, sortable }) => sortable && theme.deprecate_text1};
+    background-color: ${({ theme, sortable }) => sortable && darken(0.08, theme.deprecate_bg0)};
   }
 `
 const PriceInfoCell = styled(Cell)`
@@ -228,15 +228,15 @@ const SortingCategory = styled.span`
   cursor: pointer;
 
   &:hover {
-    background-color: ${({ theme }) => darken(0.08, theme.bg0)};
+    background-color: ${({ theme }) => darken(0.08, theme.deprecate_bg0)};
   }
 `
 const SortOption = styled.span`
   cursor: pointer;
 
   &:hover {
-    color: ${({ theme }) => theme.text1};
-    background-color: ${({ theme }) => darken(0.08, theme.bg0)};
+    color: ${({ theme }) => theme.deprecate_text1};
+    background-color: ${({ theme }) => darken(0.08, theme.deprecate_bg0)};
   }
 `
 const SparkLineCell = styled(Cell)`
@@ -273,7 +273,7 @@ const TokenName = styled.div`
   white-space: nowrap;
 `
 const TokenSymbol = styled(Cell)`
-  color: ${({ theme }) => theme.text3};
+  color: ${({ theme }) => theme.deprecate_text3};
 
   @media only screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
     font-size: 12px;
@@ -292,13 +292,13 @@ const VolumeCell = styled(Cell)<{ sortable: boolean }>`
   }
 
   &:hover {
-    color: ${({ theme, sortable }) => sortable && theme.text1};
-    background-color: ${({ theme, sortable }) => sortable && darken(0.08, theme.bg0)};
+    color: ${({ theme, sortable }) => sortable && theme.deprecate_text1};
+    background-color: ${({ theme, sortable }) => sortable && darken(0.08, theme.deprecate_bg0)};
   }
 `
 /* Loading state bubbles */
 const LoadingBubble = styled.div`
-  background-color: ${({ theme }) => darken(0.1, theme.bg3)};
+  background-color: ${({ theme }) => darken(0.1, theme.deprecate_bg3)};
   border-radius: 12px;
   height: 24px;
   width: 50%;

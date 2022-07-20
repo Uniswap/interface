@@ -16,7 +16,7 @@ const ShareButtonDisplay = styled.div`
   position: relative;
 
   &:hover {
-    color: ${({ theme }) => darken(0.1, theme.text2)};
+    color: ${({ theme }) => darken(0.1, theme.deprecate_text2)};
   }
 `
 const ShareActions = styled.div`
@@ -28,8 +28,8 @@ const ShareActions = styled.div`
   flex-direction: column;
   width: fit-content;
   overflow: auto;
-  background-color: ${({ theme }) => theme.bg0};
-  border: 1px solid ${({ theme }) => theme.bg1};
+  background-color: ${({ theme }) => theme.deprecate_bg0};
+  border: 1px solid ${({ theme }) => theme.deprecate_bg1};
   box-shadow: ${SHADOW};
   border-radius: 12px;
 `
@@ -40,12 +40,12 @@ const ShareAction = styled.div`
   gap: 8px;
   width: 200px;
   height: 48px;
-  color: ${({ theme }) => theme.text1};
+  color: ${({ theme }) => theme.deprecate_text1};
   cursor: pointer;
 
   &:hover {
-    color: ${({ theme }) => darken(0.08, theme.text1)};
-    background-color: ${({ theme }) => darken(0.08, theme.bg1)};
+    color: ${({ theme }) => darken(0.08, theme.deprecate_text1)};
+    background-color: ${({ theme }) => darken(0.08, theme.deprecate_bg1)};
   }
 `
 
@@ -54,8 +54,8 @@ const LinkCopied = styled.div<{ show: boolean }>`
   display: ${({ show }) => (show ? 'flex' : 'none')};
   width: 328px;
   height: 72px;
-  color: ${({ theme }) => theme.text1};
-  background-color: ${({ theme }) => theme.bg0};
+  color: ${({ theme }) => theme.deprecate_text1};
+  background-color: ${({ theme }) => theme.deprecate_bg0};
   justify-content: flex-start;
   align-items: center;
   padding: 24px 16px;
@@ -121,12 +121,12 @@ export default function ShareButton(tokenInfo: TokenInfo) {
         {open && (
           <ShareActions>
             <ShareAction onClick={copyLink}>
-              <Link color={theme.text2} />
+              <Link color={theme.deprecate_text2} />
               Copy link
             </ShareAction>
 
             <ShareAction onClick={shareTweet}>
-              <Twitter color={theme.text2} />
+              <Twitter color={theme.deprecate_text2} />
               Share to Twitter
             </ShareAction>
           </ShareActions>

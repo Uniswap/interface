@@ -13,20 +13,20 @@ import NetworkBalance from './NetworkBalance'
 const BalancesCard = styled.div`
   width: 284px;
   height: fit-content;
-  color: ${({ theme }) => theme.text1};
+  color: ${({ theme }) => theme.deprecate_text1};
   font-size: 12px;
   line-height: 20px;
   padding: 20px;
-  background-color: ${({ theme }) => theme.bg1};
+  background-color: ${({ theme }) => theme.deprecate_bg1};
   border-radius: 12px;
-  border: 1px solid ${({ theme }) => theme.bg3};
+  border: 1px solid ${({ theme }) => theme.deprecate_bg3};
 `
 const NetworkBalancesSection = styled.div`
   height: fit-content;
 `
 const TotalBalanceSection = styled.div`
   height: fit-content;
-  border-bottom: 1px solid ${({ theme }) => theme.bg3};
+  border-bottom: 1px solid ${({ theme }) => theme.deprecate_bg3};
   margin-bottom: 20px;
   padding-bottom: 20px;
 `

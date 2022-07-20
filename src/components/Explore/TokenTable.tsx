@@ -10,7 +10,7 @@ const GridContainer = styled.div`
   display: flex;
   flex-direction: column;
   max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT};
-  background: ${({ theme }) => theme.bg0};
+  background: ${({ theme }) => theme.deprecate_bg0};
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
     0px 24px 32px rgba(0, 0, 0, 0.01);
   margin-left: auto;
@@ -23,7 +23,7 @@ const NoTokenDisplay = styled.div`
   display: flex;
   width: 100%;
   height: 60px;
-  color: ${({ theme }) => theme.text3};
+  color: ${({ theme }) => theme.deprecate_text3};
   font-size: 16px;
   align-items: center;
   padding: 0px 28px;
