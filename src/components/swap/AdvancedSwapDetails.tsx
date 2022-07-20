@@ -77,7 +77,7 @@ export function AdvancedSwapDetails({
               }
               disableHover={hideInfoTooltips}
             >
-              <ThemedText.SubHeader color={theme.text1}>
+              <ThemedText.SubHeader color={theme.deprecated_text1}>
                 <Trans>Expected Output</Trans>
               </ThemedText.SubHeader>
             </MouseoverTooltip>
@@ -96,7 +96,7 @@ export function AdvancedSwapDetails({
               text={<Trans>The impact your trade has on the market price of this pool.</Trans>}
               disableHover={hideInfoTooltips}
             >
-              <ThemedText.SubHeader color={theme.text1}>
+              <ThemedText.SubHeader color={theme.deprecated_text1}>
                 <Trans>Price Impact</Trans>
               </ThemedText.SubHeader>
             </MouseoverTooltip>
@@ -119,7 +119,7 @@ export function AdvancedSwapDetails({
               }
               disableHover={hideInfoTooltips}
             >
-              <ThemedText.SubHeader color={theme.text3}>
+              <ThemedText.SubHeader color={theme.deprecated_text3}>
                 {trade.tradeType === TradeType.EXACT_INPUT ? (
                   <Trans>Minimum received</Trans>
                 ) : (
@@ -130,7 +130,7 @@ export function AdvancedSwapDetails({
             </MouseoverTooltip>
           </RowFixed>
           <TextWithLoadingPlaceholder syncing={syncing} width={70}>
-            <ThemedText.Black textAlign="right" fontSize={14} color={theme.text3}>
+            <ThemedText.Black textAlign="right" fontSize={14} color={theme.deprecated_text3}>
               {trade.tradeType === TradeType.EXACT_INPUT
                 ? `${trade.minimumAmountOut(allowedSlippage).toSignificant(6)} ${trade.outputAmount.currency.symbol}`
                 : `${trade.maximumAmountIn(allowedSlippage).toSignificant(6)} ${trade.inputAmount.currency.symbol}`}
@@ -147,12 +147,12 @@ export function AdvancedSwapDetails({
               }
               disableHover={hideInfoTooltips}
             >
-              <ThemedText.SubHeader color={theme.text3}>
+              <ThemedText.SubHeader color={theme.deprecated_text3}>
                 <Trans>Network Fee</Trans>
               </ThemedText.SubHeader>
             </MouseoverTooltip>
             <TextWithLoadingPlaceholder syncing={syncing} width={50}>
-              <ThemedText.Black textAlign="right" fontSize={14} color={theme.text3}>
+              <ThemedText.Black textAlign="right" fontSize={14} color={theme.deprecated_text3}>
                 ~${trade.gasUseEstimateUSD.toFixed(2)}
               </ThemedText.Black>
             </TextWithLoadingPlaceholder>

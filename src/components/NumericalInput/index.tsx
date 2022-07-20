@@ -4,14 +4,14 @@ import styled from 'styled-components/macro'
 import { escapeRegExp } from '../../utils'
 
 const StyledInput = styled.input<{ error?: boolean; fontSize?: string; align?: string }>`
-  color: ${({ error, theme }) => (error ? theme.red1 : theme.text1)};
+  color: ${({ error, theme }) => (error ? theme.deprecated_red1 : theme.deprecated_text1)};
   width: 0;
   position: relative;
   font-weight: 500;
   outline: none;
   border: none;
   flex: 1 1 auto;
-  background-color: ${({ theme }) => theme.bg1};
+  background-color: ${({ theme }) => theme.deprecated_bg1};
   font-size: ${({ fontSize }) => fontSize ?? '28px'};
   text-align: ${({ align }) => align && align};
   white-space: nowrap;
@@ -35,7 +35,7 @@ const StyledInput = styled.input<{ error?: boolean; fontSize?: string; align?: s
   }
 
   ::placeholder {
-    color: ${({ theme }) => theme.text4};
+    color: ${({ theme }) => theme.deprecated_text4};
   }
 `
 

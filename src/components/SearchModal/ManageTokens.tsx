@@ -32,7 +32,7 @@ const Footer = styled.div`
   border-radius: 20px;
   border-top-right-radius: 0;
   border-top-left-radius: 0;
-  border-top: 1px solid ${({ theme }) => theme.bg3};
+  border-top: 1px solid ${({ theme }) => theme.deprecated_bg3};
   padding: 20px;
   text-align: center;
 `
@@ -116,7 +116,7 @@ export default function ManageTokens({
             </ThemedText.Error>
           )}
           {searchToken && (
-            <Card backgroundColor={theme.bg2} padding="10px 0">
+            <Card backgroundColor={theme.deprecated_bg2} padding="10px 0">
               <ImportRow
                 token={searchToken}
                 showImportView={() => setModalView(CurrencyModalView.importToken)}

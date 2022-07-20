@@ -744,7 +744,7 @@ export default function AddLiquidity() {
                                 fontSize={14}
                                 style={{ fontWeight: 500 }}
                                 textAlign="left"
-                                color={theme.primaryText1}
+                                color={theme.deprecated_primaryText1}
                               >
                                 <Trans>
                                   This pool must be initialized before you can add liquidity. To initialize, select a
@@ -761,7 +761,9 @@ export default function AddLiquidity() {
                               onUserInput={onStartPriceInput}
                             />
                           </OutlineCard>
-                          <RowBetween style={{ backgroundColor: theme.bg1, padding: '12px', borderRadius: '12px' }}>
+                          <RowBetween
+                            style={{ backgroundColor: theme.deprecated_bg1, padding: '12px', borderRadius: '12px' }}
+                          >
                             <ThemedText.Main>
                               <Trans>Current {baseCurrency?.symbol} Price:</Trans>
                             </ThemedText.Main>
@@ -830,13 +832,13 @@ export default function AddLiquidity() {
                               $borderRadius="12px"
                               height="100%"
                               style={{
-                                borderColor: theme.yellow3,
+                                borderColor: theme.deprecated_yellow3,
                                 border: '1px solid',
                               }}
                             >
                               <AutoColumn gap="8px" style={{ height: '100%' }}>
                                 <RowFixed>
-                                  <AlertTriangle stroke={theme.yellow3} size="16px" />
+                                  <AlertTriangle stroke={theme.deprecated_yellow3} size="16px" />
                                   <ThemedText.Yellow ml="12px" fontSize="15px">
                                     <Trans>Efficiency Comparison</Trans>
                                   </ThemedText.Yellow>
@@ -846,7 +848,7 @@ export default function AddLiquidity() {
                                     <Trans>
                                       Full range positions may earn less fees than concentrated positions. Learn more{' '}
                                       <ExternalLink
-                                        style={{ color: theme.yellow3, textDecoration: 'underline' }}
+                                        style={{ color: theme.deprecated_yellow3, textDecoration: 'underline' }}
                                         href={
                                           'https://help.uniswap.org/en/articles/5434296-can-i-provide-liquidity-over-the-full-range-in-v3'
                                         }
@@ -882,7 +884,7 @@ export default function AddLiquidity() {
                       {outOfRange ? (
                         <YellowCard padding="8px 12px" $borderRadius="12px">
                           <RowBetween>
-                            <AlertTriangle stroke={theme.yellow3} size="16px" />
+                            <AlertTriangle stroke={theme.deprecated_yellow3} size="16px" />
                             <ThemedText.Yellow ml="12px" fontSize="12px">
                               <Trans>
                                 Your position will not earn fees or be used in trades until the market price moves into
@@ -896,7 +898,7 @@ export default function AddLiquidity() {
                       {invalidRange ? (
                         <YellowCard padding="8px 12px" $borderRadius="12px">
                           <RowBetween>
-                            <AlertTriangle stroke={theme.yellow3} size="16px" />
+                            <AlertTriangle stroke={theme.deprecated_yellow3} size="16px" />
                             <ThemedText.Yellow ml="12px" fontSize="12px">
                               <Trans>Invalid range selected. The min price must be lower than the max price.</Trans>
                             </ThemedText.Yellow>
