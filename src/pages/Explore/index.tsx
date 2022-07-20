@@ -1,3 +1,4 @@
+import { MAX_WIDTH_MEDIA_BREAKPOINT, MEDIUM_MEDIA_BREAKPOINT } from 'components/Explore/constants'
 import FavoriteButton from 'components/Explore/FavoriteButton'
 import NetworkFilter from 'components/Explore/NetworkFilter'
 import SearchBar from 'components/Explore/SearchBar'
@@ -25,20 +26,46 @@ const FiltersContainer = styled.div`
   display: flex;
   gap: 8px;
   height: 44px;
-  max-width: 960px;
+
+  @media only screen and (max-width: ${MEDIUM_MEDIA_BREAKPOINT}) {
+    order: 2;
+  }
+`
+const SearchContainer = styled(FiltersContainer)`
+  width: 100%;
+  margin-left: 8px;
+
+  @media only screen and (max-width: ${MEDIUM_MEDIA_BREAKPOINT}) {
+    margin: 0px;
+    order: 1;
+  }
+`
+const FiltersWrapper = styled.div`
+  display: flex;
+  max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT};
   margin: 0 auto;
+
+  @media only screen and (max-width: ${MEDIUM_MEDIA_BREAKPOINT}) {
+    flex-direction: column;
+    gap: 8px;
+  }
 `
 
 const Explore = () => {
   return (
     <ExploreContainer>
       <TitleContainer>Explore Tokens</TitleContainer>
-      <FiltersContainer>
-        <NetworkFilter />
-        <FavoriteButton />
-        <TimeSelector />
-        <SearchBar />
-      </FiltersContainer>
+      <FiltersWrapper>
+        <FiltersContainer>
+          <NetworkFilter />
+          <FavoriteButton />
+          <TimeSelector />
+        </FiltersContainer>
+        <SearchContainer>
+          <SearchBar />
+        </SearchContainer>
+      </FiltersWrapper>
+
       <TokenTableContainer>
         <TokenTable />
       </TokenTableContainer>

@@ -7,6 +7,8 @@ import { useModalIsOpen, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import styled, { useTheme } from 'styled-components/macro'
 
+import { MEDIUM_MEDIA_BREAKPOINT } from './constants'
+
 const NETWORKS = [
   SupportedChainId.MAINNET,
   SupportedChainId.ARBITRUM_ONE,
@@ -105,6 +107,10 @@ const StyledMenu = styled.div`
   border: none;
   text-align: left;
   width: 160px;
+
+  @media only screen and (max-width: ${MEDIUM_MEDIA_BREAKPOINT}) {
+    flex: 1;
+  }
 `
 
 const StyledMenuContent = styled.div`
