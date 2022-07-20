@@ -91,12 +91,8 @@ export default function App() {
 
   return (
     <ErrorBoundary>
-      <Route>
-        <DarkModeQueryParamReader />
-      </Route>
-      <Route>
-        <ApeModeQueryParamReader />
-      </Route>
+      <DarkModeQueryParamReader />
+      <ApeModeQueryParamReader />
       <AppWrapper>
         <Trace page={currentPage}>
           <HeaderWrapper>
