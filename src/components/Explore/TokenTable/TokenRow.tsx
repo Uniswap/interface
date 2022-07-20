@@ -1,4 +1,6 @@
 import { Trans } from '@lingui/macro'
+import { ElementName, EventName } from 'components/AmplitudeAnalytics/constants'
+import { TraceEvent } from 'components/AmplitudeAnalytics/TraceEvent'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { useCurrency, useToken } from 'hooks/Tokens'
 import useTheme from 'hooks/useTheme'
@@ -456,13 +458,20 @@ export default function LoadedRow({
       }
       listNumber={listNumber}
       tokenInfo={
-        <ClickableName to={`tokens/${tokenAddress}`}>
-          <CurrencyLogo currency={currency} />
-          <TokenInfoCell>
-            <TokenName>{tokenName}</TokenName>
-            <TokenSymbol>{tokenSymbol}</TokenSymbol>
-          </TokenInfoCell>
-        </ClickableName>
+        <TraceEvent
+          events={[Event.onClick]}
+          element={ElementName.TOKEN_SELECTOR_ROW}
+          name={EventName.EXPLORE_TOKEN_SELECTED}
+          properties={{ token_address: tokenAddress, token_symbol: tokenSymbol }}
+        >
+          <ClickableName to={`tokens/${tokenAddress}`}>
+            <CurrencyLogo currency={currency} />
+            <TokenInfoCell>
+              <TokenName>{tokenName}</TokenName>
+              <TokenSymbol>{tokenSymbol}</TokenSymbol>
+            </TokenInfoCell>
+          </ClickableName>
+        </TraceEvent>
       }
       price={
         <ClickableContent to={`tokens/${tokenAddress}`}>

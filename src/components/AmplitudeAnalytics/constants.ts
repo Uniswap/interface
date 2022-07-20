@@ -6,6 +6,7 @@
  */
 export enum EventName {
   CONNECT_WALLET_BUTTON_CLICKED = 'Connect Wallet Button Clicked',
+  EXPLORE_TOKEN_SELECTED = 'Explore Token Item Selected',
   PAGE_VIEWED = 'Page Viewed',
   SWAP_AUTOROUTER_VISUALIZATION_EXPANDED = 'Swap Autorouter Visualization Expanded',
   SWAP_DETAILS_EXPANDED = 'Swap Details Expanded',
