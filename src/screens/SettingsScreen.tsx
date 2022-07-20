@@ -33,7 +33,7 @@ import { setChainActiveStatus } from 'src/features/chains/chainsSlice'
 import { useActiveChainIds } from 'src/features/chains/utils'
 import { isEnabled } from 'src/features/remoteConfig'
 import { TestConfig } from 'src/features/remoteConfig/testConfigs'
-import { AccountType } from 'src/features/wallet/accounts/types'
+import { AccountType, NativeAccount } from 'src/features/wallet/accounts/types'
 import { useAccounts, useActiveAccountAddress } from 'src/features/wallet/hooks'
 import { resetWallet, setFinishedOnboarding } from 'src/features/wallet/walletSlice'
 import { Screens } from 'src/screens/Screens'
@@ -281,7 +281,25 @@ function WalletSettings() {
   const addressToAccount = useAccounts()
   const [showAll, setShowAll] = useState(false)
 
-  const allAccounts = useMemo(() => Object.values(addressToAccount), [addressToAccount])
+  const allAccounts = useMemo(() => {
+    const accounts = Object.values(addressToAccount)
+    const _mnemonicWallets = accounts
+      .filter((a): a is NativeAccount => a.type === AccountType.Native)
+      .sort((a, b) => {
+        return a.derivationIndex - b.derivationIndex
+      })
+    const _privateKeyWallets = accounts
+      .filter((a) => a.type === AccountType.Local)
+      .sort((a, b) => {
+        return a.timeImportedMs - b.timeImportedMs
+      })
+    const _viewOnlyWallets = accounts
+      .filter((a) => a.type === AccountType.Readonly)
+      .sort((a, b) => {
+        return a.timeImportedMs - b.timeImportedMs
+      })
+    return [..._mnemonicWallets, ..._privateKeyWallets, ..._viewOnlyWallets]
+  }, [addressToAccount])
 
   const toggleViewAll = () => {
     setShowAll(!showAll)
