@@ -128,7 +128,7 @@ export function PrivacyPolicy() {
               <RowBetween>
                 <AutoRow gap="4px">
                   <Info size={20} />
-                  <ThemedText.Main fontSize={14} color={'primaryText1'}>
+                  <ThemedText.Main fontSize={14} color={'deprecated_primaryText1'}>
                     <Trans>Uniswap Labs&apos; Terms of Service</Trans>
                   </ThemedText.Main>
                 </AutoRow>
@@ -141,7 +141,7 @@ export function PrivacyPolicy() {
               <RowBetween>
                 <AutoRow gap="4px">
                   <Info size={20} />
-                  <ThemedText.Main fontSize={14} color={'primaryText1'}>
+                  <ThemedText.Main fontSize={14} color={'deprecated_primaryText1'}>
                     <Trans>Protocol Disclaimer</Trans>
                   </ThemedText.Main>
                 </AutoRow>
@@ -159,7 +159,7 @@ export function PrivacyPolicy() {
               <AutoColumn gap="8px">
                 <AutoRow gap="4px">
                   <Info size={18} />
-                  <ThemedText.Main fontSize={14} color={'text1'}>
+                  <ThemedText.Main fontSize={14} color={'deprecated_text1'}>
                     {name}
                   </ThemedText.Main>
                 </AutoRow>

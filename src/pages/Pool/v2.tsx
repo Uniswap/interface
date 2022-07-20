@@ -160,7 +160,7 @@ export default function Pool() {
                   </ThemedText.White>
                 </RowBetween>
                 <ExternalLink
-                  style={{ color: 'white', textDecoration: 'underline' }}
+                  style={{ color: 'deprecated_white', textDecoration: 'underline' }}
                   target="_blank"
                   href="https://uniswap.org/docs/v2/core-concepts/pools/"
                 >

@@ -167,13 +167,13 @@ export default function PoolCard({ stakingInfo }: { stakingInfo: StakingInfo }) 
         <>
           <Break />
           <BottomSection showBackground={true}>
-            <ThemedText.Black color={'white'} fontWeight={500}>
+            <ThemedText.Black color={'deprecated_white'} fontWeight={500}>
               <span>
                 <Trans>Your rate</Trans>
               </span>
             </ThemedText.Black>
 
-            <ThemedText.Black style={{ textAlign: 'right' }} color={'white'} fontWeight={500}>
+            <ThemedText.Black style={{ textAlign: 'right' }} color={'deprecated_white'} fontWeight={500}>
               <span role="img" aria-label="wizard-icon" style={{ marginRight: '0.5rem' }}>
                 ⚡
               </span>

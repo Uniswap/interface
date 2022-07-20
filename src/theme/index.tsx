@@ -158,22 +158,22 @@ const TextWrapper = styled(Text)<{ color: keyof Colors }>`
  */
 export const ThemedText = {
   Main(props: TextProps) {
-    return <TextWrapper fontWeight={500} color={'text2'} {...props} />
+    return <TextWrapper fontWeight={500} color={'deprecated_text2'} {...props} />
   },
   Link(props: TextProps) {
-    return <TextWrapper fontWeight={500} color={'primary1'} {...props} />
+    return <TextWrapper fontWeight={500} color={'deprecated_primary1'} {...props} />
   },
   Label(props: TextProps) {
-    return <TextWrapper fontWeight={600} color={'text1'} {...props} />
+    return <TextWrapper fontWeight={600} color={'deprecated_text1'} {...props} />
   },
   Black(props: TextProps) {
-    return <TextWrapper fontWeight={500} color={'text1'} {...props} />
+    return <TextWrapper fontWeight={500} color={'deprecated_text1'} {...props} />
   },
   White(props: TextProps) {
-    return <TextWrapper fontWeight={500} color={'white'} {...props} />
+    return <TextWrapper fontWeight={500} color={'deprecated_white'} {...props} />
   },
   Body(props: TextProps) {
-    return <TextWrapper fontWeight={400} fontSize={16} color={'text1'} {...props} />
+    return <TextWrapper fontWeight={400} fontSize={16} color={'deprecated_text1'} {...props} />
   },
   LargeHeader(props: TextProps) {
     return <TextWrapper fontWeight={600} fontSize={24} {...props} />
@@ -188,22 +188,22 @@ export const ThemedText = {
     return <TextWrapper fontWeight={500} fontSize={11} {...props} />
   },
   Blue(props: TextProps) {
-    return <TextWrapper fontWeight={500} color={'blue1'} {...props} />
+    return <TextWrapper fontWeight={500} color={'deprecated_blue1'} {...props} />
   },
   Yellow(props: TextProps) {
-    return <TextWrapper fontWeight={500} color={'yellow3'} {...props} />
+    return <TextWrapper fontWeight={500} color={'deprecated_yellow3'} {...props} />
   },
   DarkGray(props: TextProps) {
-    return <TextWrapper fontWeight={500} color={'text3'} {...props} />
+    return <TextWrapper fontWeight={500} color={'deprecated_text3'} {...props} />
   },
   Gray(props: TextProps) {
-    return <TextWrapper fontWeight={500} color={'bg3'} {...props} />
+    return <TextWrapper fontWeight={500} color={'deprecated_bg3'} {...props} />
   },
   Italic(props: TextProps) {
-    return <TextWrapper fontWeight={500} fontSize={12} fontStyle={'italic'} color={'text2'} {...props} />
+    return <TextWrapper fontWeight={500} fontSize={12} fontStyle={'italic'} color={'deprecated_text2'} {...props} />
   },
   Error({ error, ...props }: { error: boolean } & TextProps) {
-    return <TextWrapper fontWeight={500} color={error ? 'red1' : 'text2'} {...props} />
+    return <TextWrapper fontWeight={500} color={error ? 'deprecated_red1' : 'deprecated_text2'} {...props} />
   },
 }
 

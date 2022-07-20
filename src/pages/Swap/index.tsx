@@ -598,7 +598,7 @@ export default function Swap() {
                                 </Trans>
                               }
                             >
-                              <HelpCircle size="20" color={'white'} style={{ marginLeft: '8px' }} />
+                              <HelpCircle size="20" color={'deprecated_white'} style={{ marginLeft: '8px' }} />
                             </MouseoverTooltip>
                           )}
                         </AutoRow>
