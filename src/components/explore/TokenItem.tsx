@@ -18,8 +18,8 @@ import { Screens } from 'src/screens/Screens'
 import { formatNumber, formatUSDPrice } from 'src/utils/format'
 import { logger } from 'src/utils/logger'
 
-const boxTokenLogoStyle: ImageStyle = { width: 32, height: 32, borderRadius: 32 / 2 }
-const tokenLogoStyle: ImageStyle = { width: 35, height: 35, borderRadius: 35 / 2 }
+const boxTokenLogoStyle: ImageStyle = { width: 32, height: 32 }
+const tokenLogoStyle: ImageStyle = { width: 35, height: 35 }
 
 interface TokenItemProps {
   coin: CoingeckoMarketCoin
