@@ -254,6 +254,7 @@ export function HomeStackNavigator() {
       {/* NFTS */}
       <HomeStack.Screen component={PortfolioNFTsScreen} name={Screens.PortfolioNFTs} />
       <HomeStack.Screen component={NFTItemScreen} name={Screens.NFTItem} />
+      <HomeStack.Screen component={NFTCollectionScreen} name={Screens.NFTCollection} />
     </HomeStack.Navigator>
   )
 }
@@ -372,9 +373,6 @@ export function AppStackNavigator() {
       />
       <AppStack.Group screenOptions={navOptions.presentationModal}>
         <AccountStack.Screen component={ImportAccountScreen} name={Screens.ImportAccount} />
-      </AppStack.Group>
-      <AppStack.Group>
-        <AppStack.Screen component={NFTCollectionScreen} name={Screens.NFTCollection} />
       </AppStack.Group>
       <AppStack.Screen component={WebViewScreen} name={Screens.WebView} />
       <AppStack.Screen component={SettingsStackGroup} name={Screens.SettingsStack} />

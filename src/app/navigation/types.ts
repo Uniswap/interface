@@ -28,6 +28,10 @@ export type HomeStackParamList = {
   [Screens.TokenDetails]: { currencyId: string }
   [Screens.PortfolioNFTs]: { owner: Address | undefined }
   [Screens.NFTItem]: NFTItem
+  [Screens.NFTCollection]: {
+    address: Address
+    slug: string
+  }
 }
 
 export type ExploreStackParamList = {
@@ -114,10 +118,6 @@ export type AppStackParamList = {
   }
   [Screens.SettingsWalletManageConnection]: { address: Address }
   [Screens.Notifications]: undefined | { txHash: string }
-  [Screens.NFTCollection]: {
-    address: Address
-    slug: string
-  }
   [Screens.OnboardingStack]: NavigatorScreenParams<OnboardingStackParamList>
   [Screens.RecipientSelector]: {
     selectedRecipient?: string
