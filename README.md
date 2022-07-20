@@ -8,16 +8,13 @@ The home of the official Uniswap mobile app for iOS and Android!
 
 I (@judo) recommend setting up your M1 Mac without Rosetta: [link](https://medium.com/@davidjasonharding/developing-a-react-native-app-on-an-m1-mac-without-rosetta-29fcc7314d70).
 
-#### Package Manager
-
-Install the [yarn package manager](https://yarnpkg.com/getting-started/install) for Javascript,
-
 #### React Native
 
-Follow the general [React Native setup instructions](https://reactnative.dev/docs/environment-setup) with the following additional steps:
+Follow the general [React Native setup instructions](https://reactnative.dev/docs/environment-setup) but make sure to follow these steps before completing the instructions:
 
 1. After installing Node: also install NVM to help you manage versions. Use the latest v14.x
-2. Before installing cocoapods: install RBEnv and use it to install Ruby v3 globally. When installing cocoapods, follow the non-sudo instructions.
+2. Install yarn: `npm install --global yarn`
+3. Before installing cocoapods: install RBEnv and use it to install Ruby v3 globally. When installing cocoapods, follow the non-sudo instructions.
 
 #### Contract ABI types
 
@@ -79,6 +76,8 @@ Anytime a required property is added or any property is renamed or deleted to/fr
 ### Troubleshooting
 
 - `unable to open file (in target "OneSignalNotificationServiceExtension" in project "Uniswap")`. Resolve this issue by navigating to the `ios/` directory and running `pod update`.
+
+- `Uniswap.xcodeproj/project.pbxproj` changes when running `pod install`: Since CI is not using the M1 architecture we have a discrepancy between our pbxproj file in CI vs development. Please, don't merge changes related to `EXCLUDED_ARCHS` in your PRs if you need to update this file.
 
 ### I18n
 
