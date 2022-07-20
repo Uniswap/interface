@@ -19,6 +19,8 @@ interface Props {
   showSuccess?: boolean // show succes indicator
   endAdornment?: string //text to auto to end of input string
   liveCheck?: boolean
+  onBlur?: () => void
+  onFocus?: () => void
 }
 
 export function GenericImportForm({
@@ -30,11 +32,23 @@ export function GenericImportForm({
   showSuccess,
   endAdornment,
   liveCheck,
+  onBlur,
+  onFocus,
 }: Props) {
   const { t } = useTranslation()
   const theme = useAppTheme()
   const [focused, setFocused] = useState(false)
   const [layout, setLayout] = useState<LayoutRectangle | null>()
+
+  const handleBlur = () => {
+    setFocused(false)
+    onBlur?.()
+  }
+
+  const handleFocus = () => {
+    setFocused(true)
+    onFocus?.()
+  }
 
   const handleSubmit = () => {
     onSubmit && onSubmit()
@@ -80,9 +94,9 @@ export function GenericImportForm({
               textAlign={value ? 'center' : 'left'}
               value={value}
               width={value ? 'auto' : layout?.width}
-              onBlur={() => setFocused(false)}
+              onBlur={handleBlur}
               onChangeText={onChange}
-              onFocus={() => setFocused(true)}
+              onFocus={handleFocus}
               onSubmitEditing={handleSubmit}
             />
             {endAdornment && value && !value.includes(endAdornment) && (

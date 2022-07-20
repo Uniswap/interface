@@ -22,15 +22,18 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props) 
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
 
+  const [focused, setFocused] = useState(false)
   const [value, setValue] = useState<string | undefined>(undefined)
-  const { valid: validWord, errorText: errorTextWord } = isValidWord(
-    value ? normalizeTextInput(value) : null,
-    t
-  )
+  const {
+    valid: validWord,
+    errorText: errorTextWord,
+    tooShort,
+  } = isValidWord(value ? normalizeTextInput(value) : null, t)
   const [errorTextPhrase, setErrorPhrase] = useState<string | undefined>()
 
-  const isValid = validWord && !errorTextPhrase
-  const error = errorTextWord || errorTextPhrase
+  const showValidation = !focused || (focused && !tooShort)
+  const isValid = showValidation && validWord && !errorTextPhrase
+  const error = (showValidation && errorTextWord) || errorTextPhrase
 
   // Add all accounts from mnemonic.
   const onSubmit = useCallback(() => {
@@ -71,7 +74,9 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props) 
           placeholderLabel={t('recovery phrase')}
           showSuccess={isValid}
           value={value}
+          onBlur={() => setFocused(false)}
           onChange={onChange}
+          onFocus={() => setFocused(true)}
           onSubmit={() => Keyboard.dismiss()}
         />
       </Flex>

@@ -9,6 +9,7 @@ export function isValidWord(
 ): {
   valid: boolean
   errorText?: string
+  tooShort?: boolean
 } {
   if (!mnemonic)
     return {
@@ -30,6 +31,7 @@ export function isValidWord(
     return {
       valid: false,
       errorText: t('Recovery phrases must be 12-24 words'),
+      tooShort: split.length < MNEMONIC_LENGTH_MIN,
     }
 
   return {
