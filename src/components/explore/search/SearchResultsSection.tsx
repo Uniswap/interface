@@ -2,10 +2,12 @@ import { default as React, useMemo } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { ListRenderItemInfo } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
-import { useAppSelector } from 'src/app/hooks'
+import { useAppDispatch, useAppSelector } from 'src/app/hooks'
+import { Button } from 'src/components/buttons/Button'
 import { SearchEtherscanItem } from 'src/components/explore/search/SearchEtherscanItem'
 import { SearchTokenItem } from 'src/components/explore/search/SearchTokenItem'
 import { SearchWalletItem } from 'src/components/explore/search/SearchWalletItem'
+import { CloseIcon } from 'src/components/icons/CloseIcon'
 import { AnimatedFlex, Box, Flex } from 'src/components/layout'
 import { BaseCard } from 'src/components/layout/BaseCard'
 import { Separator } from 'src/components/layout/Separator'
@@ -16,6 +18,7 @@ import { CoingeckoOrderBy, CoingeckoSearchCoin } from 'src/features/dataApi/coin
 import { useENS } from 'src/features/ens/useENS'
 import { useMarketTokens, useTokenSearchResults } from 'src/features/explore/hooks'
 import {
+  clearSearchHistory,
   EtherscanSearchResult,
   SearchResult,
   SearchResultType,
@@ -47,12 +50,13 @@ const TRENDING_WALLETS: WalletSearchResult[] = [
 const TRENDING_TOKENS_COUNT = 3
 const TOKEN_RESULTS_COUNT = 5
 
-export interface SearchResultsSectionProps {
+export type SearchResultsSectionProps = {
   searchQuery: string
 }
 
 export function SearchResultsSection({ searchQuery }: SearchResultsSectionProps) {
   const { t } = useTranslation()
+  const dispatch = useAppDispatch()
 
   const searchHistory = useAppSelector(selectSearchHistory)
 
@@ -71,6 +75,10 @@ export function SearchResultsSection({ searchQuery }: SearchResultsSectionProps)
     return <SearchQueryResultsSection searchQuery={searchQuery} />
   }
 
+  const onPressClearSearchHistory = () => {
+    dispatch(clearSearchHistory())
+  }
+
   // Show search history (if applicable), trending tokens, and wallets
   return (
     <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="sm">
@@ -79,9 +87,19 @@ export function SearchResultsSection({ searchQuery }: SearchResultsSectionProps)
           <BaseCard.List
             ItemSeparatorComponent={() => <Separator mx="xs" />}
             ListHeaderComponent={
-              <Text color="textSecondary" mb="xxs" mx="xs" variant="subheadSmall">
-                {t('Recent searches')}
-              </Text>
+              <Flex row justifyContent="space-between" mb="xxs" mx="xs">
+                <Text color="textSecondary" variant="subheadSmall">
+                  {t('Recent searches')}
+                </Text>
+                <Button onPress={onPressClearSearchHistory}>
+                  <Flex centered row gap="xxs">
+                    <Text color="textSecondary" variant="subheadSmall">
+                      {t('Clear all')}
+                    </Text>
+                    <CloseIcon color="textSecondary" size={18} />
+                  </Flex>
+                </Button>
+              </Flex>
             }
             data={searchHistory}
             renderItem={renderSearchHistoryItem}
