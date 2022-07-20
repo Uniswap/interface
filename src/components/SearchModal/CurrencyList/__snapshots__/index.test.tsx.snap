@@ -2,20 +2,82 @@
 
 exports[`renders currency rows correctly when currencies list is non-empty 1`] = `
 <DocumentFragment>
-  <div
+  .c5 {
+  color: #6E727D;
+}
+
+.c0 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c4 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c1 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c2 {
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c3 {
+  padding: 4px 20px;
+  height: 56px;
+  display: grid;
+  grid-template-columns: auto minmax(auto,1fr) auto minmax(0,72px);
+  grid-gap: 16px;
+  cursor: pointer;
+  opacity: 1;
+}
+
+.c3:hover {
+  background-color: #EDEEF2;
+}
+
+<div
     style="position: relative; height: 10px; width: 100%; overflow: auto; will-change: transform; direction: ltr;"
   >
     <div
       style="height: 168px; width: 100%;"
     >
       <div
-        class="sc-bczRLJ Row-sc-nrd8cx-0 Row__RowBetween-sc-nrd8cx-1 styleds__MenuItem-sc-1xp9ndq-3 jITePI cSETNY ekbhWd dxhejL token-item-0x6B175474E89094C44Da98b954EedeAC495271d0F"
+        class="c0 c1 c2 c3 token-item-0x6B175474E89094C44Da98b954EedeAC495271d0F"
         style="position: absolute; left: 0px; top: 0px; height: 56px; width: 100%;"
         tabindex="0"
       >
         CurrencyLogo currency=DAI
         <div
-          class="Column-sc-1kykgp9-0 gdySCE"
+          class="c4"
         >
           <div
             class="css-8mokm4"
@@ -24,7 +86,7 @@ exports[`renders currency rows correctly when currencies list is non-empty 1`] =
             DAI
           </div>
           <div
-            class="theme__TextWrapper-sc-18nh1jk-0 gykQyY css-165qfk5"
+            class="c5 css-165qfk5"
           >
             Dai Stablecoin
           </div>
@@ -32,13 +94,13 @@ exports[`renders currency rows correctly when currencies list is non-empty 1`] =
         <span />
       </div>
       <div
-        class="sc-bczRLJ Row-sc-nrd8cx-0 Row__RowBetween-sc-nrd8cx-1 styleds__MenuItem-sc-1xp9ndq-3 jITePI cSETNY ekbhWd dxhejL token-item-0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
+        class="c0 c1 c2 c3 token-item-0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
         style="position: absolute; left: 0px; top: 56px; height: 56px; width: 100%;"
         tabindex="0"
       >
         CurrencyLogo currency=USDC
         <div
-          class="Column-sc-1kykgp9-0 gdySCE"
+          class="c4"
         >
           <div
             class="css-8mokm4"
@@ -47,7 +109,7 @@ exports[`renders currency rows correctly when currencies list is non-empty 1`] =
             USDC
           </div>
           <div
-            class="theme__TextWrapper-sc-18nh1jk-0 gykQyY css-165qfk5"
+            class="c5 css-165qfk5"
           >
             USD//C
           </div>
@@ -55,13 +117,13 @@ exports[`renders currency rows correctly when currencies list is non-empty 1`] =
         <span />
       </div>
       <div
-        class="sc-bczRLJ Row-sc-nrd8cx-0 Row__RowBetween-sc-nrd8cx-1 styleds__MenuItem-sc-1xp9ndq-3 jITePI cSETNY ekbhWd dxhejL token-item-0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599"
+        class="c0 c1 c2 c3 token-item-0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599"
         style="position: absolute; left: 0px; top: 112px; height: 56px; width: 100%;"
         tabindex="0"
       >
         CurrencyLogo currency=WBTC
         <div
-          class="Column-sc-1kykgp9-0 gdySCE"
+          class="c4"
         >
           <div
             class="css-8mokm4"
@@ -70,7 +132,7 @@ exports[`renders currency rows correctly when currencies list is non-empty 1`] =
             WBTC
           </div>
           <div
-            class="theme__TextWrapper-sc-18nh1jk-0 gykQyY css-165qfk5"
+            class="c5 css-165qfk5"
           >
             Wrapped BTC
           </div>
