@@ -13,6 +13,7 @@ import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import Toggle from 'components/Toggle'
 import DelegateModal from 'components/vote/DelegateModal'
 import ProposalEmptyState from 'components/vote/ProposalEmptyState'
+import useTheme from 'hooks/useTheme'
 import JSBI from 'jsbi'
 import { darken } from 'polished'
 import { useState } from 'react'
@@ -109,6 +110,7 @@ const StyledExternalLink = styled(ExternalLink)`
 `
 
 export default function Landing() {
+  const theme = useTheme()
   const { account, chainId } = useWeb3React()
 
   const [hideCancelled, setHideCancelled] = useState(true)
@@ -161,7 +163,10 @@ export default function Landing() {
                     </ThemedText.White>
                   </RowBetween>
                   <ExternalLink
-                    style={{ color: 'deprecated_white', textDecoration: 'underline' }}
+                    style={{
+                      color: theme.deprecated_white,
+                      textDecoration: 'underline',
+                    }}
                     href="https://uniswap.org/blog/uni"
                     target="_blank"
                   >
