@@ -21,7 +21,10 @@ function getDurationTillTimestampSinceEpoch(futureTimestampSinceEpoch?: number):
   return futureTimestampSinceEpoch - new Date().getTime() / 1000
 }
 
-const getFormattedNumber = (initialValue: Percent | CurrencyAmount<Token>) => parseFloat(initialValue.toFixed(2))
+const getNumberFormattedToDecimalPlace = (
+  intialNumberObject: Percent | CurrencyAmount<Token | Currency>,
+  decimalPlace: number
+): number => parseFloat(intialNumberObject.toFixed(decimalPlace))
 
 interface AnalyticsEventProps {
   trade: InterfaceTrade<Currency, Currency, TradeType>
@@ -46,7 +49,9 @@ const formatAnalyticsEventProperties = ({
   tokenOutAmountUsd,
   lpFeePercent,
 }: AnalyticsEventProps) => ({
-  estimated_network_fee_usd: trade.gasUseEstimateUSD ? getFormattedNumber(trade.gasUseEstimateUSD) : undefined,
+  estimated_network_fee_usd: trade.gasUseEstimateUSD
+    ? getNumberFormattedToDecimalPlace(trade.gasUseEstimateUSD, 2)
+    : undefined,
   transaction_hash: txHash,
   transaction_deadline_seconds: getDurationTillTimestampSinceEpoch(transactionDeadlineSecondsSinceEpoch),
   token_in_amount_usd: tokenInAmountUsd ? parseFloat(tokenInAmountUsd) : undefined,
@@ -55,10 +60,10 @@ const formatAnalyticsEventProperties = ({
   token_out_address: trade.outputAmount.currency.isToken ? trade.outputAmount.currency.address : undefined,
   token_in_symbol: trade.inputAmount.currency.symbol,
   token_out_symbol: trade.outputAmount.currency.symbol,
-  token_in_amount: trade.inputAmount.currency.decimals,
-  token_out_amount: trade.outputAmount.currency.decimals,
-  price_impact_percentage: getFormattedNumber(getPriceImpact(lpFeePercent, trade)),
-  allowed_slippage_percentage: getFormattedNumber(allowedSlippage),
+  token_in_amount: getNumberFormattedToDecimalPlace(trade.inputAmount, trade.inputAmount.currency.decimals),
+  token_out_amount: getNumberFormattedToDecimalPlace(trade.outputAmount, trade.outputAmount.currency.decimals),
+  price_impact_percentage: getNumberFormattedToDecimalPlace(getPriceImpact(lpFeePercent, trade), 2),
+  allowed_slippage_percentage: getNumberFormattedToDecimalPlace(allowedSlippage, 2),
   is_auto_router_api: isAutoRouterApi,
   is_auto_slippage: isAutoSlippage,
   chain_id:
