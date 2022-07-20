@@ -83,7 +83,7 @@ export default function App() {
   const history = useHistory()
   const location = useLocation()
   const currentPage = getCurrentPageFromLocation(location.pathname)
-  useAnalyticsReporter(useLocation())
+  useAnalyticsReporter()
   initializeAnalytics()
 
   useEffect(() => {
@@ -97,8 +97,12 @@ export default function App() {
 
   return (
     <ErrorBoundary>
-      <Route component={DarkModeQueryParamReader} />
-      <Route component={ApeModeQueryParamReader} />
+      <Route>
+        <DarkModeQueryParamReader />
+      </Route>
+      <Route>
+        <ApeModeQueryParamReader />
+      </Route>
       <AppWrapper>
         <Trace page={currentPage}>
           <HeaderWrapper>
@@ -110,50 +114,73 @@ export default function App() {
             <TopLevelModals />
             <Suspense fallback={<Loader />}>
               <Switch>
-                <Route path="/vote" component={Vote} />
+                <Route strict path="/vote">
+                  <Vote />
+                </Route>
                 <Route exact strict path="/create-proposal">
                   <Redirect to="/vote/create-proposal" />
                 </Route>
-                <Route exact strict path="/claim" component={OpenClaimAddressModalAndRedirectToSwap} />
-                <Route exact strict path="/uni" component={Earn} />
-                <Route exact strict path="/uni/:currencyIdA/:currencyIdB" component={Manage} />
+                <Route exact strict path="/claim">
+                  <OpenClaimAddressModalAndRedirectToSwap />
+                </Route>
+                <Route exact strict path="/uni">
+                  <Earn />
+                </Route>
+                <Route exact strict path="/uni/:currencyIdA/:currencyIdB">
+                  <Manage />
+                </Route>
 
-                <Route exact strict path="/send" component={RedirectPathToSwapOnly} />
-                <Route exact strict path="/swap/:outputCurrency" component={RedirectToSwap} />
-                <Route path="/swap" component={Swap} />
+                <Route exact strict path="/send">
+                  <RedirectPathToSwapOnly />
+                </Route>
+                <Route exact strict path="/swap/:outputCurrency">
+                  <RedirectToSwap />
+                </Route>
+                <Route exact strict path="/swap">
+                  <Swap />
+                </Route>
 
-                <Route exact strict path="/pool/v2/find" component={PoolFinder} />
-                <Route exact strict path="/pool/v2" component={PoolV2} />
-                <Route exact strict path="/pool" component={Pool} />
-                <Route exact strict path="/pool/:tokenId" component={PositionPage} />
+                <Route exact strict path="/pool/v2/find">
+                  <PoolFinder />
+                </Route>
+                <Route exact strict path="/pool/v2">
+                  <PoolV2 />
+                </Route>
+                <Route exact strict path="/pool">
+                  <Pool />
+                </Route>
+                <Route exact strict path="/pool/:tokenId">
+                  <PositionPage />
+                </Route>
 
-                <Route
-                  exact
-                  strict
-                  path="/add/v2/:currencyIdA?/:currencyIdB?"
-                  component={RedirectDuplicateTokenIdsV2}
-                />
-                <Route
-                  exact
-                  strict
-                  path="/add/:currencyIdA?/:currencyIdB?/:feeAmount?"
-                  component={RedirectDuplicateTokenIds}
-                />
+                <Route exact strict path="/add/v2/:currencyIdA?/:currencyIdB?">
+                  <RedirectDuplicateTokenIdsV2 />
+                </Route>
+                <Route exact strict path="/add/:currencyIdA?/:currencyIdB?/:feeAmount?">
+                  <RedirectDuplicateTokenIds />
+                </Route>
 
-                <Route
-                  exact
-                  strict
-                  path="/increase/:currencyIdA?/:currencyIdB?/:feeAmount?/:tokenId?"
-                  component={AddLiquidity}
-                />
+                <Route exact strict path="/increase/:currencyIdA?/:currencyIdB?/:feeAmount?/:tokenId?">
+                  <AddLiquidity />
+                </Route>
 
-                <Route exact strict path="/remove/v2/:currencyIdA/:currencyIdB" component={RemoveLiquidity} />
-                <Route exact strict path="/remove/:tokenId" component={RemoveLiquidityV3} />
+                <Route exact strict path="/remove/v2/:currencyIdA/:currencyIdB">
+                  <RemoveLiquidity />
+                </Route>
+                <Route exact strict path="/remove/:tokenId">
+                  <RemoveLiquidityV3 />
+                </Route>
 
-                <Route exact strict path="/migrate/v2" component={MigrateV2} />
-                <Route exact strict path="/migrate/v2/:address" component={MigrateV2Pair} />
+                <Route exact strict path="/migrate/v2">
+                  <MigrateV2 />
+                </Route>
+                <Route exact strict path="/migrate/v2/:address">
+                  <MigrateV2Pair />
+                </Route>
 
-                <Route component={RedirectPathToSwapOnly} />
+                <Route>
+                  <RedirectPathToSwapOnly />
+                </Route>
               </Switch>
             </Suspense>
             <Marginer />
