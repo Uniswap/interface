@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
 import { ElementName, EventName } from 'components/AmplitudeAnalytics/constants'
 import { Event } from 'components/AmplitudeAnalytics/constants'
 import { TraceEvent } from 'components/AmplitudeAnalytics/TraceEvent'
@@ -8,7 +8,7 @@ import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import { ReactNode } from 'react'
 import { Text } from 'rebass'
 import { InterfaceTrade } from 'state/routing/types'
-import { useUserSlippageTolerance } from 'state/user/hooks'
+import { useClientSideRouter, useUserSlippageTolerance } from 'state/user/hooks'
 import { computeRealizedLPFeePercent } from 'utils/prices'
 
 import { ButtonError } from '../Button'
@@ -16,21 +16,27 @@ import { AutoRow } from '../Row'
 import { getPriceImpact } from './AdvancedSwapDetails'
 import { SwapCallbackError } from './styleds'
 
+function getDurationTillTimestampSinceEpoch(futureTimestampSinceEpoch?: number): number | undefined {
+  if (!futureTimestampSinceEpoch) return undefined
+  return futureTimestampSinceEpoch - new Date().getTime() / 1000
+}
+
+const getFormattedNumber = (initialValue: Percent | CurrencyAmount<Token>) => parseFloat(initialValue.toFixed(2))
+
 const formatAnalyticsEventProperties = (
   trade: InterfaceTrade<Currency, Currency, TradeType>,
   txHash: string | undefined,
   allowedSlippage: Percent,
   transactionDeadlineSecondsSinceEpoch: number | undefined,
   isAutoSlippage: boolean,
+  isAutoRouterApi: boolean,
   tokenInAmountUsd: string | undefined,
   tokenOutAmountUsd: string | undefined,
   lpFeePercent: Percent
 ) => ({
-  estimated_network_fee_usd: trade.gasUseEstimateUSD ? parseFloat(trade.gasUseEstimateUSD?.toFixed(2)) : undefined,
+  estimated_network_fee_usd: trade.gasUseEstimateUSD ? getFormattedNumber(trade.gasUseEstimateUSD) : undefined,
   transaction_hash: txHash,
-  transaction_deadline_seconds: transactionDeadlineSecondsSinceEpoch
-    ? /** durationInSeconds= */ transactionDeadlineSecondsSinceEpoch - new Date().getTime() / 1000
-    : undefined,
+  transaction_deadline_seconds: getDurationTillTimestampSinceEpoch(transactionDeadlineSecondsSinceEpoch),
   token_in_amount_usd: tokenInAmountUsd ? parseFloat(tokenInAmountUsd) : undefined,
   token_out_amount_usd: tokenOutAmountUsd ? parseFloat(tokenOutAmountUsd) : undefined,
   token_in_address: trade.inputAmount.currency.isToken ? trade.inputAmount.currency.address : undefined,
@@ -39,8 +45,9 @@ const formatAnalyticsEventProperties = (
   token_out_symbol: trade.outputAmount.currency.symbol,
   token_in_amount: trade.inputAmount.currency.decimals,
   token_out_amount: trade.outputAmount.currency.decimals,
-  price_impact_percentage: parseFloat(getPriceImpact(lpFeePercent, trade).toFixed(2)),
-  allowed_slippage_percentage: parseFloat(allowedSlippage.toFixed(2)),
+  price_impact_percentage: getFormattedNumber(getPriceImpact(lpFeePercent, trade)),
+  allowed_slippage_percentage: getFormattedNumber(allowedSlippage),
+  is_auto_router_api: isAutoRouterApi,
   is_auto_slippage: isAutoSlippage,
   chain_id:
     trade.inputAmount.currency.chainId === trade.outputAmount.currency.chainId
@@ -66,6 +73,7 @@ export default function SwapModalFooter({
 }) {
   const transactionDeadlineSecondsSinceEpoch = useTransactionDeadline()?.toNumber() // in seconds since epoch
   const isAutoSlippage = useUserSlippageTolerance() === 'auto'
+  const [clientSideRouter] = useClientSideRouter()
   const tokenInAmountUsd = useStablecoinValue(trade.inputAmount)?.toFixed(2)
   const tokenOutAmountUsd = useStablecoinValue(trade.outputAmount)?.toFixed(2)
   const lpFeePercent = computeRealizedLPFeePercent(trade)
@@ -83,6 +91,7 @@ export default function SwapModalFooter({
             allowedSlippage,
             transactionDeadlineSecondsSinceEpoch,
             isAutoSlippage,
+            /** isAutoRouterApi= */ !clientSideRouter,
             tokenInAmountUsd,
             tokenOutAmountUsd,
             lpFeePercent
