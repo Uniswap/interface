@@ -13,6 +13,7 @@ export enum EventName {
   SWAP_MAX_TOKEN_AMOUNT_SELECTED = 'Swap Max Token Amount Selected',
   SWAP_SUBMITTED = 'Swap Submitted',
   SWAP_TOKENS_REVERSED = 'Swap Tokens Reversed',
+  TOKEN_DETAIL_PAGE_VIEWED = 'Token Detail Page Viewed',
   TOKEN_IMPORTED = 'Token Imported',
   TOKEN_SELECTED = 'Token Selected',
   TOKEN_SELECTOR_OPENED = 'Token Selector Opened',
