@@ -9,6 +9,7 @@ import Settings from 'src/assets/icons/settings.svg'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { Button } from 'src/components/buttons/Button'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
+import { AppBackground } from 'src/components/gradients/AppBackground'
 import { Flex } from 'src/components/layout'
 import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollScreen'
 import { Text } from 'src/components/Text'
@@ -101,6 +102,7 @@ export function ProfileScreen({ navigation }: Props) {
 
   return (
     <HeaderScrollScreen
+      background={<AppBackground />}
       contentHeader={ContentHeader}
       fixedHeader={
         <Flex centered>
