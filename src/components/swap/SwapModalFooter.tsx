@@ -9,9 +9,11 @@ import { ReactNode } from 'react'
 import { Text } from 'rebass'
 import { InterfaceTrade } from 'state/routing/types'
 import { useUserSlippageTolerance } from 'state/user/hooks'
+import { computeRealizedLPFeePercent } from 'utils/prices'
 
 import { ButtonError } from '../Button'
 import { AutoRow } from '../Row'
+import { getPriceImpact } from './AdvancedSwapDetails'
 import { SwapCallbackError } from './styleds'
 
 const formatAnalyticsEventProperties = (
@@ -21,7 +23,8 @@ const formatAnalyticsEventProperties = (
   transactionDeadlineSecondsSinceEpoch: number | undefined,
   isAutoSlippage: boolean,
   tokenInAmountUsd: string | undefined,
-  tokenOutAmountUsd: string | undefined
+  tokenOutAmountUsd: string | undefined,
+  lpFeePercent: Percent
 ) => ({
   estimated_network_fee_usd: trade.gasUseEstimateUSD ? parseFloat(trade.gasUseEstimateUSD?.toFixed(2)) : undefined,
   transaction_hash: txHash,
@@ -36,7 +39,7 @@ const formatAnalyticsEventProperties = (
   token_out_symbol: trade.outputAmount.currency.symbol,
   token_in_amount: trade.inputAmount.currency.decimals,
   token_out_amount: trade.outputAmount.currency.decimals,
-  price_impact_percentage: parseFloat(trade.priceImpact.toFixed(2)),
+  price_impact_percentage: parseFloat(getPriceImpact(lpFeePercent, trade).toFixed(2)),
   allowed_slippage_percentage: parseFloat(allowedSlippage.toFixed(2)),
   is_auto_slippage: isAutoSlippage,
   chain_id:
@@ -65,6 +68,7 @@ export default function SwapModalFooter({
   const isAutoSlippage = useUserSlippageTolerance() === 'auto'
   const tokenInAmountUsd = useStablecoinValue(trade.inputAmount)?.toFixed(2)
   const tokenOutAmountUsd = useStablecoinValue(trade.outputAmount)?.toFixed(2)
+  const lpFeePercent = computeRealizedLPFeePercent(trade)
 
   return (
     <>
@@ -80,7 +84,8 @@ export default function SwapModalFooter({
             transactionDeadlineSecondsSinceEpoch,
             isAutoSlippage,
             tokenInAmountUsd,
-            tokenOutAmountUsd
+            tokenOutAmountUsd,
+            lpFeePercent
           )}
         >
           <ButtonError
