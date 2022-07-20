@@ -172,7 +172,6 @@ function formatSerializedBalanceItems(
       let currency = knownCurrencies[id]
 
       if (!tokenBalancesQualityFilterEnabled && !currency) {
-        console.log('judo', 'didnotfind', item.contract_ticker_symbol)
         currency = new Token(chainId, item.contract_address, 0, item.contract_ticker_symbol)
       }
 
