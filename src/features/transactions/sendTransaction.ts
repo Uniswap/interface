@@ -1,11 +1,9 @@
 import { providers } from 'ethers'
-import { appSelect } from 'src/app/hooks'
 import { getProvider, getSignerManager } from 'src/app/walletContext'
 import { ChainId, CHAIN_INFO } from 'src/constants/chains'
 import { isFlashbotsSupportedChainId } from 'src/features/providers/flashbotsProvider'
 import { logEvent } from 'src/features/telemetry'
 import { EventName } from 'src/features/telemetry/constants'
-import { selectTransactionCount } from 'src/features/transactions/selectors'
 import { transactionActions } from 'src/features/transactions/slice'
 import {
   TransactionDetails,
@@ -13,14 +11,19 @@ import {
   TransactionStatus,
   TransactionTypeInfo,
 } from 'src/features/transactions/types'
-import { getSerializableTransactionRequest } from 'src/features/transactions/utils'
+import {
+  createTransactionId,
+  getSerializableTransactionRequest,
+} from 'src/features/transactions/utils'
 import { SignerManager } from 'src/features/wallet/accounts/SignerManager'
 import { Account, AccountType } from 'src/features/wallet/accounts/types'
 import { selectFlashbotsEnabled } from 'src/features/wallet/selectors'
 import { logger } from 'src/utils/logger'
 import { call, put, select } from 'typed-redux-saga'
-
 export interface SendTransactionParams {
+  // internal id used for tracking transactions before theyre submitted
+  // this is optional as an override in txDetail.id calculation
+  txId?: string
   chainId: ChainId
   account: Account
   options: TransactionOptions
@@ -72,13 +75,12 @@ export async function signAndSendTransaction(
 }
 
 function* addTransaction(
-  { chainId, typeInfo, account, options }: SendTransactionParams,
+  { chainId, typeInfo, account, options, txId }: SendTransactionParams,
   hash: string,
   populatedRequest: providers.TransactionRequest,
   isFlashbots?: boolean
 ) {
-  const txCount = yield* appSelect(selectTransactionCount)
-  const id = txCount.toString() // 0 indexed so count is actually next id
+  const id = txId ?? createTransactionId()
   const request = getSerializableTransactionRequest(populatedRequest, chainId)
   const transaction: TransactionDetails = {
     id,

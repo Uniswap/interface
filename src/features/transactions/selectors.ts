@@ -29,6 +29,19 @@ export const makeSelectTransaction =
       )
     }, [state.transactions])
 
+export const makeSelectTransactionById =
+  (address: Address | undefined, chainId: ChainId | undefined, txId: string | undefined) =>
+  (state: RootState) => {
+    return useMemo(() => {
+      if (!address || !state.transactions[address] || !chainId || !txId) {
+        return undefined
+      }
+      const transactions = state.transactions[address]?.[chainId]
+      if (!transactions) return undefined
+      return Object.values(transactions).find((txDetails) => txDetails.id === txId)
+    }, [state.transactions])
+  }
+
 // Returns a list of past recipients ordered from most to least recent
 // TODO: either revert this to return addresses or keep but also return
 //     displayName so that it's searchable for RecipientSelect
@@ -62,11 +75,4 @@ export const selectIncompleteTransactions = (state: RootState) => {
     )
     return [...accum, ...pendingTxs]
   }, [])
-}
-
-export const selectTransactionCount = (state: RootState) => {
-  const transactionsByChainId = flattenObjectOfObjects(state.transactions)
-  return transactionsByChainId.reduce<number>((sum, transactions) => {
-    return (sum += Object.keys(transactions).length)
-  }, 0)
 }

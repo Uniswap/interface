@@ -30,6 +30,7 @@ import {
   CurrencyField,
   WarningModalType,
 } from 'src/features/transactions/transactionState/transactionState'
+import { createTransactionId } from 'src/features/transactions/utils'
 
 interface SwapFormProps {
   dispatch: Dispatch<AnyAction>
@@ -37,10 +38,6 @@ interface SwapFormProps {
   derivedSwapInfo: DerivedSwapInfo
 }
 
-// TODO:
-// -check erc20 permits
-// -handle price impact too high
-// TODO: token warnings
 export function SwapForm({ dispatch, onNext, derivedSwapInfo }: SwapFormProps) {
   const { t } = useTranslation()
   const theme = useAppTheme()
@@ -66,6 +63,7 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo }: SwapFormProps) {
     onSetMax,
     onToggleUSDInput,
     onShowSwapWarning,
+    onCreateTxId,
   } = useSwapActionHandlers(dispatch)
 
   const exactCurrency = currencies[exactCurrencyField]
@@ -86,6 +84,12 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo }: SwapFormProps) {
 
   const swapWarning = warnings.find(showWarningInPanel)
   const swapWarningColor = getWarningColor(swapWarning)
+
+  const onReview = () => {
+    const txId = createTransactionId()
+    onCreateTxId(txId)
+    onNext()
+  }
 
   return (
     <>
@@ -190,7 +194,7 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo }: SwapFormProps) {
           testID={ElementName.ReviewSwap}
           textVariant="largeLabel"
           variant="blue"
-          onPress={onNext}
+          onPress={onReview}
         />
       </AnimatedFlex>
     </>

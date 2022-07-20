@@ -21,7 +21,7 @@ interface SwapFormProps {
 export enum SwapStep {
   FORM,
   REVIEW,
-  // TODO: Add submission states: pending, success, error
+  SUBMITTED,
 }
 
 type InnerContentProps = {
@@ -39,7 +39,7 @@ function SwapInnerContent({
   onClose,
   derivedSwapInfo,
 }: InnerContentProps) {
-  if (step === SwapStep.FORM)
+  if (step === SwapStep.FORM) {
     return (
       <SwapForm
         derivedSwapInfo={derivedSwapInfo}
@@ -47,6 +47,7 @@ function SwapInnerContent({
         onNext={() => setStep(SwapStep.REVIEW)}
       />
     )
+  }
 
   return (
     <SwapReview
@@ -59,10 +60,10 @@ function SwapInnerContent({
 }
 
 export function SwapFlow({ prefilledState, onClose }: SwapFormProps) {
+  const { t } = useTranslation()
   const [state, dispatch] = useReducer(transactionStateReducer, prefilledState || emptyState)
   const [step, setStep] = useState<SwapStep>(SwapStep.FORM)
   const derivedSwapInfo = useDerivedSwapInfo(state)
-  const { t } = useTranslation()
 
   return (
     <Flex fill gap="xs" justifyContent="space-between" py="md">

@@ -20,6 +20,7 @@ const unwrapTxInfo: WrapTransactionInfo = {
 }
 
 const params: Params = {
+  txId: '1',
   account,
   inputCurrencyAmount: CurrencyAmount.fromRawAmount(
     NativeCurrency.onChain(ChainId.Rinkeby),
@@ -46,6 +47,7 @@ describe(wrap, () => {
       })
       .next(transaction)
       .call(sendTransaction, {
+        txId: '1',
         chainId: ChainId.Rinkeby,
         account: params.account,
         typeInfo: wrapTxInfo,
@@ -72,6 +74,7 @@ describe(wrap, () => {
       .call(wethContract.populateTransaction.withdraw, `0x30d40`)
       .next(transaction)
       .call(sendTransaction, {
+        txId: '1',
         chainId: ChainId.Rinkeby,
         account: params.account,
         typeInfo: unwrapTxInfo,

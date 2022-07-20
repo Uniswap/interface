@@ -57,6 +57,7 @@ export function SwapReview({ dispatch, onNext, onPrev, derivedSwapInfo }: SwapFo
     exactApproveRequired,
     swapMethodParameters,
     warnings,
+    txId,
   } = derivedSwapInfo
 
   useUpdateSwapGasEstimate(dispatch, trade)
@@ -77,7 +78,8 @@ export function SwapReview({ dispatch, onNext, onPrev, derivedSwapInfo }: SwapFo
     gasPrice,
     exactApproveRequired,
     swapMethodParameters,
-    onNext
+    onNext,
+    txId
   )
 
   const onSwap = () => {
@@ -92,7 +94,8 @@ export function SwapReview({ dispatch, onNext, onPrev, derivedSwapInfo }: SwapFo
   const { wrapCallback: onWrap } = useWrapCallback(
     currencyAmounts[CurrencyField.INPUT],
     wrapType,
-    onNext
+    onNext,
+    txId
   )
 
   if (

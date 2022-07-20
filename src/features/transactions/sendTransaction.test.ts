@@ -18,6 +18,7 @@ import {
 } from 'src/test/fixtures'
 
 const sendParams = {
+  txId: '0',
   chainId: ChainId.Mainnet,
   account,
   options: { request: txRequest },

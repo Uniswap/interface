@@ -3,6 +3,7 @@ import { providers } from 'ethers'
 import { TFunction } from 'i18next'
 import { ChainId } from 'src/constants/chains'
 import { TransactionDetails, TransactionType } from 'src/features/transactions/types'
+import { v4 as uuid } from 'uuid'
 
 export function getSerializableTransactionRequest(
   request: providers.TransactionRequest,
@@ -62,4 +63,8 @@ export function hasSufficientFundsIncludingGas(params: {
     nativeCurrencyBalance?.currency
   )
   return !totalSpend || !nativeCurrencyBalance?.lessThan(totalSpend)
+}
+
+export function createTransactionId() {
+  return uuid()
 }

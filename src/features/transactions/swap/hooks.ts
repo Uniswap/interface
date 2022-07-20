@@ -72,6 +72,7 @@ export type DerivedSwapInfo<
   exactApproveRequired?: boolean
   nativeCurrencyBalance?: CurrencyAmount<NativeCurrency>
   swapMethodParameters?: MethodParameters
+  txId?: string
   warningModalType?: WarningModalType
 }
 
@@ -89,6 +90,7 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
     exactApproveRequired,
     swapMethodParameters,
     warningModalType,
+    txId,
   } = state
 
   const activeAccount = useActiveAccount()
@@ -212,6 +214,7 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
     exactApproveRequired,
     nativeCurrencyBalance: nativeInBalance,
     swapMethodParameters,
+    txId,
     warnings,
     warningModalType,
   }
@@ -295,8 +298,10 @@ export function useSwapActionHandlers(dispatch: React.Dispatch<AnyAction>) {
     dispatch(transactionStateActions.toggleUSDInput(isUSDInput))
   const onShowSwapWarning = (type: WarningModalType) =>
     dispatch(transactionStateActions.showWarningModal(type))
+  const onCreateTxId = (txId: string) => dispatch(transactionStateActions.setTxId(txId))
 
   return {
+    onCreateTxId,
     onSelectCurrency,
     onSelectRecipient,
     onSwitchCurrencies,
@@ -314,7 +319,8 @@ export function useSwapCallback(
   gasPrice: string | undefined,
   exactApproveRequired: boolean | undefined,
   swapMethodParameters: MethodParameters | undefined,
-  onSubmit: () => void
+  onSubmit: () => void,
+  txId?: string
 ): {
   swapState: SagaState | null
   swapCallback: () => void
@@ -352,6 +358,7 @@ export function useSwapCallback(
       swapCallback: async () => {
         appDispatch(
           swapActions.trigger({
+            txId,
             account,
             trade,
             exactApproveRequired,
@@ -364,6 +371,7 @@ export function useSwapCallback(
       swapState,
     }
   }, [
+    txId,
     account,
     swapState,
     appDispatch,
@@ -378,7 +386,8 @@ export function useSwapCallback(
 export function useWrapCallback(
   inputCurrencyAmount: CurrencyAmount<Currency> | null | undefined,
   wrapType: WrapType,
-  onSuccess: () => void
+  onSuccess: () => void,
+  txId?: string
 ) {
   const appDispatch = useAppDispatch()
   const account = useActiveAccount()
@@ -414,13 +423,14 @@ export function useWrapCallback(
       wrapCallback: () => {
         appDispatch(
           tokenWrapActions.trigger({
+            txId,
             account,
             inputCurrencyAmount,
           })
         )
       },
     }
-  }, [account, appDispatch, inputCurrencyAmount, wrapType])
+  }, [txId, account, appDispatch, inputCurrencyAmount, wrapType])
 }
 
 export function useUpdateSwapGasEstimate(

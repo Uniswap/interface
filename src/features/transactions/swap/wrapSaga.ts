@@ -22,6 +22,7 @@ export enum WrapType {
 }
 
 export type Params = {
+  txId?: string
   account: Account
   inputCurrencyAmount: CurrencyAmount<Currency>
 }
@@ -34,7 +35,7 @@ export async function getWethContract(
 }
 
 export function* wrap(params: Params) {
-  const { account, inputCurrencyAmount } = params
+  const { account, inputCurrencyAmount, txId } = params
   const { chainId } = inputCurrencyAmount.currency
 
   const providerManager = yield* call(getProviderManager)
@@ -73,6 +74,7 @@ export function* wrap(params: Params) {
   }
 
   yield* call(sendTransaction, {
+    txId,
     chainId,
     account,
     options,

@@ -13,13 +13,18 @@ import { extractTransactionSummaryInfo } from 'src/features/transactions/convers
 import {
   makeSelectAddressTransactions,
   makeSelectTransaction,
+  makeSelectTransactionById,
 } from 'src/features/transactions/selectors'
 import { TransactionSummaryInfo } from 'src/features/transactions/SummaryCards/TransactionSummaryItem'
 import {
   CurrencyField,
   TransactionState,
 } from 'src/features/transactions/transactionState/transactionState'
-import { TransactionStatus, TransactionType } from 'src/features/transactions/types'
+import {
+  TransactionDetails,
+  TransactionStatus,
+  TransactionType,
+} from 'src/features/transactions/types'
 import { currencyIdToAddress } from 'src/utils/currencyId'
 import { logger } from 'src/utils/logger'
 import { tryParseRawAmount } from 'src/utils/tryParseAmount'
@@ -57,6 +62,14 @@ export function useSelectTransaction(
   txHash: string | undefined
 ) {
   return useAppSelector(makeSelectTransaction(address, chainId, txHash))
+}
+
+export function useSelectTransactionById(
+  address: Address | undefined,
+  chainId: ChainId | undefined,
+  txId: string | undefined
+): TransactionDetails | undefined {
+  return useAppSelector(makeSelectTransactionById(address, chainId, txId))
 }
 
 export function useSelectAddressTransactions(address: Address | null) {

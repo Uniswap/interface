@@ -17,6 +17,7 @@ import { createMonitoredSaga } from 'src/utils/saga'
 import { call } from 'typed-redux-saga'
 
 export type SwapParams = {
+  txId?: string
   account: Account
   trade: Trade
   exactApproveRequired: boolean
@@ -34,6 +35,7 @@ export function* approveAndSwap(params: SwapParams) {
       methodParameters: { calldata, value },
       gasSpendEstimate,
       gasPrice,
+      txId,
     } = params
 
     const chainId = toSupportedChainId(trade.inputAmount.currency.chainId)
@@ -74,6 +76,7 @@ export function* approveAndSwap(params: SwapParams) {
     }
 
     yield* call(sendTransaction, {
+      txId,
       chainId,
       account,
       options: { request },

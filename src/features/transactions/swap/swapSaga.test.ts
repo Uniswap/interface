@@ -39,6 +39,7 @@ const mockTrade = {
 } as unknown as Trade
 
 const swapParams: SwapParams = {
+  txId: '1',
   account,
   trade: mockTrade,
   exactApproveRequired: false,

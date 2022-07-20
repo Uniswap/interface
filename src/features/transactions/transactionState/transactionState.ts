@@ -21,6 +21,7 @@ export enum WarningModalType {
 }
 
 export interface TransactionState {
+  txId?: string
   [CurrencyField.INPUT]: TradeableAsset | null
   [CurrencyField.OUTPUT]: TradeableAsset | null
   exactCurrencyField: CurrencyField
@@ -175,6 +176,9 @@ const slice = createSlice({
     closeWarningModal: (state) => {
       state.warningModalType = WarningModalType.NONE
     },
+    setTxId: (state, action: PayloadAction<string>) => {
+      state.txId = action.payload
+    },
   },
 })
 
@@ -191,5 +195,6 @@ export const {
   setExactApproveRequired,
   showWarningModal,
   closeWarningModal,
+  setTxId,
 } = slice.actions
 export const { reducer: transactionStateReducer, actions: transactionStateActions } = slice
