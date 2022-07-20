@@ -10,7 +10,7 @@ import getLibrary from '../utils/getLibrary'
 import { NetworkConnector } from './NetworkConnector'
 
 export const NETWORK_URLS: { [key in SupportedChainId]: string } = {
-  [SupportedChainId.MAINNET]: 'https://rpc.xinfin.network',
+  [SupportedChainId.MAINNET]: 'https://erpc.xinfin.network',
   [SupportedChainId.TESTNET]: 'https://rpc.apothem.network',
 }
 
