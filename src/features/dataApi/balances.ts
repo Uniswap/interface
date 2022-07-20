@@ -1,5 +1,5 @@
 import { skipToken } from '@reduxjs/toolkit/dist/query'
-import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { ChainId } from 'src/constants/chains'
 import { PollingInterval } from 'src/constants/misc'
@@ -15,6 +15,8 @@ import {
   PortfolioBalances,
   SerializablePortfolioBalance,
 } from 'src/features/dataApi/types'
+import { isEnabled } from 'src/features/remoteConfig'
+import { TestConfig } from 'src/features/remoteConfig/testConfigs'
 import { useAllCurrencies } from 'src/features/tokens/useTokens'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { isTestnet } from 'src/utils/chainId'
@@ -162,10 +164,17 @@ function formatSerializedBalanceItems(
   chainId: ChainId,
   knownCurrencies: Record<CurrencyId, Currency> = {}
 ) {
+  const tokenBalancesQualityFilterEnabled = isEnabled(TestConfig.TokenBalancesQualityFilter)
+
   return Object.values(data).reduce<PortfolioBalances>(
     (portfolioBalances: PortfolioBalances, item: SerializablePortfolioBalance) => {
       const id = buildCurrencyId(chainId, item.contract_address)
-      const currency = knownCurrencies[id]
+      let currency = knownCurrencies[id]
+
+      if (!tokenBalancesQualityFilterEnabled && !currency) {
+        console.log('judo', 'didnotfind', item.contract_ticker_symbol)
+        currency = new Token(chainId, item.contract_address, 0, item.contract_ticker_symbol)
+      }
 
       if (currency) {
         portfolioBalances[id] = {
