@@ -92,7 +92,6 @@ export default function SwapModalFooter({
             onClick={onConfirm}
             disabled={disabledConfirm}
             style={{ margin: '10px 0 0 0' }}
-            className={ElementName.CONFIRM_SWAP_BUTTON}
             id={ElementName.CONFIRM_SWAP_BUTTON}
           >
             <Text fontSize={20} fontWeight={500}>
