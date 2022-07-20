@@ -25,7 +25,7 @@ import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import { useV3PositionFromTokenId } from 'hooks/useV3Positions'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { useCallback, useMemo, useState } from 'react'
-import { Redirect, RouteComponentProps } from 'react-router-dom'
+import { Redirect, useLocation, useParams } from 'react-router-dom'
 import { Text } from 'rebass'
 import { useBurnV3ActionHandlers, useBurnV3State, useDerivedV3BurnInfo } from 'state/burn/v3/hooks'
 import { useTransactionAdder } from 'state/transactions/hooks'
@@ -43,12 +43,9 @@ import { ResponsiveHeaderText, SmallMaxButton, Wrapper } from './styled'
 const DEFAULT_REMOVE_V3_LIQUIDITY_SLIPPAGE_TOLERANCE = new Percent(5, 100)
 
 // redirect invalid tokenIds
-export default function RemoveLiquidityV3({
-  location,
-  match: {
-    params: { tokenId },
-  },
-}: RouteComponentProps<{ tokenId: string }>) {
+export default function RemoveLiquidityV3() {
+  const { tokenId } = useParams<{ tokenId: string }>()
+  const location = useLocation()
   const parsedTokenId = useMemo(() => {
     try {
       return BigNumber.from(tokenId)
