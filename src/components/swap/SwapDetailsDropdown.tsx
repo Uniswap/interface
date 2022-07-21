@@ -12,7 +12,7 @@ import Row, { RowBetween, RowFixed } from 'components/Row'
 import { MouseoverTooltipContent } from 'components/Tooltip'
 import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'
 import { darken } from 'polished'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { ChevronDown, Info } from 'react-feather'
 import { InterfaceTrade } from 'state/routing/types'
 import styled, { keyframes, useTheme } from 'styled-components/macro'
@@ -159,7 +159,12 @@ export default function SwapDetailsDropdown({
   const theme = useTheme()
   const { chainId } = useWeb3React()
   const [showDetails, setShowDetails] = useState(false)
+  const [isFirstPriceFetch, setIsFirstPriceFetch] = useState(true)
   const lpFeePercent = trade ? computeRealizedLPFeePercent(trade) : undefined
+
+  useEffect(() => {
+    if (isFirstPriceFetch && syncing) setIsFirstPriceFetch(false)
+  }, [isFirstPriceFetch, syncing])
 
   return (
     <Wrapper>
@@ -207,7 +212,7 @@ export default function SwapDetailsDropdown({
                     name={EventName.SWAP_QUOTE_RECEIVED}
                     element={ElementName.SWAP_TRADE_PRICE_ROW}
                     properties={formatAnalyticsEventProperties(trade, lpFeePercent)}
-                    shouldLogImpression={!loading && !syncing}
+                    shouldLogImpression={!loading && !syncing && isFirstPriceFetch}
                   >
                     <TradePrice
                       price={trade.executionPrice}
