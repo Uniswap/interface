@@ -44,9 +44,10 @@ const LOADING_ROWS = Array(10)
     return <LoadingRow key={`${index}`} />
   })
 
-function useFilteredTokens(showFavorites: boolean, topTokenAddresses: string[]) {
+function useFilteredTokens(topTokenAddresses: string[]) {
   const filterString = useAtomValue(filterStringAtom)
   const favoriteTokens = useAtomValue(favoritesAtom)
+  const showFavorites = useAtomValue(showFavoritesAtom)
   const shownTokens = showFavorites ? favoriteTokens : topTokenAddresses
   const allTokens = useAllTokens()
 
@@ -80,11 +81,10 @@ function NoTokensState(message: ReactNode, timePeriod: TimePeriod) {
 
 export default function TokenTable() {
   const { data, error, loading } = useTopTokens()
-
   const showFavorites = useAtomValue(showFavoritesAtom)
   const timePeriod = TimePeriod.day
   const topTokenAddresses = Object.keys(data)
-  const filteredTokens = useFilteredTokens(showFavorites, topTokenAddresses)
+  const filteredTokens = useFilteredTokens(topTokenAddresses)
 
   /* loading and error state */
   if (loading) {
