@@ -2,7 +2,7 @@ import BalanceSummary from 'components/Explore/BalanceSummary'
 import LoadingTokenDetail from 'components/Explore/LoadingTokenDetail'
 import TokenDetail from 'components/Explore/TokenDetail'
 import { useState } from 'react'
-import { RouteComponentProps } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
 const TokenDetailsLayout = styled.div`
@@ -21,23 +21,32 @@ const Widget = styled.div`
   border-radius: 12px;
   border: 1px solid rgba(153, 161, 189, 0.24);
 `
-export function TokenDetails({
-  match: {
-    params: { tokenAddress },
-  },
-}: RouteComponentProps<{ tokenAddress: string }>) {
+export function TokenDetails() {
+  const { tokenAddress } = useParams<{ tokenAddress?: string }>()
   const [loading, setLoading] = useState(true)
   setTimeout(() => {
     setLoading(false)
   }, 1000)
 
+  let tokenDetail
+  if (!tokenAddress) {
+    // TODO: handle no address / invalid address cases
+    tokenDetail = 'invalid token'
+  } else if (loading) {
+    tokenDetail = <LoadingTokenDetail />
+  } else {
+    tokenDetail = <TokenDetail address={tokenAddress} />
+  }
+
   return (
     <TokenDetailsLayout>
-      {loading ? <LoadingTokenDetail /> : <TokenDetail address={tokenAddress} />}
-      <RightPanel>
-        <Widget />
-        {!loading && <BalanceSummary address={tokenAddress} />}
-      </RightPanel>
+      {tokenDetail}
+      {tokenAddress && (
+        <RightPanel>
+          <Widget />
+          {!loading && <BalanceSummary address={tokenAddress} />}
+        </RightPanel>
+      )}
     </TokenDetailsLayout>
   )
 }
