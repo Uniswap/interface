@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-07-12 23:04\n"
+"PO-Revision-Date: 2022-07-21 14:05\n"
 "Last-Translator: \n"
 "Language: ja_JP\n"
 "Language-Team: Japanese\n"
@@ -1264,7 +1264,6 @@ msgid "Polygonscan"
 msgstr "Polygonscan"
 
 #: src/components/Header/index.tsx
-#: src/components/NavigationTabs/index.tsx
 msgid "Pool"
 msgstr "プール"
 
@@ -1478,10 +1477,6 @@ msgstr "トークン名またはアドレス"
 msgid "Select Pair"
 msgstr "ペアを選択"
 
-#: src/components/Header/NetworkSelector.tsx
-msgid "Select a network"
-msgstr "ネットワークを選択"
-
 #: src/components/CurrencyInputPanel/index.tsx
 #: src/components/SearchModal/CurrencySearch.tsx
 #: src/pages/PoolFinder/index.tsx
@@ -1493,6 +1488,10 @@ msgstr "トークン選択"
 #: src/pages/PoolFinder/index.tsx
 msgid "Select a token to find your v2 liquidity."
 msgstr "トークンを選択して、V2の流動性を見つけます。"
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Select a {0}network"
+msgstr "{0}ネットワークを選択します"
 
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Select an action"
@@ -1587,7 +1586,6 @@ msgid "Supplying {0} {1} and {2} {3}"
 msgstr "{0} {1} と {2} {3} を追加中"
 
 #: src/components/Header/index.tsx
-#: src/components/NavigationTabs/index.tsx
 #: src/components/swap/SwapHeader.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
@@ -2137,10 +2135,6 @@ msgstr "ラップ"
 msgid "Wrap <0/> to {0}"
 msgstr "<0/> から {0} にラップ"
 
-#: src/components/Web3Status/index.tsx
-msgid "Wrong Network"
-msgstr "ネットワークが間違っています"
-
 #: src/pages/CreateProposal/index.tsx
 msgid "You already have an active or pending proposal"
 msgstr "すでにアクティブまたは保留中の提案があります"
@@ -2219,8 +2213,8 @@ msgid "Your active V3 liquidity positions will appear here."
 msgstr "アクティブなV3流動性ポジションがここに表示されます。"
 
 #: src/pages/Pool/index.tsx
-msgid "Your connected network is unsupported. Request support <0>here</0>."
-msgstr "接続されているネットワークはサポートされていません。ここでサポート <0>をリクエストします</0>。"
+msgid "Your connected network is unsupported."
+msgstr "接続されているネットワークはサポートされていません。"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Your liquidity deposits"
