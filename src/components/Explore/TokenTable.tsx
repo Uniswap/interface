@@ -44,8 +44,10 @@ const LOADING_ROWS = Array(10)
     return <LoadingRow key={`${index}`} />
   })
 
-function useFilteredTokens(shownTokens: string[]) {
+function useFilteredTokens(showFavorites: boolean, topTokenAddresses: string[]) {
   const filterString = useAtomValue(filterStringAtom)
+  const favoriteTokens = useAtomValue(favoritesAtom)
+  const shownTokens = showFavorites ? favoriteTokens : topTokenAddresses
   const allTokens = useAllTokens()
 
   return useMemo(() => {
@@ -78,12 +80,11 @@ function NoTokensState(message: ReactNode, timePeriod: TimePeriod) {
 
 export default function TokenTable() {
   const { data, error, loading } = useTopTokens()
-  const favoriteTokens = useAtomValue(favoritesAtom)
+
   const showFavorites = useAtomValue(showFavoritesAtom)
   const timePeriod = TimePeriod.day
   const topTokenAddresses = Object.keys(data)
-  const showTokens = showFavorites ? favoriteTokens : topTokenAddresses
-  const filteredTokens = useFilteredTokens(showTokens)
+  const filteredTokens = useFilteredTokens(showFavorites, topTokenAddresses)
 
   /* loading and error state */
   if (loading) {
@@ -103,11 +104,11 @@ export default function TokenTable() {
     )
   }
   /* if no favorites tokens */
-  if (showFavorites && favoriteTokens.length === 0) {
+  if (showFavorites && filteredTokens.length === 0) {
     return NoTokensState('You have no favorited tokens', timePeriod)
   }
-  console.log(filteredTokens.length)
-  if (filteredTokens.length === 0) {
+
+  if (!showFavorites && filteredTokens.length === 0) {
     return NoTokensState('No tokens found', timePeriod)
   }
 
