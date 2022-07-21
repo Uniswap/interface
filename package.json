@@ -178,6 +178,7 @@
     "qs": "^6.9.4",
     "react": "^18.2.0",
     "react-confetti": "^6.0.0",
+    "react-country-flag": "^3.0.2",
     "react-dom": "^18.2.0",
     "react-feather": "^2.0.8",
     "react-ga4": "^1.4.1",

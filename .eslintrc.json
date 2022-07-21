@@ -19,6 +19,7 @@
     "src/locales/**/*.js",
     "src/locales/**/en-US.po",
     "src/state/data/generated.ts",
+    "src/*",
     "node_modules",
     "coverage",
     "build",
