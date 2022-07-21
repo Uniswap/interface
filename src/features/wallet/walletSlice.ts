@@ -9,6 +9,11 @@ const tokensMetadataDisplayTypes = [
   ClientSideOrderBy.PriceChangePercentage24hDesc,
 ]
 
+export enum NFTViewType {
+  Grid,
+  Collection,
+}
+
 interface Wallet {
   accounts: Record<Address, Account>
   activeAccountAddress: Address | null
@@ -20,6 +25,7 @@ interface Wallet {
     // Settings used in the top tokens list
     tokensOrderBy?: CoingeckoOrderBy | ClientSideOrderBy
     tokensMetadataDisplayType?: CoingeckoOrderBy | ClientSideOrderBy
+    nftViewType?: NFTViewType
   }
 }
 
@@ -104,6 +110,9 @@ const slice = createSlice({
         next(tokensMetadataDisplayTypes, state.settings.tokensMetadataDisplayType) ??
         tokensMetadataDisplayTypes[0]
     },
+    setNFTViewType: (state, action: PayloadAction<NFTViewType>) => {
+      state.settings.nftViewType = action.payload
+    },
     resetWallet: () => initialWalletState,
   },
 })
@@ -121,6 +130,7 @@ export const {
   toggleFlashbots,
   setTokensOrderBy,
   cycleTokensMetadataDisplayType,
+  setNFTViewType,
 } = slice.actions
 
 export const walletReducer = slice.reducer

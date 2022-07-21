@@ -49,6 +49,7 @@ export const selectFinishedOnboarding = (state: RootState) => state.wallet.finis
 export const selectFlashbotsEnabled = (state: RootState) => state.wallet.flashbotsEnabled
 export const selectIsBiometricAuthEnabled = (state: RootState) =>
   state.wallet.isBiometricAuthEnabled
+export const selectNFTViewType = (state: RootState) => state.wallet.settings.nftViewType
 
 export const selectTokensOrderBy = (state: RootState) =>
   state.wallet.settings.tokensOrderBy ?? DEFAULT_TOKENS_ORDER_BY

@@ -1,7 +1,8 @@
 import { skipToken } from '@reduxjs/toolkit/dist/query'
 import { utils } from 'ethers'
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { HomeStackScreenProp, useHomeStackNavigation } from 'src/app/navigation/types'
 import ListIcon from 'src/assets/icons/list.svg'
 import MasonryIcon from 'src/assets/icons/masonry.svg'
@@ -21,6 +22,8 @@ import { useNftBalancesQuery } from 'src/features/nfts/api'
 import { NFTAsset } from 'src/features/nfts/types'
 import { getNFTAssetKey } from 'src/features/nfts/utils'
 import { useActiveAccount } from 'src/features/wallet/hooks'
+import { selectNFTViewType } from 'src/features/wallet/selectors'
+import { NFTViewType, setNFTViewType } from 'src/features/wallet/walletSlice'
 import { Screens } from 'src/screens/Screens'
 import { theme } from 'src/styles/theme'
 
@@ -34,9 +37,8 @@ export function PortfolioNFTsScreen({
   const navigation = useHomeStackNavigation()
   const accountAddress = useActiveAccount()?.address
   const activeAddress = owner ?? accountAddress
-
-  // TODO: move this out of the local state and into the wallet settings redux store
-  const [isGridView, setIsGridView] = useState(true)
+  const nftViewType = useAppSelector(selectNFTViewType) || NFTViewType.Grid
+  const dispatch = useAppDispatch()
 
   const { t } = useTranslation()
 
@@ -93,13 +95,19 @@ export function PortfolioNFTsScreen({
             </Flex>
             <IconButton
               icon={
-                isGridView ? (
+                nftViewType === NFTViewType.Grid ? (
                   <ListIcon color={theme.colors.textSecondary} height={24} width={24} />
                 ) : (
                   <MasonryIcon color={theme.colors.textSecondary} height={24} width={24} />
                 )
               }
-              onPress={() => setIsGridView(!isGridView)}
+              onPress={() =>
+                dispatch(
+                  setNFTViewType(
+                    nftViewType === NFTViewType.Grid ? NFTViewType.Collection : NFTViewType.Grid
+                  )
+                )
+              }
             />
           </Flex>
         </Flex>
@@ -118,7 +126,7 @@ export function PortfolioNFTsScreen({
           )}
         </BackHeader>
       }>
-      {isGridView ? (
+      {nftViewType === NFTViewType.Grid ? (
         <Masonry
           data={nftItems}
           getKey={({ asset_contract, token_id }) =>
