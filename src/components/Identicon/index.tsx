@@ -8,7 +8,7 @@ const StyledIdenticon = styled.div`
   height: 1rem;
   width: 1rem;
   border-radius: 1.125rem;
-  background-color: ${({ theme }) => theme.bg4};
+  background-color: ${({ theme }) => theme.deprecated_bg4};
   font-size: initial;
 `
 

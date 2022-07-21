@@ -35,5 +35,5 @@ export default function Logo({ srcs, alt, style, ...rest }: LogoProps) {
     )
   }
 
-  return <Slash {...rest} style={{ ...style, color: theme.bg4 }} />
+  return <Slash {...rest} style={{ ...style, color: theme.deprecated_bg4 }} />
 }

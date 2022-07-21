@@ -166,19 +166,19 @@ export default function LiquidityChartRangeInput({
       {isUninitialized ? (
         <InfoBox
           message={<Trans>Your position will appear here.</Trans>}
-          icon={<Inbox size={56} stroke={theme.text1} />}
+          icon={<Inbox size={56} stroke={theme.deprecated_text1} />}
         />
       ) : isLoading ? (
-        <InfoBox icon={<Loader size="40px" stroke={theme.text4} />} />
+        <InfoBox icon={<Loader size="40px" stroke={theme.deprecated_text4} />} />
       ) : isError ? (
         <InfoBox
           message={<Trans>Liquidity data not available.</Trans>}
-          icon={<CloudOff size={56} stroke={theme.text4} />}
+          icon={<CloudOff size={56} stroke={theme.deprecated_text4} />}
         />
       ) : !formattedData || formattedData === [] || !price ? (
         <InfoBox
           message={<Trans>There is no liquidity data.</Trans>}
-          icon={<BarChart2 size={56} stroke={theme.text4} />}
+          icon={<BarChart2 size={56} stroke={theme.deprecated_text4} />}
         />
       ) : (
         <ChartWrapper>
@@ -188,12 +188,12 @@ export default function LiquidityChartRangeInput({
             margins={{ top: 10, right: 2, bottom: 20, left: 0 }}
             styles={{
               area: {
-                selection: theme.blue1,
+                selection: theme.deprecated_blue1,
               },
               brush: {
                 handle: {
-                  west: saturate(0.1, tokenAColor) ?? theme.red1,
-                  east: saturate(0.1, tokenBColor) ?? theme.blue1,
+                  west: saturate(0.1, tokenAColor) ?? theme.deprecated_red1,
+                  east: saturate(0.1, tokenBColor) ?? theme.deprecated_blue1,
                 },
               },
             }}

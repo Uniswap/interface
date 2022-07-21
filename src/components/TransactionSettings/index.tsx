@@ -23,21 +23,21 @@ enum DeadlineError {
 }
 
 const FancyButton = styled.button`
-  color: ${({ theme }) => theme.text1};
+  color: ${({ theme }) => theme.deprecated_text1};
   align-items: center;
   height: 2rem;
   border-radius: 36px;
   font-size: 1rem;
   width: auto;
   min-width: 3.5rem;
-  border: 1px solid ${({ theme }) => theme.bg3};
+  border: 1px solid ${({ theme }) => theme.deprecated_bg3};
   outline: none;
-  background: ${({ theme }) => theme.bg1};
+  background: ${({ theme }) => theme.deprecated_bg1};
   :hover {
-    border: 1px solid ${({ theme }) => theme.bg4};
+    border: 1px solid ${({ theme }) => theme.deprecated_bg4};
   }
   :focus {
-    border: 1px solid ${({ theme }) => theme.primary1};
+    border: 1px solid ${({ theme }) => theme.deprecated_primary1};
   }
 `
 
@@ -46,12 +46,12 @@ const Option = styled(FancyButton)<{ active: boolean }>`
   :hover {
     cursor: pointer;
   }
-  background-color: ${({ active, theme }) => active && theme.primary1};
-  color: ${({ active, theme }) => (active ? theme.white : theme.text1)};
+  background-color: ${({ active, theme }) => active && theme.deprecated_primary1};
+  color: ${({ active, theme }) => (active ? theme.deprecated_white : theme.deprecated_text1)};
 `
 
 const Input = styled.input`
-  background: ${({ theme }) => theme.bg1};
+  background: ${({ theme }) => theme.deprecated_bg1};
   font-size: 16px;
   width: auto;
   outline: none;
@@ -59,7 +59,7 @@ const Input = styled.input`
   &::-webkit-inner-spin-button {
     -webkit-appearance: none;
   }
-  color: ${({ theme, color }) => (color === 'red' ? theme.red1 : theme.text1)};
+  color: ${({ theme, color }) => (color === 'red' ? theme.deprecated_red1 : theme.deprecated_text1)};
   text-align: right;
 `
 
@@ -69,10 +69,12 @@ const OptionCustom = styled(FancyButton)<{ active?: boolean; warning?: boolean }
   padding: 0 0.75rem;
   flex: 1;
   border: ${({ theme, active, warning }) =>
-    active ? `1px solid ${warning ? theme.red1 : theme.primary1}` : warning && `1px solid ${theme.red1}`};
+    active
+      ? `1px solid ${warning ? theme.deprecated_red1 : theme.deprecated_primary1}`
+      : warning && `1px solid ${theme.deprecated_red1}`};
   :hover {
     border: ${({ theme, active, warning }) =>
-      active && `1px solid ${warning ? darken(0.1, theme.red1) : darken(0.1, theme.primary1)}`};
+      active && `1px solid ${warning ? darken(0.1, theme.deprecated_red1) : darken(0.1, theme.deprecated_primary1)}`};
   }
 
   input {
@@ -163,7 +165,7 @@ export default function TransactionSettings({ placeholderSlippage }: Transaction
     <AutoColumn gap="md">
       <AutoColumn gap="sm">
         <RowFixed>
-          <ThemedText.Black fontWeight={400} fontSize={14} color={theme.text2}>
+          <ThemedText.Black fontWeight={400} fontSize={14} color={theme.deprecated_text2}>
             <Trans>Slippage tolerance</Trans>
           </ThemedText.Black>
           <QuestionHelper
@@ -232,7 +234,7 @@ export default function TransactionSettings({ placeholderSlippage }: Transaction
       {showCustomDeadlineRow && (
         <AutoColumn gap="sm">
           <RowFixed>
-            <ThemedText.Black fontSize={14} fontWeight={400} color={theme.text2}>
+            <ThemedText.Black fontSize={14} fontWeight={400} color={theme.deprecated_text2}>
               <Trans>Transaction deadline</Trans>
             </ThemedText.Black>
             <QuestionHelper

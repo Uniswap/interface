@@ -34,8 +34,8 @@ const pulse = (color: string) => keyframes`
   }
 `
 const FocusedOutlineCard = styled(Card)<{ pulsing: boolean }>`
-  border: 1px solid ${({ theme }) => theme.bg2};
-  animation: ${({ pulsing, theme }) => pulsing && pulse(theme.primary1)} 0.6s linear;
+  border: 1px solid ${({ theme }) => theme.deprecated_bg2};
+  animation: ${({ pulsing, theme }) => pulsing && pulse(theme.deprecated_primary1)} 0.6s linear;
   align-self: center;
 `
 
