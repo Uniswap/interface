@@ -26,6 +26,14 @@ export const getNumberFormattedToDecimalPlace = (
   decimalPlace: number
 ): number => parseFloat(intialNumberObject.toFixed(decimalPlace))
 
+export const getPriceImpactPercentageNumber = (
+  trade?: InterfaceTrade<Currency, Currency, TradeType>,
+  lpFeePercent?: Percent
+): number | undefined => {
+  if (!trade || !lpFeePercent) return undefined
+  return getNumberFormattedToDecimalPlace(getPriceImpact(lpFeePercent, trade), 4)
+}
+
 interface AnalyticsEventProps {
   trade: InterfaceTrade<Currency, Currency, TradeType>
   txHash: string | undefined
@@ -62,8 +70,8 @@ const formatAnalyticsEventProperties = ({
   token_out_symbol: trade.outputAmount.currency.symbol,
   token_in_amount: getNumberFormattedToDecimalPlace(trade.inputAmount, trade.inputAmount.currency.decimals),
   token_out_amount: getNumberFormattedToDecimalPlace(trade.outputAmount, trade.outputAmount.currency.decimals),
-  price_impact_percentage: getNumberFormattedToDecimalPlace(getPriceImpact(lpFeePercent, trade), 2),
-  allowed_slippage_percentage: getNumberFormattedToDecimalPlace(allowedSlippage, 2),
+  price_impact_percentage: getPriceImpactPercentageNumber(trade, lpFeePercent),
+  allowed_slippage_percentage: getNumberFormattedToDecimalPlace(allowedSlippage, 4),
   is_auto_router_api: isAutoRouterApi,
   is_auto_slippage: isAutoSlippage,
   chain_id:
