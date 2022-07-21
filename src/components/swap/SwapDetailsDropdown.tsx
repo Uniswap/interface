@@ -139,6 +139,7 @@ export default function SwapDetailsDropdown({
           events={[Event.onClick]}
           name={EventName.SWAP_DETAILS_EXPANDED}
           element={ElementName.SWAP_DETAILS_DROPDOWN}
+          shouldLogImpression={!showDetails}
         >
           <StyledHeaderRow onClick={() => setShowDetails(!showDetails)} disabled={!trade} open={showDetails}>
             <RowFixed style={{ position: 'relative' }}>
