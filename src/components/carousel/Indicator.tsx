@@ -4,18 +4,19 @@ import { AnimatedBox, Box, Flex } from 'src/components/layout'
 import { dimensions } from 'src/styles/sizing'
 
 const { fullWidth } = dimensions
+const INDICATOR_WIDTH = (200 / 375) * fullWidth
 
 export function Indicator({ stepCount, currentStep }: { stepCount: number; currentStep: number }) {
   return (
-    <Flex centered row gap="xs">
+    <Flex row alignItems="center" gap="xs" justifyContent="space-evenly" width={INDICATOR_WIDTH}>
       {[...Array(stepCount)].map((_, i) => (
         <Box
           key={`indicator-${i}`}
           bg="textPrimary"
           borderRadius="lg"
+          flex={1}
           height={4}
           opacity={i === currentStep ? 1 : 0.2}
-          width={36}
         />
       ))}
     </Flex>

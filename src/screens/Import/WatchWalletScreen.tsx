@@ -1,10 +1,12 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Keyboard } from 'react-native'
-import { useAppDispatch } from 'src/app/hooks'
+import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
+import { Button } from 'src/components/buttons/Button'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
+import { Chevron } from 'src/components/icons/Chevron'
 import { Flex } from 'src/components/layout'
 import { ChainId } from 'src/constants/chains'
 import { useENS } from 'src/features/ens/useENS'
@@ -21,6 +23,20 @@ type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.
 export function WatchWalletScreen({ navigation, route: { params } }: Props) {
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
+  const theme = useAppTheme()
+
+  useEffect(() => {
+    const shouldRenderBackButton = navigation.getState().index === 0
+    if (shouldRenderBackButton) {
+      navigation.setOptions({
+        headerLeft: () => (
+          <Button onPress={() => navigation.goBack()}>
+            <Chevron color={theme.colors.textPrimary} />
+          </Button>
+        ),
+      })
+    }
+  }, [navigation, theme.colors.textPrimary])
 
   // Form values.
   const [value, setValue] = useState<string | undefined>(undefined)

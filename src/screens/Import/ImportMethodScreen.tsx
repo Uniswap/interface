@@ -1,6 +1,6 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { TFunction } from 'i18next'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
@@ -70,8 +70,22 @@ type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.
 
 export function ImportMethodScreen({ navigation, route: { params } }: Props) {
   const { t } = useTranslation()
+  const theme = useAppTheme()
   const dispatch = useAppDispatch()
   const entryPoint = params?.entryPoint
+
+  useEffect(() => {
+    const shouldRenderBackButton = navigation.getState().index === 0
+    if (shouldRenderBackButton) {
+      navigation.setOptions({
+        headerLeft: () => (
+          <Button onPress={() => navigation.goBack()}>
+            <Chevron color={theme.colors.textPrimary} />
+          </Button>
+        ),
+      })
+    }
+  }, [navigation, theme.colors.textPrimary])
 
   /**
    * @TODO include check icloud backups and conditionally render restore option

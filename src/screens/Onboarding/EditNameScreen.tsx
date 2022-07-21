@@ -1,15 +1,16 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { TFunction } from 'i18next'
-import React, { Dispatch, SetStateAction, useRef, useState } from 'react'
+import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, TextInput as NativeTextInput } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import PencilIcon from 'src/assets/icons/pencil-detailed.svg'
-import { AnimatedButton } from 'src/components/buttons/Button'
+import { AnimatedButton, Button } from 'src/components/buttons/Button'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { TextButton } from 'src/components/buttons/TextButton'
+import { Chevron } from 'src/components/icons/Chevron'
 import { TextInput } from 'src/components/input/TextInput'
 import { Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
@@ -25,12 +26,26 @@ type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.
 export function EditNameScreen({ navigation, route: { params } }: Props) {
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
+  const theme = useAppTheme()
 
   const activeAccount = useActiveAccount()
   // Reference pending accounts to avoid any lag in saga import.
   const pendingAccountName = Object.values(usePendingAccounts())[0]?.name
 
   const [newAccountName, setNewAccountName] = useState<string>(pendingAccountName ?? '')
+
+  useEffect(() => {
+    const shouldRenderBackButton = navigation.getState().index === 0
+    if (shouldRenderBackButton) {
+      navigation.setOptions({
+        headerLeft: () => (
+          <Button onPress={() => navigation.goBack()}>
+            <Chevron color={theme.colors.textPrimary} />
+          </Button>
+        ),
+      })
+    }
+  }, [navigation, theme.colors.textPrimary])
 
   const onPressNext = () => {
     navigation.navigate({

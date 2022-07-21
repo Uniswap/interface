@@ -20,6 +20,7 @@ import {
 import DiscoverIcon from 'src/assets/icons/discover.svg'
 import ProfileIcon from 'src/assets/icons/profile.svg'
 import WalletIcon from 'src/assets/icons/wallet.svg'
+import { Chevron } from 'src/components/icons/Chevron'
 import { Box, Flex } from 'src/components/layout'
 import { useSelectAddressNotificationCount } from 'src/features/notifications/hooks'
 import { OnboardingHeader } from 'src/features/onboarding/OnboardingHeader'
@@ -290,6 +291,7 @@ export function OnboardingStackNavigator() {
           headerMode: 'float',
           headerTitle: (props) => <OnboardingHeader {...props} />,
           headerBackTitleVisible: false,
+          headerBackImage: () => <Chevron color={theme.colors.textPrimary} />,
           headerStyle: {
             backgroundColor: theme.colors.backgroundBackdrop,
             shadowColor: theme.colors.none,
