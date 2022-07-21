@@ -1,7 +1,7 @@
 import { useAllTokens } from 'hooks/Tokens'
 import useTopTokens, { TimePeriod } from 'hooks/useTopTokens'
-import { useAtom, useAtomValue } from 'jotai'
-import { useMemo } from 'react'
+import { useAtomValue } from 'jotai'
+import { ReactNode, useMemo } from 'react'
 import { AlertTriangle } from 'react-feather'
 import styled from 'styled-components/macro'
 
@@ -47,28 +47,43 @@ const LOADING_ROWS = Array(10)
 function useFilteredTokens(shownTokens: string[]) {
   const filterString = useAtomValue(filterStringAtom)
   const allTokens = useAllTokens()
-  const filteredTokens = shownTokens.filter((tokenAddress) => {
-    const token = allTokens[tokenAddress]
-    const tokenName = token?.name ?? ''
-    const tokenSymbol = token?.symbol ?? ''
 
-    if (!filterString) {
-      return true
-    }
-    const lowercaseFilterString = filterString.toLowerCase()
-    const addressIncludesFilterString = tokenAddress.toLowerCase().includes(lowercaseFilterString)
-    const nameIncludesFilterString = tokenName.toLowerCase().includes(lowercaseFilterString)
-    const symbolIncludesFilterString = tokenSymbol.toLowerCase().includes(lowercaseFilterString)
-    return nameIncludesFilterString || symbolIncludesFilterString || addressIncludesFilterString
-  })
-  return useMemo(() => filteredTokens, [filteredTokens])
+  return useMemo(() => {
+    const filteredTokens = shownTokens.filter((tokenAddress) => {
+      const token = allTokens[tokenAddress]
+      const tokenName = token?.name ?? ''
+      const tokenSymbol = token?.symbol ?? ''
+
+      if (!filterString) {
+        return true
+      }
+      const lowercaseFilterString = filterString.toLowerCase()
+      const addressIncludesFilterString = tokenAddress.toLowerCase().includes(lowercaseFilterString)
+      const nameIncludesFilterString = tokenName.toLowerCase().includes(lowercaseFilterString)
+      const symbolIncludesFilterString = tokenSymbol.toLowerCase().includes(lowercaseFilterString)
+      return nameIncludesFilterString || symbolIncludesFilterString || addressIncludesFilterString
+    })
+    return filteredTokens
+  }, [allTokens, shownTokens, filterString])
+}
+
+function NoTokensState(message: ReactNode, timePeriod: TimePeriod) {
+  return (
+    <GridContainer>
+      <HeaderRow timeframe={timePeriod} />
+      <NoTokenDisplay>{message}</NoTokenDisplay>
+    </GridContainer>
+  )
 }
 
 export default function TokenTable() {
   const { data, error, loading } = useTopTokens()
-  const [favoriteTokens] = useAtom(favoritesAtom)
-  const [showFavorites] = useAtom(showFavoritesAtom)
+  const favoriteTokens = useAtomValue(favoritesAtom)
+  const showFavorites = useAtomValue(showFavoritesAtom)
   const timePeriod = TimePeriod.day
+  const topTokenAddresses = Object.keys(data)
+  const showTokens = showFavorites ? favoriteTokens : topTokenAddresses
+  const filteredTokens = useFilteredTokens(showTokens)
 
   /* loading and error state */
   if (loading) {
@@ -79,31 +94,24 @@ export default function TokenTable() {
       </GridContainer>
     )
   } else if (error || data === null) {
-    return (
-      <GridContainer>
-        <HeaderRow timeframe={timePeriod} />
-        <NoTokenDisplay>
-          <AlertTriangle size={16} />
-          An error occured loading tokens. Please try again.
-        </NoTokenDisplay>
-      </GridContainer>
+    return NoTokensState(
+      <>
+        <AlertTriangle size={16} />
+        An error occured loading tokens. Please try again.
+      </>,
+      timePeriod
     )
   }
   /* if no favorites tokens */
   if (showFavorites && favoriteTokens.length === 0) {
-    return (
-      <GridContainer>
-        <HeaderRow timeframe={timePeriod} />
-        <NoTokenDisplay>You have no favorited tokens</NoTokenDisplay>
-      </GridContainer>
-    )
+    return NoTokensState('You have no favorited tokens', timePeriod)
+  }
+  console.log(filteredTokens.length)
+  if (filteredTokens.length === 0) {
+    return NoTokensState('No tokens found', timePeriod)
   }
 
-  const topTokenAddresses = Object.keys(data)
-  const showTokens = showFavorites ? favoriteTokens : topTokenAddresses
-  const filteredTokens = useFilteredTokens(showTokens)
-
-  const tokenRows = showTokens.map((tokenAddress, index) => {
+  const tokenRows = filteredTokens.map((tokenAddress, index) => {
     return (
       <LoadedRow
         key={tokenAddress}

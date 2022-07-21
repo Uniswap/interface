@@ -19,7 +19,7 @@ export type TokenData = {
 }
 
 interface UseTopTokensResult {
-  data: TokenData | null
+  data: TokenData
   error: string | null
   loading: boolean
 }
@@ -283,7 +283,7 @@ const FAKE_TOP_TOKENS_RESULT = {
 }
 
 const useTopTokens = (): UseTopTokensResult => {
-  const [data, setData] = useState<TokenData | null>(null)
+  const [data, setData] = useState<TokenData>({})
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
 
