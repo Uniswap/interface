@@ -59,11 +59,7 @@ export default function useWrapCallback(
                 }
               }
             : undefined,
-        inputError: sufficientBalance
-          ? undefined
-          : hasInputAmount
-          ? `Insufficient {CHAIN_NATIVE_TOKEN_SYMBOL[chainId ?? 1]} balance`
-          : `Enter {CHAIN_NATIVE_TOKEN_SYMBOL[chainId ?? 1]} amount`,
+        inputError: sufficientBalance ? undefined : hasInputAmount ? 'Insufficient ETH balance' : 'Enter ETH amount',
       }
     } else if (weth.equals(inputCurrency) && outputCurrency.isNative) {
       return {
@@ -83,11 +79,7 @@ export default function useWrapCallback(
                 }
               }
             : undefined,
-        inputError: sufficientBalance
-          ? undefined
-          : hasInputAmount
-          ? `Insufficient {WRAPPED_NATIVE_CURRENCY[chainId ?? 1]?.symbol} balance`
-          : `Enter {WRAPPED_NATIVE_CURRENCY[chainId ?? 1]?.symbol} amount`,
+        inputError: sufficientBalance ? undefined : hasInputAmount ? 'Insufficient WETH balance' : 'Enter WETH amount',
       }
     } else {
       return NOT_APPLICABLE

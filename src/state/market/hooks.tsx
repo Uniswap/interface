@@ -3,6 +3,7 @@ import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
+import { CHAIN_NATIVE_TOKEN_SYMBOL, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import { useBestMarketTrade, useBestV3Trade } from 'hooks/useBestV3Trade'
 import JSBI from 'jsbi'
 import { ParsedQs } from 'qs'
@@ -134,7 +135,7 @@ export function useDerivedMarketInfo(
   paymentToken: Token | null | undefined
   paymentFee: number | undefined
 } {
-  const { account } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
 
   const {
     independentField,
@@ -168,13 +169,6 @@ export function useDerivedMarketInfo(
   )
 
   const bestTrade = v2Trade == undefined ? undefined : v2Trade.trade
-  // const currencyBalances = useMemo(
-  //   () => ({
-  //     [Field.INPUT]: relevantTokenBalances[0],
-  //     [Field.OUTPUT]: relevantTokenBalances[1],
-  //   }),
-  //   [relevantTokenBalances]
-  // )
 
   const currencyBalances = useMemo(
     () => ({
@@ -203,6 +197,20 @@ export function useDerivedMarketInfo(
 
   if (!currencies[Field.INPUT] || !currencies[Field.OUTPUT]) {
     inputError = inputError ?? <Trans>Select a token</Trans>
+  }
+
+  if (
+    gasless &&
+    currencies &&
+    currencies[Field.INPUT]?.symbol === CHAIN_NATIVE_TOKEN_SYMBOL[chainId ?? 1] &&
+    currencies[Field.OUTPUT] !== null &&
+    currencies[Field.OUTPUT]?.symbol !== WRAPPED_NATIVE_CURRENCY[chainId ?? 1]?.symbol
+  ) {
+    inputError = inputError ?? (
+      <Trans>
+        Wrap {currencies[Field.INPUT]?.symbol} or switch to {WRAPPED_NATIVE_CURRENCY[chainId ?? 1]?.symbol}
+      </Trans>
+    )
   }
 
   const formattedTo = isAddress(to)

@@ -629,7 +629,7 @@ export default function Market({ history }: RouteComponentProps) {
       : false
 
   const wrapToken = function () {
-    currencies[Field.OUTPUT] = WRAPPED_NATIVE_CURRENCY[chainId ?? 1]
+    onCurrencySelection(Field.OUTPUT, WRAPPED_NATIVE_CURRENCY[chainId ?? 1])
   }
 
   if (expertMode) {

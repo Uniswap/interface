@@ -99,7 +99,7 @@ export function AdvancedMarketDetails({
         </RowFixed>
         <TextWithLoadingPlaceholder syncing={syncing} width={70}>
           <TYPE.black textAlign="right" fontSize={14}>
-            {paymentFee} {paymentToken}
+            {paymentFee} {paymentToken?.symbol}
           </TYPE.black>
         </TextWithLoadingPlaceholder>
       </RowBetween>
