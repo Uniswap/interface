@@ -1,14 +1,7 @@
 import { Connector } from '@web3-react/types'
-import {
-  coinbaseWalletConnection,
-  fortmaticConnection,
-  gnosisSafeConnection,
-  injectedConnection,
-  networkConnection,
-  walletConnectConnection,
-} from 'connection'
+import { networkConnection, walletConnectConnection } from 'connection'
 import { getChainInfo } from 'constants/chainInfo'
-import { ALL_SUPPORTED_CHAIN_IDS, SupportedChainId } from 'constants/chains'
+import { SupportedChainId } from 'constants/chains'
 import { RPC_URLS } from 'constants/networks'
 
 function getRpcUrls(chainId: SupportedChainId): [string] {
@@ -41,19 +34,8 @@ function getRpcUrls(chainId: SupportedChainId): [string] {
   throw new Error('RPC URLs must use public endpoints')
 }
 
-export function isChainAllowed(connector: Connector, chainId: number) {
-  switch (connector) {
-    case fortmaticConnection.connector:
-      return chainId === SupportedChainId.MAINNET
-    case injectedConnection.connector:
-    case coinbaseWalletConnection.connector:
-    case walletConnectConnection.connector:
-    case networkConnection.connector:
-    case gnosisSafeConnection.connector:
-      return ALL_SUPPORTED_CHAIN_IDS.includes(chainId)
-    default:
-      return false
-  }
+export function isChainAllowed(_connector: Connector, _chainId: number) {
+  return true
 }
 
 export const switchChain = async (connector: Connector, chainId: SupportedChainId) => {

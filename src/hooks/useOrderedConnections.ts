@@ -4,8 +4,6 @@ import { useMemo } from 'react'
 import { BACKFILLABLE_WALLETS } from 'state/connection/constants'
 import { useAppSelector } from 'state/hooks'
 
-const SELECTABLE_WALLETS = [...BACKFILLABLE_WALLETS, ConnectionType.FORTMATIC]
-
 export default function useOrderedConnections() {
   const selectedWallet = useAppSelector((state) => state.user.selectedWallet)
   return useMemo(() => {
@@ -18,7 +16,7 @@ export default function useOrderedConnections() {
     if (selectedWallet) {
       orderedConnectionTypes.push(selectedWallet)
     }
-    orderedConnectionTypes.push(...SELECTABLE_WALLETS.filter((wallet) => wallet !== selectedWallet))
+    orderedConnectionTypes.push(...BACKFILLABLE_WALLETS.filter((wallet) => wallet !== selectedWallet))
 
     // Add network connection last as it should be the fallback.
     orderedConnectionTypes.push(ConnectionType.NETWORK)

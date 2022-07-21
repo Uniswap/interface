@@ -161,7 +161,6 @@
     "d3-curve-circlecorners": "^0.1.6",
     "ethers": "^5.1.4",
     "firebase": "^9.1.3",
-    "fortmatic": "^2.4.0",
     "graphql": "^15.5.0",
     "graphql-request": "^3.4.0",
     "immer": "^9.0.6",
