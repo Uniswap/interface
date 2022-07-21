@@ -71,7 +71,7 @@ const formatAnalyticsEventProperties = ({
   token_in_amount: getNumberFormattedToDecimalPlace(trade.inputAmount, trade.inputAmount.currency.decimals),
   token_out_amount: getNumberFormattedToDecimalPlace(trade.outputAmount, trade.outputAmount.currency.decimals),
   price_impact_percentage: getPriceImpactPercentageNumber(trade, lpFeePercent),
-  allowed_slippage_percentage: getNumberFormattedToDecimalPlace(allowedSlippage, 2),
+  allowed_slippage_percentage: getNumberFormattedToDecimalPlace(allowedSlippage, 4),
   is_auto_router_api: isAutoRouterApi,
   is_auto_slippage: isAutoSlippage,
   chain_id:
