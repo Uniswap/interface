@@ -1,10 +1,11 @@
 import { Currency, CurrencyAmount, NativeCurrency, Percent, TradeType } from '@uniswap/sdk-core'
 import { MethodParameters } from '@uniswap/v3-sdk'
 import { BigNumber } from 'ethers'
-import React, { useEffect, useMemo, useRef } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AnyAction } from 'redux'
 import { useAppDispatch } from 'src/app/hooks'
+import { WarningModalType } from 'src/components/warnings/types'
 import { ChainId } from 'src/constants/chains'
 import { DEFAULT_SLIPPAGE_TOLERANCE } from 'src/constants/misc'
 import { AssetType } from 'src/entities/assets'
@@ -33,7 +34,6 @@ import {
   transactionStateActions,
   updateExactAmountToken,
   updateExactAmountUSD,
-  WarningModalType,
 } from 'src/features/transactions/transactionState/transactionState'
 import { BaseDerivedInfo } from 'src/features/transactions/transactionState/types'
 import { TransactionType } from 'src/features/transactions/types'
@@ -105,10 +105,12 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
       : undefined
   )
 
-  const currencies = {
-    [CurrencyField.INPUT]: currencyIn,
-    [CurrencyField.OUTPUT]: currencyOut,
-  }
+  const currencies = useMemo(() => {
+    return {
+      [CurrencyField.INPUT]: currencyIn,
+      [CurrencyField.OUTPUT]: currencyOut,
+    }
+  }, [currencyIn, currencyOut])
 
   const { balance: tokenInBalance } = useTokenBalance(
     currencyIn?.isToken ? currencyIn : undefined,
@@ -148,19 +150,33 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
 
   const tradeUSDValue = useUSDCValue(isUSDInput ? trade.trade?.outputAmount : undefined)
 
-  const currencyAmounts = shouldGetQuote
-    ? {
-        [CurrencyField.INPUT]:
-          exactCurrencyField === CurrencyField.INPUT ? amountSpecified : trade.trade?.inputAmount,
-        [CurrencyField.OUTPUT]:
-          exactCurrencyField === CurrencyField.OUTPUT ? amountSpecified : trade.trade?.outputAmount,
-      }
-    : {
-        [CurrencyField.INPUT]: amountSpecified,
-        [CurrencyField.OUTPUT]: amountSpecified,
-      }
+  const currencyAmounts = useMemo(
+    () =>
+      shouldGetQuote
+        ? {
+            [CurrencyField.INPUT]:
+              exactCurrencyField === CurrencyField.INPUT
+                ? amountSpecified
+                : trade.trade?.inputAmount,
+            [CurrencyField.OUTPUT]:
+              exactCurrencyField === CurrencyField.OUTPUT
+                ? amountSpecified
+                : trade.trade?.outputAmount,
+          }
+        : {
+            [CurrencyField.INPUT]: amountSpecified,
+            [CurrencyField.OUTPUT]: amountSpecified,
+          },
+    [
+      amountSpecified,
+      exactCurrencyField,
+      shouldGetQuote,
+      trade.trade?.inputAmount,
+      trade.trade?.outputAmount,
+    ]
+  )
 
-  const getFormattedInput = () => {
+  const getFormattedInput = useCallback(() => {
     if (isExactIn) {
       return isUSDInput ? exactAmountUSD : exactAmountToken
     }
@@ -168,20 +184,29 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
     return isUSDInput
       ? tradeUSDValue?.toFixed(2)
       : (currencyAmounts[CurrencyField.INPUT]?.toExact() ?? '').toString()
-  }
+  }, [currencyAmounts, exactAmountToken, exactAmountUSD, isExactIn, isUSDInput, tradeUSDValue])
 
-  const getFormattedOutput = () => {
+  const getFormattedOutput = useCallback(() => {
     if (!isExactIn) {
       return isUSDInput ? exactAmountUSD : exactAmountToken
     }
 
     return isUSDInput ? tradeUSDValue?.toFixed(2) : currencyAmounts[CurrencyField.OUTPUT]?.toExact()
-  }
+  }, [currencyAmounts, exactAmountToken, exactAmountUSD, isExactIn, isUSDInput, tradeUSDValue])
 
-  const currencyBalances = {
-    [CurrencyField.INPUT]: currencyIn?.isNative ? nativeInBalance : tokenInBalance,
-    [CurrencyField.OUTPUT]: currencyOut?.isNative ? nativeOutBalance : tokenOutBalance,
-  }
+  const currencyBalances = useMemo(() => {
+    return {
+      [CurrencyField.INPUT]: currencyIn?.isNative ? nativeInBalance : tokenInBalance,
+      [CurrencyField.OUTPUT]: currencyOut?.isNative ? nativeOutBalance : tokenOutBalance,
+    }
+  }, [
+    currencyIn?.isNative,
+    currencyOut?.isNative,
+    nativeInBalance,
+    nativeOutBalance,
+    tokenInBalance,
+    tokenOutBalance,
+  ])
 
   const gasFee = useSwapGasFee(state)
 
@@ -195,29 +220,51 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
     nativeCurrencyBalance: nativeInBalance,
   })
 
-  return {
+  return useMemo(() => {
+    return {
+      currencies,
+      currencyAmounts,
+      currencyBalances,
+      exactAmountToken,
+      exactAmountUSD,
+      exactCurrencyField,
+      formattedAmounts: {
+        [CurrencyField.INPUT]: getFormattedInput() || '',
+        [CurrencyField.OUTPUT]: getFormattedOutput() || '',
+      },
+      trade,
+      wrapType,
+      isUSDInput,
+      gasSpendEstimate,
+      gasPrice,
+      exactApproveRequired,
+      nativeCurrencyBalance: nativeInBalance,
+      swapMethodParameters,
+      txId,
+      warnings,
+      warningModalType,
+    }
+  }, [
     currencies,
     currencyAmounts,
     currencyBalances,
     exactAmountToken,
     exactAmountUSD,
     exactCurrencyField,
-    formattedAmounts: {
-      [CurrencyField.INPUT]: getFormattedInput() || '',
-      [CurrencyField.OUTPUT]: getFormattedOutput() || '',
-    },
-    trade,
-    wrapType,
-    isUSDInput,
-    gasSpendEstimate,
-    gasPrice,
     exactApproveRequired,
-    nativeCurrencyBalance: nativeInBalance,
+    gasPrice,
+    gasSpendEstimate,
+    getFormattedInput,
+    getFormattedOutput,
+    isUSDInput,
+    nativeInBalance,
     swapMethodParameters,
+    trade,
     txId,
     warnings,
     warningModalType,
-  }
+    wrapType,
+  ])
 }
 
 export function useUSDTokenUpdater(
@@ -312,6 +359,23 @@ export function useSwapActionHandlers(dispatch: React.Dispatch<AnyAction>) {
   }
 }
 
+export function useSwapCallbackFromDerivedSwapInfo(derivedSwapInfo: DerivedSwapInfo) {
+  const {
+    trade: { trade: trade },
+    gasSpendEstimate,
+    gasPrice,
+    exactApproveRequired,
+    swapMethodParameters,
+  } = derivedSwapInfo
+  return useSwapCallback(
+    trade,
+    gasSpendEstimate,
+    gasPrice,
+    exactApproveRequired,
+    swapMethodParameters
+  )
+}
+
 /** Callback to submit trades and track progress */
 export function useSwapCallback(
   trade: Trade | undefined | null,
@@ -319,7 +383,7 @@ export function useSwapCallback(
   gasPrice: string | undefined,
   exactApproveRequired: boolean | undefined,
   swapMethodParameters: MethodParameters | undefined,
-  onSubmit: () => void,
+  onSubmit?: () => void,
   txId?: string
 ): {
   swapState: SagaState | null
@@ -332,7 +396,7 @@ export function useSwapCallback(
 
   useEffect(() => {
     if (swapState.status === SagaStatus.Started) {
-      onSubmit()
+      onSubmit?.()
     }
   }, [onSubmit, swapState])
 

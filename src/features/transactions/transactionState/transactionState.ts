@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { MethodParameters } from '@uniswap/v3-sdk'
 import { shallowEqual } from 'react-redux'
+import { WarningModalType } from 'src/components/warnings/types'
 import { NATIVE_ADDRESS } from 'src/constants/addresses'
 import { ChainId } from 'src/constants/chains'
 import { AssetType, TradeableAsset } from 'src/entities/assets'
@@ -13,12 +14,6 @@ export enum CurrencyField {
 
 // the string is gasLimit denoted in wei
 export type GasSpendEstimate = Partial<Record<TransactionType, string>>
-
-export enum WarningModalType {
-  INFORMATIONAL, // contains text that users can acknowledge
-  ACTION, // calls callback function on ok
-  NONE, // hidden
-}
 
 export interface TransactionState {
   txId?: string

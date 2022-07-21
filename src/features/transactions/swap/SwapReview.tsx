@@ -13,7 +13,7 @@ import { Arrow } from 'src/components/icons/Arrow'
 import { AmountInput } from 'src/components/input/AmountInput'
 import { AnimatedFlex, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
-import { WarningAction } from 'src/components/warnings/types'
+import { WarningAction, WarningModalType } from 'src/components/warnings/types'
 import { useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { ElementName } from 'src/features/telemetry/constants'
 import {
@@ -26,10 +26,7 @@ import {
 import { SwapDetails } from 'src/features/transactions/swap/SwapDetails'
 import { isWrapAction } from 'src/features/transactions/swap/utils'
 import { WrapType } from 'src/features/transactions/swap/wrapSaga'
-import {
-  CurrencyField,
-  WarningModalType,
-} from 'src/features/transactions/transactionState/transactionState'
+import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
 
 interface SwapFormProps {
   dispatch: Dispatch<AnyAction>
