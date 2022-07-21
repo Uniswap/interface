@@ -8,8 +8,8 @@ import ShareIcon from 'src/assets/icons/share.svg'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { PrimaryCopyTextButton } from 'src/components/buttons/CopyTextButton'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
-import { BlueToPinkRadial } from 'src/components/gradients/BlueToPinkRadial'
 import { GradientBackground } from 'src/components/gradients/GradientBackground'
+import { UniconThemedRadial } from 'src/components/gradients/UniconThemedRadial'
 import { AnimatedFlex, Flex } from 'src/components/layout'
 import { Box } from 'src/components/layout/Box'
 import { UniconAttributes } from 'src/components/unicons/types'
@@ -27,14 +27,15 @@ export function WalletQRCode({ address }: Props) {
 
   const gradientData = useMemo(() => {
     const attributeIndices = deriveUniconAttributeIndices(address || '')
-    if (!attributeIndices) return undefined
+    if (!attributeIndices)
+      return { start: theme.colors.accentAction, end: theme.colors.accentActionSoft }
 
     const attributeData = getUniconAttributeData(attributeIndices)
-    return [
-      attributeData[UniconAttributes.GradientStart].toString(),
-      attributeData[UniconAttributes.GradientEnd].toString(),
-    ]
-  }, [address])
+    return {
+      start: attributeData[UniconAttributes.GradientStart].toString(),
+      end: attributeData[UniconAttributes.GradientEnd].toString(),
+    }
+  }, [address, theme.colors.accentAction, theme.colors.accentActionSoft])
 
   const onShare = async () => {
     if (!address) return
@@ -52,7 +53,11 @@ export function WalletQRCode({ address }: Props) {
   return (
     <>
       <GradientBackground>
-        <BlueToPinkRadial />
+        <UniconThemedRadial
+          borderRadius="lg"
+          gradientEndColor={gradientData.end}
+          gradientStartColor={gradientData.start}
+        />
       </GradientBackground>
       <AnimatedFlex centered grow entering={FadeIn} exiting={FadeOut}>
         <AddressDisplay
@@ -68,7 +73,7 @@ export function WalletQRCode({ address }: Props) {
             backgroundColor={theme.colors.backgroundContainer}
             color={theme.colors.accentTextDarkSecondary}
             enableLinearGradient={true}
-            linearGradient={gradientData}
+            linearGradient={[gradientData.start, gradientData.end]}
             size={220}
             value={address}
           />
