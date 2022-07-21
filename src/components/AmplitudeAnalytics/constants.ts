@@ -7,7 +7,11 @@
 export enum EventName {
   CONNECT_WALLET_BUTTON_CLICKED = 'Connect Wallet Button Clicked',
   PAGE_VIEWED = 'Page Viewed',
+  SWAP_AUTOROUTER_VISUALIZATION_EXPANDED = 'Swap Autorouter Visualization Expanded',
+  SWAP_DETAILS_EXPANDED = 'Swap Details Expanded',
+  SWAP_MAX_TOKEN_AMOUNT_SELECTED = 'Swap Max Token Amount Selected',
   SWAP_SUBMITTED = 'Swap Submitted',
+  SWAP_TOKENS_REVERSED = 'Swap Tokens Reversed',
   TOKEN_IMPORTED = 'Token Imported',
   TOKEN_SELECTED = 'Token Selected',
   TOKEN_SELECTOR_OPENED = 'Token Selector Opened',
@@ -45,7 +49,7 @@ export const enum SectionName {
 
 /** Known modals for analytics purposes. */
 export const enum ModalName {
-  SWAP = 'swap-modal',
+  CONFIRM_SWAP = 'confirm-swap-modal',
   TOKEN_SELECTOR = 'token-selector-modal',
   // alphabetize additional modal names.
 }
@@ -55,11 +59,15 @@ export const enum ModalName {
  * Use to identify low-level components given a TraceContext
  */
 export const enum ElementName {
+  AUTOROUTER_VISUALIZATION_ROW = 'expandable-autorouter-visualization-row',
   COMMON_BASES_CURRENCY_BUTTON = 'common-bases-currency-button',
   CONFIRM_SWAP_BUTTON = 'confirm-swap-or-send',
   CONNECT_WALLET_BUTTON = 'connect-wallet-button',
   IMPORT_TOKEN_BUTTON = 'import-token-button',
+  MAX_TOKEN_AMOUNT_BUTTON = 'max-token-amount-button',
   SWAP_BUTTON = 'swap-button',
+  SWAP_DETAILS_DROPDOWN = 'swap-details-dropdown',
+  SWAP_TOKENS_REVERSE_ARROW_BUTTON = 'swap-tokens-reverse-arrow-button',
   TOKEN_SELECTOR_ROW = 'token-selector-row',
   WALLET_TYPE_OPTION = 'wallet-type-option',
   // alphabetize additional element names.

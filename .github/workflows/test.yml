@@ -23,11 +23,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup
-      # Test that deps satisfy both "fewer" and "highest" strategies. This is to ensure we are
-      # up-to-date ("highest") while avoiding increasing package size ("fewer").
-      # These are readonly (--list) and explicitly exclude packages which only satisfy one strategy.
-      - run: npx yarn-deduplicate --strategy=fewer --list --fail --exclude commander safe-buffer
-      - run: npx yarn-deduplicate --strategy=highest --list --fail --exclude commander safe-buffer
+      - run: npx yarn-deduplicate --strategy=highest --list --fail
 
   unit-tests:
     runs-on: ubuntu-latest

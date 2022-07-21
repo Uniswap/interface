@@ -29,10 +29,6 @@ const StyledMenuIcon = styled(Settings)`
   > * {
     stroke: ${({ theme }) => theme.deprecated_text1};
   }
-
-  :hover {
-    opacity: 0.7;
-  }
 `
 
 const StyledCloseIcon = styled(X)`
@@ -47,7 +43,7 @@ const StyledCloseIcon = styled(X)`
   }
 `
 
-const StyledMenuButton = styled.button`
+const StyledMenuButton = styled.button<{ disabled: boolean }>`
   position: relative;
   width: 100%;
   height: 100%;
@@ -58,11 +54,16 @@ const StyledMenuButton = styled.button`
   border-radius: 0.5rem;
   height: 20px;
 
-  :hover,
-  :focus {
-    cursor: pointer;
-    outline: none;
-  }
+  ${({ disabled }) =>
+    !disabled &&
+    `
+    :hover,
+    :focus {
+      cursor: pointer;
+      outline: none;
+      opacity: 0.7;
+    }
+  `}
 `
 const EmojiWrapper = styled.div`
   position: absolute;
@@ -179,7 +180,12 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
           </AutoColumn>
         </ModalContentWrapper>
       </Modal>
-      <StyledMenuButton onClick={toggle} id="open-settings-dialog-button" aria-label={t`Transaction Settings`}>
+      <StyledMenuButton
+        disabled={!isSupportedChainId(chainId)}
+        onClick={toggle}
+        id="open-settings-dialog-button"
+        aria-label={t`Transaction Settings`}
+      >
         <StyledMenuIcon />
         {expertMode ? (
           <EmojiWrapper>
