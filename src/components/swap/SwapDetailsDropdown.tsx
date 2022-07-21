@@ -1,8 +1,9 @@
 import { Trans } from '@lingui/macro'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { ElementName, Event, EventName, SectionName } from 'components/AmplitudeAnalytics/constants'
-import { Trace, TraceEvent } from 'components/AmplitudeAnalytics/TraceEvent'
+import { ElementName, Event, EventName } from 'components/AmplitudeAnalytics/constants'
+import { Trace } from 'components/AmplitudeAnalytics/Trace'
+import { TraceEvent } from 'components/AmplitudeAnalytics/TraceEvent'
 import AnimatedDropdown from 'components/AnimatedDropdown'
 import Card, { OutlineCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
@@ -16,10 +17,13 @@ import { ChevronDown, Info } from 'react-feather'
 import { InterfaceTrade } from 'state/routing/types'
 import styled, { keyframes, useTheme } from 'styled-components/macro'
 import { HideSmall, ThemedText } from 'theme'
+import { computeRealizedLPFeePercent } from 'utils/prices'
 
+import { getPriceImpact } from './AdvancedSwapDetails'
 import { AdvancedSwapDetails } from './AdvancedSwapDetails'
 import GasEstimateBadge from './GasEstimateBadge'
 import { ResponsiveTooltipContainer } from './styleds'
+import { getNumberFormattedToDecimalPlace } from './SwapModalFooter'
 import SwapRoute from './SwapRoute'
 import TradePrice from './TradePrice'
 
@@ -120,17 +124,26 @@ interface SwapDetailsInlineProps {
   allowedSlippage: Percent
 }
 
-const formatAnalyticsEventProperties = (trade: InterfaceTrade<Currency, Currency, TradeType>) => ({
+const formatAnalyticsEventProperties = (
+  trade: InterfaceTrade<Currency, Currency, TradeType>,
+  lpFeePercent: Percent | undefined
+) => ({
   token_in_symbol: trade.inputAmount.currency.symbol,
   token_out_symbol: trade.outputAmount.currency.symbol,
   token_in_address: trade.inputAmount.currency.isToken ? trade.inputAmount.currency.address : undefined,
   token_out_address: trade.outputAmount.currency.isToken ? trade.outputAmount.currency.address : undefined,
+  price_impact_percentage: lpFeePercent ? getPriceImpact(lpFeePercent, trade) : undefined,
+  estimated_network_fee_usd: trade.gasUseEstimateUSD
+    ? getNumberFormattedToDecimalPlace(trade.gasUseEstimateUSD, 2)
+    : undefined,
+  chain_id:
+    trade.inputAmount.currency.chainId === trade.outputAmount.currency.chainId
+      ? trade.inputAmount.currency.chainId
+      : undefined,
+  token_in_amount: getNumberFormattedToDecimalPlace(trade.inputAmount, trade.inputAmount.currency.decimals),
+  token_out_amount: getNumberFormattedToDecimalPlace(trade.outputAmount, trade.outputAmount.currency.decimals),
+  // TODO(lynnshaoyu): Implement quote_latency_milliseconds.
 })
-
-// price_impact_percentage
-// estimated_network_fee_usd
-// token_out_amount
-// token_in_amount
 
 export default function SwapDetailsDropdown({
   trade,
@@ -143,6 +156,7 @@ export default function SwapDetailsDropdown({
   const theme = useTheme()
   const { chainId } = useWeb3React()
   const [showDetails, setShowDetails] = useState(false)
+  const lpFeePercent = trade ? computeRealizedLPFeePercent(trade) : undefined
 
   return (
     <Wrapper>
@@ -187,9 +201,9 @@ export default function SwapDetailsDropdown({
               {trade ? (
                 <LoadingOpacityContainer $loading={syncing}>
                   <Trace
-                    name={EventName.PAGE_VIEWED}
-                    section={SectionName.CURRENCY_INPUT_PANEL}
-                    properties={formatAnalyticsEventProperties(trade)}
+                    name={EventName.SWAP_QUOTE_RECEIVED}
+                    element={ElementName.SWAP_TRADE_PRICE_ROW}
+                    properties={formatAnalyticsEventProperties(trade, lpFeePercent)}
                     shouldLogImpression={!loading && !syncing}
                   >
                     <TradePrice

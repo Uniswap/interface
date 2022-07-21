@@ -21,7 +21,7 @@ function getDurationTillTimestampSinceEpoch(futureTimestampSinceEpoch?: number):
   return futureTimestampSinceEpoch - new Date().getTime() / 1000
 }
 
-const getNumberFormattedToDecimalPlace = (
+export const getNumberFormattedToDecimalPlace = (
   intialNumberObject: Percent | CurrencyAmount<Token | Currency>,
   decimalPlace: number
 ): number => parseFloat(intialNumberObject.toFixed(decimalPlace))
