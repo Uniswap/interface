@@ -83,7 +83,7 @@ export default function TokenTable() {
   const { data, error, loading } = useTopTokens()
   const showFavorites = useAtomValue(showFavoritesAtom)
   const timePeriod = TimePeriod.day
-  const topTokenAddresses = Object.keys(data)
+  const topTokenAddresses = data ? Object.keys(data) : []
   const filteredTokens = useFilteredTokens(topTokenAddresses)
 
   /* loading and error state */
