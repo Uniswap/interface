@@ -80,11 +80,11 @@ const StyledTokenRow = styled.div`
   }
 
   @media only screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
-    grid-template-columns: 1fr 12fr 6fr;
+    grid-template-columns: 12fr 6fr;
     width: fit-content;
     min-width: unset;
     border-bottom: 0.5px solid ${({ theme }) => theme.backgroundContainer};
-    padding: 0px;
+    padding: 0px 12px;
 
     :last-of-type {
       border-bottom: none;
@@ -143,9 +143,7 @@ const ListNumberCell = styled(Cell)`
   min-width: 32px;
 
   @media only screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
-    font-size: 12px;
-    justify-content: flex-start;
-    min-width: 20px;
+    display: none;
   }
 `
 const MarketCapCell = styled(Cell)<{ sortable: boolean }>`
