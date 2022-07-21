@@ -7,7 +7,6 @@ import { TraceEvent } from 'components/AmplitudeAnalytics/TraceEvent'
 import { ButtonGray, ButtonPrimary, ButtonText } from 'components/Button'
 import { AutoColumn } from 'components/Column'
 import { FlyoutAlignment, NewMenu } from 'components/Menu'
-import { SwapPoolTabs } from 'components/NavigationTabs'
 import PositionList from 'components/PositionList'
 import { RowBetween, RowFixed } from 'components/Row'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
@@ -157,7 +156,6 @@ function WrongNetworkCard() {
   return (
     <>
       <PageWrapper>
-        <SwapPoolTabs active="pool" />
         <AutoColumn gap="lg" justify="center">
           <AutoColumn gap="lg" style={{ width: '100%' }}>
             <TitleRow style={{ marginTop: '1rem' }} padding={'0'}>
@@ -256,7 +254,6 @@ export default function Pool() {
     <Trace page={PageName.POOL_PAGE} shouldLogImpression>
       <>
         <PageWrapper>
-          <SwapPoolTabs active="pool" />
           <AutoColumn gap="lg" justify="center">
             <AutoColumn gap="lg" style={{ width: '100%' }}>
               <TitleRow style={{ marginTop: '1rem' }} padding={'0'}>
