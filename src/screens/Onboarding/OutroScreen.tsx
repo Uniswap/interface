@@ -8,6 +8,7 @@ import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { Box, Flex } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
 import { Text } from 'src/components/Text'
+import { OnboardingEntryPoint } from 'src/features/onboarding/utils'
 import { ElementName } from 'src/features/telemetry/constants'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import {
@@ -15,11 +16,11 @@ import {
   pendingAccountActions,
 } from 'src/features/wallet/pendingAcccountsSaga'
 import { setFinishedOnboarding } from 'src/features/wallet/walletSlice'
-import { OnboardingScreens } from 'src/screens/Screens'
+import { OnboardingScreens, Screens } from 'src/screens/Screens'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.SelectColor>
 
-export function OutroScreen({}: Props) {
+export function OutroScreen({ navigation, route: { params } }: Props) {
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
   const theme = useAppTheme()
@@ -30,6 +31,9 @@ export function OutroScreen({}: Props) {
     // Remove pending flag from all new accounts.
     dispatch(pendingAccountActions.trigger(PendingAccountActions.ACTIVATE))
     dispatch(setFinishedOnboarding({ finishedOnboarding: true }))
+    if (params?.entryPoint === OnboardingEntryPoint.Sidebar) {
+      navigation.navigate(Screens.Home)
+    }
   }
 
   return (

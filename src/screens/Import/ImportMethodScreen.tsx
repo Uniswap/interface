@@ -14,7 +14,7 @@ import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import Disclaimer from 'src/features/import/Disclaimer'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
-import { ImportType } from 'src/features/onboarding/utils'
+import { ImportType, OnboardingEntryPoint } from 'src/features/onboarding/utils'
 import { ElementName } from 'src/features/telemetry/constants'
 import {
   PendingAccountActions,
@@ -22,7 +22,15 @@ import {
 } from 'src/features/wallet/pendingAcccountsSaga'
 import { OnboardingScreens } from 'src/screens/Screens'
 
-const backupOption = {
+interface ImportMethodOption {
+  title: (t: TFunction) => string
+  blurb: (t: TFunction) => string
+  icon: React.ReactNode
+  nav: any
+  importType: ImportType
+  name: ElementName
+}
+const backupOption: ImportMethodOption = {
   title: (t: TFunction) => t('Restore from iCloud'),
   blurb: (t: TFunction) => t('Recover a backed-up recovery phrase'),
   icon: <CloudIcon />,
@@ -31,14 +39,7 @@ const backupOption = {
   name: ElementName.OnboardingImportBackup,
 }
 
-const options: {
-  title: (t: TFunction) => string
-  blurb: (t: TFunction) => string
-  icon: React.ReactNode
-  nav: any
-  importType: ImportType
-  name: ElementName
-}[] = [
+const options: ImportMethodOption[] = [
   {
     title: (t: TFunction) => t('Import a recovery phrase'),
     blurb: (t: TFunction) => t('Enter or paste words'),
@@ -67,9 +68,10 @@ const options: {
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.ImportMethod>
 
-export function ImportMethodScreen({ navigation }: Props) {
+export function ImportMethodScreen({ navigation, route: { params } }: Props) {
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
+  const entryPoint = params?.entryPoint
 
   /**
    * @TODO include check icloud backups and conditionally render restore option
@@ -81,26 +83,29 @@ export function ImportMethodScreen({ navigation }: Props) {
     dispatch(pendingAccountActions.trigger(PendingAccountActions.DELETE))
     navigation.navigate({
       name: nav,
-      params: { importType },
+      params: { importType, entryPoint },
       merge: true,
     })
   }
 
+  const importOptions =
+    entryPoint === OnboardingEntryPoint.Sidebar
+      ? options.filter((option) => option.name !== ElementName.OnboardingImportWatchedAccount)
+      : [...(backupFound ? [backupOption] : []), ...options]
+
   return (
-    <OnboardingScreen title={t('Choose how to connect your wallet')}>
+    <OnboardingScreen title={t('Choose how to add your wallet')}>
       <Flex grow gap="md">
-        {[...(backupFound ? [backupOption] : []), ...options].map(
-          ({ title, blurb, icon, nav, importType, name }) => (
-            <OptionCard
-              key={'connection-option-' + title}
-              blurb={blurb(t)}
-              icon={icon}
-              name={name}
-              title={title(t)}
-              onPress={() => handleOnPress(nav, importType)}
-            />
-          )
-        )}
+        {importOptions.map(({ title, blurb, icon, nav, importType, name }) => (
+          <OptionCard
+            key={'connection-option-' + title}
+            blurb={blurb(t)}
+            icon={icon}
+            name={name}
+            title={title(t)}
+            onPress={() => handleOnPress(nav, importType)}
+          />
+        ))}
         <Flex grow justifyContent="flex-end">
           <Disclaimer />
         </Flex>

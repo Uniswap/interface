@@ -18,22 +18,33 @@ import {
 } from 'src/features/notifications/NotificationToast'
 import { promptPushPermission } from 'src/features/notifications/Onesignal'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
+import { OnboardingEntryPoint } from 'src/features/onboarding/utils'
 import { ElementName } from 'src/features/telemetry/constants'
+import { useIsBiometricAuthEnabled } from 'src/features/wallet/hooks'
 import { OnboardingScreens } from 'src/screens/Screens'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.Notifications>
 
 export function NotificationsSetupScreen({ navigation, route: { params } }: Props) {
   const { t } = useTranslation()
+  const isBiometricAuthEnabled = useIsBiometricAuthEnabled()
 
   const onPressNext = () => {
-    navigation.navigate({ name: OnboardingScreens.Security, params, merge: true })
+    navigateToNextScreen()
   }
 
   const onPressEnableNotifications = () => {
-    promptPushPermission(() =>
+    promptPushPermission(() => {
+      navigateToNextScreen()
+    })
+  }
+
+  const navigateToNextScreen = () => {
+    if (isBiometricAuthEnabled || params?.entryPoint === OnboardingEntryPoint.Sidebar) {
+      navigation.navigate({ name: OnboardingScreens.Outro, params, merge: true })
+    } else {
       navigation.navigate({ name: OnboardingScreens.Security, params, merge: true })
-    )
+    }
   }
 
   return (

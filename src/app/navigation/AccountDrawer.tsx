@@ -24,13 +24,18 @@ import { ActionSheetModal, MenuItemProp } from 'src/components/modals/ActionShee
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { Text } from 'src/components/Text'
 import { WalletQRCode } from 'src/components/WalletConnect/ScanSheet/WalletQRCode'
-import { importAccountActions } from 'src/features/import/importAccountSaga'
+import { ImportType, OnboardingEntryPoint } from 'src/features/onboarding/utils'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { Account, AccountType, NativeAccount } from 'src/features/wallet/accounts/types'
+import { createAccountActions } from 'src/features/wallet/createAccountSaga'
 import { EditAccountAction, editAccountActions } from 'src/features/wallet/editAccountSaga'
-import { useAccounts, useActiveAccount } from 'src/features/wallet/hooks'
+import { useAccounts, useActiveAccount, useNativeAccountExists } from 'src/features/wallet/hooks'
+import {
+  PendingAccountActions,
+  pendingAccountActions,
+} from 'src/features/wallet/pendingAcccountsSaga'
 import { activateAccount } from 'src/features/wallet/walletSlice'
-import { Screens } from 'src/screens/Screens'
+import { OnboardingScreens, Screens } from 'src/screens/Screens'
 import { setClipboard } from 'src/utils/clipboard'
 
 const key = (account: Account) => account.address
@@ -43,9 +48,11 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
   const activeAccount = useActiveAccount()
   const addressToAccount = useAccounts()
   const dispatch = useAppDispatch()
+  const hasImportedSeedPhrase = useNativeAccountExists()
 
   const [qrCodeAddress, setQRCodeAddress] = useState(activeAccount?.address)
   const [showQRModal, setShowQRModal] = useState(false)
+  const [showAddWalletModal, setShowAddWalletModal] = useState(false)
   const [showEditAccountModal, setShowEditAccountModal] = useState(false)
   const [pendingEditAddress, setPendingEditAddress] = useState<Address | null>(null)
   const [pendingRemoveAccount, setPendingRemoveAccount] = useState<Account | null>(null)
@@ -109,11 +116,12 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
 
   const onCloseQrCode = () => setShowQRModal(false)
 
-  const onPressNewAccount = () => {
-    // First reset to clear saga state that's left over from dev account import
-    // TODO remove when use of dev account is removed
-    dispatch(importAccountActions.reset())
-    navigation.navigate(Screens.ImportAccount)
+  const onPressAddWallet = () => {
+    setShowAddWalletModal(true)
+  }
+
+  const onCloseAddWallet = () => {
+    setShowAddWalletModal(false)
   }
 
   const onPressSettings = () => {
@@ -242,6 +250,84 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
     addressToAccount,
   ])
 
+  const addWalletOptions = useMemo<MenuItemProp[]>(() => {
+    const onPressCreateNewWallet = () => {
+      // Clear any existing pending accounts first.
+      dispatch(pendingAccountActions.trigger(PendingAccountActions.DELETE))
+      dispatch(createAccountActions.trigger(0))
+
+      navigation.navigate(Screens.OnboardingStack, {
+        screen: OnboardingScreens.EditName,
+        params: {
+          importType: ImportType.Create,
+          entryPoint: OnboardingEntryPoint.Sidebar,
+        },
+        merge: false,
+      })
+      setShowAddWalletModal(false)
+    }
+
+    const onPressAddViewOnlyWallet = () => {
+      navigation.navigate(Screens.OnboardingStack, {
+        screen: OnboardingScreens.WatchWallet,
+        params: {
+          importType: ImportType.Watch,
+          entryPoint: OnboardingEntryPoint.Sidebar,
+        },
+        merge: false,
+      })
+      setShowAddWalletModal(false)
+    }
+
+    const onPressImportWallet = () => {
+      navigation.navigate(Screens.OnboardingStack, {
+        screen: OnboardingScreens.ImportMethod,
+        params: { entryPoint: OnboardingEntryPoint.Sidebar },
+        merge: false,
+      })
+
+      setShowAddWalletModal(false)
+    }
+
+    const menuItems = [
+      {
+        key: ElementName.CreateAccount,
+        onPress: onPressCreateNewWallet,
+        render: () => (
+          <Box
+            alignItems="center"
+            borderBottomColor="backgroundOutline"
+            borderBottomWidth={1}
+            p="md">
+            <Text variant="body">{t('Create a new wallet')}</Text>
+          </Box>
+        ),
+      },
+      {
+        key: ElementName.AddViewOnlyWallet,
+        onPress: onPressAddViewOnlyWallet,
+        render: () => (
+          <Box alignItems="center" p="md">
+            <Text variant="body">{t('Add a view-only wallet')}</Text>
+          </Box>
+        ),
+      },
+    ]
+
+    if (!hasImportedSeedPhrase) {
+      menuItems.push({
+        key: ElementName.ImportAccount,
+        onPress: onPressImportWallet,
+        render: () => (
+          <Box alignItems="center" borderTopColor="backgroundOutline" borderTopWidth={1} p="md">
+            <Text variant="body">{t('Import a wallet')}</Text>
+          </Box>
+        ),
+      })
+    }
+    return menuItems
+  }, [hasImportedSeedPhrase, dispatch, navigation, t])
+
   return (
     <Screen bg="backgroundBackdrop">
       <AnimatedFlatList
@@ -260,7 +346,7 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
           <Button
             name={ElementName.ImportAccount}
             testID={ElementName.ImportAccount}
-            onPress={onPressNewAccount}>
+            onPress={onPressAddWallet}>
             <Flex row alignItems="center" gap="sm">
               <PlusSquareIcon color={theme.colors.textSecondary} height={24} width={24} />
               <Text color="textSecondary" variant="subhead">
@@ -286,6 +372,12 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
         name={ModalName.Account}
         options={editAccountOptions}
         onClose={() => setShowEditAccountModal(false)}
+      />
+      <ActionSheetModal
+        isVisible={showAddWalletModal}
+        name={ModalName.AddWallet}
+        options={addWalletOptions}
+        onClose={onCloseAddWallet}
       />
       {!!pendingRemoveAccount && (
         <RemoveAccountModal

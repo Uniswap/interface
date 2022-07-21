@@ -9,7 +9,7 @@ import { Flex } from 'src/components/layout'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { ElementName } from 'src/features/telemetry/constants'
 import { AccountType } from 'src/features/wallet/accounts/types'
-import { useActiveAccount } from 'src/features/wallet/hooks'
+import { useActiveAccount, useNativeAccountExists } from 'src/features/wallet/hooks'
 import { OnboardingScreens } from 'src/screens/Screens'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.SelectColor>
@@ -17,10 +17,11 @@ type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.
 // Detect next view based on import account type
 function useNextOnboardingScreen(currentScreen: OnboardingScreens) {
   const activeAccount = useActiveAccount()
+  const hasImportedSeedPhrase = useNativeAccountExists()
 
   switch (currentScreen) {
     case OnboardingScreens.SelectColor:
-      if (activeAccount?.type === AccountType.Native) {
+      if (activeAccount?.type === AccountType.Native && !hasImportedSeedPhrase) {
         return OnboardingScreens.Backup
       }
       return OnboardingScreens.Notifications

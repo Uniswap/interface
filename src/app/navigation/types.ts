@@ -101,6 +101,8 @@ export type OnboardingStackParamList = {
   [OnboardingScreens.PrivateKeyInput]: OnboardingStackBaseParams
   [OnboardingScreens.SelectWallet]: OnboardingStackBaseParams
   [OnboardingScreens.WatchWallet]: OnboardingStackBaseParams
+
+  [Screens.Home]: undefined
 }
 
 export type AppStackParamList = {
