@@ -1,32 +1,30 @@
 import { Trans } from '@lingui/macro'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import { getConnection } from 'connection/utils'
 import { LOCALE_LABEL, SUPPORTED_LOCALES, SupportedLocale } from 'constants/locales'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import useCopyClipboard from 'hooks/useCopyClipboard'
 import { useLocationLinkProps } from 'hooks/useLocationLinkProps'
-import { useCallback, useEffect, useState } from 'react'
-import { getChainInfo, getChainInfoOrDefault } from 'constants/chainInfo'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
+import { useCallback, useEffect, useState } from 'react'
 import ReactCountryFlag from 'react-country-flag'
 import { Check, ChevronLeft, ChevronRight, Copy, ExternalLink, Moon, Power, Sun } from 'react-feather'
 import { Link } from 'react-router-dom'
 import { Text } from 'rebass'
+import { useNativeCurrencyBalances } from 'state/connection/hooks'
 import { useAppDispatch } from 'state/hooks'
 import { useDarkModeManager } from 'state/user/hooks'
 import { updateSelectedWallet } from 'state/user/reducer'
-import { useNativeCurrencyBalances } from 'state/connection/hooks'
-import StatusIcon from '../Identicon/StatusIcon'
-import { getConnection } from 'connection/utils'
-
 import styled from 'styled-components/macro'
 
-import useENS from '../../hooks/useENS'
 import { themeVars } from '../../css/sprinkles.css'
+import useENS from '../../hooks/useENS'
+import { useUserUnclaimedAmount } from '../../state/claim/hooks'
 import { shortenAddress } from '../../utils'
 import { Currency, fetchPrice } from '../../utils/fetchPrice'
-import { useUserUnclaimedAmount } from '../../state/claim/hooks'
 import { ButtonPrimary } from '../Button'
+import StatusIcon from '../Identicon/StatusIcon'
 import IconButton, { IconHoverText } from './IconButton'
 
 export enum FlyoutAlignment {
@@ -47,12 +45,6 @@ const Column = styled.div`
   flex-direction: column;
   text-align: center;
   margin-top: 20px;
-`
-
-const Img = styled.img`
-  width: 20px;
-  height: 20px;
-  margin-right: 4px;
 `
 
 const WalletWrapper = styled.div`
@@ -168,7 +160,7 @@ const LanguageBack = styled.span`
 
 function LanguageMenuItem({ locale, active, key }: { locale: SupportedLocale; active: boolean; key: string }) {
   const { to, onClick } = useLocationLinkProps(locale)
-  getChainInfo
+
   if (!to) return null
 
   return (
@@ -205,7 +197,7 @@ function LanguageMenu({ close }: { close: () => void }) {
 }
 
 const Wallet = () => {
-  const { account, chainId, connector } = useWeb3React()
+  const { account, connector } = useWeb3React()
   const [darkMode, toggleDarkMode] = useDarkModeManager()
   const [price, setPrice] = useState(1500)
   const [changeLanguage, setChangeLanguage] = useState(false)
