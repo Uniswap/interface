@@ -38,7 +38,7 @@ export function SecuritySetupScreen({ navigation: { navigate } }: Props) {
       subtitle={t(
         'Make sure that you’re the only person who can access your app and make transactions.'
       )}
-      title={t('Turn on FaceID')}>
+      title={t('Turn on Face ID')}>
       <Flex grow alignItems="center" justifyContent="space-between">
         <Box bg="backgroundAction" borderRadius="lg" p="lg">
           <FaceIcon color={theme.colors.textSecondary} height={100} width={100} />
@@ -47,7 +47,7 @@ export function SecuritySetupScreen({ navigation: { navigate } }: Props) {
         <Flex alignItems="center" justifyContent="flex-end" width={'100%'}>
           <PrimaryButton
             alignSelf="stretch"
-            label={t('Turn on FaceID')}
+            label={t('Turn on Face ID')}
             name={ElementName.Enable}
             testID={ElementName.Enable}
             variant="onboard"

@@ -57,7 +57,7 @@
 	<key>NSCameraUsageDescription</key>
 	<string>$(PRODUCT_NAME) needs access to your Camera.</string>
 	<key>NSFaceIDUsageDescription</key>
-	<string>Enabling FaceId helps Uniswap keep your assets secure.</string>
+	<string>Enabling Face ID helps Uniswap keep your assets secure.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string></string>
 	<key>UIAppFonts</key>
