@@ -60,54 +60,54 @@ export interface Colors {
 
   userThemeColor: string
 
-  backgroundBackdrop: string
-  backgroundSurface: string
-  backgroundContainer: string
-  backgroundAction: string
-  backgroundOutline: string
-  backgroundScrim: string
+  backgroundBackdrop: Color
+  backgroundSurface: Color
+  backgroundContainer: Color
+  backgroundAction: Color
+  backgroundOutline: Color
+  backgroundScrim: Color
 
-  textPrimary: string
-  textSecondary: string
-  textTertiary: string
+  textPrimary: Color
+  textSecondary: Color
+  textTertiary: Color
 
-  accentAction: string
-  accentActive: string
-  accentSuccess: string
-  accentWarning: string
-  accentFailure: string
+  accentAction: Color
+  accentActive: Color
+  accentSuccess: Color
+  accentWarning: Color
+  accentFailure: Color
 
-  accentActionSoft: string
-  accentActiveSoft: string
-  accentSuccessSoft: string
-  accentWarningSoft: string
-  accentFailureSoft: string
+  accentActionSoft: Color
+  accentActiveSoft: Color
+  accentSuccessSoft: Color
+  accentWarningSoft: Color
+  accentFailureSoft: Color
 
-  accentTextDarkPrimary: string
-  accentTextDarkSecondary: string
-  accentTextDarkTertiary: string
+  accentTextDarkPrimary: Color
+  accentTextDarkSecondary: Color
+  accentTextDarkTertiary: Color
 
-  accentTextLightPrimary: string
-  accentTextLightSecondary: string
-  accentTextLightTertiary: string
+  accentTextLightPrimary: Color
+  accentTextLightSecondary: Color
+  accentTextLightTertiary: Color
 
-  white: string
-  black: string
-  none: string
+  white: Color
+  black: Color
+  none: Color
 
-  chain_1: string
-  chain_3: string
-  chain_4: string
-  chain_5: string
-  chain_10: string
-  chain_137: string
-  chain_42: string
-  chain_69: string
-  chain_42161: string
-  chain_421611: string
-  chain_80001: string
+  chain_1: Color
+  chain_3: Color
+  chain_4: Color
+  chain_5: Color
+  chain_10: Color
+  chain_137: Color
+  chain_42: Color
+  chain_69: Color
+  chain_42161: Color
+  chain_421611: Color
+  chain_80001: Color
 
-  blue200: string
+  blue200: Color
 }
 
 declare module 'styled-components/macro' {
@@ -115,7 +115,7 @@ declare module 'styled-components/macro' {
     grids: Grids
 
     // shadows
-    shadow1: string
+    shadow1: Color
 
     // media queries
     mediaWidth: {

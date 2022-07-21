@@ -1,85 +1,86 @@
 // Based mostly on https://github.com/Uniswap/interface/blob/main/src/theme/index.tsx
 
-import { opacify } from './colorsUtil'
+import { Color } from './styled'
+import { opacify } from './utils'
 
 export interface GlobalPalette {
-  white: string
-  black: string
-  gray50: string
-  gray100: string
-  gray200: string
-  gray300: string
-  gray400: string
-  gray500: string
-  gray600: string
-  gray700: string
-  gray800: string
-  gray900: string
-  pink50: string
-  pink100: string
-  pink200: string
-  pink300: string
-  pink400: string
-  pink500: string
-  pink600: string
-  pink700: string
-  pink800: string
-  pink900: string
-  pinkVibrant: string
-  red50: string
-  red100: string
-  red200: string
-  red300: string
-  red400: string
-  red500: string
-  red600: string
-  red700: string
-  red800: string
-  red900: string
-  redVibrant: string
-  yellow50: string
-  yellow100: string
-  yellow200: string
-  yellow300: string
-  yellow400: string
-  yellow500: string
-  yellow600: string
-  yellow700: string
-  yellow800: string
-  yellow900: string
-  yellowVibrant: string
-  gold200: string
-  goldVibrant: string
-  green50: string
-  green100: string
-  green200: string
-  green300: string
-  green400: string
-  green500: string
-  green600: string
-  green700: string
-  green800: string
-  green900: string
-  greenVibrant: string
-  blue50: string
-  blue100: string
-  blue200: string
-  blue300: string
-  blue400: string
-  blue500: string
-  blue600: string
-  blue700: string
-  blue800: string
-  blue900: string
-  blueVibrant: string
-  magentaVibrant: string
-  networkEthereum: string
-  networkOptimism: string
-  networkOptimismSoft: string
-  networkPolygon: string
-  networkArbitrum: string
-  networkPolygonSoft: string
-  networkEthereumSoft: string
+  white: Color
+  black: Color
+  gray50: Color
+  gray100: Color
+  gray200: Color
+  gray300: Color
+  gray400: Color
+  gray500: Color
+  gray600: Color
+  gray700: Color
+  gray800: Color
+  gray900: Color
+  pink50: Color
+  pink100: Color
+  pink200: Color
+  pink300: Color
+  pink400: Color
+  pink500: Color
+  pink600: Color
+  pink700: Color
+  pink800: Color
+  pink900: Color
+  pinkVibrant: Color
+  red50: Color
+  red100: Color
+  red200: Color
+  red300: Color
+  red400: Color
+  red500: Color
+  red600: Color
+  red700: Color
+  red800: Color
+  red900: Color
+  redVibrant: Color
+  yellow50: Color
+  yellow100: Color
+  yellow200: Color
+  yellow300: Color
+  yellow400: Color
+  yellow500: Color
+  yellow600: Color
+  yellow700: Color
+  yellow800: Color
+  yellow900: Color
+  yellowVibrant: Color
+  gold200: Color
+  goldVibrant: Color
+  green50: Color
+  green100: Color
+  green200: Color
+  green300: Color
+  green400: Color
+  green500: Color
+  green600: Color
+  green700: Color
+  green800: Color
+  green900: Color
+  greenVibrant: Color
+  blue50: Color
+  blue100: Color
+  blue200: Color
+  blue300: Color
+  blue400: Color
+  blue500: Color
+  blue600: Color
+  blue700: Color
+  blue800: Color
+  blue900: Color
+  blueVibrant: Color
+  magentaVibrant: Color
+  networkEthereum: Color
+  networkOptimism: Color
+  networkOptimismSoft: Color
+  networkPolygon: Color
+  networkArbitrum: Color
+  networkPolygonSoft: Color
+  networkEthereumSoft: Color
 }
 
 export const colors: GlobalPalette = {
@@ -166,54 +167,54 @@ export const colors: GlobalPalette = {
 }
 
 export interface Palette {
-  userThemeColor: string
+  userThemeColor: Color
 
-  backgroundBackdrop: string
-  backgroundSurface: string
-  backgroundContainer: string
-  backgroundAction: string
-  backgroundOutline: string
-  backgroundScrim: string
+  backgroundBackdrop: Color
+  backgroundSurface: Color
+  backgroundContainer: Color
+  backgroundAction: Color
+  backgroundOutline: Color
+  backgroundScrim: Color
 
-  textPrimary: string
-  textSecondary: string
-  textTertiary: string
+  textPrimary: Color
+  textSecondary: Color
+  textTertiary: Color
 
-  accentAction: string
-  accentActive: string
-  accentSuccess: string
-  accentWarning: string
-  accentFailure: string
+  accentAction: Color
+  accentActive: Color
+  accentSuccess: Color
+  accentWarning: Color
+  accentFailure: Color
 
-  accentActionSoft: string
-  accentActiveSoft: string
-  accentSuccessSoft: string
-  accentWarningSoft: string
-  accentFailureSoft: string
+  accentActionSoft: Color
+  accentActiveSoft: Color
+  accentSuccessSoft: Color
+  accentWarningSoft: Color
+  accentFailureSoft: Color
 
-  accentTextDarkPrimary: string
-  accentTextDarkSecondary: string
-  accentTextDarkTertiary: string
+  accentTextDarkPrimary: Color
+  accentTextDarkSecondary: Color
+  accentTextDarkTertiary: Color
 
-  accentTextLightPrimary: string
-  accentTextLightSecondary: string
-  accentTextLightTertiary: string
+  accentTextLightPrimary: Color
+  accentTextLightSecondary: Color
+  accentTextLightTertiary: Color
 
-  white: string
-  black: string
-  none: string
+  white: Color
+  black: Color
+  none: Color
 
-  chain_1: string
-  chain_3: string
-  chain_4: string
-  chain_5: string
-  chain_10: string
-  chain_137: string
-  chain_42: string
-  chain_69: string
-  chain_42161: string
-  chain_421611: string
-  chain_80001: string
+  chain_1: Color
+  chain_3: Color
+  chain_4: Color
+  chain_5: Color
+  chain_10: Color
+  chain_137: Color
+  chain_42: Color
+  chain_69: Color
+  chain_42161: Color
+  chain_421611: Color
+  chain_80001: Color
 }
 
 export const colorsLight: Palette = {
