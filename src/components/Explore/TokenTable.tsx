@@ -1,5 +1,6 @@
 import useTopTokens, { TimePeriod } from 'hooks/useTopTokens'
 import { useAtom } from 'jotai'
+import { AlertTriangle } from 'react-feather'
 import styled from 'styled-components/macro'
 
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from './constants'
@@ -58,7 +59,10 @@ export default function TokenTable() {
     return (
       <GridContainer>
         <HeaderRow timeframe={timePeriod} />
-        <NoTokenDisplay>An error occured loading tokens. Please try again.</NoTokenDisplay>
+        <NoTokenDisplay>
+          <AlertTriangle size={16} />
+          An error occured loading tokens. Please try again.
+        </NoTokenDisplay>
       </GridContainer>
     )
   }
