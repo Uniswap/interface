@@ -1,39 +1,51 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { TextButton } from 'src/components/buttons/TextButton'
-import { AnimatedBox } from 'src/components/layout'
+import { AnimatedBox, Box } from 'src/components/layout'
 
 type KeyProps = {
   action: string
   disabled?: (value: string) => boolean
   label: string
+  hidden?: boolean
 }
 
-const keys: KeyProps[] = [
-  { label: '1', action: 'insert' },
-  { label: '2', action: 'insert' },
-  { label: '3', action: 'insert' },
-  { label: '4', action: 'insert' },
-  { label: '5', action: 'insert' },
-  { label: '6', action: 'insert' },
-  { label: '7', action: 'insert' },
-  { label: '8', action: 'insert' },
-  { label: '9', action: 'insert' },
-  { label: '.', action: 'insert', disabled: (v: string) => v.includes('.') },
-  { label: '0', action: 'insert' },
-  { label: '←', action: 'deleteLast', disabled: (v: string) => v.length === 0 },
-]
-
 interface DecimalPadProps {
+  hideDecimal?: boolean
   setValue: (newValue: string) => void
   value?: string
 }
 
-export function DecimalPad({ setValue, value = '' }: DecimalPadProps) {
+export function DecimalPad({ setValue, value = '', hideDecimal = false }: DecimalPadProps) {
+  const keys: KeyProps[] = useMemo(() => {
+    return [
+      { label: '1', action: 'insert' },
+      { label: '2', action: 'insert' },
+      { label: '3', action: 'insert' },
+      { label: '4', action: 'insert' },
+      { label: '5', action: 'insert' },
+      { label: '6', action: 'insert' },
+      { label: '7', action: 'insert' },
+      { label: '8', action: 'insert' },
+      { label: '9', action: 'insert' },
+      {
+        label: '.',
+        action: 'insert',
+        disabled: (v: string) => v.includes('.'),
+        hidden: hideDecimal,
+      },
+      { label: '0', action: 'insert' },
+      { label: '←', action: 'deleteLast', disabled: (v: string) => v.length === 0 },
+    ]
+  }, [hideDecimal])
   return (
     <AnimatedBox flex={1} flexDirection="row" flexGrow={1} flexWrap="wrap">
-      {keys.map((key, i) => (
-        <KeyButton {...key} key={i} setValue={setValue} value={value} />
-      ))}
+      {keys.map((key, i) =>
+        key.hidden ? (
+          <Box key={i} height="25%" width="33%" />
+        ) : (
+          <KeyButton {...key} key={i} setValue={setValue} value={value} />
+        )
+      )}
     </AnimatedBox>
   )
 }

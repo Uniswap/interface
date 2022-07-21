@@ -26,7 +26,7 @@ export default function PinInput({ length, setValue, value }: PinInputProps) {
           ))}
         </Flex>
       </Flex>
-      <DecimalPad setValue={setValue} value={value} />
+      <DecimalPad hideDecimal setValue={setValue} value={value} />
     </Flex>
   )
 }
