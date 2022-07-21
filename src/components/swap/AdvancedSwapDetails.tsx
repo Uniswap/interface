@@ -45,7 +45,10 @@ function TextWithLoadingPlaceholder({
   )
 }
 
-export function getPriceImpact(lpFeePercent: Percent, trade: InterfaceTrade<Currency, Currency, TradeType>): Percent {
+export function getPriceImpactPercent(
+  lpFeePercent: Percent,
+  trade: InterfaceTrade<Currency, Currency, TradeType>
+): Percent {
   return trade.priceImpact.subtract(lpFeePercent)
 }
 
@@ -63,7 +66,7 @@ export function AdvancedSwapDetails({
     if (!trade) return { expectedOutputAmount: undefined, priceImpact: undefined }
     const expectedOutputAmount = trade.outputAmount
     const realizedLpFeePercent = computeRealizedLPFeePercent(trade)
-    const priceImpact = getPriceImpact(realizedLpFeePercent, trade)
+    const priceImpact = getPriceImpactPercent(realizedLpFeePercent, trade)
     return { expectedOutputAmount, priceImpact }
   }, [trade])
 

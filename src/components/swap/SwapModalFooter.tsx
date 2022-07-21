@@ -13,7 +13,7 @@ import { computeRealizedLPFeePercent } from 'utils/prices'
 
 import { ButtonError } from '../Button'
 import { AutoRow } from '../Row'
-import { getPriceImpact } from './AdvancedSwapDetails'
+import { getPriceImpactPercent } from './AdvancedSwapDetails'
 import { SwapCallbackError } from './styleds'
 
 function getDurationTillTimestampSinceEpoch(futureTimestampSinceEpoch?: number): number | undefined {
@@ -26,13 +26,7 @@ const getNumberFormattedToDecimalPlace = (
   decimalPlace: number
 ): number => parseFloat(intialNumberObject.toFixed(decimalPlace))
 
-export const getPriceImpactPercentageNumber = (
-  trade?: InterfaceTrade<Currency, Currency, TradeType>,
-  lpFeePercent?: Percent
-): number | undefined => {
-  if (!trade || !lpFeePercent) return undefined
-  return getNumberFormattedToDecimalPlace(getPriceImpact(lpFeePercent, trade), 4)
-}
+const formatPercentInBasisPointsNumber = (percent: Percent): number => parseFloat(percent.toFixed(2)) * 100
 
 interface AnalyticsEventProps {
   trade: InterfaceTrade<Currency, Currency, TradeType>
@@ -70,8 +64,8 @@ const formatAnalyticsEventProperties = ({
   token_out_symbol: trade.outputAmount.currency.symbol,
   token_in_amount: getNumberFormattedToDecimalPlace(trade.inputAmount, trade.inputAmount.currency.decimals),
   token_out_amount: getNumberFormattedToDecimalPlace(trade.outputAmount, trade.outputAmount.currency.decimals),
-  price_impact_percentage: getPriceImpactPercentageNumber(trade, lpFeePercent),
-  allowed_slippage_percentage: getNumberFormattedToDecimalPlace(allowedSlippage, 4),
+  price_impact_basis_points: formatPercentInBasisPointsNumber(getPriceImpactPercent(lpFeePercent, trade)),
+  allowed_slippage_basis_points: formatPercentInBasisPointsNumber(allowedSlippage),
   is_auto_router_api: isAutoRouterApi,
   is_auto_slippage: isAutoSlippage,
   chain_id:
