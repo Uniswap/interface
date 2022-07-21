@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-07-12 23:04\n"
+"PO-Revision-Date: 2022-07-21 14:04\n"
 "Last-Translator: \n"
 "Language: af_ZA\n"
 "Language-Team: Afrikaans\n"
@@ -1264,7 +1264,6 @@ msgid "Polygonscan"
 msgstr "Veelhoekskandering"
 
 #: src/components/Header/index.tsx
-#: src/components/NavigationTabs/index.tsx
 msgid "Pool"
 msgstr "Poel"
 
@@ -1478,10 +1477,6 @@ msgstr "Soek naam of plak adres"
 msgid "Select Pair"
 msgstr "Kies Koppel"
 
-#: src/components/Header/NetworkSelector.tsx
-msgid "Select a network"
-msgstr "Kies 'n netwerk"
-
 #: src/components/CurrencyInputPanel/index.tsx
 #: src/components/SearchModal/CurrencySearch.tsx
 #: src/pages/PoolFinder/index.tsx
@@ -1493,6 +1488,10 @@ msgstr "Kies 'n teken"
 #: src/pages/PoolFinder/index.tsx
 msgid "Select a token to find your v2 liquidity."
 msgstr "Kies 'n teken om u v2-likiditeit te vind."
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Select a {0}network"
+msgstr "Kies 'n {0}netwerk"
 
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Select an action"
@@ -1587,7 +1586,6 @@ msgid "Supplying {0} {1} and {2} {3}"
 msgstr "Verskaf {0} {1} en {2} {3}"
 
 #: src/components/Header/index.tsx
-#: src/components/NavigationTabs/index.tsx
 #: src/components/swap/SwapHeader.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
@@ -2137,10 +2135,6 @@ msgstr "Draai toe"
 msgid "Wrap <0/> to {0}"
 msgstr "Wikkel <0/> tot {0}"
 
-#: src/components/Web3Status/index.tsx
-msgid "Wrong Network"
-msgstr "Verkeerde netwerk"
-
 #: src/pages/CreateProposal/index.tsx
 msgid "You already have an active or pending proposal"
 msgstr "U het reeds 'n aktiewe of hangende voorstel"
@@ -2219,8 +2213,8 @@ msgid "Your active V3 liquidity positions will appear here."
 msgstr "Jou aktiewe V3-likiditeitsposisies sal hier verskyn."
 
 #: src/pages/Pool/index.tsx
-msgid "Your connected network is unsupported. Request support <0>here</0>."
-msgstr "Jou gekoppelde netwerk word nie ondersteun nie. Versoek ondersteuning <0>hier</0>."
+msgid "Your connected network is unsupported."
+msgstr "Jou gekoppelde netwerk word nie ondersteun nie."
 
 #: src/pages/Earn/Manage.tsx
 msgid "Your liquidity deposits"

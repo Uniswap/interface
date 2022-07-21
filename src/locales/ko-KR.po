@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-07-12 23:04\n"
+"PO-Revision-Date: 2022-07-21 14:05\n"
 "Last-Translator: \n"
 "Language: ko_KR\n"
 "Language-Team: Korean\n"
@@ -1264,7 +1264,6 @@ msgid "Polygonscan"
 msgstr "다각형 스캔"
 
 #: src/components/Header/index.tsx
-#: src/components/NavigationTabs/index.tsx
 msgid "Pool"
 msgstr "풀"
 
@@ -1478,10 +1477,6 @@ msgstr "이름 검색 또는 주소 붙여 넣기"
 msgid "Select Pair"
 msgstr "쌍 선택"
 
-#: src/components/Header/NetworkSelector.tsx
-msgid "Select a network"
-msgstr "네트워크 선택"
-
 #: src/components/CurrencyInputPanel/index.tsx
 #: src/components/SearchModal/CurrencySearch.tsx
 #: src/pages/PoolFinder/index.tsx
@@ -1493,6 +1488,10 @@ msgstr "토큰 선택"
 #: src/pages/PoolFinder/index.tsx
 msgid "Select a token to find your v2 liquidity."
 msgstr "v2 유동성을 찾으려면 토큰을 선택하십시오."
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Select a {0}network"
+msgstr "{0}네트워크를 선택하십시오"
 
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Select an action"
@@ -1587,7 +1586,6 @@ msgid "Supplying {0} {1} and {2} {3}"
 msgstr "{0} {1} 및 {2} {3} 공급 중"
 
 #: src/components/Header/index.tsx
-#: src/components/NavigationTabs/index.tsx
 #: src/components/swap/SwapHeader.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
@@ -2137,10 +2135,6 @@ msgstr "랩"
 msgid "Wrap <0/> to {0}"
 msgstr "<0/> 에서 {0}바꿈"
 
-#: src/components/Web3Status/index.tsx
-msgid "Wrong Network"
-msgstr "잘못된 네트워크"
-
 #: src/pages/CreateProposal/index.tsx
 msgid "You already have an active or pending proposal"
 msgstr "이미 활성 또는 보류중인 제안이 있습니다."
@@ -2219,8 +2213,8 @@ msgid "Your active V3 liquidity positions will appear here."
 msgstr "활성 V3 유동성 위치가 여기에 표시됩니다."
 
 #: src/pages/Pool/index.tsx
-msgid "Your connected network is unsupported. Request support <0>here</0>."
-msgstr "연결된 네트워크가 지원되지 않습니다. 지원 요청 <0>여기</0>."
+msgid "Your connected network is unsupported."
+msgstr "연결된 네트워크가 지원되지 않습니다."
 
 #: src/pages/Earn/Manage.tsx
 msgid "Your liquidity deposits"

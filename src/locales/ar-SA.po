@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-07-12 23:04\n"
+"PO-Revision-Date: 2022-07-21 14:04\n"
 "Last-Translator: \n"
 "Language: ar_SA\n"
 "Language-Team: Arabic\n"
@@ -1264,7 +1264,6 @@ msgid "Polygonscan"
 msgstr "بوليغونسكان"
 
 #: src/components/Header/index.tsx
-#: src/components/NavigationTabs/index.tsx
 msgid "Pool"
 msgstr "المجموعة"
 
@@ -1478,10 +1477,6 @@ msgstr "البحث عن اسم أو لصق العنوان"
 msgid "Select Pair"
 msgstr "حدد زوج"
 
-#: src/components/Header/NetworkSelector.tsx
-msgid "Select a network"
-msgstr "حدد شبكة"
-
 #: src/components/CurrencyInputPanel/index.tsx
 #: src/components/SearchModal/CurrencySearch.tsx
 #: src/pages/PoolFinder/index.tsx
@@ -1493,6 +1488,10 @@ msgstr "حدد الرمز"
 #: src/pages/PoolFinder/index.tsx
 msgid "Select a token to find your v2 liquidity."
 msgstr "حدد رمزًا للعثور على سيولة v2 الخاصة بك."
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Select a {0}network"
+msgstr "حدد شبكة {0}"
 
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Select an action"
@@ -1587,7 +1586,6 @@ msgid "Supplying {0} {1} and {2} {3}"
 msgstr "إمداد {0} {1} و {2} {3}"
 
 #: src/components/Header/index.tsx
-#: src/components/NavigationTabs/index.tsx
 #: src/components/swap/SwapHeader.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
@@ -2137,10 +2135,6 @@ msgstr "التفاف"
 msgid "Wrap <0/> to {0}"
 msgstr "لف من <0/> إلى {0}"
 
-#: src/components/Web3Status/index.tsx
-msgid "Wrong Network"
-msgstr "شبكة خاطئة"
-
 #: src/pages/CreateProposal/index.tsx
 msgid "You already have an active or pending proposal"
 msgstr "لديك بالفعل اقتراح نشط أو معلق"
@@ -2219,8 +2213,8 @@ msgid "Your active V3 liquidity positions will appear here."
 msgstr "ستظهر مراكز سيولة V3 النشطة الخاصة بك هنا."
 
 #: src/pages/Pool/index.tsx
-msgid "Your connected network is unsupported. Request support <0>here</0>."
-msgstr "شبكتك المتصلة غير مدعومة. اطلب الدعم <0>هنا</0>."
+msgid "Your connected network is unsupported."
+msgstr "شبكتك المتصلة غير مدعومة."
 
 #: src/pages/Earn/Manage.tsx
 msgid "Your liquidity deposits"
