@@ -19,10 +19,10 @@ import styled, { keyframes, useTheme } from 'styled-components/macro'
 import { HideSmall, ThemedText } from 'theme'
 import { computeRealizedLPFeePercent } from 'utils/prices'
 
-import { getPriceImpact } from './AdvancedSwapDetails'
 import { AdvancedSwapDetails } from './AdvancedSwapDetails'
 import GasEstimateBadge from './GasEstimateBadge'
 import { ResponsiveTooltipContainer } from './styleds'
+import { getPriceImpactPercentageNumber } from './SwapModalFooter'
 import { getNumberFormattedToDecimalPlace } from './SwapModalFooter'
 import SwapRoute from './SwapRoute'
 import TradePrice from './TradePrice'
@@ -132,7 +132,7 @@ const formatAnalyticsEventProperties = (
   token_out_symbol: trade.outputAmount.currency.symbol,
   token_in_address: trade.inputAmount.currency.isToken ? trade.inputAmount.currency.address : undefined,
   token_out_address: trade.outputAmount.currency.isToken ? trade.outputAmount.currency.address : undefined,
-  price_impact_percentage: lpFeePercent ? getPriceImpact(lpFeePercent, trade) : undefined,
+  price_impact_percentage: getPriceImpactPercentageNumber(trade, lpFeePercent),
   estimated_network_fee_usd: trade.gasUseEstimateUSD
     ? getNumberFormattedToDecimalPlace(trade.gasUseEstimateUSD, 2)
     : undefined,
