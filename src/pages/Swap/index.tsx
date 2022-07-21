@@ -13,6 +13,7 @@ import { NetworkAlert } from 'components/NetworkAlert/NetworkAlert'
 import SwapDetailsDropdown from 'components/swap/SwapDetailsDropdown'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 import { MouseoverTooltip } from 'components/Tooltip'
+import { isSupportedChain } from 'constants/chains'
 import { useSwapCallback } from 'hooks/useSwapCallback'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import JSBI from 'jsbi'
@@ -461,19 +462,25 @@ export default function Swap() {
                     loading={independentField === Field.OUTPUT && routeIsSyncing}
                   />
                 </Trace>
-                <ArrowWrapper clickable>
-                  <ArrowDown
-                    size="16"
-                    onClick={() => {
-                      setApprovalSubmitted(false) // reset 2 step UI for approvals
-                      onSwitchTokens()
-                    }}
-                    color={
-                      currencies[Field.INPUT] && currencies[Field.OUTPUT]
-                        ? theme.deprecated_text1
-                        : theme.deprecated_text3
-                    }
-                  />
+                <ArrowWrapper clickable={isSupportedChain(chainId)}>
+                  <TraceEvent
+                    events={[Event.onClick]}
+                    name={EventName.SWAP_TOKENS_REVERSED}
+                    element={ElementName.SWAP_TOKENS_REVERSE_ARROW_BUTTON}
+                  >
+                    <ArrowDown
+                      size="16"
+                      onClick={() => {
+                        setApprovalSubmitted(false) // reset 2 step UI for approvals
+                        onSwitchTokens()
+                      }}
+                      color={
+                        currencies[Field.INPUT] && currencies[Field.OUTPUT]
+                          ? theme.deprecated_text1
+                          : theme.deprecated_text3
+                      }
+                    />
+                  </TraceEvent>
                 </ArrowWrapper>
                 <Trace section={SectionName.CURRENCY_OUTPUT_PANEL}>
                   <CurrencyInputPanel

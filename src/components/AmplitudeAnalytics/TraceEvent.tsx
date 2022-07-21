@@ -8,6 +8,7 @@ type TraceEventProps = {
   events: Event[]
   name: EventName
   properties?: Record<string, unknown>
+  shouldLogImpression?: boolean
 } & ITraceContext
 
 /**
@@ -19,7 +20,7 @@ type TraceEventProps = {
  *  </TraceEvent>
  */
 export const TraceEvent = memo((props: PropsWithChildren<TraceEventProps>) => {
-  const { name, properties, events, children, ...traceProps } = props
+  const { shouldLogImpression, name, properties, events, children, ...traceProps } = props
 
   return (
     <Trace {...traceProps}>
@@ -31,7 +32,10 @@ export const TraceEvent = memo((props: PropsWithChildren<TraceEventProps>) => {
             }
 
             // For each child, augment event handlers defined in `events` with event tracing.
-            return cloneElement(child, getEventHandlers(child, traceContext, events, name, properties))
+            return cloneElement(
+              child,
+              getEventHandlers(child, traceContext, events, name, properties, shouldLogImpression)
+            )
           })
         }
       </TraceContext.Consumer>
@@ -50,7 +54,8 @@ function getEventHandlers(
   traceContext: ITraceContext,
   events: Event[],
   name: EventName,
-  properties?: Record<string, unknown>
+  properties?: Record<string, unknown>,
+  shouldLogImpression = true
 ) {
   const eventHandlers: Partial<Record<Event, (e: SyntheticEvent<Element, Event>) => void>> = {}
 
@@ -61,7 +66,7 @@ function getEventHandlers(
       child.props[event]?.apply(child, args)
 
       // augment handler with analytics logging
-      sendAnalyticsEvent(name, { ...traceContext, ...properties, action: event })
+      if (shouldLogImpression) sendAnalyticsEvent(name, { ...traceContext, ...properties, action: event })
     }
   }
 

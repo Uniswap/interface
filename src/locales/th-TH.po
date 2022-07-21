@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-07-12 23:04\n"
+"PO-Revision-Date: 2022-07-21 14:05\n"
 "Last-Translator: \n"
 "Language: th_TH\n"
 "Language-Team: Thai\n"
@@ -1264,7 +1264,6 @@ msgid "Polygonscan"
 msgstr "รูปหลายเหลี่ยม"
 
 #: src/components/Header/index.tsx
-#: src/components/NavigationTabs/index.tsx
 msgid "Pool"
 msgstr "สระน้ำ"
 
@@ -1478,10 +1477,6 @@ msgstr "ค้นหาชื่อหรือวางที่อยู่"
 msgid "Select Pair"
 msgstr "เลือกคู่"
 
-#: src/components/Header/NetworkSelector.tsx
-msgid "Select a network"
-msgstr "เลือกเครือข่าย"
-
 #: src/components/CurrencyInputPanel/index.tsx
 #: src/components/SearchModal/CurrencySearch.tsx
 #: src/pages/PoolFinder/index.tsx
@@ -1493,6 +1488,10 @@ msgstr "เลือกโทเค็น"
 #: src/pages/PoolFinder/index.tsx
 msgid "Select a token to find your v2 liquidity."
 msgstr "เลือกโทเค็นเพื่อค้นหาสภาพคล่อง v2 ของคุณ"
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Select a {0}network"
+msgstr "เลือก {0}เครือข่าย"
 
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Select an action"
@@ -1587,7 +1586,6 @@ msgid "Supplying {0} {1} and {2} {3}"
 msgstr "การจัดหา {0} {1} และ {2} {3}"
 
 #: src/components/Header/index.tsx
-#: src/components/NavigationTabs/index.tsx
 #: src/components/swap/SwapHeader.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
@@ -2137,10 +2135,6 @@ msgstr "ห่อ"
 msgid "Wrap <0/> to {0}"
 msgstr "ตัด <0/> ถึง {0}"
 
-#: src/components/Web3Status/index.tsx
-msgid "Wrong Network"
-msgstr "ผิดเครือข่าย"
-
 #: src/pages/CreateProposal/index.tsx
 msgid "You already have an active or pending proposal"
 msgstr "คุณมีข้อเสนอที่ใช้งานอยู่หรือรอดำเนินการอยู่แล้ว"
@@ -2219,8 +2213,8 @@ msgid "Your active V3 liquidity positions will appear here."
 msgstr "ตำแหน่งสภาพคล่อง V3 ที่ใช้งานอยู่ของคุณจะปรากฏที่นี่"
 
 #: src/pages/Pool/index.tsx
-msgid "Your connected network is unsupported. Request support <0>here</0>."
-msgstr "ไม่รองรับเครือข่ายที่เชื่อมต่อของคุณ ขอการสนับสนุน <0>ที่นี่</0>"
+msgid "Your connected network is unsupported."
+msgstr "ไม่รองรับเครือข่ายที่เชื่อมต่อของคุณ"
 
 #: src/pages/Earn/Manage.tsx
 msgid "Your liquidity deposits"
