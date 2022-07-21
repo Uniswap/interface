@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
+import { Currency, Percent, Token, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { LoadingRows } from 'components/Loader/styled'
@@ -19,6 +19,8 @@ interface AdvancedMarketDetailsProps {
   allowedSlippage: Percent
   syncing?: boolean
   referer: string | null
+  paymentToken: Token | null | undefined
+  paymentFee: number | undefined
 }
 
 function TextWithLoadingPlaceholder({
@@ -44,6 +46,8 @@ export function AdvancedMarketDetails({
   allowedSlippage,
   syncing = false,
   referer,
+  paymentToken,
+  paymentFee,
 }: AdvancedMarketDetailsProps) {
   const theme = useContext(ThemeContext)
 
@@ -86,6 +90,16 @@ export function AdvancedMarketDetails({
             {trade.tradeType === TradeType.EXACT_INPUT
               ? `${trade.minimumAmountOut(allowedSlippage).toSignificant(6)} ${trade.outputAmount.currency.symbol}`
               : `${trade.maximumAmountIn(allowedSlippage).toSignificant(6)} ${trade.inputAmount.currency.symbol}`}
+          </TYPE.black>
+        </TextWithLoadingPlaceholder>
+      </RowBetween>
+      <RowBetween>
+        <RowFixed>
+          <TYPE.subHeader color={theme.text1}>Total fees:</TYPE.subHeader>
+        </RowFixed>
+        <TextWithLoadingPlaceholder syncing={syncing} width={70}>
+          <TYPE.black textAlign="right" fontSize={14}>
+            {paymentFee} {paymentToken}
           </TYPE.black>
         </TextWithLoadingPlaceholder>
       </RowBetween>

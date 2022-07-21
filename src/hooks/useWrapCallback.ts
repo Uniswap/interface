@@ -1,14 +1,13 @@
 import { Currency } from '@uniswap/sdk-core'
+import { CHAIN_NATIVE_TOKEN_SYMBOL, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import { useMemo } from 'react'
 
-import { WRAPPED_NATIVE_CURRENCY } from '../constants/tokens'
 import { tryParseAmount } from '../state/swap/hooks'
 import { TransactionType } from '../state/transactions/actions'
 import { useTransactionAdder } from '../state/transactions/hooks'
 import { useCurrencyBalance } from '../state/wallet/hooks'
 import { useWETHContract } from './useContract'
 import { useActiveWeb3React } from './web3'
-
 export enum WrapType {
   NOT_APPLICABLE,
   WRAP,
@@ -60,7 +59,11 @@ export default function useWrapCallback(
                 }
               }
             : undefined,
-        inputError: sufficientBalance ? undefined : hasInputAmount ? 'Insufficient ETH balance' : 'Enter ETH amount',
+        inputError: sufficientBalance
+          ? undefined
+          : hasInputAmount
+          ? `Insufficient {CHAIN_NATIVE_TOKEN_SYMBOL[chainId ?? 1]} balance`
+          : `Enter {CHAIN_NATIVE_TOKEN_SYMBOL[chainId ?? 1]} amount`,
       }
     } else if (weth.equals(inputCurrency) && outputCurrency.isNative) {
       return {
@@ -80,7 +83,11 @@ export default function useWrapCallback(
                 }
               }
             : undefined,
-        inputError: sufficientBalance ? undefined : hasInputAmount ? 'Insufficient WETH balance' : 'Enter WETH amount',
+        inputError: sufficientBalance
+          ? undefined
+          : hasInputAmount
+          ? `Insufficient {WRAPPED_NATIVE_CURRENCY[chainId ?? 1]?.symbol} balance`
+          : `Enter {WRAPPED_NATIVE_CURRENCY[chainId ?? 1]?.symbol} amount`,
       }
     } else {
       return NOT_APPLICABLE

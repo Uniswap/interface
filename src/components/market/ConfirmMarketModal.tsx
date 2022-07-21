@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
+import { Currency, Percent, Token, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { ReactNode, useCallback, useMemo } from 'react'
@@ -43,6 +43,8 @@ export default function ConfirmMarketModal({
   attemptingTxn,
   txHash,
   referer,
+  paymentToken,
+  paymentFee,
 }: {
   isOpen: boolean
   trade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType> | undefined
@@ -56,6 +58,8 @@ export default function ConfirmMarketModal({
   swapErrorMessage: ReactNode | undefined
   onDismiss: () => void
   referer: string | null
+  paymentToken: Token | null | undefined
+  paymentFee: number | undefined
 }) {
   const showAcceptChanges = useMemo(
     () =>
@@ -79,6 +83,8 @@ export default function ConfirmMarketModal({
         showAcceptChanges={showAcceptChanges}
         onAcceptChanges={onAcceptChanges}
         referer={referer}
+        paymentFee={paymentFee}
+        paymentToken={paymentToken}
       />
     ) : null
   }, [allowedSlippage, onAcceptChanges, recipient, showAcceptChanges, trade])
