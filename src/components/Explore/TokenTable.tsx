@@ -1,6 +1,6 @@
 import { useAllTokens } from 'hooks/Tokens'
 import useTopTokens, { TimePeriod } from 'hooks/useTopTokens'
-import { useAtomValue } from 'jotai'
+import { useAtomValue } from 'jotai/utils'
 import { ReactNode, useMemo } from 'react'
 import { AlertTriangle } from 'react-feather'
 import styled from 'styled-components/macro'
