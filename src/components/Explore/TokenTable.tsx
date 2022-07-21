@@ -70,7 +70,7 @@ function useFilteredTokens(topTokenAddresses: string[]) {
   }, [allTokens, shownTokens, filterString])
 }
 
-function NoTokensState(message: ReactNode, timePeriod: TimePeriod) {
+function NoTokensState({ message, timePeriod }: { message: ReactNode; timePeriod: TimePeriod }) {
   return (
     <GridContainer>
       <HeaderRow timeframe={timePeriod} />
@@ -95,21 +95,25 @@ export default function TokenTable() {
       </GridContainer>
     )
   } else if (error || data === null) {
-    return NoTokensState(
-      <>
-        <AlertTriangle size={16} />
-        An error occured loading tokens. Please try again.
-      </>,
-      timePeriod
+    return (
+      <NoTokensState
+        message={
+          <>
+            <AlertTriangle size={16} />
+            An error occured loading tokens. Please try again.
+          </>
+        }
+        timePeriod={timePeriod}
+      />
     )
   }
-  /* if no favorites tokens */
+
   if (showFavorites && filteredTokens.length === 0) {
-    return NoTokensState('You have no favorited tokens', timePeriod)
+    return <NoTokensState message={'You have no favorited tokens'} timePeriod={timePeriod} />
   }
 
   if (!showFavorites && filteredTokens.length === 0) {
-    return NoTokensState('No tokens found', timePeriod)
+    return <NoTokensState message={'No tokens found'} timePeriod={timePeriod} />
   }
 
   const tokenRows = filteredTokens.map((tokenAddress, index) => {
