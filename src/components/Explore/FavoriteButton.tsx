@@ -18,10 +18,11 @@ const StyledFavoriteButton = styled.button<{ active: boolean }>`
   border: 1px solid ${({ theme, active }) => (active ? theme.accentActiveSoft : theme.backgroundOutline)};
   color: ${({ theme, active }) => (active ? theme.blue200 : theme.textPrimary)};
   font-size: 16px;
+  font-weight: 600;
   cursor: pointer;
 
   :hover {
-    background-color: ${({ theme }) => theme.backgroundContainer};
+    background-color: ${({ theme, active }) => !active && theme.backgroundContainer};
   }
 `
 

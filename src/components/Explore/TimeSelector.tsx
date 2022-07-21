@@ -24,9 +24,8 @@ enum FlyoutAlignment {
 const InternalMenuItem = styled.div`
   flex: 1;
   padding: 8px;
-  color: ${({ theme }) => theme.deprecated_text2};
+  color: ${({ theme }) => theme.textPrimary};
   :hover {
-    color: ${({ theme }) => theme.deprecated_text1};
     cursor: pointer;
     text-decoration: none;
   }
@@ -86,20 +85,20 @@ const StyledMenuButton = styled.button<{ open: boolean }>`
   height: 100%;
   border: none;
   background-color: transparent;
+  color: ${({ theme, open }) => (open ? theme.blue200 : theme.textPrimary)};
   margin: 0;
   background-color: ${({ theme, open }) => (open ? theme.accentActionSoft : theme.none)};
   border: 1px solid ${({ theme, open }) => (open ? theme.accentActiveSoft : theme.backgroundOutline)};
   padding: 6px 12px 6px 12px;
-  border-radius: 16px;
+  border-radius: 12px;
   font-size: 16px;
   line-height: 24px;
-  font-weight: 400;
+  font-weight: 600;
 
   :hover {
     cursor: pointer;
     outline: none;
-    background-color: ${({ theme }) => theme.backgroundContainer};
-    color: ${({ theme }) => theme.blue200};
+    background-color: ${({ theme, open }) => !open && theme.backgroundContainer};
   }
 
   svg {
@@ -124,11 +123,10 @@ const StyledMenuContent = styled.div`
   border: none;
   width: 100%;
   vertical-align: middle;
-  color: ${({ theme }) => theme.textPrimary};
 `
 
 const Chevron = styled.span<{ open: boolean }>`
-  padding-top: 2px;
+  padding-top: 1px;
   color: ${({ open, theme }) => (open ? theme.blue200 : theme.textPrimary)};
 `
 
