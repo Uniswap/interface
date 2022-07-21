@@ -10,7 +10,7 @@ const GridContainer = styled.div`
   display: flex;
   flex-direction: column;
   max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT};
-  background: ${({ theme }) => theme.deprecated_bg0};
+  background-color: ${({ theme }) => theme.backgroundSurface};
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
     0px 24px 32px rgba(0, 0, 0, 0.01);
   margin-left: auto;
@@ -18,18 +18,19 @@ const GridContainer = styled.div`
   border-radius: 8px;
   justify-content: center;
   align-items: center;
+  border: 1px solid ${({ theme }) => theme.backgroundOutline};
 `
 const NoTokenDisplay = styled.div`
   display: flex;
   width: 100%;
   height: 60px;
-  color: ${({ theme }) => theme.deprecated_text3};
+  color: ${({ theme }) => theme.textSecondary};
   font-size: 16px;
   align-items: center;
   padding: 0px 28px;
 `
 const TokenRowsContainer = styled.div`
-  padding: 4px 12px;
+  padding: 4px 0px;
 `
 const LOADING_ROWS = Array(10)
   .fill(0)

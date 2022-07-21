@@ -19,10 +19,9 @@ const NETWORKS = [
 const InternalMenuItem = styled.div`
   flex: 1;
   padding: 12px 16px;
-  color: ${({ theme }) => theme.deprecated_text2};
+  color: ${({ theme }) => theme.textPrimary};
 
   :hover {
-    color: ${({ theme }) => theme.deprecated_text1};
     cursor: pointer;
     text-decoration: none;
   }
@@ -39,7 +38,7 @@ const InternalLinkMenuItem = styled(InternalMenuItem)`
   cursor: pointer;
 
   :hover {
-    background-color: ${({ theme }) => theme.deprecated_bg2};
+    background-color: ${({ theme }) => theme.backgroundContainer};
     text-decoration: none;
   }
 `
@@ -47,10 +46,10 @@ const MenuTimeFlyout = styled.span`
   min-width: 200px;
   max-height: 350px;
   overflow: auto;
-  background-color: ${({ theme }) => theme.deprecated_bg1};
+  background-color: ${({ theme }) => theme.backgroundSurface};
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
     0px 24px 32px rgba(0, 0, 0, 0.01);
-  border: 1px solid ${({ theme }) => theme.deprecated_bg0};
+  border: 1px solid ${({ theme }) => theme.backgroundOutline};
   border-radius: 12px;
   padding: 8px 0px;
   display: flex;
@@ -68,14 +67,14 @@ const MenuTimeFlyout = styled.span`
   `};
 `
 
-const StyledMenuButton = styled.button`
+const StyledMenuButton = styled.button<{ open: boolean }>`
   width: 100%;
   height: 100%;
-  border: none;
+  color: ${({ theme, open }) => (open ? theme.blue200 : theme.textPrimary)};
   background-color: transparent;
+  background-color: ${({ theme, open }) => (open ? theme.accentActionSoft : theme.none)};
+  border: 1px solid ${({ theme, open }) => (open ? theme.accentActiveSoft : theme.backgroundOutline)};
   margin: 0;
-  background-color: ${({ theme }) => theme.deprecated_bg0};
-  border: 1px solid ${({ theme }) => theme.deprecated_bg0};
   padding: 6px 12px 6px 12px;
   border-radius: 12px;
   font-size: 16px;
@@ -86,7 +85,7 @@ const StyledMenuButton = styled.button`
   :focus {
     cursor: pointer;
     outline: none;
-    border: 1px solid ${({ theme }) => theme.deprecated_bg3};
+    background-color: ${({ theme, open }) => !open && theme.backgroundContainer};
   }
 
   svg {
@@ -116,11 +115,11 @@ const StyledMenuContent = styled.div`
   width: 100%;
   font-weight: 600;
   vertical-align: middle;
-  color: ${({ theme }) => theme.deprecated_text1};
 `
 
-const Chevron = styled.span`
-  color: ${({ theme }) => theme.deprecated_text2};
+const Chevron = styled.span<{ open: boolean }>`
+  padding-top: 1px;
+  color: ${({ open, theme }) => (open ? theme.blue200 : theme.textPrimary)};
 `
 const NetworkLabel = styled.div`
   display: flex;
@@ -148,12 +147,12 @@ export default function NetworkFilter() {
 
   return (
     <StyledMenu ref={node}>
-      <StyledMenuButton onClick={toggleMenu} aria-label={`networkFilter`}>
+      <StyledMenuButton onClick={toggleMenu} aria-label={`networkFilter`} open={open}>
         <StyledMenuContent>
           <NetworkLabel>
             <Logo src={logoUrl} /> {label}
           </NetworkLabel>
-          <Chevron>
+          <Chevron open={open}>
             {open ? <ChevronUp size={15} viewBox="0 0 24 20" /> : <ChevronDown size={15} viewBox="0 0 24 20" />}
           </Chevron>
         </StyledMenuContent>
@@ -173,7 +172,7 @@ export default function NetworkFilter() {
               </NetworkLabel>
               {network === activeNetwork && (
                 <CheckContainer>
-                  <Check size={16} color={theme.deprecated_primary1} />
+                  <Check size={16} color={theme.accentAction} />
                 </CheckContainer>
               )}
             </InternalLinkMenuItem>

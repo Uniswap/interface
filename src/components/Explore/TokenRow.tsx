@@ -5,7 +5,6 @@ import useTheme from 'hooks/useTheme'
 import { TimePeriod, TokenData } from 'hooks/useTopTokens'
 import { useAtom } from 'jotai'
 import { useAtomValue } from 'jotai/utils'
-import { darken } from 'polished'
 import { ReactNode, useMemo } from 'react'
 import { ArrowDown, ArrowDownRight, ArrowUp, ArrowUpRight, Heart } from 'react-feather'
 import { Link } from 'react-router-dom'
@@ -42,6 +41,7 @@ const Cell = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
 `
 const StyledTokenRow = styled.div`
   width: 100%;
@@ -53,11 +53,16 @@ const StyledTokenRow = styled.div`
 
   max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT};
   min-width: 390px;
+  padding: 0px 12px;
+
+  &:hover {
+    background-color: ${({ theme }) => theme.backgroundContainer};
+  }
 
   @media only screen and (max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT}) {
     grid-template-columns: 1.7fr 1fr 6.5fr 4.5fr 4.5fr 4.5fr 4.5fr;
     width: fit-content;
-    padding-right: 12px;
+    padding-right: 24px;
   }
 
   @media only screen and (max-width: ${LARGE_MEDIA_BREAKPOINT}) {
@@ -79,7 +84,7 @@ const StyledTokenRow = styled.div`
     grid-template-columns: 1fr 12fr 6fr;
     width: fit-content;
     min-width: unset;
-    border-bottom: 0.5px solid ${({ theme }) => theme.deprecated_bg3};
+    border-bottom: 0.5px solid ${({ theme }) => theme.backgroundContainer};
     padding: 0px;
 
     :last-of-type {
@@ -93,23 +98,18 @@ export const ClickFavorited = styled.span`
   cursor: pointer;
 
   &:hover {
-    color: ${({ theme }) => theme.deprecated_primary1};
+    color: ${({ theme }) => theme.accentActive};
   }
 `
 const ClickableName = styled(Link)`
   display: flex;
   gap: 8px;
   text-decoration: none;
-  color: ${({ theme }) => theme.deprecated_text1};
-
-  &:hover,
-  &:focus {
-    color: ${({ theme }) => darken(0.1, theme.deprecated_text1)};
-  }
+  color: ${({ theme }) => theme.textPrimary};
 `
 const FavoriteCell = styled(Cell)`
   min-width: 40px;
-  color: ${({ theme }) => theme.deprecated_text2};
+  color: ${({ theme }) => theme.textSecondary};
   fill: none;
 
   @media only screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
@@ -119,13 +119,17 @@ const FavoriteCell = styled(Cell)`
 const StyledHeaderRow = styled(StyledTokenRow)`
   width: 100%;
   height: 48px;
-  color: ${({ theme }) => theme.deprecated_text2};
+  color: ${({ theme }) => theme.textSecondary};
   font-size: 12px;
   line-height: 16px;
   border-bottom: 1px solid;
-  border-color: ${({ theme }) => theme.deprecated_bg3};
+  border-color: ${({ theme }) => theme.backgroundOutline};
   border-radius: 8px 8px 0px 0px;
   padding: 0px 12px;
+
+  &:hover {
+    background-color: ${({ theme }) => theme.backgroundSurface};
+  }
 
   @media only screen and (max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT}) {
     padding-right: 24px;
@@ -136,7 +140,7 @@ const StyledHeaderRow = styled(StyledTokenRow)`
   }
 `
 const ListNumberCell = styled(Cell)`
-  color: ${({ theme }) => theme.deprecated_text2};
+  color: ${({ theme }) => theme.textSecondary};
   min-width: 32px;
 
   @media only screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
@@ -155,8 +159,7 @@ const MarketCapCell = styled(Cell)<{ sortable: boolean }>`
   }
 
   &:hover {
-    color: ${({ theme, sortable }) => sortable && theme.deprecated_text1};
-    background-color: ${({ theme, sortable }) => sortable && darken(0.08, theme.deprecated_bg0)};
+    background-color: ${({ theme, sortable }) => sortable && theme.backgroundContainer};
   }
 `
 const NameCell = styled(Cell)`
@@ -181,8 +184,7 @@ const PercentChangeCell = styled(Cell)<{ sortable: boolean }>`
   }
 
   &:hover {
-    color: ${({ theme, sortable }) => sortable && theme.deprecated_text1};
-    background-color: ${({ theme, sortable }) => sortable && darken(0.08, theme.deprecated_bg0)};
+    background-color: ${({ theme, sortable }) => sortable && theme.backgroundContainer};
   }
 `
 const PercentChangeInfoCell = styled(Cell)`
@@ -190,7 +192,7 @@ const PercentChangeInfoCell = styled(Cell)`
 
   @media only screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
     display: flex;
-    color: ${({ theme }) => theme.deprecated_text3};
+    color: ${({ theme }) => theme.textSecondary};
     font-size: 12px;
     line-height: 16px;
   }
@@ -205,8 +207,7 @@ const PriceCell = styled(Cell)<{ sortable: boolean }>`
   }
 
   &:hover {
-    color: ${({ theme, sortable }) => sortable && theme.deprecated_text1};
-    background-color: ${({ theme, sortable }) => sortable && darken(0.08, theme.deprecated_bg0)};
+    background-color: ${({ theme, sortable }) => sortable && theme.backgroundContainer};
   }
 `
 const PriceInfoCell = styled(Cell)`
@@ -221,23 +222,13 @@ const SortArrowCell = styled(Cell)`
   padding-right: 2px;
 `
 const SortingCategory = styled.span`
-  color: ${({ theme }) => theme.deprecated_primary1};
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-
-  &:hover {
-    background-color: ${({ theme }) => darken(0.08, theme.deprecated_bg0)};
-  }
 `
 const SortOption = styled.span`
   cursor: pointer;
-
-  &:hover {
-    color: ${({ theme }) => theme.deprecated_text1};
-    background-color: ${({ theme }) => darken(0.08, theme.deprecated_bg0)};
-  }
 `
 const SparkLineCell = styled(Cell)`
   padding: 0px 24px;
@@ -273,7 +264,7 @@ const TokenName = styled.div`
   white-space: nowrap;
 `
 const TokenSymbol = styled(Cell)`
-  color: ${({ theme }) => theme.deprecated_text3};
+  color: ${({ theme }) => theme.textTertiary};
 
   @media only screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
     font-size: 12px;
@@ -292,13 +283,12 @@ const VolumeCell = styled(Cell)<{ sortable: boolean }>`
   }
 
   &:hover {
-    color: ${({ theme, sortable }) => sortable && theme.deprecated_text1};
-    background-color: ${({ theme, sortable }) => sortable && darken(0.08, theme.deprecated_bg0)};
+    background-color: ${({ theme, sortable }) => sortable && theme.backgroundContainer};
   }
 `
 /* Loading state bubbles */
 const LoadingBubble = styled.div`
-  background-color: ${({ theme }) => darken(0.1, theme.deprecated_bg3)};
+  background-color: ${({ theme }) => theme.backgroundContainer};
   border-radius: 12px;
   height: 24px;
   width: 50%;
@@ -340,11 +330,16 @@ function HeaderCell({
   sortable: boolean
   timeframe: string
 }) {
+  const theme = useTheme()
   if (isSorted) {
     return (
       <SortingCategory>
         <SortArrowCell>
-          {sortDirection === SortDirection.Decreasing ? <ArrowDown size={14} /> : <ArrowUp size={14} />}
+          {sortDirection === SortDirection.Decreasing ? (
+            <ArrowDown size={14} color={theme.accentActive} />
+          ) : (
+            <ArrowUp size={14} color={theme.accentActive} />
+          )}
         </SortArrowCell>
         <Trans>{getHeaderDisplay(category, timeframe)}</Trans>
       </SortingCategory>
@@ -511,15 +506,15 @@ export default function LoadedRow({
       {tokenData.delta}%
       <ArrowCell>
         {Math.sign(tokenData.delta) > 0 ? (
-          <ArrowUpRight size={16} color={theme.deprecated_green1} />
+          <ArrowUpRight size={16} color={theme.accentSuccess} />
         ) : (
-          <ArrowDownRight size={16} color={theme.deprecated_red1} />
+          <ArrowDownRight size={16} color={theme.accentFailure} />
         )}
       </ArrowCell>
     </>
   )
 
-  const heartColor = isFavorited ? theme.deprecated_primary1 : undefined
+  const heartColor = isFavorited ? theme.accentActive : undefined
   // TODO: currency logo sizing mobile (32px) vs. desktop (24px)
   // TODO: fix listNumber as number on most popular (should be fixed)
   return (

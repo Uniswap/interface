@@ -17,24 +17,31 @@ const SearchInput = styled.input<{ expanded: boolean }>`
   background: no-repeat scroll 7px 7px;
   background-image: url(${searchIcon});
   background-size: 20px 20px;
-  background-position: 12px center;
-  background-color: ${({ theme }) => theme.deprecated_bg0};
-  left: 10px;
-  border-radius: 12px;
-  border: none;
+  background-position: 11.5px center;
+  background-color: ${({ theme }) => theme.none};
+  border-radius: 16px;
+  border: 1px solid ${({ theme }) => theme.backgroundOutline};
   height: 100%;
   width: ${({ expanded }) => (expanded ? '100%' : '44px')};
   font-size: 16px;
   padding-left: 40px;
-  color: ${({ theme }) => theme.deprecated_text2};
+  color: ${({ theme }) => theme.textPrimary};
   transition: width 0.75s cubic-bezier(0, 0.795, 0, 1);
+
+  :hover {
+    cursor: ${({ expanded }) => !expanded && 'pointer'};
+    background-color: ${({ theme }) => theme.backgroundContainer};
+  }
 
   :focus {
     outline: none;
-    background-color: ${({ theme }) => theme.deprecated_bg2};
+    background-color: ${({ theme }) => theme.backgroundContainer};
   }
   ::placeholder {
-    color: ${({ expanded, theme }) => expanded && theme.deprecated_text3};
+    color: ${({ expanded, theme }) => expanded && theme.textSecondary};
+    @media only screen and (max-width: ${MEDIUM_MEDIA_BREAKPOINT}) {
+      color: transparent;
+    }
   }
   ::-webkit-search-cancel-button {
     -webkit-appearance: none;
