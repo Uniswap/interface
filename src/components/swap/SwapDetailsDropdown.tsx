@@ -1,6 +1,8 @@
 import { Trans } from '@lingui/macro'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import { EventName, SectionName } from 'components/AmplitudeAnalytics/constants'
+import { Trace } from 'components/AmplitudeAnalytics/Trace'
 import AnimatedDropdown from 'components/AnimatedDropdown'
 import Card, { OutlineCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
@@ -118,6 +120,18 @@ interface SwapDetailsInlineProps {
   allowedSlippage: Percent
 }
 
+const formatAnalyticsEventProperties = (trade: InterfaceTrade<Currency, Currency, TradeType>) => ({
+  token_in_symbol: trade.inputAmount.currency.symbol,
+  token_out_symbol: trade.outputAmount.currency.symbol,
+  token_in_address: trade.inputAmount.currency.isToken ? trade.inputAmount.currency.address : undefined,
+  token_out_address: trade.outputAmount.currency.isToken ? trade.outputAmount.currency.address : undefined,
+})
+
+// price_impact_percentage
+// estimated_network_fee_usd
+// token_out_amount
+// token_in_amount
+
 export default function SwapDetailsDropdown({
   trade,
   syncing,
@@ -166,11 +180,18 @@ export default function SwapDetailsDropdown({
             )}
             {trade ? (
               <LoadingOpacityContainer $loading={syncing}>
-                <TradePrice
-                  price={trade.executionPrice}
-                  showInverted={showInverted}
-                  setShowInverted={setShowInverted}
-                />
+                <Trace
+                  name={EventName.PAGE_VIEWED}
+                  section={SectionName.CURRENCY_INPUT_PANEL}
+                  properties={formatAnalyticsEventProperties(trade)}
+                  shouldLogImpression={!loading && !syncing}
+                >
+                  <TradePrice
+                    price={trade.executionPrice}
+                    showInverted={showInverted}
+                    setShowInverted={setShowInverted}
+                  />
+                </Trace>
               </LoadingOpacityContainer>
             ) : loading || syncing ? (
               <ThemedText.Main fontSize={14}>
