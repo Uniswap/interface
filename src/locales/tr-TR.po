@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-07-12 23:04\n"
+"PO-Revision-Date: 2022-07-21 14:05\n"
 "Last-Translator: \n"
 "Language: tr_TR\n"
 "Language-Team: Turkish\n"
@@ -1264,7 +1264,6 @@ msgid "Polygonscan"
 msgstr "poligon taraması"
 
 #: src/components/Header/index.tsx
-#: src/components/NavigationTabs/index.tsx
 msgid "Pool"
 msgstr "Havuz"
 
@@ -1478,10 +1477,6 @@ msgstr "Adı arayın veya adresi yapıştırın"
 msgid "Select Pair"
 msgstr "Çift Seç"
 
-#: src/components/Header/NetworkSelector.tsx
-msgid "Select a network"
-msgstr "Bir ağ seçin"
-
 #: src/components/CurrencyInputPanel/index.tsx
 #: src/components/SearchModal/CurrencySearch.tsx
 #: src/pages/PoolFinder/index.tsx
@@ -1493,6 +1488,10 @@ msgstr "Bir jeton seçin"
 #: src/pages/PoolFinder/index.tsx
 msgid "Select a token to find your v2 liquidity."
 msgstr "v2 likiditenizi bulmak için bir jeton seçin."
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Select a {0}network"
+msgstr "{0}ağ seçin"
 
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Select an action"
@@ -1587,7 +1586,6 @@ msgid "Supplying {0} {1} and {2} {3}"
 msgstr "{0} {1} ve {2} {3} temini"
 
 #: src/components/Header/index.tsx
-#: src/components/NavigationTabs/index.tsx
 #: src/components/swap/SwapHeader.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
@@ -2137,10 +2135,6 @@ msgstr "Paketle"
 msgid "Wrap <0/> to {0}"
 msgstr "<0/> {0}kaydır"
 
-#: src/components/Web3Status/index.tsx
-msgid "Wrong Network"
-msgstr "Yanlış Ağ"
-
 #: src/pages/CreateProposal/index.tsx
 msgid "You already have an active or pending proposal"
 msgstr "Zaten etkin veya bekleyen bir teklifiniz var"
@@ -2219,8 +2213,8 @@ msgid "Your active V3 liquidity positions will appear here."
 msgstr "Aktif V3 likidite pozisyonlarınız burada görünecektir."
 
 #: src/pages/Pool/index.tsx
-msgid "Your connected network is unsupported. Request support <0>here</0>."
-msgstr "Bağlı ağınız desteklenmiyor. Destek isteyin <0>burada</0>."
+msgid "Your connected network is unsupported."
+msgstr "Bağlı ağınız desteklenmiyor."
 
 #: src/pages/Earn/Manage.tsx
 msgid "Your liquidity deposits"

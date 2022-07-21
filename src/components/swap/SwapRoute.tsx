@@ -4,6 +4,8 @@ import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
+import { ElementName, Event, EventName } from 'components/AmplitudeAnalytics/constants'
+import { TraceEvent } from 'components/AmplitudeAnalytics/TraceEvent'
 import AnimatedDropdown from 'components/AnimatedDropdown'
 import { AutoColumn } from 'components/Column'
 import { LoadingRows } from 'components/Loader/styled'
@@ -23,7 +25,7 @@ import { AutoRouterLabel, AutoRouterLogo } from './RouterLabel'
 const Wrapper = styled(AutoColumn)<{ darkMode?: boolean; fixedOpen?: boolean }>`
   padding: ${({ fixedOpen }) => (fixedOpen ? '12px' : '12px 8px 12px 12px')};
   border-radius: 16px;
-  border: 1px solid ${({ theme, fixedOpen }) => (fixedOpen ? 'transparent' : theme.bg2)};
+  border: 1px solid ${({ theme, fixedOpen }) => (fixedOpen ? 'transparent' : theme.deprecated_bg2)};
   cursor: pointer;
 `
 
@@ -33,7 +35,7 @@ const OpenCloseIcon = styled(Plus)<{ open?: boolean }>`
   stroke-width: 2px;
   transition: transform 0.1s;
   transform: ${({ open }) => (open ? 'rotate(45deg)' : 'none')};
-  stroke: ${({ theme }) => theme.text3};
+  stroke: ${({ theme }) => theme.deprecated_text3};
   cursor: pointer;
   :hover {
     opacity: 0.8;
@@ -62,13 +64,20 @@ export default memo(function SwapRoute({ trade, syncing, fixedOpen = false, ...r
 
   return (
     <Wrapper {...rest} darkMode={darkMode} fixedOpen={fixedOpen}>
-      <RowBetween onClick={() => setOpen(!open)}>
-        <AutoRow gap="4px" width="auto">
-          <AutoRouterLogo />
-          <AutoRouterLabel />
-        </AutoRow>
-        {fixedOpen ? null : <OpenCloseIcon open={open} />}
-      </RowBetween>
+      <TraceEvent
+        events={[Event.onClick]}
+        name={EventName.SWAP_AUTOROUTER_VISUALIZATION_EXPANDED}
+        element={ElementName.AUTOROUTER_VISUALIZATION_ROW}
+        shouldLogImpression={!open}
+      >
+        <RowBetween onClick={() => setOpen(!open)}>
+          <AutoRow gap="4px" width="auto">
+            <AutoRouterLogo />
+            <AutoRouterLabel />
+          </AutoRow>
+          {fixedOpen ? null : <OpenCloseIcon open={open} />}
+        </RowBetween>
+      </TraceEvent>
       <AnimatedDropdown open={open || fixedOpen}>
         <AutoRow gap="4px" width="auto" style={{ paddingTop: '12px', margin: 0 }}>
           {syncing ? (

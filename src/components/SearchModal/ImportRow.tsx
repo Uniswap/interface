@@ -29,7 +29,7 @@ const CheckIcon = styled(CheckCircle)`
   height: 16px;
   width: 16px;
   margin-right: 6px;
-  stroke: ${({ theme }) => theme.green1};
+  stroke: ${({ theme }) => theme.deprecated_green1};
 `
 
 const NameOverflow = styled.div`
@@ -74,7 +74,7 @@ export default function ImportRow({
         </AutoRow>
         {list && list.logoURI && (
           <RowFixed>
-            <ThemedText.Small mr="4px" color={theme.text3}>
+            <ThemedText.Small mr="4px" color={theme.deprecated_text3}>
               <Trans>via {list.name} </Trans>
             </ThemedText.Small>
             <ListLogo logoURI={list.logoURI} size="12px" />
@@ -97,7 +97,7 @@ export default function ImportRow({
       ) : (
         <RowFixed style={{ minWidth: 'fit-content' }}>
           <CheckIcon />
-          <ThemedText.Main color={theme.green1}>
+          <ThemedText.Main color={theme.deprecated_green1}>
             <Trans>Active</Trans>
           </ThemedText.Main>
         </RowFixed>

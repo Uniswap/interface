@@ -7,11 +7,10 @@ import { getConnection } from 'connection/utils'
 import { getIsValidSwapQuote } from 'pages/Swap'
 import { darken } from 'polished'
 import { useMemo } from 'react'
-import { Activity } from 'react-feather'
+import { AlertTriangle } from 'react-feather'
 import { useAppSelector } from 'state/hooks'
 import { useDerivedSwapInfo } from 'state/swap/hooks'
 import styled, { css } from 'styled-components/macro'
-import { isChainAllowed } from 'utils/switchChain'
 
 import { useHasSocks } from '../../hooks/useSocksBalance'
 import { useToggleWalletModal } from '../../state/application/hooks'
@@ -34,61 +33,63 @@ const Web3StatusGeneric = styled(ButtonSecondary)`
   user-select: none;
   height: 36px;
   margin-right: 2px;
-  margin-left: 1px;
+  margin-left: 2px;
   :focus {
     outline: none;
   }
 `
 const Web3StatusError = styled(Web3StatusGeneric)`
-  background-color: ${({ theme }) => theme.red1};
-  border: 1px solid ${({ theme }) => theme.red1};
-  color: ${({ theme }) => theme.white};
+  background-color: ${({ theme }) => theme.deprecated_red1};
+  border: 1px solid ${({ theme }) => theme.deprecated_red1};
+  color: ${({ theme }) => theme.deprecated_white};
   font-weight: 500;
   :hover,
   :focus {
-    background-color: ${({ theme }) => darken(0.1, theme.red1)};
+    background-color: ${({ theme }) => darken(0.1, theme.deprecated_red1)};
   }
 `
 
 const Web3StatusConnect = styled(Web3StatusGeneric)<{ faded?: boolean }>`
-  background-color: ${({ theme }) => theme.primary4};
+  background-color: ${({ theme }) => theme.deprecated_primary4};
   border: none;
 
-  color: ${({ theme }) => theme.primaryText1};
+  color: ${({ theme }) => theme.deprecated_primaryText1};
   font-weight: 500;
 
   :hover,
   :focus {
-    border: 1px solid ${({ theme }) => darken(0.05, theme.primary4)};
-    color: ${({ theme }) => theme.primaryText1};
+    border: 1px solid ${({ theme }) => darken(0.05, theme.deprecated_primary4)};
+    color: ${({ theme }) => theme.deprecated_primaryText1};
   }
 
   ${({ faded }) =>
     faded &&
     css`
-      background-color: ${({ theme }) => theme.primary5};
-      border: 1px solid ${({ theme }) => theme.primary5};
-      color: ${({ theme }) => theme.primaryText1};
+      background-color: ${({ theme }) => theme.deprecated_primary5};
+      border: 1px solid ${({ theme }) => theme.deprecated_primary5};
+      color: ${({ theme }) => theme.deprecated_primaryText1};
 
       :hover,
       :focus {
-        border: 1px solid ${({ theme }) => darken(0.05, theme.primary4)};
-        color: ${({ theme }) => darken(0.05, theme.primaryText1)};
+        border: 1px solid ${({ theme }) => darken(0.05, theme.deprecated_primary4)};
+        color: ${({ theme }) => darken(0.05, theme.deprecated_primaryText1)};
       }
     `}
 `
 
 const Web3StatusConnected = styled(Web3StatusGeneric)<{ pending?: boolean }>`
-  background-color: ${({ pending, theme }) => (pending ? theme.primary1 : theme.bg1)};
-  border: 1px solid ${({ pending, theme }) => (pending ? theme.primary1 : theme.bg1)};
-  color: ${({ pending, theme }) => (pending ? theme.white : theme.text1)};
+  background-color: ${({ pending, theme }) => (pending ? theme.deprecated_primary1 : theme.deprecated_bg1)};
+  border: 1px solid ${({ pending, theme }) => (pending ? theme.deprecated_primary1 : theme.deprecated_bg1)};
+  color: ${({ pending, theme }) => (pending ? theme.deprecated_white : theme.deprecated_text1)};
   font-weight: 500;
   :hover,
   :focus {
-    border: 1px solid ${({ theme }) => darken(0.05, theme.bg3)};
+    border: 1px solid ${({ theme }) => darken(0.05, theme.deprecated_bg3)};
 
     :focus {
-      border: 1px solid ${({ pending, theme }) => (pending ? darken(0.1, theme.primary1) : darken(0.1, theme.bg2))};
+      border: 1px solid
+        ${({ pending, theme }) =>
+          pending ? darken(0.1, theme.deprecated_primary1) : darken(0.1, theme.deprecated_bg2)};
     }
   }
 `
@@ -104,7 +105,7 @@ const Text = styled.p`
   font-weight: 500;
 `
 
-const NetworkIcon = styled(Activity)`
+const NetworkIcon = styled(AlertTriangle)`
   margin-left: 0.25rem;
   margin-right: 0.5rem;
   width: 16px;
@@ -135,8 +136,6 @@ function Web3StatusInner() {
 
   const error = useAppSelector((state) => state.connection.errorByConnectionType[getConnection(connector).type])
 
-  const chainAllowed = chainId && isChainAllowed(connector, chainId)
-
   const allTransactions = useAllTransactions()
 
   const sortedRecentTransactions = useMemo(() => {
@@ -152,15 +151,6 @@ function Web3StatusInner() {
 
   if (!chainId) {
     return null
-  } else if (!chainAllowed) {
-    return (
-      <Web3StatusError onClick={toggleWalletModal}>
-        <NetworkIcon />
-        <Text>
-          <Trans>Wrong Network</Trans>
-        </Text>
-      </Web3StatusError>
-    )
   } else if (error) {
     return (
       <Web3StatusError onClick={toggleWalletModal}>
