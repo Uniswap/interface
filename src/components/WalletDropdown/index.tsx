@@ -93,9 +93,7 @@ const Divider = styled.div`
 const InternalMenuItem = styled(Link)`
   flex: 1;
   padding: 0.5rem 0.5rem;
-  color: ${({ theme }) => theme.deprecated_text2};
   :hover {
-    color: ${({ theme }) => theme.deprecated_text1};
     cursor: pointer;
     text-decoration: none;
   }
@@ -116,9 +114,7 @@ const ToggleMenuItem = styled.button`
   justify-content: space-between;
   font-size: 1rem;
   font-weight: 500;
-  color: ${({ theme }) => theme.deprecated_text2};
   :hover {
-    color: ${({ theme }) => theme.deprecated_text1};
     cursor: pointer;
     text-decoration: none;
   }
@@ -132,7 +128,6 @@ const InternalLinkMenuItem = styled(InternalMenuItem)`
   justify-content: space-between;
   text-decoration: none;
   :hover {
-    color: ${({ theme }) => theme.deprecated_text1};
     cursor: pointer;
     text-decoration: none;
   }
@@ -143,7 +138,6 @@ const LanguageBack = styled.span`
   cursor: pointer;
   color: ${themeVars.colors.darkGray};
   :hover {
-    color: ${({ theme }) => theme.deprecated_text1};
     cursor: pointer;
     text-decoration: none;
   }

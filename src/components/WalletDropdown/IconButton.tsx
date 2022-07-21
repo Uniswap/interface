@@ -11,14 +11,14 @@ interface IconButtonProps {
 }
 
 export const IconHoverText = styled.span`
-  color: ${({ theme }) => theme.deprecated_text1};
+  color: ${themeVars.colors.blackBlue};
   position: absolute;
   top: 28px;
   border-radius: 8px;
   transform: translateX(-50%);
   opacity: 0;
   font-size: 12px;
-  border: ${({ theme }) => `1px solid ${theme.deprecated_bg4}`};
+  border: 1px solid ${themeVars.colors.medGray};
   padding: 5px;
   left: 10px;
 `
