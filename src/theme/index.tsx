@@ -8,6 +8,7 @@ import styled, {
 } from 'styled-components/macro'
 
 import { useIsDarkMode } from '../state/user/hooks'
+import { colors as ColorsPalette, colorsDark, colorsLight } from './colors'
 import { Colors } from './styled'
 
 export * from './components'
@@ -110,6 +111,58 @@ function colors(darkMode: boolean): Colors {
     // dont wanna forget these blue yet
     deprecated_blue4: darkMode ? '#153d6f70' : '#C4D9F8',
     // blue5: darkMode ? '#153d6f70' : '#EBF4FF',
+
+    userThemeColor: darkMode ? colorsDark.userThemeColor : colorsLight.userThemeColor,
+
+    backgroundBackdrop: darkMode ? colorsDark.backgroundBackdrop : colorsLight.backgroundBackdrop,
+    backgroundSurface: darkMode ? colorsDark.backgroundSurface : colorsLight.backgroundSurface,
+    backgroundContainer: darkMode ? colorsDark.backgroundContainer : colorsLight.backgroundContainer,
+    backgroundAction: darkMode ? colorsDark.backgroundAction : colorsLight.backgroundAction,
+    backgroundOutline: darkMode ? colorsDark.backgroundOutline : colorsLight.backgroundOutline,
+    backgroundScrim: darkMode ? colorsDark.backgroundScrim : colorsLight.backgroundScrim,
+
+    textPrimary: darkMode ? colorsDark.textPrimary : colorsLight.textPrimary,
+    textSecondary: darkMode ? colorsDark.textSecondary : colorsLight.textSecondary,
+    textTertiary: darkMode ? colorsDark.textTertiary : colorsLight.textTertiary,
+
+    accentAction: darkMode ? colorsDark.accentAction : colorsLight.accentAction,
+    accentActive: darkMode ? colorsDark.accentActive : colorsLight.accentActive,
+    accentSuccess: darkMode ? colorsDark.accentSuccess : colorsLight.accentSuccess,
+    accentWarning: darkMode ? colorsDark.accentWarning : colorsLight.accentWarning,
+    accentFailure: darkMode ? colorsDark.accentFailure : colorsLight.accentFailure,
+
+    accentActionSoft: darkMode ? colorsDark.accentActionSoft : colorsLight.accentActionSoft,
+    accentActiveSoft: darkMode ? colorsDark.accentActiveSoft : colorsLight.accentActiveSoft,
+    accentSuccessSoft: darkMode ? colorsDark.accentSuccessSoft : colorsLight.accentSuccessSoft,
+    accentWarningSoft: darkMode ? colorsDark.accentWarningSoft : colorsLight.accentWarningSoft,
+    accentFailureSoft: darkMode ? colorsDark.accentFailureSoft : colorsLight.accentFailureSoft,
+
+    accentTextDarkPrimary: darkMode ? colorsDark.accentTextDarkPrimary : colorsLight.accentTextDarkPrimary,
+    accentTextDarkSecondary: darkMode ? colorsDark.accentTextDarkSecondary : colorsLight.accentTextDarkSecondary,
+    accentTextDarkTertiary: darkMode ? colorsDark.accentTextDarkTertiary : colorsLight.accentTextDarkTertiary,
+
+    accentTextLightPrimary: darkMode ? colorsDark.accentTextLightPrimary : colorsLight.accentTextLightPrimary,
+    accentTextLightSecondary: darkMode ? colorsDark.accentTextLightSecondary : colorsLight.accentTextLightSecondary,
+    accentTextLightTertiary: darkMode ? colorsDark.accentTextLightTertiary : colorsLight.accentTextLightTertiary,
+
+    none: colorsDark.none,
+    white: ColorsPalette.white,
+    black: ColorsPalette.black,
+
+    // chain colors are same for light/dark mode
+    chain_1: colorsDark.chain_1,
+    chain_3: colorsDark.chain_3,
+    chain_4: colorsDark.chain_4,
+    chain_5: colorsDark.chain_5,
+    chain_10: colorsDark.chain_10,
+    chain_137: colorsDark.chain_137,
+    chain_42: colorsDark.chain_42,
+    chain_69: colorsDark.chain_69,
+    chain_42161: colorsDark.chain_42161,
+    chain_421611: colorsDark.chain_421611,
+    chain_80001: colorsDark.chain_80001,
+
+    blue200: ColorsPalette.blue200,
   }
 }
 

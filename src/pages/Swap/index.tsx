@@ -463,18 +463,24 @@ export default function Swap() {
                   />
                 </Trace>
                 <ArrowWrapper clickable={isSupportedChain(chainId)}>
-                  <ArrowDown
-                    size="16"
-                    onClick={() => {
-                      setApprovalSubmitted(false) // reset 2 step UI for approvals
-                      onSwitchTokens()
-                    }}
-                    color={
-                      currencies[Field.INPUT] && currencies[Field.OUTPUT]
-                        ? theme.deprecated_text1
-                        : theme.deprecated_text3
-                    }
-                  />
+                  <TraceEvent
+                    events={[Event.onClick]}
+                    name={EventName.SWAP_TOKENS_REVERSED}
+                    element={ElementName.SWAP_TOKENS_REVERSE_ARROW_BUTTON}
+                  >
+                    <ArrowDown
+                      size="16"
+                      onClick={() => {
+                        setApprovalSubmitted(false) // reset 2 step UI for approvals
+                        onSwitchTokens()
+                      }}
+                      color={
+                        currencies[Field.INPUT] && currencies[Field.OUTPUT]
+                          ? theme.deprecated_text1
+                          : theme.deprecated_text3
+                      }
+                    />
+                  </TraceEvent>
                 </ArrowWrapper>
                 <Trace section={SectionName.CURRENCY_OUTPUT_PANEL}>
                   <CurrencyInputPanel
