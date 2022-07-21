@@ -112,9 +112,6 @@ function colors(darkMode: boolean): Colors {
     deprecated_blue4: darkMode ? '#153d6f70' : '#C4D9F8',
     // blue5: darkMode ? '#153d6f70' : '#EBF4FF',
 
-    blue200: ColorsPalette.blue200,
-
-    /* UPDATED */
     userThemeColor: darkMode ? colorsDark.userThemeColor : colorsLight.userThemeColor,
 
     backgroundBackdrop: darkMode ? colorsDark.backgroundBackdrop : colorsLight.backgroundBackdrop,
@@ -164,6 +161,8 @@ function colors(darkMode: boolean): Colors {
     chain_42161: colorsDark.chain_42161,
     chain_421611: colorsDark.chain_421611,
     chain_80001: colorsDark.chain_80001,
+
+    blue200: ColorsPalette.blue200,
   }
 }
 

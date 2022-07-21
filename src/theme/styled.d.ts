@@ -58,7 +58,6 @@ export interface Colors {
   deprecated_success: Color
   deprecated_warning: Color
 
-  /* UPDATED PALETTE */
   userThemeColor: string
 
   backgroundBackdrop: string
