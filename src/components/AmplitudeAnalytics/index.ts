@@ -1,4 +1,7 @@
 import { Identify, identify, init, track } from '@amplitude/analytics-browser'
+import { Experiment } from '@amplitude/experiment-js-client'
+
+const API_KEY = process.env.REACT_APP_AMPLITUDE_KEY
 
 /**
  * Initializes Amplitude with API key for project.
@@ -9,7 +12,6 @@ import { Identify, identify, init, track } from '@amplitude/analytics-browser'
 export function initializeAnalytics(isDevEnvironment = process.env.NODE_ENV === 'development') {
   if (isDevEnvironment) return
 
-  const API_KEY = process.env.REACT_APP_AMPLITUDE_KEY
   if (typeof API_KEY === 'undefined') {
     throw new Error(`REACT_APP_AMPLITUDE_KEY must be a defined environment variable`)
   }
@@ -29,6 +31,10 @@ export function initializeAnalytics(isDevEnvironment = process.env.NODE_ENV === 
       },
     }
   )
+
+  return {
+    experiment: Experiment.initializeWithAmplitudeAnalytics('<DEPLOYMENT_KEY>'),
+  }
 }
 
 /** Sends an event to Amplitude. */

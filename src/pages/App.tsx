@@ -84,7 +84,7 @@ export default function App() {
   const location = useLocation()
   const currentPage = getCurrentPageFromLocation(location.pathname)
   useAnalyticsReporter()
-  initializeAnalytics()
+  const { experiment } = initializeAnalytics()
 
   useEffect(() => {
     const unlisten = history.listen(() => {
