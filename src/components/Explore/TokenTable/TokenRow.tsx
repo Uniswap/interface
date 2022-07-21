@@ -78,7 +78,6 @@ const StyledTokenRow = styled.div`
 
   @media only screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
     grid-template-columns: 1fr 1fr;
-    width: fit-content;
     min-width: unset;
     border-bottom: 0.5px solid ${({ theme }) => theme.backgroundContainer};
     padding: 0px 12px;
@@ -102,6 +101,7 @@ const ClickableName = styled(Link)`
   gap: 8px;
   text-decoration: none;
   color: ${({ theme }) => theme.textPrimary};
+  align-items: center;
 `
 const FavoriteCell = styled(Cell)`
   min-width: 40px;
@@ -207,6 +207,7 @@ const PriceInfoCell = styled(Cell)`
 
   @media only screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
     flex-direction: column;
+    align-items: flex-end;
   }
 `
 const SortArrowCell = styled(Cell)`
@@ -459,7 +460,6 @@ export default function LoadedRow({
 
   const heartColor = isFavorited ? theme.accentActive : undefined
   // TODO: currency logo sizing mobile (32px) vs. desktop (24px)
-  // TODO: fix listNumber as number on most popular (should be fixed)
   return (
     <TokenRow
       address={tokenAddress}
