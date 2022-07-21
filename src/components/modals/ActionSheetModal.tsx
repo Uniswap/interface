@@ -79,13 +79,13 @@ interface ActionSheetModalProps extends ActionSheetModalContentProps {
   name: ModalName
 }
 
-export function ActionSheetModal({ isVisible, onClose, ...rest }: ActionSheetModalProps) {
+export function ActionSheetModal({ isVisible, onClose, name, ...rest }: ActionSheetModalProps) {
   return (
     <BottomSheetDetachedModal
       hideHandlebar
       backgroundColor="transparent"
       isVisible={isVisible}
-      name={ModalName.NetworkSelector}
+      name={name}
       onClose={onClose}>
       <ActionSheetModalContent onClose={onClose} {...rest} />
     </BottomSheetDetachedModal>

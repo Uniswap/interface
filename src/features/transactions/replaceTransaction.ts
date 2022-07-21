@@ -5,7 +5,7 @@ import { getProvider, getSignerManager } from 'src/app/walletContext'
 import { pushNotification } from 'src/features/notifications/notificationSlice'
 import { AppNotificationType } from 'src/features/notifications/types'
 import { signAndSendTransaction } from 'src/features/transactions/sendTransaction'
-import { updateTransaction } from 'src/features/transactions/slice'
+import { finalizeTransaction, updateTransaction } from 'src/features/transactions/slice'
 import { TransactionDetails, TransactionStatus } from 'src/features/transactions/types'
 import { getSerializableTransactionRequest } from 'src/features/transactions/utils'
 import { selectAccounts } from 'src/features/wallet/selectors'
@@ -52,10 +52,7 @@ export function* attemptReplaceTransaction(
     const updatedTransaction: TransactionDetails = {
       ...transaction,
       hash: transactionResponse.hash,
-      // Note: currently the replaced tx status is reverted to pending
-      // We may eventually want a special status (or a status history) to
-      // show that the tx was previously cancelled/replaced.
-      status: TransactionStatus.Pending,
+      status: isCancellation ? TransactionStatus.Cancelling : TransactionStatus.Pending,
       receipt: undefined,
       options: {
         ...options,
@@ -64,7 +61,26 @@ export function* attemptReplaceTransaction(
     }
     yield* put(updateTransaction(updatedTransaction))
   } catch (error) {
-    logger.error('replaceTransaction', '', 'Error while attempting tx replacement', hash, error)
+    logger.info('replaceTransaction', '', 'Error while attempting tx replacement', hash, error)
+
+    // Caught an invalid replacement, which is a failed cancelation attempt. Aka previous
+    // txn was already mined.
+    if (transaction.status === TransactionStatus.Cancelling) {
+      const updatedTransaction: TransactionDetails = {
+        ...transaction,
+        hash: hash,
+        status: TransactionStatus.FailedCancel,
+        receipt: undefined,
+        options: {
+          ...options,
+        },
+      }
+      // Finalize and end attempts to replace.
+      yield* put(
+        finalizeTransaction({ ...updatedTransaction, status: TransactionStatus.FailedCancel })
+      )
+    }
+
     yield* put(
       pushNotification({
         type: AppNotificationType.Error,

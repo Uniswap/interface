@@ -201,7 +201,12 @@ function* finalizeTransaction(
     | TransactionStatus.Cancelled
 ) {
   const status =
-    statusOverride ?? (ethersReceipt?.status ? TransactionStatus.Success : TransactionStatus.Failed)
+    statusOverride ??
+    (ethersReceipt?.status
+      ? transaction.status === TransactionStatus.Cancelling
+        ? TransactionStatus.Cancelled
+        : TransactionStatus.Success
+      : TransactionStatus.Failed)
   const receipt: TransactionReceipt | undefined = ethersReceipt
     ? {
         blockHash: ethersReceipt.blockHash,

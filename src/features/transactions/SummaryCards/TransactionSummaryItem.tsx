@@ -1,23 +1,26 @@
 import dayjs from 'dayjs'
-import { default as React, memo, useCallback, useState } from 'react'
+import { default as React, memo, useCallback, useMemo, useState } from 'react'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
-import { i18n } from 'src/app/i18n'
-import { Button } from 'src/components/buttons/Button'
+import SlashCircleIcon from 'src/assets/icons/slash-circle.svg'
+import { Button, ButtonProps } from 'src/components/buttons/Button'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { CurrencyLogoOrPlaceholder } from 'src/components/CurrencyLogo/CurrencyLogoOrPlaceholder'
 import { LogoWithTxStatus } from 'src/components/CurrencyLogo/LogoWithTxStatus'
 import { Box } from 'src/components/layout/Box'
 import { Flex } from 'src/components/layout/Flex'
+import { SpinningLoader } from 'src/components/loading/SpinningLoader'
 import { Text } from 'src/components/Text'
 import { ChainId, CHAIN_INFO } from 'src/constants/chains'
 import { AssetType } from 'src/entities/assets'
 import { useSpotPrices } from 'src/features/dataApi/prices'
 import { openModal } from 'src/features/modals/modalSlice'
-import { createBalanceUpdate, getCurrencySymbol } from 'src/features/notifications/utils'
+import { createBalanceUpdate } from 'src/features/notifications/utils'
 import { ModalName } from 'src/features/telemetry/constants'
 import { useCurrency } from 'src/features/tokens/useCurrency'
 import { useCreateSwapFormState } from 'src/features/transactions/hooks'
+import AlertBanner from 'src/features/transactions/SummaryCards/AlertBanner'
 import TransactionActionsModal from 'src/features/transactions/SummaryCards/TransactionActionsModal'
+import { getTransactionSummaryTitle } from 'src/features/transactions/SummaryCards/utils'
 import {
   TransactionDetails,
   TransactionStatus,
@@ -31,6 +34,7 @@ export const TXN_HISTORY_SIZING = {
   primaryImage: TXN_HISTORY_ICON_SIZE * (2 / 3),
   secondaryImage: TXN_HISTORY_ICON_SIZE * (2 / 3) * (2 / 3),
 }
+const LOADING_SPINNER_SIZE = 24
 
 // Key values needed for rendering transaction history item.
 export interface TransactionSummaryInfo {
@@ -52,9 +56,12 @@ export interface TransactionSummaryInfo {
 
 function TransactionSummaryItem({
   transactionSummaryInfo,
+  inlineWarning,
+  ...rest
 }: {
   transactionSummaryInfo: TransactionSummaryInfo
-}) {
+  inlineWarning?: boolean // Show warning inline and not as header banner.
+} & ButtonProps) {
   const {
     type,
     hash,
@@ -85,6 +92,14 @@ function TransactionSummaryItem({
   const { spotPrices } = useSpotPrices([currency])
 
   const failed = status === TransactionStatus.Failed
+  const canceled = status === TransactionStatus.Cancelled
+  const cancelling = status === TransactionStatus.Cancelling
+  const failedCancel = status === TransactionStatus.FailedCancel
+  const inProgress = status === TransactionStatus.Cancelling || status === TransactionStatus.Pending
+  const showRetry =
+    fullDetails?.typeInfo.type === TransactionType.Swap &&
+    fullDetails.status === TransactionStatus.Failed
+
   const explorerUrl = CHAIN_INFO[chainId].explorer
   const dateAdded = dayjs(msTimestampAdded).format('MMM D')
 
@@ -93,27 +108,42 @@ function TransactionSummaryItem({
   }, [dispatch, swapFormState])
 
   // Only need a balance update on these 3 types of transactions.
-  let balanceUpdate
-  if (
+  const balanceUpdate =
     amountRaw &&
     (type === TransactionType.Send ||
       type === TransactionType.Receive ||
       type === TransactionType.Swap)
-  ) {
-    balanceUpdate = createBalanceUpdate(type, status, currency, amountRaw, spotPrices)
-  }
+      ? createBalanceUpdate(type, status, currency, amountRaw, spotPrices)
+      : undefined
 
-  const icon =
-    type === TransactionType.Swap && !failed ? (
+  let title = getTransactionSummaryTitle({
+    transactionSummaryInfo,
+    currency,
+    otherCurrency,
+    inlineWarning,
+  })
+  const caption = inProgress ? balanceUpdate?.assetIncrease : dateAdded.toLocaleString()
+
+  const icon = useMemo(() => {
+    return type === TransactionType.Swap && !failed ? (
       <>
         <Box left={2} position="absolute" testID="swap-success-toast" top={2}>
           <CurrencyLogoOrPlaceholder currency={currency} size={TXN_HISTORY_SIZING.primaryImage} />
         </Box>
         <Box bottom={0} position="absolute" right={0}>
-          <CurrencyLogoOrPlaceholder
-            currency={otherCurrency}
-            size={TXN_HISTORY_SIZING.primaryImage}
-          />
+          {canceled && inlineWarning ? (
+            <SlashCircleIcon
+              color={theme.colors.backgroundOutline}
+              fillOpacity={1}
+              height={TXN_HISTORY_SIZING.primaryImage}
+              width={TXN_HISTORY_SIZING.primaryImage}
+            />
+          ) : (
+            <CurrencyLogoOrPlaceholder
+              currency={otherCurrency}
+              size={TXN_HISTORY_SIZING.primaryImage}
+            />
+          )}
         </Box>
       </>
     ) : (
@@ -126,44 +156,29 @@ function TransactionSummaryItem({
         txType={type}
       />
     )
-
-  // Generate copy for transaction.
-  let title = ''
-  const tokenAddressOrName = AssetType.Currency ? tokenAddress : nftMetaData?.name ?? 'NFT'
-  const assetName = getCurrencySymbol(currency, tokenAddressOrName)
-
-  switch (type) {
-    case TransactionType.Swap:
-      let tokensText = ''
-      if (currency && otherCurrency) {
-        tokensText = otherCurrency.symbol + i18n.t(' for ') + assetName
-      }
-      title = failed
-        ? i18n.t('Failed swap')
-        : i18n.t('Swapped ' + '{{tokensText}}', {
-            tokensText,
-          })
-      break
-    case TransactionType.Approve:
-      title = failed ? i18n.t('Failed approve') : i18n.t('Approved {{assetName}}', { assetName })
-      break
-    case TransactionType.Send:
-      title = failed ? i18n.t('Failed send') : i18n.t('Sent {{assetName}}', { assetName })
-      break
-    case TransactionType.Receive:
-      title = i18n.t('Received {{assetName}}', { assetName })
-      break
-    default:
-      title = i18n.t('Unknown transaction')
-  }
+  }, [
+    assetType,
+    canceled,
+    currency,
+    failed,
+    inlineWarning,
+    nftMetaData?.imageURL,
+    otherCurrency,
+    status,
+    theme.colors.backgroundOutline,
+    type,
+  ])
 
   return (
     <>
-      <Button onPress={() => setShowActionsModal(true)}>
+      <Button {...rest} overflow="hidden" onPress={() => setShowActionsModal(true)}>
+        {(canceled || cancelling || failedCancel) && !inlineWarning && (
+          <AlertBanner status={status} />
+        )}
         <Flex
           row
           alignItems="flex-start"
-          bg="translucentBackground"
+          bg="backgroundContainer"
           gap="xs"
           justifyContent="space-between"
           padding="md">
@@ -178,46 +193,41 @@ function TransactionSummaryItem({
                 {title}
               </Text>
               <Text color="textSecondary" variant="badge">
-                {dateAdded.toLocaleString()}
+                {caption}
               </Text>
             </Flex>
           </Flex>
-          {balanceUpdate && (
-            <Flex alignItems="flex-end" gap="xs">
-              <>
-                <Text adjustsFontSizeToFit numberOfLines={1} variant="body">
-                  {balanceUpdate.assetIncrease}
+          {inProgress ? (
+            <SpinningLoader size={LOADING_SPINNER_SIZE} />
+          ) : showRetry ? (
+            <PrimaryButton
+              label="Retry"
+              px="none"
+              py="none"
+              style={{ borderWidth: theme.spacing.none }}
+              textColor="accentAction"
+              textVariant="subhead"
+              variant="transparent"
+              onPress={onRetrySwap}
+            />
+          ) : balanceUpdate ? (
+            <Flex alignItems="flex-end" gap="xxxs">
+              <Text adjustsFontSizeToFit numberOfLines={1} variant="body">
+                {balanceUpdate.assetIncrease}
+              </Text>
+              {balanceUpdate.usdIncrease && (
+                <Text adjustsFontSizeToFit color="textSecondary" numberOfLines={1} variant="badge">
+                  {balanceUpdate.usdIncrease}
                 </Text>
-                {balanceUpdate.usdIncrease && (
-                  <Text
-                    adjustsFontSizeToFit
-                    color="textSecondary"
-                    numberOfLines={1}
-                    variant="badge">
-                    {balanceUpdate.usdIncrease}
-                  </Text>
-                )}
-              </>
+              )}
             </Flex>
-          )}
-          {fullDetails?.typeInfo.type === TransactionType.Swap &&
-            fullDetails.status === TransactionStatus.Failed && (
-              <PrimaryButton
-                label="Retry"
-                px="none"
-                py="none"
-                style={{ borderWidth: theme.spacing.none }}
-                textColor="accentAction"
-                textVariant="subhead"
-                variant="transparent"
-                onPress={onRetrySwap}
-              />
-            )}
+          ) : null}
         </Flex>
       </Button>
       <TransactionActionsModal
         hash={hash}
         isVisible={showActionsModal}
+        msTimestampAdded={msTimestampAdded}
         showCancelButton={status === TransactionStatus.Pending}
         transactionDetails={fullDetails}
         onClose={() => {

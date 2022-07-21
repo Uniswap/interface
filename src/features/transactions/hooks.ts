@@ -107,14 +107,12 @@ export function useCreateSwapFormState(
 
     const { status: txStatus, typeInfo } = transaction
 
+    if (txStatus !== TransactionStatus.Cancelled) return undefined
+
     if (typeInfo.type !== TransactionType.Swap) {
       throw new Error(
         `Tx hash ${txHash} does not correspond to a swap tx. It is of type ${typeInfo.type}`
       )
-    }
-
-    if (txStatus !== TransactionStatus.Failed) {
-      throw new Error(`Tx hash ${txHash} does not correspond to a failed tx`)
     }
 
     if (!inputCurrency) {
@@ -230,7 +228,12 @@ export function useAllFormattedTransactions(
       const msTimestampCutoffWeek = dayjs().subtract(1, 'week').unix() * 1000
       return combinedTransactionList.reduce(
         (accum: TransactionSummaryInfo[][], item) => {
-          if (item.status === TransactionStatus.Pending) {
+          if (
+            // Want all incomplete transactions
+            item.status === TransactionStatus.Pending ||
+            item.status === TransactionStatus.Cancelling ||
+            item.status === TransactionStatus.Replacing
+          ) {
             accum[3].push(item)
           } else if (item.msTimestampAdded > msTimestampCutoffDay) {
             accum[0].push(item)

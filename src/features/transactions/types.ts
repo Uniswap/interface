@@ -33,12 +33,17 @@ export interface TransactionDetails extends TransactionId {
 }
 
 export interface FinalizedTransactionDetails extends TransactionDetails {
-  status: TransactionStatus.Success | TransactionStatus.Failed | TransactionStatus.Cancelled
+  status:
+    | TransactionStatus.Success
+    | TransactionStatus.Failed
+    | TransactionStatus.Cancelled
+    | TransactionStatus.FailedCancel
 }
 
 export enum TransactionStatus {
   Cancelled = 'cancelled',
   Cancelling = 'cancelling',
+  FailedCancel = 'failedCancel',
   Success = 'confirmed',
   Failed = 'failed',
   Pending = 'pending',

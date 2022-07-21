@@ -156,13 +156,18 @@ const formTransferTxTitle = (
   })
 }
 
+export interface BalanceUpdate {
+  assetIncrease: string
+  usdIncrease: string | undefined
+}
+
 export const createBalanceUpdate = (
   txType: TransactionType.Send | TransactionType.Receive | TransactionType.Swap,
   txStatus: TransactionStatus,
   currency: Nullable<Currency>,
   currencyAmountRaw: string,
   spotPrices?: SpotPrices // despite what typescript says about `useSpotPrices`, `spotPrices` can be undefined while loading
-) => {
+): BalanceUpdate | undefined => {
   if (
     !currency ||
     !(txStatus === TransactionStatus.Success || txStatus === TransactionStatus.Pending)
