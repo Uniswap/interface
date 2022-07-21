@@ -68,19 +68,6 @@ const StyledArrowLeft = styled(ArrowLeft)`
   color: ${({ theme }) => theme.text1};
 `
 
-export function SwapPoolTabs({ active }: { active: 'swap' | 'pool' }) {
-  return (
-    <Tabs style={{ marginBottom: '20px', display: 'none', padding: '1rem 1rem 0 1rem' }}>
-      <StyledNavLink id={`swap-nav-link`} to={'/swap'} isActive={() => active === 'swap'}>
-        <Trans>Swap</Trans>
-      </StyledNavLink>
-      <StyledNavLink id={`pool-nav-link`} to={'/pool'} isActive={() => active === 'pool'}>
-        <Trans>Pool</Trans>
-      </StyledNavLink>
-    </Tabs>
-  )
-}
-
 export function FindPoolTabs({ origin }: { origin: string }) {
   return (
     <Tabs>
