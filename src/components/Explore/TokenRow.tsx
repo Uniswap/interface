@@ -4,8 +4,7 @@ import { useCurrency, useToken } from 'hooks/Tokens'
 import useTheme from 'hooks/useTheme'
 import { TimePeriod, TokenData } from 'hooks/useTopTokens'
 import { useAtom } from 'jotai'
-import { useAtomValue } from 'jotai/utils'
-import { ReactNode, useMemo } from 'react'
+import { ReactNode } from 'react'
 import { ArrowDown, ArrowDownRight, ArrowUp, ArrowUpRight, Heart } from 'react-feather'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components/macro'
@@ -18,7 +17,7 @@ import {
   MOBILE_MEDIA_BREAKPOINT,
   SMALL_MEDIA_BREAKPOINT,
 } from './constants'
-import { favoritesAtom, filterStringAtom, useToggleFavorite } from './state'
+import { favoritesAtom, useToggleFavorite } from './state'
 import { TIME_DISPLAYS } from './TimeSelector'
 
 enum Category {
@@ -476,7 +475,6 @@ export default function LoadedRow({
   listNumber: number
   timePeriod: TimePeriod
 }) {
-  const filterString = useAtomValue(filterStringAtom)
   const token = useToken(tokenAddress)
   const currency = useCurrency(tokenAddress)
   const tokenName = token?.name ?? ''
@@ -487,20 +485,6 @@ export default function LoadedRow({
   const isFavorited = favoriteTokens.includes(tokenAddress)
   const toggleFavorite = useToggleFavorite(tokenAddress)
 
-  const showRow = useMemo(() => {
-    if (!filterString) {
-      return true
-    }
-    const lowercaseFilterString = filterString.toLowerCase()
-    const addressIncludesFilterString = tokenAddress.toLowerCase().includes(lowercaseFilterString)
-    const nameIncludesFilterString = tokenName.toLowerCase().includes(lowercaseFilterString)
-    const symbolIncludesFilterString = tokenSymbol.toLowerCase().includes(lowercaseFilterString)
-    return nameIncludesFilterString || symbolIncludesFilterString || addressIncludesFilterString
-  }, [filterString, tokenAddress, tokenName, tokenSymbol])
-
-  if (!showRow) {
-    return null
-  }
   const tokenPercentChangeInfo = (
     <>
       {tokenData.delta}%

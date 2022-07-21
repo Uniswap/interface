@@ -1,10 +1,12 @@
+import { useToken } from 'hooks/Tokens'
 import useTopTokens, { TimePeriod } from 'hooks/useTopTokens'
-import { useAtom } from 'jotai'
+import { useAtom, useAtomValue } from 'jotai'
+import { useMemo } from 'react'
 import { AlertTriangle } from 'react-feather'
 import styled from 'styled-components/macro'
 
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from './constants'
-import { favoritesAtom, showFavoritesAtom } from './state'
+import { favoritesAtom, filterStringAtom, showFavoritesAtom } from './state'
 import LoadedRow, { HeaderRow, LoadingRow } from './TokenRow'
 
 const GridContainer = styled.div`
@@ -31,6 +33,7 @@ const NoTokenDisplay = styled.div`
   font-weight: 500;
   align-items: center;
   padding: 0px 28px;
+  gap: 8px;
 `
 const TokenRowsContainer = styled.div`
   padding: 4px 0px;
@@ -41,10 +44,28 @@ const LOADING_ROWS = Array(10)
     return <LoadingRow key={`${index}`} />
   })
 
+const ShowToken = (tokenAddress: string, filterString: string): boolean => {
+  const token = useToken(tokenAddress)
+  const tokenName = token?.name ?? ''
+  const tokenSymbol = token?.symbol ?? ''
+
+  return useMemo(() => {
+    if (!filterString) {
+      return true
+    }
+    const lowercaseFilterString = filterString.toLowerCase()
+    const addressIncludesFilterString = tokenAddress.toLowerCase().includes(lowercaseFilterString)
+    const nameIncludesFilterString = tokenName.toLowerCase().includes(lowercaseFilterString)
+    const symbolIncludesFilterString = tokenSymbol.toLowerCase().includes(lowercaseFilterString)
+    return nameIncludesFilterString || symbolIncludesFilterString || addressIncludesFilterString
+  }, [filterString, tokenAddress, tokenName, tokenSymbol])
+}
+
 export default function TokenTable() {
   const { data, error, loading } = useTopTokens()
   const [favoriteTokens] = useAtom(favoritesAtom)
   const [showFavorites] = useAtom(showFavoritesAtom)
+  const filterString = useAtomValue(filterStringAtom)
   const timePeriod = TimePeriod.day
 
   /* loading and error state */
@@ -78,7 +99,12 @@ export default function TokenTable() {
 
   const topTokenAddresses = Object.keys(data)
   const showTokens = showFavorites ? favoriteTokens : topTokenAddresses
+
   const tokenRows = showTokens.map((tokenAddress, index) => {
+    if (!ShowToken(tokenAddress, filterString)) {
+      return null
+    }
+
     return (
       <LoadedRow
         key={tokenAddress}
