@@ -77,7 +77,7 @@ const StyledTokenRow = styled.div`
   }
 
   @media only screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
-    grid-template-columns: 12fr 6fr;
+    grid-template-columns: 1fr 1fr;
     width: fit-content;
     min-width: unset;
     border-bottom: 0.5px solid ${({ theme }) => theme.backgroundContainer};
@@ -132,7 +132,7 @@ const StyledHeaderRow = styled(StyledTokenRow)`
   }
 
   @media only screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
-    display: none;
+    padding: 0px 12px;
   }
 `
 const ListNumberCell = styled(Cell)`
@@ -163,7 +163,7 @@ const NameCell = styled(Cell)`
   gap: 8px;
 
   @media only screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
-    min-width: fit-content;
+    min-width: 200px;
     padding-right: 8px;
   }
 `
@@ -186,6 +186,7 @@ const PercentChangeInfoCell = styled(Cell)`
 
   @media only screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
     display: flex;
+    justify-content: flex-end;
     color: ${({ theme }) => theme.textSecondary};
     font-size: 12px;
     line-height: 16px;
@@ -196,17 +197,13 @@ const PriceCell = styled(Cell)<{ sortable: boolean }>`
   min-width: 80px;
   padding-right: 4px;
 
-  @media only screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
-    min-width: max-content;
-  }
-
   &:hover {
     background-color: ${({ theme, sortable }) => sortable && theme.backgroundContainer};
   }
 `
 const PriceInfoCell = styled(Cell)`
   justify-content: flex-end;
-  min-width: max-content;
+  flex: 1;
 
   @media only screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
     flex-direction: column;
