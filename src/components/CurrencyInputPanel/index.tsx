@@ -2,6 +2,8 @@ import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Percent, Token } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { useWeb3React } from '@web3-react/core'
+import { ElementName, Event, EventName } from 'components/AmplitudeAnalytics/constants'
+import { TraceEvent } from 'components/AmplitudeAnalytics/TraceEvent'
 import { AutoColumn } from 'components/Column'
 import { LoadingOpacityContainer, loadingOpacityMixin } from 'components/Loader/styled'
 import { isSupportedChain } from 'constants/chains'
@@ -311,9 +313,15 @@ export default function CurrencyInputPanel({
                     ) : null}
                   </ThemedText.Body>
                   {showMaxButton && selectedCurrencyBalance ? (
-                    <StyledBalanceMax onClick={onMax}>
-                      <Trans>MAX</Trans>
-                    </StyledBalanceMax>
+                    <TraceEvent
+                      events={[Event.onClick]}
+                      name={EventName.SWAP_MAX_TOKEN_AMOUNT_SELECTED}
+                      element={ElementName.MAX_TOKEN_AMOUNT_BUTTON}
+                    >
+                      <StyledBalanceMax onClick={onMax}>
+                        <Trans>MAX</Trans>
+                      </StyledBalanceMax>
+                    </TraceEvent>
                   ) : null}
                 </RowFixed>
               ) : (
