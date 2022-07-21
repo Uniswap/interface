@@ -16,13 +16,14 @@ import { Masonry } from 'src/components/layout/Masonry'
 import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollScreen'
 import { Loading } from 'src/components/loading'
 import { Text } from 'src/components/Text'
+import { LongText } from 'src/components/text/LongText'
 import { PollingInterval } from 'src/constants/misc'
 import { useNftBalancesQuery, useNftCollectionQuery } from 'src/features/nfts/api'
 import { NFTAsset } from 'src/features/nfts/types'
 import { getNFTAssetKey } from 'src/features/nfts/utils'
 import { ElementName, SectionName } from 'src/features/telemetry/constants'
 import { Trace } from 'src/features/telemetry/Trace'
-import { useActiveAccount } from 'src/features/wallet/hooks'
+import { useActiveAccount, useDisplayName } from 'src/features/wallet/hooks'
 import { Screens } from 'src/screens/Screens'
 import { formatNumber } from 'src/utils/format'
 import { openUri } from 'src/utils/linking'
@@ -89,9 +90,7 @@ function NFTCollectionHeader({ collection, collectionName }: Props) {
 
           {/* Collection description */}
           {collection?.description && (
-            <Text color="textPrimary" variant="bodySmall">
-              {collection?.description}
-            </Text>
+            <LongText color="textPrimary" text={collection?.description} variant="bodySmall" />
           )}
 
           {/* Collection links */}
@@ -146,9 +145,6 @@ function NFTCollectionHeader({ collection, collectionName }: Props) {
             </Flex>
           </Button>
         </Flex>
-        <Text variant="mediumLabel">
-          {t('Your {{collection}}', { collection: collectionName })}
-        </Text>
       </Flex>
     </Trace>
   )
@@ -158,14 +154,18 @@ export function NFTCollectionScreen({
   navigation,
   route,
 }: HomeStackScreenProp<Screens.NFTCollection>) {
+  const { t } = useTranslation()
+
   const activeAddress = useActiveAccount()?.address
-  const { address, slug } = route.params
+  const { collectionAddress, slug, owner = activeAddress } = route.params
+
+  const ownerDisplayName = useDisplayName(owner)
 
   const { currentData: nftsByCollection, isLoading: isLoadingAssets } = useNftBalancesQuery(
-    activeAddress ? { owner: activeAddress } : skipToken,
+    owner ? { owner } : skipToken,
     { pollingInterval: PollingInterval.Normal }
   )
-  const nftAssets = nftsByCollection?.[address]
+  const nftAssets = nftsByCollection?.[collectionAddress]
 
   const { currentData: collection, isLoading: collectionLoading } = useNftCollectionQuery(
     {
@@ -179,12 +179,12 @@ export function NFTCollectionScreen({
   const onPressMasonryItem = useCallback(
     (asset: NFTAsset.Asset) => {
       navigation.navigate(Screens.NFTItem, {
-        owner: activeAddress ?? '',
+        owner: owner ?? '',
         address: utils.getAddress(asset.asset_contract.address),
         token_id: asset.token_id,
       })
     },
-    [activeAddress, navigation]
+    [owner, navigation]
   )
 
   const renderMasonryItem = useCallback(
@@ -216,6 +216,11 @@ export function NFTCollectionScreen({
             <NFTCollectionHeader collection={collection} collectionName={collection?.name ?? ''} />
           )}
         </Box>
+        <Text mx="lg" variant="mediumLabel">
+          {owner === activeAddress
+            ? t('Your {{collection}}', { collection: collection?.name ?? '' })
+            : t("{{owner}}'s NFTs", { owner: ownerDisplayName?.name ?? 'Unknown' })}
+        </Text>
         <Masonry
           data={nftAssets ?? []}
           getKey={({ asset_contract, token_id }) =>

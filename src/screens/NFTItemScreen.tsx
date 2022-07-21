@@ -48,7 +48,8 @@ export function NFTItemScreen({
 
   const onPressCollection = () =>
     navigation.navigate(Screens.NFTCollection, {
-      address: utils.getAddress(asset.asset_contract.address),
+      collectionAddress: utils.getAddress(asset.asset_contract.address),
+      owner,
       slug: asset.collection.slug,
     })
 

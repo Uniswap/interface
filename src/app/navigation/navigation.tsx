@@ -274,6 +274,7 @@ export function ExploreStackNavigator() {
       <ExploreStack.Screen component={PortfolioNFTsScreen} name={Screens.PortfolioNFTs} />
       <ExploreStack.Screen component={PortfolioTokensScreen} name={Screens.PortfolioTokens} />
       <ExploreStack.Screen component={NFTItemScreen} name={Screens.NFTItem} />
+      <ExploreStack.Screen component={NFTCollectionScreen} name={Screens.NFTCollection} />
       <ExploreStack.Screen component={WatchedWalletsScreen} name={Screens.WatchedWallets} />
       <ExploreStack.Screen component={TransactionsScreen} name={Screens.UserTransactions} />
     </ExploreStack.Navigator>

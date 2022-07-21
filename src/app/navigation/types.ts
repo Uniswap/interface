@@ -29,8 +29,9 @@ export type HomeStackParamList = {
   [Screens.PortfolioNFTs]: { owner: Address | undefined }
   [Screens.NFTItem]: NFTItem
   [Screens.NFTCollection]: {
-    address: Address
+    collectionAddress: Address
     slug: string
+    owner?: Address
   }
 }
 
@@ -43,6 +44,11 @@ export type ExploreStackParamList = {
   [Screens.PortfolioNFTs]: { owner: Address | undefined }
   [Screens.User]: { address: string }
   [Screens.NFTItem]: NFTItem
+  [Screens.NFTCollection]: {
+    collectionAddress: Address
+    slug: string
+    owner?: Address
+  }
   [Screens.PortfolioTokens]: { owner: Address | undefined }
   [Screens.UserTransactions]: { owner: Address }
 }
