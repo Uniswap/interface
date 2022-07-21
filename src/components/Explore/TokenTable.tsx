@@ -1,6 +1,7 @@
 import { useAllTokens } from 'hooks/Tokens'
 import useTopTokens, { TimePeriod } from 'hooks/useTopTokens'
 import { useAtom, useAtomValue } from 'jotai'
+import { useMemo } from 'react'
 import { AlertTriangle } from 'react-feather'
 import styled from 'styled-components/macro'
 
@@ -43,13 +44,31 @@ const LOADING_ROWS = Array(10)
     return <LoadingRow key={`${index}`} />
   })
 
+function useFilteredTokens(shownTokens: string[]) {
+  const filterString = useAtomValue(filterStringAtom)
+  const allTokens = useAllTokens()
+  const filteredTokens = shownTokens.filter((tokenAddress) => {
+    const token = allTokens[tokenAddress]
+    const tokenName = token?.name ?? ''
+    const tokenSymbol = token?.symbol ?? ''
+
+    if (!filterString) {
+      return true
+    }
+    const lowercaseFilterString = filterString.toLowerCase()
+    const addressIncludesFilterString = tokenAddress.toLowerCase().includes(lowercaseFilterString)
+    const nameIncludesFilterString = tokenName.toLowerCase().includes(lowercaseFilterString)
+    const symbolIncludesFilterString = tokenSymbol.toLowerCase().includes(lowercaseFilterString)
+    return nameIncludesFilterString || symbolIncludesFilterString || addressIncludesFilterString
+  })
+  return useMemo(() => filteredTokens, [filteredTokens])
+}
+
 export default function TokenTable() {
   const { data, error, loading } = useTopTokens()
   const [favoriteTokens] = useAtom(favoritesAtom)
   const [showFavorites] = useAtom(showFavoritesAtom)
-  const filterString = useAtomValue(filterStringAtom)
   const timePeriod = TimePeriod.day
-  const allTokens = useAllTokens()
 
   /* loading and error state */
   if (loading) {
@@ -82,24 +101,9 @@ export default function TokenTable() {
 
   const topTokenAddresses = Object.keys(data)
   const showTokens = showFavorites ? favoriteTokens : topTokenAddresses
+  const filteredTokens = useFilteredTokens(showTokens)
 
   const tokenRows = showTokens.map((tokenAddress, index) => {
-    const token = allTokens[tokenAddress]
-    const tokenName = token?.name ?? ''
-    const tokenSymbol = token?.symbol ?? ''
-
-    const showRow = () => {
-      if (!filterString) {
-        return true
-      }
-      const lowercaseFilterString = filterString.toLowerCase()
-      const addressIncludesFilterString = tokenAddress.toLowerCase().includes(lowercaseFilterString)
-      const nameIncludesFilterString = tokenName.toLowerCase().includes(lowercaseFilterString)
-      const symbolIncludesFilterString = tokenSymbol.toLowerCase().includes(lowercaseFilterString)
-      return nameIncludesFilterString || symbolIncludesFilterString || addressIncludesFilterString
-    }
-    if (!showRow()) return null
-
     return (
       <LoadedRow
         key={tokenAddress}
