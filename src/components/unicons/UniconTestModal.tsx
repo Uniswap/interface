@@ -176,7 +176,7 @@ export function UniconTestModal({ onClose }: { onClose: () => void }) {
               onChangeText={setSearchQuery}
               onFocus={() => null}
             />
-            {searchQuery && <AddressSearchResult searchQuery={searchQuery} />}
+            {!!searchQuery && <AddressSearchResult searchQuery={searchQuery} />}
             {addresses.map((address) => (
               <UniconOptions key={address} address={address} />
             ))}
