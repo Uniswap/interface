@@ -1,8 +1,13 @@
 import { Trans } from '@lingui/macro'
-import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
+import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { ElementName, EventName } from 'components/AmplitudeAnalytics/constants'
 import { Event } from 'components/AmplitudeAnalytics/constants'
 import { TraceEvent } from 'components/AmplitudeAnalytics/TraceEvent'
+import {
+  formatPercentInBasisPointsNumber,
+  getDurationTillTimestampSinceEpoch,
+  getNumberFormattedToDecimalPlace,
+} from 'components/AmplitudeAnalytics/utils'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import { ReactNode } from 'react'
@@ -15,18 +20,6 @@ import { ButtonError } from '../Button'
 import { AutoRow } from '../Row'
 import { getPriceImpactPercent } from './AdvancedSwapDetails'
 import { SwapCallbackError } from './styleds'
-
-function getDurationTillTimestampSinceEpoch(futureTimestampSinceEpoch?: number): number | undefined {
-  if (!futureTimestampSinceEpoch) return undefined
-  return futureTimestampSinceEpoch - new Date().getTime() / 1000
-}
-
-const getNumberFormattedToDecimalPlace = (
-  intialNumberObject: Percent | CurrencyAmount<Token | Currency>,
-  decimalPlace: number
-): number => parseFloat(intialNumberObject.toFixed(decimalPlace))
-
-const formatPercentInBasisPointsNumber = (percent: Percent): number => parseFloat(percent.toFixed(2)) * 100
 
 interface AnalyticsEventProps {
   trade: InterfaceTrade<Currency, Currency, TradeType>

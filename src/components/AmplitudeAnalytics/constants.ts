@@ -10,6 +10,7 @@ export enum EventName {
   SWAP_AUTOROUTER_VISUALIZATION_EXPANDED = 'Swap Autorouter Visualization Expanded',
   SWAP_DETAILS_EXPANDED = 'Swap Details Expanded',
   SWAP_MAX_TOKEN_AMOUNT_SELECTED = 'Swap Max Token Amount Selected',
+  SWAP_QUOTE_RECEIVED = 'Swap Quote Received',
   SWAP_SUBMITTED = 'Swap Submitted',
   SWAP_TOKENS_REVERSED = 'Swap Tokens Reversed',
   TOKEN_IMPORTED = 'Token Imported',
@@ -68,6 +69,7 @@ export const enum ElementName {
   SWAP_BUTTON = 'swap-button',
   SWAP_DETAILS_DROPDOWN = 'swap-details-dropdown',
   SWAP_TOKENS_REVERSE_ARROW_BUTTON = 'swap-tokens-reverse-arrow-button',
+  SWAP_TRADE_PRICE_ROW = 'swap-trade-price-row',
   TOKEN_SELECTOR_ROW = 'token-selector-row',
   WALLET_TYPE_OPTION = 'wallet-type-option',
   // alphabetize additional element names.
