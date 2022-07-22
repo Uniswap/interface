@@ -1,9 +1,13 @@
 import { MAX_WIDTH_MEDIA_BREAKPOINT, MEDIUM_MEDIA_BREAKPOINT } from 'components/Explore/constants'
+import { filterStringAtom } from 'components/Explore/state'
 import FavoriteButton from 'components/Explore/TokenTable/FavoriteButton'
 import NetworkFilter from 'components/Explore/TokenTable/NetworkFilter'
 import SearchBar from 'components/Explore/TokenTable/SearchBar'
 import TimeSelector from 'components/Explore/TokenTable/TimeSelector'
 import TokenTable from 'components/Explore/TokenTable/TokenTable'
+import { useResetAtom } from 'jotai/utils'
+import { useEffect } from 'react'
+import { useHistory } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
 const ExploreContainer = styled.div`
@@ -52,6 +56,17 @@ const FiltersWrapper = styled.div`
 `
 
 const Explore = () => {
+  const resetFilterString = useResetAtom(filterStringAtom)
+  const history = useHistory()
+  useEffect(() => {
+    const unlisten = history.listen(() => {
+      resetFilterString()
+    })
+    return () => {
+      unlisten()
+    }
+  }, [history, resetFilterString])
+
   return (
     <ExploreContainer>
       <TitleContainer>Explore Tokens</TitleContainer>

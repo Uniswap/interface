@@ -1,14 +1,14 @@
 import { SupportedChainId } from 'constants/chains'
 import { TimePeriod } from 'hooks/useTopTokens'
 import { atom, useAtom } from 'jotai'
-import { atomWithStorage } from 'jotai/utils'
+import { atomWithReset, atomWithStorage } from 'jotai/utils'
 import { useCallback } from 'react'
 
 import { Category, SortDirection } from './types'
 
 export const favoritesAtom = atomWithStorage<string[]>('favorites', [])
 export const showFavoritesAtom = atomWithStorage<boolean>('showFavorites', false)
-export const filterStringAtom = atom<string>('')
+export const filterStringAtom = atomWithReset<string>('')
 export const filterNetworkAtom = atom<SupportedChainId>(SupportedChainId.MAINNET)
 export const filterTimeAtom = atom<TimePeriod>(TimePeriod.day)
 export const sortCategoryAtom = atom<Category>(Category.marketCap)
