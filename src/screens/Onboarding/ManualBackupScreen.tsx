@@ -81,7 +81,7 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props) {
             confirmText={t('I understand')}
             isVisible={showTermsModal}
             modalName={ModalName.RecoveryWarning}
-            title={t('If your lose your recovery phrase, Uniswap Labs can’t restore your wallet')}
+            title={t('If you lose your recovery phrase, Uniswap Labs can’t restore your wallet')}
             onClose={() => setShowTermsModal(false)}
             onConfirm={nextView}
           />
