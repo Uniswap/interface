@@ -14,11 +14,10 @@ import styled, { useTheme } from 'styled-components/macro'
 
 import { MOBILE_MEDIA_BREAKPOINT } from '../constants'
 import { favoritesAtom, useToggleFavorite } from '../state'
+import { favoritesAtom, filterNetworkAtom, filterStringAtom, filterTimeAtom, useToggleFavorite } from '../state'
 import { ClickFavorited } from '../TokenTable/TokenRow'
 import Resource from './Resource'
 import ShareButton from './ShareButton'
-import { favoritesAtom, filterNetworkAtom, filterStringAtom, filterTimeAtom, useToggleFavorite } from './state'
-import { ClickFavorited } from './TokenRow'
 
 const TIME_DISPLAYS: Record<TimePeriod, string> = {
   [TimePeriod.hour]: '1H',
@@ -204,7 +203,7 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
   const networkBadgebackgroundColor = chainInfo?.backgroundColor
   const filterString = useAtomValue(filterStringAtom)
   const filterNetwork = useAtomValue(filterNetworkAtom)
-  const filterTime = useAtomValue(filterTimeAtom)
+  const filterTime = useAtomValue(filterTimeAtom) // filter time period for top tokens table
 
   // catch token error and loading state
   if (!token || !token.name || !token.symbol) {
