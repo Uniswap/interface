@@ -4,6 +4,7 @@ import { useWeb3React } from '@web3-react/core'
 import { ElementName, Event, EventName } from 'components/AmplitudeAnalytics/constants'
 import { Trace } from 'components/AmplitudeAnalytics/Trace'
 import { TraceEvent } from 'components/AmplitudeAnalytics/TraceEvent'
+import { formatPercentInBasisPointsNumber, getNumberFormattedToDecimalPlace } from 'components/AmplitudeAnalytics/utils'
 import AnimatedDropdown from 'components/AnimatedDropdown'
 import Card, { OutlineCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
@@ -23,8 +24,6 @@ import { AdvancedSwapDetails } from './AdvancedSwapDetails'
 import { getPriceImpactPercent } from './AdvancedSwapDetails'
 import GasEstimateBadge from './GasEstimateBadge'
 import { ResponsiveTooltipContainer } from './styleds'
-import { formatPercentInBasisPointsNumber } from './SwapModalFooter'
-import { getNumberFormattedToDecimalPlace } from './SwapModalFooter'
 import SwapRoute from './SwapRoute'
 import TradePrice from './TradePrice'
 
@@ -125,28 +124,28 @@ interface SwapDetailsInlineProps {
   allowedSlippage: Percent
 }
 
-const formatAnalyticsEventProperties = (
-  trade: InterfaceTrade<Currency, Currency, TradeType>,
-  lpFeePercent: Percent | undefined
-) => ({
-  token_in_symbol: trade.inputAmount.currency.symbol,
-  token_out_symbol: trade.outputAmount.currency.symbol,
-  token_in_address: trade.inputAmount.currency.isToken ? trade.inputAmount.currency.address : undefined,
-  token_out_address: trade.outputAmount.currency.isToken ? trade.outputAmount.currency.address : undefined,
-  price_impact_basis_points: lpFeePercent
-    ? formatPercentInBasisPointsNumber(getPriceImpactPercent(lpFeePercent, trade))
-    : undefined,
-  estimated_network_fee_usd: trade.gasUseEstimateUSD
-    ? getNumberFormattedToDecimalPlace(trade.gasUseEstimateUSD, 2)
-    : undefined,
-  chain_id:
-    trade.inputAmount.currency.chainId === trade.outputAmount.currency.chainId
-      ? trade.inputAmount.currency.chainId
+const formatAnalyticsEventProperties = (trade: InterfaceTrade<Currency, Currency, TradeType>) => {
+  const lpFeePercent = trade ? computeRealizedLPFeePercent(trade) : undefined
+  return {
+    token_in_symbol: trade.inputAmount.currency.symbol,
+    token_out_symbol: trade.outputAmount.currency.symbol,
+    token_in_address: trade.inputAmount.currency.isToken ? trade.inputAmount.currency.address : undefined,
+    token_out_address: trade.outputAmount.currency.isToken ? trade.outputAmount.currency.address : undefined,
+    price_impact_basis_points: lpFeePercent
+      ? formatPercentInBasisPointsNumber(getPriceImpactPercent(lpFeePercent, trade))
       : undefined,
-  token_in_amount: getNumberFormattedToDecimalPlace(trade.inputAmount, trade.inputAmount.currency.decimals),
-  token_out_amount: getNumberFormattedToDecimalPlace(trade.outputAmount, trade.outputAmount.currency.decimals),
-  // TODO(lynnshaoyu): Implement quote_latency_milliseconds.
-})
+    estimated_network_fee_usd: trade.gasUseEstimateUSD
+      ? getNumberFormattedToDecimalPlace(trade.gasUseEstimateUSD, 2)
+      : undefined,
+    chain_id:
+      trade.inputAmount.currency.chainId === trade.outputAmount.currency.chainId
+        ? trade.inputAmount.currency.chainId
+        : undefined,
+    token_in_amount: getNumberFormattedToDecimalPlace(trade.inputAmount, trade.inputAmount.currency.decimals),
+    token_out_amount: getNumberFormattedToDecimalPlace(trade.outputAmount, trade.outputAmount.currency.decimals),
+    // TODO(lynnshaoyu): Implement quote_latency_milliseconds.
+  }
+}
 
 export default function SwapDetailsDropdown({
   trade,
@@ -160,7 +159,6 @@ export default function SwapDetailsDropdown({
   const { chainId } = useWeb3React()
   const [showDetails, setShowDetails] = useState(false)
   const [isFirstPriceFetch, setIsFirstPriceFetch] = useState(true)
-  const lpFeePercent = trade ? computeRealizedLPFeePercent(trade) : undefined
 
   useEffect(() => {
     if (isFirstPriceFetch && syncing) setIsFirstPriceFetch(false)
@@ -211,7 +209,7 @@ export default function SwapDetailsDropdown({
                   <Trace
                     name={EventName.SWAP_QUOTE_RECEIVED}
                     element={ElementName.SWAP_TRADE_PRICE_ROW}
-                    properties={formatAnalyticsEventProperties(trade, lpFeePercent)}
+                    properties={formatAnalyticsEventProperties(trade)}
                     shouldLogImpression={!loading && !syncing && isFirstPriceFetch}
                   >
                     <TradePrice
