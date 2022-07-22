@@ -2,6 +2,15 @@ import { Identify, identify, init, track } from '@amplitude/analytics-browser'
 import { Experiment } from '@amplitude/experiment-js-client'
 
 const API_KEY = process.env.REACT_APP_AMPLITUDE_KEY
+const DEPLOYMENT_KEY = process.env.REACT_APP_AMPLITUDE_DEPLOYMENT_KEY
+
+if (typeof API_KEY === 'undefined') {
+  throw new Error(`REACT_APP_AMPLITUDE_KEY must be a defined environment variable`)
+}
+
+if (typeof DEPLOYMENT_KEY === 'undefined') {
+  throw new Error(`REACT_APP_AMPLITUDE_DEPLOYMENT_KEY must be a defined environment variable`)
+}
 
 /**
  * Initializes Amplitude with API key for project.
@@ -9,33 +18,23 @@ const API_KEY = process.env.REACT_APP_AMPLITUDE_KEY
  * Uniswap has two Amplitude projects: test and production. You must be a
  * member of the organization on Amplitude to view details.
  */
-export function initializeAnalytics(isDevEnvironment = process.env.NODE_ENV === 'development') {
-  if (isDevEnvironment) return
-
-  if (typeof API_KEY === 'undefined') {
-    throw new Error(`REACT_APP_AMPLITUDE_KEY must be a defined environment variable`)
+init(
+  API_KEY,
+  /* userId= */ undefined, // User ID should be undefined to let Amplitude default to Device ID
+  /* options= */ {
+    // Disable tracking of private user information by Amplitude
+    trackingOptions: {
+      ipAddress: false,
+      carrier: false,
+      city: false,
+      region: false,
+      country: false,
+      dma: false, // designated market area
+    },
   }
+)
 
-  init(
-    API_KEY,
-    /* userId= */ undefined, // User ID should be undefined to let Amplitude default to Device ID
-    /* options= */ {
-      // Disable tracking of private user information by Amplitude
-      trackingOptions: {
-        ipAddress: false,
-        carrier: false,
-        city: false,
-        region: false,
-        country: false,
-        dma: false, // designated market area
-      },
-    }
-  )
-
-  return {
-    experiment: Experiment.initializeWithAmplitudeAnalytics('<DEPLOYMENT_KEY>'),
-  }
-}
+export const experiment = Experiment.initializeWithAmplitudeAnalytics(DEPLOYMENT_KEY)
 
 /** Sends an event to Amplitude. */
 export function sendAnalyticsEvent(eventName: string, eventProperties?: Record<string, unknown>) {
