@@ -22,7 +22,6 @@ const TIME_DISPLAYS: Record<TimePeriod, string> = {
   [TimePeriod.year]: '1Y',
 }
 const TIME_PERIODS = [TimePeriod.hour, TimePeriod.day, TimePeriod.week, TimePeriod.month, TimePeriod.year]
-const STATS_MAX_WIDTH = '1120px'
 
 export const AboutSection = styled.div`
   display: flex;
@@ -100,8 +99,10 @@ export const Stat = styled.div`
   flex-direction: column;
   color: ${({ theme }) => theme.textSecondary};
   font-size: 14px;
-  width: 168px;
+  min-width: 168px;
+  flex: 1;
   gap: 4px;
+  padding: 24px 0px;
 `
 const StatPrice = styled.span`
   font-size: 28px;
@@ -109,14 +110,11 @@ const StatPrice = styled.span`
 `
 export const StatsSection = styled.div`
   display: flex;
-  gap: 4px;
-  padding: 24px 0px;
-
-  @media only screen and (max-width: ${STATS_MAX_WIDTH}) {
-    flex-wrap: wrap;
-    max-width: 560px;
-    gap: 48px;
-  }
+  flex-wrap: wrap;
+`
+const StatPair = styled.div`
+  display: flex;
+  flex: 1;
 `
 const TimeButton = styled.button<{ active: boolean }>`
   background-color: ${({ theme, active }) => (active ? theme.accentActive : 'transparent')};
@@ -261,21 +259,25 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
         </ResourcesContainer>
       </AboutSection>
       <StatsSection>
-        <Stat>
-          Market cap<StatPrice>${tokenMarketCap}</StatPrice>
-        </Stat>
-        <Stat>
-          {TIME_DISPLAYS[activeTimePeriod]} volume
-          <StatPrice>${tokenVolume}</StatPrice>
-        </Stat>
-        <Stat>
-          52W low
-          <StatPrice>$1,790.01</StatPrice>
-        </Stat>
-        <Stat>
-          52W high
-          <StatPrice>$4,420.71</StatPrice>
-        </Stat>
+        <StatPair>
+          <Stat>
+            Market cap<StatPrice>${tokenMarketCap}</StatPrice>
+          </Stat>
+          <Stat>
+            {TIME_DISPLAYS[activeTimePeriod]} volume
+            <StatPrice>${tokenVolume}</StatPrice>
+          </Stat>
+        </StatPair>
+        <StatPair>
+          <Stat>
+            52W low
+            <StatPrice>$1,790.01</StatPrice>
+          </Stat>
+          <Stat>
+            52W high
+            <StatPrice>$4,420.71</StatPrice>
+          </Stat>
+        </StatPair>
       </StatsSection>
       <ContractAddressSection>
         <Contract>
