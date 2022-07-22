@@ -77,8 +77,7 @@ const StyledTokenRow = styled.div`
   }
 
   @media only screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
-    grid-template-columns: 12fr 6fr;
-    width: fit-content;
+    grid-template-columns: 1fr 1fr;
     min-width: unset;
     border-bottom: 0.5px solid ${({ theme }) => theme.backgroundContainer};
     padding: 0px 12px;
@@ -102,6 +101,7 @@ const ClickableName = styled(Link)`
   gap: 8px;
   text-decoration: none;
   color: ${({ theme }) => theme.textPrimary};
+  align-items: center;
 `
 const FavoriteCell = styled(Cell)`
   min-width: 40px;
@@ -132,7 +132,8 @@ const StyledHeaderRow = styled(StyledTokenRow)`
   }
 
   @media only screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
-    display: none;
+    padding: 0px 12px;
+    justify-content: space-between;
   }
 `
 const ListNumberCell = styled(Cell)`
@@ -163,7 +164,6 @@ const NameCell = styled(Cell)`
   gap: 8px;
 
   @media only screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
-    min-width: fit-content;
     padding-right: 8px;
   }
 `
@@ -186,6 +186,7 @@ const PercentChangeInfoCell = styled(Cell)`
 
   @media only screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
     display: flex;
+    justify-content: flex-end;
     color: ${({ theme }) => theme.textSecondary};
     font-size: 12px;
     line-height: 16px;
@@ -196,20 +197,17 @@ const PriceCell = styled(Cell)<{ sortable: boolean }>`
   min-width: 80px;
   padding-right: 4px;
 
-  @media only screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
-    min-width: max-content;
-  }
-
   &:hover {
     background-color: ${({ theme, sortable }) => sortable && theme.backgroundContainer};
   }
 `
 const PriceInfoCell = styled(Cell)`
   justify-content: flex-end;
-  min-width: max-content;
+  flex: 1;
 
   @media only screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
     flex-direction: column;
+    align-items: flex-end;
   }
 `
 const SortArrowCell = styled(Cell)`
@@ -462,7 +460,6 @@ export default function LoadedRow({
 
   const heartColor = isFavorited ? theme.accentActive : undefined
   // TODO: currency logo sizing mobile (32px) vs. desktop (24px)
-  // TODO: fix listNumber as number on most popular (should be fixed)
   return (
     <TokenRow
       address={tokenAddress}
