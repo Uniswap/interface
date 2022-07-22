@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { SectionList, SectionListRenderItemInfo } from 'react-native'
+import { SectionList, SectionListData } from 'react-native'
 import { Box } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { AllFormattedTransactions } from 'src/features/transactions/hooks'
@@ -41,25 +41,33 @@ export function TransactionList({ transactions }: { transactions: AllFormattedTr
   }, [beforeCurrentWeekTransactionList, pending, t, todayTransactionList, weekTransactionList])
 
   const renderItem = useMemo(() => {
-    return (item: SectionListRenderItemInfo<TransactionSummaryInfo>) => {
+    return ({
+      item,
+      index,
+      section,
+    }: {
+      item: TransactionSummaryInfo
+      index: number
+      section: SectionListData<TransactionSummaryInfo>
+    }) => {
       // Logic to render border radius and margins on groups of items.
-      const aboveItem = item.index > 0 ? item.section.data[item.index - 1] : undefined
+      const aboveItem = index > 0 ? section.data[index - 1] : undefined
       const currentIsIsolated =
-        (item.item.status === TransactionStatus.Cancelled ||
-          item.item?.status === TransactionStatus.Cancelling ||
-          item.item?.status === TransactionStatus.FailedCancel) &&
-        item.index === 0 &&
-        item.section.title === 'Today'
+        (item.status === TransactionStatus.Cancelled ||
+          item?.status === TransactionStatus.Cancelling ||
+          item?.status === TransactionStatus.FailedCancel) &&
+        index === 0 &&
+        section.title === 'Today'
       const aboveIsIsolated =
         (aboveItem?.status === TransactionStatus.Cancelled ||
           aboveItem?.status === TransactionStatus.Cancelling ||
           aboveItem?.status === TransactionStatus.FailedCancel) &&
-        item.index === 1 &&
-        item.section.title === 'Today'
+        index === 1 &&
+        section.title === 'Today'
 
-      const borderTop = aboveIsIsolated || item.index === 0
-      const borderBottom = currentIsIsolated || item.index === item.section.data.length - 1
-      const useInlineWarning = item.index !== 0 || item.section.title !== 'Today'
+      const borderTop = aboveIsIsolated || index === 0
+      const borderBottom = currentIsIsolated || index === section.data.length - 1
+      const useInlineWarning = index !== 0 || section.title !== 'Today'
 
       return (
         <TransactionSummaryItem
@@ -71,7 +79,7 @@ export function TransactionList({ transactions }: { transactions: AllFormattedTr
           borderTopRightRadius={borderTop ? 'lg' : 'none'}
           inlineWarning={useInlineWarning}
           mb={currentIsIsolated ? 'md' : 'none'}
-          transactionSummaryInfo={item.item}
+          transactionSummaryInfo={item}
         />
       )
     }
