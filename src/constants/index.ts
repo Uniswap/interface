@@ -990,5 +990,3 @@ export const DEFAULT_OUTPUT_TOKEN_BY_CHAIN: Partial<Record<ChainId, Token>> = {
   [ChainId.OASIS]: USDC[ChainId.OASIS],
   [ChainId.BTTC]: USDT[ChainId.BTTC], // USDT_b
 }
-
-export const REWARD_SERVICE_BASE_URL = `${process.env.REACT_APP_REWARD_SERVICE_BASE_URL}/api/v1`

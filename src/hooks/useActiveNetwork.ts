@@ -39,22 +39,23 @@ export function useActiveNetwork() {
 
   const locationWithoutNetworkId = useMemo(() => {
     // Delete networkId from qs object
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { networkId, ...qsWithoutNetworkId } = qs
 
     return { ...location, search: stringify({ ...qsWithoutNetworkId }) }
   }, [location, qs])
 
   const changeNetwork = useCallback(
-    async (chainId: ChainId, successCallback?: () => void, failureCallback?: () => void) => {
+    async (desiredChainId: ChainId, successCallback?: () => void, failureCallback?: () => void) => {
       const switchNetworkParams = {
-        chainId: '0x' + Number(chainId).toString(16),
+        chainId: '0x' + Number(desiredChainId).toString(16),
       }
-      const addNetworkParams = getAddNetworkParams(chainId)
+      const addNetworkParams = getAddNetworkParams(desiredChainId)
 
       const isNotConnected = !(library && library.provider)
       const isWrongNetwork = error instanceof UnsupportedChainIdError
       if (isNotConnected && !isWrongNetwork) {
-        dispatch(updateChainIdWhenNotConnected(chainId))
+        dispatch(updateChainIdWhenNotConnected(desiredChainId))
       }
 
       history.push(locationWithoutNetworkId)

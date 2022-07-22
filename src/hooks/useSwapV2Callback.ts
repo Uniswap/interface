@@ -428,8 +428,6 @@ export function useSwapV2Callback(
           inputAmount: trade.inputAmount.toExact(),
         },
       })
-
-      return response.hash
     },
     [account, addTransactionWithType, feeConfig, recipient, recipientAddressOrName, saveGas, trade, typedValue],
   )

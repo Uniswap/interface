@@ -149,7 +149,7 @@ export default function LeaderboardLayout({
   return (
     <LeaderboardContainer>
       <RefreshTextAndSearchContainer>
-        {selectedCampaign.campaignState === CampaignState.CampaignStateReady ? (
+        {selectedCampaign.campaignState === CampaignState.CampaignStateReady && type === 'leaderboard' ? (
           <RefreshTextContainer>
             <RefreshText>
               <Trans>Leaderboard refresh in</Trans>

@@ -6,11 +6,13 @@ import { useActiveWeb3React } from '../../hooks'
 import { AppDispatch, AppState } from '../index'
 import { addTransaction } from './actions'
 import { TransactionDetails } from './reducer'
+import { ChainId } from '@kyberswap/ks-sdk-core'
 
 // helper that can take a ethers library transaction response and add it to the list of transactions
 export function useTransactionAdder(): (
   response: TransactionResponse,
   customData?: {
+    desiredChainId?: ChainId // ChainID after switching.
     type?: string
     summary?: string
     approval?: { tokenAddress: string; spender: string }
@@ -25,12 +27,14 @@ export function useTransactionAdder(): (
     (
       response: TransactionResponse,
       {
+        desiredChainId,
         type,
         summary,
         approval,
         claim,
         arbitrary,
       }: {
+        desiredChainId?: ChainId
         type?: string
         summary?: string
         claim?: { recipient: string }
@@ -45,9 +49,20 @@ export function useTransactionAdder(): (
       if (!hash) {
         throw Error('No transaction hash found.')
       }
-      dispatch(addTransaction({ hash, from: account, chainId, approval, type, summary, claim, arbitrary }))
+      dispatch(
+        addTransaction({
+          hash,
+          from: account,
+          chainId: desiredChainId ?? chainId,
+          approval,
+          type,
+          summary,
+          claim,
+          arbitrary,
+        }),
+      )
     },
-    [dispatch, chainId, account],
+    [account, chainId, dispatch],
   )
 }
 

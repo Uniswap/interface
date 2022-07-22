@@ -109,6 +109,7 @@ const CampaignListAndSearchContainer = styled.div`
   flex-direction: column;
   gap: 20px;
   height: 100%;
+  overflow: hidden;
 `
 
 const CampaignList = styled.div`
