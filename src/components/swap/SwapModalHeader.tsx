@@ -63,9 +63,6 @@ const getPriceUpdateBasisPoints = (
 ): number => {
   const changeFraction = newPrice.subtract(prevPrice).divide(prevPrice)
   const changePercentage = new Percent(changeFraction.numerator, changeFraction.denominator)
-  console.log('price update calculation')
-  console.log(changePercentage.toFixed(6))
-  console.log(formatPercentInBasisPointsNumber(changePercentage))
   return formatPercentInBasisPointsNumber(changePercentage)
 }
 
