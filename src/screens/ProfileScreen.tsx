@@ -109,7 +109,11 @@ export function ProfileScreen({ navigation }: Props) {
           <AddressDisplay address={address} variant="subhead" />
         </Flex>
       }>
-      {sessions.length > 0 && <SessionsButton sessions={sessions} onPress={onPressSessions} />}
+      {sessions.length > 0 && (
+        <Flex px="sm">
+          <SessionsButton sessions={sessions} onPress={onPressSessions} />
+        </Flex>
+      )}
       {hasTransactions ? (
         <Flex px="sm">
           <TransactionList transactions={transactions} />
