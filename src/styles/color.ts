@@ -185,6 +185,7 @@ export interface Palette {
   accentWarning: string
   // TODO: update to accentCritical
   accentFailure: string
+  accentBranded: string
 
   accentActionSoft: string
   accentActiveSoft: string
@@ -238,6 +239,7 @@ export const colorsLight: Palette = {
   accentSuccess: colors.green400,
   accentWarning: colors.gold200,
   accentFailure: colors.red400,
+  accentBranded: colors.pink200,
 
   accentActionSoft: opacify(12, colors.pink400),
   accentActiveSoft: opacify(12, colors.blue400),
@@ -288,6 +290,7 @@ export const colorsDark: Palette = {
   accentSuccess: colors.greenVibrant,
   accentWarning: colors.gold200,
   accentFailure: colors.red400,
+  accentBranded: colors.pink200,
 
   accentActionSoft: opacify(12, colors.blue400),
   accentActiveSoft: opacify(12, colors.blue400),

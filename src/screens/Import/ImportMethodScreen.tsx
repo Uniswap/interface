@@ -5,14 +5,13 @@ import { useTranslation } from 'react-i18next'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import CloudIcon from 'src/assets/icons/cloud.svg'
-import EyeIcon from 'src/assets/icons/eyeball.svg'
+import EyeIcon from 'src/assets/icons/eye.svg'
 import KeyIcon from 'src/assets/icons/key-icon.svg'
-import SeedPhraseIcon from 'src/assets/icons/seed-phrase-icon.svg'
+import SeedPhraseIcon from 'src/assets/icons/pencil.svg'
 import { Button } from 'src/components/buttons/Button'
 import { Chevron } from 'src/components/icons/Chevron'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
-import Disclaimer from 'src/features/import/Disclaimer'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { ImportType, OnboardingEntryPoint } from 'src/features/onboarding/utils'
 import { ElementName } from 'src/features/telemetry/constants'
@@ -21,19 +20,21 @@ import {
   pendingAccountActions,
 } from 'src/features/wallet/pendingAcccountsSaga'
 import { OnboardingScreens } from 'src/screens/Screens'
+import { Theme } from 'src/styles/theme'
 
 interface ImportMethodOption {
   title: (t: TFunction) => string
   blurb: (t: TFunction) => string
-  icon: React.ReactNode
+  icon: (theme: Theme) => React.ReactNode
   nav: any
   importType: ImportType
   name: ElementName
 }
+
 const backupOption: ImportMethodOption = {
   title: (t: TFunction) => t('Restore from iCloud'),
   blurb: (t: TFunction) => t('Recover a backed-up recovery phrase'),
-  icon: <CloudIcon />,
+  icon: (theme: Theme) => <CloudIcon color={theme.colors.textPrimary} height={16} width={16} />,
   nav: OnboardingScreens.RestoreWallet,
   importType: ImportType.Restore,
   name: ElementName.OnboardingImportBackup,
@@ -43,7 +44,7 @@ const options: ImportMethodOption[] = [
   {
     title: (t: TFunction) => t('Import a recovery phrase'),
     blurb: (t: TFunction) => t('Enter or paste words'),
-    icon: <SeedPhraseIcon />,
+    icon: (theme: Theme) => <SeedPhraseIcon color={theme.colors.textPrimary} />,
     nav: OnboardingScreens.SeedPhraseInput,
     importType: ImportType.SeedPhrase,
     name: ElementName.OnboardingImportSeedPhrase,
@@ -51,7 +52,7 @@ const options: ImportMethodOption[] = [
   {
     title: (t: TFunction) => t('Import a private key'),
     blurb: (t: TFunction) => t('Enter or paste your key'),
-    icon: <KeyIcon />,
+    icon: (theme: Theme) => <KeyIcon color={theme.colors.textPrimary} />,
     nav: OnboardingScreens.PrivateKeyInput,
     importType: ImportType.PrivateKey,
     name: ElementName.OnboardingImportPrivateKey,
@@ -59,7 +60,7 @@ const options: ImportMethodOption[] = [
   {
     title: (t: TFunction) => t('View only'),
     blurb: (t: TFunction) => t('Enter an Ethereum address or ENS name'),
-    icon: <EyeIcon />,
+    icon: (theme: Theme) => <EyeIcon color={theme.colors.textPrimary} height={16} width={16} />,
     nav: OnboardingScreens.WatchWallet,
     importType: ImportType.Watch,
     name: ElementName.OnboardingImportWatchedAccount,
@@ -114,15 +115,12 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props) {
           <OptionCard
             key={'connection-option-' + title}
             blurb={blurb(t)}
-            icon={icon}
+            icon={icon(theme)}
             name={name}
             title={title(t)}
             onPress={() => handleOnPress(nav, importType)}
           />
         ))}
-        <Flex grow justifyContent="flex-end">
-          <Disclaimer />
-        </Flex>
       </Flex>
     </OnboardingScreen>
   )
@@ -144,25 +142,35 @@ function OptionCard({
   const theme = useAppTheme()
   return (
     <Button
-      backgroundColor="backgroundBackdrop"
+      backgroundColor="backgroundContainer"
+      borderColor="backgroundOutline"
       borderRadius="lg"
       borderWidth={1}
       name={name}
       p="md"
-      style={{ borderColor: theme.colors.backgroundOutline }}
       testID={name}
       onPress={onPress}>
       <Flex row alignItems="center" gap="md" justifyContent="space-between">
-        <Flex gap="xs">
-          <Flex row alignItems="center" gap="sm">
+        <Flex row alignItems="center" gap="md" justifyContent="flex-start">
+          <Flex
+            centered
+            borderColor="accentBranded"
+            borderRadius="md"
+            borderWidth={1}
+            height={32}
+            padding="md"
+            width={32}>
             {icon}
-            <Text variant="mediumLabel">{title}</Text>
           </Flex>
-          <Text color="textSecondary" variant="caption">
-            {blurb}
-          </Text>
+
+          <Flex alignItems="flex-start" gap="xxxs" justifyContent="space-around">
+            <Text variant="subhead">{title}</Text>
+            <Text color="textSecondary" variant="caption">
+              {blurb}
+            </Text>
+          </Flex>
         </Flex>
-        <Chevron color={theme.colors.backgroundOutline} direction="e" height={12} width={12} />
+        <Chevron color={theme.colors.textSecondary} direction="e" height={24} width={24} />
       </Flex>
     </Button>
   )
