@@ -1,5 +1,6 @@
 import { Trans } from '@lingui/macro'
 import CurrencyLogo from 'components/CurrencyLogo'
+import { checkWarning, Warning } from 'constants/tokenWarnings'
 import { useCurrency, useToken } from 'hooks/Tokens'
 import useTheme from 'hooks/useTheme'
 import { TimePeriod, TokenData } from 'hooks/useTopTokens'
@@ -102,6 +103,7 @@ const ClickableName = styled.div`
   gap: 8px;
   text-decoration: none;
   color: ${({ theme }) => theme.text1};
+  cursor: pointer;
 
   &:hover,
   &:focus {
@@ -492,6 +494,7 @@ export default function LoadedRow({
   const [favoriteTokens] = useAtom(favoritesAtom)
   const isFavorited = favoriteTokens.includes(tokenAddress)
   const toggleFavorite = useToggleFavorite(tokenAddress)
+  const [warning, setWarning] = useState<Warning | null | undefined>(undefined)
   const [warningModalOpen, setWarningModalOpen] = useState(false)
   const history = useHistory()
 
@@ -527,15 +530,20 @@ export default function LoadedRow({
   )
 
   const navigateToToken = () => {
-    history.push(`tokens/${tokenAddress}`)
+    history.push({ pathname: `tokens/${tokenAddress}`, state: { from: 'explore' } })
   }
 
   const selectToken = () => {
-    const tokenIsWarning = true
-    if (tokenIsWarning) {
-      setWarningModalOpen(true)
-    } else {
+    let tokenWarning = warning
+    if (tokenWarning === undefined) {
+      tokenWarning = checkWarning(tokenAddress)
+      setWarning(tokenWarning)
+    }
+
+    if (!tokenWarning) {
       navigateToToken()
+    } else {
+      setWarningModalOpen(true)
     }
   }
 
@@ -556,11 +564,11 @@ export default function LoadedRow({
         // <ClickableName to={`tokens/${tokenAddress}`}>
         <ClickableName onClick={selectToken}>
           <ExploreTokenWarningModal
+            isOpen={warningModalOpen}
+            warning={warning}
             tokenAddress={tokenAddress}
-            currency={currency}
             onCancel={handleDismissWarning}
             onProceed={navigateToToken}
-            isOpen={warningModalOpen}
           />
           <CurrencyLogo currency={currency} />
           <TokenInfoCell>

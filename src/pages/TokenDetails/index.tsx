@@ -21,19 +21,33 @@ const Widget = styled.div`
   border-radius: 12px;
   border: 1px solid rgba(153, 161, 189, 0.24);
 `
+
+type LocationState = {
+  from: string
+}
+
 export function TokenDetails({
+  location: { state: locationState },
   match: {
     params: { tokenAddress },
   },
 }: RouteComponentProps<{ tokenAddress: string }>) {
   const [loading, setLoading] = useState(true)
+  const [from, setFrom] = useState('')
   setTimeout(() => {
     setLoading(false)
   }, 1000)
 
+  if (!from) {
+    try {
+      const from = (locationState as LocationState).from
+      setFrom(from)
+    } catch (error) {}
+  }
+
   return (
     <TokenDetailsLayout>
-      {loading ? <LoadingTokenDetail /> : <TokenDetail address={tokenAddress} />}
+      {loading ? <LoadingTokenDetail /> : <TokenDetail address={tokenAddress} from={from} />}
       <RightPanel>
         <Widget />
         {!loading && <BalanceSummary address={tokenAddress} />}

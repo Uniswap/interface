@@ -1,8 +1,9 @@
 import { outboundLink } from 'components/analytics'
-import React, { HTMLProps } from 'react'
-import { ArrowLeft, ExternalLink as LinkIconFeather, Trash, X } from 'react-feather'
+import useCopyClipboard from 'hooks/useCopyClipboard'
+import React, { HTMLProps, useCallback } from 'react'
+import { ArrowLeft, CheckSquare, Copy, ExternalLink as LinkIconFeather, Trash, X } from 'react-feather'
 import { Link } from 'react-router-dom'
-import styled, { keyframes } from 'styled-components/macro'
+import styled, { css, keyframes } from 'styled-components/macro'
 
 import { anonymizeLink } from '../utils/anonymizeLink'
 
@@ -129,17 +130,51 @@ const LinkIconWrapper = styled.a`
   }
 `
 
-const LinkIcon = styled(LinkIconFeather)`
+const CopyIconWrapper = styled.div`
+  text-decoration: none;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+
+  :hover {
+    text-decoration: none;
+    opacity: 0.7;
+  }
+
+  :focus {
+    outline: none;
+    text-decoration: none;
+  }
+
+  :active {
+    text-decoration: none;
+  }
+`
+
+const IconStyle = css`
   height: 16px;
   width: 18px;
   margin-left: 10px;
+`
+
+const LinkIcon = styled(LinkIconFeather)`
+  ${IconStyle}
+  stroke: ${({ theme }) => theme.blue1};
+`
+
+const CopyIcon = styled(Copy)`
+  ${IconStyle}
+  stroke: ${({ theme }) => theme.blue1};
+`
+
+const CopiedIcon = styled(CheckSquare)`
+  ${IconStyle}
   stroke: ${({ theme }) => theme.blue1};
 `
 
 export const TrashIcon = styled(Trash)`
-  height: 16px;
-  width: 18px;
-  margin-left: 10px;
+  ${IconStyle}
   stroke: ${({ theme }) => theme.text3};
 
   cursor: pointer;
@@ -210,6 +245,14 @@ export function ExternalLinkIcon({
       <LinkIcon />
     </LinkIconWrapper>
   )
+}
+
+export function CopyLinkIcon({ toCopy }: { toCopy: string }) {
+  const [isCopied, setCopied] = useCopyClipboard()
+  const copy = useCallback(() => {
+    setCopied(toCopy)
+  }, [toCopy, setCopied])
+  return <CopyIconWrapper onClick={copy}>{isCopied ? <CopiedIcon /> : <CopyIcon />}</CopyIconWrapper>
 }
 
 const rotate = keyframes`

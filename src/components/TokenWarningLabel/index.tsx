@@ -1,4 +1,4 @@
-import { WARNING_TO_ATTRIBUTES, WarningTypes } from 'constants/tokenWarnings'
+import { Warning } from 'constants/tokenWarnings'
 import styled from 'styled-components/macro'
 import { Color } from 'theme/styled'
 
@@ -20,13 +20,12 @@ const Label = styled.div<{ color: Color }>`
   font-weight: 700;
 `
 
-export default function TokenWarningLabel({ warningType }: { warningType: WarningTypes }) {
-  const { text, icon, color } = WARNING_TO_ATTRIBUTES[warningType]
+export default function TokenWarningLabel({ warning }: { warning: Warning }) {
   return (
     <LabelWrapper>
-      <Label color={color}>
-        {text}
-        {icon}
+      <Label color={warning.color}>
+        {warning.text}
+        {warning.icon}
       </Label>
     </LabelWrapper>
   )

@@ -1,12 +1,14 @@
 import { Trans } from '@lingui/macro'
 import CurrencyLogo from 'components/CurrencyLogo'
+import { checkWarning, Warning } from 'constants/tokenWarnings'
 import { useCurrency, useToken } from 'hooks/Tokens'
 import { TimePeriod } from 'hooks/useTopTokens'
 import { useAtom } from 'jotai'
+import ExploreTokenWarningModal from 'pages/Explore/ExploreTokenWarningModal'
 import { darken } from 'polished'
-import { useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { ArrowDownRight, ArrowLeft, ArrowUpRight, Copy, Heart, Share } from 'react-feather'
-import { Link } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import styled, { useTheme } from 'styled-components/macro'
 
 import Resource from './Resource'
@@ -157,7 +159,7 @@ export const ResourcesContainer = styled.div`
   gap: 14px;
 `
 
-export default function LoadedTokenDetail({ address }: { address: string }) {
+export default function LoadedTokenDetail({ address, from }: { address: string; from: string | null }) {
   const theme = useTheme()
   const token = useToken(address)
   const currency = useCurrency(address)
@@ -165,6 +167,23 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
   const [activeTimePeriod, setTimePeriod] = useState(TimePeriod.hour)
   const isFavorited = favoriteTokens.includes(address)
   const toggleFavorite = useToggleFavorite(address)
+  const [warningModalOpen, setWarningModalOpen] = useState(false)
+  const [warning, setWarning] = useState<Warning | null | undefined>(undefined)
+  const history = useHistory()
+
+  useEffect(() => {
+    if (from !== 'explore') {
+      const warning = checkWarning(address)
+      if (warning) {
+        setWarning(warning)
+        setWarningModalOpen(true)
+      }
+    }
+  }, [])
+
+  const handleDismissWarning = useCallback(() => {
+    setWarningModalOpen(false)
+  }, [setWarningModalOpen])
 
   // catch token error and loading state
   if (!token) {
@@ -258,6 +277,13 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
           </ContractAddress>
         </Contract>
       </ContractAddressSection>
+      <ExploreTokenWarningModal
+        isOpen={warningModalOpen}
+        warning={warning}
+        tokenAddress={address}
+        onCancel={() => history.goBack()}
+        onProceed={handleDismissWarning}
+      />
     </TopArea>
   )
 }

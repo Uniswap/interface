@@ -2,22 +2,23 @@
 // import { TokenList } from '@uniswap/token-lists'
 // import usePrevious from 'hooks/usePrevious'
 //import { Trans } from '@lingui/macro'
-import { Currency } from '@uniswap/sdk-core'
 import { ButtonPrimary } from 'components/Button'
 import { AutoColumn } from 'components/Column'
 import CurrencyLogo from 'components/CurrencyLogo'
 import TokenWarningLabel from 'components/TokenWarningLabel'
-import { WARNING_TO_ATTRIBUTES, WarningTypes } from 'constants/tokenWarnings'
+import { Warning } from 'constants/tokenWarnings'
+import { useCurrency } from 'hooks/Tokens'
 import { Text } from 'rebass'
 import styled from 'styled-components/macro'
-import { ButtonText, ExternalLinkIcon } from 'theme'
+import { ButtonText, CopyLinkIcon, ExternalLinkIcon } from 'theme'
+import { Color } from 'theme/styled'
 
 import Modal from '../../components/Modal'
 
 interface ExploreTokenWarningModalProps {
-  tokenAddress: string
-  currency: Currency | null | undefined
   isOpen: boolean
+  warning: Warning | null | undefined
+  tokenAddress: string
   onProceed?: () => void
   onCancel: () => void
 }
@@ -45,6 +46,7 @@ const ShortColumn = styled(AutoColumn)`
 const InfoText = styled(Text)`
   padding: 0 12px 0 12px;
   font-size: 14px;
+  line-height: 20px;
   text-align: center;
 `
 
@@ -70,63 +72,78 @@ const EtherscanLink = styled(Text)`
   text-overflow: ellipsis;
 `
 
-const StyledProceedButton = styled(ButtonPrimary)`
+const StyledProceedButton = styled(ButtonPrimary)<{ color?: Color; buttonColor?: Color }>`
+  color: ${({ color, theme }) => color ?? theme.white};
+  background-color: ${({ buttonColor, theme }) => buttonColor ?? theme.primary1};
   margin-top: 24px;
   width: 100%;
+  :hover {
+    background-color: ${({ buttonColor, theme }) => buttonColor ?? theme.primary1};
+  }
 `
 const StyledCloseButton = styled(ButtonPrimary)`
   margin-top: 24px;
   width: 100%;
 `
 
-const StyledCancelButton = styled(ButtonText)`
+const StyledCancelButton = styled(ButtonText)<{ color?: Color }>`
   margin-top: 16px;
-  color: ${({ theme }) => theme.primary1};
+  color: ${({ color, theme }) => color ?? theme.primary1};
 `
 
 export default function ExploreTokenWarningModal({
-  tokenAddress,
-  currency,
   isOpen,
+  warning,
+  tokenAddress,
   onProceed,
   onCancel,
 }: ExploreTokenWarningModalProps) {
-  const { heading, description } = WARNING_TO_ATTRIBUTES[WarningTypes.MEDIUM]
-
+  const currency = useCurrency(tokenAddress)
   return (
     <Modal isOpen={isOpen} onDismiss={onCancel} maxHeight={80} minHeight={40}>
-      <Wrapper>
-        <Container>
-          <AutoColumn>
-            <CurrencyLogo currency={currency} size="48px" />
-          </AutoColumn>
-          <ShortColumn>
-            <TokenWarningLabel warningType={WarningTypes.MEDIUM}></TokenWarningLabel>
-          </ShortColumn>
-          <ShortColumn>
-            <InfoText fontSize="20px">{heading}</InfoText>
-          </ShortColumn>
-          <ShortColumn>
-            <InfoText>
-              {description} <b>Learn More</b>
-            </InfoText>
-          </ShortColumn>
-          <LinkColumn>
-            <EtherscanLink href={'https://etherscan.io/token/' + tokenAddress}>
-              {'https://etherscan.io/token/' + tokenAddress}
-            </EtherscanLink>
-            <ExternalLinkIcon href={'https://etherscan.io/token/' + tokenAddress} />
-          </LinkColumn>
-          {onProceed ? (
-            <>
-              <StyledProceedButton onClick={onProceed}>I Understand</StyledProceedButton>
-              <StyledCancelButton onClick={onCancel}>Cancel</StyledCancelButton>
-            </>
-          ) : (
-            <StyledCloseButton onClick={onCancel}>Close</StyledCloseButton>
-          )}
-        </Container>
-      </Wrapper>
+      {warning && (
+        <Wrapper>
+          <Container>
+            <AutoColumn>
+              <CurrencyLogo currency={currency} size="48px" />
+            </AutoColumn>
+            <ShortColumn>
+              <TokenWarningLabel warning={warning}></TokenWarningLabel>
+            </ShortColumn>
+            <ShortColumn>
+              <InfoText fontSize="20px">{warning.heading}</InfoText>
+            </ShortColumn>
+            <ShortColumn>
+              <InfoText>
+                {warning.description} <b>Learn More</b>
+              </InfoText>
+            </ShortColumn>
+            <LinkColumn>
+              <EtherscanLink href={'https://etherscan.io/token/' + tokenAddress}>
+                {'https://etherscan.io/token/' + tokenAddress}
+              </EtherscanLink>
+              <CopyLinkIcon toCopy={'https://etherscan.io/token/' + tokenAddress} />
+              <ExternalLinkIcon color="#4c82fb" href={'https://etherscan.io/token/' + tokenAddress} />
+            </LinkColumn>
+            {warning.canProceed ? (
+              <>
+                <StyledProceedButton
+                  color={warning.buttonTextColor}
+                  buttonColor={warning.buttonColor}
+                  onClick={onProceed}
+                >
+                  I Understand
+                </StyledProceedButton>
+                <StyledCancelButton color={warning.cancelTextColor} onClick={onCancel}>
+                  Cancel
+                </StyledCancelButton>
+              </>
+            ) : (
+              <StyledCloseButton onClick={onCancel}>Close</StyledCloseButton>
+            )}
+          </Container>
+        </Wrapper>
+      )}
     </Modal>
   )
 }
