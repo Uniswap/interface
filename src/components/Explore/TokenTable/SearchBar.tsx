@@ -2,9 +2,9 @@ import { useAtom } from 'jotai'
 import { useState } from 'react'
 import styled from 'styled-components/macro'
 
-import { MEDIUM_MEDIA_BREAKPOINT } from './constants'
+import { MEDIUM_MEDIA_BREAKPOINT } from '../constants'
+import { filterStringAtom } from '../state'
 import searchIcon from './search.svg'
-import { filterStringAtom } from './state'
 import xIcon from './x.svg'
 const ICON_SIZE = '20px'
 
@@ -12,7 +12,6 @@ const SearchBarContainer = styled.div`
   display: flex;
   flex: 1;
 `
-
 const SearchInput = styled.input<{ expanded: boolean }>`
   background: no-repeat scroll 7px 7px;
   background-image: url(${searchIcon});

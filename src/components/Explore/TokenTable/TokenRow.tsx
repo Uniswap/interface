@@ -17,27 +17,17 @@ import {
   MEDIUM_MEDIA_BREAKPOINT,
   MOBILE_MEDIA_BREAKPOINT,
   SMALL_MEDIA_BREAKPOINT,
-} from './constants'
+} from '../constants'
 import {
   favoritesAtom,
   filterTimeAtom,
   sortCategoryAtom,
   sortDirectionAtom,
-  useSortCategory,
+  useSetSortCategory,
   useToggleFavorite,
-} from './state'
+} from '../state'
+import { Category, SortDirection } from '../types'
 import { TIME_DISPLAYS } from './TimeSelector'
-
-export enum Category {
-  percent_change = '% Change',
-  market_cap = 'Market Cap',
-  price = 'Price',
-  volume = 'Volume',
-}
-export enum SortDirection {
-  Increasing = 'Increasing',
-  Decreasing = 'Decreasing',
-}
 
 const ArrowCell = styled.div`
   padding-left: 2px;
@@ -334,7 +324,7 @@ function HeaderCell({
 }) {
   const theme = useTheme()
   const sortDirection = useAtomValue<SortDirection>(sortDirectionAtom)
-  const handleSortCategory = useSortCategory(category)
+  const handleSortCategory = useSetSortCategory(category)
 
   if (isSorted) {
     return (

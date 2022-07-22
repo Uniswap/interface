@@ -4,7 +4,7 @@ import { atom, useAtom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
 import { useCallback } from 'react'
 
-import { Category, SortDirection } from './TokenRow'
+import { Category, SortDirection } from './types'
 
 export const favoritesAtom = atomWithStorage<string[]>('favorites', [])
 export const showFavoritesAtom = atomWithStorage<boolean>('showFavorites', false)
@@ -14,6 +14,7 @@ export const filterTimeAtom = atom<TimePeriod>(TimePeriod.day)
 export const sortCategoryAtom = atom<Category>(Category.market_cap)
 export const sortDirectionAtom = atom<SortDirection>(SortDirection.Decreasing)
 
+/* for favoriting tokens */
 export function useToggleFavorite(tokenAddress: string) {
   const [favoriteTokens, updateFavoriteTokens] = useAtom(favoritesAtom)
 
@@ -30,7 +31,8 @@ export function useToggleFavorite(tokenAddress: string) {
   }, [favoriteTokens, tokenAddress, updateFavoriteTokens])
 }
 
-export function useSortCategory(category: Category) {
+/* keep track of sort category for token table */
+export function useSetSortCategory(category: Category) {
   const [sortCategory, setSortCategory] = useAtom(sortCategoryAtom)
   const [sortDirection, setDirectionCategory] = useAtom(sortDirectionAtom)
 

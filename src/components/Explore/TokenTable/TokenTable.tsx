@@ -6,7 +6,7 @@ import { ReactNode, useMemo } from 'react'
 import { AlertTriangle } from 'react-feather'
 import styled from 'styled-components/macro'
 
-import { MAX_WIDTH_MEDIA_BREAKPOINT } from './constants'
+import { MAX_WIDTH_MEDIA_BREAKPOINT } from '../constants'
 import LoadedRow, { HeaderRow, LoadingRow } from './TokenRow'
 
 const GridContainer = styled.div`

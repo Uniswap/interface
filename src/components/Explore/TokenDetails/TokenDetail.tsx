@@ -9,10 +9,10 @@ import { ArrowDownRight, ArrowLeft, ArrowUpRight, Copy, Heart } from 'react-feat
 import { Link } from 'react-router-dom'
 import styled, { useTheme } from 'styled-components/macro'
 
+import { favoritesAtom, useToggleFavorite } from '../state'
+import { ClickFavorited } from '../TokenTable/TokenRow'
 import Resource from './Resource'
 import ShareButton from './ShareButton'
-import { favoritesAtom, useToggleFavorite } from './state'
-import { ClickFavorited } from './TokenRow'
 
 const TIME_DISPLAYS: Record<TimePeriod, string> = {
   [TimePeriod.hour]: '1H',

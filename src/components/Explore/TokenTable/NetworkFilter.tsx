@@ -8,8 +8,8 @@ import { useModalIsOpen, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import styled, { useTheme } from 'styled-components/macro'
 
-import { MEDIUM_MEDIA_BREAKPOINT } from './constants'
-import { filterNetworkAtom } from './state'
+import { MEDIUM_MEDIA_BREAKPOINT } from '../constants'
+import { filterNetworkAtom } from '../state'
 
 const NETWORKS = [
   SupportedChainId.MAINNET,

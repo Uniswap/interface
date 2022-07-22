@@ -7,7 +7,7 @@ import { useModalIsOpen, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import styled, { css, useTheme } from 'styled-components/macro'
 
-import { filterTimeAtom } from './state'
+import { filterTimeAtom } from '../state'
 
 export const TIME_DISPLAYS: { [key: string]: string } = {
   hour: '1H',
