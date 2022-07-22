@@ -7,7 +7,7 @@ import TimeSelector from 'components/Explore/TokenTable/TimeSelector'
 import TokenTable from 'components/Explore/TokenTable/TokenTable'
 import { useResetAtom } from 'jotai/utils'
 import { useEffect } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
 const ExploreContainer = styled.div`
@@ -57,15 +57,10 @@ const FiltersWrapper = styled.div`
 
 const Explore = () => {
   const resetFilterString = useResetAtom(filterStringAtom)
-  const history = useHistory()
+  const location = useLocation()
   useEffect(() => {
-    const unlisten = history.listen(() => {
-      resetFilterString()
-    })
-    return () => {
-      unlisten()
-    }
-  }, [history, resetFilterString])
+    resetFilterString()
+  }, [location, resetFilterString])
 
   return (
     <ExploreContainer>
