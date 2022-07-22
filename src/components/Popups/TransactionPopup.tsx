@@ -1,6 +1,9 @@
 import { useWeb3React } from '@web3-react/core'
+import { ElementName, EventName } from 'components/AmplitudeAnalytics/constants'
+import { Trace } from 'components/AmplitudeAnalytics/Trace'
 import { useContext } from 'react'
 import { AlertCircle, CheckCircle } from 'react-feather'
+import { TransactionType } from 'state/transactions/types'
 import styled, { ThemeContext } from 'styled-components/macro'
 
 import { useTransaction } from '../../state/transactions/hooks'
@@ -35,7 +38,14 @@ export default function TransactionPopup({ hash }: { hash: string }) {
       </div>
       <AutoColumn gap="8px">
         <ThemedText.Body fontWeight={500}>
-          <TransactionSummary info={tx.info} />
+          <Trace
+            name={EventName.SWAP_TRANSACTION_COMPLETED}
+            properties={{ transaction_hash: tx.hash, succeeded: success }}
+            element={ElementName.TRANSACTION_SUMMARY_POPUP}
+            shouldLogImpression={tx.info.type === TransactionType.SWAP}
+          >
+            <TransactionSummary info={tx.info} />
+          </Trace>
         </ThemedText.Body>
         {chainId && (
           <ExternalLink href={getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)}>

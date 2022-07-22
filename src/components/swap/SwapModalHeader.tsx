@@ -2,7 +2,7 @@ import { Trans } from '@lingui/macro'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { ElementName, Event, EventName, SWAP_PRICE_UPDATE_USER_RESPONSE } from 'components/AmplitudeAnalytics/constants'
 import { TraceEvent } from 'components/AmplitudeAnalytics/TraceEvent'
-import { useContext, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { AlertTriangle, ArrowDown } from 'react-feather'
 import { Text } from 'rebass'
 import { InterfaceTrade } from 'state/routing/types'
@@ -21,6 +21,7 @@ import { RowBetween, RowFixed } from '../Row'
 import TradePrice from '../swap/TradePrice'
 import { AdvancedSwapDetails } from './AdvancedSwapDetails'
 import { SwapShowAcceptChanges, TruncatedText } from './styleds'
+import { formatPercentInBasisPointsNumber } from './SwapModalFooter'
 
 const ArrowWrapper = styled.div`
   padding: 4px;
@@ -40,14 +41,21 @@ const ArrowWrapper = styled.div`
   z-index: 2;
 `
 
-const formatAnalyticsEventProperties = (trade: InterfaceTrade<Currency, Currency, TradeType>) => ({
+const formatAnalyticsEventProperties = (
+  trade: InterfaceTrade<Currency, Currency, TradeType>,
+  priceUpdatePercentage: Percent
+) => ({
+  chain_id:
+    trade.inputAmount.currency.chainId === trade.outputAmount.currency.chainId
+      ? trade.inputAmount.currency.chainId
+      : undefined,
+  response: SWAP_PRICE_UPDATE_USER_RESPONSE.ACCEPTED,
   token_in_symbol: trade.inputAmount.currency.symbol,
   token_out_symbol: trade.outputAmount.currency.symbol,
-  response: SWAP_PRICE_UPDATE_USER_RESPONSE.ACCEPTED,
+  price_update_basis_points: formatPercentInBasisPointsNumber(priceUpdatePercentage),
 })
 
-// price_update_percentage
-// chain_id
+// price_update_basis_points
 
 export default function SwapModalHeader({
   trade,
@@ -65,9 +73,17 @@ export default function SwapModalHeader({
   const theme = useContext(ThemeContext)
 
   const [showInverted, setShowInverted] = useState<boolean>(false)
+  const [lastExecutionPrice, setLastExecutionPrice] = useState(trade.executionPrice)
+  const [priceUpdatePercentage, setPriceUpdatePercentage] = useState<Percent | undefined>()
 
   const fiatValueInput = useStablecoinValue(trade.inputAmount)
   const fiatValueOutput = useStablecoinValue(trade.outputAmount)
+
+  useEffect(() => {
+    if (trade.executionPrice !== lastExecutionPrice) {
+      setLastExecutionPrice(trade.executionPrice)
+    }
+  }, [lastExecutionPrice, setLastExecutionPrice, trade.executionPrice])
 
   return (
     <AutoColumn gap={'4px'} style={{ marginTop: '1rem' }}>
@@ -141,7 +157,7 @@ export default function SwapModalHeader({
             <TraceEvent
               events={[Event.onClick]}
               name={EventName.SWAP_PRICE_UPDATE_ACKNOWLEDGED}
-              properties={formatAnalyticsEventProperties(tokens)}
+              properties={formatAnalyticsEventProperties(trade, priceUpdatePercentage)}
               element={ElementName.PRICE_UPDATE_ACCEPT_BUTTON}
             >
               <ButtonPrimary

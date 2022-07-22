@@ -13,6 +13,7 @@ export enum EventName {
   SWAP_PRICE_UPDATE_ACKNOWLEDGED = 'Swap Price Update Acknowledged',
   SWAP_SUBMITTED = 'Swap Submitted',
   SWAP_TOKENS_REVERSED = 'Swap Tokens Reversed',
+  SWAP_TRANSACTION_COMPLETED = 'Swap Transaction Completed',
   TOKEN_IMPORTED = 'Token Imported',
   TOKEN_SELECTED = 'Token Selected',
   TOKEN_SELECTOR_OPENED = 'Token Selector Opened',
@@ -70,15 +71,13 @@ export const enum ElementName {
   CONFIRM_SWAP_BUTTON = 'confirm-swap-or-send',
   CONNECT_WALLET_BUTTON = 'connect-wallet-button',
   IMPORT_TOKEN_BUTTON = 'import-token-button',
-<<<<<<< HEAD
-  PRICE_UPDATE_ACCEPT_BUTTON = 'price-update-accept-button',
-=======
   MAX_TOKEN_AMOUNT_BUTTON = 'max-token-amount-button',
->>>>>>> main
+  PRICE_UPDATE_ACCEPT_BUTTON = 'price-update-accept-button',
   SWAP_BUTTON = 'swap-button',
   SWAP_DETAILS_DROPDOWN = 'swap-details-dropdown',
   SWAP_TOKENS_REVERSE_ARROW_BUTTON = 'swap-tokens-reverse-arrow-button',
   TOKEN_SELECTOR_ROW = 'token-selector-row',
+  TRANSACTION_SUMMARY_POPUP = 'transaction-summary-popup',
   WALLET_TYPE_OPTION = 'wallet-type-option',
   // alphabetize additional element names.
 }

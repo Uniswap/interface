@@ -26,7 +26,7 @@ const getNumberFormattedToDecimalPlace = (
   decimalPlace: number
 ): number => parseFloat(intialNumberObject.toFixed(decimalPlace))
 
-const formatPercentInBasisPointsNumber = (percent: Percent): number => parseFloat(percent.toFixed(2)) * 100
+export const formatPercentInBasisPointsNumber = (percent: Percent): number => parseFloat(percent.toFixed(2)) * 100
 
 interface AnalyticsEventProps {
   trade: InterfaceTrade<Currency, Currency, TradeType>
