@@ -7,6 +7,7 @@
 export enum EventName {
   CONNECT_WALLET_BUTTON_CLICKED = 'Connect Wallet Button Clicked',
   PAGE_VIEWED = 'Page Viewed',
+  SWAP_PRICE_UPDATE_ACKNOWLEDGED = 'Swap Price Update Acknowledged',
   SWAP_SUBMITTED = 'Swap Submitted',
   TOKEN_IMPORTED = 'Token Imported',
   TOKEN_SELECTED = 'Token Selected',
@@ -19,6 +20,11 @@ export enum EventName {
 export enum WALLET_CONNECTION_RESULT {
   SUCCEEDED = 'Succeeded',
   FAILED = 'Failed',
+}
+
+export enum SWAP_PRICE_UPDATE_USER_RESPONSE {
+  ACCEPTED = 'Accepted',
+  REJECTED = 'Rejected',
 }
 
 /**
@@ -59,6 +65,7 @@ export const enum ElementName {
   CONFIRM_SWAP_BUTTON = 'confirm-swap-or-send',
   CONNECT_WALLET_BUTTON = 'connect-wallet-button',
   IMPORT_TOKEN_BUTTON = 'import-token-button',
+  PRICE_UPDATE_ACCEPT_BUTTON = 'price-update-accept-button',
   SWAP_BUTTON = 'swap-button',
   TOKEN_SELECTOR_ROW = 'token-selector-row',
   WALLET_TYPE_OPTION = 'wallet-type-option',

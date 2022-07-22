@@ -1,5 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
+import { ElementName, Event, EventName, SWAP_PRICE_UPDATE_USER_RESPONSE } from 'components/AmplitudeAnalytics/constants'
+import { TraceEvent } from 'components/AmplitudeAnalytics/TraceEvent'
 import { useContext, useState } from 'react'
 import { AlertTriangle, ArrowDown } from 'react-feather'
 import { Text } from 'rebass'
@@ -37,6 +39,15 @@ const ArrowWrapper = styled.div`
   border-color: ${({ theme }) => theme.deprecated_bg0};
   z-index: 2;
 `
+
+const formatAnalyticsEventProperties = (trade: InterfaceTrade<Currency, Currency, TradeType>) => ({
+  token_in_symbol: trade.inputAmount.currency.symbol,
+  token_out_symbol: trade.outputAmount.currency.symbol,
+  response: SWAP_PRICE_UPDATE_USER_RESPONSE.ACCEPTED,
+})
+
+// price_update_percentage
+// chain_id
 
 export default function SwapModalHeader({
   trade,
@@ -127,12 +138,19 @@ export default function SwapModalHeader({
                 <Trans>Price Updated</Trans>
               </ThemedText.Main>
             </RowFixed>
-            <ButtonPrimary
-              style={{ padding: '.5rem', width: 'fit-content', fontSize: '0.825rem', borderRadius: '12px' }}
-              onClick={onAcceptChanges}
+            <TraceEvent
+              events={[Event.onClick]}
+              name={EventName.SWAP_PRICE_UPDATE_ACKNOWLEDGED}
+              properties={formatAnalyticsEventProperties(tokens)}
+              element={ElementName.PRICE_UPDATE_ACCEPT_BUTTON}
             >
-              <Trans>Accept</Trans>
-            </ButtonPrimary>
+              <ButtonPrimary
+                style={{ padding: '.5rem', width: 'fit-content', fontSize: '0.825rem', borderRadius: '12px' }}
+                onClick={onAcceptChanges}
+              >
+                <Trans>Accept</Trans>
+              </ButtonPrimary>
+            </TraceEvent>
           </RowBetween>
         </SwapShowAcceptChanges>
       ) : null}
