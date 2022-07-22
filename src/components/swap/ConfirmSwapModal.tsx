@@ -46,12 +46,8 @@ export default function ConfirmSwapModal({
   )
 
   const onModalDismiss = useCallback(() => {
-    if (isOpen) {
-      setShouldLogModalCloseEvent(true)
-      onDismiss()
-    } else {
-      setShouldLogModalCloseEvent(false)
-    }
+    if (isOpen) setShouldLogModalCloseEvent(true)
+    onDismiss()
   }, [isOpen, onDismiss])
 
   const modalHeader = useCallback(() => {

@@ -79,7 +79,6 @@ export const enum ElementName {
   SWAP_TOKENS_REVERSE_ARROW_BUTTON = 'swap-tokens-reverse-arrow-button',
   SWAP_TRADE_PRICE_ROW = 'swap-trade-price-row',
   TOKEN_SELECTOR_ROW = 'token-selector-row',
-  TRANSACTION_SUMMARY_POPUP = 'transaction-summary-popup',
   WALLET_TYPE_OPTION = 'wallet-type-option',
   // alphabetize additional element names.
 }
