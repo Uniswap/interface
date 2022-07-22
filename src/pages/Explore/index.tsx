@@ -1,9 +1,9 @@
 import { MAX_WIDTH_MEDIA_BREAKPOINT, MEDIUM_MEDIA_BREAKPOINT } from 'components/Explore/constants'
-import FavoriteButton from 'components/Explore/FavoriteButton'
-import NetworkFilter from 'components/Explore/NetworkFilter'
-import SearchBar from 'components/Explore/SearchBar'
-import TimeSelector from 'components/Explore/TimeSelector'
-import TokenTable from 'components/Explore/TokenTable'
+import FavoriteButton from 'components/Explore/TokenTable/FavoriteButton'
+import NetworkFilter from 'components/Explore/TokenTable/NetworkFilter'
+import SearchBar from 'components/Explore/TokenTable/SearchBar'
+import TimeSelector from 'components/Explore/TokenTable/TimeSelector'
+import TokenTable from 'components/Explore/TokenTable/TokenTable'
 import styled from 'styled-components/macro'
 
 const ExploreContainer = styled.div`
