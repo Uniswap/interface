@@ -53,24 +53,30 @@ const SitePermissions = () => {
       <Text color="textSecondary" variant="subheadSmall">
         {t('Site permissions')}
       </Text>
-      <Flex row alignItems="center" gap="xs">
-        <Checkmark color={theme.colors.accentSuccess} height={16} width={16} />
+      <Flex row alignItems="flex-start" gap="xs">
+        <Box mt="xxxs">
+          <Checkmark color={theme.colors.accentSuccess} height={16} width={16} />
+        </Box>
         <Box>
           <Text color="textPrimary" variant="bodySmall">
             {t('View your wallet address and ENS name')}
           </Text>
         </Box>
       </Flex>
-      <Flex row alignItems="center" gap="xs">
-        <Checkmark color={theme.colors.accentSuccess} height={16} width={16} />
+      <Flex row alignItems="flex-start" gap="xs">
+        <Box mt="xxxs">
+          <Checkmark color={theme.colors.accentSuccess} height={16} width={16} />
+        </Box>
         <Box>
           <Text color="textPrimary" variant="bodySmall">
             {t('View your token balances')}
           </Text>
         </Box>
       </Flex>
-      <Flex row alignItems="center" gap="xs">
-        <X color={theme.colors.accentFailure} height={16} width={16} />
+      <Flex row alignItems="flex-start" gap="xs">
+        <Box mt="xxxs">
+          <X color={theme.colors.accentFailure} height={16} width={16} />
+        </Box>
         <Box>
           <Text color="textPrimary" variant="bodySmall">
             {t('Transfer your assets without your consent')}
