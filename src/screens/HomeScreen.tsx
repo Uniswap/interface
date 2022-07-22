@@ -19,7 +19,6 @@ import { Box, Flex } from 'src/components/layout'
 import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollScreen'
 import { WalletConnectModalState } from 'src/components/WalletConnect/ScanSheet/WalletConnectModal'
 import { TotalBalance } from 'src/features/balances/TotalBalance'
-import { BiometricCheck } from 'src/features/biometrics'
 import { useActiveChainIds } from 'src/features/chains/utils'
 import { useAllBalancesByChainId } from 'src/features/dataApi/balances'
 import { openModal } from 'src/features/modals/modalSlice'
@@ -62,8 +61,6 @@ export function HomeScreen() {
           </Flex>
         </Flex>
       </HeaderScrollScreen>
-      {/* TODO: remove when app secures funds  */}
-      <BiometricCheck />
     </>
   )
 }
