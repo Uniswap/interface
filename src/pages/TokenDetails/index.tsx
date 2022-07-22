@@ -21,7 +21,7 @@ const Widget = styled.div`
   border-radius: 12px;
   border: 1px solid rgba(153, 161, 189, 0.24);
 `
-export function TokenDetails() {
+export default function TokenDetails() {
   const { tokenAddress } = useParams<{ tokenAddress?: string }>()
   const [loading, setLoading] = useState(true)
   setTimeout(() => {

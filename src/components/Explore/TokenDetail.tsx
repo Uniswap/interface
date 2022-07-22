@@ -2,7 +2,7 @@ import { Trans } from '@lingui/macro'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { useCurrency, useToken } from 'hooks/Tokens'
 import { TimePeriod } from 'hooks/useTopTokens'
-import { useAtom } from 'jotai'
+import { useAtomValue } from 'jotai/utils'
 import { darken } from 'polished'
 import { useState } from 'react'
 import { ArrowDownRight, ArrowLeft, ArrowUpRight, Copy, Heart } from 'react-feather'
@@ -162,7 +162,7 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
   const theme = useTheme()
   const token = useToken(address)
   const currency = useCurrency(address)
-  const [favoriteTokens] = useAtom(favoritesAtom)
+  const favoriteTokens = useAtomValue<string[]>(favoritesAtom)
   const [activeTimePeriod, setTimePeriod] = useState(TimePeriod.hour)
   const isFavorited = favoriteTokens.includes(address)
   const toggleFavorite = useToggleFavorite(address)

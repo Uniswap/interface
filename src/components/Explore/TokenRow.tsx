@@ -4,6 +4,7 @@ import { useCurrency, useToken } from 'hooks/Tokens'
 import useTheme from 'hooks/useTheme'
 import { TimePeriod, TokenData } from 'hooks/useTopTokens'
 import { useAtom } from 'jotai'
+import { useAtomValue } from 'jotai/utils'
 import { ReactNode } from 'react'
 import { ArrowDown, ArrowDownRight, ArrowUp, ArrowUpRight, Heart } from 'react-feather'
 import { Link } from 'react-router-dom'
@@ -17,20 +18,26 @@ import {
   MOBILE_MEDIA_BREAKPOINT,
   SMALL_MEDIA_BREAKPOINT,
 } from './constants'
-import { favoritesAtom, useToggleFavorite } from './state'
+import {
+  favoritesAtom,
+  filterTimeAtom,
+  sortCategoryAtom,
+  sortDirectionAtom,
+  useSortCategory,
+  useToggleFavorite,
+} from './state'
 import { TIME_DISPLAYS } from './TimeSelector'
 
-enum Category {
+export enum Category {
   percent_change = '% Change',
   market_cap = 'Market Cap',
   price = 'Price',
   volume = 'Volume',
 }
-enum SortDirection {
+export enum SortDirection {
   Increasing = 'Increasing',
   Decreasing = 'Decreasing',
 }
-const SORT_CATEGORIES = Object.values(Category)
 
 const ArrowCell = styled.div`
   padding-left: 2px;
@@ -316,21 +323,22 @@ function getHeaderDisplay(category: string, timeframe: string): string {
 /* Get singular header cell for header row */
 function HeaderCell({
   category,
-  sortDirection,
   isSorted,
   sortable,
   timeframe,
 }: {
-  category: string // TODO: change this to make it work for trans
-  sortDirection: SortDirection
+  category: Category // TODO: change this to make it work for trans
   isSorted: boolean
   sortable: boolean
   timeframe: string
 }) {
   const theme = useTheme()
+  const sortDirection = useAtomValue<SortDirection>(sortDirectionAtom)
+  const handleSortCategory = useSortCategory(category)
+
   if (isSorted) {
     return (
-      <SortingCategory>
+      <SortingCategory onClick={handleSortCategory}>
         <SortArrowCell>
           {sortDirection === SortDirection.Decreasing ? (
             <ArrowDown size={14} color={theme.accentActive} />
@@ -342,7 +350,7 @@ function HeaderCell({
       </SortingCategory>
     )
   }
-  if (sortable) return <SortOption>{getHeaderDisplay(category, timeframe)}</SortOption>
+  if (sortable) return <SortOption onClick={handleSortCategory}>{getHeaderDisplay(category, timeframe)}</SortOption>
   return <Trans>{getHeaderDisplay(category, timeframe)}</Trans>
 }
 
@@ -387,9 +395,11 @@ export function TokenRow({
 }
 
 /* Header Row: top header row component for table */
-export function HeaderRow({ timeframe }: { timeframe: string }) {
+export function HeaderRow() {
   /* TODO: access which sort category used and timeframe used (temporarily hardcoded values) */
-  const sortedBy = SORT_CATEGORIES[1]
+  const sortCategory = useAtomValue<Category>(sortCategoryAtom)
+  const timeframe = useAtomValue<TimePeriod>(filterTimeAtom)
+
   return (
     <TokenRow
       address={null}
@@ -400,8 +410,7 @@ export function HeaderRow({ timeframe }: { timeframe: string }) {
       price={
         <HeaderCell
           category={Category.price}
-          sortDirection={SortDirection.Decreasing}
-          isSorted={sortedBy === Category.price}
+          isSorted={sortCategory === Category.price}
           sortable
           timeframe={timeframe}
         />
@@ -409,8 +418,7 @@ export function HeaderRow({ timeframe }: { timeframe: string }) {
       percentChange={
         <HeaderCell
           category={Category.percent_change}
-          sortDirection={SortDirection.Decreasing}
-          isSorted={sortedBy === Category.percent_change}
+          isSorted={sortCategory === Category.percent_change}
           sortable
           timeframe={timeframe}
         />
@@ -418,8 +426,7 @@ export function HeaderRow({ timeframe }: { timeframe: string }) {
       marketCap={
         <HeaderCell
           category={Category.market_cap}
-          sortDirection={SortDirection.Decreasing}
-          isSorted={sortedBy === Category.market_cap}
+          isSorted={sortCategory === Category.market_cap}
           sortable
           timeframe={timeframe}
         />
@@ -427,8 +434,7 @@ export function HeaderRow({ timeframe }: { timeframe: string }) {
       volume={
         <HeaderCell
           category={Category.volume}
-          sortDirection={SortDirection.Decreasing}
-          isSorted={sortedBy === Category.volume}
+          isSorted={sortCategory === Category.volume}
           sortable
           timeframe={timeframe}
         />

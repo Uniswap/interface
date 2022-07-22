@@ -1,10 +1,13 @@
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { TimePeriod } from 'hooks/useTopTokens'
-import { useRef, useState } from 'react'
+import { useAtom } from 'jotai'
+import { useRef } from 'react'
 import { Check, ChevronDown, ChevronUp } from 'react-feather'
 import { useModalIsOpen, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import styled, { css, useTheme } from 'styled-components/macro'
+
+import { filterTimeAtom } from './state'
 
 export const TIME_DISPLAYS: { [key: string]: string } = {
   hour: '1H',
@@ -137,7 +140,7 @@ export default function TimeSelector() {
   const open = useModalIsOpen(ApplicationModal.TIME_SELECTOR)
   const toggleMenu = useToggleModal(ApplicationModal.TIME_SELECTOR)
   useOnClickOutside(node, open ? toggleMenu : undefined)
-  const [activeTime, setTime] = useState(TimePeriod.day)
+  const [activeTime, setTime] = useAtom(filterTimeAtom)
 
   return (
     <StyledMenu ref={node}>

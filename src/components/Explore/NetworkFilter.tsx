@@ -1,13 +1,15 @@
 import { getChainInfo } from 'constants/chainInfo'
 import { SupportedChainId } from 'constants/chains'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
-import { useRef, useState } from 'react'
+import { useAtom } from 'jotai'
+import { useRef } from 'react'
 import { Check, ChevronDown, ChevronUp } from 'react-feather'
 import { useModalIsOpen, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import styled, { useTheme } from 'styled-components/macro'
 
 import { MEDIUM_MEDIA_BREAKPOINT } from './constants'
+import { filterNetworkAtom } from './state'
 
 const NETWORKS = [
   SupportedChainId.MAINNET,
@@ -142,7 +144,7 @@ export default function NetworkFilter() {
   const open = useModalIsOpen(ApplicationModal.NETWORK_FILTER)
   const toggleMenu = useToggleModal(ApplicationModal.NETWORK_FILTER)
   useOnClickOutside(node, open ? toggleMenu : undefined)
-  const [activeNetwork, setNetwork] = useState(SupportedChainId.MAINNET)
+  const [activeNetwork, setNetwork] = useAtom(filterNetworkAtom)
   const { label, logoUrl } = getChainInfo(activeNetwork)
 
   return (
