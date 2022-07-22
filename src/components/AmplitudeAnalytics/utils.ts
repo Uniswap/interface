@@ -10,4 +10,4 @@ export const getNumberFormattedToDecimalPlace = (
   decimalPlace: number
 ): number => parseFloat(intialNumberObject.toFixed(decimalPlace))
 
-export const formatPercentInBasisPointsNumber = (percent: Percent): number => parseFloat(percent.toFixed(2)) * 100
+export const formatPercentInBasisPointsNumber = (percent: Percent): number => parseFloat(percent.toFixed(6)) * 100

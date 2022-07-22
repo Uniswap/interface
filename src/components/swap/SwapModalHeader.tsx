@@ -1,5 +1,6 @@
 import { Trans } from '@lingui/macro'
-import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
+import { Currency, Percent, Price, TradeType } from '@uniswap/sdk-core'
+import { sendAnalyticsEvent } from 'components/AmplitudeAnalytics'
 import { ElementName, Event, EventName, SWAP_PRICE_UPDATE_USER_RESPONSE } from 'components/AmplitudeAnalytics/constants'
 import { TraceEvent } from 'components/AmplitudeAnalytics/TraceEvent'
 import { formatPercentInBasisPointsNumber } from 'components/AmplitudeAnalytics/utils'
@@ -43,26 +44,43 @@ const ArrowWrapper = styled.div`
 
 const formatAnalyticsEventProperties = (
   trade: InterfaceTrade<Currency, Currency, TradeType>,
-  priceUpdatePercentage: Percent
+  priceUpdate: number | undefined,
+  response: SWAP_PRICE_UPDATE_USER_RESPONSE
 ) => ({
   chain_id:
     trade.inputAmount.currency.chainId === trade.outputAmount.currency.chainId
       ? trade.inputAmount.currency.chainId
       : undefined,
-  response: SWAP_PRICE_UPDATE_USER_RESPONSE.ACCEPTED,
+  response,
   token_in_symbol: trade.inputAmount.currency.symbol,
   token_out_symbol: trade.outputAmount.currency.symbol,
-  price_update_basis_points: formatPercentInBasisPointsNumber(priceUpdatePercentage),
+  price_update_basis_points: priceUpdate,
 })
+
+const getPriceUpdateBasisPoints = (
+  prevPrice: Price<Currency, Currency>,
+  newPrice: Price<Currency, Currency>
+): number => {
+  const changeFraction = newPrice.subtract(prevPrice).divide(prevPrice)
+  const changePercentage = new Percent(changeFraction.numerator, changeFraction.denominator)
+  console.log('price update calculation')
+  console.log(changePercentage.toFixed(6))
+  console.log(formatPercentInBasisPointsNumber(changePercentage))
+  return formatPercentInBasisPointsNumber(changePercentage)
+}
 
 export default function SwapModalHeader({
   trade,
+  shouldLogModalCloseEvent,
+  setShouldLogModalCloseEvent,
   allowedSlippage,
   recipient,
   showAcceptChanges,
   onAcceptChanges,
 }: {
   trade: InterfaceTrade<Currency, Currency, TradeType>
+  shouldLogModalCloseEvent: boolean
+  setShouldLogModalCloseEvent: (arg0: boolean) => void
   allowedSlippage: Percent
   recipient: string | null
   showAcceptChanges: boolean
@@ -72,16 +90,27 @@ export default function SwapModalHeader({
 
   const [showInverted, setShowInverted] = useState<boolean>(false)
   const [lastExecutionPrice, setLastExecutionPrice] = useState(trade.executionPrice)
-  const [priceUpdatePercentage, setPriceUpdatePercentage] = useState<Percent | undefined>()
+  const [priceUpdate, setPriceUpdate] = useState<number | undefined>()
 
   const fiatValueInput = useStablecoinValue(trade.inputAmount)
   const fiatValueOutput = useStablecoinValue(trade.outputAmount)
 
   useEffect(() => {
-    if (trade.executionPrice !== lastExecutionPrice) {
+    if (!trade.executionPrice.equalTo(lastExecutionPrice)) {
+      setPriceUpdate(getPriceUpdateBasisPoints(lastExecutionPrice, trade.executionPrice))
       setLastExecutionPrice(trade.executionPrice)
     }
   }, [lastExecutionPrice, setLastExecutionPrice, trade.executionPrice])
+
+  useEffect(() => {
+    if (shouldLogModalCloseEvent && showAcceptChanges)
+      sendAnalyticsEvent(
+        EventName.SWAP_PRICE_UPDATE_ACKNOWLEDGED,
+        formatAnalyticsEventProperties(trade, priceUpdate, SWAP_PRICE_UPDATE_USER_RESPONSE.REJECTED)
+      )
+    setShouldLogModalCloseEvent(false)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [shouldLogModalCloseEvent, showAcceptChanges])
 
   return (
     <AutoColumn gap={'4px'} style={{ marginTop: '1rem' }}>
@@ -155,7 +184,7 @@ export default function SwapModalHeader({
             <TraceEvent
               events={[Event.onClick]}
               name={EventName.SWAP_PRICE_UPDATE_ACKNOWLEDGED}
-              properties={formatAnalyticsEventProperties(trade, priceUpdatePercentage)}
+              properties={formatAnalyticsEventProperties(trade, priceUpdate, SWAP_PRICE_UPDATE_USER_RESPONSE.ACCEPTED)}
               element={ElementName.PRICE_UPDATE_ACCEPT_BUTTON}
             >
               <ButtonPrimary
