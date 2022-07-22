@@ -34,7 +34,7 @@ export function DevScreen({ navigation }: any) {
   }
 
   const onPressCreate = () => {
-    dispatch(createAccountActions.trigger(0))
+    dispatch(createAccountActions.trigger())
   }
 
   const activateWormhole = (s: Screens) => {

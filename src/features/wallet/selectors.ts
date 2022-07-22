@@ -2,7 +2,7 @@ import { createSelector } from '@reduxjs/toolkit'
 import type { RootState } from 'src/app/rootReducer'
 import { ClientSideOrderBy, CoingeckoOrderBy } from 'src/features/dataApi/coingecko/types'
 import { DEMO_ACCOUNT_ADDRESS } from 'src/features/wallet/accounts/useTestAccount'
-import { AccountType } from './accounts/types'
+import { AccountType, NativeAccount } from './accounts/types'
 
 const DEFAULT_TOKENS_ORDER_BY = CoingeckoOrderBy.MarketCapDesc
 const DEFAULT_TOKENS_METADATA_DISPLAY_TYPE = ClientSideOrderBy.PriceChangePercentage24hDesc
@@ -19,6 +19,15 @@ export const selectPendingAccounts = createSelector(selectAccounts, (accounts) =
 
 export const selectSignerAccounts = createSelector(selectAccounts, (accounts) =>
   Object.values(accounts).filter((a) => a.type !== AccountType.Readonly)
+)
+
+export const selectSortedMnemonicAccounts = createSelector(selectAccounts, (accounts) =>
+  Object.values(accounts)
+    .filter(
+      (account) => account.type === AccountType.Native && account.address !== DEMO_ACCOUNT_ADDRESS
+    )
+    .sort((a, b) => (a as NativeAccount).derivationIndex - (b as NativeAccount).derivationIndex)
+    .map((account) => account as NativeAccount)
 )
 
 export const selectNativeAccountExists = createSelector(

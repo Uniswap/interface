@@ -96,4 +96,24 @@ export const migrations = {
     delete newState?.wallet?.bluetooth
     return newState
   },
+
+  7: (state: any) => {
+    const newState = { ...state }
+    let accounts = newState?.wallet?.accounts ?? {}
+    const originalAccountValues = Object.keys(accounts)
+    for (const account of originalAccountValues) {
+      if (
+        accounts[account].type === AccountType.Native &&
+        accounts[account].derivationIndex !== 0
+      ) {
+        delete accounts[account]
+      } else if (
+        accounts[account].type === AccountType.Native &&
+        accounts[account].derivationIndex === 0
+      ) {
+        accounts[account].mnemonicId = accounts[account].address
+      }
+    }
+    return newState
+  },
 }

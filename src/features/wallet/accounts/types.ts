@@ -39,6 +39,7 @@ export interface LocalAccount extends AccountBase {
 export interface NativeAccount extends AccountBase {
   type: AccountType.Native
   derivationIndex: number
+  mnemonicId: string
 }
 
 export interface WalletConnectAccount extends AccountBase {

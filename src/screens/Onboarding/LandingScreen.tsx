@@ -34,7 +34,7 @@ export function LandingScreen({ navigation }: Props) {
   const onPressCreateWallet = () => {
     // Clear any existing pending accounts first.
     dispatch(pendingAccountActions.trigger(PendingAccountActions.DELETE))
-    dispatch(createAccountActions.trigger(0))
+    dispatch(createAccountActions.trigger())
     navigation.navigate({
       name: OnboardingScreens.EditName,
       params: { importType: ImportType.Create },
@@ -49,7 +49,7 @@ export function LandingScreen({ navigation }: Props) {
   // Explore is no longer in spec. Keeping for dev purposes.
   const onPressExplore = () => {
     dispatch(pendingAccountActions.trigger(PendingAccountActions.DELETE))
-    dispatch(createAccountActions.trigger(0))
+    dispatch(createAccountActions.trigger())
     dispatch(pendingAccountActions.trigger(PendingAccountActions.ACTIVATE))
     dispatch(setFinishedOnboarding({ finishedOnboarding: true }))
   }

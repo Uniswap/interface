@@ -10,6 +10,7 @@ import {
   v3Schema,
   v4Schema,
   v5Schema,
+  v6Schema,
 } from 'src/app/schema'
 import { persistConfig } from 'src/app/store'
 import { WalletConnectModalState } from 'src/components/WalletConnect/ScanSheet/WalletConnectModal'
@@ -31,7 +32,7 @@ import {
   TransactionStatus,
   TransactionType,
 } from 'src/features/transactions/types'
-import { AccountType } from 'src/features/wallet/accounts/types'
+import { AccountType, NativeAccount } from 'src/features/wallet/accounts/types'
 import { initialWalletState } from 'src/features/wallet/walletSlice'
 import { initialWalletConnectState } from 'src/features/walletConnect/walletConnectSlice'
 
@@ -302,5 +303,58 @@ describe('Redux state migrations', () => {
 
     expect(v5Schema.wallet.bluetooth).toBeDefined()
     expect(v6.wallet.bluetooth).toBeUndefined()
+  })
+
+  it('migrates from v6 to v7', () => {
+    const TEST_ADDRESSES = ['0xTest', '0xTest2', '0xTest3', '0xTest4']
+    const TEST_IMPORT_TIME_MS = 12345678912345
+
+    const v6SchemaStub = {
+      ...v6Schema,
+      wallet: {
+        ...v6Schema.wallet,
+        accounts: {
+          [TEST_ADDRESSES[0]]: {
+            type: AccountType.Native,
+            address: TEST_ADDRESSES[0],
+            name: 'Test Account 1',
+            pending: false,
+            derivationIndex: 0,
+            timeImportedMs: TEST_IMPORT_TIME_MS,
+          },
+          [TEST_ADDRESSES[1]]: {
+            type: AccountType.Native,
+            address: TEST_ADDRESSES[1],
+            name: 'Test Account 2',
+            pending: false,
+            derivationIndex: 1,
+            timeImportedMs: TEST_IMPORT_TIME_MS,
+          },
+          [TEST_ADDRESSES[2]]: {
+            type: AccountType.Native,
+            address: TEST_ADDRESSES[2],
+            name: 'Test Account 3',
+            pending: false,
+            derivationIndex: 2,
+            timeImportedMs: TEST_IMPORT_TIME_MS,
+          },
+          [TEST_ADDRESSES[3]]: {
+            type: AccountType.Native,
+            address: TEST_ADDRESSES[3],
+            name: 'Test Account 4',
+            pending: false,
+            derivationIndex: 3,
+            timeImportedMs: TEST_IMPORT_TIME_MS,
+          },
+        },
+      },
+    }
+
+    expect(Object.values(v6SchemaStub.wallet.accounts)).toHaveLength(4)
+    const v7 = migrations[7](v6SchemaStub)
+
+    const accounts = Object.values(v7.wallet.accounts)
+    expect(accounts).toHaveLength(1)
+    expect((accounts[0] as NativeAccount).mnemonicId).toEqual(TEST_ADDRESSES[0])
   })
 })

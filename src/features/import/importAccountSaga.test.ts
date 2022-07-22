@@ -28,7 +28,7 @@ const SAMPLE_SEED = [
 const SAMPLE_SEED_ADDRESS = '0x82D56A352367453f74FC0dC7B071b311da373Fa6'
 
 describe(importAccount, () => {
-  it('imports local account', async () => {
+  it('imports native account', async () => {
     const params: ImportMnemonicAccountParams = {
       mnemonic: SAMPLE_SEED,
       name: 'WALLET',
@@ -60,6 +60,7 @@ describe(importAccount, () => {
         pending: true,
         derivationIndex: 0,
         timeImportedMs: expect.any(Number),
+        mnemonicId: SAMPLE_SEED_ADDRESS,
       }),
       activateAccount(SAMPLE_SEED_ADDRESS),
       unlockWallet(),

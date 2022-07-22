@@ -254,7 +254,7 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
     const onPressCreateNewWallet = () => {
       // Clear any existing pending accounts first.
       dispatch(pendingAccountActions.trigger(PendingAccountActions.DELETE))
-      dispatch(createAccountActions.trigger(0))
+      dispatch(createAccountActions.trigger())
 
       navigation.navigate(Screens.OnboardingStack, {
         screen: OnboardingScreens.EditName,

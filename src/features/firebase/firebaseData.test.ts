@@ -34,6 +34,7 @@ const importedAccount: Account = {
   name: 'IMPORTED ACCOUNT',
   timeImportedMs: dayjs().valueOf(),
   derivationIndex: 3,
+  mnemonicId: '0xaddress1',
 }
 
 const importedNamelessAccount: Account = {
@@ -41,6 +42,7 @@ const importedNamelessAccount: Account = {
   address: '0xaddress3',
   timeImportedMs: dayjs().valueOf(),
   derivationIndex: 4,
+  mnemonicId: '0xaddress1',
 }
 
 const renamedAccount: EditAccountParams = {
