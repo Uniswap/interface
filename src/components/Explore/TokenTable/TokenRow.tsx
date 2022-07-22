@@ -133,6 +133,7 @@ const StyledHeaderRow = styled(StyledTokenRow)`
 
   @media only screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
     padding: 0px 12px;
+    justify-content: space-between;
   }
 `
 const ListNumberCell = styled(Cell)`
@@ -163,7 +164,6 @@ const NameCell = styled(Cell)`
   gap: 8px;
 
   @media only screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
-    min-width: 200px;
     padding-right: 8px;
   }
 `
