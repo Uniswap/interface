@@ -30,7 +30,7 @@ import RemoveLiquidity from './RemoveLiquidity'
 import RemoveLiquidityV3 from './RemoveLiquidity/V3'
 import Swap from './Swap'
 import { OpenClaimAddressModalAndRedirectToSwap, RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects'
-import { TokenDetails } from './TokenDetails'
+import TokenDetails from './TokenDetails'
 
 const Vote = lazy(() => import('./Vote'))
 

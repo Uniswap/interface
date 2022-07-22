@@ -1,6 +1,6 @@
-import BalanceSummary from 'components/Explore/BalanceSummary'
-import LoadingTokenDetail from 'components/Explore/LoadingTokenDetail'
-import TokenDetail from 'components/Explore/TokenDetail'
+import BalanceSummary from 'components/Explore/TokenDetails/BalanceSummary'
+import LoadingTokenDetail from 'components/Explore/TokenDetails/LoadingTokenDetail'
+import TokenDetail from 'components/Explore/TokenDetails/TokenDetail'
 import { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components/macro'
@@ -21,7 +21,7 @@ const Widget = styled.div`
   border-radius: 12px;
   border: 1px solid rgba(153, 161, 189, 0.24);
 `
-export function TokenDetails() {
+export default function TokenDetails() {
   const { tokenAddress } = useParams<{ tokenAddress?: string }>()
   const [loading, setLoading] = useState(true)
   setTimeout(() => {
