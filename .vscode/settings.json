@@ -5,7 +5,7 @@
   "editor.formatOnSaveMode": "file",
   "editor.tabCompletion": "on",
   "editor.tabSize": 2,
-  "editor.formatOnSave": false,
+  "editor.formatOnSave": true,
   "editor.inlineSuggest.enabled": true,
   "editor.codeActionsOnSave": {
     "source.fixAll": true

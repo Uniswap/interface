@@ -1,4 +1,9 @@
-import { MAX_WIDTH_MEDIA_BREAKPOINT } from 'components/Explore/constants'
+import {
+  LARGE_MEDIA_BREAKPOINT,
+  MAX_WIDTH_MEDIA_BREAKPOINT,
+  MOBILE_MEDIA_BREAKPOINT,
+  SMALL_MEDIA_BREAKPOINT,
+} from 'components/Explore/constants'
 import BalanceSummary from 'components/Explore/TokenDetails/BalanceSummary'
 import LoadingTokenDetail from 'components/Explore/TokenDetails/LoadingTokenDetail'
 import TokenDetail from 'components/Explore/TokenDetails/TokenDetail'
@@ -14,11 +19,21 @@ const TokenDetailsLayout = styled.div`
   @media only screen and (max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT}) {
     gap: 40px;
   }
+  @media only screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
+    padding: 0px 16px;
+  }
+  @media only screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
+    padding: 0px 8px;
+  }
 `
 const RightPanel = styled.div`
   display: flex;
   flex-direction: column;
   gap: 20px;
+
+  @media only screen and (max-width: ${LARGE_MEDIA_BREAKPOINT}) {
+    display: none;
+  }
 `
 const Widget = styled.div`
   height: 348px;
