@@ -3,12 +3,12 @@ import CurrencyLogo from 'components/CurrencyLogo'
 import { useCurrency, useToken } from 'hooks/Tokens'
 import { TimePeriod } from 'hooks/useTopTokens'
 import { useAtomValue } from 'jotai/utils'
-import { darken } from 'polished'
 import { useState } from 'react'
 import { ArrowDownRight, ArrowLeft, ArrowUpRight, Copy, Heart } from 'react-feather'
 import { Link } from 'react-router-dom'
 import styled, { useTheme } from 'styled-components/macro'
 
+import { MOBILE_MEDIA_BREAKPOINT } from '../constants'
 import { favoritesAtom, useToggleFavorite } from '../state'
 import { ClickFavorited } from '../TokenTable/TokenRow'
 import Resource from './Resource'
@@ -39,7 +39,7 @@ const ArrowCell = styled.div`
 `
 export const BreadcrumbNavLink = styled(Link)`
   display: flex;
-  color: ${({ theme }) => theme.deprecated_text2};
+  color: ${({ theme }) => theme.textSecondary};
   font-size: 14px;
   line-height: 20px;
   align-items: center;
@@ -48,20 +48,20 @@ export const BreadcrumbNavLink = styled(Link)`
   margin-bottom: 16px;
 
   &:hover {
-    color: ${({ theme }) => darken(0.1, theme.deprecated_text2)};
+    color: ${({ theme }) => theme.textTertiary};
   }
 `
 export const ChartHeader = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
-  color: ${({ theme }) => theme.deprecated_text1};
+  color: ${({ theme }) => theme.textPrimary};
   gap: 4px;
   margin-bottom: 24px;
 `
 const ContractAddress = styled.button`
   display: flex;
-  color: ${({ theme }) => theme.deprecated_text1};
+  color: ${({ theme }) => theme.textPrimary};
   gap: 10px;
   align-items: center;
   background: transparent;
@@ -70,7 +70,7 @@ const ContractAddress = styled.button`
   cursor: pointer;
 
   &:hover {
-    color: ${({ theme }) => darken(0.08, theme.deprecated_text1)};
+    color: ${({ theme }) => theme.textSecondary};
   }
 `
 export const ContractAddressSection = styled.div`
@@ -79,14 +79,14 @@ export const ContractAddressSection = styled.div`
 const Contract = styled.div`
   display: flex;
   flex-direction: column;
-  color: ${({ theme }) => theme.deprecated_text2};
+  color: ${({ theme }) => theme.textSecondary};
   font-size: 14px;
   gap: 4px;
 `
 export const ChartContainer = styled.div`
   display: flex;
   height: 332px;
-  border-bottom: 1px solid ${({ theme }) => theme.deprecated_bg3};
+  border-bottom: 1px solid ${({ theme }) => theme.backgroundOutline};
   align-items: center;
   overflow: hidden;
 `
@@ -94,39 +94,44 @@ export const DeltaContainer = styled.div`
   display: flex;
   align-items: center;
 `
-const Stat = styled.div`
+export const Stat = styled.div`
   display: flex;
   flex-direction: column;
-  color: ${({ theme }) => theme.deprecated_text2};
+  color: ${({ theme }) => theme.textSecondary};
   font-size: 14px;
-  width: 168px;
-  gap: 4px;
-`
-const StatPrice = styled.span`
-  font-size: 28px;
-  color: ${({ theme }) => theme.deprecated_text1};
-`
-export const StatsSection = styled.div`
-  display: flex;
+  min-width: 168px;
+  flex: 1;
   gap: 4px;
   padding: 24px 0px;
 `
+const StatPrice = styled.span`
+  font-size: 28px;
+  color: ${({ theme }) => theme.textPrimary};
+`
+export const StatsSection = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+`
+const StatPair = styled.div`
+  display: flex;
+  flex: 1;
+`
 const TimeButton = styled.button<{ active: boolean }>`
-  background-color: ${({ theme, active }) => (active ? theme.deprecated_primary1 : 'transparent')};
+  background-color: ${({ theme, active }) => (active ? theme.accentActive : 'transparent')};
   font-size: 14px;
   width: 36px;
   height: 36px;
   border-radius: 12px;
   border: none;
   cursor: pointer;
-  color: ${({ theme }) => theme.deprecated_text1};
+  color: ${({ theme }) => theme.textPrimary};
 `
 export const TimeOptionsContainer = styled.div`
   display: flex;
   justify-content: flex-end;
   gap: 4px;
 `
-const TokenNameCell = styled.div`
+export const TokenNameCell = styled.div`
   display: flex;
   gap: 8px;
   font-size: 20px;
@@ -136,7 +141,7 @@ const TokenNameCell = styled.div`
 const TokenActions = styled.div`
   display: flex;
   gap: 24px;
-  color: ${({ theme }) => theme.deprecated_text2};
+  color: ${({ theme }) => theme.textSecondary};
 `
 export const TokenInfoContainer = styled.div`
   display: flex;
@@ -148,14 +153,25 @@ export const TokenPrice = styled.span`
   line-height: 44px;
 `
 const TokenSymbol = styled.span`
-  color: ${({ theme }) => theme.deprecated_text2};
+  color: ${({ theme }) => theme.textSecondary};
 `
 export const TopArea = styled.div`
-  width: 832px;
+  max-width: 832px;
 `
 export const ResourcesContainer = styled.div`
   display: flex;
   gap: 14px;
+`
+const FullAddress = styled.span`
+  @media only screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
+    display: none;
+  }
+`
+const TruncatedAddress = styled.span`
+  display: none;
+  @media only screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
+    display: flex;
+  }
 `
 
 export default function LoadedTokenDetail({ address }: { address: string }) {
@@ -184,6 +200,7 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
     'Ethereum is a decentralized computing platform that uses ETH (Ether) to pay transaction fees (gas). Developers can use Ethereum to run decentralized applications (dApps) and issue new crypto assets, known as Ethereum tokens.'
   const tokenMarketCap = '23.02B'
   const tokenVolume = '1.6B'
+  const truncatedTokenAddress = `${address.slice(0, 4)}...${address.slice(-3)}`
   return (
     <TopArea>
       <BreadcrumbNavLink to="/explore">
@@ -208,7 +225,6 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
         </TokenInfoContainer>
         <TokenPrice>${tokenPrice}</TokenPrice>
         <DeltaContainer>
-          {' '}
           {deltaSign}
           {tokenDelta}%
           <ArrowCell>
@@ -235,7 +251,7 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
       <AboutSection>
         <AboutHeader>
           <Trans>About</Trans>
-        </AboutHeader>{' '}
+        </AboutHeader>
         {aboutToken}
         <ResourcesContainer>
           <Resource name={'Etherscan'} link={'https://etherscan.io/'} />
@@ -243,19 +259,33 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
         </ResourcesContainer>
       </AboutSection>
       <StatsSection>
-        <Stat>
-          Market Cap<StatPrice>${tokenMarketCap}</StatPrice>
-        </Stat>
-        <Stat>
-          {TIME_DISPLAYS[activeTimePeriod]} Volume
-          <StatPrice>${tokenVolume}</StatPrice>
-        </Stat>
+        <StatPair>
+          <Stat>
+            Market cap<StatPrice>${tokenMarketCap}</StatPrice>
+          </Stat>
+          <Stat>
+            {TIME_DISPLAYS[activeTimePeriod]} volume
+            <StatPrice>${tokenVolume}</StatPrice>
+          </Stat>
+        </StatPair>
+        <StatPair>
+          <Stat>
+            52W low
+            <StatPrice>$1,790.01</StatPrice>
+          </Stat>
+          <Stat>
+            52W high
+            <StatPrice>$4,420.71</StatPrice>
+          </Stat>
+        </StatPair>
       </StatsSection>
       <ContractAddressSection>
         <Contract>
           Contract Address
           <ContractAddress onClick={() => navigator.clipboard.writeText(address)}>
-            {address} <Copy size={13} color={theme.deprecated_text2} />
+            <FullAddress>{address}</FullAddress>
+            <TruncatedAddress>{truncatedTokenAddress}</TruncatedAddress>
+            <Copy size={13} color={theme.deprecated_text2} />
           </ContractAddress>
         </Contract>
       </ContractAddressSection>
