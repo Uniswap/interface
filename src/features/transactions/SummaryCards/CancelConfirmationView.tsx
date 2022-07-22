@@ -11,6 +11,7 @@ import { ElementName } from 'src/features/telemetry/constants'
 import { ActionButton } from 'src/features/transactions/swap/SwapReview'
 import { TransactionDetails } from 'src/features/transactions/types'
 import { useActiveAccount } from 'src/features/wallet/hooks'
+import { shortenAddress } from 'src/utils/addresses'
 import { formatPrice } from 'src/utils/format'
 
 const spacerProps: ComponentProps<typeof Box> = {
@@ -34,7 +35,7 @@ export function CancelConfirmationView({
   const gasFeeUSD = useUSDGasPrice(transactionDetails.chainId, feeInfo?.fee?.fast)
 
   return (
-    <Flex centered grow bg="backgroundSurface" borderRadius="xl" gap="lg" p="lg" pb="xxl">
+    <Flex centered grow bg="backgroundSurface" borderRadius="xl" gap="lg" p="lg" pb="xl">
       <Flex centered borderColor="textSecondary" borderRadius="md" borderWidth={1} padding="xs">
         <SlashCircleIcon fill="none" height={24} />
       </Flex>
@@ -67,6 +68,9 @@ export function CancelConfirmationView({
         {accountAddress && (
           <Flex grow row justifyContent="space-between" padding="md">
             <AddressDisplay address={transactionDetails.from} />
+            <Text color="textSecondary" variant="bodySmall">
+              {shortenAddress(transactionDetails.from)}
+            </Text>
           </Flex>
         )}
       </Flex>

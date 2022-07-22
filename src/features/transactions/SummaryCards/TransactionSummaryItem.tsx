@@ -17,10 +17,10 @@ import { openModal } from 'src/features/modals/modalSlice'
 import { createBalanceUpdate } from 'src/features/notifications/utils'
 import { ModalName } from 'src/features/telemetry/constants'
 import { useCurrency } from 'src/features/tokens/useCurrency'
-import { useCreateSwapFormState } from 'src/features/transactions/hooks'
 import AlertBanner from 'src/features/transactions/SummaryCards/AlertBanner'
 import TransactionActionsModal from 'src/features/transactions/SummaryCards/TransactionActionsModal'
 import { getTransactionSummaryTitle } from 'src/features/transactions/SummaryCards/utils'
+import createSwapFromStateFromDetails from 'src/features/transactions/swap/createSwapFromStateFromDetails'
 import {
   TransactionDetails,
   TransactionStatus,
@@ -79,11 +79,6 @@ function TransactionSummaryItem({
 
   const [showActionsModal, setShowActionsModal] = useState(false)
   const dispatch = useAppDispatch()
-  const swapFormState = useCreateSwapFormState(
-    fullDetails?.from,
-    fullDetails?.chainId,
-    fullDetails?.hash
-  )
 
   const currencyId = buildCurrencyId(chainId, tokenAddress ?? '')
   const otherCurrencyId = buildCurrencyId(chainId, otherTokenAddress ?? '')
@@ -104,8 +99,13 @@ function TransactionSummaryItem({
   const dateAdded = dayjs(msTimestampAdded).format('MMM D')
 
   const onRetrySwap = useCallback(() => {
+    const swapFormState = createSwapFromStateFromDetails({
+      transactionDetails: fullDetails,
+      inputCurrency: currency,
+      outputCurrency: otherCurrency,
+    })
     dispatch(openModal({ name: ModalName.Swap, initialState: swapFormState }))
-  }, [dispatch, swapFormState])
+  }, [currency, dispatch, fullDetails, otherCurrency])
 
   // Only need a balance update on these 3 types of transactions.
   const balanceUpdate =

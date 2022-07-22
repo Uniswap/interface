@@ -12,7 +12,7 @@ import { TransactionStatus } from 'src/features/transactions/types'
 const key = (info: TransactionSummaryInfo) => info.hash
 
 const SectionTitle: SectionList['props']['renderSectionHeader'] = ({ section: { title } }) => (
-  <Box bg="backgroundBackdrop" px="xs" py="md">
+  <Box px="xs" py="md">
     <Text color="textSecondary" variant="smallLabel">
       {title}
     </Text>

@@ -1,10 +1,8 @@
 import { skipToken } from '@reduxjs/toolkit/dist/query'
-import { TradeType } from '@uniswap/sdk-core'
 import dayjs from 'dayjs'
 import { useMemo } from 'react'
 import { useAppSelector } from 'src/app/hooks'
 import { ChainId } from 'src/constants/chains'
-import { AssetType, CurrencyAsset } from 'src/entities/assets'
 import { useTransactionHistoryQuery } from 'src/features/dataApi/zerion/api'
 import { Namespace } from 'src/features/dataApi/zerion/types'
 import { requests } from 'src/features/dataApi/zerion/utils'
@@ -16,18 +14,12 @@ import {
   makeSelectTransactionById,
 } from 'src/features/transactions/selectors'
 import { TransactionSummaryInfo } from 'src/features/transactions/SummaryCards/TransactionSummaryItem'
-import {
-  CurrencyField,
-  TransactionState,
-} from 'src/features/transactions/transactionState/transactionState'
+import createSwapFromStateFromDetails from 'src/features/transactions/swap/createSwapFromStateFromDetails'
 import {
   TransactionDetails,
   TransactionStatus,
   TransactionType,
 } from 'src/features/transactions/types'
-import { currencyIdToAddress } from 'src/utils/currencyId'
-import { logger } from 'src/utils/logger'
-import { tryParseRawAmount } from 'src/utils/tryParseAmount'
 
 // sorted oldest to newest
 export function useSortedTransactions(address: Address | null) {
@@ -98,75 +90,11 @@ export function useCreateSwapFormState(
 
   if (!chainId || !txHash) return undefined
 
-  try {
-    if (!transaction) {
-      throw new Error(
-        `No transaction found for address: ${address}, chainId: ${chainId}, and tx hash ${txHash}`
-      )
-    }
-
-    const { status: txStatus, typeInfo } = transaction
-
-    if (txStatus !== TransactionStatus.Cancelled) return undefined
-
-    if (typeInfo.type !== TransactionType.Swap) {
-      throw new Error(
-        `Tx hash ${txHash} does not correspond to a swap tx. It is of type ${typeInfo.type}`
-      )
-    }
-
-    if (!inputCurrency) {
-      throw new Error(`Could not find a matching currency for currencyId ${inputCurrencyId}`)
-    }
-
-    if (!outputCurrency) {
-      throw new Error(`Could not find a matching currency for currencyId ${outputCurrencyId}`)
-    }
-
-    const inputCurrencyAmountRaw =
-      typeInfo.tradeType === TradeType.EXACT_INPUT
-        ? typeInfo.inputCurrencyAmountRaw
-        : typeInfo.expectedInputCurrencyAmountRaw
-    const outputCurrencyAmountRaw =
-      typeInfo.tradeType === TradeType.EXACT_OUTPUT
-        ? typeInfo.outputCurrencyAmountRaw
-        : typeInfo.expectedOutputCurrencyAmountRaw
-
-    const inputAddress = currencyIdToAddress(typeInfo.inputCurrencyId)
-    const outputAddress = currencyIdToAddress(typeInfo.outputCurrencyId)
-
-    const inputAsset: CurrencyAsset = {
-      address: inputAddress,
-      chainId,
-      type: AssetType.Currency,
-    }
-
-    const outputAsset: CurrencyAsset = {
-      address: outputAddress,
-      chainId,
-      type: AssetType.Currency,
-    }
-
-    const exactCurrencyField =
-      typeInfo.tradeType === TradeType.EXACT_INPUT ? CurrencyField.INPUT : CurrencyField.OUTPUT
-
-    const exactAmount =
-      exactCurrencyField === CurrencyField.INPUT
-        ? tryParseRawAmount(inputCurrencyAmountRaw, inputCurrency)
-        : tryParseRawAmount(outputCurrencyAmountRaw, outputCurrency)
-
-    const swapFormState: TransactionState = {
-      [CurrencyField.INPUT]: inputAsset,
-      [CurrencyField.OUTPUT]: outputAsset,
-      exactCurrencyField,
-      exactAmountToken: exactAmount?.toExact() ?? '',
-    }
-
-    return swapFormState
-  } catch (error: any) {
-    logger.info('hooks', 'useRecreateSwapFormState', error?.message)
-    return undefined
-  }
+  return createSwapFromStateFromDetails({
+    transactionDetails: transaction,
+    inputCurrency,
+    outputCurrency,
+  })
 }
 
 export interface AllFormattedTransactions {
@@ -248,11 +176,19 @@ export function useAllFormattedTransactions(
       )
     }, [combinedTransactionList])
 
-  return {
+  return useMemo(() => {
+    return {
+      combinedTransactionList,
+      todayTransactionList,
+      weekTransactionList,
+      beforeCurrentWeekTransactionList,
+      pending,
+    }
+  }, [
+    beforeCurrentWeekTransactionList,
     combinedTransactionList,
+    pending,
     todayTransactionList,
     weekTransactionList,
-    beforeCurrentWeekTransactionList,
-    pending,
-  }
+  ])
 }
