@@ -88,13 +88,15 @@ export function useCreateSwapFormState(
   const inputCurrency = useCurrency(inputCurrencyId)
   const outputCurrency = useCurrency(outputCurrencyId)
 
-  if (!chainId || !txHash) return undefined
+  return useMemo(() => {
+    if (!chainId || !txHash) return undefined
 
-  return createSwapFromStateFromDetails({
-    transactionDetails: transaction,
-    inputCurrency,
-    outputCurrency,
-  })
+    return createSwapFromStateFromDetails({
+      transactionDetails: transaction,
+      inputCurrency,
+      outputCurrency,
+    })
+  }, [chainId, inputCurrency, outputCurrency, transaction, txHash])
 }
 
 export interface AllFormattedTransactions {
