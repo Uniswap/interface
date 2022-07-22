@@ -57,7 +57,7 @@ const SitePermissions = () => {
         <Box mt="xxxs">
           <Checkmark color={theme.colors.accentSuccess} height={16} width={16} />
         </Box>
-        <Box>
+        <Box flex={1}>
           <Text color="textPrimary" variant="bodySmall">
             {t('View your wallet address and ENS name')}
           </Text>
@@ -67,7 +67,7 @@ const SitePermissions = () => {
         <Box mt="xxxs">
           <Checkmark color={theme.colors.accentSuccess} height={16} width={16} />
         </Box>
-        <Box>
+        <Box flex={1}>
           <Text color="textPrimary" variant="bodySmall">
             {t('View your token balances')}
           </Text>
@@ -77,7 +77,7 @@ const SitePermissions = () => {
         <Box mt="xxxs">
           <X color={theme.colors.accentFailure} height={16} width={16} />
         </Box>
-        <Box>
+        <Box flex={1}>
           <Text color="textPrimary" variant="bodySmall">
             {t('Transfer your assets without your consent')}
           </Text>
