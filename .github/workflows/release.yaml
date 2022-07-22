@@ -1,7 +1,7 @@
 name: Release
 on:
   schedule:
-    - cron:  '0 12 * * 1-4' # every day 12:00 UTC Monday-Thursday
+    - cron: '0 12 * * 1-4' # every day 12:00 UTC Monday-Thursday
   # manual trigger
   workflow_dispatch:
 
@@ -70,7 +70,7 @@ jobs:
         uses: uniswap/convert-cidv0-cidv1@v1.0.0
         with:
           cidv0: ${{ steps.pinata.outputs.hash }}
-      
+
       - uses: actions/cache@v3
         id: cypress-cache
         with:

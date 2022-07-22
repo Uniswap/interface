@@ -4,20 +4,26 @@ import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
+import { ElementName, Event, EventName } from 'components/AmplitudeAnalytics/constants'
 import { PageName, SectionName } from 'components/AmplitudeAnalytics/constants'
 import { Trace } from 'components/AmplitudeAnalytics/Trace'
+import { TraceEvent } from 'components/AmplitudeAnalytics/TraceEvent'
 import { sendEvent } from 'components/analytics'
 import { NetworkAlert } from 'components/NetworkAlert/NetworkAlert'
 import SwapDetailsDropdown from 'components/swap/SwapDetailsDropdown'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 import { MouseoverTooltip } from 'components/Tooltip'
+import { isSupportedChain } from 'constants/chains'
 import { useSwapCallback } from 'hooks/useSwapCallback'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import JSBI from 'jsbi'
 import { Context, useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import { ReactNode } from 'react'
 import { ArrowDown, CheckCircle, HelpCircle } from 'react-feather'
-import { RouteComponentProps } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import { Text } from 'rebass'
+import { useToggleWalletModal } from 'state/application/hooks'
+import { InterfaceTrade } from 'state/routing/types'
 import { TradeState } from 'state/routing/types'
 import styled, { DefaultTheme, ThemeContext } from 'styled-components/macro'
 
@@ -42,9 +48,8 @@ import useENSAddress from '../../hooks/useENSAddress'
 import { useERC20PermitFromTrade, UseERC20PermitState } from '../../hooks/useERC20Permit'
 import useIsArgentWallet from '../../hooks/useIsArgentWallet'
 import { useIsSwapUnsupported } from '../../hooks/useIsSwapUnsupported'
-import { useUSDCValue } from '../../hooks/useStablecoinPrice'
+import { useStablecoinValue } from '../../hooks/useStablecoinPrice'
 import useWrapCallback, { WrapErrorText, WrapType } from '../../hooks/useWrapCallback'
-import { useToggleWalletModal } from '../../state/application/hooks'
 import { Field } from '../../state/swap/actions'
 import {
   useDefaultsFromURLSearch,
@@ -65,7 +70,16 @@ const AlertWrapper = styled.div`
   width: 100%;
 `
 
-export default function Swap({ history }: RouteComponentProps) {
+export function getIsValidSwapQuote(
+  trade: InterfaceTrade<Currency, Currency, TradeType> | undefined,
+  tradeState: TradeState,
+  swapInputError?: ReactNode
+): boolean {
+  return !!swapInputError && !!trade && (tradeState === TradeState.VALID || tradeState === TradeState.SYNCING)
+}
+
+export default function Swap() {
+  const history = useHistory()
   const { account, chainId } = useWeb3React()
   const loadedUrlParams = useDefaultsFromURLSearch()
 
@@ -153,8 +167,8 @@ export default function Swap({ history }: RouteComponentProps) {
   // show price estimates based on wrap trade
   const inputValue = showWrap ? parsedAmount : trade?.inputAmount
   const outputValue = showWrap ? parsedAmount : trade?.outputAmount
-  const fiatValueInput = useUSDCValue(inputValue)
-  const fiatValueOutput = useUSDCValue(outputValue)
+  const fiatValueInput = useStablecoinValue(inputValue)
+  const fiatValueOutput = useStablecoinValue(outputValue)
   const priceImpact = useMemo(
     () => (routeIsSyncing ? undefined : computeFiatValuePriceImpact(fiatValueInput, fiatValueOutput)),
     [fiatValueInput, fiatValueOutput, routeIsSyncing]
@@ -448,15 +462,25 @@ export default function Swap({ history }: RouteComponentProps) {
                     loading={independentField === Field.OUTPUT && routeIsSyncing}
                   />
                 </Trace>
-                <ArrowWrapper clickable>
-                  <ArrowDown
-                    size="16"
-                    onClick={() => {
-                      setApprovalSubmitted(false) // reset 2 step UI for approvals
-                      onSwitchTokens()
-                    }}
-                    color={currencies[Field.INPUT] && currencies[Field.OUTPUT] ? theme.text1 : theme.text3}
-                  />
+                <ArrowWrapper clickable={isSupportedChain(chainId)}>
+                  <TraceEvent
+                    events={[Event.onClick]}
+                    name={EventName.SWAP_TOKENS_REVERSED}
+                    element={ElementName.SWAP_TOKENS_REVERSE_ARROW_BUTTON}
+                  >
+                    <ArrowDown
+                      size="16"
+                      onClick={() => {
+                        setApprovalSubmitted(false) // reset 2 step UI for approvals
+                        onSwitchTokens()
+                      }}
+                      color={
+                        currencies[Field.INPUT] && currencies[Field.OUTPUT]
+                          ? theme.deprecated_text1
+                          : theme.deprecated_text3
+                      }
+                    />
+                  </TraceEvent>
                 </ArrowWrapper>
                 <Trace section={SectionName.CURRENCY_OUTPUT_PANEL}>
                   <CurrencyInputPanel
@@ -483,7 +507,7 @@ export default function Swap({ history }: RouteComponentProps) {
                 <>
                   <AutoRow justify="space-between" style={{ padding: '0 1rem' }}>
                     <ArrowWrapper clickable={false}>
-                      <ArrowDown size="16" color={theme.text2} />
+                      <ArrowDown size="16" color={theme.deprecated_text2} />
                     </ArrowWrapper>
                     <LinkStyledButton id="remove-recipient-button" onClick={() => onChangeRecipient(null)}>
                       <Trans>- Remove recipient</Trans>
@@ -510,9 +534,16 @@ export default function Swap({ history }: RouteComponentProps) {
                     </ThemedText.Main>
                   </ButtonPrimary>
                 ) : !account ? (
-                  <ButtonLight onClick={toggleWalletModal}>
-                    <Trans>Connect Wallet</Trans>
-                  </ButtonLight>
+                  <TraceEvent
+                    events={[Event.onClick]}
+                    name={EventName.CONNECT_WALLET_BUTTON_CLICKED}
+                    properties={{ received_swap_quote: getIsValidSwapQuote(trade, tradeState, swapInputError) }}
+                    element={ElementName.CONNECT_WALLET_BUTTON}
+                  >
+                    <ButtonLight onClick={toggleWalletModal}>
+                      <Trans>Connect Wallet</Trans>
+                    </ButtonLight>
+                  </TraceEvent>
                 ) : showWrap ? (
                   <ButtonPrimary disabled={Boolean(wrapInputError)} onClick={onWrap}>
                     {wrapInputError ? (
@@ -564,7 +595,7 @@ export default function Swap({ history }: RouteComponentProps) {
                             <Loader stroke="white" />
                           ) : (approvalSubmitted && approvalState === ApprovalState.APPROVED) ||
                             signatureState === UseERC20PermitState.SIGNED ? (
-                            <CheckCircle size="20" color={theme.green1} />
+                            <CheckCircle size="20" color={theme.deprecated_green1} />
                           ) : (
                             <MouseoverTooltip
                               text={
@@ -574,7 +605,7 @@ export default function Swap({ history }: RouteComponentProps) {
                                 </Trans>
                               }
                             >
-                              <HelpCircle size="20" color={'white'} style={{ marginLeft: '8px' }} />
+                              <HelpCircle size="20" color={'deprecated_white'} style={{ marginLeft: '8px' }} />
                             </MouseoverTooltip>
                           )}
                         </AutoRow>

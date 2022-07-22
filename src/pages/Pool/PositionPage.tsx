@@ -28,7 +28,7 @@ import { useV3PositionFromTokenId } from 'hooks/useV3Positions'
 import { useSingleCallResult } from 'lib/hooks/multicall'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { useCallback, useMemo, useRef, useState } from 'react'
-import { Link, RouteComponentProps } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { Bound } from 'state/mint/v3/actions'
 import { useIsTransactionPending, useTransactionAdder } from 'state/transactions/hooks'
 import styled from 'styled-components/macro'
@@ -90,7 +90,7 @@ const Label = styled(({ end, ...props }) => <ThemedText.Label {...props} />)<{ e
 `
 
 const ExtentsText = styled.span`
-  color: ${({ theme }) => theme.text2};
+  color: ${({ theme }) => theme.deprecated_text2};
   font-size: 14px;
   text-align: center;
   margin-right: 4px;
@@ -99,15 +99,15 @@ const ExtentsText = styled.span`
 
 const HoverText = styled(ThemedText.Main)`
   text-decoration: none;
-  color: ${({ theme }) => theme.text3};
+  color: ${({ theme }) => theme.deprecated_text3};
   :hover {
-    color: ${({ theme }) => theme.text1};
+    color: ${({ theme }) => theme.deprecated_text1};
     text-decoration: none;
   }
 `
 
 const DoubleArrow = styled.span`
-  color: ${({ theme }) => theme.text3};
+  color: ${({ theme }) => theme.deprecated_text3};
   margin: 0 1rem;
 `
 const ResponsiveRow = styled(RowBetween)`
@@ -315,11 +315,8 @@ const useInverter = ({
   }
 }
 
-export function PositionPage({
-  match: {
-    params: { tokenId: tokenIdFromUrl },
-  },
-}: RouteComponentProps<{ tokenId?: string }>) {
+export function PositionPage() {
+  const { tokenId: tokenIdFromUrl } = useParams<{ tokenId?: string }>()
   const { chainId, account, provider } = useWeb3React()
   const theme = useTheme()
 
@@ -588,7 +585,11 @@ export function PositionPage({
           />
           <AutoColumn gap="md">
             <AutoColumn gap="sm">
-              <Link style={{ textDecoration: 'none', width: 'fit-content', marginBottom: '0.5rem' }} to="/pool">
+              <Link
+                data-cy="visit-pool"
+                style={{ textDecoration: 'none', width: 'fit-content', marginBottom: '0.5rem' }}
+                to="/pool"
+              >
                 <HoverText>
                   <Trans>← Back to Pools Overview</Trans>
                 </HoverText>
@@ -682,7 +683,7 @@ export function PositionPage({
                           <Trans>${fiatValueOfLiquidity.toFixed(2, { groupSeparator: ',' })}</Trans>
                         </ThemedText.LargeHeader>
                       ) : (
-                        <ThemedText.LargeHeader color={theme.text1} fontSize="36px" fontWeight={500}>
+                        <ThemedText.LargeHeader color={theme.deprecated_text1} fontSize="36px" fontWeight={500}>
                           <Trans>$-</Trans>
                         </ThemedText.LargeHeader>
                       )}
@@ -712,7 +713,7 @@ export function PositionPage({
                             </ThemedText.Main>
                             {typeof ratio === 'number' && !removed ? (
                               <Badge style={{ marginLeft: '10px' }}>
-                                <ThemedText.Main color={theme.text2} fontSize={11}>
+                                <ThemedText.Main color={theme.deprecated_text2} fontSize={11}>
                                   <Trans>{inverted ? 100 - ratio : ratio}%</Trans>
                                 </ThemedText.Main>
                               </Badge>
@@ -732,11 +733,11 @@ export function PositionPage({
                             <Trans>Unclaimed fees</Trans>
                           </Label>
                           {fiatValueOfFees?.greaterThan(new Fraction(1, 100)) ? (
-                            <ThemedText.LargeHeader color={theme.green1} fontSize="36px" fontWeight={500}>
+                            <ThemedText.LargeHeader color={theme.deprecated_green1} fontSize="36px" fontWeight={500}>
                               <Trans>${fiatValueOfFees.toFixed(2, { groupSeparator: ',' })}</Trans>
                             </ThemedText.LargeHeader>
                           ) : (
-                            <ThemedText.LargeHeader color={theme.text1} fontSize="36px" fontWeight={500}>
+                            <ThemedText.LargeHeader color={theme.deprecated_text1} fontSize="36px" fontWeight={500}>
                               <Trans>$-</Trans>
                             </ThemedText.LargeHeader>
                           )}
@@ -752,11 +753,11 @@ export function PositionPage({
                             onClick={() => setShowConfirm(true)}
                           >
                             {!!collectMigrationHash && !isCollectPending ? (
-                              <ThemedText.Main color={theme.text1}>
+                              <ThemedText.Main color={theme.deprecated_text1}>
                                 <Trans> Collected</Trans>
                               </ThemedText.Main>
                             ) : isCollectPending || collecting ? (
-                              <ThemedText.Main color={theme.text1}>
+                              <ThemedText.Main color={theme.deprecated_text1}>
                                 {' '}
                                 <Dots>
                                   <Trans>Collecting</Trans>
@@ -764,7 +765,7 @@ export function PositionPage({
                               </ThemedText.Main>
                             ) : (
                               <>
-                                <ThemedText.Main color={theme.white}>
+                                <ThemedText.Main color={theme.deprecated_white}>
                                   <Trans>Collect fees</Trans>
                                 </ThemedText.Main>
                               </>
@@ -867,7 +868,7 @@ export function PositionPage({
                       </ExtentsText>
 
                       {inRange && (
-                        <ThemedText.Small color={theme.text3}>
+                        <ThemedText.Small color={theme.deprecated_text3}>
                           <Trans>Your position will be 100% {currencyBase?.symbol} at this price.</Trans>
                         </ThemedText.Small>
                       )}
@@ -891,7 +892,7 @@ export function PositionPage({
                       </ExtentsText>
 
                       {inRange && (
-                        <ThemedText.Small color={theme.text3}>
+                        <ThemedText.Small color={theme.deprecated_text3}>
                           <Trans>Your position will be 100% {currencyQuote?.symbol} at this price.</Trans>
                         </ThemedText.Small>
                       )}

@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
 import { RowFixed } from 'components/Row'
-import { CHAIN_INFO } from 'constants/chainInfo'
+import { getChainInfo } from 'constants/chainInfo'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import useGasPrice from 'hooks/useGasPrice'
 import useMachineTimeMs from 'hooks/useMachineTime'
@@ -24,7 +24,7 @@ const StyledPolling = styled.div<{ warning: boolean }>`
   right: 0;
   bottom: 0;
   padding: 1rem;
-  color: ${({ theme, warning }) => (warning ? theme.yellow3 : theme.green1)};
+  color: ${({ theme, warning }) => (warning ? theme.deprecated_yellow3 : theme.deprecated_green1)};
   transition: 250ms ease color;
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
@@ -53,12 +53,12 @@ const StyledPollingDot = styled.div<{ warning: boolean }>`
   min-width: 8px;
   border-radius: 50%;
   position: relative;
-  background-color: ${({ theme, warning }) => (warning ? theme.yellow3 : theme.green1)};
+  background-color: ${({ theme, warning }) => (warning ? theme.deprecated_yellow3 : theme.deprecated_green1)};
   transition: 250ms ease background-color;
 `
 
 const StyledGasDot = styled.div`
-  background-color: ${({ theme }) => theme.text3};
+  background-color: ${({ theme }) => theme.deprecated_text3};
   border-radius: 50%;
   height: 4px;
   min-height: 4px;
@@ -84,7 +84,7 @@ const Spinner = styled.div<{ warning: boolean }>`
   border-top: 1px solid transparent;
   border-right: 1px solid transparent;
   border-bottom: 1px solid transparent;
-  border-left: 2px solid ${({ theme, warning }) => (warning ? theme.yellow3 : theme.green1)};
+  border-left: 2px solid ${({ theme, warning }) => (warning ? theme.deprecated_yellow3 : theme.deprecated_green1)};
   background: transparent;
   width: 14px;
   height: 14px;
@@ -112,7 +112,7 @@ export default function Polling() {
   const priceGwei = ethGasPrice ? JSBI.divide(ethGasPrice, JSBI.BigInt(1000000000)) : undefined
 
   const waitMsBeforeWarning =
-    (chainId ? CHAIN_INFO[chainId]?.blockWaitMsBeforeWarning : DEFAULT_MS_BEFORE_WARNING) ?? DEFAULT_MS_BEFORE_WARNING
+    (chainId ? getChainInfo(chainId)?.blockWaitMsBeforeWarning : DEFAULT_MS_BEFORE_WARNING) ?? DEFAULT_MS_BEFORE_WARNING
 
   const warning = Boolean(!!blockTime && machineTime - blockTime.mul(1000).toNumber() > waitMsBeforeWarning)
 
@@ -143,7 +143,7 @@ export default function Polling() {
           <ExternalLink href={'https://etherscan.io/gastracker'}>
             {priceGwei ? (
               <RowFixed style={{ marginRight: '8px' }}>
-                <ThemedText.Main fontSize="11px" mr="8px" color={theme.text3}>
+                <ThemedText.Main fontSize="11px" mr="8px" color={theme.deprecated_text3}>
                   <MouseoverTooltip
                     text={
                       <Trans>

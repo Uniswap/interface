@@ -4,12 +4,14 @@ import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { FeeAmount, NonfungiblePositionManager } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
+import { ElementName, Event, EventName } from 'components/AmplitudeAnalytics/constants'
+import { TraceEvent } from 'components/AmplitudeAnalytics/TraceEvent'
 import { sendEvent } from 'components/analytics'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 import useParsedQueryString from 'hooks/useParsedQueryString'
 import { useCallback, useContext, useEffect, useState } from 'react'
 import { AlertTriangle } from 'react-feather'
-import { RouteComponentProps } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import { Text } from 'rebass'
 import {
   useRangeHopCallbacks,
@@ -43,7 +45,7 @@ import { useArgentWalletContract } from '../../hooks/useArgentWalletContract'
 import { useV3NFTPositionManagerContract } from '../../hooks/useContract'
 import { useDerivedPositionInfo } from '../../hooks/useDerivedPositionInfo'
 import { useIsSwapUnsupported } from '../../hooks/useIsSwapUnsupported'
-import { useUSDCValue } from '../../hooks/useStablecoinPrice'
+import { useStablecoinValue } from '../../hooks/useStablecoinPrice'
 import useTransactionDeadline from '../../hooks/useTransactionDeadline'
 import { useV3PositionFromTokenId } from '../../hooks/useV3Positions'
 import { useToggleWalletModal } from '../../state/application/hooks'
@@ -75,12 +77,14 @@ import {
 
 const DEFAULT_ADD_IN_RANGE_SLIPPAGE_TOLERANCE = new Percent(50, 10_000)
 
-export default function AddLiquidity({
-  match: {
-    params: { currencyIdA, currencyIdB, feeAmount: feeAmountFromUrl, tokenId },
-  },
-  history,
-}: RouteComponentProps<{ currencyIdA?: string; currencyIdB?: string; feeAmount?: string; tokenId?: string }>) {
+export default function AddLiquidity() {
+  const history = useHistory()
+  const {
+    currencyIdA,
+    currencyIdB,
+    feeAmount: feeAmountFromUrl,
+    tokenId,
+  } = useParams<{ currencyIdA?: string; currencyIdB?: string; feeAmount?: string; tokenId?: string }>()
   const { account, chainId, provider } = useWeb3React()
   const theme = useContext(ThemeContext)
   const toggleWalletModal = useToggleWalletModal() // toggle wallet when disconnected
@@ -183,8 +187,8 @@ export default function AddLiquidity({
   }
 
   const usdcValues = {
-    [Field.CURRENCY_A]: useUSDCValue(parsedAmounts[Field.CURRENCY_A]),
-    [Field.CURRENCY_B]: useUSDCValue(parsedAmounts[Field.CURRENCY_B]),
+    [Field.CURRENCY_A]: useStablecoinValue(parsedAmounts[Field.CURRENCY_A]),
+    [Field.CURRENCY_B]: useStablecoinValue(parsedAmounts[Field.CURRENCY_B]),
   }
 
   // get the max amounts user can add
@@ -433,9 +437,16 @@ export default function AddLiquidity({
         </ThemedText.Main>
       </ButtonPrimary>
     ) : !account ? (
-      <ButtonLight onClick={toggleWalletModal} $borderRadius="12px" padding={'12px'}>
-        <Trans>Connect Wallet</Trans>
-      </ButtonLight>
+      <TraceEvent
+        events={[Event.onClick]}
+        name={EventName.CONNECT_WALLET_BUTTON_CLICKED}
+        properties={{ received_swap_quote: false }}
+        element={ElementName.CONNECT_WALLET_BUTTON}
+      >
+        <ButtonLight onClick={toggleWalletModal} $borderRadius="12px" padding={'12px'}>
+          <Trans>Connect Wallet</Trans>
+        </ButtonLight>
+      </TraceEvent>
     ) : (
       <AutoColumn gap={'md'}>
         {(approvalA === ApprovalState.NOT_APPROVED ||
@@ -733,7 +744,7 @@ export default function AddLiquidity({
                                 fontSize={14}
                                 style={{ fontWeight: 500 }}
                                 textAlign="left"
-                                color={theme.primaryText1}
+                                color={theme.deprecated_primaryText1}
                               >
                                 <Trans>
                                   This pool must be initialized before you can add liquidity. To initialize, select a
@@ -750,7 +761,9 @@ export default function AddLiquidity({
                               onUserInput={onStartPriceInput}
                             />
                           </OutlineCard>
-                          <RowBetween style={{ backgroundColor: theme.bg1, padding: '12px', borderRadius: '12px' }}>
+                          <RowBetween
+                            style={{ backgroundColor: theme.deprecated_bg1, padding: '12px', borderRadius: '12px' }}
+                          >
                             <ThemedText.Main>
                               <Trans>Current {baseCurrency?.symbol} Price:</Trans>
                             </ThemedText.Main>
@@ -819,13 +832,13 @@ export default function AddLiquidity({
                               $borderRadius="12px"
                               height="100%"
                               style={{
-                                borderColor: theme.yellow3,
+                                borderColor: theme.deprecated_yellow3,
                                 border: '1px solid',
                               }}
                             >
                               <AutoColumn gap="8px" style={{ height: '100%' }}>
                                 <RowFixed>
-                                  <AlertTriangle stroke={theme.yellow3} size="16px" />
+                                  <AlertTriangle stroke={theme.deprecated_yellow3} size="16px" />
                                   <ThemedText.Yellow ml="12px" fontSize="15px">
                                     <Trans>Efficiency Comparison</Trans>
                                   </ThemedText.Yellow>
@@ -835,7 +848,7 @@ export default function AddLiquidity({
                                     <Trans>
                                       Full range positions may earn less fees than concentrated positions. Learn more{' '}
                                       <ExternalLink
-                                        style={{ color: theme.yellow3, textDecoration: 'underline' }}
+                                        style={{ color: theme.deprecated_yellow3, textDecoration: 'underline' }}
                                         href={
                                           'https://help.uniswap.org/en/articles/5434296-can-i-provide-liquidity-over-the-full-range-in-v3'
                                         }
@@ -871,7 +884,7 @@ export default function AddLiquidity({
                       {outOfRange ? (
                         <YellowCard padding="8px 12px" $borderRadius="12px">
                           <RowBetween>
-                            <AlertTriangle stroke={theme.yellow3} size="16px" />
+                            <AlertTriangle stroke={theme.deprecated_yellow3} size="16px" />
                             <ThemedText.Yellow ml="12px" fontSize="12px">
                               <Trans>
                                 Your position will not earn fees or be used in trades until the market price moves into
@@ -885,7 +898,7 @@ export default function AddLiquidity({
                       {invalidRange ? (
                         <YellowCard padding="8px 12px" $borderRadius="12px">
                           <RowBetween>
-                            <AlertTriangle stroke={theme.yellow3} size="16px" />
+                            <AlertTriangle stroke={theme.deprecated_yellow3} size="16px" />
                             <ThemedText.Yellow ml="12px" fontSize="12px">
                               <Trans>Invalid range selected. The min price must be lower than the max price.</Trans>
                             </ThemedText.Yellow>

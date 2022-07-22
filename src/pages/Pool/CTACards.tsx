@@ -1,11 +1,9 @@
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
 import { AutoColumn } from 'components/Column'
-import { CHAIN_INFO } from 'constants/chainInfo'
-import { SupportedChainId } from 'constants/chains'
+import { getChainInfoOrDefault } from 'constants/chainInfo'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
-import { isChainAllowed } from 'utils/switchChain'
 
 import { ExternalLink } from '../../theme'
 
@@ -30,15 +28,15 @@ const CTA1 = styled(ExternalLink)`
   justify-content: center;
   align-items: center;
   overflow: hidden;
-  border: 1px solid ${({ theme }) => theme.bg3};
+  border: 1px solid ${({ theme }) => theme.deprecated_bg3};
 
   * {
-    color: ${({ theme }) => theme.text1};
+    color: ${({ theme }) => theme.deprecated_text1};
     text-decoration: none !important;
   }
 
   :hover {
-    border: 1px solid ${({ theme }) => theme.bg4};
+    border: 1px solid ${({ theme }) => theme.deprecated_bg4};
 
     text-decoration: none;
     * {
@@ -55,15 +53,15 @@ const CTA2 = styled(ExternalLink)`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  border: 1px solid ${({ theme }) => theme.bg3};
+  border: 1px solid ${({ theme }) => theme.deprecated_bg3};
 
   * {
-    color: ${({ theme }) => theme.text1};
+    color: ${({ theme }) => theme.deprecated_text1};
     text-decoration: none !important;
   }
 
   :hover {
-    border: 1px solid ${({ theme }) => theme.bg4};
+    border: 1px solid ${({ theme }) => theme.deprecated_bg4};
     text-decoration: none !important;
     * {
       text-decoration: none !important;
@@ -94,8 +92,8 @@ const ResponsiveColumn = styled(AutoColumn)`
 `
 
 export default function CTACards() {
-  const { chainId, connector } = useWeb3React()
-  const { infoLink } = CHAIN_INFO[chainId && isChainAllowed(connector, chainId) ? chainId : SupportedChainId.MAINNET]
+  const { chainId } = useWeb3React()
+  const { infoLink } = getChainInfoOrDefault(chainId)
 
   return (
     <CTASection>

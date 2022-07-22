@@ -10,7 +10,7 @@ const PopoverContainer = styled.div<{ show: boolean }>`
   visibility: ${(props) => (props.show ? 'visible' : 'hidden')};
   opacity: ${(props) => (props.show ? 1 : 0)};
   transition: visibility 150ms linear, opacity 150ms linear;
-  color: ${({ theme }) => theme.text2};
+  color: ${({ theme }) => theme.deprecated_text2};
 `
 
 const ReferenceElement = styled.div`
@@ -26,16 +26,17 @@ const Arrow = styled.div`
     position: absolute;
     width: 8px;
     height: 8px;
+    box-sizing: border-box;
     z-index: 9998;
 
     content: '';
-    border: 1px solid ${({ theme }) => theme.bg2};
+    border: 1px solid ${({ theme }) => theme.deprecated_bg2};
     transform: rotate(45deg);
-    background: ${({ theme }) => theme.bg0};
+    background: ${({ theme }) => theme.deprecated_bg0};
   }
 
   &.arrow-top {
-    bottom: -5px;
+    bottom: -4px;
     ::before {
       border-top: none;
       border-left: none;
@@ -43,7 +44,7 @@ const Arrow = styled.div`
   }
 
   &.arrow-bottom {
-    top: -5px;
+    top: -4px;
     ::before {
       border-bottom: none;
       border-right: none;
@@ -51,7 +52,7 @@ const Arrow = styled.div`
   }
 
   &.arrow-left {
-    right: -5px;
+    right: -4px;
 
     ::before {
       border-bottom: none;
@@ -60,7 +61,7 @@ const Arrow = styled.div`
   }
 
   &.arrow-right {
-    left: -5px;
+    left: -4px;
     ::before {
       border-right: none;
       border-top: none;

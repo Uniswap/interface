@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import useScrollPosition from '@react-hook/window-scroll'
 import { useWeb3React } from '@web3-react/core'
-import { CHAIN_INFO } from 'constants/chainInfo'
+import { getChainInfoOrDefault } from 'constants/chainInfo'
 import { SupportedChainId } from 'constants/chains'
 import useTheme from 'hooks/useTheme'
 import { darken } from 'polished'
@@ -13,7 +13,6 @@ import { useNativeCurrencyBalances } from 'state/connection/hooks'
 import { useUserHasSubmittedClaim } from 'state/transactions/hooks'
 import { useDarkModeManager } from 'state/user/hooks'
 import styled from 'styled-components/macro'
-import { isChainAllowed } from 'utils/switchChain'
 
 import { ReactComponent as Logo } from '../../assets/svg/logo.svg'
 import { ExternalLink, ThemedText } from '../../theme'
@@ -40,10 +39,10 @@ const HeaderFrame = styled.div<{ showBackground: boolean }>`
   z-index: 21;
   position: relative;
   /* Background slide effect on scroll. */
-  background-image: ${({ theme }) => `linear-gradient(to bottom, transparent 50%, ${theme.bg0} 50% )}}`};
+  background-image: ${({ theme }) => `linear-gradient(to bottom, transparent 50%, ${theme.deprecated_bg0} 50% )}}`};
   background-position: ${({ showBackground }) => (showBackground ? '0 -100%' : '0 0')};
   background-size: 100% 200%;
-  box-shadow: 0px 0px 0px 1px ${({ theme, showBackground }) => (showBackground ? theme.bg2 : 'transparent;')};
+  box-shadow: 0px 0px 0px 1px ${({ theme, showBackground }) => (showBackground ? theme.deprecated_bg2 : 'transparent;')};
   transition: background-position 0.1s, box-shadow 0.1s;
   background-blend-mode: hard-light;
 
@@ -89,7 +88,7 @@ const HeaderElement = styled.div`
 
 const HeaderLinks = styled(Row)`
   justify-self: center;
-  background-color: ${({ theme }) => theme.bg0};
+  background-color: ${({ theme }) => theme.deprecated_bg0};
   width: fit-content;
   padding: 2px;
   border-radius: 16px;
@@ -99,7 +98,7 @@ const HeaderLinks = styled(Row)`
   overflow: auto;
   align-items: center;
   ${({ theme }) => theme.mediaWidth.upToLarge`
-    justify-self: start;  
+    justify-self: start;
     `};
   ${({ theme }) => theme.mediaWidth.upToMedium`
     justify-self: center;
@@ -113,8 +112,8 @@ const HeaderLinks = styled(Row)`
     bottom: 0; right: 50%;
     transform: translate(50%,-50%);
     margin: 0 auto;
-    background-color: ${({ theme }) => theme.bg0};
-    border: 1px solid ${({ theme }) => theme.bg2};
+    background-color: ${({ theme }) => theme.deprecated_bg0};
+    border: 1px solid ${({ theme }) => theme.deprecated_bg2};
     box-shadow: 0px 6px 10px rgb(0 0 0 / 2%);
   `};
 `
@@ -123,7 +122,7 @@ const AccountElement = styled.div<{ active: boolean }>`
   display: flex;
   flex-direction: row;
   align-items: center;
-  background-color: ${({ theme, active }) => (!active ? theme.bg0 : theme.bg0)};
+  background-color: ${({ theme, active }) => (!active ? theme.deprecated_bg0 : theme.deprecated_bg0)};
   border-radius: 16px;
   white-space: nowrap;
   width: 100%;
@@ -139,7 +138,7 @@ const UNIAmount = styled(AccountElement)`
   padding: 4px 8px;
   height: 36px;
   font-weight: 500;
-  background-color: ${({ theme }) => theme.bg3};
+  background-color: ${({ theme }) => theme.deprecated_bg3};
   background: radial-gradient(174.47% 188.91% at 1.84% 0%, #ff007a 0%, #2172e5 100%), #edeef2;
 `
 
@@ -197,7 +196,7 @@ const StyledNavLink = styled(NavLink).attrs({
   outline: none;
   cursor: pointer;
   text-decoration: none;
-  color: ${({ theme }) => theme.text2};
+  color: ${({ theme }) => theme.deprecated_text2};
   font-size: 1rem;
   font-weight: 500;
   padding: 8px 12px;
@@ -208,13 +207,13 @@ const StyledNavLink = styled(NavLink).attrs({
     border-radius: 14px;
     font-weight: 600;
     justify-content: center;
-    color: ${({ theme }) => theme.text1};
-    background-color: ${({ theme }) => theme.bg1};
+    color: ${({ theme }) => theme.deprecated_text1};
+    background-color: ${({ theme }) => theme.deprecated_bg1};
   }
 
   :hover,
   :focus {
-    color: ${({ theme }) => darken(0.1, theme.text1)};
+    color: ${({ theme }) => darken(0.1, theme.deprecated_text1)};
   }
 `
 
@@ -227,7 +226,7 @@ const StyledExternalLink = styled(ExternalLink).attrs({
   outline: none;
   cursor: pointer;
   text-decoration: none;
-  color: ${({ theme }) => theme.text2};
+  color: ${({ theme }) => theme.deprecated_text2};
   font-size: 1rem;
   width: fit-content;
   margin: 0 12px;
@@ -236,24 +235,22 @@ const StyledExternalLink = styled(ExternalLink).attrs({
   &.${activeClassName} {
     border-radius: 14px;
     font-weight: 600;
-    color: ${({ theme }) => theme.text1};
+    color: ${({ theme }) => theme.deprecated_text1};
   }
 
   :hover,
   :focus {
-    color: ${({ theme }) => darken(0.1, theme.text1)};
+    color: ${({ theme }) => darken(0.1, theme.deprecated_text1)};
     text-decoration: none;
   }
 `
 
 export default function Header() {
-  const { account, chainId, connector } = useWeb3React()
-
-  const chainAllowed = chainId && isChainAllowed(connector, chainId)
+  const { account, chainId } = useWeb3React()
 
   const userEthBalance = useNativeCurrencyBalances(account ? [account] : [])?.[account ?? '']
   const [darkMode] = useDarkModeManager()
-  const { white, black } = useTheme()
+  const { deprecated_white, deprecated_black } = useTheme()
 
   const toggleClaimModal = useToggleSelfClaimModal()
 
@@ -268,14 +265,14 @@ export default function Header() {
   const {
     infoLink,
     nativeCurrency: { symbol: nativeCurrencySymbol },
-  } = CHAIN_INFO[!chainId || !chainAllowed ? SupportedChainId.MAINNET : chainId]
+  } = getChainInfoOrDefault(chainId)
 
   return (
     <HeaderFrame showBackground={scrollY > 45}>
       <ClaimModal />
       <Title href=".">
         <UniIcon>
-          <Logo fill={darkMode ? white : black} width="24px" height="100%" title="logo" />
+          <Logo fill={darkMode ? deprecated_white : deprecated_black} width="24px" height="100%" title="logo" />
           <HolidayOrnament />
         </UniIcon>
       </Title>
@@ -284,6 +281,7 @@ export default function Header() {
           <Trans>Swap</Trans>
         </StyledNavLink>
         <StyledNavLink
+          data-cy="pool-nav-link"
           id={`pool-nav-link`}
           to={'/pool'}
           isActive={(match, { pathname }) =>
@@ -330,7 +328,7 @@ export default function Header() {
           )}
           <AccountElement active={!!account}>
             {account && userEthBalance ? (
-              <BalanceText style={{ flexShrink: 0, userSelect: 'none' }} pl="0.75rem" pr="0.5rem" fontWeight={500}>
+              <BalanceText style={{ flexShrink: 0, userSelect: 'none' }} pl="0.75rem" pr=".4rem" fontWeight={500}>
                 <Trans>
                   {userEthBalance?.toSignificant(3)} {nativeCurrencySymbol}
                 </Trans>

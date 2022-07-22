@@ -15,7 +15,6 @@ import { ButtonOutlined, ButtonPrimary, ButtonSecondary } from '../../components
 import Card from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
 import { CardBGImage, CardNoise, CardSection, DataCard } from '../../components/earn/styled'
-import { SwapPoolTabs } from '../../components/NavigationTabs'
 import FullPositionCard from '../../components/PositionCard'
 import { RowBetween, RowFixed } from '../../components/Row'
 import { Dots } from '../../components/swap/styleds'
@@ -71,7 +70,7 @@ const ResponsiveButtonSecondary = styled(ButtonSecondary)`
 `
 
 const EmptyProposals = styled.div`
-  border: 1px solid ${({ theme }) => theme.text4};
+  border: 1px solid ${({ theme }) => theme.deprecated_text4};
   padding: 16px 12px;
   border-radius: 12px;
   display: flex;
@@ -140,7 +139,6 @@ export default function Pool() {
     <Trace page={PageName.POOL_PAGE} shouldLogImpression>
       <>
         <PageWrapper>
-          <SwapPoolTabs active={'pool'} />
           <VoteCard>
             <CardBGImage />
             <CardNoise />
@@ -160,7 +158,7 @@ export default function Pool() {
                   </ThemedText.White>
                 </RowBetween>
                 <ExternalLink
-                  style={{ color: 'white', textDecoration: 'underline' }}
+                  style={{ color: theme.deprecated_white, textDecoration: 'underline' }}
                   target="_blank"
                   href="https://uniswap.org/docs/v2/core-concepts/pools/"
                 >
@@ -178,7 +176,7 @@ export default function Pool() {
             <AutoColumn gap="lg" justify="center">
               <AutoColumn gap="md" style={{ width: '100%' }}>
                 <Layer2Prompt>
-                  <ThemedText.Body color={theme.text3} textAlign="center">
+                  <ThemedText.Body color={theme.deprecated_text3} textAlign="center">
                     <Trans>V2 Pool is not available on Layer 2. Switch to Layer 1 Ethereum.</Trans>
                   </ThemedText.Body>
                 </Layer2Prompt>
@@ -212,13 +210,13 @@ export default function Pool() {
 
                 {!account ? (
                   <Card padding="40px">
-                    <ThemedText.Body color={theme.text3} textAlign="center">
+                    <ThemedText.Body color={theme.deprecated_text3} textAlign="center">
                       <Trans>Connect to a wallet to view your liquidity.</Trans>
                     </ThemedText.Body>
                   </Card>
                 ) : v2IsLoading ? (
                   <EmptyProposals>
-                    <ThemedText.Body color={theme.text3} textAlign="center">
+                    <ThemedText.Body color={theme.deprecated_text3} textAlign="center">
                       <Dots>
                         <Trans>Loading</Trans>
                       </Dots>
@@ -269,7 +267,7 @@ export default function Pool() {
                   </>
                 ) : (
                   <EmptyProposals>
-                    <ThemedText.Body color={theme.text3} textAlign="center">
+                    <ThemedText.Body color={theme.deprecated_text3} textAlign="center">
                       <Trans>No liquidity found.</Trans>
                     </ThemedText.Body>
                   </EmptyProposals>

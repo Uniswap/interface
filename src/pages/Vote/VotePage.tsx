@@ -14,7 +14,7 @@ import ms from 'ms.macro'
 import { useState } from 'react'
 import { ArrowLeft } from 'react-feather'
 import ReactMarkdown from 'react-markdown'
-import { RouteComponentProps } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
 import { ButtonPrimary } from '../../components/Button'
@@ -60,7 +60,7 @@ const PageWrapper = styled(AutoColumn)`
 `
 
 const ProposalInfo = styled(AutoColumn)`
-  background: ${({ theme }) => theme.bg0};
+  background: ${({ theme }) => theme.deprecated_bg0};
   border-radius: 12px;
   padding: 1.5rem;
   position: relative;
@@ -73,10 +73,10 @@ const ArrowWrapper = styled(StyledInternalLink)`
   align-items: center;
   gap: 8px;
   height: 24px;
-  color: ${({ theme }) => theme.text1};
+  color: ${({ theme }) => theme.deprecated_text1};
 
   a {
-    color: ${({ theme }) => theme.text1};
+    color: ${({ theme }) => theme.deprecated_text1};
     text-decoration: none;
   }
   :hover {
@@ -93,7 +93,7 @@ const CardWrapper = styled.div`
 const StyledDataCard = styled(DataCard)`
   width: 100%;
   background: none;
-  background-color: ${({ theme }) => theme.bg1};
+  background-color: ${({ theme }) => theme.deprecated_bg1};
   height: fit-content;
   z-index: 2;
 `
@@ -103,14 +103,14 @@ const ProgressWrapper = styled.div`
   margin-top: 1rem;
   height: 4px;
   border-radius: 4px;
-  background-color: ${({ theme }) => theme.bg3};
+  background-color: ${({ theme }) => theme.deprecated_bg3};
   position: relative;
 `
 
 const Progress = styled.div<{ status: 'for' | 'against'; percentageString?: string }>`
   height: 4px;
   border-radius: 4px;
-  background-color: ${({ theme, status }) => (status === 'for' ? theme.green1 : theme.red1)};
+  background-color: ${({ theme, status }) => (status === 'for' ? theme.deprecated_green1 : theme.deprecated_red1)};
   width: ${({ percentageString }) => percentageString ?? '0%'};
 `
 
@@ -152,11 +152,8 @@ function getDateFromBlock(
   return undefined
 }
 
-export default function VotePage({
-  match: {
-    params: { governorIndex, id },
-  },
-}: RouteComponentProps<{ governorIndex: string; id: string }>) {
+export default function VotePage() {
+  const { governorIndex, id } = useParams<{ governorIndex: string; id: string }>()
   const parsedGovernorIndex = Number.parseInt(governorIndex)
 
   const { chainId, account } = useWeb3React()

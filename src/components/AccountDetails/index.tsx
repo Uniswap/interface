@@ -24,7 +24,7 @@ const HeaderRow = styled.div`
   ${({ theme }) => theme.flexRowNoWrap};
   padding: 1rem 1rem;
   font-weight: 500;
-  color: ${(props) => (props.color === 'blue' ? ({ theme }) => theme.primary1 : 'inherit')};
+  color: ${(props) => (props.color === 'blue' ? ({ theme }) => theme.deprecated_primary1 : 'inherit')};
   ${({ theme }) => theme.mediaWidth.upToMedium`
     padding: 1rem;
   `};
@@ -52,7 +52,7 @@ const UpperSection = styled.div`
 
 const InfoCard = styled.div`
   padding: 1rem;
-  border: 1px solid ${({ theme }) => theme.bg3};
+  border: 1px solid ${({ theme }) => theme.deprecated_bg3};
   border-radius: 20px;
   position: relative;
   display: grid;
@@ -65,7 +65,7 @@ const AccountGroupingRow = styled.div`
   justify-content: space-between;
   align-items: center;
   font-weight: 400;
-  color: ${({ theme }) => theme.text1};
+  color: ${({ theme }) => theme.deprecated_text1};
 
   div {
     ${({ theme }) => theme.flexRowNoWrap}
@@ -95,14 +95,14 @@ const LowerSection = styled.div`
   padding: 1.5rem;
   flex-grow: 1;
   overflow: auto;
-  background-color: ${({ theme }) => theme.bg2};
+  background-color: ${({ theme }) => theme.deprecated_bg2};
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
 
   h5 {
     margin: 0;
     font-weight: 400;
-    color: ${({ theme }) => theme.text3};
+    color: ${({ theme }) => theme.deprecated_text3};
   }
 `
 
@@ -130,12 +130,12 @@ const AccountControl = styled.div`
 
 const AddressLink = styled(ExternalLink)<{ hasENS: boolean; isENS: boolean }>`
   font-size: 0.825rem;
-  color: ${({ theme }) => theme.text3};
+  color: ${({ theme }) => theme.deprecated_text3};
   margin-left: 1rem;
   font-size: 0.825rem;
   display: flex;
   :hover {
-    color: ${({ theme }) => theme.text2};
+    color: ${({ theme }) => theme.deprecated_text2};
   }
 `
 
@@ -151,7 +151,7 @@ const CloseIcon = styled.div`
 
 const CloseColor = styled(Close)`
   path {
-    stroke: ${({ theme }) => theme.text4};
+    stroke: ${({ theme }) => theme.deprecated_text4};
   }
 `
 
@@ -159,7 +159,7 @@ const WalletName = styled.div`
   width: initial;
   font-size: 0.825rem;
   font-weight: 500;
-  color: ${({ theme }) => theme.text3};
+  color: ${({ theme }) => theme.deprecated_text3};
 `
 
 const TransactionListWrapper = styled.div`
@@ -351,7 +351,7 @@ export default function AccountDetails({
         </LowerSection>
       ) : (
         <LowerSection>
-          <ThemedText.Body color={theme.text1}>
+          <ThemedText.Body color={theme.deprecated_text1}>
             <Trans>Your transactions will appear here...</Trans>
           </ThemedText.Body>
         </LowerSection>

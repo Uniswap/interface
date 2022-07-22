@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { CHAIN_INFO } from 'constants/chainInfo'
+import { getChainInfo } from 'constants/chainInfo'
 import { SupportedChainId } from 'constants/chains'
 import { useContext } from 'react'
 import { AlertCircle } from 'react-feather'
@@ -14,13 +14,13 @@ const RowNoFlex = styled(AutoRow)`
 `
 
 export default function FailedNetworkSwitchPopup({ chainId }: { chainId: SupportedChainId }) {
-  const chainInfo = CHAIN_INFO[chainId]
+  const chainInfo = getChainInfo(chainId)
   const theme = useContext(ThemeContext)
 
   return (
     <RowNoFlex>
       <div style={{ paddingRight: 16 }}>
-        <AlertCircle color={theme.red1} size={24} />
+        <AlertCircle color={theme.deprecated_red1} size={24} />
       </div>
       <AutoColumn gap="8px">
         <ThemedText.Body fontWeight={500}>

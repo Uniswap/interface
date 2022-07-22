@@ -19,7 +19,7 @@ const StyledStaticRouterIcon = styled(StaticRouterIcon)`
   height: 16px;
   width: 16px;
 
-  fill: ${({ theme }) => theme.text3};
+  fill: ${({ theme }) => theme.deprecated_text3};
 
   :hover {
     filter: brightness(1.3);
@@ -30,7 +30,7 @@ const StyledAutoRouterLabel = styled(ThemedText.Black)`
   line-height: 1rem;
 
   /* fallback color */
-  color: ${({ theme }) => theme.green1};
+  color: ${({ theme }) => theme.deprecated_green1};
 
   @supports (-webkit-background-clip: text) and (-webkit-text-fill-color: transparent) {
     background-image: linear-gradient(90deg, #2172e5 0%, #54e521 163.16%);

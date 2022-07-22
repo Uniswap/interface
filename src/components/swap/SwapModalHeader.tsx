@@ -6,7 +6,7 @@ import { Text } from 'rebass'
 import { InterfaceTrade } from 'state/routing/types'
 import styled, { ThemeContext } from 'styled-components/macro'
 
-import { useUSDCValue } from '../../hooks/useStablecoinPrice'
+import { useStablecoinValue } from '../../hooks/useStablecoinPrice'
 import { ThemedText } from '../../theme'
 import { isAddress, shortenAddress } from '../../utils'
 import { computeFiatValuePriceImpact } from '../../utils/computeFiatValuePriceImpact'
@@ -32,9 +32,9 @@ const ArrowWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: ${({ theme }) => theme.bg1};
+  background-color: ${({ theme }) => theme.deprecated_bg1};
   border: 4px solid;
-  border-color: ${({ theme }) => theme.bg0};
+  border-color: ${({ theme }) => theme.deprecated_bg0};
   z-index: 2;
 `
 
@@ -55,8 +55,8 @@ export default function SwapModalHeader({
 
   const [showInverted, setShowInverted] = useState<boolean>(false)
 
-  const fiatValueInput = useUSDCValue(trade.inputAmount)
-  const fiatValueOutput = useUSDCValue(trade.outputAmount)
+  const fiatValueInput = useStablecoinValue(trade.inputAmount)
+  const fiatValueOutput = useStablecoinValue(trade.outputAmount)
 
   return (
     <AutoColumn gap={'4px'} style={{ marginTop: '1rem' }}>
@@ -67,7 +67,7 @@ export default function SwapModalHeader({
               <TruncatedText
                 fontSize={24}
                 fontWeight={500}
-                color={showAcceptChanges && trade.tradeType === TradeType.EXACT_OUTPUT ? theme.primary1 : ''}
+                color={showAcceptChanges && trade.tradeType === TradeType.EXACT_OUTPUT ? theme.deprecated_primary1 : ''}
               >
                 {trade.inputAmount.toSignificant(6)}
               </TruncatedText>
@@ -85,7 +85,7 @@ export default function SwapModalHeader({
         </AutoColumn>
       </LightCard>
       <ArrowWrapper>
-        <ArrowDown size="16" color={theme.text2} />
+        <ArrowDown size="16" color={theme.deprecated_text2} />
       </ArrowWrapper>
       <LightCard padding="0.75rem 1rem" style={{ marginBottom: '0.25rem' }}>
         <AutoColumn gap={'8px'}>
@@ -103,7 +103,7 @@ export default function SwapModalHeader({
             </RowFixed>
           </RowBetween>
           <RowBetween>
-            <ThemedText.Body fontSize={14} color={theme.text3}>
+            <ThemedText.Body fontSize={14} color={theme.deprecated_text3}>
               <FiatValue
                 fiatValue={fiatValueOutput}
                 priceImpact={computeFiatValuePriceImpact(fiatValueInput, fiatValueOutput)}
@@ -123,7 +123,7 @@ export default function SwapModalHeader({
           <RowBetween>
             <RowFixed>
               <AlertTriangle size={20} style={{ marginRight: '8px', minWidth: 24 }} />
-              <ThemedText.Main color={theme.primary1}>
+              <ThemedText.Main color={theme.deprecated_primary1}>
                 <Trans>Price Updated</Trans>
               </ThemedText.Main>
             </RowFixed>
