@@ -1,9 +1,6 @@
 import { useWeb3React } from '@web3-react/core'
-import { ElementName, EventName } from 'components/AmplitudeAnalytics/constants'
-import { Trace } from 'components/AmplitudeAnalytics/Trace'
 import { useContext } from 'react'
 import { AlertCircle, CheckCircle } from 'react-feather'
-import { TransactionType } from 'state/transactions/types'
 import styled, { ThemeContext } from 'styled-components/macro'
 
 import { useTransaction } from '../../state/transactions/hooks'
@@ -28,31 +25,24 @@ export default function TransactionPopup({ hash }: { hash: string }) {
   const success = Boolean(tx.receipt && tx.receipt.status === 1)
 
   return (
-    <Trace
-      name={EventName.SWAP_TRANSACTION_COMPLETED}
-      properties={{ transaction_hash: tx.hash, succeeded: success }}
-      element={ElementName.TRANSACTION_SUMMARY_POPUP}
-      shouldLogImpression={tx.info.type === TransactionType.SWAP}
-    >
-      <RowNoFlex>
-        <div style={{ paddingRight: 16 }}>
-          {success ? (
-            <CheckCircle color={theme.deprecated_green1} size={24} />
-          ) : (
-            <AlertCircle color={theme.deprecated_red1} size={24} />
-          )}
-        </div>
-        <AutoColumn gap="8px">
-          <ThemedText.Body fontWeight={500}>
-            <TransactionSummary info={tx.info} />
-          </ThemedText.Body>
-          {chainId && (
-            <ExternalLink href={getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)}>
-              View on Explorer
-            </ExternalLink>
-          )}
-        </AutoColumn>
-      </RowNoFlex>
-    </Trace>
+    <RowNoFlex>
+      <div style={{ paddingRight: 16 }}>
+        {success ? (
+          <CheckCircle color={theme.deprecated_green1} size={24} />
+        ) : (
+          <AlertCircle color={theme.deprecated_red1} size={24} />
+        )}
+      </div>
+      <AutoColumn gap="8px">
+        <ThemedText.Body fontWeight={500}>
+          <TransactionSummary info={tx.info} />
+        </ThemedText.Body>
+        {chainId && (
+          <ExternalLink href={getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)}>
+            View on Explorer
+          </ExternalLink>
+        )}
+      </AutoColumn>
+    </RowNoFlex>
   )
 }
