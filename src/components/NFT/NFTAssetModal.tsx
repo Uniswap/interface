@@ -1,13 +1,12 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Image, Share, StyleSheet } from 'react-native'
-import { useAppDispatch } from 'src/app/hooks'
-import SendIcon from 'src/assets/icons/send.svg'
 import ShareIcon from 'src/assets/icons/share.svg'
 import VerifiedIcon from 'src/assets/icons/verified.svg'
 import OpenSeaIcon from 'src/assets/logos/opensea.svg'
 import { Button } from 'src/components/buttons/Button'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
+import { SendButton } from 'src/components/buttons/SendButton'
 import { NFTViewer } from 'src/components/images/NFTViewer'
 import { Flex } from 'src/components/layout'
 import { Box } from 'src/components/layout/Box'
@@ -15,13 +14,9 @@ import { BottomSheetScrollModal } from 'src/components/modals/BottomSheetModal'
 import { Text } from 'src/components/Text'
 import { ChainId } from 'src/constants/chains'
 import { AssetType } from 'src/entities/assets'
-import { openModal } from 'src/features/modals/modalSlice'
 import { NFTAsset } from 'src/features/nfts/types'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
-import {
-  CurrencyField,
-  TransactionState,
-} from 'src/features/transactions/transactionState/transactionState'
+import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
 import { flex } from 'src/styles/flex'
 import { nftCollectionBlurImageStyle } from 'src/styles/image'
 import { theme } from 'src/styles/theme'
@@ -38,7 +33,25 @@ const COLLECTION_IMAGE_WIDTH = 20
 
 export function NFTAssetModal({ nftAsset, isVisible, onClose }: Props) {
   const { t } = useTranslation()
-  const dispatch = useAppDispatch()
+
+  const initialSendState = useMemo(() => {
+    return nftAsset
+      ? {
+          exactCurrencyField: CurrencyField.INPUT,
+          exactAmountToken: '',
+          [CurrencyField.INPUT]: {
+            chainId: ChainId.Mainnet,
+            address: nftAsset.asset_contract.address,
+            tokenId: nftAsset.token_id,
+            type:
+              nftAsset.asset_contract.schema_name === 'ERC1155'
+                ? AssetType.ERC1155
+                : AssetType.ERC721,
+          },
+          [CurrencyField.OUTPUT]: null,
+        }
+      : undefined
+  }, [nftAsset])
 
   if (!nftAsset) return null
 
@@ -49,22 +62,6 @@ export function NFTAssetModal({ nftAsset, isVisible, onClose }: Props) {
     description: collectionDescription,
     safelist_request_status: safelistRequestStatus,
   } = collection
-
-  const onPressSend = () => {
-    const transferFormState: TransactionState = {
-      exactCurrencyField: CurrencyField.INPUT,
-      exactAmountToken: '',
-      [CurrencyField.INPUT]: {
-        chainId: ChainId.Mainnet,
-        address: nftAsset.asset_contract.address,
-        tokenId: nftAsset.token_id,
-        type:
-          nftAsset.asset_contract.schema_name === 'ERC1155' ? AssetType.ERC1155 : AssetType.ERC721,
-      },
-      [CurrencyField.OUTPUT]: null,
-    }
-    dispatch(openModal({ name: ModalName.Send, initialState: transferFormState }))
-  }
 
   const onPressShare = async () => {
     try {
@@ -103,15 +100,7 @@ export function NFTAssetModal({ nftAsset, isVisible, onClose }: Props) {
             variant="black"
             onPress={() => openUri(permalink)}
           />
-          <PrimaryButton
-            flex={1}
-            icon={<SendIcon color={theme.colors.white} height={20} strokeWidth={2} width={20} />}
-            label={t('Send')}
-            name={ElementName.Send}
-            testID={ElementName.Send}
-            variant="black"
-            onPress={onPressSend}
-          />
+          <SendButton flex={1} initialState={initialSendState} />
         </Flex>
         <Flex gap="sm">
           <Box

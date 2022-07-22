@@ -6,12 +6,12 @@ import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { useHomeStackNavigation } from 'src/app/navigation/types'
 import CameraScan from 'src/assets/icons/camera-scan.svg'
 import ScanQRIcon from 'src/assets/icons/scan-qr.svg'
-import SendIcon from 'src/assets/icons/send.svg'
 import SwapIcon from 'src/assets/icons/swap.svg'
 import { AccountHeader } from 'src/components/accounts/AccountHeader'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { Button } from 'src/components/buttons/Button'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
+import { SendButton } from 'src/components/buttons/SendButton'
 import { AppBackground } from 'src/components/gradients/AppBackground'
 import { PortfolioNFTsSection } from 'src/components/home/PortfolioNFTsSection'
 import { PortfolioTokensSection } from 'src/components/home/PortfolioTokensSection'
@@ -117,9 +117,6 @@ function QuickActions() {
   const onPressSwap = () => {
     dispatch(openModal({ name: ModalName.Swap }))
   }
-  const onPressSend = () => {
-    dispatch(openModal({ name: ModalName.Send }))
-  }
 
   // TODO: remove when buy flow ready
   const onPressScan = () => {
@@ -158,17 +155,7 @@ function QuickActions() {
         variant="transparent"
         onPress={onPressSwap}
       />
-      <PrimaryButton
-        borderRadius="md"
-        flex={1}
-        icon={<SendIcon height={20} stroke={theme.colors.textPrimary} strokeWidth={2} width={20} />}
-        label={t('Send')}
-        name={ElementName.NavigateSend}
-        py="sm"
-        testID={ElementName.NavigateSend}
-        variant="transparent"
-        onPress={onPressSend}
-      />
+      <SendButton flex={1} />
     </Flex>
   )
 }

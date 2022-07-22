@@ -1,13 +1,13 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import React from 'react'
+import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
 import { ExploreStackParamList } from 'src/app/navigation/types'
 import EyeIcon from 'src/assets/icons/eye.svg'
-import SendIcon from 'src/assets/icons/send.svg'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
+import { SendButton } from 'src/components/buttons/SendButton'
 import { BlueToDarkRadial } from 'src/components/gradients/BlueToPinkRadial'
 import { GradientBackground } from 'src/components/gradients/GradientBackground'
 import { PortfolioNFTsSection } from 'src/components/home/PortfolioNFTsSection'
@@ -21,8 +21,6 @@ import { Text } from 'src/components/Text'
 import { TransactionListSection } from 'src/components/TransactionList/TransactionListSection'
 import { selectWatchedAddressSet } from 'src/features/favorites/selectors'
 import { addWatchedAddress, removeWatchedAddress } from 'src/features/favorites/slice'
-import { openModal } from 'src/features/modals/modalSlice'
-import { ModalName } from 'src/features/telemetry/constants'
 import { useAllFormattedTransactions } from 'src/features/transactions/hooks'
 import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
 import { Screens } from 'src/screens/Screens'
@@ -41,22 +39,6 @@ export function UserScreen({
   const isWatching = useAppSelector(selectWatchedAddressSet).has(address)
   const { combinedTransactionList } = useAllFormattedTransactions(address)
 
-  const onSendPress = async () => {
-    dispatch(
-      openModal({
-        name: ModalName.Send,
-        initialState: {
-          recipient: address,
-          exactAmountToken: '',
-          exactAmountUSD: '',
-          exactCurrencyField: CurrencyField.INPUT,
-          [CurrencyField.INPUT]: null,
-          [CurrencyField.OUTPUT]: null,
-        },
-      })
-    )
-  }
-
   const onWatchPress = () => {
     if (isWatching) {
       dispatch(removeWatchedAddress({ address }))
@@ -64,6 +46,17 @@ export function UserScreen({
       dispatch(addWatchedAddress({ address }))
     }
   }
+
+  const initialSendState = useMemo(() => {
+    return {
+      recipient: address,
+      exactAmountToken: '',
+      exactAmountUSD: '',
+      exactCurrencyField: CurrencyField.INPUT,
+      [CurrencyField.INPUT]: null,
+      [CurrencyField.OUTPUT]: null,
+    }
+  }, [address])
 
   if (!address)
     return (
@@ -104,20 +97,11 @@ export function UserScreen({
         <Flex gap="lg" mb="md" px="md">
           {/* profile info */}
           <Flex centered row gap="xs" mt="md">
-            <PrimaryButton
+            <SendButton
               borderRadius="lg"
-              icon={
-                <SendIcon
-                  height={20}
-                  stroke={theme.colors.textPrimary}
-                  strokeWidth={3}
-                  width={20}
-                />
-              }
-              label={t('Send')}
+              iconStrokeWidth={3}
+              initialState={initialSendState}
               px="lg"
-              variant="transparent"
-              onPress={onSendPress}
             />
             <PrimaryButton
               borderRadius="lg"

@@ -1,5 +1,4 @@
-import React, { memo, ReactElement } from 'react'
-import { View } from 'react-native'
+import React, { ComponentProps, memo, ReactElement } from 'react'
 import {
   getButtonBorderRadius,
   getButtonColor,
@@ -39,7 +38,7 @@ export enum ButtonState {
   Enabled = 'enabled',
 }
 
-interface CommonButtonProps {
+interface CommonButtonProps extends ComponentProps<typeof TouchableArea> {
   name?: string
   size: ButtonSize
   emphasis: ButtonEmphasis
@@ -90,31 +89,29 @@ const _Button = ({
   const borderRadius = getButtonBorderRadius(size, buttonType)
 
   return (
-    <View>
-      <TouchableArea
-        alignItems="center"
-        backgroundColor={buttonColor}
-        borderColor="backgroundOutline"
-        borderRadius={borderRadius}
-        borderWidth={emphasis === ButtonEmphasis.Low ? 1 : 0}
-        flex={1}
-        flexDirection="row"
-        justifyContent="center"
-        name={name}
-        opacity={state === ButtonState.Enabled ? 1 : 0.6}
-        px={paddingX}
-        py={paddingY}
-        onLongPress={onLongPress}
-        onPress={onPress}
-        {...rest}>
-        {icon && <Box mr="sm">{icon}</Box>}
-        {buttonType !== ButtonType.Icon && (
-          <Text color={textColor} textAlign="center" variant={textVariant}>
-            {label}
-          </Text>
-        )}
-      </TouchableArea>
-    </View>
+    <TouchableArea
+      alignItems="center"
+      backgroundColor={buttonColor}
+      borderColor="backgroundOutline"
+      borderRadius={borderRadius}
+      borderWidth={emphasis === ButtonEmphasis.Low ? 1 : 0}
+      disabled={state === ButtonState.Disabled}
+      flexDirection="row"
+      justifyContent="center"
+      name={name}
+      opacity={state === ButtonState.Enabled ? 1 : 0.6}
+      px={paddingX}
+      py={paddingY}
+      onLongPress={onLongPress}
+      onPress={onPress}
+      {...rest}>
+      {icon && <Box mr="sm">{icon}</Box>}
+      {buttonType !== ButtonType.Icon && (
+        <Text color={textColor} textAlign="center" variant={textVariant}>
+          {label}
+        </Text>
+      )}
+    </TouchableArea>
   )
 }
 

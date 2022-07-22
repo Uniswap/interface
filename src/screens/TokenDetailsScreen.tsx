@@ -1,12 +1,12 @@
 import { Currency } from '@uniswap/sdk-core'
 import React, { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
+import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { HomeStackScreenProp } from 'src/app/navigation/types'
-import SendIcon from 'src/assets/icons/send.svg'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { IconButton } from 'src/components/buttons/IconButton'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
+import { SendButton } from 'src/components/buttons/SendButton'
 import { CurrencyLogo } from 'src/components/CurrencyLogo'
 import { Heart } from 'src/components/icons/Heart'
 import { Flex } from 'src/components/layout'
@@ -104,7 +104,6 @@ export function TokenDetailsScreen({ route }: HomeStackScreenProp<Screens.TokenD
 function TokenDetails({ currency }: { currency: Currency }) {
   const balance = useSingleBalance(currency)
 
-  const theme = useAppTheme()
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
 
@@ -116,6 +115,19 @@ function TokenDetails({ currency }: { currency: Currency }) {
   const [activeSwapAttemptType, setActiveSwapAttemptType] = useState<SwapType | undefined>(
     undefined
   )
+
+  const initialSendState = useMemo((): TransactionState => {
+    return {
+      exactCurrencyField: CurrencyField.INPUT,
+      exactAmountToken: '',
+      [CurrencyField.INPUT]: {
+        address: currencyAddress(currency),
+        chainId: currency.wrapped.chainId,
+        type: AssetType.Currency,
+      },
+      [CurrencyField.OUTPUT]: null,
+    }
+  }, [currency])
 
   const navigateToSwapBuy = useCallback(() => {
     setActiveSwapAttemptType(undefined)
@@ -164,20 +176,6 @@ function TokenDetails({ currency }: { currency: Currency }) {
     },
     [navigateToSwapBuy, navigateToSwapSell, tokenWarningDismissed, tokenWarningLevel]
   )
-
-  const onPressSend = () => {
-    const transferFormState: TransactionState = {
-      exactCurrencyField: CurrencyField.INPUT,
-      exactAmountToken: '1',
-      [CurrencyField.INPUT]: {
-        address: currencyAddress(currency),
-        chainId: currency.wrapped.chainId,
-        type: AssetType.Currency,
-      },
-      [CurrencyField.OUTPUT]: null,
-    }
-    dispatch(openModal({ name: ModalName.Send, initialState: transferFormState }))
-  }
 
   return (
     <>
@@ -236,21 +234,11 @@ function TokenDetails({ currency }: { currency: Currency }) {
           />
         )}
         {balance && (
-          <IconButton
-            bg="backgroundAction"
-            borderRadius="md"
+          <SendButton
+            iconOnly
             disabled={!balance}
-            icon={
-              <SendIcon
-                color={theme.colors.textSecondary}
-                height={20}
-                strokeWidth={1.5}
-                width={20}
-              />
-            }
-            justifyContent="center"
-            px="md"
-            onPress={onPressSend}
+            iconStrokeWidth={1.5}
+            initialState={initialSendState}
           />
         )}
       </Flex>
