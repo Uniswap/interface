@@ -1,4 +1,3 @@
-import { darken } from 'polished'
 import styled from 'styled-components/macro'
 
 import {
@@ -10,33 +9,18 @@ import {
   ContractAddressSection,
   DeltaContainer,
   ResourcesContainer,
+  Stat,
   StatsSection,
   TimeOptionsContainer,
   TokenInfoContainer,
+  TokenNameCell,
   TokenPrice,
   TopArea,
 } from './TokenDetail'
 
-const Stat = styled.div`
-  display: flex;
-  flex-direction: column;
-  color: ${({ theme }) => theme.deprecated_text2};
-  font-size: 14px;
-  width: 168px;
-  gap: 4px;
-`
-
-const TokenNameCell = styled.div`
-  display: flex;
-  gap: 8px;
-  font-size: 20px;
-  line-height: 28px;
-  align-items: center;
-`
-
 /* Loading state bubbles */
 const LoadingBubble = styled.div`
-  background-color: ${({ theme }) => darken(0.08, theme.deprecated_bg3)};
+  background-color: ${({ theme }) => theme.backgroundContainer};
   border-radius: 12px;
   height: 16px;
   width: 180px;
