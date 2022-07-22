@@ -2,6 +2,7 @@ import { Trans } from '@lingui/macro'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { ElementName, Event, EventName, SWAP_PRICE_UPDATE_USER_RESPONSE } from 'components/AmplitudeAnalytics/constants'
 import { TraceEvent } from 'components/AmplitudeAnalytics/TraceEvent'
+import { formatPercentInBasisPointsNumber } from 'components/AmplitudeAnalytics/utils'
 import { useContext, useEffect, useState } from 'react'
 import { AlertTriangle, ArrowDown } from 'react-feather'
 import { Text } from 'rebass'
@@ -21,7 +22,6 @@ import { RowBetween, RowFixed } from '../Row'
 import TradePrice from '../swap/TradePrice'
 import { AdvancedSwapDetails } from './AdvancedSwapDetails'
 import { SwapShowAcceptChanges, TruncatedText } from './styleds'
-import { formatPercentInBasisPointsNumber } from './SwapModalFooter'
 
 const ArrowWrapper = styled.div`
   padding: 4px;
@@ -54,8 +54,6 @@ const formatAnalyticsEventProperties = (
   token_out_symbol: trade.outputAmount.currency.symbol,
   price_update_basis_points: formatPercentInBasisPointsNumber(priceUpdatePercentage),
 })
-
-// price_update_basis_points
 
 export default function SwapModalHeader({
   trade,
