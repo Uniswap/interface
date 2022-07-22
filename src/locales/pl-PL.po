@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-07-12 23:04\n"
+"PO-Revision-Date: 2022-07-21 14:05\n"
 "Last-Translator: \n"
 "Language: pl_PL\n"
 "Language-Team: Polish\n"
@@ -1264,7 +1264,6 @@ msgid "Polygonscan"
 msgstr "Skanowanie wielokątów"
 
 #: src/components/Header/index.tsx
-#: src/components/NavigationTabs/index.tsx
 msgid "Pool"
 msgstr "Zbiór"
 
@@ -1478,10 +1477,6 @@ msgstr "Wyszukaj nazwę lub wklej adres"
 msgid "Select Pair"
 msgstr "Wybierz parę"
 
-#: src/components/Header/NetworkSelector.tsx
-msgid "Select a network"
-msgstr "Wybierz sieć"
-
 #: src/components/CurrencyInputPanel/index.tsx
 #: src/components/SearchModal/CurrencySearch.tsx
 #: src/pages/PoolFinder/index.tsx
@@ -1493,6 +1488,10 @@ msgstr "Wybierz token"
 #: src/pages/PoolFinder/index.tsx
 msgid "Select a token to find your v2 liquidity."
 msgstr "Wybierz token, aby znaleźć płynność v2."
+
+#: src/components/Header/NetworkSelector.tsx
+msgid "Select a {0}network"
+msgstr "Wybierz sieć {0}"
 
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Select an action"
@@ -1587,7 +1586,6 @@ msgid "Supplying {0} {1} and {2} {3}"
 msgstr "Dostarczanie {0} {1} i {2} {3}"
 
 #: src/components/Header/index.tsx
-#: src/components/NavigationTabs/index.tsx
 #: src/components/swap/SwapHeader.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
@@ -2137,10 +2135,6 @@ msgstr "Zawijanie"
 msgid "Wrap <0/> to {0}"
 msgstr "Zawijaj od <0/> do {0}"
 
-#: src/components/Web3Status/index.tsx
-msgid "Wrong Network"
-msgstr "Nieprawidłowa sieć"
-
 #: src/pages/CreateProposal/index.tsx
 msgid "You already have an active or pending proposal"
 msgstr "Masz już aktywną lub oczekującą propozycję"
@@ -2219,8 +2213,8 @@ msgid "Your active V3 liquidity positions will appear here."
 msgstr "Twoje aktywne pozycje płynności V3 pojawią się tutaj."
 
 #: src/pages/Pool/index.tsx
-msgid "Your connected network is unsupported. Request support <0>here</0>."
-msgstr "Twoja połączona sieć nie jest obsługiwana. Poproś o wsparcie <0>tutaj</0>."
+msgid "Your connected network is unsupported."
+msgstr "Twoja połączona sieć nie jest obsługiwana."
 
 #: src/pages/Earn/Manage.tsx
 msgid "Your liquidity deposits"
