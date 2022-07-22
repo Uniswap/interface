@@ -8,7 +8,7 @@ import {
 import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
 import { DerivedTransferInfo } from 'src/features/transactions/transfer/hooks'
 
-type PartialDerivedTransferInfo = Pick<
+export type PartialDerivedTransferInfo = Pick<
   DerivedTransferInfo,
   'currencyBalances' | 'currencyAmounts' | 'currencies' | 'recipient'
 >
@@ -33,7 +33,7 @@ export function getTransferWarnings(t: TFunction, state: PartialDerivedTransferI
   }
 
   // transfer form is missing fields
-  if (!currencies[CurrencyField.INPUT] || !recipient) {
+  if (!currencies[CurrencyField.INPUT] || !recipient || !currencyAmountIn) {
     warnings.push({
       type: WarningLabel.FormIncomplete,
       severity: WarningSeverity.None,
