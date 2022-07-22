@@ -1,30 +1,28 @@
+import { getChainInfo } from 'constants/chainInfo'
+import { SupportedChainId } from 'constants/chains'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
-import { TimePeriod } from 'hooks/useTopTokens'
-import { useRef, useState } from 'react'
+import { useAtom } from 'jotai'
+import { useRef } from 'react'
 import { Check, ChevronDown, ChevronUp } from 'react-feather'
 import { useModalIsOpen, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
-import styled, { css, useTheme } from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components/macro'
 
-export const TIME_DISPLAYS: { [key: string]: string } = {
-  hour: '1H',
-  day: '1D',
-  week: '1W',
-  month: '1M',
-  year: '1Y',
-}
+import { MEDIUM_MEDIA_BREAKPOINT } from '../constants'
+import { filterNetworkAtom } from '../state'
 
-const TIMES = Object.values(TimePeriod)
-
-enum FlyoutAlignment {
-  LEFT = 'LEFT',
-  RIGHT = 'RIGHT',
-}
+const NETWORKS = [
+  SupportedChainId.MAINNET,
+  SupportedChainId.ARBITRUM_ONE,
+  SupportedChainId.POLYGON,
+  SupportedChainId.OPTIMISM,
+]
 
 const InternalMenuItem = styled.div`
   flex: 1;
-  padding: 8px;
+  padding: 12px 16px;
   color: ${({ theme }) => theme.textPrimary};
+
   :hover {
     cursor: pointer;
     text-decoration: none;
@@ -36,9 +34,7 @@ const InternalMenuItem = styled.div`
 
 const InternalLinkMenuItem = styled(InternalMenuItem)`
   display: flex;
-  flex-direction: row;
   align-items: center;
-  padding: 12px 16px;
   justify-content: space-between;
   text-decoration: none;
   cursor: pointer;
@@ -48,15 +44,15 @@ const InternalLinkMenuItem = styled(InternalMenuItem)`
     text-decoration: none;
   }
 `
-const MenuTimeFlyout = styled.span<{ flyoutAlignment?: FlyoutAlignment }>`
-  min-width: 150px;
+const MenuTimeFlyout = styled.span`
+  min-width: 200px;
   max-height: 350px;
   overflow: auto;
   background-color: ${({ theme }) => theme.backgroundSurface};
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
     0px 24px 32px rgba(0, 0, 0, 0.01);
   border: 1px solid ${({ theme }) => theme.backgroundOutline};
-  border-radius: 16px;
+  border-radius: 12px;
   padding: 8px 0px;
   display: flex;
   flex-direction: column;
@@ -64,15 +60,8 @@ const MenuTimeFlyout = styled.span<{ flyoutAlignment?: FlyoutAlignment }>`
   position: absolute;
   top: 48px;
   z-index: 100;
+  left: 0px;
 
-  ${({ flyoutAlignment = FlyoutAlignment.RIGHT }) =>
-    flyoutAlignment === FlyoutAlignment.RIGHT
-      ? css`
-          right: 0px;
-        `
-      : css`
-          left: 0px;
-        `};
   ${({ theme }) => theme.mediaWidth.upToMedium`
     bottom: unset;
     right: 0;
@@ -83,19 +72,19 @@ const MenuTimeFlyout = styled.span<{ flyoutAlignment?: FlyoutAlignment }>`
 const StyledMenuButton = styled.button<{ open: boolean }>`
   width: 100%;
   height: 100%;
-  border: none;
-  background-color: transparent;
   color: ${({ theme, open }) => (open ? theme.blue200 : theme.textPrimary)};
-  margin: 0;
+  background-color: transparent;
   background-color: ${({ theme, open }) => (open ? theme.accentActionSoft : theme.none)};
   border: 1px solid ${({ theme, open }) => (open ? theme.accentActiveSoft : theme.backgroundOutline)};
+  margin: 0;
   padding: 6px 12px 6px 12px;
   border-radius: 12px;
   font-size: 16px;
   line-height: 24px;
-  font-weight: 600;
+  font-weight: 400;
 
-  :hover {
+  :hover,
+  :focus {
     cursor: pointer;
     outline: none;
     background-color: ${({ theme, open }) => !open && theme.backgroundContainer};
@@ -113,7 +102,11 @@ const StyledMenu = styled.div`
   position: relative;
   border: none;
   text-align: left;
-  width: 80px;
+  width: 160px;
+
+  @media only screen and (max-width: ${MEDIUM_MEDIA_BREAKPOINT}) {
+    flex: 1;
+  }
 `
 
 const StyledMenuContent = styled.div`
@@ -122,6 +115,7 @@ const StyledMenuContent = styled.div`
   align-items: center;
   border: none;
   width: 100%;
+  font-weight: 600;
   vertical-align: middle;
 `
 
@@ -129,39 +123,60 @@ const Chevron = styled.span<{ open: boolean }>`
   padding-top: 1px;
   color: ${({ open, theme }) => (open ? theme.blue200 : theme.textPrimary)};
 `
+const NetworkLabel = styled.div`
+  display: flex;
+  gap: 8px;
+  align-items: center;
+`
+const Logo = styled.img`
+  height: 20px;
+  width: 20px;
+`
+const CheckContainer = styled.div`
+  display: flex;
+  flex-direction: flex-end;
+`
 
 // TODO: change this to reflect data pipeline
-export default function TimeSelector() {
+export default function NetworkFilter() {
   const theme = useTheme()
   const node = useRef<HTMLDivElement | null>(null)
-  const open = useModalIsOpen(ApplicationModal.TIME_SELECTOR)
-  const toggleMenu = useToggleModal(ApplicationModal.TIME_SELECTOR)
+  const open = useModalIsOpen(ApplicationModal.NETWORK_FILTER)
+  const toggleMenu = useToggleModal(ApplicationModal.NETWORK_FILTER)
   useOnClickOutside(node, open ? toggleMenu : undefined)
-  const [activeTime, setTime] = useState(TimePeriod.day)
+  const [activeNetwork, setNetwork] = useAtom(filterNetworkAtom)
+  const { label, logoUrl } = getChainInfo(activeNetwork)
 
   return (
     <StyledMenu ref={node}>
-      <StyledMenuButton onClick={toggleMenu} aria-label={`timeSelector`} open={open}>
+      <StyledMenuButton onClick={toggleMenu} aria-label={`networkFilter`} open={open}>
         <StyledMenuContent>
-          {TIME_DISPLAYS[activeTime]}
+          <NetworkLabel>
+            <Logo src={logoUrl} /> {label}
+          </NetworkLabel>
           <Chevron open={open}>
             {open ? <ChevronUp size={15} viewBox="0 0 24 20" /> : <ChevronDown size={15} viewBox="0 0 24 20" />}
           </Chevron>
         </StyledMenuContent>
       </StyledMenuButton>
-      {/* handles the actual flyout of the menu*/}
       {open && (
         <MenuTimeFlyout>
-          {TIMES.map((time) => (
+          {NETWORKS.map((network) => (
             <InternalLinkMenuItem
-              key={time}
+              key={network}
               onClick={() => {
-                setTime(time)
+                setNetwork(network)
                 toggleMenu()
               }}
             >
-              <div>{TIME_DISPLAYS[time]}</div>
-              {time === activeTime && <Check color={theme.accentAction} size={16} />}
+              <NetworkLabel>
+                <Logo src={getChainInfo(network).logoUrl} /> {getChainInfo(network).label}
+              </NetworkLabel>
+              {network === activeNetwork && (
+                <CheckContainer>
+                  <Check size={16} color={theme.accentAction} />
+                </CheckContainer>
+              )}
             </InternalLinkMenuItem>
           ))}
         </MenuTimeFlyout>
