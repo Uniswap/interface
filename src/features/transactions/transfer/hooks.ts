@@ -4,6 +4,7 @@ import React, { useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AnyAction } from 'redux'
 import { useAppDispatch } from 'src/app/hooks'
+import { WarningModalType } from 'src/components/warnings/types'
 import { ChainId } from 'src/constants/chains'
 import { AssetType } from 'src/entities/assets'
 import { useNativeCurrencyBalance, useTokenBalance } from 'src/features/balances/hooks'
@@ -14,6 +15,7 @@ import { useCurrency } from 'src/features/tokens/useCurrency'
 import {
   CurrencyField,
   TransactionState,
+  transactionStateActions,
 } from 'src/features/transactions/transactionState/transactionState'
 import { BaseDerivedInfo } from 'src/features/transactions/transactionState/types'
 import {
@@ -35,6 +37,7 @@ export type DerivedTransferInfo = BaseDerivedInfo<Currency | NFTAsset.Asset> & {
   exactCurrencyField: CurrencyField.INPUT
   recipient?: string
   isUSDInput?: boolean
+  warningModalType?: WarningModalType
 }
 
 export function useDerivedTransferInfo(state: TransactionState): DerivedTransferInfo {
@@ -44,6 +47,7 @@ export function useDerivedTransferInfo(state: TransactionState): DerivedTransfer
     exactAmountUSD,
     recipient,
     isUSDInput,
+    warningModalType,
   } = state
   const { t } = useTranslation()
 
@@ -72,6 +76,7 @@ export function useDerivedTransferInfo(state: TransactionState): DerivedTransfer
     currencyIn?.isToken ? currencyIn : undefined,
     activeAccount?.address
   )
+
   const { balance: nativeInBalance } = useNativeCurrencyBalance(chainId, activeAccount?.address)
 
   const amountSpecified = useMemo(
@@ -84,6 +89,7 @@ export function useDerivedTransferInfo(state: TransactionState): DerivedTransfer
   const currencyBalances = {
     [CurrencyField.INPUT]: currencyIn?.isNative ? nativeInBalance : tokenInBalance,
   }
+
   const warnings = getTransferWarnings(t, {
     currencies,
     currencyAmounts,
@@ -107,6 +113,7 @@ export function useDerivedTransferInfo(state: TransactionState): DerivedTransfer
     isUSDInput,
     recipient,
     warnings,
+    warningModalType,
   }
 }
 
@@ -254,4 +261,8 @@ export function useUpdateTransferGasEstimate(
     transactionStateDispatch,
     assetType,
   ])
+}
+
+export function showTransferWarningCallback(dispatch: React.Dispatch<AnyAction>) {
+  return (type: WarningModalType) => dispatch(transactionStateActions.showWarningModal(type))
 }

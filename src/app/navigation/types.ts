@@ -130,6 +130,7 @@ export type AppStackParamList = {
   [Screens.RecipientSelector]: {
     selectedRecipient?: string
     setSelectedRecipient: (newRecipient: string) => void
+    chainId: ChainId
   }
   [Screens.ProfileStack]: NavigatorScreenParams<ProfileStackParamList>
 

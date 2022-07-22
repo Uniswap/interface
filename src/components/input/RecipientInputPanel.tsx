@@ -15,6 +15,7 @@ import { ElementName } from 'src/features/telemetry/constants'
 import { Screens } from 'src/screens/Screens'
 
 interface RecipientInputPanelProps {
+  chainId: ChainId
   recipientAddress?: string
   setRecipientAddress: (newRecipient: string) => void
 }
@@ -26,6 +27,7 @@ interface RecipientInputPanelProps {
 export function RecipientInputPanel({
   recipientAddress,
   setRecipientAddress,
+  chainId,
 }: RecipientInputPanelProps) {
   const theme = useAppTheme()
 
@@ -41,6 +43,7 @@ export function RecipientInputPanel({
           navigate(Screens.RecipientSelector, {
             selectedRecipient: recipientAddress,
             setSelectedRecipient: (newRecipient: string) => setRecipientAddress(newRecipient),
+            chainId,
           })
         }}>
         <Flex centered row gap="sm">

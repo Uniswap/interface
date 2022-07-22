@@ -11,6 +11,7 @@ import { DecimalPad } from 'src/components/input/DecimalPad'
 import { RecipientInputPanel } from 'src/components/input/RecipientInputPanel'
 import { Box, Flex } from 'src/components/layout'
 import { WarningAction } from 'src/components/warnings/types'
+import { ChainId } from 'src/constants/chains'
 import { AssetType } from 'src/entities/assets'
 import { NFTAsset } from 'src/features/nfts/types'
 import { ElementName } from 'src/features/telemetry/constants'
@@ -57,6 +58,7 @@ export function TransferTokenForm({ state, dispatch, onNext }: TransferTokenProp
     currencyTypes[CurrencyField.INPUT] === AssetType.ERC1155
   const currencyIn = !isNFT ? (currencies[CurrencyField.INPUT] as Currency) : undefined
   const nftIn = isNFT ? (currencies[CurrencyField.INPUT] as NFTAsset.Asset) : undefined
+  const chainId = isNFT ? nftIn?.chainId : currencyIn?.chainId
 
   useUSDTokenUpdater(
     dispatch,
@@ -73,7 +75,7 @@ export function TransferTokenForm({ state, dispatch, onNext }: TransferTokenProp
   // if action button is disabled, make amount undefined so that gas estimate doesn't run
   useUpdateTransferGasEstimate(
     dispatch,
-    isNFT ? nftIn?.chainId : currencyIn?.chainId,
+    chainId,
     isNFT ? nftIn?.asset_contract.address : currencyIn ? currencyAddress(currencyIn) : undefined,
     !actionButtonDisabled ? currencyAmounts[CurrencyField.INPUT]?.quotient.toString() : undefined,
     recipient,
@@ -124,8 +126,11 @@ export function TransferTokenForm({ state, dispatch, onNext }: TransferTokenProp
           </Box>
           <Flex pb="xl" pt="xl" px="md">
             <RecipientInputPanel
+              chainId={chainId ?? ChainId.Mainnet}
               recipientAddress={recipient}
-              setRecipientAddress={onSelectRecipient}
+              setRecipientAddress={(newRecipient) => {
+                onSelectRecipient(newRecipient)
+              }}
             />
           </Flex>
         </Flex>

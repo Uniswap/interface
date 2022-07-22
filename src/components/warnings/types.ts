@@ -37,6 +37,7 @@ export enum WarningLabel {
   PriceImpactHigh = 'price_impact_high',
   LowLiquidity = 'low_liquidity',
   SwapRouterError = 'swap_router_error',
+  RecipientZeroBalances = 'recipient_zero_balances',
 }
 
 export enum WarningModalType {
