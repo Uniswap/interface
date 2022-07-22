@@ -313,24 +313,22 @@ function getHeaderDisplay(category: string, timeframe: string): string {
 /* Get singular header cell for header row */
 function HeaderCell({
   category,
-  isSorted,
   sortable,
-  timeframe,
 }: {
   category: Category // TODO: change this to make it work for trans
-  isSorted: boolean
   sortable: boolean
-  timeframe: string
 }) {
   const theme = useTheme()
   const sortDirection = useAtomValue<SortDirection>(sortDirectionAtom)
   const handleSortCategory = useSetSortCategory(category)
+  const sortCategory = useAtomValue<Category>(sortCategoryAtom)
+  const timeframe = useAtomValue<TimePeriod>(filterTimeAtom)
 
-  if (isSorted) {
+  if (sortCategory === category) {
     return (
       <SortingCategory onClick={handleSortCategory}>
         <SortArrowCell>
-          {sortDirection === SortDirection.Decreasing ? (
+          {sortDirection === SortDirection.increasing ? (
             <ArrowDown size={14} color={theme.accentActive} />
           ) : (
             <ArrowUp size={14} color={theme.accentActive} />
@@ -387,8 +385,6 @@ export function TokenRow({
 /* Header Row: top header row component for table */
 export function HeaderRow() {
   /* TODO: access which sort category used and timeframe used (temporarily hardcoded values) */
-  const sortCategory = useAtomValue<Category>(sortCategoryAtom)
-  const timeframe = useAtomValue<TimePeriod>(filterTimeAtom)
 
   return (
     <TokenRow
@@ -397,38 +393,10 @@ export function HeaderRow() {
       favorited={null}
       listNumber={null}
       tokenInfo={<Trans>Name</Trans>}
-      price={
-        <HeaderCell
-          category={Category.price}
-          isSorted={sortCategory === Category.price}
-          sortable
-          timeframe={timeframe}
-        />
-      }
-      percentChange={
-        <HeaderCell
-          category={Category.percent_change}
-          isSorted={sortCategory === Category.percent_change}
-          sortable
-          timeframe={timeframe}
-        />
-      }
-      marketCap={
-        <HeaderCell
-          category={Category.market_cap}
-          isSorted={sortCategory === Category.market_cap}
-          sortable
-          timeframe={timeframe}
-        />
-      }
-      volume={
-        <HeaderCell
-          category={Category.volume}
-          isSorted={sortCategory === Category.volume}
-          sortable
-          timeframe={timeframe}
-        />
-      }
+      price={<HeaderCell category={Category.price} sortable />}
+      percentChange={<HeaderCell category={Category.percentChange} sortable />}
+      marketCap={<HeaderCell category={Category.marketCap} sortable />}
+      volume={<HeaderCell category={Category.volume} sortable />}
       sparkLine={null}
     />
   )

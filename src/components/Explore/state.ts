@@ -11,8 +11,8 @@ export const showFavoritesAtom = atomWithStorage<boolean>('showFavorites', false
 export const filterStringAtom = atom<string>('')
 export const filterNetworkAtom = atom<SupportedChainId>(SupportedChainId.MAINNET)
 export const filterTimeAtom = atom<TimePeriod>(TimePeriod.day)
-export const sortCategoryAtom = atom<Category>(Category.market_cap)
-export const sortDirectionAtom = atom<SortDirection>(SortDirection.Decreasing)
+export const sortCategoryAtom = atom<Category>(Category.marketCap)
+export const sortDirectionAtom = atom<SortDirection>(SortDirection.decreasing)
 
 /* for favoriting tokens */
 export function useToggleFavorite(tokenAddress: string) {
@@ -37,16 +37,13 @@ export function useSetSortCategory(category: Category) {
   const [sortDirection, setDirectionCategory] = useAtom(sortDirectionAtom)
 
   return useCallback(() => {
-    const oppositeDirection =
-      sortDirection === SortDirection.Increasing ? SortDirection.Decreasing : SortDirection.Increasing
-    console.log('categor: ' + category)
-    console.log('state: ' + sortCategory)
-
     if (category === sortCategory) {
+      const oppositeDirection =
+        sortDirection === SortDirection.increasing ? SortDirection.decreasing : SortDirection.increasing
       setDirectionCategory(oppositeDirection)
     } else {
       setSortCategory(category)
-      setDirectionCategory(SortDirection.Decreasing)
+      setDirectionCategory(SortDirection.decreasing)
     }
   }, [category, sortCategory, setSortCategory, sortDirection, setDirectionCategory])
 }
