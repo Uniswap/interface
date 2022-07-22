@@ -151,7 +151,7 @@ const TokenSymbol = styled.span`
   color: ${({ theme }) => theme.deprecated_text2};
 `
 export const TopArea = styled.div`
-  width: 832px;
+  max-width: 832px;
 `
 export const ResourcesContainer = styled.div`
   display: flex;

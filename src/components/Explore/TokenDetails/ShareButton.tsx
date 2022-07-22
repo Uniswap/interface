@@ -16,7 +16,7 @@ const ShareButtonDisplay = styled.div`
   position: relative;
 
   &:hover {
-    color: ${({ theme }) => darken(0.1, theme.deprecated_text2)};
+    color: ${({ theme }) => darken(0.1, theme.textSecondary)};
   }
 `
 const ShareActions = styled.div`
@@ -28,8 +28,8 @@ const ShareActions = styled.div`
   flex-direction: column;
   width: fit-content;
   overflow: auto;
-  background-color: ${({ theme }) => theme.deprecated_bg0};
-  border: 1px solid ${({ theme }) => theme.deprecated_bg1};
+  background-color: ${({ theme }) => theme.backgroundSurface};
+  border: 1px solid ${({ theme }) => theme.backgroundOutline};
   box-shadow: ${SHADOW};
   border-radius: 12px;
 `
@@ -37,15 +37,15 @@ const ShareAction = styled.div`
   display: flex;
   align-items: center;
   padding: 12px 16px;
+  font-size: 16px;
   gap: 8px;
   width: 200px;
   height: 48px;
-  color: ${({ theme }) => theme.deprecated_text1};
+  color: ${({ theme }) => theme.textPrimary};
   cursor: pointer;
 
   &:hover {
-    color: ${({ theme }) => darken(0.08, theme.deprecated_text1)};
-    background-color: ${({ theme }) => darken(0.08, theme.deprecated_bg1)};
+    background-color: ${({ theme }) => theme.backgroundContainer};
   }
 `
 
@@ -121,12 +121,12 @@ export default function ShareButton(tokenInfo: TokenInfo) {
         {open && (
           <ShareActions>
             <ShareAction onClick={copyLink}>
-              <Link color={theme.deprecated_text2} />
+              <Link color={theme.deprecated_text2} size={18} />
               Copy link
             </ShareAction>
 
             <ShareAction onClick={shareTweet}>
-              <Twitter color={theme.deprecated_text2} />
+              <Twitter color={theme.deprecated_text2} size={18} />
               Share to Twitter
             </ShareAction>
           </ShareActions>
