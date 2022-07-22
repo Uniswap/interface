@@ -230,11 +230,15 @@ const SparkLineCell = styled(Cell)`
     display: none;
   }
 `
-const SparkLineImg = styled(Cell)`
+const SparkLineImg = styled(Cell)<{ isPositive: boolean }>`
   max-width: 124px;
   max-height: 28px;
   flex-direction: column;
   transform: scale(1.2);
+
+  polyline {
+    stroke: ${({ theme, isPositive }) => (isPositive ? theme.accentSuccess : theme.accentFailure)};
+  }
 `
 const TokenInfoCell = styled(Cell)`
   gap: 8px;
@@ -444,12 +448,13 @@ export default function LoadedRow({
   const [favoriteTokens] = useAtom(favoritesAtom)
   const isFavorited = favoriteTokens.includes(tokenAddress)
   const toggleFavorite = useToggleFavorite(tokenAddress)
+  const isPositive = Math.sign(tokenData.delta) > 0
 
   const tokenPercentChangeInfo = (
     <>
       {tokenData.delta}%
       <ArrowCell>
-        {Math.sign(tokenData.delta) > 0 ? (
+        {isPositive ? (
           <ArrowUpRight size={16} color={theme.accentSuccess} />
         ) : (
           <ArrowDownRight size={16} color={theme.accentFailure} />
@@ -488,7 +493,7 @@ export default function LoadedRow({
       percentChange={tokenPercentChangeInfo}
       marketCap={formatAmount(tokenData.marketCap).toUpperCase()}
       volume={formatAmount(tokenData.volume[timePeriod]).toUpperCase()}
-      sparkLine={<SparkLineImg dangerouslySetInnerHTML={{ __html: tokenData.sparkline }} />}
+      sparkLine={<SparkLineImg dangerouslySetInnerHTML={{ __html: tokenData.sparkline }} isPositive={isPositive} />}
     />
   )
 }
