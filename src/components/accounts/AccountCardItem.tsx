@@ -41,7 +41,7 @@ export function AccountCardItem({
         borderRadius="lg"
         borderWidth={isActive ? 0.5 : 0}
         flexDirection="column"
-        gap="sm"
+        gap="xxl"
         my="xs"
         p="md"
         style={{
