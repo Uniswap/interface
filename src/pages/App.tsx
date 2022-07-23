@@ -31,6 +31,7 @@ import RemoveLiquidityV3 from './RemoveLiquidity/V3'
 import Swap from './Swap'
 import { OpenClaimAddressModalAndRedirectToSwap, RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects'
 
+// lazy load vote related pages
 const Vote = lazy(() => import('./Vote'))
 
 const AppWrapper = styled.div`
@@ -104,73 +105,46 @@ export default function App() {
             <TopLevelModals />
             <Suspense fallback={<Loader />}>
               <Routes>
-                <Route strict path="/vote">
-                  <Vote />
+                <Route path="vote/*" element={<Vote />} />
+                <Route path="create-proposal" element={<Navigate to="vote/create-proposal" replace />} />
+                <Route path="claim" element={<OpenClaimAddressModalAndRedirectToSwap />} />
+                <Route path="uni" element={<Earn />} />
+                <Route path="uni/:currencyIdA/:currencyIdB" element={<Manage />} />
+
+                <Route path="send" element={<RedirectPathToSwapOnly />} />
+                <Route path="swap/:outputCurrency" element={<RedirectToSwap />} />
+                <Route path="swap" element={<Swap />} />
+
+                <Route path="pool/v2/find" element={<PoolFinder />} />
+                <Route path="pool/v2" element={<PoolV2 />} />
+                <Route path="pool" element={<Pool />} />
+                <Route path="pool/:tokenId" element={<PositionPage />} />
+
+                <Route path="add/v2" element={<RedirectDuplicateTokenIdsV2 />}>
+                  <Route path=":currencyIdA" />
+                  <Route path=":currencyIdA/:currencyIdB" />
                 </Route>
-                <Route exact strict path="/create-proposal">
-                  <Navigate to="/vote/create-proposal" replace />
-                </Route>
-                <Route exact strict path="/claim">
-                  <OpenClaimAddressModalAndRedirectToSwap />
-                </Route>
-                <Route exact strict path="/uni">
-                  <Earn />
-                </Route>
-                <Route exact strict path="/uni/:currencyIdA/:currencyIdB">
-                  <Manage />
+                <Route path="add" element={<RedirectDuplicateTokenIds />}>
+                  {/* this is workaround since react-router-dom v6 doesn't support optional parameters any more */}
+                  <Route path=":currencyIdA" />
+                  <Route path=":currencyIdA/:currencyIdB" />
+                  <Route path=":currencyIdA/:currencyIdB/:feeAmount" />
                 </Route>
 
-                <Route exact strict path="/send">
-                  <RedirectPathToSwapOnly />
-                </Route>
-                <Route exact strict path="/swap/:outputCurrency">
-                  <RedirectToSwap />
-                </Route>
-                <Route exact strict path="/swap">
-                  <Swap />
+                <Route path="increase" element={<AddLiquidity />}>
+                  <Route path=":currencyIdA" />
+                  <Route path=":currencyIdA/:currencyIdB" />
+                  <Route path=":currencyIdA/:currencyIdB/:feeAmount" />
+                  <Route path=":currencyIdA/:currencyIdB/:feeAmount/:tokenId" />
                 </Route>
 
-                <Route exact strict path="/pool/v2/find">
-                  <PoolFinder />
-                </Route>
-                <Route exact strict path="/pool/v2">
-                  <PoolV2 />
-                </Route>
-                <Route exact strict path="/pool">
-                  <Pool />
-                </Route>
-                <Route exact strict path="/pool/:tokenId">
-                  <PositionPage />
-                </Route>
+                <Route path="remove/v2/:currencyIdA/:currencyIdB" element={<RemoveLiquidity />} />
+                <Route path="remove/:tokenId" element={<RemoveLiquidityV3 />} />
 
-                <Route exact strict path="/add/v2/:currencyIdA?/:currencyIdB?">
-                  <RedirectDuplicateTokenIdsV2 />
-                </Route>
-                <Route exact strict path="/add/:currencyIdA?/:currencyIdB?/:feeAmount?">
-                  <RedirectDuplicateTokenIds />
-                </Route>
+                <Route path="migrate/v2" element={<MigrateV2 />} />
+                <Route path="migrate/v2/:address" element={<MigrateV2Pair />} />
 
-                <Route exact strict path="/increase/:currencyIdA?/:currencyIdB?/:feeAmount?/:tokenId?">
-                  <AddLiquidity />
-                </Route>
-
-                <Route exact strict path="/remove/v2/:currencyIdA/:currencyIdB">
-                  <RemoveLiquidity />
-                </Route>
-                <Route exact strict path="/remove/:tokenId">
-                  <RemoveLiquidityV3 />
-                </Route>
-
-                <Route exact strict path="/migrate/v2">
-                  <MigrateV2 />
-                </Route>
-                <Route exact strict path="/migrate/v2/:address">
-                  <MigrateV2Pair />
-                </Route>
-
-                <Route>
-                  <RedirectPathToSwapOnly />
-                </Route>
+                <Route path="*" element={<RedirectPathToSwapOnly />} />
               </Routes>
             </Suspense>
             <Marginer />
