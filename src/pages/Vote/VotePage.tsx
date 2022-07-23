@@ -153,7 +153,8 @@ function getDateFromBlock(
 }
 
 export default function VotePage() {
-  const { governorIndex, id } = useParams<{ governorIndex: string; id: string }>()
+  // see https://github.com/remix-run/react-router/issues/8200#issuecomment-962520661
+  const { governorIndex, id } = useParams() as { governorIndex: string; id: string }
   const parsedGovernorIndex = Number.parseInt(governorIndex)
 
   const { chainId, account } = useWeb3React()
