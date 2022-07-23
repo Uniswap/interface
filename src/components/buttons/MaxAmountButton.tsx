@@ -12,6 +12,8 @@ interface MaxAmountButtonProps {
   onSetMax: (amount: string) => void
 }
 
+const MAX_AMOUNT_SIG_FIGS = 6 // default for .toSignificant()
+
 export function MaxAmountButton({
   currencyAmount,
   currencyBalance,
@@ -23,15 +25,14 @@ export function MaxAmountButton({
 
   // Only show max button when balance is sufficient and max amount is not already set
   const showMaxButton = Boolean(
-    // TODO: consider being more explicit about showing the max button
-    //      either via a param, or telling this component which CurrencyField it is
-    maxInputAmount?.greaterThan(0) && !currencyAmount?.equalTo(maxInputAmount)
+    maxInputAmount?.greaterThan(0) &&
+      currencyAmount?.toSignificant(MAX_AMOUNT_SIG_FIGS) !==
+        maxInputAmount?.toSignificant(MAX_AMOUNT_SIG_FIGS)
   )
 
   if (!showMaxButton || !maxInputAmount) return null
 
   return (
-    // TODO: use `soft` button variant when available
     <PrimaryButton
       borderRadius="md"
       label={t('Max')}
@@ -39,7 +40,7 @@ export function MaxAmountButton({
       py="sm"
       textVariant="smallLabel"
       variant="transparent"
-      onPress={() => onSetMax(maxInputAmount.toSignificant())}
+      onPress={() => onSetMax(maxInputAmount.toSignificant(MAX_AMOUNT_SIG_FIGS))}
     />
   )
 }
