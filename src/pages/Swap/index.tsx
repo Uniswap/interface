@@ -13,6 +13,7 @@ import { NetworkAlert } from 'components/NetworkAlert/NetworkAlert'
 import SwapDetailsDropdown from 'components/swap/SwapDetailsDropdown'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 import { MouseoverTooltip } from 'components/Tooltip'
+import { isSupportedChain } from 'constants/chains'
 import { useSwapCallback } from 'hooks/useSwapCallback'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import JSBI from 'jsbi'
@@ -461,15 +462,25 @@ export default function Swap() {
                     loading={independentField === Field.OUTPUT && routeIsSyncing}
                   />
                 </Trace>
-                <ArrowWrapper clickable>
-                  <ArrowDown
-                    size="16"
-                    onClick={() => {
-                      setApprovalSubmitted(false) // reset 2 step UI for approvals
-                      onSwitchTokens()
-                    }}
-                    color={currencies[Field.INPUT] && currencies[Field.OUTPUT] ? theme.text1 : theme.text3}
-                  />
+                <ArrowWrapper clickable={isSupportedChain(chainId)}>
+                  <TraceEvent
+                    events={[Event.onClick]}
+                    name={EventName.SWAP_TOKENS_REVERSED}
+                    element={ElementName.SWAP_TOKENS_REVERSE_ARROW_BUTTON}
+                  >
+                    <ArrowDown
+                      size="16"
+                      onClick={() => {
+                        setApprovalSubmitted(false) // reset 2 step UI for approvals
+                        onSwitchTokens()
+                      }}
+                      color={
+                        currencies[Field.INPUT] && currencies[Field.OUTPUT]
+                          ? theme.deprecated_text1
+                          : theme.deprecated_text3
+                      }
+                    />
+                  </TraceEvent>
                 </ArrowWrapper>
                 <Trace section={SectionName.CURRENCY_OUTPUT_PANEL}>
                   <CurrencyInputPanel
@@ -496,7 +507,7 @@ export default function Swap() {
                 <>
                   <AutoRow justify="space-between" style={{ padding: '0 1rem' }}>
                     <ArrowWrapper clickable={false}>
-                      <ArrowDown size="16" color={theme.text2} />
+                      <ArrowDown size="16" color={theme.deprecated_text2} />
                     </ArrowWrapper>
                     <LinkStyledButton id="remove-recipient-button" onClick={() => onChangeRecipient(null)}>
                       <Trans>- Remove recipient</Trans>
@@ -584,7 +595,7 @@ export default function Swap() {
                             <Loader stroke="white" />
                           ) : (approvalSubmitted && approvalState === ApprovalState.APPROVED) ||
                             signatureState === UseERC20PermitState.SIGNED ? (
-                            <CheckCircle size="20" color={theme.green1} />
+                            <CheckCircle size="20" color={theme.deprecated_green1} />
                           ) : (
                             <MouseoverTooltip
                               text={
@@ -594,7 +605,7 @@ export default function Swap() {
                                 </Trans>
                               }
                             >
-                              <HelpCircle size="20" color={'white'} style={{ marginLeft: '8px' }} />
+                              <HelpCircle size="20" color={'deprecated_white'} style={{ marginLeft: '8px' }} />
                             </MouseoverTooltip>
                           )}
                         </AutoRow>

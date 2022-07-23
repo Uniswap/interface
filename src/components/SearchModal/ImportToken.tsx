@@ -65,7 +65,7 @@ export function ImportToken(props: ImportProps) {
       <SectionBreak />
       <AutoColumn gap="md" style={{ marginBottom: '32px', padding: '1rem' }}>
         <AutoColumn justify="center" style={{ textAlign: 'center', gap: '16px', padding: '1rem' }}>
-          <AlertCircle size={48} stroke={theme.text2} strokeWidth={1} />
+          <AlertCircle size={48} stroke={theme.deprecated_text2} strokeWidth={1} />
           <ThemedText.Body fontWeight={400} fontSize={16}>
             <Trans>
               This token doesn&apos;t appear on the active token list(s). Make sure this is the token that you want to

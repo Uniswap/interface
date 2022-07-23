@@ -347,13 +347,13 @@ export default function AddLiquidity() {
                 <ColumnCenter>
                   <BlueCard>
                     <AutoColumn gap="10px">
-                      <ThemedText.Link fontWeight={600} color={'primaryText1'}>
+                      <ThemedText.Link fontWeight={600} color={'deprecated_primaryText1'}>
                         <Trans>You are the first liquidity provider.</Trans>
                       </ThemedText.Link>
-                      <ThemedText.Link fontWeight={400} color={'primaryText1'}>
+                      <ThemedText.Link fontWeight={400} color={'deprecated_primaryText1'}>
                         <Trans>The ratio of tokens you add will set the price of this pool.</Trans>
                       </ThemedText.Link>
-                      <ThemedText.Link fontWeight={400} color={'primaryText1'}>
+                      <ThemedText.Link fontWeight={400} color={'deprecated_primaryText1'}>
                         <Trans>Once you are happy with the rate click supply to review.</Trans>
                       </ThemedText.Link>
                     </AutoColumn>
@@ -363,7 +363,7 @@ export default function AddLiquidity() {
                 <ColumnCenter>
                   <BlueCard>
                     <AutoColumn gap="10px">
-                      <ThemedText.Link fontWeight={400} color={'primaryText1'}>
+                      <ThemedText.Link fontWeight={400} color={'deprecated_primaryText1'}>
                         <Trans>
                           <b>
                             <Trans>Tip:</Trans>
@@ -390,7 +390,7 @@ export default function AddLiquidity() {
               showCommonBases
             />
             <ColumnCenter>
-              <Plus size="16" color={theme.text2} />
+              <Plus size="16" color={theme.deprecated_text2} />
             </ColumnCenter>
             <CurrencyInputPanel
               value={formattedAmounts[Field.CURRENCY_B]}
