@@ -73,10 +73,11 @@ export function SwapFlow({ prefilledState, onClose }: SwapFormProps) {
   const derivedSwapInfo = useDerivedSwapInfo(state)
   const { swapCallback } = useSwapCallbackFromDerivedSwapInfo(derivedSwapInfo)
 
+  const { warningModalType, warnings } = derivedSwapInfo
   const warning =
-    derivedSwapInfo.warningModalType === WarningModalType.INFORMATIONAL
-      ? derivedSwapInfo.warnings.find(showWarningInPanel)
-      : derivedSwapInfo.warnings.find((w) => w.action === WarningAction.WarnBeforeSubmit)
+    warningModalType === WarningModalType.INFORMATIONAL
+      ? warnings.find(showWarningInPanel)
+      : warnings.find((w) => w.action === WarningAction.WarnBeforeSubmit)
 
   return (
     <Flex fill gap="xs" justifyContent="space-between" py="md">
@@ -84,6 +85,7 @@ export function SwapFlow({ prefilledState, onClose }: SwapFormProps) {
         cancelLabel={t('Cancel swap')}
         continueLabel={t('Swap anyway')}
         warning={warning}
+        warningModalType={warningModalType}
         onClose={() => dispatch(transactionStateActions.closeWarningModal())}
         onPressContinue={
           derivedSwapInfo.warningModalType === WarningModalType.ACTION ? swapCallback : undefined

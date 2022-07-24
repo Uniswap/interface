@@ -6,7 +6,7 @@ import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { Box, Flex } from 'src/components/layout'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { Text } from 'src/components/Text'
-import { Warning, WarningSeverity } from 'src/components/warnings/types'
+import { Warning, WarningModalType, WarningSeverity } from 'src/components/warnings/types'
 import { getWarningColor } from 'src/components/warnings/utils'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 
@@ -15,6 +15,7 @@ type Props = {
   continueLabel?: string
   data?: string
   warning: Warning | undefined
+  warningModalType?: WarningModalType
   onClose: () => void
   onPressCancel?: () => void
   onPressContinue?: () => void
@@ -26,6 +27,7 @@ export function WarningModal({
   continueLabel,
   data,
   warning,
+  warningModalType,
   onClose,
   onPressCancel,
   onPressContinue,
@@ -43,7 +45,7 @@ export function WarningModal({
     onPressContinue?.()
   }, [onClose, onPressContinue])
 
-  if (!warning) return null
+  if (!warning || warningModalType === WarningModalType.NONE) return null
 
   const warningColor = getWarningColor(warning)
 
