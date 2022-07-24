@@ -116,4 +116,10 @@ export const migrations = {
     }
     return newState
   },
+
+  8: (state: any) => {
+    const newState = { ...state }
+    newState.cloudBackup = { backupsFound: [] }
+    return newState
+  },
 }

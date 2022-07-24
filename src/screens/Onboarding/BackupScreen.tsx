@@ -21,11 +21,11 @@ import { CheckmarkCircle } from 'src/components/icons/CheckmarkCircle'
 import { Chevron } from 'src/components/icons/Chevron'
 import { Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
+import { isICloudAvailable } from 'src/features/CloudBackup/RNICloudBackupsManager'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { ElementName } from 'src/features/telemetry/constants'
 import { BackupType } from 'src/features/wallet/accounts/types'
 import { useActiveAccount } from 'src/features/wallet/hooks'
-import { isICloudAvailable } from 'src/lib/RNICloudBackupsManager'
 import { OnboardingScreens, Screens } from 'src/screens/Screens'
 
 type Props = CompositeScreenProps<

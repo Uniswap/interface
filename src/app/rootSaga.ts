@@ -1,5 +1,6 @@
 import { combineReducers, Reducer } from '@reduxjs/toolkit'
 import { spawn } from 'redux-saga/effects'
+import { cloudBackupsManagerSaga } from 'src/features/CloudBackup/saga'
 import { deepLinkWatcher } from 'src/features/deepLinking/handleDeepLink'
 import { firebaseDataWatcher } from 'src/features/firebase/firebaseData'
 import { initFirebase } from 'src/features/firebase/initFirebaseSaga'
@@ -63,6 +64,7 @@ const sagas: any[] = [
   walletConnectSaga,
   signWcRequestSaga,
   estimateGasWatcher,
+  cloudBackupsManagerSaga,
 ]
 
 interface MonitoredSaga {

@@ -142,6 +142,13 @@ export const v7Schema = {
   ...v6Schema,
 }
 
+export const v8Schema = {
+  ...v7Schema,
+  cloudBackup: {
+    backupsFound: [],
+  },
+}
+
 // TODO: use function with typed output when API reducers are removed from rootReducer
 // export const getSchema = (): RootState => v0Schema
-export const getSchema = () => v7Schema
+export const getSchema = () => v8Schema

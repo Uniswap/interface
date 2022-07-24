@@ -2,6 +2,7 @@ import { combineReducers } from '@reduxjs/toolkit'
 import { monitoredSagaReducers } from 'src/app/rootSaga'
 import { blocksReducer } from 'src/features/blocks/blocksSlice'
 import { chainsReducer } from 'src/features/chains/chainsSlice'
+import { cloudBackupReducer } from 'src/features/CloudBackup/cloudBackupSlice'
 import { coingeckoApi } from 'src/features/dataApi/coingecko/enhancedApi'
 import { dataApi } from 'src/features/dataApi/slice'
 import { zerionApi } from 'src/features/dataApi/zerion/api'
@@ -38,6 +39,7 @@ export const rootReducer = combineReducers({
   transactions: transactionReducer,
   wallet: walletReducer,
   walletConnect: walletConnectReducer,
+  cloudBackup: cloudBackupReducer,
 })
 
 export type RootState = ReturnType<typeof rootReducer>

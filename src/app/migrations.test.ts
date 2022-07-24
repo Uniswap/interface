@@ -11,6 +11,7 @@ import {
   v4Schema,
   v5Schema,
   v6Schema,
+  v7Schema,
 } from 'src/app/schema'
 import { persistConfig } from 'src/app/store'
 import { WalletConnectModalState } from 'src/components/WalletConnect/ScanSheet/WalletConnectModal'
@@ -18,6 +19,7 @@ import { SWAP_ROUTER_ADDRESSES } from 'src/constants/addresses'
 import { ChainId } from 'src/constants/chains'
 import { initialBlockState } from 'src/features/blocks/blocksSlice'
 import { initialChainsState } from 'src/features/chains/chainsSlice'
+import { initialCloudBackupState } from 'src/features/CloudBackup/cloudBackupSlice'
 import { initialSearchHistoryState } from 'src/features/explore/searchHistorySlice'
 import { initialFavoritesState } from 'src/features/favorites/slice'
 import { initialModalState } from 'src/features/modals/modalSlice'
@@ -76,6 +78,7 @@ describe('Redux state migrations', () => {
     const initialState = {
       blocks: initialBlockState,
       chains: initialChainsState,
+      cloudBackup: initialCloudBackupState,
       favorites: initialFavoritesState,
       modals: initialModalState,
       notifications: initialNotificationsState,
@@ -356,5 +359,10 @@ describe('Redux state migrations', () => {
     const accounts = Object.values(v7.wallet.accounts)
     expect(accounts).toHaveLength(1)
     expect((accounts[0] as NativeAccount).mnemonicId).toEqual(TEST_ADDRESSES[0])
+  })
+
+  it('migrates from v7 to v8', () => {
+    const v8 = migrations[8](v7Schema)
+    expect(v8.cloudBackup.backupsFound).toEqual([])
   })
 })

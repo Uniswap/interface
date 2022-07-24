@@ -12,6 +12,12 @@ import { Button } from 'src/components/buttons/Button'
 import { Chevron } from 'src/components/icons/Chevron'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
+import { useCloudBackups } from 'src/features/CloudBackup/hooks'
+import {
+  isICloudAvailable,
+  startFetchingICloudBackups,
+  stopFetchingICloudBackups,
+} from 'src/features/CloudBackup/RNICloudBackupsManager'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { ImportType, OnboardingEntryPoint } from 'src/features/onboarding/utils'
 import { ElementName } from 'src/features/telemetry/constants'
@@ -73,6 +79,7 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props) {
   const { t } = useTranslation()
   const theme = useAppTheme()
   const dispatch = useAppDispatch()
+  const cloudBackups = useCloudBackups()
   const entryPoint = params?.entryPoint
 
   useEffect(() => {
@@ -88,10 +95,20 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props) {
     }
   }, [navigation, theme.colors.textPrimary])
 
-  /**
-   * @TODO include check icloud backups and conditionally render restore option
-   */
-  const backupFound = true
+  useEffect(() => {
+    async function fetchICloudBackups() {
+      const available = await isICloudAvailable()
+      if (available) {
+        startFetchingICloudBackups()
+      }
+    }
+
+    fetchICloudBackups()
+
+    return () => {
+      stopFetchingICloudBackups()
+    }
+  }, [])
 
   const handleOnPress = (nav: OnboardingScreens, importType: ImportType) => {
     // Delete any pending accounts before entering flow.
@@ -106,7 +123,7 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props) {
   const importOptions =
     entryPoint === OnboardingEntryPoint.Sidebar
       ? options.filter((option) => option.name !== ElementName.OnboardingImportWatchedAccount)
-      : [...(backupFound ? [backupOption] : []), ...options]
+      : [...(cloudBackups.length > 0 ? [backupOption] : []), ...options]
 
   return (
     <OnboardingScreen title={t('Choose how to add your wallet')}>
