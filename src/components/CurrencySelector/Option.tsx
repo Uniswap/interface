@@ -2,7 +2,7 @@ import { Currency } from '@uniswap/sdk-core'
 import Fuse from 'fuse.js'
 import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Pressable } from 'react-native'
+import { Button } from 'src/components/buttons/Button'
 import { CurrencyLogo } from 'src/components/CurrencyLogo'
 import TokenMetadata from 'src/components/CurrencySelector/TokenMetadata'
 import { Text } from 'src/components/Text'
@@ -23,7 +23,7 @@ export function Option({ currency, onPress, matches, metadataType, icon }: Optio
   const { t } = useTranslation()
 
   return (
-    <Pressable testID={`currency-option-${currency.chainId}-${currency.symbol}`} onPress={onPress}>
+    <Button testID={`currency-option-${currency.chainId}-${currency.symbol}`} onPress={onPress}>
       <Flex row alignItems="center" justifyContent="space-between" py="sm">
         <Flex row flexShrink={1} gap="sm" overflow="hidden">
           <CurrencyLogo currency={currency} size={40} />
@@ -53,6 +53,6 @@ export function Option({ currency, onPress, matches, metadataType, icon }: Optio
           </Flex>
         )}
       </Flex>
-    </Pressable>
+    </Button>
   )
 }
