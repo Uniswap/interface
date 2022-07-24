@@ -61,6 +61,7 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo }: SwapFormProps) {
     onToggleUSDInput,
     onShowSwapWarning,
     onCreateTxId,
+    onUpdateExactCurrencyField,
   } = useSwapActionHandlers(dispatch)
 
   const exactCurrency = currencies[exactCurrencyField]
@@ -101,6 +102,7 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo }: SwapFormProps) {
             otherSelectedCurrency={currencies[CurrencyField.OUTPUT]}
             value={formattedAmounts[CurrencyField.INPUT]}
             warnings={warnings}
+            onPressIn={() => onUpdateExactCurrencyField(CurrencyField.INPUT)}
             onSelectCurrency={(newCurrency: Currency) =>
               onSelectCurrency(CurrencyField.INPUT, newCurrency)
             }
@@ -140,6 +142,7 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo }: SwapFormProps) {
                 showNonZeroBalancesOnly={false}
                 value={formattedAmounts[CurrencyField.OUTPUT]}
                 warnings={warnings}
+                onPressIn={() => onUpdateExactCurrencyField(CurrencyField.OUTPUT)}
                 onSelectCurrency={(newCurrency: Currency) =>
                   onSelectCurrency(CurrencyField.OUTPUT, newCurrency)
                 }

@@ -152,7 +152,7 @@ describe(switchCurrencySides, () => {
 
     expect(transactionStateReducer(previousState, switchCurrencySides())).toEqual({
       ...previousState,
-      exactCurrencyField: CurrencyField.OUTPUT,
+      exactCurrencyField: CurrencyField.INPUT,
       [CurrencyField.INPUT]: ethTradeableAsset,
       [CurrencyField.OUTPUT]: daiTradeableAsset,
       exactAmountUSD: '',

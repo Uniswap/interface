@@ -89,10 +89,8 @@ const slice = createSlice({
     },
     /** Switches input and output currencies */
     switchCurrencySides: (state) => {
-      state.exactCurrencyField =
-        state.exactCurrencyField === CurrencyField.INPUT
-          ? CurrencyField.OUTPUT
-          : CurrencyField.INPUT
+      // prettier enforces this ; here https://github.com/prettier/prettier/issues/4193
+      // eslint-disable-next-line no-extra-semi
       ;[state[CurrencyField.INPUT], state[CurrencyField.OUTPUT]] = [
         state[CurrencyField.OUTPUT],
         state[CurrencyField.INPUT],
@@ -114,6 +112,15 @@ const slice = createSlice({
         state.exactCurrencyField = field
       }
       state.exactAmountToken = amount
+    },
+    /* Changes the input field */
+    updateExactCurrencyField: (state, action: PayloadAction<CurrencyField>) => {
+      const newCurrencyField = action.payload
+      if (state.exactCurrencyField !== newCurrencyField) {
+        state.exactAmountToken = ''
+        state.exactAmountUSD = ''
+      }
+      state.exactCurrencyField = newCurrencyField
     },
     /** Processes a new typed value for the given `field` */
     updateExactAmountUSD: (

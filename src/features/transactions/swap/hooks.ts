@@ -324,6 +324,8 @@ export function useSwapActionHandlers(dispatch: React.Dispatch<AnyAction>) {
     dispatch(transactionStateActions.updateExactAmountToken({ field, amount }))
   const onUpdateExactUSDAmount = (field: CurrencyField, amount: string) =>
     dispatch(transactionStateActions.updateExactAmountUSD({ field, amount }))
+  const onUpdateExactCurrencyField = (field: CurrencyField) =>
+    dispatch(transactionStateActions.updateExactCurrencyField(field))
   const onSetAmount = (field: CurrencyField, value: string, isUSDInput: boolean) => {
     const updater = isUSDInput ? onUpdateExactUSDAmount : onUpdateExactTokenAmount
     updater(field, value)
@@ -356,6 +358,7 @@ export function useSwapActionHandlers(dispatch: React.Dispatch<AnyAction>) {
     onSetAmount,
     onSetMax,
     onShowSwapWarning,
+    onUpdateExactCurrencyField,
   }
 }
 

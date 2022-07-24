@@ -31,6 +31,7 @@ type CurrentInputPanelProps = {
   isUSDInput?: boolean
   onSetMax?: (amount: string) => void
   onToggleUSDInput?: () => void
+  onPressIn?: () => void
   warnings: Warning[]
 } & RestyleProps
 
@@ -50,6 +51,7 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps) {
     isOutput = false,
     isUSDInput = false,
     onToggleUSDInput,
+    onPressIn,
     warnings,
     ...rest
   } = props
@@ -87,7 +89,7 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps) {
           testID={isOutput ? 'amount-input-out' : 'amount-input-in'}
           value={value}
           onChangeText={(newAmount: string) => onSetAmount(newAmount)}
-          onPressIn={() => onSetAmount('')}
+          onPressIn={onPressIn}
         />
       )}
 
