@@ -35,7 +35,8 @@ import { ExploreTokensScreen } from 'src/screens/ExploreTokensScreen'
 import { HomeScreen } from 'src/screens/HomeScreen'
 import { ImportMethodScreen } from 'src/screens/Import/ImportMethodScreen'
 import { PrivateKeyInputScreen } from 'src/screens/Import/PrivateKeyInputScreen'
-import { RestoreWalletScreen } from 'src/screens/Import/RestoreWalletScreen'
+import { RestoreCloudBackupPinScreen } from 'src/screens/Import/RestoreCloudBackupPinScreen'
+import { RestoreCloudBackupScreen } from 'src/screens/Import/RestoreCloudBackupScreen'
 import { SeedPhraseInputScreen } from 'src/screens/Import/SeedPhraseInputScreen'
 import { SelectWalletScreen } from 'src/screens/Import/SelectWalletScreen'
 import { WatchWalletScreen } from 'src/screens/Import/WatchWalletScreen'
@@ -334,8 +335,12 @@ export function OnboardingStackNavigator() {
           name={OnboardingScreens.PrivateKeyInput}
         />
         <OnboardingStack.Screen
-          component={RestoreWalletScreen}
-          name={OnboardingScreens.RestoreWallet}
+          component={RestoreCloudBackupScreen}
+          name={OnboardingScreens.RestoreCloudBackup}
+        />
+        <OnboardingStack.Screen
+          component={RestoreCloudBackupPinScreen}
+          name={OnboardingScreens.RestoreCloudBackupPin}
         />
         <OnboardingStack.Screen
           component={SeedPhraseInputScreen}

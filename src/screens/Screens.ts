@@ -56,7 +56,8 @@ export enum OnboardingScreens {
   ImportMethod = 'ImportMethod',
   SeedPhraseInput = 'SeedPhraseInput',
   PrivateKeyInput = 'PrivateKeyInput',
-  RestoreWallet = 'RestoreWallet',
+  RestoreCloudBackup = 'RestoreCloudBackup',
+  RestoreCloudBackupPin = 'RestoreCloudBackupPin',
   SelectWallet = 'SelectWallet',
   WatchWallet = 'WatchWallet',
 }

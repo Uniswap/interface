@@ -10,30 +10,25 @@ import { OnboardingScreens } from 'src/screens/Screens'
 
 const PIN_LENGTH = 6
 
-type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.RestoreWallet>
+type Props = NativeStackScreenProps<
+  OnboardingStackParamList,
+  OnboardingScreens.RestoreCloudBackupPin
+>
 
-export function RestoreWalletScreen({ navigation, route: { params } }: Props) {
+export function RestoreCloudBackupPinScreen({ navigation, route: { params } }: Props) {
   const { t } = useTranslation()
 
   const [enteredPin, setEnteredPin] = useState('')
   const [error, setError] = useState(false)
 
-  /**
-   * @TODO
-   * 1. detect icloud pin and validate input against it
-   * 2. load addresses for recovered wallets
-   * 3. load wallets in low level RS code if succesful pin (accounts need to be imported)
-   * 3. navigate to select wallet page with wallets ^ if succesful pin
-   */
-  const expectedPin = '00Dummy'
   useEffect(() => {
     if (enteredPin.length !== PIN_LENGTH) return
-    if (enteredPin === expectedPin) {
-      navigation.navigate({ name: OnboardingScreens.SelectWallet, params, merge: true })
-    } else {
-      setEnteredPin('')
-      setError(true)
-    }
+
+    // TODO: Call native function to determine if pin successfully decrypts backup
+    // TODO: Dispatch importAccountActions with ImportAcountType.Restore to load mnemonic from backup using pin
+
+    setEnteredPin('')
+    setError(true)
   }, [enteredPin, navigation, params])
 
   return (

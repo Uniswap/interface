@@ -102,7 +102,10 @@ export type OnboardingStackParamList = {
 
   // import
   [OnboardingScreens.ImportMethod]: OnboardingStackBaseParams
-  [OnboardingScreens.RestoreWallet]: OnboardingStackBaseParams
+  [OnboardingScreens.RestoreCloudBackup]: OnboardingStackBaseParams
+  [OnboardingScreens.RestoreCloudBackupPin]: {
+    mnemonicId: string
+  } & OnboardingStackBaseParams
   [OnboardingScreens.SeedPhraseInput]: OnboardingStackBaseParams
   [OnboardingScreens.PrivateKeyInput]: OnboardingStackBaseParams
   [OnboardingScreens.SelectWallet]: OnboardingStackBaseParams

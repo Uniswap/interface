@@ -41,7 +41,7 @@ const backupOption: ImportMethodOption = {
   title: (t: TFunction) => t('Restore from iCloud'),
   blurb: (t: TFunction) => t('Recover a backed-up recovery phrase'),
   icon: (theme: Theme) => <CloudIcon color={theme.colors.textPrimary} height={16} width={16} />,
-  nav: OnboardingScreens.RestoreWallet,
+  nav: OnboardingScreens.RestoreCloudBackup,
   importType: ImportType.Restore,
   name: ElementName.OnboardingImportBackup,
 }
@@ -110,9 +110,43 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props) {
     }
   }, [])
 
+  const handleOnPressRestoreBackup = () => {
+    if (cloudBackups.length > 1) {
+      navigation.navigate({
+        name: OnboardingScreens.RestoreCloudBackup,
+        params: { importType: ImportType.Restore, entryPoint },
+        merge: true,
+      })
+      return
+    }
+
+    const backup = cloudBackups[0]
+    if (backup.isPinEncrypted) {
+      navigation.navigate({
+        name: OnboardingScreens.RestoreCloudBackupPin,
+        params: { importType: ImportType.Restore, entryPoint, mnemonicId: backup.mnemonicId },
+        merge: true,
+      })
+    } else {
+      // TODO(fetch-icloud-backups-p3): Dispatch importAccountActions with ImportAcountType.Restore to load mnemonic from backup
+
+      navigation.navigate({
+        name: OnboardingScreens.SelectWallet,
+        params: { importType: ImportType.Restore, entryPoint },
+        merge: true,
+      })
+    }
+  }
+
   const handleOnPress = (nav: OnboardingScreens, importType: ImportType) => {
     // Delete any pending accounts before entering flow.
     dispatch(pendingAccountActions.trigger(PendingAccountActions.DELETE))
+
+    if (importType === ImportType.Restore) {
+      handleOnPressRestoreBackup()
+      return
+    }
+
     navigation.navigate({
       name: nav,
       params: { importType, entryPoint },
