@@ -22,6 +22,7 @@ export function AmountInput({ onChangeText, value, showCurrencySign, ...rest }: 
 
   return (
     <TextInput
+      color={!value ? 'textTertiary' : 'textPrimary'}
       keyboardType="numeric"
       value={formattedValue}
       onChangeText={handleChange}
