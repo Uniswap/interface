@@ -6,7 +6,7 @@ import { ChainId } from 'src/constants/chains'
 import { useUSDGasPrice } from 'src/features/gas/hooks'
 import { FeeInfo } from 'src/features/gas/types'
 import { EthTransaction } from 'src/features/walletConnect/types'
-import { formatPrice } from 'src/utils/format'
+import { formatUSDPrice } from 'src/utils/format'
 
 export function NetworkFee({
   chainId,
@@ -24,7 +24,7 @@ export function NetworkFee({
       <Flex grow>
         <Text variant="bodySmall">{t('Network Fee')}</Text>
       </Flex>
-      <Text variant="bodySmall">{!gasFeeInfo ? 'Loading...' : formatPrice(price)}</Text>
+      <Text variant="bodySmall">{!gasFeeInfo ? 'Loading...' : formatUSDPrice(price)}</Text>
     </Flex>
   )
 }
