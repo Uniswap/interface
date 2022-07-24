@@ -10,7 +10,7 @@ import { Box } from 'src/components/layout/Box'
 import { Flex } from 'src/components/layout/Flex'
 import { SpinningLoader } from 'src/components/loading/SpinningLoader'
 import { Text } from 'src/components/Text'
-import { ChainId, CHAIN_INFO } from 'src/constants/chains'
+import { ChainId } from 'src/constants/chains'
 import { AssetType } from 'src/entities/assets'
 import { useSpotPrices } from 'src/features/dataApi/prices'
 import { openModal } from 'src/features/modals/modalSlice'
@@ -27,7 +27,7 @@ import {
   TransactionType,
 } from 'src/features/transactions/types'
 import { buildCurrencyId } from 'src/utils/currencyId'
-import { openUri } from 'src/utils/linking'
+import { openTransactionLink } from 'src/utils/linking'
 
 export const TXN_HISTORY_ICON_SIZE = 36
 export const TXN_HISTORY_SIZING = {
@@ -95,7 +95,6 @@ function TransactionSummaryItem({
     fullDetails?.typeInfo.type === TransactionType.Swap &&
     fullDetails.status === TransactionStatus.Failed
 
-  const explorerUrl = CHAIN_INFO[chainId].explorer
   const dateAdded = dayjs(msTimestampAdded).format('MMM D')
 
   const onRetrySwap = useCallback(() => {
@@ -233,7 +232,7 @@ function TransactionSummaryItem({
         onClose={() => {
           setShowActionsModal(false)
         }}
-        onExplore={() => openUri(`${explorerUrl}/tx/${hash}`)}
+        onExplore={() => openTransactionLink(hash, chainId)}
       />
     </>
   )

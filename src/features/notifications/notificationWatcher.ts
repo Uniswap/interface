@@ -1,9 +1,9 @@
-import { TradeType } from '@uniswap/sdk-core'
 import { AssetType } from 'src/entities/assets'
 import { pushNotification } from 'src/features/notifications/notificationSlice'
 import { AppNotificationType } from 'src/features/notifications/types'
 import { finalizeTransaction } from 'src/features/transactions/slice'
 import { TransactionStatus, TransactionType } from 'src/features/transactions/types'
+import { getInputAmountFromTrade, getOutputAmountFromTrade } from 'src/features/transactions/utils'
 import { WalletConnectEvent } from 'src/features/walletConnect/saga'
 import { logger } from 'src/utils/logger'
 import { put, takeLatest } from 'typed-redux-saga'
@@ -45,15 +45,8 @@ export function* pushTransactionNotification(action: ReturnType<typeof finalizeT
       )
       break
     case TransactionType.Swap:
-      const inputCurrencyAmountRaw =
-        typeInfo.tradeType === TradeType.EXACT_INPUT
-          ? typeInfo.inputCurrencyAmountRaw
-          : typeInfo.expectedInputCurrencyAmountRaw
-      const outputCurrencyAmountRaw =
-        typeInfo.tradeType === TradeType.EXACT_OUTPUT
-          ? typeInfo.outputCurrencyAmountRaw
-          : typeInfo.expectedOutputCurrencyAmountRaw
-
+      const inputCurrencyAmountRaw = getInputAmountFromTrade(typeInfo)
+      const outputCurrencyAmountRaw = getOutputAmountFromTrade(typeInfo)
       yield* put(
         pushNotification({
           ...baseNotificationData,

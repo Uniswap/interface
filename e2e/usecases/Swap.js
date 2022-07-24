@@ -39,8 +39,9 @@ export function Swap() {
 
   it('submit a swap tx', async () => {
     await element(by.id(ElementName.ReviewSwap)).tap()
-    await element(by.id(ElementName.Swap)).longPress(2000)
-
+    await element(by.id(ElementName.Swap)).tap()
     await device.matchFace()
+
+    await element(by.id(ElementName.OK)).tap()
   })
 }

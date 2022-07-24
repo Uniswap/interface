@@ -12,6 +12,7 @@ import {
 } from 'src/features/transactions/swap/hooks'
 import { SwapForm } from 'src/features/transactions/swap/SwapForm'
 import { SwapReview } from 'src/features/transactions/swap/SwapReview'
+import { SwapStatus } from 'src/features/transactions/swap/SwapStatus'
 import { showWarningInPanel } from 'src/features/transactions/swap/validate'
 import {
   initialState as emptyState,
@@ -46,6 +47,10 @@ function SwapInnerContent({
   onClose,
   derivedSwapInfo,
 }: InnerContentProps) {
+  if (step === SwapStep.SUBMITTED) {
+    return <SwapStatus derivedSwapInfo={derivedSwapInfo} onNext={onClose} />
+  }
+
   if (step === SwapStep.FORM) {
     return (
       <SwapForm
@@ -60,7 +65,7 @@ function SwapInnerContent({
     <SwapReview
       derivedSwapInfo={derivedSwapInfo}
       dispatch={dispatch}
-      onNext={onClose}
+      onNext={() => setStep(SwapStep.SUBMITTED)}
       onPrev={() => setStep(SwapStep.FORM)}
     />
   )

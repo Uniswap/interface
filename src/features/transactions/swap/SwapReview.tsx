@@ -238,6 +238,7 @@ export function ActionButton({ onPress, disabled, label, name }: ActionButtonPro
         label={label}
         name={name}
         py="md"
+        testID={name}
         onPress={() => {
           notificationAsync()
           actionButtonTrigger()

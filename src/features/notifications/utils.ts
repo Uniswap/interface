@@ -219,7 +219,7 @@ export function convertScientificNotationToNumber(value: string) {
   return convertedValue
 }
 
-const getFormattedCurrencyAmount = (
+export const getFormattedCurrencyAmount = (
   currency: Nullable<Currency>,
   currencyAmountRaw: string,
   isApproximateAmount = false

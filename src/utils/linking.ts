@@ -17,6 +17,11 @@ export async function openUri(uri: string) {
   }
 }
 
+export async function openTransactionLink(hash: string, chainId: ChainId) {
+  const explorerUrl = getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)
+  return openUri(explorerUrl)
+}
+
 export function openSettings() {
   Linking.openSettings()
 }

@@ -1,8 +1,13 @@
-import { CurrencyAmount, NativeCurrency } from '@uniswap/sdk-core'
+import { CurrencyAmount, NativeCurrency, TradeType } from '@uniswap/sdk-core'
 import { providers } from 'ethers'
 import { TFunction } from 'i18next'
 import { ChainId } from 'src/constants/chains'
-import { TransactionDetails, TransactionType } from 'src/features/transactions/types'
+import {
+  ExactInputSwapTransactionInfo,
+  ExactOutputSwapTransactionInfo,
+  TransactionDetails,
+  TransactionType,
+} from 'src/features/transactions/types'
 import { v4 as uuid } from 'uuid'
 
 export function getSerializableTransactionRequest(
@@ -67,4 +72,20 @@ export function hasSufficientFundsIncludingGas(params: {
 
 export function createTransactionId() {
   return uuid()
+}
+
+export function getInputAmountFromTrade(
+  typeInfo: ExactInputSwapTransactionInfo | ExactOutputSwapTransactionInfo
+) {
+  return typeInfo.tradeType === TradeType.EXACT_INPUT
+    ? typeInfo.inputCurrencyAmountRaw
+    : typeInfo.expectedInputCurrencyAmountRaw
+}
+
+export function getOutputAmountFromTrade(
+  typeInfo: ExactInputSwapTransactionInfo | ExactOutputSwapTransactionInfo
+) {
+  return typeInfo.tradeType === TradeType.EXACT_OUTPUT
+    ? typeInfo.outputCurrencyAmountRaw
+    : typeInfo.expectedOutputCurrencyAmountRaw
 }
