@@ -18,17 +18,29 @@ import {
   SpotPrices,
 } from 'src/features/dataApi/types'
 import { serializeQueryParams } from 'src/features/transactions/swap/utils'
+import { HIDE_SMALL_USD_BALANCES_THRESHOLD } from 'src/features/wallet/walletSlice'
 import { buildCurrencyId, CurrencyId } from 'src/utils/currencyId'
 import { percentDifference } from 'src/utils/statistics'
 
 const COVALENT_API = 'https://api.covalenthq.com/v1/'
 
 // Extracted to be used in multiple response transformations.
-function reduceItemResponse(items: CovalentWalletBalanceItem[], chainId: ChainId) {
+function reduceBalanceItemResponse(
+  items: CovalentWalletBalanceItem[],
+  chainId: ChainId,
+  ignoreSmallBalances: boolean
+) {
   return items.reduce<{
     [currencyId: CurrencyId]: SerializablePortfolioBalance
   }>((memo, item) => {
-    if (item.quote === 0) return memo
+    if (item.quote === 0) {
+      return memo
+    }
+
+    if (ignoreSmallBalances && item.quote < HIDE_SMALL_USD_BALANCES_THRESHOLD) {
+      return memo
+    }
+
     const contract_address = utils.getAddress(item.contract_address)
     memo[buildCurrencyId(chainId, contract_address)] = {
       balance: item.balance,
@@ -62,12 +74,16 @@ export const dataApi = createApi({
      */
     balances: builder.query<
       { [currencyId: CurrencyId]: SerializablePortfolioBalance },
-      { chainId: ChainId; address: Address }
+      { chainId: ChainId; address: Address; ignoreSmallBalances: boolean }
     >({
       query: ({ chainId, address }) =>
         `${chainId}/address/${address}/balances_v2/?${serializedBaseQueryOptions}`,
       transformResponse: (response: { data: CovalentBalances }, _, args) => {
-        return reduceItemResponse(response.data.items, args.chainId)
+        return reduceBalanceItemResponse(
+          response.data.items,
+          args.chainId,
+          args.ignoreSmallBalances
+        )
       },
     }),
 

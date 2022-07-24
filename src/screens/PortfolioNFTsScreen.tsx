@@ -23,7 +23,8 @@ import { NFTAsset } from 'src/features/nfts/types'
 import { getNFTAssetKey } from 'src/features/nfts/utils'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { selectNFTViewType } from 'src/features/wallet/selectors'
-import { NFTViewType, setNFTViewType } from 'src/features/wallet/walletSlice'
+import { NFTViewType } from 'src/features/wallet/types'
+import { setNFTViewType } from 'src/features/wallet/walletSlice'
 import { Screens } from 'src/screens/Screens'
 import { theme } from 'src/styles/theme'
 
@@ -37,7 +38,7 @@ export function PortfolioNFTsScreen({
   const navigation = useHomeStackNavigation()
   const accountAddress = useActiveAccount()?.address
   const activeAddress = owner ?? accountAddress
-  const nftViewType = useAppSelector(selectNFTViewType) || NFTViewType.Grid
+  const nftViewType = useAppSelector(selectNFTViewType)
   const dispatch = useAppDispatch()
 
   const { t } = useTranslation()

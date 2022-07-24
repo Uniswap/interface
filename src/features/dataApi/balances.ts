@@ -1,6 +1,7 @@
 import { skipToken } from '@reduxjs/toolkit/dist/query'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
+import { useAppSelector } from 'src/app/hooks'
 import { ChainId } from 'src/constants/chains'
 import { PollingInterval } from 'src/constants/misc'
 import {
@@ -19,6 +20,7 @@ import { isEnabled } from 'src/features/remoteConfig'
 import { TestConfig } from 'src/features/remoteConfig/testConfigs'
 import { useAllCurrencies } from 'src/features/tokens/useTokens'
 import { useActiveAccount } from 'src/features/wallet/hooks'
+import { selectHideSmallBalances } from 'src/features/wallet/selectors'
 import { isTestnet } from 'src/utils/chainId'
 import { buildCurrencyId, currencyId, CurrencyId } from 'src/utils/currencyId'
 import { flattenObjectOfObjects } from 'src/utils/objects'
@@ -35,8 +37,10 @@ function useChainBalances(
   balances: { [currency: CurrencyId]: PortfolioBalance }
   loading: boolean
 } {
+  const ignoreSmallBalances = useAppSelector(selectHideSmallBalances)
+
   const { currentData: data, isLoading: loading } = useBalancesQuery(
-    address ? { chainId, address } : skipToken,
+    address ? { chainId, address, ignoreSmallBalances } : skipToken,
     {
       pollingInterval: PollingInterval.Normal,
     }
@@ -112,11 +116,13 @@ export function useAllBalancesByChainId(
  */
 export function useSingleBalance(currency: Currency): PortfolioBalance | null {
   const address = useActiveAccount()?.address
+  const hideSmallBalances = useAppSelector(selectHideSmallBalances)
   const balance = dataApi.endpoints.balances.useQueryState(
     address
       ? {
           chainId: currency.chainId,
           address,
+          ignoreSmallBalances: hideSmallBalances,
         }
       : skipToken,
     {

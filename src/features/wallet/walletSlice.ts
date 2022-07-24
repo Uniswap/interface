@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { ClientSideOrderBy, CoingeckoOrderBy } from 'src/features/dataApi/coingecko/types'
 import { Account } from 'src/features/wallet/accounts/types'
+import { NFTViewType } from 'src/features/wallet/types'
 import { areAddressesEqual, normalizeAddress } from 'src/utils/addresses'
 import { next } from 'src/utils/array'
 
@@ -9,10 +10,7 @@ const tokensMetadataDisplayTypes = [
   ClientSideOrderBy.PriceChangePercentage24hDesc,
 ]
 
-export enum NFTViewType {
-  Grid,
-  Collection,
-}
+export const HIDE_SMALL_USD_BALANCES_THRESHOLD = 1
 
 interface Wallet {
   accounts: Record<Address, Account>
@@ -21,11 +19,15 @@ interface Wallet {
   flashbotsEnabled: boolean
   isUnlocked: boolean
   isBiometricAuthEnabled: boolean
+  // Persisted UI configs set by the user through interaction with filters and settings
   settings: {
+    showSmallBalances?: boolean // default: hide small balances
+
+    nftViewType?: NFTViewType
+
     // Settings used in the top tokens list
     tokensOrderBy?: CoingeckoOrderBy | ClientSideOrderBy
     tokensMetadataDisplayType?: CoingeckoOrderBy | ClientSideOrderBy
-    nftViewType?: NFTViewType
   }
 }
 
@@ -94,6 +96,12 @@ const slice = createSlice({
     ) => {
       state.isBiometricAuthEnabled = isBiometricAuthEnabled
     },
+    setNFTViewType: (state, action: PayloadAction<NFTViewType>) => {
+      state.settings.nftViewType = action.payload
+    },
+    setShowSmallBalances: (state, action: PayloadAction<boolean>) => {
+      state.settings.showSmallBalances = action.payload
+    },
     setTokensOrderBy: (
       state,
       {
@@ -110,9 +118,6 @@ const slice = createSlice({
         next(tokensMetadataDisplayTypes, state.settings.tokensMetadataDisplayType) ??
         tokensMetadataDisplayTypes[0]
     },
-    setNFTViewType: (state, action: PayloadAction<NFTViewType>) => {
-      state.settings.nftViewType = action.payload
-    },
     resetWallet: () => initialWalletState,
   },
 })
@@ -128,9 +133,10 @@ export const {
   setFinishedOnboarding,
   setIsBiometricAuthEnabled,
   toggleFlashbots,
+  setNFTViewType,
+  setShowSmallBalances,
   setTokensOrderBy,
   cycleTokensMetadataDisplayType,
-  setNFTViewType,
 } = slice.actions
 
 export const walletReducer = slice.reducer

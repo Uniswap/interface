@@ -3,11 +3,12 @@ import { useTheme } from '@shopify/restyle'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ListRenderItemInfo, SectionList } from 'react-native'
-import { useAppDispatch } from 'src/app/hooks'
+import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { SettingsStackParamList, useSettingsStackNavigation } from 'src/app/navigation/types'
 import NotificationIcon from 'src/assets/icons/bell.svg'
 import EditIcon from 'src/assets/icons/edit.svg'
 import GlobalIcon from 'src/assets/icons/global.svg'
+import TrendingUpIcon from 'src/assets/icons/trending-up.svg'
 import { RemoveAccountModal } from 'src/components/accounts/RemoveAccountModal'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
@@ -25,6 +26,8 @@ import { Text } from 'src/components/Text'
 import { AccountType } from 'src/features/wallet/accounts/types'
 import { EditAccountAction, editAccountActions } from 'src/features/wallet/editAccountSaga'
 import { useAccounts } from 'src/features/wallet/hooks'
+import { selectHideSmallBalances } from 'src/features/wallet/selectors'
+import { setShowSmallBalances } from 'src/features/wallet/walletSlice'
 import { opacify } from 'src/utils/colors'
 import { Screens } from './Screens'
 
@@ -43,6 +46,7 @@ export function SettingsWallet({
   const readonly = currentAccount.type === AccountType.Readonly
   const hasOnlyOneAccount = Object.values(addressToAccount).length === 1
   const navigation = useSettingsStackNavigation()
+
   const [notificationsEnabled, setNotificationsEnabled] = useState(false)
   const [showRemoveWalletModal, setShowRemoveWalletModal] = useState(false)
 
@@ -71,6 +75,12 @@ export function SettingsWallet({
     setShowRemoveWalletModal(false)
   }
 
+  const hideSmallBalancesEnabled = useAppSelector(selectHideSmallBalances)
+
+  const toggleHideSmallBalances = () => {
+    dispatch(setShowSmallBalances(hideSmallBalancesEnabled))
+  }
+
   const sections: SettingsSection[] = [
     {
       subTitle: t('Wallet preferences'),
@@ -87,6 +97,13 @@ export function SettingsWallet({
           ),
           text: t('Notifications'),
           icon: <NotificationIcon color={theme.colors.textSecondary} />,
+        },
+        {
+          action: (
+            <Switch value={hideSmallBalancesEnabled} onValueChange={toggleHideSmallBalances} />
+          ),
+          text: t('Hide small balances'),
+          icon: <TrendingUpIcon color={theme.colors.textSecondary} />,
         },
         {
           screen: Screens.SettingsWalletManageConnection,

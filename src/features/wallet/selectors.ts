@@ -2,6 +2,7 @@ import { createSelector } from '@reduxjs/toolkit'
 import type { RootState } from 'src/app/rootReducer'
 import { ClientSideOrderBy, CoingeckoOrderBy } from 'src/features/dataApi/coingecko/types'
 import { DEMO_ACCOUNT_ADDRESS } from 'src/features/wallet/accounts/useTestAccount'
+import { NFTViewType } from 'src/features/wallet/types'
 import { AccountType, NativeAccount } from './accounts/types'
 
 const DEFAULT_TOKENS_ORDER_BY = CoingeckoOrderBy.MarketCapDesc
@@ -58,7 +59,10 @@ export const selectFinishedOnboarding = (state: RootState) => state.wallet.finis
 export const selectFlashbotsEnabled = (state: RootState) => state.wallet.flashbotsEnabled
 export const selectIsBiometricAuthEnabled = (state: RootState) =>
   state.wallet.isBiometricAuthEnabled
-export const selectNFTViewType = (state: RootState) => state.wallet.settings.nftViewType
+export const selectNFTViewType = (state: RootState) =>
+  state.wallet.settings.nftViewType ?? NFTViewType.Grid
+export const selectHideSmallBalances = (state: RootState) =>
+  !state.wallet.settings.showSmallBalances
 
 export const selectTokensOrderBy = (state: RootState) =>
   state.wallet.settings.tokensOrderBy ?? DEFAULT_TOKENS_ORDER_BY
