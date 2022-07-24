@@ -1,3 +1,4 @@
+import { createSelector } from '@reduxjs/toolkit'
 import { useMemo } from 'react'
 import { RootState } from 'src/app/rootReducer'
 import { SearchableRecipient } from 'src/components/RecipientSelect/types'
@@ -11,11 +12,12 @@ import {
 } from 'src/features/transactions/types'
 import { flattenObjectOfObjects } from 'src/utils/objects'
 
-export const makeSelectAddressTransactions = (address: Address | null) => (state: RootState) =>
-  useMemo(() => {
-    if (!address || !state.transactions[address]) return undefined
-    return flattenObjectOfObjects(state.transactions[address])
-  }, [state.transactions])
+const selectTransactions = (state: RootState) => state.transactions
+export const makeSelectAddressTransactions = (address: Address | null) =>
+  createSelector(selectTransactions, (transactions) => {
+    if (!address || !transactions[address]) return undefined
+    return flattenObjectOfObjects(transactions[address])
+  })
 
 export const makeSelectTransaction =
   (address: Address | null, chainId: ChainId | undefined, txHash: string | undefined) =>
