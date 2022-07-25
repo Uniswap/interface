@@ -133,7 +133,9 @@ function QuickActions() {
       <PrimaryButton
         borderRadius="md"
         flex={1}
-        icon={<CameraScan height={20} stroke={theme.colors.textPrimary} width={20} />}
+        icon={
+          <CameraScan color={theme.colors.textPrimary} height={20} strokeWidth={2} width={20} />
+        }
         label={t('Scan')}
         name={
           // Note. Leaving as buy since scan will be reverted before launch
