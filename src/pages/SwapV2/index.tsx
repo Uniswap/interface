@@ -1,6 +1,6 @@
-import { CurrencyAmount, Token, Currency, ChainId } from '@kyberswap/ks-sdk-core'
+import { ChainId, Currency, CurrencyAmount, Token } from '@kyberswap/ks-sdk-core'
 import JSBI from 'jsbi'
-import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { AlertTriangle, ArrowDown } from 'react-feather'
 import { Box, Flex, Text } from 'rebass'
 import styled, { ThemeContext } from 'styled-components'
@@ -83,18 +83,17 @@ import { currencyId } from 'utils/currencyId'
 import Banner from 'components/Banner'
 import TrendingSoonTokenBanner from 'components/TrendingSoonTokenBanner'
 import TopTrendingSoonTokensInCurrentNetwork from 'components/TopTrendingSoonTokensInCurrentNetwork'
-import { clientData } from 'constants/clientData'
 import { NETWORKS_INFO, SUPPORTED_NETWORKS } from 'constants/networks'
 import { useActiveNetwork } from 'hooks/useActiveNetwork'
 import { convertToSlug, getNetworkSlug, getSymbolSlug } from 'utils/string'
 import { checkPairInWhiteList, convertSymbol } from 'utils/tokenInfo'
 import { filterTokensWithExactKeyword } from 'components/SearchModal/filtering'
-import { useRef } from 'react'
 import { nativeOnChain } from 'constants/tokens'
 import * as Sentry from '@sentry/react'
 
 import Footer from 'components/Footer/Footer'
 import usePrevious from 'hooks/usePrevious'
+
 enum ACTIVE_TAB {
   SWAP,
   INFO,
@@ -292,12 +291,7 @@ export default function Swap({ history }: RouteComponentProps) {
   const maxAmountInput: CurrencyAmount<Currency> | undefined = maxAmountSpend(currencyBalances[Field.INPUT])
 
   // the callback to execute the swap
-  const { callback: swapCallback, error: swapCallbackError } = useSwapV2Callback(
-    trade,
-    allowedSlippage,
-    recipient,
-    clientData,
-  )
+  const { callback: swapCallback, error: swapCallbackError } = useSwapV2Callback(trade, recipient)
 
   const handleSwap = useCallback(() => {
     if (!swapCallback) {

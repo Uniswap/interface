@@ -101,7 +101,7 @@ export default function SwapModalFooter({
           </RowFixed>
 
           <TYPE.black color={theme.text} fontSize={14}>
-            {formattedNum(trade.gasUsd?.toString(), true)}
+            {trade.gasUsd ? formattedNum(trade.gasUsd?.toString(), true) : '--'}
           </TYPE.black>
         </RowBetween>
 

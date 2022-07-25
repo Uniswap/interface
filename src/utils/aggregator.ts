@@ -1,16 +1,15 @@
-import { ethers } from 'ethers'
 import JSBI from 'jsbi'
 import {
+  ChainId,
   Currency,
   CurrencyAmount,
   Fraction,
   Percent,
   Price,
   TokenAmount,
-  ChainId,
   TradeType,
 } from '@kyberswap/ks-sdk-core'
-import { dexIds, dexTypes, dexListConfig, DexConfig, DEX_TO_COMPARE } from '../constants/dexes'
+import { DEX_TO_COMPARE, DexConfig, dexIds, dexListConfig, dexTypes } from 'constants/dexes'
 import invariant from 'tiny-invariant'
 import { AggregationComparer } from 'state/swap/types'
 import { GasPrice } from 'state/application/reducer'
@@ -18,22 +17,6 @@ import { reportException } from 'utils/sentry'
 import { ETHER_ADDRESS, KYBERSWAP_SOURCE, sentryRequestId } from 'constants/index'
 import { BigNumber } from '@ethersproject/bignumber'
 import { FeeConfig } from 'hooks/useSwapV2Callback'
-
-function dec2bin(dec: number, length: number): string {
-  // let bin = (dec >>> 0).toString(2)
-  let bin = dec.toString(2)
-  // const maxBinLength = maxDec ? (maxDec >>> 0).toString(2).length : null
-  const maxBinLength = length || null
-  if (maxBinLength && maxBinLength > bin.length) {
-    const zeros = new Array(maxBinLength - bin.length + 1).join('0')
-    bin = zeros + bin
-  }
-  return bin
-}
-
-function bin2dec(binaryNumber: string): number {
-  return parseInt((binaryNumber + '').replace(/[^01]/gi, ''), 2)
-}
 
 type ExchangeConfig = { id: number; type: number } & DexConfig
 
@@ -51,144 +34,6 @@ export const getExchangeConfig = (exchange: string, chainId: ChainId): ExchangeC
     id: getKeyValue(allIds)(exchange) ?? 1,
     type: getKeyValue(allTypes)(exchange) ?? 0,
   }
-}
-
-export function encodeParameters(types: any[], values: any[]): string {
-  const abi = new ethers.utils.AbiCoder()
-  return abi.encode(types, values)
-}
-
-function encodeUniSwapV3(data: any) {
-  return encodeParameters(
-    ['address', 'address', 'address', 'uint256', 'uint256', 'uint160'],
-    [data.pool, data.tokenIn, data.tokenOut, data.swapAmount, data.limitReturnAmount || '0', '0'],
-  )
-}
-
-function encodeUniSwap(data: any) {
-  return encodeParameters(
-    ['address', 'address', 'address', 'address', 'uint256', 'uint256'],
-    [data.pool, data.tokenIn, data.tokenOut, data.recipient, data.collectAmount, data.limitReturnAmount || '0'],
-  )
-}
-
-function encodeStableSwap(data: any) {
-  return encodeParameters(
-    ['address', 'address', 'address', 'int128', 'int128', 'uint256', 'uint256', 'uint256', 'address'],
-    [
-      data.pool,
-      data.tokenIn,
-      data.tokenOut,
-      data.extra?.tokenInIndex,
-      data.extra?.tokenOutIndex,
-      data.swapAmount,
-      data.limitReturnAmount || '0',
-      data.poolLength,
-      data.pool,
-    ],
-  )
-}
-
-function encodeCurveSwap(data: any) {
-  const poolType = data.poolType?.toLowerCase()
-  // curve-base: exchange
-  // curve-meta: exchange_underlying
-  const usePoolUnderlying = data.extra?.underlying
-  const isTriCrypto = poolType === 'curve-tricrypto'
-
-  return encodeParameters(
-    ['address', 'address', 'address', 'int128', 'int128', 'uint256', 'uint256', 'bool', 'bool'],
-    [
-      data.pool,
-      data.tokenIn,
-      data.tokenOut,
-      data.extra?.tokenInIndex,
-      data.extra?.tokenOutIndex,
-      data.swapAmount,
-      '0',
-      usePoolUnderlying,
-      isTriCrypto,
-    ],
-  )
-}
-
-function encodeBalancerSwap(data: any) {
-  return encodeParameters(
-    ['address', 'bytes32', 'address', 'address', 'uint256', 'uint256'],
-    [data.extra?.vault, data.pool, data.tokenIn, data.tokenOut, data.swapAmount, data.limitReturnAmount || '0'],
-  )
-}
-
-export function isEncodeUniswapCallback(chainId: ChainId): (swap: any) => boolean {
-  return swap => {
-    const dex = getExchangeConfig(swap.exchange, chainId)
-    if ([1, 4, 2, 6, 5].includes(dex.type)) {
-      return false
-    }
-    return true
-  }
-}
-
-export function encodeSwapExecutor(swaps: any[][], chainId: ChainId) {
-  return swaps.map(swap => {
-    return swap.map(sequence => {
-      // (0 uni, 1 one swap, 2 curve)
-      const dex = getExchangeConfig(sequence.exchange, chainId)
-      // dexOption: 16 bit (first 8 bit for dextype + last 8 bit is dexIds in uni swap type)
-      const dexOption = dec2bin(dex.type, 8) + dec2bin(dex.id, 8)
-      let data: string
-      if (dex.type === 1 || dex.type === 4) {
-        data = encodeStableSwap(sequence)
-      } else if (dex.type === 2) {
-        data = encodeCurveSwap(sequence)
-      } else if (dex.type === 6) {
-        data = encodeBalancerSwap(sequence)
-      } else if (dex.type === 5) {
-        data = encodeUniSwapV3(sequence)
-      } else {
-        data = encodeUniSwap(sequence)
-      }
-      return { data, dexOption: bin2dec(dexOption) }
-    })
-  })
-}
-
-export function encodeFeeConfig({
-  feeReceiver,
-  isInBps,
-  feeAmount,
-}: {
-  feeReceiver: string
-  isInBps: boolean
-  feeAmount: string
-}) {
-  return encodeParameters(['address', 'bool', 'uint256'], [feeReceiver, isInBps, feeAmount])
-}
-
-export function encodeSimpleModeData(data: {
-  firstPools: string[]
-  firstSwapAmounts: string[]
-  swapSequences: { data: string; dexOption: any }[][]
-  deadline: string
-  destTokenFeeData: string
-}) {
-  const bytesDes = encodeParameters(
-    ['address[]', 'uint256[]', 'bytes[]', 'uint256', 'bytes'],
-    [
-      data.firstPools,
-      data.firstSwapAmounts,
-      data.swapSequences.map(item => {
-        const data = item.map(inner => {
-          return [inner.data, inner.dexOption]
-        })
-        return encodeParameters(['(bytes,uint16)[]'], [data])
-      }),
-      data.deadline,
-      data.destTokenFeeData,
-    ],
-  )
-  // 0x...20 means first dynamic param's location.
-  return '0x0000000000000000000000000000000000000000000000000000000000000020'.concat(bytesDes.toString().slice(2))
 }
 
 /**

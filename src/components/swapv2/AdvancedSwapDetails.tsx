@@ -1,5 +1,5 @@
 import { TradeType, Currency } from '@kyberswap/ks-sdk-core'
-import React, { useContext,useMemo, useState } from 'react'
+import React, { useContext, useMemo, useState } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import { t, Trans } from '@lingui/macro'
 import { Field } from 'state/swap/actions'
@@ -67,12 +67,13 @@ function TradeSummary({ trade, feeConfig, allowedSlippage }: TradeSummaryProps) 
                 <TYPE.black color={theme.text} fontSize={12}>
                   {isExactIn
                     ? !!slippageAdjustedAmounts[Field.OUTPUT]
-                      ? `${formattedNum(slippageAdjustedAmounts[Field.OUTPUT]!.toSignificant(10))} ${nativeOutput?.symbol
-                      }`
+                      ? `${formattedNum(slippageAdjustedAmounts[Field.OUTPUT]!.toSignificant(10))} ${
+                          nativeOutput?.symbol
+                        }`
                       : '-'
                     : !!slippageAdjustedAmounts[Field.INPUT]
-                      ? `${formattedNum(slippageAdjustedAmounts[Field.INPUT]!.toSignificant(10))} ${nativeInput?.symbol}`
-                      : '-'}
+                    ? `${formattedNum(slippageAdjustedAmounts[Field.INPUT]!.toSignificant(10))} ${nativeInput?.symbol}`
+                    : '-'}
                 </TYPE.black>
               </RowFixed>
             </RowBetween>
@@ -85,7 +86,7 @@ function TradeSummary({ trade, feeConfig, allowedSlippage }: TradeSummaryProps) 
                 <InfoHelper size={14} text={t`Estimated network fee for your transaction`} />
               </RowFixed>
               <TYPE.black color={theme.text} fontSize={12}>
-                {formattedNum(trade.gasUsd?.toString(), true)}
+                {trade.gasUsd ? formattedNum(trade.gasUsd?.toString(), true) : '--'}
               </TYPE.black>
             </RowBetween>
 

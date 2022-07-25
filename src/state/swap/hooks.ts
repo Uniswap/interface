@@ -33,7 +33,7 @@ import { nativeOnChain } from 'constants/tokens'
 import { FeeConfig } from 'hooks/useSwapV2Callback'
 
 export function useSwapState(): AppState['swap'] {
-  return useSelector<AppState, AppState['swap']>((state) => state.swap)
+  return useSelector<AppState, AppState['swap']>(state => state.swap)
 }
 
 export function useSwapActionHandlers(): {
