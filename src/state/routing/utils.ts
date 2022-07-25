@@ -1,6 +1,7 @@
 import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import { Pair, Route as V2Route } from '@uniswap/v2-sdk'
 import { FeeAmount, Pool, Route as V3Route } from '@uniswap/v3-sdk'
+import { MixedRouteSDK } from '@uniswap/router-sdk'
 
 import { nativeOnChain } from '../../constants/tokens'
 import { GetQuoteResult, InterfaceTrade, V2PoolInRoute, V3PoolInRoute } from './types'
@@ -41,8 +42,15 @@ export function computeRoutes(
       }
 
       return {
-        routev3: isV3Route(route) ? new V3Route(route.map(parsePool), parsedCurrencyIn, parsedCurrencyOut) : null,
-        routev2: !isV3Route(route) ? new V2Route(route.map(parsePair), parsedCurrencyIn, parsedCurrencyOut) : null,
+        routev3: isV3Route(route)
+          ? new V3Route(route.map(genericPoolPairParser) as Pool[], parsedCurrencyIn, parsedCurrencyOut)
+          : null,
+        routev2: isV2Route(route)
+          ? new V2Route(route.map(genericPoolPairParser) as Pair[], parsedCurrencyIn, parsedCurrencyOut)
+          : null,
+        mixedRoute: isMixedRoute(route)
+          ? new MixedRouteSDK(route.map(genericPoolPairParser), parsedCurrencyIn, parsedCurrencyOut)
+          : null,
         inputAmount: CurrencyAmount.fromRawAmount(parsedCurrencyIn, rawAmountIn),
         outputAmount: CurrencyAmount.fromRawAmount(parsedCurrencyOut, rawAmountOut),
       }
@@ -95,6 +103,19 @@ const parsePair = ({ reserve0, reserve1 }: V2PoolInRoute): Pair =>
     CurrencyAmount.fromRawAmount(parseToken(reserve1.token), reserve1.quotient)
   )
 
-function isV3Route(route: V3PoolInRoute[] | V2PoolInRoute[]): route is V3PoolInRoute[] {
-  return route[0].type === 'v3-pool'
+const genericPoolPairParser = (pool: V3PoolInRoute | V2PoolInRoute): Pool | Pair => {
+  return pool.type === 'v3-pool' ? parsePool(pool) : parsePair(pool)
+}
+
+function isV3Route(route: (V3PoolInRoute | V2PoolInRoute)[]): route is V3PoolInRoute[] {
+  return route.every((pool) => pool.type === 'v3-pool')
+}
+
+function isV2Route(route: (V3PoolInRoute | V2PoolInRoute)[]): route is V2PoolInRoute[] {
+  return route.every((pool) => pool.type === 'v2-pool')
+}
+
+function isMixedRoute(route: (V3PoolInRoute | V2PoolInRoute)[]): route is (V3PoolInRoute | V2PoolInRoute)[] {
+  /// Must have at least one V3 pool and one V2 pool
+  return route.some((pool) => pool.type === 'v3-pool') && route.some((pool) => pool.type === 'v2-pool')
 }
