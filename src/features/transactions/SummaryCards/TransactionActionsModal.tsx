@@ -114,7 +114,7 @@ export default function TransactionActionsModal({
       hideHandlebar={!showConfirmView}
       isVisible={isVisible}
       name={ModalName.TransactionActions}
-      onClose={onClose}>
+      onClose={handleClose}>
       {showConfirmView && transactionDetails ? (
         <CancelConfirmationView
           transactionDetails={transactionDetails}

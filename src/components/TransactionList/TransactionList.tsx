@@ -1,3 +1,4 @@
+import { TFunction } from 'i18next'
 import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { SectionList, SectionListData } from 'react-native'
@@ -8,6 +9,11 @@ import TransactionSummaryItem, {
   TransactionSummaryInfo,
 } from 'src/features/transactions/SummaryCards/TransactionSummaryItem'
 import { TransactionStatus } from 'src/features/transactions/types'
+
+const PENDING_TITLE = (t: TFunction) => t('Pending')
+const TODAY_TITLE = (t: TFunction) => t('Today')
+const WEEK_TITLE = (t: TFunction) => t('This Week')
+const ALL_TIME_TITLE = (t: TFunction) => t('All')
 
 const key = (info: TransactionSummaryInfo) => info.hash
 
@@ -33,15 +39,15 @@ export function TransactionList({
 
   const sectionData = useMemo(() => {
     return [
-      ...(pending.length > 0 ? [{ title: t('Pending'), data: pending }] : []),
+      ...(pending.length > 0 ? [{ title: PENDING_TITLE(t), data: pending }] : []),
       ...(todayTransactionList.length > 0
-        ? [{ title: t('Today'), data: todayTransactionList }]
+        ? [{ title: TODAY_TITLE(t), data: todayTransactionList }]
         : []),
       ...(weekTransactionList.length > 0
-        ? [{ title: t('This Week'), data: weekTransactionList }]
+        ? [{ title: WEEK_TITLE(t), data: weekTransactionList }]
         : []),
       ...(beforeCurrentWeekTransactionList.length > 0
-        ? [{ title: t('All'), data: beforeCurrentWeekTransactionList }]
+        ? [{ title: ALL_TIME_TITLE(t), data: beforeCurrentWeekTransactionList }]
         : []),
     ]
   }, [beforeCurrentWeekTransactionList, pending, t, todayTransactionList, weekTransactionList])
@@ -63,17 +69,19 @@ export function TransactionList({
           item?.status === TransactionStatus.Cancelling ||
           item?.status === TransactionStatus.FailedCancel) &&
         index === 0 &&
-        section.title === 'Today'
+        section.title === TODAY_TITLE(t)
       const aboveIsIsolated =
         (aboveItem?.status === TransactionStatus.Cancelled ||
           aboveItem?.status === TransactionStatus.Cancelling ||
           aboveItem?.status === TransactionStatus.FailedCancel) &&
         index === 1 &&
-        section.title === 'Today'
+        section.title === TODAY_TITLE(t)
 
       const borderTop = aboveIsIsolated || index === 0
       const borderBottom = currentIsIsolated || index === section.data.length - 1
-      const useInlineWarning = index !== 0 || section.title !== 'Today'
+      // Only show banner if first element in pending or daily section.
+      const showInlineWarning =
+        index !== 0 || !(section.title === TODAY_TITLE(t) || section.title === PENDING_TITLE(t))
 
       return (
         <TransactionSummaryItem
@@ -83,14 +91,14 @@ export function TransactionList({
           borderBottomWidth={borderBottom ? 0 : 1}
           borderTopLeftRadius={borderTop ? 'lg' : 'none'}
           borderTopRightRadius={borderTop ? 'lg' : 'none'}
-          inlineWarning={useInlineWarning}
           mb={currentIsIsolated ? 'md' : 'none'}
           readonly={readonly}
+          showInlineWarning={showInlineWarning}
           transactionSummaryInfo={item}
         />
       )
     }
-  }, [readonly])
+  }, [readonly, t])
 
   return (
     <SectionList

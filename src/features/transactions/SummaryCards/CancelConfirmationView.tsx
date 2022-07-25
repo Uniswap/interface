@@ -35,7 +35,7 @@ export function CancelConfirmationView({
   const gasFeeUSD = useUSDGasPrice(transactionDetails.chainId, feeInfo?.fee?.fast)
 
   return (
-    <Flex centered grow bg="backgroundSurface" borderRadius="xl" gap="lg" p="lg" pb="xl">
+    <Flex centered grow bg="backgroundSurface" borderRadius="xl" gap="lg" p="lg" pb="none">
       <Flex centered borderColor="textSecondary" borderRadius="md" borderWidth={1} padding="xs">
         <SlashCircleIcon fill="none" height={24} />
       </Flex>

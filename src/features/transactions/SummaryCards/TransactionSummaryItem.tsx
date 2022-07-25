@@ -17,7 +17,7 @@ import { openModal } from 'src/features/modals/modalSlice'
 import { createBalanceUpdate } from 'src/features/notifications/utils'
 import { ModalName } from 'src/features/telemetry/constants'
 import { useCurrency } from 'src/features/tokens/useCurrency'
-import AlertBanner from 'src/features/transactions/SummaryCards/AlertBanner'
+import AlertBanner, { FailedCancelBadge } from 'src/features/transactions/SummaryCards/AlertBanner'
 import TransactionActionsModal from 'src/features/transactions/SummaryCards/TransactionActionsModal'
 import { getTransactionSummaryTitle } from 'src/features/transactions/SummaryCards/utils'
 import createSwapFromStateFromDetails from 'src/features/transactions/swap/createSwapFromStateFromDetails'
@@ -57,12 +57,12 @@ export interface TransactionSummaryInfo {
 function TransactionSummaryItem({
   readonly,
   transactionSummaryInfo,
-  inlineWarning,
+  showInlineWarning,
   ...rest
 }: {
   readonly: boolean
   transactionSummaryInfo: TransactionSummaryInfo
-  inlineWarning?: boolean // Show warning inline and not as header banner.
+  showInlineWarning?: boolean // Show warning inline and not as header banner.
 } & ButtonProps) {
   const {
     type,
@@ -86,7 +86,9 @@ function TransactionSummaryItem({
   const otherCurrencyId = buildCurrencyId(chainId, otherTokenAddress ?? '')
   const currency = useCurrency(currencyId)
   const otherCurrency = useCurrency(otherCurrencyId)
-  const { spotPrices } = useSpotPrices([currency])
+
+  const spotPricesInput = useMemo(() => [currency], [currency])
+  const { spotPrices } = useSpotPrices(spotPricesInput)
 
   const failed = status === TransactionStatus.Failed
   const canceled = status === TransactionStatus.Cancelled
@@ -121,7 +123,7 @@ function TransactionSummaryItem({
     transactionSummaryInfo,
     currency,
     otherCurrency,
-    inlineWarning,
+    showInlineWarning,
   })
   const caption = inProgress ? balanceUpdate?.assetIncrease : dateAdded.toLocaleString()
 
@@ -132,7 +134,7 @@ function TransactionSummaryItem({
           <CurrencyLogoOrPlaceholder currency={currency} size={TXN_HISTORY_SIZING.primaryImage} />
         </Box>
         <Box bottom={0} position="absolute" right={0}>
-          {canceled && inlineWarning ? (
+          {canceled && showInlineWarning ? (
             <SlashCircleIcon
               color={theme.colors.backgroundOutline}
               fillOpacity={1}
@@ -162,18 +164,18 @@ function TransactionSummaryItem({
     canceled,
     currency,
     failed,
-    inlineWarning,
     nftMetaData?.imageURL,
     otherCurrency,
     status,
     theme.colors.backgroundOutline,
     type,
+    showInlineWarning,
   ])
 
   return (
     <>
       <Button {...rest} overflow="hidden" onPress={() => setShowActionsModal(true)}>
-        {(canceled || cancelling || failedCancel) && !inlineWarning && (
+        {(canceled || cancelling || failedCancel) && !showInlineWarning && (
           <AlertBanner status={status} />
         )}
         <Flex
@@ -190,9 +192,14 @@ function TransactionSummaryItem({
               </Flex>
             )}
             <Flex shrink gap="xxxs">
-              <Text adjustsFontSizeToFit fontWeight="500" numberOfLines={2} variant="mediumLabel">
-                {title}
-              </Text>
+              <Flex row gap="xxs">
+                <Text adjustsFontSizeToFit fontWeight="500" numberOfLines={2} variant="mediumLabel">
+                  {title}
+                </Text>
+                {status === TransactionStatus.FailedCancel && showInlineWarning && (
+                  <FailedCancelBadge />
+                )}
+              </Flex>
               <Text color="textSecondary" variant="badge">
                 {caption}
               </Text>

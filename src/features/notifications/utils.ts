@@ -170,7 +170,11 @@ export const createBalanceUpdate = (
 ): BalanceUpdate | undefined => {
   if (
     !currency ||
-    !(txStatus === TransactionStatus.Success || txStatus === TransactionStatus.Pending)
+    !(
+      txStatus === TransactionStatus.Success ||
+      txStatus === TransactionStatus.Pending ||
+      txStatus === TransactionStatus.FailedCancel
+    )
   ) {
     return undefined
   }
