@@ -1,6 +1,7 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Alert } from 'react-native'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import AaveIcon from 'src/assets/icons/aave-icon.svg'
 import ArrowDownCircleIcon from 'src/assets/icons/arrow-down-circle.svg'
@@ -22,6 +23,7 @@ import { OnboardingEntryPoint } from 'src/features/onboarding/utils'
 import { ElementName } from 'src/features/telemetry/constants'
 import { useIsBiometricAuthEnabled } from 'src/features/wallet/hooks'
 import { OnboardingScreens } from 'src/screens/Screens'
+import { openSettings } from 'src/utils/linking'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.Notifications>
 
@@ -33,10 +35,25 @@ export function NotificationsSetupScreen({ navigation, route: { params } }: Prop
     navigateToNextScreen()
   }
 
+  const showSoftPrompt = () => {
+    Alert.alert(
+      t(
+        "To receive notifications, turn on notifications for Uniswap Wallet in your device's settings."
+      ),
+      '',
+      [
+        { text: t('Settings'), onPress: openSettings },
+        {
+          text: t('Cancel'),
+        },
+      ]
+    )
+  }
+
   const onPressEnableNotifications = () => {
     promptPushPermission(() => {
       navigateToNextScreen()
-    })
+    }, showSoftPrompt)
   }
 
   const navigateToNextScreen = () => {
