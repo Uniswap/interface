@@ -1,4 +1,4 @@
-import { Trade } from '@uniswap/router-sdk'
+import { MixedRouteSDK, Trade } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import { Route as V2Route } from '@uniswap/v2-sdk'
 import { Route as V3Route } from '@uniswap/v3-sdk'
@@ -91,6 +91,11 @@ export class InterfaceTrade<
       outputAmount: CurrencyAmount<TOutput>
     }[]
     tradeType: TTradeType
+    mixedRoutes?: {
+      mixedRoute: MixedRouteSDK<TInput, TOutput>
+      inputAmount: CurrencyAmount<TInput>
+      outputAmount: CurrencyAmount<TOutput>
+    }[]
   }) {
     super(routes)
     this.gasUseEstimateUSD = gasUseEstimateUSD
