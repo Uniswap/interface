@@ -1,4 +1,3 @@
-import { initializeAnalytics } from 'components/AmplitudeAnalytics'
 import { PageName } from 'components/AmplitudeAnalytics/constants'
 import { Trace } from 'components/AmplitudeAnalytics/Trace'
 import Loader from 'components/Loader'
@@ -84,7 +83,6 @@ export default function App() {
   const { pathname } = location
   const currentPage = getCurrentPageFromLocation(location.pathname)
   useAnalyticsReporter()
-  initializeAnalytics()
 
   useEffect(() => {
     window.scrollTo(0, 0)
