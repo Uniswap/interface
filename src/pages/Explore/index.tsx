@@ -12,7 +12,7 @@ import styled from 'styled-components/macro'
 
 const ExploreContainer = styled.div`
   width: 100%;
-  min-width: 390px;
+  min-width: 320px;
   padding: 0px 12px;
 `
 const TokenTableContainer = styled.div`
