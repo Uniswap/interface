@@ -9,6 +9,7 @@ import { ReactNode } from 'react'
 import { ArrowDown, ArrowDownRight, ArrowUp, ArrowUpRight, Heart } from 'react-feather'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components/macro'
+import { opacify } from 'theme/utils'
 import { formatAmount, formatDollarAmount } from 'utils/formatDollarAmt'
 
 import {
@@ -156,7 +157,8 @@ const MarketCapCell = styled(Cell)<{ sortable: boolean }>`
   }
 
   &:hover {
-    background-color: ${({ theme, sortable }) => sortable && theme.backgroundContainer};
+    color: ${({ theme, sortable }) => sortable && theme.white};
+    background-color: ${({ theme, sortable }) => sortable && opacify(24, theme.blue200)};
   }
 `
 const NameCell = styled(Cell)`
@@ -180,7 +182,8 @@ const PercentChangeCell = styled(Cell)<{ sortable: boolean }>`
   }
 
   &:hover {
-    background-color: ${({ theme, sortable }) => sortable && theme.backgroundContainer};
+    color: ${({ theme, sortable }) => sortable && theme.white};
+    background-color: ${({ theme, sortable }) => sortable && opacify(24, theme.blue200)};
   }
 `
 const PercentChangeInfoCell = styled(Cell)`
@@ -200,7 +203,8 @@ const PriceCell = styled(Cell)<{ sortable: boolean }>`
   padding-right: 4px;
 
   &:hover {
-    background-color: ${({ theme, sortable }) => sortable && theme.backgroundContainer};
+    color: ${({ theme, sortable }) => sortable && theme.white};
+    background-color: ${({ theme, sortable }) => sortable && opacify(24, theme.blue200)};
   }
 `
 const PriceInfoCell = styled(Cell)`
@@ -281,7 +285,8 @@ const VolumeCell = styled(Cell)<{ sortable: boolean }>`
   }
 
   &:hover {
-    background-color: ${({ theme, sortable }) => sortable && theme.backgroundContainer};
+    color: ${({ theme, sortable }) => sortable && theme.white};
+    background-color: ${({ theme, sortable }) => sortable && opacify(24, theme.blue200)};
   }
 `
 /* Loading state bubbles */
