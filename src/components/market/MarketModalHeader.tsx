@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { Currency, Percent, Token, TradeType } from '@uniswap/sdk-core'
+import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { useContext, useState } from 'react'
@@ -46,8 +46,6 @@ export default function MarketModalHeader({
   showAcceptChanges,
   onAcceptChanges,
   referer,
-  paymentToken,
-  paymentFee,
 }: {
   trade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType>
   allowedSlippage: Percent
@@ -55,8 +53,6 @@ export default function MarketModalHeader({
   showAcceptChanges: boolean
   onAcceptChanges: () => void
   referer: string | null
-  paymentToken: Token | null | undefined
-  paymentFee: number | undefined
 }) {
   const theme = useContext(ThemeContext)
 
@@ -133,13 +129,7 @@ export default function MarketModalHeader({
       </RowBetween>
 
       <LightCard style={{ padding: '.75rem', marginTop: '0.5rem' }}>
-        <AdvancedMarketDetails
-          trade={trade}
-          allowedSlippage={allowedSlippage}
-          referer={referer}
-          paymentToken={paymentToken}
-          paymentFee={paymentFee}
-        />
+        <AdvancedMarketDetails trade={trade} allowedSlippage={allowedSlippage} referer={referer} />
       </LightCard>
 
       {showAcceptChanges ? (
