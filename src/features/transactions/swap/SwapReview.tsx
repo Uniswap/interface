@@ -1,5 +1,5 @@
 import { AnyAction } from '@reduxjs/toolkit'
-import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { Currency } from '@uniswap/sdk-core'
 import { notificationAsync } from 'expo-haptics'
 import React, { Dispatch } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -18,13 +18,14 @@ import { useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { ElementName } from 'src/features/telemetry/constants'
 import {
   DerivedSwapInfo,
+  useAcceptedTrade,
   useSwapActionHandlers,
   useSwapCallback,
   useUpdateSwapGasEstimate,
   useWrapCallback,
 } from 'src/features/transactions/swap/hooks'
 import { SwapDetails } from 'src/features/transactions/swap/SwapDetails'
-import { isWrapAction } from 'src/features/transactions/swap/utils'
+import { isWrapAction, requireAcceptNewTrade } from 'src/features/transactions/swap/utils'
 import { WrapType } from 'src/features/transactions/swap/wrapSaga'
 import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
 
@@ -58,16 +59,19 @@ export function SwapReview({ dispatch, onNext, onPrev, derivedSwapInfo }: SwapFo
   } = derivedSwapInfo
 
   useUpdateSwapGasEstimate(dispatch, trade)
+  const { onAcceptTrade, acceptedTrade } = useAcceptedTrade(trade)
+
   const { onShowSwapWarning } = useSwapActionHandlers(dispatch)
 
-  const swapDisabled = Boolean(
-    !(isWrapAction(wrapType) || trade) ||
-      warnings.some(
-        (warning) =>
-          warning.action === WarningAction.DisableSubmit ||
-          warning.action === WarningAction.DisableReview
-      )
+  const noValidSwap = !isWrapAction(wrapType) && !trade
+  const blockingWarning = warnings.some(
+    (warning) =>
+      warning.action === WarningAction.DisableSubmit ||
+      warning.action === WarningAction.DisableReview
   )
+  const newTradeToAccept = requireAcceptNewTrade(acceptedTrade, trade)
+
+  const swapDisabled = noValidSwap || blockingWarning || newTradeToAccept
 
   const { swapCallback } = useSwapCallback(
     trade,
@@ -105,7 +109,6 @@ export function SwapReview({ dispatch, onNext, onPrev, derivedSwapInfo }: SwapFo
 
   const currencyIn = currencies[CurrencyField.INPUT] as Currency
   const currencyOut = currencies[CurrencyField.OUTPUT] as Currency
-  const currencyAmountOut = currencyAmounts[CurrencyField.OUTPUT] as CurrencyAmount<Currency>
 
   return (
     <>
@@ -174,12 +177,13 @@ export function SwapReview({ dispatch, onNext, onPrev, derivedSwapInfo }: SwapFo
         mb="xl"
         mt="xs"
         px="sm">
-        {!isWrapAction(wrapType) && trade && (
+        {!isWrapAction(wrapType) && acceptedTrade && trade && (
           <SwapDetails
-            currencyOut={currencyAmountOut}
+            acceptedTrade={acceptedTrade}
             dispatch={dispatch}
-            trade={trade}
+            newTradeToAccept={newTradeToAccept}
             warnings={warnings}
+            onAcceptTrade={onAcceptTrade}
           />
         )}
         <Flex row gap="xs">

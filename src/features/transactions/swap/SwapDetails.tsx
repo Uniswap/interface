@@ -1,12 +1,5 @@
 import { AnyAction } from '@reduxjs/toolkit'
-import {
-  Currency,
-  CurrencyAmount,
-  NativeCurrency,
-  Price,
-  Token,
-  TradeType,
-} from '@uniswap/sdk-core'
+import { Currency, Price, TradeType } from '@uniswap/sdk-core'
 import React, { ComponentProps, Dispatch } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppTheme } from 'src/app/hooks'
@@ -27,10 +20,11 @@ import { useActiveAccountWithThrow } from 'src/features/wallet/hooks'
 import { formatPrice } from 'src/utils/format'
 
 interface SwapDetailsProps {
-  currencyOut: CurrencyAmount<NativeCurrency | Token>
-  trade: Trade<Currency, Currency, TradeType>
-  warnings: Warning[]
+  acceptedTrade: Trade<Currency, Currency, TradeType>
   dispatch: Dispatch<AnyAction>
+  newTradeToAccept: boolean
+  warnings: Warning[]
+  onAcceptTrade: () => void
 }
 
 const spacerProps: ComponentProps<typeof Box> = {
@@ -46,21 +40,27 @@ const getFormattedPrice = (price: Price<Currency, Currency>) => {
   }
 }
 
-export function SwapDetails({ currencyOut, trade, warnings, dispatch }: SwapDetailsProps) {
+export function SwapDetails({
+  acceptedTrade,
+  dispatch,
+  newTradeToAccept,
+  warnings,
+  onAcceptTrade,
+}: SwapDetailsProps) {
   const { t } = useTranslation()
   const account = useActiveAccountWithThrow()
   const theme = useAppTheme()
   const { onShowSwapWarning } = useSwapActionHandlers(dispatch)
 
-  const price = trade.executionPrice
-  const usdcPrice = useUSDCPrice(currencyOut.currency)
+  const price = acceptedTrade.executionPrice
+  const usdcPrice = useUSDCPrice(acceptedTrade.outputAmount.currency)
 
   const rate = `1 ${price.quoteCurrency?.symbol} = ${getFormattedPrice(price)} ${
     price.baseCurrency?.symbol
   }`
 
   // TODO: replace with updated gas fee estimate
-  const gasFeeUSD = parseFloat(trade.quote!.gasUseEstimateUSD).toFixed(2)
+  const gasFeeUSD = parseFloat(acceptedTrade.quote!.gasUseEstimateUSD).toFixed(2)
   const swapWarning = warnings.find(showWarningInPanel)
   const swapWarningColor = getWarningColor(swapWarning)
 
@@ -70,7 +70,39 @@ export function SwapDetails({ currencyOut, trade, warnings, dispatch }: SwapDeta
       borderRadius="lg"
       gap="none"
       spacerProps={spacerProps}>
-      {swapWarning ? (
+      {newTradeToAccept ? (
+        <Flex
+          row
+          alignItems="center"
+          backgroundColor="accentActiveSoft"
+          borderTopEndRadius="lg"
+          borderTopStartRadius="lg"
+          flexGrow={1}
+          gap="xs"
+          justifyContent="space-between"
+          p="xs">
+          <Flex centered row flexBasis="30%" gap="none">
+            <Text color="blue300">{t('Rate Updated')}</Text>
+          </Flex>
+          <Flex row flexBasis="70%" gap="xxs">
+            <Flex centered row flexBasis="66%" flexGrow={1} gap="none">
+              <Text adjustsFontSizeToFit color="blue300" numberOfLines={1}>
+                {rate}
+              </Text>
+            </Flex>
+            <Flex centered row flexBasis="33%" flexGrow={1} gap="none">
+              <Button
+                backgroundColor="accentActive"
+                borderRadius="md"
+                padding="xs"
+                onPress={onAcceptTrade}>
+                <Text variant="smallLabel">{t('Accept')}</Text>
+              </Button>
+            </Flex>
+          </Flex>
+        </Flex>
+      ) : null}
+      {!newTradeToAccept && swapWarning ? (
         <Button onPress={() => onShowSwapWarning(WarningModalType.INFORMATIONAL)}>
           <Flex
             row

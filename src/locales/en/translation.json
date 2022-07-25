@@ -199,6 +199,7 @@
   "Sent {{assetName}}": "Sent {{assetName}}",
   "Received {{assetName}}": "Received {{assetName}}",
   "Unknown transaction": "Unknown transaction",
+  "Rate Updated": "Rate Updated",
   "Rate": "Rate",
   "Cancel swap": "Cancel swap",
   "Swap anyway": "Swap anyway",

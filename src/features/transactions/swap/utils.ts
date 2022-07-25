@@ -79,3 +79,7 @@ export function tradeToTransactionInfo(
           .quotient.toString(),
       }
 }
+
+export function requireAcceptNewTrade(oldTrade: Nullable<Trade>, newTrade: Nullable<Trade>) {
+  return oldTrade?.quote?.methodParameters?.calldata !== newTrade?.quote?.methodParameters?.calldata
+}

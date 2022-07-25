@@ -1,7 +1,7 @@
 import { Currency, CurrencyAmount, NativeCurrency, Percent, TradeType } from '@uniswap/sdk-core'
 import { MethodParameters } from '@uniswap/v3-sdk'
 import { BigNumber } from 'ethers'
-import React, { useCallback, useEffect, useMemo, useRef } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AnyAction } from 'redux'
 import { useAppDispatch } from 'src/app/hooks'
@@ -521,4 +521,25 @@ export function useSwapGasFee(state: TransactionState) {
     const gasFee = BigNumber.from(gasPrice).mul(gasLimitEstimate)
     return gasFee.toString()
   }, [approveGasEstimate, swapGasEstimate, gasPrice])
+}
+
+// The first shown to the user is implicitly accepted but every subsequent trade
+// update should get an explicit approval
+export function useAcceptedTrade(trade: Nullable<Trade>) {
+  const [latestTradeAccepted, setLatestTradeAccepted] = useState<boolean>(false)
+  const prevTradeRef = useRef<Trade>()
+  useEffect(() => {
+    if (latestTradeAccepted) setLatestTradeAccepted(false)
+    if (!prevTradeRef.current) prevTradeRef.current = trade ?? undefined
+  }, [latestTradeAccepted, trade])
+
+  const acceptedTrade = prevTradeRef.current ?? trade ?? undefined
+
+  const onAcceptTrade = () => {
+    if (!trade) return undefined
+    setLatestTradeAccepted(true)
+    prevTradeRef.current = trade
+  }
+
+  return { onAcceptTrade, acceptedTrade }
 }
