@@ -90,7 +90,7 @@ export function ImportList({ listURL, list, setModalView, onDismiss }: ImportPro
       <SectionBreak />
       <PaddedColumn gap="md">
         <AutoColumn gap="md">
-          <Card backgroundColor={theme.bg2} padding="12px 20px">
+          <Card backgroundColor={theme.deprecated_bg2} padding="12px 20px">
             <RowBetween>
               <RowFixed>
                 {list.logoURI && <ListLogo logoURI={list.logoURI} size="40px" />}
@@ -105,7 +105,7 @@ export function ImportList({ listURL, list, setModalView, onDismiss }: ImportPro
                     </ThemedText.Main>
                   </RowFixed>
                   <ExternalLink href={`https://tokenlists.org/token-list?url=${listURL}`}>
-                    <ThemedText.Main fontSize={'12px'} color={theme.blue1}>
+                    <ThemedText.Main fontSize={'12px'} color={theme.deprecated_blue1}>
                       {listURL}
                     </ThemedText.Main>
                   </ExternalLink>
@@ -113,23 +113,23 @@ export function ImportList({ listURL, list, setModalView, onDismiss }: ImportPro
               </RowFixed>
             </RowBetween>
           </Card>
-          <Card style={{ backgroundColor: transparentize(0.8, theme.red1) }}>
+          <Card style={{ backgroundColor: transparentize(0.8, theme.deprecated_red1) }}>
             <AutoColumn justify="center" style={{ textAlign: 'center', gap: '16px', marginBottom: '12px' }}>
-              <AlertTriangle stroke={theme.red1} size={32} />
-              <ThemedText.Body fontWeight={500} fontSize={20} color={theme.red1}>
+              <AlertTriangle stroke={theme.deprecated_red1} size={32} />
+              <ThemedText.Body fontWeight={500} fontSize={20} color={theme.deprecated_red1}>
                 <Trans>Import at your own risk</Trans>
               </ThemedText.Body>
             </AutoColumn>
 
             <AutoColumn style={{ textAlign: 'center', gap: '16px', marginBottom: '12px' }}>
-              <ThemedText.Body fontWeight={500} color={theme.red1}>
+              <ThemedText.Body fontWeight={500} color={theme.deprecated_red1}>
                 <Trans>
                   By adding this list you are implicitly trusting that the data is correct. Anyone can create a list,
                   including creating fake versions of existing lists and lists that claim to represent projects that do
                   not have one.
                 </Trans>
               </ThemedText.Body>
-              <ThemedText.Body fontWeight={600} color={theme.red1}>
+              <ThemedText.Body fontWeight={600} color={theme.deprecated_red1}>
                 <Trans>If you purchase a token from this list, you may not be able to sell it back.</Trans>
               </ThemedText.Body>
             </AutoColumn>
@@ -140,7 +140,7 @@ export function ImportList({ listURL, list, setModalView, onDismiss }: ImportPro
                 checked={confirmed}
                 onChange={() => setConfirmed(!confirmed)}
               />
-              <ThemedText.Body ml="10px" fontSize="16px" color={theme.red1} fontWeight={500}>
+              <ThemedText.Body ml="10px" fontSize="16px" color={theme.deprecated_red1} fontWeight={500}>
                 <Trans>I understand</Trans>
               </ThemedText.Body>
             </AutoRow>

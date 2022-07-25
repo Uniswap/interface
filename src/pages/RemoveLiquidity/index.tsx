@@ -4,11 +4,13 @@ import { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
 import { Currency, Percent } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import { ElementName, Event, EventName } from 'components/AmplitudeAnalytics/constants'
+import { TraceEvent } from 'components/AmplitudeAnalytics/TraceEvent'
 import { sendEvent } from 'components/analytics'
 import { useV2LiquidityTokenPermit } from 'hooks/useV2LiquidityTokenPermit'
 import { useCallback, useContext, useMemo, useState } from 'react'
 import { ArrowDown, Plus } from 'react-feather'
-import { RouteComponentProps } from 'react-router'
+import { useHistory, useParams } from 'react-router-dom'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components/macro'
 
@@ -45,12 +47,9 @@ import { ClickableText, MaxButton, Wrapper } from '../Pool/styleds'
 
 const DEFAULT_REMOVE_LIQUIDITY_SLIPPAGE_TOLERANCE = new Percent(5, 100)
 
-export default function RemoveLiquidity({
-  history,
-  match: {
-    params: { currencyIdA, currencyIdB },
-  },
-}: RouteComponentProps<{ currencyIdA: string; currencyIdB: string }>) {
+export default function RemoveLiquidity() {
+  const history = useHistory()
+  const { currencyIdA, currencyIdB } = useParams<{ currencyIdA: string; currencyIdB: string }>()
   const [currencyA, currencyB] = [useCurrency(currencyIdA) ?? undefined, useCurrency(currencyIdB) ?? undefined]
   const { account, chainId, provider } = useWeb3React()
   const [tokenA, tokenB] = useMemo(() => [currencyA?.wrapped, currencyB?.wrapped], [currencyA, currencyB])
@@ -304,7 +303,7 @@ export default function RemoveLiquidity({
           </RowFixed>
         </RowBetween>
         <RowFixed>
-          <Plus size="16" color={theme.text2} />
+          <Plus size="16" color={theme.deprecated_text2} />
         </RowFixed>
         <RowBetween align="flex-end">
           <Text fontSize={24} fontWeight={500}>
@@ -318,7 +317,7 @@ export default function RemoveLiquidity({
           </RowFixed>
         </RowBetween>
 
-        <ThemedText.Italic fontSize={12} color={theme.text2} textAlign="left" padding={'12px 0 0 0'}>
+        <ThemedText.Italic fontSize={12} color={theme.deprecated_text2} textAlign="left" padding={'12px 0 0 0'}>
           <Trans>
             Output is estimated. If the price changes by more than {allowedSlippage.toSignificant(4)}% your transaction
             will revert.
@@ -332,7 +331,7 @@ export default function RemoveLiquidity({
     return (
       <>
         <RowBetween>
-          <Text color={theme.text2} fontWeight={500} fontSize={16}>
+          <Text color={theme.deprecated_text2} fontWeight={500} fontSize={16}>
             <Trans>
               UNI {currencyA?.symbol}/{currencyB?.symbol} Burned
             </Trans>
@@ -347,16 +346,16 @@ export default function RemoveLiquidity({
         {pair && (
           <>
             <RowBetween>
-              <Text color={theme.text2} fontWeight={500} fontSize={16}>
+              <Text color={theme.deprecated_text2} fontWeight={500} fontSize={16}>
                 <Trans>Price</Trans>
               </Text>
-              <Text fontWeight={500} fontSize={16} color={theme.text1}>
+              <Text fontWeight={500} fontSize={16} color={theme.deprecated_text1}>
                 1 {currencyA?.symbol} = {tokenA ? pair.priceOf(tokenA).toSignificant(6) : '-'} {currencyB?.symbol}
               </Text>
             </RowBetween>
             <RowBetween>
               <div />
-              <Text fontWeight={500} fontSize={16} color={theme.text1}>
+              <Text fontWeight={500} fontSize={16} color={theme.deprecated_text1}>
                 1 {currencyB?.symbol} = {tokenB ? pair.priceOf(tokenB).toSignificant(6) : '-'} {currencyA?.symbol}
               </Text>
             </RowBetween>
@@ -452,7 +451,7 @@ export default function RemoveLiquidity({
           <AutoColumn gap="md">
             <BlueCard>
               <AutoColumn gap="10px">
-                <ThemedText.Link fontWeight={400} color={'primaryText1'}>
+                <ThemedText.Link fontWeight={400} color={'deprecated_primaryText1'}>
                   <Trans>
                     <b>Tip:</b> Removing pool tokens converts your position back into underlying tokens at the current
                     rate, proportional to your share of the pool. Accrued fees are included in the amounts you receive.
@@ -504,7 +503,7 @@ export default function RemoveLiquidity({
             {!showDetailed && (
               <>
                 <ColumnCenter>
-                  <ArrowDown size="16" color={theme.text2} />
+                  <ArrowDown size="16" color={theme.deprecated_text2} />
                 </ColumnCenter>
                 <LightCard>
                   <AutoColumn gap="10px">
@@ -578,7 +577,7 @@ export default function RemoveLiquidity({
                   id="liquidity-amount"
                 />
                 <ColumnCenter>
-                  <ArrowDown size="16" color={theme.text2} />
+                  <ArrowDown size="16" color={theme.deprecated_text2} />
                 </ColumnCenter>
                 <CurrencyInputPanel
                   hideBalance={true}
@@ -592,7 +591,7 @@ export default function RemoveLiquidity({
                   id="remove-liquidity-tokena"
                 />
                 <ColumnCenter>
-                  <Plus size="16" color={theme.text2} />
+                  <Plus size="16" color={theme.deprecated_text2} />
                 </ColumnCenter>
                 <CurrencyInputPanel
                   hideBalance={true}
@@ -625,9 +624,16 @@ export default function RemoveLiquidity({
             )}
             <div style={{ position: 'relative' }}>
               {!account ? (
-                <ButtonLight onClick={toggleWalletModal}>
-                  <Trans>Connect Wallet</Trans>
-                </ButtonLight>
+                <TraceEvent
+                  events={[Event.onClick]}
+                  name={EventName.CONNECT_WALLET_BUTTON_CLICKED}
+                  properties={{ received_swap_quote: false }}
+                  element={ElementName.CONNECT_WALLET_BUTTON}
+                >
+                  <ButtonLight onClick={toggleWalletModal}>
+                    <Trans>Connect Wallet</Trans>
+                  </ButtonLight>
+                </TraceEvent>
               ) : (
                 <RowBetween>
                   <ButtonConfirmed

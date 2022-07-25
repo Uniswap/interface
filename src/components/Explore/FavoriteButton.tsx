@@ -1,6 +1,5 @@
 import useTheme from 'hooks/useTheme'
 import { useAtom } from 'jotai'
-import { darken } from 'polished'
 import { Heart } from 'react-feather'
 import styled from 'styled-components/macro'
 
@@ -14,24 +13,23 @@ const FavoriteButtonContent = styled.div`
 `
 const StyledFavoriteButton = styled.button<{ active: boolean }>`
   padding: 0px 16px;
-  border-radius: 12px;
-  background-color: ${({ theme }) => theme.bg0};
-  border: 1px solid ${({ theme, active }) => (active ? theme.primary1 : theme.bg1)};
-  color: ${({ theme, active }) => (active ? theme.blue5 : theme.text1)};
+  border-radius: 16px;
+  background-color: ${({ theme, active }) => (active ? theme.accentActionSoft : theme.none)};
+  border: 1px solid ${({ theme, active }) => (active ? theme.accentActiveSoft : theme.backgroundOutline)};
+  color: ${({ theme, active }) => (active ? theme.blue200 : theme.textPrimary)};
   font-size: 16px;
+  font-weight: 600;
   cursor: pointer;
 
-  &:hover,
-  &:focus {
-    outline: none;
-    color: ${({ theme, active }) => (active ? theme.blue5 : darken(0.08, theme.text1))};
+  :hover {
+    background-color: ${({ theme, active }) => !active && theme.backgroundContainer};
   }
 `
 
 export default function FavoriteButton() {
   const theme = useTheme()
   const [showFavorites, setShowFavorites] = useAtom(showFavoritesAtom)
-  const heartColor = showFavorites ? theme.blue5 : theme.text1
+  const heartColor = showFavorites ? theme.blue200 : theme.textPrimary
   return (
     <StyledFavoriteButton onClick={() => setShowFavorites(!showFavorites)} active={showFavorites}>
       <FavoriteButtonContent>

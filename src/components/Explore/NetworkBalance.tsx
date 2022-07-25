@@ -52,7 +52,7 @@ export default function NetworkBalance({
       <Balance>
         <BalanceRow>
           <BalanceItem>
-            ${balance}&nbsp;${tokenSymbol}
+            {balance}&nbsp;{tokenSymbol}
           </BalanceItem>
           <BalanceItem>${fiatValue}</BalanceItem>
         </BalanceRow>

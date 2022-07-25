@@ -1,8 +1,10 @@
 import BalanceSummary from 'components/Explore/BalanceSummary'
 import LoadingTokenDetail from 'components/Explore/LoadingTokenDetail'
 import TokenDetail from 'components/Explore/TokenDetail'
+import TokenWarningMessage from 'components/TokenSafety/TokenSafetyMessage'
+import { checkWarning } from 'constants/tokenWarnings'
 import { useState } from 'react'
-import { RouteComponentProps } from 'react-router-dom'
+import { useLocation, useParams } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
 const TokenDetailsLayout = styled.div`
@@ -17,21 +19,13 @@ const RightPanel = styled.div`
 const Widget = styled.div`
   height: 354px;
   width: 284px;
-  background-color: ${({ theme }) => theme.bg2};
+  background-color: ${({ theme }) => theme.deprecated_bg2};
   border-radius: 12px;
   border: 1px solid rgba(153, 161, 189, 0.24);
 `
-
-type LocationState = {
-  from: string
-}
-
-export function TokenDetails({
-  location: { state: locationState },
-  match: {
-    params: { tokenAddress },
-  },
-}: RouteComponentProps<{ tokenAddress: string }>) {
+export function TokenDetails() {
+  const { tokenAddress } = useParams<{ tokenAddress?: string }>()
+  const { state } = useLocation<{ state?: any }>()
   const [loading, setLoading] = useState(true)
   const [from, setFrom] = useState('')
   setTimeout(() => {
@@ -40,18 +34,32 @@ export function TokenDetails({
 
   if (!from) {
     try {
-      const from = (locationState as LocationState).from
+      const from = (state as { from: string }).from
       setFrom(from)
     } catch (error) {}
   }
+  let tokenDetail
+  if (!tokenAddress) {
+    // TODO: handle no address / invalid address cases
+    tokenDetail = 'invalid token'
+  } else if (loading) {
+    tokenDetail = <LoadingTokenDetail />
+  } else {
+    tokenDetail = <TokenDetail address={tokenAddress} from={from} />
+  }
+
+  const tokenWarning = tokenAddress ? checkWarning(tokenAddress) : null
 
   return (
     <TokenDetailsLayout>
-      {loading ? <LoadingTokenDetail /> : <TokenDetail address={tokenAddress} from={from} />}
-      <RightPanel>
-        <Widget />
-        {!loading && <BalanceSummary address={tokenAddress} />}
-      </RightPanel>
+      {tokenDetail}
+      {tokenAddress && (
+        <RightPanel>
+          <Widget />
+          {tokenWarning && <TokenWarningMessage tokenAddress={tokenAddress} warning={tokenWarning} />}
+          {!loading && <BalanceSummary address={tokenAddress} />}
+        </RightPanel>
+      )}
     </TokenDetailsLayout>
   )
 }

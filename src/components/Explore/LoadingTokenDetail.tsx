@@ -20,7 +20,7 @@ import {
 const Stat = styled.div`
   display: flex;
   flex-direction: column;
-  color: ${({ theme }) => theme.text2};
+  color: ${({ theme }) => theme.deprecated_text2};
   font-size: 14px;
   width: 168px;
   gap: 4px;
@@ -36,7 +36,7 @@ const TokenNameCell = styled.div`
 
 /* Loading state bubbles */
 const LoadingBubble = styled.div`
-  background-color: ${({ theme }) => darken(0.08, theme.bg3)};
+  background-color: ${({ theme }) => darken(0.08, theme.deprecated_bg3)};
   border-radius: 12px;
   height: 16px;
   width: 180px;

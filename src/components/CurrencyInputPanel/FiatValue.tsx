@@ -20,24 +20,24 @@ export function FiatValue({
   const theme = useTheme()
   const priceImpactColor = useMemo(() => {
     if (!priceImpact) return undefined
-    if (priceImpact.lessThan('0')) return theme.green1
+    if (priceImpact.lessThan('0')) return theme.deprecated_green1
     const severity = warningSeverity(priceImpact)
-    if (severity < 1) return theme.text3
-    if (severity < 3) return theme.yellow1
-    return theme.red1
-  }, [priceImpact, theme.green1, theme.red1, theme.text3, theme.yellow1])
+    if (severity < 1) return theme.deprecated_text3
+    if (severity < 3) return theme.deprecated_yellow1
+    return theme.deprecated_red1
+  }, [priceImpact, theme.deprecated_green1, theme.deprecated_red1, theme.deprecated_text3, theme.deprecated_yellow1])
 
   const p = Number(fiatValue?.toFixed())
   const visibleDecimalPlaces = p < 1.05 ? 4 : 2
 
   return (
-    <ThemedText.Body fontSize={14} color={fiatValue ? theme.text3 : theme.text4}>
+    <ThemedText.Body fontSize={14} color={fiatValue ? theme.deprecated_text3 : theme.deprecated_text4}>
       {fiatValue ? (
         <Trans>
           $
           <HoverInlineText
             text={fiatValue?.toFixed(visibleDecimalPlaces, { groupSeparator: ',' })}
-            textColor={fiatValue ? theme.text3 : theme.text4}
+            textColor={fiatValue ? theme.deprecated_text3 : theme.deprecated_text4}
           />
         </Trans>
       ) : (

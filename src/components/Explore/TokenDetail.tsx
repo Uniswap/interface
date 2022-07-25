@@ -1,19 +1,21 @@
 import { Trans } from '@lingui/macro'
 import CurrencyLogo from 'components/CurrencyLogo'
+import ExploreTokenWarningModal from 'components/TokenSafety/TokenSafetyModal'
 import { checkWarning, Warning } from 'constants/tokenWarnings'
 import { useCurrency, useToken } from 'hooks/Tokens'
 import { TimePeriod } from 'hooks/useTopTokens'
 import { useAtom } from 'jotai'
-import ExploreTokenWarningModal from 'pages/Explore/ExploreTokenWarningModal'
 import { darken } from 'polished'
 import { useCallback, useEffect, useState } from 'react'
-import { ArrowDownRight, ArrowLeft, ArrowUpRight, Copy, Heart, Share } from 'react-feather'
+import { ArrowDownRight, ArrowLeft, ArrowUpRight, Copy, Heart } from 'react-feather'
 import { Link, useHistory } from 'react-router-dom'
 import styled, { useTheme } from 'styled-components/macro'
 
 import Resource from './Resource'
+import ShareButton from './ShareButton'
 import { favoritesAtom, useToggleFavorite } from './state'
 import { ClickFavorited } from './TokenRow'
+import { ReactComponent as Verified } from './verified.svg'
 
 const TIME_DISPLAYS: Record<TimePeriod, string> = {
   [TimePeriod.hour]: '1H',
@@ -40,7 +42,7 @@ const ArrowCell = styled.div`
 `
 export const BreadcrumbNavLink = styled(Link)`
   display: flex;
-  color: ${({ theme }) => theme.text2};
+  color: ${({ theme }) => theme.deprecated_text2};
   font-size: 14px;
   line-height: 20px;
   align-items: center;
@@ -49,20 +51,20 @@ export const BreadcrumbNavLink = styled(Link)`
   margin-bottom: 16px;
 
   &:hover {
-    color: ${({ theme }) => darken(0.1, theme.text2)};
+    color: ${({ theme }) => darken(0.1, theme.deprecated_text2)};
   }
 `
 export const ChartHeader = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
-  color: ${({ theme }) => theme.text1};
+  color: ${({ theme }) => theme.deprecated_text1};
   gap: 4px;
   margin-bottom: 24px;
 `
 const ContractAddress = styled.button`
   display: flex;
-  color: ${({ theme }) => theme.text1};
+  color: ${({ theme }) => theme.deprecated_text1};
   gap: 10px;
   align-items: center;
   background: transparent;
@@ -71,7 +73,7 @@ const ContractAddress = styled.button`
   cursor: pointer;
 
   &:hover {
-    color: ${({ theme }) => darken(0.08, theme.text1)};
+    color: ${({ theme }) => darken(0.08, theme.deprecated_text1)};
   }
 `
 export const ContractAddressSection = styled.div`
@@ -80,14 +82,14 @@ export const ContractAddressSection = styled.div`
 const Contract = styled.div`
   display: flex;
   flex-direction: column;
-  color: ${({ theme }) => theme.text2};
+  color: ${({ theme }) => theme.deprecated_text2};
   font-size: 14px;
   gap: 4px;
 `
 export const ChartContainer = styled.div`
   display: flex;
   height: 332px;
-  border-bottom: 1px solid ${({ theme }) => theme.bg3};
+  border-bottom: 1px solid ${({ theme }) => theme.deprecated_bg3};
   align-items: center;
   overflow: hidden;
 `
@@ -98,14 +100,14 @@ export const DeltaContainer = styled.div`
 const Stat = styled.div`
   display: flex;
   flex-direction: column;
-  color: ${({ theme }) => theme.text2};
+  color: ${({ theme }) => theme.deprecated_text2};
   font-size: 14px;
   width: 168px;
   gap: 4px;
 `
 const StatPrice = styled.span`
   font-size: 28px;
-  color: ${({ theme }) => theme.text1};
+  color: ${({ theme }) => theme.deprecated_text1};
 `
 export const StatsSection = styled.div`
   display: flex;
@@ -113,14 +115,14 @@ export const StatsSection = styled.div`
   padding: 24px 0px;
 `
 const TimeButton = styled.button<{ active: boolean }>`
-  background-color: ${({ theme, active }) => (active ? theme.primary1 : 'transparent')};
+  background-color: ${({ theme, active }) => (active ? theme.deprecated_primary1 : 'transparent')};
   font-size: 14px;
   width: 36px;
   height: 36px;
   border-radius: 12px;
   border: none;
   cursor: pointer;
-  color: ${({ theme }) => theme.text1};
+  color: ${({ theme }) => theme.deprecated_text1};
 `
 export const TimeOptionsContainer = styled.div`
   display: flex;
@@ -137,7 +139,7 @@ const TokenNameCell = styled.div`
 const TokenActions = styled.div`
   display: flex;
   gap: 24px;
-  color: ${({ theme }) => theme.text2};
+  color: ${({ theme }) => theme.deprecated_text2};
 `
 export const TokenInfoContainer = styled.div`
   display: flex;
@@ -149,7 +151,7 @@ export const TokenPrice = styled.span`
   line-height: 44px;
 `
 const TokenSymbol = styled.span`
-  color: ${({ theme }) => theme.text2};
+  color: ${({ theme }) => theme.deprecated_text2};
 `
 export const TopArea = styled.div`
   width: 832px;
@@ -179,14 +181,14 @@ export default function LoadedTokenDetail({ address, from }: { address: string; 
         setWarningModalOpen(true)
       }
     }
-  }, [])
+  }, [address, from])
 
   const handleDismissWarning = useCallback(() => {
     setWarningModalOpen(false)
   }, [setWarningModalOpen])
 
   // catch token error and loading state
-  if (!token) {
+  if (!token || !token.name || !token.symbol) {
     return <div>No Token</div>
   }
   const tokenName = token.name
@@ -212,14 +214,15 @@ export default function LoadedTokenDetail({ address, from }: { address: string; 
           <TokenNameCell>
             <CurrencyLogo currency={currency} size={'32px'} />
             {tokenName} <TokenSymbol>{tokenSymbol}</TokenSymbol>
+            {!checkWarning(address) && <Verified />}
           </TokenNameCell>
           <TokenActions>
-            <Share size={18} />
+            <ShareButton tokenName={tokenName} tokenSymbol={tokenSymbol} />
             <ClickFavorited onClick={toggleFavorite}>
               <Heart
                 size={15}
-                color={isFavorited ? theme.primary1 : theme.text2}
-                fill={isFavorited ? theme.primary1 : 'transparent'}
+                color={isFavorited ? theme.deprecated_primary1 : theme.deprecated_text2}
+                fill={isFavorited ? theme.deprecated_primary1 : 'transparent'}
               />
             </ClickFavorited>
           </TokenActions>
@@ -231,9 +234,9 @@ export default function LoadedTokenDetail({ address, from }: { address: string; 
           {tokenDelta}%
           <ArrowCell>
             {isPositive ? (
-              <ArrowUpRight size={16} color={theme.green1} />
+              <ArrowUpRight size={16} color={theme.deprecated_green1} />
             ) : (
-              <ArrowDownRight size={16} color={theme.red1} />
+              <ArrowDownRight size={16} color={theme.deprecated_red1} />
             )}
           </ArrowCell>
         </DeltaContainer>
@@ -273,7 +276,7 @@ export default function LoadedTokenDetail({ address, from }: { address: string; 
         <Contract>
           Contract Address
           <ContractAddress onClick={() => navigator.clipboard.writeText(address)}>
-            {address} <Copy size={13} color={theme.text2} />
+            {address} <Copy size={13} color={theme.deprecated_text2} />
           </ContractAddress>
         </Contract>
       </ContractAddressSection>
@@ -281,8 +284,8 @@ export default function LoadedTokenDetail({ address, from }: { address: string; 
         isOpen={warningModalOpen}
         warning={warning}
         tokenAddress={address}
-        onCancel={() => history.goBack()}
-        onProceed={handleDismissWarning}
+        onCancel={() => (warning?.canProceed ? handleDismissWarning() : history.goBack())}
+        onContinue={handleDismissWarning}
       />
     </TopArea>
   )

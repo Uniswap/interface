@@ -5,9 +5,10 @@ import { getChainInfo } from 'constants/chainInfo'
 import { CHAIN_IDS_TO_NAMES, SupportedChainId } from 'constants/chains'
 import useParsedQueryString from 'hooks/useParsedQueryString'
 import usePrevious from 'hooks/usePrevious'
+import { darken } from 'polished'
 import { ParsedQs } from 'qs'
-import { useCallback, useEffect, useRef } from 'react'
-import { ArrowDownCircle, ChevronDown } from 'react-feather'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import { AlertTriangle, ArrowDownCircle, ChevronDown } from 'react-feather'
 import { useHistory } from 'react-router-dom'
 import { useCloseModal, useModalIsOpen, useOpenModal, useToggleModal } from 'state/application/hooks'
 import { addPopup, ApplicationModal } from 'state/application/reducer'
@@ -17,6 +18,7 @@ import styled from 'styled-components/macro'
 import { ExternalLink, MEDIA_WIDTHS } from 'theme'
 import { replaceURLParam } from 'utils/routes'
 import { isChainAllowed, switchChain } from 'utils/switchChain'
+import { isMobile } from 'utils/userAgent'
 
 const ActiveRowLinkList = styled.div`
   display: flex;
@@ -24,7 +26,7 @@ const ActiveRowLinkList = styled.div`
   padding: 0 8px;
   & > a {
     align-items: center;
-    color: ${({ theme }) => theme.text2};
+    color: ${({ theme }) => theme.deprecated_text2};
     display: flex;
     flex-direction: row;
     font-size: 14px;
@@ -40,14 +42,14 @@ const ActiveRowLinkList = styled.div`
   }
 `
 const ActiveRowWrapper = styled.div`
-  background-color: ${({ theme }) => theme.bg1};
+  background-color: ${({ theme }) => theme.deprecated_bg1};
   border-radius: 8px;
   cursor: pointer;
   padding: 8px;
   width: 100%;
 `
 const FlyoutHeader = styled.div`
-  color: ${({ theme }) => theme.text2};
+  color: ${({ theme }) => theme.deprecated_text2};
   font-weight: 400;
 `
 const FlyoutMenu = styled.div`
@@ -62,7 +64,7 @@ const FlyoutMenu = styled.div`
 `
 const FlyoutMenuContents = styled.div`
   align-items: flex-start;
-  background-color: ${({ theme }) => theme.bg0};
+  background-color: ${({ theme }) => theme.deprecated_bg0};
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
     0px 24px 32px rgba(0, 0, 0, 0.01);
   border-radius: 20px;
@@ -77,7 +79,7 @@ const FlyoutMenuContents = styled.div`
 `
 const FlyoutRow = styled.div<{ active: boolean }>`
   align-items: center;
-  background-color: ${({ active, theme }) => (active ? theme.bg1 : 'transparent')};
+  background-color: ${({ active, theme }) => (active ? theme.deprecated_bg1 : 'transparent')};
   border-radius: 8px;
   cursor: pointer;
   display: flex;
@@ -88,7 +90,7 @@ const FlyoutRow = styled.div<{ active: boolean }>`
   width: 100%;
 `
 const FlyoutRowActiveIndicator = styled.div`
-  background-color: ${({ theme }) => theme.green1};
+  background-color: ${({ theme }) => theme.deprecated_green1};
   border-radius: 50%;
   height: 9px;
   width: 9px;
@@ -120,20 +122,41 @@ const SelectorLabel = styled(NetworkLabel)`
     margin-right: 8px;
   }
 `
-const SelectorControls = styled.div<{ interactive: boolean }>`
+const NetworkAlertLabel = styled(NetworkLabel)`
+  display: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin: 0 0.5rem 0 0.4rem;
+  font-size: 1rem;
+  width: fit-content;
+  font-weight: 500;
+  @media screen and (min-width: ${MEDIA_WIDTHS.upToSmall}px) {
+    display: block;
+  }
+`
+const SelectorControls = styled.div<{ supportedChain: boolean }>`
   align-items: center;
-  background-color: ${({ theme }) => theme.bg0};
-  border: 2px solid ${({ theme }) => theme.bg0};
+  background-color: ${({ theme }) => theme.deprecated_bg0};
+  border: 2px solid ${({ theme }) => theme.deprecated_bg0};
   border-radius: 16px;
-  color: ${({ theme }) => theme.text1};
-  cursor: ${({ interactive }) => (interactive ? 'pointer' : 'auto')};
+  color: ${({ theme }) => theme.deprecated_text1};
   display: flex;
   font-weight: 500;
   justify-content: space-between;
   padding: 6px 8px;
+  ${({ supportedChain, theme }) =>
+    !supportedChain &&
+    `
+    color: ${theme.deprecated_white};
+    background-color: ${theme.deprecated_red1};
+    border: 2px solid ${theme.deprecated_red1};
+  `}
+  :focus {
+    background-color: ${({ theme }) => darken(0.1, theme.deprecated_red1)};
+  }
 `
-const SelectorLogo = styled(Logo)<{ interactive?: boolean }>`
-  margin-right: ${({ interactive }) => (interactive ? 8 : 0)}px;
+const SelectorLogo = styled(Logo)`
   @media screen and (min-width: ${MEDIA_WIDTHS.upToSmall}px) {
     margin-right: 8px;
   }
@@ -146,6 +169,14 @@ const SelectorWrapper = styled.div`
 const StyledChevronDown = styled(ChevronDown)`
   width: 16px;
 `
+
+const NetworkIcon = styled(AlertTriangle)`
+  margin-left: 0.25rem;
+  margin-right: 0.25rem;
+  width: 16px;
+  height: 16px;
+`
+
 const BridgeLabel = ({ chainId }: { chainId: SupportedChainId }) => {
   switch (chainId) {
     case SupportedChainId.ARBITRUM_ONE:
@@ -247,9 +278,9 @@ function Row({
 
 const getParsedChainId = (parsedQs?: ParsedQs) => {
   const chain = parsedQs?.chain
-  if (!chain || typeof chain !== 'string') return { urlChain: undefined, urlChainId: undefined }
+  if (!chain || typeof chain !== 'string') return
 
-  return { urlChain: chain.toLowerCase(), urlChainId: getChainIdFromName(chain) }
+  return getChainIdFromName(chain)
 }
 
 const getChainIdFromName = (name: string) => {
@@ -273,19 +304,36 @@ const NETWORK_SELECTOR_CHAINS = [
 
 export default function NetworkSelector() {
   const dispatch = useAppDispatch()
-  const { chainId, provider, connector } = useWeb3React()
-  const previousChainId = usePrevious(chainId)
+
+  const { chainId, provider, connector, isActive } = useWeb3React()
+  const [previousChainId, setPreviousChainId] = useState<number | undefined>(undefined)
+
+  // Can't use `usePrevious` because `chainId` can be undefined while activating.
+  useEffect(() => {
+    if (chainId && chainId !== previousChainId) {
+      setPreviousChainId(chainId)
+    }
+  }, [chainId, previousChainId])
+
   const parsedQs = useParsedQueryString()
-  const { urlChain, urlChainId } = getParsedChainId(parsedQs)
+  const urlChainId = getParsedChainId(parsedQs)
   const previousUrlChainId = usePrevious(urlChainId)
+
+  const history = useHistory()
+
   const node = useRef<HTMLDivElement>(null)
   const isOpen = useModalIsOpen(ApplicationModal.NETWORK_SELECTOR)
   const openModal = useOpenModal(ApplicationModal.NETWORK_SELECTOR)
   const closeModal = useCloseModal(ApplicationModal.NETWORK_SELECTOR)
   const toggleModal = useToggleModal(ApplicationModal.NETWORK_SELECTOR)
-  const history = useHistory()
 
   const info = getChainInfo(chainId)
+
+  const replaceURLChainParam = useCallback(() => {
+    if (chainId) {
+      history.replace({ search: replaceURLParam(history.location.search, 'chain', getChainNameFromId(chainId)) })
+    }
+  }, [chainId, history])
 
   const onSelectChain = useCallback(
     async (targetChain: SupportedChainId, skipClose?: boolean) => {
@@ -301,54 +349,76 @@ export default function NetworkSelector() {
 
         dispatch(updateConnectionError({ connectionType, error: error.message }))
         dispatch(addPopup({ content: { failedSwitchNetwork: targetChain }, key: `failed-network-switch` }))
+
+        // If we activate a chain and it fails, reset the query param to the current chainId
+        replaceURLChainParam()
       }
 
       if (!skipClose) {
         closeModal()
       }
     },
-    [connector, closeModal, dispatch]
+    [connector, closeModal, dispatch, replaceURLChainParam]
   )
 
+  // If there is no chain query param, set it to the current chain
   useEffect(() => {
-    if (!chainId || !previousChainId) return
-
-    // when network change originates from wallet or dropdown selector, just update URL
-    if (chainId !== previousChainId && chainId !== urlChainId) {
-      history.replace({ search: replaceURLParam(history.location.search, 'chain', getChainNameFromId(chainId)) })
-      // otherwise assume network change originates from URL
-    } else if (urlChainId && urlChainId !== previousUrlChainId && urlChainId !== chainId) {
-      onSelectChain(urlChainId, true).catch(() => {
-        // we want app network <-> chainId param to be in sync, so if user changes the network by changing the URL
-        // but the request fails, revert the URL back to current chainId
-        history.replace({ search: replaceURLParam(history.location.search, 'chain', getChainNameFromId(chainId)) })
-      })
+    const chainQueryUnpopulated = !urlChainId
+    if (chainQueryUnpopulated && chainId) {
+      replaceURLChainParam()
     }
-  }, [chainId, urlChainId, previousChainId, previousUrlChainId, onSelectChain, history])
+  }, [chainId, urlChainId, replaceURLChainParam])
 
-  // set chain parameter on initial load if not there
+  // If the chain changed but the query param is stale, update to the current chain
   useEffect(() => {
-    if (chainId && !urlChainId) {
-      history.replace({ search: replaceURLParam(history.location.search, 'chain', getChainNameFromId(chainId)) })
+    const chainChanged = chainId !== previousChainId
+    const chainQueryStale = urlChainId !== chainId
+    if (chainChanged && chainQueryStale) {
+      replaceURLChainParam()
     }
-  }, [chainId, history, urlChainId, urlChain])
+  }, [chainId, previousChainId, replaceURLChainParam, urlChainId])
 
-  if (!chainId || !info || !provider) {
+  // If the query param changed, and the chain didn't change, then activate the new chain
+  useEffect(() => {
+    const chainQueryManuallyUpdated = urlChainId && urlChainId !== previousUrlChainId
+    if (chainQueryManuallyUpdated && isActive) {
+      onSelectChain(urlChainId, true)
+    }
+  }, [onSelectChain, urlChainId, previousUrlChainId, isActive])
+
+  if (!chainId || !provider) {
     return null
   }
 
+  const onSupportedChain = info !== undefined
+
   return (
-    <SelectorWrapper ref={node} onMouseEnter={openModal} onMouseLeave={closeModal} onClick={toggleModal}>
-      <SelectorControls interactive>
-        <SelectorLogo interactive src={info.logoUrl} />
-        <SelectorLabel>{info.label}</SelectorLabel>
-        <StyledChevronDown />
+    <SelectorWrapper
+      ref={node}
+      onMouseEnter={openModal}
+      onMouseLeave={closeModal}
+      onClick={isMobile ? toggleModal : undefined}
+    >
+      <SelectorControls supportedChain={onSupportedChain}>
+        {onSupportedChain ? (
+          <>
+            <SelectorLogo src={info.logoUrl} />
+            <SelectorLabel>{info.label}</SelectorLabel>
+            <StyledChevronDown />
+          </>
+        ) : (
+          <>
+            <NetworkIcon />
+            <NetworkAlertLabel>Switch Network</NetworkAlertLabel>
+            <StyledChevronDown />
+          </>
+        )}
       </SelectorControls>
       {isOpen && (
         <FlyoutMenu>
           <FlyoutMenuContents>
             <FlyoutHeader>
-              <Trans>Select a network</Trans>
+              <Trans>Select a {!onSupportedChain ? ' supported ' : ''}network</Trans>
             </FlyoutHeader>
             {NETWORK_SELECTOR_CHAINS.map((chainId: SupportedChainId) =>
               isChainAllowed(connector, chainId) ? (

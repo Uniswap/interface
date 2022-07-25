@@ -1,59 +1,38 @@
-import { AlertTriangle, XOctagon } from 'react-feather'
-import styled, { css } from 'styled-components/macro'
-import { Color } from 'theme/styled'
-
 import WarningCache, { TOKEN_LIST_TYPES } from '../constants/TokenWarningLookupCache'
 
-const IconStyle = css`
-  margin-left: 0.3rem;
-  width: 14px;
-  height: 14px;
-`
-const MediumIcon = styled(AlertTriangle)`
-  ${IconStyle}
-`
-const StrongIcon = MediumIcon
-const BlockedIcon = styled(XOctagon)`
-  ${IconStyle}
-`
+export enum SAFETY_WARNING {
+  MEDIUM,
+  UNKNOWN,
+  BLOCKED,
+}
 
 export type Warning = {
-  text: string
-  icon: JSX.Element
-  color: Color
+  level: SAFETY_WARNING
+  message: string
   heading: string
   description: string
   canProceed: boolean
-  buttonColor?: Color
-  buttonTextColor?: Color
-  cancelTextColor?: Color
 }
 
 const MediumWarning: Warning = {
-  text: 'Caution',
-  icon: <MediumIcon strokeWidth={2.5} />,
-  color: '#F3B71E',
+  level: SAFETY_WARNING.MEDIUM,
+  message: 'Caution',
   heading: "This token isn't verified",
   description: 'Please do your own research before trading.',
   canProceed: true,
 }
 
 const StrongWarning: Warning = {
-  text: 'Warning',
-  icon: <StrongIcon />,
-  color: '#FA2B39',
+  level: SAFETY_WARNING.UNKNOWN,
+  message: 'Warning',
   heading: "This token isn't verified",
   description: 'Please do your own research before trading.',
   canProceed: true,
-  buttonColor: '#FA2B391F',
-  buttonTextColor: '#FA2B39',
-  cancelTextColor: 'white',
 }
 
 const BlockedWarning: Warning = {
-  text: 'Not Available',
-  icon: <BlockedIcon />,
-  color: '#99A1BD',
+  level: SAFETY_WARNING.BLOCKED,
+  message: 'Not Available',
   heading: '',
   description: "You can't trade this token using the Uniswap App.",
   canProceed: false,
@@ -71,6 +50,8 @@ export function checkWarning(tokenAddress: string) {
     case TOKEN_LIST_TYPES.UNKNOWN:
       return StrongWarning
     case TOKEN_LIST_TYPES.BLOCKED:
+      return BlockedWarning
+    case TOKEN_LIST_TYPES.BROKEN:
       return BlockedWarning
   }
 }

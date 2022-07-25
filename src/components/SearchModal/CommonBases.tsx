@@ -17,7 +17,7 @@ const MobileWrapper = styled(AutoColumn)`
 `
 
 const BaseWrapper = styled.div<{ disable?: boolean }>`
-  border: 1px solid ${({ theme, disable }) => (disable ? 'transparent' : theme.bg3)};
+  border: 1px solid ${({ theme, disable }) => (disable ? 'transparent' : theme.deprecated_bg3)};
   border-radius: 10px;
   display: flex;
   padding: 6px;
@@ -25,11 +25,11 @@ const BaseWrapper = styled.div<{ disable?: boolean }>`
   align-items: center;
   :hover {
     cursor: ${({ disable }) => !disable && 'pointer'};
-    background-color: ${({ theme, disable }) => !disable && theme.bg2};
+    background-color: ${({ theme, disable }) => !disable && theme.deprecated_bg2};
   }
 
-  color: ${({ theme, disable }) => disable && theme.text3};
-  background-color: ${({ theme, disable }) => disable && theme.bg3};
+  color: ${({ theme, disable }) => disable && theme.deprecated_text3};
+  background-color: ${({ theme, disable }) => disable && theme.deprecated_bg3};
   filter: ${({ disable }) => disable && 'grayscale(1)'};
 `
 

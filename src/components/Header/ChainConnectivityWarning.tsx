@@ -7,14 +7,14 @@ import styled from 'styled-components/macro'
 import { ExternalLink, MEDIA_WIDTHS } from 'theme'
 
 const BodyRow = styled.div`
-  color: ${({ theme }) => theme.black};
+  color: ${({ theme }) => theme.deprecated_black};
   font-size: 12px;
 `
 const CautionIcon = styled(AlertOctagon)`
-  color: ${({ theme }) => theme.black};
+  color: ${({ theme }) => theme.deprecated_black};
 `
 const Link = styled(ExternalLink)`
-  color: ${({ theme }) => theme.black};
+  color: ${({ theme }) => theme.deprecated_black};
   text-decoration: underline;
 `
 const TitleRow = styled.div`
@@ -31,7 +31,7 @@ const TitleText = styled.div`
   margin: 0px 12px;
 `
 const Wrapper = styled.div`
-  background-color: ${({ theme }) => theme.yellow3};
+  background-color: ${({ theme }) => theme.deprecated_yellow3};
   border-radius: 12px;
   bottom: 60px;
   display: none;
