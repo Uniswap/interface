@@ -90,10 +90,6 @@ const useTokenDetailPageQuery = (tokenAddress: string | undefined): UseTokenDeta
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
 
-  if (!tokenAddress || !isAddress(tokenAddress)) {
-    return { data, error, loading }
-  }
-
   const fetchTokenDetails = async (addresses: string): Promise<TokenDetailPageQueryResult | void> => {
     const waitRandom = (min: number, max: number): Promise<void> =>
       new Promise((resolve) => setTimeout(resolve, min + Math.round(Math.random() * Math.max(0, max - min))))
@@ -114,14 +110,16 @@ const useTokenDetailPageQuery = (tokenAddress: string | undefined): UseTokenDeta
   }
 
   useEffect(() => {
-    setLoading(true)
-    setError(null)
-    fetchTokenDetails(tokenAddress)
-      .then((data) => {
-        if (data) setData(data)
-      })
-      .catch((e) => setError(e))
-      .finally(() => setLoading(false))
+    if (tokenAddress && isAddress(tokenAddress)) {
+      setLoading(true)
+      setError(null)
+      fetchTokenDetails(tokenAddress)
+        .then((data) => {
+          if (data) setData(data)
+        })
+        .catch((e) => setError(e))
+        .finally(() => setLoading(false))
+    }
   }, [tokenAddress])
 
   return { data, error, loading }
