@@ -22,11 +22,6 @@ init(
 )
 
 export function sendAnalyticsEvent(eventName: string, eventProperties?: Record<string, unknown>) {
-  if (process.env.NODE_ENV === 'development') {
-    console.log(`[amplitude(${eventName})]: ${JSON.stringify(eventProperties)}`)
-    return
-  }
-
   track(eventName, eventProperties)
 }
 
@@ -38,18 +33,7 @@ export function sendAnalyticsEvent(eventName: string, eventProperties?: Record<s
  * for details.
  */
 class UserModel {
-  constructor(private isDevEnvironment = process.env.NODE_ENV === 'development') {}
-
-  private log(method: string, ...parameters: unknown[]) {
-    console.debug(`[amplitude(Identify)]: ${method}(${parameters})`)
-  }
-
   private call(mutate: (event: Identify) => Identify) {
-    if (this.isDevEnvironment) {
-      const log = (_: Identify, method: string) => this.log.bind(this, method)
-      mutate(new Proxy(new Identify(), { get: log }))
-      return
-    }
     identify(mutate(new Identify()))
   }
 
