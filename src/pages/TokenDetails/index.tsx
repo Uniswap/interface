@@ -45,11 +45,9 @@ const Widget = styled.div`
 export default function TokenDetails() {
   const { tokenAddress } = useParams<{ tokenAddress?: string }>()
   const [loading, setLoading] = useState(true)
-  /*
   setTimeout(() => {
     setLoading(false)
   }, 1000)
-  */
 
   let tokenDetail
   if (!tokenAddress) {
