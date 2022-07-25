@@ -28,19 +28,19 @@ msgstr ""
 #: src/pages/Pools/index.tsx
 #: src/pages/Pools/index.tsx
 msgid "+ Add Liquidity"
-msgstr ""
+msgstr "+ Thêm thanh khoản"
 
-#: src/pages/SwapV2/index.tsx
-msgid "+ Add Recipient (optional)"
-msgstr "+ Thêm Người Nhận (tuỳ chọn)"
+#: 
+#~ msgid "+ Add Recipient (optional)"
+#~ msgstr "+ Thêm Người Nhận (tuỳ chọn)"
 
 #: src/pages/Swap/index.tsx
 msgid "+ Add a send (optional)"
 msgstr "+ Thêm 1 lần gửi (tùy chọn)"
 
-#: src/pages/SwapV2/index.tsx
-msgid "- Remove Recipient"
-msgstr "- Xoá Người Nhận"
+#: 
+#~ msgid "- Remove Recipient"
+#~ msgstr "- Xoá Người Nhận"
 
 #: src/pages/SwapProAmm/index.tsx
 msgid "- Remove recipient"
@@ -78,7 +78,7 @@ msgstr ""
 msgid "7D"
 msgstr ""
 
-#: src/components/TransactionSettings/index.tsx
+#: src/components/TransactionSettings/AdvanceModeModal.tsx
 msgid "<0>Advanced Mode</0> turns off the 'Confirm' transaction prompt and allows high slippage trades that can result in bad rates and lost funds."
 msgstr "<0>Chế Độ Nâng Cao</0> tắt lời nhắc giao dịch 'Xác nhận' và cho phép các giao dịch có độ trượt giá cao có thể dẫn đến tỷ giá xấu và mất thanh khoản."
 
@@ -136,10 +136,10 @@ msgstr "APR"
 #~ msgid "APY"
 #~ msgstr ""
 
-#: src/components/YieldPools/ListItem.tsx
-#: src/components/YieldPools/ListItem.tsx
-msgid "AVAILABLE BALANCE:"
-msgstr ""
+#: 
+#: 
+#~ msgid "AVAILABLE BALANCE:"
+#~ msgstr ""
 
 #: src/components/YieldPools/ProMMFarmGroup.tsx
 #: src/components/YieldPools/ProMMFarms.tsx
@@ -153,7 +153,7 @@ msgstr ""
 #~ msgid "AVG APY"
 #~ msgstr ""
 
-#: src/components/AboutPageDropDown/index.tsx
+#: src/components/Header/index.tsx
 #: src/components/Menu/AboutPageDropDown.tsx
 msgid "About"
 msgstr "Giới thiệu"
@@ -203,12 +203,28 @@ msgstr "Thêm thanh khoản"
 msgid "Add liquidity for a token pair and earn fees on the trades that are in your selected price range"
 msgstr ""
 
-#: src/pages/Pools/InstructionAndGlobalData.tsx
-msgid "Add liquidity to our Classic Pools & earn fees automatically. We amplify liquidity pools so you earn more fees even with less liquidity!"
-msgstr ""
+#: 
+#~ msgid "Add liquidity to our Classic Pools & earn fees automatically. We amplify liquidity pools so you earn more fees even with less liquidity!"
+#~ msgstr ""
 
 #: src/pages/Pools/InstructionAndGlobalData.tsx
-msgid "Add liquidity to our Elastic Pools & earn fees automatically. {0}Provide liquidity in any price range & earn more with concentrated liquidity. Your fee earnings will also be compounded!"
+msgid "Add liquidity to our Classic Pools & earn trading fees automatically."
+msgstr ""
+
+#: 
+#~ msgid "Add liquidity to our Elastic Pools & earn fees automatically. {0}Provide liquidity in any price range & earn more with concentrated liquidity. Your fee earnings will also be compounded!"
+#~ msgstr ""
+
+#: src/pages/Pools/InstructionAndGlobalData.tsx
+msgid "Add liquidity to our Elastic Pools and earn trading fees automatically."
+msgstr ""
+
+#: src/components/YieldPools/FarmGuide.tsx
+msgid "Add liquidity to the corresponding <0>Classic pool</0> to receive Liquidity Provider (LP) tokens"
+msgstr ""
+
+#: src/components/YieldPools/FarmGuide.tsx
+msgid "Add liquidity to the corresponding <0>Elastic pool</0> to receive a NFT token that represents your liquidity position"
 msgstr ""
 
 #: src/components/TransactionConfirmationModal/index.tsx
@@ -220,14 +236,17 @@ msgid "Address is not valid"
 msgstr ""
 
 #: src/components/TransactionSettings/index.tsx
+#: src/components/swapv2/SwapSettingsPanel/AdvancedModeSetting.tsx
 msgid "Advanced Mode"
 msgstr "Chế Độ Nâng Cao"
 
 #: src/components/TransactionSettings/index.tsx
+#: src/components/swapv2/SwapSettingsPanel/index.tsx
 msgid "Advanced Settings"
 msgstr "Tuỳ Chỉnh Nâng Cao"
 
 #: src/components/TransactionSettings/index.tsx
+#: src/pages/SwapV2/index.tsx
 msgid "Advanced mode is on!"
 msgstr "Đang bật chế độ nâng cao!"
 
@@ -240,6 +259,10 @@ msgstr ""
 #: src/components/YieldPools/ProMMFarms.tsx
 #: src/components/YieldPools/index.tsx
 msgid "After harvesting, your rewards will unlock linearly over the indicated time period"
+msgstr ""
+
+#: src/pages/Pools/index.tsx
+msgid "All"
 msgstr ""
 
 #: src/components/TrueSightNetworkModal/index.tsx
@@ -287,6 +310,7 @@ msgstr "Phân tích"
 msgid "Analytics ↗"
 msgstr "Phân tích ↗"
 
+#: src/components/AccountDetails/index.tsx
 #: src/pages/Pool/index.tsx
 #: src/pages/ProAmmPool/index.tsx
 msgid "Analyze Wallet"
@@ -308,7 +332,6 @@ msgstr ""
 msgid "Applicable to KyberSwap Classic"
 msgstr ""
 
-#: src/components/YieldPools/ListItem.tsx
 #: src/components/YieldPools/ListItem.tsx
 #: src/components/YieldPools/ProMMFarmGroup.tsx
 #: src/pages/RemoveLiquidity/TokenPair.tsx
@@ -335,7 +358,6 @@ msgid "Approved"
 msgstr "Đã chấp nhận"
 
 #: src/components/YieldPools/ListItem.tsx
-#: src/components/YieldPools/ListItem.tsx
 #: src/components/YieldPools/ProMMFarmGroup.tsx
 #: src/pages/RemoveLiquidity/TokenPair.tsx
 #: src/pages/RemoveLiquidity/ZapOut.tsx
@@ -356,7 +378,7 @@ msgstr ""
 msgid "Are you sure you want to unsubscribe? You will stop receiving notifications on latest tokens that could be trending soon!"
 msgstr ""
 
-#: src/components/TransactionSettings/index.tsx
+#: src/components/TransactionSettings/AdvanceModeModal.tsx
 msgid "Are you sure?"
 msgstr "Bạn có chắc chứ?"
 
@@ -368,6 +390,7 @@ msgstr ""
 msgid "Audited By"
 msgstr ""
 
+#: src/components/YieldPools/ListItem.tsx
 #: src/components/YieldPools/ProMMFarmModals/StakeModal.tsx
 msgid "Available Balance"
 msgstr ""
@@ -377,11 +400,15 @@ msgid "Available LP Tokens"
 msgstr ""
 
 #: src/components/PoolList/ListItem.tsx
-#: src/pages/ProAmmPool/PositionListItem.tsx
+#: src/components/ProAmm/ProAmmPoolInfo.tsx
 #: src/pages/ProAmmPools/CardItem.tsx
 #: src/pages/ProAmmPools/ListItem.tsx
 msgid "Available for yield farming"
 msgstr "Có thể yield farming"
+
+#: src/components/swapv2/GasPriceTrackerPanel.tsx
+msgid "Average"
+msgstr ""
 
 #: src/components/YieldPools/ProMMFarmGroup.tsx
 msgid "Average estimated return based on yearly fees and bonus rewards of the pool"
@@ -443,6 +470,7 @@ msgstr ""
 msgid "Bug Bounty"
 msgstr ""
 
+#: src/components/Header/index.tsx
 #: src/pages/BuyCrypto/index.tsx
 #: src/pages/BuyCrypto/index.tsx
 msgid "Buy Crypto"
@@ -460,13 +488,13 @@ msgstr "Bằng cách thêm danh sách này, bạn hoàn toàn tin tưởng rằn
 msgid "By collecting, you will receive 100% of your fee earnings"
 msgstr ""
 
-#: src/components/FarmHistoryModal/index.tsx
-msgid "CLAIM"
-msgstr "NHẬN"
+#: 
+#~ msgid "CLAIM"
+#~ msgstr "NHẬN"
 
-#: src/components/Vesting/Schedule.tsx
-msgid "CLAIMED"
-msgstr "ĐÃ NHẬN"
+#: 
+#~ msgid "CLAIMED"
+#~ msgstr "ĐÃ NHẬN"
 
 #: src/pages/Swap/index.tsx
 #: src/pages/SwapV2/index.tsx
@@ -474,13 +502,12 @@ msgid "Calculating best route"
 msgstr "Đang tính Route tốt nhất"
 
 #: src/components/Header/index.tsx
-#: src/components/Menu/index.tsx
 #: src/pages/Campaign/CampaignListAndSearch.tsx
 #: src/pages/Campaign/index.tsx
 msgid "Campaigns"
-msgstr ""
+msgstr "Chiến dịch"
 
-#: src/components/TransactionSettings/index.tsx
+#: src/components/TransactionSettings/AdvanceModeModal.tsx
 msgid "Cancel"
 msgstr "Huỷ"
 
@@ -488,9 +515,13 @@ msgstr "Huỷ"
 msgid "Chains"
 msgstr ""
 
+#: 
+#~ msgid "Change"
+#~ msgstr "Thay đổi"
+
 #: src/components/AccountDetails/index.tsx
-msgid "Change"
-msgstr "Thay đổi"
+msgid "Change Wallet"
+msgstr ""
 
 #: src/components/LiveChart/index.tsx
 msgid "Chart is unavailable"
@@ -502,30 +533,33 @@ msgid "Checking allowance..."
 msgstr "Đang kiểm tra khoản cho phép..."
 
 #: src/components/Menu/ClaimRewardModal.tsx
-#: src/components/Vesting/Schedule.tsx
-#: src/components/Vesting/ScheduleCard.tsx
+#: src/components/Vesting/VestingCard.tsx
 msgid "Claim"
 msgstr "Nhận"
 
-#: src/components/Vesting/UnlockedBlock.tsx
-msgid "Claim All"
-msgstr "Nhận Hết"
+#: 
+#~ msgid "Claim All"
+#~ msgstr "Nhận Hết"
 
 #: src/components/Menu/index.tsx
 msgid "Claim Rewards"
-msgstr ""
+msgstr "Yêu cầu phần thưởng"
 
 #: 
 #~ msgid "Claim fees"
-#~ msgstr ""
+#~ msgstr "Yêu cầu phí"
+
+#: src/components/YieldPools/FarmGuide.tsx
+#: src/components/YieldPools/FarmGuide.tsx
+msgid "Claim your farming rewards! (Note: some farms may have a vesting period)"
+msgstr ""
 
 #: src/components/Menu/ClaimRewardModal.tsx
 msgid "Claim your rewards"
-msgstr ""
+msgstr "Yêu cầu phần thưởng của bạn"
 
-#: src/components/Vesting/ProMMVesting.tsx
-#: src/components/Vesting/ScheduleCard.tsx
-#: src/components/Vesting/index.tsx
+#: src/components/Vesting/VestingCard.tsx
+#: src/components/Vesting/VestingSummary.tsx
 msgid "Claimed Rewards"
 msgstr "Phần Thưởng Đã Nhận"
 
@@ -537,12 +571,11 @@ msgstr ""
 msgid "Claiming..."
 msgstr ""
 
-#: src/pages/Yield/index.tsx
+#: src/components/ClassicElasticTab.tsx
 msgid "Classic Farms"
 msgstr ""
 
-#: src/pages/Pool/index.tsx
-#: src/pages/Pools/index.tsx
+#: src/components/ClassicElasticTab.tsx
 msgid "Classic Pools"
 msgstr ""
 
@@ -574,7 +607,7 @@ msgstr ""
 #: src/components/ProAmm/ProAmmFee.tsx
 #: src/components/ProAmm/ProAmmFee.tsx
 msgid "Collect Fees"
-msgstr ""
+msgstr "Thu phí"
 
 #: 
 #~ msgid "Collect as WETH"
@@ -583,7 +616,7 @@ msgstr ""
 #: 
 #: 
 #~ msgid "Collect fees"
-#~ msgstr ""
+#~ msgstr "Thu phí"
 
 #: 
 #~ msgid "Collected"
@@ -628,7 +661,7 @@ msgstr "Các Cơ Sở Chung"
 msgid "Community"
 msgstr ""
 
-#: src/components/TransactionSettings/index.tsx
+#: src/components/TransactionSettings/AdvanceModeModal.tsx
 #: src/pages/RemoveLiquidity/TokenPair.tsx
 #: src/pages/RemoveLiquidity/ZapOut.tsx
 msgid "Confirm"
@@ -689,8 +722,12 @@ msgstr "Kết nối Ví"
 msgid "Connect your Wallet"
 msgstr ""
 
+#: 
+#~ msgid "Connected"
+#~ msgstr ""
+
 #: src/components/AccountDetails/index.tsx
-msgid "Connected"
+msgid "Connected with {name}"
 msgstr ""
 
 #: src/components/Menu/index.tsx
@@ -716,13 +753,11 @@ msgstr "Chuyển vị trí thanh khoản của bạn trên Sushiswap thành các
 msgid "Copied"
 msgstr "Đã Sao Chép"
 
-#: src/components/AccountDetails/index.tsx
-#: src/components/AccountDetails/index.tsx
-msgid "Copy Address"
-msgstr "Sao chép Địa chỉ"
+#: 
+#: 
+#~ msgid "Copy Address"
+#~ msgstr "Sao chép Địa chỉ"
 
-#: src/components/Footer/Footer.tsx
-#: src/components/Footer/Footer.tsx
 #: src/components/Footer/Footer.tsx
 #: src/components/Footer/Footer.tsx
 msgid "Covers smart-contracts"
@@ -740,15 +775,15 @@ msgstr ""
 #: src/pages/Pools/index.tsx
 #: src/pages/Pools/index.tsx
 msgid "Create Pool"
-msgstr ""
+msgstr "Tạo pool"
 
 #: src/pages/CreateReferral/index.tsx
 msgid "Create Your Referral Link"
-msgstr ""
+msgstr "Tạo liên kết giới thiệu của bạn"
 
 #: src/pages/CreateReferral/index.tsx
 msgid "Create a Referral Link"
-msgstr ""
+msgstr "Tạo liên kết giới thiệu"
 
 #: src/components/NavigationTabs/index.tsx
 msgid "Create a new liquidity pool and earn fees on trades for this token pair"
@@ -788,15 +823,15 @@ msgstr "Hiện tại không có Farm nào cả."
 
 #: src/pages/Campaign/index.tsx
 msgid "Currently, there is no campaign."
-msgstr ""
+msgstr "Hiện tại, không có chiến dịch nào."
 
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "Custom"
 msgstr "Tự chọn"
 
-#: src/components/FarmHistoryModal/index.tsx
-msgid "DEPOSIT"
-msgstr "GỬI THANH KHOẢN"
+#: 
+#~ msgid "DEPOSIT"
+#~ msgstr "GỬI THANH KHOẢN"
 
 #: src/pages/About/AboutKyberSwap.tsx
 msgid "DEXs"
@@ -812,7 +847,7 @@ msgstr ""
 
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Deposit Amounts"
-msgstr ""
+msgstr "Số tiền đặt cọc"
 
 #: src/components/YieldPools/ProMMFarmModals/DepositModal.tsx
 msgid "Deposit Selected"
@@ -822,17 +857,29 @@ msgstr ""
 msgid "Deposit your liquidity"
 msgstr ""
 
-#: src/pages/Yield/index.tsx
-msgid "Deposit your liquidity & then stake it to earn even more attractive rewards"
-msgstr ""
+#: 
+#~ msgid "Deposit your liquidity & then stake it to earn even more attractive rewards"
+#~ msgstr ""
 
 #: src/components/YieldPools/ProMMFarmModals/DepositModal.tsx
 msgid "Deposit your liquidity first to enable farming. Only your in range liquidity positions will earn you farming rewards"
 msgstr ""
 
-#: src/pages/Yield/index.tsx
-msgid "Deposit your liquidity to earn even more attractive rewards"
+#: src/components/YieldPools/FarmGuide.tsx
+msgid "Deposit your liquidity from the Classic Pools here to earn even more attractive farming rewards."
 msgstr ""
+
+#: src/components/YieldPools/FarmGuide.tsx
+msgid "Deposit your liquidity from the Elastic Pools here, and then stake it to earn even more attractive farming rewards."
+msgstr ""
+
+#: src/components/YieldPools/FarmGuide.tsx
+msgid "Deposit your liquidity position (NFT token) and then stake it into the farm you identified earlier"
+msgstr ""
+
+#: 
+#~ msgid "Deposit your liquidity to earn even more attractive rewards"
+#~ msgstr ""
 
 #: src/pages/About/AboutKyberSwap.tsx
 msgid "Deposit your tokens and farm attractive rewards. We collaborate with projects to get you the best rewards."
@@ -843,11 +890,10 @@ msgid "Deposited Liquidity"
 msgstr ""
 
 #: src/components/PoolList/ItemCard/index.tsx
-#: src/components/Vesting/ProMMVesting.tsx
-#: src/components/Vesting/ProMMVesting.tsx
-#: src/components/Vesting/ProMMVesting.tsx
-#: src/components/Vesting/ProMMVesting.tsx
-#: src/components/Vesting/index.tsx
+#: src/components/Vesting/VestingSummary.tsx
+#: src/components/Vesting/VestingSummary.tsx
+#: src/components/Vesting/VestingSummary.tsx
+#: src/components/Vesting/VestingSummary.tsx
 msgid "Details"
 msgstr "Chi tiết"
 
@@ -862,7 +908,7 @@ msgstr ""
 #: src/components/Header/index.tsx
 #: src/components/Menu/index.tsx
 msgid "Discover"
-msgstr ""
+msgstr "Khám phá"
 
 #: src/components/TopTrendingSoonTokensInCurrentNetwork/index.tsx
 #: src/components/TopTrendingSoonTokensInCurrentNetwork/index.tsx
@@ -884,6 +930,7 @@ msgid "Dismiss"
 msgstr "Bỏ qua"
 
 #: src/components/TransactionSettings/index.tsx
+#: src/components/swapv2/SwapSettingsPanel/index.tsx
 msgid "Display Settings"
 msgstr ""
 
@@ -912,9 +959,9 @@ msgstr ""
 msgid "Download a wallet"
 msgstr ""
 
-#: src/components/Vesting/Schedule.tsx
-msgid "Duration: {duration}"
-msgstr "Thời Gian: {duration}"
+#: 
+#~ msgid "Duration: {duration}"
+#~ msgstr "Thời Gian: {duration}"
 
 #: src/pages/AddLiquidity/TokenPair.tsx
 #: src/pages/AddLiquidity/ZapIn.tsx
@@ -937,9 +984,9 @@ msgstr ""
 msgid "ENDED"
 msgstr ""
 
-#: src/components/Vesting/index.tsx
-msgid "Each time you harvest new rewards, a new vesting schedule (duration depends on the pool) is created. Multiple vesting schedules can run concurrently. Unlocked rewards can be claimed at any time with no deadline."
-msgstr "Mỗi khi bạn thu hoạch được phần thưởng mới, một lịch vesting mới (thời gian phụ thuộc vào Pool) sẽ được tạo. Nhiều lịch vesting có thể chạy đồng thời. Phần thưởng đã mở khóa có thể được nhận bất kỳ lúc nào mà không có thời hạn."
+#: 
+#~ msgid "Each time you harvest new rewards, a new vesting schedule (duration depends on the pool) is created. Multiple vesting schedules can run concurrently. Unlocked rewards can be claimed at any time with no deadline."
+#~ msgstr "Mỗi khi bạn thu hoạch được phần thưởng mới, một lịch vesting mới (thời gian phụ thuộc vào Pool) sẽ được tạo. Nhiều lịch vesting có thể chạy đồng thời. Phần thưởng đã mở khóa có thể được nhận bất kỳ lúc nào mà không có thời hạn."
 
 #: src/components/Header/index.tsx
 msgid "Earn"
@@ -949,10 +996,10 @@ msgstr ""
 msgid "Earn More with Concentrated Liquidity"
 msgstr ""
 
-#: src/components/YieldPools/ListItem.tsx
-#: src/components/YieldPools/ListItem.tsx
-msgid "Earn More!"
-msgstr ""
+#: 
+#: 
+#~ msgid "Earn More!"
+#~ msgstr ""
 
 #: src/pages/About/AboutKyberSwap.tsx
 msgid "Earn more due to compounding"
@@ -966,16 +1013,15 @@ msgstr ""
 msgid "Efficiency Comparison"
 msgstr ""
 
-#: src/pages/Yield/index.tsx
+#: src/components/ClassicElasticTab.tsx
 msgid "Elastic Farms"
 msgstr ""
 
-#: src/components/ElasticTutorialFarmModal/index.tsx
-msgid "Elastic Farms Tutorial"
-msgstr ""
+#: 
+#~ msgid "Elastic Farms Tutorial"
+#~ msgstr ""
 
-#: src/pages/Pool/index.tsx
-#: src/pages/Pools/index.tsx
+#: src/components/ClassicElasticTab.tsx
 msgid "Elastic Pools"
 msgstr ""
 
@@ -988,6 +1034,7 @@ msgid "Enable Metamask in C98"
 msgstr ""
 
 #: src/components/TransactionSettings/index.tsx
+#: src/components/swapv2/SwapSettingsPanel/AdvancedModeSetting.tsx
 msgid "Enables high slippage trades. Use at your own risk"
 msgstr ""
 
@@ -1008,7 +1055,14 @@ msgstr "Kết Thúc Trong"
 msgid "Enter a recipient"
 msgstr "Nhập người nhận"
 
+#: src/components/swapv2/SwapSettingsPanel/SlippageSetting.tsx
+msgid "Enter a smaller slippage percentage"
+msgstr ""
+
 #: src/components/TransactionSettings/index.tsx
+#: src/components/swapv2/SwapSettingsPanel/SlippageSetting.tsx
+#: src/components/swapv2/SwapSettingsPanel/SlippageSetting.tsx
+#: src/components/swapv2/SwapSettingsPanel/SlippageSetting.tsx
 msgid "Enter a valid slippage percentage"
 msgstr "Nhập phần trăm trượt giá hợp lệ"
 
@@ -1031,9 +1085,9 @@ msgstr "Nhập tỷ số AMP (>=1)"
 msgid "Enter an amount"
 msgstr "Nhập số lượng"
 
-#: src/pages/Campaign/EnterNowButton.tsx
-msgid "Enter now"
-msgstr ""
+#: 
+#~ msgid "Enter now"
+#~ msgstr ""
 
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "Enter valid token address"
@@ -1084,9 +1138,9 @@ msgstr ""
 msgid "FOR TRADERS"
 msgstr ""
 
-#: src/components/Vesting/Schedule.tsx
-msgid "FULL UNLOCK"
-msgstr "MỞ KHÓA HOÀN TOÀN"
+#: 
+#~ msgid "FULL UNLOCK"
+#~ msgstr "MỞ KHÓA HOÀN TOÀN"
 
 #: src/components/Header/index.tsx
 #: src/components/Menu/index.tsx
@@ -1150,8 +1204,12 @@ msgstr ""
 msgid "Filter tokens by chain"
 msgstr ""
 
+#: 
+#~ msgid "Find a token by searching for its name or symbol or by pasting its address below"
+#~ msgstr ""
+
 #: src/components/SearchModal/CurrencySearch.tsx
-msgid "Find a token by searching for its name or symbol or by pasting its address below"
+msgid "Find a token by searching for its name or symbol or by pasting its address below<0/><1/>You can select and trade any token on KyberSwap."
 msgstr ""
 
 #: src/pages/About/AboutKyberSwap.tsx
@@ -1169,12 +1227,10 @@ msgid "Forum"
 msgstr "Diễn đàn"
 
 #: src/pages/Swap/index.tsx
-#: src/pages/SwapV2/index.tsx
 msgid "From"
 msgstr "Từ"
 
 #: src/pages/Swap/index.tsx
-#: src/pages/SwapV2/index.tsx
 msgid "From (estimated)"
 msgstr "Từ (ước tính)"
 
@@ -1186,38 +1242,40 @@ msgstr ""
 msgid "Full range positions may earn less fees than concentrated positions."
 msgstr ""
 
-#: src/components/Vesting/ScheduleCard.tsx
+#: src/components/Vesting/VestingCard.tsx
 msgid "Full unlock"
 msgstr ""
 
-#: src/components/Vesting/ScheduleCard.tsx
+#: src/components/Vesting/VestingCard.tsx
 msgid "Full unlocked"
 msgstr ""
 
-#: src/components/Vesting/Schedule.tsx
-msgid "Fully Vested"
-msgstr "Hoàn toàn được xác nhận"
+#: 
+#~ msgid "Fully Vested"
+#~ msgstr "Hoàn toàn được xác nhận"
 
 #: src/components/swapv2/AdvancedSwapDetails.tsx
 #: src/components/swapv2/SwapModalFooter.tsx
 msgid "Gas Fee"
 msgstr "Phí Gas"
 
+#: src/components/swapv2/GasPriceTrackerPanel.tsx
+#: src/components/swapv2/SwapSettingsPanel/GasPriceTrackerSetting.tsx
+msgid "Gas Price Tracker"
+msgstr ""
+
 #: src/pages/BuyCrypto/index.tsx
 msgid "Get Started"
 msgstr ""
 
 #: src/components/YieldPools/ListItem.tsx
-#: src/components/YieldPools/ListItem.tsx
 msgid "Get pool {0} info"
 msgstr ""
 
 #: src/components/YieldPools/ListItem.tsx
-#: src/components/YieldPools/ListItem.tsx
 msgid "Get {0}-{1} LP ↗"
 msgstr ""
 
-#: src/components/YieldPools/ListItem.tsx
 #: src/components/YieldPools/ListItem.tsx
 msgid "Get {0}-{1} {2} LP ↗"
 msgstr ""
@@ -1244,12 +1302,16 @@ msgstr ""
 msgid "Go to farm ↗"
 msgstr ""
 
-#: src/components/FarmHistoryModal/index.tsx
-msgid "HARVEST"
-msgstr "THU HOẠCH"
+#: 
+#~ msgid "HARVEST"
+#~ msgstr "THU HOẠCH"
 
 #: src/pages/About/AboutKyberSwap.tsx
 msgid "HIGHER RETURNS"
+msgstr ""
+
+#: src/components/CurrencyInputPanel/index.tsx
+msgid "Half"
 msgstr ""
 
 #: src/components/YieldPools/ListItem.tsx
@@ -1268,6 +1330,11 @@ msgstr "Thu hoạch"
 msgid "Harvest All"
 msgstr "Thu hoạch tất cả"
 
+#: src/components/YieldPools/FarmGuide.tsx
+#: src/components/YieldPools/FarmGuide.tsx
+msgid "Harvest your farming rewards whenever you want"
+msgstr ""
+
 #: src/pages/Pool/index.tsx
 msgid "Here you can view all your liquidity and staked balances in the Classic Pools"
 msgstr ""
@@ -1276,18 +1343,23 @@ msgstr ""
 msgid "Here you can view all your liquidity and staked balances in the Elastic Pools"
 msgstr ""
 
+#: 
+#~ msgid "Here you can view tokens that are currently trending in <0>Coingecko</0> and <1>Coinmarketcap</1>"
+#~ msgstr ""
+
 #: src/pages/TrueSight/TrendingHero.tsx
-msgid "Here you can view tokens that are currently trending in <0>Coingecko</0> and <1>Coinmarketcap</1>"
+msgid "Here you can view tokens that are currently trending on Coingecko and Coinmarketcap"
+msgstr ""
+
+#: src/components/swapv2/GasPriceTrackerPanel.tsx
+msgid "High"
 msgstr ""
 
 #: src/pages/SwapProAmm/index.tsx
 msgid "High Price Impact"
 msgstr ""
 
-#: src/components/FarmHistoryModal/index.tsx
 #: src/pages/Campaign/index.tsx
-#: src/pages/Yield/index.tsx
-#: src/pages/Yield/index.tsx
 msgid "History"
 msgstr "Lịch sử"
 
@@ -1298,6 +1370,11 @@ msgstr "Lịch sử"
 msgid "Holders"
 msgstr ""
 
+#: src/components/Tutorial/index.tsx
+#: src/components/Tutorial/index.tsx
+msgid "How to Farm Tutorial"
+msgstr ""
+
 #: src/pages/Campaign/index.tsx
 msgid "How to win"
 msgstr ""
@@ -1306,6 +1383,14 @@ msgstr ""
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "I understand"
 msgstr "Tôi đã hiểu"
+
+#: src/components/YieldPools/FarmGuide.tsx
+msgid "Identify the Classic farm you would like to participate in"
+msgstr ""
+
+#: src/components/YieldPools/FarmGuide.tsx
+msgid "Identify the Elastic farm you would like to participate in"
+msgstr ""
 
 #: src/components/WalletModal/WarningBox.tsx
 msgid "If C98 wallet opens instead of Metamask, please close the C98 popup then follow the steps below to disable C98 Wallet:"
@@ -1319,9 +1404,9 @@ msgstr ""
 msgid "If you purchase a token from this list, you may not be able to sell it back."
 msgstr "Nếu bạn mua một token từ danh sách này, bạn có thể không bán lại được."
 
-#: src/pages/TrueSight/index.tsx
-msgid "If you would like to subscribe to notifications, please use Google Chrome (macOS, Windows, Android). Other browsers will be supported in the near future"
-msgstr ""
+#: 
+#~ msgid "If you would like to subscribe to notifications, please use Google Chrome (macOS, Windows, Android). Other browsers will be supported in the near future"
+#~ msgstr ""
 
 #: src/components/Menu/ClaimRewardModal.tsx
 msgid "If your wallet is eligible, you will be able to claim your reward below. You can claim:"
@@ -1391,7 +1476,7 @@ msgstr ""
 #: src/pages/ProAmmPool/PositionListItem.tsx
 #: src/pages/ProAmmPool/PositionListItem.tsx
 msgid "Increase Liquidity"
-msgstr ""
+msgstr "Tăng thanh khoản"
 
 #: src/components/PoolList/ItemCard/index.tsx
 #: src/components/swapv2/MobileTokenInfo.tsx
@@ -1473,10 +1558,10 @@ msgstr "Tài khoản {0} không đủ"
 msgid "Insufficient {0} balance."
 msgstr ""
 
-#: src/components/Footer/Footer.tsx
-#: src/pages/About/AboutKyberSwap.tsx
-msgid "Insured by"
-msgstr "Được bảo hiểm bởi"
+#: 
+#: 
+#~ msgid "Insured by"
+#~ msgstr "Được bảo hiểm bởi"
 
 #: src/state/burn/hooks.ts
 #: src/state/mint/hooks.ts
@@ -1504,14 +1589,14 @@ msgstr ""
 msgid "Invalid recipient"
 msgstr "Người nhận không hợp lệ"
 
-#: src/components/AboutPageDropDown/index.tsx
+#: src/components/Header/index.tsx
 #: src/components/Menu/AboutPageDropDown.tsx
 msgid "KNC"
 msgstr ""
 
-#: src/pages/About/AboutKNC.tsx
-msgid "KNC allows token holders to play a critical role in building a wide base of stakeholders and capturing value created by products like KyberSwap on Kyber Network. KNC holders stake and vote to receive trading fees from protocols like KyberSwap. As more trades are executed on KyberSwap, more rewards are generated for KNC holders."
-msgstr ""
+#: 
+#~ msgid "KNC allows token holders to play a critical role in building a wide base of stakeholders and capturing value created by products like KyberSwap on Kyber Network. KNC holders stake and vote to receive trading fees from protocols like KyberSwap. As more trades are executed on KyberSwap, more rewards are generated for KNC holders."
+#~ msgstr ""
 
 #: src/pages/About/AboutKNC.tsx
 msgid "KNC enables KyberDAO to shape token behaviour and upgrades, making KNC much more adaptable and providing better support for innovation and growth."
@@ -1533,8 +1618,12 @@ msgstr ""
 msgid "KNC is an ERC-20 token, so it can be stored in many Web3 wallets you control. Below are some examples."
 msgstr ""
 
+#: 
+#~ msgid "KNC is dynamic and can be upgraded, minted, or burned by KyberDAO to better support liquidity and growth. Holding KNC means having a stake in all the important innovation and liquidity protocols created for DeFi."
+#~ msgstr ""
+
 #: src/pages/About/AboutKNC.tsx
-msgid "KNC is dynamic and can be upgraded, minted, or burned by KyberDAO to better support liquidity and growth. Holding KNC means having a stake in all the important innovation and liquidity protocols created for DeFi."
+msgid "KNC token holders can benefit from our flagship product KyberSwap. Holders can stake their KNC & vote on initiatives to receive trading fees generated on KyberSwap! More trades on KyberSwap can generate more rewards for KNC holders!<0/><1/>KNC token is dynamic - it can be upgraded, minted or burned by KyberDAO to better support liquidity and growth."
 msgstr ""
 
 #: src/pages/About/AboutKNC.tsx
@@ -1557,7 +1646,7 @@ msgstr ""
 msgid "KyberDAO is a community platform that allows KNC token holders to participate in governance. KNC holders can stake KNC to vote on proposals. In return, they receive rewards from fees generated on KyberSwap through trading activities in Kyber Network."
 msgstr ""
 
-#: src/components/AboutPageDropDown/index.tsx
+#: src/components/Header/index.tsx
 msgid "KyberSwap"
 msgstr ""
 
@@ -1573,9 +1662,9 @@ msgstr ""
 msgid "LIQUIDITY INCENTIVES"
 msgstr ""
 
-#: src/components/Vesting/Schedule.tsx
-msgid "LOCKED"
-msgstr "ĐÃ KHÓA"
+#: 
+#~ msgid "LOCKED"
+#~ msgstr "ĐÃ KHÓA"
 
 #: src/pages/About/AboutKyberSwap.tsx
 msgid "LOWER SLIPPAGE"
@@ -1608,9 +1697,11 @@ msgstr ""
 msgid "Learn More"
 msgstr ""
 
+#: src/components/YieldPools/FarmGuide.tsx
+#: src/components/YieldPools/FarmGuide.tsx
+#: src/components/YieldPools/FarmGuide.tsx
+#: src/components/YieldPools/FarmGuide.tsx
 #: src/pages/Pools/InstructionAndGlobalData.tsx
-#: src/pages/Yield/index.tsx
-#: src/pages/Yield/index.tsx
 msgid "Learn More ↗"
 msgstr ""
 
@@ -1627,6 +1718,11 @@ msgstr ""
 #: src/components/swap/SwapModalFooter.tsx
 msgid "Liquidity Provider Fee"
 msgstr "Phí cho Nhà Cung cấp Thanh khoản"
+
+#: src/components/swapv2/LiquiditySourcesPanel/index.tsx
+#: src/components/swapv2/SwapSettingsPanel/LiquiditySourcesSetting.tsx
+msgid "Liquidity Sources"
+msgstr ""
 
 #: src/components/LiquidityChartRangeInput/index.tsx
 msgid "Liquidity data not available."
@@ -1654,17 +1750,24 @@ msgstr "Đã tải"
 msgid "Loading"
 msgstr "Đang tải"
 
-#: src/components/Vesting/ProMMVesting.tsx
-#: src/components/Vesting/index.tsx
+#: src/components/Vesting/VestingSummary.tsx
 msgid "Locked Rewards"
 msgstr "Các Phần thưởng bị Khóa"
 
+#: src/components/swapv2/GasPriceTrackerPanel.tsx
+msgid "Low"
+msgstr ""
+
 #: src/components/swapv2/TradeTypeSelection.tsx
 msgid "Lowest Gas"
-msgstr "Ít Phí Gas Nhất"
+msgstr "Ít phí Gas nhất"
 
 #: src/pages/About/AboutKyberSwap.tsx
 msgid "Lowest possible slippage"
+msgstr ""
+
+#: src/pages/Campaign/index.tsx
+msgid "Lucky Winners"
 msgstr ""
 
 #: src/components/CurrencyInputPanel/index.tsx
@@ -1710,6 +1813,7 @@ msgstr ""
 #~ msgid "Market Cap Rank"
 #~ msgstr ""
 
+#: src/components/CurrencyInputPanel/index.tsx
 #: src/pages/CreateReferral/index.tsx
 #: src/pages/RemoveLiquidity/TokenPair.tsx
 #: src/pages/RemoveLiquidity/ZapOut.tsx
@@ -1731,6 +1835,7 @@ msgid "Max Price"
 msgstr ""
 
 #: src/components/TransactionSettings/index.tsx
+#: src/components/swapv2/SwapSettingsPanel/SlippageSetting.tsx
 msgid "Max Slippage"
 msgstr "Trượt giá Tối đa"
 
@@ -1741,7 +1846,7 @@ msgstr "Trượt giá Tối đa:"
 
 #: src/components/swapv2/TradeTypeSelection.tsx
 msgid "Maximum Return"
-msgstr ""
+msgstr "Lợi nhuận tối đa"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 #: src/components/swap/SwapModalFooter.tsx
@@ -1799,9 +1904,16 @@ msgid "My Deposit"
 msgstr "Tiền gửi của tôi"
 
 #: src/components/Header/index.tsx
+#: src/pages/Pool/index.tsx
 msgid "My Pools"
 msgstr "Pool của Tôi"
 
+#: src/pages/ProAmmPool/index.tsx
+msgid "My Positions"
+msgstr ""
+
+#: src/components/YieldPools/HarvestAll.tsx
+#: src/components/YieldPools/ListItem.tsx
 #: src/components/YieldPools/ListItem.tsx
 #: src/components/YieldPools/ProMMFarmGroup.tsx
 #: src/components/YieldPools/ProMMFarmModals/HarvestModal.tsx
@@ -1810,18 +1922,23 @@ msgstr "Pool của Tôi"
 msgid "My Rewards"
 msgstr "Các Phần thưởng của tôi"
 
+#: src/pages/Pool/index.tsx
+msgid "My Staked Pools"
+msgstr ""
+
+#: src/components/YieldPools/HarvestAll.tsx
 #: src/components/YieldPools/ProMMFarmGroup.tsx
 msgid "My Total Rewards"
 msgstr "Tổng các Phần thưởng của tôi"
 
-#: src/pages/Yield/index.tsx
-#: src/pages/Yield/index.tsx
-msgid "My Total Rewards:"
-msgstr ""
+#: 
+#: 
+#~ msgid "My Total Rewards:"
+#~ msgstr ""
 
-#: src/pages/Yield/index.tsx
-msgid "My Vesting"
-msgstr "Vesting của Tôi"
+#: 
+#~ msgid "My Vesting"
+#~ msgstr "Vesting của Tôi"
 
 #: src/components/PoolList/index.tsx
 msgid "My liquidity"
@@ -1833,13 +1950,22 @@ msgstr "Thanh khoản của tôi"
 msgid "Name"
 msgstr ""
 
+#: src/components/Tutorial/index.tsx
+#: src/components/Tutorial/index.tsx
+msgid "Navigating My Pools Tutorial"
+msgstr ""
+
+#: src/components/Tutorial/index.tsx
+#: src/components/Tutorial/index.tsx
+msgid "Navigating Pools Tutorial"
+msgstr ""
+
 #: src/components/UpcomingFarms/ListItem.tsx
 #: src/components/UpcomingFarms/index.tsx
 msgid "Network"
 msgstr "Mạng"
 
 #: src/components/Header/index.tsx
-#: src/components/Menu/index.tsx
 #: src/components/Menu/index.tsx
 #: src/pages/Yield/index.tsx
 msgid "New"
@@ -1863,9 +1989,9 @@ msgstr ""
 msgid "No liquidity found. Check out our <0>Pools.</0>"
 msgstr ""
 
-#: src/components/FarmHistoryModal/index.tsx
-msgid "No records found."
-msgstr "Không có dữ liệu được tìm thấy."
+#: 
+#~ msgid "No records found."
+#~ msgstr "Không có dữ liệu được tìm thấy."
 
 #: src/components/SearchModal/CurrencySearch.tsx
 msgid "No results found."
@@ -1893,6 +2019,10 @@ msgstr "Không có lịch vesting!"
 msgid "No, go back"
 msgstr ""
 
+#: src/pages/Campaign/LeaderboardLayout.tsx
+msgid "Not enough trading volume"
+msgstr ""
+
 #: src/pages/CreatePool/index.tsx
 msgid "Note: There are existing pools for this token pair. Please check"
 msgstr "Lưu ý: Có các Pool hiện có cho cặp token này. Hãy kiểm tra"
@@ -1913,11 +2043,11 @@ msgstr "OFF"
 msgid "ON"
 msgstr "ON"
 
-#: src/components/Toggle/index.tsx
+#: src/components/Toggle/LegacyToggle.tsx
 msgid "Off"
 msgstr "Off"
 
-#: src/components/Toggle/index.tsx
+#: src/components/Toggle/LegacyToggle.tsx
 msgid "On"
 msgstr "On"
 
@@ -1947,8 +2077,12 @@ msgstr ""
 msgid "Other Details"
 msgstr ""
 
+#: 
+#~ msgid "Our <0>TrueSight</0> technology analyzes on-chain data, trading volumes and price trendlines to discover tokens that could be trending in the near future"
+#~ msgstr ""
+
 #: src/pages/TrueSight/TrendingSoonHero.tsx
-msgid "Our <0>TrueSight</0> technology analyzes on-chain data, trading volumes and price trendlines to discover tokens that could be trending in the near future"
+msgid "Our TrueSight technology analyzes on-chain data, trading volumes and price trendlines to discover tokens that could be trending in the near future"
 msgstr ""
 
 #: src/components/Badge/RangeBadge.tsx
@@ -2017,9 +2151,13 @@ msgstr ""
 msgid "Please select fee"
 msgstr ""
 
-#: src/components/TransactionSettings/index.tsx
-msgid "Please type the word 'confirm' below to enable Advanced Mode"
-msgstr "Vui lòng nhập từ 'xác nhận' bên dưới để bật Chế độ Nâng cao"
+#: 
+#~ msgid "Please type the word 'confirm' below to enable Advanced Mode"
+#~ msgstr "Vui lòng nhập từ 'xác nhận' bên dưới để bật Chế độ Nâng cao"
+
+#: src/components/TransactionSettings/AdvanceModeModal.tsx
+msgid "Please type the word 'confirm' below to enable Advanced Mode."
+msgstr ""
 
 #: src/pages/Campaign/LeaderboardLayout.tsx
 msgid "Points"
@@ -2168,10 +2306,10 @@ msgstr "Các mức Giá và Phần đóng góp Pool"
 msgid "Privacy Policy"
 msgstr "Chính sách Bảo mật"
 
-#: src/components/YieldPools/ListItem.tsx
-#: src/components/YieldPools/ListItem.tsx
-msgid "REWARD:"
-msgstr ""
+#: 
+#: 
+#~ msgid "REWARD:"
+#~ msgstr ""
 
 #: src/pages/About/AboutKyberSwap.tsx
 msgid "Rainmaker Yield Farming"
@@ -2185,23 +2323,31 @@ msgstr ""
 msgid "Ranking"
 msgstr ""
 
-#: src/pages/RemoveLiquidityProAmm/index.tsx
-#: src/pages/RemoveLiquidityProAmm/index.tsx
-msgid "Receive Native Token"
+#: src/components/YourCampaignTransactionsModal/index.tsx
+msgid "Read the rules for this campaign & start swapping!"
 msgstr ""
 
-#: src/pages/RemoveLiquidityProAmm/index.tsx
-#: src/pages/RemoveLiquidityProAmm/index.tsx
-msgid "Receive Wrapped Token"
-msgstr ""
+#: 
+#: 
+#~ msgid "Receive Native Token"
+#~ msgstr ""
+
+#: 
+#: 
+#~ msgid "Receive Wrapped Token"
+#~ msgstr ""
 
 #: src/components/AccountDetails/index.tsx
 msgid "Recent Transactions"
 msgstr "Giao dịch Gần đây"
 
+#: 
+#~ msgid "Recipient"
+#~ msgstr "Người nhận"
+
 #: src/components/AddressInputPanel/index.tsx
-msgid "Recipient"
-msgstr "Người nhận"
+msgid "Recipient (Optional)"
+msgstr ""
 
 #: src/components/Menu/index.tsx
 msgid "Referral"
@@ -2279,16 +2425,15 @@ msgstr ""
 
 #: src/components/UpcomingFarms/ListItem.tsx
 #: src/components/UpcomingFarms/index.tsx
-#: src/components/YieldPools/HarvestAll.tsx
 #: src/pages/Campaign/LeaderboardLayout.tsx
 #: src/pages/Campaign/index.tsx
 #: src/pages/Campaign/index.tsx
 msgid "Rewards"
 msgstr "Các Phần thưởng"
 
-#: src/components/Vesting/Schedule.tsx
-msgid "Rewards: {0} {1}"
-msgstr "Phần thưởng: {0} {1}"
+#: 
+#~ msgid "Rewards: {0} {1}"
+#~ msgstr "Phần thưởng: {0} {1}"
 
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Route"
@@ -2302,10 +2447,10 @@ msgstr ""
 msgid "Rules"
 msgstr ""
 
-#: src/components/YieldPools/ListItem.tsx
-#: src/components/YieldPools/ListItem.tsx
-msgid "STAKED BALANCE:"
-msgstr ""
+#: 
+#: 
+#~ msgid "STAKED BALANCE:"
+#~ msgstr ""
 
 #: src/pages/About/AboutKyberSwap.tsx
 msgid "Save time & effort"
@@ -2343,13 +2488,21 @@ msgstr ""
 msgid "Search by token or pool address"
 msgstr ""
 
+#: src/components/swapv2/LiquiditySourcesPanel/SearchBar.tsx
+msgid "Search for a liquidity source"
+msgstr ""
+
 #: src/pages/Campaign/CampaignListAndSearch.tsx
 msgid "Search for campaign"
 msgstr ""
 
+#: 
+#~ msgid "Search name or paste address"
+#~ msgstr "Tìm kiếm tên hoặc địa chỉ"
+
 #: src/components/SearchModal/CurrencySearch.tsx
-msgid "Search name or paste address"
-msgstr "Tìm kiếm tên hoặc địa chỉ"
+msgid "Search token name, symbol or address"
+msgstr ""
 
 #: src/components/swapv2/SingleTokenInfo.tsx
 msgid "See less"
@@ -2359,20 +2512,19 @@ msgstr ""
 msgid "See more"
 msgstr ""
 
-#: src/pages/AddLiquidityV2/index.tsx
-msgid "Select Fee"
-msgstr ""
+#: 
+#~ msgid "Select Fee"
+#~ msgstr ""
 
-#: src/components/CurrencyInputPanel/index.tsx
-msgid "Select Max"
-msgstr "Chọn Tối Đa"
+#: 
+#~ msgid "Select Max"
+#~ msgstr "Chọn Tối Đa"
 
 #: src/components/WalletModal/WarningBox.tsx
 msgid "Select Override Wallets"
 msgstr ""
 
 #: src/components/NetworkModal/index.tsx
-#: src/pages/CreateReferral/SelectNetworkModal.tsx
 msgid "Select a Network"
 msgstr "Chọn Mạng"
 
@@ -2390,18 +2542,28 @@ msgid "Select a token to find your liquidity."
 msgstr "Chọn một token để tìm thanh khoản của bạn."
 
 #: src/pages/AddLiquidityV2/index.tsx
+msgid "Select fee tier"
+msgstr "Chọn mức phí"
+
+#: src/pages/AddLiquidityV2/index.tsx
 msgid "Set Starting Price"
-msgstr ""
+msgstr "Đặt giá khởi điểm"
 
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
 msgid "Set Your Price Range"
+msgstr "Cài đặt khoảng giá của bạn"
+
+#: src/components/swapv2/SwapSettingsPanel/index.tsx
+#: src/pages/SwapV2/index.tsx
+msgid "Settings"
 msgstr ""
 
 #: src/components/PoolList/ItemCard/index.tsx
+#: src/components/ShareModal/index.tsx
 #: src/pages/ProAmmPools/CardItem.tsx
 msgid "Share"
-msgstr ""
+msgstr "Chia sẻ"
 
 #: src/components/PoolPriceBar/index.tsx
 msgid "Share of Pool"
@@ -2419,8 +2581,12 @@ msgstr ""
 msgid "Share this pool with your friends!"
 msgstr ""
 
+#: 
+#~ msgid "Share this token with your friends!"
+#~ msgstr ""
+
 #: src/components/ShareModal/index.tsx
-msgid "Share this token with your friends!"
+msgid "Share this with your friends!"
 msgstr ""
 
 #: src/pages/CreateReferral/ShareLinkModal.tsx
@@ -2480,6 +2646,13 @@ msgstr "Có lỗi đã xảy ra"
 msgid "Sort by"
 msgstr ""
 
+#: src/pages/Pools/index.tsx
+msgid "Stablecoins"
+msgstr ""
+
+#: src/components/YieldPools/ListItem.tsx
+#: src/components/YieldPools/ListItem.tsx
+#: src/components/YieldPools/ListItem.tsx
 #: src/components/YieldPools/ProMMFarmGroup.tsx
 #: src/components/YieldPools/ProMMFarmGroup.tsx
 msgid "Stake"
@@ -2495,6 +2668,10 @@ msgstr ""
 
 #: src/components/YieldPools/ProMMFarmModals/StakeModal.tsx
 msgid "Stake Selected"
+msgstr ""
+
+#: src/components/YieldPools/FarmGuide.tsx
+msgid "Stake your LP tokens in the farm you identified earlier"
 msgstr ""
 
 #: src/components/YieldPools/ProMMFarmModals/StakeModal.tsx
@@ -2522,6 +2699,10 @@ msgstr ""
 #: src/components/YieldPools/index.tsx
 msgid "Staked Only"
 msgstr "Bạn đã Stake"
+
+#: src/pages/ProAmmPool/index.tsx
+msgid "Staked Positions"
+msgstr ""
 
 #: src/components/YieldPools/ListItem.tsx
 #: src/components/YieldPools/ProMMFarmGroup.tsx
@@ -2579,15 +2760,15 @@ msgstr ""
 msgid "Subscribe"
 msgstr ""
 
-#: src/pages/TrueSight/index.tsx
-msgid "Subscribe to get notifications on the latest tokens that could be trending soon!"
-msgstr ""
+#: 
+#~ msgid "Subscribe to get notifications on the latest tokens that could be trending soon!"
+#~ msgstr ""
 
 #: src/pages/CreateReferral/ShareLinkModal.tsx
 msgid "Successfully Created"
 msgstr ""
 
-#: src/components/Vesting/ProMMVesting.tsx
+#: src/components/Vesting/VestingSummary.tsx
 msgid "Summary"
 msgstr ""
 
@@ -2603,6 +2784,7 @@ msgstr "Cung cấp"
 msgid "Supply Anyway"
 msgstr "Vẫn Cung cấp"
 
+#: src/components/Header/index.tsx
 #: src/components/Header/index.tsx
 #: src/components/NavigationTabs/index.tsx
 #: src/components/PoolList/ItemCard/index.tsx
@@ -2646,7 +2828,8 @@ msgstr ""
 msgid "Swap on KyberSwap"
 msgstr ""
 
-#: src/pages/Campaign/EnterNowButton.tsx
+#: src/pages/TrueSight/components/ButtonWithOptions.tsx
+#: src/pages/TrueSight/components/ButtonWithOptions.tsx
 msgid "Swap on {0}"
 msgstr ""
 
@@ -2658,9 +2841,9 @@ msgstr ""
 msgid "TOKEN UTILITY"
 msgstr ""
 
-#: src/components/Vesting/index.tsx
-msgid "TOTAL HARVESTED REWARDS"
-msgstr "TỔNG PHẦN THƯỞNG ĐÃ THU HOẠCH"
+#: 
+#~ msgid "TOTAL HARVESTED REWARDS"
+#~ msgstr "TỔNG PHẦN THƯỞNG ĐÃ THU HOẠCH"
 
 #: src/pages/About/AboutKyberSwap.tsx
 msgid "TVL From DEXs"
@@ -2700,15 +2883,15 @@ msgstr ""
 msgid "Terms of Use"
 msgstr "Điều khoản Sử dụng"
 
-#: src/components/Vesting/ProMMVesting.tsx
+#: src/components/Vesting/VestingSummary.tsx
 msgid "The amount of rewards that are locked as they are currently vesting"
 msgstr ""
 
-#: src/components/Vesting/ProMMVesting.tsx
+#: src/components/Vesting/VestingSummary.tsx
 msgid "The amount of rewards that are unlocked and can be claimed instantly as their vesting is over"
 msgstr ""
 
-#: src/components/Vesting/ProMMVesting.tsx
+#: src/components/Vesting/VestingSummary.tsx
 msgid "The amount of rewards you have already claimed"
 msgstr ""
 
@@ -2743,7 +2926,7 @@ msgstr ""
 msgid "The token list \"{0}\" has been updated to <0>{1}</0>."
 msgstr "Danh sách token \"{0}\" đã được cập nhật thành <0> {1} </0>."
 
-#: src/components/Vesting/ProMMVesting.tsx
+#: src/components/Vesting/VestingSummary.tsx
 msgid "The total amount of rewards you have harvested from the farms. Harvested rewards are locked initially and vested linearly over a short period."
 msgstr ""
 
@@ -2751,6 +2934,10 @@ msgstr ""
 #: src/pages/ProAmmPools/index.tsx
 msgid "There are no pools for this token pair."
 msgstr "Không có Pool nào cho cặp token này."
+
+#: src/pages/Campaign/index.tsx
+msgid "There is an error while loading campaigns."
+msgstr ""
 
 #: src/components/LiquidityChartRangeInput/index.tsx
 msgid "There is no liquidity data."
@@ -2785,13 +2972,17 @@ msgstr ""
 msgid "Tip: Custom tokens are stored locally in your browser"
 msgstr "Mẹo: Token tùy chỉnh được lưu trữ cục bộ trong trình duyệt của bạn"
 
-#: src/pages/SwapV2/index.tsx
-msgid "To"
-msgstr "Sang"
+#: src/pages/TrueSight/index.tsx
+msgid "Tired of missing out on tokens that could be Trending Soon?"
+msgstr ""
 
-#: src/pages/SwapV2/index.tsx
-msgid "To (estimated)"
-msgstr "Sang (ước tính)"
+#: 
+#~ msgid "To"
+#~ msgstr "Sang"
+
+#: 
+#~ msgid "To (estimated)"
+#~ msgstr "Sang (ước tính)"
 
 #: src/components/YieldPools/ListItem.tsx
 #: src/components/YieldPools/ListItem.tsx
@@ -2802,8 +2993,24 @@ msgstr ""
 msgid "To initialize this pool, select a starting price for the pool then enter your liquidity price range. Gas fees will be higher than usual due to initialization of the pool."
 msgstr ""
 
-#: src/components/ElasticTutorialFarmModal/index.tsx
-msgid "To learn more about KyberSwap Elastic Farming, view <0> here</0>"
+#: 
+#~ msgid "To learn more about KyberSwap Elastic Farming, view <0> here</0>"
+#~ msgstr ""
+
+#: src/components/Tutorial/index.tsx
+msgid "To learn more about how to add liquidity to KyberSwap Classic, view <0> here</0>"
+msgstr ""
+
+#: src/components/Tutorial/index.tsx
+msgid "To learn more about how to add liquidity to KyberSwap Elastic, view <0> here</0>"
+msgstr ""
+
+#: src/components/Tutorial/index.tsx
+msgid "To learn more about how to increase liquidity to KyberSwap Elastic, view <0> here</0>"
+msgstr ""
+
+#: src/components/Tutorial/index.tsx
+msgid "To learn more about how to remove liquidity on KyberSwap Elastic, view <0> here</0>"
 msgstr ""
 
 #: src/components/SearchModal/ManageTokens.tsx
@@ -2815,8 +3022,10 @@ msgid "Token Amount"
 msgstr "Số lượng Token"
 
 #: src/components/TransactionSettings/index.tsx
+#: src/components/swapv2/MobileTokenInfo.tsx
+#: src/components/swapv2/SwapSettingsPanel/index.tsx
 msgid "Token Info"
-msgstr ""
+msgstr "Thông tin token"
 
 #: src/components/SearchModal/CurrencySearch.tsx
 msgid "Token Name"
@@ -2859,8 +3068,8 @@ msgstr ""
 msgid "Total Earnings"
 msgstr ""
 
-#: src/components/Vesting/ProMMVesting.tsx
-#: src/components/Vesting/ScheduleCard.tsx
+#: src/components/Vesting/VestingCard.tsx
+#: src/components/Vesting/VestingSummary.tsx
 msgid "Total Harvested Rewards"
 msgstr ""
 
@@ -2901,6 +3110,7 @@ msgid "Tradable token pair price range for this pool based on AMP. If the price 
 msgstr "Phạm vi giá của cặp token có thể giao dịch cho Pool này được dựa trên AMP. Nếu giá thấp hơn hoặc cao hơn phạm vi này, Pool có thể không hoạt động."
 
 #: src/components/TransactionSettings/index.tsx
+#: src/components/swapv2/SwapSettingsPanel/index.tsx
 msgid "Trade Route"
 msgstr ""
 
@@ -2920,14 +3130,17 @@ msgid "Transaction Submitted"
 msgstr "Giao dịch đã được gửi"
 
 #: src/components/TransactionSettings/index.tsx
+#: src/components/swapv2/SwapSettingsPanel/TransactionTimeLimitSetting.tsx
 msgid "Transaction time limit"
 msgstr "Thời hạn giao dịch"
 
 #: src/components/TransactionSettings/index.tsx
+#: src/components/swapv2/SwapSettingsPanel/TransactionTimeLimitSetting.tsx
 msgid "Transaction will revert if it is pending for longer than the indicated time"
 msgstr "Giao dịch sẽ hoàn nguyên nếu nó đang chờ xử lý lâu hơn thời gian đã chỉ định"
 
 #: src/components/TransactionSettings/index.tsx
+#: src/components/swapv2/SwapSettingsPanel/SlippageSetting.tsx
 msgid "Transaction will revert if there is an adverse rate change that is higher than this %"
 msgstr "Giao dịch sẽ hoàn nguyên nếu có sự thay đổi tỷ giá bất lợi cao hơn % này"
 
@@ -2950,33 +3163,38 @@ msgid "Try Again"
 msgstr "Thử lại"
 
 #: src/components/TransactionSettings/index.tsx
+#: src/components/swapv2/SwapSettingsPanel/index.tsx
 msgid "Turn on to display live chart"
-msgstr ""
+msgstr "Bật để hiển thị live chart"
 
 #: src/components/TransactionSettings/index.tsx
+#: src/components/swapv2/SwapSettingsPanel/index.tsx
 msgid "Turn on to display token info"
-msgstr ""
+msgstr "Bật để hiển thị token info"
 
 #: src/components/TransactionSettings/index.tsx
+#: src/components/swapv2/SwapSettingsPanel/index.tsx
 msgid "Turn on to display tokens that could be trending soon"
-msgstr ""
+msgstr "Bật để hiển thị các token có thể sẽ trending"
 
 #: src/components/TransactionSettings/index.tsx
+#: src/components/swapv2/SwapSettingsPanel/index.tsx
 msgid "Turn on to display trade route"
-msgstr ""
+msgstr "Bật để hiển thị trade route"
 
-#: src/pages/Yield/index.tsx
-#: src/pages/Yield/index.tsx
+#: src/components/Tutorial/index.tsx
+#: src/components/Tutorial/index.tsx
+#: src/components/Tutorial/index.tsx
 msgid "Tutorial"
 msgstr ""
 
-#: src/components/FarmHistoryModal/index.tsx
-msgid "UNKNOWN"
-msgstr "KHÔNG XÁC ĐỊNH"
+#: 
+#~ msgid "UNKNOWN"
+#~ msgstr "KHÔNG XÁC ĐỊNH"
 
-#: src/components/Vesting/Schedule.tsx
-msgid "UNLOCKED"
-msgstr "ĐÃ MỞ KHÓA"
+#: 
+#~ msgid "UNLOCKED"
+#~ msgstr "ĐÃ MỞ KHÓA"
 
 #: src/pages/SwapV2/index.tsx
 msgid "Unable to calculate Price Impact"
@@ -2992,28 +3210,30 @@ msgstr "Đã có Pool không khuếch đại"
 #~ msgid "Unclaimed fees"
 #~ msgstr ""
 
-#: src/components/FarmHistoryModal/index.tsx
-msgid "Unknown"
-msgstr "Không xác định"
+#: 
+#~ msgid "Unknown"
+#~ msgstr "Không xác định"
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "Unknown Source"
 msgstr "Nguồn không rõ"
 
-#: src/components/Vesting/UnlockedBlock.tsx
-msgid "Unlocked"
-msgstr "Đã mở khoá"
+#: 
+#~ msgid "Unlocked"
+#~ msgstr "Đã mở khoá"
 
-#: src/components/Vesting/ProMMVesting.tsx
-#: src/components/Vesting/ScheduleCard.tsx
-#: src/components/Vesting/index.tsx
+#: src/components/Vesting/VestingCard.tsx
+#: src/components/Vesting/VestingSummary.tsx
 msgid "Unlocked Rewards"
 msgstr "Phần thưởng đã mở khóa"
 
-#: src/components/Vesting/Schedule.tsx
-msgid "Unlocked: {0} {1}"
-msgstr "Đã mở khóa: {0} {1}"
+#: 
+#~ msgid "Unlocked: {0} {1}"
+#~ msgstr "Đã mở khóa: {0} {1}"
 
+#: src/components/YieldPools/ListItem.tsx
+#: src/components/YieldPools/ListItem.tsx
+#: src/components/YieldPools/ListItem.tsx
 #: src/components/YieldPools/ProMMFarmGroup.tsx
 #: src/components/YieldPools/ProMMFarmGroup.tsx
 msgid "Unstake"
@@ -3036,9 +3256,9 @@ msgstr ""
 msgid "Unsubscribe"
 msgstr ""
 
-#: src/pages/TrueSight/index.tsx
-msgid "Unsubscribe to stop receiving notifications on latest tokens that could be trending soon!"
-msgstr ""
+#: 
+#~ msgid "Unsubscribe to stop receiving notifications on latest tokens that could be trending soon!"
+#~ msgstr ""
 
 #: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/IncreaseLiquidity/index.tsx
@@ -3054,14 +3274,9 @@ msgid "Update list"
 msgstr "Cập nhật danh sách"
 
 #: src/pages/AddLiquidity/TokenPair.tsx
-#: src/pages/AddLiquidity/TokenPair.tsx
 #: src/pages/AddLiquidity/ZapIn.tsx
-#: src/pages/AddLiquidityV2/index.tsx
-#: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/CreatePool/index.tsx
 #: src/pages/CreatePool/index.tsx
-#: src/pages/IncreaseLiquidity/index.tsx
-#: src/pages/IncreaseLiquidity/index.tsx
 #: src/pages/RemoveLiquidity/TokenPair.tsx
 #: src/pages/RemoveLiquidity/TokenPair.tsx
 #: src/pages/RemoveLiquidity/ZapOut.tsx
@@ -3069,23 +3284,22 @@ msgid "Use Native Token"
 msgstr "Sử dụng Native Token"
 
 #: src/pages/AddLiquidity/TokenPair.tsx
-#: src/pages/AddLiquidity/TokenPair.tsx
 #: src/pages/AddLiquidity/ZapIn.tsx
-#: src/pages/AddLiquidityV2/index.tsx
-#: src/pages/AddLiquidityV2/index.tsx
 #: src/pages/CreatePool/index.tsx
 #: src/pages/CreatePool/index.tsx
-#: src/pages/IncreaseLiquidity/index.tsx
-#: src/pages/IncreaseLiquidity/index.tsx
 #: src/pages/RemoveLiquidity/TokenPair.tsx
 #: src/pages/RemoveLiquidity/TokenPair.tsx
 #: src/pages/RemoveLiquidity/ZapOut.tsx
 msgid "Use Wrapped Token"
 msgstr "Sử dụng Wrapped Token"
 
-#: src/components/TransactionSettings/index.tsx
-msgid "Use this mode if you are aware of the risks"
-msgstr "Chỉ sử dụng chế độ này nếu bạn ý thức được các rủi ro"
+#: 
+#~ msgid "Use this mode if you are aware of the risks"
+#~ msgstr "Chỉ sử dụng chế độ này nếu bạn ý thức được các rủi ro"
+
+#: src/components/TransactionSettings/AdvanceModeModal.tsx
+msgid "Use this mode if you are aware of the risks."
+msgstr ""
 
 #: src/components/NavigationTabs/index.tsx
 msgid "Use this tool to find pairs that don't automatically appear in the interface"
@@ -3095,9 +3309,9 @@ msgstr ""
 msgid "V1"
 msgstr "V1"
 
-#: src/components/Vesting/index.tsx
-msgid "VESTING PERIODS"
-msgstr "LỊCH VESTING"
+#: 
+#~ msgid "VESTING PERIODS"
+#~ msgstr "LỊCH VESTING"
 
 #: src/pages/ProAmmPools/index.tsx
 msgid "VOLUME (24H)"
@@ -3107,16 +3321,18 @@ msgstr ""
 #: src/components/YieldPools/ProMMFarmGroup.tsx
 #: src/components/YieldPools/ProMMFarms.tsx
 #: src/components/YieldPools/index.tsx
+#: src/pages/Yield/index.tsx
 msgid "Vesting"
 msgstr ""
 
 #: src/components/Vesting/ProMMVesting.tsx
+#: src/components/Vesting/index.tsx
 msgid "Vesting Schedules"
 msgstr ""
 
-#: src/components/Vesting/Schedule.tsx
-msgid "Vesting started: {0}"
-msgstr "Vesting đã bắt đầu: {0}"
+#: 
+#~ msgid "Vesting started: {0}"
+#~ msgstr "Vesting đã bắt đầu: {0}"
 
 #: src/components/TrendingSoonTokenBanner/index.tsx
 msgid "View"
@@ -3128,6 +3344,10 @@ msgstr ""
 
 #: src/pages/ProAmmPools/CardItem.tsx
 msgid "View Positions"
+msgstr ""
+
+#: src/components/AccountDetails/index.tsx
+msgid "View Transactions"
 msgstr ""
 
 #: src/pages/ProAmmPools/ListItem.tsx
@@ -3160,9 +3380,9 @@ msgstr ""
 msgid "Volume (24h)"
 msgstr "Khối lượng (24h)"
 
-#: src/components/FarmHistoryModal/index.tsx
-msgid "WITHDRAW"
-msgstr "RÚT THANH KHOẢN"
+#: 
+#~ msgid "WITHDRAW"
+#~ msgstr "RÚT THANH KHOẢN"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Waiting For Confirmation"
@@ -3206,10 +3426,10 @@ msgstr ""
 msgid "Website"
 msgstr ""
 
-#: src/components/Vesting/index.tsx
-#: src/components/Vesting/index.tsx
-msgid "What can KNC be used for?"
-msgstr "KNC có thể được sử dụng vào mục đích gì?"
+#: 
+#: 
+#~ msgid "What can KNC be used for?"
+#~ msgstr "KNC có thể được sử dụng vào mục đích gì?"
 
 #: src/pages/About/AboutKNC.tsx
 msgid "What is KNC used for?"
@@ -3289,9 +3509,9 @@ msgstr ""
 msgid "You can include the chain in your referral link so referees are automatically re-directed to this network on KyberSwap. You will still earn commission on trades that are made on other chains and use your referral link"
 msgstr ""
 
-#: src/pages/Pool/index.tsx
-msgid "You can manually import your pool"
-msgstr ""
+#: 
+#~ msgid "You can manually import your pool"
+#~ msgstr ""
 
 #: src/pages/RemoveLiquidityProAmm/index.tsx
 msgid "You can remove your liquidity here. When you remove liquidity (even partially), you will receive 100% of your fee earnings"
@@ -3306,8 +3526,12 @@ msgstr ""
 msgid "You can select the appropriate fee tier for your pool. For each trade that uses this liquidity pool, liquidity providers will earn this trading fee."
 msgstr ""
 
+#: 
+#~ msgid "You can swap {0} for {1} (and vice versa) with no trading fees. <0/>Exchange rate is always 1 to 1."
+#~ msgstr ""
+
 #: src/components/LiveChart/index.tsx
-msgid "You can swap {0} for {1} (and vice versa) with no trading fees. <0/>Exchange rate is always 1 to 1."
+msgid "You can swap {0} for {1} (and vice versa)<0/>Exchange rate is always 1 to 1."
 msgstr ""
 
 #: src/components/YieldPools/ProMMFarmModals/StakeModal.tsx
@@ -3321,6 +3545,10 @@ msgstr ""
 #: src/components/YieldPools/ProMMFarmModals/DepositModal.tsx
 #: src/components/YieldPools/ProMMFarmModals/StakeModal.tsx
 msgid "You dont have any relevant liquidity positions yet.<0/> Add liquidity to the farming pools first. Check out our <1>Pools.</1>"
+msgstr ""
+
+#: src/components/YourCampaignTransactionsModal/index.tsx
+msgid "You haven't made any eligible transactions yet."
 msgstr ""
 
 #: src/pages/ProAmmPool/PositionListItem.tsx
@@ -3356,7 +3584,7 @@ msgstr "Vị trí Hiện tại của Bạn"
 #: src/components/PositionCard/index.tsx
 #: src/pages/ProAmmPool/PositionListItem.tsx
 msgid "Your Liquidity"
-msgstr "Thanh khoản của Bạn"
+msgstr "Thanh khoản của bạn"
 
 #: src/components/PoolList/ItemCard/TabInfoItems.tsx
 #: src/components/PoolList/ItemCard/TabYourLiquidityItems.tsx
@@ -3415,8 +3643,12 @@ msgstr ""
 msgid "Your Transactions"
 msgstr ""
 
+#: 
+#~ msgid "Your Transactions (Total: {0})"
+#~ msgstr ""
+
 #: src/components/YourCampaignTransactionsModal/index.tsx
-msgid "Your Transactions (Total: {0})"
+msgid "Your Transactions ({0})"
 msgstr ""
 
 #: src/components/PositionCard/index.tsx
@@ -3469,9 +3701,13 @@ msgstr ""
 msgid "Your rewards may be automatically harvested a few days after the farm ends. Please check the <0>Vesting</0> tab to see your rewards"
 msgstr ""
 
-#: src/components/Vesting/index.tsx
-msgid "Your total harvested rewards. Each time you harvest new rewards, they are locked and vested linearly over a short period (duration depends on the pool). Unlocked rewards can be claimed at any time with no deadline."
-msgstr "Tổng số phần thưởng đã thu hoạch của bạn. Mỗi khi bạn thu hoạch phần thưởng mới, chúng sẽ bị khóa và vesting một cách tuyến tính trong một khoảng thời gian ngắn (thời gian phụ thuộc vào pool). Phần thưởng đã mở khóa có thể được nhận bất kỳ lúc nào mà không có thời hạn."
+#: 
+#~ msgid "Your total harvested rewards. Each time you harvest new rewards, they are locked and vested linearly over a short period (duration depends on the pool). Unlocked rewards can be claimed at any time with no deadline."
+#~ msgstr "Tổng số phần thưởng đã thu hoạch của bạn. Mỗi khi bạn thu hoạch phần thưởng mới, chúng sẽ bị khóa và vesting một cách tuyến tính trong một khoảng thời gian ngắn (thời gian phụ thuộc vào pool). Phần thưởng đã mở khóa có thể được nhận bất kỳ lúc nào mà không có thời hạn."
+
+#: src/components/swapv2/SwapSettingsPanel/LiquiditySourcesSetting.tsx
+msgid "Your trade is routed through one or more of these liquidity sources"
+msgstr ""
 
 #: src/components/swapv2/MobileTradeRoutes.tsx
 #: src/pages/SwapV2/index.tsx
@@ -3479,10 +3715,12 @@ msgid "Your trade route"
 msgstr "Trade Route của bạn"
 
 #: src/components/TransactionSettings/index.tsx
+#: src/components/swapv2/SwapSettingsPanel/SlippageSetting.tsx
 msgid "Your transaction may be frontrun"
 msgstr "Giao dịch của bạn có thể bị frontrun"
 
 #: src/components/TransactionSettings/index.tsx
+#: src/components/swapv2/SwapSettingsPanel/SlippageSetting.tsx
 msgid "Your transaction may fail"
 msgstr "Giao dịch của bạn có thể thất bại"
 
@@ -3520,6 +3758,10 @@ msgstr "ở đây"
 #: src/components/SearchModal/ManageLists.tsx
 msgid "https:// or ipfs:// or ENS name"
 msgstr "https: // hoặc ipfs: // hoặc tên ENS"
+
+#: src/components/swapv2/SwapSettingsPanel/TransactionTimeLimitSetting.tsx
+msgid "mins"
+msgstr ""
 
 #: src/components/TransactionSettings/index.tsx
 msgid "minutes"
@@ -3560,10 +3802,8 @@ msgstr "qua danh sách token {0}"
 #: src/components/RateToggle/index.tsx
 #: src/components/swapv2/SingleTokenInfo.tsx
 #: src/components/swapv2/TokenInfo.tsx
+#: src/pages/Campaign/CampaignButtonWithOptions.tsx
 #: src/pages/Campaign/index.tsx
-#: src/pages/TrueSight/components/ButtonWithOptions.tsx
-#: src/pages/TrueSight/components/ButtonWithOptions.tsx
-#: src/pages/TrueSight/components/ButtonWithOptions.tsx
 #: src/pages/TrueSight/components/FilterBar/NetworkSelect.tsx
 msgid "{0}"
 msgstr ""
@@ -3585,6 +3825,10 @@ msgstr "{0} Đang chờ xử lý"
 #: src/components/Popups/ListUpdatePopup.tsx
 msgid "{0} added"
 msgstr "{0} đã được thêm vào"
+
+#: src/pages/Campaign/CampaignButtonWithOptions.tsx
+msgid "{0} on {1}"
+msgstr ""
 
 #: src/components/PositionPreview/index.tsx
 #: src/components/PositionPreview/index.tsx
@@ -3610,7 +3854,7 @@ msgstr ""
 msgid "{0}%"
 msgstr ""
 
-#: src/components/Vesting/ScheduleCard.tsx
+#: src/components/Vesting/VestingCard.tsx
 msgid "{0}% Claimed"
 msgstr ""
 
@@ -3620,11 +3864,11 @@ msgstr ""
 msgid "{0}% LP Fee + {1}% Rewards"
 msgstr "{0}% Phí LP + {1}% Phần Thưởng"
 
-#: src/components/Vesting/ScheduleCard.tsx
+#: src/components/Vesting/VestingCard.tsx
 msgid "{0}% Locked"
 msgstr ""
 
-#: src/components/Vesting/ScheduleCard.tsx
+#: src/components/Vesting/VestingCard.tsx
 msgid "{0}% Unlocked"
 msgstr ""
 
