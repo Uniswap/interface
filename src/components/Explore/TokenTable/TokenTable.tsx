@@ -108,11 +108,11 @@ export default function TokenTable() {
   }
 
   if (showFavorites && filteredTokens.length === 0) {
-    return <NoTokensState message={'You have no favorited tokens'} />
+    return <NoTokensState message="You have no favorited tokens" />
   }
 
   if (!showFavorites && filteredTokens.length === 0) {
-    return <NoTokensState message={'No tokens found'} />
+    return <NoTokensState message="No tokens found" />
   }
 
   const tokenRows = filteredTokens.map((tokenAddress, index) => {

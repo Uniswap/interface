@@ -147,18 +147,19 @@ const ListNumberCell = styled(Cell)`
     display: none;
   }
 `
-const MarketCapCell = styled(Cell)<{ sortable: boolean }>`
+const HeaderLabelCell = styled(Cell)<{ sortable: boolean }>`
   justify-content: flex-end;
-  min-width: max-content;
+  min-width: 80px;
   padding-right: 8px;
-
-  @media only screen and (max-width: ${MEDIUM_MEDIA_BREAKPOINT}) {
-    display: none;
-  }
 
   &:hover {
     color: ${({ theme, sortable }) => sortable && theme.white};
     background-color: ${({ theme, sortable }) => sortable && opacify(24, theme.blue200)};
+  }
+`
+const MarketCapCell = styled(HeaderLabelCell)`
+  @media only screen and (max-width: ${MEDIUM_MEDIA_BREAKPOINT}) {
+    display: none;
   }
 `
 const NameCell = styled(Cell)`
@@ -172,18 +173,9 @@ const NameCell = styled(Cell)`
   }
 `
 
-const PercentChangeCell = styled(Cell)<{ sortable: boolean }>`
-  justify-content: flex-end;
-  min-width: 80px;
-  padding-right: 8px;
-
+const PercentChangeCell = styled(HeaderLabelCell)`
   @media only screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
     display: none;
-  }
-
-  &:hover {
-    color: ${({ theme, sortable }) => sortable && theme.white};
-    background-color: ${({ theme, sortable }) => sortable && opacify(24, theme.blue200)};
   }
 `
 const PercentChangeInfoCell = styled(Cell)`
@@ -195,16 +187,6 @@ const PercentChangeInfoCell = styled(Cell)`
     color: ${({ theme }) => theme.textSecondary};
     font-size: 12px;
     line-height: 16px;
-  }
-`
-const PriceCell = styled(Cell)<{ sortable: boolean }>`
-  justify-content: flex-end;
-  min-width: 80px;
-  padding-right: 8px;
-
-  &:hover {
-    color: ${({ theme, sortable }) => sortable && theme.white};
-    background-color: ${({ theme, sortable }) => sortable && opacify(24, theme.blue200)};
   }
 `
 const PriceInfoCell = styled(Cell)`
@@ -275,18 +257,9 @@ const TokenSymbol = styled(Cell)`
     width: 100%;
   }
 `
-const VolumeCell = styled(Cell)<{ sortable: boolean }>`
-  justify-content: flex-end;
-  min-width: max-content;
-  padding-right: 8px;
-
+const VolumeCell = styled(HeaderLabelCell)`
   @media only screen and (max-width: ${LARGE_MEDIA_BREAKPOINT}) {
     display: none;
-  }
-
-  &:hover {
-    color: ${({ theme, sortable }) => sortable && theme.white};
-    background-color: ${({ theme, sortable }) => sortable && opacify(24, theme.blue200)};
   }
 `
 /* Loading state bubbles */
@@ -380,7 +353,7 @@ export function TokenRow({
       <FavoriteCell>{favorited}</FavoriteCell>
       <ListNumberCell>{listNumber}</ListNumberCell>
       <NameCell>{tokenInfo}</NameCell>
-      <PriceCell sortable={header}>{price}</PriceCell>
+      <HeaderLabelCell sortable={header}>{price}</HeaderLabelCell>
       <PercentChangeCell sortable={header}>{percentChange}</PercentChangeCell>
       <MarketCapCell sortable={header}>{marketCap}</MarketCapCell>
       <VolumeCell sortable={header}>{volume}</VolumeCell>
