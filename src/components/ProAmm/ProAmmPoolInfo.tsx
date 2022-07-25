@@ -11,8 +11,20 @@ import RangeBadge from 'components/Badge/RangeBadge'
 import { unwrappedToken } from 'utils/wrappedCurrency'
 import useProAmmPoolInfo from 'hooks/useProAmmPoolInfo'
 import { ELASTIC_BASE_FEE_UNIT } from 'constants/index'
+import { IconWrapper } from 'pages/Pools/styleds'
+import { MouseoverTooltip } from 'components/Tooltip'
+import AgriCulture from 'components/Icons/AgriCulture'
+import { t } from '@lingui/macro'
 
-export default function ProAmmPoolInfo({ position, tokenId }: { position: Position; tokenId?: string }) {
+export default function ProAmmPoolInfo({
+  farmAvailable,
+  position,
+  tokenId,
+}: {
+  farmAvailable?: boolean
+  position: Position
+  tokenId?: string
+}) {
   const theme = useTheme()
   const poolAddress = useProAmmPoolInfo(position.pool.token0, position.pool.token1, position.pool.fee as FeeAmount)
 
@@ -33,7 +45,17 @@ export default function ProAmmPoolInfo({ position, tokenId }: { position: Positi
                 {token0Shown.symbol} - {token1Shown.symbol}
               </Text>
             </Flex>
-            <RangeBadge removed={removed} inRange={!outOfRange} />
+
+            <Flex sx={{ gap: '8px' }}>
+              {farmAvailable && (
+                <MouseoverTooltip text={t`Available for yield farming`}>
+                  <IconWrapper style={{ width: '24px', height: '24px' }}>
+                    <AgriCulture width={16} height={16} color={theme.textReverse} />
+                  </IconWrapper>
+                </MouseoverTooltip>
+              )}
+              <RangeBadge removed={removed} inRange={!outOfRange} hideText />
+            </Flex>
           </Flex>
 
           <Flex justifyContent="space-between" alignItems="center" marginTop="8px">

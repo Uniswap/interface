@@ -196,7 +196,7 @@ const ErrorDetail = styled(Section)`
   border-radius: 4px;
   margin-top: 12px;
   color: ${({ theme }) => theme.text};
-  background-color: ${({ theme }) => `${theme.bg12}66`};
+  background-color: ${({ theme }) => `${theme.buttonBlack}66`};
   font-size: 10px;
   width: 100%;
   text-align: center;

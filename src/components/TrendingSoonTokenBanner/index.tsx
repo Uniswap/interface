@@ -79,7 +79,7 @@ const fadeIn = keyframes`
 
 const Container = styled.div`
   background: ${({ theme }) => rgba(theme.primary, 0.25)};
-  border-radius: 4px;
+  border-radius: 999px;
   padding: 8px 12px;
   display: grid;
   grid-template-columns: auto 1fr;
@@ -90,7 +90,6 @@ const Container = styled.div`
 
 const DiscoverIconWrapper = styled.div`
   place-self: center;
-  height: 24px;
 `
 
 const BannerText = styled.div`

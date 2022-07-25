@@ -1,15 +1,17 @@
 import styled from 'styled-components'
 import { Flex } from 'rebass'
 import { MoreHorizontal } from 'react-feather'
+import { rgba } from 'polished'
 
 export const ListItemGroupContainer = styled.div<{ isDisableShowTwoPools: boolean; isShowExpandedPools: boolean }>`
   border-bottom: ${({ theme }) => `1px solid ${theme.border}`};
   cursor: ${({ isDisableShowTwoPools }) => (isDisableShowTwoPools ? 'default' : 'pointer')};
-  background-color: ${({ theme, isShowExpandedPools }) => (isShowExpandedPools ? theme.evenRow : theme.oddRow)};
+  background-color: ${({ theme, isShowExpandedPools }) =>
+    isShowExpandedPools ? rgba(theme.tableHeader, 0.6) : theme.background};
 
   &:hover {
     ${({ theme, isDisableShowTwoPools, isShowExpandedPools }) =>
-      !isDisableShowTwoPools && !isShowExpandedPools && `background-color: ${theme.evenRow}`};
+      !isDisableShowTwoPools && !isShowExpandedPools && `background-color: ${theme.tableHeader}`};
   }
 `
 
@@ -28,7 +30,6 @@ export const TableRow = styled.div<{ isShowExpandedPools?: boolean; isShowBorder
   font-size: 14px;
   align-items: center;
   height: fit-content;
-    // background-color: ${({ theme, isShowExpandedPools }) => (isShowExpandedPools ? theme.evenRow : theme.oddRow)};
   position: relative;
 
   &:after {
@@ -37,7 +38,8 @@ export const TableRow = styled.div<{ isShowExpandedPools?: boolean; isShowBorder
     bottom: 0;
     right: 0;
     width: 86.36%; // 100% - (1.5fr / grid-template-columns)
-    border-bottom: ${({ theme, isShowBorderBottom }) => (isShowBorderBottom ? `1px dashed ${theme.border}` : 'none')};
+    border-bottom: ${({ theme, isShowBorderBottom }) =>
+      isShowBorderBottom ? `1px solid ${rgba(theme.border, 0.5)}` : 'none'};
   }
 `
 
@@ -164,23 +166,19 @@ export const ChevronContainer = styled.div`
 `
 
 export const StyledItemCard = styled.div`
-  border-radius: 8px;
+  border-radius: 20px;
   display: flex;
   flex-direction: column;
   gap: 20px;
   position: relative;
   min-width: 392px;
   background: ${({ theme }) => theme.background};
-  padding: 28px 20px 20px;
+  padding: 20px;
   overflow: hidden;
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
     min-width: revert;
-    padding: 20px;
-  `}
-
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-    padding: 28px 16px 20px;
+    padding: 16px;
   `}
 `
 
@@ -220,14 +218,15 @@ export const HeaderLogo = styled.div`
 `
 
 export const TokenRatioContainer = styled.div`
-  background: ${({ theme }) => theme.bg3};
+  background: ${({ theme }) => theme.tabBackgound};
   position: relative;
   overflow: hidden;
-  border-radius: 24px;
+  padding: 4px;
+  border-radius: 999px;
 `
 
 export const TokenRatioGrid = styled.div`
-  padding: 8px;
+  padding: 4px;
   display: grid;
   grid-template-columns: auto 1fr 1fr auto;
   grid-template-rows: 1fr;
@@ -237,11 +236,13 @@ export const TokenRatioGrid = styled.div`
 
 export const Progress = styled.div<{ value: string }>`
   position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
+  top: 4px;
+  left: 4px;
+  bottom: 4px;
   width: ${({ value }) => value + '%'};
-  background: ${({ theme }) => theme.bg12};
+  background: ${({ theme }) => theme.tabActive};
+  border-top-left-radius: 999px;
+  border-bottom-left-radius: 999px;
 `
 
 export const TokenRatioName = styled.div`
@@ -257,17 +258,18 @@ export const TokenRatioPercent = styled.div`
 
 export const TabContainer = styled.div`
   width: 100%;
-  background: ${({ theme }) => theme.bg12};
+  background: ${({ theme }) => theme.tabBackgound};
   border-radius: 20px;
   display: flex;
+  padding: 2px;
   cursor: pointer;
 `
 
 export const TabItem = styled.div<{ active?: boolean }>`
   font-size: 12px;
   font-weight: 500;
-  color: ${({ theme, active }) => (active ? theme.text14 : theme.subText)};
-  background: ${({ theme, active }) => (active ? theme.primary : 'transparent')};
+  color: ${({ theme, active }) => (active ? theme.text : theme.subText)};
+  background: ${({ theme, active }) => (active ? theme.tabActive : 'transparent')};
   display: flex;
   justify-content: center;
   align-items: center;
@@ -275,6 +277,7 @@ export const TabItem = styled.div<{ active?: boolean }>`
   border-radius: 20px;
   flex-grow: 1;
   flex-basis: 0;
+  transition: color 300ms;
 `
 
 export const InformationContainer = styled.div`

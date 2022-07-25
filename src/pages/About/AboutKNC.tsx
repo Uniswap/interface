@@ -9,7 +9,7 @@ import KyberDao from 'assets/svg/kyber-dao.svg'
 import RocketIcon from 'assets/svg/rocket.svg'
 import TrophyIcon from 'assets/svg/trophy.svg'
 import { FooterSocialLink } from 'components/Footer/Footer'
-import { BestPrice } from 'components/Icons'
+import { BestPrice, Polygon, Avalanche, Bttc, Ethereum, Binance } from 'components/Icons'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import useTheme from 'hooks/useTheme'
 import React from 'react'
@@ -33,9 +33,9 @@ import {
   MoreInfoWrapper,
   VerticalDivider,
   Wrapper,
+  SupportedChain,
 } from './styleds'
 import {
-  Binance,
   Krystal,
   KyberSwap,
   FTX,
@@ -111,7 +111,7 @@ function AboutKNC() {
         <Trans>Dynamic Token Model</Trans>
       </Text>
 
-      <Text color={theme.subText} marginTop="24px" textAlign={above500 ? 'start' : 'center'} lineHeight={1.5}>
+      <Text color={theme.text} marginTop="24px" textAlign={above500 ? 'start' : 'center'} lineHeight={1.5}>
         <Trans>
           KNC enables KyberDAO to shape token behaviour and upgrades, making KNC much more adaptable and providing
           better support for innovation and growth.
@@ -139,7 +139,7 @@ function AboutKNC() {
         <Trans>Participation Rewards</Trans>
       </Text>
 
-      <Text color={theme.subText} marginTop="24px" textAlign={above500 ? 'start' : 'center'} lineHeight={1.5}>
+      <Text color={theme.text} marginTop="24px" textAlign={above500 ? 'start' : 'center'} lineHeight={1.5}>
         <Trans>
           KNC holders can stake KNC in KyberDAO and vote on important decisions. Voters receive trading fees generated
           on KyberSwap and other benefits from ecosystem collaborations on Kyber.
@@ -161,7 +161,7 @@ function AboutKNC() {
         <Trans>LIQUIDITY INCENTIVES</Trans>
       </Text>
 
-      <Text color={theme.subText} marginTop="24px" textAlign={above500 ? 'start' : 'center'} lineHeight={1.5}>
+      <Text color={theme.text} marginTop="24px" textAlign={above500 ? 'start' : 'center'} lineHeight={1.5}>
         <Trans>
           KyberDAO can propose various KNC incentives like liquidity mining rewards on KyberSwap on top of standard
           trading fees to provide more value to liquidity providers.
@@ -171,7 +171,14 @@ function AboutKNC() {
   )
 
   return (
-    <div style={{ position: 'relative', background: isDarkMode ? theme.buttonBlack : theme.white, width: '100%' }}>
+    <div
+      style={{
+        position: 'relative',
+        background: isDarkMode ? theme.buttonBlack : theme.white,
+        width: '100vw',
+        overflow: 'hidden',
+      }}
+    >
       <AboutPage>
         <Wrapper>
           <Text as="h1" fontSize={['28px', '48px']} textAlign="center" lineHeight={['32px', '60px']} fontWeight="300">
@@ -184,7 +191,7 @@ function AboutKNC() {
           </Text>
 
           <Text
-            color={theme.subText}
+            color={theme.text}
             fontSize={['1rem', '1.25rem']}
             marginTop={['40px', '48px']}
             textAlign="center"
@@ -196,6 +203,14 @@ function AboutKNC() {
               maximizes earnings for liquidity providers.
             </Trans>
           </Text>
+
+          <SupportedChain>
+            <Ethereum />
+            <Polygon />
+            <Binance />
+            <Avalanche />
+            <Bttc />
+          </SupportedChain>
 
           <Text
             color={theme.primary}
@@ -209,18 +224,15 @@ function AboutKNC() {
           <Text as="h2" marginTop="12px" fontWeight="500" fontSize={['28px', '36px']} textAlign="center">
             <Trans>What is KNC used for?</Trans>
           </Text>
-          <Text color={theme.subText} marginTop={['40px', '48px']} fontSize="1rem" textAlign="center" lineHeight={1.5}>
+          <Text color={theme.text} marginTop={['40px', '48px']} fontSize="1rem" textAlign="center" lineHeight={1.5}>
             <Trans>
-              KNC allows token holders to play a critical role in building a wide base of stakeholders and capturing
-              value created by products like KyberSwap on Kyber Network. KNC holders stake and vote to receive trading
-              fees from protocols like KyberSwap. As more trades are executed on KyberSwap, more rewards are generated
-              for KNC holders.
-            </Trans>
-          </Text>
-          <Text color={theme.subText} marginTop={['20px', '24px']} fontSize="1rem" textAlign="center" lineHeight={1.5}>
-            <Trans>
-              KNC is dynamic and can be upgraded, minted, or burned by KyberDAO to better support liquidity and growth.
-              Holding KNC means having a stake in all the important innovation and liquidity protocols created for DeFi.
+              KNC token holders can benefit from our flagship product KyberSwap. Holders can stake their KNC & vote on
+              initiatives to receive trading fees generated on KyberSwap! More trades on KyberSwap can generate more
+              rewards for KNC holders!
+              <br />
+              <br />
+              KNC token is dynamic - it can be upgraded, minted or burned by KyberDAO to better support liquidity and
+              growth.
             </Trans>
           </Text>
 
@@ -277,13 +289,7 @@ function AboutKNC() {
               <Text as="h2" marginTop="12px" fontWeight="500" fontSize={['28px', '36px']}>
                 <Trans>Stake KNC, Vote, Earn Rewards.</Trans>
               </Text>
-              <Text
-                fontSize="16px"
-                marginTop={['40px', '48px']}
-                color={theme.subText}
-                lineHeight="24px"
-                textAlign="left"
-              >
+              <Text fontSize="16px" marginTop={['40px', '48px']} color={theme.text} lineHeight="24px" textAlign="left">
                 <Trans>
                   KyberDAO is a community platform that allows KNC token holders to participate in governance. KNC
                   holders can stake KNC to vote on proposals. In return, they receive rewards from fees generated on
@@ -344,7 +350,7 @@ function AboutKNC() {
             >
               {LIST_EXCHANGES.map(exchange => (
                 <SwiperSlide key={exchange.name}>
-                  <ExchangeWrapper background={isDarkMode ? '#243036' : '#F5F5F5'}>
+                  <ExchangeWrapper>
                     <Flex margin="auto">{exchange.logo}</Flex>
                   </ExchangeWrapper>
                 </SwiperSlide>
@@ -360,7 +366,7 @@ function AboutKNC() {
           >
             <Trans>Where you can store KNC</Trans>
           </Text>
-          <Text fontSize="16px" marginTop={['40px', '48px']} color={theme.subText} lineHeight="24px" textAlign="center">
+          <Text fontSize="16px" marginTop={['40px', '48px']} color={theme.text} lineHeight="24px" textAlign="center">
             <Trans>
               KNC is an ERC-20 token, so it can be stored in many Web3 wallets you control. Below are some examples.
             </Trans>
@@ -390,7 +396,7 @@ function AboutKNC() {
             >
               {LIST_WALLETS.map(wallet => (
                 <SwiperSlide key={wallet.logo}>
-                  <ExchangeWrapper background={isDarkMode ? '#243036' : '#F5F5F5'}>
+                  <ExchangeWrapper>
                     <img
                       src={require(`../../assets/wallets/${isDarkMode ? wallet.logo : wallet.lightLogo}.svg`)}
                       alt={wallet.logo}
@@ -403,7 +409,7 @@ function AboutKNC() {
             </Swiper>
           )}
 
-          <MoreInfoWrapper background={isDarkMode ? '#243036' : '#F5F5F5'}>
+          <MoreInfoWrapper>
             <Flex
               marginRight={above768 ? '180px' : '0px'}
               alignItems={!above768 ? 'center' : 'flex-start'}

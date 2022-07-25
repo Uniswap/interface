@@ -134,6 +134,6 @@ export const StyledAddressButton = styled(Flex)<{ isInOptionContainer?: boolean 
   line-height: 14px;
   color: ${({ theme }) => theme.subText};
   background: ${({ theme, isInOptionContainer }) => (isInOptionContainer ? 'transparent' : theme.buttonBlack)};
-  border-radius: ${({ isInOptionContainer }) => (isInOptionContainer ? '0' : '4px')};
+  border-radius: ${({ isInOptionContainer }) => (isInOptionContainer ? '0' : '16px')};
   position: relative;
 `

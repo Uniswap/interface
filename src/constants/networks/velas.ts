@@ -62,6 +62,7 @@ const velasInfo: NetworkInfo = {
   averageBlockTimeInSeconds: 0.4,
   coingeckoNetworkId: 'velas',
   coingeckoNativeTokenId: 'velas',
+  deBankSlug: EMPTY,
 }
 
 export default velasInfo

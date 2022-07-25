@@ -62,6 +62,7 @@ const oasisInfo: NetworkInfo = {
   averageBlockTimeInSeconds: 10,
   coingeckoNetworkId: 'oasis',
   coingeckoNativeTokenId: 'oasis-network',
+  deBankSlug: EMPTY,
 }
 
 export default oasisInfo

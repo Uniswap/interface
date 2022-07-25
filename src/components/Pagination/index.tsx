@@ -11,7 +11,8 @@ export default function Pagination({
   siblingCount = 1,
   currentPage,
   pageSize,
-  style,
+  style = {},
+  haveBg = true,
 }: {
   onPageChange: (newPage: number) => void
   totalCount: number
@@ -19,6 +20,7 @@ export default function Pagination({
   currentPage: number
   pageSize: number
   style?: CSSProperties
+  haveBg?: boolean
 }) {
   const paginationRange = usePagination({
     currentPage,
@@ -49,19 +51,15 @@ export default function Pagination({
   const lastPage = paginationRange[paginationRange.length - 1]
 
   return (
-    <PaginationContainer style={style}>
+    <PaginationContainer style={{ background: haveBg ? undefined : 'transparent', ...style }}>
       <PaginationItem $disabled={currentPage === 1} onClick={onPrevious}>
-        <PaginationButton>
-          <ChevronLeft width={16} color={theme.primary} />
+        <PaginationButton haveBg={haveBg}>
+          <ChevronLeft width={16} color={theme.subText} />
         </PaginationButton>
       </PaginationItem>
       {paginationRange.map((pageNumber, index) => {
         if (pageNumber === DOTS) {
-          return (
-            <PaginationItem key={index.toString()} $selected>
-              &#8230;
-            </PaginationItem>
-          )
+          return <PaginationItem key={index.toString()}>&#8230;</PaginationItem>
         }
         return (
           <PaginationItem
@@ -69,13 +67,15 @@ export default function Pagination({
             $selected={pageNumber === currentPage}
             onClick={() => onPageChange(pageNumber as number)}
           >
-            <PaginationButton active={pageNumber === currentPage}>{pageNumber}</PaginationButton>
+            <PaginationButton haveBg={haveBg} active={pageNumber === currentPage}>
+              {pageNumber}
+            </PaginationButton>
           </PaginationItem>
         )
       })}
       <PaginationItem $disabled={currentPage === lastPage} onClick={onNext}>
-        <PaginationButton>
-          <ChevronRight width={16} color={theme.primary} />
+        <PaginationButton haveBg={haveBg}>
+          <ChevronRight width={16} color={theme.subText} />
         </PaginationButton>
       </PaginationItem>
     </PaginationContainer>

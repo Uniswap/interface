@@ -45,7 +45,7 @@ const OptionCardClickable = styled.button<{ active?: boolean; clickable?: boolea
   padding: 12px 16px;
   cursor: ${({ clickable }) => (clickable ? 'pointer' : 'not-allowed')};
   transition: all 0.2s;
-  background-color: ${({ theme }) => theme.bg12};
+  background-color: ${({ theme }) => theme.buttonBlack};
 
   ${({ active }) => (active ? '&' : ':hover')} {
     background-color: ${({ theme }) => theme.bg7};

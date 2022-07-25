@@ -8,7 +8,7 @@ import { VerticalDivider } from 'pages/About/styleds'
 import { useActiveWeb3React } from 'hooks'
 import { ButtonPrimary } from 'components/Button'
 import InfoHelper from 'components/InfoHelper'
-import FilterBarToggle from 'components/Toggle/FilterBarToggle'
+import Toggle from 'components/Toggle'
 import { ArrowRight, ChevronDown } from 'react-feather'
 import TokensSelect from './TokensSelect'
 import Slider from 'components/Slider'
@@ -339,7 +339,7 @@ export default function CreateReferral() {
                   width="300px"
                 />
               </Text>
-              <FilterBarToggle isActive={isShowChain} toggle={() => setIsShowChain(prev => !prev)} />
+              <Toggle isActive={isShowChain} toggle={() => setIsShowChain(prev => !prev)} />
             </Flex>
             {isShowChain && (
               <>
@@ -368,7 +368,7 @@ export default function CreateReferral() {
                       width="300px"
                     />
                   </Text>
-                  <FilterBarToggle isActive={isShowTokens} toggle={() => setIsShowTokens(prev => !prev)} />
+                  <Toggle isActive={isShowTokens} toggle={() => setIsShowTokens(prev => !prev)} />
                 </Flex>
                 {isShowTokens && (
                   <Flex alignItems="flex-start" marginBottom="28px">

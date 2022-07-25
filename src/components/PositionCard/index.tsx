@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom'
 import { Text, Flex } from 'rebass'
 import styled from 'styled-components'
 import { t, Trans } from '@lingui/macro'
-
+import { IconWrapper } from 'pages/Pools/styleds'
 import { DMM_ANALYTICS_URL, ONE_BIPS } from 'constants/index'
 import { useTotalSupply } from '../../data/TotalSupply'
 import { useActiveWeb3React } from '../../hooks'
@@ -27,12 +27,12 @@ import useTheme from 'hooks/useTheme'
 import { TokenWrapper } from 'pages/AddLiquidity/styled'
 import { useTokensPrice, useETHPrice } from 'state/application/hooks'
 import { formattedNum, shortenAddress } from 'utils'
-import WarningLeftIcon from 'components/Icons/WarningLeftIcon'
 import { MouseoverTooltip } from 'components/Tooltip'
 import Divider from 'components/Divider'
-import DropIcon from 'components/Icons/DropIcon'
 import InfoHelper from 'components/InfoHelper'
 import CopyHelper from 'components/Copy'
+import { AlertTriangle } from 'react-feather'
+import AgriCulture from 'components/Icons/AgriCulture'
 
 export const FixedHeightRow = styled(RowBetween)`
   height: 24px;
@@ -55,11 +55,11 @@ const StyledPositionCard = styled(LightCard)`
   background: ${({ theme }) => theme.background};
   position: relative;
   overflow: hidden;
-  border-radius: 8px;
-  padding: 28px 20px 16px;
+  border-radius: 20px;
+  padding: 20px;
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
-    padding: 32px 16px 16px;
+    padding: 16px;
   `}
 `
 
@@ -67,9 +67,10 @@ const StyledMinimalPositionCard = styled.div`
   display: flex;
   flex-direction: column;
   background: ${({ theme }) => theme.background};
-  border-radius: 4px;
+  border-radius: 20px;
   padding: 1rem;
   align-items: flex-start;
+  justify-content: space-between;
   gap: 1rem;
 
   @media only screen and (min-width: 1000px) {
@@ -77,6 +78,15 @@ const StyledMinimalPositionCard = styled.div`
     align-items: center;
     padding: 20px 16px;
     gap: 1rem;
+  }
+`
+
+const MinimalPositionItemDivider = styled(VerticalDivider)`
+  height: 36px;
+  background-color: ${({ theme }) => theme.border};
+
+  @media only screen and (max-width: 999px) {
+    display: none;
   }
 `
 
@@ -89,16 +99,8 @@ const MinimalPositionItem = styled(AutoColumn)<{ noBorder?: boolean; noPadding?:
   @media only screen and (min-width: 1000px) {
     width: fit-content;
     border-bottom: none;
-    border-right: ${({ theme, noBorder }) => (noBorder ? 'none' : `1px solid ${theme.border}`)};
-    padding-right: ${({ noPadding }) => (noPadding ? '0' : '1rem')};
     padding-bottom: 0;
   }
-`
-
-const IconWrapper = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
 `
 
 const WarningMessage = styled(Text)`
@@ -259,13 +261,17 @@ export function MinimalPositionCard({ pair, showUnwrapped = false }: PositionCar
 
   return (
     <>
-      <StyledMinimalPositionCard>
-        <MinimalPositionItem style={{ height: '100%', alignItems: 'center', display: 'flex' }}>
-          <Text fontWeight={500} fontSize={16}>
-            <Trans>Your Current Position</Trans>
-          </Text>
-        </MinimalPositionItem>
+      <Text
+        fontWeight={500}
+        fontSize={16}
+        marginX="16px"
+        paddingY="1rem"
+        style={{ borderBottom: `1px solid ${theme.border}` }}
+      >
+        <Trans>Your Current Position</Trans>
+      </Text>
 
+      <StyledMinimalPositionCard>
         <MinimalPositionItem gap="4px">
           <RowFixed>
             <DoubleCurrencyLogo currency0={native0} currency1={native1} size={16} />
@@ -281,6 +287,7 @@ export function MinimalPositionCard({ pair, showUnwrapped = false }: PositionCar
             </Text>
           </RowFixed>
         </MinimalPositionItem>
+        <MinimalPositionItemDivider />
 
         <MinimalPositionItem>
           <TokenWrapper>
@@ -308,6 +315,8 @@ export function MinimalPositionCard({ pair, showUnwrapped = false }: PositionCar
           )}
         </MinimalPositionItem>
 
+        <MinimalPositionItemDivider />
+
         <MinimalPositionItem>
           <TokenWrapper>
             <CurrencyLogo currency={native1} size="16px" />
@@ -332,6 +341,8 @@ export function MinimalPositionCard({ pair, showUnwrapped = false }: PositionCar
             '-'
           )}
         </MinimalPositionItem>
+
+        <MinimalPositionItemDivider />
         <MinimalPositionItem gap="4px" noBorder={true} noPadding={true}>
           <Text fontSize={12} fontWeight={500} color={theme.subText}>
             <UppercaseText>
@@ -459,34 +470,14 @@ export default function FullPositionCard({
 
   return (
     <StyledPositionCard border={border}>
-      {(isWarning || farmStatus === 'FARM_ACTIVE') && (
-        <IconWrapper>
-          {farmStatus === 'FARM_ACTIVE' ? (
-            <MouseoverTooltip text="Available for yield farming">
-              <DropIcon width={40} height={40} />
-            </MouseoverTooltip>
-          ) : (
-            <MouseoverTooltip
-              text={
-                warningToken ? (
-                  <WarningMessage>{t`Note: ${warningToken} is now <10% of the pool. Pool might become inactive if ${warningToken} reaches 0%`}</WarningMessage>
-                ) : (
-                  <WarningMessage>
-                    <Trans>One token is close to 0% in the pool ratio. Pool might go inactive.</Trans>
-                  </WarningMessage>
-                )
-              }
-            >
-              <WarningLeftIcon width={40} height={40} />
-            </MouseoverTooltip>
-          )}
-        </IconWrapper>
-      )}
-
-      <Flex justifyContent="space-between" alignItems="center">
+      <Flex justifyContent="space-between">
         <div>
-          <Text fontWeight={500} fontSize={20}>{`${native0?.symbol}/${native1?.symbol}`}</Text>
-          <Flex alignItems="center" sx={{ gap: '6px' }} marginTop="4px">
+          <Flex alignItems="center">
+            <DoubleCurrencyLogo currency0={native0} currency1={native1} size={24} />
+            <Text fontWeight={500} fontSize={20}>{`${native0?.symbol}/${native1?.symbol}`}</Text>
+          </Flex>
+
+          <Flex alignItems="center" sx={{ gap: '6px' }} marginTop="12px">
             <Text color={theme.subText} fontWeight={500} fontSize="12px" width="max-content">
               AMP = {amp.toSignificant(5)}
             </Text>
@@ -498,12 +489,47 @@ export default function FullPositionCard({
             </Flex>
           </Flex>
         </div>
-        <DoubleCurrencyLogo currency0={native0} currency1={native1} size={40} />
+
+        {(isWarning || farmStatus === 'FARM_ACTIVE') && (
+          <Flex>
+            {farmStatus === 'FARM_ACTIVE' && (
+              <MouseoverTooltip text="Available for yield farming">
+                <IconWrapper style={{ width: '24px', height: '24px' }}>
+                  <AgriCulture width={16} height={16} color={theme.textReverse} />
+                </IconWrapper>
+              </MouseoverTooltip>
+            )}
+            {isWarning && (
+              <MouseoverTooltip
+                text={
+                  warningToken ? (
+                    <WarningMessage>{t`Note: ${warningToken} is now <10% of the pool. Pool might become inactive if ${warningToken} reaches 0%`}</WarningMessage>
+                  ) : (
+                    <WarningMessage>
+                      <Trans>One token is close to 0% in the pool ratio. Pool might go inactive.</Trans>
+                    </WarningMessage>
+                  )
+                }
+              >
+                <IconWrapper
+                  style={{
+                    width: '24px',
+                    height: '24px',
+                    background: theme.warning,
+                    marginLeft: farmStatus === 'FARM_ACTIVE' ? '8px' : 0,
+                  }}
+                >
+                  <AlertTriangle color={theme.textReverse} size={16} />
+                </IconWrapper>
+              </MouseoverTooltip>
+            )}
+          </Flex>
+        )}
       </Flex>
 
       <Flex marginTop="0.25rem" justifyContent="flex-end" alignItems="center"></Flex>
 
-      <Flex alignItems="center" justifyContent="space-between" marginTop="1.25rem">
+      <Flex alignItems="center" justifyContent="space-between" marginTop="1rem">
         <Text fontSize="1rem" fontWeight={500} color={theme.subText}>
           {tab === 'ALL' ? <Trans>Your Liquidity</Trans> : <Trans>Your Staked</Trans>}
         </Text>
@@ -648,22 +674,10 @@ export default function FullPositionCard({
 
       {tab === 'ALL' ? (
         <Flex marginTop="20px" sx={{ gap: '1rem' }}>
-          <ButtonPrimary
-            padding="9px"
-            style={{ fontSize: '14px', borderRadius: '4px' }}
-            as={Link}
-            to={`/add/${currencyId(currency0, chainId)}/${currencyId(currency1, chainId)}/${pair.address}`}
-          >
-            <Text width="max-content">
-              <Trans>Add Liquidity</Trans>
-            </Text>
-          </ButtonPrimary>
-
           {userDefaultPoolBalance?.greaterThan(JSBI.BigInt(0)) ? (
             <ButtonOutlined
               style={{
-                padding: '9px',
-                borderRadius: '4px',
+                padding: '10px',
                 fontSize: '14px',
               }}
               as={Link}
@@ -677,8 +691,7 @@ export default function FullPositionCard({
             <ButtonPrimary
               disabled
               style={{
-                padding: '9px',
-                borderRadius: '4px',
+                padding: '10px',
                 fontSize: '14px',
               }}
             >
@@ -687,13 +700,24 @@ export default function FullPositionCard({
               </Text>
             </ButtonPrimary>
           )}
+
+          <ButtonPrimary
+            padding="10px"
+            style={{ fontSize: '14px' }}
+            as={Link}
+            to={`/add/${currencyId(currency0, chainId)}/${currencyId(currency1, chainId)}/${pair.address}`}
+          >
+            <Text width="max-content">
+              <Trans>Add Liquidity</Trans>
+            </Text>
+          </ButtonPrimary>
         </Flex>
       ) : (
         <ButtonPrimary
-          padding="9px"
-          style={{ fontSize: '14px', borderRadius: '4px' }}
+          padding="10px"
+          style={{ fontSize: '14px' }}
           as={Link}
-          to={`/farms?tab=${farmStatus === 'FARM_ACTIVE' ? 'active' : 'end'}`}
+          to={`/farms?tab=${farmStatus === 'FARM_ACTIVE' ? 'active' : 'ended'}`}
         >
           <Text width="max-content">
             <Trans>Go to farm</Trans>

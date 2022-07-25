@@ -14,5 +14,5 @@ export const FadeInAnimation = styled.div`
   animation-name: fadeIn;
   animation-iteration-count: 1;
   animation-timing-function: ease-in-out;
-  animation-duration: 1s;
+  animation-duration: 0.5s;
 `

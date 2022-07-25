@@ -15,7 +15,7 @@ export const switchCurrenciesV2 = createAction<void>('swap/switchCurrenciesV2')
 export const typeInput = createAction<{ field: Field; typedValue: string }>('swap/typeInput')
 export const replaceSwapState = createAction<{
   field: Field
-  typedValue: string
+  typedValue?: string
   inputCurrencyId?: string
   outputCurrencyId?: string
   recipient: string | null

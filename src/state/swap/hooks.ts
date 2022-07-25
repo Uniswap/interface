@@ -4,7 +4,7 @@ import { Trade } from '@kyberswap/ks-sdk-classic'
 import JSBI from 'jsbi'
 import { ChainId, Currency, CurrencyAmount, TradeType } from '@kyberswap/ks-sdk-core'
 import { ParsedQs } from 'qs'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { t } from '@lingui/macro'
 import { useActiveWeb3React } from '../../hooks'
@@ -26,7 +26,7 @@ import {
   typeInput,
 } from './actions'
 import { SwapState } from './reducer'
-import { useUserSlippageTolerance } from '../user/hooks'
+import { useUserSlippageTolerance, useExpertModeManager } from '../user/hooks'
 import { computeSlippageAdjustedAmounts } from '../../utils/prices'
 import { BAD_RECIPIENT_ADDRESSES, DEFAULT_OUTPUT_TOKEN_BY_CHAIN } from '../../constants'
 import { nativeOnChain } from 'constants/tokens'
@@ -47,6 +47,7 @@ export function useSwapActionHandlers(): {
 } {
   const { chainId } = useActiveWeb3React()
   const dispatch = useDispatch<AppDispatch>()
+
   const onCurrencySelection = useCallback(
     (field: Field, currency: Currency) => {
       dispatch(
@@ -58,6 +59,11 @@ export function useSwapActionHandlers(): {
     },
     [dispatch, chainId],
   )
+  const [expertMode] = useExpertModeManager()
+
+  useEffect(() => {
+    if (expertMode) dispatch(setRecipient({ recipient: null }))
+  }, [expertMode, dispatch])
 
   const onResetSelectCurrency = useCallback(
     (field: Field) => {
@@ -139,8 +145,8 @@ export function tryParseAmount<T extends Currency>(
  */
 function involvesAddress(trade: Trade<Currency, Currency, TradeType>, checksummedAddress: string): boolean {
   return (
-    trade.route.path.some((token) => token.address === checksummedAddress) ||
-    trade.route.pairs.some((pair) => pair.liquidityToken.address === checksummedAddress)
+    trade.route.path.some(token => token.address === checksummedAddress) ||
+    trade.route.pairs.some(pair => pair.liquidityToken.address === checksummedAddress)
   )
 }
 
@@ -185,10 +191,12 @@ export function useDerivedSwapInfo(): {
     [Field.OUTPUT]: relevantTokenBalances[1],
   }
 
-  const currencies: { [field in Field]?: Currency } = {
-    [Field.INPUT]: inputCurrency ?? undefined,
-    [Field.OUTPUT]: outputCurrency ?? undefined,
-  }
+  const currencies: { [field in Field]?: Currency } = useMemo(() => {
+    return {
+      [Field.INPUT]: inputCurrency ?? undefined,
+      [Field.OUTPUT]: outputCurrency ?? undefined,
+    }
+  }, [inputCurrency, outputCurrency])
 
   let inputError: string | undefined
   if (!account) {
@@ -359,7 +367,6 @@ export const useDefaultsFromURLSearch = ():
 
     dispatch(
       replaceSwapState({
-        typedValue: parsed.typedValue || '1',
         field: parsed.independentField,
         inputCurrencyId,
         outputCurrencyId,
@@ -372,6 +379,8 @@ export const useDefaultsFromURLSearch = ():
       inputCurrencyId,
       outputCurrencyId,
     })
+
+    // TODO: can not add `currencies` as dependency here because it will retrigger replaceSwapState => got some issue when we have in/outputCurrency on URL
   }, [dispatch, chainId, parsedQs])
 
   return result

@@ -3,28 +3,21 @@ import { Flex } from 'rebass'
 
 import useTheme from 'hooks/useTheme'
 import { TrueSightTimeframe } from 'pages/TrueSight/index'
+import styled from 'styled-components'
 
-const TimeframePickerItem = ({ text, active, onClick }: { text: string; active: boolean; onClick: () => void }) => {
-  const theme = useTheme()
-
-  return (
-    <div
-      style={{
-        borderRadius: '4px',
-        padding: '7px',
-        color: active ? theme.text14 : theme.subText,
-        background: active ? theme.primary : 'transparent',
-        fontSize: '12px',
-        fontWeight: 500,
-        lineHeight: '14px',
-        cursor: 'pointer',
-      }}
-      onClick={onClick}
-    >
-      {text}
-    </div>
-  )
-}
+const TimeframePickerItem = styled.div<{ isActive: boolean }>`
+  border-radius: 999px;
+  padding: 4px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 500;
+  color: ${({ theme, isActive }) => (isActive ? theme.text : theme.subText)};
+  background: ${({ theme, isActive }) => (isActive ? theme.tabActive : theme.tabBackgound)};
+  cursor: pointer;
+  transition: all 0.2s ease;
+`
 
 const TimeframePicker = ({
   activeTimeframe,
@@ -36,21 +29,23 @@ const TimeframePicker = ({
   const theme = useTheme()
 
   return (
-    <Flex style={{ borderRadius: '4px', padding: '4px', background: theme.background }}>
+    <Flex style={{ borderRadius: '999px', padding: '2px', background: theme.tabBackgound }}>
       <TimeframePickerItem
-        text="1D"
-        active={activeTimeframe === TrueSightTimeframe.ONE_DAY}
+        isActive={activeTimeframe === TrueSightTimeframe.ONE_DAY}
         onClick={() => {
           setActiveTimeframe(TrueSightTimeframe.ONE_DAY)
         }}
-      />
+      >
+        1D
+      </TimeframePickerItem>
       <TimeframePickerItem
-        text="7D"
-        active={activeTimeframe === TrueSightTimeframe.ONE_WEEK}
+        isActive={activeTimeframe === TrueSightTimeframe.ONE_WEEK}
         onClick={() => {
           setActiveTimeframe(TrueSightTimeframe.ONE_WEEK)
         }}
-      />
+      >
+        7D
+      </TimeframePickerItem>
     </Flex>
   )
 }

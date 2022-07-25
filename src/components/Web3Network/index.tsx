@@ -8,6 +8,10 @@ import NetworkModal from '../NetworkModal'
 import Card from 'components/Card'
 import Row from 'components/Row'
 import { ApplicationModal } from 'state/application/actions'
+import { ReactComponent as DropdownSvg } from 'assets/svg/down.svg'
+import { useETHBalances } from 'state/wallet/hooks'
+import { ChainId, CurrencyAmount } from '@kyberswap/ks-sdk-core'
+import { nativeOnChain } from 'constants/tokens'
 
 const NetworkSwitchContainer = styled.div`
   display: flex;
@@ -18,8 +22,8 @@ const NetworkSwitchContainer = styled.div`
 
 const NetworkCard = styled(Card)`
   position: relative;
-  background-color: ${({ theme }) => theme.bg12};
-  color: ${({ theme }) => theme.primary};
+  background-color: ${({ theme }) => theme.buttonBlack};
+  color: ${({ theme }) => theme.text};
   border-radius: 999px;
   padding: 8px 12px;
   border: 1px solid transparent;
@@ -43,41 +47,46 @@ const NetworkCard = styled(Card)`
 
 const NetworkLabel = styled.div`
   white-space: nowrap;
-  margin-right: 1rem;
+  font-weight: 500;
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
     display: none;
   `};
 `
 
-const DropdownIcon = styled.div<{ open: boolean }>`
-  width: 0;
-  height: 0;
-  border-left: 6px solid transparent;
-  border-right: 6px solid transparent;
-  border-top: 6px solid ${({ theme }) => theme.primary};
-
+const DropdownIcon = styled(DropdownSvg)<{ open: boolean }>`
+  color: ${({ theme }) => theme.text};
   transform: rotate(${({ open }) => (open ? '180deg' : '0')});
   transition: transform 300ms;
 `
 
 function Web3Network(): JSX.Element | null {
-  const { chainId } = useActiveWeb3React()
+  const { chainId, account } = useActiveWeb3React()
   const networkModalOpen = useModalOpen(ApplicationModal.NETWORK)
   const toggleNetworkModal = useNetworkModalToggle()
+  const userEthBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
 
   if (!chainId) return null
 
   return (
     <NetworkCard onClick={() => toggleNetworkModal()} role="button">
       <NetworkSwitchContainer>
-        <Row>
+        <Row flex={1}>
           <img
             src={NETWORKS_INFO[chainId].icon}
             alt="Switch Network"
-            style={{ width: 24, height: 24, marginRight: '12px' }}
+            style={{ width: 20, height: 20, marginRight: '12px' }}
           />
-          <NetworkLabel>{NETWORKS_INFO[chainId].name}</NetworkLabel>
+          <NetworkLabel>
+            {userEthBalance
+              ? `${
+                  userEthBalance?.lessThan(CurrencyAmount.fromRawAmount(nativeOnChain(chainId), (1e18).toString())) &&
+                  userEthBalance?.greaterThan(0)
+                    ? parseFloat(userEthBalance.toSignificant(4)).toFixed(4)
+                    : userEthBalance.toSignificant(4)
+                } ${NETWORKS_INFO[chainId || ChainId.MAINNET].nativeToken.symbol}`
+              : NETWORKS_INFO[chainId].name}
+          </NetworkLabel>
         </Row>
         <DropdownIcon open={networkModalOpen} />
       </NetworkSwitchContainer>

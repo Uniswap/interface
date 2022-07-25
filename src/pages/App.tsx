@@ -87,8 +87,6 @@ const BodyWrapper = styled.div<{ isAboutPage?: boolean }>`
   align-items: center;
   min-height: calc(100vh - 148px);
   flex: 1;
-  overflow-y: auto;
-  overflow-x: hidden;
 `
 const AppPaths = { SWAP_LEGACY: '/swap-legacy', ABOUT: '/about', SWAP: '/swap' }
 export default function App() {
@@ -158,8 +156,7 @@ export default function App() {
   const { width } = useWindowSize()
   useGlobalMixpanelEvents()
   const { pathname } = window.location
-  const showFooter =
-    pathname === AppPaths.SWAP_LEGACY ? true : !pathname.includes(AppPaths.ABOUT) && !pathname.includes(AppPaths.SWAP)
+  const showFooter = !pathname.includes(AppPaths.ABOUT)
 
   return (
     <>

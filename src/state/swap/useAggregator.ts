@@ -42,7 +42,7 @@ export function useDerivedSwapInfoV2(): {
   const inputCurrency = useCurrency(inputCurrencyId)
   const outputCurrency = useCurrency(outputCurrencyId)
   const recipientLookup = useENS(recipient ?? undefined)
-  const to: string | null = (recipient === null ? account : recipientLookup.address) ?? null
+  const to: string | null = (recipient === null || recipient === '' ? account : recipientLookup.address) ?? null
 
   const relevantTokenBalances = useCurrencyBalances(account ?? undefined, [
     inputCurrency ?? undefined,
@@ -61,7 +61,7 @@ export function useDerivedSwapInfoV2(): {
     isExactIn ? parsedAmount : undefined,
     outputCurrency ?? undefined,
     saveGas,
-    recipient,
+    to,
     allowedSlippage,
   )
 

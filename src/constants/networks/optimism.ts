@@ -56,6 +56,7 @@ const optimismInfo: NetworkInfo = {
   averageBlockTimeInSeconds: 120,
   coingeckoNetworkId: 'optimistic-ethereum',
   coingeckoNativeTokenId: 'ethereum',
+  deBankSlug: 'op',
 }
 
 export default optimismInfo

@@ -20,25 +20,27 @@ import ProAmmPoolCardItem from './CardItem'
 import { useProMMFarms } from 'state/farms/promm/hooks'
 import { DividerDash } from 'components/Divider'
 import { SelectPairInstructionWrapper } from 'pages/Pools/styleds'
+import { STABLE_COINS_ADDRESS } from 'constants/tokens'
 
 type PoolListProps = {
   currencies: { [field in Field]?: Currency }
   searchValue: string
   isShowOnlyActiveFarmPools: boolean
+  onlyShowStable: boolean
 }
 
 const TableHeader = styled.div`
   display: grid;
   grid-gap: 1rem;
   grid-template-columns: 1.5fr 1.5fr 1.5fr 0.75fr 1fr 1fr 1.2fr 1.5fr;
-  padding: 18px 16px;
+  padding: 16px 20px;
   font-size: 12px;
   align-items: center;
   height: fit-content;
   position: relative;
   background-color: ${({ theme }) => theme.tableHeader};
-  border-top-left-radius: 8px;
-  border-top-right-radius: 8px;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
   z-index: 1;
   border-bottom: ${({ theme }) => `1px solid ${theme.border}`};
 `
@@ -64,7 +66,12 @@ const SORT_FIELD = {
   APR: 3,
 }
 
-export default function ProAmmPoolList({ currencies, searchValue, isShowOnlyActiveFarmPools }: PoolListProps) {
+export default function ProAmmPoolList({
+  currencies,
+  searchValue,
+  isShowOnlyActiveFarmPools,
+  onlyShowStable,
+}: PoolListProps) {
   const above1000 = useMedia('(min-width: 1000px)')
   const theme = useTheme()
 
@@ -134,6 +141,16 @@ export default function ProAmmPoolList({ currencies, searchValue, isShowOnlyActi
         filteredPools = filteredPools.filter(pool => pool.token0.address === cbId || pool.token1.address === cbId)
     }
 
+    if (onlyShowStable) {
+      const stableList = chainId ? STABLE_COINS_ADDRESS[chainId]?.map(item => item.toLowerCase()) || [] : []
+      filteredPools = filteredPools.filter(poolData => {
+        return (
+          stableList.includes(poolData.token0.address.toLowerCase()) &&
+          stableList.includes(poolData.token1.address.toLowerCase())
+        )
+      })
+    }
+
     const poolsGroupByPair = filteredPools.reduce((pairs, pool) => {
       const pairId = pool.token0.address + '_' + pool.token1.address
       return {
@@ -143,7 +160,7 @@ export default function ProAmmPoolList({ currencies, searchValue, isShowOnlyActi
     }, initPairs)
 
     return Object.values(poolsGroupByPair).sort((a, b) => listComparator(a[0], b[0]))
-  }, [poolDatas, searchValue, caId, cbId, listComparator, farms, isShowOnlyActiveFarmPools])
+  }, [poolDatas, searchValue, caId, cbId, listComparator, farms, isShowOnlyActiveFarmPools, chainId, onlyShowStable])
 
   const renderHeader = () => {
     return above1000 ? (
@@ -254,11 +271,11 @@ export default function ProAmmPoolList({ currencies, searchValue, isShowOnlyActi
     ) : null
   }
 
-  const ITEM_PER_PAGE = 5
+  const ITEM_PER_PAGE = 8
   const [page, setPage] = useState(1)
   useEffect(() => {
     setPage(1)
-  }, [currencies, searchValue])
+  }, [currencies, searchValue, onlyShowStable])
 
   const [sharedPoolId, setSharedPoolId] = useState('')
   const openShareModal = useOpenModal(ApplicationModal.SHARE)
@@ -294,7 +311,13 @@ export default function ProAmmPoolList({ currencies, searchValue, isShowOnlyActi
     )
 
   return (
-    <div style={{ background: above1000 ? theme.background : 'transparent', borderRadius: '8px', overflow: 'hidden' }}>
+    <div
+      style={{
+        background: above1000 ? theme.background : 'transparent',
+        borderRadius: above1000 ? '20px' : 0,
+        overflow: 'hidden',
+      }}
+    >
       {renderHeader()}
       {anyLoading && !Object.keys(pairDatas).length && <LocalLoader />}
       {pageData.map((p, index) =>
@@ -302,6 +325,7 @@ export default function ProAmmPoolList({ currencies, searchValue, isShowOnlyActi
           <ProAmmPoolListItem
             key={index}
             pair={p}
+            noBorderBottom={pairDatas.length <= pageData.length && index === pageData.length - 1}
             idx={index}
             onShared={setSharedPoolId}
             userPositions={userPositions}
@@ -315,7 +339,13 @@ export default function ProAmmPoolList({ currencies, searchValue, isShowOnlyActi
       )}
 
       {!!pairDatas.length && (
-        <Pagination onPageChange={setPage} totalCount={pairDatas.length} currentPage={page} pageSize={ITEM_PER_PAGE} />
+        <Pagination
+          onPageChange={setPage}
+          totalCount={pairDatas.length}
+          currentPage={page}
+          pageSize={ITEM_PER_PAGE}
+          haveBg={above1000}
+        />
       )}
       <ShareModal url={shareUrl} onShared={() => {}} />
     </div>

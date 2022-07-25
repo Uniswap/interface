@@ -17,8 +17,9 @@ const ContentWrapper = styled.div`
   width: 422px;
 `
 const InputWrapper = styled.div`
-  background-color: ${({ theme }) => theme.bg12};
-  border-radius: 4px;
+  background-color: ${({ theme }) => theme.buttonBlack};
+  border-radius: 999px;
+  padding: 4px;
   display: flex;
   width: 100%;
   margin-bottom: 24px;
@@ -78,7 +79,7 @@ export default function ShareLinkModal({
         <InputWrapper>
           <input type="text" value={shareUrl} readOnly />
           <CopyToClipboard text={shareUrl || ''} onCopy={handleCopyClick}>
-            <ButtonPrimary fontSize={14} padding="12px" width="auto">
+            <ButtonPrimary fontSize={14} padding="8px 12px" width="auto">
               Copy Link
               <AlertMessage className={showAlert ? 'show' : ''}>Copied!</AlertMessage>
             </ButtonPrimary>

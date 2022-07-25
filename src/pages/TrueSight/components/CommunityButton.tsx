@@ -53,7 +53,7 @@ const CommunityButton = ({ communityOption }: { communityOption: { [p: string]: 
 export default CommunityButton
 
 export const StyledCommunityButton = styled(StyledAddressButton)`
-  padding: 7px 12px;
+  padding: 6px 12px;
   cursor: pointer;
 
   &:hover {

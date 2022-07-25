@@ -3,8 +3,6 @@ import { ChainId, Fraction } from '@kyberswap/ks-sdk-core'
 import { parseSubgraphPoolData, useCheckIsFarmingPool } from 'utils/dmm'
 import { formattedNum, shortenAddress } from 'utils'
 import { MouseoverTooltip } from 'components/Tooltip'
-import DropIcon from 'components/Icons/DropIcon'
-import WarningLeftIcon from 'components/Icons/WarningLeftIcon'
 import { Trans } from '@lingui/macro'
 import CopyHelper from 'components/Copy'
 import { ButtonEmpty, ButtonOutlined, ButtonPrimary } from 'components/Button'
@@ -19,7 +17,6 @@ import {
   FooterContainer,
   HeaderAMPAndAddress,
   HeaderContainer,
-  HeaderLogo,
   HeaderTitle,
   InformationContainer,
   Progress,
@@ -44,7 +41,9 @@ import TabYourLiquidityItems from 'components/PoolList/ItemCard/TabYourLiquidity
 import TabYourStakedItems from 'components/PoolList/ItemCard/TabYourStakedItems'
 import JSBI from 'jsbi'
 import { useSharedPoolIdManager } from 'state/pools/hooks'
-import { Share2 } from 'react-feather'
+import { Share2, AlertTriangle } from 'react-feather'
+import { IconWrapper } from 'pages/Pools/styleds'
+import AgriCulture from 'components/Icons/AgriCulture'
 
 const TAB = {
   INFO: 0,
@@ -53,7 +52,7 @@ const TAB = {
   YOUR_STAKED: 3,
 }
 
-const ItemCard = ({ poolData, myLiquidity }: ListItemProps) => {
+const ItemCard = ({ poolData, style = {}, myLiquidity }: ListItemProps) => {
   const { chainId } = useActiveWeb3React()
   const amp = new Fraction(poolData.amp).divide(JSBI.BigInt(SUBGRAPH_AMP_MULTIPLIER))
 
@@ -89,25 +88,39 @@ const ItemCard = ({ poolData, myLiquidity }: ListItemProps) => {
   const [, setSharedPoolId] = useSharedPoolIdManager()
 
   return (
-    <StyledItemCard>
-      {isFarmingPool && (
-        <div style={{ position: 'absolute', top: -3, left: -1 }}>
+    <StyledItemCard style={style}>
+      {' '}
+      <div style={{ position: 'absolute', top: '16px', right: '16px' }}>
+        {isFarmingPool && (
           <MouseoverTooltip text="Available for yield farming">
-            <DropIcon width={48} height={48} />
+            <IconWrapper style={{ width: '24px', height: '24px' }}>
+              <AgriCulture width={16} height={16} color={theme.textReverse} />
+            </IconWrapper>
           </MouseoverTooltip>
-        </div>
-      )}
-      {isWarning && (
-        <div style={{ position: 'absolute', top: -3, left: -1 }}>
+        )}
+
+        {isWarning && (
           <MouseoverTooltip text="One token is close to 0% in the poolData ratio. Pool might go inactive">
-            <WarningLeftIcon width={48} height={48} />
+            <IconWrapper
+              style={{
+                width: '24px',
+                height: '24px',
+                background: theme.warning,
+                marginLeft: isFarmingPool ? '8px' : 0,
+              }}
+            >
+              <AlertTriangle color={theme.textReverse} size={16} />
+            </IconWrapper>
           </MouseoverTooltip>
-        </div>
-      )}
+        )}
+      </div>
       {above1000 ? (
         <HeaderContainer>
           <HeaderTitle>
-            {poolData.token0.symbol} - {poolData.token1.symbol}
+            <Flex alignItems="center">
+              <DoubleCurrencyLogo currency0={currency0} currency1={currency1} size={24} />
+              {poolData.token0.symbol} - {poolData.token1.symbol}
+            </Flex>
           </HeaderTitle>
           <HeaderAMPAndAddress>
             <span>AMP = {formattedNum(amp.toSignificant(5))}</span>
@@ -115,12 +128,9 @@ const ItemCard = ({ poolData, myLiquidity }: ListItemProps) => {
             <span>{shortenPoolAddress}</span>
             <CopyHelper toCopy={poolData.id} />
           </HeaderAMPAndAddress>
-          <HeaderLogo>
-            <DoubleCurrencyLogo currency0={currency0} currency1={currency1} size={40} />
-          </HeaderLogo>
         </HeaderContainer>
       ) : (
-        <Flex flexDirection="column" alignItems="center" style={{ gap: '4px' }}>
+        <Flex flexDirection="column" style={{ gap: '4px' }}>
           <Flex style={{ gap: '4px' }}>
             <Text fontSize="16px" fontWeight={400} lineHeight="16px">
               {shortenPoolAddress}
@@ -174,17 +184,6 @@ const ItemCard = ({ poolData, myLiquidity }: ListItemProps) => {
         {activeTabIndex === TAB.YOUR_STAKED && <TabYourStakedItems poolData={poolData} />}
       </InformationContainer>
       <ButtonGroupContainer>
-        <ButtonPrimary
-          as={Link}
-          to={`/add/${currencyId(currency0, chainId)}/${currencyId(currency1, chainId)}/${poolData.id}`}
-          style={{
-            padding: '10px',
-            fontSize: '14px',
-            fontWeight: 500,
-          }}
-        >
-          Add Liquidity
-        </ButtonPrimary>
         <ButtonOutlined
           as={Link}
           to={
@@ -196,10 +195,23 @@ const ItemCard = ({ poolData, myLiquidity }: ListItemProps) => {
             padding: '10px',
             fontSize: '14px',
             fontWeight: 500,
+            border: `1px solid ${theme.subText}`,
+            color: theme.subText,
           }}
         >
           {isHaveLiquidity ? <Trans>Remove Liquidity</Trans> : <Trans>Swap</Trans>}
         </ButtonOutlined>
+        <ButtonPrimary
+          as={Link}
+          to={`/add/${currencyId(currency0, chainId)}/${currencyId(currency1, chainId)}/${poolData.id}`}
+          style={{
+            padding: '10px',
+            fontSize: '14px',
+            fontWeight: 500,
+          }}
+        >
+          Add Liquidity
+        </ButtonPrimary>
       </ButtonGroupContainer>
       <Divider />
       <FooterContainer>

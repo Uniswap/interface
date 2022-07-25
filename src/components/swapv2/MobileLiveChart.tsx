@@ -28,8 +28,9 @@ function MobileLiveChart({
         isOpen={isOpen}
         onDismiss={toggle}
         transition={false}
-        maxHeight={100}
-        height={isHorizontal ? `${window.innerHeight}px` : '60vh'}
+        maxHeight={90}
+        height={isHorizontal ? `${window.innerHeight}px` : undefined}
+        minHeight={70}
       >
         <Flex flexDirection="column" padding="20px" alignItems="center" width="100%">
           <LiveChart

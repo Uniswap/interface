@@ -51,7 +51,7 @@ const TopTrendingSoonTokenItem = ({
           onClick={onSelectToken}
         />
         <Text
-          fontSize="14px"
+          fontSize="12px"
           mr="4px"
           color={theme.subText}
           style={{ cursor: 'pointer', flex: '1' }}
@@ -72,11 +72,9 @@ const TopTrendingSoonTokenItem = ({
             padding="0"
             onClick={onSelectToken}
             style={{
-              background: rgba(theme.buttonGray, 0.2),
-              minWidth: '20px',
-              minHeight: '20px',
-              width: '20px',
-              height: '20px',
+              background: theme.background,
+              width: '16px',
+              height: '16px',
               borderRadius: '50%',
             }}
           >
@@ -90,17 +88,15 @@ const TopTrendingSoonTokenItem = ({
           to={`/swap?inputCurrency=ETH&outputCurrency=${tokenData.platforms.get(currentNetwork)}`}
           style={{
             background: rgba(theme.primary, 0.2),
-            minWidth: '20px',
-            minHeight: '20px',
-            width: '20px',
-            height: '20px',
+            width: '16px',
+            height: '16px',
             borderRadius: '50%',
           }}
           onClick={() =>
             mixpanelHandler(MIXPANEL_TYPE.DISCOVER_SWAP_BUY_NOW_CLICKED, { trending_token: tokenData.symbol })
           }
         >
-          <Cart color={theme.primary} size={12} />
+          <Cart color={theme.primary} size={10} />
         </ButtonEmpty>
         {/*</MouseoverTooltipDesktopOnly>*/}
       </Flex>

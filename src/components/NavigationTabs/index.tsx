@@ -2,7 +2,7 @@ import React from 'react'
 import styled, { css } from 'styled-components'
 import { darken } from 'polished'
 import { NavLink, useHistory } from 'react-router-dom'
-import { ArrowLeft } from 'react-feather'
+import { ArrowLeft, Trash } from 'react-feather'
 import { t, Trans } from '@lingui/macro'
 import { Flex } from 'rebass'
 import { ButtonEmpty } from 'components/Button'
@@ -10,8 +10,10 @@ import { RowBetween } from '../Row'
 import QuestionHelper from '../QuestionHelper'
 import TransactionSettings from 'components/TransactionSettings'
 import { ShareButtonWithModal } from 'components/ShareModal'
-import ClearAllIcon from '../../assets/svg/clear_all.svg'
 import { useMedia } from 'react-use'
+import useTheme from 'hooks/useTheme'
+import Tutorial, { TutorialType } from 'components/Tutorial'
+import { ReactComponent as TutorialIcon } from 'assets/svg/play_circle_outline.svg'
 
 const Tabs = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
@@ -85,10 +87,14 @@ const StyledMenuButton = styled.button<{ active?: boolean }>`
   background-color: transparent;
   margin: 0;
   padding: 0;
-  height: 35px;
+  height: 36px;
+  width: 36px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: ${({ theme }) => theme.subText};
 
-  padding: 0.15rem 0.5rem;
-  border-radius: 4px;
+  border-radius: 999px;
 
   :hover {
     cursor: pointer;
@@ -104,10 +110,6 @@ const StyledMenuButton = styled.button<{ active?: boolean }>`
           background-color: ${({ theme }) => theme.buttonBlack};
         `
       : ''}
-
-  svg {
-    margin-top: 2px;
-  }
 `
 
 export function SwapPoolTabs({ active }: { active: 'swap' | 'pool' }) {
@@ -160,6 +162,7 @@ export function AddRemoveTabs({
   onCleared,
   onBack,
   tooltip,
+  tutorialType,
 }: {
   action: LiquidityAction
   showTooltip?: boolean
@@ -168,12 +171,15 @@ export function AddRemoveTabs({
   onCleared?: () => void
   onBack?: () => void
   tooltip?: string
+  tutorialType?: TutorialType
 }) {
   const history = useHistory()
   const below768 = useMedia('(max-width: 768px)')
   const goBack = () => {
     history.goBack()
   }
+
+  const theme = useTheme()
   const arrow = (
     <ButtonBack width="fit-content" padding="0" onClick={!!onBack ? onBack : goBack}>
       <StyledArrowLeft />
@@ -221,17 +227,22 @@ export function AddRemoveTabs({
         {!below768 && arrow}
         {!below768 && title}
         <Flex style={{ gap: '0px' }}>
+          {tutorialType && (
+            <Tutorial
+              type={tutorialType}
+              customIcon={
+                <StyledMenuButton>
+                  <TutorialIcon />
+                </StyledMenuButton>
+              }
+            />
+          )}
           {onCleared && (
-            <StyledMenuButton
-              active={false}
-              onClick={onCleared}
-              id="open-settings-dialog-button"
-              aria-label="Transaction Settings"
-            >
-              <img src={ClearAllIcon} alt="" />
+            <StyledMenuButton active={false} onClick={onCleared}>
+              <Trash size={18} />
             </StyledMenuButton>
           )}
-          <TransactionSettings />
+          <TransactionSettings hoverBg={theme.buttonBlack} />
           {!hideShare && <ShareButtonWithModal onShared={onShared} />}
         </Flex>
       </Wrapper>

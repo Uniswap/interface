@@ -1,9 +1,7 @@
 import { useEffect, useState } from 'react'
 
 import { GLOBAL_DATA, GLOBAL_DATA_ELASTIC } from 'apollo/queries'
-import { useActiveWeb3React } from 'hooks'
 import { ChainId } from '@kyberswap/ks-sdk-core'
-import { useBlockNumber } from 'state/application/hooks'
 import useAggregatorVolume from 'hooks/useAggregatorVolume'
 import { NETWORKS_INFO, MAINNET_NETWORKS } from 'constants/networks'
 import useAggregatorAPR from 'hooks/useAggregatorAPR'
@@ -36,8 +34,6 @@ interface GlobalData {
 }
 
 export function useGlobalData() {
-  const { chainId } = useActiveWeb3React()
-  const blockNumber = useBlockNumber()
   const [globalData, setGlobalData] = useState<GlobalData>()
   const aggregatorData = useAggregatorVolume()
   const aggregatorAPR = useAggregatorAPR()
@@ -115,7 +111,7 @@ export function useGlobalData() {
     }
 
     getGlobalData()
-  }, [chainId, blockNumber, aggregatorData, aggregatorAPR])
+  }, [aggregatorData, aggregatorAPR])
 
   return globalData
 }

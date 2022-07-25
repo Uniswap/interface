@@ -21,7 +21,7 @@ const ToggleElement = styled.span<{ isDarkMode?: boolean }>`
 const StyledToggle = styled.button`
   border-radius: 999px;
   border: none;
-  background: ${({ theme }) => theme.bg3};
+  background: ${({ theme }) => theme.tabBackgound};
   display: flex;
   width: fit-content;
   cursor: pointer;

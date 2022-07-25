@@ -549,10 +549,13 @@ export const SUGGESTED_BASES: ChainTokenList = {
   ],
   [ChainId.AVAXMAINNET]: [
     ...WETH_ONLY[ChainId.AVAXMAINNET],
-    DAI[ChainId.AVAXMAINNET],
+    // DAI[ChainId.AVAXMAINNET],
     USDC[ChainId.AVAXMAINNET],
     USDT[ChainId.AVAXMAINNET],
-    new Token(ChainId.AVAXMAINNET, '0x49D5c2BdFfac6CE2BFdB6640F4F80f226bc10bAB', 18, 'WETH.e', 'Wrapped Ether'),
+    // new Token(ChainId.AVAXMAINNET, '0x49D5c2BdFfac6CE2BFdB6640F4F80f226bc10bAB', 18, 'WETH.e', 'Wrapped Ether'),
+
+    new Token(ChainId.AVAXMAINNET, '0x9702230A8Ea53601f5cD2dc00fDBc13d4dF4A8c7', 6, 'USDt', 'TetherToken'),
+    new Token(ChainId.AVAXMAINNET, '0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E', 6, 'USDC', 'USD Coin'),
   ],
 
   [ChainId.FANTOM]: [...WETH_ONLY[ChainId.FANTOM], DAI[ChainId.FANTOM], USDC[ChainId.FANTOM], USDT[ChainId.FANTOM]],
@@ -574,6 +577,12 @@ export const SUGGESTED_BASES: ChainTokenList = {
   [ChainId.BTTC]: [...WETH_ONLY[ChainId.BTTC], DAI[ChainId.BTTC], USDC[ChainId.BTTC], USDT[ChainId.BTTC]],
   [ChainId.VELAS]: [...WETH_ONLY[ChainId.VELAS], USDC[ChainId.VELAS], USDT[ChainId.VELAS]],
   [ChainId.OASIS]: [...WETH_ONLY[ChainId.OASIS], USDC[ChainId.OASIS], USDT[ChainId.OASIS]],
+  [ChainId.OPTIMISM]: [
+    ...WETH_ONLY[ChainId.OPTIMISM],
+    USDC[ChainId.OPTIMISM],
+    USDT[ChainId.OPTIMISM],
+    DAI[ChainId.OPTIMISM],
+  ],
 }
 
 // used to construct the list of all pairs we consider by default in the frontend
@@ -974,6 +983,7 @@ export const SWR_KEYS = {
 // Epsilon 0 is absolute permittivity of free space whose value is 8.854×10^-12 and unit is C^2N^-1m–2.
 export const EPSILON = 0.000000000008854
 
+// https://www.nasdaq.com/glossary/b/bip
 export const MAX_SLIPPAGE_IN_BIPS = 2000
 
 export const DEFAULT_OUTPUT_TOKEN_BY_CHAIN: Partial<Record<ChainId, Token>> = {

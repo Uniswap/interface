@@ -15,7 +15,6 @@ import WarningIcon from 'components/LiveChart/WarningIcon'
 import { Trans } from '@lingui/macro'
 import styled from 'styled-components'
 import ButtonWithOptions from 'pages/TrueSight/components/ButtonWithOptions'
-import { ButtonEmpty } from 'components/Button'
 import { ChevronDown } from 'react-feather'
 import { TruncatedText } from 'pages/TrueSight/components/TrendingSoonLayout/TrendingSoonTokenItem'
 import { formattedNumLong } from 'utils'
@@ -133,7 +132,7 @@ const TrendingLayout = ({
               style={{ width: '16px', height: '16px', minWidth: '16px', minHeight: '16px', borderRadius: '50%' }}
             />
             <TruncatedText color={theme.subText}>{tokenData.name}</TruncatedText>
-            <span style={{ color: theme.disableText }}>{tokenData.symbol}</span>
+            <span style={{ color: theme.border }}>{tokenData.symbol}</span>
           </TableBodyItem>
           <TableBodyItem>{formattedNumLong(tokenData.price, true)}</TableBodyItem>
           <TableBodyItem align="right">{formattedNumLong(tokenData.trading_volume, true)}</TableBodyItem>
@@ -145,6 +144,7 @@ const TrendingLayout = ({
           </TableBodyItem>
           <TableBodyItem align="right" style={{ overflow: 'visible' }}>
             <ButtonWithOptions
+              variant="light"
               platforms={tokenData.platforms}
               style={{
                 minWidth: 'fit-content',
@@ -155,17 +155,22 @@ const TrendingLayout = ({
               }}
               tokenData={tokenData}
             />
-            <ButtonEmpty padding="0" height="100%" width="unset">
+
+            <Btn>
               <ChevronDown
-                size={16}
-                style={{ transform: isThisTokenSelected ? 'rotate(180deg)' : 'unset', minWidth: '16px' }}
+                color={theme.subText}
+                size={24}
+                style={{
+                  transform: `rotate(${isThisTokenSelected ? `-180deg` : 0})`,
+                  transition: 'transform 0.2s',
+                }}
               />
-            </ButtonEmpty>
+            </Btn>
           </TableBodyItem>
         </TableBodyContainer>
         {isThisTokenSelected && isTrueSightToken && (
           <>
-            <TableBodyContainer style={{ cursor: 'default' }}>
+            <TableBodyContainer style={{ cursor: 'default' }} noHover>
               <TableBodyItemSmall style={{ fontStyle: 'italic' }}>
                 <Trans>We discovered this on </Trans> {date}
               </TableBodyItemSmall>
@@ -210,7 +215,7 @@ const TrendingLayout = ({
                 <AddressButton platforms={tokenData.platforms} />
               </WebsiteCommunityAddressContainer>
             </TagWebsiteCommunityAddressContainer>
-            <Box height="360px" marginTop="20px">
+            <Box height="392px" marginTop="20px">
               <Chart
                 chartData={chartData}
                 isLoading={isChartDataLoading}
@@ -299,6 +304,25 @@ const TrendingLayout = ({
 
 export default TrendingLayout
 
+const Btn = styled.button`
+  outline: none;
+  border: none;
+  height: 28px;
+  width: 28px;
+  min-width: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: ${({ theme }) => rgba(theme.subText, 0.2)};
+  color: ${({ theme }) => theme.subText};
+  cursor: pointer;
+
+  :hover {
+    background: ${({ theme }) => rgba(theme.subText, 0.4)};
+  }
+`
+
 const TableContainer = styled.div`
   border-radius: 8px;
 `
@@ -330,12 +354,16 @@ const TableBodyWithDetailContainer = styled.div<{ isTrueSightToken: boolean; isS
   border-bottom: 1px solid ${({ theme }) => theme.border};
 `
 
-const TableBodyContainer = styled.div`
+const TableBodyContainer = styled.div<{ noHover?: boolean }>`
   display: grid;
-  padding: 10px 20px;
+  padding: 16px 20px;
   grid-template-columns: 1.5fr 1.25fr 1fr 1fr 1fr 1fr;
   gap: 16px;
   cursor: pointer;
+
+  :hover {
+    background: ${({ theme, noHover }) => (noHover ? 'transparent' : theme.buttonBlack)};
+  }
 `
 
 const TableBodyItem = styled.div<{ align?: string }>`

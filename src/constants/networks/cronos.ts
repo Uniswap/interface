@@ -63,6 +63,7 @@ const cronosInfo: NetworkInfo = {
   averageBlockTimeInSeconds: 6,
   coingeckoNetworkId: 'cronos',
   coingeckoNativeTokenId: 'crypto-com-chain',
+  deBankSlug: 'cro',
 }
 
 export default cronosInfo

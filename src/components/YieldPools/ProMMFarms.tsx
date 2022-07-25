@@ -1,7 +1,6 @@
 import React, { useState, useRef, useCallback, useEffect, useMemo } from 'react'
 import {
   HeadingContainer,
-  StakedOnlyToggle,
   StakedOnlyToggleWrapper,
   StakedOnlyToggleText,
   HeadingRight,
@@ -27,21 +26,15 @@ import { DepositModal, StakeUnstakeModal } from './ProMMFarmModals'
 import { useBlockNumber } from 'state/application/hooks'
 import WithdrawModal from './ProMMFarmModals/WithdrawModal'
 import HarvestModal from './ProMMFarmModals/HarvestModal'
-import { CurrencyAmount, Token } from '@kyberswap/ks-sdk-core'
 import HoverDropdown from 'components/HoverDropdown'
 import { ExternalLink, StyledInternalLink } from 'theme'
 import { ProMMFarm } from 'state/farms/promm/types'
 import { VERSION } from 'constants/v2'
+import Toggle from 'components/Toggle'
 
 type ModalType = 'deposit' | 'withdraw' | 'stake' | 'unstake' | 'harvest'
 
-function ProMMFarms({
-  active,
-  onUpdateUserReward,
-}: {
-  active: boolean
-  onUpdateUserReward: (address: string, usdValue: number, amounts: CurrencyAmount<Token>[]) => void
-}) {
+function ProMMFarms({ active }: { active: boolean }) {
   const theme = useTheme()
   const [stakedOnly, setStakedOnly] = useState({
     active: false,
@@ -140,14 +133,13 @@ function ProMMFarms({
 
       <HeadingContainer>
         <StakedOnlyToggleWrapper>
-          <StakedOnlyToggle
-            className="staked-only-switch"
-            checked={stakedOnly[active ? 'active' : 'ended']}
-            onClick={() => setStakedOnly(prev => ({ ...prev, [activeTab]: !prev[activeTab] }))}
-          />
           <StakedOnlyToggleText>
             <Trans>Staked Only</Trans>
           </StakedOnlyToggleText>
+          <Toggle
+            isActive={stakedOnly[active ? 'active' : 'ended']}
+            toggle={() => setStakedOnly(prev => ({ ...prev, [activeTab]: !prev[activeTab] }))}
+          />
         </StakedOnlyToggleWrapper>
         <HeadingRight>
           <SearchContainer>
@@ -162,11 +154,11 @@ function ProMMFarms({
         </HeadingRight>
       </HeadingContainer>
 
-      {qs.tab === 'ended' && qs.farmType !== VERSION.CLASSIC && (
+      {qs.type === 'ended' && qs.tab !== VERSION.CLASSIC && (
         <Text fontStyle="italic" fontSize={12} textAlign="right" marginBottom="1rem" color={theme.subText}>
           <Trans>
             Your rewards may be automatically harvested a few days after the farm ends. Please check the{' '}
-            <StyledInternalLink to="/farms?tab=vesting">Vesting</StyledInternalLink> tab to see your rewards
+            <StyledInternalLink to="/farms?type=vesting">Vesting</StyledInternalLink> tab to see your rewards
           </Trans>
         </Text>
       )}
@@ -270,7 +262,7 @@ function ProMMFarms({
           backgroundColor={theme.background}
           justifyContent="center"
           padding="32px"
-          style={{ borderBottomLeftRadius: '8px', borderBottomRightRadius: '8px' }}
+          style={{ borderBottomLeftRadius: '20px', borderBottomRightRadius: '20px' }}
         >
           <Text color={theme.subText}>
             {stakedOnly[activeTab] || search ? (
@@ -291,7 +283,6 @@ function ProMMFarms({
                 setSeletedFarm(fairLaunchAddress)
                 setSeletedPoolId(pid ?? null)
               }}
-              onUpdateUserReward={onUpdateUserReward}
               farms={filteredFarms[fairLaunchAddress]}
             />
           )

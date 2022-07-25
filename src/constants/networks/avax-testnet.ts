@@ -58,6 +58,7 @@ const avaxTestnetInfo: NetworkInfo = {
   averageBlockTimeInSeconds: 1.85,
   coingeckoNetworkId: EMPTY,
   coingeckoNativeTokenId: EMPTY,
+  deBankSlug: EMPTY,
 }
 
 export default avaxTestnetInfo

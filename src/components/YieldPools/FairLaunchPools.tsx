@@ -13,9 +13,8 @@ import { getFormattedTimeFromSecond } from 'utils/formatTime'
 import { useFarmRewards } from 'utils/dmm'
 import ListItem from './ListItem'
 import HarvestAll from './HarvestAll'
-import { FairLaunchPoolsWrapper, FairLaunchPoolsTitle, HarvestAllSection, ListItemWrapper } from './styleds'
+import { FairLaunchPoolsWrapper, FairLaunchPoolsTitle, ListItemWrapper } from './styleds'
 import useTheme from 'hooks/useTheme'
-import { useIsDarkMode } from 'state/user/hooks'
 import { useFairLaunchVersion } from 'hooks/useContract'
 import { Text } from 'rebass'
 import { Trans } from '@lingui/macro'
@@ -33,7 +32,6 @@ const FairLaunchPools = ({ fairLaunchAddress, farms }: FarmsListProps) => {
   const dispatch = useAppDispatch()
   const { chainId, account } = useActiveWeb3React()
   const theme = useTheme()
-  const isDarkMode = useIsDarkMode()
   const blockNumber = useBlockNumber()
   const totalRewards = useFarmRewards(farms)
   const fairLaunchVersion = useFairLaunchVersion(fairLaunchAddress)
@@ -152,19 +150,17 @@ const FairLaunchPools = ({ fairLaunchAddress, farms }: FarmsListProps) => {
     <FairLaunchPoolsWrapper>
       {!!displayFarms.length && (
         <>
-          <FairLaunchPoolsTitle backgroundColor={isDarkMode ? `${theme.bg12}40` : `${theme.bg12}80`}>
-            <Text fontSize={14} fontStyle="italic" color={theme.subText}>
-              {outsideFarm && (
+          <FairLaunchPoolsTitle justify={outsideFarm ? 'space-between' : 'flex-end'}>
+            {outsideFarm && (
+              <Text fontSize={14} fontStyle="italic" color={theme.subText}>
                 <Trans>
                   This pool require {outsideFarm.name} LP Tokens. Get the LP Tokens{' '}
                   <ExternalLink href={outsideFarm.getLPTokenLink}>here ↗</ExternalLink>{' '}
                 </Trans>
-              )}
-            </Text>
+              </Text>
+            )}
 
-            <HarvestAllSection>
-              <HarvestAll totalRewards={totalRewards} onHarvestAll={handleHarvestAll} />
-            </HarvestAllSection>
+            <HarvestAll totalRewards={totalRewards} onHarvestAll={handleHarvestAll} />
           </FairLaunchPoolsTitle>
 
           <ListItemWrapper>

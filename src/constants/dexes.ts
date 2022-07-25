@@ -56,15 +56,15 @@ export const dexListConfig: DexList = {
   },
   firebird: {
     name: 'Firebird',
-    icon: 'https://app.firebird.finance/favicon.png',
+    icon: 'https://s2.coinmarketcap.com/static/img/exchanges/64x64/1500.png',
   },
   oneswap: {
     name: 'OneSwap',
-    icon: 'https://app.firebird.finance/favicon.png',
+    icon: 'https://s2.coinmarketcap.com/static/img/exchanges/64x64/1170.png',
   },
   wault: {
     name: 'Wault',
-    icon: 'https://wault.finance/wp-content/uploads/2021/04/cropped-wault-new-favicon-32x32.png',
+    icon: 'https://s2.coinmarketcap.com/static/img/coins/64x64/9478.png',
   },
   curve: {
     name: 'Curve',
@@ -76,7 +76,7 @@ export const dexListConfig: DexList = {
   },
   'iron-stable': {
     name: 'IronSwap',
-    icon: 'https://iron.finance/icons/icon-72x72.png',
+    icon: 'https://s2.coinmarketcap.com/static/img/coins/64x64/10484.png',
   },
   polydex: {
     name: 'PolyDex',
@@ -128,7 +128,7 @@ export const dexListConfig: DexList = {
   },
   pantherswap: {
     name: 'PantherSwap',
-    icon: 'https://pantherswap.com/favicon.ico',
+    icon: 'https://s2.coinmarketcap.com/static/img/coins/64x64/9778.png',
   },
   nerve: {
     name: 'Nerve',
@@ -176,7 +176,7 @@ export const dexListConfig: DexList = {
   },
   axial: {
     name: 'Axial',
-    icon: 'https://assets.website-files.com/6189dee5e79d6e8f7e214eba/618bf2f3e40e777d4210a84f_favicon.ico',
+    icon: 'https://s2.coinmarketcap.com/static/img/coins/64x64/14396.png',
   },
   lydia: {
     name: 'Lydia',
@@ -274,6 +274,15 @@ export const dexListConfig: DexList = {
     name: '1inch',
     icon: 'https://s2.coinmarketcap.com/static/img/coins/64x64/8104.png',
   },
+  platypus: {
+    name: 'Platypus',
+    icon: 'https://s2.coinmarketcap.com/static/img/exchanges/64x64/1674.png',
+  },
+  velodrome: {
+    name: 'Velodrome',
+    icon: 'https://s2.coinmarketcap.com/static/img/coins/64x64/20435.png',
+  },
+
   //todo namgold: optimism add dex
 }
 

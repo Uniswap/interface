@@ -5,13 +5,10 @@ import { Box, Flex, Text } from 'rebass'
 import { ExternalLink } from 'theme'
 import { ChevronRight } from 'react-feather'
 import useTheme from 'hooks/useTheme'
-import { rgba } from 'polished'
 import useTopTrendingSoonTokensInCurrentNetwork from 'components/TopTrendingSoonTokensInCurrentNetwork/useTopTrendingSoonTokensInCurrentNetwork'
 import TopTrendingSoonTokenItem from 'components/TopTrendingSoonTokensInCurrentNetwork/TopTrendingSoonTokenItem'
 import { useMedia } from 'react-use'
-import { TextTooltip } from 'pages/TrueSight/styled'
 import DiscoverIcon from 'components/Icons/DiscoverIcon'
-import { MouseoverTooltip } from 'components/Tooltip'
 import { useShowTopTrendingSoonTokens } from 'state/user/hooks'
 import { useModalOpen, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/actions'
@@ -26,6 +23,9 @@ import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import { ButtonLight } from 'components/Button'
 import useMarquee from 'hooks/useMarquee'
 import { FadeInAnimation } from 'components/Animation'
+import Divider from 'components/Divider'
+import { TextTooltip } from 'pages/TrueSight/styled'
+import { MouseoverTooltip } from 'components/Tooltip'
 
 const TopTrendingSoonTokensInCurrentNetwork = () => {
   const theme = useTheme()
@@ -96,11 +96,11 @@ const TopTrendingSoonTokensInCurrentNetwork = () => {
               <Flex
                 alignItems="center"
                 style={{
-                  gap: '4px',
+                  gap: '8px',
                   minWidth: 'fit-content',
                 }}
               >
-                <Text color={theme.subText} fontWeight={500}>
+                <Text color={theme.subText} fontWeight={500} fontSize="14px">
                   <Trans>Trending Soon</Trans>
                 </Text>
                 <DiscoverIcon color={theme.subText} />
@@ -108,7 +108,7 @@ const TopTrendingSoonTokensInCurrentNetwork = () => {
               <Flex
                 ref={marqueeContainerRef}
                 alignItems="center"
-                ml="24px"
+                ml="12px"
                 backgroundColor={theme.buttonBlack}
                 overflow="auto"
                 style={{ borderRadius: '40px', paddingLeft: '8px', flex: 1 }}
@@ -130,7 +130,7 @@ const TopTrendingSoonTokensInCurrentNetwork = () => {
                   minWidth="fit-content"
                   width="fit-content"
                   height="100%"
-                  padding="7px 8px"
+                  padding="6px 12px"
                   borderRadius="20px"
                   margin="0 0 0 12px"
                   style={{ fontSize: '14px', whiteSpace: 'nowrap' }}
@@ -179,19 +179,19 @@ const TopTrendingSoonTokensInCurrentNetwork = () => {
       <FadeInAnimation>
         <TrendingSoonTokensMobileContainer>
           <Flex justifyContent="space-between" alignItems="center">
-            <MouseoverTooltip text={t`Powered by TrueSight, our AI prediction model`}>
-              <TextTooltip
-                color={theme.subText}
-                fontSize="14px"
-                fontWeight={500}
-                style={{ display: 'flex', alignItems: 'center', gap: '4px' }}
-              >
-                <Text>
+            <Text
+              color={theme.subText}
+              fontSize="14px"
+              fontWeight={500}
+              style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
+            >
+              <MouseoverTooltip text={t`Powered by TrueSight, our AI prediction model`}>
+                <TextTooltip color={theme.subText}>
                   <Trans>Trending Soon</Trans>
-                </Text>
-                <DiscoverIcon color={theme.subText} />
-              </TextTooltip>
-            </MouseoverTooltip>
+                </TextTooltip>
+              </MouseoverTooltip>
+              <DiscoverIcon color={theme.subText} />
+            </Text>
             <ExternalLink
               href={window.location.origin + '/discover?tab=trending_soon'}
               target="_blank"
@@ -208,20 +208,18 @@ const TopTrendingSoonTokensInCurrentNetwork = () => {
               <ChevronRight color={theme.primary} size={16} />
             </ExternalLink>
           </Flex>
+
           <Flex
+            marginTop="12px"
+            marginBottom="20px"
             style={{
               gap: '12px',
-              marginTop: '15px',
-              padding: '6px 12px',
-              borderRadius: '8px',
-              overflow: 'hidden',
-              background: rgba(theme.background, 0.5),
             }}
           >
             <Flex
               ref={marqueeContainerRef}
               alignItems="center"
-              style={{ overflow: 'auto', background: theme.buttonBlack, borderRadius: '40px' }}
+              style={{ overflow: 'auto', background: theme.buttonBlack, borderRadius: '999px' }}
             >
               {topTrendingSoonTokens.map((tokenData, index) => (
                 <React.Fragment key={tokenData.token_id}>
@@ -233,6 +231,7 @@ const TopTrendingSoonTokensInCurrentNetwork = () => {
               ))}
             </Flex>
           </Flex>
+          <Divider />
         </TrendingSoonTokensMobileContainer>
       </FadeInAnimation>
     </>
@@ -267,15 +266,18 @@ const TrendingSoonTokensContainer = styled.div`
   display: flex;
   align-items: center;
   position: relative;
-  padding: 6px 12px 6px 24px;
-  background: ${({ theme }) => rgba(theme.background, 0.5)};
-  border-radius: 40px;
+  padding: 6px 6px 6px 12px;
+  background: ${({ theme }) => theme.background};
+  border-radius: 999px;
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    padding: 6px;
+  `}
 `
 
 const TrendingSoonTokensMobileContainer = styled.div`
   display: flex;
   flex-direction: column;
-  border-radius: 8px;
   width: 100%;
 `
 

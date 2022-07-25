@@ -9,7 +9,6 @@ import { darken, rgba } from 'polished'
 import useTheme from 'hooks/useTheme'
 import { useSelector } from 'react-redux'
 import { AppState } from 'state'
-import { SelectedHighlight } from 'pages/TrueSight/components/TrendingSoonLayout/TrendingSoonTokenItem'
 import { NETWORKS_INFO } from 'constants/networks'
 import { ChainId } from '@kyberswap/ks-sdk-core'
 import { BigNumber } from '@ethersproject/bignumber'
@@ -57,14 +56,11 @@ export default function CampaignListAndSearch({
               .pow(18) // TODO nguyenhuudungz: Wait for backend refactoring.
               .toString(),
           )
+
           return (
-            <CampaignItem key={index} onClick={() => onSelectCampaign(campaign)}>
+            <CampaignItem key={index} onClick={() => onSelectCampaign(campaign)} selected={isSelected}>
               <Flex justifyContent="space-between" alignItems="center" style={{ gap: '12px' }}>
-                <Text
-                  fontWeight={500}
-                  color={isSelected ? theme.primary : theme.text}
-                  style={{ wordBreak: 'break-word' }}
-                >
+                <Text fontWeight={500} color={theme.text} style={{ wordBreak: 'break-word' }}>
                   {campaign.name}
                 </Text>
                 <CampaignStatusText status={campaign.status}>{campaign.status}</CampaignStatusText>
@@ -91,7 +87,6 @@ export default function CampaignListAndSearch({
                   </Text>
                 )}
               </Flex>
-              {isSelected && <SelectedHighlight />}
             </CampaignItem>
           )
         })}
@@ -103,13 +98,17 @@ export default function CampaignListAndSearch({
 const CampaignListAndSearchContainer = styled.div`
   width: 100%;
   background: ${({ theme }) => theme.background};
-  border-radius: 8px;
+  border-radius: 20px;
   padding: 24px 20px 0;
   display: flex;
   flex-direction: column;
   gap: 20px;
   height: 100%;
   overflow: hidden;
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    background: ${({ theme }) => theme.tableHeader};
+    border-radius: 0;
+  `}
 `
 
 const CampaignList = styled.div`
@@ -129,7 +128,7 @@ const CampaignList = styled.div`
   }
 `
 
-const CampaignItem = styled.div`
+const CampaignItem = styled.div<{ selected?: boolean }>`
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -137,9 +136,10 @@ const CampaignItem = styled.div`
   cursor: pointer;
   border-bottom: 1px solid ${({ theme }) => theme.border};
   position: relative;
+  background: ${({ theme, selected }) => (selected ? rgba(theme.primary, 0.2) : 'transparent')};
 
   &:hover {
-    background: ${({ theme }) => darken(0.03, theme.background)} !important;
+    background: ${({ theme }) => darken(0.01, theme.background)} !important;
   }
 `
 

@@ -14,10 +14,10 @@ import { ButtonPrimary } from '../Button'
 import { useActiveWeb3React } from 'hooks'
 import { useLocation } from 'react-router-dom'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
-import { isMobile } from 'react-device-detect'
 import { useModalOpen, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/actions'
 import { StyledActionButtonSwapForm } from 'components/swapv2/styleds'
+import { MouseoverTooltip } from 'components/Tooltip'
 
 const ButtonWrapper = styled.div`
   text-align: center;
@@ -33,14 +33,15 @@ const ButtonWrapper = styled.div`
     align-items: center;
     margin-bottom: 8px;
     &:hover {
-      background-color: ${({ theme }) => theme.bg12};
+      background-color: ${({ theme }) => theme.buttonBlack};
     }
   }
 `
 
 const InputWrapper = styled.div`
-  background-color: ${({ theme }) => theme.bg12};
+  background-color: ${({ theme }) => theme.buttonBlack};
   border-radius: 999px;
+  padding: 4px;
   display: flex;
   width: 100%;
   input {
@@ -94,7 +95,7 @@ export default function ShareModal({ url, onShared = () => null }: { url?: strin
   const { pathname } = useLocation()
 
   const modalTitle = pathname.startsWith('/swap')
-    ? t`Share this token with your friends!`
+    ? t`Share this with your friends!`
     : pathname.startsWith('/campaigns')
     ? t`Share this campaign with your friends!`
     : t`Share this pool with your friends!`
@@ -112,7 +113,7 @@ export default function ShareModal({ url, onShared = () => null }: { url?: strin
   }
 
   return (
-    <Modal isOpen={isOpen} onDismiss={toggle} minHeight={isMobile && 50}>
+    <Modal isOpen={isOpen} onDismiss={toggle}>
       <Flex flexDirection="column" alignItems="center" padding="25px" width="100%">
         <RowBetween>
           <Text fontSize={18} fontWeight={500}>
@@ -175,7 +176,7 @@ export default function ShareModal({ url, onShared = () => null }: { url?: strin
         <InputWrapper>
           <input type="text" value={shareUrl} />
           <CopyToClipboard text={shareUrl} onCopy={handleCopyClick}>
-            <ButtonPrimary fontSize={14} padding="12px" width="auto">
+            <ButtonPrimary fontSize={14} padding="8px 12px" width="auto">
               Copy Link
               <AlertMessage className={showAlert ? 'show' : ''}>Copied!</AlertMessage>
             </ButtonPrimary>
@@ -193,7 +194,9 @@ export function ShareButtonWithModal({ url, onShared }: { url?: string; onShared
   return (
     <>
       <StyledActionButtonSwapForm onClick={toggle}>
-        <Share2 size={16} color={theme.text} />
+        <MouseoverTooltip text={t`Share`} placement="top" width="fit-content">
+          <Share2 size={18} color={theme.subText} />
+        </MouseoverTooltip>
       </StyledActionButtonSwapForm>
       <ShareModal url={url} onShared={onShared} />
     </>

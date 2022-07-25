@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { TransactionResponse } from '@ethersproject/providers'
-import { ChainId, Currency, CurrencyAmount, Percent, WETH } from '@kyberswap/ks-sdk-core'
+import { Currency, CurrencyAmount, Percent, WETH } from '@kyberswap/ks-sdk-core'
 import { Flex, Text } from 'rebass'
 import { BigNumber } from '@ethersproject/bignumber'
 import { useMemo } from 'react'
@@ -43,6 +43,7 @@ import Copy from 'components/Copy'
 import { unwrappedToken } from 'utils/wrappedCurrency'
 import { ZERO } from '@kyberswap/ks-sdk-classic'
 import { VERSION } from 'constants/v2'
+import { TutorialType } from 'components/Tutorial'
 
 const MaxButton = styled(MaxBtn)`
   margin: 0;
@@ -347,15 +348,6 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
       </ButtonPrimary>
     )
   }
-  const showCollectAsWeth = Boolean(
-    liquidityValue0?.currency &&
-      liquidityValue1?.currency &&
-      (liquidityValue0.currency.isNative ||
-        liquidityValue1.currency.isNative ||
-        liquidityValue0.currency.wrapped.equals(WETH[liquidityValue0.currency.chainId as ChainId]) ||
-        liquidityValue1.currency.wrapped.equals(WETH[liquidityValue1.currency.chainId as ChainId])),
-  )
-
   const onCurrencyAInput = useCallback((typedValue: string): void => onUserInput(Field.CURRENCY_A, typedValue), [
     onUserInput,
   ])
@@ -394,6 +386,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
           action={LiquidityAction.REMOVE}
           hideShare
           tooltip={t`You can remove your liquidity here. When you remove liquidity (even partially), you will receive 100% of your fee earnings`}
+          tutorialType={TutorialType.ELASTIC_REMOVE_LIQUIDITY}
         />
         {owner && account && !ownsNFT ? (
           <Text
@@ -471,24 +464,12 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
                       showMaxButton={false}
                       currency={liquidityValue0?.currency}
                       onCurrencySelect={() => null}
-                      disableCurrencySelect={true}
                       id="remove-liquidity-tokena"
                       estimatedUsd={formattedNum(estimatedUsdCurrencyA.toString(), true) || undefined}
+                      disableCurrencySelect={!currency0IsETHER && !currency0IsWETH}
+                      isSwitchMode={currency0IsETHER || currency0IsWETH}
+                      onSwitchCurrency={() => setReceiveWETH(prev => !prev)}
                     />
-                    <Flex justifyContent="flex-end" alignItems="center" marginTop="0.5rem">
-                      {showCollectAsWeth && chainId && (currency0IsETHER || currency0IsWETH) && (
-                        <Text
-                          color={theme.primary}
-                          role="button"
-                          onClick={() => setReceiveWETH(prev => !prev)}
-                          fontSize={14}
-                          fontWeight="500"
-                          sx={{ cursor: 'pointer' }}
-                        >
-                          {!receiveWETH ? <Trans>Receive Wrapped Token</Trans> : <Trans>Receive Native Token</Trans>}
-                        </Text>
-                      )}
-                    </Flex>
                   </div>
 
                   <div>
@@ -498,24 +479,12 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
                       showMaxButton={false}
                       currency={liquidityValue1?.currency}
                       onCurrencySelect={() => null}
-                      disableCurrencySelect={true}
                       id="remove-liquidity-tokenb"
                       estimatedUsd={formattedNum(estimatedUsdCurrencyB.toString(), true) || undefined}
+                      disableCurrencySelect={!currency1IsETHER && !currency1IsWETH}
+                      isSwitchMode={currency1IsETHER || currency1IsWETH}
+                      onSwitchCurrency={() => setReceiveWETH(prev => !prev)}
                     />
-                    <Flex justifyContent="flex-end" alignItems="center" marginTop="0.5rem">
-                      {showCollectAsWeth && chainId && (currency1IsETHER || currency1IsWETH) && (
-                        <Text
-                          color={theme.primary}
-                          role="button"
-                          onClick={() => setReceiveWETH(prev => !prev)}
-                          fontSize={14}
-                          fontWeight="500"
-                          sx={{ cursor: 'pointer' }}
-                        >
-                          {!receiveWETH ? <Trans>Receive Wrapped Token</Trans> : <Trans>Receive Native Token</Trans>}
-                        </Text>
-                      )}
-                    </Flex>
                   </div>
                   <ButtonConfirmed
                     style={{ marginTop: '28px' }}

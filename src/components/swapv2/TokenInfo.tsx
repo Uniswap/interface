@@ -21,18 +21,17 @@ import { formatLongNumber } from 'utils/formatBalance'
 import { Flex } from 'rebass'
 const NOT_AVAIALBLE = '--'
 
-const Wrapper = styled.div<{ border?: boolean }>`
-  border: ${({ theme, border }) => (border ? `1px solid ${theme.border}` : 'none')};
+const Wrapper = styled.div`
   border-radius: 4px;
-  padding: ${({ border }) => (border ? '16px 20px 20px' : '16px 0px')};
   width: 100%;
 `
 
 const TabContainer = styled.div`
   display: flex;
   flex: 1;
-  border-radius: 20px;
-  background-color: ${({ theme }) => theme.buttonBlack};
+  border-radius: 999px;
+  background-color: ${({ theme }) => theme.tabBackgound};
+  padding: 2px;
 `
 
 const Tab = styled(ButtonEmpty)<{ isActive?: boolean; isLeft?: boolean }>`
@@ -40,11 +39,11 @@ const Tab = styled(ButtonEmpty)<{ isActive?: boolean; isLeft?: boolean }>`
   justify-content: center;
   align-items: center;
   flex: 1;
-  background-color: ${({ theme, isActive }) => (isActive ? theme.primary : theme.buttonBlack)};
-  padding: 8px;
-  font-size: 14px;
+  background-color: ${({ theme, isActive }) => (isActive ? theme.tabActive : theme.tabBackgound)};
+  padding: 4px;
+  font-size: 12px;
   font-weight: 500;
-  border-radius: 20px;
+  border-radius: 999px;
 
   &:hover {
     text-decoration: none;
@@ -55,33 +54,28 @@ const TabText = styled.div<{ isActive: boolean }>`
   display: flex;
   align-items: center;
   gap: 2px;
-  color: ${({ theme, isActive }) => (isActive ? theme.textReverse : theme.subText)};
+  color: ${({ theme, isActive }) => (isActive ? theme.text : theme.subText)};
   margin-left: 4px;
 `
 
 const InfoRow = styled(RowBetween)`
-  padding: 16px 0;
+  padding: 14px 0;
   border-bottom: 1px solid ${({ theme }) => theme.border};
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    padding: 12px 0
+  `}
 `
 
 const InfoRowLabel = styled.div`
   color: ${({ theme }) => theme.subText};
-  font-size: 14px;
-  font-weight: 500;
-
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    font-size: 12px;
-  `}
+  font-size: 12px;
 `
 
 const InfoRowValue = styled.div`
   color: ${({ theme }) => theme.text};
-  font-size: 14px;
-  font-weight: 400;
-
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    font-size: 12px;
-  `}
+  font-size: 12px;
+  font-weight: 500;
 `
 
 const PoweredByWrapper = styled.div`
@@ -113,16 +107,7 @@ const BackIconWrapper = styled(ArrowLeft)`
     stroke: ${({ theme }) => theme.text} !important;
   }
 `
-const TokenInfo = ({
-  currencies,
-  border = true,
-  onBack,
-}: {
-  currencies: { [field in Field]?: Currency }
-  border?: boolean
-  onBack?: () => void
-}) => {
-  // 2 style: border and no border
+const TokenInfo = ({ currencies, onBack }: { currencies: { [field in Field]?: Currency }; onBack?: () => void }) => {
   const { chainId } = useActiveWeb3React()
   const inputNativeCurrency = useCurrencyConvertedToNative(currencies[Field.INPUT])
   const outputNativeCurrency = useCurrencyConvertedToNative(currencies[Field.OUTPUT])
@@ -173,8 +158,8 @@ const TokenInfo = ({
 
   return (
     <>
-      <Wrapper border={border}>
-        <Flex justifyContent="space-between">
+      <Wrapper>
+        <Flex justifyContent="space-between" alignItems="center" marginBottom="4px">
           {onBack && (
             <Flex alignItems="center" marginRight={20}>
               <BackIconWrapper onClick={onBack}></BackIconWrapper>
@@ -206,7 +191,7 @@ const TokenInfo = ({
             <InfoRowLabel>
               <Trans>{item.label}</Trans>
             </InfoRowLabel>
-            <InfoRowValue>{loading ? <Loader /> : item.value}</InfoRowValue>
+            <InfoRowValue>{loading ? <Loader size="10px" /> : item.value}</InfoRowValue>
           </InfoRow>
         ))}
 

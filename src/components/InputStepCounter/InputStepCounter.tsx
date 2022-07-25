@@ -42,7 +42,7 @@ const SmallButton = styled(ButtonGray)`
 const FocusedOutlineCard = styled(OutlineCard)<{ active?: boolean; pulsing?: boolean }>`
   border-color: #00000000;
   padding: 12px;
-  border-radius: 8px;
+  border-radius: 16px;
   background-color: ${({ theme }) => theme.buttonBlack};
   animation: ${({ pulsing, theme }) => pulsing && pulse(theme.blue1)} 0.8s linear;
 `

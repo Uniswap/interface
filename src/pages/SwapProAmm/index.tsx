@@ -288,7 +288,7 @@ export default function SwapProAmm({ history }: RouteComponentProps) {
                     showCommonBases={true}
                     id="swap-currency-input"
                   />
-                  <ArrowWrapper clickable>
+                  <ArrowWrapper>
                     <ArrowDown
                       size="16"
                       onClick={() => {
@@ -314,7 +314,7 @@ export default function SwapProAmm({ history }: RouteComponentProps) {
                 {recipient !== null && !showWrap ? (
                   <>
                     <AutoRow justify="space-between" style={{ padding: '0 1rem' }}>
-                      <ArrowWrapper clickable={false}>
+                      <ArrowWrapper>
                         <ArrowDown size="16" color={theme.text2} />
                       </ArrowWrapper>
                       <LinkStyledButton id="remove-recipient-button" onClick={() => onChangeRecipient(null)}>

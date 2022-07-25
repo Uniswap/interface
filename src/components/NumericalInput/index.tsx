@@ -22,8 +22,7 @@ const StyledInput = styled.input<{ error?: boolean; fontSize?: string; align?: s
   padding: 0px;
   -webkit-appearance: textfield;
 
-  ${({ disabled, theme }) =>
-    disabled && `cursor: not-allowed; opacity: 1; -webkit-text-fill-color: ${theme.disableText}`};
+  ${({ disabled, theme }) => disabled && `cursor: not-allowed; opacity: 1; -webkit-text-fill-color: ${theme.border}`};
 
   ::-webkit-search-decoration {
     -webkit-appearance: none;

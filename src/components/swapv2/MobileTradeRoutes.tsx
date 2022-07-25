@@ -38,12 +38,7 @@ function MobileTradeRoutes({
               <X color={theme.text} />
             </ButtonText>
           </RowBetween>
-          <Routing
-            trade={trade}
-            currencies={currencies}
-            formattedAmounts={formattedAmounts}
-            backgroundColor={theme.background}
-          />
+          <Routing trade={trade} currencies={currencies} formattedAmounts={formattedAmounts} />
         </Flex>
       </MobileModalWrapper>
     </MobileView>

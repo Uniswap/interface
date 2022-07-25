@@ -12,7 +12,6 @@ import {
   TableHeader,
   ClickableText,
   StakedOnlyToggleWrapper,
-  StakedOnlyToggle,
   StakedOnlyToggleText,
   HeadingContainer,
   HeadingRight,
@@ -33,6 +32,7 @@ import useParsedQueryString from 'hooks/useParsedQueryString'
 import { ChainId } from '@kyberswap/ks-sdk-core'
 import { useActiveWeb3React } from 'hooks'
 import { useHistory, useLocation } from 'react-router-dom'
+import Toggle from 'components/Toggle'
 
 const YieldPools = ({ loading, active }: { loading: boolean; active?: boolean }) => {
   const theme = useTheme()
@@ -172,14 +172,13 @@ const YieldPools = ({ loading, active }: { loading: boolean; active?: boolean })
       <ConfirmHarvestingModal />
       <HeadingContainer>
         <StakedOnlyToggleWrapper>
-          <StakedOnlyToggle
-            className="staked-only-switch"
-            checked={stakedOnly[active ? 'active' : 'ended']}
-            onClick={() => setStakedOnly(prev => ({ ...prev, [activeTab]: !prev[activeTab] }))}
-          />
           <StakedOnlyToggleText>
             <Trans>Staked Only</Trans>
           </StakedOnlyToggleText>
+          <Toggle
+            isActive={stakedOnly[active ? 'active' : 'ended']}
+            toggle={() => setStakedOnly(prev => ({ ...prev, [activeTab]: !prev[activeTab] }))}
+          />
         </StakedOnlyToggleWrapper>
         <HeadingRight>
           <SearchContainer>
@@ -236,15 +235,15 @@ const YieldPools = ({ loading, active }: { loading: boolean; active?: boolean })
             <InfoHelper text={t`After harvesting, your rewards will unlock linearly over the indicated time period`} />
           </Flex>
 
-          <Flex grid-area="reward" alignItems="center" justifyContent="flex-end">
-            <ClickableText>
-              <Trans>My Rewards</Trans>
-            </ClickableText>
-          </Flex>
-
           <Flex grid-area="staked_balance" alignItems="center" justifyContent="flex-end">
             <ClickableText>
               <Trans>My Deposit</Trans>
+            </ClickableText>
+          </Flex>
+
+          <Flex grid-area="reward" alignItems="center" justifyContent="flex-end">
+            <ClickableText>
+              <Trans>My Rewards</Trans>
             </ClickableText>
           </Flex>
         </TableHeader>
@@ -259,7 +258,7 @@ const YieldPools = ({ loading, active }: { loading: boolean; active?: boolean })
           backgroundColor={theme.background}
           justifyContent="center"
           padding="32px"
-          style={{ borderBottomLeftRadius: '8px', borderBottomRightRadius: '8px' }}
+          style={{ borderBottomLeftRadius: '20px', borderBottomRightRadius: '20px' }}
         >
           <Text color={theme.subText}>
             {stakedOnly[activeTab] || debouncedSearchText ? (

@@ -14,7 +14,7 @@ const StyledPositionCard = styled.div`
   background: ${({ theme }) => theme.background};
   position: relative;
   overflow: hidden;
-  border-radius: 8px;
+  border-radius: 20px;
   padding: 28px 20px 16px;
   display: flex;
   gap: 1rem;
@@ -24,11 +24,11 @@ const StyledPositionCard = styled.div`
 export const Loading = styled.div`
   background: linear-gradient(
     90deg,
-    ${({ theme }) => theme.skeleton} 8%,
-    ${({ theme }) => theme.skeletonShine} 18%,
-    ${({ theme }) => theme.skeleton} 33%
+    ${({ theme }) => theme.tableHeader} 8%,
+    ${({ theme }) => theme.tableHeader} 18%,
+    ${({ theme }) => theme.tableHeader} 33%
   );
-  border-radius: 4px;
+  border-radius: 20px;
   background-size: 200% 100%;
   animation: 1.5s ${shine} linear infinite;
 `

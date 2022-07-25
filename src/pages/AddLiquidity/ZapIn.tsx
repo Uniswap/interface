@@ -450,6 +450,9 @@ const ZapIn = ({
                 onMax={() => {
                   onFieldInput(maxAmounts[independentField]?.toExact() ?? '')
                 }}
+                onHalf={() => {
+                  onFieldInput(currencyBalances[independentField]?.divide(2)?.toExact() ?? '')
+                }}
                 onSwitchCurrency={handleSwitchCurrency}
                 showMaxButton={true}
                 currency={currencies[independentField]}

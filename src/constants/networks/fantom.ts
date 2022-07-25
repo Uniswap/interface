@@ -59,6 +59,7 @@ const fantomInfo: NetworkInfo = {
   averageBlockTimeInSeconds: 1,
   coingeckoNetworkId: 'fantom',
   coingeckoNativeTokenId: 'fantom',
+  deBankSlug: 'ftm',
 }
 
 export default fantomInfo

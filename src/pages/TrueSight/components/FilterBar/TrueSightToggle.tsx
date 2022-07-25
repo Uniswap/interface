@@ -1,5 +1,5 @@
 import React from 'react'
-import FilterBarToggle, { ToggleProps } from 'components/Toggle/FilterBarToggle'
+import Toggle, { ToggleProps } from 'components/Toggle'
 import { Flex } from 'rebass'
 import { t, Trans } from '@lingui/macro'
 import useTheme from 'hooks/useTheme'
@@ -16,7 +16,7 @@ const TrueSightToggle = ({ isActive, toggle }: ToggleProps) => {
           <Trans>TrueSight</Trans>
         </TextTooltip>
       </MouseoverTooltip>
-      <FilterBarToggle isActive={isActive} toggle={toggle} style={{ marginLeft: '8px' }} />
+      <Toggle isActive={isActive} toggle={toggle} style={{ marginLeft: '8px' }} />
     </Flex>
   )
 }

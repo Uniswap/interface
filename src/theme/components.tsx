@@ -127,7 +127,6 @@ const StyledLink = styled.a`
 
   :focus {
     outline: none;
-    text-decoration: underline;
   }
 
   :active {

@@ -3,13 +3,13 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { TransactionResponse } from '@ethersproject/providers'
 import { CurrencyAmount, Fraction, TokenAmount, WETH, Currency } from '@kyberswap/ks-sdk-core'
 import JSBI from 'jsbi'
-import { Plus, AlertTriangle } from 'react-feather'
+import { AlertTriangle } from 'react-feather'
 import { Text, Flex } from 'rebass'
 import { ThemeContext } from 'styled-components'
 import { t, Trans } from '@lingui/macro'
 
 import { ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
-import { AutoColumn, ColumnCenter } from '../../components/Column'
+import { AutoColumn } from '../../components/Column'
 import TransactionConfirmationModal, {
   ConfirmationModalContent,
   TransactionErrorContent,
@@ -61,6 +61,8 @@ import {
 } from './styled'
 import { nativeOnChain } from 'constants/tokens'
 import { NETWORKS_INFO } from 'constants/networks'
+import { useHistory } from 'react-router-dom'
+
 import * as Sentry from '@sentry/react'
 const TokenPair = ({
   currencyIdA,
@@ -369,6 +371,7 @@ const TokenPair = ({
   const marketPrice = marketPrices[1] && marketPrices[0] / marketPrices[1]
 
   const showSanityPriceWarning = !!(poolPrice && marketPrice && Math.abs(poolPrice - marketPrice) / marketPrice > 0.05)
+  const history = useHistory()
 
   const modalHeader = () => {
     return (
@@ -459,40 +462,41 @@ const TokenPair = ({
                 onMax={() => {
                   onFieldAInput(maxAmounts[Field.CURRENCY_A]?.toExact() ?? '')
                 }}
+                onHalf={() => {
+                  onFieldAInput(currencyBalances[Field.CURRENCY_A]?.divide(2).toExact() ?? '')
+                }}
                 showMaxButton={true}
                 currency={currencies[Field.CURRENCY_A]}
                 id="add-liquidity-input-tokena"
-                disableCurrencySelect={true}
                 showCommonBases
                 positionMax="top"
                 estimatedUsd={formattedNum(estimatedUsdCurrencyA.toString(), true) || undefined}
+                disableCurrencySelect={!currencyAIsWETH && !currencyAIsETHER}
+                isSwitchMode={currencyAIsWETH || currencyAIsETHER}
+                onSwitchCurrency={() => {
+                  chainId &&
+                    history.replace(
+                      `/add/${
+                        currencyAIsETHER ? WETH[chainId].address : nativeOnChain(chainId).symbol
+                      }/${currencyIdB}/${pairAddress}`,
+                    )
+                }}
               />
               <Flex justifyContent="space-between" alignItems="center" marginTop="0.5rem">
                 <USDPrice>
                   {usdPrices[0] ? `1 ${nativeA?.symbol} = ${formattedNum(usdPrices[0].toString(), true)}` : <Loader />}
                 </USDPrice>
-
-                {pairAddress && chainId && (currencyAIsWETH || currencyAIsETHER) && (
-                  <StyledInternalLink
-                    replace
-                    to={`/add/${
-                      currencyAIsETHER ? WETH[chainId].address : nativeOnChain(chainId).symbol
-                    }/${currencyIdB}/${pairAddress}`}
-                  >
-                    {currencyAIsETHER ? <Trans>Use Wrapped Token</Trans> : <Trans>Use Native Token</Trans>}
-                  </StyledInternalLink>
-                )}
               </Flex>
             </div>
-            <ColumnCenter>
-              <Plus size="24" color={theme.text} />
-            </ColumnCenter>
             <div>
               <CurrencyInputPanel
                 value={formattedAmounts[Field.CURRENCY_B]}
                 onUserInput={onFieldBInput}
                 onMax={() => {
                   onFieldBInput(maxAmounts[Field.CURRENCY_B]?.toExact() ?? '')
+                }}
+                onHalf={() => {
+                  onFieldBInput(currencyBalances[Field.CURRENCY_B]?.divide(2)?.toExact() ?? '')
                 }}
                 showMaxButton={true}
                 currency={currencies[Field.CURRENCY_B]}
@@ -521,7 +525,7 @@ const TokenPair = ({
             </div>
 
             {currencies[independentField] && currencies[dependentField] && pairState !== PairState.INVALID && (
-              <Section padding="0" marginTop="8px" borderRadius={'20px'} style={{ marginTop: '8px' }}>
+              <Section padding="0" marginTop="8px" style={{ marginTop: '8px' }}>
                 <PoolPriceBar
                   currencies={currencies}
                   poolTokenPercentage={poolTokenPercentage}
@@ -535,7 +539,7 @@ const TokenPair = ({
 
           <SecondColumn>
             {currencies[independentField] && currencies[dependentField] && pairState !== PairState.INVALID && (
-              <Section borderRadius={'20px'} marginBottom="28px">
+              <Section borderRadius={'20px'} marginBottom="24px">
                 <ToggleComponent title={t`Pool Information`}>
                   <AutoRow padding="16px 0" style={{ borderBottom: `1px dashed ${theme.border}`, gap: '1rem' }}>
                     {!noLiquidity && (

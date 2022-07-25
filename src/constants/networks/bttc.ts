@@ -4,6 +4,7 @@ import { createClient } from 'utils/client'
 
 import BTT from 'assets/networks/bttc.png'
 
+const EMPTY = ''
 const EMPTY_ARRAY: any[] = []
 const NOT_SUPPORT = null
 
@@ -65,6 +66,7 @@ const bttcInfo: NetworkInfo = {
   averageBlockTimeInSeconds: 2, // TODO: check these info
   coingeckoNetworkId: 'tron',
   coingeckoNativeTokenId: 'bittorrent',
+  deBankSlug: EMPTY,
 }
 
 export default bttcInfo

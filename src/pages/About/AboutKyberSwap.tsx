@@ -37,7 +37,7 @@ import Loader from 'components/Loader'
 import ForTraderImage from 'assets/svg/for_trader.svg'
 import ForTraderImageLight from 'assets/svg/for_trader_light.svg'
 import KNCGraphic from 'assets/images/knc-graphic.png'
-import KNCBlack from 'assets/svg/knc_black.svg'
+import { ReactComponent as KNCSVG } from 'assets/svg/knc_black.svg'
 import SeamlessImg from 'assets/svg/seamless.svg'
 import { useMedia } from 'react-use'
 import { ExternalLink, StyledInternalLink } from 'theme'
@@ -72,7 +72,7 @@ import {
   Tabs,
   TabItem,
 } from './styleds'
-import { ButtonEmpty } from 'components/Button'
+import { ButtonEmpty, ButtonLight } from 'components/Button'
 import { FooterSocialLink } from 'components/Footer/Footer'
 import { dexListConfig } from 'constants/dexes'
 import { MAINNET_NETWORKS } from 'constants/networks'
@@ -80,6 +80,13 @@ import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import Banner from 'components/Banner'
 import AntiSnippingAttack from 'components/Icons/AntiSnippingAttack'
 import { VERSION } from 'constants/v2'
+import styled from 'styled-components'
+
+const KNCBlack = styled(KNCSVG)`
+  path {
+    fill: ${({ theme }) => theme.textReverse};
+  }
+`
 
 export const KSStatistic = () => {
   const theme = useTheme()
@@ -183,7 +190,7 @@ function AboutKyberSwap() {
         <Trans>Earn more due to compounding</Trans>
       </Text>
 
-      <Text color={theme.subText} marginTop="24px" textAlign={above500 ? 'start' : 'center'} lineHeight={1.5}>
+      <Text color={theme.text} marginTop="24px" textAlign={above500 ? 'start' : 'center'} lineHeight={1.5}>
         <Trans>
           We automatically reinvest your trading fee earnings by adding it back into the pool. And so you earn even more
           with less effort due to compounding.
@@ -218,7 +225,7 @@ function AboutKyberSwap() {
         <Text>
           <Trans>Amplified Liquidity Pools</Trans>
         </Text>
-        <Text color={theme.subText} textAlign={above500 ? 'start' : 'center'} lineHeight={1.5}>
+        <Text color={theme.text} textAlign={above500 ? 'start' : 'center'} lineHeight={1.5}>
           <Trans>
             We can amplify liquidity pools to provide much higher capital efficiency and better slippage for you.
             Deposit less tokens and still achieve better liquidity and volume.
@@ -281,7 +288,7 @@ function AboutKyberSwap() {
       <Text marginTop={['40px', '48px']}>
         <Trans>Dynamic Fees</Trans>
       </Text>
-      <Text color={theme.subText} marginTop="24px" textAlign={above500 ? 'start' : 'center'} lineHeight={1.5}>
+      <Text color={theme.text} marginTop="24px" textAlign={above500 ? 'start' : 'center'} lineHeight={1.5}>
         <Trans>We adjust trading fees dynamically based on market conditions to give you the best returns.</Trans>
       </Text>
 
@@ -310,7 +317,7 @@ function AboutKyberSwap() {
       <Text marginTop={['40px', '48px']}>
         <Trans>Rainmaker Yield Farming</Trans>
       </Text>
-      <Text color={theme.subText} marginTop="24px" textAlign={above500 ? 'start' : 'center'} lineHeight={1.5}>
+      <Text color={theme.text} marginTop="24px" textAlign={above500 ? 'start' : 'center'} lineHeight={1.5}>
         <Trans>
           Deposit your tokens and farm attractive rewards. We collaborate with projects to get you the best rewards.
         </Trans>
@@ -347,7 +354,7 @@ function AboutKyberSwap() {
         <Trans>Earn More with Concentrated Liquidity</Trans>
       </Text>
 
-      <Text color={theme.subText} marginTop="24px" textAlign={above500 ? 'start' : 'center'} lineHeight={1.5}>
+      <Text color={theme.text} marginTop="24px" textAlign={above500 ? 'start' : 'center'} lineHeight={1.5}>
         <Trans>
           As Liquidity Providers, you can now supply liquidity to a pool within a custom price range. This allows your
           liquidity to be used more efficiently. Consequently, you will earn more trading fees on your liquidity.
@@ -376,7 +383,7 @@ function AboutKyberSwap() {
         <Trans>PREVENT SNIPING ATTACKS</Trans>
       </Text>
 
-      <Text color={theme.subText} marginTop="24px" textAlign={above500 ? 'start' : 'center'} lineHeight={1.5}>
+      <Text color={theme.text} marginTop="24px" textAlign={above500 ? 'start' : 'center'} lineHeight={1.5}>
         <Trans>
           Sniping is where an attacker jumps in front of normal liquidity providers by adding and removing liquidity
           just before and right after a huge swap. To protect our liquidity providers, we have created an anti-sniping
@@ -413,13 +420,7 @@ function AboutKyberSwap() {
             </Trans>
           </Text>
 
-          <Text
-            color={theme.subText}
-            fontSize={['1rem', '1.25rem']}
-            marginTop={['40px', '48px']}
-            textAlign="center"
-            lineHeight={1.5}
-          >
+          <Text color={theme.text} fontSize="1rem" marginTop={['40px', '48px']} textAlign="center" lineHeight={1.5}>
             <Trans>
               KyberSwap is DeFi’s premier automated market maker, providing the best token prices for traders across
               multiple exchanges, and maximizing earnings for liquidity providers, in one decentralized platform.
@@ -448,22 +449,28 @@ function AboutKyberSwap() {
             marginTop={['40px', '48px']}
             sx={{ gap: above768 ? '24px' : '16px' }}
           >
-            <BtnPrimary onClick={() => mixpanelHandler(MIXPANEL_TYPE.ABOUT_SWAP_CLICKED)} as={Link} to="/swap">
-              <Repeat />
-              <Text fontSize={['16px', '20px']} marginLeft="8px">
+            <BtnPrimary
+              style={{ flex: 1 }}
+              onClick={() => mixpanelHandler(MIXPANEL_TYPE.ABOUT_SWAP_CLICKED)}
+              as={Link}
+              to="/swap?highlightBox=true"
+            >
+              <Repeat size={20} />
+              <Text fontSize="14px" marginLeft="8px">
                 <Trans>Swap Now</Trans>
               </Text>
             </BtnPrimary>
-            <BtnOutlined
+            <ButtonLight
               as={Link}
-              to={'/pools?tab=elastic'}
+              to={'/pools?tab=elastic&highlightAddLiquidityButton=true'}
               onClick={() => mixpanelHandler(MIXPANEL_TYPE.ABOUT_START_EARNING_CLICKED)}
+              style={{ flex: 1 }}
             >
-              <MoneyBag color={theme.btnOutline} />
-              <Text fontSize={['16px', '20px']} marginLeft="8px">
+              <MoneyBag color={theme.primary} size={20} />
+              <Text fontSize="14px" marginLeft="8px">
                 <Trans>Start Earning</Trans>
               </Text>
-            </BtnOutlined>
+            </ButtonLight>
           </Flex>
 
           <OverflowStatisticWrapper>
@@ -542,7 +549,7 @@ function AboutKyberSwap() {
                       </Text>
                       <Text color={theme.subText} marginTop="8px">
                         <Link
-                          to={`/${dataToShow.maxAPRAvailable.is_farm ? 'farms' : 'pools'}?networkId=${
+                          to={`/${dataToShow.maxAPRAvailable.is_farm ? 'farms' : 'pools'}?tab=classic&networkId=${
                             dataToShow.maxAPRAvailable.chain_id
                           }&search=${dataToShow.maxAPRAvailable.id}`}
                           style={{ textDecorationLine: 'none' }}
@@ -566,42 +573,6 @@ function AboutKyberSwap() {
             </Text>
           </OverflowStatisticWrapper>
 
-          <AboutKNC>
-            <img height="400px" src={KNCGraphic} alt="KNCGraphic" style={{ display: above768 ? 'block' : 'none' }} />
-            <Flex width="100%" alignSelf="center" flexDirection="column" height="max-content">
-              <Text fontSize={['16px', '20px']} fontWeight={500} color={theme.primary}>
-                <Trans>ABOUT KNC</Trans>
-              </Text>
-              <Text as="h2" marginTop="12px" fontSize={['28px', '36px']} fontWeight="500">
-                <Trans>Kyber Network Crystal (KNC)</Trans>
-              </Text>
-              <Text
-                fontSize="16px"
-                marginTop={['40px', '48px']}
-                color={theme.subText}
-                lineHeight="24px"
-                textAlign="justify"
-              >
-                <Trans>
-                  KNC is a utility and governance token, and an integral part of Kyber Network and its flagship product
-                  KyberSwap. It is the glue that connects different stakeholders in Kyber&apos;s ecosystem
-                </Trans>
-              </Text>
-              <img
-                width="75%"
-                src={KNCGraphic}
-                alt="KNCGraphic"
-                style={{ display: above768 ? 'none' : 'block', margin: 'auto', marginTop: '40px' }}
-              />
-              <BtnPrimary as={Link} to="/about/knc" margin="48px 0">
-                <img width="14px" src={KNCBlack} alt="KNCBlack" />
-                <Text fontSize={['14px', '16px']} marginLeft="8px">
-                  <Trans>Find out more</Trans>
-                </Text>
-              </BtnPrimary>
-            </Flex>
-          </AboutKNC>
-
           <ForTrader>
             <Flex flex={1} flexDirection="column" height="max-content">
               <Text fontSize={['16px', '20px']} fontWeight={500} color={theme.primary}>
@@ -613,7 +584,7 @@ function AboutKyberSwap() {
               <Text
                 fontSize="16px"
                 marginTop={['40px', '48px']}
-                color={theme.subText}
+                color={theme.text}
                 lineHeight="24px"
                 textAlign="justify"
               >
@@ -695,7 +666,7 @@ function AboutKyberSwap() {
             <Trans>Earn more with your crypto assets</Trans>
           </Text>
           <Text
-            color={theme.subText}
+            color={theme.text}
             margin="auto"
             marginTop={['40px', '48px']}
             fontSize="1rem"
@@ -751,35 +722,6 @@ function AboutKyberSwap() {
               </GridWrapper>
             ))}
 
-          {/* WAIT FOR PROMM RELEASE */}
-          {/* {above768 ? (
-            <Flex sx={{ gap: '24px' }} marginTop={['40px', '48px']} flexDirection="row">
-              <ConcentratedLiquidity width="392px" />
-              <Compounding width="392px" />
-              <PreventAttack width="392px" />
-            </Flex>
-          ) : (
-            <Swiper
-              slidesPerView={1}
-              freeMode={true}
-              pagination={{
-                clickable: true,
-              }}
-              modules={[FreeMode, Pagination]}
-              style={{ marginTop: '24px' }}
-            >
-              <SwiperSlide>
-                <ConcentratedLiquidity />
-              </SwiperSlide>
-              <SwiperSlide>
-                <Compounding />
-              </SwiperSlide>
-              <SwiperSlide>
-                <PreventAttack />
-              </SwiperSlide>
-            </Swiper>
-          )}*/}
-
           <Flex
             justifyContent="center"
             maxWidth="456px"
@@ -789,7 +731,11 @@ function AboutKyberSwap() {
           >
             <BtnPrimary
               as={Link}
-              to={activeTab === VERSION.ELASTIC ? '/pools?tab=elastic' : '/pools?tab=classic'}
+              to={
+                activeTab === VERSION.ELASTIC
+                  ? '/pools?tab=elastic&highlightAddLiquidityButton=true'
+                  : '/pools?tab=classic&highlightCreateButton=true'
+              }
               onClick={() => mixpanelHandler(MIXPANEL_TYPE.ABOUT_START_EARNING_CLICKED)}
             >
               <MoneyBag size={20} color={theme.textReverse} />
@@ -797,16 +743,19 @@ function AboutKyberSwap() {
                 <Trans>Start Earning</Trans>
               </Text>
             </BtnPrimary>
-            <BtnOutlined
+            <ButtonLight
               as={Link}
-              to={activeTab === VERSION.ELASTIC ? '/farms?farmType=elastic' : '/farms?farmType=classic'}
+              to={activeTab === VERSION.ELASTIC ? '/farms?tab=elastic' : '/farms?tab=classic'}
               onClick={() => mixpanelHandler(MIXPANEL_TYPE.ABOUT_VIEW_FARMS_CLICKED)}
+              style={{
+                flex: 1,
+              }}
             >
-              <FarmIcon size={20} color={theme.btnOutline} />
+              <FarmIcon size={20} />
               <Text fontSize="16px" marginLeft="8px">
                 <Trans>View Farms</Trans>
               </Text>
-            </BtnOutlined>
+            </ButtonLight>
           </Flex>
 
           <Flex
@@ -823,15 +772,15 @@ function AboutKyberSwap() {
                 <Trans>For everyone</Trans>
               </Text>
 
-              <Text color={theme.subText} marginTop={['40px', '48px']} lineHeight={1.5}>
+              <Text color={theme.text} marginTop={['40px', '48px']} lineHeight={1.5}>
                 <Trans>Anyone can provide liquidity to KyberSwap by depositing tokens e.g. Traders, Token Teams.</Trans>
               </Text>
-              <Text color={theme.subText} marginTop="24px" lineHeight={1.5}>
+              <Text color={theme.text} marginTop="24px" lineHeight={1.5}>
                 <Trans>
                   Anyone can access this liquidity from KyberSwap for their own use case e.g. Dapps, Aggregators.
                 </Trans>
               </Text>
-              <Text color={theme.subText} marginTop="24px" lineHeight={1.5}>
+              <Text color={theme.text} marginTop="24px" lineHeight={1.5}>
                 <Trans>
                   Thousands of users and multiple decentralized applications are already providing and using our
                   liquidity.
@@ -866,28 +815,29 @@ function AboutKyberSwap() {
             sx={{ gap: '24px' }}
             marginTop={['40px', '48px']}
             flexDirection={above768 ? 'row' : 'column'}
-            maxWidth="696px"
+            maxWidth="756px"
           >
             <BtnPrimary
               as={Link}
               to={'/pools?tab=elastic&highlightCreateButton=true'}
               onClick={() => mixpanelHandler(MIXPANEL_TYPE.ABOUT_CREATE_NEW_POOL_CLICKED)}
+              style={{ flex: 1 }}
             >
               <Plus size={20} />
               <Text marginLeft="8px" fontSize={['14px', '16px']}>
                 <Trans>Create New Pool</Trans>
               </Text>
             </BtnPrimary>
-            <Flex sx={{ gap: above768 ? '24px' : '16px' }} maxWidth="456px">
-              <BtnOutlined as={ExternalLink} href="https://forms.gle/gLiNsi7iUzHws2BY8">
-                <Edit color={theme.btnOutline} size={20} />
+            <Flex sx={{ flex: 2, gap: above768 ? '24px' : '16px' }}>
+              <ButtonLight style={{ flex: 1 }} as={ExternalLink} href="https://forms.gle/gLiNsi7iUzHws2BY8">
+                <Edit color={theme.primary} size={20} />
                 <Text marginLeft="8px" fontSize={['14px', '16px']}>
                   <Trans>Contact Us</Trans>
                 </Text>
-              </BtnOutlined>
+              </ButtonLight>
 
-              <BtnOutlined as={ExternalLink} href="https://docs.kyberswap.com/">
-                <FileText color={theme.btnOutline} size={20} />
+              <BtnOutlined style={{ flex: 1 }} as={ExternalLink} href="https://docs.kyberswap.com/">
+                <FileText color={theme.subText} size={20} />
                 <Text marginLeft="8px" fontSize={['14px', '16px']}>
                   <Trans>Docs</Trans>
                 </Text>
@@ -989,6 +939,42 @@ function AboutKyberSwap() {
             </Flex>
           </Flex>
 
+          <AboutKNC>
+            <img height="400px" src={KNCGraphic} alt="KNCGraphic" style={{ display: above768 ? 'block' : 'none' }} />
+            <Flex width="100%" alignSelf="center" flexDirection="column" height="max-content">
+              <Text fontSize={['16px', '20px']} fontWeight={500} color={theme.primary}>
+                <Trans>ABOUT KNC</Trans>
+              </Text>
+              <Text as="h2" marginTop="12px" fontSize={['28px', '36px']} fontWeight="500">
+                <Trans>Kyber Network Crystal (KNC)</Trans>
+              </Text>
+              <Text
+                fontSize="16px"
+                marginTop={['40px', '48px']}
+                color={theme.subText}
+                lineHeight="24px"
+                textAlign="justify"
+              >
+                <Trans>
+                  KNC is a utility and governance token, and an integral part of Kyber Network and its flagship product
+                  KyberSwap. It is the glue that connects different stakeholders in Kyber&apos;s ecosystem
+                </Trans>
+              </Text>
+              <img
+                width="75%"
+                src={KNCGraphic}
+                alt="KNCGraphic"
+                style={{ display: above768 ? 'none' : 'block', margin: 'auto', marginTop: '40px' }}
+              />
+              <BtnPrimary as={Link} to="/about/knc" margin="48px 0">
+                <KNCBlack />
+                <Text fontSize={['14px', '16px']} marginLeft="8px">
+                  <Trans>Find out more</Trans>
+                </Text>
+              </BtnPrimary>
+            </Flex>
+          </AboutKNC>
+
           <Text as="h2" marginTop={['100px', '160px']} fontSize={['28px', '36px']} fontWeight="500" textAlign="center">
             <Trans>Powered by</Trans>
 
@@ -1023,7 +1009,6 @@ function AboutKyberSwap() {
               />
               <VelasLogoFull color={isDarkMode ? undefined : 'black'} />
               <AuroraFull />
-              <div />
               <OasisLogoFull />
               <img
                 src={require(`../../assets/images/btt-logo${isDarkMode ? '-dark' : ''}.svg`)}

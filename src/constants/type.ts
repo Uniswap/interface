@@ -60,4 +60,5 @@ export type NetworkInfo = {
   readonly averageBlockTimeInSeconds: number
   readonly coingeckoNetworkId: string //https://api.coingecko.com/api/v3/asset_platforms
   readonly coingeckoNativeTokenId: string //https://api.coingecko.com/api/v3/coins/list
+  readonly deBankSlug: string
 }

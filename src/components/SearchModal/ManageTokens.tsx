@@ -13,6 +13,7 @@ import { getEtherscanLink, isAddress } from 'utils'
 import { useActiveWeb3React } from 'hooks'
 import Card from 'components/Card'
 import ImportRow from './ImportRow'
+import { Text } from 'rebass'
 import useTheme from '../../hooks/useTheme'
 
 import { CurrencyModalView } from './CurrencySearchModal'
@@ -143,9 +144,9 @@ export default function ManageTokens({
         </PaddedColumn>
       </Column>
       <Footer>
-        <TYPE.darkGray>
+        <Text color={theme.subText}>
           <Trans>Tip: Custom tokens are stored locally in your browser</Trans>
-        </TYPE.darkGray>
+        </Text>
       </Footer>
     </Wrapper>
   )

@@ -95,7 +95,7 @@ const ArrowLocatorLoading = React.forwardRef<any, any>((props, ref) => {
 ArrowLocatorLoading.displayName = 'ArrowLocatorLoading'
 
 const StyledArrowLocatorLoading = styled(ArrowLocatorLoading)<{ enable_click_to_refresh: number }>`
-  color: ${({ theme }) => theme.text};
+  color: ${({ theme }) => theme.subText};
   .background-path {
     fill: ${({ theme }) => theme.disableText};
   }

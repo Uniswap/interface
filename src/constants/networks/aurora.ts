@@ -59,6 +59,7 @@ const auroraInfo: NetworkInfo = {
   averageBlockTimeInSeconds: 1,
   coingeckoNetworkId: 'aurora',
   coingeckoNativeTokenId: 'ethereum',
+  deBankSlug: 'aurora',
 }
 
 export default auroraInfo

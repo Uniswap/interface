@@ -4,7 +4,6 @@ import { TrueSightChartCategory, TrueSightTimeframe } from 'pages/TrueSight/inde
 import { Trans } from '@lingui/macro'
 import LineChart from 'components/LiveChart/LineChart'
 import styled from 'styled-components'
-import { rgba } from 'polished'
 import useTheme from 'hooks/useTheme'
 import { FormattedCoinGeckoChartData } from 'pages/TrueSight/hooks/useGetCoinGeckoChartData'
 import { formattedNumLong } from 'utils'
@@ -78,20 +77,20 @@ const Chart = ({
                 <Trans>Price</Trans>
               </ChartDataTypeItem>
             </ChartDataTypeContainer>
-            <ChartTimeframeContainer>
-              <ChartTimeframeItem
+            <ChartDataTypeContainer>
+              <ChartDataTypeItem
                 isActive={chartTimeframe === TrueSightTimeframe.ONE_DAY}
                 onClick={() => setChartTimeframe(TrueSightTimeframe.ONE_DAY)}
               >
                 <Trans>1D</Trans>
-              </ChartTimeframeItem>
-              <ChartTimeframeItem
+              </ChartDataTypeItem>
+              <ChartDataTypeItem
                 isActive={chartTimeframe === TrueSightTimeframe.ONE_WEEK}
                 onClick={() => setChartTimeframe(TrueSightTimeframe.ONE_WEEK)}
               >
                 <Trans>7D</Trans>
-              </ChartTimeframeItem>
-            </ChartTimeframeContainer>
+              </ChartDataTypeItem>
+            </ChartDataTypeContainer>
           </Flex>
           <MainValue>{mainValue}</MainValue>
           <SubValue up={typeof subValueNumber === 'number' && subValueNumber >= 0}>
@@ -105,9 +104,9 @@ const Chart = ({
               timeFrame={
                 chartTimeframe === TrueSightTimeframe.ONE_DAY ? LiveDataTimeframeEnum.DAY : LiveDataTimeframeEnum.WEEK
               }
-              minHeight={0}
               showYAsis
               unitYAsis="$"
+              minHeight={0}
             />
           </div>
         </>
@@ -122,8 +121,8 @@ const ChartContainer = styled.div`
   flex: 1;
   width: 100%;
   height: 100%;
-  background: ${({ theme }) => rgba(theme.buttonBlack, 0.4)};
-  border-radius: 8px;
+  background: ${({ theme }) => theme.buttonBlack};
+  border-radius: 20px;
   padding: 16px;
   display: flex;
   flex-direction: column;
@@ -152,32 +151,17 @@ const SubValue = styled.div<{ up?: boolean }>`
 
 const ChartDataTypeContainer = styled.div`
   display: flex;
-  border-radius: 14px;
-  background: ${({ theme }) => theme.buttonBlack};
-  background: ${({ theme }) => theme.buttonBlack};
+  border-radius: 999px;
+  padding: 2px;
+  background: ${({ theme }) => theme.tabBackgound};
 `
 
 const ChartDataTypeItem = styled.div<{ isActive?: boolean }>`
-  padding: 7px 12px;
+  padding: 4px 12px;
   border-radius: 14px;
-  background: ${({ theme, isActive }) => (isActive ? theme.primary : theme.buttonBlack)};
-  color: ${({ theme, isActive }) => (isActive ? theme.text14 : theme.subText)};
+  background: ${({ theme, isActive }) => (isActive ? theme.tabActive : theme.tabBackgound)};
+  color: ${({ theme, isActive }) => (isActive ? theme.text : theme.subText)};
   font-size: 12px;
   font-weight: 500;
-  cursor: pointer;
-`
-
-const ChartTimeframeContainer = styled.div`
-  display: flex;
-  gap: 4px;
-`
-
-const ChartTimeframeItem = styled.div<{ isActive?: boolean }>`
-  padding: 7px 6px;
-  background: ${({ theme, isActive }) => (isActive ? theme.primary : theme.buttonBlack)};
-  color: ${({ theme, isActive }) => (isActive ? theme.text14 : theme.subText)};
-  font-size: 12px;
-  font-weight: 500;
-  border-radius: 4px;
   cursor: pointer;
 `

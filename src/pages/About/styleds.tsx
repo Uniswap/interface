@@ -43,12 +43,12 @@ export const SupportedChain = styled.div`
 
   gap: 20px;
   margin: auto;
-  margin-top: 24px;
+  margin-top: 32px;
 `
 
 export const BtnOutlined = styled(ButtonOutlined)`
   width: 216px;
-  padding: 14px;
+  padding: 12px;
   flex: 1;
   border-radius: 32px;
 
@@ -59,7 +59,7 @@ export const BtnOutlined = styled(ButtonOutlined)`
 
 export const BtnPrimary = styled(ButtonPrimary)`
   width: 216px;
-  padding: 12px;
+  padding: 10px 12px;
   flex: 1;
   border-radius: 32px;
   ${({ theme }) => theme.mediaWidth.upToSmall`
@@ -88,7 +88,7 @@ export const StatisticWrapper = styled.div`
 `
 
 export const StatisticItem = styled.div`
-  background-color: ${({ theme }) => theme.bg20};
+  background-color: ${({ theme }) => theme.background2};
   flex: 1;
   border-radius: 8px;
   text-align: center;
@@ -109,7 +109,7 @@ export const ForTrader = styled.div`
 
 export const ForTraderInfo = styled(Flex)`
   margin-top: 20px;
-  background-color: ${({ theme }) => theme.bg20};
+  background-color: ${({ theme }) => theme.background2};
   padding: 20px 0;
   display: flex;
   gap: 24px;
@@ -154,9 +154,9 @@ export const ForTraderDivider = styled.div<{ horizontal?: boolean }>`
 
 export const ForLiquidityProviderItem = styled(Flex)`
   padding: 48px;
-  border-radius: 8px;
+  border-radius: 20px;
   width: 100%;
-  background-color: ${({ theme }) => theme.bg20};
+  background-color: ${({ theme }) => theme.background2};
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
     padding: 32px;
@@ -221,7 +221,7 @@ export const FooterContainer = styled.div`
 
 export const Powered = styled.div`
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(6, minmax(0, 1fr));
   margin-top: 48px;
   gap: 52px;
   align-items: center;
@@ -296,18 +296,18 @@ export const AboutKNC = styled.div`
   `}
 `
 
-export const ExchangeWrapper = styled.div<{ background: string }>`
+export const ExchangeWrapper = styled.div`
   margin: 28px 0px;
   height: 152px;
-  background: ${({ background }) => background};
+  background: ${({ theme }) => theme.background2};
   display: flex;
   border-radius: 8px;
 `
 
-export const MoreInfoWrapper = styled.div<{ background: string }>`
+export const MoreInfoWrapper = styled.div`
   display: flex;
-  border-radius: 8px;
-  background: ${({ background }) => background};
+  border-radius: 20px;
+  background: ${({ theme }) => theme.background2};
   width: 100%;
   padding: 64px;
   margin-top: 100px;

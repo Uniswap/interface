@@ -29,19 +29,21 @@ import ShareModal from 'components/ShareModal'
 import { useModalOpen, useOpenModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/actions'
 import ListItem from 'components/PoolList/ListItem'
+import useTheme from 'hooks/useTheme'
+import { STABLE_COINS_ADDRESS } from 'constants/tokens'
 
 const TableHeader = styled.div`
   display: grid;
   grid-gap: 1.5rem;
   grid-template-columns: 1.5fr 1.5fr 2fr 0.75fr 1fr 1fr 1fr 1.5fr;
-  padding: 18px 16px;
+  padding: 16px 20px;
   font-size: 12px;
   align-items: center;
   height: fit-content;
   position: relative;
   background-color: ${({ theme }) => theme.tableHeader};
-  border-top-left-radius: 8px;
-  border-top-right-radius: 8px;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
   z-index: 1;
   border-bottom: ${({ theme }) => `1px solid ${theme.border}`};
   text-align: right;
@@ -51,6 +53,7 @@ interface PoolListProps {
   currencies: { [field in Field]?: Currency }
   searchValue: string
   isShowOnlyActiveFarmPools: boolean
+  onlyShowStable: boolean
 }
 
 const SORT_FIELD = {
@@ -60,9 +63,9 @@ const SORT_FIELD = {
   APR: 3,
 }
 
-const ITEM_PER_PAGE = 5
+const ITEM_PER_PAGE = 8
 
-const PoolList = ({ currencies, searchValue, isShowOnlyActiveFarmPools }: PoolListProps) => {
+const PoolList = ({ currencies, searchValue, isShowOnlyActiveFarmPools, onlyShowStable }: PoolListProps) => {
   const above1000 = useMedia('(min-width: 1000px)')
 
   const [sortDirection, setSortDirection] = useState(true)
@@ -271,13 +274,31 @@ const PoolList = ({ currencies, searchValue, isShowOnlyActiveFarmPools }: PoolLi
       )
     })
 
+    if (onlyShowStable) {
+      const stableList = chainId ? STABLE_COINS_ADDRESS[chainId]?.map(item => item.toLowerCase()) || [] : []
+      res = res.filter(poolData => {
+        return (
+          stableList.includes(poolData.token0.id.toLowerCase()) && stableList.includes(poolData.token1.id.toLowerCase())
+        )
+      })
+    }
+
     return res
-  }, [subgraphPoolsData, listComparator, currencies, searchValue, isShowOnlyActiveFarmPools, farms])
+  }, [
+    chainId,
+    onlyShowStable,
+    subgraphPoolsData,
+    listComparator,
+    currencies,
+    searchValue,
+    isShowOnlyActiveFarmPools,
+    farms,
+  ])
 
   const [currentPage, setCurrentPage] = useState(1)
   useEffect(() => {
     setCurrentPage(1)
-  }, [subgraphPoolsData, currencies, searchValue, isShowOnlyActiveFarmPools])
+  }, [subgraphPoolsData, currencies, searchValue, isShowOnlyActiveFarmPools, onlyShowStable])
 
   const sortedFilteredSubgraphPoolsObject = useMemo(() => {
     const res = new Map<string, SubgraphPoolData[]>()
@@ -336,6 +357,8 @@ const PoolList = ({ currencies, searchValue, isShowOnlyActiveFarmPools }: PoolLi
     }
   }, [isShareModalOpen, setSharedPoolId])
 
+  const theme = useTheme()
+
   if (loadingUserLiquidityPositions || loadingPoolsData) return <LocalLoader />
 
   if (sortedFilteredPaginatedSubgraphPoolsList.length === 0)
@@ -351,7 +374,13 @@ const PoolList = ({ currencies, searchValue, isShowOnlyActiveFarmPools }: PoolLi
     )
 
   return (
-    <div>
+    <div
+      style={{
+        background: above1000 ? theme.background : 'transparent',
+        borderRadius: above1000 ? '20px' : 0,
+        overflow: 'hidden',
+      }}
+    >
       {renderHeader()}
       {sortedFilteredPaginatedSubgraphPoolsList.map(poolData => {
         if (poolData) {
@@ -383,6 +412,7 @@ const PoolList = ({ currencies, searchValue, isShowOnlyActiveFarmPools }: PoolLi
         onPageChange={newPage => setCurrentPage(newPage)}
         currentPage={currentPage}
         totalCount={sortedFilteredSubgraphPoolsObject.size}
+        haveBg={above1000}
       />
       <PoolDetailModal />
       <ShareModal url={shareUrl} />

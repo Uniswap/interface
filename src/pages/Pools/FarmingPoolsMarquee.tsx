@@ -6,7 +6,6 @@ import { ChainId, Token, WETH } from '@kyberswap/ks-sdk-core'
 import { Text } from 'rebass'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { MouseoverTooltip } from 'components/Tooltip'
-import DropIcon from 'components/Icons/DropIcon'
 import { Link } from 'react-router-dom'
 import { useActiveWeb3React } from 'hooks'
 import { useActiveAndUniqueFarmsData } from 'state/farms/hooks'
@@ -18,9 +17,25 @@ import { useToken } from 'hooks/Tokens'
 import useMarquee from 'hooks/useMarquee'
 import { FadeInAnimation } from 'components/Animation'
 import { VERSION } from 'constants/v2'
+import AgriCulture from 'components/Icons/AgriCulture'
+
+const StyledLink = styled(Link)`
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  padding-right: 12px;
+  background: ${({ theme }) => theme.buttonBlack};
+
+  min-width: fit-content;
+  color: ${({ theme }) => theme.subText};
+  text-decoration: none;
+
+  :not(:last-child) {
+    border-right: 1px solid ${({ theme }) => theme.border};
+  }
+`
 
 const MarqueeItem = ({ token0: address0, token1: address1 }: { token0: string; token1: string }) => {
-  const theme = useTheme()
   const { chainId } = useActiveWeb3React()
 
   const token0 = useToken(address0) as Token
@@ -42,26 +57,13 @@ const MarqueeItem = ({ token0: address0, token1: address1 }: { token0: string; t
   const tab = (qs.tab as string) || VERSION.ELASTIC
 
   return (
-    <Link
-      style={{
-        display: 'flex',
-        gap: '4px',
-        alignItems: 'center',
-        padding: '8px',
-        background: theme.buttonBlack,
-        borderRadius: '5px',
-        minWidth: 'fit-content',
-        color: theme.text,
-        textDecoration: 'none',
-      }}
-      to={`/pools/${token0Address}/${token1Address}?tab=${tab}`}
-    >
+    <StyledLink to={`/pools/${token0Address}/${token1Address}?tab=${tab}`}>
       <CurrencyLogo currency={token0} size="16px" />
-      <Text fontSize="12px">{token0.symbol}</Text>
-      <Text fontSize="12px">|</Text>
-      <Text fontSize="12px">{token1.symbol ?? '--'}</Text>
+      <Text fontSize="12px">
+        {token0.symbol} - {token1.symbol}
+      </Text>
       <CurrencyLogo currency={token1} size="16px" />
-    </Link>
+    </StyledLink>
   )
 }
 
@@ -69,6 +71,7 @@ const FarmingPoolsMarquee = ({ tab }: { tab: string }) => {
   const { data: uniqueAndActiveFarms } = useActiveAndUniqueFarmsData()
 
   const farms = useProMMFarmsFetchOnlyOne()
+  const theme = useTheme()
 
   const existedPairs: { [key: string]: boolean } = {}
   const activePrommFarm = Object.values(farms)
@@ -95,13 +98,16 @@ const FarmingPoolsMarquee = ({ tab }: { tab: string }) => {
   return (
     <FadeInAnimation>
       <Container>
-        <div style={{ position: 'absolute', top: 0, left: 0, zIndex: 2 }}>
-          <MouseoverTooltip text="Available for yield farming">
-            <DropIcon />
-          </MouseoverTooltip>
-        </div>
         <Title>
-          <Trans>Farming Pools</Trans>
+          <MouseoverTooltip text="Available for yield farming">
+            <IconWrapper>
+              <AgriCulture width={14} height={14} color={theme.textReverse} />
+            </IconWrapper>
+          </MouseoverTooltip>
+
+          <TitleText>
+            <Trans>Farming Pools</Trans>
+          </TitleText>
         </Title>
         <MarqueeSection>
           <MarqueeWrapper ref={increaseRef}>
@@ -127,26 +133,43 @@ const FarmingPoolsMarquee = ({ tab }: { tab: string }) => {
 
 export default FarmingPoolsMarquee
 
+const IconWrapper = styled.div`
+  border-radius: 50%;
+  background: ${({ theme }) => theme.apr};
+  width: 20px;
+  height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`
+
 const Container = styled.div`
   overflow: hidden;
   display: flex;
   gap: 16px;
-  padding: 16px 24px;
+  padding: 6px 6px 6px 12px;
   background: ${({ theme }) => theme.background};
-  border-radius: 5px;
+  border-radius: 999px;
   align-items: center;
   position: relative;
 
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    padding: 16px;
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    background: ${({ theme }) => theme.buttonBlack};
+    padding: 0;
   `}
 `
 
 const Title = styled.div`
-  font-size: 16px;
+  font-size: 14px;
   min-width: max-content;
+  display: flex;
+  align-items: center;
+  color: ${({ theme }) => theme.subText};
+  gap: 4px;
+`
 
-  ${({ theme }) => theme.mediaWidth.upToMedium`
+const TitleText = styled.span`
+  ${({ theme }) => theme.mediaWidth.upToSmall`
     display: none;
   `}
 `
@@ -157,6 +180,13 @@ const MarqueeSection = styled.div`
   grid-template-columns: auto 1fr auto;
   overflow: hidden;
   z-index: 1;
+  background: ${({ theme }) => theme.buttonBlack};
+  border-radius: 999px;
+  padding: 6px 12px;
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    padding: 6px 0;
+  `}
 `
 
 const MarqueeWrapper = styled.div`
@@ -172,5 +202,5 @@ const Marquee = styled.div`
   min-width: fit-content;
   overflow: hidden;
   display: flex;
-  gap: 8px;
+  gap: 12px;
 `

@@ -155,7 +155,7 @@ export default function SwapModalFooter({
           }}
           id="confirm-swap-or-send"
         >
-          <Text fontSize={20} fontWeight={500}>
+          <Text fontSize={16} fontWeight={500}>
             {t`Confirm Swap`}
           </Text>
         </ButtonError>

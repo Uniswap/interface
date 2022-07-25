@@ -24,7 +24,6 @@ import DiscoverIcon from 'components/Icons/DiscoverIcon'
 import Faucet from 'components/Icons/Faucet'
 import AboutPageDropwdown from './AboutPageDropDown'
 import {
-  Award,
   BookOpen,
   Edit,
   FileText,
@@ -46,7 +45,7 @@ const sharedStylesMenuItem = css`
   font-weight: 500;
   white-space: nowrap;
   align-items: center;
-  color: ${({ theme }) => theme.text2};
+  color: ${({ theme }) => theme.subText};
 
   :hover {
     color: ${({ theme }) => theme.text};
@@ -156,9 +155,7 @@ export default function Menu() {
 
   const under1440 = useMedia('(max-width: 1440px)')
   const above1321 = useMedia('(min-width: 1321px)')
-  const above1100 = useMedia('(min-width: 1100px)')
   const above768 = useMedia('(min-width: 768px)')
-  const above369 = useMedia('(min-width: 369px)')
 
   const getBridgeLink = () => {
     if (!chainId) return ''
@@ -232,22 +229,10 @@ export default function Menu() {
           </NavMenuItem>
         )}
 
-        {!above369 && (
+        {!above768 && (
           <NavMenuItem to="/farms" onClick={toggle}>
             <MoneyBag size={16} />
             <Trans>Farm</Trans>
-          </NavMenuItem>
-        )}
-
-        {!above1321 && (
-          <NavMenuItem to="/campaigns" onClick={toggle}>
-            <Award size={14} />
-            <Text width="max-content">
-              <Trans>Campaigns</Trans>
-            </Text>
-            <NewLabel>
-              <Trans>New</Trans>
-            </NewLabel>
           </NavMenuItem>
         )}
 
@@ -257,7 +242,7 @@ export default function Menu() {
           <UserPlus size={14} />
           <Trans>Referral</Trans>
         </NavMenuItem>
-        {!above1100 && (
+        {!above1321 && (
           <MenuItem id="link" href={DMM_ANALYTICS_URL[chainId as ChainId]}>
             <PieChart size={14} />
             <Trans>Analytics</Trans>

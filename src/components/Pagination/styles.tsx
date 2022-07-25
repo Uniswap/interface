@@ -17,6 +17,7 @@ export const PaginationItem = styled.li<{ $disabled?: boolean; $selected?: boole
   justify-content: center;
   align-items: center;
   min-width: 36px;
+  font-size: 12px;
   color: ${({ theme, $selected }) => ($selected ? theme.primary : theme.subText)};
 
   ${({ $disabled }) =>
@@ -33,7 +34,7 @@ export const PaginationItem = styled.li<{ $disabled?: boolean; $selected?: boole
   `}
 `
 
-export const PaginationButton = styled.div<{ active?: boolean }>`
+export const PaginationButton = styled.div<{ active?: boolean, haveBg?: boolean }>`
   height: 36px;
   min-width: 36px;
   width: fit-content;
@@ -45,5 +46,14 @@ export const PaginationButton = styled.div<{ active?: boolean }>`
   border-radius: 50%;
 
   color: ${({ theme, active }) => (active ? theme.primary : theme.subText)};
-  background: ${({ theme, active }) => (active ? theme.buttonBlack : rgba(theme.buttonBlack, 0.4))};
+  background: ${({ theme, active, haveBg }) =>
+    !haveBg
+      ? active
+        ? theme.background
+        : rgba(theme.background, 0.4)
+      : active
+      ? theme.buttonBlack
+      : rgba(theme.buttonBlack, 0.4)};
+  padding: 0;
+  border-radius: 50%;
 `

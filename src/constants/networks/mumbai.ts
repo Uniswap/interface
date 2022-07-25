@@ -58,6 +58,7 @@ const mumbaiInfo: NetworkInfo = {
   averageBlockTimeInSeconds: 2.6,
   coingeckoNetworkId: EMPTY,
   coingeckoNativeTokenId: EMPTY,
+  deBankSlug: EMPTY,
 }
 
 export default mumbaiInfo

@@ -13,7 +13,7 @@ import { Trans, t } from '@lingui/macro'
 import { unwrappedToken } from 'utils/wrappedCurrency'
 import { BigNumber } from '@ethersproject/bignumber'
 import { useProAmmPositionFees } from 'hooks/useProAmmPositionFees'
-import { ButtonCollect } from 'components/Button'
+import { ButtonLight } from 'components/Button'
 import { useActiveWeb3React } from 'hooks'
 import { useProAmmNFTPositionManagerContract } from 'hooks/useContract'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
@@ -211,26 +211,26 @@ export default function ProAmmFee({
                 placement="top"
                 text={farmAvailable ? t`You need to withdraw your liquidity from the farms first` : ''}
               >
-                <ButtonCollect
+                <ButtonLight
                   style={{
                     padding: '10px',
                     fontSize: '14px',
                     cursor: 'not-allowed',
                     background: theme.buttonGray,
-                    color: theme.subText,
+                    color: theme.border,
                   }}
                 >
-                  <Flex alignItems="center" sx={{ gap: '4px' }}>
+                  <Flex alignItems="center" sx={{ gap: '8px' }}>
+                    <Info size={16} />
                     <Trans>Collect Fees</Trans>
-                    <Info size={14} />
                   </Flex>
-                </ButtonCollect>
+                </ButtonLight>
               </MouseoverTooltip>
             ) : (
-              <ButtonCollect disabled={disabledCollect} onClick={collect} style={{ padding: '10px', fontSize: '14px' }}>
-                <Flex>
-                  <Trans>Collect Fees</Trans>
+              <ButtonLight disabled={disabledCollect} onClick={collect} style={{ padding: '10px', fontSize: '14px' }}>
+                <Flex alignItems="center" sx={{ gap: '8px' }}>
                   <QuestionHelper
+                    size={16}
                     text={
                       disabledCollect
                         ? t`You don't have any fees to collect`
@@ -238,8 +238,9 @@ export default function ProAmmFee({
                     }
                     color={disabledCollect ? theme.disableText : theme.primary}
                   />
+                  <Trans>Collect Fees</Trans>
                 </Flex>
-              </ButtonCollect>
+              </ButtonLight>
             )}
           </AutoColumn>
         </OutlineCard>

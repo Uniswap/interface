@@ -27,14 +27,14 @@ export const PageWrapper = styled.div`
 export const Container = styled.div`
   max-width: 936px;
   margin: 0 auto;
-  padding: 24px 20px;
+  padding: 4px 20px 24px;
   background: ${({ theme }) => theme.background};
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
     0px 24px 32px rgba(0, 0, 0, 0.01);
-  border-radius: 8px;
+  border-radius: 20px;
 
   @media only screen and (min-width: 1000px) {
-    padding: 24px;
+    padding: 4px 24px 24px;
   }
 `
 
@@ -48,15 +48,17 @@ export const GridColumn = styled.div`
 `
 
 export const TopBar = styled.div`
-  margin: 0 0 24px 0;
+  padding: 20px 0;
   display: flex;
   flex-direction: column-reverse;
   align-items: center;
+  border-top: 1px solid ${({ theme }) => theme.border};
+  margin-top: 1rem;
 
   @media only screen and (min-width: 768px) {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    margin: 8px 0 24px 0;
+    margin-top: 0;
   }
 `
 
@@ -120,7 +122,6 @@ export const ActiveText = styled.div`
 export const Section = styled(Card)`
   padding: 16px 12px;
   border: 1px solid ${({ theme }) => theme.border};
-  border-radius: 4px;
 
   @media only screen and (min-width: 768px) {
     padding: 16px;
@@ -160,15 +161,15 @@ export const USDPrice = styled.div`
   line-height: normal;
   letter-spacing: normal;
   padding-left: 8px;
-  color: ${({ theme }) => theme.primaryText2};
+  color: ${({ theme }) => theme.subText};
 `
 
 export const Warning = styled.div`
   display: flex;
   background: ${({ theme }) => `${theme.warning}20`};
-  border-radius: 0.625rem;
+  border-radius: 999px;
   padding: 0.75rem 1rem;
-  margin-bottom: 28px;
+  margin-bottom: 24px;
 `
 
 export const DetailWrapper = styled(AutoColumn)`

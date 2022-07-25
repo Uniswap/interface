@@ -12,11 +12,11 @@ const PopoverContainer = styled.div<{ show: boolean }>`
   opacity: ${props => (props.show ? 0.95 : 0)};
   transition: visibility 150ms linear, opacity 150ms linear;
 
-  background: ${({ theme }) => theme.background};
+  background: ${({ theme }) => theme.tableHeader};
   border: 1px solid transparent;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.32);
   color: ${({ theme }) => theme.text2};
-  border-radius: 8px;
+  border-radius: 16px;
 `
 
 const ReferenceElement = styled.div`
@@ -37,7 +37,7 @@ const Arrow = styled.div`
     content: '';
     border: 1px solid transparent;
     transform: rotate(45deg);
-    background: ${({ theme }) => theme.background};
+    background: ${({ theme }) => theme.tableHeader};
   }
 
   &.arrow-top {

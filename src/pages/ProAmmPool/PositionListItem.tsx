@@ -24,7 +24,6 @@ import Divider from 'components/Divider'
 import ContentLoader from './ContentLoader'
 import { PROMM_ANALYTICS_URL } from 'constants/index'
 import { useTokensPrice } from 'state/application/hooks'
-import DropIcon from 'components/Icons/DropIcon'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { UserPositionFarm } from 'state/farms/promm/types'
 import useTheme from 'hooks/useTheme'
@@ -38,16 +37,21 @@ const StyledPositionCard = styled(LightCard)`
   background: ${({ theme }) => theme.background};
   position: relative;
   overflow: hidden;
-  border-radius: 8px;
-  padding: 28px 20px 16px;
+  border-radius: 20px;
+  padding: 20px;
   display: flex;
   flex-direction: column;
+
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    padding: 16px;
+  `}
 `
 
 const TabContainer = styled.div`
   display: flex;
-  border-radius: 20px;
-  background-color: ${({ theme }) => theme.buttonBlack};
+  border-radius: 999px;
+  background-color: ${({ theme }) => theme.tabBackgound};
+  padding: 2px;
 `
 
 const Tab = styled(ButtonEmpty)<{ isActive?: boolean; isLeft?: boolean }>`
@@ -55,11 +59,12 @@ const Tab = styled(ButtonEmpty)<{ isActive?: boolean; isLeft?: boolean }>`
   justify-content: center;
   align-items: center;
   flex: 1;
-  background-color: ${({ theme, isActive }) => (isActive ? theme.primary : theme.buttonBlack)};
-  padding: 6px;
-  font-size: 14px;
+  background-color: ${({ theme, isActive }) => (isActive ? theme.tabActive : theme.tabBackgound)};
+  padding: 4px;
+  font-size: 12px;
   font-weight: 500;
   border-radius: 20px;
+  transition: all 0.2s;
 
   &:hover {
     text-decoration: none;
@@ -70,7 +75,7 @@ const TabText = styled.div<{ isActive: boolean }>`
   display: flex;
   align-items: center;
   gap: 2px;
-  color: ${({ theme, isActive }) => (isActive ? theme.textReverse : theme.subText)};
+  color: ${({ theme, isActive }) => (isActive ? theme.text : theme.subText)};
 `
 
 const StakedInfo = styled.div`
@@ -185,25 +190,12 @@ export default function PositionListItem({
   const [activeTab, setActiveTab] = useState(0)
   return position && priceLower && priceUpper ? (
     <StyledPositionCard>
-      {farmAvailable && (
-        <div
-          style={{
-            overflow: 'hidden',
-            borderTopLeftRadius: '8px',
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            display: 'flex',
-            flexDirection: 'column',
-          }}
-        >
-          <MouseoverTooltip text={t`Available for yield farming`}>
-            <DropIcon />
-          </MouseoverTooltip>
-        </div>
-      )}
       <>
-        <ProAmmPoolInfo position={position} tokenId={positionDetails.tokenId.toString()} />
+        <ProAmmPoolInfo
+          position={position}
+          tokenId={positionDetails.tokenId.toString()}
+          farmAvailable={farmAvailable}
+        />
         <TabContainer style={{ marginTop: '1rem' }}>
           <Tab isActive={activeTab === 0} padding="0" onClick={() => setActiveTab(0)}>
             <TabText isActive={activeTab === 0} style={{ fontSize: '12px' }}>
@@ -288,38 +280,6 @@ export default function PositionListItem({
           ) : (
             <Flex marginBottom="20px" sx={{ gap: '1rem' }}>
               {removed ? (
-                <ButtonPrimary disabled padding="8px" style={{ flex: 1 }}>
-                  <Text width="max-content" fontSize="14px">
-                    <Trans>Increase Liquidity</Trans>
-                  </Text>
-                </ButtonPrimary>
-              ) : (
-                <ButtonPrimary
-                  padding="8px"
-                  style={{
-                    borderRadius: '18px',
-                    fontSize: '14px',
-                    flex: 1,
-                  }}
-                  as={Link}
-                  to={`/elastic/increase/${currencyId(currency0, chainId)}/${currencyId(
-                    currency1,
-                    chainId,
-                  )}/${feeAmount}/${positionDetails.tokenId}`}
-                  onClick={() => {
-                    mixpanelHandler(MIXPANEL_TYPE.ELASTIC_INCREASE_LIQUIDITY_INITIATED, {
-                      token_1: token0?.symbol || '',
-                      token_2: token1?.symbol || '',
-                      fee_tier: (pool?.fee as number) / 10000,
-                    })
-                  }}
-                >
-                  <Text width="max-content" fontSize="14px">
-                    <Trans>Increase Liquidity</Trans>
-                  </Text>
-                </ButtonPrimary>
-              )}
-              {removed ? (
                 <ButtonOutlined disabled padding="8px" style={{ flex: 1 }}>
                   <Text width="max-content" fontSize="14px">
                     <Trans>Remove Liquidity</Trans>
@@ -359,6 +319,39 @@ export default function PositionListItem({
                     <Trans>Remove Liquidity</Trans>
                   </Text>
                 </ButtonOutlined>
+              )}
+
+              {removed ? (
+                <ButtonPrimary disabled padding="8px" style={{ flex: 1 }}>
+                  <Text width="max-content" fontSize="14px">
+                    <Trans>Increase Liquidity</Trans>
+                  </Text>
+                </ButtonPrimary>
+              ) : (
+                <ButtonPrimary
+                  padding="8px"
+                  style={{
+                    borderRadius: '18px',
+                    fontSize: '14px',
+                    flex: 1,
+                  }}
+                  as={Link}
+                  to={`/elastic/increase/${currencyId(currency0, chainId)}/${currencyId(
+                    currency1,
+                    chainId,
+                  )}/${feeAmount}/${positionDetails.tokenId}`}
+                  onClick={() => {
+                    mixpanelHandler(MIXPANEL_TYPE.ELASTIC_INCREASE_LIQUIDITY_INITIATED, {
+                      token_1: token0?.symbol || '',
+                      token_2: token1?.symbol || '',
+                      fee_tier: (pool?.fee as number) / 10000,
+                    })
+                  }}
+                >
+                  <Text width="max-content" fontSize="14px">
+                    <Trans>Increase Liquidity</Trans>
+                  </Text>
+                </ButtonPrimary>
               )}
             </Flex>
           )}

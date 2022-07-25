@@ -66,6 +66,7 @@ const cronosTestnetInfo: NetworkInfo = {
   averageBlockTimeInSeconds: 5.6,
   coingeckoNetworkId: EMPTY,
   coingeckoNativeTokenId: EMPTY,
+  deBankSlug: EMPTY,
 }
 
 export default cronosTestnetInfo

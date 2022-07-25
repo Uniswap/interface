@@ -55,6 +55,7 @@ const kovanInfo: NetworkInfo = {
   averageBlockTimeInSeconds: 13.13,
   coingeckoNetworkId: EMPTY,
   coingeckoNativeTokenId: EMPTY,
+  deBankSlug: EMPTY,
 }
 
 export default kovanInfo

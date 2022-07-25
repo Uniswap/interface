@@ -19,11 +19,11 @@ const StyledRangeInput = styled.input<{ size: number }>`
     -webkit-appearance: none;
     height: ${({ size }) => size}px;
     width: ${({ size }) => size}px;
-    background-color: #565a69;
+    background-color: ${({ theme }) => theme.subText};
     border-radius: 100%;
     border: none;
     transform: translateY(-50%);
-    color: ${({ theme }) => theme.bg1};
+    color: ${({ theme }) => theme.subText};
 
     &:hover,
     &:focus {
@@ -35,10 +35,10 @@ const StyledRangeInput = styled.input<{ size: number }>`
   &::-moz-range-thumb {
     height: ${({ size }) => size}px;
     width: ${({ size }) => size}px;
-    background-color: #565a69;
+    background-color: ${({ theme }) => theme.subText};
     border-radius: 100%;
     border: none;
-    color: ${({ theme }) => theme.bg1};
+    color: ${({ theme }) => theme.subText};
 
     &:hover,
     &:focus {
@@ -50,9 +50,9 @@ const StyledRangeInput = styled.input<{ size: number }>`
   &::-ms-thumb {
     height: ${({ size }) => size}px;
     width: ${({ size }) => size}px;
-    background-color: #565a69;
+    background-color: ${({ theme }) => theme.subText};
     border-radius: 100%;
-    color: ${({ theme }) => theme.bg1};
+    color: ${({ theme }) => theme.subText};
 
     &:hover,
     &:focus {
@@ -62,12 +62,12 @@ const StyledRangeInput = styled.input<{ size: number }>`
   }
 
   &::-webkit-slider-runnable-track {
-    background: linear-gradient(90deg, ${({ theme }) => theme.bg5}, ${({ theme }) => theme.bg3});
+    background: linear-gradient(90deg, ${({ theme }) => theme.subText}, ${({ theme }) => theme.subText});
     height: 2px;
   }
 
   &::-moz-range-track {
-    background: linear-gradient(90deg, ${({ theme }) => theme.bg5}, ${({ theme }) => theme.bg3});
+    background: linear-gradient(90deg, ${({ theme }) => theme.subText}, ${({ theme }) => theme.subText});
     height: 2px;
   }
 
@@ -76,14 +76,14 @@ const StyledRangeInput = styled.input<{ size: number }>`
     border-color: transparent;
     color: transparent;
 
-    background: ${({ theme }) => theme.bg5};
+    background: ${({ theme }) => theme.subText};
     height: 2px;
   }
   &::-ms-fill-lower {
-    background: ${({ theme }) => theme.bg5};
+    background: ${({ theme }) => theme.subText};
   }
   &::-ms-fill-upper {
-    background: ${({ theme }) => theme.bg3};
+    background: ${({ theme }) => theme.subText};
   }
 `
 

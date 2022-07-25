@@ -2,79 +2,46 @@ import React from 'react'
 import styled from 'styled-components'
 import { Trans } from '@lingui/macro'
 
-import TrendingSoonHeroLaptop from 'assets/images/trending_soon_hero_laptop.png'
-import TrendingSoonHeroTablet from 'assets/images/trending_soon_hero_tablet.png'
-import TrendingSoonHeroMobile from 'assets/images/trending_soon_hero_mobile.png'
-import useTheme from 'hooks/useTheme'
+import TrendingSoonHeroImg from 'assets/images/trending_hero.png'
+import TrendingSoonHeroLight from 'assets/images/trending_hero-light.png'
+import { useIsDarkMode } from 'state/user/hooks'
 
-const Hero = styled.div`
+const Hero = styled.div<{ darkMode?: boolean }>`
   width: 100%;
-  background-image: url(${TrendingSoonHeroLaptop});
-  background-size: 100%;
+  padding: 16px 0;
+  border-top: 1px solid ${({ theme }) => theme.border};
+  border-bottom: 1px solid ${({ theme }) => theme.border};
+
+  background-image: ${({ darkMode }) => (darkMode ? `url(${TrendingSoonHeroImg})` : `url(${TrendingSoonHeroLight})`)};
+  background-size: contain;
   background-repeat: no-repeat;
-  background-position: center;
-  padding: 18px 28px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 8px;
-  border-radius: 8px;
-  overflow: hidden;
+  background-position: right;
 
-  ${({ theme }) => theme.mediaWidth.upToLarge`
-    background-image: url(${TrendingSoonHeroTablet});
-  `}
-
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    background-image: url(${TrendingSoonHeroMobile});
-  `}
-
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-    padding: 16px;
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    background-image: none;
   `}
 `
 
 const MainContent = styled.div`
-  color: ${({ theme }) => theme.white};
-  font-weight: 400;
-  font-size: 16px;
-  line-height: 24px;
-
-  ${({ theme }) => theme.mediaWidth.upToLarge`
-    max-width: 70ch;
-  `}
-
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    max-width: 60ch;
-  `}
-
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-    font-size: 14px;
-    line-height: 20px;
-  `}
+  color: ${({ theme }) => theme.subText};
+  font-size: 12px;
 `
 
 const SubContent = styled.div`
   color: ${({ theme }) => theme.subText};
   font-weight: 400;
   font-size: 10px;
-  line-height: 12px;
-
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-    font-size: 8px;
-    line-height: 9.38px;
-  `}
+  margin-top: 8px;
 `
 
 const TrendingSoonHero = () => {
-  const theme = useTheme()
-
+  const darkMode = useIsDarkMode()
   return (
-    <Hero>
+    <Hero darkMode={darkMode}>
       <MainContent>
         <Trans>
-          Our <span style={{ color: theme.primary }}>TrueSight</span> technology analyzes on-chain data, trading volumes
-          and price trendlines to discover tokens that could be trending in the near future
+          Our TrueSight technology analyzes on-chain data, trading volumes and price trendlines to discover tokens that
+          could be trending in the near future
         </Trans>
       </MainContent>
       <SubContent>

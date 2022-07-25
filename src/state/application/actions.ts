@@ -47,7 +47,6 @@ export enum ApplicationModal {
   VOTE,
   PRICE_RANGE,
   POOL_DETAIL,
-  FARM_HISTORY,
 
   MOBILE_LIVE_CHART,
   MOBILE_TRADE_ROUTES,

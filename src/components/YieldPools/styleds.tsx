@@ -1,10 +1,9 @@
 import styled, { css } from 'styled-components'
 import { Flex, Text } from 'rebass'
-import { Switch } from '@rebass/forms'
-
-import { ButtonEmpty } from 'components/Button'
-import { StyledInternalLink } from 'theme'
+import { ButtonEmpty, ButtonLight } from 'components/Button'
 import { AutoColumn } from 'components/Column'
+import { ReactComponent as Down } from 'assets/svg/down.svg'
+import { rgba } from 'polished'
 
 export const PageWrapper = styled(AutoColumn)`
   padding: 32px 24px 50px;
@@ -16,59 +15,65 @@ export const PageWrapper = styled(AutoColumn)`
   `}
 `
 
-export const ProMMFarmGuideAndRewardWrapper = styled.div`
-  display: flex;
-  gap: 24px;
-
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    flex-direction: column
-  `}
+export const ProMMFarmGuideWrapper = styled.div`
+  padding: 1rem 0;
+  font-size: 12px;
+  color: ${({ theme }) => theme.subText};
+  line-height: 1.5;
+  border-top: 1px solid ${({ theme }) => theme.border};
+  border-bottom: 1px solid ${({ theme }) => theme.border};
 `
 
 export const ProMMFarmGuide = styled.div`
-  padding: 16px;
-  font-size: 14px;
-  background: ${({ theme }) => theme.primary + '33'};
-  border-radius: 999px;
-  flex: 2;
-  text-align: center;
+  font-size: 12px;
 `
 
-export const ProMMTotalRewards = styled(ProMMFarmGuide)`
-  padding: 8px 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: ${({ theme }) => theme.apr + '33'};
-  flex: 1;
-`
-
-export const FarmType = styled(StyledInternalLink)<{ active: 0 | 1; disabled?: boolean }>`
-  display: flex;
+export const ShowGuideBtn = styled.button<{ show: boolean }>`
+  border: none;
+  outline: none;
+  line-height: 0;
+  background: transparent;
+  color: ${({ theme }) => theme.text};
   cursor: pointer;
-  align-items: center;
-  gap: 6px;
-  font-size: 20px;
-  font-weight: 500;
-  color: ${({ theme, active, disabled }) => (disabled ? theme.subText : active ? theme.primary : theme.subText)};
+  transform: rotate(${({ show }) => (show ? '-180deg' : 0)});
+  transition: transform 0.2s;
+`
 
-  :focus {
-    text-decoration: none;
-  }
+export const GuideWrapper = styled.div<{ show?: boolean }>`
+  display: grid;
+  grid-template-columns: 1fr auto 1fr auto 1fr auto 1fr auto 1fr;
+  margin-top: ${({ show }) => (show ? '1rem' : 0)};
+  height: ${({ show }) => (show ? 'auto' : 0)};
+  max-height: ${({ show }) => (show ? '1000px' : 0)};
+  transition: height 0.2s ease, margin 0.2s ease;
+  overflow: hidden;
 
-  :hover {
-    color: ${({ theme, disabled }) => (disabled ? theme.subText : theme.primary)};
-    text-decoration: none;
-  }
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    grid-template-columns: 1fr;
+    gap: 8px;
 
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-    font-size: 18px
+    ${ChevronRight} {
+      display: none;
+    }
+  `}
+`
+export const GuideItem = styled.div`
+  padding: 1rem;
+  font-size: 12px;
+  color: ${({ theme }) => theme.subText};
+  border-radius: 20px;
+  background: ${({ theme }) => theme.background};
+
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    background: transparent;
+    padding: 0;
   `}
 `
 
-export const FarmTypeWrapper = styled(Flex)`
-  gap: 12px;
-  align-items: center;
+export const ChevronRight = styled(Down)`
+  transform: rotate(-90deg);
+  margin: auto;
+  color: ${({ theme }) => theme.primary};
 `
 
 export const TopBar = styled.div`
@@ -76,58 +81,32 @@ export const TopBar = styled.div`
   justify-content: space-between;
   align-items: center;
   gap: 24px;
-
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    flex-direction: column-reverse
-    align-items: flex-start
-  `}
 `
 
 export const TabContainer = styled.div`
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
   margin-bottom: 0;
-
-  @media only screen and (min-width: 768px) {
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 24px;
-  }
-`
-
-export const Divider = styled.div`
-  width: 1px;
-  height: 20px;
-  background: ${({ theme }) => theme.border};
-  margin-right: 1.5rem;
-
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    margin-right: 12px;
-  `}
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
 `
 
 export const TabWrapper = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1.5rem;
-
-  @media only screen and (min-width: 768px) {
-    margin-bottom: 0;
-  }
 `
 
 export const Tab = styled(ButtonEmpty)<{ isActive: boolean }>`
   width: fit-content;
   margin-right: 1.5rem;
-  font-weight: 400;
+  font-weight: 500;
   padding: 0;
+  font-size: 1rem;
   padding-bottom: 4px;
-  color: ${({ theme, isActive }) => (isActive ? theme.text : theme.subText)};
+  color: ${({ theme, isActive }) => (isActive ? theme.primary : theme.subText)};
   border-radius: 0;
-  border-bottom: ${({ theme, isActive }) => (isActive ? `2px solid ${theme.primary}` : 'none')};
 
   &:hover {
     text-decoration: none;
@@ -174,17 +153,12 @@ export const StakedOnlyToggleWrapper = styled.div`
   `}
 `
 
-export const StakedOnlyToggle = styled(Switch)`
-  transform: scale(0.7);
-  color: ${({ theme }) => theme.bg14};
-  cursor: pointer;
-`
-
 export const StakedOnlyToggleText = styled.div`
   margin-left: 10px;
   font-size: 14px;
   font-weight: 500;
-  color: ${({ theme }) => theme.text7};
+  color: ${({ theme }) => theme.subText};
+  margin-right: 8px;
 
   ${({ theme }) => theme.mediaWidth.upToLarge`
     margin-left: 4px;
@@ -291,7 +265,7 @@ export const HarvestAllInstruction = styled.div`
   font-style: normal;
   font-weight: 500;
   color: ${({ theme }) => theme.text7};
-  background-color: ${({ theme }) => theme.bg12};
+  background-color: ${({ theme }) => theme.buttonBlack};
   padding: 20px;
   border-radius: 8px;
 `
@@ -307,14 +281,6 @@ export const RewardToken = styled.span`
   @media (min-width: 1200px) {
     display: block;
     margin-bottom: 4px;
-  }
-`
-
-export const Plus = styled.span`
-  margin: 0 4px;
-
-  @media (min-width: 1200px) {
-    display: none;
   }
 `
 
@@ -337,26 +303,27 @@ export const FairLaunchPoolsWrapper = styled.div`
   background-color: ${({ theme }) => theme.background};
   box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.04);
   :last-child {
-    border-bottom-left-radius: 0.5rem;
-    border-bottom-right-radius: 0.5rem;
+    border-bottom-left-radius: 1.25rem;
+    border-bottom-right-radius: 1.25rem;
   }
   ${({ theme }) => theme.mediaWidth.upToMedium`
-    border-radius: 0.5rem;
+    border-radius: 1.25rem;
     margin-bottom: 1.5rem;
   `};
 `
 
-export const FairLaunchPoolsTitle = styled.div<{ backgroundColor: string }>`
-  padding: 24px;
+export const FairLaunchPoolsTitle = styled.div<{ justify?: string }>`
+  padding: 12px 24px;
   display: flex;
-  justify-content: space-between;
+  justify-content: ${({ justify }) => justify || 'space-between'};
   align-items: center;
-  background-color: ${({ backgroundColor }) => backgroundColor};
+  background-color: ${({ theme }) => rgba(theme.buttonBlack, 0.4)};
   gap: 24px;
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
     flex-direction: column;
     align-items: flex-end;
+    padding: 16px;
   `}
 `
 
@@ -364,31 +331,24 @@ export const ListItemWrapper = styled.div`
   padding: 0 24px 24px;
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
-    padding: 16px;
+    padding: 0;
   `};
-`
-
-export const HarvestAllSection = styled.div<{ expanded?: boolean }>`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: fit-content;
 `
 
 export const TableHeader = styled.div<{ fade?: boolean; oddRow?: boolean }>`
   display: grid;
   grid-gap: 1rem;
-  grid-template-columns: 1.5fr 1fr 1fr 0.75fr 1fr 1.5fr 1fr 0.25fr;
-  grid-template-areas: 'pools liq end apy vesting_duration reward staked_balance expand';
-  padding: 18px 24px;
+  grid-template-columns: 1.5fr 1fr 1fr 0.75fr 1fr 1.5fr 1fr 1fr;
+  grid-template-areas: 'pools liq end apy vesting_duration reward staked_balance expand action';
+  padding: 16px 20px;
   font-size: 12px;
   align-items: center;
   height: fit-content;
   position: relative;
   opacity: ${({ fade }) => (fade ? '0.6' : '1')};
   background-color: ${({ theme }) => theme.tableHeader};
-  border-top-left-radius: 0.5rem;
-  border-top-right-radius: 0.5rem;
+  border-top-left-radius: 1.25rem;
+  border-top-right-radius: 1.25rem;
   box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.04);
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
@@ -412,8 +372,11 @@ export const ProMMFarmTableHeader = styled(TableHeader)`
 
 export const ProMMFarmTableRow = styled(ProMMFarmTableHeader)`
   font-size: 14px;
-  background-color: ${({ theme }) => theme.tableHeader};
+  background-color: ${({ theme }) => theme.background};
   border-radius: 0;
+  :not(:last-child) {
+    border-bottom: 1px solid ${({ theme }) => theme.border};
+  }
 `
 
 export const ClickableText = styled(Text)`
@@ -464,7 +427,7 @@ export const Tag = styled.div<{ tag?: string }>`
 export const TableRow = styled.div<{ fade?: boolean; isExpanded?: boolean }>`
   display: grid;
   grid-gap: 1rem;
-  grid-template-columns: 1.5fr 1fr 1fr 0.75fr 1fr 1.5fr 1fr 0.25fr;
+  grid-template-columns: 1.5fr 1fr 1fr 0.75fr 1fr 1.5fr 1fr 1fr;
   grid-template-areas: 'pools liq end apy vesting_duration reward staked_balance expand';
   padding: 15px 0 13px;
   font-size: 14px;
@@ -474,7 +437,7 @@ export const TableRow = styled.div<{ fade?: boolean; isExpanded?: boolean }>`
   opacity: ${({ fade }) => (fade ? '0.6' : '1')};
   background-color: ${({ theme }) => theme.background};
   border: 1px solid transparent;
-  border-bottom: 1px solid ${({ theme, isExpanded }) => (isExpanded ? 'transparent' : theme.advancedBorder)};
+  border-bottom: 1px solid ${({ theme, isExpanded }) => (isExpanded ? 'transparent' : theme.border)};
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
     grid-gap: 1rem;
@@ -493,67 +456,6 @@ export const TableRow = styled.div<{ fade?: boolean; isExpanded?: boolean }>`
   }
 `
 
-export const ExpandedSection = styled.div`
-  background: ${({ theme }) => theme.tableHeader};
-  border-radius: 8px;
-`
-
-export const ExpandedContent = styled.div`
-  border-radius: 8px;
-  background-color: ${({ theme }) => theme.tableHeader};
-  font-size: 14px;
-  font-weight: 500;
-  padding: 16px 24px;
-
-  ${({ theme }) => theme.mediaWidth.upToLarge`
-    margin-bottom: 1rem;
-  `};
-`
-
-export const StakeGroup = styled.div`
-  display: grid;
-  grid-gap: 1.5rem;
-  grid-template-columns: 1fr 1fr 1fr;
-  grid-template-areas: 'stake unstake harvest';
-  margin-bottom: 8px;
-
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    grid-template-columns: 1fr;
-    grid-template-areas: 'stake';
-    grid-gap: 1rem;
-  `};
-`
-
-export const BalanceInfo = styled.div`
-  display: flex;
-  justify-content: space-between;
-`
-
-export const GreyText = styled.div`
-  color: ${({ theme }) => theme.subText};
-`
-
-export const LPInfoAndVestingDurationContainer = styled.div`
-  margin-top: 1rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 4px;
-`
-
-export const LPInfoContainer = styled.div`
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  gap: 24px;
-
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    gap: 12px;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: center;
-  `};
-`
 export const GetLP = styled.span`
   font-size: 14px;
   font-weight: 600;
@@ -561,15 +463,15 @@ export const GetLP = styled.span`
 `
 
 export const StyledItemCard = styled.div`
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  grid-column-gap: 4px;
-  border: ${({ theme }) => `1px solid ${theme.border}`};
-  border-radius: 8px;
+  border-bottom: ${({ theme }) => `1px solid ${theme.border}`};
   margin-bottom: 24px;
-  padding: 8px 20px 4px 20px;
+  padding: 16px;
   background-color: ${({ theme }) => theme.background};
-  box-shadow: 0px 0px 8px 2px rgba(0, 0, 0, 0.06);
+
+  :last-child {
+    border-bottom: none;
+    border-radius: 1rem;
+  }
 `
 
 export const RewardBalanceWrapper = styled.div`
@@ -577,14 +479,17 @@ export const RewardBalanceWrapper = styled.div`
   align-items: center;
   flex-wrap: wrap;
   width: 100%;
-  justify-content: space-around;
-  padding: 8px 12px;
-  border-radius: 4px;
-  background-color: ${({ theme }) => theme.background};
+  justify-content: center;
+  padding: 0.75rem;
+  border-radius: 1.25rem;
+  gap: 8px;
+  background-color: ${({ theme }) => theme.buttonBlack};
+  margin-top: 0.75rem;
+  margin-bottom: 1rem;
 `
 
 export const PoolRewardUSD = styled.div`
-  color: ${({ theme }) => theme.primaryText2};
+  color: ${({ theme }) => theme.subText};
 `
 
 export const DataText = styled(Flex)<{ align?: string }>`
@@ -620,10 +525,6 @@ export const DataTitle = styled.div`
   text-transform: uppercase;
   margin-bottom: 4px;
   font-size: 12px;
-`
-
-export const Seperator = styled.div`
-  border-bottom: 1px solid ${({ theme }) => theme.border};
 `
 
 export const SearchContainer = styled.div`
@@ -682,4 +583,16 @@ export const RewardMobileArea = styled.div`
   border-radius: 8px;
   padding: 12px;
   margin-top: 12px;
+`
+
+export const ActionButton = styled(ButtonLight)<{ backgroundColor?: string }>`
+  background-color: ${({ theme, backgroundColor }) => backgroundColor || theme.primary + '33'};
+  width: 28px;
+  height: 28px;
+
+  :disabled {
+    background: ${({ theme }) => theme.buttonGray};
+    cursor: not-allowed;
+    opacity: 0.4;
+  }
 `

@@ -20,7 +20,6 @@ import { CloseIcon, TYPE, ButtonText, IconWrapper } from '../../theme'
 import { isAddress } from '../../utils'
 import Row, { RowBetween, RowFixed } from '../Row'
 import Column from '../Column'
-import QuestionHelper from '../QuestionHelper'
 import CommonBases from './CommonBases'
 import CurrencyList from './CurrencyList'
 import { filterTokens } from './filtering'
@@ -32,6 +31,7 @@ import useToggle from 'hooks/useToggle'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import useDebounce from 'hooks/useDebounce'
 import { nativeOnChain } from 'constants/tokens'
+import InfoHelper from 'components/InfoHelper'
 
 const ContentWrapper = styled(Column)`
   width: 100%;
@@ -45,8 +45,7 @@ const Footer = styled.div`
   padding: 20px;
   border-top-left-radius: 0;
   border-top-right-radius: 0;
-  background-color: ${({ theme }) => theme.bg1};
-  border-top: 1px solid ${({ theme }) => theme.bg2};
+  background-color: ${({ theme }) => theme.background};
 `
 
 interface CurrencySearchProps {
@@ -178,8 +177,15 @@ export function CurrencySearch({
         <RowBetween>
           <Text fontWeight={500} fontSize={16} display="flex">
             <Trans>Select a token</Trans>
-            <QuestionHelper
-              text={t`Find a token by searching for its name or symbol or by pasting its address below`}
+            <InfoHelper
+              text={
+                <Trans>
+                  Find a token by searching for its name or symbol or by pasting its address below
+                  <br />
+                  <br />
+                  You can select and trade any token on KyberSwap.
+                </Trans>
+              }
             />
           </Text>
           <CloseIcon onClick={onDismiss} />
@@ -187,7 +193,7 @@ export function CurrencySearch({
         <SearchInput
           type="text"
           id="token-search-input"
-          placeholder={t`Search name or paste address`}
+          placeholder={t`Search token name, symbol or address`}
           value={searchQuery}
           ref={inputRef as RefObject<HTMLInputElement>}
           onChange={handleInput}

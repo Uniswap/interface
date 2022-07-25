@@ -16,6 +16,7 @@ import TokenPair from './TokenPair'
 import { PageWrapper, Container, TopBar, LiquidityProviderModeWrapper, PoolName } from './styled'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import JSBI from 'jsbi'
+import { TutorialType } from 'components/Tutorial'
 
 export default function AddLiquidity({
   match: {
@@ -55,7 +56,7 @@ export default function AddLiquidity({
     <>
       <PageWrapper>
         <Container>
-          <AddRemoveTabs action={LiquidityAction.ADD} />
+          <AddRemoveTabs action={LiquidityAction.ADD} tutorialType={TutorialType.CLASSIC_ADD_LIQUIDITY} />
 
           <TopBar>
             <LiquidityProviderModeWrapper>

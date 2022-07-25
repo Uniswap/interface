@@ -6,14 +6,14 @@ import { t, Trans } from '@lingui/macro'
 
 import { SUGGESTED_BASES } from '../../constants'
 import { AutoColumn } from '../Column'
-import QuestionHelper from '../QuestionHelper'
 import { AutoRow } from '../Row'
 import CurrencyLogo from '../CurrencyLogo'
 import { nativeOnChain } from 'constants/tokens'
 import { NETWORKS_INFO } from 'constants/networks'
+import InfoHelper from 'components/InfoHelper'
 
 const BaseWrapper = styled.div<{ disable?: boolean }>`
-  border: 1px solid ${({ theme, disable }) => (disable ? 'transparent' : theme.bg3)};
+  border: 1px solid ${({ theme }) => theme.border};
   border-radius: 10px;
   display: flex;
   padding: 6px;
@@ -21,11 +21,12 @@ const BaseWrapper = styled.div<{ disable?: boolean }>`
   align-items: center;
   :hover {
     cursor: ${({ disable }) => !disable && 'pointer'};
-    background-color: ${({ theme, disable }) => !disable && theme.bg2};
+    background-color: ${({ theme, disable }) => !disable && theme.buttonBlack};
   }
 
-  background-color: ${({ theme, disable }) => disable && theme.bg3};
-  opacity: ${({ disable }) => disable && '0.4'};
+  background-color: ${({ theme, disable }) => disable && theme.primary + '33'};
+  color: ${({ theme, disable }) => disable && theme.primary};
+  opacity: ${({ disable }) => disable && '0.8'};
 `
 
 export default function CommonBases({
@@ -43,7 +44,7 @@ export default function CommonBases({
         <Text fontWeight={500} fontSize={14}>
           <Trans>Common bases</Trans>
         </Text>
-        <QuestionHelper text={t`These tokens are commonly paired with other tokens`} />
+        <InfoHelper text={t`These tokens are commonly paired with other tokens`} />
       </AutoRow>
       <AutoRow gap="4px">
         <BaseWrapper

@@ -6,7 +6,7 @@ import { ChevronUp } from 'react-feather'
 
 const WarningBoxWrapper = styled.div`
   width: 100%;
-  background-color: ${({ theme }) => theme.bg12};
+  background-color: ${({ theme }) => theme.buttonBlack};
   margin-top: 24px;
   color: ${({ theme }) => theme.subText};
   margin-bottom: 12px;

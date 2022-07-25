@@ -55,6 +55,7 @@ const arbitrumTestnetInfo: NetworkInfo = {
   averageBlockTimeInSeconds: 1, // TODO: check these info
   coingeckoNetworkId: EMPTY,
   coingeckoNativeTokenId: 'ethereum',
+  deBankSlug: EMPTY,
 }
 
 export default arbitrumTestnetInfo

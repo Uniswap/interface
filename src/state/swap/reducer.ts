@@ -55,7 +55,7 @@ export default createReducer<SwapState>(initialState, builder =>
             currencyId: outputCurrencyId,
           },
           independentField: field,
-          typedValue: typedValue,
+          typedValue: typedValue || state.typedValue || '1',
           recipient,
           saveGas: state.saveGas,
           feeConfig,

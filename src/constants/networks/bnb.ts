@@ -65,6 +65,7 @@ const bnbInfo: NetworkInfo = {
   averageBlockTimeInSeconds: 3,
   coingeckoNetworkId: 'binance-smart-chain',
   coingeckoNativeTokenId: 'binancecoin',
+  deBankSlug: 'bsc',
 }
 
 export default bnbInfo

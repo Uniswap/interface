@@ -8,7 +8,7 @@ const ToggleButton = styled.span<{ size?: string; element?: HTMLSpanElement; fir
   ${({ element }) =>
     `transform: translateX(${element?.offsetLeft ? element?.offsetLeft - 4 : 0}px); width: ${element?.offsetWidth ||
       0}px;`}
-  border-radius: 3px;
+  border-radius: 999px;
   height: 28px;
 `
 
@@ -36,7 +36,7 @@ const ToggleElement = styled.span<{
 
 const ToggleWrapper = styled.button<{ background?: string }>`
   position: relative;
-  border-radius: 4px;
+  border-radius: 999px;
   background: ${({ theme }) => theme.buttonBlack};
   display: flex;
   align-items: center;
@@ -50,7 +50,7 @@ const SelectWrapper = styled.select`
   padding: 10px 5px;
   background: ${({ theme }) => theme.buttonGray};
   color: ${({ theme }) => theme.text};
-  border-radius: 5px;
+  border-radius: 999px;
   border: none;
 `
 export interface StaticFeeSelectorProps {

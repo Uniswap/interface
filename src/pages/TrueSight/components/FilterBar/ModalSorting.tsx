@@ -30,7 +30,7 @@ const SortItem = ({
       alignItems="center"
       justifyContent="center"
       bg={bgColor}
-      style={{ borderRadius: '4px', gap: '4px' }}
+      style={{ borderRadius: '999px', gap: '4px' }}
       onClick={onClick}
     >
       <Text color={textColor} fontSize="16px" fontWeight={500}>

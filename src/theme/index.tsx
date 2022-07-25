@@ -42,30 +42,35 @@ export function colors(darkMode: boolean): Colors {
     black,
 
     // text
-    text: darkMode ? '#ffffff' : '#333333',
-    darkText: '#333333',
-    textReverse: darkMode ? '#333333' : '#ffffff',
-    subText: darkMode ? '#A7B6BD' : '#868787',
+    text: darkMode ? '#ffffff' : '#222222',
+    darkText: '#222222',
+    textReverse: darkMode ? '#222222' : '#ffffff',
+    subText: darkMode ? '#A9A9A9' : '#5E5E5E',
+    disableText: darkMode ? '#373737' : '#B6B6B6',
+
+    // backgrounds
+    background: darkMode ? '#1C1C1C' : '#ffffff',
+    background2: darkMode ? '#1C1C1C' : '#f5f5f5',
+    tabActive: darkMode ? '#313131' : '#ffffff',
+    tabBackgound: darkMode ? '#0F0F0F' : '#E2E2E2',
+
+    tableHeader: darkMode ? '#313131' : '#FBFBFB',
+    buttonBlack: darkMode ? '#0F0F0F' : '#f5f5f5',
+    buttonGray: darkMode ? '#292929' : '#E2E2E2',
 
     text2: darkMode ? '#C3C5CB' : '#565A69',
     text3: darkMode ? '#6C7284' : '#888D9B',
     text4: darkMode ? '#565A69' : '#C3C5CB',
     text6: darkMode ? '#6d8591' : '#565A69',
     text7: darkMode ? '#c9d2d7' : '#565A69',
-    text8: darkMode ? '#5c6468' : '#5c6468',
     text9: darkMode ? '#859aa5' : '#859aa5',
     text10: darkMode ? '#00a2f7' : '#00a2f7',
     text11: darkMode ? '#f4f4f4' : '#565A69',
-    text12: darkMode ? '#4aff8c' : '#0CE15B',
     text13: darkMode ? '#f5f5f5' : '#333333',
-    text14: darkMode ? '#3a3a3a' : '#ffffff',
     text15: darkMode ? '#3b3b3b' : '#8A8A8A',
     text16: darkMode ? '#D8D8D8' : '#212121',
-    disableText: darkMode ? '#6C7284' : '#A7B6BD',
 
     // backgrounds
-    tableHeader: darkMode ? '#303E46' : '#F9F9F9',
-    background: darkMode ? '#243036' : '#ffffff',
     bg1: darkMode ? '#212429' : '#FFFFFF',
     bg2: darkMode ? '#222c31' : '#F7F8FA',
     bg3: darkMode ? '#40444F' : '#dcdbdc',
@@ -77,7 +82,6 @@ export function colors(darkMode: boolean): Colors {
     bg9: darkMode ? '#1d2a32' : '#ecebeb',
     bg10: darkMode ? '#263239' : '#f5f5f5',
     bg11: darkMode ? '#1b2226' : '#ebeaea',
-    bg12: darkMode ? '#11171a' : '#f5f5f5',
     bg13: darkMode ? '#1f292e' : '#e8e9ed',
     bg14: darkMode ? '#40505a' : '#a9a9a9',
     bg15: darkMode ? '#1f292e' : '#f5f5f5',
@@ -93,10 +97,6 @@ export function colors(darkMode: boolean): Colors {
       ? 'linear-gradient(90deg, rgba(255, 83, 123, 0.4) 0%, rgba(255, 83, 123, 0) 100%)'
       : 'linear-gradient(90deg, rgba(255, 83, 123, 0.15) 0%, rgba(255, 83, 123, 0) 100%)',
 
-    buttonBlack: darkMode ? '#11171a' : '#f5f5f5',
-    buttonGray: darkMode ? '#40444f' : '#dcdbdc',
-    poweredByText: darkMode ? '#A7B6BD' : '#5C6468',
-
     //specialty colors
     modalBG: darkMode ? 'rgba(0,0,0,.425)' : 'rgba(0,0,0,0.3)',
     advancedBG: darkMode ? '#1d272b' : '#ecebeb',
@@ -104,22 +104,9 @@ export function colors(darkMode: boolean): Colors {
 
     //primary colors
     primary: '#31CB9E',
-    primary2: darkMode ? '#3680E7' : '#3680E7',
-    primary3: darkMode ? '#4D8FEA' : '#4D8FEA',
-    primary4: darkMode ? '#376bad70' : '#376bad70',
-    primary5: darkMode ? '#153d6f70' : '#31cb9e',
-
-    // color text
-    primaryText2: darkMode ? '#a7b6bd' : '#13191b',
-
-    // secondary colors
-    secondary1: darkMode ? '#31cb9e' : '#31cb9e',
-    secondary2: darkMode ? '#17000b26' : '#17000b26',
-    secondary3: darkMode ? '#17000b26' : '#17000b26',
-    secondary4: '#2FC99E',
 
     // border colors
-    border: darkMode ? '#40505A' : '#dcdbdc ',
+    border: darkMode ? '#505050' : '#C1C1C1',
     btnOutline: darkMode ? '#31cb9e' : '#333333',
 
     // table colors
@@ -128,6 +115,10 @@ export function colors(darkMode: boolean): Colors {
 
     // other
     red: darkMode ? '#FF537B' : '#FF6871',
+    warning: '#FF9901',
+    apr: '#0faaa2',
+    lightGreen: '#98E5CE',
+
     red1: '#FF6871',
     red2: '#F82D3A',
     red3: '#D60000',
@@ -136,16 +127,10 @@ export function colors(darkMode: boolean): Colors {
     yellow1: '#FFE270',
     yellow2: '#F3841E',
     blue1: '#31cb9e',
-    warning: '#FF9901',
     lightBlue: '#78d5ff',
     darkBlue: '#1183b7',
     blue: darkMode ? '#78d5ff' : '#31cb9e',
-    lightGreen: '#98E5CE',
-    apr: '#0faaa2',
     shadow: darkMode ? 'rgba(0, 0, 0, 0.2)' : 'rgba(0, 0, 0, 0.04)',
-
-    skeleton: darkMode ? '#303E46' : '#ececec',
-    skeletonShine: darkMode ? '#303e46e6' : '#f5f5f5',
   }
 }
 
@@ -192,19 +177,19 @@ const TextWrapper = styled(Text)<{ color: keyof Colors }>`
 
 export const TYPE = {
   main(props: TextProps) {
-    return <TextWrapper fontWeight={500} color={'text2'} {...props} />
+    return <TextWrapper fontWeight={500} color={'subText'} {...props} />
   },
   link(props: TextProps) {
     return <TextWrapper fontWeight={500} color={'primary'} {...props} />
   },
   black(props: TextProps) {
-    return <TextWrapper fontWeight={500} color={'text1'} {...props} />
+    return <TextWrapper fontWeight={500} color={'text'} {...props} />
   },
   white(props: TextProps) {
     return <TextWrapper fontWeight={500} color={'white'} {...props} />
   },
   body(props: TextProps) {
-    return <TextWrapper fontWeight={400} fontSize={16} color={'text1'} {...props} />
+    return <TextWrapper fontWeight={400} fontSize={16} color={'text'} {...props} />
   },
   largeHeader(props: TextProps) {
     return <TextWrapper fontWeight={600} fontSize={24} {...props} />
@@ -292,23 +277,24 @@ export const ThemedGlobalStyle = createGlobalStyle`
 
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
-  
+
   html {
     color: ${({ theme }) => theme.text};
-    background-color: ${({ theme }) => theme.bg2};
+    background-color: ${({ theme }) => theme.buttonBlack};
   }
 
   body {
     min-height: 100vh;
-    background: ${({ theme }) => theme.bg12};
+    background: ${({ theme }) => theme.buttonBlack};
   }
 
-  .staked-only-switch[aria-checked="false"] {
-    background: ${({ theme }) => theme.bg14} !important;
+  .staked-only-switch {
+    box-shadow: 0 0 0 2px;
+    background: ${({ theme }) => theme.background} !important;
   }
 
   .staked-only-switch[aria-checked="false"] div {
-    background: ${({ theme }) => theme.bg12} !important;
+    background: ${({ theme }) => theme.border} !important;
   }
 
   .staked-only-switch div {
@@ -342,9 +328,9 @@ export const ThemedGlobalStyle = createGlobalStyle`
   }
 
   .tf-v1-sidetab-button {
-    height: 44px !important;
-    left: -44px !important;
-    border-radius: 4px 4px 0 0 !important;
+    height: 36px !important;
+    left: -36px !important;
+    border-radius: 12px 12px 0 0 !important;
     color: ${({ theme }) => theme.textReverse} !important;
   }
 

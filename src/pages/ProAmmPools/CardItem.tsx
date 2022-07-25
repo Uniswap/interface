@@ -3,7 +3,7 @@ import { Token, ChainId, WETH } from '@kyberswap/ks-sdk-core'
 import styled from 'styled-components'
 import { Flex, Text } from 'rebass'
 import CopyHelper from 'components/Copy'
-import { Share2, ChevronDown, ChevronUp } from 'react-feather'
+import { Share2, ChevronUp } from 'react-feather'
 import { shortenAddress } from 'utils'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
 import { useActiveWeb3React } from 'hooks'
@@ -18,10 +18,12 @@ import InfoHelper from 'components/InfoHelper'
 import Divider from 'components/Divider'
 import { nativeOnChain } from 'constants/tokens'
 import { MouseoverTooltip } from 'components/Tooltip'
-import DropIcon from 'components/Icons/DropIcon'
 import { useProMMFarms } from 'state/farms/promm/hooks'
 import { ELASTIC_BASE_FEE_UNIT, PROMM_ANALYTICS_URL } from 'constants/index'
 import { VERSION } from 'constants/v2'
+import { IconWrapper } from 'pages/Pools/styleds'
+import AgriCulture from 'components/Icons/AgriCulture'
+import { rgba } from 'polished'
 
 interface ListItemProps {
   pair: ProMMPoolData[]
@@ -40,7 +42,7 @@ export const Wrapper = styled.div`
   padding: 20px 16px;
   font-size: 12px;
   background-color: ${({ theme }) => theme.background};
-  border-radius: 8px;
+  border-radius: 20px;
   margin-bottom: 20px;
 `
 
@@ -53,19 +55,16 @@ const PoolAddressContainer = styled(Flex)`
   align-items: center;
 `
 
-export const TokenPairContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+const ButtonIcon = styled(ButtonEmpty)`
+  background: ${({ theme }) => rgba(theme.subText, 0.2)};
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  padding: 0;
+  color: ${({ theme }) => theme.subText};
 `
 
-export const ButtonWrapper = styled(Flex)`
-  justify-content: flex-end;
-  gap: 4px;
-  align-items: center;
-`
-
-export default function ProAmmPoolCardItem({ pair, onShared, userPositions }: ListItemProps) {
+export default function ProAmmPoolCardItem({ pair, onShared, userPositions, idx }: ListItemProps) {
   const { chainId } = useActiveWeb3React()
   const theme = useTheme()
   const [isOpen, setIsOpen] = useState(true)
@@ -92,27 +91,28 @@ export default function ProAmmPoolCardItem({ pair, onShared, userPositions }: Li
       : token1.symbol
   return (
     <>
-      <Flex justifyContent="space-between" marginY="20px">
+      <Flex justifyContent="space-between" marginBottom="20px" marginTop={idx === 0 ? 0 : '20px'}>
         <Flex alignItems="center">
           <DoubleCurrencyLogo size={24} currency0={token0} currency1={token1} />
           <Text fontSize={20} fontWeight="500">
             {token0Symbol} - {token1Symbol}
           </Text>
         </Flex>
-        <ButtonEmpty
-          padding="0"
+        <ButtonIcon
           disabled={pair.length === 1}
-          style={{ width: '28px' }}
           onClick={() => {
             pair.length > 1 && setIsOpen(prev => !prev)
           }}
         >
-          {isOpen && pair.length > 1 ? (
-            <ChevronUp size="24px" color={theme.text} />
-          ) : (
-            <ChevronDown size="24px" color={theme.text} />
-          )}
-        </ButtonEmpty>
+          <ChevronUp
+            size="20px"
+            color={theme.subText}
+            style={{
+              transition: 'transform 0.2s',
+              transform: `rotate(${isOpen && pair.length > 1 ? '0' : '180deg'})`,
+            }}
+          />
+        </ButtonIcon>
       </Flex>
       {pair.map((pool, index) => {
         const myLiquidity = userPositions[pool.address]
@@ -131,20 +131,19 @@ export default function ProAmmPoolCardItem({ pair, onShared, userPositions }: Li
               <div
                 style={{
                   overflow: 'hidden',
-                  borderTopLeftRadius: '8px',
                   position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  display: 'flex',
-                  flexDirection: 'column',
+                  top: '16px',
+                  right: '16px',
                 }}
               >
                 <MouseoverTooltip text={t`Available for yield farming`}>
-                  <DropIcon />
+                  <IconWrapper style={{ width: '24px', height: '24px' }}>
+                    <AgriCulture width={16} height={16} color={theme.textReverse} />
+                  </IconWrapper>
                 </MouseoverTooltip>
               </div>
             )}
-            <DataText justifyContent="center" alignItems="center">
+            <DataText justifyContent="center" marginBottom="1rem">
               <PoolAddressContainer>
                 <Text color={theme.text} fontSize="16px">
                   {shortenAddress(pool.address, 3)}
@@ -160,6 +159,7 @@ export default function ProAmmPoolCardItem({ pair, onShared, userPositions }: Li
                 />
               </Flex>
             </DataText>
+            <Divider />
 
             <Flex marginTop="20px" justifyContent="space-between">
               <Text color={theme.subText} fontWeight="500">
@@ -199,24 +199,28 @@ export default function ProAmmPoolCardItem({ pair, onShared, userPositions }: Li
               <Text>{myLiquidity ? formatDollarAmount(Number(myLiquidity)) : '-'}</Text>
             </Flex>
 
-            <Flex marginY="20px" justifyContent="space-between" fontSize="14px" style={{ gap: '10px' }}>
+            <Flex marginY="20px" justifyContent="space-between" fontSize="14px" style={{ gap: '16px' }}>
+              {hasLiquidity && (
+                <ButtonOutlined as={Link} to={`/myPools?tab=${VERSION.ELASTIC}search=${pool.address}`} padding="10px">
+                  <Text width="max-content" fontSize="14px">
+                    <Trans>View Positions</Trans>
+                  </Text>
+                </ButtonOutlined>
+              )}
+
               <ButtonPrimary
                 as={Link}
+                padding="10px"
                 to={
                   myLiquidity
                     ? `/myPools?tab=${VERSION.ELASTIC}&search=${pool.address}`
                     : `/elastic/add/${token0Address}/${token1Address}/${pool.feeTier}`
                 }
               >
-                <Trans>Add Liquidity</Trans>
+                <Text width="max-content" fontSize="14px">
+                  <Trans>Add Liquidity</Trans>
+                </Text>
               </ButtonPrimary>
-              {hasLiquidity && (
-                <ButtonOutlined as={Link} to={`/myPools?search=${pool.address}`} padding="8px">
-                  <Text width="max-content" fontSize="14px">
-                    <Trans>View Positions</Trans>
-                  </Text>
-                </ButtonOutlined>
-              )}
             </Flex>
 
             <Divider />

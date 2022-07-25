@@ -54,7 +54,7 @@ const ModalContractAddress = ({ platforms }: { platforms: Map<string, string> })
             <Trans>Contract Address</Trans>
           </Text>
           <Flex sx={{ cursor: 'pointer' }} role="button" onClick={toggleContractAddressModal}>
-            <X size={20} color={theme.disableText} />
+            <X size={20} color={theme.subText} />
           </Flex>
         </Flex>
         <ContractAddressContainer>

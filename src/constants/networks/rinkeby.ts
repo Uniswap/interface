@@ -51,7 +51,7 @@ const rinkebyInfo: NetworkInfo = {
   elastic: {
     coreFactory: '0xBC1A68889EB9DE88838259B16d30C3639304A546',
     nonfungiblePositionManager: '0x50067B85491Fd7f3E3a5e707a9161F1f4f68372e',
-    tickReader: '0xF08651170A4593898B5506BAbaf3A7fc85C0958E',
+    tickReader: '0x8F30cd9943C289B3BcFAB000998b6719F1cFf63a',
     initCodeHash: '0x9af381b43515b80cfc9d1c3abe15a1ebd48392d5df2bcce1eb4940eea548c789',
     quoter: '0x5BcbB0bb7236d9fb3DB4C996B05f0e6162Ba5B64',
     routers: '0x335cB9b399e3c33c4a0d1bE7407675C888f66e86',
@@ -59,6 +59,7 @@ const rinkebyInfo: NetworkInfo = {
   averageBlockTimeInSeconds: 13.13,
   coingeckoNetworkId: EMPTY,
   coingeckoNativeTokenId: EMPTY,
+  deBankSlug: EMPTY,
 }
 
 export default rinkebyInfo

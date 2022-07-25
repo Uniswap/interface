@@ -460,7 +460,7 @@ export default function TokenPair({
           <Text fontSize={32} fontWeight={500}>
             {nativeA?.symbol}
           </Text>
-          {estimatedUsdCurrencyA && (
+          {!!estimatedUsdCurrencyA && (
             <Text color={theme.subText} marginLeft="4px" fontSize={18} fontWeight={500}>
               (~{formattedNum(estimatedUsdCurrencyA.toString(), true) || undefined})
             </Text>
@@ -475,7 +475,7 @@ export default function TokenPair({
           <Text fontSize={32} fontWeight={500}>
             {nativeB?.symbol}
           </Text>
-          {estimatedUsdCurrencyB && (
+          {!!estimatedUsdCurrencyB && (
             <Text color={theme.subText} marginLeft="4px" fontSize={18} fontWeight={500}>
               (~{formattedNum(estimatedUsdCurrencyB.toString(), true) || undefined})
             </Text>

@@ -79,7 +79,7 @@ const TrendingTokenItemMobileOnly = ({
               <TruncatedText fontSize="14px" fontWeight={500} color={theme.subText}>
                 {tokenData.name}
               </TruncatedText>
-              <Text fontSize="14px" fontWeight={500} color={theme.disableText} marginLeft="8px">
+              <Text fontSize="14px" fontWeight={500} color={theme.border} marginLeft="8px">
                 {tokenData.symbol}
               </Text>
             </Flex>

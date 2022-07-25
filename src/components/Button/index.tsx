@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import styled, { css, ThemeContext } from 'styled-components'
+import styled, { ThemeContext } from 'styled-components'
 import { darken, rgba } from 'polished'
 
 import { RowBetween } from '../Row'
@@ -19,10 +19,9 @@ const Base = styled(RebassButton)<{
   height: ${({ height }) => (height ? height : 'auto')};
   margin: ${({ margin }) => (margin ? margin : 'unset')};
   font-weight: 500;
+  font-size: 14px;
   text-align: center;
-  border-radius: 999px;
-  height: auto;
-  border-radius: ${({ borderRadius }) => borderRadius && borderRadius};
+  border-radius: ${({ borderRadius }) => (borderRadius ? borderRadius : '999px')};
   outline: none;
   border: 1px solid transparent;
   color: white;
@@ -53,32 +52,14 @@ export const ButtonPrimary = styled(Base)`
     background-color: ${({ theme }) => darken(0.1, theme.primary)};
   }
   &:disabled {
-    background-color: ${({ theme, altDisabledStyle }) => (altDisabledStyle ? theme.primary : theme.bg3)};
-    color: ${({ theme, altDisabledStyle }) => (altDisabledStyle ? 'white' : theme.text3)};
+    background-color: ${({ theme, altDisabledStyle }) => (altDisabledStyle ? theme.primary : theme.buttonGray)};
+    color: ${({ theme, altDisabledStyle }) => (altDisabledStyle ? 'white' : theme.border)};
     cursor: auto;
     box-shadow: none;
     border: 1px solid transparent;
     outline: none;
     opacity: ${({ altDisabledStyle }) => (altDisabledStyle ? '0.7' : '1')};
   }
-`
-
-export const ButtonCollect = styled(Base)<{ disabled?: boolean }>`
-  background-color: ${({ theme }) => `${theme.primary}33`};
-  color: ${({ theme }) => theme.primary};
-
-  ${({ disabled }) =>
-    disabled
-      ? css`
-          background-color: ${({ theme }) => theme.buttonGray};
-          color: ${({ theme }) => theme.disableText};
-          cursor: not-allowed;
-        `
-      : css`
-          &:hover {
-            background-color: ${({ theme }) => `${theme.primary}40`};
-          }
-        `};
 `
 
 export const ButtonWarning = styled(Base)`
@@ -106,12 +87,9 @@ export const ButtonLight = styled(Base)`
   background-color: ${({ theme }) => `${theme.primary}33`};
   min-width: unset;
   color: ${({ theme }) => theme.primary};
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 500;
-  // &:focus {
-  //   box-shadow: 0 0 0 1pt ${({ theme, disabled }) => !disabled && darken(0.03, `${theme.primary}33`)};
-  //   background-color: ${({ theme, disabled }) => !disabled && darken(0.03, `${theme.primary}33`)};
-  // }
+
   &:hover {
     background-color: ${({ theme, disabled }) => !disabled && darken(0.03, `${theme.primary}33`)};
   }
@@ -120,14 +98,12 @@ export const ButtonLight = styled(Base)`
     background-color: ${({ theme, disabled }) => !disabled && darken(0.05, `${theme.primary}33`)};
   }
   :disabled {
-    opacity: 0.6;
-    :hover {
-      cursor: not-allowed;
-      background-color: ${({ theme }) => `${theme.primary}33`};
-      box-shadow: none;
-      border: 1px solid transparent;
-      outline: none;
-    }
+    cursor: not-allowed;
+    background-color: ${({ theme }) => `${theme.buttonGray}`};
+    color: ${({ theme }) => theme.border};
+    box-shadow: none;
+    border: 1px solid transparent;
+    outline: none;
   }
 `
 
@@ -150,7 +126,7 @@ export const ButtonGray = styled(Base)`
 `
 
 export const ButtonSecondary = styled(Base)`
-  border: 1px solid ${({ theme }) => theme.primary4};
+  border: 1px solid ${({ theme }) => theme.primary};
   color: ${({ theme }) => theme.primary};
   background-color: transparent;
   font-size: 16px;
@@ -158,15 +134,15 @@ export const ButtonSecondary = styled(Base)`
   padding: ${({ padding }) => (padding ? padding : '10px')};
 
   &:focus {
-    box-shadow: 0 0 0 1pt ${({ theme }) => theme.primary4};
-    border: 1px solid ${({ theme }) => theme.primary3};
+    box-shadow: 0 0 0 1pt ${({ theme }) => theme.primary};
+    border: 1px solid ${({ theme }) => theme.primary};
   }
   &:hover {
-    border: 1px solid ${({ theme }) => theme.primary3};
+    border: 1px solid ${({ theme }) => theme.primary};
   }
   &:active {
-    box-shadow: 0 0 0 1pt ${({ theme }) => theme.primary4};
-    border: 1px solid ${({ theme }) => theme.primary3};
+    box-shadow: 0 0 0 1pt ${({ theme }) => theme.primary};
+    border: 1px solid ${({ theme }) => theme.primary};
   }
   &:disabled {
     opacity: 50%;
@@ -199,47 +175,27 @@ export const ButtonPink = styled(Base)`
   }
 `
 
-export const ButtonUNIGradient = styled(ButtonPrimary)`
-  color: white;
-  padding: 4px 8px;
-  height: 36px;
-  font-weight: 500;
-  background-color: ${({ theme }) => theme.bg3};
-  background: radial-gradient(174.47% 188.91% at 1.84% 0%, #ff007a 0%, #2172e5 100%), #edeef2;
-  width: fit-content;
-  position: relative;
-  cursor: pointer;
-  border: none;
-  white-space: no-wrap;
-  :hover {
-    opacity: 0.8;
-  }
-  :active {
-    opacity: 0.9;
-  }
-`
-
 export const ButtonOutlined = styled(Base)`
-  border: 1px solid ${({ theme }) => theme.btnOutline};
+  border: 1px solid ${({ theme }) => theme.subText};
   background-color: transparent;
-  color: ${({ theme }) => theme.btnOutline};
+  color: ${({ theme }) => theme.subText};
   border-radius: 999px;
-  font-size: 12px;
+  font-size: 14px;
 
   &:focus {
-    box-shadow: 0 0 0 1px ${({ theme }) => theme.bg4};
+    box-shadow: 0 0 0 1px ${({ theme }) => theme.subText};
   }
   &:hover {
-    box-shadow: 0 0 0 1px ${({ theme }) => theme.bg4};
+    box-shadow: 0 0 0 1px ${({ theme }) => theme.subText};
   }
   &:active {
-    box-shadow: 0 0 0 1px ${({ theme }) => theme.bg4};
+    box-shadow: 0 0 0 1px ${({ theme }) => theme.subText};
   }
   &:disabled {
-    color: ${({ theme, altDisabledStyle }) => (altDisabledStyle ? 'white' : theme.text3)};
+    color: ${({ theme, altDisabledStyle }) => (altDisabledStyle ? 'white' : theme.border)};
     cursor: auto;
     box-shadow: none;
-    border: 1px solid ${({ theme, altDisabledStyle }) => (altDisabledStyle ? 'white' : theme.text3)};
+    border: 1px solid ${({ theme, altDisabledStyle }) => (altDisabledStyle ? 'white' : theme.border)};
   }
 `
 

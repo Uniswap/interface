@@ -4,11 +4,13 @@ import { ApplicationModal } from 'state/application/actions'
 import { useModalOpen, usePoolDetailModalToggle } from 'state/application/hooks'
 import { useSelectedPool } from 'state/pools/hooks'
 import ItemCard from 'components/PoolList/ItemCard'
+import useTheme from 'hooks/useTheme'
 
 export default function PoolDetailModal() {
   const poolDetailModalOpen = useModalOpen(ApplicationModal.POOL_DETAIL)
   const togglePoolDetailModal = usePoolDetailModalToggle()
   const selectedPool = useSelectedPool()
+  const theme = useTheme()
 
   if (!selectedPool) {
     return null
@@ -22,6 +24,7 @@ export default function PoolDetailModal() {
       maxHeight="fit-content"
     >
       <ItemCard
+        style={{ background: theme.tableHeader }}
         poolData={selectedPool.poolData}
         myLiquidity={selectedPool.myLiquidity}
         isShowExpandedPools={false}

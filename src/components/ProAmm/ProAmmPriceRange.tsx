@@ -13,9 +13,10 @@ import InfoHelper from 'components/InfoHelper'
 import { formatTickPrice } from 'utils/formatTickPrice'
 import { Bound } from 'state/mint/proamm/actions'
 import styled from 'styled-components'
+import { rgba } from 'polished'
 
 const PriceRangeCard = styled(Card)`
-  background-color: ${({ theme }) => theme.evenRow};
+  background-color: ${({ theme }) => rgba(theme.buttonGray, 0.6)};
 `
 export default function ProAmmPriceRange({
   position,

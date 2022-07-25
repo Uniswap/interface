@@ -113,13 +113,13 @@ export const NoFarmsWrapper = styled.div`
 `
 
 export const NoFarmsMessage = styled.div`
-  font-size: 24px;
+  font-size: 20px;
   font-weight: 400;
-  color: ${({ theme }) => theme.text};
+  color: ${({ theme }) => theme.subText};
   margin-bottom: 40px;
 
   @media only screen and (min-width: 1000px) {
-    font-size: 36px;
+    font-size: 24px;
   }
 `
 

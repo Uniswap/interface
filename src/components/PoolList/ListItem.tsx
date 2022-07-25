@@ -1,14 +1,12 @@
-import React, { useState } from 'react'
+import React, { useState, CSSProperties } from 'react'
 import { Link } from 'react-router-dom'
 import { Flex } from 'rebass'
-import { ChevronDown, ChevronUp, Info, Minus, Plus, Share2 } from 'react-feather'
+import { ChevronDown, ChevronUp, Info, Minus, Plus, Share2, AlertTriangle } from 'react-feather'
 import { useDispatch } from 'react-redux'
 import { t, Trans } from '@lingui/macro'
 import { Fraction, ChainId } from '@kyberswap/ks-sdk-core'
 import JSBI from 'jsbi'
 import { ButtonEmpty } from 'components/Button'
-import DropIcon from 'components/Icons/DropIcon'
-import WarningLeftIcon from 'components/Icons/WarningLeftIcon'
 import { MouseoverTooltip } from 'components/Tooltip'
 import CopyHelper from 'components/Copy'
 import { usePoolDetailModalToggle } from 'state/application/hooks'
@@ -23,6 +21,7 @@ import { MAX_ALLOW_APY } from 'constants/index'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
 import useTheme from 'hooks/useTheme'
 import { rgba } from 'polished'
+import { IconWrapper } from 'pages/Pools/styleds'
 import {
   AddressAndAMPContainer,
   AddressWrapper,
@@ -41,6 +40,7 @@ import {
   TextTVL,
   TokenPairContainer,
 } from 'components/PoolList/styled'
+import AgriCulture from 'components/Icons/AgriCulture'
 
 export interface ListItemGroupProps {
   sortedFilteredSubgraphPoolsObject: Map<string, SubgraphPoolData[]>
@@ -56,6 +56,7 @@ export interface ListItemProps {
   isShowExpandedPools: boolean
   isFirstPoolInGroup: boolean
   isDisableShowTwoPools: boolean
+  style?: CSSProperties
 }
 
 const ListItem = ({
@@ -190,25 +191,25 @@ const ListItemGroup = ({
           <div
             style={{
               position: 'absolute',
-              top: '-16px',
-              left: '-22px',
+              top: '-1px',
+              left: '-28px',
               display: 'flex',
               flexDirection: 'column',
             }}
           >
             {isFarmingPool && (
-              <div style={{ overflow: 'hidden', borderTopLeftRadius: '8px' }}>
-                <MouseoverTooltip text={t`Available for yield farming`}>
-                  <DropIcon />
-                </MouseoverTooltip>
-              </div>
+              <MouseoverTooltip text={t`Available for yield farming`}>
+                <IconWrapper>
+                  <AgriCulture width={12} height={12} color={theme.textReverse} />
+                </IconWrapper>
+              </MouseoverTooltip>
             )}
             {isWarning && (
-              <div style={{ overflow: 'hidden', borderTopLeftRadius: '8px' }}>
-                <MouseoverTooltip text={`One token is close to 0% in the pool ratio. Pool might go inactive`}>
-                  <WarningLeftIcon />
-                </MouseoverTooltip>
-              </div>
+              <MouseoverTooltip text={`One token is close to 0% in the pool ratio. Pool might go inactive`}>
+                <IconWrapper style={{ background: theme.warning, marginTop: isFarmingPool ? '4px' : 0 }}>
+                  <AlertTriangle color={theme.textReverse} size={12} />
+                </IconWrapper>
+              </MouseoverTooltip>
             )}
           </div>
           <PoolAddressContainer>

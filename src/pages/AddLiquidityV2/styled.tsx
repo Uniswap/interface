@@ -15,7 +15,7 @@ export const Container = styled.div`
   border-radius: 0.75rem;
   background: ${({ theme }) => theme.background};
 
-  padding: 6px 26px 40px;
+  padding: 4px 20px 28px;
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
     max-width: 480px;

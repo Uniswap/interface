@@ -1,74 +1,90 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { BigNumber } from '@ethersproject/bignumber'
 
 import { Token } from '@kyberswap/ks-sdk-core'
-import { ButtonDropdown } from 'components/Button'
 import { useActiveWeb3React } from 'hooks'
 import useVesting from 'hooks/useVesting'
 import { useAppDispatch } from 'state/hooks'
-import { useBlockNumber } from 'state/application/hooks'
-import Schedule from './Schedule'
-import UnlockedBlock from './UnlockedBlock'
-import { ClaimAllSection, RewardLockerSchedulesTitle, RewardLockerSchedulesWrapper } from './styleds'
+import { useBlockNumber, useTokensPrice } from 'state/application/hooks'
 import { setAttemptingTxn, setShowConfirm, setTxHash, setVestingError } from 'state/vesting/actions'
-import { Flex, Text } from 'rebass'
-import { useMedia } from 'react-use'
-import useTheme from 'hooks/useTheme'
-import { useIsDarkMode } from 'state/user/hooks'
 import { RewardLockerVersion } from 'state/farms/types'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import { fixedFormatting } from 'utils/formatBalance'
+import { ZERO_ADDRESS } from 'constants/index'
+import { useTimestampFromBlock } from 'hooks/useTimestampFromBlock'
+import VestingCard from './VestingCard'
 
 const RewardLockerSchedules = ({
   rewardLockerAddress,
   schedules,
-  idx,
   rewardLockerVersion,
 }: {
   rewardLockerAddress: string
   schedules: [BigNumber, BigNumber, BigNumber, BigNumber, Token, number, RewardLockerVersion][]
-  idx: number
   rewardLockerVersion: RewardLockerVersion
 }) => {
-  const theme = useTheme()
-  const isDarkMode = useIsDarkMode()
   const dispatch = useAppDispatch()
-  const above500 = useMedia('(min-width: 500px)')
   const currentBlockNumber = useBlockNumber()
   const currentTimestamp = Math.round(Date.now() / 1000)
   const { account, chainId } = useActiveWeb3React()
-  const [expanded, setExpanded] = useState<boolean>(true)
   const { vestMultipleTokensAtIndices } = useVesting(rewardLockerAddress)
   const { mixpanelHandler } = useMixpanel()
   if (!schedules) {
     schedules = []
   }
+
+  const rewardTokenMap: { [address: string]: Token } = {}
+  schedules.forEach(schedule => {
+    const address = (schedule[4] as Token).isNative ? ZERO_ADDRESS : schedule[4].address
+    if (!rewardTokenMap[address]) {
+      rewardTokenMap[address] = schedule[4]
+    }
+  })
+
+  const rewardTokens = Object.values(rewardTokenMap)
+
+  const rewardPrices = useTokensPrice(rewardTokens)
+  const rewardPriceMap = rewardTokens.reduce((acc, token, index) => {
+    const address = token.isNative ? ZERO_ADDRESS : token.address
+    return {
+      ...acc,
+      [address]: rewardPrices[index],
+    }
+  }, {} as { [address: string]: number })
+
   const info = schedules.reduce<{
     [key: string]: {
       vestableIndexes: number[]
       vestableAmount: BigNumber
-      fullyIndexes: number[]
-      fullyAmount: BigNumber
+      // fullyIndexes: number[]
+      // fullyAmount: BigNumber
       totalAmount: BigNumber
       unlockedAmount: BigNumber
+      vestedAmount: BigNumber
       token: Token
+      tokenPrice: number
     }
   }>((result, schedule) => {
     if (!currentBlockNumber) return result
-    const address = (schedule[4] as Token).symbol as string
+    const address = (schedule[4] as Token).isNative ? ZERO_ADDRESS : schedule[4].address
+
     if (!result[address]) {
       result[address] = {
         vestableIndexes: [],
         vestableAmount: BigNumber.from(0),
-        fullyIndexes: [],
-        fullyAmount: BigNumber.from(0),
+        // fullyIndexes: [],
+        // fullyAmount: BigNumber.from(0),
         totalAmount: BigNumber.from(0),
         unlockedAmount: BigNumber.from(0),
+        vestedAmount: BigNumber.from(0),
         token: schedule[4] as Token,
+        tokenPrice: rewardPriceMap[address],
       }
     }
 
     result[address].totalAmount = result[address].totalAmount.add(BigNumber.from(schedule[2]))
+
+    result[address].vestedAmount = result[address].vestedAmount.add(BigNumber.from(schedule[3]))
     /**
      * fullyVestedAlready = schedule.quantity - schedule.vestedQuantity
      */
@@ -105,14 +121,15 @@ const RewardLockerSchedules = ({
     result[address].vestableAmount = result[address].vestableAmount.add(
       vestableAmount.isNegative() ? BigNumber.from(0) : vestableAmount,
     )
-    if (!fullyVestedAlready && (rewardLockerVersion === RewardLockerVersion.V2 || !!currentBlockNumber) && isEnd) {
-      result[address].fullyIndexes.push(schedule[5])
-      result[address].fullyAmount = result[address].fullyAmount.add(schedule[2])
-    }
+    // if (!fullyVestedAlready && (rewardLockerVersion === RewardLockerVersion.V2 || !!currentBlockNumber) && isEnd) {
+    //   result[address].fullyIndexes.push(schedule[5])
+    //   result[address].fullyAmount = result[address].fullyAmount.add(schedule[2])
+    // }
 
     result[address].unlockedAmount = result[address].unlockedAmount.add(unlockedAmount)
     return result
   }, {})
+
   const onClaimAll = async () => {
     if (!chainId || !account) {
       return
@@ -150,70 +167,29 @@ const RewardLockerSchedules = ({
     dispatch(setAttemptingTxn(false))
   }
 
-  return (
-    <RewardLockerSchedulesWrapper showBorder={!expanded}>
-      <RewardLockerSchedulesTitle backgroundColor={isDarkMode ? `${theme.bg12}40` : `${theme.bg12}80`}>
-        <Flex justifyContent="space-between" alignItems="center" width="100%" marginBottom={above500 ? 0 : '10px'}>
-          <Text>Group {idx}</Text>
-          {!above500 && (
-            <ButtonDropdown
-              expanded={expanded}
-              marginLeft="8px"
-              padding="9px"
-              width="max-content"
-              onClick={() => setExpanded(prev => !prev)}
-            />
-          )}
-        </Flex>
+  const maxEndBlock = schedules.reduce((acc, cur) => {
+    // timestapm or blockNumber version
+    const version = cur[6]
+    if (version === RewardLockerVersion.V1) {
+      return acc && acc < cur[1].toNumber() ? cur[1].toNumber() : acc
+    }
 
-        <ClaimAllSection>
-          <UnlockedBlock info={info} onClaimAll={onClaimAll} />
+    return acc
+  }, currentBlockNumber)
 
-          {above500 && (
-            <ButtonDropdown
-              expanded={expanded}
-              marginLeft="8px"
-              padding="9px"
-              width="max-content"
-              onClick={() => setExpanded(prev => !prev)}
-            />
-          )}
-        </ClaimAllSection>
-      </RewardLockerSchedulesTitle>
+  const endTimestampFromBlock = useTimestampFromBlock(maxEndBlock)
 
-      {expanded && (
-        <>
-          {schedules.map(
-            (s, index) =>
-              !BigNumber.from(s[2])
-                .sub(BigNumber.from(s[3]))
-                .isZero() && (
-                <Schedule
-                  rewardLockerAddress={rewardLockerAddress}
-                  schedule={s}
-                  key={index}
-                  currentTimestamp={currentTimestamp}
-                />
-              ),
-          )}
+  const endTime = schedules.reduce((acc, cur) => {
+    // timestapm or blockNumber version
+    const version = cur[6]
+    if (version === RewardLockerVersion.V2) {
+      return acc && acc < cur[1].toNumber() ? cur[1].toNumber() : acc
+    }
 
-          {schedules.map(
-            (s, index) =>
-              BigNumber.from(s[2])
-                .sub(BigNumber.from(s[3]))
-                .isZero() && (
-                <Schedule
-                  rewardLockerAddress={rewardLockerAddress}
-                  schedule={s}
-                  key={index}
-                  currentTimestamp={currentTimestamp}
-                />
-              ),
-          )}
-        </>
-      )}
-    </RewardLockerSchedulesWrapper>
-  )
+    return acc
+  }, endTimestampFromBlock || 0)
+
+  return <VestingCard info={info} endTime={endTime} remainTime={endTime - currentTimestamp} onClaimAll={onClaimAll} />
 }
 
 export default RewardLockerSchedules

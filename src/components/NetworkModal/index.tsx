@@ -14,30 +14,34 @@ import Modal from 'components/Modal'
 import { Flex, Text } from 'rebass'
 import { X } from 'react-feather'
 
-const Wrapper = styled.div`
+export const Wrapper = styled.div`
   width: 100%;
   padding: 20px;
 `
 
-const NetworkList = styled.div`
+export const NetworkList = styled.div`
   display: grid;
-  grid-gap: 1rem;
-  grid-template-columns: 1fr 1fr;
+  grid-gap: 1.25rem;
+  grid-template-columns: 1fr 1fr 1fr;
   width: 100%;
   margin-top: 20px;
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    grid-template-columns: 1fr 1fr;
+  `}
 `
 
-const NetworkLabel = styled.span`
+export const NetworkLabel = styled.span`
   color: ${({ theme }) => theme.text13};
 `
 
-const ListItem = styled.div<{ selected?: boolean }>`
+export const ListItem = styled.div<{ selected?: boolean }>`
   width: 100%;
   display: flex;
   justify-content: flex-start;
   align-items: center;
   padding: 10px 12px;
-  border-radius: 4px;
+  border-radius: 999px;
   ${({ theme, selected }) =>
     selected
       ? `
@@ -47,11 +51,11 @@ const ListItem = styled.div<{ selected?: boolean }>`
         }
       `
       : `
-        background-color : ${theme.bg12};
+        background-color : ${theme.buttonBlack};
       `}
 `
 
-const SelectNetworkButton = styled(ButtonEmpty)`
+export const SelectNetworkButton = styled(ButtonEmpty)`
   background-color: transparent;
   color: ${({ theme }) => theme.primary};
   display: flex;
@@ -63,7 +67,6 @@ const SelectNetworkButton = styled(ButtonEmpty)`
   &:hover {
     text-decoration: none;
     border: 1px solid ${({ theme }) => theme.primary};
-    border-radius: 4px;
   }
   &:active {
     text-decoration: none;
@@ -83,10 +86,10 @@ export default function NetworkModal(): JSX.Element | null {
   if (!chainId || !networkModalOpen) return null
 
   return (
-    <Modal isOpen={networkModalOpen} onDismiss={toggleNetworkModal}>
+    <Modal isOpen={networkModalOpen} onDismiss={toggleNetworkModal} maxWidth={624}>
       <Wrapper>
         <Flex alignItems="center" justifyContent="space-between">
-          <Text fontWeight="500" fontSize={18}>
+          <Text fontWeight="500" fontSize={20}>
             <Trans>Select a Network</Trans>
           </Text>
 

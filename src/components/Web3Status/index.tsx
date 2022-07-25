@@ -60,16 +60,18 @@ const Web3StatusError = styled(Web3StatusGeneric)`
 `
 
 const Web3StatusConnected = styled(Web3StatusGeneric)<{ pending?: boolean }>`
-  background-color: ${({ pending, theme }) => (pending ? theme.primary : theme.bg2)};
-  border: 1px solid ${({ pending, theme }) => (pending ? theme.primary : theme.bg3)};
-  color: ${({ pending, theme }) => (pending ? theme.white : theme.text)};
+  background-color: ${({ pending, theme }) => (pending ? theme.primary : theme.buttonGray)};
+  border: 1px solid ${({ pending, theme }) => (pending ? theme.primary : theme.buttonGray)};
+  color: ${({ pending, theme }) => (pending ? theme.white : theme.subText)};
   font-weight: 500;
   :hover,
   :focus {
-    background-color: ${({ pending, theme }) => (pending ? darken(0.05, theme.primary) : lighten(0.05, theme.bg2))};
+    background-color: ${({ pending, theme }) =>
+      pending ? darken(0.05, theme.primary) : lighten(0.05, theme.buttonGray)};
 
     :focus {
-      border: 1px solid ${({ pending, theme }) => (pending ? darken(0.1, theme.primary) : darken(0.1, theme.bg3))};
+      border: 1px solid
+        ${({ pending, theme }) => (pending ? darken(0.1, theme.primary) : darken(0.1, theme.buttonGray))};
     }
   }
 `

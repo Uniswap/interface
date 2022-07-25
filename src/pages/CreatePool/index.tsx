@@ -70,6 +70,7 @@ import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import { NETWORKS_INFO } from 'constants/networks'
 import FeeTypeSelector from './FeeTypeSelector'
 import StaticFeeSelector from './StaticFeeSelector'
+import { TutorialType } from 'components/Tutorial'
 
 export enum FEE_TYPE {
   STATIC = 'static',
@@ -429,6 +430,7 @@ export default function CreatePool({
     <PageWrapper>
       <Container>
         <AddRemoveTabs
+          tutorialType={TutorialType.CLASSIC_CREATE_POOL}
           action={LiquidityAction.CREATE}
           onShared={() => {
             mixpanelHandler(MIXPANEL_TYPE.CREATE_POOL_LINK_SHARED, {
@@ -512,6 +514,9 @@ export default function CreatePool({
                     onMax={() => {
                       onFieldAInput(maxAmounts[Field.CURRENCY_A]?.toExact() ?? '')
                     }}
+                    onHalf={() => {
+                      onFieldAInput(currencyBalances[Field.CURRENCY_A]?.divide(2).toExact() ?? '')
+                    }}
                     onCurrencySelect={handleCurrencyASelect}
                     showMaxButton={true}
                     currency={currencies[Field.CURRENCY_A]}
@@ -553,6 +558,9 @@ export default function CreatePool({
                     onCurrencySelect={handleCurrencyBSelect}
                     onMax={() => {
                       onFieldBInput(maxAmounts[Field.CURRENCY_B]?.toExact() ?? '')
+                    }}
+                    onHalf={() => {
+                      onFieldBInput(currencyBalances[Field.CURRENCY_B]?.divide(2).toExact() ?? '')
                     }}
                     showMaxButton={true}
                     currency={currencies[Field.CURRENCY_B]}
@@ -783,7 +791,7 @@ export default function CreatePool({
                         !!(+amp < 1)
                       }
                     >
-                      <Text fontSize={20} fontWeight={500}>
+                      <Text fontSize={16} fontWeight={500}>
                         {error ??
                           (+amp < 1
                             ? t`Enter amp (>=1)`

@@ -2,57 +2,40 @@ import React from 'react'
 import styled from 'styled-components'
 import { Trans } from '@lingui/macro'
 
-import TrendingHeroLaptop from 'assets/images/trending_hero_laptop.png'
-import TrendingHeroTablet from 'assets/images/trending_hero_tablet.png'
-import TrendingHeroMobile from 'assets/images/trending_hero_mobile.png'
+import TrendingHeroImg from 'assets/images/trending.png'
+import TrendingHeroLight from 'assets/images/trending-light.png'
+import { useIsDarkMode } from 'state/user/hooks'
 
-const Hero = styled.div`
+const Hero = styled.div<{ darkMode?: boolean }>`
   width: 100%;
-  background-image: url(${TrendingHeroLaptop});
-  background-size: 100%;
+  padding: 24px 0;
+  border-top: 1px solid ${({ theme }) => theme.border};
+  border-bottom: 1px solid ${({ theme }) => theme.border};
+
+  background-image: ${({ darkMode }) => (darkMode ? `url(${TrendingHeroImg})` : `url(${TrendingHeroLight})`)};
+  background-size: contain;
   background-repeat: no-repeat;
-  background-position: center;
-  padding: 28px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  border-radius: 8px;
-  overflow: hidden;
+  background-position: right;
 
-  ${({ theme }) => theme.mediaWidth.upToLarge`
-    background-image: url(${TrendingHeroTablet});
-  `}
-
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    background-image: url(${TrendingHeroMobile});
-  `}
-
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-    padding: 16px;
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    background-image: none;
+    padding: 16px 0;
   `}
 `
 
 const MainContent = styled.div`
-  color: ${({ theme }) => theme.white};
+  color: ${({ theme }) => theme.subText};
   font-weight: 400;
-  font-size: 16px;
-  line-height: 24px;
+  font-size: 12px;
   max-width: 70ch;
-
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-    font-size: 14px;
-    line-height: 20px;
-  `}
 `
 
 const TrendingHero = () => {
+  const darkMode = useIsDarkMode()
   return (
-    <Hero>
+    <Hero darkMode={darkMode}>
       <MainContent>
-        <Trans>
-          Here you can view tokens that are currently trending in <span style={{ fontWeight: 500 }}>Coingecko</span> and{' '}
-          <span style={{ fontWeight: 500 }}>Coinmarketcap</span>
-        </Trans>
+        <Trans>Here you can view tokens that are currently trending on Coingecko and Coinmarketcap</Trans>
       </MainContent>
     </Hero>
   )

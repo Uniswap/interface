@@ -1,11 +1,16 @@
-import React from 'react'
+import React, { useState, useRef } from 'react'
 
 import { Trans } from '@lingui/macro'
 import { ReactNode } from 'react'
 import { FeeAmount } from '@kyberswap/ks-sdk-elastic'
-import { Text } from 'rebass'
+import { Text, Flex } from 'rebass'
 import styled from 'styled-components'
 import useTheme from 'hooks/useTheme'
+import { ReactComponent as Down } from 'assets/svg/down.svg'
+import { useOnClickOutside } from 'hooks/useOnClickOutside'
+import { Currency } from '@kyberswap/ks-sdk-core'
+import { useFeeTierDistribution } from './hook'
+import { rgba } from 'polished'
 
 const FEE_AMOUNT_DETAIL: { [key: string]: { label: string; description: ReactNode } } = {
   [FeeAmount.STABLE]: {
@@ -34,38 +39,14 @@ const FEE_AMOUNT_DETAIL: { [key: string]: { label: string; description: ReactNod
 
 const Option = styled.div<{ active: boolean }>`
   padding: 12px;
-  border-radius: 6px;
   cursor: pointer;
-  position: relative;
-  border: 1px solid ${({ theme, active }) => (active ? theme.primary : 'transparent')};
-  background: ${({ theme }) => theme.buttonBlack};
-  overflow: hidden;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 
   :hover {
-    border: 1px solid ${({ theme }) => theme.primary};
+    background: ${({ theme }) => theme.buttonBlack};
   }
-
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-    padding: 0.5rem
-  `}
-`
-
-const TickBackground = styled.div`
-  position: absolute;
-  top: -1px;
-  right: -1px;
-  width: 0px;
-  height: 0px;
-  border-style: solid;
-  border-width: 0px 40px 40px 0px;
-  border-color: transparent ${({ theme }) => theme.primary} transparent transparent;
-`
-const Tick = styled.div`
-  font-size: 17px;
-  position: absolute;
-  top: 0;
-  color: #3a3a3a;
-  right: 4px;
 `
 
 const FeeOption = ({
@@ -73,55 +54,118 @@ const FeeOption = ({
   label,
   description,
   onClick,
+  percentSelected,
 }: {
   onClick: () => void
   active: boolean
   label: string
   description: ReactNode
+  percentSelected?: string
 }) => {
   const theme = useTheme()
   return (
     <Option active={active} role="button" onClick={onClick}>
-      <Text fontWeight={500} fontSize="14px">
-        {label}%
-      </Text>
-      <Text color={theme.subText} marginTop="6px" fontSize="12px">
-        {description}
-      </Text>
-      {active && (
-        <>
-          <TickBackground></TickBackground>
-          <Tick>✓</Tick>
-        </>
-      )}
+      <div>
+        <Text fontWeight={500} fontSize="14px">
+          {label}%
+        </Text>
+        <Text color={theme.subText} marginTop="4px" fontSize="10px">
+          {description}
+        </Text>
+      </div>
+      {percentSelected && <FeeSelectionPercent>{percentSelected}% select</FeeSelectionPercent>}
     </Option>
   )
 }
 
 const FeeSelectorWrapper = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 16px;
-
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-  gap: 8px;
-  `}
+  display: flex;
+  padding: 8px 12px;
+  justify-content: space-between;
+  align-items: center;
+  background: ${({ theme }) => theme.buttonBlack};
+  position: relative;
+  cursor: pointer;
+  border-radius: 16px;
 `
 
-function FeeSelector({ feeAmount, onChange }: { feeAmount?: FeeAmount; onChange: (fee: FeeAmount) => void }) {
+const SelectWrapper = styled.div<{ show: boolean }>`
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 56px;
+  background: ${({ theme }) => theme.tableHeader};
+  border-radius: 20px;
+  overflow: hidden;
+  z-index: 2;
+  box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.04);
+  max-height: ${({ show }) => (show ? '1000px' : 0)};
+  transition: max-height 0.15s ${({ show }) => (show ? 'ease-in' : 'ease-out')};
+`
+
+const FeeSelectionPercent = styled.div`
+  border-radius: 999px;
+  height: fit-content;
+  padding: 4px 8px;
+  font-size: 10px;
+  background: ${({ theme }) => rgba(theme.subText, 0.2)};
+  color: ${({ theme }) => theme.subText};
+`
+
+function FeeSelector({
+  feeAmount,
+  onChange,
+  currencyA,
+  currencyB,
+}: {
+  feeAmount: FeeAmount
+  onChange: (fee: FeeAmount) => void
+  currencyA: Currency | undefined
+  currencyB: Currency | undefined
+}) {
+  const [show, setShow] = useState(false)
+  const feeTierDistribution = useFeeTierDistribution(currencyA, currencyB)
+
+  const showFeeDistribution = Object.values(feeTierDistribution).some(item => item !== 0)
+
+  const ref = useRef<HTMLDivElement>(null)
+  useOnClickOutside(ref, () => {
+    setShow(false)
+  })
+
   return (
-    <FeeSelectorWrapper>
-      {[FeeAmount.STABLE, FeeAmount.LOWEST, FeeAmount.LOW, FeeAmount.MEDIUM, FeeAmount.HIGH].map(_feeAmount => {
-        return (
-          <FeeOption
-            onClick={() => onChange(_feeAmount)}
-            key={_feeAmount}
-            active={feeAmount === _feeAmount}
-            label={FEE_AMOUNT_DETAIL[_feeAmount].label}
-            description={FEE_AMOUNT_DETAIL[_feeAmount].description}
-          />
-        )
-      })}
+    <FeeSelectorWrapper role="button" onClick={() => setShow(prev => !prev)} ref={ref}>
+      <div>
+        <Text fontSize="14px" lineHeight="20px" fontWeight={500}>
+          {FEE_AMOUNT_DETAIL[feeAmount].label}%
+        </Text>
+        <Text fontSize={10} marginTop="4px">
+          {FEE_AMOUNT_DETAIL[feeAmount].description}
+        </Text>
+      </div>
+
+      <Flex alignItems="center" sx={{ gap: '8px' }}>
+        {showFeeDistribution && (
+          <FeeSelectionPercent>{feeTierDistribution[feeAmount].toFixed(0)}% select</FeeSelectionPercent>
+        )}
+
+        <Down style={{ transform: `rotate(${show ? '-180deg' : 0})`, transition: 'transform 0.15s' }} />
+      </Flex>
+
+      <SelectWrapper show={show}>
+        {[FeeAmount.STABLE, FeeAmount.LOWEST, FeeAmount.LOW, FeeAmount.MEDIUM, FeeAmount.HIGH].map(_feeAmount => {
+          return (
+            <FeeOption
+              onClick={() => onChange(_feeAmount)}
+              key={_feeAmount}
+              active={feeAmount === _feeAmount}
+              label={FEE_AMOUNT_DETAIL[_feeAmount].label}
+              description={FEE_AMOUNT_DETAIL[_feeAmount].description}
+              percentSelected={showFeeDistribution ? feeTierDistribution[_feeAmount].toFixed(0) : undefined}
+            />
+          )
+        })}
+      </SelectWrapper>
     </FeeSelectorWrapper>
   )
 }

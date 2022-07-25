@@ -65,7 +65,7 @@ export function ImportToken({ tokens, onBack, onDismiss, handleCurrencySelect, l
         </RowBetween>
       </PaddedColumn>
       <SectionBreak />
-      <AutoColumn gap="md" style={{ marginBottom: '32px', padding: '1rem' }}>
+      <AutoColumn gap="md" style={{ marginBottom: '1rem', padding: '1rem' }}>
         <AutoColumn justify="center" style={{ textAlign: 'center', gap: '16px', padding: '1rem' }}>
           <AlertCircle size={48} stroke={theme.text2} strokeWidth={1} />
           <TYPE.body fontWeight={400} fontSize={16}>
@@ -75,7 +75,7 @@ export function ImportToken({ tokens, onBack, onDismiss, handleCurrencySelect, l
         {tokens.map(token => {
           return (
             <Card
-              backgroundColor={theme.bg2}
+              backgroundColor={theme.buttonBlack}
               key={'import' + token.address}
               className=".token-warning-container"
               padding="2rem"
@@ -122,6 +122,7 @@ export function ImportToken({ tokens, onBack, onDismiss, handleCurrencySelect, l
           altDisabledStyle={true}
           borderRadius="20px"
           padding="10px 1rem"
+          margin="16px 0 0"
           onClick={() => {
             tokens.map(token => addToken(token))
             handleCurrencySelect && handleCurrencySelect(tokens[0])

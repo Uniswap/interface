@@ -41,14 +41,14 @@ export const ScrollContainerWithGradient = styled.div<{ backgroundColor?: string
   &.left-visible:after {
     background: linear-gradient(
       to right,
-      ${({ theme, backgroundColor }) => backgroundColor ?? theme.bg12},
+      ${({ theme, backgroundColor }) => backgroundColor ?? theme.buttonBlack},
       transparent
     );
     left: 0;
   }
 
   &.right-visible:before {
-    background: linear-gradient(to left, ${({ theme, backgroundColor }) => backgroundColor ?? theme.bg12}, transparent);
+    background: linear-gradient(to left, ${({ theme, backgroundColor }) => backgroundColor ?? theme.buttonBlack}, transparent);
     right: 0;
   }
 `

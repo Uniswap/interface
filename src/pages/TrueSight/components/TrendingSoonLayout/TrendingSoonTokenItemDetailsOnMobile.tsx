@@ -55,7 +55,7 @@ const TrendingSoonTokenItemDetailsOnMobile = ({
     <>
       <Flex style={{ gap: '20px', marginTop: '4px' }}>
         <ButtonOutlined height="36px" fontSize="14px" padding="0" flex="1" onClick={() => setIsOpenChartModal(true)}>
-          <BarChartIcon />
+          <BarChartIcon color={theme.subText} />
           <span style={{ marginLeft: '6px' }}>
             <Trans>View chart</Trans>
           </span>

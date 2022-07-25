@@ -64,6 +64,7 @@ const maticInfo: NetworkInfo = {
   averageBlockTimeInSeconds: 2.6,
   coingeckoNetworkId: 'polygon-pos',
   coingeckoNativeTokenId: 'matic-network',
+  deBankSlug: 'matic',
 }
 
 export default maticInfo

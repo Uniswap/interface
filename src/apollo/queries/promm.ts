@@ -162,6 +162,21 @@ export const ALL_TICKS = (poolAddress: string) => {
   `
 }
 
+export const POOL_POSITION_COUNT = (poolAddresses: string[]) => {
+  const p = JSON.stringify(poolAddresses.map(id => id.toLowerCase()))
+
+  return gql`
+    query positionCount {
+      pools(first: 1000,  where: { id_in: ${p} }) {
+        id
+        positionCount
+        feeTier
+        closedPostionCount
+      }
+    }
+  `
+}
+
 export const PROMM_GET_POOL_VALUES_AFTER_MINTS_SUCCESS = gql`
   query getPoolValuesAfterMintsSuccess($poolAddress: String!) {
     pool(id: $poolAddress) {

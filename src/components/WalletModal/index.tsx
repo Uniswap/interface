@@ -22,11 +22,14 @@ import PendingView from './PendingView'
 import WrongNetworkModal from 'components/WrongNetworkModal'
 import { useLocation } from 'react-router-dom'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
+import { ChevronLeft } from 'react-feather'
+import useTheme from 'hooks/useTheme'
 
 const CloseIcon = styled.div`
   position: absolute;
   right: 1rem;
-  top: 14px;
+  top: 16px;
+  padding: 8px;
   &:hover {
     cursor: pointer;
     opacity: 0.6;
@@ -48,16 +51,15 @@ const Wrapper = styled.div`
 
 const HeaderRow = styled.div<{ padding?: string }>`
   ${({ theme }) => theme.flexRowNoWrap};
-  padding: ${({ padding }) => padding ?? ' 3rem 2rem 0 2rem'};
+  padding: ${({ padding }) => padding ?? '1.5rem 2rem 0 2rem'};
   font-weight: 500;
   color: ${props => (props.color === 'blue' ? ({ theme }) => theme.primary : 'inherit')};
   ${({ theme }) => theme.mediaWidth.upToMedium`
-    padding: 1rem;
+    padding: 1.5rem 1rem 1rem;
   `};
 `
 
 const ContentWrapper = styled.div<{ padding?: string }>`
-  background-color: ${({ theme }) => theme.background};
   padding: ${({ padding }) => padding ?? '2rem 2rem 8px 2rem'};
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
@@ -109,6 +111,9 @@ const OptionGrid = styled.div`
 `
 
 const HoverText = styled.div`
+  display: flex;
+  gap: 4px;
+  align-items: center;
   font-size: 18px;
   :hover {
     cursor: pointer;
@@ -138,6 +143,7 @@ export default function WalletModal({
 }) {
   // important that these are destructed from the account-specific web3-react context
   const { active, account, connector, activate, error } = useWeb3React()
+  const theme = useTheme()
 
   const [walletView, setWalletView] = useState(WALLET_VIEWS.ACCOUNT)
 
@@ -165,7 +171,7 @@ export default function WalletModal({
       }
       toggleWalletModal()
     }
-  }, [account, previousAccount, toggleWalletModal, walletModalOpen])
+  }, [account, previousAccount, toggleWalletModal, walletModalOpen, location.pathname, mixpanelHandler])
 
   // always reset to account view
   useEffect(() => {
@@ -352,13 +358,14 @@ export default function WalletModal({
           <CloseColor />
         </CloseIcon>
         {walletView !== WALLET_VIEWS.ACCOUNT ? (
-          <HeaderRow color="blue">
+          <HeaderRow>
             <HoverText
               onClick={() => {
                 setPendingError(false)
                 setWalletView(WALLET_VIEWS.ACCOUNT)
               }}
             >
+              <ChevronLeft color={theme.primary} />
               <Trans>Back</Trans>
             </HoverText>
           </HeaderRow>
@@ -404,7 +411,7 @@ export default function WalletModal({
       onDismiss={toggleWalletModal}
       minHeight={false}
       maxHeight={90}
-      maxWidth={account && walletView === WALLET_VIEWS.ACCOUNT ? 420 : 512}
+      maxWidth={account && walletView === WALLET_VIEWS.ACCOUNT ? 544 : 512}
     >
       <Wrapper>{getModalContent()}</Wrapper>
     </Modal>

@@ -1,14 +1,19 @@
 import React, { useState, useRef, useEffect } from 'react'
 import styled from 'styled-components'
 import useTheme from 'hooks/useTheme'
+import { isMobile } from 'react-device-detect'
+
 const ToggleButton = styled.span<{ size?: string; element?: HTMLSpanElement }>`
   position: absolute;
   transition: all 0.2s ease;
-  background-color: ${({ theme }) => theme.primary};
-  ${({ element }) => `transform: translateX(${element?.offsetLeft ?? 55}px); width: ${element?.offsetWidth || 44}px;`}
+  background-color: ${({ theme }) => theme.tabActive};
+  ${({ element }) => `
+    transform: translateX(${element?.offsetLeft ?? 55}px);
+    width: ${element?.offsetWidth || 44}px;
+  `}
   border-radius: ${({ size }) => (size === 'md' ? '16px' : '12px')};
   height: 100%;
-  
+
   top: 0;
 `
 
@@ -28,11 +33,8 @@ const ToggleElement = styled.span<{
 
   z-index: 1;
   transition: all 0.2s ease;
-  color: ${({ theme, isActive, disabled }) => (isActive ? theme.text14 : disabled ? theme.buttonGray : theme.subText)};
+  color: ${({ theme, isActive, disabled }) => (isActive ? theme.text : disabled ? theme.buttonGray : theme.subText)};
   cursor: ${({ disabled }) => (disabled ? 'inherit' : 'pointer')};
-  :hover {
-    color: ${({ theme, isActive, disabled }) => (isActive ? theme.white : disabled ? theme.buttonGray : theme.text2)};
-  }
 `
 
 const ToggleWrapper = styled.button<{ size?: string; border?: boolean; background?: string }>`
@@ -58,8 +60,27 @@ export interface ProChartToggleProps {
   toggle: (name: string) => void
   size?: 'sm' | 'md'
   border?: boolean
-  bgColor?: 'background' | 'buttonBlack'
 }
+
+const Wrapper = styled.div`
+  padding: 2px;
+  border-radius: 999px;
+  background: ${({ theme }) => theme.tabBackgound};
+  width: 100%;
+  display: flex;
+`
+
+const Element = styled.div<{ isActive?: boolean; disabled?: boolean }>`
+  padding: 6px;
+  flex: 1;
+  border-radius: 999px;
+  background: ${({ theme, isActive }) => (isActive ? theme.tabActive : theme.tabBackgound)};
+  cursor: pointer;
+  color: ${({ theme, disabled, isActive }) => (isActive ? theme.text : disabled ? theme.border : theme.subText)};
+  font-size: 12px;
+  font-weight: 500;
+  text-align: center;
+`
 
 export default function ProChartToggle({
   id,
@@ -71,7 +92,6 @@ export default function ProChartToggle({
   toggle,
   size = 'sm',
   border = false,
-  bgColor = 'background',
 }: ProChartToggleProps) {
   const buttonsRef = useRef<any>({})
   const theme = useTheme()
@@ -81,12 +101,34 @@ export default function ProChartToggle({
     setActiveElement(buttonsRef.current[activeName])
   }, [activeName])
 
+  if (isMobile)
+    return (
+      <Wrapper>
+        {buttons.map(button => {
+          return (
+            <Element
+              role="button"
+              key={button.name}
+              ref={el => {
+                buttonsRef.current[button.name] = el
+              }}
+              isActive={activeName === button.name}
+              disabled={button.disabled}
+              onClick={() => toggle(button.name)}
+            >
+              {button.title}
+            </Element>
+          )
+        })}
+      </Wrapper>
+    )
+
   return (
     <ToggleWrapper
       id={id}
       size={size}
       border={border}
-      background={`${theme[bgColor]}${buttons.some((b: any) => b.disabled) ? '20' : ''}`}
+      background={`${theme.tabBackgound}${buttons.some((b: any) => b.disabled) ? '20' : ''}`}
     >
       {buttons.map(button => {
         return (

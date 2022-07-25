@@ -95,7 +95,7 @@ export const USDPrice = styled.div`
   line-height: normal;
   letter-spacing: normal;
   padding-left: 8px;
-  color: ${({ theme }) => theme.primaryText2};
+  color: ${({ theme }) => theme.subText};
 `
 
 export const Warning = styled.div`

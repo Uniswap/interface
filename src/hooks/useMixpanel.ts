@@ -1,5 +1,4 @@
 import { ChainId, Currency } from '@kyberswap/ks-sdk-core'
-import { useWeb3React } from '@web3-react/core'
 import { ELASTIC_BASE_FEE_UNIT } from 'constants/index'
 import { NETWORKS_INFO } from 'constants/networks'
 import mixpanel from 'mixpanel-browser'
@@ -27,6 +26,7 @@ import {
   PROMM_GET_POOL_VALUES_AFTER_MINTS_SUCCESS,
 } from 'apollo/queries/promm'
 import { checkedSubgraph } from 'state/transactions/actions'
+import { useWeb3React } from '@web3-react/core'
 
 export enum MIXPANEL_TYPE {
   PAGE_VIEWED,

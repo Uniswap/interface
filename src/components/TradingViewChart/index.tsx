@@ -49,7 +49,7 @@ const MobileChart = styled.div<{ fullscreen: boolean; $loading: boolean }>`
   width: 100%;
   bottom: 0;
 
-  ${({ theme, fullscreen }) => !fullscreen && `padding-top: 15px; border-bottom: solid 15px ${theme.buttonBlack};`}
+  ${({ theme, fullscreen }) => !fullscreen && `border-bottom: solid 15px ${theme.buttonBlack};`}
   ${({ $loading }) => `display:${$loading ? 'none' : 'block'};`}
 `
 

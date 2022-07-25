@@ -2,16 +2,20 @@ import { useState, useLayoutEffect } from 'react'
 import { shade } from 'polished'
 import Vibrant from 'node-vibrant'
 import { hex } from 'wcag-contrast'
-import { ChainId, Token } from '@kyberswap/ks-sdk-core'
+import { ChainId, Currency } from '@kyberswap/ks-sdk-core'
 import uriToHttp from 'utils/uriToHttp'
 import { useIsDarkMode } from 'state/user/hooks'
+import { getTokenLogoURL } from 'utils'
+import { NETWORKS_INFO } from 'constants/networks'
 
-async function getColorFromToken(token: Token): Promise<string | null> {
-  if (token.chainId === ChainId.RINKEBY && token.address === '0xc7AD46e0b8a400Bb3C915120d284AafbA8fc4735') {
+async function getColorFromToken(token: Currency): Promise<string | null> {
+  if (token.chainId === ChainId.RINKEBY && token.wrapped.address === '0xc7AD46e0b8a400Bb3C915120d284AafbA8fc4735') {
     return Promise.resolve('#FAAB14')
   }
 
-  const path = `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${token.address}/logo.png`
+  const path = token.isNative
+    ? NETWORKS_INFO[token.chainId as ChainId].icon
+    : getTokenLogoURL(token.address, token.chainId)
 
   return Vibrant.from(path)
     .getPalette()
@@ -53,7 +57,7 @@ async function getColorFromUriPath(uri: string, isDark: boolean): Promise<string
     .catch(() => null)
 }
 
-export function useColor(token?: Token) {
+export function useColor(token?: Currency) {
   const [color, setColor] = useState('#2172E5')
 
   useLayoutEffect(() => {

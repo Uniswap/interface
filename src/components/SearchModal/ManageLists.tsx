@@ -83,7 +83,7 @@ const StyledListUrlText = styled(TYPE.main)<{ active: boolean }>`
 `
 
 const RowWrapper = styled(Row)<{ bgColor: string; active: boolean }>`
-  background-color: ${({ bgColor, active, theme }) => (active ? bgColor ?? 'transparent' : theme.bg2)};
+  background-color: ${({ bgColor, active, theme }) => (active ? bgColor ?? 'transparent' : theme.background)};
   transition: 200ms;
   align-items: center;
   padding: 1rem;
@@ -322,7 +322,7 @@ export function ManageLists({
       </PaddedColumn>
       {tempList && (
         <PaddedColumn style={{ paddingTop: 0 }}>
-          <Card backgroundColor={theme.bg2} padding="12px 20px">
+          <Card backgroundColor={theme.background} padding="12px 20px">
             <RowBetween>
               <RowFixed>
                 {tempList.logoURI && <ListLogo logoURI={tempList.logoURI} size="40px" />}
@@ -335,10 +335,10 @@ export function ManageLists({
               </RowFixed>
               {isImported ? (
                 <RowFixed>
-                  <IconWrapper stroke={theme.text2} size="16px" marginRight={'10px'}>
+                  <IconWrapper stroke={theme.subText} size="16px" marginRight={'10px'}>
                     <CheckCircle />
                   </IconWrapper>
-                  <TYPE.body color={theme.text2}>
+                  <TYPE.body color={theme.subText}>
                     <Trans>Loaded</Trans>
                   </TYPE.body>
                 </RowFixed>

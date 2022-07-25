@@ -26,14 +26,14 @@ export const PageWrapper = styled.div`
 export const Container = styled.div`
   max-width: 936px;
   margin: 0 auto;
-  padding: 24px 20px;
+  padding: 4px 20px 24px;
   background: ${({ theme }) => theme.background};
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
     0px 24px 32px rgba(0, 0, 0, 0.01);
   border-radius: 8px;
 
   @media only screen and (min-width: 1000px) {
-    padding: 24px;
+    padding: 4px 24px 24px;
   }
 `
 
@@ -47,15 +47,17 @@ export const GridColumn = styled.div`
 `
 
 export const TopBar = styled.div`
-  margin: 0 0 24px 0;
+  padding: 20px 0;
   display: flex;
   flex-direction: column-reverse;
   align-items: center;
+  border-top: 1px solid ${({ theme }) => theme.border};
+  margin-top: 1rem;
 
   @media only screen and (min-width: 768px) {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    margin: 8px 0 24px 0;
+    margin-top: 0;
   }
 `
 
@@ -106,10 +108,10 @@ export const SecondColumn = styled(AutoColumn)`
 
 export const MaxButton = styled.button`
   flex: 1;
-  padding: 0.5rem 0;
+  padding: 6px 0;
   background-color: ${({ theme }) => `${theme.primary}33`};
   border: 1px solid transparent;
-  border-radius: 3px;
+  border-radius: 999px;
   font-size: 1rem;
   ${({ theme }) => theme.mediaWidth.upToSmall`
     padding: 0.25rem 0;
@@ -132,7 +134,7 @@ export const DetailWrapper = styled(AutoColumn)`
   padding: 1rem 1rem 12px;
   border: 1px solid ${({ theme }) => theme.border};
   margin: 24px 0 28px;
-  border-radius: 4px;
+  border-radius: 20px;
 `
 
 export const DetailBox = styled.div`
@@ -148,7 +150,7 @@ export const TokenWrapper = styled.div`
 
 export const ModalDetailWrapper = styled.div`
   border: 1px solid ${({ theme }) => theme.border};
-  border-radius: 4px;
+  border-radius: 20px;
   padding: 1rem;
   margin-bottom: 28px;
 `

@@ -1,37 +1,13 @@
 import React from 'react'
-import styled from 'styled-components'
 import { Trans } from '@lingui/macro'
 
-import { ButtonEmpty } from 'components/Button'
 import InfoHelper from 'components/InfoHelper'
+import { TabContainer, TabItem } from 'components/PoolList/styled'
+import styled from 'styled-components'
+import useTheme from 'hooks/useTheme'
 
-const TabContainer = styled.div`
-  display: flex;
-  border-radius: 20px;
-  background-color: ${({ theme }) => theme.buttonBlack};
-`
-
-const Tab = styled(ButtonEmpty)<{ isActive?: boolean; isLeft?: boolean }>`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex: 1;
-  background-color: ${({ theme, isActive }) => (isActive ? theme.primary : theme.buttonBlack)};
+const Tab = styled(TabItem)`
   padding: 8px;
-  font-size: 14px;
-  font-weight: 500;
-  border-radius: 20px;
-
-  &:hover {
-    text-decoration: none;
-  }
-`
-
-const TabText = styled.div<{ isActive: boolean }>`
-  display: flex;
-  align-items: center;
-  gap: 2px;
-  color: ${({ theme, isActive }) => (isActive ? theme.textReverse : theme.subText)};
 `
 
 const LiquidityProviderMode = ({
@@ -43,18 +19,20 @@ const LiquidityProviderMode = ({
   setActiveTab: (activeTab: number) => void
   singleTokenInfo: string
 }) => {
+  const theme = useTheme()
   return (
-    <TabContainer>
-      <Tab isActive={activeTab === 0} padding="0" onClick={() => setActiveTab(0)}>
-        <TabText isActive={activeTab === 0}>
-          <Trans>Token Pair</Trans>
-        </TabText>
+    <TabContainer style={{ padding: '4px' }}>
+      <Tab active={activeTab === 0} onClick={() => setActiveTab(0)} role="button">
+        <Trans>Token Pair</Trans>
       </Tab>
-      <Tab isActive={activeTab === 1} padding="0" onClick={() => setActiveTab(1)}>
-        <TabText isActive={activeTab === 1}>
-          <Trans>Single Token</Trans>
-          <InfoHelper text={singleTokenInfo} size={12} isActive={activeTab === 1} />
-        </TabText>
+      <Tab active={activeTab === 1} onClick={() => setActiveTab(1)} role="button">
+        <Trans>Single Token</Trans>
+        <InfoHelper
+          text={singleTokenInfo}
+          size={12}
+          isActive={activeTab === 1}
+          color={activeTab === 1 ? theme.text : theme.subText}
+        />
       </Tab>
     </TabContainer>
   )
