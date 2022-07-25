@@ -37,7 +37,6 @@ const Cell = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
 `
 const StyledTokenRow = styled.div`
   width: 100%;
@@ -96,12 +95,15 @@ export const ClickFavorited = styled.span`
     color: ${({ theme }) => theme.accentActive};
   }
 `
-const ClickableName = styled(Link)`
+const ClickableContent = styled(Link)`
   display: flex;
-  gap: 8px;
   text-decoration: none;
   color: ${({ theme }) => theme.textPrimary};
   align-items: center;
+  cursor: pointer;
+`
+const ClickableName = styled(ClickableContent)`
+  gap: 8px;
 `
 const FavoriteCell = styled(Cell)`
   min-width: 40px;
@@ -394,7 +396,7 @@ export function HeaderRow() {
       header={true}
       favorited={null}
       listNumber={null}
-      tokenInfo={<Trans>Name</Trans>}
+      tokenInfo={<Trans>Token Name</Trans>}
       price={<HeaderCell category={Category.price} sortable />}
       percentChange={<HeaderCell category={Category.percentChange} sortable />}
       marketCap={<HeaderCell category={Category.marketCap} sortable />}
@@ -485,14 +487,24 @@ export default function LoadedRow({
         </ClickableName>
       }
       price={
-        <PriceInfoCell>
-          {formatDollarAmount(tokenData.price)}
-          <PercentChangeInfoCell>{tokenPercentChangeInfo}</PercentChangeInfoCell>
-        </PriceInfoCell>
+        <ClickableContent to={`tokens/${tokenAddress}`}>
+          <PriceInfoCell>
+            {formatDollarAmount(tokenData.price)}
+            <PercentChangeInfoCell>{tokenPercentChangeInfo}</PercentChangeInfoCell>
+          </PriceInfoCell>
+        </ClickableContent>
       }
-      percentChange={tokenPercentChangeInfo}
-      marketCap={formatAmount(tokenData.marketCap).toUpperCase()}
-      volume={formatAmount(tokenData.volume[timePeriod]).toUpperCase()}
+      percentChange={<ClickableContent to={`tokens/${tokenAddress}`}>{tokenPercentChangeInfo}</ClickableContent>}
+      marketCap={
+        <ClickableContent to={`tokens/${tokenAddress}`}>
+          {formatAmount(tokenData.marketCap).toUpperCase()}
+        </ClickableContent>
+      }
+      volume={
+        <ClickableContent to={`tokens/${tokenAddress}`}>
+          {formatAmount(tokenData.volume[timePeriod]).toUpperCase()}
+        </ClickableContent>
+      }
       sparkLine={<SparkLineImg dangerouslySetInnerHTML={{ __html: tokenData.sparkline }} isPositive={isPositive} />}
     />
   )
