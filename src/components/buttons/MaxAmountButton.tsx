@@ -23,13 +23,18 @@ export function MaxAmountButton({
 
   const maxInputAmount = maxAmountSpend(currencyBalance)
 
-  // Only show max button when balance is sufficient
-  if (!maxInputAmount?.greaterThan(0)) return null
-
-  // Disable max button if max already set
+  // Disable max button if max already set or when balance is not sufficient
   const disableMaxButton =
+    !maxInputAmount ||
+    !maxInputAmount.greaterThan(0) ||
     currencyAmount?.toSignificant(MAX_AMOUNT_SIG_FIGS) ===
-    maxInputAmount?.toSignificant(MAX_AMOUNT_SIG_FIGS)
+      maxInputAmount.toSignificant(MAX_AMOUNT_SIG_FIGS)
+
+  const onPress = () => {
+    if (disableMaxButton) return
+
+    onSetMax(maxInputAmount.toSignificant(MAX_AMOUNT_SIG_FIGS))
+  }
 
   return (
     <PrimaryButton
@@ -40,7 +45,7 @@ export function MaxAmountButton({
       py="sm"
       textVariant="smallLabel"
       variant="transparent"
-      onPress={() => onSetMax(maxInputAmount.toSignificant(MAX_AMOUNT_SIG_FIGS))}
+      onPress={onPress}
     />
   )
 }
