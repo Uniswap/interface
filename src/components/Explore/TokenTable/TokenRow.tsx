@@ -37,7 +37,6 @@ const Cell = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
 `
 const StyledTokenRow = styled.div`
   width: 100%;
@@ -101,6 +100,7 @@ const ClickableContent = styled(Link)`
   text-decoration: none;
   color: ${({ theme }) => theme.textPrimary};
   align-items: center;
+  cursor: pointer;
 `
 const ClickableName = styled(ClickableContent)`
   gap: 8px;
