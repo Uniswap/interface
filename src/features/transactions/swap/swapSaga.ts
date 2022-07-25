@@ -52,7 +52,7 @@ export function* approveAndSwap(params: SwapParams) {
 
     const approveAmount = exactApproveRequired ? BigNumber.from(trade.quote.amount) : MaxUint256
     const provider = yield* call(getProvider, chainId)
-    const nonce = yield* call([provider, provider.getTransactionCount], account.address)
+    const nonce = yield* call([provider, provider.getTransactionCount], account.address, 'pending')
     const swapRouterAddress = SWAP_ROUTER_ADDRESSES[chainId]
 
     const approveSubmitted = yield* call(maybeApprove, {
