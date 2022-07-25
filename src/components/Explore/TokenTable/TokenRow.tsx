@@ -148,7 +148,7 @@ const ListNumberCell = styled(Cell)`
 const MarketCapCell = styled(Cell)<{ sortable: boolean }>`
   justify-content: flex-end;
   min-width: max-content;
-  padding-right: 4px;
+  padding-right: 8px;
 
   @media only screen and (max-width: ${MEDIUM_MEDIA_BREAKPOINT}) {
     display: none;
@@ -173,7 +173,7 @@ const NameCell = styled(Cell)`
 const PercentChangeCell = styled(Cell)<{ sortable: boolean }>`
   justify-content: flex-end;
   min-width: 80px;
-  padding-right: 4px;
+  padding-right: 8px;
 
   @media only screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
     display: none;
@@ -198,7 +198,7 @@ const PercentChangeInfoCell = styled(Cell)`
 const PriceCell = styled(Cell)<{ sortable: boolean }>`
   justify-content: flex-end;
   min-width: 80px;
-  padding-right: 4px;
+  padding-right: 8px;
 
   &:hover {
     color: ${({ theme, sortable }) => sortable && theme.white};
@@ -276,7 +276,7 @@ const TokenSymbol = styled(Cell)`
 const VolumeCell = styled(Cell)<{ sortable: boolean }>`
   justify-content: flex-end;
   min-width: max-content;
-  padding-right: 4px;
+  padding-right: 8px;
 
   @media only screen and (max-width: ${LARGE_MEDIA_BREAKPOINT}) {
     display: none;
