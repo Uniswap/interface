@@ -47,5 +47,5 @@ export interface GetValidatorQuoteResult {
 export interface GetValidatorGaslessQuoteResult {
   quote: GetValidatorQuoteResult
   paymentTokenAddress: string
-  paymentFee: number
+  paymentFee: string
 }
