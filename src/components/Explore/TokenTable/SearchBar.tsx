@@ -1,7 +1,6 @@
 import { useAtom } from 'jotai'
 import { useState } from 'react'
 import styled from 'styled-components/macro'
-import { isMobile } from 'utils/userAgent'
 
 import { MEDIUM_MEDIA_BREAKPOINT } from '../constants'
 import { filterStringAtom } from '../state'
@@ -13,7 +12,7 @@ const SearchBarContainer = styled.div`
   display: flex;
   flex: 1;
 `
-const SearchInput = styled.input<{ expanded: boolean; isMobile: boolean }>`
+const SearchInput = styled.input<{ expanded: boolean }>`
   background: no-repeat scroll 7px 7px;
   background-image: url(${searchIcon});
   background-size: 20px 20px;
@@ -39,10 +38,6 @@ const SearchInput = styled.input<{ expanded: boolean; isMobile: boolean }>`
   }
   ::placeholder {
     color: ${({ expanded, theme }) => expanded && theme.textTertiary};
-
-    @media only screen and (max-width: ${MEDIUM_MEDIA_BREAKPOINT}) {
-      color: ${({ theme, isMobile }) => !isMobile && theme.none};
-    }
   }
   ::-webkit-search-cancel-button {
     -webkit-appearance: none;
@@ -63,15 +58,12 @@ const SearchInput = styled.input<{ expanded: boolean; isMobile: boolean }>`
 export default function SearchBar() {
   const [filterString, setFilterString] = useAtom(filterStringAtom)
   const [isExpanded, setExpanded] = useState(false)
-  const placeholderText = isMobile ? 'Search apps, tokens, and NFTs' : 'Search by name or token address'
-
   return (
     <SearchBarContainer>
       <SearchInput
         expanded={isExpanded}
-        isMobile={isMobile}
         type="search"
-        placeholder={placeholderText}
+        placeholder="Search by name or token address"
         id="searchBar"
         onBlur={() => isExpanded && filterString.length === 0 && setExpanded(false)}
         onFocus={() => setExpanded(true)}

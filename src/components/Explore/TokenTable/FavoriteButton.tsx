@@ -26,7 +26,7 @@ const StyledFavoriteButton = styled.button<{ active: boolean }>`
     background-color: ${({ theme, active }) => !active && theme.backgroundContainer};
   }
 `
-const FavoriteMobile = styled.span`
+const FavoriteText = styled.span`
   @media only screen and (max-width: ${SMALL_MOBILE_MEDIA_BREAKPOINT}) {
     display: none;
   }
@@ -41,7 +41,7 @@ export default function FavoriteButton() {
     <StyledFavoriteButton onClick={() => setShowFavorites(!showFavorites)} active={showFavorites}>
       <FavoriteButtonContent>
         <Heart size={17} color={heartColor} fill={fillColor} />
-        <FavoriteMobile>Favorites</FavoriteMobile>
+        <FavoriteText>Favorites</FavoriteText>
       </FavoriteButtonContent>
     </StyledFavoriteButton>
   )
