@@ -59,7 +59,7 @@ export function WalletQRCode({ address }: Props) {
           gradientStartColor={gradientData.start}
         />
       </GradientBackground>
-      <AnimatedFlex centered grow entering={FadeIn} exiting={FadeOut}>
+      <AnimatedFlex centered grow entering={FadeIn} exiting={FadeOut} py="lg">
         <AddressDisplay
           address={address}
           captionVariant="bodySmall"
