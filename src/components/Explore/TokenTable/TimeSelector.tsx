@@ -7,6 +7,7 @@ import { useModalIsOpen, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import styled, { css, useTheme } from 'styled-components/macro'
 
+import { MOBILE_MEDIA_BREAKPOINT } from '../constants'
 import { filterTimeAtom } from '../state'
 
 export const TIME_DISPLAYS: { [key: string]: string } = {
@@ -117,6 +118,10 @@ const StyledMenu = styled.div`
   border: none;
   text-align: left;
   width: 80px;
+
+  @media only screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
+    width: 72px;
+  }
 `
 
 const StyledMenuContent = styled.div`
@@ -130,7 +135,7 @@ const StyledMenuContent = styled.div`
 
 const Chevron = styled.span<{ open: boolean }>`
   padding-top: 1px;
-  color: ${({ open, theme }) => (open ? theme.blue200 : theme.textPrimary)};
+  color: ${({ open, theme }) => (open ? theme.blue200 : theme.textSecondary)};
 `
 
 // TODO: change this to reflect data pipeline

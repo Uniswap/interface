@@ -115,6 +115,7 @@ export const StatsSection = styled.div`
 const StatPair = styled.div`
   display: flex;
   flex: 1;
+  flex-wrap: wrap;
 `
 const TimeButton = styled.button<{ active: boolean }>`
   background-color: ${({ theme, active }) => (active ? theme.accentActive : 'transparent')};
