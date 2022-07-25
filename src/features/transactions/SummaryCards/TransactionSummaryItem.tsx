@@ -55,10 +55,12 @@ export interface TransactionSummaryInfo {
 }
 
 function TransactionSummaryItem({
+  readonly,
   transactionSummaryInfo,
   inlineWarning,
   ...rest
 }: {
+  readonly: boolean
   transactionSummaryInfo: TransactionSummaryInfo
   inlineWarning?: boolean // Show warning inline and not as header banner.
 } & ButtonProps) {
@@ -227,7 +229,7 @@ function TransactionSummaryItem({
         hash={hash}
         isVisible={showActionsModal}
         msTimestampAdded={msTimestampAdded}
-        showCancelButton={status === TransactionStatus.Pending}
+        showCancelButton={status === TransactionStatus.Pending && !readonly}
         transactionDetails={fullDetails}
         onClose={() => {
           setShowActionsModal(false)

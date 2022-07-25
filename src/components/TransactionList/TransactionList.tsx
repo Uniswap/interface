@@ -20,7 +20,13 @@ const SectionTitle: SectionList['props']['renderSectionHeader'] = ({ section: { 
 )
 
 /** Displays historical and pending transactions for a given address. */
-export function TransactionList({ transactions }: { transactions: AllFormattedTransactions }) {
+export function TransactionList({
+  transactions,
+  readonly,
+}: {
+  transactions: AllFormattedTransactions
+  readonly: boolean
+}) {
   const { t } = useTranslation()
   const { pending, todayTransactionList, weekTransactionList, beforeCurrentWeekTransactionList } =
     transactions
@@ -79,11 +85,12 @@ export function TransactionList({ transactions }: { transactions: AllFormattedTr
           borderTopRightRadius={borderTop ? 'lg' : 'none'}
           inlineWarning={useInlineWarning}
           mb={currentIsIsolated ? 'md' : 'none'}
+          readonly={readonly}
           transactionSummaryInfo={item}
         />
       )
     }
-  }, [])
+  }, [readonly])
 
   return (
     <SectionList

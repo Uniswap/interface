@@ -10,7 +10,7 @@ import TransactionSummaryItem, {
 import { Screens } from 'src/screens/Screens'
 
 const renderItem = (item: ListRenderItemInfo<TransactionSummaryInfo>) => {
-  return <TransactionSummaryItem transactionSummaryInfo={item.item} />
+  return <TransactionSummaryItem readonly={true} transactionSummaryInfo={item.item} />
 }
 
 const key = (info: TransactionSummaryInfo) => info.hash

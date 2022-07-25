@@ -38,7 +38,7 @@ export function TransactionsScreen({
           </Flex>
         </BackHeader>
       }>
-      <TransactionList transactions={transactions} />
+      <TransactionList readonly={true} transactions={transactions} />
     </HeaderScrollScreen>
   )
 }
