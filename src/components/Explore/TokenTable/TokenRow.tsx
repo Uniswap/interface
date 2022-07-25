@@ -396,7 +396,7 @@ export function HeaderRow() {
       header={true}
       favorited={null}
       listNumber={null}
-      tokenInfo={<Trans>Name</Trans>}
+      tokenInfo={<Trans>Token Name</Trans>}
       price={<HeaderCell category={Category.price} sortable />}
       percentChange={<HeaderCell category={Category.percentChange} sortable />}
       marketCap={<HeaderCell category={Category.marketCap} sortable />}
