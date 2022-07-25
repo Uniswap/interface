@@ -4,7 +4,7 @@ const LightModeIconInactive = ({ width, height }: { width?: number; height?: num
   return (
     <svg xmlns="http://www.w3.org/2000/svg" width={width || 14} height={height || 14} viewBox="0 0 14 14">
       <g fill="none" fillRule="evenodd">
-        <g fill="#859AA5" fillRule="nonzero">
+        <g fill="#A9A9A9" fillRule="nonzero">
           <g>
             <g>
               <g>

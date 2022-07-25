@@ -1,5 +1,5 @@
 import React, { lazy, Suspense, useEffect } from 'react'
-import { Route, Switch, useRouteMatch } from 'react-router-dom'
+import { Route, Switch } from 'react-router-dom'
 import styled from 'styled-components'
 import { ApolloProvider } from '@apollo/client'
 
@@ -28,6 +28,7 @@ import { useGlobalMixpanelEvents } from 'hooks/useMixpanel'
 import { ethers } from 'ethers'
 import TopBanner from 'components/Header/TopBanner'
 import { NETWORKS_INFO } from 'constants/networks'
+import { isMobile } from 'react-device-detect'
 
 // Route-based code splitting
 const Pools = lazy(() => import(/* webpackChunkName: 'pools-page' */ './Pools'))
@@ -79,7 +80,7 @@ const HeaderWrapper = styled.div`
   z-index: 3;
 `
 
-const BodyWrapper = styled.div<{ isAboutPage?: boolean }>`
+const BodyWrapper = styled.div`
   display: flex;
   position: relative;
   flex-direction: column;
@@ -87,11 +88,12 @@ const BodyWrapper = styled.div<{ isAboutPage?: boolean }>`
   align-items: center;
   min-height: calc(100vh - 148px);
   flex: 1;
+
+  ${isMobile && `overflow-x: hidden;`}
 `
 const AppPaths = { SWAP_LEGACY: '/swap-legacy', ABOUT: '/about', SWAP: '/swap' }
 export default function App() {
   const { account, chainId, library } = useActiveWeb3React()
-  const aboutPage = useRouteMatch(AppPaths.ABOUT)
   const classicClient = NETWORKS_INFO[chainId || ChainId.MAINNET].classicClient
   const dispatch = useDispatch<AppDispatch>()
   useEffect(() => {
@@ -184,7 +186,7 @@ export default function App() {
               <Header />
             </HeaderWrapper>
             <Suspense fallback={<Loader />}>
-              <BodyWrapper isAboutPage={aboutPage?.isExact}>
+              <BodyWrapper>
                 <Popups />
                 <Web3ReactManager>
                   <Switch>

@@ -4,7 +4,7 @@ const DarkModeIconInactive = ({ width, height }: { width?: number; height?: numb
   return (
     <svg xmlns="http://www.w3.org/2000/svg" width={width || 10} height={height || 12} viewBox="0 0 10 12">
       <g fill="none" fillRule="evenodd">
-        <g fill="#859AA5" fillRule="nonzero">
+        <g fill="#5E5E5E" fillRule="nonzero">
           <g>
             <g>
               <g>

@@ -882,37 +882,17 @@ function AboutKyberSwap() {
                   </ExternalLink>
                 </ButtonEmpty>
               </div>
-
-              <CommittedToSecurityDivider height={!above992 ? '110px' : undefined} />
-
-              <div style={{ flex: 1, textAlign: 'center' }}>
-                <Text color={theme.subText} textAlign="center" marginBottom={above992 ? '24px' : '12px'}>
-                  <Trans>Insured by</Trans>
-                </Text>
-                <ButtonEmpty padding="0">
-                  <ExternalLink href="https://medium.com/unslashed/kyber-network-and-unslashed-finance-partner-over-a-20m-native-insurance-to-protect-kyber-network-df543045a97c">
-                    <img
-                      src={
-                        !isDarkMode
-                          ? require('../../assets/svg/unslashed_light.svg')
-                          : require('../../assets/svg/unslashed.svg')
-                      }
-                      alt="unslashed"
-                      width={above992 ? '170px' : '140px'}
-                    />
-                  </ExternalLink>
-                </ButtonEmpty>
-              </div>
             </Flex>
 
             {above992 ? <CommittedToSecurityDivider /> : <div />}
 
             <Flex
-              flex={1}
+              flex={2}
               sx={{ gap: above992 ? '24px' : '10px' }}
               alignItems="center"
               justifyContent="center"
               width="100%"
+              marginTop={above992 ? '0' : '16px'}
             >
               <div style={{ flex: 1, textAlign: 'center' }}>
                 <Text color={theme.subText} textAlign="center" marginBottom={above992 ? '16px' : '12px'}>
@@ -924,7 +904,7 @@ function AboutKyberSwap() {
                   </ExternalLink>
                 </ButtonEmpty>
               </div>
-              <CommittedToSecurityDivider height={!above992 ? '110px' : undefined} />
+              <CommittedToSecurityDivider height={!above992 ? '90px' : undefined} />
 
               <div style={{ flex: 1, textAlign: 'center' }}>
                 <Text color={theme.subText} textAlign="center" marginBottom="16px">
