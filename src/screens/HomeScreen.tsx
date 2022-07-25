@@ -52,7 +52,7 @@ export function HomeScreen() {
         fixedHeader={<FixedHeader />}>
         <Flex gap="sm" px="sm">
           <Flex gap="lg" p="sm">
-            <TotalBalance showRelativeChange balances={balances} />
+            <TotalBalance showRelativeChange balances={balances} owner={activeAccount?.address} />
             <QuickActions />
           </Flex>
           <Flex gap="sm">

@@ -7,7 +7,6 @@ import { Text } from 'src/components/Text'
 import { RelativeChange } from 'src/components/text/RelativeChange'
 import { TotalBalanceQuery } from 'src/features/balances/__generated__/TotalBalanceQuery.graphql'
 import { ChainIdToCurrencyIdToPortfolioBalance } from 'src/features/dataApi/types'
-import { useActiveAccountAddressWithThrow } from 'src/features/wallet/hooks'
 import { Theme } from 'src/styles/theme'
 import { isTestnet, toSupportedChainId } from 'src/utils/chainId'
 import { formatUSDPrice } from 'src/utils/format'
@@ -15,16 +14,17 @@ import { getKeys } from 'src/utils/objects'
 
 interface TotalBalanceViewProps {
   balances: ChainIdToCurrencyIdToPortfolioBalance
+  owner?: Address
   showRelativeChange?: boolean
   variant?: keyof Theme['textVariants']
 }
 
 export function TotalBalance({
   balances,
+  owner,
   showRelativeChange,
   variant = 'headlineLarge',
 }: TotalBalanceViewProps) {
-  const owner = useActiveAccountAddressWithThrow()
   const totalBalance = useMemo(
     () =>
       getKeys(balances)
@@ -45,7 +45,7 @@ export function TotalBalance({
     <Suspense fallback={<Loading type="header" />}>
       <Flex gap="xxs">
         <Text fontWeight="400" variant={variant}>{`${formatUSDPrice(totalBalance)}`}</Text>
-        {showRelativeChange && <BalanceRelativeChange owner={owner} />}
+        {showRelativeChange && owner && <BalanceRelativeChange owner={owner} />}
       </Flex>
     </Suspense>
   )
