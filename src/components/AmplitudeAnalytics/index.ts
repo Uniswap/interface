@@ -1,36 +1,26 @@
 import { Identify, identify, init, track } from '@amplitude/analytics-browser'
 
-/**
- * Initializes Amplitude with API key for project.
- *
- * Uniswap has two Amplitude projects: test and production. You must be a
- * member of the organization on Amplitude to view details.
- */
-
-if (process.env.NODE_ENV !== 'development') {
-  const API_KEY = process.env.REACT_APP_AMPLITUDE_KEY
-  if (typeof API_KEY === 'undefined') {
-    throw new Error(`REACT_APP_AMPLITUDE_KEY must be a defined environment variable`)
-  }
-
-  init(
-    API_KEY,
-    /* userId= */ undefined, // User ID should be undefined to let Amplitude default to Device ID
-    /* options= */ {
-      // Disable tracking of private user information by Amplitude
-      trackingOptions: {
-        ipAddress: false,
-        carrier: false,
-        city: false,
-        region: false,
-        country: false,
-        dma: false, // designated market area
-      },
-    }
-  )
+const API_KEY = process.env.REACT_APP_AMPLITUDE_KEY
+if (typeof API_KEY === 'undefined') {
+  throw new Error(`REACT_APP_AMPLITUDE_KEY must be a defined environment variable`)
 }
 
-/** Sends an event to Amplitude. */
+init(
+  API_KEY,
+  /* userId= */ undefined, // User ID should be undefined to let Amplitude default to Device ID
+  /* options= */ {
+    // Disable tracking of private user information by Amplitude
+    trackingOptions: {
+      ipAddress: false,
+      carrier: false,
+      city: false,
+      region: false,
+      country: false,
+      dma: false, // designated market area
+    },
+  }
+)
+
 export function sendAnalyticsEvent(eventName: string, eventProperties?: Record<string, unknown>) {
   if (process.env.NODE_ENV === 'development') {
     console.log(`[amplitude(${eventName})]: ${JSON.stringify(eventProperties)}`)
