@@ -32,7 +32,7 @@ export function BackButton({ onPressBack, size, color, showButtonLabel, ...rest 
           width={size}
         />
         {showButtonLabel && (
-          <Text color="textSecondary" variant={'subhead'}>
+          <Text color="textSecondary" variant="subhead">
             {t('Back')}
           </Text>
         )}

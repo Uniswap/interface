@@ -42,7 +42,7 @@ export function TransferDetails({
             {totalNetworkFee ? (
               <Text variant="bodySmall">{totalNetworkFee}</Text>
             ) : (
-              <Progress.CircleSnail direction={'clockwise'} size={20} thickness={2.5} />
+              <Progress.CircleSnail direction="clockwise" size={20} thickness={2.5} />
             )}
           </Box>
         </Flex>

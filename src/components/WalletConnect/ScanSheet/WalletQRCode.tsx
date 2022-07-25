@@ -83,7 +83,7 @@ export function WalletQRCode({ address }: Props) {
             borderRadius="full"
             left={103}
             padding="sm"
-            position={'absolute'}
+            position="absolute"
             top={103}>
             <Unicon address={address} size={24} />
           </Flex>

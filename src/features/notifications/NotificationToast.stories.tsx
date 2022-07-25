@@ -35,5 +35,5 @@ export const WallectConnectNotification: ComponentStory<typeof WCNotification> =
 }
 
 export const BaseAppNotification: ComponentStory<typeof DefaultNotification> = () => {
-  return <NotificationToast title={'This is a text notification'} />
+  return <NotificationToast title="This is a text notification" />
 }

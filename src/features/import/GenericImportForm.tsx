@@ -74,7 +74,7 @@ export function GenericImportForm({
           height={160}
           p="sm"
           width="100%">
-          <Flex row alignItems={'flex-end'} gap="none">
+          <Flex row alignItems="flex-end" gap="none">
             <TextInput
               autoFocus
               autoCapitalize="none"

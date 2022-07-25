@@ -186,7 +186,7 @@ function RequestMessageContent({ request }: Props) {
       return getParsedObjectDisplay(request.dapp.chain_id, data.message, 0)
     } catch (e) {
       logger.error('WalletConnectRequestModal', 'getMessage', 'invalid JSON message', e)
-      return <Text>{''}</Text>
+      return <Text />
     }
   }
 

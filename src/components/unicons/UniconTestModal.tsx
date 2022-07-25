@@ -202,23 +202,23 @@ export function UniconTestModal({ onClose }: { onClose: () => void }) {
                 />
               </Flex>
             </Flex>
-            <Flex flexDirection={'row'} gap="md" p="md">
+            <Flex flexDirection="row" gap="md" p="md">
               <Unicon address={activeAddress} size={36} />
-              <Unicon address={'0xb794f5ea0ba39494ce839613fffba74279579268'} size={36} />
-              <Unicon address={'0x71C7656EC7ab88b098defB751B7401B5f6d8976F'} size={36} />
-              <Unicon address={'0xddfAbCdc4D8FfC6d5beaf154f18B778f892A0740'} size={36} />
+              <Unicon address="0xb794f5ea0ba39494ce839613fffba74279579268" size={36} />
+              <Unicon address="0x71C7656EC7ab88b098defB751B7401B5f6d8976F" size={36} />
+              <Unicon address="0xddfAbCdc4D8FfC6d5beaf154f18B778f892A0740" size={36} />
             </Flex>
-            <Flex flexDirection={'row'} gap="md" p="md">
-              <Unicon address={'0x5C141b6786b90812628Ff778b22d328AA7A65549'} size={36} />
-              <Unicon address={'0xEA674fdDe714fd979de3EdF0F56AA9716B898ec8'} size={36} />
-              <Unicon address={'0x4defA30195094963cFAc7285d8d6E6E523c7f90D'} size={36} />
-              <Unicon address={'0x39336A270b92A64a68925fb8540E7b4AdF218e0a'} size={36} />
+            <Flex flexDirection="row" gap="md" p="md">
+              <Unicon address="0x5C141b6786b90812628Ff778b22d328AA7A65549" size={36} />
+              <Unicon address="0xEA674fdDe714fd979de3EdF0F56AA9716B898ec8" size={36} />
+              <Unicon address="0x4defA30195094963cFAc7285d8d6E6E523c7f90D" size={36} />
+              <Unicon address="0x39336A270b92A64a68925fb8540E7b4AdF218e0a" size={36} />
             </Flex>
-            <Flex flexDirection={'row'} gap="md" p="md">
-              <Unicon address={'0x82BdFf92B259d83382C28a2d0CF3229E0d8B0B98'} size={36} />
-              <Unicon address={'0x514910771AF9Ca656af840dff83E8264EcF986CA'} size={36} />
-              <Unicon address={'0xad6eaa735D9dF3D7696fd03984379dAE02eD8862'} size={36} />
-              <Unicon address={'0x876eabf441b2ee5b5b0554fd502a8e0600950cfa'} size={36} />
+            <Flex flexDirection="row" gap="md" p="md">
+              <Unicon address="0x82BdFf92B259d83382C28a2d0CF3229E0d8B0B98" size={36} />
+              <Unicon address="0x514910771AF9Ca656af840dff83E8264EcF986CA" size={36} />
+              <Unicon address="0xad6eaa735D9dF3D7696fd03984379dAE02eD8862" size={36} />
+              <Unicon address="0x876eabf441b2ee5b5b0554fd502a8e0600950cfa" size={36} />
             </Flex>
             <Flex row gap="md" p="md">
               <Unicon address="0x5807F31f1c1ED25B10700b8b5283f934E850Bc8b" size={36} />

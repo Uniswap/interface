@@ -68,7 +68,7 @@ describe(firebaseDataWatcher, () => {
 })
 
 describe(addAccountDataToFirebase, () => {
-  it('Adds to the UID mapping, metadata, and push token mapping when it is a named, imported account ', () => {
+  it('Adds to the UID mapping, metadata, and push token mapping when it is a named, imported account', () => {
     return expectSaga(addAccountDataToFirebase, { payload: importedAccount, type: '' })
       .call(mapAddressesToFirebaseUid, [importedAccount.address])
       .call(updateAccountMetadata, importedAccount.address, {
@@ -78,7 +78,7 @@ describe(addAccountDataToFirebase, () => {
       .silentRun()
   })
 
-  it('Does not add to push token mapping when a read only account is added ', () => {
+  it('Does not add to push token mapping when a read only account is added', () => {
     return expectSaga(addAccountDataToFirebase, { payload: readonlyAccount, type: '' })
       .call(mapAddressesToFirebaseUid, [readonlyAccount.address])
       .call(updateAccountMetadata, readonlyAccount.address, {

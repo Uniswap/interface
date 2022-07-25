@@ -141,7 +141,7 @@ export function QRCodeScanner({
               {t('Scan a QR code')}
             </Text>
             <Flex centered row gap="sm">
-              {<WalletConnectLogo height={16} width={16} />}
+              <WalletConnectLogo height={16} width={16} />
               <Text color="textPrimary" variant="bodySmall">
                 {t('Connect to an app with WalletConnect')}
               </Text>

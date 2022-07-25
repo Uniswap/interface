@@ -6,8 +6,6 @@ const FALLBACK_ASPECT_RATIO = 1
 export async function fetchSVG(
   uri: string,
   autoplay: boolean,
-  // AbortSignal is not resolved
-  // eslint-disable-next-line no-undef
   signal?: AbortSignal
 ): Promise<{ content: string; aspectRatio: number }> {
   const res = await fetch(uri, { signal })

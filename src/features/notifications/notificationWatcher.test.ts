@@ -18,16 +18,6 @@ import {
 } from 'src/features/transactions/types'
 import { finalizedTxAction } from 'src/test/fixtures'
 
-// Seems to be an issue with testing `takeLatest` from `typed-redux-saga`
-// describe(notificationWatcher, () => {
-//   it.skip('Triggers watcher successfully', () => {
-//     return expectSaga(notificationWatcher)
-//       .dispatch(finalizeTransaction(finalizedTxAction.payload))
-//       .fork(takeLatest, finalizeTransaction.type, pushTransactionNotification)
-//       .silentRun()
-//   })
-// })
-
 const createFinalizedTxAction = (
   typeInfo: TransactionTypeInfo
 ): ReturnType<typeof finalizeTransaction> => ({

@@ -44,7 +44,7 @@ export function SecuritySetupScreen({ navigation: { navigate } }: Props) {
           <FaceIcon color={theme.colors.textSecondary} height={100} width={100} />
         </Box>
 
-        <Flex alignItems="center" justifyContent="flex-end" width={'100%'}>
+        <Flex alignItems="center" justifyContent="flex-end" width="100%">
           <PrimaryButton
             alignSelf="stretch"
             label={t('Turn on Face ID')}

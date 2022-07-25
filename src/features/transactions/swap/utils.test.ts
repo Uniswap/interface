@@ -48,11 +48,11 @@ describe(getWrapType, () => {
 })
 
 describe(getFlow, () => {
-  it('correctly returns length of onboarding create flow without seed phrase with add security screen ', () => {
+  it('correctly returns length of onboarding create flow without seed phrase with add security screen', () => {
     expect(getFlow(ImportType.Create, true, false, true)).toHaveLength(5)
   })
 
-  it('correctly returns length of onboarding create flow with seed phrase existing without add security screen ', () => {
+  it('correctly returns length of onboarding create flow with seed phrase existing without add security screen', () => {
     expect(getFlow(ImportType.Create, true, true, true)).toHaveLength(4)
   })
 

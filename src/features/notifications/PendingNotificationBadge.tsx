@@ -59,7 +59,7 @@ export function PendingNotificationBadge({ size = 24 }: { size?: number }) {
         </Text>
       </Box>
       <Box alignItems="center" flexDirection="row">
-        <Progress.CircleSnail direction={'clockwise'} size={size} thickness={2.5} />
+        <Progress.CircleSnail direction="clockwise" size={size} thickness={2.5} />
       </Box>
     </Box>
   )

@@ -53,7 +53,7 @@ export function NotificationsSetupScreen({ navigation, route: { params } }: Prop
       title={t('Turn on push notifications')}>
       <Flex grow justifyContent="space-between">
         <SampleNotifications />
-        <Flex alignItems="center" gap="xl" justifyContent="flex-end" width={'100%'}>
+        <Flex alignItems="center" gap="xl" justifyContent="flex-end" width="100%">
           <PrimaryButton
             alignSelf="stretch"
             label={t('Turn on notifications')}
