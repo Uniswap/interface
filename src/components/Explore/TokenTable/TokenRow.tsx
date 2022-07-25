@@ -96,12 +96,14 @@ export const ClickFavorited = styled.span`
     color: ${({ theme }) => theme.accentActive};
   }
 `
-const ClickableName = styled(Link)`
+const ClickableContent = styled(Link)`
   display: flex;
-  gap: 8px;
   text-decoration: none;
   color: ${({ theme }) => theme.textPrimary};
   align-items: center;
+`
+const ClickableName = styled(ClickableContent)`
+  gap: 8px;
 `
 const FavoriteCell = styled(Cell)`
   min-width: 40px;
@@ -485,14 +487,24 @@ export default function LoadedRow({
         </ClickableName>
       }
       price={
-        <PriceInfoCell>
-          {formatDollarAmount(tokenData.price)}
-          <PercentChangeInfoCell>{tokenPercentChangeInfo}</PercentChangeInfoCell>
-        </PriceInfoCell>
+        <ClickableContent to={`tokens/${tokenAddress}`}>
+          <PriceInfoCell>
+            {formatDollarAmount(tokenData.price)}
+            <PercentChangeInfoCell>{tokenPercentChangeInfo}</PercentChangeInfoCell>
+          </PriceInfoCell>
+        </ClickableContent>
       }
-      percentChange={tokenPercentChangeInfo}
-      marketCap={formatAmount(tokenData.marketCap).toUpperCase()}
-      volume={formatAmount(tokenData.volume[timePeriod]).toUpperCase()}
+      percentChange={<ClickableContent to={`tokens/${tokenAddress}`}>{tokenPercentChangeInfo}</ClickableContent>}
+      marketCap={
+        <ClickableContent to={`tokens/${tokenAddress}`}>
+          {formatAmount(tokenData.marketCap).toUpperCase()}
+        </ClickableContent>
+      }
+      volume={
+        <ClickableContent to={`tokens/${tokenAddress}`}>
+          {formatAmount(tokenData.volume[timePeriod]).toUpperCase()}
+        </ClickableContent>
+      }
       sparkLine={<SparkLineImg dangerouslySetInnerHTML={{ __html: tokenData.sparkline }} isPositive={isPositive} />}
     />
   )
