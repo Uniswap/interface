@@ -5,6 +5,7 @@ import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { TWO_PERCENT } from 'constants/misc'
 import { useBestMarketTrade, useBestV3Trade } from 'hooks/useBestV3Trade'
+import { SignatureData } from 'hooks/useERC20Permit'
 import JSBI from 'jsbi'
 import { ParsedQs } from 'qs'
 import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
@@ -118,7 +119,9 @@ function involvesAddress(
 // from the current swap inputs, compute the best trade and return it.
 export function useDerivedMarketInfo(
   toggledVersion: Version | undefined,
-  gasless: boolean
+  showConfirm: boolean,
+  gasless: boolean,
+  signatureData: SignatureData | null
 ): {
   currencies: { [field in Field]?: Currency | null }
   currencyBalances: { [field in Field]?: CurrencyAmount<Currency> }
@@ -160,7 +163,9 @@ export function useDerivedMarketInfo(
   )
 
   const v2Trade = useBestMarketTrade(
+    showConfirm,
     gasless,
+    signatureData,
     isExactIn ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT,
     toggledVersion !== Version.v3 ? parsedAmount : undefined,
     (isExactIn ? outputCurrency : inputCurrency) ?? undefined

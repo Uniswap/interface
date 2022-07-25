@@ -12,17 +12,18 @@ import { GetValidatorGaslessQuoteResult, GetValidatorQuoteResult } from './types
 
 export const routingApiKromatika = createApi({
   reducerPath: 'routingApiKromatika',
-  baseQuery: fetchBaseQuery({ baseUrl: 'https://api.kromatika.finance/v1.0' }),
+  baseQuery: fetchBaseQuery({ baseUrl: 'http://192.168.254.143:4001/v1.0' }),
   endpoints: (build) => ({
     getQuote: build.query<
       GetValidatorQuoteResult,
       {
         chainId: string
         queryArg: {
-          sellToken: string
-          buyToken: string
-          sellAmount: string | null
-          buyAmount: string | null
+          fromAddress: string
+          sellTokenAddress: string
+          buyTokenAddress: string
+          sellTokenAmount: string | null
+          buyTokenAmount: string | null
           recipient: string | null | undefined
           slippage: string
           affiliate: string | null
@@ -34,7 +35,7 @@ export const routingApiKromatika = createApi({
     >({
       query: (args) => {
         const { chainId, queryArg } = args
-        return `/${chainId}/quote?${qs.stringify(queryArg, { skipNulls: true })}`
+        return `/${chainId}/getQuote?${qs.stringify(queryArg, { skipNulls: true })}`
       },
       extraOptions: { maxRetries: 3 }, // You can o
     }),
@@ -43,10 +44,11 @@ export const routingApiKromatika = createApi({
       {
         chainId: string
         queryArg: {
-          sellToken: string
-          buyToken: string
-          sellAmount: string | null
-          buyAmount: string | null
+          fromAddress: string
+          sellTokenAddress: string
+          buyTokenAddress: string
+          sellTokenAmount: string | null
+          buyTokenAmount: string | null
           recipient: string | null | undefined
           slippage: string
           affiliate: string | null
@@ -58,7 +60,7 @@ export const routingApiKromatika = createApi({
     >({
       query: (args) => {
         const { chainId, queryArg } = args
-        return `/${chainId}/quoteGasless?${qs.stringify(queryArg, { skipNulls: true })}`
+        return `/${chainId}/getGaslessQuote?${qs.stringify(queryArg, { skipNulls: true })}`
       },
       extraOptions: { maxRetries: 3 }, // You can o
     }),

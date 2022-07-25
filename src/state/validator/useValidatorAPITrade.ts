@@ -53,10 +53,11 @@ function useValidatorAPIArguments({
   return {
     chainId: chainId.toString(),
     queryArg: {
-      sellToken: tokenIn.isNative ? '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee' : tokenIn.wrapped.address,
-      buyToken: tokenOut.isNative ? '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee' : tokenOut.wrapped.address,
-      sellAmount: tradeType == TradeType.EXACT_INPUT ? amount.quotient.toString() : null,
-      buyAmount: tradeType == TradeType.EXACT_OUTPUT ? amount.quotient.toString() : null,
+      fromAddress: account.toString(),
+      sellTokenAddress: tokenIn.isNative ? '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee' : tokenIn.wrapped.address,
+      buyTokenAddress: tokenOut.isNative ? '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee' : tokenOut.wrapped.address,
+      sellTokenAmount: tradeType == TradeType.EXACT_INPUT ? amount.quotient.toString() : null,
+      buyTokenAmount: tradeType == TradeType.EXACT_OUTPUT ? amount.quotient.toString() : null,
       recipient,
       slippage: allowedSlippage.divide(100).toSignificant(6),
       affiliate: affiliate?.toString() ?? null,
@@ -92,7 +93,6 @@ export function useGaslessAPITrade(
   state: V3TradeState
   trade: TradeV3<Currency, Currency, TradeType> | undefined
   tx: SwapTransaction | undefined
-  uniswapAmount: CurrencyAmount<Currency> | undefined
   paymentFees: CurrencyAmount<Currency> | undefined
 } {
   const [currencyIn, currencyOut]: [Currency | undefined, Currency | undefined] = useMemo(
@@ -124,9 +124,9 @@ export function useGaslessAPITrade(
 
   const gasAmount = useNetworkGasPrice()
   const priceGwei =
-    gasAmount && data?.quote?.estimatedGas
+    gasAmount && data?.estimatedGas
       ? gasAmount
-          .multiply(JSBI.BigInt(data?.quote?.estimatedGas))
+          .multiply(JSBI.BigInt(data?.estimatedGas))
           .multiply(ONE_HUNDRED_PERCENT.subtract(new Percent(JSBI.BigInt(1500), JSBI.BigInt(10000))))
       : undefined
   const gasUseEstimateUSD = useUSDCValue(priceGwei) ?? null
@@ -150,7 +150,6 @@ export function useGaslessAPITrade(
         state: V3TradeState.LOADING,
         trade: undefined,
         tx: undefined,
-        uniswapAmount: undefined,
         paymentFees: undefined,
       }
     }
@@ -158,10 +157,10 @@ export function useGaslessAPITrade(
     const otherAmount =
       tradeType === TradeType.EXACT_INPUT
         ? currencyIn && quoteResult
-          ? CurrencyAmount.fromRawAmount(currencyIn, quoteResult.quote?.sellAmount)
+          ? CurrencyAmount.fromRawAmount(currencyIn, quoteResult?.sellAmount)
           : undefined
         : currencyOut && quoteResult
-        ? CurrencyAmount.fromRawAmount(currencyOut, quoteResult.quote?.buyAmount)
+        ? CurrencyAmount.fromRawAmount(currencyOut, quoteResult?.buyAmount)
         : undefined
 
     if (isError || !otherAmount || !queryArgs) {
@@ -169,7 +168,6 @@ export function useGaslessAPITrade(
         state: V3TradeState.NO_ROUTE_FOUND,
         trade: undefined,
         tx: undefined,
-        uniswapAmount: undefined,
         paymentFees: undefined,
       }
     }
@@ -181,12 +179,11 @@ export function useGaslessAPITrade(
           state: V3TradeState.INVALID,
           trade: undefined,
           tx: undefined,
-          uniswapAmount: undefined,
           paymentFees: undefined,
         }
       }
-      const inputAmount = CurrencyAmount.fromRawAmount(currencyIn, quoteResult.quote?.sellAmount)
-      const outputAmount = CurrencyAmount.fromRawAmount(currencyOut, quoteResult.quote?.buyAmount)
+      const inputAmount = CurrencyAmount.fromRawAmount(currencyIn, quoteResult?.sellAmount)
+      const outputAmount = CurrencyAmount.fromRawAmount(currencyOut, quoteResult?.buyAmount)
       const route = new RouteV3([v2StylePool(inputAmount.wrapped, outputAmount.wrapped)], currencyIn, currencyOut)
       const bestTrade = TradeV3.createUncheckedTrade({
         route,
@@ -201,18 +198,18 @@ export function useGaslessAPITrade(
         trade: bestTrade,
         tx: {
           from: account?.toString() ?? '',
-          to: quoteResult?.quote?.to ?? '',
-          data: quoteResult?.quote?.data ?? '',
-          value: quoteResult?.quote?.value ?? '',
-          gas: quoteResult?.quote?.estimatedGas ?? '',
+          to: quoteResult?.tx?.to ?? '',
+          data: quoteResult?.tx?.data ?? '',
+          value: quoteResult?.tx?.value ?? '',
+          gas: quoteResult?.estimatedGas ?? '',
           type: 1,
           gasUseEstimateUSD: gasUseEstimateUSD ? gasUseEstimateUSD.toFixed(2) : '0',
-          allowanceTarget: quoteResult?.quote?.allowanceTarget,
+          allowanceTarget: quoteResult?.allowanceTarget,
         },
-        uniswapAmount: CurrencyAmount.fromRawAmount(currencyOut, quoteResult.quote?.uniswapAmount),
-        paymentFees: paymentToken
-          ? CurrencyAmount.fromRawAmount(paymentToken as Currency, quoteResult.paymentFee)
-          : undefined,
+        paymentFees:
+          paymentToken && quoteResult.paymentFee
+            ? CurrencyAmount.fromRawAmount(paymentToken as Currency, quoteResult.paymentFee)
+            : undefined,
       }
     } catch (error) {
       console.log(error)
@@ -263,7 +260,6 @@ export function useValidatorAPITrade(
   state: V3TradeState
   trade: TradeV3<Currency, Currency, TradeType> | undefined
   tx: SwapTransaction | undefined
-  uniswapAmount: CurrencyAmount<Currency> | undefined
 } {
   const [currencyIn, currencyOut]: [Currency | undefined, Currency | undefined] = useMemo(
     () =>
@@ -307,7 +303,6 @@ export function useValidatorAPITrade(
         state: V3TradeState.INVALID,
         trade: undefined,
         tx: undefined,
-        uniswapAmount: undefined,
       }
     }
 
@@ -317,7 +312,6 @@ export function useValidatorAPITrade(
         state: V3TradeState.LOADING,
         trade: undefined,
         tx: undefined,
-        uniswapAmount: undefined,
       }
     }
 
@@ -335,7 +329,6 @@ export function useValidatorAPITrade(
         state: V3TradeState.NO_ROUTE_FOUND,
         trade: undefined,
         tx: undefined,
-        uniswapAmount: undefined,
       }
     }
 
@@ -346,7 +339,6 @@ export function useValidatorAPITrade(
           state: V3TradeState.INVALID,
           trade: undefined,
           tx: undefined,
-          uniswapAmount: undefined,
         }
       }
       const inputAmount = CurrencyAmount.fromRawAmount(currencyIn, quoteResult.sellAmount)
@@ -365,9 +357,9 @@ export function useValidatorAPITrade(
         trade: bestTrade,
         tx: {
           from: account?.toString() ?? '',
-          to: quoteResult?.to ?? '',
-          data: quoteResult?.data ?? '',
-          value: quoteResult?.value ?? '',
+          to: quoteResult?.tx?.to ?? '',
+          data: quoteResult?.tx?.data ?? '',
+          value: quoteResult?.tx?.value ?? '',
           gas: quoteResult?.estimatedGas ?? '',
           type: 1,
           gasUseEstimateUSD: gasUseEstimateUSD ? gasUseEstimateUSD.toFixed(2) : '0',
@@ -375,7 +367,6 @@ export function useValidatorAPITrade(
           paymentToken: null,
           paymentFees: null,
         },
-        uniswapAmount: CurrencyAmount.fromRawAmount(currencyOut, quoteResult.uniswapAmount),
       }
     } catch (error) {
       console.log(error)

@@ -86,87 +86,9 @@ function useMarketCallArguments(
   const affiliate = referer === null || referer == account ? null : referer
   const deadline = useTransactionDeadline()
   const argentWalletContract = useArgentWalletContract()
-  const kromatikaMetaswap = useKromatikaMetaswap()
-
-  let signaturePermitData
-  if (signatureData && kromatikaMetaswap && parsedAmount) {
-    // create call data
-    const inputTokenPermit =
-      'allowed' in signatureData
-        ? {
-            expiry: signatureData.deadline,
-            nonce: signatureData.nonce,
-            s: signatureData.s,
-            r: signatureData.r,
-            v: signatureData.v as any,
-          }
-        : {
-            deadline: signatureData.deadline,
-            amount: signatureData.amount,
-            s: signatureData.s,
-            r: signatureData.r,
-            v: signatureData.v as any,
-          }
-
-    if ('nonce' in inputTokenPermit) {
-      signaturePermitData = kromatikaMetaswap.interface.encodeFunctionData('selfPermitAllowed', [
-        parsedAmount.currency.isToken ? parsedAmount.currency.address : undefined,
-        inputTokenPermit.nonce,
-        inputTokenPermit.expiry,
-        inputTokenPermit.v,
-        inputTokenPermit.r,
-        inputTokenPermit.s,
-      ])
-    } else {
-      signaturePermitData = kromatikaMetaswap.interface.encodeFunctionData('selfPermit', [
-        parsedAmount.currency.isToken ? parsedAmount.currency.address : undefined,
-        inputTokenPermit.amount,
-        inputTokenPermit.deadline,
-        inputTokenPermit.v,
-        inputTokenPermit.r,
-        inputTokenPermit.s,
-      ])
-    }
-  }
-
-  // get swap txn
-  const quoteTrade = useValidatorAPITrade(
-    trade ? trade.tradeType : TradeType.EXACT_OUTPUT,
-    recipient,
-    affiliate,
-    false,
-    !showConfirm || gasless,
-    trade?.tradeType == TradeType.EXACT_INPUT ? trade?.inputAmount : trade?.outputAmount,
-    trade?.tradeType == TradeType.EXACT_INPUT ? trade?.outputAmount.currency : trade?.inputAmount.currency,
-    signaturePermitData
-  )
-
-  // get swap txn
-  const gaslessSwapTrade = useGaslessAPITrade(
-    trade ? trade.tradeType : TradeType.EXACT_OUTPUT,
-    recipient,
-    affiliate,
-    false,
-    !showConfirm || !gasless,
-    trade?.tradeType == TradeType.EXACT_INPUT ? trade?.inputAmount : trade?.outputAmount,
-    trade?.tradeType == TradeType.EXACT_INPUT ? trade?.outputAmount.currency : trade?.inputAmount.currency,
-    signaturePermitData
-  )
-
-  const updatedSwapTxn = showConfirm ? (gasless ? gaslessSwapTrade : quoteTrade) : undefined
 
   return useMemo(() => {
-    if (
-      !trade ||
-      !recipient ||
-      !library ||
-      !account ||
-      !chainId ||
-      !deadline ||
-      !parsedAmount ||
-      !updatedSwapTxn ||
-      !updatedSwapTxn.tx
-    )
+    if (!trade || !recipient || !library || !account || !chainId || !deadline || !parsedAmount || !swapTransaction)
       return {
         state: V3TradeState.LOADING,
         trade: null,
@@ -174,41 +96,41 @@ function useMarketCallArguments(
         marketcall: [],
       }
     // trade is V3Trade
-    const callData = updatedSwapTxn.tx.data
+    const callData = swapTransaction.data
     if (argentWalletContract && trade.inputAmount.currency.isToken) {
       return {
-        state: updatedSwapTxn.state,
-        trade: updatedSwapTxn.trade,
-        tx: updatedSwapTxn.tx,
+        state: V3TradeState.VALID,
+        trade,
+        tx: swapTransaction,
         marketcall: [
           {
             address: argentWalletContract.address,
             calldata: argentWalletContract.interface.encodeFunctionData('wc_multiCall', [
               [
-                approveAmountCalldata(trade.maximumAmountIn(allowedSlippage), updatedSwapTxn.tx?.to),
+                approveAmountCalldata(trade.maximumAmountIn(allowedSlippage), swapTransaction?.to),
                 {
-                  to: updatedSwapTxn.tx?.to,
-                  value: updatedSwapTxn.tx.value,
+                  to: swapTransaction?.to,
+                  value: swapTransaction.value,
                   data: callData,
                 },
               ],
             ]),
             value: '0x0',
-            gas: updatedSwapTxn.tx.gas,
+            gas: swapTransaction.gas,
           },
         ],
       }
     }
     return {
-      state: updatedSwapTxn.state,
-      trade: updatedSwapTxn.trade,
-      tx: updatedSwapTxn.tx,
+      state: V3TradeState.VALID,
+      trade,
+      tx: swapTransaction,
       marketcall: [
         {
-          address: updatedSwapTxn.tx?.to,
-          value: toHex(updatedSwapTxn.tx.value),
+          address: swapTransaction?.to,
+          value: toHex(swapTransaction.value),
           calldata: callData,
-          gas: updatedSwapTxn.tx.gas,
+          gas: swapTransaction.gas,
         },
       ],
     }
@@ -220,7 +142,7 @@ function useMarketCallArguments(
     chainId,
     deadline,
     parsedAmount,
-    updatedSwapTxn,
+    swapTransaction,
     argentWalletContract,
     allowedSlippage,
   ])
@@ -420,7 +342,7 @@ export function useMarketCallback(
             data: calldata,
             to: address,
             from: account,
-            gasLimit: gasLimit ? gasLimit?.gasLimit?.add(200000).toHexString() : 700000,
+            gasLimit: gasLimit ? gasLimit?.gasLimit?.toHexString() : 700000,
             signatureType: library.provider.isMetaMask ? 'EIP712_SIGN' : 'PERSONAL_SIGN',
             ...(value && !isZero(value) ? { value } : {}),
           }

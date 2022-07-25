@@ -3,6 +3,7 @@ import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { ReactNode, useCallback, useMemo } from 'react'
+import { SwapTransaction } from 'state/validator/types'
 
 import TransactionConfirmationModal, {
   ConfirmationModalContent,
@@ -33,6 +34,8 @@ function tradeMeaningfullyDiffers(
 export default function ConfirmMarketModal({
   trade,
   originalTrade,
+  swapTransaction,
+  originalSwapTransaction,
   onAcceptChanges,
   allowedSlippage,
   onConfirm,
@@ -47,6 +50,8 @@ export default function ConfirmMarketModal({
   isOpen: boolean
   trade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType> | undefined
   originalTrade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType> | undefined
+  swapTransaction: SwapTransaction | undefined
+  originalSwapTransaction: SwapTransaction | undefined
   attemptingTxn: boolean
   txHash: string | undefined
   recipient: string | null
@@ -70,6 +75,11 @@ export default function ConfirmMarketModal({
     [originalTrade, trade]
   )
 
+  const showTransactionInfo = useMemo(
+    () => Boolean(originalSwapTransaction?.data || (!originalSwapTransaction?.data && swapTransaction?.data)),
+    [originalSwapTransaction?.data, swapTransaction?.data]
+  )
+
   const modalHeader = useCallback(() => {
     return trade ? (
       <MarketModalHeader
@@ -81,18 +91,18 @@ export default function ConfirmMarketModal({
         referer={referer}
       />
     ) : null
-  }, [allowedSlippage, onAcceptChanges, recipient, showAcceptChanges, trade])
+  }, [allowedSlippage, onAcceptChanges, recipient, referer, showAcceptChanges, trade])
 
   const modalBottom = useCallback(() => {
     return trade ? (
       <MarketModalFooter
         onConfirm={onConfirm}
         trade={trade}
-        disabledConfirm={showAcceptChanges}
+        disabledConfirm={showAcceptChanges || !showTransactionInfo}
         swapErrorMessage={swapErrorMessage}
       />
     ) : null
-  }, [onConfirm, showAcceptChanges, swapErrorMessage, trade])
+  }, [onConfirm, showAcceptChanges, showTransactionInfo, swapErrorMessage, trade])
 
   // text to show while loading
   const pendingText = (
@@ -114,7 +124,7 @@ export default function ConfirmMarketModal({
           bottomContent={modalBottom}
         />
       ),
-    [onDismiss, modalBottom, modalHeader, swapErrorMessage]
+    [swapErrorMessage, onDismiss, modalHeader, modalBottom]
   )
 
   return (

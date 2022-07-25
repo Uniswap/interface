@@ -4,17 +4,23 @@ import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { ChainName } from 'constants/chains'
 import { BETTER_TRADE_LESS_HOPS_THRESHOLD, TWO_PERCENT } from 'constants/misc'
 import { useMemo } from 'react'
+import { useInchQuoteAPITrade } from 'state/routing/useRoutingAPITrade'
 import { useRoutingAPIEnabled } from 'state/user/hooks'
 import { SwapTransaction, V3TradeState } from 'state/validator/types'
 import { useGaslessAPITrade, useValidatorAPITrade } from 'state/validator/useValidatorAPITrade'
 
 import { useClientSideV3Trade } from './useClientSideV3Trade'
+import { useKromatikaMetaswap } from './useContract'
 import useDebounce from './useDebounce'
+import { SignatureData } from './useERC20Permit'
 import useIsWindowVisible from './useIsWindowVisible'
 import { useUSDCValue } from './useUSDCPrice'
+import { useActiveWeb3React } from './web3'
 
 export function useBestMarketTrade(
+  showConfirm: boolean,
   gasless: boolean,
+  signatureData: SignatureData | null,
   tradeType: TradeType,
   amountSpecified?: CurrencyAmount<Currency>,
   otherCurrency?: Currency
@@ -25,28 +31,94 @@ export function useBestMarketTrade(
   savings: CurrencyAmount<Token> | null
 } {
   const isWindowVisible = useIsWindowVisible()
-
+  const { chainId } = useActiveWeb3React()
   const debouncedAmount = useDebounce(amountSpecified, 100)
+  const kromatikaMetaswap = useKromatikaMetaswap()
+
+  // parse signature data
+  let signaturePermitData
+  if (signatureData && kromatikaMetaswap && debouncedAmount) {
+    // create call data
+    const inputTokenPermit =
+      'allowed' in signatureData
+        ? {
+            expiry: signatureData.deadline,
+            nonce: signatureData.nonce,
+            s: signatureData.s,
+            r: signatureData.r,
+            v: signatureData.v as any,
+          }
+        : {
+            deadline: signatureData.deadline,
+            amount: signatureData.amount,
+            s: signatureData.s,
+            r: signatureData.r,
+            v: signatureData.v as any,
+          }
+    if ('nonce' in inputTokenPermit) {
+      signaturePermitData = kromatikaMetaswap.interface.encodeFunctionData('selfPermitAllowed', [
+        debouncedAmount.currency.isToken ? debouncedAmount.currency.address : undefined,
+        inputTokenPermit.nonce,
+        inputTokenPermit.expiry,
+        inputTokenPermit.v,
+        inputTokenPermit.r,
+        inputTokenPermit.s,
+      ])
+    } else {
+      signaturePermitData = kromatikaMetaswap.interface.encodeFunctionData('selfPermit', [
+        debouncedAmount.currency.isToken ? debouncedAmount.currency.address : undefined,
+        inputTokenPermit.amount,
+        inputTokenPermit.deadline,
+        inputTokenPermit.v,
+        inputTokenPermit.r,
+        inputTokenPermit.s,
+      ])
+    }
+  }
 
   const routingAPIEnabled = useRoutingAPIEnabled()
   const quoteTrade = useValidatorAPITrade(
     tradeType,
     null,
     null,
-    true,
-    !gasless,
+    !showConfirm,
+    gasless,
     routingAPIEnabled && isWindowVisible ? debouncedAmount : undefined,
-    otherCurrency
+    otherCurrency,
+    signaturePermitData
   )
 
   const gaslessTrade = useGaslessAPITrade(
     tradeType,
     null,
     null,
-    true,
-    gasless,
+    !showConfirm,
+    !gasless,
     routingAPIEnabled && isWindowVisible ? debouncedAmount : undefined,
-    otherCurrency
+    otherCurrency,
+    signaturePermitData
+  )
+
+  const nameOfNetwork = useMemo(() => {
+    if (!chainId) return undefined
+    return ChainName[chainId]
+  }, [chainId])
+
+  const protocols = useMemo(() => {
+    if (!nameOfNetwork) return undefined
+
+    if (nameOfNetwork === 'ethereum') {
+      return 'UNISWAP_V2,UNISWAP_V3'
+    }
+    return nameOfNetwork.toUpperCase().concat('_UNISWAP_V2,').concat(nameOfNetwork.toUpperCase()).concat('_UNISWAP_V3')
+  }, [nameOfNetwork])
+
+  // use 1inch with only v2,v3
+  const uniswapAPITrade = useInchQuoteAPITrade(
+    tradeType,
+    routingAPIEnabled && isWindowVisible ? debouncedAmount : undefined,
+    otherCurrency,
+    protocols
   )
 
   const betterTrade = gasless ? gaslessTrade : quoteTrade
@@ -63,7 +135,7 @@ export function useBestMarketTrade(
         !amountSpecified.currency.equals(betterTrade?.trade.outputAmount.currency) ||
         !otherCurrency?.equals(betterTrade?.trade.inputAmount.currency))
 
-  const savings = useUSDCValue(betterTrade.uniswapAmount)
+  const savings = useUSDCValue(uniswapAPITrade.trade?.outputAmount)
 
   return useMemo(
     () => ({

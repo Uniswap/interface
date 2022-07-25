@@ -25,7 +25,7 @@ import ReactGA from 'react-ga'
 import { RouteComponentProps, useLocation } from 'react-router-dom'
 import { Text } from 'rebass'
 import { useDerivedMarketInfo, useMarketActionHandlers, useMarketState } from 'state/market/hooks'
-import { V3TradeState } from 'state/validator/types'
+import { SwapTransaction, V3TradeState } from 'state/validator/types'
 import styled, { ThemeContext } from 'styled-components/macro'
 import { shortenAddress } from 'utils'
 
@@ -54,7 +54,7 @@ import TokenWarningModal from '../../components/TokenWarningModal'
 import { useAllTokens, useCurrency } from '../../hooks/Tokens'
 import { ApprovalState, useApproveCallbackFromTrade } from '../../hooks/useApproveCallback'
 import useENSAddress from '../../hooks/useENSAddress'
-import { useERC20PermitFromTrade, UseERC20PermitState } from '../../hooks/useERC20Permit'
+import { SignatureData, useERC20PermitFromTrade, UseERC20PermitState } from '../../hooks/useERC20Permit'
 import useIsArgentWallet from '../../hooks/useIsArgentWallet'
 import { useIsSwapUnsupported } from '../../hooks/useIsSwapUnsupported'
 import useToggledVersion, { Version } from '../../hooks/useToggledVersion'
@@ -308,6 +308,29 @@ export default function Market({ history }: RouteComponentProps) {
 
   // swap state
   const { independentField, typedValue, recipient } = useMarketState()
+
+  // modal and loading
+  const [
+    { showConfirm, tradeToConfirm, signatureDataNew, swapTransactionNew, swapErrorMessage, attemptingTxn, txHash },
+    setSwapState,
+  ] = useState<{
+    showConfirm: boolean
+    tradeToConfirm: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType> | undefined
+    signatureDataNew: SignatureData | null
+    swapTransactionNew: SwapTransaction | undefined
+    attemptingTxn: boolean
+    swapErrorMessage: string | undefined
+    txHash: string | undefined
+  }>({
+    showConfirm: false,
+    tradeToConfirm: undefined,
+    signatureDataNew: null,
+    swapTransactionNew: undefined,
+    attemptingTxn: false,
+    swapErrorMessage: undefined,
+    txHash: undefined,
+  })
+
   const {
     v2Trade: { state: v3TradeState, tx: swapTransaction, savings: uniSavings },
     bestTrade: trade,
@@ -316,7 +339,7 @@ export default function Market({ history }: RouteComponentProps) {
     parsedAmount,
     currencies,
     inputError: swapInputError,
-  } = useDerivedMarketInfo(toggledVersion, isExpertMode)
+  } = useDerivedMarketInfo(toggledVersion, showConfirm, isExpertMode, signatureDataNew)
 
   if (currencies.OUTPUT == undefined) currencies.OUTPUT = null
   if (currencies.INPUT == undefined) currencies.INPUT = null
@@ -380,21 +403,6 @@ export default function Market({ history }: RouteComponentProps) {
     setDismissTokenWarning(true)
     history.push('/market/')
   }, [history])
-
-  // modal and loading
-  const [{ showConfirm, tradeToConfirm, swapErrorMessage, attemptingTxn, txHash }, setSwapState] = useState<{
-    showConfirm: boolean
-    tradeToConfirm: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType> | undefined
-    attemptingTxn: boolean
-    swapErrorMessage: string | undefined
-    txHash: string | undefined
-  }>({
-    showConfirm: false,
-    tradeToConfirm: undefined,
-    attemptingTxn: false,
-    swapErrorMessage: undefined,
-    txHash: undefined,
-  })
 
   const formattedAmounts = {
     [independentField]: typedValue,
@@ -469,10 +477,26 @@ export default function Market({ history }: RouteComponentProps) {
     if (priceImpact && !confirmPriceImpactWithoutFee(priceImpact)) {
       return
     }
-    setSwapState({ attemptingTxn: true, tradeToConfirm, showConfirm, swapErrorMessage: undefined, txHash: undefined })
+    setSwapState({
+      attemptingTxn: true,
+      tradeToConfirm,
+      showConfirm,
+      signatureDataNew: signatureData,
+      swapTransactionNew: swapTransaction,
+      swapErrorMessage: undefined,
+      txHash: undefined,
+    })
     swapCallback()
       .then((hash) => {
-        setSwapState({ attemptingTxn: false, tradeToConfirm, showConfirm, swapErrorMessage: undefined, txHash: hash })
+        setSwapState({
+          attemptingTxn: false,
+          tradeToConfirm,
+          showConfirm,
+          signatureDataNew: signatureData,
+          swapTransactionNew: swapTransaction,
+          swapErrorMessage: undefined,
+          txHash: hash,
+        })
         ReactGA.event({
           category: 'Swap',
           action:
@@ -494,11 +518,24 @@ export default function Market({ history }: RouteComponentProps) {
           attemptingTxn: false,
           tradeToConfirm,
           showConfirm,
+          signatureDataNew: signatureData,
+          swapTransactionNew: swapTransaction,
           swapErrorMessage: error.message,
           txHash: undefined,
         })
       })
-  }, [swapCallback, priceImpact, tradeToConfirm, showConfirm, recipient, recipientAddress, account, trade])
+  }, [
+    swapCallback,
+    priceImpact,
+    tradeToConfirm,
+    showConfirm,
+    signatureData,
+    swapTransaction,
+    recipient,
+    recipientAddress,
+    account,
+    trade,
+  ])
 
   // errors
   const [showInverted, setShowInverted] = useState<boolean>(false)
@@ -527,7 +564,15 @@ export default function Market({ history }: RouteComponentProps) {
       (approvalSubmitted && approvalState === ApprovalState.APPROVED))
 
   const handleConfirmDismiss = useCallback(() => {
-    setSwapState({ showConfirm: false, tradeToConfirm, attemptingTxn, swapErrorMessage, txHash })
+    setSwapState({
+      showConfirm: false,
+      tradeToConfirm,
+      signatureDataNew: null,
+      swapTransactionNew: undefined,
+      attemptingTxn,
+      swapErrorMessage,
+      txHash,
+    })
     // if there was a tx hash, we want to clear the input
     if (txHash) {
       onUserInput(Field.INPUT, '')
@@ -535,8 +580,16 @@ export default function Market({ history }: RouteComponentProps) {
   }, [attemptingTxn, onUserInput, swapErrorMessage, tradeToConfirm, txHash])
 
   const handleAcceptChanges = useCallback(() => {
-    setSwapState({ tradeToConfirm: trade, swapErrorMessage, txHash, attemptingTxn, showConfirm })
-  }, [attemptingTxn, showConfirm, swapErrorMessage, trade, txHash])
+    setSwapState({
+      tradeToConfirm: trade,
+      signatureDataNew: signatureData,
+      swapTransactionNew: swapTransaction,
+      swapErrorMessage,
+      txHash,
+      attemptingTxn,
+      showConfirm,
+    })
+  }, [attemptingTxn, showConfirm, signatureData, swapErrorMessage, swapTransaction, trade, txHash])
 
   const handleInputSelect = useCallback(
     (inputCurrency) => {
@@ -585,6 +638,8 @@ export default function Market({ history }: RouteComponentProps) {
                     isOpen={showConfirm}
                     trade={trade}
                     originalTrade={tradeToConfirm}
+                    swapTransaction={swapTransaction}
+                    originalSwapTransaction={swapTransactionNew}
                     onAcceptChanges={handleAcceptChanges}
                     attemptingTxn={attemptingTxn}
                     txHash={txHash}
@@ -863,7 +918,7 @@ export default function Market({ history }: RouteComponentProps) {
                             </ButtonConfirmed>
                             <ButtonError
                               onClick={() => {
-                                if (isExpertMode) {
+                                if (false) {
                                   handleSwap()
                                 } else {
                                   setSwapState({
@@ -871,6 +926,8 @@ export default function Market({ history }: RouteComponentProps) {
                                     attemptingTxn: false,
                                     swapErrorMessage: undefined,
                                     showConfirm: true,
+                                    signatureDataNew: signatureData,
+                                    swapTransactionNew: swapTransaction,
                                     txHash: undefined,
                                   })
                                 }
@@ -893,7 +950,7 @@ export default function Market({ history }: RouteComponentProps) {
                       ) : (
                         <ButtonError
                           onClick={() => {
-                            if (isExpertMode) {
+                            if (false) {
                               handleSwap()
                             } else {
                               setSwapState({
@@ -901,6 +958,8 @@ export default function Market({ history }: RouteComponentProps) {
                                 attemptingTxn: false,
                                 swapErrorMessage: undefined,
                                 showConfirm: true,
+                                signatureDataNew: signatureData,
+                                swapTransactionNew: swapTransaction,
                                 txHash: undefined,
                               })
                             }
@@ -1027,6 +1086,8 @@ export default function Market({ history }: RouteComponentProps) {
               isOpen={showConfirm}
               trade={trade}
               originalTrade={tradeToConfirm}
+              swapTransaction={swapTransaction}
+              originalSwapTransaction={swapTransactionNew}
               onAcceptChanges={handleAcceptChanges}
               attemptingTxn={attemptingTxn}
               txHash={txHash}
@@ -1294,7 +1355,7 @@ export default function Market({ history }: RouteComponentProps) {
                       </ButtonConfirmed>
                       <ButtonError
                         onClick={() => {
-                          if (isExpertMode) {
+                          if (false) {
                             handleSwap()
                           } else {
                             setSwapState({
@@ -1302,6 +1363,8 @@ export default function Market({ history }: RouteComponentProps) {
                               attemptingTxn: false,
                               swapErrorMessage: undefined,
                               showConfirm: true,
+                              signatureDataNew: signatureData,
+                              swapTransactionNew: swapTransaction,
                               txHash: undefined,
                             })
                           }
@@ -1323,7 +1386,7 @@ export default function Market({ history }: RouteComponentProps) {
                 ) : (
                   <ButtonError
                     onClick={() => {
-                      if (isExpertMode) {
+                      if (false) {
                         handleSwap()
                       } else {
                         setSwapState({
@@ -1331,6 +1394,8 @@ export default function Market({ history }: RouteComponentProps) {
                           attemptingTxn: false,
                           swapErrorMessage: undefined,
                           showConfirm: true,
+                          signatureDataNew: signatureData,
+                          swapTransactionNew: swapTransaction,
                           txHash: undefined,
                         })
                       }

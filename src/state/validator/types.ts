@@ -28,10 +28,16 @@ export type SwapTransaction = {
   allowanceTarget: string
 }
 
-export interface GetValidatorQuoteResult {
+export type TransactionData = {
+  from: string
   to: string
   data: string
+  gas: number
+  gasPrice: string | undefined
   value: string
+}
+
+export interface GetValidatorQuoteResult {
   estimatedGas: string
 
   buyTokenAddress: string
@@ -41,11 +47,20 @@ export interface GetValidatorQuoteResult {
   sellAmount: string
 
   allowanceTarget: string
-  uniswapAmount: string
+  tx: TransactionData | undefined
 }
 
 export interface GetValidatorGaslessQuoteResult {
-  quote: GetValidatorQuoteResult
+  estimatedGas: string
+
+  buyTokenAddress: string
+  buyAmount: string
+
+  sellTokenAddress: string
+  sellAmount: string
+
+  allowanceTarget: string
+  tx: TransactionData | undefined
   paymentTokenAddress: string
   paymentFee: string
 }
