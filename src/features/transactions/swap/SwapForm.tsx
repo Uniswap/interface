@@ -117,7 +117,7 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo }: SwapFormProps) {
             backgroundColor={currencies[CurrencyField.OUTPUT] ? 'backgroundContainer' : 'none'}
             borderRadius="lg"
             mb="sm"
-            mt="xl"
+            mt="lg"
             mx="md"
             position="relative">
             <Box zIndex="popover">
@@ -131,7 +131,7 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo }: SwapFormProps) {
                 </Box>
               </Box>
             </Box>
-            <Flex pb={swapWarning ? 'xxs' : 'md'} pt="md" px="md">
+            <Flex pb={swapWarning ? 'xxs' : 'md'} pt="xs" px="md">
               <CurrencyInputPanel
                 isOutput
                 currency={currencies[CurrencyField.OUTPUT]}

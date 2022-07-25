@@ -78,8 +78,8 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps) {
           backgroundColor="none"
           borderWidth={0}
           fontFamily={theme.textVariants.headlineLarge.fontFamily}
-          fontSize={36}
-          height={36}
+          fontSize={28}
+          height={28}
           mb="xs"
           placeholder="0"
           px="none"

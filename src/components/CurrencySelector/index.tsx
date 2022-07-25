@@ -57,7 +57,7 @@ export function CurrencySelector({
           {selectedCurrency ? (
             <Flex centered row flexDirection="row" gap="sm" px="sm" py="xs">
               <CurrencyLogo currency={selectedCurrency} size={25} />
-              <Text color="textPrimary" variant="headlineSmall">
+              <Text color="textPrimary" variant="subhead">
                 {selectedCurrency.symbol}
               </Text>
               <Chevron color={theme.colors.textPrimary} direction="e" />
