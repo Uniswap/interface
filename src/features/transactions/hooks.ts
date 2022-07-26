@@ -1,5 +1,6 @@
 import { skipToken } from '@reduxjs/toolkit/dist/query'
 import dayjs from 'dayjs'
+import { BigNumberish } from 'ethers'
 import { useMemo } from 'react'
 import { useAppSelector } from 'src/app/hooks'
 import { ChainId } from 'src/constants/chains'
@@ -20,6 +21,7 @@ import {
   TransactionStatus,
   TransactionType,
 } from 'src/features/transactions/types'
+import { useActiveAccountAddress } from 'src/features/wallet/hooks'
 
 // sorted oldest to newest
 export function useSortedTransactions(address: Address | null) {
@@ -163,7 +165,7 @@ export function useAllFormattedTransactions(
     const msTimestampCutoffDay = dayjs().startOf('day').unix() * 1000 // timestamp in ms for start of day local time
     const msTimestampCutoffMonth = dayjs().startOf('month').unix() * 1000
     const msTimestampCutoffYear = dayjs().startOf('year').unix() * 1000
-    return combinedTransactionList.reduce(
+    const formatted = combinedTransactionList.reduce(
       (accum: TransactionSummaryInfo[][], item) => {
         if (
           // Want all incomplete transactions
@@ -185,6 +187,13 @@ export function useAllFormattedTransactions(
       },
       [[], [], [], [], []]
     )
+    // sort pending txns based on nonces
+    formatted[0] = formatted[0].sort((a, b) => {
+      const nonceA = a.fullDetails?.options?.request?.nonce
+      const nonceB = b.fullDetails?.options?.request?.nonce
+      return nonceA && nonceB ? (nonceA < nonceB ? -1 : 1) : -1
+    })
+    return formatted
   }, [combinedTransactionList])
 
   return useMemo(() => {
@@ -204,4 +213,18 @@ export function useAllFormattedTransactions(
     todayTransactionList,
     yearTransactionList,
   ])
+}
+
+export function useLowestPendingNonce() {
+  const activeAccountAddress = useActiveAccountAddress()
+  const { pending } = useAllFormattedTransactions(activeAccountAddress)
+
+  return useMemo(() => {
+    let min: BigNumberish | undefined
+    pending.map((txn) => {
+      const currentNonce = txn.fullDetails?.options?.request?.nonce
+      min = min ? (currentNonce ? (min < currentNonce ? min : currentNonce) : min) : currentNonce
+    })
+    return min
+  }, [pending])
 }

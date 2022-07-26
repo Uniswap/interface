@@ -1,5 +1,6 @@
 import dayjs from 'dayjs'
 import { default as React, memo, useCallback, useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import SlashCircleIcon from 'src/assets/icons/slash-circle.svg'
 import { Button, ButtonProps } from 'src/components/buttons/Button'
@@ -17,6 +18,7 @@ import { openModal } from 'src/features/modals/modalSlice'
 import { createBalanceUpdate } from 'src/features/notifications/utils'
 import { ModalName } from 'src/features/telemetry/constants'
 import { useCurrency } from 'src/features/tokens/useCurrency'
+import { useLowestPendingNonce } from 'src/features/transactions/hooks'
 import AlertBanner, { FailedCancelBadge } from 'src/features/transactions/SummaryCards/AlertBanner'
 import TransactionActionsModal from 'src/features/transactions/SummaryCards/TransactionActionsModal'
 import { getTransactionSummaryTitle } from 'src/features/transactions/SummaryCards/utils'
@@ -34,7 +36,7 @@ export const TXN_HISTORY_SIZING = {
   primaryImage: TXN_HISTORY_ICON_SIZE * (2 / 3),
   secondaryImage: TXN_HISTORY_ICON_SIZE * (2 / 3) * (2 / 3),
 }
-const LOADING_SPINNER_SIZE = 24
+const LOADING_SPINNER_SIZE = 20
 
 // Key values needed for rendering transaction history item.
 export interface TransactionSummaryInfo {
@@ -78,6 +80,7 @@ function TransactionSummaryItem({
     fullDetails,
   } = transactionSummaryInfo
   const theme = useAppTheme()
+  const { t } = useTranslation()
 
   const [showActionsModal, setShowActionsModal] = useState(false)
   const dispatch = useAppDispatch()
@@ -89,6 +92,11 @@ function TransactionSummaryItem({
 
   const spotPricesInput = useMemo(() => [currency], [currency])
   const { spotPrices } = useSpotPrices(spotPricesInput)
+
+  // Monitor latest nonce to identify queued transactions.
+  const lowestPendingNonce = useLowestPendingNonce()
+  const nonce = fullDetails?.options?.request?.nonce
+  const queued = nonce && lowestPendingNonce ? nonce > lowestPendingNonce : false
 
   const failed = status === TransactionStatus.Failed
   const canceled = status === TransactionStatus.Cancelled
@@ -206,7 +214,14 @@ function TransactionSummaryItem({
             </Flex>
           </Flex>
           {inProgress ? (
-            <SpinningLoader size={LOADING_SPINNER_SIZE} />
+            <Flex alignItems="flex-end" gap="xxxs">
+              <SpinningLoader disabled={queued} size={LOADING_SPINNER_SIZE} />
+              {queued && (
+                <Text color="textSecondary" variant="badge">
+                  {t('Queued')}
+                </Text>
+              )}
+            </Flex>
           ) : showRetry ? (
             <PrimaryButton
               label="Retry"

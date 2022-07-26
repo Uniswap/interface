@@ -8,9 +8,10 @@ import {
   withTiming,
 } from 'react-native-reanimated'
 import Loader from 'src/assets/icons/circle-spinner.svg'
+import EmptySpinner from 'src/assets/icons/empty-spinner.svg'
 import { AnimatedBox } from 'src/components/layout'
 
-export function SpinningLoader({ size }: { size: number }) {
+export function SpinningLoader({ size, disabled }: { size: number; disabled?: boolean }) {
   const rotation = useSharedValue(0)
 
   const animatedStyles = useAnimatedStyle(() => {
@@ -34,6 +35,9 @@ export function SpinningLoader({ size }: { size: number }) {
     return () => cancelAnimation(rotation)
   }, [rotation])
 
+  if (disabled) {
+    return <EmptySpinner height={size} width={size} />
+  }
   return (
     <AnimatedBox style={[animatedStyles]}>
       <Loader height={size} width={size} />

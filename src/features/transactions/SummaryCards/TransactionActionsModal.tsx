@@ -68,6 +68,7 @@ export default function TransactionActionsModal({
           address: transactionDetails.from,
         })
       )
+      onClose()
     }
   }
 

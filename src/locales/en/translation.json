@@ -187,6 +187,7 @@
   "From {{addr}} on {{chain}}": "From {{addr}} on {{chain}}",
   "Hash: {{hash}}": "Hash: {{hash}}",
   "Unknown chain": "Unknown chain",
+  "Queued": "Queued",
   "Unknown transaction": "Unknown transaction",
   " for ": " for ",
   "Swap": "Swap",
