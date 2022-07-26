@@ -15,9 +15,9 @@ const FavoriteButtonContent = styled.div`
 const StyledFavoriteButton = styled.button<{ active: boolean }>`
   padding: 0px 16px;
   border-radius: 12px;
-  background-color: ${({ theme, active }) => (active ? theme.accentActionSoft : theme.none)};
-  border: 1px solid ${({ theme, active }) => (active ? theme.accentActiveSoft : theme.backgroundOutline)};
-  color: ${({ theme, active }) => (active ? theme.blue200 : theme.textPrimary)};
+  background-color: ${({ theme, active }) => (active ? theme.accentAction : theme.none)};
+  border: 1px solid ${({ theme, active }) => (active ? theme.accentActive : theme.backgroundOutline)};
+  color: ${({ theme }) => theme.textPrimary};
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
@@ -35,12 +35,10 @@ const FavoriteText = styled.span`
 export default function FavoriteButton() {
   const theme = useTheme()
   const [showFavorites, setShowFavorites] = useAtom(showFavoritesAtom)
-  const heartColor = showFavorites ? theme.blue200 : theme.textPrimary
-  const fillColor = showFavorites ? theme.blue200 : theme.none
   return (
     <StyledFavoriteButton onClick={() => setShowFavorites(!showFavorites)} active={showFavorites}>
       <FavoriteButtonContent>
-        <Heart size={17} color={heartColor} fill={fillColor} />
+        <Heart size={17} color={theme.textPrimary} fill={theme.none} />
         <FavoriteText>Favorites</FavoriteText>
       </FavoriteButtonContent>
     </StyledFavoriteButton>

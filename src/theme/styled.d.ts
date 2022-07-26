@@ -109,6 +109,7 @@ export interface Colors {
   chain_80001: Color
 
   blue200: Color
+  flyoutDropShadow: Color
 }
 
 declare module 'styled-components/macro' {

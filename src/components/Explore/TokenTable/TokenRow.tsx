@@ -9,7 +9,6 @@ import { ReactNode } from 'react'
 import { ArrowDown, ArrowDownRight, ArrowUp, ArrowUpRight, Heart } from 'react-feather'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components/macro'
-import { opacify } from 'theme/utils'
 import { formatAmount, formatDollarAmount } from 'utils/formatDollarAmt'
 
 import {
@@ -52,7 +51,7 @@ const StyledTokenRow = styled.div`
   padding: 0px 12px;
 
   &:hover {
-    background-color: ${({ theme }) => theme.backgroundContainer};
+    background-color: ${({ theme }) => theme.accentActionSoft};
   }
 
   @media only screen and (max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT}) {
@@ -93,7 +92,7 @@ export const ClickFavorited = styled.span`
   cursor: pointer;
 
   &:hover {
-    color: ${({ theme }) => theme.accentActive};
+    color: ${({ theme }) => theme.textPrimary};
   }
 `
 const ClickableContent = styled(Link)`
@@ -154,7 +153,7 @@ const HeaderLabelCell = styled(Cell)<{ sortable: boolean }>`
 
   &:hover {
     color: ${({ theme, sortable }) => sortable && theme.white};
-    background-color: ${({ theme, sortable }) => sortable && opacify(24, theme.blue200)};
+    background-color: ${({ theme, sortable }) => sortable && theme.accentActionSoft};
   }
 `
 const MarketCapCell = styled(HeaderLabelCell)`
