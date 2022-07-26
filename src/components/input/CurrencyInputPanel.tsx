@@ -34,6 +34,7 @@ type CurrentInputPanelProps = {
   onToggleUSDInput?: () => void
   onPressIn?: () => void
   warnings: Warning[]
+  dimTextColor?: boolean
 } & RestyleProps
 
 /** Input panel for a single side of a transfer action. */
@@ -54,6 +55,7 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps) {
     onToggleUSDInput,
     onPressIn,
     warnings,
+    dimTextColor,
     ...rest
   } = props
 
@@ -78,10 +80,12 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps) {
           autoFocus={autoFocus}
           backgroundColor="none"
           borderWidth={0}
+          dimTextColor={dimTextColor}
           fontFamily={theme.textVariants.headlineLarge.fontFamily}
           fontSize={36}
           height={36}
           placeholder="0"
+          placeholderTextColor={theme.colors.textSecondary}
           px="none"
           py="none"
           showCurrencySign={isUSDInput}

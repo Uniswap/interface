@@ -6,9 +6,16 @@ const inputRegex = RegExp('^\\d*(?:\\\\[.])?\\d*$') // match escaped "." charact
 
 type Props = {
   showCurrencySign: boolean
+  dimTextColor?: boolean
 } & TextInputProps
 
-export function AmountInput({ onChangeText, value, showCurrencySign, ...rest }: Props) {
+export function AmountInput({
+  onChangeText,
+  value,
+  showCurrencySign,
+  dimTextColor,
+  ...rest
+}: Props) {
   const handleChange = (text: string) => {
     const parsedText = showCurrencySign ? text.substring(1) : text
 
@@ -22,7 +29,7 @@ export function AmountInput({ onChangeText, value, showCurrencySign, ...rest }: 
 
   return (
     <TextInput
-      color={!value ? 'textTertiary' : 'textPrimary'}
+      color={!value || dimTextColor ? 'textTertiary' : 'textPrimary'}
       keyboardType="numeric"
       value={formattedValue}
       onChangeText={handleChange}

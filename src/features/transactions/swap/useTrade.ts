@@ -47,6 +47,7 @@ export function useTrade(
 
   const {
     isLoading,
+    isFetching,
     error,
     currentData: data,
   } = useRouterQuote({
@@ -67,8 +68,9 @@ export function useTrade(
 
     return {
       loading: isDebouncing || isLoading,
+      isFetching,
       error,
       trade: transformQuoteToTrade(currencyIn, currencyOut, tradeType, data),
     }
-  }, [currencyIn, currencyOut, data, isDebouncing, isLoading, error, tradeType])
+  }, [currencyIn, currencyOut, data, isDebouncing, isLoading, error, tradeType, isFetching])
 }

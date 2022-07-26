@@ -3,6 +3,7 @@ import { Currency } from '@uniswap/sdk-core'
 import React, { Dispatch } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleSheet } from 'react-native'
+import * as Progress from 'react-native-progress'
 import { FadeIn, FadeOut, FadeOutDown } from 'react-native-reanimated'
 import { useAppTheme } from 'src/app/hooks'
 import InfoCircle from 'src/assets/icons/info-circle.svg'
@@ -47,7 +48,7 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo }: SwapFormProps) {
     exactAmountToken,
     exactAmountUSD = '',
     formattedAmounts,
-    trade: { trade: trade },
+    trade,
     wrapType,
     isUSDInput = false,
     warnings,
@@ -73,12 +74,23 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo }: SwapFormProps) {
     exactCurrency ?? undefined
   )
 
-  useUpdateSwapGasEstimate(dispatch, trade)
+  useUpdateSwapGasEstimate(dispatch, trade.trade)
 
-  const actionButtonDisabled = Boolean(
-    !(isWrapAction(wrapType) || trade) ||
-      warnings.some((warning) => warning.action === WarningAction.DisableReview)
+  const outputNotLoaded = !!(
+    formattedAmounts[CurrencyField.INPUT] && !formattedAmounts[CurrencyField.OUTPUT]
   )
+  const inputNotLoaded = !!(
+    formattedAmounts[CurrencyField.OUTPUT] && !formattedAmounts[CurrencyField.INPUT]
+  )
+
+  const otherAmountNotLoaded = outputNotLoaded || inputNotLoaded
+
+  const swapDataRefreshing = trade.isFetching || trade.loading || otherAmountNotLoaded
+
+  const noValidSwap = !isWrapAction(wrapType) && !trade
+  const blockWarning = warnings.some((warning) => warning.action === WarningAction.DisableReview)
+
+  const actionButtonDisabled = noValidSwap || blockWarning || swapDataRefreshing
 
   const swapWarning = warnings.find(showWarningInPanel)
   const swapWarningColor = getWarningColor(swapWarning)
@@ -98,6 +110,7 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo }: SwapFormProps) {
             currency={currencies[CurrencyField.INPUT]}
             currencyAmount={currencyAmounts[CurrencyField.INPUT]}
             currencyBalance={currencyBalances[CurrencyField.INPUT]}
+            dimTextColor={exactCurrencyField === CurrencyField.OUTPUT && swapDataRefreshing}
             isUSDInput={isUSDInput}
             otherSelectedCurrency={currencies[CurrencyField.OUTPUT]}
             value={formattedAmounts[CurrencyField.INPUT]}
@@ -120,6 +133,16 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo }: SwapFormProps) {
             mt="lg"
             mx="md"
             position="relative">
+            <Box bottom={12} height={24} position="absolute" right={12} width={24}>
+              {swapDataRefreshing ? (
+                <Progress.CircleSnail
+                  color={theme.colors.textSecondary}
+                  direction="clockwise"
+                  size={24}
+                  thickness={2.5}
+                />
+              ) : null}
+            </Box>
             <Box zIndex="popover">
               <Box alignItems="center" height={36} style={StyleSheet.absoluteFill}>
                 <Box alignItems="center" position="absolute" top={-24}>
@@ -138,6 +161,7 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo }: SwapFormProps) {
                   currency={currencies[CurrencyField.OUTPUT]}
                   currencyAmount={currencyAmounts[CurrencyField.OUTPUT]}
                   currencyBalance={currencyBalances[CurrencyField.OUTPUT]}
+                  dimTextColor={exactCurrencyField === CurrencyField.INPUT && swapDataRefreshing}
                   isUSDInput={isUSDInput}
                   otherSelectedCurrency={currencies[CurrencyField.INPUT]}
                   showNonZeroBalancesOnly={false}
