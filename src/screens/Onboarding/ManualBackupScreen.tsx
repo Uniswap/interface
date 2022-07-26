@@ -21,7 +21,6 @@ import { BackupType } from 'src/features/wallet/accounts/types'
 import { EditAccountAction, editAccountActions } from 'src/features/wallet/editAccountSaga'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { OnboardingScreens } from 'src/screens/Screens'
-import { flex } from 'src/styles/flex'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.BackupManual>
 
@@ -118,7 +117,9 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props) {
             onConfirm={() => setShowScreenShotWarningModal(false)}
           />
           <Flex grow justifyContent="space-between">
-            <MnemonicDisplay address={activeAccount!.address} style={flex.fill} />
+            <Flex mx="md">
+              <MnemonicDisplay address={activeAccount!.address} />
+            </Flex>
             <Flex grow justifyContent="flex-end">
               <PrimaryButton
                 label={t('Continue')}

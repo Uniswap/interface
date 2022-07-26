@@ -22,7 +22,7 @@ export default function WarningModal({
   onConfirm?: () => void
   modalName: ModalName
   title: string
-  caption: string
+  caption?: string
   closeText?: string
   confirmText?: string
 }) {
@@ -38,9 +38,11 @@ export default function WarningModal({
         <Text textAlign="center" variant="mediumLabel">
           {title}
         </Text>
-        <Text color="textSecondary" textAlign="center" variant="smallLabel">
-          {caption}
-        </Text>
+        {caption && (
+          <Text color="textSecondary" textAlign="center" variant="smallLabel">
+            {caption}
+          </Text>
+        )}
         <Flex centered row gap="sm" paddingTop="lg">
           {closeText && (
             <PrimaryButton flex={1} label={closeText} variant="gray" onPress={onClose} />

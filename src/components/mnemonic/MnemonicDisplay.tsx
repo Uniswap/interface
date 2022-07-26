@@ -1,6 +1,5 @@
 import React from 'react'
 import { requireNativeComponent, ViewProps } from 'react-native'
-import { Flex } from 'src/components/layout'
 
 interface NativeMnemonicDisplayProps {
   address: Address
@@ -10,10 +9,7 @@ const NativeMnemonicDisplay = requireNativeComponent<NativeMnemonicDisplayProps>
 
 type MnemonicDisplayProps = ViewProps & NativeMnemonicDisplayProps
 
+const MNEMONIC_DISPLAY_HEIGHT = 348
 export function MnemonicDisplay(props: MnemonicDisplayProps) {
-  return (
-    <Flex height={300} justifyContent="space-between" mx="xl" my="lg">
-      <NativeMnemonicDisplay {...props} />
-    </Flex>
-  )
+  return <NativeMnemonicDisplay style={{ height: MNEMONIC_DISPLAY_HEIGHT }} {...props} />
 }

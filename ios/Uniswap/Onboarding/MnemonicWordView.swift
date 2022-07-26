@@ -29,8 +29,6 @@ class MnemonicWordView: UIView {
   }
   
   private func setupView() {
-    self.layer.borderWidth = 1
-    self.layer.backgroundColor = UIColor.clear.cgColor
     self.layer.cornerRadius = 20
     self.layer.masksToBounds = true
     
@@ -48,19 +46,21 @@ class MnemonicWordView: UIView {
     stackView.axis = .horizontal
     stackView.distribution = .equalSpacing
     stackView.alignment = .leading
-    stackView.spacing = 15.0
+    stackView.spacing = 12.0
     stackView.translatesAutoresizingMaskIntoConstraints = false
     stackView.isLayoutMarginsRelativeArrangement = true
-    stackView.directionalLayoutMargins = NSDirectionalEdgeInsets(top: 0, leading: 15, bottom: 0, trailing: 15)
+    stackView.directionalLayoutMargins = NSDirectionalEdgeInsets(top: 12, leading: 16, bottom: 12, trailing: 16)
     self.addSubview(stackView)
     
     stackView.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
     
     if traitCollection.userInterfaceStyle == .light {
       self.layer.borderColor = UIColor.init(red: 94/255.0, green: 104/255.0, blue: 135/255.0, alpha: 0.24).cgColor
+      self.layer.backgroundColor = UIColor.init(red: 237/255.0, green: 239/255.0, blue: 247/255.0, alpha: 1.0).cgColor
       indexLabel.textColor = UIColor.lightGray
       wordLabel.textColor = UIColor.black
     } else {
+      self.layer.backgroundColor = UIColor.init(red: 14/255.0, green: 17/255.0, blue: 26/255.0, alpha: 1.0).cgColor
       self.layer.borderColor = UIColor.init(red: 153/255.0, green: 161/255.0, blue: 189/255.0, alpha: 0.24).cgColor
       indexLabel.textColor = UIColor.lightGray
       wordLabel.textColor = UIColor.white

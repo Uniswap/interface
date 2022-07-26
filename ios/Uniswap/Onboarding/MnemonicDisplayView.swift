@@ -53,7 +53,7 @@ class MnemonicDisplayView: UIView {
     leftStackView.alignment = .fill
     leftStackView.axis = .vertical
     leftStackView.distribution = .fillEqually
-    leftStackView.spacing = 10
+    leftStackView.spacing = 12
     parentStackView.addSubview(leftStackView)
     
     let rightStackView = UIStackView()
@@ -61,7 +61,7 @@ class MnemonicDisplayView: UIView {
     rightStackView.alignment = .fill
     rightStackView.axis = .vertical
     rightStackView.distribution = .fillEqually
-    rightStackView.spacing = 10
+    rightStackView.spacing = 12
     parentStackView.addSubview(rightStackView)
     
     let halfway = mnemonicArray.count/2
