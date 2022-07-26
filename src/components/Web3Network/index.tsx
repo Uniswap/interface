@@ -18,6 +18,7 @@ const NetworkSwitchContainer = styled.div`
   justify-content: space-between;
   align-items: center;
   width: 100%;
+  min-width: fit-content;
 `
 
 const NetworkCard = styled(Card)`

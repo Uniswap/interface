@@ -77,7 +77,8 @@ export default function CampaignListAndSearch({
                       ))}
                 </Flex>
                 <Text fontSize="14px">
-                  {totalRewardAmount.toSignificant(DEFAULT_SIGNIFICANT)} {campaign.rewardDistribution[0]?.token?.symbol}
+                  {totalRewardAmount.toSignificant(DEFAULT_SIGNIFICANT, { groupSeparator: ',' })}{' '}
+                  {campaign.rewardDistribution[0]?.token?.symbol}
                 </Text>
               </Flex>
             </CampaignItem>
