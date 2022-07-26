@@ -106,7 +106,7 @@ export default function App() {
             <Suspense fallback={<Loader />}>
               <Routes>
                 <Route path="vote/*" element={<Vote />} />
-                <Route path="create-proposal" element={<Navigate to="vote/create-proposal" replace />} />
+                <Route path="create-proposal" element={<Navigate to="/vote/create-proposal" replace />} />
                 <Route path="claim" element={<OpenClaimAddressModalAndRedirectToSwap />} />
                 <Route path="uni" element={<Earn />} />
                 <Route path="uni/:currencyIdA/:currencyIdB" element={<Manage />} />
