@@ -283,27 +283,29 @@ export default function VotePage() {
               {proposalData && <ProposalStatus status={proposalData.status} />}
             </RowBetween>
             <AutoColumn gap="10px" style={{ width: '100%' }}>
-              <ThemedText.LargeHeader style={{ marginBottom: '.5rem' }}>{proposalData?.title}</ThemedText.LargeHeader>
+              <ThemedText.DeprecatedLargeHeader style={{ marginBottom: '.5rem' }}>
+                {proposalData?.title}
+              </ThemedText.DeprecatedLargeHeader>
               <RowBetween>
-                <ThemedText.Main>
+                <ThemedText.DeprecatedMain>
                   {startDate && startDate > now ? (
                     <Trans>Voting starts approximately {startDate.toLocaleString(locale, dateFormat)}</Trans>
                   ) : null}
-                </ThemedText.Main>
+                </ThemedText.DeprecatedMain>
               </RowBetween>
               <RowBetween>
-                <ThemedText.Main>
+                <ThemedText.DeprecatedMain>
                   {endDate &&
                     (endDate < now ? (
                       <Trans>Voting ended {endDate.toLocaleString(locale, dateFormat)}</Trans>
                     ) : (
                       <Trans>Voting ends approximately {endDate.toLocaleString(locale, dateFormat)}</Trans>
                     ))}
-                </ThemedText.Main>
+                </ThemedText.DeprecatedMain>
               </RowBetween>
               {proposalData && proposalData.status === ProposalState.ACTIVE && !showVotingButtons && (
                 <GreyCard>
-                  <ThemedText.Black>
+                  <ThemedText.DeprecatedBlack>
                     <Trans>
                       Only UNI votes that were self delegated or delegated to another address before block{' '}
                       {proposalData.startBlock} are eligible for voting.
@@ -316,7 +318,7 @@ export default function VotePage() {
                         </Trans>
                       </span>
                     )}
-                  </ThemedText.Black>
+                  </ThemedText.DeprecatedBlack>
                 </GreyCard>
               )}
             </AutoColumn>
@@ -361,9 +363,9 @@ export default function VotePage() {
               <>
                 {eta && (
                   <RowBetween>
-                    <ThemedText.Black>
+                    <ThemedText.DeprecatedBlack>
                       <Trans>This proposal may be executed after {eta.toLocaleString(locale, dateFormat)}.</Trans>
-                    </ThemedText.Black>
+                    </ThemedText.DeprecatedBlack>
                   </RowBetween>
                 )}
                 <RowFixed style={{ width: '100%', gap: '12px' }}>
@@ -386,18 +388,18 @@ export default function VotePage() {
                 <CardSection>
                   <AutoColumn gap="md">
                     <WrapSmall>
-                      <ThemedText.Black fontWeight={600}>
+                      <ThemedText.DeprecatedBlack fontWeight={600}>
                         <Trans>For</Trans>
-                      </ThemedText.Black>
+                      </ThemedText.DeprecatedBlack>
                       {proposalData && (
-                        <ThemedText.Black fontWeight={600}>
+                        <ThemedText.DeprecatedBlack fontWeight={600}>
                           {proposalData.forCount.toFixed(0, { groupSeparator: ',' })}
                           {quorumAmount && (
                             <span style={{ fontWeight: 400 }}>{` / ${quorumAmount.toExact({
                               groupSeparator: ',',
                             })}`}</span>
                           )}
-                        </ThemedText.Black>
+                        </ThemedText.DeprecatedBlack>
                       )}
                     </WrapSmall>
                   </AutoColumn>
@@ -415,13 +417,13 @@ export default function VotePage() {
                 <CardSection>
                   <AutoColumn gap="md">
                     <WrapSmall>
-                      <ThemedText.Black fontWeight={600}>
+                      <ThemedText.DeprecatedBlack fontWeight={600}>
                         <Trans>Against</Trans>
-                      </ThemedText.Black>
+                      </ThemedText.DeprecatedBlack>
                       {proposalData && (
-                        <ThemedText.Black fontWeight={600}>
+                        <ThemedText.DeprecatedBlack fontWeight={600}>
                           {proposalData.againstCount.toFixed(0, { groupSeparator: ',' })}
-                        </ThemedText.Black>
+                        </ThemedText.DeprecatedBlack>
                       )}
                     </WrapSmall>
                   </AutoColumn>
@@ -437,9 +439,9 @@ export default function VotePage() {
               </StyledDataCard>
             </CardWrapper>
             <AutoColumn gap="md">
-              <ThemedText.MediumHeader fontWeight={600}>
+              <ThemedText.DeprecatedMediumHeader fontWeight={600}>
                 <Trans>Details</Trans>
-              </ThemedText.MediumHeader>
+              </ThemedText.DeprecatedMediumHeader>
               {proposalData?.details?.map((d, i) => {
                 return (
                   <DetailText key={i}>
@@ -458,17 +460,17 @@ export default function VotePage() {
               })}
             </AutoColumn>
             <AutoColumn gap="md">
-              <ThemedText.MediumHeader fontWeight={600}>
+              <ThemedText.DeprecatedMediumHeader fontWeight={600}>
                 <Trans>Description</Trans>
-              </ThemedText.MediumHeader>
+              </ThemedText.DeprecatedMediumHeader>
               <MarkDownWrapper>
                 <ReactMarkdown source={proposalData?.description} />
               </MarkDownWrapper>
             </AutoColumn>
             <AutoColumn gap="md">
-              <ThemedText.MediumHeader fontWeight={600}>
+              <ThemedText.DeprecatedMediumHeader fontWeight={600}>
                 <Trans>Proposer</Trans>
-              </ThemedText.MediumHeader>
+              </ThemedText.DeprecatedMediumHeader>
               <ProposerAddressLink
                 href={
                   proposalData?.proposer && chainId

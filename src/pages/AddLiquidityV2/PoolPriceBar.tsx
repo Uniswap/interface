@@ -26,7 +26,7 @@ export function PoolPriceBar({
     <AutoColumn gap="md">
       <AutoRow justify="space-around" gap="4px">
         <AutoColumn justify="center">
-          <ThemedText.Black>{price?.toSignificant(6) ?? '-'}</ThemedText.Black>
+          <ThemedText.DeprecatedBlack>{price?.toSignificant(6) ?? '-'}</ThemedText.DeprecatedBlack>
           <Text fontWeight={500} fontSize={14} color={theme.deprecated_text2} pt={1}>
             <Trans>
               {currencies[Field.CURRENCY_B]?.symbol} per {currencies[Field.CURRENCY_A]?.symbol}
@@ -34,7 +34,7 @@ export function PoolPriceBar({
           </Text>
         </AutoColumn>
         <AutoColumn justify="center">
-          <ThemedText.Black>{price?.invert()?.toSignificant(6) ?? '-'}</ThemedText.Black>
+          <ThemedText.DeprecatedBlack>{price?.invert()?.toSignificant(6) ?? '-'}</ThemedText.DeprecatedBlack>
           <Text fontWeight={500} fontSize={14} color={theme.deprecated_text2} pt={1}>
             <Trans>
               {currencies[Field.CURRENCY_A]?.symbol} per {currencies[Field.CURRENCY_B]?.symbol}
@@ -42,12 +42,12 @@ export function PoolPriceBar({
           </Text>
         </AutoColumn>
         <AutoColumn justify="center">
-          <ThemedText.Black>
+          <ThemedText.DeprecatedBlack>
             {noLiquidity && price
               ? '100'
               : (poolTokenPercentage?.lessThan(ONE_BIPS) ? '<0.01' : poolTokenPercentage?.toFixed(2)) ?? '0'}
             %
-          </ThemedText.Black>
+          </ThemedText.DeprecatedBlack>
           <Text fontWeight={500} fontSize={14} color={theme.deprecated_text2} pt={1}>
             <Trans>Share of Pool</Trans>
           </Text>

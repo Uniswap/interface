@@ -81,9 +81,9 @@ export default function ManageTokens({
           <RowFixed>
             <CurrencyLogo currency={token} size={'20px'} />
             <ExternalLink href={getExplorerLink(chainId, token.address, ExplorerDataType.ADDRESS)}>
-              <ThemedText.Main ml={'10px'} fontWeight={600}>
+              <ThemedText.DeprecatedMain ml={'10px'} fontWeight={600}>
                 {token.symbol}
-              </ThemedText.Main>
+              </ThemedText.DeprecatedMain>
             </ExternalLink>
           </RowFixed>
           <RowFixed>
@@ -111,9 +111,9 @@ export default function ManageTokens({
             />
           </Row>
           {searchQuery !== '' && !isAddressSearch && (
-            <ThemedText.Error error={true}>
+            <ThemedText.DeprecatedError error={true}>
               <Trans>Enter valid token address</Trans>
-            </ThemedText.Error>
+            </ThemedText.DeprecatedError>
           )}
           {searchToken && (
             <Card backgroundColor={theme.deprecated_bg2} padding="10px 0">
@@ -129,14 +129,14 @@ export default function ManageTokens({
         <Separator />
         <PaddedColumn gap="lg" style={{ overflow: 'auto', marginBottom: '10px' }}>
           <RowBetween>
-            <ThemedText.Main fontWeight={600}>
+            <ThemedText.DeprecatedMain fontWeight={600}>
               <Trans>{userAddedTokens?.length} Custom Tokens</Trans>
-            </ThemedText.Main>
+            </ThemedText.DeprecatedMain>
             {userAddedTokens.length > 0 && (
               <ButtonText onClick={handleRemoveAll}>
-                <ThemedText.Blue>
+                <ThemedText.DeprecatedBlue>
                   <Trans>Clear all</Trans>
-                </ThemedText.Blue>
+                </ThemedText.DeprecatedBlue>
               </ButtonText>
             )}
           </RowBetween>
@@ -144,9 +144,9 @@ export default function ManageTokens({
         </PaddedColumn>
       </Column>
       <Footer>
-        <ThemedText.DarkGray>
+        <ThemedText.DeprecatedDarkGray>
           <Trans>Tip: Custom tokens are stored locally in your browser</Trans>
-        </ThemedText.DarkGray>
+        </ThemedText.DeprecatedDarkGray>
       </Footer>
     </Wrapper>
   )

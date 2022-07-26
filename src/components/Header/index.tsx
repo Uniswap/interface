@@ -313,7 +313,7 @@ export default function Header() {
           {availableClaim && !showClaimPopup && (
             <UNIWrapper onClick={toggleClaimModal}>
               <UNIAmount active={!!account && !availableClaim} style={{ pointerEvents: 'auto' }}>
-                <ThemedText.White padding="0 2px">
+                <ThemedText.DeprecatedWhite padding="0 2px">
                   {claimTxn && !claimTxn?.receipt ? (
                     <Dots>
                       <Trans>Claiming UNI</Trans>
@@ -321,7 +321,7 @@ export default function Header() {
                   ) : (
                     <Trans>Claim UNI</Trans>
                   )}
-                </ThemedText.White>
+                </ThemedText.DeprecatedWhite>
               </UNIAmount>
               <CardNoise />
             </UNIWrapper>

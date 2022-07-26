@@ -251,9 +251,9 @@ export function CurrencySearch({
           </div>
         ) : (
           <Column style={{ padding: '20px', height: '100%' }}>
-            <ThemedText.Main color={theme.deprecated_text3} textAlign="center" mb="20px">
+            <ThemedText.DeprecatedMain color={theme.deprecated_text3} textAlign="center" mb="20px">
               <Trans>No results found.</Trans>
-            </ThemedText.Main>
+            </ThemedText.DeprecatedMain>
           </Column>
         )}
         <Footer>
@@ -263,9 +263,9 @@ export function CurrencySearch({
                 <IconWrapper size="16px" marginRight="6px" stroke={theme.deprecated_primaryText1}>
                   <Edit />
                 </IconWrapper>
-                <ThemedText.Main color={theme.deprecated_primaryText1}>
+                <ThemedText.DeprecatedMain color={theme.deprecated_primaryText1}>
                   <Trans>Manage Token Lists</Trans>
-                </ThemedText.Main>
+                </ThemedText.DeprecatedMain>
               </RowFixed>
             </ButtonText>
           </Row>

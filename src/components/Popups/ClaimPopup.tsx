@@ -98,10 +98,14 @@ export default function ClaimPopup() {
           <StyledClose stroke="white" onClick={toggleShowClaimPopup} />
           <AutoColumn style={{ padding: '2rem 0', zIndex: 10 }} justify="center">
             <UniToken width="48px" src={tokenLogo} />{' '}
-            <ThemedText.White style={{ marginTop: '1rem' }} fontSize={36} fontWeight={600}>
+            <ThemedText.DeprecatedWhite style={{ marginTop: '1rem' }} fontSize={36} fontWeight={600}>
               {unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-')} UNI
-            </ThemedText.White>
-            <ThemedText.White style={{ paddingTop: '1.25rem', textAlign: 'center' }} fontWeight={600} color="white">
+            </ThemedText.DeprecatedWhite>
+            <ThemedText.DeprecatedWhite
+              style={{ paddingTop: '1.25rem', textAlign: 'center' }}
+              fontWeight={600}
+              color="white"
+            >
               <span role="img" aria-label="party">
                 🎉
               </span>{' '}
@@ -109,12 +113,12 @@ export default function ClaimPopup() {
               <span role="img" aria-label="party">
                 🎉
               </span>
-            </ThemedText.White>
-            <ThemedText.SubHeader style={{ paddingTop: '0.5rem', textAlign: 'center' }} color="white">
+            </ThemedText.DeprecatedWhite>
+            <ThemedText.DeprecatedSubHeader style={{ paddingTop: '0.5rem', textAlign: 'center' }} color="white">
               <Trans>
                 Thanks for being part of the Uniswap community <Heart size={12} />
               </Trans>
-            </ThemedText.SubHeader>
+            </ThemedText.DeprecatedSubHeader>
           </AutoColumn>
           <AutoColumn style={{ zIndex: 10 }} justify="center">
             <ButtonPrimary padding="8px" $borderRadius="8px" width={'fit-content'} onClick={handleToggleSelfClaimModal}>

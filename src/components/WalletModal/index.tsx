@@ -302,7 +302,7 @@ export default function WalletModal({
             {!pendingError && (
               <LightCard>
                 <AutoRow style={{ flexWrap: 'nowrap' }}>
-                  <ThemedText.Body fontSize={12}>
+                  <ThemedText.DeprecatedBody fontSize={12}>
                     <Trans>
                       By connecting a wallet, you agree to Uniswap Labs’{' '}
                       <ExternalLink
@@ -317,7 +317,7 @@ export default function WalletModal({
                       </ExternalLink>
                       .
                     </Trans>
-                  </ThemedText.Body>
+                  </ThemedText.DeprecatedBody>
                 </AutoRow>
               </LightCard>
             )}
