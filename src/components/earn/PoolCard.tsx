@@ -118,9 +118,9 @@ export default function PoolCard({ stakingInfo }: { stakingInfo: StakingInfo }) 
 
       <TopSection>
         <DoubleCurrencyLogo currency0={currency0} currency1={currency1} size={24} />
-        <ThemedText.White fontWeight={600} fontSize={24} style={{ marginLeft: '8px' }}>
+        <ThemedText.DeprecatedWhite fontWeight={600} fontSize={24} style={{ marginLeft: '8px' }}>
           {currency0.symbol}-{currency1.symbol}
-        </ThemedText.White>
+        </ThemedText.DeprecatedWhite>
 
         <StyledInternalLink to={`/uni/${currencyId(currency0)}/${currencyId(currency1)}`} style={{ width: '100%' }}>
           <ButtonPrimary padding="8px" $borderRadius="8px">
@@ -131,22 +131,22 @@ export default function PoolCard({ stakingInfo }: { stakingInfo: StakingInfo }) 
 
       <StatContainer>
         <RowBetween>
-          <ThemedText.White>
+          <ThemedText.DeprecatedWhite>
             <Trans>Total deposited</Trans>
-          </ThemedText.White>
-          <ThemedText.White>
+          </ThemedText.DeprecatedWhite>
+          <ThemedText.DeprecatedWhite>
             {valueOfTotalStakedAmountInUSDC ? (
               <Trans>${valueOfTotalStakedAmountInUSDC.toFixed(0, { groupSeparator: ',' })}</Trans>
             ) : (
               <Trans>{valueOfTotalStakedAmountInWETH?.toSignificant(4, { groupSeparator: ',' }) ?? '-'} ETH</Trans>
             )}
-          </ThemedText.White>
+          </ThemedText.DeprecatedWhite>
         </RowBetween>
         <RowBetween>
-          <ThemedText.White>
+          <ThemedText.DeprecatedWhite>
             <Trans>Pool rate</Trans>
-          </ThemedText.White>
-          <ThemedText.White>
+          </ThemedText.DeprecatedWhite>
+          <ThemedText.DeprecatedWhite>
             {stakingInfo ? (
               stakingInfo.active ? (
                 <Trans>
@@ -159,7 +159,7 @@ export default function PoolCard({ stakingInfo }: { stakingInfo: StakingInfo }) 
             ) : (
               '-'
             )}
-          </ThemedText.White>
+          </ThemedText.DeprecatedWhite>
         </RowBetween>
       </StatContainer>
 
@@ -167,13 +167,13 @@ export default function PoolCard({ stakingInfo }: { stakingInfo: StakingInfo }) 
         <>
           <Break />
           <BottomSection showBackground={true}>
-            <ThemedText.Black color={'deprecated_white'} fontWeight={500}>
+            <ThemedText.DeprecatedBlack color={'deprecated_white'} fontWeight={500}>
               <span>
                 <Trans>Your rate</Trans>
               </span>
-            </ThemedText.Black>
+            </ThemedText.DeprecatedBlack>
 
-            <ThemedText.Black style={{ textAlign: 'right' }} color={'deprecated_white'} fontWeight={500}>
+            <ThemedText.DeprecatedBlack style={{ textAlign: 'right' }} color={'deprecated_white'} fontWeight={500}>
               <span role="img" aria-label="wizard-icon" style={{ marginRight: '0.5rem' }}>
                 ⚡
               </span>
@@ -191,7 +191,7 @@ export default function PoolCard({ stakingInfo }: { stakingInfo: StakingInfo }) 
               ) : (
                 '-'
               )}
-            </ThemedText.Black>
+            </ThemedText.DeprecatedBlack>
           </BottomSection>
         </>
       )}

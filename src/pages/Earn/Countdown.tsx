@@ -56,7 +56,7 @@ export function Countdown({ exactEnd }: { exactEnd?: Date }) {
   const seconds = timeRemaining
 
   return (
-    <ThemedText.Black fontWeight={400}>
+    <ThemedText.DeprecatedBlack fontWeight={400}>
       {message}{' '}
       {Number.isFinite(timeRemaining) && (
         <code>
@@ -65,6 +65,6 @@ export function Countdown({ exactEnd }: { exactEnd?: Date }) {
             .padStart(2, '0')}`}
         </code>
       )}
-    </ThemedText.Black>
+    </ThemedText.DeprecatedBlack>
   )
 }

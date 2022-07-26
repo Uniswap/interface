@@ -7,7 +7,7 @@ import { DEFAULT_LOCALE, LOCALE_LABEL, SupportedLocale } from '../../constants/l
 import { navigatorLocale, useActiveLocale } from '../../hooks/useActiveLocale'
 import { StyledInternalLink, ThemedText } from '../../theme'
 
-const Container = styled(ThemedText.Small)`
+const Container = styled(ThemedText.DeprecatedSmall)`
   opacity: 0.6;
   :hover {
     opacity: 1;

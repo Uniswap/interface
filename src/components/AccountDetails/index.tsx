@@ -339,9 +339,9 @@ export default function AccountDetails({
       {!!pendingTransactions.length || !!confirmedTransactions.length ? (
         <LowerSection>
           <AutoRow mb={'1rem'} style={{ justifyContent: 'space-between' }}>
-            <ThemedText.Body>
+            <ThemedText.DeprecatedBody>
               <Trans>Recent Transactions</Trans>
-            </ThemedText.Body>
+            </ThemedText.DeprecatedBody>
             <LinkStyledButton onClick={clearAllTransactionsCallback}>
               <Trans>(clear all)</Trans>
             </LinkStyledButton>
@@ -351,9 +351,9 @@ export default function AccountDetails({
         </LowerSection>
       ) : (
         <LowerSection>
-          <ThemedText.Body color={theme.deprecated_text1}>
+          <ThemedText.DeprecatedBody color={theme.deprecated_text1}>
             <Trans>Your transactions will appear here...</Trans>
-          </ThemedText.Body>
+          </ThemedText.DeprecatedBody>
         </LowerSection>
       )}
     </>

@@ -105,29 +105,29 @@ export default function AddressClaimModal({ isOpen, onDismiss }: { isOpen: boole
             <CardNoise />
             <CardSection gap="md">
               <RowBetween>
-                <ThemedText.White fontWeight={500}>
+                <ThemedText.DeprecatedWhite fontWeight={500}>
                   <Trans>Claim UNI Token</Trans>
-                </ThemedText.White>
+                </ThemedText.DeprecatedWhite>
                 <CloseIcon onClick={wrappedOnDismiss} style={{ zIndex: 99 }} stroke="white" />
               </RowBetween>
-              <ThemedText.White fontWeight={700} fontSize={36}>
+              <ThemedText.DeprecatedWhite fontWeight={700} fontSize={36}>
                 <Trans>{unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-')} UNI</Trans>
-              </ThemedText.White>
+              </ThemedText.DeprecatedWhite>
             </CardSection>
             <Break />
           </ModalUpper>
           <AutoColumn gap="md" style={{ padding: '1rem', paddingTop: '0' }} justify="center">
-            <ThemedText.SubHeader fontWeight={500}>
+            <ThemedText.DeprecatedSubHeader fontWeight={500}>
               <Trans>
                 Enter an address to trigger a UNI claim. If the address has any claimable UNI it will be sent to them on
                 submission.
               </Trans>
-            </ThemedText.SubHeader>
+            </ThemedText.DeprecatedSubHeader>
             <AddressInputPanel value={typed} onChange={handleRecipientType} />
             {parsedAddress && !hasAvailableClaim && (
-              <ThemedText.Error error={true}>
+              <ThemedText.DeprecatedError error={true}>
                 <Trans>Address has no available claim</Trans>
-              </ThemedText.Error>
+              </ThemedText.DeprecatedError>
             )}
             <ButtonPrimary
               disabled={!isAddress(parsedAddress ?? '') || !hasAvailableClaim}
@@ -159,23 +159,23 @@ export default function AddressClaimModal({ isOpen, onDismiss }: { isOpen: boole
           </ConfirmedIcon>
           <AutoColumn gap="100px" justify={'center'}>
             <AutoColumn gap="12px" justify={'center'}>
-              <ThemedText.LargeHeader fontWeight={600} color="black">
+              <ThemedText.DeprecatedLargeHeader fontWeight={600} color="black">
                 {claimConfirmed ? <Trans>Claimed</Trans> : <Trans>Claiming</Trans>}
-              </ThemedText.LargeHeader>
+              </ThemedText.DeprecatedLargeHeader>
               {!claimConfirmed && (
                 <Text fontSize={36} color={'#ff007a'} fontWeight={800}>
                   <Trans>{unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-')} UNI</Trans>
                 </Text>
               )}
               {parsedAddress && (
-                <ThemedText.LargeHeader fontWeight={600} color="black">
+                <ThemedText.DeprecatedLargeHeader fontWeight={600} color="black">
                   <Trans>for {shortenAddress(parsedAddress)}</Trans>
-                </ThemedText.LargeHeader>
+                </ThemedText.DeprecatedLargeHeader>
               )}
             </AutoColumn>
             {claimConfirmed && (
               <>
-                <ThemedText.SubHeader fontWeight={500} color="black">
+                <ThemedText.DeprecatedSubHeader fontWeight={500} color="black">
                   <span role="img" aria-label="party-hat">
                     🎉{' '}
                   </span>
@@ -183,13 +183,13 @@ export default function AddressClaimModal({ isOpen, onDismiss }: { isOpen: boole
                   <span role="img" aria-label="party-hat">
                     🎉
                   </span>
-                </ThemedText.SubHeader>
+                </ThemedText.DeprecatedSubHeader>
               </>
             )}
             {attempting && !hash && (
-              <ThemedText.SubHeader color="black">
+              <ThemedText.DeprecatedSubHeader color="black">
                 <Trans>Confirm this transaction in your wallet</Trans>
-              </ThemedText.SubHeader>
+              </ThemedText.DeprecatedSubHeader>
             )}
             {attempting && hash && !claimConfirmed && chainId && hash && (
               <ExternalLink href={getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)} style={{ zIndex: 99 }}>

@@ -31,7 +31,7 @@ const StyledPolling = styled.div<{ warning: boolean }>`
     display: none;
   `}
 `
-const StyledPollingNumber = styled(ThemedText.Small)<{ breathe: boolean; hovering: boolean }>`
+const StyledPollingNumber = styled(ThemedText.DeprecatedSmall)<{ breathe: boolean; hovering: boolean }>`
   transition: opacity 0.25s ease;
   opacity: ${({ breathe, hovering }) => (hovering ? 0.7 : breathe ? 1 : 0.5)};
   :hover {
@@ -143,7 +143,7 @@ export default function Polling() {
           <ExternalLink href={'https://etherscan.io/gastracker'}>
             {priceGwei ? (
               <RowFixed style={{ marginRight: '8px' }}>
-                <ThemedText.Main fontSize="11px" mr="8px" color={theme.deprecated_text3}>
+                <ThemedText.DeprecatedMain fontSize="11px" mr="8px" color={theme.deprecated_text3}>
                   <MouseoverTooltip
                     text={
                       <Trans>
@@ -154,7 +154,7 @@ export default function Polling() {
                   >
                     {priceGwei.toString()} <Trans>gwei</Trans>
                   </MouseoverTooltip>
-                </ThemedText.Main>
+                </ThemedText.DeprecatedMain>
                 <StyledGasDot />
               </RowFixed>
             ) : null}

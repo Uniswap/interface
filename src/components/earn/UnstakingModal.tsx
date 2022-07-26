@@ -83,34 +83,34 @@ export default function UnstakingModal({ isOpen, onDismiss, stakingInfo }: Staki
       {!attempting && !hash && (
         <ContentWrapper gap="lg">
           <RowBetween>
-            <ThemedText.MediumHeader>
+            <ThemedText.DeprecatedMediumHeader>
               <Trans>Withdraw</Trans>
-            </ThemedText.MediumHeader>
+            </ThemedText.DeprecatedMediumHeader>
             <CloseIcon onClick={wrappedOnDismiss} />
           </RowBetween>
           {stakingInfo?.stakedAmount && (
             <AutoColumn justify="center" gap="md">
-              <ThemedText.Body fontWeight={600} fontSize={36}>
+              <ThemedText.DeprecatedBody fontWeight={600} fontSize={36}>
                 {<FormattedCurrencyAmount currencyAmount={stakingInfo.stakedAmount} />}
-              </ThemedText.Body>
-              <ThemedText.Body>
+              </ThemedText.DeprecatedBody>
+              <ThemedText.DeprecatedBody>
                 <Trans>Deposited liquidity:</Trans>
-              </ThemedText.Body>
+              </ThemedText.DeprecatedBody>
             </AutoColumn>
           )}
           {stakingInfo?.earnedAmount && (
             <AutoColumn justify="center" gap="md">
-              <ThemedText.Body fontWeight={600} fontSize={36}>
+              <ThemedText.DeprecatedBody fontWeight={600} fontSize={36}>
                 {<FormattedCurrencyAmount currencyAmount={stakingInfo?.earnedAmount} />}
-              </ThemedText.Body>
-              <ThemedText.Body>
+              </ThemedText.DeprecatedBody>
+              <ThemedText.DeprecatedBody>
                 <Trans>Unclaimed UNI</Trans>
-              </ThemedText.Body>
+              </ThemedText.DeprecatedBody>
             </AutoColumn>
           )}
-          <ThemedText.SubHeader style={{ textAlign: 'center' }}>
+          <ThemedText.DeprecatedSubHeader style={{ textAlign: 'center' }}>
             <Trans>When you withdraw, your UNI is claimed and your liquidity is removed from the mining pool.</Trans>
-          </ThemedText.SubHeader>
+          </ThemedText.DeprecatedSubHeader>
           <ButtonError disabled={!!error} error={!!error && !!stakingInfo?.stakedAmount} onClick={onWithdraw}>
             {error ?? <Trans>Withdraw & Claim</Trans>}
           </ButtonError>
@@ -119,27 +119,27 @@ export default function UnstakingModal({ isOpen, onDismiss, stakingInfo }: Staki
       {attempting && !hash && (
         <LoadingView onDismiss={wrappedOnDismiss}>
           <AutoColumn gap="12px" justify={'center'}>
-            <ThemedText.Body fontSize={20}>
+            <ThemedText.DeprecatedBody fontSize={20}>
               <Trans>Withdrawing {stakingInfo?.stakedAmount?.toSignificant(4)} UNI-V2</Trans>
-            </ThemedText.Body>
-            <ThemedText.Body fontSize={20}>
+            </ThemedText.DeprecatedBody>
+            <ThemedText.DeprecatedBody fontSize={20}>
               <Trans>Claiming {stakingInfo?.earnedAmount?.toSignificant(4)} UNI</Trans>
-            </ThemedText.Body>
+            </ThemedText.DeprecatedBody>
           </AutoColumn>
         </LoadingView>
       )}
       {hash && (
         <SubmittedView onDismiss={wrappedOnDismiss} hash={hash}>
           <AutoColumn gap="12px" justify={'center'}>
-            <ThemedText.LargeHeader>
+            <ThemedText.DeprecatedLargeHeader>
               <Trans>Transaction Submitted</Trans>
-            </ThemedText.LargeHeader>
-            <ThemedText.Body fontSize={20}>
+            </ThemedText.DeprecatedLargeHeader>
+            <ThemedText.DeprecatedBody fontSize={20}>
               <Trans>Withdrew UNI-V2!</Trans>
-            </ThemedText.Body>
-            <ThemedText.Body fontSize={20}>
+            </ThemedText.DeprecatedBody>
+            <ThemedText.DeprecatedBody fontSize={20}>
               <Trans>Claimed UNI!</Trans>
-            </ThemedText.Body>
+            </ThemedText.DeprecatedBody>
           </AutoColumn>
         </SubmittedView>
       )}

@@ -56,9 +56,9 @@ export function ImportToken(props: ImportProps) {
       <PaddedColumn gap="14px" style={{ width: '100%', flex: '1 1' }}>
         <RowBetween>
           {onBack ? <ArrowLeft style={{ cursor: 'pointer' }} onClick={onBack} /> : <div />}
-          <ThemedText.MediumHeader>
+          <ThemedText.DeprecatedMediumHeader>
             <Plural value={tokens.length} _1="Import token" other="Import tokens" />
-          </ThemedText.MediumHeader>
+          </ThemedText.DeprecatedMediumHeader>
           {onDismiss ? <CloseIcon onClick={onDismiss} /> : <div />}
         </RowBetween>
       </PaddedColumn>
@@ -66,12 +66,12 @@ export function ImportToken(props: ImportProps) {
       <AutoColumn gap="md" style={{ marginBottom: '32px', padding: '1rem' }}>
         <AutoColumn justify="center" style={{ textAlign: 'center', gap: '16px', padding: '1rem' }}>
           <AlertCircle size={48} stroke={theme.deprecated_text2} strokeWidth={1} />
-          <ThemedText.Body fontWeight={400} fontSize={16}>
+          <ThemedText.DeprecatedBody fontWeight={400} fontSize={16}>
             <Trans>
               This token doesn&apos;t appear on the active token list(s). Make sure this is the token that you want to
               trade.
             </Trans>
-          </ThemedText.Body>
+          </ThemedText.DeprecatedBody>
         </AutoColumn>
         {tokens.map((token) => (
           <TokenImportCard token={token} list={list} key={'import' + token.address} />
