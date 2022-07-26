@@ -35,6 +35,8 @@ We currently have CI exclude arm64 builds given it is not using the M1 architect
 
 - Run `yarn` to install packages, then run `yarn pod` in the main directory.
 
+**NOTE:** If you want to build and run the app on XCode, please run `pod install` as that would make XCode build for arm64 an speed up your build times on an M1 Mac
+
 ### Important Libraries
 
 Get familiar with the following (no particular order):
