@@ -322,7 +322,7 @@ function WalletSettings() {
         {allAccounts.length > DEFAULT_ACCOUNTS_TO_DISPLAY && (
           <Button onPress={toggleViewAll}>
             <Text color="textSecondary" mb="sm" variant="subheadSmall">
-              {showAll ? t('Hide') : t('View all')}
+              {showAll ? t('View less') : t('View all')}
             </Text>
           </Button>
         )}
