@@ -1,13 +1,10 @@
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
-import { getChainInfo, getChainInfoOrDefault } from 'constants/chainInfo'
-import { L1_CHAIN_IDS, L2_CHAIN_IDS, SupportedChainId, TESTNET_CHAIN_IDS } from 'constants/chains'
+import { getChainInfoOrDefault } from 'constants/chainInfo'
 import { useToken } from 'hooks/Tokens'
 import { useNetworkTokenBalances } from 'hooks/useNetworkTokenBalances'
-import { useMemo } from 'react'
 import { AlertTriangle } from 'react-feather'
 import styled, { useTheme } from 'styled-components/macro'
-import { isChainAllowed } from 'utils/switchChain'
 
 import NetworkBalance from './NetworkBalance'
 
@@ -56,26 +53,24 @@ const TotalBalanceItem = styled.div`
   display: flex;
 `
 
-export default function BalanceSummary({ address }: { address: string }) {
+export default function BalanceSummary({
+  address,
+  networkBalances,
+  totalBalance,
+}: {
+  address: string
+  networkBalances: (JSX.Element | null)[] | null
+  totalBalance: number
+}) {
   const theme = useTheme()
   const tokenSymbol = useToken(address)?.symbol
   const { loading, error, data } = useNetworkTokenBalances({ address })
 
-  const { connector, chainId: connectedChainId } = useWeb3React()
+  const { chainId: connectedChainId } = useWeb3React()
 
   const { label: connectedLabel, logoUrl: connectedLogoUrl } = getChainInfoOrDefault(connectedChainId)
   const connectedFiatValue = 1
   const multipleBalances = true // for testing purposes
-  const totalBalance = 4.3
-
-  const chainsToList = useMemo(() => {
-    let chainIds = [...L1_CHAIN_IDS, ...L2_CHAIN_IDS]
-    const userConnectedToATestNetwork = connectedChainId && TESTNET_CHAIN_IDS.includes(connectedChainId)
-    if (!userConnectedToATestNetwork) {
-      chainIds = chainIds.filter((id) => !(TESTNET_CHAIN_IDS as unknown as SupportedChainId[]).includes(id))
-    }
-    return chainIds
-  }, [connectedChainId])
 
   if (loading) return null
   return (
@@ -97,25 +92,7 @@ export default function BalanceSummary({ address }: { address: string }) {
             </TotalBalance>
           </TotalBalanceSection>
           <NetworkBalancesSection>Your balances by network</NetworkBalancesSection>
-          {data &&
-            chainsToList.map((chainId) => {
-              const amount = data[chainId]
-              const fiatValue = amount // for testing purposes
-              if (!fiatValue || !isChainAllowed(connector, chainId)) return null
-              const chainInfo = getChainInfo(chainId)
-              if (!chainInfo) return null
-              return (
-                <NetworkBalance
-                  key={chainId}
-                  logoUrl={chainInfo.logoUrl}
-                  balance={'1'}
-                  tokenSymbol={tokenSymbol ?? 'XXX'}
-                  fiatValue={fiatValue.toSignificant(2)}
-                  label={chainInfo.label}
-                  networkColor={chainInfo.color}
-                />
-              )
-            })}
+          {data && networkBalances}
         </>
       ) : (
         <>
