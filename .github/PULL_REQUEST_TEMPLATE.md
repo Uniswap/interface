@@ -7,8 +7,3 @@
 **Before and After Screen capture**
 
 **How Has This Been Tested?**
-
-- [ ] E2E Test
-- [ ] Unit Test
-- [ ] Storybook
-- [ ] Manual
