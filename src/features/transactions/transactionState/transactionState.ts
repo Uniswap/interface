@@ -114,13 +114,19 @@ const slice = createSlice({
       state.exactAmountToken = amount
     },
     /* Changes the input field */
-    updateExactCurrencyField: (state, action: PayloadAction<CurrencyField>) => {
-      const newCurrencyField = action.payload
-      if (state.exactCurrencyField !== newCurrencyField) {
-        state.exactAmountToken = ''
-        state.exactAmountUSD = ''
+    updateExactCurrencyField: (
+      state,
+      action: PayloadAction<{ currencyField: CurrencyField; newExactAmount: string }>
+    ) => {
+      const { currencyField, newExactAmount } = action.payload
+      if (state.exactCurrencyField === currencyField) return
+
+      state.exactCurrencyField = currencyField
+      if (state.isUSDInput) {
+        state.exactAmountUSD = newExactAmount
+      } else {
+        state.exactAmountToken = newExactAmount
       }
-      state.exactCurrencyField = newCurrencyField
     },
     /** Processes a new typed value for the given `field` */
     updateExactAmountUSD: (

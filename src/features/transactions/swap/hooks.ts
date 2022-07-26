@@ -149,7 +149,6 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
   )
 
   const tradeUSDValue = useUSDCValue(isUSDInput ? trade.trade?.outputAmount : undefined)
-
   const currencyAmounts = useMemo(
     () =>
       shouldGetQuote
@@ -324,8 +323,8 @@ export function useSwapActionHandlers(dispatch: React.Dispatch<AnyAction>) {
     dispatch(transactionStateActions.updateExactAmountToken({ field, amount }))
   const onUpdateExactUSDAmount = (field: CurrencyField, amount: string) =>
     dispatch(transactionStateActions.updateExactAmountUSD({ field, amount }))
-  const onUpdateExactCurrencyField = (field: CurrencyField) =>
-    dispatch(transactionStateActions.updateExactCurrencyField(field))
+  const onUpdateExactCurrencyField = (currencyField: CurrencyField, newExactAmount: string) =>
+    dispatch(transactionStateActions.updateExactCurrencyField({ currencyField, newExactAmount }))
   const onSetAmount = (field: CurrencyField, value: string, isUSDInput: boolean) => {
     const updater = isUSDInput ? onUpdateExactUSDAmount : onUpdateExactTokenAmount
     updater(field, value)

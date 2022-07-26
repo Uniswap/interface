@@ -105,6 +105,11 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo }: SwapFormProps) {
     onNext()
   }
 
+  const onCurrencyInputPress = (currencyField: CurrencyField) => () => {
+    const newExactAmount = formattedAmounts[currencyField]
+    onUpdateExactCurrencyField(currencyField, newExactAmount)
+  }
+
   return (
     <Flex grow gap="none" justifyContent="space-between">
       <AnimatedFlex grow entering={FadeIn} exiting={FadeOut} gap="sm">
@@ -119,7 +124,7 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo }: SwapFormProps) {
             otherSelectedCurrency={currencies[CurrencyField.OUTPUT]}
             value={formattedAmounts[CurrencyField.INPUT]}
             warnings={warnings}
-            onPressIn={() => onUpdateExactCurrencyField(CurrencyField.INPUT)}
+            onPressIn={onCurrencyInputPress(CurrencyField.INPUT)}
             onSelectCurrency={(newCurrency: Currency) =>
               onSelectCurrency(CurrencyField.INPUT, newCurrency)
             }
@@ -171,7 +176,7 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo }: SwapFormProps) {
                   showNonZeroBalancesOnly={false}
                   value={formattedAmounts[CurrencyField.OUTPUT]}
                   warnings={warnings}
-                  onPressIn={() => onUpdateExactCurrencyField(CurrencyField.OUTPUT)}
+                  onPressIn={onCurrencyInputPress(CurrencyField.OUTPUT)}
                   onSelectCurrency={(newCurrency: Currency) =>
                     onSelectCurrency(CurrencyField.OUTPUT, newCurrency)
                   }
