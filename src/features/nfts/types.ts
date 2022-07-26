@@ -114,7 +114,7 @@ export module NFTAsset {
     chat_url?: any
     created_date: Date
     default_to_fiat: boolean
-    description: string
+    description: string | null
     dev_buyer_fee_basis_points: string
     dev_seller_fee_basis_points: string
     discord_url: string

@@ -126,19 +126,21 @@ export function NFTItemScreen({
           </Flex>
 
           {/* Metadata */}
-          <Flex gap="sm">
+          {asset.collection.description && (
             <Flex gap="sm">
-              <Text color="textSecondary" variant="headlineSmall">
-                {t('Description')}
-              </Text>
-              <LongText
-                color="textPrimary"
-                initialDisplayedLines={5}
-                text={asset.collection.description}
-                variant="bodySmall"
-              />
+              <Flex gap="sm">
+                <Text color="textSecondary" variant="headlineSmall">
+                  {t('Description')}
+                </Text>
+                <LongText
+                  color="textPrimary"
+                  initialDisplayedLines={5}
+                  text={asset.collection.description}
+                  variant="bodySmall"
+                />
+              </Flex>
             </Flex>
-          </Flex>
+          )}
         </Flex>
       </Flex>
     </HeaderScrollScreen>
