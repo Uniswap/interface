@@ -317,7 +317,12 @@ export default function RemoveLiquidity() {
           </RowFixed>
         </RowBetween>
 
-        <ThemedText.DeprecatedItalic fontSize={12} color={theme.deprecated_text2} textAlign="left" padding={'12px 0 0 0'}>
+        <ThemedText.DeprecatedItalic
+          fontSize={12}
+          color={theme.deprecated_text2}
+          textAlign="left"
+          padding={'12px 0 0 0'}
+        >
           <Trans>
             Output is estimated. If the price changes by more than {allowedSlippage.toSignificant(4)}% your transaction
             will revert.
