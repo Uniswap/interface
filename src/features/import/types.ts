@@ -1,6 +1,7 @@
 export enum ImportAccountType {
   Address = 'address',
   Mnemonic = 'mnemonic',
+  RestoreBackup = 'restoreBackup',
   PrivateKey = 'privateKey',
   Indexed = 'indexed',
 }
@@ -30,6 +31,12 @@ export interface ImportMnemonicAccountParams extends BaseImportAccountParams {
   markAsActive?: boolean // used for automatically activating test account
 }
 
+export interface ImportRestoreBackupAccountParams extends BaseImportAccountParams {
+  type: ImportAccountType.RestoreBackup
+  mnemonicId: string
+  indexes?: number[]
+}
+
 export interface ImportPrivateKeyAccountParams extends BaseImportAccountParams {
   type: ImportAccountType.PrivateKey
   privateKey: string
@@ -39,3 +46,4 @@ export type ImportAccountParams =
   | ImportAddressAccountParams
   | ImportMnemonicAccountParams
   | ImportPrivateKeyAccountParams
+  | ImportRestoreBackupAccountParams

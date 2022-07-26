@@ -20,10 +20,10 @@ let privateKeyPrefix = ".privateKey."
 let entireMnemonicPrefix = prefix + mnemonicPrefix
 let entirePrivateKeyPrefix = prefix + privateKeyPrefix
 
-enum RNEthersRSError: Error {
-  case storeMnemonicError
-  case retrieveMnemonicError
-  case iCloudError
+enum RNEthersRSError: String, Error  {
+  case storeMnemonicError = "storeMnemonicError"
+  case retrieveMnemonicError = "retrieveMnemonicError"
+  case iCloudError = "iCloudError"
 }
 
 @objc(RNEthersRS)
@@ -165,8 +165,8 @@ class RNEthersRS: NSObject {
    Stores mnemonic to iCloud Documents
    
    - parameter mnemonicId: key string associated with mnemonic to backup
-   - parameter pin: optional user provided pin to encrypt the mnemonic, interprets as no pin if empty string 
-   - returns: boolean for success
+   - parameter pin: optional user provided pin to encrypt the mnemonic, interprets as no pin if empty string
+   - returns: true if successful, otherwise throws an error
    */
   @objc(backupMnemonicToICloud:pin:resolve:reject:)
   func backupMnemonicToICloud(
@@ -174,7 +174,7 @@ class RNEthersRS: NSObject {
     reject: RCTPromiseRejectBlock
   ) {
     guard let mnemonic = retrieveMnemonic(mnemonicId: mnemonicId) else {
-      return reject("retrieve-mnemonic-error", "Failed to retrieve mnemonic", RNEthersRSError.retrieveMnemonicError)
+      return reject(RNEthersRSError.retrieveMnemonicError.rawValue, "Failed to retrieve mnemonic", RNEthersRSError.retrieveMnemonicError)
     }
     
     let isPinEncrypted = pin != ""
@@ -185,7 +185,7 @@ class RNEthersRS: NSObject {
     // Access iCloud Documents container
     // TODO: Temporarily appending "Documents" path to make file visible in iCloud Files for easier debugging
     guard let containerUrl = FileManager.default.url(forUbiquityContainerIdentifier: nil)?.appendingPathComponent("Documents") else {
-      return reject("icloud-error", "Failed to find iCloud container", RNEthersRSError.iCloudError)
+      return reject(RNEthersRSError.iCloudError.rawValue, "Failed to find iCloud container", RNEthersRSError.iCloudError)
     }
     
     // Create iCloud container if empty
@@ -194,7 +194,7 @@ class RNEthersRS: NSObject {
         try FileManager.default.createDirectory(at: containerUrl, withIntermediateDirectories: true, attributes: nil)
       }
       catch {
-        return reject("icloud-error", "Failed to create iCloud container", RNEthersRSError.iCloudError)
+        return reject(RNEthersRSError.iCloudError.rawValue, "Failed to create iCloud container", RNEthersRSError.iCloudError)
       }
     }
     
@@ -206,8 +206,50 @@ class RNEthersRS: NSObject {
       return resolve(true)
     }
     catch {
-      return reject("icloud-error", "Failed to write backup file to iCloud", RNEthersRSError.iCloudError)
+      return reject(RNEthersRSError.iCloudError.rawValue, "Failed to write backup file to iCloud", RNEthersRSError.iCloudError)
     }
+  }
+  
+  /**
+   
+   Attempts to restore mnemonic into native keychain from iCloud backup file. Assumes that the backup file `[mnemonicId].json` has already been downloaded from iCloud Documents using `RNICloudBackupsManager`
+   
+   - parameter mnemonicId: key string associated with JSON backup file stored in iCloud
+   - parameter pin: user inputted pin used to decrypt backup if necessary
+   - returns: true if mnemonic successfully restored, otherwise a relevant error will be thrown
+   */
+  @objc(restoreMnemonicFromICloud:pin:resolve:reject:)
+  func restoreMnemonicFromICloud(mnemonicId: String, pin: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock
+  ) {
+    // Access iCloud Documents container
+    // TODO: Temporarily appending "Documents" path to make file visible in iCloud Files for easier debugging
+    guard let containerUrl = FileManager.default.url(forUbiquityContainerIdentifier: nil)?.appendingPathComponent("Documents") else {
+      return reject(RNEthersRSError.iCloudError.rawValue, "Failed to find iCloud container", RNEthersRSError.iCloudError)
+    }
+    
+    // Fetch backup file from iCloud
+    let iCloudFileURL = containerUrl.appendingPathComponent("\(mnemonicId).json")
+    
+    guard FileManager.default.fileExists(atPath: iCloudFileURL.path) else {
+      return reject(RNEthersRSError.iCloudError.rawValue, "Failed to locate iCloud backup", RNEthersRSError.iCloudError)
+    }
+    
+    let data = try? Data(contentsOf: iCloudFileURL)
+    guard let backup = try? JSONDecoder().decode(ICloudMnemonicBackup.self, from: data!)  else {
+      return reject(RNEthersRSError.iCloudError.rawValue, "Failed to load iCloud backup", RNEthersRSError.iCloudError)
+    }
+    
+    if (backup.isPinEncrypted) {
+      // TODO: Attempt decrypt mnemonic with pin, throw error
+    }
+    
+    // Restore mnemonic from backup into native keychain
+    let res = storeNewMnemonic(mnemonic: backup.mnemonic, address: backup.mnemonicId)
+    if res == nil {
+      return reject(RNEthersRSError.storeMnemonicError.rawValue, "Failed to restore mnemonic into native keychain", RNEthersRSError.storeMnemonicError)
+    }
+    
+    return resolve(true)
   }
   
   @objc(signTransactionHashForAddress:hash:chainId:resolve:reject:)

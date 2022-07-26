@@ -2,6 +2,12 @@ import { NativeModules } from 'react-native'
 
 const { RNEthersRS } = NativeModules
 
+export enum RNEthersRSErrorType {
+  StoreMnemonicError = 'storeMnemonicError',
+  RetrieveMnemonicError = 'retrieveMnemonicError',
+  ICloudError = 'iCloudError',
+}
+
 export function getMnemonicIds(): Promise<string[]> {
   return RNEthersRS.getMnemonicIds()
 }
@@ -30,6 +36,10 @@ export function generateAndStorePrivateKey(
 
 export function backupMnemonicToICloud(mnemonicId: string, pin: string): Promise<boolean> {
   return RNEthersRS.backupMnemonicToICloud(mnemonicId, pin)
+}
+
+export function restoreMnemonicFromICloud(mnemonicId: string, pin: string): Promise<boolean> {
+  return RNEthersRS.restoreMnemonicFromICloud(mnemonicId, pin)
 }
 
 export function signTransactionHashForAddress(

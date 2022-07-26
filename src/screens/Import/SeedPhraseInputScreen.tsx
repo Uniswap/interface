@@ -7,14 +7,12 @@ import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { Flex } from 'src/components/layout'
 import { GenericImportForm } from 'src/features/import/GenericImportForm'
-import { importAccountActions } from 'src/features/import/importAccountSaga'
+import { importAccountActions, IMPORT_WALLET_AMOUNT } from 'src/features/import/importAccountSaga'
 import { ImportAccountType } from 'src/features/import/types'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { isValidMnemonic, isValidWord } from 'src/utils/mnemonics'
 import { normalizeTextInput } from 'src/utils/string'
-
-const IMPORT_WALLET_AMOUNT = 3
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.ImportMethod>
 

@@ -2,6 +2,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { TFunction } from 'i18next'
 import React, { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Alert } from 'react-native'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import CloudIcon from 'src/assets/icons/cloud.svg'
@@ -18,6 +19,8 @@ import {
   startFetchingICloudBackups,
   stopFetchingICloudBackups,
 } from 'src/features/CloudBackup/RNICloudBackupsManager'
+import { importAccountActions, IMPORT_WALLET_AMOUNT } from 'src/features/import/importAccountSaga'
+import { ImportAccountType } from 'src/features/import/types'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { ImportType, OnboardingEntryPoint } from 'src/features/onboarding/utils'
 import { ElementName } from 'src/features/telemetry/constants'
@@ -25,8 +28,10 @@ import {
   PendingAccountActions,
   pendingAccountActions,
 } from 'src/features/wallet/pendingAcccountsSaga'
+import { restoreMnemonicFromICloud } from 'src/lib/RNEthersRs'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { Theme } from 'src/styles/theme'
+import { logger } from 'src/utils/logger'
 
 interface ImportMethodOption {
   title: (t: TFunction) => string
@@ -110,7 +115,8 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props) {
     }
   }, [])
 
-  const handleOnPressRestoreBackup = () => {
+  const handleOnPressRestoreBackup = async () => {
+    // Handle multiple backups found by showing screen with list of backups
     if (cloudBackups.length > 1) {
       navigation.navigate({
         name: OnboardingScreens.RestoreCloudBackup,
@@ -120,6 +126,7 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props) {
       return
     }
 
+    // Handle one backup found with user pin
     const backup = cloudBackups[0]
     if (backup.isPinEncrypted) {
       navigation.navigate({
@@ -127,14 +134,30 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props) {
         params: { importType: ImportType.Restore, entryPoint, mnemonicId: backup.mnemonicId },
         merge: true,
       })
-    } else {
-      // TODO(fetch-icloud-backups-p3): Dispatch importAccountActions with ImportAcountType.Restore to load mnemonic from backup
+      return
+    }
 
-      navigation.navigate({
-        name: OnboardingScreens.SelectWallet,
-        params: { importType: ImportType.Restore, entryPoint },
-        merge: true,
-      })
+    // Handle one backup found with no user pin
+    try {
+      await restoreMnemonicFromICloud(backup.mnemonicId, '')
+      dispatch(
+        importAccountActions.trigger({
+          type: ImportAccountType.RestoreBackup,
+          mnemonicId: backup.mnemonicId,
+          indexes: Array.from(Array(IMPORT_WALLET_AMOUNT).keys()),
+        })
+      )
+
+      navigation.navigate({ name: OnboardingScreens.SelectWallet, params, merge: true })
+    } catch (error) {
+      const err = error as Error
+      logger.debug('RestoreCloudBackupScreen', 'restoreMnemonicFromICloud', 'Error', error)
+      Alert.alert(t('iCloud error'), err.message, [
+        {
+          text: t('OK'),
+          style: 'default',
+        },
+      ])
     }
   }
 
