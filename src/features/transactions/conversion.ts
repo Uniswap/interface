@@ -10,6 +10,7 @@ import {
   TransactionStatus,
   TransactionType,
 } from 'src/features/transactions/types'
+import { normalizeAddress } from 'src/utils/addresses'
 import { currencyIdToAddress } from 'src/utils/currencyId'
 
 /**
@@ -33,6 +34,8 @@ function parseLocalTransactionItem(transaction: TransactionDetails): Transaction
   let tokenAddress: string | undefined
   let otherTokenAddress: string | undefined
   let amountRaw: string | undefined
+  let otherAmountRaw: string | undefined
+  let to: string | undefined
   let assetType = AssetType.Currency // default to currency unless NFT found
   let msTimestampAdded = transaction.addedTime
 
@@ -49,6 +52,7 @@ function parseLocalTransactionItem(transaction: TransactionDetails): Transaction
       tokenAddress = typeInfo.tokenAddress
       amountRaw = typeInfo.currencyAmountRaw
       assetType = typeInfo.assetType
+      to = typeInfo.recipient
       break
     case TransactionType.Swap:
       tokenAddress = currencyIdToAddress(typeInfo.outputCurrencyId)
@@ -57,6 +61,10 @@ function parseLocalTransactionItem(transaction: TransactionDetails): Transaction
         typeInfo.tradeType === TradeType.EXACT_INPUT
           ? typeInfo.expectedOutputCurrencyAmountRaw
           : typeInfo.outputCurrencyAmountRaw
+      otherAmountRaw =
+        typeInfo.tradeType === TradeType.EXACT_INPUT
+          ? typeInfo.inputCurrencyAmountRaw
+          : typeInfo.expectedInputCurrencyAmountRaw
       break
   }
 
@@ -67,7 +75,9 @@ function parseLocalTransactionItem(transaction: TransactionDetails): Transaction
     type: typeInfo.type,
     tokenAddress,
     otherTokenAddress,
+    to,
     amountRaw,
+    otherAmountRaw,
     assetType,
     msTimestampAdded,
     fullDetails: transaction,
@@ -81,6 +91,8 @@ function parseExternalTransactionItem(transaction: Transaction): TransactionSumm
   let amountRaw: string | undefined
   let tokenAddress: string | undefined
   let otherTokenAddress: string | undefined
+  let from: string | undefined
+  let to: string | undefined
   let nftMetaData:
     | {
         name: string
@@ -124,6 +136,9 @@ function parseExternalTransactionItem(transaction: Transaction): TransactionSumm
       }
       amountRaw = change?.value?.toString()
       tokenAddress = transaction.changes?.[0].asset.id
+      if (transaction.address_to) {
+        to = normalizeAddress(transaction.address_to)
+      }
       break
     case 'receive':
       type = TransactionType.Receive
@@ -133,6 +148,9 @@ function parseExternalTransactionItem(transaction: Transaction): TransactionSumm
       }
       amountRaw = change?.value?.toString()
       tokenAddress = transaction.changes?.[0].asset.id
+      if (transaction.address_from) {
+        from = normalizeAddress(transaction.address_from)
+      }
       break
     case 'trade':
       type = TransactionType.Swap
@@ -169,10 +187,12 @@ function parseExternalTransactionItem(transaction: Transaction): TransactionSumm
     status,
     hash,
     type,
+    from,
     tokenAddress,
     otherTokenAddress,
     amountRaw,
     assetType,
+    to,
     msTimestampAdded,
     nftMetaData,
   }

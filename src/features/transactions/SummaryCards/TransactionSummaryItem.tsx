@@ -1,4 +1,3 @@
-import dayjs from 'dayjs'
 import { default as React, memo, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
@@ -10,6 +9,7 @@ import { LogoWithTxStatus } from 'src/components/CurrencyLogo/LogoWithTxStatus'
 import { Box } from 'src/components/layout/Box'
 import { Flex } from 'src/components/layout/Flex'
 import { SpinningLoader } from 'src/components/loading/SpinningLoader'
+import { InlineNetworkPill } from 'src/components/Network/NetworkPill'
 import { Text } from 'src/components/Text'
 import { ChainId } from 'src/constants/chains'
 import { AssetType } from 'src/entities/assets'
@@ -21,7 +21,10 @@ import { useCurrency } from 'src/features/tokens/useCurrency'
 import { useLowestPendingNonce } from 'src/features/transactions/hooks'
 import AlertBanner, { FailedCancelBadge } from 'src/features/transactions/SummaryCards/AlertBanner'
 import TransactionActionsModal from 'src/features/transactions/SummaryCards/TransactionActionsModal'
-import { getTransactionSummaryTitle } from 'src/features/transactions/SummaryCards/utils'
+import {
+  getTransactionSummaryCaption,
+  getTransactionSummaryTitle,
+} from 'src/features/transactions/SummaryCards/utils'
 import createSwapFromStateFromDetails from 'src/features/transactions/swap/createSwapFromStateFromDetails'
 import {
   TransactionDetails,
@@ -46,9 +49,12 @@ export interface TransactionSummaryInfo {
   assetType: AssetType
   msTimestampAdded: number
   status: TransactionStatus
-  amountRaw?: string
   tokenAddress?: string
+  amountRaw?: string
   otherTokenAddress?: string // for swaps
+  otherAmountRaw?: string // for swaps
+  to?: string | undefined
+  from?: string | undefined
   nftMetaData?: {
     name: string
     imageURL: string
@@ -107,8 +113,6 @@ function TransactionSummaryItem({
     fullDetails?.typeInfo.type === TransactionType.Swap &&
     fullDetails.status === TransactionStatus.Failed
 
-  const dateAdded = dayjs(msTimestampAdded).format('MMM D')
-
   const onRetrySwap = useCallback(() => {
     const swapFormState = createSwapFromStateFromDetails({
       transactionDetails: fullDetails,
@@ -129,11 +133,14 @@ function TransactionSummaryItem({
 
   let title = getTransactionSummaryTitle({
     transactionSummaryInfo,
-    currency,
-    otherCurrency,
+    t,
     showInlineWarning,
   })
-  const caption = inProgress ? balanceUpdate?.assetIncrease : dateAdded.toLocaleString()
+  const caption = getTransactionSummaryCaption({
+    transactionSummaryInfo,
+    currency,
+    otherCurrency,
+  })
 
   const icon = useMemo(() => {
     return type === TransactionType.Swap && !failed ? (
@@ -141,13 +148,16 @@ function TransactionSummaryItem({
         <Box left={2} position="absolute" testID="swap-success-toast" top={2}>
           <CurrencyLogoOrPlaceholder currency={currency} size={TXN_HISTORY_SIZING.primaryImage} />
         </Box>
-        <Box bottom={0} position="absolute" right={0}>
+        <Box
+          bottom={canceled && showInlineWarning ? 5 : 0}
+          position="absolute"
+          right={canceled && showInlineWarning ? 5 : 0}>
           {canceled && showInlineWarning ? (
             <SlashCircleIcon
               color={theme.colors.backgroundOutline}
               fillOpacity={1}
-              height={TXN_HISTORY_SIZING.primaryImage}
-              width={TXN_HISTORY_SIZING.primaryImage}
+              height={TXN_HISTORY_SIZING.secondaryImage}
+              width={TXN_HISTORY_SIZING.secondaryImage}
             />
           ) : (
             <CurrencyLogoOrPlaceholder
@@ -200,17 +210,20 @@ function TransactionSummaryItem({
               </Flex>
             )}
             <Flex shrink gap="xxxs">
-              <Flex row gap="xxs">
+              <Flex row alignItems="center" gap="xxs">
                 <Text adjustsFontSizeToFit fontWeight="500" numberOfLines={2} variant="mediumLabel">
                   {title}
                 </Text>
+                {chainId !== ChainId.Mainnet && <InlineNetworkPill chainId={chainId} />}
                 {status === TransactionStatus.FailedCancel && showInlineWarning && (
                   <FailedCancelBadge />
                 )}
               </Flex>
-              <Text color="textSecondary" variant="badge">
-                {caption}
-              </Text>
+              {caption && (
+                <Text color="textSecondary" variant="badge">
+                  {caption}
+                </Text>
+              )}
             </Flex>
           </Flex>
           {inProgress ? (

@@ -32,8 +32,8 @@ export function InlineNetworkPill(props: NetworkLabelProps) {
   return (
     <NetworkPill
       borderRadius="xs"
-      height={20}
-      px="xs"
+      height={16}
+      px="xxs"
       py="none"
       showIcon={false}
       textVariant="badge"
