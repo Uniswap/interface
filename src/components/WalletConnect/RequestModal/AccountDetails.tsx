@@ -5,13 +5,13 @@ import { Unicon } from 'src/components/unicons/Unicon'
 import { useDisplayName } from 'src/features/wallet/hooks'
 import { shortenAddress } from 'src/utils/addresses'
 
-export function AccountDetails({ address }: { address: string }) {
+export function AccountDetails({ address, iconSize = 20 }: { address: string; iconSize?: number }) {
   const displayName = useDisplayName(address)
 
   return (
     <Flex row>
       <Flex grow row alignItems="center" gap="xs">
-        <Unicon address={address} size={20} />
+        <Unicon address={address} size={iconSize} />
         <Text fontWeight="500" variant="subheadSmall">
           {displayName?.name}
         </Text>

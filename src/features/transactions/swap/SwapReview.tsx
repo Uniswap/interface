@@ -112,60 +112,61 @@ export function SwapReview({ dispatch, onNext, onPrev, derivedSwapInfo }: SwapFo
 
   return (
     <>
-      <AnimatedFlex centered entering={FadeInUp} exiting={FadeOut} flexGrow={1} gap="xs">
-        <Text color="textSecondary" variant="bodySmall">
-          {t('Swap')}
-        </Text>
+      <AnimatedFlex alignItems="center" entering={FadeInUp} exiting={FadeOut} flexGrow={1} gap="md">
         {/* TODO: onPressIn here should go back to prev screen */}
-        <AmountInput
-          borderWidth={0}
-          editable={false}
-          fontFamily={theme.textVariants.headlineLarge.fontFamily}
-          fontSize={48}
-          height={48}
-          mb="xs"
-          placeholder="0"
-          px="none"
-          py="none"
-          showCurrencySign={isUSDInput}
-          showSoftInputOnFocus={false}
-          testID="amount-input-in"
-          value={formattedAmounts[CurrencyField.INPUT]}
-        />
-        <Flex centered gap="none">
+        <Flex gap="sm" mt="xxl">
+          <AmountInput
+            backgroundColor="none"
+            borderWidth={0}
+            editable={false}
+            fontFamily={theme.textVariants.headlineLarge.fontFamily}
+            fontSize={48}
+            height={48}
+            placeholder="0"
+            px="md"
+            py="none"
+            showCurrencySign={isUSDInput}
+            showSoftInputOnFocus={false}
+            testID="amount-input-in"
+            value={formattedAmounts[CurrencyField.INPUT]}
+          />
           <Flex centered row gap="xs">
             <CurrencyLogo currency={currencyIn} size={28} />
             <Text color="textPrimary" variant="largeLabel">
               {currencyIn.symbol}
             </Text>
           </Flex>
-          <TransferArrowButton disabled bg="none" borderColor="none" />
         </Flex>
 
-        <Text color="textSecondary" variant="bodySmall">
-          {t('for')}
-        </Text>
-        {/* TODO: onPressIn here should go back to prev screen */}
-        <AmountInput
-          borderWidth={0}
-          editable={false}
-          fontFamily={theme.textVariants.headlineLarge.fontFamily}
-          fontSize={48}
-          height={48}
-          mb="xs"
-          placeholder="0"
-          px="none"
-          py="none"
-          showCurrencySign={isUSDInput}
-          showSoftInputOnFocus={false}
-          testID="amount-input-out"
-          value={formattedAmounts[CurrencyField.OUTPUT]}
-        />
-        <Flex centered row gap="xs">
-          <CurrencyLogo currency={currencyOut} size={28} />
-          <Text color="textPrimary" variant="largeLabel">
-            {currencyOut.symbol}
+        <TransferArrowButton disabled bg="none" borderColor="none" />
+        <Flex centered gap="md">
+          <Text color="textSecondary" variant="bodySmall">
+            {t('For')}
           </Text>
+          {/* TODO: onPressIn here should go back to prev screen */}
+          <Flex gap="sm">
+            <AmountInput
+              backgroundColor="none"
+              borderWidth={0}
+              editable={false}
+              fontFamily={theme.textVariants.headlineLarge.fontFamily}
+              fontSize={48}
+              height={48}
+              placeholder="0"
+              px="md"
+              py="none"
+              showCurrencySign={isUSDInput}
+              showSoftInputOnFocus={false}
+              testID="amount-input-out"
+              value={formattedAmounts[CurrencyField.OUTPUT]}
+            />
+            <Flex centered row gap="xs">
+              <CurrencyLogo currency={currencyOut} size={28} />
+              <Text color="textPrimary" variant="largeLabel">
+                {currencyOut.symbol}
+              </Text>
+            </Flex>
+          </Flex>
         </Flex>
       </AnimatedFlex>
       <AnimatedFlex
@@ -197,7 +198,7 @@ export function SwapReview({ dispatch, onNext, onPrev, derivedSwapInfo }: SwapFo
             px="md"
             py="sm"
             onPress={onPrev}>
-            <Arrow color={theme.colors.textSecondary} direction="w" size={20} />
+            <Arrow color={theme.colors.textPrimary} direction="w" size={20} />
           </Button>
           <Flex grow>
             <ActionButton
@@ -243,6 +244,7 @@ export function ActionButton({ onPress, disabled, label, name }: ActionButtonPro
         name={name}
         py="md"
         testID={name}
+        textVariant="largeLabel"
         onPress={() => {
           notificationAsync()
           actionButtonTrigger()

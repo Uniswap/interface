@@ -82,11 +82,13 @@ export function SwapDetails({
           justifyContent="space-between"
           p="xs">
           <Flex centered row flexBasis="30%" gap="none">
-            <Text color="blue300">{t('Rate Updated')}</Text>
+            <Text color="blue300" variant="subheadSmall">
+              {t('Rate Updated')}
+            </Text>
           </Flex>
           <Flex row flexBasis="70%" gap="xxs">
             <Flex centered row flexBasis="66%" flexGrow={1} gap="none">
-              <Text adjustsFontSizeToFit color="blue300" numberOfLines={1}>
+              <Text adjustsFontSizeToFit color="blue300" numberOfLines={1} variant="subheadSmall">
                 {rate}
               </Text>
             </Flex>
@@ -96,7 +98,7 @@ export function SwapDetails({
                 borderRadius="md"
                 padding="xs"
                 onPress={onAcceptTrade}>
-                <Text variant="smallLabel">{t('Accept')}</Text>
+                <Text variant="subheadSmall">{t('Accept')}</Text>
               </Button>
             </Flex>
           </Flex>
@@ -115,28 +117,34 @@ export function SwapDetails({
             p="md">
             <AlertTriangle color={theme.colors[swapWarningColor?.text]} height={18} width={18} />
             <Flex flexGrow={1}>
-              <Text color={swapWarningColor.text}>{swapWarning.title}</Text>
+              <Text color={swapWarningColor.text} variant="subheadSmall">
+                {swapWarning.title}
+              </Text>
             </Flex>
             <InfoCircle color={theme.colors.accentTextLightSecondary} height={18} width={18} />
           </Flex>
         </Button>
       ) : null}
       <Flex row justifyContent="space-between" p="md">
-        <Text color="textPrimary">{t('Rate')}</Text>
+        <Text fontWeight="500" variant="subheadSmall">
+          {t('Rate')}
+        </Text>
         <Flex row gap="none">
-          <Text color="textPrimary">{rate}</Text>
-          <Text color="textSecondary">
+          <Text variant="subheadSmall">{rate}</Text>
+          <Text color="textSecondary" variant="subheadSmall">
             {usdcPrice &&
               ` (${formatPrice(usdcPrice, { maximumFractionDigits: 6, notation: 'standard' })})`}
           </Text>
         </Flex>
       </Flex>
       <Flex row justifyContent="space-between" p="md">
-        <Text color="textPrimary">{t('Network fee')}</Text>
-        <Text color="textPrimary">${gasFeeUSD}</Text>
+        <Text fontWeight="500" variant="subheadSmall">
+          {t('Network fee')}
+        </Text>
+        <Text variant="subheadSmall">${gasFeeUSD}</Text>
       </Flex>
       <Box p="md">
-        <AccountDetails address={account?.address} />
+        <AccountDetails address={account?.address} iconSize={24} />
       </Box>
     </Flex>
   )
