@@ -77,10 +77,14 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo }: SwapFormProps) {
   useUpdateSwapGasEstimate(dispatch, trade.trade)
 
   const outputNotLoaded = !!(
-    formattedAmounts[CurrencyField.INPUT] && !formattedAmounts[CurrencyField.OUTPUT]
+    formattedAmounts[CurrencyField.INPUT] &&
+    currencies[CurrencyField.OUTPUT] &&
+    !formattedAmounts[CurrencyField.OUTPUT]
   )
   const inputNotLoaded = !!(
-    formattedAmounts[CurrencyField.OUTPUT] && !formattedAmounts[CurrencyField.INPUT]
+    formattedAmounts[CurrencyField.OUTPUT] &&
+    currencies[CurrencyField.INPUT] &&
+    !formattedAmounts[CurrencyField.INPUT]
   )
 
   const otherAmountNotLoaded = outputNotLoaded || inputNotLoaded
