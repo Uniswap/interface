@@ -17,8 +17,8 @@ export function Swap() {
 
     await maybeDismissTokenWarning()
 
-    // type 1.23
-    await element(by.id('decimal-pad-1')).tap()
+    // type 7.23
+    await element(by.id('decimal-pad-7')).tap()
     await element(by.id('decimal-pad-.')).tap()
     await element(by.id('decimal-pad-2')).tap()
     await element(by.id('decimal-pad-.')).tap() // should be ignored
