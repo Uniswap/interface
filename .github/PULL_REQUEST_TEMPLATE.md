@@ -1,9 +1,11 @@
-**Description**
-
+### Description
 **Fixes MOB-#**
 
-**Summary of the change, motivation and context**
+_[Summary of the change, motivation, and context]_
 
-**Before and After Screen capture**
+### Before and After Screen capture
+| Before             | After             |
+| ------------------ |-------------------|
+| _[before capture]_ | _[after capture]_ |
 
-**How Has This Been Tested?**
+### How Has This Been Tested?
