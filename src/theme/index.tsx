@@ -39,7 +39,7 @@ export enum Z_INDEX {
 
 const mediaWidthTemplates: { [width in keyof typeof MEDIA_WIDTHS]: typeof css } = Object.keys(MEDIA_WIDTHS).reduce(
   (accumulator, size) => {
-    ;(accumulator as any)[size] = (a: any, b: any, c: any) => css`
+    ; (accumulator as any)[size] = (a: any, b: any, c: any) => css`
       @media (max-width: ${(MEDIA_WIDTHS as any)[size]}px) {
         ${css(a, b, c)}
       }
@@ -202,7 +202,7 @@ export default function ThemeProvider({ children }: { children: React.ReactNode 
   return <StyledComponentsThemeProvider theme={themeObject}>{children}</StyledComponentsThemeProvider>
 }
 
-const TextWrapper = styled(Text)<{ color: keyof Colors }>`
+const TextWrapper = styled(Text) <{ color: keyof Colors }>`
   color: ${({ color, theme }) => (theme as any)[color]};
 `
 
@@ -267,45 +267,6 @@ export const ThemedText = {
   },
   DeprecatedError({ error, ...props }: { error: boolean } & TextProps) {
     return <TextWrapper fontWeight={500} color={error ? 'deprecated_red1' : 'deprecated_text2'} {...props} />
-  },
-  HeadlineLarge({ error, ...props }: { error: boolean } & TextProps) {
-    return <TextWrapper fontFamily={fontFamily.sansSerif.regular} fontSize={36} lineHeight={44} {...props} />
-  },
-  HeadlineMedium({ error, ...props }: { error: boolean } & TextProps) {
-    return <TextWrapper fontFamily={fontFamily.sansSerif.regular} fontSize={28} lineHeight={36} {...props} />
-  },
-  HeadlineSmall({ error, ...props }: { error: boolean } & TextProps) {
-    return <TextWrapper fontFamily={fontFamily.sansSerif.regular} fontSize={20} lineHeight={28} {...props} />
-  },
-  Subhead({ error, ...props }: { error: boolean } & TextProps) {
-    return <TextWrapper fontFamily={fontFamily.sansSerif.medium} fontSize={16} lineHeight={16} {...props} />
-  },
-  SubheadSmall({ error, ...props }: { error: boolean } & TextProps) {
-    return <TextWrapper fontFamily={fontFamily.sansSerif.medium} fontSize={14} lineHeight={14} {...props} />
-  },
-  Body({ error, ...props }: { error: boolean } & TextProps) {
-    return <TextWrapper fontFamily={fontFamily.sansSerif.regular} fontSize={16} lineHeight={24} {...props} />
-  },
-  BodySmall({ error, ...props }: { error: boolean } & TextProps) {
-    return <TextWrapper fontFamily={fontFamily.sansSerif.regular} fontSize={14} lineHeight={20} {...props} />
-  },
-  Caption({ error, ...props }: { error: boolean } & TextProps) {
-    return <TextWrapper fontFamily={fontFamily.sansSerif.regular} fontSize={12} lineHeight={16} {...props} />
-  },
-  Badge({ error, ...props }: { error: boolean } & TextProps) {
-    return <TextWrapper fontFamily={fontFamily.sansSerif.semibold} fontSize={8} lineHeight={8} {...props} />
-  },
-  Code({ error, ...props }: { error: boolean } & TextProps) {
-    return <TextWrapper fontFamily={fontFamily.sansSerif.monospace} fontSize={12} lineHeight={16} {...props} />
-  },
-  LargeLabel({ error, ...props }: { error: boolean } & TextProps) {
-    return <TextWrapper fontFamily={fontFamily.sansSerif.semibold} fontSize={20} lineHeight={24} {...props} />
-  },
-  MediumLabel({ error, ...props }: { error: boolean } & TextProps) {
-    return <TextWrapper fontFamily={fontFamily.sansSerif.semibold} fontSize={16} lineHeight={20} {...props} />
-  },
-  SmallLabel({ error, ...props }: { error: boolean } & TextProps) {
-    return <TextWrapper fontFamily={fontFamily.sansSerif.semibold} fontSize={14} lineHeight={16} {...props} />
   },
 }
 
