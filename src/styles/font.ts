@@ -22,19 +22,19 @@ export const fontFamily = {
 
 export const textVariants = {
   headlineLarge: {
-    fontFamily: fontFamily.sansSerif.medium,
+    fontFamily: fontFamily.sansSerif.regular,
     fontSize: 36,
     lineHeight: 44,
     color: 'textPrimary',
   },
   headlineMedium: {
-    fontFamily: fontFamily.sansSerif.medium,
+    fontFamily: fontFamily.sansSerif.regular,
     fontSize: 28,
     lineHeight: 36,
     color: 'textPrimary',
   },
   headlineSmall: {
-    fontFamily: fontFamily.sansSerif.medium,
+    fontFamily: fontFamily.sansSerif.regular,
     fontSize: 20,
     lineHeight: 28,
     color: 'textPrimary',

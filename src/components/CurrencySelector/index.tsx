@@ -48,6 +48,7 @@ export function CurrencySelector({
     <Box>
       <Toggle
         backgroundColor={!selectedCurrency ? 'accentActive' : 'backgroundAction'}
+        borderRadius="xl"
         filled={!selectedCurrency}
         testID={`currency-selector-toggle-${showNonZeroBalancesOnly ? 'in' : 'out'}`}
         onToggle={() => {
@@ -55,15 +56,15 @@ export function CurrencySelector({
         }}>
         <CenterBox>
           {selectedCurrency ? (
-            <Flex centered row flexDirection="row" gap="sm" px="sm" py="xs">
-              <CurrencyLogo currency={selectedCurrency} size={25} />
-              <Text color="textPrimary" variant="subhead">
+            <Flex centered row flexDirection="row" gap="xs" pl="xxs" pr="xs" py="xxs">
+              <CurrencyLogo currency={selectedCurrency} size={28} />
+              <Text color="textPrimary" variant="largeLabel">
                 {selectedCurrency.symbol}
               </Text>
               <Chevron color={theme.colors.textPrimary} direction="e" />
             </Flex>
           ) : (
-            <Flex centered row gap="xs" px="md" py="xs">
+            <Flex centered row gap="xs" p="xs" paddingLeft="sm">
               <Text color="accentTextLightPrimary" lineHeight={20} variant="mediumLabel">
                 {t('Choose token')}
               </Text>

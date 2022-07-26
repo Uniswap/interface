@@ -80,9 +80,9 @@ exports[`renders a currency logo without network logo 1`] = `
           "resizeMode": "cover",
         },
         Object {
-          "borderRadius": 8,
-          "height": 16,
-          "width": 16,
+          "borderRadius": 10,
+          "height": 20,
+          "width": 20,
         },
       ]
     }

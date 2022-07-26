@@ -24,24 +24,26 @@ export function Option({ currency, onPress, matches, metadataType, icon }: Optio
 
   return (
     <Button testID={`currency-option-${currency.chainId}-${currency.symbol}`} onPress={onPress}>
-      <Flex row alignItems="center" justifyContent="space-between" py="sm">
-        <Flex row flexShrink={1} gap="sm" overflow="hidden">
-          <CurrencyLogo currency={currency} size={40} />
-          <Flex alignItems="flex-start" flexShrink={1} gap="none">
-            <Flex centered row gap="xs">
-              <TextWithFuseMatches
-                matches={nameMatches}
-                text={currency.name ?? ''}
-                variant="subhead"
-              />
-              {icon}
-            </Flex>
-            <Flex row>
-              <TextWithFuseMatches
-                matches={symbolMatches}
-                text={currency.symbol ?? ''}
-                variant="caption"
-              />
+      <Flex row alignItems="center" flexShrink={1} justifyContent="space-between" py="sm">
+        <Flex row gap="sm" overflow="hidden">
+          <Flex row alignItems="center" gap="xs">
+            <CurrencyLogo currency={currency} size={32} />
+            <Flex alignItems="flex-start" flexShrink={1} gap="none">
+              <Flex centered row gap="xs">
+                <TextWithFuseMatches
+                  matches={nameMatches}
+                  text={currency.name ?? ''}
+                  variant="subhead"
+                />
+                {icon}
+              </Flex>
+              <Flex row>
+                <TextWithFuseMatches
+                  matches={symbolMatches}
+                  text={currency.symbol ?? ''}
+                  variant="caption"
+                />
+              </Flex>
             </Flex>
           </Flex>
         </Flex>

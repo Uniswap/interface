@@ -1,7 +1,7 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { FlexAlignType } from 'react-native'
+import { FlexAlignType, StyleProp, ViewStyle } from 'react-native'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { Box } from 'src/components/layout'
 import { maxAmountSpend } from 'src/utils/balance'
@@ -10,6 +10,7 @@ interface MaxAmountButtonProps {
   currencyAmount: CurrencyAmount<Currency> | null | undefined
   currencyBalance: CurrencyAmount<Currency> | null | undefined
   onSetMax: (amount: string) => void
+  style?: StyleProp<ViewStyle>
 }
 
 const MAX_AMOUNT_SIG_FIGS = 6 // default for .toSignificant()
@@ -18,6 +19,7 @@ export function MaxAmountButton({
   currencyAmount,
   currencyBalance,
   onSetMax,
+  style,
 }: MaxAmountButtonProps) {
   const { t } = useTranslation()
 
@@ -41,8 +43,9 @@ export function MaxAmountButton({
       borderRadius="md"
       disabled={disableMaxButton}
       label={t('Max')}
-      px="sm"
+      px="xs"
       py="sm"
+      style={style}
       textVariant="smallLabel"
       variant="transparent"
       onPress={onPress}

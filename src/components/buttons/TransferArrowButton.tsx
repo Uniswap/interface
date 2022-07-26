@@ -24,8 +24,8 @@ export function TransferArrowButton({
       alignItems="center"
       alignSelf="center"
       bg={bg}
-      borderColor="backgroundBackdrop"
-      borderRadius="md"
+      borderColor="backgroundSurface"
+      borderRadius="lg"
       borderWidth={4}
       disabled={disabled}
       icon={<Arrow color={theme.colors.textSecondary} direction="s" size={ICON_SIZE} />}

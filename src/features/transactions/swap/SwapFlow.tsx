@@ -91,7 +91,7 @@ export function SwapFlow({ prefilledState, onClose }: SwapFormProps) {
       : warnings.find((w) => w.action === WarningAction.WarnBeforeSubmit)
 
   return (
-    <Flex fill gap="xs" justifyContent="space-between" py="md">
+    <Flex grow gap="xs" py="xs">
       <WarningModal
         cancelLabel={t('Cancel swap')}
         continueLabel={t('Swap anyway')}

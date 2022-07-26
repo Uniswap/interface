@@ -8,6 +8,7 @@ interface ToggleProps {
   onToggle: () => void
   testID: string
   backgroundColor?: keyof Theme['colors']
+  borderRadius?: keyof Theme['borderRadii']
 }
 
 export function Toggle({
@@ -16,11 +17,12 @@ export function Toggle({
   onToggle,
   testID,
   backgroundColor,
+  borderRadius,
 }: PropsWithChildren<ToggleProps>) {
   return (
     <Button
       bg={backgroundColor ?? (filled ? 'accentActive' : 'backgroundAction')}
-      borderRadius="lg"
+      borderRadius={borderRadius || 'lg'}
       name={ElementName.CurrencySelectorToggle}
       testID={testID}
       onPress={onToggle}>

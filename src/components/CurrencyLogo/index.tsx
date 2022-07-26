@@ -23,12 +23,13 @@ interface CurrencyLogoProps {
 
 export function CurrencyLogo(props: CurrencyLogoProps) {
   const { size, currency } = props
-  const currencyLogoSize = (size ?? DEFAULT_SIZE) - 4
   const networkSize = NETWORK_LOGO_SIZE
+  const notOnMainnet = currency.chainId !== ChainId.Mainnet
+  const currencyLogoSize = notOnMainnet ? (size ?? DEFAULT_SIZE) - 4 : size ?? DEFAULT_SIZE
   return (
     <Box alignItems="center" height={size} justifyContent="center" width={size}>
       <CurrencyLogoOnly currency={currency} size={currencyLogoSize} />
-      {currency.chainId !== ChainId.Mainnet && (
+      {notOnMainnet && (
         <Box
           bottom={0}
           position="absolute"

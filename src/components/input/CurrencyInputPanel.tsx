@@ -14,6 +14,7 @@ import { Warning, WarningLabel } from 'src/components/warnings/types'
 import { Theme } from 'src/styles/theme'
 import { formatCurrencyAmount } from 'src/utils/format'
 
+const TOGGLE_PADDING_VERTICAL = 10 // custom value to keep components same height
 const restyleFunctions = [backgroundColor]
 type RestyleProps = BackgroundColorProps<Theme>
 
@@ -69,7 +70,7 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps) {
     <Flex
       centered
       borderRadius="lg"
-      gap="xs"
+      gap="sm"
       pt={isBlankOutputState ? 'lg' : 'md'}
       {...transformedProps}>
       {!isBlankOutputState && (
@@ -78,9 +79,8 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps) {
           backgroundColor="none"
           borderWidth={0}
           fontFamily={theme.textVariants.headlineLarge.fontFamily}
-          fontSize={28}
-          height={28}
-          mb="xs"
+          fontSize={36}
+          height={36}
           placeholder="0"
           px="none"
           py="none"
@@ -94,13 +94,13 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps) {
       )}
 
       {!isOutput && insufficientBalanceWarning && (
-        <Text color="accentWarning" variant="bodySmall">
+        <Text color="accentWarning" variant="caption">
           {insufficientBalanceWarning.title}
         </Text>
       )}
 
       {!isOutput && currency && !insufficientBalanceWarning && (
-        <Text color="textSecondary" variant="bodySmall">
+        <Text color="textSecondary" variant="caption">
           {t('Balance')}: {formatCurrencyAmount(currencyBalance)} {currency.symbol}
         </Text>
       )}
@@ -110,6 +110,7 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps) {
           <InlineMaxAmountButton
             currencyAmount={currencyAmount}
             currencyBalance={currencyBalance}
+            style={{ paddingVertical: TOGGLE_PADDING_VERTICAL }}
             onSetMax={onSetMax}
           />
         ) : (
@@ -129,8 +130,8 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps) {
             <PrimaryButton
               borderRadius="md"
               label={t('USD')}
-              px="sm"
-              py="sm"
+              px="xs"
+              style={{ paddingVertical: TOGGLE_PADDING_VERTICAL }}
               testID="toggle-usd"
               textVariant="smallLabel"
               variant={isUSDInput ? 'transparentBlue' : 'transparent'}

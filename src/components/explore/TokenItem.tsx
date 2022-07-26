@@ -19,7 +19,7 @@ import { formatNumber, formatUSDPrice } from 'src/utils/format'
 import { logger } from 'src/utils/logger'
 
 const boxTokenLogoStyle: ImageStyle = { width: 32, height: 32 }
-const tokenLogoStyle: ImageStyle = { width: 35, height: 35 }
+const tokenLogoStyle: ImageStyle = { width: 32, height: 32 }
 
 interface TokenItemProps {
   coin: CoingeckoMarketCoin
@@ -119,7 +119,7 @@ export const TokenItem = forwardRef<Swipeable, TokenItemProps>(
               )}
 
               <Image source={{ uri: coin.image }} style={tokenLogoStyle} />
-              <Flex alignItems="flex-start" flexShrink={1} gap="xxs">
+              <Flex alignItems="flex-start" flexShrink={1} gap="xxxs">
                 <Text variant="mediumLabel">{coin.name ?? ''}</Text>
                 <Text color="textSecondary" variant="caption">
                   {coin.symbol.toUpperCase() ?? ''}

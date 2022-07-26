@@ -7,6 +7,8 @@ type KeyProps = {
   disabled?: (value: string) => boolean
   label: string
   hidden?: boolean
+  paddingTop?: 'sm'
+  align: 'flex-start' | 'center' | 'flex-end'
 }
 
 interface DecimalPadProps {
@@ -18,30 +20,36 @@ interface DecimalPadProps {
 export function DecimalPad({ setValue, value = '', hideDecimal = false }: DecimalPadProps) {
   const keys: KeyProps[] = useMemo(() => {
     return [
-      { label: '1', action: 'insert' },
-      { label: '2', action: 'insert' },
-      { label: '3', action: 'insert' },
-      { label: '4', action: 'insert' },
-      { label: '5', action: 'insert' },
-      { label: '6', action: 'insert' },
-      { label: '7', action: 'insert' },
-      { label: '8', action: 'insert' },
-      { label: '9', action: 'insert' },
+      { label: '1', action: 'insert', align: 'flex-start', paddingTop: 'sm' },
+      { label: '2', action: 'insert', align: 'center', paddingTop: 'sm' },
+      { label: '3', action: 'insert', align: 'flex-end', paddingTop: 'sm' },
+      { label: '4', action: 'insert', align: 'flex-start' },
+      { label: '5', action: 'insert', align: 'center' },
+      { label: '6', action: 'insert', align: 'flex-end' },
+      { label: '7', action: 'insert', align: 'flex-start' },
+      { label: '8', action: 'insert', align: 'center' },
+      { label: '9', action: 'insert', align: 'flex-end' },
       {
         label: '.',
         action: 'insert',
         disabled: (v: string) => v.includes('.'),
         hidden: hideDecimal,
+        align: 'flex-start',
       },
-      { label: '0', action: 'insert' },
-      { label: '←', action: 'deleteLast', disabled: (v: string) => v.length === 0 },
+      { label: '0', action: 'insert', align: 'center' },
+      {
+        label: '←',
+        action: 'deleteLast',
+        disabled: (v: string) => v.length === 0,
+        align: 'flex-end',
+      },
     ]
   }, [hideDecimal])
   return (
-    <AnimatedBox flex={1} flexDirection="row" flexGrow={1} flexWrap="wrap">
+    <AnimatedBox flexDirection="row" flexWrap="wrap" px="md">
       {keys.map((key, i) =>
         key.hidden ? (
-          <Box key={i} height="25%" width="33%" />
+          <Box key={i} alignItems={key.align} height="25%" />
         ) : (
           <KeyButton {...key} key={i} setValue={setValue} value={value} />
         )
@@ -55,14 +63,23 @@ type KeyButtonProps = KeyProps & {
   value: string
 }
 
-function KeyButton({ action, disabled, label, setValue, value }: KeyButtonProps) {
+function KeyButton({
+  action,
+  disabled,
+  label,
+  setValue,
+  value,
+  align,
+  paddingTop,
+}: KeyButtonProps) {
   const isDisabled = disabled?.(value) ?? false
   return (
     <TextButton
-      alignItems="center"
+      alignItems={align}
       disabled={isDisabled}
-      height="25%"
       justifyContent="center"
+      padding="md"
+      paddingTop={paddingTop}
       testID={'decimal-pad-' + label}
       textAlign="center"
       textColor={isDisabled ? 'textSecondary' : 'textPrimary'}

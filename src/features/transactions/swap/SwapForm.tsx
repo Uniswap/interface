@@ -90,8 +90,8 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo }: SwapFormProps) {
   }
 
   return (
-    <>
-      <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="sm" justifyContent="center">
+    <Flex grow gap="none" justifyContent="space-between">
+      <AnimatedFlex grow entering={FadeIn} exiting={FadeOut} gap="sm">
         <Trace section={SectionName.CurrencyInputPanel}>
           <CurrencyInputPanel
             autoFocus
@@ -131,57 +131,54 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo }: SwapFormProps) {
                 </Box>
               </Box>
             </Box>
-            <Flex pb={swapWarning ? 'xxs' : 'md'} pt="xs" px="md">
-              <CurrencyInputPanel
-                isOutput
-                currency={currencies[CurrencyField.OUTPUT]}
-                currencyAmount={currencyAmounts[CurrencyField.OUTPUT]}
-                currencyBalance={currencyBalances[CurrencyField.OUTPUT]}
-                isUSDInput={isUSDInput}
-                otherSelectedCurrency={currencies[CurrencyField.INPUT]}
-                showNonZeroBalancesOnly={false}
-                value={formattedAmounts[CurrencyField.OUTPUT]}
-                warnings={warnings}
-                onPressIn={() => onUpdateExactCurrencyField(CurrencyField.OUTPUT)}
-                onSelectCurrency={(newCurrency: Currency) =>
-                  onSelectCurrency(CurrencyField.OUTPUT, newCurrency)
-                }
-                onSetAmount={(value) => onSetAmount(CurrencyField.OUTPUT, value, isUSDInput)}
-              />
+            <Flex>
+              <Flex pb={swapWarning ? 'xxs' : 'lg'} pt="xs" px="md">
+                <CurrencyInputPanel
+                  isOutput
+                  currency={currencies[CurrencyField.OUTPUT]}
+                  currencyAmount={currencyAmounts[CurrencyField.OUTPUT]}
+                  currencyBalance={currencyBalances[CurrencyField.OUTPUT]}
+                  isUSDInput={isUSDInput}
+                  otherSelectedCurrency={currencies[CurrencyField.INPUT]}
+                  showNonZeroBalancesOnly={false}
+                  value={formattedAmounts[CurrencyField.OUTPUT]}
+                  warnings={warnings}
+                  onPressIn={() => onUpdateExactCurrencyField(CurrencyField.OUTPUT)}
+                  onSelectCurrency={(newCurrency: Currency) =>
+                    onSelectCurrency(CurrencyField.OUTPUT, newCurrency)
+                  }
+                  onSetAmount={(value) => onSetAmount(CurrencyField.OUTPUT, value, isUSDInput)}
+                />
+              </Flex>
+              {swapWarning ? (
+                <Button onPress={() => onShowSwapWarning(WarningModalType.INFORMATIONAL)}>
+                  <Flex
+                    centered
+                    row
+                    alignItems="center"
+                    alignSelf="stretch"
+                    backgroundColor={swapWarningColor.background}
+                    borderBottomLeftRadius="lg"
+                    borderBottomRightRadius="lg"
+                    flexGrow={1}
+                    gap="xs"
+                    p="sm">
+                    <Text color={swapWarningColor.text} fontWeight="600" variant="caption">
+                      {swapWarning.title}
+                    </Text>
+                    <InfoCircle
+                      color={theme.colors.accentTextLightSecondary}
+                      height={18}
+                      width={18}
+                    />
+                  </Flex>
+                </Button>
+              ) : null}
             </Flex>
-            {swapWarning ? (
-              <Button onPress={() => onShowSwapWarning(WarningModalType.INFORMATIONAL)}>
-                <Flex
-                  centered
-                  row
-                  alignItems="center"
-                  alignSelf="stretch"
-                  backgroundColor={swapWarningColor.background}
-                  borderBottomLeftRadius="lg"
-                  borderBottomRightRadius="lg"
-                  flexGrow={1}
-                  gap="xs"
-                  p="sm">
-                  <Text color={swapWarningColor.text}>{swapWarning.title}</Text>
-                  <InfoCircle
-                    color={theme.colors.accentTextLightSecondary}
-                    height={18}
-                    width={18}
-                  />
-                </Flex>
-              </Button>
-            ) : null}
           </Flex>
         </Trace>
       </AnimatedFlex>
-      <AnimatedFlex
-        exiting={FadeOutDown}
-        flexGrow={1}
-        gap="sm"
-        justifyContent="flex-end"
-        mb="xl"
-        mt="xs"
-        px="sm">
+      <AnimatedFlex exiting={FadeOutDown} gap="sm" justifyContent="flex-end" mb="lg" px="sm">
         <DecimalPad
           setValue={(value: string) => onSetAmount(exactCurrencyField, value, isUSDInput)}
           value={formattedAmounts[exactCurrencyField]}
@@ -197,6 +194,6 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo }: SwapFormProps) {
           onPress={onReview}
         />
       </AnimatedFlex>
-    </>
+    </Flex>
   )
 }
