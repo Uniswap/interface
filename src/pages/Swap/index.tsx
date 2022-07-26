@@ -529,9 +529,9 @@ export default function Swap() {
               <div>
                 {swapIsUnsupported ? (
                   <ButtonPrimary disabled={true}>
-                    <ThemedText.Main mb="4px">
+                    <ThemedText.DeprecatedMain mb="4px">
                       <Trans>Unsupported Asset</Trans>
-                    </ThemedText.Main>
+                    </ThemedText.DeprecatedMain>
                   </ButtonPrimary>
                 ) : !account ? (
                   <TraceEvent
@@ -556,9 +556,9 @@ export default function Swap() {
                   </ButtonPrimary>
                 ) : routeNotFound && userHasSpecifiedInputOutput && !routeIsLoading && !routeIsSyncing ? (
                   <GreyCard style={{ textAlign: 'center' }}>
-                    <ThemedText.Main mb="4px">
+                    <ThemedText.DeprecatedMain mb="4px">
                       <Trans>Insufficient liquidity for this trade.</Trans>
-                    </ThemedText.Main>
+                    </ThemedText.DeprecatedMain>
                   </GreyCard>
                 ) : showApproveFlow ? (
                   <AutoRow style={{ flexWrap: 'nowrap', width: '100%' }}>

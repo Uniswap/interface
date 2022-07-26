@@ -81,20 +81,20 @@ export default function ExecuteModal({ isOpen, onDismiss, proposalId }: ExecuteM
         <ContentWrapper gap="lg">
           <AutoColumn gap="lg" justify="center">
             <RowBetween>
-              <ThemedText.MediumHeader fontWeight={500}>
+              <ThemedText.DeprecatedMediumHeader fontWeight={500}>
                 <Trans>Execute Proposal {proposalId}</Trans>
-              </ThemedText.MediumHeader>
+              </ThemedText.DeprecatedMediumHeader>
               <StyledClosed onClick={wrappedOnDismiss} />
             </RowBetween>
             <RowBetween>
-              <ThemedText.Body>
+              <ThemedText.DeprecatedBody>
                 <Trans>Executing this proposal will enact the calldata on-chain.</Trans>
-              </ThemedText.Body>
+              </ThemedText.DeprecatedBody>
             </RowBetween>
             <ButtonPrimary onClick={onExecute}>
-              <ThemedText.MediumHeader color="white">
+              <ThemedText.DeprecatedMediumHeader color="white">
                 <Trans>Execute</Trans>
-              </ThemedText.MediumHeader>
+              </ThemedText.DeprecatedMediumHeader>
             </ButtonPrimary>
           </AutoColumn>
         </ContentWrapper>
@@ -110,13 +110,13 @@ export default function ExecuteModal({ isOpen, onDismiss, proposalId }: ExecuteM
           </ConfirmedIcon>
           <AutoColumn gap="100px" justify={'center'}>
             <AutoColumn gap="12px" justify={'center'}>
-              <ThemedText.LargeHeader>
+              <ThemedText.DeprecatedLargeHeader>
                 <Trans>Executing</Trans>
-              </ThemedText.LargeHeader>
+              </ThemedText.DeprecatedLargeHeader>
             </AutoColumn>
-            <ThemedText.SubHeader>
+            <ThemedText.DeprecatedSubHeader>
               <Trans>Confirm this transaction in your wallet</Trans>
-            </ThemedText.SubHeader>
+            </ThemedText.DeprecatedSubHeader>
           </AutoColumn>
         </ConfirmOrLoadingWrapper>
       )}
@@ -131,18 +131,18 @@ export default function ExecuteModal({ isOpen, onDismiss, proposalId }: ExecuteM
           </ConfirmedIcon>
           <AutoColumn gap="100px" justify={'center'}>
             <AutoColumn gap="12px" justify={'center'}>
-              <ThemedText.LargeHeader>
+              <ThemedText.DeprecatedLargeHeader>
                 <Trans>Execution Submitted</Trans>
-              </ThemedText.LargeHeader>
+              </ThemedText.DeprecatedLargeHeader>
             </AutoColumn>
             {chainId && (
               <ExternalLink
                 href={getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)}
                 style={{ marginLeft: '4px' }}
               >
-                <ThemedText.SubHeader>
+                <ThemedText.DeprecatedSubHeader>
                   <Trans>View transaction on Explorer</Trans>
-                </ThemedText.SubHeader>
+                </ThemedText.DeprecatedSubHeader>
               </ExternalLink>
             )}
           </AutoColumn>

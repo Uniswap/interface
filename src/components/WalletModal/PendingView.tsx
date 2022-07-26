@@ -63,14 +63,14 @@ export default function PendingView({
         <LoadingWrapper>
           {error ? (
             <ErrorGroup>
-              <ThemedText.MediumHeader marginBottom={12}>
+              <ThemedText.DeprecatedMediumHeader marginBottom={12}>
                 <Trans>Error connecting</Trans>
-              </ThemedText.MediumHeader>
-              <ThemedText.Body fontSize={14} marginBottom={36} textAlign="center">
+              </ThemedText.DeprecatedMediumHeader>
+              <ThemedText.DeprecatedBody fontSize={14} marginBottom={36} textAlign="center">
                 <Trans>
                   The connection attempt failed. Please click try again and follow the steps to connect in your wallet.
                 </Trans>
-              </ThemedText.Body>
+              </ThemedText.DeprecatedBody>
               <ButtonPrimary
                 $borderRadius="12px"
                 padding="12px"
@@ -81,19 +81,19 @@ export default function PendingView({
                 <Trans>Try Again</Trans>
               </ButtonPrimary>
               <ButtonEmpty width="fit-content" padding="0" marginTop={20}>
-                <ThemedText.Link fontSize={12} onClick={openOptions}>
+                <ThemedText.DeprecatedLink fontSize={12} onClick={openOptions}>
                   <Trans>Back to wallet selection</Trans>
-                </ThemedText.Link>
+                </ThemedText.DeprecatedLink>
               </ButtonEmpty>
             </ErrorGroup>
           ) : (
             <>
-              <ThemedText.Black fontSize={20} marginY={16}>
+              <ThemedText.DeprecatedBlack fontSize={20} marginY={16}>
                 <LoaderContainer>
                   <Loader stroke="currentColor" size="32px" />
                 </LoaderContainer>
                 <Trans>Connecting...</Trans>
-              </ThemedText.Black>
+              </ThemedText.DeprecatedBlack>
             </>
           )}
         </LoadingWrapper>

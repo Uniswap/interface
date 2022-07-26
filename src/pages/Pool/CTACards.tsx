@@ -69,7 +69,7 @@ const CTA2 = styled(ExternalLink)`
   }
 `
 
-const HeaderText = styled(ThemedText.Label)`
+const HeaderText = styled(ThemedText.DeprecatedLabel)`
   align-items: center;
   display: flex;
 
@@ -102,9 +102,9 @@ export default function CTACards() {
           <HeaderText>
             <Trans>Learn about providing liquidity</Trans> ↗
           </HeaderText>
-          <ThemedText.Body fontWeight={400} style={{ alignItems: 'center', display: 'flex' }}>
+          <ThemedText.DeprecatedBody fontWeight={400} style={{ alignItems: 'center', display: 'flex' }}>
             <Trans>Check out our v3 LP walkthrough and migration guides.</Trans>
-          </ThemedText.Body>
+          </ThemedText.DeprecatedBody>
         </ResponsiveColumn>
       </CTA1>
       <CTA2 data-testid="cta-infolink" href={infoLink + 'pools'}>
@@ -112,9 +112,9 @@ export default function CTACards() {
           <HeaderText style={{ alignSelf: 'flex-start' }}>
             <Trans>Top pools</Trans> ↗
           </HeaderText>
-          <ThemedText.Body fontWeight={400} style={{ alignSelf: 'flex-start' }}>
+          <ThemedText.DeprecatedBody fontWeight={400} style={{ alignSelf: 'flex-start' }}>
             <Trans>Explore Uniswap Analytics.</Trans>
-          </ThemedText.Body>
+          </ThemedText.DeprecatedBody>
         </ResponsiveColumn>
       </CTA2>
     </CTASection>

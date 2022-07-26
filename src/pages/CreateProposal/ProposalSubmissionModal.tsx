@@ -26,9 +26,9 @@ export const ProposalSubmissionModal = ({
       {!hash ? (
         <LoadingView onDismiss={onDismiss}>
           <AutoColumn gap="12px" justify={'center'}>
-            <ThemedText.LargeHeader>
+            <ThemedText.DeprecatedLargeHeader>
               <Trans>Submitting Proposal</Trans>
-            </ThemedText.LargeHeader>
+            </ThemedText.DeprecatedLargeHeader>
           </AutoColumn>
         </LoadingView>
       ) : (

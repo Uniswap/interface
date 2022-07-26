@@ -317,12 +317,17 @@ export default function RemoveLiquidity() {
           </RowFixed>
         </RowBetween>
 
-        <ThemedText.Italic fontSize={12} color={theme.deprecated_text2} textAlign="left" padding={'12px 0 0 0'}>
+        <ThemedText.DeprecatedItalic
+          fontSize={12}
+          color={theme.deprecated_text2}
+          textAlign="left"
+          padding={'12px 0 0 0'}
+        >
           <Trans>
             Output is estimated. If the price changes by more than {allowedSlippage.toSignificant(4)}% your transaction
             will revert.
           </Trans>
-        </ThemedText.Italic>
+        </ThemedText.DeprecatedItalic>
       </AutoColumn>
     )
   }
@@ -451,12 +456,12 @@ export default function RemoveLiquidity() {
           <AutoColumn gap="md">
             <BlueCard>
               <AutoColumn gap="10px">
-                <ThemedText.Link fontWeight={400} color={'deprecated_primaryText1'}>
+                <ThemedText.DeprecatedLink fontWeight={400} color={'deprecated_primaryText1'}>
                   <Trans>
                     <b>Tip:</b> Removing pool tokens converts your position back into underlying tokens at the current
                     rate, proportional to your share of the pool. Accrued fees are included in the amounts you receive.
                   </Trans>
-                </ThemedText.Link>
+                </ThemedText.DeprecatedLink>
               </AutoColumn>
             </BlueCard>
             <LightCard>

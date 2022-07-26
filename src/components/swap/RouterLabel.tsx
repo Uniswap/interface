@@ -26,7 +26,7 @@ const StyledStaticRouterIcon = styled(StaticRouterIcon)`
   }
 `
 
-const StyledAutoRouterLabel = styled(ThemedText.Black)`
+const StyledAutoRouterLabel = styled(ThemedText.DeprecatedBlack)`
   line-height: 1rem;
 
   /* fallback color */
@@ -51,8 +51,8 @@ export function AutoRouterLabel() {
   return autoRouterSupported ? (
     <StyledAutoRouterLabel fontSize={14}>Auto Router</StyledAutoRouterLabel>
   ) : (
-    <ThemedText.Black fontSize={14}>
+    <ThemedText.DeprecatedBlack fontSize={14}>
       <Trans>Trade Route</Trans>
-    </ThemedText.Black>
+    </ThemedText.DeprecatedBlack>
   )
 }

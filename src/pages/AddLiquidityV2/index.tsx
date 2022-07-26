@@ -249,12 +249,12 @@ export default function AddLiquidity() {
             {currencies[Field.CURRENCY_A]?.symbol + '/' + currencies[Field.CURRENCY_B]?.symbol + ' Pool Tokens'}
           </Text>
         </Row>
-        <ThemedText.Italic fontSize={12} textAlign="left" padding={'8px 0 0 0 '}>
+        <ThemedText.DeprecatedItalic fontSize={12} textAlign="left" padding={'8px 0 0 0 '}>
           <Trans>
             Output is estimated. If the price changes by more than {allowedSlippage.toSignificant(4)}% your transaction
             will revert.
           </Trans>
-        </ThemedText.Italic>
+        </ThemedText.DeprecatedItalic>
       </AutoColumn>
     )
   }
@@ -347,15 +347,15 @@ export default function AddLiquidity() {
                 <ColumnCenter>
                   <BlueCard>
                     <AutoColumn gap="10px">
-                      <ThemedText.Link fontWeight={600} color={'deprecated_primaryText1'}>
+                      <ThemedText.DeprecatedLink fontWeight={600} color={'deprecated_primaryText1'}>
                         <Trans>You are the first liquidity provider.</Trans>
-                      </ThemedText.Link>
-                      <ThemedText.Link fontWeight={400} color={'deprecated_primaryText1'}>
+                      </ThemedText.DeprecatedLink>
+                      <ThemedText.DeprecatedLink fontWeight={400} color={'deprecated_primaryText1'}>
                         <Trans>The ratio of tokens you add will set the price of this pool.</Trans>
-                      </ThemedText.Link>
-                      <ThemedText.Link fontWeight={400} color={'deprecated_primaryText1'}>
+                      </ThemedText.DeprecatedLink>
+                      <ThemedText.DeprecatedLink fontWeight={400} color={'deprecated_primaryText1'}>
                         <Trans>Once you are happy with the rate click supply to review.</Trans>
-                      </ThemedText.Link>
+                      </ThemedText.DeprecatedLink>
                     </AutoColumn>
                   </BlueCard>
                 </ColumnCenter>
@@ -363,7 +363,7 @@ export default function AddLiquidity() {
                 <ColumnCenter>
                   <BlueCard>
                     <AutoColumn gap="10px">
-                      <ThemedText.Link fontWeight={400} color={'deprecated_primaryText1'}>
+                      <ThemedText.DeprecatedLink fontWeight={400} color={'deprecated_primaryText1'}>
                         <Trans>
                           <b>
                             <Trans>Tip:</Trans>
@@ -372,7 +372,7 @@ export default function AddLiquidity() {
                           automatically earn fees proportional to your share of the pool, and can be redeemed at any
                           time.
                         </Trans>
-                      </ThemedText.Link>
+                      </ThemedText.DeprecatedLink>
                     </AutoColumn>
                   </BlueCard>
                 </ColumnCenter>
@@ -408,13 +408,13 @@ export default function AddLiquidity() {
               <>
                 <LightCard padding="0px" $borderRadius={'20px'}>
                   <RowBetween padding="1rem">
-                    <ThemedText.SubHeader fontWeight={500} fontSize={14}>
+                    <ThemedText.DeprecatedSubHeader fontWeight={500} fontSize={14}>
                       {noLiquidity ? (
                         <Trans>Initial prices and pool share</Trans>
                       ) : (
                         <Trans>Prices and pool share</Trans>
                       )}
-                    </ThemedText.SubHeader>
+                    </ThemedText.DeprecatedSubHeader>
                   </RowBetween>{' '}
                   <LightCard padding="1rem" $borderRadius={'20px'}>
                     <PoolPriceBar
@@ -430,9 +430,9 @@ export default function AddLiquidity() {
 
             {addIsUnsupported ? (
               <ButtonPrimary disabled={true}>
-                <ThemedText.Main mb="4px">
+                <ThemedText.DeprecatedMain mb="4px">
                   <Trans>Unsupported Asset</Trans>
-                </ThemedText.Main>
+                </ThemedText.DeprecatedMain>
               </ButtonPrimary>
             ) : !account ? (
               <TraceEvent
