@@ -894,6 +894,7 @@ export const DEFAULT_GAS_LIMIT_MARGIN = 20000
 export const MAX_ALLOW_APY = 10000
 export const LP_TOKEN_DECIMALS = 18
 export const RESERVE_USD_DECIMALS = 100
+export const DEFAULT_SIGNIFICANT = 6
 export const SUBGRAPH_AMP_MULTIPLIER = 10000
 export const AMP_LIQUIDITY_HINT = t`AMP factor x Liquidity in the pool. Amplified pools have higher capital efficiency and liquidity.`
 export const AMP_HINT = t`Stands for amplification factor. Each pool can have its own AMP. Pools with a higher AMP provide higher capital efficiency within a particular price range`

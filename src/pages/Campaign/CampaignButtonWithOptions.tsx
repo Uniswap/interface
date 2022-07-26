@@ -19,6 +19,7 @@ import axios from 'axios'
 import { BigNumber } from '@ethersproject/bignumber'
 import { useActiveNetwork } from 'hooks/useActiveNetwork'
 import { ButtonPrimary } from 'components/Button'
+import { BIG_INT_ZERO } from 'constants/index'
 
 export default function CampaignButtonWithOptions({
   campaign,
@@ -55,7 +56,7 @@ export default function CampaignButtonWithOptions({
     const refs: string[] = []
     if (selectedCampaignLeaderboard && selectedCampaignLeaderboard.rewards) {
       selectedCampaignLeaderboard.rewards.forEach(reward => {
-        if (!reward.claimed && reward.rewardAmount > 0) {
+        if (!reward.claimed && reward.rewardAmount.greaterThan(BIG_INT_ZERO)) {
           refs.push(reward.ref)
         }
       })

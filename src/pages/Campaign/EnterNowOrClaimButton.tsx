@@ -3,6 +3,7 @@ import { CampaignState } from 'state/campaigns/actions'
 import { useSelector } from 'react-redux'
 import { AppState } from 'state'
 import CampaignButtonWithOptions from 'pages/Campaign/CampaignButtonWithOptions'
+import { BIG_INT_ZERO } from 'constants/index'
 
 export default function EnterNowOrClaimButton() {
   const selectedCampaign = useSelector((state: AppState) => state.campaigns.selectedCampaign)
@@ -30,7 +31,7 @@ export default function EnterNowOrClaimButton() {
     let isUserClaimedRewardsInThisCampaign = false
     if (selectedCampaignLeaderboard?.rewards?.length) {
       selectedCampaignLeaderboard.rewards.forEach(reward => {
-        if (!reward.claimed && reward.rewardAmount > 0) {
+        if (!reward.claimed && reward.rewardAmount.greaterThan(BIG_INT_ZERO)) {
           isUserClaimedRewardsInThisCampaign = true
         }
       })

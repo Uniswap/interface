@@ -26,6 +26,9 @@ import { CAMPAIGN_LEADERBOARD_ITEM_PER_PAGE, SWR_KEYS } from 'constants/index'
 import useParsedQueryString from 'hooks/useParsedQueryString'
 import { useHistory } from 'react-router-dom'
 import { stringify } from 'qs'
+import { SerializedToken } from 'state/user/actions'
+import { Fraction } from '@kyberswap/ks-sdk-core'
+import JSBI from 'jsbi'
 
 const MAXIMUM_ITEMS_PER_REQUEST = 10000
 
@@ -65,25 +68,25 @@ export default function CampaignsUpdater(): null {
       const rewardDistribution: RewardDistribution[] = []
       if (campaign.rewardDistribution.single) {
         campaign.rewardDistribution.single.forEach(
-          ({ amount, rank, tokenSymbol }: { amount: number; rank: number; tokenSymbol: string }) => {
+          ({ amount, rank, token }: { amount: string; rank: number; token: SerializedToken }) => {
             rewardDistribution.push({
               type: 'Single',
               amount,
               rank,
-              tokenSymbol,
+              token,
             })
           },
         )
       }
       if (campaign.rewardDistribution.range) {
         campaign.rewardDistribution.range.forEach(
-          ({ from, to, amount, tokenSymbol }: { from: number; to: number; amount: number; tokenSymbol: string }) => {
+          ({ from, to, amount, token }: { from: number; to: number; amount: string; token: SerializedToken }) => {
             rewardDistribution.push({
               type: 'Range',
               from,
               to,
               amount,
-              tokenSymbol,
+              token,
             })
           },
         )
@@ -95,13 +98,13 @@ export default function CampaignsUpdater(): null {
             to,
             amount,
             numberOfWinners,
-            tokenSymbol,
+            token,
           }: {
             from: number
             to: number
-            amount: number
+            amount: string
             numberOfWinners: number
-            tokenSymbol: string
+            token: SerializedToken
           }) => {
             rewardDistribution.push({
               type: 'Random',
@@ -109,7 +112,7 @@ export default function CampaignsUpdater(): null {
               to,
               amount,
               nWinners: numberOfWinners,
-              tokenSymbol,
+              token,
             })
           },
         )
@@ -218,18 +221,24 @@ export default function CampaignsUpdater(): null {
                   userAddress: item.UserAddress,
                   totalPoint: item.TotalPoint,
                   rankNo: item.RankNo,
-                  rewardAmount: item.RewardAmount ?? 0,
-                  tokenSymbol: item.TokenSymbol,
+                  rewardAmount: new Fraction(
+                    item.RewardAmount,
+                    JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(item?.Token?.decimals ?? 18)),
+                  ),
+                  token: item.Token,
                 }),
               )
             : [],
           rewards: data.Rewards
             ? data.Rewards.map(
                 (item: any): CampaignLeaderboardRewards => ({
-                  rewardAmount: item.RewardAmount,
-                  tokenSymbol: item.TokenSymbol,
+                  rewardAmount: new Fraction(
+                    item.RewardAmount,
+                    JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(item?.Token?.decimals ?? 18)),
+                  ),
                   ref: item.Ref,
                   claimed: item.Claimed,
+                  token: item.Token,
                 }),
               )
             : [],
@@ -292,8 +301,11 @@ export default function CampaignsUpdater(): null {
         const luckyWinners: CampaignLuckyWinner[] = data.map(
           (item: any): CampaignLuckyWinner => ({
             userAddress: item.userAddress,
-            rewardAmount: item.rewardAmount,
-            tokenSymbol: item.tokenSymbol,
+            rewardAmount: new Fraction(
+              item.rewardAmount,
+              JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(item?.token?.decimals ?? 18)),
+            ),
+            token: item.token,
           }),
         )
         return luckyWinners

@@ -13,7 +13,7 @@ import Gold from 'assets/svg/gold_icon.svg'
 import Silver from 'assets/svg/silver_icon.svg'
 import Bronze from 'assets/svg/bronze_icon.svg'
 import Pagination from 'components/Pagination'
-import { CAMPAIGN_LEADERBOARD_ITEM_PER_PAGE } from 'constants/index'
+import { CAMPAIGN_LEADERBOARD_ITEM_PER_PAGE, DEFAULT_SIGNIFICANT } from 'constants/index'
 import { useSelector } from 'react-redux'
 import { AppState } from 'state'
 import {
@@ -23,7 +23,6 @@ import {
 } from 'state/campaigns/hooks'
 import InfoHelper from 'components/InfoHelper'
 import { CampaignState } from 'state/campaigns/actions'
-import BigNumberJS from 'bignumber.js'
 
 const leaderboardTableBodyBackgroundColorsByRank: { [p: string]: string } = {
   1: `linear-gradient(90deg, rgba(255, 204, 102, 0.25) 0%, rgba(255, 204, 102, 0) 54.69%, rgba(255, 204, 102, 0) 100%)`,
@@ -114,7 +113,7 @@ export default function LeaderboardLayout({
         </LeaderboardTableBodyItem>
         {showRewardsColumn && (
           <LeaderboardTableBodyItem align="right" isThisRankingEligible={isThisRankingEligible}>
-            {formatNumberWithPrecisionRange(data.rewardAmount, 0, 2)} {data.tokenSymbol}
+            {data.rewardAmount.toSignificant(DEFAULT_SIGNIFICANT)} {data.token.symbol}
           </LeaderboardTableBodyItem>
         )}
       </LeaderboardTableBody>
@@ -128,12 +127,7 @@ export default function LeaderboardLayout({
           {getShortenAddress(luckyWinner.userAddress, above1200)}
         </LeaderboardTableBodyItem>
         <LeaderboardTableBodyItem align="right" isThisRankingEligible={true}>
-          {formatNumberWithPrecisionRange(
-            new BigNumberJS(luckyWinner.rewardAmount).div(new BigNumberJS(10).pow(18)).toNumber(), // TODO nguyenhuudungz: Refactor backend return decimals.
-            0,
-            2,
-          )}{' '}
-          {luckyWinner.tokenSymbol}
+          {luckyWinner.rewardAmount.toSignificant(DEFAULT_SIGNIFICANT)} {luckyWinner.token.symbol}
         </LeaderboardTableBodyItem>
       </LeaderboardTableBody>
     )
