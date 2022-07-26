@@ -1,3 +1,4 @@
+import dayjs from 'dayjs'
 import { TFunction } from 'i18next'
 import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -12,7 +13,8 @@ import { TransactionStatus } from 'src/features/transactions/types'
 
 const PENDING_TITLE = (t: TFunction) => t('Pending')
 const TODAY_TITLE = (t: TFunction) => t('Today')
-const WEEK_TITLE = (t: TFunction) => t('This Week')
+const MONTH_TITLE = dayjs().format('MMMM')
+const YEAR_TITLE = dayjs().year().toString()
 const ALL_TIME_TITLE = (t: TFunction) => t('All')
 
 const key = (info: TransactionSummaryInfo) => info.hash
@@ -34,8 +36,13 @@ export function TransactionList({
   readonly: boolean
 }) {
   const { t } = useTranslation()
-  const { pending, todayTransactionList, weekTransactionList, beforeCurrentWeekTransactionList } =
-    transactions
+  const {
+    pending,
+    todayTransactionList,
+    monthTransactionList,
+    yearTransactionList,
+    beforeCurrentYearTransactionList,
+  } = transactions
 
   const sectionData = useMemo(() => {
     return [
@@ -43,14 +50,22 @@ export function TransactionList({
       ...(todayTransactionList.length > 0
         ? [{ title: TODAY_TITLE(t), data: todayTransactionList }]
         : []),
-      ...(weekTransactionList.length > 0
-        ? [{ title: WEEK_TITLE(t), data: weekTransactionList }]
+      ...(monthTransactionList.length > 0
+        ? [{ title: MONTH_TITLE, data: monthTransactionList }]
         : []),
-      ...(beforeCurrentWeekTransactionList.length > 0
-        ? [{ title: ALL_TIME_TITLE(t), data: beforeCurrentWeekTransactionList }]
+      ...(yearTransactionList.length > 0 ? [{ title: YEAR_TITLE, data: yearTransactionList }] : []),
+      ...(beforeCurrentYearTransactionList.length > 0
+        ? [{ title: ALL_TIME_TITLE(t), data: beforeCurrentYearTransactionList }]
         : []),
     ]
-  }, [beforeCurrentWeekTransactionList, pending, t, todayTransactionList, weekTransactionList])
+  }, [
+    beforeCurrentYearTransactionList,
+    monthTransactionList,
+    pending,
+    t,
+    todayTransactionList,
+    yearTransactionList,
+  ])
 
   const renderItem = useMemo(() => {
     return ({

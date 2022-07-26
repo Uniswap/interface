@@ -102,8 +102,9 @@ export function useCreateSwapFormState(
 export interface AllFormattedTransactions {
   combinedTransactionList: TransactionSummaryInfo[]
   todayTransactionList: TransactionSummaryInfo[]
-  weekTransactionList: TransactionSummaryInfo[]
-  beforeCurrentWeekTransactionList: TransactionSummaryInfo[]
+  monthTransactionList: TransactionSummaryInfo[]
+  yearTransactionList: TransactionSummaryInfo[]
+  beforeCurrentYearTransactionList: TransactionSummaryInfo[]
   pending: TransactionSummaryInfo[]
 }
 
@@ -151,46 +152,56 @@ export function useAllFormattedTransactions(
       .sort((a, b) => (a.msTimestampAdded > b.msTimestampAdded ? -1 : 1))
   }, [allTransactionsFromApi, localTransactions])
 
-  // Segement by current day, current week, and rest.
-  const [todayTransactionList, weekTransactionList, beforeCurrentWeekTransactionList, pending] =
-    useMemo(() => {
-      const msTimestampCutoffDay = dayjs().startOf('day').unix() * 1000 // timestamp in ms for start of day local time
-      const msTimestampCutoffWeek = dayjs().subtract(1, 'week').unix() * 1000
-      return combinedTransactionList.reduce(
-        (accum: TransactionSummaryInfo[][], item) => {
-          if (
-            // Want all incomplete transactions
-            item.status === TransactionStatus.Pending ||
-            item.status === TransactionStatus.Cancelling ||
-            item.status === TransactionStatus.Replacing
-          ) {
-            accum[3].push(item)
-          } else if (item.msTimestampAdded > msTimestampCutoffDay) {
-            accum[0].push(item)
-          } else if (item.msTimestampAdded > msTimestampCutoffWeek) {
-            accum[1].push(item)
-          } else {
-            accum[2].push(item)
-          }
-          return accum
-        },
-        [[], [], [], []]
-      )
-    }, [combinedTransactionList])
+  // Segement by time periods.
+  const [
+    pending,
+    todayTransactionList,
+    monthTransactionList,
+    yearTransactionList,
+    beforeCurrentYearTransactionList,
+  ] = useMemo(() => {
+    const msTimestampCutoffDay = dayjs().startOf('day').unix() * 1000 // timestamp in ms for start of day local time
+    const msTimestampCutoffMonth = dayjs().startOf('month').unix() * 1000
+    const msTimestampCutoffYear = dayjs().startOf('year').unix() * 1000
+    return combinedTransactionList.reduce(
+      (accum: TransactionSummaryInfo[][], item) => {
+        if (
+          // Want all incomplete transactions
+          item.status === TransactionStatus.Pending ||
+          item.status === TransactionStatus.Cancelling ||
+          item.status === TransactionStatus.Replacing
+        ) {
+          accum[0].push(item)
+        } else if (item.msTimestampAdded > msTimestampCutoffDay) {
+          accum[1].push(item)
+        } else if (item.msTimestampAdded > msTimestampCutoffMonth) {
+          accum[2].push(item)
+        } else if (item.msTimestampAdded > msTimestampCutoffYear) {
+          accum[3].push(item)
+        } else {
+          accum[4].push
+        }
+        return accum
+      },
+      [[], [], [], [], []]
+    )
+  }, [combinedTransactionList])
 
   return useMemo(() => {
     return {
       combinedTransactionList,
-      todayTransactionList,
-      weekTransactionList,
-      beforeCurrentWeekTransactionList,
       pending,
+      todayTransactionList,
+      monthTransactionList,
+      yearTransactionList,
+      beforeCurrentYearTransactionList,
     }
   }, [
-    beforeCurrentWeekTransactionList,
+    beforeCurrentYearTransactionList,
     combinedTransactionList,
+    monthTransactionList,
     pending,
     todayTransactionList,
-    weekTransactionList,
+    yearTransactionList,
   ])
 }
