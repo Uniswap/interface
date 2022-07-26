@@ -2,10 +2,12 @@ import { TradeType } from '@uniswap/sdk-core'
 import { TFunction } from 'i18next'
 import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useAppTheme } from 'src/app/hooks'
 import AlertTriangle from 'src/assets/icons/alert-triangle.svg'
 import CheckCircle from 'src/assets/icons/check-circle.svg'
 import Send from 'src/assets/icons/send.svg'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
+import { TextButton } from 'src/components/buttons/TextButton'
 import { AnimatedFlex, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { ChainId } from 'src/constants/chains'
@@ -27,6 +29,7 @@ import { openTransactionLink } from 'src/utils/linking'
 type SwapStatusProps = {
   derivedSwapInfo: DerivedSwapInfo
   onNext: () => void
+  onTryAgain: () => void
 }
 
 const getTextFromStatus = (
@@ -99,18 +102,24 @@ const getTextFromStatus = (
 }
 
 function StatusIcon({ status, size }: { status?: TransactionStatus; size: number }) {
+  const theme = useAppTheme()
+
   if (status === TransactionStatus.Success) {
     return <CheckCircle height={size} width={size} />
   }
 
   if (status === TransactionStatus.Failed) {
-    return <AlertTriangle height={size} width={size} />
+    return <AlertTriangle color={theme.colors.accentFailure} height={size} width={size} />
   }
 
   return <Send height={size} width={size} />
 }
 
-export function SwapStatus({ derivedSwapInfo, onNext }: SwapStatusProps) {
+function isFinalizedState(status: TransactionStatus) {
+  return status === TransactionStatus.Success || status === TransactionStatus.Failed
+}
+
+export function SwapStatus({ derivedSwapInfo, onNext, onTryAgain }: SwapStatusProps) {
   const account = useActiveAccountWithThrow()
   const { t } = useTranslation()
   const { txId, currencies } = derivedSwapInfo
@@ -132,9 +141,19 @@ export function SwapStatus({ derivedSwapInfo, onNext }: SwapStatusProps) {
           <Text color="textTertiary" textAlign="center" variant="body">
             {description}
           </Text>
+          {transaction?.status === TransactionStatus.Failed ? (
+            <TextButton
+              fontWeight="600"
+              textColor="accentAction"
+              textVariant="body"
+              onPress={onTryAgain}>
+              {' '}
+              {t('Try again')}
+            </TextButton>
+          ) : null}
         </Flex>
       </Flex>
-      {transaction && transaction.status === TransactionStatus.Success ? (
+      {transaction && isFinalizedState(transaction.status) ? (
         <PrimaryButton
           alignSelf="stretch"
           label={t('View transaction')}

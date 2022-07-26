@@ -48,7 +48,13 @@ function SwapInnerContent({
   derivedSwapInfo,
 }: InnerContentProps) {
   if (step === SwapStep.SUBMITTED) {
-    return <SwapStatus derivedSwapInfo={derivedSwapInfo} onNext={onClose} />
+    return (
+      <SwapStatus
+        derivedSwapInfo={derivedSwapInfo}
+        onNext={onClose}
+        onTryAgain={() => setStep(SwapStep.FORM)}
+      />
+    )
   }
 
   if (step === SwapStep.FORM) {
