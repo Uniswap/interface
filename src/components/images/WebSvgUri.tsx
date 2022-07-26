@@ -28,7 +28,9 @@ const getHTML = (svgContent: string) => `
         width: 100%;
         overflow: hidden;
       }
-
+      * {
+        -webkit-user-select: none;
+      }
     </style>
   </head>
   <body>
