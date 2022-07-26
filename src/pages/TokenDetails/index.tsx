@@ -5,6 +5,7 @@ import {
   SMALL_MEDIA_BREAKPOINT,
 } from 'components/Explore/constants'
 import BalanceSummary from 'components/Explore/TokenDetails/BalanceSummary'
+import FooterBalanceSummary from 'components/Explore/TokenDetails/FooterBalanceSummary'
 import LoadingTokenDetail from 'components/Explore/TokenDetails/LoadingTokenDetail'
 import TokenDetail from 'components/Explore/TokenDetails/TokenDetail'
 import TokenSafetyMessage from 'components/TokenSafety/TokenSafetyMessage'
@@ -67,11 +68,14 @@ export default function TokenDetails() {
     <TokenDetailsLayout>
       {tokenDetail}
       {tokenAddress && (
-        <RightPanel>
-          <Widget />
-          {tokenWarning && <TokenSafetyMessage tokenAddress={tokenAddress} warning={tokenWarning} />}
-          {!loading && <BalanceSummary address={tokenAddress} />}
-        </RightPanel>
+        <>
+          <RightPanel>
+            <Widget />
+            {tokenWarning && <TokenSafetyMessage tokenAddress={tokenAddress} warning={tokenWarning} />}
+            {!loading && <BalanceSummary address={tokenAddress} />}
+          </RightPanel>
+          {!loading && <FooterBalanceSummary address={tokenAddress} />}
+        </>
       )}
     </TokenDetailsLayout>
   )
