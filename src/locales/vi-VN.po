@@ -1377,7 +1377,7 @@ msgstr ""
 
 #: src/pages/Campaign/index.tsx
 msgid "How to win"
-msgstr ""
+msgstr "Thể lệ cuộc thi"
 
 #: src/components/SearchModal/ImportList.tsx
 #: src/pages/AddLiquidityV2/index.tsx
@@ -1681,11 +1681,11 @@ msgstr "Ngôn ngữ"
 
 #: src/pages/Campaign/index.tsx
 msgid "Leaderboard"
-msgstr ""
+msgstr "Bảng xếp hạng"
 
 #: src/pages/Campaign/LeaderboardLayout.tsx
 msgid "Leaderboard refresh in"
-msgstr ""
+msgstr "Bảng xếp hạng sẽ cập nhật trong"
 
 #: src/components/YieldPools/ProMMFarmGroup.tsx
 #: src/pages/About/AboutKyberSwap.tsx
@@ -2121,7 +2121,7 @@ msgstr ""
 
 #: src/pages/Campaign/index.tsx
 msgid "Participants"
-msgstr ""
+msgstr "Người tham dự"
 
 #: src/pages/About/AboutKNC.tsx
 msgid "Participation Rewards"
@@ -2161,7 +2161,7 @@ msgstr ""
 
 #: src/pages/Campaign/LeaderboardLayout.tsx
 msgid "Points"
-msgstr ""
+msgstr "Số điểm"
 
 #: src/components/NavigationTabs/index.tsx
 #: src/components/YieldPools/ProMMFarms.tsx
@@ -2317,7 +2317,7 @@ msgstr ""
 
 #: src/pages/Campaign/LeaderboardLayout.tsx
 msgid "Rank"
-msgstr ""
+msgstr "Thứ hạng"
 
 #: src/pages/TrueSight/components/FilterBar/ModalSorting.tsx
 msgid "Ranking"
@@ -3390,7 +3390,7 @@ msgstr "Chờ xác nhận"
 
 #: src/pages/Campaign/LeaderboardLayout.tsx
 msgid "Wallet"
-msgstr ""
+msgstr "Địa chỉ ví"
 
 #: src/components/AddressInputPanel/index.tsx
 msgid "Wallet Address or ENS name"
@@ -3605,7 +3605,7 @@ msgstr ""
 
 #: src/pages/Campaign/index.tsx
 msgid "Your Rank"
-msgstr ""
+msgstr "Thứ hạng của bạn"
 
 #: src/components/PoolList/ItemCard/TabYourLiquidityItems.tsx
 #: src/components/PositionCard/index.tsx
