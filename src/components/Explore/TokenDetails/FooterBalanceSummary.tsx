@@ -3,6 +3,8 @@ import { useNetworkTokenBalances } from 'hooks/useNetworkTokenBalances'
 import { useState } from 'react'
 import styled from 'styled-components/macro'
 
+import { SMALLEST_MOBILE_MEDIA_BREAKPOINT } from '../constants'
+
 const BalanceFooter = styled.div`
   height: fit-content;
   border: 1px solid ${({ theme }) => theme.backgroundOutline};
@@ -54,6 +56,10 @@ const FiatValue = styled.span`
   align-self: flex-end;
   font-size: 12px;
   line-height: 24px;
+
+  @media only screen and (max-width: ${SMALLEST_MOBILE_MEDIA_BREAKPOINT}) {
+    line-height: 16px;
+  }
 `
 const NetworkBalancesSection = styled.div`
   height: fit-content;
