@@ -1,8 +1,8 @@
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
 import { Connector } from '@web3-react/types'
-import { sendAnalyticsEvent } from 'components/AmplitudeAnalytics'
-import { EventName, WALLET_CONNECTION_RESULT } from 'components/AmplitudeAnalytics/constants'
+import { sendAnalyticsEvent, user } from 'components/AmplitudeAnalytics'
+import { CUSTOM_USER_PROPERTIES, EventName, WALLET_CONNECTION_RESULT } from 'components/AmplitudeAnalytics/constants'
 import { sendEvent } from 'components/analytics'
 import { AutoColumn } from 'components/Column'
 import { AutoRow } from 'components/Row'
@@ -113,6 +113,22 @@ const WALLET_VIEWS = {
   PENDING: 'pending',
 }
 
+const sendAnalyticsEventAndUserInfo = (account: string, walletType: string, chainId: number | undefined) => {
+  const currentDate = new Date().toISOString()
+  sendAnalyticsEvent(EventName.WALLET_CONNECT_TXN_COMPLETED, {
+    result: WALLET_CONNECTION_RESULT.SUCCEEDED,
+    wallet_address: account,
+    wallet_type: walletType,
+    // TODO(lynnshaoyu): Send correct is_reconnect value after modifying user state.
+  })
+  user.set(CUSTOM_USER_PROPERTIES.WALLET_ADDRESS, account)
+  user.set(CUSTOM_USER_PROPERTIES.WALLET_TYPE, walletType)
+  if (chainId) user.postInsert(CUSTOM_USER_PROPERTIES.WALLET_CHAIN_IDS, chainId)
+  user.postInsert(CUSTOM_USER_PROPERTIES.ALL_WALLET_ADDRESSES_CONNECTED, account)
+  user.setOnce(CUSTOM_USER_PROPERTIES.USER_FIRST_SEEN_DATE, currentDate)
+  user.set(CUSTOM_USER_PROPERTIES.USER_LAST_SEEN_DATE, currentDate)
+}
+
 export default function WalletModal({
   pendingTransactions,
   confirmedTransactions,
@@ -123,7 +139,7 @@ export default function WalletModal({
   ENSName?: string
 }) {
   const dispatch = useAppDispatch()
-  const { connector, account } = useWeb3React()
+  const { connector, account, chainId } = useWeb3React()
 
   const [walletView, setWalletView] = useState(WALLET_VIEWS.ACCOUNT)
   const [lastActiveWalletAddress, setLastActiveWalletAddress] = useState<string | undefined>(account)
@@ -156,15 +172,11 @@ export default function WalletModal({
   // When new wallet is successfully set by the user, trigger logging of Amplitude analytics event.
   useEffect(() => {
     if (account && account !== lastActiveWalletAddress) {
-      sendAnalyticsEvent(EventName.WALLET_CONNECT_TXN_COMPLETED, {
-        result: WALLET_CONNECTION_RESULT.SUCCEEDED,
-        wallet_address: account,
-        wallet_type: getConnectionName(getConnection(connector).type, getIsMetaMask()),
-        // TODO(lynnshaoyu): Send correct is_reconnect value after modifying user state.
-      })
+      const walletType = getConnectionName(getConnection(connector).type, getIsMetaMask())
+      sendAnalyticsEventAndUserInfo(account, walletType, chainId)
     }
     setLastActiveWalletAddress(account)
-  }, [lastActiveWalletAddress, account, connector])
+  }, [lastActiveWalletAddress, account, connector, chainId])
 
   const tryActivation = useCallback(
     async (connector: Connector) => {
