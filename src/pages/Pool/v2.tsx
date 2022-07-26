@@ -160,7 +160,7 @@ export default function Pool() {
                 <ExternalLink
                   style={{ color: theme.deprecated_white, textDecoration: 'underline' }}
                   target="_blank"
-                  href="https://uniswap.org/docs/v2/core-concepts/pools/"
+                  href="https://docs.uniswap.org/protocol/V2/concepts/core-concepts/pools"
                 >
                   <ThemedText.White fontSize={14}>
                     <Trans>Read more about providing liquidity</Trans>
