@@ -1,11 +1,9 @@
 import { createSelector } from '@reduxjs/toolkit'
-import { useMemo } from 'react'
 import { RootState } from 'src/app/rootReducer'
 import { EMPTY_ARRAY } from 'src/constants/misc'
 import { selectActiveAccountAddress } from 'src/features/wallet/selectors'
 
 const selectNotificationQueue = (state: RootState) => state.notifications.notificationQueue
-
 export const selectActiveAccountNotifications = createSelector(
   selectNotificationQueue,
   selectActiveAccountAddress,
@@ -16,11 +14,14 @@ export const selectActiveAccountNotifications = createSelector(
   }
 )
 
-export const makeSelectAddressNotificationCount = (address: Address | null) => (state: RootState) =>
-  useMemo(() => {
-    if (!address) return undefined
-    return state.notifications.notificationCount?.[address]
-  }, [state.notifications.notificationCount])
+const selectNotificationsCount = (state: RootState) => state.notifications.notificationCount
+export const makeSelectAddressNotificationCount = (address: Address | null) =>
+  createSelector(selectNotificationsCount, (notificationsCount) => {
+    if (!address) {
+      return undefined
+    }
+    return notificationsCount?.[address]
+  })
 
 export const selectHasUnreadNotifications = (state: RootState) => {
   for (const count of Object.values(state.notifications.notificationCount)) {
