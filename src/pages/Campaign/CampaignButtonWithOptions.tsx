@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react'
-import { CampaignData } from 'state/campaigns/actions'
-import { t, Trans } from '@lingui/macro'
+import { CampaignData, CampaignLeaderboardReward } from 'state/campaigns/actions'
+import { t } from '@lingui/macro'
 import { ReactComponent as ChevronDown } from 'assets/svg/down.svg'
 import styled, { css } from 'styled-components'
 import useTheme from 'hooks/useTheme'
@@ -19,7 +19,7 @@ import axios from 'axios'
 import { BigNumber } from '@ethersproject/bignumber'
 import { useActiveNetwork } from 'hooks/useActiveNetwork'
 import { ButtonPrimary } from 'components/Button'
-import { BIG_INT_ZERO } from 'constants/index'
+import { BIG_INT_ZERO, DEFAULT_SIGNIFICANT } from 'constants/index'
 
 export default function CampaignButtonWithOptions({
   campaign,
@@ -83,11 +83,27 @@ export default function CampaignButtonWithOptions({
       const encodedData = response.data.data.EncodedData
       try {
         await sendTransaction(rewardContractAddress, encodedData, BigNumber.from(0), transactionResponse => {
-          // TODO nguyenhuudungz: Compile a list of unclaimed rewards from `campaignLeaderboard`.
+          const accumulatedUnclaimedRewards = selectedCampaignLeaderboard.rewards
+            .filter(reward => !reward.claimed)
+            .reduce((acc: { [p: string]: CampaignLeaderboardReward }, value) => {
+              const key = value.token.chainId + '_' + value.token.address
+              if (acc[key] === undefined) {
+                acc[key] = value
+              } else {
+                acc[key] = {
+                  ...value,
+                  rewardAmount: value.rewardAmount.add(acc[key].rewardAmount),
+                }
+              }
+              return acc
+            }, {})
+          const rewardString = Object.values(accumulatedUnclaimedRewards)
+            .map(reward => reward.rewardAmount.toSignificant(DEFAULT_SIGNIFICANT) + ' ' + reward.token.symbol)
+            .join(' ' + t`and` + ' ')
           addTransactionWithType(transactionResponse, {
             type: 'Claim',
             desiredChainId: claimChainId,
-            summary: `rewards from campaign "${selectedCampaign.name}"`,
+            summary: `${rewardString} from campaign "${selectedCampaign.name}"`,
           })
         })
       } catch (err) {

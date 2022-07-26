@@ -6,8 +6,8 @@ import axios from 'axios'
 import {
   CampaignData,
   CampaignLeaderboard,
-  CampaignLeaderboardRankings,
-  CampaignLeaderboardRewards,
+  CampaignLeaderboardRanking,
+  CampaignLeaderboardReward,
   CampaignLuckyWinner,
   CampaignState,
   RewardDistribution,
@@ -217,7 +217,7 @@ export default function CampaignsUpdater(): null {
           userRank: data.UserRank,
           rankings: data.Rankings
             ? data.Rankings.map(
-                (item: any): CampaignLeaderboardRankings => ({
+                (item: any): CampaignLeaderboardRanking => ({
                   userAddress: item.UserAddress,
                   totalPoint: item.TotalPoint,
                   rankNo: item.RankNo,
@@ -231,7 +231,7 @@ export default function CampaignsUpdater(): null {
             : [],
           rewards: data.Rewards
             ? data.Rewards.map(
-                (item: any): CampaignLeaderboardRewards => ({
+                (item: any): CampaignLeaderboardReward => ({
                   rewardAmount: new Fraction(
                     item.RewardAmount,
                     JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(item?.Token?.decimals ?? 18)),
