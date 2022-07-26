@@ -33,16 +33,39 @@ const BalanceTotal = styled.div`
   gap: 8px;
   color: ${({ theme }) => theme.textPrimary};
 `
+const BalanceInfo = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: column;
+`
+const FakeFooterNavBar = styled.div`
+  position: fixed;
+  bottom: 0px;
+  left: 0px;
+  background-color: ${({ theme }) => theme.backgroundBackdrop};
+  height: 56px;
+  width: 100%;
+  align-items: flex-end;
+  padding: 20px 10px;
+  font-size: 10px;
+`
 const FiatValue = styled.span`
   display: flex;
   align-self: flex-end;
   font-size: 12px;
   line-height: 24px;
 `
-const BalanceInfo = styled.div`
+const NetworkBalancesSection = styled.div`
+  height: fit-content;
+  border-top: 1px solid ${({ theme }) => theme.backgroundOutline};
   display: flex;
-  justify-content: flex-start;
   flex-direction: column;
+  padding: 16px 0px;
+  margin-top: 16px;
+  color: ${({ theme }) => theme.textPrimary};
+`
+const NetworkBalancesLabel = styled.span`
+  color: ${({ theme }) => theme.textSecondary};
 `
 const SwapButton = styled.button`
   background-color: ${({ theme }) => theme.accentAction};
@@ -59,16 +82,11 @@ const SwapButton = styled.button`
   justify-content: center;
   cursor: pointer;
 `
-const FakeFooterNavBar = styled.div`
-  position: fixed;
-  bottom: 0px;
-  left: 0px;
-  background-color: ${({ theme }) => theme.backgroundBackdrop};
-  height: 56px;
-  width: 100%;
-  align-items: flex-end;
-  padding: 20px 10px;
-  font-size: 10px;
+const TotalBalancesSection = styled.div`
+  display: flex;
+  color: ${({ theme }) => theme.textSecondary};
+  justify-content: space-between;
+  align-items: center;
 `
 const ViewAll = styled.span`
   display: flex;
@@ -76,24 +94,6 @@ const ViewAll = styled.span`
   font-size: 14px;
   line-height: 20px;
   cursor: pointer;
-`
-const NetworkBalancesSection = styled.div`
-  height: fit-content;
-  border-top: 1px solid ${({ theme }) => theme.backgroundOutline};
-  display: flex;
-  flex-direction: column;
-  padding: 16px 0px;
-  margin-top: 16px;
-  color: ${({ theme }) => theme.textPrimary};
-`
-const TotalBalancesSection = styled.div`
-  display: flex;
-  color: ${({ theme }) => theme.textSecondary};
-  justify-content: space-between;
-  align-items: center;
-`
-const NetworkBalancesLabel = styled.span`
-  color: ${({ theme }) => theme.textSecondary};
 `
 
 export default function FooterBalanceSummary({
