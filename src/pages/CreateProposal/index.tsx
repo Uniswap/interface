@@ -238,7 +238,7 @@ ${bodyValue}
                   <strong>Tip:</strong> Select an action and describe your proposal for the community. The proposal
                   cannot be modified after submission, so please verify all information before submitting. The voting
                   period will begin immediately and last for 7 days. To propose a custom action,{' '}
-                  <ExternalLink href="https://uniswap.org/docs/v2/governance/governance-reference/#propose">
+                  <ExternalLink href="https://docs.uniswap.org/protocol/reference/Governance/governance-reference#propose">
                     read the docs
                   </ExternalLink>
                   .
