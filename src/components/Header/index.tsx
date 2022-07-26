@@ -5,7 +5,7 @@ import { getChainInfoOrDefault } from 'constants/chainInfo'
 import { SupportedChainId } from 'constants/chains'
 import useTheme from 'hooks/useTheme'
 import { darken } from 'polished'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useLocation } from 'react-router-dom'
 import { Text } from 'rebass'
 import { useShowClaimPopup, useToggleSelfClaimModal } from 'state/application/hooks'
 import { useUserHasAvailableClaim } from 'state/claim/hooks'
@@ -185,11 +185,11 @@ const UniIcon = styled.div`
   position: relative;
 `
 
-const activeClassName = 'ACTIVE'
+// can't be customized under react-router-dom v6
+// so we have to persist to the default one, i.e., .active
+const activeClassName = 'active'
 
-const StyledNavLink = styled(NavLink).attrs({
-  activeClassName,
-})`
+const StyledNavLink = styled(NavLink)`
   ${({ theme }) => theme.flexRowNoWrap}
   align-items: left;
   border-radius: 3rem;
@@ -217,9 +217,7 @@ const StyledNavLink = styled(NavLink).attrs({
   }
 `
 
-const StyledExternalLink = styled(ExternalLink).attrs({
-  activeClassName,
-})<{ isActive?: boolean }>`
+const StyledExternalLink = styled(ExternalLink)`
   ${({ theme }) => theme.flexRowNoWrap}
   align-items: left;
   border-radius: 3rem;
@@ -262,10 +260,21 @@ export default function Header() {
 
   const scrollY = useScrollPosition()
 
+  const { pathname } = useLocation()
+
   const {
     infoLink,
     nativeCurrency: { symbol: nativeCurrencySymbol },
   } = getChainInfoOrDefault(chainId)
+
+  // work around https://github.com/remix-run/react-router/issues/8161
+  // as we can't pass function `({isActive}) => ''` to className with styled-components
+  const isPoolActive =
+    pathname.startsWith('/pool') ||
+    pathname.startsWith('/add') ||
+    pathname.startsWith('/remove') ||
+    pathname.startsWith('/increase') ||
+    pathname.startsWith('/find')
 
   return (
     <HeaderFrame showBackground={scrollY > 45}>
@@ -284,13 +293,7 @@ export default function Header() {
           data-cy="pool-nav-link"
           id={`pool-nav-link`}
           to={'/pool'}
-          isActive={(match, { pathname }) =>
-            Boolean(match) ||
-            pathname.startsWith('/add') ||
-            pathname.startsWith('/remove') ||
-            pathname.startsWith('/increase') ||
-            pathname.startsWith('/find')
-          }
+          className={isPoolActive ? activeClassName : undefined}
         >
           <Trans>Pool</Trans>
         </StyledNavLink>

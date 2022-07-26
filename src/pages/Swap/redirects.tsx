@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { Redirect, useLocation, useParams } from 'react-router-dom'
+import { Navigate, useLocation, useParams } from 'react-router-dom'
 import { useAppDispatch } from 'state/hooks'
 
 import { ApplicationModal, setOpenModal } from '../../state/application/reducer'
@@ -7,7 +7,7 @@ import { ApplicationModal, setOpenModal } from '../../state/application/reducer'
 // Redirects to swap but only replace the pathname
 export function RedirectPathToSwapOnly() {
   const location = useLocation()
-  return <Redirect to={{ ...location, pathname: '/swap' }} />
+  return <Navigate to={{ ...location, pathname: '/swap' }} replace />
 }
 
 // Redirects from the /swap/:outputCurrency path to the /swap?outputCurrency=:outputCurrency format
@@ -17,7 +17,7 @@ export function RedirectToSwap() {
   const { outputCurrency } = useParams<{ outputCurrency: string }>()
 
   return (
-    <Redirect
+    <Navigate
       to={{
         ...location,
         pathname: '/swap',
@@ -26,6 +26,7 @@ export function RedirectToSwap() {
             ? `${search}&outputCurrency=${outputCurrency}`
             : `?outputCurrency=${outputCurrency}`,
       }}
+      replace
     />
   )
 }

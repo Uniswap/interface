@@ -11,7 +11,7 @@ import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter
 import useParsedQueryString from 'hooks/useParsedQueryString'
 import { useCallback, useContext, useEffect, useState } from 'react'
 import { AlertTriangle } from 'react-feather'
-import { useHistory, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { Text } from 'rebass'
 import {
   useRangeHopCallbacks,
@@ -78,7 +78,7 @@ import {
 const DEFAULT_ADD_IN_RANGE_SLIPPAGE_TOLERANCE = new Percent(50, 10_000)
 
 export default function AddLiquidity() {
-  const history = useHistory()
+  const navigate = useNavigate()
   const {
     currencyIdA,
     currencyIdB,
@@ -360,33 +360,33 @@ export default function AddLiquidity() {
     (currencyANew: Currency) => {
       const [idA, idB] = handleCurrencySelect(currencyANew, currencyIdB)
       if (idB === undefined) {
-        history.push(`/add/${idA}`)
+        navigate(`/add/${idA}`)
       } else {
-        history.push(`/add/${idA}/${idB}`)
+        navigate(`/add/${idA}/${idB}`)
       }
     },
-    [handleCurrencySelect, currencyIdB, history]
+    [handleCurrencySelect, currencyIdB, navigate]
   )
 
   const handleCurrencyBSelect = useCallback(
     (currencyBNew: Currency) => {
       const [idB, idA] = handleCurrencySelect(currencyBNew, currencyIdA)
       if (idA === undefined) {
-        history.push(`/add/${idB}`)
+        navigate(`/add/${idB}`)
       } else {
-        history.push(`/add/${idA}/${idB}`)
+        navigate(`/add/${idA}/${idB}`)
       }
     },
-    [handleCurrencySelect, currencyIdA, history]
+    [handleCurrencySelect, currencyIdA, navigate]
   )
 
   const handleFeePoolSelect = useCallback(
     (newFeeAmount: FeeAmount) => {
       onLeftRangeInput('')
       onRightRangeInput('')
-      history.push(`/add/${currencyIdA}/${currencyIdB}/${newFeeAmount}`)
+      navigate(`/add/${currencyIdA}/${currencyIdB}/${newFeeAmount}`)
     },
-    [currencyIdA, currencyIdB, history, onLeftRangeInput, onRightRangeInput]
+    [currencyIdA, currencyIdB, navigate, onLeftRangeInput, onRightRangeInput]
   )
 
   const handleDismissConfirmation = useCallback(() => {
@@ -395,10 +395,10 @@ export default function AddLiquidity() {
     if (txHash) {
       onFieldAInput('')
       // dont jump to pool page if creating
-      history.push('/pool')
+      navigate('/pool')
     }
     setTxHash('')
-  }, [history, onFieldAInput, txHash])
+  }, [navigate, onFieldAInput, txHash])
 
   const addIsUnsupported = useIsSwapUnsupported(currencies?.CURRENCY_A, currencies?.CURRENCY_B)
 
@@ -407,8 +407,8 @@ export default function AddLiquidity() {
     onFieldBInput('')
     onLeftRangeInput('')
     onRightRangeInput('')
-    history.push(`/add`)
-  }, [history, onFieldAInput, onFieldBInput, onLeftRangeInput, onRightRangeInput])
+    navigate(`/add`)
+  }, [navigate, onFieldAInput, onFieldBInput, onLeftRangeInput, onRightRangeInput])
 
   // get value and prices at ticks
   const { [Bound.LOWER]: tickLower, [Bound.UPPER]: tickUpper } = ticks
@@ -564,7 +564,7 @@ export default function AddLiquidity() {
                         onRightRangeInput((invertPrice ? priceUpper : priceLower?.invert())?.toSignificant(6) ?? '')
                         onFieldAInput(formattedAmounts[Field.CURRENCY_B] ?? '')
                       }
-                      history.push(
+                      navigate(
                         `/add/${currencyIdB as string}/${currencyIdA as string}${feeAmount ? '/' + feeAmount : ''}`
                       )
                     }}
