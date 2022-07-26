@@ -1,8 +1,12 @@
 import { Currency, CurrencyAmount, Percent, Token } from '@uniswap/sdk-core'
 
-export const getDurationTillTimestampSinceEpoch = (futureTimestampSinceEpoch?: number): number | undefined => {
+export const getDurationTillTimestampSinceEpochSeconds = (futureTimestampSinceEpoch?: number): number | undefined => {
   if (!futureTimestampSinceEpoch) return undefined
   return futureTimestampSinceEpoch - new Date().getTime() / 1000
+}
+
+export const getDurationFromDateTillNowMilliseconds = (date: Date): number => {
+  return Math.abs(new Date().getUTCMilliseconds() - date.getUTCMilliseconds())
 }
 
 export const getNumberFormattedToDecimalPlace = (

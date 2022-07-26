@@ -350,6 +350,7 @@ export default function Swap() {
 
   // errors
   const [showInverted, setShowInverted] = useState<boolean>(false)
+  const [swapQuoteReceivedDate, setSwapQuoteReceivedDate] = useState<Date | undefined>()
 
   // warnings on the greater of fiat value price impact and execution price impact
   const priceImpactSeverity = useMemo(() => {
@@ -436,6 +437,7 @@ export default function Swap() {
               onConfirm={handleSwap}
               swapErrorMessage={swapErrorMessage}
               onDismiss={handleConfirmDismiss}
+              swapQuoteReceivedDate={swapQuoteReceivedDate}
             />
 
             <AutoColumn gap={'sm'}>
@@ -524,6 +526,7 @@ export default function Swap() {
                   showInverted={showInverted}
                   setShowInverted={setShowInverted}
                   allowedSlippage={allowedSlippage}
+                  setSwapQuoteReceivedDate={setSwapQuoteReceivedDate}
                 />
               )}
               <div>

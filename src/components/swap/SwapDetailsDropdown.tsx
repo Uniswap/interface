@@ -4,7 +4,11 @@ import { useWeb3React } from '@web3-react/core'
 import { ElementName, Event, EventName } from 'components/AmplitudeAnalytics/constants'
 import { Trace } from 'components/AmplitudeAnalytics/Trace'
 import { TraceEvent } from 'components/AmplitudeAnalytics/TraceEvent'
-import { formatPercentInBasisPointsNumber, getNumberFormattedToDecimalPlace } from 'components/AmplitudeAnalytics/utils'
+import {
+  formatPercentInBasisPointsNumber,
+  getDurationFromDateTillNowMilliseconds,
+  getNumberFormattedToDecimalPlace,
+} from 'components/AmplitudeAnalytics/utils'
 import AnimatedDropdown from 'components/AnimatedDropdown'
 import Card, { OutlineCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
@@ -122,10 +126,16 @@ interface SwapDetailsInlineProps {
   showInverted: boolean
   setShowInverted: React.Dispatch<React.SetStateAction<boolean>>
   allowedSlippage: Percent
+  setSwapQuoteReceivedDate: (date: Date) => void
 }
 
-const formatAnalyticsEventProperties = (trade: InterfaceTrade<Currency, Currency, TradeType>) => {
+const formatAnalyticsEventProperties = (
+  trade: InterfaceTrade<Currency, Currency, TradeType>,
+  fetchingQuoteStartTime: Date | undefined,
+  setSwapQuoteReceivedDate: (date: Date) => void
+) => {
   const lpFeePercent = trade ? computeRealizedLPFeePercent(trade) : undefined
+  setSwapQuoteReceivedDate(new Date())
   return {
     token_in_symbol: trade.inputAmount.currency.symbol,
     token_out_symbol: trade.outputAmount.currency.symbol,
@@ -143,7 +153,9 @@ const formatAnalyticsEventProperties = (trade: InterfaceTrade<Currency, Currency
         : undefined,
     token_in_amount: getNumberFormattedToDecimalPlace(trade.inputAmount, trade.inputAmount.currency.decimals),
     token_out_amount: getNumberFormattedToDecimalPlace(trade.outputAmount, trade.outputAmount.currency.decimals),
-    // TODO(lynnshaoyu): Implement quote_latency_milliseconds.
+    quote_latency_milliseconds: fetchingQuoteStartTime
+      ? getDurationFromDateTillNowMilliseconds(fetchingQuoteStartTime)
+      : undefined,
   }
 }
 
@@ -154,15 +166,18 @@ export default function SwapDetailsDropdown({
   showInverted,
   setShowInverted,
   allowedSlippage,
+  setSwapQuoteReceivedDate,
 }: SwapDetailsInlineProps) {
   const theme = useTheme()
   const { chainId } = useWeb3React()
   const [showDetails, setShowDetails] = useState(false)
   const [isFirstPriceFetch, setIsFirstPriceFetch] = useState(true)
+  const [fetchingQuoteStartTime, setFetchingQuoteStartTime] = useState<Date | undefined>()
 
   useEffect(() => {
+    if (loading || syncing) setFetchingQuoteStartTime(new Date())
     if (isFirstPriceFetch && syncing) setIsFirstPriceFetch(false)
-  }, [isFirstPriceFetch, syncing])
+  }, [isFirstPriceFetch, syncing, loading])
 
   return (
     <Wrapper>
@@ -209,7 +224,7 @@ export default function SwapDetailsDropdown({
                   <Trace
                     name={EventName.SWAP_QUOTE_RECEIVED}
                     element={ElementName.SWAP_TRADE_PRICE_ROW}
-                    properties={formatAnalyticsEventProperties(trade)}
+                    properties={formatAnalyticsEventProperties(trade, fetchingQuoteStartTime, setSwapQuoteReceivedDate)}
                     shouldLogImpression={!loading && !syncing && isFirstPriceFetch}
                   >
                     <TradePrice

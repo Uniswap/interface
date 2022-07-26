@@ -5,7 +5,8 @@ import { Event } from 'components/AmplitudeAnalytics/constants'
 import { TraceEvent } from 'components/AmplitudeAnalytics/TraceEvent'
 import {
   formatPercentInBasisPointsNumber,
-  getDurationTillTimestampSinceEpoch,
+  getDurationFromDateTillNowMilliseconds,
+  getDurationTillTimestampSinceEpochSeconds,
   getNumberFormattedToDecimalPlace,
 } from 'components/AmplitudeAnalytics/utils'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
@@ -31,6 +32,7 @@ interface AnalyticsEventProps {
   tokenInAmountUsd: string | undefined
   tokenOutAmountUsd: string | undefined
   lpFeePercent: Percent
+  swapQuoteReceivedDate: Date | undefined
 }
 
 const formatAnalyticsEventProperties = ({
@@ -43,12 +45,13 @@ const formatAnalyticsEventProperties = ({
   tokenInAmountUsd,
   tokenOutAmountUsd,
   lpFeePercent,
+  swapQuoteReceivedDate,
 }: AnalyticsEventProps) => ({
   estimated_network_fee_usd: trade.gasUseEstimateUSD
     ? getNumberFormattedToDecimalPlace(trade.gasUseEstimateUSD, 2)
     : undefined,
   transaction_hash: txHash,
-  transaction_deadline_seconds: getDurationTillTimestampSinceEpoch(transactionDeadlineSecondsSinceEpoch),
+  transaction_deadline_seconds: getDurationTillTimestampSinceEpochSeconds(transactionDeadlineSecondsSinceEpoch),
   token_in_amount_usd: tokenInAmountUsd ? parseFloat(tokenInAmountUsd) : undefined,
   token_out_amount_usd: tokenOutAmountUsd ? parseFloat(tokenOutAmountUsd) : undefined,
   token_in_address: trade.inputAmount.currency.isToken ? trade.inputAmount.currency.address : undefined,
@@ -65,6 +68,9 @@ const formatAnalyticsEventProperties = ({
     trade.inputAmount.currency.chainId === trade.outputAmount.currency.chainId
       ? trade.inputAmount.currency.chainId
       : undefined,
+  duration_from_first_quote_to_swap_submission_milliseconds: swapQuoteReceivedDate
+    ? getDurationFromDateTillNowMilliseconds(swapQuoteReceivedDate)
+    : undefined,
   // TODO(lynnshaoyu): implement duration_from_first_quote_to_swap_submission_seconds
 })
 
@@ -75,6 +81,7 @@ export default function SwapModalFooter({
   onConfirm,
   swapErrorMessage,
   disabledConfirm,
+  swapQuoteReceivedDate,
 }: {
   trade: InterfaceTrade<Currency, Currency, TradeType>
   txHash: string | undefined
@@ -82,6 +89,7 @@ export default function SwapModalFooter({
   onConfirm: () => void
   swapErrorMessage: ReactNode | undefined
   disabledConfirm: boolean
+  swapQuoteReceivedDate: Date | undefined
 }) {
   const transactionDeadlineSecondsSinceEpoch = useTransactionDeadline()?.toNumber() // in seconds since epoch
   const isAutoSlippage = useUserSlippageTolerance() === 'auto'
@@ -107,6 +115,7 @@ export default function SwapModalFooter({
             tokenInAmountUsd,
             tokenOutAmountUsd,
             lpFeePercent,
+            swapQuoteReceivedDate,
           })}
         >
           <ButtonError
