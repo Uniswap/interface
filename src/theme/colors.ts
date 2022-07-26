@@ -111,7 +111,7 @@ export const colors: GlobalPalette = {
   red100: '#FFD9CE',
   red200: '#FDA799',
   red300: '#FF776D',
-  red400: '#FD4040',
+  red400: '#FA2B39',
   red500: '#C52533',
   red600: '#891E20',
   red700: '#530F10',
