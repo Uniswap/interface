@@ -84,9 +84,15 @@ export default function YourCampaignTransactionsModal() {
         <TableWrapper>
           <TableHeader>
             <TableHeaderItem>#</TableHeaderItem>
-            <TableHeaderItem>Txn Hash</TableHeaderItem>
-            <TableHeaderItem style={{ textAlign: above768 ? 'left' : 'center' }}>Local Time</TableHeaderItem>
-            <TableHeaderItem style={{ textAlign: 'right' }}>Points</TableHeaderItem>
+            <TableHeaderItem>
+              <Trans>Txn Hash</Trans>
+            </TableHeaderItem>
+            <TableHeaderItem style={{ textAlign: above768 ? 'left' : 'center' }}>
+              <Trans>Local Time</Trans>
+            </TableHeaderItem>
+            <TableHeaderItem style={{ textAlign: 'right' }}>
+              <Trans>Points</Trans>
+            </TableHeaderItem>
           </TableHeader>
           <TableBodyWrapper>
             {userCampaignTransactions && userCampaignTransactions.length === 0 && (

@@ -581,7 +581,12 @@ msgstr "领取"
 #~ msgstr "领取全部"
 
 #: src/components/Menu/index.tsx
+#: src/pages/Campaign/CampaignButtonWithOptions.tsx
 msgid "Claim Rewards"
+msgstr ""
+
+#: src/pages/Campaign/CampaignButtonWithOptions.tsx
+msgid "Claim on {0}"
 msgstr ""
 
 #: src/components/YieldPools/FarmGuide.tsx
@@ -1053,14 +1058,20 @@ msgstr ""
 #~ msgid "Enables high slippage trades. Use at your own risk."
 #~ msgstr "允许高滑点交易。使用的风险自负。"
 
+#: src/pages/Campaign/CampaignListAndSearch.tsx
 #: src/pages/Yield/index.tsx
 msgid "Ended"
 msgstr "已结束"
+
+#: src/pages/Campaign/index.tsx
+msgid "Ended In"
+msgstr ""
 
 #: src/components/YieldPools/ListItem.tsx
 #: src/components/YieldPools/ProMMFarmGroup.tsx
 #: src/components/YieldPools/ProMMFarms.tsx
 #: src/components/YieldPools/index.tsx
+#: src/pages/Campaign/index.tsx
 msgid "Ending In"
 msgstr "截止"
 
@@ -1100,9 +1111,9 @@ msgstr "输入 amp (>=1)"
 msgid "Enter an amount"
 msgstr "输入金额"
 
-#: 
-#~ msgid "Enter now"
-#~ msgstr ""
+#: src/pages/Campaign/CampaignButtonWithOptions.tsx
+msgid "Enter now"
+msgstr ""
 
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "Enter valid token address"
@@ -1782,6 +1793,10 @@ msgstr "已加载"
 msgid "Loading"
 msgstr "加载中"
 
+#: src/components/YourCampaignTransactionsModal/index.tsx
+msgid "Local Time"
+msgstr ""
+
 #: src/components/Vesting/VestingSummary.tsx
 msgid "Locked Rewards"
 msgstr "锁定奖励"
@@ -2138,6 +2153,10 @@ msgstr "当流动性挖矿活动结束时，您还是能继续通过LP费用收�
 msgid "One token is close to 0% in the pool ratio. Pool might go inactive."
 msgstr "一个代币在池中的比例接近0%时，池可能会变得不活跃。"
 
+#: src/pages/Campaign/CampaignListAndSearch.tsx
+msgid "Ongoing"
+msgstr ""
+
 #: src/components/Web3ReactManager/index.tsx
 msgid "Oops! An unknown error occurred. Please refresh the page, or visit from another browser or device."
 msgstr "哎呀！ 出现未知错误。 请刷新页面，或从其他浏览器或设备访问。"
@@ -2228,6 +2247,7 @@ msgstr ""
 msgid "Please type the word 'confirm' below to enable Advanced Mode."
 msgstr ""
 
+#: src/components/YourCampaignTransactionsModal/index.tsx
 #: src/pages/Campaign/LeaderboardLayout.tsx
 msgid "Points"
 msgstr ""
@@ -2842,6 +2862,7 @@ msgstr ""
 
 #: src/components/UpcomingFarms/ListItem.tsx
 #: src/components/UpcomingFarms/index.tsx
+#: src/pages/Campaign/index.tsx
 msgid "Starting In"
 msgstr "开始"
 
@@ -2937,6 +2958,7 @@ msgstr ""
 msgid "Swap on KyberSwap"
 msgstr ""
 
+#: src/pages/Campaign/CampaignButtonWithOptions.tsx
 #: src/pages/TrueSight/components/ButtonWithOptions.tsx
 #: src/pages/TrueSight/components/ButtonWithOptions.tsx
 msgid "Swap on {0}"
@@ -3338,6 +3360,10 @@ msgstr ""
 msgid "Tutorial"
 msgstr ""
 
+#: src/components/YourCampaignTransactionsModal/index.tsx
+msgid "Txn Hash"
+msgstr ""
+
 #: 
 #~ msgid "UNKNOWN"
 #~ msgstr "未知的"
@@ -3411,6 +3437,7 @@ msgstr ""
 msgid "Unsupported Asset"
 msgstr ""
 
+#: src/pages/Campaign/CampaignListAndSearch.tsx
 #: src/pages/Yield/index.tsx
 msgid "Upcoming"
 msgstr "即将推出"
@@ -3965,8 +3992,6 @@ msgstr "通过 {0} 代币列表"
 #: src/components/RateToggle/index.tsx
 #: src/components/swapv2/SingleTokenInfo.tsx
 #: src/components/swapv2/TokenInfo.tsx
-#: src/pages/Campaign/CampaignButtonWithOptions.tsx
-#: src/pages/Campaign/index.tsx
 #: src/pages/TrueSight/components/FilterBar/NetworkSelect.tsx
 msgid "{0}"
 msgstr ""
@@ -3989,9 +4014,9 @@ msgstr "{0} 待处理"
 msgid "{0} added"
 msgstr "{0} 添加"
 
-#: src/pages/Campaign/CampaignButtonWithOptions.tsx
-msgid "{0} on {1}"
-msgstr ""
+#: 
+#~ msgid "{0} on {1}"
+#~ msgstr ""
 
 #: src/components/PositionPreview/index.tsx
 #: src/components/PositionPreview/index.tsx

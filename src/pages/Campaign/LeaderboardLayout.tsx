@@ -308,7 +308,10 @@ const LeaderboardTableBodyItem = styled.div<{ align?: 'left' | 'right' | 'center
   line-height: 16px;
   font-weight: 500;
   text-align: ${({ align }) => align ?? 'left'};
+  display: flex;
+  justify-content: ${({ align }) => (align === 'right' ? 'flex-end' : align === 'center' ? 'center' : 'flex-start')};
   color: ${({ isThisRankingEligible, theme }) => (isThisRankingEligible ? theme.text : theme.subText)};
+  white-space: nowrap;
 
   ${({ theme }) =>
     theme.mediaWidth.upToMedium`${css`

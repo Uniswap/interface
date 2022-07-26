@@ -581,7 +581,12 @@ msgstr "Talep Et"
 #~ msgstr "Tümünü Talep Et"
 
 #: src/components/Menu/index.tsx
+#: src/pages/Campaign/CampaignButtonWithOptions.tsx
 msgid "Claim Rewards"
+msgstr ""
+
+#: src/pages/Campaign/CampaignButtonWithOptions.tsx
+msgid "Claim on {0}"
 msgstr ""
 
 #: src/components/YieldPools/FarmGuide.tsx
@@ -1053,14 +1058,20 @@ msgstr ""
 #~ msgid "Enables high slippage trades. Use at your own risk."
 #~ msgstr "Yüksek kayma oranı yaşanabilecek işlemlere olanak tanır. Kendi sorumluluğunuzu alınız."
 
+#: src/pages/Campaign/CampaignListAndSearch.tsx
 #: src/pages/Yield/index.tsx
 msgid "Ended"
 msgstr "Sonlandı"
+
+#: src/pages/Campaign/index.tsx
+msgid "Ended In"
+msgstr ""
 
 #: src/components/YieldPools/ListItem.tsx
 #: src/components/YieldPools/ProMMFarmGroup.tsx
 #: src/components/YieldPools/ProMMFarms.tsx
 #: src/components/YieldPools/index.tsx
+#: src/pages/Campaign/index.tsx
 msgid "Ending In"
 msgstr "Bitiş Zamanı"
 
@@ -1100,9 +1111,9 @@ msgstr "Amp girin (>=1)"
 msgid "Enter an amount"
 msgstr "Bir miktar girin"
 
-#: 
-#~ msgid "Enter now"
-#~ msgstr ""
+#: src/pages/Campaign/CampaignButtonWithOptions.tsx
+msgid "Enter now"
+msgstr ""
 
 #: src/components/SearchModal/ManageTokens.tsx
 msgid "Enter valid token address"
@@ -1782,6 +1793,10 @@ msgstr "Yüklendi"
 msgid "Loading"
 msgstr "Yükleniyor"
 
+#: src/components/YourCampaignTransactionsModal/index.tsx
+msgid "Local Time"
+msgstr ""
+
 #: src/components/Vesting/VestingSummary.tsx
 msgid "Locked Rewards"
 msgstr "Kilitli Ödüller"
@@ -2138,6 +2153,10 @@ msgstr "Bir çiftlik (Farm) sona erdiğinde, LP ücretlerini almaya devam edecek
 msgid "One token is close to 0% in the pool ratio. Pool might go inactive."
 msgstr "Bir token için havuz oranı %0’a yakındır. Havuz devre dışı kalabilir."
 
+#: src/pages/Campaign/CampaignListAndSearch.tsx
+msgid "Ongoing"
+msgstr ""
+
 #: src/components/Web3ReactManager/index.tsx
 msgid "Oops! An unknown error occurred. Please refresh the page, or visit from another browser or device."
 msgstr "Hay aksi! Bilinmeyen bir hata oluştu. Lütfen sayfayı yenileyin ya da başka bir tarayıcı veya cihazdan ziyaret edin."
@@ -2228,6 +2247,7 @@ msgstr ""
 msgid "Please type the word 'confirm' below to enable Advanced Mode."
 msgstr ""
 
+#: src/components/YourCampaignTransactionsModal/index.tsx
 #: src/pages/Campaign/LeaderboardLayout.tsx
 msgid "Points"
 msgstr ""
@@ -2842,6 +2862,7 @@ msgstr ""
 
 #: src/components/UpcomingFarms/ListItem.tsx
 #: src/components/UpcomingFarms/index.tsx
+#: src/pages/Campaign/index.tsx
 msgid "Starting In"
 msgstr "İçinde Başlayacak"
 
@@ -2937,6 +2958,7 @@ msgstr ""
 msgid "Swap on KyberSwap"
 msgstr ""
 
+#: src/pages/Campaign/CampaignButtonWithOptions.tsx
 #: src/pages/TrueSight/components/ButtonWithOptions.tsx
 #: src/pages/TrueSight/components/ButtonWithOptions.tsx
 msgid "Swap on {0}"
@@ -3338,6 +3360,10 @@ msgstr ""
 msgid "Tutorial"
 msgstr ""
 
+#: src/components/YourCampaignTransactionsModal/index.tsx
+msgid "Txn Hash"
+msgstr ""
+
 #: 
 #~ msgid "UNKNOWN"
 #~ msgstr "BİLİNMEYEN"
@@ -3411,6 +3437,7 @@ msgstr ""
 msgid "Unsupported Asset"
 msgstr ""
 
+#: src/pages/Campaign/CampaignListAndSearch.tsx
 #: src/pages/Yield/index.tsx
 msgid "Upcoming"
 msgstr "Gelecek"
@@ -3965,8 +3992,6 @@ msgstr "{0} token listesi aracılığıyla"
 #: src/components/RateToggle/index.tsx
 #: src/components/swapv2/SingleTokenInfo.tsx
 #: src/components/swapv2/TokenInfo.tsx
-#: src/pages/Campaign/CampaignButtonWithOptions.tsx
-#: src/pages/Campaign/index.tsx
 #: src/pages/TrueSight/components/FilterBar/NetworkSelect.tsx
 msgid "{0}"
 msgstr ""
@@ -3989,9 +4014,9 @@ msgstr "{0} Beklemede"
 msgid "{0} added"
 msgstr "{0} eklendi"
 
-#: src/pages/Campaign/CampaignButtonWithOptions.tsx
-msgid "{0} on {1}"
-msgstr ""
+#: 
+#~ msgid "{0} on {1}"
+#~ msgstr ""
 
 #: src/components/PositionPreview/index.tsx
 #: src/components/PositionPreview/index.tsx

@@ -28,7 +28,7 @@ const NetworkCard = styled(Card)`
   border-radius: 999px;
   padding: 8px 12px;
   border: 1px solid transparent;
-  min-width: 165px;
+  min-width: fit-content;
 
   &:hover {
     text-decoration: none;
@@ -72,7 +72,7 @@ function Web3Network(): JSX.Element | null {
   return (
     <NetworkCard onClick={() => toggleNetworkModal()} role="button">
       <NetworkSwitchContainer>
-        <Row flex={1}>
+        <Row>
           <img
             src={NETWORKS_INFO[chainId].icon}
             alt="Switch Network"

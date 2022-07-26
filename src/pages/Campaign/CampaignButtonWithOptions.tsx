@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react'
 import { CampaignData } from 'state/campaigns/actions'
-import { Trans } from '@lingui/macro'
+import { t, Trans } from '@lingui/macro'
 import { ReactComponent as ChevronDown } from 'assets/svg/down.svg'
 import styled, { css } from 'styled-components'
 import useTheme from 'hooks/useTheme'
@@ -105,7 +105,7 @@ export default function CampaignButtonWithOptions({
       disabled={disabled}
       ref={containerRef}
     >
-      <Trans>{type === 'enter_now' ? 'Enter now' : 'Claim Rewards'}</Trans>
+      {type === 'enter_now' ? t`Enter now` : t`Claim Rewards`}
       <ChevronDown style={{ position: 'absolute', top: '50%', right: '12px', transform: 'translateY(-50%)' }} />
       {isShowNetworks && (
         <OptionsContainer style={{ margin: '0 12px', width: 'calc(100% - 24px)' }}>
@@ -126,9 +126,9 @@ export default function CampaignButtonWithOptions({
               >
                 <img src={NETWORKS_INFO[chainId].icon} alt="Network" style={{ minWidth: '16px', width: '16px' }} />
                 <Text marginLeft="4px" color={theme.subText} fontSize="12px" fontWeight={500} minWidth="fit-content">
-                  <Trans>
-                    {type === 'enter_now' ? 'Swap' : 'Claim'} on {NETWORKS_INFO[chainId].name}
-                  </Trans>
+                  {type === 'enter_now'
+                    ? t`Swap on ${NETWORKS_INFO[chainId].name}`
+                    : t`Claim on ${NETWORKS_INFO[chainId].name}`}
                 </Text>
               </Flex>
             )

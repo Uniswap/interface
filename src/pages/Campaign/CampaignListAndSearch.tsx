@@ -59,7 +59,9 @@ export default function CampaignListAndSearch({
                 <Text fontWeight={500} color={theme.text} style={{ wordBreak: 'break-word' }}>
                   {campaign.name}
                 </Text>
-                <CampaignStatusText status={campaign.status}>{campaign.status}</CampaignStatusText>
+                <CampaignStatusText status={campaign.status}>
+                  {campaign.status === 'Upcoming' ? t`Upcoming` : campaign.status === 'Ongoing' ? t`Ongoing` : t`Ended`}
+                </CampaignStatusText>
               </Flex>
               <Flex justifyContent="space-between" alignItems="center" style={{ gap: '12px' }}>
                 <Flex style={{ gap: '8px' }}>
@@ -145,10 +147,10 @@ const CampaignStatusText = styled.div<{ status: CampaignStatus }>`
   font-size: 12px;
   line-height: 10px;
   padding: 5px 8px;
-  min-width: 76px;
   text-align: center;
   height: fit-content;
   border-radius: 24px;
+  white-space: nowrap;
 
   ${({ theme, status }) =>
     status === 'Upcoming' &&
