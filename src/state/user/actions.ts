@@ -1,6 +1,7 @@
 import { createAction } from '@reduxjs/toolkit'
 import { SupportedLocale } from 'constants/locales'
 import { TokenList } from '@uniswap/token-lists'
+import { ChainId } from '@kyberswap/ks-sdk-core'
 
 export interface SerializedToken {
   chainId: number
@@ -40,3 +41,8 @@ export const toggleTokenInfo = createAction<void>('user/toggleTokenInfo')
 
 export const toggleTopTrendingTokens = createAction<void>('user/toggleTopTrendingTokens')
 export const toggleProLiveChart = createAction<void>('user/toggleProLiveChart')
+
+type ToggleFavoriteTokenPayload = {
+  chainId: ChainId
+} & ({ isNative?: false; address: string } | { isNative: true; address?: never })
+export const toggleFavoriteToken = createAction<ToggleFavoriteTokenPayload>('user/toggleFavoriteToken')

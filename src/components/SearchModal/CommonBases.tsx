@@ -3,30 +3,33 @@ import { Text } from 'rebass'
 import { Currency, Token, ChainId } from '@kyberswap/ks-sdk-core'
 import styled from 'styled-components'
 import { t, Trans } from '@lingui/macro'
+import { rgba } from 'polished'
+
+import { nativeOnChain } from 'constants/tokens'
+import { NETWORKS_INFO } from 'constants/networks'
+import InfoHelper from 'components/InfoHelper'
 
 import { SUGGESTED_BASES } from '../../constants'
 import { AutoColumn } from '../Column'
 import { AutoRow } from '../Row'
 import CurrencyLogo from '../CurrencyLogo'
-import { nativeOnChain } from 'constants/tokens'
-import { NETWORKS_INFO } from 'constants/networks'
-import InfoHelper from 'components/InfoHelper'
 
-const BaseWrapper = styled.div<{ disable?: boolean }>`
+const BaseWrapper = styled.div`
+  padding: 6px;
   border: 1px solid ${({ theme }) => theme.border};
   border-radius: 10px;
   display: flex;
-  padding: 6px;
-
   align-items: center;
-  :hover {
-    cursor: ${({ disable }) => !disable && 'pointer'};
-    background-color: ${({ theme, disable }) => !disable && theme.buttonBlack};
+
+  cursor: pointer;
+
+  &[data-selected='true'] {
+    background-color: ${({ theme }) => rgba(theme.primary, 0.15)};
   }
 
-  background-color: ${({ theme, disable }) => disable && theme.primary + '33'};
-  color: ${({ theme, disable }) => disable && theme.primary};
-  opacity: ${({ disable }) => disable && '0.8'};
+  :hover {
+    background-color: ${({ theme }) => theme.buttonBlack};
+  }
 `
 
 export default function CommonBases({
@@ -53,7 +56,7 @@ export default function CommonBases({
               onSelect(nativeOnChain(chainId as number))
             }
           }}
-          disable={selectedCurrency?.isNative}
+          data-selected={selectedCurrency?.isNative}
         >
           <CurrencyLogo currency={nativeOnChain(chainId as number)} style={{ marginRight: 8 }} />
           <Text fontWeight={500} fontSize={16}>
@@ -68,7 +71,7 @@ export default function CommonBases({
           }
 
           return (
-            <BaseWrapper onClick={() => !selected && onSelect(showWToken)} disable={selected} key={token.address}>
+            <BaseWrapper onClick={() => !selected && onSelect(showWToken)} data-selected={selected} key={token.address}>
               <CurrencyLogo currency={showWToken} style={{ marginRight: 8 }} />
               <Text fontWeight={500} fontSize={16}>
                 {showWToken.symbol}

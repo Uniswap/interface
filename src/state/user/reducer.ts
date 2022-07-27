@@ -21,6 +21,7 @@ import {
   toggleTokenInfo,
   toggleProLiveChart,
   toggleTopTrendingTokens,
+  toggleFavoriteToken,
 } from './actions'
 import { SupportedLocale } from 'constants/locales'
 import { isMobile } from 'react-device-detect'
@@ -67,6 +68,16 @@ export interface UserState {
   showTradeRoutes: boolean
   showTokenInfo: boolean
   showTopTrendingSoonTokens: boolean
+
+  favoriteTokensByChainId: Partial<
+    Record<
+      ChainId,
+      {
+        includeNativeToken: boolean
+        addresses: string[]
+      }
+    >
+  >
 }
 
 function pairKey(token0Address: string, token1Address: string) {
@@ -115,6 +126,7 @@ export const initialState: UserState = {
   showTradeRoutes: !isMobile,
   showTokenInfo: true,
   showTopTrendingSoonTokens: true,
+  favoriteTokensByChainId: {},
 }
 
 export default createReducer(initialState, builder =>
@@ -210,5 +222,31 @@ export default createReducer(initialState, builder =>
     })
     .addCase(toggleTopTrendingTokens, state => {
       state.showTopTrendingSoonTokens = !state.showTopTrendingSoonTokens
+    })
+    .addCase(toggleFavoriteToken, (state, { payload: { chainId, isNative, address } }) => {
+      let favoriteTokens = state.favoriteTokensByChainId[chainId]
+      if (!favoriteTokens) {
+        favoriteTokens = {
+          includeNativeToken: false,
+          addresses: [],
+        }
+        state.favoriteTokensByChainId[chainId] = favoriteTokens
+      }
+
+      if (isNative) {
+        const previousValue = favoriteTokens.includeNativeToken
+        favoriteTokens.includeNativeToken = !previousValue
+        return
+      }
+
+      if (address) {
+        // this is intentionally added, to remove compiler error
+        const index = favoriteTokens.addresses.findIndex(addr => addr === address)
+        if (index === -1) {
+          favoriteTokens.addresses.push(address)
+          return
+        }
+        favoriteTokens.addresses.splice(index, 1)
+      }
     }),
 )

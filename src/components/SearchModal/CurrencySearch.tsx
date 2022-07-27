@@ -2,7 +2,7 @@ import React, { KeyboardEvent, RefObject, useCallback, useEffect, useMemo, useRe
 import styled from 'styled-components'
 import { Edit } from 'react-feather'
 import { FixedSizeList } from 'react-window'
-import { Text } from 'rebass'
+import { Flex, Text } from 'rebass'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { t, Trans } from '@lingui/macro'
 
@@ -32,6 +32,13 @@ import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import useDebounce from 'hooks/useDebounce'
 import { nativeOnChain } from 'constants/tokens'
 import InfoHelper from 'components/InfoHelper'
+import { useSelector } from 'react-redux'
+import { AppState } from 'state'
+
+enum Tab {
+  All,
+  Favorites,
+}
 
 const ContentWrapper = styled(Column)`
   width: 100%;
@@ -46,6 +53,18 @@ const Footer = styled.div`
   border-top-left-radius: 0;
   border-top-right-radius: 0;
   background-color: ${({ theme }) => theme.background};
+`
+
+const TabButton = styled(ButtonText)`
+  height: 32px;
+  color: ${({ theme }) => theme.text};
+  &[data-active='true'] {
+    color: ${({ theme }) => theme.primary};
+  }
+
+  :focus {
+    text-decoration: none;
+  }
 `
 
 interface CurrencySearchProps {
@@ -76,10 +95,18 @@ export function CurrencySearch({
   const { chainId: web3ChainId } = useActiveWeb3React()
   const chainId = customChainId || web3ChainId
   const theme = useTheme()
+  const [activeTab, setActiveTab] = useState<Tab>(Tab.All)
 
   const fixedList = useRef<FixedSizeList>()
   const [searchQuery, setSearchQuery] = useState<string>('')
   const debouncedQuery = useDebounce(searchQuery, 200)
+
+  const favoriteTokens = useSelector((state: AppState) => {
+    if (!chainId) {
+      return undefined
+    }
+    return state.user.favoriteTokensByChainId[chainId]
+  })
 
   const [invertSearchOrder, setInvertSearchOrder] = useState<boolean>(false)
   const allTokens = useAllTokens()
@@ -171,6 +198,33 @@ export function CurrencySearch({
   // if no results on main list, show option to expand into inactive
   const filteredInactiveTokens: Token[] = useSearchInactiveTokenLists(debouncedQuery)
 
+  const visibleCurrencies: Currency[] = (() => {
+    // `concat` always returns a new array
+    const currencies: Currency[] = filteredSortedTokens.concat(filteredInactiveTokens)
+    if (showETH && chainId) {
+      currencies.unshift(nativeOnChain(chainId))
+    }
+
+    if (activeTab === Tab.All) {
+      return currencies
+    }
+
+    if (activeTab === Tab.Favorites) {
+      // use `currencies` so that it filters from the visible token list
+      return currencies.filter(token => {
+        if (token.isNative) {
+          return favoriteTokens?.includeNativeToken
+        }
+        if (token.isToken) {
+          return favoriteTokens?.addresses?.includes(token.address)
+        }
+        return false
+      })
+    }
+
+    return []
+  })()
+
   return (
     <ContentWrapper>
       <PaddedColumn gap="14px">
@@ -204,9 +258,23 @@ export function CurrencySearch({
           <CommonBases chainId={chainId} onSelect={handleCurrencySelect} selectedCurrency={selectedCurrency} />
         )}
         <RowBetween>
-          <Text fontSize={14} fontWeight={500}>
-            <Trans>Token Name</Trans>
-          </Text>
+          <Flex
+            sx={{
+              columnGap: '24px',
+            }}
+          >
+            <TabButton data-active={activeTab === Tab.All} onClick={() => setActiveTab(Tab.All)}>
+              <Text as="span" fontSize={14} fontWeight={500}>
+                <Trans>All</Trans>
+              </Text>
+            </TabButton>
+
+            <TabButton data-active={activeTab === Tab.Favorites} onClick={() => setActiveTab(Tab.Favorites)}>
+              <Text as="span" fontSize={14} fontWeight={500}>
+                <Trans>Favorites</Trans>
+              </Text>
+            </TabButton>
+          </Flex>
           <SortButton ascending={invertSearchOrder} toggleSortOrder={() => setInvertSearchOrder(iso => !iso)} />
         </RowBetween>
       </PaddedColumn>
@@ -223,15 +291,14 @@ export function CurrencySearch({
             {({ height }) => (
               <CurrencyList
                 height={height}
-                showETH={showETH}
-                currencies={
-                  filteredInactiveTokens.length
-                    ? filteredSortedTokens.concat(filteredInactiveTokens)
-                    : filteredSortedTokens
-                }
+                currencies={visibleCurrencies}
                 inactiveTokens={filteredInactiveTokens}
                 breakIndex={
-                  filteredInactiveTokens.length && filteredSortedTokens ? filteredSortedTokens.length : undefined
+                  activeTab === Tab.All
+                    ? filteredInactiveTokens.length && filteredSortedTokens
+                      ? filteredSortedTokens.length
+                      : undefined
+                    : undefined
                 }
                 onCurrencySelect={handleCurrencySelect}
                 otherCurrency={otherSelectedCurrency}
