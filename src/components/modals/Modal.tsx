@@ -21,6 +21,7 @@ interface Props extends ModalProps {
 // May be resolved after upgrading reanimated to latest but uncertain
 // https://github.com/facebook/react-native/issues/32329
 export function Modal({
+  animationType = 'none',
   visible,
   hide,
   showCloseButton,
@@ -30,6 +31,8 @@ export function Modal({
   dimBackground,
   children,
   dismissable = true,
+  transparent = true,
+  presentationStyle = 'overFullScreen',
 }: // ...rest (TODO above)
 React.PropsWithChildren<Props>) {
   let justifyContent: ResponsiveValue<'center' | 'flex-start' | 'flex-end', Theme> = 'center'
@@ -38,11 +41,10 @@ React.PropsWithChildren<Props>) {
 
   return (
     <BaseModal
-      animationType="none"
-      presentationStyle="overFullScreen"
-      transparent={true}
-      visible={visible} /* {...rest} */
-    >
+      animationType={animationType}
+      presentationStyle={presentationStyle}
+      transparent={transparent} /* {...rest} */
+      visible={visible}>
       <Button
         alignItems="center"
         flexGrow={1}

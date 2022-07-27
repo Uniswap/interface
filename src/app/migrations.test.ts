@@ -5,6 +5,7 @@ import { migrations } from 'src/app/migrations'
 import {
   getSchema,
   initialSchema,
+  v10Schema,
   v1Schema,
   v2Schema,
   v3Schema,
@@ -16,9 +17,10 @@ import {
   v9Schema,
 } from 'src/app/schema'
 import { persistConfig } from 'src/app/store'
-import { WalletConnectModalState } from 'src/components/WalletConnect/ScanSheet/WalletConnectModal'
+import { WalletConnectModalState } from 'src/components/WalletConnect/constants'
 import { SWAP_ROUTER_ADDRESSES } from 'src/constants/addresses'
 import { ChainId } from 'src/constants/chains'
+import { initialBiometricsSettingsState } from 'src/features/biometrics/slice'
 import { initialBlockState } from 'src/features/blocks/blocksSlice'
 import { initialChainsState } from 'src/features/chains/chainsSlice'
 import { initialCloudBackupState } from 'src/features/CloudBackup/cloudBackupSlice'
@@ -78,6 +80,7 @@ describe('Redux state migrations', () => {
 
     // Add new slices here!
     const initialState = {
+      biometricSettings: initialBiometricsSettingsState,
       blocks: initialBlockState,
       chains: initialChainsState,
       cloudBackup: initialCloudBackupState,
@@ -430,5 +433,13 @@ describe('Redux state migrations', () => {
     const migratedSchema = migrations[10](v9SchemaStub)
     expect(Object.values(migratedSchema.wallet.accounts)).toHaveLength(3)
     expect(Object.keys(migratedSchema.wallet.accounts)).not.toContain(DEMO_ACCOUNT_ADDRESS)
+  })
+
+  it('migrates from v10 to v11', () => {
+    const v11 = migrations[11](v10Schema)
+
+    expect(v11.biometricSettings).toBeDefined()
+    expect(v11.biometricSettings.requiredForAppAccess).toBeDefined()
+    expect(v11.biometricSettings.requiredForTransactions).toBeDefined()
   })
 })

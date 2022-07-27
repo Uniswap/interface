@@ -59,6 +59,7 @@ import { ProfileScreen } from 'src/screens/ProfileScreen'
 import { RecipientSelectoScreen } from 'src/screens/RecipientSelectorScreen'
 import { OnboardingScreens, Screens, Tabs } from 'src/screens/Screens'
 import { SettingsChainsScreen } from 'src/screens/SettingsChainsScreen'
+import { SettingsFaceIdScreen } from 'src/screens/SettingsFaceIdScreen'
 import { SettingsScreen } from 'src/screens/SettingsScreen'
 import { SettingsSupportScreen } from 'src/screens/SettingsSupportScreen'
 import { SettingsTestConfigs } from 'src/screens/SettingsTestConfigs'
@@ -184,6 +185,7 @@ function SettingsStackGroup() {
       <SettingsStack.Screen component={SettingsSupportScreen} name={Screens.SettingsSupport} />
       <SettingsStack.Screen component={SettingsTestConfigs} name={Screens.SettingsTestConfigs} />
       <SettingsStack.Screen component={DevScreen} name={Screens.Dev} />
+      <SettingsStack.Screen component={SettingsFaceIdScreen} name={Screens.SettingsFaceId} />
     </SettingsStack.Navigator>
   )
 }

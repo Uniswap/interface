@@ -1,5 +1,6 @@
 import { combineReducers } from '@reduxjs/toolkit'
 import { monitoredSagaReducers } from 'src/app/rootSaga'
+import { biometricSettingsReducer } from 'src/features/biometrics/slice'
 import { blocksReducer } from 'src/features/blocks/blocksSlice'
 import { chainsReducer } from 'src/features/chains/chainsSlice'
 import { cloudBackupReducer } from 'src/features/CloudBackup/cloudBackupSlice'
@@ -26,6 +27,7 @@ export const rootReducer = combineReducers({
   [nftApi.reducerPath]: nftApi.reducer,
   [routingApi.reducerPath]: routingApi.reducer,
   [zerionApi.reducerPath]: zerionApi.reducer,
+  biometricSettings: biometricSettingsReducer,
   blocks: blocksReducer,
   chains: chainsReducer,
   favorites: favoritesReducer,

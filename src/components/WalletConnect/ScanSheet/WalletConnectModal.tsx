@@ -13,6 +13,7 @@ import { Box, Flex } from 'src/components/layout'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { Text } from 'src/components/Text'
 import { ConnectedDappsList } from 'src/components/WalletConnect/ConnectedDapps/ConnectedDappsList'
+import { WalletConnectModalState } from 'src/components/WalletConnect/constants'
 import { PendingConnection } from 'src/components/WalletConnect/ScanSheet/PendingConnection'
 import { QRCodeScanner } from 'src/components/WalletConnect/ScanSheet/QRCodeScanner'
 import { WalletQRCode } from 'src/components/WalletConnect/ScanSheet/WalletQRCode'
@@ -25,12 +26,6 @@ import { Screens, Tabs } from 'src/screens/Screens'
 import { isValidAddress } from 'src/utils/addresses'
 
 const WC_TIMEOUT_DURATION_MS = 10000 // timeout after 10 seconds
-
-export enum WalletConnectModalState {
-  ScanQr,
-  ConnectedDapps,
-  WalletQr,
-}
 
 type Props = {
   isVisible: boolean

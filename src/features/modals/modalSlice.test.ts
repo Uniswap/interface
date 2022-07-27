@@ -1,4 +1,5 @@
 import { createStore, Store } from '@reduxjs/toolkit'
+import { WalletConnectModalState } from 'src/components/WalletConnect/constants'
 import {
   closeModal,
   initialModalState,
@@ -6,7 +7,6 @@ import {
   ModalsState,
   openModal,
 } from 'src/features/modals/modalSlice'
-import { WalletConnectModalState } from 'src/components/WalletConnect/ScanSheet/WalletConnectModal'
 import { ModalName } from 'src/features/telemetry/constants'
 
 const initialState = { ...initialModalState }

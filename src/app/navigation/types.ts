@@ -67,6 +67,7 @@ export type SettingsStackParamList = {
   [Screens.SettingsChains]: undefined
   [Screens.SettingsSupport]: undefined
   [Screens.SettingsTestConfigs]: undefined
+  [Screens.SettingsFaceId]: undefined
   [Screens.WebView]: { headerTitle: string; uriLink: string }
   [Screens.Dev]: undefined
   [OnboardingScreens.Landing]: undefined // temporary to be able to view onboarding from settings

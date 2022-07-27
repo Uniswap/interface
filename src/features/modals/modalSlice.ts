@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { RootState } from 'src/app/rootReducer'
-import { WalletConnectModalState } from 'src/components/WalletConnect/ScanSheet/WalletConnectModal'
+import { WalletConnectModalState } from 'src/components/WalletConnect/constants'
 import { ModalName } from 'src/features/telemetry/constants'
 import { TransactionState } from 'src/features/transactions/transactionState/transactionState'
 

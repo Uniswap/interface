@@ -14,15 +14,15 @@ type ConfigValue = 'disabled' | 'enabled'
  * Local test configs can also be added to this list.
  */
 export enum TestConfig {
+  DisplayExtractedNFTColors = 'extract-nft-colors',
   TokenBalancesQualityFilter = 'token_balances_quality_filter',
-  BiometricPrompt = 'Biometric Prompt (__DEV__)',
   RinkebyNFTs = 'rinkeby-nfts',
   ShowDevSettings = 'show_dev_settings',
 }
 
 export const TestConfigValues: Record<TestConfig, ConfigValue> = {
+  [TestConfig.DisplayExtractedNFTColors]: __DEV__ ? 'enabled' : 'disabled',
   [TestConfig.TokenBalancesQualityFilter]: 'enabled',
-  [TestConfig.BiometricPrompt]: __DEV__ ? 'disabled' : 'enabled',
   [TestConfig.RinkebyNFTs]: 'disabled',
   [TestConfig.ShowDevSettings]: __DEV__ ? 'enabled' : 'disabled',
 }

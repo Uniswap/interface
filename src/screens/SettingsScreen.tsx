@@ -1,12 +1,14 @@
 import { useTheme } from '@shopify/restyle'
-import React, { useCallback, useMemo, useState } from 'react'
+import { default as React, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ListRenderItemInfo, SectionList } from 'react-native'
+import { SvgProps } from 'react-native-svg'
 import { useDispatch } from 'react-redux'
 import { useAppDispatch } from 'src/app/hooks'
 import { useSettingsStackNavigation } from 'src/app/navigation/types'
 import BookOpenIcon from 'src/assets/icons/book-open.svg'
 import CoffeeIcon from 'src/assets/icons/coffee.svg'
+import FaceIdIcon from 'src/assets/icons/faceid.svg'
 import HeartIcon from 'src/assets/icons/heart.svg'
 import HelpIcon from 'src/assets/icons/help.svg'
 import LockIcon from 'src/assets/icons/lock.svg'
@@ -29,6 +31,7 @@ import { Text } from 'src/components/Text'
 import { Unicon } from 'src/components/unicons/Unicon'
 import { UniconTestModal } from 'src/components/unicons/UniconTestModal'
 import { ChainId, TESTNET_CHAIN_IDS } from 'src/constants/chains'
+import { useDeviceSupportsFaceId } from 'src/features/biometrics/hooks'
 import { setChainActiveStatus } from 'src/features/chains/chainsSlice'
 import { useActiveChainIds } from 'src/features/chains/utils'
 import { isEnabled } from 'src/features/remoteConfig'
@@ -53,18 +56,35 @@ export function SettingsScreen() {
     )
   }, [dispatch, isRinkebyActive])
 
+  // check if device supports faceId authentication, if not, hide faceId option
+  const deviceSupportsFaceId = useDeviceSupportsFaceId()
+
   // Defining them inline instead of outside component b.c. they need t()
   const showDevSettings = isEnabled(TestConfig.ShowDevSettings)
-  const sections: SettingsSection[] = useMemo(
-    () => [
+  const sections: SettingsSection[] = useMemo((): SettingsSection[] => {
+    const iconProps: SvgProps = {
+      color: theme.colors.textSecondary,
+      height: 20,
+      strokeLinecap: 'round',
+      strokeWidth: '1.5',
+      width: 20,
+    }
+
+    return [
       {
         subTitle: t('App settings'),
         data: [
           {
+            screen: Screens.SettingsFaceId,
+            isHidden: !deviceSupportsFaceId,
+            text: 'Face ID',
+            icon: <FaceIdIcon {...iconProps} />,
+          },
+          {
             action: <Switch value={isRinkebyActive} onValueChange={onToggleTestnets} />,
             text: t('Testnets'),
             subText: t('Allow connections to test networks'),
-            icon: <TestnetsIcon color={theme.colors.textSecondary} />,
+            icon: <TestnetsIcon {...iconProps} />,
           },
         ],
       },
@@ -74,12 +94,12 @@ export function SettingsScreen() {
           {
             externalLink: 'https://help.uniswap.org',
             text: t('Help Center'),
-            icon: <HelpIcon color={theme.textSecondary} />,
+            icon: <HelpIcon {...iconProps} />,
           },
           {
             externalLink: 'https://twitter.com/Uniswap',
             text: t('Uniswap Labs Twitter'),
-            icon: <TwitterIcon color={theme.colors.textSecondary} />,
+            icon: <TwitterIcon {...iconProps} />,
           },
         ],
       },
@@ -93,7 +113,7 @@ export function SettingsScreen() {
               headerTitle: t('Uniswap Labs Privacy Policy'),
             },
             text: t('Uniswap Labs Privacy Policy'),
-            icon: <LockIcon color={theme.colors.textSecondary} />,
+            icon: <LockIcon {...iconProps} />,
           },
           {
             screen: Screens.WebView,
@@ -102,7 +122,7 @@ export function SettingsScreen() {
               headerTitle: t('Uniswap Labs Terms of Service'),
             },
             text: t('Uniswap Labs Terms of Service'),
-            icon: <BookOpenIcon color={theme.colors.textSecondary} />,
+            icon: <BookOpenIcon {...iconProps} />,
           },
         ],
       },
@@ -122,68 +142,34 @@ export function SettingsScreen() {
             screen: Screens.SettingsChains,
             text: t('Chains'),
             // TODO use chains icon when available
-            icon: (
-              <CoffeeIcon
-                color={theme.colors.textSecondary}
-                height={20}
-                strokeLinecap="round"
-                strokeWidth="1.5"
-                width={20}
-              />
-            ),
+            icon: <CoffeeIcon {...iconProps} />,
           },
           {
             screen: Screens.SettingsSupport,
             text: t('Support'),
-            icon: (
-              <CoffeeIcon
-                color={theme.colors.textSecondary}
-                height={20}
-                strokeLinecap="round"
-                strokeWidth="1.5"
-                width={20}
-              />
-            ),
+            icon: <CoffeeIcon {...iconProps} />,
           },
           {
             screen: Screens.SettingsTestConfigs,
             text: 'Test Configs',
-            icon: (
-              <CoffeeIcon
-                color={theme.colors.textSecondary}
-                height={20}
-                strokeLinecap="round"
-                strokeWidth="1.5"
-                width={20}
-              />
-            ),
+            icon: <CoffeeIcon {...iconProps} />,
           },
           {
             screen: Screens.Dev,
             text: t('Dev Options'),
-            icon: (
-              <CoffeeIcon
-                color={theme.colors.textSecondary}
-                height={20}
-                strokeLinecap="round"
-                strokeWidth="1.5"
-                width={20}
-              />
-            ),
+            icon: <CoffeeIcon {...iconProps} />,
           },
           { component: <OnboardingRow /> },
         ],
       },
-    ],
-    [isRinkebyActive, onToggleTestnets, t, theme, showDevSettings]
-  )
+    ]
+  }, [isRinkebyActive, onToggleTestnets, t, theme, showDevSettings, deviceSupportsFaceId])
 
   const renderItem = ({
     item,
   }: ListRenderItemInfo<SettingsSectionItem | SettingsSectionItemComponent>) => {
-    if ('component' in item) {
-      return item.component
-    }
+    if (item.isHidden) return null
+    if ('component' in item) return item.component
     return <SettingsRow key={item.screen} navigation={navigation} page={item} theme={theme} />
   }
 

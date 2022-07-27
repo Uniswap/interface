@@ -14,7 +14,7 @@ import { AmountInput } from 'src/components/input/AmountInput'
 import { AnimatedFlex, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { WarningAction, WarningModalType } from 'src/components/warnings/types'
-import { useBiometricPrompt } from 'src/features/biometrics/hooks'
+import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { ElementName } from 'src/features/telemetry/constants'
 import {
   DerivedSwapInfo,
@@ -235,6 +235,7 @@ type ActionButtonProps = {
 
 export function ActionButton({ onPress, disabled, label, name }: ActionButtonProps) {
   const { trigger: actionButtonTrigger, modal: BiometricModal } = useBiometricPrompt(onPress)
+  const { requiredForTransactions } = useBiometricAppSettings()
 
   return (
     <>
@@ -247,7 +248,11 @@ export function ActionButton({ onPress, disabled, label, name }: ActionButtonPro
         textVariant="largeLabel"
         onPress={() => {
           notificationAsync()
-          actionButtonTrigger()
+          if (requiredForTransactions) {
+            actionButtonTrigger()
+          } else {
+            onPress()
+          }
         }}
       />
 

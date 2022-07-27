@@ -138,9 +138,7 @@ export const v6Schema = {
   },
 }
 
-export const v7Schema = {
-  ...v6Schema,
-}
+export const v7Schema = { ...v6Schema }
 
 export const v8Schema = {
   ...v7Schema,
@@ -148,13 +146,17 @@ export const v8Schema = {
     backupsFound: [],
   },
 }
-
 // schema did not change, but we removed private key wallets
-export const v9Schema = v8Schema
+export const v9Schema = { ...v8Schema }
 
 // schema did not change, removed the demo account
-export const v10Schema = v9Schema
+export const v10Schema = { ...v9Schema }
+
+export const v11Schema = {
+  ...v10Schema,
+  biometricSettings: { requiredForAppAccess: false, requiredForTransactions: false },
+}
 
 // TODO: use function with typed output when API reducers are removed from rootReducer
 // export const getSchema = (): RootState => v0Schema
-export const getSchema = () => v10Schema
+export const getSchema = () => v11Schema

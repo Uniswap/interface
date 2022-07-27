@@ -2,7 +2,6 @@ import { AuthenticationType, supportedAuthenticationTypesAsync } from 'expo-loca
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppTheme } from 'src/app/hooks'
-import { goBack } from 'src/app/navigation/rootNavigation'
 import FaceIdIcon from 'src/assets/icons/faceid.svg'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { TextButton } from 'src/components/buttons/TextButton'
@@ -17,12 +16,14 @@ type BiometricModalProps = {
   authenticationStatus?: BiometricAuthenticationStatus
   show: boolean
   tryAuthenticate: () => void
+  cancel: () => void
 }
 
 export function BiometricModal({
   authenticationStatus,
   show,
   tryAuthenticate,
+  cancel,
 }: BiometricModalProps) {
   const { t } = useTranslation()
   const theme = useAppTheme()
@@ -56,9 +57,7 @@ export function BiometricModal({
             </Text>
           </Flex>
           <Text color="textSecondary" variant="caption">
-            {t(
-              'Face ID or Touch ID is required in this early release to help safeguard your assets.'
-            )}
+            {t('Face ID or Touch ID is required to help safeguard your assets.')}
             {authenticationStatus === BiometricAuthenticationStatus.MissingEnrollment &&
               ' ' + t('Please enable Face ID or Touch ID.')}
           </Text>
@@ -73,7 +72,7 @@ export function BiometricModal({
               width="100%"
               onPress={tryAuthenticate}
             />
-            <TextButton name={ElementName.Back} onPress={() => goBack()}>
+            <TextButton name={ElementName.Back} onPress={cancel}>
               <Text variant="caption">{t('Cancel')}</Text>
             </TextButton>
           </Flex>

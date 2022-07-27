@@ -18,6 +18,7 @@ import { AnimatedFlex, Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { WarningAction } from 'src/components/warnings/types'
 import { AssetType } from 'src/entities/assets'
+import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { NFTAsset } from 'src/features/nfts/types'
 import { ElementName } from 'src/features/telemetry/constants'
 import {
@@ -106,10 +107,20 @@ export function TransferReview({ state, dispatch, onNext, onPrev }: TransferForm
     onNext
   )
 
-  const onSubmit = () => {
+  const submitCallback = () => {
     onNext()
-    notificationAsync()
     isNFT ? transferNFTCallback?.() : transferERC20Callback?.()
+  }
+  const { trigger: actionButtonTrigger, modal: BiometricModal } = useBiometricPrompt(submitCallback)
+  const { requiredForTransactions } = useBiometricAppSettings()
+
+  const onSubmit = () => {
+    notificationAsync()
+    if (requiredForTransactions) {
+      actionButtonTrigger()
+    } else {
+      submitCallback()
+    }
   }
 
   if (!recipient) return null
@@ -198,6 +209,7 @@ export function TransferReview({ state, dispatch, onNext, onPrev }: TransferForm
                   {t('Send')}
                 </Text>
               </Box>
+              {BiometricModal}
             </Button>
           </Flex>
         </Flex>

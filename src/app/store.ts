@@ -39,6 +39,7 @@ export const persistConfig = {
   storage: AsyncStorage,
   whitelist: [
     'wallet',
+    'biometricSettings',
     'chains',
     'favorites',
     'searchHistory',
@@ -50,7 +51,7 @@ export const persistConfig = {
     dataApi.reducerPath,
     nftApi.reducerPath,
   ],
-  version: 10,
+  version: 11,
   migrate: createMigrate(migrations),
 }
 

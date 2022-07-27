@@ -8,13 +8,14 @@ import { Provider } from 'react-redux'
 import { RelayEnvironmentProvider } from 'react-relay'
 import { PersistGate } from 'redux-persist/integration/react'
 import { ErrorBoundary } from 'src/app/ErrorBoundary'
+import { AppModals } from 'src/app/modals/AppModals'
 import { DrawerNavigator } from 'src/app/navigation/navigation'
 import { NavigationContainer } from 'src/app/navigation/NavigationContainer'
 import { persistor, store } from 'src/app/store'
 import { WalletContextProvider } from 'src/app/walletContext'
-import { AppModals } from 'src/app/modals/AppModals'
 import { config } from 'src/config'
 import RelayEnvironment from 'src/data/relay'
+import { LockScreenContextProvider } from 'src/features/authentication/lockScreenContext'
 import { TransactionHistoryUpdater } from 'src/features/dataApi/zerion/updater'
 import { MulticallUpdaters } from 'src/features/multicall'
 import { NotificationToastWrapper } from 'src/features/notifications/NotificationToastWrapper'
@@ -48,11 +49,13 @@ export function App() {
               <DynamicThemeProvider>
                 <ErrorBoundary>
                   <WalletContextProvider>
-                    <DataUpdaters />
-                    <BottomSheetModalProvider>
-                      <AppModals />
-                      <NavStack isDarkMode={isDarkMode} />
-                    </BottomSheetModalProvider>
+                    <LockScreenContextProvider>
+                      <DataUpdaters />
+                      <BottomSheetModalProvider>
+                        <AppModals />
+                        <NavStack isDarkMode={isDarkMode} />
+                      </BottomSheetModalProvider>
+                    </LockScreenContextProvider>
                   </WalletContextProvider>
                 </ErrorBoundary>
               </DynamicThemeProvider>

@@ -17,8 +17,9 @@ import { PortfolioNFTsSection } from 'src/components/home/PortfolioNFTsSection'
 import { PortfolioTokensSection } from 'src/components/home/PortfolioTokensSection'
 import { Box, Flex } from 'src/components/layout'
 import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollScreen'
-import { WalletConnectModalState } from 'src/components/WalletConnect/ScanSheet/WalletConnectModal'
+import { WalletConnectModalState } from 'src/components/WalletConnect/constants'
 import { TotalBalance } from 'src/features/balances/TotalBalance'
+import { BiometricCheck } from 'src/features/biometrics/BiometricCheck'
 import { useActiveChainIds } from 'src/features/chains/utils'
 import { useAllBalancesByChainId } from 'src/features/dataApi/balances'
 import { openModal } from 'src/features/modals/modalSlice'
@@ -58,6 +59,7 @@ export function HomeScreen() {
           </Flex>
         </Flex>
       </HeaderScrollScreen>
+      <BiometricCheck />
     </>
   )
 }

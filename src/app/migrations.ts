@@ -147,4 +147,14 @@ export const migrations = {
 
     return newState
   },
+
+  11: (state: any) => {
+    const newState = { ...state }
+    newState.biometricSettings = {
+      requiredForAppAccess: false,
+      requiredForTransactions: false,
+    }
+
+    return newState
+  },
 }

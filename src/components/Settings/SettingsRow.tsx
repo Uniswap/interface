@@ -16,6 +16,7 @@ export interface SettingsSection {
 
 export interface SettingsSectionItemComponent {
   component: ReactElement
+  isHidden?: boolean
 }
 
 export interface SettingsSectionItem {
