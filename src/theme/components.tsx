@@ -1,4 +1,5 @@
 import { outboundLink } from 'components/analytics'
+import { atom, useAtom } from 'jotai'
 import React, { HTMLProps } from 'react'
 import { ArrowLeft, ExternalLink as LinkIconFeather, Trash, X } from 'react-feather'
 import { Link } from 'react-router-dom'
@@ -267,3 +268,28 @@ export const Separator = styled.div`
   height: 1px;
   background-color: ${({ theme }) => theme.deprecated_bg2};
 `
+
+/* colors toggle for testing */
+const ColorsToggle = styled.button<{ updated: boolean }>`
+  display: flex;
+  position: fixed;
+  left: 16px;
+  bottom: 16px;
+  border-radius: 12px;
+  background-color: ${({ theme, updated }) => (updated ? theme.accentAction : theme.accentFailure)};
+  font-size: 14px;
+  padding: 8px 16px;
+  color: ${({ theme }) => theme.textPrimary};
+  border: 1.5px solid ${({ theme }) => theme.textPrimary};
+  cursor: pointer;
+`
+export const useColorsUpdatedAtom = atom<boolean>(false)
+
+export function ColorThemeToggle() {
+  const [colorsUpdated, setColorsUpdated] = useAtom(useColorsUpdatedAtom)
+  return (
+    <ColorsToggle updated={colorsUpdated} onClick={() => setColorsUpdated(!colorsUpdated)}>
+      Theme: {colorsUpdated ? 'New Colors' : 'Depricated Colors'}
+    </ColorsToggle>
+  )
+}
