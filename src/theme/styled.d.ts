@@ -110,6 +110,7 @@ export interface Colors {
 
   blue200: Color
   flyoutDropShadow: Color
+  hoverState: Color
 }
 
 declare module 'styled-components/macro' {

@@ -13,6 +13,7 @@ import { lightTheme } from '../css/lightTheme'
 import { useIsDarkMode } from '../state/user/hooks'
 import { colors as ColorsPalette, colorsDark, colorsLight } from './colors'
 import { Colors } from './styled'
+import { opacify } from './utils'
 
 export * from './components'
 
@@ -169,6 +170,7 @@ function colors(darkMode: boolean): Colors {
     blue200: ColorsPalette.blue200,
     flyoutDropShadow:
       '0px 24px 32px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 0px 1px rgba(0, 0, 0, 0.12)',
+    hoverState: opacify(24, ColorsPalette.blue200),
   }
 }
 

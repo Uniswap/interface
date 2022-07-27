@@ -42,7 +42,7 @@ const InternalLinkMenuItem = styled(InternalMenuItem)`
   cursor: pointer;
 
   :hover {
-    background-color: ${({ theme }) => theme.accentActionSoft};
+    background-color: ${({ theme }) => theme.hoverState};
     text-decoration: none;
   }
 `

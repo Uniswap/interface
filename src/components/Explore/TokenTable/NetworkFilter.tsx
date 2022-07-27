@@ -38,7 +38,7 @@ const InternalLinkMenuItem = styled(InternalMenuItem)`
   border-radius: 12px;
 
   :hover {
-    background-color: ${({ theme }) => theme.accentActionSoft};
+    background-color: ${({ theme }) => theme.hoverState};
     text-decoration: none;
   }
 `
