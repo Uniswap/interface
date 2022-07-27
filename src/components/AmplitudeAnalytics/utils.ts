@@ -5,8 +5,8 @@ export const getDurationTillTimestampSinceEpochSeconds = (futureTimestampSinceEp
   return futureTimestampSinceEpoch - new Date().getTime() / 1000
 }
 
-export const getDurationFromDateTillNowMilliseconds = (date: Date): number => {
-  return new Date().getUTCMilliseconds() - date.getUTCMilliseconds()
+export const getDurationFromDateTillNowMilliseconds = (start: Date): number => {
+  return new Date().getTime() - start.getTime()
 }
 
 export const getNumberFormattedToDecimalPlace = (

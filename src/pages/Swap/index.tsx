@@ -4,12 +4,25 @@ import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
-import { ElementName, Event, EventName } from 'components/AmplitudeAnalytics/constants'
-import { PageName, SectionName } from 'components/AmplitudeAnalytics/constants'
+import { sendAnalyticsEvent } from 'components/AmplitudeAnalytics'
+import {
+  ElementName,
+  Event,
+  EventName,
+  NATIVE_CHAIN_ADDRESS,
+  PageName,
+  SectionName,
+} from 'components/AmplitudeAnalytics/constants'
 import { Trace } from 'components/AmplitudeAnalytics/Trace'
 import { TraceEvent } from 'components/AmplitudeAnalytics/TraceEvent'
+import {
+  formatPercentInBasisPointsNumber,
+  getDurationFromDateTillNowMilliseconds,
+  getNumberFormattedToDecimalPlace,
+} from 'components/AmplitudeAnalytics/utils'
 import { sendEvent } from 'components/analytics'
 import { NetworkAlert } from 'components/NetworkAlert/NetworkAlert'
+import { getPriceImpactPercent } from 'components/swap/AdvancedSwapDetails'
 import SwapDetailsDropdown from 'components/swap/SwapDetailsDropdown'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 import { MouseoverTooltip } from 'components/Tooltip'
@@ -61,6 +74,7 @@ import { useExpertModeManager } from '../../state/user/hooks'
 import { LinkStyledButton, ThemedText } from '../../theme'
 import { computeFiatValuePriceImpact } from '../../utils/computeFiatValuePriceImpact'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
+import { computeRealizedLPFeePercent } from '../../utils/prices'
 import { warningSeverity } from '../../utils/prices'
 import { supportedChainId } from '../../utils/supportedChainId'
 import AppBody from '../AppBody'
@@ -78,10 +92,42 @@ export function getIsValidSwapQuote(
   return !!swapInputError && !!trade && (tradeState === TradeState.VALID || tradeState === TradeState.SYNCING)
 }
 
+const formatAnalyticsEventProperties = (
+  trade: InterfaceTrade<Currency, Currency, TradeType>,
+  fetchingSwapQuoteStartTime: Date | undefined
+) => {
+  const lpFeePercent = trade ? computeRealizedLPFeePercent(trade) : undefined
+  return {
+    token_in_symbol: trade.inputAmount.currency.symbol,
+    token_out_symbol: trade.outputAmount.currency.symbol,
+    token_in_address: trade.inputAmount.currency.isNative ? NATIVE_CHAIN_ADDRESS : trade.inputAmount.currency.address,
+    token_out_address: trade.outputAmount.currency.isNative
+      ? NATIVE_CHAIN_ADDRESS
+      : trade.outputAmount.currency.address,
+    price_impact_basis_points: lpFeePercent
+      ? formatPercentInBasisPointsNumber(getPriceImpactPercent(lpFeePercent, trade))
+      : undefined,
+    estimated_network_fee_usd: trade.gasUseEstimateUSD
+      ? getNumberFormattedToDecimalPlace(trade.gasUseEstimateUSD, 2)
+      : undefined,
+    chain_id:
+      trade.inputAmount.currency.chainId === trade.outputAmount.currency.chainId
+        ? trade.inputAmount.currency.chainId
+        : undefined,
+    token_in_amount: getNumberFormattedToDecimalPlace(trade.inputAmount, trade.inputAmount.currency.decimals),
+    token_out_amount: getNumberFormattedToDecimalPlace(trade.outputAmount, trade.outputAmount.currency.decimals),
+    quote_latency_milliseconds: fetchingSwapQuoteStartTime
+      ? getDurationFromDateTillNowMilliseconds(fetchingSwapQuoteStartTime)
+      : undefined,
+  }
+}
+
 export default function Swap() {
   const navigate = useNavigate()
   const { account, chainId } = useWeb3React()
   const loadedUrlParams = useDefaultsFromURLSearch()
+  const [newSwapQuoteNeedsLogging, setNewSwapQuoteNeedsLogging] = useState(true)
+  const [fetchingSwapQuoteStartTime, setFetchingSwapQuoteStartTime] = useState<Date | undefined>()
 
   // token warning stuff
   const [loadedInputCurrency, loadedOutputCurrency] = [
@@ -412,6 +458,37 @@ export default function Swap() {
   const swapIsUnsupported = useIsSwapUnsupported(currencies[Field.INPUT], currencies[Field.OUTPUT])
 
   const priceImpactTooHigh = priceImpactSeverity > 3 && !isExpertMode
+
+  useEffect(() => {
+    const now = new Date()
+    // If a trade exists, and we need to log the receipt of this new swap quote:
+    if (newSwapQuoteNeedsLogging && !!trade) {
+      // Set the current datetime as the time of receipt of latest swap quote.
+      setSwapQuoteReceivedDate(now)
+      // Log swap quote.
+      sendAnalyticsEvent(
+        EventName.SWAP_QUOTE_RECEIVED,
+        formatAnalyticsEventProperties(trade, fetchingSwapQuoteStartTime)
+      )
+      // Latest swap quote has just been logged, so we don't need to log the current trade anymore
+      // unless user inputs change again and a new trade is in the process of being generated.
+      setNewSwapQuoteNeedsLogging(false)
+      // New quote is not being fetched, so set start time of quote fetch to undefined.
+      setFetchingSwapQuoteStartTime(undefined)
+    }
+    // If another swap quote is being loaded based on changed user inputs:
+    if (routeIsLoading) {
+      setNewSwapQuoteNeedsLogging(true)
+      if (fetchingSwapQuoteStartTime === undefined) setFetchingSwapQuoteStartTime(now)
+    }
+  }, [
+    newSwapQuoteNeedsLogging,
+    routeIsSyncing,
+    routeIsLoading,
+    fetchingSwapQuoteStartTime,
+    trade,
+    setSwapQuoteReceivedDate,
+  ])
 
   return (
     <Trace page={PageName.SWAP_PAGE} shouldLogImpression>

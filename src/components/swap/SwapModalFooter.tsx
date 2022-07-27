@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
-import { ElementName, EventName } from 'components/AmplitudeAnalytics/constants'
+import { ElementName, EventName, NATIVE_CHAIN_ADDRESS } from 'components/AmplitudeAnalytics/constants'
 import { Event } from 'components/AmplitudeAnalytics/constants'
 import { TraceEvent } from 'components/AmplitudeAnalytics/TraceEvent'
 import {
@@ -54,8 +54,8 @@ const formatAnalyticsEventProperties = ({
   transaction_deadline_seconds: getDurationTillTimestampSinceEpochSeconds(transactionDeadlineSecondsSinceEpoch),
   token_in_amount_usd: tokenInAmountUsd ? parseFloat(tokenInAmountUsd) : undefined,
   token_out_amount_usd: tokenOutAmountUsd ? parseFloat(tokenOutAmountUsd) : undefined,
-  token_in_address: trade.inputAmount.currency.isToken ? trade.inputAmount.currency.address : undefined,
-  token_out_address: trade.outputAmount.currency.isToken ? trade.outputAmount.currency.address : undefined,
+  token_in_address: trade.inputAmount.currency.isNative ? NATIVE_CHAIN_ADDRESS : trade.inputAmount.currency.address,
+  token_out_address: trade.outputAmount.currency.isNative ? NATIVE_CHAIN_ADDRESS : trade.outputAmount.currency.address,
   token_in_symbol: trade.inputAmount.currency.symbol,
   token_out_symbol: trade.outputAmount.currency.symbol,
   token_in_amount: getNumberFormattedToDecimalPlace(trade.inputAmount, trade.inputAmount.currency.decimals),
@@ -71,7 +71,6 @@ const formatAnalyticsEventProperties = ({
   duration_from_first_quote_to_swap_submission_milliseconds: swapQuoteReceivedDate
     ? getDurationFromDateTillNowMilliseconds(swapQuoteReceivedDate)
     : undefined,
-  // TODO(lynnshaoyu): implement duration_from_first_quote_to_swap_submission_seconds
 })
 
 export default function SwapModalFooter({

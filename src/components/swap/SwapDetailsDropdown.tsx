@@ -2,13 +2,7 @@ import { Trans } from '@lingui/macro'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { ElementName, Event, EventName } from 'components/AmplitudeAnalytics/constants'
-import { Trace } from 'components/AmplitudeAnalytics/Trace'
 import { TraceEvent } from 'components/AmplitudeAnalytics/TraceEvent'
-import {
-  formatPercentInBasisPointsNumber,
-  getDurationFromDateTillNowMilliseconds,
-  getNumberFormattedToDecimalPlace,
-} from 'components/AmplitudeAnalytics/utils'
 import AnimatedDropdown from 'components/AnimatedDropdown'
 import Card, { OutlineCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
@@ -17,15 +11,13 @@ import Row, { RowBetween, RowFixed } from 'components/Row'
 import { MouseoverTooltipContent } from 'components/Tooltip'
 import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'
 import { darken } from 'polished'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { ChevronDown, Info } from 'react-feather'
 import { InterfaceTrade } from 'state/routing/types'
 import styled, { keyframes, useTheme } from 'styled-components/macro'
 import { HideSmall, ThemedText } from 'theme'
-import { computeRealizedLPFeePercent } from 'utils/prices'
 
 import { AdvancedSwapDetails } from './AdvancedSwapDetails'
-import { getPriceImpactPercent } from './AdvancedSwapDetails'
 import GasEstimateBadge from './GasEstimateBadge'
 import { ResponsiveTooltipContainer } from './styleds'
 import SwapRoute from './SwapRoute'
@@ -129,36 +121,6 @@ interface SwapDetailsInlineProps {
   setSwapQuoteReceivedDate: (date: Date) => void
 }
 
-const formatAnalyticsEventProperties = (
-  trade: InterfaceTrade<Currency, Currency, TradeType>,
-  fetchingQuoteStartTime: Date | undefined,
-  setSwapQuoteReceivedDate: (date: Date) => void
-) => {
-  const lpFeePercent = trade ? computeRealizedLPFeePercent(trade) : undefined
-  setSwapQuoteReceivedDate(new Date())
-  return {
-    token_in_symbol: trade.inputAmount.currency.symbol,
-    token_out_symbol: trade.outputAmount.currency.symbol,
-    token_in_address: trade.inputAmount.currency.isToken ? trade.inputAmount.currency.address : undefined,
-    token_out_address: trade.outputAmount.currency.isToken ? trade.outputAmount.currency.address : undefined,
-    price_impact_basis_points: lpFeePercent
-      ? formatPercentInBasisPointsNumber(getPriceImpactPercent(lpFeePercent, trade))
-      : undefined,
-    estimated_network_fee_usd: trade.gasUseEstimateUSD
-      ? getNumberFormattedToDecimalPlace(trade.gasUseEstimateUSD, 2)
-      : undefined,
-    chain_id:
-      trade.inputAmount.currency.chainId === trade.outputAmount.currency.chainId
-        ? trade.inputAmount.currency.chainId
-        : undefined,
-    token_in_amount: getNumberFormattedToDecimalPlace(trade.inputAmount, trade.inputAmount.currency.decimals),
-    token_out_amount: getNumberFormattedToDecimalPlace(trade.outputAmount, trade.outputAmount.currency.decimals),
-    quote_latency_milliseconds: fetchingQuoteStartTime
-      ? getDurationFromDateTillNowMilliseconds(fetchingQuoteStartTime)
-      : undefined,
-  }
-}
-
 export default function SwapDetailsDropdown({
   trade,
   syncing,
@@ -171,13 +133,6 @@ export default function SwapDetailsDropdown({
   const theme = useTheme()
   const { chainId } = useWeb3React()
   const [showDetails, setShowDetails] = useState(false)
-  const [isFirstPriceFetch, setIsFirstPriceFetch] = useState(true)
-  const [fetchingQuoteStartTime, setFetchingQuoteStartTime] = useState<Date | undefined>()
-
-  useEffect(() => {
-    if (loading || syncing) setFetchingQuoteStartTime(new Date())
-    if (isFirstPriceFetch && syncing) setIsFirstPriceFetch(false)
-  }, [isFirstPriceFetch, syncing, loading])
 
   return (
     <Wrapper>
@@ -221,18 +176,11 @@ export default function SwapDetailsDropdown({
               )}
               {trade ? (
                 <LoadingOpacityContainer $loading={syncing}>
-                  <Trace
-                    name={EventName.SWAP_QUOTE_RECEIVED}
-                    element={ElementName.SWAP_TRADE_PRICE_ROW}
-                    properties={formatAnalyticsEventProperties(trade, fetchingQuoteStartTime, setSwapQuoteReceivedDate)}
-                    shouldLogImpression={!loading && !syncing && isFirstPriceFetch}
-                  >
-                    <TradePrice
-                      price={trade.executionPrice}
-                      showInverted={showInverted}
-                      setShowInverted={setShowInverted}
-                    />
-                  </Trace>
+                  <TradePrice
+                    price={trade.executionPrice}
+                    showInverted={showInverted}
+                    setShowInverted={setShowInverted}
+                  />
                 </LoadingOpacityContainer>
               ) : loading || syncing ? (
                 <ThemedText.DeprecatedMain fontSize={14}>
