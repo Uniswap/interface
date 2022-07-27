@@ -224,6 +224,10 @@ export default createReducer(initialState, builder =>
       state.showTopTrendingSoonTokens = !state.showTopTrendingSoonTokens
     })
     .addCase(toggleFavoriteToken, (state, { payload: { chainId, isNative, address } }) => {
+      if (!state.favoriteTokensByChainId) {
+        state.favoriteTokensByChainId = {}
+      }
+
       let favoriteTokens = state.favoriteTokensByChainId[chainId]
       if (!favoriteTokens) {
         favoriteTokens = {

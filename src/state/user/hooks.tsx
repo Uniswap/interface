@@ -9,7 +9,7 @@ import { SupportedLocale } from 'constants/locales'
 
 import { useActiveWeb3React } from '../../hooks'
 import { AppDispatch, AppState } from 'state'
-import { useAppDispatch } from 'state/hooks'
+import { useAppDispatch, useAppSelector } from 'state/hooks'
 import {
   addSerializedPair,
   addSerializedToken,
@@ -28,11 +28,12 @@ import {
   toggleProLiveChart,
   toggleTopTrendingTokens,
   toggleTokenInfo,
+  toggleFavoriteToken as toggleFavoriteTokenAction,
+  ToggleFavoriteTokenPayload,
 } from './actions'
 import { useUserLiquidityPositions } from 'state/pools/hooks'
 import { useAllTokens } from 'hooks/Tokens'
 import { isAddress } from 'utils'
-import { useAppSelector } from 'state/hooks'
 import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 import { defaultShowLiveCharts } from './reducer'
 import {
@@ -494,4 +495,26 @@ export function useToggleTokenInfo(): () => void {
 export function useToggleTopTrendingTokens(): () => void {
   const dispatch = useDispatch<AppDispatch>()
   return useCallback(() => dispatch(toggleTopTrendingTokens()), [dispatch])
+}
+
+export const useUserFavoriteTokens = (chainId: ChainId | undefined) => {
+  const dispatch = useDispatch<AppDispatch>()
+  const favoriteTokens = useSelector((state: AppState) => {
+    if (!chainId) {
+      return undefined
+    }
+
+    if (!state.user.favoriteTokensByChainId) {
+      return undefined
+    }
+
+    return state.user.favoriteTokensByChainId[chainId]
+  })
+
+  const toggleFavoriteToken = useCallback(
+    (payload: ToggleFavoriteTokenPayload) => dispatch(toggleFavoriteTokenAction(payload)),
+    [dispatch],
+  )
+
+  return { favoriteTokens, toggleFavoriteToken }
 }

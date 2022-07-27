@@ -42,7 +42,7 @@ export const toggleTokenInfo = createAction<void>('user/toggleTokenInfo')
 export const toggleTopTrendingTokens = createAction<void>('user/toggleTopTrendingTokens')
 export const toggleProLiveChart = createAction<void>('user/toggleProLiveChart')
 
-type ToggleFavoriteTokenPayload = {
+export type ToggleFavoriteTokenPayload = {
   chainId: ChainId
 } & ({ isNative?: false; address: string } | { isNative: true; address?: never })
 export const toggleFavoriteToken = createAction<ToggleFavoriteTokenPayload>('user/toggleFavoriteToken')

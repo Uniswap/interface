@@ -5,10 +5,15 @@ import { FixedSizeList } from 'react-window'
 import { Flex, Text } from 'rebass'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { t, Trans } from '@lingui/macro'
-
 import { Currency, Token, ChainId } from '@kyberswap/ks-sdk-core'
-import ImportRow from './ImportRow'
-import { useActiveWeb3React } from '../../hooks'
+
+import useTheme from 'hooks/useTheme'
+import useToggle from 'hooks/useToggle'
+import { useOnClickOutside } from 'hooks/useOnClickOutside'
+import useDebounce from 'hooks/useDebounce'
+import { nativeOnChain } from 'constants/tokens'
+import InfoHelper from 'components/InfoHelper'
+import { useUserFavoriteTokens } from 'state/user/hooks'
 import {
   useAllTokens,
   useToken,
@@ -16,6 +21,9 @@ import {
   useIsTokenActive,
   useSearchInactiveTokenLists,
 } from 'hooks/Tokens'
+
+import ImportRow from './ImportRow'
+import { useActiveWeb3React } from '../../hooks'
 import { CloseIcon, TYPE, ButtonText, IconWrapper } from '../../theme'
 import { isAddress } from '../../utils'
 import Row, { RowBetween, RowFixed } from '../Row'
@@ -26,14 +34,6 @@ import { filterTokens } from './filtering'
 import SortButton from './SortButton'
 import { useTokenComparator } from './sorting'
 import { PaddedColumn, SearchInput, Separator } from './styleds'
-import useTheme from 'hooks/useTheme'
-import useToggle from 'hooks/useToggle'
-import { useOnClickOutside } from 'hooks/useOnClickOutside'
-import useDebounce from 'hooks/useDebounce'
-import { nativeOnChain } from 'constants/tokens'
-import InfoHelper from 'components/InfoHelper'
-import { useSelector } from 'react-redux'
-import { AppState } from 'state'
 
 enum Tab {
   All,
@@ -101,12 +101,7 @@ export function CurrencySearch({
   const [searchQuery, setSearchQuery] = useState<string>('')
   const debouncedQuery = useDebounce(searchQuery, 200)
 
-  const favoriteTokens = useSelector((state: AppState) => {
-    if (!chainId) {
-      return undefined
-    }
-    return state.user.favoriteTokensByChainId[chainId]
-  })
+  const { favoriteTokens } = useUserFavoriteTokens(chainId)
 
   const [invertSearchOrder, setInvertSearchOrder] = useState<boolean>(false)
   const allTokens = useAllTokens()

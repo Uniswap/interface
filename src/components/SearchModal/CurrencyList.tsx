@@ -30,6 +30,7 @@ import CurrencyLogo from '../CurrencyLogo'
 import { MouseoverTooltip } from '../Tooltip'
 import Loader from '../Loader'
 import ImportRow from './ImportRow'
+import { useUserFavoriteTokens } from 'state/user/hooks'
 
 function currencyKey(currency: Currency): string {
   return currency?.isNative ? 'ETHER' : currency?.address || ''
@@ -186,27 +187,24 @@ function CurrencyRow({
   const nativeCurrency = useCurrencyConvertedToNative(currency || undefined)
   // only show add or remove buttons if not on selected list
 
-  const isFavorite = useSelector((state: AppState) => {
-    if (!chainId) {
-      return false
-    }
+  const { favoriteTokens, toggleFavoriteToken } = useUserFavoriteTokens(chainId)
 
-    const data = state.user.favoriteTokensByChainId[chainId]
-    if (!data) {
+  const isFavorite = (() => {
+    if (!chainId || !favoriteTokens) {
       return false
     }
 
     if (currency.isNative) {
-      return data.includeNativeToken
+      return !!favoriteTokens.includeNativeToken
     }
 
     if (currency.isToken) {
       const addr = (currency as Token).address
-      return data.addresses.includes(addr)
+      return !!favoriteTokens.addresses?.includes(addr)
     }
 
     return false
-  })
+  })()
 
   const handleClickFavorite = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation()
@@ -216,22 +214,18 @@ function CurrencyRow({
     }
 
     if (currency.isNative) {
-      dispatch(
-        toggleFavoriteToken({
-          chainId,
-          isNative: true,
-        }),
-      )
+      toggleFavoriteToken({
+        chainId,
+        isNative: true,
+      })
       return
     }
 
     if (currency.isToken) {
-      dispatch(
-        toggleFavoriteToken({
-          chainId,
-          address: (currency as Token).address,
-        }),
-      )
+      toggleFavoriteToken({
+        chainId,
+        address: (currency as Token).address,
+      })
     }
   }
 
