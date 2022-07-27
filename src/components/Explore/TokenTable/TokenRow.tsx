@@ -200,14 +200,14 @@ const PriceInfoCell = styled(Cell)`
 const SortArrowCell = styled(Cell)`
   padding-right: 2px;
 `
-const SortingCategory = styled.span`
+const HeaderCellWrapper = styled.span<{ onClick?: () => void }>`
   align-items: center;
-  cursor: pointer;
+  cursor: ${({ onClick }) => (onClick ? 'pointer' : 'unset')};
   display: flex;
-  justify-content: center;
-
   height: 48px;
+  justify-content: flex-end;
   line-height: 16px;
+  padding-right: 8px;
   width: 100%;
 `
 const SparkLineCell = styled(Cell)`
@@ -308,7 +308,7 @@ function HeaderCell({
 
   if (sortCategory === category) {
     return (
-      <SortingCategory onClick={handleSortCategory}>
+      <HeaderCellWrapper onClick={handleSortCategory}>
         <SortArrowCell>
           {sortDirection === SortDirection.increasing ? (
             <ArrowDown size={14} color={theme.accentActive} />
@@ -317,20 +317,20 @@ function HeaderCell({
           )}
         </SortArrowCell>
         {getHeaderDisplay(category, timeframe)}
-      </SortingCategory>
+      </HeaderCellWrapper>
     )
   }
   if (sortable) {
     return (
-      <SortingCategory onClick={handleSortCategory}>
+      <HeaderCellWrapper onClick={handleSortCategory}>
         <SortArrowCell>
           <ArrowUp size={14} visibility="hidden" />
         </SortArrowCell>
         {getHeaderDisplay(category, timeframe)}
-      </SortingCategory>
+      </HeaderCellWrapper>
     )
   }
-  return <span>{getHeaderDisplay(category, timeframe)}</span>
+  return <HeaderCellWrapper>{getHeaderDisplay(category, timeframe)}</HeaderCellWrapper>
 }
 
 /* Token Row: skeleton row component */
@@ -375,8 +375,6 @@ export function TokenRow({
 
 /* Header Row: top header row component for table */
 export function HeaderRow() {
-  /* TODO: access which sort category used and timeframe used (temporarily hardcoded values) */
-
   return (
     <TokenRow
       address={null}
