@@ -202,7 +202,8 @@ function TransactionSummaryItem({
           bg="backgroundContainer"
           gap="xs"
           justifyContent="space-between"
-          padding="md">
+          px="md"
+          py="sm">
           <Flex row shrink alignItems="center" flexGrow={1} gap="xs" justifyContent="flex-start">
             {icon && (
               <Flex centered height={TXN_HISTORY_ICON_SIZE} width={TXN_HISTORY_ICON_SIZE}>

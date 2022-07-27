@@ -115,7 +115,7 @@ export function ProfileScreen({ navigation }: Props) {
         </Flex>
       )}
       {hasTransactions ? (
-        <Flex px="sm">
+        <Flex pb="lg" px="sm">
           <TransactionList readonly={false} transactions={transactions} />
         </Flex>
       ) : (

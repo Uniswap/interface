@@ -21,9 +21,15 @@ export function TransactionsScreen({
   return (
     <HeaderScrollScreen
       contentHeader={
-        <Flex>
+        <Flex pt="md">
           <BackHeader>
-            <AddressDisplay address={owner} color="textSecondary" size={16} variant="subhead" />
+            <AddressDisplay
+              address={owner}
+              color="textSecondary"
+              horizontalGap="xs"
+              size={16}
+              variant="subhead"
+            />
           </BackHeader>
           <Text variant="headlineSmall">{t('Transactions')}</Text>
         </Flex>
@@ -38,7 +44,9 @@ export function TransactionsScreen({
           </Flex>
         </BackHeader>
       }>
-      <TransactionList readonly={true} transactions={transactions} />
+      <Flex pb="lg" px="sm">
+        <TransactionList readonly={true} transactions={transactions} />
+      </Flex>
     </HeaderScrollScreen>
   )
 }

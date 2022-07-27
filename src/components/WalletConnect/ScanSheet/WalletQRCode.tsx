@@ -17,6 +17,8 @@ import { Unicon } from 'src/components/unicons/Unicon'
 import { deriveUniconAttributeIndices, getUniconAttributeData } from 'src/components/unicons/utils'
 import { logger } from 'src/utils/logger'
 
+const QR_CODE_SIZE = 220
+
 interface Props {
   address?: Address
 }
@@ -66,7 +68,7 @@ export function WalletQRCode({ address }: Props) {
           showAddressAsSubtitle={true}
           showUnicon={false}
           variant="headlineSmall"
-          verticalGap="md"
+          verticalGap="xxs"
         />
         <Flex
           centered
@@ -79,11 +81,12 @@ export function WalletQRCode({ address }: Props) {
             color={theme.colors.accentTextDarkSecondary}
             enableLinearGradient={true}
             linearGradient={[gradientData.start, gradientData.end]}
-            size={220}
+            size={QR_CODE_SIZE}
             value={address}
           />
           {/* TODO: Once unicons are hosted as svgs then pass them as a prop into the QRCode component rather than overlaying the Unicon here. */}
           <Flex
+            alignItems="center"
             backgroundColor="backgroundBackdrop"
             borderRadius="full"
             padding="sm"

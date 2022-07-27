@@ -3,8 +3,8 @@ import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
 import { ExploreStackParamList } from 'src/app/navigation/types'
-import EyeIcon from 'src/assets/icons/eye.svg'
 import EyeOffIcon from 'src/assets/icons/eye-off.svg'
+import EyeIcon from 'src/assets/icons/eye.svg'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
@@ -13,12 +13,10 @@ import { BlueToDarkRadial } from 'src/components/gradients/BlueToPinkRadial'
 import { GradientBackground } from 'src/components/gradients/GradientBackground'
 import { PortfolioNFTsSection } from 'src/components/home/PortfolioNFTsSection'
 import { PortfolioTokensSection } from 'src/components/home/PortfolioTokensSection'
-import { Box, Flex } from 'src/components/layout'
+import { Flex } from 'src/components/layout'
 import { BackHeader } from 'src/components/layout/BackHeader'
-import { Screen } from 'src/components/layout/Screen'
 import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollScreen'
 import { VirtualizedList } from 'src/components/layout/VirtualizedList'
-import { Text } from 'src/components/Text'
 import { TransactionListSection } from 'src/components/TransactionList/TransactionListSection'
 import { selectWatchedAddressSet } from 'src/features/favorites/selectors'
 import { addWatchedAddress, removeWatchedAddress } from 'src/features/favorites/slice'
@@ -59,15 +57,6 @@ export function UserScreen({
     }
   }, [address])
 
-  if (!address)
-    return (
-      <Screen>
-        <Box mx="md" my="sm">
-          <Text>todo blank state</Text>
-        </Box>
-      </Screen>
-    )
-
   return (
     <HeaderScrollScreen
       background={
@@ -76,7 +65,7 @@ export function UserScreen({
         </GradientBackground>
       }
       contentHeader={
-        <Flex gap="md">
+        <Flex gap="md" pt="lg">
           <BackButton showButtonLabel />
           <AddressDisplay
             address={address}

@@ -5,7 +5,6 @@ import CopyIcon from 'src/assets/icons/copy-sheets.svg'
 import { Button } from 'src/components/buttons/Button'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
-import { Unicon } from 'src/components/unicons/Unicon'
 import { UniconWithVisibilityBadge } from 'src/components/unicons/UniconWithVisibilityBadge'
 import { ElementName } from 'src/features/telemetry/constants'
 import { useDisplayName } from 'src/features/wallet/hooks'
@@ -22,6 +21,7 @@ type AddressDisplayProps = {
   captionVariant?: keyof Theme['textVariants']
   captionColor?: keyof Theme['colors']
   verticalGap?: keyof Theme['spacing']
+  horizontalGap?: keyof Theme['spacing']
   showNotificationBadge?: boolean
   direction?: 'row' | 'column'
   showCopy?: boolean
@@ -38,6 +38,7 @@ export function AddressDisplay({
   captionVariant = 'caption',
   captionColor = 'textSecondary',
   verticalGap = 'xxs',
+  horizontalGap = 'sm',
   showAddressAsSubtitle,
   direction = 'row',
   showCopy = false,
@@ -61,11 +62,9 @@ export function AddressDisplay({
   const captionSize = theme.textVariants[captionVariant].fontSize
 
   return (
-    <Flex alignItems="center" flexDirection={direction} gap="sm" {...rest}>
-      {showUnicon ? (
+    <Flex alignItems="center" flexDirection={direction} gap={horizontalGap} {...rest}>
+      {showUnicon && (
         <UniconWithVisibilityBadge address={address} showViewOnlyBadge={showViewOnly} size={size} />
-      ) : (
-        <Unicon address={address} size={size} />
       )}
       <Flex
         alignItems={!showUnicon || direction === 'column' ? 'center' : 'flex-start'}
