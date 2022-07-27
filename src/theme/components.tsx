@@ -273,6 +273,7 @@ export const Separator = styled.div`
 const ColorsToggle = styled.button<{ updated: boolean }>`
   display: flex;
   position: fixed;
+  z-index: 100;
   left: 16px;
   bottom: 16px;
   border-radius: 12px;
