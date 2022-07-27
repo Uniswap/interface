@@ -6,8 +6,11 @@ import { ListRenderItemInfo, SectionList } from 'react-native'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { SettingsStackParamList, useSettingsStackNavigation } from 'src/app/navigation/types'
 import NotificationIcon from 'src/assets/icons/bell.svg'
+import BriefcaseIcon from 'src/assets/icons/briefcase.svg'
+import CloudIcon from 'src/assets/icons/cloud.svg'
 import EditIcon from 'src/assets/icons/edit.svg'
 import GlobalIcon from 'src/assets/icons/global.svg'
+import PencilIcon from 'src/assets/icons/pencil.svg'
 import TrendingUpIcon from 'src/assets/icons/trending-up.svg'
 import { RemoveAccountModal } from 'src/components/accounts/RemoveAccountModal'
 import { AddressDisplay } from 'src/components/AddressDisplay'
@@ -15,6 +18,7 @@ import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { Switch } from 'src/components/buttons/Switch'
 import { BackHeader } from 'src/components/layout/BackHeader'
 import { Box } from 'src/components/layout/Box'
+import { Flex } from 'src/components/layout/Flex'
 import { Screen } from 'src/components/layout/Screen'
 import {
   SettingsRow,
@@ -23,10 +27,14 @@ import {
   SettingsSectionItemComponent,
 } from 'src/components/Settings/SettingsRow'
 import { Text } from 'src/components/Text'
+import { ElementName } from 'src/features/telemetry/constants'
 import { AccountType } from 'src/features/wallet/accounts/types'
 import { EditAccountAction, editAccountActions } from 'src/features/wallet/editAccountSaga'
 import { useAccounts } from 'src/features/wallet/hooks'
-import { selectHideSmallBalances } from 'src/features/wallet/selectors'
+import {
+  selectHideSmallBalances,
+  selectSortedMnemonicAccounts,
+} from 'src/features/wallet/selectors'
 import { setShowSmallBalances } from 'src/features/wallet/walletSlice'
 import { opacify } from 'src/utils/colors'
 import { Screens } from './Screens'
@@ -42,10 +50,15 @@ export function SettingsWallet({
   const { t } = useTranslation()
   const theme = useTheme()
   const addressToAccount = useAccounts()
+  const mnemonicWallets = useAppSelector(selectSortedMnemonicAccounts)
   const currentAccount = addressToAccount[address]
   const readonly = currentAccount.type === AccountType.Readonly
-  const hasOnlyOneAccount = Object.values(addressToAccount).length === 1
   const navigation = useSettingsStackNavigation()
+
+  // Should not show remove option if we have only one account remaining, or only one seed phrase wallet remaining
+  const shouldHideRemoveOption =
+    Object.values(addressToAccount).length === 1 ||
+    (mnemonicWallets.length === 1 && currentAccount.type === AccountType.Native)
 
   const [notificationsEnabled, setNotificationsEnabled] = useState(false)
   const [showRemoveWalletModal, setShowRemoveWalletModal] = useState(false)
@@ -114,6 +127,45 @@ export function SettingsWallet({
         },
       ],
     },
+    {
+      subTitle: t('Security'),
+      isHidden: readonly,
+      data: [
+        {
+          // TODO: update in following PR to new screen
+          text: t('Recovery phrase'),
+          icon: (
+            <Flex px="xxs">
+              <BriefcaseIcon color={theme.colors.textSecondary} height={22} width={22} />
+            </Flex>
+          ),
+          screenProps: { address },
+          isHidden: readonly,
+        },
+        {
+          // TODO: update in following PR to new screen
+          screenProps: { address },
+          text: t('iCloud backup'),
+          icon: (
+            <Flex px="xxs">
+              <CloudIcon color={theme.colors.textSecondary} height={22} width={22} />
+            </Flex>
+          ),
+          isHidden: readonly,
+        },
+        {
+          // TODO: update in following PR to new screen
+          screenProps: { address },
+          text: t('Manual backup'),
+          icon: (
+            <Flex px="xxs">
+              <PencilIcon color={theme.colors.textSecondary} height={20} width={20} />
+            </Flex>
+          ),
+          isHidden: readonly,
+        },
+      ],
+    },
   ]
 
   const renderItem = ({
@@ -151,16 +203,16 @@ export function SettingsWallet({
           showsVerticalScrollIndicator={false}
         />
       </Box>
-      {!hasOnlyOneAccount && (
-        <PrimaryButton
-          label={t('Remove wallet')}
-          style={{ backgroundColor: opacify(15, theme.colors.accentFailure) }}
-          textColor="accentFailure"
-          width="100%"
-          onPress={() => setShowRemoveWalletModal(true)}
-        />
-      )}
-
+      <PrimaryButton
+        label={t('Remove wallet')}
+        name={ElementName.Remove}
+        style={{ backgroundColor: opacify(15, theme.colors.accentFailure) }}
+        testID={ElementName.Remove}
+        textColor="accentFailure"
+        visible={!shouldHideRemoveOption}
+        width="100%"
+        onPress={() => setShowRemoveWalletModal(true)}
+      />
       {!!showRemoveWalletModal && !!currentAccount && (
         <RemoveAccountModal
           accountType={currentAccount.type}
