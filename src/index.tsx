@@ -58,7 +58,7 @@ if (process.env.REACT_APP_GTM_ID) {
 
 Sentry.init({
   dsn: process.env.REACT_APP_SENTRY_DNS,
-  environment: window.location.href.includes('kyberswap') ? 'production' : 'development',
+  environment: window.location.href.includes('kyberswap.com') ? 'production' : 'development',
 })
 Sentry.configureScope(scope => {
   scope.setTag('request_id', sentryRequestId)
