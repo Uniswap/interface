@@ -69,9 +69,6 @@ const ChartAnimation = styled.div`
     }
   }
 `
-const ChartWrapper = styled.div`
-  width: inherit;
-`
 const TimeSpace = styled.div`
   height: 36px;
 `
@@ -95,27 +92,25 @@ export default function LoadingTokenDetail() {
         <DeltaContainer>
           <br></br>
         </DeltaContainer>
-        <ChartWrapper>
-          <ChartContainer>
-            <ChartAnimation>
-              <svg width="416" height="160" xmlns="http://www.w3.org/2000/svg">
-                <path d="M 0 80 Q 104 10, 208 80 T 416 80" stroke="#2e3138" fill="transparent" strokeWidth="2" />
-              </svg>
-              <svg width="416" height="160" xmlns="http://www.w3.org/2000/svg">
-                <path d="M 0 80 Q 104 10, 208 80 T 416 80" stroke="#2e3138" fill="transparent" strokeWidth="2" />
-              </svg>
-              <svg width="416" height="160" xmlns="http://www.w3.org/2000/svg">
-                <path d="M 0 80 Q 104 10, 208 80 T 416 80" stroke="#2e3138" fill="transparent" strokeWidth="2" />
-              </svg>
-              <svg width="416" height="160" xmlns="http://www.w3.org/2000/svg">
-                <path d="M 0 80 Q 104 10, 208 80 T 416 80" stroke="#2e3138" fill="transparent" strokeWidth="2" />
-              </svg>
-              <svg width="416" height="160" xmlns="http://www.w3.org/2000/svg">
-                <path d="M 0 80 Q 104 10, 208 80 T 416 80" stroke="#2e3138" fill="transparent" strokeWidth="2" />
-              </svg>
-            </ChartAnimation>
-          </ChartContainer>
-        </ChartWrapper>
+        <ChartContainer>
+          <ChartAnimation>
+            <svg width="416" height="160" xmlns="http://www.w3.org/2000/svg">
+              <path d="M 0 80 Q 104 10, 208 80 T 416 80" stroke="#2e3138" fill="transparent" strokeWidth="2" />
+            </svg>
+            <svg width="416" height="160" xmlns="http://www.w3.org/2000/svg">
+              <path d="M 0 80 Q 104 10, 208 80 T 416 80" stroke="#2e3138" fill="transparent" strokeWidth="2" />
+            </svg>
+            <svg width="416" height="160" xmlns="http://www.w3.org/2000/svg">
+              <path d="M 0 80 Q 104 10, 208 80 T 416 80" stroke="#2e3138" fill="transparent" strokeWidth="2" />
+            </svg>
+            <svg width="416" height="160" xmlns="http://www.w3.org/2000/svg">
+              <path d="M 0 80 Q 104 10, 208 80 T 416 80" stroke="#2e3138" fill="transparent" strokeWidth="2" />
+            </svg>
+            <svg width="416" height="160" xmlns="http://www.w3.org/2000/svg">
+              <path d="M 0 80 Q 104 10, 208 80 T 416 80" stroke="#2e3138" fill="transparent" strokeWidth="2" />
+            </svg>
+          </ChartAnimation>
+        </ChartContainer>
         <TimeOptionsContainer>
           <TimeSpace></TimeSpace>
         </TimeOptionsContainer>
