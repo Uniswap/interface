@@ -10,6 +10,8 @@ import useAggregatorStats from 'hooks/useAggregatorStats'
 import { useActiveWeb3React } from 'hooks'
 import useTheme from 'hooks/useTheme'
 
+import { extractUniqueDEXes } from '../LiquiditySourcesPanel'
+
 type Props = {
   onClick: () => void
 }
@@ -43,10 +45,12 @@ const LiquiditySourcesSetting: React.FC<Props> = ({ onClick }) => {
     return null
   }
 
-  const numberOfDEXes = Object.keys(data.pools).length
-  if (numberOfDEXes === 0) {
+  const dexIDs = Object.keys(data.pools)
+  if (dexIDs.length === 0) {
     return null
   }
+
+  const numberOfDEXes = extractUniqueDEXes(dexIDs).length
 
   return (
     <Flex

@@ -56,7 +56,6 @@ const BackText = styled.span`
 `
 
 const SettingsPanel: React.FC<Props> = ({ className, onBack, onClickLiquiditySources, onClickGasPriceTracker }) => {
-  
   const theme = useTheme()
 
   const { data: topTrendingSoonTokens } = useTopTrendingSoonTokensInCurrentNetwork()

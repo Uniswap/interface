@@ -7,12 +7,24 @@ import { t } from '@lingui/macro'
 import { useActiveWeb3React } from 'hooks'
 import useDebounce from 'hooks/useDebounce'
 import useAggregatorStats from 'hooks/useAggregatorStats'
-import { dexListConfig } from 'constants/dexes'
+import { DexConfig, dexListConfig } from 'constants/dexes'
 
 import SearchBar from './SearchBar'
 
 type Props = {
   onBack: () => void
+}
+
+export const extractUniqueDEXes = (dexIDs: string[]): DexConfig[] => {
+  const visibleDEXes = dexIDs.map(id => dexListConfig[id]).filter(Boolean)
+
+  // Names of different IDs can be the same
+  const dexConfigByName = visibleDEXes.reduce((acc, dex) => {
+    acc[dex.name] = dex
+    return acc
+  }, {} as Record<string, DexConfig>)
+
+  return Object.values(dexConfigByName)
 }
 
 const BackIconWrapper = styled(ArrowLeft)`
@@ -108,10 +120,7 @@ const LiquiditySourcesPanel: React.FC<Props> = ({ onBack }) => {
     return null
   }
 
-  const visibleDEXes = dexIDs
-    .map(id => dexListConfig[id])
-    .filter(Boolean)
-    .filter(({ name }) => name.toLowerCase().includes(debouncedSearchText))
+  const visibleDEXes = extractUniqueDEXes(dexIDs).filter(({ name }) => name.toLowerCase().includes(debouncedSearchText))
 
   return (
     <Box width="100%">
