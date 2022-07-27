@@ -110,7 +110,7 @@ function Banner({
         : w > 500
         ? KyberSwapTradingCampaignCronosTablet
         : KyberSwapTradingCampaignCronosMobile,
-      link: 'https://kyberswap.com/campaigns?selectedCampaignId=2',
+      link: 'https://kyberswap.com/campaigns?selectedCampaignId=2&networkId=25&utm_source=kyberswap&utm_medium=banner&utm_campaign=cronostradingcontest&utm_content=onsite',
     },
   ]
 
