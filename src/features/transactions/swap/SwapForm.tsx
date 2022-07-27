@@ -154,7 +154,7 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo }: SwapFormProps) {
             </Box>
             <Box zIndex="popover">
               <Box alignItems="center" height={36} style={StyleSheet.absoluteFill}>
-                <Box alignItems="center" position="absolute" top={-24}>
+                <Box alignItems="center" position="absolute" top="-100%">
                   <TransferArrowButton
                     bg={currencies[CurrencyField.OUTPUT] ? 'backgroundAction' : 'backgroundSurface'}
                     disabled={!currencies[CurrencyField.OUTPUT]}
