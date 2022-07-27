@@ -68,7 +68,12 @@ export function WalletQRCode({ address }: Props) {
           variant="headlineSmall"
           verticalGap="md"
         />
-        <Box backgroundColor="backgroundContainer" borderRadius="lg" padding="lg">
+        <Flex
+          centered
+          backgroundColor="backgroundContainer"
+          borderRadius="lg"
+          gap="none"
+          padding="lg">
           <QRCode
             backgroundColor={theme.colors.backgroundContainer}
             color={theme.colors.accentTextDarkSecondary}
@@ -81,13 +86,11 @@ export function WalletQRCode({ address }: Props) {
           <Flex
             backgroundColor="backgroundBackdrop"
             borderRadius="full"
-            left={103}
             padding="sm"
-            position="absolute"
-            top={103}>
+            position="absolute">
             <Unicon address={address} size={24} />
           </Flex>
-        </Box>
+        </Flex>
         <Box flexDirection="row">
           <PrimaryCopyTextButton borderRadius="md" borderWidth={1} copyText={address} />
           <PrimaryButton
