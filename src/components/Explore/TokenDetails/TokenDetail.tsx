@@ -6,7 +6,7 @@ import { checkWarning } from 'constants/tokenWarnings'
 import { useCurrency, useIsUserAddedToken, useToken } from 'hooks/Tokens'
 import { TimePeriod } from 'hooks/useTopTokens'
 import { useAtomValue } from 'jotai/utils'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useState } from 'react'
 import { ArrowDownRight, ArrowLeft, ArrowUpRight, Copy, Heart } from 'react-feather'
 import { Link, useHistory } from 'react-router-dom'
 import styled, { useTheme } from 'styled-components/macro'
@@ -189,13 +189,7 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
   const warning = checkWarning(address)
   const history = useHistory()
   const isUserAddedToken = useIsUserAddedToken(token)
-  const [warningModalOpen, setWarningModalOpen] = useState(false)
-
-  useEffect(() => {
-    if (warning && !isUserAddedToken) {
-      setWarningModalOpen(true)
-    }
-  }, [])
+  const [warningModalOpen, setWarningModalOpen] = useState(!!warning && !isUserAddedToken)
 
   const handleDismissWarning = useCallback(() => {
     setWarningModalOpen(false)
@@ -312,7 +306,7 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
       <TokenSafetyModal
         isOpen={warningModalOpen}
         tokenAddress={address}
-        onCancel={() => (warning?.canProceed ? handleDismissWarning() : history.goBack())}
+        onCancel={history.goBack}
         onContinue={handleDismissWarning}
       />
     </TopArea>

@@ -1,7 +1,3 @@
-// import { Currency, Token } from '@uniswap/sdk-core'
-// import { TokenList } from '@uniswap/token-lists'
-// import usePrevious from 'hooks/usePrevious'
-//import { Trans } from '@lingui/macro'
 import { Trans } from '@lingui/macro'
 import { ButtonPrimary } from 'components/Button'
 import { AutoColumn } from 'components/Column'
@@ -47,13 +43,9 @@ const InfoText = styled(Text)`
   text-align: center;
 `
 
-const LinkContainer = styled.div`
-  margin-top: 24px;
-`
-
 const StyledButton = styled(ButtonPrimary)<{ buttonColor: Color; textColor: Color }>`
-  color: ${({ textColor, theme }) => textColor};
-  background-color: ${({ buttonColor, theme }) => buttonColor};
+  color: ${({ textColor }) => textColor};
+  background-color: ${({ buttonColor }) => buttonColor};
   margin-top: 24px;
   width: 100%;
   :hover {
@@ -146,7 +138,7 @@ const URL = styled(Text)`
   text-overflow: ellipsis;
 `
 
-function EtherscanURL({ tokenAddress }: { tokenAddress: string }) {
+function EtherscanURL({ tokenAddress }: { tokenAddress: string | null | undefined }) {
   const learnMoreURL = 'https://etherscan.io/token/' + tokenAddress
   return (
     <URLWrapper>
@@ -176,13 +168,14 @@ export default function TokenSafety({ tokenAddress, secondTokenAddress, onContin
   const token1Unsupported = !token1Warning?.canProceed
   const token2Unsupported = !token2Warning?.canProceed
 
+  // Logic for only showing the 'unsupported' warning if one is supported and other isn't
   if (token1Warning && (token1Unsupported || !(token2Warning && token2Unsupported))) {
     logos.push(<CurrencyLogo currency={token1} size="48px" />)
-    urls.push(<EtherscanURL tokenAddress={tokenAddress!} />)
+    urls.push(<EtherscanURL tokenAddress={tokenAddress} />)
   }
   if (token2Warning && (token2Unsupported || !(token1Warning && token1Unsupported))) {
     logos.push(<CurrencyLogo currency={token2} size="48px" />)
-    urls.push(<EtherscanURL tokenAddress={secondTokenAddress!} />)
+    urls.push(<EtherscanURL tokenAddress={secondTokenAddress} />)
   }
 
   const plural = logos.length > 1
@@ -204,7 +197,7 @@ export default function TokenSafety({ tokenAddress, secondTokenAddress, onContin
     onContinue()
   }
 
-  const [heading, description] = getWarningCopy(displayWarning, plural)
+  const { heading, description } = getWarningCopy(displayWarning, plural)
 
   return (
     displayWarning && (
@@ -219,7 +212,10 @@ export default function TokenSafety({ tokenAddress, secondTokenAddress, onContin
           <ShortColumn>{heading && <InfoText fontSize="20px">{heading}</InfoText>}</ShortColumn>
           <ShortColumn>
             <InfoText>
-              {description} <b>Learn More</b>
+              {description}{' '}
+              <b>
+                <Trans>Learn More</Trans>
+              </b>
             </InfoText>
           </ShortColumn>
           <LinkColumn>{urls}</LinkColumn>

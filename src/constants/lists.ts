@@ -42,4 +42,4 @@ export const DEFAULT_LIST_OF_LISTS: string[] = [
 ]
 
 // default lists to be 'active' aka searched across
-export const DEFAULT_ACTIVE_LIST_URLS: string[] = [UNI_LIST, UNI_EXTENDED_LIST, GEMINI_LIST]
+export const DEFAULT_ACTIVE_LIST_URLS: string[] = [UNI_LIST, GEMINI_LIST]

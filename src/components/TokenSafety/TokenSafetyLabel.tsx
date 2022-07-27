@@ -1,4 +1,3 @@
-import { Trans } from '@lingui/macro'
 import { WARNING_LEVEL } from 'constants/tokenWarnings'
 import { useTokenWarningColor } from 'hooks/useTokenWarningColor'
 import { ReactNode } from 'react'
@@ -31,9 +30,7 @@ type TokenWarningLabelProps = {
 export default function TokenSafetyLabel({ level, canProceed, children }: TokenWarningLabelProps) {
   return (
     <Label color={useTokenWarningColor(level)}>
-      <Title marginRight="5px">
-        <Trans>{children}</Trans>
-      </Title>
+      <Title marginRight="5px">{children}</Title>
       {canProceed ? <AlertTriangle strokeWidth={2.5} size="14px" /> : <AlertOctagon size="14px" />}
     </Label>
   )

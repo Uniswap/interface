@@ -17,7 +17,6 @@ const Label = styled.div<{ color: Color }>`
 
 const TitleRow = styled.div`
   align-items: center;
-  font-size: 12px;
   font-weight: 700;
   display: inline-flex;
 `
@@ -25,6 +24,7 @@ const TitleRow = styled.div`
 const Title = styled(Text)`
   font-weight: 600;
   font-size: 16px;
+  line-height: 24px;
   margin-left: 7px;
 `
 
@@ -40,21 +40,24 @@ type TokenWarningMessageProps = {
 }
 export default function TokenWarningMessage({ warning, tokenAddress }: TokenWarningMessageProps) {
   const color = useTokenWarningColor(warning.level)
-  const [heading, description] = getWarningCopy(warning)
+  const { heading, description } = getWarningCopy(warning)
 
-  const message = (heading ? heading + '. ' : '') + description
   return (
     <Label color={color}>
       <TitleRow>
         {warning.canProceed ? <AlertTriangle size={'16px'} /> : <AlertOctagon size={'16px'} />}
-        <Title marginLeft="7px">
-          <Trans>{warning.message}</Trans>
-        </Title>
+        <Title marginLeft="7px">{warning.message}</Title>
       </TitleRow>
 
       <DetailsRow>
-        {message}
-        {tokenAddress && <ExternalLink href={'https://etherscan.io/token/' + tokenAddress}> Learn more</ExternalLink>}
+        {heading && [heading, '. ']}
+        {description}
+        {tokenAddress && (
+          <ExternalLink href={'https://etherscan.io/token/' + tokenAddress}>
+            {' '}
+            <Trans>Learn more</Trans>
+          </ExternalLink>
+        )}
       </DetailsRow>
     </Label>
   )

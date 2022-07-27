@@ -39,6 +39,14 @@ const StyledBalanceText = styled(Text)`
   text-overflow: ellipsis;
 `
 
+const CurrencyName = styled(Text)`
+  max-width: 90%;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`
+
 const Tag = styled.div`
   background-color: ${({ theme }) => theme.deprecated_bg3};
   color: ${({ theme }) => theme.deprecated_text2};
@@ -60,7 +68,6 @@ const FixedContentRow = styled.div`
   grid-gap: 16px;
   align-items: center;
 `
-
 function Balance({ balance }: { balance: CurrencyAmount<Currency> }) {
   return <StyledBalanceText title={balance.toExact()}>{balance.toSignificant(4)}</StyledBalanceText>
 }
@@ -153,14 +160,12 @@ function CurrencyRow({
         <CurrencyLogo currency={currency} size={'24px'} />
         <Column>
           <NameContainer>
-            <Text title={currency.name} fontWeight={500}>
-              {currency.name}
-            </Text>
+            <CurrencyName title={currency.name}>{currency.name}</CurrencyName>
             <TokenSafetyIcon warning={warning} />
           </NameContainer>
           <ThemedText.DarkGray ml="0px" fontSize={'12px'} fontWeight={300}>
             {!currency.isNative && !isOnSelectedList && customAdded ? (
-              <Trans>{currency.name} • Added by user</Trans>
+              <Trans>{currency.symbol} • Added by user</Trans>
             ) : (
               currency.symbol
             )}

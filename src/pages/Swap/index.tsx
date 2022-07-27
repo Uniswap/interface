@@ -115,8 +115,6 @@ export default function Swap() {
     [chainId, defaultTokens, urlLoadedTokens]
   )
 
-  console.log(importTokensNotInDefault)
-
   const handleConfirmTokenWarning = useCallback(() => {
     setDismissTokenWarning(true)
   }, [])

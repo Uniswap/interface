@@ -1,3 +1,5 @@
+import { Trans } from '@lingui/macro'
+
 import WarningCache, { TOKEN_LIST_TYPES } from './TokenSafetyLookupTable'
 
 export enum WARNING_LEVEL {
@@ -8,24 +10,30 @@ export enum WARNING_LEVEL {
 
 export function getWarningCopy(warning: Warning | null, plural = false) {
   if (!warning) {
-    return [null, null]
+    return { heading: null, description: null }
   }
   if (warning.canProceed) {
     if (plural) {
-      return ["These tokens aren't verified", 'Please do your own research before trading.']
+      return {
+        heading: <Trans>{"These tokens aren't verified"}</Trans>,
+        description: <Trans>{'Please do your own research before trading'}.</Trans>,
+      }
     }
-    return ["This token isn't verified", 'Please do your own research before trading.']
+    return {
+      heading: <Trans>{"This token isn't verified"}</Trans>,
+      description: <Trans>{'Please do your own research before trading.'}</Trans>,
+    }
   } else {
     if (plural) {
-      return [null, "You can't trade these tokens using the Uniswap App."]
+      return { heading: null, description: <Trans>{"You can't trade these tokens using the Uniswap App."}</Trans> }
     }
-    return [null, "You can't trade this token using the Uniswap App."]
+    return { heading: null, description: <Trans>{"You can't trade this token using the Uniswap App."}</Trans> }
   }
 }
 
 export type Warning = {
   level: WARNING_LEVEL
-  message: string
+  message: JSX.Element
   /* canProceed determines whether triangle/octagon alert icon is used, and
     whether this token is supported/able to be traded */
   canProceed: boolean
@@ -33,19 +41,19 @@ export type Warning = {
 
 const MediumWarning: Warning = {
   level: WARNING_LEVEL.MEDIUM,
-  message: 'Caution',
+  message: <Trans>Caution</Trans>,
   canProceed: true,
 }
 
 const StrongWarning: Warning = {
   level: WARNING_LEVEL.UNKNOWN,
-  message: 'Warning',
+  message: <Trans>Warning</Trans>,
   canProceed: true,
 }
 
 const BlockedWarning: Warning = {
   level: WARNING_LEVEL.BLOCKED,
-  message: 'Not Available',
+  message: <Trans>Not Available</Trans>,
   canProceed: false,
 }
 

@@ -73,7 +73,7 @@ export default function CurrencySearchModal({
   )
 
   // change min height if not searching
-  const minHeight = modalView === CurrencyModalView.importToken || modalView === CurrencyModalView.importList ? 40 : 80
+  let minHeight: number | undefined = 80
   let content = null
   switch (modalView) {
     case CurrencyModalView.search:
@@ -95,23 +95,18 @@ export default function CurrencySearchModal({
       break
     case CurrencyModalView.importToken:
       if (importToken) {
+        minHeight = undefined
         content = (
           <TokenSafety
             tokenAddress={importToken.address}
             onContinue={() => handleCurrencySelect(importToken)}
             onCancel={handleBackImport}
           />
-          // <ImportToken
-          //   tokens={[importToken]}
-          //   onDismiss={onDismiss}
-          //   list={importToken instanceof WrappedTokenInfo ? importToken.list : undefined}
-          //   onBack={handleBackImport}
-          //   handleCurrencySelect={handleCurrencySelect}
-          // />
         )
       }
       break
     case CurrencyModalView.importList:
+      minHeight = 40
       if (importList && listURL) {
         content = <ImportList list={importList} listURL={listURL} onDismiss={onDismiss} setModalView={setModalView} />
       }

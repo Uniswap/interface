@@ -17,7 +17,7 @@ export default function TokenSafetyModal({
   onCancel,
 }: TokenSafetyModalProps) {
   return (
-    <Modal isOpen={isOpen} onDismiss={onCancel} maxHeight={80} minHeight={40}>
+    <Modal isOpen={isOpen} onDismiss={onCancel}>
       <TokenSafety
         tokenAddress={tokenAddress}
         secondTokenAddress={secondTokenAddress}
