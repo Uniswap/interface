@@ -14,15 +14,9 @@ export async function quickOnboarding() {
   // enter address / eth
   await element(by.id('import_account_form/input')).typeText(Accounts.managed.seedPhrase)
   await sleep(500)
-  await element(by.id(ElementName.Submit)).tap()
-
-  // @TODO: update with wallet selection screen once e2e tests are updated.
-
-  // skip nickname
   await element(by.id(ElementName.Next)).tap()
 
-  // Choose a color
-  await element(by.id(ElementName.SelectColor + '-' + '#FC72FF')).tap()
+  await element(by.id(ElementName.WalletCard + '-1')).tap()
   await element(by.id(ElementName.Next)).tap()
 
   // skip notifs

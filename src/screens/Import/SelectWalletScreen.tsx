@@ -10,6 +10,7 @@ import { Flex } from 'src/components/layout'
 import { importAccountSagaName } from 'src/features/import/importAccountSaga'
 import WalletPreviewCard from 'src/features/import/WalletPreviewCard'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
+import { ElementName } from 'src/features/telemetry/constants'
 import { AccountType, NativeAccount } from 'src/features/wallet/accounts/types'
 import { EditAccountAction, editAccountActions } from 'src/features/wallet/editAccountSaga'
 import { usePendingAccounts } from 'src/features/wallet/hooks'
@@ -72,12 +73,14 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props) {
       ) : (
         <ScrollView>
           <Flex gap="sm">
-            {addresses.map((a) => {
+            {addresses.map((a, i) => {
               return (
                 <WalletPreviewCard
                   key={a}
                   address={a}
+                  name={ElementName.WalletCard}
                   selected={selectedAddresses.includes(a)}
+                  testID={`${ElementName.WalletCard}-${i + 1}`}
                   onSelect={onPress}
                 />
               )
@@ -88,6 +91,8 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props) {
       <PrimaryButton
         disabled={selectedAddresses.length === 0}
         label={t('Next')}
+        name={ElementName.Next}
+        testID={ElementName.Next}
         variant="onboard"
         onPress={onSubmit}
       />

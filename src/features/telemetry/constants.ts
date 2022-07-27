@@ -135,6 +135,7 @@ export const enum ElementName {
   WCDappSwitchAccount = 'wc-dapp-switch-account',
   WCOpenDapp = 'wc-open-dapp',
   WCViewDappConnections = 'wc-view-dapp-connections',
+  WalletCard = 'wallet-card',
   WalletConnectScan = 'wallet-connect-scan',
   WalletSettings = 'WalletSettings',
   Wrap = 'wrap',

@@ -10,6 +10,7 @@ import { GenericImportForm } from 'src/features/import/GenericImportForm'
 import { importAccountActions, IMPORT_WALLET_AMOUNT } from 'src/features/import/importAccountSaga'
 import { ImportAccountType } from 'src/features/import/types'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
+import { ElementName } from 'src/features/telemetry/constants'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { isValidMnemonic, isValidWord } from 'src/utils/mnemonics'
 import { normalizeTextInput } from 'src/utils/string'
@@ -81,6 +82,8 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props) 
       <PrimaryButton
         disabled={!validWord}
         label={t('Continue')}
+        name={ElementName.Next}
+        testID={ElementName.Next}
         variant="onboard"
         onPress={onSubmit}
       />

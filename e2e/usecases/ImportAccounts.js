@@ -7,17 +7,20 @@ export function ImportAccounts() {
   it('creates a readonly account', async () => {
     await element(by.id(ElementName.Manage)).tap()
     await element(by.id(ElementName.ImportAccount)).tap()
+    await element(by.id(ElementName.AddViewOnlyWallet)).tap()
 
     // enter address / eth
     await element(by.id('import_account_form/input')).typeText(Accounts.readonly.address)
     await sleep(500)
-    await element(by.id(ElementName.Submit)).tap()
+    await element(by.id(ElementName.Next)).tap()
 
     await device.matchFace()
 
-    // enter account name
-    await element(by.id('import_account_form/input')).typeText(Accounts.readonly.name)
-    await element(by.id(ElementName.Submit)).tap()
+    // skip notifs
+    await element(by.id(ElementName.Skip)).tap()
+
+    // Outro
+    await element(by.id(ElementName.Next)).tap()
 
     // Wait for import saga to complete
     await sleep(500)
@@ -25,26 +28,22 @@ export function ImportAccounts() {
     await expect(element(by.id(`account_item/${Accounts.readonly.address}`))).toExist()
   })
 
-  it('creates a managed account', async () => {
+  it('creates a new managed account', async () => {
     await element(by.id(ElementName.Manage)).tap()
     await element(by.id(ElementName.ImportAccount)).tap()
+    await element(by.id(ElementName.CreateAccount)).tap()
 
-    // enter address / eth
-    await element(by.id('import_account_form/input')).typeText(Accounts.managed2.seedPhrase)
-    await sleep(500)
-    await element(by.id(ElementName.Submit)).tap()
+    // skip nickname
+    await element(by.id(ElementName.Next)).tap()
 
-    // @TODO: update with wallet selection screen once e2e tests are updated.
+    // Choose a color
+    await element(by.id(ElementName.SelectColor + '-' + '#FC72FF')).tap()
+    await element(by.id(ElementName.Next)).tap()
 
-    await device.matchFace()
+    // skip notifs
+    await element(by.id(ElementName.Skip)).tap()
 
-    // enter account name
-    await element(by.id('import_account_form/input')).typeText(Accounts.managed2.name)
-    await element(by.id(ElementName.Submit)).tap()
-
-    // Wait for import saga to complete
-    await sleep(500)
-
-    await expect(element(by.id(`account_item/${Accounts.managed2.address}`))).toExist()
+    // Outro
+    await element(by.id(ElementName.Next)).tap()
   })
 }

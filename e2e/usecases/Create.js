@@ -1,6 +1,6 @@
 import { by, device, element, expect } from 'detox'
-import { sleep } from '../../src/utils/timing'
 import { ElementName } from '../../src/features/telemetry/constants'
+import { sleep } from '../../src/utils/timing'
 import { Accounts } from '../utils/fixtures'
 
 export function Create() {
@@ -24,24 +24,13 @@ export function Create() {
     await element(by.id(ElementName.AddManualBackup)).tap()
     await element(by.id(ElementName.Next)).tap()
     await element(by.id(ElementName.Confirm)).tap()
+
     // view native mnemonic
     await element(by.id(ElementName.Next)).tap()
     // finish viewing native mnemonic
-    await element(by.id(ElementName.Confirm)).tap()
+    await element(by.id(ElementName.Next)).tap()
 
     await sleep(1000)
-
-    // iCloud Backup
-    await element(by.id(ElementName.AddiCloudBackup)).tap()
-
-    // enter pin
-    await repeatedTap(6, 'decimal-pad-1')
-    // failure
-    await repeatedTap(6, 'decimal-pad-9')
-    // valid
-    await repeatedTap(6, 'decimal-pad-1')
-
-    await element(by.id(ElementName.Next)).tap()
 
     // Push notifications
     await element(by.id(ElementName.Enable)).tap()
@@ -57,11 +46,4 @@ export function Create() {
       element(by.id(`address-display/name/${Accounts.managed.name}`)).atIndex(0)
     ).toBeVisible()
   })
-}
-
-async function repeatedTap(to, id) {
-  let counter = 0
-  while (counter++ < to) {
-    await element(by.id(id)).tap()
-  }
 }

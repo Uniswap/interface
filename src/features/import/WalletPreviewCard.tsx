@@ -10,9 +10,11 @@ interface Props {
   address: string
   selected: boolean
   onSelect: (address: string) => void
+  name?: string
+  testID?: string
 }
 
-export default function WalletPreviewCard({ address, selected, onSelect }: Props) {
+export default function WalletPreviewCard({ address, selected, onSelect, ...rest }: Props) {
   const chainIds = useActiveChainIds()
   const { balances } = useAllBalancesByChainId(address, chainIds)
 
@@ -23,7 +25,8 @@ export default function WalletPreviewCard({ address, selected, onSelect }: Props
       borderRadius="lg"
       borderWidth={1}
       p="md"
-      onPress={() => onSelect(address)}>
+      onPress={() => onSelect(address)}
+      {...rest}>
       <Flex row alignItems="center" justifyContent="space-between">
         <AddressDisplay address={address} variant="bodySmall" />
         <TotalBalance balances={balances} variant="bodySmall" />

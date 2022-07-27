@@ -14,6 +14,7 @@ import { GenericImportForm } from 'src/features/import/GenericImportForm'
 import { importAccountActions } from 'src/features/import/importAccountSaga'
 import { ImportAccountType } from 'src/features/import/types'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
+import { ElementName } from 'src/features/telemetry/constants'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { isValidAddress } from 'src/utils/addresses'
 import { normalizeTextInput } from 'src/utils/string'
@@ -90,7 +91,14 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props) {
           onSubmit={() => Keyboard.dismiss()}
         />
       </Flex>
-      <PrimaryButton disabled={!isValid} label={t('Next')} variant="onboard" onPress={onSubmit} />
+      <PrimaryButton
+        disabled={!isValid}
+        label={t('Next')}
+        name={ElementName.Next}
+        testID={ElementName.Next}
+        variant="onboard"
+        onPress={onSubmit}
+      />
     </OnboardingScreen>
   )
 }

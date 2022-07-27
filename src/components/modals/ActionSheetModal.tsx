@@ -46,6 +46,7 @@ export function ActionSheetModalContent(props: ActionSheetModalContentProps) {
                 <Button
                   key={key}
                   name={key}
+                  testID={key}
                   onPress={() => {
                     selectionAsync()
                     onPress()
