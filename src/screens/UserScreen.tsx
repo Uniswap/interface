@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
 import { ExploreStackParamList } from 'src/app/navigation/types'
 import EyeIcon from 'src/assets/icons/eye.svg'
+import EyeOffIcon from 'src/assets/icons/eye-off.svg'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
@@ -106,7 +107,16 @@ export function UserScreen({
             <PrimaryButton
               borderRadius="lg"
               icon={
-                <EyeIcon height={20} stroke={theme.colors.textPrimary} strokeWidth={2} width={20} />
+                isWatching ? (
+                  <EyeOffIcon color={theme.colors.textPrimary} height={20} width={20} />
+                ) : (
+                  <EyeIcon
+                    color={theme.colors.textPrimary}
+                    height={20}
+                    strokeWidth={2}
+                    width={20}
+                  />
+                )
               }
               label={isWatching ? t('Unwatch') : t('Watch')}
               px="lg"
