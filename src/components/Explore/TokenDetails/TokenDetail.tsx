@@ -3,6 +3,7 @@ import CurrencyLogo from 'components/CurrencyLogo'
 import { useCurrency, useToken } from 'hooks/Tokens'
 import { TimePeriod } from 'hooks/useTopTokens'
 import { useAtomValue } from 'jotai/utils'
+import { darken } from 'polished'
 import { useState } from 'react'
 import { ArrowDownRight, ArrowLeft, ArrowUpRight, Copy, Heart } from 'react-feather'
 import { Link } from 'react-router-dom'
@@ -70,7 +71,7 @@ const ContractAddress = styled.button`
   cursor: pointer;
 
   &:hover {
-    color: ${({ theme }) => theme.textSecondary};
+    color: ${({ theme }) => darken(0.1, theme.textPrimary)};
   }
 `
 export const ContractAddressSection = styled.div`
@@ -218,8 +219,8 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
             <ClickFavorited onClick={toggleFavorite}>
               <Heart
                 size={15}
-                color={isFavorited ? theme.deprecated_primary1 : theme.deprecated_text2}
-                fill={isFavorited ? theme.deprecated_primary1 : 'transparent'}
+                color={isFavorited ? theme.accentAction : theme.textSecondary}
+                fill={isFavorited ? theme.accentAction : theme.none}
               />
             </ClickFavorited>
           </TokenActions>
@@ -230,9 +231,9 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
           {tokenDelta}%
           <ArrowCell>
             {isPositive ? (
-              <ArrowUpRight size={16} color={theme.deprecated_green1} />
+              <ArrowUpRight size={16} color={theme.accentSuccess} />
             ) : (
-              <ArrowDownRight size={16} color={theme.deprecated_red1} />
+              <ArrowDownRight size={16} color={theme.accentFailure} />
             )}
           </ArrowCell>
         </DeltaContainer>
@@ -286,7 +287,7 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
           <ContractAddress onClick={() => navigator.clipboard.writeText(address)}>
             <FullAddress>{address}</FullAddress>
             <TruncatedAddress>{truncatedTokenAddress}</TruncatedAddress>
-            <Copy size={13} color={theme.deprecated_text2} />
+            <Copy size={13} color={theme.textSecondary} />
           </ContractAddress>
         </Contract>
       </ContractAddressSection>
