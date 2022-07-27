@@ -2,7 +2,7 @@ import { createReducer } from '@reduxjs/toolkit'
 
 import { Farm } from 'state/farms/types'
 import { setFarmsData, setLoading, setShowConfirm, setAttemptingTxn, setTxHash, setYieldPoolsError } from './actions'
-import * as Sentry from '@sentry/react'
+import { reportException } from 'utils/sentry'
 export interface FarmsState {
   readonly data: { [key: string]: Farm[] }
   readonly loading: boolean
@@ -45,7 +45,7 @@ export default createReducer<FarmsState>(initialState, builder =>
       state.txHash = txHash
     })
     .addCase(setYieldPoolsError, (state, { payload: error }) => {
-      if (error) Sentry.captureException(error)
+      if (error) reportException(error)
       return {
         ...state,
         error: error ? error?.message : '',

@@ -246,7 +246,10 @@ export class Aggregator {
         )
       } catch (e) {
         console.error(e)
-        reportException(e)
+        // ignore aborted request error
+        if (!e?.message?.includes('Fetch is aborted') && !e?.message?.includes('The user aborted a request')) {
+          reportException(e)
+        }
       }
     }
 

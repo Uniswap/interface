@@ -62,7 +62,7 @@ import {
 import { nativeOnChain } from 'constants/tokens'
 import JSBI from 'jsbi'
 import { NETWORKS_INFO } from 'constants/networks'
-import * as Sentry from '@sentry/react'
+import { reportException } from 'utils/sentry'
 
 export default function TokenPair({
   currencyIdA,
@@ -395,7 +395,7 @@ export default function TokenPair({
         })
         .catch((err: Error) => {
           setAttemptingTxn(false)
-          Sentry.captureException(err)
+          reportException(err)
           // we only care if the error is something _other_ than the user rejected the tx
           if ((err as any)?.code !== 4001) {
             console.error(err)
