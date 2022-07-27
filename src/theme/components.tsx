@@ -39,7 +39,7 @@ export const IconWrapper = styled.div<{ stroke?: string; size?: string; marginRi
   margin-right: ${({ marginRight }) => marginRight ?? 0};
   margin-left: ${({ marginLeft }) => marginLeft ?? 0};
   & > * {
-    stroke: ${({ theme, stroke }) => stroke ?? theme.deprecated_blue1};
+    stroke: ${({ theme, stroke }) => stroke ?? theme.accentActive};
   }
 `
 
@@ -71,7 +71,7 @@ export const LinkStyledButton = styled.button<{ disabled?: boolean }>`
 export const StyledInternalLink = styled(Link)`
   text-decoration: none;
   cursor: pointer;
-  color: ${({ theme }) => theme.deprecated_primary1};
+  color: ${({ theme }) => theme.accentAction};
   font-weight: 500;
 
   :hover {
@@ -91,7 +91,7 @@ export const StyledInternalLink = styled(Link)`
 const StyledLink = styled.a`
   text-decoration: none;
   cursor: pointer;
-  color: ${({ theme }) => theme.deprecated_primary1};
+  color: ${({ theme }) => theme.accentAction};
   font-weight: 500;
 
   :hover {
@@ -160,17 +160,17 @@ const IconStyle = css`
 
 const LinkIcon = styled(LinkIconFeather)`
   ${IconStyle}
-  stroke: ${({ theme }) => theme.deprecated_blue1};
+  stroke: ${({ theme }) => theme.accentAction};
 `
 
 const CopyIcon = styled(Copy)`
   ${IconStyle}
-  stroke: ${({ theme }) => theme.deprecated_blue1};
+  stroke: ${({ theme }) => theme.accentAction};
 `
 
 const CopiedIcon = styled(CheckSquare)`
   ${IconStyle}
-  stroke: ${({ theme }) => theme.deprecated_blue1};
+  stroke: ${({ theme }) => theme.accentAction};
 `
 
 export const TrashIcon = styled(Trash)`

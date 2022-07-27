@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { Warning } from 'constants/tokenWarnings'
+import { getWarningCopy, Warning } from 'constants/tokenWarnings'
 import { useTokenWarningColor } from 'hooks/useTokenWarningColor'
 import { AlertOctagon, AlertTriangle } from 'react-feather'
 import { Text } from 'rebass'
@@ -40,6 +40,9 @@ type TokenWarningMessageProps = {
 }
 export default function TokenWarningMessage({ warning, tokenAddress }: TokenWarningMessageProps) {
   const color = useTokenWarningColor(warning.level)
+  const [heading, description] = getWarningCopy(warning)
+
+  const message = (heading ? heading + '. ' : '') + description
   return (
     <Label color={color}>
       <TitleRow>
@@ -50,7 +53,7 @@ export default function TokenWarningMessage({ warning, tokenAddress }: TokenWarn
       </TitleRow>
 
       <DetailsRow>
-        {`${warning.heading}. ${warning.description} `}{' '}
+        {message}
         {tokenAddress && <ExternalLink href={'https://etherscan.io/token/' + tokenAddress}>Learn more</ExternalLink>}
       </DetailsRow>
     </Label>

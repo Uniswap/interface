@@ -1,18 +1,18 @@
-import { SAFETY_WARNING } from 'constants/tokenWarnings'
+import { WARNING_LEVEL } from 'constants/tokenWarnings'
 import { useEffect, useState } from 'react'
 import { useTheme } from 'styled-components/macro'
 
-export const useTokenWarningColor = (level: SAFETY_WARNING) => {
+export const useTokenWarningColor = (level: WARNING_LEVEL) => {
   const [color, setColor] = useState('')
   const theme = useTheme()
 
   useEffect(() => {
     switch (level) {
-      case SAFETY_WARNING.MEDIUM:
+      case WARNING_LEVEL.MEDIUM:
         return setColor(theme.accentWarning)
-      case SAFETY_WARNING.UNKNOWN:
+      case WARNING_LEVEL.UNKNOWN:
         return setColor(theme.accentFailure)
-      case SAFETY_WARNING.BLOCKED:
+      case WARNING_LEVEL.BLOCKED:
         return setColor(theme.textSecondary)
     }
   }, [level, theme])

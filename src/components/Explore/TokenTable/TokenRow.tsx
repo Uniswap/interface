@@ -1,12 +1,12 @@
 import { Trans } from '@lingui/macro'
 import CurrencyLogo from 'components/CurrencyLogo'
-import ExploreTokenWarningModal from 'components/TokenSafety/TokenSafetyModal'
+import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import { checkWarning, Warning } from 'constants/tokenWarnings'
-import { useCurrency, useToken } from 'hooks/Tokens'
+import { useCurrency, useIsUserAddedToken, useToken } from 'hooks/Tokens'
 import useTheme from 'hooks/useTheme'
 import { TimePeriod, TokenData } from 'hooks/useTopTokens'
 import { useAtom } from 'jotai'
-import { darken } from 'polished'
+import { useAtomValue } from 'jotai/utils'
 import { ReactNode, useCallback, useState } from 'react'
 import { ArrowDown, ArrowDownRight, ArrowUp, ArrowUpRight, Heart } from 'react-feather'
 import { useHistory } from 'react-router-dom'
@@ -19,21 +19,17 @@ import {
   MEDIUM_MEDIA_BREAKPOINT,
   MOBILE_MEDIA_BREAKPOINT,
   SMALL_MEDIA_BREAKPOINT,
-} from './constants'
-import { favoritesAtom, useToggleFavorite } from './state'
+} from '../constants'
+import {
+  favoritesAtom,
+  filterTimeAtom,
+  sortCategoryAtom,
+  sortDirectionAtom,
+  useSetSortCategory,
+  useToggleFavorite,
+} from '../state'
+import { Category, SortDirection } from '../types'
 import { TIME_DISPLAYS } from './TimeSelector'
-
-enum Category {
-  percent_change = '% Change',
-  market_cap = 'Market Cap',
-  price = 'Price',
-  volume = 'Volume',
-}
-enum SortDirection {
-  Increasing = 'Increasing',
-  Decreasing = 'Decreasing',
-}
-const SORT_CATEGORIES = Object.values(Category)
 
 const ArrowCell = styled.div`
   padding-left: 2px;
@@ -83,11 +79,10 @@ const StyledTokenRow = styled.div`
   }
 
   @media only screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
-    grid-template-columns: 1fr 12fr 6fr;
-    width: fit-content;
+    grid-template-columns: 1fr 1fr;
     min-width: unset;
     border-bottom: 0.5px solid ${({ theme }) => theme.backgroundContainer};
-    padding: 0px;
+    padding: 0px 12px;
 
     :last-of-type {
       border-bottom: none;
@@ -108,12 +103,7 @@ const ClickableName = styled.div`
   gap: 8px;
   text-decoration: none;
   color: ${({ theme }) => theme.textPrimary};
-  cursor: pointer;
-
-  &:hover,
-  &:focus {
-    color: ${({ theme }) => darken(0.1, theme.textPrimary)};
-  }
+  align-items: center;
 `
 const FavoriteCell = styled(Cell)`
   min-width: 40px;
@@ -144,7 +134,8 @@ const StyledHeaderRow = styled(StyledTokenRow)`
   }
 
   @media only screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
-    display: none;
+    padding: 0px 12px;
+    justify-content: space-between;
   }
 `
 const ListNumberCell = styled(Cell)`
@@ -152,9 +143,7 @@ const ListNumberCell = styled(Cell)`
   min-width: 32px;
 
   @media only screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
-    font-size: 12px;
-    justify-content: flex-start;
-    min-width: 20px;
+    display: none;
   }
 `
 const MarketCapCell = styled(Cell)<{ sortable: boolean }>`
@@ -177,7 +166,6 @@ const NameCell = styled(Cell)`
   gap: 8px;
 
   @media only screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
-    min-width: fit-content;
     padding-right: 8px;
   }
 `
@@ -200,6 +188,7 @@ const PercentChangeInfoCell = styled(Cell)`
 
   @media only screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
     display: flex;
+    justify-content: flex-end;
     color: ${({ theme }) => theme.textSecondary};
     font-size: 12px;
     line-height: 16px;
@@ -210,20 +199,17 @@ const PriceCell = styled(Cell)<{ sortable: boolean }>`
   min-width: 80px;
   padding-right: 4px;
 
-  @media only screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
-    min-width: max-content;
-  }
-
   &:hover {
     background-color: ${({ theme, sortable }) => sortable && theme.backgroundContainer};
   }
 `
 const PriceInfoCell = styled(Cell)`
   justify-content: flex-end;
-  min-width: max-content;
+  flex: 1;
 
   @media only screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
     flex-direction: column;
+    align-items: flex-end;
   }
 `
 const SortArrowCell = styled(Cell)`
@@ -246,11 +232,15 @@ const SparkLineCell = styled(Cell)`
     display: none;
   }
 `
-const SparkLineImg = styled(Cell)`
+const SparkLineImg = styled(Cell)<{ isPositive: boolean }>`
   max-width: 124px;
   max-height: 28px;
   flex-direction: column;
   transform: scale(1.2);
+
+  polyline {
+    stroke: ${({ theme, isPositive }) => (isPositive ? theme.accentSuccess : theme.accentFailure)};
+  }
 `
 const TokenInfoCell = styled(Cell)`
   gap: 8px;
@@ -327,23 +317,22 @@ function getHeaderDisplay(category: string, timeframe: string): string {
 /* Get singular header cell for header row */
 function HeaderCell({
   category,
-  sortDirection,
-  isSorted,
   sortable,
-  timeframe,
 }: {
-  category: string // TODO: change this to make it work for trans
-  sortDirection: SortDirection
-  isSorted: boolean
+  category: Category // TODO: change this to make it work for trans
   sortable: boolean
-  timeframe: string
 }) {
   const theme = useTheme()
-  if (isSorted) {
+  const sortDirection = useAtomValue<SortDirection>(sortDirectionAtom)
+  const handleSortCategory = useSetSortCategory(category)
+  const sortCategory = useAtomValue<Category>(sortCategoryAtom)
+  const timeframe = useAtomValue<TimePeriod>(filterTimeAtom)
+
+  if (sortCategory === category) {
     return (
-      <SortingCategory>
+      <SortingCategory onClick={handleSortCategory}>
         <SortArrowCell>
-          {sortDirection === SortDirection.Decreasing ? (
+          {sortDirection === SortDirection.increasing ? (
             <ArrowDown size={14} color={theme.accentActive} />
           ) : (
             <ArrowUp size={14} color={theme.accentActive} />
@@ -353,7 +342,7 @@ function HeaderCell({
       </SortingCategory>
     )
   }
-  if (sortable) return <SortOption>{getHeaderDisplay(category, timeframe)}</SortOption>
+  if (sortable) return <SortOption onClick={handleSortCategory}>{getHeaderDisplay(category, timeframe)}</SortOption>
   return <Trans>{getHeaderDisplay(category, timeframe)}</Trans>
 }
 
@@ -398,9 +387,9 @@ export function TokenRow({
 }
 
 /* Header Row: top header row component for table */
-export function HeaderRow({ timeframe }: { timeframe: string }) {
+export function HeaderRow() {
   /* TODO: access which sort category used and timeframe used (temporarily hardcoded values) */
-  const sortedBy = SORT_CATEGORIES[1]
+
   return (
     <TokenRow
       address={null}
@@ -408,42 +397,10 @@ export function HeaderRow({ timeframe }: { timeframe: string }) {
       favorited={null}
       listNumber={null}
       tokenInfo={<Trans>Name</Trans>}
-      price={
-        <HeaderCell
-          category={Category.price}
-          sortDirection={SortDirection.Decreasing}
-          isSorted={sortedBy === Category.price}
-          sortable
-          timeframe={timeframe}
-        />
-      }
-      percentChange={
-        <HeaderCell
-          category={Category.percent_change}
-          sortDirection={SortDirection.Decreasing}
-          isSorted={sortedBy === Category.percent_change}
-          sortable
-          timeframe={timeframe}
-        />
-      }
-      marketCap={
-        <HeaderCell
-          category={Category.market_cap}
-          sortDirection={SortDirection.Decreasing}
-          isSorted={sortedBy === Category.market_cap}
-          sortable
-          timeframe={timeframe}
-        />
-      }
-      volume={
-        <HeaderCell
-          category={Category.volume}
-          sortDirection={SortDirection.Decreasing}
-          isSorted={sortedBy === Category.volume}
-          sortable
-          timeframe={timeframe}
-        />
-      }
+      price={<HeaderCell category={Category.price} sortable />}
+      percentChange={<HeaderCell category={Category.percentChange} sortable />}
+      marketCap={<HeaderCell category={Category.marketCap} sortable />}
+      volume={<HeaderCell category={Category.volume} sortable />}
       sparkLine={null}
     />
   )
@@ -496,16 +453,18 @@ export default function LoadedRow({
   const [warning, setWarning] = useState<Warning | null | undefined>(undefined)
   const [warningModalOpen, setWarningModalOpen] = useState(false)
   const history = useHistory()
+  const isUserAddedToken = useIsUserAddedToken(token)
 
   const handleDismissWarning = useCallback(() => {
     setWarningModalOpen(false)
   }, [setWarningModalOpen])
+  const isPositive = Math.sign(tokenData.delta) > 0
 
   const tokenPercentChangeInfo = (
     <>
       {tokenData.delta}%
       <ArrowCell>
-        {Math.sign(tokenData.delta) > 0 ? (
+        {isPositive ? (
           <ArrowUpRight size={16} color={theme.accentSuccess} />
         ) : (
           <ArrowDownRight size={16} color={theme.accentFailure} />
@@ -525,7 +484,7 @@ export default function LoadedRow({
       setWarning(tokenWarning)
     }
 
-    if (!tokenWarning) {
+    if (!tokenWarning || isUserAddedToken) {
       navigateToToken()
     } else {
       setWarningModalOpen(true)
@@ -534,7 +493,6 @@ export default function LoadedRow({
 
   const heartColor = isFavorited ? theme.accentActive : undefined
   // TODO: currency logo sizing mobile (32px) vs. desktop (24px)
-  // TODO: fix listNumber as number on most popular (should be fixed)
   return (
     <TokenRow
       address={tokenAddress}
@@ -548,9 +506,8 @@ export default function LoadedRow({
       tokenInfo={
         // <ClickableName to={`tokens/${tokenAddress}`}>
         <ClickableName onClick={selectToken}>
-          <ExploreTokenWarningModal
+          <TokenSafetyModal
             isOpen={warningModalOpen}
-            warning={warning}
             tokenAddress={tokenAddress}
             onCancel={handleDismissWarning}
             onContinue={navigateToToken}
@@ -571,7 +528,7 @@ export default function LoadedRow({
       percentChange={tokenPercentChangeInfo}
       marketCap={formatAmount(tokenData.marketCap).toUpperCase()}
       volume={formatAmount(tokenData.volume[timePeriod]).toUpperCase()}
-      sparkLine={<SparkLineImg dangerouslySetInnerHTML={{ __html: tokenData.sparkline }} />}
+      sparkLine={<SparkLineImg dangerouslySetInnerHTML={{ __html: tokenData.sparkline }} isPositive={isPositive} />}
     />
   )
 }

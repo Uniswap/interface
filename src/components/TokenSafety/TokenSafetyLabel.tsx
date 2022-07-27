@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { SAFETY_WARNING } from 'constants/tokenWarnings'
+import { WARNING_LEVEL } from 'constants/tokenWarnings'
 import { useTokenWarningColor } from 'hooks/useTokenWarningColor'
 import { ReactNode } from 'react'
 import { AlertOctagon, AlertTriangle } from 'react-feather'
@@ -20,11 +20,11 @@ const Label = styled.div<{ color: Color }>`
 const Title = styled(Text)`
   margin-right: 5px;
   font-weight: 700;
-  font-size: 14px;
+  font-size: 12px;
 `
 
 type TokenWarningLabelProps = {
-  level: SAFETY_WARNING
+  level: WARNING_LEVEL
   canProceed: boolean
   children: ReactNode
 }
@@ -34,7 +34,7 @@ export default function TokenSafetyLabel({ level, canProceed, children }: TokenW
       <Title marginRight="5px">
         <Trans>{children}</Trans>
       </Title>
-      {canProceed ? <AlertTriangle size="14px" /> : <AlertOctagon size="14px" />}
+      {canProceed ? <AlertTriangle strokeWidth={2.5} size="14px" /> : <AlertOctagon size="14px" />}
     </Label>
   )
 }

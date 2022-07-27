@@ -1,14 +1,13 @@
 import { Currency, Token } from '@uniswap/sdk-core'
 import { TokenList } from '@uniswap/token-lists'
+import TokenSafety from 'components/TokenSafety'
 import usePrevious from 'hooks/usePrevious'
 import { useCallback, useEffect, useState } from 'react'
 
 import useLast from '../../hooks/useLast'
-import { WrappedTokenInfo } from '../../state/lists/wrappedTokenInfo'
 import Modal from '../Modal'
 import { CurrencySearch } from './CurrencySearch'
 import { ImportList } from './ImportList'
-import { ImportToken } from './ImportToken'
 import Manage from './Manage'
 
 interface CurrencySearchModalProps {
@@ -97,13 +96,18 @@ export default function CurrencySearchModal({
     case CurrencyModalView.importToken:
       if (importToken) {
         content = (
-          <ImportToken
-            tokens={[importToken]}
-            onDismiss={onDismiss}
-            list={importToken instanceof WrappedTokenInfo ? importToken.list : undefined}
-            onBack={handleBackImport}
-            handleCurrencySelect={handleCurrencySelect}
+          <TokenSafety
+            tokenAddress={importToken.address}
+            onContinue={() => handleCurrencySelect(importToken)}
+            onCancel={handleBackImport}
           />
+          // <ImportToken
+          //   tokens={[importToken]}
+          //   onDismiss={onDismiss}
+          //   list={importToken instanceof WrappedTokenInfo ? importToken.list : undefined}
+          //   onBack={handleBackImport}
+          //   handleCurrencySelect={handleCurrencySelect}
+          // />
         )
       }
       break

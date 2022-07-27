@@ -4,14 +4,14 @@ import brokenTokenList from './tokenLists/broken.tokenlist.json'
 import unsupportedTokenList from './tokenLists/unsupported.tokenlist.json'
 
 export enum TOKEN_LIST_TYPES {
-  UNI_DEFAULT,
+  UNI_DEFAULT = 1,
   UNI_EXTENDED,
   UNKNOWN,
   BLOCKED,
   BROKEN,
 }
 
-class TokenWarningLookupCache {
+class TokenSafetyLookupTable {
   dict: { [key: string]: TOKEN_LIST_TYPES } = {}
 
   uniDefaultTokens = store.getState().lists.byUrl[UNI_LIST].current?.tokens
@@ -46,4 +46,4 @@ class TokenWarningLookupCache {
   }
 }
 
-export default new TokenWarningLookupCache()
+export default new TokenSafetyLookupTable()

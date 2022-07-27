@@ -3,7 +3,7 @@ import { useAtom } from 'jotai'
 import { Heart } from 'react-feather'
 import styled from 'styled-components/macro'
 
-import { showFavoritesAtom } from './state'
+import { showFavoritesAtom } from '../state'
 
 const FavoriteButtonContent = styled.div`
   display: flex;

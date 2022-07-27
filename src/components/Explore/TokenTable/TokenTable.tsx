@@ -1,3 +1,4 @@
+import { favoritesAtom, filterStringAtom, filterTimeAtom, showFavoritesAtom } from 'components/Explore/state'
 import { useAllTokens } from 'hooks/Tokens'
 import useTopTokens, { TimePeriod } from 'hooks/useTopTokens'
 import { useAtomValue } from 'jotai/utils'
@@ -5,8 +6,7 @@ import { ReactNode, useMemo } from 'react'
 import { AlertTriangle } from 'react-feather'
 import styled from 'styled-components/macro'
 
-import { MAX_WIDTH_MEDIA_BREAKPOINT } from './constants'
-import { favoritesAtom, filterStringAtom, showFavoritesAtom } from './state'
+import { MAX_WIDTH_MEDIA_BREAKPOINT } from '../constants'
 import LoadedRow, { HeaderRow, LoadingRow } from './TokenRow'
 
 const GridContainer = styled.div`
@@ -45,9 +45,9 @@ const LOADING_ROWS = Array(10)
   })
 
 function useFilteredTokens(topTokenAddresses: string[]) {
-  const filterString = useAtomValue(filterStringAtom)
-  const favoriteTokens = useAtomValue(favoritesAtom)
-  const showFavorites = useAtomValue(showFavoritesAtom)
+  const filterString = useAtomValue<string>(filterStringAtom)
+  const favoriteTokens = useAtomValue<string[]>(favoritesAtom)
+  const showFavorites = useAtomValue<boolean>(showFavoritesAtom)
   const shownTokens = showFavorites ? favoriteTokens : topTokenAddresses
   const allTokens = useAllTokens()
 
@@ -73,7 +73,7 @@ function useFilteredTokens(topTokenAddresses: string[]) {
 function NoTokensState({ message, timePeriod }: { message: ReactNode; timePeriod: TimePeriod }) {
   return (
     <GridContainer>
-      <HeaderRow timeframe={timePeriod} />
+      <HeaderRow />
       <NoTokenDisplay>{message}</NoTokenDisplay>
     </GridContainer>
   )
@@ -81,8 +81,8 @@ function NoTokensState({ message, timePeriod }: { message: ReactNode; timePeriod
 
 export default function TokenTable() {
   const { data, error, loading } = useTopTokens()
-  const showFavorites = useAtomValue(showFavoritesAtom)
-  const timePeriod = TimePeriod.day
+  const showFavorites = useAtomValue<boolean>(showFavoritesAtom)
+  const timePeriod = useAtomValue<TimePeriod>(filterTimeAtom)
   const topTokenAddresses = data ? Object.keys(data) : []
   const filteredTokens = useFilteredTokens(topTokenAddresses)
 
@@ -90,7 +90,7 @@ export default function TokenTable() {
   if (loading) {
     return (
       <GridContainer>
-        <HeaderRow timeframe={timePeriod} />
+        <HeaderRow />
         <TokenRowsContainer>{LOADING_ROWS}</TokenRowsContainer>
       </GridContainer>
     )
@@ -129,7 +129,7 @@ export default function TokenTable() {
   })
   return (
     <GridContainer>
-      <HeaderRow timeframe={timePeriod} />
+      <HeaderRow />
       <TokenRowsContainer>{tokenRows}</TokenRowsContainer>
     </GridContainer>
   )

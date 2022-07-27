@@ -1,45 +1,53 @@
-import WarningCache, { TOKEN_LIST_TYPES } from '../constants/TokenWarningLookupCache'
+import WarningCache, { TOKEN_LIST_TYPES } from './TokenSafetyLookupTable'
 
-export enum SAFETY_WARNING {
+export enum WARNING_LEVEL {
   MEDIUM,
   UNKNOWN,
   BLOCKED,
 }
 
+export function getWarningCopy(warning: Warning | null, plural = false) {
+  if (!warning) {
+    return [null, null]
+  }
+  if (warning.canProceed) {
+    if (plural) {
+      return ["These tokens aren't verified", 'Please do your own research before trading.']
+    }
+    return ["This token isn't verified", 'Please do your own research before trading.']
+  } else {
+    if (plural) {
+      return [null, "You can't trade these tokens using the Uniswap App."]
+    }
+    return [null, "You can't trade this token using the Uniswap App."]
+  }
+}
+
 export type Warning = {
-  level: SAFETY_WARNING
+  level: WARNING_LEVEL
   message: string
-  heading: string
-  description: string
+  /* canProceed determines whether triangle/octagon alert icon is used, and
+    whether this token is supported/able to be traded */
   canProceed: boolean
 }
 
 const MediumWarning: Warning = {
-  level: SAFETY_WARNING.MEDIUM,
+  level: WARNING_LEVEL.MEDIUM,
   message: 'Caution',
-  heading: "This token isn't verified",
-  description: 'Please do your own research before trading.',
   canProceed: true,
 }
 
 const StrongWarning: Warning = {
-  level: SAFETY_WARNING.UNKNOWN,
+  level: WARNING_LEVEL.UNKNOWN,
   message: 'Warning',
-  heading: "This token isn't verified",
-  description: 'Please do your own research before trading.',
   canProceed: true,
 }
 
 const BlockedWarning: Warning = {
-  level: SAFETY_WARNING.BLOCKED,
+  level: WARNING_LEVEL.BLOCKED,
   message: 'Not Available',
-  heading: '',
-  description: "You can't trade this token using the Uniswap App.",
   canProceed: false,
 }
-
-// Todo: Replace this with actual extended list
-const UniswapExtendedList: string[] = []
 
 export function checkWarning(tokenAddress: string) {
   switch (WarningCache.checkToken(tokenAddress.toLowerCase())) {
