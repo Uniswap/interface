@@ -72,11 +72,16 @@ const ChartAnimation = styled.div`
 const ChartWrapper = styled.div`
   width: inherit;
 `
+const TimeSpace = styled.div`
+  height: 36px;
+`
 /* Loading State: row component with loading bubbles */
 export default function LoadingTokenDetail() {
   return (
     <TopArea>
-      <BreadcrumbNavLink to="/explore">{null}</BreadcrumbNavLink>
+      <BreadcrumbNavLink to="/explore">
+        <br></br>
+      </BreadcrumbNavLink>
       <ChartHeader>
         <TokenInfoContainer>
           <TokenNameCell>
@@ -87,7 +92,9 @@ export default function LoadingTokenDetail() {
         <TokenPrice>
           <PriceLoadingBubble />
         </TokenPrice>
-        <DeltaContainer>{null}</DeltaContainer>
+        <DeltaContainer>
+          <br></br>
+        </DeltaContainer>
         <ChartWrapper>
           <ChartContainer>
             <ChartAnimation>
@@ -109,7 +116,9 @@ export default function LoadingTokenDetail() {
             </ChartAnimation>
           </ChartContainer>
         </ChartWrapper>
-        <TimeOptionsContainer>{null}</TimeOptionsContainer>
+        <TimeOptionsContainer>
+          <TimeSpace></TimeSpace>
+        </TimeOptionsContainer>
       </ChartHeader>
       <AboutSection>
         <AboutHeader>
