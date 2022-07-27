@@ -1,7 +1,6 @@
 import { createSelector } from '@reduxjs/toolkit'
 import type { RootState } from 'src/app/rootReducer'
 import { ClientSideOrderBy, CoingeckoOrderBy } from 'src/features/dataApi/coingecko/types'
-import { DEMO_ACCOUNT_ADDRESS } from 'src/features/wallet/accounts/useTestAccount'
 import { NFTViewType } from 'src/features/wallet/types'
 import { AccountType, NativeAccount } from './accounts/types'
 
@@ -24,9 +23,7 @@ export const selectSignerAccounts = createSelector(selectAccounts, (accounts) =>
 
 export const selectSortedMnemonicAccounts = createSelector(selectAccounts, (accounts) =>
   Object.values(accounts)
-    .filter(
-      (account) => account.type === AccountType.Native && account.address !== DEMO_ACCOUNT_ADDRESS
-    )
+    .filter((account) => account.type === AccountType.Native)
     .sort((a, b) => (a as NativeAccount).derivationIndex - (b as NativeAccount).derivationIndex)
     .map((account) => account as NativeAccount)
 )
@@ -35,7 +32,7 @@ export const selectNativeAccountExists = createSelector(
   selectNonPendingAccounts,
   (accounts) =>
     Object.values(accounts).findIndex((value) => {
-      return value.type === AccountType.Native && value.address !== DEMO_ACCOUNT_ADDRESS
+      return value.type === AccountType.Native
     }) >= 0
 )
 

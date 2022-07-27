@@ -13,6 +13,7 @@ import {
   v6Schema,
   v7Schema,
   v8Schema,
+  v9Schema,
 } from 'src/app/schema'
 import { persistConfig } from 'src/app/store'
 import { WalletConnectModalState } from 'src/components/WalletConnect/ScanSheet/WalletConnectModal'
@@ -35,7 +36,7 @@ import {
   TransactionStatus,
   TransactionType,
 } from 'src/features/transactions/types'
-import { AccountType, NativeAccount } from 'src/features/wallet/accounts/types'
+import { Account, AccountType, NativeAccount } from 'src/features/wallet/accounts/types'
 import { initialWalletState } from 'src/features/wallet/walletSlice'
 import { initialWalletConnectState } from 'src/features/walletConnect/walletConnectSlice'
 
@@ -398,5 +399,36 @@ describe('Redux state migrations', () => {
     expect(Object.values(v8SchemaStub.wallet.accounts)).toHaveLength(2)
     const v9 = migrations[9](v8SchemaStub)
     expect(Object.values(v9.wallet.accounts)).toHaveLength(1)
+  })
+
+  it('migrates from v9 to v10', () => {
+    const DEMO_ACCOUNT_ADDRESS = '0xE1d494bC8690b1EF2F0A13B6672C4F2EE5c2D2B7'
+    const TEST_ADDRESSES = ['0xTest', DEMO_ACCOUNT_ADDRESS, '0xTest2', '0xTest3']
+    const TEST_IMPORT_TIME_MS = 12345678912345
+
+    const accounts = TEST_ADDRESSES.reduce((acc, address) => {
+      acc[address] = {
+        address,
+        timeImportedMs: TEST_IMPORT_TIME_MS,
+        type: AccountType.Native,
+      } as Account
+
+      return acc
+    }, {} as { [address: string]: Account })
+
+    const v9SchemaStub = {
+      ...v9Schema,
+      wallet: {
+        ...v9Schema.wallet,
+        accounts,
+      },
+    }
+
+    expect(Object.values(v9SchemaStub.wallet.accounts)).toHaveLength(4)
+    expect(Object.keys(v9SchemaStub.wallet.accounts)).toContain(DEMO_ACCOUNT_ADDRESS)
+
+    const migratedSchema = migrations[10](v9SchemaStub)
+    expect(Object.values(migratedSchema.wallet.accounts)).toHaveLength(3)
+    expect(Object.keys(migratedSchema.wallet.accounts)).not.toContain(DEMO_ACCOUNT_ADDRESS)
   })
 })

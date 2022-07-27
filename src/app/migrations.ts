@@ -1,4 +1,5 @@
 import dayjs from 'dayjs'
+import { utils } from 'ethers'
 import { ChainId } from 'src/constants/chains'
 import { ModalName } from 'src/features/telemetry/constants'
 import { AccountType } from 'src/features/wallet/accounts/types'
@@ -131,6 +132,19 @@ export const migrations = {
         delete newState.wallet.accounts[account]
       }
     }
+    return newState
+  },
+
+  10: (state: any) => {
+    const DEMO_ACCOUNT_ADDRESS = utils.getAddress('0xE1d494bC8690b1EF2F0A13B6672C4F2EE5c2D2B7')
+
+    const newState = { ...state }
+    const accounts = newState?.wallet?.accounts ?? {}
+
+    if (accounts[DEMO_ACCOUNT_ADDRESS]) {
+      delete accounts[DEMO_ACCOUNT_ADDRESS]
+    }
+
     return newState
   },
 }

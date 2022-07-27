@@ -8,7 +8,6 @@ import {
   getOneSignalUserIdOrError,
 } from 'src/features/firebase/utils'
 import { AccountBase, AccountType } from 'src/features/wallet/accounts/types'
-import { DEMO_ACCOUNT_ADDRESS } from 'src/features/wallet/accounts/useTestAccount'
 import { EditAccountAction, editAccountActions } from 'src/features/wallet/editAccountSaga'
 import { addAccount } from 'src/features/wallet/walletSlice'
 import { logger } from 'src/utils/logger'
@@ -39,7 +38,7 @@ export function* addAccountDataToFirebase(actionData: ReturnType<typeof addAccou
     yield* call(updateAccountMetadata, address, { name })
   }
   // Push notifcations are default off for watched addresses & our demo account
-  if (type !== AccountType.Readonly && address !== DEMO_ACCOUNT_ADDRESS) {
+  if (type !== AccountType.Readonly) {
     yield* call(mapAddressesToPushToken, [address])
   }
 }

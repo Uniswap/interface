@@ -4,7 +4,6 @@ import { useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { isEnabled } from 'src/features/remoteConfig'
 import { TestConfig } from 'src/features/remoteConfig/testConfigs'
 import { AccountType } from 'src/features/wallet/accounts/types'
-import { DEMO_ACCOUNT_ADDRESS } from 'src/features/wallet/accounts/useTestAccount'
 import { useAccounts } from 'src/features/wallet/hooks'
 import { logger } from 'src/utils/logger'
 import { useAppStateTrigger } from 'src/utils/useAppStateTrigger'
@@ -55,12 +54,7 @@ export function BiometricCheck() {
 
   const biometricTrigger = useCallback(() => {
     // only show prompt if there are no imported accounts
-    if (
-      Object.values(accounts)
-        // TODO: remove in v0.3
-        .filter((a) => a.address !== DEMO_ACCOUNT_ADDRESS)
-        .some((a) => a.type !== AccountType.Readonly)
-    ) {
+    if (Object.values(accounts).some((a) => a.type !== AccountType.Readonly)) {
       trigger()
     }
   }, [trigger, accounts])
