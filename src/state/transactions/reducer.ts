@@ -1,7 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { sendAnalyticsEvent } from 'components/AmplitudeAnalytics'
-import { EventName } from 'components/AmplitudeAnalytics/constants'
-import { TransactionType } from 'state/transactions/types'
 
 import { updateVersion } from '../global/actions'
 import { TransactionDetails } from './types'

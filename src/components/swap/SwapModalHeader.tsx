@@ -1,8 +1,8 @@
 import { Trans } from '@lingui/macro'
-import { Currency, Percent, Price, TradeType } from '@uniswap/sdk-core'
+import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
+import { Price } from '@uniswap/sdk-core'
 import { sendAnalyticsEvent } from 'components/AmplitudeAnalytics'
-import { ElementName, Event, EventName, SWAP_PRICE_UPDATE_USER_RESPONSE } from 'components/AmplitudeAnalytics/constants'
-import { TraceEvent } from 'components/AmplitudeAnalytics/TraceEvent'
+import { EventName, SWAP_PRICE_UPDATE_USER_RESPONSE } from 'components/AmplitudeAnalytics/constants'
 import { formatPercentInBasisPointsNumber } from 'components/AmplitudeAnalytics/utils'
 import { useContext, useEffect, useState } from 'react'
 import { AlertTriangle, ArrowDown } from 'react-feather'
@@ -77,7 +77,7 @@ export default function SwapModalHeader({
 }: {
   trade: InterfaceTrade<Currency, Currency, TradeType>
   shouldLogModalCloseEvent: boolean
-  setShouldLogModalCloseEvent: (arg0: boolean) => void
+  setShouldLogModalCloseEvent: (shouldLog: boolean) => void
   allowedSlippage: Percent
   recipient: string | null
   showAcceptChanges: boolean
@@ -106,7 +106,7 @@ export default function SwapModalHeader({
         formatAnalyticsEventProperties(trade, priceUpdate, SWAP_PRICE_UPDATE_USER_RESPONSE.REJECTED)
       )
     setShouldLogModalCloseEvent(false)
-  }, [shouldLogModalCloseEvent, showAcceptChanges, setShouldLogModalCloseEvent])
+  }, [shouldLogModalCloseEvent, showAcceptChanges, setShouldLogModalCloseEvent, trade, priceUpdate])
 
   return (
     <AutoColumn gap={'4px'} style={{ marginTop: '1rem' }}>
@@ -177,19 +177,12 @@ export default function SwapModalHeader({
                 <Trans>Price Updated</Trans>
               </ThemedText.DeprecatedMain>
             </RowFixed>
-            <TraceEvent
-              events={[Event.onClick]}
-              name={EventName.SWAP_PRICE_UPDATE_ACKNOWLEDGED}
-              properties={formatAnalyticsEventProperties(trade, priceUpdate, SWAP_PRICE_UPDATE_USER_RESPONSE.ACCEPTED)}
-              element={ElementName.PRICE_UPDATE_ACCEPT_BUTTON}
+            <ButtonPrimary
+              style={{ padding: '.5rem', width: 'fit-content', fontSize: '0.825rem', borderRadius: '12px' }}
+              onClick={onAcceptChanges}
             >
-              <ButtonPrimary
-                style={{ padding: '.5rem', width: 'fit-content', fontSize: '0.825rem', borderRadius: '12px' }}
-                onClick={onAcceptChanges}
-              >
-                <Trans>Accept</Trans>
-              </ButtonPrimary>
-            </TraceEvent>
+              <Trans>Accept</Trans>
+            </ButtonPrimary>
           </RowBetween>
         </SwapShowAcceptChanges>
       ) : null}
