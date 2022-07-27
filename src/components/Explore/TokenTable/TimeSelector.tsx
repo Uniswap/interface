@@ -5,7 +5,7 @@ import { useRef } from 'react'
 import { Check, ChevronDown, ChevronUp } from 'react-feather'
 import { useModalIsOpen, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
-import styled, { css, useTheme } from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components/macro'
 
 import { MOBILE_MEDIA_BREAKPOINT } from '../constants'
 import { filterTimeAtom } from '../state'
@@ -20,21 +20,15 @@ export const TIME_DISPLAYS: { [key: string]: string } = {
 
 const TIMES = Object.values(TimePeriod)
 
-enum FlyoutAlignment {
-  LEFT = 'LEFT',
-  RIGHT = 'RIGHT',
-}
-
 const InternalMenuItem = styled.div`
   flex: 1;
   padding: 8px;
   color: ${({ theme }) => theme.textPrimary};
+  border-radius: 12px;
+
   :hover {
     cursor: pointer;
     text-decoration: none;
-  }
-  > svg {
-    margin-right: 8px;
   }
 `
 
@@ -42,41 +36,32 @@ const InternalLinkMenuItem = styled(InternalMenuItem)`
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding: 12px 16px;
+  padding: 12px 8px;
   justify-content: space-between;
   text-decoration: none;
   cursor: pointer;
 
   :hover {
-    background-color: ${({ theme }) => theme.backgroundContainer};
+    background-color: ${({ theme }) => theme.hoverState};
     text-decoration: none;
   }
 `
-const MenuTimeFlyout = styled.span<{ flyoutAlignment?: FlyoutAlignment }>`
-  min-width: 150px;
-  max-height: 350px;
+const MenuTimeFlyout = styled.span`
+  min-width: 200px;
+  max-height: 300px;
   overflow: auto;
   background-color: ${({ theme }) => theme.backgroundSurface};
-  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
-    0px 24px 32px rgba(0, 0, 0, 0.01);
+  box-shadow: ${({ theme }) => theme.flyoutDropShadow};
   border: 1px solid ${({ theme }) => theme.backgroundOutline};
-  border-radius: 16px;
-  padding: 8px 0px;
+  border-radius: 12px;
+  padding: 8px;
   display: flex;
   flex-direction: column;
   font-size: 16px;
   position: absolute;
   top: 48px;
   z-index: 100;
-
-  ${({ flyoutAlignment = FlyoutAlignment.RIGHT }) =>
-    flyoutAlignment === FlyoutAlignment.RIGHT
-      ? css`
-          right: 0px;
-        `
-      : css`
-          left: 0px;
-        `};
+  left: 0px;
   ${({ theme }) => theme.mediaWidth.upToMedium`
     bottom: unset;
     right: 0;
@@ -157,7 +142,6 @@ export default function TimeSelector() {
           </Chevron>
         </StyledMenuContent>
       </StyledMenuButton>
-      {/* handles the actual flyout of the menu*/}
       {open && (
         <MenuTimeFlyout>
           {TIMES.map((time) => (
