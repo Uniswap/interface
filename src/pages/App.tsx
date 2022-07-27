@@ -7,6 +7,7 @@ import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
 import { lazy, Suspense, useEffect } from 'react'
 import { Redirect, Route, Switch, useHistory, useLocation } from 'react-router-dom'
 import styled from 'styled-components/macro'
+import { ColorThemeToggle } from 'theme'
 
 import { useAnalyticsReporter } from '../components/analytics'
 import ErrorBoundary from '../components/ErrorBoundary'
@@ -100,6 +101,7 @@ export default function App() {
     <ErrorBoundary>
       <DarkModeQueryParamReader />
       <ApeModeQueryParamReader />
+      <ColorThemeToggle />
       <AppWrapper>
         <Trace page={currentPage}>
           <HeaderWrapper>
