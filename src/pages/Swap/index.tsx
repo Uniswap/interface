@@ -459,6 +459,7 @@ export default function Swap() {
 
   const priceImpactTooHigh = priceImpactSeverity > 3 && !isExpertMode
 
+  // Handle time based logging events and event properties.
   useEffect(() => {
     const now = new Date()
     // If a trade exists, and we need to log the receipt of this new swap quote:
