@@ -5,7 +5,6 @@ import { useAppSelector } from 'src/app/hooks'
 import { SearchableRecipient } from 'src/components/RecipientSelect/types'
 import { uniqueAddressesOnly } from 'src/components/RecipientSelect/utils'
 import { ChainId } from 'src/constants/chains'
-import { useAllBalancesList } from 'src/features/dataApi/balances'
 import { useENS } from 'src/features/ens/useENS'
 import { selectRecipientsByRecency } from 'src/features/transactions/selectors'
 import { selectInactiveAccounts } from 'src/features/wallet/selectors'
@@ -86,13 +85,4 @@ export function useRecipients() {
     }),
     [pattern, onChangePattern, searchableRecipientOptions, sections, loading]
   )
-}
-
-export function useRecipientHasZeroBalances(recipient: string, chainId: ChainId) {
-  const { totalCount, loading } = useAllBalancesList(recipient, [chainId])
-
-  return useMemo(() => {
-    const recipientHasZeroBalances = recipient && !loading && totalCount === 0
-    return { recipientHasZeroBalances, balancesLoading: loading }
-  }, [recipient, totalCount, loading])
 }

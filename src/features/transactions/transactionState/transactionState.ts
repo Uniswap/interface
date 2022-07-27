@@ -27,6 +27,8 @@ export interface TransactionState {
   gasSpendEstimate?: GasSpendEstimate
   gasPrice?: string // gas price in native currency
   exactApproveRequired?: boolean // undefined except in rare instances when infinite approve is not supported by a token
+  showNewAddressWarning?: boolean
+  showNoBalancesWarning?: boolean
   swapMethodParameters?: MethodParameters
   warningModalType?: WarningModalType
 }
@@ -184,6 +186,18 @@ const slice = createSlice({
     closeWarningModal: (state) => {
       state.warningModalType = WarningModalType.NONE
     },
+    showNewAddressWarningModal: (state) => {
+      state.showNewAddressWarning = true
+    },
+    closeNewAddressWarningModal: (state) => {
+      state.showNewAddressWarning = false
+    },
+    showNoBalancesWarningModal: (state) => {
+      state.showNoBalancesWarning = true
+    },
+    closeNoBalancesWarningModal: (state) => {
+      state.showNoBalancesWarning = false
+    },
     setTxId: (state, action: PayloadAction<string>) => {
       state.txId = action.payload
     },
@@ -203,6 +217,10 @@ export const {
   setExactApproveRequired,
   showWarningModal,
   closeWarningModal,
+  showNewAddressWarningModal,
+  closeNewAddressWarningModal,
+  showNoBalancesWarningModal,
+  closeNoBalancesWarningModal,
   setTxId,
 } = slice.actions
 export const { reducer: transactionStateReducer, actions: transactionStateActions } = slice

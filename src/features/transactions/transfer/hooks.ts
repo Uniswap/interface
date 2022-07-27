@@ -1,6 +1,6 @@
 import { Currency } from '@uniswap/sdk-core'
 import { utils } from 'ethers'
-import React, { useEffect, useMemo } from 'react'
+import React, { useCallback, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AnyAction } from 'redux'
 import { useAppDispatch } from 'src/app/hooks'
@@ -8,14 +8,17 @@ import { WarningModalType } from 'src/components/warnings/types'
 import { ChainId } from 'src/constants/chains'
 import { AssetType } from 'src/entities/assets'
 import { useNativeCurrencyBalance, useTokenBalance } from 'src/features/balances/hooks'
+import { useAllBalancesList } from 'src/features/dataApi/balances'
 import { estimateGasAction } from 'src/features/gas/estimateGasSaga'
 import { useNFT } from 'src/features/nfts/hooks'
 import { NFTAsset } from 'src/features/nfts/types'
 import { useCurrency } from 'src/features/tokens/useCurrency'
+import { useAllTransactionsBetweenAddresses } from 'src/features/transactions/hooks'
 import {
   CurrencyField,
+  showNewAddressWarningModal,
+  showNoBalancesWarningModal,
   TransactionState,
-  transactionStateActions,
 } from 'src/features/transactions/transactionState/transactionState'
 import { BaseDerivedInfo } from 'src/features/transactions/transactionState/types'
 import {
@@ -25,7 +28,11 @@ import {
 import { TransferTokenParams } from 'src/features/transactions/transfer/types'
 import { getTransferWarnings } from 'src/features/transactions/transfer/validate'
 import { TransactionType } from 'src/features/transactions/types'
-import { useActiveAccount, useActiveAccountWithThrow } from 'src/features/wallet/hooks'
+import {
+  useActiveAccount,
+  useActiveAccountAddressWithThrow,
+  useActiveAccountWithThrow,
+} from 'src/features/wallet/hooks'
 import { buildCurrencyId } from 'src/utils/currencyId'
 import { logger } from 'src/utils/logger'
 import { SagaStatus } from 'src/utils/saga'
@@ -263,6 +270,50 @@ export function useUpdateTransferGasEstimate(
   ])
 }
 
-export function showTransferWarningCallback(dispatch: React.Dispatch<AnyAction>) {
-  return (type: WarningModalType) => dispatch(transactionStateActions.showWarningModal(type))
+export function useRecipientHasZeroBalances(recipient: string | undefined, chainId: ChainId) {
+  const { totalCount, loading } = useAllBalancesList(recipient, [chainId])
+  return loading ? null : totalCount === 0
+}
+
+export function useRecipientIsNewAddress(recipient: string | undefined) {
+  const activeAddress = useActiveAccountAddressWithThrow()
+  const txnsToSelectedAddress = useAllTransactionsBetweenAddresses(activeAddress, recipient)
+  return txnsToSelectedAddress?.length === 0
+}
+
+export function useHandleTransferWarningModals(
+  state: TransactionState,
+  dispatch: React.Dispatch<AnyAction>,
+  onNext: () => void,
+  recipient: string | undefined,
+  chainId: ChainId
+) {
+  const { showNewAddressWarning, showNoBalancesWarning } = state
+
+  const recipientHasNoBalances = useRecipientHasZeroBalances(recipient, chainId)
+  const hasNoBalancesWarning = !!recipient && !!recipientHasNoBalances
+  const hasNewAddressWarning = useRecipientIsNewAddress(recipient)
+
+  const onPressReview = useCallback(() => {
+    if (!hasNewAddressWarning && !hasNoBalancesWarning) {
+      onNext()
+      return
+    }
+    if (hasNoBalancesWarning) dispatch(showNoBalancesWarningModal())
+    if (hasNewAddressWarning) dispatch(showNewAddressWarningModal())
+  }, [hasNewAddressWarning, hasNoBalancesWarning, dispatch, onNext])
+
+  const moreThanOneModalOpen = showNewAddressWarning && showNoBalancesWarning
+  const onPressWarningContinue = useCallback(
+    () => (moreThanOneModalOpen ? null : onNext()),
+    [moreThanOneModalOpen, onNext]
+  )
+
+  return useMemo(() => {
+    return {
+      warningsLoading: recipientHasNoBalances === null,
+      onPressReview,
+      onPressWarningContinue,
+    }
+  }, [recipientHasNoBalances, onPressReview, onPressWarningContinue])
 }

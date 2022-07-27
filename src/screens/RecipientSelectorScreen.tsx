@@ -7,13 +7,12 @@ import { Screens } from 'src/screens/Screens'
 export function RecipientSelectoScreen({
   navigation,
   route: {
-    params: { setSelectedRecipient, chainId },
+    params: { setSelectedRecipient },
   },
 }: AppStackScreenProp<Screens.RecipientSelector>) {
   return (
     <SheetScreen>
       <RecipientSelect
-        chainId={chainId}
         setRecipientAddress={(recipient) => {
           setSelectedRecipient(recipient)
           navigation.goBack()

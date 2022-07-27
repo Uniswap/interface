@@ -11,7 +11,6 @@ import { DecimalPad } from 'src/components/input/DecimalPad'
 import { RecipientInputPanel } from 'src/components/input/RecipientInputPanel'
 import { Box, Flex } from 'src/components/layout'
 import { WarningAction } from 'src/components/warnings/types'
-import { ChainId } from 'src/constants/chains'
 import { AssetType } from 'src/entities/assets'
 import { NFTAsset } from 'src/features/nfts/types'
 import { ElementName } from 'src/features/telemetry/constants'
@@ -126,7 +125,6 @@ export function TransferTokenForm({ state, dispatch, onNext }: TransferTokenProp
           </Box>
           <Flex pb="xl" pt="xl" px="md">
             <RecipientInputPanel
-              chainId={chainId ?? ChainId.Mainnet}
               recipientAddress={recipient}
               setRecipientAddress={(newRecipient) => {
                 onSelectRecipient(newRecipient)

@@ -228,3 +228,23 @@ export function useLowestPendingNonce() {
     return min
   }, [pending])
 }
+
+/**
+ * Gets all transactions from a given sender and to a given recipient
+ * @param sender Get all transactions sent by this sender
+ * @param recipient Then filter so that we only keep txns to this recipient
+ */
+export function useAllTransactionsBetweenAddresses(
+  sender: string | undefined | null,
+  recipient: string | undefined | null
+): TransactionSummaryInfo[] | undefined {
+  const txnsToSearch = useAllFormattedTransactions(sender)
+  return useMemo(() => {
+    if (!sender || !recipient) return undefined
+    return txnsToSearch.combinedTransactionList.filter(
+      (tx) =>
+        tx.fullDetails?.typeInfo.type === TransactionType.Send &&
+        tx.fullDetails.typeInfo.recipient === recipient
+    )
+  }, [recipient, sender, txnsToSearch.combinedTransactionList])
+}

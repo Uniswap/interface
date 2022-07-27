@@ -38,6 +38,7 @@ export enum WarningLabel {
   LowLiquidity = 'low_liquidity',
   SwapRouterError = 'swap_router_error',
   RecipientZeroBalances = 'recipient_zero_balances',
+  RecipientNewAddress = 'recipient_new_address',
 }
 
 export enum WarningModalType {
