@@ -73,6 +73,10 @@ export function useAllBalancesByChainId(
   for (const chainId of chainIds) {
     balancesByChainId ??= {}
 
+    // chainIds content is stable
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const balances = useChainBalances(chainId, address, tokensByChainId[chainId])
+
     if (isTestnet(chainId)) {
       balancesByChainId[chainId] = Object.keys(tokensByChainId[chainId] ?? {}).reduce<
         Record<CurrencyId, PortfolioBalance>
@@ -92,10 +96,6 @@ export function useAllBalancesByChainId(
       }, {})
       continue
     }
-
-    // chainIds content is stable
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    const balances = useChainBalances(chainId, address, tokensByChainId[chainId])
 
     balancesByChainId[chainId] = balances.balances
     loading = loading || balances.loading

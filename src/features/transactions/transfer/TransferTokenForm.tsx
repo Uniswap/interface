@@ -3,24 +3,30 @@ import { Currency } from '@uniswap/sdk-core'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleSheet } from 'react-native'
+import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { TransferArrowButton } from 'src/components/buttons/TransferArrowButton'
 import { NFTViewer } from 'src/components/images/NFTViewer'
 import { CurrencyInputPanel } from 'src/components/input/CurrencyInputPanel'
 import { DecimalPad } from 'src/components/input/DecimalPad'
 import { RecipientInputPanel } from 'src/components/input/RecipientInputPanel'
-import { Box, Flex } from 'src/components/layout'
-import { WarningAction } from 'src/components/warnings/types'
+import { AnimatedFlex, Box, Flex } from 'src/components/layout'
+import { WarningAction, WarningLabel, WarningSeverity } from 'src/components/warnings/types'
+import { WarningModal } from 'src/components/warnings/WarningModal'
+import { ChainId, CHAIN_INFO } from 'src/constants/chains'
 import { AssetType } from 'src/entities/assets'
 import { NFTAsset } from 'src/features/nfts/types'
 import { ElementName } from 'src/features/telemetry/constants'
 import { useSwapActionHandlers, useUSDTokenUpdater } from 'src/features/transactions/swap/hooks'
 import {
+  closeNewAddressWarningModal,
+  closeNoBalancesWarningModal,
   CurrencyField,
   TransactionState,
 } from 'src/features/transactions/transactionState/transactionState'
 import {
   useDerivedTransferInfo,
+  useHandleTransferWarningModals,
   useUpdateTransferGasEstimate,
 } from 'src/features/transactions/transfer/hooks'
 import { currencyAddress } from 'src/utils/currencyId'
@@ -33,6 +39,7 @@ interface TransferTokenProps {
 
 export function TransferTokenForm({ state, dispatch, onNext }: TransferTokenProps) {
   const { t } = useTranslation()
+  const { showNewAddressWarning, showNoBalancesWarning } = state
 
   const derivedTransferInfo = useDerivedTransferInfo(state)
   const {
@@ -67,9 +74,16 @@ export function TransferTokenForm({ state, dispatch, onNext }: TransferTokenProp
     currencyIn ?? undefined
   )
 
-  const actionButtonDisabled = warnings.some(
-    (warning) => warning.action === WarningAction.DisableReview
+  const { warningsLoading, onPressReview, onPressWarningContinue } = useHandleTransferWarningModals(
+    state,
+    dispatch,
+    onNext,
+    recipient,
+    chainId ?? ChainId.Mainnet
   )
+
+  const actionButtonDisabled =
+    warnings.some((warning) => warning.action === WarningAction.DisableReview) || warningsLoading
 
   // if action button is disabled, make amount undefined so that gas estimate doesn't run
   useUpdateTransferGasEstimate(
@@ -82,75 +96,112 @@ export function TransferTokenForm({ state, dispatch, onNext }: TransferTokenProp
     currencyTypes[CurrencyField.INPUT]
   )
 
-  return (
-    <Flex grow justifyContent="space-between" p="md">
-      <Flex gap="md">
-        {isNFT ? (
-          <Flex centered mx="xl">
-            {nftIn && <NFTViewer uri={nftIn.image_url} />}
-          </Flex>
-        ) : (
-          <CurrencyInputPanel
-            autoFocus
-            currency={currencyIn}
-            currencyAmount={currencyAmounts[CurrencyField.INPUT]}
-            currencyBalance={currencyBalances[CurrencyField.INPUT]}
-            isUSDInput={isUSDInput}
-            value={formattedAmounts[CurrencyField.INPUT]}
-            warnings={warnings}
-            onSelectCurrency={(newCurrency: Currency) =>
-              onSelectCurrency(CurrencyField.INPUT, newCurrency)
-            }
-            onSetAmount={(value) => onSetAmount(CurrencyField.INPUT, value, isUSDInput)}
-            // TODO: enable USD inputs in transfer token form
-            onSetMax={onSetMax}
-            onToggleUSDInput={() => onToggleUSDInput(!isUSDInput)}
-          />
-        )}
-        <Flex
-          backgroundColor={recipient ? 'backgroundContainer' : 'none'}
-          borderRadius="lg"
-          mt="xl"
-          width="100%">
-          <Box zIndex="popover">
-            <Box alignItems="center" height={36} style={StyleSheet.absoluteFill}>
-              <Box alignItems="center" position="absolute" top={-24}>
-                <TransferArrowButton
-                  disabled
-                  bg="backgroundAction"
-                  borderColor="backgroundSurface"
-                />
-              </Box>
-            </Box>
-          </Box>
-          <Flex pb="xl" pt="xl" px="md">
-            <RecipientInputPanel
-              recipientAddress={recipient}
-              setRecipientAddress={(newRecipient) => {
-                onSelectRecipient(newRecipient)
-              }}
-            />
-          </Flex>
-        </Flex>
-      </Flex>
+  const networkName = CHAIN_INFO[chainId ?? ChainId.Mainnet].label
 
-      {isNFT ? null : (
-        <DecimalPad
-          setValue={(newValue) => onSetAmount(CurrencyField.INPUT, newValue, false)}
-          value={formattedAmounts[CurrencyField.INPUT]}
+  return (
+    <>
+      {showNoBalancesWarning && !showNewAddressWarning && (
+        <WarningModal
+          data={recipient}
+          warning={{
+            type: WarningLabel.RecipientZeroBalances,
+            severity: WarningSeverity.Medium,
+            action: WarningAction.WarnBeforeSubmit,
+            title: t('No token balances on {{ network }}', { network: networkName }),
+            message: t(
+              "The address you selected doesn't have any tokens in its wallet on {{ network }}. Please confirm that the address and network are corect before continuing.",
+              { network: networkName }
+            ),
+          }}
+          onClose={() => dispatch(closeNoBalancesWarningModal())}
+          onPressContinue={onPressWarningContinue}
         />
       )}
+      {showNewAddressWarning && (
+        <WarningModal
+          data={recipient}
+          warning={{
+            type: WarningLabel.RecipientNewAddress,
+            severity: WarningSeverity.Medium,
+            action: WarningAction.WarnBeforeSubmit,
+            title: t('New address'),
+            message: t(
+              "You haven't transacted with this address before. Please confirm that the address is correct before continuing."
+            ),
+          }}
+          onClose={() => dispatch(closeNewAddressWarningModal())}
+          onPressContinue={onPressWarningContinue}
+        />
+      )}
+      <AnimatedFlex grow entering={FadeIn} exiting={FadeOut} justifyContent="space-between" p="md">
+        <Flex gap="md">
+          {isNFT ? (
+            <Flex centered mx="xl">
+              {nftIn && <NFTViewer uri={nftIn.image_url} />}
+            </Flex>
+          ) : (
+            <CurrencyInputPanel
+              autoFocus
+              currency={currencyIn}
+              currencyAmount={currencyAmounts[CurrencyField.INPUT]}
+              currencyBalance={currencyBalances[CurrencyField.INPUT]}
+              isUSDInput={isUSDInput}
+              value={formattedAmounts[CurrencyField.INPUT]}
+              warnings={warnings}
+              onSelectCurrency={(newCurrency: Currency) =>
+                onSelectCurrency(CurrencyField.INPUT, newCurrency)
+              }
+              onSetAmount={(value) => onSetAmount(CurrencyField.INPUT, value, isUSDInput)}
+              // TODO: enable USD inputs in transfer token form
+              onSetMax={onSetMax}
+              onToggleUSDInput={() => onToggleUSDInput(!isUSDInput)}
+            />
+          )}
+          <Flex
+            backgroundColor={recipient ? 'backgroundContainer' : 'none'}
+            borderRadius="lg"
+            mt="xl"
+            width="100%">
+            <Box zIndex="popover">
+              <Box alignItems="center" height={36} style={StyleSheet.absoluteFill}>
+                <Box alignItems="center" position="absolute" top={-24}>
+                  <TransferArrowButton
+                    disabled
+                    bg="backgroundAction"
+                    borderColor="backgroundSurface"
+                  />
+                </Box>
+              </Box>
+            </Box>
+            <Flex pb="xl" pt="xl" px="md">
+              <RecipientInputPanel
+                recipientAddress={recipient}
+                setRecipientAddress={(newRecipient) => {
+                  onSelectRecipient(newRecipient)
+                }}
+              />
+            </Flex>
+          </Flex>
+        </Flex>
 
-      <PrimaryButton
-        disabled={actionButtonDisabled}
-        label={t('Review transfer')}
-        name={ElementName.ReviewTransfer}
-        py="md"
-        testID={ElementName.ReviewTransfer}
-        textVariant="largeLabel"
-        variant="blue"
-        onPress={onNext}
-      />
-    </Flex>
+        {isNFT ? null : (
+          <DecimalPad
+            setValue={(newValue) => onSetAmount(CurrencyField.INPUT, newValue, false)}
+            value={formattedAmounts[CurrencyField.INPUT]}
+          />
+        )}
+
+        <PrimaryButton
+          disabled={actionButtonDisabled}
+          label={t('Review transfer')}
+          name={ElementName.ReviewTransfer}
+          py="md"
+          testID={ElementName.ReviewTransfer}
+          textVariant="largeLabel"
+          variant="blue"
+          onPress={onPressReview}
+        />
+      </AnimatedFlex>
+    </>
   )
 }

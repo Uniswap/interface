@@ -4,6 +4,7 @@ import { FixedNumber } from 'ethers'
 import { notificationAsync } from 'expo-haptics'
 import React, { Dispatch } from 'react'
 import { useTranslation } from 'react-i18next'
+import { FadeInUp, FadeOut } from 'react-native-reanimated'
 import { useAppTheme } from 'src/app/hooks'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { Button } from 'src/components/buttons/Button'
@@ -12,7 +13,7 @@ import { CurrencyLogo } from 'src/components/CurrencyLogo'
 import { Arrow } from 'src/components/icons/Arrow'
 import { NFTViewer } from 'src/components/images/NFTViewer'
 import { AmountInput } from 'src/components/input/AmountInput'
-import { Box, Flex } from 'src/components/layout'
+import { AnimatedFlex, Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { WarningAction } from 'src/components/warnings/types'
 import { AssetType } from 'src/entities/assets'
@@ -114,7 +115,7 @@ export function TransferReview({ state, dispatch, onNext, onPrev }: TransferForm
 
   return (
     <>
-      <Flex centered flexGrow={1} gap="xs">
+      <AnimatedFlex centered entering={FadeInUp} exiting={FadeOut} flexGrow={1} gap="xs">
         <Text color="textSecondary" variant="bodySmall">
           {t('Send')}
         </Text>
@@ -162,7 +163,7 @@ export function TransferReview({ state, dispatch, onNext, onPrev }: TransferForm
           {t('To')}
         </Text>
         <AddressDisplay address={recipient} size={24} variant="headlineMedium" />
-      </Flex>
+      </AnimatedFlex>
       <Flex flexGrow={1} gap="sm" justifyContent="flex-end" mb="xl" mt="xs" px="sm">
         <TransferDetails chainId={currencyIn?.chainId || nftIn?.chainId} gasFee={gasFee} />
         <Flex row gap="xs">
