@@ -49,12 +49,6 @@ const transactionSlice = createSlice({
         return
       }
       tx.receipt = receipt
-      if (tx.info.type === TransactionType.SWAP) {
-        sendAnalyticsEvent(EventName.SWAP_TRANSACTION_COMPLETED, {
-          transaction_hash: tx.hash,
-          succeeded: receipt.status === 1,
-        })
-      }
       tx.confirmedTime = now()
     },
   },

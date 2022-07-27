@@ -106,8 +106,7 @@ export default function SwapModalHeader({
         formatAnalyticsEventProperties(trade, priceUpdate, SWAP_PRICE_UPDATE_USER_RESPONSE.REJECTED)
       )
     setShouldLogModalCloseEvent(false)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [shouldLogModalCloseEvent, showAcceptChanges])
+  }, [shouldLogModalCloseEvent, showAcceptChanges, setShouldLogModalCloseEvent])
 
   return (
     <AutoColumn gap={'4px'} style={{ marginTop: '1rem' }}>
