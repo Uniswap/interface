@@ -118,7 +118,6 @@ interface SwapDetailsInlineProps {
   showInverted: boolean
   setShowInverted: React.Dispatch<React.SetStateAction<boolean>>
   allowedSlippage: Percent
-  setSwapQuoteReceivedDate: (date: Date) => void
 }
 
 export default function SwapDetailsDropdown({
@@ -128,7 +127,6 @@ export default function SwapDetailsDropdown({
   showInverted,
   setShowInverted,
   allowedSlippage,
-  setSwapQuoteReceivedDate,
 }: SwapDetailsInlineProps) {
   const theme = useTheme()
   const { chainId } = useWeb3React()

@@ -604,7 +604,6 @@ export default function Swap() {
                   showInverted={showInverted}
                   setShowInverted={setShowInverted}
                   allowedSlippage={allowedSlippage}
-                  setSwapQuoteReceivedDate={setSwapQuoteReceivedDate}
                 />
               )}
               <div>
