@@ -125,11 +125,11 @@ export function SwapDetails({
           </Flex>
         </Button>
       ) : null}
-      <Flex row justifyContent="space-between" p="md">
+      <Flex row alignItems="center" gap="xs" justifyContent="space-between" p="md">
         <Text fontWeight="500" variant="subheadSmall">
           {t('Rate')}
         </Text>
-        <Flex row gap="none">
+        <Flex row flex={1} flexWrap="wrap" gap="none" justifyContent="flex-end">
           <Text variant="subheadSmall">{rate}</Text>
           <Text color="textSecondary" variant="subheadSmall">
             {usdcPrice &&
