@@ -248,3 +248,12 @@ export function useAllTransactionsBetweenAddresses(
     )
   }, [recipient, sender, txnsToSearch.combinedTransactionList])
 }
+
+// Counts number of transactions from a given sender and to a given recipient
+export function useNumTransactionsBetweenAddresses(
+  sender: string | undefined | null,
+  recipient: string | undefined | null
+): number | undefined {
+  const prevTxns = useAllTransactionsBetweenAddresses(sender, recipient)
+  return prevTxns?.length
+}

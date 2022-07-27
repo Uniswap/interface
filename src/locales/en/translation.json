@@ -65,6 +65,7 @@
   "Balance": "Balance",
   "USD": "USD",
   "Select Recipient": "Select Recipient",
+  "{{ prevTxns }} previous transfers": "{{ prevTxns }} previous transfers",
   "Select Network": "Select Network",
   "Close": "Close",
   "View": "View",

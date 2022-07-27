@@ -13,6 +13,7 @@ import { CurrencyLogo } from 'src/components/CurrencyLogo'
 import { Arrow } from 'src/components/icons/Arrow'
 import { NFTViewer } from 'src/components/images/NFTViewer'
 import { AmountInput } from 'src/components/input/AmountInput'
+import { RecipientPrevTransfers } from 'src/components/input/RecipientInputPanel'
 import { AnimatedFlex, Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { WarningAction } from 'src/components/warnings/types'
@@ -137,7 +138,6 @@ export function TransferReview({ state, dispatch, onNext, onPrev }: TransferForm
             value={formattedAmounts[CurrencyField.INPUT]}
           />
         )}
-
         <Flex centered gap="none">
           {!isNFT && currencyIn && (
             <Flex centered row gap="xs">
@@ -162,7 +162,10 @@ export function TransferReview({ state, dispatch, onNext, onPrev }: TransferForm
         <Text color="textSecondary" variant="bodySmall">
           {t('To')}
         </Text>
-        <AddressDisplay address={recipient} size={24} variant="headlineMedium" />
+        <Flex centered gap="xs">
+          <AddressDisplay address={recipient} size={24} variant="headlineMedium" />
+          <RecipientPrevTransfers recipient={recipient} />
+        </Flex>
       </AnimatedFlex>
       <Flex flexGrow={1} gap="sm" justifyContent="flex-end" mb="xl" mt="xs" px="sm">
         <TransferDetails chainId={currencyIn?.chainId || nftIn?.chainId} gasFee={gasFee} />

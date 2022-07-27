@@ -12,6 +12,8 @@ import { Unicon } from 'src/components/unicons/Unicon'
 import { ChainId } from 'src/constants/chains'
 import { useENS } from 'src/features/ens/useENS'
 import { ElementName } from 'src/features/telemetry/constants'
+import { useNumTransactionsBetweenAddresses } from 'src/features/transactions/hooks'
+import { useActiveAccountAddressWithThrow } from 'src/features/wallet/hooks'
 import { Screens } from 'src/screens/Screens'
 
 interface RecipientInputPanelProps {
@@ -43,13 +45,16 @@ export function RecipientInputPanel({
             setSelectedRecipient: (newRecipient: string) => setRecipientAddress(newRecipient),
           })
         }}>
-        <Flex centered row gap="sm">
-          {recipientAddress ? (
-            <RecipientMetadata recipient={recipientAddress} />
-          ) : (
-            <RecipientInput />
-          )}
-          <Chevron color={theme.colors.textPrimary} direction="e" />
+        <Flex gap="xxs">
+          <Flex centered row gap="sm">
+            {recipientAddress ? (
+              <RecipientMetadata recipient={recipientAddress} />
+            ) : (
+              <RecipientInput />
+            )}
+            <Chevron color={theme.colors.textPrimary} direction="e" />
+          </Flex>
+          {recipientAddress && <RecipientPrevTransfers recipient={recipientAddress} />}
         </Flex>
       </Button>
     </Flex>
@@ -78,5 +83,17 @@ function RecipientMetadata({ recipient }: { recipient: string }) {
       <Unicon address={address} size={24} />
       <FormattedAddress address={address} name={name} variant="headlineSmall" />
     </Flex>
+  )
+}
+
+export function RecipientPrevTransfers({ recipient }: { recipient: string }) {
+  const { t } = useTranslation()
+  const activeAddress = useActiveAccountAddressWithThrow()
+  const prevTxns = useNumTransactionsBetweenAddresses(activeAddress, recipient) ?? 0
+
+  return (
+    <Text color="textSecondary" textAlign="center" variant="caption">
+      {t('{{ prevTxns }} previous transfers', { prevTxns })}
+    </Text>
   )
 }
