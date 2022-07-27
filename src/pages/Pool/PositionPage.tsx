@@ -82,7 +82,7 @@ const BadgeText = styled.div`
 // responsive text
 // disable the warning because we don't use the end prop, we just want to filter it out
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const Label = styled(({ end, ...props }) => <ThemedText.Label {...props} />)<{ end?: boolean }>`
+const Label = styled(({ end, ...props }) => <ThemedText.DeprecatedLabel {...props} />)<{ end?: boolean }>`
   display: flex;
   font-size: 16px;
   justify-content: ${({ end }) => (end ? 'flex-end' : 'flex-start')};
@@ -97,7 +97,7 @@ const ExtentsText = styled.span`
   font-weight: 500;
 `
 
-const HoverText = styled(ThemedText.Main)`
+const HoverText = styled(ThemedText.DeprecatedMain)`
   text-decoration: none;
   color: ${({ theme }) => theme.deprecated_text3};
   :hover {
@@ -167,9 +167,9 @@ function CurrentPriceCard({
         <ExtentsText>
           <Trans>Current price</Trans>
         </ExtentsText>
-        <ThemedText.MediumHeader textAlign="center">
+        <ThemedText.DeprecatedMediumHeader textAlign="center">
           {(inverted ? pool.token1Price : pool.token0Price).toSignificant(6)}{' '}
-        </ThemedText.MediumHeader>
+        </ThemedText.DeprecatedMediumHeader>
         <ExtentsText>
           <Trans>
             {currencyQuote?.symbol} per {currencyBase?.symbol}
@@ -188,7 +188,7 @@ function LinkedCurrency({ chainId, currency }: { chainId?: number; currency?: Cu
       <ExternalLink href={getExplorerLink(chainId, address, ExplorerDataType.TOKEN)}>
         <RowFixed>
           <CurrencyLogo currency={currency} size={'20px'} style={{ marginRight: '0.5rem' }} />
-          <ThemedText.Main>{currency?.symbol} ↗</ThemedText.Main>
+          <ThemedText.DeprecatedMain>{currency?.symbol} ↗</ThemedText.DeprecatedMain>
         </RowFixed>
       </ExternalLink>
     )
@@ -197,7 +197,7 @@ function LinkedCurrency({ chainId, currency }: { chainId?: number; currency?: Cu
   return (
     <RowFixed>
       <CurrencyLogo currency={currency} size={'20px'} style={{ marginRight: '0.5rem' }} />
-      <ThemedText.Main>{currency?.symbol}</ThemedText.Main>
+      <ThemedText.DeprecatedMain>{currency?.symbol}</ThemedText.DeprecatedMain>
     </RowFixed>
   )
 }
@@ -518,22 +518,26 @@ export function PositionPage() {
             <RowBetween>
               <RowFixed>
                 <CurrencyLogo currency={feeValueUpper?.currency} size={'20px'} style={{ marginRight: '0.5rem' }} />
-                <ThemedText.Main>{feeValueUpper ? formatCurrencyAmount(feeValueUpper, 4) : '-'}</ThemedText.Main>
+                <ThemedText.DeprecatedMain>
+                  {feeValueUpper ? formatCurrencyAmount(feeValueUpper, 4) : '-'}
+                </ThemedText.DeprecatedMain>
               </RowFixed>
-              <ThemedText.Main>{feeValueUpper?.currency?.symbol}</ThemedText.Main>
+              <ThemedText.DeprecatedMain>{feeValueUpper?.currency?.symbol}</ThemedText.DeprecatedMain>
             </RowBetween>
             <RowBetween>
               <RowFixed>
                 <CurrencyLogo currency={feeValueLower?.currency} size={'20px'} style={{ marginRight: '0.5rem' }} />
-                <ThemedText.Main>{feeValueLower ? formatCurrencyAmount(feeValueLower, 4) : '-'}</ThemedText.Main>
+                <ThemedText.DeprecatedMain>
+                  {feeValueLower ? formatCurrencyAmount(feeValueLower, 4) : '-'}
+                </ThemedText.DeprecatedMain>
               </RowFixed>
-              <ThemedText.Main>{feeValueLower?.currency?.symbol}</ThemedText.Main>
+              <ThemedText.DeprecatedMain>{feeValueLower?.currency?.symbol}</ThemedText.DeprecatedMain>
             </RowBetween>
           </AutoColumn>
         </LightCard>
-        <ThemedText.Italic>
+        <ThemedText.DeprecatedItalic>
           <Trans>Collecting fees will withdraw currently available fees for you.</Trans>
-        </ThemedText.Italic>
+        </ThemedText.DeprecatedItalic>
         <ButtonPrimary onClick={collect}>
           <Trans>Collect</Trans>
         </ButtonPrimary>
@@ -597,9 +601,9 @@ export function PositionPage() {
               <ResponsiveRow>
                 <RowFixed>
                   <DoubleCurrencyLogo currency0={currencyBase} currency1={currencyQuote} size={24} margin={true} />
-                  <ThemedText.Label fontSize={'24px'} mr="10px">
+                  <ThemedText.DeprecatedLabel fontSize={'24px'} mr="10px">
                     &nbsp;{currencyQuote?.symbol}&nbsp;/&nbsp;{currencyBase?.symbol}
-                  </ThemedText.Label>
+                  </ThemedText.DeprecatedLabel>
                   <Badge style={{ marginRight: '8px' }}>
                     <BadgeText>
                       <Trans>{new Percent(feeAmount, 1_000_000).toSignificant()}%</Trans>
@@ -679,13 +683,17 @@ export function PositionPage() {
                         <Trans>Liquidity</Trans>
                       </Label>
                       {fiatValueOfLiquidity?.greaterThan(new Fraction(1, 100)) ? (
-                        <ThemedText.LargeHeader fontSize="36px" fontWeight={500}>
+                        <ThemedText.DeprecatedLargeHeader fontSize="36px" fontWeight={500}>
                           <Trans>${fiatValueOfLiquidity.toFixed(2, { groupSeparator: ',' })}</Trans>
-                        </ThemedText.LargeHeader>
+                        </ThemedText.DeprecatedLargeHeader>
                       ) : (
-                        <ThemedText.LargeHeader color={theme.deprecated_text1} fontSize="36px" fontWeight={500}>
+                        <ThemedText.DeprecatedLargeHeader
+                          color={theme.deprecated_text1}
+                          fontSize="36px"
+                          fontWeight={500}
+                        >
                           <Trans>$-</Trans>
-                        </ThemedText.LargeHeader>
+                        </ThemedText.DeprecatedLargeHeader>
                       )}
                     </AutoColumn>
                     <LightCard padding="12px 16px">
@@ -693,14 +701,14 @@ export function PositionPage() {
                         <RowBetween>
                           <LinkedCurrency chainId={chainId} currency={currencyQuote} />
                           <RowFixed>
-                            <ThemedText.Main>
+                            <ThemedText.DeprecatedMain>
                               {inverted ? position?.amount0.toSignificant(4) : position?.amount1.toSignificant(4)}
-                            </ThemedText.Main>
+                            </ThemedText.DeprecatedMain>
                             {typeof ratio === 'number' && !removed ? (
                               <Badge style={{ marginLeft: '10px' }}>
-                                <ThemedText.Main fontSize={11}>
+                                <ThemedText.DeprecatedMain fontSize={11}>
                                   <Trans>{inverted ? ratio : 100 - ratio}%</Trans>
-                                </ThemedText.Main>
+                                </ThemedText.DeprecatedMain>
                               </Badge>
                             ) : null}
                           </RowFixed>
@@ -708,14 +716,14 @@ export function PositionPage() {
                         <RowBetween>
                           <LinkedCurrency chainId={chainId} currency={currencyBase} />
                           <RowFixed>
-                            <ThemedText.Main>
+                            <ThemedText.DeprecatedMain>
                               {inverted ? position?.amount1.toSignificant(4) : position?.amount0.toSignificant(4)}
-                            </ThemedText.Main>
+                            </ThemedText.DeprecatedMain>
                             {typeof ratio === 'number' && !removed ? (
                               <Badge style={{ marginLeft: '10px' }}>
-                                <ThemedText.Main color={theme.deprecated_text2} fontSize={11}>
+                                <ThemedText.DeprecatedMain color={theme.deprecated_text2} fontSize={11}>
                                   <Trans>{inverted ? 100 - ratio : ratio}%</Trans>
-                                </ThemedText.Main>
+                                </ThemedText.DeprecatedMain>
                               </Badge>
                             ) : null}
                           </RowFixed>
@@ -733,13 +741,21 @@ export function PositionPage() {
                             <Trans>Unclaimed fees</Trans>
                           </Label>
                           {fiatValueOfFees?.greaterThan(new Fraction(1, 100)) ? (
-                            <ThemedText.LargeHeader color={theme.deprecated_green1} fontSize="36px" fontWeight={500}>
+                            <ThemedText.DeprecatedLargeHeader
+                              color={theme.deprecated_green1}
+                              fontSize="36px"
+                              fontWeight={500}
+                            >
                               <Trans>${fiatValueOfFees.toFixed(2, { groupSeparator: ',' })}</Trans>
-                            </ThemedText.LargeHeader>
+                            </ThemedText.DeprecatedLargeHeader>
                           ) : (
-                            <ThemedText.LargeHeader color={theme.deprecated_text1} fontSize="36px" fontWeight={500}>
+                            <ThemedText.DeprecatedLargeHeader
+                              color={theme.deprecated_text1}
+                              fontSize="36px"
+                              fontWeight={500}
+                            >
                               <Trans>$-</Trans>
-                            </ThemedText.LargeHeader>
+                            </ThemedText.DeprecatedLargeHeader>
                           )}
                         </AutoColumn>
                         {ownsNFT &&
@@ -753,21 +769,21 @@ export function PositionPage() {
                             onClick={() => setShowConfirm(true)}
                           >
                             {!!collectMigrationHash && !isCollectPending ? (
-                              <ThemedText.Main color={theme.deprecated_text1}>
+                              <ThemedText.DeprecatedMain color={theme.deprecated_text1}>
                                 <Trans> Collected</Trans>
-                              </ThemedText.Main>
+                              </ThemedText.DeprecatedMain>
                             ) : isCollectPending || collecting ? (
-                              <ThemedText.Main color={theme.deprecated_text1}>
+                              <ThemedText.DeprecatedMain color={theme.deprecated_text1}>
                                 {' '}
                                 <Dots>
                                   <Trans>Collecting</Trans>
                                 </Dots>
-                              </ThemedText.Main>
+                              </ThemedText.DeprecatedMain>
                             ) : (
                               <>
-                                <ThemedText.Main color={theme.deprecated_white}>
+                                <ThemedText.DeprecatedMain color={theme.deprecated_white}>
                                   <Trans>Collect fees</Trans>
-                                </ThemedText.Main>
+                                </ThemedText.DeprecatedMain>
                               </>
                             )}
                           </ButtonConfirmed>
@@ -783,12 +799,12 @@ export function PositionPage() {
                               size={'20px'}
                               style={{ marginRight: '0.5rem' }}
                             />
-                            <ThemedText.Main>{feeValueUpper?.currency?.symbol}</ThemedText.Main>
+                            <ThemedText.DeprecatedMain>{feeValueUpper?.currency?.symbol}</ThemedText.DeprecatedMain>
                           </RowFixed>
                           <RowFixed>
-                            <ThemedText.Main>
+                            <ThemedText.DeprecatedMain>
                               {feeValueUpper ? formatCurrencyAmount(feeValueUpper, 4) : '-'}
-                            </ThemedText.Main>
+                            </ThemedText.DeprecatedMain>
                           </RowFixed>
                         </RowBetween>
                         <RowBetween>
@@ -798,12 +814,12 @@ export function PositionPage() {
                               size={'20px'}
                               style={{ marginRight: '0.5rem' }}
                             />
-                            <ThemedText.Main>{feeValueLower?.currency?.symbol}</ThemedText.Main>
+                            <ThemedText.DeprecatedMain>{feeValueLower?.currency?.symbol}</ThemedText.DeprecatedMain>
                           </RowFixed>
                           <RowFixed>
-                            <ThemedText.Main>
+                            <ThemedText.DeprecatedMain>
                               {feeValueLower ? formatCurrencyAmount(feeValueLower, 4) : '-'}
-                            </ThemedText.Main>
+                            </ThemedText.DeprecatedMain>
                           </RowFixed>
                         </RowBetween>
                       </AutoColumn>
@@ -811,9 +827,9 @@ export function PositionPage() {
                     {showCollectAsWeth && (
                       <AutoColumn gap="md">
                         <RowBetween>
-                          <ThemedText.Main>
+                          <ThemedText.DeprecatedMain>
                             <Trans>Collect as {nativeWrappedSymbol}</Trans>
-                          </ThemedText.Main>
+                          </ThemedText.DeprecatedMain>
                           <Toggle
                             id="receive-as-weth"
                             isActive={receiveWETH}
@@ -857,9 +873,9 @@ export function PositionPage() {
                       <ExtentsText>
                         <Trans>Min price</Trans>
                       </ExtentsText>
-                      <ThemedText.MediumHeader textAlign="center">
+                      <ThemedText.DeprecatedMediumHeader textAlign="center">
                         {formatTickPrice(priceLower, tickAtLimit, Bound.LOWER)}
-                      </ThemedText.MediumHeader>
+                      </ThemedText.DeprecatedMediumHeader>
                       <ExtentsText>
                         {' '}
                         <Trans>
@@ -868,9 +884,9 @@ export function PositionPage() {
                       </ExtentsText>
 
                       {inRange && (
-                        <ThemedText.Small color={theme.deprecated_text3}>
+                        <ThemedText.DeprecatedSmall color={theme.deprecated_text3}>
                           <Trans>Your position will be 100% {currencyBase?.symbol} at this price.</Trans>
-                        </ThemedText.Small>
+                        </ThemedText.DeprecatedSmall>
                       )}
                     </AutoColumn>
                   </LightCard>
@@ -881,9 +897,9 @@ export function PositionPage() {
                       <ExtentsText>
                         <Trans>Max price</Trans>
                       </ExtentsText>
-                      <ThemedText.MediumHeader textAlign="center">
+                      <ThemedText.DeprecatedMediumHeader textAlign="center">
                         {formatTickPrice(priceUpper, tickAtLimit, Bound.UPPER)}
-                      </ThemedText.MediumHeader>
+                      </ThemedText.DeprecatedMediumHeader>
                       <ExtentsText>
                         {' '}
                         <Trans>
@@ -892,9 +908,9 @@ export function PositionPage() {
                       </ExtentsText>
 
                       {inRange && (
-                        <ThemedText.Small color={theme.deprecated_text3}>
+                        <ThemedText.DeprecatedSmall color={theme.deprecated_text3}>
                           <Trans>Your position will be 100% {currencyQuote?.symbol} at this price.</Trans>
-                        </ThemedText.Small>
+                        </ThemedText.DeprecatedSmall>
                       )}
                     </AutoColumn>
                   </LightCard>

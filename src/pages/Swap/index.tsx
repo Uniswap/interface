@@ -20,7 +20,7 @@ import JSBI from 'jsbi'
 import { Context, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { ReactNode } from 'react'
 import { ArrowDown, CheckCircle, HelpCircle } from 'react-feather'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { Text } from 'rebass'
 import { useToggleWalletModal } from 'state/application/hooks'
 import { InterfaceTrade } from 'state/routing/types'
@@ -79,7 +79,7 @@ export function getIsValidSwapQuote(
 }
 
 export default function Swap() {
-  const history = useHistory()
+  const navigate = useNavigate()
   const { account, chainId } = useWeb3React()
   const loadedUrlParams = useDefaultsFromURLSearch()
 
@@ -194,8 +194,8 @@ export default function Swap() {
   // reset if they close warning without tokens in params
   const handleDismissTokenWarning = useCallback(() => {
     setDismissTokenWarning(true)
-    history.push('/swap/')
-  }, [history])
+    navigate('/swap/')
+  }, [navigate])
 
   // modal and loading
   const [{ showConfirm, tradeToConfirm, swapErrorMessage, attemptingTxn, txHash }, setSwapState] = useState<{
@@ -529,9 +529,9 @@ export default function Swap() {
               <div>
                 {swapIsUnsupported ? (
                   <ButtonPrimary disabled={true}>
-                    <ThemedText.Main mb="4px">
+                    <ThemedText.DeprecatedMain mb="4px">
                       <Trans>Unsupported Asset</Trans>
-                    </ThemedText.Main>
+                    </ThemedText.DeprecatedMain>
                   </ButtonPrimary>
                 ) : !account ? (
                   <TraceEvent
@@ -556,9 +556,9 @@ export default function Swap() {
                   </ButtonPrimary>
                 ) : routeNotFound && userHasSpecifiedInputOutput && !routeIsLoading && !routeIsSyncing ? (
                   <GreyCard style={{ textAlign: 'center' }}>
-                    <ThemedText.Main mb="4px">
+                    <ThemedText.DeprecatedMain mb="4px">
                       <Trans>Insufficient liquidity for this trade.</Trans>
-                    </ThemedText.Main>
+                    </ThemedText.DeprecatedMain>
                   </GreyCard>
                 ) : showApproveFlow ? (
                   <AutoRow style={{ flexWrap: 'nowrap', width: '100%' }}>

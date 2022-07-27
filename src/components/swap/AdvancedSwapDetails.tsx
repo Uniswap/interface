@@ -84,17 +84,17 @@ export function AdvancedSwapDetails({
               }
               disableHover={hideInfoTooltips}
             >
-              <ThemedText.SubHeader color={theme.deprecated_text1}>
+              <ThemedText.DeprecatedSubHeader color={theme.deprecated_text1}>
                 <Trans>Expected Output</Trans>
-              </ThemedText.SubHeader>
+              </ThemedText.DeprecatedSubHeader>
             </MouseoverTooltip>
           </RowFixed>
           <TextWithLoadingPlaceholder syncing={syncing} width={65}>
-            <ThemedText.Black textAlign="right" fontSize={14}>
+            <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
               {expectedOutputAmount
                 ? `${expectedOutputAmount.toSignificant(6)}  ${expectedOutputAmount.currency.symbol}`
                 : '-'}
-            </ThemedText.Black>
+            </ThemedText.DeprecatedBlack>
           </TextWithLoadingPlaceholder>
         </RowBetween>
         <RowBetween>
@@ -103,15 +103,15 @@ export function AdvancedSwapDetails({
               text={<Trans>The impact your trade has on the market price of this pool.</Trans>}
               disableHover={hideInfoTooltips}
             >
-              <ThemedText.SubHeader color={theme.deprecated_text1}>
+              <ThemedText.DeprecatedSubHeader color={theme.deprecated_text1}>
                 <Trans>Price Impact</Trans>
-              </ThemedText.SubHeader>
+              </ThemedText.DeprecatedSubHeader>
             </MouseoverTooltip>
           </RowFixed>
           <TextWithLoadingPlaceholder syncing={syncing} width={50}>
-            <ThemedText.Black textAlign="right" fontSize={14}>
+            <ThemedText.DeprecatedBlack textAlign="right" fontSize={14}>
               <FormattedPriceImpact priceImpact={priceImpact} />
-            </ThemedText.Black>
+            </ThemedText.DeprecatedBlack>
           </TextWithLoadingPlaceholder>
         </RowBetween>
         <Separator />
@@ -126,22 +126,22 @@ export function AdvancedSwapDetails({
               }
               disableHover={hideInfoTooltips}
             >
-              <ThemedText.SubHeader color={theme.deprecated_text3}>
+              <ThemedText.DeprecatedSubHeader color={theme.deprecated_text3}>
                 {trade.tradeType === TradeType.EXACT_INPUT ? (
                   <Trans>Minimum received</Trans>
                 ) : (
                   <Trans>Maximum sent</Trans>
                 )}{' '}
                 <Trans>after slippage</Trans> ({allowedSlippage.toFixed(2)}%)
-              </ThemedText.SubHeader>
+              </ThemedText.DeprecatedSubHeader>
             </MouseoverTooltip>
           </RowFixed>
           <TextWithLoadingPlaceholder syncing={syncing} width={70}>
-            <ThemedText.Black textAlign="right" fontSize={14} color={theme.deprecated_text3}>
+            <ThemedText.DeprecatedBlack textAlign="right" fontSize={14} color={theme.deprecated_text3}>
               {trade.tradeType === TradeType.EXACT_INPUT
                 ? `${trade.minimumAmountOut(allowedSlippage).toSignificant(6)} ${trade.outputAmount.currency.symbol}`
                 : `${trade.maximumAmountIn(allowedSlippage).toSignificant(6)} ${trade.inputAmount.currency.symbol}`}
-            </ThemedText.Black>
+            </ThemedText.DeprecatedBlack>
           </TextWithLoadingPlaceholder>
         </RowBetween>
         {!trade?.gasUseEstimateUSD || !chainId || !SUPPORTED_GAS_ESTIMATE_CHAIN_IDS.includes(chainId) ? null : (
@@ -154,14 +154,14 @@ export function AdvancedSwapDetails({
               }
               disableHover={hideInfoTooltips}
             >
-              <ThemedText.SubHeader color={theme.deprecated_text3}>
+              <ThemedText.DeprecatedSubHeader color={theme.deprecated_text3}>
                 <Trans>Network Fee</Trans>
-              </ThemedText.SubHeader>
+              </ThemedText.DeprecatedSubHeader>
             </MouseoverTooltip>
             <TextWithLoadingPlaceholder syncing={syncing} width={50}>
-              <ThemedText.Black textAlign="right" fontSize={14} color={theme.deprecated_text3}>
+              <ThemedText.DeprecatedBlack textAlign="right" fontSize={14} color={theme.deprecated_text3}>
                 ~${trade.gasUseEstimateUSD.toFixed(2)}
-              </ThemedText.Black>
+              </ThemedText.DeprecatedBlack>
             </TextWithLoadingPlaceholder>
           </RowBetween>
         )}

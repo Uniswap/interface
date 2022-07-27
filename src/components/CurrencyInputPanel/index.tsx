@@ -232,9 +232,9 @@ export default function CurrencyInputPanel({
         <FixedContainer>
           <AutoColumn gap="sm" justify="center">
             <Lock />
-            <ThemedText.Label fontSize="12px" textAlign="center" padding="0 12px">
+            <ThemedText.DeprecatedLabel fontSize="12px" textAlign="center" padding="0 12px">
               <Trans>The market price is outside your specified price range. Single-asset deposit only.</Trans>
-            </ThemedText.Label>
+            </ThemedText.DeprecatedLabel>
           </AutoColumn>
         </FixedContainer>
       )}
@@ -297,7 +297,7 @@ export default function CurrencyInputPanel({
               </LoadingOpacityContainer>
               {account ? (
                 <RowFixed style={{ height: '17px' }}>
-                  <ThemedText.Body
+                  <ThemedText.DeprecatedBody
                     onClick={onMax}
                     color={theme.deprecated_text3}
                     fontWeight={500}
@@ -311,7 +311,7 @@ export default function CurrencyInputPanel({
                         <Trans>Balance: {formatCurrencyAmount(selectedCurrencyBalance, 4)}</Trans>
                       )
                     ) : null}
-                  </ThemedText.Body>
+                  </ThemedText.DeprecatedBody>
                   {showMaxButton && selectedCurrencyBalance ? (
                     <TraceEvent
                       events={[Event.onClick]}

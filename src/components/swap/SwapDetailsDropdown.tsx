@@ -220,9 +220,9 @@ export default function SwapDetailsDropdown({
                   </Trace>
                 </LoadingOpacityContainer>
               ) : loading || syncing ? (
-                <ThemedText.Main fontSize={14}>
+                <ThemedText.DeprecatedMain fontSize={14}>
                   <Trans>Fetching best price...</Trans>
-                </ThemedText.Main>
+                </ThemedText.DeprecatedMain>
               ) : null}
             </RowFixed>
             <RowFixed>
