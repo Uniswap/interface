@@ -10,6 +10,7 @@ import {
   DeltaContainer,
   ResourcesContainer,
   Stat,
+  StatPair,
   StatsSection,
   TimeOptionsContainer,
   TokenInfoContainer,
@@ -53,6 +54,7 @@ const StatLoadingBubble = styled(SquareLoadingBubble)`
 const StatsLoadingContainer = styled.div`
   display: flex;
   gap: 24px;
+  flex-wrap: wrap;
 `
 const ChartAnimation = styled.div`
   display: flex;
@@ -67,7 +69,9 @@ const ChartAnimation = styled.div`
     }
   }
 `
-
+const ChartWrapper = styled.div`
+  width: inherit;
+`
 /* Loading State: row component with loading bubbles */
 export default function LoadingTokenDetail() {
   return (
@@ -84,25 +88,27 @@ export default function LoadingTokenDetail() {
           <PriceLoadingBubble />
         </TokenPrice>
         <DeltaContainer>{null}</DeltaContainer>
-        <ChartContainer>
-          <ChartAnimation>
-            <svg width="416" height="160" xmlns="http://www.w3.org/2000/svg">
-              <path d="M 0 80 Q 104 10, 208 80 T 416 80" stroke="#2e3138" fill="transparent" strokeWidth="2" />
-            </svg>
-            <svg width="416" height="160" xmlns="http://www.w3.org/2000/svg">
-              <path d="M 0 80 Q 104 10, 208 80 T 416 80" stroke="#2e3138" fill="transparent" strokeWidth="2" />
-            </svg>
-            <svg width="416" height="160" xmlns="http://www.w3.org/2000/svg">
-              <path d="M 0 80 Q 104 10, 208 80 T 416 80" stroke="#2e3138" fill="transparent" strokeWidth="2" />
-            </svg>
-            <svg width="416" height="160" xmlns="http://www.w3.org/2000/svg">
-              <path d="M 0 80 Q 104 10, 208 80 T 416 80" stroke="#2e3138" fill="transparent" strokeWidth="2" />
-            </svg>
-            <svg width="416" height="160" xmlns="http://www.w3.org/2000/svg">
-              <path d="M 0 80 Q 104 10, 208 80 T 416 80" stroke="#2e3138" fill="transparent" strokeWidth="2" />
-            </svg>
-          </ChartAnimation>
-        </ChartContainer>
+        <ChartWrapper>
+          <ChartContainer>
+            <ChartAnimation>
+              <svg width="416" height="160" xmlns="http://www.w3.org/2000/svg">
+                <path d="M 0 80 Q 104 10, 208 80 T 416 80" stroke="#2e3138" fill="transparent" strokeWidth="2" />
+              </svg>
+              <svg width="416" height="160" xmlns="http://www.w3.org/2000/svg">
+                <path d="M 0 80 Q 104 10, 208 80 T 416 80" stroke="#2e3138" fill="transparent" strokeWidth="2" />
+              </svg>
+              <svg width="416" height="160" xmlns="http://www.w3.org/2000/svg">
+                <path d="M 0 80 Q 104 10, 208 80 T 416 80" stroke="#2e3138" fill="transparent" strokeWidth="2" />
+              </svg>
+              <svg width="416" height="160" xmlns="http://www.w3.org/2000/svg">
+                <path d="M 0 80 Q 104 10, 208 80 T 416 80" stroke="#2e3138" fill="transparent" strokeWidth="2" />
+              </svg>
+              <svg width="416" height="160" xmlns="http://www.w3.org/2000/svg">
+                <path d="M 0 80 Q 104 10, 208 80 T 416 80" stroke="#2e3138" fill="transparent" strokeWidth="2" />
+              </svg>
+            </ChartAnimation>
+          </ChartContainer>
+        </ChartWrapper>
         <TimeOptionsContainer>{null}</TimeOptionsContainer>
       </ChartHeader>
       <AboutSection>
@@ -117,22 +123,26 @@ export default function LoadingTokenDetail() {
       </AboutSection>
       <StatsSection>
         <StatsLoadingContainer>
-          <Stat>
-            <HalfLoadingBubble />
-            <StatLoadingBubble />
-          </Stat>
-          <Stat>
-            <HalfLoadingBubble />
-            <StatLoadingBubble />
-          </Stat>
-          <Stat>
-            <HalfLoadingBubble />
-            <StatLoadingBubble />
-          </Stat>
-          <Stat>
-            <HalfLoadingBubble />
-            <StatLoadingBubble />
-          </Stat>
+          <StatPair>
+            <Stat>
+              <HalfLoadingBubble />
+              <StatLoadingBubble />
+            </Stat>
+            <Stat>
+              <HalfLoadingBubble />
+              <StatLoadingBubble />
+            </Stat>
+          </StatPair>
+          <StatPair>
+            <Stat>
+              <HalfLoadingBubble />
+              <StatLoadingBubble />
+            </Stat>
+            <Stat>
+              <HalfLoadingBubble />
+              <StatLoadingBubble />
+            </Stat>
+          </StatPair>
         </StatsLoadingContainer>
       </StatsSection>
       <ContractAddressSection>{null}</ContractAddressSection>
