@@ -25,7 +25,7 @@ export const ButtonText = styled.button`
   }
 `
 
-export const CloseIcon = styled(X)<{ onClick: () => void }>`
+export const CloseIcon = styled(X) <{ onClick: () => void }>`
   cursor: pointer;
 `
 
@@ -239,7 +239,7 @@ export function BackArrow({ to }: { to: string }) {
   )
 }
 
-export const CustomLightSpinner = styled(Spinner)<{ size: string }>`
+export const CustomLightSpinner = styled(Spinner) <{ size: string }>`
   height: ${({ size }) => size};
   width: ${({ size }) => size};
 `
@@ -290,7 +290,7 @@ export function ColorThemeToggle() {
   const [colorsUpdated, setColorsUpdated] = useAtom(useColorsUpdatedAtom)
   return (
     <ColorsToggle updated={colorsUpdated} onClick={() => setColorsUpdated(!colorsUpdated)}>
-      Theme: {colorsUpdated ? 'New Colors' : 'Depricated Colors'}
+      Theme: {colorsUpdated ? 'New Colors' : 'Deprecated Colors'}
     </ColorsToggle>
   )
 }
