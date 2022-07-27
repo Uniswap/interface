@@ -42,7 +42,7 @@ function useChainBalances(
   const { currentData: data, isLoading: loading } = useBalancesQuery(
     address ? { chainId, address, ignoreSmallBalances } : skipToken,
     {
-      pollingInterval: PollingInterval.Normal,
+      pollingInterval: PollingInterval.Slow,
     }
   )
 

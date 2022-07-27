@@ -1,6 +1,6 @@
 import { Currency } from '@uniswap/sdk-core'
 import Fuse from 'fuse.js'
-import React from 'react'
+import React, { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ListRenderItemInfo } from 'react-native'
 import { FilterGroup } from 'src/components/CurrencySelector/FilterGroup'
@@ -40,6 +40,26 @@ export function CurrencySelect({
 
   const tokenWarningLevelMap = useCombinedTokenWarningLevelMap()
 
+  const renderItem = useCallback(
+    ({ item }: ListRenderItemInfo<Fuse.FuseResult<Currency>>) => {
+      const currency = item.item
+      return (
+        <WarningOption
+          currency={currency}
+          matches={item.matches}
+          tokenWarningLevelMap={tokenWarningLevelMap}
+          onPress={() => onSelectCurrency?.(currency)}
+        />
+      )
+    },
+    [onSelectCurrency, tokenWarningLevelMap]
+  )
+
+  const onClearFilters = useCallback(() => {
+    onClearSearchFilter()
+    onClearChainFilter()
+  }, [onClearChainFilter, onClearSearchFilter])
+
   return (
     <Flex gap="lg" px="md">
       <SearchBar
@@ -58,22 +78,9 @@ export function CurrencySelect({
 
       <CurrencySearchResultList
         currencies={filteredCurrencies}
-        renderItem={({ item }: ListRenderItemInfo<Fuse.FuseResult<Currency>>) => {
-          const currency = item.item
-          return (
-            <WarningOption
-              currency={currency}
-              matches={item.matches}
-              tokenWarningLevelMap={tokenWarningLevelMap}
-              onPress={() => onSelectCurrency?.(currency)}
-            />
-          )
-        }}
+        renderItem={renderItem}
         searchFilter={searchFilter}
-        onClearSearchFilter={() => {
-          onClearSearchFilter()
-          onClearChainFilter()
-        }}
+        onClearSearchFilter={onClearFilters}
       />
     </Flex>
   )

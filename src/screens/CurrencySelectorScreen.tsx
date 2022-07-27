@@ -1,5 +1,5 @@
 import { Currency } from '@uniswap/sdk-core'
-import React from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { AppStackScreenProp, useAppStackNavigation } from 'src/app/navigation/types'
 import { CurrencySelect } from 'src/components/CurrencySelector/CurrencySelect'
 import { SheetScreen } from 'src/components/layout/SheetScreen'
@@ -68,7 +68,18 @@ function CurrencySearchWithBalancesOnly({
   const chainIds = useActiveChainIds()
   const activeAccount = useActiveAccount()
   const balances = useAllBalancesByChainId(activeAccount?.address, chainIds)
-  const currencies = flattenObjectOfObjects(balances.balances).map((b) => b.amount.currency)
+  const currencies = useMemo(
+    () => flattenObjectOfObjects(balances.balances).map((b) => b.amount.currency),
+    [balances.balances]
+  )
+
+  const onSelectCurrencyGoBack = useCallback(
+    (currency: Currency) => {
+      onSelectCurrency(currency)
+      navigation.goBack()
+    },
+    [navigation, onSelectCurrency]
+  )
 
   return (
     <CurrencySelect
@@ -76,10 +87,7 @@ function CurrencySearchWithBalancesOnly({
       currencies={currencies}
       otherCurrency={otherCurrency}
       selectedCurrency={selectedCurrency}
-      onSelectCurrency={(currency: Currency) => {
-        onSelectCurrency(currency)
-        navigation.goBack()
-      }}
+      onSelectCurrency={onSelectCurrencyGoBack}
     />
   )
 }
@@ -95,18 +103,24 @@ function CurrencySearchAllCurrencies({
   onSelectCurrency: (currency: Currency) => void
 }) {
   const navigation = useAppStackNavigation()
-  const currencies = useAllCurrencies()
+  const currenciesByChain = useAllCurrencies()
+  const currencies = useMemo(() => flattenObjectOfObjects(currenciesByChain), [currenciesByChain])
+
+  const onSelectCurrencyGoBack = useCallback(
+    (currency: Currency) => {
+      onSelectCurrency(currency)
+      navigation.goBack()
+    },
+    [navigation, onSelectCurrency]
+  )
 
   return (
     <CurrencySelect
-      currencies={flattenObjectOfObjects(currencies)}
+      currencies={currencies}
       otherCurrency={otherCurrency}
       selectedCurrency={selectedCurrency}
       showNonZeroBalancesOnly={false}
-      onSelectCurrency={(currency: Currency) => {
-        onSelectCurrency(currency)
-        navigation.goBack()
-      }}
+      onSelectCurrency={onSelectCurrencyGoBack}
     />
   )
 }

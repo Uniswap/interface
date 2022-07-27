@@ -30,19 +30,23 @@ export function useFilteredCurrencies(
     [chainFilter, currencies, debouncedSearchFilter, favoriteCurrencies, favoritesFilter]
   )
 
-  const onChainPress = (newChainFilter: typeof chainFilter) => {
-    if (chainFilter === newChainFilter) {
-      setChainFilter(null)
-    } else {
-      setChainFilter(newChainFilter)
-    }
-    setFavoritesFilter(false)
-  }
+  const onChainPress = useCallback(
+    (newChainFilter: typeof chainFilter) => {
+      if (chainFilter === newChainFilter) {
+        setChainFilter(null)
+      } else {
+        setChainFilter(newChainFilter)
+      }
+      setFavoritesFilter(false)
+    },
+    [chainFilter]
+  )
 
   const onClearChainFilter = useCallback(() => {
     setFavoritesFilter(false)
     setChainFilter(null)
   }, [])
+
   const onClearSearchFilter = useCallback(() => {
     setFavoritesFilter(false)
     setSearchFilter(null)

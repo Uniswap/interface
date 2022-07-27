@@ -42,18 +42,26 @@ export function CurrencySearchResultList({
           </TextButton>
         </Flex>
       }
-      ListFooterComponent={
-        <Inset all="xxl">
-          <Inset all="md" />
-        </Inset>
-      }
+      ListFooterComponent={Footer}
       data={currencies}
-      keyExtractor={(item) => currencyId(item.item)}
+      keyExtractor={key}
       renderItem={renderItem}
       style={styles.list}
       windowSize={1}
     />
   )
+}
+
+function Footer() {
+  return (
+    <Inset all="xxl">
+      <Inset all="md" />
+    </Inset>
+  )
+}
+
+function key(item: Fuse.FuseResult<Currency>) {
+  return currencyId(item.item)
 }
 
 const styles = StyleSheet.create({
