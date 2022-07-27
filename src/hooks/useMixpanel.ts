@@ -27,6 +27,7 @@ import {
 } from 'apollo/queries/promm'
 import { checkedSubgraph } from 'state/transactions/actions'
 import { useWeb3React } from '@web3-react/core'
+import { BigNumber } from '@ethersproject/bignumber'
 
 export enum MIXPANEL_TYPE {
   PAGE_VIEWED,
@@ -607,7 +608,7 @@ export default function useMixpanel(trade?: Aggregator | undefined, currencies?:
             break
           mixpanelHandler(MIXPANEL_TYPE.SWAP_COMPLETED, {
             arbitrary: transaction.arbitrary,
-            actual_gas: transaction.receipt?.gasUsed || '',
+            actual_gas: transaction.receipt?.gasUsed || BigNumber.from(0),
             trade_amount_usd: !!res.data?.transaction?.swaps
               ? Math.max(res.data.transaction.swaps.map((s: any) => parseFloat(s.amountUSD).toPrecision(3)))
               : '',

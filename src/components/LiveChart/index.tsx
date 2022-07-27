@@ -66,6 +66,7 @@ const SwitchButtonWrapper = styled.div`
 const ProLiveChartCustom = styled(ProLiveChart)<{ $isShowProChart: boolean }>`
   margin: ${() => (isMobile ? '0' : '16px 0 0 0 !important')};
   display: ${({ $isShowProChart }) => ($isShowProChart ? 'block' : 'none')};
+  background: ${({ theme }) => (theme.darkMode ? theme.buttonBlack : theme.background)};
 `
 
 const getDifferentValues = (chartData: any, hoverValue: number | null) => {

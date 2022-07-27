@@ -80,7 +80,7 @@ const SlippageOptionCSS = css`
   border: 1px solid transparent;
   border-radius: 20px;
 
-  background-color: ${({ theme }) => theme.buttonBlack};
+  background-color: ${({ theme }) => theme.tabBackgound};
   color: ${({ theme }) => theme.subText};
   text-align: center;
 

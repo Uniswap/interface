@@ -128,7 +128,14 @@ function ProLiveChart({
       return
     }
     setLoading(true)
-    let widgetOptions: ChartingLibraryWidgetOptions = {
+
+    const localStorageState = JSON.parse(localStorage.getItem(LOCALSTORAGE_STATE_NAME) || 'null')
+    // set auto scale mode to true to fix wrong behavious of right axis price range
+    if (localStorageState?.charts[0]?.panes[0]?.rightAxisesState[0]?.state?.m_isAutoScale === false) {
+      localStorageState.charts[0].panes[0].rightAxisesState[0].state.m_isAutoScale = true
+    }
+
+    const widgetOptions: ChartingLibraryWidgetOptions = {
       symbol: 'KNC',
       datafeed: datafeed,
       interval: '1H' as ResolutionString,
@@ -162,26 +169,26 @@ function ProLiveChart({
         { text: '1d', resolution: '15' as ResolutionString, description: '1 Day' },
       ],
       timezone: Intl.DateTimeFormat().resolvedOptions().timeZone as Timezone,
+      auto_save_delay: 2,
+      saved_data: localStorageState,
     }
-    let localStorageState = localStorage.getItem(LOCALSTORAGE_STATE_NAME)
-    if (localStorageState) {
-      widgetOptions.saved_data = JSON.parse(localStorageState)
-    }
+
     const tvWidget = new window.TradingView.widget(widgetOptions)
 
     tvWidget.onChartReady(() => {
+      setLoading(false)
       tvWidget.applyOverrides({
         'paneProperties.backgroundType': 'solid',
-        'paneProperties.background': theme.buttonBlack,
+        'paneProperties.background': theme.darkMode ? theme.buttonBlack : theme.background,
         'mainSeriesProperties.candleStyle.upColor': theme.primary,
         'mainSeriesProperties.candleStyle.borderUpColor': theme.primary,
         'mainSeriesProperties.candleStyle.wickUpColor': theme.primary,
         'mainSeriesProperties.candleStyle.downColor': theme.red,
         'mainSeriesProperties.candleStyle.borderDownColor': theme.red,
         'mainSeriesProperties.candleStyle.wickDownColor': theme.red,
+        'mainSeriesProperties.priceAxisProperties.autoScale': true,
+        'scalesProperties.textColor': theme.text,
       })
-      setLoading(false)
-
       tvWidget.headerReady().then(() => {
         const fullscreenOn = tvWidget.createButton()
         fullscreenOn.setAttribute('title', 'Fullscreen on')
