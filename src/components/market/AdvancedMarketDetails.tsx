@@ -1,9 +1,12 @@
 import { Trans } from '@lingui/macro'
-import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { LoadingRows } from 'components/Loader/styled'
+import { SupportedChainId } from 'constants/chains'
+import { useActiveWeb3React } from 'hooks/web3'
 import { useContext, useMemo } from 'react'
+import { useIsGaslessMode } from 'state/user/hooks'
 import { ThemeContext } from 'styled-components/macro'
 
 import { TYPE } from '../../theme'
@@ -19,6 +22,9 @@ interface AdvancedMarketDetailsProps {
   allowedSlippage: Percent
   syncing?: boolean
   referer: string | null
+  paymentToken: Token | undefined | null
+  paymentFees: CurrencyAmount<Currency> | undefined
+  minimumReceived: number | undefined
 }
 
 function TextWithLoadingPlaceholder({
@@ -44,9 +50,13 @@ export function AdvancedMarketDetails({
   allowedSlippage,
   syncing = false,
   referer,
+  paymentToken,
+  paymentFees,
+  minimumReceived,
 }: AdvancedMarketDetailsProps) {
   const theme = useContext(ThemeContext)
-
+  const { chainId } = useActiveWeb3React()
+  const isGaslessMode = useIsGaslessMode() && chainId == SupportedChainId.POLYGON
   const { realizedLPFee, priceImpact } = useMemo(() => {
     if (!trade) return { realizedLPFee: undefined, priceImpact: undefined }
 
@@ -78,17 +88,33 @@ export function AdvancedMarketDetails({
       <RowBetween>
         <RowFixed>
           <TYPE.subHeader color={theme.text1}>
-            {trade.tradeType === TradeType.EXACT_INPUT ? <Trans>Minimum received</Trans> : <Trans>Maximum sent</Trans>}
+            {trade.tradeType === TradeType.EXACT_INPUT ? (
+              <Trans>Minimum received {isGaslessMode ? <span>(including fees)</span> : ''}</Trans>
+            ) : (
+              <Trans>Maximum sent</Trans>
+            )}
           </TYPE.subHeader>
         </RowFixed>
         <TextWithLoadingPlaceholder syncing={syncing} width={70}>
           <TYPE.black textAlign="right" fontSize={14}>
             {trade.tradeType === TradeType.EXACT_INPUT
-              ? `${trade.minimumAmountOut(allowedSlippage).toSignificant(6)} ${trade.outputAmount.currency.symbol}`
+              ? `${minimumReceived} ${trade.outputAmount.currency.symbol}`
               : `${trade.maximumAmountIn(allowedSlippage).toSignificant(6)} ${trade.inputAmount.currency.symbol}`}
           </TYPE.black>
         </TextWithLoadingPlaceholder>
       </RowBetween>
+      {isGaslessMode && (
+        <RowBetween>
+          <RowFixed>
+            <TYPE.subHeader color={theme.text1}>Total fees:</TYPE.subHeader>
+          </RowFixed>
+          <TextWithLoadingPlaceholder syncing={syncing} width={70}>
+            <TYPE.black textAlign="right" fontSize={14}>
+              {paymentFees?.toSignificant(4)} {paymentToken?.symbol}
+            </TYPE.black>
+          </TextWithLoadingPlaceholder>
+        </RowBetween>
+      )}
       <RowBetween>
         <RowFixed>
           <TYPE.subHeader color={theme.text1}>Referer:</TYPE.subHeader>

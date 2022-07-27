@@ -1,5 +1,5 @@
 import { skipToken } from '@reduxjs/toolkit/query/react'
-import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
+import { BigintIsh, Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
 import { Route } from '@uniswap/v2-sdk'
 import { Route as RouteV3, Trade as TradeV3 } from '@uniswap/v3-sdk'
 import { INCH_ROUTER_ADDRESS, V2_ROUTER_ADDRESS } from 'constants/addresses'
@@ -94,6 +94,7 @@ export function useGaslessAPITrade(
   trade: TradeV3<Currency, Currency, TradeType> | undefined
   tx: SwapTransaction | undefined
   paymentFees: CurrencyAmount<Currency> | undefined
+  paymentToken: Token | null | undefined
 } {
   const [currencyIn, currencyOut]: [Currency | undefined, Currency | undefined] = useMemo(
     () =>
@@ -141,6 +142,7 @@ export function useGaslessAPITrade(
         tx: undefined,
         uniswapAmount: undefined,
         paymentFees: undefined,
+        paymentToken: undefined,
       }
     }
 
@@ -151,6 +153,7 @@ export function useGaslessAPITrade(
         trade: undefined,
         tx: undefined,
         paymentFees: undefined,
+        paymentToken: undefined,
       }
     }
 
@@ -169,6 +172,7 @@ export function useGaslessAPITrade(
         trade: undefined,
         tx: undefined,
         paymentFees: undefined,
+        paymentToken: undefined,
       }
     }
 
@@ -180,6 +184,7 @@ export function useGaslessAPITrade(
           trade: undefined,
           tx: undefined,
           paymentFees: undefined,
+          paymentToken: undefined,
         }
       }
       const inputAmount = CurrencyAmount.fromRawAmount(currencyIn, quoteResult?.sellAmount)
@@ -194,7 +199,7 @@ export function useGaslessAPITrade(
 
       return {
         // always return VALID regardless of isFetching status
-        state: V3TradeState.VALID,
+        state: 3, // V3TradeState.VALID,
         trade: bestTrade,
         tx: {
           from: account?.toString() ?? '',
@@ -208,8 +213,9 @@ export function useGaslessAPITrade(
         },
         paymentFees:
           paymentToken && quoteResult.paymentFee
-            ? CurrencyAmount.fromRawAmount(paymentToken as Currency, quoteResult.paymentFee)
+            ? CurrencyAmount.fromRawAmount(paymentToken as Currency, quoteResult.paymentFee as BigintIsh)
             : undefined,
+        paymentToken,
       }
     } catch (error) {
       console.log(error)
@@ -219,6 +225,7 @@ export function useGaslessAPITrade(
         tx: undefined,
         uniswapAmount: undefined,
         paymentFees: undefined,
+        paymentToken: undefined,
       }
     }
   }, [

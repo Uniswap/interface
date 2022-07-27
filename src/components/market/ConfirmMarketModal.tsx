@@ -1,8 +1,8 @@
 import { Trans } from '@lingui/macro'
-import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
-import { ReactNode, useCallback, useMemo } from 'react'
+import { ReactNode, useCallback, useMemo, useState } from 'react'
 import { SwapTransaction } from 'state/validator/types'
 
 import TransactionConfirmationModal, {
@@ -46,6 +46,12 @@ export default function ConfirmMarketModal({
   attemptingTxn,
   txHash,
   referer,
+  paymentToken,
+  paymentFees,
+  priceImpactHigh,
+  feeImpactHigh,
+  updateFeeImpact,
+  updatePriceImpact,
 }: {
   isOpen: boolean
   trade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType> | undefined
@@ -61,6 +67,12 @@ export default function ConfirmMarketModal({
   swapErrorMessage: ReactNode | undefined
   onDismiss: () => void
   referer: string | null
+  paymentToken: Token | undefined | null
+  paymentFees: CurrencyAmount<Currency> | undefined
+  priceImpactHigh: boolean
+  feeImpactHigh: boolean
+  updateFeeImpact: () => void
+  updatePriceImpact: () => void
 }) {
   const showAcceptChanges = useMemo(
     () =>
@@ -89,6 +101,12 @@ export default function ConfirmMarketModal({
         showAcceptChanges={showAcceptChanges}
         onAcceptChanges={onAcceptChanges}
         referer={referer}
+        paymentToken={paymentToken}
+        paymentFees={paymentFees}
+        priceImpactHigh={priceImpactHigh}
+        feeImpactHigh={feeImpactHigh}
+        updateFeeImpact={updateFeeImpact}
+        updatePriceImpact={updatePriceImpact}
       />
     ) : null
   }, [allowedSlippage, onAcceptChanges, recipient, referer, showAcceptChanges, trade])

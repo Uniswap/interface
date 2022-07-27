@@ -29,6 +29,8 @@ export function useBestMarketTrade(
   trade: V3Trade<Currency, Currency, typeof tradeType> | undefined
   tx: SwapTransaction | undefined
   savings: CurrencyAmount<Token> | null
+  paymentToken: Token | undefined | null
+  paymentFees: CurrencyAmount<Currency> | undefined
 } {
   const isWindowVisible = useIsWindowVisible()
   const { chainId } = useActiveWeb3React()
@@ -143,6 +145,11 @@ export function useBestMarketTrade(
       trade: betterTrade?.trade,
       tx: betterTrade?.tx,
       savings,
+      // @ts-ignore
+      paymentFees: gasless ? betterTrade.paymentFees : undefined,
+      // @ts-ignore
+      paymentToken: gasless ? betterTrade.paymentToken : undefined,
+
       ...(debouncing ? { state: V3TradeState.SYNCING } : {}),
       ...(isLoading ? { state: V3TradeState.LOADING } : {}),
     }),
