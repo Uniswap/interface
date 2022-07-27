@@ -69,15 +69,15 @@ const ChartAnimation = styled.div`
     }
   }
 `
-const TimeSpace = styled.div`
-  height: 36px;
+const Space = styled.div<{ heightSize: string }>`
+  height: ${({ heightSize }) => heightSize};
 `
 /* Loading State: row component with loading bubbles */
 export default function LoadingTokenDetail() {
   return (
     <TopArea>
       <BreadcrumbNavLink to="/explore">
-        <br></br>
+        <Space heightSize="20px" />
       </BreadcrumbNavLink>
       <ChartHeader>
         <TokenInfoContainer>
@@ -90,7 +90,7 @@ export default function LoadingTokenDetail() {
           <PriceLoadingBubble />
         </TokenPrice>
         <DeltaContainer>
-          <br></br>
+          <Space heightSize="20px" />
         </DeltaContainer>
         <ChartContainer>
           <ChartAnimation>
@@ -112,7 +112,7 @@ export default function LoadingTokenDetail() {
           </ChartAnimation>
         </ChartContainer>
         <TimeOptionsContainer>
-          <TimeSpace></TimeSpace>
+          <Space heightSize="32px" />
         </TimeOptionsContainer>
       </ChartHeader>
       <AboutSection>

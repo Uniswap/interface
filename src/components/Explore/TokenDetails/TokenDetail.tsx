@@ -93,6 +93,7 @@ export const ChartContainer = styled.div`
 export const DeltaContainer = styled.div`
   display: flex;
   align-items: center;
+  height: ;
 `
 export const Stat = styled.div`
   display: flex;
