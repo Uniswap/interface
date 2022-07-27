@@ -41,7 +41,7 @@ export interface CampaignLeaderboardRanking {
   totalPoint: number
   rankNo: number
   rewardAmount: Fraction
-  token: SerializedToken
+  token?: SerializedToken
 }
 
 export interface CampaignLeaderboardReward {

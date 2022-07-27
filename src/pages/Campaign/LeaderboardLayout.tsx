@@ -113,7 +113,7 @@ export default function LeaderboardLayout({
         </LeaderboardTableBodyItem>
         {showRewardsColumn && (
           <LeaderboardTableBodyItem align="right" isThisRankingEligible={isThisRankingEligible}>
-            {data.rewardAmount.toSignificant(DEFAULT_SIGNIFICANT)} {data.token.symbol}
+            {data.rewardAmount.toSignificant(DEFAULT_SIGNIFICANT)} {data?.token?.symbol ?? ''}
           </LeaderboardTableBodyItem>
         )}
       </LeaderboardTableBody>
