@@ -48,10 +48,12 @@ export function HomeScreen() {
         background={<AppBackground isStrongAccent />}
         contentHeader={<ContentHeader />}
         fixedHeader={<FixedHeader />}>
-        <Flex gap="sm" px="sm">
-          <Flex gap="lg" p="sm">
+        <Flex gap="lg" px="sm">
+          <Flex gap="md" p="sm">
             <TotalBalance showRelativeChange balances={balances} owner={activeAccount?.address} />
-            <QuickActions />
+            <Flex pt="xxs">
+              <QuickActions />
+            </Flex>
           </Flex>
           <Flex gap="sm">
             <PortfolioTokensSection count={4} />
@@ -94,7 +96,14 @@ function ContentHeader() {
   const activeAccount = useActiveAccountWithThrow()
 
   return (
-    <Box alignItems="center" flexDirection="row" justifyContent="space-between" px="xs" py="sm">
+    <Box
+      alignItems="center"
+      flexDirection="row"
+      justifyContent="space-between"
+      mb="xxs"
+      mt="sm"
+      px="xs"
+      py="sm">
       <AccountHeader onPress={onPressAccountHeader} />
       <Flex row gap="xs">
         <PendingNotificationBadge />
