@@ -92,6 +92,7 @@ function NFTLogoOrPlaceholder(props: { nftImageUrl?: string; size: number }) {
       borderRadius="xs"
       height={size}
       justifyContent="center"
+      overflow="hidden"
       width={size}>
       {nftImageUrl && <NFTViewer uri={nftImageUrl} />}
     </Box>

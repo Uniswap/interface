@@ -96,6 +96,7 @@ function parseExternalTransactionItem(transaction: Transaction): TransactionSumm
   let nftMetaData:
     | {
         name: string
+        collectionName: string
         imageURL: string
       }
     | undefined
@@ -133,6 +134,11 @@ function parseExternalTransactionItem(transaction: Transaction): TransactionSumm
       let change = transaction.changes?.[0]
       if (change?.nft_asset) {
         assetType = AssetType.ERC721
+        nftMetaData = {
+          name: change.nft_asset.asset.name,
+          collectionName: change.nft_asset.collection.name,
+          imageURL: change.nft_asset.asset.detail.url,
+        }
       }
       amountRaw = change?.value?.toString()
       tokenAddress = transaction.changes?.[0].asset.id
@@ -145,6 +151,11 @@ function parseExternalTransactionItem(transaction: Transaction): TransactionSumm
       change = transaction.changes?.[0]
       if (change?.nft_asset) {
         assetType = AssetType.ERC721
+        nftMetaData = {
+          name: change.nft_asset.asset.name,
+          collectionName: change.nft_asset.collection.name,
+          imageURL: change.nft_asset.asset.detail.url,
+        }
       }
       amountRaw = change?.value?.toString()
       tokenAddress = transaction.changes?.[0].asset.id
@@ -156,14 +167,17 @@ function parseExternalTransactionItem(transaction: Transaction): TransactionSumm
       type = TransactionType.Swap
       const changeIn = transaction.changes?.[0]
       const changeOut = transaction.changes?.[1]
-      // NFT transfer
+      // NFT Buy / Sell
       if (changeOut?.nft_asset) {
         assetType = AssetType.ERC721
         tokenAddress = changeOut.nft_asset.asset.contract_address
-        amountRaw = '0'
+        amountRaw = changeIn?.value.toString()
         type = changeOut.direction === 'in' ? TransactionType.Receive : TransactionType.Send
+        from = transaction.address_from
+        to = transaction.address_to
         nftMetaData = {
           name: changeOut.nft_asset.asset.name,
+          collectionName: changeOut.nft_asset.collection.name,
           imageURL: changeOut.nft_asset.asset.detail.url,
         }
       } else {

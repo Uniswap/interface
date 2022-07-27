@@ -22,6 +22,7 @@ import { useLowestPendingNonce } from 'src/features/transactions/hooks'
 import AlertBanner, { FailedCancelBadge } from 'src/features/transactions/SummaryCards/AlertBanner'
 import TransactionActionsModal from 'src/features/transactions/SummaryCards/TransactionActionsModal'
 import {
+  getNftUpdateInfo,
   getTransactionSummaryCaption,
   getTransactionSummaryTitle,
 } from 'src/features/transactions/SummaryCards/utils'
@@ -57,6 +58,7 @@ export interface TransactionSummaryInfo {
   from?: string | undefined
   nftMetaData?: {
     name: string
+    collectionName: string
     imageURL: string
   }
   fullDetails?: TransactionDetails // for resubmission or canceling
@@ -131,6 +133,8 @@ function TransactionSummaryItem({
       ? createBalanceUpdate(type, status, currency, amountRaw, spotPrices)
       : undefined
 
+  const nftUpdateInfo = getNftUpdateInfo(nftMetaData)
+
   let title = getTransactionSummaryTitle({
     transactionSummaryInfo,
     t,
@@ -143,7 +147,7 @@ function TransactionSummaryItem({
   })
 
   const icon = useMemo(() => {
-    return type === TransactionType.Swap && !failed ? (
+    return type === TransactionType.Swap && !failed && assetType === AssetType.Currency ? (
       <>
         <Box left={2} position="absolute" testID="swap-success-toast" top={2}>
           <CurrencyLogoOrPlaceholder currency={currency} size={TXN_HISTORY_SIZING.primaryImage} />
@@ -257,6 +261,15 @@ function TransactionSummaryItem({
                   {balanceUpdate.usdIncrease}
                 </Text>
               )}
+            </Flex>
+          ) : nftUpdateInfo ? (
+            <Flex alignItems="flex-end" gap="xxxs">
+              <Text adjustsFontSizeToFit numberOfLines={1} variant="body">
+                {nftUpdateInfo.title}
+              </Text>
+              <Text adjustsFontSizeToFit color="textSecondary" numberOfLines={1} variant="badge">
+                {nftUpdateInfo.caption}
+              </Text>
             </Flex>
           ) : null}
         </Flex>

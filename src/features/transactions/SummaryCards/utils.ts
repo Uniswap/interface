@@ -74,6 +74,16 @@ export function getTransactionSummaryCaption({
     assetType === AssetType.Currency ? otherTokenAddress : nftMetaData?.name ?? 'NFT'
   const otherAssetSymbol = getCurrencySymbol(otherCurrency, otherAssetAddressOrName)
 
+  // For NFT transaction, show sender or recipient, or name if swap.
+  if (nftMetaData) {
+    if (type === TransactionType.Receive) {
+      return from && isValidAddress(from) ? shortenAddress(from) : undefined
+    }
+    if (type === TransactionType.Send) {
+      return to && isValidAddress(to) ? shortenAddress(to) : undefined
+    }
+  }
+
   switch (type) {
     case TransactionType.Swap:
       if (!assetSymbol || !otherAssetSymbol) {
@@ -112,4 +122,21 @@ export function getTransactionSummaryCaption({
       break
   }
   return caption
+}
+
+export function getNftUpdateInfo(
+  nftMetaData:
+    | {
+        name: string
+        collectionName: string
+      }
+    | undefined
+) {
+  if (!nftMetaData) {
+    return undefined
+  }
+  return {
+    title: nftMetaData.name,
+    caption: nftMetaData.collectionName,
+  }
 }
