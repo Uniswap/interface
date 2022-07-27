@@ -1,9 +1,10 @@
 import { Currency } from '@uniswap/sdk-core'
 import { utils } from 'ethers'
-import React, { useCallback, useEffect, useMemo } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AnyAction } from 'redux'
 import { useAppDispatch } from 'src/app/hooks'
+import { useProvider } from 'src/app/walletContext'
 import { WarningModalType } from 'src/components/warnings/types'
 import { ChainId } from 'src/constants/chains'
 import { AssetType } from 'src/entities/assets'
@@ -279,6 +280,26 @@ export function useRecipientIsNewAddress(recipient: string | undefined) {
   const activeAddress = useActiveAccountAddressWithThrow()
   const txnsToSelectedAddress = useAllTransactionsBetweenAddresses(activeAddress, recipient)
   return txnsToSelectedAddress?.length === 0
+}
+
+export function useIsSmartContractAddress(address: string | undefined, chainId: ChainId) {
+  const provider = useProvider(chainId)
+  const [state, setState] = useState<{ loading: boolean; isSmartContractAddress: boolean }>({
+    loading: false,
+    isSmartContractAddress: false,
+  })
+
+  useEffect(() => {
+    if (!address) return setState({ loading: false, isSmartContractAddress: false })
+    setState((s) => ({ ...s, loading: true }))
+    provider?.getCode(address).then((code: string) => {
+      // provider.getCode(address) will return a hex string if code is deployed at that address = it's a smart contract
+      // returning just 0x means there's no code and it's not a smart contract
+      const isSmartContractAddress = code !== '0x'
+      setState({ loading: false, isSmartContractAddress })
+    })
+  }, [address, provider])
+  return state
 }
 
 export function useHandleTransferWarningModals(

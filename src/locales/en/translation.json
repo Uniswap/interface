@@ -221,6 +221,8 @@
   "The address you selected doesn't have any tokens in its wallet on {{ network }}. Please confirm that the address and network are corect before continuing.": "The address you selected doesn't have any tokens in its wallet on {{ network }}. Please confirm that the address and network are corect before continuing.",
   "New address": "New address",
   "You haven't transacted with this address before. Please confirm that the address is correct before continuing.": "You haven't transacted with this address before. Please confirm that the address is correct before continuing.",
+  "Smart contract address": "Smart contract address",
+  "This address is a smart contract. In many cases, sending tokens directly to a contract will result in the loss of your assets. Please select a different address.": "This address is a smart contract. In many cases, sending tokens directly to a contract will result in the loss of your assets. Please select a different address.",
   "Review transfer": "Review transfer",
   "Unwrapped": "Unwrapped",
   "Transaction": "Transaction",

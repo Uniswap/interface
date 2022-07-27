@@ -149,7 +149,9 @@ const slice = createSlice({
       const { recipient } = action.payload
       state.recipient = recipient
     },
-
+    clearRecipient: (state) => {
+      state.recipient = undefined
+    },
     toggleUSDInput: (state, action: PayloadAction<boolean>) => {
       state.isUSDInput = action.payload
     },
@@ -210,6 +212,7 @@ export const {
   updateExactAmountToken,
   updateExactAmountUSD,
   selectRecipient,
+  clearRecipient,
   toggleUSDInput,
   updateGasEstimates,
   updateSwapMethodParamaters,

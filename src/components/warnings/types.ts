@@ -39,6 +39,7 @@ export enum WarningLabel {
   SwapRouterError = 'swap_router_error',
   RecipientZeroBalances = 'recipient_zero_balances',
   RecipientNewAddress = 'recipient_new_address',
+  RecipientIsSmartContract = 'recipient_is_smart_contract',
 }
 
 export enum WarningModalType {

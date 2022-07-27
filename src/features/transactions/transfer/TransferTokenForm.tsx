@@ -19,6 +19,7 @@ import { NFTAsset } from 'src/features/nfts/types'
 import { ElementName } from 'src/features/telemetry/constants'
 import { useSwapActionHandlers, useUSDTokenUpdater } from 'src/features/transactions/swap/hooks'
 import {
+  clearRecipient,
   closeNewAddressWarningModal,
   closeNoBalancesWarningModal,
   CurrencyField,
@@ -27,6 +28,7 @@ import {
 import {
   useDerivedTransferInfo,
   useHandleTransferWarningModals,
+  useIsSmartContractAddress,
   useUpdateTransferGasEstimate,
 } from 'src/features/transactions/transfer/hooks'
 import { currencyAddress } from 'src/utils/currencyId'
@@ -81,9 +83,17 @@ export function TransferTokenForm({ state, dispatch, onNext }: TransferTokenProp
     recipient,
     chainId ?? ChainId.Mainnet
   )
+  const { isSmartContractAddress, loading: addressLoading } = useIsSmartContractAddress(
+    recipient,
+    chainId ?? ChainId.Mainnet
+  )
+  const showAddressIsSmartContractError = !!recipient && !addressLoading && isSmartContractAddress
 
   const actionButtonDisabled =
-    warnings.some((warning) => warning.action === WarningAction.DisableReview) || warningsLoading
+    warnings.some((warning) => warning.action === WarningAction.DisableReview) ||
+    warningsLoading ||
+    addressLoading ||
+    showAddressIsSmartContractError
 
   // if action button is disabled, make amount undefined so that gas estimate doesn't run
   useUpdateTransferGasEstimate(
@@ -100,7 +110,7 @@ export function TransferTokenForm({ state, dispatch, onNext }: TransferTokenProp
 
   return (
     <>
-      {showNoBalancesWarning && !showNewAddressWarning && (
+      {showNoBalancesWarning && !showNewAddressWarning && !showAddressIsSmartContractError && (
         <WarningModal
           data={recipient}
           warning={{
@@ -117,7 +127,7 @@ export function TransferTokenForm({ state, dispatch, onNext }: TransferTokenProp
           onPressContinue={onPressWarningContinue}
         />
       )}
-      {showNewAddressWarning && (
+      {showNewAddressWarning && !showAddressIsSmartContractError && (
         <WarningModal
           data={recipient}
           warning={{
@@ -131,6 +141,22 @@ export function TransferTokenForm({ state, dispatch, onNext }: TransferTokenProp
           }}
           onClose={() => dispatch(closeNewAddressWarningModal())}
           onPressContinue={onPressWarningContinue}
+        />
+      )}
+      {showAddressIsSmartContractError && (
+        <WarningModal
+          warning={{
+            type: WarningLabel.RecipientNewAddress,
+            severity: WarningSeverity.High,
+            action: WarningAction.DisableReview,
+            title: t('Smart contract address'),
+            message: t(
+              'This address is a smart contract. In many cases, sending tokens directly to a contract will result in the loss of your assets. Please select a different address.'
+            ),
+          }}
+          onClose={() => {
+            dispatch(clearRecipient())
+          }}
         />
       )}
       <AnimatedFlex grow entering={FadeIn} exiting={FadeOut} justifyContent="space-between" p="md">
