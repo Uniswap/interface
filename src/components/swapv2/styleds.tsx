@@ -322,15 +322,20 @@ export const LiveChartWrapper = styled.div`
   }
 `
 
-export const RoutesWrapper = styled(LiveChartWrapper)<{ isOpenChart: boolean; borderBottom?: boolean }>`
+export const RoutesWrapper = styled(LiveChartWrapper)<{ isOpenChart: boolean }>`
   height: auto;
   margin-top: 4px;
-  padding-bottom: 25px;
-  border-bottom: ${({ theme, borderBottom }) => (borderBottom ? `1px solid ${theme.border}` : 'none')};
 `
 
 export const TokenInfoWrapper = styled(LiveChartWrapper)`
-  display: block;
+  display: flex;
+  flex-direction: column;
+  row-gap: 16px;
+
+  @media screen and (min-width: 1100px) {
+    display: flex;
+  }
+
   height: auto;
   border-bottom: none;
   ${({ theme }) => theme.mediaWidth.upToSmall`

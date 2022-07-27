@@ -747,10 +747,12 @@ export default function Swap({ history }: RouteComponentProps) {
                             <KyberTag>
                               <Trans>You save</Trans>{' '}
                               {formattedNum(tradeComparer.tradeSaved.usd, true) +
-                                ` (${tradeComparer?.tradeSaved?.percent &&
+                                ` (${
+                                  tradeComparer?.tradeSaved?.percent &&
                                   (tradeComparer.tradeSaved.percent < 0.01
                                     ? '<0.01'
-                                    : tradeComparer.tradeSaved.percent.toFixed(2))}%)`}
+                                    : tradeComparer.tradeSaved.percent.toFixed(2))
+                                }%)`}
                               <InfoHelper
                                 text={
                                   <Text>
@@ -994,10 +996,7 @@ export default function Swap({ history }: RouteComponentProps) {
                     </LiveChartWrapper>
                   )}
                   {isShowTradeRoutes && (
-                    <RoutesWrapper
-                      isOpenChart={isShowLiveChart}
-                      borderBottom={shouldRenderTokenInfo ? actualShowTokenInfo : false}
-                    >
+                    <RoutesWrapper isOpenChart={isShowLiveChart}>
                       <Flex flexDirection="column" width="100%">
                         <Flex alignItems={'center'}>
                           <RoutingIconWrapper />

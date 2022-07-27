@@ -1,13 +1,15 @@
 import React, { useEffect } from 'react'
 import { ChainId, Currency } from '@kyberswap/ks-sdk-core'
-import useTokenInfo, { TokenInfo } from 'hooks/useTokenInfo'
-import { useCurrencyConvertedToNative } from 'utils/dmm'
-import { TokenInfoWrapper } from './styleds'
-import SingleTokenInfo, { HowToSwap } from 'components/swapv2/SingleTokenInfo'
+
 import { TOKEN_INFO_DESCRIPTION } from 'constants/tokenLists/token-info'
-import { checkPairInWhiteList } from 'utils/tokenInfo'
-import { getSymbolSlug } from 'utils/string'
 import { useActiveWeb3React } from 'hooks'
+import useTokenInfo, { TokenInfo } from 'hooks/useTokenInfo'
+import { getSymbolSlug } from 'utils/string'
+import { checkPairInWhiteList } from 'utils/tokenInfo'
+import { useCurrencyConvertedToNative } from 'utils/dmm'
+
+import SingleTokenInfo, { HowToSwap } from './SingleTokenInfo'
+import { TokenInfoWrapper } from '../styleds'
 
 const isEmptyData = (tokenInfo: TokenInfo) => {
   return !tokenInfo.price && !tokenInfo?.description?.en && !tokenInfo.tradingVolume && !tokenInfo.marketCapRank
@@ -98,21 +100,9 @@ const TokenInfoV2 = ({
   return (
     <TokenInfoWrapper>
       {showToken1 && (
-        <SingleTokenInfo
-          data={tokenInfo1}
-          borderBottom={showToken2}
-          loading={loading1}
-          currency={inputNativeCurrency}
-        />
+        <SingleTokenInfo expandedOnMount data={tokenInfo1} loading={loading1} currency={inputNativeCurrency} />
       )}
-      {showToken2 && (
-        <SingleTokenInfo
-          data={tokenInfo2}
-          loading={loading2}
-          currency={outputNativeCurrency}
-          borderBottom={showHow2Swap}
-        />
-      )}
+      {showToken2 && <SingleTokenInfo data={tokenInfo2} loading={loading2} currency={outputNativeCurrency} />}
       {showHow2Swap && (
         <HowToSwap
           fromCurrency={currencyIn}
