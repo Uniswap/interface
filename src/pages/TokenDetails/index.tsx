@@ -10,7 +10,7 @@ import TokenDetail from 'components/Explore/TokenDetails/TokenDetail'
 import TokenSafetyMessage from 'components/TokenSafety/TokenSafetyMessage'
 import { checkWarning } from 'constants/tokenWarnings'
 import { useState } from 'react'
-import { useLocation, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
 const TokenDetailsLayout = styled.div`
@@ -46,19 +46,11 @@ const Widget = styled.div`
 `
 export default function TokenDetails() {
   const { tokenAddress } = useParams<{ tokenAddress?: string }>()
-  const { state } = useLocation<{ state?: any }>()
   const [loading, setLoading] = useState(true)
-  const [from, setFrom] = useState('')
   setTimeout(() => {
     setLoading(false)
   }, 1000)
 
-  if (!from) {
-    try {
-      const from = (state as { from: string }).from
-      setFrom(from)
-    } catch (error) {}
-  }
   let tokenDetail
   if (!tokenAddress) {
     // TODO: handle no address / invalid address cases
@@ -66,7 +58,7 @@ export default function TokenDetails() {
   } else if (loading) {
     tokenDetail = <LoadingTokenDetail />
   } else {
-    tokenDetail = <TokenDetail address={tokenAddress} from={from} />
+    tokenDetail = <TokenDetail address={tokenAddress} />
   }
 
   const tokenWarning = tokenAddress ? checkWarning(tokenAddress) : null

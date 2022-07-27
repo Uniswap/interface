@@ -41,7 +41,6 @@ import ConfirmSwapModal from '../../components/swap/ConfirmSwapModal'
 import { ArrowWrapper, SwapCallbackError, Wrapper } from '../../components/swap/styleds'
 import SwapHeader from '../../components/swap/SwapHeader'
 import { SwitchLocaleLink } from '../../components/SwitchLocaleLink'
-//import TokenWarningModal from '../../components/TokenWarningModal'
 import { TOKEN_SHORTHANDS } from '../../constants/tokens'
 import { useAllTokens, useCurrency } from '../../hooks/Tokens'
 import { ApprovalState, useApprovalOptimizedTrade, useApproveCallbackFromTrade } from '../../hooks/useApproveCallback'
@@ -58,7 +57,7 @@ import {
   useSwapActionHandlers,
   useSwapState,
 } from '../../state/swap/hooks'
-import { useAddUserToken, useExpertModeManager } from '../../state/user/hooks'
+import { useExpertModeManager } from '../../state/user/hooks'
 import { LinkStyledButton, ThemedText } from '../../theme'
 import { computeFiatValuePriceImpact } from '../../utils/computeFiatValuePriceImpact'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
@@ -116,11 +115,11 @@ export default function Swap() {
     [chainId, defaultTokens, urlLoadedTokens]
   )
 
-  const addToken = useAddUserToken()
+  console.log(importTokensNotInDefault)
+
   const handleConfirmTokenWarning = useCallback(() => {
-    importTokensNotInDefault.forEach((token) => addToken(token))
     setDismissTokenWarning(true)
-  }, [addToken, importTokensNotInDefault])
+  }, [])
 
   const theme = useContext(ThemeContext as Context<DefaultTheme>)
 
@@ -425,12 +424,6 @@ export default function Swap() {
           onContinue={handleConfirmTokenWarning}
           onCancel={handleDismissTokenWarning}
         />
-        {/* <TokenWarningModal
-          isOpen={importTokensNotInDefault.length > 0 && !dismissTokenWarning}
-          tokens={importTokensNotInDefault}
-          onConfirm={handleConfirmTokenWarning}
-          onDismiss={handleDismissTokenWarning}
-        /> */}
         <AppBody>
           <SwapHeader allowedSlippage={allowedSlippage} />
           <Wrapper id="swap-page">

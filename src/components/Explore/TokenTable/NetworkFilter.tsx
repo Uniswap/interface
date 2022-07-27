@@ -121,7 +121,7 @@ const StyledMenuContent = styled.div`
 
 const Chevron = styled.span<{ open: boolean }>`
   padding-top: 1px;
-  color: ${({ open, theme }) => (open ? theme.blue200 : theme.textPrimary)};
+  color: ${({ open, theme }) => (open ? theme.blue200 : theme.textSecondary)};
 `
 const NetworkLabel = styled.div`
   display: flex;

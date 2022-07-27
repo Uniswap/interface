@@ -118,6 +118,7 @@ export const StatsSection = styled.div`
 const StatPair = styled.div`
   display: flex;
   flex: 1;
+  flex-wrap: wrap;
 `
 const TimeButton = styled.button<{ active: boolean }>`
   background-color: ${({ theme, active }) => (active ? theme.accentActive : 'transparent')};
@@ -177,7 +178,7 @@ const TruncatedAddress = styled.span`
   }
 `
 
-export default function LoadedTokenDetail({ address, from }: { address: string; from: string | null }) {
+export default function LoadedTokenDetail({ address }: { address: string }) {
   const theme = useTheme()
   const token = useToken(address)
   const currency = useCurrency(address)
@@ -185,19 +186,16 @@ export default function LoadedTokenDetail({ address, from }: { address: string; 
   const [activeTimePeriod, setTimePeriod] = useState(TimePeriod.hour)
   const isFavorited = favoriteTokens.includes(address)
   const toggleFavorite = useToggleFavorite(address)
-  const [warningModalOpen, setWarningModalOpen] = useState(false)
   const warning = checkWarning(address)
   const history = useHistory()
-
   const isUserAddedToken = useIsUserAddedToken(token)
+  const [warningModalOpen, setWarningModalOpen] = useState(false)
 
   useEffect(() => {
-    if (from !== 'explore') {
-      if (warning && !isUserAddedToken) {
-        setWarningModalOpen(true)
-      }
+    if (warning && !isUserAddedToken) {
+      setWarningModalOpen(true)
     }
-  }, [address, from])
+  }, [])
 
   const handleDismissWarning = useCallback(() => {
     setWarningModalOpen(false)

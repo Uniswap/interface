@@ -11,7 +11,7 @@ const Label = styled.div<{ color: Color }>`
   width: 284px;
   padding: 12px 20px;
   background-color: ${({ color }) => color + '1F'};
-  border-radius: 8px;
+  border-radius: 16px;
   color: ${({ color }) => color};
 `
 
@@ -54,7 +54,7 @@ export default function TokenWarningMessage({ warning, tokenAddress }: TokenWarn
 
       <DetailsRow>
         {message}
-        {tokenAddress && <ExternalLink href={'https://etherscan.io/token/' + tokenAddress}>Learn more</ExternalLink>}
+        {tokenAddress && <ExternalLink href={'https://etherscan.io/token/' + tokenAddress}> Learn more</ExternalLink>}
       </DetailsRow>
     </Label>
   )

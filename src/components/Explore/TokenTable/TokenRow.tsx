@@ -1,16 +1,15 @@
 import { Trans } from '@lingui/macro'
 import CurrencyLogo from 'components/CurrencyLogo'
-import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
-import { checkWarning, Warning } from 'constants/tokenWarnings'
-import { useCurrency, useIsUserAddedToken, useToken } from 'hooks/Tokens'
+import { useCurrency, useToken } from 'hooks/Tokens'
 import useTheme from 'hooks/useTheme'
 import { TimePeriod, TokenData } from 'hooks/useTopTokens'
 import { useAtom } from 'jotai'
 import { useAtomValue } from 'jotai/utils'
-import { ReactNode, useCallback, useState } from 'react'
+import { ReactNode } from 'react'
 import { ArrowDown, ArrowDownRight, ArrowUp, ArrowUpRight, Heart } from 'react-feather'
-import { useHistory } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import styled from 'styled-components/macro'
+import { opacify } from 'theme/utils'
 import { formatAmount, formatDollarAmount } from 'utils/formatDollarAmt'
 
 import {
@@ -39,7 +38,6 @@ const Cell = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
 `
 const StyledTokenRow = styled.div`
   width: 100%;
@@ -98,12 +96,15 @@ export const ClickFavorited = styled.span`
     color: ${({ theme }) => theme.accentActive};
   }
 `
-const ClickableName = styled.div`
+const ClickableContent = styled(Link)`
   display: flex;
-  gap: 8px;
   text-decoration: none;
   color: ${({ theme }) => theme.textPrimary};
   align-items: center;
+  cursor: pointer;
+`
+const ClickableName = styled(ClickableContent)`
+  gap: 8px;
 `
 const FavoriteCell = styled(Cell)`
   min-width: 40px;
@@ -146,17 +147,19 @@ const ListNumberCell = styled(Cell)`
     display: none;
   }
 `
-const MarketCapCell = styled(Cell)<{ sortable: boolean }>`
+const HeaderLabelCell = styled(Cell)<{ sortable: boolean }>`
   justify-content: flex-end;
-  min-width: max-content;
-  padding-right: 4px;
-
-  @media only screen and (max-width: ${MEDIUM_MEDIA_BREAKPOINT}) {
-    display: none;
-  }
+  min-width: 80px;
+  padding-right: 8px;
 
   &:hover {
-    background-color: ${({ theme, sortable }) => sortable && theme.backgroundContainer};
+    color: ${({ theme, sortable }) => sortable && theme.white};
+    background-color: ${({ theme, sortable }) => sortable && opacify(24, theme.blue200)};
+  }
+`
+const MarketCapCell = styled(HeaderLabelCell)`
+  @media only screen and (max-width: ${MEDIUM_MEDIA_BREAKPOINT}) {
+    display: none;
   }
 `
 const NameCell = styled(Cell)`
@@ -170,17 +173,9 @@ const NameCell = styled(Cell)`
   }
 `
 
-const PercentChangeCell = styled(Cell)<{ sortable: boolean }>`
-  justify-content: flex-end;
-  min-width: 80px;
-  padding-right: 4px;
-
+const PercentChangeCell = styled(HeaderLabelCell)`
   @media only screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
     display: none;
-  }
-
-  &:hover {
-    background-color: ${({ theme, sortable }) => sortable && theme.backgroundContainer};
   }
 `
 const PercentChangeInfoCell = styled(Cell)`
@@ -192,15 +187,6 @@ const PercentChangeInfoCell = styled(Cell)`
     color: ${({ theme }) => theme.textSecondary};
     font-size: 12px;
     line-height: 16px;
-  }
-`
-const PriceCell = styled(Cell)<{ sortable: boolean }>`
-  justify-content: flex-end;
-  min-width: 80px;
-  padding-right: 4px;
-
-  &:hover {
-    background-color: ${({ theme, sortable }) => sortable && theme.backgroundContainer};
   }
 `
 const PriceInfoCell = styled(Cell)`
@@ -271,17 +257,9 @@ const TokenSymbol = styled(Cell)`
     width: 100%;
   }
 `
-const VolumeCell = styled(Cell)<{ sortable: boolean }>`
-  justify-content: flex-end;
-  min-width: max-content;
-  padding-right: 4px;
-
+const VolumeCell = styled(HeaderLabelCell)`
   @media only screen and (max-width: ${LARGE_MEDIA_BREAKPOINT}) {
     display: none;
-  }
-
-  &:hover {
-    background-color: ${({ theme, sortable }) => sortable && theme.backgroundContainer};
   }
 `
 /* Loading state bubbles */
@@ -375,7 +353,7 @@ export function TokenRow({
       <FavoriteCell>{favorited}</FavoriteCell>
       <ListNumberCell>{listNumber}</ListNumberCell>
       <NameCell>{tokenInfo}</NameCell>
-      <PriceCell sortable={header}>{price}</PriceCell>
+      <HeaderLabelCell sortable={header}>{price}</HeaderLabelCell>
       <PercentChangeCell sortable={header}>{percentChange}</PercentChangeCell>
       <MarketCapCell sortable={header}>{marketCap}</MarketCapCell>
       <VolumeCell sortable={header}>{volume}</VolumeCell>
@@ -396,7 +374,7 @@ export function HeaderRow() {
       header={true}
       favorited={null}
       listNumber={null}
-      tokenInfo={<Trans>Name</Trans>}
+      tokenInfo={<Trans>Token Name</Trans>}
       price={<HeaderCell category={Category.price} sortable />}
       percentChange={<HeaderCell category={Category.percentChange} sortable />}
       marketCap={<HeaderCell category={Category.marketCap} sortable />}
@@ -450,14 +428,6 @@ export default function LoadedRow({
   const [favoriteTokens] = useAtom(favoritesAtom)
   const isFavorited = favoriteTokens.includes(tokenAddress)
   const toggleFavorite = useToggleFavorite(tokenAddress)
-  const [warning, setWarning] = useState<Warning | null | undefined>(undefined)
-  const [warningModalOpen, setWarningModalOpen] = useState(false)
-  const history = useHistory()
-  const isUserAddedToken = useIsUserAddedToken(token)
-
-  const handleDismissWarning = useCallback(() => {
-    setWarningModalOpen(false)
-  }, [setWarningModalOpen])
   const isPositive = Math.sign(tokenData.delta) > 0
 
   const tokenPercentChangeInfo = (
@@ -473,24 +443,6 @@ export default function LoadedRow({
     </>
   )
 
-  const navigateToToken = () => {
-    history.push({ pathname: `tokens/${tokenAddress}`, state: { from: 'explore' } })
-  }
-
-  const selectToken = () => {
-    let tokenWarning = warning
-    if (tokenWarning === undefined) {
-      tokenWarning = checkWarning(tokenAddress)
-      setWarning(tokenWarning)
-    }
-
-    if (!tokenWarning || isUserAddedToken) {
-      navigateToToken()
-    } else {
-      setWarningModalOpen(true)
-    }
-  }
-
   const heartColor = isFavorited ? theme.accentActive : undefined
   // TODO: currency logo sizing mobile (32px) vs. desktop (24px)
   return (
@@ -504,14 +456,7 @@ export default function LoadedRow({
       }
       listNumber={listNumber}
       tokenInfo={
-        // <ClickableName to={`tokens/${tokenAddress}`}>
-        <ClickableName onClick={selectToken}>
-          <TokenSafetyModal
-            isOpen={warningModalOpen}
-            tokenAddress={tokenAddress}
-            onCancel={handleDismissWarning}
-            onContinue={navigateToToken}
-          />
+        <ClickableName to={`tokens/${tokenAddress}`}>
           <CurrencyLogo currency={currency} />
           <TokenInfoCell>
             <TokenName>{tokenName}</TokenName>
@@ -520,14 +465,24 @@ export default function LoadedRow({
         </ClickableName>
       }
       price={
-        <PriceInfoCell>
-          {formatDollarAmount(tokenData.price)}
-          <PercentChangeInfoCell>{tokenPercentChangeInfo}</PercentChangeInfoCell>
-        </PriceInfoCell>
+        <ClickableContent to={`tokens/${tokenAddress}`}>
+          <PriceInfoCell>
+            {formatDollarAmount(tokenData.price)}
+            <PercentChangeInfoCell>{tokenPercentChangeInfo}</PercentChangeInfoCell>
+          </PriceInfoCell>
+        </ClickableContent>
       }
-      percentChange={tokenPercentChangeInfo}
-      marketCap={formatAmount(tokenData.marketCap).toUpperCase()}
-      volume={formatAmount(tokenData.volume[timePeriod]).toUpperCase()}
+      percentChange={<ClickableContent to={`tokens/${tokenAddress}`}>{tokenPercentChangeInfo}</ClickableContent>}
+      marketCap={
+        <ClickableContent to={`tokens/${tokenAddress}`}>
+          {formatAmount(tokenData.marketCap).toUpperCase()}
+        </ClickableContent>
+      }
+      volume={
+        <ClickableContent to={`tokens/${tokenAddress}`}>
+          {formatAmount(tokenData.volume[timePeriod]).toUpperCase()}
+        </ClickableContent>
+      }
       sparkLine={<SparkLineImg dangerouslySetInnerHTML={{ __html: tokenData.sparkline }} isPositive={isPositive} />}
     />
   )

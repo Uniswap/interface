@@ -37,10 +37,7 @@ const SearchInput = styled.input<{ expanded: boolean }>`
     background-color: ${({ theme }) => theme.backgroundContainer};
   }
   ::placeholder {
-    color: ${({ expanded, theme }) => expanded && theme.textSecondary};
-    @media only screen and (max-width: ${MEDIUM_MEDIA_BREAKPOINT}) {
-      color: transparent;
-    }
+    color: ${({ expanded, theme }) => expanded && theme.textTertiary};
   }
   ::-webkit-search-cancel-button {
     -webkit-appearance: none;
@@ -61,7 +58,6 @@ const SearchInput = styled.input<{ expanded: boolean }>`
 export default function SearchBar() {
   const [filterString, setFilterString] = useAtom(filterStringAtom)
   const [isExpanded, setExpanded] = useState(false)
-
   return (
     <SearchBarContainer>
       <SearchInput
