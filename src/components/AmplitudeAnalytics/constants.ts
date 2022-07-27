@@ -24,9 +24,9 @@ export enum EventName {
 export enum CUSTOM_USER_PROPERTIES {
   WALLET_ADDRESS = 'wallet_address',
   WALLET_TYPE = 'wallet_type',
-  USER_LAST_SEEN_DATE = 'user_last_seen_date',
-  USER_FIRST_SEEN_DATE = 'user_first_seen_date',
-  WALLET_CHAIN_IDS = 'all_wallet_chain_ids',
+  WALLET_LAST_SEEN_DATE = 'wallet_last_seen_date',
+  WALLET_FIRST_SEEN_DATE = 'wallet_first_seen_date',
+  WALLET_CHAIN_IDS = 'wallet_chain_ids',
   ALL_WALLET_ADDRESSES_CONNECTED = 'all_wallet_addresses_connected',
   SCREEN_RESOLUTION = 'screen_resolution',
   BROWSER = 'browser',
