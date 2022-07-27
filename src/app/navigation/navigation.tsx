@@ -34,7 +34,6 @@ import { ExploreScreen } from 'src/screens/ExploreScreen'
 import { ExploreTokensScreen } from 'src/screens/ExploreTokensScreen'
 import { HomeScreen } from 'src/screens/HomeScreen'
 import { ImportMethodScreen } from 'src/screens/Import/ImportMethodScreen'
-import { PrivateKeyInputScreen } from 'src/screens/Import/PrivateKeyInputScreen'
 import { RestoreCloudBackupPinScreen } from 'src/screens/Import/RestoreCloudBackupPinScreen'
 import { RestoreCloudBackupScreen } from 'src/screens/Import/RestoreCloudBackupScreen'
 import { SeedPhraseInputScreen } from 'src/screens/Import/SeedPhraseInputScreen'
@@ -329,10 +328,6 @@ export function OnboardingStackNavigator() {
         <OnboardingStack.Screen
           component={ImportMethodScreen}
           name={OnboardingScreens.ImportMethod}
-        />
-        <OnboardingStack.Screen
-          component={PrivateKeyInputScreen}
-          name={OnboardingScreens.PrivateKeyInput}
         />
         <OnboardingStack.Screen
           component={RestoreCloudBackupScreen}

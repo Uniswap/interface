@@ -107,7 +107,6 @@ export type OnboardingStackParamList = {
     mnemonicId: string
   } & OnboardingStackBaseParams
   [OnboardingScreens.SeedPhraseInput]: OnboardingStackBaseParams
-  [OnboardingScreens.PrivateKeyInput]: OnboardingStackBaseParams
   [OnboardingScreens.SelectWallet]: OnboardingStackBaseParams
   [OnboardingScreens.WatchWallet]: OnboardingStackBaseParams
 

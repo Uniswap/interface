@@ -7,7 +7,6 @@ import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import CloudIcon from 'src/assets/icons/cloud.svg'
 import EyeIcon from 'src/assets/icons/eye.svg'
-import KeyIcon from 'src/assets/icons/key-icon.svg'
 import SeedPhraseIcon from 'src/assets/icons/pencil.svg'
 import { Button } from 'src/components/buttons/Button'
 import { Chevron } from 'src/components/icons/Chevron'
@@ -59,14 +58,6 @@ const options: ImportMethodOption[] = [
     nav: OnboardingScreens.SeedPhraseInput,
     importType: ImportType.SeedPhrase,
     name: ElementName.OnboardingImportSeedPhrase,
-  },
-  {
-    title: (t: TFunction) => t('Import a private key'),
-    blurb: (t: TFunction) => t('Enter or paste your key'),
-    icon: (theme: Theme) => <KeyIcon color={theme.colors.textPrimary} />,
-    nav: OnboardingScreens.PrivateKeyInput,
-    importType: ImportType.PrivateKey,
-    name: ElementName.OnboardingImportPrivateKey,
   },
   {
     title: (t: TFunction) => t('View only'),

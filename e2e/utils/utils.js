@@ -9,12 +9,14 @@ export async function quickOnboarding() {
 
   // open app, import existing account
   await element(by.id(ElementName.OnboardingImportWallet)).tap()
-  await element(by.id(ElementName.OnboardingImportPrivateKey)).tap()
+  await element(by.id(ElementName.OnboardingImportSeedPhrase)).tap()
 
   // enter address / eth
-  await element(by.id('import_account_form/input')).typeText(Accounts.managed.privateKey)
+  await element(by.id('import_account_form/input')).typeText(Accounts.managed.seedPhrase)
   await sleep(500)
   await element(by.id(ElementName.Submit)).tap()
+
+  // @TODO: update with wallet selection screen once e2e tests are updated.
 
   // skip nickname
   await element(by.id(ElementName.Next)).tap()

@@ -12,6 +12,7 @@ import {
   v5Schema,
   v6Schema,
   v7Schema,
+  v8Schema,
 } from 'src/app/schema'
 import { persistConfig } from 'src/app/store'
 import { WalletConnectModalState } from 'src/components/WalletConnect/ScanSheet/WalletConnectModal'
@@ -364,5 +365,38 @@ describe('Redux state migrations', () => {
   it('migrates from v7 to v8', () => {
     const v8 = migrations[8](v7Schema)
     expect(v8.cloudBackup.backupsFound).toEqual([])
+  })
+
+  it('migrates from v8 to v9', () => {
+    const TEST_ADDRESSES = ['0xTest', '0xTest2', '0xTest3', '0xTest4']
+    const TEST_IMPORT_TIME_MS = 12345678912345
+
+    const v8SchemaStub = {
+      ...v8Schema,
+      wallet: {
+        ...v6Schema.wallet,
+        accounts: {
+          [TEST_ADDRESSES[0]]: {
+            type: AccountType.Native,
+            address: TEST_ADDRESSES[0],
+            name: 'Test Account 1',
+            pending: false,
+            derivationIndex: 0,
+            timeImportedMs: TEST_IMPORT_TIME_MS,
+          },
+          [TEST_ADDRESSES[1]]: {
+            type: 'local',
+            address: TEST_ADDRESSES[1],
+            name: 'Test Account 2',
+            pending: false,
+            timeImportedMs: TEST_IMPORT_TIME_MS,
+          },
+        },
+      },
+    }
+
+    expect(Object.values(v8SchemaStub.wallet.accounts)).toHaveLength(2)
+    const v9 = migrations[9](v8SchemaStub)
+    expect(Object.values(v9.wallet.accounts)).toHaveLength(1)
   })
 })

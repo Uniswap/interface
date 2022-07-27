@@ -288,17 +288,12 @@ function WalletSettings() {
       .sort((a, b) => {
         return a.derivationIndex - b.derivationIndex
       })
-    const _privateKeyWallets = accounts
-      .filter((a) => a.type === AccountType.Local)
-      .sort((a, b) => {
-        return a.timeImportedMs - b.timeImportedMs
-      })
     const _viewOnlyWallets = accounts
       .filter((a) => a.type === AccountType.Readonly)
       .sort((a, b) => {
         return a.timeImportedMs - b.timeImportedMs
       })
-    return [..._mnemonicWallets, ..._privateKeyWallets, ..._viewOnlyWallets]
+    return [..._mnemonicWallets, ..._viewOnlyWallets]
   }, [addressToAccount])
 
   const toggleViewAll = () => {

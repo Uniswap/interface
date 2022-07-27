@@ -3,16 +3,16 @@ export const Accounts = {
     name: 'Watched',
     address: '0x123196b9703ead9037d15e87841acef07a4dec03',
   },
-  // managed accounts provided by hardhat node
+  // real accounts generated with derivation index 0 from seed phrase
   managed: {
-    address: '0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266',
+    address: '0xFF4ae0DD5e31e65F9e05D9C521cA5D71259e5927',
     name: 'Investing',
-    privateKey: '0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80',
+    seedPhrase: 'bunker quiz cup addict quick narrow design lens boost iron dismiss appear',
   },
   managed2: {
-    address: '0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc',
+    address: '0x3964052C113dd41b4e405012675C0eFCBe51D5B9',
     name: 'Imported',
-    privateKey: '0x5de4111afa1a4b94908f83103eb1f1706367c2e68ca870fc3fb9a804cdab365a',
+    seedPhrase: 'scorpion diamond slim lizard client food fatigue prize pulse pilot joy glow',
   },
 }
 

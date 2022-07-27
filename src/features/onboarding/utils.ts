@@ -3,7 +3,6 @@ import { OnboardingScreens } from 'src/screens/Screens'
 export enum ImportType {
   Create = 'Create',
   SeedPhrase = 'SeedPhrase',
-  PrivateKey = 'PrivateKey',
   Watch = 'Watch',
   Restore = 'Restore',
 }
@@ -25,13 +24,6 @@ const FLOWS: Record<ImportType, OnboardingScreens[]> = {
   [ImportType.SeedPhrase]: [
     OnboardingScreens.SeedPhraseInput,
     OnboardingScreens.SelectWallet,
-    OnboardingScreens.Notifications,
-    OnboardingScreens.Security,
-  ],
-  [ImportType.PrivateKey]: [
-    OnboardingScreens.PrivateKeyInput,
-    OnboardingScreens.EditName,
-    OnboardingScreens.SelectColor,
     OnboardingScreens.Notifications,
     OnboardingScreens.Security,
   ],

@@ -1,10 +1,9 @@
 import dayjs from 'dayjs'
-import { Wallet } from 'ethers'
 import { ImportAccountParams, ImportAccountType } from 'src/features/import/types'
 import { Account, AccountType, BackupType } from 'src/features/wallet/accounts/types'
 import { activateAccount, addAccount, unlockWallet } from 'src/features/wallet/walletSlice'
 import { generateAndStorePrivateKey, importMnemonic } from 'src/lib/RNEthersRs'
-import { ensureLeading0x, normalizeAddress } from 'src/utils/addresses'
+import { normalizeAddress } from 'src/utils/addresses'
 import { logger } from 'src/utils/logger'
 import { normalizeMnemonic } from 'src/utils/mnemonics'
 import { createMonitoredSaga } from 'src/utils/saga'
@@ -27,8 +26,6 @@ export function* importAccount(params: ImportAccountParams) {
       params.markAsActive,
       params.ignoreActivate
     )
-  } else if (type === ImportAccountType.PrivateKey) {
-    yield* call(importPrivateKeyAccount, params.privateKey, name, params.ignoreActivate)
   } else if (type === ImportAccountType.RestoreBackup) {
     yield* call(importRestoreBackupAccounts, params.mnemonicId, params.indexes)
   } else {
@@ -111,21 +108,6 @@ function* importRestoreBackupAccounts(mnemonicId: string, indexes = [0]) {
       return put(addAccount(account))
     })
   )
-}
-
-function* importPrivateKeyAccount(privateKey: string, name?: string, ignoreActivate?: boolean) {
-  const wallet = new Wallet(ensureLeading0x(privateKey))
-  const address = wallet.address
-  const account: Account = {
-    type: AccountType.Local,
-    privateKey,
-    name,
-    address,
-    pending: true,
-    timeImportedMs: dayjs().valueOf(),
-  }
-  // TODO save key to keychain: https://github.com/Uniswap/mobile/issues/131
-  yield* call(onAccountImport, account, ignoreActivate)
 }
 
 function* onAccountImport(account: Account, ignoreActivate?: boolean) {

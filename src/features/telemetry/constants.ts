@@ -98,7 +98,6 @@ export const enum ElementName {
   OnboardingCreateWallet = 'onboarding-create-wallet',
   OnboardingExplore = 'onboarding-explore',
   OnboardingImportBackup = 'onboarding-import-backup',
-  OnboardingImportPrivateKey = 'onboarding-import-private-key',
   OnboardingImportSeedPhrase = 'onboarding-import-seed-phrase',
   OnboardingImportWallet = 'onboarding-import-wallet',
   OnboardingImportWatchedAccount = 'onboarding-import-watched-account',

@@ -40,10 +40,6 @@ export function RemoveAccountModal({ accountType, onCancel, onConfirm }: RemoveA
         return t(
           'This action will only remove your wallet from appearing in Uniswap Wallet. Your recovery phrase will remain stored until you delete the app.'
         )
-      case AccountType.Local:
-        return t(
-          'This action will remove your wallet from appearing in Uniswap Wallet. Your private key will not be stored in the app, so make sure that you have it backed up elsewhere.'
-        )
     }
   }
 

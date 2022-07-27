@@ -122,4 +122,15 @@ export const migrations = {
     newState.cloudBackup = { backupsFound: [] }
     return newState
   },
+
+  9: (state: any) => {
+    const newState = { ...state }
+    const accounts = newState?.wallet?.accounts ?? {}
+    for (const account of Object.keys(accounts)) {
+      if (newState.wallet.accounts[account].type === 'local') {
+        delete newState.wallet.accounts[account]
+      }
+    }
+    return newState
+  },
 }

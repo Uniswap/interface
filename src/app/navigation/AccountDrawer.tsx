@@ -64,18 +64,13 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
       .sort((a, b) => {
         return (a as NativeAccount).derivationIndex - (b as NativeAccount).derivationIndex
       })
-    const _privateKeyWallets = accounts
-      .filter((a) => a.type === AccountType.Local)
-      .sort((a, b) => {
-        return a.timeImportedMs - b.timeImportedMs
-      })
     const _viewOnlyWallets = accounts
       .filter((a) => a.type === AccountType.Readonly)
       .sort((a, b) => {
         return a.timeImportedMs - b.timeImportedMs
       })
     return {
-      accountsData: [..._mnemonicWallets, ..._privateKeyWallets, ..._viewOnlyWallets],
+      accountsData: [..._mnemonicWallets, ..._viewOnlyWallets],
       mnemonicWallets: _mnemonicWallets,
     }
   }, [addressToAccount])

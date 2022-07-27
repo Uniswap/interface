@@ -1,5 +1,5 @@
+import { by, device, element, expect } from 'detox'
 import { ElementName } from '../../src/features/telemetry/constants'
-import { by, expect, element, device } from 'detox'
 import { sleep } from '../../src/utils/timing'
 import { Accounts } from '../utils/fixtures'
 
@@ -30,9 +30,11 @@ export function ImportAccounts() {
     await element(by.id(ElementName.ImportAccount)).tap()
 
     // enter address / eth
-    await element(by.id('import_account_form/input')).typeText(Accounts.managed2.privateKey)
+    await element(by.id('import_account_form/input')).typeText(Accounts.managed2.seedPhrase)
     await sleep(500)
     await element(by.id(ElementName.Submit)).tap()
+
+    // @TODO: update with wallet selection screen once e2e tests are updated.
 
     await device.matchFace()
 

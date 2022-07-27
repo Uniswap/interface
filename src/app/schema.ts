@@ -149,6 +149,9 @@ export const v8Schema = {
   },
 }
 
+// schema did not change, but we removed private key wallets
+export const v9Schema = v8Schema
+
 // TODO: use function with typed output when API reducers are removed from rootReducer
 // export const getSchema = (): RootState => v0Schema
-export const getSchema = () => v8Schema
+export const getSchema = () => v9Schema

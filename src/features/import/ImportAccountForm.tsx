@@ -21,7 +21,6 @@ import {
 import { isValidAddress } from 'src/utils/addresses'
 import { getClipboard } from 'src/utils/clipboard'
 import { isValidMnemonic } from 'src/utils/mnemonics'
-import { isValidPrivateKey } from 'src/utils/privateKeys'
 import { SagaStatus } from 'src/utils/saga'
 import { normalizeTextInput } from 'src/utils/string'
 import { useSagaStatus } from 'src/utils/useSagaStatus'
@@ -62,10 +61,6 @@ export function ImportAccountForm({ onSuccess }: Props) {
       } else if (inputType === ImportAccountInputType.Mnemonic) {
         dispatch(
           importAccountActions.trigger({ type: ImportAccountType.Mnemonic, mnemonic: input })
-        )
-      } else if (inputType === ImportAccountInputType.PrivateKey) {
-        dispatch(
-          importAccountActions.trigger({ type: ImportAccountType.PrivateKey, privateKey: input })
         )
       }
       // Activate all new accounts.
@@ -207,7 +202,6 @@ function validateInput(input: string, resolvedAddress: string | null, t: TFuncti
   if (!input) return false
   if (isValidAddress(input)) return ImportAccountInputType.Address
   if (isValidEnsName(input) && resolvedAddress) return ImportAccountInputType.ENS
-  if (isValidPrivateKey(input)) return ImportAccountInputType.PrivateKey
   if (isValidMnemonic(input, t)) return ImportAccountInputType.Mnemonic
   return false
 }
