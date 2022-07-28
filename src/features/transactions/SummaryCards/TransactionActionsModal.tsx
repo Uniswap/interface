@@ -52,7 +52,7 @@ export default function TransactionActionsModal({
 
   const [showConfirmView, setShowConfirmView] = useState(false)
 
-  const dateString = dayjs(msTimestampAdded).format('MMM DD, YYYY')
+  const dateString = dayjs(msTimestampAdded).format('MMMM D, YYYY')
 
   const handleClose = useCallback(() => {
     setShowConfirmView(false)

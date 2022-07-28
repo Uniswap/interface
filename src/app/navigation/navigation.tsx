@@ -18,7 +18,7 @@ import {
   TabParamList,
 } from 'src/app/navigation/types'
 import DiscoverIcon from 'src/assets/icons/discover.svg'
-import ProfileIcon from 'src/assets/icons/profile.svg'
+import LightningIcon from 'src/assets/icons/lightning.svg'
 import WalletIcon from 'src/assets/icons/wallet.svg'
 import { Chevron } from 'src/components/icons/Chevron'
 import { Box, Flex } from 'src/components/layout'
@@ -147,7 +147,7 @@ function TabNavigator() {
           tabBarLabel: t('Me'),
           tabBarIcon: ({ focused, color }) => (
             <Flex alignItems="center" gap="xxs">
-              <ProfileIcon color={focused ? theme.colors.userThemeColor : color} height={24} />
+              <LightningIcon color={focused ? theme.colors.userThemeColor : color} height={24} />
               {hasUnreadNotifications && (
                 <Box
                   backgroundColor="accentAction"

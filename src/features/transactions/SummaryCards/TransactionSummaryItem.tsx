@@ -225,7 +225,7 @@ function TransactionSummaryItem({
                 )}
               </Flex>
               {caption && (
-                <Text color="textSecondary" variant="badge">
+                <Text color="textSecondary" variant="caption">
                   {caption}
                 </Text>
               )}
@@ -257,7 +257,11 @@ function TransactionSummaryItem({
                 {balanceUpdate.assetIncrease}
               </Text>
               {balanceUpdate.usdIncrease && (
-                <Text adjustsFontSizeToFit color="textSecondary" numberOfLines={1} variant="badge">
+                <Text
+                  adjustsFontSizeToFit
+                  color="textSecondary"
+                  numberOfLines={1}
+                  variant="caption">
                   {balanceUpdate.usdIncrease}
                 </Text>
               )}
@@ -267,7 +271,7 @@ function TransactionSummaryItem({
               <Text adjustsFontSizeToFit numberOfLines={1} variant="body">
                 {nftUpdateInfo.title}
               </Text>
-              <Text adjustsFontSizeToFit color="textSecondary" numberOfLines={1} variant="badge">
+              <Text adjustsFontSizeToFit color="textSecondary" numberOfLines={1} variant="caption">
                 {nftUpdateInfo.caption}
               </Text>
             </Flex>
