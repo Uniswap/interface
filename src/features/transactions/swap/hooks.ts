@@ -207,7 +207,7 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
     tokenOutBalance,
   ])
 
-  const gasFee = useSwapGasFee(state)
+  const gasFee = useSwapGasFee(state.gasSpendEstimate)
 
   const warnings = getSwapWarnings(t, {
     currencyAmounts,
@@ -510,10 +510,9 @@ export function useUpdateSwapGasEstimate(
   }, [trade, transactionStateDispatch, dispatch])
 }
 
-export function useSwapGasFee(state: TransactionState) {
-  const approveGasEstimate = state.gasSpendEstimate?.[TransactionType.Approve]
-  const swapGasEstimate = state.gasSpendEstimate?.[TransactionType.Swap]
-  const gasPrice = state.gasPrice
+export function useSwapGasFee(gasSpendEstimate?: GasSpendEstimate, gasPrice?: string) {
+  const approveGasEstimate = gasSpendEstimate?.[TransactionType.Approve]
+  const swapGasEstimate = gasSpendEstimate?.[TransactionType.Swap]
   return useMemo(() => {
     if (!approveGasEstimate || !swapGasEstimate || !gasPrice) return undefined
     const gasLimitEstimate = BigNumber.from(approveGasEstimate).add(swapGasEstimate)

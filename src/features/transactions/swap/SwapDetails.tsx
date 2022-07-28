@@ -13,16 +13,20 @@ import { Text } from 'src/components/Text'
 import { AccountDetails } from 'src/components/WalletConnect/RequestModal/AccountDetails'
 import { Warning, WarningModalType } from 'src/components/warnings/types'
 import { getWarningColor } from 'src/components/warnings/utils'
+import { useUSDGasPrice } from 'src/features/gas/hooks'
 import { useUSDCPrice } from 'src/features/routing/useUSDCPrice'
-import { useSwapActionHandlers } from 'src/features/transactions/swap/hooks'
+import { useSwapActionHandlers, useSwapGasFee } from 'src/features/transactions/swap/hooks'
 import { Trade } from 'src/features/transactions/swap/useTrade'
 import { showWarningInPanel } from 'src/features/transactions/swap/validate'
+import { GasSpendEstimate } from 'src/features/transactions/transactionState/transactionState'
 import { useActiveAccountWithThrow } from 'src/features/wallet/hooks'
 import { formatPrice } from 'src/utils/format'
 
 interface SwapDetailsProps {
   acceptedTrade: Trade<Currency, Currency, TradeType>
   dispatch: Dispatch<AnyAction>
+  gasPrice?: string
+  gasSpendEstimate?: GasSpendEstimate
   newTradeToAccept: boolean
   warnings: Warning[]
   onAcceptTrade: () => void
@@ -44,6 +48,8 @@ const getFormattedPrice = (price: Price<Currency, Currency>, inverse: boolean) =
 export function SwapDetails({
   acceptedTrade,
   dispatch,
+  gasPrice,
+  gasSpendEstimate,
   newTradeToAccept,
   warnings,
   onAcceptTrade,
@@ -64,8 +70,8 @@ export function SwapDetails({
   const inverseRate = `1 ${price.baseCurrency?.symbol} = ${formattedInversePrice} ${price.quoteCurrency?.symbol}`
 
   const rateDisplay = showInverseRate ? rate : inverseRate
-  // TODO: replace with updated gas fee estimate
-  const gasFeeUSD = parseFloat(acceptedTrade.quote!.gasUseEstimateUSD).toFixed(2)
+  const gasFee = useSwapGasFee(gasSpendEstimate, gasPrice)
+  const gasFeeUSD = useUSDGasPrice(acceptedTrade.inputAmount.currency.chainId, gasFee)
   const swapWarning = warnings.find(showWarningInPanel)
   const swapWarningColor = getWarningColor(swapWarning)
 
