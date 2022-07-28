@@ -105,7 +105,7 @@ function ContentHeader() {
       px="xs"
       py="sm">
       <AccountHeader onPress={onPressAccountHeader} />
-      <Flex row gap="xs">
+      <Flex row alignItems="center" gap="sm">
         <PendingNotificationBadge />
         {isWalletConnectSupportedAccount(activeAccount) && (
           <Button name={ElementName.WalletConnectScan} onPress={onPressScan}>

@@ -1,17 +1,22 @@
 import React from 'react'
-import * as Progress from 'react-native-progress'
 import { useAppSelector, useAppTheme } from 'src/app/hooks'
+import { navigate } from 'src/app/navigation/rootNavigation'
 import AlertCircle from 'src/assets/icons/alert-circle.svg'
+import { Button } from 'src/components/buttons/Button'
 import { CheckmarkCircle } from 'src/components/icons/CheckmarkCircle'
 import { Box } from 'src/components/layout'
+import { SpinningLoader } from 'src/components/loading/SpinningLoader'
 import { Text } from 'src/components/Text'
 import { selectActiveAccountNotifications } from 'src/features/notifications/selectors'
 import { AppNotificationType } from 'src/features/notifications/types'
 import { useSortedPendingTransactions } from 'src/features/transactions/hooks'
 import { TransactionStatus } from 'src/features/transactions/types'
 import { selectActiveAccountAddress } from 'src/features/wallet/selectors'
+import { Tabs } from 'src/screens/Screens'
 
 const PENDING_TX_TIME_LIMIT = 60_000 * 5 // 5 mins
+const LOADING_SPINNER_SIZE = 26
+const TEXT_OFFSET = 1
 
 export function PendingNotificationBadge({ size = 24 }: { size?: number }) {
   const theme = useAppTheme()
@@ -45,22 +50,27 @@ export function PendingNotificationBadge({ size = 24 }: { size?: number }) {
     return null
 
   const countToDisplay = pendingTransactionCount === 1 ? undefined : pendingTransactionCount
+
+  function onPress() {
+    navigate(Tabs.Profile)
+  }
+
   return (
-    <Box position="relative">
+    <Button position="relative" onPress={onPress}>
       <Box
         alignItems="center"
         height={size}
         justifyContent="center"
+        left={TEXT_OFFSET}
         position="absolute"
+        top={TEXT_OFFSET}
         width={size}
         zIndex="modal">
         <Text textAlign="center" variant="badge">
           {countToDisplay}
         </Text>
       </Box>
-      <Box alignItems="center" flexDirection="row">
-        <Progress.CircleSnail direction="clockwise" size={size} thickness={2.5} />
-      </Box>
-    </Box>
+      <SpinningLoader size={LOADING_SPINNER_SIZE} />
+    </Button>
   )
 }
