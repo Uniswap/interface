@@ -7,10 +7,10 @@ import { Event } from 'components/AmplitudeAnalytics/constants'
 import { TraceEvent } from 'components/AmplitudeAnalytics/TraceEvent'
 import {
   formatPercentInBasisPointsNumber,
-  formatPercentNumber,
-  getDurationFromDateTillNowMilliseconds,
-  getDurationTillTimestampSinceEpochSeconds,
-  getNumberFormattedToDecimalPlace,
+  formatToDecimal,
+  getDurationFromDateMilliseconds,
+  getDurationUntilTimestampSeconds,
+  getTokenAddress,
 } from 'components/AmplitudeAnalytics/utils'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
@@ -89,19 +89,17 @@ const formatAnalyticsEventProperties = ({
   swapQuoteReceivedDate,
   routes,
 }: AnalyticsEventProps) => ({
-  estimated_network_fee_usd: trade.gasUseEstimateUSD
-    ? getNumberFormattedToDecimalPlace(trade.gasUseEstimateUSD, 2)
-    : undefined,
+  estimated_network_fee_usd: trade.gasUseEstimateUSD ? formatToDecimal(trade.gasUseEstimateUSD, 2) : undefined,
   transaction_hash: txHash,
-  transaction_deadline_seconds: getDurationTillTimestampSinceEpochSeconds(transactionDeadlineSecondsSinceEpoch),
+  transaction_deadline_seconds: getDurationUntilTimestampSeconds(transactionDeadlineSecondsSinceEpoch),
   token_in_amount_usd: tokenInAmountUsd ? parseFloat(tokenInAmountUsd) : undefined,
   token_out_amount_usd: tokenOutAmountUsd ? parseFloat(tokenOutAmountUsd) : undefined,
-  token_in_address: trade.inputAmount.currency.isNative ? NATIVE_CHAIN_ADDRESS : trade.inputAmount.currency.address,
-  token_out_address: trade.outputAmount.currency.isNative ? NATIVE_CHAIN_ADDRESS : trade.outputAmount.currency.address,
+  token_in_address: getTokenAddress(trade.inputAmount.currency),
+  token_out_address: getTokenAddress(trade.outputAmount.currency),
   token_in_symbol: trade.inputAmount.currency.symbol,
   token_out_symbol: trade.outputAmount.currency.symbol,
-  token_in_amount: getNumberFormattedToDecimalPlace(trade.inputAmount, trade.inputAmount.currency.decimals),
-  token_out_amount: getNumberFormattedToDecimalPlace(trade.outputAmount, trade.outputAmount.currency.decimals),
+  token_in_amount: formatToDecimal(trade.inputAmount, trade.inputAmount.currency.decimals),
+  token_out_amount: formatToDecimal(trade.outputAmount, trade.outputAmount.currency.decimals),
   price_impact_basis_points: formatPercentInBasisPointsNumber(getPriceImpactPercent(lpFeePercent, trade)),
   allowed_slippage_basis_points: formatPercentInBasisPointsNumber(allowedSlippage),
   is_auto_router_api: isAutoRouterApi,
@@ -111,7 +109,7 @@ const formatAnalyticsEventProperties = ({
       ? trade.inputAmount.currency.chainId
       : undefined,
   duration_from_first_quote_to_swap_submission_milliseconds: swapQuoteReceivedDate
-    ? getDurationFromDateTillNowMilliseconds(swapQuoteReceivedDate)
+    ? getDurationFromDateMilliseconds(swapQuoteReceivedDate)
     : undefined,
   ...formatRoutesEventProperties(routes),
 })

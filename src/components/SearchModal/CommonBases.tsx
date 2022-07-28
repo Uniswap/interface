@@ -1,6 +1,7 @@
 import { Currency } from '@uniswap/sdk-core'
-import { ElementName, Event, EventName, NATIVE_CHAIN_ADDRESS } from 'components/AmplitudeAnalytics/constants'
+import { ElementName, Event, EventName } from 'components/AmplitudeAnalytics/constants'
 import { TraceEvent } from 'components/AmplitudeAnalytics/TraceEvent'
+import { getTokenAddress } from 'components/AmplitudeAnalytics/utils'
 import { AutoColumn } from 'components/Column'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { AutoRow } from 'components/Row'
@@ -36,7 +37,7 @@ const BaseWrapper = styled.div<{ disable?: boolean }>`
 const formatAnalyticsEventProperties = (currency: Currency, searchQuery: string, isAddressSearch: string | false) => ({
   token_symbol: currency?.symbol,
   token_chain_id: currency?.chainId,
-  token_address: currency.isNative ? NATIVE_CHAIN_ADDRESS : currency.address,
+  token_address: getTokenAddress(currency),
   is_suggested_token: true,
   is_selected_from_list: false,
   is_imported_by_user: false,
