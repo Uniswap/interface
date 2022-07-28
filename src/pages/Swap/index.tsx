@@ -92,7 +92,13 @@ export function getIsValidSwapQuote(
   return !!swapInputError && !!trade && (tradeState === TradeState.VALID || tradeState === TradeState.SYNCING)
 }
 
-const formatApproveTokenTxnSubmittedEventProperties = (approvalOptimizedTrade: Trade | undefined) => {
+const formatApproveTokenTxnSubmittedEventProperties = (
+  approvalOptimizedTrade:
+    | Trade<Currency, Currency, TradeType>
+    | V2Trade<Currency, Currency, TradeType>
+    | V3Trade<Currency, Currency, TradeType>
+    | undefined
+) => {
   if (!approvalOptimizedTrade) return {}
   return {
     chain_id: approvalOptimizedTrade.inputAmount.currency.chainId,
