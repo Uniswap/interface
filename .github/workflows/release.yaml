@@ -157,7 +157,7 @@ jobs:
       - name: Create release
         uses: softprops/action-gh-release@v1
         with:
-          body_path: ${{steps.github_release.outputs.changelog}}
+          body: ${{steps.github_release.outputs.changelog}}
           token: ${{ secrets.GITHUB_TOKEN }}
           tag_name: ${{ env.VERSION_TAG }}
           prerelease: false
