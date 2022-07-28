@@ -4,7 +4,6 @@ import { Text } from 'rebass'
 import styled from 'styled-components'
 import { t, Trans } from '@lingui/macro'
 import { Star } from 'react-feather'
-import { useDispatch, useSelector } from 'react-redux'
 import { Currency, CurrencyAmount, Token } from '@kyberswap/ks-sdk-core'
 import { rgba } from 'polished'
 
@@ -21,8 +20,6 @@ import useTheme from 'hooks/useTheme'
 import { useCurrencyConvertedToNative } from 'utils/dmm'
 import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 import { ButtonEmpty } from 'components/Button'
-import { AppState } from 'state'
-import { toggleFavoriteToken } from 'state/user/actions'
 
 import { RowFixed, RowBetween } from '../Row'
 import Column from '../Column'
@@ -175,7 +172,6 @@ function CurrencyRow({
   otherSelected: boolean
   style: CSSProperties
 }) {
-  const dispatch = useDispatch()
   const { chainId, account } = useActiveWeb3React()
   const selectedTokenList = useCombinedActiveList()
   const isOnSelectedList = isTokenOnList(selectedTokenList, currency)

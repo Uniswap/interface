@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { ChainId, Currency } from '@kyberswap/ks-sdk-core'
 
 import { TOKEN_INFO_DESCRIPTION } from 'constants/tokenLists/token-info'
@@ -60,15 +60,7 @@ const checkTokenDescription = ({
   }
 }
 
-const TokenInfoV2 = ({
-  currencyIn,
-  currencyOut,
-  callback,
-}: {
-  currencyIn?: Currency
-  currencyOut?: Currency
-  callback: (show: boolean) => void
-}) => {
+const TokenInfoV2 = ({ currencyIn, currencyOut }: { currencyIn?: Currency; currencyOut?: Currency }) => {
   const inputNativeCurrency = useCurrencyConvertedToNative(currencyIn)
   const outputNativeCurrency = useCurrencyConvertedToNative(currencyOut)
 
@@ -90,10 +82,6 @@ const TokenInfoV2 = ({
 
   const showToken1 = !isEmptyData(tokenInfo1) && isInWhiteList
   const showToken2 = !isEmptyData(tokenInfo2) && isInWhiteList
-
-  useEffect(() => {
-    callback(showToken2 || showToken1)
-  }, [callback, showToken2, showToken1])
 
   if (!showToken2 && !showToken1) return null
   const showHow2Swap = Boolean(showToken1 && showToken2 && currencyIn && currencyOut && isInWhiteList)
