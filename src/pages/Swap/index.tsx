@@ -78,6 +78,13 @@ export function getIsValidSwapQuote(
   return !!swapInputError && !!trade && (tradeState === TradeState.VALID || tradeState === TradeState.SYNCING)
 }
 
+const formatAnalyticsEventProperties = (inputCurrency: Currency, outputCurrency: Currency) => ({
+  token_in_address: inputCurrency.isNative ? 'NATIVE' : inputCurrency.address,
+token_out_address: outputCurrency.isNative ? 'NATIVE' : outputCurrency.address,
+token_in_symbol: inputCurrency.symbol,
+token_out_symbol: outputCurrency.symbol,
+})
+
 export default function Swap() {
   const navigate = useNavigate()
   const { account, chainId } = useWeb3React()
@@ -545,15 +552,23 @@ export default function Swap() {
                     </ButtonLight>
                   </TraceEvent>
                 ) : showWrap ? (
-                  <ButtonPrimary disabled={Boolean(wrapInputError)} onClick={onWrap}>
-                    {wrapInputError ? (
-                      <WrapErrorText wrapInputError={wrapInputError} />
-                    ) : wrapType === WrapType.WRAP ? (
-                      <Trans>Wrap</Trans>
-                    ) : wrapType === WrapType.UNWRAP ? (
-                      <Trans>Unwrap</Trans>
-                    ) : null}
-                  </ButtonPrimary>
+                  <TraceEvent
+                    events={[Event.onClick]}
+                    name={EventName.WRAP_TOKEN_TXN_SUBMITTED}
+                        element={ElementName.WRAP_TOKEN_BUTTON}
+                        properties={{}}
+                    shouldLogImpression={!Boolean(wrapInputError)}
+                  >
+                    <ButtonPrimary disabled={Boolean(wrapInputError)} onClick={onWrap}>
+                      {wrapInputError ? (
+                        <WrapErrorText wrapInputError={wrapInputError} />
+                      ) : wrapType === WrapType.WRAP ? (
+                        <Trans>Wrap</Trans>
+                      ) : wrapType === WrapType.UNWRAP ? (
+                        <Trans>Unwrap</Trans>
+                      ) : null}
+                    </ButtonPrimary>
+                  </TraceEvent>
                 ) : routeNotFound && userHasSpecifiedInputOutput && !routeIsLoading && !routeIsSyncing ? (
                   <GreyCard style={{ textAlign: 'center' }}>
                     <ThemedText.DeprecatedMain mb="4px">

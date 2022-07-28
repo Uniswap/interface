@@ -5,6 +5,7 @@
  * and logged.
  */
 export enum EventName {
+  APPROVE_TOKEN_TXN_SUBMITTED = 'Approve Token Transaction Submitted',
   CONNECT_WALLET_BUTTON_CLICKED = 'Connect Wallet Button Clicked',
   PAGE_VIEWED = 'Page Viewed',
   SWAP_AUTOROUTER_VISUALIZATION_EXPANDED = 'Swap Autorouter Visualization Expanded',
@@ -18,6 +19,7 @@ export enum EventName {
   TOKEN_SELECTOR_OPENED = 'Token Selector Opened',
   WALLET_CONNECT_TXN_COMPLETED = 'Wallet Connect Transaction Completed',
   WALLET_SELECTED = 'Wallet Selected',
+  WRAP_TOKEN_TXN_SUBMITTED = 'Wrap Token Transaction Submitted',
   // alphabetize additional event names.
 }
 
@@ -84,6 +86,7 @@ export const enum ElementName {
   SWAP_TRADE_PRICE_ROW = 'swap-trade-price-row',
   TOKEN_SELECTOR_ROW = 'token-selector-row',
   WALLET_TYPE_OPTION = 'wallet-type-option',
+  WRAP_TOKEN_BUTTON = 'wrap-token-button',
   // alphabetize additional element names.
 }
 
