@@ -264,7 +264,7 @@ const VolumeCell = styled(DataCell)`
   }
 `
 /* Loading state bubbles */
-const LoadingBubble = styled.div`
+export const LoadingBubble = styled.div`
   border-radius: 12px;
   height: 24px;
   width: 50%;
