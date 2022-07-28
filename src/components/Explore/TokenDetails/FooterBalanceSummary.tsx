@@ -1,9 +1,11 @@
 import { useToken } from 'hooks/Tokens'
 import { useNetworkTokenBalances } from 'hooks/useNetworkTokenBalances'
 import { useState } from 'react'
+import { AlertTriangle } from 'react-feather'
 import styled from 'styled-components/macro'
 
 import { SMALLEST_MOBILE_MEDIA_BREAKPOINT } from '../constants'
+import { LoadingBubble } from '../loading'
 
 const BalanceFooter = styled.div`
   height: fit-content;
@@ -101,6 +103,29 @@ const ViewAll = styled.span`
   line-height: 20px;
   cursor: pointer;
 `
+const ErrorState = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-right: 8px;
+`
+const LoadingState = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+`
+const TopBalanceLoadBubble = styled(LoadingBubble)`
+  height: 12px;
+  width: 172px;
+`
+const BottomBalanceLoadBubble = styled(LoadingBubble)`
+  height: 16px;
+  width: 188px;
+`
+const ErrorText = styled.span`
+  display: flex;
+  flex-wrap: wrap;
+`
 
 export default function FooterBalanceSummary({
   address,
@@ -117,37 +142,40 @@ export default function FooterBalanceSummary({
   const { loading, error } = useNetworkTokenBalances({ address })
   return (
     <BalanceFooter>
-      {loading ? (
-        <span>loading...</span>
-      ) : error ? (
-        <span>Error fetching user balances</span>
-      ) : (
-        <>
-          <TotalBalancesSection>
-            <BalanceInfo>
-              Your balance
-              <BalanceTotal>
-                <BalanceValue>
-                  {totalBalance} {tokenSymbol}
-                </BalanceValue>
-                <FiatValue>($107, 610.04)</FiatValue>
-              </BalanceTotal>
-              {multipleBalances && (
-                <ViewAll onClick={() => setShowMultipleBalances(!showMultipleBalances)}>
-                  {showMultipleBalances ? 'Hide' : 'View'} all balances
-                </ViewAll>
-              )}
-            </BalanceInfo>
-            <SwapButton onClick={() => (window.location.href = 'https://app.uniswap.org/#/swap')}>Swap</SwapButton>
-          </TotalBalancesSection>
-          {showMultipleBalances && (
-            <NetworkBalancesSection>
-              <NetworkBalancesLabel>Your balances by network</NetworkBalancesLabel> {networkBalances}
-            </NetworkBalancesSection>
-          )}
-        </>
+      <TotalBalancesSection>
+        {loading ? (
+          <LoadingState>
+            <TopBalanceLoadBubble></TopBalanceLoadBubble>
+            <BottomBalanceLoadBubble></BottomBalanceLoadBubble>
+          </LoadingState>
+        ) : error ? (
+          <ErrorState>
+            <AlertTriangle size={17} />
+            <ErrorText>There was an error fetching your balance</ErrorText>
+          </ErrorState>
+        ) : (
+          <BalanceInfo>
+            Your balance
+            <BalanceTotal>
+              <BalanceValue>
+                {totalBalance} {tokenSymbol}
+              </BalanceValue>
+              <FiatValue>($107, 610.04)</FiatValue>
+            </BalanceTotal>
+            {multipleBalances && (
+              <ViewAll onClick={() => setShowMultipleBalances(!showMultipleBalances)}>
+                {showMultipleBalances ? 'Hide' : 'View'} all balances
+              </ViewAll>
+            )}
+          </BalanceInfo>
+        )}
+        <SwapButton onClick={() => (window.location.href = 'https://app.uniswap.org/#/swap')}>Swap</SwapButton>
+      </TotalBalancesSection>
+      {showMultipleBalances && (
+        <NetworkBalancesSection>
+          <NetworkBalancesLabel>Your balances by network</NetworkBalancesLabel> {networkBalances}
+        </NetworkBalancesSection>
       )}
-
       <FakeFooterNavBar>**leaving space for updated nav footer**</FakeFooterNavBar>
     </BalanceFooter>
   )
