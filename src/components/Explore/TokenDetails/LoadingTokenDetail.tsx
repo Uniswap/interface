@@ -1,5 +1,6 @@
 import styled from 'styled-components/macro'
 
+import { LoadingBubble } from '../loading'
 import {
   AboutHeader,
   AboutSection,
@@ -20,16 +21,14 @@ import {
 } from './TokenDetail'
 
 /* Loading state bubbles */
-const LoadingBubble = styled.div`
-  background-color: ${({ theme }) => theme.backgroundContainer};
-  border-radius: 12px;
+const LoadingDetailBubble = styled(LoadingBubble)`
   height: 16px;
   width: 180px;
 `
-const TitleLoadingBubble = styled(LoadingBubble)`
+const TitleLoadingBubble = styled(LoadingDetailBubble)`
   width: 140px;
 `
-const SquareLoadingBubble = styled(LoadingBubble)`
+const SquareLoadingBubble = styled(LoadingDetailBubble)`
   height: 32px;
   border-radius: 8px;
   margin-top: 4px;
@@ -37,13 +36,13 @@ const SquareLoadingBubble = styled(LoadingBubble)`
 const PriceLoadingBubble = styled(SquareLoadingBubble)`
   height: 40px;
 `
-const LongLoadingBubble = styled(LoadingBubble)`
+const LongLoadingBubble = styled(LoadingDetailBubble)`
   width: 100%;
 `
-const HalfLoadingBubble = styled(LoadingBubble)`
+const HalfLoadingBubble = styled(LoadingDetailBubble)`
   width: 50%;
 `
-const IconLoadingBubble = styled(LoadingBubble)`
+const IconLoadingBubble = styled(LoadingDetailBubble)`
   width: 32px;
   height: 32px;
   border-radius: 50%;

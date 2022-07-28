@@ -18,6 +18,7 @@ import {
   MOBILE_MEDIA_BREAKPOINT,
   SMALL_MEDIA_BREAKPOINT,
 } from '../constants'
+import { LoadingBubble } from '../loading'
 import {
   favoritesAtom,
   filterTimeAtom,
@@ -260,13 +261,6 @@ const VolumeCell = styled(DataCell)`
   @media only screen and (max-width: ${LARGE_MEDIA_BREAKPOINT}) {
     display: none;
   }
-`
-/* Loading state bubbles */
-const LoadingBubble = styled.div`
-  background-color: ${({ theme }) => theme.backgroundContainer};
-  border-radius: 12px;
-  height: 24px;
-  width: 50%;
 `
 const SmallLoadingBubble = styled(LoadingBubble)`
   width: 25%;
