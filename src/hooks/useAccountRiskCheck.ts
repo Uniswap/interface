@@ -35,7 +35,7 @@ export default function useAccountRiskCheck(account: string | null | undefined) 
             .catch(() => dispatch(setOpenModal(null)))
         }
       } finally {
-        localStorage.setItem(riskCheckLocalStorageKey, (now + ms`7 days`).toString())
+        localStorage.setItem(riskCheckLocalStorageKey, (now + ms`12 hours`).toString())
       }
     }
   }, [account, dispatch])
