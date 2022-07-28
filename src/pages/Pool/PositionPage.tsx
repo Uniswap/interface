@@ -133,15 +133,21 @@ const NFTGrid = styled.div`
   display: grid;
   grid-template: 'overlap';
   min-height: 400px;
+  position: relative;
 `
 
 const NFTCanvas = styled.canvas`
   grid-area: overlap;
 `
 
-const NFTImage = styled.img`
+const NFTImage = styled.img<{ targetHeight: number }>`
   grid-area: overlap;
-  height: 400px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform-origin: 0 0;
+  /* 500 value comes from https://github.com/Uniswap/v3-periphery/blob/2880364dcde105b903d4bf1bea94105b14cbbd35/contracts/libraries/NFTSVG.sol#L79 */
+  transform: ${(props) => `scale(${props.targetHeight / 500})`};
   /* Ensures SVG appears on top of canvas. */
   z-index: 1;
 `
@@ -277,6 +283,7 @@ function NFT({ image, height: targetHeight }: { image: string; height: number })
       <NFTImage
         ref={imageRef}
         src={image}
+        targetHeight={targetHeight}
         hidden={!animate}
         onLoad={() => {
           // snapshot for the canvas
