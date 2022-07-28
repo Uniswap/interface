@@ -1,10 +1,12 @@
 import { Trans } from '@lingui/macro'
 import CurrencyLogo from 'components/CurrencyLogo'
+import { loadingAnimation } from 'components/Loader/styled'
 import { useCurrency, useToken } from 'hooks/Tokens'
 import useTheme from 'hooks/useTheme'
 import { TimePeriod, TokenData } from 'hooks/useTopTokens'
 import { useAtom } from 'jotai'
 import { useAtomValue } from 'jotai/utils'
+import { darken } from 'polished'
 import { ReactNode } from 'react'
 import { ArrowDown, ArrowDownRight, ArrowUp, ArrowUpRight, Heart } from 'react-feather'
 import { Link } from 'react-router-dom'
@@ -263,10 +265,19 @@ const VolumeCell = styled(DataCell)`
 `
 /* Loading state bubbles */
 const LoadingBubble = styled.div`
-  background-color: ${({ theme }) => theme.backgroundContainer};
   border-radius: 12px;
   height: 24px;
   width: 50%;
+  animation: ${loadingAnimation} 1.5s infinite;
+  animation-fill-mode: both;
+  will-change: background-position;
+  background-size: 400%;
+  background: linear-gradient(
+    to left,
+    ${({ theme }) => theme.backgroundContainer} 25%,
+    ${({ theme }) => darken(0.24, theme.backgroundContainer)} 50%,
+    ${({ theme }) => theme.backgroundContainer} 75%
+  );
 `
 const SmallLoadingBubble = styled(LoadingBubble)`
   width: 25%;
