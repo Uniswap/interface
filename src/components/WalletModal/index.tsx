@@ -1,18 +1,26 @@
 import { Trans } from '@lingui/macro'
-import { CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { Connector } from '@web3-react/types'
 import { sendAnalyticsEvent, user } from 'components/AmplitudeAnalytics'
-import { CUSTOM_USER_PROPERTIES, EventName, WALLET_CONNECTION_RESULT } from 'components/AmplitudeAnalytics/constants'
-import { getNumberFormattedToDecimalPlace } from 'components/AmplitudeAnalytics/utils'
+import {
+  CUSTOM_USER_PROPERTIES,
+  EventName,
+  NATIVE_CHAIN_ADDRESS,
+  WALLET_CONNECTION_RESULT,
+} from 'components/AmplitudeAnalytics/constants'
 import { sendEvent } from 'components/analytics'
 import { AutoColumn } from 'components/Column'
 import { AutoRow } from 'components/Row'
 import { ConnectionType } from 'connection'
 import { getConnection, getConnectionName, getIsCoinbaseWallet, getIsInjected, getIsMetaMask } from 'connection/utils'
-import { useTokenBalances } from 'lib/hooks/useCurrencyBalance'
-import { useCallback, useEffect, useState } from 'react'
+import { useStablecoinValue } from 'hooks/useStablecoinPrice'
+import { useCurrencyBalances } from 'lib/hooks/useCurrencyBalance'
+import useNativeCurrency from 'lib/hooks/useNativeCurrency'
+import { tokenComparator } from 'lib/hooks/useTokenList/sorting'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { ArrowLeft } from 'react-feather'
+import { useAllTokenBalances } from 'state/connection/hooks'
 import { updateConnectionError } from 'state/connection/reducer'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { updateSelectedWallet } from 'state/user/reducer'
@@ -20,6 +28,7 @@ import styled from 'styled-components/macro'
 import { isMobile } from 'utils/userAgent'
 
 import { ReactComponent as Close } from '../../assets/images/x.svg'
+import { useAllTokens } from '../../hooks/Tokens'
 import { useModalIsOpen, useToggleWalletModal } from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/reducer'
 import { ExternalLink, ThemedText } from '../../theme'
@@ -120,19 +129,23 @@ const modifyUserModelWithCustomWalletProperties = (
   account: string,
   walletType: string,
   chainId: number | undefined,
-  balances: { [tokenAddress: string]: CurrencyAmount<Token> | undefined }
+  balances: (CurrencyAmount<Currency> | undefined)[]
 ) => {
   const currentDate = new Date().toISOString()
   const walletTokensSymbols: string[] = []
   const walletTokensAddresses: string[] = []
   const walletTokensBalancesUsd: number[] = []
   let totalWalletBalanceUsd = 0
-  Object.entries(balances).forEach(([key, val]) => {
-    if (val !== undefined) {
-      const tokenBalanceUsd = getNumberFormattedToDecimalPlace(val, 2)
+  balances.forEach((currencyAmount) => {
+    console.log('currencyAmount', currencyAmount)
+    if (currencyAmount !== undefined) {
+      const tokenBalanceUsdValue = useStablecoinValue(currencyAmount)?.toFixed(2)
+      const tokenBalanceUsd = tokenBalanceUsdValue ? parseFloat(tokenBalanceUsdValue) : 0
       if (tokenBalanceUsd > 0) {
-        walletTokensAddresses.push(key)
-        walletTokensSymbols.push(val.currency.symbol ?? '')
+        walletTokensAddresses.push(
+          currencyAmount.currency.isNative ? NATIVE_CHAIN_ADDRESS : currencyAmount.currency.address
+        )
+        walletTokensSymbols.push(currencyAmount.currency.symbol ?? '')
         walletTokensBalancesUsd.push(tokenBalanceUsd)
         totalWalletBalanceUsd += tokenBalanceUsd
       }
@@ -157,7 +170,7 @@ const sendAnalyticsEventAndUserInfo = (
   account: string,
   walletType: string,
   chainId: number | undefined,
-  balances: { [tokenAddress: string]: CurrencyAmount<Token> | undefined }
+  balances: (CurrencyAmount<Currency> | undefined)[]
 ) => {
   sendAnalyticsEvent(EventName.WALLET_CONNECT_TXN_COMPLETED, {
     result: WALLET_CONNECTION_RESULT.SUCCEEDED,
@@ -191,7 +204,33 @@ export default function WalletModal({
   const walletModalOpen = useModalIsOpen(ApplicationModal.WALLET)
   const toggleWalletModal = useToggleWalletModal()
 
-  const balances = useTokenBalances(account)
+  const allTokens = useAllTokens()
+  const [tokenBalances, tokenBalancesIsLoading] = useAllTokenBalances()
+  const sortedTokens: Token[] = useMemo(() => {
+    void tokenBalancesIsLoading // creates a new array once balances load to update hooks
+    return Object.values(allTokens).sort(tokenComparator.bind(null, tokenBalances))
+  }, [tokenBalances, allTokens, tokenBalancesIsLoading])
+  const native = useNativeCurrency()
+
+  const sortedTokensWithETH: Currency[] = useMemo(() => {
+    // Use Celo ERC20 Implementation and exclude the native asset
+    if (!native) {
+      return sortedTokens
+    }
+    // Always bump the native token to the top of the list.
+    return native ? [native, ...sortedTokens.filter((t) => !t.equals(native))] : sortedTokens
+  }, [native, sortedTokens])
+
+  const balances = useCurrencyBalances(account, sortedTokensWithETH)
+  console.log('balances', balances)
+
+  // const tokenBalanceUsdValue = useStablecoinValue(currencyAmount)?.toFixed(2)
+  // const tokenBalanceUsd = tokenBalanceUsdValue ? parseFloat(tokenBalanceUsdValue) : 0
+
+  const balancesUsd = balances.map((balance) => {
+    const tokenBalanceUsdValue = useStablecoinValue(currencyAmount)?.toFixed(2)
+    const tokenBalanceUsd = tokenBalanceUsdValue ? parseFloat(tokenBalanceUsdValue) : 0
+  })
 
   const openOptions = useCallback(() => {
     setWalletView(WALLET_VIEWS.OPTIONS)
