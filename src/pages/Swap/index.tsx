@@ -512,9 +512,8 @@ export default function Swap() {
     setSwapQuoteReceivedDate,
   ])
 
-  const approveTokenButtonDisabled = approvalState !== ApprovalState.NOT_APPROVED ||
-                            approvalSubmitted ||
-                            signatureState === UseERC20PermitState.SIGNED
+  const approveTokenButtonDisabled =
+    approvalState !== ApprovalState.NOT_APPROVED || approvalSubmitted || signatureState === UseERC20PermitState.SIGNED
 
   return (
     <Trace page={PageName.SWAP_PAGE} shouldLogImpression>
@@ -685,9 +684,7 @@ export default function Swap() {
                         name={EventName.APPROVE_TOKEN_TXN_SUBMITTED}
                         element={ElementName.APPROVE_TOKEN_BUTTON}
                         properties={formatApproveTokenTxnSubmittedEventProperties(approvalOptimizedTrade)}
-                        shouldLogImpression={
-                          !approveTokenButtonDisabled
-                        }
+                        shouldLogImpression={!approveTokenButtonDisabled}
                       >
                         <ButtonConfirmed
                           onClick={handleApprove}

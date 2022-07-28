@@ -1,7 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { Protocol } from '@uniswap/router-sdk'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
-import { FeeAmount } from '@uniswap/v3-sdk'
 import { ElementName, Event, EventName } from 'components/AmplitudeAnalytics/constants'
 import { TraceEvent } from 'components/AmplitudeAnalytics/TraceEvent'
 import {
@@ -41,34 +39,29 @@ interface AnalyticsEventProps {
 }
 
 const formatRoutesEventProperties = (routes: RoutingDiagramEntry[]) => {
-  const routesPercentages: number[] = []
-  const routesProtocols: Protocol[] = []
-  const routesInputCurrencySymbols: string[][] = []
-  const routesOutputCurrencySymbols: string[][] = []
-  const routesInputCurrencyAddresses: string[][] = []
-  const routesOutputCurrencyAddresses: string[][] = []
-  const routesFeeAmounts: FeeAmount[][] = []
-
-  routes.forEach((route) => {
-    routesPercentages.push(formatPercentNumber(route.percent))
-    routesProtocols.push(route.protocol)
-    routesInputCurrencySymbols.push(route.path.map((pathStep) => pathStep[0].symbol ?? ''))
-    routesOutputCurrencySymbols.push(route.path.map((pathStep) => pathStep[1].symbol ?? ''))
-    routesInputCurrencyAddresses.push(route.path.map((pathStep) => getTokenAddress(pathStep[0])))
-    routesOutputCurrencyAddresses.push(route.path.map((pathStep) => getTokenAddress(pathStep[1])))
-    routesFeeAmounts.push(route.path.map((pathStep) => pathStep[2]))
-  })
   const routesEventProperties: Record<string, any[]> = {
-    routes_percentages: routesPercentages,
-    routes_protocols: routesProtocols,
+    routes_percentages: [],
+    routes_protocols: [],
   }
-  routes.forEach((_, index) => {
-    routesEventProperties[`route_${index}_input_currency_symbols`] = routesInputCurrencySymbols[index]
-    routesEventProperties[`route_${index}_output_currency_symbols`] = routesOutputCurrencySymbols[index]
-    routesEventProperties[`route_${index}_input_currency_addresses`] = routesInputCurrencyAddresses[index]
-    routesEventProperties[`route_${index}_output_currency_addresses`] = routesOutputCurrencyAddresses[index]
-    routesEventProperties[`route_${index}_fee_amounts_hundredths_of_bps`] = routesFeeAmounts[index]
+
+  routes.forEach((route, index) => {
+    routesEventProperties['routes_percentages'].push(formatPercentNumber(route.percent))
+    routesEventProperties['routes_protocols'].push(route.protocol)
+    routesEventProperties[`route_${index}_input_currency_symbols`] = route.path.map(
+      (pathStep) => pathStep[0].symbol ?? ''
+    )
+    routesEventProperties[`route_${index}_output_currency_symbols`] = route.path.map(
+      (pathStep) => pathStep[1].symbol ?? ''
+    )
+    routesEventProperties[`route_${index}_input_currency_addresses`] = route.path.map((pathStep) =>
+      getTokenAddress(pathStep[0])
+    )
+    routesEventProperties[`route_${index}_output_currency_addresses`] = route.path.map((pathStep) =>
+      getTokenAddress(pathStep[1])
+    )
+    routesEventProperties[`route_${index}_fee_amounts_hundredths_of_bps`] = route.path.map((pathStep) => pathStep[2])
   })
+
   return routesEventProperties
 }
 
