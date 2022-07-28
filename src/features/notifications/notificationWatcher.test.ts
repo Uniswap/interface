@@ -39,6 +39,16 @@ describe(pushTransactionNotification, () => {
     const { chainId, from, hash } = finalizedApproveAction.payload
 
     return expectSaga(pushTransactionNotification, finalizedApproveAction)
+      .withState({
+        transactions: {
+          [from]: {
+            [chainId]: {
+              uuid1: { typeInfo: TransactionType.Approve, addedTime: Date.now() },
+              uuid2: { typeInfo: TransactionType.Swap, addedTime: Date.now() + 3000 },
+            },
+          },
+        },
+      })
       .put(
         pushNotification({
           txStatus: TransactionStatus.Success,
@@ -51,6 +61,29 @@ describe(pushTransactionNotification, () => {
           spender: approveTypeInfo.spender,
         })
       )
+      .silentRun()
+  })
+
+  it('Suppresses approve notification if a swap was also submited within 3 seconds', () => {
+    const approveTypeInfo: ApproveTransactionInfo = {
+      type: TransactionType.Approve,
+      tokenAddress: '0xUniswapToken',
+      spender: '0xUniswapDeployer',
+    }
+    const finalizedApproveAction = createFinalizedTxAction(approveTypeInfo)
+    const { chainId, from } = finalizedApproveAction.payload
+
+    return expectSaga(pushTransactionNotification, finalizedApproveAction)
+      .withState({
+        transactions: {
+          [from]: {
+            [chainId]: {
+              uuid1: { typeInfo: TransactionType.Approve, addedTime: Date.now() },
+              uuid2: { typeInfo: TransactionType.Swap, addedTime: Date.now() + 2000 },
+            },
+          },
+        },
+      })
       .silentRun()
   })
 

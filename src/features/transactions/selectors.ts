@@ -12,7 +12,8 @@ import {
 } from 'src/features/transactions/types'
 import { flattenObjectOfObjects } from 'src/utils/objects'
 
-const selectTransactions = (state: RootState) => state.transactions
+export const selectTransactions = (state: RootState) => state.transactions
+
 export const makeSelectAddressTransactions = (address: Address | null) =>
   createSelector(selectTransactions, (transactions) => {
     if (!address || !transactions[address]) return undefined

@@ -1,19 +1,22 @@
+import { appSelect } from 'src/app/hooks'
+import { ChainId } from 'src/constants/chains'
 import { AssetType } from 'src/entities/assets'
 import { pushNotification } from 'src/features/notifications/notificationSlice'
 import { AppNotificationType } from 'src/features/notifications/types'
+import { selectTransactions } from 'src/features/transactions/selectors'
 import { finalizeTransaction } from 'src/features/transactions/slice'
 import { TransactionStatus, TransactionType } from 'src/features/transactions/types'
 import { getInputAmountFromTrade, getOutputAmountFromTrade } from 'src/features/transactions/utils'
 import { WalletConnectEvent } from 'src/features/walletConnect/saga'
 import { logger } from 'src/utils/logger'
-import { put, takeLatest } from 'typed-redux-saga'
+import { call, put, takeLatest } from 'typed-redux-saga'
 
 export function* notificationWatcher() {
   yield* takeLatest(finalizeTransaction.type, pushTransactionNotification)
 }
 
 export function* pushTransactionNotification(action: ReturnType<typeof finalizeTransaction>) {
-  const { chainId, status, typeInfo, hash, from } = action.payload
+  const { chainId, status, typeInfo, hash, from, addedTime } = action.payload
 
   // TODO: Build notifications for `cancelled` txs
   if (status === TransactionStatus.Cancelled) {
@@ -34,15 +37,23 @@ export function* pushTransactionNotification(action: ReturnType<typeof finalizeT
 
   switch (typeInfo.type) {
     case TransactionType.Approve:
-      yield* put(
-        pushNotification({
-          ...baseNotificationData,
-          type: AppNotificationType.Transaction,
-          txType: TransactionType.Approve,
-          tokenAddress: typeInfo.tokenAddress,
-          spender: typeInfo.spender,
-        })
+      const shouldSuppressNotification = yield* call(
+        suppressApproveNotification,
+        from,
+        chainId,
+        addedTime
       )
+      if (!shouldSuppressNotification) {
+        yield* put(
+          pushNotification({
+            ...baseNotificationData,
+            type: AppNotificationType.Transaction,
+            txType: TransactionType.Approve,
+            tokenAddress: typeInfo.tokenAddress,
+            spender: typeInfo.spender,
+          })
+        )
+      }
       break
     case TransactionType.Swap:
       const inputCurrencyAmountRaw = getInputAmountFromTrade(typeInfo)
@@ -146,4 +157,26 @@ export function* pushTransactionNotification(action: ReturnType<typeof finalizeT
       )
       break
   }
+}
+
+// If an approve tx is submitted with a swap tx (i.e, swap tx is added within 3 seconds of an approve tx),
+// then suppress the approve notification
+function* suppressApproveNotification(
+  address: Address,
+  chainId: ChainId,
+  approveAddedTime: number
+) {
+  const transactions = (yield* appSelect(selectTransactions))?.[address]?.[chainId]
+  const transactionDetails = Object.values(transactions ?? {})
+  const foundSwapTx = transactionDetails.find((tx) => {
+    const { type } = tx.typeInfo
+    if (type !== TransactionType.Swap) {
+      return false
+    }
+
+    const swapAddedTime = tx.addedTime
+    return swapAddedTime - approveAddedTime < 3000
+  })
+
+  return !!foundSwapTx
 }
