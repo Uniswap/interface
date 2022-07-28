@@ -3,7 +3,7 @@ import { Trade } from '@uniswap/router-sdk'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { ModalName } from 'components/AmplitudeAnalytics/constants'
 import { Trace } from 'components/AmplitudeAnalytics/Trace'
-import { ReactNode, useCallback, useMemo } from 'react'
+import { ReactNode, useCallback, useMemo, useState } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
 import { tradeMeaningfullyDiffers } from 'utils/tradeMeaningFullyDiffer'
 
@@ -39,22 +39,32 @@ export default function ConfirmSwapModal({
   swapErrorMessage: ReactNode | undefined
   onDismiss: () => void
 }) {
+  // shouldLogModalCloseEvent lets the child SwapModalHeader component know when modal has been closed
+  // and an event triggered by modal closing should be logged.
+  const [shouldLogModalCloseEvent, setShouldLogModalCloseEvent] = useState(false)
   const showAcceptChanges = useMemo(
     () => Boolean(trade && originalTrade && tradeMeaningfullyDiffers(trade, originalTrade)),
     [originalTrade, trade]
   )
 
+  const onModalDismiss = useCallback(() => {
+    if (isOpen) setShouldLogModalCloseEvent(true)
+    onDismiss()
+  }, [isOpen, onDismiss])
+
   const modalHeader = useCallback(() => {
     return trade ? (
       <SwapModalHeader
         trade={trade}
+        shouldLogModalCloseEvent={shouldLogModalCloseEvent}
+        setShouldLogModalCloseEvent={setShouldLogModalCloseEvent}
         allowedSlippage={allowedSlippage}
         recipient={recipient}
         showAcceptChanges={showAcceptChanges}
         onAcceptChanges={onAcceptChanges}
       />
     ) : null
-  }, [allowedSlippage, onAcceptChanges, recipient, showAcceptChanges, trade])
+  }, [allowedSlippage, onAcceptChanges, recipient, showAcceptChanges, trade, shouldLogModalCloseEvent])
 
   const modalBottom = useCallback(() => {
     return trade ? (
@@ -80,23 +90,23 @@ export default function ConfirmSwapModal({
   const confirmationContent = useCallback(
     () =>
       swapErrorMessage ? (
-        <TransactionErrorContent onDismiss={onDismiss} message={swapErrorMessage} />
+        <TransactionErrorContent onDismiss={onModalDismiss} message={swapErrorMessage} />
       ) : (
         <ConfirmationModalContent
           title={<Trans>Confirm Swap</Trans>}
-          onDismiss={onDismiss}
+          onDismiss={onModalDismiss}
           topContent={modalHeader}
           bottomContent={modalBottom}
         />
       ),
-    [onDismiss, modalBottom, modalHeader, swapErrorMessage]
+    [onModalDismiss, modalBottom, modalHeader, swapErrorMessage]
   )
 
   return (
     <Trace modal={ModalName.CONFIRM_SWAP} shouldLogImpression={isOpen}>
       <TransactionConfirmationModal
         isOpen={isOpen}
-        onDismiss={onDismiss}
+        onDismiss={onModalDismiss}
         attemptingTxn={attemptingTxn}
         hash={txHash}
         content={confirmationContent}

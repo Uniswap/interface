@@ -10,9 +10,11 @@ export enum EventName {
   SWAP_AUTOROUTER_VISUALIZATION_EXPANDED = 'Swap Autorouter Visualization Expanded',
   SWAP_DETAILS_EXPANDED = 'Swap Details Expanded',
   SWAP_MAX_TOKEN_AMOUNT_SELECTED = 'Swap Max Token Amount Selected',
+  SWAP_PRICE_UPDATE_ACKNOWLEDGED = 'Swap Price Update Acknowledged',
   SWAP_QUOTE_RECEIVED = 'Swap Quote Received',
   SWAP_SUBMITTED = 'Swap Submitted',
   SWAP_TOKENS_REVERSED = 'Swap Tokens Reversed',
+  SWAP_TRANSACTION_COMPLETED = 'Swap Transaction Completed',
   TOKEN_IMPORTED = 'Token Imported',
   TOKEN_SELECTED = 'Token Selected',
   TOKEN_SELECTOR_OPENED = 'Token Selector Opened',
@@ -36,6 +38,11 @@ export enum CUSTOM_USER_PROPERTIES {
 export enum WALLET_CONNECTION_RESULT {
   SUCCEEDED = 'Succeeded',
   FAILED = 'Failed',
+}
+
+export enum SWAP_PRICE_UPDATE_USER_RESPONSE {
+  ACCEPTED = 'Accepted',
+  REJECTED = 'Rejected',
 }
 
 /**
@@ -78,6 +85,7 @@ export const enum ElementName {
   CONNECT_WALLET_BUTTON = 'connect-wallet-button',
   IMPORT_TOKEN_BUTTON = 'import-token-button',
   MAX_TOKEN_AMOUNT_BUTTON = 'max-token-amount-button',
+  PRICE_UPDATE_ACCEPT_BUTTON = 'price-update-accept-button',
   SWAP_BUTTON = 'swap-button',
   SWAP_DETAILS_DROPDOWN = 'swap-details-dropdown',
   SWAP_TOKENS_REVERSE_ARROW_BUTTON = 'swap-tokens-reverse-arrow-button',
