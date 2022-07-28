@@ -108,8 +108,8 @@ function useSortedTokens(addresses: string[], tokenData: TokenData | null) {
         if (!token1 || !token2 || !sortDirection || !sortCategory) {
           return 0
         }
-        let a: number = 0
-        let b: number = 0
+        let a: number
+        let b: number
         switch (sortCategory) {
           case Category.marketCap:
             a = token1.marketCap
@@ -130,7 +130,7 @@ function useSortedTokens(addresses: string[], tokenData: TokenData | null) {
         }
         return sortFn(a, b)
       }),
-    [addresses, tokenData, sortDirection, sortCategory, timePeriod]
+    [addresses, tokenData, sortDirection, sortCategory, sortFn, timePeriod]
   )
 }
 
