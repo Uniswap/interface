@@ -2,9 +2,9 @@ import { Currency, CurrencyAmount, Percent, Token } from '@uniswap/sdk-core'
 
 import { NATIVE_CHAIN_ID } from './constants'
 
-export const getDurationTillTimestampSinceEpochSeconds = (futureTimestampSinceEpoch?: number): number | undefined => {
-  if (!futureTimestampSinceEpoch) return undefined
-  return futureTimestampSinceEpoch - new Date().getTime() / 1000
+export const getDurationTillTimestampSeconds = (futureTimestampInSecondsSinceEpoch?: number): number | undefined => {
+  if (!futureTimestampInSecondsSinceEpoch) return undefined
+  return futureTimestampInSecondsSinceEpoch - new Date().getTime() / 1000
 }
 
 export const getDurationFromDateMilliseconds = (start: Date): number => {

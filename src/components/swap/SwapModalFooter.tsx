@@ -1,13 +1,14 @@
 import { Trans } from '@lingui/macro'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
-import { ElementName, EventName, NATIVE_CHAIN_ADDRESS } from 'components/AmplitudeAnalytics/constants'
+import { ElementName, EventName } from 'components/AmplitudeAnalytics/constants'
 import { Event } from 'components/AmplitudeAnalytics/constants'
 import { TraceEvent } from 'components/AmplitudeAnalytics/TraceEvent'
 import {
   formatPercentInBasisPointsNumber,
   formatToDecimal,
   getDurationFromDateMilliseconds,
-  getDurationTillTimestampSinceEpochSeconds,
+  getDurationTillTimestampSeconds,
+  getTokenAddress,
 } from 'components/AmplitudeAnalytics/utils'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
@@ -49,11 +50,11 @@ const formatAnalyticsEventProperties = ({
 }: AnalyticsEventProps) => ({
   estimated_network_fee_usd: trade.gasUseEstimateUSD ? formatToDecimal(trade.gasUseEstimateUSD, 2) : undefined,
   transaction_hash: txHash,
-  transaction_deadline_seconds: getDurationTillTimestampSinceEpochSeconds(transactionDeadlineSecondsSinceEpoch),
+  transaction_deadline_seconds: getDurationTillTimestampSeconds(transactionDeadlineSecondsSinceEpoch),
   token_in_amount_usd: tokenInAmountUsd ? parseFloat(tokenInAmountUsd) : undefined,
   token_out_amount_usd: tokenOutAmountUsd ? parseFloat(tokenOutAmountUsd) : undefined,
-  token_in_address: trade.inputAmount.currency.isNative ? NATIVE_CHAIN_ADDRESS : trade.inputAmount.currency.address,
-  token_out_address: trade.outputAmount.currency.isNative ? NATIVE_CHAIN_ADDRESS : trade.outputAmount.currency.address,
+  token_in_address: getTokenAddress(trade.inputAmount.currency),
+  token_out_address: getTokenAddress(trade.outputAmount.currency),
   token_in_symbol: trade.inputAmount.currency.symbol,
   token_out_symbol: trade.outputAmount.currency.symbol,
   token_in_amount: formatToDecimal(trade.inputAmount, trade.inputAmount.currency.decimals),
