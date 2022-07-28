@@ -1,4 +1,5 @@
 import { Currency, CurrencyAmount, Percent, Token } from '@uniswap/sdk-core'
+
 import { NATIVE_CHAIN_ID } from './constants'
 
 export const getDurationUntilTimestampSeconds = (futureTimestampInSecondsSinceEpoch?: number): number | undefined => {

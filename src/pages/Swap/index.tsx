@@ -97,9 +97,7 @@ const formatApproveTokenTxnSubmittedEventProperties = (
   return {
     chain_id: approvalOptimizedTrade.inputAmount.currency.chainId,
     token_symbol: approvalOptimizedTrade.inputAmount.currency.symbol,
-    token_address: approvalOptimizedTrade.inputAmount.currency.isNative
-      ? NATIVE_CHAIN_ADDRESS
-      : approvalOptimizedTrade.inputAmount.currency.address,
+    token_address: getTokenAddress(approvalOptimizedTrade.inputAmount.currency),
   }
 }
 
@@ -110,12 +108,12 @@ const formatWrapTokenTxnSubmittedEventProperties = (
 ) => {
   if (!inputCurrency || !outputCurrency || !parsedAmount) return {}
   return {
-    token_in_address: inputCurrency.isNative ? NATIVE_CHAIN_ADDRESS : inputCurrency.address,
-    token_out_address: outputCurrency.isNative ? NATIVE_CHAIN_ADDRESS : outputCurrency.address,
+    token_in_address: getTokenAddress(inputCurrency),
+    token_out_address: getTokenAddress(outputCurrency),
     token_in_symbol: inputCurrency.symbol,
     token_out_symbol: outputCurrency.symbol,
     chain_id: inputCurrency.chainId === outputCurrency.chainId ? inputCurrency.chainId : undefined,
-    amount: parsedAmount ? getNumberFormattedToDecimalPlace(parsedAmount, parsedAmount?.currency.decimals) : undefined,
+    amount: parsedAmount ? formatToDecimal(parsedAmount, parsedAmount?.currency.decimals) : undefined,
   }
 }
 

@@ -2,11 +2,11 @@ import { Trans } from '@lingui/macro'
 import { Protocol } from '@uniswap/router-sdk'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
-import { ElementName, EventName, NATIVE_CHAIN_ADDRESS } from 'components/AmplitudeAnalytics/constants'
-import { Event } from 'components/AmplitudeAnalytics/constants'
+import { ElementName, Event, EventName } from 'components/AmplitudeAnalytics/constants'
 import { TraceEvent } from 'components/AmplitudeAnalytics/TraceEvent'
 import {
   formatPercentInBasisPointsNumber,
+  formatPercentNumber,
   formatToDecimal,
   getDurationFromDateMilliseconds,
   getDurationUntilTimestampSeconds,
@@ -54,12 +54,8 @@ const formatRoutesEventProperties = (routes: RoutingDiagramEntry[]) => {
     routesProtocols.push(route.protocol)
     routesInputCurrencySymbols.push(route.path.map((pathStep) => pathStep[0].symbol ?? ''))
     routesOutputCurrencySymbols.push(route.path.map((pathStep) => pathStep[1].symbol ?? ''))
-    routesInputCurrencyAddresses.push(
-      route.path.map((pathStep) => (pathStep[0].isNative ? NATIVE_CHAIN_ADDRESS : pathStep[0].address))
-    )
-    routesOutputCurrencyAddresses.push(
-      route.path.map((pathStep) => (pathStep[1].isNative ? NATIVE_CHAIN_ADDRESS : pathStep[1].address))
-    )
+    routesInputCurrencyAddresses.push(route.path.map((pathStep) => getTokenAddress(pathStep[0])))
+    routesOutputCurrencyAddresses.push(route.path.map((pathStep) => getTokenAddress(pathStep[1])))
     routesFeeAmounts.push(route.path.map((pathStep) => pathStep[2]))
   })
   const routesEventProperties: Record<string, any[]> = {
