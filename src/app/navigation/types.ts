@@ -70,6 +70,7 @@ export type SettingsStackParamList = {
   [Screens.SettingsFaceId]: undefined
   [Screens.WebView]: { headerTitle: string; uriLink: string }
   [Screens.Dev]: undefined
+  [Screens.SettingsManualBackup]: { address: Address }
   [OnboardingScreens.Landing]: undefined // temporary to be able to view onboarding from settings
 }
 

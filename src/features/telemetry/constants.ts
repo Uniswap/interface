@@ -68,6 +68,7 @@ export const enum ElementName {
   Cancel = 'cancel',
   ClearSearch = 'clear-search',
   Confirm = 'confirm',
+  Continue = 'continue',
   Copy = 'copy',
   CreateAccount = 'create-account',
   CurrencySelectorToggle = 'currency-selector-toggle',

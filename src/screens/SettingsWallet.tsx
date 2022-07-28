@@ -154,7 +154,7 @@ export function SettingsWallet({
           isHidden: readonly,
         },
         {
-          // TODO: update in following PR to new screen
+          screen: Screens.SettingsManualBackup,
           screenProps: { address },
           text: t('Manual backup'),
           icon: (

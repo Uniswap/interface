@@ -60,6 +60,7 @@ import { RecipientSelectoScreen } from 'src/screens/RecipientSelectorScreen'
 import { OnboardingScreens, Screens, Tabs } from 'src/screens/Screens'
 import { SettingsChainsScreen } from 'src/screens/SettingsChainsScreen'
 import { SettingsFaceIdScreen } from 'src/screens/SettingsFaceIdScreen'
+import { SettingsManualBackup } from 'src/screens/SettingsManualBackup'
 import { SettingsScreen } from 'src/screens/SettingsScreen'
 import { SettingsSupportScreen } from 'src/screens/SettingsSupportScreen'
 import { SettingsTestConfigs } from 'src/screens/SettingsTestConfigs'
@@ -186,6 +187,7 @@ function SettingsStackGroup() {
       <SettingsStack.Screen component={SettingsTestConfigs} name={Screens.SettingsTestConfigs} />
       <SettingsStack.Screen component={DevScreen} name={Screens.Dev} />
       <SettingsStack.Screen component={SettingsFaceIdScreen} name={Screens.SettingsFaceId} />
+      <SettingsStack.Screen component={SettingsManualBackup} name={Screens.SettingsManualBackup} />
     </SettingsStack.Navigator>
   )
 }
