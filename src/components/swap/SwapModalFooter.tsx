@@ -7,7 +7,7 @@ import {
   formatPercentInBasisPointsNumber,
   formatToDecimal,
   getDurationFromDateMilliseconds,
-  getDurationTillTimestampSeconds,
+  getDurationUntilTimestampSeconds,
   getTokenAddress,
 } from 'components/AmplitudeAnalytics/utils'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
@@ -50,7 +50,7 @@ const formatAnalyticsEventProperties = ({
 }: AnalyticsEventProps) => ({
   estimated_network_fee_usd: trade.gasUseEstimateUSD ? formatToDecimal(trade.gasUseEstimateUSD, 2) : undefined,
   transaction_hash: txHash,
-  transaction_deadline_seconds: getDurationTillTimestampSeconds(transactionDeadlineSecondsSinceEpoch),
+  transaction_deadline_seconds: getDurationUntilTimestampSeconds(transactionDeadlineSecondsSinceEpoch),
   token_in_amount_usd: tokenInAmountUsd ? parseFloat(tokenInAmountUsd) : undefined,
   token_out_amount_usd: tokenOutAmountUsd ? parseFloat(tokenOutAmountUsd) : undefined,
   token_in_address: getTokenAddress(trade.inputAmount.currency),
