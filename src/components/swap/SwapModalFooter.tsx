@@ -1,10 +1,13 @@
 import { Trans } from '@lingui/macro'
+import { Protocol } from '@uniswap/router-sdk'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
+import { FeeAmount } from '@uniswap/v3-sdk'
 import { ElementName, EventName, NATIVE_CHAIN_ADDRESS } from 'components/AmplitudeAnalytics/constants'
 import { Event } from 'components/AmplitudeAnalytics/constants'
 import { TraceEvent } from 'components/AmplitudeAnalytics/TraceEvent'
 import {
   formatPercentInBasisPointsNumber,
+  formatPercentNumber,
   getDurationFromDateTillNowMilliseconds,
   getDurationTillTimestampSinceEpochSeconds,
   getNumberFormattedToDecimalPlace,
@@ -21,6 +24,7 @@ import { ButtonError } from '../Button'
 import { AutoRow } from '../Row'
 import { getPriceImpactPercent } from './AdvancedSwapDetails'
 import { SwapCallbackError } from './styleds'
+import { getTokenPath, RoutingDiagramEntry } from './SwapRoute'
 
 interface AnalyticsEventProps {
   trade: InterfaceTrade<Currency, Currency, TradeType>
@@ -33,6 +37,43 @@ interface AnalyticsEventProps {
   tokenOutAmountUsd: string | undefined
   lpFeePercent: Percent
   swapQuoteReceivedDate: Date | undefined
+  routes: RoutingDiagramEntry[]
+}
+
+const formatRoutesEventProperties = (routes: RoutingDiagramEntry[]) => {
+  const routesPercentages: number[] = []
+  const routesProtocols: Protocol[] = []
+  const routesInputCurrencySymbols: string[][] = []
+  const routesOutputCurrencySymbols: string[][] = []
+  const routesInputCurrencyAddresses: string[][] = []
+  const routesOutputCurrencyAddresses: string[][] = []
+  const routesFeeAmounts: FeeAmount[][] = []
+
+  routes.forEach((route) => {
+    routesPercentages.push(formatPercentNumber(route.percent))
+    routesProtocols.push(route.protocol)
+    routesInputCurrencySymbols.push(route.path.map((pathStep) => pathStep[0].symbol ?? ''))
+    routesOutputCurrencySymbols.push(route.path.map((pathStep) => pathStep[1].symbol ?? ''))
+    routesInputCurrencyAddresses.push(
+      route.path.map((pathStep) => (pathStep[0].isNative ? NATIVE_CHAIN_ADDRESS : pathStep[0].address))
+    )
+    routesOutputCurrencyAddresses.push(
+      route.path.map((pathStep) => (pathStep[1].isNative ? NATIVE_CHAIN_ADDRESS : pathStep[1].address))
+    )
+    routesFeeAmounts.push(route.path.map((pathStep) => pathStep[2]))
+  })
+  const routesEventProperties: Record<string, any[]> = {
+    routes_percentages: routesPercentages,
+    routes_protocols: routesProtocols,
+  }
+  routes.forEach((_, index) => {
+    routesEventProperties[`route_${index}_input_currency_symbols`] = routesInputCurrencySymbols[index]
+    routesEventProperties[`route_${index}_output_currency_symbols`] = routesOutputCurrencySymbols[index]
+    routesEventProperties[`route_${index}_input_currency_addresses`] = routesInputCurrencyAddresses[index]
+    routesEventProperties[`route_${index}_output_currency_addresses`] = routesOutputCurrencyAddresses[index]
+    routesEventProperties[`route_${index}_fee_amounts_hundredths_of_bps`] = routesFeeAmounts[index]
+  })
+  return routesEventProperties
 }
 
 const formatAnalyticsEventProperties = ({
@@ -46,6 +87,7 @@ const formatAnalyticsEventProperties = ({
   tokenOutAmountUsd,
   lpFeePercent,
   swapQuoteReceivedDate,
+  routes,
 }: AnalyticsEventProps) => ({
   estimated_network_fee_usd: trade.gasUseEstimateUSD
     ? getNumberFormattedToDecimalPlace(trade.gasUseEstimateUSD, 2)
@@ -71,6 +113,7 @@ const formatAnalyticsEventProperties = ({
   duration_from_first_quote_to_swap_submission_milliseconds: swapQuoteReceivedDate
     ? getDurationFromDateTillNowMilliseconds(swapQuoteReceivedDate)
     : undefined,
+  ...formatRoutesEventProperties(routes),
 })
 
 export default function SwapModalFooter({
@@ -96,6 +139,7 @@ export default function SwapModalFooter({
   const tokenInAmountUsd = useStablecoinValue(trade.inputAmount)?.toFixed(2)
   const tokenOutAmountUsd = useStablecoinValue(trade.outputAmount)?.toFixed(2)
   const lpFeePercent = computeRealizedLPFeePercent(trade)
+  const routes = getTokenPath(trade)
 
   return (
     <>
@@ -115,6 +159,7 @@ export default function SwapModalFooter({
             tokenOutAmountUsd,
             lpFeePercent,
             swapQuoteReceivedDate,
+            routes,
           })}
         >
           <ButtonError
