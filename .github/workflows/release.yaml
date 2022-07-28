@@ -142,17 +142,17 @@ jobs:
           git config user.name "$GITHUB_ACTOR"
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
 
-      - name: Build Changelog
-        id: github_release
-        uses: mikepenz/release-changelog-builder-action@v3
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Create tag
         run: |
           git tag -d "$VERSION_TAG" 2> /dev/null || echo "Release tag '$VERSION_TAG' does NOT exist"
           git tag --annotate --message "KyberSwap Interface - $VERSION_TAG" "$VERSION_TAG"
           git push origin "refs/tags/$VERSION_TAG"
+
+      - name: Build Changelog
+        id: github_release
+        uses: mikepenz/release-changelog-builder-action@v3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Create release
         uses: softprops/action-gh-release@v1
