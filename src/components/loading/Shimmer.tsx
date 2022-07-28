@@ -19,10 +19,11 @@ type Props = {
 // inspired by tutorial found here: https://github.com/kadikraman/skeleton-loader
 export function Shimmer({ children }: Props) {
   const [layout, setLayout] = useState<LayoutRectangle | null>()
-  const shared = useSharedValue(0)
+  const xPosition = useSharedValue(0)
 
   useEffect(() => {
-    shared.value = withRepeat(withTiming(1, { duration: SHIMMER_DURATION }), Infinity)
+    // TODO: tweak animation to be smoother, right now sometimes looks kind of stuttery
+    xPosition.value = withRepeat(withTiming(1, { duration: SHIMMER_DURATION }), Infinity, true)
 
     // only want to do this once on mount
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -32,7 +33,7 @@ export function Shimmer({ children }: Props) {
     transform: [
       {
         translateX: interpolate(
-          shared.value,
+          xPosition.value,
           [0, 1],
           [layout ? -layout.width : 0, layout ? layout.width : 0]
         ),
@@ -51,12 +52,12 @@ export function Shimmer({ children }: Props) {
         width: layout.width,
         height: layout.height,
       }}>
-      <Box backgroundColor="backgroundAction" flexGrow={1} overflow="hidden" />
+      <Box backgroundColor="backgroundContainer" flexGrow={1} overflow="hidden" />
       <Reanimated.View style={[StyleSheet.absoluteFill, animatedStyle]}>
         <MaskedView
           maskElement={
             <LinearGradient
-              colors={['transparent', 'black', 'transparent']}
+              colors={['transparent', 'black', 'black', 'black', 'transparent']}
               end={{ x: 1, y: 0 }}
               start={{ x: 0, y: 0 }}
               style={StyleSheet.absoluteFill}
