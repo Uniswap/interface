@@ -40,6 +40,8 @@ export enum WALLET_CONNECTION_RESULT {
   FAILED = 'Failed',
 }
 
+export const NATIVE_CHAIN_ID = 'NATIVE'
+
 export enum SWAP_PRICE_UPDATE_USER_RESPONSE {
   ACCEPTED = 'Accepted',
   REJECTED = 'Rejected',
@@ -89,7 +91,6 @@ export const enum ElementName {
   SWAP_BUTTON = 'swap-button',
   SWAP_DETAILS_DROPDOWN = 'swap-details-dropdown',
   SWAP_TOKENS_REVERSE_ARROW_BUTTON = 'swap-tokens-reverse-arrow-button',
-  SWAP_TRADE_PRICE_ROW = 'swap-trade-price-row',
   TOKEN_SELECTOR_ROW = 'token-selector-row',
   WALLET_TYPE_OPTION = 'wallet-type-option',
   // alphabetize additional element names.

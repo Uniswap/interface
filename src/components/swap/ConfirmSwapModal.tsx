@@ -26,6 +26,7 @@ export default function ConfirmSwapModal({
   isOpen,
   attemptingTxn,
   txHash,
+  swapQuoteReceivedDate,
 }: {
   isOpen: boolean
   trade: InterfaceTrade<Currency, Currency, TradeType> | undefined
@@ -38,6 +39,7 @@ export default function ConfirmSwapModal({
   onConfirm: () => void
   swapErrorMessage: ReactNode | undefined
   onDismiss: () => void
+  swapQuoteReceivedDate: Date | undefined
 }) {
   // shouldLogModalCloseEvent lets the child SwapModalHeader component know when modal has been closed
   // and an event triggered by modal closing should be logged.
@@ -75,9 +77,10 @@ export default function ConfirmSwapModal({
         allowedSlippage={allowedSlippage}
         disabledConfirm={showAcceptChanges}
         swapErrorMessage={swapErrorMessage}
+        swapQuoteReceivedDate={swapQuoteReceivedDate}
       />
     ) : null
-  }, [onConfirm, showAcceptChanges, swapErrorMessage, trade, allowedSlippage, txHash])
+  }, [onConfirm, showAcceptChanges, swapErrorMessage, trade, allowedSlippage, txHash, swapQuoteReceivedDate])
 
   // text to show while loading
   const pendingText = (

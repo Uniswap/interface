@@ -1,13 +1,21 @@
 import { Currency, CurrencyAmount, Percent, Token } from '@uniswap/sdk-core'
 
-export const getDurationTillTimestampSinceEpoch = (futureTimestampSinceEpoch?: number): number | undefined => {
-  if (!futureTimestampSinceEpoch) return undefined
-  return futureTimestampSinceEpoch - new Date().getTime() / 1000
+import { NATIVE_CHAIN_ID } from './constants'
+
+export const getDurationUntilTimestampSeconds = (futureTimestampInSecondsSinceEpoch?: number): number | undefined => {
+  if (!futureTimestampInSecondsSinceEpoch) return undefined
+  return futureTimestampInSecondsSinceEpoch - new Date().getTime() / 1000
 }
 
-export const getNumberFormattedToDecimalPlace = (
+export const getDurationFromDateMilliseconds = (start: Date): number => {
+  return new Date().getTime() - start.getTime()
+}
+
+export const formatToDecimal = (
   intialNumberObject: Percent | CurrencyAmount<Token | Currency>,
   decimalPlace: number
 ): number => parseFloat(intialNumberObject.toFixed(decimalPlace))
 
-export const formatPercentInBasisPointsNumber = (percent: Percent): number => parseFloat(percent.toFixed(6)) * 100
+export const getTokenAddress = (currency: Currency) => (currency.isNative ? NATIVE_CHAIN_ID : currency.address)
+
+export const formatPercentInBasisPointsNumber = (percent: Percent): number => parseFloat(percent.toFixed(2)) * 100
