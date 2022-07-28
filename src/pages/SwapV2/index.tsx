@@ -822,7 +822,7 @@ export default function Swap({ history }: RouteComponentProps) {
                           <InfoHelper text="Turn on Advanced Mode to trade" color={theme.text} />
                         </PriceImpactHigh>
                       ) : (
-                        trade?.priceImpact &&
+                        !!trade?.priceImpact &&
                         trade.priceImpact > 5 && (
                           <PriceImpactHigh veryHigh={trade?.priceImpact > 15}>
                             <AlertTriangle

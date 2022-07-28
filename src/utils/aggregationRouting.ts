@@ -47,28 +47,20 @@ function formatRoutesV2(routes: SwapRoute[]): SwapRouteV2[] {
             swapPool.swapAmount || ZERO,
           )
           // merge hop with same exchange
-          let existed = false
           const newSub: any[] = sub.map(pool => {
             const p2: any = { ...pool }
-            const same = p2.exchange === swapPool.exchange
             let swapAmount = p2.swapAmount || ZERO
-            if (same) {
-              existed = true
-              swapAmount = JSBI.add(swapAmount, swapPool.swapAmount || ZERO)
-            }
             const percent = new Percent(swapAmount, totalSwapAmount).toFixed(0, undefined, Rounding.ROUND_HALF_UP)
             p2.swapPercentage = parseInt(percent)
             p2.total = totalSwapAmount.toString()
             return p2
           })
-          if (!existed) {
-            const percent = new Percent(swapPool.swapAmount || ZERO, totalSwapAmount).toFixed(
-              0,
-              undefined,
-              Rounding.ROUND_HALF_UP,
-            )
-            newSub.push({ ...swapPool, swapPercentage: parseInt(percent) })
-          }
+          const percent = new Percent(swapPool.swapAmount || ZERO, totalSwapAmount).toFixed(
+            0,
+            undefined,
+            Rounding.ROUND_HALF_UP,
+          )
+          newSub.push({ ...swapPool, swapPercentage: parseInt(percent) })
           subRoutes[ind] = newSub
         })
       } else {

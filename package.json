@@ -102,6 +102,7 @@
     "start-dev": "env-cmd -f .env.dev react-app-rewired start",
     "start-stg": "env-cmd -f .env.stg react-app-rewired start",
     "start-production": "env-cmd -f .env.production react-app-rewired start",
+    "build": "yarn i18n && react-app-rewired build",
     "build-dev": "yarn i18n && env-cmd -f .env.dev react-app-rewired build",
     "build-stg": "yarn i18n && env-cmd -f .env.stg react-app-rewired build",
     "build-prod": "yarn i18n && env-cmd -f .env.production react-app-rewired build",

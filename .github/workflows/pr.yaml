@@ -109,7 +109,7 @@ jobs:
           CI: false
           REACT_APP_VERSION: ${{ github.sha }}
           CURRENT_BRANCH: ${{ needs.prepare.outputs.current_branch }}
-        run: yarn build-prod
+        run: yarn build
 
       - name: Docker build and push
         uses: docker/build-push-action@v2

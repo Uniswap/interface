@@ -1,5 +1,5 @@
 import React from 'react'
-import { Text, Flex } from 'rebass'
+import { Text } from 'rebass'
 import { Clock } from 'react-feather'
 import { useSelector } from 'react-redux'
 import { t, Trans } from '@lingui/macro'

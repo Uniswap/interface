@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef } from 'react'
+import React, { useEffect, useMemo, useRef, useCallback } from 'react'
 import styled, { css } from 'styled-components'
 import ScrollContainer from 'react-indiana-drag-scroll'
 import { ChainId, Currency, CurrencyAmount } from '@kyberswap/ks-sdk-core'
@@ -464,7 +464,7 @@ const Routing = ({ trade, currencies, formattedAmounts, maxHeight }: RoutingProp
 
   const hasRoutes = trade && chainId && tradeComposition && tradeComposition.length > 0
 
-  const handleScroll = () => {
+  const handleScroll = useCallback(() => {
     const element = wrapperRef?.current
     if (element?.scrollTop > 0) {
       shadowRef?.current?.classList.add('top')
@@ -476,17 +476,20 @@ const Routing = ({ trade, currencies, formattedAmounts, maxHeight }: RoutingProp
     } else {
       shadowRef.current?.classList.remove('bottom')
     }
-  }
+  }, [])
+
   useEffect(() => {
     window.addEventListener('resize', handleScroll)
     return () => window.removeEventListener('resize', handleScroll)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [handleScroll])
+
   useEffect(() => {
     handleScroll()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [trade, maxHeight])
+
   const { feeConfig, typedValue } = useSwapState()
+
   return (
     <Shadow ref={shadowRef as any}>
       <StyledContainer ref={wrapperRef as any} onScroll={handleScroll} style={{ maxHeight: maxHeight || '100%' }}>

@@ -182,16 +182,6 @@ export default function Menu() {
         translatedTitle={t`Menu`}
         hasArrow
       >
-        {/* !above768 && (
-          <MenuItem href={process.env.REACT_APP_ZKYBER_URL ?? ''}>
-            <img src="https://kyberswap.com/favicon.ico" width="14" alt="KyberSwap" />
-            <SlideToUnlock>
-              <Text width="max-content" marginLeft="8px">
-                ZKyber ↗
-              </Text>
-            </SlideToUnlock>
-          </MenuItem>
-          ) */}
         {chainId && [ChainId.BTTC, ChainId.RINKEBY].includes(chainId) && (
           <MenuButton
             onClick={() => {

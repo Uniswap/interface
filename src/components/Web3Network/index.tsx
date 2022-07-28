@@ -76,7 +76,7 @@ function Web3Network(): JSX.Element | null {
             : userEthBalance.toSignificant(4)
         } ${NETWORKS_INFO[chainId || ChainId.MAINNET].nativeToken.symbol}`
       : NETWORKS_INFO[chainId].name
-  }, [account, userEthBalance, chainId])
+  }, [userEthBalance, chainId])
 
   if (!chainId) return null
 

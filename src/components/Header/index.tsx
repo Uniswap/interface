@@ -476,17 +476,6 @@ export default function Header() {
       </HeaderRow>
       <HeaderControls>
         <HeaderElement>
-          {/*  <HideExtraSmall>
-            <MouseoverTooltip text={t`Test our L2 solution now!`} placement="bottom">
-              <SlideToUnlock>
-                <StyledNavExternalLink href={process.env.REACT_APP_ZKYBER_URL || ''}>
-                  <Text width="max-content">ZKyber ↗</Text>
-                </StyledNavExternalLink>
-              </SlideToUnlock>
-            </MouseoverTooltip>
-          </HideExtraSmall>
-          */}
-
           <Web3Network />
 
           <AccountElement active={!!account} style={{ pointerEvents: 'auto' }}>
