@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import styled from 'styled-components'
 
 import { useActiveWeb3React } from 'hooks'
@@ -66,6 +66,17 @@ function Web3Network(): JSX.Element | null {
   const networkModalOpen = useModalOpen(ApplicationModal.NETWORK)
   const toggleNetworkModal = useNetworkModalToggle()
   const userEthBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
+  const labelContent = useMemo(() => {
+    if (!chainId) return ''
+    return userEthBalance
+      ? `${
+          userEthBalance?.lessThan(CurrencyAmount.fromRawAmount(nativeOnChain(chainId), (1e18).toString())) &&
+          userEthBalance?.greaterThan(0)
+            ? parseFloat(userEthBalance.toSignificant(4)).toFixed(4)
+            : userEthBalance.toSignificant(4)
+        } ${NETWORKS_INFO[chainId || ChainId.MAINNET].nativeToken.symbol}`
+      : NETWORKS_INFO[chainId].name
+  }, [account, userEthBalance, chainId])
 
   if (!chainId) return null
 
@@ -78,16 +89,7 @@ function Web3Network(): JSX.Element | null {
             alt="Switch Network"
             style={{ width: 20, height: 20, marginRight: '12px' }}
           />
-          <NetworkLabel>
-            {userEthBalance
-              ? `${
-                  userEthBalance?.lessThan(CurrencyAmount.fromRawAmount(nativeOnChain(chainId), (1e18).toString())) &&
-                  userEthBalance?.greaterThan(0)
-                    ? parseFloat(userEthBalance.toSignificant(4)).toFixed(4)
-                    : userEthBalance.toSignificant(4)
-                } ${NETWORKS_INFO[chainId || ChainId.MAINNET].nativeToken.symbol}`
-              : NETWORKS_INFO[chainId].name}
-          </NetworkLabel>
+          <NetworkLabel>{labelContent}</NetworkLabel>
         </Row>
         <DropdownIcon open={networkModalOpen} />
       </NetworkSwitchContainer>

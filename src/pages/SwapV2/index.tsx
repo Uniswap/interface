@@ -603,14 +603,16 @@ export default function Swap({ history }: RouteComponentProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [allowedSlippage])
 
-  const shareUrl =
-    currencies && currencyIn && currencyOut
+  const shareUrl = useMemo(() => {
+    return currencies && currencyIn && currencyOut
       ? window.location.origin +
-        `/swap?inputCurrency=${currencyId(currencyIn as Currency, chainId)}&outputCurrency=${currencyId(
-          currencyOut as Currency,
-          chainId,
-        )}&networkId=${chainId}`
+          `/swap?inputCurrency=${currencyId(currencyIn as Currency, chainId)}&outputCurrency=${currencyId(
+            currencyOut as Currency,
+            chainId,
+          )}&networkId=${chainId}`
       : window.location.origin + `/swap?networkId=${chainId}`
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currencies, currencyIn, currencyOut, chainId, currencyId, window.location.origin])
 
   const { isInWhiteList: isPairInWhiteList, canonicalUrl } = checkPairInWhiteList(
     chainId,

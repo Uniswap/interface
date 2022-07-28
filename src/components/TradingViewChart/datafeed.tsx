@@ -12,6 +12,7 @@ import { useState, useEffect, useRef } from 'react'
 import { useActiveWeb3React } from 'hooks'
 import { ChainId, Currency, Token } from '@kyberswap/ks-sdk-core'
 import { USDC, USDT, DAI } from 'constants/index'
+import { STABLE_COINS_ADDRESS } from 'constants/tokens'
 import { Field } from 'state/swap/actions'
 import { Bar } from './charting_library'
 import { NETWORKS_INFO } from 'constants/networks'
@@ -52,6 +53,7 @@ const DEXTOOLS_API = 'https://pancake-subgraph-proxy.kyberswap.com/dextools'
 const monthTs = 2592000000
 const weekTs = 604800000
 const dayTs = 86400000
+// Hard code token address to specific pair address to use in dextool api.
 const TOKEN_PAIRS_ADDRESS_MAPPING: {
   [key: string]: string
 } = {
@@ -80,6 +82,7 @@ const TOKEN_PAIRS_ADDRESS_MAPPING: {
   '0xff970a61a04b1ca14834a43f5de4533ebddb5cc8': '0x905dfcd5649217c42684f23958568e533c711aa3', // ETH_USD Arbitrum
   '0x7f5c764cbc14f9669b88837ca1490cca17c31607': '0x1a981daa7967c66c3356ad044979bc82e4a478b9', // ETH_USD Optimism
   '0xe9e7cea3dedca5984780bafc599bd69add087d56': '0x58f876857a02d6762e0101bb5c46a8c1ed44dc16', // BNB_BUSD
+  '0x853ea32391aaa14c112c645fd20ba389ab25c5e0': '0x5d79a43e6b9d8e3ecca26f91afe34634248773c8', // USX on AVAX
 }
 const LOCALSTORAGE_CHECKED_PAIRS = 'proChartCheckedPairs'
 
@@ -129,6 +132,8 @@ const checkIsUSDToken = (chainId: ChainId | undefined, currency: Currency | unde
     '0xdb28719f7f938507dbfe4f0eae55668903d34a15', //USDT_t BTTC
     '0xe887512ab8bc60bcc9224e1c3b5be68e26048b8b', //USDT_e BTTC
     '0x19860ccb0a68fd4213ab9d8266f7bbf05a8dde98', //BUSD.e
+    '0x4fbf0429599460d327bd5f55625e30e4fc066095', //TDS on AVAX
+    ...STABLE_COINS_ADDRESS[chainId].map(a => a.toLowerCase()),
   ]
   if (currency?.address && usdTokenAddresses.includes(currency.address.toLowerCase())) {
     return true
