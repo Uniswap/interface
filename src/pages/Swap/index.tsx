@@ -112,7 +112,7 @@ const formatWrapTokenTxnSubmittedEventProperties = (
     token_out_address: getTokenAddress(outputCurrency),
     token_in_symbol: inputCurrency.symbol,
     token_out_symbol: outputCurrency.symbol,
-    chain_id: inputCurrency.chainId === outputCurrency.chainId ? inputCurrency.chainId : undefined,
+    chain_id: inputCurrency.chainId,
     amount: parsedAmount ? formatToDecimal(parsedAmount, parsedAmount?.currency.decimals) : undefined,
   }
 }
@@ -512,6 +512,10 @@ export default function Swap() {
     setSwapQuoteReceivedDate,
   ])
 
+  const approveTokenButtonDisabled = approvalState !== ApprovalState.NOT_APPROVED ||
+                            approvalSubmitted ||
+                            signatureState === UseERC20PermitState.SIGNED
+
   return (
     <Trace page={PageName.SWAP_PAGE} shouldLogImpression>
       <>
@@ -682,20 +686,12 @@ export default function Swap() {
                         element={ElementName.APPROVE_TOKEN_BUTTON}
                         properties={formatApproveTokenTxnSubmittedEventProperties(approvalOptimizedTrade)}
                         shouldLogImpression={
-                          !(
-                            approvalState !== ApprovalState.NOT_APPROVED ||
-                            approvalSubmitted ||
-                            signatureState === UseERC20PermitState.SIGNED
-                          )
+                          !approveTokenButtonDisabled
                         }
                       >
                         <ButtonConfirmed
                           onClick={handleApprove}
-                          disabled={
-                            approvalState !== ApprovalState.NOT_APPROVED ||
-                            approvalSubmitted ||
-                            signatureState === UseERC20PermitState.SIGNED
-                          }
+                          disabled={approveTokenButtonDisabled}
                           width="100%"
                           altDisabledStyle={approvalState === ApprovalState.PENDING} // show solid button while waiting
                           confirmed={
