@@ -191,8 +191,8 @@ export function CurrencySearch({
   }, [])
 
   return (
-    <Trace name={EventName.TOKEN_SELECTOR_OPENED} modal={ModalName.TOKEN_SELECTOR} shouldLogImpression={true}>
-      <ContentWrapper>
+    <ContentWrapper>
+      <Trace name={EventName.TOKEN_SELECTOR_OPENED} modal={ModalName.TOKEN_SELECTOR} shouldLogImpression>
         <PaddedColumn gap="16px">
           <RowBetween>
             <Text fontWeight={500} fontSize={16}>
@@ -270,7 +270,7 @@ export function CurrencySearch({
             </ButtonText>
           </Row>
         </Footer>
-      </ContentWrapper>
-    </Trace>
+      </Trace>
+    </ContentWrapper>
   )
 }
