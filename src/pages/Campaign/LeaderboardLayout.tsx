@@ -1,20 +1,21 @@
 import React from 'react'
-import { Text } from 'rebass'
+import { Text, Flex } from 'rebass'
 import { Clock } from 'react-feather'
-import Search from 'components/Search'
+import { useSelector } from 'react-redux'
 import { t, Trans } from '@lingui/macro'
+import styled, { css } from 'styled-components'
+import { useMedia, useSize } from 'react-use'
+import { rgba } from 'polished'
+
+import Search, { Wrapper as SearchWrapper, Container as SearchContainer } from 'components/Search'
 import getShortenAddress from 'utils/getShortenAddress'
 import { formatNumberWithPrecisionRange } from 'utils'
-import styled, { css } from 'styled-components'
-import { rgba } from 'polished'
 import useTheme from 'hooks/useTheme'
-import { useMedia, useSize } from 'react-use'
 import Gold from 'assets/svg/gold_icon.svg'
 import Silver from 'assets/svg/silver_icon.svg'
 import Bronze from 'assets/svg/bronze_icon.svg'
 import Pagination from 'components/Pagination'
 import { CAMPAIGN_LEADERBOARD_ITEM_PER_PAGE, DEFAULT_SIGNIFICANT } from 'constants/index'
-import { useSelector } from 'react-redux'
 import { AppState } from 'state'
 import {
   useSelectedCampaignLeaderboardLookupAddressManager,
@@ -143,7 +144,7 @@ export default function LeaderboardLayout({
   return (
     <LeaderboardContainer>
       <RefreshTextAndSearchContainer>
-        {selectedCampaign.campaignState === CampaignState.CampaignStateReady && type === 'leaderboard' ? (
+        {selectedCampaign.campaignState === CampaignState.CampaignStateReady && type === 'leaderboard' && (
           <RefreshTextContainer>
             <RefreshText>
               <Trans>Leaderboard refresh in</Trans>
@@ -156,15 +157,16 @@ export default function LeaderboardLayout({
               </Text>
             </CountdownContainer>
           </RefreshTextContainer>
-        ) : (
-          <div />
         )}
-        <Search
-          placeholder={t`Search by full address`}
-          searchValue={searchValue}
-          onSearch={setSearchValue}
-          style={{ background: theme.buttonBlack }}
-        />
+
+        <CustomSearchContainer>
+          <Search
+            placeholder={t`Search by full address`}
+            searchValue={searchValue}
+            onSearch={setSearchValue}
+            style={{ background: theme.buttonBlack }}
+          />
+        </CustomSearchContainer>
       </RefreshTextAndSearchContainer>
       <LeaderboardTable>
         <LeaderboardTableHeader noColumns={type === 'lucky_winner' ? 2 : isRewardShown ? 4 : 3}>
@@ -196,26 +198,55 @@ export default function LeaderboardLayout({
   )
 }
 
+const CustomSearchContainer = styled.div`
+  flex: 1 1 100%;
+
+  display: flex;
+  justify-content: flex-end;
+
+  ${SearchContainer} {
+    flex: 0 1 360px;
+  }
+
+  ${SearchWrapper} {
+    min-width: unset;
+  }
+
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    width: 100%;
+    flex: 0 0;
+
+    ${SearchContainer} {
+      flex: 1 1 100%;
+    }
+  `}
+`
+
 const LeaderboardContainer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 16px;
+  padding: 16px 0;
 `
 
 const RefreshTextAndSearchContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 16px;
+  align-content: center;
+
+  padding: 0 16px;
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
-  ${css`
     flex-direction: column;
     gap: 16px;
-  `}
   `}
 `
 
 const RefreshTextContainer = styled.div`
+  flex-wrap: nowrap;
+  white-space: nowrap;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -224,17 +255,19 @@ const RefreshTextContainer = styled.div`
 const RefreshText = styled.div`
   font-size: 12px;
   line-height: 14px;
-  color: ${({ theme }) => theme.border};
+  color: ${({ theme }) => theme.subText};
 `
 
 const CountdownContainer = styled.div`
+  width: 73px;
+  flex-wrap: nowrap;
   display: flex;
   align-items: center;
   gap: 6px;
   padding: 3px 6px;
   border-radius: 12px;
-  background: ${({ theme }) => rgba(theme.border, 0.1)};
-  color: ${({ theme }) => theme.border};
+  background: ${({ theme }) => rgba(theme.subText, 0.1)};
+  color: ${({ theme }) => theme.subText};
 `
 
 const LeaderboardTable = styled.div``
@@ -244,8 +277,6 @@ const LeaderboardTableHeader = styled.div<{ noColumns: 2 | 3 | 4 }>`
   display: grid;
   align-items: center;
   background: ${({ theme }) => theme.tableHeader};
-  border-top-left-radius: 20px;
-  border-top-right-radius: 20px;
 
   ${({ noColumns }) =>
     noColumns === 4
@@ -276,10 +307,7 @@ const LeaderboardTableHeader = styled.div<{ noColumns: 2 | 3 | 4 }>`
     }
     }`}
 
-  ${({ theme }) =>
-    theme.mediaWidth.upToSmall`${css`
-      padding: 16px;
-    `}`}
+  ${({ theme }) => theme.mediaWidth.upToSmall`padding: 16px;`}
 `
 
 const LeaderboardTableHeaderItem = styled.div<{ align?: 'left' | 'right' | 'center' }>`
@@ -314,11 +342,11 @@ const LeaderboardTableBodyItem = styled.div<{ align?: 'left' | 'right' | 'center
   white-space: nowrap;
 
   ${({ theme }) =>
-    theme.mediaWidth.upToMedium`${css`
+    theme.mediaWidth.upToMedium`
       font-size: 12px;
       line-height: 14px;
       font-weight: 400;
-    `}`}
+    `}
 `
 
 const MedalImg = styled.img`

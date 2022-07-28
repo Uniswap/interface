@@ -100,7 +100,12 @@ export default function Campaign() {
   const TabHowToWinContent = useMemo(
     // eslint-disable-next-line react/display-name
     () => () => (
-      <Flex flexDirection="column">
+      <Flex
+        flexDirection="column"
+        sx={{
+          padding: '24px',
+        }}
+      >
         <Flex
           justifyContent="space-between"
           alignItems="center"
@@ -184,7 +189,7 @@ export default function Campaign() {
   const TabRewardsContent = useMemo(
     // eslint-disable-next-line react/display-name
     () => () => (
-      <Flex flexDirection="column" style={{ gap: '20px' }}>
+      <Flex flexDirection="column" sx={{ gap: '20px', padding: '24px' }}>
         <Text fontSize={16} fontWeight={500}>
           <Trans>Rewards</Trans>
         </Text>
@@ -485,7 +490,6 @@ export default function Campaign() {
 }
 
 const CampaignDetailContent = styled.div`
-  padding: 28px 24px;
   background: ${({ theme }) => theme.background};
   border-radius: 20px;
   flex: 1;

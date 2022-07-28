@@ -1,14 +1,16 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import { Trans } from '@lingui/macro'
+import { Text, Flex } from 'rebass'
+import { ChevronDown } from 'react-feather'
+import { isMobile } from 'react-device-detect'
+
 import { ExternalLink } from 'theme'
 import { formatBigLiquidity } from 'utils/formatBalance'
 import Loader from 'components/Loader'
 import { useGlobalData } from 'state/about/hooks'
 import useParsedQueryString from 'hooks/useParsedQueryString'
 import { VERSION } from 'constants/v2'
-import { Text, Flex } from 'rebass'
-import { ChevronDown } from 'react-feather'
 import { LowestSlippage, BestPrice, MoneyBag } from 'components/Icons'
 import AntiSnippingAttack from 'components/Icons/AntiSnippingAttack'
 import useTheme from 'hooks/useTheme'
@@ -105,7 +107,7 @@ export const Instruction = () => {
 
   const theme = useTheme()
 
-  const [show, setShow] = useState(true)
+  const [show, setShow] = useState(!isMobile) // hide by default on mobile
 
   return (
     <InstructionItem>

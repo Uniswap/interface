@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Text, Flex } from 'rebass'
+import { Text, Flex, Box } from 'rebass'
 import { Link } from 'react-router-dom'
 import useTheme from 'hooks/useTheme'
 import { Trans } from '@lingui/macro'
@@ -88,61 +88,82 @@ const KNCBlack = styled(KNCSVG)`
   }
 `
 
+const ForTraderInfoRow = styled.div`
+  flex: 1 1 100%;
+  display: flex;
+  ${({ theme }) => theme.mediaWidth.upToLarge`
+    flex: 1;  
+    gap: 24px;
+    width: 100%;
+    height: 100%;
+  `}
+`
+
+const ForTraderInfoCell = styled.div`
+  flex: 1 1 100%;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  ${({ theme }) => theme.mediaWidth.upToLarge`
+    flex: 1;  
+  `}
+`
+
 export const KSStatistic = () => {
   const theme = useTheme()
-  const above992 = useMedia('(min-width: 992px)')
+  const upToLarge = useMedia('(max-width: 1200px)')
 
   return (
-    <>
-      <div style={{ position: 'relative', marginTop: '20px' }}>
-        <ForTraderInfoShadow />
-        <ForTraderInfo>
-          <Flex sx={{ gap: '24px' }} height={above992 ? '100%' : 'unset'} width={above992 ? 'unset' : '100%'}>
-            <Flex flexDirection="column" alignItems="center" flex={!above992 ? 1 : 'unset'}>
-              <Text fontWeight="600" fontSize="24px">
-                $24B
-              </Text>
-              <Text color={theme.subText} marginTop="4px" fontSize="14px">
-                <Trans>TVL From DEXs</Trans>
-              </Text>
-            </Flex>
+    <Box sx={{ position: 'relative', marginTop: '20px' }}>
+      <ForTraderInfoShadow />
+      <ForTraderInfo>
+        <ForTraderInfoRow>
+          <ForTraderInfoCell>
+            <Text fontWeight="600" fontSize="24px">
+              $24B
+            </Text>
+            <Text color={theme.subText} marginTop="4px" fontSize="14px">
+              <Trans>TVL From DEXs</Trans>
+            </Text>
+          </ForTraderInfoCell>
 
-            <ForTraderDivider />
+          <ForTraderDivider />
 
-            <Flex flexDirection="column" alignItems="center" flex={!above992 ? 1 : 'unset'}>
-              <Text fontWeight="600" fontSize="24px">
-                {Object.keys(dexListConfig).length - 1}+{/* DMM and KyberSwap are one */}
-              </Text>
-              <Text color={theme.subText} marginTop="4px" fontSize="14px">
-                <Trans>DEXs</Trans>
-              </Text>
-            </Flex>
-          </Flex>
+          <ForTraderInfoCell>
+            <Text fontWeight="600" fontSize="24px">
+              {Object.keys(dexListConfig).length - 1}+{/* DMM and KyberSwap are one */}
+            </Text>
+            <Text color={theme.subText} marginTop="4px" fontSize="14px">
+              <Trans>DEXs</Trans>
+            </Text>
+          </ForTraderInfoCell>
+        </ForTraderInfoRow>
 
-          <ForTraderDivider horizontal={!above992} />
+        <ForTraderDivider horizontal={upToLarge} />
 
-          <Flex sx={{ gap: '24px' }} height={above992 ? '100%' : 'unset'} width={above992 ? 'unset' : '100%'}>
-            <Flex flexDirection="column" alignItems="center" flex={!above992 ? 1 : 'unset'}>
-              <Text fontWeight="600" fontSize="24px">
-                {MAINNET_NETWORKS.length}
-              </Text>
-              <Text color={theme.subText} marginTop="4px" fontSize="14px">
-                <Trans>Chains</Trans>
-              </Text>
-            </Flex>
-            <ForTraderDivider />
-            <Flex flexDirection="column" alignItems="center" flex={!above992 ? 1 : 'unset'}>
-              <Text fontWeight="600" fontSize="24px">
-                20,000+
-              </Text>
-              <Text color={theme.subText} marginTop="4px" fontSize="14px">
-                <Trans>Tokens</Trans>
-              </Text>
-            </Flex>
-          </Flex>
-        </ForTraderInfo>
-      </div>
-    </>
+        <ForTraderInfoRow>
+          <ForTraderInfoCell>
+            <Text fontWeight="600" fontSize="24px">
+              {MAINNET_NETWORKS.length}
+            </Text>
+            <Text color={theme.subText} marginTop="4px" fontSize="14px">
+              <Trans>Chains</Trans>
+            </Text>
+          </ForTraderInfoCell>
+          <ForTraderDivider />
+          <ForTraderInfoCell>
+            <Text fontWeight="600" fontSize="24px">
+              20,000+
+            </Text>
+            <Text color={theme.subText} marginTop="4px" fontSize="14px">
+              <Trans>Tokens</Trans>
+            </Text>
+          </ForTraderInfoCell>
+        </ForTraderInfoRow>
+      </ForTraderInfo>
+    </Box>
   )
 }
 

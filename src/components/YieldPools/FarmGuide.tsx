@@ -1,18 +1,20 @@
 import React, { useState } from 'react'
+import { Flex, Text } from 'rebass'
+import { ChevronDown, Eye } from 'react-feather'
+import { useMedia } from 'react-use'
+import { isMobile } from 'react-device-detect'
+
 import { VERSION } from 'constants/v2'
 import { ProMMFarmGuideWrapper, ProMMFarmGuide, ShowGuideBtn, ChevronRight, GuideWrapper, GuideItem } from './styleds'
-import { Flex, Text } from 'rebass'
 import { ExternalLink, StyledInternalLink } from 'theme'
 import { Trans } from '@lingui/macro'
-import { ChevronDown, Eye } from 'react-feather'
 import useTheme from 'hooks/useTheme'
 import { Drop, MoneyBag } from 'components/Icons'
 import Deposit from 'components/Icons/Deposit'
 import AgriCulture from 'components/Icons/AgriCulture'
-import { useMedia } from 'react-use'
 
 function FarmGuide({ farmType }: { farmType: VERSION }) {
-  const [show, setShow] = useState(true)
+  const [show, setShow] = useState(!isMobile)
   const theme = useTheme()
   const upToMedium = useMedia('(max-width: 992px)')
 

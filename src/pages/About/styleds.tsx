@@ -111,17 +111,16 @@ export const ForTraderInfo = styled(Flex)`
   margin-top: 20px;
   background-color: ${({ theme }) => theme.background2};
   padding: 20px 0;
-  display: flex;
-  gap: 24px;
   border-radius: 8px;
   justify-content: center;
   align-items: center;
   border: 1px solid ${({ theme }) => theme.primary};
   position: relative;
 
-  ${({ theme }) => theme.mediaWidth.upToMedium`
+  ${({ theme }) => theme.mediaWidth.upToLarge`
     flex-direction: column;
     padding: 20px 16px;
+    gap: 24px;
   `}
 `
 
@@ -134,7 +133,7 @@ export const ForTraderInfoShadow = styled.div`
   bottom: -1px;
   left: 0;
 
-  ${({ theme }) => theme.mediaWidth.upToMedium`
+  ${({ theme }) => theme.mediaWidth.upToLarge`
     top: 0;
     bottom: -12px;
     left: -1px;
