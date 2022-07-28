@@ -9,7 +9,7 @@ import {
 import { useAllTokens } from 'hooks/Tokens'
 import useTopTokens, { TimePeriod, TokenData } from 'hooks/useTopTokens'
 import { useAtomValue } from 'jotai/utils'
-import { ReactNode, useMemo } from 'react'
+import { ReactNode, useCallback, useMemo } from 'react'
 import { AlertTriangle } from 'react-feather'
 import styled from 'styled-components/macro'
 
@@ -84,6 +84,18 @@ function useSortedTokens(addresses: string[], tokenData: TokenData | null) {
   const sortDirection = useAtomValue(sortDirectionAtom)
   const timePeriod = useAtomValue<TimePeriod>(filterTimeAtom)
 
+  const sortFn = useCallback(
+    (a: any, b: any) => {
+      if (a > b) {
+        return sortDirection === SortDirection.decreasing ? -1 : 1
+      } else if (a < b) {
+        return sortDirection === SortDirection.decreasing ? 1 : -1
+      }
+      return 0
+    },
+    [sortDirection]
+  )
+
   return useMemo(
     () =>
       addresses.sort((token1Address, token2Address) => {
@@ -96,29 +108,27 @@ function useSortedTokens(addresses: string[], tokenData: TokenData | null) {
         if (!token1 || !token2 || !sortDirection || !sortCategory) {
           return 0
         }
-        if (sortCategory === Category.marketCap) {
-          if (token1.marketCap > token2.marketCap) return sortDirection === SortDirection.decreasing ? -1 : 1
-          if (token1.marketCap < token2.marketCap) return sortDirection === SortDirection.decreasing ? 1 : -1
-          return 0
+        let a: number = 0
+        let b: number = 0
+        switch (sortCategory) {
+          case Category.marketCap:
+            a = token1.marketCap
+            b = token2.marketCap
+            break
+          case Category.percentChange:
+            a = token1.delta
+            b = token2.delta
+            break
+          case Category.price:
+            a = token1.price
+            b = token2.price
+            break
+          case Category.volume:
+            a = token1.volume[timePeriod]
+            b = token2.volume[timePeriod]
+            break
         }
-        if (sortCategory === Category.percentChange) {
-          if (token1.delta > token2.delta) return sortDirection === SortDirection.decreasing ? -1 : 1
-          if (token1.delta < token2.delta) return sortDirection === SortDirection.decreasing ? 1 : -1
-          return 0
-        }
-        if (sortCategory === Category.price) {
-          if (token1.price > token2.price) return sortDirection === SortDirection.decreasing ? -1 : 1
-          if (token1.price < token2.price) return sortDirection === SortDirection.decreasing ? 1 : -1
-          return 0
-        }
-        if (sortCategory === Category.volume) {
-          if (token1.volume[timePeriod] > token2.volume[timePeriod])
-            return sortDirection === SortDirection.decreasing ? -1 : 1
-          if (token1.volume[timePeriod] < token2.volume[timePeriod])
-            return sortDirection === SortDirection.decreasing ? 1 : -1
-          return 0
-        }
-        return sortDirection === SortDirection.increasing ? 1 : -1
+        return sortFn(a, b)
       }),
     [addresses, tokenData, sortDirection, sortCategory, timePeriod]
   )
