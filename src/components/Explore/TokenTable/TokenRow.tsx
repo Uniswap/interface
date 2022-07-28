@@ -310,9 +310,9 @@ function HeaderCell({
       <HeaderCellWrapper onClick={handleSortCategory}>
         <SortArrowCell>
           {sortDirection === SortDirection.increasing ? (
-            <ArrowDown size={14} color={theme.accentActive} />
-          ) : (
             <ArrowUp size={14} color={theme.accentActive} />
+          ) : (
+            <ArrowDown size={14} color={theme.accentActive} />
           )}
         </SortArrowCell>
         {getHeaderDisplay(category, timeframe)}
