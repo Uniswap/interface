@@ -131,10 +131,12 @@ export default function FooterBalanceSummary({
   address,
   networkBalances,
   totalBalance,
+  connectedNetwork,
 }: {
   address: string
   networkBalances: (JSX.Element | null)[] | null
   totalBalance: number
+  connectedNetwork: string
 }) {
   const tokenSymbol = useToken(address)?.symbol
   const [showMultipleBalances, setShowMultipleBalances] = useState(false)
@@ -155,7 +157,7 @@ export default function FooterBalanceSummary({
           </ErrorState>
         ) : (
           <BalanceInfo>
-            Your balance
+            {multipleBalances ? 'Your balance' : `Your balance on ${connectedNetwork}`}
             <BalanceTotal>
               <BalanceValue>
                 {totalBalance} {tokenSymbol}
