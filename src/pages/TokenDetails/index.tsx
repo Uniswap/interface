@@ -97,7 +97,6 @@ export default function TokenDetails() {
   const balancesByNetwork = data
     ? chainsToList.map((chainId) => {
         const amount = data[chainId]
-        console.log(`theme.chain_${chainId}`)
         const fiatValue = amount // for testing purposes
         if (!fiatValue || !isChainAllowed(connector, chainId)) return null
         const chainInfo = getChainInfo(chainId)
