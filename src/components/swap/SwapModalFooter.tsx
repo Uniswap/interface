@@ -4,7 +4,6 @@ import { ElementName, EventName, NATIVE_CHAIN_ADDRESS } from 'components/Amplitu
 import { Event } from 'components/AmplitudeAnalytics/constants'
 import { TraceEvent } from 'components/AmplitudeAnalytics/TraceEvent'
 import {
-  formatPercentInBasisPointsNumber,
   getDurationFromDateTillNowMilliseconds,
   getDurationTillTimestampSinceEpochSeconds,
   getNumberFormattedToDecimalPlace,
@@ -60,8 +59,8 @@ const formatAnalyticsEventProperties = ({
   token_out_symbol: trade.outputAmount.currency.symbol,
   token_in_amount: getNumberFormattedToDecimalPlace(trade.inputAmount, trade.inputAmount.currency.decimals),
   token_out_amount: getNumberFormattedToDecimalPlace(trade.outputAmount, trade.outputAmount.currency.decimals),
-  price_impact_basis_points: formatPercentInBasisPointsNumber(getPriceImpactPercent(lpFeePercent, trade)),
-  allowed_slippage_basis_points: formatPercentInBasisPointsNumber(allowedSlippage),
+  price_impact_basis_points: formatPercentageInBasisPoints(getPriceImpactPercent(lpFeePercent, trade)),
+  allowed_slippage_basis_points: formatPercentageInBasisPoints(allowedSlippage),
   is_auto_router_api: isAutoRouterApi,
   is_auto_slippage: isAutoSlippage,
   chain_id:

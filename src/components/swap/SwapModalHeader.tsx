@@ -1,6 +1,9 @@
 import { Trans } from '@lingui/macro'
-import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
-import { useContext, useState } from 'react'
+import { Currency, Percent, Price, TradeType } from '@uniswap/sdk-core'
+import { sendAnalyticsEvent } from 'components/AmplitudeAnalytics'
+import { ElementName, Event, EventName, SWAP_PRICE_UPDATE_USER_RESPONSE } from 'components/AmplitudeAnalytics/constants'
+import { TraceEvent } from 'components/AmplitudeAnalytics/TraceEvent'
+import { useContext, useEffect, useState } from 'react'
 import { AlertTriangle, ArrowDown } from 'react-feather'
 import { Text } from 'rebass'
 import { InterfaceTrade } from 'state/routing/types'
@@ -19,6 +22,7 @@ import { RowBetween, RowFixed } from '../Row'
 import TradePrice from '../swap/TradePrice'
 import { AdvancedSwapDetails } from './AdvancedSwapDetails'
 import { SwapShowAcceptChanges, TruncatedText } from './styleds'
+import { formatPercentageInBasisPoints } from './SwapModalFooter'
 
 const ArrowWrapper = styled.div`
   padding: 4px;
@@ -38,14 +42,43 @@ const ArrowWrapper = styled.div`
   z-index: 2;
 `
 
+const formatAnalyticsEventProperties = (
+  trade: InterfaceTrade<Currency, Currency, TradeType>,
+  priceUpdate: number | undefined,
+  response: SWAP_PRICE_UPDATE_USER_RESPONSE
+) => ({
+  chain_id:
+    trade.inputAmount.currency.chainId === trade.outputAmount.currency.chainId
+      ? trade.inputAmount.currency.chainId
+      : undefined,
+  response,
+  token_in_symbol: trade.inputAmount.currency.symbol,
+  token_out_symbol: trade.outputAmount.currency.symbol,
+  price_update_basis_points: priceUpdate,
+})
+
+const getPriceUpdateBasisPoints = (
+  prevPrice: Price<Currency, Currency>,
+  newPrice: Price<Currency, Currency>
+): number => {
+  const changeFraction = newPrice.subtract(prevPrice).divide(prevPrice)
+  const changePercentage = new Percent(changeFraction.numerator, changeFraction.denominator)
+  console.log('price update calculation')
+  console.log(changePercentage.toFixed(6))
+  console.log(formatPercentageInBasisPoints(changePercentage))
+  return formatPercentageInBasisPoints(changePercentage)
+}
+
 export default function SwapModalHeader({
   trade,
+  modalDismissed,
   allowedSlippage,
   recipient,
   showAcceptChanges,
   onAcceptChanges,
 }: {
   trade: InterfaceTrade<Currency, Currency, TradeType>
+  modalDismissed: boolean
   allowedSlippage: Percent
   recipient: string | null
   showAcceptChanges: boolean
@@ -54,9 +87,29 @@ export default function SwapModalHeader({
   const theme = useContext(ThemeContext)
 
   const [showInverted, setShowInverted] = useState<boolean>(false)
+  const [lastExecutionPrice, setLastExecutionPrice] = useState(trade.executionPrice)
+  const [priceUpdate, setPriceUpdate] = useState<number | undefined>()
 
   const fiatValueInput = useStablecoinValue(trade.inputAmount)
   const fiatValueOutput = useStablecoinValue(trade.outputAmount)
+
+  useEffect(() => {
+    if (!trade.executionPrice.equalTo(lastExecutionPrice)) {
+      setPriceUpdate(getPriceUpdateBasisPoints(lastExecutionPrice, trade.executionPrice))
+      setLastExecutionPrice(trade.executionPrice)
+    }
+  }, [lastExecutionPrice, setLastExecutionPrice, trade.executionPrice])
+
+  useEffect(() => {
+    console.log('modal dismiss useEffect triggered')
+    console.log(modalDismissed, showAcceptChanges)
+    if (modalDismissed && showAcceptChanges)
+      sendAnalyticsEvent(
+        EventName.SWAP_PRICE_UPDATE_ACKNOWLEDGED,
+        formatAnalyticsEventProperties(trade, priceUpdate, SWAP_PRICE_UPDATE_USER_RESPONSE.REJECTED)
+      )
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [modalDismissed, showAcceptChanges])
 
   return (
     <AutoColumn gap={'4px'} style={{ marginTop: '1rem' }}>
@@ -127,9 +180,11 @@ export default function SwapModalHeader({
                 <Trans>Price Updated</Trans>
               </ThemedText.DeprecatedMain>
             </RowFixed>
-            <ButtonPrimary
-              style={{ padding: '.5rem', width: 'fit-content', fontSize: '0.825rem', borderRadius: '12px' }}
-              onClick={onAcceptChanges}
+            <TraceEvent
+              events={[Event.onClick]}
+              name={EventName.SWAP_PRICE_UPDATE_ACKNOWLEDGED}
+              properties={formatAnalyticsEventProperties(trade, priceUpdate, SWAP_PRICE_UPDATE_USER_RESPONSE.ACCEPTED)}
+              element={ElementName.PRICE_UPDATE_ACCEPT_BUTTON}
             >
               <Trans>Accept</Trans>
             </ButtonPrimary>

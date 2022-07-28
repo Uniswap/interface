@@ -3,7 +3,7 @@ import { Trade } from '@uniswap/router-sdk'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { ModalName } from 'components/AmplitudeAnalytics/constants'
 import { Trace } from 'components/AmplitudeAnalytics/Trace'
-import { ReactNode, useCallback, useMemo } from 'react'
+import { ReactNode, useCallback, useMemo, useState } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
 import { tradeMeaningfullyDiffers } from 'utils/tradeMeaningFullyDiffer'
 
@@ -41,22 +41,30 @@ export default function ConfirmSwapModal({
   onDismiss: () => void
   swapQuoteReceivedDate: Date | undefined
 }) {
+  const [dismissed, setDismissed] = useState(false)
   const showAcceptChanges = useMemo(
     () => Boolean(trade && originalTrade && tradeMeaningfullyDiffers(trade, originalTrade)),
     [originalTrade, trade]
   )
 
+  const onModalDismiss = () => {
+    setDismissed(true)
+    console.log('modal just dismissed')
+    onDismiss()
+  }
+
   const modalHeader = useCallback(() => {
     return trade ? (
       <SwapModalHeader
         trade={trade}
+        modalDismissed={dismissed}
         allowedSlippage={allowedSlippage}
         recipient={recipient}
         showAcceptChanges={showAcceptChanges}
         onAcceptChanges={onAcceptChanges}
       />
     ) : null
-  }, [allowedSlippage, onAcceptChanges, recipient, showAcceptChanges, trade])
+  }, [allowedSlippage, onAcceptChanges, recipient, showAcceptChanges, trade, dismissed])
 
   const modalBottom = useCallback(() => {
     return trade ? (
@@ -83,15 +91,16 @@ export default function ConfirmSwapModal({
   const confirmationContent = useCallback(
     () =>
       swapErrorMessage ? (
-        <TransactionErrorContent onDismiss={onDismiss} message={swapErrorMessage} />
+        <TransactionErrorContent onDismiss={onModalDismiss} message={swapErrorMessage} />
       ) : (
         <ConfirmationModalContent
           title={<Trans>Confirm Swap</Trans>}
-          onDismiss={onDismiss}
+          onDismiss={onModalDismiss}
           topContent={modalHeader}
           bottomContent={modalBottom}
         />
       ),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [onDismiss, modalBottom, modalHeader, swapErrorMessage]
   )
 
@@ -99,7 +108,7 @@ export default function ConfirmSwapModal({
     <Trace modal={ModalName.CONFIRM_SWAP} shouldLogImpression={isOpen}>
       <TransactionConfirmationModal
         isOpen={isOpen}
-        onDismiss={onDismiss}
+        onDismiss={onModalDismiss}
         attemptingTxn={attemptingTxn}
         hash={txHash}
         content={confirmationContent}
