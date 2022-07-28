@@ -22,15 +22,20 @@ export enum EventName {
 }
 
 export enum CUSTOM_USER_PROPERTIES {
-  WALLET_ADDRESS = 'wallet_address',
-  WALLET_TYPE = 'wallet_type',
-  WALLET_LAST_SEEN_DATE = 'wallet_last_seen_date',
-  WALLET_FIRST_SEEN_DATE = 'wallet_first_seen_date',
-  WALLET_CHAIN_IDS = 'wallet_chain_ids',
   ALL_WALLET_ADDRESSES_CONNECTED = 'all_wallet_addresses_connected',
-  SCREEN_RESOLUTION = 'screen_resolution',
+  ALL_WALLET_CHAIN_IDS = 'all_wallet_chain_ids',
   BROWSER = 'browser',
   LIGHT_MODE = 'light_mode',
+  SCREEN_RESOLUTION = 'screen_resolution',
+  WALLET_ADDRESS = 'wallet_address',
+  WALLET_BALANCE_USD = 'wallet_total_balance_usd',
+  WALLET_CHAIN_IDS_PREFIX = 'wallet_chain_ids_',
+  WALLET_FIRST_SEEN_DATE_PREFIX = 'first_seen_date_',
+  WALLET_LAST_SEEN_DATE_PREFIX = 'last_seen_date_',
+  WALLET_TOKENS_ADDRESSES = 'wallet_tokens_addresses',
+  WALLET_TOKENS_BALANCES_USD = 'wallet_tokens_balances_usd',
+  WALLET_TOKENS_SYMBOLS = 'wallet_tokens_symbols',
+  WALLET_TYPE = 'wallet_type',
 }
 
 export enum WALLET_CONNECTION_RESULT {

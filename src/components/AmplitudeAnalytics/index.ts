@@ -67,7 +67,7 @@ class UserModel {
     identify(mutate(new Identify()))
   }
 
-  set(key: string, value: string | number) {
+  set(key: string, value: string | number | string[] | number[]) {
     this.call((event) => event.set(key, value))
   }
 

@@ -1,13 +1,16 @@
 import { Trans } from '@lingui/macro'
+import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { Connector } from '@web3-react/types'
 import { sendAnalyticsEvent, user } from 'components/AmplitudeAnalytics'
 import { CUSTOM_USER_PROPERTIES, EventName, WALLET_CONNECTION_RESULT } from 'components/AmplitudeAnalytics/constants'
+import { getNumberFormattedToDecimalPlace } from 'components/AmplitudeAnalytics/utils'
 import { sendEvent } from 'components/analytics'
 import { AutoColumn } from 'components/Column'
 import { AutoRow } from 'components/Row'
 import { ConnectionType } from 'connection'
 import { getConnection, getConnectionName, getIsCoinbaseWallet, getIsInjected, getIsMetaMask } from 'connection/utils'
+import { useTokenBalances } from 'lib/hooks/useCurrencyBalance'
 import { useCallback, useEffect, useState } from 'react'
 import { ArrowLeft } from 'react-feather'
 import { updateConnectionError } from 'state/connection/reducer'
@@ -113,20 +116,56 @@ const WALLET_VIEWS = {
   PENDING: 'pending',
 }
 
-const sendAnalyticsEventAndUserInfo = (account: string, walletType: string, chainId: number | undefined) => {
+const modifyUserModelWithCustomWalletProperties = (
+  account: string,
+  walletType: string,
+  chainId: number | undefined,
+  balances: { [tokenAddress: string]: CurrencyAmount<Token> | undefined }
+) => {
   const currentDate = new Date().toISOString()
+  const walletTokensSymbols: string[] = []
+  const walletTokensAddresses: string[] = []
+  const walletTokensBalancesUsd: number[] = []
+  let totalWalletBalanceUsd = 0
+  Object.entries(balances).forEach(([key, val]) => {
+    if (val !== undefined) {
+      const tokenBalanceUsd = getNumberFormattedToDecimalPlace(val, 2)
+      if (tokenBalanceUsd > 0) {
+        walletTokensAddresses.push(key)
+        walletTokensSymbols.push(val.currency.symbol ?? '')
+        walletTokensBalancesUsd.push(tokenBalanceUsd)
+        totalWalletBalanceUsd += tokenBalanceUsd
+      }
+    }
+  })
+  user.set(CUSTOM_USER_PROPERTIES.WALLET_ADDRESS, account)
+  user.set(CUSTOM_USER_PROPERTIES.WALLET_TYPE, walletType)
+  if (chainId) {
+    user.postInsert(CUSTOM_USER_PROPERTIES.ALL_WALLET_CHAIN_IDS, chainId)
+    user.postInsert(`${CUSTOM_USER_PROPERTIES.WALLET_CHAIN_IDS_PREFIX}${account}`, chainId)
+  }
+  user.postInsert(CUSTOM_USER_PROPERTIES.ALL_WALLET_ADDRESSES_CONNECTED, account)
+  user.setOnce(`${CUSTOM_USER_PROPERTIES.WALLET_FIRST_SEEN_DATE_PREFIX}${account}`, currentDate)
+  user.set(`${CUSTOM_USER_PROPERTIES.WALLET_LAST_SEEN_DATE_PREFIX}${account}`, currentDate)
+  user.set(CUSTOM_USER_PROPERTIES.WALLET_BALANCE_USD, totalWalletBalanceUsd)
+  user.set(CUSTOM_USER_PROPERTIES.WALLET_TOKENS_ADDRESSES, walletTokensAddresses)
+  user.set(CUSTOM_USER_PROPERTIES.WALLET_TOKENS_SYMBOLS, walletTokensSymbols)
+  user.set(CUSTOM_USER_PROPERTIES.WALLET_TOKENS_BALANCES_USD, walletTokensBalancesUsd)
+}
+
+const sendAnalyticsEventAndUserInfo = (
+  account: string,
+  walletType: string,
+  chainId: number | undefined,
+  balances: { [tokenAddress: string]: CurrencyAmount<Token> | undefined }
+) => {
   sendAnalyticsEvent(EventName.WALLET_CONNECT_TXN_COMPLETED, {
     result: WALLET_CONNECTION_RESULT.SUCCEEDED,
     wallet_address: account,
     wallet_type: walletType,
     // TODO(lynnshaoyu): Send correct is_reconnect value after modifying user state.
   })
-  user.set(CUSTOM_USER_PROPERTIES.WALLET_ADDRESS, account)
-  user.set(CUSTOM_USER_PROPERTIES.WALLET_TYPE, walletType)
-  if (chainId) user.postInsert(CUSTOM_USER_PROPERTIES.WALLET_CHAIN_IDS, chainId)
-  user.postInsert(CUSTOM_USER_PROPERTIES.ALL_WALLET_ADDRESSES_CONNECTED, account)
-  user.setOnce(CUSTOM_USER_PROPERTIES.USER_FIRST_SEEN_DATE, currentDate)
-  user.set(CUSTOM_USER_PROPERTIES.USER_LAST_SEEN_DATE, currentDate)
+  modifyUserModelWithCustomWalletProperties(account, walletType, chainId, balances)
 }
 
 export default function WalletModal({
@@ -152,6 +191,8 @@ export default function WalletModal({
   const walletModalOpen = useModalIsOpen(ApplicationModal.WALLET)
   const toggleWalletModal = useToggleWalletModal()
 
+  const balances = useTokenBalances(account)
+
   const openOptions = useCallback(() => {
     setWalletView(WALLET_VIEWS.OPTIONS)
   }, [setWalletView])
@@ -173,10 +214,10 @@ export default function WalletModal({
   useEffect(() => {
     if (account && account !== lastActiveWalletAddress) {
       const walletType = getConnectionName(getConnection(connector).type, getIsMetaMask())
-      sendAnalyticsEventAndUserInfo(account, walletType, chainId)
+      sendAnalyticsEventAndUserInfo(account, walletType, chainId, balances)
     }
     setLastActiveWalletAddress(account)
-  }, [lastActiveWalletAddress, account, connector, chainId])
+  }, [lastActiveWalletAddress, account, connector, chainId, balances])
 
   const tryActivation = useCallback(
     async (connector: Connector) => {
