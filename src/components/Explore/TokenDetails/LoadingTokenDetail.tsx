@@ -28,14 +28,14 @@ const LoadingBubble = styled.div`
   width: 180px;
   animation: ${loadingAnimation} 1.5s infinite;
   animation-fill-mode: both;
-  will-change: background-position;
-  background-size: 400%;
   background: linear-gradient(
     to left,
     ${({ theme }) => theme.backgroundContainer} 25%,
-    ${({ theme }) => darken(0.24, theme.backgroundContainer)} 50%,
+    ${({ theme }) => darken(0.8, theme.backgroundContainer)} 50%,
     ${({ theme }) => theme.backgroundContainer} 75%
   );
+  will-change: background-position;
+  background-size: 400%;
 `
 const TitleLoadingBubble = styled(LoadingBubble)`
   width: 140px;
