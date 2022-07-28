@@ -185,6 +185,7 @@ export function SwapReview({ dispatch, onNext, onPrev, derivedSwapInfo }: SwapFo
             gasPrice={gasPrice}
             gasSpendEstimate={gasSpendEstimate}
             newTradeToAccept={newTradeToAccept}
+            trade={trade}
             warnings={warnings}
             onAcceptTrade={onAcceptTrade}
           />

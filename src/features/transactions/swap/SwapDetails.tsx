@@ -1,5 +1,5 @@
 import { AnyAction } from '@reduxjs/toolkit'
-import { Currency, Price, TradeType } from '@uniswap/sdk-core'
+import { Currency, TradeType } from '@uniswap/sdk-core'
 import React, { ComponentProps, Dispatch, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { TouchableOpacity } from 'react-native-gesture-handler'
@@ -17,6 +17,7 @@ import { useUSDGasPrice } from 'src/features/gas/hooks'
 import { useUSDCPrice } from 'src/features/routing/useUSDCPrice'
 import { useSwapActionHandlers, useSwapGasFee } from 'src/features/transactions/swap/hooks'
 import { Trade } from 'src/features/transactions/swap/useTrade'
+import { getRateToDisplay } from 'src/features/transactions/swap/utils'
 import { showWarningInPanel } from 'src/features/transactions/swap/validate'
 import { GasSpendEstimate } from 'src/features/transactions/transactionState/transactionState'
 import { useActiveAccountWithThrow } from 'src/features/wallet/hooks'
@@ -24,6 +25,7 @@ import { formatPrice } from 'src/utils/format'
 
 interface SwapDetailsProps {
   acceptedTrade: Trade<Currency, Currency, TradeType>
+  trade: Trade<Currency, Currency, TradeType>
   dispatch: Dispatch<AnyAction>
   gasPrice?: string
   gasSpendEstimate?: GasSpendEstimate
@@ -37,20 +39,13 @@ const spacerProps: ComponentProps<typeof Box> = {
   borderBottomWidth: 1,
 }
 
-const getFormattedPrice = (price: Price<Currency, Currency>, inverse: boolean) => {
-  try {
-    return inverse ? price.toSignificant(4) : price.invert()?.toSignificant(4) ?? '-'
-  } catch (error) {
-    return '-'
-  }
-}
-
 export function SwapDetails({
   acceptedTrade,
   dispatch,
   gasPrice,
   gasSpendEstimate,
   newTradeToAccept,
+  trade,
   warnings,
   onAcceptTrade,
 }: SwapDetailsProps) {
@@ -62,14 +57,8 @@ export function SwapDetails({
 
   const price = acceptedTrade.executionPrice
   const usdcPrice = useUSDCPrice(showInverseRate ? price.baseCurrency : price.quoteCurrency)
-
-  const formattedPrice = getFormattedPrice(price, false)
-  const formattedInversePrice = getFormattedPrice(price, true)
-
-  const rate = `1 ${price.quoteCurrency?.symbol} = ${formattedPrice} ${price.baseCurrency?.symbol}`
-  const inverseRate = `1 ${price.baseCurrency?.symbol} = ${formattedInversePrice} ${price.quoteCurrency?.symbol}`
-
-  const rateDisplay = showInverseRate ? rate : inverseRate
+  const acceptedRate = getRateToDisplay(acceptedTrade, showInverseRate)
+  const rate = getRateToDisplay(trade, showInverseRate)
   const gasFee = useSwapGasFee(gasSpendEstimate, gasPrice)
   const gasFeeUSD = useUSDGasPrice(acceptedTrade.inputAmount.currency.chainId, gasFee)
   const swapWarning = warnings.find(showWarningInPanel)
@@ -99,9 +88,11 @@ export function SwapDetails({
           </Flex>
           <Flex row flexBasis="70%" gap="xxs">
             <Flex centered row flexBasis="66%" flexGrow={1} gap="none">
-              <Text adjustsFontSizeToFit color="blue300" numberOfLines={1} variant="subheadSmall">
-                {rate}
-              </Text>
+              <TouchableOpacity onPress={() => setShowInverseRate(!showInverseRate)}>
+                <Text adjustsFontSizeToFit color="blue300" numberOfLines={1} variant="subheadSmall">
+                  {rate}
+                </Text>
+              </TouchableOpacity>
             </Flex>
             <Flex centered row flexBasis="33%" flexGrow={1} gap="none">
               <Button
@@ -109,7 +100,7 @@ export function SwapDetails({
                 borderRadius="md"
                 padding="xs"
                 onPress={onAcceptTrade}>
-                <Text variant="subheadSmall">{t('Accept')}</Text>
+                <Text variant="smallLabel">{t('Accept')}</Text>
               </Button>
             </Flex>
           </Flex>
@@ -142,7 +133,7 @@ export function SwapDetails({
         </Text>
         <TouchableOpacity onPress={() => setShowInverseRate(!showInverseRate)}>
           <Flex row gap="none">
-            <Text variant="subheadSmall">{rateDisplay}</Text>
+            <Text variant="subheadSmall">{acceptedRate}</Text>
             <Text color="textSecondary" variant="subheadSmall">
               {usdcPrice &&
                 ` (${formatPrice(usdcPrice, { maximumFractionDigits: 6, notation: 'standard' })})`}

@@ -85,5 +85,22 @@ export function requireAcceptNewTrade(oldTrade: Nullable<Trade>, newTrade: Nulla
   return oldTrade?.quote?.methodParameters?.calldata !== newTrade?.quote?.methodParameters?.calldata
 }
 
+const getFormattedPrice = (price: Price<Currency, Currency>, showInverseRate: boolean) => {
+  try {
+    return showInverseRate ? price.toSignificant(4) : price.invert()?.toSignificant(4) ?? '-'
+  } catch (error) {
+    return '-'
+  }
+}
+
+export const getRateToDisplay = (trade: Trade, showInverseRate: boolean) => {
+  const price = trade.executionPrice
+  const formattedPrice = getFormattedPrice(price, false)
+  const formattedInversePrice = getFormattedPrice(price, true)
+  const rate = `1 ${price.quoteCurrency?.symbol} = ${formattedPrice} ${price.baseCurrency?.symbol}`
+  const inverseRate = `1 ${price.baseCurrency?.symbol} = ${formattedInversePrice} ${price.quoteCurrency?.symbol}`
+  return showInverseRate ? rate : inverseRate
+}
+
 export const formatAsHexString = (input?: string | number) =>
   input !== undefined ? BigNumber.from(input).toHexString() : input
