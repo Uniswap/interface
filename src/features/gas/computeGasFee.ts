@@ -1,20 +1,10 @@
 import { BigNumber, FixedNumber, providers } from 'ethers'
-import { ChainId } from 'src/constants/chains'
+import { ChainId, EIP_1559_CHAINS } from 'src/constants/chains'
 import { GAS_FAST_MULTIPLIER, GAS_URGENT_MULTIPLIER } from 'src/constants/gas'
 import { suggestFees } from 'src/features/gas/feeSuggestion'
 import { FeeInfo, FeeInfo1559, FeeInfoLegacy, FeeType } from 'src/features/gas/types'
 import { logger } from 'src/utils/logger'
 import { fixedNumberToInt } from 'src/utils/number'
-
-// Using a const list of 1559 chains to save a network request for each fee calculation
-// Must be kept up to date if more chains adopt 1559
-const EIP_1559_CHAINS = [
-  ChainId.Mainnet,
-  ChainId.Ropsten,
-  // TODO: removed until figure out why EIP-1559 gas estimation fails
-  // ChainId.Rinkeby,
-  ChainId.Goerli,
-]
 
 export async function computeGasFee(
   chainId: ChainId,

@@ -33,7 +33,7 @@
     "pod": "./podinstall.sh"
   },
   "dependencies": {
-    "@ethersproject/shims": "^5.5.0",
+    "@ethersproject/shims": "^5.6.0",
     "@formatjs/intl-datetimeformat": "^4.5.1",
     "@formatjs/intl-getcanonicallocales": "^1.9.0",
     "@formatjs/intl-locale": "^2.4.44",
@@ -74,7 +74,7 @@
     "d3-scale": "^4.0.2",
     "d3-shape": "^3.0.1",
     "dayjs": "^1.10.7",
-    "ethers": "^5.5.2",
+    "ethers": "^5.6.9",
     "expo": "^43.0.3",
     "expo-blur": "~10.0.3",
     "expo-clipboard": "^2.0.3",
@@ -130,7 +130,7 @@
     "@storybook/react": "^6.4.9",
     "@testing-library/react-hooks": "^7.0.2",
     "@testing-library/react-native": "^8.0.0",
-    "@typechain/ethers-v5": "^7.2.0",
+    "@typechain/ethers-v5": "^10.1.0",
     "@types/d3-scale": "^4.0.1",
     "@types/d3-shape": "^3.0.2",
     "@types/jest": "^27.0.1",

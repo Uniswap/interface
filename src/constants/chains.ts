@@ -79,6 +79,18 @@ export const L2_CHAIN_IDS = [
   ChainId.OptimisticKovan,
 ] as const
 
+export const EIP_1559_CHAINS = [
+  ChainId.Mainnet,
+  ChainId.Ropsten,
+  // TODO: removed until figure out why EIP-1559 gas estimation fails
+  // ChainId.Rinkeby,
+  ChainId.Goerli,
+  // TODO: activate when ethers fixes gas estimatation (https://github.com/ethers-io/ethers.js/issues/2828)
+  // or we integrate a 3rd party provider for pricing
+  // ChainId.Polygon,
+  // ChainId.PolygonMumbai,
+]
+
 // Renamed from SupportedL2ChainId in web app
 export type L2ChainId = typeof L2_CHAIN_IDS[number]
 

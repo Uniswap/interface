@@ -6,7 +6,7 @@ import { SWAP_ROUTER_ADDRESSES } from 'src/constants/addresses'
 import { maybeApprove } from 'src/features/transactions/approve/approveSaga'
 import { sendTransaction } from 'src/features/transactions/sendTransaction'
 import { Trade } from 'src/features/transactions/swap/useTrade'
-import { tradeToTransactionInfo } from 'src/features/transactions/swap/utils'
+import { formatAsHexString, tradeToTransactionInfo } from 'src/features/transactions/swap/utils'
 import { GasSpendEstimate } from 'src/features/transactions/transactionState/transactionState'
 import { Account } from 'src/features/wallet/accounts/types'
 import { toSupportedChainId } from 'src/utils/chainId'
@@ -69,10 +69,11 @@ export function* approveAndSwap(params: SwapParams) {
       from: account.address,
       to: swapRouterAddress,
       data: calldata,
-      ...(!value || isZero(value) ? {} : { value }),
-      gasLimit: gasSpendEstimate.swap,
-      gasPrice,
-      nonce: approveSubmitted ? nonce + 1 : nonce,
+      // For whatever reason Ethers throws for L2s if we don't manually convert to hex strings
+      ...(!value || isZero(value) ? {} : { value: formatAsHexString(value) }),
+      gasLimit: formatAsHexString(gasSpendEstimate.swap),
+      gasPrice: formatAsHexString(gasPrice),
+      nonce: formatAsHexString(approveSubmitted ? nonce + 1 : nonce),
     }
 
     yield* call(sendTransaction, {

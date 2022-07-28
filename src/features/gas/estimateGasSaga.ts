@@ -261,7 +261,10 @@ function* estimateSwapGasInfo(params: EstimateSwapGasInfo) {
     chainId,
     tx,
     provider as providers.JsonRpcProvider,
-    trade.quote.gasUseEstimate
+    // TODO: remove hardcoded value and uncomment trade quote gas estimate when endpoint is updated
+    // Using a conservative 300,000 fallback gasLimit until then
+    '300000'
+    // trade.quote.gasUseEstimate
   )
   const gasPrice = getGasPrice(swapGasInfo)
 

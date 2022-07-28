@@ -1,4 +1,5 @@
 import { Currency, Price, TradeType } from '@uniswap/sdk-core'
+import { BigNumber } from 'ethers'
 import { WRAPPED_NATIVE_CURRENCY } from 'src/constants/tokens'
 import { DEFAULT_SLIPPAGE_TOLERANCE_PERCENT } from 'src/features/transactions/swap/hooks'
 import { Trade } from 'src/features/transactions/swap/useTrade'
@@ -83,3 +84,6 @@ export function tradeToTransactionInfo(
 export function requireAcceptNewTrade(oldTrade: Nullable<Trade>, newTrade: Nullable<Trade>) {
   return oldTrade?.quote?.methodParameters?.calldata !== newTrade?.quote?.methodParameters?.calldata
 }
+
+export const formatAsHexString = (input?: string | number) =>
+  input !== undefined ? BigNumber.from(input).toHexString() : input
