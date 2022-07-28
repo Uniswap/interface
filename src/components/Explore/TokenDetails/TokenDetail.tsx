@@ -1,5 +1,7 @@
 import { Trans } from '@lingui/macro'
+import { useWeb3React } from '@web3-react/core'
 import CurrencyLogo from 'components/CurrencyLogo'
+import { getChainInfo } from 'constants/chainInfo'
 import { useCurrency, useToken } from 'hooks/Tokens'
 import { TimePeriod } from 'hooks/useTopTokens'
 import { useAtomValue } from 'jotai/utils'
@@ -176,6 +178,17 @@ const TruncatedAddress = styled.span`
     display: flex;
   }
 `
+const NetworkBadge = styled.div<{ networkColor?: string }>`
+  display: flex;
+  border-radius: 5px;
+  padding: 4px 6px;
+  align-items: center;
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 12px;
+  color: ${({ theme, networkColor }) => networkColor ?? theme.textPrimary};
+  background-color: ${({ theme }) => theme.backgroundSurface};
+`
 
 export default function LoadedTokenDetail({ address }: { address: string }) {
   const theme = useTheme()
@@ -185,6 +198,8 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
   const [activeTimePeriod, setTimePeriod] = useState(TimePeriod.hour)
   const isFavorited = favoriteTokens.includes(address)
   const toggleFavorite = useToggleFavorite(address)
+  const { chainId: connectedChainId } = useWeb3React()
+  const chainInfo = getChainInfo(connectedChainId)
 
   // catch token error and loading state
   if (!token || !token.name || !token.symbol) {
@@ -214,6 +229,7 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
           <TokenNameCell>
             <CurrencyLogo currency={currency} size={'32px'} />
             {tokenName} <TokenSymbol>{tokenSymbol}</TokenSymbol>
+            <NetworkBadge networkColor={chainInfo?.color}>{chainInfo?.label}</NetworkBadge>
           </TokenNameCell>
           <TokenActions>
             <ShareButton tokenName={tokenName} tokenSymbol={tokenSymbol} />
