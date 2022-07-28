@@ -15,7 +15,7 @@ import Gold from 'assets/svg/gold_icon.svg'
 import Silver from 'assets/svg/silver_icon.svg'
 import Bronze from 'assets/svg/bronze_icon.svg'
 import Pagination from 'components/Pagination'
-import { CAMPAIGN_LEADERBOARD_ITEM_PER_PAGE, DEFAULT_SIGNIFICANT } from 'constants/index'
+import { BIG_INT_ZERO, CAMPAIGN_LEADERBOARD_ITEM_PER_PAGE, DEFAULT_SIGNIFICANT } from 'constants/index'
 import { AppState } from 'state'
 import {
   useSelectedCampaignLeaderboardLookupAddressManager,
@@ -114,7 +114,8 @@ export default function LeaderboardLayout({
         </LeaderboardTableBodyItem>
         {showRewardsColumn && (
           <LeaderboardTableBodyItem align="right" isThisRankingEligible={isThisRankingEligible}>
-            {data.rewardAmount.toSignificant(DEFAULT_SIGNIFICANT)} {data?.token?.symbol ?? ''}
+            {data.rewardAmount.equalTo(BIG_INT_ZERO) ? '--' : data.rewardAmount.toSignificant(DEFAULT_SIGNIFICANT)}{' '}
+            {data?.token?.symbol ?? ''}
           </LeaderboardTableBodyItem>
         )}
       </LeaderboardTableBody>
