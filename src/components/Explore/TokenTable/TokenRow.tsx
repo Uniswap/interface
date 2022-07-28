@@ -263,7 +263,7 @@ const VolumeCell = styled(DataCell)`
     display: none;
   }
 `
-/* Loading state bubbles */
+/* Loading state bubbles (animation style from: src/components/Loader/styled.tsx) */
 export const LoadingBubble = styled.div`
   border-radius: 12px;
   height: 24px;
