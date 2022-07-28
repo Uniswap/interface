@@ -49,7 +49,7 @@ export function DecimalPad({ setValue, value = '', hideDecimal = false }: Decima
     <AnimatedBox flexDirection="row" flexWrap="wrap" px="md">
       {keys.map((key, i) =>
         key.hidden ? (
-          <Box key={i} alignItems={key.align} height="25%" />
+          <Box key={i} alignItems={key.align} height="25%" width="33%" />
         ) : (
           <KeyButton {...key} key={i} setValue={setValue} value={value} />
         )
