@@ -1,6 +1,7 @@
 import { AnyAction } from '@reduxjs/toolkit'
 import React, { Dispatch, useReducer, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Keyboard, LayoutChangeEvent, TouchableWithoutFeedback } from 'react-native'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { WarningAction, WarningModalType } from 'src/components/warnings/types'
@@ -20,6 +21,7 @@ import {
   transactionStateActions,
   transactionStateReducer,
 } from 'src/features/transactions/transactionState/transactionState'
+import { dimensions } from 'src/styles/sizing'
 
 interface SwapFormProps {
   prefilledState?: TransactionState
@@ -38,6 +40,7 @@ type InnerContentProps = {
   step: SwapStep
   setStep: (step: SwapStep) => void
   onClose: () => void
+  isCompressedView: boolean
 }
 
 function SwapInnerContent({
@@ -46,6 +49,7 @@ function SwapInnerContent({
   setStep,
   onClose,
   derivedSwapInfo,
+  isCompressedView,
 }: InnerContentProps) {
   if (step === SwapStep.SUBMITTED) {
     return (
@@ -62,6 +66,7 @@ function SwapInnerContent({
       <SwapForm
         derivedSwapInfo={derivedSwapInfo}
         dispatch={dispatch}
+        isCompressedView={isCompressedView}
         onNext={() => setStep(SwapStep.REVIEW)}
       />
     )
@@ -84,34 +89,58 @@ export function SwapFlow({ prefilledState, onClose }: SwapFormProps) {
   const derivedSwapInfo = useDerivedSwapInfo(state)
   const { swapCallback } = useSwapCallbackFromDerivedSwapInfo(derivedSwapInfo)
 
+  // use initial content height only to determine native keyboard view
+  // because show/hiding the custom keyboard will change the content height
+  const [initialContentHeight, setInitialContentHeight] = useState<number | undefined>(undefined)
+
   const { warningModalType, warnings } = derivedSwapInfo
   const warning =
     warningModalType === WarningModalType.INFORMATIONAL
       ? warnings.find(showWarningInPanel)
       : warnings.find((w) => w.action === WarningAction.WarnBeforeSubmit)
 
+  const onLayout = (event: LayoutChangeEvent) => {
+    const totalHeight = event.nativeEvent.layout.height
+    if (initialContentHeight !== undefined) return
+
+    setInitialContentHeight(totalHeight)
+  }
+
+  const isCompressedView = Boolean(
+    initialContentHeight && dimensions.fullHeight < initialContentHeight
+  )
+
+  // enable tap to dismiss keyboard on whole modal screen
+  // this only applies when we show native keyboard on smaller devices
+  const onBackgroundPress = () => {
+    Keyboard.dismiss()
+  }
+
   return (
-    <Flex grow gap="xs" py="xs">
-      <WarningModal
-        cancelLabel={t('Cancel swap')}
-        continueLabel={t('Swap anyway')}
-        warning={warning}
-        warningModalType={warningModalType}
-        onClose={() => dispatch(transactionStateActions.closeWarningModal())}
-        onPressContinue={
-          derivedSwapInfo.warningModalType === WarningModalType.ACTION ? swapCallback : undefined
-        }
-      />
-      <Text textAlign="center" variant="subhead">
-        {t('Swap')}
-      </Text>
-      <SwapInnerContent
-        derivedSwapInfo={derivedSwapInfo}
-        dispatch={dispatch}
-        setStep={setStep}
-        step={step}
-        onClose={onClose}
-      />
-    </Flex>
+    <TouchableWithoutFeedback onPress={onBackgroundPress}>
+      <Flex grow gap="xs" py="xs" onLayout={onLayout}>
+        <WarningModal
+          cancelLabel={t('Cancel swap')}
+          continueLabel={t('Swap anyway')}
+          warning={warning}
+          warningModalType={warningModalType}
+          onClose={() => dispatch(transactionStateActions.closeWarningModal())}
+          onPressContinue={
+            derivedSwapInfo.warningModalType === WarningModalType.ACTION ? swapCallback : undefined
+          }
+        />
+        <Text textAlign="center" variant="subhead">
+          {t('Swap')}
+        </Text>
+        <SwapInnerContent
+          derivedSwapInfo={derivedSwapInfo}
+          dispatch={dispatch}
+          isCompressedView={isCompressedView}
+          setStep={setStep}
+          step={step}
+          onClose={onClose}
+        />
+      </Flex>
+    </TouchableWithoutFeedback>
   )
 }

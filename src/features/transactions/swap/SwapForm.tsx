@@ -34,9 +34,10 @@ interface SwapFormProps {
   dispatch: Dispatch<AnyAction>
   onNext: () => void
   derivedSwapInfo: DerivedSwapInfo
+  isCompressedView: boolean
 }
 
-export function SwapForm({ dispatch, onNext, derivedSwapInfo }: SwapFormProps) {
+export function SwapForm({ dispatch, onNext, derivedSwapInfo, isCompressedView }: SwapFormProps) {
   const { t } = useTranslation()
   const theme = useAppTheme()
 
@@ -122,6 +123,7 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo }: SwapFormProps) {
             dimTextColor={exactCurrencyField === CurrencyField.OUTPUT && swapDataRefreshing}
             isUSDInput={isUSDInput}
             otherSelectedCurrency={currencies[CurrencyField.OUTPUT]}
+            showSoftInputOnFocus={isCompressedView}
             value={formattedAmounts[CurrencyField.INPUT]}
             warnings={warnings}
             onPressIn={onCurrencyInputPress(CurrencyField.INPUT)}
@@ -174,6 +176,7 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo }: SwapFormProps) {
                   isUSDInput={isUSDInput}
                   otherSelectedCurrency={currencies[CurrencyField.INPUT]}
                   showNonZeroBalancesOnly={false}
+                  showSoftInputOnFocus={isCompressedView}
                   value={formattedAmounts[CurrencyField.OUTPUT]}
                   warnings={warnings}
                   onPressIn={onCurrencyInputPress(CurrencyField.OUTPUT)}
@@ -212,10 +215,12 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo }: SwapFormProps) {
         </Trace>
       </AnimatedFlex>
       <AnimatedFlex exiting={FadeOutDown} gap="sm" justifyContent="flex-end" mb="lg" px="sm">
-        <DecimalPad
-          setValue={(value: string) => onSetAmount(exactCurrencyField, value, isUSDInput)}
-          value={formattedAmounts[exactCurrencyField]}
-        />
+        {!isCompressedView ? (
+          <DecimalPad
+            setValue={(value: string) => onSetAmount(exactCurrencyField, value, isUSDInput)}
+            value={formattedAmounts[exactCurrencyField]}
+          />
+        ) : null}
         <PrimaryButton
           disabled={actionButtonDisabled}
           label={t('Review swap')}

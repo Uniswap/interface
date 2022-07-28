@@ -27,6 +27,7 @@ type CurrentInputPanelProps = {
   value?: string
   otherSelectedCurrency?: Currency | null
   showNonZeroBalancesOnly?: boolean
+  showSoftInputOnFocus?: boolean
   autoFocus?: boolean
   isOutput?: boolean
   isUSDInput?: boolean
@@ -49,6 +50,7 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps) {
     value,
     otherSelectedCurrency,
     showNonZeroBalancesOnly = true,
+    showSoftInputOnFocus = false,
     autoFocus,
     isOutput = false,
     isUSDInput = false,
@@ -89,7 +91,7 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps) {
           px="none"
           py="none"
           showCurrencySign={isUSDInput}
-          showSoftInputOnFocus={false}
+          showSoftInputOnFocus={showSoftInputOnFocus}
           testID={isOutput ? 'amount-input-out' : 'amount-input-in'}
           value={value}
           onChangeText={(newAmount: string) => onSetAmount(newAmount)}
