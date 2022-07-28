@@ -1,7 +1,8 @@
 import { AnyAction } from '@reduxjs/toolkit'
 import { Currency, Price, TradeType } from '@uniswap/sdk-core'
-import React, { ComponentProps, Dispatch } from 'react'
+import React, { ComponentProps, Dispatch, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { TouchableOpacity } from 'react-native-gesture-handler'
 import { useAppTheme } from 'src/app/hooks'
 import AlertTriangle from 'src/assets/icons/alert-triangle.svg'
 import InfoCircle from 'src/assets/icons/info-circle.svg'
@@ -32,11 +33,11 @@ const spacerProps: ComponentProps<typeof Box> = {
   borderBottomWidth: 1,
 }
 
-const getFormattedPrice = (price: Price<Currency, Currency>) => {
+const getFormattedPrice = (price: Price<Currency, Currency>, inverse: boolean) => {
   try {
-    return price.invert()?.toSignificant(4) ?? '-'
+    return inverse ? price.toSignificant(4) : price.invert()?.toSignificant(4) ?? '-'
   } catch (error) {
-    return '0'
+    return '-'
   }
 }
 
@@ -50,15 +51,19 @@ export function SwapDetails({
   const { t } = useTranslation()
   const account = useActiveAccountWithThrow()
   const theme = useAppTheme()
+  const [showInverseRate, setShowInverseRate] = useState(false)
   const { onShowSwapWarning } = useSwapActionHandlers(dispatch)
 
   const price = acceptedTrade.executionPrice
-  const usdcPrice = useUSDCPrice(acceptedTrade.outputAmount.currency)
+  const usdcPrice = useUSDCPrice(showInverseRate ? price.baseCurrency : price.quoteCurrency)
 
-  const rate = `1 ${price.quoteCurrency?.symbol} = ${getFormattedPrice(price)} ${
-    price.baseCurrency?.symbol
-  }`
+  const formattedPrice = getFormattedPrice(price, false)
+  const formattedInversePrice = getFormattedPrice(price, true)
 
+  const rate = `1 ${price.quoteCurrency?.symbol} = ${formattedPrice} ${price.baseCurrency?.symbol}`
+  const inverseRate = `1 ${price.baseCurrency?.symbol} = ${formattedInversePrice} ${price.quoteCurrency?.symbol}`
+
+  const rateDisplay = showInverseRate ? rate : inverseRate
   // TODO: replace with updated gas fee estimate
   const gasFeeUSD = parseFloat(acceptedTrade.quote!.gasUseEstimateUSD).toFixed(2)
   const swapWarning = warnings.find(showWarningInPanel)
@@ -129,13 +134,15 @@ export function SwapDetails({
         <Text fontWeight="500" variant="subheadSmall">
           {t('Rate')}
         </Text>
-        <Flex row flex={1} flexWrap="wrap" gap="none" justifyContent="flex-end">
-          <Text variant="subheadSmall">{rate}</Text>
-          <Text color="textSecondary" variant="subheadSmall">
-            {usdcPrice &&
-              ` (${formatPrice(usdcPrice, { maximumFractionDigits: 6, notation: 'standard' })})`}
-          </Text>
-        </Flex>
+        <TouchableOpacity onPress={() => setShowInverseRate(!showInverseRate)}>
+          <Flex row gap="none">
+            <Text variant="subheadSmall">{rateDisplay}</Text>
+            <Text color="textSecondary" variant="subheadSmall">
+              {usdcPrice &&
+                ` (${formatPrice(usdcPrice, { maximumFractionDigits: 6, notation: 'standard' })})`}
+            </Text>
+          </Flex>
+        </TouchableOpacity>
       </Flex>
       <Flex row justifyContent="space-between" p="md">
         <Text fontWeight="500" variant="subheadSmall">
