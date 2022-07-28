@@ -13,6 +13,7 @@ import { TrueSightTokenData } from 'pages/TrueSight/hooks/useGetTrendingSoonData
 import { TruncatedText } from 'pages/TrueSight/components/TrendingSoonLayout/TrendingSoonTokenItem'
 
 interface TrueSightSearchBoxProps {
+  className?: string
   minWidth?: string
   style?: CSSProperties
   placeholder: string
@@ -58,6 +59,7 @@ const Option = ({ option, onClick }: { option: string | TrueSightTokenData; onCl
 }
 
 export default function TrueSightSearchBox({
+  className,
   minWidth,
   style,
   placeholder,
@@ -85,7 +87,7 @@ export default function TrueSightSearchBox({
   useOnClickOutside(containerRef, () => setIsShowOptions(false))
 
   return (
-    <Box ref={containerRef} style={{ position: 'relative', height: '100%', ...style }}>
+    <Box className={className} ref={containerRef} style={{ position: 'relative', height: '100%', ...style }}>
       {selectedTag || selectedTokenData ? (
         <SelectedOption>
           <Option option={(selectedTag || selectedTokenData) as string | TrueSightTokenData} />
@@ -147,7 +149,7 @@ export default function TrueSightSearchBox({
   )
 }
 
-const SelectedOption = styled.div`
+export const SelectedOption = styled.div`
   background: ${({ theme }) => theme.background};
   color: ${({ theme }) => theme.subText};
   font-size: 12px;

@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from 'react'
 import { RouteComponentProps } from 'react-router-dom'
 import { Flex, Text } from 'rebass'
+import { useMedia } from 'react-use'
+import { ChainId } from '@kyberswap/ks-sdk-core'
+import { Trans } from '@lingui/macro'
 
 import {
   ButtonText,
   SubscribeButton,
   TrueSightPageWrapper,
   UnSubscribeButton,
-  StyledSpinnder,
+  StyledSpinner,
 } from 'pages/TrueSight/styled'
 import TrendingSoonHero from 'pages/TrueSight/TrendingSoonHero'
 import TrendingHero from 'pages/TrueSight/TrendingHero'
@@ -17,17 +20,12 @@ import FilterBar from 'pages/TrueSight/components/FilterBar'
 import TrendingSoonLayout from 'pages/TrueSight/components/TrendingSoonLayout'
 import { TrueSightTokenData } from 'pages/TrueSight/hooks/useGetTrendingSoonData'
 import TrendingLayout from 'pages/TrueSight/components/TrendingLayout'
-import { ChainId } from '@kyberswap/ks-sdk-core'
-
-import { Trans } from '@lingui/macro'
 import NotificationIcon from 'components/Icons/NotificationIcon'
+import { useTrueSightUnsubscribeModalToggle } from 'state/application/hooks'
 import useTheme from 'hooks/useTheme'
 
 import UnsubscribeModal from './components/UnsubscribeModal'
-import { useTrueSightUnsubscribeModalToggle } from 'state/application/hooks'
-import { useNotification } from './hooks/useNotification'
-import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
-import { useMedia } from 'react-use'
+import useNotification from './hooks/useNotification'
 
 export enum TrueSightTabs {
   TRENDING_SOON = 'trending_soon',
@@ -60,9 +58,7 @@ export interface TrueSightSortSettings {
 export default function TrueSight({ history }: RouteComponentProps) {
   const { tab } = useParsedQueryString()
   const [activeTab, setActiveTab] = useState<TrueSightTabs>()
-  const [isLoading, setIsLoading] = useState(false)
   const toggleUnsubscribeModal = useTrueSightUnsubscribeModalToggle()
-  const { mixpanelHandler } = useMixpanel()
 
   const [filter, setFilter] = useState<TrueSightFilter>({
     isShowTrueSightOnly: false,
@@ -90,22 +86,13 @@ export default function TrueSight({ history }: RouteComponentProps) {
   }, [history, tab])
 
   const theme = useTheme()
-  const { isChrome, subscribe, handleSubscribe, handleUnSubscribe } = useNotification()
-
-  const handleOnSubscribe = async () => {
-    mixpanelHandler(MIXPANEL_TYPE.DISCOVER_CLICK_SUBSCRIBE_TRENDING_SOON)
-    setIsLoading(true)
-    await handleSubscribe()
-    setIsLoading(false)
-  }
+  const notificationState = useNotification()
+  const { isLoading, isChrome, hasSubscribed, handleSubscribe, handleUnsubscribe } = notificationState
 
   const upTo992 = useMedia('(max-width: 992px)')
 
-  const handleOnUnSubscribe = async () => {
-    mixpanelHandler(MIXPANEL_TYPE.DISCOVER_CLICK_UNSUBSCRIBE_TRENDING_SOON)
-    setIsLoading(true)
-    await handleUnSubscribe()
-    setIsLoading(false)
+  const handleOnClickUnSubscribe = async () => {
+    await handleUnsubscribe()
     toggleUnsubscribeModal()
   }
 
@@ -121,17 +108,17 @@ export default function TrueSight({ history }: RouteComponentProps) {
         <br />
         <Text fontWeight="500">Subscribe now to receive notifications!</Text>
       </Text>
-      {subscribe ? (
+      {hasSubscribed ? (
         <UnSubscribeButton disabled={!isChrome || isLoading} onClick={toggleUnsubscribeModal}>
-          {isLoading ? <StyledSpinnder color={theme.primary} /> : <NotificationIcon color={theme.primary} />}
+          {isLoading ? <StyledSpinner color={theme.primary} /> : <NotificationIcon color={theme.primary} />}
 
           <ButtonText color="primary">
             <Trans>Unsubscribe</Trans>
           </ButtonText>
         </UnSubscribeButton>
       ) : (
-        <SubscribeButton isDisabled={!isChrome || isLoading} onClick={handleOnSubscribe}>
-          {isLoading ? <StyledSpinnder color={theme.primary} /> : <NotificationIcon />}
+        <SubscribeButton isDisabled={!isChrome || isLoading} onClick={handleSubscribe}>
+          {isLoading ? <StyledSpinner color={theme.primary} /> : <NotificationIcon />}
 
           <ButtonText>
             <Trans>Subscribe</Trans>
@@ -148,19 +135,24 @@ export default function TrueSight({ history }: RouteComponentProps) {
 
         {!upTo992 && subscribeContent}
       </Flex>
+
       {activeTab === TrueSightTabs.TRENDING_SOON && (
         <>
           <div>
             <TrendingSoonHero />
-            {upTo992 && subscribeContent}
+            {upTo992 && !hasSubscribed && subscribeContent}
           </div>
-          <Flex flexDirection="column" style={{ gap: '16px' }}>
+          <Flex
+            flexDirection="column"
+            sx={{
+              gap: upTo992 ? undefined : '16px',
+            }}
+          >
             <FilterBar
               activeTab={TrueSightTabs.TRENDING_SOON}
               filter={filter}
               setFilter={setFilter}
-              sortSettings={sortSettings}
-              setSortSettings={setSortSettings}
+              notificationState={notificationState}
             />
             <TrendingSoonLayout
               filter={filter}
@@ -176,19 +168,23 @@ export default function TrueSight({ history }: RouteComponentProps) {
           <div>
             <TrendingHero />
           </div>
-          <Flex flexDirection="column" style={{ gap: '16px' }}>
+          <Flex
+            flexDirection="column"
+            sx={{
+              gap: upTo992 ? undefined : '16px',
+            }}
+          >
             <FilterBar
               activeTab={TrueSightTabs.TRENDING}
               filter={filter}
               setFilter={setFilter}
-              sortSettings={sortSettings}
-              setSortSettings={setSortSettings}
+              notificationState={notificationState}
             />
             <TrendingLayout filter={filter} setFilter={setFilter} />
           </Flex>
         </>
       )}
-      <UnsubscribeModal handleUnsubscribe={handleOnUnSubscribe} />
+      <UnsubscribeModal handleUnsubscribe={handleOnClickUnSubscribe} />
     </TrueSightPageWrapper>
   )
 }

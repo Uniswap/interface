@@ -1,5 +1,7 @@
 import styled from 'styled-components'
 import { Flex, Text } from 'rebass'
+import { rgba } from 'polished'
+
 import { ButtonEmpty, ButtonPrimary } from 'components/Button'
 import { Spinner } from 'components/Header/Polling'
 
@@ -123,16 +125,19 @@ export const TextTooltip = styled(Text)<{ color: string }>`
 `
 
 export const SubscribeButton = styled(ButtonPrimary)<{ isDisabled: boolean }>`
+  overflow: hidden;
   width: fit-content;
   height: 36px;
   padding: 8px 12px;
   background: ${({ theme, isDisabled }) => (isDisabled ? theme.buttonGray : theme.primary)};
-  color: ${({ theme, isDisabled }) => (!isDisabled ? theme.textReverse : theme.border)};
+  color: ${({ theme, isDisabled }) => (isDisabled ? theme.border : theme.textReverse)};
 
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+  ${({ theme, isDisabled }) => theme.mediaWidth.upToExtraSmall`
     width: 36px;
     min-width: 36px;
     padding: 6px;
+    background: ${isDisabled ? theme.buttonGray : rgba(theme.primary, 0.2)};
+    color: ${isDisabled ? theme.border : theme.primary};
   `}
 `
 
@@ -157,7 +162,7 @@ export const ButtonText = styled(Text)`
   `}
 `
 
-export const StyledSpinnder = styled(Spinner)<{ color: string }>`
+export const StyledSpinner = styled(Spinner)<{ color: string }>`
   border-left: ${({ color }) => `1px solid  ${color}`};
   width: 16px;
   height: 16px;

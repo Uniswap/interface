@@ -1,13 +1,14 @@
 import React from 'react'
-import { Flex, Text } from 'rebass'
+import { Flex } from 'rebass'
+import { Trans } from '@lingui/macro'
+
+import { formattedNum } from 'utils'
+import { ExternalLink } from 'theme'
 import { ButtonOutlined } from 'components/Button'
 import { ReactComponent as BarChartIcon } from 'assets/svg/bar_chart_icon.svg'
-import { Trans } from '@lingui/macro'
 import ButtonWithOptions from 'pages/TrueSight/components/ButtonWithOptions'
 import Tags from 'pages/TrueSight/components/Tags'
 import Divider from 'components/Divider'
-import { formattedNum, isAddress } from 'utils'
-import { ExternalLink } from 'theme'
 import {
   FieldName,
   FieldValue,
@@ -15,18 +16,10 @@ import {
 } from 'pages/TrueSight/components/TrendingSoonLayout/TrendingSoonTokenItem'
 import { TrueSightTokenData } from 'pages/TrueSight/hooks/useGetTrendingSoonData'
 import { TrueSightFilter } from 'pages/TrueSight/index'
-import { CheckCircle, ChevronDown, Copy } from 'react-feather'
-import TwitterIcon from 'components/Icons/TwitterIcon'
 import useTheme from 'hooks/useTheme'
-import { NETWORKS_INFO, TRUESIGHT_NETWORK_TO_CHAINID } from 'constants/networks'
-import getShortenAddress from 'utils/getShortenAddress'
-import useCopyClipboard from 'hooks/useCopyClipboard'
-import Facebook from 'components/Icons/Facebook'
-import Reddit from 'components/Icons/Reddit'
-import { useToggleModal } from 'state/application/hooks'
-import { ApplicationModal } from 'state/application/actions'
-import ModalCommunity from 'components/ModalCommunity'
-import ModalContractAddress from 'components/ModalContractAddress'
+
+import CommunityRowOnMobile from '../CommunityRowOnMobile'
+import AddressRowOnMobile from '../AddressRowOnMobile'
 
 const TrendingSoonTokenItemDetailsOnMobile = ({
   tokenData,
@@ -38,22 +31,10 @@ const TrendingSoonTokenItemDetailsOnMobile = ({
   setFilter?: React.Dispatch<React.SetStateAction<TrueSightFilter>>
 }) => {
   const theme = useTheme()
-  const defaultNetwork = tokenData.platforms.size ? tokenData.platforms.keys().next().value : ''
-  const defaultAddress = defaultNetwork ? tokenData.platforms.get(defaultNetwork) ?? '' : ''
-
-  const [isCopied, setCopied] = useCopyClipboard()
-
-  const onCopy = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    event.stopPropagation()
-    setCopied(isAddress(defaultAddress) || defaultAddress)
-  }
-
-  const toggleCommunityModal = useToggleModal(ApplicationModal.COMMUNITY)
-  const toggleContractAddressModal = useToggleModal(ApplicationModal.CONTRACT_ADDRESS)
 
   return (
     <>
-      <Flex style={{ gap: '20px', marginTop: '4px' }}>
+      <Flex style={{ gap: '20px' }}>
         <ButtonOutlined height="36px" fontSize="14px" padding="0" flex="1" onClick={() => setIsOpenChartModal(true)}>
           <BarChartIcon color={theme.subText} />
           <span style={{ marginLeft: '6px' }}>
@@ -67,7 +48,35 @@ const TrendingSoonTokenItemDetailsOnMobile = ({
         />
       </Flex>
 
-      <Flex flexDirection="column" style={{ gap: '16px', marginTop: '4px' }}>
+      <Divider />
+
+      <Flex flexDirection="column" sx={{ gap: '16px', marginTop: '4px', marginBottom: '8px' }}>
+        <Flex
+          justifyContent="space-between"
+          alignItems="center"
+          sx={{
+            columnGap: '4px',
+          }}
+        >
+          <FieldName>
+            <Trans>Name</Trans>
+          </FieldName>
+          <FieldValue>
+            <TruncatedText>{tokenData.name}</TruncatedText>
+          </FieldValue>
+        </Flex>
+
+        <Divider />
+
+        <Flex justifyContent="space-between" alignItems="center">
+          <FieldName>
+            <Trans>Symbol</Trans>
+          </FieldName>
+          <FieldValue>{tokenData.symbol}</FieldValue>
+        </Flex>
+
+        <Divider />
+
         <Flex justifyContent="space-between" alignItems="center">
           <FieldName>
             <Trans>Tag</Trans>
@@ -115,56 +124,18 @@ const TrendingSoonTokenItemDetailsOnMobile = ({
             <TruncatedText>{tokenData.official_web} ↗</TruncatedText>
           </FieldValue>
         </Flex>
+
         {Object.keys(tokenData.social_urls).length && (
           <>
             <Divider />
-            <Flex justifyContent="space-between" alignItems="center">
-              <FieldName onClick={toggleCommunityModal}>
-                <Trans>Community</Trans>
-                <ChevronDown size={16} style={{ marginLeft: '4px' }} />
-              </FieldName>
-              <FieldValue
-                as={ExternalLink}
-                target="_blank"
-                href={Object.values(tokenData.social_urls)[0]}
-                style={{ textTransform: 'capitalize' }}
-              >
-                <Flex mr="4px" alignItems="center" width="fit-content">
-                  {Object.keys(tokenData.social_urls)[0] === 'twitter' ? (
-                    <TwitterIcon width={16} height={16} color={theme.text} />
-                  ) : Object.keys(tokenData.social_urls)[0] === 'facebook' ? (
-                    <Facebook size={16} color={theme.text} />
-                  ) : Object.keys(tokenData.social_urls)[0] === 'reddit' ? (
-                    <Reddit size={16} color={theme.text} />
-                  ) : null}
-                </Flex>
-                <Text>{Object.keys(tokenData.social_urls)[0]} ↗</Text>
-              </FieldValue>
-            </Flex>
-            <ModalCommunity communities={tokenData.social_urls} />
+            <CommunityRowOnMobile socialURLs={tokenData.social_urls} />
           </>
         )}
+
         {tokenData.platforms.size && (
           <>
             <Divider />
-            <Flex justifyContent="space-between" alignItems="center" onClick={toggleContractAddressModal}>
-              <FieldName>
-                <Trans>Contract Address</Trans>
-                <ChevronDown size={16} style={{ marginLeft: '4px' }} />
-              </FieldName>
-              <FieldValue>
-                <img
-                  src={NETWORKS_INFO[TRUESIGHT_NETWORK_TO_CHAINID[defaultNetwork]].icon}
-                  alt="Network"
-                  style={{ minWidth: '16px', width: '16px', marginRight: '6px' }}
-                />
-                <Flex alignItems="center" onClick={onCopy}>
-                  <div style={{ width: '90px' }}>{getShortenAddress(defaultAddress)}</div>
-                  {isCopied ? <CheckCircle size={'14'} /> : <Copy size={'14'} />}
-                </Flex>
-              </FieldValue>
-            </Flex>
-            <ModalContractAddress platforms={tokenData.platforms} />
+            <AddressRowOnMobile platforms={tokenData.platforms} />
           </>
         )}
       </Flex>

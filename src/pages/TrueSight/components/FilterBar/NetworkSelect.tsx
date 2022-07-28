@@ -25,6 +25,11 @@ const NetworkSelectContainer = styled.div`
   background: ${({ theme }) => theme.background};
   min-width: 160px;
   cursor: pointer;
+
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    min-width: unset;
+    width: 100%;
+  `}
 `
 
 const NetworkSelect = ({

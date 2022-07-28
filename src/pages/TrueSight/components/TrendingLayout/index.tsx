@@ -77,7 +77,16 @@ const TrendingLayout = ({
 
   const MobileLayout = () => (
     <Box overflow="hidden">
-      {trendingSoonTokens.map(tokenData => (
+      <MobileTableHeader>
+        <MobileTableHeaderItem style={{ marginRight: 24, marginLeft: 4 }}>#</MobileTableHeaderItem>
+        <MobileTableHeaderItem style={{ flex: 1 }}>
+          <Trans>Name</Trans>
+        </MobileTableHeaderItem>
+        <MobileTableHeaderItem>
+          <Trans>Discovered on</Trans>
+        </MobileTableHeaderItem>
+      </MobileTableHeader>
+      {trendingSoonTokens.map((tokenData, index) => (
         <TrendingTokenItemMobileOnly
           key={tokenData.token_id}
           isSelected={selectedToken?.token_id === tokenData.token_id}
@@ -85,6 +94,7 @@ const TrendingLayout = ({
           onSelect={() => setSelectedToken(prev => (prev?.token_id === tokenData.token_id ? undefined : tokenData))}
           setIsOpenChartModal={setIsOpenChartModal}
           setFilter={setFilter}
+          tokenIndex={TRENDING_ITEM_PER_PAGE * (currentPage - 1) + index + 1}
         />
       ))}
       <Pagination
@@ -344,6 +354,27 @@ const TableHeaderItem = styled.div<{ align?: string }>`
   color: ${({ theme }) => theme.subText};
   text-align: ${({ align }) => align ?? 'left'};
   text-transform: uppercase;
+`
+
+const MobileTableHeader = styled.div`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  height: 50px;
+  background: ${({ theme }) => theme.tableHeader};
+  padding-right: 64px;
+`
+
+const MobileTableHeaderItem = styled.div`
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  line-height: 14px;
+  font-weight: 500;
+  color: ${({ theme }) => theme.subText};
+  text-transform: uppercase;
+  height: 100%;
 `
 
 const TableBodyWithDetailContainer = styled.div<{ isTrueSightToken: boolean; isSelected: boolean }>`

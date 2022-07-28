@@ -2,17 +2,15 @@ import React from 'react'
 import styled from 'styled-components'
 import { rgba } from 'polished'
 import { Trans } from '@lingui/macro'
+import { ChevronDown } from 'react-feather'
+import dayjs from 'dayjs'
+import { Box, Flex, Text } from 'rebass'
 
 import useTheme from 'hooks/useTheme'
-import { Box, Flex, Text } from 'rebass'
-import dayjs from 'dayjs'
-import { ChevronDown } from 'react-feather'
 import { ButtonOutlined } from 'components/Button'
 import Tags from 'pages/TrueSight/components/Tags'
 import Divider from 'components/Divider'
 import { ExternalLink } from 'theme'
-import AddressButton from 'pages/TrueSight/components/AddressButton'
-import CommunityButton from 'pages/TrueSight/components/CommunityButton'
 import ButtonWithOptions from 'pages/TrueSight/components/ButtonWithOptions'
 import { ReactComponent as BarChartIcon } from 'assets/svg/bar_chart_icon.svg'
 import { formattedNumLong } from 'utils'
@@ -26,22 +24,31 @@ import { TableBodyItemSmallDiff } from 'pages/TrueSight/components/TrendingLayou
 import { TrueSightFilter } from 'pages/TrueSight/index'
 import getFormattedNumLongDiscoveredDetails from 'pages/TrueSight/utils/getFormattedNumLongDiscoveredDetails'
 
-const StyledTrendingTokenItem = styled(Flex)<{
-  isSelected: boolean
-  isTrueSightToken: boolean
-}>`
+import CommunityRowOnMobile from '../CommunityRowOnMobile'
+import AddressRowOnMobile from '../AddressRowOnMobile'
+
+const StyledTrendingTokenItem = styled(Flex)`
   position: relative;
-  padding: ${({ isTrueSightToken }) => (isTrueSightToken ? `10px 16px 10.5px` : `15.5px 16px 15.5px`)};
+  padding: 10px 20px 10.5px;
   border-bottom: 1px solid ${({ theme }) => theme.border};
-  background: ${({ theme, isTrueSightToken }) => (isTrueSightToken ? rgba(theme.bg8, 0.12) : 'transparent')};
   cursor: pointer;
   gap: 16px;
 
-  ${({ theme, isTrueSightToken, isSelected }) => `
-    &, &:hover {
-      background: ${isSelected ? theme.tableHeader : isTrueSightToken ? rgba(theme.bg8, 0.12) : 'transparent'};
+  background: transparent;
+
+  &[data-highlight='true'] {
+    &,
+    &:hover {
+      background: ${({ theme }) => rgba(theme.bg8, 0.12)};
     }
-  `};
+  }
+
+  &[data-selected='true'] {
+    &,
+    &:hover {
+      background: ${({ theme }) => theme.tableHeader};
+    }
+  }
 `
 
 interface TrendingTokenItemProps {
@@ -50,6 +57,7 @@ interface TrendingTokenItemProps {
   onSelect: () => void
   setIsOpenChartModal: React.Dispatch<React.SetStateAction<boolean>>
   setFilter: React.Dispatch<React.SetStateAction<TrueSightFilter>>
+  tokenIndex: number
 }
 
 const TrendingTokenItemMobileOnly = ({
@@ -58,43 +66,91 @@ const TrendingTokenItemMobileOnly = ({
   onSelect,
   setIsOpenChartModal,
   setFilter,
+  tokenIndex,
 }: TrendingTokenItemProps) => {
   const theme = useTheme()
-  const date = dayjs(tokenData.discovered_on * 1000).format('YYYY/MM/DD')
 
-  const isTrueSightToken = tokenData.discovered_on !== 0
+  const date = tokenData.discovered_on !== 0 ? dayjs(tokenData.discovered_on * 1000).format('YYYY/MM/DD') : undefined
+
+  const isFoundByTrueSight = tokenData.discovered_on !== 0
   const formattedDetails = getFormattedNumLongDiscoveredDetails(tokenData)
 
   return (
-    <StyledTrendingTokenItem flexDirection="column" isSelected={isSelected} isTrueSightToken={isTrueSightToken}>
-      <Flex justifyContent="space-between" alignItems="center" onClick={onSelect} style={{ gap: '16px' }}>
-        <Flex alignItems="center">
-          <img
-            src={tokenData.logo_url}
-            style={{ minWidth: '24px', width: '24px', minHeight: '24px', height: '24px', borderRadius: '50%' }}
-            alt="logo"
-          />
-          <Flex flexDirection="column" style={{ gap: '4px', marginLeft: '8px' }}>
-            <Flex>
-              <TruncatedText fontSize="14px" fontWeight={500} color={theme.subText}>
-                {tokenData.name}
-              </TruncatedText>
-              <Text fontSize="14px" fontWeight={500} color={theme.border} marginLeft="8px">
-                {tokenData.symbol}
-              </Text>
-            </Flex>
-            {isTrueSightToken && (
-              <Text fontSize="12px" color={theme.subText}>
-                <Trans>We discovered this on</Trans> {date}
-              </Text>
-            )}
+    <StyledTrendingTokenItem flexDirection="column" data-highlight={isFoundByTrueSight} data-selected={isSelected}>
+      <Flex
+        justifyContent="space-between"
+        alignItems="center"
+        onClick={onSelect}
+        sx={{
+          columnGap: '16px',
+        }}
+      >
+        <Flex
+          alignItems="center"
+          justifyContent="space-between"
+          flex={1}
+          sx={{
+            columnGap: '4px',
+          }}
+        >
+          <Flex alignItems="center" flex={1}>
+            <Text
+              fontSize="14px"
+              fontWeight={500}
+              color={theme.subText}
+              width="18px"
+              textAlign="center"
+              marginRight={'16px'}
+            >
+              {tokenIndex}
+            </Text>
+
+            <img
+              src={tokenData.logo_url}
+              style={{
+                minWidth: '24px',
+                width: '24px',
+                minHeight: '24px',
+                height: '24px',
+                borderRadius: '50%',
+                marginRight: '8px',
+              }}
+              alt="logo"
+            />
+
+            <TruncatedText fontSize="14px" fontWeight={500} color={theme.subText} flex={1}>
+              {tokenData.name}
+            </TruncatedText>
           </Flex>
+
+          {!!date && (
+            <Text fontSize="14px" fontWeight={400} color={theme.text} flex="0 0 fit-content">
+              {date}
+            </Text>
+          )}
         </Flex>
-        <ChevronDown size={16} style={{ transform: isSelected ? 'rotate(180deg)' : 'unset', minWidth: '16px' }} />
+
+        <Flex
+          flex="0 0 28px"
+          width="28px"
+          height="28px"
+          justifyContent={'center'}
+          alignItems="center"
+          sx={{
+            backgroundColor: rgba(theme.subText, 0.2),
+            borderRadius: '999px',
+            color: theme.text,
+          }}
+        >
+          <ChevronDown
+            size={18}
+            style={{ transform: isSelected ? 'rotate(180deg)' : 'unset', transition: 'transform 150ms ease-in-out' }}
+          />
+        </Flex>
       </Flex>
       {isSelected && (
         <>
-          <Flex style={{ gap: '20px', marginTop: '4px' }}>
+          <Flex sx={{ gap: '20px' }}>
             <ButtonOutlined
               height="36px"
               fontSize="14px"
@@ -114,8 +170,42 @@ const TrendingTokenItemMobileOnly = ({
             />
           </Flex>
 
-          <Flex flexDirection="column" style={{ gap: '16px', marginTop: '4px' }}>
+          <Divider />
+
+          <Flex flexDirection="column" style={{ gap: '16px', marginTop: '4px', marginBottom: '8px' }}>
+            <Flex
+              justifyContent="space-between"
+              alignItems="center"
+              sx={{
+                columnGap: '8px',
+              }}
+            >
+              <FieldName>
+                <Trans>Name</Trans>
+              </FieldName>
+              <FieldValue>
+                <TruncatedText>{tokenData.name}</TruncatedText>
+              </FieldValue>
+            </Flex>
+
+            <Divider />
+
             <Flex justifyContent="space-between" alignItems="center">
+              <FieldName>
+                <Trans>Symbol</Trans>
+              </FieldName>
+              <FieldValue>{tokenData.symbol}</FieldValue>
+            </Flex>
+
+            <Divider />
+
+            <Flex
+              justifyContent="space-between"
+              alignItems="center"
+              sx={{
+                columnGap: '8px',
+              }}
+            >
               <FieldName>
                 <Trans>Tag</Trans>
               </FieldName>
@@ -131,7 +221,7 @@ const TrendingTokenItemMobileOnly = ({
                 </FieldName>
                 <FieldValue>{formattedNumLong(tokenData.price, true)}</FieldValue>
               </Flex>
-              {isTrueSightToken && (
+              {isFoundByTrueSight && (
                 <Flex justifyContent="space-between" alignItems="center" marginTop="8px">
                   <SubFieldName>Since {date}</SubFieldName>
                   <Flex alignItems="center" style={{ gap: '4px' }}>
@@ -153,8 +243,8 @@ const TrendingTokenItemMobileOnly = ({
                 </FieldName>
                 <FieldValue>{formattedNumLong(tokenData.trading_volume, true)}</FieldValue>
               </Flex>
-              {isTrueSightToken && (
-                <Flex justifyContent="space-between" alignItems="center" marginTop="8px">
+              {isFoundByTrueSight && (
+                <Flex justifyContent="space-between" alignItems="center" marginTop="8px" color={theme.border}>
                   <SubFieldName>Since {date}</SubFieldName>
                   <Flex alignItems="center" style={{ gap: '4px' }}>
                     <SubFieldValue>{formattedDetails.tradingVolume}</SubFieldValue>
@@ -177,7 +267,7 @@ const TrendingTokenItemMobileOnly = ({
                   {tokenData.market_cap <= 0 ? '--' : formattedNumLong(tokenData.market_cap, true)}
                 </FieldValue>
               </Flex>
-              {isTrueSightToken && (
+              {isFoundByTrueSight && (
                 <Flex justifyContent="space-between" alignItems="center" marginTop="8px">
                   <SubFieldName>Since {date}</SubFieldName>
                   <Flex alignItems="center" style={{ gap: '4px' }}>
@@ -213,11 +303,20 @@ const TrendingTokenItemMobileOnly = ({
                 <Trans>{tokenData.official_web} ↗</Trans>
               </FieldValue>
             </Flex>
-            <Divider />
-            <Flex justifyContent="space-between" alignItems="center">
-              <CommunityButton communityOption={tokenData.social_urls} />
-              <AddressButton platforms={tokenData.platforms} />
-            </Flex>
+
+            {Object.keys(tokenData.social_urls).length > 0 && (
+              <>
+                <Divider />
+                <CommunityRowOnMobile socialURLs={tokenData.social_urls} />
+              </>
+            )}
+
+            {tokenData.platforms.size > 0 && (
+              <>
+                <Divider />
+                <AddressRowOnMobile platforms={tokenData.platforms} />
+              </>
+            )}
           </Flex>
         </>
       )}
@@ -228,13 +327,13 @@ const TrendingTokenItemMobileOnly = ({
 export default TrendingTokenItemMobileOnly
 
 const SubFieldName = styled.div`
-  color: ${({ theme }) => theme.disableText};
+  color: ${({ theme }) => theme.subText};
   font-size: 12px;
   font-style: italic;
 `
 
 const SubFieldValue = styled.div`
-  color: ${({ theme }) => theme.disableText};
+  color: ${({ theme }) => theme.subText};
   font-size: 12px;
   font-style: normal;
 `

@@ -1,11 +1,12 @@
 import React from 'react'
-import { useModalOpen, useToggleModal } from 'state/application/hooks'
-import { ApplicationModal } from 'state/application/actions'
-import Modal from 'components/Modal'
 import styled from 'styled-components'
 import { Flex, Text } from 'rebass'
 import { Trans } from '@lingui/macro'
 import { X } from 'react-feather'
+
+import { useModalOpen, useToggleModal } from 'state/application/hooks'
+import { ApplicationModal } from 'state/application/actions'
+import Modal from 'components/Modal'
 import useTheme from 'hooks/useTheme'
 import TwitterIcon from 'components/Icons/TwitterIcon'
 import Facebook from 'components/Icons/Facebook'
@@ -29,29 +30,27 @@ const ModalCommunity = ({ communities }: { communities: { [p: string]: string } 
             <Trans>Community</Trans>
           </Text>
           <Flex sx={{ cursor: 'pointer' }} role="button" onClick={toggleCommunityModal}>
-            <X size={20} color={theme.disableText} />
+            <X size={20} color={theme.subText} />
           </Flex>
         </Flex>
         <CommunityContainer>
           {communityNames.map((name, index) => (
             <Flex key={name} alignItems="center" as={ExternalLink} target="_blank" href={communityUrls[index]}>
-              <>
-                {name === 'twitter' ? (
-                  <TwitterIcon width={16} height={16} color={theme.text} />
-                ) : name === 'facebook' ? (
-                  <Facebook size={16} color={theme.text} />
-                ) : name === 'reddit' ? (
-                  <Reddit size={16} color={theme.text} />
-                ) : null}
-                <Text
-                  fontSize="14px"
-                  fontWeight={500}
-                  style={{ textTransform: 'capitalize', marginLeft: '4px' }}
-                  color={theme.text}
-                >
-                  {name} ↗
-                </Text>
-              </>
+              {name === 'twitter' ? (
+                <TwitterIcon width={16} height={16} color={theme.text} />
+              ) : name === 'facebook' ? (
+                <Facebook size={16} color={theme.text} />
+              ) : name === 'reddit' ? (
+                <Reddit size={16} color={theme.text} />
+              ) : null}
+              <Text
+                fontSize="14px"
+                fontWeight={500}
+                style={{ textTransform: 'capitalize', marginLeft: '4px' }}
+                color={theme.text}
+              >
+                {name} ↗
+              </Text>
             </Flex>
           ))}
         </CommunityContainer>

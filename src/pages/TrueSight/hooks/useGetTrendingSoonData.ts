@@ -12,6 +12,9 @@ export interface TrueSightTokenData {
   name: string
   symbol: string
   rank: number | undefined // Trending soon only
+
+  // a Map keeps the order of keys as we add them
+  // a regular object doesn't not
   platforms: Map<string, string>
   present_on_chains: string[]
   predicted_date: number | undefined // Trending soon only

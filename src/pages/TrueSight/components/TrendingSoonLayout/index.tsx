@@ -262,15 +262,16 @@ export const TrueSightContainer = styled.div`
   ${({ theme }) => theme.mediaWidth.upToLarge`
     min-height: unset;
   `}
+
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    border-top-left-radius: unset;
+    border-top-right-radius: unset;
+  `}
 `
 
 export const TrendingSoonTokenListHeaderWrapper = styled.div`
   width: 100%;
   background: ${({ theme }) => theme.tableHeader};
-
-  ${({ theme }) => theme.mediaWidth.upToLarge`
-    display: none;
-  `}
 `
 
 export const TrendingSoonTokenListHeader = styled.div`
@@ -279,6 +280,11 @@ export const TrendingSoonTokenListHeader = styled.div`
   align-items: center;
   padding: 0 20px;
   height: 50px;
+
+  ${({ theme }) => theme.mediaWidth.upToLarge`
+    width: 100%;
+    padding-right: 64px;
+  `}
 `
 
 export const TrendingSoonTokenListHeaderItem = styled.div`
