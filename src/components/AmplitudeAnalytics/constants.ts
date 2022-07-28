@@ -76,6 +76,7 @@ export const enum ModalName {
  * Use to identify low-level components given a TraceContext
  */
 export const enum ElementName {
+  APPROVE_TOKEN_BUTTON = 'approve-token-button',
   AUTOROUTER_VISUALIZATION_ROW = 'expandable-autorouter-visualization-row',
   COMMON_BASES_CURRENCY_BUTTON = 'common-bases-currency-button',
   CONFIRM_SWAP_BUTTON = 'confirm-swap-or-send',

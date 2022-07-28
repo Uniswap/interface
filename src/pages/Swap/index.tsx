@@ -92,6 +92,17 @@ export function getIsValidSwapQuote(
   return !!swapInputError && !!trade && (tradeState === TradeState.VALID || tradeState === TradeState.SYNCING)
 }
 
+const formatApproveTokenTxnSubmittedEventProperties = (approvalOptimizedTrade: Trade | undefined) => {
+  if (!approvalOptimizedTrade) return {}
+  return {
+    chain_id: approvalOptimizedTrade.inputAmount.currency.chainId,
+    token_symbol: approvalOptimizedTrade.inputAmount.currency.symbol,
+    token_address: approvalOptimizedTrade.inputAmount.currency.isNative
+      ? NATIVE_CHAIN_ADDRESS
+      : approvalOptimizedTrade.inputAmount.currency.address,
+  }
+}
+
 const formatWrapTokenTxnSubmittedEventProperties = (
   inputCurrency: Currency | null | undefined,
   outputCurrency: Currency | null | undefined,
@@ -103,6 +114,7 @@ const formatWrapTokenTxnSubmittedEventProperties = (
     token_out_address: outputCurrency.isNative ? NATIVE_CHAIN_ADDRESS : outputCurrency.address,
     token_in_symbol: inputCurrency.symbol,
     token_out_symbol: outputCurrency.symbol,
+    chain_id: inputCurrency.chainId === outputCurrency.chainId ? inputCurrency.chainId : undefined,
     amount: parsedAmount ? getNumberFormattedToDecimalPlace(parsedAmount, parsedAmount?.currency.decimals) : undefined,
   }
 }
@@ -645,11 +657,10 @@ export default function Swap() {
                     name={EventName.WRAP_TOKEN_TXN_SUBMITTED}
                     element={ElementName.WRAP_TOKEN_BUTTON}
                     properties={formatWrapTokenTxnSubmittedEventProperties(
-                            currencies[Field.INPUT],
-                            currencies[Field.OUTPUT],
-                            parsedAmount,
-                          )
-                    }
+                      currencies[Field.INPUT],
+                      currencies[Field.OUTPUT],
+                      parsedAmount
+                    )}
                     shouldLogImpression={!Boolean(wrapInputError)}
                   >
                     <ButtonPrimary disabled={Boolean(wrapInputError)} onClick={onWrap}>
@@ -671,53 +682,67 @@ export default function Swap() {
                 ) : showApproveFlow ? (
                   <AutoRow style={{ flexWrap: 'nowrap', width: '100%' }}>
                     <AutoColumn style={{ width: '100%' }} gap="12px">
-                      <ButtonConfirmed
-                        onClick={handleApprove}
-                        disabled={
-                          approvalState !== ApprovalState.NOT_APPROVED ||
-                          approvalSubmitted ||
-                          signatureState === UseERC20PermitState.SIGNED
-                        }
-                        width="100%"
-                        altDisabledStyle={approvalState === ApprovalState.PENDING} // show solid button while waiting
-                        confirmed={
-                          approvalState === ApprovalState.APPROVED || signatureState === UseERC20PermitState.SIGNED
+                      <TraceEvent
+                        events={[Event.onClick]}
+                        name={EventName.APPROVE_TOKEN_TXN_SUBMITTED}
+                        element={ElementName.APPROVE_TOKEN_BUTTON}
+                        properties={formatApproveTokenTxnSubmittedEventProperties(approvalOptimizedTrade)}
+                        shouldLogImpression={
+                          !(
+                            approvalState !== ApprovalState.NOT_APPROVED ||
+                            approvalSubmitted ||
+                            signatureState === UseERC20PermitState.SIGNED
+                          )
                         }
                       >
-                        <AutoRow justify="space-between" style={{ flexWrap: 'nowrap' }}>
-                          <span style={{ display: 'flex', alignItems: 'center' }}>
-                            <CurrencyLogo
-                              currency={currencies[Field.INPUT]}
-                              size={'20px'}
-                              style={{ marginRight: '8px', flexShrink: 0 }}
-                            />
-                            {/* we need to shorten this string on mobile */}
-                            {approvalState === ApprovalState.APPROVED ||
-                            signatureState === UseERC20PermitState.SIGNED ? (
-                              <Trans>You can now trade {currencies[Field.INPUT]?.symbol}</Trans>
+                        <ButtonConfirmed
+                          onClick={handleApprove}
+                          disabled={
+                            approvalState !== ApprovalState.NOT_APPROVED ||
+                            approvalSubmitted ||
+                            signatureState === UseERC20PermitState.SIGNED
+                          }
+                          width="100%"
+                          altDisabledStyle={approvalState === ApprovalState.PENDING} // show solid button while waiting
+                          confirmed={
+                            approvalState === ApprovalState.APPROVED || signatureState === UseERC20PermitState.SIGNED
+                          }
+                        >
+                          <AutoRow justify="space-between" style={{ flexWrap: 'nowrap' }}>
+                            <span style={{ display: 'flex', alignItems: 'center' }}>
+                              <CurrencyLogo
+                                currency={currencies[Field.INPUT]}
+                                size={'20px'}
+                                style={{ marginRight: '8px', flexShrink: 0 }}
+                              />
+                              {/* we need to shorten this string on mobile */}
+                              {approvalState === ApprovalState.APPROVED ||
+                              signatureState === UseERC20PermitState.SIGNED ? (
+                                <Trans>You can now trade {currencies[Field.INPUT]?.symbol}</Trans>
+                              ) : (
+                                <Trans>Allow the Uniswap Protocol to use your {currencies[Field.INPUT]?.symbol}</Trans>
+                              )}
+                            </span>
+                            {approvalState === ApprovalState.PENDING ? (
+                              <Loader stroke="white" />
+                            ) : (approvalSubmitted && approvalState === ApprovalState.APPROVED) ||
+                              signatureState === UseERC20PermitState.SIGNED ? (
+                              <CheckCircle size="20" color={theme.deprecated_green1} />
                             ) : (
-                              <Trans>Allow the Uniswap Protocol to use your {currencies[Field.INPUT]?.symbol}</Trans>
+                              <MouseoverTooltip
+                                text={
+                                  <Trans>
+                                    You must give the Uniswap smart contracts permission to use your{' '}
+                                    {currencies[Field.INPUT]?.symbol}. You only have to do this once per token.
+                                  </Trans>
+                                }
+                              >
+                                <HelpCircle size="20" color={'deprecated_white'} style={{ marginLeft: '8px' }} />
+                              </MouseoverTooltip>
                             )}
-                          </span>
-                          {approvalState === ApprovalState.PENDING ? (
-                            <Loader stroke="white" />
-                          ) : (approvalSubmitted && approvalState === ApprovalState.APPROVED) ||
-                            signatureState === UseERC20PermitState.SIGNED ? (
-                            <CheckCircle size="20" color={theme.deprecated_green1} />
-                          ) : (
-                            <MouseoverTooltip
-                              text={
-                                <Trans>
-                                  You must give the Uniswap smart contracts permission to use your{' '}
-                                  {currencies[Field.INPUT]?.symbol}. You only have to do this once per token.
-                                </Trans>
-                              }
-                            >
-                              <HelpCircle size="20" color={'deprecated_white'} style={{ marginLeft: '8px' }} />
-                            </MouseoverTooltip>
-                          )}
-                        </AutoRow>
-                      </ButtonConfirmed>
+                          </AutoRow>
+                        </ButtonConfirmed>
+                      </TraceEvent>
                       <ButtonError
                         onClick={() => {
                           if (isExpertMode) {
