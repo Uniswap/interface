@@ -5,20 +5,14 @@ import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { sendAnalyticsEvent } from 'components/AmplitudeAnalytics'
-import {
-  ElementName,
-  Event,
-  EventName,
-  NATIVE_CHAIN_ADDRESS,
-  PageName,
-  SectionName,
-} from 'components/AmplitudeAnalytics/constants'
+import { ElementName, Event, EventName, PageName, SectionName } from 'components/AmplitudeAnalytics/constants'
 import { Trace } from 'components/AmplitudeAnalytics/Trace'
 import { TraceEvent } from 'components/AmplitudeAnalytics/TraceEvent'
 import {
   formatPercentInBasisPointsNumber,
-  getDurationFromDateTillNowMilliseconds,
-  getNumberFormattedToDecimalPlace,
+  formatToDecimal,
+  getDurationFromDateMilliseconds,
+  getTokenAddress,
 } from 'components/AmplitudeAnalytics/utils'
 import { sendEvent } from 'components/analytics'
 import { NetworkAlert } from 'components/NetworkAlert/NetworkAlert'
@@ -100,24 +94,20 @@ const formatAnalyticsEventProperties = (
   return {
     token_in_symbol: trade.inputAmount.currency.symbol,
     token_out_symbol: trade.outputAmount.currency.symbol,
-    token_in_address: trade.inputAmount.currency.isNative ? NATIVE_CHAIN_ADDRESS : trade.inputAmount.currency.address,
-    token_out_address: trade.outputAmount.currency.isNative
-      ? NATIVE_CHAIN_ADDRESS
-      : trade.outputAmount.currency.address,
+    token_in_address: getTokenAddress(trade.inputAmount.currency),
+    token_out_address: getTokenAddress(trade.outputAmount.currency),
     price_impact_basis_points: lpFeePercent
       ? formatPercentInBasisPointsNumber(getPriceImpactPercent(lpFeePercent, trade))
       : undefined,
-    estimated_network_fee_usd: trade.gasUseEstimateUSD
-      ? getNumberFormattedToDecimalPlace(trade.gasUseEstimateUSD, 2)
-      : undefined,
+    estimated_network_fee_usd: trade.gasUseEstimateUSD ? formatToDecimal(trade.gasUseEstimateUSD, 2) : undefined,
     chain_id:
       trade.inputAmount.currency.chainId === trade.outputAmount.currency.chainId
         ? trade.inputAmount.currency.chainId
         : undefined,
-    token_in_amount: getNumberFormattedToDecimalPlace(trade.inputAmount, trade.inputAmount.currency.decimals),
-    token_out_amount: getNumberFormattedToDecimalPlace(trade.outputAmount, trade.outputAmount.currency.decimals),
+    token_in_amount: formatToDecimal(trade.inputAmount, trade.inputAmount.currency.decimals),
+    token_out_amount: formatToDecimal(trade.outputAmount, trade.outputAmount.currency.decimals),
     quote_latency_milliseconds: fetchingSwapQuoteStartTime
-      ? getDurationFromDateTillNowMilliseconds(fetchingSwapQuoteStartTime)
+      ? getDurationFromDateMilliseconds(fetchingSwapQuoteStartTime)
       : undefined,
   }
 }
@@ -480,7 +470,7 @@ export default function Swap() {
     // If another swap quote is being loaded based on changed user inputs:
     if (routeIsLoading) {
       setNewSwapQuoteNeedsLogging(true)
-      if (fetchingSwapQuoteStartTime === undefined) setFetchingSwapQuoteStartTime(now)
+      if (!fetchingSwapQuoteStartTime) setFetchingSwapQuoteStartTime(now)
     }
   }, [
     newSwapQuoteNeedsLogging,

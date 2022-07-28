@@ -38,7 +38,7 @@ export enum WALLET_CONNECTION_RESULT {
   FAILED = 'Failed',
 }
 
-export const NATIVE_CHAIN_ADDRESS = 'NATIVE'
+export const NATIVE_CHAIN_ID = 'NATIVE'
 
 /**
  * Known pages in the app. Highest order context.
