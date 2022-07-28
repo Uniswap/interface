@@ -1,3 +1,4 @@
+import useTheme from 'hooks/useTheme'
 import styled from 'styled-components/macro'
 
 const Balance = styled.div`
@@ -44,8 +45,9 @@ export default function NetworkBalance({
   tokenSymbol: string
   fiatValue: string | number
   label: string
-  networkColor: string
+  networkColor: string | undefined
 }) {
+  const theme = useTheme()
   return (
     <NetworkBalanceContainer>
       <Logo src={logoUrl} />
@@ -56,7 +58,7 @@ export default function NetworkBalance({
           </BalanceItem>
           <BalanceItem>${fiatValue}</BalanceItem>
         </BalanceRow>
-        <Network color={networkColor}>{label}</Network>
+        <Network color={networkColor ?? theme.textPrimary}>{label}</Network>
       </Balance>
     </NetworkBalanceContainer>
   )

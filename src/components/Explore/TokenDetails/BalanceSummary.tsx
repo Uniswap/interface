@@ -13,20 +13,20 @@ import NetworkBalance from './NetworkBalance'
 const BalancesCard = styled.div`
   width: 284px;
   height: fit-content;
-  color: ${({ theme }) => theme.deprecated_text1};
+  color: ${({ theme }) => theme.textPrimary};
   font-size: 12px;
   line-height: 20px;
   padding: 20px;
-  background-color: ${({ theme }) => theme.deprecated_bg1};
+  background-color: ${({ theme }) => theme.backgroundSurface};
   border-radius: 12px;
-  border: 1px solid ${({ theme }) => theme.deprecated_bg3};
+  border: 1px solid ${({ theme }) => theme.backgroundOutline};
 `
 const NetworkBalancesSection = styled.div`
   height: fit-content;
 `
 const TotalBalanceSection = styled.div`
   height: fit-content;
-  border-bottom: 1px solid ${({ theme }) => theme.deprecated_bg3};
+  border-bottom: 1px solid ${({ theme }) => theme.backgroundOutline};
   margin-bottom: 20px;
   padding-bottom: 20px;
 `
@@ -96,7 +96,7 @@ export default function BalanceSummary({ address }: { address: string }) {
                   tokenSymbol={tokenSymbol ?? 'XXX'}
                   fiatValue={fiatValue.toSignificant(2)}
                   label={chainInfo.label}
-                  networkColor={theme.deprecated_primary1}
+                  networkColor={chainInfo.color}
                 />
               )
             })}
@@ -110,7 +110,7 @@ export default function BalanceSummary({ address }: { address: string }) {
             tokenSymbol={tokenSymbol ?? 'XXX'}
             fiatValue={connectedFiatValue}
             label={connectedLabel}
-            networkColor={theme.deprecated_primary1}
+            networkColor={theme.textPrimary}
           />
         </>
       )}
