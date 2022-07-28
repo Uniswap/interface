@@ -115,15 +115,15 @@ const FavoriteCell = styled(Cell)`
   }
 `
 const StyledHeaderRow = styled(StyledTokenRow)`
-  width: 100%;
-  height: 48px;
-  color: ${({ theme }) => theme.textSecondary};
-  font-size: 12px;
-  line-height: 16px;
   border-bottom: 1px solid;
   border-color: ${({ theme }) => theme.backgroundOutline};
   border-radius: 8px 8px 0px 0px;
+  color: ${({ theme }) => theme.textSecondary};
+  font-size: 12px;
+  height: 48px;
+  line-height: 16px;
   padding: 0px 12px;
+  width: 100%;
 
   &:hover {
     background-color: ${({ theme }) => theme.backgroundSurface};
@@ -134,8 +134,8 @@ const StyledHeaderRow = styled(StyledTokenRow)`
   }
 
   @media only screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
-    padding: 0px 12px;
     justify-content: space-between;
+    padding: 0px 12px;
   }
 `
 const ListNumberCell = styled(Cell)`
@@ -146,17 +146,17 @@ const ListNumberCell = styled(Cell)`
     display: none;
   }
 `
-const HeaderLabelCell = styled(Cell)<{ sortable: boolean }>`
+const DataCell = styled(Cell)<{ sortable: boolean }>`
   justify-content: flex-end;
   min-width: 80px;
-  padding-right: 8px;
+  user-select: ${({ sortable }) => (sortable ? 'none' : 'unset')};
 
   &:hover {
     color: ${({ theme, sortable }) => sortable && theme.white};
     background-color: ${({ theme, sortable }) => sortable && theme.accentActionSoft};
   }
 `
-const MarketCapCell = styled(HeaderLabelCell)`
+const MarketCapCell = styled(DataCell)`
   @media only screen and (max-width: ${MEDIUM_MEDIA_BREAKPOINT}) {
     display: none;
   }
@@ -171,8 +171,8 @@ const NameCell = styled(Cell)`
     padding-right: 8px;
   }
 `
-
-const PercentChangeCell = styled(HeaderLabelCell)`
+const PriceCell = styled(DataCell)``
+const PercentChangeCell = styled(DataCell)`
   @media only screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
     display: none;
   }
@@ -200,14 +200,14 @@ const PriceInfoCell = styled(Cell)`
 const SortArrowCell = styled(Cell)`
   padding-right: 2px;
 `
-const SortingCategory = styled.span`
-  display: flex;
+const HeaderCellWrapper = styled.span<{ onClick?: () => void }>`
   align-items: center;
-  justify-content: center;
-  cursor: pointer;
-`
-const SortOption = styled.span`
-  cursor: pointer;
+  cursor: ${({ onClick }) => (onClick ? 'pointer' : 'unset')};
+  display: flex;
+  height: 100%;
+  justify-content: flex-end;
+  padding-right: 8px;
+  width: 100%;
 `
 const SparkLineCell = styled(Cell)`
   padding: 0px 24px;
@@ -256,7 +256,7 @@ const TokenSymbol = styled(Cell)`
     width: 100%;
   }
 `
-const VolumeCell = styled(HeaderLabelCell)`
+const VolumeCell = styled(DataCell)`
   @media only screen and (max-width: ${LARGE_MEDIA_BREAKPOINT}) {
     display: none;
   }
@@ -307,20 +307,29 @@ function HeaderCell({
 
   if (sortCategory === category) {
     return (
-      <SortingCategory onClick={handleSortCategory}>
+      <HeaderCellWrapper onClick={handleSortCategory}>
         <SortArrowCell>
           {sortDirection === SortDirection.increasing ? (
-            <ArrowDown size={14} color={theme.accentActive} />
-          ) : (
             <ArrowUp size={14} color={theme.accentActive} />
+          ) : (
+            <ArrowDown size={14} color={theme.accentActive} />
           )}
         </SortArrowCell>
-        <Trans>{getHeaderDisplay(category, timeframe)}</Trans>
-      </SortingCategory>
+        {getHeaderDisplay(category, timeframe)}
+      </HeaderCellWrapper>
     )
   }
-  if (sortable) return <SortOption onClick={handleSortCategory}>{getHeaderDisplay(category, timeframe)}</SortOption>
-  return <Trans>{getHeaderDisplay(category, timeframe)}</Trans>
+  if (sortable) {
+    return (
+      <HeaderCellWrapper onClick={handleSortCategory}>
+        <SortArrowCell>
+          <ArrowUp size={14} visibility="hidden" />
+        </SortArrowCell>
+        {getHeaderDisplay(category, timeframe)}
+      </HeaderCellWrapper>
+    )
+  }
+  return <HeaderCellWrapper>{getHeaderDisplay(category, timeframe)}</HeaderCellWrapper>
 }
 
 /* Token Row: skeleton row component */
@@ -352,7 +361,7 @@ export function TokenRow({
       <FavoriteCell>{favorited}</FavoriteCell>
       <ListNumberCell>{listNumber}</ListNumberCell>
       <NameCell>{tokenInfo}</NameCell>
-      <HeaderLabelCell sortable={header}>{price}</HeaderLabelCell>
+      <PriceCell sortable={header}>{price}</PriceCell>
       <PercentChangeCell sortable={header}>{percentChange}</PercentChangeCell>
       <MarketCapCell sortable={header}>{marketCap}</MarketCapCell>
       <VolumeCell sortable={header}>{volume}</VolumeCell>
@@ -365,8 +374,6 @@ export function TokenRow({
 
 /* Header Row: top header row component for table */
 export function HeaderRow() {
-  /* TODO: access which sort category used and timeframe used (temporarily hardcoded values) */
-
   return (
     <TokenRow
       address={null}
