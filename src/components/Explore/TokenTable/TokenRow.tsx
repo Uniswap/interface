@@ -1,12 +1,10 @@
 import { Trans } from '@lingui/macro'
 import CurrencyLogo from 'components/CurrencyLogo'
-import { loadingAnimation } from 'components/Loader/styled'
 import { useCurrency, useToken } from 'hooks/Tokens'
 import useTheme from 'hooks/useTheme'
 import { TimePeriod, TokenData } from 'hooks/useTopTokens'
 import { useAtom } from 'jotai'
 import { useAtomValue } from 'jotai/utils'
-import { darken } from 'polished'
 import { ReactNode } from 'react'
 import { ArrowDown, ArrowDownRight, ArrowUp, ArrowUpRight, Heart } from 'react-feather'
 import { Link } from 'react-router-dom'
@@ -20,6 +18,7 @@ import {
   MOBILE_MEDIA_BREAKPOINT,
   SMALL_MEDIA_BREAKPOINT,
 } from '../constants'
+import { LoadingBubble } from '../loading'
 import {
   favoritesAtom,
   filterTimeAtom,
@@ -262,22 +261,6 @@ const VolumeCell = styled(DataCell)`
   @media only screen and (max-width: ${LARGE_MEDIA_BREAKPOINT}) {
     display: none;
   }
-`
-/* Loading state bubbles (animation style from: src/components/Loader/styled.tsx) */
-export const LoadingBubble = styled.div`
-  border-radius: 12px;
-  height: 24px;
-  width: 50%;
-  animation: ${loadingAnimation} 1.5s infinite;
-  animation-fill-mode: both;
-  background: linear-gradient(
-    to left,
-    ${({ theme }) => theme.backgroundContainer} 25%,
-    ${({ theme }) => darken(0.8, theme.backgroundContainer)} 50%,
-    ${({ theme }) => theme.backgroundContainer} 75%
-  );
-  will-change: background-position;
-  background-size: 400%;
 `
 const SmallLoadingBubble = styled(LoadingBubble)`
   width: 25%;

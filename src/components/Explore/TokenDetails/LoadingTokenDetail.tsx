@@ -1,6 +1,6 @@
 import styled from 'styled-components/macro'
 
-import { LoadingBubble } from '../TokenTable/TokenRow'
+import { LoadingBubble } from '../loading'
 import {
   AboutHeader,
   AboutSection,
