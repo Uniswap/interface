@@ -27,8 +27,8 @@ import { SwapShowAcceptChanges, TruncatedText } from './styleds'
 const ArrowWrapper = styled.div`
   padding: 4px;
   border-radius: 12px;
-  height: 32px;
-  width: 32px;
+  height: 40px;
+  width: 40px;
   position: relative;
   margin-top: -18px;
   margin-bottom: -18px;
@@ -36,9 +36,9 @@ const ArrowWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: ${({ theme }) => theme.deprecated_bg1};
+  background-color: ${({ theme }) => theme.backgroundSurface};
   border: 4px solid;
-  border-color: ${({ theme }) => theme.deprecated_bg0};
+  border-color: ${({ theme }) => theme.backgroundContainer};
   z-index: 2;
 `
 
@@ -135,7 +135,7 @@ export default function SwapModalHeader({
         </AutoColumn>
       </LightCard>
       <ArrowWrapper>
-        <ArrowDown size="16" color={theme.deprecated_text2} />
+        <ArrowDown size="16" color={theme.textPrimary} />
       </ArrowWrapper>
       <LightCard padding="0.75rem 1rem" style={{ marginBottom: '0.25rem' }}>
         <AutoColumn gap={'8px'}>
