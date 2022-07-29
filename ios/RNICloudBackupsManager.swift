@@ -30,7 +30,7 @@ class RNICloudBackupsManager: RCTEventEmitter {
   override func supportedEvents() -> [String]! {
     return ICloudManagerEventType.allCases.map { $0.rawValue }
   }
-  
+
   /**
    Determine if iCloud Documents is available on device
    

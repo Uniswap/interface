@@ -23,6 +23,8 @@
 		6C84F057283D83ED0071FA2E /* MnemonicDisplayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C84F056283D83ED0071FA2E /* MnemonicDisplayView.swift */; };
 		6C84F05D283DB7050071FA2E /* RNTMnemonicDisplayManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C84F05C283DB7050071FA2E /* RNTMnemonicDisplayManager.m */; };
 		6C84F05F283DB7150071FA2E /* MnemonicWordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C84F05E283DB7150071FA2E /* MnemonicWordView.swift */; };
+		6C8EFC2B28909EDF00FBD8EB /* EncryptionHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C8EFC2A28909EDF00FBD8EB /* EncryptionHelper.swift */; };
+		6C8EFC2D2891B99100FBD8EB /* EncryptionHelperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C8EFC2C2891B99100FBD8EB /* EncryptionHelperTests.swift */; };
 		77CF6065C8A24FE48204A2C1 /* SplashScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BF9176E944C84910B1C0B057 /* SplashScreen.storyboard */; };
 		8385A47D3C765B841F450090 /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = C26D739993D5C939C6FBB58A /* ExpoModulesProvider.swift */; };
 		9293C688E2BC4F0791E544E7 /* Inter-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3155C0CF238C4436932B207D /* Inter-Regular.ttf */; };
@@ -96,6 +98,8 @@
 		6C84F056283D83ED0071FA2E /* MnemonicDisplayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MnemonicDisplayView.swift; path = Uniswap/Onboarding/MnemonicDisplayView.swift; sourceTree = "<group>"; };
 		6C84F05C283DB7050071FA2E /* RNTMnemonicDisplayManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = RNTMnemonicDisplayManager.m; path = Uniswap/Onboarding/RNTMnemonicDisplayManager.m; sourceTree = "<group>"; };
 		6C84F05E283DB7150071FA2E /* MnemonicWordView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MnemonicWordView.swift; path = Uniswap/Onboarding/MnemonicWordView.swift; sourceTree = "<group>"; };
+		6C8EFC2A28909EDF00FBD8EB /* EncryptionHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EncryptionHelper.swift; sourceTree = "<group>"; };
+		6C8EFC2C2891B99100FBD8EB /* EncryptionHelperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EncryptionHelperTests.swift; sourceTree = "<group>"; };
 		816850AA5E2EE808CDC32BCA /* libPods-OneSignalNotificationServiceExtension.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OneSignalNotificationServiceExtension.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A32F9FBC272343C8002CFCDB /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		A3F0A5AD272B01C800895B25 /* RNEthersRS-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RNEthersRS-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -157,6 +161,7 @@
 		00E356EF1AD99517003FC87E /* UniswapTests */ = {
 			isa = PBXGroup;
 			children = (
+				6C8EFC2C2891B99100FBD8EB /* EncryptionHelperTests.swift */,
 				00E356F21AD99517003FC87E /* UniswapTests.m */,
 				00E356F01AD99517003FC87E /* Supporting Files */,
 			);
@@ -186,6 +191,7 @@
 				6C33CB432885E74F006850A9 /* RNICloudBackupsManager.m */,
 				6C33CB442885E750006850A9 /* RNICloudBackupsManager.swift */,
 				A3F0A5B0272B1DFA00895B25 /* KeychainSwiftDistrib.swift */,
+				6C8EFC2A28909EDF00FBD8EB /* EncryptionHelper.swift */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				13B07FB71A68108700A75B9A /* main.m */,
@@ -654,6 +660,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				00E356F31AD99517003FC87E /* UniswapTests.m in Sources */,
+				6C8EFC2D2891B99100FBD8EB /* EncryptionHelperTests.swift in Sources */,
 				8385A47D3C765B841F450090 /* ExpoModulesProvider.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -664,6 +671,7 @@
 			files = (
 				6C13E36C28185EA10065DBB1 /* WalletConnectSwitchChainHandler.swift in Sources */,
 				D63928FA27D704350004F5CC /* RNWalletConnect.swift in Sources */,
+				6C8EFC2B28909EDF00FBD8EB /* EncryptionHelper.swift in Sources */,
 				A3F0A5AF272B01FD00895B25 /* RnEthersRS.m in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
 				6C84F05D283DB7050071FA2E /* RNTMnemonicDisplayManager.m in Sources */,
@@ -718,7 +726,7 @@
 					"$(inherited)",
 				);
 				INFOPLIST_FILE = UniswapTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -731,6 +739,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Uniswap.app/Uniswap";
 			};
 			name = Debug;
@@ -743,7 +752,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
 				INFOPLIST_FILE = UniswapTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -756,6 +765,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Uniswap.app/Uniswap";
 			};
 			name = Release;

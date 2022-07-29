@@ -8,3 +8,4 @@
 #import <React/RCTBridgeModule.h>
 #import "libethers_ffi.h"
 #import <React/RCTEventEmitter.h>
+#import <CommonCrypto/CommonKeyDerivation.h>
