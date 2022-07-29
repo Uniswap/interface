@@ -5,6 +5,7 @@
  * and logged.
  */
 export enum EventName {
+  APP_LOADED = 'Application Loaded',
   CONNECT_WALLET_BUTTON_CLICKED = 'Connect Wallet Button Clicked',
   PAGE_VIEWED = 'Page Viewed',
   SWAP_AUTOROUTER_VISUALIZATION_EXPANDED = 'Swap Autorouter Visualization Expanded',
@@ -27,8 +28,9 @@ export enum CUSTOM_USER_PROPERTIES {
   ALL_WALLET_ADDRESSES_CONNECTED = 'all_wallet_addresses_connected',
   ALL_WALLET_CHAIN_IDS = 'all_wallet_chain_ids',
   BROWSER = 'browser',
-  LIGHT_MODE = 'light_mode',
-  SCREEN_RESOLUTION = 'screen_resolution',
+  DARK_MODE = 'is_dark_mode',
+  SCREEN_RESOLUTION_HEIGHT = 'screen_resolution_height',
+  SCREEN_RESOLUTION_WIDTH = 'screen_resolution_width',
   WALLET_ADDRESS = 'wallet_address',
   WALLET_NATIVE_CURRENCY_BALANCE_USD = 'wallet_native_currency_balance_usd',
   WALLET_CHAIN_IDS_PREFIX = 'wallet_chain_ids_',
@@ -38,6 +40,18 @@ export enum CUSTOM_USER_PROPERTIES {
   WALLET_TOKENS_BALANCES_AMOUNT = 'wallet_tokens_balances_amount',
   WALLET_TOKENS_SYMBOLS = 'wallet_tokens_symbols',
   WALLET_TYPE = 'wallet_type',
+}
+
+export enum BROWSER {
+  FIREFOX = 'Mozilla Firefox',
+  SAMSUNG = 'Samsung Internet',
+  OPERA = 'Opera',
+  INTERNET_EXPLORER = 'Microsoft Internet Explorer',
+  EDGE = 'Microsoft Edge (Legacy)',
+  EDGE_CHROMIUM = 'Microsoft Edge (Chromium)',
+  CHROME = 'Google Chrome or Chromium',
+  SAFARI = 'Apple Safari',
+  UNKNOWN = 'unknown',
 }
 
 export enum WALLET_CONNECTION_RESULT {

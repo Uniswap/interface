@@ -67,16 +67,16 @@ class UserModel {
     identify(mutate(new Identify()))
   }
 
-  set(key: string, value: string | number | string[] | number[]) {
+  set(key: string, value: string | number | boolean | string[] | number[]) {
     this.call((event) => event.set(key, value))
   }
 
-  setOnce(key: string, value: string | number) {
+  setOnce(key: string, value: string | number | boolean | string[] | number[]) {
     this.call((event) => event.setOnce(key, value))
   }
 
-  add(key: string, value: string | number) {
-    this.call((event) => event.add(key, typeof value === 'number' ? value : 0))
+  add(key: string, value: number) {
+    this.call((event) => event.add(key, value))
   }
 
   postInsert(key: string, value: string | number) {
