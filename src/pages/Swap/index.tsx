@@ -102,6 +102,9 @@ const TopInputWrapper = styled.div`
 const BottomInputWrapper = styled.div`
   padding: 8px 0px;
 `
+const BottomInputSeparator = styled.div`
+  border-bottom: 1px solid ${({ theme }) => theme.backgroundOutline};
+`
 
 export function getIsValidSwapQuote(
   trade: InterfaceTrade<Currency, Currency, TradeType> | undefined,
@@ -719,7 +722,6 @@ export default function Swap() {
                       loading={independentField === Field.INPUT && routeIsSyncing}
                     />
                   </Trace>
-
                   {recipient !== null && !showWrap ? (
                     <>
                       <AutoRow justify="space-between" style={{ padding: '0 1rem' }}>
