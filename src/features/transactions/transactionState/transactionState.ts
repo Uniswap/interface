@@ -26,6 +26,7 @@ export interface TransactionState {
   isUSDInput?: boolean
   gasSpendEstimate?: GasSpendEstimate
   gasPrice?: string // gas price in native currency
+  optimismL1Fee?: GasSpendEstimate // Optimism txs have a L1 fee. Not relevant for submitting txs but needs to be accounted for in SwapDetails
   exactApproveRequired?: boolean // undefined except in rare instances when infinite approve is not supported by a token
   showNewAddressWarning?: boolean
   showNoBalancesWarning?: boolean
@@ -170,6 +171,13 @@ const slice = createSlice({
         ...(gasEstimates ?? {}),
       }
     },
+    updateOptimismL1Fee: (state, action: PayloadAction<{ optimismL1Fee?: GasSpendEstimate }>) => {
+      const { optimismL1Fee } = action.payload
+      state.optimismL1Fee = {
+        ...state.optimismL1Fee,
+        ...(optimismL1Fee ?? {}),
+      }
+    },
     updateSwapMethodParamaters: (state, action: PayloadAction<MethodParameters | undefined>) => {
       state.swapMethodParameters = action.payload
     },
@@ -215,6 +223,7 @@ export const {
   clearRecipient,
   toggleUSDInput,
   updateGasEstimates,
+  updateOptimismL1Fee,
   updateSwapMethodParamaters,
   clearGasSwapData,
   setExactApproveRequired,

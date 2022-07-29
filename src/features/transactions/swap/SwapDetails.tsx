@@ -29,6 +29,7 @@ interface SwapDetailsProps {
   dispatch: Dispatch<AnyAction>
   gasPrice?: string
   gasSpendEstimate?: GasSpendEstimate
+  optimismL1Fee?: GasSpendEstimate
   newTradeToAccept: boolean
   warnings: Warning[]
   onAcceptTrade: () => void
@@ -44,6 +45,7 @@ export function SwapDetails({
   dispatch,
   gasPrice,
   gasSpendEstimate,
+  optimismL1Fee,
   newTradeToAccept,
   trade,
   warnings,
@@ -59,7 +61,7 @@ export function SwapDetails({
   const usdcPrice = useUSDCPrice(showInverseRate ? price.baseCurrency : price.quoteCurrency)
   const acceptedRate = getRateToDisplay(acceptedTrade, showInverseRate)
   const rate = getRateToDisplay(trade, showInverseRate)
-  const gasFee = useSwapGasFee(gasSpendEstimate, gasPrice)
+  const gasFee = useSwapGasFee(gasSpendEstimate, gasPrice, optimismL1Fee)
   const gasFeeUSD = useUSDGasPrice(acceptedTrade.inputAmount.currency.chainId, gasFee)
   const swapWarning = warnings.find(showWarningInPanel)
   const swapWarningColor = getWarningColor(swapWarning)

@@ -18,6 +18,7 @@ import { Trade } from 'src/features/transactions/swap/useTrade'
 import {
   setExactApproveRequired,
   updateGasEstimates,
+  updateOptimismL1Fee,
   updateSwapMethodParamaters,
 } from 'src/features/transactions/transactionState/transactionState'
 import { createTransactionRequest } from 'src/features/transactions/transfer/transferTokenSaga'
@@ -28,6 +29,12 @@ import { currencyAddress, isNativeCurrencyAddress } from 'src/utils/currencyId'
 import { logger } from 'src/utils/logger'
 import { isZero } from 'src/utils/number'
 import { call, takeEvery } from 'typed-redux-saga'
+
+// TODO: remove hardcoded L1 estimates when trade route endpoint can provide accurate Optimism gas estimation
+const OPTIMISM_L1_GAS_LIMIT_ESTIMATES: Partial<Record<TransactionType, string>> = {
+  [TransactionType.Approve]: '5000',
+  [TransactionType.Swap]: '7200',
+}
 
 // TODO: remove hardcoded values and use gas estimate from trade quote endpoint once
 // it is updated. Until then, using conservative values to ensure swaps succeeed
@@ -141,6 +148,14 @@ export function* estimateGas({ payload }: ReturnType<typeof estimateGasAction>) 
             gasPrice: swapData.gasPrice,
           })
         )
+        transactionStateDispatch(
+          updateOptimismL1Fee({
+            optimismL1Fee: {
+              [TransactionType.Approve]: approveData.optimismL1Fee,
+              [TransactionType.Swap]: swapData.optimismL1Fee,
+            },
+          })
+        )
 
         break
       }
@@ -213,12 +228,15 @@ function* estimateApproveGasLimit(params: EstiamteApproveGasInfo) {
     exactApproveRequired = true
   }
 
+  const optimismL1Fee = yield* call(estimateOptimismL1Fee, chainId, TransactionType.Approve)
+
   return {
     allowance,
     exactApproveRequired,
     gasEstimates: {
       [TransactionType.Approve]: getGasAfterInflation(approveGasEstimate),
     },
+    optimismL1Fee,
   }
 }
 
@@ -286,11 +304,34 @@ function* estimateSwapGasInfo(params: EstimateSwapGasInfo) {
 
   const methodParameters = calldata && value ? { calldata, value } : undefined
 
+  const optimismL1Fee = yield* call(estimateOptimismL1Fee, chainId, TransactionType.Swap)
+
   return {
     gasEstimates: {
       [TransactionType.Swap]: getGasAfterInflation(swapGasInfo.gasLimit),
     },
     gasPrice,
     methodParameters,
+    optimismL1Fee,
   }
+}
+
+// TODO: remove when trade route endpoint can provide accurate Optimism gas estimation
+// Also worth looking into Optimism SDK but encountered build errors with the package
+function* estimateOptimismL1Fee(chainId: ChainId, txType: TransactionType) {
+  if (chainId !== ChainId.Optimism) {
+    return undefined
+  }
+
+  const provider = yield* call(getProvider, ChainId.Mainnet)
+  const gasPrice = yield* call([provider, provider.getGasPrice])
+  const gasLimit = OPTIMISM_L1_GAS_LIMIT_ESTIMATES[txType]
+  if (!gasLimit) {
+    throw new Error(
+      `Need to add hardcoded Optimism gasLimit estimate for tx type ${txType} to the const`
+    )
+  }
+
+  const optimismL1Fee = gasPrice.mul(gasLimit).toString()
+  return optimismL1Fee
 }

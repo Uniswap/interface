@@ -68,6 +68,7 @@ export type DerivedSwapInfo<
   wrapType: WrapType
   isUSDInput?: boolean
   gasSpendEstimate?: GasSpendEstimate
+  optimismL1Fee?: GasSpendEstimate
   gasPrice?: string
   exactApproveRequired?: boolean
   nativeCurrencyBalance?: CurrencyAmount<NativeCurrency>
@@ -86,6 +87,7 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
     exactCurrencyField,
     isUSDInput,
     gasSpendEstimate,
+    optimismL1Fee,
     gasPrice,
     exactApproveRequired,
     swapMethodParameters,
@@ -235,6 +237,7 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
       wrapType,
       isUSDInput,
       gasSpendEstimate,
+      optimismL1Fee,
       gasPrice,
       exactApproveRequired,
       nativeCurrencyBalance: nativeInBalance,
@@ -253,6 +256,7 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
     exactApproveRequired,
     gasPrice,
     gasSpendEstimate,
+    optimismL1Fee,
     getFormattedInput,
     getFormattedOutput,
     isUSDInput,
@@ -510,15 +514,30 @@ export function useUpdateSwapGasEstimate(
   }, [trade, transactionStateDispatch, dispatch])
 }
 
-export function useSwapGasFee(gasSpendEstimate?: GasSpendEstimate, gasPrice?: string) {
+export function useSwapGasFee(
+  gasSpendEstimate?: GasSpendEstimate,
+  gasPrice?: string,
+  optimismL1Fee?: GasSpendEstimate
+) {
   const approveGasEstimate = gasSpendEstimate?.[TransactionType.Approve]
   const swapGasEstimate = gasSpendEstimate?.[TransactionType.Swap]
+  const optimismL1ApproveFee = optimismL1Fee?.[TransactionType.Approve]
+  const optimismL1SwapFee = optimismL1Fee?.[TransactionType.Swap]
   return useMemo(() => {
     if (!approveGasEstimate || !swapGasEstimate || !gasPrice) return undefined
     const gasLimitEstimate = BigNumber.from(approveGasEstimate).add(swapGasEstimate)
-    const gasFee = BigNumber.from(gasPrice).mul(gasLimitEstimate)
+    let gasFee = BigNumber.from(gasPrice).mul(gasLimitEstimate)
+
+    if (optimismL1ApproveFee) {
+      gasFee = gasFee.add(optimismL1ApproveFee)
+    }
+
+    if (optimismL1SwapFee) {
+      gasFee = gasFee.add(optimismL1SwapFee)
+    }
+
     return gasFee.toString()
-  }, [approveGasEstimate, swapGasEstimate, gasPrice])
+  }, [approveGasEstimate, swapGasEstimate, gasPrice, optimismL1ApproveFee, optimismL1SwapFee])
 }
 
 // The first shown to the user is implicitly accepted but every subsequent trade
