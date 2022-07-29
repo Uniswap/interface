@@ -3,12 +3,12 @@ import { useTranslation } from 'react-i18next'
 import { ActivityIndicator } from 'react-native'
 import SlashCircleIcon from 'src/assets/icons/slash-circle.svg'
 import { AddressDisplay } from 'src/components/AddressDisplay'
+import ActionButton from 'src/components/buttons/ActionButton'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { useCancelationGasFeeInfo, useUSDGasPrice } from 'src/features/gas/hooks'
 import { ElementName } from 'src/features/telemetry/constants'
-import { ActionButton } from 'src/features/transactions/swap/SwapReview'
 import { TransactionDetails } from 'src/features/transactions/types'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { shortenAddress } from 'src/utils/addresses'
@@ -35,7 +35,7 @@ export function CancelConfirmationView({
   const gasFeeUSD = useUSDGasPrice(transactionDetails.chainId, feeInfo?.fee?.fast)
 
   return (
-    <Flex centered grow bg="backgroundSurface" borderRadius="xl" gap="lg" p="lg" pb="none">
+    <Flex centered grow bg="backgroundSurface" borderRadius="xl" gap="lg" p="lg" pb="xxl">
       <Flex centered borderColor="textSecondary" borderRadius="md" borderWidth={1} padding="xs">
         <SlashCircleIcon fill="none" height={24} />
       </Flex>
@@ -74,13 +74,20 @@ export function CancelConfirmationView({
           </Flex>
         )}
       </Flex>
-      <Flex grow row gap="xs">
-        <PrimaryButton flex={1} label="Back" variant="transparent" onPress={onBack} />
-        <Flex flex={1}>
+      <Flex grow row gap="xs" px="xxs">
+        <PrimaryButton
+          flex={1}
+          flexBasis="50%"
+          label="Back"
+          variant="transparent"
+          onPress={onBack}
+        />
+        <Flex flex={1} flexBasis="50%">
           <ActionButton
             disabled={false}
             label={t('Confirm')}
             name={ElementName.Cancel}
+            textVariant="mediumLabel"
             onPress={onCancel}
           />
         </Flex>

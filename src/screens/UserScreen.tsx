@@ -36,7 +36,7 @@ export function UserScreen({
   const { t } = useTranslation()
 
   const isWatching = useAppSelector(selectWatchedAddressSet).has(address)
-  const { combinedTransactionList } = useAllFormattedTransactions(address)
+  const { combinedTransactionList, loading } = useAllFormattedTransactions(address)
 
   const onWatchPress = () => {
     if (isWatching) {
@@ -65,7 +65,7 @@ export function UserScreen({
         </GradientBackground>
       }
       contentHeader={
-        <Flex gap="md" pt="lg">
+        <Flex gap="md" pt="md">
           <BackButton showButtonLabel />
           <AddressDisplay
             address={address}
@@ -86,15 +86,17 @@ export function UserScreen({
       <VirtualizedList>
         <Flex gap="lg" mb="md" px="md">
           {/* profile info */}
-          <Flex centered row gap="xs" mt="md">
+          <Flex centered row flex={1} gap="xs" mt="md" px="xl">
             <SendButton
               borderRadius="lg"
+              flexBasis="49%"
               iconStrokeWidth={3}
               initialState={initialSendState}
               px="lg"
             />
             <PrimaryButton
               borderRadius="lg"
+              flexBasis="49%"
               icon={
                 isWatching ? (
                   <EyeOffIcon color={theme.colors.textPrimary} height={20} width={20} />
@@ -113,9 +115,11 @@ export function UserScreen({
               onPress={onWatchPress}
             />
           </Flex>
-          {combinedTransactionList.length > 0 && (
-            <TransactionListSection owner={address} transactions={combinedTransactionList} />
-          )}
+          <TransactionListSection
+            loading={loading}
+            owner={address}
+            transactions={combinedTransactionList}
+          />
           <PortfolioNFTsSection count={4} owner={address} />
           <PortfolioTokensSection count={3} owner={address} />
         </Flex>

@@ -23,7 +23,6 @@ import { useAllFormattedTransactions } from 'src/features/transactions/hooks'
 import { useActiveAccountWithThrow } from 'src/features/wallet/hooks'
 import { useWalletConnect } from 'src/features/walletConnect/useWalletConnect'
 import { Screens } from 'src/screens/Screens'
-import { isWalletConnectSupportedAccount } from 'src/utils/walletConnect'
 
 type Props = NativeStackScreenProps<AppStackParamList, Screens.TabNavigator>
 
@@ -73,11 +72,9 @@ export function ProfileScreen({ navigation }: Props) {
         <Flex row justifyContent="space-between">
           <Text variant="headlineSmall">{t('Activity')}</Text>
           <Flex centered row gap="md">
-            {isWalletConnectSupportedAccount(activeAccount) && (
-              <Button name={ElementName.WalletConnectScan} onPress={onPressScan}>
-                <Scan color={theme.colors.textSecondary} height={24} width={24} />
-              </Button>
-            )}
+            <Button name={ElementName.WalletConnectScan} onPress={onPressScan}>
+              <Scan color={theme.colors.textSecondary} height={24} width={24} />
+            </Button>
             <Button name={ElementName.Settings} onPress={onPressSettings}>
               <Settings color={theme.colors.textSecondary} height={24} width={24} />
             </Button>
@@ -97,7 +94,7 @@ export function ProfileScreen({ navigation }: Props) {
         </Flex>
       </Flex>
     ),
-    [activeAccount, address, onPressScan, onPressSettings, t, theme.colors.textSecondary]
+    [address, onPressScan, onPressSettings, t, theme.colors.textSecondary]
   )
 
   return (

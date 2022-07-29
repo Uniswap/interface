@@ -108,6 +108,7 @@ export interface AllFormattedTransactions {
   yearTransactionList: TransactionSummaryInfo[]
   beforeCurrentYearTransactionList: TransactionSummaryInfo[]
   pending: TransactionSummaryInfo[]
+  loading: boolean
 }
 
 /**
@@ -118,7 +119,7 @@ export function useAllFormattedTransactions(
   address: string | undefined | null
 ): AllFormattedTransactions {
   // Retrieve all transactions for account.
-  const { currentData: txData } = useTransactionHistoryQuery(
+  const { currentData: txData, isLoading } = useTransactionHistoryQuery(
     address ? requests[Namespace.Address].transactions([address]) : skipToken
   )
 
@@ -204,10 +205,12 @@ export function useAllFormattedTransactions(
       monthTransactionList,
       yearTransactionList,
       beforeCurrentYearTransactionList,
+      loading: isLoading,
     }
   }, [
     beforeCurrentYearTransactionList,
     combinedTransactionList,
+    isLoading,
     monthTransactionList,
     pending,
     todayTransactionList,

@@ -9,6 +9,7 @@ import { LogoWithTxStatus } from 'src/components/CurrencyLogo/LogoWithTxStatus'
 import { Box } from 'src/components/layout/Box'
 import { Flex } from 'src/components/layout/Flex'
 import { SpinningLoader } from 'src/components/loading/SpinningLoader'
+import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { InlineNetworkPill } from 'src/components/Network/NetworkPill'
 import { Text } from 'src/components/Text'
 import { ChainId } from 'src/constants/chains'
@@ -19,7 +20,9 @@ import { createBalanceUpdate } from 'src/features/notifications/utils'
 import { ModalName } from 'src/features/telemetry/constants'
 import { useCurrency } from 'src/features/tokens/useCurrency'
 import { useLowestPendingNonce } from 'src/features/transactions/hooks'
+import { cancelTransaction } from 'src/features/transactions/slice'
 import AlertBanner, { FailedCancelBadge } from 'src/features/transactions/SummaryCards/AlertBanner'
+import { CancelConfirmationView } from 'src/features/transactions/SummaryCards/CancelConfirmationView'
 import TransactionActionsModal from 'src/features/transactions/SummaryCards/TransactionActionsModal'
 import {
   getNftUpdateInfo,
@@ -68,6 +71,7 @@ function TransactionSummaryItem({
   readonly,
   transactionSummaryInfo,
   showInlineWarning,
+  bg,
   ...rest
 }: {
   readonly: boolean
@@ -91,6 +95,7 @@ function TransactionSummaryItem({
   const { t } = useTranslation()
 
   const [showActionsModal, setShowActionsModal] = useState(false)
+  const [showCancelModal, setShowCancelModal] = useState(false)
   const dispatch = useAppDispatch()
 
   const currencyId = buildCurrencyId(chainId, tokenAddress ?? '')
@@ -146,6 +151,18 @@ function TransactionSummaryItem({
     otherCurrency,
   })
 
+  function handleCancel() {
+    if (!fullDetails) return
+    dispatch(
+      cancelTransaction({
+        chainId: fullDetails.chainId,
+        id: fullDetails.id,
+        address: fullDetails.from,
+      })
+    )
+    setShowCancelModal(false)
+  }
+
   const icon = useMemo(() => {
     return type === TransactionType.Swap && !failed && assetType === AssetType.Currency ? (
       <>
@@ -196,14 +213,14 @@ function TransactionSummaryItem({
 
   return (
     <>
-      <Button {...rest} overflow="hidden" onPress={() => setShowActionsModal(true)}>
+      <Button overflow="hidden" onPress={() => setShowActionsModal(true)} {...rest}>
         {(canceled || cancelling || failedCancel) && !showInlineWarning && (
           <AlertBanner status={status} />
         )}
         <Flex
           row
           alignItems="flex-start"
-          bg="backgroundContainer"
+          bg={bg ?? 'backgroundContainer'}
           gap="xs"
           justifyContent="space-between"
           px="md"
@@ -214,9 +231,9 @@ function TransactionSummaryItem({
                 {icon}
               </Flex>
             )}
-            <Flex shrink gap="xxxs">
+            <Flex grow gap="xxxs">
               <Flex row alignItems="center" gap="xxs">
-                <Text adjustsFontSizeToFit fontWeight="500" numberOfLines={2} variant="mediumLabel">
+                <Text fontWeight="500" numberOfLines={1} variant="mediumLabel">
                   {title}
                 </Text>
                 {chainId !== ChainId.Mainnet && <InlineNetworkPill chainId={chainId} />}
@@ -257,19 +274,15 @@ function TransactionSummaryItem({
                 {balanceUpdate.assetIncrease}
               </Text>
               {balanceUpdate.usdIncrease && (
-                <Text
-                  adjustsFontSizeToFit
-                  color="textSecondary"
-                  numberOfLines={1}
-                  variant="caption">
+                <Text color="textSecondary" numberOfLines={1} variant="caption">
                   {balanceUpdate.usdIncrease}
                 </Text>
               )}
             </Flex>
           ) : nftUpdateInfo ? (
-            <Flex alignItems="flex-end" gap="xxxs">
-              <Text adjustsFontSizeToFit numberOfLines={1} variant="body">
-                {nftUpdateInfo.title}
+            <Flex shrink alignItems="flex-end" gap="xxxs">
+              <Text ellipsizeMode="tail" numberOfLines={1} variant="body">
+                {nftUpdateInfo.title + nftUpdateInfo.title + nftUpdateInfo.title}
               </Text>
               <Text adjustsFontSizeToFit color="textSecondary" numberOfLines={1} variant="caption">
                 {nftUpdateInfo.caption}
@@ -284,11 +297,29 @@ function TransactionSummaryItem({
         msTimestampAdded={msTimestampAdded}
         showCancelButton={status === TransactionStatus.Pending && !readonly}
         transactionDetails={fullDetails}
-        onClose={() => {
+        onCancel={() => {
           setShowActionsModal(false)
+          setShowCancelModal(true)
         }}
+        onClose={() => setShowActionsModal(false)}
         onExplore={() => openTransactionLink(hash, chainId)}
       />
+      <BottomSheetModal
+        hideHandlebar={false}
+        isVisible={showCancelModal}
+        name={ModalName.TransactionActions}
+        onClose={() => setShowCancelModal(false)}>
+        {fullDetails && (
+          <CancelConfirmationView
+            transactionDetails={fullDetails}
+            onBack={() => {
+              setShowActionsModal(true)
+              setShowCancelModal(false)
+            }}
+            onCancel={handleCancel}
+          />
+        )}
+      </BottomSheetModal>
     </>
   )
 }

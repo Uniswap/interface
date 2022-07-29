@@ -95,6 +95,8 @@
   "Today": "Today",
   "All": "All",
   "Transactions": "Transactions",
+  "Any transactions made by this wallet will appear here.": "Any transactions made by this wallet will appear here.",
+  "No transactions yet": "No transactions yet",
   "Input an address or ENS to view its Unicon": "Input an address or ENS to view its Unicon",
   "Manage connections": "Manage connections",
   "No sites connected": "No sites connected",

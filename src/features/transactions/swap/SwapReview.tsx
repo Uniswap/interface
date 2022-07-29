@@ -1,12 +1,11 @@
 import { AnyAction } from '@reduxjs/toolkit'
 import { Currency } from '@uniswap/sdk-core'
-import { notificationAsync } from 'expo-haptics'
 import React, { Dispatch } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FadeInUp, FadeOut } from 'react-native-reanimated'
 import { useAppTheme } from 'src/app/hooks'
+import ActionButton from 'src/components/buttons/ActionButton'
 import { Button } from 'src/components/buttons/Button'
-import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { TransferArrowButton } from 'src/components/buttons/TransferArrowButton'
 import { CurrencyLogo } from 'src/components/CurrencyLogo'
 import { Arrow } from 'src/components/icons/Arrow'
@@ -14,7 +13,6 @@ import { AmountInput } from 'src/components/input/AmountInput'
 import { AnimatedFlex, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { WarningAction, WarningModalType } from 'src/components/warnings/types'
-import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { ElementName } from 'src/features/telemetry/constants'
 import {
   DerivedSwapInfo,
@@ -227,41 +225,6 @@ export function SwapReview({ dispatch, onNext, onPrev, derivedSwapInfo }: SwapFo
           </Flex>
         </Flex>
       </AnimatedFlex>
-    </>
-  )
-}
-
-type ActionButtonProps = {
-  disabled: boolean
-  name: ElementName
-  label: string
-  onPress: () => void
-}
-
-export function ActionButton({ onPress, disabled, label, name }: ActionButtonProps) {
-  const { trigger: actionButtonTrigger, modal: BiometricModal } = useBiometricPrompt(onPress)
-  const { requiredForTransactions } = useBiometricAppSettings()
-
-  return (
-    <>
-      <PrimaryButton
-        disabled={disabled}
-        label={label}
-        name={name}
-        py="md"
-        testID={name}
-        textVariant="largeLabel"
-        onPress={() => {
-          notificationAsync()
-          if (requiredForTransactions) {
-            actionButtonTrigger()
-          } else {
-            onPress()
-          }
-        }}
-      />
-
-      {BiometricModal}
     </>
   )
 }

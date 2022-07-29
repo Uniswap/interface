@@ -1,16 +1,15 @@
 import dayjs from 'dayjs'
-import { default as React, useCallback, useMemo, useState } from 'react'
+import { default as React, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch } from 'src/app/hooks'
+import { Flex } from 'src/components/layout'
 import { Separator } from 'src/components/layout/Separator'
 import { ActionSheetModalContent, MenuItemProp } from 'src/components/modals/ActionSheetModal'
-import { BottomSheetDetachedModal } from 'src/components/modals/BottomSheetModal'
+import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { Text } from 'src/components/Text'
 import { pushNotification } from 'src/features/notifications/notificationSlice'
 import { AppNotificationType } from 'src/features/notifications/types'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
-import { cancelTransaction } from 'src/features/transactions/slice'
-import { CancelConfirmationView } from 'src/features/transactions/SummaryCards/CancelConfirmationView'
 import { TransactionDetails } from 'src/features/transactions/types'
 import { Theme } from 'src/styles/theme'
 import { setClipboard } from 'src/utils/clipboard'
@@ -32,6 +31,7 @@ interface TransactionActionModalProps {
   isVisible: boolean
   onExplore: () => void
   onClose: () => void
+  onCancel: () => void
   msTimestampAdded: number
   showCancelButton?: boolean
   transactionDetails?: TransactionDetails
@@ -43,34 +43,18 @@ export default function TransactionActionsModal({
   isVisible,
   onExplore,
   onClose,
+  onCancel,
   msTimestampAdded,
   showCancelButton,
-  transactionDetails,
 }: TransactionActionModalProps) {
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
 
-  const [showConfirmView, setShowConfirmView] = useState(false)
-
   const dateString = dayjs(msTimestampAdded).format('MMMM D, YYYY')
 
   const handleClose = useCallback(() => {
-    setShowConfirmView(false)
     onClose()
   }, [onClose])
-
-  function handleCancel() {
-    if (transactionDetails) {
-      dispatch(
-        cancelTransaction({
-          chainId: transactionDetails.chainId,
-          id: transactionDetails.id,
-          address: transactionDetails.from,
-        })
-      )
-      onClose()
-    }
-  }
 
   const options = useMemo(() => {
     const transactionActionOptions: MenuItemProp[] = [
@@ -102,27 +86,21 @@ export default function TransactionActionsModal({
     if (showCancelButton) {
       transactionActionOptions.push({
         key: ElementName.Cancel,
-        onPress: () => setShowConfirmView(true),
+        onPress: onCancel,
         render: renderOptionItem(t('Cancel transaction'), 'accentFailure'),
       })
     }
     return transactionActionOptions
-  }, [onExplore, t, showCancelButton, handleClose, dispatch, hash])
+  }, [onExplore, t, showCancelButton, hash, dispatch, handleClose, onCancel])
 
   return (
-    <BottomSheetDetachedModal
-      backgroundColor="transparent"
-      hideHandlebar={!showConfirmView}
+    <BottomSheetModal
+      backgroundColor="accentFailure"
+      hideHandlebar={true}
       isVisible={isVisible}
       name={ModalName.TransactionActions}
       onClose={handleClose}>
-      {showConfirmView && transactionDetails ? (
-        <CancelConfirmationView
-          transactionDetails={transactionDetails}
-          onBack={() => setShowConfirmView(false)}
-          onCancel={handleCancel}
-        />
-      ) : (
+      <Flex pb="lg" px="sm">
         <ActionSheetModalContent
           header={
             <Text color="textTertiary" p="md" variant="bodySmall">
@@ -132,7 +110,7 @@ export default function TransactionActionsModal({
           options={options}
           onClose={handleClose}
         />
-      )}
-    </BottomSheetDetachedModal>
+      </Flex>
+    </BottomSheetModal>
   )
 }
