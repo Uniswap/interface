@@ -13,6 +13,11 @@ import { useClientSideRouter } from 'state/user/hooks'
 import { GetQuoteResult, InterfaceTrade, TradeState } from './types'
 import { computeRoutes, transformRoutesToTrade } from './utils'
 
+export enum RouterPreference {
+  CLIENT = 'client',
+  API = 'api',
+}
+
 /**
  * Returns the best trade by invoking the routing api or the smart order router on the client
  * @param tradeType whether the swap is an exact in/out
@@ -22,7 +27,8 @@ import { computeRoutes, transformRoutesToTrade } from './utils'
 export function useRoutingAPITrade<TTradeType extends TradeType>(
   tradeType: TTradeType,
   amountSpecified?: CurrencyAmount<Currency>,
-  otherCurrency?: Currency
+  otherCurrency?: Currency,
+  routerPreference?: RouterPreference
 ): {
   state: TradeState
   trade: InterfaceTrade<Currency, Currency, TTradeType> | undefined
@@ -35,14 +41,20 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
     [amountSpecified, otherCurrency, tradeType]
   )
 
-  const [clientSideRouter] = useClientSideRouter()
+  let clientSideRouter: boolean
+  const [clientSideRouterStoredPreference] = useClientSideRouter()
+  if (routerPreference) {
+    clientSideRouter = routerPreference === RouterPreference.CLIENT ? true : false
+  } else {
+    clientSideRouter = clientSideRouterStoredPreference
+  }
 
   const queryArgs = useRoutingAPIArguments({
     tokenIn: currencyIn,
     tokenOut: currencyOut,
     amount: amountSpecified,
     tradeType,
-    useClientSideRouter: clientSideRouter,
+    useClientSideRouter: false,
   })
 
   const { isLoading, isError, data, currentData } = useGetQuoteQuery(queryArgs ?? skipToken, {

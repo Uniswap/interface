@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { Trade } from '@uniswap/router-sdk'
-import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
@@ -10,6 +10,7 @@ import { Trace } from 'components/AmplitudeAnalytics/Trace'
 import { TraceEvent } from 'components/AmplitudeAnalytics/TraceEvent'
 import { sendEvent } from 'components/analytics'
 import { NetworkAlert } from 'components/NetworkAlert/NetworkAlert'
+import PriceImpactWarning from 'components/swap/PriceImpactWarning'
 import SwapDetailsDropdown from 'components/swap/SwapDetailsDropdown'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 import { MouseoverTooltip } from 'components/Tooltip'
@@ -76,6 +77,17 @@ export function getIsValidSwapQuote(
   swapInputError?: ReactNode
 ): boolean {
   return !!swapInputError && !!trade && (tradeState === TradeState.VALID || tradeState === TradeState.SYNCING)
+}
+
+export function largerPercentValue(a?: Percent, b?: Percent) {
+  if (a && b) {
+    return a.greaterThan(b) ? a : b
+  } else if (a) {
+    return a
+  } else if (b) {
+    return b
+  }
+  return undefined
 }
 
 export default function Swap() {
@@ -169,7 +181,7 @@ export default function Swap() {
   const outputValue = showWrap ? parsedAmount : trade?.outputAmount
   const fiatValueInput = useStablecoinValue(inputValue)
   const fiatValueOutput = useStablecoinValue(outputValue)
-  const priceImpact = useMemo(
+  const stablecoinPriceImpact = useMemo(
     () => (routeIsSyncing ? undefined : computeFiatValuePriceImpact(fiatValueInput, fiatValueOutput)),
     [fiatValueInput, fiatValueOutput, routeIsSyncing]
   )
@@ -298,7 +310,7 @@ export default function Swap() {
     if (!swapCallback) {
       return
     }
-    if (priceImpact && !confirmPriceImpactWithoutFee(priceImpact)) {
+    if (stablecoinPriceImpact && !confirmPriceImpactWithoutFee(stablecoinPriceImpact)) {
       return
     }
     setSwapState({ attemptingTxn: true, tradeToConfirm, showConfirm, swapErrorMessage: undefined, txHash: undefined })
@@ -337,7 +349,7 @@ export default function Swap() {
       })
   }, [
     swapCallback,
-    priceImpact,
+    stablecoinPriceImpact,
     tradeToConfirm,
     showConfirm,
     recipient,
@@ -352,16 +364,11 @@ export default function Swap() {
   const [showInverted, setShowInverted] = useState<boolean>(false)
 
   // warnings on the greater of fiat value price impact and execution price impact
-  const priceImpactSeverity = useMemo(() => {
-    const executionPriceImpact = trade?.priceImpact
-    return warningSeverity(
-      executionPriceImpact && priceImpact
-        ? executionPriceImpact.greaterThan(priceImpact)
-          ? executionPriceImpact
-          : priceImpact
-        : executionPriceImpact ?? priceImpact
-    )
-  }, [priceImpact, trade])
+  const { priceImpactSeverity, largerPriceImpact } = useMemo(() => {
+    const marketPriceImpact = trade?.priceImpact
+    const largerPriceImpact = largerPercentValue(marketPriceImpact, stablecoinPriceImpact)
+    return { priceImpactSeverity: warningSeverity(largerPriceImpact), largerPriceImpact }
+  }, [stablecoinPriceImpact, trade])
 
   const isArgentWallet = useIsArgentWallet()
 
@@ -411,6 +418,7 @@ export default function Swap() {
   const swapIsUnsupported = useIsSwapUnsupported(currencies[Field.INPUT], currencies[Field.OUTPUT])
 
   const priceImpactTooHigh = priceImpactSeverity > 3 && !isExpertMode
+  const showPriceImpactWarning = largerPriceImpact && priceImpactSeverity > 3
 
   return (
     <Trace page={PageName.SWAP_PAGE} shouldLogImpression>
@@ -492,7 +500,7 @@ export default function Swap() {
                     showMaxButton={false}
                     hideBalance={false}
                     fiatValue={fiatValueOutput ?? undefined}
-                    priceImpact={priceImpact}
+                    priceImpact={stablecoinPriceImpact}
                     currency={currencies[Field.OUTPUT] ?? null}
                     onCurrencySelect={handleOutputSelect}
                     otherCurrency={currencies[Field.INPUT]}
@@ -526,6 +534,7 @@ export default function Swap() {
                   allowedSlippage={allowedSlippage}
                 />
               )}
+              {showPriceImpactWarning ? <PriceImpactWarning priceImpact={largerPriceImpact} /> : undefined}
               <div>
                 {swapIsUnsupported ? (
                   <ButtonPrimary disabled={true}>

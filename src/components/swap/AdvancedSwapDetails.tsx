@@ -10,7 +10,7 @@ import { InterfaceTrade } from 'state/routing/types'
 import styled, { ThemeContext } from 'styled-components/macro'
 
 import { Separator, ThemedText } from '../../theme'
-import { computeRealizedLPFeePercent } from '../../utils/prices'
+import { computeRealizedPriceImpact } from '../../utils/prices'
 import { AutoColumn } from '../Column'
 import { RowBetween, RowFixed } from '../Row'
 import { MouseoverTooltip } from '../Tooltip'
@@ -45,13 +45,6 @@ function TextWithLoadingPlaceholder({
   )
 }
 
-export function getPriceImpactPercent(
-  lpFeePercent: Percent,
-  trade: InterfaceTrade<Currency, Currency, TradeType>
-): Percent {
-  return trade.priceImpact.subtract(lpFeePercent)
-}
-
 export function AdvancedSwapDetails({
   trade,
   allowedSlippage,
@@ -63,11 +56,10 @@ export function AdvancedSwapDetails({
   const nativeCurrency = useNativeCurrency()
 
   const { expectedOutputAmount, priceImpact } = useMemo(() => {
-    if (!trade) return { expectedOutputAmount: undefined, priceImpact: undefined }
-    const expectedOutputAmount = trade.outputAmount
-    const realizedLpFeePercent = computeRealizedLPFeePercent(trade)
-    const priceImpact = getPriceImpactPercent(realizedLpFeePercent, trade)
-    return { expectedOutputAmount, priceImpact }
+    return {
+      expectedOutputAmount: trade?.outputAmount,
+      priceImpact: trade ? computeRealizedPriceImpact(trade) : undefined,
+    }
   }, [trade])
 
   return !trade ? null : (

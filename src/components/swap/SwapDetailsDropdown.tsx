@@ -18,10 +18,9 @@ import { ChevronDown, Info } from 'react-feather'
 import { InterfaceTrade } from 'state/routing/types'
 import styled, { keyframes, useTheme } from 'styled-components/macro'
 import { HideSmall, ThemedText } from 'theme'
-import { computeRealizedLPFeePercent } from 'utils/prices'
+import { computeRealizedPriceImpact } from 'utils/prices'
 
 import { AdvancedSwapDetails } from './AdvancedSwapDetails'
-import { getPriceImpactPercent } from './AdvancedSwapDetails'
 import GasEstimateBadge from './GasEstimateBadge'
 import { ResponsiveTooltipContainer } from './styleds'
 import SwapRoute from './SwapRoute'
@@ -125,15 +124,12 @@ interface SwapDetailsInlineProps {
 }
 
 const formatAnalyticsEventProperties = (trade: InterfaceTrade<Currency, Currency, TradeType>) => {
-  const lpFeePercent = trade ? computeRealizedLPFeePercent(trade) : undefined
   return {
     token_in_symbol: trade.inputAmount.currency.symbol,
     token_out_symbol: trade.outputAmount.currency.symbol,
     token_in_address: trade.inputAmount.currency.isToken ? trade.inputAmount.currency.address : undefined,
     token_out_address: trade.outputAmount.currency.isToken ? trade.outputAmount.currency.address : undefined,
-    price_impact_basis_points: lpFeePercent
-      ? formatPercentInBasisPointsNumber(getPriceImpactPercent(lpFeePercent, trade))
-      : undefined,
+    price_impact_basis_points: formatPercentInBasisPointsNumber(computeRealizedPriceImpact(trade)),
     estimated_network_fee_usd: trade.gasUseEstimateUSD
       ? getNumberFormattedToDecimalPlace(trade.gasUseEstimateUSD, 2)
       : undefined,
