@@ -178,10 +178,8 @@ const TruncatedAddress = styled.span`
   }
 `
 const NetworkBadge = styled.div<{ networkColor?: string; backgroundColor?: string }>`
-  display: flex;
   border-radius: 5px;
-  padding: 4px 6px;
-  align-items: center;
+  padding: 4px 8px;
   font-weight: 600;
   font-size: 12px;
   line-height: 12px;
@@ -199,7 +197,7 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
   const toggleFavorite = useToggleFavorite(address)
   const chainInfo = getChainInfo(token?.chainId)
   const networkLabel = chainInfo?.label
-  const networkBadgeBackgroundColor = chainInfo?.background_color
+  const backgroundColor = chainInfo?.background_color
 
   // catch token error and loading state
   if (!token || !token.name || !token.symbol) {
@@ -229,8 +227,8 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
           <TokenNameCell>
             <CurrencyLogo currency={currency} size={'32px'} />
             {tokenName} <TokenSymbol>{tokenSymbol}</TokenSymbol>
-            {networkBadgeBackgroundColor && (
-              <NetworkBadge networkColor={chainInfo?.color} backgroundColor={networkBadgeBackgroundColor}>
+            {backgroundColor && (
+              <NetworkBadge networkColor={chainInfo?.color} backgroundColor={backgroundColor}>
                 {networkLabel}
               </NetworkBadge>
             )}
