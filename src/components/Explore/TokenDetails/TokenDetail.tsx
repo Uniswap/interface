@@ -192,11 +192,6 @@ const NetworkBadge = styled.div<{ networkColor?: string; backgroundColor?: strin
 
 export default function LoadedTokenDetail({ address }: { address: string }) {
   const theme = useTheme()
-  const NETWORK_BADGE_COLORS: Record<string, string> = {
-    Polygon: theme.polygon_background,
-    Optimism: theme.optimism_background,
-    Arbitrum: theme.arbitrum_background,
-  }
   const token = useToken(address)
   const currency = useCurrency(address)
   const favoriteTokens = useAtomValue<string[]>(favoritesAtom)
@@ -206,6 +201,7 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
   const { chainId: connectedChainId } = useWeb3React()
   const chainInfo = getChainInfo(connectedChainId)
   const networkLabel = chainInfo?.label
+  const networkBadgeBackgroundColor = chainInfo?.background_color
 
   // catch token error and loading state
   if (!token || !token.name || !token.symbol) {
@@ -235,11 +231,8 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
           <TokenNameCell>
             <CurrencyLogo currency={currency} size={'32px'} />
             {tokenName} <TokenSymbol>{tokenSymbol}</TokenSymbol>
-            {networkLabel && NETWORK_BADGE_COLORS.hasOwnProperty(networkLabel) && (
-              <NetworkBadge
-                networkColor={chainInfo?.color}
-                backgroundColor={networkLabel && NETWORK_BADGE_COLORS[networkLabel]}
-              >
+            {networkBadgeBackgroundColor && (
+              <NetworkBadge networkColor={chainInfo?.color} backgroundColor={networkBadgeBackgroundColor}>
                 {networkLabel}
               </NetworkBadge>
             )}
