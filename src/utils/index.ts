@@ -10,7 +10,6 @@ import dayjs from 'dayjs'
 import { GET_BLOCK, GET_BLOCKS } from 'apollo/queries'
 import {
   ROPSTEN_TOKEN_LOGOS_MAPPING,
-  MIGRATE_ADDRESS,
   KNCL_ADDRESS,
   KNCL_ADDRESS_ROPSTEN,
   KNC,
@@ -23,7 +22,6 @@ import ROUTER_ABI_V2 from '../constants/abis/dmm-router-v2.json'
 import KS_ROUTER_STATIC_FEE_ABI from '../constants/abis/ks-router-static-fee.json'
 import { abi as ROUTER_PRO_AMM } from '../constants/abis/v2/ProAmmRouter.json'
 import AGGREGATOR_EXECUTOR_ABI from '../constants/abis/aggregation-executor.json'
-import MIGRATOR_ABI from '../constants/abis/dmm-migrator.json'
 import ZAP_ABI from '../constants/abis/zap.json'
 import ZAP_STATIC_FEE_ABI from 'constants/abis/zap-static-fee.json'
 import JSBI from 'jsbi'
@@ -211,10 +209,6 @@ export function getAggregationExecutorAddress(chainId: ChainId): string {
 
 export function getAggregationExecutorContract(chainId: ChainId, library: Web3Provider, account?: string): Contract {
   return getContract(getAggregationExecutorAddress(chainId), AGGREGATOR_EXECUTOR_ABI, library, account)
-}
-
-export function getMigratorContract(_: number, library: Web3Provider, account?: string): Contract {
-  return getContract(MIGRATE_ADDRESS, MIGRATOR_ABI, library, account)
 }
 
 export function escapeRegExp(string: string): string {

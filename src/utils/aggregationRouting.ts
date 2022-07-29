@@ -17,12 +17,14 @@ interface SwapRoute {
   slug: string
   pools: SwapPool[]
   path: PathItem[]
+  id: string
 }
 
 export interface SwapRouteV2 {
   swapPercentage?: number
   path: PathItem[]
   subRoutes: SwapPool[][]
+  id: string
 }
 
 function formatRoutesV2(routes: SwapRoute[]): SwapRouteV2[] {
@@ -46,21 +48,29 @@ function formatRoutesV2(routes: SwapRoute[]): SwapRouteV2[] {
             sub.reduce((sum, x2) => JSBI.add(sum, x2.swapAmount || ZERO), ZERO),
             swapPool.swapAmount || ZERO,
           )
-          // merge hop with same exchange
+          // merge hop with same pools
+          let existed = false
           const newSub: any[] = sub.map(pool => {
             const p2: any = { ...pool }
+            const same = p2.id === swapPool.id
             let swapAmount = p2.swapAmount || ZERO
+            if (same) {
+              existed = true
+              swapAmount = JSBI.add(swapAmount, swapPool.swapAmount || ZERO)
+            }
             const percent = new Percent(swapAmount, totalSwapAmount).toFixed(0, undefined, Rounding.ROUND_HALF_UP)
             p2.swapPercentage = parseInt(percent)
             p2.total = totalSwapAmount.toString()
             return p2
           })
-          const percent = new Percent(swapPool.swapAmount || ZERO, totalSwapAmount).toFixed(
-            0,
-            undefined,
-            Rounding.ROUND_HALF_UP,
-          )
-          newSub.push({ ...swapPool, swapPercentage: parseInt(percent) })
+          if (!existed) {
+            const percent = new Percent(swapPool.swapAmount || ZERO, totalSwapAmount).toFixed(
+              0,
+              undefined,
+              Rounding.ROUND_HALF_UP,
+            )
+            newSub.push({ ...swapPool, swapPercentage: parseInt(percent) })
+          }
           subRoutes[ind] = newSub
         })
       } else {
@@ -82,6 +92,10 @@ function formatRoutesV2(routes: SwapRoute[]): SwapRouteV2[] {
         swapPercentage: route.swapPercentage,
         path: route.path,
         subRoutes: route.subRoutes,
+        id: route.subRoutes
+          .flat()
+          .map((route: SwapPool) => route.id)
+          .join('-'),
       })
     })
     return routesV2
@@ -135,6 +149,7 @@ export function getTradeComposition(
           },
         ],
         path,
+        id: hop.pool?.toLowerCase(),
       })
     } else if (sorMultiSwap.length > 1) {
       const path: PathItem[] = []
@@ -167,6 +182,7 @@ export function getTradeComposition(
           .toLowerCase(),
         path,
         pools,
+        id: pools.map(p => p.id).join('-'),
       })
     }
   })
