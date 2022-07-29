@@ -9,6 +9,7 @@ import {
   NATIVE_CHAIN_ADDRESS,
   WALLET_CONNECTION_RESULT,
 } from 'components/AmplitudeAnalytics/constants'
+import { getNumberFormattedToDecimalPlace } from 'components/AmplitudeAnalytics/utils'
 import { sendEvent } from 'components/analytics'
 import { AutoColumn } from 'components/Column'
 import { AutoRow } from 'components/Row'
@@ -129,25 +130,22 @@ const modifyUserModelWithCustomWalletProperties = (
   account: string,
   walletType: string,
   chainId: number | undefined,
-  balances: (CurrencyAmount<Currency> | undefined)[]
+  balances: (CurrencyAmount<Currency> | undefined)[],
+  nativeCurrencyBalanceUsd: number
 ) => {
   const currentDate = new Date().toISOString()
   const walletTokensSymbols: string[] = []
   const walletTokensAddresses: string[] = []
-  const walletTokensBalancesUsd: number[] = []
-  let totalWalletBalanceUsd = 0
+  const walletTokensBalancesAmount: number[] = []
   balances.forEach((currencyAmount) => {
-    console.log('currencyAmount', currencyAmount)
     if (currencyAmount !== undefined) {
-      const tokenBalanceUsdValue = useStablecoinValue(currencyAmount)?.toFixed(2)
-      const tokenBalanceUsd = tokenBalanceUsdValue ? parseFloat(tokenBalanceUsdValue) : 0
-      if (tokenBalanceUsd > 0) {
+      const tokenBalanceAmount = getNumberFormattedToDecimalPlace(currencyAmount, currencyAmount.currency.decimals)
+      if (tokenBalanceAmount > 0) {
         walletTokensAddresses.push(
           currencyAmount.currency.isNative ? NATIVE_CHAIN_ADDRESS : currencyAmount.currency.address
         )
         walletTokensSymbols.push(currencyAmount.currency.symbol ?? '')
-        walletTokensBalancesUsd.push(tokenBalanceUsd)
-        totalWalletBalanceUsd += tokenBalanceUsd
+        walletTokensBalancesAmount.push(tokenBalanceAmount)
       }
     }
   })
@@ -160,17 +158,18 @@ const modifyUserModelWithCustomWalletProperties = (
   user.postInsert(CUSTOM_USER_PROPERTIES.ALL_WALLET_ADDRESSES_CONNECTED, account)
   user.setOnce(`${CUSTOM_USER_PROPERTIES.WALLET_FIRST_SEEN_DATE_PREFIX}${account}`, currentDate)
   user.set(`${CUSTOM_USER_PROPERTIES.WALLET_LAST_SEEN_DATE_PREFIX}${account}`, currentDate)
-  user.set(CUSTOM_USER_PROPERTIES.WALLET_BALANCE_USD, totalWalletBalanceUsd)
+  user.set(CUSTOM_USER_PROPERTIES.WALLET_NATIVE_CURRENCY_BALANCE_USD, nativeCurrencyBalanceUsd)
   user.set(CUSTOM_USER_PROPERTIES.WALLET_TOKENS_ADDRESSES, walletTokensAddresses)
   user.set(CUSTOM_USER_PROPERTIES.WALLET_TOKENS_SYMBOLS, walletTokensSymbols)
-  user.set(CUSTOM_USER_PROPERTIES.WALLET_TOKENS_BALANCES_USD, walletTokensBalancesUsd)
+  user.set(CUSTOM_USER_PROPERTIES.WALLET_TOKENS_BALANCES_AMOUNT, walletTokensBalancesAmount)
 }
 
 const sendAnalyticsEventAndUserInfo = (
   account: string,
   walletType: string,
   chainId: number | undefined,
-  balances: (CurrencyAmount<Currency> | undefined)[]
+  balances: (CurrencyAmount<Currency> | undefined)[],
+  nativeCurrencyBalanceUsd: number
 ) => {
   sendAnalyticsEvent(EventName.WALLET_CONNECT_TXN_COMPLETED, {
     result: WALLET_CONNECTION_RESULT.SUCCEEDED,
@@ -178,7 +177,7 @@ const sendAnalyticsEventAndUserInfo = (
     wallet_type: walletType,
     // TODO(lynnshaoyu): Send correct is_reconnect value after modifying user state.
   })
-  modifyUserModelWithCustomWalletProperties(account, walletType, chainId, balances)
+  modifyUserModelWithCustomWalletProperties(account, walletType, chainId, balances, nativeCurrencyBalanceUsd)
 }
 
 export default function WalletModal({
@@ -227,10 +226,9 @@ export default function WalletModal({
   // const tokenBalanceUsdValue = useStablecoinValue(currencyAmount)?.toFixed(2)
   // const tokenBalanceUsd = tokenBalanceUsdValue ? parseFloat(tokenBalanceUsdValue) : 0
 
-  const balancesUsd = balances.map((balance) => {
-    const tokenBalanceUsdValue = useStablecoinValue(currencyAmount)?.toFixed(2)
-    const tokenBalanceUsd = tokenBalanceUsdValue ? parseFloat(tokenBalanceUsdValue) : 0
-  })
+  const nativeCurrencyBalanceUsdValue = useStablecoinValue(balances[0])?.toFixed(2)
+  const nativeCurrencyBalanceUsd =
+    native && nativeCurrencyBalanceUsdValue ? parseFloat(nativeCurrencyBalanceUsdValue) : 0
 
   const openOptions = useCallback(() => {
     setWalletView(WALLET_VIEWS.OPTIONS)
@@ -253,10 +251,10 @@ export default function WalletModal({
   useEffect(() => {
     if (account && account !== lastActiveWalletAddress) {
       const walletType = getConnectionName(getConnection(connector).type, getIsMetaMask())
-      sendAnalyticsEventAndUserInfo(account, walletType, chainId, balances)
+      sendAnalyticsEventAndUserInfo(account, walletType, chainId, balances, nativeCurrencyBalanceUsd)
     }
     setLastActiveWalletAddress(account)
-  }, [lastActiveWalletAddress, account, connector, chainId, balances])
+  }, [lastActiveWalletAddress, account, connector, chainId, balances, nativeCurrencyBalanceUsd])
 
   const tryActivation = useCallback(
     async (connector: Connector) => {
