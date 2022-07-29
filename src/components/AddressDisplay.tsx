@@ -1,5 +1,5 @@
 import { LayoutProps } from '@shopify/restyle'
-import React from 'react'
+import React, { PropsWithChildren } from 'react'
 import { useAppTheme } from 'src/app/hooks'
 import CopyIcon from 'src/assets/icons/copy-sheets.svg'
 import { Button } from 'src/components/buttons/Button'
@@ -28,6 +28,21 @@ type AddressDisplayProps = {
   showUnicon?: boolean
   showViewOnly?: boolean
 } & LayoutProps<Theme>
+
+type CopyButtonWrapperProps = {
+  onPress?: () => void
+}
+
+function CopyButtonWrapper({ children, onPress }: PropsWithChildren<CopyButtonWrapperProps>) {
+  if (onPress)
+    return (
+      <Button name={ElementName.Copy} testID={ElementName.Copy} onPress={onPress}>
+        {children}
+      </Button>
+    )
+
+  return <>{children}</>
+}
 
 /** Helper component to display identicon and formatted address */
 export function AddressDisplay({
@@ -70,36 +85,36 @@ export function AddressDisplay({
         alignItems={!showUnicon || direction === 'column' ? 'center' : 'flex-start'}
         flexShrink={1}
         gap={verticalGap}>
-        <Flex centered row gap="sm">
-          <Text
-            color={color}
-            ellipsizeMode="tail"
-            numberOfLines={1}
-            testID={`address-display/name/${displayName?.name}`}
-            variant={variant}>
-            {displayName?.name}
-          </Text>
-          {showCopy && !showCaption && (
-            <Button name={ElementName.Copy} onPress={onPressCopyAddress}>
-              <CopyIcon color={theme.colors.textPrimary} height={mainSize} width={mainSize} />
-            </Button>
-          )}
-        </Flex>
-        {showCaption && (
+        <CopyButtonWrapper onPress={showCopy && !showCaption ? onPressCopyAddress : undefined}>
           <Flex centered row gap="sm">
-            <Text color={captionColor} variant={captionVariant}>
-              {shortenAddress(address)}
+            <Text
+              color={color}
+              ellipsizeMode="tail"
+              numberOfLines={1}
+              testID={`address-display/name/${displayName?.name}`}
+              variant={variant}>
+              {displayName?.name}
             </Text>
-            {showCopy && (
-              <Button name={ElementName.Copy} onPress={onPressCopyAddress}>
+            {showCopy && !showCaption && (
+              <CopyIcon color={theme.colors.textPrimary} height={mainSize} width={mainSize} />
+            )}
+          </Flex>
+        </CopyButtonWrapper>
+        {showCaption && (
+          <CopyButtonWrapper onPress={showCopy ? onPressCopyAddress : undefined}>
+            <Flex centered row gap="sm">
+              <Text color={captionColor} variant={captionVariant}>
+                {shortenAddress(address)}
+              </Text>
+              {showCopy && (
                 <CopyIcon
                   color={theme.colors[captionColor]}
                   height={captionSize}
                   width={captionSize}
                 />
-              </Button>
-            )}
-          </Flex>
+              )}
+            </Flex>
+          </CopyButtonWrapper>
         )}
       </Flex>
     </Flex>
