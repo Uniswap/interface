@@ -16,7 +16,6 @@ import {
 } from 'components/AmplitudeAnalytics/utils'
 import { sendEvent } from 'components/analytics'
 import { NetworkAlert } from 'components/NetworkAlert/NetworkAlert'
-import { getPriceImpactPercent } from 'components/swap/AdvancedSwapDetails'
 import PriceImpactWarning from 'components/swap/PriceImpactWarning'
 import SwapDetailsDropdown from 'components/swap/SwapDetailsDropdown'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
@@ -70,7 +69,6 @@ import { LinkStyledButton, ThemedText } from '../../theme'
 import { computeFiatValuePriceImpact } from '../../utils/computeFiatValuePriceImpact'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { computeRealizedPriceImpact, warningSeverity } from '../../utils/prices'
-import { computeRealizedLPFeePercent } from '../../utils/prices'
 import { supportedChainId } from '../../utils/supportedChainId'
 import AppBody from '../AppBody'
 
@@ -102,14 +100,13 @@ const formatAnalyticsEventProperties = (
   trade: InterfaceTrade<Currency, Currency, TradeType>,
   fetchingSwapQuoteStartTime: Date | undefined
 ) => {
-  const lpFeePercent = trade ? computeRealizedLPFeePercent(trade) : undefined
   return {
     token_in_symbol: trade.inputAmount.currency.symbol,
     token_out_symbol: trade.outputAmount.currency.symbol,
     token_in_address: getTokenAddress(trade.inputAmount.currency),
     token_out_address: getTokenAddress(trade.outputAmount.currency),
     price_impact_basis_points: lpFeePercent
-      ? formatPercentInBasisPointsNumber(getPriceImpactPercent(lpFeePercent, trade))
+      ? formatPercentInBasisPointsNumber(computeRealizedPriceImpact(trade))
       : undefined,
     estimated_network_fee_usd: trade.gasUseEstimateUSD ? formatToDecimal(trade.gasUseEstimateUSD, 2) : undefined,
     chain_id:
