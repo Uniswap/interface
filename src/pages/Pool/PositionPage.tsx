@@ -661,7 +661,12 @@ export function PositionPage() {
                     marginRight: '12px',
                   }}
                 >
-                  <div style={{ marginRight: 12 }}>
+                  <div
+                    style={{
+                      width: 232,
+                      height: 400,
+                    }}
+                  >
                     <NFT image={metadata.result.image} height={400} />
                   </div>
                   {typeof chainId === 'number' && owner && !ownsNFT ? (
