@@ -178,7 +178,7 @@ const TruncatedAddress = styled.span`
     display: flex;
   }
 `
-const NetworkBadge = styled.div<{ networkColor?: string }>`
+const NetworkBadge = styled.div<{ networkColor?: string; backgroundColor?: string }>`
   display: flex;
   border-radius: 5px;
   padding: 4px 6px;
@@ -187,11 +187,16 @@ const NetworkBadge = styled.div<{ networkColor?: string }>`
   font-size: 12px;
   line-height: 12px;
   color: ${({ theme, networkColor }) => networkColor ?? theme.textPrimary};
-  background-color: ${({ theme }) => theme.backgroundSurface};
+  background-color: ${({ theme, backgroundColor }) => backgroundColor ?? theme.backgroundSurface};
 `
 
 export default function LoadedTokenDetail({ address }: { address: string }) {
   const theme = useTheme()
+  const NETWORK_BADGE_COLORS: Record<string, string> = {
+    Polygon: theme.polygon_background,
+    Optimism: theme.optimism_background,
+    Arbitrum: theme.arbitrum_background,
+  }
   const token = useToken(address)
   const currency = useCurrency(address)
   const favoriteTokens = useAtomValue<string[]>(favoritesAtom)
@@ -200,6 +205,7 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
   const toggleFavorite = useToggleFavorite(address)
   const { chainId: connectedChainId } = useWeb3React()
   const chainInfo = getChainInfo(connectedChainId)
+  const networkLabel = chainInfo?.label
 
   // catch token error and loading state
   if (!token || !token.name || !token.symbol) {
@@ -229,7 +235,14 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
           <TokenNameCell>
             <CurrencyLogo currency={currency} size={'32px'} />
             {tokenName} <TokenSymbol>{tokenSymbol}</TokenSymbol>
-            <NetworkBadge networkColor={chainInfo?.color}>{chainInfo?.label}</NetworkBadge>
+            {networkLabel && NETWORK_BADGE_COLORS.hasOwnProperty(networkLabel) && (
+              <NetworkBadge
+                networkColor={chainInfo?.color}
+                backgroundColor={networkLabel && NETWORK_BADGE_COLORS[networkLabel]}
+              >
+                {networkLabel}
+              </NetworkBadge>
+            )}
           </TokenNameCell>
           <TokenActions>
             <ShareButton tokenName={tokenName} tokenSymbol={tokenSymbol} />

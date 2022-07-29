@@ -166,6 +166,9 @@ function colors(darkMode: boolean): Colors {
     chain_42161: colorsDark.chain_42161,
     chain_421611: colorsDark.chain_421611,
     chain_80001: colorsDark.chain_80001,
+    polygon_background: colorsDark.polygon_background,
+    optimism_background: colorsDark.optimism_background,
+    arbitrum_background: colorsDark.arbitrum_background,
 
     blue200: ColorsPalette.blue200,
     flyoutDropShadow:
