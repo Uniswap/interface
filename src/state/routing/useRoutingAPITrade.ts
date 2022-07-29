@@ -41,13 +41,10 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
     [amountSpecified, otherCurrency, tradeType]
   )
 
-  let clientSideRouter: boolean
   const [clientSideRouterStoredPreference] = useClientSideRouter()
-  if (routerPreference) {
-    clientSideRouter = routerPreference === RouterPreference.CLIENT ? true : false
-  } else {
-    clientSideRouter = clientSideRouterStoredPreference
-  }
+  const clientSideRouter = routerPreference
+    ? routerPreference === RouterPreference.CLIENT
+    : clientSideRouterStoredPreference
 
   const queryArgs = useRoutingAPIArguments({
     tokenIn: currencyIn,

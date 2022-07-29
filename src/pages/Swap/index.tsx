@@ -87,7 +87,7 @@ export function getIsValidSwapQuote(
   return !!swapInputError && !!trade && (tradeState === TradeState.VALID || tradeState === TradeState.SYNCING)
 }
 
-export function largerPercentValue(a?: Percent, b?: Percent) {
+function largerPercentValue(a?: Percent, b?: Percent) {
   if (a && b) {
     return a.greaterThan(b) ? a : b
   } else if (a) {
@@ -604,7 +604,7 @@ export default function Swap() {
                   allowedSlippage={allowedSlippage}
                 />
               )}
-              {showPriceImpactWarning ? <PriceImpactWarning priceImpact={largerPriceImpact} /> : undefined}
+              {showPriceImpactWarning && <PriceImpactWarning priceImpact={largerPriceImpact} />}
               <div>
                 {swapIsUnsupported ? (
                   <ButtonPrimary disabled={true}>
