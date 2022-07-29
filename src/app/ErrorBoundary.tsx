@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/react-native'
 import React, { ErrorInfo } from 'react'
 import { Box } from 'src/components/layout/Box'
 import { Text } from 'src/components/Text'
@@ -20,8 +21,8 @@ export class ErrorBoundary extends React.Component<unknown, ErrorBoundaryState> 
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    // TODO analytics here
     logger.error('ErrorBoundary', 'componentDidCatch', 'Error caught by boundary', error, errorInfo)
+    Sentry.captureException(error)
   }
 
   render() {
