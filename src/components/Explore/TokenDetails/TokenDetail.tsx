@@ -197,7 +197,7 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
   const toggleFavorite = useToggleFavorite(address)
   const chainInfo = getChainInfo(token?.chainId)
   const networkLabel = chainInfo?.label
-  const backgroundColor = chainInfo?.background_color
+  const networkBadgebackgroundColor = chainInfo?.backgroundColor
 
   // catch token error and loading state
   if (!token || !token.name || !token.symbol) {
@@ -227,8 +227,8 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
           <TokenNameCell>
             <CurrencyLogo currency={currency} size={'32px'} />
             {tokenName} <TokenSymbol>{tokenSymbol}</TokenSymbol>
-            {backgroundColor && (
-              <NetworkBadge networkColor={chainInfo?.color} backgroundColor={backgroundColor}>
+            {networkBadgebackgroundColor && (
+              <NetworkBadge networkColor={chainInfo?.color} backgroundColor={networkBadgebackgroundColor}>
                 {networkLabel}
               </NetworkBadge>
             )}
