@@ -54,7 +54,7 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
     tokenOut: currencyOut,
     amount: amountSpecified,
     tradeType,
-    useClientSideRouter: false,
+    useClientSideRouter: clientSideRouter,
   })
 
   const { isLoading, isError, data, currentData } = useGetQuoteQuery(queryArgs ?? skipToken, {

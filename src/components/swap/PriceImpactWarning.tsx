@@ -29,8 +29,8 @@ export default function PriceImpactWarning({ priceImpact }: PriceImpactWarningPr
         <MouseoverTooltip
           text={
             <Trans>
-              A swap of this size has high price impact. The current liquidity in the pool means that there is a large
-              difference between your input token amount and your received output amount
+              A swap of this size may have a high price impact, given the current liquidity in the pool. There may be a
+              large difference between the amount of your input token and what you will receive in the output token
             </Trans>
           }
         >
