@@ -695,16 +695,94 @@ export default function Swap() {
                         allowedSlippage={allowedSlippage}
                       />
                     )}
-                    {showPriceImpactWarning && <PriceImpactWarning priceImpact={largerPriceImpact} />}
-                  </BottomInputWrapper>
-                  <div>
-                    {swapIsUnsupported ? (
-                      <ButtonPrimary disabled={true}>
-                        <ThemedText.DeprecatedMain mb="4px">
-                          <Trans>Unsupported Asset</Trans>
-                        </ThemedText.DeprecatedMain>
-                      </ButtonPrimary>
-                    ) : !account ? (
+                    shouldLogImpression={!Boolean(wrapInputError)}
+                  >
+              </div>
+              <BottomWrapper>
+                For
+                <BottomInputWrapper>
+                  <Trace section={SectionName.CURRENCY_OUTPUT_PANEL}>
+                    <CurrencyInputPanel
+                      value={formattedAmounts[Field.OUTPUT]}
+                      onUserInput={handleTypeOutput}
+                      label={
+                        independentField === Field.INPUT && !showWrap ? <Trans>To (at least)</Trans> : <Trans>To</Trans>
+                      }
+                      showMaxButton={false}
+                      hideBalance={false}
+                      fiatValue={fiatValueOutput ?? undefined}
+                      priceImpact={priceImpact}
+                      currency={currencies[Field.OUTPUT] ?? null}
+                      onCurrencySelect={handleOutputSelect}
+                      otherCurrency={currencies[Field.INPUT]}
+                      showCommonBases={true}
+                      id={SectionName.CURRENCY_OUTPUT_PANEL}
+                      loading={independentField === Field.INPUT && routeIsSyncing}
+                    />
+                  </Trace>
+
+                  {recipient !== null && !showWrap ? (
+                    <>
+                      <AutoRow justify="space-between" style={{ padding: '0 1rem' }}>
+                        <ArrowWrapper clickable={false}>
+                          <ArrowDown size="16" color={theme.deprecated_text2} />
+                        </ArrowWrapper>
+                        <LinkStyledButton id="remove-recipient-button" onClick={() => onChangeRecipient(null)}>
+                          <Trans>- Remove recipient</Trans>
+                        </LinkStyledButton>
+                      </AutoRow>
+                      <AddressInputPanel id="recipient" value={recipient} onChange={onChangeRecipient} />
+                    </>
+                  ) : null}
+                  {!showWrap && userHasSpecifiedInputOutput && (trade || routeIsLoading || routeIsSyncing) && (
+                    <SwapDetailsDropdown
+                      trade={trade}
+                      syncing={routeIsSyncing}
+                      loading={routeIsLoading}
+                      showInverted={showInverted}
+                      setShowInverted={setShowInverted}
+                      allowedSlippage={allowedSlippage}
+                    />
+                  )}
+                </BottomInputWrapper>
+                <div>
+                  {swapIsUnsupported ? (
+                    <ButtonPrimary disabled={true}>
+                      <ThemedText.Main mb="4px">
+                        <Trans>Unsupported Asset</Trans>
+                      </ThemedText.Main>
+                    </ButtonPrimary>
+                  ) : !account ? (
+                    <TraceEvent
+                      events={[Event.onClick]}
+                      name={EventName.CONNECT_WALLET_BUTTON_CLICKED}
+                      properties={{ received_swap_quote: getIsValidSwapQuote(trade, tradeState, swapInputError) }}
+                      element={ElementName.CONNECT_WALLET_BUTTON}
+                    >
+                      <ButtonLight onClick={toggleWalletModal}>
+                        <Trans>Connect Wallet</Trans>
+                      </ButtonLight>
+                    </TraceEvent>
+                  ) : showWrap ? (
+                    <ButtonPrimary disabled={Boolean(wrapInputError)} onClick={onWrap}>
+                      {wrapInputError ? (
+                        <WrapErrorText wrapInputError={wrapInputError} />
+                      ) : wrapType === WrapType.WRAP ? (
+                        <Trans>Wrap</Trans>
+                      ) : wrapType === WrapType.UNWRAP ? (
+                        <Trans>Unwrap</Trans>
+                      ) : null}
+                    </ButtonPrimary>
+                  </TraceEvent>
+                ) : routeNotFound && userHasSpecifiedInputOutput && !routeIsLoading && !routeIsSyncing ? (
+                  <GreyCard style={{ textAlign: 'center' }}>
+                    <ThemedText.DeprecatedMain mb="4px">
+                      <Trans>Insufficient liquidity for this trade.</Trans>
+                    </ThemedText.DeprecatedMain>
+                  </GreyCard>
+                ) : showApproveFlow ? (
+                  <AutoRow style={{ flexWrap: 'nowrap', width: '100%' }}>
+                    <AutoColumn style={{ width: '100%' }} gap="12px">
                       <TraceEvent
                         events={[Event.onClick]}
                         name={EventName.CONNECT_WALLET_BUTTON_CLICKED}
