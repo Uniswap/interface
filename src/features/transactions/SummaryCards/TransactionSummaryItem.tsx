@@ -282,7 +282,7 @@ function TransactionSummaryItem({
           ) : nftUpdateInfo ? (
             <Flex shrink alignItems="flex-end" gap="xxxs">
               <Text ellipsizeMode="tail" numberOfLines={1} variant="body">
-                {nftUpdateInfo.title + nftUpdateInfo.title + nftUpdateInfo.title}
+                {nftUpdateInfo.title}
               </Text>
               <Text adjustsFontSizeToFit color="textSecondary" numberOfLines={1} variant="caption">
                 {nftUpdateInfo.caption}

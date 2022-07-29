@@ -50,7 +50,6 @@ export function TransactionListSection({
     )
   }
 
-  totalTransactionCount = 0
   return (
     <BaseCard.Container>
       {totalTransactionCount === 0 ? (
