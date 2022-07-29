@@ -107,9 +107,9 @@ export interface Colors {
   chain_42161: Color
   chain_421611: Color
   chain_80001: Color
-  polygon_background: Color
-  optimism_background: Color
-  arbitrum_background: Color
+  chain_10_background: Color
+  chain_137_background: Color
+  chain_42161_background: Color
 
   blue200: Color
   flyoutDropShadow: Color

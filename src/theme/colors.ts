@@ -217,10 +217,9 @@ export interface Palette {
   chain_42161: Color
   chain_421611: Color
   chain_80001: Color
-
-  polygon_background: Color
-  optimism_background: Color
-  arbitrum_background: Color
+  chain_137_background: Color
+  chain_10_background: Color
+  chain_42161_background: Color
 }
 
 export const colorsLight: Palette = {
@@ -273,10 +272,9 @@ export const colorsLight: Palette = {
   chain_42161: colors.networkEthereum,
   chain_421611: colors.networkEthereum,
   chain_80001: colors.networkPolygon,
-
-  polygon_background: colors.purple900,
-  optimism_background: colors.red900,
-  arbitrum_background: colors.blue900,
+  chain_137_background: colors.purple900,
+  chain_10_background: colors.red900,
+  chain_42161_background: colors.blue900,
 }
 
 export const colorsDark: Palette = {
@@ -328,8 +326,7 @@ export const colorsDark: Palette = {
   chain_42161: colors.networkEthereum,
   chain_421611: colors.networkEthereum,
   chain_80001: colors.networkPolygon,
-
-  polygon_background: colors.purple900,
-  optimism_background: colors.red900,
-  arbitrum_background: colors.blue900,
+  chain_137_background: colors.purple900,
+  chain_10_background: colors.red900,
+  chain_42161_background: colors.blue900,
 }
