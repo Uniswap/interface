@@ -105,9 +105,7 @@ const formatAnalyticsEventProperties = (
     token_out_symbol: trade.outputAmount.currency.symbol,
     token_in_address: getTokenAddress(trade.inputAmount.currency),
     token_out_address: getTokenAddress(trade.outputAmount.currency),
-    price_impact_basis_points: lpFeePercent
-      ? formatPercentInBasisPointsNumber(computeRealizedPriceImpact(trade))
-      : undefined,
+    price_impact_basis_points: trade ? formatPercentInBasisPointsNumber(computeRealizedPriceImpact(trade)) : undefined,
     estimated_network_fee_usd: trade.gasUseEstimateUSD ? formatToDecimal(trade.gasUseEstimateUSD, 2) : undefined,
     chain_id:
       trade.inputAmount.currency.chainId === trade.outputAmount.currency.chainId
