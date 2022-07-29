@@ -148,16 +148,9 @@ jobs:
           git tag --annotate --message "KyberSwap Interface - $VERSION_TAG" "$VERSION_TAG"
           git push origin "refs/tags/$VERSION_TAG"
 
-      - name: Build Changelog
-        id: github_release
-        uses: mikepenz/release-changelog-builder-action@v3
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Create release
         uses: softprops/action-gh-release@v1
         with:
-          body: ${{steps.github_release.outputs.changelog}}
           token: ${{ secrets.GITHUB_TOKEN }}
           tag_name: ${{ env.VERSION_TAG }}
           prerelease: false
