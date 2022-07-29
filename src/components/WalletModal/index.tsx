@@ -3,13 +3,8 @@ import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { Connector } from '@web3-react/types'
 import { sendAnalyticsEvent, user } from 'components/AmplitudeAnalytics'
-import {
-  CUSTOM_USER_PROPERTIES,
-  EventName,
-  NATIVE_CHAIN_ADDRESS,
-  WALLET_CONNECTION_RESULT,
-} from 'components/AmplitudeAnalytics/constants'
-import { getNumberFormattedToDecimalPlace } from 'components/AmplitudeAnalytics/utils'
+import { CUSTOM_USER_PROPERTIES, EventName, WALLET_CONNECTION_RESULT } from 'components/AmplitudeAnalytics/constants'
+import { formatToDecimal, getTokenAddress } from 'components/AmplitudeAnalytics/utils'
 import { sendEvent } from 'components/analytics'
 import { AutoColumn } from 'components/Column'
 import { AutoRow } from 'components/Row'
@@ -139,11 +134,9 @@ const modifyUserModelWithCustomWalletProperties = (
   const walletTokensBalancesAmount: number[] = []
   balances.forEach((currencyAmount) => {
     if (currencyAmount !== undefined) {
-      const tokenBalanceAmount = getNumberFormattedToDecimalPlace(currencyAmount, currencyAmount.currency.decimals)
+      const tokenBalanceAmount = formatToDecimal(currencyAmount, currencyAmount.currency.decimals)
       if (tokenBalanceAmount > 0) {
-        walletTokensAddresses.push(
-          currencyAmount.currency.isNative ? NATIVE_CHAIN_ADDRESS : currencyAmount.currency.address
-        )
+        walletTokensAddresses.push(getTokenAddress(currencyAmount.currency))
         walletTokensSymbols.push(currencyAmount.currency.symbol ?? '')
         walletTokensBalancesAmount.push(tokenBalanceAmount)
       }
@@ -221,10 +214,6 @@ export default function WalletModal({
   }, [native, sortedTokens])
 
   const balances = useCurrencyBalances(account, sortedTokensWithETH)
-  console.log('balances', balances)
-
-  // const tokenBalanceUsdValue = useStablecoinValue(currencyAmount)?.toFixed(2)
-  // const tokenBalanceUsd = tokenBalanceUsdValue ? parseFloat(tokenBalanceUsdValue) : 0
 
   const nativeCurrencyBalanceUsdValue = useStablecoinValue(balances[0])?.toFixed(2)
   const nativeCurrencyBalanceUsd =
