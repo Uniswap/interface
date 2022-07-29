@@ -1,4 +1,4 @@
-import { Trade } from '@uniswap/router-sdk'
+import { Protocol, Trade } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'
@@ -14,6 +14,7 @@ import useStablecoinPrice, { useStablecoinValue } from './useStablecoinPrice'
 const V3_SWAP_DEFAULT_SLIPPAGE = new Percent(50, 10_000) // .50%
 const ONE_TENTHS_PERCENT = new Percent(10, 10_000) // .10%
 export const DEFAULT_AUTO_SLIPPAGE = ONE_TENTHS_PERCENT
+const GAS_ESTIMATE_BUFFER = new Percent(10, 100) // 10%
 
 /**
  * Return a guess of the gas cost used in computing slippage tolerance for a given trade
@@ -21,7 +22,17 @@ export const DEFAULT_AUTO_SLIPPAGE = ONE_TENTHS_PERCENT
  */
 function guesstimateGas(trade: Trade<Currency, Currency, TradeType> | undefined): number | undefined {
   if (!!trade) {
-    return 100_000 + trade.swaps.reduce((memo, swap) => swap.route.pools.length + memo, 0) * 30_000
+    let gas = 0
+    for (const { route } of trade.swaps) {
+      if (route.protocol == Protocol.V2) {
+        gas += 135000 + route.pools.length * 50_000
+      } else {
+        // V3 gas costs scale on initialized ticks being crossed, but we don't have that data here.
+        // We bake in some tick crossings into the base 100k cost.
+        gas += 100_000 + route.pools.length * 70_000
+      }
+    }
+    return gas
   }
   return undefined
 }
@@ -61,8 +72,8 @@ export default function useAutoSlippageTolerance(
     // if not, use local heuristic
     const dollarCostToUse =
       chainId && SUPPORTED_GAS_ESTIMATE_CHAIN_IDS.includes(chainId) && trade?.gasUseEstimateUSD
-        ? trade.gasUseEstimateUSD
-        : dollarGasCost
+        ? trade.gasUseEstimateUSD.multiply(GAS_ESTIMATE_BUFFER)
+        : dollarGasCost?.multiply(GAS_ESTIMATE_BUFFER)
 
     if (outputDollarValue && dollarCostToUse) {
       // the rationale is that a user will not want their trade to fail for a loss due to slippage that is less than
