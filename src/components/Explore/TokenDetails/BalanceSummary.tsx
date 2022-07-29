@@ -5,6 +5,7 @@ import { L1_CHAIN_IDS, L2_CHAIN_IDS, SupportedChainId, TESTNET_CHAIN_IDS } from 
 import { useToken } from 'hooks/Tokens'
 import { useNetworkTokenBalances } from 'hooks/useNetworkTokenBalances'
 import { useMemo } from 'react'
+import { AlertTriangle } from 'react-feather'
 import styled, { useTheme } from 'styled-components/macro'
 import { isChainAllowed } from 'utils/switchChain'
 
@@ -20,6 +21,19 @@ const BalancesCard = styled.div`
   background-color: ${({ theme }) => theme.backgroundSurface};
   border-radius: 12px;
   border: 1px solid ${({ theme }) => theme.backgroundOutline};
+`
+const ErrorState = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: ${({ theme }) => theme.textSecondary};
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+`
+const ErrorText = styled.span`
+  display: flex;
+  flex-wrap: wrap;
 `
 const NetworkBalancesSection = styled.div`
   height: fit-content;
@@ -63,14 +77,16 @@ export default function BalanceSummary({ address }: { address: string }) {
     return chainIds
   }, [connectedChainId])
 
+  if (loading) return null
   return (
     <BalancesCard>
-      {loading ? (
-        <span>loading...</span>
-      ) : error ? (
-        <p>
-          <Trans>Error fetching user balances</Trans>
-        </p>
+      {error ? (
+        <ErrorState>
+          <AlertTriangle size={24} />
+          <ErrorText>
+            <Trans>There was an error loading your {tokenSymbol} balance</Trans>
+          </ErrorText>
+        </ErrorState>
       ) : multipleBalances ? (
         <>
           <TotalBalanceSection>
