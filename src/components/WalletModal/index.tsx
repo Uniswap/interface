@@ -171,13 +171,6 @@ export default function WalletModal({
   }, [walletModalOpen, setWalletView, account])
 
   useEffect(() => {
-    if (connectedWallets) {
-      console.log('connected:')
-      console.log(connectedWallets)
-    }
-  }, [connectedWallets])
-
-  useEffect(() => {
     if (pendingConnector && walletView !== WALLET_VIEWS.PENDING) {
       updateConnectionError({ connectionType: getConnection(pendingConnector).type, error: undefined })
       setPendingConnector(undefined)
@@ -199,7 +192,7 @@ export default function WalletModal({
       }
     }
     setLastActiveWalletAddress(account)
-  }, [lastActiveWalletAddress, account, connector, chainId])
+  }, [connectedWallets, updateConnectedWallets, lastActiveWalletAddress, account, connector, chainId])
 
   const tryActivation = useCallback(
     async (connector: Connector) => {
