@@ -26,6 +26,7 @@ import { openModal } from 'src/features/modals/modalSlice'
 import { promptPushPermission } from 'src/features/notifications/Onesignal'
 import { PendingNotificationBadge } from 'src/features/notifications/PendingNotificationBadge'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
+import { useTestAccount } from 'src/features/wallet/accounts/useTestAccount'
 import {
   useActiveAccount,
   useActiveAccountAddressWithThrow,
@@ -35,6 +36,8 @@ import { removePendingSession } from 'src/features/walletConnect/walletConnectSl
 import { isWalletConnectSupportedAccount } from 'src/utils/walletConnect'
 
 export function HomeScreen() {
+  // imports test account for easy development/testing
+  useTestAccount()
   promptPushPermission()
 
   const activeAccount = useActiveAccount()
