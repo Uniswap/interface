@@ -77,7 +77,6 @@ export const routingApi = createApi({
               type,
             })
             result = await fetch(`quote?${query}`)
-            if (result.error) throw result.error.toString()
           }
 
           return { data: result.data as GetQuoteResult }
