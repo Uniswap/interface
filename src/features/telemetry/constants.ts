@@ -50,6 +50,7 @@ export const enum ModalName {
   WalletConnectScan = 'wallet-connect-scan-modal',
   WCSignRequest = 'wc-sign-request-modal',
   RemoveWallet = 'remove-wallet-modal',
+  ViewSeedPhraseWarning = 'view-seed-phrase-warning',
 }
 
 /**

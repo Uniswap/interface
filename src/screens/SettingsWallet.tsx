@@ -132,7 +132,7 @@ export function SettingsWallet({
       isHidden: readonly,
       data: [
         {
-          // TODO: update in following PR to new screen
+          screen: Screens.SettingsViewSeedPhrase,
           text: t('Recovery phrase'),
           icon: (
             <Flex px="xxs">

@@ -30,6 +30,7 @@ export enum Screens {
   SettingsSupport = 'SettingsSupport',
   SettingsTestConfigs = 'SettingsTestConfigs',
   SettingsFaceId = 'SettingsFaceId',
+  SettingsViewSeedPhrase = 'SettingsViewSeedPhrase',
   Swap = 'Swap',
   SwapConfig = 'SwapConfig',
   TabNavigator = 'TabNavigator',

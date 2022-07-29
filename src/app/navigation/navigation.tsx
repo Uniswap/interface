@@ -64,6 +64,7 @@ import { SettingsManualBackup } from 'src/screens/SettingsManualBackup'
 import { SettingsScreen } from 'src/screens/SettingsScreen'
 import { SettingsSupportScreen } from 'src/screens/SettingsSupportScreen'
 import { SettingsTestConfigs } from 'src/screens/SettingsTestConfigs'
+import { SettingsViewSeedPhraseScreen } from 'src/screens/SettingsViewSeedPhraseScreen'
 import { SettingsWallet } from 'src/screens/SettingsWallet'
 import { SettingsWalletEdit } from 'src/screens/SettingsWalletEdit'
 import { SettingsWalletManageConnection } from 'src/screens/SettingsWalletManageConnection'
@@ -188,6 +189,10 @@ function SettingsStackGroup() {
       <SettingsStack.Screen component={DevScreen} name={Screens.Dev} />
       <SettingsStack.Screen component={SettingsFaceIdScreen} name={Screens.SettingsFaceId} />
       <SettingsStack.Screen component={SettingsManualBackup} name={Screens.SettingsManualBackup} />
+      <SettingsStack.Screen
+        component={SettingsViewSeedPhraseScreen}
+        name={Screens.SettingsViewSeedPhrase}
+      />
     </SettingsStack.Navigator>
   )
 }
