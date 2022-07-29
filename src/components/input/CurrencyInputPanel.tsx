@@ -1,6 +1,6 @@
 import { backgroundColor, BackgroundColorProps, useRestyle } from '@shopify/restyle'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import React, { useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { TextInput, TouchableWithoutFeedback } from 'react-native'
 import { useAppTheme } from 'src/app/hooks'
@@ -29,7 +29,7 @@ type CurrentInputPanelProps = {
   otherSelectedCurrency?: Currency | null
   showNonZeroBalancesOnly?: boolean
   showSoftInputOnFocus?: boolean
-  autoFocus?: boolean
+  focus?: boolean
   isOutput?: boolean
   isUSDInput?: boolean
   onSetMax?: (amount: string) => void
@@ -52,7 +52,7 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps) {
     otherSelectedCurrency,
     showNonZeroBalancesOnly = true,
     showSoftInputOnFocus = false,
-    autoFocus,
+    focus,
     isOutput = false,
     isUSDInput = false,
     onToggleUSDInput,
@@ -72,11 +72,23 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps) {
     (warning) => warning.type === WarningLabel.InsufficientFunds
   )
 
+  useEffect(() => {
+    if (!focus) {
+      inputRef.current?.blur()
+    } else {
+      inputRef.current?.focus()
+    }
+  }, [focus])
+
+  // allow users to focus on text input by
+  // clicking on the larger surrounding area
+  const onBackgroundPress = () => {
+    onPressIn?.()
+    inputRef.current?.focus()
+  }
+
   return (
-    <TouchableWithoutFeedback
-      onPress={() => {
-        inputRef.current?.focus()
-      }}>
+    <TouchableWithoutFeedback onPress={onBackgroundPress}>
       <Flex
         centered
         borderRadius="lg"
@@ -86,7 +98,6 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps) {
         {!isBlankOutputState && (
           <AmountInput
             ref={inputRef}
-            autoFocus={autoFocus}
             backgroundColor="none"
             borderWidth={0}
             dimTextColor={dimTextColor}

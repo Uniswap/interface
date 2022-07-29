@@ -116,11 +116,11 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo, isCompressedView }
       <AnimatedFlex grow entering={FadeIn} exiting={FadeOut} gap="sm">
         <Trace section={SectionName.CurrencyInputPanel}>
           <CurrencyInputPanel
-            autoFocus
             currency={currencies[CurrencyField.INPUT]}
             currencyAmount={currencyAmounts[CurrencyField.INPUT]}
             currencyBalance={currencyBalances[CurrencyField.INPUT]}
             dimTextColor={exactCurrencyField === CurrencyField.OUTPUT && swapDataRefreshing}
+            focus={exactCurrencyField === CurrencyField.INPUT}
             isUSDInput={isUSDInput}
             otherSelectedCurrency={currencies[CurrencyField.OUTPUT]}
             showSoftInputOnFocus={isCompressedView}
@@ -173,6 +173,7 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo, isCompressedView }
                   currencyAmount={currencyAmounts[CurrencyField.OUTPUT]}
                   currencyBalance={currencyBalances[CurrencyField.OUTPUT]}
                   dimTextColor={exactCurrencyField === CurrencyField.INPUT && swapDataRefreshing}
+                  focus={exactCurrencyField === CurrencyField.OUTPUT}
                   isUSDInput={isUSDInput}
                   otherSelectedCurrency={currencies[CurrencyField.INPUT]}
                   showNonZeroBalancesOnly={false}
