@@ -19,3 +19,5 @@ export const formatToDecimal = (
 export const getTokenAddress = (currency: Currency) => (currency.isNative ? NATIVE_CHAIN_ID : currency.address)
 
 export const formatPercentInBasisPointsNumber = (percent: Percent): number => parseFloat(percent.toFixed(2)) * 100
+
+export const formatPercentNumber = (percent: Percent): number => parseFloat(percent.toFixed(2))

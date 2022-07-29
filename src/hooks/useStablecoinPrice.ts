@@ -2,11 +2,10 @@ import { Currency, CurrencyAmount, Price, Token, TradeType } from '@uniswap/sdk-
 import { useWeb3React } from '@web3-react/core'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useMemo, useRef } from 'react'
+import { RouterPreference, useRoutingAPITrade } from 'state/routing/useRoutingAPITrade'
 
 import { SupportedChainId } from '../constants/chains'
 import { CUSD_CELO, DAI_OPTIMISM, USDC_ARBITRUM, USDC_MAINNET, USDC_POLYGON } from '../constants/tokens'
-import { useBestV2Trade } from './useBestV2Trade'
-import { useClientSideV3Trade } from './useClientSideV3Trade'
 
 // Stablecoin amounts used when calculating spot price for a given currency.
 // The amount is large enough to filter low liquidity pairs.
@@ -28,11 +27,7 @@ export default function useStablecoinPrice(currency?: Currency): Price<Currency,
   const amountOut = chainId ? STABLECOIN_AMOUNT_OUT[chainId] : undefined
   const stablecoin = amountOut?.currency
 
-  // TODO(#2808): remove dependency on useBestV2Trade
-  const v2USDCTrade = useBestV2Trade(TradeType.EXACT_OUTPUT, amountOut, currency, {
-    maxHops: 2,
-  })
-  const v3USDCTrade = useClientSideV3Trade(TradeType.EXACT_OUTPUT, amountOut, currency)
+  const { trade } = useRoutingAPITrade(TradeType.EXACT_OUTPUT, amountOut, currency, RouterPreference.CLIENT)
   const price = useMemo(() => {
     if (!currency || !stablecoin) {
       return undefined
@@ -43,17 +38,13 @@ export default function useStablecoinPrice(currency?: Currency): Price<Currency,
       return new Price(stablecoin, stablecoin, '1', '1')
     }
 
-    // use v2 price if available, v3 as fallback
-    if (v2USDCTrade) {
-      const { numerator, denominator } = v2USDCTrade.route.midPrice
-      return new Price(currency, stablecoin, denominator, numerator)
-    } else if (v3USDCTrade.trade) {
-      const { numerator, denominator } = v3USDCTrade.trade.routes[0].midPrice
+    if (trade) {
+      const { numerator, denominator } = trade.routes[0].midPrice
       return new Price(currency, stablecoin, denominator, numerator)
     }
 
     return undefined
-  }, [currency, stablecoin, v2USDCTrade, v3USDCTrade.trade])
+  }, [currency, stablecoin, trade])
 
   const lastPrice = useRef(price)
   if (!price || !lastPrice.current || !price.equalTo(lastPrice.current)) {
