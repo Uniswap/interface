@@ -37,6 +37,7 @@ import { useAppDispatch } from 'state/hooks'
 import YourCampaignTransactionsModal from 'components/YourCampaignTransactionsModal'
 import EnterNowOrClaimButton from 'pages/Campaign/EnterNowOrClaimButton'
 import LocalLoader from 'components/LocalLoader'
+import dayjs from 'dayjs'
 
 const LoaderParagraphs = () => (
   <>
@@ -291,7 +292,7 @@ export default function Campaign() {
     account,
   ])
 
-  if (loadingCampaignData) {
+  if (campaigns.length === 0 && loadingCampaignData) {
     return <LocalLoader />
   }
 
@@ -402,7 +403,7 @@ export default function Campaign() {
                         ? getFormattedTimeFromSecond((selectedCampaign.startTime - now) / 1000)
                         : selectedCampaign.status === 'Ongoing'
                         ? getFormattedTimeFromSecond((selectedCampaign.endTime - now) / 1000)
-                        : 'ENDED'
+                        : dayjs(selectedCampaign.endTime).format('YYYY-MM-DD HH:mm')
                       : '--'}
                   </Text>
                 ) : (
