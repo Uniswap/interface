@@ -16,11 +16,10 @@ import { ReactNode } from 'react'
 import { Text } from 'rebass'
 import { InterfaceTrade } from 'state/routing/types'
 import { useClientSideRouter, useUserSlippageTolerance } from 'state/user/hooks'
-import { computeRealizedLPFeePercent } from 'utils/prices'
+import { computeRealizedPriceImpact } from 'utils/prices'
 
 import { ButtonError } from '../Button'
 import { AutoRow } from '../Row'
-import { getPriceImpactPercent } from './AdvancedSwapDetails'
 import { SwapCallbackError } from './styleds'
 import { getTokenPath, RoutingDiagramEntry } from './SwapRoute'
 
@@ -33,7 +32,6 @@ interface AnalyticsEventProps {
   isAutoRouterApi: boolean
   tokenInAmountUsd: string | undefined
   tokenOutAmountUsd: string | undefined
-  lpFeePercent: Percent
   swapQuoteReceivedDate: Date | undefined
   routes: RoutingDiagramEntry[]
 }
@@ -74,7 +72,6 @@ const formatAnalyticsEventProperties = ({
   isAutoRouterApi,
   tokenInAmountUsd,
   tokenOutAmountUsd,
-  lpFeePercent,
   swapQuoteReceivedDate,
   routes,
 }: AnalyticsEventProps) => ({
@@ -89,7 +86,7 @@ const formatAnalyticsEventProperties = ({
   token_out_symbol: trade.outputAmount.currency.symbol,
   token_in_amount: formatToDecimal(trade.inputAmount, trade.inputAmount.currency.decimals),
   token_out_amount: formatToDecimal(trade.outputAmount, trade.outputAmount.currency.decimals),
-  price_impact_basis_points: formatPercentInBasisPointsNumber(getPriceImpactPercent(lpFeePercent, trade)),
+  price_impact_basis_points: formatPercentInBasisPointsNumber(computeRealizedPriceImpact(trade)),
   allowed_slippage_basis_points: formatPercentInBasisPointsNumber(allowedSlippage),
   is_auto_router_api: isAutoRouterApi,
   is_auto_slippage: isAutoSlippage,
@@ -144,7 +141,6 @@ export default function SwapModalFooter({
             isAutoRouterApi: !clientSideRouter,
             tokenInAmountUsd,
             tokenOutAmountUsd,
-            lpFeePercent,
             swapQuoteReceivedDate,
             routes,
           })}
