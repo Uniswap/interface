@@ -1,5 +1,4 @@
 import { loadingAnimation } from 'components/Loader/styled'
-import { darken } from 'polished'
 import styled from 'styled-components/macro'
 
 /* Loading state bubbles (animation style from: src/components/Loader/styled.tsx) */
@@ -11,9 +10,9 @@ export const LoadingBubble = styled.div`
   animation-fill-mode: both;
   background: linear-gradient(
     to left,
-    ${({ theme }) => theme.backgroundContainer} 25%,
-    ${({ theme }) => darken(0.8, theme.backgroundContainer)} 50%,
-    ${({ theme }) => theme.backgroundContainer} 75%
+    ${({ theme }) => theme.backgroundAction} 25%,
+    ${({ theme }) => theme.backgroundOutline} 50%,
+    ${({ theme }) => theme.backgroundAction} 75%
   );
   will-change: background-position;
   background-size: 400%;

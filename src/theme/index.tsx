@@ -166,6 +166,9 @@ function colors(darkMode: boolean): Colors {
     chain_42161: colorsDark.chain_42161,
     chain_421611: colorsDark.chain_421611,
     chain_80001: colorsDark.chain_80001,
+    chain_137_background: ColorsPalette.purple900,
+    chain_10_background: ColorsPalette.red900,
+    chain_42161_background: ColorsPalette.blue900,
 
     blue200: ColorsPalette.blue200,
     flyoutDropShadow:

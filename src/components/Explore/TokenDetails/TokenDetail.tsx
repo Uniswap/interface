@@ -1,5 +1,6 @@
 import { Trans } from '@lingui/macro'
 import CurrencyLogo from 'components/CurrencyLogo'
+import { getChainInfo } from 'constants/chainInfo'
 import { useCurrency, useToken } from 'hooks/Tokens'
 import { TimePeriod } from 'hooks/useTopTokens'
 import { useAtomValue } from 'jotai/utils'
@@ -176,6 +177,15 @@ const TruncatedAddress = styled.span`
     display: flex;
   }
 `
+const NetworkBadge = styled.div<{ networkColor?: string; backgroundColor?: string }>`
+  border-radius: 5px;
+  padding: 4px 8px;
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 12px;
+  color: ${({ theme, networkColor }) => networkColor ?? theme.textPrimary};
+  background-color: ${({ theme, backgroundColor }) => backgroundColor ?? theme.backgroundSurface};
+`
 
 export default function LoadedTokenDetail({ address }: { address: string }) {
   const theme = useTheme()
@@ -185,6 +195,9 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
   const [activeTimePeriod, setTimePeriod] = useState(TimePeriod.hour)
   const isFavorited = favoriteTokens.includes(address)
   const toggleFavorite = useToggleFavorite(address)
+  const chainInfo = getChainInfo(token?.chainId)
+  const networkLabel = chainInfo?.label
+  const networkBadgebackgroundColor = chainInfo?.backgroundColor
 
   // catch token error and loading state
   if (!token || !token.name || !token.symbol) {
@@ -214,6 +227,11 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
           <TokenNameCell>
             <CurrencyLogo currency={currency} size={'32px'} />
             {tokenName} <TokenSymbol>{tokenSymbol}</TokenSymbol>
+            {networkBadgebackgroundColor && (
+              <NetworkBadge networkColor={chainInfo?.color} backgroundColor={networkBadgebackgroundColor}>
+                {networkLabel}
+              </NetworkBadge>
+            )}
           </TokenNameCell>
           <TokenActions>
             <ShareButton tokenName={tokenName} tokenSymbol={tokenSymbol} />

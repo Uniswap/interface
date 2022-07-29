@@ -30,6 +30,7 @@ interface BaseChainInfo {
     decimals: number // e.g. 18,
   }
   readonly color?: string
+  readonly backgroundColor?: string
 }
 
 export interface L1ChainInfo extends BaseChainInfo {
@@ -113,6 +114,7 @@ const CHAIN_INFO: ChainInfoMap = {
     helpCenterUrl: 'https://help.uniswap.org/en/collections/3137778-uniswap-on-optimistic-ethereum-oξ',
     nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
     color: colorsDark.chain_10,
+    backgroundColor: colorsDark.chain_10_background,
   },
   [SupportedChainId.OPTIMISTIC_KOVAN]: {
     networkType: NetworkType.L2,
@@ -142,6 +144,7 @@ const CHAIN_INFO: ChainInfoMap = {
     helpCenterUrl: 'https://help.uniswap.org/en/collections/3137787-uniswap-on-arbitrum',
     nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
     color: colorsDark.chain_42,
+    backgroundColor: colorsDark.chain_42161_background,
   },
   [SupportedChainId.ARBITRUM_RINKEBY]: {
     networkType: NetworkType.L2,
@@ -168,6 +171,7 @@ const CHAIN_INFO: ChainInfoMap = {
     logoUrl: polygonMaticLogo,
     nativeCurrency: { name: 'Polygon Matic', symbol: 'MATIC', decimals: 18 },
     color: colorsDark.chain_137,
+    backgroundColor: colorsDark.chain_137_background,
   },
   [SupportedChainId.POLYGON_MUMBAI]: {
     networkType: NetworkType.L1,
