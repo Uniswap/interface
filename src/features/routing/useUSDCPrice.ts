@@ -2,7 +2,7 @@ import { Currency, CurrencyAmount, Price, Token, TradeType } from '@uniswap/sdk-
 import { useMemo } from 'react'
 import { ChainId } from 'src/constants/chains'
 import { PollingInterval } from 'src/constants/misc'
-import { DAI_OPTIMISM, DAI_RINKEBY, USDC, USDC_ARBITRUM } from 'src/constants/tokens'
+import { DAI_OPTIMISM, DAI_RINKEBY, USDC, USDC_ARBITRUM, USDC_POLYGON } from 'src/constants/tokens'
 import { useRouterQuote } from 'src/features/routing/hooks'
 
 // Stablecoin amounts used when calculating spot price for a given currency.
@@ -11,6 +11,7 @@ export const STABLECOIN_AMOUNT_OUT: { [chainId: number]: CurrencyAmount<Token> }
   [ChainId.Mainnet]: CurrencyAmount.fromRawAmount(USDC, 100_000e6),
   [ChainId.Rinkeby]: CurrencyAmount.fromRawAmount(DAI_RINKEBY, 100_000e18),
   [ChainId.ArbitrumOne]: CurrencyAmount.fromRawAmount(USDC_ARBITRUM, 10_000e6),
+  [ChainId.Polygon]: CurrencyAmount.fromRawAmount(USDC_POLYGON, 10_000e6),
   [ChainId.Optimism]: CurrencyAmount.fromRawAmount(DAI_OPTIMISM, 10_000e18),
 }
 

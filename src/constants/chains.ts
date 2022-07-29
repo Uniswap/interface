@@ -85,10 +85,8 @@ export const EIP_1559_CHAINS = [
   // TODO: removed until figure out why EIP-1559 gas estimation fails
   // ChainId.Rinkeby,
   ChainId.Goerli,
-  // TODO: activate when ethers fixes gas estimatation (https://github.com/ethers-io/ethers.js/issues/2828)
-  // or we integrate a 3rd party provider for pricing
-  // ChainId.Polygon,
-  // ChainId.PolygonMumbai,
+  ChainId.Polygon,
+  ChainId.PolygonMumbai,
 ]
 
 // Renamed from SupportedL2ChainId in web app
@@ -243,6 +241,8 @@ export const ARBITRUM_HELP_CENTER_LINK =
 export const OPTIMISM_HELP_CENTER_LINK =
   'https://help.uniswap.org/en/collections/3137778-uniswap-on-optimistic-ethereum-oξ'
 
-export function isMatic(chainId: number): chainId is ChainId.Polygon | ChainId.PolygonMumbai {
+export function isPolygonChain(
+  chainId: number
+): chainId is ChainId.Polygon | ChainId.PolygonMumbai {
   return chainId === ChainId.PolygonMumbai || chainId === ChainId.Polygon
 }

@@ -59,6 +59,13 @@ export const USDC_OPTIMISM = new Token(
   'USDC',
   'USD//C'
 )
+export const USDC_POLYGON = new Token(
+  ChainId.Polygon,
+  '0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174',
+  6,
+  'USDC',
+  'USD//C'
+)
 export const USDT = new Token(
   ChainId.Mainnet,
   '0xdAC17F958D2ee523a2206206994597C13D831ec7',

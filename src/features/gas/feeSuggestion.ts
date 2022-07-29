@@ -2,6 +2,7 @@
 // Which was based on https://github.com/zsfelfoldi/feehistory
 
 import { BigNumber, providers } from 'ethers'
+import { isPolygonChain } from 'src/constants/chains'
 import {
   GWEI_REWARD_OUTLIER_THRESHOLD,
   MAX_GWEI_FAST_PRI_FEE,
@@ -112,8 +113,11 @@ export async function suggestMaxPriorityFee(
   const blocksRewards = feeHistory?.reward
   if (!blocksRewards?.length) throw new Error('Error: blocksRewards is empty')
 
+  const chainId = provider.network.chainId
+
   // Find set of outlier (blocks with high rewards) to exclude
-  const outlierBlocks = getOutlierBlocksToRemove(blocksRewards, 0)
+  // Polygon rewards have high variability so don't assume any are outliers
+  const outlierBlocks = isPolygonChain(chainId) ? [] : getOutlierBlocksToRemove(blocksRewards, 0)
 
   // Get reward data sets for different percentiles, while excluding outliers
   const blocksRewardsPercentile10 = rewardsFilterOutliers(blocksRewards, outlierBlocks, 0)
@@ -151,9 +155,10 @@ export async function suggestMaxPriorityFee(
 
   return {
     priorityFeeSuggestions: {
-      normal: gweiToWei(boundedNormalPriorityFee),
-      fast: gweiToWei(boundedFastMaxPriorityFee),
-      urgent: gweiToWei(boundedUrgentPriorityFee),
+      // Don't bound Polygon fees because hardcoded bounds are for Ethereum only
+      normal: gweiToWei(isPolygonChain(chainId) ? emaPercentile15 : boundedNormalPriorityFee),
+      fast: gweiToWei(isPolygonChain(chainId) ? emaPercentile30 : boundedFastMaxPriorityFee),
+      urgent: gweiToWei(isPolygonChain(chainId) ? emaPercentile45 : boundedUrgentPriorityFee),
     },
     confirmationSecondsToPriorityFee: {
       15: gweiToWei(emaPercentile45),

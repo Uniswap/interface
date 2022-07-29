@@ -1,6 +1,6 @@
 import { Currency } from '@uniswap/sdk-core'
 import { NATIVE_ADDRESS, NATIVE_ADDRESS_ALT } from 'src/constants/addresses'
-import { ChainId, isMatic } from 'src/constants/chains'
+import { ChainId, isPolygonChain } from 'src/constants/chains'
 import { toSupportedChainId } from 'src/utils/chainId'
 
 export type CurrencyId = string
@@ -17,7 +17,7 @@ export function currencyAddressForSwapQuote(currency: Currency): string {
   if (currency.isNative) {
     // swap router API special cases these strings to represent native currencies
     // all chains have "ETH" as native currency symbol except for polygon
-    return isMatic(currency.chainId) ? 'MATIC' : 'ETH'
+    return isPolygonChain(currency.chainId) ? 'MATIC' : 'ETH'
   }
 
   return currencyAddress(currency)

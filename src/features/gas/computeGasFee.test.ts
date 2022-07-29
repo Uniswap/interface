@@ -44,6 +44,7 @@ const mockProvider: any = {
 
 describe('computeGasFee', () => {
   it('Computes fee for 1559 chain', async () => {
+    mockProvider.network = { chain: ChainId.Mainnet }
     const fee = await computeGasFee(ChainId.Mainnet, {}, mockProvider)
     expect(fee).toEqual({
       type: 'eip1559',

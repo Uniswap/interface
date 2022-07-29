@@ -1,7 +1,7 @@
 // adapted from https://github.com/Uniswap/interface/src/constants/tokens.ts
 import { Currency, NativeCurrency as NativeCurrencyClass, Token } from '@uniswap/sdk-core'
 import { NATIVE_ADDRESS } from 'src/constants/addresses'
-import { CHAIN_INFO, isMatic } from 'src/constants/chains'
+import { CHAIN_INFO, isPolygonChain } from 'src/constants/chains'
 import { WRAPPED_NATIVE_CURRENCY } from 'src/constants/tokens'
 
 export class NativeCurrency implements NativeCurrencyClass {
@@ -39,7 +39,7 @@ export class NativeCurrency implements NativeCurrencyClass {
   public static onChain(chainId: number): NativeCurrency {
     return (
       this._cachedNativeCurrency[chainId] ??
-      (this._cachedNativeCurrency[chainId] = isMatic(chainId)
+      (this._cachedNativeCurrency[chainId] = isPolygonChain(chainId)
         ? new MaticNativeCurrency(chainId)
         : new NativeCurrency(chainId))
     )
@@ -52,12 +52,12 @@ class MaticNativeCurrency extends NativeCurrency {
   }
 
   get wrapped(): Token {
-    if (!isMatic(this.chainId)) throw new Error('Not matic')
+    if (!isPolygonChain(this.chainId)) throw new Error('Not matic')
     return WRAPPED_NATIVE_CURRENCY[this.chainId]
   }
 
   public constructor(chainId: number) {
-    if (!isMatic(chainId)) throw new Error('Not matic')
+    if (!isPolygonChain(chainId)) throw new Error('Not matic')
     super(chainId)
   }
 }
