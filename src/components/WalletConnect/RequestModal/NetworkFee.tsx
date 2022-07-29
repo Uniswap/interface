@@ -24,7 +24,9 @@ export function NetworkFee({
       <Flex grow>
         <Text variant="bodySmall">{t('Network Fee')}</Text>
       </Flex>
-      <Text variant="bodySmall">{!gasFeeInfo ? 'Loading...' : formatUSDPrice(price)}</Text>
+      <Text variant="bodySmall">
+        {!gasFeeInfo || !price ? 'Loading...' : formatUSDPrice(price)}
+      </Text>
     </Flex>
   )
 }

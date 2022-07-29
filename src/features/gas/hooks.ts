@@ -46,7 +46,7 @@ export function useGasFeeInfo(
     }
   }, [chainId, provider, tx, fallbackGasEstimate])
 
-  useInterval(computeGas, intervalOverride ?? GAS_FEE_REFRESH_INTERVAL)
+  useInterval(computeGas, intervalOverride ?? GAS_FEE_REFRESH_INTERVAL, true)
 
   return gasFeeInfo
 }

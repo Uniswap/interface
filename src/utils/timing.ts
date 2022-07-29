@@ -20,13 +20,13 @@ export async function promiseTimeout<T extends any>(promise: Promise<T>, millise
 }
 
 // https://usehooks-typescript.com/react-hook/use-interval
-export function useInterval(callback: () => void, delay: number | null) {
+export function useInterval(callback: () => void, delay: number | null, immediateStart?: boolean) {
   const savedCallback = useRef<() => void | null>()
 
   // Remember the latest callback.
   useEffect(() => {
     savedCallback.current = callback
-  })
+  }, [callback])
 
   // Set up the interval.
   useEffect(() => {
@@ -37,12 +37,16 @@ export function useInterval(callback: () => void, delay: number | null) {
     }
 
     if (delay !== null) {
+      if (immediateStart) {
+        tick()
+      }
+
       const id = setInterval(tick, delay)
       return () => clearInterval(id)
     }
 
     return undefined
-  }, [delay])
+  }, [delay, immediateStart])
 }
 
 // https://medium.com/javascript-in-plain-english/usetimeout-react-hook-3cc58b94af1f
