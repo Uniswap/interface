@@ -152,8 +152,8 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
           backgroundColor="none"
           borderWidth={0}
           flex={1}
-          fontSize={16}
-          fontWeight="500"
+          fontFamily={theme.textVariants.subheadSmall.fontFamily}
+          fontSize={theme.textVariants.subheadSmall.fontSize}
           placeholder={placeholder}
           placeholderTextColor={theme.colors.textTertiary}
           returnKeyType="done"
@@ -168,7 +168,7 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
             <ClearButton clearIcon={clearIcon} onPress={onClear} />
           </AnimatedFlex>
         ) : (
-          <AnimatedFlex mx="sm" style={[endAdornmentStyle]}>
+          <AnimatedFlex mx="md" style={[endAdornmentStyle]}>
             {endAdornment}
           </AnimatedFlex>
         )}

@@ -121,7 +121,7 @@ export function ExploreScreen() {
           </AnimatedText>
           <SearchTextInput
             ref={textInputRef}
-            backgroundColor="backgroundBackdrop"
+            backgroundColor="backgroundContainer"
             placeholder={t('Search tokens or addresses')}
             value={searchQuery}
             onCancel={onSearchCancel}

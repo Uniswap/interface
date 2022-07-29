@@ -109,7 +109,7 @@ export const TokenItem = forwardRef<Swipeable, TokenItemProps>(
             justifyContent="space-between"
             px="md"
             py="sm">
-            <Flex centered row flexShrink={1} gap="sm" overflow="hidden">
+            <Flex centered row flexShrink={1} gap="xs" overflow="hidden">
               {index !== undefined && (
                 <Box minWidth={18}>
                   <Text color="textSecondary" variant="badge">
