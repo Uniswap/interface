@@ -29,6 +29,22 @@ import { logger } from 'src/utils/logger'
 import { isZero } from 'src/utils/number'
 import { call, takeEvery } from 'typed-redux-saga'
 
+// TODO: remove hardcoded values and use gas estimate from trade quote endpoint once
+// it is updated. Until then, using conservative values to ensure swaps succeeed
+const SWAP_GAS_LIMIT_FALLBACKS: Record<ChainId, string> = {
+  [ChainId.Mainnet]: '420000',
+  [ChainId.Rinkeby]: '420000',
+  [ChainId.Ropsten]: '420000',
+  [ChainId.Goerli]: '420000',
+  [ChainId.Kovan]: '420000',
+  [ChainId.Optimism]: '420000',
+  [ChainId.OptimisticKovan]: '420000',
+  [ChainId.Polygon]: '420000',
+  [ChainId.PolygonMumbai]: '420000',
+  [ChainId.ArbitrumOne]: '1200000',
+  [ChainId.ArbitrumRinkeby]: '1200000',
+}
+
 export type GasEstimateParams = SwapGasEstimateParams | TransferGasEstimateParams
 
 export interface SwapGasEstimateParams {
@@ -256,14 +272,14 @@ function* estimateSwapGasInfo(params: EstimateSwapGasInfo) {
     ...valueObject,
   }
 
+  const gasFallbackValue = SWAP_GAS_LIMIT_FALLBACKS[chainId]
+
   const swapGasInfo = yield* call(
     computeGasFee,
     chainId,
     tx,
     provider as providers.JsonRpcProvider,
-    // TODO: remove hardcoded value and uncomment trade quote gas estimate when endpoint is updated
-    // Using a conservative 300,000 fallback gasLimit until then
-    '300000'
+    gasFallbackValue
     // trade.quote.gasUseEstimate
   )
   const gasPrice = getGasPrice(swapGasInfo)
