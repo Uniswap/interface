@@ -78,20 +78,20 @@ export const ButtonPrimary = styled(BaseButton)`
 `
 
 export const ButtonLight = styled(BaseButton)`
-  background-color: ${({ theme }) => theme.deprecated_primary5};
-  color: ${({ theme }) => theme.deprecated_primaryText1};
-  font-size: 16px;
-  font-weight: 500;
+  background-color: ${({ theme }) => theme.accentActionSoft};
+  color: ${({ theme }) => theme.accentAction};
+  font-size: 20px;
+  font-weight: 600;
   &:focus {
-    box-shadow: 0 0 0 1pt ${({ theme, disabled }) => !disabled && darken(0.03, theme.deprecated_primary5)};
-    background-color: ${({ theme, disabled }) => !disabled && darken(0.03, theme.deprecated_primary5)};
+    box-shadow: 0 0 0 1pt ${({ theme, disabled }) => !disabled && darken(0.03, theme.accentActionSoft)};
+    background-color: ${({ theme, disabled }) => !disabled && darken(0.03, theme.accentActionSoft)};
   }
   &:hover {
-    background-color: ${({ theme, disabled }) => !disabled && darken(0.03, theme.deprecated_primary5)};
+    background-color: ${({ theme, disabled }) => !disabled && darken(0.03, theme.accentActionSoft)};
   }
   &:active {
-    box-shadow: 0 0 0 1pt ${({ theme, disabled }) => !disabled && darken(0.05, theme.deprecated_primary5)};
-    background-color: ${({ theme, disabled }) => !disabled && darken(0.05, theme.deprecated_primary5)};
+    box-shadow: 0 0 0 1pt ${({ theme, disabled }) => !disabled && darken(0.05, theme.accentActionSoft)};
+    background-color: ${({ theme, disabled }) => !disabled && darken(0.05, theme.accentActionSoft)};
   }
   :disabled {
     opacity: 0.4;
