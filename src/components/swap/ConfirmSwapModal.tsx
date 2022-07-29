@@ -41,30 +41,32 @@ export default function ConfirmSwapModal({
   onDismiss: () => void
   swapQuoteReceivedDate: Date | undefined
 }) {
-  const [dismissed, setDismissed] = useState(false)
+  // shouldLogModalCloseEvent lets the child SwapModalHeader component know when modal has been closed
+  // and an event triggered by modal closing should be logged.
+  const [shouldLogModalCloseEvent, setShouldLogModalCloseEvent] = useState(false)
   const showAcceptChanges = useMemo(
     () => Boolean(trade && originalTrade && tradeMeaningfullyDiffers(trade, originalTrade)),
     [originalTrade, trade]
   )
 
-  const onModalDismiss = () => {
-    setDismissed(true)
-    console.log('modal just dismissed')
+  const onModalDismiss = useCallback(() => {
+    if (isOpen) setShouldLogModalCloseEvent(true)
     onDismiss()
-  }
+  }, [isOpen, onDismiss])
 
   const modalHeader = useCallback(() => {
     return trade ? (
       <SwapModalHeader
         trade={trade}
-        modalDismissed={dismissed}
+        shouldLogModalCloseEvent={shouldLogModalCloseEvent}
+        setShouldLogModalCloseEvent={setShouldLogModalCloseEvent}
         allowedSlippage={allowedSlippage}
         recipient={recipient}
         showAcceptChanges={showAcceptChanges}
         onAcceptChanges={onAcceptChanges}
       />
     ) : null
-  }, [allowedSlippage, onAcceptChanges, recipient, showAcceptChanges, trade, dismissed])
+  }, [allowedSlippage, onAcceptChanges, recipient, showAcceptChanges, trade, shouldLogModalCloseEvent])
 
   const modalBottom = useCallback(() => {
     return trade ? (
@@ -100,8 +102,7 @@ export default function ConfirmSwapModal({
           bottomContent={modalBottom}
         />
       ),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [onDismiss, modalBottom, modalHeader, swapErrorMessage]
+    [onModalDismiss, modalBottom, modalHeader, swapErrorMessage]
   )
 
   return (
