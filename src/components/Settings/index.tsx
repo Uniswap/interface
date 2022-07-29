@@ -27,7 +27,7 @@ const StyledMenuIcon = styled(Settings)`
   width: 20px;
 
   > * {
-    stroke: ${({ theme }) => theme.deprecated_text1};
+    stroke: ${({ theme }) => theme.textSecondary};
   }
 `
 

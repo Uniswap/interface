@@ -19,7 +19,7 @@ import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import JSBI from 'jsbi'
 import { Context, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { ReactNode } from 'react'
-import { ArrowDown, CheckCircle, HelpCircle } from 'react-feather'
+import { ArrowDown, ArrowUp, CheckCircle, HelpCircle } from 'react-feather'
 import { useHistory } from 'react-router-dom'
 import { Text } from 'rebass'
 import { useToggleWalletModal } from 'state/application/hooks'
@@ -68,6 +68,32 @@ import AppBody from '../AppBody'
 const AlertWrapper = styled.div`
   max-width: 460px;
   width: 100%;
+`
+const ArrowContainer = styled.div`
+  display: inline-block;
+`
+const ArrowDownWrapper = styled.div`
+  margin-top: -70%;
+  margin-left: 18%;
+`
+const ArrowUpWrapper = styled.div`
+  margin-left: 55%;
+  margin-top: -10%;
+`
+const BottomWrapper = styled.div`
+  background-color: ${({ theme }) => theme.backgroundContainer};
+  border-radius: 12px;
+  padding: 8px 12px 10px;
+  color: ${({ theme }) => theme.textSecondary};
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 500;
+`
+const TopInputWrapper = styled.div`
+  padding: 0px 12px;
+`
+const BottomInputWrapper = styled.div`
+  padding: 8px 0px;
 `
 
 export function getIsValidSwapQuote(
@@ -438,251 +464,262 @@ export default function Swap() {
               onDismiss={handleConfirmDismiss}
             />
 
-            <AutoColumn gap={'sm'}>
+            <AutoColumn grid-row-gap="0px" gap="0px">
               <div style={{ display: 'relative' }}>
-                <Trace section={SectionName.CURRENCY_INPUT_PANEL}>
-                  <CurrencyInputPanel
-                    label={
-                      independentField === Field.OUTPUT && !showWrap ? (
-                        <Trans>From (at most)</Trans>
-                      ) : (
-                        <Trans>From</Trans>
-                      )
-                    }
-                    value={formattedAmounts[Field.INPUT]}
-                    showMaxButton={showMaxButton}
-                    currency={currencies[Field.INPUT] ?? null}
-                    onUserInput={handleTypeInput}
-                    onMax={handleMaxInput}
-                    fiatValue={fiatValueInput ?? undefined}
-                    onCurrencySelect={handleInputSelect}
-                    otherCurrency={currencies[Field.OUTPUT]}
-                    showCommonBases={true}
-                    id={SectionName.CURRENCY_INPUT_PANEL}
-                    loading={independentField === Field.OUTPUT && routeIsSyncing}
-                  />
-                </Trace>
+                <TopInputWrapper>
+                  <Trace section={SectionName.CURRENCY_INPUT_PANEL}>
+                    <CurrencyInputPanel
+                      label={
+                        independentField === Field.OUTPUT && !showWrap ? (
+                          <Trans>From (at most)</Trans>
+                        ) : (
+                          <Trans>From</Trans>
+                        )
+                      }
+                      value={formattedAmounts[Field.INPUT]}
+                      showMaxButton={showMaxButton}
+                      currency={currencies[Field.INPUT] ?? null}
+                      onUserInput={handleTypeInput}
+                      onMax={handleMaxInput}
+                      fiatValue={fiatValueInput ?? undefined}
+                      onCurrencySelect={handleInputSelect}
+                      otherCurrency={currencies[Field.OUTPUT]}
+                      showCommonBases={true}
+                      id={SectionName.CURRENCY_INPUT_PANEL}
+                      loading={independentField === Field.OUTPUT && routeIsSyncing}
+                    />
+                  </Trace>
+                </TopInputWrapper>
                 <ArrowWrapper clickable={isSupportedChain(chainId)}>
                   <TraceEvent
                     events={[Event.onClick]}
                     name={EventName.SWAP_TOKENS_REVERSED}
                     element={ElementName.SWAP_TOKENS_REVERSE_ARROW_BUTTON}
                   >
-                    <ArrowDown
-                      size="16"
+                    <ArrowContainer
                       onClick={() => {
                         setApprovalSubmitted(false) // reset 2 step UI for approvals
                         onSwitchTokens()
                       }}
-                      color={
-                        currencies[Field.INPUT] && currencies[Field.OUTPUT]
-                          ? theme.deprecated_text1
-                          : theme.deprecated_text3
-                      }
-                    />
+                      color={theme.textPrimary}
+                    >
+                      <ArrowUpWrapper>
+                        <ArrowUp size="14" stroke-width="3" />
+                      </ArrowUpWrapper>
+                      <ArrowDownWrapper>
+                        <ArrowDown size="14" stroke-width="3" />
+                      </ArrowDownWrapper>
+                    </ArrowContainer>
                   </TraceEvent>
                 </ArrowWrapper>
-                <Trace section={SectionName.CURRENCY_OUTPUT_PANEL}>
-                  <CurrencyInputPanel
-                    value={formattedAmounts[Field.OUTPUT]}
-                    onUserInput={handleTypeOutput}
-                    label={
-                      independentField === Field.INPUT && !showWrap ? <Trans>To (at least)</Trans> : <Trans>To</Trans>
-                    }
-                    showMaxButton={false}
-                    hideBalance={false}
-                    fiatValue={fiatValueOutput ?? undefined}
-                    priceImpact={priceImpact}
-                    currency={currencies[Field.OUTPUT] ?? null}
-                    onCurrencySelect={handleOutputSelect}
-                    otherCurrency={currencies[Field.INPUT]}
-                    showCommonBases={true}
-                    id={SectionName.CURRENCY_OUTPUT_PANEL}
-                    loading={independentField === Field.INPUT && routeIsSyncing}
-                  />
-                </Trace>
               </div>
-
-              {recipient !== null && !showWrap ? (
-                <>
-                  <AutoRow justify="space-between" style={{ padding: '0 1rem' }}>
-                    <ArrowWrapper clickable={false}>
-                      <ArrowDown size="16" color={theme.deprecated_text2} />
-                    </ArrowWrapper>
-                    <LinkStyledButton id="remove-recipient-button" onClick={() => onChangeRecipient(null)}>
-                      <Trans>- Remove recipient</Trans>
-                    </LinkStyledButton>
-                  </AutoRow>
-                  <AddressInputPanel id="recipient" value={recipient} onChange={onChangeRecipient} />
-                </>
-              ) : null}
-              {!showWrap && userHasSpecifiedInputOutput && (trade || routeIsLoading || routeIsSyncing) && (
-                <SwapDetailsDropdown
-                  trade={trade}
-                  syncing={routeIsSyncing}
-                  loading={routeIsLoading}
-                  showInverted={showInverted}
-                  setShowInverted={setShowInverted}
-                  allowedSlippage={allowedSlippage}
-                />
-              )}
-              <div>
-                {swapIsUnsupported ? (
-                  <ButtonPrimary disabled={true}>
-                    <ThemedText.Main mb="4px">
-                      <Trans>Unsupported Asset</Trans>
-                    </ThemedText.Main>
-                  </ButtonPrimary>
-                ) : !account ? (
-                  <TraceEvent
-                    events={[Event.onClick]}
-                    name={EventName.CONNECT_WALLET_BUTTON_CLICKED}
-                    properties={{ received_swap_quote: getIsValidSwapQuote(trade, tradeState, swapInputError) }}
-                    element={ElementName.CONNECT_WALLET_BUTTON}
-                  >
-                    <ButtonLight onClick={toggleWalletModal}>
-                      <Trans>Connect Wallet</Trans>
-                    </ButtonLight>
-                  </TraceEvent>
-                ) : showWrap ? (
-                  <ButtonPrimary disabled={Boolean(wrapInputError)} onClick={onWrap}>
-                    {wrapInputError ? (
-                      <WrapErrorText wrapInputError={wrapInputError} />
-                    ) : wrapType === WrapType.WRAP ? (
-                      <Trans>Wrap</Trans>
-                    ) : wrapType === WrapType.UNWRAP ? (
-                      <Trans>Unwrap</Trans>
-                    ) : null}
-                  </ButtonPrimary>
-                ) : routeNotFound && userHasSpecifiedInputOutput && !routeIsLoading && !routeIsSyncing ? (
-                  <GreyCard style={{ textAlign: 'center' }}>
-                    <ThemedText.Main mb="4px">
-                      <Trans>Insufficient liquidity for this trade.</Trans>
-                    </ThemedText.Main>
-                  </GreyCard>
-                ) : showApproveFlow ? (
-                  <AutoRow style={{ flexWrap: 'nowrap', width: '100%' }}>
-                    <AutoColumn style={{ width: '100%' }} gap="12px">
-                      <ButtonConfirmed
-                        onClick={handleApprove}
-                        disabled={
-                          approvalState !== ApprovalState.NOT_APPROVED ||
-                          approvalSubmitted ||
-                          signatureState === UseERC20PermitState.SIGNED
-                        }
-                        width="100%"
-                        altDisabledStyle={approvalState === ApprovalState.PENDING} // show solid button while waiting
-                        confirmed={
-                          approvalState === ApprovalState.APPROVED || signatureState === UseERC20PermitState.SIGNED
-                        }
-                      >
-                        <AutoRow justify="space-between" style={{ flexWrap: 'nowrap' }}>
-                          <span style={{ display: 'flex', alignItems: 'center' }}>
-                            <CurrencyLogo
-                              currency={currencies[Field.INPUT]}
-                              size={'20px'}
-                              style={{ marginRight: '8px', flexShrink: 0 }}
-                            />
-                            {/* we need to shorten this string on mobile */}
-                            {approvalState === ApprovalState.APPROVED ||
-                            signatureState === UseERC20PermitState.SIGNED ? (
-                              <Trans>You can now trade {currencies[Field.INPUT]?.symbol}</Trans>
-                            ) : (
-                              <Trans>Allow the Uniswap Protocol to use your {currencies[Field.INPUT]?.symbol}</Trans>
-                            )}
-                          </span>
-                          {approvalState === ApprovalState.PENDING ? (
-                            <Loader stroke="white" />
-                          ) : (approvalSubmitted && approvalState === ApprovalState.APPROVED) ||
-                            signatureState === UseERC20PermitState.SIGNED ? (
-                            <CheckCircle size="20" color={theme.deprecated_green1} />
-                          ) : (
-                            <MouseoverTooltip
-                              text={
-                                <Trans>
-                                  You must give the Uniswap smart contracts permission to use your{' '}
-                                  {currencies[Field.INPUT]?.symbol}. You only have to do this once per token.
-                                </Trans>
-                              }
-                            >
-                              <HelpCircle size="20" color={'deprecated_white'} style={{ marginLeft: '8px' }} />
-                            </MouseoverTooltip>
-                          )}
-                        </AutoRow>
-                      </ButtonConfirmed>
-                      <ButtonError
-                        onClick={() => {
-                          if (isExpertMode) {
-                            handleSwap()
-                          } else {
-                            setSwapState({
-                              tradeToConfirm: trade,
-                              attemptingTxn: false,
-                              swapErrorMessage: undefined,
-                              showConfirm: true,
-                              txHash: undefined,
-                            })
-                          }
-                        }}
-                        width="100%"
-                        id="swap-button"
-                        disabled={
-                          !isValid ||
-                          routeIsSyncing ||
-                          routeIsLoading ||
-                          (approvalState !== ApprovalState.APPROVED && signatureState !== UseERC20PermitState.SIGNED) ||
-                          priceImpactTooHigh
-                        }
-                        error={isValid && priceImpactSeverity > 2}
-                      >
-                        <Text fontSize={16} fontWeight={500}>
-                          {priceImpactTooHigh ? (
-                            <Trans>High Price Impact</Trans>
-                          ) : trade && priceImpactSeverity > 2 ? (
-                            <Trans>Swap Anyway</Trans>
-                          ) : (
-                            <Trans>Swap</Trans>
-                          )}
-                        </Text>
-                      </ButtonError>
-                    </AutoColumn>
-                  </AutoRow>
-                ) : (
-                  <ButtonError
-                    onClick={() => {
-                      if (isExpertMode) {
-                        handleSwap()
-                      } else {
-                        setSwapState({
-                          tradeToConfirm: trade,
-                          attemptingTxn: false,
-                          swapErrorMessage: undefined,
-                          showConfirm: true,
-                          txHash: undefined,
-                        })
+              <BottomWrapper>
+                For
+                <BottomInputWrapper>
+                  <Trace section={SectionName.CURRENCY_OUTPUT_PANEL}>
+                    <CurrencyInputPanel
+                      value={formattedAmounts[Field.OUTPUT]}
+                      onUserInput={handleTypeOutput}
+                      label={
+                        independentField === Field.INPUT && !showWrap ? <Trans>To (at least)</Trans> : <Trans>To</Trans>
                       }
-                    }}
-                    id="swap-button"
-                    disabled={!isValid || routeIsSyncing || routeIsLoading || priceImpactTooHigh || !!swapCallbackError}
-                    error={isValid && priceImpactSeverity > 2 && !swapCallbackError}
-                  >
-                    <Text fontSize={20} fontWeight={500}>
-                      {swapInputError ? (
-                        swapInputError
-                      ) : routeIsSyncing || routeIsLoading ? (
-                        <Trans>Swap</Trans>
-                      ) : priceImpactSeverity > 2 ? (
-                        <Trans>Swap Anyway</Trans>
-                      ) : priceImpactTooHigh ? (
-                        <Trans>Price Impact Too High</Trans>
-                      ) : (
-                        <Trans>Swap</Trans>
-                      )}
-                    </Text>
-                  </ButtonError>
+                      showMaxButton={false}
+                      hideBalance={false}
+                      fiatValue={fiatValueOutput ?? undefined}
+                      priceImpact={priceImpact}
+                      currency={currencies[Field.OUTPUT] ?? null}
+                      onCurrencySelect={handleOutputSelect}
+                      otherCurrency={currencies[Field.INPUT]}
+                      showCommonBases={true}
+                      id={SectionName.CURRENCY_OUTPUT_PANEL}
+                      loading={independentField === Field.INPUT && routeIsSyncing}
+                    />
+                  </Trace>
+                </BottomInputWrapper>
+                {recipient !== null && !showWrap ? (
+                  <>
+                    <AutoRow justify="space-between" style={{ padding: '0 1rem' }}>
+                      <ArrowWrapper clickable={false}>
+                        <ArrowDown size="16" color={theme.deprecated_text2} />
+                      </ArrowWrapper>
+                      <LinkStyledButton id="remove-recipient-button" onClick={() => onChangeRecipient(null)}>
+                        <Trans>- Remove recipient</Trans>
+                      </LinkStyledButton>
+                    </AutoRow>
+                    <AddressInputPanel id="recipient" value={recipient} onChange={onChangeRecipient} />
+                  </>
+                ) : null}
+                {!showWrap && userHasSpecifiedInputOutput && (trade || routeIsLoading || routeIsSyncing) && (
+                  <SwapDetailsDropdown
+                    trade={trade}
+                    syncing={routeIsSyncing}
+                    loading={routeIsLoading}
+                    showInverted={showInverted}
+                    setShowInverted={setShowInverted}
+                    allowedSlippage={allowedSlippage}
+                  />
                 )}
-                {isExpertMode && swapErrorMessage ? <SwapCallbackError error={swapErrorMessage} /> : null}
-              </div>
+                <div>
+                  {swapIsUnsupported ? (
+                    <ButtonPrimary disabled={true}>
+                      <ThemedText.Main mb="4px">
+                        <Trans>Unsupported Asset</Trans>
+                      </ThemedText.Main>
+                    </ButtonPrimary>
+                  ) : !account ? (
+                    <TraceEvent
+                      events={[Event.onClick]}
+                      name={EventName.CONNECT_WALLET_BUTTON_CLICKED}
+                      properties={{ received_swap_quote: getIsValidSwapQuote(trade, tradeState, swapInputError) }}
+                      element={ElementName.CONNECT_WALLET_BUTTON}
+                    >
+                      <ButtonLight onClick={toggleWalletModal}>
+                        <Trans>Connect Wallet</Trans>
+                      </ButtonLight>
+                    </TraceEvent>
+                  ) : showWrap ? (
+                    <ButtonPrimary disabled={Boolean(wrapInputError)} onClick={onWrap}>
+                      {wrapInputError ? (
+                        <WrapErrorText wrapInputError={wrapInputError} />
+                      ) : wrapType === WrapType.WRAP ? (
+                        <Trans>Wrap</Trans>
+                      ) : wrapType === WrapType.UNWRAP ? (
+                        <Trans>Unwrap</Trans>
+                      ) : null}
+                    </ButtonPrimary>
+                  ) : routeNotFound && userHasSpecifiedInputOutput && !routeIsLoading && !routeIsSyncing ? (
+                    <GreyCard style={{ textAlign: 'center' }}>
+                      <ThemedText.Main mb="4px">
+                        <Trans>Insufficient liquidity for this trade.</Trans>
+                      </ThemedText.Main>
+                    </GreyCard>
+                  ) : showApproveFlow ? (
+                    <AutoRow style={{ flexWrap: 'nowrap', width: '100%' }}>
+                      <AutoColumn style={{ width: '100%' }} gap="12px">
+                        <ButtonConfirmed
+                          onClick={handleApprove}
+                          disabled={
+                            approvalState !== ApprovalState.NOT_APPROVED ||
+                            approvalSubmitted ||
+                            signatureState === UseERC20PermitState.SIGNED
+                          }
+                          width="100%"
+                          altDisabledStyle={approvalState === ApprovalState.PENDING} // show solid button while waiting
+                          confirmed={
+                            approvalState === ApprovalState.APPROVED || signatureState === UseERC20PermitState.SIGNED
+                          }
+                        >
+                          <AutoRow justify="space-between" style={{ flexWrap: 'nowrap' }}>
+                            <span style={{ display: 'flex', alignItems: 'center' }}>
+                              <CurrencyLogo
+                                currency={currencies[Field.INPUT]}
+                                size={'20px'}
+                                style={{ marginRight: '8px', flexShrink: 0 }}
+                              />
+                              {/* we need to shorten this string on mobile */}
+                              {approvalState === ApprovalState.APPROVED ||
+                              signatureState === UseERC20PermitState.SIGNED ? (
+                                <Trans>You can now trade {currencies[Field.INPUT]?.symbol}</Trans>
+                              ) : (
+                                <Trans>Allow the Uniswap Protocol to use your {currencies[Field.INPUT]?.symbol}</Trans>
+                              )}
+                            </span>
+                            {approvalState === ApprovalState.PENDING ? (
+                              <Loader stroke="white" />
+                            ) : (approvalSubmitted && approvalState === ApprovalState.APPROVED) ||
+                              signatureState === UseERC20PermitState.SIGNED ? (
+                              <CheckCircle size="20" color={theme.deprecated_green1} />
+                            ) : (
+                              <MouseoverTooltip
+                                text={
+                                  <Trans>
+                                    You must give the Uniswap smart contracts permission to use your{' '}
+                                    {currencies[Field.INPUT]?.symbol}. You only have to do this once per token.
+                                  </Trans>
+                                }
+                              >
+                                <HelpCircle size="20" color={'deprecated_white'} style={{ marginLeft: '8px' }} />
+                              </MouseoverTooltip>
+                            )}
+                          </AutoRow>
+                        </ButtonConfirmed>
+                        <ButtonError
+                          onClick={() => {
+                            if (isExpertMode) {
+                              handleSwap()
+                            } else {
+                              setSwapState({
+                                tradeToConfirm: trade,
+                                attemptingTxn: false,
+                                swapErrorMessage: undefined,
+                                showConfirm: true,
+                                txHash: undefined,
+                              })
+                            }
+                          }}
+                          width="100%"
+                          id="swap-button"
+                          disabled={
+                            !isValid ||
+                            routeIsSyncing ||
+                            routeIsLoading ||
+                            (approvalState !== ApprovalState.APPROVED &&
+                              signatureState !== UseERC20PermitState.SIGNED) ||
+                            priceImpactTooHigh
+                          }
+                          error={isValid && priceImpactSeverity > 2}
+                        >
+                          <Text fontSize={16} fontWeight={500}>
+                            {priceImpactTooHigh ? (
+                              <Trans>High Price Impact</Trans>
+                            ) : trade && priceImpactSeverity > 2 ? (
+                              <Trans>Swap Anyway</Trans>
+                            ) : (
+                              <Trans>Swap</Trans>
+                            )}
+                          </Text>
+                        </ButtonError>
+                      </AutoColumn>
+                    </AutoRow>
+                  ) : (
+                    <ButtonError
+                      onClick={() => {
+                        if (isExpertMode) {
+                          handleSwap()
+                        } else {
+                          setSwapState({
+                            tradeToConfirm: trade,
+                            attemptingTxn: false,
+                            swapErrorMessage: undefined,
+                            showConfirm: true,
+                            txHash: undefined,
+                          })
+                        }
+                      }}
+                      id="swap-button"
+                      disabled={
+                        !isValid || routeIsSyncing || routeIsLoading || priceImpactTooHigh || !!swapCallbackError
+                      }
+                      error={isValid && priceImpactSeverity > 2 && !swapCallbackError}
+                    >
+                      <Text fontSize={20} fontWeight={500}>
+                        {swapInputError ? (
+                          swapInputError
+                        ) : routeIsSyncing || routeIsLoading ? (
+                          <Trans>Swap</Trans>
+                        ) : priceImpactSeverity > 2 ? (
+                          <Trans>Swap Anyway</Trans>
+                        ) : priceImpactTooHigh ? (
+                          <Trans>Price Impact Too High</Trans>
+                        ) : (
+                          <Trans>Swap</Trans>
+                        )}
+                      </Text>
+                    </ButtonError>
+                  )}
+                  {isExpertMode && swapErrorMessage ? <SwapCallbackError error={swapErrorMessage} /> : null}
+                </div>
+              </BottomWrapper>
             </AutoColumn>
           </Wrapper>
         </AppBody>
