@@ -1,7 +1,8 @@
 import { backgroundColor, BackgroundColorProps, useRestyle } from '@shopify/restyle'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import React from 'react'
+import React, { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
+import { TextInput, TouchableWithoutFeedback } from 'react-native'
 import { useAppTheme } from 'src/app/hooks'
 import { InlineMaxAmountButton } from 'src/components/buttons/MaxAmountButton'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
@@ -65,87 +66,94 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps) {
   const { t } = useTranslation()
   const transformedProps = useRestyle(restyleFunctions, rest)
   const isBlankOutputState = isOutput && !currency
+  const inputRef = useRef<TextInput>(null)
 
   const insufficientBalanceWarning = warnings.find(
     (warning) => warning.type === WarningLabel.InsufficientFunds
   )
 
   return (
-    <Flex
-      centered
-      borderRadius="lg"
-      gap="sm"
-      pt={isBlankOutputState ? 'lg' : 'md'}
-      {...transformedProps}>
-      {!isBlankOutputState && (
-        <AmountInput
-          autoFocus={autoFocus}
-          backgroundColor="none"
-          borderWidth={0}
-          dimTextColor={dimTextColor}
-          fontFamily={theme.textVariants.headlineLarge.fontFamily}
-          fontSize={36}
-          height={36}
-          placeholder="0"
-          placeholderTextColor={theme.colors.textSecondary}
-          px="none"
-          py="none"
-          showCurrencySign={isUSDInput}
-          showSoftInputOnFocus={showSoftInputOnFocus}
-          testID={isOutput ? 'amount-input-out' : 'amount-input-in'}
-          value={value}
-          onChangeText={(newAmount: string) => onSetAmount(newAmount)}
-          onPressIn={onPressIn}
-        />
-      )}
-
-      {!isOutput && insufficientBalanceWarning && (
-        <Text color="accentWarning" variant="caption">
-          {insufficientBalanceWarning.title}
-        </Text>
-      )}
-
-      {!isOutput && currency && !insufficientBalanceWarning && (
-        <Text color="textSecondary" variant="caption">
-          {t('Balance')}: {formatCurrencyAmount(currencyBalance)} {currency.symbol}
-        </Text>
-      )}
-
-      <Flex row alignItems="center" gap="xs" justifyContent="center">
-        {onSetMax ? (
-          <InlineMaxAmountButton
-            currencyAmount={currencyAmount}
-            currencyBalance={currencyBalance}
-            style={{ paddingVertical: TOGGLE_PADDING_VERTICAL }}
-            onSetMax={onSetMax}
+    <TouchableWithoutFeedback
+      onPress={() => {
+        inputRef.current?.focus()
+      }}>
+      <Flex
+        centered
+        borderRadius="lg"
+        gap="sm"
+        pt={isBlankOutputState ? 'lg' : 'md'}
+        {...transformedProps}>
+        {!isBlankOutputState && (
+          <AmountInput
+            ref={inputRef}
+            autoFocus={autoFocus}
+            backgroundColor="none"
+            borderWidth={0}
+            dimTextColor={dimTextColor}
+            fontFamily={theme.textVariants.headlineLarge.fontFamily}
+            fontSize={36}
+            height={36}
+            placeholder="0"
+            placeholderTextColor={theme.colors.textSecondary}
+            px="none"
+            py="none"
+            showCurrencySign={isUSDInput}
+            showSoftInputOnFocus={showSoftInputOnFocus}
+            testID={isOutput ? 'amount-input-out' : 'amount-input-in'}
+            value={value}
+            onChangeText={(newAmount: string) => onSetAmount(newAmount)}
+            onPressIn={onPressIn}
           />
-        ) : (
-          <Box alignItems="flex-start" flexBasis={0} flexGrow={1} />
         )}
-        <Box alignItems="center">
-          <CurrencySelector
-            otherSelectedCurrency={otherSelectedCurrency}
-            selectedCurrency={currency}
-            showNonZeroBalancesOnly={showNonZeroBalancesOnly}
-            onSelectCurrency={(newCurrency: Currency) => onSelectCurrency(newCurrency)}
-          />
-        </Box>
 
-        <Box alignItems="flex-start" flexBasis={0} flexGrow={1}>
-          {onToggleUSDInput ? (
-            <PrimaryButton
-              borderRadius="md"
-              label={t('USD')}
-              px="xs"
+        {!isOutput && insufficientBalanceWarning && (
+          <Text color="accentWarning" variant="caption">
+            {insufficientBalanceWarning.title}
+          </Text>
+        )}
+
+        {!isOutput && currency && !insufficientBalanceWarning && (
+          <Text color="textSecondary" variant="caption">
+            {t('Balance')}: {formatCurrencyAmount(currencyBalance)} {currency.symbol}
+          </Text>
+        )}
+
+        <Flex row alignItems="center" gap="xs" justifyContent="center">
+          {onSetMax ? (
+            <InlineMaxAmountButton
+              currencyAmount={currencyAmount}
+              currencyBalance={currencyBalance}
               style={{ paddingVertical: TOGGLE_PADDING_VERTICAL }}
-              testID="toggle-usd"
-              textVariant="smallLabel"
-              variant={isUSDInput ? 'transparentBlue' : 'transparent'}
-              onPress={onToggleUSDInput}
+              onSetMax={onSetMax}
             />
-          ) : null}
-        </Box>
+          ) : (
+            <Box alignItems="flex-start" flexBasis={0} flexGrow={1} />
+          )}
+          <Box alignItems="center">
+            <CurrencySelector
+              otherSelectedCurrency={otherSelectedCurrency}
+              selectedCurrency={currency}
+              showNonZeroBalancesOnly={showNonZeroBalancesOnly}
+              onSelectCurrency={(newCurrency: Currency) => onSelectCurrency(newCurrency)}
+            />
+          </Box>
+
+          <Box alignItems="flex-start" flexBasis={0} flexGrow={1}>
+            {onToggleUSDInput ? (
+              <PrimaryButton
+                borderRadius="md"
+                label={t('USD')}
+                px="xs"
+                style={{ paddingVertical: TOGGLE_PADDING_VERTICAL }}
+                testID="toggle-usd"
+                textVariant="smallLabel"
+                variant={isUSDInput ? 'transparentBlue' : 'transparent'}
+                onPress={onToggleUSDInput}
+              />
+            ) : null}
+          </Box>
+        </Flex>
       </Flex>
-    </Flex>
+    </TouchableWithoutFeedback>
   )
 }
