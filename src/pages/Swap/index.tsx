@@ -535,30 +535,31 @@ export default function Swap() {
                       loading={independentField === Field.INPUT && routeIsSyncing}
                     />
                   </Trace>
+
+                  {recipient !== null && !showWrap ? (
+                    <>
+                      <AutoRow justify="space-between" style={{ padding: '0 1rem' }}>
+                        <ArrowWrapper clickable={false}>
+                          <ArrowDown size="16" color={theme.deprecated_text2} />
+                        </ArrowWrapper>
+                        <LinkStyledButton id="remove-recipient-button" onClick={() => onChangeRecipient(null)}>
+                          <Trans>- Remove recipient</Trans>
+                        </LinkStyledButton>
+                      </AutoRow>
+                      <AddressInputPanel id="recipient" value={recipient} onChange={onChangeRecipient} />
+                    </>
+                  ) : null}
+                  {!showWrap && userHasSpecifiedInputOutput && (trade || routeIsLoading || routeIsSyncing) && (
+                    <SwapDetailsDropdown
+                      trade={trade}
+                      syncing={routeIsSyncing}
+                      loading={routeIsLoading}
+                      showInverted={showInverted}
+                      setShowInverted={setShowInverted}
+                      allowedSlippage={allowedSlippage}
+                    />
+                  )}
                 </BottomInputWrapper>
-                {recipient !== null && !showWrap ? (
-                  <>
-                    <AutoRow justify="space-between" style={{ padding: '0 1rem' }}>
-                      <ArrowWrapper clickable={false}>
-                        <ArrowDown size="16" color={theme.deprecated_text2} />
-                      </ArrowWrapper>
-                      <LinkStyledButton id="remove-recipient-button" onClick={() => onChangeRecipient(null)}>
-                        <Trans>- Remove recipient</Trans>
-                      </LinkStyledButton>
-                    </AutoRow>
-                    <AddressInputPanel id="recipient" value={recipient} onChange={onChangeRecipient} />
-                  </>
-                ) : null}
-                {!showWrap && userHasSpecifiedInputOutput && (trade || routeIsLoading || routeIsSyncing) && (
-                  <SwapDetailsDropdown
-                    trade={trade}
-                    syncing={routeIsSyncing}
-                    loading={routeIsLoading}
-                    showInverted={showInverted}
-                    setShowInverted={setShowInverted}
-                    allowedSlippage={allowedSlippage}
-                  />
-                )}
                 <div>
                   {swapIsUnsupported ? (
                     <ButtonPrimary disabled={true}>
