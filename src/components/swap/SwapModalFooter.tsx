@@ -1,7 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
-import { ElementName, EventName } from 'components/AmplitudeAnalytics/constants'
-import { Event } from 'components/AmplitudeAnalytics/constants'
+import { ElementName, Event, EventName } from 'components/AmplitudeAnalytics/constants'
 import { TraceEvent } from 'components/AmplitudeAnalytics/TraceEvent'
 import {
   formatPercentInBasisPointsNumber,
@@ -16,11 +15,10 @@ import { ReactNode } from 'react'
 import { Text } from 'rebass'
 import { InterfaceTrade } from 'state/routing/types'
 import { useClientSideRouter, useUserSlippageTolerance } from 'state/user/hooks'
-import { computeRealizedLPFeePercent } from 'utils/prices'
+import { computeRealizedPriceImpact } from 'utils/prices'
 
 import { ButtonError } from '../Button'
 import { AutoRow } from '../Row'
-import { getPriceImpactPercent } from './AdvancedSwapDetails'
 import { SwapCallbackError } from './styleds'
 
 interface AnalyticsEventProps {
@@ -32,7 +30,6 @@ interface AnalyticsEventProps {
   isAutoRouterApi: boolean
   tokenInAmountUsd: string | undefined
   tokenOutAmountUsd: string | undefined
-  lpFeePercent: Percent
   swapQuoteReceivedDate: Date | undefined
 }
 
@@ -45,7 +42,6 @@ const formatAnalyticsEventProperties = ({
   isAutoRouterApi,
   tokenInAmountUsd,
   tokenOutAmountUsd,
-  lpFeePercent,
   swapQuoteReceivedDate,
 }: AnalyticsEventProps) => ({
   estimated_network_fee_usd: trade.gasUseEstimateUSD ? formatToDecimal(trade.gasUseEstimateUSD, 2) : undefined,
@@ -59,7 +55,7 @@ const formatAnalyticsEventProperties = ({
   token_out_symbol: trade.outputAmount.currency.symbol,
   token_in_amount: formatToDecimal(trade.inputAmount, trade.inputAmount.currency.decimals),
   token_out_amount: formatToDecimal(trade.outputAmount, trade.outputAmount.currency.decimals),
-  price_impact_basis_points: formatPercentInBasisPointsNumber(getPriceImpactPercent(lpFeePercent, trade)),
+  price_impact_basis_points: formatPercentInBasisPointsNumber(computeRealizedPriceImpact(trade)),
   allowed_slippage_basis_points: formatPercentInBasisPointsNumber(allowedSlippage),
   is_auto_router_api: isAutoRouterApi,
   is_auto_slippage: isAutoSlippage,
@@ -94,7 +90,6 @@ export default function SwapModalFooter({
   const [clientSideRouter] = useClientSideRouter()
   const tokenInAmountUsd = useStablecoinValue(trade.inputAmount)?.toFixed(2)
   const tokenOutAmountUsd = useStablecoinValue(trade.outputAmount)?.toFixed(2)
-  const lpFeePercent = computeRealizedLPFeePercent(trade)
 
   return (
     <>
@@ -112,7 +107,6 @@ export default function SwapModalFooter({
             isAutoRouterApi: !clientSideRouter,
             tokenInAmountUsd,
             tokenOutAmountUsd,
-            lpFeePercent,
             swapQuoteReceivedDate,
           })}
         >

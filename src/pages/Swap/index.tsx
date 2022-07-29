@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { Trade } from '@uniswap/router-sdk'
-import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
@@ -16,7 +16,7 @@ import {
 } from 'components/AmplitudeAnalytics/utils'
 import { sendEvent } from 'components/analytics'
 import { NetworkAlert } from 'components/NetworkAlert/NetworkAlert'
-import { getPriceImpactPercent } from 'components/swap/AdvancedSwapDetails'
+import PriceImpactWarning from 'components/swap/PriceImpactWarning'
 import SwapDetailsDropdown from 'components/swap/SwapDetailsDropdown'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 import { MouseoverTooltip } from 'components/Tooltip'
@@ -68,8 +68,7 @@ import { useExpertModeManager } from '../../state/user/hooks'
 import { LinkStyledButton, ThemedText } from '../../theme'
 import { computeFiatValuePriceImpact } from '../../utils/computeFiatValuePriceImpact'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
-import { computeRealizedLPFeePercent } from '../../utils/prices'
-import { warningSeverity } from '../../utils/prices'
+import { computeRealizedPriceImpact, warningSeverity } from '../../utils/prices'
 import { supportedChainId } from '../../utils/supportedChainId'
 import AppBody from '../AppBody'
 
@@ -86,19 +85,27 @@ export function getIsValidSwapQuote(
   return !!swapInputError && !!trade && (tradeState === TradeState.VALID || tradeState === TradeState.SYNCING)
 }
 
+function largerPercentValue(a?: Percent, b?: Percent) {
+  if (a && b) {
+    return a.greaterThan(b) ? a : b
+  } else if (a) {
+    return a
+  } else if (b) {
+    return b
+  }
+  return undefined
+}
+
 const formatAnalyticsEventProperties = (
   trade: InterfaceTrade<Currency, Currency, TradeType>,
   fetchingSwapQuoteStartTime: Date | undefined
 ) => {
-  const lpFeePercent = trade ? computeRealizedLPFeePercent(trade) : undefined
   return {
     token_in_symbol: trade.inputAmount.currency.symbol,
     token_out_symbol: trade.outputAmount.currency.symbol,
     token_in_address: getTokenAddress(trade.inputAmount.currency),
     token_out_address: getTokenAddress(trade.outputAmount.currency),
-    price_impact_basis_points: lpFeePercent
-      ? formatPercentInBasisPointsNumber(getPriceImpactPercent(lpFeePercent, trade))
-      : undefined,
+    price_impact_basis_points: trade ? formatPercentInBasisPointsNumber(computeRealizedPriceImpact(trade)) : undefined,
     estimated_network_fee_usd: trade.gasUseEstimateUSD ? formatToDecimal(trade.gasUseEstimateUSD, 2) : undefined,
     chain_id:
       trade.inputAmount.currency.chainId === trade.outputAmount.currency.chainId
@@ -205,7 +212,7 @@ export default function Swap() {
   const outputValue = showWrap ? parsedAmount : trade?.outputAmount
   const fiatValueInput = useStablecoinValue(inputValue)
   const fiatValueOutput = useStablecoinValue(outputValue)
-  const priceImpact = useMemo(
+  const stablecoinPriceImpact = useMemo(
     () => (routeIsSyncing ? undefined : computeFiatValuePriceImpact(fiatValueInput, fiatValueOutput)),
     [fiatValueInput, fiatValueOutput, routeIsSyncing]
   )
@@ -334,7 +341,7 @@ export default function Swap() {
     if (!swapCallback) {
       return
     }
-    if (priceImpact && !confirmPriceImpactWithoutFee(priceImpact)) {
+    if (stablecoinPriceImpact && !confirmPriceImpactWithoutFee(stablecoinPriceImpact)) {
       return
     }
     setSwapState({ attemptingTxn: true, tradeToConfirm, showConfirm, swapErrorMessage: undefined, txHash: undefined })
@@ -373,7 +380,7 @@ export default function Swap() {
       })
   }, [
     swapCallback,
-    priceImpact,
+    stablecoinPriceImpact,
     tradeToConfirm,
     showConfirm,
     recipient,
@@ -389,16 +396,11 @@ export default function Swap() {
   const [swapQuoteReceivedDate, setSwapQuoteReceivedDate] = useState<Date | undefined>()
 
   // warnings on the greater of fiat value price impact and execution price impact
-  const priceImpactSeverity = useMemo(() => {
-    const executionPriceImpact = trade?.priceImpact
-    return warningSeverity(
-      executionPriceImpact && priceImpact
-        ? executionPriceImpact.greaterThan(priceImpact)
-          ? executionPriceImpact
-          : priceImpact
-        : executionPriceImpact ?? priceImpact
-    )
-  }, [priceImpact, trade])
+  const { priceImpactSeverity, largerPriceImpact } = useMemo(() => {
+    const marketPriceImpact = trade?.priceImpact ? computeRealizedPriceImpact(trade) : undefined
+    const largerPriceImpact = largerPercentValue(marketPriceImpact, stablecoinPriceImpact)
+    return { priceImpactSeverity: warningSeverity(largerPriceImpact), largerPriceImpact }
+  }, [stablecoinPriceImpact, trade])
 
   const isArgentWallet = useIsArgentWallet()
 
@@ -448,6 +450,7 @@ export default function Swap() {
   const swapIsUnsupported = useIsSwapUnsupported(currencies[Field.INPUT], currencies[Field.OUTPUT])
 
   const priceImpactTooHigh = priceImpactSeverity > 3 && !isExpertMode
+  const showPriceImpactWarning = largerPriceImpact && priceImpactSeverity > 3
 
   // Handle time based logging events and event properties.
   useEffect(() => {
@@ -562,7 +565,7 @@ export default function Swap() {
                     showMaxButton={false}
                     hideBalance={false}
                     fiatValue={fiatValueOutput ?? undefined}
-                    priceImpact={priceImpact}
+                    priceImpact={stablecoinPriceImpact}
                     currency={currencies[Field.OUTPUT] ?? null}
                     onCurrencySelect={handleOutputSelect}
                     otherCurrency={currencies[Field.INPUT]}
@@ -596,6 +599,7 @@ export default function Swap() {
                   allowedSlippage={allowedSlippage}
                 />
               )}
+              {showPriceImpactWarning && <PriceImpactWarning priceImpact={largerPriceImpact} />}
               <div>
                 {swapIsUnsupported ? (
                   <ButtonPrimary disabled={true}>
