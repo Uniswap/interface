@@ -45,12 +45,7 @@ export function useTrade(
 ) {
   const [debouncedAmountSpecified, isDebouncing] = useDebounceWithStatus(amountSpecified)
 
-  const {
-    isLoading,
-    isFetching,
-    error,
-    currentData: data,
-  } = useRouterQuote({
+  const { isLoading, isFetching, error, data } = useRouterQuote({
     amountSpecified: debouncedAmountSpecified,
     otherCurrency,
     tradeType,
