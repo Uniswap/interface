@@ -7,7 +7,7 @@ import { createWeb3ReactRoot, Web3ReactProvider } from '@web3-react/core'
 import { StrictMode } from 'react'
 import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
-import { HashRouter } from 'react-router-dom'
+import { BrowserRouter } from 'react-router-dom'
 
 import Blocklist from './components/Blocklist'
 import { NetworkContextName } from './constants/misc'
@@ -48,7 +48,7 @@ function Updaters() {
 ReactDOM.render(
   <StrictMode>
     <Provider store={store}>
-      <HashRouter>
+      <BrowserRouter>
         <LanguageProvider>
           <Web3ReactProvider getLibrary={getLibrary}>
             <Web3ProviderNetwork getLibrary={getLibrary}>
@@ -62,7 +62,7 @@ ReactDOM.render(
             </Web3ProviderNetwork>
           </Web3ReactProvider>
         </LanguageProvider>
-      </HashRouter>
+      </BrowserRouter>
     </Provider>
   </StrictMode>,
   document.getElementById('root')

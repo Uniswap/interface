@@ -123,10 +123,10 @@ export default class ErrorBoundary extends React.Component<unknown, ErrorBoundar
 
 function getRelevantState(): null | keyof AppState {
   const path = window.location.hash
-  if (!path.startsWith('#/')) {
-    return null
-  }
-  const pieces = path.substring(2).split(/[/\\?]/)
+  // if (!path.startsWith('#/')) {
+  //   return null
+  // }
+  const pieces = path.split(/[/\\?]/)
   switch (pieces[0]) {
     case 'swap':
       return 'swap'

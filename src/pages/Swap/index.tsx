@@ -51,7 +51,8 @@ import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { warningSeverity } from '../../utils/prices'
 import AppBody from '../AppBody'
 
-export default function Swap({ history }: RouteComponentProps) {
+export default function Swap({ history, match, location }: RouteComponentProps) {
+  console.log(match, location)
   const { account } = useActiveWeb3React()
   const loadedUrlParams = useDefaultsFromURLSearch()
 
