@@ -2,6 +2,7 @@ import { useTheme } from '@shopify/restyle'
 import { default as React, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ListRenderItemInfo, SectionList } from 'react-native'
+import DeviceInfo from 'react-native-device-info'
 import { SvgProps } from 'react-native-svg'
 import { useDispatch } from 'react-redux'
 import { useAppDispatch } from 'src/app/hooks'
@@ -176,6 +177,7 @@ export function SettingsScreen() {
   return (
     <Screen px="lg" py="lg">
       <SectionList
+        ListFooterComponent={<FooterSettings />}
         ListHeaderComponent={<WalletSettings />}
         keyExtractor={(_item, index) => 'settings' + index}
         renderItem={renderItem}
@@ -330,5 +332,16 @@ function WalletSettings() {
           </Button>
         ))}
     </Box>
+  )
+}
+
+function FooterSettings() {
+  const version = DeviceInfo.getVersion()
+  const buildVersion = DeviceInfo.getBuildNumber()
+
+  return (
+    <Text color="textTertiary" fontSize={14} fontWeight="400" paddingTop="lg" variant="body">
+      {`Version ${version}.${buildVersion}`}
+    </Text>
   )
 }
