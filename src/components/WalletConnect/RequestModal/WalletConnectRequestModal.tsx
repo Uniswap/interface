@@ -154,7 +154,7 @@ export function WalletConnectRequestModal({ isVisible, onClose, request }: Props
       request.type === EthMethod.EthSignTransaction ||
       request.type === EthMethod.EthSendTransaction
     ) {
-      const { to, from, gasPrice, data, nonce } = request.transaction
+      const { to, from, gasPrice, data, nonce, value } = request.transaction
       const transaction: providers.TransactionRequest = {
         to,
         from,
@@ -162,6 +162,7 @@ export function WalletConnectRequestModal({ isVisible, onClose, request }: Props
         data,
         nonce,
         chainId,
+        value,
       }
       dispatch(
         signWcRequestActions.trigger({
