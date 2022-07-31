@@ -1,31 +1,11 @@
 """This directive allows results to be deferred during execution"""
 directive @defer on FIELD
 
-"""Tells the service which mutation triggers this subscription."""
-directive @aws_subscribe(
-  """
-  List of mutations which will trigger this subscription when they are called.
-  """
-  mutations: [String]
-) on FIELD_DEFINITION
-
-"""
-Tells the service this field/object has access authorized by an OIDC token.
-"""
-directive @aws_oidc on OBJECT | FIELD_DEFINITION
-
-"""
-Tells the service this field/object has access authorized by a Cognito User Pools token.
-"""
-directive @aws_cognito_user_pools(
+"""Directs the schema to enforce authorization on a field"""
+directive @aws_auth(
   """List of cognito user pool groups which have access on this field"""
   cognito_groups: [String]
-) on OBJECT | FIELD_DEFINITION
-
-"""
-Tells the service this field/object has access authorized by sigv4 signing.
-"""
-directive @aws_iam on OBJECT | FIELD_DEFINITION
+) on FIELD_DEFINITION
 
 """
 Tells the service which subscriptions will be published to when this mutation is
@@ -38,11 +18,10 @@ directive @aws_publish(
   subscriptions: [String]
 ) on FIELD_DEFINITION
 
-"""Directs the schema to enforce authorization on a field"""
-directive @aws_auth(
-  """List of cognito user pool groups which have access on this field"""
-  cognito_groups: [String]
-) on FIELD_DEFINITION
+"""
+Tells the service this field/object has access authorized by sigv4 signing.
+"""
+directive @aws_iam on OBJECT | FIELD_DEFINITION
 
 """
 Tells the service this field/object has access authorized by a Lambda Authorizer.
@@ -50,93 +29,160 @@ Tells the service this field/object has access authorized by a Lambda Authorizer
 directive @aws_lambda on OBJECT | FIELD_DEFINITION
 
 """
+Tells the service this field/object has access authorized by an OIDC token.
+"""
+directive @aws_oidc on OBJECT | FIELD_DEFINITION
+
+"""Tells the service which mutation triggers this subscription."""
+directive @aws_subscribe(
+  """
+  List of mutations which will trigger this subscription when they are called.
+  """
+  mutations: [String]
+) on FIELD_DEFINITION
+
+"""
 Tells the service this field/object has access authorized by an API key.
 """
 directive @aws_api_key on OBJECT | FIELD_DEFINITION
 
+"""
+Tells the service this field/object has access authorized by a Cognito User Pools token.
+"""
+directive @aws_cognito_user_pools(
+  """List of cognito user pool groups which have access on this field"""
+  cognito_groups: [String]
+) on OBJECT | FIELD_DEFINITION
+
+type Amount implements IAmount {
+  id: ID!
+  currency: Currency
+  value: Float
+}
+
 enum Chain {
   ARBITRUM
   ETHEREUM
-  ETHEREUM_RINKEBY
+  ETHEREUM_GOERLI
   OPTIMISM
   POLYGON
 }
 
-enum HistoricalPricingInterval {
-  DAILY
-  HOURLY
+input ContractInput {
+  chain: Chain!
+  address: String
 }
 
-type Market {
-  id: ID!
-  imageUrl: String
-  marketCap: Float
-  marketCapChange24H: Float
-  marketCapRank: Int
-  name: String
-  priceLow24H: Float
-  priceChange24H: Float
-  priceHigh24H: Float
-  priceUSD: Float
-  symbol: String
-  totalSupply: Float
+enum Currency {
+  USD
 }
 
-enum MarketSortableField {
-  id
-  marketCap
-}
-
-type Portfolio {
-  id: ID!
-  ownerAddress: String!
-  assetsValueUSD: Float
-  totalValueUSD: Float
-  absoluteChange24H: Float
-  relativeChange24H: Float
-}
-
-type PortfolioChartDataPoint {
-  id: ID!
-  timestamp: Int!
-  value: Float!
-}
-
-enum PortfolioChartDuration {
+enum HistoryDuration {
   HOUR
   DAY
   WEEK
   MONTH
   YEAR
+  MAX
+}
+
+interface IAmount {
+  currency: Currency
+  value: Float
+}
+
+interface IContract {
+  chain: Chain!
+  address: String
+}
+
+enum MarketSortableField {
+  MARKET_CAP
+  VOLUME
+}
+
+type Portfolio {
+  id: ID!
+  ownerAddress: String!
+  tokensTotalDenominatedValue: Amount
+  tokensTotalDenominatedValueHistory(duration: HistoryDuration): [TimestampedAmount]
+  tokenBalances: [TokenBalance]
+  assetsValueUSD: Float
+  totalValueUSD: Float
+  assetsValue: Float
+  totalValue: Float
+  absoluteChange24H: Float
+  relativeChange24H: Float
 }
 
 type Query {
-  markets(asc: Boolean, orderBy: MarketSortableField, page: Int, pageSize: Int): [Market]
+  tokens(contracts: [ContractInput]): [Token]
+  tokenProjects(contracts: [ContractInput]): [TokenProject]
+  topTokenProjects(orderBy: MarketSortableField, page: Int, pageSize: Int, currency: Currency): [TokenProject]
   searchTokens(searchQuery: String!): [Token]
   transactions(address: String!, page: Int, pageSize: Int): [Transaction]
-  tokenBalances(ownerAddress: String!): [TokenBalance]
   portfolio(ownerAddress: String!): Portfolio
-  portfolioChart(ownerAddress: String!, duration: PortfolioChartDuration): [PortfolioChartDataPoint]
+  portfolios(ownerAddresses: [String!]!): [Portfolio]
 }
 
-type Token {
+type TimestampedAmount implements IAmount {
+  id: ID!
+  currency: Currency
+  value: Float
+  timestamp: Int!
+}
+
+type Token implements IContract {
   id: ID!
   chain: Chain!
   address: String
+  standard: TokenStandard
   decimals: Int
-  logoURI: String
-  name: String!
-  symbol: String!
+  name: String
+  symbol: String
 }
 
 type TokenBalance {
   id: ID!
-  balance: Float
-  balanceUSD: Float
+  quantity: Float
+  denominatedValue: Amount
   ownerAddress: String!
   token: Token
-  priceUSD: Float
-  priceChange24H: Float
+  tokenProjectMarket: TokenProjectMarket
+}
+
+type TokenProject {
+  id: ID!
+  name: String
+  tokens: [Token]
+  description: String
+  twitterName: String
+  homepageUrl: String
+  logoUrl: String
+  markets(currencies: [Currency!]!): [TokenProjectMarket]
+}
+
+type TokenProjectMarket {
+  id: ID!
+  price: Amount
+  volume24h: Amount
+  volume7d: Amount
+  volume30d: Amount
+  volume1yr: Amount
+  pricePercentChange24h: Amount
+  pricePercentChange7d: Amount
+  pricePercentChange30d: Amount
+  pricePercentChange1yr: Amount
+  marketCap: Amount
+  fullyDilutedMarketCap: Amount
+  priceHistory(duration: HistoryDuration): [TimestampedAmount]
+}
+
+enum TokenStandard {
+  NATIVE
+  ERC20
+  ERC721
+  ERC1155
 }
 
 type Transaction {

@@ -9,7 +9,7 @@ import { normalizeMnemonic } from 'src/utils/mnemonics'
 import { createMonitoredSaga } from 'src/utils/saga'
 import { all, call, put } from 'typed-redux-saga'
 
-export const IMPORT_WALLET_AMOUNT = 3
+export const IMPORT_WALLET_AMOUNT = 10
 
 export function* importAccount(params: ImportAccountParams) {
   const { type, name } = params
