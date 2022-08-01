@@ -14,16 +14,16 @@ const SearchBarContainer = styled.div`
 `
 const SearchInput = styled.input<{ expanded: boolean }>`
   background: no-repeat scroll 7px 7px;
-  background-image: url(${searchIcon});
+  background-image: ${({ expanded }) => !expanded && `url(${searchIcon})`};
   background-size: 20px 20px;
-  background-position: 11.5px center;
+  background-position: 11px center;
   background-color: ${({ theme }) => theme.none};
-  border-radius: 16px;
+  border-radius: 12px;
   border: 1px solid ${({ theme }) => theme.backgroundOutline};
   height: 100%;
   width: ${({ expanded }) => (expanded ? '100%' : '44px')};
   font-size: 16px;
-  padding-left: 40px;
+  padding-left: 18px;
   color: ${({ theme }) => theme.textPrimary};
   transition: width 0.75s cubic-bezier(0, 0.795, 0, 1);
 
@@ -34,7 +34,8 @@ const SearchInput = styled.input<{ expanded: boolean }>`
 
   :focus {
     outline: none;
-    background-color: ${({ theme }) => theme.backgroundContainer};
+    background-color: ${({ theme }) => theme.accentActionSoft};
+    border: none;
   }
   ::placeholder {
     color: ${({ expanded, theme }) => expanded && theme.textTertiary};

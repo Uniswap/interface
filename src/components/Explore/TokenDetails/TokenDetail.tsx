@@ -2,11 +2,14 @@ import { Trans } from '@lingui/macro'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { VerifiedIcon } from 'components/TokenSafety/TokenSafetyIcon'
 import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
+import { getChainInfo } from 'constants/chainInfo'
 import { checkWarning } from 'constants/tokenWarnings'
 import { useCurrency, useIsUserAddedToken, useToken } from 'hooks/Tokens'
 import { TimePeriod } from 'hooks/useTopTokens'
 import { useAtomValue } from 'jotai/utils'
-import { useCallback, useState } from 'react'
+import { darken } from 'polished'
+import { useCallback } from 'react'
+import { useState } from 'react'
 import { ArrowDownRight, ArrowLeft, ArrowUpRight, Copy, Heart } from 'react-feather'
 import { Link, useHistory } from 'react-router-dom'
 import styled, { useTheme } from 'styled-components/macro'
@@ -73,7 +76,7 @@ const ContractAddress = styled.button`
   cursor: pointer;
 
   &:hover {
-    color: ${({ theme }) => theme.textSecondary};
+    color: ${({ theme }) => darken(0.1, theme.textPrimary)};
   }
 `
 export const ContractAddressSection = styled.div`
@@ -115,7 +118,7 @@ export const StatsSection = styled.div`
   display: flex;
   flex-wrap: wrap;
 `
-const StatPair = styled.div`
+export const StatPair = styled.div`
   display: flex;
   flex: 1;
   flex-wrap: wrap;
@@ -161,6 +164,7 @@ const TokenSymbol = styled.span`
 `
 export const TopArea = styled.div`
   max-width: 832px;
+  overflow: hidden;
 `
 export const ResourcesContainer = styled.div`
   display: flex;
@@ -176,6 +180,15 @@ const TruncatedAddress = styled.span`
   @media only screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
     display: flex;
   }
+`
+const NetworkBadge = styled.div<{ networkColor?: string; backgroundColor?: string }>`
+  border-radius: 5px;
+  padding: 4px 8px;
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 12px;
+  color: ${({ theme, networkColor }) => networkColor ?? theme.textPrimary};
+  background-color: ${({ theme, backgroundColor }) => backgroundColor ?? theme.backgroundSurface};
 `
 
 export default function LoadedTokenDetail({ address }: { address: string }) {
@@ -194,6 +207,9 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
   const handleDismissWarning = useCallback(() => {
     setWarningModalOpen(false)
   }, [setWarningModalOpen])
+  const chainInfo = getChainInfo(token?.chainId)
+  const networkLabel = chainInfo?.label
+  const networkBadgebackgroundColor = chainInfo?.backgroundColor
 
   // catch token error and loading state
   if (!token || !token.name || !token.symbol) {
@@ -225,14 +241,19 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
             <CurrencyLogo currency={currency} size={'32px'} />
             {tokenName} <TokenSymbol>{tokenSymbol}</TokenSymbol>
             {!warning && <VerifiedIcon size="24px" />}
+            {networkBadgebackgroundColor && (
+              <NetworkBadge networkColor={chainInfo?.color} backgroundColor={networkBadgebackgroundColor}>
+                {networkLabel}
+              </NetworkBadge>
+            )}
           </TokenNameCell>
           <TokenActions>
             <ShareButton tokenName={tokenName} tokenSymbol={tokenSymbol} />
             <ClickFavorited onClick={toggleFavorite}>
               <Heart
                 size={15}
-                color={isFavorited ? theme.deprecated_primary1 : theme.deprecated_text2}
-                fill={isFavorited ? theme.deprecated_primary1 : 'transparent'}
+                color={isFavorited ? theme.accentAction : theme.textSecondary}
+                fill={isFavorited ? theme.accentAction : theme.none}
               />
             </ClickFavorited>
           </TokenActions>
@@ -243,9 +264,9 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
           {tokenDelta}%
           <ArrowCell>
             {isPositive ? (
-              <ArrowUpRight size={16} color={theme.deprecated_green1} />
+              <ArrowUpRight size={16} color={theme.accentSuccess} />
             ) : (
-              <ArrowDownRight size={16} color={theme.deprecated_red1} />
+              <ArrowDownRight size={16} color={theme.accentFailure} />
             )}
           </ArrowCell>
         </DeltaContainer>
@@ -299,7 +320,7 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
           <ContractAddress onClick={() => navigator.clipboard.writeText(address)}>
             <FullAddress>{address}</FullAddress>
             <TruncatedAddress>{truncatedTokenAddress}</TruncatedAddress>
-            <Copy size={13} color={theme.deprecated_text2} />
+            <Copy size={13} color={theme.textSecondary} />
           </ContractAddress>
         </Contract>
       </ContractAddressSection>

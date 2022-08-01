@@ -17,6 +17,8 @@ const TokenDetailsLayout = styled.div`
   display: flex;
   gap: 80px;
   padding: 0px 20px;
+  width: 100%;
+  justify-content: center;
 
   @media only screen and (max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT}) {
     gap: 40px;
@@ -47,6 +49,7 @@ const Widget = styled.div`
 export default function TokenDetails() {
   const { tokenAddress } = useParams<{ tokenAddress?: string }>()
   const [loading, setLoading] = useState(true)
+
   setTimeout(() => {
     setLoading(false)
   }, 1000)

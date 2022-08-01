@@ -1,12 +1,20 @@
-import { favoritesAtom, filterStringAtom, filterTimeAtom, showFavoritesAtom } from 'components/Explore/state'
+import {
+  favoritesAtom,
+  filterStringAtom,
+  filterTimeAtom,
+  showFavoritesAtom,
+  sortCategoryAtom,
+  sortDirectionAtom,
+} from 'components/Explore/state'
 import { useAllTokens } from 'hooks/Tokens'
-import useTopTokens, { TimePeriod } from 'hooks/useTopTokens'
+import useTopTokens, { TimePeriod, TokenData } from 'hooks/useTopTokens'
 import { useAtomValue } from 'jotai/utils'
-import { ReactNode, useMemo } from 'react'
+import { ReactNode, useCallback, useMemo } from 'react'
 import { AlertTriangle } from 'react-feather'
 import styled from 'styled-components/macro'
 
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from '../constants'
+import { Category, SortDirection } from '../types'
 import LoadedRow, { HeaderRow, LoadingRow } from './TokenRow'
 
 const GridContainer = styled.div`
@@ -44,30 +52,86 @@ const LOADING_ROWS = Array(10)
     return <LoadingRow key={`${index}`} />
   })
 
-function useFilteredTokens(topTokenAddresses: string[]) {
-  const filterString = useAtomValue<string>(filterStringAtom)
-  const favoriteTokens = useAtomValue<string[]>(favoritesAtom)
-  const showFavorites = useAtomValue<boolean>(showFavoritesAtom)
-  const shownTokens = showFavorites ? favoriteTokens : topTokenAddresses
+function useFilteredTokens(addresses: string[]) {
+  const filterString = useAtomValue(filterStringAtom)
+  const favoriteTokens = useAtomValue(favoritesAtom)
+  const showFavorites = useAtomValue(showFavoritesAtom)
+  const shownTokens = showFavorites ? favoriteTokens : addresses
   const allTokens = useAllTokens()
 
-  return useMemo(() => {
-    const filteredTokens = shownTokens.filter((tokenAddress) => {
-      const token = allTokens[tokenAddress]
-      const tokenName = token?.name ?? ''
-      const tokenSymbol = token?.symbol ?? ''
+  return useMemo(
+    () =>
+      shownTokens.filter((tokenAddress) => {
+        const token = allTokens[tokenAddress]
+        const tokenName = token?.name ?? ''
+        const tokenSymbol = token?.symbol ?? ''
 
-      if (!filterString) {
-        return true
+        if (!filterString) {
+          return true
+        }
+        const lowercaseFilterString = filterString.toLowerCase()
+        const addressIncludesFilterString = tokenAddress.toLowerCase().includes(lowercaseFilterString)
+        const nameIncludesFilterString = tokenName.toLowerCase().includes(lowercaseFilterString)
+        const symbolIncludesFilterString = tokenSymbol.toLowerCase().includes(lowercaseFilterString)
+        return nameIncludesFilterString || symbolIncludesFilterString || addressIncludesFilterString
+      }),
+    [allTokens, shownTokens, filterString]
+  )
+}
+
+function useSortedTokens(addresses: string[], tokenData: TokenData | null) {
+  const sortCategory = useAtomValue(sortCategoryAtom)
+  const sortDirection = useAtomValue(sortDirectionAtom)
+  const timePeriod = useAtomValue<TimePeriod>(filterTimeAtom)
+
+  const sortFn = useCallback(
+    (a: any, b: any) => {
+      if (a > b) {
+        return sortDirection === SortDirection.decreasing ? -1 : 1
+      } else if (a < b) {
+        return sortDirection === SortDirection.decreasing ? 1 : -1
       }
-      const lowercaseFilterString = filterString.toLowerCase()
-      const addressIncludesFilterString = tokenAddress.toLowerCase().includes(lowercaseFilterString)
-      const nameIncludesFilterString = tokenName.toLowerCase().includes(lowercaseFilterString)
-      const symbolIncludesFilterString = tokenSymbol.toLowerCase().includes(lowercaseFilterString)
-      return nameIncludesFilterString || symbolIncludesFilterString || addressIncludesFilterString
-    })
-    return filteredTokens
-  }, [allTokens, shownTokens, filterString])
+      return 0
+    },
+    [sortDirection]
+  )
+
+  return useMemo(
+    () =>
+      addresses.sort((token1Address, token2Address) => {
+        if (!tokenData) {
+          return 0
+        }
+        const token1 = tokenData[token1Address] as any
+        const token2 = tokenData[token2Address] as any
+
+        if (!token1 || !token2 || !sortDirection || !sortCategory) {
+          return 0
+        }
+        let a: number
+        let b: number
+        switch (sortCategory) {
+          case Category.marketCap:
+            a = token1.marketCap
+            b = token2.marketCap
+            break
+          case Category.percentChange:
+            a = token1.delta
+            b = token2.delta
+            break
+          case Category.price:
+            a = token1.price
+            b = token2.price
+            break
+          case Category.volume:
+            a = token1.volume[timePeriod]
+            b = token2.volume[timePeriod]
+            break
+        }
+        return sortFn(a, b)
+      }),
+    [addresses, tokenData, sortDirection, sortCategory, sortFn, timePeriod]
+  )
 }
 
 function NoTokensState({ message }: { message: ReactNode }) {
@@ -85,6 +149,7 @@ export default function TokenTable() {
   const timePeriod = useAtomValue<TimePeriod>(filterTimeAtom)
   const topTokenAddresses = data ? Object.keys(data) : []
   const filteredTokens = useFilteredTokens(topTokenAddresses)
+  const filteredAndSortedTokens = useSortedTokens(filteredTokens, data)
 
   /* loading and error state */
   if (loading) {
@@ -107,15 +172,15 @@ export default function TokenTable() {
     )
   }
 
-  if (showFavorites && filteredTokens.length === 0) {
+  if (showFavorites && filteredAndSortedTokens.length === 0) {
     return <NoTokensState message="You have no favorited tokens" />
   }
 
-  if (!showFavorites && filteredTokens.length === 0) {
+  if (!showFavorites && filteredAndSortedTokens.length === 0) {
     return <NoTokensState message="No tokens found" />
   }
 
-  const tokenRows = filteredTokens.map((tokenAddress, index) => {
+  const tokenRows = filteredAndSortedTokens.map((tokenAddress, index) => {
     return (
       <LoadedRow
         key={tokenAddress}

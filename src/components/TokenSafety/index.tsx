@@ -162,7 +162,6 @@ const ExplorerLink = styled.div`
     text-decoration: none;
   }
 `
-const ExplorerLinkIconWrapper = styled(LinkIconFeather)``
 const ExplorerLinkIcon = styled(LinkIconFeather)`
   height: 16px;
   width: 18px;
