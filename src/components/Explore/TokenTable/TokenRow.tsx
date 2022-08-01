@@ -18,6 +18,7 @@ import {
   MOBILE_MEDIA_BREAKPOINT,
   SMALL_MEDIA_BREAKPOINT,
 } from '../constants'
+import { LoadingBubble } from '../loading'
 import {
   favoritesAtom,
   filterTimeAtom,
@@ -37,7 +38,6 @@ const Cell = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
 `
 const StyledTokenRow = styled.div`
   width: 100%;
@@ -52,7 +52,7 @@ const StyledTokenRow = styled.div`
   padding: 0px 12px;
 
   &:hover {
-    background-color: ${({ theme }) => theme.backgroundContainer};
+    background-color: ${({ theme }) => theme.accentActionSoft};
   }
 
   @media only screen and (max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT}) {
@@ -93,15 +93,18 @@ export const ClickFavorited = styled.span`
   cursor: pointer;
 
   &:hover {
-    color: ${({ theme }) => theme.accentActive};
+    color: ${({ theme }) => theme.textPrimary};
   }
 `
-const ClickableName = styled(Link)`
+const ClickableContent = styled(Link)`
   display: flex;
-  gap: 8px;
   text-decoration: none;
   color: ${({ theme }) => theme.textPrimary};
   align-items: center;
+  cursor: pointer;
+`
+const ClickableName = styled(ClickableContent)`
+  gap: 8px;
 `
 const FavoriteCell = styled(Cell)`
   min-width: 40px;
@@ -113,15 +116,15 @@ const FavoriteCell = styled(Cell)`
   }
 `
 const StyledHeaderRow = styled(StyledTokenRow)`
-  width: 100%;
-  height: 48px;
-  color: ${({ theme }) => theme.textSecondary};
-  font-size: 12px;
-  line-height: 16px;
   border-bottom: 1px solid;
   border-color: ${({ theme }) => theme.backgroundOutline};
   border-radius: 8px 8px 0px 0px;
+  color: ${({ theme }) => theme.textSecondary};
+  font-size: 12px;
+  height: 48px;
+  line-height: 16px;
   padding: 0px 12px;
+  width: 100%;
 
   &:hover {
     background-color: ${({ theme }) => theme.backgroundSurface};
@@ -132,8 +135,8 @@ const StyledHeaderRow = styled(StyledTokenRow)`
   }
 
   @media only screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
-    padding: 0px 12px;
     justify-content: space-between;
+    padding: 0px 12px;
   }
 `
 const ListNumberCell = styled(Cell)`
@@ -144,17 +147,19 @@ const ListNumberCell = styled(Cell)`
     display: none;
   }
 `
-const MarketCapCell = styled(Cell)<{ sortable: boolean }>`
+const DataCell = styled(Cell)<{ sortable: boolean }>`
   justify-content: flex-end;
-  min-width: max-content;
-  padding-right: 4px;
-
-  @media only screen and (max-width: ${MEDIUM_MEDIA_BREAKPOINT}) {
-    display: none;
-  }
+  min-width: 80px;
+  user-select: ${({ sortable }) => (sortable ? 'none' : 'unset')};
 
   &:hover {
-    background-color: ${({ theme, sortable }) => sortable && theme.backgroundContainer};
+    color: ${({ theme, sortable }) => sortable && theme.white};
+    background-color: ${({ theme, sortable }) => sortable && theme.accentActionSoft};
+  }
+`
+const MarketCapCell = styled(DataCell)`
+  @media only screen and (max-width: ${MEDIUM_MEDIA_BREAKPOINT}) {
+    display: none;
   }
 `
 const NameCell = styled(Cell)`
@@ -167,18 +172,10 @@ const NameCell = styled(Cell)`
     padding-right: 8px;
   }
 `
-
-const PercentChangeCell = styled(Cell)<{ sortable: boolean }>`
-  justify-content: flex-end;
-  min-width: 80px;
-  padding-right: 4px;
-
+const PriceCell = styled(DataCell)``
+const PercentChangeCell = styled(DataCell)`
   @media only screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
     display: none;
-  }
-
-  &:hover {
-    background-color: ${({ theme, sortable }) => sortable && theme.backgroundContainer};
   }
 `
 const PercentChangeInfoCell = styled(Cell)`
@@ -190,15 +187,6 @@ const PercentChangeInfoCell = styled(Cell)`
     color: ${({ theme }) => theme.textSecondary};
     font-size: 12px;
     line-height: 16px;
-  }
-`
-const PriceCell = styled(Cell)<{ sortable: boolean }>`
-  justify-content: flex-end;
-  min-width: 80px;
-  padding-right: 4px;
-
-  &:hover {
-    background-color: ${({ theme, sortable }) => sortable && theme.backgroundContainer};
   }
 `
 const PriceInfoCell = styled(Cell)`
@@ -213,14 +201,14 @@ const PriceInfoCell = styled(Cell)`
 const SortArrowCell = styled(Cell)`
   padding-right: 2px;
 `
-const SortingCategory = styled.span`
-  display: flex;
+const HeaderCellWrapper = styled.span<{ onClick?: () => void }>`
   align-items: center;
-  justify-content: center;
-  cursor: pointer;
-`
-const SortOption = styled.span`
-  cursor: pointer;
+  cursor: ${({ onClick }) => (onClick ? 'pointer' : 'unset')};
+  display: flex;
+  height: 100%;
+  justify-content: flex-end;
+  padding-right: 8px;
+  width: 100%;
 `
 const SparkLineCell = styled(Cell)`
   padding: 0px 24px;
@@ -269,25 +257,10 @@ const TokenSymbol = styled(Cell)`
     width: 100%;
   }
 `
-const VolumeCell = styled(Cell)<{ sortable: boolean }>`
-  justify-content: flex-end;
-  min-width: max-content;
-  padding-right: 4px;
-
+const VolumeCell = styled(DataCell)`
   @media only screen and (max-width: ${LARGE_MEDIA_BREAKPOINT}) {
     display: none;
   }
-
-  &:hover {
-    background-color: ${({ theme, sortable }) => sortable && theme.backgroundContainer};
-  }
-`
-/* Loading state bubbles */
-const LoadingBubble = styled.div`
-  background-color: ${({ theme }) => theme.backgroundContainer};
-  border-radius: 12px;
-  height: 24px;
-  width: 50%;
 `
 const SmallLoadingBubble = styled(LoadingBubble)`
   width: 25%;
@@ -328,20 +301,29 @@ function HeaderCell({
 
   if (sortCategory === category) {
     return (
-      <SortingCategory onClick={handleSortCategory}>
+      <HeaderCellWrapper onClick={handleSortCategory}>
         <SortArrowCell>
           {sortDirection === SortDirection.increasing ? (
-            <ArrowDown size={14} color={theme.accentActive} />
-          ) : (
             <ArrowUp size={14} color={theme.accentActive} />
+          ) : (
+            <ArrowDown size={14} color={theme.accentActive} />
           )}
         </SortArrowCell>
-        <Trans>{getHeaderDisplay(category, timeframe)}</Trans>
-      </SortingCategory>
+        {getHeaderDisplay(category, timeframe)}
+      </HeaderCellWrapper>
     )
   }
-  if (sortable) return <SortOption onClick={handleSortCategory}>{getHeaderDisplay(category, timeframe)}</SortOption>
-  return <Trans>{getHeaderDisplay(category, timeframe)}</Trans>
+  if (sortable) {
+    return (
+      <HeaderCellWrapper onClick={handleSortCategory}>
+        <SortArrowCell>
+          <ArrowUp size={14} visibility="hidden" />
+        </SortArrowCell>
+        {getHeaderDisplay(category, timeframe)}
+      </HeaderCellWrapper>
+    )
+  }
+  return <HeaderCellWrapper>{getHeaderDisplay(category, timeframe)}</HeaderCellWrapper>
 }
 
 /* Token Row: skeleton row component */
@@ -386,15 +368,13 @@ export function TokenRow({
 
 /* Header Row: top header row component for table */
 export function HeaderRow() {
-  /* TODO: access which sort category used and timeframe used (temporarily hardcoded values) */
-
   return (
     <TokenRow
       address={null}
       header={true}
       favorited={null}
       listNumber={null}
-      tokenInfo={<Trans>Name</Trans>}
+      tokenInfo={<Trans>Token Name</Trans>}
       price={<HeaderCell category={Category.price} sortable />}
       percentChange={<HeaderCell category={Category.percentChange} sortable />}
       marketCap={<HeaderCell category={Category.marketCap} sortable />}
@@ -485,14 +465,24 @@ export default function LoadedRow({
         </ClickableName>
       }
       price={
-        <PriceInfoCell>
-          {formatDollarAmount(tokenData.price)}
-          <PercentChangeInfoCell>{tokenPercentChangeInfo}</PercentChangeInfoCell>
-        </PriceInfoCell>
+        <ClickableContent to={`tokens/${tokenAddress}`}>
+          <PriceInfoCell>
+            {formatDollarAmount(tokenData.price)}
+            <PercentChangeInfoCell>{tokenPercentChangeInfo}</PercentChangeInfoCell>
+          </PriceInfoCell>
+        </ClickableContent>
       }
-      percentChange={tokenPercentChangeInfo}
-      marketCap={formatAmount(tokenData.marketCap).toUpperCase()}
-      volume={formatAmount(tokenData.volume[timePeriod]).toUpperCase()}
+      percentChange={<ClickableContent to={`tokens/${tokenAddress}`}>{tokenPercentChangeInfo}</ClickableContent>}
+      marketCap={
+        <ClickableContent to={`tokens/${tokenAddress}`}>
+          {formatAmount(tokenData.marketCap).toUpperCase()}
+        </ClickableContent>
+      }
+      volume={
+        <ClickableContent to={`tokens/${tokenAddress}`}>
+          {formatAmount(tokenData.volume[timePeriod]).toUpperCase()}
+        </ClickableContent>
+      }
       sparkLine={<SparkLineImg dangerouslySetInnerHTML={{ __html: tokenData.sparkline }} isPositive={isPositive} />}
     />
   )

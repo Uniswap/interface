@@ -1,5 +1,6 @@
 import styled from 'styled-components/macro'
 
+import { LoadingBubble } from '../loading'
 import {
   AboutHeader,
   AboutSection,
@@ -10,6 +11,7 @@ import {
   DeltaContainer,
   ResourcesContainer,
   Stat,
+  StatPair,
   StatsSection,
   TimeOptionsContainer,
   TokenInfoContainer,
@@ -19,16 +21,14 @@ import {
 } from './TokenDetail'
 
 /* Loading state bubbles */
-const LoadingBubble = styled.div`
-  background-color: ${({ theme }) => theme.backgroundContainer};
-  border-radius: 12px;
+const LoadingDetailBubble = styled(LoadingBubble)`
   height: 16px;
   width: 180px;
 `
-const TitleLoadingBubble = styled(LoadingBubble)`
+const TitleLoadingBubble = styled(LoadingDetailBubble)`
   width: 140px;
 `
-const SquareLoadingBubble = styled(LoadingBubble)`
+const SquareLoadingBubble = styled(LoadingDetailBubble)`
   height: 32px;
   border-radius: 8px;
   margin-top: 4px;
@@ -36,13 +36,13 @@ const SquareLoadingBubble = styled(LoadingBubble)`
 const PriceLoadingBubble = styled(SquareLoadingBubble)`
   height: 40px;
 `
-const LongLoadingBubble = styled(LoadingBubble)`
+const LongLoadingBubble = styled(LoadingDetailBubble)`
   width: 100%;
 `
-const HalfLoadingBubble = styled(LoadingBubble)`
+const HalfLoadingBubble = styled(LoadingDetailBubble)`
   width: 50%;
 `
-const IconLoadingBubble = styled(LoadingBubble)`
+const IconLoadingBubble = styled(LoadingDetailBubble)`
   width: 32px;
   height: 32px;
   border-radius: 50%;
@@ -53,6 +53,7 @@ const StatLoadingBubble = styled(SquareLoadingBubble)`
 const StatsLoadingContainer = styled.div`
   display: flex;
   gap: 24px;
+  flex-wrap: wrap;
 `
 const ChartAnimation = styled.div`
   display: flex;
@@ -67,12 +68,16 @@ const ChartAnimation = styled.div`
     }
   }
 `
-
+const Space = styled.div<{ heightSize: number }>`
+  height: ${({ heightSize }) => `${heightSize}px`};
+`
 /* Loading State: row component with loading bubbles */
 export default function LoadingTokenDetail() {
   return (
     <TopArea>
-      <BreadcrumbNavLink to="/explore">{null}</BreadcrumbNavLink>
+      <BreadcrumbNavLink to="/explore">
+        <Space heightSize={20} />
+      </BreadcrumbNavLink>
       <ChartHeader>
         <TokenInfoContainer>
           <TokenNameCell>
@@ -83,7 +88,9 @@ export default function LoadingTokenDetail() {
         <TokenPrice>
           <PriceLoadingBubble />
         </TokenPrice>
-        <DeltaContainer>{null}</DeltaContainer>
+        <DeltaContainer>
+          <Space heightSize={20} />
+        </DeltaContainer>
         <ChartContainer>
           <ChartAnimation>
             <svg width="416" height="160" xmlns="http://www.w3.org/2000/svg">
@@ -103,7 +110,9 @@ export default function LoadingTokenDetail() {
             </svg>
           </ChartAnimation>
         </ChartContainer>
-        <TimeOptionsContainer>{null}</TimeOptionsContainer>
+        <TimeOptionsContainer>
+          <Space heightSize={32} />
+        </TimeOptionsContainer>
       </ChartHeader>
       <AboutSection>
         <AboutHeader>
@@ -117,22 +126,26 @@ export default function LoadingTokenDetail() {
       </AboutSection>
       <StatsSection>
         <StatsLoadingContainer>
-          <Stat>
-            <HalfLoadingBubble />
-            <StatLoadingBubble />
-          </Stat>
-          <Stat>
-            <HalfLoadingBubble />
-            <StatLoadingBubble />
-          </Stat>
-          <Stat>
-            <HalfLoadingBubble />
-            <StatLoadingBubble />
-          </Stat>
-          <Stat>
-            <HalfLoadingBubble />
-            <StatLoadingBubble />
-          </Stat>
+          <StatPair>
+            <Stat>
+              <HalfLoadingBubble />
+              <StatLoadingBubble />
+            </Stat>
+            <Stat>
+              <HalfLoadingBubble />
+              <StatLoadingBubble />
+            </Stat>
+          </StatPair>
+          <StatPair>
+            <Stat>
+              <HalfLoadingBubble />
+              <StatLoadingBubble />
+            </Stat>
+            <Stat>
+              <HalfLoadingBubble />
+              <StatLoadingBubble />
+            </Stat>
+          </StatPair>
         </StatsLoadingContainer>
       </StatsSection>
       <ContractAddressSection>{null}</ContractAddressSection>

@@ -20,15 +20,12 @@ const NETWORKS = [
 
 const InternalMenuItem = styled.div`
   flex: 1;
-  padding: 12px 16px;
+  padding: 12px 8px;
   color: ${({ theme }) => theme.textPrimary};
 
   :hover {
     cursor: pointer;
     text-decoration: none;
-  }
-  > svg {
-    margin-right: 8px;
   }
 `
 
@@ -38,9 +35,10 @@ const InternalLinkMenuItem = styled(InternalMenuItem)`
   justify-content: space-between;
   text-decoration: none;
   cursor: pointer;
+  border-radius: 12px;
 
   :hover {
-    background-color: ${({ theme }) => theme.backgroundContainer};
+    background-color: ${({ theme }) => theme.hoverState};
     text-decoration: none;
   }
 `
@@ -49,11 +47,10 @@ const MenuTimeFlyout = styled.span`
   max-height: 350px;
   overflow: auto;
   background-color: ${({ theme }) => theme.backgroundSurface};
-  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
-    0px 24px 32px rgba(0, 0, 0, 0.01);
+  box-shadow: ${({ theme }) => theme.flyoutDropShadow};
   border: 1px solid ${({ theme }) => theme.backgroundOutline};
   border-radius: 12px;
-  padding: 8px 0px;
+  padding: 8px;
   display: flex;
   flex-direction: column;
   font-size: 16px;
@@ -121,7 +118,7 @@ const StyledMenuContent = styled.div`
 
 const Chevron = styled.span<{ open: boolean }>`
   padding-top: 1px;
-  color: ${({ open, theme }) => (open ? theme.blue200 : theme.textPrimary)};
+  color: ${({ open, theme }) => (open ? theme.blue200 : theme.textSecondary)};
 `
 const NetworkLabel = styled.div`
   display: flex;

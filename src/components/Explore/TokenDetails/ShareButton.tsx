@@ -8,7 +8,6 @@ import styled, { useTheme } from 'styled-components/macro'
 
 const TWITTER_WIDTH = 560
 const TWITTER_HEIGHT = 480
-const SHADOW = '0px 1px 6px rgba(0, 0, 0, 0.9), 0px 8px 12px rgba(13, 14, 14, 0.8)'
 
 const ShareButtonDisplay = styled.div`
   display: flex;
@@ -30,7 +29,7 @@ const ShareActions = styled.div`
   overflow: auto;
   background-color: ${({ theme }) => theme.backgroundSurface};
   border: 1px solid ${({ theme }) => theme.backgroundOutline};
-  box-shadow: ${SHADOW};
+  box-shadow: ${({ theme }) => theme.flyoutDropShadow};
   border-radius: 12px;
 `
 const ShareAction = styled.div`
@@ -49,13 +48,12 @@ const ShareAction = styled.div`
   }
 `
 
-// TODO: create component in shared location
 const LinkCopied = styled.div<{ show: boolean }>`
   display: ${({ show }) => (show ? 'flex' : 'none')};
   width: 328px;
   height: 72px;
-  color: ${({ theme }) => theme.deprecated_text1};
-  background-color: ${({ theme }) => theme.deprecated_bg0};
+  color: ${({ theme }) => theme.textPrimary};
+  background-color: ${({ theme }) => theme.backgroundBackdrop};
   justify-content: flex-start;
   align-items: center;
   padding: 24px 16px;
@@ -65,7 +63,7 @@ const LinkCopied = styled.div<{ show: boolean }>`
   font-size: 14px;
   gap: 8px;
   border: 1px solid rgba(153, 161, 189, 0.08);
-  box-shadow: ${SHADOW};
+  box-shadow: ${({ theme }) => theme.flyoutDropShadow};
   border-radius: 20px;
   animation: floatIn 0s ease-in 3s forwards;
 
@@ -121,19 +119,19 @@ export default function ShareButton(tokenInfo: TokenInfo) {
         {open && (
           <ShareActions>
             <ShareAction onClick={copyLink}>
-              <Link color={theme.deprecated_text2} size={18} />
+              <Link color={theme.textSecondary} size={18} />
               Copy link
             </ShareAction>
 
             <ShareAction onClick={shareTweet}>
-              <Twitter color={theme.deprecated_text2} size={18} />
+              <Twitter color={theme.textSecondary} size={18} />
               Share to Twitter
             </ShareAction>
           </ShareActions>
         )}
       </ShareButtonDisplay>
       <LinkCopied show={showCopied}>
-        <Check color={theme.deprecated_green1} />
+        <Check color={theme.accentSuccess} />
         Link Copied
       </LinkCopied>
     </>

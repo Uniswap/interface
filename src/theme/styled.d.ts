@@ -107,8 +107,13 @@ export interface Colors {
   chain_42161: Color
   chain_421611: Color
   chain_80001: Color
+  chain_10_background: Color
+  chain_137_background: Color
+  chain_42161_background: Color
 
   blue200: Color
+  flyoutDropShadow: Color
+  hoverState: Color
 }
 
 declare module 'styled-components/macro' {
