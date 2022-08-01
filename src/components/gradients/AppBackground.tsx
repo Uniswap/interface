@@ -1,5 +1,6 @@
-import { Blur, Canvas, Circle, Group, Oval, Rect } from '@shopify/react-native-skia'
-import React, { memo } from 'react'
+import { Blur, Canvas, Group, Oval, RadialGradient, Rect, vec } from '@shopify/react-native-skia'
+import React, { ComponentProps, memo } from 'react'
+import { useColorScheme } from 'react-native'
 import { useAppTheme } from 'src/app/hooks'
 import { GradientBackground } from 'src/components/gradients/GradientBackground'
 import { Box } from 'src/components/layout/Box'
@@ -8,9 +9,38 @@ import { dimensions } from 'src/styles/sizing'
 import { opacify } from 'src/utils/colors'
 
 const { fullWidth, fullHeight } = dimensions
-const BASE_BLUR_RADIUS = fullWidth * 0.75
 const ACCENT_BLUR_WIDTH = fullWidth
 const ACCENT_BLUR_HEIGHT = fullWidth * 0.5
+
+const BG_BLUR_VALUES: {
+  opacity: number
+  startColor: string
+  endColor: string
+  radius: number
+  startXPos: number
+  startYPos: number
+} = {
+  opacity: 0.32,
+  startColor: '#7095DF',
+  endColor: '#00000000',
+  radius: 400,
+  startXPos: -124,
+  startYPos: -163,
+}
+
+const bgBlurContainerProps: ComponentProps<typeof Rect> = {
+  opacity: BG_BLUR_VALUES.opacity,
+  height: BG_BLUR_VALUES.radius,
+  width: BG_BLUR_VALUES.radius,
+  x: BG_BLUR_VALUES.startXPos,
+  y: BG_BLUR_VALUES.startYPos,
+}
+
+const bgBlurGradientProps: ComponentProps<typeof RadialGradient> = {
+  colors: [BG_BLUR_VALUES.startColor, BG_BLUR_VALUES.endColor],
+  r: BG_BLUR_VALUES.radius,
+  c: vec(0, 0),
+}
 
 export const AppBackground = memo(
   ({
@@ -23,6 +53,7 @@ export const AppBackground = memo(
     color?: string
   }) => {
     const theme = useAppTheme()
+    const isDarkMode = useColorScheme() === 'dark'
 
     return (
       <GradientBackground>
@@ -36,8 +67,10 @@ export const AppBackground = memo(
                 x={0}
                 y={0}
               />
-              {!topOnly && (
-                <Circle color={theme.colors.backgroundAction} cx={0} cy={0} r={BASE_BLUR_RADIUS} />
+              {isDarkMode && !topOnly && (
+                <Rect {...bgBlurContainerProps}>
+                  <RadialGradient {...bgBlurGradientProps} />
+                </Rect>
               )}
               <Oval
                 color={opacify(100, color || theme.colors.userThemeColor)}
