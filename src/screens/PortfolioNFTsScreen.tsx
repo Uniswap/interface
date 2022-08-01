@@ -21,7 +21,8 @@ import { PollingInterval } from 'src/constants/misc'
 import { useNftBalancesQuery } from 'src/features/nfts/api'
 import { NFTAsset } from 'src/features/nfts/types'
 import { getNFTAssetKey } from 'src/features/nfts/utils'
-import { useActiveAccount } from 'src/features/wallet/hooks'
+import { AccountType } from 'src/features/wallet/accounts/types'
+import { useActiveAccount, useDisplayName } from 'src/features/wallet/hooks'
 import { selectNFTViewType } from 'src/features/wallet/selectors'
 import { NFTViewType } from 'src/features/wallet/types'
 import { setNFTViewType } from 'src/features/wallet/walletSlice'
@@ -36,8 +37,11 @@ export function PortfolioNFTsScreen({
   },
 }: HomeStackScreenProp<Screens.PortfolioNFTs>) {
   const navigation = useHomeStackNavigation()
-  const accountAddress = useActiveAccount()?.address
+  const activeAccount = useActiveAccount()
+  const accountAddress = activeAccount?.address
+  const accountType = activeAccount?.type
   const activeAddress = owner ?? accountAddress
+  const displayName = useDisplayName(activeAddress)
   const nftViewType = useAppSelector(selectNFTViewType)
   const dispatch = useAppDispatch()
 
@@ -75,7 +79,7 @@ export function PortfolioNFTsScreen({
     [onPressItem]
   )
 
-  const isOtherOwner = owner && owner !== accountAddress
+  const isOtherOwner = owner && (owner !== accountAddress || accountType === AccountType.Readonly)
 
   return (
     <HeaderScrollScreen
@@ -91,7 +95,9 @@ export function PortfolioNFTsScreen({
           <Flex row alignItems="center" mb="md">
             <Flex grow>
               <Text mx="xs" variant="headlineSmall">
-                {isOtherOwner ? t('NFTs') : t('Your NFTs')}
+                {isOtherOwner
+                  ? t("{{owner}}'s NFTs", { owner: displayName?.name })
+                  : t('Your NFTs')}
               </Text>
             </Flex>
             <IconButton

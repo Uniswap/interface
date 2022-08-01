@@ -57,7 +57,7 @@ export function HomeScreen() {
           </Flex>
           <Flex gap="sm">
             <PortfolioTokensSection count={4} />
-            <PortfolioNFTsSection count={6} />
+            <PortfolioNFTsSection count={6} owner={activeAccount?.address} />
           </Flex>
         </Flex>
       </HeaderScrollScreen>
