@@ -4,7 +4,6 @@ import React, { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { useHomeStackNavigation } from 'src/app/navigation/types'
-import CameraScan from 'src/assets/icons/camera-scan-alt.svg'
 import ScanQRIcon from 'src/assets/icons/scan-qr.svg'
 import SwapIcon from 'src/assets/icons/swap.svg'
 import { AccountHeader } from 'src/components/accounts/AccountHeader'
@@ -143,7 +142,7 @@ function QuickActions() {
         borderRadius="md"
         flex={1}
         icon={
-          <CameraScan color={theme.colors.textPrimary} height={20} strokeWidth={2} width={20} />
+          <ScanQRIcon color={theme.colors.textPrimary} height={20} strokeWidth={2} width={20} />
         }
         label={t('Scan')}
         name={
