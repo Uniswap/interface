@@ -9,7 +9,7 @@ import LoadingTokenDetail from 'components/Explore/TokenDetails/LoadingTokenDeta
 import TokenDetail from 'components/Explore/TokenDetails/TokenDetail'
 import TokenSafetyMessage from 'components/TokenSafety/TokenSafetyMessage'
 import { checkWarning } from 'constants/tokenWarnings'
-import { useState } from 'react'
+import useTokenDetailPageQuery from 'hooks/useTokenDetailPageQuery'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
@@ -48,11 +48,7 @@ const Widget = styled.div`
 `
 export default function TokenDetails() {
   const { tokenAddress } = useParams<{ tokenAddress?: string }>()
-  const [loading, setLoading] = useState(true)
-
-  setTimeout(() => {
-    setLoading(false)
-  }, 1000)
+  const { data, error, loading } = useTokenDetailPageQuery(tokenAddress)
 
   let tokenDetail
   if (!tokenAddress) {
