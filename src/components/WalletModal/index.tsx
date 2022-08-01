@@ -126,7 +126,6 @@ const sendAnalyticsEventAndUserInfo = (
     wallet_address: account,
     wallet_type: walletType,
     is_reconnect: isReconnect,
-    // TODO(lynnshaoyu): Send correct is_reconnect value after modifying user state.
   })
   user.set(CUSTOM_USER_PROPERTIES.WALLET_ADDRESS, account)
   user.set(CUSTOM_USER_PROPERTIES.WALLET_TYPE, walletType)
