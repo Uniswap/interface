@@ -7,7 +7,7 @@ import {
 import BalanceSummary from 'components/Explore/TokenDetails/BalanceSummary'
 import LoadingTokenDetail from 'components/Explore/TokenDetails/LoadingTokenDetail'
 import TokenDetail from 'components/Explore/TokenDetails/TokenDetail'
-import { useState } from 'react'
+import useTokenDetailPageQuery from 'hooks/useTokenDetailPageQuery'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
@@ -46,11 +46,8 @@ const Widget = styled.div`
 `
 export default function TokenDetails() {
   const { tokenAddress } = useParams<{ tokenAddress?: string }>()
-  const [loading, setLoading] = useState(true)
+  const { data, error, loading } = useTokenDetailPageQuery(tokenAddress)
 
-  setTimeout(() => {
-    setLoading(false)
-  }, 1000)
 
   let tokenDetail
   if (!tokenAddress) {
