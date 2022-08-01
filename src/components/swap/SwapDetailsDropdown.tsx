@@ -10,7 +10,6 @@ import { LoadingOpacityContainer } from 'components/Loader/styled'
 import Row, { RowBetween, RowFixed } from 'components/Row'
 import { MouseoverTooltipContent } from 'components/Tooltip'
 import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'
-import { darken } from 'polished'
 import { useState } from 'react'
 import { ChevronDown, Info } from 'react-feather'
 import { InterfaceTrade } from 'state/routing/types'
@@ -41,17 +40,13 @@ const StyledCard = styled(OutlineCard)`
 `
 
 const StyledHeaderRow = styled(RowBetween)<{ disabled: boolean; open: boolean }>`
-  padding: 4px 8px;
-  border-radius: 12px;
-  background-color: ${({ open, theme }) => (open ? theme.deprecated_bg1 : 'transparent')};
+  padding: 12px 8px 8px 8px;
+  background-color: ${({ open, theme }) => (open ? theme.deprecated_bg1 : theme.none)};
   align-items: center;
+  border-top: 1px solid ${({ theme }) => theme.backgroundOutline};
+  margin-top: 8px;
   cursor: ${({ disabled }) => (disabled ? 'initial' : 'pointer')};
   min-height: 40px;
-
-  :hover {
-    background-color: ${({ theme, disabled }) =>
-      disabled ? theme.deprecated_bg1 : darken(0.015, theme.deprecated_bg1)};
-  }
 `
 
 const RotatingArrow = styled(ChevronDown)<{ open?: boolean }>`
