@@ -1,15 +1,18 @@
 import { Trans } from '@lingui/macro'
+import { Token } from '@uniswap/sdk-core'
 import { ButtonPrimary } from 'components/Button'
 import { AutoColumn } from 'components/Column'
 import CurrencyLogo from 'components/CurrencyLogo'
 import TokenSafetyLabel from 'components/TokenSafety/TokenSafetyLabel'
 import { checkWarning, getWarningCopy, Warning, WARNING_LEVEL } from 'constants/tokenWarnings'
 import { useToken } from 'hooks/Tokens'
+import { ExternalLink as LinkIconFeather } from 'react-feather'
 import { Text } from 'rebass'
 import { useAddUserToken } from 'state/user/hooks'
 import styled, { useTheme } from 'styled-components/macro'
-import { ButtonText, CopyLinkIcon, ExternalLinkIcon } from 'theme'
+import { ButtonText, CopyLinkIcon, ExternalLink } from 'theme'
 import { Color } from 'theme/styled'
+import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 const Wrapper = styled.div`
   width: 100%;
@@ -41,6 +44,11 @@ const InfoText = styled(Text)`
   font-size: 14px;
   line-height: 20px;
   text-align: center;
+`
+
+const LearnMoreLink = styled(ExternalLink)`
+  color: ${({ theme }) => theme.textPrimary};
+  font-weight: 600;
 `
 
 const StyledButton = styled(ButtonPrimary)<{ buttonColor: Color; textColor: Color }>`
@@ -78,11 +86,11 @@ const Buttons = ({
     case WARNING_LEVEL.UNKNOWN:
       textColor = theme.accentFailure
       buttonColor = theme.accentFailureSoft
-      cancelColor = theme.white
+      cancelColor = theme.textPrimary
       break
     case WARNING_LEVEL.BLOCKED:
-      textColor = theme.white
-      buttonColor = theme.accentAction
+      textColor = theme.textPrimary
+      buttonColor = theme.backgroundAction
       break
   }
   return warning.canProceed ? (
@@ -113,40 +121,82 @@ const SafetyLabel = ({ warning }: { warning: Warning }) => {
 const LinkColumn = styled(AutoColumn)`
   width: 100%;
   margin-top: 16px;
+  position: relative;
 `
 
-const URLWrapper = styled.div`
+const ExplorerContainer = styled.div`
   width: 100%;
   height: 32px;
   margin-top: 10px;
   font-size: 20px;
   background-color: ${({ theme }) => theme.accentActionSoft};
+  color: ${({ theme }) => theme.accentAction};
   border-radius: 8px;
   padding: 2px 12px;
   display: flex;
   align-items: center;
   overflow: hidden;
-  text-overflow: ellipsis;
 `
 
-const URL = styled(Text)`
+const ExplorerLinkWrapper = styled.div`
+  display: flex;
+  overflow: hidden;
+  align-items: center;
+  cursor: pointer;
+
+  :hover {
+    text-decoration: none;
+    opacity: 0.7;
+  }
+`
+
+const ExplorerLink = styled.div`
   display: block;
-  text-decoration: none;
   font-size: 14px;
   color: ${({ theme }) => theme.accentAction};
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
+
+  :hover {
+    text-decoration: none;
+  }
+`
+const ExplorerLinkIconWrapper = styled(LinkIconFeather)``
+const ExplorerLinkIcon = styled(LinkIconFeather)`
+  height: 16px;
+  width: 18px;
+  margin-left: 8px;
 `
 
-function EtherscanURL({ tokenAddress }: { tokenAddress: string | null | undefined }) {
-  const learnMoreURL = 'https://etherscan.io/token/' + tokenAddress
+const LinkIconWrapper = styled.div`
+  justify-content: center;
+  display: flex;
+`
+
+export function ExternalLinkIcon() {
   return (
-    <URLWrapper>
-      <URL>{learnMoreURL}</URL>
-      <CopyLinkIcon toCopy={learnMoreURL} />
-      <ExternalLinkIcon color="#4c82fb" href={learnMoreURL} />
-    </URLWrapper>
+    <LinkIconWrapper>
+      <ExplorerLinkIcon />
+    </LinkIconWrapper>
   )
+}
+
+function ExplorerView({ token }: { token: Token }) {
+  if (token) {
+    const explorerLink = getExplorerLink(token?.chainId, token?.address, ExplorerDataType.TOKEN)
+    return (
+      <ExplorerContainer>
+        <ExplorerLinkWrapper onClick={() => window.open(explorerLink, '_blank')}>
+          <ExplorerLink>{explorerLink}</ExplorerLink>
+          <ExternalLinkIcon />
+        </ExplorerLinkWrapper>
+        <CopyLinkIcon toCopy={explorerLink} />
+      </ExplorerContainer>
+    )
+  } else {
+    return null
+  }
 }
 
 interface TokenSafetyProps {
@@ -169,13 +219,13 @@ export default function TokenSafety({ tokenAddress, secondTokenAddress, onContin
   const token2Unsupported = !token2Warning?.canProceed
 
   // Logic for only showing the 'unsupported' warning if one is supported and other isn't
-  if (token1Warning && (token1Unsupported || !(token2Warning && token2Unsupported))) {
+  if (token1 && token1Warning && (token1Unsupported || !(token2Warning && token2Unsupported))) {
     logos.push(<CurrencyLogo currency={token1} size="48px" />)
-    urls.push(<EtherscanURL tokenAddress={tokenAddress} />)
+    urls.push(<ExplorerView token={token1} />)
   }
-  if (token2Warning && (token2Unsupported || !(token1Warning && token1Unsupported))) {
+  if (token2 && token2Warning && (token2Unsupported || !(token1Warning && token1Unsupported))) {
     logos.push(<CurrencyLogo currency={token2} size="48px" />)
-    urls.push(<EtherscanURL tokenAddress={secondTokenAddress} />)
+    urls.push(<ExplorerView token={token2} />)
   }
 
   const plural = logos.length > 1
@@ -213,9 +263,9 @@ export default function TokenSafety({ tokenAddress, secondTokenAddress, onContin
           <ShortColumn>
             <InfoText>
               {description}{' '}
-              <b>
+              <LearnMoreLink href="https://help.uniswap.org/en/">
                 <Trans>Learn More</Trans>
-              </b>
+              </LearnMoreLink>
             </InfoText>
           </ShortColumn>
           <LinkColumn>{urls}</LinkColumn>

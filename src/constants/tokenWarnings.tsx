@@ -1,4 +1,4 @@
-import { Trans } from '@lingui/macro'
+import { Plural, Trans } from '@lingui/macro'
 
 import WarningCache, { TOKEN_LIST_TYPES } from './TokenSafetyLookupTable'
 
@@ -9,26 +9,23 @@ export enum WARNING_LEVEL {
 }
 
 export function getWarningCopy(warning: Warning | null, plural = false) {
-  if (!warning) {
-    return { heading: null, description: null }
+  let heading = null,
+    description = null
+  if (warning) {
+    if (warning.canProceed) {
+      heading = <Plural value={plural ? 2 : 1} _1="This token isn't verified" other="These tokens aren't verified" />
+      description = <Trans>{'Please do your own research before trading.'}</Trans>
+    } else {
+      description = (
+        <Plural
+          value={plural ? 2 : 1}
+          _1="You can't trade this token using the Uniswap App."
+          other="You can't trade these tokens using the Uniswap App."
+        />
+      )
+    }
   }
-  if (warning.canProceed) {
-    if (plural) {
-      return {
-        heading: <Trans>{"These tokens aren't verified"}</Trans>,
-        description: <Trans>{'Please do your own research before trading'}.</Trans>,
-      }
-    }
-    return {
-      heading: <Trans>{"This token isn't verified"}</Trans>,
-      description: <Trans>{'Please do your own research before trading.'}</Trans>,
-    }
-  } else {
-    if (plural) {
-      return { heading: null, description: <Trans>{"You can't trade these tokens using the Uniswap App."}</Trans> }
-    }
-    return { heading: null, description: <Trans>{"You can't trade this token using the Uniswap App."}</Trans> }
-  }
+  return { heading, description }
 }
 
 export type Warning = {

@@ -1,10 +1,11 @@
 import { outboundLink } from 'components/analytics'
 import useCopyClipboard from 'hooks/useCopyClipboard'
 import React, { HTMLProps, useCallback } from 'react'
-import { ArrowLeft, CheckSquare, Copy, ExternalLink as LinkIconFeather, Trash, X } from 'react-feather'
+import { ArrowLeft, Copy, ExternalLink as LinkIconFeather, Trash, X } from 'react-feather'
 import { Link } from 'react-router-dom'
 import styled, { css, keyframes } from 'styled-components/macro'
 
+import { ReactComponent as TooltipTriangle } from '../assets/svg/tooltip_triangle.svg'
 import { anonymizeLink } from '../utils/anonymizeLink'
 
 export const ButtonText = styled.button`
@@ -136,20 +137,6 @@ const CopyIconWrapper = styled.div`
   align-items: center;
   justify-content: center;
   display: flex;
-
-  :hover {
-    text-decoration: none;
-    opacity: 0.7;
-  }
-
-  :focus {
-    outline: none;
-    text-decoration: none;
-  }
-
-  :active {
-    text-decoration: none;
-  }
 `
 
 const IconStyle = css`
@@ -166,11 +153,20 @@ const LinkIcon = styled(LinkIconFeather)`
 const CopyIcon = styled(Copy)`
   ${IconStyle}
   stroke: ${({ theme }) => theme.accentAction};
-`
 
-const CopiedIcon = styled(CheckSquare)`
-  ${IconStyle}
-  stroke: ${({ theme }) => theme.accentAction};
+  :hover {
+    text-decoration: none;
+    opacity: 0.7;
+  }
+
+  :focus {
+    outline: none;
+    text-decoration: none;
+  }
+
+  :active {
+    text-decoration: none;
+  }
 `
 
 export const TrashIcon = styled(Trash)`
@@ -247,12 +243,48 @@ export function ExternalLinkIcon({
   )
 }
 
+const ToolTipWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: absolute;
+  transform: translate(5px, 32px);
+  z-index: 9999;
+`
+
+const CopiedTooltip = styled.div`
+  background-color: ${({ theme }) => theme.black};
+  text-align: center;
+  justify-content: center;
+  width: 60px;
+  height: 32px;
+  line-height: 32px;
+  border-radius: 8px;
+
+  color: ${({ theme }) => theme.white};
+  font-size: 12px;
+`
+
+function ToolTip() {
+  return (
+    <ToolTipWrapper>
+      <TooltipTriangle />
+      <CopiedTooltip>Copied!</CopiedTooltip>
+    </ToolTipWrapper>
+  )
+}
+
 export function CopyLinkIcon({ toCopy }: { toCopy: string }) {
   const [isCopied, setCopied] = useCopyClipboard()
   const copy = useCallback(() => {
     setCopied(toCopy)
   }, [toCopy, setCopied])
-  return <CopyIconWrapper onClick={copy}>{isCopied ? <CopiedIcon /> : <CopyIcon />}</CopyIconWrapper>
+  return (
+    <CopyIconWrapper onClick={copy}>
+      <CopyIcon />
+      {isCopied && <ToolTip />}
+    </CopyIconWrapper>
+  )
 }
 
 const rotate = keyframes`

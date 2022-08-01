@@ -31,7 +31,7 @@ export default function TokenSafetyLabel({ level, canProceed, children }: TokenW
   return (
     <Label color={useTokenWarningColor(level)}>
       <Title marginRight="5px">{children}</Title>
-      {canProceed ? <AlertTriangle strokeWidth={2.5} size="14px" /> : <AlertOctagon size="14px" />}
+      {canProceed ? <AlertTriangle strokeWidth={2.5} size="14px" /> : <AlertOctagon strokeWidth={2.5} size="14px" />}
     </Label>
   )
 }
