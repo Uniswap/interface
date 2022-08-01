@@ -150,14 +150,12 @@ const StyledTokenName = styled.span<{ active?: boolean }>`
 
 const StyledBalanceMax = styled.button<{ disabled?: boolean }>`
   background-color: transparent;
-  background-color: ${({ theme }) => theme.deprecated_primary5};
   border: none;
-  border-radius: 12px;
-  color: ${({ theme }) => theme.deprecated_primary1};
+  color: ${({ theme }) => theme.accentAction};
   cursor: pointer;
-  font-size: 11px;
-  font-weight: 500;
-  margin-left: 0.25rem;
+  font-size: 14px;
+  font-weight: 600;
+  margin-left: 8px;
   opacity: ${({ disabled }) => (!disabled ? 1 : 0.4)};
   padding: 4px 6px;
   pointer-events: ${({ disabled }) => (!disabled ? 'initial' : 'none')};
@@ -338,7 +336,7 @@ export default function CurrencyInputPanel({
                       element={ElementName.MAX_TOKEN_AMOUNT_BUTTON}
                     >
                       <StyledBalanceMax onClick={onMax}>
-                        <Trans>MAX</Trans>
+                        <Trans>Max</Trans>
                       </StyledBalanceMax>
                     </TraceEvent>
                   ) : null}
