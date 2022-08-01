@@ -79,6 +79,7 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps) {
       {...transformedProps}>
       {!isBlankOutputState && (
         <AmountInput
+          alignSelf="stretch"
           autoFocus={autoFocus}
           backgroundColor="none"
           borderWidth={0}
@@ -93,6 +94,7 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps) {
           showCurrencySign={isUSDInput}
           showSoftInputOnFocus={showSoftInputOnFocus}
           testID={isOutput ? 'amount-input-out' : 'amount-input-in'}
+          textAlign="center"
           value={value}
           onChangeText={(newAmount: string) => onSetAmount(newAmount)}
           onPressIn={onPressIn}
