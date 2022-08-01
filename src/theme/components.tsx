@@ -26,7 +26,7 @@ export const ButtonText = styled.button`
   }
 `
 
-export const CloseIcon = styled(X) <{ onClick: () => void }>`
+export const CloseIcon = styled(X)<{ onClick: () => void }>`
   cursor: pointer;
 `
 
@@ -272,7 +272,7 @@ export function BackArrow({ to }: { to: string }) {
   )
 }
 
-export const CustomLightSpinner = styled(Spinner) <{ size: string }>`
+export const CustomLightSpinner = styled(Spinner)<{ size: string }>`
   height: ${({ size }) => size};
   width: ${({ size }) => size};
 `
@@ -302,28 +302,4 @@ export const Separator = styled.div`
   background-color: ${({ theme }) => theme.deprecated_bg2};
 `
 
-/* colors toggle for testing */
-const ColorsToggle = styled.button<{ updated: boolean }>`
-  display: flex;
-  position: fixed;
-  z-index: 100;
-  left: 16px;
-  bottom: 16px;
-  border-radius: 12px;
-  background-color: ${({ theme, updated }) => (updated ? theme.accentAction : theme.accentFailure)};
-  font-size: 14px;
-  padding: 8px 16px;
-  color: ${({ theme }) => theme.textPrimary};
-  border: 1.5px solid ${({ theme }) => theme.textPrimary};
-  cursor: pointer;
-`
 export const useColorsUpdatedAtom = atom<boolean>(false)
-
-export function ColorThemeToggle() {
-  const [colorsUpdated, setColorsUpdated] = useAtom(useColorsUpdatedAtom)
-  return (
-    <ColorsToggle updated={colorsUpdated} onClick={() => setColorsUpdated(!colorsUpdated)}>
-      Theme: {colorsUpdated ? 'New Colors' : 'Deprecated Colors'}
-    </ColorsToggle>
-  )
-}

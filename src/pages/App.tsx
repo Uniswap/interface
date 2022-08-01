@@ -138,7 +138,6 @@ export default function App() {
     <ErrorBoundary>
       <DarkModeQueryParamReader />
       <ApeModeQueryParamReader />
-      <ColorThemeToggle />
       <AppWrapper>
         <Trace page={currentPage}>
           <HeaderWrapper>
