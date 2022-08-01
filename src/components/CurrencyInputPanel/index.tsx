@@ -60,9 +60,10 @@ const CurrencySelect = styled(ButtonGray)<{
   selected: boolean
   hideInput?: boolean
   disabled?: boolean
+  isInputCurrency?: boolean
 }>`
   align-items: center;
-  background-color: ${({ selected, theme }) => (selected ? theme.backgroundContainer : theme.deprecated_primary1)};
+  background-color: ${({ isInputCurrency, theme }) => (isInputCurrency ? theme.none : theme.accentActive)};
   opacity: ${({ disabled }) => (!disabled ? 1 : 0.4)};
   box-shadow: ${({ selected }) => (selected ? 'none' : '0px 6px 10px rgba(0, 0, 0, 0.075)')};
   box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.075);
@@ -261,6 +262,7 @@ export default function CurrencyInputPanel({
             disabled={!chainAllowed}
             visible={currency !== undefined}
             selected={!!currency}
+            isInputCurrency={id === 'swap-currency-input'}
             hideInput={hideInput}
             className="open-currency-select-button"
             onClick={() => {
