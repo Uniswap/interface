@@ -27,6 +27,10 @@ target 'Uniswap' do
   pod 'WalletConnectSwift' => '1.6.0'
   pod 'Shake'
 
+  permissions_path = '../node_modules/react-native-permissions/ios'
+  pod 'Permission-FaceID', :path => "#{permissions_path}/FaceID"
+  pod 'Permission-Notifications', :path => "#{permissions_path}/Notifications"
+
   # Enables Flipper.
   #
   # Note that if you have use_frameworks! enabled, Flipper will not work and

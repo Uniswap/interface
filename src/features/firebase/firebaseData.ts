@@ -1,5 +1,6 @@
 import firebase from '@react-native-firebase/app'
 import firestore from '@react-native-firebase/firestore'
+import { appSelect } from 'src/app/hooks'
 import {
   getFirebaseUidOrError,
   getFirestoreMetadataRef,
@@ -8,10 +9,15 @@ import {
   getOneSignalUserIdOrError,
 } from 'src/features/firebase/utils'
 import { AccountBase } from 'src/features/wallet/accounts/types'
-import { EditAccountAction, editAccountActions } from 'src/features/wallet/editAccountSaga'
-import { addAccount } from 'src/features/wallet/walletSlice'
+import {
+  EditAccountAction,
+  editAccountActions,
+  TogglePushNotificationParams,
+} from 'src/features/wallet/editAccountSaga'
+import { selectAccounts } from 'src/features/wallet/selectors'
+import { addAccount, editAccount } from 'src/features/wallet/walletSlice'
 import { logger } from 'src/utils/logger'
-import { call, fork, takeEvery } from 'typed-redux-saga'
+import { call, fork, put, takeEvery } from 'typed-redux-saga'
 
 type AccountMetadata = Pick<AccountBase, 'name'> & { avatar?: string }
 
@@ -30,16 +36,10 @@ export function* firebaseEditAddressWatcher() {
 
 export function* addAccountToFirebase(actionData: ReturnType<typeof addAccount>) {
   const {
-    payload: { address, name },
+    payload: { address },
   } = actionData
   try {
     yield* call(mapFirebaseUidToAddresses, [address])
-
-    if (name) {
-      yield* call(updateAccountMetadata, address, { name })
-    }
-
-    yield* call(mapPushTokenToAddresses, [address])
   } catch (error) {
     logger.error('firebaseData', 'addAccountToFirebase', 'Error:', error)
   }
@@ -62,7 +62,7 @@ export function* editAccountDataInFirebase(
       // no-op
       break
     case EditAccountAction.TogglePushNotificationParams:
-      yield* call(updateFirebasePushNotificationsSettings, { address, enabled: payload.enabled })
+      yield* call(updateFirebasePushNotificationsSettings, payload)
       break
     default:
       throw new Error(`Invalid EditAccountAction ${type}`)
@@ -87,13 +87,30 @@ export function* renameAccountInFirebase(address: Address, newName: string) {
   }
 }
 
-export function* updateFirebasePushNotificationsSettings(params: {
-  enabled: boolean
-  address: Address
-}) {
-  const { enabled, address } = params
+export function* updateFirebasePushNotificationsSettings(params: TogglePushNotificationParams) {
+  const accounts = yield* appSelect(selectAccounts)
+  const { address, enabled } = params
+  const account = accounts[address]
+
   try {
-    yield* call(enabled ? mapFirebaseUidToAddresses : disassociatePushTokenFromAddresses, [address])
+    if (enabled) {
+      if (account.name) {
+        yield* call(updateAccountMetadata, address, { name: account.name })
+      }
+      yield* call(mapPushTokenToAddresses, [address])
+    } else {
+      yield* call(disassociatePushTokenFromAddresses, [address])
+    }
+
+    yield* put(
+      editAccount({
+        address,
+        updatedAccount: {
+          ...account,
+          pushNotificationsEnabled: enabled,
+        },
+      })
+    )
   } catch (error) {
     logger.error('firebaseData', 'updateFirebasePushNotificationsSettings', 'Error:', error)
   }

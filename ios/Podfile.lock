@@ -569,6 +569,10 @@ PODS:
   - nanopb/decode (2.30908.0)
   - nanopb/encode (2.30908.0)
   - OneSignalXCFramework (3.10.1)
+  - Permission-FaceID (3.6.0):
+    - RNPermissions
+  - Permission-Notifications (3.6.0):
+    - RNPermissions
   - PromisesObjC (2.0.0)
   - Protobuf (3.19.4)
   - RCT-Folly (2021.06.28.00-v2):
@@ -905,6 +909,8 @@ PODS:
     - React-Core
   - RNImageColors (1.5.0):
     - React-Core
+  - RNPermissions (3.6.0):
+    - React-Core
   - RNReanimated (2.4.1):
     - DoubleConversion
     - FBLazyVector
@@ -981,6 +987,8 @@ DEPENDENCIES:
   - lottie-ios (from `../node_modules/lottie-ios`)
   - lottie-react-native (from `../node_modules/lottie-react-native`)
   - OneSignalXCFramework (< 4.0, >= 3.0)
+  - Permission-FaceID (from `../node_modules/react-native-permissions/ios/FaceID`)
+  - Permission-Notifications (from `../node_modules/react-native-permissions/ios/Notifications`)
   - RCT-Folly (from `../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec`)
   - RCTRequired (from `../node_modules/react-native/Libraries/RCTRequired`)
   - RCTTypeSafety (from `../node_modules/react-native/Libraries/TypeSafety`)
@@ -1023,6 +1031,7 @@ DEPENDENCIES:
   - "RNFBRemoteConfig (from `../node_modules/@react-native-firebase/remote-config`)"
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNImageColors (from `../node_modules/react-native-image-colors`)
+  - RNPermissions (from `../node_modules/react-native-permissions`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
   - "RNSentry (from `../node_modules/@sentry/react-native`)"
@@ -1112,6 +1121,10 @@ EXTERNAL SOURCES:
     :path: "../node_modules/lottie-ios"
   lottie-react-native:
     :path: "../node_modules/lottie-react-native"
+  Permission-FaceID:
+    :path: "../node_modules/react-native-permissions/ios/FaceID"
+  Permission-Notifications:
+    :path: "../node_modules/react-native-permissions/ios/Notifications"
   RCT-Folly:
     :podspec: "../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec"
   RCTRequired:
@@ -1192,6 +1205,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-gesture-handler"
   RNImageColors:
     :path: "../node_modules/react-native-image-colors"
+  RNPermissions:
+    :path: "../node_modules/react-native-permissions"
   RNReanimated:
     :path: "../node_modules/react-native-reanimated"
   RNScreens:
@@ -1260,6 +1275,8 @@ SPEC CHECKSUMS:
   MLKitVision: e87dc3f2e456a6ab32361ebd985e078dd2746143
   nanopb: a0ba3315591a9ae0a16a309ee504766e90db0c96
   OneSignalXCFramework: fe027712118f2862ab193b72270487f11450ea63
+  Permission-FaceID: aaf43b353c25aaa2c1a501f93fa33dcb0f76e6c8
+  Permission-Notifications: 7f2a467ab97a130a847519705340830d52cfc5f0
   PromisesObjC: 68159ce6952d93e17b2dfe273b8c40907db5ba58
   Protobuf: 235750e4696ff59fb07d949a9dbbc92b3c0700fe
   RCT-Folly: a21c126816d8025b547704b777a2ba552f3d9fa9
@@ -1302,6 +1319,7 @@ SPEC CHECKSUMS:
   RNFBRemoteConfig: c1248accec3d59d6f09a526e5b04405a17e8093d
   RNGestureHandler: 61628a2c859172551aa2100d3e73d1e57878392f
   RNImageColors: ed00190f4e743ff4fb1a61285572b5d4e6a0a8f0
+  RNPermissions: de7b7c3fe1680d974ac7a85e3e97aa539c0e68ea
   RNReanimated: e8afbe2a9e08e9e778ea72ddb1a8533445812621
   RNScreens: 6e1ea5787989f92b0671049b808aef64fa1ef98c
   RNSentry: f03937a2cf86c7029ba31fbbf5618c55d223cd62
@@ -1315,6 +1333,6 @@ SPEC CHECKSUMS:
   WalletConnectSwift: 1fbff8f5315bd8d41596773ca1b384aa873b6824
   Yoga: c11abbf5809216c91fcd62f5571078b83d9b6720
 
-PODFILE CHECKSUM: e796ea3e591923b5d5bc2a0f4ccb9fac6efa067c
+PODFILE CHECKSUM: 329ac72219459827172e8a7d57058dd3d5093294
 
 COCOAPODS: 1.11.3

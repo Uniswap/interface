@@ -27,6 +27,7 @@ export interface AccountBase {
   flashbotsEnabled?: boolean
   pending?: boolean
   timeImportedMs: number
+  pushNotificationsEnabled?: boolean
 }
 
 export interface NativeAccount extends AccountBase {

@@ -68,6 +68,7 @@ jest.mock('src/data/relay', () => {
 })
 
 jest.mock('react-native/Libraries/EventEmitter/NativeEventEmitter')
+jest.mock('react-native-permissions', () => {})
 jest.mock('react-native-device-info', () => mockRNDeviceInfo)
 
 global.__reanimatedWorkletInit = jest.fn()

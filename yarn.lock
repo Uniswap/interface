@@ -17579,6 +17579,11 @@ react-native-onesignal@^4.3.7:
   dependencies:
     invariant "^2.2.2"
 
+react-native-permissions@^3.6.0:
+  version "3.6.0"
+  resolved "https://registry.yarnpkg.com/react-native-permissions/-/react-native-permissions-3.6.0.tgz#4b284b6374fdb8b9b6702c6a0719bfb1a97aa7ff"
+  integrity sha512-aiancYU5eAC3lCtdAFNz/8OQAShAXSgFJAcNrsspXiMulL4zjClIa52uWMi5NTU4skU0KoWG5rCfqjxWAkJL8w==
+
 react-native-progress@^5.0.0:
   version "5.0.0"
   resolved "https://registry.yarnpkg.com/react-native-progress/-/react-native-progress-5.0.0.tgz#f5ac6ceaeee27f184c660b00f29419e82a9d0ab0"

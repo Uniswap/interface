@@ -157,6 +157,9 @@ export const v11Schema = {
   biometricSettings: { requiredForAppAccess: false, requiredForTransactions: false },
 }
 
+// schema did not change, added `pushNotificationsEnabled` prop to the Account type
+export const v12Schema = { ...v11Schema }
+
 // TODO: use function with typed output when API reducers are removed from rootReducer
 // export const getSchema = (): RootState => v0Schema
-export const getSchema = () => v11Schema
+export const getSchema = () => v12Schema

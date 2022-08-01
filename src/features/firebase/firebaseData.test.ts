@@ -20,7 +20,7 @@ import {
   editAccountActions,
   EditAccountParams,
 } from 'src/features/wallet/editAccountSaga'
-import { addAccount } from 'src/features/wallet/walletSlice'
+import { addAccount, editAccount } from 'src/features/wallet/walletSlice'
 
 const MOCK_ADDRESS_1 = '0xaddress1'
 const MOCK_ADDRESS_2 = '0xaddress2'
@@ -102,37 +102,50 @@ describe(firebaseDataWatcher, () => {
   })
 })
 
-// Re-enable tests when Firestore is mocked
-
 describe(addAccountToFirebase, () => {
-  it.skip('Adds to the UID mapping when an account is added', () => {
+  it('Adds to the UID mapping when an account is added', () => {
     return expectSaga(addAccountToFirebase, { payload: importedAccount, type: '' })
       .call(mapFirebaseUidToAddresses, [importedAccount.address])
       .silentRun()
   })
 })
 
+// Re-enable tests when Firestore is mocked
 describe(editAccountDataInFirebase, () => {
   it.skip('Adds to the push notification mapping and updates metadata when notifications are enabled and account is named', () => {
     return expectSaga(updateFirebasePushNotificationsSettings, {
-      address: MOCK_ADDRESS_1,
+      type: EditAccountAction.TogglePushNotificationParams,
       enabled: true,
+      address: MOCK_ADDRESS_1,
     })
       .withState({ wallet: { accounts: { [MOCK_ADDRESS_1]: readonlyAccount } } })
       .call(updateAccountMetadata, readonlyAccount.address, {
         name: readonlyAccount.name,
       })
       .call(mapPushTokenToAddresses, [readonlyAccount.address])
+      .put(
+        editAccount({
+          address: readonlyAccount.address,
+          updatedAccount: { ...readonlyAccount, pushNotificationsEnabled: true },
+        })
+      )
       .silentRun()
   })
 
   it.skip('Adds to the push notification mapping and does not update metadata when notifications are enabled and account is nameless', () => {
     return expectSaga(updateFirebasePushNotificationsSettings, {
-      address: MOCK_ADDRESS_2,
+      type: EditAccountAction.TogglePushNotificationParams,
       enabled: true,
+      address: MOCK_ADDRESS_2,
     })
       .withState({ wallet: { accounts: { [MOCK_ADDRESS_2]: importedNamelessAccount } } })
       .call(mapPushTokenToAddresses, [importedNamelessAccount.address])
+      .put(
+        editAccount({
+          address: importedNamelessAccount.address,
+          updatedAccount: { ...importedNamelessAccount, pushNotificationsEnabled: true },
+        })
+      )
       .silentRun()
   })
 

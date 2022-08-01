@@ -84,3 +84,6 @@ export const selectInactiveAccounts = createSelector(
   (activeAddress, accounts) =>
     Object.values(accounts).filter((account) => account.address !== activeAddress)
 )
+
+export const makeSelectAccountNotificationSetting = (address: Address) =>
+  createSelector(selectAccounts, (accounts) => !!accounts[address]?.pushNotificationsEnabled)

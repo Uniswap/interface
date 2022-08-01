@@ -23,7 +23,6 @@ import { BiometricCheck } from 'src/features/biometrics/BiometricCheck'
 import { useActiveChainIds } from 'src/features/chains/utils'
 import { useAllBalancesByChainId } from 'src/features/dataApi/balances'
 import { openModal } from 'src/features/modals/modalSlice'
-import { promptPushPermission } from 'src/features/notifications/Onesignal'
 import { PendingNotificationBadge } from 'src/features/notifications/PendingNotificationBadge'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { useTestAccount } from 'src/features/wallet/accounts/useTestAccount'
@@ -38,7 +37,6 @@ import { isWalletConnectSupportedAccount } from 'src/utils/walletConnect'
 export function HomeScreen() {
   // imports test account for easy development/testing
   useTestAccount()
-  promptPushPermission()
 
   const activeAccount = useActiveAccount()
   const currentChains = useActiveChainIds()

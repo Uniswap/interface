@@ -27,16 +27,23 @@ import {
   SettingsSectionItemComponent,
 } from 'src/components/Settings/SettingsRow'
 import { Text } from 'src/components/Text'
+import {
+  NotificationPermission,
+  useNotificationOSPermissionsEnabled,
+} from 'src/features/notifications/hooks'
+import { promptPushPermission } from 'src/features/notifications/Onesignal'
 import { ElementName } from 'src/features/telemetry/constants'
 import { AccountType } from 'src/features/wallet/accounts/types'
 import { EditAccountAction, editAccountActions } from 'src/features/wallet/editAccountSaga'
-import { useAccounts } from 'src/features/wallet/hooks'
+import { useAccounts, useSelectAccountNotificationSetting } from 'src/features/wallet/hooks'
 import {
   selectHideSmallBalances,
   selectSortedMnemonicAccounts,
 } from 'src/features/wallet/selectors'
 import { setShowSmallBalances } from 'src/features/wallet/walletSlice'
+import { showNotificationSettingsAlert } from 'src/screens/Onboarding/NotificationsSetupScreen'
 import { opacify } from 'src/utils/colors'
+import { useAppStateTrigger } from 'src/utils/useAppStateTrigger'
 import { Screens } from './Screens'
 
 type Props = NativeStackScreenProps<SettingsStackParamList, Screens.SettingsWallet>
@@ -60,18 +67,44 @@ export function SettingsWallet({
     Object.values(addressToAccount).length === 1 ||
     (mnemonicWallets.length === 1 && currentAccount.type === AccountType.Native)
 
-  const [notificationsEnabled, setNotificationsEnabled] = useState(false)
+  const notificationOSPermission = useNotificationOSPermissionsEnabled()
+  const notificationsEnabledOnFirebase = useSelectAccountNotificationSetting(address)
+  // Can't control switch logic directly from hook outputs because it makes the switch UI choppy
+  const [notificationSwitchEnabled, setNotificationSwitchEnabled] = useState<boolean>(
+    notificationsEnabledOnFirebase && notificationOSPermission === NotificationPermission.Enabled
+  )
+
+  // Need to trigger a state update when the user backgrounds the app to enable notifications and then returns to this screen
+  useAppStateTrigger('background', 'active', () => {
+    setNotificationSwitchEnabled(
+      notificationOSPermission === NotificationPermission.Enabled && notificationsEnabledOnFirebase
+    )
+  })
+
   const [showRemoveWalletModal, setShowRemoveWalletModal] = useState(false)
 
   const onChangeNotificationSettings = (enabled: boolean) => {
-    setNotificationsEnabled(enabled)
-    dispatch(
-      editAccountActions.trigger({
-        type: EditAccountAction.TogglePushNotificationParams,
-        enabled,
-        address,
-      })
-    )
+    if (notificationOSPermission === NotificationPermission.Enabled) {
+      dispatch(
+        editAccountActions.trigger({
+          type: EditAccountAction.TogglePushNotificationParams,
+          enabled,
+          address,
+        })
+      )
+      setNotificationSwitchEnabled(enabled)
+    } else {
+      promptPushPermission(() => {
+        dispatch(
+          editAccountActions.trigger({
+            type: EditAccountAction.TogglePushNotificationParams,
+            enabled: true,
+            address,
+          })
+        )
+        setNotificationSwitchEnabled(enabled)
+      }, showNotificationSettingsAlert)
+    }
   }
 
   const removeWallet = () => {
@@ -106,7 +139,11 @@ export function SettingsWallet({
         },
         {
           action: (
-            <Switch value={notificationsEnabled} onValueChange={onChangeNotificationSettings} />
+            <Switch
+              disabled={notificationOSPermission === NotificationPermission.Loading}
+              value={notificationSwitchEnabled}
+              onValueChange={onChangeNotificationSettings}
+            />
           ),
           text: t('Notifications'),
           icon: <NotificationIcon color={theme.colors.textSecondary} />,

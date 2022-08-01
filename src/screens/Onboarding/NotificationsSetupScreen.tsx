@@ -2,6 +2,8 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert } from 'react-native'
+import { useAppDispatch, useAppSelector } from 'src/app/hooks'
+import { i18n } from 'src/app/i18n'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import AaveIcon from 'src/assets/icons/aave-icon.svg'
 import ArrowDownCircleIcon from 'src/assets/icons/arrow-down-circle.svg'
@@ -21,39 +23,53 @@ import { promptPushPermission } from 'src/features/notifications/Onesignal'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { OnboardingEntryPoint } from 'src/features/onboarding/utils'
 import { ElementName } from 'src/features/telemetry/constants'
+import { EditAccountAction, editAccountActions } from 'src/features/wallet/editAccountSaga'
 import { useIsBiometricAuthEnabled } from 'src/features/wallet/hooks'
+import { selectAccounts } from 'src/features/wallet/selectors'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { openSettings } from 'src/utils/linking'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.Notifications>
 
+export const showNotificationSettingsAlert = () => {
+  Alert.alert(
+    i18n.t(
+      "To receive notifications, turn on notifications for Uniswap Wallet in your device's settings."
+    ),
+    '',
+    [
+      { text: i18n.t('Settings'), onPress: openSettings },
+      {
+        text: i18n.t('Cancel'),
+      },
+    ]
+  )
+}
+
 export function NotificationsSetupScreen({ navigation, route: { params } }: Props) {
   const { t } = useTranslation()
   const isBiometricAuthEnabled = useIsBiometricAuthEnabled()
+  const accounts = useAppSelector(selectAccounts)
+  const dispatch = useAppDispatch()
+  const addresses = Object.keys(accounts)
 
   const onPressNext = () => {
     navigateToNextScreen()
   }
 
-  const showSoftPrompt = () => {
-    Alert.alert(
-      t(
-        "To receive notifications, turn on notifications for Uniswap Wallet in your device's settings."
-      ),
-      '',
-      [
-        { text: t('Settings'), onPress: openSettings },
-        {
-          text: t('Cancel'),
-        },
-      ]
-    )
-  }
-
   const onPressEnableNotifications = () => {
     promptPushPermission(() => {
+      addresses.forEach((address) =>
+        dispatch(
+          editAccountActions.trigger({
+            type: EditAccountAction.TogglePushNotificationParams,
+            enabled: true,
+            address,
+          })
+        )
+      )
       navigateToNextScreen()
-    }, showSoftPrompt)
+    }, showNotificationSettingsAlert)
   }
 
   const navigateToNextScreen = () => {

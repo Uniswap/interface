@@ -6,6 +6,7 @@ import {
   getSchema,
   initialSchema,
   v10Schema,
+  v11Schema,
   v1Schema,
   v2Schema,
   v3Schema,
@@ -441,5 +442,33 @@ describe('Redux state migrations', () => {
     expect(v11.biometricSettings).toBeDefined()
     expect(v11.biometricSettings.requiredForAppAccess).toBeDefined()
     expect(v11.biometricSettings.requiredForTransactions).toBeDefined()
+  })
+
+  it('migrates from v11 to v12', () => {
+    const TEST_ADDRESS = '0xTestAddress'
+    const ACCOUNT_NAME = 'Test Account'
+    const v11Stub = {
+      ...v11Schema,
+      wallet: {
+        ...v11Schema.wallet,
+        accounts: {
+          [TEST_ADDRESS]: {
+            type: AccountType.Native,
+            address: TEST_ADDRESS,
+            name: ACCOUNT_NAME,
+            pending: false,
+            derivationIndex: 0,
+            timeImportedMs: 123,
+          },
+        },
+      },
+    }
+
+    const v12 = migrations[12](v11Stub)
+
+    expect(v12.wallet.accounts[TEST_ADDRESS].pushNotificationsEnabled).toEqual(false)
+    expect(v12.wallet.accounts[TEST_ADDRESS].type).toEqual(AccountType.Native)
+    expect(v12.wallet.accounts[TEST_ADDRESS].address).toEqual(TEST_ADDRESS)
+    expect(v12.wallet.accounts[TEST_ADDRESS].name).toEqual(ACCOUNT_NAME)
   })
 })

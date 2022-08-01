@@ -34,7 +34,8 @@ interface AddBackupMethodParams extends EditParamsBase {
   type: EditAccountAction.AddBackupMethod
   backupMethod: BackupType
 }
-interface TogglePushNotificationParams extends EditParamsBase {
+
+export interface TogglePushNotificationParams extends EditParamsBase {
   type: EditAccountAction.TogglePushNotificationParams
   enabled: boolean
 }

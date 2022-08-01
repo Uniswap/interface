@@ -6,6 +6,7 @@ import { ChainId } from 'src/constants/chains'
 import { useENS } from 'src/features/ens/useENS'
 import { Account } from 'src/features/wallet/accounts/types'
 import {
+  makeSelectAccountNotificationSetting,
   makeSelectLocalPfp,
   selectActiveAccount,
   selectActiveAccountAddress,
@@ -60,6 +61,10 @@ export function useActiveAccountWithThrow(): Account {
 
 export function useSelectLocalPfp(address: Address) {
   return useAppSelector(makeSelectLocalPfp(address))
+}
+
+export function useSelectAccountNotificationSetting(address: Address) {
+  return useAppSelector(makeSelectAccountNotificationSetting(address))
 }
 
 export function useDisplayName(address: Nullable<string>):

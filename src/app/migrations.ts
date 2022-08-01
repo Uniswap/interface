@@ -2,7 +2,7 @@ import dayjs from 'dayjs'
 import { utils } from 'ethers'
 import { ChainId } from 'src/constants/chains'
 import { ModalName } from 'src/features/telemetry/constants'
-import { AccountType } from 'src/features/wallet/accounts/types'
+import { Account, AccountType } from 'src/features/wallet/accounts/types'
 
 export const migrations = {
   0: (state: any) => {
@@ -155,6 +155,24 @@ export const migrations = {
       requiredForTransactions: false,
     }
 
+    return newState
+  },
+
+  12: (state: any) => {
+    const accounts: Record<Address, Account> | undefined = state?.wallet?.accounts
+    const newAccounts = Object.values(accounts ?? {}).map((account: Account) => {
+      const newAccount = { ...account }
+      newAccount.pushNotificationsEnabled = false
+      return newAccount
+    })
+
+    const newAccountObj = newAccounts.reduce<Record<Address, Account>>((accountObj, account) => {
+      accountObj[account.address] = account
+      return accountObj
+    }, {})
+
+    const newState = { ...state }
+    newState.wallet = { ...state.wallet, accounts: newAccountObj }
     return newState
   },
 }
