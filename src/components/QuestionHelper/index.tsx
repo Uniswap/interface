@@ -1,4 +1,5 @@
 import { ReactNode, useCallback, useState } from 'react'
+import { HelpCircle } from 'react-feather'
 import styled from 'styled-components/macro'
 
 import Tooltip from '../Tooltip'
@@ -16,7 +17,7 @@ const QuestionWrapper = styled.div`
   cursor: default;
   border-radius: 36px;
   font-size: 12px;
-  background-color: ${({ theme }) => theme.deprecated_bg2};
+  border-radius: 12px;
   color: ${({ theme }) => theme.deprecated_text2};
 
   :hover,
@@ -26,7 +27,10 @@ const QuestionWrapper = styled.div`
 `
 
 const QuestionMark = styled.span`
-  font-size: 14px;
+  margin-left: 8px;
+  align-items: center;
+  color: ${({ theme }) => theme.textSecondary};
+  margin-top: 2.5px;
 `
 
 export default function QuestionHelper({ text }: { text: ReactNode; size?: number }) {
@@ -39,7 +43,9 @@ export default function QuestionHelper({ text }: { text: ReactNode; size?: numbe
     <span style={{ marginLeft: 4, display: 'flex', alignItems: 'center' }}>
       <Tooltip text={text} show={show}>
         <QuestionWrapper onClick={open} onMouseEnter={open} onMouseLeave={close}>
-          <QuestionMark>?</QuestionMark>
+          <QuestionMark>
+            <HelpCircle size={16}></HelpCircle>
+          </QuestionMark>
         </QuestionWrapper>
       </Tooltip>
     </span>
