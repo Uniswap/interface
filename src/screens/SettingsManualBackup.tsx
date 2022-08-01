@@ -3,7 +3,7 @@ import { addScreenshotListener } from 'expo-screen-capture'
 import React, { useEffect, useReducer, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { SlideInRight, SlideOutLeft } from 'react-native-reanimated'
-import { useAppTheme } from 'src/app/hooks'
+import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { SettingsStackParamList } from 'src/app/navigation/types'
 import PencilIcon from 'src/assets/icons/pencil.svg'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
@@ -16,6 +16,7 @@ import WarningModal from 'src/components/modals/WarningModal'
 import { Text } from 'src/components/Text'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { BackupType } from 'src/features/wallet/accounts/types'
+import { EditAccountAction, editAccountActions } from 'src/features/wallet/editAccountSaga'
 import { useAccounts } from 'src/features/wallet/hooks'
 import { Screens } from 'src/screens/Screens'
 
@@ -35,6 +36,7 @@ export function SettingsManualBackup({
 }: Props) {
   const { t } = useTranslation()
   const theme = useAppTheme()
+  const dispatch = useAppDispatch()
 
   const accounts = useAccounts()
   const account = accounts[address]
@@ -106,10 +108,19 @@ export function SettingsManualBackup({
             borderRadius="md"
             icon={<PencilIcon color={theme.colors.white} height={20} width={20} />}
             label={t('Back up manually')}
-            name={ElementName.Remove}
+            name={ElementName.AddManualBackup}
             textVariant="largeLabel"
             variant="blue"
-            onPress={nextStep}
+            onPress={() => {
+              dispatch(
+                editAccountActions.trigger({
+                  type: EditAccountAction.AddBackupMethod,
+                  address: address,
+                  backupMethod: BackupType.Manual,
+                })
+              )
+              nextStep()
+            }}
           />
         </Flex>
       </AnimatedFlex>

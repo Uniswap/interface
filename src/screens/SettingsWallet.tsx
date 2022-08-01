@@ -236,7 +236,7 @@ export function SettingsWallet({
               </Text>
             </Box>
           )}
-          sections={sections}
+          sections={sections.filter((p) => !p.isHidden)}
           showsVerticalScrollIndicator={false}
         />
       </Box>
