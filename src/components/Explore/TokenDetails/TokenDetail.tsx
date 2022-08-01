@@ -13,7 +13,6 @@ import { Link } from 'react-router-dom'
 import styled, { useTheme } from 'styled-components/macro'
 
 import { MOBILE_MEDIA_BREAKPOINT } from '../constants'
-import { favoritesAtom, useToggleFavorite } from '../state'
 import { favoritesAtom, filterNetworkAtom, filterStringAtom, filterTimeAtom, useToggleFavorite } from '../state'
 import { ClickFavorited } from '../TokenTable/TokenRow'
 import Resource from './Resource'
