@@ -62,7 +62,9 @@ const options: ImportMethodOption[] = [
   {
     title: (t: TFunction) => t('View only'),
     blurb: (t: TFunction) => t('Enter an Ethereum address or ENS name'),
-    icon: (theme: Theme) => <EyeIcon color={theme.colors.textPrimary} height={16} width={16} />,
+    icon: (theme: Theme) => (
+      <EyeIcon color={theme.colors.textPrimary} height={16} strokeWidth={2} width={16} />
+    ),
     nav: OnboardingScreens.WatchWallet,
     importType: ImportType.Watch,
     name: ElementName.OnboardingImportWatchedAccount,
