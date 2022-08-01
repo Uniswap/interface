@@ -57,6 +57,7 @@ fastlane/builds
 
 # Bundle artifact
 *.jsbundle
+*.jsbundle.map
 
 # Detox artifacts
 artifacts/
