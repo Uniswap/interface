@@ -28,12 +28,14 @@ type HeaderScrollScreenProps = {
   fixedHeader: ReactElement
   contentHeader?: ReactElement
   background?: ReactElement
+  maxScrollHeightOverride?: number
 }
 
 export function HeaderScrollScreen({
   fixedHeader,
   contentHeader,
   background,
+  maxScrollHeightOverride,
   children,
 }: PropsWithChildren<HeaderScrollScreenProps>) {
   const listRef = useRef(null)
@@ -43,21 +45,21 @@ export function HeaderScrollScreen({
   const insets = useSafeAreaInsets()
   const scrollY = useSharedValue(0)
 
+  const maxScroll = maxScrollHeightOverride ?? CONTENT_MAX_SCROLL_Y
+
   // On scroll, ListContentHeader fades out and FixedHeaderBar fades in
   const scrollHandler = useAnimatedScrollHandler({
     onScroll: (event) => {
       scrollY.value = event.contentOffset.y
     },
     onEndDrag: (event) => {
-      scrollY.value = withTiming(
-        event.contentOffset.y > CONTENT_MAX_SCROLL_Y / 2 ? CONTENT_MAX_SCROLL_Y : 0
-      )
+      scrollY.value = withTiming(event.contentOffset.y > maxScroll / 2 ? maxScroll : 0)
     },
   })
 
   const headerStyle = useAnimatedStyle(() => {
     return {
-      opacity: interpolate(scrollY.value, [0, CONTENT_MAX_SCROLL_Y], [0, 1], Extrapolate.CLAMP),
+      opacity: interpolate(scrollY.value, [0, maxScroll], [0, 1], Extrapolate.CLAMP),
     }
   })
 
@@ -69,7 +71,7 @@ export function HeaderScrollScreen({
 
   const contentHeaderStyle = useAnimatedStyle(() => {
     return {
-      opacity: interpolate(scrollY.value, [0, CONTENT_MAX_SCROLL_Y], [1, 0], Extrapolate.CLAMP),
+      opacity: interpolate(scrollY.value, [0, maxScroll], [1, 0], Extrapolate.CLAMP),
     }
   })
 

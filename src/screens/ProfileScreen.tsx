@@ -24,6 +24,8 @@ import { useActiveAccountWithThrow } from 'src/features/wallet/hooks'
 import { useWalletConnect } from 'src/features/walletConnect/useWalletConnect'
 import { Screens } from 'src/screens/Screens'
 
+const MAX_SCROLL_HEIGHT = 180
+
 type Props = NativeStackScreenProps<AppStackParamList, Screens.TabNavigator>
 
 export function ProfileScreen({ navigation }: Props) {
@@ -105,7 +107,8 @@ export function ProfileScreen({ navigation }: Props) {
         <Flex centered>
           <AddressDisplay address={address} variant="subhead" />
         </Flex>
-      }>
+      }
+      maxScrollHeightOverride={MAX_SCROLL_HEIGHT}>
       {sessions.length > 0 && (
         <Flex px="sm">
           <SessionsButton sessions={sessions} onPress={onPressSessions} />
