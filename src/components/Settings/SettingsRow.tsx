@@ -56,7 +56,7 @@ export function SettingsRow({
       pl="xxs"
       onPress={handleRow}>
       <Flex row alignItems="center" gap="sm">
-        <Flex grow row alignItems={subText ? 'flex-start' : 'center'} gap="sm">
+        <Flex grow row alignItems={subText ? 'flex-start' : 'center'} flexBasis={0} gap="sm">
           {icon}
           <Flex alignItems="stretch" gap="none">
             <Text fontWeight="500" variant="subhead">
