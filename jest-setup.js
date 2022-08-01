@@ -2,6 +2,7 @@
 // For example: https://reactnavigation.org/docs/testing/
 
 import mockAsyncStorage from '@react-native-async-storage/async-storage/jest/async-storage-mock'
+import mockRNDeviceInfo from 'react-native-device-info/jest/react-native-device-info-mock'
 // required polyfill for rtk-query baseQueryFn
 import 'cross-fetch/polyfill'
 
@@ -65,5 +66,8 @@ jest.mock('src/data/relay', () => {
   const { createMockEnvironment } = require('relay-test-utils')
   return createMockEnvironment()
 })
+
+jest.mock('react-native/Libraries/EventEmitter/NativeEventEmitter')
+jest.mock('react-native-device-info', () => mockRNDeviceInfo)
 
 global.__reanimatedWorkletInit = jest.fn()

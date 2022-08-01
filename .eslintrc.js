@@ -33,6 +33,7 @@ module.exports = {
     'jest/expect-expect': ['off', { assertFunctionNames: ['expect', 'expectSaga'] }],
     // Required for exception catching tests
     'jest/no-conditional-expect': 'off',
+    'jest/no-disabled-tests': 'off',
     // TODO consider enabling these:
     // '@typescript-eslint/no-floating-promises': 'error',
     // 'import/no-self-import': 2,

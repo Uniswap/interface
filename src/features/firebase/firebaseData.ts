@@ -7,7 +7,7 @@ import {
   getFirestoreUidRef,
   getOneSignalUserIdOrError,
 } from 'src/features/firebase/utils'
-import { AccountBase, AccountType } from 'src/features/wallet/accounts/types'
+import { AccountBase } from 'src/features/wallet/accounts/types'
 import { EditAccountAction, editAccountActions } from 'src/features/wallet/editAccountSaga'
 import { addAccount } from 'src/features/wallet/walletSlice'
 import { logger } from 'src/utils/logger'
@@ -21,25 +21,27 @@ export function* firebaseDataWatcher() {
 }
 
 export function* firebaseAddAddressWatcher() {
-  yield* takeEvery(addAccount.type, addAccountDataToFirebase)
+  yield* takeEvery(addAccount.type, addAccountToFirebase)
 }
 
 export function* firebaseEditAddressWatcher() {
   yield* takeEvery(editAccountActions.trigger, editAccountDataInFirebase)
 }
 
-export function* addAccountDataToFirebase(actionData: ReturnType<typeof addAccount>) {
+export function* addAccountToFirebase(actionData: ReturnType<typeof addAccount>) {
   const {
-    payload: { address, name, type },
+    payload: { address, name },
   } = actionData
-  yield* call(mapAddressesToFirebaseUid, [address])
+  try {
+    yield* call(mapFirebaseUidToAddresses, [address])
 
-  if (name) {
-    yield* call(updateAccountMetadata, address, { name })
-  }
-  // Push notifcations are default off for watched addresses & our demo account
-  if (type !== AccountType.Readonly) {
-    yield* call(mapAddressesToPushToken, [address])
+    if (name) {
+      yield* call(updateAccountMetadata, address, { name })
+    }
+
+    yield* call(mapPushTokenToAddresses, [address])
+  } catch (error) {
+    logger.error('firebaseData', 'addAccountToFirebase', 'Error:', error)
   }
 }
 
@@ -51,112 +53,114 @@ export function* editAccountDataInFirebase(
 
   switch (type) {
     case EditAccountAction.Remove:
-      yield* call(deleteAccountMetadata, address)
-      yield* call(disassociateAddressesFromPushToken, [address])
-      yield* call(disassociateAddressesFromFirebaseUid, [address])
+      yield* call(removeAccountFromFirebase, address)
       break
     case EditAccountAction.Rename:
-      yield* call(updateAccountMetadata, address, { name: payload.newName })
+      yield* call(renameAccountInFirebase, address, payload.newName)
       break
     case EditAccountAction.AddBackupMethod:
       // no-op
       break
     case EditAccountAction.TogglePushNotificationParams:
-      yield* call(payload.enabled ? mapAddressesToPushToken : disassociateAddressesFromPushToken, [
-        address,
-      ])
+      yield* call(updateFirebasePushNotificationsSettings, { address, enabled: payload.enabled })
       break
     default:
       throw new Error(`Invalid EditAccountAction ${type}`)
   }
 }
 
-export function* mapAddressesToFirebaseUid(addresses: Address[]) {
+export function* removeAccountFromFirebase(address: Address) {
   try {
-    const firebaseApp = firebase.app()
-    const uid = getFirebaseUidOrError(firebaseApp)
-    const batch = firestore(firebaseApp).batch()
-    addresses.forEach((address: string) => {
-      const uidRef = getFirestoreUidRef(firebaseApp, address)
-      batch.set(uidRef, { [uid]: true }, { merge: true })
-    })
-
-    yield* call([batch, 'commit'])
-  } catch (error: any) {
-    logger.error('firebaseData', 'mapAddressesToFirebaseUid', error?.message)
+    yield* call(deleteAccountMetadata, address)
+    yield* call(disassociatePushTokenFromAddresses, [address])
+    yield* call(disassociateFirebaseUidFromAddresses, [address])
+  } catch (error) {
+    logger.error('firebaseData', 'removeAccountFromFirebase', 'Error:', error)
   }
 }
 
-export const mapAddressesToPushToken = async (addresses: Address[]) => {
+export function* renameAccountInFirebase(address: Address, newName: string) {
   try {
-    const pushId = await getOneSignalUserIdOrError()
-    const firebaseApp = firebase.app()
-    const batch = firestore(firebaseApp).batch()
-    addresses.forEach((address: string) => {
-      const pushTokenRef = getFirestorePushTokenRef(firebaseApp, address)
-      batch.set(
-        pushTokenRef,
-        { pushIds: firebase.firestore.FieldValue.arrayUnion(pushId) },
-        { merge: true }
-      )
-    })
-
-    await batch.commit()
-  } catch (error: any) {
-    logger.error('firebaseData', 'mapAddressesToPushToken', error?.message)
+    yield* call(updateAccountMetadata, address, { name: newName })
+  } catch (error) {
+    logger.error('firebaseData', 'renameAccountInFirebase', 'Error:', error)
   }
 }
 
-export function* disassociateAddressesFromFirebaseUid(addresses: Address[]) {
+export function* updateFirebasePushNotificationsSettings(params: {
+  enabled: boolean
+  address: Address
+}) {
+  const { enabled, address } = params
   try {
-    const firebaseApp = firebase.app()
-    const uid = getFirebaseUidOrError(firebaseApp)
-    const batch = firestore(firebaseApp).batch()
-    addresses.forEach((address: string) => {
-      const uidRef = getFirestoreUidRef(firebaseApp, address)
-      batch.update(uidRef, { [uid]: firebase.firestore.FieldValue.delete() })
-    })
-
-    yield* call([batch, 'commit'])
-  } catch (error: any) {
-    logger.error('firebaseData', 'disassociateAddressesFromFirebaseUid', error?.message)
+    yield* call(enabled ? mapFirebaseUidToAddresses : disassociatePushTokenFromAddresses, [address])
+  } catch (error) {
+    logger.error('firebaseData', 'updateFirebasePushNotificationsSettings', 'Error:', error)
   }
 }
 
-export const disassociateAddressesFromPushToken = async (addresses: Address[]) => {
-  try {
-    const pushId = await getOneSignalUserIdOrError()
-    const firebaseApp = firebase.app()
-    const batch = firestore(firebaseApp).batch()
-    addresses.forEach((address: string) => {
-      const pushTokenRef = getFirestorePushTokenRef(firebaseApp, address)
-      batch.set(pushTokenRef, { pushIds: firebase.firestore.FieldValue.arrayRemove(pushId) })
-    })
+export function* mapFirebaseUidToAddresses(addresses: Address[]) {
+  const firebaseApp = firebase.app()
+  const uid = getFirebaseUidOrError(firebaseApp)
+  const batch = firestore(firebaseApp).batch()
+  addresses.forEach((address: string) => {
+    const uidRef = getFirestoreUidRef(firebaseApp, address)
+    batch.set(uidRef, { [uid]: true }, { merge: true })
+  })
 
-    await batch.commit()
-  } catch (error: any) {
-    logger.error('firebaseData', 'disassociateAddressesFromPushToken', error?.message)
-  }
+  yield* call([batch, 'commit'])
+}
+
+export const mapPushTokenToAddresses = async (addresses: Address[]) => {
+  const pushId = await getOneSignalUserIdOrError()
+  const firebaseApp = firebase.app()
+  const batch = firestore(firebaseApp).batch()
+  addresses.forEach((address: string) => {
+    const pushTokenRef = getFirestorePushTokenRef(firebaseApp, address)
+    batch.set(
+      pushTokenRef,
+      { pushIds: firebase.firestore.FieldValue.arrayUnion(pushId) },
+      { merge: true }
+    )
+  })
+
+  await batch.commit()
+}
+
+export function* disassociateFirebaseUidFromAddresses(addresses: Address[]) {
+  const firebaseApp = firebase.app()
+  const uid = getFirebaseUidOrError(firebaseApp)
+  const batch = firestore(firebaseApp).batch()
+  addresses.forEach((address: string) => {
+    const uidRef = getFirestoreUidRef(firebaseApp, address)
+    batch.update(uidRef, { [uid]: firebase.firestore.FieldValue.delete() })
+  })
+
+  yield* call([batch, 'commit'])
+}
+
+export const disassociatePushTokenFromAddresses = async (addresses: Address[]) => {
+  const pushId = await getOneSignalUserIdOrError()
+  const firebaseApp = firebase.app()
+  const batch = firestore(firebaseApp).batch()
+  addresses.forEach((address: string) => {
+    const pushTokenRef = getFirestorePushTokenRef(firebaseApp, address)
+    batch.set(pushTokenRef, { pushIds: firebase.firestore.FieldValue.arrayRemove(pushId) })
+  })
+
+  await batch.commit()
 }
 
 export const updateAccountMetadata = async (address: Address, metadata: AccountMetadata) => {
-  try {
-    const firebaseApp = firebase.app()
-    const uid = getFirebaseUidOrError(firebaseApp)
-    const metadataRef = getFirestoreMetadataRef(firebaseApp, address, uid)
-    await metadataRef.set(metadata, { merge: true })
-  } catch (error: any) {
-    logger.error('firebaseData', 'updateAccountMetadata', error?.message)
-  }
+  const firebaseApp = firebase.app()
+  const uid = getFirebaseUidOrError(firebaseApp)
+  const metadataRef = getFirestoreMetadataRef(firebaseApp, address, uid)
+  await metadataRef.set(metadata, { merge: true })
 }
 
 export const deleteAccountMetadata = async (address: Address) => {
-  try {
-    const firebaseApp = firebase.app()
-    const uid = getFirebaseUidOrError(firebaseApp)
-    const metadataRef = getFirestoreMetadataRef(firebaseApp, address, uid)
-    await metadataRef.delete()
-  } catch (error: any) {
-    logger.error('firebaseData', 'deleteAccountMetadata', error?.message)
-  }
+  const firebaseApp = firebase.app()
+  const uid = getFirebaseUidOrError(firebaseApp)
+  const metadataRef = getFirestoreMetadataRef(firebaseApp, address, uid)
+  await metadataRef.delete()
 }
