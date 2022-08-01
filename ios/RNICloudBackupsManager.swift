@@ -11,6 +11,7 @@ struct ICloudMnemonicBackup: Codable {
   let mnemonicId: String
   let mnemonic: String
   let isPinEncrypted: Bool
+  let encryptionSalt: String
   let createdAt: Double
 }
 

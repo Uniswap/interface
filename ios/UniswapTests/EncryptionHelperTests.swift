@@ -12,7 +12,7 @@ class EncryptionHelperTests: XCTestCase {
   
   private var secret = "student zone flight quote trial case shadow alien yard choose quiz produce"
   private var password = "012345"
-  
+
   func testEncryptAndDecrypt() throws {
     let salt = generateSalt(length: 32)
     print("Secret: \(secret)")
@@ -26,7 +26,6 @@ class EncryptionHelperTests: XCTestCase {
     let decryptedSecret = try decrypt(encryptedSecret: encryptedSecret, password: password, salt: salt)
     XCTAssertEqual(secret, decryptedSecret, "Decrypted secret does not match plaintext secret")
     print("Decrypted Secret: \(decryptedSecret)")
-    
   }
   
   func testEncryptAndDecryptFail() throws {
