@@ -41,7 +41,7 @@ const StyledCard = styled(OutlineCard)`
 
 const StyledHeaderRow = styled(RowBetween)<{ disabled: boolean; open: boolean }>`
   padding: 12px 8px 8px 8px;
-  background-color: ${({ open, theme }) => (open ? theme.deprecated_bg1 : theme.none)};
+  background-color: ${({ theme }) => theme.none};
   align-items: center;
   border-top: 1px solid ${({ theme }) => theme.backgroundOutline};
   margin-top: 8px;
