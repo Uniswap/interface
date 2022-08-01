@@ -39,7 +39,7 @@ export enum CUSTOM_USER_PROPERTIES {
   WALLET_FIRST_SEEN_DATE_PREFIX = 'first_seen_date_',
   WALLET_LAST_SEEN_DATE_PREFIX = 'last_seen_date_',
   WALLET_TOKENS_ADDRESSES = 'wallet_tokens_addresses',
-  WALLET_TOKENS_BALANCES_AMOUNT = 'wallet_tokens_balances_amount',
+  WALLET_TOKEN_AMOUNT_SUFFIX = '_token_amount',
   WALLET_TOKENS_SYMBOLS = 'wallet_tokens_symbols',
   WALLET_TYPE = 'wallet_type',
 }

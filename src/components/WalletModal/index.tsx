@@ -127,21 +127,21 @@ const sendAnalyticsWalletBalanceUserInfo = (
 ) => {
   const walletTokensSymbols: string[] = []
   const walletTokensAddresses: string[] = []
-  const walletTokensBalancesAmount: number[] = []
   balances.forEach((currencyAmount) => {
     if (currencyAmount !== undefined) {
       const tokenBalanceAmount = formatToDecimal(currencyAmount, currencyAmount.currency.decimals)
       if (tokenBalanceAmount > 0) {
+        const tokenAddress = getTokenAddress(currencyAmount.currency)
         walletTokensAddresses.push(getTokenAddress(currencyAmount.currency))
         walletTokensSymbols.push(currencyAmount.currency.symbol ?? '')
-        walletTokensBalancesAmount.push(tokenBalanceAmount)
+        const tokenPrefix = currencyAmount.currency.symbol ?? tokenAddress
+        user.set(`${tokenPrefix}${CUSTOM_USER_PROPERTIES.WALLET_TOKEN_AMOUNT_SUFFIX}`, tokenBalanceAmount)
       }
     }
   })
   user.set(CUSTOM_USER_PROPERTIES.WALLET_NATIVE_CURRENCY_BALANCE_USD, nativeCurrencyBalanceUsd)
   user.set(CUSTOM_USER_PROPERTIES.WALLET_TOKENS_ADDRESSES, walletTokensAddresses)
   user.set(CUSTOM_USER_PROPERTIES.WALLET_TOKENS_SYMBOLS, walletTokensSymbols)
-  user.set(CUSTOM_USER_PROPERTIES.WALLET_TOKENS_BALANCES_AMOUNT, walletTokensBalancesAmount)
 }
 
 const sendAnalyticsEventAndUserInfo = (account: string, walletType: string, chainId: number | undefined) => {
@@ -205,7 +205,8 @@ export default function WalletModal({
   }, [native, sortedTokens])
 
   const balances = useCurrencyBalances(account, sortedTokensWithETH)
-  const nativeCurrencyBalanceUsdValue = useStablecoinValue(balances[0])?.toFixed(2)
+  const nativeBalance = balances.length > 0 ? balances[0] : null
+  const nativeCurrencyBalanceUsdValue = useStablecoinValue(nativeBalance)?.toFixed(2)
 
   const openOptions = useCallback(() => {
     setWalletView(WALLET_VIEWS.OPTIONS)
