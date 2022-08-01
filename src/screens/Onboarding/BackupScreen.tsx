@@ -11,13 +11,13 @@ import {
   OnboardingStackParamList,
   useOnboardingStackNavigation,
 } from 'src/app/navigation/types'
+import Check from 'src/assets/icons/check.svg'
 import CloudIcon from 'src/assets/icons/cloud.svg'
 import PencilIcon from 'src/assets/icons/pencil.svg'
 import StarGroup from 'src/assets/icons/star-group.svg'
 import { Button } from 'src/components/buttons/Button'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { EducationContentType } from 'src/components/education'
-import { CheckmarkCircle } from 'src/components/icons/CheckmarkCircle'
 import { Chevron } from 'src/components/icons/Chevron'
 import { Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
@@ -178,36 +178,38 @@ function BackupOptionButton({
 }: BackupOptionButtonProps) {
   const theme = useAppTheme()
   return (
-    <Button
-      backgroundColor="translucentBackground"
-      borderColor={!completed ? 'backgroundOutline' : 'none'}
-      borderRadius="lg"
-      borderWidth={1}
-      disabled={completed}
-      name={name}
-      padding="lg"
-      testID={name}
-      onPress={onPress}>
-      <Flex row alignItems="center" justifyContent="space-between" opacity={completed ? 0.4 : 1}>
-        <Flex flexShrink={1} gap="xs" maxWidth="80%">
-          <Flex row gap="sm">
-            <Box height={20} width={20}>
-              {icon}
-            </Box>
-            <Text variant="mediumLabel">{label}</Text>
+    <Box opacity={completed ? 0.4 : 1}>
+      <Button
+        backgroundColor="backgroundContainer"
+        borderColor="backgroundOutline"
+        borderRadius="lg"
+        borderWidth={1}
+        disabled={completed}
+        name={name}
+        padding="lg"
+        testID={name}
+        onPress={onPress}>
+        <Flex row alignItems="center" justifyContent="space-between">
+          <Flex flexShrink={1} gap="xs" maxWidth="80%">
+            <Flex row gap="sm">
+              <Box height={20} width={20}>
+                {icon}
+              </Box>
+              <Text variant="mediumLabel">{label}</Text>
+            </Flex>
+            <Text color="textSecondary" variant="caption">
+              {caption}
+            </Text>
           </Flex>
-          <Text color="textSecondary" variant="caption">
-            {caption}
-          </Text>
+          <Flex grow alignItems="flex-end">
+            {completed ? (
+              <Check color={theme.colors.accentSuccess} height="24" width="24" />
+            ) : (
+              <Chevron color={theme.colors.textSecondary} direction="e" height="24" width="24" />
+            )}
+          </Flex>
         </Flex>
-        <Flex grow alignItems="flex-end">
-          {completed ? (
-            <CheckmarkCircle backgroundColor="none" color={theme.colors.accentSuccess} size={40} />
-          ) : (
-            <Chevron color={theme.colors.textSecondary} direction="e" height="20" width="15" />
-          )}
-        </Flex>
-      </Flex>
-    </Button>
+      </Button>
+    </Box>
   )
 }
