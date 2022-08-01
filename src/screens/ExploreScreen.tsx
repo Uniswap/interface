@@ -1,6 +1,6 @@
 import { useScrollToTop } from '@react-navigation/native'
 import { BlurView } from 'expo-blur'
-import React, { useRef, useState } from 'react'
+import React, { useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { KeyboardAvoidingView, TextInput, useColorScheme, ViewStyle } from 'react-native'
 import Animated, {
@@ -15,6 +15,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { useAppSelector } from 'src/app/hooks'
 import { FavoriteTokensCard } from 'src/components/explore/FavoriteTokensCard'
 import { SearchResultsSection } from 'src/components/explore/search/SearchResultsSection'
 import { TopTokensCard } from 'src/components/explore/TopTokensCard'
@@ -26,6 +27,7 @@ import { Screen } from 'src/components/layout/Screen'
 import { VirtualizedList } from 'src/components/layout/VirtualizedList'
 import { AnimatedText } from 'src/components/Text'
 import { ClientSideOrderBy } from 'src/features/dataApi/coingecko/types'
+import { selectHasFavoriteTokens, selectHasWatchedWallets } from 'src/features/favorites/selectors'
 import { flex } from 'src/styles/flex'
 import { theme } from 'src/styles/theme'
 
@@ -143,28 +145,67 @@ export function ExploreScreen() {
       ) : (
         <VirtualizedList ref={listRef} onScroll={scrollHandler}>
           <Box height={HEADER_HEIGHT} mb="md" />
-          <AnimatedFlex entering={FadeIn} exiting={FadeOut} mb="md" mx="sm">
-            <WatchedWalletsCard
-              onSearchWallets={() => {
-                textInputRef.current?.focus()
-              }}
-            />
-          </AnimatedFlex>
-          <AnimatedFlex entering={FadeIn} exiting={FadeOut} mx="sm">
-            <FavoriteTokensCard
-              fixedCount={5}
-              metadataDisplayType={ClientSideOrderBy.PriceChangePercentage24hDesc}
-            />
-          </AnimatedFlex>
-          <AnimatedFlex entering={FadeIn} exiting={FadeOut} mb="lg" mx="sm">
-            <TopTokensCard
-              fixedCount={15}
-              metadataDisplayType={ClientSideOrderBy.PriceChangePercentage24hDesc}
-            />
-          </AnimatedFlex>
+          <Flex gap="sm" pb="lg" px="sm">
+            <CardSections textInputRef={textInputRef} />
+          </Flex>
         </VirtualizedList>
       )}
     </Screen>
+  )
+}
+
+type CardSectionsProps = {
+  textInputRef: React.RefObject<TextInput>
+}
+const CardSections = ({ textInputRef }: CardSectionsProps) => {
+  const hasWatchedWallets = useAppSelector(selectHasWatchedWallets)
+  const hasFavoriteTokens = useAppSelector(selectHasFavoriteTokens)
+  // Adding 'weight' to card sections depending on if they are empty or not
+  // Order will go watchedWallets > favoriteTokens > topTokens
+  const cardSections = useMemo(() => {
+    const SORT_SHOW_FIRST = 0
+    const SORT_SHOW_LAST = 1
+    const sections = [
+      {
+        order: hasWatchedWallets ? SORT_SHOW_FIRST : SORT_SHOW_LAST,
+        section: (
+          <WatchedWalletsCard
+            onSearchWallets={() => {
+              textInputRef.current?.focus()
+            }}
+          />
+        ),
+      },
+      {
+        order: hasFavoriteTokens ? SORT_SHOW_FIRST : SORT_SHOW_LAST,
+        section: (
+          <FavoriteTokensCard
+            fixedCount={5}
+            metadataDisplayType={ClientSideOrderBy.PriceChangePercentage24hDesc}
+          />
+        ),
+      },
+      {
+        order: SORT_SHOW_FIRST,
+        section: (
+          <TopTokensCard
+            fixedCount={15}
+            metadataDisplayType={ClientSideOrderBy.PriceChangePercentage24hDesc}
+          />
+        ),
+      },
+    ]
+    return sections.sort((a, b) => a.order - b.order).map(({ section }) => section)
+  }, [textInputRef, hasWatchedWallets, hasFavoriteTokens])
+
+  return (
+    <Flex gap="sm" pb="lg" px="sm">
+      {cardSections.map((card, i) => (
+        <AnimatedFlex key={i} entering={FadeIn} exiting={FadeOut}>
+          {card}
+        </AnimatedFlex>
+      ))}
+    </Flex>
   )
 }
 

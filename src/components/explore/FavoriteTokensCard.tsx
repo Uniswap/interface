@@ -33,7 +33,7 @@ export function FavoriteTokensCard(props: BaseTokensCardProps) {
   )
 
   return (
-    <AnimatedBox entering={FadeInUp} mb="sm">
+    <AnimatedBox entering={FadeInUp}>
       <GenericTokensCard
         {...props}
         displayFavorites
