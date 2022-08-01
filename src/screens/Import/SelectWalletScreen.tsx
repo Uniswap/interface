@@ -163,7 +163,7 @@ function WalletPreviewList({
         disabled={
           initialSelectedAccounts && initialSelectedAccounts.length <= unselectedAddresses.length
         }
-        label={t('Next')}
+        label={t('Continue')}
         name={ElementName.Next}
         testID={ElementName.Next}
         variant="onboard"

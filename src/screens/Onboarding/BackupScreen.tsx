@@ -65,7 +65,7 @@ export function BackupScreen({ navigation, route: { params } }: Props) {
         <Flex grow justifyContent="flex-end">
           <PrimaryButton
             disabled={disabled}
-            label={disabled ? t('Add backup to continue') : t('Next')}
+            label={disabled ? t('Add backup to continue') : t('Continue')}
             name={ElementName.Next}
             testID={ElementName.Next}
             variant="onboard"

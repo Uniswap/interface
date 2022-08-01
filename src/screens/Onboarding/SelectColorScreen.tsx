@@ -61,7 +61,7 @@ export function SelectColorScreen({ navigation, route: { params } }: Props) {
       <Flex grow justifyContent="flex-end">
         <PrimaryButton
           disabled={!selectedColor}
-          label={t('Next')}
+          label={t('Continue')}
           name={ElementName.Next}
           testID={ElementName.Next}
           variant="onboard"

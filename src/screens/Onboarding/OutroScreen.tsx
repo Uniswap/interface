@@ -58,7 +58,7 @@ export function OutroScreen({ navigation, route: { params } }: Props) {
           </Flex>
         </Flex>
         <PrimaryButton
-          label={t('Next')}
+          label={t('Continue')}
           name={ElementName.Next}
           testID={ElementName.Next}
           variant="onboard"

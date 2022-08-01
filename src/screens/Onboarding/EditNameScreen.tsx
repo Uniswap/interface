@@ -82,7 +82,7 @@ export function EditNameScreen({ navigation, route: { params } }: Props) {
       </Box>
       <Flex justifyContent="flex-end">
         <PrimaryButton
-          label={t('Next')}
+          label={t('Continue')}
           name={ElementName.Next}
           testID={ElementName.Next}
           variant="onboard"

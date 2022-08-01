@@ -139,7 +139,7 @@ function SubmitButton({ onSuccess }: SubmitButtonProps) {
       {/* TODO show spinner in button while loading */}
       <PrimaryButton
         disabled={!values.input || !isValid || isSubmitting || isLoading}
-        label={t('Next')}
+        label={t('Continue')}
         mt="lg"
         name={ElementName.Submit}
         testID={ElementName.Submit}

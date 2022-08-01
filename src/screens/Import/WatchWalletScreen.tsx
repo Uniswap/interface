@@ -93,7 +93,7 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props) {
       </Flex>
       <PrimaryButton
         disabled={!isValid}
-        label={t('Next')}
+        label={t('Continue')}
         name={ElementName.Next}
         testID={ElementName.Next}
         variant="onboard"
