@@ -24,11 +24,14 @@ function guesstimateGas(trade: Trade<Currency, Currency, TradeType> | undefined)
   if (!!trade) {
     let gas = 0
     for (const { route } of trade.swaps) {
-      if (route.protocol == Protocol.V2) {
+      if (route.protocol === Protocol.V2) {
         gas += 135000 + route.pools.length * 50_000
-      } else {
+      } else if (route.protocol === Protocol.V3) {
         // V3 gas costs scale on initialized ticks being crossed, but we don't have that data here.
         // We bake in some tick crossings into the base 100k cost.
+        gas += 100_000 + route.pools.length * 70_000
+      } else {
+        // TODO: Update with better estimates once we have interleaved routes.
         gas += 100_000 + route.pools.length * 70_000
       }
     }
