@@ -20,6 +20,7 @@ export enum Screens {
   RecipientSelector = 'RecipientSelector',
   SeedPhrase = 'SeedPhrase',
   Settings = 'Settings',
+  SettingsCloudBackupStatus = 'SettingsCloudBackupStatus',
   SettingsManualBackup = 'SettingsManualBackup',
   SettingsWallet = 'SettingsWallet',
   SettingsWalletEdit = 'SettingsWalletEdit',
