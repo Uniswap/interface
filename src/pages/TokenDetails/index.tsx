@@ -48,6 +48,7 @@ export default function TokenDetails() {
   setTimeout(() => {
     setLoading(false)
   }, 1000)
+  
   let tokenDetail
   if (!tokenAddress) {
     // TODO: handle no address / invalid address cases
