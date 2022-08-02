@@ -1,6 +1,4 @@
 import { Trans } from '@lingui/macro'
-import { EventName } from 'components/AmplitudeAnalytics/constants'
-import { Trace } from 'components/AmplitudeAnalytics/Trace'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { getChainInfo } from 'constants/chainInfo'
 import { useCurrency, useToken } from 'hooks/Tokens'
@@ -13,7 +11,7 @@ import { Link } from 'react-router-dom'
 import styled, { useTheme } from 'styled-components/macro'
 
 import { MOBILE_MEDIA_BREAKPOINT } from '../constants'
-import { favoritesAtom, filterNetworkAtom, filterStringAtom, filterTimeAtom, useToggleFavorite } from '../state'
+import { favoritesAtom, useToggleFavorite } from '../state'
 import { ClickFavorited } from '../TokenTable/TokenRow'
 import Resource from './Resource'
 import ShareButton from './ShareButton'
@@ -200,9 +198,6 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
   const chainInfo = getChainInfo(token?.chainId)
   const networkLabel = chainInfo?.label
   const networkBadgebackgroundColor = chainInfo?.backgroundColor
-  const filterString = useAtomValue(filterStringAtom)
-  const filterNetwork = useAtomValue(filterNetworkAtom)
-  const filterTime = useAtomValue(filterTimeAtom) // filter time period for top tokens table
 
   // catch token error and loading state
   if (!token || !token.name || !token.symbol) {
@@ -222,110 +217,98 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
   const tokenVolume = '1.6B'
   const truncatedTokenAddress = `${address.slice(0, 4)}...${address.slice(-3)}`
   return (
-    <Trace
-      name={EventName.TOKEN_DETAIL_PAGE_VIEWED}
-      properties={{
-        chain_id: filterNetwork,
-        token_address: address,
-        token_symbol: tokenSymbol,
-        time_frame: filterTime,
-        search_token_address_input: filterString,
-      }}
-      shouldLogImpression
-    >
-      <TopArea>
-        <BreadcrumbNavLink to="/explore">
-          <ArrowLeft size={14} /> Explore
-        </BreadcrumbNavLink>
-        <ChartHeader>
-          <TokenInfoContainer>
-            <TokenNameCell>
-              <CurrencyLogo currency={currency} size={'32px'} />
-              {tokenName} <TokenSymbol>{tokenSymbol}</TokenSymbol>
-              {networkBadgebackgroundColor && (
-                <NetworkBadge networkColor={chainInfo?.color} backgroundColor={networkBadgebackgroundColor}>
-                  {networkLabel}
-                </NetworkBadge>
-              )}
-            </TokenNameCell>
-            <TokenActions>
-              <ShareButton tokenName={tokenName} tokenSymbol={tokenSymbol} />
-              <ClickFavorited onClick={toggleFavorite}>
-                <Heart
-                  size={15}
-                  color={isFavorited ? theme.accentAction : theme.textSecondary}
-                  fill={isFavorited ? theme.accentAction : theme.none}
-                />
-              </ClickFavorited>
-            </TokenActions>
-          </TokenInfoContainer>
-          <TokenPrice>${tokenPrice}</TokenPrice>
-          <DeltaContainer>
-            {deltaSign}
-            {tokenDelta}%
-            <ArrowCell>
-              {isPositive ? (
-                <ArrowUpRight size={16} color={theme.accentSuccess} />
-              ) : (
-                <ArrowDownRight size={16} color={theme.accentFailure} />
-              )}
-            </ArrowCell>
-          </DeltaContainer>
-          <ChartContainer>{null}</ChartContainer>
-          <TimeOptionsContainer>
-            {TIME_PERIODS.map((timePeriod) => (
-              <TimeButton
-                key={timePeriod}
-                active={activeTimePeriod === timePeriod}
-                onClick={() => setTimePeriod(timePeriod)}
-              >
-                {TIME_DISPLAYS[timePeriod]}
-              </TimeButton>
-            ))}
-          </TimeOptionsContainer>
-        </ChartHeader>
-        <AboutSection>
-          <AboutHeader>
-            <Trans>About</Trans>
-          </AboutHeader>
-          {aboutToken}
-          <ResourcesContainer>
-            <Resource name={'Etherscan'} link={'https://etherscan.io/'} />
-            <Resource name={'Protocol Info'} link={`https://info.uniswap.org/#/tokens/${address}`} />
-          </ResourcesContainer>
-        </AboutSection>
-        <StatsSection>
-          <StatPair>
-            <Stat>
-              Market cap<StatPrice>${tokenMarketCap}</StatPrice>
-            </Stat>
-            <Stat>
-              {TIME_DISPLAYS[activeTimePeriod]} volume
-              <StatPrice>${tokenVolume}</StatPrice>
-            </Stat>
-          </StatPair>
-          <StatPair>
-            <Stat>
-              52W low
-              <StatPrice>$1,790.01</StatPrice>
-            </Stat>
-            <Stat>
-              52W high
-              <StatPrice>$4,420.71</StatPrice>
-            </Stat>
-          </StatPair>
-        </StatsSection>
-        <ContractAddressSection>
-          <Contract>
-            Contract Address
-            <ContractAddress onClick={() => navigator.clipboard.writeText(address)}>
-              <FullAddress>{address}</FullAddress>
-              <TruncatedAddress>{truncatedTokenAddress}</TruncatedAddress>
-              <Copy size={13} color={theme.textSecondary} />
-            </ContractAddress>
-          </Contract>
-        </ContractAddressSection>
-      </TopArea>
-    </Trace>
+    <TopArea>
+      <BreadcrumbNavLink to="/explore">
+        <ArrowLeft size={14} /> Explore
+      </BreadcrumbNavLink>
+      <ChartHeader>
+        <TokenInfoContainer>
+          <TokenNameCell>
+            <CurrencyLogo currency={currency} size={'32px'} />
+            {tokenName} <TokenSymbol>{tokenSymbol}</TokenSymbol>
+            {networkBadgebackgroundColor && (
+              <NetworkBadge networkColor={chainInfo?.color} backgroundColor={networkBadgebackgroundColor}>
+                {networkLabel}
+              </NetworkBadge>
+            )}
+          </TokenNameCell>
+          <TokenActions>
+            <ShareButton tokenName={tokenName} tokenSymbol={tokenSymbol} />
+            <ClickFavorited onClick={toggleFavorite}>
+              <Heart
+                size={15}
+                color={isFavorited ? theme.accentAction : theme.textSecondary}
+                fill={isFavorited ? theme.accentAction : theme.none}
+              />
+            </ClickFavorited>
+          </TokenActions>
+        </TokenInfoContainer>
+        <TokenPrice>${tokenPrice}</TokenPrice>
+        <DeltaContainer>
+          {deltaSign}
+          {tokenDelta}%
+          <ArrowCell>
+            {isPositive ? (
+              <ArrowUpRight size={16} color={theme.accentSuccess} />
+            ) : (
+              <ArrowDownRight size={16} color={theme.accentFailure} />
+            )}
+          </ArrowCell>
+        </DeltaContainer>
+        <ChartContainer>{null}</ChartContainer>
+        <TimeOptionsContainer>
+          {TIME_PERIODS.map((timePeriod) => (
+            <TimeButton
+              key={timePeriod}
+              active={activeTimePeriod === timePeriod}
+              onClick={() => setTimePeriod(timePeriod)}
+            >
+              {TIME_DISPLAYS[timePeriod]}
+            </TimeButton>
+          ))}
+        </TimeOptionsContainer>
+      </ChartHeader>
+      <AboutSection>
+        <AboutHeader>
+          <Trans>About</Trans>
+        </AboutHeader>
+        {aboutToken}
+        <ResourcesContainer>
+          <Resource name={'Etherscan'} link={'https://etherscan.io/'} />
+          <Resource name={'Protocol Info'} link={`https://info.uniswap.org/#/tokens/${address}`} />
+        </ResourcesContainer>
+      </AboutSection>
+      <StatsSection>
+        <StatPair>
+          <Stat>
+            Market cap<StatPrice>${tokenMarketCap}</StatPrice>
+          </Stat>
+          <Stat>
+            {TIME_DISPLAYS[activeTimePeriod]} volume
+            <StatPrice>${tokenVolume}</StatPrice>
+          </Stat>
+        </StatPair>
+        <StatPair>
+          <Stat>
+            52W low
+            <StatPrice>$1,790.01</StatPrice>
+          </Stat>
+          <Stat>
+            52W high
+            <StatPrice>$4,420.71</StatPrice>
+          </Stat>
+        </StatPair>
+      </StatsSection>
+      <ContractAddressSection>
+        <Contract>
+          Contract Address
+          <ContractAddress onClick={() => navigator.clipboard.writeText(address)}>
+            <FullAddress>{address}</FullAddress>
+            <TruncatedAddress>{truncatedTokenAddress}</TruncatedAddress>
+            <Copy size={13} color={theme.textSecondary} />
+          </ContractAddress>
+        </Contract>
+      </ContractAddressSection>
+    </TopArea>
   )
 }
