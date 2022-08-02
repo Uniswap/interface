@@ -35,13 +35,19 @@ export enum CUSTOM_USER_PROPERTIES {
   SCREEN_RESOLUTION_WIDTH = 'screen_resolution_width',
   WALLET_ADDRESS = 'wallet_address',
   WALLET_NATIVE_CURRENCY_BALANCE_USD = 'wallet_native_currency_balance_usd',
+  WALLET_TOKENS_ADDRESSES = 'wallet_tokens_addresses',
+  WALLET_TOKENS_SYMBOLS = 'wallet_tokens_symbols',
+  WALLET_TYPE = 'wallet_type',
+}
+
+export enum CUSTOM_USER_PROPERTY_SUFFIXES {
+  WALLET_TOKEN_AMOUNT_SUFFIX = '_token_amount',
+}
+
+export enum CUSTOM_USER_PROPERTY_PREFIXES {
   WALLET_CHAIN_IDS_PREFIX = 'wallet_chain_ids_',
   WALLET_FIRST_SEEN_DATE_PREFIX = 'first_seen_date_',
   WALLET_LAST_SEEN_DATE_PREFIX = 'last_seen_date_',
-  WALLET_TOKENS_ADDRESSES = 'wallet_tokens_addresses',
-  WALLET_TOKEN_AMOUNT_SUFFIX = '_token_amount',
-  WALLET_TOKENS_SYMBOLS = 'wallet_tokens_symbols',
-  WALLET_TYPE = 'wallet_type',
 }
 
 export enum BROWSER {

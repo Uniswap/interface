@@ -44,6 +44,8 @@ export function sendAnalyticsEvent(eventName: string, eventProperties?: Record<s
   track(eventName, eventProperties)
 }
 
+type Value = string | number | boolean | string[] | number[]
+
 /**
  * Class that exposes methods to mutate the User Model's properties in
  * Amplitude that represents the current session's user.
@@ -67,11 +69,11 @@ class UserModel {
     identify(mutate(new Identify()))
   }
 
-  set(key: string, value: string | number | boolean | string[] | number[]) {
+  set(key: string, value: Value) {
     this.call((event) => event.set(key, value))
   }
 
-  setOnce(key: string, value: string | number | boolean | string[] | number[]) {
+  setOnce(key: string, value: Value) {
     this.call((event) => event.setOnce(key, value))
   }
 

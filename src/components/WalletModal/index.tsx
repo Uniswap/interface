@@ -3,7 +3,13 @@ import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { Connector } from '@web3-react/types'
 import { sendAnalyticsEvent, user } from 'components/AmplitudeAnalytics'
-import { CUSTOM_USER_PROPERTIES, EventName, WALLET_CONNECTION_RESULT } from 'components/AmplitudeAnalytics/constants'
+import {
+  CUSTOM_USER_PROPERTIES,
+  CUSTOM_USER_PROPERTY_PREFIXES,
+  CUSTOM_USER_PROPERTY_SUFFIXES,
+  EventName,
+  WALLET_CONNECTION_RESULT,
+} from 'components/AmplitudeAnalytics/constants'
 import { formatToDecimal, getTokenAddress } from 'components/AmplitudeAnalytics/utils'
 import { sendEvent } from 'components/analytics'
 import { AutoColumn } from 'components/Column'
@@ -20,6 +26,7 @@ import { useAllTokenBalances } from 'state/connection/hooks'
 import { updateConnectionError } from 'state/connection/reducer'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { updateSelectedWallet } from 'state/user/reducer'
+import { useConnectedWallets } from 'state/wallets/hooks'
 import styled from 'styled-components/macro'
 import { isMobile } from 'utils/userAgent'
 
@@ -135,7 +142,7 @@ const sendAnalyticsWalletBalanceUserInfo = (
         walletTokensAddresses.push(getTokenAddress(currencyAmount.currency))
         walletTokensSymbols.push(currencyAmount.currency.symbol ?? '')
         const tokenPrefix = currencyAmount.currency.symbol ?? tokenAddress
-        user.set(`${tokenPrefix}${CUSTOM_USER_PROPERTIES.WALLET_TOKEN_AMOUNT_SUFFIX}`, tokenBalanceAmount)
+        user.set(`${tokenPrefix}${CUSTOM_USER_PROPERTY_SUFFIXES.WALLET_TOKEN_AMOUNT_SUFFIX}`, tokenBalanceAmount)
       }
     }
   })
@@ -144,23 +151,28 @@ const sendAnalyticsWalletBalanceUserInfo = (
   user.set(CUSTOM_USER_PROPERTIES.WALLET_TOKENS_SYMBOLS, walletTokensSymbols)
 }
 
-const sendAnalyticsEventAndUserInfo = (account: string, walletType: string, chainId: number | undefined) => {
+const sendAnalyticsEventAndUserInfo = (
+  account: string,
+  walletType: string,
+  chainId: number | undefined,
+  isReconnect: boolean
+) => {
   sendAnalyticsEvent(EventName.WALLET_CONNECT_TXN_COMPLETED, {
     result: WALLET_CONNECTION_RESULT.SUCCEEDED,
     wallet_address: account,
     wallet_type: walletType,
-    // TODO(lynnshaoyu): Send correct is_reconnect value after modifying user state.
+    is_reconnect: isReconnect,
   })
   const currentDate = new Date().toISOString()
   user.set(CUSTOM_USER_PROPERTIES.WALLET_ADDRESS, account)
   user.set(CUSTOM_USER_PROPERTIES.WALLET_TYPE, walletType)
   if (chainId) {
     user.postInsert(CUSTOM_USER_PROPERTIES.ALL_WALLET_CHAIN_IDS, chainId)
-    user.postInsert(`${CUSTOM_USER_PROPERTIES.WALLET_CHAIN_IDS_PREFIX}${account}`, chainId)
+    user.postInsert(`${CUSTOM_USER_PROPERTY_PREFIXES.WALLET_CHAIN_IDS_PREFIX}${account}`, chainId)
   }
   user.postInsert(CUSTOM_USER_PROPERTIES.ALL_WALLET_ADDRESSES_CONNECTED, account)
-  user.setOnce(`${CUSTOM_USER_PROPERTIES.WALLET_FIRST_SEEN_DATE_PREFIX}${account}`, currentDate)
-  user.set(`${CUSTOM_USER_PROPERTIES.WALLET_LAST_SEEN_DATE_PREFIX}${account}`, currentDate)
+  user.setOnce(`${CUSTOM_USER_PROPERTY_PREFIXES.WALLET_FIRST_SEEN_DATE_PREFIX}${account}`, currentDate)
+  user.set(`${CUSTOM_USER_PROPERTY_PREFIXES.WALLET_LAST_SEEN_DATE_PREFIX}${account}`, currentDate)
 }
 
 export default function WalletModal({
@@ -174,6 +186,7 @@ export default function WalletModal({
 }) {
   const dispatch = useAppDispatch()
   const { connector, account, chainId } = useWeb3React()
+  const [connectedWallets, updateConnectedWallets] = useConnectedWallets()
 
   const [walletView, setWalletView] = useState(WALLET_VIEWS.ACCOUNT)
   const [lastActiveWalletAddress, setLastActiveWalletAddress] = useState<string | undefined>(account)
@@ -229,11 +242,19 @@ export default function WalletModal({
   useEffect(() => {
     if (account && account !== lastActiveWalletAddress) {
       const walletType = getConnectionName(getConnection(connector).type, getIsMetaMask())
-      sendAnalyticsEventAndUserInfo(account, walletType, chainId)
+
+      if (
+        connectedWallets.filter((wallet) => wallet.account === account && wallet.walletType === walletType).length > 0
+      ) {
+        sendAnalyticsEventAndUserInfo(account, walletType, chainId, true)
+      } else {
+        sendAnalyticsEventAndUserInfo(account, walletType, chainId, false)
+        updateConnectedWallets({ account, walletType })
+      }
       setLogWalletBalances(true)
     }
     setLastActiveWalletAddress(account)
-  }, [lastActiveWalletAddress, account, connector, chainId])
+  }, [connectedWallets, updateConnectedWallets, lastActiveWalletAddress, account, connector, chainId])
 
   // Send wallet balance info once it becomes available.
   useEffect(() => {

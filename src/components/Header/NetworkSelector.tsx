@@ -114,6 +114,7 @@ const Logo = styled.img`
 `
 const NetworkLabel = styled.div`
   flex: 1 1 auto;
+  cursor: default;
 `
 const SelectorLabel = styled(NetworkLabel)`
   display: none;
