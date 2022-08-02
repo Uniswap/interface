@@ -120,11 +120,24 @@ jobs:
           yarn react-native bundle --platform ios --dev false --entry-file index.js --bundle-output main.jsbundle --sourcemap-output main.jsbundle.map
 
       - name: Create Sentry release with sourcemaps
-        uses: getsentry/action-release@v1.2.0
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
           SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
-        with:
-          environment: production
-          sourcemaps: main.jsbundle main.jsbundle.map
+        run: |
+          # Install Sentry CLI
+          curl -sL https://sentry.io/get-cli/ | bash
+
+          # Create new Sentry release
+          export SENTRY_RELEASE="com.uniswap.mobile.dev@$IOS_VERSION_NUMBER+$IOS_BUILD_NUMBER"
+          sentry-cli releases new -p $SENTRY_PROJECT $SENTRY_RELEASE --log-level=info
+          sentry-cli releases set-commits --auto $SENTRY_RELEASE --log-level=info
+
+          #Upload sourcemaps
+          sentry-cli releases files $SENTRY_RELEASE upload-sourcemaps main.jsbundle.map --dist $IOS_BUILD_NUMBER --log-level=info
+          sentry-cli releases files $SENTRY_RELEASE upload main.jsbundle '~/main.jsbundle' --dist $IOS_BUILD_NUMBER --log-level=info
+
+          sentry-cli releases finalize $SENTRY_RELEASE --log-level=info
+
+          # Create new deploy for this Sentry release
+          sentry-cli releases deploys $SENTRY_RELEASE new -e production

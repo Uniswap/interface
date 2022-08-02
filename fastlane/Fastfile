@@ -120,9 +120,18 @@ platform :ios do
       :token => ENV["GITHUB_TOKEN"],
     }
 
-    increment_build_number(
+    build_number = increment_build_number(
       xcodeproj: XCODE_PROJECT,
     )
+
+    version_number = get_version_number(
+      xcodeproj: XCODE_PROJECT,
+      target: PROJECT_NAME
+    )
+
+    # Setting env variables to be used in the next step of the workflow
+    sh "echo IOS_BUILD_NUMBER=#{build_number} >> $GITHUB_ENV"
+    sh "echo IOS_VERSION_NUMBER=#{version_number} >> $GITHUB_ENV"
 
     match_type = build(options)
 
