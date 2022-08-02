@@ -3227,13 +3227,13 @@
     "@ethersproject/networks" "^5.0.2"
     "@ethersproject/providers" "^5.0.5"
     "@ethersproject/solidity" "^5.0.2"
+    "@kyberswap/ks-sdk-core" "^0.0.12"
     big.js "^5.2.2"
     decimal.js-light "^2.5.0"
     jsbi "^3.1.4"
     tiny-invariant "^1.1.0"
     tiny-warning "^1.0.3"
     toformat "^2.0.0"
-
 
 "@kyberswap/ks-sdk-core@^0.0.13":
   version "0.0.13"
@@ -3254,6 +3254,7 @@
   dependencies:
     "@ethersproject/abi" "^5.0.12"
     "@ethersproject/solidity" "^5.0.9"
+    "@kyberswap/ks-sdk-core" "^0.0.12"
     "@uniswap/v3-periphery" "^1.3.0"
     tiny-invariant "^1.1.0"
     tiny-warning "^1.0.3"
@@ -4709,50 +4710,20 @@
   resolved "https://registry.npmjs.org/@uniswap/default-token-list/-/default-token-list-2.0.0.tgz"
   integrity sha512-P37PqBtUjEB9DIRFfmEsgougkV0555JQKiGPISeN9UFk1UgCQM5sg6+bBaShiyaqEpdtttAaBFI1QESCzPGvXw==
 
-"@uniswap/lib@1.1.1":
-  version "1.1.1"
-  resolved "https://registry.npmjs.org/@uniswap/lib/-/lib-1.1.1.tgz"
-  integrity sha512-2yK7sLpKIT91TiS5sewHtOa7YuM8IuBXVl4GZv2jZFys4D2sY7K5vZh6MqD25TPA95Od+0YzCVq6cTF2IKrOmg==
-
 "@uniswap/lib@^4.0.1-alpha":
   version "4.0.1-alpha"
   resolved "https://registry.npmjs.org/@uniswap/lib/-/lib-4.0.1-alpha.tgz"
   integrity sha512-f6UIliwBbRsgVLxIaBANF6w09tYqc6Y/qXdsrbEmXHyFA7ILiKrIwRFXe1yOg8M3cksgVsO9N7yuL2DdCGQKBA==
-
-"@uniswap/liquidity-staker@^1.0.2":
-  version "1.0.2"
-  resolved "https://registry.npmjs.org/@uniswap/liquidity-staker/-/liquidity-staker-1.0.2.tgz"
-  integrity sha512-Rdj+QqapWO3sY1SJdLUQ8dhf26yXg9DC3XU3cpNoh5jrJ0UhAnKqciZss1F6oxBLbNWXzekuigLgSVbVb1BFcw==
-  dependencies:
-    openzeppelin-solidity-2.3.0 "npm:openzeppelin-solidity@2.3.0"
-
-"@uniswap/merkle-distributor@1.0.1":
-  version "1.0.1"
-  resolved "https://registry.npmjs.org/@uniswap/merkle-distributor/-/merkle-distributor-1.0.1.tgz"
-  integrity sha512-5gDiTI5hrXIh5UWTrxKYjw30QQDnpl8ckDSpefldNenDlYO1RKkdUYMYpvrqGi2r7YzLYTlO6+TDlNs6O7hDRw==
 
 "@uniswap/token-lists@^1.0.0-beta.21":
   version "1.0.0-beta.21"
   resolved "https://registry.npmjs.org/@uniswap/token-lists/-/token-lists-1.0.0-beta.21.tgz"
   integrity sha512-IQ1YpWKgXIsfYqym9Nl/uaB1t5Wk70pyqJ2W4FmvQmt3FIQz+pHlzlEl91aYloPrlcZaFluE0Jq7gkfYpIjsBw==
 
-"@uniswap/v2-core@1.0.0":
-  version "1.0.0"
-  resolved "https://registry.npmjs.org/@uniswap/v2-core/-/v2-core-1.0.0.tgz"
-  integrity sha512-BJiXrBGnN8mti7saW49MXwxDBRFiWemGetE58q8zgfnPPzQKq55ADltEILqOt6VFZ22kVeVKbF8gVd8aY3l7pA==
-
 "@uniswap/v2-core@1.0.1":
   version "1.0.1"
   resolved "https://registry.npmjs.org/@uniswap/v2-core/-/v2-core-1.0.1.tgz"
   integrity sha512-MtybtkUPSyysqLY2U210NBDeCHX+ltHt3oADGdjqoThZaFRDKwM6k1Nb3F0A3hk5hwuQvytFWhrWHOEq6nVJ8Q==
-
-"@uniswap/v2-periphery@^1.1.0-beta.0":
-  version "1.1.0-beta.0"
-  resolved "https://registry.npmjs.org/@uniswap/v2-periphery/-/v2-periphery-1.1.0-beta.0.tgz"
-  integrity sha512-6dkwAMKza8nzqYiXEr2D86dgW3TTavUvCR0w2Tu33bAbM8Ah43LKAzH7oKKPRT5VJQaMi1jtkGs1E8JPor1n5g==
-  dependencies:
-    "@uniswap/lib" "1.1.1"
-    "@uniswap/v2-core" "1.0.0"
 
 "@uniswap/v3-core@1.0.0":
   version "1.0.0"
@@ -14940,11 +14911,6 @@ open@^7.0.2:
   dependencies:
     is-docker "^2.0.0"
     is-wsl "^2.1.1"
-
-"openzeppelin-solidity-2.3.0@npm:openzeppelin-solidity@2.3.0":
-  version "2.3.0"
-  resolved "https://registry.npmjs.org/openzeppelin-solidity/-/openzeppelin-solidity-2.3.0.tgz"
-  integrity sha512-QYeiPLvB1oSbDt6lDQvvpx7k8ODczvE474hb2kLXZBPKMsxKT1WxTCHBYrCU7kS7hfAku4DcJ0jqOyL+jvjwQw==
 
 opn@^5.5.0:
   version "5.5.0"

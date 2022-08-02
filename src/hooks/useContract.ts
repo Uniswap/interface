@@ -1,6 +1,6 @@
 import { Contract } from '@ethersproject/contracts'
 import { ChainId, WETH } from '@kyberswap/ks-sdk-core'
-import { abi as IUniswapV2PairABI } from '@uniswap/v2-core/build/IUniswapV2Pair.json'
+import IUniswapV2PairABI from 'constants/abis/IUniswapV2PairABI.json'
 import { useMemo } from 'react'
 import {
   ARGENT_WALLET_DETECTOR_ABI,

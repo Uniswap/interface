@@ -16,7 +16,7 @@ import WalletConnectIcon from '../../assets/images/walletConnectIcon.svg'
 import FortmaticIcon from '../../assets/images/fortmaticIcon.png'
 import PortisIcon from '../../assets/images/portisIcon.png'
 import Identicon from '../Identicon'
-import { ButtonSecondary, ButtonPrimary } from '../Button'
+import { ButtonSecondary, ButtonPrimary, ButtonOutlined } from '../Button'
 import { FileText } from 'react-feather'
 import { ExternalLink, LinkStyledButton, TYPE } from '../../theme'
 import { SUPPORTED_WALLETS, PROMM_ANALYTICS_URL } from 'constants/index'
@@ -27,6 +27,7 @@ import Wallet from 'components/Icons/Wallet'
 import Divider from 'components/Divider'
 import { useWeb3React } from '@web3-react/core'
 import { isMobile } from 'react-device-detect'
+import { useLocalStorage } from 'react-use'
 
 const HeaderRow = styled.div`
   display: flex;
@@ -199,7 +200,7 @@ export default function AccountDetails({
   ENSName,
   openOptions,
 }: AccountDetailsProps) {
-  const { chainId, account, connector } = useWeb3React()
+  const { chainId, account, connector, deactivate } = useWeb3React()
   const theme = useContext(ThemeContext)
   const dispatch = useDispatch<AppDispatch>()
 
@@ -268,6 +269,16 @@ export default function AccountDetails({
     if (chainId) dispatch(clearAllTransactions({ chainId }))
   }, [dispatch, chainId])
 
+  const [, setIsUserManuallyDisconnect] = useLocalStorage('user-manually-disconnect')
+
+  const handleDisconnect = () => {
+    deactivate()
+
+    // @ts-expect-error close can be returned by wallet
+    if (connector && connector.close) connector.close()
+    setIsUserManuallyDisconnect(true)
+  }
+
   return (
     <>
       <UpperSection>
@@ -327,9 +338,9 @@ export default function AccountDetails({
         </Flex>
 
         <Flex justifyContent="space-between" marginTop="24px" paddingX="20px" sx={{ gap: '1rem' }}>
-          {/* <ButtonOutlined> */}
-          {/*   <Trans>Disconnect</Trans> */}
-          {/* </ButtonOutlined> */}
+          <ButtonOutlined onClick={handleDisconnect}>
+            <Trans>Disconnect</Trans>
+          </ButtonOutlined>
           <ButtonPrimary
             onClick={() => {
               openOptions()

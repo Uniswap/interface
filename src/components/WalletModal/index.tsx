@@ -24,6 +24,7 @@ import { useLocation } from 'react-router-dom'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import { ChevronLeft } from 'react-feather'
 import useTheme from 'hooks/useTheme'
+import { useLocalStorage } from 'react-use'
 
 const CloseIcon = styled.div`
   position: absolute;
@@ -189,6 +190,7 @@ export default function WalletModal({
       setWalletView(WALLET_VIEWS.ACCOUNT)
     }
   }, [setWalletView, active, error, connector, walletModalOpen, activePrevious, connectorPrevious])
+  const [, setIsUserManuallyDisconnect] = useLocalStorage('user-manually-disconnect')
 
   const tryActivation = async (connector: AbstractConnector | undefined) => {
     setPendingWallet(connector) // set wallet for pending view
@@ -199,14 +201,19 @@ export default function WalletModal({
       connector.walletConnectProvider = undefined
     }
 
-    connector &&
-      activate(connector, undefined, true).catch(error => {
-        if (error instanceof UnsupportedChainIdError) {
-          activate(connector)
-        } else {
-          setPendingError(true)
-        }
-      })
+    if (connector) {
+      await activate(connector, undefined, true)
+        .then(() => {
+          setIsUserManuallyDisconnect(false)
+        })
+        .catch(error => {
+          if (error instanceof UnsupportedChainIdError) {
+            activate(connector)
+          } else {
+            setPendingError(true)
+          }
+        })
+    }
   }
 
   // close wallet modal if fortmatic modal is active
@@ -352,6 +359,7 @@ export default function WalletModal({
         />
       )
     }
+
     return (
       <UpperSection>
         <CloseIcon onClick={toggleWalletModal}>

@@ -18,8 +18,6 @@ import BlockWrapper from './BlockWrapper'
 const NOT_AVAILABLE = '--'
 
 const InfoRow = styled.div`
-  flex: 0 0 32%;
-
   display: flex;
   flex-direction: column;
   row-gap: 4px;
@@ -27,7 +25,14 @@ const InfoRow = styled.div`
   ${({ theme }) => theme.mediaWidth.upToSmall`
     border: none;
     padding: 20px 0px;
-`}
+  `}
+
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+    border-bottom: 1px solid ${({ theme }) => theme.border};
+    :last-child {
+      border-bottom: none;
+    }
+  `}
 `
 
 const InfoRowValue = styled.div`
@@ -49,6 +54,10 @@ const AboutText = styled.h2`
   font-size: 20px;
   font-weight: 500;
   margin: 0;
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    font-size: 16px;
+  `}
 `
 
 /**
@@ -82,6 +91,15 @@ const SwapInstruction = styled.div`
   line-height: 24px;
 `
 
+const InfoRowWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+    flex-direction: column;
+  `}
+`
+
 export function HowToSwap({
   fromCurrency,
   toCurrency,
@@ -112,9 +130,9 @@ export function HowToSwap({
       header={
         <Text
           as="h2"
+          fontSize={[16, 20]}
           sx={{
             color: theme.text,
-            fontSize: '20px',
             fontWeight: 500,
           }}
         >
@@ -261,7 +279,7 @@ const SingleTokenInfo = ({
           __html: description.replaceAll('\r\n\r\n', '<br><br>'),
         }}
       />
-      <Flex flexWrap="wrap">
+      <InfoRowWrapper>
         {listField.map((item, i) => (
           <InfoRow key={i}>
             <InfoRowLabel>
@@ -270,7 +288,7 @@ const SingleTokenInfo = ({
             <InfoRowValue>{loading ? <Loader /> : item.value}</InfoRowValue>
           </InfoRow>
         ))}
-      </Flex>
+      </InfoRowWrapper>
     </BlockWrapper>
   )
 }
