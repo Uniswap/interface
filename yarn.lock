@@ -3235,7 +3235,7 @@
     tiny-warning "^1.0.3"
     toformat "^2.0.0"
 
-"@kyberswap/ks-sdk-core@^0.0.13":
+"@kyberswap/ks-sdk-core@^0.0.12", "@kyberswap/ks-sdk-core@^0.0.13":
   version "0.0.13"
   resolved "https://registry.yarnpkg.com/@kyberswap/ks-sdk-core/-/ks-sdk-core-0.0.13.tgz#5331007fdbbe22bec8c258ef4ad7d0fcdff33a9b"
   integrity sha512-WcuSJzey7b2NXNVm4PEULqiqMoNmBE8uI1t8Vak2sSpsdy+p82sICCQqAn4oYimdW2U1JZG0svgaBGdKZsiapQ==
@@ -3247,14 +3247,13 @@
     tiny-invariant "^1.1.0"
     toformat "^2.0.0"
 
-"@kyberswap/ks-sdk-elastic@^0.0.41":
-  version "0.0.41"
-  resolved "https://registry.yarnpkg.com/@kyberswap/ks-sdk-elastic/-/ks-sdk-elastic-0.0.41.tgz#a9fdf074aaa5ab26f2d3e71faac22ad1df7694b7"
-  integrity sha512-sEXL0uIHx3YoRHFWuo0jnOWk6rCVZOHqtjKEbKjvc93sSvCL7RKj4U1JRKJagjmX94f+G8+3g74mF1oJ05q8Vg==
+"@kyberswap/ks-sdk-elastic@^0.0.43":
+  version "0.0.43"
+  resolved "https://registry.yarnpkg.com/@kyberswap/ks-sdk-elastic/-/ks-sdk-elastic-0.0.43.tgz#bf3cd2eaf03b94b9d724d7cca3e8b9d641a09e6d"
+  integrity sha512-2QiwHJRK1MitgpPLwSNVEdCZycJDB3rO57acT0wsxXP4NPnXQ9jKVwd+rG86c2qjTMXxaZGKsjk/d9PaP/+RCw==
   dependencies:
     "@ethersproject/abi" "^5.0.12"
     "@ethersproject/solidity" "^5.0.9"
-    "@kyberswap/ks-sdk-core" "^0.0.12"
     "@uniswap/v3-periphery" "^1.3.0"
     tiny-invariant "^1.1.0"
     tiny-warning "^1.0.3"

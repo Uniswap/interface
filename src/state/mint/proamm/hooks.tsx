@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ReactNode, useCallback, useMemo } from 'react'
 import { AppState } from '../../index'
 
 import { Currency, CurrencyAmount, Price, Rounding, Token } from '@kyberswap/ks-sdk-core'
@@ -25,7 +25,6 @@ import {
   typeRightRangeInput,
   typeStartPriceInput,
 } from './actions'
-import { ReactNode, useCallback, useMemo } from 'react'
 import { useActiveWeb3React } from 'hooks'
 import { useCurrencyBalances } from 'state/wallet/hooks'
 import { PoolState, usePool } from 'hooks/usePools'
@@ -223,7 +222,7 @@ export function useProAmmDerivedMintInfo(
   // if pool exists use it, if not use the mock pool
   const poolForPosition: Pool | undefined = pool ?? mockPool
 
-  // lower and upper limits in the tick space for `feeAmoun<Trans>
+  // lower and upper limits in the tick space for `feeAmount<Trans>
   const tickSpaceLimits: {
     [bound in Bound]: number | undefined
   } = useMemo(
@@ -241,7 +240,7 @@ export function useProAmmDerivedMintInfo(
   } = useMemo(() => {
     //case NO invert
     //      tickLower = tryParseTick(0, 1, left)
-    //      tickUpper = tryParseTick(0, 1, rigth)
+    //      tickUpper = tryParseTick(0, 1, right)
     //case invert
     //      tickLower = tryParseTick(1, 0, right)
     //      tickUpper = tryParseTick(1, 0, left)
@@ -516,6 +515,7 @@ export function useRangeHopCallbacks(
 ) {
   const dispatch = useAppDispatch()
 
+  const { startPriceTypedValue } = useProAmmMintState()
   const baseToken = useMemo(() => baseCurrency?.wrapped, [baseCurrency])
   const quoteToken = useMemo(() => quoteCurrency?.wrapped, [quoteCurrency])
 
@@ -526,17 +526,19 @@ export function useRangeHopCallbacks(
 
   if (pool) {
     initTick = pool.tickCurrent
+  } else {
+    initTick = tryParseTick(baseCurrency?.wrapped, quoteCurrency?.wrapped, feeAmount, startPriceTypedValue)
   }
 
   const getDecrementLower = useCallback(() => {
     if (baseToken && quoteToken && feeAmount) {
       if (typeof tickLower === 'number' && tickLower < TickMath.MAX_TICK - 2 && tickLower > TickMath.MIN_TICK + 2) {
         const newPrice = tickToPrice(baseToken, quoteToken, tickLower - TICK_SPACINGS[feeAmount])
-        return newPrice.toSignificant(5, undefined, Rounding.ROUND_UP)
-      }else if (initTick) {
+        return newPrice.toSignificant(9, undefined, Rounding.ROUND_UP)
+      } else if (initTick) {
         const newPrice = tickToPrice(baseToken, quoteToken, initTick - TICK_SPACINGS[feeAmount])
-        return newPrice.toSignificant(5, undefined, Rounding.ROUND_UP)
-      }  
+        return newPrice.toSignificant(9, undefined, Rounding.ROUND_UP)
+      }
     }
     return ''
   }, [baseToken, quoteToken, tickLower, feeAmount, initTick])
@@ -545,11 +547,11 @@ export function useRangeHopCallbacks(
     if (baseToken && quoteToken && feeAmount) {
       if (typeof tickLower === 'number' && tickLower < TickMath.MAX_TICK - 2 && tickLower > TickMath.MIN_TICK + 2) {
         const newPrice = tickToPrice(baseToken, quoteToken, tickLower + TICK_SPACINGS[feeAmount])
-        return newPrice.toSignificant(5, undefined, Rounding.ROUND_UP)
-      }else if (initTick) {
+        return newPrice.toSignificant(9, undefined, Rounding.ROUND_UP)
+      } else if (initTick) {
         const newPrice = tickToPrice(baseToken, quoteToken, initTick + TICK_SPACINGS[feeAmount])
-        return newPrice.toSignificant(5, undefined, Rounding.ROUND_UP)
-      }  
+        return newPrice.toSignificant(9, undefined, Rounding.ROUND_UP)
+      }
     }
     return ''
   }, [baseToken, quoteToken, tickLower, feeAmount, initTick])
@@ -558,11 +560,11 @@ export function useRangeHopCallbacks(
     if (baseToken && quoteToken && feeAmount) {
       if (typeof tickUpper === 'number' && tickUpper < TickMath.MAX_TICK - 2 && tickUpper > TickMath.MIN_TICK + 2) {
         const newPrice = tickToPrice(baseToken, quoteToken, tickUpper - TICK_SPACINGS[feeAmount])
-        return newPrice.toSignificant(5, undefined, Rounding.ROUND_UP)
-      }else if (initTick) {
+        return newPrice.toSignificant(9, undefined, Rounding.ROUND_UP)
+      } else if (initTick) {
         const newPrice = tickToPrice(baseToken, quoteToken, initTick - TICK_SPACINGS[feeAmount])
-        return newPrice.toSignificant(5, undefined, Rounding.ROUND_UP)
-      }  
+        return newPrice.toSignificant(9, undefined, Rounding.ROUND_UP)
+      }
     }
     return ''
   }, [baseToken, quoteToken, tickUpper, feeAmount, initTick])
@@ -571,11 +573,11 @@ export function useRangeHopCallbacks(
     if (baseToken && quoteToken && feeAmount) {
       if (typeof tickUpper === 'number' && tickUpper < TickMath.MAX_TICK - 2 && tickUpper > TickMath.MIN_TICK + 2) {
         const newPrice = tickToPrice(baseToken, quoteToken, tickUpper + TICK_SPACINGS[feeAmount])
-        return newPrice.toSignificant(5, undefined, Rounding.ROUND_UP)
-      }else if (initTick) {
+        return newPrice.toSignificant(9, undefined, Rounding.ROUND_UP)
+      } else if (initTick) {
         const newPrice = tickToPrice(baseToken, quoteToken, initTick + TICK_SPACINGS[feeAmount])
-        return newPrice.toSignificant(5, undefined, Rounding.ROUND_UP)
-      }  
+        return newPrice.toSignificant(9, undefined, Rounding.ROUND_UP)
+      }
     }
     return ''
   }, [baseToken, quoteToken, tickUpper, feeAmount, initTick])

@@ -130,7 +130,7 @@
     "@apollo/client": "^3.3.11",
     "@kyberswap/ks-sdk-classic": "^0.0.13",
     "@kyberswap/ks-sdk-core": "^0.0.13",
-    "@kyberswap/ks-sdk-elastic": "^0.0.41",
+    "@kyberswap/ks-sdk-elastic": "^0.0.43",
     "@lingui/detect-locale": "^3.10.4",
     "@lingui/react": "^3.10.2",
     "@rebass/forms": "^4.0.6",
