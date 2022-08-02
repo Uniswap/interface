@@ -10,7 +10,7 @@ import styled, {
 
 import { useIsDarkMode } from '../state/user/hooks'
 import { colors as ColorsPalette, colorsDark, colorsLight } from './colors'
-import { Colors, themeColors } from './styled'
+import { Colors, ThemeColors } from './styled'
 import { opacify } from './utils'
 
 export * from './components'
@@ -54,7 +54,7 @@ const mediaWidthTemplates: { [width in keyof typeof MEDIA_WIDTHS]: typeof css } 
 const deprecated_white = ColorsPalette.white
 const deprecated_black = ColorsPalette.black
 
-function uniswapThemeColors(darkMode: boolean): themeColors {
+function uniswapThemeColors(darkMode: boolean): ThemeColors {
   return {
     userThemeColor: darkMode ? colorsDark.userThemeColor : colorsLight.userThemeColor,
 

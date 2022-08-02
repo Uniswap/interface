@@ -1,7 +1,7 @@
 import { FlattenSimpleInterpolation, ThemedCssFunction } from 'styled-components/macro'
 
 export type Color = string
-export interface themeColors {
+export interface ThemeColors {
   userThemeColor: string
 
   backgroundBackdrop: Color
