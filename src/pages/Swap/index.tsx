@@ -21,6 +21,7 @@ import SwapDetailsDropdown from 'components/swap/SwapDetailsDropdown'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { isSupportedChain } from 'constants/chains'
+import { Phase0Variant, usePhase0Flag } from 'featureFlag'
 import { useSwapCallback } from 'hooks/useSwapCallback'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import JSBI from 'jsbi'
@@ -178,6 +179,7 @@ const formatSwapQuoteReceivedEventProperties = (
 
 export default function Swap() {
   const navigate = useNavigate()
+  const phase0flag = usePhase0Flag()
   const { account, chainId } = useWeb3React()
   const loadedUrlParams = useDefaultsFromURLSearch()
   const [newSwapQuoteNeedsLogging, setNewSwapQuoteNeedsLogging] = useState(true)
@@ -682,7 +684,7 @@ export default function Swap() {
                       properties={{ received_swap_quote: getIsValidSwapQuote(trade, tradeState, swapInputError) }}
                       element={ElementName.CONNECT_WALLET_BUTTON}
                     >
-                      <ButtonLight onClick={toggleWalletModal}>
+                      <ButtonLight onClick={toggleWalletModal} phase0Flag={phase0flag === Phase0Variant.Enabled}>
                         <Trans>Connect Wallet</Trans>
                       </ButtonLight>
                     </TraceEvent>

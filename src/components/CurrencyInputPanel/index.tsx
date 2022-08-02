@@ -7,6 +7,7 @@ import { TraceEvent } from 'components/AmplitudeAnalytics/TraceEvent'
 import { AutoColumn } from 'components/Column'
 import { LoadingOpacityContainer, loadingOpacityMixin } from 'components/Loader/styled'
 import { isSupportedChain } from 'constants/chains'
+import { Phase0Variant, usePhase0Flag } from 'featureFlag'
 import { darken } from 'polished'
 import { ReactNode, useCallback, useState } from 'react'
 import { Lock } from 'react-feather'
@@ -25,34 +26,44 @@ import { RowBetween, RowFixed } from '../Row'
 import CurrencySearchModal from '../SearchModal/CurrencySearchModal'
 import { FiatValue } from './FiatValue'
 
-const InputPanel = styled.div<{ hideInput?: boolean }>`
+const InputPanel = styled.div<{ hideInput?: boolean; phase0Flag: boolean }>`
   ${({ theme }) => theme.flexColumnNoWrap}
   position: relative;
   border-radius: ${({ hideInput }) => (hideInput ? '16px' : '20px')};
-  background-color: ${({ theme }) => theme.none};
+  background-color: ${({ theme, phase0Flag, hideInput }) =>
+    phase0Flag ? theme.none : hideInput ? 'transparent' : theme.deprecated_bg2};
   z-index: 1;
   width: ${({ hideInput }) => (hideInput ? '100%' : 'initial')};
   transition: height 1s ease;
   will-change: height;
 `
 
-const FixedContainer = styled.div`
+const FixedContainer = styled.div<{ phase0Flag: boolean }>`
   width: 100%;
   height: 100%;
   position: absolute;
   border-radius: 20px;
-  background-color: ${({ theme }) => theme.none};
+  background-color: ${({ theme, phase0Flag }) => (phase0Flag ? theme.none : theme.deprecated_bg2)};
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 2;
 `
 
-const Container = styled.div<{ hideInput: boolean; disabled: boolean }>`
+const Container = styled.div<{ hideInput: boolean; disabled: boolean; phase0Flag: boolean }>`
   border-radius: ${({ hideInput }) => (hideInput ? '16px' : '20px')};
-  border: 1px solid ${({ theme }) => theme.none};
-  background-color: ${({ theme }) => theme.none};
+  border: 1px solid ${({ theme, phase0Flag }) => (phase0Flag ? theme.none : theme.deprecated_bg0)};
+  background-color: ${({ theme, phase0Flag }) => (phase0Flag ? theme.none : theme.deprecated_bg1)};
   width: ${({ hideInput }) => (hideInput ? '100%' : 'initial')};
+  ${({ theme, hideInput, disabled, phase0Flag }) =>
+    !phase0Flag &&
+    !disabled &&
+    `
+    :focus,
+    :hover {
+      border: 1px solid ${hideInput ? ' transparent' : theme.deprecated_bg3};
+    }
+  `}
 `
 
 const CurrencySelect = styled(ButtonGray)<{
@@ -60,9 +71,17 @@ const CurrencySelect = styled(ButtonGray)<{
   selected: boolean
   hideInput?: boolean
   disabled?: boolean
+  phase0Flag: boolean
 }>`
   align-items: center;
-  background-color: ${({ theme, selected }) => (selected ? theme.backgroundSurface : theme.accentAction)};
+  background-color: ${({ selected, theme, phase0Flag }) =>
+    phase0Flag
+      ? selected
+        ? theme.backgroundSurface
+        : theme.accentAction
+      : selected
+      ? theme.deprecated_bg2
+      : theme.deprecated_primary1};
   opacity: ${({ disabled }) => (!disabled ? 1 : 0.4)};
   box-shadow: ${({ selected }) => (selected ? 'none' : '0px 6px 10px rgba(0, 0, 0, 0.075)')};
   color: ${({ selected, theme }) => (selected ? theme.deprecated_text1 : theme.deprecated_white)};
@@ -74,8 +93,10 @@ const CurrencySelect = styled(ButtonGray)<{
   font-size: 24px;
   font-weight: 500;
   width: ${({ hideInput }) => (hideInput ? '100%' : 'initial')};
-  padding: ${({ selected }) => (selected ? '4px 8px 4px 4px' : '6px 8px 6px 12px')};
-  gap: 8px;
+  padding: ${({ selected, phase0Flag }) =>
+    phase0Flag ? (selected ? '4px 8px 4px 4px' : '6px 8px 6px 12px') : '0 8px'};
+  gap: ${({ phase0Flag }) => (phase0Flag ? '8px' : '0px')};
+  justify-content: space-between;
   margin-left: ${({ hideInput }) => (hideInput ? '0' : '12px')};
   :focus,
   :hover {
@@ -84,14 +105,16 @@ const CurrencySelect = styled(ButtonGray)<{
   }
   visibility: ${({ visible }) => (visible ? 'visible' : 'hidden')};
 `
-const InputCurrencySelect = styled(CurrencySelect)`
-  background-color: ${({ theme, selected }) => (selected ? theme.none : theme.accentAction)};
+const InputCurrencySelect = styled(CurrencySelect)<{ phase0Flag: boolean }>`
+  background-color: ${({ theme, selected, phase0Flag }) => phase0Flag && (selected ? theme.none : theme.accentAction)};
 `
 
-const InputRow = styled.div<{ selected: boolean }>`
+const InputRow = styled.div<{ selected: boolean; phase0Flag: boolean }>`
   ${({ theme }) => theme.flexRowNoWrap}
   align-items: center;
   justify-content: space-between;
+  padding: ${({ selected, phase0Flag }) =>
+    phase0Flag ? '0px' : selected ? ' 1rem 1rem 0.75rem 1rem' : '1rem 1rem 1rem 1rem'};
 `
 
 const LabelRow = styled.div`
@@ -224,6 +247,7 @@ export default function CurrencyInputPanel({
 }: CurrencyInputPanelProps) {
   const [modalOpen, setModalOpen] = useState(false)
   const { account, chainId } = useWeb3React()
+  const phase0Flag = usePhase0Flag()
   const selectedCurrencyBalance = useCurrencyBalance(account ?? undefined, currency ?? undefined)
   const theme = useTheme()
 
@@ -234,9 +258,9 @@ export default function CurrencyInputPanel({
   const chainAllowed = isSupportedChain(chainId)
 
   return (
-    <InputPanel id={id} hideInput={hideInput} {...rest}>
+    <InputPanel id={id} hideInput={hideInput} {...rest} phase0Flag={phase0Flag === Phase0Variant.Enabled}>
       {locked && (
-        <FixedContainer>
+        <FixedContainer phase0Flag={phase0Flag === Phase0Variant.Enabled}>
           <AutoColumn gap="sm" justify="center">
             <Lock />
             <ThemedText.DeprecatedLabel fontSize="12px" textAlign="center" padding="0 12px">
@@ -245,8 +269,12 @@ export default function CurrencyInputPanel({
           </AutoColumn>
         </FixedContainer>
       )}
-      <Container hideInput={hideInput} disabled={!chainAllowed}>
-        <InputRow style={hideInput ? { padding: '0', borderRadius: '8px' } : {}} selected={!onCurrencySelect}>
+      <Container hideInput={hideInput} disabled={!chainAllowed} phase0Flag={phase0Flag === Phase0Variant.Enabled}>
+        <InputRow
+          style={hideInput ? { padding: '0', borderRadius: '8px' } : {}}
+          selected={!onCurrencySelect}
+          phase0Flag={phase0Flag === Phase0Variant.Enabled}
+        >
           {!hideInput && (
             <StyledNumericalInput
               className="token-amount-input"
@@ -262,6 +290,7 @@ export default function CurrencyInputPanel({
             visible={currency !== undefined}
             selected={!!currency}
             hideInput={hideInput}
+            phase0Flag={phase0Flag === Phase0Variant.Enabled}
             className="open-currency-select-button"
             onClick={() => {
               if (onCurrencySelect) {
