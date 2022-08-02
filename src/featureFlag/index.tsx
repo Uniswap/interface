@@ -5,7 +5,9 @@ interface FeatureFlagsContextType {
   flags: Record<string, string>
 }
 
-const FeatureFlagContext = createContext<FeatureFlagsContextType>({ isLoaded: false, flags: {} })
+// TODO(vm): `isLoaded` to `true` so `App.tsx` will render. Later, this will be dependent on
+// flags loading from Amplitude, with a timeout.
+const FeatureFlagContext = createContext<FeatureFlagsContextType>({ isLoaded: true, flags: {} })
 
 export function useFeatureFlagsContext(): FeatureFlagsContextType {
   const context = useContext(FeatureFlagContext)
