@@ -447,7 +447,7 @@ export const get24hValue = (valueNow: string, value24HoursAgo: string | undefine
 
 export const getRopstenTokenLogoURL = (address: string) => {
   if (address.toLowerCase() === KNCL_ADDRESS_ROPSTEN.toLowerCase()) {
-    return 'https://raw.githubusercontent.com/KyberNetwork/dmm-interface/develop/src/assets/images/KNCL.png'
+    return 'https://raw.githubusercontent.com/KyberNetwork/kyberswap-interface/develop/src/assets/images/KNCL.png'
   }
 
   if (ROPSTEN_TOKEN_LOGOS_MAPPING[address.toLowerCase()]) {
@@ -466,11 +466,11 @@ export const getTokenLogoURL = (inputAddress: string, chainId?: ChainId): string
   }
 
   if (address.toLowerCase() === KNC[chainId as ChainId].address.toLowerCase()) {
-    return 'https://raw.githubusercontent.com/KyberNetwork/dmm-interface/develop/src/assets/images/KNC.svg'
+    return 'https://raw.githubusercontent.com/KyberNetwork/kyberswap-interface/develop/src/assets/images/KNC.svg'
   }
 
   if (address.toLowerCase() === KNCL_ADDRESS.toLowerCase()) {
-    return 'https://raw.githubusercontent.com/KyberNetwork/dmm-interface/develop/src/assets/images/KNCL.png'
+    return 'https://raw.githubusercontent.com/KyberNetwork/kyberswap-interface/develop/src/assets/images/KNCL.png'
   }
 
   // WBTC
