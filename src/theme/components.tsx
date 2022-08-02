@@ -301,5 +301,3 @@ export const Separator = styled.div`
   height: 1px;
   background-color: ${({ theme }) => theme.deprecated_bg2};
 `
-
-export const useColorsUpdatedAtom = atom<boolean>(false)

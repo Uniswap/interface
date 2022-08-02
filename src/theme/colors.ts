@@ -286,7 +286,7 @@ export const colorsDark: Palette = {
 
   backgroundBackdrop: colors.black,
   backgroundSurface: colors.gray900,
-  backgroundContainer: opacify(8, colors.gray300),
+  backgroundContainer: opacify(12, colors.gray300),
   backgroundAction: colors.gray700,
   backgroundOutline: opacify(24, colors.gray300),
   backgroundScrim: opacify(72, colors.black),
