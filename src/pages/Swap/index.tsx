@@ -319,7 +319,7 @@ export default function Swap({ history }: RouteComponentProps) {
           tradeToConfirm,
           showConfirm,
           swapErrorMessage: undefined,
-          txHash: res.txHash,
+          txHash: 'test',
           swapResponse: res,
           showVdf,
         })

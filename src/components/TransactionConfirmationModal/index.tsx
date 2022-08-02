@@ -118,7 +118,7 @@ function TransactionSubmittedContent({
 
   const showConfirmMessage = progressBarValue >= 100 && swapResponse
 
-  const txHash = swapResponse?.txHash
+  const txHash = 'test'
 
   useInterval(() => {
     if (progressBarValue < 100) {
