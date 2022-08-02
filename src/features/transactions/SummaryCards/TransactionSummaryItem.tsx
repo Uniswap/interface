@@ -167,7 +167,10 @@ function TransactionSummaryItem({
     return type === TransactionType.Swap && !failed && assetType === AssetType.Currency ? (
       <>
         <Box left={2} position="absolute" testID="swap-success-toast" top={2}>
-          <CurrencyLogoOrPlaceholder currency={currency} size={TXN_HISTORY_SIZING.primaryImage} />
+          <CurrencyLogoOrPlaceholder
+            currency={otherCurrency}
+            size={TXN_HISTORY_SIZING.primaryImage}
+          />
         </Box>
         <Box
           bottom={canceled && showInlineWarning ? 5 : 0}
@@ -181,10 +184,7 @@ function TransactionSummaryItem({
               width={TXN_HISTORY_SIZING.secondaryImage}
             />
           ) : (
-            <CurrencyLogoOrPlaceholder
-              currency={otherCurrency}
-              size={TXN_HISTORY_SIZING.primaryImage}
-            />
+            <CurrencyLogoOrPlaceholder currency={currency} size={TXN_HISTORY_SIZING.primaryImage} />
           )}
         </Box>
       </>

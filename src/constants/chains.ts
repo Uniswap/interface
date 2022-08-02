@@ -246,3 +246,17 @@ export function isPolygonChain(
 ): chainId is ChainId.Polygon | ChainId.PolygonMumbai {
   return chainId === ChainId.PolygonMumbai || chainId === ChainId.Polygon
 }
+
+export const CHAIN_ID_TO_LOGO: Record<ChainId, any> = {
+  [ChainId.Mainnet]: ETHEREUM_LOGO,
+  [ChainId.Rinkeby]: ETHEREUM_LOGO,
+  [ChainId.Goerli]: ETHEREUM_LOGO,
+  [ChainId.Ropsten]: ETHEREUM_LOGO,
+  [ChainId.Kovan]: ETHEREUM_LOGO,
+  [ChainId.Optimism]: ETHEREUM_LOGO,
+  [ChainId.OptimisticKovan]: ETHEREUM_LOGO,
+  [ChainId.ArbitrumOne]: ETHEREUM_LOGO,
+  [ChainId.ArbitrumRinkeby]: ETHEREUM_LOGO,
+  [ChainId.Polygon]: POLYGON_LOGO,
+  [ChainId.PolygonMumbai]: POLYGON_LOGO,
+}

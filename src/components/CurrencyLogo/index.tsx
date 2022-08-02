@@ -3,13 +3,13 @@ import { Currency } from '@uniswap/sdk-core'
 import React from 'react'
 import { Image } from 'react-native'
 import { SvgUri } from 'react-native-svg'
-import { ETHEREUM_LOGO } from 'src/assets'
 import { NetworkLogo } from 'src/components/CurrencyLogo/NetworkLogo'
 import { style } from 'src/components/CurrencyLogo/styles'
 import { getCurrencyLogoSrcs, maybeReplaceIPFSScheme } from 'src/components/CurrencyLogo/utils'
 import { Box } from 'src/components/layout/Box'
-import { ChainId } from 'src/constants/chains'
+import { ChainId, CHAIN_ID_TO_LOGO } from 'src/constants/chains'
 import { Theme } from 'src/styles/theme'
+import { toSupportedChainId } from 'src/utils/chainId'
 
 const DEFAULT_SIZE = 40
 const NETWORK_LOGO_SIZE = 16
@@ -49,9 +49,11 @@ export function CurrencyLogoOnly({ currency, size = 40 }: CurrencyLogoProps) {
   const srcs: string[] = getCurrencyLogoSrcs(currency)
 
   if (currency?.isNative) {
+    const chainId = toSupportedChainId(currency.chainId) ?? ChainId.Mainnet
+    const logo = CHAIN_ID_TO_LOGO[chainId]
     return (
       <Image
-        source={ETHEREUM_LOGO}
+        source={logo}
         style={[style.image, { width: size, height: size, borderRadius: size / 2 }]}
       />
     )
