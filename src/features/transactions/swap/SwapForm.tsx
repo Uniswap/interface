@@ -25,7 +25,7 @@ import {
   useUpdateSwapGasEstimate,
   useUSDTokenUpdater,
 } from 'src/features/transactions/swap/hooks'
-import { isWrapAction } from 'src/features/transactions/swap/utils'
+import { getReviewActionName, isWrapAction } from 'src/features/transactions/swap/utils'
 import { showWarningInPanel } from 'src/features/transactions/swap/validate'
 import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
 import { createTransactionId } from 'src/features/transactions/utils'
@@ -216,7 +216,7 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo, isCompressedView }
         ) : null}
         <PrimaryButton
           disabled={actionButtonDisabled}
-          label={t('Review swap')}
+          label={getReviewActionName(t, wrapType)}
           name={ElementName.ReviewSwap}
           py="md"
           testID={ElementName.ReviewSwap}

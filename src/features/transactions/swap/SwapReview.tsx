@@ -23,7 +23,11 @@ import {
   useWrapCallback,
 } from 'src/features/transactions/swap/hooks'
 import { SwapDetails } from 'src/features/transactions/swap/SwapDetails'
-import { isWrapAction, requireAcceptNewTrade } from 'src/features/transactions/swap/utils'
+import {
+  getActionName,
+  isWrapAction,
+  requireAcceptNewTrade,
+} from 'src/features/transactions/swap/utils'
 import { WrapType } from 'src/features/transactions/swap/wrapSaga'
 import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
 
@@ -206,13 +210,7 @@ export function SwapReview({ dispatch, onNext, onPrev, derivedSwapInfo }: SwapFo
           <Flex grow>
             <ActionButton
               disabled={swapDisabled}
-              label={
-                wrapType === WrapType.Wrap
-                  ? t('Wrap')
-                  : wrapType === WrapType.Unwrap
-                  ? t('Unwrap')
-                  : t('Swap')
-              }
+              label={getActionName(t, wrapType)}
               name={
                 wrapType === WrapType.Wrap
                   ? ElementName.Wrap
