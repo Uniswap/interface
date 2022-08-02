@@ -1,11 +1,47 @@
 """This directive allows results to be deferred during execution"""
 directive @defer on FIELD
 
+"""
+Tells the service this field/object has access authorized by an API key.
+"""
+directive @aws_api_key on OBJECT | FIELD_DEFINITION
+
+"""
+Tells the service this field/object has access authorized by sigv4 signing.
+"""
+directive @aws_iam on OBJECT | FIELD_DEFINITION
+
+"""
+Tells the service this field/object has access authorized by a Cognito User Pools token.
+"""
+directive @aws_cognito_user_pools(
+  """List of cognito user pool groups which have access on this field"""
+  cognito_groups: [String]
+) on OBJECT | FIELD_DEFINITION
+
 """Directs the schema to enforce authorization on a field"""
 directive @aws_auth(
   """List of cognito user pool groups which have access on this field"""
   cognito_groups: [String]
 ) on FIELD_DEFINITION
+
+"""Tells the service which mutation triggers this subscription."""
+directive @aws_subscribe(
+  """
+  List of mutations which will trigger this subscription when they are called.
+  """
+  mutations: [String]
+) on FIELD_DEFINITION
+
+"""
+Tells the service this field/object has access authorized by an OIDC token.
+"""
+directive @aws_oidc on OBJECT | FIELD_DEFINITION
+
+"""
+Tells the service this field/object has access authorized by a Lambda Authorizer.
+"""
+directive @aws_lambda on OBJECT | FIELD_DEFINITION
 
 """
 Tells the service which subscriptions will be published to when this mutation is
@@ -18,47 +54,45 @@ directive @aws_publish(
   subscriptions: [String]
 ) on FIELD_DEFINITION
 
-"""
-Tells the service this field/object has access authorized by sigv4 signing.
-"""
-directive @aws_iam on OBJECT | FIELD_DEFINITION
-
-"""
-Tells the service this field/object has access authorized by a Lambda Authorizer.
-"""
-directive @aws_lambda on OBJECT | FIELD_DEFINITION
-
-"""
-Tells the service this field/object has access authorized by an OIDC token.
-"""
-directive @aws_oidc on OBJECT | FIELD_DEFINITION
-
-"""Tells the service which mutation triggers this subscription."""
-directive @aws_subscribe(
-  """
-  List of mutations which will trigger this subscription when they are called.
-  """
-  mutations: [String]
-) on FIELD_DEFINITION
-
-"""
-Tells the service this field/object has access authorized by an API key.
-"""
-directive @aws_api_key on OBJECT | FIELD_DEFINITION
-
-"""
-Tells the service this field/object has access authorized by a Cognito User Pools token.
-"""
-directive @aws_cognito_user_pools(
-  """List of cognito user pool groups which have access on this field"""
-  cognito_groups: [String]
-) on OBJECT | FIELD_DEFINITION
+enum ActivityType {
+  APPROVE
+  CANCEL
+  CLAIM
+  SEND
+  RECEIVE
+  SWAP
+  DEPLOYMENT
+  UNKNOWN
+  money
+  market
+  LEND
+  BORROW
+  REPAY
+  WITHDRAW
+  NFT
+  MINT
+  BURN
+  Staking
+  STAKE
+  UNSTAKE
+}
 
 type Amount implements IAmount {
   id: ID!
   currency: Currency
   value: Float
 }
+
+type AssetActivity {
+  id: ID!
+  timestamp: Int!
+  type: ActivityType!
+  gasUsed: Float
+  transaction: Transaction!
+  assetChanges: [AssetChange]!
+}
+
+union AssetChange = TokenTransfer | NftTransfer | TokenApproval | NftApproval | NftApproveForAll
 
 enum Chain {
   ARBITRUM
@@ -101,6 +135,46 @@ enum MarketSortableField {
   VOLUME
 }
 
+type NftApproval {
+  nftStandard: NftStandard!
+
+  """  can be erc20 or erc1155"""
+  asset: NftAsset!
+  approvedAddress: String!
+}
+
+type NftApproveForAll {
+  nftStandard: NftStandard!
+
+  """  can be erc721 or erc1155"""
+  asset: NftAsset!
+  operatorAddress: String!
+  approved: Boolean!
+}
+
+"""  TODO: design this"""
+type NftAsset {
+  id: ID!
+  chain: Chain!
+  address: String
+  name: String
+  tokenId: String
+}
+
+enum NftStandard {
+  ERC721
+  ERC1155
+}
+
+type NftTransfer {
+  id: ID!
+  nftStandard: NftStandard!
+  asset: NftAsset!
+  sender: String!
+  recipient: String!
+  direction: TransactionDirection!
+}
+
 type Portfolio {
   id: ID!
   ownerAddress: String!
@@ -120,7 +194,7 @@ type Query {
   tokenProjects(contracts: [ContractInput]): [TokenProject]
   topTokenProjects(orderBy: MarketSortableField, page: Int, pageSize: Int, currency: Currency): [TokenProject]
   searchTokens(searchQuery: String!): [Token]
-  transactions(address: String!, page: Int, pageSize: Int): [Transaction]
+  assetActivities(address: String!, page: Int, pageSize: Int): [AssetActivity]
   portfolio(ownerAddress: String!): Portfolio
   portfolios(ownerAddresses: [String!]!): [Portfolio]
 }
@@ -140,6 +214,15 @@ type Token implements IContract {
   decimals: Int
   name: String
   symbol: String
+}
+
+type TokenApproval {
+  tokenStandard: TokenStandard!
+
+  """  can be erc20 or erc1155"""
+  asset: Token!
+  approvedAddress: String!
+  quantity: String!
 }
 
 type TokenBalance {
@@ -181,24 +264,30 @@ type TokenProjectMarket {
 enum TokenStandard {
   NATIVE
   ERC20
-  ERC721
   ERC1155
+}
+
+type TokenTransfer {
+  id: ID!
+  tokenStandard: TokenStandard!
+  asset: Token!
+  sender: String!
+  recipient: String!
+  quantity: String!
+  direction: TransactionDirection!
+  transactedValue: Amount
 }
 
 type Transaction {
   id: ID!
   blockNumber: Int!
-  contract: String
   from: String!
+  to: String!
   hash: String!
   nonce: Int!
+  gasLimit: Float
+  maxFeePerGas: Float
   status: TransactionStatus!
-  timestamp: Int!
-  to: String!
-  type: TransactionType
-  feeValue: Float
-  feePrice: Float
-  directon: TransactionDirection
 }
 
 enum TransactionDirection {
@@ -211,22 +300,5 @@ enum TransactionStatus {
   FAILED
   CONFIRMED
   PENDING
-}
-
-enum TransactionType {
-  AUTHORIZE
-  BORROW
-  CANCEL
-  CLAIM
-  DEPLOYMENT
-  DEPOSIT
-  EXECUTION
-  RECEIVE
-  REPAY
-  SEND
-  STAKE
-  TRADE
-  UNSTAKE
-  WITHDRAW
 }
 
