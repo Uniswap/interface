@@ -7,10 +7,10 @@ import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import PencilIcon from 'src/assets/icons/pencil-detailed.svg'
-import { AnimatedButton, Button } from 'src/components/buttons/Button'
+import { BackButton } from 'src/components/buttons/BackButton'
+import { AnimatedButton } from 'src/components/buttons/Button'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { TextButton } from 'src/components/buttons/TextButton'
-import { Chevron } from 'src/components/icons/Chevron'
 import { TextInput } from 'src/components/input/TextInput'
 import { Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
@@ -38,11 +38,7 @@ export function EditNameScreen({ navigation, route: { params } }: Props) {
     const shouldRenderBackButton = navigation.getState().index === 0
     if (shouldRenderBackButton) {
       navigation.setOptions({
-        headerLeft: () => (
-          <Button onPress={() => navigation.goBack()}>
-            <Chevron color={theme.colors.textPrimary} />
-          </Button>
-        ),
+        headerLeft: () => <BackButton />,
       })
     }
   }, [navigation, theme.colors.textPrimary])

@@ -42,7 +42,6 @@ import { WatchWalletScreen } from 'src/screens/Import/WatchWalletScreen'
 import { ImportAccountScreen } from 'src/screens/ImportAccountScreen'
 import { NFTCollectionScreen } from 'src/screens/NFTCollectionScreen'
 import { NFTItemScreen } from 'src/screens/NFTItemScreen'
-import { NotificationsScreen } from 'src/screens/NotificationsScreen'
 import { BackupScreen } from 'src/screens/Onboarding/BackupScreen'
 import { CloudBackupProcessingScreen } from 'src/screens/Onboarding/CloudBackupProcessingScreen'
 import { CloudBackupScreen } from 'src/screens/Onboarding/CloudBackupScreen'
@@ -398,7 +397,6 @@ export function AppStackNavigator() {
         name={Screens.SettingsWalletManageConnection}
       />
       <AppStack.Group screenOptions={navOptions.presentationModal}>
-        <AppStack.Screen component={NotificationsScreen} name={Screens.Notifications} />
         <AppStack.Screen component={CurrencySelectorScreen} name={Screens.CurrencySelector} />
         <AppStack.Screen component={RecipientSelectoScreen} name={Screens.RecipientSelector} />
         <AppStack.Screen component={ProfileStackGroup} name={Screens.ProfileStack} />

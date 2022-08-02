@@ -22,7 +22,6 @@ export function BackButton({ onPressBack, size, color, showButtonLabel, ...rest 
   const theme = useTheme<Theme>()
 
   const goBack = onPressBack ? onPressBack : () => navigation.goBack()
-
   return (
     <Button onPress={goBack} {...rest}>
       <Flex row alignItems="center" gap="xs">

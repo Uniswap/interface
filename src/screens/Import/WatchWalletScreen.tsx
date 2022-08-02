@@ -4,9 +4,8 @@ import { useTranslation } from 'react-i18next'
 import { Keyboard } from 'react-native'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
-import { Button } from 'src/components/buttons/Button'
+import { BackButton } from 'src/components/buttons/BackButton'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
-import { Chevron } from 'src/components/icons/Chevron'
 import { Flex } from 'src/components/layout'
 import { ChainId } from 'src/constants/chains'
 import { useENS } from 'src/features/ens/useENS'
@@ -30,11 +29,7 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props) {
     const shouldRenderBackButton = navigation.getState().index === 0
     if (shouldRenderBackButton) {
       navigation.setOptions({
-        headerLeft: () => (
-          <Button onPress={() => navigation.goBack()}>
-            <Chevron color={theme.colors.textPrimary} />
-          </Button>
-        ),
+        headerLeft: () => <BackButton />,
       })
     }
   }, [navigation, theme.colors.textPrimary])

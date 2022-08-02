@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { ScrollView } from 'react-native'
 import { batch } from 'react-redux'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
-import { BackX } from 'src/components/buttons/BackX'
+import { BackButton } from 'src/components/buttons/BackButton'
 import { Switch } from 'src/components/buttons/Switch'
 import { TextButton } from 'src/components/buttons/TextButton'
 import { Flex } from 'src/components/layout'
@@ -86,7 +86,7 @@ export function DevScreen({ navigation }: any) {
   return (
     <SheetScreen>
       <Box flexDirection="row" justifyContent="flex-end" pb="sm" pt="xl" px="md">
-        <BackX />
+        <BackButton />
       </Box>
       <ScrollView>
         <Box alignItems="center">

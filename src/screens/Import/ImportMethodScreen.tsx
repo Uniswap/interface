@@ -8,6 +8,7 @@ import { OnboardingStackParamList } from 'src/app/navigation/types'
 import CloudIcon from 'src/assets/icons/cloud.svg'
 import EyeIcon from 'src/assets/icons/eye.svg'
 import SeedPhraseIcon from 'src/assets/icons/pencil.svg'
+import { BackButton } from 'src/components/buttons/BackButton'
 import { Button } from 'src/components/buttons/Button'
 import { Chevron } from 'src/components/icons/Chevron'
 import { Flex } from 'src/components/layout'
@@ -84,11 +85,7 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props) {
     const shouldRenderBackButton = navigation.getState().index === 0
     if (shouldRenderBackButton) {
       navigation.setOptions({
-        headerLeft: () => (
-          <Button onPress={() => navigation.goBack()}>
-            <Chevron color={theme.colors.textPrimary} />
-          </Button>
-        ),
+        headerLeft: () => <BackButton />,
       })
     }
   }, [navigation, theme.colors.textPrimary])
