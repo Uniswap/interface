@@ -38,10 +38,10 @@ export interface NotificationContentProps {
     title: string
     onPress: () => void
   }
+  onPress?: () => void
 }
 
 export interface NotificationToastProps extends NotificationContentProps {
-  onPress?: () => void
   hideDelay?: number // If omitted, the default delay time is used
   address?: string
 }
@@ -118,25 +118,15 @@ export function NotificationToast({
         right={0}
         style={animatedStyle}
         zIndex="modal">
-        <Button
-          alignItems="center"
-          bg="backgroundBackdrop"
-          borderRadius="lg"
-          flex={1}
-          flexDirection="row"
-          minHeight={NOTIFICATION_HEIGHT}
-          px="md"
-          py="md"
-          onPress={onNotificationPress}>
-          <NotificationContent
-            actionButton={
-              actionButton ? { title: actionButton.title, onPress: onActionButtonPress } : undefined
-            }
-            balanceUpdate={balanceUpdate}
-            icon={icon}
-            title={title}
-          />
-        </Button>
+        <NotificationContent
+          actionButton={
+            actionButton ? { title: actionButton.title, onPress: onActionButtonPress } : undefined
+          }
+          balanceUpdate={balanceUpdate}
+          icon={icon}
+          title={title}
+          onPress={onNotificationPress}
+        />
       </AnimatedBox>
     </FlingGestureHandler>
   )
@@ -147,56 +137,68 @@ export function NotificationContent({
   icon,
   balanceUpdate,
   actionButton,
+  onPress,
 }: NotificationContentProps) {
   const endAdornment = balanceUpdate || actionButton
   return (
-    <Flex row alignItems="center" gap="xs" justifyContent="space-between" width="100%">
-      <Flex
-        row
-        shrink
-        alignItems="center"
-        flexBasis={endAdornment ? '75%' : '100%'}
-        gap="xs"
-        justifyContent="flex-start">
-        {icon && (
-          <Flex centered height={NOTIFICATION_ICON_SIZE} width={NOTIFICATION_ICON_SIZE}>
-            {icon}
+    <Button
+      alignItems="center"
+      bg="backgroundBackdrop"
+      borderRadius="lg"
+      flex={1}
+      flexDirection="row"
+      minHeight={NOTIFICATION_HEIGHT}
+      px="md"
+      py="md"
+      onPress={onPress}>
+      <Flex row alignItems="center" gap="xs" justifyContent="space-between" width="100%">
+        <Flex
+          row
+          shrink
+          alignItems="center"
+          flexBasis={endAdornment ? '75%' : '100%'}
+          gap="xs"
+          justifyContent="flex-start">
+          {icon && (
+            <Flex height={NOTIFICATION_ICON_SIZE} width={NOTIFICATION_ICON_SIZE}>
+              {icon}
+            </Flex>
+          )}
+          <Flex row shrink alignItems="center">
+            <Text adjustsFontSizeToFit fontWeight="500" numberOfLines={2} variant="bodySmall">
+              {title}
+            </Text>
           </Flex>
-        )}
-        <Flex row shrink alignItems="center">
-          <Text adjustsFontSizeToFit fontWeight="500" numberOfLines={2} variant="bodySmall">
-            {title}
-          </Text>
         </Flex>
+        {endAdornment ? (
+          <Flex shrink alignItems="flex-end" flexBasis="25%" gap="xxs">
+            {balanceUpdate ? (
+              <>
+                <Text
+                  adjustsFontSizeToFit
+                  color="accentSuccess"
+                  fontWeight="600"
+                  numberOfLines={1}
+                  variant="smallLabel">
+                  {balanceUpdate.assetIncrease}
+                </Text>
+                <Text
+                  adjustsFontSizeToFit
+                  color="textSecondary"
+                  fontWeight="500"
+                  numberOfLines={1}
+                  variant="code">
+                  {balanceUpdate.usdIncrease}
+                </Text>
+              </>
+            ) : actionButton ? (
+              <TextButton px="xs" py="xs" textColor="accentActive" onPress={actionButton.onPress}>
+                {actionButton.title}
+              </TextButton>
+            ) : null}
+          </Flex>
+        ) : null}
       </Flex>
-      {endAdornment ? (
-        <Flex shrink alignItems="flex-end" flexBasis="25%" gap="xxs">
-          {balanceUpdate ? (
-            <>
-              <Text
-                adjustsFontSizeToFit
-                color="accentSuccess"
-                fontWeight="600"
-                numberOfLines={1}
-                variant="smallLabel">
-                {balanceUpdate.assetIncrease}
-              </Text>
-              <Text
-                adjustsFontSizeToFit
-                color="textSecondary"
-                fontWeight="500"
-                numberOfLines={1}
-                variant="code">
-                {balanceUpdate.usdIncrease}
-              </Text>
-            </>
-          ) : actionButton ? (
-            <TextButton px="xs" py="xs" textColor="accentActive" onPress={actionButton.onPress}>
-              {actionButton.title}
-            </TextButton>
-          ) : null}
-        </Flex>
-      ) : null}
-    </Flex>
+    </Button>
   )
 }

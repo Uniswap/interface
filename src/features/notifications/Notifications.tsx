@@ -2,6 +2,8 @@ import { utils } from 'ethers'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
+import { navigate } from 'src/app/navigation/rootNavigation'
+import { store } from 'src/app/store'
 import Approve from 'src/assets/icons/approve.svg'
 import CheckCircle from 'src/assets/icons/check-circle.svg'
 import { CurrencyLogoOrPlaceholder } from 'src/components/CurrencyLogo/CurrencyLogoOrPlaceholder'
@@ -13,7 +15,7 @@ import { WalletConnectModalState } from 'src/components/WalletConnect/constants'
 import { AssetType } from 'src/entities/assets'
 import { useSpotPrices } from 'src/features/dataApi/prices'
 import { useENS } from 'src/features/ens/useENS'
-import { openModal } from 'src/features/modals/modalSlice'
+import { closeModal, openModal } from 'src/features/modals/modalSlice'
 import { useNFT } from 'src/features/nfts/hooks'
 import {
   NotificationToast,
@@ -45,8 +47,15 @@ import { useCreateSwapFormState } from 'src/features/transactions/hooks'
 import { TransactionStatus, TransactionType } from 'src/features/transactions/types'
 import { selectActiveAccountAddress } from 'src/features/wallet/selectors'
 import { WalletConnectEvent } from 'src/features/walletConnect/saga'
+import { Tabs } from 'src/screens/Screens'
 import { toSupportedChainId } from 'src/utils/chainId'
 import { buildCurrencyId } from 'src/utils/currencyId'
+
+// TODO: once profile tab has screens for transaction details, navigate there instead
+const navigateToProfileTab = () => {
+  store.dispatch(closeModal({ name: ModalName.Swap }))
+  navigate(Tabs.Profile)
+}
 
 export function WCNotification({ notification }: { notification: WalletConnectNotification }) {
   const theme = useAppTheme()
@@ -110,7 +119,9 @@ export function ApproveNotification({
     />
   )
 
-  return <NotificationToast address={address} icon={icon} title={title} />
+  return (
+    <NotificationToast address={address} icon={icon} title={title} onPress={navigateToProfileTab} />
+  )
 }
 
 export function SwapNotification({
@@ -149,8 +160,10 @@ export function SwapNotification({
     txStatus === TransactionStatus.Failed
       ? {
           title: t('Retry'),
-          onPress: () =>
-            dispatch(openModal({ name: ModalName.Swap, initialState: swapFormState ?? undefined })),
+          onPress: () => {
+            dispatch(closeModal({ name: ModalName.Swap }))
+            dispatch(openModal({ name: ModalName.Swap, initialState: swapFormState ?? undefined }))
+          },
         }
       : undefined
 
@@ -196,6 +209,7 @@ export function SwapNotification({
       balanceUpdate={balanceUpdate}
       icon={icon}
       title={title}
+      onPress={navigateToProfileTab}
     />
   )
 }
@@ -236,7 +250,13 @@ export function TransferCurrencyNotification({
   )
 
   return (
-    <NotificationToast address={address} balanceUpdate={balanceUpdate} icon={icon} title={title} />
+    <NotificationToast
+      address={address}
+      balanceUpdate={balanceUpdate}
+      icon={icon}
+      title={title}
+      onPress={navigateToProfileTab}
+    />
   )
 }
 
@@ -271,7 +291,9 @@ export function TransferNFTNotification({
     />
   )
 
-  return <NotificationToast address={address} icon={icon} title={title} />
+  return (
+    <NotificationToast address={address} icon={icon} title={title} onPress={navigateToProfileTab} />
+  )
 }
 
 export function UnknownTxNotification({
@@ -292,7 +314,9 @@ export function UnknownTxNotification({
     />
   )
 
-  return <NotificationToast address={address} icon={icon} title={title} />
+  return (
+    <NotificationToast address={address} icon={icon} title={title} onPress={navigateToProfileTab} />
+  )
 }
 
 export function ErrorNotification({
