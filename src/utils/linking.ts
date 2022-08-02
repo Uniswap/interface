@@ -89,3 +89,7 @@ export function getExplorerLink(chainId: number, data: string, type: ExplorerDat
       return `${prefix}`
   }
 }
+
+export function getTwitterLink(twitterName: string) {
+  return `https://twitter.com/${twitterName}`
+}
