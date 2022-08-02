@@ -1,4 +1,6 @@
 import { Trans } from '@lingui/macro'
+import { sendAnalyticsEvent } from 'components/AmplitudeAnalytics'
+import { EventName } from 'components/AmplitudeAnalytics/constants'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { useCurrency, useToken } from 'hooks/Tokens'
 import useTheme from 'hooks/useTheme'
@@ -21,6 +23,8 @@ import {
 import { LoadingBubble } from '../loading'
 import {
   favoritesAtom,
+  filterNetworkAtom,
+  filterStringAtom,
   filterTimeAtom,
   sortCategoryAtom,
   sortDirectionAtom,
@@ -96,7 +100,8 @@ export const ClickFavorited = styled.span`
     color: ${({ theme }) => theme.textPrimary};
   }
 `
-const ClickableContent = styled(Link)`
+
+const ClickableContent = styled.div`
   display: flex;
   text-decoration: none;
   color: ${({ theme }) => theme.textPrimary};
@@ -410,11 +415,15 @@ export function LoadingRow() {
 /* Loaded State: row component with token information */
 export default function LoadedRow({
   tokenAddress,
+  tokenListIndex,
+  tokenListLength,
   data,
   listNumber,
   timePeriod,
 }: {
   tokenAddress: string
+  tokenListIndex: number
+  tokenListLength: number
   data: TokenData
   listNumber: number
   timePeriod: TimePeriod
@@ -429,6 +438,9 @@ export default function LoadedRow({
   const isFavorited = favoriteTokens.includes(tokenAddress)
   const toggleFavorite = useToggleFavorite(tokenAddress)
   const isPositive = Math.sign(tokenData.delta) > 0
+  const filterString = useAtomValue(filterStringAtom)
+  const filterNetwork = useAtomValue(filterNetworkAtom)
+  const filterTime = useAtomValue(filterTimeAtom) // filter time period for top tokens table
 
   const tokenPercentChangeInfo = (
     <>
@@ -443,47 +455,59 @@ export default function LoadedRow({
     </>
   )
 
+  const exploreTokenSelectedEventProperties = {
+    chain_id: filterNetwork,
+    token_address: tokenAddress,
+    token_symbol: token?.symbol,
+    token_list_index: tokenListIndex,
+    token_list_length: tokenListLength,
+    time_frame: filterTime,
+    search_token_address_input: filterString,
+  }
+
   const heartColor = isFavorited ? theme.accentActive : undefined
   // TODO: currency logo sizing mobile (32px) vs. desktop (24px)
   return (
-    <TokenRow
-      address={tokenAddress}
-      header={false}
-      favorited={
-        <ClickFavorited onClick={toggleFavorite}>
-          <Heart size={15} color={heartColor} fill={heartColor} />
-        </ClickFavorited>
-      }
-      listNumber={listNumber}
-      tokenInfo={
-        <ClickableName to={`tokens/${tokenAddress}`}>
-          <CurrencyLogo currency={currency} />
-          <TokenInfoCell>
-            <TokenName>{tokenName}</TokenName>
-            <TokenSymbol>{tokenSymbol}</TokenSymbol>
-          </TokenInfoCell>
-        </ClickableName>
-      }
-      price={
-        <ClickableContent to={`tokens/${tokenAddress}`}>
-          <PriceInfoCell>
-            {formatDollarAmount(tokenData.price)}
-            <PercentChangeInfoCell>{tokenPercentChangeInfo}</PercentChangeInfoCell>
-          </PriceInfoCell>
-        </ClickableContent>
-      }
-      percentChange={<ClickableContent to={`tokens/${tokenAddress}`}>{tokenPercentChangeInfo}</ClickableContent>}
-      marketCap={
-        <ClickableContent to={`tokens/${tokenAddress}`}>
-          {formatAmount(tokenData.marketCap).toUpperCase()}
-        </ClickableContent>
-      }
-      volume={
-        <ClickableContent to={`tokens/${tokenAddress}`}>
-          {formatAmount(tokenData.volume[timePeriod]).toUpperCase()}
-        </ClickableContent>
-      }
-      sparkLine={<SparkLineImg dangerouslySetInnerHTML={{ __html: tokenData.sparkline }} isPositive={isPositive} />}
-    />
+    <Link
+      to={`tokens/${tokenAddress}`}
+      onClick={() => sendAnalyticsEvent(EventName.EXPLORE_TOKEN_ROW_SELECTED, exploreTokenSelectedEventProperties)}
+    >
+      <TokenRow
+        address={tokenAddress}
+        header={false}
+        favorited={
+          <ClickFavorited
+            onClick={(e) => {
+              e.preventDefault()
+              toggleFavorite()
+            }}
+          >
+            <Heart size={15} color={heartColor} fill={heartColor} />
+          </ClickFavorited>
+        }
+        listNumber={listNumber}
+        tokenInfo={
+          <ClickableName>
+            <CurrencyLogo currency={currency} />
+            <TokenInfoCell>
+              <TokenName>{tokenName}</TokenName>
+              <TokenSymbol>{tokenSymbol}</TokenSymbol>
+            </TokenInfoCell>
+          </ClickableName>
+        }
+        price={
+          <ClickableContent>
+            <PriceInfoCell>
+              {formatDollarAmount(tokenData.price)}
+              <PercentChangeInfoCell>{tokenPercentChangeInfo}</PercentChangeInfoCell>
+            </PriceInfoCell>
+          </ClickableContent>
+        }
+        percentChange={<ClickableContent>{tokenPercentChangeInfo}</ClickableContent>}
+        marketCap={<ClickableContent>{formatAmount(tokenData.marketCap).toUpperCase()}</ClickableContent>}
+        volume={<ClickableContent>{formatAmount(tokenData.volume[timePeriod]).toUpperCase()}</ClickableContent>}
+        sparkLine={<SparkLineImg dangerouslySetInnerHTML={{ __html: tokenData.sparkline }} isPositive={isPositive} />}
+      />
+    </Link>
   )
 }

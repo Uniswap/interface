@@ -6,13 +6,13 @@
  */
 export enum EventName {
   CONNECT_WALLET_BUTTON_CLICKED = 'Connect Wallet Button Clicked',
+  EXPLORE_TOKEN_ROW_SELECTED = 'Explore Token Row Selected',
   PAGE_VIEWED = 'Page Viewed',
   SWAP_AUTOROUTER_VISUALIZATION_EXPANDED = 'Swap Autorouter Visualization Expanded',
   SWAP_DETAILS_EXPANDED = 'Swap Details Expanded',
   SWAP_MAX_TOKEN_AMOUNT_SELECTED = 'Swap Max Token Amount Selected',
   SWAP_SUBMITTED = 'Swap Submitted',
   SWAP_TOKENS_REVERSED = 'Swap Tokens Reversed',
-  TOKEN_DETAIL_PAGE_VIEWED = 'Token Detail Page Viewed',
   TOKEN_IMPORTED = 'Token Imported',
   TOKEN_SELECTED = 'Token Selected',
   TOKEN_SELECTOR_OPENED = 'Token Selector Opened',
