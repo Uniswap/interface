@@ -60,10 +60,9 @@ const CurrencySelect = styled(ButtonGray)<{
   selected: boolean
   hideInput?: boolean
   disabled?: boolean
-  isInputCurrency?: boolean
 }>`
   align-items: center;
-  background-color: ${({ isInputCurrency, theme }) => (isInputCurrency ? theme.none : theme.accentAction)};
+  background-color: ${({ theme, selected }) => (selected ? theme.backgroundSurface : theme.accentAction)};
   opacity: ${({ disabled }) => (!disabled ? 1 : 0.4)};
   box-shadow: ${({ selected }) => (selected ? 'none' : '0px 6px 10px rgba(0, 0, 0, 0.075)')};
   color: ${({ selected, theme }) => (selected ? theme.deprecated_text1 : theme.deprecated_white)};
@@ -74,10 +73,9 @@ const CurrencySelect = styled(ButtonGray)<{
   border: none;
   font-size: 24px;
   font-weight: 500;
-  height: ${({ hideInput }) => (hideInput ? '2.8rem' : '2.4rem')};
   width: ${({ hideInput }) => (hideInput ? '100%' : 'initial')};
-  padding: 0 8px;
-  justify-content: space-between;
+  padding: ${({ selected }) => (selected ? '4px 8px 4px 4px' : '6px 8px 6px 12px')};
+  gap: 8px;
   margin-left: ${({ hideInput }) => (hideInput ? '0' : '12px')};
   :focus,
   :hover {
@@ -85,6 +83,9 @@ const CurrencySelect = styled(ButtonGray)<{
       selected ? theme.backgroundSurface : darken(0.05, theme.deprecated_primary1)};
   }
   visibility: ${({ visible }) => (visible ? 'visible' : 'hidden')};
+`
+const InputCurrencySelect = styled(CurrencySelect)`
+  background-color: ${({ theme, selected }) => (selected ? theme.none : theme.accentAction)};
 `
 
 const InputRow = styled.div<{ selected: boolean }>`
@@ -134,6 +135,7 @@ const Aligner = styled.span`
 const StyledDropDown = styled(DropDown)<{ selected: boolean }>`
   margin: 0 0.25rem 0 0.35rem;
   height: 35%;
+  margin-left: 8px;
 
   path {
     stroke: ${({ selected, theme }) => (selected ? theme.deprecated_text1 : theme.deprecated_white)};
@@ -255,11 +257,10 @@ export default function CurrencyInputPanel({
             />
           )}
 
-          <CurrencySelect
+          <InputCurrencySelect
             disabled={!chainAllowed}
             visible={currency !== undefined}
             selected={!!currency}
-            isInputCurrency={id === 'swap-currency-input'}
             hideInput={hideInput}
             className="open-currency-select-button"
             onClick={() => {
@@ -275,7 +276,7 @@ export default function CurrencyInputPanel({
                     <DoubleCurrencyLogo currency0={pair.token0} currency1={pair.token1} size={24} margin={true} />
                   </span>
                 ) : currency ? (
-                  <CurrencyLogo style={{ marginRight: '0.5rem' }} currency={currency} size={'24px'} />
+                  <CurrencyLogo style={{ marginRight: '2px' }} currency={currency} size={'24px'} />
                 ) : null}
                 {pair ? (
                   <StyledTokenName className="pair-name-container">
@@ -293,7 +294,7 @@ export default function CurrencyInputPanel({
               </RowFixed>
               {onCurrencySelect && <StyledDropDown selected={!!currency} />}
             </Aligner>
-          </CurrencySelect>
+          </InputCurrencySelect>
         </InputRow>
         {!currency && (
           <NoBalanceState>
