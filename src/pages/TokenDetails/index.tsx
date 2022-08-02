@@ -48,7 +48,6 @@ export default function TokenDetails() {
   const { tokenAddress } = useParams<{ tokenAddress?: string }>()
   const { data, error, loading } = useTokenDetailPageQuery(tokenAddress)
 
-
   let tokenDetail
   if (!tokenAddress) {
     // TODO: handle no address / invalid address cases
