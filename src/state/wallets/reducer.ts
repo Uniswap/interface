@@ -6,11 +6,11 @@ import { Wallet } from './types'
 /* Used to track wallets that have been connected by the user in current session, and remove them when deliberately disconnected. 
   Used to compute is_reconnect event property for analytics */
 export interface WalletState {
-  connectedWallets: Wallet[]
+  connectedWallets: Set<Wallet>
 }
 
 export const initialState: WalletState = {
-  connectedWallets: [],
+  connectedWallets: new Set(),
 }
 
 const walletsSlice = createSlice({
@@ -18,10 +18,18 @@ const walletsSlice = createSlice({
   initialState,
   reducers: {
     addConnectedWallet(state, { payload }) {
-      state.connectedWallets = state.connectedWallets.concat(payload)
+      state.connectedWallets.forEach((wallet) => {
+        if (!shallowEqual(wallet, payload)) {
+          state.connectedWallets.add(payload)
+        }
+      })
     },
     removeConnectedWallet(state, { payload }) {
-      state.connectedWallets = state.connectedWallets.filter((wallet) => !shallowEqual(wallet, payload))
+      state.connectedWallets.forEach((wallet) => {
+        if (shallowEqual(wallet, payload)) {
+          state.connectedWallets.delete(wallet)
+        }
+      })
     },
   },
 })

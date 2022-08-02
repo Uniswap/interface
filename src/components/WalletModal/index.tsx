@@ -186,11 +186,11 @@ export default function WalletModal({
 }) {
   const dispatch = useAppDispatch()
   const { connector, account, chainId } = useWeb3React()
-  const [connectedWallets, updateConnectedWallets] = useConnectedWallets()
+  const [connectedWallets, addWalletToConnectedWallets] = useConnectedWallets()
 
   const [walletView, setWalletView] = useState(WALLET_VIEWS.ACCOUNT)
   const [lastActiveWalletAddress, setLastActiveWalletAddress] = useState<string | undefined>(account)
-  const [logWalletBalances, setLogWalletBalances] = useState(false)
+  const [shouldLogWalletBalances, setShouldLogWalletBalances] = useState(false)
 
   const [pendingConnector, setPendingConnector] = useState<Connector | undefined>()
   const pendingError = useAppSelector((state) =>
@@ -202,20 +202,18 @@ export default function WalletModal({
 
   const allTokens = useAllTokens()
   const [tokenBalances, tokenBalancesIsLoading] = useAllTokenBalances()
-  const sortedTokens: Token[] = useMemo(() => {
-    void tokenBalancesIsLoading // creates a new array once balances load to update hooks
-    return Object.values(allTokens).sort(tokenComparator.bind(null, tokenBalances))
-  }, [tokenBalances, allTokens, tokenBalancesIsLoading])
+  const sortedTokens: Token[] = useMemo(
+    () => (!tokenBalancesIsLoading ? Object.values(allTokens).sort(tokenComparator.bind(null, tokenBalances)) : []),
+    [tokenBalances, allTokens, tokenBalancesIsLoading]
+  )
   const native = useNativeCurrency()
 
-  const sortedTokensWithETH: Currency[] = useMemo(() => {
-    // Use Celo ERC20 Implementation and exclude the native asset
-    if (!native) {
-      return sortedTokens
-    }
-    // Always bump the native token to the top of the list.
-    return native ? [native, ...sortedTokens.filter((t) => !t.equals(native))] : sortedTokens
-  }, [native, sortedTokens])
+  const sortedTokensWithETH: Currency[] = useMemo(
+    () =>
+      // Always bump the native token to the top of the list.
+      native ? [native, ...sortedTokens.filter((t) => !t.equals(native))] : sortedTokens,
+    [native, sortedTokens]
+  )
 
   const balances = useCurrencyBalances(account, sortedTokensWithETH)
   const nativeBalance = balances.length > 0 ? balances[0] : null
@@ -242,29 +240,31 @@ export default function WalletModal({
   useEffect(() => {
     if (account && account !== lastActiveWalletAddress) {
       const walletType = getConnectionName(getConnection(connector).type, getIsMetaMask())
-
-      if (
+      const isReconnect =
         connectedWallets.filter((wallet) => wallet.account === account && wallet.walletType === walletType).length > 0
-      ) {
-        sendAnalyticsEventAndUserInfo(account, walletType, chainId, true)
-      } else {
-        sendAnalyticsEventAndUserInfo(account, walletType, chainId, false)
-        updateConnectedWallets({ account, walletType })
-      }
-      setLogWalletBalances(true)
+      sendAnalyticsEventAndUserInfo(account, walletType, chainId, isReconnect)
+      setShouldLogWalletBalances(true)
+      addWalletToConnectedWallets({ account, walletType })
     }
     setLastActiveWalletAddress(account)
-  }, [connectedWallets, updateConnectedWallets, lastActiveWalletAddress, account, connector, chainId])
+  }, [connectedWallets, addWalletToConnectedWallets, lastActiveWalletAddress, account, connector, chainId])
 
   // Send wallet balance info once it becomes available.
   useEffect(() => {
-    if (!tokenBalancesIsLoading && logWalletBalances && balances && nativeCurrencyBalanceUsdValue) {
+    if (!tokenBalancesIsLoading && shouldLogWalletBalances && balances && nativeCurrencyBalanceUsdValue) {
       const nativeCurrencyBalanceUsd =
         native && nativeCurrencyBalanceUsdValue ? parseFloat(nativeCurrencyBalanceUsdValue) : 0
       sendAnalyticsWalletBalanceUserInfo(balances, nativeCurrencyBalanceUsd)
-      setLogWalletBalances(false)
+      setShouldLogWalletBalances(false)
     }
-  }, [balances, nativeCurrencyBalanceUsdValue, logWalletBalances, setLogWalletBalances, tokenBalancesIsLoading, native])
+  }, [
+    balances,
+    nativeCurrencyBalanceUsdValue,
+    shouldLogWalletBalances,
+    setShouldLogWalletBalances,
+    tokenBalancesIsLoading,
+    native,
+  ])
 
   const tryActivation = useCallback(
     async (connector: Connector) => {

@@ -13,5 +13,5 @@ export function useConnectedWallets(): [Wallet[], (wallet: Wallet) => void] {
     },
     [dispatch]
   )
-  return [connectedWallets, addWallet]
+  return [[...connectedWallets], addWallet]
 }
