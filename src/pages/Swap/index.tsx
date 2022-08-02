@@ -706,7 +706,7 @@ export default function Swap() {
                       properties={{ received_swap_quote: getIsValidSwapQuote(trade, tradeState, swapInputError) }}
                       element={ElementName.CONNECT_WALLET_BUTTON}
                     >
-                      <ButtonLight onClick={toggleWalletModal}>
+                      <ButtonLight onClick={toggleWalletModal} phase0Flag={phase0flag === Phase0Variant.Enabled}>
                         <Trans>Connect Wallet</Trans>
                       </ButtonLight>
                     </TraceEvent>
