@@ -25,13 +25,14 @@ const AnimatedBlurView = Animated.createAnimatedComponent(BlurView)
 type PointerEvent = 'auto' | 'none'
 
 type HeaderListScreenProps = {
-  fixedHeader: ReactElement
-  contentHeader?: ReactElement
+  ScrolledScreenHeader: ReactElement
+  InitialScreenHeader?: ReactElement
 } & FlatListProps<any>
 
 export function HeaderListScreen({
-  fixedHeader,
-  contentHeader,
+  ListHeaderComponent,
+  ScrolledScreenHeader,
+  InitialScreenHeader,
   ...listProps
 }: HeaderListScreenProps) {
   const isDarkMode = useColorScheme() === 'dark'
@@ -66,16 +67,19 @@ export function HeaderListScreen({
     }
   })
 
-  const contentHeaderStyle = useAnimatedStyle(() => {
+  const InitialScreenHeaderStyle = useAnimatedStyle(() => {
     return {
       opacity: interpolate(scrollY.value, [0, CONTENT_MAX_SCROLL_Y / 2], [1, 0], Extrapolate.CLAMP),
     }
   })
 
   const ContentHeader = (
-    <AnimatedFlex mx="md" style={contentHeaderStyle}>
-      {contentHeader}
-    </AnimatedFlex>
+    <>
+      <AnimatedFlex mx="md" style={InitialScreenHeaderStyle}>
+        {InitialScreenHeader}
+      </AnimatedFlex>
+      {ListHeaderComponent}
+    </>
   )
 
   const FixedHeaderBar = (
@@ -92,7 +96,7 @@ export function HeaderListScreen({
       tint={isDarkMode ? 'dark' : 'default'}>
       <WithScrollToTop ref={listRef}>
         <Box mx="md" my="sm">
-          {fixedHeader}
+          {ScrolledScreenHeader}
         </Box>
       </WithScrollToTop>
     </AnimatedBlurView>

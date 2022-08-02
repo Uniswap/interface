@@ -35,6 +35,11 @@ export function ExploreFavoritesScreen() {
 
   return (
     <HeaderListScreen
+      InitialScreenHeader={
+        <BackHeader>
+          <Text variant="subhead">{t('Favorite tokens')}</Text>
+        </BackHeader>
+      }
       ItemSeparatorComponent={() => <Separator ml="md" />}
       ListEmptyComponent={
         isLoading ? (
@@ -45,7 +50,7 @@ export function ExploreFavoritesScreen() {
           <FavoritesEmptyState />
         )
       }
-      contentHeader={
+      ScrolledScreenHeader={
         <Flex gap="md" mt="sm">
           <BackButton showButtonLabel />
           <Flex row alignItems="center" gap="xs" my="xs">
@@ -54,11 +59,6 @@ export function ExploreFavoritesScreen() {
         </Flex>
       }
       data={tokens}
-      fixedHeader={
-        <BackHeader>
-          <Text variant="subhead">{t('Favorite tokens')}</Text>
-        </BackHeader>
-      }
       keyExtractor={key}
       renderItem={renderItem}
     />

@@ -1,6 +1,5 @@
 import { Currency } from '@uniswap/sdk-core'
 import React, { useCallback } from 'react'
-import { useTranslation } from 'react-i18next'
 import { ListRenderItemInfo } from 'react-native'
 import { HomeStackScreenProp, useHomeStackNavigation } from 'src/app/navigation/types'
 import { AddressDisplay } from 'src/components/AddressDisplay'
@@ -10,13 +9,12 @@ import { BackHeader } from 'src/components/layout/BackHeader'
 import { HeaderListScreen } from 'src/components/layout/screens/HeaderListScreen'
 import { Separator } from 'src/components/layout/Separator'
 import { Loading } from 'src/components/loading'
-import { Text } from 'src/components/Text'
 import { TokenBalanceItem } from 'src/components/TokenBalanceList/TokenBalanceItem'
 import { TotalBalance } from 'src/features/balances/TotalBalance'
 import { useActiveChainIds } from 'src/features/chains/utils'
 import { useAllBalancesList } from 'src/features/dataApi/balances'
 import { PortfolioBalance } from 'src/features/dataApi/types'
-import { useActiveAccount } from 'src/features/wallet/hooks'
+import { useActiveAccountAddressWithThrow } from 'src/features/wallet/hooks'
 import { Screens } from 'src/screens/Screens'
 import { currencyId } from 'src/utils/currencyId'
 
@@ -25,11 +23,9 @@ export function PortfolioTokensScreen({
     params: { owner },
   },
 }: HomeStackScreenProp<Screens.PortfolioTokens>) {
-  const { t } = useTranslation()
-
   // TODO: Figure out how to make nav available across stacks
   const navigation = useHomeStackNavigation()
-  const accountAddress = useActiveAccount()?.address
+  const accountAddress = useActiveAccountAddressWithThrow()
   const activeAddress = owner ?? accountAddress
   const currentChains = useActiveChainIds()
 
@@ -52,13 +48,7 @@ export function PortfolioTokensScreen({
 
   return (
     <HeaderListScreen
-      ItemSeparatorComponent={() => <Separator ml="md" />}
-      ListEmptyComponent={
-        <Box mx="md" my="sm">
-          <Loading repeat={8} type="token" />
-        </Box>
-      }
-      contentHeader={
+      InitialScreenHeader={
         <Flex gap="md" my="sm">
           {isOtherOwner ? (
             <BackHeader>
@@ -67,11 +57,15 @@ export function PortfolioTokensScreen({
           ) : (
             <BackButton showButtonLabel />
           )}
-          <TotalBalance balances={balancesByChain} />
         </Flex>
       }
-      data={balances}
-      fixedHeader={
+      ItemSeparatorComponent={() => <Separator ml="md" />}
+      ListEmptyComponent={
+        <Box mx="md" my="sm">
+          <Loading repeat={8} type="token" />
+        </Box>
+      }
+      ScrolledScreenHeader={
         <BackHeader>
           <Flex centered gap="none">
             {isOtherOwner ? (
@@ -79,12 +73,10 @@ export function PortfolioTokensScreen({
             ) : (
               <TotalBalance balances={balancesByChain} variant="subheadSmall" />
             )}
-            <Text color="textSecondary" variant="subheadSmall">
-              {isOtherOwner ? t('Tokens') : t('Your tokens')}
-            </Text>
           </Flex>
         </BackHeader>
       }
+      data={balances}
       keyExtractor={(item: PortfolioBalance) => currencyId(item.amount.currency)}
       renderItem={renderItem}
     />

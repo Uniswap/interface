@@ -98,19 +98,19 @@ export function WatchedWalletsScreen() {
 
   return (
     <HeaderListScreen
+      InitialScreenHeader={
+        <BackHeader>
+          <Text variant="subhead">{headerText}</Text>
+        </BackHeader>
+      }
       ItemSeparatorComponent={() => <Separator mx="md" />}
-      contentHeader={
+      ScrolledScreenHeader={
         <Flex>
           <BackButton showButtonLabel />
           <Text variant="headlineSmall">{headerText}</Text>
         </Flex>
       }
       data={originalWallets.current}
-      fixedHeader={
-        <BackHeader>
-          <Text variant="subhead">{headerText}</Text>
-        </BackHeader>
-      }
       keyExtractor={(address) => address}
       renderItem={renderItem}
     />

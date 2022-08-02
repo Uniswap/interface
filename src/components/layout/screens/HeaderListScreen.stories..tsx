@@ -48,9 +48,9 @@ const Template: ComponentStory<typeof HeaderListScreen> = (args) => <HeaderListS
 export const Primary = Template.bind({})
 Primary.args = {
   ItemSeparatorComponent: () => <Separator />,
-  contentHeader: ContentHeader,
+  ScrolledScreenHeader: ContentHeader,
   data: data,
   keyExtractor: (item) => item,
   renderItem: renderItem,
-  fixedHeader: FixedHeader,
+  InitialScreenHeader: FixedHeader,
 }
