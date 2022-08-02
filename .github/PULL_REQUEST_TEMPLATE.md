@@ -1,15 +1,18 @@
 ### Description
-**Fixes MOB-#**
+**Fixes [MOB-1337](https://uniswaplabs.atlassian.net/browse/MOB-1337)**
 
 _[Summary of the change, motivation, and context]_
 
-### Before and After Screen capture
-| Before             | After             |
-| ------------------ |-------------------|
-| _[before capture]_ | _[after capture]_ |
+### Before and After Screen Capture
+| Before           | After           |
+| ---------------- |-----------------|
+| _before_capture_ | _after_capture_ |
 
 ### How Has This Been Tested?
 _[e.g. Manually, E2E tests, unit tests, Storybook]_
 
-### Follow Ups
+### (Optional) Feedback Focus
+_[Specific parts of this PR you'd like feedback on, or that reviewers should pay closer attention to]_
+
+### (Optional) Follow Ups
 _[Things that weren't addressed in this PR, ways you plan to build on this work, or other ways this work could be extended]_
