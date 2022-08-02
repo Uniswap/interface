@@ -418,14 +418,12 @@ export default function LoadedRow({
   tokenListIndex,
   tokenListLength,
   data,
-  listNumber,
   timePeriod,
 }: {
   tokenAddress: string
   tokenListIndex: number
   tokenListLength: number
   data: TokenData
-  listNumber: number
   timePeriod: TimePeriod
 }) {
   const token = useToken(tokenAddress)
@@ -485,7 +483,7 @@ export default function LoadedRow({
             <Heart size={15} color={heartColor} fill={heartColor} />
           </ClickFavorited>
         }
-        listNumber={listNumber}
+        listNumber={tokenListIndex + 1}
         tokenInfo={
           <ClickableName>
             <CurrencyLogo currency={currency} />
