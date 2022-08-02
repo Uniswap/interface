@@ -2,15 +2,18 @@ import { createContext, ReactNode, useContext } from 'react'
 
 interface FeatureFlagContextType {
   isLoaded: boolean
-  flags: Record<string, string>
+  flags?: Record<string, string>
 }
 
 const FeatureFlagContext = createContext<FeatureFlagContextType | undefined>(undefined)
 
-export function useFeatureFlagContext() {
+export function useFeatureFlagContext(): FeatureFlagContextType {
   const context = useContext(FeatureFlagContext)
-  if (!context) throw Error('Feature flag hooks can only be used by children of FeatureFlagProvider.')
-  return context
+  if (!context) {
+    throw Error('Feature flag hooks can only be used by children of FeatureFlagProvider.')
+  } else {
+    return context
+  }
 }
 
 export function FeatureFlagProvider({ children }: { children: ReactNode }) {
@@ -35,7 +38,7 @@ enum Phase0Variant {
 }
 
 export function usePhase0Flag(): Phase0Variant {
-  const phase0Variant = useFeatureFlagContext().flags['phase0']
+  const phase0Variant = useFeatureFlagContext().flags?.['phase0']
   switch (phase0Variant) {
     case 'enabled':
       return Phase0Variant.Enabled
@@ -50,7 +53,7 @@ enum Phase1Variant {
 }
 
 export function usePhase1Flag(): Phase1Variant {
-  const phase1Variant = useFeatureFlagContext().flags['phase1']
+  const phase1Variant = useFeatureFlagContext().flags?.['phase1']
   switch (phase1Variant) {
     case 'enabled':
       return Phase1Variant.Enabled
