@@ -38,8 +38,7 @@ enum Phase0Variant {
 }
 
 export function usePhase0Flag(): Phase0Variant {
-  const phase0Variant = useFeatureFlagsContext().flags['phase0']
-  switch (phase0Variant) {
+  switch (useFeatureFlagsContext().flags['phase0']) {
     case 'enabled':
       return Phase0Variant.Enabled
     default:
@@ -53,8 +52,7 @@ enum Phase1Variant {
 }
 
 export function usePhase1Flag(): Phase1Variant {
-  const phase1Variant = useFeatureFlagsContext().flags['phase1']
-  switch (phase1Variant) {
+  switch (useFeatureFlagsContext().flags['phase1']) {
     case 'enabled':
       return Phase1Variant.Enabled
     default:
