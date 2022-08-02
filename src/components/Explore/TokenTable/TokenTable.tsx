@@ -185,8 +185,9 @@ export default function TokenTable() {
       <LoadedRow
         key={tokenAddress}
         tokenAddress={tokenAddress}
+        tokenListIndex={index}
+        tokenListLength={filteredAndSortedTokens.length}
         data={data}
-        listNumber={index + 1}
         timePeriod={timePeriod}
       />
     )
