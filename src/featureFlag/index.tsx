@@ -5,9 +5,7 @@ interface FeatureFlagsContextType {
   flags: Record<string, string>
 }
 
-// TODO(vm): `isLoaded` to `true` so `App.tsx` will render. Later, this will be dependent on
-// flags loading from Amplitude, with a timeout.
-const FeatureFlagContext = createContext<FeatureFlagsContextType>({ isLoaded: true, flags: {} })
+const FeatureFlagContext = createContext<FeatureFlagsContextType>({ isLoaded: false, flags: {} })
 
 export function useFeatureFlagsContext(): FeatureFlagsContextType {
   const context = useContext(FeatureFlagContext)
@@ -19,10 +17,13 @@ export function useFeatureFlagsContext(): FeatureFlagsContextType {
 }
 
 export function FeatureFlagsProvider({ children }: { children: ReactNode }) {
+  // TODO(vm): `isLoaded` to `true` so `App.tsx` will render. Later, this will be dependent on
+  // flags loading from Amplitude, with a timeout.
   const value = {
     isLoaded: true,
     flags: {
       phase0: 'control',
+      phase1: 'control',
     },
   }
   return <FeatureFlagContext.Provider value={value}>{children}</FeatureFlagContext.Provider>
