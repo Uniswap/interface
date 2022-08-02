@@ -1,11 +1,11 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import * as Progress from 'react-native-progress'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { Box } from 'src/components/layout/Box'
 import { AnimatedFlex, Flex } from 'src/components/layout/Flex'
 import { Separator } from 'src/components/layout/Separator'
+import { SpinningLoader } from 'src/components/loading/SpinningLoader'
 import { Text } from 'src/components/Text'
 import { ChainId } from 'src/constants/chains'
 import { useUSDGasPrice } from 'src/features/gas/hooks'
@@ -42,7 +42,7 @@ export function TransferDetails({
             {totalNetworkFee ? (
               <Text variant="bodySmall">{totalNetworkFee}</Text>
             ) : (
-              <Progress.CircleSnail direction="clockwise" size={20} thickness={2.5} />
+              <SpinningLoader size={20} />
             )}
           </Box>
         </Flex>

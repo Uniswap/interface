@@ -3,7 +3,6 @@ import { Currency } from '@uniswap/sdk-core'
 import React, { Dispatch } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleSheet } from 'react-native'
-import * as Progress from 'react-native-progress'
 import { FadeIn, FadeOut, FadeOutDown } from 'react-native-reanimated'
 import { useAppTheme } from 'src/app/hooks'
 import InfoCircle from 'src/assets/icons/info-circle.svg'
@@ -14,6 +13,7 @@ import { CurrencyInputPanel } from 'src/components/input/CurrencyInputPanel'
 import { DecimalPad } from 'src/components/input/DecimalPad'
 import { AnimatedFlex, Flex } from 'src/components/layout'
 import { Box } from 'src/components/layout/Box'
+import { SpinningLoader } from 'src/components/loading/SpinningLoader'
 import { Text } from 'src/components/Text'
 import { WarningAction, WarningModalType } from 'src/components/warnings/types'
 import { getWarningColor } from 'src/components/warnings/utils'
@@ -145,14 +145,7 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo, isCompressedView }
             mx="md"
             position="relative">
             <Box bottom={12} height={24} position="absolute" right={12} width={24}>
-              {swapDataRefreshing ? (
-                <Progress.CircleSnail
-                  color={theme.colors.textSecondary}
-                  direction="clockwise"
-                  size={24}
-                  thickness={2.5}
-                />
-              ) : null}
+              {swapDataRefreshing ? <SpinningLoader color="textSecondary" size={24} /> : null}
             </Box>
             <Box zIndex="popover">
               <Box alignItems="center" height={36} style={StyleSheet.absoluteFill}>

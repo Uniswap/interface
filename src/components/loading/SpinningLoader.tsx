@@ -1,3 +1,4 @@
+import { useTheme } from '@shopify/restyle'
 import React, { useEffect } from 'react'
 import {
   cancelAnimation,
@@ -10,8 +11,18 @@ import {
 import Loader from 'src/assets/icons/circle-spinner.svg'
 import EmptySpinner from 'src/assets/icons/empty-spinner.svg'
 import { AnimatedBox } from 'src/components/layout'
+import { Theme } from 'src/styles/theme'
 
-export function SpinningLoader({ size, disabled }: { size: number; disabled?: boolean }) {
+export function SpinningLoader({
+  size,
+  disabled,
+  color,
+}: {
+  size: number
+  disabled?: boolean
+  color?: keyof Theme['colors']
+}) {
+  const theme = useTheme()
   const rotation = useSharedValue(0)
 
   const animatedStyles = useAnimatedStyle(() => {
@@ -40,7 +51,7 @@ export function SpinningLoader({ size, disabled }: { size: number; disabled?: bo
   }
   return (
     <AnimatedBox style={[animatedStyles]}>
-      <Loader height={size} width={size} />
+      <Loader color={theme.colors[color ?? 'blue300']} height={size} width={size} />
     </AnimatedBox>
   )
 }
