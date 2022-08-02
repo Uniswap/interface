@@ -219,7 +219,6 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
   const tokenName = token.name
   const tokenSymbol = token.symbol
 
-  // dummy data for now until Jordan writes token detail hooks
   // TODO: format price, add sparkline
   const isPositive = tokenDelta ? Math.sign(tokenDelta) > 0 : null
   const deltaSign = isPositive ? '+' : null
