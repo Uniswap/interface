@@ -3,7 +3,7 @@ import 'inter-ui'
 import 'polyfills'
 import 'components/analytics'
 
-import { FeatureFlagProvider } from 'featureFlag'
+import { FeatureFlagsProvider } from 'featureFlag'
 import { BlockNumberProvider } from 'lib/hooks/useBlockNumber'
 import { MulticallUpdater } from 'lib/state/multicall'
 import { StrictMode } from 'react'
@@ -48,7 +48,7 @@ const container = document.getElementById('root') as HTMLElement
 createRoot(container).render(
   <StrictMode>
     <Provider store={store}>
-      <FeatureFlagProvider>
+      <FeatureFlagsProvider>
         <HashRouter>
           <LanguageProvider>
             <Web3Provider>
@@ -64,7 +64,7 @@ createRoot(container).render(
             </Web3Provider>
           </LanguageProvider>
         </HashRouter>
-      </FeatureFlagProvider>
+      </FeatureFlagsProvider>
     </Provider>
   </StrictMode>
 )
