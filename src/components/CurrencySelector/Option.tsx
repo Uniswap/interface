@@ -13,7 +13,7 @@ interface OptionProps {
   currency: Currency
   onPress: () => void
   matches: Fuse.FuseResult<Currency>['matches']
-  metadataType: 'balance' | 'price' | 'disabled'
+  metadataType: 'balance' | 'disabled'
   icon?: ReactElement | null
 }
 
@@ -48,7 +48,7 @@ export function Option({ currency, onPress, matches, metadataType, icon }: Optio
           </Flex>
         </Flex>
         {metadataType !== 'disabled' ? (
-          <TokenMetadata currency={currency} metadataType={metadataType} />
+          <TokenMetadata currency={currency} />
         ) : (
           <Flex backgroundColor="translucentBackground" borderRadius="md" padding="sm">
             <Text variant="mediumLabel">{t('Not available')}</Text>
