@@ -1,4 +1,4 @@
-import { useAtomValue } from 'jotai/utils'
+import { Phase0Variant, usePhase0Flag } from 'featureFlag'
 import React, { useMemo } from 'react'
 import { Text, TextProps as TextPropsOriginal } from 'rebass'
 import styled, {
@@ -10,7 +10,6 @@ import styled, {
 
 import { useIsDarkMode } from '../state/user/hooks'
 import { colors as ColorsPalette, colorsDark, colorsLight } from './colors'
-import { useColorsUpdatedAtom } from './components'
 import { Colors, themeColors } from './styled'
 import { opacify } from './utils'
 
@@ -267,11 +266,9 @@ function getTheme(darkMode: boolean, isNewColorsEnabled: boolean): DefaultTheme 
 }
 
 export default function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const isNewColorsEnabled = useAtomValue(useColorsUpdatedAtom)
+  const phase0Flag = usePhase0Flag()
   const darkMode = useIsDarkMode()
-
-  const themeObject = useMemo(() => getTheme(darkMode, isNewColorsEnabled), [darkMode, isNewColorsEnabled])
-
+  const themeObject = useMemo(() => getTheme(darkMode, phase0Flag === Phase0Variant.Enabled), [darkMode, phase0Flag])
   return <StyledComponentsThemeProvider theme={themeObject}>{children}</StyledComponentsThemeProvider>
 }
 

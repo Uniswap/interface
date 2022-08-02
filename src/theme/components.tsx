@@ -1,5 +1,4 @@
 import { outboundLink } from 'components/analytics'
-import { atom } from 'jotai'
 import React, { HTMLProps } from 'react'
 import { ArrowLeft, ExternalLink as LinkIconFeather, Trash, X } from 'react-feather'
 import { Link } from 'react-router-dom'
@@ -268,5 +267,3 @@ export const Separator = styled.div`
   height: 1px;
   background-color: ${({ theme }) => theme.deprecated_bg2};
 `
-
-export const useColorsUpdatedAtom = atom<boolean>(false)
