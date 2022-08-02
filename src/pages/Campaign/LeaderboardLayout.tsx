@@ -1,5 +1,5 @@
 import React from 'react'
-import { Text } from 'rebass'
+import { Flex, Text } from 'rebass'
 import { Clock } from 'react-feather'
 import { useSelector } from 'react-redux'
 import { t, Trans } from '@lingui/macro'
@@ -137,9 +137,9 @@ export default function LeaderboardLayout({
 
   if (selectedCampaign === undefined || selectedCampaign.status === 'Upcoming')
     return (
-      <div>
+      <Flex justifyContent="center" alignItems="center" height="100%">
         <Trans>This campaign does not have a leaderboard yet.</Trans>
-      </div>
+      </Flex>
     )
 
   return (

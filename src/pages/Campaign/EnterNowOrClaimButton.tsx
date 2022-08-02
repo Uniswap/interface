@@ -4,10 +4,13 @@ import { useSelector } from 'react-redux'
 import { AppState } from 'state'
 import CampaignButtonWithOptions from 'pages/Campaign/CampaignButtonWithOptions'
 import { BIG_INT_ZERO } from 'constants/index'
+import useTemporaryClaimedRefsManager from 'hooks/campaigns/useTemporaryClaimedRefsManager'
 
 export default function EnterNowOrClaimButton() {
   const selectedCampaign = useSelector((state: AppState) => state.campaigns.selectedCampaign)
   const selectedCampaignLeaderboard = useSelector((state: AppState) => state.campaigns.selectedCampaignLeaderboard)
+
+  const [temporaryClaimedRefs, addTemporaryClaimedRefs] = useTemporaryClaimedRefsManager()
 
   if (!selectedCampaign) return null
 
@@ -28,11 +31,15 @@ export default function EnterNowOrClaimButton() {
   }
 
   if (selectedCampaign.campaignState === CampaignState.CampaignStateDistributedRewards) {
-    let isUserClaimedRewardsInThisCampaign = false
+    let isUserClaimedRewardsInThisCampaign = true
     if (selectedCampaignLeaderboard?.rewards?.length) {
       selectedCampaignLeaderboard.rewards.forEach(reward => {
-        if (!reward.claimed && reward.rewardAmount.greaterThan(BIG_INT_ZERO)) {
-          isUserClaimedRewardsInThisCampaign = true
+        if (
+          reward.rewardAmount.greaterThan(BIG_INT_ZERO) &&
+          !reward.claimed &&
+          !temporaryClaimedRefs.includes(reward.ref)
+        ) {
+          isUserClaimedRewardsInThisCampaign = false
         }
       })
     }
@@ -40,7 +47,8 @@ export default function EnterNowOrClaimButton() {
       <CampaignButtonWithOptions
         campaign={selectedCampaign}
         type="claim_rewards"
-        disabled={!isUserClaimedRewardsInThisCampaign}
+        disabled={isUserClaimedRewardsInThisCampaign}
+        addTemporaryClaimedRefs={addTemporaryClaimedRefs}
       />
     )
   }

@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useMemo, useRef, useState } from 'react'
 import { CampaignData, CampaignLeaderboardReward } from 'state/campaigns/actions'
 import { t } from '@lingui/macro'
 import { ReactComponent as ChevronDown } from 'assets/svg/down.svg'
@@ -20,15 +20,18 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { useActiveNetwork } from 'hooks/useActiveNetwork'
 import { ButtonPrimary } from 'components/Button'
 import { BIG_INT_ZERO, DEFAULT_SIGNIFICANT } from 'constants/index'
+import { Dots } from 'pages/Pool/styleds'
 
 export default function CampaignButtonWithOptions({
   campaign,
   disabled = false,
   type,
+  addTemporaryClaimedRefs,
 }: {
   campaign: CampaignData | undefined
   disabled?: boolean
   type: 'enter_now' | 'claim_rewards'
+  addTemporaryClaimedRefs?: (claimedRefs: string[]) => void
 }) {
   const theme = useTheme()
   const [isShowNetworks, setIsShowNetworks] = useState(false)
@@ -46,6 +49,27 @@ export default function CampaignButtonWithOptions({
   const selectedCampaign = useSelector((state: AppState) => state.campaigns.selectedCampaign)
   const selectedCampaignLeaderboard = useSelector((state: AppState) => state.campaigns.selectedCampaignLeaderboard)
 
+  const refs: string[] = []
+  if (selectedCampaignLeaderboard && selectedCampaignLeaderboard.rewards) {
+    selectedCampaignLeaderboard.rewards.forEach(reward => {
+      if (!reward.claimed && reward.rewardAmount.greaterThan(BIG_INT_ZERO)) {
+        refs.push(reward.ref)
+      }
+    })
+  }
+
+  const transactionsState = useSelector<AppState, AppState['transactions']>(state => state.transactions)
+  const transactions = useMemo(
+    () => (selectedCampaign ? transactionsState[parseInt(selectedCampaign.rewardChainIds)] ?? {} : {}),
+    [transactionsState, selectedCampaign],
+  )
+
+  const [ref2Hash, setRef2Hash] = useState<{ [ref: string]: string }>({})
+  const claimRewardHashes = refs.map(ref => ref2Hash[ref]).filter(hash => !!hash)
+  const isClaimingThisCampaignRewards = claimRewardHashes.some(hash => {
+    return transactions[hash] !== undefined && transactions[hash]?.receipt === undefined
+  })
+
   const addTransactionWithType = useTransactionAdder()
   const sendTransaction = useSendTransactionCallback()
   const claimRewards = async (claimChainId: ChainId) => {
@@ -53,14 +77,6 @@ export default function CampaignButtonWithOptions({
 
     const url = process.env.REACT_APP_REWARD_SERVICE_API + '/rewards/claim'
 
-    const refs: string[] = []
-    if (selectedCampaignLeaderboard && selectedCampaignLeaderboard.rewards) {
-      selectedCampaignLeaderboard.rewards.forEach(reward => {
-        if (!reward.claimed && reward.rewardAmount.greaterThan(BIG_INT_ZERO)) {
-          refs.push(reward.ref)
-        }
-      })
-    }
     const data = {
       wallet: account.toLowerCase(),
       chainId: selectedCampaign.rewardChainIds,
@@ -82,7 +98,7 @@ export default function CampaignButtonWithOptions({
       const rewardContractAddress = response.data.data.ContractAddress
       const encodedData = response.data.data.EncodedData
       try {
-        await sendTransaction(rewardContractAddress, encodedData, BigNumber.from(0), transactionResponse => {
+        await sendTransaction(rewardContractAddress, encodedData, BigNumber.from(0), async transactionResponse => {
           const accumulatedUnclaimedRewards = selectedCampaignLeaderboard.rewards
             .filter(reward => !reward.claimed)
             .reduce((acc: { [p: string]: CampaignLeaderboardReward }, value) => {
@@ -105,6 +121,14 @@ export default function CampaignButtonWithOptions({
             desiredChainId: claimChainId,
             summary: `${rewardString} from campaign "${selectedCampaign.name}"`,
           })
+          const newRef2Hash = refs
+            .filter(ref => !!ref)
+            .reduce((acc, ref) => ({ ...acc, [ref]: transactionResponse.hash }), {})
+          setRef2Hash(prev => ({ ...prev, ...newRef2Hash }))
+          const transactionReceipt = await transactionResponse.wait()
+          if (transactionReceipt.status === 1) {
+            addTemporaryClaimedRefs && addTemporaryClaimedRefs(refs)
+          }
         })
       } catch (err) {
         console.error(err)
@@ -118,10 +142,11 @@ export default function CampaignButtonWithOptions({
         e.stopPropagation()
         setIsShowNetworks(prev => !prev)
       }}
-      disabled={disabled}
+      disabled={disabled || isClaimingThisCampaignRewards}
       ref={containerRef}
     >
-      {type === 'enter_now' ? t`Enter now` : t`Claim Rewards`}
+      {type === 'enter_now' ? t`Enter now` : isClaimingThisCampaignRewards ? t`Claiming Rewards` : t`Claim Rewards`}
+      {isClaimingThisCampaignRewards && <Dots />}
       <ChevronDown style={{ position: 'absolute', top: '50%', right: '12px', transform: 'translateY(-50%)' }} />
       {isShowNetworks && (
         <OptionsContainer style={{ margin: '0 12px', width: 'calc(100% - 24px)' }}>
