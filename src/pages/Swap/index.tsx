@@ -28,10 +28,7 @@ import JSBI from 'jsbi'
 import { Context, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { ReactNode } from 'react'
 import { ArrowDown, ArrowUp, CheckCircle, HelpCircle } from 'react-feather'
-<<<<<<< HEAD
 import { useNavigate } from 'react-router-dom'
-=======
->>>>>>> e0e49886 (updates)
 import { Text } from 'rebass'
 import { useToggleWalletModal } from 'state/application/hooks'
 import { InterfaceTrade } from 'state/routing/types'
@@ -646,63 +643,6 @@ export default function Swap() {
                     )}
                   </TraceEvent>
                 </ArrowWrapper>
-<<<<<<< HEAD
-              </div>
-              <BottomWrapper phase0Flag={phase0FlagEnabled}>
-                {phase0FlagEnabled && 'For'}
-                <AutoColumn gap={phase0FlagEnabled ? '0px' : '8px'}>
-                  <BottomInputWrapper phase0Flag={phase0FlagEnabled}>
-                    <Trace section={SectionName.CURRENCY_OUTPUT_PANEL}>
-                      <CurrencyInputPanel
-                        value={formattedAmounts[Field.OUTPUT]}
-                        onUserInput={handleTypeOutput}
-                        label={
-                          independentField === Field.INPUT && !showWrap ? (
-                            <Trans>To (at least)</Trans>
-                          ) : (
-                            <Trans>To</Trans>
-                          )
-                        }
-                        showMaxButton={false}
-                        hideBalance={false}
-                        fiatValue={fiatValueOutput ?? undefined}
-                        priceImpact={stablecoinPriceImpact}
-                        currency={currencies[Field.OUTPUT] ?? null}
-                        onCurrencySelect={handleOutputSelect}
-                        otherCurrency={currencies[Field.INPUT]}
-                        showCommonBases={true}
-                        id={SectionName.CURRENCY_OUTPUT_PANEL}
-                        loading={independentField === Field.INPUT && routeIsSyncing}
-                      />
-                    </Trace>
-
-                    {recipient !== null && !showWrap ? (
-                      <>
-                        <AutoRow justify="space-between" style={{ padding: '0 1rem' }}>
-                          <ArrowWrapper clickable={false} phase0Flag={phase0FlagEnabled}>
-                            <ArrowDown size="16" color={theme.deprecated_text2} />
-                          </ArrowWrapper>
-                          <LinkStyledButton id="remove-recipient-button" onClick={() => onChangeRecipient(null)}>
-                            <Trans>- Remove recipient</Trans>
-                          </LinkStyledButton>
-                        </AutoRow>
-                        <AddressInputPanel id="recipient" value={recipient} onChange={onChangeRecipient} />
-                      </>
-                    ) : null}
-                    {!showWrap && userHasSpecifiedInputOutput && (trade || routeIsLoading || routeIsSyncing) && (
-                      <SwapDetailsDropdown
-                        trade={trade}
-                        syncing={routeIsSyncing}
-                        loading={routeIsLoading}
-                        showInverted={showInverted}
-                        setShowInverted={setShowInverted}
-                        allowedSlippage={allowedSlippage}
-                      />
-                    )}
-                    shouldLogImpression={!Boolean(wrapInputError)}
-                  >
-=======
->>>>>>> e0e49886 (updates)
               </div>
               <BottomWrapper>
                 For
