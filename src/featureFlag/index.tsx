@@ -2,10 +2,10 @@ import { createContext, ReactNode, useContext } from 'react'
 
 interface FeatureFlagsContextType {
   isLoaded: boolean
-  flags?: Record<string, string>
+  flags: Record<string, string>
 }
 
-const FeatureFlagContext = createContext<FeatureFlagsContextType | undefined>(undefined)
+const FeatureFlagContext = createContext<FeatureFlagsContextType>({ isLoaded: false, flags: {} })
 
 export function useFeatureFlagsContext(): FeatureFlagsContextType {
   const context = useContext(FeatureFlagContext)
@@ -38,7 +38,7 @@ enum Phase0Variant {
 }
 
 export function usePhase0Flag(): Phase0Variant {
-  const phase0Variant = useFeatureFlagsContext().flags?.['phase0']
+  const phase0Variant = useFeatureFlagsContext().flags['phase0']
   switch (phase0Variant) {
     case 'enabled':
       return Phase0Variant.Enabled
@@ -53,7 +53,7 @@ enum Phase1Variant {
 }
 
 export function usePhase1Flag(): Phase1Variant {
-  const phase1Variant = useFeatureFlagsContext().flags?.['phase1']
+  const phase1Variant = useFeatureFlagsContext().flags['phase1']
   switch (phase1Variant) {
     case 'enabled':
       return Phase1Variant.Enabled
