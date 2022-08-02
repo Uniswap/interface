@@ -31,6 +31,19 @@ import { ApplicationModal } from 'state/application/actions'
 import ListItem from 'components/PoolList/ListItem'
 import useTheme from 'hooks/useTheme'
 import { STABLE_COINS_ADDRESS } from 'constants/tokens'
+import { Input as PaginationInput } from 'components/Pagination/PaginationInputOnMobile'
+
+const PageWrapper = styled.div`
+  overflow: 'hidden';
+  &[data-above1000='true'] {
+    background: ${({ theme }) => theme.background};
+    border-radius: 20px;
+  }
+
+  ${PaginationInput} {
+    background: ${({ theme }) => theme.background};
+  }
+`
 
 const TableHeader = styled.div`
   display: grid;
@@ -374,13 +387,7 @@ const PoolList = ({ currencies, searchValue, isShowOnlyActiveFarmPools, onlyShow
     )
 
   return (
-    <div
-      style={{
-        background: above1000 ? theme.background : 'transparent',
-        borderRadius: above1000 ? '20px' : 0,
-        overflow: 'hidden',
-      }}
-    >
+    <PageWrapper data-above1000={above1000}>
       {renderHeader()}
       {sortedFilteredPaginatedSubgraphPoolsList.map(poolData => {
         if (poolData) {
@@ -416,7 +423,7 @@ const PoolList = ({ currencies, searchValue, isShowOnlyActiveFarmPools, onlyShow
       />
       <PoolDetailModal />
       <ShareModal url={shareUrl} />
-    </div>
+    </PageWrapper>
   )
 }
 

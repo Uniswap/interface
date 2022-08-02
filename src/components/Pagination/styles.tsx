@@ -34,7 +34,7 @@ export const PaginationItem = styled.li<{ $disabled?: boolean; $selected?: boole
   `}
 `
 
-export const PaginationButton = styled.div<{ active?: boolean, haveBg?: boolean }>`
+export const PaginationButton = styled.div<{ active?: boolean; haveBg?: boolean }>`
   height: 36px;
   min-width: 36px;
   width: fit-content;

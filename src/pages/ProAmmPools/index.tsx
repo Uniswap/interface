@@ -21,6 +21,7 @@ import { useProMMFarms } from 'state/farms/promm/hooks'
 import { DividerDash } from 'components/Divider'
 import { SelectPairInstructionWrapper } from 'pages/Pools/styleds'
 import { STABLE_COINS_ADDRESS } from 'constants/tokens'
+import { Input as PaginationInput } from 'components/Pagination/PaginationInputOnMobile'
 
 type PoolListProps = {
   currencies: { [field in Field]?: Currency }
@@ -28,6 +29,18 @@ type PoolListProps = {
   isShowOnlyActiveFarmPools: boolean
   onlyShowStable: boolean
 }
+
+const PageWrapper = styled.div`
+  overflow: 'hidden';
+  &[data-above1000='true'] {
+    background: ${({ theme }) => theme.background};
+    border-radius: 20px;
+  }
+
+  ${PaginationInput} {
+    background: ${({ theme }) => theme.background};
+  }
+`
 
 const TableHeader = styled.div`
   display: grid;
@@ -311,13 +324,7 @@ export default function ProAmmPoolList({
     )
 
   return (
-    <div
-      style={{
-        background: above1000 ? theme.background : 'transparent',
-        borderRadius: above1000 ? '20px' : 0,
-        overflow: 'hidden',
-      }}
-    >
+    <PageWrapper data-above1000={above1000}>
       {renderHeader()}
       {anyLoading && !Object.keys(pairDatas).length && <LocalLoader />}
       {pageData.map((p, index) =>
@@ -348,6 +355,6 @@ export default function ProAmmPoolList({
         />
       )}
       <ShareModal url={shareUrl} onShared={() => {}} />
-    </div>
+    </PageWrapper>
   )
 }

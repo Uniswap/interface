@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react'
+import React, { Dispatch, SetStateAction, useEffect, useMemo, useState, useCallback } from 'react'
 import { useMedia } from 'react-use'
 import { TrueSightContainer } from 'pages/TrueSight/components/TrendingSoonLayout'
 import TrendingTokenItemMobileOnly from 'pages/TrueSight/components/TrendingLayout/TrendingTokenItemMobileOnly'
@@ -75,45 +75,59 @@ const TrendingLayout = ({
 
   const theme = useTheme()
 
-  const MobileLayout = () => (
-    <Box overflow="hidden">
-      <MobileTableHeader>
-        <MobileTableHeaderItem style={{ marginRight: 24, marginLeft: 4 }}>#</MobileTableHeaderItem>
-        <MobileTableHeaderItem style={{ flex: 1 }}>
-          <Trans>Name</Trans>
-        </MobileTableHeaderItem>
-        <MobileTableHeaderItem>
-          <Trans>Discovered on</Trans>
-        </MobileTableHeaderItem>
-      </MobileTableHeader>
-      {trendingSoonTokens.map((tokenData, index) => (
-        <TrendingTokenItemMobileOnly
-          key={tokenData.token_id}
-          isSelected={selectedToken?.token_id === tokenData.token_id}
-          tokenData={tokenData}
-          onSelect={() => setSelectedToken(prev => (prev?.token_id === tokenData.token_id ? undefined : tokenData))}
-          setIsOpenChartModal={setIsOpenChartModal}
-          setFilter={setFilter}
-          tokenIndex={TRENDING_ITEM_PER_PAGE * (currentPage - 1) + index + 1}
+  const renderMobileLayout = useCallback(
+    () => (
+      <Box overflow="hidden">
+        <MobileTableHeader>
+          <MobileTableHeaderItem style={{ marginRight: 24, marginLeft: 4 }}>#</MobileTableHeaderItem>
+          <MobileTableHeaderItem style={{ flex: 1 }}>
+            <Trans>Name</Trans>
+          </MobileTableHeaderItem>
+          <MobileTableHeaderItem>
+            <Trans>Discovered on</Trans>
+          </MobileTableHeaderItem>
+        </MobileTableHeader>
+        {trendingSoonTokens.map((tokenData, index) => (
+          <TrendingTokenItemMobileOnly
+            key={tokenData.token_id}
+            isSelected={selectedToken?.token_id === tokenData.token_id}
+            tokenData={tokenData}
+            onSelect={() => setSelectedToken(prev => (prev?.token_id === tokenData.token_id ? undefined : tokenData))}
+            setIsOpenChartModal={setIsOpenChartModal}
+            setFilter={setFilter}
+            tokenIndex={TRENDING_ITEM_PER_PAGE * (currentPage - 1) + index + 1}
+          />
+        ))}
+        <Pagination
+          pageSize={TRENDING_ITEM_PER_PAGE}
+          onPageChange={newPage => setCurrentPage(newPage)}
+          currentPage={currentPage}
+          totalCount={trendingSoonData?.total_number_tokens ?? 1}
         />
-      ))}
-      <Pagination
-        pageSize={TRENDING_ITEM_PER_PAGE}
-        onPageChange={newPage => setCurrentPage(newPage)}
-        currentPage={currentPage}
-        totalCount={trendingSoonData?.total_number_tokens ?? 1}
-      />
-      <MobileChartModal
-        isOpen={isOpenChartModal}
-        setIsOpen={setIsOpenChartModal}
-        chartData={chartData}
-        isLoading={isChartDataLoading}
-        chartCategory={chartCategory}
-        setChartCategory={setChartCategory}
-        chartTimeframe={chartTimeframe}
-        setChartTimeframe={setChartTimeframe}
-      />
-    </Box>
+        <MobileChartModal
+          isOpen={isOpenChartModal}
+          setIsOpen={setIsOpenChartModal}
+          chartData={chartData}
+          isLoading={isChartDataLoading}
+          chartCategory={chartCategory}
+          setChartCategory={setChartCategory}
+          chartTimeframe={chartTimeframe}
+          setChartTimeframe={setChartTimeframe}
+        />
+      </Box>
+    ),
+    [
+      chartCategory,
+      chartData,
+      chartTimeframe,
+      currentPage,
+      isChartDataLoading,
+      isOpenChartModal,
+      selectedToken?.token_id,
+      setFilter,
+      trendingSoonData?.total_number_tokens,
+      trendingSoonTokens,
+    ],
   )
 
   const TableBody = ({
@@ -305,7 +319,7 @@ const TrendingLayout = ({
         ) : above1200 ? (
           <DesktopLayout />
         ) : (
-          <MobileLayout />
+          renderMobileLayout()
         )}
       </TrueSightContainer>
     </>
