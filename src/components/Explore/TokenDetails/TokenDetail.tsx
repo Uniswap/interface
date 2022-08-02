@@ -1,11 +1,13 @@
 import { Trans } from '@lingui/macro'
+import { ParentSize } from '@visx/responsive'
+import PriceChart from 'components/Charts/PriceChart'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { getChainInfo } from 'constants/chainInfo'
 import { useCurrency, useToken } from 'hooks/Tokens'
 import { TimePeriod } from 'hooks/useTopTokens'
 import { useAtomValue } from 'jotai/utils'
 import { darken } from 'polished'
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import { ArrowDownRight, ArrowLeft, ArrowUpRight, Copy, Heart } from 'react-feather'
 import { Link } from 'react-router-dom'
 import styled, { useTheme } from 'styled-components/macro'
@@ -93,6 +95,7 @@ export const ChartContainer = styled.div`
   overflow: hidden;
 `
 export const DeltaContainer = styled.div`
+  height: 16px;
   display: flex;
   align-items: center;
 `
@@ -198,6 +201,16 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
   const chainInfo = getChainInfo(token?.chainId)
   const networkLabel = chainInfo?.label
   const networkBadgebackgroundColor = chainInfo?.backgroundColor
+  const [tokenPrice, setTokenPrice] = useState(0)
+  const [tokenDelta, setTokenDelta] = useState<number | undefined>()
+
+  const setTokenNumbers = useCallback(
+    (tokenPrice: number, tokenDelta: number | undefined) => {
+      setTokenPrice(tokenPrice)
+      setTokenDelta(tokenDelta)
+    },
+    [setTokenPrice, setTokenDelta]
+  )
 
   // catch token error and loading state
   if (!token || !token.name || !token.symbol) {
@@ -208,10 +221,8 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
 
   // dummy data for now until Jordan writes token detail hooks
   // TODO: format price, add sparkline
-  const tokenPrice = '3,243.22'
-  const tokenDelta = 1.22
-  const isPositive = Math.sign(tokenDelta) > 0
-  const deltaSign = isPositive ? '+' : '-'
+  const isPositive = tokenDelta ? Math.sign(tokenDelta) > 0 : null
+  const deltaSign = isPositive ? '+' : null
   const aboutToken =
     'Ethereum is a decentralized computing platform that uses ETH (Ether) to pay transaction fees (gas). Developers can use Ethereum to run decentralized applications (dApps) and issue new crypto assets, known as Ethereum tokens.'
   const tokenMarketCap = '23.02B'
@@ -244,19 +255,29 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
             </ClickFavorited>
           </TokenActions>
         </TokenInfoContainer>
-        <TokenPrice>${tokenPrice}</TokenPrice>
+        <TokenPrice>${tokenPrice.toFixed(2)}</TokenPrice>
         <DeltaContainer>
-          {deltaSign}
-          {tokenDelta}%
-          <ArrowCell>
-            {isPositive ? (
-              <ArrowUpRight size={16} color={theme.accentSuccess} />
-            ) : (
-              <ArrowDownRight size={16} color={theme.accentFailure} />
-            )}
-          </ArrowCell>
+          {tokenDelta ? (
+            <>
+              {deltaSign}
+              {tokenDelta.toFixed(2)}%
+              <ArrowCell>
+                {isPositive ? (
+                  <ArrowUpRight size={16} color={theme.accentSuccess} />
+                ) : (
+                  <ArrowDownRight size={16} color={theme.accentFailure} />
+                )}
+              </ArrowCell>
+            </>
+          ) : (
+            '+0.00%'
+          )}
         </DeltaContainer>
-        <ChartContainer>{null}</ChartContainer>
+        <ChartContainer>
+          <ParentSize>
+            {({ width, height }) => <PriceChart width={width} height={height} setTokenNumbers={setTokenNumbers} />}
+          </ParentSize>
+        </ChartContainer>
         <TimeOptionsContainer>
           {TIME_PERIODS.map((timePeriod) => (
             <TimeButton
