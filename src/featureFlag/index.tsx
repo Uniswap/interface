@@ -22,3 +22,39 @@ export function FeatureFlagProvider({ children }: { children: ReactNode }) {
   }
   return <FeatureFlagContext.Provider value={value}>{children}</FeatureFlagContext.Provider>
 }
+
+export function useFeatureFlagsLoaded(): boolean {
+  return useFeatureFlagContext().isLoaded
+}
+
+// feature flag hooks
+
+enum Phase0Variant {
+  Control = 'Control',
+  Enabled = 'Enabled',
+}
+
+export function usePhase0Flag(): Phase0Variant {
+  const phase0Variant = useFeatureFlagContext().flags['phase0']
+  switch (phase0Variant) {
+    case 'enabled':
+      return Phase0Variant.Enabled
+    default:
+      return Phase0Variant.Control
+  }
+}
+
+enum Phase1Variant {
+  Control = 'Control',
+  Enabled = 'Enabled',
+}
+
+export function usePhase1Flag(): Phase1Variant {
+  const phase1Variant = useFeatureFlagContext().flags['phase1']
+  switch (phase1Variant) {
+    case 'enabled':
+      return Phase1Variant.Enabled
+    default:
+      return Phase1Variant.Control
+  }
+}
