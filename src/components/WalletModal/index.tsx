@@ -13,6 +13,7 @@ import { ArrowLeft } from 'react-feather'
 import { updateConnectionError } from 'state/connection/reducer'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { updateSelectedWallet } from 'state/user/reducer'
+import { useConnectedWallets } from 'state/wallets/hooks'
 import styled from 'styled-components/macro'
 import { isMobile } from 'utils/userAgent'
 
@@ -113,13 +114,18 @@ const WALLET_VIEWS = {
   PENDING: 'pending',
 }
 
-const sendAnalyticsEventAndUserInfo = (account: string, walletType: string, chainId: number | undefined) => {
+const sendAnalyticsEventAndUserInfo = (
+  account: string,
+  walletType: string,
+  chainId: number | undefined,
+  isReconnect: boolean
+) => {
   const currentDate = new Date().toISOString()
   sendAnalyticsEvent(EventName.WALLET_CONNECT_TXN_COMPLETED, {
     result: WALLET_CONNECTION_RESULT.SUCCEEDED,
     wallet_address: account,
     wallet_type: walletType,
-    // TODO(lynnshaoyu): Send correct is_reconnect value after modifying user state.
+    is_reconnect: isReconnect,
   })
   user.set(CUSTOM_USER_PROPERTIES.WALLET_ADDRESS, account)
   user.set(CUSTOM_USER_PROPERTIES.WALLET_TYPE, walletType)
@@ -140,6 +146,7 @@ export default function WalletModal({
 }) {
   const dispatch = useAppDispatch()
   const { connector, account, chainId } = useWeb3React()
+  const [connectedWallets, updateConnectedWallets] = useConnectedWallets()
 
   const [walletView, setWalletView] = useState(WALLET_VIEWS.ACCOUNT)
   const [lastActiveWalletAddress, setLastActiveWalletAddress] = useState<string | undefined>(account)
@@ -173,10 +180,18 @@ export default function WalletModal({
   useEffect(() => {
     if (account && account !== lastActiveWalletAddress) {
       const walletType = getConnectionName(getConnection(connector).type, getIsMetaMask())
-      sendAnalyticsEventAndUserInfo(account, walletType, chainId)
+
+      if (
+        connectedWallets.filter((wallet) => wallet.account === account && wallet.walletType === walletType).length > 0
+      ) {
+        sendAnalyticsEventAndUserInfo(account, walletType, chainId, true)
+      } else {
+        sendAnalyticsEventAndUserInfo(account, walletType, chainId, false)
+        updateConnectedWallets({ account, walletType })
+      }
     }
     setLastActiveWalletAddress(account)
-  }, [lastActiveWalletAddress, account, connector, chainId])
+  }, [connectedWallets, updateConnectedWallets, lastActiveWalletAddress, account, connector, chainId])
 
   const tryActivation = useCallback(
     async (connector: Connector) => {
