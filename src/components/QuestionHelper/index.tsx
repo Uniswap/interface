@@ -1,10 +1,11 @@
+import { Phase0Variant, usePhase0Flag } from 'featureFlag'
 import { ReactNode, useCallback, useState } from 'react'
 import { HelpCircle } from 'react-feather'
 import styled from 'styled-components/macro'
 
 import Tooltip from '../Tooltip'
 
-const QuestionWrapper = styled.div`
+const QuestionWrapper = styled.div<{ phase0Flag: boolean }>`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -17,8 +18,8 @@ const QuestionWrapper = styled.div`
   cursor: default;
   border-radius: 36px;
   font-size: 12px;
-  border-radius: 12px;
-  color: ${({ theme }) => theme.deprecated_text2};
+  border-radius: ${({ phase0Flag }) => phase0Flag && '12px'};
+  color: ${({ theme, phase0Flag }) => !phase0Flag && theme.deprecated_text2};
 
   :hover,
   :focus {
@@ -38,14 +39,13 @@ export default function QuestionHelper({ text }: { text: ReactNode; size?: numbe
 
   const open = useCallback(() => setShow(true), [setShow])
   const close = useCallback(() => setShow(false), [setShow])
-
+  const phase0Flag = usePhase0Flag()
+  const phase0FlagEnabled = phase0Flag === Phase0Variant.Enabled
   return (
     <span style={{ marginLeft: 4, display: 'flex', alignItems: 'center' }}>
       <Tooltip text={text} show={show}>
-        <QuestionWrapper onClick={open} onMouseEnter={open} onMouseLeave={close}>
-          <QuestionMark>
-            <HelpCircle size={16}></HelpCircle>
-          </QuestionMark>
+        <QuestionWrapper onClick={open} onMouseEnter={open} onMouseLeave={close} phase0Flag={phase0FlagEnabled}>
+          <QuestionMark>{phase0FlagEnabled ? <HelpCircle size={16}></HelpCircle> : '?'}</QuestionMark>
         </QuestionWrapper>
       </Tooltip>
     </span>
