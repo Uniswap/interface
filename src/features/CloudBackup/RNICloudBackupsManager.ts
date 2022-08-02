@@ -6,6 +6,10 @@ export function isICloudAvailable(): Promise<boolean> {
   return RNICloudBackupsManager.isICloudAvailable()
 }
 
+export function deleteICloudMnemonicBackup(mnemonicId: string): Promise<boolean> {
+  return RNICloudBackupsManager.deleteICloudMnemonicBackup(mnemonicId)
+}
+
 export function startFetchingICloudBackups() {
   return RNICloudBackupsManager.startFetchingICloudBackups()
 }

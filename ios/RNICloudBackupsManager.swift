@@ -15,6 +15,12 @@ struct ICloudMnemonicBackup: Codable {
   let createdAt: Double
 }
 
+enum ICloudBackupError: String, Error  {
+  case iCloudContainerError = "iCloudContainerError"
+  case deleteBackupError = "deleteBackupError"
+  case backupNotFoundError = "backupNotFoundError"
+}
+
 enum ICloudManagerEventType: String, CaseIterable {
   case foundCloudBackup = "FoundCloudBackup"
 }
@@ -31,7 +37,7 @@ class RNICloudBackupsManager: RCTEventEmitter {
   override func supportedEvents() -> [String]! {
     return ICloudManagerEventType.allCases.map { $0.rawValue }
   }
-
+  
   /**
    Determine if iCloud Documents is available on device
    
@@ -45,6 +51,42 @@ class RNICloudBackupsManager: RCTEventEmitter {
       return resolve(false)
     } else  {
       return resolve(true)
+    }
+  }
+  
+  /**
+   Deletes mnemonic backup in iCloud Documents container
+   
+   - parameter mnemonicId: mnemonic backup filename to delete
+   - returns: boolean if deletion successful, otherwise throws error
+   */
+  @objc(deleteICloudMnemonicBackup:resolve:reject:)
+  func deleteICloudMnemonicBackup(mnemonicId: String, resolve: @escaping RCTPromiseResolveBlock,
+                                  reject: @escaping RCTPromiseRejectBlock) {
+    // Access iCloud Documents container
+    // TODO(MOB-1295): Temporarily appending "/Documents" path to make file visible in iCloud Files for easier debugging
+    guard let containerUrl = FileManager.default.url(forUbiquityContainerIdentifier: nil)?.appendingPathComponent("Documents") else {
+      return reject(ICloudBackupError.iCloudContainerError.rawValue, "Failed to find iCloud container", ICloudBackupError.iCloudContainerError)
+    }
+    
+    // Ensure backup file exists
+    let iCloudFileURL = containerUrl.appendingPathComponent("\(mnemonicId).json")
+    guard FileManager.default.fileExists(atPath: iCloudFileURL.path) else {
+      return reject(ICloudBackupError.backupNotFoundError.rawValue, "Failed to locate iCloud backup", ICloudBackupError.backupNotFoundError)
+    }
+    
+    // Delete backup file from iCloud
+    DispatchQueue.global(qos: .default).async {
+      let fileCoordinator = NSFileCoordinator(filePresenter: nil)
+      fileCoordinator.coordinate(writingItemAt: URL(fileURLWithPath: iCloudFileURL.path), options: NSFileCoordinator.WritingOptions.forDeleting, error: nil) {
+        url in
+        do {
+          try FileManager.default.removeItem(at: url)
+          return resolve(true)
+        } catch {
+          return reject(ICloudBackupError.deleteBackupError.rawValue, "Failed to delete iCloud backup", ICloudBackupError.deleteBackupError)
+        }
+      }
     }
   }
   
@@ -116,6 +158,7 @@ class RNICloudBackupsManager: RCTEventEmitter {
       print("Error decoding iCloud backup JSON at \(url)")
     }
   }
+  
   
   /**
    Determines if an iCloud Documents file discovered from NSMetadataQuery exists locally.

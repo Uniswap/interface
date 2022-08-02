@@ -13,6 +13,10 @@
 RCT_EXTERN_METHOD(isICloudAvailable: (RCTPromiseResolveBlock)resolve
                   reject: (RCTPromiseRejectBlock)reject)
 
+RCT_EXTERN_METHOD(deleteICloudMnemonicBackup: (NSString *)mnemonicId
+                  resolve: (RCTPromiseResolveBlock)resolve
+                  reject: (RCTPromiseRejectBlock)reject)
+
 RCT_EXTERN_METHOD(startFetchingICloudBackups)
 
 RCT_EXTERN_METHOD(stopFetchingICloudBackups)
