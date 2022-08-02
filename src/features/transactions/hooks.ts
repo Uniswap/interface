@@ -106,7 +106,8 @@ export interface AllFormattedTransactions {
   todayTransactionList: TransactionSummaryInfo[]
   monthTransactionList: TransactionSummaryInfo[]
   yearTransactionList: TransactionSummaryInfo[]
-  beforeCurrentYearTransactionList: TransactionSummaryInfo[]
+  // Maps year <-> TransactionSummaryInfo[] for all priors years
+  priorByYearTransactionList: Record<string, TransactionSummaryInfo[]>
   pending: TransactionSummaryInfo[]
   loading: boolean
 }
@@ -161,7 +162,7 @@ export function useAllFormattedTransactions(
     todayTransactionList,
     monthTransactionList,
     yearTransactionList,
-    beforeCurrentYearTransactionList,
+    beforeCurrentYear,
   ] = useMemo(() => {
     const msTimestampCutoffDay = dayjs().startOf('day').unix() * 1000 // timestamp in ms for start of day local time
     const msTimestampCutoffMonth = dayjs().startOf('month').unix() * 1000
@@ -194,8 +195,20 @@ export function useAllFormattedTransactions(
       const nonceB = b.fullDetails?.options?.request?.nonce
       return nonceA && nonceB ? (nonceA < nonceB ? -1 : 1) : -1
     })
+
     return formatted
   }, [combinedTransactionList])
+
+  // For all transaction before current year, group by years
+  const priorByYearTransactionList = useMemo(() => {
+    return beforeCurrentYear.reduce((accum: Record<string, TransactionSummaryInfo[]>, item) => {
+      const currentYear = dayjs(item.msTimestampAdded).year().toString()
+      const currentYearList = accum[currentYear] ?? []
+      currentYearList.push(item)
+      accum[currentYear] = currentYearList
+      return accum
+    }, {})
+  }, [beforeCurrentYear])
 
   return useMemo(() => {
     return {
@@ -204,11 +217,11 @@ export function useAllFormattedTransactions(
       todayTransactionList,
       monthTransactionList,
       yearTransactionList,
-      beforeCurrentYearTransactionList,
+      priorByYearTransactionList,
       loading: isLoading,
     }
   }, [
-    beforeCurrentYearTransactionList,
+    priorByYearTransactionList,
     combinedTransactionList,
     isLoading,
     monthTransactionList,

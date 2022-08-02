@@ -15,7 +15,6 @@ const PENDING_TITLE = (t: TFunction) => t('Pending')
 const TODAY_TITLE = (t: TFunction) => t('Today')
 const MONTH_TITLE = dayjs().format('MMMM')
 const YEAR_TITLE = dayjs().year().toString()
-const ALL_TIME_TITLE = (t: TFunction) => t('All')
 
 const key = (info: TransactionSummaryInfo) => info.hash
 
@@ -41,7 +40,7 @@ export function TransactionList({
     todayTransactionList,
     monthTransactionList,
     yearTransactionList,
-    beforeCurrentYearTransactionList,
+    priorByYearTransactionList,
   } = transactions
 
   const sectionData = useMemo(() => {
@@ -54,14 +53,28 @@ export function TransactionList({
         ? [{ title: MONTH_TITLE, data: monthTransactionList }]
         : []),
       ...(yearTransactionList.length > 0 ? [{ title: YEAR_TITLE, data: yearTransactionList }] : []),
-      ...(beforeCurrentYearTransactionList.length > 0
-        ? [{ title: ALL_TIME_TITLE(t), data: beforeCurrentYearTransactionList }]
-        : []),
+      // for each year prior, detect length and render if includes transactions
+      ...Object.keys(priorByYearTransactionList).reduce(
+        (
+          accum: {
+            title: string
+            data: TransactionSummaryInfo[]
+          }[],
+          year
+        ) => {
+          const transactionList = priorByYearTransactionList[year]
+          if (transactionList.length > 0) {
+            accum.push({ title: year, data: transactionList })
+          }
+          return accum
+        },
+        []
+      ),
     ]
   }, [
-    beforeCurrentYearTransactionList,
     monthTransactionList,
     pending,
+    priorByYearTransactionList,
     t,
     todayTransactionList,
     yearTransactionList,
