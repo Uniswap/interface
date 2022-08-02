@@ -114,7 +114,7 @@ export interface Colors {
 }
 
 declare module 'styled-components/macro' {
-  export interface DefaultTheme extends Colors, themeColors {
+  export interface DefaultTheme extends Colors, ThemeColors {
     grids: Grids
 
     // shadows
