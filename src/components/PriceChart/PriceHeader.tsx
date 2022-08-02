@@ -18,12 +18,12 @@ import { ReText, round } from 'react-native-redash'
 import { useAppTheme } from 'src/app/hooks'
 import { Box } from 'src/components/layout'
 import { Flex } from 'src/components/layout/Flex'
-import { HEIGHT, WIDTH } from 'src/components/PriceChart/Model'
 import {
   AnimatedNumber,
   AnimatedTranslation,
   GraphMetadatas,
 } from 'src/components/PriceChart/types'
+import { HEIGHT, WIDTH } from 'src/components/PriceChart/utils'
 import { Theme } from 'src/styles/theme'
 
 interface HeaderProps {

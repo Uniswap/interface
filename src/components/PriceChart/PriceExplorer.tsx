@@ -11,10 +11,10 @@ import { mixPath, useVector } from 'react-native-redash'
 import Svg, { Defs, LinearGradient, Path, Stop } from 'react-native-svg'
 import { AnimatedBox, Box } from 'src/components/layout/Box'
 import { Cursor } from 'src/components/PriceChart/Cursor'
-import { HEIGHT, NUM_GRAPHS, WIDTH } from 'src/components/PriceChart/Model'
 import { PriceHeader } from 'src/components/PriceChart/PriceHeader'
 import { TimeRangeLabel } from 'src/components/PriceChart/TimeRangeLabel'
 import { GraphMetadatas } from 'src/components/PriceChart/types'
+import { HEIGHT, NUM_GRAPHS, WIDTH } from 'src/components/PriceChart/utils'
 import { Theme } from 'src/styles/theme'
 
 const AnimatedPath = Animated.createAnimatedComponent(Path)

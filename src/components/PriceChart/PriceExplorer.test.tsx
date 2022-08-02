@@ -1,8 +1,8 @@
 import React from 'react'
 import 'react-native'
 import 'react-native-gesture-handler'
-import { buildGraph } from 'src/components/PriceChart/Model'
 import { PriceExplorer } from 'src/components/PriceChart/PriceExplorer'
+import { buildGraph } from 'src/components/PriceChart/utils'
 import { renderWithTheme } from 'src/test/render'
 
 const graphDatapoints = buildGraph(

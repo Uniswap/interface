@@ -14,7 +14,7 @@ import { BackHeader } from 'src/components/layout/BackHeader'
 import { Box } from 'src/components/layout/Box'
 import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollScreen'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
-import { PriceChart } from 'src/components/PriceChart'
+import { CurrencyPriceChart } from 'src/components/PriceChart'
 import { Text } from 'src/components/Text'
 import TokenWarningCard from 'src/components/tokens/TokenWarningCard'
 import TokenWarningModalContent from 'src/components/tokens/TokenWarningModalContent'
@@ -188,7 +188,7 @@ function TokenDetails({ currency }: { currency: Currency }) {
         }>
         <Flex gap="md" my="md">
           <TokenDetailsHeader currency={currency} />
-          <PriceChart currency={currency} />
+          <CurrencyPriceChart currency={currency} />
           {balance && (
             <Flex bg="backgroundContainer" borderRadius="sm" gap="md" mx="md" p="md">
               <Text color="textSecondary" variant="subheadSmall">

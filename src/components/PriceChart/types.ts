@@ -33,4 +33,4 @@ type Price = {
   timestamp: number
   close: number
 }
-export type PriceList = Price[]
+export type PriceList = Readonly<Nullable<Price>[]>
