@@ -12,8 +12,6 @@ import { solidityKeccak256 } from 'ethers/lib/utils'
 import { SwapCall } from 'hooks/useSwapCallArguments'
 import { useMemo } from 'react'
 import { swapErrorToUserReadableMessage } from 'utils/swapErrorToUserReadableMessage'
-import { encrypt } from 'wasm/poseidon/wasm'
-import { get_vdf_proof } from 'wasm/vdf/wasm'
 
 type AnyTrade =
   | V2Trade<Currency, Currency, TradeType>
@@ -194,7 +192,9 @@ async function signWithEIP712(library: JsonRpcProvider, signAddress: string, sig
 }
 
 async function getVdfProof(): Promise<VdfResponse> {
-  const data = await get_vdf_proof()
+  const vdf = await import('vdf')
+  const data = await vdf
+    .get_vdf_proof()
     .then((res) => {
       return res.data
     })
@@ -207,7 +207,9 @@ async function getVdfProof(): Promise<VdfResponse> {
 }
 
 async function poseidonEncrypt(commitment: string, plainText: string): Promise<EncryptResponse> {
-  const data = await encrypt(commitment, plainText)
+  const poseidon = await import('poseidon')
+  const data = await poseidon
+    .encrypt(commitment, plainText)
     .then((res) => {
       return res.data
     })

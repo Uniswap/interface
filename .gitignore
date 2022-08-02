@@ -10,6 +10,7 @@
 /src/locales/**/en-US.po
 /src/locales/**/pseudo.po
 /src/state/data/generated.ts
+/wasm
 
 # dependencies
 /node_modules
