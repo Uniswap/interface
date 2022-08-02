@@ -28,11 +28,11 @@ export function OnboardingScreen({
         <Flex grow pb="md" px="md">
           {/* Text content */}
           <Flex centered gap="sm" m="sm">
-            <Text fontWeight="600" textAlign="center" variant="largeLabel">
+            <Text fontWeight="600" textAlign="center" variant="headlineSmall">
               {title}
             </Text>
             {subtitle ? (
-              <Text color="textSecondary" textAlign="center" variant="body">
+              <Text color="textSecondary" textAlign="center" variant="bodySmall">
                 {subtitle}
               </Text>
             ) : null}

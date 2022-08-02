@@ -1,20 +1,17 @@
-import React, { ReactNode } from 'react'
+import React, { ComponentProps, ReactNode } from 'react'
 import { Box, Flex } from 'src/components/layout'
 
-// For overlaying icons in JSX
-export default function OverlayIcon({
-  icon,
-  overlay,
-  offset = 4,
-}: {
+type Props = {
   icon: ReactNode
   overlay: ReactNode
-  offset?: number
-}) {
+} & Pick<ComponentProps<typeof Box>, 'top' | 'bottom' | 'left' | 'right'>
+
+// For overlaying icons in JSX
+export default function OverlayIcon({ icon, overlay, ...props }: Props) {
   return (
     <>
       {icon}
-      <Box bottom={offset} position="absolute" right={offset}>
+      <Box position="absolute" {...props}>
         {overlay}
       </Box>
     </>
