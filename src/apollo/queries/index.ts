@@ -392,16 +392,6 @@ export const FARM_HISTORIES = gql`
   }
 `
 
-export const TRANSACTION_SWAP_AMOUNT_USD = gql`
-  query transactionSwapAmountUSD($transactionHash: String!) {
-    transaction(id: $transactionHash) {
-      swaps {
-        amountUSD
-      }
-    }
-  }
-`
-
 export const GET_POOL_VALUES_AFTER_MINTS_SUCCESS = gql`
   query getPoolValuesAfterMintsSuccess($poolAddress: String!) {
     pool(id: $poolAddress) {

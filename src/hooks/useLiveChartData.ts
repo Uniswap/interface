@@ -162,7 +162,7 @@ export default function useLiveChartData(tokens: (Token | null | undefined)[], t
     } else return []
   }, [kyberData, coingeckoData, isKyberDataNotValid, isReverse])
 
-  const error = (kyberError && coingeckoError) || (coingeckoData && chartData.length === 0)
+  const error = (!!kyberError && !!coingeckoError) || chartData.length === 0
 
   const { data: liveKyberData } = useSWR(
     !isKyberDataNotValid && kyberData && chainId

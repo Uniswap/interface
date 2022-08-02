@@ -142,6 +142,14 @@ export default function Updater(): null {
               )
               if (receipt.status === 1 && transaction && transaction.arbitrary) {
                 switch (transaction.type) {
+                  case 'Swap': {
+                    mixpanelHandler(MIXPANEL_TYPE.SWAP_COMPLETED, {
+                      arbitrary: transaction.arbitrary,
+                      actual_gas: transaction.receipt?.gasUsed || BigNumber.from(0),
+                      tx_hash: hash,
+                    })
+                    break
+                  }
                   case 'Collect fee': {
                     mixpanelHandler(MIXPANEL_TYPE.ELASTIC_COLLECT_FEES_COMPLETED, transaction.arbitrary)
                     break
@@ -149,7 +157,7 @@ export default function Updater(): null {
                   case 'Increase liquidity': {
                     mixpanelHandler(MIXPANEL_TYPE.ELASTIC_INCREASE_LIQUIDITY_COMPLETED, {
                       ...transaction.arbitrary,
-                      tx_hash: transaction.hash,
+                      tx_hash: hash,
                     })
                     break
                   }

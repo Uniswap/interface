@@ -114,7 +114,9 @@ export default function ProChartToggle({
               }}
               isActive={activeName === button.name}
               disabled={button.disabled}
-              onClick={() => toggle(button.name)}
+              onClick={() => {
+                !button.disabled && toggle(button.name)
+              }}
             >
               {button.title}
             </Element>
@@ -141,7 +143,9 @@ export default function ProChartToggle({
             size={size}
             border={border}
             disabled={button.disabled}
-            onClick={() => toggle(button.name)}
+            onClick={() => {
+              !button.disabled && toggle(button.name)
+            }}
           >
             {button.title}
           </ToggleElement>

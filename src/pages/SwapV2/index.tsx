@@ -269,6 +269,13 @@ export default function Swap({ history }: RouteComponentProps) {
     onChangeRecipient(null)
   }, [onChangeRecipient, isExpertMode])
 
+  const handleRecipientChange = (value: string | null) => {
+    if (recipient === null && value !== null) {
+      mixpanelHandler(MIXPANEL_TYPE.ADD_RECIPIENT_CLICKED)
+    }
+    onChangeRecipient(value)
+  }
+
   const isValid = !swapInputError
   const dependentField: Field = independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT
 
@@ -792,7 +799,7 @@ export default function Swap({ history }: RouteComponentProps) {
                         </Box>
 
                         {isExpertMode && !showWrap && (
-                          <AddressInputPanel id="recipient" value={recipient} onChange={onChangeRecipient} />
+                          <AddressInputPanel id="recipient" value={recipient} onChange={handleRecipientChange} />
                         )}
 
                         {!showWrap && allowedSlippage !== INITIAL_ALLOWED_SLIPPAGE && (

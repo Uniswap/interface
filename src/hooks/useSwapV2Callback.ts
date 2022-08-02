@@ -9,6 +9,7 @@ import { TransactionResponse } from '@ethersproject/providers'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 import { useSwapState } from 'state/swap/hooks'
 import useSendTransactionCallback from 'hooks/useSendTransactionCallback'
+import { useUserSlippageTolerance } from 'state/user/hooks'
 
 export enum SwapCallbackState {
   INVALID,
@@ -31,6 +32,8 @@ export function useSwapV2Callback(
 ): { state: SwapCallbackState; callback: null | (() => Promise<string>); error: string | null } {
   const { account, chainId, library } = useActiveWeb3React()
   const { typedValue, feeConfig, saveGas } = useSwapState()
+
+  const [allowedSlippage] = useUserSlippageTolerance()
 
   const addTransactionWithType = useTransactionAdder()
 
@@ -72,6 +75,8 @@ export function useSwapV2Callback(
           withRecipient,
           saveGas,
           inputAmount: trade.inputAmount.toExact(),
+          slippageSetting: allowedSlippage ? allowedSlippage / 100 : 0,
+          priceImpact: trade && trade?.priceImpact > 0.01 ? trade?.priceImpact.toFixed(2) : '<0.01',
         },
       })
     },
