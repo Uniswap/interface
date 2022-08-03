@@ -6,7 +6,7 @@ import { Z_INDEX } from 'theme'
 export const BodyWrapper = styled.main<{ margin?: string; maxWidth?: string; phase0Flag?: boolean }>`
   position: relative;
   margin-top: ${({ margin }) => margin ?? '0px'};
-  max-width: ${({ maxWidth }) => maxWidth ?? '480px'};
+  max-width: ${({ maxWidth }) => maxWidth ?? '420px'};
   width: 100%;
   background: ${({ theme, phase0Flag }) => (phase0Flag ? theme.backgroundSurface : theme.deprecated_bg0)};
   border-radius: ${({ phase0Flag }) => (phase0Flag ? '16px' : '24px')};
