@@ -134,6 +134,7 @@ export function TransferReview({
         {/* TODO: onPressIn here should go back to prev screen */}
         {!isNFT && currencyIn && (
           <AmountInput
+            alignSelf="stretch"
             borderWidth={0}
             editable={false}
             fontFamily={theme.textVariants.headlineLarge.fontFamily}
@@ -146,6 +147,7 @@ export function TransferReview({
             showCurrencySign={isUSDInput}
             showSoftInputOnFocus={false}
             testID="amount-input-in"
+            textAlign="center"
             value={formattedAmounts[CurrencyField.INPUT]}
           />
         )}

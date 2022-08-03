@@ -119,6 +119,7 @@ export function SwapReview({ dispatch, onNext, onPrev, derivedSwapInfo }: SwapFo
         {/* TODO: onPressIn here should go back to prev screen */}
         <Flex gap="sm" mt="xxl">
           <AmountInput
+            alignSelf="stretch"
             backgroundColor="none"
             borderWidth={0}
             editable={false}
@@ -131,6 +132,7 @@ export function SwapReview({ dispatch, onNext, onPrev, derivedSwapInfo }: SwapFo
             showCurrencySign={isUSDInput}
             showSoftInputOnFocus={false}
             testID="amount-input-in"
+            textAlign="center"
             value={formattedAmounts[CurrencyField.INPUT]}
           />
           <Flex centered row gap="xs">
@@ -149,6 +151,7 @@ export function SwapReview({ dispatch, onNext, onPrev, derivedSwapInfo }: SwapFo
           {/* TODO: onPressIn here should go back to prev screen */}
           <Flex gap="sm">
             <AmountInput
+              alignSelf="stretch"
               backgroundColor="none"
               borderWidth={0}
               editable={false}
@@ -161,6 +164,7 @@ export function SwapReview({ dispatch, onNext, onPrev, derivedSwapInfo }: SwapFo
               showCurrencySign={isUSDInput}
               showSoftInputOnFocus={false}
               testID="amount-input-out"
+              textAlign="center"
               value={formattedAmounts[CurrencyField.OUTPUT]}
             />
             <Flex centered row gap="xs">
