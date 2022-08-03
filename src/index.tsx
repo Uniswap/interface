@@ -3,6 +3,7 @@ import 'inter-ui'
 import 'polyfills'
 import 'components/analytics'
 
+import { FeatureFlagsProvider } from 'featureFlag'
 import { BlockNumberProvider } from 'lib/hooks/useBlockNumber'
 import { MulticallUpdater } from 'lib/state/multicall'
 import { StrictMode } from 'react'
@@ -50,23 +51,25 @@ const container = document.getElementById('root') as HTMLElement
 createRoot(container).render(
   <StrictMode>
     <Provider store={store}>
-      <QueryClientProvider client={queryClient}>
-        <HashRouter>
-          <LanguageProvider>
-            <Web3Provider>
-              <Blocklist>
-                <BlockNumberProvider>
-                  <Updaters />
-                  <ThemeProvider>
-                    <ThemedGlobalStyle />
-                    <App />
-                  </ThemeProvider>
-                </BlockNumberProvider>
-              </Blocklist>
-            </Web3Provider>
-          </LanguageProvider>
-        </HashRouter>
-      </QueryClientProvider>
+      <FeatureFlagsProvider>
+        <QueryClientProvider client={queryClient}>
+          <HashRouter>
+            <LanguageProvider>
+              <Web3Provider>
+                <Blocklist>
+                  <BlockNumberProvider>
+                    <Updaters />
+                    <ThemeProvider>
+                      <ThemedGlobalStyle />
+                      <App />
+                    </ThemeProvider>
+                  </BlockNumberProvider>
+                </Blocklist>
+              </Web3Provider>
+            </LanguageProvider>
+          </HashRouter>
+        </QueryClientProvider>
+      </FeatureFlagsProvider>
     </Provider>
   </StrictMode>
 )
