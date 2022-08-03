@@ -1,4 +1,4 @@
-import { Blur, Canvas, Group, Circle } from '@shopify/react-native-skia'
+import { Blur, Canvas, Circle, Group } from '@shopify/react-native-skia'
 import React, { memo } from 'react'
 import { useAppTheme } from 'src/app/hooks'
 import { GradientBackground } from 'src/components/gradients/GradientBackground'

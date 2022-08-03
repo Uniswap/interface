@@ -55,7 +55,9 @@ const options: ImportMethodOption[] = [
   {
     title: (t: TFunction) => t('Import a recovery phrase'),
     blurb: (t: TFunction) => t('Enter or paste words'),
-    icon: (theme: Theme) => <SeedPhraseIcon color={theme.colors.textPrimary} />,
+    icon: (theme: Theme) => (
+      <SeedPhraseIcon color={theme.colors.textPrimary} height={16} width={16} />
+    ),
     nav: OnboardingScreens.SeedPhraseInput,
     importType: ImportType.SeedPhrase,
     name: ElementName.OnboardingImportSeedPhrase,
@@ -63,9 +65,7 @@ const options: ImportMethodOption[] = [
   {
     title: (t: TFunction) => t('View only'),
     blurb: (t: TFunction) => t('Enter an Ethereum address or ENS name'),
-    icon: (theme: Theme) => (
-      <EyeIcon color={theme.colors.textPrimary} height={16} strokeWidth={2} width={16} />
-    ),
+    icon: (theme: Theme) => <EyeIcon color={theme.colors.textPrimary} height={16} width={16} />,
     nav: OnboardingScreens.WatchWallet,
     importType: ImportType.Watch,
     name: ElementName.OnboardingImportWatchedAccount,
@@ -173,8 +173,8 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props) {
       : [...(cloudBackups.length > 0 ? [backupOption] : []), ...options]
 
   return (
-    <OnboardingScreen title={t('Choose how to add your wallet')}>
-      <Flex grow gap="md">
+    <OnboardingScreen title={t('Choose how to connect your wallet')}>
+      <Flex grow gap="xs">
         {importOptions.map(({ title, blurb, icon, nav, importType, name }) => (
           <OptionCard
             key={'connection-option-' + title}
@@ -211,7 +211,8 @@ function OptionCard({
       borderRadius="lg"
       borderWidth={1}
       name={name}
-      p="md"
+      px="md"
+      py="sm"
       testID={name}
       onPress={onPress}>
       <Flex row alignItems="center" gap="md" justifyContent="space-between">

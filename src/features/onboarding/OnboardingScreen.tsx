@@ -30,7 +30,7 @@ export function OnboardingScreen({
         <AnimatedFlex grow entering={FadeIn} exiting={FadeOut} pb="md" px="md">
           {/* Text content */}
           <Flex centered gap="sm" m="sm">
-            <Text fontWeight="600" textAlign="center" variant="headlineSmall">
+            <Text textAlign="center" variant="headlineSmall">
               {title}
             </Text>
             {subtitle ? (
