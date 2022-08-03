@@ -25,9 +25,22 @@ import { enableAnalytics } from 'src/features/telemetry'
 import { TokenListUpdater } from 'src/features/tokenLists/updater'
 import { DynamicThemeProvider } from 'src/styles/DynamicThemeProvider'
 
+// Construct a new instrumentation instance. This is needed to communicate between the integration and React
+const routingInstrumentation = new Sentry.ReactNavigationInstrumentation()
+
 if (!__DEV__) {
   Sentry.init({
     dsn: config.sentryDsn,
+    tracesSampler: (_) => {
+      // Lower to ~20% before going live: MOB-1634
+      return 1
+    },
+    integrations: [
+      new Sentry.ReactNativeTracing({
+        // Pass instrumentation to be used as `routingInstrumentation`
+        routingInstrumentation,
+      }),
+    ],
   })
 }
 
@@ -37,7 +50,7 @@ enableAnalytics()
 // https://github.com/software-mansion/react-native-reanimated/issues/2758
 enableLayoutAnimations(true)
 
-export function App() {
+function App() {
   const isDarkMode = useColorScheme() === 'dark'
 
   return (
@@ -79,7 +92,10 @@ function DataUpdaters() {
 
 function NavStack({ isDarkMode }: { isDarkMode: boolean }) {
   return (
-    <NavigationContainer>
+    <NavigationContainer
+      onReady={(navigationRef) => {
+        routingInstrumentation.registerNavigationContainer(navigationRef)
+      }}>
       <NotificationToastWrapper>
         <DrawerNavigator />
         <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
@@ -87,3 +103,9 @@ function NavStack({ isDarkMode }: { isDarkMode: boolean }) {
     </NavigationContainer>
   )
 }
+
+function getApp() {
+  return __DEV__ ? App : Sentry.wrap(App)
+}
+
+export default getApp()

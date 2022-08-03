@@ -7,7 +7,12 @@ import mockRNDeviceInfo from 'react-native-device-info/jest/react-native-device-
 import 'cross-fetch/polyfill'
 
 // Mock Sentry crash reporting
-jest.mock('@sentry/react-native', () => ({ init: () => jest.fn() }))
+jest.mock('@sentry/react-native', () => ({
+  init: () => jest.fn(),
+  wrap: (val) => val,
+  ReactNavigationInstrumentation: jest.fn(),
+  ReactNativeTracing: jest.fn(),
+}))
 
 // Mock redux-persist due to type issue in CI
 // https://github.com/rt2zz/redux-persist/issues/1243#issuecomment-692609748

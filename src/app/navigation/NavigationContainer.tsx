@@ -2,20 +2,23 @@ import {
   createNavigationContainerRef,
   DefaultTheme,
   NavigationContainer as NativeNavigationContainer,
+  NavigationContainerRefWithCurrent,
 } from '@react-navigation/native'
 import { AnyAction } from '@reduxjs/toolkit'
-import React, { Dispatch, FC, useEffect, useState } from 'react'
+import React, { Dispatch, FC, useEffect } from 'react'
 import { Linking } from 'react-native'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { DeepLink, openDeepLink } from 'src/features/deepLinking/handleDeepLink'
-import { logScreenView } from 'src/features/telemetry'
 import { Trace } from 'src/features/telemetry/Trace'
+
+interface Props {
+  onReady: (navigationRef: NavigationContainerRefWithCurrent<ReactNavigation.RootParamList>) => void
+}
 
 export const navigationRef = createNavigationContainerRef()
 
 /** Wrapped `NavigationContainer` with telemetry tracing. */
-export const NavigationContainer: FC = ({ children }) => {
-  const [routeName, setRouteName] = useState<string | undefined>()
+export const NavigationContainer: FC<Props> = ({ children, onReady }) => {
   const dispatch = useAppDispatch()
   const theme = useAppTheme()
 
@@ -30,19 +33,9 @@ export const NavigationContainer: FC = ({ children }) => {
         colors: { ...DefaultTheme.colors, background: theme.colors.backgroundBackdrop },
       }}
       onReady={() => {
-        setRouteName(navigationRef.getCurrentRoute()?.name)
-      }}
-      onStateChange={() => {
-        const previousRouteName = routeName
-        const currentRouteName = navigationRef.getCurrentRoute()?.name
-
-        if (currentRouteName && previousRouteName !== currentRouteName) {
-          logScreenView(currentRouteName)
-        }
-
-        setRouteName(currentRouteName)
+        onReady(navigationRef)
       }}>
-      <Trace screen={routeName}>{children}</Trace>
+      <Trace>{children}</Trace>
     </NativeNavigationContainer>
   )
 }

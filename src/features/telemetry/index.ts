@@ -34,16 +34,3 @@ export async function logEvent(name: string, params: {}) {
     logger.error('telemetry', 'logEvent', 'error from Firebase', err)
   }
 }
-
-/** Logs a screen view event. */
-export async function logScreenView(name: string) {
-  if (__DEV__) {
-    logger.info('telemetry', 'logScreenView', name)
-  }
-
-  try {
-    await firebase.analytics().logScreenView({ screen_name: name })
-  } catch (err) {
-    logger.error('telemetry', 'logScreenView', 'error from Firebase', err)
-  }
-}
