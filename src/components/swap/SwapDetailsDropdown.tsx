@@ -49,6 +49,7 @@ const StyledHeaderRow = styled(RowBetween)<{ disabled: boolean; open: boolean; p
   margin-top: ${({ phase0Flag }) => phase0Flag && '8px'};
   cursor: ${({ disabled }) => (disabled ? 'initial' : 'pointer')};
   min-height: 40px;
+  border-radius: ${({ phase0Flag }) => !phase0Flag && '12px'};
 `
 
 const RotatingArrow = styled(ChevronDown)<{ open?: boolean }>`
@@ -132,7 +133,7 @@ export default function SwapDetailsDropdown({
   const phase0FlagEnabled = phase0Flag === Phase0Variant.Enabled
 
   return (
-    <Wrapper>
+    <Wrapper style={{ marginTop: '8px' }}>
       <AutoColumn gap={'8px'} style={{ width: '100%', marginBottom: '-8px' }}>
         <TraceEvent
           events={[Event.onClick]}

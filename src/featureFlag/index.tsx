@@ -42,16 +42,13 @@ export enum Phase0Variant {
 
 export function usePhase0Flag(): Phase0Variant {
   return Phase0Variant.Enabled
-
-  /*
-  switch (useFeatureFlagsContext().flags['phase0']) {
-    case 'enabled':
-      return Phase0Variant.Enabled
-    case 'control':
-    default:
-      return Phase0Variant.Control
-  }
-  */
+  // switch (useFeatureFlagsContext().flags['phase0']) {
+  //   case 'enabled':
+  //     return Phase0Variant.Enabled
+  //   case 'control':
+  //   default:
+  //     return Phase0Variant.Control
+  // }
 }
 
 enum Phase1Variant {
