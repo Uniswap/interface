@@ -86,6 +86,7 @@ const CurrencySelect = styled(ButtonGray)<{
   box-shadow: ${({ selected }) => (selected ? 'none' : '0px 6px 10px rgba(0, 0, 0, 0.075)')};
   color: ${({ selected, theme }) => (selected ? theme.deprecated_text1 : theme.deprecated_white)};
   cursor: pointer;
+  height: ${({ hideInput, phase0Flag }) => (phase0Flag && hideInput ? '2.8rem' : '2.4rem')};
   border-radius: 16px;
   outline: none;
   user-select: none;
