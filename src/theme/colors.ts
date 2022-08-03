@@ -112,7 +112,7 @@ export const colors: GlobalPalette = {
   red100: '#FFD9CE',
   red200: '#FDA799',
   red300: '#FF776D',
-  red400: '#FD4040',
+  red400: '#FA2B39',
   red500: '#C52533',
   red600: '#891E20',
   red700: '#530F10',
@@ -220,6 +220,8 @@ export interface Palette {
   chain_137_background: Color
   chain_10_background: Color
   chain_42161_background: Color
+
+  flyoutDropShadow: Color
 }
 
 export const colorsLight: Palette = {
@@ -275,6 +277,8 @@ export const colorsLight: Palette = {
   chain_137_background: colors.purple900,
   chain_10_background: colors.red900,
   chain_42161_background: colors.blue900,
+
+  flyoutDropShadow: colors.black,
 }
 
 export const colorsDark: Palette = {
@@ -329,4 +333,6 @@ export const colorsDark: Palette = {
   chain_137_background: colors.purple900,
   chain_10_background: colors.red900,
   chain_42161_background: colors.blue900,
+
+  flyoutDropShadow: colors.black,
 }

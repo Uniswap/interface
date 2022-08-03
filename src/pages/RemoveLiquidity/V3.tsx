@@ -25,7 +25,7 @@ import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import { useV3PositionFromTokenId } from 'hooks/useV3Positions'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { useCallback, useMemo, useState } from 'react'
-import { Redirect, useLocation, useParams } from 'react-router-dom'
+import { Navigate, useLocation, useParams } from 'react-router-dom'
 import { Text } from 'rebass'
 import { useBurnV3ActionHandlers, useBurnV3State, useDerivedV3BurnInfo } from 'state/burn/v3/hooks'
 import { useTransactionAdder } from 'state/transactions/hooks'
@@ -55,7 +55,7 @@ export default function RemoveLiquidityV3() {
   }, [tokenId])
 
   if (parsedTokenId === null || parsedTokenId.eq(0)) {
-    return <Redirect to={{ ...location, pathname: '/pool' }} />
+    return <Navigate to={{ ...location, pathname: '/pool' }} replace />
   }
 
   return <Remove tokenId={parsedTokenId} />
@@ -227,9 +227,14 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
         </RowBetween>
         {feeValue0?.greaterThan(0) || feeValue1?.greaterThan(0) ? (
           <>
-            <ThemedText.Italic fontSize={12} color={theme.deprecated_text2} textAlign="left" padding={'8px 0 0 0'}>
+            <ThemedText.DeprecatedItalic
+              fontSize={12}
+              color={theme.deprecated_text2}
+              textAlign="left"
+              padding={'8px 0 0 0'}
+            >
               <Trans>You will also collect fees earned from this position.</Trans>
-            </ThemedText.Italic>
+            </ThemedText.DeprecatedItalic>
             <RowBetween>
               <Text fontSize={16} fontWeight={500}>
                 <Trans>{feeValue0?.currency?.symbol} Fees Earned:</Trans>
@@ -303,18 +308,18 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
                     size={20}
                     margin={true}
                   />
-                  <ThemedText.Label
+                  <ThemedText.DeprecatedLabel
                     ml="10px"
                     fontSize="20px"
-                  >{`${feeValue0?.currency?.symbol}/${feeValue1?.currency?.symbol}`}</ThemedText.Label>
+                  >{`${feeValue0?.currency?.symbol}/${feeValue1?.currency?.symbol}`}</ThemedText.DeprecatedLabel>
                 </RowFixed>
                 <RangeBadge removed={removed} inRange={!outOfRange} />
               </RowBetween>
               <LightCard>
                 <AutoColumn gap="md">
-                  <ThemedText.Main fontWeight={400}>
+                  <ThemedText.DeprecatedMain fontWeight={400}>
                     <Trans>Amount</Trans>
-                  </ThemedText.Main>
+                  </ThemedText.DeprecatedMain>
                   <RowBetween>
                     <ResponsiveHeaderText>
                       <Trans>{percentForSlider}%</Trans>
@@ -393,9 +398,9 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
 
               {showCollectAsWeth && (
                 <RowBetween>
-                  <ThemedText.Main>
+                  <ThemedText.DeprecatedMain>
                     <Trans>Collect as {nativeWrappedSymbol}</Trans>
-                  </ThemedText.Main>
+                  </ThemedText.DeprecatedMain>
                   <Toggle
                     id="receive-as-weth"
                     isActive={receiveWETH}

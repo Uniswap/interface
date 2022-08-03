@@ -1,6 +1,59 @@
 import { FlattenSimpleInterpolation, ThemedCssFunction } from 'styled-components/macro'
 
 export type Color = string
+export interface ThemeColors {
+  userThemeColor: string
+
+  backgroundBackdrop: Color
+  backgroundSurface: Color
+  backgroundContainer: Color
+  backgroundAction: Color
+  backgroundOutline: Color
+  backgroundScrim: Color
+
+  textPrimary: Color
+  textSecondary: Color
+  textTertiary: Color
+
+  accentAction: Color
+  accentActive: Color
+  accentSuccess: Color
+  accentWarning: Color
+  accentFailure: Color
+
+  accentActionSoft: Color
+  accentActiveSoft: Color
+  accentSuccessSoft: Color
+  accentWarningSoft: Color
+  accentFailureSoft: Color
+
+  accentTextDarkPrimary: Color
+  accentTextDarkSecondary: Color
+  accentTextDarkTertiary: Color
+
+  accentTextLightPrimary: Color
+  accentTextLightSecondary: Color
+  accentTextLightTertiary: Color
+
+  white: Color
+  black: Color
+  none: Color
+
+  chain_1: Color
+  chain_3: Color
+  chain_4: Color
+  chain_5: Color
+  chain_10: Color
+  chain_137: Color
+  chain_42: Color
+  chain_69: Color
+  chain_42161: Color
+  chain_421611: Color
+  chain_80001: Color
+
+  blue200: Color
+}
+
 export interface Colors {
   darkMode: boolean
 
@@ -117,7 +170,7 @@ export interface Colors {
 }
 
 declare module 'styled-components/macro' {
-  export interface DefaultTheme extends Colors {
+  export interface DefaultTheme extends Colors, ThemeColors {
     grids: Grids
 
     // shadows

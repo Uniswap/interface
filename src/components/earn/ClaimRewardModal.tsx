@@ -81,24 +81,24 @@ export default function ClaimRewardModal({ isOpen, onDismiss, stakingInfo }: Sta
       {!attempting && !hash && (
         <ContentWrapper gap="lg">
           <RowBetween>
-            <ThemedText.MediumHeader>
+            <ThemedText.DeprecatedMediumHeader>
               <Trans>Claim</Trans>
-            </ThemedText.MediumHeader>
+            </ThemedText.DeprecatedMediumHeader>
             <CloseIcon onClick={wrappedOnDismiss} />
           </RowBetween>
           {stakingInfo?.earnedAmount && (
             <AutoColumn justify="center" gap="md">
-              <ThemedText.Body fontWeight={600} fontSize={36}>
+              <ThemedText.DeprecatedBody fontWeight={600} fontSize={36}>
                 {stakingInfo?.earnedAmount?.toSignificant(6)}
-              </ThemedText.Body>
-              <ThemedText.Body>
+              </ThemedText.DeprecatedBody>
+              <ThemedText.DeprecatedBody>
                 <Trans>Unclaimed UNI</Trans>
-              </ThemedText.Body>
+              </ThemedText.DeprecatedBody>
             </AutoColumn>
           )}
-          <ThemedText.SubHeader style={{ textAlign: 'center' }}>
+          <ThemedText.DeprecatedSubHeader style={{ textAlign: 'center' }}>
             <Trans>When you claim without withdrawing your liquidity remains in the mining pool.</Trans>
-          </ThemedText.SubHeader>
+          </ThemedText.DeprecatedSubHeader>
           <ButtonError disabled={!!error} error={!!error && !!stakingInfo?.stakedAmount} onClick={onClaimReward}>
             {error ?? <Trans>Claim</Trans>}
           </ButtonError>
@@ -107,21 +107,21 @@ export default function ClaimRewardModal({ isOpen, onDismiss, stakingInfo }: Sta
       {attempting && !hash && (
         <LoadingView onDismiss={wrappedOnDismiss}>
           <AutoColumn gap="12px" justify={'center'}>
-            <ThemedText.Body fontSize={20}>
+            <ThemedText.DeprecatedBody fontSize={20}>
               <Trans>Claiming {stakingInfo?.earnedAmount?.toSignificant(6)} UNI</Trans>
-            </ThemedText.Body>
+            </ThemedText.DeprecatedBody>
           </AutoColumn>
         </LoadingView>
       )}
       {hash && (
         <SubmittedView onDismiss={wrappedOnDismiss} hash={hash}>
           <AutoColumn gap="12px" justify={'center'}>
-            <ThemedText.LargeHeader>
+            <ThemedText.DeprecatedLargeHeader>
               <Trans>Transaction Submitted</Trans>
-            </ThemedText.LargeHeader>
-            <ThemedText.Body fontSize={20}>
+            </ThemedText.DeprecatedLargeHeader>
+            <ThemedText.DeprecatedBody fontSize={20}>
               <Trans>Claimed UNI!</Trans>
-            </ThemedText.Body>
+            </ThemedText.DeprecatedBody>
           </AutoColumn>
         </SubmittedView>
       )}

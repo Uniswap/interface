@@ -11,7 +11,7 @@ import { ThemedText } from 'theme'
 import { FeeTierPercentageBadge } from './FeeTierPercentageBadge'
 import { FEE_AMOUNT_DETAIL } from './shared'
 
-const ResponsiveText = styled(ThemedText.Label)`
+const ResponsiveText = styled(ThemedText.DeprecatedLabel)`
   line-height: 16px;
   font-size: 14px;
 
@@ -37,9 +37,9 @@ export function FeeOption({ feeAmount, active, poolState, distributions, onClick
           <ResponsiveText>
             <Trans>{FEE_AMOUNT_DETAIL[feeAmount].label}%</Trans>
           </ResponsiveText>
-          <ThemedText.Main fontWeight={400} fontSize="12px" textAlign="left">
+          <ThemedText.DeprecatedMain fontWeight={400} fontSize="12px" textAlign="left">
             {FEE_AMOUNT_DETAIL[feeAmount].description}
-          </ThemedText.Main>
+          </ThemedText.DeprecatedMain>
         </AutoColumn>
 
         {distributions && (

@@ -76,7 +76,7 @@ const StyledTitleText = styled.div<{ active: boolean }>`
   color: ${({ theme, active }) => (active ? theme.deprecated_white : theme.deprecated_text2)};
 `
 
-const StyledListUrlText = styled(ThemedText.Main)<{ active: boolean }>`
+const StyledListUrlText = styled(ThemedText.DeprecatedMain)<{ active: boolean }>`
   font-size: 12px;
   color: ${({ theme, active }) => (active ? theme.deprecated_white : theme.deprecated_text2)};
 `
@@ -362,9 +362,9 @@ export function ManageLists({
           />
         </Row>
         {addError ? (
-          <ThemedText.Error title={addError} style={{ textOverflow: 'ellipsis', overflow: 'hidden' }} error>
+          <ThemedText.DeprecatedError title={addError} style={{ textOverflow: 'ellipsis', overflow: 'hidden' }} error>
             {addError}
-          </ThemedText.Error>
+          </ThemedText.DeprecatedError>
         ) : null}
       </PaddedColumn>
       {tempList && (
@@ -374,10 +374,10 @@ export function ManageLists({
               <RowFixed>
                 {tempList.logoURI && <ListLogo logoURI={tempList.logoURI} size="40px" />}
                 <AutoColumn gap="4px" style={{ marginLeft: '20px' }}>
-                  <ThemedText.Body fontWeight={600}>{tempList.name}</ThemedText.Body>
-                  <ThemedText.Main fontSize={'12px'}>
+                  <ThemedText.DeprecatedBody fontWeight={600}>{tempList.name}</ThemedText.DeprecatedBody>
+                  <ThemedText.DeprecatedMain fontSize={'12px'}>
                     <Trans>{tempList.tokens.length} tokens</Trans>
-                  </ThemedText.Main>
+                  </ThemedText.DeprecatedMain>
                 </AutoColumn>
               </RowFixed>
               {isImported ? (
@@ -385,9 +385,9 @@ export function ManageLists({
                   <IconWrapper stroke={theme.deprecated_text2} size="16px" marginRight={'10px'}>
                     <CheckCircle />
                   </IconWrapper>
-                  <ThemedText.Body color={theme.deprecated_text2}>
+                  <ThemedText.DeprecatedBody color={theme.deprecated_text2}>
                     <Trans>Loaded</Trans>
-                  </ThemedText.Body>
+                  </ThemedText.DeprecatedBody>
                 </RowFixed>
               ) : (
                 <ButtonPrimary

@@ -15,7 +15,6 @@ class TokenSafetyLookupTable {
   dict: { [key: string]: TOKEN_LIST_TYPES } | null = null
 
   createMap() {
-    console.log('AYYY')
     const dict: { [key: string]: TOKEN_LIST_TYPES } = {}
     let uniDefaultTokens = store.getState().lists.byUrl[UNI_LIST].current?.tokens
     let uniExtendedTokens = store.getState().lists.byUrl[UNI_EXTENDED_LIST].current?.tokens

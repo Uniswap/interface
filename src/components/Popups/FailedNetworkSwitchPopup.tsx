@@ -23,12 +23,12 @@ export default function FailedNetworkSwitchPopup({ chainId }: { chainId: Support
         <AlertCircle color={theme.deprecated_red1} size={24} />
       </div>
       <AutoColumn gap="8px">
-        <ThemedText.Body fontWeight={500}>
+        <ThemedText.DeprecatedBody fontWeight={500}>
           <Trans>
             Failed to switch networks from the Uniswap Interface. In order to use Uniswap on {chainInfo.label}, you must
             change the network in your wallet.
           </Trans>
-        </ThemedText.Body>
+        </ThemedText.DeprecatedBody>
       </AutoColumn>
     </RowNoFlex>
   )

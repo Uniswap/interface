@@ -31,7 +31,7 @@ export function FiatValue({
   const visibleDecimalPlaces = p < 1.05 ? 4 : 2
 
   return (
-    <ThemedText.Body fontSize={14} color={fiatValue ? theme.deprecated_text3 : theme.deprecated_text4}>
+    <ThemedText.DeprecatedBody fontSize={14} color={fiatValue ? theme.deprecated_text3 : theme.deprecated_text4}>
       {fiatValue ? (
         <Trans>
           $
@@ -51,6 +51,6 @@ export function FiatValue({
           </MouseoverTooltip>
         </span>
       ) : null}
-    </ThemedText.Body>
+    </ThemedText.DeprecatedBody>
   )
 }

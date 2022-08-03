@@ -2,7 +2,7 @@ import { TEST_ADDRESS_NEVER_USE_SHORTENED } from '../support/ethereum'
 
 describe('Wallet', () => {
   before(() => {
-    cy.visit('/')
+    cy.visit('/swap')
   })
 
   it('displays account details', () => {
