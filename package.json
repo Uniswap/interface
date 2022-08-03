@@ -33,6 +33,7 @@
     "pod": "./podinstall.sh"
   },
   "dependencies": {
+    "@amplitude/react-native": "^2.13.0",
     "@ethersproject/shims": "^5.6.0",
     "@formatjs/intl-datetimeformat": "^4.5.1",
     "@formatjs/intl-getcanonicallocales": "^1.9.0",

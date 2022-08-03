@@ -1,5 +1,7 @@
+import { Amplitude } from '@amplitude/react-native'
 import { firebase } from '@react-native-firebase/analytics'
 import { firebase as firebasePerf } from '@react-native-firebase/perf'
+import { AMPLITUDE_API_KEY } from 'react-native-dotenv'
 import { logger } from 'src/utils/logger'
 
 export async function enableAnalytics() {
@@ -10,6 +12,9 @@ export async function enableAnalytics() {
   }
 
   try {
+    const ampInstance = Amplitude.getInstance()
+    ampInstance.init(AMPLITUDE_API_KEY)
+
     await firebase.analytics().setAnalyticsCollectionEnabled(true)
     await firebasePerf.perf().setPerformanceCollectionEnabled(true)
   } catch (err) {
