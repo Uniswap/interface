@@ -19,9 +19,11 @@ export function getTransactionSummaryTitle({
   let title = ''
   const prefix =
     status === TransactionStatus.Failed
-      ? 'Failed '
+      ? t('Failed ')
       : status === TransactionStatus.Cancelled && showInlineWarning
-      ? 'Canceled '
+      ? t('Canceled ')
+      : status === TransactionStatus.Cancelling && showInlineWarning
+      ? t('Canceling ')
       : ''
   switch (type) {
     case TransactionType.Swap:

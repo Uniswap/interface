@@ -164,6 +164,7 @@ function TransactionSummaryItem({
   }
 
   const icon = useMemo(() => {
+    const showCancelIcon = (canceled || cancelling) && showInlineWarning
     return type === TransactionType.Swap && !failed && assetType === AssetType.Currency ? (
       <>
         <Box left={2} position="absolute" testID="swap-success-toast" top={2}>
@@ -172,11 +173,8 @@ function TransactionSummaryItem({
             size={TXN_HISTORY_SIZING.primaryImage}
           />
         </Box>
-        <Box
-          bottom={canceled && showInlineWarning ? 5 : 0}
-          position="absolute"
-          right={canceled && showInlineWarning ? 5 : 0}>
-          {canceled && showInlineWarning ? (
+        <Box bottom={showCancelIcon ? 5 : 0} position="absolute" right={showCancelIcon ? 5 : 0}>
+          {showCancelIcon ? (
             <SlashCircleIcon
               color={theme.colors.backgroundOutline}
               fillOpacity={1}
@@ -199,16 +197,17 @@ function TransactionSummaryItem({
       />
     )
   }, [
-    assetType,
     canceled,
-    currency,
-    failed,
-    nftMetaData?.imageURL,
-    otherCurrency,
-    status,
-    theme.colors.backgroundOutline,
-    type,
+    cancelling,
     showInlineWarning,
+    type,
+    failed,
+    assetType,
+    otherCurrency,
+    theme.colors.backgroundOutline,
+    currency,
+    nftMetaData?.imageURL,
+    status,
   ])
 
   return (
