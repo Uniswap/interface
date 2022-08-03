@@ -58,7 +58,6 @@ const BlockedWarning: Warning = {
 }
 
 export function checkWarning(tokenAddress: string) {
-  console.log(WarningCache.dict)
   switch (WarningCache.checkToken(tokenAddress.toLowerCase())) {
     case TOKEN_LIST_TYPES.UNI_DEFAULT:
       return null
