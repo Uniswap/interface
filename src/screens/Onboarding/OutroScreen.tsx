@@ -18,7 +18,7 @@ import {
 import { setFinishedOnboarding } from 'src/features/wallet/walletSlice'
 import { OnboardingScreens, Screens } from 'src/screens/Screens'
 
-type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.SelectColor>
+type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.Outro>
 
 export function OutroScreen({ navigation, route: { params } }: Props) {
   const { t } = useTranslation()

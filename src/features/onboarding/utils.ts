@@ -16,7 +16,6 @@ export enum OnboardingEntryPoint {
 const FLOWS: Record<ImportType, OnboardingScreens[]> = {
   [ImportType.Create]: [
     OnboardingScreens.EditName,
-    OnboardingScreens.SelectColor,
     OnboardingScreens.Backup,
     OnboardingScreens.Notifications,
     OnboardingScreens.Security,

@@ -51,7 +51,6 @@ import { ManualBackupScreen } from 'src/screens/Onboarding/ManualBackupScreen'
 import { NotificationsSetupScreen } from 'src/screens/Onboarding/NotificationsSetupScreen'
 import { OutroScreen } from 'src/screens/Onboarding/OutroScreen'
 import { SecuritySetupScreen } from 'src/screens/Onboarding/SecuritySetupScreen'
-import { SelectColorScreen } from 'src/screens/Onboarding/SelectColorScreen'
 import { PortfolioNFTsScreen } from 'src/screens/PortfolioNFTsScreen'
 import { PortfolioTokensScreen } from 'src/screens/PortfolioTokensScreen'
 import { ProfileScreen } from 'src/screens/ProfileScreen'
@@ -357,10 +356,6 @@ export function OnboardingStackNavigator() {
         <OnboardingStack.Screen
           component={SelectWalletScreen}
           name={OnboardingScreens.SelectWallet}
-        />
-        <OnboardingStack.Screen
-          component={SelectColorScreen}
-          name={OnboardingScreens.SelectColor}
         />
         <OnboardingStack.Screen
           component={WatchWalletScreen}

@@ -56,7 +56,7 @@ export function EditNameScreen({ navigation, route: { params } }: Props) {
 
   const onPressNext = () => {
     navigation.navigate({
-      name: OnboardingScreens.SelectColor,
+      name: OnboardingScreens.Backup,
       merge: true,
       params,
     })
