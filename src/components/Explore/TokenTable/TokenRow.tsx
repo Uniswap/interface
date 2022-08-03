@@ -233,6 +233,9 @@ const SparkLineImg = styled(Cell)<{ isPositive: boolean }>`
     stroke: ${({ theme, isPositive }) => (isPositive ? theme.accentSuccess : theme.accentFailure)};
   }
 `
+const StyledLink = styled(Link)`
+  text-decoration: none;
+`
 const TokenInfoCell = styled(Cell)`
   gap: 8px;
   line-height: 24px;
@@ -466,7 +469,7 @@ export default function LoadedRow({
   const heartColor = isFavorited ? theme.accentActive : undefined
   // TODO: currency logo sizing mobile (32px) vs. desktop (24px)
   return (
-    <Link
+    <StyledLink
       to={`tokens/${tokenAddress}`}
       onClick={() => sendAnalyticsEvent(EventName.EXPLORE_TOKEN_ROW_SELECTED, exploreTokenSelectedEventProperties)}
     >
@@ -506,6 +509,6 @@ export default function LoadedRow({
         volume={<ClickableContent>{formatAmount(tokenData.volume[timePeriod]).toUpperCase()}</ClickableContent>}
         sparkLine={<SparkLineImg dangerouslySetInnerHTML={{ __html: tokenData.sparkline }} isPositive={isPositive} />}
       />
-    </Link>
+    </StyledLink>
   )
 }
