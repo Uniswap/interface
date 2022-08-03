@@ -5,33 +5,38 @@ import { GlyphCircle } from '@visx/glyph'
 import { Group } from '@visx/group'
 import { Line, LinePath } from '@visx/shape'
 import { bisect, scaleLinear } from 'd3'
+import { atom } from 'jotai'
+import { useUpdateAtom } from 'jotai/utils'
 import { useCallback, useEffect, useState } from 'react'
 
 import circleCorners from './circleCorners'
 import data from './data.json'
 
+export const CrosshairPriceAtom = atom<{ value: number; delta: string }>({ value: 0, delta: '+0.00%' })
+
 // Defining selector functions
 type PricePoint = { value: number; timestamp: number }
 
-function getMin(priceHistory: PricePoint[]) {
-  return priceHistory.reduce((r, e) => (r.value < e.value ? r : e)).value
-}
-
-function getMax(priceHistory: PricePoint[]) {
-  return priceHistory.reduce((r, e) => (r.value > e.value ? r : e)).value
+function getPriceBounds(priceHistory: PricePoint[]): [number, number] {
+  const prices = data.priceHistory.map((x) => x.value)
+  const min = Math.min(...prices)
+  const max = Math.max(...prices)
+  return [min, max]
 }
 
 function getDelta(start: number, current: number) {
-  return (current / start - 1) * 100
+  const delta = (current / start - 1) * 100
+  const isPositive = Math.sign(delta) > 0
+
+  return (isPositive ? '+' : '') + delta.toFixed(2)
 }
 
 interface PriceChartProps {
   width: number
   height: number
-  setTokenNumbers: (price: number, delta: number | undefined) => void
 }
 
-export function PriceChart({ setTokenNumbers, width, height }: PriceChartProps) {
+export function PriceChart({ width, height }: PriceChartProps) {
   const margin = { top: 40, bottom: 50 }
   // defining inner measurements
   const innerHeight = height - margin.top - margin.bottom
@@ -42,19 +47,21 @@ export function PriceChart({ setTokenNumbers, width, height }: PriceChartProps) 
   const initialState = { pricePoint: endingPrice, xCordinate: null }
 
   const [selected, setSelected] = useState<{ pricePoint: PricePoint; xCordinate: number | null }>(initialState)
+  const setCrosshairPrice = useUpdateAtom(CrosshairPriceAtom)
 
   useEffect(() => {
-    setTokenNumbers(selected.pricePoint.value, getDelta(startingPrice.value, selected.pricePoint.value))
-  }, [setTokenNumbers, selected, startingPrice])
+    setCrosshairPrice({
+      value: selected.pricePoint.value,
+      delta: getDelta(startingPrice.value, selected.pricePoint.value),
+    })
+  }, [setCrosshairPrice, selected, startingPrice])
 
   // Defining scales
   // x scale
   const timeScale = scaleLinear().domain([startingPrice.timestamp, endingPrice.timestamp]).range([0, width])
 
   // y scale
-  const rdScale = scaleLinear()
-    .domain([getMin(data.priceHistory), getMax(data.priceHistory)])
-    .range([innerHeight, 0])
+  const rdScale = scaleLinear().domain(getPriceBounds(pricePoints)).range([innerHeight, 0])
 
   const handleTooltip = useCallback(
     (event: Element | EventType) => {
@@ -96,7 +103,7 @@ export function PriceChart({ setTokenNumbers, width, height }: PriceChartProps) 
               from={{ x: selected.xCordinate, y: 0 }}
               to={{ x: selected.xCordinate, y: height }}
               stroke={'#99A1BD3D'}
-              strokeWidth={2}
+              strokeWidth={1}
               pointerEvents="none"
               strokeDasharray="4,4"
             />
