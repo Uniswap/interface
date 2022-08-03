@@ -179,7 +179,8 @@ const formatSwapQuoteReceivedEventProperties = (
 
 export default function Swap() {
   const navigate = useNavigate()
-  const phase0flag = usePhase0Flag()
+  const phase0Flag = usePhase0Flag()
+  const phase0FlagEnabled = phase0Flag === Phase0Variant.Enabled
   const { account, chainId } = useWeb3React()
   const loadedUrlParams = useDefaultsFromURLSearch()
   const [newSwapQuoteNeedsLogging, setNewSwapQuoteNeedsLogging] = useState(true)
@@ -599,7 +600,7 @@ export default function Swap() {
                     />
                   </Trace>
                 </TopInputWrapper>
-                <ArrowWrapper clickable={isSupportedChain(chainId)}>
+                <ArrowWrapper clickable={isSupportedChain(chainId)} phase0Flag={phase0FlagEnabled}>
                   <TraceEvent
                     events={[Event.onClick]}
                     name={EventName.SWAP_TOKENS_REVERSED}
@@ -648,7 +649,7 @@ export default function Swap() {
                   {recipient !== null && !showWrap ? (
                     <>
                       <AutoRow justify="space-between" style={{ padding: '0 1rem' }}>
-                        <ArrowWrapper clickable={false}>
+                        <ArrowWrapper clickable={false} phase0Flag={phase0FlagEnabled}>
                           <ArrowDown size="16" color={theme.deprecated_text2} />
                         </ArrowWrapper>
                         <LinkStyledButton id="remove-recipient-button" onClick={() => onChangeRecipient(null)}>
@@ -684,7 +685,7 @@ export default function Swap() {
                       properties={{ received_swap_quote: getIsValidSwapQuote(trade, tradeState, swapInputError) }}
                       element={ElementName.CONNECT_WALLET_BUTTON}
                     >
-                      <ButtonLight onClick={toggleWalletModal} phase0Flag={phase0flag === Phase0Variant.Enabled}>
+                      <ButtonLight onClick={toggleWalletModal} phase0Flag={phase0FlagEnabled}>
                         <Trans>Connect Wallet</Trans>
                       </ButtonLight>
                     </TraceEvent>

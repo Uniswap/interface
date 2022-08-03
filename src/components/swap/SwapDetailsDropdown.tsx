@@ -10,6 +10,7 @@ import { LoadingOpacityContainer } from 'components/Loader/styled'
 import Row, { RowBetween, RowFixed } from 'components/Row'
 import { MouseoverTooltipContent } from 'components/Tooltip'
 import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'
+import { Phase0Variant, usePhase0Flag } from 'featureFlag'
 import { useState } from 'react'
 import { ChevronDown, Info } from 'react-feather'
 import { InterfaceTrade } from 'state/routing/types'
@@ -39,12 +40,13 @@ const StyledCard = styled(OutlineCard)`
   border: 1px solid ${({ theme }) => theme.deprecated_bg2};
 `
 
-const StyledHeaderRow = styled(RowBetween)<{ disabled: boolean; open: boolean }>`
-  padding: 12px 8px 8px 8px;
+const StyledHeaderRow = styled(RowBetween)<{ disabled: boolean; open: boolean; phase0Flag: boolean }>`
+  padding: ${({ phase0Flag }) => (phase0Flag ? '12px 8px 8px 8px' : '4px 8px')};
   background-color: ${({ theme }) => theme.none};
+  background-color: ${({ open, theme, phase0Flag }) => (open && !phase0Flag ? theme.deprecated_bg1 : theme.none)};
   align-items: center;
-  border-top: 1px solid ${({ theme }) => theme.backgroundOutline};
-  margin-top: 8px;
+  border-top: 1px solid ${({ theme, phase0Flag }) => (phase0Flag ? theme.backgroundOutline : theme.none)};
+  margin-top: ${({ phase0Flag }) => phase0Flag && '8px'};
   cursor: ${({ disabled }) => (disabled ? 'initial' : 'pointer')};
   min-height: 40px;
 `
@@ -126,6 +128,8 @@ export default function SwapDetailsDropdown({
   const theme = useTheme()
   const { chainId } = useWeb3React()
   const [showDetails, setShowDetails] = useState(false)
+  const phase0Flag = usePhase0Flag()
+  const phase0FlagEnabled = phase0Flag === Phase0Variant.Enabled
 
   return (
     <Wrapper>
@@ -136,7 +140,12 @@ export default function SwapDetailsDropdown({
           element={ElementName.SWAP_DETAILS_DROPDOWN}
           shouldLogImpression={!showDetails}
         >
-          <StyledHeaderRow onClick={() => setShowDetails(!showDetails)} disabled={!trade} open={showDetails}>
+          <StyledHeaderRow
+            phase0Flag={phase0FlagEnabled}
+            onClick={() => setShowDetails(!showDetails)}
+            disabled={!trade}
+            open={showDetails}
+          >
             <RowFixed style={{ position: 'relative' }}>
               {loading || syncing ? (
                 <StyledPolling>

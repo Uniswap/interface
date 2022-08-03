@@ -27,11 +27,12 @@ const QuestionWrapper = styled.div<{ phase0Flag: boolean }>`
   }
 `
 
-const QuestionMark = styled.span`
-  margin-left: 8px;
-  align-items: center;
-  color: ${({ theme }) => theme.textSecondary};
-  margin-top: 2.5px;
+const QuestionMark = styled.span<{ phase0Flag?: boolean }>`
+  font-size: 14px;
+  margin-left: ${({ phase0Flag }) => phase0Flag && '8px'};
+  align-items: ${({ phase0Flag }) => phase0Flag && 'center'};
+  color: ${({ theme, phase0Flag }) => phase0Flag && theme.textSecondary};
+  margin-top: ${({ phase0Flag }) => phase0Flag && '2.5px'};
 `
 
 export default function QuestionHelper({ text }: { text: ReactNode; size?: number }) {
@@ -45,7 +46,9 @@ export default function QuestionHelper({ text }: { text: ReactNode; size?: numbe
     <span style={{ marginLeft: 4, display: 'flex', alignItems: 'center' }}>
       <Tooltip text={text} show={show}>
         <QuestionWrapper onClick={open} onMouseEnter={open} onMouseLeave={close} phase0Flag={phase0FlagEnabled}>
-          <QuestionMark>{phase0FlagEnabled ? <HelpCircle size={16}></HelpCircle> : '?'}</QuestionMark>
+          <QuestionMark phase0Flag={phase0FlagEnabled}>
+            {phase0FlagEnabled ? <HelpCircle size={16}></HelpCircle> : '?'}
+          </QuestionMark>
         </QuestionWrapper>
       </Tooltip>
     </span>

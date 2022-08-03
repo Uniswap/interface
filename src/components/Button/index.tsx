@@ -77,7 +77,7 @@ export const ButtonPrimary = styled(BaseButton)`
   }
 `
 
-export const ButtonLight = styled(BaseButton)<{ phase0Flag: boolean }>`
+export const ButtonLight = styled(BaseButton)<{ phase0Flag?: boolean }>`
   background-color: ${({ theme, phase0Flag }) => (phase0Flag ? theme.accentActionSoft : theme.deprecated_primary5)};
   color: ${({ theme, phase0Flag }) => (phase0Flag ? theme.accentAction : theme.deprecated_primaryText1)};
   font-size: ${({ phase0Flag }) => (phase0Flag ? '20px' : '16px')};
