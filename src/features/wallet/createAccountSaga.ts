@@ -1,6 +1,6 @@
 import dayjs from 'dayjs'
 import { appSelect } from 'src/app/hooks'
-import { AccountType, NativeAccount } from 'src/features/wallet/accounts/types'
+import { AccountType, BackupType, NativeAccount } from 'src/features/wallet/accounts/types'
 import { selectSortedMnemonicAccounts } from 'src/features/wallet/selectors'
 import { activateAccount, addAccount } from 'src/features/wallet/walletSlice'
 import { generateAndStoreMnemonic, generateAndStorePrivateKey } from 'src/lib/RNEthersRs'
@@ -10,7 +10,7 @@ import { call, put } from 'typed-redux-saga'
 
 export function* createAccount() {
   const sortedMnemonicAccounts: NativeAccount[] = yield* appSelect(selectSortedMnemonicAccounts)
-  const { nextDerivationIndex, mnemonicId } = yield* call(
+  const { nextDerivationIndex, mnemonicId, existingBackups } = yield* call(
     getNewAccountParams,
     sortedMnemonicAccounts
   )
@@ -24,6 +24,7 @@ export function* createAccount() {
       timeImportedMs: dayjs().valueOf(),
       derivationIndex: nextDerivationIndex,
       mnemonicId: mnemonicId,
+      backups: existingBackups,
     })
   )
   yield* put(activateAccount(address))
@@ -33,6 +34,7 @@ export function* createAccount() {
 async function getNewAccountParams(sortedAccounts: NativeAccount[]): Promise<{
   nextDerivationIndex: number
   mnemonicId: string
+  existingBackups?: BackupType[]
 }> {
   if (sortedAccounts.length === 0) {
     const mnemonicId = await generateAndStoreMnemonic()
@@ -41,6 +43,7 @@ async function getNewAccountParams(sortedAccounts: NativeAccount[]): Promise<{
   return {
     nextDerivationIndex: getNextDerivationIndex(sortedAccounts),
     mnemonicId: sortedAccounts[0].mnemonicId,
+    existingBackups: sortedAccounts[0].backups,
   }
 }
 
