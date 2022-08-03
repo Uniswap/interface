@@ -364,6 +364,7 @@ export function CopiedNotification() {
     <NotificationToast
       icon={<CheckCircle color={theme.colors.accentSuccess} height={20} width={20} />}
       title={t('Copied to clipboard')}
+      useSmallDisplay={true}
     />
   )
 }

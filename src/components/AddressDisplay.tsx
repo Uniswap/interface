@@ -1,11 +1,13 @@
 import { LayoutProps } from '@shopify/restyle'
 import React, { PropsWithChildren } from 'react'
-import { useAppTheme } from 'src/app/hooks'
+import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import CopyIcon from 'src/assets/icons/copy-sheets.svg'
 import { Button } from 'src/components/buttons/Button'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { UniconWithVisibilityBadge } from 'src/components/unicons/UniconWithVisibilityBadge'
+import { pushNotification } from 'src/features/notifications/notificationSlice'
+import { AppNotificationType } from 'src/features/notifications/types'
 import { ElementName } from 'src/features/telemetry/constants'
 import { useDisplayName } from 'src/features/wallet/hooks'
 import { Theme } from 'src/styles/theme'
@@ -61,12 +63,14 @@ export function AddressDisplay({
   showViewOnly = false,
   ...rest
 }: AddressDisplayProps) {
+  const dispatch = useAppDispatch()
   const theme = useAppTheme()
   const displayName = useDisplayName(address)
   const nameTypeIsAddress = displayName?.type === 'address'
 
   const onPressCopyAddress = () => {
     if (!address) return
+    dispatch(pushNotification({ type: AppNotificationType.Copied }))
     setClipboard(address)
   }
 

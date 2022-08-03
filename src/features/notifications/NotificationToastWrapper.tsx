@@ -3,6 +3,7 @@ import { useAppSelector } from 'src/app/hooks'
 import { AssetType } from 'src/entities/assets'
 import {
   ApproveNotification,
+  CopiedNotification,
   DefaultNotification,
   ErrorNotification,
   FavoriteNotification,
@@ -11,7 +12,6 @@ import {
   TransferNFTNotification,
   UnknownTxNotification,
   WCNotification,
-  CopiedNotification,
 } from 'src/features/notifications/Notifications'
 import { selectActiveAccountNotifications } from 'src/features/notifications/selectors'
 import { AppNotification, AppNotificationType } from 'src/features/notifications/types'

@@ -44,6 +44,7 @@ export interface NotificationContentProps {
 export interface NotificationToastProps extends NotificationContentProps {
   hideDelay?: number // If omitted, the default delay time is used
   address?: string
+  useSmallDisplay?: boolean // for compressed toasts with only icon and text
 }
 
 export function NotificationToast({
@@ -54,6 +55,7 @@ export function NotificationToast({
   hideDelay,
   actionButton,
   address,
+  useSmallDisplay,
 }: NotificationToastProps) {
   const dispatch = useAppDispatch()
   const notifications = useAppSelector(selectActiveAccountNotifications)
@@ -109,7 +111,7 @@ export function NotificationToast({
   return (
     <FlingGestureHandler direction={Directions.UP} onHandlerStateChange={onFling}>
       <AnimatedBox
-        borderColor="backgroundContainer"
+        borderColor={useSmallDisplay ? 'none' : 'backgroundContainer'}
         borderRadius="lg"
         borderWidth={1}
         left={0}
@@ -118,15 +120,19 @@ export function NotificationToast({
         right={0}
         style={animatedStyle}
         zIndex="modal">
-        <NotificationContent
-          actionButton={
-            actionButton ? { title: actionButton.title, onPress: onActionButtonPress } : undefined
-          }
-          balanceUpdate={balanceUpdate}
-          icon={icon}
-          title={title}
-          onPress={onNotificationPress}
-        />
+        {useSmallDisplay ? (
+          <NotificationContentSmall icon={icon} title={title} onPress={onNotificationPress} />
+        ) : (
+          <NotificationContent
+            actionButton={
+              actionButton ? { title: actionButton.title, onPress: onActionButtonPress } : undefined
+            }
+            balanceUpdate={balanceUpdate}
+            icon={icon}
+            title={title}
+            onPress={onNotificationPress}
+          />
+        )}
       </AnimatedBox>
     </FlingGestureHandler>
   )
@@ -200,5 +206,26 @@ export function NotificationContent({
         ) : null}
       </Flex>
     </Button>
+  )
+}
+
+export function NotificationContentSmall({ title, icon, onPress }: NotificationContentProps) {
+  return (
+    <Flex alignItems="center">
+      <Button
+        bg="backgroundBackdrop"
+        borderColor="backgroundAction"
+        borderRadius="full"
+        borderWidth={1}
+        p="sm"
+        onPress={onPress}>
+        <Flex row alignItems="center" gap="xs" justifyContent="space-between">
+          {icon && icon}
+          <Text adjustsFontSizeToFit fontWeight="500" numberOfLines={1} variant="bodySmall">
+            {title}
+          </Text>
+        </Flex>
+      </Button>
+    </Flex>
   )
 }
