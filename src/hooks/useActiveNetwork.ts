@@ -9,6 +9,8 @@ import { ChainId } from '@kyberswap/ks-sdk-core'
 import { useAppDispatch } from 'state/hooks'
 import { updateChainIdWhenNotConnected } from 'state/application/actions'
 import { UnsupportedChainIdError } from '@web3-react/core'
+import { useAddPopup } from 'state/application/hooks'
+import { t } from '@lingui/macro'
 
 const getAddNetworkParams = (chainId: ChainId) => ({
   chainId: '0x' + chainId.toString(16),
@@ -36,6 +38,7 @@ export function useActiveNetwork() {
   const location = useLocation()
   const qs = useParsedQueryString()
   const dispatch = useAppDispatch()
+  const addPopup = useAddPopup()
 
   const locationWithoutNetworkId = useMemo(() => {
     // Delete networkId from qs object
@@ -75,6 +78,15 @@ export function useActiveNetwork() {
           if (switchError?.code === 4902 || switchError?.code === -32603 || isSwitchError) {
             try {
               await activeProvider.request({ method: 'wallet_addEthereumChain', params: [addNetworkParams] })
+              if (chainId !== desiredChainId) {
+                addPopup({
+                  simple: {
+                    title: t`Failed to switch network`,
+                    success: false,
+                    summary: t`In order to use KyberSwap on ${NETWORKS_INFO[desiredChainId].name}, you must change the network in your wallet.`,
+                  },
+                })
+              }
               successCallback && successCallback()
             } catch (addError) {
               console.error(addError)
@@ -84,11 +96,18 @@ export function useActiveNetwork() {
             // handle other "switch" errors
             console.error(switchError)
             failureCallback && failureCallback()
+            addPopup({
+              simple: {
+                title: t`Failed to switch network`,
+                success: false,
+                summary: t`In order to use KyberSwap on ${NETWORKS_INFO[desiredChainId].name}, you must change the network in your wallet.`,
+              },
+            })
           }
         }
       }
     },
-    [dispatch, history, library, locationWithoutNetworkId, error],
+    [dispatch, history, library, locationWithoutNetworkId, error, addPopup, chainId],
   )
 
   useEffect(() => {
