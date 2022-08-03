@@ -2,7 +2,6 @@ import { Palette } from 'src/styles/color'
 
 export enum AccountType {
   Native = 'native', // Key lives in native keystore
-  WalletConnect = 'walletConnect', // Account connected over WalletConnect protocol
   Readonly = 'readonly', // Accounts without keys (e.g. so user can track balances)
 }
 
@@ -36,12 +35,8 @@ export interface NativeAccount extends AccountBase {
   mnemonicId: string
 }
 
-export interface WalletConnectAccount extends AccountBase {
-  type: AccountType.WalletConnect
-}
-
 export interface ReadOnlyAccount extends AccountBase {
   type: AccountType.Readonly
 }
 
-export type Account = NativeAccount | ReadOnlyAccount | WalletConnectAccount
+export type Account = NativeAccount | ReadOnlyAccount
