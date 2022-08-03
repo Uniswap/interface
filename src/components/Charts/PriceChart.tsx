@@ -1,10 +1,10 @@
-//import { AxisBottom, AxisLeft } from '@visx/axis'
 import { localPoint } from '@visx/event'
 import { EventType } from '@visx/event/lib/types'
 import { GlyphCircle } from '@visx/glyph'
 import { Group } from '@visx/group'
 import { Line, LinePath } from '@visx/shape'
 import { bisect, scaleLinear } from 'd3'
+import useTheme from 'hooks/useTheme'
 import { atom } from 'jotai'
 import { useUpdateAtom } from 'jotai/utils'
 import { useCallback, useEffect, useState } from 'react'
@@ -14,11 +14,10 @@ import data from './data.json'
 
 export const CrosshairPriceAtom = atom<{ value: number; delta: string }>({ value: 0, delta: '+0.00%' })
 
-// Defining selector functions
 type PricePoint = { value: number; timestamp: number }
 
-function getPriceBounds(priceHistory: PricePoint[]): [number, number] {
-  const prices = data.priceHistory.map((x) => x.value)
+function getPriceBounds(pricePoints: PricePoint[]): [number, number] {
+  const prices = pricePoints.map((x) => x.value)
   const min = Math.min(...prices)
   const max = Math.max(...prices)
   return [min, max]
@@ -40,13 +39,14 @@ export function PriceChart({ width, height }: PriceChartProps) {
   const margin = { top: 40, bottom: 50 }
   // defining inner measurements
   const innerHeight = height - margin.top - margin.bottom
+  const theme = useTheme()
 
   const pricePoints = data.priceHistory
   const startingPrice = pricePoints[0]
   const endingPrice = pricePoints[pricePoints.length - 1]
-  const initialState = { pricePoint: endingPrice, xCordinate: null }
+  const initialState = { pricePoint: endingPrice, xCoordinate: null }
 
-  const [selected, setSelected] = useState<{ pricePoint: PricePoint; xCordinate: number | null }>(initialState)
+  const [selected, setSelected] = useState<{ pricePoint: PricePoint; xCoordinate: number | null }>(initialState)
   const setCrosshairPrice = useUpdateAtom(CrosshairPriceAtom)
 
   useEffect(() => {
@@ -63,7 +63,7 @@ export function PriceChart({ width, height }: PriceChartProps) {
   // y scale
   const rdScale = scaleLinear().domain(getPriceBounds(pricePoints)).range([innerHeight, 0])
 
-  const handleTooltip = useCallback(
+  const handleHover = useCallback(
     (event: Element | EventType) => {
       const { x } = localPoint(event) || { x: 0 }
       const x0 = timeScale.invert(x) // get timestamp from the scale
@@ -76,12 +76,13 @@ export function PriceChart({ width, height }: PriceChartProps) {
       const d0 = data.priceHistory[index - 1]
       const d1 = data.priceHistory[index]
       let pricePoint = d0
-      // is previous data point available?
-      if (d1 && d1.timestamp) {
+
+      const hasPreviousData = d1 && d1.timestamp
+      if (hasPreviousData) {
         pricePoint = x0.valueOf() - d0.timestamp.valueOf() > d1.timestamp.valueOf() - x0.valueOf() ? d1 : d0
       }
 
-      setSelected({ pricePoint, xCordinate: x })
+      setSelected({ pricePoint, xCoordinate: x })
     },
     [timeScale]
   )
@@ -91,17 +92,17 @@ export function PriceChart({ width, height }: PriceChartProps) {
       <Group top={margin.top}>
         <LinePath
           curve={circleCorners.radius(1)}
-          stroke={'#627EEA'}
+          stroke={theme.accentActive}
           strokeWidth={2}
           data={data.priceHistory}
           x={(d: PricePoint) => timeScale(d.timestamp) ?? 0}
           y={(d: PricePoint) => rdScale(d.value) ?? 0}
         />
-        {selected.xCordinate && (
+        {selected.xCoordinate && (
           <g>
             <Line
-              from={{ x: selected.xCordinate, y: 0 }}
-              to={{ x: selected.xCordinate, y: height }}
+              from={{ x: selected.xCoordinate, y: 0 }}
+              to={{ x: selected.xCoordinate, y: height }}
               stroke={'#99A1BD3D'}
               strokeWidth={1}
               pointerEvents="none"
@@ -109,14 +110,14 @@ export function PriceChart({ width, height }: PriceChartProps) {
             />
           </g>
         )}
-        {selected.xCordinate && (
+        {selected.xCoordinate && (
           <g>
             <GlyphCircle
-              left={selected.xCordinate}
+              left={selected.xCoordinate}
               top={rdScale(selected.pricePoint.value)}
               size={50}
-              fill={'#627EEA'}
-              stroke={'#99A1BD3D'}
+              fill={theme.accentActive}
+              stroke={theme.backgroundOutline}
               strokeWidth={2}
             />
           </g>
@@ -127,9 +128,9 @@ export function PriceChart({ width, height }: PriceChartProps) {
           width={width}
           height={innerHeight}
           fill={'transparent'}
-          onTouchStart={handleTooltip}
-          onTouchMove={handleTooltip}
-          onMouseMove={handleTooltip}
+          onTouchStart={handleHover}
+          onTouchMove={handleHover}
+          onMouseMove={handleHover}
           onMouseLeave={() => setSelected(initialState)}
         />
       </Group>
