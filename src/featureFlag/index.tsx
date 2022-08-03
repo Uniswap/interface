@@ -35,7 +35,7 @@ export function useFeatureFlagsIsLoaded(): boolean {
 
 // feature flag hooks
 
-enum Phase0Variant {
+export enum Phase0Variant {
   Control = 'Control',
   Enabled = 'Enabled',
 }
