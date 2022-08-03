@@ -77,7 +77,7 @@ export enum SWAP_PRICE_UPDATE_USER_RESPONSE {
 /**
  * Known pages in the app. Highest order context.
  */
-export const enum PageName {
+export enum PageName {
   EXPLORE_PAGE = 'explore-page',
   POOL_PAGE = 'pool-page',
   SWAP_PAGE = 'swap-page',
@@ -90,14 +90,14 @@ export const enum PageName {
  * eg a `back` button in a modal will have the same `element`,
  * but a different `section`.
  */
-export const enum SectionName {
+export enum SectionName {
   CURRENCY_INPUT_PANEL = 'swap-currency-input',
   CURRENCY_OUTPUT_PANEL = 'swap-currency-output',
   // alphabetize additional section names.
 }
 
 /** Known modals for analytics purposes. */
-export const enum ModalName {
+export enum ModalName {
   CONFIRM_SWAP = 'confirm-swap-modal',
   TOKEN_SELECTOR = 'token-selector-modal',
   // alphabetize additional modal names.
@@ -107,7 +107,7 @@ export const enum ModalName {
  * Known element names for analytics purposes.
  * Use to identify low-level components given a TraceContext
  */
-export const enum ElementName {
+export enum ElementName {
   AUTOROUTER_VISUALIZATION_ROW = 'expandable-autorouter-visualization-row',
   COMMON_BASES_CURRENCY_BUTTON = 'common-bases-currency-button',
   CONFIRM_SWAP_BUTTON = 'confirm-swap-or-send',
