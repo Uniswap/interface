@@ -212,8 +212,8 @@ export function useGaslessAPITrade(
           allowanceTarget: quoteResult?.allowanceTarget,
         },
         paymentFees:
-          paymentToken && quoteResult.paymentFee
-            ? CurrencyAmount.fromRawAmount(paymentToken as Currency, quoteResult.paymentFee as BigintIsh)
+          paymentToken && quoteResult.paymentFees
+            ? CurrencyAmount.fromRawAmount(paymentToken as Currency, quoteResult.paymentFees as BigintIsh)
             : undefined,
         paymentToken,
       }

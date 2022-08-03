@@ -153,7 +153,7 @@ export function useBestMarketTrade(
       ...(debouncing ? { state: V3TradeState.SYNCING } : {}),
       ...(isLoading ? { state: V3TradeState.LOADING } : {}),
     }),
-    [betterTrade, debouncing, isLoading, savings]
+    [betterTrade, debouncing, gasless, isLoading, savings]
   )
 }
 

@@ -203,6 +203,7 @@ export function useDerivedMarketInfo(
 
   const allowedSlippage = useSwapSlippageTolerance(bestTrade ?? undefined)
 
+  // TODO use memo
   const outputAmount = v2Trade?.trade?.outputAmount
   const outputAfterFees =
     v2Trade?.paymentFees && outputAmount ? outputAmount.subtract(v2Trade?.paymentFees) : outputAmount

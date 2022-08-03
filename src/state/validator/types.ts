@@ -62,5 +62,5 @@ export interface GetValidatorGaslessQuoteResult {
   allowanceTarget: string
   tx: TransactionData | undefined
   paymentTokenAddress: string
-  paymentFee: string
+  paymentFees: string
 }
