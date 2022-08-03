@@ -34,6 +34,7 @@ import {
   useActiveAccountAddressWithThrow,
   useActiveAccountWithThrow,
 } from 'src/features/wallet/hooks'
+import { toSupportedChainId } from 'src/utils/chainId'
 import { buildCurrencyId } from 'src/utils/currencyId'
 import { logger } from 'src/utils/logger'
 import { SagaStatus } from 'src/utils/saga'
@@ -201,7 +202,7 @@ function useTransferCallback(
 
 export function useUpdateTransferGasEstimate(
   transactionStateDispatch: React.Dispatch<AnyAction>,
-  chainId: ChainId | undefined,
+  chainId: Nullable<ChainId>,
   tokenAddress: string | undefined,
   amount: string | undefined,
   toAddress: string | undefined,
@@ -337,4 +338,16 @@ export function useHandleTransferWarningModals(
       onPressWarningContinue,
     }
   }, [recipientHasNoBalances, onPressReview, onPressWarningContinue])
+}
+
+export function useInputAssetInfo(
+  assetType: AssetType | undefined,
+  inputAsset: Nullable<Currency | NFTAsset.Asset>
+) {
+  // TODO: consider simplifying this logic
+  const isNFT = assetType === AssetType.ERC721 || assetType === AssetType.ERC1155
+  const currencyIn = !isNFT ? (inputAsset as Currency) : undefined
+  const nftIn = isNFT ? (inputAsset as NFTAsset.Asset) : undefined
+  const chainId = toSupportedChainId(isNFT ? nftIn?.chainId : currencyIn?.chainId) ?? undefined
+  return { isNFT, currencyIn, nftIn, chainId }
 }

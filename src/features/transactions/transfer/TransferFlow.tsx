@@ -4,11 +4,14 @@ import { useTranslation } from 'react-i18next'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import {
+  CurrencyField,
   initialState as emptyState,
   TransactionState,
   transactionStateReducer,
 } from 'src/features/transactions/transactionState/transactionState'
+import { useDerivedTransferInfo, useInputAssetInfo } from 'src/features/transactions/transfer/hooks'
 import { TransferReview } from 'src/features/transactions/transfer/TransferReview'
+import { TransferStatus } from 'src/features/transactions/transfer/TransferStatus'
 import { TransferTokenForm } from 'src/features/transactions/transfer/TransferTokenForm'
 
 interface TransferFormProps {
@@ -19,7 +22,7 @@ interface TransferFormProps {
 export enum TransferStep {
   FORM,
   REVIEW,
-  // TODO: Add submission states: pending, success, error
+  SUBMITTED,
 }
 
 type InnerContentProps = {
@@ -31,22 +34,44 @@ type InnerContentProps = {
 }
 
 function TransferInnerContent({ dispatch, state, step, setStep, onClose }: InnerContentProps) {
-  if (step === TransferStep.FORM)
-    return (
-      <TransferTokenForm
-        dispatch={dispatch}
-        state={state}
-        onNext={() => setStep(TransferStep.REVIEW)}
-      />
-    )
-  return (
-    <TransferReview
-      dispatch={dispatch}
-      state={state}
-      onNext={onClose}
-      onPrev={() => setStep(TransferStep.FORM)}
-    />
-  )
+  const derivedTransferInfo = useDerivedTransferInfo(state)
+  const assetType = derivedTransferInfo.currencyTypes[CurrencyField.INPUT]
+  const inputAsset = derivedTransferInfo.currencies[CurrencyField.INPUT]
+  const inputAssetInfo = useInputAssetInfo(assetType, inputAsset)
+
+  switch (step) {
+    case TransferStep.SUBMITTED:
+      return (
+        <TransferStatus
+          derivedTransferInfo={derivedTransferInfo}
+          inputAssetInfo={inputAssetInfo}
+          txId={state.txId}
+          onNext={onClose}
+          onTryAgain={() => setStep(TransferStep.FORM)}
+        />
+      )
+    case TransferStep.FORM:
+      return (
+        <TransferTokenForm
+          derivedTransferInfo={derivedTransferInfo}
+          dispatch={dispatch}
+          inputAssetInfo={inputAssetInfo}
+          state={state}
+          onNext={() => setStep(TransferStep.REVIEW)}
+        />
+      )
+    case TransferStep.REVIEW:
+      return (
+        <TransferReview
+          derivedTransferInfo={derivedTransferInfo}
+          dispatch={dispatch}
+          inputAssetInfo={inputAssetInfo}
+          state={state}
+          onNext={() => setStep(TransferStep.SUBMITTED)}
+          onPrev={() => setStep(TransferStep.FORM)}
+        />
+      )
+  }
 }
 
 export function TransferFlow({ prefilledState, onClose }: TransferFormProps) {

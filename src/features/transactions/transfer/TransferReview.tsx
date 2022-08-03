@@ -1,5 +1,4 @@
 import { AnyAction } from '@reduxjs/toolkit'
-import { Currency } from '@uniswap/sdk-core'
 import { FixedNumber } from 'ethers'
 import { notificationAsync } from 'expo-haptics'
 import React, { Dispatch } from 'react'
@@ -17,21 +16,20 @@ import { RecipientPrevTransfers } from 'src/components/input/RecipientInputPanel
 import { AnimatedFlex, Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { WarningAction } from 'src/components/warnings/types'
-import { AssetType } from 'src/entities/assets'
 import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
-import { NFTAsset } from 'src/features/nfts/types'
 import { ElementName } from 'src/features/telemetry/constants'
 import {
   CurrencyField,
   TransactionState,
 } from 'src/features/transactions/transactionState/transactionState'
 import {
-  useDerivedTransferInfo,
+  DerivedTransferInfo,
   useTransferERC20Callback,
   useTransferNFTCallback,
   useUpdateTransferGasEstimate,
 } from 'src/features/transactions/transfer/hooks'
 import { TransferDetails } from 'src/features/transactions/transfer/TransferDetails'
+import { InputAssetInfo } from 'src/features/transactions/transfer/types'
 import { TransactionType } from 'src/features/transactions/types'
 import { dimensions } from 'src/styles/sizing'
 import { currencyAddress } from 'src/utils/currencyId'
@@ -39,18 +37,25 @@ import { fixedNumberToInt } from 'src/utils/number'
 
 interface TransferFormProps {
   state: TransactionState
+  derivedTransferInfo: DerivedTransferInfo
+  inputAssetInfo: InputAssetInfo
   dispatch: Dispatch<AnyAction>
   onNext: () => void
   onPrev: () => void
 }
 
-export function TransferReview({ state, dispatch, onNext, onPrev }: TransferFormProps) {
+export function TransferReview({
+  derivedTransferInfo,
+  inputAssetInfo,
+  state,
+  dispatch,
+  onNext,
+  onPrev,
+}: TransferFormProps) {
   const { t } = useTranslation()
   const theme = useAppTheme()
 
-  const derivedTransferInfo = useDerivedTransferInfo(state)
   const {
-    currencies,
     currencyAmounts,
     currencyTypes,
     formattedAmounts,
@@ -58,13 +63,8 @@ export function TransferReview({ state, dispatch, onNext, onPrev }: TransferForm
     isUSDInput = false,
     warnings,
   } = derivedTransferInfo
-
-  // TODO: consider simplifying this logic
-  const isNFT =
-    currencyTypes[CurrencyField.INPUT] === AssetType.ERC721 ||
-    currencyTypes[CurrencyField.INPUT] === AssetType.ERC1155
-  const currencyIn = !isNFT ? (currencies[CurrencyField.INPUT] as Currency) : undefined
-  const nftIn = isNFT ? (currencies[CurrencyField.INPUT] as NFTAsset.Asset) : undefined
+  const { isNFT, currencyIn, nftIn, chainId } = inputAssetInfo
+  const { gasSpendEstimate, gasPrice } = state
 
   // TODO: how should we surface this warning?
   const actionButtonDisabled = warnings.some(
@@ -74,14 +74,14 @@ export function TransferReview({ state, dispatch, onNext, onPrev }: TransferForm
   // if action button is disabled, make amount undefined so that gas estimate doesn't run
   useUpdateTransferGasEstimate(
     dispatch,
-    isNFT ? nftIn?.chainId : currencyIn?.chainId,
+    chainId,
     isNFT ? nftIn?.asset_contract.address : currencyIn ? currencyAddress(currencyIn) : undefined,
     !actionButtonDisabled ? currencyAmounts[CurrencyField.INPUT]?.quotient.toString() : undefined,
     recipient,
     nftIn?.token_id,
     currencyTypes[CurrencyField.INPUT]
   )
-  const { gasSpendEstimate, gasPrice } = state
+
   const gasFee =
     gasSpendEstimate && gasPrice
       ? fixedNumberToInt(
@@ -92,7 +92,7 @@ export function TransferReview({ state, dispatch, onNext, onPrev }: TransferForm
       : undefined
 
   const transferERC20Callback = useTransferERC20Callback(
-    currencyIn?.chainId,
+    chainId,
     recipient,
     currencyIn ? currencyAddress(currencyIn) : undefined,
     currencyAmounts[CurrencyField.INPUT]?.quotient.toString(),
@@ -100,7 +100,7 @@ export function TransferReview({ state, dispatch, onNext, onPrev }: TransferForm
   )
   // TODO: if readonly account, not sendable
   const transferNFTCallback = useTransferNFTCallback(
-    nftIn?.chainId,
+    chainId,
     recipient,
     nftIn?.asset_contract.address,
     nftIn?.token_id,
@@ -179,7 +179,7 @@ export function TransferReview({ state, dispatch, onNext, onPrev }: TransferForm
         </Flex>
       </AnimatedFlex>
       <Flex flexGrow={1} gap="sm" justifyContent="flex-end" mb="xl" mt="xs" px="sm">
-        <TransferDetails chainId={currencyIn?.chainId || nftIn?.chainId} gasFee={gasFee} />
+        <TransferDetails chainId={chainId} gasFee={gasFee} />
         <Flex row gap="xs">
           <Button
             alignItems="center"

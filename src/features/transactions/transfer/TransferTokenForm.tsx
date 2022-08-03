@@ -14,8 +14,6 @@ import { AnimatedFlex, Box, Flex } from 'src/components/layout'
 import { WarningAction, WarningLabel, WarningSeverity } from 'src/components/warnings/types'
 import { WarningModal } from 'src/components/warnings/WarningModal'
 import { ChainId, CHAIN_INFO } from 'src/constants/chains'
-import { AssetType } from 'src/entities/assets'
-import { NFTAsset } from 'src/features/nfts/types'
 import { ElementName } from 'src/features/telemetry/constants'
 import { useSwapActionHandlers, useUSDTokenUpdater } from 'src/features/transactions/swap/hooks'
 import {
@@ -26,26 +24,33 @@ import {
   TransactionState,
 } from 'src/features/transactions/transactionState/transactionState'
 import {
-  useDerivedTransferInfo,
+  DerivedTransferInfo,
   useHandleTransferWarningModals,
   useIsSmartContractAddress,
   useUpdateTransferGasEstimate,
 } from 'src/features/transactions/transfer/hooks'
+import { InputAssetInfo } from 'src/features/transactions/transfer/types'
 import { currencyAddress } from 'src/utils/currencyId'
 
 interface TransferTokenProps {
   state: TransactionState
   dispatch: React.Dispatch<AnyAction>
+  derivedTransferInfo: DerivedTransferInfo
+  inputAssetInfo: InputAssetInfo
   onNext: () => void
 }
 
-export function TransferTokenForm({ state, dispatch, onNext }: TransferTokenProps) {
+export function TransferTokenForm({
+  state,
+  dispatch,
+  derivedTransferInfo,
+  inputAssetInfo,
+  onNext,
+}: TransferTokenProps) {
   const { t } = useTranslation()
   const { showNewAddressWarning, showNoBalancesWarning } = state
 
-  const derivedTransferInfo = useDerivedTransferInfo(state)
   const {
-    currencies,
     currencyAmounts,
     currencyBalances,
     currencyTypes,
@@ -57,16 +62,10 @@ export function TransferTokenForm({ state, dispatch, onNext }: TransferTokenProp
     warnings,
   } = derivedTransferInfo
 
+  const { isNFT, currencyIn, nftIn, chainId } = inputAssetInfo
+
   const { onSelectCurrency, onSetAmount, onSetMax, onSelectRecipient, onToggleUSDInput } =
     useSwapActionHandlers(dispatch)
-
-  // TODO: consider simplifying this logic
-  const isNFT =
-    currencyTypes[CurrencyField.INPUT] === AssetType.ERC721 ||
-    currencyTypes[CurrencyField.INPUT] === AssetType.ERC1155
-  const currencyIn = !isNFT ? (currencies[CurrencyField.INPUT] as Currency) : undefined
-  const nftIn = isNFT ? (currencies[CurrencyField.INPUT] as NFTAsset.Asset) : undefined
-  const chainId = isNFT ? nftIn?.chainId : currencyIn?.chainId
 
   useUSDTokenUpdater(
     dispatch,

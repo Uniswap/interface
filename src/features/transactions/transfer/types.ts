@@ -1,5 +1,7 @@
+import { Currency } from '@uniswap/sdk-core'
 import { ChainId } from 'src/constants/chains'
 import { AssetType, NFTAssetType } from 'src/entities/assets'
+import { NFTAsset } from 'src/features/nfts/types'
 import { Account } from 'src/features/wallet/accounts/types'
 
 interface BaseTransferParams {
@@ -20,3 +22,10 @@ export interface TransferNFTParams extends BaseTransferParams {
 }
 
 export type TransferTokenParams = TransferCurrencyParams | TransferNFTParams
+
+export interface InputAssetInfo {
+  isNFT: boolean
+  currencyIn: Currency | undefined
+  nftIn: NFTAsset.Asset | undefined
+  chainId: ChainId | undefined
+}
