@@ -47,7 +47,8 @@ const Widget = styled.div`
 export default function TokenDetails() {
   const { tokenAddress } = useParams<{ tokenAddress?: string }>()
   const { data, error, loading } = useTokenDetailPageQuery(tokenAddress)
-
+  console.log('token details', data)
+  console.log('token details error', error)
   let tokenDetail
   if (!tokenAddress) {
     // TODO: handle no address / invalid address cases

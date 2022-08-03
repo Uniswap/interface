@@ -220,6 +220,8 @@ export interface Palette {
   chain_137_background: Color
   chain_10_background: Color
   chain_42161_background: Color
+
+  flyoutDropShadow: Color
 }
 
 export const colorsLight: Palette = {
@@ -275,6 +277,8 @@ export const colorsLight: Palette = {
   chain_137_background: colors.purple900,
   chain_10_background: colors.red900,
   chain_42161_background: colors.blue900,
+
+  flyoutDropShadow: colors.black,
 }
 
 export const colorsDark: Palette = {
@@ -329,4 +333,6 @@ export const colorsDark: Palette = {
   chain_137_background: colors.purple900,
   chain_10_background: colors.red900,
   chain_42161_background: colors.blue900,
+
+  flyoutDropShadow: colors.black,
 }
