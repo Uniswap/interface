@@ -1,5 +1,6 @@
 // Copied from https://github.com/Uniswap/interface/blob/main/src/hooks/useENSName.ts
 
+import { NEVER_RELOAD } from '@uniswap/redux-multicall'
 import { utils } from 'ethers'
 import { useMemo } from 'react'
 import { ChainId } from 'src/constants/chains'
@@ -40,14 +41,22 @@ export function useENSName(
     chainId,
     registrarContract,
     'resolver',
-    ensNodeArgument
+    ensNodeArgument,
+    NEVER_RELOAD
   )
+
   const resolverAddressResult = resolverAddress.result?.[0]
   const resolverContract = useENSResolverContract(
     chainId,
     resolverAddressResult && !isZero(resolverAddressResult) ? resolverAddressResult : undefined
   )
-  const nameCallRes = useSingleCallResult(chainId, resolverContract, 'name', ensNodeArgument)
+  const nameCallRes = useSingleCallResult(
+    chainId,
+    resolverContract,
+    'name',
+    ensNodeArgument,
+    NEVER_RELOAD
+  )
   const name = nameCallRes.result?.[0]
 
   /* ENS does not enforce that an address owns a .eth domain before setting it as a reverse proxy

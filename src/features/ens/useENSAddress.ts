@@ -1,5 +1,6 @@
 // Mostly copied from https://github.com/Uniswap/interface/blob/main/src/hooks/useENSAddress.ts
 
+import { NEVER_RELOAD } from '@uniswap/redux-multicall'
 import { utils } from 'ethers'
 import { useMemo } from 'react'
 import { ChainId } from 'src/constants/chains'
@@ -33,14 +34,15 @@ export function useENSAddress(
     chainId,
     registrarContract,
     'resolver',
-    ensNodeArgument
+    ensNodeArgument,
+    NEVER_RELOAD
   )
   const resolverAddressResult = resolverAddress.result?.[0]
   const resolverContract = useENSResolverContract(
     chainId,
     resolverAddressResult && !isZero(resolverAddressResult) ? resolverAddressResult : undefined
   )
-  const addr = useSingleCallResult(chainId, resolverContract, 'addr', ensNodeArgument)
+  const addr = useSingleCallResult(chainId, resolverContract, 'addr', ensNodeArgument, NEVER_RELOAD)
 
   const changed = debouncedName !== ensName
   return {
