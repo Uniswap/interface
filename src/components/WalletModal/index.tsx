@@ -244,7 +244,7 @@ export default function WalletModal({
         connectedWallets.filter((wallet) => wallet.account === account && wallet.walletType === walletType).length > 0
       sendAnalyticsEventAndUserInfo(account, walletType, chainId, isReconnect)
       setShouldLogWalletBalances(true)
-      addWalletToConnectedWallets({ account, walletType })
+      if (!isReconnect) addWalletToConnectedWallets({ account, walletType })
     }
     setLastActiveWalletAddress(account)
   }, [connectedWallets, addWalletToConnectedWallets, lastActiveWalletAddress, account, connector, chainId])
