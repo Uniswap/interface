@@ -181,11 +181,8 @@ class RNEthersRS: NSObject {
       return reject(RNEthersRSError.retrieveMnemonicError.rawValue, "Failed to retrieve mnemonic", RNEthersRSError.retrieveMnemonicError)
     }
     
-    
-    
-    // Access iCloud Documents container
-    // TODO: Temporarily appending "Documents" path to make file visible in iCloud Files for easier debugging
-    guard let containerUrl = FileManager.default.url(forUbiquityContainerIdentifier: nil)?.appendingPathComponent("Documents") else {
+    // Access Uniswap iCloud Documents container
+    guard let containerUrl = FileManager.default.url(forUbiquityContainerIdentifier: nil) else {
       return reject(RNEthersRSError.iCloudError.rawValue, "Failed to find iCloud container", RNEthersRSError.iCloudError)
     }
     
@@ -233,9 +230,8 @@ class RNEthersRS: NSObject {
   @objc(restoreMnemonicFromICloud:pin:resolve:reject:)
   func restoreMnemonicFromICloud(mnemonicId: String, pin: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock
   ) {
-    // Access iCloud Documents container
-    // TODO: Temporarily appending "Documents" path to make file visible in iCloud Files for easier debugging
-    guard let containerUrl = FileManager.default.url(forUbiquityContainerIdentifier: nil)?.appendingPathComponent("Documents") else {
+    // Access Uniswap iCloud Documents container
+    guard let containerUrl = FileManager.default.url(forUbiquityContainerIdentifier: nil) else {
       return reject(RNEthersRSError.iCloudError.rawValue, "Failed to find iCloud container", RNEthersRSError.iCloudError)
     }
     

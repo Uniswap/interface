@@ -96,7 +96,7 @@
        <key>iCloud.Uniswap.UserBackups</key>
        <dict>
            <key>NSUbiquitousContainerIsDocumentScopePublic</key>
-           <true/>
+           <false/>
            <key>NSUbiquitousContainerName</key>
            <string>Uniswap</string>
            <key>NSUbiquitousContainerSupportedFolderLevels</key>

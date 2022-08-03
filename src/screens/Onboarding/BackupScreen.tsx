@@ -121,28 +121,11 @@ function BackupOptions({
             return
           }
 
-          // TODO: Remove alert when tested and reviewed
-          Alert.alert(
-            'iCloud Backup Warning',
-            'iCloud backup is currently in development and currently stores your recovery phrase in plain text in iCloud. It is recommended to only use this feature with test wallets for now.',
-            [
-              {
-                text: t('Continue'),
-                style: 'default',
-                onPress: () => {
-                  navigate({
-                    name: OnboardingScreens.BackupCloud,
-                    params: { importType: params?.importType },
-                    merge: true,
-                  })
-                },
-              },
-              {
-                text: t('Cancel'),
-                style: 'cancel',
-              },
-            ]
-          )
+          navigate({
+            name: OnboardingScreens.BackupCloud,
+            params: { importType: params?.importType },
+            merge: true,
+          })
         }}
       />
       <BackupOptionButton

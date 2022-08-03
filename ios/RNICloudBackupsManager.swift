@@ -63,9 +63,8 @@ class RNICloudBackupsManager: RCTEventEmitter {
   @objc(deleteICloudMnemonicBackup:resolve:reject:)
   func deleteICloudMnemonicBackup(mnemonicId: String, resolve: @escaping RCTPromiseResolveBlock,
                                   reject: @escaping RCTPromiseRejectBlock) {
-    // Access iCloud Documents container
-    // TODO(MOB-1295): Temporarily appending "/Documents" path to make file visible in iCloud Files for easier debugging
-    guard let containerUrl = FileManager.default.url(forUbiquityContainerIdentifier: nil)?.appendingPathComponent("Documents") else {
+    // Access Uniswap iCloud Documents container
+    guard let containerUrl = FileManager.default.url(forUbiquityContainerIdentifier: nil) else {
       return reject(ICloudBackupError.iCloudContainerError.rawValue, "Failed to find iCloud container", ICloudBackupError.iCloudContainerError)
     }
     
@@ -97,9 +96,8 @@ class RNICloudBackupsManager: RCTEventEmitter {
    */
   @objc
   func startFetchingICloudBackups() {
-    // TODO: update search scope to NSMetadataQueryUbiquitousDataScope when saving backups outside of /Documents directory
-    backupsQuery.searchScopes = [NSMetadataQueryUbiquitousDocumentsScope]
-    // Fetch all JSON files in iCloud container
+    // Fetch all JSON files in Uniswap iCloud container
+    backupsQuery.searchScopes = [NSMetadataQueryUbiquitousDataScope]
     backupsQuery.predicate =
     NSPredicate(format: "%K LIKE %@", NSMetadataItemFSNameKey, "*.json")
     
