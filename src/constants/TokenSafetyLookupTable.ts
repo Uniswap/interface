@@ -14,34 +14,36 @@ export enum TOKEN_LIST_TYPES {
 class TokenSafetyLookupTable {
   dict: { [key: string]: TOKEN_LIST_TYPES } = {}
 
-  uniDefaultTokens = store.getState().lists.byUrl[UNI_LIST].current?.tokens
-  brokenTokens = brokenTokenList.tokens
-  unsupportTokens = unsupportedTokenList.tokens
-  uniExtendedTokens = store.getState().lists.byUrl[UNI_EXTENDED_LIST].current?.tokens
-
   constructor() {
-    if (!this.uniDefaultTokens) {
-      this.uniDefaultTokens = []
+    let uniDefaultTokens = store.getState().lists.byUrl[UNI_LIST].current?.tokens
+    let uniExtendedTokens = store.getState().lists.byUrl[UNI_EXTENDED_LIST].current?.tokens
+    const brokenTokens = brokenTokenList.tokens
+    const unsupportTokens = unsupportedTokenList.tokens
+
+    if (!uniDefaultTokens) {
+      uniDefaultTokens = []
     }
-    if (!this.uniExtendedTokens) {
-      this.uniExtendedTokens = []
+    if (!uniExtendedTokens) {
+      uniExtendedTokens = []
     }
 
-    this.brokenTokens.forEach((token) => {
+    brokenTokens.forEach((token) => {
       this.dict[token.address.toLowerCase()] = TOKEN_LIST_TYPES.BROKEN
     })
-    this.unsupportTokens.forEach((token) => {
+    unsupportTokens.forEach((token) => {
       this.dict[token.address.toLowerCase()] = TOKEN_LIST_TYPES.BLOCKED
     })
-    this.uniExtendedTokens.forEach((token) => {
+    uniExtendedTokens.forEach((token) => {
       this.dict[token.address.toLowerCase()] = TOKEN_LIST_TYPES.UNI_EXTENDED
     })
-    this.uniDefaultTokens.forEach((token) => {
+    uniDefaultTokens.forEach((token) => {
       this.dict[token.address.toLowerCase()] = TOKEN_LIST_TYPES.UNI_DEFAULT
     })
+    console.log('YO')
   }
 
   checkToken(address: string) {
+    console.log('What')
     return this.dict[address] ?? TOKEN_LIST_TYPES.UNKNOWN
   }
 }

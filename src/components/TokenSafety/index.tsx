@@ -46,11 +46,6 @@ const InfoText = styled(Text)`
   text-align: center;
 `
 
-const LearnMoreLink = styled(ExternalLink)`
-  color: ${({ theme }) => theme.textPrimary};
-  font-weight: 600;
-`
-
 const StyledButton = styled(ButtonPrimary)<{ buttonColor: Color; textColor: Color }>`
   color: ${({ textColor }) => textColor};
   background-color: ${({ buttonColor }) => buttonColor};
@@ -129,8 +124,8 @@ const ExplorerContainer = styled.div`
   height: 32px;
   margin-top: 10px;
   font-size: 20px;
-  background-color: ${({ theme }) => theme.accentActionSoft};
-  color: ${({ theme }) => theme.accentAction};
+  background-color: ${({ theme }) => theme.accentActiveSoft};
+  color: ${({ theme }) => theme.accentActive};
   border-radius: 8px;
   padding: 2px 12px;
   display: flex;
@@ -145,22 +140,19 @@ const ExplorerLinkWrapper = styled.div`
   cursor: pointer;
 
   :hover {
-    text-decoration: none;
-    opacity: 0.7;
+    opacity: 0.6;
+  }
+  :active {
+    opacity: 0.4;
   }
 `
 
 const ExplorerLink = styled.div`
   display: block;
   font-size: 14px;
-  color: ${({ theme }) => theme.accentAction};
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-
-  :hover {
-    text-decoration: none;
-  }
 `
 const ExplorerLinkIcon = styled(LinkIconFeather)`
   height: 16px;
@@ -262,9 +254,9 @@ export default function TokenSafety({ tokenAddress, secondTokenAddress, onContin
           <ShortColumn>
             <InfoText>
               {description}{' '}
-              <LearnMoreLink href={TOKEN_SAFETY_ARTICLE}>
+              <ExternalLink href={TOKEN_SAFETY_ARTICLE}>
                 <Trans>Learn More</Trans>
-              </LearnMoreLink>
+              </ExternalLink>
             </InfoText>
           </ShortColumn>
           <LinkColumn>{urls}</LinkColumn>

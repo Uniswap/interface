@@ -68,67 +68,30 @@ export const LinkStyledButton = styled.button<{ disabled?: boolean }>`
   }
 `
 
-// An internal link from the react-router-dom library that is correctly styled
-export const StyledInternalLink = styled(Link)`
+export const LinkStyle = css`
   text-decoration: none;
-  cursor: pointer;
   color: ${({ theme }) => theme.accentAction};
+  stroke: ${({ theme }) => theme.accentAction};
+  cursor: pointer;
   font-weight: 500;
 
   :hover {
-    text-decoration: underline;
+    opacity: 0.6;
   }
-
-  :focus {
-    outline: none;
-    text-decoration: underline;
-  }
-
   :active {
-    text-decoration: none;
+    opacity: 0.4;
   }
 `
 
-const StyledLink = styled.a`
-  text-decoration: none;
-  cursor: pointer;
-  color: ${({ theme }) => theme.accentAction};
-  font-weight: 500;
-
-  :hover {
-    text-decoration: underline;
-  }
-
-  :focus {
-    outline: none;
-    text-decoration: underline;
-  }
-
-  :active {
-    text-decoration: none;
-  }
+// An internal link from the react-router-dom library that is correctly styled
+export const StyledInternalLink = styled(Link)`
+  ${LinkStyle}
 `
 
 const LinkIconWrapper = styled.a`
-  text-decoration: none;
-  cursor: pointer;
   align-items: center;
   justify-content: center;
   display: flex;
-
-  :hover {
-    text-decoration: none;
-    opacity: 0.7;
-  }
-
-  :focus {
-    outline: none;
-    text-decoration: none;
-  }
-
-  :active {
-    text-decoration: none;
-  }
 `
 
 const CopyIconWrapper = styled.div`
@@ -147,26 +110,13 @@ const IconStyle = css`
 
 const LinkIcon = styled(LinkIconFeather)`
   ${IconStyle}
-  stroke: ${({ theme }) => theme.accentAction};
+  ${LinkStyle}
 `
 
 const CopyIcon = styled(Copy)`
   ${IconStyle}
-  stroke: ${({ theme }) => theme.accentAction};
-
-  :hover {
-    text-decoration: none;
-    opacity: 0.7;
-  }
-
-  :focus {
-    outline: none;
-    text-decoration: none;
-  }
-
-  :active {
-    text-decoration: none;
-  }
+  ${LinkStyle}
+  stroke: ${({ theme }) => theme.accentActive};
 `
 
 export const TrashIcon = styled(Trash)`
@@ -218,6 +168,9 @@ function handleClickExternalLink(event: React.MouseEvent<HTMLAnchorElement>) {
   }
 }
 
+const StyledLink = styled.a`
+  ${LinkStyle}
+`
 /**
  * Outbound link that handles firing google analytics events
  */
