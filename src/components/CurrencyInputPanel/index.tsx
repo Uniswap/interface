@@ -100,8 +100,12 @@ const CurrencySelect = styled(ButtonGray)<{
   margin-left: ${({ hideInput }) => (hideInput ? '0' : '12px')};
   :focus,
   :hover {
-    background-color: ${({ selected, theme }) =>
-      selected ? theme.backgroundSurface : darken(0.05, theme.deprecated_primary1)};
+    background-color: ${({ selected, theme, phase0Flag }) =>
+      selected
+        ? phase0Flag
+          ? theme.backgroundSurface
+          : theme.deprecated_bg3
+        : darken(0.05, theme.deprecated_primary1)};
   }
   visibility: ${({ visible }) => (visible ? 'visible' : 'hidden')};
 `

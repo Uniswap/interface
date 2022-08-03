@@ -3,7 +3,7 @@ import React from 'react'
 import styled from 'styled-components/macro'
 import { Z_INDEX } from 'theme'
 
-export const BodyWrapper = styled.main<{ margin?: string; maxWidth?: string; phase0Flag: boolean }>`
+export const BodyWrapper = styled.main<{ margin?: string; maxWidth?: string; phase0Flag?: boolean }>`
   position: relative;
   margin-top: ${({ margin }) => margin ?? '0px'};
   max-width: ${({ maxWidth }) => maxWidth ?? '480px'};

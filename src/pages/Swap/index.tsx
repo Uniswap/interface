@@ -33,7 +33,7 @@ import { Text } from 'rebass'
 import { useToggleWalletModal } from 'state/application/hooks'
 import { InterfaceTrade } from 'state/routing/types'
 import { TradeState } from 'state/routing/types'
-import styled, { DefaultTheme, ThemeContext } from 'styled-components/macro'
+import styled, { css, DefaultTheme, ThemeContext } from 'styled-components/macro'
 
 import AddressInputPanel from '../../components/AddressInputPanel'
 import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
@@ -88,20 +88,24 @@ const ArrowUpWrapper = styled.div`
   margin-left: 55%;
   margin-top: -10%;
 `
-const BottomWrapper = styled.div`
-  background-color: ${({ theme }) => theme.backgroundContainer};
-  border-radius: 12px;
-  padding: 8px 12px 10px;
-  color: ${({ theme }) => theme.textSecondary};
-  font-size: 14px;
-  line-height: 20px;
-  font-weight: 500;
+const BottomWrapper = styled.div<{ phase0Flag: boolean }>`
+  ${({ phase0Flag }) =>
+    phase0Flag &&
+    css`
+      background-color: ${({ theme }) => theme.backgroundContainer};
+      border-radius: 12px;
+      padding: 8px 12px 10px;
+      color: ${({ theme }) => theme.textSecondary};
+      font-size: 14px;
+      line-height: 20px;
+      font-weight: 500;
+    `}
 `
-const TopInputWrapper = styled.div`
-  padding: 0px 12px;
+const TopInputWrapper = styled.div<{ phase0Flag: boolean }>`
+  padding: ${({ phase0Flag }) => phase0Flag && '0px 12px'};
 `
-const BottomInputWrapper = styled.div`
-  padding: 8px 0px;
+const BottomInputWrapper = styled.div<{ phase0Flag: boolean }>`
+  padding: ${({ phase0Flag }) => phase0Flag && '8px 0px'};
 `
 
 export function getIsValidSwapQuote(
@@ -574,9 +578,9 @@ export default function Swap() {
               swapQuoteReceivedDate={swapQuoteReceivedDate}
             />
 
-            <AutoColumn grid-row-gap="0px" gap="0px">
+            <AutoColumn grid-row-gap={phase0FlagEnabled && '0px'} gap={phase0FlagEnabled ? '0px' : 'sm'}>
               <div style={{ display: 'relative' }}>
-                <TopInputWrapper>
+                <TopInputWrapper phase0Flag={phase0FlagEnabled}>
                   <Trace section={SectionName.CURRENCY_INPUT_PANEL}>
                     <CurrencyInputPanel
                       label={
@@ -606,26 +610,41 @@ export default function Swap() {
                     name={EventName.SWAP_TOKENS_REVERSED}
                     element={ElementName.SWAP_TOKENS_REVERSE_ARROW_BUTTON}
                   >
-                    <ArrowContainer
-                      onClick={() => {
-                        setApprovalSubmitted(false) // reset 2 step UI for approvals
-                        onSwitchTokens()
-                      }}
-                      color={theme.textPrimary}
-                    >
-                      <ArrowUpWrapper>
-                        <ArrowUp size="14" stroke-width="3" />
-                      </ArrowUpWrapper>
-                      <ArrowDownWrapper>
-                        <ArrowDown size="14" stroke-width="3" />
-                      </ArrowDownWrapper>
-                    </ArrowContainer>
+                    {phase0FlagEnabled ? (
+                      <ArrowContainer
+                        onClick={() => {
+                          setApprovalSubmitted(false) // reset 2 step UI for approvals
+                          onSwitchTokens()
+                        }}
+                        color={theme.textPrimary}
+                      >
+                        <ArrowUpWrapper>
+                          <ArrowUp size="14" stroke-width="3" />
+                        </ArrowUpWrapper>
+                        <ArrowDownWrapper>
+                          <ArrowDown size="14" stroke-width="3" />
+                        </ArrowDownWrapper>
+                      </ArrowContainer>
+                    ) : (
+                      <ArrowDown
+                        size="16"
+                        onClick={() => {
+                          setApprovalSubmitted(false) // reset 2 step UI for approvals
+                          onSwitchTokens()
+                        }}
+                        color={
+                          currencies[Field.INPUT] && currencies[Field.OUTPUT]
+                            ? theme.deprecated_text1
+                            : theme.deprecated_text3
+                        }
+                      />
+                    )}
                   </TraceEvent>
                 </ArrowWrapper>
               </div>
-              <BottomWrapper>
-                For
-                <BottomInputWrapper>
+              <BottomWrapper phase0Flag={phase0FlagEnabled}>
+                {phase0FlagEnabled && 'For'}
+                <BottomInputWrapper phase0Flag={phase0FlagEnabled}>
                   <Trace section={SectionName.CURRENCY_OUTPUT_PANEL}>
                     <CurrencyInputPanel
                       value={formattedAmounts[Field.OUTPUT]}
