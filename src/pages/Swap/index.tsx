@@ -105,9 +105,13 @@ const BottomWrapper = styled.div<{ phase0Flag: boolean }>`
 const TopInputWrapper = styled.div<{ phase0Flag: boolean }>`
   padding: ${({ phase0Flag }) => phase0Flag && '0px 12px'};
 <<<<<<< HEAD
+<<<<<<< HEAD
   visibility: ${({ phase0Flag }) => !phase0Flag && 'none'};
 =======
 >>>>>>> c5b953d6 (flagbergasted)
+=======
+  visibility: ${({ phase0Flag }) => !phase0Flag && 'none'};
+>>>>>>> a42bc11a (minor updates)
 `
 const BottomInputWrapper = styled.div<{ phase0Flag: boolean }>`
   padding: ${({ phase0Flag }) => phase0Flag && '8px 0px'};
@@ -584,10 +588,14 @@ export default function Swap() {
             />
 
 <<<<<<< HEAD
+<<<<<<< HEAD
             <AutoColumn gap={'0px'}>
 =======
             <AutoColumn grid-row-gap={phase0FlagEnabled && '0px'} gap={phase0FlagEnabled ? '0px' : 'sm'}>
 >>>>>>> c5b953d6 (flagbergasted)
+=======
+            <AutoColumn gap={'0px'}>
+>>>>>>> a42bc11a (minor updates)
               <div style={{ display: 'relative' }}>
                 <TopInputWrapper phase0Flag={phase0FlagEnabled}>
                   <Trace section={SectionName.CURRENCY_INPUT_PANEL}>
@@ -713,7 +721,11 @@ export default function Swap() {
                       properties={{ received_swap_quote: getIsValidSwapQuote(trade, tradeState, swapInputError) }}
                       element={ElementName.CONNECT_WALLET_BUTTON}
                     >
-                      <ButtonLight onClick={toggleWalletModal} phase0Flag={phase0FlagEnabled}>
+                      <ButtonLight
+                        style={{ marginTop: '8px' }}
+                        onClick={toggleWalletModal}
+                        phase0Flag={phase0FlagEnabled}
+                      >
                         <Trans>Connect Wallet</Trans>
                       </ButtonLight>
                     </TraceEvent>
