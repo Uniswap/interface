@@ -1,4 +1,4 @@
-import { WARNING_LEVEL } from 'constants/tokenWarnings'
+import { WARNING_LEVEL } from 'constants/tokenSafety'
 import { useTokenWarningColor } from 'hooks/useTokenWarningColor'
 import { ReactNode } from 'react'
 import { AlertOctagon, AlertTriangle } from 'react-feather'

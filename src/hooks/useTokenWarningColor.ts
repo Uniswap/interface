@@ -1,4 +1,4 @@
-import { WARNING_LEVEL } from 'constants/tokenWarnings'
+import { WARNING_LEVEL } from 'constants/tokenSafety'
 import { useEffect, useState } from 'react'
 import { useTheme } from 'styled-components/macro'
 

@@ -4,7 +4,7 @@ import { ButtonPrimary } from 'components/Button'
 import { AutoColumn } from 'components/Column'
 import CurrencyLogo from 'components/CurrencyLogo'
 import TokenSafetyLabel from 'components/TokenSafety/TokenSafetyLabel'
-import { checkWarning, getWarningCopy, Warning, WARNING_LEVEL } from 'constants/tokenWarnings'
+import { checkWarning, getWarningCopy, TOKEN_SAFETY_ARTICLE, Warning, WARNING_LEVEL } from 'constants/tokenSafety'
 import { useToken } from 'hooks/Tokens'
 import { ExternalLink as LinkIconFeather } from 'react-feather'
 import { Text } from 'rebass'
@@ -262,7 +262,7 @@ export default function TokenSafety({ tokenAddress, secondTokenAddress, onContin
           <ShortColumn>
             <InfoText>
               {description}{' '}
-              <LearnMoreLink href="https://help.uniswap.org/en/">
+              <LearnMoreLink href={TOKEN_SAFETY_ARTICLE}>
                 <Trans>Learn More</Trans>
               </LearnMoreLink>
             </InfoText>

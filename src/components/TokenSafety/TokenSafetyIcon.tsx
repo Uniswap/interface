@@ -1,4 +1,4 @@
-import { Warning, WARNING_LEVEL } from 'constants/tokenWarnings'
+import { Warning, WARNING_LEVEL } from 'constants/tokenSafety'
 import { useTokenWarningColor } from 'hooks/useTokenWarningColor'
 import { AlertOctagon, AlertTriangle } from 'react-feather'
 import styled from 'styled-components/macro'
@@ -10,9 +10,6 @@ const Container = styled.div<{ color: Color }>`
   width: 0.9rem;
   height: 0.9rem;
   margin-left: 4px;
-  /* font-size: 12px;
-  background-color: ${({ color }) => color + '1F'};
-  border-radius: 8px; */
   color: ${({ color }) => color};
   display: inline-flex;
   align-items: center;
