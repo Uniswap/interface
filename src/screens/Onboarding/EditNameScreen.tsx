@@ -18,6 +18,10 @@ import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { ElementName } from 'src/features/telemetry/constants'
 import { EditAccountAction, editAccountActions } from 'src/features/wallet/editAccountSaga'
 import { useActiveAccount, usePendingAccounts } from 'src/features/wallet/hooks'
+import {
+  PendingAccountActions,
+  pendingAccountActions,
+} from 'src/features/wallet/pendingAcccountsSaga'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { shortenAddress } from 'src/utils/addresses'
 
@@ -38,10 +42,17 @@ export function EditNameScreen({ navigation, route: { params } }: Props) {
     const shouldRenderBackButton = navigation.getState().index === 0
     if (shouldRenderBackButton) {
       navigation.setOptions({
-        headerLeft: () => <BackButton />,
+        headerLeft: () => (
+          <BackButton
+            onPressBack={() => {
+              navigation.goBack()
+              dispatch(pendingAccountActions.trigger(PendingAccountActions.DELETE))
+            }}
+          />
+        ),
       })
     }
-  }, [navigation, theme.colors.textPrimary])
+  }, [dispatch, navigation, theme.colors.textPrimary])
 
   const onPressNext = () => {
     navigation.navigate({
