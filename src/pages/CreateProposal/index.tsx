@@ -11,7 +11,7 @@ import { AutoColumn } from 'components/Column'
 import JSBI from 'jsbi'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { Wrapper } from 'pages/Pool/styleds'
-import React, { useCallback, useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import {
   CreateProposalData,
   ProposalState,
@@ -233,17 +233,17 @@ ${bodyValue}
         <CreateProposalWrapper>
           <BlueCard>
             <AutoColumn gap="10px">
-              <ThemedText.Link fontWeight={400} color={'deprecated_primaryText1'}>
+              <ThemedText.DeprecatedLink fontWeight={400} color={'deprecated_primaryText1'}>
                 <Trans>
                   <strong>Tip:</strong> Select an action and describe your proposal for the community. The proposal
                   cannot be modified after submission, so please verify all information before submitting. The voting
                   period will begin immediately and last for 7 days. To propose a custom action,{' '}
-                  <ExternalLink href="https://uniswap.org/docs/v2/governance/governance-reference/#propose">
+                  <ExternalLink href="https://docs.uniswap.org/protocol/reference/Governance/governance-reference#propose">
                     read the docs
                   </ExternalLink>
                   .
                 </Trans>
-              </ThemedText.Link>
+              </ThemedText.DeprecatedLink>
             </AutoColumn>
           </BlueCard>
 

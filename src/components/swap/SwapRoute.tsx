@@ -100,7 +100,7 @@ export default memo(function SwapRoute({ trade, syncing, fixedOpen = false, ...r
                   <div style={{ width: '250px', height: '15px' }} />
                 </LoadingRows>
               ) : (
-                <ThemedText.Main fontSize={12} width={400} margin={0}>
+                <ThemedText.DeprecatedMain fontSize={12} width={400} margin={0}>
                   {trade?.gasUseEstimateUSD && chainId && SUPPORTED_GAS_ESTIMATE_CHAIN_IDS.includes(chainId) ? (
                     <Trans>Best price route costs ~{formattedGasPriceString} in gas. </Trans>
                   ) : null}{' '}
@@ -108,7 +108,7 @@ export default memo(function SwapRoute({ trade, syncing, fixedOpen = false, ...r
                     This route optimizes your total output by considering split routes, multiple hops, and the gas cost
                     of each step.
                   </Trans>
-                </ThemedText.Main>
+                </ThemedText.DeprecatedMain>
               )}
             </>
           )}

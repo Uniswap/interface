@@ -133,7 +133,7 @@ export const SwapShowAcceptChanges = styled(AutoColumn)`
   margin-top: 8px;
 `
 
-export const TransactionDetailsLabel = styled(ThemedText.Black)`
+export const TransactionDetailsLabel = styled(ThemedText.DeprecatedBlack)`
   border-bottom: 1px solid ${({ theme }) => theme.deprecated_bg2};
   padding-bottom: 0.5rem;
 `

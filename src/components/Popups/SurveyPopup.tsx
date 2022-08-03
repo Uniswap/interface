@@ -91,19 +91,19 @@ export default function SurveyPopup() {
           <ExternalLink href="https://www.surveymonkey.com/r/YGWV9VD">
             <RowFixed>
               <MessageCircle stroke={theme.deprecated_black} size="20px" strokeWidth="1px" />
-              <ThemedText.White fontWeight={600} color={theme.deprecated_black} ml="6px">
+              <ThemedText.DeprecatedWhite fontWeight={600} color={theme.deprecated_black} ml="6px">
                 <Trans>Tell us what you think ↗</Trans>
-              </ThemedText.White>
+              </ThemedText.DeprecatedWhite>
             </RowFixed>
           </ExternalLink>
-          <ThemedText.Black
+          <ThemedText.DeprecatedBlack
             style={{ zIndex: Z_INDEX.fixed }}
             fontWeight={400}
             fontSize="12px"
             color={theme.deprecated_black}
           >
             <Trans>Take a 10 minute survey to help us improve your experience in the Uniswap app.</Trans>
-          </ThemedText.Black>
+          </ThemedText.DeprecatedBlack>
         </Wrapper>
       )}
     </>

@@ -17,7 +17,7 @@ export function FeeTierPercentageBadge({
 }) {
   return (
     <Badge>
-      <ThemedText.Label fontSize={10}>
+      <ThemedText.DeprecatedLabel fontSize={10}>
         {!distributions || poolState === PoolState.NOT_EXISTS || poolState === PoolState.INVALID ? (
           <Trans>Not created</Trans>
         ) : distributions[feeAmount] !== undefined ? (
@@ -25,7 +25,7 @@ export function FeeTierPercentageBadge({
         ) : (
           <Trans>No data</Trans>
         )}
-      </ThemedText.Label>
+      </ThemedText.DeprecatedLabel>
     </Badge>
   )
 }

@@ -153,33 +153,33 @@ export default function Manage() {
   return (
     <PageWrapper gap="lg" justify="center">
       <RowBetween style={{ gap: '24px' }}>
-        <ThemedText.MediumHeader style={{ margin: 0 }}>
+        <ThemedText.DeprecatedMediumHeader style={{ margin: 0 }}>
           <Trans>
             {currencyA?.symbol}-{currencyB?.symbol} Liquidity Mining
           </Trans>
-        </ThemedText.MediumHeader>
+        </ThemedText.DeprecatedMediumHeader>
         <DoubleCurrencyLogo currency0={currencyA ?? undefined} currency1={currencyB ?? undefined} size={24} />
       </RowBetween>
 
       <DataRow style={{ gap: '24px' }}>
         <PoolData>
           <AutoColumn gap="sm">
-            <ThemedText.Body style={{ margin: 0 }}>
+            <ThemedText.DeprecatedBody style={{ margin: 0 }}>
               <Trans>Total deposits</Trans>
-            </ThemedText.Body>
-            <ThemedText.Body fontSize={24} fontWeight={500}>
+            </ThemedText.DeprecatedBody>
+            <ThemedText.DeprecatedBody fontSize={24} fontWeight={500}>
               {valueOfTotalStakedAmountInUSDC
                 ? `$${valueOfTotalStakedAmountInUSDC.toFixed(0, { groupSeparator: ',' })}`
                 : `${valueOfTotalStakedAmountInWETH?.toSignificant(4, { groupSeparator: ',' }) ?? '-'} ETH`}
-            </ThemedText.Body>
+            </ThemedText.DeprecatedBody>
           </AutoColumn>
         </PoolData>
         <PoolData>
           <AutoColumn gap="sm">
-            <ThemedText.Body style={{ margin: 0 }}>
+            <ThemedText.DeprecatedBody style={{ margin: 0 }}>
               <Trans>Pool Rate</Trans>
-            </ThemedText.Body>
-            <ThemedText.Body fontSize={24} fontWeight={500}>
+            </ThemedText.DeprecatedBody>
+            <ThemedText.DeprecatedBody fontSize={24} fontWeight={500}>
               {stakingInfo?.active ? (
                 <Trans>
                   {stakingInfo.totalRewardRate?.multiply(BIG_INT_SECONDS_IN_WEEK)?.toFixed(0, { groupSeparator: ',' })}{' '}
@@ -188,7 +188,7 @@ export default function Manage() {
               ) : (
                 <Trans>0 UNI / week</Trans>
               )}
-            </ThemedText.Body>
+            </ThemedText.DeprecatedBody>
           </AutoColumn>
         </PoolData>
       </DataRow>
@@ -200,17 +200,17 @@ export default function Manage() {
           <CardSection>
             <AutoColumn gap="md">
               <RowBetween>
-                <ThemedText.White fontWeight={600}>
+                <ThemedText.DeprecatedWhite fontWeight={600}>
                   <Trans>Step 1. Get UNI-V2 Liquidity tokens</Trans>
-                </ThemedText.White>
+                </ThemedText.DeprecatedWhite>
               </RowBetween>
               <RowBetween style={{ marginBottom: '1rem' }}>
-                <ThemedText.White fontSize={14}>
+                <ThemedText.DeprecatedWhite fontSize={14}>
                   <Trans>
                     UNI-V2 LP tokens are required. Once you&apos;ve added liquidity to the {currencyA?.symbol}-
                     {currencyB?.symbol} pool you can stake your liquidity tokens on this page.
                   </Trans>
-                </ThemedText.White>
+                </ThemedText.DeprecatedWhite>
               </RowBetween>
               <ButtonPrimary
                 padding="8px"
@@ -259,19 +259,19 @@ export default function Manage() {
               <CardNoise />
               <AutoColumn gap="md">
                 <RowBetween>
-                  <ThemedText.White fontWeight={600}>
+                  <ThemedText.DeprecatedWhite fontWeight={600}>
                     <Trans>Your liquidity deposits</Trans>
-                  </ThemedText.White>
+                  </ThemedText.DeprecatedWhite>
                 </RowBetween>
                 <RowBetween style={{ alignItems: 'baseline' }}>
-                  <ThemedText.White fontSize={36} fontWeight={600}>
+                  <ThemedText.DeprecatedWhite fontSize={36} fontWeight={600}>
                     {stakingInfo?.stakedAmount?.toSignificant(6) ?? '-'}
-                  </ThemedText.White>
-                  <ThemedText.White>
+                  </ThemedText.DeprecatedWhite>
+                  <ThemedText.DeprecatedWhite>
                     <Trans>
                       UNI-V2 {currencyA?.symbol}-{currencyB?.symbol}
                     </Trans>
-                  </ThemedText.White>
+                  </ThemedText.DeprecatedWhite>
                 </RowBetween>
               </AutoColumn>
             </CardSection>
@@ -282,9 +282,9 @@ export default function Manage() {
             <AutoColumn gap="sm">
               <RowBetween>
                 <div>
-                  <ThemedText.Black>
+                  <ThemedText.DeprecatedBlack>
                     <Trans>Your unclaimed UNI</Trans>
-                  </ThemedText.Black>
+                  </ThemedText.DeprecatedBlack>
                 </div>
                 {stakingInfo?.earnedAmount && JSBI.notEqual(BIG_INT_ZERO, stakingInfo?.earnedAmount?.quotient) && (
                   <ButtonEmpty
@@ -298,7 +298,7 @@ export default function Manage() {
                 )}
               </RowBetween>
               <RowBetween style={{ alignItems: 'baseline' }}>
-                <ThemedText.LargeHeader fontSize={36} fontWeight={600}>
+                <ThemedText.DeprecatedLargeHeader fontSize={36} fontWeight={600}>
                   <CountUp
                     key={countUpAmount}
                     isCounting
@@ -308,8 +308,8 @@ export default function Manage() {
                     thousandsSeparator={','}
                     duration={1}
                   />
-                </ThemedText.LargeHeader>
-                <ThemedText.Black fontSize={16} fontWeight={500}>
+                </ThemedText.DeprecatedLargeHeader>
+                <ThemedText.DeprecatedBlack fontSize={16} fontWeight={500}>
                   <span role="img" aria-label="wizard-icon" style={{ marginRight: '8px ' }}>
                     ⚡
                   </span>
@@ -322,17 +322,17 @@ export default function Manage() {
                   ) : (
                     <Trans>0 UNI / week</Trans>
                   )}
-                </ThemedText.Black>
+                </ThemedText.DeprecatedBlack>
               </RowBetween>
             </AutoColumn>
           </StyledBottomCard>
         </BottomSection>
-        <ThemedText.Main style={{ textAlign: 'center' }} fontSize={14}>
+        <ThemedText.DeprecatedMain style={{ textAlign: 'center' }} fontSize={14}>
           <span role="img" aria-label="wizard-icon" style={{ marginRight: '8px' }}>
             ⭐️
           </span>
           <Trans>When you withdraw, the contract will automagically claim UNI on your behalf!</Trans>
-        </ThemedText.Main>
+        </ThemedText.DeprecatedMain>
 
         {!showAddLiquidityButton && (
           <DataRow style={{ marginBottom: '1rem' }}>
@@ -361,9 +361,9 @@ export default function Manage() {
           </DataRow>
         )}
         {!userLiquidityUnstaked ? null : userLiquidityUnstaked.equalTo('0') ? null : !stakingInfo?.active ? null : (
-          <ThemedText.Main>
+          <ThemedText.DeprecatedMain>
             <Trans>{userLiquidityUnstaked.toSignificant(6)} UNI-V2 LP tokens available</Trans>
-          </ThemedText.Main>
+          </ThemedText.DeprecatedMain>
         )}
       </PositionInfo>
     </PageWrapper>
