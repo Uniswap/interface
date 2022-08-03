@@ -100,22 +100,6 @@ const formatApproveTokenTxnSubmittedEventProperties = (
   }
 }
 
-const formatWrapTokenTxnSubmittedEventProperties = (
-  inputCurrency: Currency | null | undefined,
-  outputCurrency: Currency | null | undefined,
-  parsedAmount: CurrencyAmount<Currency> | undefined
-) => {
-  if (!inputCurrency || !outputCurrency || !parsedAmount) return {}
-  return {
-    token_in_address: getTokenAddress(inputCurrency),
-    token_out_address: getTokenAddress(outputCurrency),
-    token_in_symbol: inputCurrency.symbol,
-    token_out_symbol: outputCurrency.symbol,
-    chain_id: inputCurrency.chainId,
-    amount: parsedAmount ? formatToDecimal(parsedAmount, parsedAmount?.currency.decimals) : undefined,
-  }
-}
-
 function largerPercentValue(a?: Percent, b?: Percent) {
   if (a && b) {
     return a.greaterThan(b) ? a : b
@@ -653,17 +637,7 @@ export default function Swap() {
                     </ButtonLight>
                   </TraceEvent>
                 ) : showWrap ? (
-                  <TraceEvent
-                    events={[Event.onClick]}
-                    name={EventName.WRAP_TOKEN_TXN_SUBMITTED}
-                    element={ElementName.WRAP_TOKEN_BUTTON}
-                    properties={formatWrapTokenTxnSubmittedEventProperties(
-                      currencies[Field.INPUT],
-                      currencies[Field.OUTPUT],
-                      parsedAmount
-                    )}
-                    shouldLogImpression={!Boolean(wrapInputError)}
-                  >
+                  <Trace element={ElementName.WRAP_TOKEN_BUTTON}>
                     <ButtonPrimary disabled={Boolean(wrapInputError)} onClick={onWrap}>
                       {wrapInputError ? (
                         <WrapErrorText wrapInputError={wrapInputError} />
@@ -673,7 +647,7 @@ export default function Swap() {
                         <Trans>Unwrap</Trans>
                       ) : null}
                     </ButtonPrimary>
-                  </TraceEvent>
+                  </Trace>
                 ) : routeNotFound && userHasSpecifiedInputOutput && !routeIsLoading && !routeIsSyncing ? (
                   <GreyCard style={{ textAlign: 'center' }}>
                     <ThemedText.DeprecatedMain mb="4px">
