@@ -374,7 +374,7 @@ export default function CurrencyInputPanel({
                       element={ElementName.MAX_TOKEN_AMOUNT_BUTTON}
                     >
                       <StyledBalanceMax onClick={onMax} phase0Flag={phase0FlagEnabled}>
-                        <Trans>Max</Trans>
+                        <Trans>{phase0FlagEnabled ? 'Max' : 'MAX'}</Trans>
                       </StyledBalanceMax>
                     </TraceEvent>
                   ) : null}

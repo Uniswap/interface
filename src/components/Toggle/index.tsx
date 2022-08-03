@@ -1,3 +1,4 @@
+import { Phase0Variant, usePhase0Flag } from 'featureFlag'
 import { darken } from 'polished'
 import { useState } from 'react'
 import styled, { keyframes } from 'styled-components/macro'
@@ -5,7 +6,7 @@ import styled, { keyframes } from 'styled-components/macro'
 const Wrapper = styled.button<{ isActive?: boolean; activeElement?: boolean; phase0Flag: boolean }>`
   align-items: center;
   background: ${({ isActive, theme, phase0Flag }) =>
-    phase0Flag ? (isActive ? theme.accentActionSoft : theme.deprecated_bg1) : theme.deprecated_bg1};
+    phase0Flag && isActive ? theme.accentActionSoft : theme.deprecated_bg1};
   border: none;
   border-radius: 20px;
   cursor: pointer;
@@ -72,6 +73,8 @@ interface ToggleProps {
 
 export default function Toggle({ id, bgColor, isActive, toggle }: ToggleProps) {
   const [isInitialToggleLoad, setIsInitialToggleLoad] = useState(true)
+  const phase0Flag = usePhase0Flag()
+  const phase0FlagEnabled = phase0Flag === Phase0Variant.Enabled
 
   const switchToggle = () => {
     toggle()
@@ -79,7 +82,7 @@ export default function Toggle({ id, bgColor, isActive, toggle }: ToggleProps) {
   }
 
   return (
-    <Wrapper id={id} isActive={isActive} onClick={switchToggle}>
+    <Wrapper id={id} isActive={isActive} onClick={switchToggle} phase0Flag={phase0FlagEnabled}>
       <ToggleElement isActive={isActive} bgColor={bgColor} isInitialToggleLoad={isInitialToggleLoad} />
     </Wrapper>
   )

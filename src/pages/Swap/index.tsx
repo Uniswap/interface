@@ -670,7 +670,7 @@ export default function Swap() {
                   {recipient !== null && !showWrap ? (
                     <>
                       <AutoRow justify="space-between" style={{ padding: '0 1rem' }}>
-                        <ArrowWrapper clickable={false}>
+                        <ArrowWrapper clickable={false} phase0Flag={phase0FlagEnabled}>
                           <ArrowDown size="16" color={theme.deprecated_text2} />
                         </ArrowWrapper>
                         <LinkStyledButton id="remove-recipient-button" onClick={() => onChangeRecipient(null)}>
@@ -706,7 +706,7 @@ export default function Swap() {
                       properties={{ received_swap_quote: getIsValidSwapQuote(trade, tradeState, swapInputError) }}
                       element={ElementName.CONNECT_WALLET_BUTTON}
                     >
-                      <ButtonLight onClick={toggleWalletModal} phase0Flag={phase0flag === Phase0Variant.Enabled}>
+                      <ButtonLight onClick={toggleWalletModal} phase0Flag={phase0FlagEnabled}>
                         <Trans>Connect Wallet</Trans>
                       </ButtonLight>
                     </TraceEvent>
