@@ -5,6 +5,7 @@
  * and logged.
  */
 export enum EventName {
+  APP_LOADED = 'Application Loaded',
   APPROVE_TOKEN_TXN_SUBMITTED = 'Approve Token Transaction Submitted',
   CONNECT_WALLET_BUTTON_CLICKED = 'Connect Wallet Button Clicked',
   PAGE_VIEWED = 'Page Viewed',
@@ -26,15 +27,39 @@ export enum EventName {
 }
 
 export enum CUSTOM_USER_PROPERTIES {
-  WALLET_ADDRESS = 'wallet_address',
-  WALLET_TYPE = 'wallet_type',
-  USER_LAST_SEEN_DATE = 'user_last_seen_date',
-  USER_FIRST_SEEN_DATE = 'user_first_seen_date',
-  WALLET_CHAIN_IDS = 'all_wallet_chain_ids',
   ALL_WALLET_ADDRESSES_CONNECTED = 'all_wallet_addresses_connected',
-  SCREEN_RESOLUTION = 'screen_resolution',
+  ALL_WALLET_CHAIN_IDS = 'all_wallet_chain_ids',
   BROWSER = 'browser',
-  LIGHT_MODE = 'light_mode',
+  DARK_MODE = 'is_dark_mode',
+  SCREEN_RESOLUTION_HEIGHT = 'screen_resolution_height',
+  SCREEN_RESOLUTION_WIDTH = 'screen_resolution_width',
+  WALLET_ADDRESS = 'wallet_address',
+  WALLET_NATIVE_CURRENCY_BALANCE_USD = 'wallet_native_currency_balance_usd',
+  WALLET_TOKENS_ADDRESSES = 'wallet_tokens_addresses',
+  WALLET_TOKENS_SYMBOLS = 'wallet_tokens_symbols',
+  WALLET_TYPE = 'wallet_type',
+}
+
+export enum CUSTOM_USER_PROPERTY_SUFFIXES {
+  WALLET_TOKEN_AMOUNT_SUFFIX = '_token_amount',
+}
+
+export enum CUSTOM_USER_PROPERTY_PREFIXES {
+  WALLET_CHAIN_IDS_PREFIX = 'wallet_chain_ids_',
+  WALLET_FIRST_SEEN_DATE_PREFIX = 'first_seen_date_',
+  WALLET_LAST_SEEN_DATE_PREFIX = 'last_seen_date_',
+}
+
+export enum BROWSER {
+  FIREFOX = 'Mozilla Firefox',
+  SAMSUNG = 'Samsung Internet',
+  OPERA = 'Opera',
+  INTERNET_EXPLORER = 'Microsoft Internet Explorer',
+  EDGE = 'Microsoft Edge (Legacy)',
+  EDGE_CHROMIUM = 'Microsoft Edge (Chromium)',
+  CHROME = 'Google Chrome or Chromium',
+  SAFARI = 'Apple Safari',
+  UNKNOWN = 'unknown',
 }
 
 export enum WALLET_CONNECTION_RESULT {

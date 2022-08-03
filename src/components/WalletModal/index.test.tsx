@@ -1,6 +1,9 @@
+import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import * as connectionUtils from 'connection/utils'
+import JSBI from 'jsbi'
 import { ApplicationModal } from 'state/application/reducer'
 
+import { nativeOnChain } from '../../constants/tokens'
 import { render, screen } from '../../test-utils'
 import WalletModal from './index'
 
@@ -8,6 +11,11 @@ afterEach(() => {
   jest.clearAllMocks()
   jest.resetModules()
 })
+
+const currencyAmount = (token: Currency, amount: number) => CurrencyAmount.fromRawAmount(token, JSBI.BigInt(amount))
+
+const mockEth = () => nativeOnChain(1)
+const mockCurrencyAmount = currencyAmount(mockEth(), 1)
 
 const UserAgentMock = jest.requireMock('utils/userAgent')
 jest.mock('utils/userAgent', () => ({
@@ -22,6 +30,38 @@ jest.mock('.../../state/application/hooks', () => {
     },
   }
 })
+
+jest.mock('hooks/useStablecoinPrice', () => {
+  return {
+    useStablecoinValue: (_currencyAmount: CurrencyAmount<Currency> | undefined | null) => {
+      return
+    },
+  }
+})
+
+jest.mock('state/connection/hooks', () => {
+  return {
+    useAllTokenBalances: () => {
+      return [{}, false]
+    },
+  }
+})
+
+jest.mock('../../hooks/Tokens', () => {
+  return {
+    useAllTokens: () => ({}),
+  }
+})
+
+jest.mock('lib/hooks/useCurrencyBalance', () => {
+  return {
+    useCurrencyBalances: (account?: string, currencies?: (Currency | undefined)[]) => {
+      return [mockCurrencyAmount]
+    },
+  }
+})
+
+jest.mock('lib/hooks/useNativeCurrency', () => () => mockEth)
 
 jest.mock('@web3-react/core', () => {
   const web3React = jest.requireActual('@web3-react/core')

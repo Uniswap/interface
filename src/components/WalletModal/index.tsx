@@ -1,15 +1,28 @@
 import { Trans } from '@lingui/macro'
+import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { Connector } from '@web3-react/types'
 import { sendAnalyticsEvent, user } from 'components/AmplitudeAnalytics'
-import { CUSTOM_USER_PROPERTIES, EventName, WALLET_CONNECTION_RESULT } from 'components/AmplitudeAnalytics/constants'
+import {
+  CUSTOM_USER_PROPERTIES,
+  CUSTOM_USER_PROPERTY_PREFIXES,
+  CUSTOM_USER_PROPERTY_SUFFIXES,
+  EventName,
+  WALLET_CONNECTION_RESULT,
+} from 'components/AmplitudeAnalytics/constants'
+import { formatToDecimal, getTokenAddress } from 'components/AmplitudeAnalytics/utils'
 import { sendEvent } from 'components/analytics'
 import { AutoColumn } from 'components/Column'
 import { AutoRow } from 'components/Row'
 import { ConnectionType } from 'connection'
 import { getConnection, getConnectionName, getIsCoinbaseWallet, getIsInjected, getIsMetaMask } from 'connection/utils'
-import { useCallback, useEffect, useState } from 'react'
+import { useStablecoinValue } from 'hooks/useStablecoinPrice'
+import { useCurrencyBalances } from 'lib/hooks/useCurrencyBalance'
+import useNativeCurrency from 'lib/hooks/useNativeCurrency'
+import { tokenComparator } from 'lib/hooks/useTokenList/sorting'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { ArrowLeft } from 'react-feather'
+import { useAllTokenBalances } from 'state/connection/hooks'
 import { updateConnectionError } from 'state/connection/reducer'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { updateSelectedWallet } from 'state/user/reducer'
@@ -18,6 +31,7 @@ import styled from 'styled-components/macro'
 import { isMobile } from 'utils/userAgent'
 
 import { ReactComponent as Close } from '../../assets/images/x.svg'
+import { useAllTokens } from '../../hooks/Tokens'
 import { useModalIsOpen, useToggleWalletModal } from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/reducer'
 import { ExternalLink, ThemedText } from '../../theme'
@@ -114,25 +128,51 @@ const WALLET_VIEWS = {
   PENDING: 'pending',
 }
 
+const sendAnalyticsWalletBalanceUserInfo = (
+  balances: (CurrencyAmount<Currency> | undefined)[],
+  nativeCurrencyBalanceUsd: number
+) => {
+  const walletTokensSymbols: string[] = []
+  const walletTokensAddresses: string[] = []
+  balances.forEach((currencyAmount) => {
+    if (currencyAmount !== undefined) {
+      const tokenBalanceAmount = formatToDecimal(currencyAmount, currencyAmount.currency.decimals)
+      if (tokenBalanceAmount > 0) {
+        const tokenAddress = getTokenAddress(currencyAmount.currency)
+        walletTokensAddresses.push(getTokenAddress(currencyAmount.currency))
+        walletTokensSymbols.push(currencyAmount.currency.symbol ?? '')
+        const tokenPrefix = currencyAmount.currency.symbol ?? tokenAddress
+        user.set(`${tokenPrefix}${CUSTOM_USER_PROPERTY_SUFFIXES.WALLET_TOKEN_AMOUNT_SUFFIX}`, tokenBalanceAmount)
+      }
+    }
+  })
+  user.set(CUSTOM_USER_PROPERTIES.WALLET_NATIVE_CURRENCY_BALANCE_USD, nativeCurrencyBalanceUsd)
+  user.set(CUSTOM_USER_PROPERTIES.WALLET_TOKENS_ADDRESSES, walletTokensAddresses)
+  user.set(CUSTOM_USER_PROPERTIES.WALLET_TOKENS_SYMBOLS, walletTokensSymbols)
+}
+
 const sendAnalyticsEventAndUserInfo = (
   account: string,
   walletType: string,
   chainId: number | undefined,
   isReconnect: boolean
 ) => {
-  const currentDate = new Date().toISOString()
   sendAnalyticsEvent(EventName.WALLET_CONNECT_TXN_COMPLETED, {
     result: WALLET_CONNECTION_RESULT.SUCCEEDED,
     wallet_address: account,
     wallet_type: walletType,
     is_reconnect: isReconnect,
   })
+  const currentDate = new Date().toISOString()
   user.set(CUSTOM_USER_PROPERTIES.WALLET_ADDRESS, account)
   user.set(CUSTOM_USER_PROPERTIES.WALLET_TYPE, walletType)
-  if (chainId) user.postInsert(CUSTOM_USER_PROPERTIES.WALLET_CHAIN_IDS, chainId)
+  if (chainId) {
+    user.postInsert(CUSTOM_USER_PROPERTIES.ALL_WALLET_CHAIN_IDS, chainId)
+    user.postInsert(`${CUSTOM_USER_PROPERTY_PREFIXES.WALLET_CHAIN_IDS_PREFIX}${account}`, chainId)
+  }
   user.postInsert(CUSTOM_USER_PROPERTIES.ALL_WALLET_ADDRESSES_CONNECTED, account)
-  user.setOnce(CUSTOM_USER_PROPERTIES.USER_FIRST_SEEN_DATE, currentDate)
-  user.set(CUSTOM_USER_PROPERTIES.USER_LAST_SEEN_DATE, currentDate)
+  user.setOnce(`${CUSTOM_USER_PROPERTY_PREFIXES.WALLET_FIRST_SEEN_DATE_PREFIX}${account}`, currentDate)
+  user.set(`${CUSTOM_USER_PROPERTY_PREFIXES.WALLET_LAST_SEEN_DATE_PREFIX}${account}`, currentDate)
 }
 
 export default function WalletModal({
@@ -146,10 +186,11 @@ export default function WalletModal({
 }) {
   const dispatch = useAppDispatch()
   const { connector, account, chainId } = useWeb3React()
-  const [connectedWallets, updateConnectedWallets] = useConnectedWallets()
+  const [connectedWallets, addWalletToConnectedWallets] = useConnectedWallets()
 
   const [walletView, setWalletView] = useState(WALLET_VIEWS.ACCOUNT)
   const [lastActiveWalletAddress, setLastActiveWalletAddress] = useState<string | undefined>(account)
+  const [shouldLogWalletBalances, setShouldLogWalletBalances] = useState(false)
 
   const [pendingConnector, setPendingConnector] = useState<Connector | undefined>()
   const pendingError = useAppSelector((state) =>
@@ -158,6 +199,25 @@ export default function WalletModal({
 
   const walletModalOpen = useModalIsOpen(ApplicationModal.WALLET)
   const toggleWalletModal = useToggleWalletModal()
+
+  const allTokens = useAllTokens()
+  const [tokenBalances, tokenBalancesIsLoading] = useAllTokenBalances()
+  const sortedTokens: Token[] = useMemo(
+    () => (!tokenBalancesIsLoading ? Object.values(allTokens).sort(tokenComparator.bind(null, tokenBalances)) : []),
+    [tokenBalances, allTokens, tokenBalancesIsLoading]
+  )
+  const native = useNativeCurrency()
+
+  const sortedTokensWithETH: Currency[] = useMemo(
+    () =>
+      // Always bump the native token to the top of the list.
+      native ? [native, ...sortedTokens.filter((t) => !t.equals(native))] : sortedTokens,
+    [native, sortedTokens]
+  )
+
+  const balances = useCurrencyBalances(account, sortedTokensWithETH)
+  const nativeBalance = balances.length > 0 ? balances[0] : null
+  const nativeCurrencyBalanceUsdValue = useStablecoinValue(nativeBalance)?.toFixed(2)
 
   const openOptions = useCallback(() => {
     setWalletView(WALLET_VIEWS.OPTIONS)
@@ -180,18 +240,31 @@ export default function WalletModal({
   useEffect(() => {
     if (account && account !== lastActiveWalletAddress) {
       const walletType = getConnectionName(getConnection(connector).type, getIsMetaMask())
-
-      if (
+      const isReconnect =
         connectedWallets.filter((wallet) => wallet.account === account && wallet.walletType === walletType).length > 0
-      ) {
-        sendAnalyticsEventAndUserInfo(account, walletType, chainId, true)
-      } else {
-        sendAnalyticsEventAndUserInfo(account, walletType, chainId, false)
-        updateConnectedWallets({ account, walletType })
-      }
+      sendAnalyticsEventAndUserInfo(account, walletType, chainId, isReconnect)
+      setShouldLogWalletBalances(true)
+      if (!isReconnect) addWalletToConnectedWallets({ account, walletType })
     }
     setLastActiveWalletAddress(account)
-  }, [connectedWallets, updateConnectedWallets, lastActiveWalletAddress, account, connector, chainId])
+  }, [connectedWallets, addWalletToConnectedWallets, lastActiveWalletAddress, account, connector, chainId])
+
+  // Send wallet balance info once it becomes available.
+  useEffect(() => {
+    if (!tokenBalancesIsLoading && shouldLogWalletBalances && balances && nativeCurrencyBalanceUsdValue) {
+      const nativeCurrencyBalanceUsd =
+        native && nativeCurrencyBalanceUsdValue ? parseFloat(nativeCurrencyBalanceUsdValue) : 0
+      sendAnalyticsWalletBalanceUserInfo(balances, nativeCurrencyBalanceUsd)
+      setShouldLogWalletBalances(false)
+    }
+  }, [
+    balances,
+    nativeCurrencyBalanceUsdValue,
+    shouldLogWalletBalances,
+    setShouldLogWalletBalances,
+    tokenBalancesIsLoading,
+    native,
+  ])
 
   const tryActivation = useCallback(
     async (connector: Connector) => {
