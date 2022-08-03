@@ -104,7 +104,10 @@ const BottomWrapper = styled.div<{ phase0Flag: boolean }>`
 `
 const TopInputWrapper = styled.div<{ phase0Flag: boolean }>`
   padding: ${({ phase0Flag }) => phase0Flag && '0px 12px'};
+<<<<<<< HEAD
   visibility: ${({ phase0Flag }) => !phase0Flag && 'none'};
+=======
+>>>>>>> c5b953d6 (flagbergasted)
 `
 const BottomInputWrapper = styled.div<{ phase0Flag: boolean }>`
   padding: ${({ phase0Flag }) => phase0Flag && '8px 0px'};
@@ -580,7 +583,11 @@ export default function Swap() {
               swapQuoteReceivedDate={swapQuoteReceivedDate}
             />
 
+<<<<<<< HEAD
             <AutoColumn gap={'0px'}>
+=======
+            <AutoColumn grid-row-gap={phase0FlagEnabled && '0px'} gap={phase0FlagEnabled ? '0px' : 'sm'}>
+>>>>>>> c5b953d6 (flagbergasted)
               <div style={{ display: 'relative' }}>
                 <TopInputWrapper phase0Flag={phase0FlagEnabled}>
                   <Trace section={SectionName.CURRENCY_INPUT_PANEL}>
@@ -644,9 +651,9 @@ export default function Swap() {
                   </TraceEvent>
                 </ArrowWrapper>
               </div>
-              <BottomWrapper>
-                For
-                <BottomInputWrapper>
+              <BottomWrapper phase0Flag={phase0FlagEnabled}>
+                {phase0FlagEnabled && 'For'}
+                <BottomInputWrapper phase0Flag={phase0FlagEnabled}>
                   <Trace section={SectionName.CURRENCY_OUTPUT_PANEL}>
                     <CurrencyInputPanel
                       value={formattedAmounts[Field.OUTPUT]}
