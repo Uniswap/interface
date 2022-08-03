@@ -56,12 +56,15 @@ function TokenDetailsHeader({ currency }: TokenDetailsHeaderProps) {
           </Text>
         </Box>
       </Flex>
-      <IconButton
-        icon={<Heart active={isFavoriteToken} size={21} />}
-        px="none"
-        variant="transparent"
-        onPress={onFavoritePress}
-      />
+      <Flex row gap="none">
+        <SendButton iconOnly bg="none" iconColor="textPrimary" iconSize={21} />
+        <IconButton
+          icon={<Heart active={isFavoriteToken} size={21} />}
+          px="none"
+          variant="transparent"
+          onPress={onFavoritePress}
+        />
+      </Flex>
     </Flex>
   )
 }
