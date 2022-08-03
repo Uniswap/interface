@@ -8,7 +8,7 @@ const StyledInput = styled.input<{ error?: boolean; fontSize?: string; align?: s
   color: ${({ error, theme }) => (error ? theme.deprecated_red1 : theme.deprecated_text1)};
   width: 0;
   position: relative;
-  font-weight: 500;
+  font-weight: 400;
   outline: none;
   border: none;
   flex: 1 1 auto;
@@ -36,7 +36,7 @@ const StyledInput = styled.input<{ error?: boolean; fontSize?: string; align?: s
   }
 
   ::placeholder {
-    color: ${({ theme }) => theme.deprecated_text4};
+    color: ${({ theme, phase0Flag }) => (phase0Flag ? theme.textSecondary : theme.deprecated_text4)};
   }
 `
 

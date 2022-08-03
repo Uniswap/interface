@@ -35,13 +35,13 @@ const StyledInfoIcon = styled(Info)`
   color: ${({ theme }) => theme.deprecated_text3};
 `
 
-const StyledCard = styled(OutlineCard)`
+const StyledCard = styled(OutlineCard)<{ phase0Flag: boolean }>`
   padding: 12px;
-  border: 1px solid ${({ theme }) => theme.deprecated_bg2};
+  border: 1px solid ${({ theme, phase0Flag }) => (phase0Flag ? theme.backgroundOutline : theme.deprecated_bg3)};
 `
 
 const StyledHeaderRow = styled(RowBetween)<{ disabled: boolean; open: boolean; phase0Flag: boolean }>`
-  padding: ${({ phase0Flag }) => (phase0Flag ? '12px 8px 8px 8px' : '4px 8px')};
+  padding: ${({ phase0Flag }) => (phase0Flag ? '8px 8px 0px 8px' : '4px 8px')};
   background-color: ${({ theme }) => theme.none};
   background-color: ${({ open, theme, phase0Flag }) => (open && !phase0Flag ? theme.deprecated_bg1 : theme.none)};
   align-items: center;
@@ -212,7 +212,7 @@ export default function SwapDetailsDropdown({
         <AnimatedDropdown open={showDetails}>
           <AutoColumn gap={'8px'} style={{ padding: '0', paddingBottom: '8px' }}>
             {trade ? (
-              <StyledCard>
+              <StyledCard phase0Flag={phase0FlagEnabled}>
                 <AdvancedSwapDetails trade={trade} allowedSlippage={allowedSlippage} syncing={syncing} />
               </StyledCard>
             ) : null}

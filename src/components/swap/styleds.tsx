@@ -26,7 +26,7 @@ export const ArrowWrapper = styled.div<{ clickable: boolean; phase0Flag: boolean
   left: calc(50% - 16px);
   /* transform: rotate(90deg); */
   background-color: ${({ theme, phase0Flag }) => (phase0Flag ? theme.backgroundSurface : theme.deprecated_bg1)};
-  border: ${({ phase0Flag }) => !phase0Flag && '4px solid'};
+  border: 4px solid;
   border-color: ${({ theme, phase0Flag }) => (phase0Flag ? theme.backgroundContainer : theme.deprecated_bg0)};
 
   z-index: 2;

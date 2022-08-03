@@ -86,16 +86,15 @@ const CurrencySelect = styled(ButtonGray)<{
   box-shadow: ${({ selected }) => (selected ? 'none' : '0px 6px 10px rgba(0, 0, 0, 0.075)')};
   color: ${({ selected, theme }) => (selected ? theme.deprecated_text1 : theme.deprecated_white)};
   cursor: pointer;
-  height: ${({ hideInput, phase0Flag }) => (phase0Flag && hideInput ? '2.8rem' : '2.4rem')};
+  height: ${({ hideInput, phase0Flag }) => (phase0Flag ? 'unset' : hideInput ? '2.8rem' : '2.4rem')};
   border-radius: 16px;
   outline: none;
   user-select: none;
   border: none;
   font-size: 24px;
-  font-weight: 500;
+  font-weight: 400;
   width: ${({ hideInput }) => (hideInput ? '100%' : 'initial')};
-  padding: ${({ selected, phase0Flag }) =>
-    phase0Flag ? (selected ? '4px 8px 4px 4px' : '6px 8px 6px 12px') : '0 8px'};
+  padding: ${({ selected, phase0Flag }) => (phase0Flag ? (selected ? '4px 8px 4px 4px' : '6px 6px 6px 8px') : '0 8px')};
   gap: ${({ phase0Flag }) => (phase0Flag ? '8px' : '0px')};
   justify-content: space-between;
   margin-left: ${({ hideInput }) => (hideInput ? '0' : '12px')};
@@ -112,6 +111,15 @@ const CurrencySelect = styled(ButtonGray)<{
 `
 const InputCurrencySelect = styled(CurrencySelect)<{ phase0Flag: boolean }>`
   background-color: ${({ theme, selected, phase0Flag }) => phase0Flag && (selected ? theme.none : theme.accentAction)};
+  :focus,
+  :hover {
+    background-color: ${({ selected, theme, phase0Flag }) =>
+      selected
+        ? phase0Flag
+          ? theme.backgroundAction
+          : theme.deprecated_bg3
+        : darken(0.05, theme.deprecated_primary1)};
+  }
 `
 
 const InputRow = styled.div<{ selected: boolean; phase0Flag: boolean }>`
@@ -143,13 +151,13 @@ const FiatRow = styled(LabelRow)<{ phase0Flag: boolean }>`
 `
 
 const NoBalanceState = styled.div`
-  color: ${({ theme }) => theme.textSecondary};
+  color: ${({ theme }) => theme.textTertiary};
   font-weight: 400;
   justify-content: space-between;
   padding: 0px 4px;
 `
 const NoBalanceDash = styled.span`
-  color: ${({ theme }) => theme.textSecondary};
+  color: ${({ theme }) => theme.textTertiary};
   font-variant: small-caps;
   font-feature-settings: 'pnum' on, 'lnum' on;
 `
@@ -183,7 +191,7 @@ const StyledBalanceMax = styled.button<{ disabled?: boolean; phase0Flag: boolean
   background-color: ${({ theme, phase0Flag }) => !phase0Flag && theme.deprecated_primary5};
   border: none;
   border-radius: ${({ phase0Flag }) => !phase0Flag && '12px'};
-  color: ${({ theme, phase0Flag }) => (phase0Flag ? theme.deprecated_primary5 : theme.accentAction)};
+  color: ${({ theme, phase0Flag }) => (phase0Flag ? theme.accentAction : theme.deprecated_primary5)};
   cursor: pointer;
   font-size: ${({ phase0Flag }) => (phase0Flag ? '14px' : '11px')};
   font-weight: ${({ phase0Flag }) => (phase0Flag ? '600' : '500')};
