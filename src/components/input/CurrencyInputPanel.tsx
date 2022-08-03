@@ -1,7 +1,8 @@
 import { backgroundColor, BackgroundColorProps, useRestyle } from '@shopify/restyle'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
+import { TextInput } from 'react-native'
 import { useAppTheme } from 'src/app/hooks'
 import { InlineMaxAmountButton } from 'src/components/buttons/MaxAmountButton'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
@@ -29,6 +30,7 @@ type CurrentInputPanelProps = {
   showNonZeroBalancesOnly?: boolean
   showSoftInputOnFocus?: boolean
   autoFocus?: boolean
+  focus?: boolean
   isOutput?: boolean
   isUSDInput?: boolean
   onSetMax?: (amount: string) => void
@@ -51,6 +53,7 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps) {
     otherSelectedCurrency,
     showNonZeroBalancesOnly = true,
     showSoftInputOnFocus = false,
+    focus,
     autoFocus,
     isOutput = false,
     isUSDInput = false,
@@ -64,11 +67,20 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps) {
   const theme = useAppTheme()
   const { t } = useTranslation()
   const transformedProps = useRestyle(restyleFunctions, rest)
+  const inputRef = useRef<TextInput>(null)
   const isBlankOutputState = isOutput && !currency
 
   const insufficientBalanceWarning = warnings.find(
     (warning) => warning.type === WarningLabel.InsufficientFunds
   )
+
+  useEffect(() => {
+    if (focus) {
+      inputRef.current?.focus()
+    } else {
+      inputRef.current?.blur()
+    }
+  }, [focus, inputRef])
 
   return (
     <Flex
@@ -79,8 +91,9 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps) {
       {...transformedProps}>
       {!isBlankOutputState && (
         <AmountInput
+          ref={inputRef}
           alignSelf="stretch"
-          autoFocus={autoFocus}
+          autoFocus={autoFocus ?? focus}
           backgroundColor="none"
           borderWidth={0}
           dimTextColor={dimTextColor}
