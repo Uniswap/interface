@@ -1,8 +1,10 @@
 import { useHeaderHeight } from '@react-navigation/elements'
 import React, { PropsWithChildren } from 'react'
 import { KeyboardAvoidingView, StyleSheet } from 'react-native'
+import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { Flex } from 'src/components/layout'
+import { OnboardingBackground } from 'src/components/gradients/OnboardingBackground'
+import { AnimatedFlex, Flex } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
 import { Text } from 'src/components/Text'
 
@@ -20,12 +22,12 @@ export function OnboardingScreen({
   const insets = useSafeAreaInsets()
 
   return (
-    <Screen edges={['right', 'left']}>
+    <Screen edges={['right', 'left']} style={{ paddingTop: headerHeight }}>
+      <OnboardingBackground />
       <KeyboardAvoidingView
         behavior="padding"
-        keyboardVerticalOffset={headerHeight}
         style={[WrapperStyle.base, { marginBottom: insets.bottom }]}>
-        <Flex grow pb="md" px="md">
+        <AnimatedFlex grow entering={FadeIn} exiting={FadeOut} pb="md" px="md">
           {/* Text content */}
           <Flex centered gap="sm" m="sm">
             <Text fontWeight="600" textAlign="center" variant="headlineSmall">
@@ -41,7 +43,7 @@ export function OnboardingScreen({
           <Flex grow justifyContent="space-between">
             {children}
           </Flex>
-        </Flex>
+        </AnimatedFlex>
       </KeyboardAvoidingView>
     </Screen>
   )

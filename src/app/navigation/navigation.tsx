@@ -303,11 +303,10 @@ export function OnboardingStackNavigator() {
           headerMode: 'float',
           headerTitle: (props) => <OnboardingHeader {...props} />,
           headerBackTitleVisible: false,
-          headerBackImage: () => <Chevron color={theme.colors.textPrimary} />,
-          headerStyle: {
-            backgroundColor: theme.colors.backgroundBackdrop,
-            shadowColor: theme.colors.none,
-          },
+          headerBackImage: () => (
+            <Chevron color={theme.colors.textSecondary} height={28} width={28} />
+          ),
+          headerTransparent: true,
           headerTintColor: theme.colors.textSecondary,
           headerLeftContainerStyle: { paddingLeft: theme.spacing.md },
           headerRightContainerStyle: { paddingRight: theme.spacing.md },

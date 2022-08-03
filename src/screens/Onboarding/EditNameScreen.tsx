@@ -24,6 +24,7 @@ import {
 } from 'src/features/wallet/pendingAcccountsSaga'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { shortenAddress } from 'src/utils/addresses'
+const EDIT_BUTTON_ICON_SIZE = 10
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.EditName>
 
@@ -37,6 +38,7 @@ export function EditNameScreen({ navigation, route: { params } }: Props) {
   const pendingAccountName = Object.values(usePendingAccounts())[0]?.name
 
   const [newAccountName, setNewAccountName] = useState<string>(pendingAccountName ?? '')
+  const [focused, setFocused] = useState(false)
 
   useEffect(() => {
     const shouldRenderBackButton = navigation.getState().index === 0
@@ -74,14 +76,18 @@ export function EditNameScreen({ navigation, route: { params } }: Props) {
 
   return (
     <OnboardingScreen
-      subtitle={t('Easily identify your wallet in the app by giving it a nickname and color.')}
-      title={t('Give your wallet a nickname')}>
+      subtitle={t(
+        'It has a public address for making transactions, and a nickname that’s only visible to you.'
+      )}
+      title={t('Say hello to your new wallet')}>
       <Box>
         {activeAccount ? (
           <CustomizationSection
             accountName={newAccountName}
             address={activeAccount.address}
+            focused={focused}
             setAccountName={setNewAccountName}
+            setFocused={setFocused}
           />
         ) : (
           <ActivityIndicator />
@@ -89,9 +95,11 @@ export function EditNameScreen({ navigation, route: { params } }: Props) {
       </Box>
       <Flex justifyContent="flex-end">
         <PrimaryButton
+          disabled={focused}
           label={t('Continue')}
           name={ElementName.Next}
           testID={ElementName.Next}
+          textVariant="largeLabel"
           variant="onboard"
           onPress={onPressNext}
         />
@@ -111,15 +119,18 @@ function CustomizationSection({
   address,
   accountName,
   setAccountName,
+  focused,
+  setFocused,
 }: {
   address: Address
   accountName: string
   setAccountName: Dispatch<SetStateAction<string>>
+  focused: boolean
+  setFocused: Dispatch<SetStateAction<boolean>>
 }) {
   const theme = useAppTheme()
   const { t } = useTranslation()
   const textInputRef = useRef<NativeTextInput>(null)
-  const [focused, setFocused] = useState(false)
 
   const focusInputWithKeyboard = () => {
     textInputRef.current?.focus()
@@ -131,7 +142,7 @@ function CustomizationSection({
         <Flex centered row gap="none">
           <TextInput
             ref={textInputRef}
-            autoFocus={true}
+            backgroundColor="none"
             fontSize={28}
             placeholder="Nickname"
             placeholderTextColor={theme.colors.textTertiary}
@@ -144,17 +155,22 @@ function CustomizationSection({
           />
           {!focused && (
             <AnimatedButton
-              backgroundColor="translucentBackground"
-              borderRadius="full"
+              backgroundColor="backgroundAction"
+              borderRadius="md"
               entering={FadeIn}
               exiting={FadeOut}
               p="sm"
               onPress={focusInputWithKeyboard}>
-              <PencilIcon />
+              <PencilIcon
+                color={theme.colors.textPrimary}
+                height={EDIT_BUTTON_ICON_SIZE}
+                strokeWidth="1.5"
+                width={EDIT_BUTTON_ICON_SIZE}
+              />
             </AnimatedButton>
           )}
         </Flex>
-        <Text color="textSecondary" opacity={0.7} variant="body">
+        <Text color="textSecondary" variant="body">
           {shortenAddress(address)}
         </Text>
       </Flex>
