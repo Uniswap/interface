@@ -6,6 +6,7 @@ import { Context, useCallback, useContext } from 'react'
 import { ExternalLink as LinkIcon } from 'react-feather'
 import { useAppDispatch } from 'state/hooks'
 import { updateSelectedWallet } from 'state/user/reducer'
+import { removeConnectedWallet } from 'state/wallets/reducer'
 import { DefaultTheme } from 'styled-components/macro'
 import styled, { ThemeContext } from 'styled-components/macro'
 import { isMobile } from 'utils/userAgent'
@@ -245,6 +246,7 @@ export default function AccountDetails({
                       <WalletAction
                         style={{ fontSize: '.825rem', fontWeight: 400, marginRight: '8px' }}
                         onClick={() => {
+                          const walletType = getConnectionName(getConnection(connector).type, getIsMetaMask())
                           if (connector.deactivate) {
                             connector.deactivate()
                           } else {
@@ -252,6 +254,7 @@ export default function AccountDetails({
                           }
 
                           dispatch(updateSelectedWallet({ wallet: undefined }))
+                          dispatch(removeConnectedWallet({ account, walletType }))
                           openOptions()
                         }}
                       >
@@ -339,9 +342,9 @@ export default function AccountDetails({
       {!!pendingTransactions.length || !!confirmedTransactions.length ? (
         <LowerSection>
           <AutoRow mb={'1rem'} style={{ justifyContent: 'space-between' }}>
-            <ThemedText.Body>
+            <ThemedText.DeprecatedBody>
               <Trans>Recent Transactions</Trans>
-            </ThemedText.Body>
+            </ThemedText.DeprecatedBody>
             <LinkStyledButton onClick={clearAllTransactionsCallback}>
               <Trans>(clear all)</Trans>
             </LinkStyledButton>
@@ -351,9 +354,9 @@ export default function AccountDetails({
         </LowerSection>
       ) : (
         <LowerSection>
-          <ThemedText.Body color={theme.deprecated_text1}>
+          <ThemedText.DeprecatedBody color={theme.deprecated_text1}>
             <Trans>Your transactions will appear here...</Trans>
-          </ThemedText.Body>
+          </ThemedText.DeprecatedBody>
         </LowerSection>
       )}
     </>

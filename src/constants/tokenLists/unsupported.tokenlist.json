@@ -1115,6 +1115,55 @@
       "name": "oneUNI",
       "symbol": "oneUNI",
       "decimals": 18
+    },
+    {
+      "chainId": 1,
+      "address": "0x26dE40bFFAFe73Ff4E37089B2C71e35Fd02eb1a7",
+      "name": "EUULA",
+      "symbol": "EUULA",
+      "decimals": 2
+    },
+    {
+      "chainId": 1,
+      "address": "0x3d1BA9be9f66B8ee101911bC36D3fB562eaC2244",
+      "name": "RvT",
+      "symbol": "RVT",
+      "decimals": 18
+    },
+    {
+      "chainId": 1,
+      "address": "0x10B35b348Fd49966f2BaF81df35A511c18bD1f80",
+      "name": "Denaro",
+      "symbol": "DNO",
+      "decimals": 7
+    },
+    {
+      "chainId": 1,
+      "address": "0x47bc01597798DCD7506DCCA36ac4302fc93a8cFb",
+      "name": "Crowd Machine Compute Token",
+      "symbol": "CMCT",
+      "decimals": 8
+    },
+    {
+      "chainId": 1,
+      "address": "0xc96DF921009B790dfFcA412375251ed1A2b75c60",
+      "name": "Ormeus Coin",
+      "symbol": "ORME",
+      "decimals": 8
+    },
+    {
+      "chainId": 1,
+      "address": "0xd6bD97a26232bA02172Ff86b055d5D7bE789335B",
+      "name": "OrmeCash",
+      "symbol": "OMC",
+      "decimals": 18
+    },
+    {
+      "chainId": 1,
+      "address": "0xa2B0fDe6D710e201d0d608e924A484d1A5fEd57c",
+      "name": "Synth sXRP",
+      "symbol": "sXRP",
+      "decimals": 18
     }
   ]
 }

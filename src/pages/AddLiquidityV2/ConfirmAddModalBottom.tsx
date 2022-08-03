@@ -26,47 +26,47 @@ export function ConfirmAddModalBottom({
   return (
     <>
       <RowBetween>
-        <ThemedText.Body>
+        <ThemedText.DeprecatedBody>
           <Trans>{currencies[Field.CURRENCY_A]?.symbol} Deposited</Trans>
-        </ThemedText.Body>
+        </ThemedText.DeprecatedBody>
         <RowFixed>
           <CurrencyLogo currency={currencies[Field.CURRENCY_A]} style={{ marginRight: '8px' }} />
-          <ThemedText.Body>{parsedAmounts[Field.CURRENCY_A]?.toSignificant(6)}</ThemedText.Body>
+          <ThemedText.DeprecatedBody>{parsedAmounts[Field.CURRENCY_A]?.toSignificant(6)}</ThemedText.DeprecatedBody>
         </RowFixed>
       </RowBetween>
       <RowBetween>
-        <ThemedText.Body>
+        <ThemedText.DeprecatedBody>
           <Trans>{currencies[Field.CURRENCY_B]?.symbol} Deposited</Trans>
-        </ThemedText.Body>
+        </ThemedText.DeprecatedBody>
         <RowFixed>
           <CurrencyLogo currency={currencies[Field.CURRENCY_B]} style={{ marginRight: '8px' }} />
-          <ThemedText.Body>{parsedAmounts[Field.CURRENCY_B]?.toSignificant(6)}</ThemedText.Body>
+          <ThemedText.DeprecatedBody>{parsedAmounts[Field.CURRENCY_B]?.toSignificant(6)}</ThemedText.DeprecatedBody>
         </RowFixed>
       </RowBetween>
       <RowBetween>
-        <ThemedText.Body>
+        <ThemedText.DeprecatedBody>
           <Trans>Rates</Trans>
-        </ThemedText.Body>
-        <ThemedText.Body>
+        </ThemedText.DeprecatedBody>
+        <ThemedText.DeprecatedBody>
           {`1 ${currencies[Field.CURRENCY_A]?.symbol} = ${price?.toSignificant(4)} ${
             currencies[Field.CURRENCY_B]?.symbol
           }`}
-        </ThemedText.Body>
+        </ThemedText.DeprecatedBody>
       </RowBetween>
       <RowBetween style={{ justifyContent: 'flex-end' }}>
-        <ThemedText.Body>
+        <ThemedText.DeprecatedBody>
           {`1 ${currencies[Field.CURRENCY_B]?.symbol} = ${price?.invert().toSignificant(4)} ${
             currencies[Field.CURRENCY_A]?.symbol
           }`}
-        </ThemedText.Body>
+        </ThemedText.DeprecatedBody>
       </RowBetween>
       <RowBetween>
-        <ThemedText.Body>
+        <ThemedText.DeprecatedBody>
           <Trans>Share of Pool:</Trans>
-        </ThemedText.Body>
-        <ThemedText.Body>
+        </ThemedText.DeprecatedBody>
+        <ThemedText.DeprecatedBody>
           <Trans>{noLiquidity ? '100' : poolTokenPercentage?.toSignificant(4)}%</Trans>
-        </ThemedText.Body>
+        </ThemedText.DeprecatedBody>
       </RowBetween>
       <ButtonPrimary style={{ margin: '20px 0 0 0' }} onClick={onAdd}>
         <Text fontWeight={500} fontSize={20}>

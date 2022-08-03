@@ -108,9 +108,9 @@ export default function AddressInputPanel({
         <InputContainer>
           <AutoColumn gap="md">
             <RowBetween>
-              <ThemedText.Black color={theme.deprecated_text2} fontWeight={500} fontSize={14}>
+              <ThemedText.DeprecatedBlack color={theme.deprecated_text2} fontWeight={500} fontSize={14}>
                 {label ?? <Trans>Recipient</Trans>}
-              </ThemedText.Black>
+              </ThemedText.DeprecatedBlack>
               {address && chainId && (
                 <ExternalLink
                   href={getExplorerLink(chainId, name ?? address, ExplorerDataType.ADDRESS)}

@@ -166,9 +166,9 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
       {!attempting && !hash && (
         <ContentWrapper gap="lg">
           <RowBetween>
-            <ThemedText.MediumHeader>
+            <ThemedText.DeprecatedMediumHeader>
               <Trans>Deposit</Trans>
-            </ThemedText.MediumHeader>
+            </ThemedText.DeprecatedMediumHeader>
             <CloseIcon onClick={wrappedOnDismiss} />
           </RowBetween>
           <CurrencyInputPanel
@@ -185,19 +185,19 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
 
           <HypotheticalRewardRate dim={!hypotheticalRewardRate.greaterThan('0')}>
             <div>
-              <ThemedText.Black fontWeight={600}>
+              <ThemedText.DeprecatedBlack fontWeight={600}>
                 <Trans>Weekly Rewards</Trans>
-              </ThemedText.Black>
+              </ThemedText.DeprecatedBlack>
             </div>
 
-            <ThemedText.Black>
+            <ThemedText.DeprecatedBlack>
               <Trans>
                 {hypotheticalRewardRate
                   .multiply((60 * 60 * 24 * 7).toString())
                   .toSignificant(4, { groupSeparator: ',' })}{' '}
                 UNI / week
               </Trans>
-            </ThemedText.Black>
+            </ThemedText.DeprecatedBlack>
           </HypotheticalRewardRate>
 
           <RowBetween>
@@ -223,24 +223,24 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
       {attempting && !hash && (
         <LoadingView onDismiss={wrappedOnDismiss}>
           <AutoColumn gap="12px" justify={'center'}>
-            <ThemedText.LargeHeader>
+            <ThemedText.DeprecatedLargeHeader>
               <Trans>Depositing Liquidity</Trans>
-            </ThemedText.LargeHeader>
-            <ThemedText.Body fontSize={20}>
+            </ThemedText.DeprecatedLargeHeader>
+            <ThemedText.DeprecatedBody fontSize={20}>
               <Trans>{parsedAmount?.toSignificant(4)} UNI-V2</Trans>
-            </ThemedText.Body>
+            </ThemedText.DeprecatedBody>
           </AutoColumn>
         </LoadingView>
       )}
       {attempting && hash && (
         <SubmittedView onDismiss={wrappedOnDismiss} hash={hash}>
           <AutoColumn gap="12px" justify={'center'}>
-            <ThemedText.LargeHeader>
+            <ThemedText.DeprecatedLargeHeader>
               <Trans>Transaction Submitted</Trans>
-            </ThemedText.LargeHeader>
-            <ThemedText.Body fontSize={20}>
+            </ThemedText.DeprecatedLargeHeader>
+            <ThemedText.DeprecatedBody fontSize={20}>
               <Trans>Deposited {parsedAmount?.toSignificant(4)} UNI-V2</Trans>
-            </ThemedText.Body>
+            </ThemedText.DeprecatedBody>
           </AutoColumn>
         </SubmittedView>
       )}
