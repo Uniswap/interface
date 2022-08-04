@@ -1,5 +1,7 @@
 import * as Sentry from '@sentry/react-native'
 import React, { ErrorInfo } from 'react'
+import RNRestart from 'react-native-restart'
+import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { Box } from 'src/components/layout/Box'
 import { Text } from 'src/components/Text'
 import { logger } from 'src/utils/logger'
@@ -36,6 +38,15 @@ export class ErrorBoundary extends React.Component<unknown, ErrorBoundaryState> 
               {error.message}
             </Text>
           )}
+          <PrimaryButton
+            borderRadius="md"
+            label="Restart"
+            marginTop="lg"
+            py="sm"
+            onPress={() => {
+              RNRestart.Restart()
+            }}
+          />
         </Box>
       )
     }

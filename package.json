@@ -104,6 +104,7 @@
     "react-native-qrcode-svg": "^6.1.2",
     "react-native-reanimated": "2.4.1",
     "react-native-redash": "^16.2.3",
+    "react-native-restart": "^0.0.24",
     "react-native-safe-area-context": "^3.3.2",
     "react-native-screens": "^3.7.2",
     "react-native-svg": "^12.1.1",
