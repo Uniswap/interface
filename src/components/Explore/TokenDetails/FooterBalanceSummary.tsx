@@ -7,6 +7,7 @@ import styled from 'styled-components/macro'
 import { SMALLEST_MOBILE_MEDIA_BREAKPOINT } from '../constants'
 import { LoadingBubble } from '../loading'
 
+const FAKE_NAV_FOOTER_HEIGHT = '56px'
 const BalanceFooter = styled.div`
   height: fit-content;
   border: 1px solid ${({ theme }) => theme.backgroundOutline};
@@ -20,7 +21,7 @@ const BalanceFooter = styled.div`
   color: ${({ theme }) => theme.textSecondary};
   position: fixed;
   left: 0;
-  bottom: 56px;
+  bottom: ${FAKE_NAV_FOOTER_HEIGHT};
   display: flex;
   flex-direction: column;
   align-content: center;
@@ -47,10 +48,10 @@ const FakeFooterNavBar = styled.div`
   bottom: 0px;
   left: 0px;
   background-color: ${({ theme }) => theme.backgroundBackdrop};
-  height: 56px;
+  height: ${FAKE_NAV_FOOTER_HEIGHT};
   width: 100%;
   align-items: flex-end;
-  padding: 20px 10px;
+  padding: 20px 8px;
   font-size: 10px;
 `
 const FiatValue = styled.span`
@@ -88,7 +89,6 @@ const SwapButton = styled.button`
   font-size: 16px;
   font-weight: 600;
   justify-content: center;
-  cursor: pointer;
 `
 const TotalBalancesSection = styled.div`
   display: flex;
