@@ -25,7 +25,13 @@ export function WatchedWalletsCard({ onSearchWallets }: { onSearchWallets: () =>
             navigation.navigate(Screens.User, { address })
           }}>
           <Box mx="sm">
-            <AddressDisplay address={address} direction="column" variant="smallLabel" />
+            <AddressDisplay
+              showShortenedEns
+              address={address}
+              direction="column"
+              size={40}
+              variant="smallLabel"
+            />
           </Box>
         </Button>
       )

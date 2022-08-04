@@ -18,6 +18,9 @@ import {
 } from 'src/features/wallet/selectors'
 import { WalletConnectSession } from 'src/features/walletConnect/walletConnectSlice'
 import { parseAddress, shortenAddress } from 'src/utils/addresses'
+import { trimToLength } from 'src/utils/string'
+
+const ENS_TRIM_LENGTH = 8
 
 export function useAccounts() {
   return useAppSelector(selectNonPendingAccounts)
@@ -67,7 +70,10 @@ export function useSelectAccountNotificationSetting(address: Address) {
   return useAppSelector(makeSelectAccountNotificationSetting(address))
 }
 
-export function useDisplayName(address: Nullable<string>):
+export function useDisplayName(
+  address: Nullable<string>,
+  showShortenedEns = false
+):
   | {
       name: string
       type: 'local' | 'ens' | 'address'
@@ -81,7 +87,11 @@ export function useDisplayName(address: Nullable<string>):
   if (!address) return
 
   if (maybeLocalName) return { name: maybeLocalName, type: 'local' }
-  if (ens.ENSName) return { name: ens.ENSName, type: 'ens' }
+  if (ens.ENSName)
+    return {
+      name: showShortenedEns ? trimToLength(ens.ENSName, ENS_TRIM_LENGTH) : ens.ENSName,
+      type: 'ens',
+    }
   return { name: shortenAddress(address), type: 'address' }
 }
 

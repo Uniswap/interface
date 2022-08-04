@@ -29,6 +29,7 @@ type AddressDisplayProps = {
   showCopy?: boolean
   showUnicon?: boolean
   showViewOnly?: boolean
+  showShortenedEns?: boolean
 } & LayoutProps<Theme>
 
 type CopyButtonWrapperProps = {
@@ -61,11 +62,12 @@ export function AddressDisplay({
   showCopy = false,
   showUnicon = true,
   showViewOnly = false,
+  showShortenedEns = false,
   ...rest
 }: AddressDisplayProps) {
   const dispatch = useAppDispatch()
   const theme = useAppTheme()
-  const displayName = useDisplayName(address)
+  const displayName = useDisplayName(address, showShortenedEns)
   const nameTypeIsAddress = displayName?.type === 'address'
 
   const onPressCopyAddress = () => {
