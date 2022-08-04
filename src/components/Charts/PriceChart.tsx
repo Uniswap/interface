@@ -5,14 +5,12 @@ import { Group } from '@visx/group'
 import { Line, LinePath } from '@visx/shape'
 import { bisect, scaleLinear } from 'd3'
 import useTheme from 'hooks/useTheme'
-import { atom } from 'jotai'
-import { useUpdateAtom } from 'jotai/utils'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useState } from 'react'
+import { ArrowDownRight, ArrowUpRight } from 'react-feather'
+import styled from 'styled-components/macro'
 
 import circleCorners from './circleCorners'
 import data from './data.json'
-
-export const CrosshairPriceAtom = atom<{ value: number; delta: string }>({ value: 0, delta: '+0.00%' })
 
 type PricePoint = { value: number; timestamp: number }
 
@@ -23,12 +21,47 @@ function getPriceBounds(pricePoints: PricePoint[]): [number, number] {
   return [min, max]
 }
 
+const StyledUpArrow = styled(ArrowUpRight)`
+  color: ${({ theme }) => theme.accentSuccess};
+`
+const StyledDownArrow = styled(ArrowDownRight)`
+  color: ${({ theme }) => theme.accentFailure};
+`
+
 function getDelta(start: number, current: number) {
   const delta = (current / start - 1) * 100
   const isPositive = Math.sign(delta) > 0
 
-  return (isPositive ? '+' : '') + delta.toFixed(2)
+  const formattedDelta = delta.toFixed(2) + '%'
+  if (isPositive) {
+    return ['+' + formattedDelta, <StyledUpArrow size={16} key="arrow-up" />]
+  } else if (delta === 0) {
+    return [formattedDelta, null]
+  }
+  return [formattedDelta, <StyledDownArrow size={16} key="arrow-down" />]
 }
+
+export const ChartWrapper = styled.div`
+  position: relative;
+`
+
+export const ChartHeader = styled.div`
+  position: absolute;
+`
+
+export const TokenPrice = styled.span`
+  font-size: 36px;
+  line-height: 44px;
+`
+export const DeltaContainer = styled.div`
+  height: 16px;
+  display: flex;
+  align-items: center;
+`
+const ArrowCell = styled.div`
+  padding-left: 2px;
+  display: flex;
+`
 
 interface PriceChartProps {
   width: number
@@ -36,7 +69,7 @@ interface PriceChartProps {
 }
 
 export function PriceChart({ width, height }: PriceChartProps) {
-  const margin = { top: 40, bottom: 50 }
+  const margin = { top: 80, bottom: 20, crosshair: 72 }
   // defining inner measurements
   const innerHeight = height - margin.top - margin.bottom
   const theme = useTheme()
@@ -47,14 +80,6 @@ export function PriceChart({ width, height }: PriceChartProps) {
   const initialState = { pricePoint: endingPrice, xCoordinate: null }
 
   const [selected, setSelected] = useState<{ pricePoint: PricePoint; xCoordinate: number | null }>(initialState)
-  const setCrosshairPrice = useUpdateAtom(CrosshairPriceAtom)
-
-  useEffect(() => {
-    setCrosshairPrice({
-      value: selected.pricePoint.value,
-      delta: getDelta(startingPrice.value, selected.pricePoint.value),
-    })
-  }, [setCrosshairPrice, selected, startingPrice])
 
   // Defining scales
   // x scale
@@ -87,21 +112,22 @@ export function PriceChart({ width, height }: PriceChartProps) {
     [timeScale]
   )
 
+  const [delta, arrow] = getDelta(startingPrice.value, selected.pricePoint.value)
+
   return (
-    <svg width={width} height={height}>
-      <Group top={margin.top}>
-        <LinePath
-          curve={circleCorners.radius(1)}
-          stroke={theme.accentActive}
-          strokeWidth={2}
-          data={data.priceHistory}
-          x={(d: PricePoint) => timeScale(d.timestamp) ?? 0}
-          y={(d: PricePoint) => rdScale(d.value) ?? 0}
-        />
+    <ChartWrapper>
+      <ChartHeader>
+        <TokenPrice>${selected.pricePoint.value.toFixed(2)}</TokenPrice>
+        <DeltaContainer>
+          {delta}
+          <ArrowCell>{arrow}</ArrowCell>
+        </DeltaContainer>
+      </ChartHeader>
+      <svg width={width} height={height}>
         {selected.xCoordinate && (
           <g>
             <Line
-              from={{ x: selected.xCoordinate, y: 0 }}
+              from={{ x: selected.xCoordinate, y: margin.crosshair }}
               to={{ x: selected.xCoordinate, y: height }}
               stroke={'#99A1BD3D'}
               strokeWidth={1}
@@ -110,31 +136,41 @@ export function PriceChart({ width, height }: PriceChartProps) {
             />
           </g>
         )}
-        {selected.xCoordinate && (
-          <g>
-            <GlyphCircle
-              left={selected.xCoordinate}
-              top={rdScale(selected.pricePoint.value)}
-              size={50}
-              fill={theme.accentActive}
-              stroke={theme.backgroundOutline}
-              strokeWidth={2}
-            />
-          </g>
-        )}
+        <Group top={margin.top}>
+          <LinePath
+            curve={circleCorners.radius(1)}
+            stroke={theme.accentActive}
+            strokeWidth={2}
+            data={data.priceHistory}
+            x={(d: PricePoint) => timeScale(d.timestamp) ?? 0}
+            y={(d: PricePoint) => rdScale(d.value) ?? 0}
+          />
+          {selected.xCoordinate && (
+            <g>
+              <GlyphCircle
+                left={selected.xCoordinate}
+                top={rdScale(selected.pricePoint.value)}
+                size={50}
+                fill={theme.accentActive}
+                stroke={theme.backgroundOutline}
+                strokeWidth={2}
+              />
+            </g>
+          )}
+        </Group>
         <rect
           x={0}
           y={0}
           width={width}
-          height={innerHeight}
+          height={height}
           fill={'transparent'}
           onTouchStart={handleHover}
           onTouchMove={handleHover}
           onMouseMove={handleHover}
           onMouseLeave={() => setSelected(initialState)}
         />
-      </Group>
-    </svg>
+      </svg>
+    </ChartWrapper>
   )
 }
 

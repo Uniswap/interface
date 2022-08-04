@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { ParentSize } from '@visx/responsive'
-import PriceChart, { CrosshairPriceAtom } from 'components/Charts/PriceChart'
+import PriceChart from 'components/Charts/PriceChart'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { VerifiedIcon } from 'components/TokenSafety/TokenSafetyIcon'
 import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
@@ -12,7 +12,7 @@ import { useAtomValue } from 'jotai/utils'
 import { darken } from 'polished'
 import { useCallback } from 'react'
 import { useState } from 'react'
-import { ArrowDownRight, ArrowLeft, ArrowUpRight, Copy, Heart } from 'react-feather'
+import { ArrowLeft, Copy, Heart } from 'react-feather'
 import { Link, useNavigate } from 'react-router-dom'
 import styled, { useTheme } from 'styled-components/macro'
 
@@ -40,10 +40,6 @@ export const AboutSection = styled.div`
 export const AboutHeader = styled.span`
   font-size: 28px;
   line-height: 36px;
-`
-const ArrowCell = styled.div`
-  padding-left: 2px;
-  display: flex;
 `
 export const BreadcrumbNavLink = styled(Link)`
   display: flex;
@@ -93,15 +89,10 @@ const Contract = styled.div`
 `
 export const ChartContainer = styled.div`
   display: flex;
-  height: 332px;
+  height: 404px;
   border-bottom: 1px solid ${({ theme }) => theme.backgroundOutline};
   align-items: center;
   overflow: hidden;
-`
-export const DeltaContainer = styled.div`
-  height: 16px;
-  display: flex;
-  align-items: center;
 `
 export const Stat = styled.div`
   display: flex;
@@ -158,10 +149,6 @@ export const TokenInfoContainer = styled.div`
   justify-content: space-between;
   align-items: center;
 `
-export const TokenPrice = styled.span`
-  font-size: 36px;
-  line-height: 44px;
-`
 const TokenSymbol = styled.span`
   color: ${({ theme }) => theme.textSecondary};
 `
@@ -213,7 +200,6 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
   const chainInfo = getChainInfo(token?.chainId)
   const networkLabel = chainInfo?.label
   const networkBadgebackgroundColor = chainInfo?.backgroundColor
-  const crosshairPrice = useAtomValue(CrosshairPriceAtom)
 
   // catch token error and loading state
   if (!token || !token.name || !token.symbol) {
@@ -257,17 +243,6 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
             </ClickFavorited>
           </TokenActions>
         </TokenInfoContainer>
-        <TokenPrice>${crosshairPrice.value.toFixed(2)}</TokenPrice>
-        <DeltaContainer>
-          {crosshairPrice.delta}%
-          <ArrowCell>
-            {crosshairPrice.delta.charAt(0) === '+' ? (
-              <ArrowUpRight size={16} color={theme.accentSuccess} />
-            ) : (
-              <ArrowDownRight size={16} color={theme.accentFailure} />
-            )}
-          </ArrowCell>
-        </DeltaContainer>
         <ChartContainer>
           <ParentSize>{({ width, height }) => <PriceChart width={width} height={height} />}</ParentSize>
         </ChartContainer>
