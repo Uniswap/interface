@@ -128,6 +128,7 @@ export function useDerivedTransferInfo(state: TransactionState): DerivedTransfer
 
 /** Helper transfer callback for ERC20s */
 export function useTransferERC20Callback(
+  txId?: string,
   chainId?: ChainId,
   toAddress?: Address,
   tokenAddress?: Address,
@@ -145,6 +146,7 @@ export function useTransferERC20Callback(
           tokenAddress,
           amountInWei,
           type: AssetType.Currency,
+          txId,
         }
       : null,
     onSubmit
@@ -153,6 +155,7 @@ export function useTransferERC20Callback(
 
 /** Helper transfer callback for NFTs */
 export function useTransferNFTCallback(
+  txId?: string,
   chainId?: ChainId,
   toAddress?: Address,
   tokenAddress?: Address,
@@ -170,6 +173,7 @@ export function useTransferNFTCallback(
           tokenAddress,
           tokenId,
           type: AssetType.ERC721,
+          txId,
         }
       : null,
     onSubmit

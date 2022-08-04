@@ -30,7 +30,7 @@ const getTextFromSwapStatus = (
 ) => {
   if (!transactionDetails || transactionDetails.typeInfo.type !== TransactionType.Swap) {
     // TODO: should never go into this state but should probably do some
-    // error display here
+    // error display here as well as log to sentry or amplitude
     return {
       title: t('Swap pending'),
       description: t(

@@ -64,7 +64,7 @@ export function TransferReview({
     warnings,
   } = derivedTransferInfo
   const { isNFT, currencyIn, nftIn, chainId } = inputAssetInfo
-  const { gasSpendEstimate, gasPrice } = state
+  const { gasSpendEstimate, gasPrice, txId } = state
 
   // TODO: how should we surface this warning?
   const actionButtonDisabled = warnings.some(
@@ -92,6 +92,7 @@ export function TransferReview({
       : undefined
 
   const transferERC20Callback = useTransferERC20Callback(
+    txId,
     chainId,
     recipient,
     currencyIn ? currencyAddress(currencyIn) : undefined,
@@ -100,6 +101,7 @@ export function TransferReview({
   )
   // TODO: if readonly account, not sendable
   const transferNFTCallback = useTransferNFTCallback(
+    txId,
     chainId,
     recipient,
     nftIn?.asset_contract.address,

@@ -14,6 +14,7 @@ import { SendTokenTransactionInfo, TransactionType } from 'src/features/transact
 import { account, mockContractManager, mockProvider, txRequest } from 'src/test/fixtures'
 
 const erc20TranferParams: TransferCurrencyParams = {
+  txId: '1',
   type: AssetType.Currency,
   account: account,
   tokenAddress: DAI.address,
@@ -26,6 +27,7 @@ const nativeTranferParams: TransferCurrencyParams = {
   tokenAddress: NATIVE_ADDRESS,
 }
 const erc721TransferParams: TransferNFTParams = {
+  txId: '1',
   type: AssetType.ERC721,
   chainId: ChainId.Rinkeby,
   account: account,
@@ -68,6 +70,7 @@ describe('transferTokenSaga', () => {
           ...typeInfo,
           tokenAddress: nativeTranferParams.tokenAddress,
         },
+        txId: '1',
       })
       .silentRun()
   })
@@ -89,6 +92,7 @@ describe('transferTokenSaga', () => {
           request: txRequest,
         },
         typeInfo,
+        txId: '1',
       })
       .silentRun()
   })
@@ -112,6 +116,7 @@ describe('transferTokenSaga', () => {
           tokenId: erc721TransferParams.tokenId,
           type: TransactionType.Send,
         },
+        txId: '1',
       })
       .silentRun()
   })
@@ -135,6 +140,7 @@ describe('transferTokenSaga', () => {
           tokenId: erc1155TransferParams.tokenId,
           type: TransactionType.Send,
         },
+        txId: '1',
       })
       .silentRun()
   })

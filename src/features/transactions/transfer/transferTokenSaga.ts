@@ -23,7 +23,7 @@ import { createMonitoredSaga } from 'src/utils/saga'
 import { call } from 'typed-redux-saga'
 
 export function* transferToken(params: TransferTokenParams) {
-  const { account, chainId } = params
+  const { txId, account, chainId } = params
 
   const transactionRequest: providers.TransactionRequest = yield* call(
     createTransactionRequest,
@@ -36,6 +36,7 @@ export function* transferToken(params: TransferTokenParams) {
   }
 
   yield* call(sendTransaction, {
+    txId,
     chainId,
     account,
     options,

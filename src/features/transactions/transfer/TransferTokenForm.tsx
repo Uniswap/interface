@@ -22,6 +22,7 @@ import {
   closeNoBalancesWarningModal,
   CurrencyField,
   TransactionState,
+  transactionStateActions,
 } from 'src/features/transactions/transactionState/transactionState'
 import {
   DerivedTransferInfo,
@@ -30,6 +31,7 @@ import {
   useUpdateTransferGasEstimate,
 } from 'src/features/transactions/transfer/hooks'
 import { InputAssetInfo } from 'src/features/transactions/transfer/types'
+import { createTransactionId } from 'src/features/transactions/utils'
 import { currencyAddress } from 'src/utils/currencyId'
 
 interface TransferTokenProps {
@@ -78,7 +80,11 @@ export function TransferTokenForm({
   const { warningsLoading, onPressReview, onPressWarningContinue } = useHandleTransferWarningModals(
     state,
     dispatch,
-    onNext,
+    () => {
+      const txId = createTransactionId()
+      dispatch(transactionStateActions.setTxId(txId))
+      onNext()
+    },
     recipient,
     chainId ?? ChainId.Mainnet
   )

@@ -5,6 +5,7 @@ import { NFTAsset } from 'src/features/nfts/types'
 import { Account } from 'src/features/wallet/accounts/types'
 
 interface BaseTransferParams {
+  txId?: string
   account: Account
   chainId: ChainId
   toAddress: Address
