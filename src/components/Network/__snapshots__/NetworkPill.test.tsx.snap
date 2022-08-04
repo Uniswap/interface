@@ -217,7 +217,7 @@ exports[`renders an InlineNetworkPill 1`] = `
           "color": "#070A15",
           "display": "flex",
           "fontFamily": "Inter-SemiBold",
-          "fontSize": 10,
+          "fontSize": 12,
           "lineHeight": 12,
         },
         Object {

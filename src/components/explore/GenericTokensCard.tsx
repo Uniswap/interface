@@ -1,7 +1,7 @@
 import { default as React, ReactElement, ReactNode } from 'react'
 import { FlatListProps } from 'react-native'
 import { useExploreStackNavigation } from 'src/app/navigation/types'
-import { Box } from 'src/components/layout'
+import { Box, Flex } from 'src/components/layout'
 import { BaseCard } from 'src/components/layout/BaseCard'
 import { Separator } from 'src/components/layout/Separator'
 import { Loading } from 'src/components/loading'
@@ -56,29 +56,38 @@ export function GenericTokensCard<T>({
 
   const margin = horizontal ? 'sm' : 'none'
 
+  if (loading) {
+    return (
+      <BaseCard.Container>
+        <BaseCard.Header icon={icon} subtitle={subtitle} title={title} onPress={onPress} />
+        {displayFavorites ? (
+          <Flex row alignItems="flex-start" m="sm">
+            <Loading repeat={4} type="favorite" />
+          </Flex>
+        ) : (
+          <Loading showSeparator repeat={10} type="token" />
+        )}
+      </BaseCard.Container>
+    )
+  }
+
   return (
     <BaseCard.Container>
       <BaseCard.Header icon={icon} subtitle={subtitle} title={title} onPress={onPress} />
-      {loading ? (
-        <Box padding="sm">
-          <Loading repeat={4} type="box" />
-        </Box>
-      ) : (
-        <Box>
-          <BaseCard.List
-            ItemSeparatorComponent={() => <Separator ml={margin} />}
-            ListEmptyComponent={ListEmptyComponent}
-            contentContainerStyle={
-              horizontal ? { ...flex.grow, padding: spacing.sm } : { ...flex.fill }
-            }
-            data={fixedCount ? assets?.slice(0, fixedCount) : assets}
-            horizontal={horizontal}
-            keyExtractor={key}
-            listKey={id}
-            renderItem={renderItem}
-          />
-        </Box>
-      )}
+      <Box>
+        <BaseCard.List
+          ItemSeparatorComponent={() => <Separator ml={margin} />}
+          ListEmptyComponent={ListEmptyComponent}
+          contentContainerStyle={
+            horizontal ? { ...flex.grow, padding: spacing.sm } : { ...flex.fill }
+          }
+          data={fixedCount ? assets?.slice(0, fixedCount) : assets}
+          horizontal={horizontal}
+          keyExtractor={key}
+          listKey={id}
+          renderItem={renderItem}
+        />
+      </Box>
     </BaseCard.Container>
   )
 }

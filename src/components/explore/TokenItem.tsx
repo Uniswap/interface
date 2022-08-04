@@ -149,6 +149,8 @@ export const TokenItem = forwardRef<Swipeable, TokenItemProps>(
   }
 )
 
+export const TOKEN_ITEM_BOX_MINWIDTH = 137
+
 export function TokenItemBox({ coin }: TokenItemProps) {
   const { navigate } = useExploreStackNavigation()
   const _currencyId = useCurrencyIdFromCoingeckoId(coin.id)
@@ -159,7 +161,11 @@ export function TokenItemBox({ coin }: TokenItemProps) {
       onPress={() => {
         navigate(Screens.TokenDetails, { currencyId: _currencyId })
       }}>
-      <Box bg="backgroundContainer" borderRadius="md" justifyContent="space-between" width={137}>
+      <Box
+        bg="backgroundContainer"
+        borderRadius="md"
+        justifyContent="space-between"
+        minWidth={TOKEN_ITEM_BOX_MINWIDTH}>
         <Flex p="sm">
           <Flex row alignItems="center" justifyContent="space-between">
             <Text variant="subhead">{coin.symbol.toUpperCase() ?? ''}</Text>

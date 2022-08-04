@@ -71,7 +71,7 @@ export const textVariants = {
   },
   badge: {
     fontFamily: fontFamily.sansSerif.semibold,
-    fontSize: 10,
+    fontSize: 12,
     lineHeight: 12,
     color: 'textPrimary',
   },

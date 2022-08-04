@@ -30,13 +30,15 @@ export function SearchWalletItem({ wallet }: SearchWalletItemProps) {
   return (
     <Button name={ElementName.SearchWalletItem} testID={`wallet-item-${address}`} onPress={onPress}>
       <Flex row alignItems="center" gap="sm" justifyContent="space-between" px="xs" py="sm">
-        <Flex centered row gap="md">
-          <Unicon address={address} size={35} />
-          <Flex gap="xxs">
-            <Text variant="mediumLabel">{ensName}</Text>
-            <Text color="textSecondary" variant="caption">
-              {shortenAddress(address)}
-            </Text>
+        <Flex centered row gap="xs">
+          <Unicon address={address} size={32} />
+          <Flex gap="none">
+            <Text variant="subhead">{ensName}</Text>
+            <Flex height={20}>
+              <Text color="textSecondary" variant="caption">
+                {shortenAddress(address)}
+              </Text>
+            </Flex>
           </Flex>
         </Flex>
         <ProfileIcon color={theme.colors.textSecondary} height={24} width={24} />

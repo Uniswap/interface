@@ -8,7 +8,7 @@ import { SearchEtherscanItem } from 'src/components/explore/search/SearchEthersc
 import { SearchTokenItem } from 'src/components/explore/search/SearchTokenItem'
 import { SearchWalletItem } from 'src/components/explore/search/SearchWalletItem'
 import { CloseIcon } from 'src/components/icons/CloseIcon'
-import { AnimatedFlex, Box, Flex } from 'src/components/layout'
+import { AnimatedFlex, Flex } from 'src/components/layout'
 import { BaseCard } from 'src/components/layout/BaseCard'
 import { Separator } from 'src/components/layout/Separator'
 import { Loading } from 'src/components/loading'
@@ -107,8 +107,8 @@ export function SearchResultsSection({ searchQuery }: SearchResultsSectionProps)
         </AnimatedFlex>
       )}
       {trendingIsLoading ? (
-        <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="md" mx="xs">
-          <Text color="textSecondary" variant="subheadSmall">
+        <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="none">
+          <Text color="textSecondary" mb="xxs" mx="xs" variant="subheadSmall">
             {t('Popular Tokens')}
           </Text>
           <Loading repeat={TRENDING_TOKENS_COUNT} type="token" />
@@ -183,11 +183,11 @@ export function SearchQueryResultsSection({ searchQuery }: SearchResultsSectionP
   return (
     <Flex grow borderRadius="md" gap="xs">
       {tokensLoading ? (
-        <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="xs" mx="xs">
-          <Text color="textSecondary" variant="subheadSmall">
+        <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="xs">
+          <Text color="textSecondary" mx="xs" variant="subheadSmall">
             {t('Tokens')}
           </Text>
-          <Loading repeat={TOKEN_RESULTS_COUNT} type="token" />
+          <Loading showSeparator repeat={TOKEN_RESULTS_COUNT} type="token" />
         </AnimatedFlex>
       ) : (
         topTokenSearchResults?.length && (
@@ -217,9 +217,7 @@ export function SearchQueryResultsSection({ searchQuery }: SearchResultsSectionP
               wallet={{ type: SearchResultType.Wallet, address: ensAddress, ensName }}
             />
           ) : (
-            <Box mx="xs" my="sm">
-              <Loading repeat={1} type="token" />
-            </Box>
+            <Loading repeat={1} type="token" />
           )}
         </AnimatedFlex>
       )}

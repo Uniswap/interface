@@ -19,6 +19,8 @@ type SearchTokenItemProps = {
   coin: CoingeckoSearchCoin | CoingeckoMarketCoin | TokenSearchResult
 }
 
+export const TOKEN_SUBHEAD_ROW_HEIGHT = 20
+
 export function SearchTokenItem({ coin }: SearchTokenItemProps) {
   const { navigate } = useExploreStackNavigation()
   const dispatch = useAppDispatch()
@@ -45,15 +47,17 @@ export function SearchTokenItem({ coin }: SearchTokenItemProps) {
 
   return (
     <Button name={ElementName.SearchTokenItem} onPress={onPress}>
-      <Flex row alignItems="center" px="xs" py="sm">
+      <Flex row alignItems="center" gap="xs" px="xs" py="sm">
         <Image source={{ uri }} style={logoStyle} />
         <Flex gap="none">
           <Text color="textPrimary" variant="subhead">
             {name}
           </Text>
-          <Text color="textSecondary" variant="caption">
-            {symbol.toUpperCase() ?? ''}
-          </Text>
+          <Flex row height={TOKEN_SUBHEAD_ROW_HEIGHT}>
+            <Text color="textSecondary" variant="caption">
+              {symbol.toUpperCase() ?? ''}
+            </Text>
+          </Flex>
         </Flex>
       </Flex>
     </Button>
@@ -61,7 +65,7 @@ export function SearchTokenItem({ coin }: SearchTokenItemProps) {
 }
 
 export const logoStyle: ImageStyle = {
-  height: 35,
+  height: 32,
   resizeMode: 'cover',
-  width: 35,
+  width: 32,
 }

@@ -2,7 +2,6 @@ import { Currency } from '@uniswap/sdk-core'
 import React, { ReactElement, useCallback, useMemo } from 'react'
 import { FlatList, ListRenderItemInfo, SectionList } from 'react-native'
 import { Inset } from 'src/components/layout'
-import { Box } from 'src/components/layout/Box'
 import { Separator } from 'src/components/layout/Separator'
 import { Loading } from 'src/components/loading'
 import { TokenBalanceItem } from 'src/components/TokenBalanceList/TokenBalanceItem'
@@ -50,9 +49,10 @@ export function TokenBalanceList({
 }: TokenBalanceListProps) {
   if (loading) {
     return (
-      <Box padding="sm">
-        <Loading repeat={4} type="box" />
-      </Box>
+      <>
+        {header}
+        <Loading showSeparator repeat={4} type="token" />
+      </>
     )
   }
 

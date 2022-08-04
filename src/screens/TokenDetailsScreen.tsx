@@ -48,7 +48,7 @@ function TokenDetailsHeader({ currency }: TokenDetailsHeaderProps) {
   return (
     <Flex row justifyContent="space-between" mx="md">
       <Flex centered row gap="xs">
-        <CurrencyLogo currency={currency} size={35} />
+        <CurrencyLogo currency={currency} size={32} />
         <Box>
           <Text variant="headlineSmall">{currency.name ?? t('Unknown token')}</Text>
           <Text color="textTertiary" variant="caption">
