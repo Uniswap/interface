@@ -1,5 +1,6 @@
 ### Description
-**Fixes [MOB-1337](https://uniswaplabs.atlassian.net/browse/MOB-1337)**
+
+Fixes MOB-XXX
 
 _[Summary of the change, motivation, and context]_
 
