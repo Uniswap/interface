@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-07-21 14:05\n"
+"PO-Revision-Date: 2022-07-29 20:04\n"
 "Last-Translator: \n"
 "Language: ja_JP\n"
 "Language-Team: Japanese\n"
@@ -115,6 +115,10 @@ msgstr "<0>🎉 </0>チーム ユニコーンにようこそ <1>🎉</1>"
 #: src/pages/Vote/Landing.tsx
 msgid "A minimum threshold of 0.25% of the total UNI supply is required to submit proposals"
 msgstr "提案を提出するには、UNIの総供給量の0.25％以上のUNIが必要です。"
+
+#: src/components/swap/PriceImpactWarning.tsx
+msgid "A swap of this size may have a high price impact, given the current liquidity in the pool. There may be a large difference between the amount of your input token and what you will receive in the output token"
+msgstr "プールの現在の流動性を考えると、このサイズのスワップは価格に大きな影響を与える可能性があります。入力トークンの量と出力トークンで受け取る量には大きな違いがある可能性があります"
 
 #: src/components/Menu/index.tsx
 msgid "About"
@@ -1327,6 +1331,10 @@ msgstr "価格の影響が大きすぎます"
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Price Updated"
 msgstr "価格が更新されています"
+
+#: src/components/swap/PriceImpactWarning.tsx
+msgid "Price impact warning"
+msgstr "価格への影響に関する警告"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Price range"

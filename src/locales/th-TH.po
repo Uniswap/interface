@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-07-21 14:05\n"
+"PO-Revision-Date: 2022-07-29 20:05\n"
 "Last-Translator: \n"
 "Language: th_TH\n"
 "Language-Team: Thai\n"
@@ -115,6 +115,10 @@ msgstr "<0>🎉</0> ยินดีต้อนรับสู่ทีมยู
 #: src/pages/Vote/Landing.tsx
 msgid "A minimum threshold of 0.25% of the total UNI supply is required to submit proposals"
 msgstr "เกณฑ์ขั้นต่ำ 0.25% ของอุปทาน UNI ทั้งหมดจะต้องส่งข้อเสนอ"
+
+#: src/components/swap/PriceImpactWarning.tsx
+msgid "A swap of this size may have a high price impact, given the current liquidity in the pool. There may be a large difference between the amount of your input token and what you will receive in the output token"
+msgstr "การแลกเปลี่ยนขนาดนี้อาจมีผลกระทบต่อราคาสูง เมื่อพิจารณาจากสภาพคล่องในปัจจุบันในกลุ่ม อาจมีความแตกต่างกันมากระหว่างจำนวนโทเค็นอินพุตของคุณกับสิ่งที่คุณจะได้รับในโทเค็นเอาต์พุต"
 
 #: src/components/Menu/index.tsx
 msgid "About"
@@ -1327,6 +1331,10 @@ msgstr "ผลกระทบของราคาสูงเกินไป"
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Price Updated"
 msgstr "อัพเดทราคา"
+
+#: src/components/swap/PriceImpactWarning.tsx
+msgid "Price impact warning"
+msgstr "คำเตือนผลกระทบด้านราคา"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Price range"
