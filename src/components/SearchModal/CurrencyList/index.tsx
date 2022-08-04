@@ -5,6 +5,8 @@ import { ElementName, Event, EventName } from 'components/AmplitudeAnalytics/con
 import { TraceEvent } from 'components/AmplitudeAnalytics/TraceEvent'
 import { LightGreyCard } from 'components/Card'
 import QuestionHelper from 'components/QuestionHelper'
+import TokenSafetyIcon from 'components/TokenSafety/TokenSafetyIcon'
+import { checkWarning } from 'constants/tokenSafety'
 import useTheme from 'hooks/useTheme'
 import { CSSProperties, MutableRefObject, useCallback, useMemo } from 'react'
 import { FixedSizeList } from 'react-window'
@@ -37,6 +39,14 @@ const StyledBalanceText = styled(Text)`
   text-overflow: ellipsis;
 `
 
+const CurrencyName = styled(Text)`
+  max-width: 90%;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`
+
 const Tag = styled.div`
   background-color: ${({ theme }) => theme.deprecated_bg3};
   color: ${({ theme }) => theme.deprecated_text2};
@@ -58,7 +68,6 @@ const FixedContentRow = styled.div`
   grid-gap: 16px;
   align-items: center;
 `
-
 function Balance({ balance }: { balance: CurrencyAmount<Currency> }) {
   return <StyledBalanceText title={balance.toExact()}>{balance.toSignificant(4)}</StyledBalanceText>
 }
@@ -70,6 +79,11 @@ const TagContainer = styled.div`
 
 const TokenListLogoWrapper = styled.img`
   height: 20px;
+`
+
+const NameContainer = styled.div`
+  display: flex;
+  align-items: center;
 `
 
 function TokenTags({ currency }: { currency: Currency }) {
@@ -124,6 +138,7 @@ function CurrencyRow({
   const isOnSelectedList = isTokenOnList(selectedTokenList, currency.isToken ? currency : undefined)
   const customAdded = useIsUserAddedToken(currency)
   const balance = useCurrencyBalance(account ?? undefined, currency)
+  const warning = currency.isNative ? null : checkWarning(currency.address)
 
   // only show add or remove buttons if not on selected list
   return (
@@ -144,14 +159,15 @@ function CurrencyRow({
       >
         <CurrencyLogo currency={currency} size={'24px'} />
         <Column>
-          <Text title={currency.name} fontWeight={500}>
-            {currency.symbol}
-          </Text>
+          <NameContainer>
+            <CurrencyName title={currency.name}>{currency.name}</CurrencyName>
+            <TokenSafetyIcon warning={warning} />
+          </NameContainer>
           <ThemedText.DeprecatedDarkGray ml="0px" fontSize={'12px'} fontWeight={300}>
             {!currency.isNative && !isOnSelectedList && customAdded ? (
-              <Trans>{currency.name} • Added by user</Trans>
+              <Trans>{currency.symbol} • Added by user</Trans>
             ) : (
-              currency.name
+              currency.symbol
             )}
           </ThemedText.DeprecatedDarkGray>
         </Column>

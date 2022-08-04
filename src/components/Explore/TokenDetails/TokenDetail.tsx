@@ -2,14 +2,18 @@ import { Trans } from '@lingui/macro'
 import { ParentSize } from '@visx/responsive'
 import PriceChart, { CrosshairPriceAtom } from 'components/Charts/PriceChart'
 import CurrencyLogo from 'components/CurrencyLogo'
+import { VerifiedIcon } from 'components/TokenSafety/TokenSafetyIcon'
+import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import { getChainInfo } from 'constants/chainInfo'
-import { useCurrency, useToken } from 'hooks/Tokens'
+import { checkWarning } from 'constants/tokenSafety'
+import { useCurrency, useIsUserAddedToken, useToken } from 'hooks/Tokens'
 import { TimePeriod } from 'hooks/useTopTokens'
 import { useAtomValue } from 'jotai/utils'
 import { darken } from 'polished'
+import { useCallback } from 'react'
 import { useState } from 'react'
 import { ArrowDownRight, ArrowLeft, ArrowUpRight, Copy, Heart } from 'react-feather'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import styled, { useTheme } from 'styled-components/macro'
 
 import { MOBILE_MEDIA_BREAKPOINT } from '../constants'
@@ -198,6 +202,14 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
   const [activeTimePeriod, setTimePeriod] = useState(TimePeriod.hour)
   const isFavorited = favoriteTokens.includes(address)
   const toggleFavorite = useToggleFavorite(address)
+  const warning = checkWarning(address)
+  const navigate = useNavigate()
+  const isUserAddedToken = useIsUserAddedToken(token)
+  const [warningModalOpen, setWarningModalOpen] = useState(!!warning && !isUserAddedToken)
+
+  const handleDismissWarning = useCallback(() => {
+    setWarningModalOpen(false)
+  }, [setWarningModalOpen])
   const chainInfo = getChainInfo(token?.chainId)
   const networkLabel = chainInfo?.label
   const networkBadgebackgroundColor = chainInfo?.backgroundColor
@@ -216,6 +228,7 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
   const tokenMarketCap = '23.02B'
   const tokenVolume = '1.6B'
   const truncatedTokenAddress = `${address.slice(0, 4)}...${address.slice(-3)}`
+
   return (
     <TopArea>
       <BreadcrumbNavLink to="/explore">
@@ -226,6 +239,7 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
           <TokenNameCell>
             <CurrencyLogo currency={currency} size={'32px'} />
             {tokenName} <TokenSymbol>{tokenSymbol}</TokenSymbol>
+            {!warning && <VerifiedIcon size="24px" />}
             {networkBadgebackgroundColor && (
               <NetworkBadge networkColor={chainInfo?.color} backgroundColor={networkBadgebackgroundColor}>
                 {networkLabel}
@@ -310,6 +324,12 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
           </ContractAddress>
         </Contract>
       </ContractAddressSection>
+      <TokenSafetyModal
+        isOpen={warningModalOpen}
+        tokenAddress={address}
+        onCancel={() => navigate(-1)}
+        onContinue={handleDismissWarning}
+      />
     </TopArea>
   )
 }

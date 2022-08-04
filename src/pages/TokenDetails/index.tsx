@@ -7,6 +7,8 @@ import {
 import BalanceSummary from 'components/Explore/TokenDetails/BalanceSummary'
 import LoadingTokenDetail from 'components/Explore/TokenDetails/LoadingTokenDetail'
 import TokenDetail from 'components/Explore/TokenDetails/TokenDetail'
+import TokenSafetyMessage from 'components/TokenSafety/TokenSafetyMessage'
+import { checkWarning } from 'constants/tokenSafety'
 import useTokenDetailPageQuery from 'hooks/useTokenDetailPageQuery'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components/macro'
@@ -59,12 +61,15 @@ export default function TokenDetails() {
     tokenDetail = <TokenDetail address={tokenAddress} />
   }
 
+  const tokenWarning = tokenAddress ? checkWarning(tokenAddress) : null
+
   return (
     <TokenDetailsLayout>
       {tokenDetail}
       {tokenAddress && (
         <RightPanel>
           <Widget />
+          {tokenWarning && <TokenSafetyMessage tokenAddress={tokenAddress} warning={tokenWarning} />}
           {!loading && <BalanceSummary address={tokenAddress} />}
         </RightPanel>
       )}

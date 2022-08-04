@@ -19,6 +19,7 @@ import { NetworkAlert } from 'components/NetworkAlert/NetworkAlert'
 import PriceImpactWarning from 'components/swap/PriceImpactWarning'
 import SwapDetailsDropdown from 'components/swap/SwapDetailsDropdown'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
+import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { isSupportedChain } from 'constants/chains'
 import { useSwapCallback } from 'hooks/useSwapCallback'
@@ -47,7 +48,6 @@ import ConfirmSwapModal from '../../components/swap/ConfirmSwapModal'
 import { ArrowWrapper, SwapCallbackError, Wrapper } from '../../components/swap/styleds'
 import SwapHeader from '../../components/swap/SwapHeader'
 import { SwitchLocaleLink } from '../../components/SwitchLocaleLink'
-import TokenWarningModal from '../../components/TokenWarningModal'
 import { TOKEN_SHORTHANDS } from '../../constants/tokens'
 import { useAllTokens, useCurrency } from '../../hooks/Tokens'
 import { ApprovalState, useApprovalOptimizedTrade, useApproveCallbackFromTrade } from '../../hooks/useApproveCallback'
@@ -136,9 +136,6 @@ export default function Swap() {
     () => [loadedInputCurrency, loadedOutputCurrency]?.filter((c): c is Token => c?.isToken ?? false) ?? [],
     [loadedInputCurrency, loadedOutputCurrency]
   )
-  const handleConfirmTokenWarning = useCallback(() => {
-    setDismissTokenWarning(true)
-  }, [])
 
   // dismiss warning if all imported tokens are in active lists
   const defaultTokens = useAllTokens()
@@ -160,6 +157,10 @@ export default function Swap() {
         }),
     [chainId, defaultTokens, urlLoadedTokens]
   )
+
+  const handleConfirmTokenWarning = useCallback(() => {
+    setDismissTokenWarning(true)
+  }, [])
 
   const theme = useContext(ThemeContext as Context<DefaultTheme>)
 
@@ -490,11 +491,12 @@ export default function Swap() {
   return (
     <Trace page={PageName.SWAP_PAGE} shouldLogImpression>
       <>
-        <TokenWarningModal
+        <TokenSafetyModal
           isOpen={importTokensNotInDefault.length > 0 && !dismissTokenWarning}
-          tokens={importTokensNotInDefault}
-          onConfirm={handleConfirmTokenWarning}
-          onDismiss={handleDismissTokenWarning}
+          tokenAddress={importTokensNotInDefault[0]?.address}
+          secondTokenAddress={importTokensNotInDefault[1]?.address}
+          onContinue={handleConfirmTokenWarning}
+          onCancel={handleDismissTokenWarning}
         />
         <AppBody>
           <SwapHeader allowedSlippage={allowedSlippage} />
