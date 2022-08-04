@@ -84,31 +84,35 @@ export default function LoadingTokenDetail() {
             <TitleLoadingBubble />
           </TokenNameCell>
         </TokenInfoContainer>
-        <TokenPrice>
-          <PriceLoadingBubble />
-        </TokenPrice>
-        <DeltaContainer>
-          <Space heightSize={20} />
-        </DeltaContainer>
-        <ChartContainer>
-          <ChartAnimation>
-            <svg width="416" height="160" xmlns="http://www.w3.org/2000/svg">
-              <path d="M 0 80 Q 104 10, 208 80 T 416 80" stroke="#2e3138" fill="transparent" strokeWidth="2" />
-            </svg>
-            <svg width="416" height="160" xmlns="http://www.w3.org/2000/svg">
-              <path d="M 0 80 Q 104 10, 208 80 T 416 80" stroke="#2e3138" fill="transparent" strokeWidth="2" />
-            </svg>
-            <svg width="416" height="160" xmlns="http://www.w3.org/2000/svg">
-              <path d="M 0 80 Q 104 10, 208 80 T 416 80" stroke="#2e3138" fill="transparent" strokeWidth="2" />
-            </svg>
-            <svg width="416" height="160" xmlns="http://www.w3.org/2000/svg">
-              <path d="M 0 80 Q 104 10, 208 80 T 416 80" stroke="#2e3138" fill="transparent" strokeWidth="2" />
-            </svg>
-            <svg width="416" height="160" xmlns="http://www.w3.org/2000/svg">
-              <path d="M 0 80 Q 104 10, 208 80 T 416 80" stroke="#2e3138" fill="transparent" strokeWidth="2" />
-            </svg>
-          </ChartAnimation>
-        </ChartContainer>
+        <div>
+          <div style={{ position: 'absolute' }}>
+            <TokenPrice>
+              <PriceLoadingBubble />
+            </TokenPrice>
+            <DeltaContainer>
+              <Space heightSize={20} />
+            </DeltaContainer>
+          </div>
+          <ChartContainer>
+            <ChartAnimation>
+              <svg width="416" height="160" xmlns="http://www.w3.org/2000/svg">
+                <path d="M 0 80 Q 104 10, 208 80 T 416 80" stroke="#2e3138" fill="transparent" strokeWidth="2" />
+              </svg>
+              <svg width="416" height="160" xmlns="http://www.w3.org/2000/svg">
+                <path d="M 0 80 Q 104 10, 208 80 T 416 80" stroke="#2e3138" fill="transparent" strokeWidth="2" />
+              </svg>
+              <svg width="416" height="160" xmlns="http://www.w3.org/2000/svg">
+                <path d="M 0 80 Q 104 10, 208 80 T 416 80" stroke="#2e3138" fill="transparent" strokeWidth="2" />
+              </svg>
+              <svg width="416" height="160" xmlns="http://www.w3.org/2000/svg">
+                <path d="M 0 80 Q 104 10, 208 80 T 416 80" stroke="#2e3138" fill="transparent" strokeWidth="2" />
+              </svg>
+              <svg width="416" height="160" xmlns="http://www.w3.org/2000/svg">
+                <path d="M 0 80 Q 104 10, 208 80 T 416 80" stroke="#2e3138" fill="transparent" strokeWidth="2" />
+              </svg>
+            </ChartAnimation>
+          </ChartContainer>
+        </div>
         <TimeOptionsContainer>
           <Space heightSize={32} />
         </TimeOptionsContainer>

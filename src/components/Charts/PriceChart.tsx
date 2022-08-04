@@ -95,16 +95,13 @@ export function PriceChart({ width, height }: PriceChartProps) {
 
   return (
     <div>
-      <div style={{ position: 'absolute', display: 'flex', flexDirection: 'column' }}>
+      <div style={{ position: 'absolute' }}>
         <TokenPrice>${selected.pricePoint.value.toFixed(2)}</TokenPrice>
         <DeltaContainer>
           {delta}%
           <ArrowCell>
-            {delta.charAt(0) === '+' ? (
-              <ArrowUpRight size={16} color={theme.accentSuccess} />
-            ) : (
-              <ArrowDownRight size={16} color={theme.accentFailure} />
-            )}
+            {delta.charAt(0) === '+' && <ArrowUpRight size={16} color={theme.accentSuccess} />}
+            {delta.charAt(0) === '-' && <ArrowDownRight size={16} color={theme.accentFailure} />}
           </ArrowCell>
         </DeltaContainer>
       </div>
