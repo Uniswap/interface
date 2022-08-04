@@ -19,7 +19,7 @@ export function useFeatureFlagsContext(): FeatureFlagsContextType {
 export function FeatureFlagsProvider({ children }: { children: ReactNode }) {
   // TODO(vm): `isLoaded` to `true` so `App.tsx` will render. Later, this will be dependent on
   // flags loading from Amplitude, with a timeout.
-  const variant = process.env.NODE_ENV === 'development' ? 'enabled' : 'control'
+  const variant = ['development', 'staging'].includes(process.env.NODE_ENV) ? 'enabled' : 'control'
   const value = {
     isLoaded: true,
     flags: {
