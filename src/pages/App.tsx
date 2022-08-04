@@ -4,7 +4,7 @@ import { CUSTOM_USER_PROPERTIES, EventName, PageName } from 'components/Amplitud
 import { Trace } from 'components/AmplitudeAnalytics/Trace'
 import Loader from 'components/Loader'
 import TopLevelModals from 'components/TopLevelModals'
-import { useFeatureFlagsIsLoaded } from 'featureFlag'
+import { Phase0Variant, useFeatureFlagsIsLoaded, usePhase0Flag } from 'featureFlag'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
 import { lazy, Suspense, useEffect } from 'react'
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
@@ -89,6 +89,7 @@ function getCurrentPageFromLocation(locationPathname: string): PageName | undefi
 
 export default function App() {
   const isLoaded = useFeatureFlagsIsLoaded()
+  const phase0Flag = usePhase0Flag()
 
   const { pathname } = useLocation()
   const currentPage = getCurrentPageFromLocation(pathname)
@@ -129,8 +130,12 @@ export default function App() {
             <Suspense fallback={<Loader />}>
               {isLoaded ? (
                 <Routes>
-                  <Route path="/explore" element={<Explore />} />
-                  <Route path="/tokens/:tokenAddress" element={<TokenDetails />} />
+                  {phase0Flag === Phase0Variant.Enabled && (
+                    <>
+                      <Route path="/explore" element={<Explore />} />
+                      <Route path="/tokens/:tokenAddress" element={<TokenDetails />} />
+                    </>
+                  )}
                   <Route path="vote/*" element={<Vote />} />
                   <Route path="create-proposal" element={<Navigate to="/vote/create-proposal" replace />} />
                   <Route path="claim" element={<OpenClaimAddressModalAndRedirectToSwap />} />
