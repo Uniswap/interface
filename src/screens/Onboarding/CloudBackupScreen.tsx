@@ -7,12 +7,11 @@ import PinInput from 'src/components/input/PinInput'
 import { Box } from 'src/components/layout'
 import WarningModal from 'src/components/modals/WarningModal'
 import { Text } from 'src/components/Text'
+import { PIN_LENGTH } from 'src/features/CloudBackup/cloudBackupSlice'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { OnboardingScreens } from 'src/screens/Screens'
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.BackupCloud>
-
-const PIN_LENGTH = 6
 
 function isPinConfirmationValid(expected: string, actual: string) {
   return expected === actual

@@ -33,7 +33,7 @@ import {
 } from 'src/features/notifications/hooks'
 import { promptPushPermission } from 'src/features/notifications/Onesignal'
 import { ElementName } from 'src/features/telemetry/constants'
-import { AccountType } from 'src/features/wallet/accounts/types'
+import { AccountType, BackupType } from 'src/features/wallet/accounts/types'
 import { EditAccountAction, editAccountActions } from 'src/features/wallet/editAccountSaga'
 import { useAccounts, useSelectAccountNotificationSetting } from 'src/features/wallet/hooks'
 import {
@@ -61,6 +61,8 @@ export function SettingsWallet({
   const currentAccount = addressToAccount[address]
   const readonly = currentAccount.type === AccountType.Readonly
   const navigation = useSettingsStackNavigation()
+
+  const hasICloudBackup = currentAccount?.backups?.includes(BackupType.Cloud)
 
   // Should not show remove option if we have only one account remaining, or only one seed phrase wallet remaining
   const shouldHideRemoveOption =
@@ -180,7 +182,9 @@ export function SettingsWallet({
           isHidden: readonly,
         },
         {
-          // TODO: update in following PR to new screen
+          screen: hasICloudBackup
+            ? Screens.SettingsCloudBackupStatus
+            : Screens.SettingsCloudBackupScreen,
           screenProps: { address },
           text: t('iCloud backup'),
           icon: (

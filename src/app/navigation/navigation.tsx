@@ -57,6 +57,7 @@ import { ProfileScreen } from 'src/screens/ProfileScreen'
 import { RecipientSelectoScreen } from 'src/screens/RecipientSelectorScreen'
 import { OnboardingScreens, Screens, Tabs } from 'src/screens/Screens'
 import { SettingsChainsScreen } from 'src/screens/SettingsChainsScreen'
+import { SettingsCloudBackupScreen } from 'src/screens/SettingsCloudBackupScreen'
 import { SettingsCloudBackupStatus } from 'src/screens/SettingsCloudBackupStatus'
 import { SettingsFaceIdScreen } from 'src/screens/SettingsFaceIdScreen'
 import { SettingsManualBackup } from 'src/screens/SettingsManualBackup'
@@ -191,6 +192,10 @@ function SettingsStackGroup() {
       <SettingsStack.Screen
         component={SettingsViewSeedPhraseScreen}
         name={Screens.SettingsViewSeedPhrase}
+      />
+      <SettingsStack.Screen
+        component={SettingsCloudBackupScreen}
+        name={Screens.SettingsCloudBackupScreen}
       />
       <SettingsStack.Screen
         component={SettingsCloudBackupStatus}

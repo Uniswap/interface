@@ -70,6 +70,7 @@ export type SettingsStackParamList = {
   [Screens.SettingsFaceId]: undefined
   [Screens.WebView]: { headerTitle: string; uriLink: string }
   [Screens.Dev]: undefined
+  [Screens.SettingsCloudBackupScreen]: { address: Address }
   [Screens.SettingsCloudBackupStatus]: { address: Address }
   [Screens.SettingsManualBackup]: { address: Address }
   [Screens.SettingsViewSeedPhrase]: { address: Address }

@@ -39,6 +39,7 @@ export const enum ModalName {
   TermsModal = 'terms-modal',
   RecipientSelect = 'recipient-select-modal',
   RecoveryWarning = 'recovery-warning',
+  ICloudBackupInfo = 'icloud-backup-info-modal',
   ICloudSkipPinWarning = 'icloud-skip-pin-warning',
   ScreenshotWarning = 'screenshot-warning',
   Send = 'send-modal',

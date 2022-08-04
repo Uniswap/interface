@@ -6,13 +6,12 @@ import { OnboardingStackParamList } from 'src/app/navigation/types'
 import PinInput from 'src/components/input/PinInput'
 import { Box } from 'src/components/layout'
 import { Text } from 'src/components/Text'
+import { PIN_LENGTH } from 'src/features/CloudBackup/cloudBackupSlice'
 import { importAccountActions, IMPORT_WALLET_AMOUNT } from 'src/features/import/importAccountSaga'
 import { ImportAccountType } from 'src/features/import/types'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { restoreMnemonicFromICloud } from 'src/lib/RNEthersRs'
 import { OnboardingScreens } from 'src/screens/Screens'
-
-const PIN_LENGTH = 6
 
 type Props = NativeStackScreenProps<
   OnboardingStackParamList,
