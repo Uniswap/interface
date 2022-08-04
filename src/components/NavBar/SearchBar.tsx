@@ -7,10 +7,10 @@ import { Overlay } from 'nft/components/modals/Overlay'
 import { subheadSmall } from 'nft/css/common.css'
 import { breakpoints } from 'nft/css/sprinkles.css'
 import { useOnClickOutside, useSearchHistory, useWindowWidth } from 'nft/hooks'
-import { fetchSearchCollections, fetchTrendingCollections } from 'nft/queries'
+// import { fetchSearchCollections, fetchTrendingCollections } from 'nft/queries'
 import { fetchSearchTokens } from 'nft/queries/genie/SearchTokensFetcher'
 import { fetchTrendingTokens } from 'nft/queries/genie/TrendingTokensFetcher'
-import { FungibleToken, GenieCollection, TimePeriod, TrendingCollection } from 'nft/types'
+import { FungibleToken, GenieCollection, TrendingCollection } from 'nft/types'
 import { ethNumberStandardFormatter, formatEthPrice } from 'nft/utils/currency'
 import { putCommas } from 'nft/utils/putCommas'
 import { ChangeEvent, useEffect, useMemo, useReducer, useRef, useState } from 'react'
@@ -325,9 +325,7 @@ export const SearchBarDropdown = ({ toggleOpen, tokens, collections, hasInput }:
       <Box className={styles.notFoundContainer}>No NFT collections found.</Box>
     )
 
-  const { data: trendingCollectionResults } = useQuery(['trendingCollections', 'eth', 'twenty_four_hours'], () =>
-    fetchTrendingCollections({ volumeType: 'eth', timePeriod: 'ONE_DAY' as TimePeriod, size: 3 })
-  )
+  const trendingCollectionResults = [] as TrendingCollection[]
 
   const trendingCollections = useMemo(() => {
     return trendingCollectionResults
@@ -462,15 +460,8 @@ export const SearchBar = () => {
     isOpen && toggleOpen()
   })
 
-  const { data: collections, isLoading: collectionsAreLoading } = useQuery(
-    ['searchCollections', debouncedSearchValue],
-    () => fetchSearchCollections(debouncedSearchValue),
-    {
-      refetchOnWindowFocus: false,
-      refetchOnMount: false,
-      refetchOnReconnect: false,
-    }
-  )
+  const collections = [] as GenieCollection[]
+  const collectionsAreLoading = false
   const { data: tokens, isLoading: tokensAreLoading } = useQuery(
     ['searchTokens', debouncedSearchValue],
     () => fetchSearchTokens(debouncedSearchValue),
