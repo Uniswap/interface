@@ -1,11 +1,13 @@
 import { LayoutProps } from '@shopify/restyle'
-import React, { PropsWithChildren } from 'react'
+import { default as React, PropsWithChildren, useMemo } from 'react'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import CopyIcon from 'src/assets/icons/copy-sheets.svg'
 import { Button } from 'src/components/buttons/Button'
+import { RemoteImage } from 'src/components/images/RemoteImage'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { UniconWithVisibilityBadge } from 'src/components/unicons/UniconWithVisibilityBadge'
+import useENSAvatar from 'src/features/ens/useENSAvatar'
 import { pushNotification } from 'src/features/notifications/notificationSlice'
 import { AppNotificationType } from 'src/features/notifications/types'
 import { ElementName } from 'src/features/telemetry/constants'
@@ -69,6 +71,7 @@ export function AddressDisplay({
   const theme = useAppTheme()
   const displayName = useDisplayName(address, showShortenedEns)
   const nameTypeIsAddress = displayName?.type === 'address'
+  const { avatar } = useENSAvatar(address)
 
   const onPressCopyAddress = () => {
     if (!address) return
@@ -82,11 +85,20 @@ export function AddressDisplay({
   const mainSize = theme.textVariants[variant].fontSize
   const captionSize = theme.textVariants[captionVariant].fontSize
 
+  // Use ENS avatar if found, if not revert to Unicon
+  const icon = useMemo(() => {
+    if (avatar) {
+      return <RemoteImage borderRadius={size} height={size} uri={avatar} width={size} />
+    } else {
+      return (
+        <UniconWithVisibilityBadge address={address} showViewOnlyBadge={showViewOnly} size={size} />
+      )
+    }
+  }, [address, avatar, showViewOnly, size])
+
   return (
     <Flex alignItems="center" flexDirection={direction} gap={horizontalGap} {...rest}>
-      {showUnicon && (
-        <UniconWithVisibilityBadge address={address} showViewOnlyBadge={showViewOnly} size={size} />
-      )}
+      {showUnicon && icon}
       <Flex
         alignItems={!showUnicon || direction === 'column' ? 'center' : 'flex-start'}
         flexShrink={1}

@@ -20,15 +20,18 @@ const slice = createSlice({
     updateName: (state, action: PayloadAction<{ address: Address; name: string }>) => {
       const { address, name } = action.payload
       state.ensForAddress[address] = state.ensForAddress[address] ?? {}
-      // Update cached name if new valid name found.
-      if (state.ensForAddress[address].name !== name && name) {
+      // Update cached name if valid name found.
+      if (name) {
         state.ensForAddress[address].name = name
       }
     },
     updateAvatarUri: (state, action: PayloadAction<{ address: Address; avatarUri: string }>) => {
       const { address, avatarUri } = action.payload
       state.ensForAddress[address] = state.ensForAddress[address] ?? {}
-      state.ensForAddress[address].avatarUri = avatarUri
+      // Update store if valid uri found.
+      if (avatarUri) {
+        state.ensForAddress[address].avatarUri = avatarUri
+      }
     },
     resetEns: () => initialEnsState,
   },

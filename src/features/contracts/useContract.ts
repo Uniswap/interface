@@ -9,9 +9,11 @@ import { useMemo } from 'react'
 import EIP_2612 from 'src/abis/eip_2612.json'
 import ENS_PUBLIC_RESOLVER_ABI from 'src/abis/ens-public-resolver.json'
 import ENS_ABI from 'src/abis/ens-registrar.json'
+import ERC1155_ABI from 'src/abis/erc1155.json'
 import ERC20_ABI from 'src/abis/erc20.json'
 import ERC20_BYTES32_ABI from 'src/abis/erc20_bytes32.json'
-import { EnsPublicResolver, EnsRegistrar, Erc20, Weth } from 'src/abis/types'
+import ERC721_ABI from 'src/abis/erc721.json'
+import { EnsPublicResolver, EnsRegistrar, Erc1155, Erc20, Erc721, Weth } from 'src/abis/types'
 import {
   NonfungiblePositionManager,
   Quoter,
@@ -79,6 +81,14 @@ export function usePairContract(chainId: ChainId, pairAddress?: Address): Contra
 
 export function useTokenContract(chainId: ChainId, tokenAddress?: Address) {
   return useContract<Erc20>(chainId, tokenAddress, ERC20_ABI)
+}
+
+export function useERC721Contract(chainId: ChainId, tokenAddress?: Address) {
+  return useContract<Erc721>(chainId, tokenAddress, ERC721_ABI)
+}
+
+export function useERC1155Contract(chainId: ChainId, tokenAddress?: Address) {
+  return useContract<Erc1155>(chainId, tokenAddress, ERC1155_ABI)
 }
 
 export function useV3NFTPositionManagerContract(
