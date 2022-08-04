@@ -31,6 +31,7 @@ export enum CUSTOM_USER_PROPERTIES {
   ALL_WALLET_CHAIN_IDS = 'all_wallet_chain_ids',
   BROWSER = 'browser',
   DARK_MODE = 'is_dark_mode',
+  EXPERT_MODE = 'is_expert_mode',
   SCREEN_RESOLUTION_HEIGHT = 'screen_resolution_height',
   SCREEN_RESOLUTION_WIDTH = 'screen_resolution_width',
   WALLET_ADDRESS = 'wallet_address',
