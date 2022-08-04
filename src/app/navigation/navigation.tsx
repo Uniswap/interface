@@ -4,6 +4,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { createStackNavigator } from '@react-navigation/stack'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useAppSelector, useAppTheme } from 'src/app/hooks'
 import { AccountDrawer } from 'src/app/navigation/AccountDrawer'
 import { navigationRef } from 'src/app/navigation/NavigationContainer'
@@ -301,6 +302,7 @@ export function ExploreStackNavigator() {
 
 export function OnboardingStackNavigator() {
   const theme = useAppTheme()
+  const insets = useSafeAreaInsets()
   return (
     <OnboardingStack.Navigator>
       <OnboardingStack.Group
@@ -311,6 +313,7 @@ export function OnboardingStackNavigator() {
           headerBackImage: () => (
             <Chevron color={theme.colors.textSecondary} height={28} width={28} />
           ),
+          headerStatusBarHeight: insets.top + theme.spacing.xs,
           headerTransparent: true,
           headerTintColor: theme.colors.textSecondary,
           headerLeftContainerStyle: { paddingLeft: theme.spacing.md },

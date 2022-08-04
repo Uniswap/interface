@@ -180,7 +180,7 @@ function CustomizationSection({
             {items.map((item) => (
               <TextButton
                 key={item}
-                backgroundColor="backgroundSurface"
+                backgroundColor={accountName === item ? 'backgroundAction' : 'backgroundSurface'}
                 borderRadius="xl"
                 px="md"
                 py="sm"
