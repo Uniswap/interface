@@ -5,6 +5,7 @@ import { Trace } from 'components/AmplitudeAnalytics/Trace'
 import Loader from 'components/Loader'
 import TopLevelModals from 'components/TopLevelModals'
 import { useFeatureFlagsIsLoaded } from 'featureFlags'
+import { Phase0Variant, usePhase0Flag } from 'featureFlags/flags/phase0'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
 import { lazy, Suspense } from 'react'
 import { useEffect } from 'react'
@@ -17,6 +18,7 @@ import { useAnalyticsReporter } from '../components/analytics'
 import ErrorBoundary from '../components/ErrorBoundary'
 import Header from '../components/Header'
 import Polling from '../components/Header/Polling'
+import Navbar from '../components/NavBar'
 import Popups from '../components/Popups'
 import { useIsExpertMode } from '../state/user/hooks'
 import DarkModeQueryParamReader from '../theme/DarkModeQueryParamReader'
@@ -49,13 +51,12 @@ const BodyWrapper = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  padding: 120px 16px 0px 16px;
+  padding: 72px 16px 0px 16px;
   align-items: center;
   flex: 1;
-  z-index: 1;
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
-    padding: 4rem 8px 16px 8px;
+    padding: 52px 8px 16px 8px;
   `};
 `
 
@@ -87,6 +88,7 @@ function getCurrentPageFromLocation(locationPathname: string): PageName | undefi
 
 export default function App() {
   const isLoaded = useFeatureFlagsIsLoaded()
+  const phase0Flag = usePhase0Flag()
 
   const { pathname } = useLocation()
   const currentPage = getCurrentPageFromLocation(pathname)
@@ -122,9 +124,8 @@ export default function App() {
       <ApeModeQueryParamReader />
       <AppWrapper>
         <Trace page={currentPage}>
-          <HeaderWrapper>
-            <Header />
-          </HeaderWrapper>
+          {/* TODO swap to Enabled when Feature Flag works properly */}
+          <HeaderWrapper>{phase0Flag === Phase0Variant.Control ? <Navbar /> : <Header />}</HeaderWrapper>
           <BodyWrapper>
             <Popups />
             <Polling />

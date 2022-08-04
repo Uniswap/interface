@@ -12,6 +12,7 @@ import { useTotalUniEarned } from '../stake/hooks'
 export {
   default as useCurrencyBalance,
   useCurrencyBalances,
+  useCurrencyBalanceString,
   useNativeCurrencyBalances,
   useTokenBalance,
   useTokenBalances,
