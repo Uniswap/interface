@@ -33,34 +33,17 @@ export function useFeatureFlagsIsLoaded(): boolean {
   return useFeatureFlagsContext().isLoaded
 }
 
-// feature flag hooks
-
-export enum Phase0Variant {
+export enum BaseVariant {
   Control = 'Control',
   Enabled = 'Enabled',
 }
 
-export function usePhase0Flag(): Phase0Variant {
-  switch (useFeatureFlagsContext().flags['phase0']) {
+export function useBaseFlag(flag: string): BaseVariant {
+  switch (useFeatureFlagsContext().flags[flag]) {
     case 'enabled':
-      return Phase0Variant.Enabled
+      return BaseVariant.Enabled
     case 'control':
     default:
-      return Phase0Variant.Control
-  }
-}
-
-enum Phase1Variant {
-  Control = 'Control',
-  Enabled = 'Enabled',
-}
-
-export function usePhase1Flag(): Phase1Variant {
-  switch (useFeatureFlagsContext().flags['phase1']) {
-    case 'enabled':
-      return Phase1Variant.Enabled
-    case 'control':
-    default:
-      return Phase1Variant.Control
+      return BaseVariant.Control
   }
 }
