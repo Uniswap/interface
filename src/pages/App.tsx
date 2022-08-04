@@ -92,6 +92,7 @@ export default function App() {
   const isDarkMode = useIsDarkMode()
 
   useAnalyticsReporter()
+  initializeAnalytics()
 
   useEffect(() => {
     window.scrollTo(0, 0)
