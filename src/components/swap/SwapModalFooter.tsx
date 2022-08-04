@@ -36,6 +36,11 @@ interface AnalyticsEventProps {
   routes: RoutingDiagramEntry[]
 }
 
+// expected output amount shown to the user (from each route + total), that the user executed on
+// block number used to produce expected output amount
+// predicted gas price used to produce the output amount
+// max slippage the user selected
+
 const formatRoutesEventProperties = (routes: RoutingDiagramEntry[]) => {
   const routesEventProperties: Record<string, any[]> = {
     routes_percentages: [],
