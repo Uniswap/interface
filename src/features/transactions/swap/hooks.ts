@@ -78,6 +78,7 @@ export type DerivedSwapInfo<
   optimismL1Fee?: OptimismL1FeeEstimate
   exactApproveRequired?: boolean
   nativeCurrencyBalance?: CurrencyAmount<NativeCurrency>
+  selectingCurrencyField?: CurrencyField
   swapMethodParameters?: MethodParameters
   txId?: string
   warningModalType?: WarningModalType
@@ -95,6 +96,7 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
     gasFeeEstimate,
     optimismL1Fee,
     exactApproveRequired,
+    selectingCurrencyField,
     swapMethodParameters,
     warningModalType,
     txId,
@@ -245,6 +247,7 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
       optimismL1Fee,
       exactApproveRequired,
       nativeCurrencyBalance: nativeInBalance,
+      selectingCurrencyField,
       swapMethodParameters,
       txId,
       warnings,
@@ -264,6 +267,7 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
     getFormattedOutput,
     isUSDInput,
     nativeInBalance,
+    selectingCurrencyField,
     swapMethodParameters,
     trade,
     txId,
@@ -314,7 +318,7 @@ export function useUSDTokenUpdater(
 
 /** Set of handlers wrapping actions involving user input */
 export function useSwapActionHandlers(dispatch: React.Dispatch<AnyAction>) {
-  const onSelectCurrency = (field: CurrencyField, currency: Currency) =>
+  const onSelectCurrency = (field: CurrencyField, currency: Currency) => {
     dispatch(
       transactionStateActions.selectCurrency({
         field,
@@ -325,6 +329,10 @@ export function useSwapActionHandlers(dispatch: React.Dispatch<AnyAction>) {
         },
       })
     )
+
+    // hide screen when done selecting
+    dispatch(transactionStateActions.showCurrencySelector(undefined))
+  }
 
   const onUpdateExactTokenAmount = (field: CurrencyField, amount: string) =>
     dispatch(transactionStateActions.updateExactAmountToken({ field, amount }))
@@ -354,6 +362,8 @@ export function useSwapActionHandlers(dispatch: React.Dispatch<AnyAction>) {
   const onShowSwapWarning = (type: WarningModalType) =>
     dispatch(transactionStateActions.showWarningModal(type))
   const onCreateTxId = (txId: string) => dispatch(transactionStateActions.setTxId(txId))
+  const onShowCurrencySelector = (field: CurrencyField) =>
+    dispatch(transactionStateActions.showCurrencySelector(field))
 
   return {
     onCreateTxId,
@@ -365,6 +375,7 @@ export function useSwapActionHandlers(dispatch: React.Dispatch<AnyAction>) {
     onSetMax,
     onShowSwapWarning,
     onUpdateExactCurrencyField,
+    onShowCurrencySelector,
   }
 }
 

@@ -1,5 +1,4 @@
 import { AnyAction } from '@reduxjs/toolkit'
-import { Currency } from '@uniswap/sdk-core'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleSheet } from 'react-native'
@@ -66,7 +65,7 @@ export function TransferTokenForm({
 
   const { isNFT, currencyIn, nftIn, chainId } = inputAssetInfo
 
-  const { onSelectCurrency, onSetAmount, onSetMax, onSelectRecipient, onToggleUSDInput } =
+  const { onShowCurrencySelector, onSetAmount, onSetMax, onSelectRecipient, onToggleUSDInput } =
     useSwapActionHandlers(dispatch)
 
   useUSDTokenUpdater(
@@ -179,12 +178,9 @@ export function TransferTokenForm({
               isUSDInput={isUSDInput}
               value={formattedAmounts[CurrencyField.INPUT]}
               warnings={warnings}
-              onSelectCurrency={(newCurrency: Currency) =>
-                onSelectCurrency(CurrencyField.INPUT, newCurrency)
-              }
               onSetAmount={(value) => onSetAmount(CurrencyField.INPUT, value, isUSDInput)}
-              // TODO: enable USD inputs in transfer token form
               onSetMax={onSetMax}
+              onShowCurrencySelector={() => onShowCurrencySelector(CurrencyField.INPUT)}
               onToggleUSDInput={() => onToggleUSDInput(!isUSDInput)}
             />
           )}

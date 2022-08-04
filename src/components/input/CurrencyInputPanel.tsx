@@ -23,10 +23,9 @@ type CurrentInputPanelProps = {
   currency: Currency | null | undefined
   currencyAmount: CurrencyAmount<Currency> | null | undefined
   currencyBalance: CurrencyAmount<Currency> | null | undefined
-  onSelectCurrency: (currency: Currency) => void
+  onShowCurrencySelector: () => void
   onSetAmount: (amount: string) => void
   value?: string
-  otherSelectedCurrency?: Currency | null
   showNonZeroBalancesOnly?: boolean
   showSoftInputOnFocus?: boolean
   autoFocus?: boolean
@@ -48,9 +47,8 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps) {
     currencyBalance,
     onSetAmount,
     onSetMax,
-    onSelectCurrency,
+    onShowCurrencySelector,
     value,
-    otherSelectedCurrency,
     showNonZeroBalancesOnly = true,
     showSoftInputOnFocus = false,
     focus,
@@ -139,10 +137,9 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps) {
         )}
         <Box alignItems="center">
           <CurrencySelector
-            otherSelectedCurrency={otherSelectedCurrency}
             selectedCurrency={currency}
             showNonZeroBalancesOnly={showNonZeroBalancesOnly}
-            onSelectCurrency={(newCurrency: Currency) => onSelectCurrency(newCurrency)}
+            onPress={onShowCurrencySelector}
           />
         </Box>
 

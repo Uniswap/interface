@@ -37,6 +37,7 @@ export interface TransactionState {
   showNoBalancesWarning?: boolean
   swapMethodParameters?: MethodParameters
   warningModalType?: WarningModalType
+  selectingCurrencyField?: CurrencyField
 }
 
 const ETH_TRADEABLE_ASSET: TradeableAsset = {
@@ -55,6 +56,7 @@ export const initialState: Readonly<TransactionState> = {
   exactAmountUSD: '',
   isUSDInput: false,
   warningModalType: WarningModalType.NONE,
+  selectingCurrencyField: undefined,
 }
 
 // using `createSlice` for convenience -- slice is not added to root reducer
@@ -212,6 +214,9 @@ const slice = createSlice({
     setTxId: (state, action: PayloadAction<string>) => {
       state.txId = action.payload
     },
+    showCurrencySelector: (state, action: PayloadAction<CurrencyField | undefined>) => {
+      state.selectingCurrencyField = action.payload
+    },
   },
 })
 
@@ -235,5 +240,6 @@ export const {
   showNoBalancesWarningModal,
   closeNoBalancesWarningModal,
   setTxId,
+  showCurrencySelector,
 } = slice.actions
 export const { reducer: transactionStateReducer, actions: transactionStateActions } = slice

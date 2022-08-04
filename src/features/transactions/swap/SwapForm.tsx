@@ -1,5 +1,4 @@
 import { AnyAction } from '@reduxjs/toolkit'
-import { Currency } from '@uniswap/sdk-core'
 import React, { Dispatch } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleSheet } from 'react-native'
@@ -56,7 +55,6 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo, isCompressedView }
   } = derivedSwapInfo
 
   const {
-    onSelectCurrency,
     onSwitchCurrencies,
     onSetAmount,
     onSetMax,
@@ -64,6 +62,7 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo, isCompressedView }
     onShowSwapWarning,
     onCreateTxId,
     onUpdateExactCurrencyField,
+    onShowCurrencySelector,
   } = useSwapActionHandlers(dispatch)
 
   const exactCurrency = currencies[exactCurrencyField]
@@ -113,7 +112,7 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo, isCompressedView }
 
   return (
     <Flex grow gap="none" justifyContent="space-between">
-      <AnimatedFlex grow entering={FadeIn} exiting={FadeOut} gap="sm">
+      <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="sm">
         <Trace section={SectionName.CurrencyInputPanel}>
           <CurrencyInputPanel
             currency={currencies[CurrencyField.INPUT]}
@@ -122,16 +121,13 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo, isCompressedView }
             dimTextColor={exactCurrencyField === CurrencyField.OUTPUT && swapDataRefreshing}
             focus={exactCurrencyField === CurrencyField.INPUT}
             isUSDInput={isUSDInput}
-            otherSelectedCurrency={currencies[CurrencyField.OUTPUT]}
             showSoftInputOnFocus={isCompressedView}
             value={formattedAmounts[CurrencyField.INPUT]}
             warnings={warnings}
             onPressIn={onCurrencyInputPress(CurrencyField.INPUT)}
-            onSelectCurrency={(newCurrency: Currency) =>
-              onSelectCurrency(CurrencyField.INPUT, newCurrency)
-            }
             onSetAmount={(value) => onSetAmount(CurrencyField.INPUT, value, isUSDInput)}
             onSetMax={onSetMax}
+            onShowCurrencySelector={() => onShowCurrencySelector(CurrencyField.INPUT)}
             onToggleUSDInput={() => onToggleUSDInput(!isUSDInput)}
           />
         </Trace>
@@ -168,16 +164,13 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo, isCompressedView }
                   dimTextColor={exactCurrencyField === CurrencyField.INPUT && swapDataRefreshing}
                   focus={exactCurrencyField === CurrencyField.OUTPUT}
                   isUSDInput={isUSDInput}
-                  otherSelectedCurrency={currencies[CurrencyField.INPUT]}
                   showNonZeroBalancesOnly={false}
                   showSoftInputOnFocus={isCompressedView}
                   value={formattedAmounts[CurrencyField.OUTPUT]}
                   warnings={warnings}
                   onPressIn={onCurrencyInputPress(CurrencyField.OUTPUT)}
-                  onSelectCurrency={(newCurrency: Currency) =>
-                    onSelectCurrency(CurrencyField.OUTPUT, newCurrency)
-                  }
                   onSetAmount={(value) => onSetAmount(CurrencyField.OUTPUT, value, isUSDInput)}
+                  onShowCurrencySelector={() => onShowCurrencySelector(CurrencyField.OUTPUT)}
                 />
               </Flex>
               {swapWarning ? (

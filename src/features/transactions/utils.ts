@@ -89,3 +89,9 @@ export function getOutputAmountFromTrade(
     ? typeInfo.outputCurrencyAmountRaw
     : typeInfo.expectedOutputCurrencyAmountRaw
 }
+
+export const ANIMATE_SPRING_CONFIG = {
+  stiffness: 90,
+  damping: 15,
+  mass: 0.8,
+}

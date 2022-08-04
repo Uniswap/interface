@@ -14,6 +14,8 @@ export function TransferTokenModal() {
     appDispatch(closeModal({ name: ModalName.Send }))
   }
 
+  if (!modalState.isOpen) return null
+
   return (
     <BottomSheetModal
       fullScreen
