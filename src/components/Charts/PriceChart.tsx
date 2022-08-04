@@ -21,11 +21,24 @@ function getPriceBounds(pricePoints: PricePoint[]): [number, number] {
   return [min, max]
 }
 
+const StyledUpArrow = styled(ArrowUpRight)`
+  color: ${({ theme }) => theme.accentSuccess};
+`
+const StyledDownArrow = styled(ArrowDownRight)`
+  color: ${({ theme }) => theme.accentFailure};
+`
+
 function getDelta(start: number, current: number) {
   const delta = (current / start - 1) * 100
   const isPositive = Math.sign(delta) > 0
 
-  return (isPositive ? '+' : '') + delta.toFixed(2)
+  const formattedDelta = delta.toFixed(2) + '%'
+  if (isPositive) {
+    return ['+' + formattedDelta, <StyledUpArrow size={16} key="arrow-up" />]
+  } else if (delta === 0) {
+    return [formattedDelta, null]
+  }
+  return [formattedDelta, <StyledDownArrow size={16} key="arrow-down" />]
 }
 
 export const ChartWrapper = styled.div`
@@ -56,7 +69,7 @@ interface PriceChartProps {
 }
 
 export function PriceChart({ width, height }: PriceChartProps) {
-  const margin = { top: 80, bottom: 20, crosshair: 70 }
+  const margin = { top: 80, bottom: 20, crosshair: 72 }
   // defining inner measurements
   const innerHeight = height - margin.top - margin.bottom
   const theme = useTheme()
@@ -99,18 +112,15 @@ export function PriceChart({ width, height }: PriceChartProps) {
     [timeScale]
   )
 
-  const delta = getDelta(startingPrice.value, selected.pricePoint.value)
+  const [delta, arrow] = getDelta(startingPrice.value, selected.pricePoint.value)
 
   return (
     <ChartWrapper>
       <ChartHeader>
         <TokenPrice>${selected.pricePoint.value.toFixed(2)}</TokenPrice>
         <DeltaContainer>
-          {delta}%
-          <ArrowCell>
-            {delta.charAt(0) === '+' && <ArrowUpRight size={16} color={theme.accentSuccess} />}
-            {delta.charAt(0) === '-' && <ArrowDownRight size={16} color={theme.accentFailure} />}
-          </ArrowCell>
+          {delta}
+          <ArrowCell>{arrow}</ArrowCell>
         </DeltaContainer>
       </ChartHeader>
       <svg width={width} height={height}>
