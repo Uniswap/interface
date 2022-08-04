@@ -16,6 +16,7 @@ import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollSc
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { CurrencyPriceChart } from 'src/components/PriceChart'
 import { Text } from 'src/components/Text'
+import { TokenDetailsStats } from 'src/components/TokenDetails/TokenDetailsStats'
 import TokenWarningCard from 'src/components/tokens/TokenWarningCard'
 import TokenWarningModalContent from 'src/components/tokens/TokenWarningModalContent'
 import { AssetType } from 'src/entities/assets'
@@ -205,7 +206,7 @@ function TokenDetails({ currency }: { currency: Currency }) {
               </Flex>
             </Flex>
           )}
-
+          <TokenDetailsStats currency={currency} />
           {tokenWarningLevel !== TokenWarningLevel.NONE && !tokenWarningDismissed && (
             <Box mx="md">
               <TokenWarningCard
