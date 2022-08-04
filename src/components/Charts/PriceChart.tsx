@@ -28,6 +28,14 @@ function getDelta(start: number, current: number) {
   return (isPositive ? '+' : '') + delta.toFixed(2)
 }
 
+export const ChartWrapper = styled.div`
+  position: relative;
+`
+
+export const ChartHeader = styled.div`
+  position: absolute;
+`
+
 export const TokenPrice = styled.span`
   font-size: 36px;
   line-height: 44px;
@@ -94,8 +102,8 @@ export function PriceChart({ width, height }: PriceChartProps) {
   const delta = getDelta(startingPrice.value, selected.pricePoint.value)
 
   return (
-    <div>
-      <div style={{ position: 'absolute' }}>
+    <ChartWrapper>
+      <ChartHeader>
         <TokenPrice>${selected.pricePoint.value.toFixed(2)}</TokenPrice>
         <DeltaContainer>
           {delta}%
@@ -104,7 +112,7 @@ export function PriceChart({ width, height }: PriceChartProps) {
             {delta.charAt(0) === '-' && <ArrowDownRight size={16} color={theme.accentFailure} />}
           </ArrowCell>
         </DeltaContainer>
-      </div>
+      </ChartHeader>
       <svg width={width} height={height}>
         {selected.xCoordinate && (
           <g>
@@ -152,7 +160,7 @@ export function PriceChart({ width, height }: PriceChartProps) {
           onMouseLeave={() => setSelected(initialState)}
         />
       </svg>
-    </div>
+    </ChartWrapper>
   )
 }
 

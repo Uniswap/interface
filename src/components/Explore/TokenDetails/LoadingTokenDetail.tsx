@@ -1,6 +1,6 @@
 import styled from 'styled-components/macro'
 
-import { DeltaContainer, TokenPrice } from '../../Charts/PriceChart'
+import { ChartWrapper, DeltaContainer, TokenPrice } from '../../Charts/PriceChart'
 import { LoadingBubble } from '../loading'
 import {
   AboutHeader,
@@ -84,16 +84,16 @@ export default function LoadingTokenDetail() {
             <TitleLoadingBubble />
           </TokenNameCell>
         </TokenInfoContainer>
-        <div>
-          <div style={{ position: 'absolute' }}>
-            <TokenPrice>
-              <PriceLoadingBubble />
-            </TokenPrice>
-            <DeltaContainer>
-              <Space heightSize={20} />
-            </DeltaContainer>
-          </div>
-          <ChartContainer>
+        <ChartContainer>
+          <ChartWrapper>
+            <ChartHeader>
+              <TokenPrice>
+                <PriceLoadingBubble />
+              </TokenPrice>
+              <DeltaContainer>
+                <Space heightSize={20} />
+              </DeltaContainer>
+            </ChartHeader>
             <ChartAnimation>
               <svg width="416" height="160" xmlns="http://www.w3.org/2000/svg">
                 <path d="M 0 80 Q 104 10, 208 80 T 416 80" stroke="#2e3138" fill="transparent" strokeWidth="2" />
@@ -111,8 +111,8 @@ export default function LoadingTokenDetail() {
                 <path d="M 0 80 Q 104 10, 208 80 T 416 80" stroke="#2e3138" fill="transparent" strokeWidth="2" />
               </svg>
             </ChartAnimation>
-          </ChartContainer>
-        </div>
+          </ChartWrapper>
+        </ChartContainer>
         <TimeOptionsContainer>
           <Space heightSize={32} />
         </TimeOptionsContainer>
