@@ -32,6 +32,26 @@ export function currencyAddress(currency: Currency): string {
   throw new Error('invalid currency')
 }
 
+export function graphQLCurrencyInfo(currency: Currency): {
+  address: string | null
+  chain: ChainId
+} {
+  let address: string | null = currencyAddress(currency)
+  let chain = currency.chainId
+  // hard-coded edge cases begin here
+  if (currency.isNative) {
+    if (chain === ChainId.Mainnet) {
+      // for mainnet eth, send a null address to data API
+      address = null
+    } else if (chain === ChainId.Optimism || chain === ChainId.ArbitrumOne) {
+      // for L2s that use eth as native currency, use mainnet eth data
+      address = null
+      chain = ChainId.Mainnet
+    }
+  }
+  return { address, chain }
+}
+
 export const isNativeCurrencyAddress = (address: Address) =>
   address === NATIVE_ADDRESS || address === NATIVE_ADDRESS_ALT
 

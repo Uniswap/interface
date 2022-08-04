@@ -10,6 +10,7 @@ import { Text } from 'src/components/Text'
 import { LongText } from 'src/components/text/LongText'
 import { TokenDetailsStatsQuery } from 'src/components/TokenDetails/__generated__/TokenDetailsStatsQuery.graphql'
 import { toGraphQLChain } from 'src/utils/chainId'
+import { graphQLCurrencyInfo } from 'src/utils/currencyId'
 import { formatPrice, formatUSDPrice } from 'src/utils/format'
 import { ExplorerDataType, getExplorerLink, getTwitterLink } from 'src/utils/linking'
 
@@ -64,10 +65,11 @@ function formatTokenPrice(price: Nullable<number>) {
 function TokenDetailsStatsInner({ currency }: { currency: Currency }) {
   const { t } = useTranslation()
 
-  const graphQLChain = toGraphQLChain(currency.chainId)
+  const { address, chain } = graphQLCurrencyInfo(currency)
+  const graphQLChain = toGraphQLChain(chain)
   const data = useLazyLoadQuery<TokenDetailsStatsQuery>(tokenDetailsStatsQuery, {
     contract: {
-      address: currency.isNative ? null : currency.wrapped.address,
+      address,
       chain: graphQLChain ?? 'ETHEREUM',
     },
   })
