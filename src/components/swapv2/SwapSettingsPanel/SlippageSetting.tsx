@@ -175,11 +175,11 @@ const SlippageSetting: React.FC = () => {
   // rawSlippage = 10
   // slippage = 10 / 10_000 = 0.001 = 0.1%
   const [rawSlippage, setRawSlippage] = useUserSlippageTolerance()
-  const [slippageInput, setSlippageInput] = useState((rawSlippage / 100).toFixed(2))
-
-  const { isValid, message } = validateSlippageInput(slippageInput)
 
   const isCustomOptionActive = !DefaultSlippages.includes(rawSlippage)
+  const [slippageInput, setSlippageInput] = useState(isCustomOptionActive ? (rawSlippage / 100).toFixed(2) : '')
+  const { isValid, message } = validateSlippageInput(slippageInput)
+
   const isWarning = isValid && !!message
   const isError = !isValid
 
@@ -194,16 +194,6 @@ const SlippageSetting: React.FC = () => {
     }
 
     setRawSlippage(newRawSlippage)
-
-    // cannot 100% rely on the useEffect below as:
-    // input = 3.2 => newRawSlippage = 320
-    // input = 3.200003 => newRawSlippage = 320
-    // in that case, the useEffect is not trigged, need to do this manually
-    if (!DefaultSlippages.includes(newRawSlippage)) {
-      setSlippageInput((newRawSlippage / 100).toFixed(2))
-    } else {
-      setSlippageInput('')
-    }
   }
 
   const handleKeyUp = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -255,7 +245,7 @@ const SlippageSetting: React.FC = () => {
           <DefaultSlippageOption
             key={slp}
             onClick={() => {
-              setSlippageInput((slp / 100).toFixed(2))
+              setSlippageInput('')
               setRawSlippage(slp)
             }}
             data-active={rawSlippage === slp}
@@ -278,7 +268,7 @@ const SlippageSetting: React.FC = () => {
           )}
           <input
             ref={inputRef}
-            placeholder={(rawSlippage / 100).toFixed(2)}
+            placeholder={t`Custom`}
             value={slippageInput}
             onChange={e => setSlippageInput(e.target.value)}
             onBlur={handleCommitChange}
