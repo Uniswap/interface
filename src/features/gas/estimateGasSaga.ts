@@ -1,7 +1,7 @@
 import { MaxUint256 } from '@ethersproject/constants'
 import { AnyAction, createAction } from '@reduxjs/toolkit'
 import { SwapRouter } from '@uniswap/router-sdk'
-import { BigNumber, providers } from 'ethers'
+import { BigNumber, PopulatedTransaction, providers } from 'ethers'
 import { Dispatch } from 'react'
 import ERC20_ABI from 'src/abis/erc20.json'
 import { Erc20 } from 'src/abis/types'
@@ -10,7 +10,6 @@ import { getContractManager, getProvider } from 'src/app/walletContext'
 import { SWAP_ROUTER_ADDRESSES } from 'src/constants/addresses'
 import { ChainId } from 'src/constants/chains'
 import { computeGasFee } from 'src/features/gas/computeGasFee'
-import { getGasAfterInflation, getGasPrice } from 'src/features/gas/utils'
 import { PermitOptions, signPermitMessage } from 'src/features/transactions/approve/permitSaga'
 import { PERMITTABLE_TOKENS } from 'src/features/transactions/approve/permittableTokens'
 import { DEFAULT_SLIPPAGE_TOLERANCE_PERCENT } from 'src/features/transactions/swap/hooks'
@@ -108,7 +107,7 @@ export function* estimateGas({ payload }: ReturnType<typeof estimateGasAction>) 
         const txAmount = trade.quote.amount
 
         const { allowance, exactApproveRequired, ...approveData } = yield* call(
-          estimateApproveGasLimit,
+          estimateApproveGasFee,
           {
             address,
             chainId,
@@ -142,10 +141,9 @@ export function* estimateGas({ payload }: ReturnType<typeof estimateGasAction>) 
         transactionStateDispatch(
           updateGasEstimates({
             gasEstimates: {
-              [TransactionType.Approve]: approveData.gasEstimates[TransactionType.Approve],
-              [TransactionType.Swap]: swapData.gasEstimates[TransactionType.Swap],
+              [TransactionType.Approve]: approveData.gasFeeEstimate[TransactionType.Approve],
+              [TransactionType.Swap]: swapData.gasFeeEstimate[TransactionType.Swap],
             },
-            gasPrice: swapData.gasPrice,
           })
         )
         transactionStateDispatch(
@@ -168,9 +166,8 @@ export function* estimateGas({ payload }: ReturnType<typeof estimateGasAction>) 
         transactionStateDispatch(
           updateGasEstimates({
             gasEstimates: {
-              [TransactionType.Send]: transferData.gasEstimates[TransactionType.Send],
+              [TransactionType.Send]: transferData.gasFeeEstimate[TransactionType.Send],
             },
-            gasPrice: transferData.gasPrice,
           })
         )
         break
@@ -181,7 +178,7 @@ export function* estimateGas({ payload }: ReturnType<typeof estimateGasAction>) 
   }
 }
 
-function* estimateApproveGasLimit(params: EstiamteApproveGasInfo) {
+function* estimateApproveGasFee(params: EstiamteApproveGasInfo) {
   const { address, chainId, provider, tokenAddress, spender, txAmount } = params
   let exactApproveRequired = false
 
@@ -189,7 +186,7 @@ function* estimateApproveGasLimit(params: EstiamteApproveGasInfo) {
     return {
       allowance: MaxUint256,
       exactApproveRequired,
-      gasEstimates: { [TransactionType.Approve]: '0' },
+      gasFeeEstimate: { [TransactionType.Approve]: null },
     }
   }
 
@@ -204,14 +201,14 @@ function* estimateApproveGasLimit(params: EstiamteApproveGasInfo) {
   const allowance = yield* call(tokenContract.allowance, address, spender)
 
   if (allowance.gt(txAmount) || PERMITTABLE_TOKENS[chainId]?.[tokenAddress]) {
-    return { allowance, exactApproveRequired, gasEstimates: { [TransactionType.Approve]: '0' } }
+    return { allowance, exactApproveRequired, gasFeeEstimate: { [TransactionType.Approve]: null } }
   }
 
-  let approveGasEstimate: BigNumber
+  let tx: PopulatedTransaction
 
   try {
     const amountToApprove = MaxUint256
-    approveGasEstimate = yield* call(tokenContract.estimateGas.approve, spender, amountToApprove, {
+    tx = yield* call(tokenContract.populateTransaction.approve, spender, amountToApprove, {
       from: address,
     })
   } catch (error) {
@@ -221,21 +218,25 @@ function* estimateApproveGasLimit(params: EstiamteApproveGasInfo) {
       'Gas estimation for approve max amount failed (token may restrict approval amounts). Attempting to approve exact amount'
     )
     const amountToApprove = BigNumber.from(txAmount)
-    approveGasEstimate = yield* call(tokenContract.estimateGas.approve, spender, amountToApprove, {
+    tx = yield* call(tokenContract.populateTransaction.approve, spender, amountToApprove, {
       from: address,
     })
 
     exactApproveRequired = true
   }
 
+  const approveGasInfo = yield* call(
+    computeGasFee,
+    chainId,
+    tx,
+    provider as providers.JsonRpcProvider
+  )
   const optimismL1Fee = yield* call(estimateOptimismL1Fee, chainId, TransactionType.Approve)
 
   return {
     allowance,
     exactApproveRequired,
-    gasEstimates: {
-      [TransactionType.Approve]: getGasAfterInflation(approveGasEstimate),
-    },
+    gasFeeEstimate: { [TransactionType.Approve]: approveGasInfo },
     optimismL1Fee,
   }
 }
@@ -255,14 +256,7 @@ function* estimateTransferGasLimit(provider: providers.Provider, params: Transfe
     provider as providers.JsonRpcProvider
   )
 
-  const gasPrice = getGasPrice(transferGasInfo)
-
-  return {
-    gasEstimates: {
-      [TransactionType.Send]: getGasAfterInflation(transferGasInfo.gasLimit),
-    },
-    gasPrice,
-  }
+  return { gasFeeEstimate: { [TransactionType.Send]: transferGasInfo } }
 }
 
 function* estimateSwapGasInfo(params: EstimateSwapGasInfo) {
@@ -300,17 +294,13 @@ function* estimateSwapGasInfo(params: EstimateSwapGasInfo) {
     gasFallbackValue
     // trade.quote.gasUseEstimate
   )
-  const gasPrice = getGasPrice(swapGasInfo)
 
   const methodParameters = calldata && value ? { calldata, value } : undefined
 
   const optimismL1Fee = yield* call(estimateOptimismL1Fee, chainId, TransactionType.Swap)
 
   return {
-    gasEstimates: {
-      [TransactionType.Swap]: getGasAfterInflation(swapGasInfo.gasLimit),
-    },
-    gasPrice,
+    gasFeeEstimate: { [TransactionType.Swap]: swapGasInfo },
     methodParameters,
     optimismL1Fee,
   }

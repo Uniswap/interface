@@ -6,6 +6,8 @@ import { expectSaga } from 'redux-saga-test-plan'
 import { getProvider } from 'src/app/walletContext'
 import { NATIVE_ADDRESS, SWAP_ROUTER_ADDRESSES } from 'src/constants/addresses'
 import { ChainId } from 'src/constants/chains'
+import { FeeType } from 'src/features/gas/types'
+import { getTxGasPriceSettings } from 'src/features/gas/utils'
 import { NativeCurrency } from 'src/features/tokenLists/NativeCurrency'
 import { ApproveParams, maybeApprove } from 'src/features/transactions/approve/approveSaga'
 import { sendTransaction } from 'src/features/transactions/sendTransaction'
@@ -44,11 +46,27 @@ const swapParams: SwapParams = {
   trade: mockTrade,
   exactApproveRequired: false,
   methodParameters,
-  gasSpendEstimate: {
-    [TransactionType.Approve]: '0',
-    [TransactionType.Swap]: '115000',
+  gasFeeEstimate: {
+    [TransactionType.Approve]: null,
+    [TransactionType.Swap]: {
+      type: FeeType.Eip1559,
+      gasLimit: '100000',
+      fee: {
+        fast: '14508243138800000',
+        normal: '14375759517700000',
+        urgent: '14639580260700000',
+      },
+      feeDetails: {
+        currentBaseFeePerGas: '120281423397',
+        maxBaseFeePerGas: '142082431388',
+        maxPriorityFeePerGas: {
+          fast: '3000000000',
+          normal: '1675163789',
+          urgent: '4313371219',
+        },
+      },
+    },
   },
-  gasPrice: '71',
 }
 
 const approveParams: ApproveParams = {
@@ -57,22 +75,40 @@ const approveParams: ApproveParams = {
   approveAmount: MaxUint256,
   inputTokenAddress: NATIVE_ADDRESS,
   spender: swapRouterAddress,
-  gasLimit: swapParams.gasSpendEstimate[TransactionType.Approve] as string,
-  gasPrice: swapParams.gasPrice,
+  gasFeeEstimate: {
+    type: FeeType.Eip1559,
+    gasLimit: '100000',
+    fee: {
+      fast: '14508243138800000',
+      normal: '14375759517700000',
+      urgent: '14639580260700000',
+    },
+    feeDetails: {
+      currentBaseFeePerGas: '120281423397',
+      maxBaseFeePerGas: '142082431388',
+      maxPriorityFeePerGas: {
+        fast: '3000000000',
+        normal: '1675163789',
+        urgent: '4313371219',
+      },
+    },
+  },
 }
 
 const nonce = 1
 
-const tx = {
-  from: swapParams.account.address,
-  to: swapRouterAddress,
-  data: swapParams.methodParameters.calldata,
-  gasLimit: swapParams.gasSpendEstimate.swap,
-  gasPrice: swapParams.gasPrice,
-  nonce,
-}
-
 describe(approveAndSwap, () => {
+  const swapGasEstimate = swapParams.gasFeeEstimate[TransactionType.Swap]
+  if (!swapGasEstimate) return
+  const gasPriceSettings = getTxGasPriceSettings(swapGasEstimate)
+  const tx = {
+    from: swapParams.account.address,
+    to: swapRouterAddress,
+    data: swapParams.methodParameters.calldata,
+    nonce,
+    ...gasPriceSettings,
+  }
+
   it('sends a swap tx', async () => {
     await expectSaga(approveAndSwap, swapParams)
       .provide([

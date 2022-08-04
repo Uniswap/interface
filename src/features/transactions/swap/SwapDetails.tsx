@@ -15,11 +15,18 @@ import { Warning, WarningModalType } from 'src/components/warnings/types'
 import { getWarningColor } from 'src/components/warnings/utils'
 import { useUSDGasPrice } from 'src/features/gas/hooks'
 import { useUSDCPrice } from 'src/features/routing/useUSDCPrice'
-import { useSwapActionHandlers, useSwapGasFee } from 'src/features/transactions/swap/hooks'
+import {
+  GasSpeed,
+  useSwapActionHandlers,
+  useSwapGasFee,
+} from 'src/features/transactions/swap/hooks'
 import { Trade } from 'src/features/transactions/swap/useTrade'
 import { getRateToDisplay } from 'src/features/transactions/swap/utils'
 import { showWarningInPanel } from 'src/features/transactions/swap/validate'
-import { GasSpendEstimate } from 'src/features/transactions/transactionState/transactionState'
+import {
+  GasFeeByTransactionType,
+  OptimismL1FeeEstimate,
+} from 'src/features/transactions/transactionState/transactionState'
 import { useActiveAccountWithThrow } from 'src/features/wallet/hooks'
 import { formatPrice } from 'src/utils/format'
 
@@ -27,9 +34,8 @@ interface SwapDetailsProps {
   acceptedTrade: Trade<Currency, Currency, TradeType>
   trade: Trade<Currency, Currency, TradeType>
   dispatch: Dispatch<AnyAction>
-  gasPrice?: string
-  gasSpendEstimate?: GasSpendEstimate
-  optimismL1Fee?: GasSpendEstimate
+  gasFeeEstimate?: GasFeeByTransactionType
+  optimismL1Fee?: OptimismL1FeeEstimate
   newTradeToAccept: boolean
   warnings: Warning[]
   onAcceptTrade: () => void
@@ -43,8 +49,7 @@ const spacerProps: ComponentProps<typeof Box> = {
 export function SwapDetails({
   acceptedTrade,
   dispatch,
-  gasPrice,
-  gasSpendEstimate,
+  gasFeeEstimate,
   optimismL1Fee,
   newTradeToAccept,
   trade,
@@ -61,8 +66,9 @@ export function SwapDetails({
   const usdcPrice = useUSDCPrice(showInverseRate ? price.baseCurrency : price.quoteCurrency)
   const acceptedRate = getRateToDisplay(acceptedTrade, showInverseRate)
   const rate = getRateToDisplay(trade, showInverseRate)
-  const gasFee = useSwapGasFee(gasSpendEstimate, gasPrice, optimismL1Fee)
+  const gasFee = useSwapGasFee(gasFeeEstimate, GasSpeed.Urgent, optimismL1Fee)
   const gasFeeUSD = useUSDGasPrice(acceptedTrade.inputAmount.currency.chainId, gasFee)
+
   const swapWarning = warnings.find(showWarningInPanel)
   const swapWarningColor = getWarningColor(swapWarning)
 

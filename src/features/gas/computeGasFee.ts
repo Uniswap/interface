@@ -1,6 +1,10 @@
 import { BigNumber, FixedNumber, providers } from 'ethers'
 import { ChainId, EIP_1559_CHAINS } from 'src/constants/chains'
-import { GAS_FAST_MULTIPLIER, GAS_URGENT_MULTIPLIER } from 'src/constants/gas'
+import {
+  GAS_FAST_MULTIPLIER,
+  GAS_LIMIT_INFLATION_FACTOR,
+  GAS_URGENT_MULTIPLIER,
+} from 'src/constants/gas'
 import { suggestFees } from 'src/features/gas/feeSuggestion'
 import { FeeInfo, FeeInfo1559, FeeInfoLegacy, FeeType } from 'src/features/gas/types'
 import { logger } from 'src/utils/logger'
@@ -34,7 +38,8 @@ async function estimateGasOrUseFallback(
   fallbackGasEstimate?: string
 ) {
   try {
-    return await provider.estimateGas(tx)
+    const gasLimit = await provider.estimateGas(tx)
+    return BigNumber.from(gasLimit).mul(GAS_LIMIT_INFLATION_FACTOR)
   } catch (error) {
     if (fallbackGasEstimate) {
       logger.info(

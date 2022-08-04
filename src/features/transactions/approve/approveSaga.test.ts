@@ -6,21 +6,23 @@ import { getContractManager, getProvider } from 'src/app/walletContext'
 import { SWAP_ROUTER_ADDRESSES } from 'src/constants/addresses'
 import { ChainId } from 'src/constants/chains'
 import { DAI } from 'src/constants/tokens'
+import { FeeType } from 'src/features/gas/types'
+import { getTxGasPriceSettings } from 'src/features/gas/utils'
 import { ApproveParams, maybeApprove } from 'src/features/transactions/approve/approveSaga'
 import { sendTransaction } from 'src/features/transactions/sendTransaction'
+import { formatAsHexString } from 'src/features/transactions/swap/utils'
 import { TransactionType } from 'src/features/transactions/types'
 import { account, mockProvider } from 'src/test/fixtures'
 
 describe(maybeApprove, () => {
-  it('skips approval when gasLimit is 0', async () => {
+  it('skips approval when gasFeeEstimate null', async () => {
     const approveParams: ApproveParams = {
       account,
       chainId: ChainId.Rinkeby,
       approveAmount: BigNumber.from(1),
       inputTokenAddress: DAI.address,
       spender: SWAP_ROUTER_ADDRESSES[ChainId.Rinkeby],
-      gasLimit: '0',
-      gasPrice: '45',
+      gasFeeEstimate: null,
     }
 
     await expectSaga(maybeApprove, approveParams).silentRun()
@@ -33,24 +35,42 @@ describe(maybeApprove, () => {
       approveAmount: MaxUint256,
       inputTokenAddress: DAI.address,
       spender: SWAP_ROUTER_ADDRESSES[ChainId.Rinkeby],
-      gasLimit: '45000',
-      gasPrice: '45',
+      gasFeeEstimate: {
+        type: FeeType.Eip1559,
+        gasLimit: '100000',
+        fee: {
+          fast: '14508243138800000',
+          normal: '14375759517700000',
+          urgent: '14639580260700000',
+        },
+        feeDetails: {
+          currentBaseFeePerGas: '120281423397',
+          maxBaseFeePerGas: '142082431388',
+          maxPriorityFeePerGas: {
+            fast: '3000000000',
+            normal: '1675163789',
+            urgent: '4313371219',
+          },
+        },
+      },
     }
 
     const mockContractManager = {
       getOrCreateContract: jest.fn(() => mockTokenContract),
     }
 
+    if (!approveParams.gasFeeEstimate) return
+
+    const gasPriceSettings = getTxGasPriceSettings(approveParams.gasFeeEstimate)
+
     const tx = {
       to: approveParams.inputTokenAddress,
       from: approveParams.spender,
       nonce: 1,
-      gasLimit: BigNumber.from(approveParams.gasLimit),
-      gasPrice: BigNumber.from(approveParams.gasPrice),
       data: '0x1230101013',
       chainId: approveParams.chainId,
-      maxFeePerGas: BigNumber.from(approveParams.gasPrice),
-      maxPriorityFeePerGas: BigNumber.from(0),
+      gasLimit: BigNumber.from(approveParams.gasFeeEstimate?.gasLimit),
+      ...gasPriceSettings,
     }
 
     const mockTokenContract = {
@@ -82,7 +102,7 @@ describe(maybeApprove, () => {
         mockTokenContract.populateTransaction.approve,
         SWAP_ROUTER_ADDRESSES[approveParams.chainId],
         MaxUint256,
-        { gasLimit: approveParams.gasLimit, gasPrice: approveParams.gasPrice }
+        { ...gasPriceSettings, gasLimit: formatAsHexString(approveParams.gasFeeEstimate.gasLimit) }
       )
       .silentRun()
   })
@@ -94,24 +114,42 @@ describe(maybeApprove, () => {
       approveAmount: BigNumber.from(1),
       inputTokenAddress: DAI.address,
       spender: SWAP_ROUTER_ADDRESSES[ChainId.Rinkeby],
-      gasLimit: '45000',
-      gasPrice: '45',
+      gasFeeEstimate: {
+        type: FeeType.Eip1559,
+        gasLimit: '100000',
+        fee: {
+          fast: '14508243138800000',
+          normal: '14375759517700000',
+          urgent: '14639580260700000',
+        },
+        feeDetails: {
+          currentBaseFeePerGas: '120281423397',
+          maxBaseFeePerGas: '142082431388',
+          maxPriorityFeePerGas: {
+            fast: '3000000000',
+            normal: '1675163789',
+            urgent: '4313371219',
+          },
+        },
+      },
     }
 
     const mockContractManager = {
       getOrCreateContract: jest.fn(() => mockTokenContract),
     }
 
+    if (!approveParams.gasFeeEstimate) return
+
+    const gasPriceSettings = getTxGasPriceSettings(approveParams.gasFeeEstimate)
+
     const tx = {
       to: approveParams.inputTokenAddress,
       from: approveParams.spender,
       nonce: 1,
-      gasLimit: BigNumber.from(approveParams.gasLimit),
-      gasPrice: BigNumber.from(approveParams.gasPrice),
       data: '0x1230101013',
       chainId: approveParams.chainId,
-      maxFeePerGas: BigNumber.from(approveParams.gasPrice),
-      maxPriorityFeePerGas: BigNumber.from(0),
+      gasLimit: BigNumber.from(approveParams.gasFeeEstimate.gasLimit),
+      ...gasPriceSettings,
     }
 
     const mockTokenContract = {
@@ -143,7 +181,7 @@ describe(maybeApprove, () => {
         mockTokenContract.populateTransaction.approve,
         SWAP_ROUTER_ADDRESSES[approveParams.chainId],
         BigNumber.from(approveParams.approveAmount),
-        { gasLimit: approveParams.gasLimit, gasPrice: approveParams.gasPrice }
+        { ...gasPriceSettings, gasLimit: formatAsHexString(approveParams.gasFeeEstimate.gasLimit) }
       )
       .silentRun()
   })

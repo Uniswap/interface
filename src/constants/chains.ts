@@ -82,8 +82,7 @@ export const L2_CHAIN_IDS = [
 export const EIP_1559_CHAINS = [
   ChainId.Mainnet,
   ChainId.Ropsten,
-  // TODO: removed until figure out why EIP-1559 gas estimation fails
-  // ChainId.Rinkeby,
+  ChainId.Rinkeby,
   ChainId.Goerli,
   ChainId.Polygon,
   ChainId.PolygonMumbai,

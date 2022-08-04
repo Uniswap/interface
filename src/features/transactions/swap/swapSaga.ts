@@ -3,11 +3,13 @@ import { MethodParameters } from '@uniswap/v3-sdk'
 import { BigNumber, providers } from 'ethers'
 import { getProvider } from 'src/app/walletContext'
 import { SWAP_ROUTER_ADDRESSES } from 'src/constants/addresses'
+import { getTxGasPriceSettings } from 'src/features/gas/utils'
 import { maybeApprove } from 'src/features/transactions/approve/approveSaga'
 import { sendTransaction } from 'src/features/transactions/sendTransaction'
 import { Trade } from 'src/features/transactions/swap/useTrade'
 import { formatAsHexString, tradeToTransactionInfo } from 'src/features/transactions/swap/utils'
-import { GasSpendEstimate } from 'src/features/transactions/transactionState/transactionState'
+import { GasFeeByTransactionType } from 'src/features/transactions/transactionState/transactionState'
+import { TransactionType } from 'src/features/transactions/types'
 import { Account } from 'src/features/wallet/accounts/types'
 import { toSupportedChainId } from 'src/utils/chainId'
 import { currencyAddress } from 'src/utils/currencyId'
@@ -22,8 +24,7 @@ export type SwapParams = {
   trade: Trade
   exactApproveRequired: boolean
   methodParameters: MethodParameters
-  gasSpendEstimate: GasSpendEstimate
-  gasPrice: string
+  gasFeeEstimate: GasFeeByTransactionType
 }
 
 export function* approveAndSwap(params: SwapParams) {
@@ -33,8 +34,7 @@ export function* approveAndSwap(params: SwapParams) {
       trade,
       exactApproveRequired,
       methodParameters: { calldata, value },
-      gasSpendEstimate,
-      gasPrice,
+      gasFeeEstimate,
       txId,
     } = params
 
@@ -43,7 +43,10 @@ export function* approveAndSwap(params: SwapParams) {
 
     if (!trade.quote) throw new Error('Trade quote not provided by router endpoint')
 
-    if (!gasSpendEstimate.approve || !gasSpendEstimate.swap) {
+    const approveGasFeeEstimate = gasFeeEstimate[TransactionType.Approve]
+    const swapGasFeeEstimate = gasFeeEstimate[TransactionType.Swap]
+
+    if (approveGasFeeEstimate === undefined || swapGasFeeEstimate === undefined) {
       throw new Error('Gas estimates were not provided')
     }
 
@@ -61,19 +64,20 @@ export function* approveAndSwap(params: SwapParams) {
       inputTokenAddress,
       spender: swapRouterAddress,
       approveAmount,
-      gasLimit: gasSpendEstimate.approve,
-      gasPrice,
+      gasFeeEstimate: approveGasFeeEstimate,
     })
 
+    const swapGasPriceSettings = getTxGasPriceSettings(swapGasFeeEstimate)
+
+    // For whatever reason Ethers throws for L2s if we don't convert strings to hex strings
     const request: providers.TransactionRequest = {
       from: account.address,
       to: swapRouterAddress,
       data: calldata,
-      // For whatever reason Ethers throws for L2s if we don't manually convert to hex strings
-      ...(!value || isZero(value) ? {} : { value: formatAsHexString(value) }),
-      gasLimit: formatAsHexString(gasSpendEstimate.swap),
-      gasPrice: formatAsHexString(gasPrice),
       nonce: formatAsHexString(approveSubmitted ? nonce + 1 : nonce),
+      ...(!value || isZero(value) ? {} : { value: formatAsHexString(value) }),
+      ...swapGasPriceSettings,
+      gasLimit: formatAsHexString(swapGasFeeEstimate.gasLimit),
     }
 
     yield* call(sendTransaction, {

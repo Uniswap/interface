@@ -8,7 +8,7 @@ export const MAX_GWEI_FAST_PRI_FEE = 3 // Max priority fee in gwei
 export const MIN_GWEI_URGENT_PRI_FEE = 2 // Min priority fee in gwei
 export const MAX_GWEI_URGENT_PRI_FEE = 9 // Max priority fee in gwei
 
-export const GAS_INFLATION_FACTOR = 1 // For padding gas estimations to increase likelyhood of success. 1 == no inflation.
+export const GAS_LIMIT_INFLATION_FACTOR = 1 // For padding gas estimations to increase likelyhood of success. 1 == no inflation.
 export const GAS_FAST_MULTIPLIER = 1.25 // Gas price factor to raise urgency to fast
 export const GAS_URGENT_MULTIPLIER = 1.5 // Gas price factor to raise urgency to urgent
 

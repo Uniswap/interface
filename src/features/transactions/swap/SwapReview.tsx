@@ -52,9 +52,8 @@ export function SwapReview({ dispatch, onNext, onPrev, derivedSwapInfo }: SwapFo
     trade: { trade: trade },
     wrapType,
     isUSDInput = false,
-    gasSpendEstimate,
+    gasFeeEstimate,
     optimismL1Fee,
-    gasPrice,
     exactApproveRequired,
     swapMethodParameters,
     warnings,
@@ -78,8 +77,7 @@ export function SwapReview({ dispatch, onNext, onPrev, derivedSwapInfo }: SwapFo
 
   const { swapCallback } = useSwapCallback(
     trade,
-    gasSpendEstimate,
-    gasPrice,
+    gasFeeEstimate,
     exactApproveRequired,
     swapMethodParameters,
     onNext,
@@ -189,8 +187,7 @@ export function SwapReview({ dispatch, onNext, onPrev, derivedSwapInfo }: SwapFo
           <SwapDetails
             acceptedTrade={acceptedTrade}
             dispatch={dispatch}
-            gasPrice={gasPrice}
-            gasSpendEstimate={gasSpendEstimate}
+            gasFeeEstimate={gasFeeEstimate}
             newTradeToAccept={newTradeToAccept}
             optimismL1Fee={optimismL1Fee}
             trade={trade}

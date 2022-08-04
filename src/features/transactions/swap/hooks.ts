@@ -29,7 +29,8 @@ import {
 import {
   clearGasSwapData,
   CurrencyField,
-  GasSpendEstimate,
+  GasFeeByTransactionType,
+  OptimismL1FeeEstimate,
   TransactionState,
   transactionStateActions,
   updateExactAmountToken,
@@ -47,6 +48,12 @@ import { useSagaStatus } from 'src/utils/useSagaStatus'
 export const DEFAULT_SLIPPAGE_TOLERANCE_PERCENT = new Percent(DEFAULT_SLIPPAGE_TOLERANCE, 100)
 const NUM_CURRENCY_DECIMALS_DISPLAY = 8
 const NUM_USD_DECIMALS_DISPLAY = 2
+
+export enum GasSpeed {
+  Normal = 'normal',
+  Fast = 'fast',
+  Urgent = 'urgent',
+}
 
 export type DerivedSwapInfo<
   TInput = Currency,
@@ -67,9 +74,8 @@ export type DerivedSwapInfo<
   trade: ReturnType<typeof useTrade>
   wrapType: WrapType
   isUSDInput?: boolean
-  gasSpendEstimate?: GasSpendEstimate
-  optimismL1Fee?: GasSpendEstimate
-  gasPrice?: string
+  gasFeeEstimate?: GasFeeByTransactionType
+  optimismL1Fee?: OptimismL1FeeEstimate
   exactApproveRequired?: boolean
   nativeCurrencyBalance?: CurrencyAmount<NativeCurrency>
   swapMethodParameters?: MethodParameters
@@ -86,9 +92,8 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
     exactAmountToken,
     exactCurrencyField,
     isUSDInput,
-    gasSpendEstimate,
+    gasFeeEstimate,
     optimismL1Fee,
-    gasPrice,
     exactApproveRequired,
     swapMethodParameters,
     warningModalType,
@@ -209,7 +214,7 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
     tokenOutBalance,
   ])
 
-  const gasFee = useSwapGasFee(state.gasSpendEstimate)
+  const gasFee = useSwapGasFee(state.gasFeeEstimate, GasSpeed.Urgent)
 
   const warnings = getSwapWarnings(t, {
     currencyAmounts,
@@ -236,9 +241,8 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
       trade,
       wrapType,
       isUSDInput,
-      gasSpendEstimate,
+      gasFeeEstimate,
       optimismL1Fee,
-      gasPrice,
       exactApproveRequired,
       nativeCurrencyBalance: nativeInBalance,
       swapMethodParameters,
@@ -254,8 +258,7 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
     exactAmountUSD,
     exactCurrencyField,
     exactApproveRequired,
-    gasPrice,
-    gasSpendEstimate,
+    gasFeeEstimate,
     optimismL1Fee,
     getFormattedInput,
     getFormattedOutput,
@@ -368,25 +371,17 @@ export function useSwapActionHandlers(dispatch: React.Dispatch<AnyAction>) {
 export function useSwapCallbackFromDerivedSwapInfo(derivedSwapInfo: DerivedSwapInfo) {
   const {
     trade: { trade: trade },
-    gasSpendEstimate,
-    gasPrice,
+    gasFeeEstimate,
     exactApproveRequired,
     swapMethodParameters,
   } = derivedSwapInfo
-  return useSwapCallback(
-    trade,
-    gasSpendEstimate,
-    gasPrice,
-    exactApproveRequired,
-    swapMethodParameters
-  )
+  return useSwapCallback(trade, gasFeeEstimate, exactApproveRequired, swapMethodParameters)
 }
 
 /** Callback to submit trades and track progress */
 export function useSwapCallback(
   trade: Trade | undefined | null,
-  gasSpendEstimate: GasSpendEstimate | undefined,
-  gasPrice: string | undefined,
+  gasFeeEstimate: GasFeeByTransactionType | undefined,
   exactApproveRequired: boolean | undefined,
   swapMethodParameters: MethodParameters | undefined,
   onSubmit?: () => void,
@@ -411,9 +406,8 @@ export function useSwapCallback(
       !account ||
       !trade ||
       exactApproveRequired === undefined ||
-      !gasSpendEstimate?.approve ||
-      !gasSpendEstimate?.swap ||
-      !gasPrice ||
+      gasFeeEstimate?.approve === undefined ||
+      !gasFeeEstimate?.swap ||
       !swapMethodParameters
     ) {
       return {
@@ -433,8 +427,7 @@ export function useSwapCallback(
             trade,
             exactApproveRequired,
             methodParameters: swapMethodParameters,
-            gasSpendEstimate,
-            gasPrice,
+            gasFeeEstimate,
           })
         )
       },
@@ -446,8 +439,7 @@ export function useSwapCallback(
     swapState,
     appDispatch,
     trade,
-    gasSpendEstimate,
-    gasPrice,
+    gasFeeEstimate,
     exactApproveRequired,
     swapMethodParameters,
   ])
@@ -515,18 +507,21 @@ export function useUpdateSwapGasEstimate(
 }
 
 export function useSwapGasFee(
-  gasSpendEstimate?: GasSpendEstimate,
-  gasPrice?: string,
-  optimismL1Fee?: GasSpendEstimate
+  gasFeeEstimate: GasFeeByTransactionType | undefined,
+  gasSpeedPreference: GasSpeed,
+  optimismL1Fee?: OptimismL1FeeEstimate
 ) {
-  const approveGasEstimate = gasSpendEstimate?.[TransactionType.Approve]
-  const swapGasEstimate = gasSpendEstimate?.[TransactionType.Swap]
+  const approveGasFeeInfo = gasFeeEstimate?.[TransactionType.Approve]
+  const approveGasFee =
+    approveGasFeeInfo === null ? '0' : approveGasFeeInfo?.fee[gasSpeedPreference]
+  const swapGasFee = gasFeeEstimate?.[TransactionType.Swap]?.fee[gasSpeedPreference]
+
   const optimismL1ApproveFee = optimismL1Fee?.[TransactionType.Approve]
   const optimismL1SwapFee = optimismL1Fee?.[TransactionType.Swap]
   return useMemo(() => {
-    if (!approveGasEstimate || !swapGasEstimate || !gasPrice) return undefined
-    const gasLimitEstimate = BigNumber.from(approveGasEstimate).add(swapGasEstimate)
-    let gasFee = BigNumber.from(gasPrice).mul(gasLimitEstimate)
+    if (!approveGasFee || !swapGasFee) return undefined
+
+    let gasFee = BigNumber.from(approveGasFee).add(swapGasFee)
 
     if (optimismL1ApproveFee) {
       gasFee = gasFee.add(optimismL1ApproveFee)
@@ -537,7 +532,7 @@ export function useSwapGasFee(
     }
 
     return gasFee.toString()
-  }, [approveGasEstimate, swapGasEstimate, gasPrice, optimismL1ApproveFee, optimismL1SwapFee])
+  }, [approveGasFee, swapGasFee, optimismL1ApproveFee, optimismL1SwapFee])
 }
 
 // The first shown to the user is implicitly accepted but every subsequent trade

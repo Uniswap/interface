@@ -5,15 +5,21 @@ import { WarningModalType } from 'src/components/warnings/types'
 import { NATIVE_ADDRESS } from 'src/constants/addresses'
 import { ChainId } from 'src/constants/chains'
 import { AssetType, TradeableAsset } from 'src/entities/assets'
+import { FeeInfo } from 'src/features/gas/types'
 import { TransactionType } from 'src/features/transactions/types'
 
 export enum CurrencyField {
   INPUT,
   OUTPUT,
 }
+export interface GasFeeByTransactionType {
+  [TransactionType.Approve]?: FeeInfo | null // null means approve tx not needed (e.g., allowance is sufficient)
+  [TransactionType.Swap]?: FeeInfo
+  [TransactionType.Send]?: FeeInfo
+}
 
-// the string is gasLimit denoted in wei
-export type GasSpendEstimate = Partial<Record<TransactionType, string>>
+// the string is gasFee (gasPrice * gasLimit) denoted in wei
+export type OptimismL1FeeEstimate = Partial<Record<TransactionType, string>>
 
 export interface TransactionState {
   txId?: string
@@ -24,9 +30,8 @@ export interface TransactionState {
   exactAmountUSD?: string
   recipient?: string
   isUSDInput?: boolean
-  gasSpendEstimate?: GasSpendEstimate
-  gasPrice?: string // gas price in native currency
-  optimismL1Fee?: GasSpendEstimate // Optimism txs have a L1 fee. Not relevant for submitting txs but needs to be accounted for in SwapDetails
+  gasFeeEstimate?: GasFeeByTransactionType
+  optimismL1Fee?: OptimismL1FeeEstimate // Optimism txs have a L1 fee. Not relevant for submitting txs but needs to be accounted for in SwapDetails
   exactApproveRequired?: boolean // undefined except in rare instances when infinite approve is not supported by a token
   showNewAddressWarning?: boolean
   showNoBalancesWarning?: boolean
@@ -158,20 +163,17 @@ const slice = createSlice({
     },
     updateGasEstimates: (
       state,
-      action: PayloadAction<{
-        gasEstimates?: GasSpendEstimate
-        gasPrice?: string
-      }>
+      action: PayloadAction<{ gasEstimates: GasFeeByTransactionType }>
     ) => {
-      const { gasEstimates, gasPrice } = action.payload
-      if (gasPrice) state.gasPrice = gasPrice
-
-      state.gasSpendEstimate = {
-        ...state.gasSpendEstimate,
-        ...(gasEstimates ?? {}),
+      state.gasFeeEstimate = {
+        ...state.gasFeeEstimate,
+        ...action.payload.gasEstimates,
       }
     },
-    updateOptimismL1Fee: (state, action: PayloadAction<{ optimismL1Fee?: GasSpendEstimate }>) => {
+    updateOptimismL1Fee: (
+      state,
+      action: PayloadAction<{ optimismL1Fee?: OptimismL1FeeEstimate }>
+    ) => {
       const { optimismL1Fee } = action.payload
       state.optimismL1Fee = {
         ...state.optimismL1Fee,
@@ -185,8 +187,7 @@ const slice = createSlice({
       state.exactApproveRequired = action.payload
     },
     clearGasSwapData: (state) => {
-      state.gasPrice = undefined
-      state.gasSpendEstimate = undefined
+      state.gasFeeEstimate = undefined
       state.exactApproveRequired = undefined
       state.swapMethodParameters = undefined
     },

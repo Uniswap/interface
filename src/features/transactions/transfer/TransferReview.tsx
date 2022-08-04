@@ -1,5 +1,4 @@
 import { AnyAction } from '@reduxjs/toolkit'
-import { FixedNumber } from 'ethers'
 import { notificationAsync } from 'expo-haptics'
 import React, { Dispatch } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -18,6 +17,7 @@ import { Text } from 'src/components/Text'
 import { WarningAction } from 'src/components/warnings/types'
 import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { ElementName } from 'src/features/telemetry/constants'
+import { GasSpeed } from 'src/features/transactions/swap/hooks'
 import {
   CurrencyField,
   TransactionState,
@@ -33,7 +33,6 @@ import { InputAssetInfo } from 'src/features/transactions/transfer/types'
 import { TransactionType } from 'src/features/transactions/types'
 import { dimensions } from 'src/styles/sizing'
 import { currencyAddress } from 'src/utils/currencyId'
-import { fixedNumberToInt } from 'src/utils/number'
 
 interface TransferFormProps {
   state: TransactionState
@@ -64,7 +63,7 @@ export function TransferReview({
     warnings,
   } = derivedTransferInfo
   const { isNFT, currencyIn, nftIn, chainId } = inputAssetInfo
-  const { gasSpendEstimate, gasPrice, txId } = state
+  const { gasFeeEstimate, txId } = state
 
   // TODO: how should we surface this warning?
   const actionButtonDisabled = warnings.some(
@@ -82,14 +81,7 @@ export function TransferReview({
     currencyTypes[CurrencyField.INPUT]
   )
 
-  const gasFee =
-    gasSpendEstimate && gasPrice
-      ? fixedNumberToInt(
-          FixedNumber.from(gasSpendEstimate[TransactionType.Send]).mulUnsafe(
-            FixedNumber.from(gasPrice)
-          )
-        )
-      : undefined
+  const gasFee = gasFeeEstimate?.[TransactionType.Send]?.fee[GasSpeed.Urgent]
 
   const transferERC20Callback = useTransferERC20Callback(
     txId,
