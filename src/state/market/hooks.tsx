@@ -4,7 +4,7 @@ import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sd
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { SupportedChainId } from 'constants/chains'
-import { TWO_PERCENT } from 'constants/misc'
+import { FEE_IMPACT_MIN, TWO_PERCENT } from 'constants/misc'
 import { CHAIN_NATIVE_TOKEN_SYMBOL, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import { useBestMarketTrade, useBestV3Trade } from 'hooks/useBestV3Trade'
 import { SignatureData } from 'hooks/useERC20Permit'
@@ -14,6 +14,7 @@ import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { useIsGaslessMode } from 'state/user/hooks'
 import { SwapTransaction, V3TradeState } from 'state/validator/types'
+import { computeFiatValuePriceImpact } from 'utils/computeFiatValuePriceImpact'
 import { isTradeBetter } from 'utils/isTradeBetter'
 
 import { useCurrency } from '../../hooks/Tokens'
@@ -144,7 +145,7 @@ export function useDerivedMarketInfo(
   paymentFees: CurrencyAmount<Currency> | undefined
   priceImpactHigh: boolean
   feeImpactHigh: boolean
-  amountToReceive: number | undefined
+  amountToReceive: CurrencyAmount<Currency> | undefined
   inputTokenShouldBeWrapped: boolean
 } {
   const { account, chainId } = useActiveWeb3React()
@@ -203,17 +204,29 @@ export function useDerivedMarketInfo(
 
   const allowedSlippage = useSwapSlippageTolerance(bestTrade ?? undefined)
 
-  // TODO use memo
   const outputAmount = v2Trade?.trade?.outputAmount
-  const outputAfterFees =
-    v2Trade?.paymentFees && outputAmount ? outputAmount.subtract(v2Trade?.paymentFees) : outputAmount
-  const feeImpactHigh = Number(outputAfterFees?.toSignificant(6)) / Number(outputAmount) < 0.8 ? true : false
 
-  const amountToReceive =
-    Number(outputAfterFees?.toSignificant(6)) -
-    Number(outputAfterFees?.toSignificant(6)) * (Number(allowedSlippage.toSignificant(6)) / 100)
+  const outputAfterFees = useMemo(
+    () => (v2Trade?.paymentFees && outputAmount ? outputAmount.subtract(v2Trade?.paymentFees) : outputAmount),
+    [outputAmount, v2Trade?.paymentFees]
+  )
 
-  const priceImpactHigh = amountToReceive / Number(outputAmount) < 0.8 ? true : false
+  const feeImpact = outputAmount
+    ? computeFiatValuePriceImpact(outputAmount as CurrencyAmount<Token>, outputAfterFees as CurrencyAmount<Token>)
+    : undefined
+
+  const feeImpactHigh = useMemo(() => (feeImpact ? feeImpact?.greaterThan(FEE_IMPACT_MIN) : false), [feeImpact])
+
+  const amountToReceive = useMemo(
+    () => outputAfterFees?.subtract(outputAfterFees.multiply(allowedSlippage).divide(100)),
+    [allowedSlippage, outputAfterFees]
+  )
+
+  const priceImpact = outputAmount
+    ? computeFiatValuePriceImpact(outputAmount as CurrencyAmount<Token>, amountToReceive as CurrencyAmount<Token>)
+    : undefined
+
+  const priceImpactHigh = useMemo(() => (priceImpact ? priceImpact?.greaterThan(FEE_IMPACT_MIN) : false), [priceImpact])
 
   const inputTokenShouldBeWrapped =
     isGaslessMode &&

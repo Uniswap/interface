@@ -829,8 +829,7 @@ export default function Market({ history }: RouteComponentProps) {
                                         {' '}
                                         {isGaslessMode ? (
                                           <span>
-                                            {amountToReceive}
-                                            {trade?.outputAmount.currency.symbol}
+                                            {amountToReceive?.toSignificant(6)} {trade?.outputAmount.currency.symbol}
                                           </span>
                                         ) : (
                                           <span>
@@ -911,7 +910,7 @@ export default function Market({ history }: RouteComponentProps) {
                               >
                                 <StyledInfo />
                               </MouseoverTooltipContent>
-                              <Trans>&nbsp;Total Fees:</Trans>
+                              <Trans>&nbsp;Est. Fees:</Trans>
                             </RowFixed>
                             {paymentFees && (
                               <RowFixed>
@@ -1375,8 +1374,7 @@ export default function Market({ history }: RouteComponentProps) {
                                   {' '}
                                   {isGaslessMode ? (
                                     <span style={{ font: '10px' }}>
-                                      {amountToReceive}
-                                      {trade?.outputAmount.currency.symbol}
+                                      {amountToReceive?.toSignificant(6)} {trade?.outputAmount.currency.symbol}
                                     </span>
                                   ) : (
                                     <span>
@@ -1455,7 +1453,7 @@ export default function Market({ history }: RouteComponentProps) {
                         >
                           <StyledInfo />
                         </MouseoverTooltipContent>
-                        <Trans>&nbsp;Total Fees:</Trans>
+                        <Trans>&nbsp;Est. Fees:</Trans>
                       </RowFixed>
                       {paymentFees && (
                         <RowFixed>
