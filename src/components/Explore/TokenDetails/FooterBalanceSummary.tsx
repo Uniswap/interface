@@ -69,7 +69,7 @@ const NetworkBalancesSection = styled.div`
   border-top: 1px solid ${({ theme }) => theme.backgroundOutline};
   display: flex;
   flex-direction: column;
-  padding: 16px 0px;
+  padding: 16px 0px 8px 0px;
   margin-top: 16px;
   color: ${({ theme }) => theme.textPrimary};
 `
@@ -131,16 +131,15 @@ export default function FooterBalanceSummary({
   address,
   networkBalances,
   totalBalance,
-  connectedNetwork,
 }: {
   address: string
   networkBalances: (JSX.Element | null)[] | null
   totalBalance: number
-  connectedNetwork: string
 }) {
   const tokenSymbol = useToken(address)?.symbol
   const [showMultipleBalances, setShowMultipleBalances] = useState(false)
-  const multipleBalances = true
+  const multipleBalances = false // for testing purposes
+  const networkNameIfOneBalance = 'Ethereum' // for testing purposes
   const { loading, error } = useNetworkTokenBalances({ address })
   return (
     <BalanceFooter>
@@ -157,7 +156,7 @@ export default function FooterBalanceSummary({
           </ErrorState>
         ) : (
           <BalanceInfo>
-            {multipleBalances ? 'Your balance' : `Your balance on ${connectedNetwork}`}
+            {multipleBalances ? 'Balance on all networks' : `Your balance on ${networkNameIfOneBalance}`}
             <BalanceTotal>
               <BalanceValue>
                 {totalBalance} {tokenSymbol}

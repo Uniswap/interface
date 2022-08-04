@@ -59,7 +59,7 @@ export default function BalanceSummary({
   totalBalance,
 }: {
   address: string
-  networkBalances?: (JSX.Element | null)[]
+  networkBalances: (JSX.Element | null)[] | null
   totalBalance: number
 }) {
   const theme = useTheme()

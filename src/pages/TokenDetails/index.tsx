@@ -19,7 +19,7 @@ import { useNetworkTokenBalances } from 'hooks/useNetworkTokenBalances'
 import useTokenDetailPageQuery from 'hooks/useTokenDetailPageQuery'
 import { useMemo } from 'react'
 import { useParams } from 'react-router-dom'
-import styled, { useTheme } from 'styled-components/macro'
+import styled from 'styled-components/macro'
 import { isChainAllowed } from 'utils/switchChain'
 
 const Footer = styled.div`
@@ -61,10 +61,13 @@ const Widget = styled.div`
   border-radius: 12px;
   border: 1px solid ${({ theme }) => theme.backgroundOutline};
 `
+function NetworkBalances(tokenAddress: string) {
+  return useNetworkTokenBalances({ address: tokenAddress })
+}
+
 export default function TokenDetails() {
   const { tokenAddress } = useParams<{ tokenAddress?: string }>()
   const { data, error, loading } = useTokenDetailPageQuery(tokenAddress)
-  const theme = useTheme()
   const tokenSymbol = useToken(tokenAddress)?.symbol
 
   let tokenDetail
@@ -79,7 +82,7 @@ export default function TokenDetails() {
 
   const tokenWarning = tokenAddress ? checkWarning(tokenAddress) : null
   /* network balance handling */
-  const { data } = useNetworkTokenBalances({ address: tokenAddress })
+  const { data: networkData } = tokenAddress ? NetworkBalances(tokenAddress) : { data: null }
   const { connector, chainId: connectedChainId } = useWeb3React()
   const totalBalance = 4.3 // dummy data
 
@@ -92,13 +95,13 @@ export default function TokenDetails() {
     return chainIds
   }, [connectedChainId])
 
-  const balancesByNetwork = data
+  const balancesByNetwork = networkData
     ? chainsToList.map((chainId) => {
-        const amount = data[chainId]
-        console.log(`theme.chain_${chainId}`)
+        const amount = networkData[chainId]
         const fiatValue = amount // for testing purposes
         if (!fiatValue || !isChainAllowed(connector, chainId)) return null
         const chainInfo = getChainInfo(chainId)
+        const networkColor = chainInfo.color
         if (!chainInfo) return null
         return (
           <NetworkBalance
@@ -108,7 +111,7 @@ export default function TokenDetails() {
             tokenSymbol={tokenSymbol ?? 'XXX'}
             fiatValue={fiatValue.toSignificant(2)}
             label={chainInfo.label}
-            networkColor={theme.textPrimary}
+            networkColor={networkColor}
           />
         )
       })
@@ -122,12 +125,12 @@ export default function TokenDetails() {
           <RightPanel>
             <Widget />
             {tokenWarning && <TokenSafetyMessage tokenAddress={tokenAddress} warning={tokenWarning} />}
-            {!loadingDetails && (
+            {!loading && (
               <BalanceSummary address={tokenAddress} totalBalance={totalBalance} networkBalances={balancesByNetwork} />
             )}
           </RightPanel>
           <Footer>
-            {!loadingDetails && (
+            {!loading && (
               <FooterBalanceSummary
                 address={tokenAddress}
                 totalBalance={totalBalance}
