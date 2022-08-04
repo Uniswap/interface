@@ -82,7 +82,7 @@ export default function TokenDetails() {
   const tokenWarning = tokenAddress ? checkWarning(tokenAddress) : null
   /* network balance handling */
   const { data: networkData } = tokenAddress ? NetworkBalances(tokenAddress) : { data: null }
-  const { connector, chainId: connectedChainId } = useWeb3React()
+  const { chainId: connectedChainId } = useWeb3React()
   const totalBalance = 4.3 // dummy data
 
   const chainsToList = useMemo(() => {
