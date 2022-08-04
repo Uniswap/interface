@@ -38,22 +38,22 @@ export function useTokenPriceGraphs(token: Token): Nullable<GraphMetadatas> {
       },
       {
         label: '1D',
-        index: 0,
+        index: 1,
         data: buildGraph(takeSubset(dailyPrices, 1), GRAPH_PRECISION),
       },
       {
         label: '1W',
-        index: 1,
+        index: 2,
         data: buildGraph(takeSubset(dailyPrices, 7), GRAPH_PRECISION),
       },
       {
         label: '1M',
-        index: 2,
+        index: 3,
         data: buildGraph(takeSubset(dailyPrices, 30), GRAPH_PRECISION),
       },
       {
         label: '1Y',
-        index: 3,
+        index: 4,
         data: buildGraph(takeSubset(dailyPrices, 365), GRAPH_PRECISION),
       },
     ] as const

@@ -1,5 +1,5 @@
 import { Currency } from '@uniswap/sdk-core'
-import React, { useCallback } from 'react'
+import React, { Suspense, useCallback } from 'react'
 import { ListRenderItemInfo } from 'react-native'
 import { HomeStackScreenProp, useHomeStackNavigation } from 'src/app/navigation/types'
 import { AddressDisplay } from 'src/components/AddressDisplay'
@@ -9,6 +9,8 @@ import { BackHeader } from 'src/components/layout/BackHeader'
 import { HeaderListScreen } from 'src/components/layout/screens/HeaderListScreen'
 import { Separator } from 'src/components/layout/Separator'
 import { Loading } from 'src/components/loading'
+import { PortfolioBalanceChart } from 'src/components/PriceChart'
+import { PriceChartLoading } from 'src/components/PriceChart/PriceChartLoading'
 import { TokenBalanceItem } from 'src/components/TokenBalanceList/TokenBalanceItem'
 import { TotalBalance } from 'src/features/balances/TotalBalance'
 import { useActiveChainIds } from 'src/features/chains/utils'
@@ -64,6 +66,13 @@ export function PortfolioTokensScreen({
         <Box mx="md" my="sm">
           <Loading repeat={8} type="token" />
         </Box>
+      }
+      ListHeaderComponent={
+        activeAddress ? (
+          <Suspense fallback={<PriceChartLoading />}>
+            <PortfolioBalanceChart owner={activeAddress} />
+          </Suspense>
+        ) : null
       }
       ScrolledScreenHeader={
         <BackHeader>
