@@ -248,11 +248,17 @@ const rotate = keyframes`
     transform: rotate(360deg);
   }
 `
+const SpinnerCss = css`
+  animation: 2s ${rotate} linear infinite;
+`
 
 const Spinner = styled.img`
-  animation: 2s ${rotate} linear infinite;
+  ${SpinnerCss}
   width: 16px;
   height: 16px;
+`
+export const SpinnerSVG = styled.svg`
+  ${SpinnerCss}
 `
 
 const BackArrowLink = styled(StyledInternalLink)`
