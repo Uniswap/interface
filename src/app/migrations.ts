@@ -175,4 +175,10 @@ export const migrations = {
     newState.wallet = { ...state.wallet, accounts: newAccountObj }
     return newState
   },
+
+  13: (state: any) => {
+    const newState = { ...state }
+    newState.ens = { ensForAddress: {} }
+    return newState
+  },
 }

@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Alert } from 'react-native'
 import { useAppSelector } from 'src/app/hooks'
 import { ChainId } from 'src/constants/chains'
-import { useENS } from 'src/features/ens/useENS'
+import { useENSName } from 'src/features/ens/useENSName'
 import { Account } from 'src/features/wallet/accounts/types'
 import {
   makeSelectAccountNotificationSetting,
@@ -17,7 +17,7 @@ import {
   selectSignerAccounts,
 } from 'src/features/wallet/selectors'
 import { WalletConnectSession } from 'src/features/walletConnect/walletConnectSlice'
-import { shortenAddress } from 'src/utils/addresses'
+import { parseAddress, shortenAddress } from 'src/utils/addresses'
 
 export function useAccounts() {
   return useAppSelector(selectNonPendingAccounts)
@@ -74,12 +74,14 @@ export function useDisplayName(address: Nullable<string>):
     }
   | undefined {
   const maybeLocalName = useAccounts()[address ?? '']?.name // if address is a local account with a name
-  const ens = useENS(ChainId.Mainnet, address)
+
+  const validated = parseAddress(address)
+  const ens = useENSName(ChainId.Mainnet, validated ?? undefined)
 
   if (!address) return
 
   if (maybeLocalName) return { name: maybeLocalName, type: 'local' }
-  if (ens.name) return { name: ens.name, type: 'ens' }
+  if (ens.ENSName) return { name: ens.ENSName, type: 'ens' }
   return { name: shortenAddress(address), type: 'address' }
 }
 

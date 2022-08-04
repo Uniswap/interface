@@ -160,6 +160,8 @@ export const v11Schema = {
 // schema did not change, added `pushNotificationsEnabled` prop to the Account type
 export const v12Schema = { ...v11Schema }
 
+export const v13Schema = { ...v12Schema, ens: { ensForAddress: {} } }
+
 // TODO: use function with typed output when API reducers are removed from rootReducer
 // export const getSchema = (): RootState => v0Schema
-export const getSchema = () => v12Schema
+export const getSchema = () => v13Schema

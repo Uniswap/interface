@@ -47,11 +47,12 @@ export const persistConfig = {
     'tokenLists',
     'tokens',
     'notifications',
+    'ens',
     coingeckoApi.reducerPath,
     dataApi.reducerPath,
     nftApi.reducerPath,
   ],
-  version: 12,
+  version: 13,
   migrate: createMigrate(migrations),
 }
 

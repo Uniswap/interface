@@ -7,6 +7,7 @@ import { cloudBackupReducer } from 'src/features/CloudBackup/cloudBackupSlice'
 import { coingeckoApi } from 'src/features/dataApi/coingecko/enhancedApi'
 import { dataApi } from 'src/features/dataApi/slice'
 import { zerionApi } from 'src/features/dataApi/zerion/api'
+import { ensReducer } from 'src/features/ens/ensSlice'
 import { searchHistoryReducer } from 'src/features/explore/searchHistorySlice'
 import { favoritesReducer } from 'src/features/favorites/slice'
 import { modalsReducer } from 'src/features/modals/modalSlice'
@@ -30,6 +31,7 @@ export const rootReducer = combineReducers({
   biometricSettings: biometricSettingsReducer,
   blocks: blocksReducer,
   chains: chainsReducer,
+  ens: ensReducer,
   favorites: favoritesReducer,
   modals: modalsReducer,
   notifications: notificationReducer,

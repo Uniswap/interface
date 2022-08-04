@@ -7,6 +7,7 @@ import {
   initialSchema,
   v10Schema,
   v11Schema,
+  v12Schema,
   v1Schema,
   v2Schema,
   v3Schema,
@@ -25,6 +26,7 @@ import { initialBiometricsSettingsState } from 'src/features/biometrics/slice'
 import { initialBlockState } from 'src/features/blocks/blocksSlice'
 import { initialChainsState } from 'src/features/chains/chainsSlice'
 import { initialCloudBackupState } from 'src/features/CloudBackup/cloudBackupSlice'
+import { initialEnsState } from 'src/features/ens/ensSlice'
 import { initialSearchHistoryState } from 'src/features/explore/searchHistorySlice'
 import { initialFavoritesState } from 'src/features/favorites/slice'
 import { initialModalState } from 'src/features/modals/modalSlice'
@@ -96,6 +98,7 @@ describe('Redux state migrations', () => {
       transactions: initialTransactionsState,
       wallet: initialWalletState,
       walletConnect: initialWalletConnectState,
+      ens: initialEnsState,
       _persist: {
         version: persistConfig.version,
         rehydrated: true,
@@ -470,5 +473,10 @@ describe('Redux state migrations', () => {
     expect(v12.wallet.accounts[TEST_ADDRESS].type).toEqual(AccountType.Native)
     expect(v12.wallet.accounts[TEST_ADDRESS].address).toEqual(TEST_ADDRESS)
     expect(v12.wallet.accounts[TEST_ADDRESS].name).toEqual(ACCOUNT_NAME)
+  })
+
+  it('migrates from v12 to v13', () => {
+    const v13 = migrations[13](v12Schema)
+    expect(v13.ens.ensForAddress).toEqual({})
   })
 })

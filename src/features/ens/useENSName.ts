@@ -2,9 +2,11 @@
 
 import { NEVER_RELOAD } from '@uniswap/redux-multicall'
 import { utils } from 'ethers'
-import { useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
+import { useAppDispatch } from 'src/app/hooks'
 import { ChainId } from 'src/constants/chains'
 import { useENSRegistrarContract, useENSResolverContract } from 'src/features/contracts/useContract'
+import { updateName, useCachedEns } from 'src/features/ens/ensSlice'
 import { useENSAddress } from 'src/features/ens/useENSAddress'
 import { useSingleCallResult } from 'src/features/multicall'
 import {
@@ -24,6 +26,10 @@ export function useENSName(
   chainId: ChainId,
   address?: string
 ): { ENSName: string | null; loading: boolean } {
+  const dispatch = useAppDispatch()
+  // get cached value from store
+  const { name: cachedName } = useCachedEns(address)
+
   const debouncedAddress = useDebounce(address)
   const ensNodeArgument = useMemo(() => {
     if (!isValidAddress(debouncedAddress)) return [undefined]
@@ -67,11 +73,18 @@ export function useENSName(
   const checkedName = address === fwdAddr?.address ? name : null
   const changed = debouncedAddress !== address
 
+  // Update cache on every new response of checked name.
+  useEffect(() => {
+    if (address && checkedName) {
+      dispatch(updateName({ address, name: checkedName }))
+    }
+  }, [address, checkedName, dispatch])
+
   return useMemo(
     () => ({
-      ENSName: changed ? null : checkedName,
+      ENSName: changed ? cachedName ?? null : checkedName ?? cachedName,
       loading: changed || resolverAddress.loading || nameCallRes.loading,
     }),
-    [changed, nameCallRes.loading, checkedName, resolverAddress.loading]
+    [changed, cachedName, checkedName, resolverAddress.loading, nameCallRes.loading]
   )
 }
