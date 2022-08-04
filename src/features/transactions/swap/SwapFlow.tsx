@@ -21,7 +21,6 @@ import {
 import { SwapForm } from 'src/features/transactions/swap/SwapForm'
 import { SwapReview } from 'src/features/transactions/swap/SwapReview'
 import { SwapStatus } from 'src/features/transactions/swap/SwapStatus'
-import { ANIMATE_SPRING_CONFIG } from 'src/features/transactions/utils'
 import { showWarningInPanel } from 'src/features/transactions/swap/validate'
 import {
   CurrencyField,
@@ -30,6 +29,7 @@ import {
   transactionStateActions,
   transactionStateReducer,
 } from 'src/features/transactions/transactionState/transactionState'
+import { ANIMATE_SPRING_CONFIG } from 'src/features/transactions/utils'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { dimensions } from 'src/styles/sizing'
 import { flattenObjectOfObjects } from 'src/utils/objects'
@@ -150,7 +150,7 @@ export function SwapFlow({ prefilledState, onClose }: SwapFormProps) {
 
   const screenXOffset = useSharedValue(0)
   useEffect(() => {
-    if (selectingCurrencyField !== undefined) {
+    if (selectingCurrencyField) {
       setSelectableCurrencies(
         selectingCurrencyField === CurrencyField.INPUT ? currenciesWithBalances : allCurrencies
       )
@@ -204,17 +204,14 @@ export function SwapFlow({ prefilledState, onClose }: SwapFormProps) {
         <CurrencySelect
           currencies={selectableCurrencies}
           otherCurrency={
-            selectingCurrencyField !== undefined
+            selectingCurrencyField
               ? currencies[otherCurrencyField(selectingCurrencyField)]
               : undefined
           }
-          selectedCurrency={
-            selectingCurrencyField !== undefined ? currencies[selectingCurrencyField] : undefined
-          }
+          selectedCurrency={selectingCurrencyField ? currencies[selectingCurrencyField] : undefined}
           showNonZeroBalancesOnly={selectingCurrencyField === CurrencyField.INPUT}
           onSelectCurrency={(currency: Currency) =>
-            selectingCurrencyField !== undefined &&
-            onSelectCurrency(selectingCurrencyField, currency)
+            selectingCurrencyField && onSelectCurrency(selectingCurrencyField, currency)
           }
         />
       </AnimatedFlex>

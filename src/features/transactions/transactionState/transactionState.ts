@@ -9,8 +9,8 @@ import { FeeInfo } from 'src/features/gas/types'
 import { TransactionType } from 'src/features/transactions/types'
 
 export enum CurrencyField {
-  INPUT,
-  OUTPUT,
+  INPUT = 'input',
+  OUTPUT = 'output',
 }
 export interface GasFeeByTransactionType {
   [TransactionType.Approve]?: FeeInfo | null // null means approve tx not needed (e.g., allowance is sufficient)
