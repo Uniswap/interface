@@ -1,5 +1,6 @@
 import styled from 'styled-components/macro'
 
+import { DeltaContainer, TokenPrice } from '../../Charts/PriceChart'
 import { LoadingBubble } from '../loading'
 import {
   AboutHeader,
@@ -8,7 +9,6 @@ import {
   ChartContainer,
   ChartHeader,
   ContractAddressSection,
-  DeltaContainer,
   ResourcesContainer,
   Stat,
   StatPair,
@@ -16,7 +16,6 @@ import {
   TimeOptionsContainer,
   TokenInfoContainer,
   TokenNameCell,
-  TokenPrice,
   TopArea,
 } from './TokenDetail'
 
