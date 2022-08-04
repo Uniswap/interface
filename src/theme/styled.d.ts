@@ -52,6 +52,7 @@ export interface ThemeColors {
   chain_80001: Color
 
   blue200: Color
+  flyoutDropShadow: Color
 }
 
 export interface Colors {
