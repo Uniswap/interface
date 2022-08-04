@@ -69,11 +69,14 @@ export function getSwapWarnings(t: TFunction, state: PartialDerivedSwapInfo) {
     const errorData = trade.error as any
     // assume swaps with no routes available are due to low liquidity
     if (errorData?.data?.errorCode === SWAP_NO_ROUTE_ERROR) {
+      const currencyOut = currencies[CurrencyField.OUTPUT]
       warnings.push({
         type: WarningLabel.LowLiquidity,
         severity: WarningSeverity.Medium,
         action: WarningAction.DisableReview,
-        title: t('Not enough liquidity'),
+        title: t('Not enough {{ tokenOut }} liquidity', {
+          tokenOut: currencyOut?.symbol,
+        }),
         message: t(
           'There isn’t currently enough liquidity available between these tokens to perform a swap. Please try again later or select another token.'
         ),
