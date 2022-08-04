@@ -1,4 +1,4 @@
-import { Phase0Variant, usePhase0Flag } from 'featureFlag'
+import { Phase0Variant, usePhase0Flag } from 'featureFlags/flags/phase0'
 import React, { useMemo } from 'react'
 import { Text, TextProps as TextPropsOriginal } from 'rebass'
 import styled, {
