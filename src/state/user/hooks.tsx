@@ -3,13 +3,21 @@ import { ChainId, Token } from '@kyberswap/ks-sdk-core'
 import flatMap from 'lodash.flatmap'
 import { useCallback, useMemo } from 'react'
 import { shallowEqual, useDispatch, useSelector } from 'react-redux'
-import { useSingleContractMultipleData } from 'state/multicall/hooks'
-import { BASES_TO_TRACK_LIQUIDITY_FOR, PINNED_PAIRS } from '../../constants'
-import { SupportedLocale } from 'constants/locales'
 
-import { useActiveWeb3React } from '../../hooks'
+import { useSingleContractMultipleData } from 'state/multicall/hooks'
+import { SupportedLocale } from 'constants/locales'
 import { AppDispatch, AppState } from 'state'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
+import { useUserLiquidityPositions } from 'state/pools/hooks'
+import { useAllTokens } from 'hooks/Tokens'
+import { isAddress } from 'utils'
+import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
+import {
+  useStaticFeeFactoryContract,
+  useDynamicFeeFactoryContract,
+  useOldStaticFeeFactoryContract,
+} from 'hooks/useContract'
+
 import {
   addSerializedPair,
   addSerializedToken,
@@ -31,16 +39,9 @@ import {
   toggleFavoriteToken as toggleFavoriteTokenAction,
   ToggleFavoriteTokenPayload,
 } from './actions'
-import { useUserLiquidityPositions } from 'state/pools/hooks'
-import { useAllTokens } from 'hooks/Tokens'
-import { isAddress } from 'utils'
-import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 import { defaultShowLiveCharts } from './reducer'
-import {
-  useStaticFeeFactoryContract,
-  useDynamicFeeFactoryContract,
-  useOldStaticFeeFactoryContract,
-} from 'hooks/useContract'
+import { BASES_TO_TRACK_LIQUIDITY_FOR, PINNED_PAIRS } from '../../constants'
+import { useActiveWeb3React } from '../../hooks'
 
 function serializeToken(token: Token | WrappedTokenInfo): SerializedToken {
   return {
@@ -75,29 +76,12 @@ function deserializeToken(serializedToken: SerializedToken): Token {
         serializedToken.name,
       )
 }
-// function deserializeTokenUNI(serializedToken: SerializedToken): TokenUNI {
-//   return new TokenUNI(
-//     serializedToken.chainId,
-//     serializedToken.address,
-//     serializedToken.decimals,
-//     serializedToken.symbol,
-//     serializedToken.name
-//   )
-// }
 
 export function useIsDarkMode(): boolean {
-  const { userDarkMode, matchesDarkMode } = useSelector<
-    AppState,
-    { userDarkMode: boolean | null; matchesDarkMode: boolean }
-  >(
-    ({ user: { matchesDarkMode, userDarkMode } }) => ({
-      userDarkMode,
-      matchesDarkMode,
-    }),
-    shallowEqual,
-  )
+  const userDarkMode = useSelector<AppState, boolean | null>(state => state.user.userDarkMode)
+  const matchesDarkMode = useSelector<AppState, boolean>(state => state.user.matchesDarkMode)
 
-  return userDarkMode === null ? matchesDarkMode : userDarkMode
+  return typeof userDarkMode !== 'boolean' ? matchesDarkMode : userDarkMode
 }
 
 export function useDarkModeManager(): [boolean, () => void] {

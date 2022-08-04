@@ -68,6 +68,7 @@ Sentry.configureScope(scope => {
 
 const preloadhtml = document.querySelector('.preloadhtml')
 const preloadhtmlStyle = document.querySelector('.preloadhtml-style')
+
 const hideLoader = () => {
   setTimeout(() => {
     preloadhtml?.remove()
@@ -75,7 +76,7 @@ const hideLoader = () => {
   }, 100)
 }
 
-const ReactApp = ({ hideLoader }: { hideLoader: () => void }) => {
+const ReactApp = () => {
   useEffect(hideLoader, [])
 
   return (
@@ -104,7 +105,7 @@ const ReactApp = ({ hideLoader }: { hideLoader: () => void }) => {
   )
 }
 
-ReactDOM.render(<ReactApp hideLoader={hideLoader} />, document.getElementById('root'))
+ReactDOM.render(<ReactApp />, document.getElementById('root'))
 
 // if (process.env.REACT_APP_SERVICE_WORKER === 'true') {
 //   serviceWorkerRegistration.register()

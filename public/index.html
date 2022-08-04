@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
   <head>
     <meta charset="utf-8" />
     <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico?version=v" />
@@ -56,16 +56,27 @@
         left: 0;
         right: 0;
         bottom: 0;
-        background-color: #0f0f0f;
         font-family: 'Work Sans', 'Inter', sans-serif;
+      }
+      [data-theme='dark'] .preloadhtml {
+        background-color: #0f0f0f;
+      }
+      [data-theme='light'] .preloadhtml {
+        background-color: rgb(245, 245, 245);
       }
 
       .preloadhtml-header {
         display: flex;
         padding: 1rem;
+        z-index: 2;
+      }
+      [data-theme='dark'] .preloadhtml-header {
         background-color: #1c1c1c;
         border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-        z-index: 2;
+      }
+      [data-theme='light'] .preloadhtml-header {
+        background-color: rgb(255, 255, 255);
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
       }
 
       .preloadhtml-logo {
@@ -80,14 +91,18 @@
         display: flex;
         align-items: center;
         margin-left: 12px;
-        color: #c3c5cb;
       }
 
       .preloadhtml-header-link-item {
         padding: 10px 12px;
         width: max-content;
-        font-weight: 400;
-        color: #a9a9a9;
+        font-weight: 500;
+      }
+      [data-theme='dark'] .preloadhtml-header-link-item {
+        color: rgb(169, 169, 169);
+      }
+      [data-theme='light'] .preloadhtml-header-link-item {
+        color: rgb(94, 94, 94);
       }
 
       .preloadhtml-header-link-item-icon {
@@ -100,7 +115,14 @@
 
       .preloadhtml-header-link-item-icon * {
         color: #a9a9a9;
-        fill: #a9a9a9;
+        fill: currentColor;
+      }
+
+      [data-theme='dark'] .onlyVisibleInLightMode {
+        display: none;
+      }
+      [data-theme='light'] .onlyVisibleInDarkMode {
+        display: none;
       }
 
       @keyframes pulse {
@@ -120,13 +142,20 @@
     <div class="preloadhtml">
       <div class="preloadhtml-header">
         <div>
-          <img style="margin-top:1px;" width="140px" src="/logo-dark.svg" alt="DmmLogo" />
+          <img
+            class="onlyVisibleInDarkMode"
+            style="margin-top: 1px;"
+            width="140px"
+            src="/logo-dark.svg"
+            alt="DmmLogo"
+          />
+          <img class="onlyVisibleInLightMode" style="margin-top: 1px;" width="140px" src="/logo.svg" alt="DmmLogo" />
         </div>
         <div class="preloadhtml-header-link">
-          <div style="color: #31CB9E; font-weight: 500;" class="preloadhtml-header-link-item">Swap</div>
+          <div style="color: #31cb9e;" class="preloadhtml-header-link-item">Swap</div>
           <div class="preloadhtml-header-link-item">Earn</div>
           <div class="preloadhtml-header-link-item">Farm</div>
-          <div class="preloadhtml-header-link-item">Analytics</div>
+          <div class="preloadhtml-header-link-item">Campaigns</div>
           <div class="preloadhtml-header-link-item">
             Discover
             <svg
@@ -163,19 +192,70 @@
               />
             </svg>
           </div>
-          <div class="preloadhtml-header-link-item">Campaign</div>
+          <div class="preloadhtml-header-link-item">Analytics</div>
           <div class="preloadhtml-header-link-item">About</div>
         </div>
       </div>
       <div style="height: 180px; display: flex;">
         <img
-          style="animation: pulse 800ms linear infinite; margin: auto; "
+          class="onlyVisibleInDarkMode"
+          style="animation: pulse 800ms linear infinite; margin: auto;"
           width="160px"
           src="/logo-dark.svg"
           alt="DmmLogo"
         />
+        <img
+          class="onlyVisibleInLightMode"
+          style="animation: pulse 800ms linear infinite; margin: auto;"
+          width="160px"
+          src="/logo.svg"
+          alt="DmmLogo"
+        />
       </div>
     </div>
+    <script>
+      ;(() => {
+        function doesUseDarkMode() {
+          const rawLocalState = window.localStorage.getItem('redux_localstorage_simple_user')
+          const hasRawLocalState = typeof rawLocalState === 'string'
+          if (hasRawLocalState) {
+            try {
+              // need JSON.parse here as we useLocalStorage when storing theme mode
+              const localState = JSON.parse(rawLocalState)
+              return localState.userDarkMode
+            } catch (e) {
+              // empty
+            }
+          }
+        }
+
+        function setInitialColorMode() {
+          function getInitialColorMode() {
+            const useDarkMode = doesUseDarkMode()
+            if (typeof useDarkMode === 'boolean') {
+              return useDarkMode ? 'dark' : 'light'
+            }
+
+            // If there is no saved preference, use a media query
+            const mediaQuery = '(prefers-color-scheme: dark)'
+            const mql = window.matchMedia(mediaQuery)
+            const hasImplicitPreference = typeof mql.matches === 'boolean'
+            if (hasImplicitPreference) {
+              return mql.matches ? 'dark' : 'light'
+            }
+
+            // default to 'light'.
+            return 'light'
+          }
+          const colorMode = getInitialColorMode()
+          // add HTML attribute if dark mode
+          if (colorMode === 'dark') {
+            document.documentElement.setAttribute('data-theme', 'dark')
+          }
+        }
+        setInitialColorMode()
+      })()
+    </script>
     <script src="/charting_library/charting_library.standalone.js"></script>
     <!--
       This HTML file is a template.
