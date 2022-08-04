@@ -95,25 +95,25 @@ export default function DelegateModal({ isOpen, onDismiss, title }: VoteModalPro
         <ContentWrapper gap="lg">
           <AutoColumn gap="lg" justify="center">
             <RowBetween>
-              <ThemedText.MediumHeader fontWeight={500}>{title}</ThemedText.MediumHeader>
+              <ThemedText.DeprecatedMediumHeader fontWeight={500}>{title}</ThemedText.DeprecatedMediumHeader>
               <StyledClosed stroke="black" onClick={wrappedOnDismiss} />
             </RowBetween>
-            <ThemedText.Body>
+            <ThemedText.DeprecatedBody>
               <Trans>Earned UNI tokens represent voting shares in Uniswap governance.</Trans>
-            </ThemedText.Body>
-            <ThemedText.Body>
+            </ThemedText.DeprecatedBody>
+            <ThemedText.DeprecatedBody>
               <Trans>You can either vote on each proposal yourself or delegate your votes to a third party.</Trans>
-            </ThemedText.Body>
+            </ThemedText.DeprecatedBody>
             {usingDelegate && <AddressInputPanel value={typed} onChange={handleRecipientType} />}
             <ButtonPrimary disabled={!isAddress(parsedAddress ?? '')} onClick={onDelegate}>
-              <ThemedText.MediumHeader color="white">
+              <ThemedText.DeprecatedMediumHeader color="white">
                 {usingDelegate ? <Trans>Delegate Votes</Trans> : <Trans>Self Delegate</Trans>}
-              </ThemedText.MediumHeader>
+              </ThemedText.DeprecatedMediumHeader>
             </ButtonPrimary>
             <TextButton onClick={() => setUsingDelegate(!usingDelegate)}>
-              <ThemedText.Blue>
+              <ThemedText.DeprecatedBlue>
                 {usingDelegate ? <Trans>Remove Delegate</Trans> : <Trans>Add Delegate +</Trans>}
-              </ThemedText.Blue>
+              </ThemedText.DeprecatedBlue>
             </TextButton>
           </AutoColumn>
         </ContentWrapper>
@@ -121,20 +121,20 @@ export default function DelegateModal({ isOpen, onDismiss, title }: VoteModalPro
       {attempting && !hash && (
         <LoadingView onDismiss={wrappedOnDismiss}>
           <AutoColumn gap="12px" justify={'center'}>
-            <ThemedText.LargeHeader>
+            <ThemedText.DeprecatedLargeHeader>
               {usingDelegate ? <Trans>Delegating votes</Trans> : <Trans>Unlocking Votes</Trans>}
-            </ThemedText.LargeHeader>
-            <ThemedText.Main fontSize={36}> {formatCurrencyAmount(uniBalance, 4)}</ThemedText.Main>
+            </ThemedText.DeprecatedLargeHeader>
+            <ThemedText.DeprecatedMain fontSize={36}> {formatCurrencyAmount(uniBalance, 4)}</ThemedText.DeprecatedMain>
           </AutoColumn>
         </LoadingView>
       )}
       {hash && (
         <SubmittedView onDismiss={wrappedOnDismiss} hash={hash}>
           <AutoColumn gap="12px" justify={'center'}>
-            <ThemedText.LargeHeader>
+            <ThemedText.DeprecatedLargeHeader>
               <Trans>Transaction Submitted</Trans>
-            </ThemedText.LargeHeader>
-            <ThemedText.Main fontSize={36}>{formatCurrencyAmount(uniBalance, 4)}</ThemedText.Main>
+            </ThemedText.DeprecatedLargeHeader>
+            <ThemedText.DeprecatedMain fontSize={36}>{formatCurrencyAmount(uniBalance, 4)}</ThemedText.DeprecatedMain>
           </AutoColumn>
         </SubmittedView>
       )}

@@ -57,13 +57,13 @@ const StyledInput = styled(NumericalInput)<{ usePercent?: boolean }>`
   `};
 `
 
-const InputTitle = styled(ThemedText.Small)`
+const InputTitle = styled(ThemedText.DeprecatedSmall)`
   color: ${({ theme }) => theme.deprecated_text2};
   font-size: 12px;
   font-weight: 500;
 `
 
-const ButtonLabel = styled(ThemedText.White)<{ disabled: boolean }>`
+const ButtonLabel = styled(ThemedText.DeprecatedWhite)<{ disabled: boolean }>`
   color: ${({ theme, disabled }) => (disabled ? theme.deprecated_text2 : theme.deprecated_text1)} !important;
 `
 

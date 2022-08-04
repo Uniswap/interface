@@ -1,15 +1,22 @@
 import { Trans } from '@lingui/macro'
 import { Trade } from '@uniswap/router-sdk'
-import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
-import { ElementName, Event, EventName } from 'components/AmplitudeAnalytics/constants'
-import { PageName, SectionName } from 'components/AmplitudeAnalytics/constants'
+import { sendAnalyticsEvent } from 'components/AmplitudeAnalytics'
+import { ElementName, Event, EventName, PageName, SectionName } from 'components/AmplitudeAnalytics/constants'
 import { Trace } from 'components/AmplitudeAnalytics/Trace'
 import { TraceEvent } from 'components/AmplitudeAnalytics/TraceEvent'
+import {
+  formatPercentInBasisPointsNumber,
+  formatToDecimal,
+  getDurationFromDateMilliseconds,
+  getTokenAddress,
+} from 'components/AmplitudeAnalytics/utils'
 import { sendEvent } from 'components/analytics'
 import { NetworkAlert } from 'components/NetworkAlert/NetworkAlert'
+import PriceImpactWarning from 'components/swap/PriceImpactWarning'
 import SwapDetailsDropdown from 'components/swap/SwapDetailsDropdown'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 import { MouseoverTooltip } from 'components/Tooltip'
@@ -20,7 +27,7 @@ import JSBI from 'jsbi'
 import { Context, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { ReactNode } from 'react'
 import { ArrowDown, CheckCircle, HelpCircle } from 'react-feather'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { Text } from 'rebass'
 import { useToggleWalletModal } from 'state/application/hooks'
 import { InterfaceTrade } from 'state/routing/types'
@@ -61,7 +68,7 @@ import { useExpertModeManager } from '../../state/user/hooks'
 import { LinkStyledButton, ThemedText } from '../../theme'
 import { computeFiatValuePriceImpact } from '../../utils/computeFiatValuePriceImpact'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
-import { warningSeverity } from '../../utils/prices'
+import { computeRealizedPriceImpact, warningSeverity } from '../../utils/prices'
 import { supportedChainId } from '../../utils/supportedChainId'
 import AppBody from '../AppBody'
 
@@ -78,10 +85,46 @@ export function getIsValidSwapQuote(
   return !!swapInputError && !!trade && (tradeState === TradeState.VALID || tradeState === TradeState.SYNCING)
 }
 
+function largerPercentValue(a?: Percent, b?: Percent) {
+  if (a && b) {
+    return a.greaterThan(b) ? a : b
+  } else if (a) {
+    return a
+  } else if (b) {
+    return b
+  }
+  return undefined
+}
+
+const formatSwapQuoteReceivedEventProperties = (
+  trade: InterfaceTrade<Currency, Currency, TradeType>,
+  fetchingSwapQuoteStartTime: Date | undefined
+) => {
+  return {
+    token_in_symbol: trade.inputAmount.currency.symbol,
+    token_out_symbol: trade.outputAmount.currency.symbol,
+    token_in_address: getTokenAddress(trade.inputAmount.currency),
+    token_out_address: getTokenAddress(trade.outputAmount.currency),
+    price_impact_basis_points: trade ? formatPercentInBasisPointsNumber(computeRealizedPriceImpact(trade)) : undefined,
+    estimated_network_fee_usd: trade.gasUseEstimateUSD ? formatToDecimal(trade.gasUseEstimateUSD, 2) : undefined,
+    chain_id:
+      trade.inputAmount.currency.chainId === trade.outputAmount.currency.chainId
+        ? trade.inputAmount.currency.chainId
+        : undefined,
+    token_in_amount: formatToDecimal(trade.inputAmount, trade.inputAmount.currency.decimals),
+    token_out_amount: formatToDecimal(trade.outputAmount, trade.outputAmount.currency.decimals),
+    quote_latency_milliseconds: fetchingSwapQuoteStartTime
+      ? getDurationFromDateMilliseconds(fetchingSwapQuoteStartTime)
+      : undefined,
+  }
+}
+
 export default function Swap() {
-  const history = useHistory()
+  const navigate = useNavigate()
   const { account, chainId } = useWeb3React()
   const loadedUrlParams = useDefaultsFromURLSearch()
+  const [newSwapQuoteNeedsLogging, setNewSwapQuoteNeedsLogging] = useState(true)
+  const [fetchingSwapQuoteStartTime, setFetchingSwapQuoteStartTime] = useState<Date | undefined>()
 
   // token warning stuff
   const [loadedInputCurrency, loadedOutputCurrency] = [
@@ -169,7 +212,7 @@ export default function Swap() {
   const outputValue = showWrap ? parsedAmount : trade?.outputAmount
   const fiatValueInput = useStablecoinValue(inputValue)
   const fiatValueOutput = useStablecoinValue(outputValue)
-  const priceImpact = useMemo(
+  const stablecoinPriceImpact = useMemo(
     () => (routeIsSyncing ? undefined : computeFiatValuePriceImpact(fiatValueInput, fiatValueOutput)),
     [fiatValueInput, fiatValueOutput, routeIsSyncing]
   )
@@ -194,8 +237,8 @@ export default function Swap() {
   // reset if they close warning without tokens in params
   const handleDismissTokenWarning = useCallback(() => {
     setDismissTokenWarning(true)
-    history.push('/swap/')
-  }, [history])
+    navigate('/swap/')
+  }, [navigate])
 
   // modal and loading
   const [{ showConfirm, tradeToConfirm, swapErrorMessage, attemptingTxn, txHash }, setSwapState] = useState<{
@@ -298,7 +341,7 @@ export default function Swap() {
     if (!swapCallback) {
       return
     }
-    if (priceImpact && !confirmPriceImpactWithoutFee(priceImpact)) {
+    if (stablecoinPriceImpact && !confirmPriceImpactWithoutFee(stablecoinPriceImpact)) {
       return
     }
     setSwapState({ attemptingTxn: true, tradeToConfirm, showConfirm, swapErrorMessage: undefined, txHash: undefined })
@@ -337,7 +380,7 @@ export default function Swap() {
       })
   }, [
     swapCallback,
-    priceImpact,
+    stablecoinPriceImpact,
     tradeToConfirm,
     showConfirm,
     recipient,
@@ -350,18 +393,14 @@ export default function Swap() {
 
   // errors
   const [showInverted, setShowInverted] = useState<boolean>(false)
+  const [swapQuoteReceivedDate, setSwapQuoteReceivedDate] = useState<Date | undefined>()
 
   // warnings on the greater of fiat value price impact and execution price impact
-  const priceImpactSeverity = useMemo(() => {
-    const executionPriceImpact = trade?.priceImpact
-    return warningSeverity(
-      executionPriceImpact && priceImpact
-        ? executionPriceImpact.greaterThan(priceImpact)
-          ? executionPriceImpact
-          : priceImpact
-        : executionPriceImpact ?? priceImpact
-    )
-  }, [priceImpact, trade])
+  const { priceImpactSeverity, largerPriceImpact } = useMemo(() => {
+    const marketPriceImpact = trade?.priceImpact ? computeRealizedPriceImpact(trade) : undefined
+    const largerPriceImpact = largerPercentValue(marketPriceImpact, stablecoinPriceImpact)
+    return { priceImpactSeverity: warningSeverity(largerPriceImpact), largerPriceImpact }
+  }, [stablecoinPriceImpact, trade])
 
   const isArgentWallet = useIsArgentWallet()
 
@@ -411,6 +450,42 @@ export default function Swap() {
   const swapIsUnsupported = useIsSwapUnsupported(currencies[Field.INPUT], currencies[Field.OUTPUT])
 
   const priceImpactTooHigh = priceImpactSeverity > 3 && !isExpertMode
+  const showPriceImpactWarning = largerPriceImpact && priceImpactSeverity > 3
+
+  // Handle time based logging events and event properties.
+  useEffect(() => {
+    const now = new Date()
+    // If a trade exists, and we need to log the receipt of this new swap quote:
+    if (newSwapQuoteNeedsLogging && !!trade) {
+      // Set the current datetime as the time of receipt of latest swap quote.
+      setSwapQuoteReceivedDate(now)
+      // Log swap quote.
+      sendAnalyticsEvent(
+        EventName.SWAP_QUOTE_RECEIVED,
+        formatSwapQuoteReceivedEventProperties(trade, fetchingSwapQuoteStartTime)
+      )
+      // Latest swap quote has just been logged, so we don't need to log the current trade anymore
+      // unless user inputs change again and a new trade is in the process of being generated.
+      setNewSwapQuoteNeedsLogging(false)
+      // New quote is not being fetched, so set start time of quote fetch to undefined.
+      setFetchingSwapQuoteStartTime(undefined)
+    }
+    // If another swap quote is being loaded based on changed user inputs:
+    if (routeIsLoading) {
+      setNewSwapQuoteNeedsLogging(true)
+      if (!fetchingSwapQuoteStartTime) setFetchingSwapQuoteStartTime(now)
+    }
+  }, [
+    newSwapQuoteNeedsLogging,
+    routeIsSyncing,
+    routeIsLoading,
+    fetchingSwapQuoteStartTime,
+    trade,
+    setSwapQuoteReceivedDate,
+  ])
+
+  const approveTokenButtonDisabled =
+    approvalState !== ApprovalState.NOT_APPROVED || approvalSubmitted || signatureState === UseERC20PermitState.SIGNED
 
   return (
     <Trace page={PageName.SWAP_PAGE} shouldLogImpression>
@@ -436,6 +511,7 @@ export default function Swap() {
               onConfirm={handleSwap}
               swapErrorMessage={swapErrorMessage}
               onDismiss={handleConfirmDismiss}
+              swapQuoteReceivedDate={swapQuoteReceivedDate}
             />
 
             <AutoColumn gap={'sm'}>
@@ -492,7 +568,7 @@ export default function Swap() {
                     showMaxButton={false}
                     hideBalance={false}
                     fiatValue={fiatValueOutput ?? undefined}
-                    priceImpact={priceImpact}
+                    priceImpact={stablecoinPriceImpact}
                     currency={currencies[Field.OUTPUT] ?? null}
                     onCurrencySelect={handleOutputSelect}
                     otherCurrency={currencies[Field.INPUT]}
@@ -526,12 +602,13 @@ export default function Swap() {
                   allowedSlippage={allowedSlippage}
                 />
               )}
+              {showPriceImpactWarning && <PriceImpactWarning priceImpact={largerPriceImpact} />}
               <div>
                 {swapIsUnsupported ? (
                   <ButtonPrimary disabled={true}>
-                    <ThemedText.Main mb="4px">
+                    <ThemedText.DeprecatedMain mb="4px">
                       <Trans>Unsupported Asset</Trans>
-                    </ThemedText.Main>
+                    </ThemedText.DeprecatedMain>
                   </ButtonPrimary>
                 ) : !account ? (
                   <TraceEvent
@@ -556,20 +633,16 @@ export default function Swap() {
                   </ButtonPrimary>
                 ) : routeNotFound && userHasSpecifiedInputOutput && !routeIsLoading && !routeIsSyncing ? (
                   <GreyCard style={{ textAlign: 'center' }}>
-                    <ThemedText.Main mb="4px">
+                    <ThemedText.DeprecatedMain mb="4px">
                       <Trans>Insufficient liquidity for this trade.</Trans>
-                    </ThemedText.Main>
+                    </ThemedText.DeprecatedMain>
                   </GreyCard>
                 ) : showApproveFlow ? (
                   <AutoRow style={{ flexWrap: 'nowrap', width: '100%' }}>
                     <AutoColumn style={{ width: '100%' }} gap="12px">
                       <ButtonConfirmed
                         onClick={handleApprove}
-                        disabled={
-                          approvalState !== ApprovalState.NOT_APPROVED ||
-                          approvalSubmitted ||
-                          signatureState === UseERC20PermitState.SIGNED
-                        }
+                        disabled={approveTokenButtonDisabled}
                         width="100%"
                         altDisabledStyle={approvalState === ApprovalState.PENDING} // show solid button while waiting
                         confirmed={

@@ -10,7 +10,7 @@ import { sendEvent } from 'components/analytics'
 import { useV2LiquidityTokenPermit } from 'hooks/useV2LiquidityTokenPermit'
 import { useCallback, useContext, useMemo, useState } from 'react'
 import { ArrowDown, Plus } from 'react-feather'
-import { useHistory, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components/macro'
 
@@ -48,7 +48,7 @@ import { ClickableText, MaxButton, Wrapper } from '../Pool/styleds'
 const DEFAULT_REMOVE_LIQUIDITY_SLIPPAGE_TOLERANCE = new Percent(5, 100)
 
 export default function RemoveLiquidity() {
-  const history = useHistory()
+  const navigate = useNavigate()
   const { currencyIdA, currencyIdB } = useParams<{ currencyIdA: string; currencyIdB: string }>()
   const [currencyA, currencyB] = [useCurrency(currencyIdA) ?? undefined, useCurrency(currencyIdB) ?? undefined]
   const { account, chainId, provider } = useWeb3React()
@@ -317,12 +317,17 @@ export default function RemoveLiquidity() {
           </RowFixed>
         </RowBetween>
 
-        <ThemedText.Italic fontSize={12} color={theme.deprecated_text2} textAlign="left" padding={'12px 0 0 0'}>
+        <ThemedText.DeprecatedItalic
+          fontSize={12}
+          color={theme.deprecated_text2}
+          textAlign="left"
+          padding={'12px 0 0 0'}
+        >
           <Trans>
             Output is estimated. If the price changes by more than {allowedSlippage.toSignificant(4)}% your transaction
             will revert.
           </Trans>
-        </ThemedText.Italic>
+        </ThemedText.DeprecatedItalic>
       </AutoColumn>
     )
   }
@@ -396,22 +401,22 @@ export default function RemoveLiquidity() {
   const handleSelectCurrencyA = useCallback(
     (currency: Currency) => {
       if (currencyIdB && currencyId(currency) === currencyIdB) {
-        history.push(`/remove/v2/${currencyId(currency)}/${currencyIdA}`)
+        navigate(`/remove/v2/${currencyId(currency)}/${currencyIdA}`)
       } else {
-        history.push(`/remove/v2/${currencyId(currency)}/${currencyIdB}`)
+        navigate(`/remove/v2/${currencyId(currency)}/${currencyIdB}`)
       }
     },
-    [currencyIdA, currencyIdB, history]
+    [currencyIdA, currencyIdB, navigate]
   )
   const handleSelectCurrencyB = useCallback(
     (currency: Currency) => {
       if (currencyIdA && currencyId(currency) === currencyIdA) {
-        history.push(`/remove/v2/${currencyIdB}/${currencyId(currency)}`)
+        navigate(`/remove/v2/${currencyIdB}/${currencyId(currency)}`)
       } else {
-        history.push(`/remove/v2/${currencyIdA}/${currencyId(currency)}`)
+        navigate(`/remove/v2/${currencyIdA}/${currencyId(currency)}`)
       }
     },
-    [currencyIdA, currencyIdB, history]
+    [currencyIdA, currencyIdB, navigate]
   )
 
   const handleDismissConfirmation = useCallback(() => {
@@ -451,12 +456,12 @@ export default function RemoveLiquidity() {
           <AutoColumn gap="md">
             <BlueCard>
               <AutoColumn gap="10px">
-                <ThemedText.Link fontWeight={400} color={'deprecated_primaryText1'}>
+                <ThemedText.DeprecatedLink fontWeight={400} color={'deprecated_primaryText1'}>
                   <Trans>
                     <b>Tip:</b> Removing pool tokens converts your position back into underlying tokens at the current
                     rate, proportional to your share of the pool. Accrued fees are included in the amounts you receive.
                   </Trans>
-                </ThemedText.Link>
+                </ThemedText.DeprecatedLink>
               </AutoColumn>
             </BlueCard>
             <LightCard>

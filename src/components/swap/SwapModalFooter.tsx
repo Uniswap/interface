@@ -1,12 +1,13 @@
 import { Trans } from '@lingui/macro'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
-import { ElementName, EventName } from 'components/AmplitudeAnalytics/constants'
-import { Event } from 'components/AmplitudeAnalytics/constants'
+import { ElementName, Event, EventName } from 'components/AmplitudeAnalytics/constants'
 import { TraceEvent } from 'components/AmplitudeAnalytics/TraceEvent'
 import {
   formatPercentInBasisPointsNumber,
-  getDurationTillTimestampSinceEpoch,
-  getNumberFormattedToDecimalPlace,
+  formatToDecimal,
+  getDurationFromDateMilliseconds,
+  getDurationUntilTimestampSeconds,
+  getTokenAddress,
 } from 'components/AmplitudeAnalytics/utils'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
@@ -14,11 +15,10 @@ import { ReactNode } from 'react'
 import { Text } from 'rebass'
 import { InterfaceTrade } from 'state/routing/types'
 import { useClientSideRouter, useUserSlippageTolerance } from 'state/user/hooks'
-import { computeRealizedLPFeePercent } from 'utils/prices'
+import { computeRealizedPriceImpact } from 'utils/prices'
 
 import { ButtonError } from '../Button'
 import { AutoRow } from '../Row'
-import { getPriceImpactPercent } from './AdvancedSwapDetails'
 import { SwapCallbackError } from './styleds'
 
 interface AnalyticsEventProps {
@@ -30,7 +30,7 @@ interface AnalyticsEventProps {
   isAutoRouterApi: boolean
   tokenInAmountUsd: string | undefined
   tokenOutAmountUsd: string | undefined
-  lpFeePercent: Percent
+  swapQuoteReceivedDate: Date | undefined
 }
 
 const formatAnalyticsEventProperties = ({
@@ -42,22 +42,20 @@ const formatAnalyticsEventProperties = ({
   isAutoRouterApi,
   tokenInAmountUsd,
   tokenOutAmountUsd,
-  lpFeePercent,
+  swapQuoteReceivedDate,
 }: AnalyticsEventProps) => ({
-  estimated_network_fee_usd: trade.gasUseEstimateUSD
-    ? getNumberFormattedToDecimalPlace(trade.gasUseEstimateUSD, 2)
-    : undefined,
+  estimated_network_fee_usd: trade.gasUseEstimateUSD ? formatToDecimal(trade.gasUseEstimateUSD, 2) : undefined,
   transaction_hash: txHash,
-  transaction_deadline_seconds: getDurationTillTimestampSinceEpoch(transactionDeadlineSecondsSinceEpoch),
+  transaction_deadline_seconds: getDurationUntilTimestampSeconds(transactionDeadlineSecondsSinceEpoch),
   token_in_amount_usd: tokenInAmountUsd ? parseFloat(tokenInAmountUsd) : undefined,
   token_out_amount_usd: tokenOutAmountUsd ? parseFloat(tokenOutAmountUsd) : undefined,
-  token_in_address: trade.inputAmount.currency.isToken ? trade.inputAmount.currency.address : undefined,
-  token_out_address: trade.outputAmount.currency.isToken ? trade.outputAmount.currency.address : undefined,
+  token_in_address: getTokenAddress(trade.inputAmount.currency),
+  token_out_address: getTokenAddress(trade.outputAmount.currency),
   token_in_symbol: trade.inputAmount.currency.symbol,
   token_out_symbol: trade.outputAmount.currency.symbol,
-  token_in_amount: getNumberFormattedToDecimalPlace(trade.inputAmount, trade.inputAmount.currency.decimals),
-  token_out_amount: getNumberFormattedToDecimalPlace(trade.outputAmount, trade.outputAmount.currency.decimals),
-  price_impact_basis_points: formatPercentInBasisPointsNumber(getPriceImpactPercent(lpFeePercent, trade)),
+  token_in_amount: formatToDecimal(trade.inputAmount, trade.inputAmount.currency.decimals),
+  token_out_amount: formatToDecimal(trade.outputAmount, trade.outputAmount.currency.decimals),
+  price_impact_basis_points: formatPercentInBasisPointsNumber(computeRealizedPriceImpact(trade)),
   allowed_slippage_basis_points: formatPercentInBasisPointsNumber(allowedSlippage),
   is_auto_router_api: isAutoRouterApi,
   is_auto_slippage: isAutoSlippage,
@@ -65,7 +63,9 @@ const formatAnalyticsEventProperties = ({
     trade.inputAmount.currency.chainId === trade.outputAmount.currency.chainId
       ? trade.inputAmount.currency.chainId
       : undefined,
-  // TODO(lynnshaoyu): implement duration_from_first_quote_to_swap_submission_seconds
+  duration_from_first_quote_to_swap_submission_milliseconds: swapQuoteReceivedDate
+    ? getDurationFromDateMilliseconds(swapQuoteReceivedDate)
+    : undefined,
 })
 
 export default function SwapModalFooter({
@@ -75,6 +75,7 @@ export default function SwapModalFooter({
   onConfirm,
   swapErrorMessage,
   disabledConfirm,
+  swapQuoteReceivedDate,
 }: {
   trade: InterfaceTrade<Currency, Currency, TradeType>
   txHash: string | undefined
@@ -82,13 +83,13 @@ export default function SwapModalFooter({
   onConfirm: () => void
   swapErrorMessage: ReactNode | undefined
   disabledConfirm: boolean
+  swapQuoteReceivedDate: Date | undefined
 }) {
   const transactionDeadlineSecondsSinceEpoch = useTransactionDeadline()?.toNumber() // in seconds since epoch
   const isAutoSlippage = useUserSlippageTolerance() === 'auto'
   const [clientSideRouter] = useClientSideRouter()
   const tokenInAmountUsd = useStablecoinValue(trade.inputAmount)?.toFixed(2)
   const tokenOutAmountUsd = useStablecoinValue(trade.outputAmount)?.toFixed(2)
-  const lpFeePercent = computeRealizedLPFeePercent(trade)
 
   return (
     <>
@@ -106,7 +107,7 @@ export default function SwapModalFooter({
             isAutoRouterApi: !clientSideRouter,
             tokenInAmountUsd,
             tokenOutAmountUsd,
-            lpFeePercent,
+            swapQuoteReceivedDate,
           })}
         >
           <ButtonError

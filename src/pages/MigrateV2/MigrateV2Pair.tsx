@@ -24,8 +24,7 @@ import JSBI from 'jsbi'
 import { NEVER_RELOAD, useSingleCallResult } from 'lib/hooks/multicall'
 import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
 import { AlertCircle, AlertTriangle, ArrowDown } from 'react-feather'
-import { Redirect } from 'react-router'
-import { useParams } from 'react-router-dom'
+import { Navigate, useParams } from 'react-router-dom'
 import { Text } from 'rebass'
 import { useAppDispatch } from 'state/hooks'
 import { Bound, resetMintState } from 'state/mint/v3/actions'
@@ -61,7 +60,7 @@ const DEFAULT_MIGRATE_SLIPPAGE_TOLERANCE = new Percent(75, 10_000)
 function EmptyState({ message }: { message: ReactNode }) {
   return (
     <AutoColumn style={{ minHeight: 200, justifyContent: 'center', alignItems: 'center' }}>
-      <ThemedText.Body>{message}</ThemedText.Body>
+      <ThemedText.DeprecatedBody>{message}</ThemedText.DeprecatedBody>
     </AutoColumn>
   )
 }
@@ -383,31 +382,31 @@ function V2PairMigration({
 
   return (
     <AutoColumn gap="20px">
-      <ThemedText.Body my={9} style={{ fontWeight: 400 }}>
+      <ThemedText.DeprecatedBody my={9} style={{ fontWeight: 400 }}>
         <Trans>
           This tool will safely migrate your {isNotUniswap ? 'SushiSwap' : 'V2'} liquidity to V3. The process is
           completely trustless thanks to the{' '}
         </Trans>
         {chainId && migrator && (
           <ExternalLink href={getExplorerLink(chainId, migrator.address, ExplorerDataType.ADDRESS)}>
-            <ThemedText.Blue display="inline">
+            <ThemedText.DeprecatedBlue display="inline">
               <Trans>Uniswap migration contract↗</Trans>
-            </ThemedText.Blue>
+            </ThemedText.DeprecatedBlue>
           </ExternalLink>
         )}
         .
-      </ThemedText.Body>
+      </ThemedText.DeprecatedBody>
 
       <LightCard>
         <AutoColumn gap="lg">
           <RowBetween>
             <RowFixed style={{ marginLeft: '8px' }}>
               <DoubleCurrencyLogo currency0={currency0} currency1={currency1} margin={false} size={20} />
-              <ThemedText.MediumHeader style={{ marginLeft: '8px' }}>
+              <ThemedText.DeprecatedMediumHeader style={{ marginLeft: '8px' }}>
                 <Trans>
                   {currency0.symbol}/{currency1.symbol} LP Tokens
                 </Trans>
-              </ThemedText.MediumHeader>
+              </ThemedText.DeprecatedMediumHeader>
             </RowFixed>
             <Badge variant={BadgeVariant.WARNING}>{isNotUniswap ? 'Sushi' : 'V2'}</Badge>
           </RowBetween>
@@ -424,11 +423,11 @@ function V2PairMigration({
           <RowBetween>
             <RowFixed style={{ marginLeft: '8px' }}>
               <DoubleCurrencyLogo currency0={currency0} currency1={currency1} margin={false} size={20} />
-              <ThemedText.MediumHeader style={{ marginLeft: '8px' }}>
+              <ThemedText.DeprecatedMediumHeader style={{ marginLeft: '8px' }}>
                 <Trans>
                   {currency0.symbol}/{currency1.symbol} LP NFT
                 </Trans>
-              </ThemedText.MediumHeader>
+              </ThemedText.DeprecatedMediumHeader>
             </RowFixed>
             <Badge variant={BadgeVariant.PRIMARY}>V3</Badge>
           </RowBetween>
@@ -437,7 +436,7 @@ function V2PairMigration({
           {noLiquidity && (
             <BlueCard style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
               <AlertCircle color={theme.deprecated_text1} style={{ marginBottom: '12px', opacity: 0.8 }} />
-              <ThemedText.Body
+              <ThemedText.DeprecatedBody
                 fontSize={14}
                 style={{ marginBottom: 8, fontWeight: 500, opacity: 0.8 }}
                 textAlign="center"
@@ -446,28 +445,28 @@ function V2PairMigration({
                   You are the first liquidity provider for this Uniswap V3 pool. Your liquidity will migrate at the
                   current {isNotUniswap ? 'SushiSwap' : 'V2'} price.
                 </Trans>
-              </ThemedText.Body>
+              </ThemedText.DeprecatedBody>
 
-              <ThemedText.Body
+              <ThemedText.DeprecatedBody
                 fontWeight={500}
                 textAlign="center"
                 fontSize={14}
                 style={{ marginTop: '8px', opacity: 0.8 }}
               >
                 <Trans>Your transaction cost will be much higher as it includes the gas to create the pool.</Trans>
-              </ThemedText.Body>
+              </ThemedText.DeprecatedBody>
 
               {v2SpotPrice && (
                 <AutoColumn gap="8px" style={{ marginTop: '12px' }}>
                   <RowBetween>
-                    <ThemedText.Body fontWeight={500} fontSize={14}>
+                    <ThemedText.DeprecatedBody fontWeight={500} fontSize={14}>
                       <Trans>
                         {isNotUniswap ? 'SushiSwap' : 'V2'} {invertPrice ? currency1.symbol : currency0.symbol} Price:
                       </Trans>{' '}
                       {invertPrice
                         ? `${v2SpotPrice?.invert()?.toSignificant(6)} ${currency0.symbol}`
                         : `${v2SpotPrice?.toSignificant(6)} ${currency1.symbol}`}
-                    </ThemedText.Body>
+                    </ThemedText.DeprecatedBody>
                   </RowBetween>
                 </AutoColumn>
               )}
@@ -478,63 +477,63 @@ function V2PairMigration({
             <YellowCard>
               <AutoColumn gap="8px">
                 <RowBetween>
-                  <ThemedText.Body fontSize={14}>
+                  <ThemedText.DeprecatedBody fontSize={14}>
                     <Trans>
                       {isNotUniswap ? 'SushiSwap' : 'V2'} {invertPrice ? currency1.symbol : currency0.symbol} Price:
                     </Trans>
-                  </ThemedText.Body>
-                  <ThemedText.Black fontSize={14}>
+                  </ThemedText.DeprecatedBody>
+                  <ThemedText.DeprecatedBlack fontSize={14}>
                     {invertPrice
                       ? `${v2SpotPrice?.invert()?.toSignificant(6)} ${currency0.symbol}`
                       : `${v2SpotPrice?.toSignificant(6)} ${currency1.symbol}`}
-                  </ThemedText.Black>
+                  </ThemedText.DeprecatedBlack>
                 </RowBetween>
 
                 <RowBetween>
-                  <ThemedText.Body fontSize={14}>
+                  <ThemedText.DeprecatedBody fontSize={14}>
                     <Trans>V3 {invertPrice ? currency1.symbol : currency0.symbol} Price:</Trans>
-                  </ThemedText.Body>
-                  <ThemedText.Black fontSize={14}>
+                  </ThemedText.DeprecatedBody>
+                  <ThemedText.DeprecatedBlack fontSize={14}>
                     {invertPrice
                       ? `${v3SpotPrice?.invert()?.toSignificant(6)} ${currency0.symbol}`
                       : `${v3SpotPrice?.toSignificant(6)} ${currency1.symbol}`}
-                  </ThemedText.Black>
+                  </ThemedText.DeprecatedBlack>
                 </RowBetween>
 
                 <RowBetween>
-                  <ThemedText.Body fontSize={14} color="inherit">
+                  <ThemedText.DeprecatedBody fontSize={14} color="inherit">
                     <Trans>Price Difference:</Trans>
-                  </ThemedText.Body>
-                  <ThemedText.Black fontSize={14} color="inherit">
+                  </ThemedText.DeprecatedBody>
+                  <ThemedText.DeprecatedBlack fontSize={14} color="inherit">
                     <Trans>{priceDifferenceFraction?.toSignificant(4)}%</Trans>
-                  </ThemedText.Black>
+                  </ThemedText.DeprecatedBlack>
                 </RowBetween>
               </AutoColumn>
-              <ThemedText.Body fontSize={14} style={{ marginTop: 8, fontWeight: 400 }}>
+              <ThemedText.DeprecatedBody fontSize={14} style={{ marginTop: 8, fontWeight: 400 }}>
                 <Trans>
                   You should only deposit liquidity into Uniswap V3 at a price you believe is correct. <br />
                   If the price seems incorrect, you can either make a swap to move the price or wait for someone else to
                   do so.
                 </Trans>
-              </ThemedText.Body>
+              </ThemedText.DeprecatedBody>
             </YellowCard>
           ) : !noLiquidity && v3SpotPrice ? (
             <RowBetween>
-              <ThemedText.Body fontSize={14}>
+              <ThemedText.DeprecatedBody fontSize={14}>
                 <Trans>V3 {invertPrice ? currency1.symbol : currency0.symbol} Price:</Trans>
-              </ThemedText.Body>
-              <ThemedText.Black fontSize={14}>
+              </ThemedText.DeprecatedBody>
+              <ThemedText.DeprecatedBlack fontSize={14}>
                 {invertPrice
                   ? `${v3SpotPrice?.invert()?.toSignificant(6)} ${currency0.symbol}`
                   : `${v3SpotPrice?.toSignificant(6)} ${currency1.symbol}`}
-              </ThemedText.Black>
+              </ThemedText.DeprecatedBlack>
             </RowBetween>
           ) : null}
 
           <RowBetween>
-            <ThemedText.Label>
+            <ThemedText.DeprecatedLabel>
               <Trans>Set Price Range</Trans>
-            </ThemedText.Label>
+            </ThemedText.DeprecatedLabel>
             <RateToggle
               currencyA={invertPrice ? currency1 : currency0}
               currencyB={invertPrice ? currency0 : currency1}
@@ -565,11 +564,11 @@ function V2PairMigration({
             <YellowCard padding="8px 12px" $borderRadius="12px">
               <RowBetween>
                 <AlertTriangle stroke={theme.deprecated_yellow3} size="16px" />
-                <ThemedText.Yellow ml="12px" fontSize="12px">
+                <ThemedText.DeprecatedYellow ml="12px" fontSize="12px">
                   <Trans>
                     Your position will not earn fees or be used in trades until the market price moves into your range.
                   </Trans>
-                </ThemedText.Yellow>
+                </ThemedText.DeprecatedYellow>
               </RowBetween>
             </YellowCard>
           ) : null}
@@ -578,9 +577,9 @@ function V2PairMigration({
             <YellowCard padding="8px 12px" $borderRadius="12px">
               <RowBetween>
                 <AlertTriangle stroke={theme.deprecated_yellow3} size="16px" />
-                <ThemedText.Yellow ml="12px" fontSize="12px">
+                <ThemedText.DeprecatedYellow ml="12px" fontSize="12px">
                   <Trans>Invalid range selected. The min price must be lower than the max price.</Trans>
-                </ThemedText.Yellow>
+                </ThemedText.DeprecatedYellow>
               </RowBetween>
             </YellowCard>
           ) : null}
@@ -590,7 +589,7 @@ function V2PairMigration({
               <AutoColumn gap="md">
                 <LiquidityInfo token0Amount={position.amount0} token1Amount={position.amount1} />
                 {chainId && refund0 && refund1 ? (
-                  <ThemedText.Black fontSize={12}>
+                  <ThemedText.DeprecatedBlack fontSize={12}>
                     <Trans>
                       At least {formatCurrencyAmount(refund0, 4)}{' '}
                       {chainId && WRAPPED_NATIVE_CURRENCY[chainId]?.equals(token0) ? 'ETH' : token0.symbol} and{' '}
@@ -598,7 +597,7 @@ function V2PairMigration({
                       {chainId && WRAPPED_NATIVE_CURRENCY[chainId]?.equals(token1) ? 'ETH' : token1.symbol} will be
                       refunded to your wallet due to selected price range.
                     </Trans>
-                  </ThemedText.Black>
+                  </ThemedText.DeprecatedBlack>
                 ) : null}
               </AutoColumn>
             </DarkGreyCard>
@@ -719,7 +718,7 @@ export default function MigrateV2Pair() {
       !token0Address)
   ) {
     console.error('Invalid pair address')
-    return <Redirect to="/migrate/v2" />
+    return <Navigate to="/migrate/v2" replace />
   }
 
   return (
@@ -727,16 +726,16 @@ export default function MigrateV2Pair() {
       <AutoColumn gap="16px">
         <AutoRow style={{ alignItems: 'center', justifyContent: 'space-between' }} gap="8px">
           <BackArrow to="/migrate/v2" />
-          <ThemedText.MediumHeader>
+          <ThemedText.DeprecatedMediumHeader>
             <Trans>Migrate V2 Liquidity</Trans>
-          </ThemedText.MediumHeader>
+          </ThemedText.DeprecatedMediumHeader>
           <SettingsTab placeholderSlippage={DEFAULT_MIGRATE_SLIPPAGE_TOLERANCE} />
         </AutoRow>
 
         {!account ? (
-          <ThemedText.LargeHeader>
+          <ThemedText.DeprecatedLargeHeader>
             <Trans>You must connect an account.</Trans>
-          </ThemedText.LargeHeader>
+          </ThemedText.DeprecatedLargeHeader>
         ) : pairBalance && totalSupply && reserve0 && reserve1 && token0 && token1 ? (
           <V2PairMigration
             pair={pair}

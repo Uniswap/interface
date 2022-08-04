@@ -22,7 +22,7 @@ const Button = styled(ButtonPrimary)`
 const Content = styled.div`
   padding: 1em;
 `
-const Copy = styled(ThemedText.Body)`
+const Copy = styled(ThemedText.DeprecatedBody)`
   text-align: center;
   margin: 0 2em 1em !important;
   font-weight: 400;
@@ -51,9 +51,9 @@ const BlockedToken = ({ onBack, onDismiss, blockedTokens }: BlockedTokenProps) =
   <Wrapper>
     <Header>
       {onBack ? <ArrowLeft style={{ cursor: 'pointer' }} onClick={onBack} /> : <div />}
-      <ThemedText.MediumHeader>
+      <ThemedText.DeprecatedMediumHeader>
         <Trans>Token not supported</Trans>
-      </ThemedText.MediumHeader>
+      </ThemedText.DeprecatedMediumHeader>
       {onDismiss ? <CloseIcon onClick={onDismiss} /> : <div />}
     </Header>
     <Icon />

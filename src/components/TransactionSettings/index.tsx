@@ -165,9 +165,9 @@ export default function TransactionSettings({ placeholderSlippage }: Transaction
     <AutoColumn gap="md">
       <AutoColumn gap="sm">
         <RowFixed>
-          <ThemedText.Black fontWeight={400} fontSize={14} color={theme.deprecated_text2}>
+          <ThemedText.DeprecatedBlack fontWeight={400} fontSize={14} color={theme.deprecated_text2}>
             <Trans>Slippage tolerance</Trans>
-          </ThemedText.Black>
+          </ThemedText.DeprecatedBlack>
           <QuestionHelper
             text={
               <Trans>Your transaction will revert if the price changes unfavorably by more than this percentage.</Trans>
@@ -234,9 +234,9 @@ export default function TransactionSettings({ placeholderSlippage }: Transaction
       {showCustomDeadlineRow && (
         <AutoColumn gap="sm">
           <RowFixed>
-            <ThemedText.Black fontSize={14} fontWeight={400} color={theme.deprecated_text2}>
+            <ThemedText.DeprecatedBlack fontSize={14} fontWeight={400} color={theme.deprecated_text2}>
               <Trans>Transaction deadline</Trans>
-            </ThemedText.Black>
+            </ThemedText.DeprecatedBlack>
             <QuestionHelper
               text={<Trans>Your transaction will revert if it is pending for more than this period of time.</Trans>}
             />
@@ -260,9 +260,9 @@ export default function TransactionSettings({ placeholderSlippage }: Transaction
                 color={deadlineError ? 'red' : ''}
               />
             </OptionCustom>
-            <ThemedText.Body style={{ paddingLeft: '8px' }} fontSize={14}>
+            <ThemedText.DeprecatedBody style={{ paddingLeft: '8px' }} fontSize={14}>
               <Trans>minutes</Trans>
-            </ThemedText.Body>
+            </ThemedText.DeprecatedBody>
           </RowFixed>
         </AutoColumn>
       )}

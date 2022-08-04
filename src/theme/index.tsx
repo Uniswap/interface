@@ -1,3 +1,4 @@
+import { Phase0Variant, usePhase0Flag } from 'featureFlag'
 import React, { useMemo } from 'react'
 import { Text, TextProps as TextPropsOriginal } from 'rebass'
 import styled, {
@@ -9,7 +10,8 @@ import styled, {
 
 import { useIsDarkMode } from '../state/user/hooks'
 import { colors as ColorsPalette, colorsDark, colorsLight } from './colors'
-import { Colors } from './styled'
+import { Colors, ThemeColors } from './styled'
+import { opacify } from './utils'
 
 export * from './components'
 
@@ -49,10 +51,66 @@ const mediaWidthTemplates: { [width in keyof typeof MEDIA_WIDTHS]: typeof css } 
   {}
 ) as any
 
-const deprecated_white = '#FFFFFF'
-const deprecated_black = '#000000'
+const deprecated_white = ColorsPalette.white
+const deprecated_black = ColorsPalette.black
 
-function colors(darkMode: boolean): Colors {
+function uniswapThemeColors(darkMode: boolean): ThemeColors {
+  return {
+    userThemeColor: darkMode ? colorsDark.userThemeColor : colorsLight.userThemeColor,
+
+    backgroundBackdrop: darkMode ? colorsDark.backgroundBackdrop : colorsLight.backgroundBackdrop,
+    backgroundSurface: darkMode ? colorsDark.backgroundSurface : colorsLight.backgroundSurface,
+    backgroundContainer: darkMode ? colorsDark.backgroundContainer : colorsLight.backgroundContainer,
+    backgroundAction: darkMode ? colorsDark.backgroundAction : colorsLight.backgroundAction,
+    backgroundOutline: darkMode ? colorsDark.backgroundOutline : colorsLight.backgroundOutline,
+    backgroundScrim: darkMode ? colorsDark.backgroundScrim : colorsLight.backgroundScrim,
+
+    textPrimary: darkMode ? colorsDark.textPrimary : colorsLight.textPrimary,
+    textSecondary: darkMode ? colorsDark.textSecondary : colorsLight.textSecondary,
+    textTertiary: darkMode ? colorsDark.textTertiary : colorsLight.textTertiary,
+
+    accentAction: darkMode ? colorsDark.accentAction : colorsLight.accentAction,
+    accentActive: darkMode ? colorsDark.accentActive : colorsLight.accentActive,
+    accentSuccess: darkMode ? colorsDark.accentSuccess : colorsLight.accentSuccess,
+    accentWarning: darkMode ? colorsDark.accentWarning : colorsLight.accentWarning,
+    accentFailure: darkMode ? colorsDark.accentFailure : colorsLight.accentFailure,
+
+    accentActionSoft: darkMode ? colorsDark.accentActionSoft : colorsLight.accentActionSoft,
+    accentActiveSoft: darkMode ? colorsDark.accentActiveSoft : colorsLight.accentActiveSoft,
+    accentSuccessSoft: darkMode ? colorsDark.accentSuccessSoft : colorsLight.accentSuccessSoft,
+    accentWarningSoft: darkMode ? colorsDark.accentWarningSoft : colorsLight.accentWarningSoft,
+    accentFailureSoft: darkMode ? colorsDark.accentFailureSoft : colorsLight.accentFailureSoft,
+
+    accentTextDarkPrimary: darkMode ? colorsDark.accentTextDarkPrimary : colorsLight.accentTextDarkPrimary,
+    accentTextDarkSecondary: darkMode ? colorsDark.accentTextDarkSecondary : colorsLight.accentTextDarkSecondary,
+    accentTextDarkTertiary: darkMode ? colorsDark.accentTextDarkTertiary : colorsLight.accentTextDarkTertiary,
+
+    accentTextLightPrimary: darkMode ? colorsDark.accentTextLightPrimary : colorsLight.accentTextLightPrimary,
+    accentTextLightSecondary: darkMode ? colorsDark.accentTextLightSecondary : colorsLight.accentTextLightSecondary,
+    accentTextLightTertiary: darkMode ? colorsDark.accentTextLightTertiary : colorsLight.accentTextLightTertiary,
+
+    none: colorsDark.none,
+    white: ColorsPalette.white,
+    black: ColorsPalette.black,
+
+    // chain colors are same for light/dark mode
+    chain_1: colorsDark.chain_1,
+    chain_3: colorsDark.chain_3,
+    chain_4: colorsDark.chain_4,
+    chain_5: colorsDark.chain_5,
+    chain_10: colorsDark.chain_10,
+    chain_137: colorsDark.chain_137,
+    chain_42: colorsDark.chain_42,
+    chain_69: colorsDark.chain_69,
+    chain_42161: colorsDark.chain_42161,
+    chain_421611: colorsDark.chain_421611,
+    chain_80001: colorsDark.chain_80001,
+
+    blue200: ColorsPalette.blue200,
+  }
+}
+
+function oldColors(darkMode: boolean): Colors {
   return {
     darkMode,
     // base
@@ -110,65 +168,77 @@ function colors(darkMode: boolean): Colors {
 
     // dont wanna forget these blue yet
     deprecated_blue4: darkMode ? '#153d6f70' : '#C4D9F8',
-    // blue5: darkMode ? '#153d6f70' : '#EBF4FF',
-
-    userThemeColor: darkMode ? colorsDark.userThemeColor : colorsLight.userThemeColor,
-
-    backgroundBackdrop: darkMode ? colorsDark.backgroundBackdrop : colorsLight.backgroundBackdrop,
-    backgroundSurface: darkMode ? colorsDark.backgroundSurface : colorsLight.backgroundSurface,
-    backgroundContainer: darkMode ? colorsDark.backgroundContainer : colorsLight.backgroundContainer,
-    backgroundAction: darkMode ? colorsDark.backgroundAction : colorsLight.backgroundAction,
-    backgroundOutline: darkMode ? colorsDark.backgroundOutline : colorsLight.backgroundOutline,
-    backgroundScrim: darkMode ? colorsDark.backgroundScrim : colorsLight.backgroundScrim,
-
-    textPrimary: darkMode ? colorsDark.textPrimary : colorsLight.textPrimary,
-    textSecondary: darkMode ? colorsDark.textSecondary : colorsLight.textSecondary,
-    textTertiary: darkMode ? colorsDark.textTertiary : colorsLight.textTertiary,
-
-    accentAction: darkMode ? colorsDark.accentAction : colorsLight.accentAction,
-    accentActive: darkMode ? colorsDark.accentActive : colorsLight.accentActive,
-    accentSuccess: darkMode ? colorsDark.accentSuccess : colorsLight.accentSuccess,
-    accentWarning: darkMode ? colorsDark.accentWarning : colorsLight.accentWarning,
-    accentFailure: darkMode ? colorsDark.accentFailure : colorsLight.accentFailure,
-
-    accentActionSoft: darkMode ? colorsDark.accentActionSoft : colorsLight.accentActionSoft,
-    accentActiveSoft: darkMode ? colorsDark.accentActiveSoft : colorsLight.accentActiveSoft,
-    accentSuccessSoft: darkMode ? colorsDark.accentSuccessSoft : colorsLight.accentSuccessSoft,
-    accentWarningSoft: darkMode ? colorsDark.accentWarningSoft : colorsLight.accentWarningSoft,
-    accentFailureSoft: darkMode ? colorsDark.accentFailureSoft : colorsLight.accentFailureSoft,
-
-    accentTextDarkPrimary: darkMode ? colorsDark.accentTextDarkPrimary : colorsLight.accentTextDarkPrimary,
-    accentTextDarkSecondary: darkMode ? colorsDark.accentTextDarkSecondary : colorsLight.accentTextDarkSecondary,
-    accentTextDarkTertiary: darkMode ? colorsDark.accentTextDarkTertiary : colorsLight.accentTextDarkTertiary,
-
-    accentTextLightPrimary: darkMode ? colorsDark.accentTextLightPrimary : colorsLight.accentTextLightPrimary,
-    accentTextLightSecondary: darkMode ? colorsDark.accentTextLightSecondary : colorsLight.accentTextLightSecondary,
-    accentTextLightTertiary: darkMode ? colorsDark.accentTextLightTertiary : colorsLight.accentTextLightTertiary,
-
-    none: colorsDark.none,
-    white: ColorsPalette.white,
-    black: ColorsPalette.black,
-
-    // chain colors are same for light/dark mode
-    chain_1: colorsDark.chain_1,
-    chain_3: colorsDark.chain_3,
-    chain_4: colorsDark.chain_4,
-    chain_5: colorsDark.chain_5,
-    chain_10: colorsDark.chain_10,
-    chain_137: colorsDark.chain_137,
-    chain_42: colorsDark.chain_42,
-    chain_69: colorsDark.chain_69,
-    chain_42161: colorsDark.chain_42161,
-    chain_421611: colorsDark.chain_421611,
-    chain_80001: colorsDark.chain_80001,
-
-    blue200: ColorsPalette.blue200,
   }
 }
 
-function getTheme(darkMode: boolean): DefaultTheme {
+function oldColorsUpdated(darkMode: boolean): Colors {
   return {
-    ...colors(darkMode),
+    darkMode,
+    // base
+    deprecated_white,
+    deprecated_black,
+
+    // text
+    deprecated_text1: darkMode ? colorsDark.textPrimary : colorsLight.textPrimary,
+    deprecated_text2: darkMode ? colorsDark.textSecondary : colorsLight.textSecondary,
+    deprecated_text3: darkMode ? colorsDark.textTertiary : colorsLight.textTertiary,
+    deprecated_text4: darkMode ? ColorsPalette.gray200 : ColorsPalette.gray300,
+    deprecated_text5: darkMode ? ColorsPalette.gray500 : ColorsPalette.gray50,
+
+    // backgrounds / greys
+    deprecated_bg0: darkMode ? ColorsPalette.gray900 : ColorsPalette.white,
+    deprecated_bg1: darkMode ? ColorsPalette.gray800 : ColorsPalette.gray50,
+    deprecated_bg2: darkMode ? ColorsPalette.gray700 : ColorsPalette.gray100,
+    deprecated_bg3: darkMode ? ColorsPalette.gray600 : ColorsPalette.gray200,
+    deprecated_bg4: darkMode ? ColorsPalette.gray500 : ColorsPalette.gray300,
+    deprecated_bg5: darkMode ? ColorsPalette.gray400 : ColorsPalette.gray400,
+    deprecated_bg6: darkMode ? ColorsPalette.gray300 : ColorsPalette.gray500,
+
+    //specialty colors
+    deprecated_modalBG: darkMode ? opacify(40, ColorsPalette.black) : opacify(30, ColorsPalette.black),
+    deprecated_advancedBG: darkMode ? opacify(10, ColorsPalette.black) : opacify(60, ColorsPalette.white),
+
+    //primary colors
+    deprecated_primary1: darkMode ? colorsDark.accentAction : colorsLight.accentAction,
+    deprecated_primary2: darkMode ? ColorsPalette.blue400 : ColorsPalette.pink300,
+    deprecated_primary3: darkMode ? ColorsPalette.blue300 : ColorsPalette.pink200,
+    deprecated_primary4: darkMode ? '#376bad70' : '#F6DDE8',
+    deprecated_primary5: darkMode ? '#153d6f70' : '#FDEAF1',
+
+    // color text
+    deprecated_primaryText1: darkMode ? colorsDark.accentAction : colorsLight.accentAction,
+
+    // secondary colors
+    deprecated_secondary1: darkMode ? colorsDark.accentAction : colorsLight.accentAction,
+    deprecated_secondary2: darkMode ? opacify(25, ColorsPalette.gray900) : '#F6DDE8',
+    deprecated_secondary3: darkMode ? opacify(25, ColorsPalette.gray900) : '#FDEAF1',
+
+    // other
+    deprecated_red1: darkMode ? colorsDark.accentFailure : colorsLight.accentFailure,
+    deprecated_red2: darkMode ? colorsDark.accentFailure : colorsLight.accentFailure,
+    deprecated_red3: darkMode ? colorsDark.accentFailure : colorsLight.accentFailure,
+    deprecated_green1: darkMode ? colorsDark.accentSuccess : colorsLight.accentSuccess,
+    deprecated_yellow1: ColorsPalette.yellow400,
+    deprecated_yellow2: ColorsPalette.yellow500,
+    deprecated_yellow3: ColorsPalette.yellow600,
+    deprecated_blue1: darkMode ? colorsDark.accentAction : colorsLight.accentAction,
+    deprecated_blue2: darkMode ? colorsDark.accentAction : colorsLight.accentAction,
+    deprecated_error: darkMode ? colorsDark.accentFailure : colorsLight.accentFailure,
+    deprecated_success: darkMode ? colorsDark.accentSuccess : colorsLight.accentSuccess,
+    deprecated_warning: darkMode ? colorsDark.accentWarning : colorsLight.accentWarning,
+
+    // dont wanna forget these blue yet
+    deprecated_blue4: darkMode ? '#153d6f70' : '#C4D9F8',
+    // blue5: darkMode ? '#153d6f70' : '#EBF4FF',
+    // deprecated_blue5: '#869EFF',
+  }
+}
+
+function getTheme(darkMode: boolean, isNewColorsEnabled: boolean): DefaultTheme {
+  const useColors = isNewColorsEnabled ? oldColorsUpdated(darkMode) : oldColors(darkMode)
+  return {
+    ...uniswapThemeColors(darkMode),
+    ...useColors,
 
     grids: {
       sm: 8,
@@ -195,10 +265,9 @@ function getTheme(darkMode: boolean): DefaultTheme {
 }
 
 export default function ThemeProvider({ children }: { children: React.ReactNode }) {
+  const phase0Flag = usePhase0Flag()
   const darkMode = useIsDarkMode()
-
-  const themeObject = useMemo(() => getTheme(darkMode), [darkMode])
-
+  const themeObject = useMemo(() => getTheme(darkMode, phase0Flag === Phase0Variant.Enabled), [darkMode, phase0Flag])
   return <StyledComponentsThemeProvider theme={themeObject}>{children}</StyledComponentsThemeProvider>
 }
 
@@ -210,52 +279,52 @@ const TextWrapper = styled(Text)<{ color: keyof Colors }>`
  * Preset styles of the Rebass Text component
  */
 export const ThemedText = {
-  Main(props: TextProps) {
+  DeprecatedMain(props: TextProps) {
     return <TextWrapper fontWeight={500} color={'deprecated_text2'} {...props} />
   },
-  Link(props: TextProps) {
+  DeprecatedLink(props: TextProps) {
     return <TextWrapper fontWeight={500} color={'deprecated_primary1'} {...props} />
   },
-  Label(props: TextProps) {
+  DeprecatedLabel(props: TextProps) {
     return <TextWrapper fontWeight={600} color={'deprecated_text1'} {...props} />
   },
-  Black(props: TextProps) {
+  DeprecatedBlack(props: TextProps) {
     return <TextWrapper fontWeight={500} color={'deprecated_text1'} {...props} />
   },
-  White(props: TextProps) {
+  DeprecatedWhite(props: TextProps) {
     return <TextWrapper fontWeight={500} color={'deprecated_white'} {...props} />
   },
-  Body(props: TextProps) {
+  DeprecatedBody(props: TextProps) {
     return <TextWrapper fontWeight={400} fontSize={16} color={'deprecated_text1'} {...props} />
   },
-  LargeHeader(props: TextProps) {
+  DeprecatedLargeHeader(props: TextProps) {
     return <TextWrapper fontWeight={600} fontSize={24} {...props} />
   },
-  MediumHeader(props: TextProps) {
+  DeprecatedMediumHeader(props: TextProps) {
     return <TextWrapper fontWeight={500} fontSize={20} {...props} />
   },
-  SubHeader(props: TextProps) {
+  DeprecatedSubHeader(props: TextProps) {
     return <TextWrapper fontWeight={400} fontSize={14} {...props} />
   },
-  Small(props: TextProps) {
+  DeprecatedSmall(props: TextProps) {
     return <TextWrapper fontWeight={500} fontSize={11} {...props} />
   },
-  Blue(props: TextProps) {
+  DeprecatedBlue(props: TextProps) {
     return <TextWrapper fontWeight={500} color={'deprecated_blue1'} {...props} />
   },
-  Yellow(props: TextProps) {
+  DeprecatedYellow(props: TextProps) {
     return <TextWrapper fontWeight={500} color={'deprecated_yellow3'} {...props} />
   },
-  DarkGray(props: TextProps) {
+  DeprecatedDarkGray(props: TextProps) {
     return <TextWrapper fontWeight={500} color={'deprecated_text3'} {...props} />
   },
-  Gray(props: TextProps) {
+  DeprecatedGray(props: TextProps) {
     return <TextWrapper fontWeight={500} color={'deprecated_bg3'} {...props} />
   },
-  Italic(props: TextProps) {
+  DeprecatedItalic(props: TextProps) {
     return <TextWrapper fontWeight={500} fontSize={12} fontStyle={'italic'} color={'deprecated_text2'} {...props} />
   },
-  Error({ error, ...props }: { error: boolean } & TextProps) {
+  DeprecatedError({ error, ...props }: { error: boolean } & TextProps) {
     return <TextWrapper fontWeight={500} color={error ? 'deprecated_red1' : 'deprecated_text2'} {...props} />
   },
 }

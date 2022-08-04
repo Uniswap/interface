@@ -108,10 +108,10 @@ export function CurrencySearch({
   }, [allTokens, debouncedQuery])
 
   const [balances, balancesIsLoading] = useAllTokenBalances()
-  const sortedTokens: Token[] = useMemo(() => {
-    void balancesIsLoading // creates a new array once balances load to update hooks
-    return [...filteredTokens].sort(tokenComparator.bind(null, balances))
-  }, [balances, filteredTokens, balancesIsLoading])
+  const sortedTokens: Token[] = useMemo(
+    () => (!balancesIsLoading ? [...filteredTokens].sort(tokenComparator.bind(null, balances)) : []),
+    [balances, filteredTokens, balancesIsLoading]
+  )
 
   const filteredSortedTokens = useSortTokensByQuery(debouncedQuery, sortedTokens)
 
@@ -126,7 +126,7 @@ export function CurrencySearch({
     const s = debouncedQuery.toLowerCase().trim()
     if (native.symbol?.toLowerCase()?.indexOf(s) !== -1) {
       // Always bump the native token to the top of the list.
-      return native ? [native, ...filteredSortedTokens.filter((t) => !t.equals(native))] : filteredSortedTokens
+      return [native, ...filteredSortedTokens.filter((t) => !t.equals(native))]
     }
     return filteredSortedTokens
   }, [debouncedQuery, native, filteredSortedTokens])
@@ -191,8 +191,8 @@ export function CurrencySearch({
   }, [])
 
   return (
-    <Trace name={EventName.TOKEN_SELECTOR_OPENED} modal={ModalName.TOKEN_SELECTOR} shouldLogImpression={true}>
-      <ContentWrapper>
+    <ContentWrapper>
+      <Trace name={EventName.TOKEN_SELECTOR_OPENED} modal={ModalName.TOKEN_SELECTOR} shouldLogImpression>
         <PaddedColumn gap="16px">
           <RowBetween>
             <Text fontWeight={500} fontSize={16}>
@@ -251,9 +251,9 @@ export function CurrencySearch({
           </div>
         ) : (
           <Column style={{ padding: '20px', height: '100%' }}>
-            <ThemedText.Main color={theme.deprecated_text3} textAlign="center" mb="20px">
+            <ThemedText.DeprecatedMain color={theme.deprecated_text3} textAlign="center" mb="20px">
               <Trans>No results found.</Trans>
-            </ThemedText.Main>
+            </ThemedText.DeprecatedMain>
           </Column>
         )}
         <Footer>
@@ -263,14 +263,14 @@ export function CurrencySearch({
                 <IconWrapper size="16px" marginRight="6px" stroke={theme.deprecated_primaryText1}>
                   <Edit />
                 </IconWrapper>
-                <ThemedText.Main color={theme.deprecated_primaryText1}>
+                <ThemedText.DeprecatedMain color={theme.deprecated_primaryText1}>
                   <Trans>Manage Token Lists</Trans>
-                </ThemedText.Main>
+                </ThemedText.DeprecatedMain>
               </RowFixed>
             </ButtonText>
           </Row>
         </Footer>
-      </ContentWrapper>
-    </Trace>
+      </Trace>
+    </ContentWrapper>
   )
 }
