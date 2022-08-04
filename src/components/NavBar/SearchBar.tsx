@@ -539,7 +539,7 @@ export const SearchBar = () => {
           </Box>
           <Box
             as="input"
-            placeholder="Search tokens and NFT collections"
+            placeholder="Search tokens"
             width="full"
             onChange={(event: ChangeEvent<HTMLInputElement>) => {
               !isOpen && toggleOpen()

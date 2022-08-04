@@ -10,7 +10,6 @@ import {
   GithubIconMenuMobile,
   GovernanceIconMobile,
   HamburgerIcon,
-  ThinTagIconMobile,
   TwitterIconMenuMobile,
 } from 'nft/components/icons'
 import { themeVars } from 'nft/css/sprinkles.css'
@@ -159,21 +158,12 @@ export const MobileSideBar = () => {
                 <NavLinkItem href={'/tokens'} close={toggleOpen}>
                   Tokens
                 </NavLinkItem>
-                <NavLinkItem href={'/nft'} close={toggleOpen}>
-                  NFTs
-                </NavLinkItem>
                 <NavLinkItem href={'/pool'} id={'pool-nav-link'} isActive={isPoolActive} close={toggleOpen}>
                   Pool
                 </NavLinkItem>
               </Column>
               <Seperator />
               <Column gap="4">
-                <ExtraLinkRow to="/nft/sell" close={toggleOpen}>
-                  <Icon>
-                    <ThinTagIconMobile width={24} height={24} />
-                  </Icon>
-                  Sell NFTs
-                </ExtraLinkRow>
                 <ExtraLinkRow to="/vote" close={toggleOpen}>
                   <Icon>
                     <GovernanceIconMobile width={24} height={24} />

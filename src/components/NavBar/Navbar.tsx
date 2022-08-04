@@ -125,7 +125,6 @@ const Navbar = () => {
           <Row gap="8">
             <NavLinkItem href={'/swap'}>Swap</NavLinkItem>
             <NavLinkItem href={'/tokens'}>Tokens</NavLinkItem>
-            <NavLinkItem href={'/nft'}>NFTs</NavLinkItem>
             <NavLinkItem href={'/pool'} id={'pool-nav-link'} isActive={isPoolActive}>
               Pools
             </NavLinkItem>
