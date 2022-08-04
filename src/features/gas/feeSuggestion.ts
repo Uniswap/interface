@@ -108,7 +108,7 @@ export async function suggestMaxPriorityFee(
   const feeHistory: FeeHistoryResponse = await provider.send('eth_feeHistory', [
     10,
     fromBlock,
-    [10, 15, 30, 45],
+    [10, 25, 50, 75],
   ])
   const blocksRewards = feeHistory?.reward
   if (!blocksRewards?.length) throw new Error('Error: blocksRewards is empty')
@@ -121,49 +121,49 @@ export async function suggestMaxPriorityFee(
 
   // Get reward data sets for different percentiles, while excluding outliers
   const blocksRewardsPercentile10 = rewardsFilterOutliers(blocksRewards, outlierBlocks, 0)
-  const blocksRewardsPercentile15 = rewardsFilterOutliers(blocksRewards, outlierBlocks, 1)
-  const blocksRewardsPercentile30 = rewardsFilterOutliers(blocksRewards, outlierBlocks, 2)
-  const blocksRewardsPercentile45 = rewardsFilterOutliers(blocksRewards, outlierBlocks, 3)
+  const blocksRewardsPercentile25 = rewardsFilterOutliers(blocksRewards, outlierBlocks, 1)
+  const blocksRewardsPercentile50 = rewardsFilterOutliers(blocksRewards, outlierBlocks, 2)
+  const blocksRewardsPercentile75 = rewardsFilterOutliers(blocksRewards, outlierBlocks, 3)
 
   // Compute exponential moving averages for different percentiles
   const emaPercentile10 = ema(blocksRewardsPercentile10, blocksRewardsPercentile10.length).at(-1)
-  const emaPercentile15 = ema(blocksRewardsPercentile15, blocksRewardsPercentile15.length).at(-1)
-  const emaPercentile30 = ema(blocksRewardsPercentile30, blocksRewardsPercentile30.length).at(-1)
-  const emaPercentile45 = ema(blocksRewardsPercentile45, blocksRewardsPercentile45.length).at(-1)
+  const emaPercentile25 = ema(blocksRewardsPercentile25, blocksRewardsPercentile25.length).at(-1)
+  const emaPercentile50 = ema(blocksRewardsPercentile50, blocksRewardsPercentile50.length).at(-1)
+  const emaPercentile75 = ema(blocksRewardsPercentile75, blocksRewardsPercentile75.length).at(-1)
 
   if (
     emaPercentile10 === undefined ||
-    emaPercentile15 === undefined ||
-    emaPercentile30 === undefined ||
-    emaPercentile45 === undefined
+    emaPercentile25 === undefined ||
+    emaPercentile50 === undefined ||
+    emaPercentile75 === undefined
   ) {
     throw new Error('An ema percentile was undefined')
   }
 
   const boundedNormalPriorityFee = Math.min(
-    Math.max(emaPercentile15, MIN_GWEI_NORMAL_PRI_FEE),
+    Math.max(emaPercentile25, MIN_GWEI_NORMAL_PRI_FEE),
     MAX_GWEI_NORMAL_PRI_FEE
   )
   const boundedFastMaxPriorityFee = Math.min(
-    Math.max(emaPercentile30, MIN_GWEI_FAST_PRI_FEE),
+    Math.max(emaPercentile50, MIN_GWEI_FAST_PRI_FEE),
     MAX_GWEI_FAST_PRI_FEE
   )
   const boundedUrgentPriorityFee = Math.min(
-    Math.max(emaPercentile45, MIN_GWEI_URGENT_PRI_FEE),
+    Math.max(emaPercentile75, MIN_GWEI_URGENT_PRI_FEE),
     MAX_GWEI_URGENT_PRI_FEE
   )
 
   return {
     priorityFeeSuggestions: {
       // Don't bound Polygon fees because hardcoded bounds are for Ethereum only
-      normal: gweiToWei(isPolygonChain(chainId) ? emaPercentile15 : boundedNormalPriorityFee),
-      fast: gweiToWei(isPolygonChain(chainId) ? emaPercentile30 : boundedFastMaxPriorityFee),
-      urgent: gweiToWei(isPolygonChain(chainId) ? emaPercentile45 : boundedUrgentPriorityFee),
+      normal: gweiToWei(isPolygonChain(chainId) ? emaPercentile25 : boundedNormalPriorityFee),
+      fast: gweiToWei(isPolygonChain(chainId) ? emaPercentile50 : boundedFastMaxPriorityFee),
+      urgent: gweiToWei(isPolygonChain(chainId) ? emaPercentile75 : boundedUrgentPriorityFee),
     },
     confirmationSecondsToPriorityFee: {
-      15: gweiToWei(emaPercentile45),
-      30: gweiToWei(emaPercentile30),
-      45: gweiToWei(emaPercentile15),
+      15: gweiToWei(emaPercentile75),
+      30: gweiToWei(emaPercentile50),
+      45: gweiToWei(emaPercentile25),
       60: gweiToWei(emaPercentile10),
     },
   }
