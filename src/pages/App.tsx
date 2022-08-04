@@ -18,6 +18,7 @@ import ErrorBoundary from '../components/ErrorBoundary'
 import Header from '../components/Header'
 import Polling from '../components/Header/Polling'
 import Popups from '../components/Popups'
+import { useIsExpertMode } from '../state/user/hooks'
 import DarkModeQueryParamReader from '../theme/DarkModeQueryParamReader'
 import AddLiquidity from './AddLiquidity'
 import { RedirectDuplicateTokenIds } from './AddLiquidity/redirects'
@@ -90,6 +91,7 @@ export default function App() {
   const { pathname } = useLocation()
   const currentPage = getCurrentPageFromLocation(pathname)
   const isDarkMode = useIsDarkMode()
+  const isExpertMode = useIsExpertMode()
 
   useAnalyticsReporter()
   initializeAnalytics()
@@ -109,6 +111,10 @@ export default function App() {
   useEffect(() => {
     user.set(CUSTOM_USER_PROPERTIES.DARK_MODE, isDarkMode)
   }, [isDarkMode])
+
+  useEffect(() => {
+    user.set(CUSTOM_USER_PROPERTIES.EXPERT_MODE, isExpertMode)
+  }, [isExpertMode])
 
   return (
     <ErrorBoundary>

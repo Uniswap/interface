@@ -1,6 +1,8 @@
 import { Percent, Token } from '@uniswap/sdk-core'
 import { computePairAddress, Pair } from '@uniswap/v2-sdk'
 import { useWeb3React } from '@web3-react/core'
+import { user } from 'components/AmplitudeAnalytics'
+import { CUSTOM_USER_PROPERTIES } from 'components/AmplitudeAnalytics/constants'
 import { L2_CHAIN_IDS } from 'constants/chains'
 import { SupportedLocale } from 'constants/locales'
 import { L2_DEADLINE_FROM_NOW } from 'constants/misc'
@@ -101,6 +103,7 @@ export function useExpertModeManager(): [boolean, () => void] {
 
   const toggleSetExpertMode = useCallback(() => {
     dispatch(updateUserExpertMode({ userExpertMode: !expertMode }))
+    user.set(CUSTOM_USER_PROPERTIES.EXPERT_MODE, !expertMode)
   }, [expertMode, dispatch])
 
   return [expertMode, toggleSetExpertMode]
