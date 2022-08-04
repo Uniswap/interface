@@ -394,9 +394,6 @@ PODS:
   - Firebase/Firestore (8.8.0):
     - Firebase/CoreOnly
     - FirebaseFirestore (~> 8.8.0)
-  - Firebase/Performance (8.8.0):
-    - Firebase/CoreOnly
-    - FirebasePerformance (~> 8.8.0)
   - Firebase/RemoteConfig (8.8.0):
     - Firebase/CoreOnly
     - FirebaseRemoteConfig (~> 8.8.0)
@@ -443,15 +440,6 @@ PODS:
     - GoogleUtilities/Environment (~> 7.7)
     - GoogleUtilities/UserDefaults (~> 7.7)
     - PromisesObjC (< 3.0, >= 1.2)
-  - FirebasePerformance (8.8.0):
-    - FirebaseCore (~> 8.0)
-    - FirebaseInstallations (~> 8.0)
-    - FirebaseRemoteConfig (~> 8.0)
-    - GoogleDataTransport (~> 9.0)
-    - GoogleUtilities/Environment (~> 7.4)
-    - GoogleUtilities/ISASwizzler (~> 7.4)
-    - GoogleUtilities/MethodSwizzler (~> 7.4)
-    - nanopb (~> 2.30908.0)
   - FirebaseRemoteConfig (8.8.0):
     - FirebaseABTesting (~> 8.0)
     - FirebaseCore (~> 8.0)
@@ -496,7 +484,6 @@ PODS:
     - GoogleUtilities/Network
   - GoogleUtilities/Environment (7.7.0):
     - PromisesObjC (< 3.0, >= 1.2)
-  - GoogleUtilities/ISASwizzler (7.7.0)
   - GoogleUtilities/Logger (7.7.0):
     - GoogleUtilities/Environment
   - GoogleUtilities/MethodSwizzler (7.7.0):
@@ -905,10 +892,6 @@ PODS:
     - Firebase/Firestore (= 8.8.0)
     - React-Core
     - RNFBApp
-  - RNFBPerf (14.11.1):
-    - Firebase/Performance (= 8.8.0)
-    - React-Core
-    - RNFBApp
   - RNFBRemoteConfig (14.2.2):
     - Firebase/RemoteConfig (= 8.8.0)
     - React-Core
@@ -1037,7 +1020,6 @@ DEPENDENCIES:
   - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
   - "RNFBAuth (from `../node_modules/@react-native-firebase/auth`)"
   - "RNFBFirestore (from `../node_modules/@react-native-firebase/firestore`)"
-  - "RNFBPerf (from `../node_modules/@react-native-firebase/perf`)"
   - "RNFBRemoteConfig (from `../node_modules/@react-native-firebase/remote-config`)"
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNImageColors (from `../node_modules/react-native-image-colors`)
@@ -1068,7 +1050,6 @@ SPEC REPOS:
     - FirebaseCoreDiagnostics
     - FirebaseFirestore
     - FirebaseInstallations
-    - FirebasePerformance
     - FirebaseRemoteConfig
     - fmt
     - GoogleAppMeasurement
@@ -1213,8 +1194,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-firebase/auth"
   RNFBFirestore:
     :path: "../node_modules/@react-native-firebase/firestore"
-  RNFBPerf:
-    :path: "../node_modules/@react-native-firebase/perf"
   RNFBRemoteConfig:
     :path: "../node_modules/@react-native-firebase/remote-config"
   RNGestureHandler:
@@ -1270,7 +1249,6 @@ SPEC CHECKSUMS:
   FirebaseCoreDiagnostics: c2836d254a8f0bbb4121ff18f2c2ea39d118fd08
   FirebaseFirestore: 29baf05d5e7e0d5003eb34e5805d92b9858b36d4
   FirebaseInstallations: 60edbf7e11d91ae4c751d26c200dfd037099abe0
-  FirebasePerformance: 0c01a7a496657d7cea86d40c0b1725259d164c6c
   FirebaseRemoteConfig: f6365883d7950d784ee97bcdbbf1e442d4fa6119
   fmt: ff9d55029c625d3757ed641535fd4a75fedc7ce9
   glog: 5337263514dd6f09803962437687240c5dc39aa4
@@ -1335,7 +1313,6 @@ SPEC CHECKSUMS:
   RNFBApp: 51f0e199c968b7b5792fb1445e75d6e65221cfec
   RNFBAuth: ae42431577d611536eaf14d1b24e52b4d4242a19
   RNFBFirestore: 0b505d0b0ab2de6ca1555af7dfe092d42cec0a52
-  RNFBPerf: 630f74aeea393a2e715aee1a16eda76512178b8e
   RNFBRemoteConfig: c1248accec3d59d6f09a526e5b04405a17e8093d
   RNGestureHandler: 61628a2c859172551aa2100d3e73d1e57878392f
   RNImageColors: ed00190f4e743ff4fb1a61285572b5d4e6a0a8f0
