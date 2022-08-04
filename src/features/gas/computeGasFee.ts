@@ -32,6 +32,7 @@ export async function computeGasFee(
   }
 }
 
+const INFLATION = BigNumber.from(GAS_LIMIT_INFLATION_FACTOR * 100).div(100)
 async function estimateGasOrUseFallback(
   tx: providers.TransactionRequest,
   provider: providers.JsonRpcProvider,
@@ -39,7 +40,7 @@ async function estimateGasOrUseFallback(
 ) {
   try {
     const gasLimit = await provider.estimateGas(tx)
-    return BigNumber.from(gasLimit).mul(GAS_LIMIT_INFLATION_FACTOR)
+    return BigNumber.from(gasLimit).mul(INFLATION)
   } catch (error) {
     if (fallbackGasEstimate) {
       logger.info(
