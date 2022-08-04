@@ -1,13 +1,16 @@
 import { initializeAnalytics } from 'components/AmplitudeAnalytics'
-import { PageName } from 'components/AmplitudeAnalytics/constants'
+import { sendAnalyticsEvent, user } from 'components/AmplitudeAnalytics'
+import { CUSTOM_USER_PROPERTIES, EventName, PageName } from 'components/AmplitudeAnalytics/constants'
 import { Trace } from 'components/AmplitudeAnalytics/Trace'
 import Loader from 'components/Loader'
 import TopLevelModals from 'components/TopLevelModals'
-import { useFeatureFlagsIsLoaded } from 'featureFlag'
+import { Phase0Variant, useFeatureFlagsIsLoaded, usePhase0Flag } from 'featureFlag'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
 import { lazy, Suspense, useEffect } from 'react'
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
+import { useIsDarkMode } from 'state/user/hooks'
 import styled from 'styled-components/macro'
+import { getBrowser } from 'utils/browser'
 
 import { useAnalyticsReporter } from '../components/analytics'
 import ErrorBoundary from '../components/ErrorBoundary'
@@ -86,9 +89,11 @@ function getCurrentPageFromLocation(locationPathname: string): PageName | undefi
 
 export default function App() {
   const isLoaded = useFeatureFlagsIsLoaded()
+  const phase0Flag = usePhase0Flag()
 
   const { pathname } = useLocation()
   const currentPage = getCurrentPageFromLocation(pathname)
+  const isDarkMode = useIsDarkMode()
 
   useAnalyticsReporter()
   initializeAnalytics()
@@ -96,6 +101,18 @@ export default function App() {
   useEffect(() => {
     window.scrollTo(0, 0)
   }, [pathname])
+
+  useEffect(() => {
+    // TODO(zzmp): add web vitals event properties to app loaded event.
+    sendAnalyticsEvent(EventName.APP_LOADED)
+    user.set(CUSTOM_USER_PROPERTIES.BROWSER, getBrowser())
+    user.set(CUSTOM_USER_PROPERTIES.SCREEN_RESOLUTION_HEIGHT, window.screen.height)
+    user.set(CUSTOM_USER_PROPERTIES.SCREEN_RESOLUTION_WIDTH, window.screen.width)
+  }, [])
+
+  useEffect(() => {
+    user.set(CUSTOM_USER_PROPERTIES.DARK_MODE, isDarkMode)
+  }, [isDarkMode])
 
   return (
     <ErrorBoundary>
@@ -113,8 +130,12 @@ export default function App() {
             <Suspense fallback={<Loader />}>
               {isLoaded ? (
                 <Routes>
-                  <Route path="/explore" element={<Explore />} />
-                  <Route path="/tokens/:tokenAddress" element={<TokenDetails />} />
+                  {phase0Flag === Phase0Variant.Enabled && (
+                    <>
+                      <Route path="/explore" element={<Explore />} />
+                      <Route path="/tokens/:tokenAddress" element={<TokenDetails />} />
+                    </>
+                  )}
                   <Route path="vote/*" element={<Vote />} />
                   <Route path="create-proposal" element={<Navigate to="/vote/create-proposal" replace />} />
                   <Route path="claim" element={<OpenClaimAddressModalAndRedirectToSwap />} />

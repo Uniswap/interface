@@ -470,7 +470,7 @@ export default function LoadedRow({
   // TODO: currency logo sizing mobile (32px) vs. desktop (24px)
   return (
     <StyledLink
-      to={`tokens/${tokenAddress}`}
+      to={`/tokens/${tokenAddress}`}
       onClick={() => sendAnalyticsEvent(EventName.EXPLORE_TOKEN_ROW_SELECTED, exploreTokenSelectedEventProperties)}
     >
       <TokenRow

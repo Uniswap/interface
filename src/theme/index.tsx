@@ -452,7 +452,6 @@ html {
   color: ${({ theme }) => theme.deprecated_text1};
   background-color: ${({ theme }) => theme.deprecated_bg1} !important;
 }
-
 a {
  color: ${({ theme }) => theme.deprecated_blue1}; 
 }
