@@ -46,11 +46,6 @@ const NoTokenDisplay = styled.div`
 const TokenRowsContainer = styled.div`
   padding: 4px 0px;
 `
-const LOADING_ROWS = Array(10)
-  .fill(0)
-  .map((_item, index) => {
-    return <LoadingRow key={`${index}`} />
-  })
 
 function useFilteredTokens(addresses: string[]) {
   const filterString = useAtomValue(filterStringAtom)
@@ -143,6 +138,21 @@ function NoTokensState({ message }: { message: ReactNode }) {
   )
 }
 
+function LoadingTokenTable() {
+  return (
+    <GridContainer>
+      <HeaderRow />
+      <TokenRowsContainer>
+        {Array(10)
+          .fill(0)
+          .map((_item, index) => (
+            <LoadingRow key={index} />
+          ))}
+      </TokenRowsContainer>
+    </GridContainer>
+  )
+}
+
 export default function TokenTable() {
   const { data, error, loading } = useTopTokens()
   const showFavorites = useAtomValue<boolean>(showFavoritesAtom)
@@ -153,12 +163,7 @@ export default function TokenTable() {
 
   /* loading and error state */
   if (loading) {
-    return (
-      <GridContainer>
-        <HeaderRow />
-        <TokenRowsContainer>{LOADING_ROWS}</TokenRowsContainer>
-      </GridContainer>
-    )
+    return <LoadingTokenTable />
   } else if (error || data === null) {
     return (
       <NoTokensState
@@ -180,22 +185,21 @@ export default function TokenTable() {
     return <NoTokensState message="No tokens found" />
   }
 
-  const tokenRows = filteredAndSortedTokens.map((tokenAddress, index) => {
-    return (
-      <LoadedRow
-        key={tokenAddress}
-        tokenAddress={tokenAddress}
-        tokenListIndex={index}
-        tokenListLength={filteredAndSortedTokens.length}
-        data={data}
-        timePeriod={timePeriod}
-      />
-    )
-  })
   return (
     <GridContainer>
       <HeaderRow />
-      <TokenRowsContainer>{tokenRows}</TokenRowsContainer>
+      <TokenRowsContainer>
+        {filteredAndSortedTokens.map((tokenAddress, index) => (
+          <LoadedRow
+            key={tokenAddress}
+            tokenAddress={tokenAddress}
+            tokenListIndex={index}
+            tokenListLength={filteredAndSortedTokens.length}
+            data={data}
+            timePeriod={timePeriod}
+          />
+        ))}
+      </TokenRowsContainer>
     </GridContainer>
   )
 }

@@ -1,5 +1,4 @@
-import { initializeAnalytics } from 'components/AmplitudeAnalytics'
-import { sendAnalyticsEvent, user } from 'components/AmplitudeAnalytics'
+import { initializeAnalytics, sendAnalyticsEvent, user } from 'components/AmplitudeAnalytics'
 import { CUSTOM_USER_PROPERTIES, EventName, PageName } from 'components/AmplitudeAnalytics/constants'
 import { Trace } from 'components/AmplitudeAnalytics/Trace'
 import Loader from 'components/Loader'
@@ -10,6 +9,7 @@ import { lazy, Suspense, useEffect } from 'react'
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import { useIsDarkMode } from 'state/user/hooks'
 import styled from 'styled-components/macro'
+import { SpinnerSVG } from 'theme/components'
 import { getBrowser } from 'utils/browser'
 
 import { useAnalyticsReporter } from '../components/analytics'
@@ -34,9 +34,8 @@ import RemoveLiquidity from './RemoveLiquidity'
 import RemoveLiquidityV3 from './RemoveLiquidity/V3'
 import Swap from './Swap'
 import { OpenClaimAddressModalAndRedirectToSwap, RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects'
-import TokenDetails from './TokenDetails'
 
-// lazy load vote related pages
+const TokenDetails = lazy(() => import('./TokenDetails'))
 const Vote = lazy(() => import('./Vote'))
 
 const AppWrapper = styled.div`
@@ -87,6 +86,20 @@ function getCurrentPageFromLocation(locationPathname: string): PageName | undefi
   }
 }
 
+// this is the same svg defined in assets/images/blue-loader.svg
+// it is defined here because the remote asset may not have had time to load when this file is executing
+const LazyLoadSpinner = () => (
+  <SpinnerSVG width="94" height="94" viewBox="0 0 94 94" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path
+      d="M92 47C92 22.1472 71.8528 2 47 2C22.1472 2 2 22.1472 2 47C2 71.8528 22.1472 92 47 92"
+      stroke="#2172E5"
+      strokeWidth="3"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </SpinnerSVG>
+)
+
 export default function App() {
   const isLoaded = useFeatureFlagsIsLoaded()
   const phase0Flag = usePhase0Flag()
@@ -133,10 +146,24 @@ export default function App() {
                   {phase0Flag === Phase0Variant.Enabled && (
                     <>
                       <Route path="/explore" element={<Explore />} />
-                      <Route path="/tokens/:tokenAddress" element={<TokenDetails />} />
+                      <Route
+                        path="/tokens/:tokenAddress"
+                        element={
+                          <Suspense fallback={<LazyLoadSpinner />}>
+                            <TokenDetails />
+                          </Suspense>
+                        }
+                      />
                     </>
                   )}
-                  <Route path="vote/*" element={<Vote />} />
+                  <Route
+                    path="vote/*"
+                    element={
+                      <Suspense fallback={<LazyLoadSpinner />}>
+                        <Vote />
+                      </Suspense>
+                    }
+                  />
                   <Route path="create-proposal" element={<Navigate to="/vote/create-proposal" replace />} />
                   <Route path="claim" element={<OpenClaimAddressModalAndRedirectToSwap />} />
                   <Route path="uni" element={<Earn />} />
