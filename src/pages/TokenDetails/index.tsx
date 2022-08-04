@@ -20,7 +20,6 @@ import useTokenDetailPageQuery from 'hooks/useTokenDetailPageQuery'
 import { useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components/macro'
-import { isChainAllowed } from 'utils/switchChain'
 
 const Footer = styled.div`
   display: none;
@@ -99,7 +98,7 @@ export default function TokenDetails() {
     ? chainsToList.map((chainId) => {
         const amount = networkData[chainId]
         const fiatValue = amount // for testing purposes
-        if (!fiatValue || !isChainAllowed(connector, chainId)) return null
+        if (!fiatValue || !tokenSymbol) return null
         const chainInfo = getChainInfo(chainId)
         const networkColor = chainInfo.color
         if (!chainInfo) return null
@@ -108,7 +107,7 @@ export default function TokenDetails() {
             key={chainId}
             logoUrl={chainInfo.logoUrl}
             balance={'1'}
-            tokenSymbol={tokenSymbol ?? 'XXX'}
+            tokenSymbol={tokenSymbol}
             fiatValue={fiatValue.toSignificant(2)}
             label={chainInfo.label}
             networkColor={networkColor}
