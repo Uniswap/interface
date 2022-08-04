@@ -63,7 +63,6 @@
     "@graphql-codegen/typescript-operations": "^1.18.2",
     "@graphql-codegen/typescript-rtk-query": "^1.1.1",
     "@lingui/cli": "^3.9.0",
-    "@opensea/seaport-js": "^1.0.2",
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.1",
     "@testing-library/react-hooks": "^7.0.2",
@@ -111,10 +110,13 @@
     "serve": "^11.3.2",
     "tslib": "^2.4.0",
     "typechain": "^5.0.0",
-    "typescript": "^4.6.3"
+    "typescript": "^4.4.3",
+    "@vanilla-extract/babel-plugin": "^1.1.7",
+    "@vanilla-extract/webpack-plugin": "^2.1.11"
   },
   "dependencies": {
     "@amplitude/analytics-browser": "^0.5.1",
+    "@amplitude/experiment-js-client": "^1.5.4",
     "@coinbase/wallet-sdk": "^3.3.0",
     "@fontsource/ibm-plex-mono": "^4.5.1",
     "@fontsource/inter": "^4.5.1",
@@ -123,6 +125,7 @@
     "@lingui/react": "^3.14.0",
     "@looksrare/sdk": "^0.7.1",
     "@metamask/jazzicon": "^2.0.0",
+    "@opensea/seaport-js": "^1.0.2",
     "@popperjs/core": "^2.4.4",
     "@reach/dialog": "^0.10.3",
     "@reach/portal": "^0.10.3",
@@ -144,12 +147,10 @@
     "@uniswap/v3-periphery": "^1.1.1",
     "@uniswap/v3-sdk": "^3.9.0",
     "@use-gesture/react": "^10.2.15",
-    "@vanilla-extract/babel-plugin": "^1.1.7",
     "@vanilla-extract/css": "^1.7.2",
     "@vanilla-extract/css-utils": "^0.1.2",
     "@vanilla-extract/dynamic": "^2.0.2",
     "@vanilla-extract/sprinkles": "^1.4.1",
-    "@vanilla-extract/webpack-plugin": "^2.1.11",
     "@walletconnect/ethereum-provider": "1.7.1",
     "@web3-react/coinbase-wallet": "^8.0.34-beta.0",
     "@web3-react/core": "^8.0.35-beta.0",
@@ -234,10 +235,5 @@
     "workbox-precaching": "^6.1.0",
     "workbox-routing": "^6.1.0",
     "zustand": "^4.0.0-rc.1"
-  },
-  "resolutions": {
-    "@walletconnect/ethereum-provider": "1.7.1",
-    "react-error-overlay": "6.0.9",
-    "ethers": "^5.6.8"
   }
 }
