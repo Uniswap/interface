@@ -56,7 +56,7 @@ export default function useGetCoinGeckoChartData(
             url = `https://api.coingecko.com/api/v3/coins/near/market_chart/range?vs_currency=usd&from=${from}&to=${to}`
           } else if (tokenNetwork === 'eth' && tokenAddress === '0x7c8161545717a334f3196e765d9713f8042EF338') {
             // CAKE
-            url = `https://api.coingecko.com/api/v3/coins/binance-smart-chain/contract/0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82/market_chart/range?vs_currency=usd&from=1649824248&to=1649910648`
+            url = `https://api.coingecko.com/api/v3/coins/binance-smart-chain/contract/0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82/market_chart/range?vs_currency=usd&from=${from}&to=${to}`
           }
           if (Date.now() - latestRequestingTime.current < FETCHING_COINGECKO_CHART_DATA_OFFSET) {
             // Too Many Request
