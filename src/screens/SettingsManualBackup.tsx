@@ -15,7 +15,7 @@ import { MnemonicDisplay } from 'src/components/mnemonic/MnemonicDisplay'
 import WarningModal from 'src/components/modals/WarningModal'
 import { Text } from 'src/components/Text'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
-import { BackupType } from 'src/features/wallet/accounts/types'
+import { BackupType, NativeAccount } from 'src/features/wallet/accounts/types'
 import { EditAccountAction, editAccountActions } from 'src/features/wallet/editAccountSaga'
 import { useAccounts } from 'src/features/wallet/hooks'
 import { Screens } from 'src/screens/Screens'
@@ -40,6 +40,7 @@ export function SettingsManualBackup({
 
   const accounts = useAccounts()
   const account = accounts[address]
+  const mnemonicId = (account as NativeAccount)?.mnemonicId
   const hasManualBackup = account.backups?.includes(BackupType.Manual)
 
   const [showScreenShotWarningModal, setShowScreenShotWarningModal] = useState(false)
@@ -142,7 +143,7 @@ export function SettingsManualBackup({
           </Text>
 
           <Flex grow justifyContent="flex-start" mx="sm" my="xl">
-            <MnemonicDisplay address={address} />
+            <MnemonicDisplay mnemonicId={mnemonicId} />
           </Flex>
           <Flex justifyContent="center">
             <PrimaryButton

@@ -2,7 +2,7 @@ import React from 'react'
 import { requireNativeComponent, ViewProps } from 'react-native'
 
 interface NativeMnemonicDisplayProps {
-  address: Address
+  mnemonicId: Address
 }
 
 const NativeMnemonicDisplay = requireNativeComponent<NativeMnemonicDisplayProps>('MnemonicDisplay')

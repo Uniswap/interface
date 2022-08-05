@@ -10,7 +10,7 @@ import UIKit
 
 class MnemonicDisplayView: UIView {
   
-  @objc var address: String = ""
+  @objc var mnemonicId: String = ""
   
   override init(frame: CGRect) {
     super.init(frame: frame)
@@ -28,7 +28,7 @@ class MnemonicDisplayView: UIView {
   private func setupView() {
     let rnEthersRs = RNEthersRS()
 
-    guard let mnemonic = rnEthersRs.retrieveMnemonic(mnemonicId: address) else {
+    guard let mnemonic = rnEthersRs.retrieveMnemonic(mnemonicId: mnemonicId) else {
       let wordLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 300, height: 50))
       wordLabel.text = "Error loading recovery phrase"
       wordLabel.textColor = UIColor.lightGray

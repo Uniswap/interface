@@ -13,7 +13,8 @@ import WarningModal from 'src/components/modals/WarningModal'
 import { Text } from 'src/components/Text'
 import { useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
-import { useIsBiometricAuthEnabled } from 'src/features/wallet/hooks'
+import { NativeAccount } from 'src/features/wallet/accounts/types'
+import { useAccounts, useIsBiometricAuthEnabled } from 'src/features/wallet/hooks'
 import { Screens } from 'src/screens/Screens'
 import { useSecondCountdownTimer } from 'src/utils/timing'
 
@@ -27,6 +28,10 @@ export function SettingsViewSeedPhraseScreen({
   },
 }: Props) {
   const { t } = useTranslation()
+
+  const accounts = useAccounts()
+  const account = accounts[address]
+  const mnemonicId = (account as NativeAccount)?.mnemonicId
 
   const [showSeedPhrase, setShowSeedPhrase] = useState(false)
   const [showSeedPhraseViewWarningModal, setShowSeedPhraseViewWarningModal] = useState(true)
@@ -75,7 +80,7 @@ export function SettingsViewSeedPhraseScreen({
       {showSeedPhrase ? (
         <Flex grow alignItems="stretch" justifyContent="space-evenly" mt="md">
           <Flex grow mx="md" my="sm">
-            <MnemonicDisplay address={address} />
+            <MnemonicDisplay mnemonicId={mnemonicId} />
           </Flex>
           <Flex justifyContent="center">
             <PrimaryButton

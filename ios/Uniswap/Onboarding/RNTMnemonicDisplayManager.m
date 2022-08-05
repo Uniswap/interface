@@ -19,6 +19,6 @@ RCT_EXPORT_MODULE()
   return [[MnemonicDisplayView alloc] init];
 }
 
-RCT_EXPORT_VIEW_PROPERTY(address, NSString)
+RCT_EXPORT_VIEW_PROPERTY(mnemonicId, NSString)
 
 @end
