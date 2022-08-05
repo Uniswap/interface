@@ -37,8 +37,11 @@ const Row = styled.div`
   padding: 8px 0px;
 `
 
-const CloseWrapper = styled.span`
+const CloseButton = styled.button`
   cursor: pointer;
+  background: ${({ theme }) => theme.none};
+  border: none;
+  color: ${({ theme }) => theme.textPrimary};
 `
 
 const Header = styled(Row)`
@@ -91,9 +94,9 @@ export default function FeatureFlagModal() {
     <Modal open={open}>
       <Header>
         Feature Flag Settings
-        <CloseWrapper onClick={toggle}>
+        <CloseButton onClick={toggle}>
           <X size={24} />
-        </CloseWrapper>
+        </CloseButton>
       </Header>
 
       <FeatureFlagOption
