@@ -27,7 +27,6 @@ import { useSelectAddressNotificationCount } from 'src/features/notifications/ho
 import { OnboardingHeader } from 'src/features/onboarding/OnboardingHeader'
 import { OnboardingEntryPoint } from 'src/features/onboarding/utils'
 import { selectActiveAccountAddress, selectFinishedOnboarding } from 'src/features/wallet/selectors'
-import { CurrencySelectorScreen } from 'src/screens/CurrencySelectorScreen'
 import { DevScreen } from 'src/screens/DevScreen'
 import { EducationScreen } from 'src/screens/EducationScreen'
 import { ExploreFavoritesScreen } from 'src/screens/ExploreFavoritesScreen'
@@ -399,7 +398,6 @@ export function AppStackNavigator() {
         name={Screens.SettingsWalletManageConnection}
       />
       <AppStack.Group screenOptions={navOptions.presentationModal}>
-        <AppStack.Screen component={CurrencySelectorScreen} name={Screens.CurrencySelector} />
         <AppStack.Screen component={RecipientSelectoScreen} name={Screens.RecipientSelector} />
         <AppStack.Screen component={ProfileStackGroup} name={Screens.ProfileStack} />
         <AppStack.Screen component={EducationScreen} name={Screens.Education} />
