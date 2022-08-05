@@ -31,6 +31,7 @@ export enum ApplicationModal {
   TIME_SELECTOR,
   SHARE,
   NETWORK_FILTER,
+  FEATURE_FLAGS,
 }
 
 type PopupList = Array<{ key: string; show: boolean; content: PopupContent; removeAfterMs: number | null }>
