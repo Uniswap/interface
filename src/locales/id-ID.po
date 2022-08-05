@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-07-29 20:05\n"
+"PO-Revision-Date: 2022-08-04 20:04\n"
 "Last-Translator: \n"
 "Language: id_ID\n"
 "Language-Team: Indonesian\n"
@@ -94,7 +94,7 @@ msgstr "<0>Kiat:</0> Menghapus token pool akan mengubah posisi Anda kembali ke t
 
 #: src/pages/CreateProposal/index.tsx
 msgid "<0>Tip:</0> Select an action and describe your proposal for the community. The proposal cannot be modified after submission, so please verify all information before submitting. The voting period will begin immediately and last for 7 days. To propose a custom action, <1>read the docs</1>."
-msgstr "<0>Kiat:</0> Pilih tindakan dan jelaskan proposal Anda untuk komunitas. Proposal tidak dapat diubah setelah dikirimkan, jadi harap verifikasi semua informasi sebelum dikirm. Periode pemungutan suara akan segera dimulai dan berlangsung selama 7 hari. Untuk mengusulkan tindakan khusus, <1>baca dokumen</1>."
+msgstr "<0>Tip:</0> Pilih tindakan dan jelaskan proposal Anda untuk komunitas. Proposal tidak dapat diubah setelah pengiriman, jadi harap verifikasi semua informasi sebelum mengirimkan. Periode pemungutan suara akan segera dimulai dan berlangsung selama 7 hari. Untuk mengusulkan tindakan khusus, <1>baca dokumentasi</1>."
 
 #: src/pages/PoolFinder/index.tsx
 msgid "<0>Tip:</0> Use this tool to find v2 pools that don't automatically appear in the interface."
@@ -342,7 +342,7 @@ msgstr "Dengan menambahkan daftar ini, Anda secara implisit mempercayai bahwa da
 
 #: src/components/WalletModal/index.tsx
 msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the Uniswap <1>Protocol Disclaimer</1>."
-msgstr "Dengan menghubungkan dompet, Anda menyetujui Persyaratan Layanan</0> <0>dan mengakui bahwa Anda telah membaca dan memahami Penafian Protokol <1></1>."
+msgstr "Dengan menghubungkan dompet, Anda menyetujui <0>Syarat Layanan</0> Uniswap Labs' dan mengakui bahwa Anda telah membaca dan memahami <1>Penafian Protokol</1> Uniswap."
 
 #: src/pages/Vote/styled.tsx
 msgid "Canceled"
@@ -372,7 +372,7 @@ msgstr "Klaim"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Claim <0/> for {0}"
-msgstr "Klaim </> untuk {0}"
+msgstr "Klaim <0/> untuk {0}"
 
 #: src/components/Header/index.tsx
 #: src/components/Menu/index.tsx
@@ -787,7 +787,7 @@ msgstr "Dieksekusi"
 
 #: src/components/vote/ExecuteModal.tsx
 msgid "Executing"
-msgstr "Pelaksana"
+msgstr "Mengeksekusi"
 
 #: src/components/vote/ExecuteModal.tsx
 msgid "Executing this proposal will enact the calldata on-chain."
@@ -1192,7 +1192,7 @@ msgstr "Hasil tidak ditemukan."
 
 #: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "Not created"
-msgstr "Tidak dibuat"
+msgstr "Belum dibuat"
 
 #: src/components/Settings/index.tsx
 msgid "ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING."
@@ -1439,7 +1439,7 @@ msgstr "Hapus"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Remove <0/> and <1/>"
-msgstr "Hapus </> dan <1/>"
+msgstr "Hapus <0/> dan <1/>"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Remove Amount"
@@ -1469,7 +1469,7 @@ msgstr "Menghapus {0} {1} dan{2} {3}"
 
 #: src/components/Menu/index.tsx
 msgid "Request Features"
-msgstr "Fitur Permintaan"
+msgstr "Request Fitur"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
@@ -1629,7 +1629,7 @@ msgstr "Ikuti survei 10 menit untuk membantu kami meningkatkan pengalaman Anda d
 
 #: src/components/Popups/SurveyPopup.tsx
 msgid "Tell us what you think ↗"
-msgstr "Beri tahu kami pendapat Anda"
+msgstr "Beri tahu kami apa pendapatmu ↗"
 
 #: src/components/Popups/ClaimPopup.tsx
 msgid "Thanks for being part of the Uniswap community <0/>"
@@ -2464,7 +2464,7 @@ msgstr "tingkat biaya {0}%"
 
 #: src/components/RoutingDiagram/RoutingDiagram.tsx
 msgid "{0}% pool"
-msgstr "{0}% kolam"
+msgstr "{0}% kumpulan"
 
 #: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "{0}% select"
