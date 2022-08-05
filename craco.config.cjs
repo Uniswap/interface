@@ -8,13 +8,12 @@ module.exports = {
   },
   webpack: {
     plugins: [new VanillaExtractPlugin()],
-    configure: (webpackConfig, { env }) => {
-      if (env === 'production') {
-        const instanceOfMiniCssExtractPlugin = webpackConfig.plugins.find(
-          (plugin) => plugin instanceof MiniCssExtractPlugin
-        )
+    configure: (webpackConfig) => {
+      const instanceOfMiniCssExtractPlugin = webpackConfig.plugins.find(
+        (plugin) => plugin instanceof MiniCssExtractPlugin
+      )
+      if (instanceOfMiniCssExtractPlugin.options !== undefined)
         instanceOfMiniCssExtractPlugin.options.ignoreOrder = true
-      }
       return webpackConfig
     },
   },
