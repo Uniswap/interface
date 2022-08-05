@@ -302,11 +302,7 @@ export default function Menu() {
                       </UNIbutton>
                     )}
                     {['development', 'staging'].includes(process.env.NODE_ENV) && (
-                      <ToggleMenuItem onClick={openFeatureFlagsModal}>
-                        <span style={{ fontWeight: 600, color: '#407CF8' }}>
-                          <Trans>Show Feature Flags</Trans>
-                        </span>
-                      </ToggleMenuItem>
+                      <ToggleMenuItem onClick={openFeatureFlagsModal}>Feature Flags</ToggleMenuItem>
                     )}
                   </MenuFlyout>
                 )
