@@ -87,7 +87,7 @@ export interface GlobalPalette {
 export const colors: GlobalPalette = {
   white: '#FFFFFF',
   black: '#000000',
-  gray50: '#EDEFF7',
+  gray50: '#F8F9FF',
   gray100: '#DDE3F7',
   gray200: '#B7BED4',
   gray300: '#99A1BD',
@@ -229,7 +229,7 @@ export const colorsLight: Palette = {
 
   none: 'transparent',
 
-  backgroundBackdrop: colors.gray50,
+  backgroundBackdrop: colors.white,
   backgroundSurface: colors.white,
   backgroundContainer: opacify(8, colors.gray500),
   backgroundAction: opacify(8, colors.gray700),

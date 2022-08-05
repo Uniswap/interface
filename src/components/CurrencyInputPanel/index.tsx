@@ -196,7 +196,7 @@ const StyledBalanceMax = styled.button<{ disabled?: boolean; phase0Flag: boolean
   cursor: pointer;
   font-size: ${({ phase0Flag }) => (phase0Flag ? '14px' : '11px')};
   font-weight: ${({ phase0Flag }) => (phase0Flag ? '600' : '500')};
-  margin-left: ${({ phase0Flag }) => (phase0Flag ? '8px' : '0.25rem')};
+  margin-left: ${({ phase0Flag }) => (phase0Flag ? '0px' : '0.25rem')};
   opacity: ${({ disabled }) => (!disabled ? 1 : 0.4)};
   padding: 4px 6px;
   pointer-events: ${({ disabled }) => (!disabled ? 'initial' : 'none')};

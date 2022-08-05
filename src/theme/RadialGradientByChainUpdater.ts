@@ -97,11 +97,11 @@ export default function RadialGradientByChainUpdater(): null {
       default:
         setBackground(initialStyles)
         const defaultLightGradient = phase0FlagEnabled
-          ? 'radial-gradient(100% 100% at 50% 0%, rgba(255, 243, 255, 0.8) 0%, rgba(252, 243, 249, 0.7) 50.52%, rgba(255, 255, 255, 0) 100%), #FFFFFF;'
-          : 'radial-gradient(50% 50% at 50% 50%,#fc077d10 0,rgba(255,255,255,0) 100%);'
+          ? 'radial-gradient(100% 100% at 50% 0%, rgba(255, 184, 226, 0.51) 0%, rgba(255, 255, 255, 0) 100%), #FFFFFF'
+          : 'radial-gradient(50% 50% at 50% 50%,#fc077d10 0,rgba(255,255,255,0) 100%)'
         const defaultDarkGradient = phase0FlagEnabled
-          ? 'linear-gradient(180deg, #202738 0%, #070816 100%);'
-          : 'radial-gradient(50% 50% at 50% 50%,#fc077d10 0,rgba(255,255,255,0) 100%);'
+          ? 'linear-gradient(180deg, #202738 0%, #070816 100%)'
+          : 'radial-gradient(50% 50% at 50% 50%,#fc077d10 0,rgba(255,255,255,0) 100%)'
         backgroundRadialGradientElement.style.background = darkMode ? defaultDarkGradient : defaultLightGradient
         backgroundRadialGradientElement.style.backgroundBlendMode = phase0FlagEnabled
           ? 'none'
