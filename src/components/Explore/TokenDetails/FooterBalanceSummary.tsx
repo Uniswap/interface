@@ -7,7 +7,7 @@ import styled from 'styled-components/macro'
 import { SMALLEST_MOBILE_MEDIA_BREAKPOINT } from '../constants'
 import { LoadingBubble } from '../loading'
 
-const FAKE_NAV_FOOTER_HEIGHT = '56px'
+const PLACEHOLDER_NAV_FOOTER_HEIGHT = '56px'
 const BalanceFooter = styled.div`
   height: fit-content;
   border: 1px solid ${({ theme }) => theme.backgroundOutline};
@@ -21,7 +21,7 @@ const BalanceFooter = styled.div`
   color: ${({ theme }) => theme.textSecondary};
   position: fixed;
   left: 0;
-  bottom: ${FAKE_NAV_FOOTER_HEIGHT};
+  bottom: ${PLACEHOLDER_NAV_FOOTER_HEIGHT};
   display: flex;
   flex-direction: column;
   align-content: center;
@@ -48,7 +48,7 @@ const FakeFooterNavBar = styled.div`
   bottom: 0px;
   left: 0px;
   background-color: ${({ theme }) => theme.backgroundBackdrop};
-  height: ${FAKE_NAV_FOOTER_HEIGHT};
+  height: ${PLACEHOLDER_NAV_FOOTER_HEIGHT};
   width: 100%;
   align-items: flex-end;
   padding: 20px 8px;

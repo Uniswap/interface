@@ -1,11 +1,11 @@
+import searchIcon from 'assets/svg/search.svg'
+import xIcon from 'assets/svg/x.svg'
 import { useAtom } from 'jotai'
 import { useState } from 'react'
 import styled from 'styled-components/macro'
 
 import { MEDIUM_MEDIA_BREAKPOINT } from '../constants'
 import { filterStringAtom } from '../state'
-import searchIcon from './search.svg'
-import xIcon from './x.svg'
 const ICON_SIZE = '20px'
 
 const SearchBarContainer = styled.div`

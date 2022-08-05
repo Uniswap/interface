@@ -471,7 +471,7 @@ export default function LoadedRow({
   return (
     <StyledLink
       to={`/tokens/${tokenAddress}`}
-      onClick={() => sendAnalyticsEvent(EventName.EXPLORE_TOKEN_ROW_SELECTED, exploreTokenSelectedEventProperties)}
+      onClick={() => sendAnalyticsEvent(EventName.EXPLORE_TOKEN_ROW_CLICKED, exploreTokenSelectedEventProperties)}
     >
       <TokenRow
         address={tokenAddress}
