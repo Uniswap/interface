@@ -21,7 +21,7 @@ const SearchInput = styled.input<{ expanded: boolean }>`
   border-radius: 12px;
   border: 1px solid ${({ theme }) => theme.backgroundOutline};
   height: 100%;
-  width: ${({ expanded }) => (expanded ? '100%' : '44px')};
+  width: ${({ expanded }) => (expanded ? '100%' : '52px')};
   font-size: 16px;
   padding-left: 18px;
   color: ${({ theme }) => theme.textPrimary};
@@ -38,7 +38,7 @@ const SearchInput = styled.input<{ expanded: boolean }>`
     border: none;
   }
   ::placeholder {
-    color: ${({ expanded, theme }) => expanded && theme.textTertiary};
+    color: ${({ expanded, theme }) => (expanded ? theme.textTertiary : theme.none)};
   }
   ::-webkit-search-cancel-button {
     -webkit-appearance: none;
