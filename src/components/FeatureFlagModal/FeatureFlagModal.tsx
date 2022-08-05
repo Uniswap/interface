@@ -51,7 +51,7 @@ const Header = styled(Row)`
   margin-bottom: 8px;
 `
 
-function VariantOption({ option }: { option: string }) {
+function Variant({ option }: { option: string }) {
   return <option value={option}>{option}</option>
 }
 
@@ -68,7 +68,7 @@ function FeatureFlagOption({
 }) {
   const updateFlag = useUpdateFlag()
   return (
-    <Row key={featureFlag as string}>
+    <Row key={featureFlag}>
       {featureFlag}: {label}
       <select
         id={featureFlag}
@@ -79,7 +79,7 @@ function FeatureFlagOption({
         }}
       >
         {variants.map((variant) => (
-          <VariantOption key={variant} option={variant} />
+          <Variant key={variant} option={variant} />
         ))}
       </select>
     </Row>
