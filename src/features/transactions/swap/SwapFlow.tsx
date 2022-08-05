@@ -1,6 +1,6 @@
 import { AnyAction } from '@reduxjs/toolkit'
 import { Currency } from '@uniswap/sdk-core'
-import React, { Dispatch, useEffect, useMemo, useReducer, useState } from 'react'
+import React, { Dispatch, useEffect, useReducer, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Keyboard, LayoutChangeEvent, TouchableWithoutFeedback } from 'react-native'
 import { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated'
@@ -9,9 +9,6 @@ import { AnimatedFlex, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { WarningAction, WarningModalType } from 'src/components/warnings/types'
 import { WarningModal } from 'src/components/warnings/WarningModal'
-import { useActiveChainIds } from 'src/features/chains/utils'
-import { useAllBalancesByChainId } from 'src/features/dataApi/balances'
-import { useAllCurrencies } from 'src/features/tokens/useTokens'
 import {
   DerivedSwapInfo,
   useDerivedSwapInfo,
@@ -30,9 +27,7 @@ import {
   transactionStateReducer,
 } from 'src/features/transactions/transactionState/transactionState'
 import { ANIMATE_SPRING_CONFIG } from 'src/features/transactions/utils'
-import { useActiveAccount } from 'src/features/wallet/hooks'
 import { dimensions } from 'src/styles/sizing'
-import { flattenObjectOfObjects } from 'src/utils/objects'
 
 interface SwapFormProps {
   prefilledState?: TransactionState
@@ -104,23 +99,10 @@ export function SwapFlow({ prefilledState, onClose }: SwapFormProps) {
   const derivedSwapInfo = useDerivedSwapInfo(state)
   const { onSelectCurrency } = useSwapActionHandlers(dispatch)
 
-  // keep currencies list as state so that it remains stable through the slide animation
-  const [selectableCurrencies, setSelectableCurrencies] = useState<Currency[]>([])
+  // keep currencies list option as state so that rendered list remains stable through the slide animation
+  const [showNonZeroBalancesOnly, setShowNonZeroBalancesOnly] = useState<boolean>(true)
   const { swapCallback } = useSwapCallbackFromDerivedSwapInfo(derivedSwapInfo)
   const { warningModalType, warnings, selectingCurrencyField, currencies } = derivedSwapInfo
-
-  const chainIds = useActiveChainIds()
-  const activeAccount = useActiveAccount()
-  const currenciesByChain = useAllCurrencies()
-  const balances = useAllBalancesByChainId(activeAccount?.address, chainIds)
-  const currenciesWithBalances = useMemo(
-    () => flattenObjectOfObjects(balances.balances).map((b) => b.amount.currency),
-    [balances.balances]
-  )
-  const allCurrencies = useMemo(
-    () => flattenObjectOfObjects(currenciesByChain),
-    [currenciesByChain]
-  )
 
   // use initial content height only to determine native keyboard view
   // because show/hiding the custom keyboard will change the content height
@@ -149,18 +131,14 @@ export function SwapFlow({ prefilledState, onClose }: SwapFormProps) {
   }
 
   const screenXOffset = useSharedValue(0)
+
   useEffect(() => {
     if (selectingCurrencyField) {
-      setSelectableCurrencies(
-        selectingCurrencyField === CurrencyField.INPUT ? currenciesWithBalances : allCurrencies
-      )
+      setShowNonZeroBalancesOnly(selectingCurrencyField === CurrencyField.INPUT)
     }
 
     const screenOffset = selectingCurrencyField !== undefined ? 1 : 0
     screenXOffset.value = withSpring(-(dimensions.fullWidth * screenOffset), ANIMATE_SPRING_CONFIG)
-
-    // TODO: fix currenciesWithBalances being different on every render, until then:
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [screenXOffset, selectingCurrencyField])
 
   const wrapperStyle = useAnimatedStyle(() => {
@@ -202,14 +180,13 @@ export function SwapFlow({ prefilledState, onClose }: SwapFormProps) {
           />
         </Flex>
         <CurrencySelect
-          currencies={selectableCurrencies}
           otherCurrency={
             selectingCurrencyField
               ? currencies[otherCurrencyField(selectingCurrencyField)]
               : undefined
           }
           selectedCurrency={selectingCurrencyField ? currencies[selectingCurrencyField] : undefined}
-          showNonZeroBalancesOnly={selectingCurrencyField === CurrencyField.INPUT}
+          showNonZeroBalancesOnly={showNonZeroBalancesOnly}
           onSelectCurrency={(currency: Currency) =>
             selectingCurrencyField && onSelectCurrency(selectingCurrencyField, currency)
           }
