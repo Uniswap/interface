@@ -1,4 +1,6 @@
-import { createContext, ReactNode, useContext } from 'react'
+import { useAtom } from 'jotai'
+import { atomWithStorage, useAtomValue } from 'jotai/utils'
+import { createContext, ReactNode, useCallback, useContext } from 'react'
 
 interface FeatureFlagsContextType {
   isLoaded: boolean
@@ -16,16 +18,30 @@ export function useFeatureFlagsContext(): FeatureFlagsContextType {
   }
 }
 
+export enum Flags {
+  phase0 = 'control',
+  phase1 = 'control',
+}
+/* update and save feature flag settings */
+export const featureFlagSettings = atomWithStorage<Record<string, string>>('featureFlags', Flags)
+export function useFeatureFlagToggle(featureFlag: string) {
+  const [featureFlags, setFeatureFlags] = useAtom(featureFlagSettings)
+
+  return useCallback(() => {
+    const curFeatureFlagSetting = featureFlags[featureFlag]
+    featureFlags[featureFlag] = curFeatureFlagSetting === 'enabled' ? 'control' : 'enabled'
+    console.log(featureFlags)
+    setFeatureFlags(featureFlags)
+  }, [featureFlags, setFeatureFlags, featureFlag])
+}
+
 export function FeatureFlagsProvider({ children }: { children: ReactNode }) {
   // TODO(vm): `isLoaded` to `true` so `App.tsx` will render. Later, this will be dependent on
   // flags loading from Amplitude, with a timeout.
-  const variant = process.env.NODE_ENV === 'development' ? 'enabled' : 'control'
+  const featureFlags = useAtomValue(featureFlagSettings)
   const value = {
     isLoaded: true,
-    flags: {
-      phase0: variant,
-      phase1: variant,
-    },
+    flags: featureFlags,
   }
   return <FeatureFlagContext.Provider value={value}>{children}</FeatureFlagContext.Provider>
 }
