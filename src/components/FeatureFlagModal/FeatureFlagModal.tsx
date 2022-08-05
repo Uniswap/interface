@@ -1,11 +1,12 @@
 import { FeatureFlag, useUpdateFlag } from 'featureFlags'
 import { Phase0Variant, usePhase0Flag } from 'featureFlags/flags/phase0'
+import { ReactNode } from 'react'
 import { X } from 'react-feather'
 import { useModalIsOpen, useToggleFeatureFlags } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import styled from 'styled-components/macro'
 
-const Modal = styled.div<{ open: boolean }>`
+const StyledModal = styled.div`
   position: fixed;
   display: flex;
   left: 50%;
@@ -24,6 +25,10 @@ const Modal = styled.div<{ open: boolean }>`
   gap: 8px;
   border: 1px solid ${({ theme }) => theme.backgroundOutline};
 `
+
+function Modal({ open, children }: { open: boolean; children: ReactNode }) {
+  return open ? <StyledModal>{children}</StyledModal> : null
+}
 
 const StyledFeatureFlagOption = styled.div`
   display: flex;
