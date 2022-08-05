@@ -1,6 +1,6 @@
 import { Currency } from '@kyberswap/ks-sdk-core'
 import { Trans } from '@lingui/macro'
-import React, { useRef } from 'react'
+import { useRef } from 'react'
 import { isMobile } from 'react-device-detect'
 import { BarChart2, DollarSign, Repeat } from 'react-feather'
 import { Flex, Text } from 'rebass'
@@ -113,8 +113,6 @@ export function HowToSwap({
   toCurrencyInfo: TokenInfo
   expandedOnMount?: boolean
 }) {
-  const theme = useTheme()
-
   if (!fromCurrency || !toCurrency || !fromCurrencyInfo || !toCurrencyInfo) return null
   const symbol1 = fromCurrency.symbol
   const symbol2 = toCurrency.symbol
