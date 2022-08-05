@@ -21,7 +21,7 @@ import SwapDetailsDropdown from 'components/swap/SwapDetailsDropdown'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { isSupportedChain } from 'constants/chains'
-import { Phase0Variant, usePhase0Flag } from 'featureFlags/flags/phase0'
+import { Phase0Variant, usePhase0Flag } from 'featureFlag'
 import { useSwapCallback } from 'hooks/useSwapCallback'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import JSBI from 'jsbi'
@@ -104,14 +104,7 @@ const BottomWrapper = styled.div<{ phase0Flag: boolean }>`
 `
 const TopInputWrapper = styled.div<{ phase0Flag: boolean }>`
   padding: ${({ phase0Flag }) => phase0Flag && '0px 12px'};
-<<<<<<< HEAD
-<<<<<<< HEAD
   visibility: ${({ phase0Flag }) => !phase0Flag && 'none'};
-=======
->>>>>>> c5b953d6 (flagbergasted)
-=======
-  visibility: ${({ phase0Flag }) => !phase0Flag && 'none'};
->>>>>>> a42bc11a (minor updates)
 `
 const BottomInputWrapper = styled.div<{ phase0Flag: boolean }>`
   padding: ${({ phase0Flag }) => phase0Flag && '8px 0px'};
@@ -165,37 +158,6 @@ function largerPercentValue(a?: Percent, b?: Percent) {
     return b
   }
   return undefined
-}
-
-const formatApproveTokenTxnSubmittedEventProperties = (
-  approvalOptimizedTrade:
-    | Trade<Currency, Currency, TradeType>
-    | V2Trade<Currency, Currency, TradeType>
-    | V3Trade<Currency, Currency, TradeType>
-    | undefined
-) => {
-  if (!approvalOptimizedTrade) return {}
-  return {
-    chain_id: approvalOptimizedTrade.inputAmount.currency.chainId,
-    token_symbol: approvalOptimizedTrade.inputAmount.currency.symbol,
-    token_address: getTokenAddress(approvalOptimizedTrade.inputAmount.currency),
-  }
-}
-
-const formatWrapTokenTxnSubmittedEventProperties = (
-  inputCurrency: Currency | null | undefined,
-  outputCurrency: Currency | null | undefined,
-  parsedAmount: CurrencyAmount<Currency> | undefined
-) => {
-  if (!inputCurrency || !outputCurrency || !parsedAmount) return {}
-  return {
-    token_in_address: getTokenAddress(inputCurrency),
-    token_out_address: getTokenAddress(outputCurrency),
-    token_in_symbol: inputCurrency.symbol,
-    token_out_symbol: outputCurrency.symbol,
-    chain_id: inputCurrency.chainId,
-    amount: parsedAmount ? formatToDecimal(parsedAmount, parsedAmount?.currency.decimals) : undefined,
-  }
 }
 
 const formatSwapQuoteReceivedEventProperties = (
@@ -618,15 +580,7 @@ export default function Swap() {
               swapQuoteReceivedDate={swapQuoteReceivedDate}
             />
 
-<<<<<<< HEAD
-<<<<<<< HEAD
             <AutoColumn gap={'0px'}>
-=======
-            <AutoColumn grid-row-gap={phase0FlagEnabled && '0px'} gap={phase0FlagEnabled ? '0px' : 'sm'}>
->>>>>>> c5b953d6 (flagbergasted)
-=======
-            <AutoColumn gap={'0px'}>
->>>>>>> a42bc11a (minor updates)
               <div style={{ display: 'relative' }}>
                 <TopInputWrapper phase0Flag={phase0FlagEnabled}>
                   <Trace section={SectionName.CURRENCY_INPUT_PANEL}>
