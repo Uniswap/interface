@@ -66,7 +66,7 @@ function NetworkBalances(tokenAddress: string) {
 
 export default function TokenDetails() {
   const { tokenAddress } = useParams<{ tokenAddress?: string }>()
-  const { data, error, loading } = useTokenDetailPageQuery(tokenAddress)
+  const { loading } = useTokenDetailPageQuery(tokenAddress)
   const tokenSymbol = useToken(tokenAddress)?.symbol
 
   let tokenDetail
