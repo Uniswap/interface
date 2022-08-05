@@ -172,7 +172,7 @@ function oldColors(darkMode: boolean): Colors {
     // dont wanna forget these blue yet
     deprecated_blue4: darkMode ? '#153d6f70' : '#C4D9F8',
 
-    deprecated_blue5: '#869EFF',
+    // deprecated_blue5: '#869EFF',
 
     userThemeColor: darkMode ? colorsDark.userThemeColor : colorsLight.userThemeColor,
 
@@ -293,7 +293,7 @@ function oldColorsUpdated(darkMode: boolean): Colors {
     // dont wanna forget these blue yet
     deprecated_blue4: darkMode ? '#153d6f70' : '#C4D9F8',
     // blue5: darkMode ? '#153d6f70' : '#EBF4FF',
-    deprecated_blue5: '#869EFF',
+    // deprecated_blue5: '#869EFF',
 
     userThemeColor: darkMode ? colorsDark.userThemeColor : colorsLight.userThemeColor,
 

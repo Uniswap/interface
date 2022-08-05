@@ -108,7 +108,7 @@ export interface Colors {
   deprecated_blue2: Color
 
   deprecated_blue4: Color
-  deprecated_blue5: Color
+  // deprecated_blue5: Color
 
   deprecated_error: Color
   deprecated_success: Color
