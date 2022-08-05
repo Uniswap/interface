@@ -1,4 +1,5 @@
-import { featureFlagOptions, Flags, useUpdateFlag } from 'featureFlags'
+import { useUpdateFlag } from 'featureFlags'
+import { Phase0Variant, usePhase0Flag } from 'featureFlags/flags/phase0'
 import { useRef } from 'react'
 import { X } from 'react-feather'
 import { useModalIsOpen, useToggleFeatureFlags } from 'state/application/hooks'
@@ -41,20 +42,18 @@ const HeaderRow = styled(FeatureFlagRow)`
   margin-bottom: 8px;
 `
 
-function FeatureFlagOption(featureFlag: string, option: string) {
-  const toggleFeatureFlags = useUpdateFlag(featureFlag, option)
-  return (
-    <option value={`${featureFlag}-${option}`} onClick={toggleFeatureFlags}>
-      {option}
-    </option>
-  )
+function FeatureFlagOption({ option }: { option: string }) {
+  return <option value={option}>{option}</option>
 }
 
 export default function FeatureFlagModal() {
   const node = useRef<HTMLDivElement>()
   const open = useModalIsOpen(ApplicationModal.FEATURE_FLAGS)
-  const flagOptions = Object.keys(Flags)
   const toggle = useToggleFeatureFlags()
+
+  const updateFlag = useUpdateFlag()
+
+  const phase0Variant = usePhase0Flag()
 
   return (
     <ModalCard open={open} ref={node as any}>
@@ -65,19 +64,20 @@ export default function FeatureFlagModal() {
         </CloseWrapper>
       </HeaderRow>
 
-      {flagOptions.map((featureFlag) => {
-        const featureOptions = featureFlagOptions[featureFlag]
-        return (
-          <FeatureFlagRow key={featureFlag}>
-            {featureFlag}:
-            <form>
-              <select id={featureFlag}>
-                {featureOptions.map((flagOption) => FeatureFlagOption(featureFlag, flagOption))}
-              </select>
-            </form>
-          </FeatureFlagRow>
-        )
-      })}
+      <FeatureFlagRow>
+        {'Phase 0'}:
+        <select
+          id={'phase0'}
+          value={phase0Variant}
+          onChange={(e) => {
+            updateFlag('phase0', e.target.value)
+          }}
+        >
+          {Object.values(Phase0Variant).map((variant) => (
+            <FeatureFlagOption key={variant} option={variant} />
+          ))}
+        </select>
+      </FeatureFlagRow>
     </ModalCard>
   )
 }

@@ -18,21 +18,18 @@ export function useFeatureFlagsContext(): FeatureFlagsContextType {
   }
 }
 
-export enum Flags {
-  phase0 = 'control',
-  phase1 = 'control',
-}
-
-export const featureFlagOptions = { phase0: ['control', 'enabled'] }
 /* update and save feature flag settings */
-export const featureFlagSettings = atomWithStorage<Record<string, string>>('featureFlags', Flags)
-export function useUpdateFlag(featureFlag: string, option: string) {
+export const featureFlagSettings = atomWithStorage<Record<string, string>>('featureFlags', {})
+export function useUpdateFlag() {
   const [featureFlags, setFeatureFlags] = useAtom(featureFlagSettings)
 
-  return useCallback(() => {
-    featureFlags[featureFlag] = option
-    setFeatureFlags(featureFlags)
-  }, [featureFlags, setFeatureFlags, featureFlag, option])
+  return useCallback(
+    (featureFlag: string, option: string) => {
+      featureFlags[featureFlag] = option
+      setFeatureFlags(featureFlags)
+    },
+    [featureFlags, setFeatureFlags]
+  )
 }
 
 export function FeatureFlagsProvider({ children }: { children: ReactNode }) {
@@ -51,8 +48,8 @@ export function useFeatureFlagsIsLoaded(): boolean {
 }
 
 export enum BaseVariant {
-  Control = 'Control',
-  Enabled = 'Enabled',
+  Control = 'control',
+  Enabled = 'enabled',
 }
 
 export function useBaseFlag(flag: string): BaseVariant {
