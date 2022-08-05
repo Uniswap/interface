@@ -15,7 +15,7 @@ interface Window {
     request: (params: { method: string; params?: any }) => Promise<any>
   }
   web3?: any
-  version?: string
+  tag?: string
   coin98?: any
   dataLayer?: any[]
   chrome?: any

@@ -110,7 +110,7 @@ jobs:
       - name: Yarn Build
         env:
           CI: false
-          REACT_APP_VERSION: ${{ github.sha }}
+          REACT_APP_TAG: ${{ needs.prepare.outputs.image_tag }}
           CURRENT_BRANCH: ${{ needs.prepare.outputs.current_branch }}
         run: yarn build
 

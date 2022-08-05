@@ -104,6 +104,7 @@ export const FooterSocialLink = () => {
 function Footer() {
   const isDarkMode = useIsDarkMode()
   const above768 = useMedia('(min-width: 768px)')
+
   return (
     <FooterWrapper>
       <FooterContent>

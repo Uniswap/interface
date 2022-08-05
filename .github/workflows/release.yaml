@@ -56,7 +56,7 @@ jobs:
       - name: Yarn Build
         env:
           CI: false
-          REACT_APP_VERSION: ${{ github.sha }}
+          REACT_APP_TAG: ${{ github.event.inputs.version }}
         run: yarn build-prod
 
       - name: Save build

@@ -32,7 +32,7 @@ AOS.init()
 
 const Web3ProviderNetwork = createWeb3ReactRoot(NetworkContextName)
 
-window.version = process.env.REACT_APP_VERSION
+window.tag = process.env.REACT_APP_TAG
 
 if ('ethereum' in window) {
   ;(window.ethereum as any).autoRefreshOnNetworkChange = false
