@@ -301,7 +301,7 @@ export default function Menu() {
                         <Trans>Claim UNI</Trans>
                       </UNIbutton>
                     )}
-                    {process.env.NODE_ENV === 'development' && (
+                    {['development', 'staging'].includes(process.env.NODE_ENV) && (
                       <ToggleMenuItem onClick={openFeatureFlagsModal}>
                         <span style={{ fontWeight: 600, color: '#407CF8' }}>
                           <Trans>Show Feature Flags</Trans>
