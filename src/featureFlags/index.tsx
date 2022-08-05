@@ -1,7 +1,6 @@
 import { useAtom } from 'jotai'
 import { atomWithStorage, useAtomValue } from 'jotai/utils'
 import { createContext, ReactNode, useCallback, useContext } from 'react'
-import { Phase0Variant } from './flags/phase0'
 
 interface FeatureFlagsContextType {
   isLoaded: boolean
@@ -23,7 +22,8 @@ export enum Flags {
   phase0 = 'control',
   phase1 = 'control',
 }
-export const featureFlagOptions = ['phase0':['control', 'enabled']]
+
+export const featureFlagOptions = { phase0: ['control', 'enabled'] }
 /* update and save feature flag settings */
 export const featureFlagSettings = atomWithStorage<Record<string, string>>('featureFlags', Flags)
 export function useUpdateFlag(featureFlag: string, option: string) {
