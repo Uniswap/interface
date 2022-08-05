@@ -3,7 +3,7 @@ import { t } from '@lingui/macro'
 import { debounce } from 'lodash'
 import { stringify } from 'qs'
 import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react'
-import { BrowserView, MobileView, isMobile } from 'react-device-detect'
+import { BrowserView, MobileView, isIOS, isMobile } from 'react-device-detect'
 import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 
@@ -91,16 +91,21 @@ export default forwardRef<PairSuggestionHandle, Props>(function PairSuggestionIn
     const input = refInput.current
     if (!input) return
     input.focus()
-    input?.setSelectionRange(searchQuery.length, searchQuery.length) // fix focus input cursor at front (ios)
+    if (isIOS) input?.setSelectionRange(searchQuery.length, searchQuery.length) // fix focus input cursor at front (ios)
   }
 
+  const refKeywordSearching = useRef('')
   const searchSuggestionPair = (keyword = '') => {
+    refKeywordSearching.current = keyword
     reqGetSuggestionPair(chainId, account, keyword)
       .then(({ recommendedPairs = [], favoritePairs = [], amount }) => {
-        setSuggestions(findLogoAndSortPair(activeTokens, recommendedPairs, chainId))
-        setListFavorite(findLogoAndSortPair(activeTokens, favoritePairs, chainId))
-        setSuggestedAmount(amount || '')
-        if (!keyword) setTotalFavoritePair(favoritePairs.length)
+        // make sure same query when typing too fast
+        if (refKeywordSearching.current === keyword) {
+          setSuggestions(findLogoAndSortPair(activeTokens, recommendedPairs, chainId))
+          setListFavorite(findLogoAndSortPair(activeTokens, favoritePairs, chainId))
+          setSuggestedAmount(amount || '')
+          if (!keyword) setTotalFavoritePair(favoritePairs.length)
+        }
       })
       .catch(e => {
         console.log(e)
@@ -110,7 +115,7 @@ export default forwardRef<PairSuggestionHandle, Props>(function PairSuggestionIn
     keyword && mixpanelHandler(MIXPANEL_TYPE.TAS_TYPING_KEYWORD, keyword)
   }
 
-  const searchDebounce = useCallback(debounce(searchSuggestionPair, 300), [chainId, account])
+  const searchDebounce = useCallback(debounce(searchSuggestionPair, 100), [chainId, account])
   const notify = useNotify()
   const addToFavorite = (item: SuggestionPairData) => {
     focusInput()
@@ -219,7 +224,7 @@ export default forwardRef<PairSuggestionHandle, Props>(function PairSuggestionIn
     const fromToken = findToken(item.tokenIn)
     const toToken = findToken(item.tokenOut)
     onSelectSuggestedPair(fromToken, toToken, suggestedAmount)
-    setIsShowListPair(false)
+    hideListView()
   }
 
   useImperativeHandle(ref, () => ({

@@ -144,7 +144,7 @@ export enum NotificationType {
 export const useNotify = () => {
   const addPopup = useAddPopup()
   return useCallback(
-    (data: PopupContentSimple, removeAfterMs = 3000) => {
+    (data: PopupContentSimple, removeAfterMs = 4000) => {
       addPopup(data, PopupType.SIMPLE, data.title, removeAfterMs)
     },
     [addPopup],
