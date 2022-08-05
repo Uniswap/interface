@@ -1,5 +1,5 @@
 import { appSelect } from 'src/app/hooks'
-import { Account, BackupType } from 'src/features/wallet/accounts/types'
+import { Account, AccountType, BackupType, NativeAccount } from 'src/features/wallet/accounts/types'
 import { selectAccounts } from 'src/features/wallet/selectors'
 import {
   editAccount as editInStore,
@@ -9,7 +9,7 @@ import { disconnectWCForAccount } from 'src/features/walletConnect/WalletConnect
 import { unique } from 'src/utils/array'
 import { logger } from 'src/utils/logger'
 import { createMonitoredSaga } from 'src/utils/saga'
-import { call, put } from 'typed-redux-saga'
+import { all, call, put } from 'typed-redux-saga'
 
 export enum EditAccountAction {
   AddBackupMethod = 'addbackupmethod',
@@ -95,18 +95,37 @@ function* removeAccount(params: RemoveParams) {
   yield* call(disconnectWCForAccount, address)
 }
 
-// TODO: should be per recovery phrase
+// Adds the backup to all accounts that share the same seed phrase
 function* addBackupMethod(params: AddBackupMethodParams, account: Account) {
-  const { address, backupMethod } = params
-  logger.info('editAccountSaga', 'addBackupMethod', 'Adding backup method', address)
-  yield* put(
-    editInStore({
-      address,
-      updatedAccount: {
-        ...account,
-        backups: unique([...(account.backups ?? []), backupMethod]),
-      },
+  if (account.type !== AccountType.Native) return
+
+  const { backupMethod } = params
+
+  const accounts = yield* appSelect(selectAccounts)
+  const mnemonicAccounts = Object.values(accounts).filter(
+    (a) => a.type === AccountType.Native && a.mnemonicId === (account as NativeAccount).mnemonicId
+  )
+
+  const updatedBackups: BackupType[] = unique([...(account.backups ?? []), backupMethod])
+  yield* all(
+    mnemonicAccounts.map((mnemonicAccount: Account) => {
+      return put(
+        editInStore({
+          address: mnemonicAccount.address,
+          updatedAccount: {
+            ...mnemonicAccount,
+            backups: updatedBackups,
+          },
+        })
+      )
     })
+  )
+
+  logger.info(
+    'editAccountSaga',
+    'addBackupMethod',
+    'Adding backup method',
+    mnemonicAccounts.map((a) => a.address)
   )
 }
 
