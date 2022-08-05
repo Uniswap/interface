@@ -21,7 +21,7 @@ import SwapDetailsDropdown from 'components/swap/SwapDetailsDropdown'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { isSupportedChain } from 'constants/chains'
-import { Phase0Variant, usePhase0Flag } from 'featureFlag'
+import { Phase0Variant, usePhase0Flag } from 'featureFlags/flags/phase0'
 import { useSwapCallback } from 'hooks/useSwapCallback'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import JSBI from 'jsbi'
@@ -165,6 +165,37 @@ function largerPercentValue(a?: Percent, b?: Percent) {
     return b
   }
   return undefined
+}
+
+const formatApproveTokenTxnSubmittedEventProperties = (
+  approvalOptimizedTrade:
+    | Trade<Currency, Currency, TradeType>
+    | V2Trade<Currency, Currency, TradeType>
+    | V3Trade<Currency, Currency, TradeType>
+    | undefined
+) => {
+  if (!approvalOptimizedTrade) return {}
+  return {
+    chain_id: approvalOptimizedTrade.inputAmount.currency.chainId,
+    token_symbol: approvalOptimizedTrade.inputAmount.currency.symbol,
+    token_address: getTokenAddress(approvalOptimizedTrade.inputAmount.currency),
+  }
+}
+
+const formatWrapTokenTxnSubmittedEventProperties = (
+  inputCurrency: Currency | null | undefined,
+  outputCurrency: Currency | null | undefined,
+  parsedAmount: CurrencyAmount<Currency> | undefined
+) => {
+  if (!inputCurrency || !outputCurrency || !parsedAmount) return {}
+  return {
+    token_in_address: getTokenAddress(inputCurrency),
+    token_out_address: getTokenAddress(outputCurrency),
+    token_in_symbol: inputCurrency.symbol,
+    token_out_symbol: outputCurrency.symbol,
+    chain_id: inputCurrency.chainId,
+    amount: parsedAmount ? formatToDecimal(parsedAmount, parsedAmount?.currency.decimals) : undefined,
+  }
 }
 
 const formatSwapQuoteReceivedEventProperties = (

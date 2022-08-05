@@ -1,4 +1,4 @@
-import { Phase0Variant, usePhase0Flag } from 'featureFlag'
+import { Phase0Variant, usePhase0Flag } from 'featureFlags/flags/phase0'
 import { darken } from 'polished'
 import { useState } from 'react'
 import styled, { keyframes } from 'styled-components/macro'
