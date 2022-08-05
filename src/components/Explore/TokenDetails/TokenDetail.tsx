@@ -7,7 +7,6 @@ import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import { getChainInfo } from 'constants/chainInfo'
 import { checkWarning } from 'constants/tokenSafety'
 import { useCurrency, useIsUserAddedToken, useToken } from 'hooks/Tokens'
-import { TimePeriod } from 'hooks/useTopTokens'
 import { useAtomValue } from 'jotai/utils'
 import { darken } from 'polished'
 import { useCallback } from 'react'
@@ -21,15 +20,6 @@ import { favoritesAtom, useToggleFavorite } from '../state'
 import { ClickFavorited } from '../TokenTable/TokenRow'
 import Resource from './Resource'
 import ShareButton from './ShareButton'
-
-const TIME_DISPLAYS: Record<TimePeriod, string> = {
-  [TimePeriod.hour]: '1H',
-  [TimePeriod.day]: '1D',
-  [TimePeriod.week]: '1W',
-  [TimePeriod.month]: '1M',
-  [TimePeriod.year]: '1Y',
-}
-const TIME_PERIODS = [TimePeriod.hour, TimePeriod.day, TimePeriod.week, TimePeriod.month, TimePeriod.year]
 
 export const AboutSection = styled.div`
   display: flex;
@@ -89,10 +79,8 @@ const Contract = styled.div`
 `
 export const ChartContainer = styled.div`
   display: flex;
-  height: 404px;
-  border-bottom: 1px solid ${({ theme }) => theme.backgroundOutline};
+  height: 436px;
   align-items: center;
-  overflow: hidden;
 `
 export const Stat = styled.div`
   display: flex;
@@ -117,21 +105,6 @@ export const StatPair = styled.div`
   flex: 1;
   flex-wrap: wrap;
 `
-const TimeButton = styled.button<{ active: boolean }>`
-  background-color: ${({ theme, active }) => (active ? theme.accentActive : 'transparent')};
-  font-size: 14px;
-  width: 36px;
-  height: 36px;
-  border-radius: 12px;
-  border: none;
-  cursor: pointer;
-  color: ${({ theme }) => theme.textPrimary};
-`
-export const TimeOptionsContainer = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  gap: 4px;
-`
 export const TokenNameCell = styled.div`
   display: flex;
   gap: 8px;
@@ -154,7 +127,6 @@ const TokenSymbol = styled.span`
 `
 export const TopArea = styled.div`
   max-width: 832px;
-  overflow: hidden;
 `
 export const ResourcesContainer = styled.div`
   display: flex;
@@ -186,7 +158,6 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
   const token = useToken(address)
   const currency = useCurrency(address)
   const favoriteTokens = useAtomValue<string[]>(favoritesAtom)
-  const [activeTimePeriod, setTimePeriod] = useState(TimePeriod.hour)
   const isFavorited = favoriteTokens.includes(address)
   const toggleFavorite = useToggleFavorite(address)
   const warning = checkWarning(address)
@@ -246,17 +217,6 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
         <ChartContainer>
           <ParentSize>{({ width, height }) => <PriceChart width={width} height={height} />}</ParentSize>
         </ChartContainer>
-        <TimeOptionsContainer>
-          {TIME_PERIODS.map((timePeriod) => (
-            <TimeButton
-              key={timePeriod}
-              active={activeTimePeriod === timePeriod}
-              onClick={() => setTimePeriod(timePeriod)}
-            >
-              {TIME_DISPLAYS[timePeriod]}
-            </TimeButton>
-          ))}
-        </TimeOptionsContainer>
       </ChartHeader>
       <AboutSection>
         <AboutHeader>
@@ -274,7 +234,8 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
             Market cap<StatPrice>${tokenMarketCap}</StatPrice>
           </Stat>
           <Stat>
-            {TIME_DISPLAYS[activeTimePeriod]} volume
+            {/* TODO: connect to chart's selected time */}
+            1h volume
             <StatPrice>${tokenVolume}</StatPrice>
           </Stat>
         </StatPair>
