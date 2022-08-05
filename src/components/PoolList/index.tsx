@@ -29,7 +29,6 @@ import ShareModal from 'components/ShareModal'
 import { useModalOpen, useOpenModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/actions'
 import ListItem from 'components/PoolList/ListItem'
-import useTheme from 'hooks/useTheme'
 import { STABLE_COINS_ADDRESS } from 'constants/tokens'
 import { Input as PaginationInput } from 'components/Pagination/PaginationInputOnMobile'
 
@@ -369,8 +368,6 @@ const PoolList = ({ currencies, searchValue, isShowOnlyActiveFarmPools, onlyShow
       setSharedPoolId(undefined)
     }
   }, [isShareModalOpen, setSharedPoolId])
-
-  const theme = useTheme()
 
   if (loadingUserLiquidityPositions || loadingPoolsData) return <LocalLoader />
 

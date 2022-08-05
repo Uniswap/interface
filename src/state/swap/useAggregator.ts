@@ -25,7 +25,7 @@ export function useDerivedSwapInfoV2(): {
   v2Trade: Aggregator | undefined
   tradeComparer: AggregationComparer | undefined
   inputError?: string
-  onRefresh: (value?: boolean) => void
+  onRefresh: (resetRoute: boolean, minimumLoadingTime: number) => void
   loading: boolean
 } {
   const { account } = useActiveWeb3React()

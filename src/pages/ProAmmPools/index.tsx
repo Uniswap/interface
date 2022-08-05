@@ -1,5 +1,4 @@
 import { Currency } from '@kyberswap/ks-sdk-core'
-import useTheme from 'hooks/useTheme'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useMedia } from 'react-use'
 import { Field } from 'state/mint/proamm/actions'
@@ -86,7 +85,6 @@ export default function ProAmmPoolList({
   onlyShowStable,
 }: PoolListProps) {
   const above1000 = useMedia('(min-width: 1000px)')
-  const theme = useTheme()
 
   const { data: farms } = useProMMFarms()
 
