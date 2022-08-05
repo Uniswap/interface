@@ -1,4 +1,4 @@
-import { Phase0Variant, usePhase0Flag } from 'featureFlag'
+import { Phase0Variant, usePhase0Flag } from 'featureFlags/flags/phase0'
 import { ReactNode, useCallback, useState } from 'react'
 import { HelpCircle } from 'react-feather'
 import styled from 'styled-components/macro'

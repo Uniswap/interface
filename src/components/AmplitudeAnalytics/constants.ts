@@ -110,6 +110,7 @@ export enum ModalName {
  * Use to identify low-level components given a TraceContext
  */
 export enum ElementName {
+  APPROVE_TOKEN_BUTTON = 'approve-token-button',
   AUTOROUTER_VISUALIZATION_ROW = 'expandable-autorouter-visualization-row',
   COMMON_BASES_CURRENCY_BUTTON = 'common-bases-currency-button',
   CONFIRM_SWAP_BUTTON = 'confirm-swap-or-send',
@@ -122,6 +123,7 @@ export enum ElementName {
   SWAP_TOKENS_REVERSE_ARROW_BUTTON = 'swap-tokens-reverse-arrow-button',
   TOKEN_SELECTOR_ROW = 'token-selector-row',
   WALLET_TYPE_OPTION = 'wallet-type-option',
+  WRAP_TOKEN_BUTTON = 'wrap-token-button',
   // alphabetize additional element names.
 }
 
