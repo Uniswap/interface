@@ -20,6 +20,7 @@ export function useFeatureFlagsContext(): FeatureFlagsContextType {
 
 /* update and save feature flag settings */
 export const featureFlagSettings = atomWithStorage<Record<string, string>>('featureFlags', {})
+
 export function useUpdateFlag() {
   const [featureFlags, setFeatureFlags] = useAtom(featureFlagSettings)
 
@@ -50,6 +51,10 @@ export function useFeatureFlagsIsLoaded(): boolean {
 export enum BaseVariant {
   Control = 'control',
   Enabled = 'enabled',
+}
+
+export enum FeatureFlag {
+  phase0 = 'phase0',
 }
 
 export function useBaseFlag(flag: string): BaseVariant {

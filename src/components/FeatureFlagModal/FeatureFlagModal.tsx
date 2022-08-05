@@ -1,4 +1,4 @@
-import { useUpdateFlag } from 'featureFlags'
+import { FeatureFlag, useUpdateFlag } from 'featureFlags'
 import { Phase0Variant, usePhase0Flag } from 'featureFlags/flags/phase0'
 import { useRef } from 'react'
 import { X } from 'react-feather'
@@ -42,18 +42,45 @@ const HeaderRow = styled(FeatureFlagRow)`
   margin-bottom: 8px;
 `
 
-function FeatureFlagOption({ option }: { option: string }) {
+function VariantOption({ option }: { option: string }) {
   return <option value={option}>{option}</option>
+}
+
+function FeatureFlagOption({
+  variants,
+  featureFlag,
+  value,
+  label,
+}: {
+  variants: string[]
+  featureFlag: FeatureFlag
+  value: string
+  label: string
+}) {
+  const updateFlag = useUpdateFlag()
+  return (
+    <FeatureFlagRow key={featureFlag as string}>
+      {featureFlag}: {label}
+      <select
+        id={featureFlag}
+        value={value}
+        onChange={(e) => {
+          updateFlag(featureFlag, e.target.value)
+          window.location.reload()
+        }}
+      >
+        {variants.map((variant) => (
+          <VariantOption key={variant} option={variant} />
+        ))}
+      </select>
+    </FeatureFlagRow>
+  )
 }
 
 export default function FeatureFlagModal() {
   const node = useRef<HTMLDivElement>()
   const open = useModalIsOpen(ApplicationModal.FEATURE_FLAGS)
   const toggle = useToggleFeatureFlags()
-
-  const updateFlag = useUpdateFlag()
-
-  const phase0Variant = usePhase0Flag()
 
   return (
     <ModalCard open={open} ref={node as any}>
@@ -64,20 +91,12 @@ export default function FeatureFlagModal() {
         </CloseWrapper>
       </HeaderRow>
 
-      <FeatureFlagRow>
-        {'Phase 0'}:
-        <select
-          id={'phase0'}
-          value={phase0Variant}
-          onChange={(e) => {
-            updateFlag('phase0', e.target.value)
-          }}
-        >
-          {Object.values(Phase0Variant).map((variant) => (
-            <FeatureFlagOption key={variant} option={variant} />
-          ))}
-        </select>
-      </FeatureFlagRow>
+      <FeatureFlagOption
+        variants={Object.values(Phase0Variant)}
+        value={usePhase0Flag()}
+        featureFlag={FeatureFlag.phase0}
+        label="All Phase 0 changes (redesign, explore, header)."
+      />
     </ModalCard>
   )
 }
