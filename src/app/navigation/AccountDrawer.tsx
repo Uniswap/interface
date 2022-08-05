@@ -1,5 +1,5 @@
 import { DrawerContentComponentProps } from '@react-navigation/drawer'
-import { default as React, useMemo, useState } from 'react'
+import { default as React, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ListRenderItemInfo } from 'react-native'
 import 'react-native-gesture-handler'
@@ -77,10 +77,14 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
     }
   }, [addressToAccount])
 
-  const onPressEdit = (address: Address) => {
-    setShowEditAccountModal(true)
-    setPendingEditAddress(address)
-  }
+  const onPressEdit = useCallback(
+    () => (address: Address) => {
+      setShowEditAccountModal(true)
+      setPendingEditAddress(address)
+    },
+    []
+  )
+
   const onPressEditCancel = () => {
     setShowEditAccountModal(false)
     setPendingEditAddress(null)
@@ -101,15 +105,20 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
     onPressEditCancel() // Dismiss bottom sheet
   }
 
-  const onPressAccount = (address: Address) => {
-    navigation.closeDrawer()
-    dispatch(activateAccount(address))
-  }
+  const onPressAccount = useCallback(() => {
+    return (address: Address) => {
+      navigation.closeDrawer()
+      dispatch(activateAccount(address))
+    }
+  }, [navigation, dispatch])
 
-  const onPressQRCode = (address: Address) => {
-    setQRCodeAddress(address)
-    setShowQRModal(true)
-  }
+  const onPressQRCode = useCallback(
+    () => (address: Address) => {
+      setQRCodeAddress(address)
+      setShowQRModal(true)
+    },
+    []
+  )
 
   const onCloseQrCode = () => setShowQRModal(false)
 
@@ -126,18 +135,22 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
     navigation.navigate(Screens.SettingsStack, { screen: Screens.Settings })
   }
 
-  const renderItem = ({ item }: ListRenderItemInfo<Account>) => {
-    return (
-      <AccountCardItem
-        account={item}
-        isActive={!!activeAccount && activeAccount.address === item.address}
-        isViewOnly={item.type === AccountType.Readonly}
-        onPress={onPressAccount}
-        onPressEdit={onPressEdit}
-        onPressQRCode={onPressQRCode}
-      />
-    )
-  }
+  const renderItem = useCallback(
+    () =>
+      ({ item }: ListRenderItemInfo<Account>) => {
+        return (
+          <AccountCardItem
+            account={item}
+            isActive={!!activeAccount && activeAccount.address === item.address}
+            isViewOnly={item.type === AccountType.Readonly}
+            onPress={onPressAccount()}
+            onPressEdit={onPressEdit()}
+            onPressQRCode={onPressQRCode()}
+          />
+        )
+      },
+    [onPressAccount, onPressEdit, onPressQRCode, activeAccount]
+  )
 
   const scrollY = useSharedValue(0)
   const scrollHandler = useAnimatedScrollHandler({
@@ -150,20 +163,18 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
       )
     },
   })
+
   const headerBorderStyle = useAnimatedStyle(() => {
     return {
       opacity: interpolate(scrollY.value, [0, CONTENT_MAX_SCROLL_Y], [0, 1], Extrapolate.CLAMP),
     }
-  })
+  }, [scrollY.value])
 
-  const header = (
-    <Flex bg="backgroundBackdrop" borderBottomColor="backgroundOutline" pt="sm">
-      <Text color="textPrimary" px="lg" variant="headlineSmall">
-        {t('Your wallets')}
-      </Text>
-      <AnimatedBox bg="backgroundOutline" height={1} style={headerBorderStyle} />
-    </Flex>
-  )
+  // useAnimatedStyle gets rebuilt on every re-render
+  // https://github.com/software-mansion/react-native-reanimated/issues/1767
+  // Make headerBorderStyle to depend only on `scrollY.value`
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const headerBorderStyleMemo = useMemo(() => headerBorderStyle, [scrollY.value])
 
   const editAccountOptions = useMemo<MenuItemProp[]>(() => {
     const onPressWalletSettings = () => {
@@ -327,18 +338,32 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
     return menuItems
   }, [hasImportedSeedPhrase, dispatch, navigation, t])
 
-  return (
-    <Screen bg="backgroundBackdrop">
+  const flatList = useMemo(
+    () => (
       <AnimatedFlatList
-        ListHeaderComponent={header}
+        ListHeaderComponent={
+          <Flex bg="backgroundBackdrop" borderBottomColor="backgroundOutline" pt="sm">
+            <Text color="textPrimary" px="lg" variant="headlineSmall">
+              {t('Your wallets')}
+            </Text>
+            <AnimatedBox bg="backgroundOutline" height={1} style={headerBorderStyleMemo} />
+          </Flex>
+        }
         data={accountsData}
         keyExtractor={key}
-        renderItem={renderItem}
+        renderItem={renderItem()}
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
         stickyHeaderIndices={[0]}
         onScroll={scrollHandler}
       />
+    ),
+    [t, accountsData, scrollHandler, renderItem, headerBorderStyleMemo]
+  )
+
+  return (
+    <Screen bg="backgroundBackdrop">
+      {flatList}
       <Flex>
         <Box bg="backgroundOutline" height={0.5} mb="sm" />
         <Flex gap="xl" pb="xl" px="lg">
