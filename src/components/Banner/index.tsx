@@ -6,9 +6,9 @@ import styled from 'styled-components'
 import { Autoplay, Navigation, Pagination } from 'swiper'
 import { Swiper, SwiperSlide } from 'swiper/react'
 
-import KyberSwapTradingCampaignCronosDesktop from 'assets/banners/kyberswap-trading-campaign-cronos-desktop.png'
-import KyberSwapTradingCampaignCronosMobile from 'assets/banners/kyberswap-trading-campaign-cronos-mobile.png'
-import KyberSwapTradingCampaignCronosTablet from 'assets/banners/kyberswap-trading-campaign-cronos-tablet.png'
+import KyberSwapTradingCampaignAthDesktop from 'assets/banners/kyberswap-trading-campaign-ath-desktop.png'
+import KyberSwapTradingCampaignAthMobile from 'assets/banners/kyberswap-trading-campaign-ath-mobile.png'
+import KyberSwapTradingCampaignAthTablet from 'assets/banners/kyberswap-trading-campaign-ath-tablet.png'
 import useTheme from 'hooks/useTheme'
 import { useWindowSize } from 'hooks/useWindowSize'
 import { ExternalLink } from 'theme'
@@ -99,18 +99,18 @@ function Banner({
 
   const ALL_BANNERS = [
     {
-      // KyberSwap Trading Campaign Cronos
-      id: 'kyberSwap-trading-campaign-cronos',
-      start: new Date('2022-07-26T00:00:00.000Z'),
-      end: new Date('2022-08-03T23:59:59.000Z'),
+      // KyberSwap Trading Campaign ATH
+      id: 'kyberSwap-trading-campaign-ath',
+      start: new Date('2022-08-08T09:00:00.000Z'),
+      end: new Date('2022-08-11T23:59:59.000Z'),
       img: isInModal
-        ? KyberSwapTradingCampaignCronosMobile
+        ? KyberSwapTradingCampaignAthMobile
         : w > 768
-        ? KyberSwapTradingCampaignCronosDesktop
+        ? KyberSwapTradingCampaignAthDesktop
         : w > 500
-        ? KyberSwapTradingCampaignCronosTablet
-        : KyberSwapTradingCampaignCronosMobile,
-      link: 'https://kyberswap.com/campaigns?selectedCampaignId=2&networkId=25&utm_source=kyberswap&utm_medium=banner&utm_campaign=cronostradingcontest&utm_content=onsite',
+        ? KyberSwapTradingCampaignAthTablet
+        : KyberSwapTradingCampaignAthMobile,
+      link: 'https://kyberswap.com/campaigns?selectedCampaignId=3&networkId=56&utm_source=partner&utm_medium=banner&utm_campaign=athtradingcontest&utm_content=onsite',
     },
   ]
 
