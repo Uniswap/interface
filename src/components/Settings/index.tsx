@@ -77,7 +77,7 @@ const MenuFlyoutBrowserStyle = css`
 const StyledLabel = styled.div`
   font-size: ${isMobile ? '14px' : '12px'};
   color: ${({ theme }) => theme.text};
-  font-weigh: 400;
+  font-weight: 400;
   line-height: 20px;
 `
 export default function SettingsTab() {

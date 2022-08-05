@@ -1,30 +1,28 @@
 import React, { useCallback, useContext, useEffect } from 'react'
 import { X } from 'react-feather'
 import { useSpring } from 'react-spring/web'
-import styled, { keyframes, ThemeContext } from 'styled-components'
+import styled, { DefaultTheme, keyframes, ThemeContext } from 'styled-components'
 import { animated } from 'react-spring'
-import { PopupContent } from 'state/application/actions'
-import { useRemovePopup } from 'state/application/hooks'
+import { PopupContentListUpdate, PopupContentSimple, PopupContentTxn, PopupType } from 'state/application/actions'
+import { NotificationType, useRemovePopup } from 'state/application/hooks'
 import ListUpdatePopup from './ListUpdatePopup'
 import TransactionPopup from './TransactionPopup'
 import SimplePopup from './SimplePopup'
+import { Flex } from 'rebass'
 
 export const StyledClose = styled(X)`
-  position: absolute;
-  right: 10px;
-  top: 10px;
-
+  margin-left: 10px;
   :hover {
     cursor: pointer;
   }
 `
+const delta = window.innerWidth + 'px'
 
 const rtl = keyframes`
   from {
     opacity: 0;
-    transform: translateX(1000px);
+    transform: translateX(${delta});
   }
-
   to {
     opacity: 1;
     transform: translateX(0);
@@ -36,25 +34,28 @@ const ltr = keyframes`
     opacity: 1;
     transform: translateX(0);
   }
-
   to {
     opacity: 0;
-    transform: translateX(1000px);
+    transform: translateX(${delta});
   }
 `
 
-export const Popup = styled.div<{ success?: boolean }>`
+const getBackgroundColor = (theme: DefaultTheme, type: NotificationType = NotificationType.ERROR) => {
+  const mapColor = {
+    [NotificationType.SUCCESS]: theme.bg21,
+    [NotificationType.ERROR]: theme.bg22,
+    [NotificationType.WARNING]: theme.bg23,
+  }
+  return mapColor[type]
+}
+
+export const Popup = styled.div<{ type?: NotificationType }>`
   display: inline-block;
   width: 100%;
-  background: ${({ theme, success }) => (success ? theme.bg21 : theme.bg22)};
+  background: ${({ theme, type }) => getBackgroundColor(theme, type)};
   position: relative;
   padding: 20px;
-  padding-right: 36px;
-
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    padding: 12px;
-    padding-right: 24px;
-  `}
+  padding-right: 12px;
 `
 
 const Fader = styled.div`
@@ -68,19 +69,19 @@ const Fader = styled.div`
 
 const AnimatedFader = animated(Fader)
 
-const PopupWrapper = styled.div`
+const PopupWrapper = styled.div<{ removeAfterMs?: number | null }>`
   position: relative;
   isolation: isolate;
   border-radius: 10px;
   overflow: hidden;
-  animation: ${rtl} 1.5s ease-in-out, ${ltr} 1.5s ease-in-out 14.15s;
-
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    width: min(calc(100vw - 32px), 425px);
-
-    &:not(:first-of-type) {
-      margin-top: 10px;
-    }
+  width: min(calc(100vw - 32px), 425px);
+  animation: ${rtl} 0.7s ease-in-out,
+    ${ltr} 0.5s ease-in-out ${({ removeAfterMs }) => (removeAfterMs || 15000) / 1000 - 0.2}s; // animation out auto play after removeAfterMs - 0.2 seconds
+  &:not(:first-of-type) {
+    margin-top: 15px;
+  }
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    margin: auto;
   `}
 `
 
@@ -97,16 +98,17 @@ export default function PopupItem({
   removeAfterMs,
   content,
   popKey,
+  popupType,
 }: {
   removeAfterMs: number | null
-  content: PopupContent
+  content: PopupContentTxn | PopupContentListUpdate | PopupContentSimple
   popKey: string
+  popupType: PopupType
 }) {
   const removePopup = useRemovePopup()
   const removeThisPopup = useCallback(() => removePopup(popKey), [popKey, removePopup])
   useEffect(() => {
-    if (removeAfterMs === null) return undefined
-
+    if (removeAfterMs === null) return
     const timeout = setTimeout(() => {
       removeThisPopup()
     }, removeAfterMs)
@@ -118,29 +120,30 @@ export default function PopupItem({
 
   const theme = useContext(ThemeContext)
 
+  let notiType: NotificationType
   let popupContent
-  if ('txn' in content) {
-    const {
-      txn: { hash, success, type, summary },
-    } = content
-    popupContent = <TransactionPopup hash={hash} success={success} type={type} summary={summary} />
-  } else if ('listUpdate' in content) {
-    const {
-      listUpdate: { listUrl, oldList, newList, auto },
-    } = content
-    popupContent = <ListUpdatePopup popKey={popKey} listUrl={listUrl} oldList={oldList} newList={newList} auto={auto} />
-  } else if ('simple' in content) {
-    const {
-      simple: { title, success, summary },
-    } = content
-    popupContent = <SimplePopup title={title} success={success} summary={summary} />
-  } else if ('truesightNoti' in content) {
-    const {
-      truesightNoti: { title },
-    } = content
-    popupContent = <SimplePopup title={title} />
+  switch (popupType) {
+    case PopupType.SIMPLE: {
+      const { title, summary, type = NotificationType.ERROR } = content as PopupContentSimple
+      notiType = type
+      popupContent = <SimplePopup title={title} type={type} summary={summary} />
+      break
+    }
+    case PopupType.TRANSACTION: {
+      const { hash, type, summary, notiType: _notiType = NotificationType.ERROR } = content as PopupContentTxn
+      notiType = _notiType
+      popupContent = <TransactionPopup hash={hash} notiType={notiType} type={type} summary={summary} />
+      break
+    }
+    case PopupType.LIST_UPDATE: {
+      const { listUrl, oldList, newList, auto } = content as PopupContentListUpdate
+      notiType = NotificationType.SUCCESS
+      popupContent = (
+        <ListUpdatePopup popKey={popKey} listUrl={listUrl} oldList={oldList} newList={newList} auto={auto} />
+      )
+      break
+    }
   }
-
   const faderStyle = useSpring({
     from: { width: '100%' },
     to: { width: '0%' },
@@ -148,12 +151,14 @@ export default function PopupItem({
   })
 
   return (
-    <PopupWrapper>
+    <PopupWrapper removeAfterMs={removeAfterMs}>
       <SolidBackgroundLayer />
-      <Popup success={'txn' in content ? content.txn.success : true}>
-        <StyledClose color={theme.text2} onClick={removeThisPopup} />
-        {popupContent}
-        {removeAfterMs !== null ? <AnimatedFader style={faderStyle} /> : null}
+      <Popup type={notiType}>
+        <Flex justifyContent={'space-between'}>
+          {popupContent}
+          <StyledClose color={theme.text2} onClick={removeThisPopup} />
+        </Flex>
+        {removeAfterMs && <AnimatedFader style={faderStyle} />}
       </Popup>
     </PopupWrapper>
   )

@@ -4,7 +4,7 @@ import { TransactionReceipt } from '@ethersproject/abstract-provider'
 import { ethers } from 'ethers'
 import { BigNumber } from '@ethersproject/bignumber'
 import { useActiveWeb3React } from '../../hooks'
-import { useAddPopup, useBlockNumber } from '../application/hooks'
+import { NotificationType, useBlockNumber, useTransactionNotify } from '../application/hooks'
 import { AppDispatch, AppState } from '../index'
 import { checkedTransaction, finalizeTransaction } from './actions'
 import { AGGREGATOR_ROUTER_SWAPPED_EVENT_TOPIC } from 'constants/index'
@@ -42,7 +42,6 @@ export default function Updater(): null {
   const transactions = useMemo(() => (chainId ? state[chainId] ?? {} : {}), [chainId, state])
 
   // show popup on confirm
-  const addPopup = useAddPopup()
 
   const parseTransactionType = useCallback(
     (receipt: TransactionReceipt): string | undefined => {
@@ -97,6 +96,7 @@ export default function Updater(): null {
     [transactions],
   )
   const { mixpanelHandler, subgraphMixpanelHandler } = useMixpanel()
+  const transactionNotify = useTransactionNotify()
 
   useEffect(() => {
     if (!chainId || !library || !lastBlockNumber) return
@@ -129,17 +129,12 @@ export default function Updater(): null {
                 }),
               )
 
-              addPopup(
-                {
-                  txn: {
-                    hash,
-                    success: receipt.status === 1,
-                    type: parseTransactionType(receipt),
-                    summary: parseTransactionSummary(receipt),
-                  },
-                },
+              transactionNotify({
                 hash,
-              )
+                notiType: receipt.status === 1 ? NotificationType.SUCCESS : NotificationType.ERROR,
+                type: parseTransactionType(receipt),
+                summary: parseTransactionSummary(receipt),
+              })
               if (receipt.status === 1 && transaction && transaction.arbitrary) {
                 switch (transaction.type) {
                   case 'Swap': {
@@ -185,16 +180,7 @@ export default function Updater(): null {
       })
 
     // eslint-disable-next-line
-  }, [
-    chainId,
-    library,
-    transactions,
-    lastBlockNumber,
-    dispatch,
-    addPopup,
-    parseTransactionSummary,
-    parseTransactionType,
-  ])
+  }, [chainId, library, transactions, lastBlockNumber, dispatch, parseTransactionSummary, parseTransactionType])
 
   return null
 }

@@ -17,7 +17,7 @@ export default function TokenWarningModal({
 }) {
   return (
     <Modal isOpen={isOpen} onDismiss={onDismiss} maxHeight={100}>
-      <ImportToken tokens={tokens} handleCurrencySelect={onConfirm} />
+      <ImportToken tokens={tokens} handleCurrencySelect={onConfirm} enterToImport={isOpen} />
     </Modal>
   )
 }

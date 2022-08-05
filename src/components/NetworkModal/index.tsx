@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { Trans } from '@lingui/macro'
 
-import { NETWORKS_INFO, MAINNET_NETWORKS } from '../../constants/networks'
+import { NETWORKS_INFO, MAINNET_NETWORKS, SUPPORTED_NETWORKS } from '../../constants/networks'
 import { useModalOpen, useNetworkModalToggle } from 'state/application/hooks'
 
 import { ApplicationModal } from 'state/application/actions'
@@ -76,7 +76,7 @@ export const SelectNetworkButton = styled(ButtonEmpty)`
     cursor: not-allowed;
   }
 `
-
+const SHOW_NETWORKS = process.env.NODE_ENV === 'production' ? MAINNET_NETWORKS : SUPPORTED_NETWORKS
 export default function NetworkModal(): JSX.Element | null {
   const { chainId } = useActiveWeb3React()
   const networkModalOpen = useModalOpen(ApplicationModal.NETWORK)
@@ -98,7 +98,7 @@ export default function NetworkModal(): JSX.Element | null {
           </Flex>
         </Flex>
         <NetworkList>
-          {MAINNET_NETWORKS.map((key: ChainId, i: number) => {
+          {SHOW_NETWORKS.map((key: ChainId, i: number) => {
             if (chainId === key) {
               return (
                 <SelectNetworkButton key={i} padding="0">

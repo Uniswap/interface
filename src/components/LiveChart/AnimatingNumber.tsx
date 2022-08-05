@@ -1,5 +1,4 @@
-import React from 'react'
-import { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 import { Text, Flex } from 'rebass'
 import useTheme from 'hooks/useTheme'

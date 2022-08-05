@@ -33,25 +33,6 @@ export const useProMMFarms = () => {
   return useSelector((state: AppState) => state.prommFarms)
 }
 
-export const useProMMFarmsFetchOnlyOne = () => {
-  const { data: farms } = useProMMFarms()
-  const getProMMFarm = useGetProMMFarms()
-
-  const firstRender = useRef(true)
-
-  const { chainId } = useActiveWeb3React()
-  const previousChainId = usePrevious(chainId)
-
-  useEffect(() => {
-    if ((!Object.keys(farms).length && firstRender.current) || chainId !== previousChainId) {
-      getProMMFarm()
-      firstRender.current = false
-    }
-  }, [previousChainId, farms, getProMMFarm, chainId])
-
-  return farms
-}
-
 export const useGetProMMFarms = () => {
   const dispatch = useAppDispatch()
   const { chainId, account } = useActiveWeb3React()
@@ -183,6 +164,25 @@ export const useGetProMMFarms = () => {
   }, [chainId, prevChainId, dispatch, prommFarmContracts, account, positionManager])
 
   return getProMMFarms
+}
+
+export const useProMMFarmsFetchOnlyOne = () => {
+  const { data: farms } = useProMMFarms()
+  const getProMMFarm = useGetProMMFarms()
+
+  const firstRender = useRef(true)
+
+  const { chainId } = useActiveWeb3React()
+  const previousChainId = usePrevious(chainId)
+
+  useEffect(() => {
+    if ((!Object.keys(farms).length && firstRender.current) || chainId !== previousChainId) {
+      getProMMFarm()
+      firstRender.current = false
+    }
+  }, [previousChainId, farms, getProMMFarm, chainId])
+
+  return farms
 }
 
 export const useFarmAction = (address: string) => {

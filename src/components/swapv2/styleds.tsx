@@ -8,7 +8,7 @@ import { AutoColumn } from '../Column'
 import { errorFriendly } from 'utils/dmm'
 import { ReactComponent as Alert } from '../../assets/images/alert.svg'
 import Modal, { ModalProps } from 'components/Modal'
-import { Z_INDEXS } from 'styles'
+import { Z_INDEXS } from 'constants/styles'
 
 export const PageWrapper = styled.div`
   display: flex;

@@ -8,7 +8,7 @@ import styled, {
 import { useIsDarkMode } from 'state/user/hooks'
 import { Text, TextProps } from 'rebass'
 import { Colors } from './styled'
-import { Z_INDEXS } from 'styles'
+import { Z_INDEXS } from 'constants/styles'
 
 export * from './components'
 
@@ -92,10 +92,13 @@ export function colors(darkMode: boolean): Colors {
     bg20: darkMode ? '#243036' : '#F5F5F5',
     bg21: darkMode
       ? 'linear-gradient(90deg, rgba(29, 122, 95, 0.5) 0%, rgba(29, 122, 95, 0) 100%)'
-      : 'linear-gradient(90deg, rgba(49, 203, 158, 0.15) 0%, rgba(49, 203, 158, 0) 100%)',
+      : 'linear-gradient(90deg, rgba(49, 203, 158, 0.15) 0%, rgba(49, 203, 158, 0) 100%)', // success
     bg22: darkMode
       ? 'linear-gradient(90deg, rgba(255, 83, 123, 0.4) 0%, rgba(255, 83, 123, 0) 100%)'
-      : 'linear-gradient(90deg, rgba(255, 83, 123, 0.15) 0%, rgba(255, 83, 123, 0) 100%)',
+      : 'linear-gradient(90deg, rgba(255, 83, 123, 0.15) 0%, rgba(255, 83, 123, 0) 100%)', // error
+    bg23: darkMode
+      ? 'linear-gradient(90deg, rgba(255, 153, 1, 0.5) 0%, rgba(255, 153, 1, 0) 100%)'
+      : 'linear-gradient(90deg, rgba(255, 153, 1, 0.5) 0%, rgba(255, 153, 1, 0) 100%)', // warning
 
     //specialty colors
     modalBG: darkMode ? 'rgba(0,0,0,.425)' : 'rgba(0,0,0,0.3)',

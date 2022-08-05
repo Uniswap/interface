@@ -2,7 +2,7 @@ import React, { useContext } from 'react'
 import { MobileModalWrapper, StyledActionButtonSwapForm } from 'components/swapv2/styleds'
 import { Flex, Text } from 'rebass'
 import { ButtonText } from 'theme/components'
-import { X } from 'react-feather'
+
 import { ThemeContext } from 'styled-components'
 import { isMobile, MobileView } from 'react-device-detect'
 import { useModalOpen, useToggleModal } from 'state/application/hooks'
@@ -12,7 +12,7 @@ import { Trans, t } from '@lingui/macro'
 import { Field } from 'state/swap/actions'
 import { Currency } from '@kyberswap/ks-sdk-core'
 import TokenInfo from 'components/swapv2/TokenInfo'
-import { Info } from 'react-feather'
+import { X, Info } from 'react-feather'
 import { MouseoverTooltip } from 'components/Tooltip'
 
 function MobileTradeRoutes({

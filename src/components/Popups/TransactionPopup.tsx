@@ -8,6 +8,7 @@ import { AutoColumn } from 'components/Column'
 import { AutoRow } from 'components/Row'
 import IconSuccess from 'assets/svg/notification_icon_success.svg'
 import IconFailure from 'assets/svg/notification_icon_failure.svg'
+import { NotificationType } from 'state/application/hooks'
 
 const RowNoFlex = styled(AutoRow)`
   flex-wrap: nowrap;
@@ -124,17 +125,17 @@ export const SUMMARY: {
 
 export default function TransactionPopup({
   hash,
-  success,
+  notiType,
   type,
   summary,
 }: {
   hash: string
-  success?: boolean
+  notiType: NotificationType
   type?: string
   summary?: string
 }) {
   const { chainId } = useActiveWeb3React()
-
+  const success = notiType === NotificationType.SUCCESS
   const theme = useContext(ThemeContext)
 
   return (

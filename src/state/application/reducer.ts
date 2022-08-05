@@ -12,9 +12,16 @@ import {
   updateChainIdWhenNotConnected,
   setGasPrice,
   updatePrommETHPrice,
+  PopupType,
 } from './actions'
 
-type PopupList = Array<{ key: string; show: boolean; content: PopupContent; removeAfterMs: number | null }>
+type PopupList = Array<{
+  key: string
+  show: boolean
+  content: PopupContent
+  removeAfterMs: number | null
+  popupType: PopupType
+}>
 
 type ETHPrice = {
   currentPrice?: string
@@ -63,13 +70,14 @@ export default createReducer(initialState, builder =>
     .addCase(setOpenModal, (state, action) => {
       state.openModal = action.payload
     })
-    .addCase(addPopup, (state, { payload: { content, key, removeAfterMs = 15000 } }) => {
+    .addCase(addPopup, (state, { payload: { content, key, removeAfterMs = 15000, popupType } }) => {
       state.popupList = (key ? state.popupList.filter(popup => popup.key !== key) : state.popupList).concat([
         {
           key: key || nanoid(),
           show: true,
           content,
           removeAfterMs,
+          popupType,
         },
       ])
     })

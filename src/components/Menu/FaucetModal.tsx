@@ -2,11 +2,16 @@ import { Trans, t } from '@lingui/macro'
 import React, { useContext, useEffect, useMemo, useState } from 'react'
 import { Flex, Text } from 'rebass'
 import { ApplicationModal } from 'state/application/actions'
-import { useAddPopup, useModalOpen, useToggleModal, useWalletModalToggle } from 'state/application/hooks'
-import { ThemeContext } from 'styled-components'
+import {
+  NotificationType,
+  useModalOpen,
+  useNotify,
+  useToggleModal,
+  useWalletModalToggle,
+} from 'state/application/hooks'
+import styled, { ThemeContext } from 'styled-components'
 import { ButtonPrimary } from 'components/Button'
 import { getTokenLogoURL, isAddress, shortenAddress } from 'utils'
-import styled from 'styled-components'
 import { CloseIcon } from 'theme'
 import { RowBetween } from 'components/Row'
 import { useActiveWeb3React } from 'hooks'
@@ -14,7 +19,7 @@ import Modal from 'components/Modal'
 import { Fraction, ChainId } from '@kyberswap/ks-sdk-core'
 import { BigNumber } from 'ethers'
 import { useAllTokens } from 'hooks/Tokens'
-import { filterTokens } from 'components/SearchModal/filtering'
+import { filterTokens } from 'utils/filtering'
 import Logo from 'components/Logo'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import JSBI from 'jsbi'
@@ -50,7 +55,7 @@ function FaucetModal() {
   const toggle = useToggleModal(ApplicationModal.FAUCET_POPUP)
   const theme = useContext(ThemeContext)
   const [rewardData, setRewardData] = useState<{ amount: BigNumber; tokenAddress: string; program: number }>()
-  const addPopup = useAddPopup()
+  const notify = useNotify()
   const toggleWalletModal = useWalletModalToggle()
   const { mixpanelHandler } = useMixpanel()
   const allTokens = useAllTokens()
@@ -84,14 +89,12 @@ function FaucetModal() {
       })
       const content = await rawResponse.json()
       if (content) {
-        addPopup({
-          simple: {
-            title: t`Request to Faucet - Submitted`,
-            success: true,
-            summary: t`You will receive ${
-              rewardData?.amount ? getFullDisplayBalance(rewardData?.amount, token?.decimals) : 0
-            } ${tokenSymbol} soon!`,
-          },
+        notify({
+          title: t`Request to Faucet - Submitted`,
+          type: NotificationType.SUCCESS,
+          summary: t`You will receive ${
+            rewardData?.amount ? getFullDisplayBalance(rewardData?.amount, token?.decimals) : 0
+          } ${tokenSymbol} soon!`,
         })
         setRewardData(rw => {
           if (rw) {

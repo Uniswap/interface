@@ -4,6 +4,7 @@ import { useActiveWeb3React } from 'hooks'
 import useSWR from 'swr'
 import { getUnixTime, subHours } from 'date-fns'
 import { NETWORKS_INFO } from 'constants/networks'
+import { COINGECKO_API_URL } from 'constants/index'
 
 export enum LiveDataTimeframeEnum {
   HOUR = '1H',
@@ -41,7 +42,7 @@ const generateCoingeckoUrl = (
   const timeFrom =
     timeFrame === 'live' ? timeTo - 1000 : getUnixTime(subHours(new Date(), getTimeFrameHours(timeFrame)))
 
-  return `https://api.coingecko.com/api/v3/coins/${
+  return `${COINGECKO_API_URL}/coins/${
     NETWORKS_INFO[chainId || ChainId.MAINNET].coingeckoNetworkId
   }/contract/${address}/market_chart/range?vs_currency=usd&from=${timeFrom}&to=${timeTo}`
 }

@@ -1,4 +1,4 @@
-import { ChainId, Currency, CurrencyAmount, Token } from '@kyberswap/ks-sdk-core'
+import { ChainId, Currency, CurrencyAmount, NativeCurrency, Token } from '@kyberswap/ks-sdk-core'
 import JSBI from 'jsbi'
 import React, { useCallback, useContext, useEffect, useMemo, useState, useRef } from 'react'
 import { AlertTriangle } from 'react-feather'
@@ -34,6 +34,7 @@ import {
   TabContainer,
   TabWrapper,
   Wrapper,
+  StyledActionButtonSwapForm,
 } from 'components/swapv2/styleds'
 import TokenWarningModal from 'components/TokenWarningModal'
 import ProgressSteps from 'components/ProgressSteps'
@@ -76,6 +77,7 @@ import TokenInfoV2 from 'components/swapv2/TokenInfoV2'
 import MobileLiveChart from 'components/swapv2/MobileLiveChart'
 import MobileTradeRoutes from 'components/swapv2/MobileTradeRoutes'
 import MobileTokenInfo from 'components/swapv2/MobileTokenInfo'
+import PairSuggestion, { PairSuggestionHandle } from 'components/swapv2/PairSuggestion'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import { currencyId } from 'utils/currencyId'
 import Banner from 'components/Banner'
@@ -85,12 +87,11 @@ import { NETWORKS_INFO, SUPPORTED_NETWORKS } from 'constants/networks'
 import { useActiveNetwork } from 'hooks/useActiveNetwork'
 import { convertToSlug, getNetworkSlug, getSymbolSlug } from 'utils/string'
 import { checkPairInWhiteList, convertSymbol } from 'utils/tokenInfo'
-import { filterTokensWithExactKeyword } from 'components/SearchModal/filtering'
+import { filterTokensWithExactKeyword } from 'utils/filtering'
 import { nativeOnChain } from 'constants/tokens'
 import usePrevious from 'hooks/usePrevious'
 import SettingsPanel from 'components/swapv2/SwapSettingsPanel'
 import TransactionSettingsIcon from 'components/Icons/TransactionSettingsIcon'
-import { StyledActionButtonSwapForm } from 'components/swapv2/styleds'
 import GasPriceTrackerPanel from 'components/swapv2/GasPriceTrackerPanel'
 import LiquiditySourcesPanel from 'components/swapv2/LiquiditySourcesPanel'
 import useParsedQueryString from 'hooks/useParsedQueryString'
@@ -98,6 +99,9 @@ import { ReactComponent as TutorialSvg } from 'assets/svg/play_circle_outline.sv
 import Tutorial, { TutorialType } from 'components/Tutorial'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { reportException } from 'utils/sentry'
+import { Z_INDEXS } from 'constants/styles'
+import { stringify } from 'qs'
+import { debounce } from 'lodash'
 
 const TutorialIcon = styled(TutorialSvg)`
   width: 22px;
@@ -146,7 +150,7 @@ const highlight = (theme: DefaultTheme) => keyframes`
 
 export const AppBodyWrapped = styled(BodyWrapper)`
   box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.04);
-  z-index: 1;
+  z-index: ${Z_INDEXS.SWAP_FORM};
   padding: 16px 16px 24px;
   margin-top: 0;
 
@@ -179,7 +183,10 @@ export default function Swap({ history }: RouteComponentProps) {
   const isShowTokenInfoSetting = useShowTokenInfo()
   const qs = useParsedQueryString()
 
-  const shouldHighlightSwapBox = (qs.highlightBox as string) === 'true'
+  const refSuggestPair = useRef<PairSuggestionHandle>(null)
+  const [showingPairSuggestionImport, setShowingPairSuggestionImport] = useState<boolean>(false) // show modal import when click pair suggestion
+
+  const shouldHighlightSwapBox = qs.highlightBox === 'true'
 
   const [isSelectCurencyMannual, setIsSelectCurencyMannual] = useState(false) // true when: select token input, output mannualy or click rotate token.
   // else select via url
@@ -291,8 +298,19 @@ export default function Swap({ history }: RouteComponentProps) {
 
   // reset if they close warning without tokens in params
   const handleDismissTokenWarning = useCallback(() => {
-    setDismissTokenWarning(true)
-  }, [])
+    if (showingPairSuggestionImport) {
+      setShowingPairSuggestionImport(false)
+    } else {
+      setDismissTokenWarning(true)
+    }
+  }, [showingPairSuggestionImport])
+
+  const handleConfirmTokenWarning = useCallback(() => {
+    handleDismissTokenWarning()
+    if (showingPairSuggestionImport) {
+      refSuggestPair.current?.onConfirmImportToken() // callback from children
+    }
+  }, [handleDismissTokenWarning, showingPairSuggestionImport])
 
   // modal and loading
   const [{ showConfirm, tradeToConfirm, swapErrorMessage, attemptingTxn, txHash }, setSwapState] = useState<{
@@ -454,9 +472,17 @@ export default function Swap({ history }: RouteComponentProps) {
     return filterTokensWithExactKeyword(Object.values(defaultTokens), keyword)[0]
   }
 
-  const navigate = (url: string) => {
-    history.push(`${url}${window.location.search}`) // keep query params
-  }
+  const navigate = useCallback(
+    (url: string) => {
+      const newQs = { ...qs }
+      // /swap/net/symA-to-symB?inputCurrency= addressC/symC &outputCurrency= addressD/symD
+      delete newQs.outputCurrency
+      delete newQs.inputCurrency
+      delete newQs.networkId
+      history.push(`${url}?${stringify(newQs)}`) // keep query params
+    },
+    [history, qs],
+  )
 
   function findTokenPairFromUrl() {
     let { fromCurrency, toCurrency, network } = getUrlMatchParams()
@@ -471,7 +497,7 @@ export default function Swap({ history }: RouteComponentProps) {
 
     const isSame = fromCurrency && fromCurrency === toCurrency
     if (!toCurrency || isSame) {
-      // net/xxx
+      // net/symbol
       const fromToken = findToken(fromCurrency)
       if (fromToken) {
         onCurrencySelection(Field.INPUT, fromToken)
@@ -511,7 +537,7 @@ export default function Swap({ history }: RouteComponentProps) {
   }
 
   const checkAutoSelectTokenFromUrl = () => {
-    // check case:  `/swap/net/x-to-y` or `/swap/net/x` is valid
+    // check case:  `/swap/net/sym-to-sym` or `/swap/net/sym` is valid
     const { fromCurrency, network } = getUrlMatchParams()
     if (!fromCurrency || !network) return
 
@@ -529,13 +555,29 @@ export default function Swap({ history }: RouteComponentProps) {
     }
   }
 
-  const syncUrl = () => {
-    const symbolIn = getSymbolSlug(currencyIn)
-    const symbolOut = getSymbolSlug(currencyOut)
-    if (symbolIn && symbolOut && chainId) {
-      navigate(`/swap/${getNetworkSlug(chainId)}/${symbolIn}-to-${symbolOut}`)
-    }
-  }
+  const syncUrl = useCallback(
+    (currencyIn: Currency | undefined, currencyOut: Currency | undefined) => {
+      const symbolIn = getSymbolSlug(currencyIn)
+      const symbolOut = getSymbolSlug(currencyOut)
+      if (symbolIn && symbolOut && chainId) {
+        navigate(`/swap/${getNetworkSlug(chainId)}/${symbolIn}-to-${symbolOut}`)
+      }
+    },
+    [navigate, chainId],
+  )
+
+  const onSelectSuggestedPair = useCallback(
+    (
+      fromToken: NativeCurrency | Token | undefined | null,
+      toToken: NativeCurrency | Token | undefined | null,
+      amount: string,
+    ) => {
+      if (fromToken) onCurrencySelection(Field.INPUT, fromToken)
+      if (toToken) onCurrencySelection(Field.OUTPUT, toToken)
+      if (amount) handleTypeInput(amount)
+    },
+    [handleTypeInput, onCurrencySelection],
+  )
 
   const tokenImports: Token[] = useUserAddedTokens()
   const prevTokenImports = usePrevious(tokenImports) || []
@@ -592,9 +634,35 @@ export default function Swap({ history }: RouteComponentProps) {
   }, [])
 
   useEffect(() => {
-    if (isSelectCurencyMannual) syncUrl() // when we select token mannual
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currencyIn, currencyOut])
+    if (isSelectCurencyMannual) syncUrl(currencyIn, currencyOut) // when we select token manual
+  }, [currencyIn, currencyOut, isSelectCurencyMannual, syncUrl])
+
+  const refLoadedCurrency = useRef<{
+    currencyIn: Currency | null | undefined
+    currencyOut: Currency | null | undefined
+  }>({ currencyIn: null, currencyOut: null })
+
+  useEffect(() => {
+    refLoadedCurrency.current = { currencyIn: loadedInputCurrency, currencyOut: loadedOutputCurrency }
+  }, [loadedInputCurrency, loadedOutputCurrency])
+
+  const checkParamWrong = useCallback(() => {
+    const { currencyIn, currencyOut } = refLoadedCurrency.current
+    if (!currencyIn || !currencyOut) {
+      const newQuery = { ...qs }
+      if (!currencyIn) delete newQuery.inputCurrency
+      if (!currencyOut) delete newQuery.outputCurrency
+      history.replace({
+        search: stringify(newQuery),
+      })
+    }
+  }, [qs, history])
+
+  // swap?inputCurrency=xxx&outputCurrency=yyy. xxx yyy not exist in chain => remove params => select default pair
+  const checkParamWrongDebounce = useCallback(debounce(checkParamWrong, 300), [])
+  useEffect(() => {
+    checkParamWrongDebounce()
+  }, [chainId, checkParamWrongDebounce])
 
   useEffect(() => {
     if (isExpertMode) {
@@ -611,15 +679,16 @@ export default function Swap({ history }: RouteComponentProps) {
   }, [allowedSlippage])
 
   const shareUrl = useMemo(() => {
-    return currencies && currencyIn && currencyOut
-      ? window.location.origin +
-          `/swap?inputCurrency=${currencyId(currencyIn as Currency, chainId)}&outputCurrency=${currencyId(
-            currencyOut as Currency,
-            chainId,
-          )}&networkId=${chainId}`
-      : window.location.origin + `/swap?networkId=${chainId}`
+    return `${window.location.origin}/swap?networkId=${chainId}${
+      currencyIn && currencyOut
+        ? `&${stringify({
+            inputCurrency: currencyId(currencyIn, chainId),
+            outputCurrency: currencyId(currencyOut, chainId),
+          })}`
+        : ''
+    }`
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currencies, currencyIn, currencyOut, chainId, currencyId, window.location.origin])
+  }, [currencyIn, currencyOut, chainId, currencyId, window.location.origin])
 
   const { isInWhiteList: isPairInWhiteList, canonicalUrl } = checkPairInWhiteList(
     chainId,
@@ -628,6 +697,9 @@ export default function Swap({ history }: RouteComponentProps) {
   )
 
   const shouldRenderTokenInfo = isShowTokenInfoSetting && currencyIn && currencyOut && isPairInWhiteList
+
+  const isShowModalImportToken =
+    importTokensNotInDefault.length > 0 && (!dismissTokenWarning || showingPairSuggestionImport)
 
   return (
     <>
@@ -638,9 +710,9 @@ export default function Swap({ history }: RouteComponentProps) {
       <SEOSwap canonicalUrl={canonicalUrl} />
 
       <TokenWarningModal
-        isOpen={importTokensNotInDefault.length > 0 && !dismissTokenWarning}
+        isOpen={isShowModalImportToken}
         tokens={importTokensNotInDefault}
-        onConfirm={handleDismissTokenWarning}
+        onConfirm={handleConfirmTokenWarning}
         onDismiss={handleDismissTokenWarning}
       />
       <PageWrapper>
@@ -693,6 +765,14 @@ export default function Swap({ history }: RouteComponentProps) {
                   </StyledActionButtonSwapForm>
                   {/* <TransactionSettings isShowDisplaySettings /> */}
                 </SwapFormActions>
+              </RowBetween>
+
+              <RowBetween mb={'16px'}>
+                <PairSuggestion
+                  ref={refSuggestPair}
+                  onSelectSuggestedPair={onSelectSuggestedPair}
+                  setShowModalImportToken={setShowingPairSuggestionImport}
+                />
               </RowBetween>
 
               <AppBodyWrapped data-highlight={shouldHighlightSwapBox}>

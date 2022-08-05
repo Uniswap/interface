@@ -128,16 +128,9 @@ export function HowToSwap({
     <BlockWrapper
       expandedOnMount={expandedOnMount}
       header={
-        <Text
-          as="h2"
-          fontSize={[16, 20]}
-          sx={{
-            color: theme.text,
-            fontWeight: 500,
-          }}
-        >
+        <AboutText>
           How to swap {symbol1} to {symbol2}?
-        </Text>
+        </AboutText>
       }
     >
       <SwapInstruction>
