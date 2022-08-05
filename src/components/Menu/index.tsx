@@ -301,7 +301,7 @@ export default function Menu() {
                         <Trans>Claim UNI</Trans>
                       </UNIbutton>
                     )}
-                    {['development', 'staging'].includes(process.env.NODE_ENV) && (
+                    {['development', 'test'].includes(process.env.NODE_ENV) && (
                       <ToggleMenuItem onClick={openFeatureFlagsModal}>Feature Flags</ToggleMenuItem>
                     )}
                   </MenuFlyout>
