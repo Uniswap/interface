@@ -1,6 +1,6 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { useTheme } from '@shopify/restyle'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ListRenderItemInfo, SectionList } from 'react-native'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
@@ -59,7 +59,7 @@ export function SettingsWallet({
   const addressToAccount = useAccounts()
   const mnemonicWallets = useAppSelector(selectSortedMnemonicAccounts)
   const currentAccount = addressToAccount[address]
-  const readonly = currentAccount.type === AccountType.Readonly
+  const readonly = currentAccount?.type === AccountType.Readonly
   const navigation = useSettingsStackNavigation()
 
   const hasICloudBackup = currentAccount?.backups?.includes(BackupType.Cloud)
@@ -84,6 +84,10 @@ export function SettingsWallet({
   })
 
   const [showRemoveWalletModal, setShowRemoveWalletModal] = useState(false)
+  // cleanup modal on exit
+  useEffect(() => {
+    return () => setShowRemoveWalletModal(false)
+  }, [])
 
   const onChangeNotificationSettings = (enabled: boolean) => {
     if (notificationOSPermission === NotificationPermission.Enabled) {
