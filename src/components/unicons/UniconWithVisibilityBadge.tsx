@@ -21,14 +21,14 @@ export function UniconWithVisibilityBadge({ address, size, showViewOnlyBadge }: 
       <Unicon address={address} size={size} />
       <Flex
         centered
-        backgroundColor="backgroundBackdrop"
+        backgroundColor="backgroundAction"
         borderRadius="full"
         bottom={-4}
-        height={20}
+        height={24}
         position="absolute"
         right={-4}
-        width={20}>
-        <Eye height={10} stroke={theme.colors.textPrimary} strokeWidth={2} width={14} />
+        width={24}>
+        <Eye height={12} stroke={theme.colors.textPrimary} strokeWidth={2} width={16} />
       </Flex>
     </Box>
   )

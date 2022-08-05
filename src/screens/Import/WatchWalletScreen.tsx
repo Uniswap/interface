@@ -20,6 +20,8 @@ import { normalizeTextInput } from 'src/utils/string'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.WatchWallet>
 
+const LIVE_CHECK_DELAY = 500
+
 export function WatchWalletScreen({ navigation, route: { params } }: Props) {
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
@@ -36,6 +38,7 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props) {
 
   // Form values.
   const [value, setValue] = useState<string | undefined>(undefined)
+  const [showLiveCheck, setShowLiveCheck] = useState(false)
 
   // ENS and address parsing.
   const normalizedValue = normalizeTextInput(value ?? '')
@@ -68,8 +71,21 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props) {
   }, [dispatch, isValid, navigation, normalizedValue, params, resolvedAddress, value])
 
   const onChange = (text: string | undefined) => {
+    if (value !== text?.trim()) {
+      setShowLiveCheck(false)
+    }
     setValue(text?.trim())
   }
+
+  useEffect(() => {
+    const delayFn = setTimeout(() => {
+      setShowLiveCheck(true)
+    }, LIVE_CHECK_DELAY)
+
+    return () => {
+      clearTimeout(delayFn)
+    }
+  }, [value])
 
   return (
     <OnboardingScreen
@@ -77,13 +93,17 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props) {
       title={t('Enter a wallet address')}>
       <Flex pt="lg">
         <GenericImportForm
+          blurOnSubmit={Boolean(isValid)}
           endAdornment={isAddress ? undefined : '.eth'}
           error={errorText}
+          liveCheck={showLiveCheck}
           placeholderLabel="address or ENS"
           showSuccess={Boolean(isValid)}
           value={value}
           onChange={onChange}
-          onSubmit={() => Keyboard.dismiss()}
+          onSubmit={() => {
+            isValid ? Keyboard.dismiss() : null
+          }}
         />
       </Flex>
       <PrimaryButton

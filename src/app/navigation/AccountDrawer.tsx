@@ -24,6 +24,8 @@ import { ActionSheetModal, MenuItemProp } from 'src/components/modals/ActionShee
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { Text } from 'src/components/Text'
 import { WalletQRCode } from 'src/components/WalletConnect/ScanSheet/WalletQRCode'
+import { pushNotification } from 'src/features/notifications/notificationSlice'
+import { AppNotificationType } from 'src/features/notifications/types'
 import { ImportType, OnboardingEntryPoint } from 'src/features/onboarding/utils'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { Account, AccountType, NativeAccount } from 'src/features/wallet/accounts/types'
@@ -177,6 +179,7 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
     const onPressCopyAddress = () => {
       if (!pendingEditAddress) return
       setClipboard(pendingEditAddress)
+      dispatch(pushNotification({ type: AppNotificationType.Copied }))
       setShowEditAccountModal(false)
     }
 
@@ -207,7 +210,7 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
           <Box
             alignItems="center"
             borderBottomColor="backgroundOutline"
-            borderBottomWidth={1}
+            borderBottomWidth={shouldHideRemoveOption ? 0 : 1}
             p="md">
             <Text variant="body">{t('Copy address')}</Text>
           </Box>
@@ -237,12 +240,13 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
     }
     return editWalletOptions
   }, [
-    navigation,
-    pendingEditAddress,
-    t,
     accountsData.length,
     mnemonicWallets.length,
+    pendingEditAddress,
     addressToAccount,
+    navigation,
+    dispatch,
+    t,
   ])
 
   const addWalletOptions = useMemo<MenuItemProp[]>(() => {

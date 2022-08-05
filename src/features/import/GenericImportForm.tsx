@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Keyboard, LayoutRectangle } from 'react-native'
+import { LayoutRectangle } from 'react-native'
 import { useAppTheme } from 'src/app/hooks'
 import AlertTriangle from 'src/assets/icons/alert-triangle.svg'
 import PasteButton from 'src/components/buttons/PasteButton'
@@ -21,6 +21,7 @@ interface Props {
   liveCheck?: boolean
   onBlur?: () => void
   onFocus?: () => void
+  blurOnSubmit?: boolean
 }
 
 export function GenericImportForm({
@@ -34,6 +35,7 @@ export function GenericImportForm({
   liveCheck,
   onBlur,
   onFocus,
+  blurOnSubmit,
 }: Props) {
   const { t } = useTranslation()
   const theme = useAppTheme()
@@ -52,7 +54,6 @@ export function GenericImportForm({
 
   const handleSubmit = () => {
     onSubmit && onSubmit()
-    Keyboard.dismiss()
   }
 
   return (
@@ -80,7 +81,7 @@ export function GenericImportForm({
               autoCapitalize="none"
               autoCorrect={false}
               backgroundColor="backgroundSurface"
-              blurOnSubmit={true}
+              blurOnSubmit={blurOnSubmit ?? false}
               fontSize={18}
               justifyContent="center"
               multiline={true}
