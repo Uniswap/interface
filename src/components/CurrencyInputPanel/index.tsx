@@ -110,7 +110,8 @@ const CurrencySelect = styled(ButtonGray)<{
   visibility: ${({ visible }) => (visible ? 'visible' : 'hidden')};
 `
 const InputCurrencySelect = styled(CurrencySelect)<{ phase0Flag: boolean }>`
-  background-color: ${({ theme, selected, phase0Flag }) => phase0Flag && (selected ? theme.none : theme.accentAction)};
+  background-color: ${({ theme, selected, phase0Flag }) =>
+    phase0Flag && (selected ? theme.backgroundContainer : theme.accentAction)};
   :focus,
   :hover {
     background-color: ${({ selected, theme, phase0Flag }) =>
