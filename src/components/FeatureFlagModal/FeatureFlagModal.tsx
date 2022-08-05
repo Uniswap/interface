@@ -30,7 +30,7 @@ function Modal({ open, children }: { open: boolean; children: ReactNode }) {
   return open ? <StyledModal>{children}</StyledModal> : null
 }
 
-const StyledFeatureFlagOption = styled.div`
+const Row = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -41,7 +41,7 @@ const CloseWrapper = styled.span`
   cursor: pointer;
 `
 
-const Header = styled(StyledFeatureFlagOption)`
+const Header = styled(Row)`
   font-weight: 600;
   font-size: 20px;
   border-bottom: 1px solid ${({ theme }) => theme.backgroundOutline};
@@ -65,7 +65,7 @@ function FeatureFlagOption({
 }) {
   const updateFlag = useUpdateFlag()
   return (
-    <StyledFeatureFlagOption key={featureFlag as string}>
+    <Row key={featureFlag as string}>
       {featureFlag}: {label}
       <select
         id={featureFlag}
@@ -79,7 +79,7 @@ function FeatureFlagOption({
           <VariantOption key={variant} option={variant} />
         ))}
       </select>
-    </StyledFeatureFlagOption>
+    </Row>
   )
 }
 
