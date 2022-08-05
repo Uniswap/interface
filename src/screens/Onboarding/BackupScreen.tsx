@@ -14,7 +14,7 @@ import {
 import Check from 'src/assets/icons/check.svg'
 import CloudIcon from 'src/assets/icons/cloud.svg'
 import PencilIcon from 'src/assets/icons/pencil.svg'
-import StarGroup from 'src/assets/icons/star-group.svg'
+import InfoCircle from 'src/assets/icons/info-circle.svg'
 import { Button } from 'src/components/buttons/Button'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { EducationContentType } from 'src/components/education'
@@ -35,6 +35,7 @@ type Props = CompositeScreenProps<
 
 export function BackupScreen({ navigation, route: { params } }: Props) {
   const { t } = useTranslation()
+  const theme = useAppTheme()
 
   const activeAccountBackups = useActiveAccount()?.backups
 
@@ -56,9 +57,9 @@ export function BackupScreen({ navigation, route: { params } }: Props) {
       title={t('Back up your recovery phrase')}>
       <Flex grow>
         <BackupOptions backupMethods={activeAccountBackups} params={params} />
-        <Button alignSelf="center" py="sm" onPress={onPressEducationButton}>
-          <Flex centered row gap="xs">
-            <StarGroup height={16} width={16} />
+        <Button alignSelf="flex-start" py="xxs" onPress={onPressEducationButton}>
+          <Flex centered row gap="md">
+            <InfoCircle color={theme.colors.textSecondary} height={24} width={24} />
             <Text variant="mediumLabel">{t('What’s a recovery phrase?')}</Text>
           </Flex>
         </Button>
@@ -67,8 +68,9 @@ export function BackupScreen({ navigation, route: { params } }: Props) {
             disabled={disabled}
             label={disabled ? t('Add backup to continue') : t('Continue')}
             name={ElementName.Next}
+            py="md"
             testID={ElementName.Next}
-            variant="onboard"
+            textVariant="largeLabel"
             onPress={onPressNext}
           />
         </Flex>
@@ -99,11 +101,22 @@ function BackupOptions({
   }, [])
 
   return (
-    <Flex gap="lg">
+    <Flex gap="xs">
       <BackupOptionButton
         caption={t('Easily restore your wallet by backing up your recovery phrase to your iCloud.')}
         completed={backupMethods?.includes(BackupType.Cloud)}
-        icon={<CloudIcon color={theme.colors.accentActive} height={20} width={20} />}
+        icon={
+          <Flex
+            centered
+            borderColor="accentBranded"
+            borderRadius="md"
+            borderWidth={1}
+            height={32}
+            padding="md"
+            width={32}>
+            <CloudIcon color={theme.colors.textPrimary} height={16} strokeWidth={1.5} width={16} />
+          </Flex>
+        }
         label={t('iCloud backup')}
         name={ElementName.AddiCloudBackup}
         onPress={() => {
@@ -131,7 +144,18 @@ function BackupOptions({
       <BackupOptionButton
         caption={t('Write down your recovery phrase and store it in a safe yet memorable place.')}
         completed={backupMethods?.includes(BackupType.Manual)}
-        icon={<PencilIcon color={theme.colors.accentWarning} height={20} width={20} />}
+        icon={
+          <Flex
+            centered
+            borderColor="accentBranded"
+            borderRadius="md"
+            borderWidth={1}
+            height={32}
+            padding="md"
+            width={32}>
+            <PencilIcon color={theme.colors.textPrimary} height={16} strokeWidth={1.5} width={16} />
+          </Flex>
+        }
         label={t('Manual backup')}
         name={ElementName.AddManualBackup}
         onPress={() => {
@@ -169,20 +193,19 @@ function BackupOptionButton({
         borderWidth={1}
         disabled={completed}
         name={name}
-        padding="lg"
+        paddingHorizontal="md"
+        paddingVertical="sm"
         testID={name}
         onPress={onPress}>
-        <Flex row alignItems="center" justifyContent="space-between">
-          <Flex flexShrink={1} gap="xs" maxWidth="80%">
-            <Flex row gap="sm">
-              <Box height={20} width={20}>
-                {icon}
-              </Box>
-              <Text variant="mediumLabel">{label}</Text>
+        <Flex row alignItems="center" gap="xs" justifyContent="space-between">
+          <Flex row flexShrink={1} gap="sm">
+            <Box>{icon}</Box>
+            <Flex flexShrink={1} gap="xxs">
+              <Text variant="subhead">{label}</Text>
+              <Text color="textSecondary" variant="caption">
+                {caption}
+              </Text>
             </Flex>
-            <Text color="textSecondary" variant="caption">
-              {caption}
-            </Text>
           </Flex>
           <Flex grow alignItems="flex-end">
             {completed ? (
