@@ -118,37 +118,6 @@ export function getIsValidSwapQuote(
   return !!swapInputError && !!trade && (tradeState === TradeState.VALID || tradeState === TradeState.SYNCING)
 }
 
-const formatApproveTokenTxnSubmittedEventProperties = (
-  approvalOptimizedTrade:
-    | Trade<Currency, Currency, TradeType>
-    | V2Trade<Currency, Currency, TradeType>
-    | V3Trade<Currency, Currency, TradeType>
-    | undefined
-) => {
-  if (!approvalOptimizedTrade) return {}
-  return {
-    chain_id: approvalOptimizedTrade.inputAmount.currency.chainId,
-    token_symbol: approvalOptimizedTrade.inputAmount.currency.symbol,
-    token_address: getTokenAddress(approvalOptimizedTrade.inputAmount.currency),
-  }
-}
-
-const formatWrapTokenTxnSubmittedEventProperties = (
-  inputCurrency: Currency | null | undefined,
-  outputCurrency: Currency | null | undefined,
-  parsedAmount: CurrencyAmount<Currency> | undefined
-) => {
-  if (!inputCurrency || !outputCurrency || !parsedAmount) return {}
-  return {
-    token_in_address: getTokenAddress(inputCurrency),
-    token_out_address: getTokenAddress(outputCurrency),
-    token_in_symbol: inputCurrency.symbol,
-    token_out_symbol: outputCurrency.symbol,
-    chain_id: inputCurrency.chainId,
-    amount: parsedAmount ? formatToDecimal(parsedAmount, parsedAmount?.currency.decimals) : undefined,
-  }
-}
-
 function largerPercentValue(a?: Percent, b?: Percent) {
   if (a && b) {
     return a.greaterThan(b) ? a : b
@@ -158,37 +127,6 @@ function largerPercentValue(a?: Percent, b?: Percent) {
     return b
   }
   return undefined
-}
-
-const formatApproveTokenTxnSubmittedEventProperties = (
-  approvalOptimizedTrade:
-    | Trade<Currency, Currency, TradeType>
-    | V2Trade<Currency, Currency, TradeType>
-    | V3Trade<Currency, Currency, TradeType>
-    | undefined
-) => {
-  if (!approvalOptimizedTrade) return {}
-  return {
-    chain_id: approvalOptimizedTrade.inputAmount.currency.chainId,
-    token_symbol: approvalOptimizedTrade.inputAmount.currency.symbol,
-    token_address: getTokenAddress(approvalOptimizedTrade.inputAmount.currency),
-  }
-}
-
-const formatWrapTokenTxnSubmittedEventProperties = (
-  inputCurrency: Currency | null | undefined,
-  outputCurrency: Currency | null | undefined,
-  parsedAmount: CurrencyAmount<Currency> | undefined
-) => {
-  if (!inputCurrency || !outputCurrency || !parsedAmount) return {}
-  return {
-    token_in_address: getTokenAddress(inputCurrency),
-    token_out_address: getTokenAddress(outputCurrency),
-    token_in_symbol: inputCurrency.symbol,
-    token_out_symbol: outputCurrency.symbol,
-    chain_id: inputCurrency.chainId,
-    amount: parsedAmount ? formatToDecimal(parsedAmount, parsedAmount?.currency.decimals) : undefined,
-  }
 }
 
 const formatSwapQuoteReceivedEventProperties = (

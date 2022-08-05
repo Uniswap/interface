@@ -192,7 +192,7 @@ const StyledBalanceMax = styled.button<{ disabled?: boolean; phase0Flag: boolean
   background-color: ${({ theme, phase0Flag }) => !phase0Flag && theme.deprecated_primary5};
   border: none;
   border-radius: ${({ phase0Flag }) => !phase0Flag && '12px'};
-  color: ${({ theme, phase0Flag }) => (phase0Flag ? theme.accentAction : theme.deprecated_primary5)};
+  color: ${({ theme, phase0Flag }) => (phase0Flag ? theme.accentAction : theme.deprecated_primary1)};
   cursor: pointer;
   font-size: ${({ phase0Flag }) => (phase0Flag ? '14px' : '11px')};
   font-weight: ${({ phase0Flag }) => (phase0Flag ? '600' : '500')};
