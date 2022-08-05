@@ -229,12 +229,12 @@ export const colorsLight: Palette = {
 
   none: 'transparent',
 
-  backgroundBackdrop: colors.white,
-  backgroundSurface: colors.gray50,
+  backgroundBackdrop: colors.gray50,
+  backgroundSurface: colors.white,
   backgroundContainer: opacify(8, colors.gray500),
-  backgroundAction: colors.gray100,
+  backgroundAction: opacify(8, colors.gray700),
   backgroundOutline: opacify(24, colors.gray500),
-  backgroundScrim: opacify(72, colors.white),
+  backgroundScrim: opacify(60, colors.gray900),
 
   textPrimary: colors.gray900,
   textSecondary: colors.gray500,
