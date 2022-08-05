@@ -14,7 +14,7 @@ import {
   OPENSEA_LISTINGS_API_PATH,
 } from 'nft/queries/openSea'
 
-import ERC721 from '../abis/ERC721.json'
+import ERC721 from '../../abis/erc721.json'
 import { PostOpenSeaSellOrder } from '../queries'
 import { createLooksRareOrder } from '../queries'
 import { newX2Y2Order } from '../queries'

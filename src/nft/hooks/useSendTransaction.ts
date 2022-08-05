@@ -6,9 +6,9 @@ import { JsonRpcSigner } from '@ethersproject/providers'
 import create from 'zustand'
 import { devtools } from 'zustand/middleware'
 
+import ERC721 from '../../abis/erc721.json'
+import ERC1155 from '../../abis/erc1155.json'
 import CryptoPunksMarket from '../abis/CryptoPunksMarket.json'
-import ERC721 from '../abis/ERC721.json'
-import ERC1155 from '../abis/ERC1155.json'
 import { GenieAsset, RouteResponse, RoutingItem, TxResponse, TxStateType, UpdatedGenieAsset } from '../types'
 import { combineBuyItemsWithTxRoute } from '../utils/txRoute/combineItemsWithTxRoute'
 

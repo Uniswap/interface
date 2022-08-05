@@ -1,7 +1,7 @@
 import { Provider } from '@ethersproject/abstract-provider'
 import { Contract } from '@ethersproject/contracts'
 
-import ERC721 from '../abis/ERC721.json'
+import ERC721 from '../../abis/erc721.json'
 import { TokenType } from '../types'
 
 export const isAssetOwnedByUser = async ({

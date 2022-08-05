@@ -4,7 +4,7 @@ import * as resetStyles from './reset.css'
 import { Sprinkles, sprinkles } from './sprinkles.css'
 
 export interface Atoms extends Sprinkles {
-  // reset is used by the Box component when its expected to perform as something other than a div, ie button, a, or span
+  // reset is used by the Box component when its expected to behave as something other than a div, ie button, a, or span
   reset?: keyof JSX.IntrinsicElements
 }
 
