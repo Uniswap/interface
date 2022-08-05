@@ -151,7 +151,7 @@ export function useBytes32TokenContract(tokenAddress?: string, withSignerIfPossi
 }
 
 export function usePairContract(pairAddress?: string, withSignerIfPossible?: boolean): Contract | null {
-  return useContract(pairAddress, IUniswapV2PairABI, withSignerIfPossible)
+  return useContract(pairAddress, IUniswapV2PairABI.abi, withSignerIfPossible)
 }
 
 export function useMulticallContract(): Contract | null {
