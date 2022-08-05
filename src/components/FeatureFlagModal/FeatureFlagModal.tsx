@@ -1,6 +1,5 @@
 import { FeatureFlag, useUpdateFlag } from 'featureFlags'
 import { Phase0Variant, usePhase0Flag } from 'featureFlags/flags/phase0'
-import { useRef } from 'react'
 import { X } from 'react-feather'
 import { useModalIsOpen, useToggleFeatureFlags } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
@@ -78,12 +77,11 @@ function FeatureFlagOption({
 }
 
 export default function FeatureFlagModal() {
-  const node = useRef<HTMLDivElement>()
   const open = useModalIsOpen(ApplicationModal.FEATURE_FLAGS)
   const toggle = useToggleFeatureFlags()
 
   return (
-    <ModalCard open={open} ref={node as any}>
+    <ModalCard open={open}>
       <HeaderRow>
         Feature Flag Settings
         <CloseWrapper onClick={toggle}>
