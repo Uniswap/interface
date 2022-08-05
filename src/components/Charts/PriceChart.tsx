@@ -138,11 +138,7 @@ export function PriceChart({ width, height }: PriceChartProps) {
         )}
         <Group top={margin.top}>
           <LinePath
-<<<<<<< HEAD
-            curve={circleCorners.radius(1)}
-=======
             curve={radius(1)}
->>>>>>> main
             stroke={theme.accentActive}
             strokeWidth={2}
             data={data.priceHistory}
