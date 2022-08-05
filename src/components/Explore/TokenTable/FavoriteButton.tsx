@@ -15,8 +15,8 @@ const FavoriteButtonContent = styled.div`
 const StyledFavoriteButton = styled.button<{ active: boolean }>`
   padding: 0px 16px;
   border-radius: 12px;
-  background-color: ${({ theme, active }) => (active ? theme.accentAction : theme.none)};
-  border: 1px solid ${({ theme, active }) => (active ? theme.accentActive : theme.backgroundOutline)};
+  background-color: ${({ theme, active }) => (active ? theme.accentAction : theme.backgroundAction)};
+  border: none;
   color: ${({ theme }) => theme.textPrimary};
   font-size: 16px;
   font-weight: 600;

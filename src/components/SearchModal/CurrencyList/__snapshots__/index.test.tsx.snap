@@ -124,7 +124,11 @@ exports[`renders currency rows correctly when currencies list is non-empty 1`] =
             </div>
             <div
               class="c7"
+<<<<<<< HEAD
+              color="#FA2B39"
+=======
               color="#FD4040"
+>>>>>>> main
             >
               <svg
                 fill="none"
@@ -183,7 +187,11 @@ exports[`renders currency rows correctly when currencies list is non-empty 1`] =
             </div>
             <div
               class="c7"
+<<<<<<< HEAD
+              color="#FA2B39"
+=======
               color="#FD4040"
+>>>>>>> main
             >
               <svg
                 fill="none"
@@ -242,7 +250,11 @@ exports[`renders currency rows correctly when currencies list is non-empty 1`] =
             </div>
             <div
               class="c7"
+<<<<<<< HEAD
+              color="#FA2B39"
+=======
               color="#FD4040"
+>>>>>>> main
             >
               <svg
                 fill="none"

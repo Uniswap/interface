@@ -31,7 +31,7 @@ const TitleContainer = styled.div`
 const FiltersContainer = styled.div`
   display: flex;
   gap: 8px;
-  height: 44px;
+  height: 40px;
 
   @media only screen and (max-width: ${MEDIUM_MEDIA_BREAKPOINT}) {
     order: 2;
