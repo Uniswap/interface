@@ -1,10 +1,9 @@
+import { ReactComponent as Verified } from 'assets/svg/verified.svg'
 import { Warning, WARNING_LEVEL } from 'constants/tokenSafety'
 import { useTokenWarningColor } from 'hooks/useTokenWarningColor'
 import { AlertOctagon, AlertTriangle } from 'react-feather'
 import styled from 'styled-components/macro'
 import { Color } from 'theme/styled'
-
-import { ReactComponent as Verified } from './verified.svg'
 
 const Container = styled.div<{ color: Color }>`
   width: 0.9rem;
