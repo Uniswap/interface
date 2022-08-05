@@ -31,7 +31,7 @@ exports[`renders correctly 1`] = `
       editable={false}
       style={
         Object {
-          "color": "#070A15",
+          "color": "#0E111A",
           "fontFamily": "Inter-Regular",
           "fontSize": 36,
           "fontWeight": "300",
@@ -76,7 +76,7 @@ exports[`renders correctly 1`] = `
           editable={false}
           style={
             Object {
-              "color": "#5F667D",
+              "color": "#5E6887",
               "fontFamily": "Inter-Regular",
               "fontSize": 12,
               "lineHeight": 16,
@@ -103,7 +103,7 @@ exports[`renders correctly 1`] = `
           animatedStyle={
             Object {
               "value": Object {
-                "color": "#FD4040",
+                "color": "#FA2B39",
               },
             }
           }
@@ -111,7 +111,7 @@ exports[`renders correctly 1`] = `
           editable={false}
           style={
             Object {
-              "color": "#FD4040",
+              "color": "#FA2B39",
               "fontFamily": "Inter-Regular",
               "fontSize": 12,
               "lineHeight": 16,
@@ -145,7 +145,7 @@ exports[`renders correctly 1`] = `
         editable={false}
         style={
           Object {
-            "color": "#5F667D",
+            "color": "#5E6887",
             "fontFamily": "Inter-Regular",
             "fontSize": 12,
             "lineHeight": 16,
@@ -198,7 +198,7 @@ exports[`renders correctly 1`] = `
               "strokeWidth",
             ]
           }
-          stroke={4293867150}
+          stroke={4294644110}
           strokeWidth={2}
         />
         <RNSVGDefs>
@@ -206,9 +206,9 @@ exports[`renders correctly 1`] = `
             gradient={
               Array [
                 0,
-                871315086,
+                872092046,
                 1,
-                15677070,
+                16454030,
               ]
             }
             gradientTransform={null}
@@ -333,7 +333,7 @@ exports[`renders correctly 1`] = `
             style={
               Array [
                 Object {
-                  "backgroundColor": "#EF368E",
+                  "backgroundColor": "#FB118E",
                   "borderRadius": 999999,
                   "display": "flex",
                   "height": 15,
@@ -385,7 +385,7 @@ exports[`renders correctly 1`] = `
         style={
           Array [
             Object {
-              "backgroundColor": "#F4F6FE",
+              "backgroundColor": "#F8F9FF",
               "borderRadius": 16,
               "display": "flex",
               "width": 150,
@@ -430,14 +430,14 @@ exports[`renders correctly 1`] = `
         animatedStyle={
           Object {
             "value": Object {
-              "color": "#5F667D",
+              "color": "#5E6887",
             },
           }
         }
         collapsable={false}
         style={
           Object {
-            "color": "#5F667D",
+            "color": "#5E6887",
             "display": "flex",
             "fontFamily": "Inter-SemiBold",
             "fontSize": 14,
@@ -473,14 +473,14 @@ exports[`renders correctly 1`] = `
         animatedStyle={
           Object {
             "value": Object {
-              "color": "rgba(7, 10, 21, 1)",
+              "color": "rgba(14, 17, 26, 1)",
             },
           }
         }
         collapsable={false}
         style={
           Object {
-            "color": "rgba(7, 10, 21, 1)",
+            "color": "rgba(14, 17, 26, 1)",
             "display": "flex",
             "fontFamily": "Inter-SemiBold",
             "fontSize": 14,
@@ -516,14 +516,14 @@ exports[`renders correctly 1`] = `
         animatedStyle={
           Object {
             "value": Object {
-              "color": "#5F667D",
+              "color": "#5E6887",
             },
           }
         }
         collapsable={false}
         style={
           Object {
-            "color": "#5F667D",
+            "color": "#5E6887",
             "display": "flex",
             "fontFamily": "Inter-SemiBold",
             "fontSize": 14,
@@ -559,14 +559,14 @@ exports[`renders correctly 1`] = `
         animatedStyle={
           Object {
             "value": Object {
-              "color": "#5F667D",
+              "color": "#5E6887",
             },
           }
         }
         collapsable={false}
         style={
           Object {
-            "color": "#5F667D",
+            "color": "#5E6887",
             "display": "flex",
             "fontFamily": "Inter-SemiBold",
             "fontSize": 14,
@@ -602,14 +602,14 @@ exports[`renders correctly 1`] = `
         animatedStyle={
           Object {
             "value": Object {
-              "color": "#5F667D",
+              "color": "#5E6887",
             },
           }
         }
         collapsable={false}
         style={
           Object {
-            "color": "#5F667D",
+            "color": "#5E6887",
             "display": "flex",
             "fontFamily": "Inter-SemiBold",
             "fontSize": 14,

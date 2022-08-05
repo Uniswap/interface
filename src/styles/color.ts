@@ -48,7 +48,16 @@ export interface GlobalPalette {
   yellow800: string
   yellow900: string
   yellowVibrant: string
+  gold50: string
+  gold100: string
   gold200: string
+  gold300: string
+  gold400: string
+  gold500: string
+  gold600: string
+  gold700: string
+  gold800: string
+  gold900: string
   goldVibrant: string
   green50: string
   green100: string
@@ -72,97 +81,235 @@ export interface GlobalPalette {
   blue800: string
   blue900: string
   blueVibrant: string
+  lime50: string
+  lime100: string
+  lime200: string
+  lime300: string
+  lime400: string
+  lime500: string
+  lime600: string
+  lime700: string
+  lime800: string
+  lime900: string
+  limeVibrant: string
+  orange50: string
+  orange100: string
+  orange200: string
+  orange300: string
+  orange400: string
+  orange500: string
+  orange600: string
+  orange700: string
+  orange800: string
+  orange900: string
+  orangeVibrant: string
+  magenta50: string
+  magenta100: string
+  magenta200: string
+  magenta300: string
+  magenta400: string
+  magenta500: string
+  magenta600: string
+  magenta700: string
+  magenta800: string
+  magenta900: string
   magentaVibrant: string
+  violet50: string
+  violet100: string
+  violet200: string
+  violet300: string
+  violet400: string
+  violet500: string
+  violet600: string
+  violet700: string
+  violet800: string
+  violet900: string
+  violetVibrant: string
+  cyan50: string
+  cyan100: string
+  cyan200: string
+  cyan300: string
+  cyan400: string
+  cyan500: string
+  cyan600: string
+  cyan700: string
+  cyan800: string
+  cyan900: string
+  cyanVibrant: string
+  slate50: string
+  slate100: string
+  slate200: string
+  slate300: string
+  slate400: string
+  slate500: string
+  slate600: string
+  slate700: string
+  slate800: string
+  slate900: string
+  slateVibrant: string
   networkEthereum: string
+  networkEthereumSoft: string
   networkOptimism: string
   networkOptimismSoft: string
   networkPolygon: string
-  networkArbitrum: string
   networkPolygonSoft: string
-  networkEthereumSoft: string
+  networkArbitrum: string
+  networkArbitrumSoft: string
 }
 
 export const colors: GlobalPalette = {
   white: '#FFFFFF',
   black: '#000000',
-  gray50: '#F4F6FE',
-  gray100: '#DBE1F5',
-  gray200: '#C0C7DE',
+  gray50: '#F8F9FF',
+  gray100: '#DDE3F7',
+  gray200: '#B7BED4',
   gray300: '#99A1BD',
-  gray400: '#747D9C',
-  gray500: '#5F667D',
-  gray600: '#44495A',
-  gray700: '#272A35',
-  gray800: '#181B24',
-  gray900: '#070A15',
-  pink50: '#FFF2F7',
-  pink100: '#FFD7E3',
+  gray400: '#7C85A2',
+  gray500: '#5E6887',
+  gray600: '#404963',
+  gray700: '#293249',
+  gray800: '#141B2B',
+  gray900: '#0E111A',
+  pink50: '#F9ECF1',
+  pink100: '#FFD9E4',
   pink200: '#FBA4C0',
   pink300: '#FF6FA3',
-  pink400: '#EF368E',
-  pink500: '#C41969',
+  pink400: '#FB118E',
+  pink500: '#C41A69',
   pink600: '#8C0F49',
   pink700: '#55072A',
-  pink800: '#350318',
+  pink800: '#39061B',
   pink900: '#2B000B',
   pinkVibrant: '#F51A70',
-  red50: '#FFF4EE',
-  red100: '#FFD9CE',
-  red200: '#FDA799',
-  red300: '#FF776D',
-  red400: '#FD4040',
-  red500: '#C52533',
+  red50: '#FAECEA',
+  red100: '#FED5CF',
+  red200: '#FEA79B',
+  red300: '#FD766B',
+  red400: '#FA2B39',
+  red500: '#C4292F',
   red600: '#891E20',
   red700: '#530F10',
-  red800: '#350700',
-  red900: '#2C0000',
+  red800: '#380A03',
+  red900: '#240800',
   redVibrant: '#F14544',
-  yellow50: '#FFF5E8',
-  yellow100: '#F8DEB6',
-  yellow200: '#F3B71E',
-  yellow300: '#DC910D',
-  yellow400: '#AE780C',
-  yellow500: '#8F5C0F',
-  yellow600: '#643F07',
-  yellow700: '#3F2208',
-  yellow800: '#26130A',
-  yellow900: '#110A00',
+  yellow50: '#F6F2D5',
+  yellow100: '#F0E49A',
+  yellow200: '#DBBC19',
+  yellow300: '#BB9F13',
+  yellow400: '#A08116',
+  yellow500: '#866311',
+  yellow600: '#5D4204',
+  yellow700: '#3E2B04',
+  yellow800: '#231902',
+  yellow900: '#180F02',
   yellowVibrant: '#FAF40A',
-  // TODO: add gold 50-900
+  gold50: '#F7EDE0',
+  gold100: '#F8DEB6',
   gold200: '#EEB317',
+  gold300: '#DB900B',
+  gold400: '#B17900',
+  gold500: '#905C10',
+  gold600: '#643F07',
+  gold700: '#3F2208',
+  gold800: '#29160F',
+  gold900: '#161007',
   goldVibrant: '#FEB239',
-  green50: '#EAFAED',
-  green100: '#BDECC8',
-  green200: '#75D090',
-  green300: '#35AD63',
-  green400: '#1A9550',
-  green500: '#07773D',
+  green50: '#E3F3E6',
+  green100: '#BFEECA',
+  green200: '#76D191',
+  green300: '#40B66B',
+  green400: '#209853',
+  green500: '#0B783E',
   green600: '#0C522A',
   green700: '#053117',
-  green800: '#031C0A',
-  green900: '#020E04',
+  green800: '#091F10',
+  green900: '#09130B',
   greenVibrant: '#5CFE9D',
-  blue50: '#F4F6FF',
-  blue100: '#DBDFFF',
-  blue200: '#AABAFF',
-  blue300: '#829BFF',
-  blue400: '#407CF8',
-  blue500: '#1869D8',
+  blue50: '#EDEFF8',
+  blue100: '#DEE1FF',
+  blue200: '#ADBCFF',
+  blue300: '#869EFF',
+  blue400: '#4C82FB',
+  blue500: '#1267D6',
   blue600: '#1D4294',
   blue700: '#09265E',
-  blue800: '#06163B',
-  blue900: '#00072F',
+  blue800: '#0B193F',
+  blue900: '#040E34',
   blueVibrant: '#587BFF',
-  // TODO: add magenta 50-900
+  lime50: '#F2FEDB',
+  lime100: '#D3EBA3',
+  lime200: '#9BCD46',
+  lime300: '#7BB10C',
+  lime400: '#649205',
+  lime500: '#527318',
+  lime600: '#344F00',
+  lime700: '#233401',
+  lime800: '#171D00',
+  lime900: '#0E1300',
+  limeVibrant: '#B1F13C',
+  orange50: '#FEEDE5',
+  orange100: '#FCD9C8',
+  orange200: '#FBAA7F',
+  orange300: '#F67E3E',
+  orange400: '#DC5B14',
+  orange500: '#AF460A',
+  orange600: '#76330F',
+  orange700: '#4D220B',
+  orange800: '#2A1505',
+  orange900: '#1C0E03',
+  orangeVibrant: '#FF6F1E',
+  magenta50: '#F9EBF8',
+  magenta100: '#FAD8F8',
+  magenta200: '#F5A1F5',
+  magenta300: '#F06DF3',
+  magenta400: '#DC39E3',
+  magenta500: '#AF2EB4',
+  magenta600: '#7A1C7D',
+  magenta700: '#550D56',
+  magenta800: '#330733',
+  magenta900: '#250225',
   magentaVibrant: '#FC72FF',
-  // TODO: add all other vibrant variations
+  violet50: '#F0EEFD',
+  violet100: '#E2DEFD',
+  violet200: '#BDB8FA',
+  violet300: '#9D99F5',
+  violet400: '#7A7BEB',
+  violet500: '#515EDC',
+  violet600: '#343F9E',
+  violet700: '#121643',
+  violet800: '#0B193F',
+  violet900: '#0E0D30',
+  violetVibrant: '#5065FD',
+  cyan50: '#D5F4FD',
+  cyan100: '#B0EDFE',
+  cyan200: '#63CDE8',
+  cyan300: '#2FB0CC',
+  cyan400: '#2092AB',
+  cyan500: '#117489',
+  cyan600: '#014F5F',
+  cyan700: '#003540',
+  cyan800: '#011E26',
+  cyan900: '#011418',
+  cyanVibrant: '#36DBFF',
+  slate50: '#E7F2E5',
+  slate100: '#DAE6D8',
+  slate200: '#B8C3B7',
+  slate300: '#9AA498',
+  slate400: '#7E887D',
+  slate500: '#646B62',
+  slate600: '#434942',
+  slate700: '#2C302C',
+  slate800: '#181B18',
+  slate900: '#0F120E',
+  slateVibrant: '#7E887D',
   networkEthereum: '#627EEA',
+  networkEthereumSoft: opacify(12, '#627EEA'),
   networkOptimism: '#FF0420',
-  networkOptimismSoft: 'rgba(255, 4, 32, 0.16)',
+  networkOptimismSoft: opacify(12, '#FF0420'),
   networkPolygon: '#A457FF',
+  networkPolygonSoft: opacify(12, '#A457FF'),
   networkArbitrum: '#28A0F0',
-  networkPolygonSoft: 'rgba(164, 87, 255, 0.16)',
-  networkEthereumSoft: 'rgba(98, 126, 234, 0.16)',
+  networkArbitrumSoft: opacify(12, '#28A0F0'),
 }
 
 export interface Palette {
@@ -226,7 +373,7 @@ export const colorsLight: Palette = {
 
   backgroundBackdrop: colors.white,
   backgroundSurface: colors.gray50,
-  backgroundContainer: opacify(8, colors.gray500),
+  backgroundContainer: opacify(4, colors.gray500),
   backgroundAction: colors.gray100,
   backgroundOutline: opacify(24, colors.gray500),
   backgroundScrim: opacify(72, colors.white),
@@ -242,19 +389,19 @@ export const colorsLight: Palette = {
   accentFailure: colors.red400,
   accentBranded: colors.pink200,
 
-  accentActionSoft: opacify(12, colors.pink400),
-  accentActiveSoft: opacify(12, colors.blue400),
-  accentSuccessSoft: opacify(12, colors.green400),
-  accentWarningSoft: opacify(12, colors.gold200),
-  accentFailureSoft: opacify(12, colors.red400),
+  accentActionSoft: opacify(24, colors.pink400),
+  accentActiveSoft: opacify(24, colors.blue400),
+  accentSuccessSoft: opacify(24, colors.green400),
+  accentWarningSoft: opacify(24, colors.gold200),
+  accentFailureSoft: opacify(24, colors.red400),
 
-  accentTextDarkPrimary: opacify(80, colors.black),
-  accentTextDarkSecondary: opacify(60, colors.black),
-  accentTextDarkTertiary: opacify(24, colors.black),
+  accentTextDarkPrimary: opacify(80, colors.gray900),
+  accentTextDarkSecondary: opacify(60, colors.gray900),
+  accentTextDarkTertiary: opacify(24, colors.gray900),
 
-  accentTextLightPrimary: colors.white,
-  accentTextLightSecondary: opacify(60, colors.white),
-  accentTextLightTertiary: opacify(12, colors.white),
+  accentTextLightPrimary: colors.gray50,
+  accentTextLightSecondary: opacify(60, colors.gray50),
+  accentTextLightTertiary: opacify(12, colors.gray50),
 
   white: colors.white,
   black: colors.black,
@@ -285,28 +432,28 @@ export const colorsDark: Palette = {
 
   textPrimary: colors.white,
   textSecondary: colors.gray300,
-  textTertiary: colors.gray400,
+  textTertiary: colors.gray500,
 
   accentAction: colors.blue400,
   accentActive: colors.blue400,
-  accentSuccess: colors.greenVibrant,
+  accentSuccess: colors.green200,
   accentWarning: colors.gold200,
-  accentFailure: colors.red400,
+  accentFailure: colors.red300,
   accentBranded: colors.pink200,
 
-  accentActionSoft: opacify(12, colors.blue400),
-  accentActiveSoft: opacify(12, colors.blue400),
-  accentSuccessSoft: opacify(12, colors.green400),
-  accentWarningSoft: opacify(12, colors.gold200),
-  accentFailureSoft: opacify(12, colors.red400),
+  accentActionSoft: opacify(24, colors.blue400),
+  accentActiveSoft: opacify(24, colors.blue400),
+  accentSuccessSoft: opacify(24, colors.green400),
+  accentWarningSoft: opacify(24, colors.gold200),
+  accentFailureSoft: opacify(24, colors.red400),
 
-  accentTextDarkPrimary: opacify(80, colors.black),
-  accentTextDarkSecondary: opacify(60, colors.black),
-  accentTextDarkTertiary: opacify(24, colors.black),
+  accentTextDarkPrimary: opacify(80, colors.gray900),
+  accentTextDarkSecondary: opacify(60, colors.gray900),
+  accentTextDarkTertiary: opacify(24, colors.gray900),
 
-  accentTextLightPrimary: colors.white,
-  accentTextLightSecondary: opacify(72, colors.white),
-  accentTextLightTertiary: opacify(12, colors.white),
+  accentTextLightPrimary: colors.gray50,
+  accentTextLightSecondary: opacify(72, colors.gray50),
+  accentTextLightTertiary: opacify(12, colors.gray50),
 
   white: colors.white,
   black: colors.black,

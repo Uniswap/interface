@@ -6,7 +6,7 @@ exports[`renders a NetworkPill with border 1`] = `
     Array [
       Object {
         "alignItems": "center",
-        "backgroundColor": "#F4F6FE",
+        "backgroundColor": "#F8F9FF",
         "borderColor": "transparent",
         "borderRadius": 999999,
         "borderWidth": 1,
@@ -18,8 +18,8 @@ exports[`renders a NetworkPill with border 1`] = `
         "paddingVertical": 8,
       },
       Object {
-        "backgroundColor": "#EF368E1a",
-        "borderColor": "#EF368E",
+        "backgroundColor": "#FB118E1a",
+        "borderColor": "#FB118E",
       },
     ]
   }
@@ -34,7 +34,7 @@ exports[`renders a NetworkPill with border 1`] = `
           "marginRight": 8,
         },
         Object {
-          "borderColor": "#EF368E",
+          "borderColor": "#FB118E",
         },
       ]
     }
@@ -76,14 +76,14 @@ exports[`renders a NetworkPill with border 1`] = `
     style={
       Array [
         Object {
-          "color": "#070A15",
+          "color": "#0E111A",
           "display": "flex",
           "fontFamily": "Inter-Regular",
           "fontSize": 14,
           "lineHeight": 20,
         },
         Object {
-          "color": "#EF368E",
+          "color": "#FB118E",
         },
       ]
     }
@@ -99,7 +99,7 @@ exports[`renders a NetworkPill without image 1`] = `
     Array [
       Object {
         "alignItems": "center",
-        "backgroundColor": "#F4F6FE",
+        "backgroundColor": "#F8F9FF",
         "borderColor": "transparent",
         "borderRadius": 999999,
         "borderWidth": 1,
@@ -111,7 +111,7 @@ exports[`renders a NetworkPill without image 1`] = `
         "paddingVertical": 8,
       },
       Object {
-        "backgroundColor": "#EF368E1a",
+        "backgroundColor": "#FB118E1a",
         "borderColor": "transparent",
       },
     ]
@@ -127,7 +127,7 @@ exports[`renders a NetworkPill without image 1`] = `
           "marginRight": 8,
         },
         Object {
-          "borderColor": "#EF368E",
+          "borderColor": "#FB118E",
         },
       ]
     }
@@ -169,14 +169,14 @@ exports[`renders a NetworkPill without image 1`] = `
     style={
       Array [
         Object {
-          "color": "#070A15",
+          "color": "#0E111A",
           "display": "flex",
           "fontFamily": "Inter-Regular",
           "fontSize": 14,
           "lineHeight": 20,
         },
         Object {
-          "color": "#EF368E",
+          "color": "#FB118E",
         },
       ]
     }
@@ -192,7 +192,7 @@ exports[`renders an InlineNetworkPill 1`] = `
     Array [
       Object {
         "alignItems": "center",
-        "backgroundColor": "#F4F6FE",
+        "backgroundColor": "#F8F9FF",
         "borderColor": "transparent",
         "borderRadius": 4,
         "borderWidth": 1,
@@ -204,7 +204,7 @@ exports[`renders an InlineNetworkPill 1`] = `
         "paddingVertical": 0,
       },
       Object {
-        "backgroundColor": "#EF368E1a",
+        "backgroundColor": "#FB118E1a",
         "borderColor": "transparent",
       },
     ]
@@ -214,14 +214,14 @@ exports[`renders an InlineNetworkPill 1`] = `
     style={
       Array [
         Object {
-          "color": "#070A15",
+          "color": "#0E111A",
           "display": "flex",
           "fontFamily": "Inter-SemiBold",
           "fontSize": 12,
           "lineHeight": 12,
         },
         Object {
-          "color": "#EF368E",
+          "color": "#FB118E",
         },
       ]
     }

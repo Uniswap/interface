@@ -5,7 +5,7 @@ exports[`renders a FormattedAddress with a name 1`] = `
   style={
     Array [
       Object {
-        "color": "#070A15",
+        "color": "#0E111A",
         "display": "flex",
         "fontFamily": "Inter-Regular",
         "fontSize": 16,
@@ -23,7 +23,7 @@ exports[`renders a FormattedAddress without a name 1`] = `
   style={
     Array [
       Object {
-        "color": "#070A15",
+        "color": "#0E111A",
         "display": "flex",
         "fontFamily": "Inter-Regular",
         "fontSize": 16,
