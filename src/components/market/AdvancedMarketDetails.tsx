@@ -106,7 +106,7 @@ export function AdvancedMarketDetails({
       {isGaslessMode && (
         <RowBetween>
           <RowFixed>
-            <TYPE.subHeader color={theme.text1}>Total fees:</TYPE.subHeader>
+            <TYPE.subHeader color={theme.text1}>Fees:</TYPE.subHeader>
           </RowFixed>
           <TextWithLoadingPlaceholder syncing={syncing} width={70}>
             <TYPE.black textAlign="right" fontSize={14}>

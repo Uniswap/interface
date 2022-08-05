@@ -81,6 +81,37 @@ function ConfirmationPendingContent({
     </Wrapper>
   )
 }
+export function TransactionPreparingContent({
+  onDismiss,
+  inline,
+}: {
+  onDismiss: () => void
+  inline?: boolean // not in modal
+}) {
+  return (
+    <Wrapper>
+      <AutoColumn gap="md">
+        {!inline && (
+          <RowBetween>
+            <div />
+            <CloseIcon onClick={onDismiss} />
+          </RowBetween>
+        )}
+        <ConfirmedIcon inline={inline}>
+          <CustomLightSpinner src={Circle} alt="loader" size={inline ? '40px' : '90px'} />
+        </ConfirmedIcon>
+        <AutoColumn gap="12px" justify={'center'}>
+          <Text fontWeight={500} fontSize={20} textAlign="center">
+            <Trans>Preparing transaction</Trans>
+          </Text>
+          <Text fontWeight={500} fontSize={14} color="#565A69" textAlign="center" marginBottom="12px">
+            <Trans>Please wait while the transaction is being built</Trans>
+          </Text>
+        </AutoColumn>
+      </AutoColumn>
+    </Wrapper>
+  )
+}
 function TransactionSubmittedContent({
   onDismiss,
   chainId,

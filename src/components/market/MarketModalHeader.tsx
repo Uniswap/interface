@@ -192,7 +192,7 @@ export default function MarketModalHeader({
           <AutoColumn gap={'8px'}>
             <RowBetween align="flex-end">
               <TYPE.body fontSize={14} color={'white'}>
-                <RowFixed gap={'0px'}>Receive (including fee)</RowFixed>
+                <RowFixed gap={'0px'}>Received (including fees)</RowFixed>
               </TYPE.body>
               <RowFixed gap={'0px'}>
                 <TruncatedText fontSize={14} fontWeight={500}>

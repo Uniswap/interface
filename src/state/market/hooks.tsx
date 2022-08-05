@@ -204,11 +204,16 @@ export function useDerivedMarketInfo(
 
   const allowedSlippage = useSwapSlippageTolerance(bestTrade ?? undefined)
 
-  const outputAmount = v2Trade?.trade?.outputAmount
+  const outputAmount = useMemo(() => v2Trade?.trade?.outputAmount, [v2Trade?.trade?.outputAmount])
+
+  const paymentFees = useMemo(() => v2Trade?.paymentFees, [v2Trade?.paymentFees])
 
   const outputAfterFees = useMemo(
-    () => (v2Trade?.paymentFees && outputAmount ? outputAmount.subtract(v2Trade?.paymentFees) : outputAmount),
-    [outputAmount, v2Trade?.paymentFees]
+    () =>
+      paymentFees && outputAmount && paymentFees.currency.equals(outputAmount.currency)
+        ? outputAmount.subtract(paymentFees)
+        : outputAmount,
+    [outputAmount, paymentFees]
   )
 
   const feeImpact = outputAmount

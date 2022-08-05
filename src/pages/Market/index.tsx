@@ -935,36 +935,6 @@ export default function Market({ history }: RouteComponentProps) {
                             )}
                           </Row>
                         )}
-                        <Row justify={!trade ? 'center' : 'space-between'}>
-                          <RowFixed style={{ position: 'relative' }}>
-                            <MouseoverTooltipContent
-                              wrap={false}
-                              content={
-                                <ResponsiveTooltipContainer origin="top right" width={'295px'}>
-                                  $KROM stakers will be eligible for discount. Find out more on
-                                  https://docs.kromatika.finance
-                                </ResponsiveTooltipContainer>
-                              }
-                              placement="bottom"
-                              onOpen={() =>
-                                ReactGA.event({
-                                  category: 'Swap',
-                                  action: 'Transaction Details Tooltip Open',
-                                })
-                              }
-                            >
-                              <StyledInfo />
-                            </MouseoverTooltipContent>
-                            <Trans> Fees discount:</Trans>
-                          </RowFixed>
-                          <RowFixed>
-                            {darkMode ? (
-                              <StyledDiscountDark>0 % discount </StyledDiscountDark>
-                            ) : (
-                              <StyledDiscountLight>0 % discount </StyledDiscountLight>
-                            )}
-                          </RowFixed>
-                        </Row>
                       </div>
                     )}
                     {inputTokenShouldBeWrapped && isGaslessMode && (
@@ -1478,35 +1448,6 @@ export default function Market({ history }: RouteComponentProps) {
                       )}
                     </Row>
                   )}
-                  <Row justify={!trade ? 'center' : 'space-between'}>
-                    <RowFixed style={{ position: 'relative' }}>
-                      <MouseoverTooltipContent
-                        wrap={false}
-                        content={
-                          <ResponsiveTooltipContainer origin="top right" width={'295px'}>
-                            $KROM stakers will be eligible for discount. Find out more on https://docs.kromatika.finance
-                          </ResponsiveTooltipContainer>
-                        }
-                        placement="bottom"
-                        onOpen={() =>
-                          ReactGA.event({
-                            category: 'Swap',
-                            action: 'Transaction Details Tooltip Open',
-                          })
-                        }
-                      >
-                        <StyledInfo />
-                      </MouseoverTooltipContent>
-                      <Trans> Fees discount:</Trans>
-                    </RowFixed>
-                    <RowFixed>
-                      {darkMode ? (
-                        <StyledDiscountDark>0 % discount </StyledDiscountDark>
-                      ) : (
-                        <StyledDiscountLight>0 % discount </StyledDiscountLight>
-                      )}
-                    </RowFixed>
-                  </Row>
                 </div>
               )}
               {inputTokenShouldBeWrapped && isGaslessMode && (

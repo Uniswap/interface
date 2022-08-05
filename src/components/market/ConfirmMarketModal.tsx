@@ -8,6 +8,7 @@ import { SwapTransaction } from 'state/validator/types'
 import TransactionConfirmationModal, {
   ConfirmationModalContent,
   TransactionErrorContent,
+  TransactionPreparingContent,
 } from '../TransactionConfirmationModal'
 import MarketModalFooter from './MarketModalFooter'
 import MarketModalHeader from './MarketModalHeader'
@@ -109,18 +110,31 @@ export default function ConfirmMarketModal({
         updatePriceImpact={updatePriceImpact}
       />
     ) : null
-  }, [allowedSlippage, onAcceptChanges, recipient, referer, showAcceptChanges, trade])
+  }, [
+    allowedSlippage,
+    feeImpactHigh,
+    onAcceptChanges,
+    paymentFees,
+    paymentToken,
+    priceImpactHigh,
+    recipient,
+    referer,
+    showAcceptChanges,
+    trade,
+    updateFeeImpact,
+    updatePriceImpact,
+  ])
 
   const modalBottom = useCallback(() => {
     return trade ? (
       <MarketModalFooter
         onConfirm={onConfirm}
         trade={trade}
-        disabledConfirm={showAcceptChanges || !showTransactionInfo}
+        disabledConfirm={showAcceptChanges}
         swapErrorMessage={swapErrorMessage}
       />
     ) : null
-  }, [onConfirm, showAcceptChanges, showTransactionInfo, swapErrorMessage, trade])
+  }, [onConfirm, showAcceptChanges, swapErrorMessage, trade])
 
   // text to show while loading
   const pendingText = (
@@ -134,15 +148,17 @@ export default function ConfirmMarketModal({
     () =>
       swapErrorMessage ? (
         <TransactionErrorContent onDismiss={onDismiss} message={swapErrorMessage} />
-      ) : (
+      ) : swapTransaction?.data ? (
         <ConfirmationModalContent
           title={<Trans>Confirm Swap</Trans>}
           onDismiss={onDismiss}
           topContent={modalHeader}
           bottomContent={modalBottom}
         />
+      ) : (
+        <TransactionPreparingContent onDismiss={onDismiss} />
       ),
-    [swapErrorMessage, onDismiss, modalHeader, modalBottom]
+    [swapErrorMessage, onDismiss, swapTransaction?.data, modalHeader, modalBottom]
   )
 
   return (
