@@ -19,11 +19,12 @@ export function useFeatureFlagsContext(): FeatureFlagsContextType {
 export function FeatureFlagsProvider({ children }: { children: ReactNode }) {
   // TODO(vm): `isLoaded` to `true` so `App.tsx` will render. Later, this will be dependent on
   // flags loading from Amplitude, with a timeout.
+  const variant = process.env.NODE_ENV === 'development' ? 'enabled' : 'control'
   const value = {
     isLoaded: true,
     flags: {
-      phase0: 'control',
-      phase1: 'control',
+      phase0: variant,
+      phase1: variant,
     },
   }
   return <FeatureFlagContext.Provider value={value}>{children}</FeatureFlagContext.Provider>
@@ -33,35 +34,17 @@ export function useFeatureFlagsIsLoaded(): boolean {
   return useFeatureFlagsContext().isLoaded
 }
 
-// feature flag hooks
-
-export enum Phase0Variant {
+export enum BaseVariant {
   Control = 'Control',
   Enabled = 'Enabled',
 }
 
-export function usePhase0Flag(): Phase0Variant {
-  return Phase0Variant.Enabled
-  // switch (useFeatureFlagsContext().flags['phase0']) {
-  //   case 'enabled':
-  //     return Phase0Variant.Enabled
-  //   case 'control':
-  //   default:
-  //     return Phase0Variant.Control
-  // }
-}
-
-enum Phase1Variant {
-  Control = 'Control',
-  Enabled = 'Enabled',
-}
-
-export function usePhase1Flag(): Phase1Variant {
-  switch (useFeatureFlagsContext().flags['phase1']) {
+export function useBaseFlag(flag: string): BaseVariant {
+  switch (useFeatureFlagsContext().flags[flag]) {
     case 'enabled':
-      return Phase1Variant.Enabled
+      return BaseVariant.Enabled
     case 'control':
     default:
-      return Phase1Variant.Control
+      return BaseVariant.Control
   }
 }

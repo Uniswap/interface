@@ -79,7 +79,7 @@ const plurals: LocalePlural = {
 export async function dynamicActivate(locale: SupportedLocale) {
   i18n.loadLocaleData(locale, { plurals: () => plurals[locale] })
   try {
-    const catalog = await import(`${process.env.REACT_APP_LOCALES}/${locale}.js`)
+    const catalog = await import(`locales/${locale}.js`)
     // Bundlers will either export it as default or as a named export named default.
     i18n.load(locale, catalog.messages || catalog.default.messages)
   } catch {}
