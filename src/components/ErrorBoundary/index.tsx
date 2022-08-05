@@ -20,7 +20,6 @@ const FallbackWrapper = styled.div`
 const BodyWrapper = styled.div<{ margin?: string }>`
   padding: 1rem;
   width: 100%;
-  white-space: ;
 `
 
 const CodeBlockWrapper = styled.div`
