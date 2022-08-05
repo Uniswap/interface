@@ -1,6 +1,4 @@
-import Toggle from 'components/Toggle'
-import { featureFlagSettings, Flags, useFeatureFlagToggle } from 'featureFlags'
-import { useAtomValue } from 'jotai/utils'
+import { featureFlagOptions, Flags, useUpdateFlag } from 'featureFlags'
 import { useRef } from 'react'
 import { X } from 'react-feather'
 import { useModalIsOpen, useToggleFeatureFlags } from 'state/application/hooks'
@@ -43,19 +41,12 @@ const HeaderRow = styled(FeatureFlagRow)`
   margin-bottom: 8px;
 `
 
-function FeatureFlagToggle(featureFlag: string) {
-  const toggleFeatureFlags = useFeatureFlagToggle(featureFlag)
-  const featureFlags = useAtomValue(featureFlagSettings)
-
+function FeatureFlagOption(featureFlag: string, option: string) {
+  const toggleFeatureFlags = useUpdateFlag(featureFlag, option)
   return (
-    <FeatureFlagRow key={featureFlag}>
-      {featureFlag}
-      <Toggle
-        id={`${featureFlag}-toggle`}
-        isActive={featureFlags[featureFlag] === 'enabled'}
-        toggle={toggleFeatureFlags}
-      />
-    </FeatureFlagRow>
+    <option value={`${featureFlag}-${option}`} onClick={toggleFeatureFlags}>
+      {option}
+    </option>
   )
 }
 
@@ -74,7 +65,19 @@ export default function FeatureFlagModal() {
         </CloseWrapper>
       </HeaderRow>
 
-      {flagOptions.map((featureFlag) => FeatureFlagToggle(featureFlag))}
+      {flagOptions.map((featureFlag) => {
+        const featureOptions = featureFlagOptions[featureFlag]
+        return (
+          <FeatureFlagRow key={featureFlag}>
+            {featureFlag}:
+            <form>
+              <select id={featureFlag}>
+                {featureOptions.map((flagOption) => FeatureFlagOption(featureFlag, flagOption))}
+              </select>
+            </form>
+          </FeatureFlagRow>
+        )
+      })}
     </ModalCard>
   )
 }
