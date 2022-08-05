@@ -108,10 +108,10 @@ export function CurrencySearch({
   }, [allTokens, debouncedQuery])
 
   const [balances, balancesIsLoading] = useAllTokenBalances()
-  const sortedTokens: Token[] = useMemo(() => {
-    void balancesIsLoading // creates a new array once balances load to update hooks
-    return [...filteredTokens].sort(tokenComparator.bind(null, balances))
-  }, [balances, filteredTokens, balancesIsLoading])
+  const sortedTokens: Token[] = useMemo(
+    () => (!balancesIsLoading ? [...filteredTokens].sort(tokenComparator.bind(null, balances)) : []),
+    [balances, filteredTokens, balancesIsLoading]
+  )
 
   const filteredSortedTokens = useSortTokensByQuery(debouncedQuery, sortedTokens)
 
@@ -126,7 +126,7 @@ export function CurrencySearch({
     const s = debouncedQuery.toLowerCase().trim()
     if (native.symbol?.toLowerCase()?.indexOf(s) !== -1) {
       // Always bump the native token to the top of the list.
-      return native ? [native, ...filteredSortedTokens.filter((t) => !t.equals(native))] : filteredSortedTokens
+      return [native, ...filteredSortedTokens.filter((t) => !t.equals(native))]
     }
     return filteredSortedTokens
   }, [debouncedQuery, native, filteredSortedTokens])
