@@ -16,7 +16,7 @@ const SearchInput = styled.input<{ expanded: boolean }>`
   background: no-repeat scroll 7px 7px;
   background-image: ${({ expanded }) => !expanded && `url(${searchIcon})`};
   background-size: 20px 20px;
-  background-position: 11px center;
+  background-position: 14px center;
   background-color: ${({ theme }) => theme.none};
   border-radius: 12px;
   border: 1px solid ${({ theme }) => theme.backgroundOutline};
