@@ -15,7 +15,8 @@
 ### Fix
 
 *  wrong Cake price ([@nguyenhuudungz](https://github.com/nguyenhuudungz)) in [#1199](https://github.com/KyberNetwork/kyberswap-interface/pull/1199)
-*  Mix pannel ([@XiaoYhun](https://github.com/XiaoYhun)) in [#1187]
+*  Mix pannel ([@XiaoYhun](https://github.com/XiaoYhun)) in [#1187](https://github.com/KyberNetwork/kyberswap-interface/pull/1187)
+*  Fix wrong closest tick when add liquidity ([@namgold](https://github.com/namgold)) in [#1184](https://github.com/KyberNetwork/kyberswap-interface/pull/1184)
 *  Lucky winner total item ([@nguyenhuudungz](https://github.com/nguyenhuudungz)) in [#1203](https://github.com/KyberNetwork/kyberswap-interface/pull/1203)
 
 ### Other
