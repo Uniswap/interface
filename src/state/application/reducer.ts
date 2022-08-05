@@ -28,6 +28,9 @@ export enum ApplicationModal {
   WALLET,
   QUEUE,
   EXECUTE,
+  TIME_SELECTOR,
+  SHARE,
+  NETWORK_FILTER,
 }
 
 type PopupList = Array<{ key: string; show: boolean; content: PopupContent; removeAfterMs: number | null }>
