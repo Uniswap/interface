@@ -4,19 +4,12 @@ import { GlyphCircle } from '@visx/glyph'
 import { Group } from '@visx/group'
 import { Line, LinePath } from '@visx/shape'
 import { bisect, scaleLinear } from 'd3'
-<<<<<<< HEAD
-=======
 import { radius } from 'd3-curve-circlecorners'
->>>>>>> main
 import useTheme from 'hooks/useTheme'
 import { useCallback, useState } from 'react'
 import { ArrowDownRight, ArrowUpRight } from 'react-feather'
 import styled from 'styled-components/macro'
 
-<<<<<<< HEAD
-import circleCorners from './circleCorners'
-=======
->>>>>>> main
 import data from './data.json'
 
 type PricePoint = { value: number; timestamp: number }
@@ -145,11 +138,7 @@ export function PriceChart({ width, height }: PriceChartProps) {
         )}
         <Group top={margin.top}>
           <LinePath
-<<<<<<< HEAD
-            curve={circleCorners.radius(1)}
-=======
             curve={radius(1)}
->>>>>>> main
             stroke={theme.accentActive}
             strokeWidth={2}
             data={data.priceHistory}
