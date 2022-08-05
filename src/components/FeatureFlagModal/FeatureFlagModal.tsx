@@ -5,9 +5,9 @@ import { useModalIsOpen, useToggleFeatureFlags } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import styled from 'styled-components/macro'
 
-const ModalCard = styled.div<{ open: boolean }>`
+const Modal = styled.div<{ open: boolean }>`
   position: fixed;
-  display: ${({ open }) => (open ? 'flex' : 'none')};
+  display: flex;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
@@ -24,7 +24,8 @@ const ModalCard = styled.div<{ open: boolean }>`
   gap: 8px;
   border: 1px solid ${({ theme }) => theme.backgroundOutline};
 `
-const FeatureFlagRow = styled.div`
+
+const StyledFeatureFlagOption = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -34,7 +35,8 @@ const FeatureFlagRow = styled.div`
 const CloseWrapper = styled.span`
   cursor: pointer;
 `
-const HeaderRow = styled(FeatureFlagRow)`
+
+const Header = styled(StyledFeatureFlagOption)`
   font-weight: 600;
   font-size: 20px;
   border-bottom: 1px solid ${({ theme }) => theme.backgroundOutline};
@@ -58,7 +60,7 @@ function FeatureFlagOption({
 }) {
   const updateFlag = useUpdateFlag()
   return (
-    <FeatureFlagRow key={featureFlag as string}>
+    <StyledFeatureFlagOption key={featureFlag as string}>
       {featureFlag}: {label}
       <select
         id={featureFlag}
@@ -72,7 +74,7 @@ function FeatureFlagOption({
           <VariantOption key={variant} option={variant} />
         ))}
       </select>
-    </FeatureFlagRow>
+    </StyledFeatureFlagOption>
   )
 }
 
@@ -81,13 +83,13 @@ export default function FeatureFlagModal() {
   const toggle = useToggleFeatureFlags()
 
   return (
-    <ModalCard open={open}>
-      <HeaderRow>
+    <Modal open={open}>
+      <Header>
         Feature Flag Settings
         <CloseWrapper onClick={toggle}>
           <X size={24} />
         </CloseWrapper>
-      </HeaderRow>
+      </Header>
 
       <FeatureFlagOption
         variants={Object.values(Phase0Variant)}
@@ -95,6 +97,6 @@ export default function FeatureFlagModal() {
         featureFlag={FeatureFlag.phase0}
         label="All Phase 0 changes (redesign, explore, header)."
       />
-    </ModalCard>
+    </Modal>
   )
 }
