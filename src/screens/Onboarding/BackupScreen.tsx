@@ -13,8 +13,8 @@ import {
 } from 'src/app/navigation/types'
 import Check from 'src/assets/icons/check.svg'
 import CloudIcon from 'src/assets/icons/cloud.svg'
-import PencilIcon from 'src/assets/icons/pencil.svg'
 import InfoCircle from 'src/assets/icons/info-circle.svg'
+import PencilIcon from 'src/assets/icons/pencil.svg'
 import { Button } from 'src/components/buttons/Button'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { EducationContentType } from 'src/components/education'
@@ -68,9 +68,9 @@ export function BackupScreen({ navigation, route: { params } }: Props) {
             disabled={disabled}
             label={disabled ? t('Add backup to continue') : t('Continue')}
             name={ElementName.Next}
-            py="md"
             testID={ElementName.Next}
             textVariant="largeLabel"
+            variant="onboard"
             onPress={onPressNext}
           />
         </Flex>
