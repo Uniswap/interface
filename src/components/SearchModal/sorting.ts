@@ -1,5 +1,6 @@
 import { Token, TokenAmount } from '@kyberswap/ks-sdk-core'
 import { useMemo } from 'react'
+
 import { useAllTokenBalances } from '../../state/wallet/hooks'
 
 // compare two token amounts with highest one coming first

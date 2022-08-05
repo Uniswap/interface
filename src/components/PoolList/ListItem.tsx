@@ -1,32 +1,23 @@
-import React, { useState, CSSProperties } from 'react'
+import { ChainId, Fraction } from '@kyberswap/ks-sdk-core'
+import { Trans, t } from '@lingui/macro'
+import JSBI from 'jsbi'
+import { rgba } from 'polished'
+import React, { CSSProperties, useState } from 'react'
+import { AlertTriangle, ChevronDown, ChevronUp, Info, Minus, Plus, Share2 } from 'react-feather'
+import { useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { Flex } from 'rebass'
-import { ChevronDown, ChevronUp, Info, Minus, Plus, Share2, AlertTriangle } from 'react-feather'
-import { useDispatch } from 'react-redux'
-import { t, Trans } from '@lingui/macro'
-import { Fraction, ChainId } from '@kyberswap/ks-sdk-core'
-import JSBI from 'jsbi'
+
 import { ButtonEmpty } from 'components/Button'
-import { MouseoverTooltip } from 'components/Tooltip'
 import CopyHelper from 'components/Copy'
-import { usePoolDetailModalToggle } from 'state/application/hooks'
-import { SubgraphPoolData, UserLiquidityPosition, useSharedPoolIdManager } from 'state/pools/hooks'
-import { formattedNum, shortenAddress } from 'utils'
-import { currencyId } from 'utils/currencyId'
-import { getMyLiquidity, getTradingFeeAPR, parseSubgraphPoolData, useCheckIsFarmingPool } from 'utils/dmm'
-import { setSelectedPool } from 'state/pools/actions'
-import Loader from 'components/Loader'
-import { useActiveWeb3React } from 'hooks'
-import { MAX_ALLOW_APY } from 'constants/index'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
-import useTheme from 'hooks/useTheme'
-import { rgba } from 'polished'
-import { IconWrapper } from 'pages/Pools/styleds'
+import AgriCulture from 'components/Icons/AgriCulture'
+import Loader from 'components/Loader'
 import {
-  AddressAndAMPContainer,
-  AddressWrapper,
   AMPLiquidityAndTVLContainer,
   APR,
+  AddressAndAMPContainer,
+  AddressWrapper,
   ButtonWrapper,
   ChevronContainer,
   DataText,
@@ -36,11 +27,21 @@ import {
   TextAMP,
   TextAMPLiquidity,
   TextShowMorePools,
-  TextTokenPair,
   TextTVL,
+  TextTokenPair,
   TokenPairContainer,
 } from 'components/PoolList/styled'
-import AgriCulture from 'components/Icons/AgriCulture'
+import { MouseoverTooltip } from 'components/Tooltip'
+import { MAX_ALLOW_APY } from 'constants/index'
+import { useActiveWeb3React } from 'hooks'
+import useTheme from 'hooks/useTheme'
+import { IconWrapper } from 'pages/Pools/styleds'
+import { usePoolDetailModalToggle } from 'state/application/hooks'
+import { setSelectedPool } from 'state/pools/actions'
+import { SubgraphPoolData, UserLiquidityPosition, useSharedPoolIdManager } from 'state/pools/hooks'
+import { formattedNum, shortenAddress } from 'utils'
+import { currencyId } from 'utils/currencyId'
+import { getMyLiquidity, getTradingFeeAPR, parseSubgraphPoolData, useCheckIsFarmingPool } from 'utils/dmm'
 
 export interface ListItemGroupProps {
   sortedFilteredSubgraphPoolsObject: Map<string, SubgraphPoolData[]>

@@ -1,10 +1,12 @@
+import { Trans, t } from '@lingui/macro'
 import { AbstractConnector } from '@web3-react/abstract-connector'
 import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
 import { darken, lighten } from 'polished'
 import React, { useMemo } from 'react'
 import { Activity } from 'react-feather'
-import { t, Trans } from '@lingui/macro'
+import { useMedia } from 'react-use'
 import styled from 'styled-components'
+
 import CoinbaseWalletIcon from '../../assets/images/coinbaseWalletIcon.svg'
 import FortmaticIcon from '../../assets/images/fortmaticIcon.png'
 import PortisIcon from '../../assets/images/portisIcon.png'
@@ -17,14 +19,11 @@ import { useWalletModalToggle } from '../../state/application/hooks'
 import { isTransactionRecent, useAllTransactions } from '../../state/transactions/hooks'
 import { TransactionDetails } from '../../state/transactions/reducer'
 import { shortenAddress } from '../../utils'
-import { ButtonSecondary, ButtonLight } from '../Button'
-
+import { ButtonLight, ButtonSecondary } from '../Button'
 import Identicon from '../Identicon'
 import Loader from '../Loader'
-
 import { RowBetween } from '../Row'
 import WalletModal from '../WalletModal'
-import { useMedia } from 'react-use'
 
 const IconWrapper = styled.div<{ size?: number }>`
   ${({ theme }) => theme.flexColumnNoWrap};

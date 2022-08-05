@@ -1,17 +1,18 @@
-import ItemCardInfoRow, { ItemCardInfoRowPriceRange } from 'components/PoolList/ItemCard/ItemCardInfoRow'
+import { DMMPool } from '@kyberswap/ks-sdk-classic'
+import { Fraction } from '@kyberswap/ks-sdk-core'
 import { t } from '@lingui/macro'
-import { AMP_LIQUIDITY_HINT, SUBGRAPH_AMP_MULTIPLIER, ONLY_STATIC_FEE_CHAINS } from 'constants/index'
-import { feeRangeCalc } from 'utils/dmm'
+import { Interface } from 'ethers/lib/utils'
+import JSBI from 'jsbi'
 import React from 'react'
+
+import ItemCardInfoRow, { ItemCardInfoRowPriceRange } from 'components/PoolList/ItemCard/ItemCardInfoRow'
+import { AMP_LIQUIDITY_HINT, ONLY_STATIC_FEE_CHAINS, SUBGRAPH_AMP_MULTIPLIER } from 'constants/index'
+import { NETWORKS_INFO } from 'constants/networks'
+import { useActiveWeb3React } from 'hooks'
+import { useMultipleContractSingleData } from 'state/multicall/hooks'
 import { SubgraphPoolData } from 'state/pools/hooks'
 import { formattedNum } from 'utils'
-import { Fraction } from '@kyberswap/ks-sdk-core'
-import { useActiveWeb3React } from 'hooks'
-import JSBI from 'jsbi'
-import { useMultipleContractSingleData } from 'state/multicall/hooks'
-import { Interface } from 'ethers/lib/utils'
-import { DMMPool } from '@kyberswap/ks-sdk-classic'
-import { NETWORKS_INFO } from 'constants/networks'
+import { feeRangeCalc } from 'utils/dmm'
 
 export default function TabDetailsItems({ poolData }: { poolData: SubgraphPoolData }) {
   const { chainId } = useActiveWeb3React()

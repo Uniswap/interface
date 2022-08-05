@@ -1,31 +1,33 @@
-import { useMemo } from 'react'
+import { getAddress } from '@ethersproject/address'
 import { BigNumber } from '@ethersproject/bignumber'
+import { Pair } from '@kyberswap/ks-sdk-classic'
 import {
-  Price,
+  ChainId,
   ChainId as ChainIdDMM,
-  Fraction,
-  Token,
   Currency,
   CurrencyAmount,
-  ChainId,
+  Fraction,
+  Price,
+  Token,
   TokenAmount,
 } from '@kyberswap/ks-sdk-core'
-import { Pair } from '@kyberswap/ks-sdk-classic'
-import { SubgraphPoolData, UserLiquidityPosition } from 'state/pools/hooks'
-import { formattedNum } from 'utils'
-import { BLOCKS_PER_YEAR, SECONDS_PER_YEAR, ZERO_ADDRESS } from 'constants/index'
-import { useActiveWeb3React } from 'hooks'
-import { Farm, Reward, RewardPerTimeUnit } from 'state/farms/types'
-import { useAllTokens } from 'hooks/Tokens'
-import { useActiveAndUniqueFarmsData, useRewardTokenPrices, useRewardTokens } from 'state/farms/hooks'
-import { getFullDisplayBalance } from './formatBalance'
-import { nativeOnChain } from 'constants/tokens'
-import { useBlockNumber } from 'state/application/hooks'
-import { tryParseAmount } from 'state/swap/hooks'
-import { getAddress } from '@ethersproject/address'
-import { unwrappedToken } from 'utils/wrappedCurrency'
 import JSBI from 'jsbi'
+import { useMemo } from 'react'
+
+import { BLOCKS_PER_YEAR, SECONDS_PER_YEAR, ZERO_ADDRESS } from 'constants/index'
 import { NETWORKS_INFO } from 'constants/networks'
+import { nativeOnChain } from 'constants/tokens'
+import { useActiveWeb3React } from 'hooks'
+import { useAllTokens } from 'hooks/Tokens'
+import { useBlockNumber } from 'state/application/hooks'
+import { useActiveAndUniqueFarmsData, useRewardTokenPrices, useRewardTokens } from 'state/farms/hooks'
+import { Farm, Reward, RewardPerTimeUnit } from 'state/farms/types'
+import { SubgraphPoolData, UserLiquidityPosition } from 'state/pools/hooks'
+import { tryParseAmount } from 'state/swap/hooks'
+import { formattedNum } from 'utils'
+import { unwrappedToken } from 'utils/wrappedCurrency'
+
+import { getFullDisplayBalance } from './formatBalance'
 
 export function priceRangeCalc(
   price?: Price<Currency, Currency> | Fraction,

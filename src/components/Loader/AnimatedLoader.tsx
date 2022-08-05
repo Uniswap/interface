@@ -1,5 +1,6 @@
 import React from 'react'
 import styled, { keyframes } from 'styled-components'
+
 import LoadingLogo from 'assets/svg/loading_logo.svg'
 
 const loadingAnimation = keyframes`

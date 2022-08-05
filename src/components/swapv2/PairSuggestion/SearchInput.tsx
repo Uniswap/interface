@@ -1,10 +1,12 @@
 import { t } from '@lingui/macro'
-import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import React, { RefObject, forwardRef } from 'react'
-import { BrowserView, isMobile, isMacOs } from 'react-device-detect'
+import { BrowserView, isMacOs, isMobile } from 'react-device-detect'
 import { Command, Search } from 'react-feather'
 import { Flex } from 'rebass'
 import styled, { css } from 'styled-components'
+
+import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
+
 const SearchWrapper = styled.div<{ showList: boolean }>`
   display: flex;
   align-items: center;

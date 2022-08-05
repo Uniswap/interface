@@ -1,22 +1,29 @@
-import useENS from '../../hooks/useENS'
 import { parseUnits } from '@ethersproject/units'
 import { Trade } from '@kyberswap/ks-sdk-classic'
-import JSBI from 'jsbi'
 import { ChainId, Currency, CurrencyAmount, TradeType } from '@kyberswap/ks-sdk-core'
-import { ParsedQs } from 'qs'
-import { useCallback, useEffect, useState, useMemo } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
 import { t } from '@lingui/macro'
+import JSBI from 'jsbi'
+import { ParsedQs } from 'qs'
+import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+
+import { nativeOnChain } from 'constants/tokens'
+import { FeeConfig } from 'hooks/useSwapV2Callback'
+
+import { BAD_RECIPIENT_ADDRESSES, DEFAULT_OUTPUT_TOKEN_BY_CHAIN } from '../../constants'
 import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
 import { useTradeExactIn, useTradeExactOut } from '../../hooks/Trades'
+import useENS from '../../hooks/useENS'
 import useParsedQueryString from '../../hooks/useParsedQueryString'
 import { isAddress } from '../../utils'
+import { computeSlippageAdjustedAmounts } from '../../utils/prices'
 import { AppDispatch, AppState } from '../index'
+import { useExpertModeManager, useUserSlippageTolerance } from '../user/hooks'
 import { useCurrencyBalances } from '../wallet/hooks'
 import {
-  chooseToSaveGas,
   Field,
+  chooseToSaveGas,
   replaceSwapState,
   resetSelectCurrency,
   selectCurrency,
@@ -26,11 +33,6 @@ import {
   typeInput,
 } from './actions'
 import { SwapState } from './reducer'
-import { useUserSlippageTolerance, useExpertModeManager } from '../user/hooks'
-import { computeSlippageAdjustedAmounts } from '../../utils/prices'
-import { BAD_RECIPIENT_ADDRESSES, DEFAULT_OUTPUT_TOKEN_BY_CHAIN } from '../../constants'
-import { nativeOnChain } from 'constants/tokens'
-import { FeeConfig } from 'hooks/useSwapV2Callback'
 
 export function useSwapState(): AppState['swap'] {
   return useSelector<AppState, AppState['swap']>(state => state.swap)

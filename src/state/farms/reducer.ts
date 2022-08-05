@@ -1,8 +1,10 @@
 import { createReducer } from '@reduxjs/toolkit'
 
 import { Farm } from 'state/farms/types'
-import { setFarmsData, setLoading, setShowConfirm, setAttemptingTxn, setTxHash, setYieldPoolsError } from './actions'
 import { reportException } from 'utils/sentry'
+
+import { setAttemptingTxn, setFarmsData, setLoading, setShowConfirm, setTxHash, setYieldPoolsError } from './actions'
+
 export interface FarmsState {
   readonly data: { [key: string]: Farm[] }
   readonly loading: boolean

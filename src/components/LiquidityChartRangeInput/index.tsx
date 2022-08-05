@@ -1,23 +1,24 @@
-import { Trans } from '@lingui/macro'
 import { Currency, Price, Token } from '@kyberswap/ks-sdk-core'
 import { FeeAmount } from '@kyberswap/ks-sdk-elastic'
-import { AutoColumn, ColumnCenter } from 'components/Column'
-import Loader from 'components/Loader'
+import { Trans } from '@lingui/macro'
 import { format } from 'd3'
-import { useColor } from 'hooks/useColor'
-import useTheme from 'hooks/useTheme'
 import { saturate } from 'polished'
 import React, { ReactNode, useCallback, useMemo } from 'react'
 import { BarChart2, Inbox } from 'react-feather'
 import { batch } from 'react-redux'
+import { Text } from 'rebass'
 import styled from 'styled-components'
+
+import { AutoColumn, ColumnCenter } from 'components/Column'
+import WarningIcon from 'components/LiveChart/WarningIcon'
+import Loader from 'components/Loader'
+import { useColor } from 'hooks/useColor'
+import useTheme from 'hooks/useTheme'
+import { Bound } from 'state/mint/proamm/actions'
 
 import { Chart } from './Chart'
 import { useDensityChartData } from './hooks'
 import { ZoomLevels } from './types'
-import { Bound } from 'state/mint/proamm/actions'
-import { Text } from 'rebass'
-import WarningIcon from 'components/LiveChart/WarningIcon'
 
 const ZOOM_LEVELS: Record<FeeAmount, ZoomLevels> = {
   [FeeAmount.STABLE]: {
@@ -110,7 +111,7 @@ export default function LiquidityChartRangeInput({
   })
 
   const onBrushDomainChangeEnded = useCallback(
-    (domain, mode) => {
+    (domain: [number, number], mode: string | undefined) => {
       let leftRangeValue = Number(domain[0])
       const rightRangeValue = Number(domain[1])
 

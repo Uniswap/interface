@@ -1,10 +1,11 @@
-import JSBI from 'jsbi'
 import { ChainId, Percent, Token, WETH } from '@kyberswap/ks-sdk-core'
-import { AbstractConnector } from '@web3-react/abstract-connector'
-import { coin98InjectedConnector, injected, ledger, walletconnect, walletlink } from '../connectors'
 import { t } from '@lingui/macro'
+import { AbstractConnector } from '@web3-react/abstract-connector'
+import JSBI from 'jsbi'
 import { v4 as uuid } from 'uuid'
-import { SUPPORTED_NETWORKS, NETWORKS_INFO } from './networks'
+
+import { coin98InjectedConnector, injected, ledger, walletconnect, walletlink } from '../connectors'
+import { NETWORKS_INFO, SUPPORTED_NETWORKS } from './networks'
 
 export const BAD_RECIPIENT_ADDRESSES: string[] = [
   NETWORKS_INFO[ChainId.MAINNET].classic.static.factory,

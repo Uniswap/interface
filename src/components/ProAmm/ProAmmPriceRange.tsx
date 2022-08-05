@@ -1,19 +1,20 @@
 import { Position } from '@kyberswap/ks-sdk-elastic'
+import { Trans, t } from '@lingui/macro'
+import { rgba } from 'polished'
 import React, { useCallback, useState } from 'react'
 import { Flex, Text } from 'rebass'
-import useTheme from 'hooks/useTheme'
-import { AutoColumn } from 'components/Column'
+import styled from 'styled-components'
+
 import Card, { OutlineCard } from 'components/Card'
+import { AutoColumn } from 'components/Column'
 import Divider from 'components/Divider'
-import { RowBetween, RowFixed } from 'components/Row'
-import { Trans, t } from '@lingui/macro'
-import { unwrappedToken } from 'utils/wrappedCurrency'
 import { Swap2 as SwapIcon } from 'components/Icons'
 import InfoHelper from 'components/InfoHelper'
-import { formatTickPrice } from 'utils/formatTickPrice'
+import { RowBetween, RowFixed } from 'components/Row'
+import useTheme from 'hooks/useTheme'
 import { Bound } from 'state/mint/proamm/actions'
-import styled from 'styled-components'
-import { rgba } from 'polished'
+import { formatTickPrice } from 'utils/formatTickPrice'
+import { unwrappedToken } from 'utils/wrappedCurrency'
 
 const PriceRangeCard = styled(Card)`
   background-color: ${({ theme }) => rgba(theme.buttonGray, 0.6)};

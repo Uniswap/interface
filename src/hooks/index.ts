@@ -2,14 +2,16 @@ import { Web3Provider } from '@ethersproject/providers'
 import { ChainId } from '@kyberswap/ks-sdk-core'
 import { useWeb3React as useWeb3ReactCore } from '@web3-react/core'
 import { Web3ReactContextInterface } from '@web3-react/core/dist/types'
-import { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
-import { AppState } from '../state'
-import { isMobile } from 'react-device-detect'
-import { injected } from '../connectors'
 import { ethers } from 'ethers'
-import { NETWORKS_INFO, SUPPORTED_NETWORKS } from 'constants/networks'
+import { useEffect, useState } from 'react'
+import { isMobile } from 'react-device-detect'
+import { useSelector } from 'react-redux'
 import { useLocalStorage } from 'react-use'
+
+import { NETWORKS_INFO, SUPPORTED_NETWORKS } from 'constants/networks'
+
+import { injected } from '../connectors'
+import { AppState } from '../state'
 
 export const providers: {
   [chainId in ChainId]: ethers.providers.JsonRpcProvider

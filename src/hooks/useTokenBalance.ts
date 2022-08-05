@@ -1,9 +1,11 @@
 import { WETH } from '@kyberswap/ks-sdk-core'
-import ERC20_ABI from 'constants/abis/erc20.json'
-import { Contract, BigNumber } from 'ethers'
-import { useActiveWeb3React } from 'hooks'
+import { BigNumber, Contract } from 'ethers'
 import { useCallback, useEffect, useState } from 'react'
+
+import ERC20_ABI from 'constants/abis/erc20.json'
+import { useActiveWeb3React } from 'hooks'
 import { isAddress } from 'utils'
+
 import { useContract } from './useContract'
 import useTransactionStatus from './useTransactionStatus'
 

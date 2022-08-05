@@ -3,7 +3,6 @@ import JSBI from 'jsbi'
 import { useMemo } from 'react'
 
 import { NEVER_RELOAD, useSingleCallResult } from '../state/multicall/hooks'
-
 import { useProAmmNFTPositionManagerContract } from './useContract'
 
 type TokenId = number | JSBI | BigNumber
@@ -31,38 +30,39 @@ type UsePositionTokenURIResult =
 
 export function useProAmmPositionTokenURI(tokenId: TokenId | undefined): UsePositionTokenURIResult {
   const contract = useProAmmNFTPositionManagerContract()
-  const inputs = useMemo(() => [tokenId instanceof BigNumber ? tokenId.toHexString() : tokenId?.toString(16)], [
-    tokenId
-  ])
+  const inputs = useMemo(
+    () => [tokenId instanceof BigNumber ? tokenId.toHexString() : tokenId?.toString(16)],
+    [tokenId],
+  )
 
   const { result, error, loading, valid } = useSingleCallResult(contract, 'tokenURI', inputs, {
     ...NEVER_RELOAD,
-    gasRequired: 3_000_000
+    gasRequired: 3_000_000,
   })
   return useMemo(() => {
     if (error || !valid || !tokenId) {
       return {
         valid: false,
-        loading: false
+        loading: false,
       }
     }
     if (loading) {
       return {
         valid: true,
-        loading: true
+        loading: true,
       }
     }
     if (!result) {
       return {
         valid: false,
-        loading: false
+        loading: false,
       }
     }
     const [tokenURI] = result as [string]
     if (!tokenURI || !tokenURI.startsWith(STARTS_WITH))
       return {
         valid: false,
-        loading: false
+        loading: false,
       }
 
     try {
@@ -71,7 +71,7 @@ export function useProAmmPositionTokenURI(tokenId: TokenId | undefined): UsePosi
       return {
         valid: true,
         loading: false,
-        result: json
+        result: json,
       }
     } catch (error) {
       return { valid: false, loading: false }

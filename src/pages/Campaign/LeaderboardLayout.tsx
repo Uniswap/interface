@@ -1,29 +1,29 @@
+import { Trans, t } from '@lingui/macro'
+import { rgba } from 'polished'
 import React from 'react'
-import { Flex, Text } from 'rebass'
 import { Clock } from 'react-feather'
 import { useSelector } from 'react-redux'
-import { t, Trans } from '@lingui/macro'
-import styled, { css } from 'styled-components'
 import { useMedia, useSize } from 'react-use'
-import { rgba } from 'polished'
+import { Flex, Text } from 'rebass'
+import styled, { css } from 'styled-components'
 
-import Search, { Wrapper as SearchWrapper, Container as SearchContainer } from 'components/Search'
-import getShortenAddress from 'utils/getShortenAddress'
-import { formatNumberWithPrecisionRange } from 'utils'
-import useTheme from 'hooks/useTheme'
+import Bronze from 'assets/svg/bronze_icon.svg'
 import Gold from 'assets/svg/gold_icon.svg'
 import Silver from 'assets/svg/silver_icon.svg'
-import Bronze from 'assets/svg/bronze_icon.svg'
+import InfoHelper from 'components/InfoHelper'
 import Pagination from 'components/Pagination'
+import Search, { Container as SearchContainer, Wrapper as SearchWrapper } from 'components/Search'
 import { BIG_INT_ZERO, CAMPAIGN_LEADERBOARD_ITEM_PER_PAGE, DEFAULT_SIGNIFICANT } from 'constants/index'
+import useTheme from 'hooks/useTheme'
 import { AppState } from 'state'
+import { CampaignState } from 'state/campaigns/actions'
 import {
   useSelectedCampaignLeaderboardLookupAddressManager,
   useSelectedCampaignLeaderboardPageNumberManager,
   useSelectedCampaignLuckyWinnersLookupAddressManager,
 } from 'state/campaigns/hooks'
-import InfoHelper from 'components/InfoHelper'
-import { CampaignState } from 'state/campaigns/actions'
+import { formatNumberWithPrecisionRange } from 'utils'
+import getShortenAddress from 'utils/getShortenAddress'
 
 const leaderboardTableBodyBackgroundColorsByRank: { [p: string]: string } = {
   1: `linear-gradient(90deg, rgba(255, 204, 102, 0.25) 0%, rgba(255, 204, 102, 0) 54.69%, rgba(255, 204, 102, 0) 100%)`,

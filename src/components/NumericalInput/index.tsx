@@ -1,6 +1,6 @@
+import { t } from '@lingui/macro'
 import React from 'react'
 import styled from 'styled-components'
-import { t } from '@lingui/macro'
 
 import { escapeRegExp } from '../../utils'
 

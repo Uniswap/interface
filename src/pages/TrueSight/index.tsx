@@ -1,28 +1,28 @@
-import React, { useEffect, useState } from 'react'
-import { RouteComponentProps } from 'react-router-dom'
-import { Flex, Text } from 'rebass'
-import { useMedia } from 'react-use'
 import { ChainId } from '@kyberswap/ks-sdk-core'
 import { Trans } from '@lingui/macro'
+import React, { useEffect, useState } from 'react'
+import { RouteComponentProps } from 'react-router-dom'
+import { useMedia } from 'react-use'
+import { Flex, Text } from 'rebass'
 
+import NotificationIcon from 'components/Icons/NotificationIcon'
+import useParsedQueryString from 'hooks/useParsedQueryString'
+import useTheme from 'hooks/useTheme'
+import TrendingHero from 'pages/TrueSight/TrendingHero'
+import TrendingSoonHero from 'pages/TrueSight/TrendingSoonHero'
+import TrueSightTab from 'pages/TrueSight/TrueSightTab'
+import FilterBar from 'pages/TrueSight/components/FilterBar'
+import TrendingLayout from 'pages/TrueSight/components/TrendingLayout'
+import TrendingSoonLayout from 'pages/TrueSight/components/TrendingSoonLayout'
+import { TrueSightTokenData } from 'pages/TrueSight/hooks/useGetTrendingSoonData'
 import {
   ButtonText,
+  StyledSpinner,
   SubscribeButton,
   TrueSightPageWrapper,
   UnSubscribeButton,
-  StyledSpinner,
 } from 'pages/TrueSight/styled'
-import TrendingSoonHero from 'pages/TrueSight/TrendingSoonHero'
-import TrendingHero from 'pages/TrueSight/TrendingHero'
-import useParsedQueryString from 'hooks/useParsedQueryString'
-import TrueSightTab from 'pages/TrueSight/TrueSightTab'
-import FilterBar from 'pages/TrueSight/components/FilterBar'
-import TrendingSoonLayout from 'pages/TrueSight/components/TrendingSoonLayout'
-import { TrueSightTokenData } from 'pages/TrueSight/hooks/useGetTrendingSoonData'
-import TrendingLayout from 'pages/TrueSight/components/TrendingLayout'
-import NotificationIcon from 'components/Icons/NotificationIcon'
 import { useTrueSightUnsubscribeModalToggle } from 'state/application/hooks'
-import useTheme from 'hooks/useTheme'
 
 import UnsubscribeModal from './components/UnsubscribeModal'
 import useNotification from './hooks/useNotification'

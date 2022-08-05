@@ -1,7 +1,8 @@
-import React, { useState, useRef, useEffect } from 'react'
-import styled from 'styled-components'
-import useTheme from 'hooks/useTheme'
+import React, { useEffect, useRef, useState } from 'react'
 import { isMobile } from 'react-device-detect'
+import styled from 'styled-components'
+
+import useTheme from 'hooks/useTheme'
 
 const ToggleButton = styled.span<{ size?: string; element?: HTMLSpanElement }>`
   position: absolute;

@@ -1,39 +1,38 @@
+import { Trans, t } from '@lingui/macro'
 import React, { useMemo, useState } from 'react'
-import styled from 'styled-components'
-import { t, Trans } from '@lingui/macro'
-import { Box, Flex, Text } from 'rebass'
-import { ExternalLink } from 'theme'
 import { ChevronRight } from 'react-feather'
-import useTheme from 'hooks/useTheme'
-import useTopTrendingSoonTokensInCurrentNetwork from 'components/TopTrendingSoonTokensInCurrentNetwork/useTopTrendingSoonTokensInCurrentNetwork'
-import TopTrendingSoonTokenItem from 'components/TopTrendingSoonTokensInCurrentNetwork/TopTrendingSoonTokenItem'
 import { useMedia } from 'react-use'
+import { Box, Flex, Text } from 'rebass'
+import styled from 'styled-components'
+
+import { FadeInAnimation } from 'components/Animation'
+import { ButtonLight } from 'components/Button'
+import Divider from 'components/Divider'
 import DiscoverIcon from 'components/Icons/DiscoverIcon'
-import { useShowTopTrendingSoonTokens } from 'state/user/hooks'
-import { useModalOpen, useToggleModal } from 'state/application/hooks'
-import { ApplicationModal } from 'state/application/actions'
 import Modal from 'components/Modal'
-import TrendingSoonTokenDetail from 'pages/TrueSight/components/TrendingSoonLayout/TrendingSoonTokenDetail'
-import { TrueSightTokenData } from 'pages/TrueSight/hooks/useGetTrendingSoonData'
-import useGetCoinGeckoChartData from 'pages/TrueSight/hooks/useGetCoinGeckoChartData'
+import { MouseoverTooltip } from 'components/Tooltip'
+import TopTrendingSoonTokenItem from 'components/TopTrendingSoonTokensInCurrentNetwork/TopTrendingSoonTokenItem'
+import useTopTrendingSoonTokensInCurrentNetwork from 'components/TopTrendingSoonTokensInCurrentNetwork/useTopTrendingSoonTokensInCurrentNetwork'
+import useMarquee from 'hooks/useMarquee'
+import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
+import useTheme from 'hooks/useTheme'
 import { TrueSightChartCategory, TrueSightTimeframe } from 'pages/TrueSight'
 import MobileChartModal from 'pages/TrueSight/components/TrendingSoonLayout/MobileChartModal'
+import TrendingSoonTokenDetail from 'pages/TrueSight/components/TrendingSoonLayout/TrendingSoonTokenDetail'
 import TrendingSoonTokenItem from 'pages/TrueSight/components/TrendingSoonLayout/TrendingSoonTokenItem'
-import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
-import { ButtonLight } from 'components/Button'
-import useMarquee from 'hooks/useMarquee'
-import { FadeInAnimation } from 'components/Animation'
-import Divider from 'components/Divider'
+import useGetCoinGeckoChartData from 'pages/TrueSight/hooks/useGetCoinGeckoChartData'
+import { TrueSightTokenData } from 'pages/TrueSight/hooks/useGetTrendingSoonData'
 import { TextTooltip } from 'pages/TrueSight/styled'
-import { MouseoverTooltip } from 'components/Tooltip'
+import { ApplicationModal } from 'state/application/actions'
+import { useModalOpen, useToggleModal } from 'state/application/hooks'
+import { useShowTopTrendingSoonTokens } from 'state/user/hooks'
+import { ExternalLink } from 'theme'
 
 const TopTrendingSoonTokensInCurrentNetwork = () => {
   const theme = useTheme()
   const { mixpanelHandler } = useMixpanel()
-  const {
-    data: topTrendingSoonTokens,
-    isLoading: isLoadingTrendingSoonTokens,
-  } = useTopTrendingSoonTokensInCurrentNetwork()
+  const { data: topTrendingSoonTokens, isLoading: isLoadingTrendingSoonTokens } =
+    useTopTrendingSoonTokensInCurrentNetwork()
   const above768 = useMedia('(min-width: 768px)')
   const isShowTopTrendingTokens = useShowTopTrendingSoonTokens()
   const isTrendingSoonTokenDetailModalOpen = useModalOpen(ApplicationModal.TRENDING_SOON_TOKEN_DETAIL)

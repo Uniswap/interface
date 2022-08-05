@@ -1,9 +1,9 @@
-import React from 'react'
 import { Trans } from '@lingui/macro'
+import React from 'react'
+import styled from 'styled-components'
 
 import InfoHelper from 'components/InfoHelper'
 import { TabContainer, TabItem } from 'components/PoolList/styled'
-import styled from 'styled-components'
 import useTheme from 'hooks/useTheme'
 
 const Tab = styled(TabItem)`

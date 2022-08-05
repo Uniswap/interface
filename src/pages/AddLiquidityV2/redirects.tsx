@@ -1,16 +1,18 @@
-import React from 'react'
 import { WETH } from '@kyberswap/ks-sdk-core'
-import { useActiveWeb3React } from 'hooks'
+import React from 'react'
 import { Redirect, RouteComponentProps } from 'react-router-dom'
+
+import { useActiveWeb3React } from 'hooks'
+
 import ProAmmAddLiquidity from './index'
 
 export function RedirectDuplicateTokenIds(
-  props: RouteComponentProps<{ currencyIdA: string; currencyIdB: string; feeAmount?: string }>
+  props: RouteComponentProps<{ currencyIdA: string; currencyIdB: string; feeAmount?: string }>,
 ) {
   const {
     match: {
-      params: { currencyIdA, currencyIdB }
-    }
+      params: { currencyIdA, currencyIdB },
+    },
   } = props
 
   const { chainId } = useActiveWeb3React()

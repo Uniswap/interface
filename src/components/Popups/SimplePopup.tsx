@@ -1,11 +1,12 @@
-import React, { useContext } from 'react'
 import { Box, Text } from 'rebass'
-import styled, { ThemeContext } from 'styled-components'
-import IconSuccess from 'assets/svg/notification_icon_success.svg'
+import styled from 'styled-components'
+
 import IconFailure from 'assets/svg/notification_icon_failure.svg'
+import IconSuccess from 'assets/svg/notification_icon_success.svg'
 import IconWarning from 'assets/svg/notification_icon_warning.svg'
 import { AutoColumn } from 'components/Column'
 import { AutoRow } from 'components/Row'
+import useTheme from 'hooks/useTheme'
 import { NotificationType } from 'state/application/hooks'
 
 const RowNoFlex = styled(AutoRow)`
@@ -25,7 +26,7 @@ export default function SimplePopup({
   type?: NotificationType
   summary?: string
 }) {
-  const theme = useContext(ThemeContext)
+  const theme = useTheme()
   const mapColor = {
     [NotificationType.SUCCESS]: theme.primary,
     [NotificationType.WARNING]: theme.text,

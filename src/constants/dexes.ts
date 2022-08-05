@@ -10,7 +10,7 @@ type DexList = { [key: string]: DexConfig }
 
 export const dexListConfig: DexList = {
   dmm: {
-    name: 'KyberSwap',
+    name: 'KyberSwap Classic',
     icon: 'https://kyberswap.com/favicon.ico',
   },
   kyberswapv2: {
@@ -18,11 +18,11 @@ export const dexListConfig: DexList = {
     icon: 'https://kyberswap.com/favicon.ico',
   },
   kyberswap: {
-    name: 'KyberSwap',
+    name: 'KyberSwap Classic',
     icon: 'https://kyberswap.com/favicon.ico',
   },
   'kyberswap-static': {
-    name: 'KyberSwap',
+    name: 'KyberSwap Classic',
     icon: 'https://kyberswap.com/favicon.ico',
   },
   uniswap: {
@@ -35,8 +35,7 @@ export const dexListConfig: DexList = {
   },
   sushiswap: {
     name: 'SushiSwap',
-    icon:
-      'https://res.cloudinary.com/sushi-cdn/image/fetch/f_auto,c_limit,w_32,q_auto/https://app.sushi.com/images/logo.svg',
+    icon: 'https://res.cloudinary.com/sushi-cdn/image/fetch/f_auto,c_limit,w_32,q_auto/https://app.sushi.com/images/logo.svg',
   },
   shibaswap: {
     name: 'ShibaSwap',

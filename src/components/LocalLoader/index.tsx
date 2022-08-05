@@ -1,5 +1,6 @@
 import React from 'react'
 import styled, { css, keyframes } from 'styled-components'
+
 import { useIsDarkMode } from 'state/user/hooks'
 
 const pulse = keyframes`

@@ -1,29 +1,29 @@
 import { ChainId } from '@kyberswap/ks-sdk-core'
-import { NetworkInfo } from './type'
 
 import {
+  arbitrum,
+  arbitrumTestnet,
+  aurora,
+  avax,
+  avaxTestnet,
+  bnb,
+  bnbTestnet,
+  bttc,
+  cronos,
+  cronosTestnet,
   ethereum,
-  ropsten,
-  rinkeby,
+  fantom,
   görli,
   kovan,
   matic,
   mumbai,
-  bnb,
-  bnbTestnet,
-  avax,
-  avaxTestnet,
-  fantom,
-  cronos,
-  cronosTestnet,
-  arbitrum,
-  arbitrumTestnet,
-  bttc,
-  velas,
-  aurora,
   oasis,
   optimism,
+  rinkeby,
+  ropsten,
+  velas,
 } from './networks/index'
+import { NetworkInfo } from './type'
 
 type NetToChain = { [p: string]: ChainId }
 
@@ -64,7 +64,7 @@ export const NETWORKS_INFO_CONFIG: { [chain in ChainId]: NetworkInfo } = {
 //this Proxy helps fallback undefined ChainId by Ethereum info
 export const NETWORKS_INFO = new Proxy(NETWORKS_INFO_CONFIG, {
   get(target, p) {
-    const prop = (p as any) as ChainId
+    const prop = p as any as ChainId
     if (p && target[prop]) return target[prop]
     return target[ChainId.MAINNET]
   },

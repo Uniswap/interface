@@ -1,19 +1,21 @@
 import { Pair, Trade } from '@kyberswap/ks-sdk-classic'
 import { Currency, CurrencyAmount, Token, TradeType } from '@kyberswap/ks-sdk-core'
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useSelector } from 'react-redux'
+
+import { NETWORKS_INFO } from 'constants/networks'
+import { AppState } from 'state'
+import { useSwapState } from 'state/swap/hooks'
+import { isAddress } from 'utils'
+
 import { ZERO_ADDRESS } from '../constants'
 import { PairState, usePairs } from '../data/Reserves'
-import { useActiveWeb3React } from './index'
-import useDebounce from './useDebounce'
-import { Aggregator } from '../utils/aggregator'
 import { AggregationComparer } from '../state/swap/types'
-import useParsedQueryString from './useParsedQueryString'
-import { useSelector } from 'react-redux'
-import { AppState } from 'state'
+import { Aggregator } from '../utils/aggregator'
+import { useActiveWeb3React } from './index'
 import { useAllCurrencyCombinations } from './useAllCurrencyCombinations'
-import { isAddress } from 'utils'
-import { useSwapState } from 'state/swap/hooks'
-import { NETWORKS_INFO } from 'constants/networks'
+import useDebounce from './useDebounce'
+import useParsedQueryString from './useParsedQueryString'
 
 function useAllCommonPairs(currencyA?: Currency, currencyB?: Currency): Pair[][] {
   const allPairCombinations = useAllCurrencyCombinations(currencyA, currencyB)
@@ -53,7 +55,7 @@ export function useTradeExactIn(
 
   useEffect(() => {
     let timeout: any
-    const fn = async function() {
+    const fn = async function () {
       timeout = setTimeout(() => {
         if (currencyAmountIn && currencyOut && allowedPairs.length > 0) {
           if (process.env.REACT_APP_MAINNET_ENV === 'staging') {
@@ -97,7 +99,7 @@ export function useTradeExactOut(
   const [trade, setTrade] = useState<Trade<Currency, Currency, TradeType> | null>(null)
   useEffect(() => {
     let timeout: any
-    const fn = async function() {
+    const fn = async function () {
       timeout = setTimeout(() => {
         if (currencyAmountOut && currencyIn && allowedPairs.length > 0) {
           if (process.env.REACT_APP_MAINNET_ENV === 'staging') {

@@ -1,14 +1,16 @@
 import { transparentize } from 'polished'
-import React, { useContext, useState } from 'react'
-import styled, { ThemeContext, css } from 'styled-components'
-import { Text, Flex } from 'rebass'
+import { useState } from 'react'
+import { Flex, Text } from 'rebass'
+import styled, { css } from 'styled-components'
 
 import { ButtonEmpty } from 'components/Button'
-import { AutoColumn } from '../Column'
-import { errorFriendly } from 'utils/dmm'
-import { ReactComponent as Alert } from '../../assets/images/alert.svg'
 import Modal, { ModalProps } from 'components/Modal'
 import { Z_INDEXS } from 'constants/styles'
+import useTheme from 'hooks/useTheme'
+import { errorFriendly } from 'utils/dmm'
+
+import { ReactComponent as Alert } from '../../assets/images/alert.svg'
+import { AutoColumn } from '../Column'
 
 export const PageWrapper = styled.div`
   display: flex;
@@ -215,7 +217,7 @@ const SwapCallbackErrorInner = styled.div`
 `
 
 export function SwapCallbackError({ error }: { error: string }) {
-  const theme = useContext(ThemeContext)
+  const theme = useTheme()
   const [showDetail, setShowDetail] = useState<boolean>(false)
   return (
     <SwapCallbackErrorInner>

@@ -30,7 +30,7 @@ export const brushHandlePath = (height: number) =>
     'v 22', // vertical line
     'q 0 2 -2 2', // rounded corner
     'h -12', // horizontal line
-    `z` // close path
+    `z`, // close path
   ].join(' ')
 
 export const brushHandleAccentPath = () =>
@@ -40,13 +40,13 @@ export const brushHandleAccentPath = () =>
     'M 0 0', // move to origin
     'm 9 7', // move to second accent
     'v 14', // vertical line
-    'z'
+    'z',
   ].join(' ')
 
 export const OffScreenHandle = ({
   color,
   size = 10,
-  margin = 10
+  margin = 10,
 }: {
   color: string
   size?: number

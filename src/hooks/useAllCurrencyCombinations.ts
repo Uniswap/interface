@@ -1,12 +1,13 @@
 import { Currency, Token } from '@kyberswap/ks-sdk-core'
 import { useMemo } from 'react'
+
 import { BASES_TO_CHECK_TRADES_AGAINST, CUSTOM_BASES } from '../constants'
 import { useActiveWeb3React } from './index'
 
 export function useAllCurrencyCombinations(currencyA?: Currency, currencyB?: Currency): [Token, Token][] {
   const { chainId } = useActiveWeb3React()
 
-  const bases: Token[] = chainId ? BASES_TO_CHECK_TRADES_AGAINST[chainId] : []
+  const bases: Token[] = useMemo(() => (chainId ? BASES_TO_CHECK_TRADES_AGAINST[chainId] : []), [chainId])
 
   const [tokenA, tokenB] = [currencyA?.wrapped, currencyB?.wrapped]
 
@@ -33,7 +34,7 @@ export function useAllCurrencyCombinations(currencyA?: Currency, currencyB?: Cur
       tokenA && bases.filter(base => base.address === tokenA?.address).length <= 0
         ? bases.map((base): [Token, Token] => [tokenA, base])
         : [],
-    [bases, tokenA]
+    [bases, tokenA],
   )
 
   const BAgainstAllBase = useMemo(
@@ -41,7 +42,7 @@ export function useAllCurrencyCombinations(currencyA?: Currency, currencyB?: Cur
       tokenB && bases.filter(base => base.address === tokenB?.address).length <= 0
         ? bases.map((base): [Token, Token] => [tokenB, base])
         : [],
-    [bases, tokenB]
+    [bases, tokenB],
   )
   const directPair = useMemo(
     () =>
@@ -51,7 +52,7 @@ export function useAllCurrencyCombinations(currencyA?: Currency, currencyB?: Cur
       bases.filter(base => base.address === tokenB?.address).length <= 0
         ? [[tokenA, tokenB]]
         : [],
-    [bases, tokenA, tokenB]
+    [bases, tokenA, tokenB],
   )
   const allPairCombinations: [Token, Token][] = useMemo(() => {
     return tokenA && tokenB
@@ -63,7 +64,7 @@ export function useAllCurrencyCombinations(currencyA?: Currency, currencyB?: Cur
           // token B against all bases
           ...BAgainstAllBase,
           // each base against all bases
-          ...basePairs
+          ...basePairs,
         ]
           .filter((tokens): tokens is [Token, Token] => Boolean(tokens[0] && tokens[1]))
           .filter(([t0, t1]) => t0.address !== t1.address)

@@ -1,7 +1,7 @@
-import styled from 'styled-components'
-import { Flex } from 'rebass'
-import { MoreHorizontal } from 'react-feather'
 import { rgba } from 'polished'
+import { MoreHorizontal } from 'react-feather'
+import { Flex } from 'rebass'
+import styled from 'styled-components'
 
 export const ListItemGroupContainer = styled.div<{ isDisableShowTwoPools: boolean; isShowExpandedPools: boolean }>`
   border-bottom: ${({ theme }) => `1px solid ${theme.border}`};

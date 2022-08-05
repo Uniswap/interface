@@ -1,18 +1,20 @@
-import React, { CSSProperties, useMemo } from 'react'
 import { ChainId, Currency, Token } from '@kyberswap/ks-sdk-core'
-import { useActiveWeb3React } from 'hooks'
 import { Trans } from '@lingui/macro'
-import CurrencyLogo from 'components/CurrencyLogo'
-import { ExternalLink } from 'theme'
-import styled, { keyframes } from 'styled-components'
-import DiscoverIcon from 'components/Icons/DiscoverIcon'
-import useGetTrendingSoonTokenId from 'pages/TrueSight/hooks/useGetTrendingSoonTokenId'
-import useTheme from 'hooks/useTheme'
 import { rgba } from 'polished'
-import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
+import React, { CSSProperties, useMemo } from 'react'
 import { Flex } from 'rebass'
-import { Field } from '../../state/swap/actions'
+import styled, { keyframes } from 'styled-components'
+
+import CurrencyLogo from 'components/CurrencyLogo'
+import DiscoverIcon from 'components/Icons/DiscoverIcon'
 import { NETWORKS_INFO } from 'constants/networks'
+import { useActiveWeb3React } from 'hooks'
+import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
+import useTheme from 'hooks/useTheme'
+import useGetTrendingSoonTokenId from 'pages/TrueSight/hooks/useGetTrendingSoonTokenId'
+import { ExternalLink } from 'theme'
+
+import { Field } from '../../state/swap/actions'
 
 const TrendingSoonTokenBanner = ({
   currencies,

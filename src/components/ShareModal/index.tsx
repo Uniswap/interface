@@ -1,23 +1,26 @@
-import React, { useContext, useMemo, useState } from 'react'
-import TwitterIcon from 'components/Icons/TwitterIcon'
-import Discord from 'components/Icons/Discord'
-import { Telegram } from 'components/Icons'
-import Facebook from 'components/Icons/Facebook'
-import { ButtonText, ExternalLink } from 'theme'
-import Modal from 'components/Modal'
-import { Flex, Text } from 'rebass'
-import { RowBetween } from '../Row'
 import { t } from '@lingui/macro'
-import { Share2, X } from 'react-feather'
-import styled, { ThemeContext } from 'styled-components'
-import { ButtonPrimary } from '../Button'
-import { useActiveWeb3React } from 'hooks'
-import { useLocation } from 'react-router-dom'
+import React, { useMemo, useState } from 'react'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
-import { useModalOpen, useToggleModal } from 'state/application/hooks'
-import { ApplicationModal } from 'state/application/actions'
-import { StyledActionButtonSwapForm } from 'components/swapv2/styleds'
+import { Share2, X } from 'react-feather'
+import { useLocation } from 'react-router-dom'
+import { Flex, Text } from 'rebass'
+import styled from 'styled-components'
+
+import { Telegram } from 'components/Icons'
+import Discord from 'components/Icons/Discord'
+import Facebook from 'components/Icons/Facebook'
+import TwitterIcon from 'components/Icons/TwitterIcon'
+import Modal from 'components/Modal'
 import { MouseoverTooltip } from 'components/Tooltip'
+import { StyledActionButtonSwapForm } from 'components/swapv2/styleds'
+import { useActiveWeb3React } from 'hooks'
+import useTheme from 'hooks/useTheme'
+import { ApplicationModal } from 'state/application/actions'
+import { useModalOpen, useToggleModal } from 'state/application/hooks'
+import { ButtonText, ExternalLink } from 'theme'
+
+import { ButtonPrimary } from '../Button'
+import { RowBetween } from '../Row'
 
 const ButtonWrapper = styled.div`
   text-align: center;
@@ -72,7 +75,7 @@ const AlertMessage = styled.span`
 `
 
 const ButtonWithHoverEffect = ({ children, onClick }: { children: (color: string) => any; onClick: () => void }) => {
-  const theme = useContext(ThemeContext)
+  const theme = useTheme()
   const [isHovering, setIsHovering] = useState<boolean>(false)
   const handleMouseEnter = () => {
     setIsHovering(true)
@@ -90,7 +93,7 @@ const ButtonWithHoverEffect = ({ children, onClick }: { children: (color: string
 export default function ShareModal({ url, onShared = () => null }: { url?: string; onShared?: () => void }) {
   const isOpen = useModalOpen(ApplicationModal.SHARE)
   const toggle = useToggleModal(ApplicationModal.SHARE)
-  const theme = useContext(ThemeContext)
+  const theme = useTheme()
   const { chainId } = useActiveWeb3React()
   const { pathname } = useLocation()
 
@@ -188,7 +191,7 @@ export default function ShareModal({ url, onShared = () => null }: { url?: strin
 }
 
 export function ShareButtonWithModal({ url, onShared }: { url?: string; onShared?: () => void }) {
-  const theme = useContext(ThemeContext)
+  const theme = useTheme()
   const toggle = useToggleModal(ApplicationModal.SHARE)
 
   return (

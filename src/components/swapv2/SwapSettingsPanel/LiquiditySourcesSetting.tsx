@@ -1,13 +1,13 @@
+import { Trans, t } from '@lingui/macro'
 import React from 'react'
-import styled from 'styled-components'
 import { isMobile } from 'react-device-detect'
-import { t, Trans } from '@lingui/macro'
 import { ChevronRight } from 'react-feather'
 import { Flex } from 'rebass'
+import styled from 'styled-components'
 
 import QuestionHelper from 'components/QuestionHelper'
-import useAggregatorStats from 'hooks/useAggregatorStats'
 import { useActiveWeb3React } from 'hooks'
+import useAggregatorStats from 'hooks/useAggregatorStats'
 import useTheme from 'hooks/useTheme'
 
 import { extractUniqueDEXes } from '../LiquiditySourcesPanel'

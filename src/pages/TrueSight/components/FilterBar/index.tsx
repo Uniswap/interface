@@ -1,34 +1,34 @@
+import { Trans, t } from '@lingui/macro'
 import React, { useState } from 'react'
-import { t, Trans } from '@lingui/macro'
-import { Flex } from 'rebass'
 import { useMedia } from 'react-use'
+import { Flex } from 'rebass'
 import styled from 'styled-components'
 
+import NotificationIcon from 'components/Icons/NotificationIcon'
+import { Container as SearchContainer, Input as SearchInput } from 'components/Search'
+import { MouseoverTooltip } from 'components/Tooltip'
+import useDebounce from 'hooks/useDebounce'
+import useParsedQueryString from 'hooks/useParsedQueryString'
+import useTheme from 'hooks/useTheme'
+import NetworkSelect from 'pages/TrueSight/components/FilterBar/NetworkSelect'
+import TimeframePicker from 'pages/TrueSight/components/FilterBar/TimeframePicker'
+import TrueSightSearchBox, { SelectedOption } from 'pages/TrueSight/components/FilterBar/TrueSightSearchBox'
+import TrueSightToggle from 'pages/TrueSight/components/FilterBar/TrueSightToggle'
+import UnsubscribeModal from 'pages/TrueSight/components/UnsubscribeModal'
+import useGetTagsForSearchBox from 'pages/TrueSight/hooks/useGetTagsForSearchBox'
+import useGetTokensForSearchBox from 'pages/TrueSight/hooks/useGetTokensForSearchBox'
+import useNotification from 'pages/TrueSight/hooks/useNotification'
+import { TrueSightFilter, TrueSightTabs, TrueSightTimeframe } from 'pages/TrueSight/index'
 import {
+  ButtonText,
+  StyledSpinner,
   TextTooltip,
   TrueSightFilterBarLayout,
   TrueSightFilterBarLayoutMobile,
   TrueSightFilterBarSection,
-  ButtonText,
   UnSubscribeButton,
-  StyledSpinner,
 } from 'pages/TrueSight/styled'
-import { TrueSightFilter, TrueSightTabs, TrueSightTimeframe } from 'pages/TrueSight/index'
-import TimeframePicker from 'pages/TrueSight/components/FilterBar/TimeframePicker'
-import TrueSightToggle from 'pages/TrueSight/components/FilterBar/TrueSightToggle'
-import useParsedQueryString from 'hooks/useParsedQueryString'
-import TrueSightSearchBox, { SelectedOption } from 'pages/TrueSight/components/FilterBar/TrueSightSearchBox'
-import NetworkSelect from 'pages/TrueSight/components/FilterBar/NetworkSelect'
-import useGetTokensForSearchBox from 'pages/TrueSight/hooks/useGetTokensForSearchBox'
-import useDebounce from 'hooks/useDebounce'
-import useGetTagsForSearchBox from 'pages/TrueSight/hooks/useGetTagsForSearchBox'
-import { MouseoverTooltip } from 'components/Tooltip'
-import { Container as SearchContainer, Input as SearchInput } from 'components/Search'
-import NotificationIcon from 'components/Icons/NotificationIcon'
-import useTheme from 'hooks/useTheme'
 import { useTrueSightUnsubscribeModalToggle } from 'state/application/hooks'
-import useNotification from 'pages/TrueSight/hooks/useNotification'
-import UnsubscribeModal from 'pages/TrueSight/components/UnsubscribeModal'
 
 const TrueSightSearchBoxOnMobile = styled(TrueSightSearchBox)`
   flex: 1;

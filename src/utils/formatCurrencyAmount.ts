@@ -26,8 +26,8 @@ export function formatPrice(price: Price<Currency, Currency> | undefined, sigFig
     return '<0.0001'
   }
 
-  if (parseFloat(price.toFixed(sigFigs)) > 10**sigFigs - 1) {
-    return price.toSignificant(sigFigs).slice(0, sigFigs) + "..."
+  if (parseFloat(price.toFixed(sigFigs)) > 10 ** sigFigs - 1) {
+    return price.toSignificant(sigFigs).slice(0, sigFigs) + '...'
   }
   return price.toSignificant(sigFigs)
 }

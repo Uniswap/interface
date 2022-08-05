@@ -1,16 +1,16 @@
-import React from 'react'
-import { Trans } from '@lingui/macro'
 import { FeeAmount } from '@kyberswap/ks-sdk-elastic'
-import { ButtonGray } from 'components/Button'
-import { OutlineCard } from 'components/Card'
-import { AutoColumn } from 'components/Column'
+import { Trans } from '@lingui/macro'
 import { ReactNode, useCallback, useEffect, useState } from 'react'
 import { Minus, Plus } from 'react-feather'
 import styled, { keyframes } from 'styled-components'
+
+import { ButtonGray } from 'components/Button'
+import { OutlineCard } from 'components/Card'
+import { AutoColumn } from 'components/Column'
+import useTheme from 'hooks/useTheme'
 import { TYPE } from 'theme'
 
 import { Input as NumericalInput } from '../NumericalInput'
-import useTheme from 'hooks/useTheme'
 
 const pulse = (color: string) => keyframes`
   0% {
@@ -131,7 +131,7 @@ const StepCounter = ({
       setTimeout(() => {
         setLocalValue(value) // reset local value to match parent
         setPulsing(true) // trigger animation
-        setTimeout(function() {
+        setTimeout(function () {
           setPulsing(false)
         }, 1800)
       }, 0)

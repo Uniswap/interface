@@ -1,20 +1,22 @@
+import { ChainId } from '@kyberswap/ks-sdk-core'
 import { Trans, t } from '@lingui/macro'
-import CurrencyLogo from 'components/CurrencyLogo'
-import React, { useContext } from 'react'
+import React from 'react'
 import { Flex, Text } from 'rebass'
+import styled from 'styled-components'
+
+import { ButtonPrimary } from 'components/Button'
+import CurrencyLogo from 'components/CurrencyLogo'
+import { RowBetween } from 'components/Row'
+import TransactionConfirmationModal, { TransactionErrorContent } from 'components/TransactionConfirmationModal'
+import { useActiveWeb3React } from 'hooks'
+import useClaimReward from 'hooks/useClaimReward'
+import useTheme from 'hooks/useTheme'
 import { ApplicationModal } from 'state/application/actions'
 import { useModalOpen, useToggleModal } from 'state/application/hooks'
-import { ThemeContext } from 'styled-components'
-import { KNC } from '../../constants'
-import { ChainId } from '@kyberswap/ks-sdk-core'
-import { ButtonPrimary } from 'components/Button'
-import { shortenAddress } from 'utils'
-import useClaimReward from 'hooks/useClaimReward'
-import styled from 'styled-components'
-import TransactionConfirmationModal, { TransactionErrorContent } from 'components/TransactionConfirmationModal'
 import { CloseIcon } from 'theme'
-import { RowBetween } from 'components/Row'
-import { useActiveWeb3React } from 'hooks'
+import { shortenAddress } from 'utils'
+
+import { KNC } from '../../constants'
 
 const AddressWrapper = styled.div`
   background: ${({ theme }) => theme.buttonBlack};
@@ -33,7 +35,7 @@ function ClaimRewardModal() {
   const { chainId, account } = useActiveWeb3React()
   const open = useModalOpen(ApplicationModal.CLAIM_POPUP)
   const toggle = useToggleModal(ApplicationModal.CLAIM_POPUP)
-  const theme = useContext(ThemeContext)
+  const theme = useTheme()
   const {
     isUserHasReward,
     rewardAmounts,

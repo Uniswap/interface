@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
+import { Currency, CurrencyAmount, Fraction } from '@kyberswap/ks-sdk-core'
 import JSBI from 'jsbi'
-import { CurrencyAmount, Fraction, Currency } from '@kyberswap/ks-sdk-core'
 import Numeral from 'numeral'
 
 export const getFullDisplayBalance = (balance: BigNumber, decimals = 18, significant = 6): string => {
@@ -47,7 +47,7 @@ export const formatBigLiquidity = (num: string, decimals: number, usd = true): s
   const item = lookup
     .slice()
     .reverse()
-    .find(function(item) {
+    .find(function (item) {
       return parseFloat(num) >= item.value
     })
 

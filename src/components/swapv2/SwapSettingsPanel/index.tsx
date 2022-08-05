@@ -1,36 +1,36 @@
-import React from 'react'
-import styled from 'styled-components'
-import { Flex, Box } from 'rebass'
-import { ArrowLeft } from 'react-feather'
 import { Trans, t } from '@lingui/macro'
 import { rgba } from 'polished'
+import React from 'react'
 import { isMobile } from 'react-device-detect'
+import { ArrowLeft } from 'react-feather'
+import { Box, Flex } from 'rebass'
+import styled from 'styled-components'
 
-import QuestionHelper from 'components/QuestionHelper'
 import { AutoColumn } from 'components/Column'
+import QuestionHelper from 'components/QuestionHelper'
 import { RowBetween, RowFixed } from 'components/Row'
+import Toggle from 'components/Toggle'
+import useTopTrendingSoonTokensInCurrentNetwork from 'components/TopTrendingSoonTokensInCurrentNetwork/useTopTrendingSoonTokensInCurrentNetwork'
+import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
+import useTheme from 'hooks/useTheme'
+import { ApplicationModal } from 'state/application/actions'
+import { useModalOpen, useToggleModal } from 'state/application/hooks'
 import {
   useShowLiveChart,
+  useShowTokenInfo,
   useShowTopTrendingSoonTokens,
   useShowTradeRoutes,
   useToggleLiveChart,
+  useToggleTokenInfo,
   useToggleTopTrendingTokens,
   useToggleTradeRoutes,
-  useShowTokenInfo,
-  useToggleTokenInfo,
 } from 'state/user/hooks'
-import useTheme from 'hooks/useTheme'
-import { useModalOpen, useToggleModal } from 'state/application/hooks'
-import Toggle from 'components/Toggle'
-import { ApplicationModal } from 'state/application/actions'
-import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
-import useTopTrendingSoonTokensInCurrentNetwork from 'components/TopTrendingSoonTokensInCurrentNetwork/useTopTrendingSoonTokensInCurrentNetwork'
 
-import TransactionTimeLimitSetting from './TransactionTimeLimitSetting'
-import SlippageSetting from './SlippageSetting'
 import AdvancedModeSetting from './AdvancedModeSetting'
 import GasPriceTrackerSetting from './GasPriceTrackerSetting'
 import LiquiditySourcesSetting from './LiquiditySourcesSetting'
+import SlippageSetting from './SlippageSetting'
+import TransactionTimeLimitSetting from './TransactionTimeLimitSetting'
 
 type Props = {
   className?: string

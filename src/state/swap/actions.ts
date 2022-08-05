@@ -1,4 +1,5 @@
 import { createAction } from '@reduxjs/toolkit'
+
 import { FeeConfig } from 'hooks/useSwapV2Callback'
 
 export enum Field {

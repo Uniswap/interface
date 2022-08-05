@@ -1,36 +1,36 @@
-import React, { KeyboardEvent, RefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import styled from 'styled-components'
+import { ChainId, Currency, Token } from '@kyberswap/ks-sdk-core'
+import { Trans, t } from '@lingui/macro'
+import React, { ChangeEvent, KeyboardEvent, RefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Edit } from 'react-feather'
+import AutoSizer from 'react-virtualized-auto-sizer'
 import { FixedSizeList } from 'react-window'
 import { Flex, Text } from 'rebass'
-import AutoSizer from 'react-virtualized-auto-sizer'
-import { t, Trans } from '@lingui/macro'
-import { Currency, Token, ChainId } from '@kyberswap/ks-sdk-core'
+import styled from 'styled-components'
 
-import useTheme from 'hooks/useTheme'
-import useToggle from 'hooks/useToggle'
-import { useOnClickOutside } from 'hooks/useOnClickOutside'
-import useDebounce from 'hooks/useDebounce'
-import { nativeOnChain } from 'constants/tokens'
 import InfoHelper from 'components/InfoHelper'
-import { useUserFavoriteTokens } from 'state/user/hooks'
+import { nativeOnChain } from 'constants/tokens'
 import {
   useAllTokens,
-  useToken,
-  useIsUserAddedToken,
   useIsTokenActive,
+  useIsUserAddedToken,
   useSearchInactiveTokenLists,
+  useToken,
 } from 'hooks/Tokens'
+import useDebounce from 'hooks/useDebounce'
+import { useOnClickOutside } from 'hooks/useOnClickOutside'
+import useTheme from 'hooks/useTheme'
+import useToggle from 'hooks/useToggle'
+import { useUserFavoriteTokens } from 'state/user/hooks'
+import { filterTokens } from 'utils/filtering'
 
-import ImportRow from './ImportRow'
 import { useActiveWeb3React } from '../../hooks'
-import { CloseIcon, TYPE, ButtonText, IconWrapper } from '../../theme'
+import { ButtonText, CloseIcon, IconWrapper, TYPE } from '../../theme'
 import { isAddress } from '../../utils'
-import Row, { RowBetween, RowFixed } from '../Row'
 import Column from '../Column'
+import Row, { RowBetween, RowFixed } from '../Row'
 import CommonBases from './CommonBases'
 import CurrencyList from './CurrencyList'
-import { filterTokens } from 'utils/filtering'
+import ImportRow from './ImportRow'
 import SortButton from './SortButton'
 import { useTokenComparator } from './sorting'
 import { PaddedColumn, SearchInput, Separator } from './styleds'
@@ -159,7 +159,7 @@ export function CurrencySearch({
 
   // manage focus on modal show
   const inputRef = useRef<HTMLInputElement>()
-  const handleInput = useCallback(event => {
+  const handleInput = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     const input = event.target.value
     const checksummedInput = isAddress(input)
     setSearchQuery(checksummedInput || input)

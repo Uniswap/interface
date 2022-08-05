@@ -1,5 +1,5 @@
-import { createAction } from '@reduxjs/toolkit'
 import { ChainId } from '@kyberswap/ks-sdk-core'
+import { createAction } from '@reduxjs/toolkit'
 import { BigNumber } from 'ethers'
 
 export interface SerializableTransactionReceipt {

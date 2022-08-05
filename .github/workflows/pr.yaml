@@ -104,6 +104,9 @@ jobs:
       - name: Install dependences
         uses: bahmutov/npm-install@HEAD
 
+      - name: Run Lint
+        run: yarn lint --quiet
+
       - name: Yarn Build
         env:
           CI: false

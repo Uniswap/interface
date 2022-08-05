@@ -1,7 +1,8 @@
 import styled from 'styled-components'
-import { AutoColumn } from 'components/Column'
+
 import uImage from 'assets/images/big_unicorn.png'
 import noise from 'assets/images/noise.png'
+import { AutoColumn } from 'components/Column'
 
 export const DataCard = styled(AutoColumn)<{ disabled?: boolean }>`
   background: radial-gradient(76.02% 75.41% at 1.84% 0%, #ff007a 0%, #2172e5 100%);

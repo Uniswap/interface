@@ -1,68 +1,68 @@
-import React, { useCallback, useContext, useMemo, useState, useEffect } from 'react'
 import { BigNumber } from '@ethersproject/bignumber'
 import { splitSignature } from '@ethersproject/bytes'
 import { Contract } from '@ethersproject/contracts'
 import { TransactionResponse } from '@ethersproject/providers'
-import { Flex, Text } from 'rebass'
-import { ThemeContext } from 'styled-components'
-import { t, Trans } from '@lingui/macro'
-
 import { Currency, CurrencyAmount, Fraction, Percent, Token, WETH } from '@kyberswap/ks-sdk-core'
-import { ButtonPrimary, ButtonLight, ButtonError, ButtonConfirmed } from 'components/Button'
+import { Trans, t } from '@lingui/macro'
+import JSBI from 'jsbi'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import { Flex, Text } from 'rebass'
+
+import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from 'components/Button'
 import { BlackCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
+import CurrencyInputPanel from 'components/CurrencyInputPanel'
+import CurrencyLogo from 'components/CurrencyLogo'
+import CurrentPrice from 'components/CurrentPrice'
+import DoubleCurrencyLogo from 'components/DoubleLogo'
+import Loader from 'components/Loader'
+import Row, { AutoRow, RowBetween, RowFixed } from 'components/Row'
+import Slider from 'components/Slider'
 import TransactionConfirmationModal, {
   ConfirmationModalContent,
   TransactionErrorContent,
 } from 'components/TransactionConfirmationModal'
-import CurrencyInputPanel from 'components/CurrencyInputPanel'
-import DoubleCurrencyLogo from 'components/DoubleLogo'
-import Row, { AutoRow, RowBetween, RowFixed } from 'components/Row'
-import Loader from 'components/Loader'
 import { Dots } from 'components/swap/styleds'
-import Slider from 'components/Slider'
-import CurrencyLogo from 'components/CurrencyLogo'
-import CurrentPrice from 'components/CurrentPrice'
+import { NETWORKS_INFO } from 'constants/networks'
+import { nativeOnChain } from 'constants/tokens'
 import { useActiveWeb3React } from 'hooks'
 import { useCurrency } from 'hooks/Tokens'
+import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
 import { usePairContract } from 'hooks/useContract'
 import useIsArgentWallet from 'hooks/useIsArgentWallet'
+import useTheme from 'hooks/useTheme'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
-import { useApproveCallback, ApprovalState } from 'hooks/useApproveCallback'
-import { useTransactionAdder } from 'state/transactions/hooks'
-import { useBurnActionHandlers } from 'state/burn/hooks'
-import { useDerivedBurnInfo, useBurnState } from 'state/burn/hooks'
-import { Field } from 'state/burn/actions'
 import { useTokensPrice, useWalletModalToggle } from 'state/application/hooks'
+import { Field } from 'state/burn/actions'
+import { useBurnActionHandlers, useBurnState, useDerivedBurnInfo } from 'state/burn/hooks'
+import { useTransactionAdder } from 'state/transactions/hooks'
 import { useUserSlippageTolerance } from 'state/user/hooks'
 import { StyledInternalLink, TYPE, UppercaseText } from 'theme'
-import { Wrapper } from '../Pool/styleds'
 import {
   calculateGasMargin,
   calculateSlippageAmount,
   formattedNum,
-  getStaticFeeRouterContract,
   getDynamicFeeRouterContract,
   getOldStaticFeeRouterContract,
+  getStaticFeeRouterContract,
 } from 'utils'
-import useDebouncedChangeHandler from 'utils/useDebouncedChangeHandler'
 import { currencyId } from 'utils/currencyId'
 import { formatJSBIValue } from 'utils/formatBalance'
+import { reportException } from 'utils/sentry'
+import useDebouncedChangeHandler from 'utils/useDebouncedChangeHandler'
+
+import { Wrapper } from '../Pool/styleds'
 import {
-  SecondColumn,
+  CurrentPriceWrapper,
+  DetailBox,
+  DetailWrapper,
+  FirstColumn,
   GridColumn,
   MaxButton,
-  FirstColumn,
-  DetailWrapper,
-  DetailBox,
-  TokenWrapper,
   ModalDetailWrapper,
-  CurrentPriceWrapper,
+  SecondColumn,
+  TokenWrapper,
 } from './styled'
-import { nativeOnChain } from 'constants/tokens'
-import JSBI from 'jsbi'
-import { NETWORKS_INFO } from 'constants/networks'
-import { reportException } from 'utils/sentry'
 
 export default function TokenPair({
   currencyIdA,
@@ -86,23 +86,15 @@ export default function TokenPair({
   const currencyBIsETHER = !!(chainId && currencyB && currencyB.isNative)
   const currencyBIsWETH = !!(chainId && currencyB && currencyB.equals(WETH[chainId]))
 
-  const theme = useContext(ThemeContext)
+  const theme = useTheme()
 
   // toggle wallet when disconnected
   const toggleWalletModal = useWalletModalToggle()
 
   // burn state
   const { independentField, typedValue } = useBurnState()
-  const {
-    pair,
-    userLiquidity,
-    parsedAmounts,
-    amountsMin,
-    price,
-    error,
-    isStaticFeePair,
-    isOldStaticFeeContract,
-  } = useDerivedBurnInfo(currencyA ?? undefined, currencyB ?? undefined, pairAddress)
+  const { pair, userLiquidity, parsedAmounts, amountsMin, price, error, isStaticFeePair, isOldStaticFeeContract } =
+    useDerivedBurnInfo(currencyA ?? undefined, currencyB ?? undefined, pairAddress)
   const contractAddress = chainId
     ? isStaticFeePair
       ? isOldStaticFeeContract
@@ -231,15 +223,18 @@ export default function TokenPair({
     [_onUserInput],
   )
 
-  const onLiquidityInput = useCallback((typedValue: string): void => onUserInput(Field.LIQUIDITY, typedValue), [
-    onUserInput,
-  ])
-  const onCurrencyAInput = useCallback((typedValue: string): void => onUserInput(Field.CURRENCY_A, typedValue), [
-    onUserInput,
-  ])
-  const onCurrencyBInput = useCallback((typedValue: string): void => onUserInput(Field.CURRENCY_B, typedValue), [
-    onUserInput,
-  ])
+  const onLiquidityInput = useCallback(
+    (typedValue: string): void => onUserInput(Field.LIQUIDITY, typedValue),
+    [onUserInput],
+  )
+  const onCurrencyAInput = useCallback(
+    (typedValue: string): void => onUserInput(Field.CURRENCY_A, typedValue),
+    [onUserInput],
+  )
+  const onCurrencyBInput = useCallback(
+    (typedValue: string): void => onUserInput(Field.CURRENCY_B, typedValue),
+    [onUserInput],
+  )
 
   // tx sending
   const addTransactionWithType = useTransactionAdder()
@@ -483,8 +478,9 @@ export default function TokenPair({
         </AutoRow>
 
         <TYPE.italic fontSize={12} fontWeight={400} color={theme.subText} textAlign="left">
-          {t`Output is estimated. If the price changes by more than ${allowedSlippage /
-            100}% your transaction will revert.`}
+          {t`Output is estimated. If the price changes by more than ${
+            allowedSlippage / 100
+          }% your transaction will revert.`}
         </TYPE.italic>
       </AutoColumn>
     )

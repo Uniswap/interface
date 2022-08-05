@@ -1,7 +1,7 @@
+import { t } from '@lingui/macro'
 import React from 'react'
 import { Search } from 'react-feather'
 import styled from 'styled-components'
-import { t } from '@lingui/macro'
 
 type Props = {
   text: string

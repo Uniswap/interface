@@ -1,14 +1,16 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import { Box, Text } from 'rebass'
-import styled, { ThemeContext } from 'styled-components'
-import { useActiveWeb3React } from 'hooks'
-import { ExternalLink, HideSmall } from 'theme'
-import { getEtherscanLink, getEtherscanLinkText } from 'utils'
+import styled from 'styled-components'
+
+import IconFailure from 'assets/svg/notification_icon_failure.svg'
+import IconSuccess from 'assets/svg/notification_icon_success.svg'
 import { AutoColumn } from 'components/Column'
 import { AutoRow } from 'components/Row'
-import IconSuccess from 'assets/svg/notification_icon_success.svg'
-import IconFailure from 'assets/svg/notification_icon_failure.svg'
+import { useActiveWeb3React } from 'hooks'
+import useTheme from 'hooks/useTheme'
 import { NotificationType } from 'state/application/hooks'
+import { ExternalLink, HideSmall } from 'theme'
+import { getEtherscanLink, getEtherscanLinkText } from 'utils'
 
 const RowNoFlex = styled(AutoRow)`
   flex-wrap: nowrap;
@@ -135,8 +137,9 @@ export default function TransactionPopup({
   summary?: string
 }) {
   const { chainId } = useActiveWeb3React()
+
+  const theme = useTheme()
   const success = notiType === NotificationType.SUCCESS
-  const theme = useContext(ThemeContext)
 
   return (
     <Box>

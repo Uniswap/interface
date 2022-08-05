@@ -50,9 +50,9 @@ msgstr "1D"
 msgid "24H Trading Volume"
 msgstr "24H Trading Volume"
 
-#: 
-#~ msgid "24H Volume"
-#~ msgstr "24H Volume"
+#: src/components/swapv2/TokenInfoV2/SingleTokenInfo.tsx
+msgid "24H Volume"
+msgstr "24H Volume"
 
 #: src/pages/RemoveLiquidityProAmm/index.tsx
 msgid "25%"
@@ -253,6 +253,7 @@ msgstr "After harvesting, your rewards will begin vesting linearly (only if the 
 msgid "After harvesting, your rewards will unlock linearly over the indicated time period"
 msgstr "After harvesting, your rewards will unlock linearly over the indicated time period"
 
+#: src/components/SearchModal/CurrencySearch.tsx
 #: src/pages/Pools/index.tsx
 msgid "All"
 msgstr "All"
@@ -516,8 +517,12 @@ msgid "Change Wallet"
 msgstr "Change Wallet"
 
 #: src/components/LiveChart/index.tsx
-msgid "Chart is unavailable"
-msgstr "Chart is unavailable"
+#~ msgid "Chart is unavailable"
+#~ msgstr "Chart is unavailable"
+
+#: src/components/LiveChart/index.tsx
+msgid "Chart is unavailable right now"
+msgstr "Chart is unavailable right now"
 
 #: src/pages/Swap/index.tsx
 #: src/pages/SwapV2/index.tsx
@@ -555,6 +560,10 @@ msgstr "Claim your rewards"
 #: src/components/Vesting/VestingSummary.tsx
 msgid "Claimed Rewards"
 msgstr "Claimed Rewards"
+
+#: src/pages/Campaign/CampaignButtonWithOptions.tsx
+msgid "Claiming Rewards"
+msgstr "Claiming Rewards"
 
 #: src/components/Menu/ClaimRewardModal.tsx
 msgid "Claiming {rewardAmounts} KNC"
@@ -621,7 +630,7 @@ msgstr "Common bases"
 
 #: src/components/ModalCommunity/index.tsx
 #: src/pages/TrueSight/components/CommunityButton.tsx
-#: src/pages/TrueSight/components/TrendingSoonLayout/TrendingSoonTokenItemDetailsOnMobile.tsx
+#: src/pages/TrueSight/components/CommunityRowOnMobile.tsx
 msgid "Community"
 msgstr "Community"
 
@@ -701,7 +710,7 @@ msgstr "Contact Us"
 
 #: src/components/ModalContractAddress/index.tsx
 #: src/components/swapv2/TokenInfo.tsx
-#: src/pages/TrueSight/components/TrendingSoonLayout/TrendingSoonTokenItemDetailsOnMobile.tsx
+#: src/pages/TrueSight/components/AddressRowOnMobile.tsx
 msgid "Contract Address"
 msgstr "Contract Address"
 
@@ -869,6 +878,10 @@ msgstr "Disable Metamask in C98"
 msgid "Disclaimer: The information here should not be treated as any form of financial advice"
 msgstr "Disclaimer: The information here should not be treated as any form of financial advice"
 
+#: src/components/AccountDetails/index.tsx
+msgid "Disconnect"
+msgstr "Disconnect"
+
 #: src/components/Header/index.tsx
 #: src/components/Menu/index.tsx
 msgid "Discover"
@@ -879,12 +892,11 @@ msgstr "Discover"
 msgid "Discover more"
 msgstr "Discover more"
 
-#: src/pages/TrueSight/components/FilterBar/ModalSorting.tsx
 #: src/pages/TrueSight/components/TrendingSoonLayout/index.tsx
 msgid "Discovered On"
 msgstr "Discovered On"
 
-#: src/pages/TrueSight/components/TrendingSoonLayout/TrendingSoonTokenItem.tsx
+#: src/pages/TrueSight/components/TrendingLayout/index.tsx
 msgid "Discovered on"
 msgstr "Discovered on"
 
@@ -1135,6 +1147,10 @@ msgstr "Farming Pools"
 #: src/components/Menu/index.tsx
 msgid "Faucet"
 msgstr "Faucet"
+
+#: src/components/SearchModal/CurrencySearch.tsx
+msgid "Favorites"
+msgstr "Favorites"
 
 #: src/components/PoolList/ItemCard/TabDetailsItems.tsx
 #: src/pages/AddLiquidity/TokenPair.tsx
@@ -1783,9 +1799,9 @@ msgstr "Manage your pools."
 msgid "Market Cap"
 msgstr "Market Cap"
 
-#: 
-#~ msgid "Market Cap Rank"
-#~ msgstr "Market Cap Rank"
+#: src/components/swapv2/TokenInfoV2/SingleTokenInfo.tsx
+msgid "Market Cap Rank"
+msgstr "Market Cap Rank"
 
 #: src/components/CurrencyInputPanel/index.tsx
 #: src/pages/CreateReferral/index.tsx
@@ -1918,8 +1934,10 @@ msgstr "My Total Rewards"
 msgid "My liquidity"
 msgstr "My liquidity"
 
-#: src/pages/TrueSight/components/FilterBar/ModalSorting.tsx
+#: src/pages/TrueSight/components/TrendingLayout/TrendingTokenItemMobileOnly.tsx
 #: src/pages/TrueSight/components/TrendingLayout/index.tsx
+#: src/pages/TrueSight/components/TrendingLayout/index.tsx
+#: src/pages/TrueSight/components/TrendingSoonLayout/TrendingSoonTokenItemDetailsOnMobile.tsx
 #: src/pages/TrueSight/components/TrendingSoonLayout/index.tsx
 msgid "Name"
 msgstr "Name"
@@ -2215,6 +2233,7 @@ msgstr "Preferences"
 msgid "Preview"
 msgstr "Preview"
 
+#: src/components/swapv2/TokenInfoV2/SingleTokenInfo.tsx
 #: src/pages/TrueSight/components/Chart.tsx
 #: src/pages/TrueSight/components/TrendingLayout/TrendingTokenItemMobileOnly.tsx
 #: src/pages/TrueSight/components/TrendingLayout/index.tsx
@@ -2291,8 +2310,8 @@ msgid "Rank"
 msgstr "Rank"
 
 #: src/pages/TrueSight/components/FilterBar/ModalSorting.tsx
-msgid "Ranking"
-msgstr "Ranking"
+#~ msgid "Ranking"
+#~ msgstr "Ranking"
 
 #: src/components/YourCampaignTransactionsModal/index.tsx
 msgid "Read the rules for this campaign & start swapping!"
@@ -2476,12 +2495,12 @@ msgid "Search token name, symbol or address"
 msgstr "Search token name, symbol or address"
 
 #: src/components/swapv2/SingleTokenInfo.tsx
-msgid "See less"
-msgstr "See less"
+#~ msgid "See less"
+#~ msgstr "See less"
 
 #: src/components/swapv2/SingleTokenInfo.tsx
-msgid "See more"
-msgstr "See more"
+#~ msgid "See more"
+#~ msgstr "See more"
 
 #: 
 #~ msgid "Select Fee"
@@ -2614,8 +2633,8 @@ msgid "Something went wrong"
 msgstr "Something went wrong"
 
 #: src/pages/TrueSight/components/FilterBar/ModalSorting.tsx
-msgid "Sort by"
-msgstr "Sort by"
+#~ msgid "Sort by"
+#~ msgstr "Sort by"
 
 #: src/pages/Pools/index.tsx
 msgid "Stablecoins"
@@ -2810,6 +2829,11 @@ msgstr "Swap on {0}"
 msgid "Swap your tokens at the best rates. No limits"
 msgstr "Swap your tokens at the best rates. No limits"
 
+#: src/pages/TrueSight/components/TrendingLayout/TrendingTokenItemMobileOnly.tsx
+#: src/pages/TrueSight/components/TrendingSoonLayout/TrendingSoonTokenItemDetailsOnMobile.tsx
+msgid "Symbol"
+msgstr "Symbol"
+
 #: src/pages/About/AboutKNC.tsx
 msgid "TOKEN UTILITY"
 msgstr "TOKEN UTILITY"
@@ -3001,8 +3025,8 @@ msgid "Token Info"
 msgstr "Token Info"
 
 #: src/components/SearchModal/CurrencySearch.tsx
-msgid "Token Name"
-msgstr "Token Name"
+#~ msgid "Token Name"
+#~ msgstr "Token Name"
 
 #: src/components/LiquidityProviderMode/index.tsx
 #: src/components/PoolList/index.tsx
@@ -3224,6 +3248,7 @@ msgstr "Unstake your liquidity positions from the farm. You will no longer earn 
 msgid "Unstaked your liquidity"
 msgstr "Unstaked your liquidity"
 
+#: src/pages/TrueSight/components/FilterBar/index.tsx
 #: src/pages/TrueSight/components/UnsubscribeModal.tsx
 #: src/pages/TrueSight/index.tsx
 msgid "Unsubscribe"
@@ -3382,7 +3407,6 @@ msgstr "We automatically reinvest your trading fee earnings by adding it back in
 msgid "We can amplify liquidity pools to provide much higher capital efficiency and better slippage for you. Deposit less tokens and still achieve better liquidity and volume."
 msgstr "We can amplify liquidity pools to provide much higher capital efficiency and better slippage for you. Deposit less tokens and still achieve better liquidity and volume."
 
-#: src/pages/TrueSight/components/TrendingLayout/TrendingTokenItemMobileOnly.tsx
 #: src/pages/TrueSight/components/TrendingLayout/index.tsx
 msgid "We discovered this on"
 msgstr "We discovered this on"
@@ -3708,6 +3732,8 @@ msgid "Your wallet address *"
 msgstr "Your wallet address *"
 
 #: src/components/WalletModal/index.tsx
+#: src/pages/Campaign/CampaignButtonWithOptions.tsx
+#: src/pages/Campaign/CampaignButtonWithOptions.tsx
 msgid "and"
 msgstr "and"
 
@@ -3765,8 +3791,8 @@ msgstr "via {0} token list"
 #: src/components/ProAmm/ProAmmPriceRange.tsx
 #: src/components/RateToggle/index.tsx
 #: src/components/RateToggle/index.tsx
-#: src/components/swapv2/SingleTokenInfo.tsx
 #: src/components/swapv2/TokenInfo.tsx
+#: src/components/swapv2/TokenInfoV2/SingleTokenInfo.tsx
 #: src/pages/TrueSight/components/FilterBar/NetworkSelect.tsx
 msgid "{0}"
 msgstr "{0}"

@@ -1,51 +1,53 @@
 import { TransactionResponse } from '@ethersproject/providers'
-import { t, Trans } from '@lingui/macro'
-import { FeeAmount, NonfungiblePositionManager } from '@kyberswap/ks-sdk-elastic'
 import { Currency, CurrencyAmount, Percent, WETH } from '@kyberswap/ks-sdk-core'
+import { FeeAmount, NonfungiblePositionManager } from '@kyberswap/ks-sdk-elastic'
+import { Trans, t } from '@lingui/macro'
+import { BigNumber } from 'ethers'
+import JSBI from 'jsbi'
+import React, { useCallback, useEffect, useState } from 'react'
+import { RouteComponentProps } from 'react-router-dom'
+import { Flex, Text } from 'rebass'
+
 import { ButtonError, ButtonLight, ButtonPrimary } from 'components/Button'
 import { AutoColumn } from 'components/Column'
+import Copy from 'components/Copy'
+import CurrencyInputPanel from 'components/CurrencyInputPanel'
+import Divider from 'components/Divider'
+import Loader from 'components/Loader'
+import { AddRemoveTabs, LiquidityAction } from 'components/NavigationTabs'
+import ProAmmPoolInfo from 'components/ProAmm/ProAmmPoolInfo'
+import ProAmmPooledTokens from 'components/ProAmm/ProAmmPooledTokens'
+import ProAmmPriceRange from 'components/ProAmm/ProAmmPriceRange'
 import { RowBetween } from 'components/Row'
+import TransactionConfirmationModal, { ConfirmationModalContent } from 'components/TransactionConfirmationModal'
+import { TutorialType } from 'components/Tutorial'
 import { Dots } from 'components/swap/styleds'
+import { NETWORKS_INFO } from 'constants/networks'
+import { nativeOnChain } from 'constants/tokens'
 import { FARM_CONTRACTS, VERSION } from 'constants/v2'
 import { useActiveWeb3React } from 'hooks'
 import { useCurrency } from 'hooks/Tokens'
 import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
 import { useProAmmNFTPositionManagerContract } from 'hooks/useContract'
+import usePrevious from 'hooks/usePrevious'
 import { useProAmmDerivedPositionInfo } from 'hooks/useProAmmDerivedPositionInfo'
 import { useProAmmPositionsFromTokenId } from 'hooks/useProAmmPositions'
+import useProAmmPreviousTicks from 'hooks/useProAmmPreviousTicks'
+import useTheme from 'hooks/useTheme'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
-import React, { useCallback, useEffect, useState } from 'react'
-import { RouteComponentProps } from 'react-router-dom'
 import { useTokensPrice, useWalletModalToggle } from 'state/application/hooks'
 import { Field } from 'state/mint/proamm/actions'
 import { useProAmmDerivedMintInfo, useProAmmMintActionHandlers, useProAmmMintState } from 'state/mint/proamm/hooks'
+import { useSingleCallResult } from 'state/multicall/hooks'
 import { useTransactionAdder } from 'state/transactions/hooks'
 import { useIsExpertMode } from 'state/user/hooks'
+import { calculateGasMargin, formattedNum, isAddressString, shortenAddress } from 'utils'
 import { maxAmountSpend } from 'utils/maxAmountSpend'
-import { useUserSlippageTolerance } from '../../state/user/hooks'
-import { Flex, Text } from 'rebass'
-import { Container, GridColumn, FirstColumn } from './styled'
-import TransactionConfirmationModal, { ConfirmationModalContent } from 'components/TransactionConfirmationModal'
-import CurrencyInputPanel from 'components/CurrencyInputPanel'
-import useProAmmPreviousTicks from 'hooks/useProAmmPreviousTicks'
-import { calculateGasMargin, formattedNum, shortenAddress, isAddressString } from 'utils'
-import JSBI from 'jsbi'
-import { AddRemoveTabs, LiquidityAction } from 'components/NavigationTabs'
-import { BigNumber } from 'ethers'
-import Divider from 'components/Divider'
-import Loader from 'components/Loader'
-import ProAmmPoolInfo from 'components/ProAmm/ProAmmPoolInfo'
-import ProAmmPooledTokens from 'components/ProAmm/ProAmmPooledTokens'
 import { unwrappedToken } from 'utils/wrappedCurrency'
-import { SecondColumn } from './styled'
-import ProAmmPriceRange from 'components/ProAmm/ProAmmPriceRange'
-import { nativeOnChain } from 'constants/tokens'
-import usePrevious from 'hooks/usePrevious'
-import { useSingleCallResult } from 'state/multicall/hooks'
-import useTheme from 'hooks/useTheme'
-import Copy from 'components/Copy'
-import { NETWORKS_INFO } from 'constants/networks'
-import { TutorialType } from 'components/Tutorial'
+
+import { useUserSlippageTolerance } from '../../state/user/hooks'
+import { Container, FirstColumn, GridColumn, SecondColumn } from './styled'
+
 export default function AddLiquidity({
   match: {
     params: { currencyIdA, currencyIdB, feeAmount: feeAmountFromUrl, tokenId },
@@ -75,9 +77,7 @@ export default function AddLiquidity({
 
   const owner = useSingleCallResult(!!tokenId ? positionManager : null, 'ownerOf', [tokenId]).result?.[0]
   const ownsNFT = owner === account || existingPositionDetails?.operator === account
-  const ownByFarm = Object.values(FARM_CONTRACTS)
-    .flat()
-    .includes(isAddressString(owner))
+  const ownByFarm = Object.values(FARM_CONTRACTS).flat().includes(isAddressString(owner))
 
   const { position: existingPosition } = useProAmmDerivedPositionInfo(existingPositionDetails)
 

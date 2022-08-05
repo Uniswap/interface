@@ -1,18 +1,19 @@
-import React, { useEffect, useMemo, useRef, useCallback } from 'react'
-import styled, { css } from 'styled-components'
-import ScrollContainer from 'react-indiana-drag-scroll'
 import { ChainId, Currency, CurrencyAmount } from '@kyberswap/ks-sdk-core'
+import React, { useCallback, useEffect, useMemo, useRef } from 'react'
+import ScrollContainer from 'react-indiana-drag-scroll'
+import styled, { css } from 'styled-components'
 
-import CurrencyLogo from '../CurrencyLogo'
-import { getEtherscanLink } from 'utils'
 import { useActiveWeb3React } from 'hooks'
-import { Aggregator, getExchangeConfig } from 'utils/aggregator'
-import { getTradeComposition, SwapRouteV2 } from 'utils/aggregationRouting'
+import { useAllTokens } from 'hooks/Tokens'
 import useThrottle from 'hooks/useThrottle'
 import { Field } from 'state/swap/actions'
-import { useCurrencyConvertedToNative } from 'utils/dmm'
-import { useAllTokens } from 'hooks/Tokens'
 import { useSwapState } from 'state/swap/hooks'
+import { getEtherscanLink } from 'utils'
+import { SwapRouteV2, getTradeComposition } from 'utils/aggregationRouting'
+import { Aggregator, getExchangeConfig } from 'utils/aggregator'
+import { useCurrencyConvertedToNative } from 'utils/dmm'
+
+import CurrencyLogo from '../CurrencyLogo'
 
 const Shadow = styled.div<{ backgroundColor?: string }>`
   position: relative;

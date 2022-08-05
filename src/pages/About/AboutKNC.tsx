@@ -1,4 +1,12 @@
 import { Trans } from '@lingui/macro'
+import React from 'react'
+import { Archive, Repeat } from 'react-feather'
+import { Link } from 'react-router-dom'
+import { useMedia } from 'react-use'
+import { Flex, Text } from 'rebass'
+import { Pagination } from 'swiper'
+import { Swiper, SwiperSlide } from 'swiper/react'
+
 import KNCGraphic from 'assets/images/knc-graphic.png'
 import CoinGecko from 'assets/svg/coingecko_color.svg'
 import CoinGeckoLight from 'assets/svg/coingecko_color_light.svg'
@@ -8,19 +16,29 @@ import KyberDaoLight from 'assets/svg/kyber-dao-light.svg'
 import KyberDao from 'assets/svg/kyber-dao.svg'
 import RocketIcon from 'assets/svg/rocket.svg'
 import TrophyIcon from 'assets/svg/trophy.svg'
+import {
+  Bithumb,
+  Etoro,
+  FTX,
+  Gate,
+  Gemini,
+  Huobi,
+  Kraken,
+  Krystal,
+  Kucoin,
+  KyberSwap,
+  Okex,
+  TokyoCrypto,
+  Upbit,
+  Wazirx,
+} from 'components/ExchangeIcons'
 import { FooterSocialLink } from 'components/Footer/Footer'
-import { BestPrice, Polygon, Avalanche, Bttc, Ethereum, Binance } from 'components/Icons'
+import { Avalanche, BestPrice, Binance, Bttc, Ethereum, Polygon } from 'components/Icons'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import useTheme from 'hooks/useTheme'
-import React from 'react'
-import { Archive, Repeat } from 'react-feather'
-import { Link } from 'react-router-dom'
-import { useMedia } from 'react-use'
-import { Flex, Text } from 'rebass'
 import { useDarkModeManager } from 'state/user/hooks'
-import { Pagination } from 'swiper'
-import { Swiper, SwiperSlide } from 'swiper/react/swiper-react'
 import { ExternalLink, StyledInternalLink } from 'theme'
+
 import {
   AboutPage,
   BtnPrimary,
@@ -31,26 +49,10 @@ import {
   ForLiquidityProviderItem,
   GridWrapper,
   MoreInfoWrapper,
+  SupportedChain,
   VerticalDivider,
   Wrapper,
-  SupportedChain,
 } from './styleds'
-import {
-  Krystal,
-  KyberSwap,
-  FTX,
-  Etoro,
-  Huobi,
-  Kraken,
-  Okex,
-  Bithumb,
-  Gemini,
-  TokyoCrypto,
-  Upbit,
-  Kucoin,
-  Gate,
-  Wazirx,
-} from 'components/ExchangeIcons'
 
 const LIST_EXCHANGES = [
   { name: 'KyberSwap', logo: <KyberSwap /> },
@@ -377,7 +379,7 @@ function AboutKNC() {
               {LIST_WALLETS.map(wallet => (
                 <img
                   key={wallet.logo}
-                  src={require(`../../assets/wallets/${isDarkMode ? wallet.logo : wallet.lightLogo}.svg`)}
+                  src={require(`../../assets/wallets/${isDarkMode ? wallet.logo : wallet.lightLogo}.svg`).default}
                   alt={wallet.logo}
                   style={{ margin: 'auto' }}
                 />
@@ -398,7 +400,7 @@ function AboutKNC() {
                 <SwiperSlide key={wallet.logo}>
                   <ExchangeWrapper>
                     <img
-                      src={require(`../../assets/wallets/${isDarkMode ? wallet.logo : wallet.lightLogo}.svg`)}
+                      src={require(`../../assets/wallets/${isDarkMode ? wallet.logo : wallet.lightLogo}.svg`).default}
                       alt={wallet.logo}
                       width="160px"
                       style={{ margin: 'auto' }}

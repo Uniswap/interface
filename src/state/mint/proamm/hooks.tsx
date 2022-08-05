@@ -1,21 +1,31 @@
-import React, { ReactNode, useCallback, useMemo } from 'react'
-import { AppState } from '../../index'
-
+import { ZERO } from '@kyberswap/ks-sdk-classic'
 import { Currency, CurrencyAmount, Price, Rounding, Token } from '@kyberswap/ks-sdk-core'
-import { useAppDispatch, useAppSelector } from 'state/hooks'
 import {
-  encodeSqrtRatioX96,
   FeeAmount,
-  nearestUsableTick,
+  FullMath,
   Pool,
   Position,
-  priceToClosestTick,
+  SqrtPriceMath,
   TICK_SPACINGS,
   TickMath,
+  encodeSqrtRatioX96,
+  nearestUsableTick,
+  priceToClosestTick,
   tickToPrice,
-  FullMath,
-  SqrtPriceMath,
 } from '@kyberswap/ks-sdk-elastic'
+import { Trans } from '@lingui/macro'
+import JSBI from 'jsbi'
+import React, { ReactNode, useCallback, useMemo } from 'react'
+
+import { useActiveWeb3React } from 'hooks'
+import { PoolState, usePool } from 'hooks/usePools'
+import { useAppDispatch, useAppSelector } from 'state/hooks'
+import { tryParseAmount } from 'state/swap/hooks'
+import { useCurrencyBalances } from 'state/wallet/hooks'
+import { getTickToPrice } from 'utils/getTickToPrice'
+
+import { BIG_INT_ZERO } from '../../../constants'
+import { AppState } from '../../index'
 import {
   Bound,
   Field,
@@ -25,24 +35,13 @@ import {
   typeRightRangeInput,
   typeStartPriceInput,
 } from './actions'
-import { useActiveWeb3React } from 'hooks'
-import { useCurrencyBalances } from 'state/wallet/hooks'
-import { PoolState, usePool } from 'hooks/usePools'
-import { tryParseAmount } from 'state/swap/hooks'
-import JSBI from 'jsbi'
 import { tryParseTick } from './utils'
-import { getTickToPrice } from 'utils/getTickToPrice'
-import { BIG_INT_ZERO } from '../../../constants'
-import { Trans } from '@lingui/macro'
-import { ZERO } from '@kyberswap/ks-sdk-classic'
 
 export function useProAmmMintState(): AppState['mintV2'] {
   return useAppSelector(state => state.mintV2)
 }
 
-export function useProAmmMintActionHandlers(
-  noLiquidity: boolean | undefined,
-): {
+export function useProAmmMintActionHandlers(noLiquidity: boolean | undefined): {
   onFieldAInput: (typedValue: string) => void
   onFieldBInput: (typedValue: string) => void
   onLeftRangeInput: (typedValue: string) => void
@@ -126,13 +125,8 @@ export function useProAmmDerivedMintInfo(
   amount1Unlock: JSBI
 } {
   const { account } = useActiveWeb3React()
-  const {
-    independentField,
-    typedValue,
-    leftRangeTypedValue,
-    rightRangeTypedValue,
-    startPriceTypedValue,
-  } = useProAmmMintState()
+  const { independentField, typedValue, leftRangeTypedValue, rightRangeTypedValue, startPriceTypedValue } =
+    useProAmmMintState()
   const dependentField = independentField === Field.CURRENCY_A ? Field.CURRENCY_B : Field.CURRENCY_A
 
   // currencies
@@ -144,11 +138,10 @@ export function useProAmmDerivedMintInfo(
     [currencyA, currencyB],
   )
   // formatted with tokens
-  const [tokenA, tokenB, baseToken] = useMemo(() => [currencyA?.wrapped, currencyB?.wrapped, baseCurrency?.wrapped], [
-    currencyA,
-    currencyB,
-    baseCurrency,
-  ])
+  const [tokenA, tokenB, baseToken] = useMemo(
+    () => [currencyA?.wrapped, currencyB?.wrapped, baseCurrency?.wrapped],
+    [currencyA, currencyB, baseCurrency],
+  )
 
   const [token0, token1] = useMemo(
     () =>
@@ -430,16 +423,22 @@ export function useProAmmDerivedMintInfo(
     tickUpper,
   ])
 
-  const amount0Unlock = price && noLiquidity ? FullMath.mulDiv(
-    SqrtPriceMath.getAmount0Unlock(encodeSqrtRatioX96(price.numerator, price.denominator)),
-    JSBI.BigInt('105'),
-    JSBI.BigInt('100'),
-  ) : JSBI.BigInt('0')
-  const amount1Unlock = price && noLiquidity ? FullMath.mulDiv(
-    SqrtPriceMath.getAmount1Unlock(encodeSqrtRatioX96(price.numerator, price.denominator)),
-    JSBI.BigInt('105'),
-    JSBI.BigInt('100'),
-  ) : JSBI.BigInt('0')
+  const amount0Unlock =
+    price && noLiquidity
+      ? FullMath.mulDiv(
+          SqrtPriceMath.getAmount0Unlock(encodeSqrtRatioX96(price.numerator, price.denominator)),
+          JSBI.BigInt('105'),
+          JSBI.BigInt('100'),
+        )
+      : JSBI.BigInt('0')
+  const amount1Unlock =
+    price && noLiquidity
+      ? FullMath.mulDiv(
+          SqrtPriceMath.getAmount1Unlock(encodeSqrtRatioX96(price.numerator, price.denominator)),
+          JSBI.BigInt('105'),
+          JSBI.BigInt('100'),
+        )
+      : JSBI.BigInt('0')
   let errorMessage: ReactNode | undefined
   if (!account) {
     errorMessage = <Trans>Connect Wallet</Trans>
@@ -461,22 +460,38 @@ export function useProAmmDerivedMintInfo(
   }
 
   const { [Field.CURRENCY_A]: currencyAAmount, [Field.CURRENCY_B]: currencyBAmount } = parsedAmounts
-  
-  if ((currencyAAmount && currencyBalances?.[Field.CURRENCY_A]?.lessThan(currencyAAmount)) || 
+
+  if (
+    (currencyAAmount && currencyBalances?.[Field.CURRENCY_A]?.lessThan(currencyAAmount)) ||
     (noLiquidity && depositADisabled && currencyBalances?.[Field.CURRENCY_A]?.equalTo(ZERO))
   ) {
     errorMessage = <Trans>Insufficient {currencies[Field.CURRENCY_A]?.symbol} balance</Trans>
-  } else if ((noLiquidity && currencyAAmount && currencyA && currencyBalances?.[Field.CURRENCY_A]?.lessThan(currencyAAmount.add(CurrencyAmount.fromRawAmount(currencyA, !invertPrice ? amount0Unlock : amount1Unlock))))) {
+  } else if (
+    noLiquidity &&
+    currencyAAmount &&
+    currencyA &&
+    currencyBalances?.[Field.CURRENCY_A]?.lessThan(
+      currencyAAmount.add(CurrencyAmount.fromRawAmount(currencyA, !invertPrice ? amount0Unlock : amount1Unlock)),
+    )
+  ) {
     errorMessage = <Trans>Insufficient {currencies[Field.CURRENCY_A]?.symbol} balance.</Trans>
   }
 
-  if ((currencyBAmount && currencyBalances?.[Field.CURRENCY_B]?.lessThan(currencyBAmount)) || 
+  if (
+    (currencyBAmount && currencyBalances?.[Field.CURRENCY_B]?.lessThan(currencyBAmount)) ||
     (noLiquidity && depositBDisabled && currencyBalances?.[Field.CURRENCY_B]?.equalTo(ZERO))
   ) {
     errorMessage = <Trans>Insufficient {currencies[Field.CURRENCY_B]?.symbol} balance</Trans>
-  } else if ((noLiquidity && currencyBAmount && currencyB && currencyBalances?.[Field.CURRENCY_B]?.lessThan(currencyBAmount.add(CurrencyAmount.fromRawAmount(currencyB, !invertPrice ? amount1Unlock : amount0Unlock))))) {
+  } else if (
+    noLiquidity &&
+    currencyBAmount &&
+    currencyB &&
+    currencyBalances?.[Field.CURRENCY_B]?.lessThan(
+      currencyBAmount.add(CurrencyAmount.fromRawAmount(currencyB, !invertPrice ? amount1Unlock : amount0Unlock)),
+    )
+  ) {
     errorMessage = <Trans>Insufficient {currencies[Field.CURRENCY_B]?.symbol} balance.</Trans>
-  } 
+  }
   const invalidPool = poolState === PoolState.INVALID
 
   return {
@@ -500,7 +515,7 @@ export function useProAmmDerivedMintInfo(
     invertPrice,
     ticksAtLimit,
     amount0Unlock,
-    amount1Unlock
+    amount1Unlock,
   }
 }
 

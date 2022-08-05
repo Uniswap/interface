@@ -1,8 +1,10 @@
 import { Pool, Position, TickMath } from '@kyberswap/ks-sdk-elastic'
+import { useMemo } from 'react'
+
 import { NETWORKS_INFO } from 'constants/networks'
 import { useActiveWeb3React } from 'hooks'
-import { useMemo } from 'react'
 import { Result, useSingleContractMultipleData } from 'state/multicall/hooks'
+
 import { useProAmmTickReader } from './useContract'
 import useProAmmPoolInfo from './useProAmmPoolInfo'
 
@@ -39,10 +41,7 @@ export default function useProAmmPreviousTicks(
   }, [results, loading, error, pool])
 }
 
-export function useProAmmTotalFeeOwedByPosition(
-  pool: Pool | null | undefined,
-  tokenID: string | null | undefined,
-): number[] {
+export function useProAmmTotalFeeOwedByPosition(pool: Pool | null | undefined, tokenID: string | undefined): number[] {
   const tickReader = useProAmmTickReader()
   const poolAddress = useProAmmPoolInfo(pool?.token0, pool?.token1, pool?.fee)
   const { chainId } = useActiveWeb3React()
@@ -50,7 +49,7 @@ export function useProAmmTotalFeeOwedByPosition(
   const result = useSingleContractMultipleData(
     tickReader,
     'getTotalFeesOwedToPosition',
-    [[chainId && NETWORKS_INFO[chainId].elastic.nonfungiblePositionManager, poolAddress, tokenID!!]].filter(
+    [[chainId && NETWORKS_INFO[chainId].elastic.nonfungiblePositionManager, poolAddress, tokenID]].filter(
       item => !!item[0] && !!item[1] && !!item[2],
     ),
   )?.[0]?.result

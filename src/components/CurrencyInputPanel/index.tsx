@@ -1,23 +1,26 @@
-import { Currency } from '@kyberswap/ks-sdk-core'
 import { Pair } from '@kyberswap/ks-sdk-classic'
-import React, { useState, useContext, useCallback, ReactNode, useEffect, useRef } from 'react'
-import styled, { ThemeContext } from 'styled-components'
-import { darken, lighten, rgba } from 'polished'
+import { Currency } from '@kyberswap/ks-sdk-core'
 import { Trans } from '@lingui/macro'
+import { darken, lighten, rgba } from 'polished'
+import React, { ReactNode, useCallback, useEffect, useRef, useState } from 'react'
+import { Flex, Text } from 'rebass'
+import styled from 'styled-components'
+
+import { ReactComponent as DropdownSVG } from 'assets/svg/down.svg'
+import Wallet from 'components/Icons/Wallet'
+import { RowFixed } from 'components/Row'
+import useTheme from 'hooks/useTheme'
+import { useCurrencyConvertedToNative } from 'utils/dmm'
+
+import { ReactComponent as Lock } from '../../assets/svg/ic_lock.svg'
+import { ReactComponent as SwitchIcon } from '../../assets/svg/switch.svg'
+import { useActiveWeb3React } from '../../hooks'
 import { useCurrencyBalance } from '../../state/wallet/hooks'
-import CurrencySearchModal from '../SearchModal/CurrencySearchModal'
+import Card from '../Card'
 import CurrencyLogo from '../CurrencyLogo'
 import DoubleCurrencyLogo from '../DoubleLogo'
 import { Input as NumericalInput } from '../NumericalInput'
-import { ReactComponent as SwitchIcon } from '../../assets/svg/switch.svg'
-import { useActiveWeb3React } from '../../hooks'
-import Card from '../Card'
-import { useCurrencyConvertedToNative } from 'utils/dmm'
-import { Flex, Text } from 'rebass'
-import Wallet from 'components/Icons/Wallet'
-import { RowFixed } from 'components/Row'
-import { ReactComponent as DropdownSVG } from 'assets/svg/down.svg'
-import { ReactComponent as Lock } from '../../assets/svg/ic_lock.svg'
+import CurrencySearchModal from '../SearchModal/CurrencySearchModal'
 
 const InputRow = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
@@ -202,7 +205,7 @@ export default function CurrencyInputPanel({
     if (!currency || !account) balanceRef.current = '0'
   }, [selectedCurrencyBalance, currency, account])
 
-  const theme = useContext(ThemeContext)
+  const theme = useTheme()
 
   const handleDismissSearch = useCallback(() => {
     setModalOpen(false)

@@ -1,8 +1,9 @@
 import { ChainId } from '@kyberswap/ks-sdk-core'
-import { NetworkInfo } from '../type'
-import { createClient } from 'utils/client'
 
 import Polygon from 'assets/networks/polygon-network.png'
+import { createClient } from 'utils/client'
+
+import { NetworkInfo } from '../type'
 
 const EMPTY = ''
 const EMPTY_ARRAY: any[] = []

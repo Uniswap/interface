@@ -1,13 +1,14 @@
-import React from 'react'
-import { useModalOpen, useSelectCampaignModalToggle } from 'state/application/hooks'
-import { ApplicationModal } from 'state/application/actions'
-import useTheme from 'hooks/useTheme'
-import Modal from 'components/Modal'
-import CampaignListAndSearch from 'pages/Campaign/CampaignListAndSearch'
-import { X } from 'react-feather'
-import { CampaignData } from 'state/campaigns/actions'
 import { stringify } from 'qs'
+import React from 'react'
+import { X } from 'react-feather'
 import { useHistory } from 'react-router-dom'
+
+import Modal from 'components/Modal'
+import useTheme from 'hooks/useTheme'
+import CampaignListAndSearch from 'pages/Campaign/CampaignListAndSearch'
+import { ApplicationModal } from 'state/application/actions'
+import { useModalOpen, useSelectCampaignModalToggle } from 'state/application/hooks'
+import { CampaignData } from 'state/campaigns/actions'
 
 export default function ModalSelectCampaign() {
   const isSelectCampaignModalOpen = useModalOpen(ApplicationModal.SELECT_CAMPAIGN)

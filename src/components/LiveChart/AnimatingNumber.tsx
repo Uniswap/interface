@@ -1,8 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react'
-import styled from 'styled-components'
-import { Text, Flex } from 'rebass'
-import useTheme from 'hooks/useTheme'
+import { useEffect, useRef, useState } from 'react'
 import { animated, useSpring } from 'react-spring'
+import { Flex, Text } from 'rebass'
+import styled from 'styled-components'
+
+import useTheme from 'hooks/useTheme'
 
 export function usePrevious(value: number) {
   const ref = useRef<number>(value)
@@ -15,16 +16,9 @@ export function usePrevious(value: number) {
 }
 
 function formatForDisplay(number = 0) {
-  if (number > 1000000)
-    return Math.max(number, 0)
-      .toString()
-      .split('')
-      .reverse()
+  if (number > 1000000) return Math.max(number, 0).toString().split('').reverse()
   else {
-    return Math.max(number, 0)
-      .toPrecision(6)
-      .split('')
-      .reverse()
+    return Math.max(number, 0).toPrecision(6).split('').reverse()
   }
 }
 

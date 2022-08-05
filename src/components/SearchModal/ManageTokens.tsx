@@ -1,22 +1,23 @@
-import React, { useRef, RefObject, useCallback, useState, useMemo } from 'react'
-import { t, Trans } from '@lingui/macro'
-import Column from 'components/Column'
-import { PaddedColumn, Separator, SearchInput } from './styleds'
-import Row, { RowBetween, RowFixed } from 'components/Row'
-import { TYPE, ExternalLinkIcon, TrashIcon, ButtonText, ExternalLink } from 'theme'
-import { useToken } from 'hooks/Tokens'
-import styled from 'styled-components'
-import { useUserAddedTokens, useRemoveUserAddedToken } from 'state/user/hooks'
 import { Token } from '@kyberswap/ks-sdk-core'
-import CurrencyLogo from 'components/CurrencyLogo'
-import { getEtherscanLink, isAddress } from 'utils'
-import { useActiveWeb3React } from 'hooks'
-import Card from 'components/Card'
-import ImportRow from './ImportRow'
+import { Trans, t } from '@lingui/macro'
+import React, { ChangeEvent, RefObject, useCallback, useMemo, useRef, useState } from 'react'
 import { Text } from 'rebass'
-import useTheme from '../../hooks/useTheme'
+import styled from 'styled-components'
 
+import Card from 'components/Card'
+import Column from 'components/Column'
+import CurrencyLogo from 'components/CurrencyLogo'
+import Row, { RowBetween, RowFixed } from 'components/Row'
+import { useActiveWeb3React } from 'hooks'
+import { useToken } from 'hooks/Tokens'
+import { useRemoveUserAddedToken, useUserAddedTokens } from 'state/user/hooks'
+import { ButtonText, ExternalLink, ExternalLinkIcon, TYPE, TrashIcon } from 'theme'
+import { getEtherscanLink, isAddress } from 'utils'
+
+import useTheme from '../../hooks/useTheme'
 import { CurrencyModalView } from './CurrencySearchModal'
+import ImportRow from './ImportRow'
+import { PaddedColumn, SearchInput, Separator } from './styleds'
 
 const Wrapper = styled.div`
   width: 100%;
@@ -51,7 +52,7 @@ export default function ManageTokens({
 
   // manage focus on modal show
   const inputRef = useRef<HTMLInputElement>()
-  const handleInput = useCallback(event => {
+  const handleInput = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     const input = event.target.value
     const checksummedInput = isAddress(input)
     setSearchQuery(checksummedInput || input)

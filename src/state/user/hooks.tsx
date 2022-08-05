@@ -2,46 +2,46 @@ import { Pair } from '@kyberswap/ks-sdk-classic'
 import { ChainId, Token } from '@kyberswap/ks-sdk-core'
 import flatMap from 'lodash.flatmap'
 import { useCallback, useMemo } from 'react'
-import { shallowEqual, useDispatch, useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
-import { useSingleContractMultipleData } from 'state/multicall/hooks'
 import { SupportedLocale } from 'constants/locales'
-import { AppDispatch, AppState } from 'state'
-import { useAppDispatch, useAppSelector } from 'state/hooks'
-import { useUserLiquidityPositions } from 'state/pools/hooks'
 import { useAllTokens } from 'hooks/Tokens'
-import { isAddress } from 'utils'
-import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 import {
-  useStaticFeeFactoryContract,
   useDynamicFeeFactoryContract,
   useOldStaticFeeFactoryContract,
+  useStaticFeeFactoryContract,
 } from 'hooks/useContract'
+import { AppDispatch, AppState } from 'state'
+import { useAppDispatch, useAppSelector } from 'state/hooks'
+import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
+import { useSingleContractMultipleData } from 'state/multicall/hooks'
+import { useUserLiquidityPositions } from 'state/pools/hooks'
+import { isAddress } from 'utils'
 
+import { BASES_TO_TRACK_LIQUIDITY_FOR, PINNED_PAIRS } from '../../constants'
+import { useActiveWeb3React } from '../../hooks'
 import {
+  SerializedPair,
+  SerializedToken,
+  ToggleFavoriteTokenPayload,
   addSerializedPair,
   addSerializedToken,
   removeSerializedToken,
-  SerializedPair,
-  SerializedToken,
+  toggleFavoriteToken as toggleFavoriteTokenAction,
+  toggleLiveChart,
+  toggleProLiveChart,
+  toggleRebrandingAnnouncement,
+  toggleTokenInfo,
+  toggleTopTrendingTokens,
+  toggleTradeRoutes,
+  toggleURLWarning,
   updateUserDarkMode,
   updateUserDeadline,
   updateUserExpertMode,
-  updateUserSlippageTolerance,
-  toggleURLWarning,
   updateUserLocale,
-  toggleRebrandingAnnouncement,
-  toggleLiveChart,
-  toggleTradeRoutes,
-  toggleProLiveChart,
-  toggleTopTrendingTokens,
-  toggleTokenInfo,
-  toggleFavoriteToken as toggleFavoriteTokenAction,
-  ToggleFavoriteTokenPayload,
+  updateUserSlippageTolerance,
 } from './actions'
 import { defaultShowLiveCharts } from './reducer'
-import { BASES_TO_TRACK_LIQUIDITY_FOR, PINNED_PAIRS } from '../../constants'
-import { useActiveWeb3React } from '../../hooks'
 
 function serializeToken(token: Token | WrappedTokenInfo): SerializedToken {
   return {
@@ -344,11 +344,10 @@ export function useTrackedTokenPairs(): [Token, Token][] {
     })
   }, [savedSerializedPairs, chainId])
 
-  const combinedList = useMemo(() => userPairs.concat(generatedPairs).concat(pinnedPairs), [
-    generatedPairs,
-    pinnedPairs,
-    userPairs,
-  ])
+  const combinedList = useMemo(
+    () => userPairs.concat(generatedPairs).concat(pinnedPairs),
+    [generatedPairs, pinnedPairs, userPairs],
+  )
 
   return useMemo(() => {
     // dedupes pairs of tokens in the combined list
@@ -406,11 +405,10 @@ export function useLiquidityPositionTokenPairs(): [Token, Token][] {
     })
   }, [savedSerializedPairs, chainId])
 
-  const combinedList = useMemo(() => userPairs.concat(generatedPairs).concat(pinnedPairs), [
-    generatedPairs,
-    pinnedPairs,
-    userPairs,
-  ])
+  const combinedList = useMemo(
+    () => userPairs.concat(generatedPairs).concat(pinnedPairs),
+    [generatedPairs, pinnedPairs, userPairs],
+  )
 
   return useMemo(() => {
     // dedupes pairs of tokens in the combined list

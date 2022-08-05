@@ -1,19 +1,18 @@
-import React, { useContext } from 'react'
-import { MobileModalWrapper, StyledActionButtonSwapForm } from 'components/swapv2/styleds'
-import { Flex, Text } from 'rebass'
-import { ButtonText } from 'theme/components'
-
-import { ThemeContext } from 'styled-components'
-import { isMobile, MobileView } from 'react-device-detect'
-import { useModalOpen, useToggleModal } from 'state/application/hooks'
-import { ApplicationModal } from 'state/application/actions'
-import { RowBetween } from 'components/Row'
-import { Trans, t } from '@lingui/macro'
-import { Field } from 'state/swap/actions'
 import { Currency } from '@kyberswap/ks-sdk-core'
-import TokenInfo from 'components/swapv2/TokenInfo'
-import { X, Info } from 'react-feather'
+import { Trans, t } from '@lingui/macro'
+import { MobileView, isMobile } from 'react-device-detect'
+import { Info, X } from 'react-feather'
+import { Flex, Text } from 'rebass'
+
+import { RowBetween } from 'components/Row'
 import { MouseoverTooltip } from 'components/Tooltip'
+import TokenInfo from 'components/swapv2/TokenInfo'
+import { MobileModalWrapper, StyledActionButtonSwapForm } from 'components/swapv2/styleds'
+import useTheme from 'hooks/useTheme'
+import { ApplicationModal } from 'state/application/actions'
+import { useModalOpen, useToggleModal } from 'state/application/hooks'
+import { Field } from 'state/swap/actions'
+import { ButtonText } from 'theme/components'
 
 function MobileTradeRoutes({
   currencies,
@@ -22,7 +21,7 @@ function MobileTradeRoutes({
   currencies: { [field in Field]?: Currency }
   onClick?: () => void
 }) {
-  const theme = useContext(ThemeContext)
+  const theme = useTheme()
   const isOpen = useModalOpen(ApplicationModal.MOBILE_TOKEN_INFO)
   const toggle = useToggleModal(ApplicationModal.MOBILE_TOKEN_INFO)
 

@@ -1,9 +1,11 @@
 import React, { useCallback, useState } from 'react'
 import { Info } from 'react-feather'
-import styled from 'styled-components'
-import Tooltip from '../Tooltip'
 import { Flex } from 'rebass'
+import styled from 'styled-components'
+
 import useTheme from 'hooks/useTheme'
+
+import Tooltip from '../Tooltip'
 
 const QuestionWrapper = styled.div<{ useCurrentColor?: boolean }>`
   display: flex;

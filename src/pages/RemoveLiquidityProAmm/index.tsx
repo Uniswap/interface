@@ -1,49 +1,50 @@
-import React, { useCallback, useEffect, useState } from 'react'
-import { TransactionResponse } from '@ethersproject/providers'
-import { Currency, CurrencyAmount, Percent, WETH } from '@kyberswap/ks-sdk-core'
-import { Flex, Text } from 'rebass'
 import { BigNumber } from '@ethersproject/bignumber'
-import { useMemo } from 'react'
-import { Redirect, RouteComponentProps } from 'react-router-dom'
-import { useProAmmPositionsFromTokenId } from 'hooks/useProAmmPositions'
-import useTheme from 'hooks/useTheme'
-import { useActiveWeb3React } from 'hooks'
-import { useBurnProAmmActionHandlers, useBurnProAmmState, useDerivedProAmmBurnInfo } from 'state/burn/proamm/hooks'
-import useDebouncedChangeHandler from 'utils/useDebouncedChangeHandler'
-import useTransactionDeadline from 'hooks/useTransactionDeadline'
-import { useUserSlippageTolerance } from 'state/user/hooks'
-import { useTransactionAdder } from 'state/transactions/hooks'
-import { useProAmmNFTPositionManagerContract } from 'hooks/useContract'
+import { TransactionResponse } from '@ethersproject/providers'
+import { ZERO } from '@kyberswap/ks-sdk-classic'
+import { Currency, CurrencyAmount, Percent, WETH } from '@kyberswap/ks-sdk-core'
 import { FeeAmount, NonfungiblePositionManager } from '@kyberswap/ks-sdk-elastic'
-import { basisPointsToPercent, calculateGasMargin, formattedNum, shortenAddress } from 'utils'
 import { Trans, t } from '@lingui/macro'
-import { AutoColumn } from 'components/Column'
-import { ButtonConfirmed, ButtonPrimary } from 'components/Button'
-import TransactionConfirmationModal, { ConfirmationModalContent } from 'components/TransactionConfirmationModal'
-import Loader from 'components/Loader'
-import { BlackCard } from 'components/Card'
-import { MaxButton as MaxBtn } from 'pages/RemoveLiquidity/styled'
-import Slider from 'components/Slider'
-import { AddRemoveTabs, LiquidityAction } from 'components/NavigationTabs'
-import useProAmmPoolInfo from 'hooks/useProAmmPoolInfo'
+import JSBI from 'jsbi'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import { useHistory } from 'react-router'
+import { Redirect, RouteComponentProps } from 'react-router-dom'
+import { Flex, Text } from 'rebass'
 import styled from 'styled-components'
-import Divider from 'components/Divider'
-import { Container, FirstColumn, GridColumn, SecondColumn } from './styled'
+
+import { ButtonConfirmed, ButtonPrimary } from 'components/Button'
+import { BlackCard } from 'components/Card'
+import { AutoColumn } from 'components/Column'
+import Copy from 'components/Copy'
 import CurrencyInputPanel from 'components/CurrencyInputPanel'
-import { Field } from 'state/burn/proamm/actions'
-import { useTokensPrice, useWalletModalToggle } from 'state/application/hooks'
+import Divider from 'components/Divider'
+import Loader from 'components/Loader'
+import { AddRemoveTabs, LiquidityAction } from 'components/NavigationTabs'
+import ProAmmFee from 'components/ProAmm/ProAmmFee'
 import ProAmmPoolInfo from 'components/ProAmm/ProAmmPoolInfo'
 import ProAmmPooledTokens from 'components/ProAmm/ProAmmPooledTokens'
-import ProAmmFee from 'components/ProAmm/ProAmmFee'
-import { useHistory } from 'react-router'
-import JSBI from 'jsbi'
-import usePrevious from 'hooks/usePrevious'
-import { useSingleCallResult } from 'state/multicall/hooks'
-import Copy from 'components/Copy'
-import { unwrappedToken } from 'utils/wrappedCurrency'
-import { ZERO } from '@kyberswap/ks-sdk-classic'
-import { VERSION } from 'constants/v2'
+import Slider from 'components/Slider'
+import TransactionConfirmationModal, { ConfirmationModalContent } from 'components/TransactionConfirmationModal'
 import { TutorialType } from 'components/Tutorial'
+import { VERSION } from 'constants/v2'
+import { useActiveWeb3React } from 'hooks'
+import { useProAmmNFTPositionManagerContract } from 'hooks/useContract'
+import usePrevious from 'hooks/usePrevious'
+import useProAmmPoolInfo from 'hooks/useProAmmPoolInfo'
+import { useProAmmPositionsFromTokenId } from 'hooks/useProAmmPositions'
+import useTheme from 'hooks/useTheme'
+import useTransactionDeadline from 'hooks/useTransactionDeadline'
+import { MaxButton as MaxBtn } from 'pages/RemoveLiquidity/styled'
+import { useTokensPrice, useWalletModalToggle } from 'state/application/hooks'
+import { Field } from 'state/burn/proamm/actions'
+import { useBurnProAmmActionHandlers, useBurnProAmmState, useDerivedProAmmBurnInfo } from 'state/burn/proamm/hooks'
+import { useSingleCallResult } from 'state/multicall/hooks'
+import { useTransactionAdder } from 'state/transactions/hooks'
+import { useUserSlippageTolerance } from 'state/user/hooks'
+import { basisPointsToPercent, calculateGasMargin, formattedNum, shortenAddress } from 'utils'
+import useDebouncedChangeHandler from 'utils/useDebouncedChangeHandler'
+import { unwrappedToken } from 'utils/wrappedCurrency'
+
+import { Container, FirstColumn, GridColumn, SecondColumn } from './styled'
 
 const MaxButton = styled(MaxBtn)`
   margin: 0;
@@ -348,12 +349,14 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
       </ButtonPrimary>
     )
   }
-  const onCurrencyAInput = useCallback((typedValue: string): void => onUserInput(Field.CURRENCY_A, typedValue), [
-    onUserInput,
-  ])
-  const onCurrencyBInput = useCallback((typedValue: string): void => onUserInput(Field.CURRENCY_B, typedValue), [
-    onUserInput,
-  ])
+  const onCurrencyAInput = useCallback(
+    (typedValue: string): void => onUserInput(Field.CURRENCY_A, typedValue),
+    [onUserInput],
+  )
+  const onCurrencyBInput = useCallback(
+    (typedValue: string): void => onUserInput(Field.CURRENCY_B, typedValue),
+    [onUserInput],
+  )
 
   return (
     <>

@@ -1,4 +1,5 @@
 import { createAction } from '@reduxjs/toolkit'
+
 import { ProMMFarm } from './types'
 
 export const updatePrommFarms = createAction<{ [address: string]: ProMMFarm[] }>('prommFarms/updatePrommFarms')

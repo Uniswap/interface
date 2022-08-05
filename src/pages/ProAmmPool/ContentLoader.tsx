@@ -1,6 +1,7 @@
 import React from 'react'
-import styled, { keyframes } from 'styled-components'
 import { Flex } from 'rebass'
+import styled, { keyframes } from 'styled-components'
+
 import Divider from 'components/Divider'
 
 const shine = keyframes`

@@ -1,67 +1,69 @@
-import React, { useCallback, useContext, useMemo, useState } from 'react'
 import { BigNumber } from '@ethersproject/bignumber'
 import { TransactionResponse } from '@ethersproject/providers'
+import { Currency, CurrencyAmount, Fraction, TokenAmount, WETH, computePriceImpact } from '@kyberswap/ks-sdk-core'
+import { Trans, t } from '@lingui/macro'
 import { parseUnits } from 'ethers/lib/utils'
-import { AlertTriangle } from 'react-feather'
-import { Text, Flex } from 'rebass'
-import { ThemeContext } from 'styled-components'
-import { t, Trans } from '@lingui/macro'
-import { computePriceImpact, Currency, CurrencyAmount, Fraction, TokenAmount, WETH } from '@kyberswap/ks-sdk-core'
 import JSBI from 'jsbi'
-import { AMP_HINT } from 'constants/index'
+import React, { useCallback, useMemo, useState } from 'react'
+import { AlertTriangle } from 'react-feather'
+import { Flex, Text } from 'rebass'
+
 import { ButtonError, ButtonLight, ButtonPrimary } from 'components/Button'
 import { AutoColumn } from 'components/Column'
+import { ConfirmAddModalBottom } from 'components/ConfirmAddModalBottom'
 import CurrencyInputPanel from 'components/CurrencyInputPanel'
-import Row, { AutoRow, RowBetween, RowFlat } from 'components/Row'
+import CurrencyLogo from 'components/CurrencyLogo'
+import CurrentPrice from 'components/CurrentPrice'
+import Loader from 'components/Loader'
 import { PoolPriceBar, PoolPriceRangeBar, ToggleComponent } from 'components/PoolPriceBar'
 import QuestionHelper from 'components/QuestionHelper'
-import Loader from 'components/Loader'
-import CurrentPrice from 'components/CurrentPrice'
-import CurrencyLogo from 'components/CurrencyLogo'
-import FormattedPriceImpact from 'components/swap/FormattedPriceImpact'
+import Row, { AutoRow, RowBetween, RowFlat } from 'components/Row'
 import TransactionConfirmationModal, {
   ConfirmationModalContent,
   TransactionErrorContent,
 } from 'components/TransactionConfirmationModal'
-import { ConfirmAddModalBottom } from 'components/ConfirmAddModalBottom'
 import ZapError from 'components/ZapError'
-import { PairState } from '../../data/Reserves'
+import FormattedPriceImpact from 'components/swap/FormattedPriceImpact'
+import { AMP_HINT } from 'constants/index'
+import { NETWORKS_INFO } from 'constants/networks'
+import { nativeOnChain } from 'constants/tokens'
 import { useActiveWeb3React } from 'hooks'
 import { useCurrency } from 'hooks/Tokens'
 import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
-import useTransactionDeadline from 'hooks/useTransactionDeadline'
+import useTheme from 'hooks/useTheme'
 import useTokensMarketPrice from 'hooks/useTokensMarketPrice'
+import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import { useTokensPrice, useWalletModalToggle } from 'state/application/hooks'
 import { Field } from 'state/mint/actions'
 import { useDerivedZapInInfo, useMintState, useZapInActionHandlers } from 'state/mint/hooks'
-import { useIsExpertMode, useUserSlippageTolerance } from 'state/user/hooks'
 import { tryParseAmount } from 'state/swap/hooks'
 import { useTransactionAdder } from 'state/transactions/hooks'
+import { useIsExpertMode, useUserSlippageTolerance } from 'state/user/hooks'
 import { StyledInternalLink, TYPE, UppercaseText } from 'theme'
 import { calculateGasMargin, formattedNum, getZapContract } from 'utils'
-import { maxAmountSpend } from 'utils/maxAmountSpend'
 import { currencyId } from 'utils/currencyId'
+import { feeRangeCalc, useCurrencyConvertedToNative } from 'utils/dmm'
 import isZero from 'utils/isZero'
-import { useCurrencyConvertedToNative, feeRangeCalc } from 'utils/dmm'
+import { maxAmountSpend } from 'utils/maxAmountSpend'
 import { computePriceImpactWithoutFee, warningSeverity } from 'utils/prices'
+import { reportException } from 'utils/sentry'
+
+import { PairState } from '../../data/Reserves'
 import { Dots, Wrapper } from '../Pool/styleds'
 import {
   ActiveText,
+  CurrentPriceWrapper,
+  DetailBox,
+  DynamicFeeRangeWrapper,
+  FirstColumn,
+  GridColumn,
+  PoolRatioWrapper,
+  SecondColumn,
   Section,
+  TokenWrapper,
   USDPrice,
   Warning,
-  TokenWrapper,
-  SecondColumn,
-  GridColumn,
-  FirstColumn,
-  DetailBox,
-  CurrentPriceWrapper,
-  PoolRatioWrapper,
-  DynamicFeeRangeWrapper,
 } from './styled'
-import { nativeOnChain } from 'constants/tokens'
-import { NETWORKS_INFO } from 'constants/networks'
-import { reportException } from 'utils/sentry'
 
 const ZapIn = ({
   currencyIdA,
@@ -73,7 +75,7 @@ const ZapIn = ({
   pairAddress: string
 }) => {
   const { account, library, chainId } = useActiveWeb3React()
-  const theme = useContext(ThemeContext)
+  const theme = useTheme()
   const currencyA = useCurrency(currencyIdA)
   const currencyB = useCurrency(currencyIdB)
 
@@ -372,8 +374,9 @@ const ZapIn = ({
           <Text fontSize="24px">{'DMM ' + nativeA?.symbol + '/' + nativeB?.symbol + ' LP Tokens'}</Text>
         </Row>
         <TYPE.italic fontSize={12} textAlign="left" padding={'8px 0 0 0 '}>
-          {t`Output is estimated. If the price changes by more than ${allowedSlippage /
-            100}% your transaction will revert.`}
+          {t`Output is estimated. If the price changes by more than ${
+            allowedSlippage / 100
+          }% your transaction will revert.`}
         </TYPE.italic>
       </AutoColumn>
     )

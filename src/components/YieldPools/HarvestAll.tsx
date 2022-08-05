@@ -1,26 +1,26 @@
-import React, { useState, useRef } from 'react'
-import { Trans } from '@lingui/macro'
-import { Flex } from 'rebass'
 import { BigNumber } from '@ethersproject/bignumber'
+import { Trans } from '@lingui/macro'
+import { Fragment, useRef, useState } from 'react'
+import { X } from 'react-feather'
+import { useMedia } from 'react-use'
+import { Flex, Text } from 'rebass'
 
-import { ButtonPrimary, ButtonEmpty } from 'components/Button'
+import { ButtonEmpty, ButtonPrimary } from 'components/Button'
+import CurrencyLogo from 'components/CurrencyLogo'
+import HoverDropdown from 'components/HoverDropdown'
+import Harvest from 'components/Icons/Harvest'
+import Modal from 'components/Modal'
+import { useActiveWeb3React } from 'hooks'
+import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import useTheme from 'hooks/useTheme'
 import { Reward } from 'state/farms/types'
+import { formattedNum } from 'utils'
 import { useFarmRewardsUSD } from 'utils/dmm'
 import { fixedFormatting, getFullDisplayBalance } from 'utils/formatBalance'
-import { useOnClickOutside } from 'hooks/useOnClickOutside'
-import Harvest from 'components/Icons/Harvest'
-import { Text } from 'rebass'
-import HoverDropdown from 'components/HoverDropdown'
 import { formatDollarAmount } from 'utils/numbers'
-import CurrencyLogo from 'components/CurrencyLogo'
-import { useMedia } from 'react-use'
-import Modal from 'components/Modal'
+
 import { ModalContentWrapper } from './ProMMFarmModals/styled'
-import { X } from 'react-feather'
-import { formattedNum } from 'utils'
 import { RewardBalanceWrapper } from './styleds'
-import { useActiveWeb3React } from 'hooks'
 
 const HarvestAll = ({ totalRewards, onHarvestAll }: { totalRewards: Reward[]; onHarvestAll?: () => void }) => {
   const theme = useTheme()
@@ -67,13 +67,13 @@ const HarvestAll = ({ totalRewards, onHarvestAll }: { totalRewards: Reward[]; on
           <RewardBalanceWrapper>
             {totalRewards.map((reward, index) => {
               return (
-                <React.Fragment key={reward.token.wrapped.address}>
+                <Fragment key={reward.token.wrapped.address}>
                   <Flex alignItems="center" fontSize="12px" sx={{ gap: '4px' }}>
                     {chainId && reward.token.wrapped.address && <CurrencyLogo currency={reward.token} size="16px" />}
                     {getFullDisplayBalance(reward.amount, reward.token.decimals)}
                   </Flex>
                   {index !== totalRewards.length - 1 && <Text color={theme.subText}>|</Text>}
-                </React.Fragment>
+                </Fragment>
               )
             })}
           </RewardBalanceWrapper>

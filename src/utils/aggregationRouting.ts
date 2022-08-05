@@ -1,8 +1,9 @@
-import JSBI from 'jsbi'
-import { ChainId, Rounding, Percent, Token } from '@kyberswap/ks-sdk-core'
 import { ZERO } from '@kyberswap/ks-sdk-classic'
-import { Aggregator } from './aggregator'
+import { ChainId, Percent, Rounding, Token } from '@kyberswap/ks-sdk-core'
 import { getAddress } from 'ethers/lib/utils'
+import JSBI from 'jsbi'
+
+import { Aggregator } from './aggregator'
 
 interface SwapPool {
   id: string
@@ -115,7 +116,7 @@ export function getTradeComposition(
   }
   const inputTokenAmount = trade.inputAmount?.wrapped
 
-  const calcSwapPercentage = function(tokenIn: string, amount: string): number | undefined {
+  const calcSwapPercentage = function (tokenIn: string, amount: string): number | undefined {
     if (!tokenIn || !amount) {
       return undefined
     }

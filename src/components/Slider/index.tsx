@@ -1,4 +1,4 @@
-import React, { useCallback, CSSProperties } from 'react'
+import React, { CSSProperties, ChangeEvent, useCallback } from 'react'
 import styled from 'styled-components'
 
 const StyledRangeInput = styled.input<{ size: number }>`
@@ -109,7 +109,7 @@ export default function Slider({
   className,
 }: InputSliderProps) {
   const changeCallback = useCallback(
-    e => {
+    (e: ChangeEvent<HTMLInputElement>) => {
       onChange(parseInt(e.target.value))
     },
     [onChange],

@@ -1,33 +1,33 @@
-import React, { memo, useCallback, useMemo, useRef, useState, useEffect } from 'react'
-import { Settings, CheckCircle } from 'react-feather'
+import { Trans, t } from '@lingui/macro'
+import { TokenList } from '@uniswap/token-lists'
+import React, { ChangeEvent, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { CheckCircle, Settings } from 'react-feather'
 import { usePopper } from 'react-popper'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
-import { t, Trans } from '@lingui/macro'
+
+import Card from 'components/Card'
+import { HIDE_LIST, UNSUPPORTED_LIST_URLS } from 'constants/lists'
+import { useListColor } from 'hooks/useColor'
+
 import { useFetchListCallback } from '../../hooks/useFetchListCallback'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
-import { TokenList } from '@uniswap/token-lists'
-
+import useTheme from '../../hooks/useTheme'
 import useToggle from '../../hooks/useToggle'
 import { AppDispatch, AppState } from '../../state'
-import { acceptListUpdate, removeList, disableList, enableList } from '../../state/lists/actions'
-import { useIsListActive, useAllListsByChainId, useActiveListUrls } from '../../state/lists/hooks'
-import { ExternalLink, LinkStyledButton, TYPE, IconWrapper } from '../../theme'
+import { acceptListUpdate, disableList, enableList, removeList } from '../../state/lists/actions'
+import { useActiveListUrls, useAllListsByChainId, useIsListActive } from '../../state/lists/hooks'
+import { ExternalLink, IconWrapper, LinkStyledButton, TYPE } from '../../theme'
 import listVersionLabel from '../../utils/listVersionLabel'
 import { parseENSAddress } from '../../utils/parseENSAddress'
 import uriToHttp from '../../utils/uriToHttp'
 import { ButtonEmpty, ButtonPrimary } from '../Button'
-
 import Column, { AutoColumn } from '../Column'
 import ListLogo from '../ListLogo'
-import Row, { RowFixed, RowBetween } from '../Row'
-import { PaddedColumn, SearchInput, Separator, SeparatorDark } from './styleds'
-import { useListColor } from 'hooks/useColor'
-import useTheme from '../../hooks/useTheme'
+import Row, { RowBetween, RowFixed } from '../Row'
 import ListToggle from '../Toggle/ListToggle'
-import Card from 'components/Card'
 import { CurrencyModalView } from './CurrencySearchModal'
-import { UNSUPPORTED_LIST_URLS, HIDE_LIST } from 'constants/lists'
+import { PaddedColumn, SearchInput, Separator, SeparatorDark } from './styleds'
 
 const TOKEN_LIST_FAILED_VALIDATION = 'Token list failed validation'
 
@@ -218,7 +218,7 @@ export function ManageLists({
     }
   }, [activeCopy, activeListUrls])
 
-  const handleInput = useCallback(e => {
+  const handleInput = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     setListUrlInput(e.target.value)
   }, [])
 

@@ -1,33 +1,33 @@
+import { Currency, CurrencyAmount, Token } from '@kyberswap/ks-sdk-core'
+import { Trans, t } from '@lingui/macro'
+import { rgba } from 'polished'
 import React, { CSSProperties, MutableRefObject, useCallback, useMemo } from 'react'
+import { Star } from 'react-feather'
 import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
 import styled from 'styled-components'
-import { t, Trans } from '@lingui/macro'
-import { Star } from 'react-feather'
-import { Currency, CurrencyAmount, Token } from '@kyberswap/ks-sdk-core'
-import { rgba } from 'polished'
 
+import TokenListLogo from 'assets/svg/tokenlist.svg'
+import { ButtonEmpty } from 'components/Button'
+import { LightGreyCard } from 'components/Card'
+import QuestionHelper from 'components/QuestionHelper'
 import { useActiveWeb3React } from 'hooks'
+import { useIsUserAddedToken } from 'hooks/Tokens'
+import useTheme from 'hooks/useTheme'
 import { useCombinedActiveList } from 'state/lists/hooks'
+import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
+import { useUserFavoriteTokens } from 'state/user/hooks'
 import { useCurrencyBalances } from 'state/wallet/hooks'
 import { TYPE } from 'theme'
-import { useIsUserAddedToken } from 'hooks/Tokens'
-import { isTokenOnList, isAddress } from 'utils'
-import { LightGreyCard } from 'components/Card'
-import TokenListLogo from 'assets/svg/tokenlist.svg'
-import QuestionHelper from 'components/QuestionHelper'
-import useTheme from 'hooks/useTheme'
+import { isAddress, isTokenOnList } from 'utils'
 import { useCurrencyConvertedToNative } from 'utils/dmm'
-import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
-import { ButtonEmpty } from 'components/Button'
 
-import { RowFixed, RowBetween } from '../Row'
 import Column from '../Column'
 import CurrencyLogo from '../CurrencyLogo'
-import { MouseoverTooltip } from '../Tooltip'
 import Loader from '../Loader'
+import { RowBetween, RowFixed } from '../Row'
+import { MouseoverTooltip } from '../Tooltip'
 import ImportRow from './ImportRow'
-import { useUserFavoriteTokens } from 'state/user/hooks'
 
 function currencyKey(currency: Currency): string {
   return currency?.isNative ? 'ETHER' : currency?.address || ''
@@ -247,6 +247,15 @@ function CurrencyRow({
   )
 }
 
+interface TokenRowProps {
+  data: {
+    currencies: Array<Currency | Token | undefined>
+    currencyBalances: Array<CurrencyAmount<Currency>>
+  }
+  index: number
+  style: CSSProperties
+}
+
 export default function CurrencyList({
   height,
   currencies,
@@ -283,8 +292,9 @@ export default function CurrencyList({
 
   const theme = useTheme()
 
-  const Row = useCallback(
-    ({ data, index, style }) => {
+  // TODO(viet-nv): check typescript for this
+  const Row: any = useCallback(
+    function TokenRow({ data, index, style }: TokenRowProps) {
       const currency: Currency | undefined = data.currencies[index]
       const currencyBalance: CurrencyAmount<Currency> = data.currencyBalances[index]
       const isSelected = Boolean(selectedCurrency && currency && selectedCurrency.equals(currency))

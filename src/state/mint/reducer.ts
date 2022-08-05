@@ -1,4 +1,5 @@
 import { createReducer } from '@reduxjs/toolkit'
+
 import { Field, resetMintState, switchTokenField, typeInput } from './actions'
 
 export interface MintState {

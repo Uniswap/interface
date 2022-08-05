@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
-import { TrueSightFilter, TrueSightTimeframe } from 'pages/TrueSight/index'
+
 import { TRENDING_SOON_SUPPORTED_NETWORKS } from 'constants/index'
+import { TrueSightFilter, TrueSightTimeframe } from 'pages/TrueSight/index'
 
 export interface TrueSightTokenData {
   token_id: number
@@ -56,8 +57,9 @@ export default function useGetTrendingSoonData(filter: TrueSightFilter, maxItems
         const timeframe = filter.timeframe === TrueSightTimeframe.ONE_DAY ? '24h' : '7d'
         const url = `${
           process.env.REACT_APP_TRUESIGHT_API
-        }/api/v1/trending-soon?timeframe=${timeframe}&page_number=0&page_size=${maxItems}&search_token_id=${filter
-          .selectedTokenData?.token_id ?? ''}&search_token_tag=${filter.selectedTag ?? ''}`
+        }/api/v1/trending-soon?timeframe=${timeframe}&page_number=0&page_size=${maxItems}&search_token_id=${
+          filter.selectedTokenData?.token_id ?? ''
+        }&search_token_tag=${filter.selectedTag ?? ''}`
         setError(undefined)
         setIsLoading(true)
         const response = await fetch(url)
@@ -71,7 +73,7 @@ export default function useGetTrendingSoonData(filter: TrueSightFilter, maxItems
             const platforms = new Map<string, string>()
             for (let i = 0; i < priorityNetworks.length; i++) {
               const network = priorityNetworks[i]
-              const address = ((token.platforms as unknown) as { [p: string]: string })[network]
+              const address = (token.platforms as unknown as { [p: string]: string })[network]
               if (address) {
                 platforms.set(network, address)
               }

@@ -1,4 +1,5 @@
 import { createReducer } from '@reduxjs/toolkit'
+
 import { Field, selectCurrency } from './actions'
 
 export interface PairState {

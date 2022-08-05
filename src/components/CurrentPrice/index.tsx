@@ -1,10 +1,10 @@
-import React, { useContext, useState } from 'react'
-import { Text } from 'rebass'
-import { ThemeContext } from 'styled-components'
-
 import { Currency, Price } from '@kyberswap/ks-sdk-core'
+import React, { useState } from 'react'
+import { Text } from 'rebass'
+
 import { ButtonEmpty } from 'components/Button'
 import SwitchIcon from 'components/Icons/SwitchIcon'
+import useTheme from 'hooks/useTheme'
 import { useCurrencyConvertedToNative } from 'utils/dmm'
 
 interface CurrentPriceProps {
@@ -12,7 +12,7 @@ interface CurrentPriceProps {
 }
 
 export default function CurrentPrice({ price }: CurrentPriceProps) {
-  const theme = useContext(ThemeContext)
+  const theme = useTheme()
   const [showInverted, setShowInverted] = useState<boolean>(false)
 
   const formattedPrice = showInverted ? price?.toSignificant(8) : price?.invert()?.toSignificant(8)

@@ -1,8 +1,9 @@
 import { Token } from '@kyberswap/ks-sdk-core'
 import { tickToPrice } from '@kyberswap/ks-sdk-elastic'
-import { TickProcessed } from 'hooks/usePoolTickData'
 import JSBI from 'jsbi'
+
 import { Tick } from 'apollo/queries/promm'
+import { TickProcessed } from 'hooks/usePoolTickData'
 
 const PRICE_FIXED_DIGITS = 8
 

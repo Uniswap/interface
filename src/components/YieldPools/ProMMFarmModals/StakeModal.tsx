@@ -1,29 +1,32 @@
-import React, { useState, useRef, useEffect, useMemo } from 'react'
-import Modal from 'components/Modal'
-import { Flex, Text } from 'rebass'
-import { Trans } from '@lingui/macro'
-import { ButtonEmpty, ButtonPrimary } from 'components/Button'
-import { X, Info } from 'react-feather'
-import useTheme from 'hooks/useTheme'
-import { useProMMFarms, useFarmAction } from 'state/farms/promm/hooks'
 import { Position } from '@kyberswap/ks-sdk-elastic'
-import { useToken } from 'hooks/Tokens'
-import { unwrappedToken } from 'utils/wrappedCurrency'
-import { usePool } from 'hooks/usePools'
-import DoubleCurrencyLogo from 'components/DoubleLogo'
-import RangeBadge from 'components/Badge/RangeBadge'
+import { Trans } from '@lingui/macro'
 import { BigNumber } from 'ethers'
-import { useTokensPrice } from 'state/application/hooks'
-import { formatDollarAmount } from 'utils/numbers'
-import { ModalContentWrapper, Checkbox, TableHeader, TableRow, Title } from './styled'
-import styled from 'styled-components'
-import { ProMMFarm, UserPositionFarm } from 'state/farms/promm/types'
-import HoverDropdown from 'components/HoverDropdown'
-import CurrencyLogo from 'components/CurrencyLogo'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
+import { Info, X } from 'react-feather'
 import { useMedia } from 'react-use'
-import { StyledInternalLink } from 'theme'
-import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
+import { Flex, Text } from 'rebass'
+import styled from 'styled-components'
+
+import RangeBadge from 'components/Badge/RangeBadge'
+import { ButtonEmpty, ButtonPrimary } from 'components/Button'
+import CurrencyLogo from 'components/CurrencyLogo'
+import DoubleCurrencyLogo from 'components/DoubleLogo'
+import HoverDropdown from 'components/HoverDropdown'
+import Modal from 'components/Modal'
 import { VERSION } from 'constants/v2'
+import { useToken } from 'hooks/Tokens'
+import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
+import { usePool } from 'hooks/usePools'
+import useTheme from 'hooks/useTheme'
+import { useTokensPrice } from 'state/application/hooks'
+import { useFarmAction, useProMMFarms } from 'state/farms/promm/hooks'
+import { ProMMFarm, UserPositionFarm } from 'state/farms/promm/types'
+import { StyledInternalLink } from 'theme'
+import { formatDollarAmount } from 'utils/numbers'
+import { unwrappedToken } from 'utils/wrappedCurrency'
+
+import { Checkbox, ModalContentWrapper, TableHeader, TableRow, Title } from './styled'
+
 const StakeTableHeader = styled(TableHeader)<{ isUnstake: boolean }>`
   grid-template-columns: 18px 90px repeat(${({ isUnstake }) => (isUnstake ? 2 : 3)}, 1fr);
 `
@@ -299,7 +302,7 @@ function StakeModal({
             </Flex>
           ) : (
             <Text fontSize={14} color={theme.subText} textAlign="center" padding="16px" marginTop="20px">
-              <Trans>You don't have any available position, Please deposit and stake first</Trans>
+              <Trans>You don&apos;t have any available position, Please deposit and stake first</Trans>
             </Text>
           )
         ) : (

@@ -1,16 +1,16 @@
-import React from 'react'
-import { Flex } from 'rebass'
 import { Trans } from '@lingui/macro'
+import React from 'react'
 import { CheckCircle, ChevronDown, Copy } from 'react-feather'
+import { Flex } from 'rebass'
 
-import { isAddress } from 'utils'
-import { FieldName, FieldValue } from 'pages/TrueSight/components/TrendingSoonLayout/TrendingSoonTokenItem'
-import { NETWORKS_INFO, TRUESIGHT_NETWORK_TO_CHAINID } from 'constants/networks'
-import getShortenAddress from 'utils/getShortenAddress'
-import useCopyClipboard from 'hooks/useCopyClipboard'
-import { useToggleModal } from 'state/application/hooks'
-import { ApplicationModal } from 'state/application/actions'
 import ModalContractAddress from 'components/ModalContractAddress'
+import { NETWORKS_INFO, TRUESIGHT_NETWORK_TO_CHAINID } from 'constants/networks'
+import useCopyClipboard from 'hooks/useCopyClipboard'
+import { FieldName, FieldValue } from 'pages/TrueSight/components/TrendingSoonLayout/TrendingSoonTokenItem'
+import { ApplicationModal } from 'state/application/actions'
+import { useToggleModal } from 'state/application/hooks'
+import { isAddress } from 'utils'
+import getShortenAddress from 'utils/getShortenAddress'
 
 type Props = {
   platforms: Map<string, string>

@@ -1,41 +1,43 @@
-import React, { useContext, useMemo, useState } from 'react'
-import styled, { ThemeContext, keyframes } from 'styled-components'
-import { Text, Flex } from 'rebass'
-import { t, Trans } from '@lingui/macro'
-
-import { Pair, JSBI } from '@kyberswap/ks-sdk-classic'
-import { Token, TokenAmount, ChainId } from '@kyberswap/ks-sdk-core'
-import FullPositionCard from 'components/PositionCard'
-import Card from 'components/Card'
-import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
-import { AutoColumn } from 'components/Column'
-import { AutoRow } from 'components/Row'
-import { ExternalLink, StyledInternalLink, TYPE } from '../../theme'
-import { useActiveWeb3React } from 'hooks'
-import { usePairsByAddress, usePairByAddress } from 'data/Reserves'
-import { useTokenBalancesWithLoadingIndicator } from 'state/wallet/hooks'
-import { useToV2LiquidityTokens, useLiquidityPositionTokenPairs } from 'state/user/hooks'
-import { UserLiquidityPosition, useUserLiquidityPositions } from 'state/pools/hooks'
-import useDebounce from 'hooks/useDebounce'
-import Search from 'components/Search'
-import { useFarmsData, useTotalApr } from 'state/farms/hooks'
-import { Farm } from 'state/farms/types'
-import { useToken } from 'hooks/Tokens'
-import LocalLoader from 'components/LocalLoader'
-import { ButtonPrimary } from 'components/Button'
+import { JSBI, Pair } from '@kyberswap/ks-sdk-classic'
+import { ChainId, Token, TokenAmount } from '@kyberswap/ks-sdk-core'
+import { Trans, t } from '@lingui/macro'
+import { rgba } from 'polished'
+import { useMemo, useState } from 'react'
 import { Info } from 'react-feather'
-import { OUTSIDE_FAIRLAUNCH_ADDRESSES, DMM_ANALYTICS_URL } from 'constants/index'
-import ProAmmPool from '../ProAmmPool'
+import { useMedia } from 'react-use'
+import { Flex, Text } from 'rebass'
+import styled, { keyframes } from 'styled-components'
+
+import { ButtonPrimary } from 'components/Button'
+import Card from 'components/Card'
+import ClassicElasticTab from 'components/ClassicElasticTab'
+import { AutoColumn } from 'components/Column'
+import Wallet from 'components/Icons/Wallet'
+import Withdraw from 'components/Icons/Withdraw'
+import LocalLoader from 'components/LocalLoader'
+import FullPositionCard from 'components/PositionCard'
+import { AutoRow } from 'components/Row'
+import Search from 'components/Search'
+import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
+import Tutorial, { TutorialType } from 'components/Tutorial'
+import { DMM_ANALYTICS_URL, OUTSIDE_FAIRLAUNCH_ADDRESSES } from 'constants/index'
+import { VERSION } from 'constants/v2'
+import { usePairByAddress, usePairsByAddress } from 'data/Reserves'
+import { useActiveWeb3React } from 'hooks'
+import { useToken } from 'hooks/Tokens'
+import useDebounce from 'hooks/useDebounce'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import useParsedQueryString from 'hooks/useParsedQueryString'
-import Wallet from 'components/Icons/Wallet'
+import useTheme from 'hooks/useTheme'
 import { useWindowSize } from 'hooks/useWindowSize'
-import { VERSION } from 'constants/v2'
-import ClassicElasticTab from 'components/ClassicElasticTab'
-import { useMedia } from 'react-use'
-import { rgba } from 'polished'
-import Withdraw from 'components/Icons/Withdraw'
-import Tutorial, { TutorialType } from 'components/Tutorial'
+import { useFarmsData, useTotalApr } from 'state/farms/hooks'
+import { Farm } from 'state/farms/types'
+import { UserLiquidityPosition, useUserLiquidityPositions } from 'state/pools/hooks'
+import { useLiquidityPositionTokenPairs, useToV2LiquidityTokens } from 'state/user/hooks'
+import { useTokenBalancesWithLoadingIndicator } from 'state/wallet/hooks'
+
+import { ExternalLink, StyledInternalLink, TYPE } from '../../theme'
+import ProAmmPool from '../ProAmmPool'
 
 export const Tab = styled.div<{ active: boolean }>`
   padding: 4px 0;
@@ -172,7 +174,7 @@ export default function PoolCombination() {
 }
 
 function Pool() {
-  const theme = useContext(ThemeContext)
+  const theme = useTheme()
   const { account, chainId } = useActiveWeb3React()
   const { width } = useWindowSize()
 
@@ -196,9 +198,10 @@ function Pool() {
 
   const tokenPairsWithLiquidityTokens = useToV2LiquidityTokens(liquidityPositionTokenPairs)
 
-  const liquidityTokens = useMemo(() => tokenPairsWithLiquidityTokens.map(tpwlt => tpwlt.liquidityTokens), [
-    tokenPairsWithLiquidityTokens,
-  ])
+  const liquidityTokens = useMemo(
+    () => tokenPairsWithLiquidityTokens.map(tpwlt => tpwlt.liquidityTokens),
+    [tokenPairsWithLiquidityTokens],
+  )
 
   const [v2PairsBalances, fetchingV2PairBalances] = useTokenBalancesWithLoadingIndicator(
     account ?? undefined,

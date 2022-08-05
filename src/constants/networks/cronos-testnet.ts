@@ -1,9 +1,10 @@
 import { ChainId } from '@kyberswap/ks-sdk-core'
-import { NetworkInfo } from '../type'
-import { createClient } from 'utils/client'
 
 import CRONOS from 'assets/networks/cronos-network.png'
 import CronosLogo from 'assets/svg/cronos-token-logo.svg'
+import { createClient } from 'utils/client'
+
+import { NetworkInfo } from '../type'
 
 const EMPTY = ''
 const EMPTY_ARRAY: any[] = []

@@ -1,12 +1,14 @@
-import React from 'react'
-import { usePrommSchedules } from 'state/vesting/hooks'
-import { Text } from 'rebass'
-import { Trans } from '@lingui/macro'
-import useTheme from 'hooks/useTheme'
-import ScheduleCard from './ScheduleCard'
-import LocalLoader from 'components/LocalLoader'
 import { CurrencyAmount, Token } from '@kyberswap/ks-sdk-core'
+import { Trans } from '@lingui/macro'
 import { BigNumber } from 'ethers'
+import React from 'react'
+import { Text } from 'rebass'
+
+import LocalLoader from 'components/LocalLoader'
+import useTheme from 'hooks/useTheme'
+import { usePrommSchedules } from 'state/vesting/hooks'
+
+import ScheduleCard from './ScheduleCard'
 import VestingSummary from './VestingSummary'
 import { ScheduleGrid } from './styleds'
 
@@ -53,11 +55,7 @@ const ProMMVesting = () => {
       const timePeriod = BigNumber.from(item.endTime - item.startTime)
       const unlockedBigint = isEnd
         ? item.quantity
-        : item.quantity.mul(
-            BigNumber.from(currentTimestamp)
-              .sub(BigNumber.from(item.startTime))
-              .div(timePeriod),
-          )
+        : item.quantity.mul(BigNumber.from(currentTimestamp).sub(BigNumber.from(item.startTime)).div(timePeriod))
       // unlocked
       const vestableAmount = CurrencyAmount.fromRawAmount(
         item.token,

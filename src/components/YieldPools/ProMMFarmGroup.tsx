@@ -1,47 +1,49 @@
-import React, { useState, useMemo, useEffect, useCallback } from 'react'
-import { Text, Flex } from 'rebass'
-import useTheme from 'hooks/useTheme'
-import { Trans, t } from '@lingui/macro'
-import { useActiveWeb3React } from 'hooks'
-import { ButtonLight, ButtonPrimary, ButtonOutlined } from 'components/Button'
-import Deposit from 'components/Icons/Deposit'
-import Withdraw from 'components/Icons/Withdraw'
-import Harvest from 'components/Icons/Harvest'
-import Divider from 'components/Divider'
-import styled from 'styled-components'
-import { useFarmAction, useProMMFarmTVL } from 'state/farms/promm/hooks'
-import { ProMMFarmTableRow, ProMMFarmTableRowMobile, InfoRow, RewardMobileArea, ActionButton } from './styleds'
-import { Token, CurrencyAmount, Fraction } from '@kyberswap/ks-sdk-core'
-import DoubleCurrencyLogo from 'components/DoubleLogo'
-import { shortenAddress } from 'utils'
-import CopyHelper from 'components/Copy'
-import { getFormattedTimeFromSecond } from 'utils/formatTime'
-import { useWalletModalToggle, useTokensPrice } from 'state/application/hooks'
-import { MouseoverTooltip } from 'components/Tooltip'
-import { Plus, Minus, Info, Edit2 } from 'react-feather'
-import { useIsTransactionPending } from 'state/transactions/hooks'
-import { Dots } from 'pages/Pool/styleds'
-import { ProMMFarm } from 'state/farms/promm/types'
-import { formatDollarAmount } from 'utils/numbers'
-import CurrencyLogo from 'components/CurrencyLogo'
-import { useToken, useTokens } from 'hooks/Tokens'
+import { CurrencyAmount, Fraction, Token } from '@kyberswap/ks-sdk-core'
 import { Pool, Position } from '@kyberswap/ks-sdk-elastic'
+import { Trans, t } from '@lingui/macro'
 import { BigNumber } from 'ethers'
-import { useSingleCallResult } from 'state/multicall/hooks'
-import { useProAmmNFTPositionManagerContract, useProMMFarmContract } from 'hooks/useContract'
-import { ZERO_ADDRESS, ELASTIC_BASE_FEE_UNIT } from 'constants/index'
-import HoverInlineText from 'components/HoverInlineText'
-import { AutoColumn } from 'components/Column'
-import HoverDropdown from 'components/HoverDropdown'
-import { useMedia } from 'react-use'
-import InfoHelper from 'components/InfoHelper'
-import Modal from 'components/Modal'
-import { ModalContentWrapper } from './ProMMFarmModals/styled'
-import { ExternalLink } from 'theme'
-import Loader from 'components/Loader'
-import useParsedQueryString from 'hooks/useParsedQueryString'
-import { VERSION } from 'constants/v2'
 import { rgba } from 'polished'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import { Edit2, Info, Minus, Plus } from 'react-feather'
+import { useMedia } from 'react-use'
+import { Flex, Text } from 'rebass'
+import styled from 'styled-components'
+
+import { ButtonLight, ButtonOutlined, ButtonPrimary } from 'components/Button'
+import { AutoColumn } from 'components/Column'
+import CopyHelper from 'components/Copy'
+import CurrencyLogo from 'components/CurrencyLogo'
+import Divider from 'components/Divider'
+import DoubleCurrencyLogo from 'components/DoubleLogo'
+import HoverDropdown from 'components/HoverDropdown'
+import HoverInlineText from 'components/HoverInlineText'
+import Deposit from 'components/Icons/Deposit'
+import Harvest from 'components/Icons/Harvest'
+import Withdraw from 'components/Icons/Withdraw'
+import InfoHelper from 'components/InfoHelper'
+import Loader from 'components/Loader'
+import Modal from 'components/Modal'
+import { MouseoverTooltip } from 'components/Tooltip'
+import { ELASTIC_BASE_FEE_UNIT, ZERO_ADDRESS } from 'constants/index'
+import { VERSION } from 'constants/v2'
+import { useActiveWeb3React } from 'hooks'
+import { useToken, useTokens } from 'hooks/Tokens'
+import { useProAmmNFTPositionManagerContract, useProMMFarmContract } from 'hooks/useContract'
+import useParsedQueryString from 'hooks/useParsedQueryString'
+import useTheme from 'hooks/useTheme'
+import { Dots } from 'pages/Pool/styleds'
+import { useTokensPrice, useWalletModalToggle } from 'state/application/hooks'
+import { useFarmAction, useProMMFarmTVL } from 'state/farms/promm/hooks'
+import { ProMMFarm } from 'state/farms/promm/types'
+import { useSingleCallResult } from 'state/multicall/hooks'
+import { useIsTransactionPending } from 'state/transactions/hooks'
+import { ExternalLink } from 'theme'
+import { shortenAddress } from 'utils'
+import { getFormattedTimeFromSecond } from 'utils/formatTime'
+import { formatDollarAmount } from 'utils/numbers'
+
+import { ModalContentWrapper } from './ProMMFarmModals/styled'
+import { ActionButton, InfoRow, ProMMFarmTableRow, ProMMFarmTableRowMobile, RewardMobileArea } from './styleds'
 
 const BtnPrimary = styled(ButtonPrimary)`
   font-size: 14px;
@@ -189,7 +191,7 @@ const Row = ({
       let token0Amount = CurrencyAmount.fromRawAmount(token0.wrapped, '0')
       let token1Amount = CurrencyAmount.fromRawAmount(token1.wrapped, '0')
 
-      let rewardAmounts = farm.rewardTokens.map(_item => BigNumber.from('0'))
+      const rewardAmounts = farm.rewardTokens.map(_item => BigNumber.from('0'))
 
       farm.userDepositedNFTs.forEach(item => {
         const pos = new Position({
@@ -618,16 +620,29 @@ function ProMMFarmGroup({
       setApprovalTx(tx)
     }
   }
-  const aggreateDepositedInfo = useCallback(({ pid, usdValue, token0Amount, token1Amount }) => {
-    setUserPoolFarmInfo(prev => ({
-      ...prev,
-      [pid]: {
-        usdValue,
-        token0Amount,
-        token1Amount,
-      },
-    }))
-  }, [])
+  const aggreateDepositedInfo = useCallback(
+    ({
+      pid,
+      usdValue,
+      token0Amount,
+      token1Amount,
+    }: {
+      pid: string | number
+      usdValue: number
+      token0Amount: CurrencyAmount<Token>
+      token1Amount: CurrencyAmount<Token>
+    }) => {
+      setUserPoolFarmInfo(prev => ({
+        ...prev,
+        [pid]: {
+          usdValue,
+          token0Amount,
+          token1Amount,
+        },
+      }))
+    },
+    [],
+  )
 
   const qs = useParsedQueryString()
   const tab = qs.tab || 'active'

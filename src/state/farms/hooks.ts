@@ -1,21 +1,16 @@
+import { Interface } from '@ethersproject/abi'
+import { BigNumber } from '@ethersproject/bignumber'
+import { Contract } from '@ethersproject/contracts'
+import { ChainId, CurrencyAmount, Fraction, Token } from '@kyberswap/ks-sdk-core'
+import { ethers } from 'ethers'
+import { parseUnits } from 'ethers/lib/utils'
+import JSBI from 'jsbi'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { Contract } from '@ethersproject/contracts'
-import { BigNumber } from '@ethersproject/bignumber'
-import { Interface } from '@ethersproject/abi'
 
 import { FARM_HISTORIES } from 'apollo/queries'
-import { ChainId, Token, Fraction, CurrencyAmount } from '@kyberswap/ks-sdk-core'
-import FAIRLAUNCH_ABI from 'constants/abis/fairlaunch.json'
 import FAIRLAUNCH_V2_ABI from 'constants/abis/fairlaunch-v2.json'
-import { AppState } from 'state'
-import { useAppDispatch } from 'state/hooks'
-import { FairLaunchVersion, Farm, FarmHistoriesSubgraphResult, FarmHistory, FarmHistoryMethod } from 'state/farms/types'
-import { setFarmsData, setLoading, setYieldPoolsError } from './actions'
-import { useBlockNumber, useETHPrice, useTokensPrice } from 'state/application/hooks'
-import { useActiveWeb3React } from 'hooks'
-import useTokensMarketPrice from 'hooks/useTokensMarketPrice'
-import { useFairLaunchContracts } from 'hooks/useContract'
+import FAIRLAUNCH_ABI from 'constants/abis/fairlaunch.json'
 import {
   DEFAULT_REWARDS,
   LP_TOKEN_DECIMALS,
@@ -24,18 +19,24 @@ import {
   RESERVE_USD_DECIMALS,
   ZERO_ADDRESS,
 } from 'constants/index'
-import { useAllTokens } from 'hooks/Tokens'
-import { getBulkPoolDataFromPoolList, SubgraphPoolData } from 'state/pools/hooks'
-import { useMultipleContractSingleData } from 'state/multicall/hooks'
-import { getTradingFeeAPR, parseSubgraphPoolData, useFarmApr } from 'utils/dmm'
-import { isAddressString } from 'utils'
-import useTokenBalance from 'hooks/useTokenBalance'
-import { ethers } from 'ethers'
-import JSBI from 'jsbi'
-import { tryParseAmount } from 'state/swap/hooks'
-import { parseUnits } from 'ethers/lib/utils'
-import { nativeOnChain } from 'constants/tokens'
 import { NETWORKS_INFO } from 'constants/networks'
+import { nativeOnChain } from 'constants/tokens'
+import { useActiveWeb3React } from 'hooks'
+import { useAllTokens } from 'hooks/Tokens'
+import { useFairLaunchContracts } from 'hooks/useContract'
+import useTokenBalance from 'hooks/useTokenBalance'
+import useTokensMarketPrice from 'hooks/useTokensMarketPrice'
+import { AppState } from 'state'
+import { useBlockNumber, useETHPrice, useTokensPrice } from 'state/application/hooks'
+import { FairLaunchVersion, Farm, FarmHistoriesSubgraphResult, FarmHistory, FarmHistoryMethod } from 'state/farms/types'
+import { useAppDispatch } from 'state/hooks'
+import { useMultipleContractSingleData } from 'state/multicall/hooks'
+import { SubgraphPoolData, getBulkPoolDataFromPoolList } from 'state/pools/hooks'
+import { tryParseAmount } from 'state/swap/hooks'
+import { isAddressString } from 'utils'
+import { getTradingFeeAPR, parseSubgraphPoolData, useFarmApr } from 'utils/dmm'
+
+import { setFarmsData, setLoading, setYieldPoolsError } from './actions'
 
 export const useRewardTokens = () => {
   const { chainId } = useActiveWeb3React()
@@ -413,7 +414,7 @@ export const useYieldHistories = (isModalOpen: boolean) => {
           }
         })
 
-        historiesData.sort(function(a, b) {
+        historiesData.sort(function (a, b) {
           return parseInt(b.timestamp) - parseInt(a.timestamp)
         })
 
@@ -497,25 +498,21 @@ export const useUserStakedBalance = (poolData: SubgraphPoolData) => {
       }
     })
 
-  const {
-    userStakedToken0Balance,
-    userStakedToken1Balance,
-    userStakedBalanceUSD,
-    userStakedBalance,
-  } = userStakedData.reduce(
-    (acc, value) => ({
-      userStakedToken0Balance: value.userStakedToken0Balance.add(acc.userStakedToken0Balance),
-      userStakedToken1Balance: value.userStakedToken1Balance.add(acc.userStakedToken1Balance),
-      userStakedBalanceUSD: value.userStakedBalanceUSD.add(acc.userStakedBalanceUSD),
-      userStakedBalance: value.userStakedBalance.add(acc.userStakedBalance),
-    }),
-    {
-      userStakedToken0Balance: CurrencyAmount.fromRawAmount(currency0, 0),
-      userStakedToken1Balance: CurrencyAmount.fromRawAmount(currency1, 0),
-      userStakedBalanceUSD: new Fraction('0'),
-      userStakedBalance: new Fraction('0'),
-    },
-  )
+  const { userStakedToken0Balance, userStakedToken1Balance, userStakedBalanceUSD, userStakedBalance } =
+    userStakedData.reduce(
+      (acc, value) => ({
+        userStakedToken0Balance: value.userStakedToken0Balance.add(acc.userStakedToken0Balance),
+        userStakedToken1Balance: value.userStakedToken1Balance.add(acc.userStakedToken1Balance),
+        userStakedBalanceUSD: value.userStakedBalanceUSD.add(acc.userStakedBalanceUSD),
+        userStakedBalance: value.userStakedBalance.add(acc.userStakedBalance),
+      }),
+      {
+        userStakedToken0Balance: CurrencyAmount.fromRawAmount(currency0, 0),
+        userStakedToken1Balance: CurrencyAmount.fromRawAmount(currency1, 0),
+        userStakedBalanceUSD: new Fraction('0'),
+        userStakedBalance: new Fraction('0'),
+      },
+    )
 
   return {
     userStakedToken0Balance,

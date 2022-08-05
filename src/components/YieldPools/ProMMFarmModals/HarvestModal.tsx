@@ -1,25 +1,28 @@
-import React, { useState, useCallback, useEffect, useMemo } from 'react'
-import Modal from 'components/Modal'
-import { Flex, Text } from 'rebass'
-import { Trans } from '@lingui/macro'
-import { ButtonEmpty, ButtonPrimary } from 'components/Button'
-import { X } from 'react-feather'
-import useTheme from 'hooks/useTheme'
-import { useProMMFarms, useFarmAction } from 'state/farms/promm/hooks'
-import { useToken } from 'hooks/Tokens'
-import DoubleCurrencyLogo from 'components/DoubleLogo'
-import { BigNumber } from 'ethers'
-import { ModalContentWrapper, Title } from './styled'
-import styled from 'styled-components'
-import { StyledInternalLink } from 'theme'
 import { CurrencyAmount } from '@kyberswap/ks-sdk-core'
-import HoverInlineText from 'components/HoverInlineText'
+import { Trans } from '@lingui/macro'
+import { BigNumber } from 'ethers'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import { X } from 'react-feather'
+import { Flex, Text } from 'rebass'
+import styled from 'styled-components'
+
+import { ButtonEmpty, ButtonPrimary } from 'components/Button'
 import CurrencyLogo from 'components/CurrencyLogo'
+import DoubleCurrencyLogo from 'components/DoubleLogo'
+import HoverInlineText from 'components/HoverInlineText'
+import Modal from 'components/Modal'
 import { MouseoverTooltip } from 'components/Tooltip'
-import { useTokensPrice } from 'state/application/hooks'
-import { formatDollarAmount } from 'utils/numbers'
-import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import { VERSION } from 'constants/v2'
+import { useToken } from 'hooks/Tokens'
+import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
+import useTheme from 'hooks/useTheme'
+import { useTokensPrice } from 'state/application/hooks'
+import { useFarmAction, useProMMFarms } from 'state/farms/promm/hooks'
+import { StyledInternalLink } from 'theme'
+import { formatDollarAmount } from 'utils/numbers'
+
+import { ModalContentWrapper, Title } from './styled'
+
 const HarvestInfo = styled.div`
   padding: 16px;
   border-radius: 4px;
@@ -62,7 +65,7 @@ function HarvestModal({
 
   const [usdByToken, setUsdValueByToken] = useState<{ [address: string]: number }>({})
   const { mixpanelHandler } = useMixpanel()
-  const aggreateRewardUsdValue = useCallback(({ address, value }) => {
+  const aggreateRewardUsdValue = useCallback(({ address, value }: { address: string; value: number }) => {
     setUsdValueByToken(prev => {
       const tmp = { ...prev }
       if (tmp[address]) tmp[address] = tmp[address] + value
@@ -165,7 +168,7 @@ function HarvestModal({
             <br />
             To claim your rewards, go to the{' '}
             <StyledInternalLink to="/farms?type=vesting&tab=elastic"> Vesting</StyledInternalLink> tab and click
-            'Claim'.
+            &apos;Claim&apos;.
           </Trans>
         </HarvestInfo>
 

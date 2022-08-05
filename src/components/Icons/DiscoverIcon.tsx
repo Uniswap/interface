@@ -1,5 +1,6 @@
-import { ReactComponent as DiscoverIconSvg } from 'assets/svg/discover_icon.svg'
 import styled from 'styled-components'
+
+import { ReactComponent as DiscoverIconSvg } from 'assets/svg/discover_icon.svg'
 
 const DiscoverIcon = styled(DiscoverIconSvg)<{ size?: number; color?: string }>`
   min-width: ${({ size }) => (size ?? 12) + 'px'};

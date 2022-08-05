@@ -1,8 +1,9 @@
+import { Token } from '@kyberswap/ks-sdk-core'
 import React from 'react'
 
-import { Token } from '@kyberswap/ks-sdk-core'
-import Modal from '../Modal'
 import { ImportToken } from 'components/SearchModal/ImportToken'
+
+import Modal from '../Modal'
 
 export default function TokenWarningModal({
   isOpen,

@@ -1,5 +1,5 @@
-import { FortmaticConnector as FortmaticConnectorCore } from '@web3-react/fortmatic-connector'
 import { ChainId } from '@kyberswap/ks-sdk-core'
+import { FortmaticConnector as FortmaticConnectorCore } from '@web3-react/fortmatic-connector'
 
 export const OVERLAY_READY = 'OVERLAY_READY'
 

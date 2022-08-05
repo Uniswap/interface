@@ -22,11 +22,7 @@ export default function oembed2iframe(html: string) {
       i++
     }
     const endIndex = i + 9
-    const youtubeId = html
-      .substring(startIndex, endIndex)
-      .split(/url="/)[1]
-      .split(/"></)[0]
-      .split('?v=')[1]
+    const youtubeId = html.substring(startIndex, endIndex).split(/url="/)[1].split(/"></)[0].split('?v=')[1]
     html = html.substring(0, startIndex) + getEmbedIframeByYoutubeId(youtubeId) + html.substring(endIndex, html.length)
     i++
   }

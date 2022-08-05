@@ -1,43 +1,45 @@
-import React, { useState, useRef, useEffect, useMemo } from 'react'
-import Modal from 'components/Modal'
-import { Flex, Text } from 'rebass'
-import { Trans } from '@lingui/macro'
-import { ButtonEmpty, ButtonPrimary } from 'components/Button'
-import { X, Info } from 'react-feather'
-import useTheme from 'hooks/useTheme'
-import { useProMMFarms, useFarmAction, usePostionFilter } from 'state/farms/promm/hooks'
-import { useActiveWeb3React } from 'hooks'
-import { useProAmmPositions } from 'hooks/useProAmmPositions'
 import { Position } from '@kyberswap/ks-sdk-elastic'
-import LocalLoader from 'components/LocalLoader'
-import { PositionDetails } from 'types/position'
-import { useToken, useTokens } from 'hooks/Tokens'
-import { unwrappedToken } from 'utils/wrappedCurrency'
-import { usePool } from 'hooks/usePools'
+import { Trans } from '@lingui/macro'
+import { BigNumber } from 'ethers'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
+import { Info, X } from 'react-feather'
+import { useMedia } from 'react-use'
+import { Flex, Text } from 'rebass'
+
+import RangeBadge from 'components/Badge/RangeBadge'
+import { ButtonEmpty, ButtonPrimary } from 'components/Button'
 import CurrencyLogo from 'components/CurrencyLogo'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
-import RangeBadge from 'components/Badge/RangeBadge'
-import { BigNumber } from 'ethers'
+import HoverDropdown from 'components/HoverDropdown'
+import LocalLoader from 'components/LocalLoader'
+import Modal from 'components/Modal'
+import { VERSION } from 'constants/v2'
+import { useActiveWeb3React } from 'hooks'
+import { useToken, useTokens } from 'hooks/Tokens'
+import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
+import { useOnClickOutside } from 'hooks/useOnClickOutside'
+import useParsedQueryString from 'hooks/useParsedQueryString'
+import { usePool } from 'hooks/usePools'
+import { useProAmmPositions } from 'hooks/useProAmmPositions'
+import useTheme from 'hooks/useTheme'
 import { useTokensPrice } from 'state/application/hooks'
+import { useFarmAction, usePostionFilter, useProMMFarms } from 'state/farms/promm/hooks'
+import { StyledInternalLink } from 'theme'
+import { PositionDetails } from 'types/position'
 import { formatDollarAmount } from 'utils/numbers'
+import { unwrappedToken } from 'utils/wrappedCurrency'
+
 import {
-  ModalContentWrapper,
   Checkbox,
-  TableHeader,
-  TableRow,
-  Title,
+  DropdownIcon,
+  ModalContentWrapper,
   Select,
   SelectMenu,
   SelectOption,
-  DropdownIcon,
+  TableHeader,
+  TableRow,
+  Title,
 } from './styled'
-import { useOnClickOutside } from 'hooks/useOnClickOutside'
-import { useMedia } from 'react-use'
-import HoverDropdown from 'components/HoverDropdown'
-import { StyledInternalLink } from 'theme'
-import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
-import useParsedQueryString from 'hooks/useParsedQueryString'
-import { VERSION } from 'constants/v2'
 
 const PositionRow = ({
   position,
@@ -220,6 +222,7 @@ function ProMMDepositNFTModal({
         <SelectMenu ref={ref}>
           {filterOptions.map(item => (
             <SelectOption
+              key={item.code}
               role="button"
               onClick={e => {
                 e.stopPropagation()

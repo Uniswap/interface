@@ -1,86 +1,88 @@
-import React, { useState } from 'react'
-import { Text, Flex, Box } from 'rebass'
-import { Link } from 'react-router-dom'
-import useTheme from 'hooks/useTheme'
 import { Trans } from '@lingui/macro'
+import React, { useState } from 'react'
+import { Edit, FileText, Plus, Repeat } from 'react-feather'
+import { Link } from 'react-router-dom'
+import { useMedia } from 'react-use'
+import { Box, Flex, Text } from 'rebass'
+import styled from 'styled-components'
+
+import KNCGraphic from 'assets/images/knc-graphic.png'
+import githubImg from 'assets/svg/about_icon_github.png'
+import githubImgLight from 'assets/svg/about_icon_github_light.png'
+import ForTraderImage from 'assets/svg/for_trader.svg'
+import ForTraderImageLight from 'assets/svg/for_trader_light.svg'
+import { ReactComponent as KNCSVG } from 'assets/svg/knc_black.svg'
+import SeamlessImg from 'assets/svg/seamless.svg'
+import Banner from 'components/Banner'
+import { ButtonEmpty, ButtonLight } from 'components/Button'
+import { FooterSocialLink } from 'components/Footer/Footer'
 import {
-  MoneyBag,
-  Ethereum,
-  Polygon,
-  PolygonLogoFull,
-  Binance,
-  Clock,
-  Avalanche,
-  Fantom,
-  FantomLogoFull,
-  Cronos,
-  CronosLogoFull,
+  Arbitrum,
   Aurora,
   AuroraFull,
+  Avalanche,
   BestPrice,
-  LowestSlippage,
-  Enter,
-  CircleFocus,
-  Arbitrum,
+  Binance,
   Bttc,
-  Velas,
-  VelasLogoFull,
+  CircleFocus,
+  Clock,
+  Cronos,
+  CronosLogoFull,
+  Drop,
+  Enter,
+  Ethereum,
+  Fantom,
+  FantomLogoFull,
+  FarmIcon,
+  LowestSlippage,
+  MoneyBag,
   Oasis,
   OasisLogoFull,
   OptimismLogo,
   OptimismLogoFull,
-  Drop,
-  FarmIcon,
+  Polygon,
+  PolygonLogoFull,
+  Velas,
+  VelasLogoFull,
 } from 'components/Icons'
-import { Repeat, Plus, Edit, FileText } from 'react-feather'
+import AntiSnippingAttack from 'components/Icons/AntiSnippingAttack'
 import Loader from 'components/Loader'
-import ForTraderImage from 'assets/svg/for_trader.svg'
-import ForTraderImageLight from 'assets/svg/for_trader_light.svg'
-import KNCGraphic from 'assets/images/knc-graphic.png'
-import { ReactComponent as KNCSVG } from 'assets/svg/knc_black.svg'
-import SeamlessImg from 'assets/svg/seamless.svg'
-import { useMedia } from 'react-use'
-import { ExternalLink, StyledInternalLink } from 'theme'
-import { useDarkModeManager } from 'state/user/hooks'
-import githubImg from 'assets/svg/about_icon_github.png'
-import githubImgLight from 'assets/svg/about_icon_github_light.png'
-import { useGlobalData } from 'state/about/hooks'
-import { formatBigLiquidity } from 'utils/formatBalance'
-import {
-  Footer,
-  FooterContainer,
-  Wrapper,
-  Powered,
-  BtnOutlined,
-  BtnPrimary,
-  ForLiquidityProviderItem,
-  ForTrader,
-  ForTraderInfo,
-  ForTraderDivider,
-  StatisticWrapper,
-  StatisticItem,
-  SupportedChain,
-  AboutPage,
-  ForTraderInfoShadow,
-  VerticalDivider,
-  CommittedToSecurityDivider,
-  OverflowStatisticWrapper,
-  AboutKNC,
-  TypicalAMM,
-  KyberSwapSlippage,
-  GridWrapper,
-  Tabs,
-  TabItem,
-} from './styleds'
-import { ButtonEmpty, ButtonLight } from 'components/Button'
-import { FooterSocialLink } from 'components/Footer/Footer'
 import { dexListConfig } from 'constants/dexes'
 import { MAINNET_NETWORKS } from 'constants/networks'
-import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
-import Banner from 'components/Banner'
-import AntiSnippingAttack from 'components/Icons/AntiSnippingAttack'
 import { VERSION } from 'constants/v2'
-import styled from 'styled-components'
+import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
+import useTheme from 'hooks/useTheme'
+import { useGlobalData } from 'state/about/hooks'
+import { useDarkModeManager } from 'state/user/hooks'
+import { ExternalLink, StyledInternalLink } from 'theme'
+import { formatBigLiquidity } from 'utils/formatBalance'
+
+import {
+  AboutKNC,
+  AboutPage,
+  BtnOutlined,
+  BtnPrimary,
+  CommittedToSecurityDivider,
+  Footer,
+  FooterContainer,
+  ForLiquidityProviderItem,
+  ForTrader,
+  ForTraderDivider,
+  ForTraderInfo,
+  ForTraderInfoShadow,
+  GridWrapper,
+  KyberSwapSlippage,
+  OverflowStatisticWrapper,
+  Powered,
+  StatisticItem,
+  StatisticWrapper,
+  SupportedChain,
+  TabItem,
+  Tabs,
+  TypicalAMM,
+  VerticalDivider,
+  Wrapper,
+} from './styleds'
 
 const KNCBlack = styled(KNCSVG)`
   path {
@@ -92,7 +94,7 @@ const ForTraderInfoRow = styled.div`
   flex: 1 1 100%;
   display: flex;
   ${({ theme }) => theme.mediaWidth.upToLarge`
-    flex: 1;  
+    flex: 1;
     gap: 24px;
     width: 100%;
     height: 100%;
@@ -107,7 +109,7 @@ const ForTraderInfoCell = styled.div`
   align-items: center;
 
   ${({ theme }) => theme.mediaWidth.upToLarge`
-    flex: 1;  
+    flex: 1;
   `}
 `
 
@@ -895,7 +897,7 @@ function AboutKyberSwap() {
                       src={
                         !isDarkMode
                           ? 'https://chainsecurity.com/wp-content/themes/chainsecurity-wp/resources/images/temp/logo.svg'
-                          : require('../../assets/svg/chainsecurity.svg')
+                          : require('../../assets/svg/chainsecurity.svg').default
                       }
                       alt="security"
                       width={above992 ? '197px' : '140px'}
@@ -932,7 +934,7 @@ function AboutKyberSwap() {
                   <Trans>Bug Bounty</Trans>
                 </Text>
                 <img
-                  src={require('../../assets/svg/about_icon_bug_bounty.svg')}
+                  src={require('../../assets/svg/about_icon_bug_bounty.svg').default}
                   alt="bugbounty"
                   width={above992 ? '186px' : '140px'}
                 />
@@ -983,8 +985,8 @@ function AboutKyberSwap() {
               <img
                 src={
                   isDarkMode
-                    ? require('../../assets/svg/about_icon_kyber.svg')
-                    : require('../../assets/svg/about_icon_kyber_light.svg')
+                    ? require('../../assets/svg/about_icon_kyber.svg').default
+                    : require('../../assets/svg/about_icon_kyber_light.svg').default
                 }
                 alt="kyber_icon"
                 width="100%"
@@ -992,19 +994,23 @@ function AboutKyberSwap() {
               <img
                 src={
                   isDarkMode
-                    ? require('../../assets/svg/about_icon_ethereum.png')
-                    : require('../../assets/svg/about_icon_ethereum_light.png')
+                    ? require('../../assets/svg/about_icon_ethereum.png').default
+                    : require('../../assets/svg/about_icon_ethereum_light.png').default
                 }
                 alt="ethereum_icon"
                 width="100%"
               />
-              <img src={require('../../assets/svg/about_icon_bsc.svg')} alt="bsc_icon" width="100%" />
+              <img src={require('../../assets/svg/about_icon_bsc.svg').default} alt="bsc_icon" width="100%" />
               <PolygonLogoFull />
-              <img src={require('../../assets/svg/about_icon_avalanche.svg')} alt="avalanche_icon" width="100%" />
+              <img
+                src={require('../../assets/svg/about_icon_avalanche.svg').default}
+                alt="avalanche_icon"
+                width="100%"
+              />
               <FantomLogoFull color={isDarkMode ? '#fff' : '#1969FF'} width="100%" height="unset" />
               <CronosLogoFull color={isDarkMode ? undefined : '#142564'} />
               <img
-                src={require(`../../assets/images/Arbitrum_HorizontalLogo${isDarkMode ? '-dark' : ''}.svg`)}
+                src={require(`../../assets/images/Arbitrum_HorizontalLogo${isDarkMode ? '-dark' : ''}.svg`).default}
                 alt=""
                 width="100%"
               />
@@ -1012,7 +1018,7 @@ function AboutKyberSwap() {
               <AuroraFull />
               <OasisLogoFull />
               <img
-                src={require(`../../assets/images/btt-logo${isDarkMode ? '-dark' : ''}.svg`)}
+                src={require(`../../assets/images/btt-logo${isDarkMode ? '-dark' : ''}.svg`).default}
                 alt="btt"
                 width="100%"
               />

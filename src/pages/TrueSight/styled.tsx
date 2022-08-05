@@ -1,6 +1,6 @@
-import styled from 'styled-components'
-import { Flex, Text } from 'rebass'
 import { rgba } from 'polished'
+import { Flex, Text } from 'rebass'
+import styled from 'styled-components'
 
 import { ButtonEmpty, ButtonPrimary } from 'components/Button'
 import { Spinner } from 'components/Header/Polling'

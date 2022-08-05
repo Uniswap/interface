@@ -1,11 +1,11 @@
-import React from 'react'
-import styled from 'styled-components'
-import { animated, useTransition, useSpring } from 'react-spring'
-import { DialogOverlay, DialogContent } from '@reach/dialog'
-import { isMobile } from 'react-device-detect'
+import { DialogContent, DialogOverlay } from '@reach/dialog'
 import '@reach/dialog/styles.css'
 import { transparentize } from 'polished'
+import React from 'react'
+import { isMobile } from 'react-device-detect'
+import { animated, useSpring, useTransition } from 'react-spring'
 import { useGesture } from 'react-use-gesture'
+import styled from 'styled-components'
 
 const AnimatedDialogOverlay = animated(DialogOverlay)
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -61,13 +61,15 @@ const StyledDialogContent = styled(({ minHeight, maxHeight, maxWidth, width, mob
     `}
     ${({ theme, mobile }) => theme.mediaWidth.upToSmall`
       width:  85vw;
-      ${mobile &&
+      ${
+        mobile &&
         `
           width: 100vw;
           border-radius: 20px;
           border-bottom-left-radius: 0;
           border-bottom-right-radius: 0;
-        `}
+        `
+      }
     `}
   }
 `
@@ -99,7 +101,7 @@ export default function Modal({
   transition = true,
   zindex = 100,
 }: ModalProps) {
-  const fadeTransition = useTransition(isOpen, null, {
+  const fadeTransition = useTransition(isOpen, {
     config: { duration: transition ? 200 : 0 },
     from: { opacity: 0 },
     enter: { opacity: 1 },
@@ -120,10 +122,10 @@ export default function Modal({
 
   return (
     <>
-      {fadeTransition.map(
-        ({ item, key, props }) =>
+      {fadeTransition(
+        (style, item) =>
           item && (
-            <StyledDialogOverlay zindex={zindex} key={key} style={props} onDismiss={onDismiss}>
+            <StyledDialogOverlay zindex={zindex} style={style} onDismiss={onDismiss}>
               <StyledDialogContent
                 {...(isMobile
                   ? {

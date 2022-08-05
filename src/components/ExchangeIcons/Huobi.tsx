@@ -1,4 +1,5 @@
 import React from 'react'
+
 import { useIsDarkMode } from 'state/user/hooks'
 
 function Etoro({ width, height }: { width?: number; height?: number }) {

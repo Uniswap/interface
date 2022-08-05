@@ -1,9 +1,9 @@
+import { ChainId, Token, WETH } from '@kyberswap/ks-sdk-core'
 import useSWR from 'swr'
 
-import { ChainId, Token, WETH } from '@kyberswap/ks-sdk-core'
 import { COINGECKO_API_URL } from 'constants/index'
-import { useActiveWeb3React } from 'hooks'
 import { NETWORKS_INFO } from 'constants/networks'
+import { useActiveWeb3React } from 'hooks'
 
 export interface TokenInfo {
   price: number

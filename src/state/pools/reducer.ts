@@ -1,7 +1,7 @@
 import { createReducer } from '@reduxjs/toolkit'
 
-import { SubgraphPoolData, UserLiquidityPosition } from './hooks'
 import { setError, setLoading, setSelectedPool, setSharedPoolId, updatePools } from './actions'
+import { SubgraphPoolData, UserLiquidityPosition } from './hooks'
 
 interface SelectedPool {
   poolData: SubgraphPoolData

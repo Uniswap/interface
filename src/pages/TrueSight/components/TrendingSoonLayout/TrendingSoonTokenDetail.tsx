@@ -1,18 +1,19 @@
-import React, { CSSProperties } from 'react'
-import styled from 'styled-components'
-import { Flex, Text } from 'rebass'
 import { Trans } from '@lingui/macro'
+import React, { CSSProperties } from 'react'
+import { Flex, Text } from 'rebass'
+import styled from 'styled-components'
+
 import Divider from 'components/Divider'
-import ButtonWithOptions from 'pages/TrueSight/components/ButtonWithOptions'
 import AddressButton from 'pages/TrueSight/components/AddressButton'
-import CommunityButton, { StyledCommunityButton } from 'pages/TrueSight/components/CommunityButton'
-import { ExternalLink } from 'theme'
-import Tags from 'pages/TrueSight/components/Tags'
+import ButtonWithOptions from 'pages/TrueSight/components/ButtonWithOptions'
 import Chart from 'pages/TrueSight/components/Chart'
-import { TrueSightTokenData } from 'pages/TrueSight/hooks/useGetTrendingSoonData'
-import { formattedNumLong } from 'utils'
+import CommunityButton, { StyledCommunityButton } from 'pages/TrueSight/components/CommunityButton'
+import Tags from 'pages/TrueSight/components/Tags'
 import { FormattedCoinGeckoChartData } from 'pages/TrueSight/hooks/useGetCoinGeckoChartData'
+import { TrueSightTokenData } from 'pages/TrueSight/hooks/useGetTrendingSoonData'
 import { TrueSightChartCategory, TrueSightFilter, TrueSightTimeframe } from 'pages/TrueSight/index'
+import { ExternalLink } from 'theme'
+import { formattedNumLong } from 'utils'
 
 const TrendingSoonTokenDetail = ({
   tokenData,

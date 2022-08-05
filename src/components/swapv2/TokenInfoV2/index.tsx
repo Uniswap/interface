@@ -1,15 +1,15 @@
-import React from 'react'
 import { ChainId, Currency } from '@kyberswap/ks-sdk-core'
+import React from 'react'
 
 import { TOKEN_INFO_DESCRIPTION } from 'constants/tokenLists/token-info'
 import { useActiveWeb3React } from 'hooks'
 import useTokenInfo, { TokenInfo } from 'hooks/useTokenInfo'
+import { useCurrencyConvertedToNative } from 'utils/dmm'
 import { getSymbolSlug } from 'utils/string'
 import { checkPairInWhiteList } from 'utils/tokenInfo'
-import { useCurrencyConvertedToNative } from 'utils/dmm'
 
-import SingleTokenInfo, { HowToSwap } from './SingleTokenInfo'
 import { TokenInfoWrapper } from '../styleds'
+import SingleTokenInfo, { HowToSwap } from './SingleTokenInfo'
 
 const isEmptyData = (tokenInfo: TokenInfo) => {
   return !tokenInfo.price && !tokenInfo?.description?.en && !tokenInfo.tradingVolume && !tokenInfo.marketCapRank

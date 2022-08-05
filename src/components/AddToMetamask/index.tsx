@@ -1,6 +1,6 @@
+import { ChainId, Token } from '@kyberswap/ks-sdk-core'
 import React from 'react'
 import styled from 'styled-components'
-import { ChainId, Token } from '@kyberswap/ks-sdk-core'
 
 import MetaMaskLogo from 'assets/images/metamask.png'
 import { ButtonEmpty } from 'components/Button'

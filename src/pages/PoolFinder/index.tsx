@@ -1,11 +1,15 @@
-import { Currency, TokenAmount, ChainId } from '@kyberswap/ks-sdk-core'
 import { Pair } from '@kyberswap/ks-sdk-classic'
+import { ChainId, Currency, TokenAmount } from '@kyberswap/ks-sdk-core'
+import { Trans, t } from '@lingui/macro'
 import JSBI from 'jsbi'
 import React, { useCallback, useEffect, useState } from 'react'
 import { Plus } from 'react-feather'
 import { Text } from 'rebass'
-import { t, Trans } from '@lingui/macro'
+
+import { nativeOnChain } from 'constants/tokens'
+import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import { useCurrencyConvertedToNative } from 'utils/dmm'
+
 import { ButtonDropdownLight } from '../../components/Button'
 import { LightCard } from '../../components/Card'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
@@ -22,8 +26,6 @@ import { StyledInternalLink } from '../../theme'
 import { currencyId } from '../../utils/currencyId'
 import AppBody from '../AppBody'
 import { Dots } from '../Pool/styleds'
-import { nativeOnChain } from 'constants/tokens'
-import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 
 enum Fields {
   TOKEN0 = 0,

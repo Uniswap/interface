@@ -1,16 +1,16 @@
-import React, { useState, useRef } from 'react'
-
-import { Trans } from '@lingui/macro'
-import { ReactNode } from 'react'
+import { Currency } from '@kyberswap/ks-sdk-core'
 import { FeeAmount } from '@kyberswap/ks-sdk-elastic'
-import { Text, Flex } from 'rebass'
+import { Trans } from '@lingui/macro'
+import { rgba } from 'polished'
+import { ReactNode, useRef, useState } from 'react'
+import { Flex, Text } from 'rebass'
 import styled from 'styled-components'
-import useTheme from 'hooks/useTheme'
+
 import { ReactComponent as Down } from 'assets/svg/down.svg'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
-import { Currency } from '@kyberswap/ks-sdk-core'
+import useTheme from 'hooks/useTheme'
+
 import { useFeeTierDistribution } from './hook'
-import { rgba } from 'polished'
 
 const FEE_AMOUNT_DETAIL: { [key: string]: { label: string; description: ReactNode } } = {
   [FeeAmount.STABLE]: {

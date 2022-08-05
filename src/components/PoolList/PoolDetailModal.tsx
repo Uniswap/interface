@@ -1,10 +1,11 @@
 import React from 'react'
+
 import Modal from 'components/Modal'
+import ItemCard from 'components/PoolList/ItemCard'
+import useTheme from 'hooks/useTheme'
 import { ApplicationModal } from 'state/application/actions'
 import { useModalOpen, usePoolDetailModalToggle } from 'state/application/hooks'
 import { useSelectedPool } from 'state/pools/hooks'
-import ItemCard from 'components/PoolList/ItemCard'
-import useTheme from 'hooks/useTheme'
 
 export default function PoolDetailModal() {
   const poolDetailModalOpen = useModalOpen(ApplicationModal.POOL_DETAIL)

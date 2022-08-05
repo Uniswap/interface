@@ -1,18 +1,18 @@
+import { ChainId, Currency, Token } from '@kyberswap/ks-sdk-core'
+import { Trans, t } from '@lingui/macro'
+import { rgba } from 'polished'
 import React from 'react'
 import { Text } from 'rebass'
-import { Currency, Token, ChainId } from '@kyberswap/ks-sdk-core'
 import styled from 'styled-components'
-import { t, Trans } from '@lingui/macro'
-import { rgba } from 'polished'
 
-import { nativeOnChain } from 'constants/tokens'
-import { NETWORKS_INFO } from 'constants/networks'
 import InfoHelper from 'components/InfoHelper'
+import { NETWORKS_INFO } from 'constants/networks'
+import { nativeOnChain } from 'constants/tokens'
 
 import { SUGGESTED_BASES } from '../../constants'
 import { AutoColumn } from '../Column'
-import { AutoRow } from '../Row'
 import CurrencyLogo from '../CurrencyLogo'
+import { AutoRow } from '../Row'
 
 const BaseWrapper = styled.div`
   padding: 6px;

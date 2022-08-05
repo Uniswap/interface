@@ -1,31 +1,31 @@
-import React from 'react'
-import styled from 'styled-components'
-import { rgba } from 'polished'
 import { Trans } from '@lingui/macro'
-import { ChevronDown } from 'react-feather'
 import dayjs from 'dayjs'
+import { rgba } from 'polished'
+import React from 'react'
+import { ChevronDown } from 'react-feather'
 import { Box, Flex, Text } from 'rebass'
+import styled from 'styled-components'
 
-import useTheme from 'hooks/useTheme'
-import { ButtonOutlined } from 'components/Button'
-import Tags from 'pages/TrueSight/components/Tags'
-import Divider from 'components/Divider'
-import { ExternalLink } from 'theme'
-import ButtonWithOptions from 'pages/TrueSight/components/ButtonWithOptions'
 import { ReactComponent as BarChartIcon } from 'assets/svg/bar_chart_icon.svg'
-import { formattedNumLong } from 'utils'
+import { ButtonOutlined } from 'components/Button'
+import Divider from 'components/Divider'
+import useTheme from 'hooks/useTheme'
+import ButtonWithOptions from 'pages/TrueSight/components/ButtonWithOptions'
+import Tags from 'pages/TrueSight/components/Tags'
+import { TableBodyItemSmallDiff } from 'pages/TrueSight/components/TrendingLayout/index'
 import {
   FieldName,
   FieldValue,
   TruncatedText,
 } from 'pages/TrueSight/components/TrendingSoonLayout/TrendingSoonTokenItem'
 import { TrueSightTokenData } from 'pages/TrueSight/hooks/useGetTrendingSoonData'
-import { TableBodyItemSmallDiff } from 'pages/TrueSight/components/TrendingLayout/index'
 import { TrueSightFilter } from 'pages/TrueSight/index'
 import getFormattedNumLongDiscoveredDetails from 'pages/TrueSight/utils/getFormattedNumLongDiscoveredDetails'
+import { ExternalLink } from 'theme'
+import { formattedNumLong } from 'utils'
 
-import CommunityRowOnMobile from '../CommunityRowOnMobile'
 import AddressRowOnMobile from '../AddressRowOnMobile'
+import CommunityRowOnMobile from '../CommunityRowOnMobile'
 
 const StyledTrendingTokenItem = styled(Flex)`
   position: relative;

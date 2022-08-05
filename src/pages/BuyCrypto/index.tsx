@@ -1,38 +1,39 @@
-import React, { useRef, useState } from 'react'
-import styled, { keyframes } from 'styled-components'
-import { Flex, Text, Image } from 'rebass'
 import { Trans } from '@lingui/macro'
-import useTheme from 'hooks/useTheme'
-import introImg from 'assets/buy-crypto/intro.png'
-import buyNowImg from 'assets/buy-crypto/buy-now.png'
-import visa from 'assets/buy-crypto/visa.svg'
-import masterCard from 'assets/buy-crypto/master-card.svg'
-import gPay from 'assets/buy-crypto/google-pay.svg'
+import { rgba } from 'polished'
+import React, { useRef, useState } from 'react'
+import { ArrowDown, ChevronDown, Repeat, X } from 'react-feather'
+import { Link } from 'react-router-dom'
+import { useMedia } from 'react-use'
+import { Flex, Image, Text } from 'rebass'
+import styled, { keyframes } from 'styled-components'
+
 import applePay from 'assets/buy-crypto/apple-pay.svg'
 import bankTransfer from 'assets/buy-crypto/bank-transfer.svg'
-import { ButtonPrimary, ButtonLight } from 'components/Button'
-import SeamlessImg from 'assets/svg/seamless.svg'
-import Cart from 'components/Icons/Cart'
-import { useMedia } from 'react-use'
-import { ArrowDown, ChevronDown, Repeat, X } from 'react-feather'
-import { ButtonText, ExternalLink } from 'theme'
-import Deposit from 'components/Icons/Deposit'
-import metamask from 'assets/images/metamask.svg'
+import buyNowImg from 'assets/buy-crypto/buy-now.png'
+import gPay from 'assets/buy-crypto/google-pay.svg'
+import introImg from 'assets/buy-crypto/intro.png'
+import masterCard from 'assets/buy-crypto/master-card.svg'
+import visa from 'assets/buy-crypto/visa.svg'
 import c98 from 'assets/images/coin98.svg'
+import { ReactComponent as Ledger } from 'assets/images/ledger.svg'
+import metamask from 'assets/images/metamask.svg'
 import walletConnect from 'assets/images/wallet-connect.svg'
 import { ReactComponent as Coinbase } from 'assets/images/wallet-link.svg'
-import { ReactComponent as Ledger } from 'assets/images/ledger.svg'
-import { useActiveWeb3React } from 'hooks'
-import CopyHelper from 'components/Copy'
-import { useWalletModalToggle } from 'state/application/hooks'
-import { KSStatistic } from 'pages/About/AboutKyberSwap'
-import { Link } from 'react-router-dom'
-import Modal from 'components/Modal'
 import ForTraderImage from 'assets/svg/for_trader.svg'
 import ForTraderImageLight from 'assets/svg/for_trader_light.svg'
-import { rgba } from 'polished'
-import { useDarkModeManager } from 'state/user/hooks'
+import SeamlessImg from 'assets/svg/seamless.svg'
+import { ButtonLight, ButtonPrimary } from 'components/Button'
+import CopyHelper from 'components/Copy'
+import Cart from 'components/Icons/Cart'
+import Deposit from 'components/Icons/Deposit'
+import Modal from 'components/Modal'
+import { useActiveWeb3React } from 'hooks'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
+import useTheme from 'hooks/useTheme'
+import { KSStatistic } from 'pages/About/AboutKyberSwap'
+import { useWalletModalToggle } from 'state/application/hooks'
+import { useDarkModeManager } from 'state/user/hooks'
+import { ButtonText, ExternalLink } from 'theme'
 
 const CoinbaseSVG = styled(Coinbase)`
   path {
@@ -482,9 +483,9 @@ function BuyCrypto() {
                 </Text>
 
                 <Text color={'#A7B6BD'} lineHeight={1.5} marginTop={upToMedium ? '40px' : '48px'}>
-                  Note: Clicking "Buy Crypto" will bring you to a third party website, owned and operated by an
-                  independent party over which KyberSwap has no control ("
-                  <ExternalLink href="https://app.transak.com/">Third Party Website</ExternalLink>").
+                  Note: Clicking &quot;Buy Crypto&quot; will bring you to a third party website, owned and operated by
+                  an independent party over which KyberSwap has no control (&quot;
+                  <ExternalLink href="https://app.transak.com/">Third Party Website</ExternalLink>&quot;).
                   <br />
                   <br />
                   For support, please contact Transak{' '}

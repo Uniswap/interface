@@ -1,8 +1,9 @@
-import React from 'react'
 import styled from 'styled-components'
-import { useActivePopups } from 'state/application/hooks'
-import PopupItem from './PopupItem'
+
 import { Z_INDEXS } from 'constants/styles'
+import { useActivePopups } from 'state/application/hooks'
+
+import PopupItem from './PopupItem'
 
 const FixedPopupColumn = styled.div`
   position: fixed;

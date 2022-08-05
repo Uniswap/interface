@@ -1,15 +1,22 @@
-import React, { useEffect, useMemo, useState } from 'react'
-import styled from 'styled-components'
-import { Box, Flex, Text } from 'rebass'
-import { useMedia } from 'react-use'
-import { ArrowDown } from 'react-feather'
 import { Trans } from '@lingui/macro'
+import React, { useEffect, useMemo, useState } from 'react'
+import { ArrowDown } from 'react-feather'
+import { useHistory } from 'react-router'
+import { useLocation } from 'react-router-dom'
+import { useMedia } from 'react-use'
+import { Box, Flex, Text } from 'rebass'
+import styled from 'styled-components'
 
-import Pagination from 'components/Pagination'
+import WarningIcon from 'components/LiveChart/WarningIcon'
 import LocalLoader from 'components/LocalLoader'
-import TrendingSoonTokenItem from 'pages/TrueSight/components/TrendingSoonLayout/TrendingSoonTokenItem'
-import TrendingSoonTokenDetail from 'pages/TrueSight/components/TrendingSoonLayout/TrendingSoonTokenDetail'
+import Pagination from 'components/Pagination'
+import { TRENDING_SOON_ITEM_PER_PAGE, TRENDING_SOON_MAX_ITEMS } from 'constants/index'
+import useParsedQueryString from 'hooks/useParsedQueryString'
+import useTheme from 'hooks/useTheme'
 import MobileChartModal from 'pages/TrueSight/components/TrendingSoonLayout/MobileChartModal'
+import TrendingSoonTokenDetail from 'pages/TrueSight/components/TrendingSoonLayout/TrendingSoonTokenDetail'
+import TrendingSoonTokenItem from 'pages/TrueSight/components/TrendingSoonLayout/TrendingSoonTokenItem'
+import useGetCoinGeckoChartData from 'pages/TrueSight/hooks/useGetCoinGeckoChartData'
 import useGetTrendingSoonData, { TrueSightTokenData } from 'pages/TrueSight/hooks/useGetTrendingSoonData'
 import {
   TrueSightChartCategory,
@@ -17,13 +24,6 @@ import {
   TrueSightSortSettings,
   TrueSightTimeframe,
 } from 'pages/TrueSight/index'
-import useGetCoinGeckoChartData from 'pages/TrueSight/hooks/useGetCoinGeckoChartData'
-import WarningIcon from 'components/LiveChart/WarningIcon'
-import useTheme from 'hooks/useTheme'
-import { TRENDING_SOON_ITEM_PER_PAGE, TRENDING_SOON_MAX_ITEMS } from 'constants/index'
-import useParsedQueryString from 'hooks/useParsedQueryString'
-import { useHistory } from 'react-router'
-import { useLocation } from 'react-router-dom'
 
 const TrendingSoonLayout = ({
   filter,

@@ -1,13 +1,14 @@
 import React, { ReactNode, useRef, useState } from 'react'
 import { CheckCircle, ChevronDown, Copy } from 'react-feather'
-import styled from 'styled-components'
-import useCopyClipboard from 'hooks/useCopyClipboard'
-import { OptionsContainer } from 'pages/TrueSight/styled'
-import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { Box, Flex } from 'rebass'
-import useTheme from 'hooks/useTheme'
-import { isAddress } from 'utils'
+import styled from 'styled-components'
+
 import { NETWORKS_INFO, TRUESIGHT_NETWORK_TO_CHAINID } from 'constants/networks'
+import useCopyClipboard from 'hooks/useCopyClipboard'
+import { useOnClickOutside } from 'hooks/useOnClickOutside'
+import useTheme from 'hooks/useTheme'
+import { OptionsContainer } from 'pages/TrueSight/styled'
+import { isAddress } from 'utils'
 import getShortenAddress from 'utils/getShortenAddress'
 
 function AddressButtonItself({

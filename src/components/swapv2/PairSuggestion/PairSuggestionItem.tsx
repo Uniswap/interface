@@ -1,17 +1,19 @@
+import { t } from '@lingui/macro'
+import { rgba } from 'polished'
 import React from 'react'
-import { useAllTokens } from 'hooks/Tokens'
-import useTheme from 'hooks/useTheme'
+import { isMobile } from 'react-device-detect'
+import { Star } from 'react-feather'
 import { Flex, Text } from 'rebass'
 import styled from 'styled-components'
-import { SuggestionPairData } from './request'
-import { Star } from 'react-feather'
-import { isMobile } from 'react-device-detect'
+
 import Logo from 'components/Logo'
-import { useActiveWeb3React } from 'hooks'
-import { isActivePair } from './utils'
-import { rgba } from 'polished'
 import { MouseoverTooltip } from 'components/Tooltip'
-import { t } from '@lingui/macro'
+import { useActiveWeb3React } from 'hooks'
+import { useAllTokens } from 'hooks/Tokens'
+import useTheme from 'hooks/useTheme'
+
+import { SuggestionPairData } from './request'
+import { isActivePair } from './utils'
 
 const ItemWrapper = styled.div<{ isActive: boolean }>`
   cursor: pointer;

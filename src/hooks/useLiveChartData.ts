@@ -1,10 +1,11 @@
-import { useMemo } from 'react'
-import { Token, ChainId, WETH } from '@kyberswap/ks-sdk-core'
-import { useActiveWeb3React } from 'hooks'
-import useSWR from 'swr'
+import { ChainId, Token, WETH } from '@kyberswap/ks-sdk-core'
 import { getUnixTime, subHours } from 'date-fns'
-import { NETWORKS_INFO } from 'constants/networks'
+import { useMemo } from 'react'
+import useSWR from 'swr'
+
 import { COINGECKO_API_URL } from 'constants/index'
+import { NETWORKS_INFO } from 'constants/networks'
+import { useActiveWeb3React } from 'hooks'
 
 export enum LiveDataTimeframeEnum {
   HOUR = '1H',

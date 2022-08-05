@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
-import styled from 'styled-components'
+import React, { ReactNode, useState } from 'react'
 import { ChevronUp } from 'react-feather'
+import styled from 'styled-components'
 
 const Wrapper = styled.div`
   position: relative;
@@ -53,6 +53,7 @@ const ContentWrapper = styled.div`
 type Props = {
   header: string | JSX.Element
   expandedOnMount?: boolean
+  children: ReactNode
 }
 
 const BlockWrapper: React.FC<Props> = ({ header, children, expandedOnMount = false }) => {

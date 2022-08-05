@@ -1,11 +1,12 @@
-import React from 'react'
 import { Currency, Price } from '@kyberswap/ks-sdk-core'
-import { useContext } from 'react'
+import React from 'react'
 import { Repeat } from 'react-feather'
 import { Text } from 'rebass'
-import { ThemeContext } from 'styled-components'
-import { StyledBalanceMaxMini } from './styleds'
+
+import useTheme from 'hooks/useTheme'
 import { useCurrencyConvertedToNative } from 'utils/dmm'
+
+import { StyledBalanceMaxMini } from './styleds'
 
 interface TradePriceProps {
   price?: Price<Currency, Currency>
@@ -14,7 +15,7 @@ interface TradePriceProps {
 }
 
 export default function TradePrice({ price, showInverted, setShowInverted }: TradePriceProps) {
-  const theme = useContext(ThemeContext)
+  const theme = useTheme()
 
   const formattedPrice = showInverted ? price?.toSignificant(6) : price?.invert()?.toSignificant(6)
 

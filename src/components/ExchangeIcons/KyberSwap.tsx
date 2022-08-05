@@ -1,4 +1,5 @@
 import React from 'react'
+
 import { useIsDarkMode } from 'state/user/hooks'
 
 function KyberSwap({ width, height }: { width?: number; height?: number }) {

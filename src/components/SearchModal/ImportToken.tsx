@@ -1,24 +1,26 @@
-import React, { useCallback, useEffect } from 'react'
-import { Token, Currency } from '@kyberswap/ks-sdk-core'
+import { Currency, Token } from '@kyberswap/ks-sdk-core'
+import { Trans, t } from '@lingui/macro'
+import { TokenList } from '@uniswap/token-lists'
+import { rgba, transparentize } from 'polished'
+import { useCallback, useEffect } from 'react'
+import { AlertCircle, ArrowLeft, CornerDownLeft } from 'react-feather'
 import styled from 'styled-components'
-import { t, Trans } from '@lingui/macro'
-import { TYPE, CloseIcon } from 'theme'
+
+import { ButtonPrimary } from 'components/Button'
 import Card from 'components/Card'
 import { AutoColumn } from 'components/Column'
-import { RowBetween, RowFixed } from 'components/Row'
 import CurrencyLogo from 'components/CurrencyLogo'
-import { ArrowLeft, AlertCircle, CornerDownLeft } from 'react-feather'
-import { rgba, transparentize } from 'polished'
-import useTheme from 'hooks/useTheme'
-import { ButtonPrimary } from 'components/Button'
-import { SectionBreak } from 'components/swap/styleds'
-import { useAddUserToken } from 'state/user/hooks'
-import { getEtherscanLink } from 'utils'
-import { useActiveWeb3React } from 'hooks'
-import { ExternalLink } from '../../theme/components'
 import ListLogo from 'components/ListLogo'
+import { RowBetween, RowFixed } from 'components/Row'
+import { SectionBreak } from 'components/swap/styleds'
+import { useActiveWeb3React } from 'hooks'
+import useTheme from 'hooks/useTheme'
+import { useAddUserToken } from 'state/user/hooks'
+import { CloseIcon, TYPE } from 'theme'
+import { getEtherscanLink } from 'utils'
+
+import { ExternalLink } from '../../theme/components'
 import { PaddedColumn } from './styleds'
-import { TokenList } from '@uniswap/token-lists'
 
 const Wrapper = styled.div`
   position: relative;
@@ -103,12 +105,12 @@ export function ImportToken({
           <TYPE.body fontWeight={400} fontSize={16}>
             {tokens.length > 1 ? (
               <Trans>
-                These tokens don't appear on the active token list(s). Make sure these are the tokens that you want to
-                trade.
+                These tokens don&apos;t appear on the active token list(s). Make sure these are the tokens that you want
+                to trade.
               </Trans>
             ) : (
               <Trans>
-                This token doesn't appear on the active token list(s). Make sure this is the token that you want to
+                This token doesn&apos;t appear on the active token list(s). Make sure this is the token that you want to
                 trade.
               </Trans>
             )}

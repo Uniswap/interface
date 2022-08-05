@@ -1,5 +1,6 @@
-import { createAction } from '@reduxjs/toolkit'
 import { ChainId, Fraction } from '@kyberswap/ks-sdk-core'
+import { createAction } from '@reduxjs/toolkit'
+
 import { SerializedToken } from 'state/user/actions'
 
 export type CampaignStatus = 'Upcoming' | 'Ongoing' | 'Ended'

@@ -1,16 +1,17 @@
-import React, { useState } from 'react'
-import { ListItemGroupProps } from 'components/PoolList/ListItem'
-import { useActiveWeb3React } from 'hooks'
-import { parseSubgraphPoolData } from 'utils/dmm'
 import { ChainId } from '@kyberswap/ks-sdk-core'
-import useTheme from 'hooks/useTheme'
-import { DashedDivider, ItemCardGroupContainer, TextShowMorePools } from 'components/PoolList/styled'
-import { Flex, Text } from 'rebass'
-import DoubleCurrencyLogo from 'components/DoubleLogo'
-import { ChevronDown } from 'react-feather'
 import { Trans } from '@lingui/macro'
+import React, { useState } from 'react'
+import { ChevronDown } from 'react-feather'
+import { Flex, Text } from 'rebass'
+
+import DoubleCurrencyLogo from 'components/DoubleLogo'
 import ItemCard from 'components/PoolList/ItemCard/index'
+import { ListItemGroupProps } from 'components/PoolList/ListItem'
+import { DashedDivider, ItemCardGroupContainer, TextShowMorePools } from 'components/PoolList/styled'
+import { useActiveWeb3React } from 'hooks'
+import useTheme from 'hooks/useTheme'
 import { ButtonIcon } from 'pages/Pools/styleds'
+import { parseSubgraphPoolData } from 'utils/dmm'
 
 const ItemCardGroup = ({
   sortedFilteredSubgraphPoolsObject,

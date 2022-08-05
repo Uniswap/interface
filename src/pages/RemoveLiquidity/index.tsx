@@ -1,20 +1,21 @@
+import { Fraction, WETH } from '@kyberswap/ks-sdk-core'
+import { Trans, t } from '@lingui/macro'
+import JSBI from 'jsbi'
 import React, { useEffect, useState } from 'react'
 import { RouteComponentProps } from 'react-router'
-import { t, Trans } from '@lingui/macro'
 
-import { Fraction, WETH } from '@kyberswap/ks-sdk-core'
+import LiquidityProviderMode from 'components/LiquidityProviderMode'
 import { AddRemoveTabs, LiquidityAction } from 'components/NavigationTabs'
 import { MinimalPositionCard } from 'components/PositionCard'
-import LiquidityProviderMode from 'components/LiquidityProviderMode'
 import { useActiveWeb3React } from 'hooks'
 import { useCurrency } from 'hooks/Tokens'
-import { useCurrencyConvertedToNative } from 'utils/dmm'
-import ZapOut from './ZapOut'
-import TokenPair from './TokenPair'
-import { useDerivedBurnInfo } from 'state/burn/hooks'
-import { PageWrapper, Container, TopBar, LiquidityProviderModeWrapper, PoolName } from './styled'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
-import JSBI from 'jsbi'
+import { useDerivedBurnInfo } from 'state/burn/hooks'
+import { useCurrencyConvertedToNative } from 'utils/dmm'
+
+import TokenPair from './TokenPair'
+import ZapOut from './ZapOut'
+import { Container, LiquidityProviderModeWrapper, PageWrapper, PoolName, TopBar } from './styled'
 
 export default function RemoveLiquidity({
   match: {

@@ -1,15 +1,17 @@
-import { JSBI, DMMPool, Pair } from '@kyberswap/ks-sdk-classic'
-import { TokenAmount, Currency, Token } from '@kyberswap/ks-sdk-core'
-import { useMemo } from 'react'
 import { Interface } from '@ethersproject/abi'
-import { useMultipleContractSingleData, useSingleContractMultipleData } from '../state/multicall/hooks'
+import { DMMPool, JSBI, Pair } from '@kyberswap/ks-sdk-classic'
+import { Currency, Token, TokenAmount } from '@kyberswap/ks-sdk-core'
+import { useMemo } from 'react'
+
+import { NETWORKS_INFO } from 'constants/networks'
+import { useActiveWeb3React } from 'hooks'
 import {
+  useDynamicFeeFactoryContract,
   useOldStaticFeeFactoryContract,
   useStaticFeeFactoryContract,
-  useDynamicFeeFactoryContract,
 } from 'hooks/useContract'
-import { useActiveWeb3React } from 'hooks'
-import { NETWORKS_INFO } from 'constants/networks'
+
+import { useMultipleContractSingleData, useSingleContractMultipleData } from '../state/multicall/hooks'
 
 export enum PairState {
   LOADING,
@@ -19,9 +21,10 @@ export enum PairState {
 }
 
 export function usePairs(currencies: [Currency | undefined, Currency | undefined][]): [PairState, Pair | null][][] {
-  const tokens = useMemo(() => currencies.map(([currencyA, currencyB]) => [currencyA?.wrapped, currencyB?.wrapped]), [
-    currencies,
-  ])
+  const tokens = useMemo(
+    () => currencies.map(([currencyA, currencyB]) => [currencyA?.wrapped, currencyB?.wrapped]),
+    [currencies],
+  )
 
   const oldStaticContract = useOldStaticFeeFactoryContract()
   const staticContract = useStaticFeeFactoryContract()
@@ -187,9 +190,10 @@ export function usePairByAddress(
 }
 
 export function useUnAmplifiedPairs(currencies: [Currency | undefined, Currency | undefined][]): string[] {
-  const tokens = useMemo(() => currencies.map(([currencyA, currencyB]) => [currencyA?.wrapped, currencyB?.wrapped]), [
-    currencies,
-  ])
+  const tokens = useMemo(
+    () => currencies.map(([currencyA, currencyB]) => [currencyA?.wrapped, currencyB?.wrapped]),
+    [currencies],
+  )
   const dynamicContract = useDynamicFeeFactoryContract()
   const dynamicRess = useSingleContractMultipleData(
     dynamicContract,

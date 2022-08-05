@@ -33,7 +33,7 @@ export function parseCallKey(callKey: string): Call {
   return {
     address: pcs[0],
     callData: pcs[1],
-    ...(pcs[2] ? { gasRequired: Number.parseInt(pcs[2]) } : {})
+    ...(pcs[2] ? { gasRequired: Number.parseInt(pcs[2]) } : {}),
   }
 }
 

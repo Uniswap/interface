@@ -1,13 +1,14 @@
+import { Trans } from '@lingui/macro'
 import React from 'react'
 import { useMedia } from 'react-use'
 import { Flex } from 'rebass'
-import { Trans } from '@lingui/macro'
 
-import { UPCOMING_POOLS } from 'constants/upcoming-pools'
 import { ClickableText } from 'components/YieldPools/styleds'
-import NoFarms from './NoFarms'
+import { UPCOMING_POOLS } from 'constants/upcoming-pools'
+
 import ListItem from './ListItem'
-import { TableWrapper, TableHeader, RowsWrapper } from './styled'
+import NoFarms from './NoFarms'
+import { RowsWrapper, TableHeader, TableWrapper } from './styled'
 
 const UpcomingFarms = () => {
   const lgBreakpoint = useMedia('(min-width: 1000px)')

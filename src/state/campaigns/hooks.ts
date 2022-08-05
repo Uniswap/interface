@@ -1,11 +1,12 @@
-import { useDispatch, useSelector } from 'react-redux'
-import { AppState } from 'state/index'
 import { useCallback, useMemo } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+
 import {
   setSelectedCampaignLeaderboardLookupAddress,
   setSelectedCampaignLeaderboardPageNumber,
   setSelectedCampaignLuckyWinnersLookupAddress,
 } from 'state/campaigns/actions'
+import { AppState } from 'state/index'
 
 export function useSelectedCampaignLeaderboardPageNumberManager() {
   const selectedCampaignLeaderboardPageNumber = useSelector(

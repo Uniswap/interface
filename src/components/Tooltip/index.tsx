@@ -1,8 +1,9 @@
-import React, { useCallback, useState, ReactNode } from 'react'
-import styled from 'styled-components'
-import Popover, { PopoverProps } from '../Popover'
-import { Flex } from 'rebass'
+import React, { ReactNode, useCallback, useState } from 'react'
 import { isMobile } from 'react-device-detect'
+import { Flex } from 'rebass'
+import styled from 'styled-components'
+
+import Popover, { PopoverProps } from '../Popover'
 
 const TooltipContainer = styled.div<{ width?: string; size?: number }>`
   width: ${({ width }) => width || '228px'};

@@ -1,42 +1,42 @@
-import React, { useMemo } from 'react'
+import { Token } from '@kyberswap/ks-sdk-core'
 import { Trans } from '@lingui/macro'
+import { stringify } from 'qs'
+import React, { useMemo } from 'react'
+import { useSelector } from 'react-redux'
+import { useHistory } from 'react-router-dom'
+import { useMedia } from 'react-use'
+import { Flex, Text } from 'rebass'
 
-import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
-import { useFarmsData } from 'state/farms/hooks'
-import { useBlockNumber } from 'state/application/hooks'
+import ClassicElasticTab from 'components/ClassicElasticTab'
 import Loader from 'components/Loader'
+import RewardTokenPrices from 'components/RewardTokenPrices'
+import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
+import Tutorial, { TutorialType } from 'components/Tutorial'
+import UpcomingFarms from 'components/UpcomingFarms'
+import Vesting from 'components/Vesting'
+import ProMMVesting from 'components/Vesting/ProMMVesting'
+import YieldPools from 'components/YieldPools'
+import FarmGuide from 'components/YieldPools/FarmGuide'
+import ProMMFarms from 'components/YieldPools/ProMMFarms'
 import {
-  TopBar,
-  TabContainer,
-  TabWrapper,
-  Tab,
-  PoolTitleContainer,
-  UpcomingPoolsWrapper,
   NewText,
   PageWrapper,
+  PoolTitleContainer,
+  Tab,
+  TabContainer,
+  TabWrapper,
+  TopBar,
+  UpcomingPoolsWrapper,
 } from 'components/YieldPools/styleds'
-import Vesting from 'components/Vesting'
-import { useSelector } from 'react-redux'
-import { AppState } from 'state'
-import YieldPools from 'components/YieldPools'
-import RewardTokenPrices from 'components/RewardTokenPrices'
-import { Text, Flex } from 'rebass'
-import UpcomingFarms from 'components/UpcomingFarms'
 import { UPCOMING_POOLS } from 'constants/upcoming-pools'
-import useParsedQueryString from 'hooks/useParsedQueryString'
-import { useHistory } from 'react-router-dom'
-import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
-import { stringify } from 'qs'
-import ProMMFarms from 'components/YieldPools/ProMMFarms'
-import ProMMVesting from 'components/Vesting/ProMMVesting'
-import { Token } from '@kyberswap/ks-sdk-core'
-import Tutorial, { TutorialType } from 'components/Tutorial'
-import { useMedia } from 'react-use'
-import { useProMMFarms } from 'state/farms/promm/hooks'
-import { useTokens } from 'hooks/Tokens'
 import { VERSION } from 'constants/v2'
-import ClassicElasticTab from 'components/ClassicElasticTab'
-import FarmGuide from 'components/YieldPools/FarmGuide'
+import { useTokens } from 'hooks/Tokens'
+import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
+import useParsedQueryString from 'hooks/useParsedQueryString'
+import { AppState } from 'state'
+import { useBlockNumber } from 'state/application/hooks'
+import { useFarmsData } from 'state/farms/hooks'
+import { useProMMFarms } from 'state/farms/promm/hooks'
 
 const Farms = () => {
   const { loading } = useFarmsData()
@@ -91,7 +91,7 @@ const Farms = () => {
   const prommTokenMap = useTokens(prommRewardTokenAddress)
 
   const rewardTokens = useMemo(() => {
-    let tokenMap: { [address: string]: Token } = {}
+    const tokenMap: { [address: string]: Token } = {}
     const currentTimestamp = Math.floor(Date.now() / 1000)
     Object.values(farmsByFairLaunch)
       .flat()

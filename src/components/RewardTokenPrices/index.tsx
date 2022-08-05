@@ -1,15 +1,15 @@
+import { ChainId, Token, WETH } from '@kyberswap/ks-sdk-core'
 import React, { useEffect, useRef } from 'react'
-import styled from 'styled-components'
 import ScrollContainer from 'react-indiana-drag-scroll'
+import styled from 'styled-components'
 
-import { ChainId, WETH, Token } from '@kyberswap/ks-sdk-core'
-import { KNC, ZERO_ADDRESS } from 'constants/index'
-import useThrottle from 'hooks/useThrottle'
-import { useActiveWeb3React } from 'hooks'
-import { useRewardTokenPrices } from 'state/farms/hooks'
-import { formattedNumLong } from 'utils'
 // import { useRewardTokensFullInfo } from 'utils/dmm'
 import CurrencyLogo from 'components/CurrencyLogo'
+import { KNC, ZERO_ADDRESS } from 'constants/index'
+import { useActiveWeb3React } from 'hooks'
+import useThrottle from 'hooks/useThrottle'
+import { useRewardTokenPrices } from 'state/farms/hooks'
+import { formattedNumLong } from 'utils'
 
 export const ScrollContainerWithGradient = styled.div<{ backgroundColor?: string }>`
   position: relative;
@@ -48,7 +48,11 @@ export const ScrollContainerWithGradient = styled.div<{ backgroundColor?: string
   }
 
   &.right-visible:before {
-    background: linear-gradient(to left, ${({ theme, backgroundColor }) => backgroundColor ?? theme.buttonBlack}, transparent);
+    background: linear-gradient(
+      to left,
+      ${({ theme, backgroundColor }) => backgroundColor ?? theme.buttonBlack},
+      transparent
+    );
     right: 0;
   }
 `
@@ -84,7 +88,7 @@ const RewardTokenPrices = ({ style = {}, rewardTokens }: { style?: React.CSSProp
       : rewardTokens
 
   // Sort the list of reward tokens in order: KNC -> Native token -> Other tokens
-  rewardTokens.sort(function(tokenA, tokenB) {
+  rewardTokens.sort(function (tokenA, tokenB) {
     if (tokenA.address === KNC[chainId as ChainId].address) {
       return -1
     }

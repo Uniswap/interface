@@ -1,4 +1,5 @@
 import { useMemo } from 'react'
+
 import contenthashToUri from '../utils/contenthashToUri'
 import { parseENSAddress } from '../utils/parseENSAddress'
 import uriToHttp from '../utils/uriToHttp'

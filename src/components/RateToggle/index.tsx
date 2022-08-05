@@ -1,6 +1,7 @@
-import React from 'react'
-import { Trans } from '@lingui/macro'
 import { Currency } from '@kyberswap/ks-sdk-core'
+import { Trans } from '@lingui/macro'
+import React from 'react'
+
 import { ToggleElement, ToggleWrapper } from 'components/Toggle/MultiToggle'
 
 // the order of displayed base currencies from left to right is always in sort order
@@ -8,7 +9,7 @@ import { ToggleElement, ToggleWrapper } from 'components/Toggle/MultiToggle'
 export default function RateToggle({
   currencyA,
   currencyB,
-  handleRateToggle
+  handleRateToggle,
 }: {
   currencyA: Currency
   currencyB: Currency

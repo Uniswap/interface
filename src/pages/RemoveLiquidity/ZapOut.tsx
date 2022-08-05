@@ -1,14 +1,8 @@
-import React, { useCallback, useContext, useMemo, useState, useEffect } from 'react'
 import { BigNumber } from '@ethersproject/bignumber'
 import { splitSignature } from '@ethersproject/bytes'
 import { Contract } from '@ethersproject/contracts'
 import { TransactionResponse } from '@ethersproject/providers'
-import { Flex, Text } from 'rebass'
-import { ThemeContext } from 'styled-components'
-import { t, Trans } from '@lingui/macro'
-
 import {
-  computePriceImpact,
   Currency,
   CurrencyAmount,
   Fraction,
@@ -16,60 +10,65 @@ import {
   Token,
   TokenAmount,
   WETH,
+  computePriceImpact,
 } from '@kyberswap/ks-sdk-core'
+import { Trans, t } from '@lingui/macro'
+import JSBI from 'jsbi'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import { Flex, Text } from 'rebass'
 
-import { ButtonPrimary, ButtonLight, ButtonError, ButtonConfirmed } from 'components/Button'
+import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from 'components/Button'
 import { BlackCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
+import CurrencyInputPanel from 'components/CurrencyInputPanel'
+import CurrencyLogo from 'components/CurrencyLogo'
+import CurrentPrice from 'components/CurrentPrice'
+import DoubleCurrencyLogo from 'components/DoubleLogo'
+import Loader from 'components/Loader'
+import Row, { AutoRow, RowBetween, RowFixed } from 'components/Row'
+import Slider from 'components/Slider'
 import TransactionConfirmationModal, {
   ConfirmationModalContent,
   TransactionErrorContent,
 } from 'components/TransactionConfirmationModal'
-import CurrencyInputPanel from 'components/CurrencyInputPanel'
-import DoubleCurrencyLogo from 'components/DoubleLogo'
-import Row, { AutoRow, RowBetween, RowFixed } from 'components/Row'
-import Loader from 'components/Loader'
-import { Dots } from 'components/swap/styleds'
-import Slider from 'components/Slider'
-import CurrencyLogo from 'components/CurrencyLogo'
-import FormattedPriceImpact from 'components/swap/FormattedPriceImpact'
 import ZapError from 'components/ZapError'
-import CurrentPrice from 'components/CurrentPrice'
+import FormattedPriceImpact from 'components/swap/FormattedPriceImpact'
+import { Dots } from 'components/swap/styleds'
+import { NETWORKS_INFO } from 'constants/networks'
+import { nativeOnChain } from 'constants/tokens'
 import { useActiveWeb3React } from 'hooks'
 import { useCurrency } from 'hooks/Tokens'
+import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
 import { usePairContract } from 'hooks/useContract'
 import useIsArgentWallet from 'hooks/useIsArgentWallet'
+import useTheme from 'hooks/useTheme'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
-import { useApproveCallback, ApprovalState } from 'hooks/useApproveCallback'
-import { useTransactionAdder } from 'state/transactions/hooks'
-import { useZapOutActionHandlers } from 'state/burn/hooks'
-import { useDerivedZapOutInfo, useBurnState } from 'state/burn/hooks'
-import { Field } from 'state/burn/actions'
 import { useTokensPrice, useWalletModalToggle } from 'state/application/hooks'
+import { Field } from 'state/burn/actions'
+import { useBurnState, useDerivedZapOutInfo, useZapOutActionHandlers } from 'state/burn/hooks'
+import { useTransactionAdder } from 'state/transactions/hooks'
 import { useIsExpertMode, useUserSlippageTolerance } from 'state/user/hooks'
 import { StyledInternalLink, TYPE, UppercaseText } from 'theme'
-import { Wrapper } from '../Pool/styleds'
 import { calculateGasMargin, formattedNum, getZapContract } from 'utils'
-import { useCurrencyConvertedToNative } from 'utils/dmm'
-import useDebouncedChangeHandler from 'utils/useDebouncedChangeHandler'
 import { currencyId } from 'utils/currencyId'
+import { useCurrencyConvertedToNative } from 'utils/dmm'
 import { formatJSBIValue } from 'utils/formatBalance'
 import { computePriceImpactWithoutFee, warningSeverity } from 'utils/prices'
+import { reportException } from 'utils/sentry'
+import useDebouncedChangeHandler from 'utils/useDebouncedChangeHandler'
+
+import { Wrapper } from '../Pool/styleds'
 import {
-  SecondColumn,
+  CurrentPriceWrapper,
+  DetailBox,
+  DetailWrapper,
+  FirstColumn,
   GridColumn,
   MaxButton,
-  FirstColumn,
-  DetailWrapper,
-  DetailBox,
-  TokenWrapper,
   ModalDetailWrapper,
-  CurrentPriceWrapper,
+  SecondColumn,
+  TokenWrapper,
 } from './styled'
-import { nativeOnChain } from 'constants/tokens'
-import JSBI from 'jsbi'
-import { NETWORKS_INFO } from 'constants/networks'
-import { reportException } from 'utils/sentry'
 
 export default function ZapOut({
   currencyIdA,
@@ -87,7 +86,7 @@ export default function ZapOut({
   const nativeB = useCurrencyConvertedToNative(currencyB as Currency)
   const [tokenA, tokenB] = useMemo(() => [currencyA?.wrapped, currencyB?.wrapped], [currencyA, currencyB])
 
-  const theme = useContext(ThemeContext)
+  const theme = useTheme()
 
   const expertMode = useIsExpertMode()
 
@@ -260,13 +259,14 @@ export default function ZapOut({
     [_onUserInput],
   )
 
-  const onLiquidityInput = useCallback((typedValue: string): void => onUserInput(Field.LIQUIDITY, typedValue), [
-    onUserInput,
-  ])
-  const onCurrencyInput = useCallback((typedValue: string): void => onUserInput(independentTokenField, typedValue), [
-    independentTokenField,
-    onUserInput,
-  ])
+  const onLiquidityInput = useCallback(
+    (typedValue: string): void => onUserInput(Field.LIQUIDITY, typedValue),
+    [onUserInput],
+  )
+  const onCurrencyInput = useCallback(
+    (typedValue: string): void => onUserInput(independentTokenField, typedValue),
+    [independentTokenField, onUserInput],
+  )
 
   // tx sending
   const addTransactionWithType = useTransactionAdder()
@@ -520,8 +520,9 @@ export default function ZapOut({
         </AutoRow>
 
         <TYPE.italic fontSize={12} fontWeight={400} color={theme.subText} textAlign="left">
-          {t`Output is estimated. If the price changes by more than ${allowedSlippage /
-            100}% your transaction will revert.`}
+          {t`Output is estimated. If the price changes by more than ${
+            allowedSlippage / 100
+          }% your transaction will revert.`}
         </TYPE.italic>
       </AutoColumn>
     )

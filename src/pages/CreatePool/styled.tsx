@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 
-import { AutoColumn } from 'components/Column'
 import Card from 'components/Card'
+import { AutoColumn } from 'components/Column'
 import NumericalInput from 'components/NumericalInput'
 
 export const PageWrapper = styled.div`

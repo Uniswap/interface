@@ -1,12 +1,13 @@
-import React, { useRef, useState } from 'react'
-import { Text } from 'rebass'
 import { Trans } from '@lingui/macro'
+import React, { useRef, useState } from 'react'
 import { ChevronDown } from 'react-feather'
+import { Text } from 'rebass'
 import styled from 'styled-components'
-import { StyledAddressButton } from 'pages/TrueSight/components/AddressButton'
+
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
-import { OptionsContainer } from 'pages/TrueSight/styled'
 import useTheme from 'hooks/useTheme'
+import { StyledAddressButton } from 'pages/TrueSight/components/AddressButton'
+import { OptionsContainer } from 'pages/TrueSight/styled'
 import { ExternalLink } from 'theme'
 
 const CommunityButton = ({ communityOption }: { communityOption: { [p: string]: string } }) => {

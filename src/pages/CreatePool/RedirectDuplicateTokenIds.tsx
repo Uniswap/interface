@@ -1,5 +1,6 @@
 import React from 'react'
 import { Redirect, RouteComponentProps } from 'react-router-dom'
+
 import CreatePool from './index'
 
 export default function RedirectDuplicateTokenIds(

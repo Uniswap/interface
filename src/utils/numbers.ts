@@ -1,4 +1,5 @@
 import numbro from 'numbro'
+
 import { EPSILON } from 'constants/index'
 
 // using a currency library here in case we want to add more in future

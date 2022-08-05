@@ -1,5 +1,5 @@
-import { useCallback } from 'react'
 import { BigNumber } from 'ethers'
+import { useCallback } from 'react'
 
 import { CONTRACT_NOT_FOUND_MSG } from 'constants/messages'
 import { useFairLaunchContract } from 'hooks/useContract'

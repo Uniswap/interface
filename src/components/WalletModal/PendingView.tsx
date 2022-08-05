@@ -1,9 +1,10 @@
+import { Trans } from '@lingui/macro'
 import { AbstractConnector } from '@web3-react/abstract-connector'
+import { darken } from 'polished'
 import React from 'react'
 import styled from 'styled-components'
-import { Trans } from '@lingui/macro'
+
 import { SUPPORTED_WALLETS } from '../../constants'
-import { darken } from 'polished'
 import Loader from '../Loader'
 import { WarningBox } from './WarningBox'
 

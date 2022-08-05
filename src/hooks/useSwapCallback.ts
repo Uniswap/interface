@@ -1,27 +1,29 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Contract } from '@ethersproject/contracts'
-import { Percent, TradeType, Currency } from '@kyberswap/ks-sdk-core'
 import { Router, Trade } from '@kyberswap/ks-sdk-classic'
-import JSBI from 'jsbi'
+import { Currency, Percent, TradeType } from '@kyberswap/ks-sdk-core'
 import { SwapRouter as ProAmmRouter, Trade as ProAmmTrade } from '@kyberswap/ks-sdk-elastic'
+import JSBI from 'jsbi'
 import { useMemo } from 'react'
+
+import { formatCurrencyAmount } from 'utils/formatBalance'
+import { reportException } from 'utils/sentry'
+
 import { BIPS_BASE, INITIAL_ALLOWED_SLIPPAGE } from '../constants'
 import { useTransactionAdder } from '../state/transactions/hooks'
 import {
   basisPointsToPercent,
   calculateGasMargin,
-  getProAmmRouterContract,
   getDynamicFeeRouterContract,
+  getProAmmRouterContract,
   isAddress,
   shortenAddress,
 } from '../utils'
 import isZero from '../utils/isZero'
-import { useActiveWeb3React } from './index'
-import useTransactionDeadline from './useTransactionDeadline'
-import useENS from './useENS'
 import { useTradeExactIn } from './Trades'
-import { formatCurrencyAmount } from 'utils/formatBalance'
-import { reportException } from 'utils/sentry'
+import { useActiveWeb3React } from './index'
+import useENS from './useENS'
+import useTransactionDeadline from './useTransactionDeadline'
 
 export type AnyTrade = Trade<Currency, Currency, TradeType> | ProAmmTrade<Currency, Currency, TradeType>
 

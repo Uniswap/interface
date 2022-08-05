@@ -1,7 +1,9 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { useActiveWeb3React } from 'hooks'
 import { useCallback, useEffect, useState } from 'react'
+
+import { useActiveWeb3React } from 'hooks'
 import { useBlockNumber } from 'state/application/hooks'
+
 import { useFairLaunchContract } from './useContract'
 
 export interface BalanceProps {

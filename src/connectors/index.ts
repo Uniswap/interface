@@ -1,16 +1,17 @@
 import { Web3Provider } from '@ethersproject/providers'
-// import { InjectedConnector } from '@web3-react/injected-connector'
-import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
-import { WalletLinkConnector } from '@web3-react/walletlink-connector'
+import { ChainId } from '@kyberswap/ks-sdk-core'
+import { InjectedConnector } from '@web3-react/injected-connector'
+import { LedgerConnector } from '@web3-react/ledger-connector'
 import { PortisConnector } from '@web3-react/portis-connector'
 import { TrezorConnector } from '@web3-react/trezor-connector'
-import { LedgerConnector } from '@web3-react/ledger-connector'
+import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
+import { WalletLinkConnector } from '@web3-react/walletlink-connector'
+
+// import { InjectedConnector } from '@pangolindex/web3-react-injected-connector'
+import { NETWORKS_INFO, SUPPORTED_NETWORKS } from 'constants/networks'
+
 import { FortmaticConnector } from './Fortmatic'
 import { NetworkConnector } from './NetworkConnector'
-import { ChainId } from '@kyberswap/ks-sdk-core'
-
-import { InjectedConnector } from '@pangolindex/web3-react-injected-connector'
-import { NETWORKS_INFO, SUPPORTED_NETWORKS } from 'constants/networks'
 
 const NETWORK_URL = NETWORKS_INFO[ChainId.MAINNET].rpcUrl
 const FORMATIC_KEY = process.env.REACT_APP_FORTMATIC_KEY // todo: remove

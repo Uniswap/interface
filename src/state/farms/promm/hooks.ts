@@ -1,33 +1,35 @@
-import { useSelector } from 'react-redux'
-import { AppState } from 'state'
-import { useAppDispatch } from 'state/hooks'
-import { useCallback, useMemo, useState, useRef, useEffect } from 'react'
-import { useActiveWeb3React, providers } from 'hooks'
-import { FARM_CONTRACTS, VERSION } from 'constants/v2'
-import { ChainId, Token, TokenAmount } from '@kyberswap/ks-sdk-core'
-import { updatePrommFarms, setLoading } from './actions'
-import { useProMMFarmContracts, useProMMFarmContract, useProAmmNFTPositionManagerContract } from 'hooks/useContract'
-import { BigNumber } from 'ethers'
-import { ProMMFarm, ProMMFarmResponse } from './types'
-import { CONTRACT_NOT_FOUND_MSG } from 'constants/messages'
-import { useTransactionAdder } from 'state/transactions/hooks'
-import { calculateGasMargin, getContractForReading, isAddressString } from 'utils'
-import { getCreate2Address } from '@ethersproject/address'
-import { defaultAbiCoder } from '@ethersproject/abi'
-import { keccak256 } from '@ethersproject/solidity'
-import PROMM_POOL_ABI from 'constants/abis/v2/pool.json'
-import { useTokens } from 'hooks/Tokens'
-import { FeeAmount, Pool, Position } from '@kyberswap/ks-sdk-elastic'
-import { usePools } from 'hooks/usePools'
-import { t } from '@lingui/macro'
-import { PositionDetails } from 'types/position'
-import usePrevious from 'hooks/usePrevious'
 import { useQuery } from '@apollo/client'
+import { defaultAbiCoder } from '@ethersproject/abi'
+import { getCreate2Address } from '@ethersproject/address'
+import { keccak256 } from '@ethersproject/solidity'
+import { ChainId, Token, TokenAmount } from '@kyberswap/ks-sdk-core'
+import { FeeAmount, Pool, Position } from '@kyberswap/ks-sdk-elastic'
+import { t } from '@lingui/macro'
+import { BigNumber } from 'ethers'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useSelector } from 'react-redux'
+
 import { PROMM_JOINED_POSITION } from 'apollo/queries/promm'
-import { useETHPrice, useTokensPrice } from 'state/application/hooks'
-import { usePoolBlocks } from 'state/prommPools/hooks'
+import PROMM_POOL_ABI from 'constants/abis/v2/pool.json'
 import { ZERO_ADDRESS } from 'constants/index'
+import { CONTRACT_NOT_FOUND_MSG } from 'constants/messages'
 import { NETWORKS_INFO } from 'constants/networks'
+import { FARM_CONTRACTS, VERSION } from 'constants/v2'
+import { providers, useActiveWeb3React } from 'hooks'
+import { useTokens } from 'hooks/Tokens'
+import { useProAmmNFTPositionManagerContract, useProMMFarmContract, useProMMFarmContracts } from 'hooks/useContract'
+import { usePools } from 'hooks/usePools'
+import usePrevious from 'hooks/usePrevious'
+import { AppState } from 'state'
+import { useETHPrice, useTokensPrice } from 'state/application/hooks'
+import { useAppDispatch } from 'state/hooks'
+import { usePoolBlocks } from 'state/prommPools/hooks'
+import { useTransactionAdder } from 'state/transactions/hooks'
+import { PositionDetails } from 'types/position'
+import { calculateGasMargin, getContractForReading, isAddressString } from 'utils'
+
+import { setLoading, updatePrommFarms } from './actions'
+import { ProMMFarm, ProMMFarmResponse } from './types'
 
 export const useProMMFarms = () => {
   return useSelector((state: AppState) => state.prommFarms)
@@ -466,7 +468,7 @@ export const useProMMFarmTVL = (fairlaunchAddress: string, pid: number) => {
 
   return useMemo(() => {
     let tvl = 0
-    data?.joinedPositions.map(({ position, pool }) => {
+    data?.joinedPositions.forEach(({ position, pool }) => {
       const token0 = new Token(chainId as ChainId, pool.token0.id, Number(pool.token0.decimals), pool.token0.symbol)
       const token1 = new Token(chainId as ChainId, pool.token1.id, Number(pool.token1.decimals), pool.token1.symbol)
       const poolObj = new Pool(

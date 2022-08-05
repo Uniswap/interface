@@ -1,6 +1,7 @@
+import { Trans } from '@lingui/macro'
 import React from 'react'
 import styled from 'styled-components'
-import { Trans } from '@lingui/macro'
+
 import { TYPE } from '../../theme'
 
 const Wrapper = styled.button<{ isActive?: boolean; activeElement?: boolean }>`

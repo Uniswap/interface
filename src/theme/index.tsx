@@ -1,14 +1,16 @@
 import React, { useMemo } from 'react'
+import { Text, TextProps } from 'rebass'
 import styled, {
+  DefaultTheme,
   ThemeProvider as StyledComponentsThemeProvider,
   createGlobalStyle,
   css,
-  DefaultTheme,
 } from 'styled-components'
-import { useIsDarkMode } from 'state/user/hooks'
-import { Text, TextProps } from 'rebass'
-import { Colors } from './styled'
+
 import { Z_INDEXS } from 'constants/styles'
+import { useIsDarkMode } from 'state/user/hooks'
+
+import { Colors } from './styled'
 
 export * from './components'
 
@@ -21,9 +23,9 @@ export const MEDIA_WIDTHS = {
   upToXXL: 1800,
 }
 
-const mediaWidthTemplates: { [width in keyof typeof MEDIA_WIDTHS]: typeof css } = (Object.keys(
-  MEDIA_WIDTHS,
-) as (keyof typeof MEDIA_WIDTHS)[]).reduce((accumulator, size) => {
+const mediaWidthTemplates: { [width in keyof typeof MEDIA_WIDTHS]: typeof css } = (
+  Object.keys(MEDIA_WIDTHS) as (keyof typeof MEDIA_WIDTHS)[]
+).reduce((accumulator, size) => {
   accumulator[size] = (a: any, b: any, c: any) => css`
     @media (max-width: ${MEDIA_WIDTHS[size]}px) {
       ${css(a, b, c)}

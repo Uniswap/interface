@@ -1,6 +1,6 @@
+import { Trans } from '@lingui/macro'
 import React from 'react'
 import { Text } from 'rebass'
-import { Trans } from '@lingui/macro'
 
 import useTheme from 'hooks/useTheme'
 import { getFormattedTimeFromSecond } from 'utils/formatTime'

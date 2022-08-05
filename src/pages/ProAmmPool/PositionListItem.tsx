@@ -1,36 +1,37 @@
-import React, { useState } from 'react'
+import { ChainId, CurrencyAmount, Price, Token } from '@kyberswap/ks-sdk-core'
 import { Position } from '@kyberswap/ks-sdk-elastic'
+import { Trans, t } from '@lingui/macro'
+import { useWeb3React } from '@web3-react/core'
+import React, { useMemo, useState } from 'react'
+import { Link } from 'react-router-dom'
+import { Flex, Text } from 'rebass'
+import styled from 'styled-components'
+
+import { ButtonEmpty, ButtonOutlined, ButtonPrimary } from 'components/Button'
+import { LightCard } from 'components/Card'
+import Divider from 'components/Divider'
+import ProAmmFee from 'components/ProAmm/ProAmmFee'
+import ProAmmPoolInfo from 'components/ProAmm/ProAmmPoolInfo'
+import ProAmmPooledTokens from 'components/ProAmm/ProAmmPooledTokens'
+import ProAmmPriceRange from 'components/ProAmm/ProAmmPriceRange'
+import { RowBetween } from 'components/Row'
+import { MouseoverTooltip } from 'components/Tooltip'
+import { PROMM_ANALYTICS_URL } from 'constants/index'
+import { VERSION } from 'constants/v2'
 import { useToken } from 'hooks/Tokens'
 import useIsTickAtLimit from 'hooks/useIsTickAtLimit'
-import { usePool } from 'hooks/usePools'
-import { useMemo } from 'react'
-import { unwrappedToken } from 'utils/wrappedCurrency'
-import { PositionDetails } from 'types/position'
-import { CurrencyAmount, Price, Token, ChainId } from '@kyberswap/ks-sdk-core'
-import styled from 'styled-components'
-import { Link } from 'react-router-dom'
-import { ExternalLink, StyledInternalLink } from 'theme'
-import { Trans, t } from '@lingui/macro'
-import { currencyId } from 'utils/currencyId'
-import { LightCard } from 'components/Card'
-import ProAmmPoolInfo from 'components/ProAmm/ProAmmPoolInfo'
-import { ButtonEmpty, ButtonOutlined, ButtonPrimary } from 'components/Button'
-import ProAmmPooledTokens from 'components/ProAmm/ProAmmPooledTokens'
-import ProAmmFee from 'components/ProAmm/ProAmmFee'
-import ProAmmPriceRange from 'components/ProAmm/ProAmmPriceRange'
-import { Flex, Text } from 'rebass'
-import { useWeb3React } from '@web3-react/core'
-import Divider from 'components/Divider'
-import ContentLoader from './ContentLoader'
-import { PROMM_ANALYTICS_URL } from 'constants/index'
-import { useTokensPrice } from 'state/application/hooks'
-import { MouseoverTooltip } from 'components/Tooltip'
-import { UserPositionFarm } from 'state/farms/promm/types'
-import useTheme from 'hooks/useTheme'
-import { RowBetween } from 'components/Row'
-import { formatDollarAmount } from 'utils/numbers'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
-import { VERSION } from 'constants/v2'
+import { usePool } from 'hooks/usePools'
+import useTheme from 'hooks/useTheme'
+import { useTokensPrice } from 'state/application/hooks'
+import { UserPositionFarm } from 'state/farms/promm/types'
+import { ExternalLink, StyledInternalLink } from 'theme'
+import { PositionDetails } from 'types/position'
+import { currencyId } from 'utils/currencyId'
+import { formatDollarAmount } from 'utils/numbers'
+import { unwrappedToken } from 'utils/wrappedCurrency'
+
+import ContentLoader from './ContentLoader'
 
 const StyledPositionCard = styled(LightCard)`
   border: none;
@@ -99,9 +100,7 @@ interface PositionListItemProps {
   refe?: React.MutableRefObject<any>
 }
 
-export function getPriceOrderingFromPositionForUI(
-  position?: Position,
-): {
+export function getPriceOrderingFromPositionForUI(position?: Position): {
   priceLower?: Price<Token, Token>
   priceUpper?: Price<Token, Token>
   quote?: Token

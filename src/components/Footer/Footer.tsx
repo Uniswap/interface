@@ -1,19 +1,20 @@
-import React from 'react'
-import styled from 'styled-components'
-import { Flex, Text } from 'rebass'
-import TwitterIcon from 'components/Icons/TwitterIcon'
-import Discord from 'components/Icons/Discord'
-import { Telegram } from 'components/Icons'
-import { KYBER_NETWORK_DISCORD_URL, KYBER_NETWORK_TWITTER_URL } from 'constants/index'
-import Medium from 'components/Icons/Medium'
-import { ExternalLink } from 'theme'
 import { Trans, t } from '@lingui/macro'
-import PoweredByIconDark from 'components/Icons/PoweredByIconDark'
-import { useIsDarkMode } from 'state/user/hooks'
-import PoweredByIconLight from 'components/Icons/PoweredByIconLight'
-import InfoHelper from 'components/InfoHelper'
+import React from 'react'
 import { useMedia } from 'react-use'
+import { Flex, Text } from 'rebass'
+import styled from 'styled-components'
+
+import { Telegram } from 'components/Icons'
+import Discord from 'components/Icons/Discord'
+import Medium from 'components/Icons/Medium'
+import PoweredByIconDark from 'components/Icons/PoweredByIconDark'
+import PoweredByIconLight from 'components/Icons/PoweredByIconLight'
+import TwitterIcon from 'components/Icons/TwitterIcon'
+import InfoHelper from 'components/InfoHelper'
+import { KYBER_NETWORK_DISCORD_URL, KYBER_NETWORK_TWITTER_URL } from 'constants/index'
 import useTheme from 'hooks/useTheme'
+import { useIsDarkMode } from 'state/user/hooks'
+import { ExternalLink } from 'theme'
 
 const FooterWrapper = styled.div`
   background: ${({ theme }) => theme.buttonGray + '33'};
@@ -130,7 +131,7 @@ function Footer() {
                 src={
                   !isDarkMode
                     ? 'https://chainsecurity.com/wp-content/themes/chainsecurity-wp/resources/images/temp/logo.svg'
-                    : require('../../assets/svg/chainsecurity.svg')
+                    : require('../../assets/svg/chainsecurity.svg').default
                 }
                 alt=""
                 width="98px"

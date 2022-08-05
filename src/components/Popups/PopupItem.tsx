@@ -1,14 +1,16 @@
-import React, { useCallback, useContext, useEffect } from 'react'
+import { useCallback, useEffect } from 'react'
 import { X } from 'react-feather'
-import { useSpring } from 'react-spring/web'
-import styled, { DefaultTheme, keyframes, ThemeContext } from 'styled-components'
-import { animated } from 'react-spring'
+import { animated, useSpring } from 'react-spring'
+import { Flex } from 'rebass'
+import styled, { DefaultTheme, keyframes } from 'styled-components'
+
+import useTheme from 'hooks/useTheme'
 import { PopupContentListUpdate, PopupContentSimple, PopupContentTxn, PopupType } from 'state/application/actions'
 import { NotificationType, useRemovePopup } from 'state/application/hooks'
+
 import ListUpdatePopup from './ListUpdatePopup'
-import TransactionPopup from './TransactionPopup'
 import SimplePopup from './SimplePopup'
-import { Flex } from 'rebass'
+import TransactionPopup from './TransactionPopup'
 
 export const StyledClose = styled(X)`
   margin-left: 10px;
@@ -118,7 +120,7 @@ export default function PopupItem({
     }
   }, [removeAfterMs, removeThisPopup])
 
-  const theme = useContext(ThemeContext)
+  const theme = useTheme()
 
   let notiType: NotificationType
   let popupContent

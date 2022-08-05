@@ -1,15 +1,17 @@
-import React, { useContext } from 'react'
-import { useActiveWeb3React } from '../../hooks'
 import { Trans } from '@lingui/macro'
-import { AutoColumn, ColumnCenter } from '../Column'
-import styled, { ThemeContext } from 'styled-components'
-import { RowBetween } from '../Row'
-import { TYPE, CloseIcon, CustomLightSpinner } from '../../theme'
+import React from 'react'
 import { ArrowUpCircle } from 'react-feather'
+import styled from 'styled-components'
+
+import useTheme from 'hooks/useTheme'
 
 import Circle from '../../assets/images/blue-loader.svg'
-import { getEtherscanLink } from '../../utils'
+import { useActiveWeb3React } from '../../hooks'
+import { CloseIcon, CustomLightSpinner, TYPE } from '../../theme'
 import { ExternalLink } from '../../theme/components'
+import { getEtherscanLink } from '../../utils'
+import { AutoColumn, ColumnCenter } from '../Column'
+import { RowBetween } from '../Row'
 
 const ConfirmOrLoadingWrapper = styled.div`
   width: 100%;
@@ -49,7 +51,7 @@ export function SubmittedView({
   onDismiss: () => void
   hash: string | undefined
 }) {
-  const theme = useContext(ThemeContext)
+  const theme = useTheme()
   const { chainId } = useActiveWeb3React()
 
   return (

@@ -1,7 +1,7 @@
-import { createAction } from '@reduxjs/toolkit'
 import { BigNumber } from '@ethersproject/bignumber'
-
 import { Token } from '@kyberswap/ks-sdk-core'
+import { createAction } from '@reduxjs/toolkit'
+
 import { RewardLockerVersion } from 'state/farms/types'
 
 export const setLoading = createAction<boolean>('vesting/setLoading')

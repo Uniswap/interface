@@ -1,7 +1,10 @@
-import { createReducer } from '@reduxjs/toolkit'
 import { BigNumber } from '@ethersproject/bignumber'
-
 import { Token } from '@kyberswap/ks-sdk-core'
+import { createReducer } from '@reduxjs/toolkit'
+
+import { RewardLockerVersion } from 'state/farms/types'
+import { reportException } from 'utils/sentry'
+
 import {
   setAttemptingTxn,
   setLoading,
@@ -10,8 +13,7 @@ import {
   setTxHash,
   setVestingError,
 } from './actions'
-import { RewardLockerVersion } from 'state/farms/types'
-import { reportException } from 'utils/sentry'
+
 export interface VestingState {
   readonly loading: boolean
   readonly schedulesByRewardLocker: {

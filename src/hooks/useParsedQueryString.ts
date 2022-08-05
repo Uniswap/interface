@@ -1,4 +1,4 @@
-import { parse, ParsedQs } from 'qs'
+import { ParsedQs, parse } from 'qs'
 import { useMemo } from 'react'
 import { useLocation } from 'react-router-dom'
 

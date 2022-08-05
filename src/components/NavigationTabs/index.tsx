@@ -1,19 +1,21 @@
-import React from 'react'
-import styled, { css } from 'styled-components'
+import { Trans, t } from '@lingui/macro'
 import { darken } from 'polished'
-import { NavLink, useHistory } from 'react-router-dom'
+import React from 'react'
 import { ArrowLeft, Trash } from 'react-feather'
-import { t, Trans } from '@lingui/macro'
-import { Flex } from 'rebass'
-import { ButtonEmpty } from 'components/Button'
-import { RowBetween } from '../Row'
-import QuestionHelper from '../QuestionHelper'
-import TransactionSettings from 'components/TransactionSettings'
-import { ShareButtonWithModal } from 'components/ShareModal'
+import { NavLink, useHistory } from 'react-router-dom'
 import { useMedia } from 'react-use'
-import useTheme from 'hooks/useTheme'
-import Tutorial, { TutorialType } from 'components/Tutorial'
+import { Flex } from 'rebass'
+import styled, { css } from 'styled-components'
+
 import { ReactComponent as TutorialIcon } from 'assets/svg/play_circle_outline.svg'
+import { ButtonEmpty } from 'components/Button'
+import { ShareButtonWithModal } from 'components/ShareModal'
+import TransactionSettings from 'components/TransactionSettings'
+import Tutorial, { TutorialType } from 'components/Tutorial'
+import useTheme from 'hooks/useTheme'
+
+import QuestionHelper from '../QuestionHelper'
+import { RowBetween } from '../Row'
 
 const Tabs = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}

@@ -1,18 +1,17 @@
-import React from 'react'
-import { Text, Flex } from 'rebass'
 import { Trans } from '@lingui/macro'
+import React from 'react'
 import { ChevronDown } from 'react-feather'
+import { Flex, Text } from 'rebass'
 
-import { ExternalLink } from 'theme'
-import TwitterIcon from 'components/Icons/TwitterIcon'
 import Facebook from 'components/Icons/Facebook'
 import Reddit from 'components/Icons/Reddit'
+import TwitterIcon from 'components/Icons/TwitterIcon'
 import ModalCommunity from 'components/ModalCommunity'
-import { useToggleModal } from 'state/application/hooks'
-import { ApplicationModal } from 'state/application/actions'
-
-import { FieldName, FieldValue } from 'pages/TrueSight/components/TrendingSoonLayout/TrendingSoonTokenItem'
 import useTheme from 'hooks/useTheme'
+import { FieldName, FieldValue } from 'pages/TrueSight/components/TrendingSoonLayout/TrendingSoonTokenItem'
+import { ApplicationModal } from 'state/application/actions'
+import { useToggleModal } from 'state/application/hooks'
+import { ExternalLink } from 'theme'
 
 type Props = {
   socialURLs: Record<string, string>

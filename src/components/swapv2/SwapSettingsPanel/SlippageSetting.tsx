@@ -1,13 +1,13 @@
-import React, { useState, useRef } from 'react'
-import { t, Trans } from '@lingui/macro'
-import styled, { css } from 'styled-components'
+import { Trans, t } from '@lingui/macro'
+import React, { useRef, useState } from 'react'
 import { isMobile } from 'react-device-detect'
 import { Flex, Text } from 'rebass'
+import styled, { css } from 'styled-components'
 
 import QuestionHelper from 'components/QuestionHelper'
-import { useUserSlippageTolerance } from 'state/user/hooks'
 import { MAX_SLIPPAGE_IN_BIPS } from 'constants/index'
 import useTheme from 'hooks/useTheme'
+import { useUserSlippageTolerance } from 'state/user/hooks'
 
 const DefaultSlippages = [10, 50, 100]
 

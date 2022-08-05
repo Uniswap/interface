@@ -1,8 +1,9 @@
 import { ChainId } from '@kyberswap/ks-sdk-core'
-import { NetworkInfo } from '../type'
-import { createClient } from 'utils/client'
 
 import BTT from 'assets/networks/bttc.png'
+import { createClient } from 'utils/client'
+
+import { NetworkInfo } from '../type'
 
 const EMPTY = ''
 const EMPTY_ARRAY: any[] = []

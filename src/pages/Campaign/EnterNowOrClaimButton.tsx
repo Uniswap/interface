@@ -1,10 +1,11 @@
 import React from 'react'
-import { CampaignState } from 'state/campaigns/actions'
 import { useSelector } from 'react-redux'
-import { AppState } from 'state'
-import CampaignButtonWithOptions from 'pages/Campaign/CampaignButtonWithOptions'
+
 import { BIG_INT_ZERO } from 'constants/index'
 import useTemporaryClaimedRefsManager from 'hooks/campaigns/useTemporaryClaimedRefsManager'
+import CampaignButtonWithOptions from 'pages/Campaign/CampaignButtonWithOptions'
+import { AppState } from 'state'
+import { CampaignState } from 'state/campaigns/actions'
 
 export default function EnterNowOrClaimButton() {
   const selectedCampaign = useSelector((state: AppState) => state.campaigns.selectedCampaign)

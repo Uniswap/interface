@@ -1,27 +1,40 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { TransactionResponse } from '@ethersproject/providers'
-import { Currency, Fraction, TokenAmount, WETH, ChainId } from '@kyberswap/ks-sdk-core'
+import { ChainId, Currency, Fraction, TokenAmount, WETH } from '@kyberswap/ks-sdk-core'
+import { Trans, t } from '@lingui/macro'
+import { parseUnits } from 'ethers/lib/utils'
 import JSBI from 'jsbi'
-import React, { useCallback, useContext, useMemo, useState, useEffect } from 'react'
-import { Plus, AlertTriangle } from 'react-feather'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import { AlertTriangle, Plus } from 'react-feather'
 import { Link, RouteComponentProps } from 'react-router-dom'
-import { Text, Flex } from 'rebass'
-import { ThemeContext } from 'styled-components'
-import { t, Trans } from '@lingui/macro'
+import { Flex, Text } from 'rebass'
+
+import { ConfirmAddModalBottom } from 'components/ConfirmAddModalBottom'
+import Loader from 'components/Loader'
+import { PoolPriceBar, PoolPriceRangeBarToggle } from 'components/PoolPriceBar'
+import QuestionHelper from 'components/QuestionHelper'
+import { TutorialType } from 'components/Tutorial'
+import { NETWORKS_INFO } from 'constants/networks'
+import { nativeOnChain } from 'constants/tokens'
+import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
+import useTheme from 'hooks/useTheme'
+import useTokensMarketPrice from 'hooks/useTokensMarketPrice'
+import { useDerivedPairInfo } from 'state/pair/hooks'
+import { feeRangeCalc, useCurrencyConvertedToNative } from 'utils/dmm'
+import isZero from 'utils/isZero'
 
 import { ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
 import { BlueCard, LightCard } from '../../components/Card'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
-import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import { AddRemoveTabs, LiquidityAction } from '../../components/NavigationTabs'
 import Row, { AutoRow, RowBetween, RowFlat } from '../../components/Row'
-
+import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'
 import {
   CREATE_POOL_AMP_HINT,
-  STATIC_FEE_OPTIONS,
-  ONLY_STATIC_FEE_CHAINS,
   ONLY_DYNAMIC_FEE_CHAINS,
+  ONLY_STATIC_FEE_CHAINS,
+  STATIC_FEE_OPTIONS,
 } from '../../constants'
 import { PairState } from '../../data/Reserves'
 import { useActiveWeb3React } from '../../hooks'
@@ -31,7 +44,6 @@ import useTransactionDeadline from '../../hooks/useTransactionDeadline'
 import { useTokensPrice, useWalletModalToggle } from '../../state/application/hooks'
 import { Field } from '../../state/mint/actions'
 import { useDerivedMintInfo, useMintActionHandlers, useMintState } from '../../state/mint/hooks'
-import useTokensMarketPrice from 'hooks/useTokensMarketPrice'
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import { useIsExpertMode, usePairAdderByTokens, useUserSlippageTolerance } from '../../state/user/hooks'
 import { StyledInternalLink, TYPE } from '../../theme'
@@ -42,35 +54,23 @@ import {
   getDynamicFeeRouterContract,
   getStaticFeeRouterContract,
 } from '../../utils'
+import { currencyId } from '../../utils/currencyId'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { Dots, Wrapper } from '../Pool/styleds'
-import { ConfirmAddModalBottom } from 'components/ConfirmAddModalBottom'
-import { currencyId } from '../../utils/currencyId'
-import { PoolPriceBar, PoolPriceRangeBarToggle } from 'components/PoolPriceBar'
-import QuestionHelper from 'components/QuestionHelper'
-import { parseUnits } from 'ethers/lib/utils'
-import isZero from 'utils/isZero'
-import { useCurrencyConvertedToNative, feeRangeCalc } from 'utils/dmm'
-import { useDerivedPairInfo } from 'state/pair/hooks'
-import Loader from 'components/Loader'
+import FeeTypeSelector from './FeeTypeSelector'
+import StaticFeeSelector from './StaticFeeSelector'
 import {
-  PageWrapper,
-  Container,
-  GridColumn,
-  TokenColumn,
   AMPColumn,
   ActiveText,
-  Section,
+  Container,
+  GridColumn,
   NumericalInput2,
+  PageWrapper,
+  Section,
+  TokenColumn,
   USDPrice,
   Warning,
 } from './styled'
-import { nativeOnChain } from 'constants/tokens'
-import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
-import { NETWORKS_INFO } from 'constants/networks'
-import FeeTypeSelector from './FeeTypeSelector'
-import StaticFeeSelector from './StaticFeeSelector'
-import { TutorialType } from 'components/Tutorial'
 
 export enum FEE_TYPE {
   STATIC = 'static',
@@ -84,7 +84,7 @@ export default function CreatePool({
   history,
 }: RouteComponentProps<{ currencyIdA?: string; currencyIdB?: string }>) {
   const { account, chainId, library } = useActiveWeb3React()
-  const theme = useContext(ThemeContext)
+  const theme = useTheme()
   const currencyA = useCurrency(currencyIdA)
   const currencyB = useCurrency(currencyIdB)
   const [selectedFee, setSelectedFee] = useState(STATIC_FEE_OPTIONS[chainId as ChainId]?.[0])

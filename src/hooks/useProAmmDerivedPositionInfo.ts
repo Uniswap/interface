@@ -1,11 +1,11 @@
 import { Pool, Position } from '@kyberswap/ks-sdk-elastic'
+
 import { PositionDetails } from 'types/position'
+
 import { useCurrency } from './Tokens'
 import { usePool } from './usePools'
 
-export function useProAmmDerivedPositionInfo(
-  positionDetails: PositionDetails | undefined
-): {
+export function useProAmmDerivedPositionInfo(positionDetails: PositionDetails | undefined): {
   position: Position | undefined
   pool: Pool | undefined
 } {
@@ -21,12 +21,12 @@ export function useProAmmDerivedPositionInfo(
       pool,
       liquidity: positionDetails.liquidity.toString(),
       tickLower: positionDetails.tickLower,
-      tickUpper: positionDetails.tickUpper
+      tickUpper: positionDetails.tickUpper,
     })
   }
 
   return {
     position,
-    pool: pool ?? undefined
+    pool: pool ?? undefined,
   }
 }

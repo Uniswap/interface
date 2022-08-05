@@ -1,6 +1,6 @@
+import { rgba } from 'polished'
 import React, { CSSProperties } from 'react'
 import styled from 'styled-components'
-import { rgba } from 'polished'
 
 export interface ToggleProps {
   id?: string

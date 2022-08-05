@@ -1,11 +1,12 @@
-import React, { useContext } from 'react'
 import { Trans } from '@lingui/macro'
+import React from 'react'
+import { AlertCircle, Info } from 'react-feather'
+import styled from 'styled-components'
+
 import Badge, { BadgeVariant } from 'components/Badge'
-import { AlertCircle } from 'react-feather'
-import styled, { ThemeContext } from 'styled-components'
+import useTheme from 'hooks/useTheme'
 
 import { MouseoverTooltip } from '../../components/Tooltip'
-import { Info } from 'react-feather'
 
 const BadgeWrapper = styled.div`
   font-size: 12px;
@@ -19,14 +20,6 @@ const BadgeText = styled.div`
   white-space: nowrap;
 `
 
-/* const ActiveDot = styled.span` */
-/*   background-color: ${({ theme }) => theme.primary}; */
-/*   border-radius: 50%; */
-/*   height: 8px; */
-/*   width: 8px; */
-/*   margin-right: 4px; */
-/* ` */
-
 export default function RangeBadge({
   removed,
   inRange,
@@ -36,7 +29,7 @@ export default function RangeBadge({
   inRange: boolean | undefined
   hideText?: boolean
 }) {
-  const theme = useContext(ThemeContext)
+  const theme = useTheme()
   return (
     <BadgeWrapper>
       {removed ? (

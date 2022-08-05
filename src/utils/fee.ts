@@ -1,10 +1,11 @@
-import { CurrencyAmount, Fraction, Currency } from '@kyberswap/ks-sdk-core'
-import { FeeConfig } from 'hooks/useSwapV2Callback'
-import { BIPS_BASE, RESERVE_USD_DECIMALS } from 'constants/index'
-import { Aggregator } from 'utils/aggregator'
-import { formattedNum } from 'utils/index'
+import { Currency, CurrencyAmount, Fraction } from '@kyberswap/ks-sdk-core'
 import { parseUnits } from 'ethers/lib/utils'
 import JSBI from 'jsbi'
+
+import { BIPS_BASE, RESERVE_USD_DECIMALS } from 'constants/index'
+import { FeeConfig } from 'hooks/useSwapV2Callback'
+import { Aggregator } from 'utils/aggregator'
+import { formattedNum } from 'utils/index'
 
 // This function is not correct, the result will be rounded.
 // Eg. 0.9999 (amountIn) * 0.0008 (fee bps currency_in) = 0.000799 (round 6 number, for example, swap from usdt)

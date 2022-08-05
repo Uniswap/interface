@@ -1,6 +1,6 @@
+import { Trans } from '@lingui/macro'
 import React from 'react'
 import styled from 'styled-components'
-import { Trans } from '@lingui/macro'
 
 const ToggleButton = styled.span<{ isActive?: boolean; size?: string }>`
   position: absolute;

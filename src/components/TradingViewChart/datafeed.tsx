@@ -1,21 +1,24 @@
-import {
-  ResolveCallback,
-  ErrorCallback,
-  LibrarySymbolInfo,
-  ResolutionString,
-  PeriodParams,
-  HistoryCallback,
-  Timezone,
-  SubscribeBarsCallback,
-} from './charting_library'
-import { useState, useEffect, useRef } from 'react'
-import { useActiveWeb3React } from 'hooks'
 import { ChainId, Currency, Token } from '@kyberswap/ks-sdk-core'
-import { USDC, USDT, DAI } from 'constants/index'
-import { STABLE_COINS_ADDRESS } from 'constants/tokens'
-import { Field } from 'state/swap/actions'
-import { Bar } from './charting_library'
+import { useEffect, useRef, useState } from 'react'
+
+import { DAI, USDC, USDT } from 'constants/index'
 import { NETWORKS_INFO } from 'constants/networks'
+import { STABLE_COINS_ADDRESS } from 'constants/tokens'
+import { useActiveWeb3React } from 'hooks'
+import { Field } from 'state/swap/actions'
+
+import {
+  Bar,
+  ErrorCallback,
+  HistoryCallback,
+  LibrarySymbolInfo,
+  PeriodParams,
+  ResolutionString,
+  ResolveCallback,
+  SubscribeBarsCallback,
+  Timezone,
+} from './charting_library'
+
 const configurationData = {
   supported_resolutions: ['1', '3', '5', '15', '30', '1H', '2H', '4H', '1D', '1W', '1M'],
 }
@@ -115,8 +118,9 @@ export const getCandlesApi = (
   return fetcherDextools(
     `${getNetworkString(
       chainId,
-    )}/api/Pancakeswap/history/candles?sym=${sym}&span=${span}&pair=${pairAddress}&ts=${ts}&v=${apiVersion}${res &&
-      '&res=' + res}`,
+    )}/api/Pancakeswap/history/candles?sym=${sym}&span=${span}&pair=${pairAddress}&ts=${ts}&v=${apiVersion}${
+      res && '&res=' + res
+    }`,
   )
 }
 const checkIsUSDToken = (chainId: ChainId | undefined, currency: Currency | undefined) => {
@@ -183,7 +187,7 @@ export const checkPairHasDextoolsData = async (
   if (currencyA.isNative || currencyB.isNative) {
     const token = (currencyA.isToken ? currencyA : currencyB) as Token
     if (token?.address) {
-      const data1 = await searchTokenPair(token.address, chainId)
+      const data1: { id: string }[] = await searchTokenPair(token.address, chainId)
       if (data1.length > 0 && data1[0].id) {
         const ver = (await getHistoryCandleStatus(data1[0].id, chainId)) || 0
 
@@ -418,7 +422,9 @@ export const useDatafeed = (currencies: Array<Currency | undefined>, pairAddress
         onErrorCallback(error as string)
       }
     },
-    searchSymbols: () => {},
+    searchSymbols: () => {
+      // TODO(viet-nv): check no empty function rule
+    },
     subscribeBars: (
       symbolInfo: LibrarySymbolInfo,
       resolution: ResolutionString,
@@ -489,6 +495,8 @@ export const useDatafeed = (currencies: Array<Currency | undefined>, pairAddress
       intervalRef.current = setInterval(getLivePrice, 30000)
       getLivePrice()
     },
-    unsubscribeBars: () => {},
+    unsubscribeBars: () => {
+      // TODO(viet-nv): check no empty function rule
+    },
   }
 }

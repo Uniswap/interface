@@ -1,9 +1,11 @@
 import { ChainId } from '@kyberswap/ks-sdk-core'
+
 import { ETHER_ADDRESS } from 'constants/index'
 import { nativeOnChain } from 'constants/tokens'
 import { AllTokenType } from 'hooks/Tokens'
 import { getTokenLogoURL } from 'utils'
 import { currencyId } from 'utils/currencyId'
+
 import { SuggestionPairData } from './request'
 
 export const isFavoritePair = (favoritePairs: SuggestionPairData[], item: SuggestionPairData) => {

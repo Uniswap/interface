@@ -1,38 +1,40 @@
-import React, { useCallback, useContext, useRef, useState } from 'react'
-import styled, { css, ThemeContext } from 'styled-components'
-import { t, Trans } from '@lingui/macro'
-import QuestionHelper from '../QuestionHelper'
-import { TYPE } from '../../theme'
-import { AutoColumn } from '../Column'
-import { RowBetween, RowFixed } from '../Row'
+import { parseUnits } from '@ethersproject/units'
+import { Trans, t } from '@lingui/macro'
 import { darken } from 'polished'
+import React, { useCallback, useRef, useState } from 'react'
+import { isMobile } from 'react-device-detect'
+import styled, { css } from 'styled-components'
+
+import TransactionSettingsIcon from 'components/Icons/TransactionSettingsIcon'
+import MenuFlyout from 'components/MenuFlyout'
+import LegacyToggle from 'components/Toggle/LegacyToggle'
+import Tooltip from 'components/Tooltip'
+import useTopTrendingSoonTokensInCurrentNetwork from 'components/TopTrendingSoonTokensInCurrentNetwork/useTopTrendingSoonTokensInCurrentNetwork'
+import { StyledActionButtonSwapForm } from 'components/swapv2/styleds'
+import { MAX_SLIPPAGE_IN_BIPS } from 'constants/index'
+import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
+import useTheme from 'hooks/useTheme'
+import { ApplicationModal } from 'state/application/actions'
+import { useModalOpen, useToggleModal, useToggleTransactionSettingsMenu } from 'state/application/hooks'
 import {
   useExpertModeManager,
   useShowLiveChart,
+  useShowTokenInfo,
   useShowTopTrendingSoonTokens,
   useShowTradeRoutes,
   useToggleLiveChart,
+  useToggleTokenInfo,
   useToggleTopTrendingTokens,
   useToggleTradeRoutes,
   useUserSlippageTolerance,
   useUserTransactionTTL,
-  useShowTokenInfo,
-  useToggleTokenInfo,
 } from 'state/user/hooks'
-import useTheme from 'hooks/useTheme'
-import { useModalOpen, useToggleModal, useToggleTransactionSettingsMenu } from 'state/application/hooks'
-import LegacyToggle from 'components/Toggle/LegacyToggle'
-import { ApplicationModal } from 'state/application/actions'
-import TransactionSettingsIcon from 'components/Icons/TransactionSettingsIcon'
-import Tooltip from 'components/Tooltip'
-import MenuFlyout from 'components/MenuFlyout'
-import { isMobile } from 'react-device-detect'
-import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
-import useTopTrendingSoonTokensInCurrentNetwork from 'components/TopTrendingSoonTokensInCurrentNetwork/useTopTrendingSoonTokensInCurrentNetwork'
-import { StyledActionButtonSwapForm } from 'components/swapv2/styleds'
 import { isEqual } from 'utils/numbers'
-import { parseUnits } from '@ethersproject/units'
-import { MAX_SLIPPAGE_IN_BIPS } from 'constants/index'
+
+import { TYPE } from '../../theme'
+import { AutoColumn } from '../Column'
+import QuestionHelper from '../QuestionHelper'
+import { RowBetween, RowFixed } from '../Row'
 import AdvanceModeModal from './AdvanceModeModal'
 
 enum SlippageError {
@@ -159,7 +161,7 @@ export interface SlippageTabsProps {
 }
 
 export function SlippageTabs({ rawSlippage, setRawSlippage, deadline, setDeadline }: SlippageTabsProps) {
-  const theme = useContext(ThemeContext)
+  const theme = useTheme()
 
   const inputRef = useRef<HTMLInputElement>()
 

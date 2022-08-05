@@ -1,14 +1,16 @@
-import React, { useCallback } from 'react'
+import { Trans, t } from '@lingui/macro'
+import React, { ChangeEvent, useCallback } from 'react'
+import { Flex, Text } from 'rebass'
 import styled from 'styled-components'
-import { t, Trans } from '@lingui/macro'
-import useENS from '../../hooks/useENS'
-import { AutoColumn } from '../Column'
+
+import { ReactComponent as DropdownSVG } from 'assets/svg/down.svg'
 import { useActiveWeb3React } from 'hooks'
+import useTheme from 'hooks/useTheme'
 import { ExternalLink } from 'theme'
 import { getEtherscanLink, getEtherscanLinkText } from 'utils'
-import { Flex, Text } from 'rebass'
-import { ReactComponent as DropdownSVG } from 'assets/svg/down.svg'
-import useTheme from 'hooks/useTheme'
+
+import useENS from '../../hooks/useENS'
+import { AutoColumn } from '../Column'
 
 const InputPanel = styled.div`
   ${({ theme }) => theme.flexColumnNoWrap}
@@ -85,7 +87,7 @@ export default function AddressInputPanel({
   const { address, loading, name } = useENS(value)
 
   const handleInput = useCallback(
-    event => {
+    (event: ChangeEvent<HTMLInputElement>) => {
       const input = event.target.value
       const withoutSpaces = input.replace(/\s+/g, '')
       onChange(withoutSpaces)

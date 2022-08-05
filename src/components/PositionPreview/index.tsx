@@ -1,22 +1,22 @@
-import React from 'react'
-import { Trans } from '@lingui/macro'
 import { Currency } from '@kyberswap/ks-sdk-core'
 import { Position } from '@kyberswap/ks-sdk-elastic'
+import { Trans } from '@lingui/macro'
+import JSBI from 'jsbi'
+import { ReactNode, useCallback, useState } from 'react'
+import { Text } from 'rebass'
+
 import RangeBadge from 'components/Badge/RangeBadge'
 import { OutlineCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
 import CurrencyLogo from 'components/CurrencyLogo'
+import Divider from 'components/Divider'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
 import RateToggle from 'components/RateToggle'
 import { RowBetween, RowFixed } from 'components/Row'
-import JSBI from 'jsbi'
-import { ReactNode, useCallback, useContext, useState } from 'react'
-import { ThemeContext } from 'styled-components'
-import { formatTickPrice } from 'utils/formatTickPrice'
-import Divider from 'components/Divider'
+import useTheme from 'hooks/useTheme'
 import { Bound } from 'state/mint/proamm/actions'
+import { formatTickPrice } from 'utils/formatTickPrice'
 import { unwrappedToken } from 'utils/wrappedCurrency'
-import { Text } from 'rebass'
 
 export const PositionPreview = ({
   position,
@@ -31,7 +31,7 @@ export const PositionPreview = ({
   baseCurrencyDefault?: Currency | undefined
   ticksAtLimit: { [bound: string]: boolean | undefined }
 }) => {
-  const theme = useContext(ThemeContext)
+  const theme = useTheme()
 
   const currency0 = unwrappedToken(position.pool.token0)
   const currency1 = unwrappedToken(position.pool.token1)

@@ -1,22 +1,53 @@
 import { ChainId, Currency, CurrencyAmount, NativeCurrency, Token } from '@kyberswap/ks-sdk-core'
+import { Trans, t } from '@lingui/macro'
 import JSBI from 'jsbi'
-import React, { useCallback, useContext, useEffect, useMemo, useState, useRef } from 'react'
-import { AlertTriangle } from 'react-feather'
-import { Box, Flex, Text } from 'rebass'
-import styled, { DefaultTheme, keyframes, ThemeContext } from 'styled-components'
-import { RouteComponentProps, useParams } from 'react-router-dom'
-import { t, Trans } from '@lingui/macro'
+import { debounce } from 'lodash'
+import { stringify } from 'qs'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { BrowserView } from 'react-device-detect'
-import { SEOSwap } from 'components/SEO'
+import { AlertTriangle } from 'react-feather'
+import { RouteComponentProps, useParams } from 'react-router-dom'
+import { Box, Flex, Text } from 'rebass'
+import styled, { DefaultTheme, keyframes } from 'styled-components'
+
+import { ReactComponent as TutorialSvg } from 'assets/svg/play_circle_outline.svg'
+import { ReactComponent as RoutingIcon } from 'assets/svg/routing-icon.svg'
 import AddressInputPanel from 'components/AddressInputPanel'
+import Banner from 'components/Banner'
 import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from 'components/Button'
 import { GreyCard } from 'components/Card/index'
 import Column from 'components/Column/index'
-import ConfirmSwapModal from 'components/swapv2/ConfirmSwapModal'
 import CurrencyInputPanel from 'components/CurrencyInputPanel'
+import { Swap as SwapIcon } from 'components/Icons'
+import TransactionSettingsIcon from 'components/Icons/TransactionSettingsIcon'
+import InfoHelper from 'components/InfoHelper'
+import LiveChart from 'components/LiveChart'
+import Loader from 'components/Loader'
+import ProgressSteps from 'components/ProgressSteps'
 import { AutoRow, RowBetween } from 'components/Row'
+import { SEOSwap } from 'components/SEO'
+import { ShareButtonWithModal } from 'components/ShareModal'
+import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
+import TokenWarningModal from 'components/TokenWarningModal'
+import { MouseoverTooltip } from 'components/Tooltip'
+import TopTrendingSoonTokensInCurrentNetwork from 'components/TopTrendingSoonTokensInCurrentNetwork'
+import TrendingSoonTokenBanner from 'components/TrendingSoonTokenBanner'
+import Tutorial, { TutorialType } from 'components/Tutorial'
 import AdvancedSwapDetailsDropdown from 'components/swapv2/AdvancedSwapDetailsDropdown'
-import { ReactComponent as RoutingIcon } from 'assets/svg/routing-icon.svg'
+import ConfirmSwapModal from 'components/swapv2/ConfirmSwapModal'
+import GasPriceTrackerPanel from 'components/swapv2/GasPriceTrackerPanel'
+import LiquiditySourcesPanel from 'components/swapv2/LiquiditySourcesPanel'
+import MobileLiveChart from 'components/swapv2/MobileLiveChart'
+import MobileTokenInfo from 'components/swapv2/MobileTokenInfo'
+import MobileTradeRoutes from 'components/swapv2/MobileTradeRoutes'
+import PairSuggestion, { PairSuggestionHandle } from 'components/swapv2/PairSuggestion'
+import RefreshButton from 'components/swapv2/RefreshButton'
+import Routing from 'components/swapv2/Routing'
+import SettingsPanel from 'components/swapv2/SwapSettingsPanel'
+import TokenInfo from 'components/swapv2/TokenInfo'
+import TokenInfoV2 from 'components/swapv2/TokenInfoV2'
+import TradePrice from 'components/swapv2/TradePrice'
+import TradeTypeSelection from 'components/swapv2/TradeTypeSelection'
 import {
   ArrowWrapper,
   BottomGrouping,
@@ -27,6 +58,7 @@ import {
   PageWrapper,
   PriceImpactHigh,
   RoutesWrapper,
+  StyledActionButtonSwapForm,
   StyledFlex,
   SwapCallbackError,
   SwapFormActions,
@@ -34,16 +66,23 @@ import {
   TabContainer,
   TabWrapper,
   Wrapper,
-  StyledActionButtonSwapForm,
 } from 'components/swapv2/styleds'
-import TokenWarningModal from 'components/TokenWarningModal'
-import ProgressSteps from 'components/ProgressSteps'
-import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import { INITIAL_ALLOWED_SLIPPAGE } from 'constants/index'
+import { NETWORKS_INFO, SUPPORTED_NETWORKS } from 'constants/networks'
+import { Z_INDEXS } from 'constants/styles'
+import { nativeOnChain } from 'constants/tokens'
 import { useActiveWeb3React } from 'hooks'
 import { useAllTokens, useCurrency } from 'hooks/Tokens'
+import { useActiveNetwork } from 'hooks/useActiveNetwork'
 import { ApprovalState, useApproveCallbackFromTradeV2 } from 'hooks/useApproveCallback'
+import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
+import useParsedQueryString from 'hooks/useParsedQueryString'
+import usePrevious from 'hooks/usePrevious'
+import { useSwapV2Callback } from 'hooks/useSwapV2Callback'
+import useTheme from 'hooks/useTheme'
 import useWrapCallback, { WrapType } from 'hooks/useWrapCallback'
+import { BodyWrapper } from 'pages/AppBody'
+import { ClickableText } from 'pages/Pool/styleds'
 import { useToggleTransactionSettingsMenu, useWalletModalToggle } from 'state/application/hooks'
 import { Field } from 'state/swap/actions'
 import { useDefaultsFromURLSearch, useSwapActionHandlers, useSwapState } from 'state/swap/hooks'
@@ -57,51 +96,14 @@ import {
   useUserSlippageTolerance,
 } from 'state/user/hooks'
 import { TYPE } from 'theme'
-import { maxAmountSpend } from 'utils/maxAmountSpend'
-import { BodyWrapper } from 'pages/AppBody'
-import { ClickableText } from 'pages/Pool/styleds'
-import Loader from 'components/Loader'
-import { Aggregator } from 'utils/aggregator'
-import { useSwapV2Callback } from 'hooks/useSwapV2Callback'
-import Routing from 'components/swapv2/Routing'
-import RefreshButton from 'components/swapv2/RefreshButton'
-import TradeTypeSelection from 'components/swapv2/TradeTypeSelection'
 import { formattedNum, isAddressString } from 'utils'
-import { Swap as SwapIcon } from 'components/Icons'
-import TradePrice from 'components/swapv2/TradePrice'
-import InfoHelper from 'components/InfoHelper'
-import LiveChart from 'components/LiveChart'
-import { ShareButtonWithModal } from 'components/ShareModal'
-import TokenInfo from 'components/swapv2/TokenInfo'
-import TokenInfoV2 from 'components/swapv2/TokenInfoV2'
-import MobileLiveChart from 'components/swapv2/MobileLiveChart'
-import MobileTradeRoutes from 'components/swapv2/MobileTradeRoutes'
-import MobileTokenInfo from 'components/swapv2/MobileTokenInfo'
-import PairSuggestion, { PairSuggestionHandle } from 'components/swapv2/PairSuggestion'
-import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
+import { Aggregator } from 'utils/aggregator'
 import { currencyId } from 'utils/currencyId'
-import Banner from 'components/Banner'
-import TrendingSoonTokenBanner from 'components/TrendingSoonTokenBanner'
-import TopTrendingSoonTokensInCurrentNetwork from 'components/TopTrendingSoonTokensInCurrentNetwork'
-import { NETWORKS_INFO, SUPPORTED_NETWORKS } from 'constants/networks'
-import { useActiveNetwork } from 'hooks/useActiveNetwork'
+import { filterTokensWithExactKeyword } from 'utils/filtering'
+import { maxAmountSpend } from 'utils/maxAmountSpend'
+import { reportException } from 'utils/sentry'
 import { convertToSlug, getNetworkSlug, getSymbolSlug } from 'utils/string'
 import { checkPairInWhiteList, convertSymbol } from 'utils/tokenInfo'
-import { filterTokensWithExactKeyword } from 'utils/filtering'
-import { nativeOnChain } from 'constants/tokens'
-import usePrevious from 'hooks/usePrevious'
-import SettingsPanel from 'components/swapv2/SwapSettingsPanel'
-import TransactionSettingsIcon from 'components/Icons/TransactionSettingsIcon'
-import GasPriceTrackerPanel from 'components/swapv2/GasPriceTrackerPanel'
-import LiquiditySourcesPanel from 'components/swapv2/LiquiditySourcesPanel'
-import useParsedQueryString from 'hooks/useParsedQueryString'
-import { ReactComponent as TutorialSvg } from 'assets/svg/play_circle_outline.svg'
-import Tutorial, { TutorialType } from 'components/Tutorial'
-import { MouseoverTooltip } from 'components/Tooltip'
-import { reportException } from 'utils/sentry'
-import { Z_INDEXS } from 'constants/styles'
-import { stringify } from 'qs'
-import { debounce } from 'lodash'
 
 const TutorialIcon = styled(TutorialSvg)`
   width: 22px;
@@ -216,7 +218,7 @@ export default function Swap({ history }: RouteComponentProps) {
     })
 
   const { account, chainId } = useActiveWeb3React()
-  const theme = useContext(ThemeContext)
+  const theme = useTheme()
 
   // toggle wallet when disconnected
   const toggleWalletModal = useWalletModalToggle()
@@ -245,11 +247,11 @@ export default function Swap({ history }: RouteComponentProps) {
   const currencyIn = currencies[Field.INPUT]
   const currencyOut = currencies[Field.OUTPUT]
 
-  const { wrapType, execute: onWrap, inputError: wrapInputError } = useWrapCallback(
-    currencies[Field.INPUT],
-    currencies[Field.OUTPUT],
-    typedValue,
-  )
+  const {
+    wrapType,
+    execute: onWrap,
+    inputError: wrapInputError,
+  } = useWrapCallback(currencies[Field.INPUT], currencies[Field.OUTPUT], typedValue)
   const showWrap: boolean = wrapType !== WrapType.NOT_APPLICABLE
   const trade = showWrap ? undefined : v2Trade
 
@@ -263,13 +265,8 @@ export default function Swap({ history }: RouteComponentProps) {
         [Field.OUTPUT]: independentField === Field.OUTPUT ? parsedAmount : trade?.outputAmount,
       }
 
-  const {
-    onSwitchTokensV2,
-    onCurrencySelection,
-    onResetSelectCurrency,
-    onUserInput,
-    onChangeRecipient,
-  } = useSwapActionHandlers()
+  const { onSwitchTokensV2, onCurrencySelection, onResetSelectCurrency, onUserInput, onChangeRecipient } =
+    useSwapActionHandlers()
 
   // reset recipient
   useEffect(() => {
@@ -410,7 +407,7 @@ export default function Swap({ history }: RouteComponentProps) {
   }, [attemptingTxn, showConfirm, swapErrorMessage, trade, txHash])
 
   const handleInputSelect = useCallback(
-    inputCurrency => {
+    (inputCurrency: Currency) => {
       setIsSelectCurencyMannual(true)
       setApprovalSubmitted(false) // reset 2 step UI for approvals
       onCurrencySelection(Field.INPUT, inputCurrency)
@@ -427,7 +424,7 @@ export default function Swap({ history }: RouteComponentProps) {
   }, [currencyBalances, onUserInput])
 
   const handleOutputSelect = useCallback(
-    outputCurrency => {
+    (outputCurrency: Currency) => {
       setIsSelectCurencyMannual(true)
       onCurrencySelection(Field.OUTPUT, outputCurrency)
     },
@@ -834,10 +831,12 @@ export default function Swap({ history }: RouteComponentProps) {
                             <KyberTag>
                               <Trans>You save</Trans>{' '}
                               {formattedNum(tradeComparer.tradeSaved.usd, true) +
-                                ` (${tradeComparer?.tradeSaved?.percent &&
+                                ` (${
+                                  tradeComparer?.tradeSaved?.percent &&
                                   (tradeComparer.tradeSaved.percent < 0.01
                                     ? '<0.01'
-                                    : tradeComparer.tradeSaved.percent.toFixed(2))}%)`}
+                                    : tradeComparer.tradeSaved.percent.toFixed(2))
+                                }%)`}
                               <InfoHelper
                                 text={
                                   <Text>

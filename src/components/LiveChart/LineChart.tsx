@@ -1,9 +1,11 @@
-import React, { useContext, useEffect, useMemo } from 'react'
-import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { format } from 'date-fns'
-import styled, { ThemeContext } from 'styled-components'
-import { LiveDataTimeframeEnum } from 'hooks/useLiveChartData'
+import React, { useEffect, useMemo } from 'react'
 import { isMobile } from 'react-device-detect'
+import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
+import styled from 'styled-components'
+
+import { LiveDataTimeframeEnum } from 'hooks/useLiveChartData'
+import useTheme from 'hooks/useTheme'
 import { toKInChart } from 'utils'
 
 const AreaChartWrapper = styled(AreaChart)`
@@ -138,7 +140,7 @@ const LineChart = ({
   showYAsis,
   unitYAsis = '',
 }: LineChartProps) => {
-  const theme = useContext(ThemeContext)
+  const theme = useTheme()
   const formattedData = useMemo(() => {
     return addZeroData(
       data.filter(item => !!item.value),
@@ -168,7 +170,7 @@ const LineChart = ({
   }, [formattedData])
 
   return (
-    <ResponsiveContainer minHeight={isMobile ? 300 : minHeight} height='100%'>
+    <ResponsiveContainer minHeight={isMobile ? 300 : minHeight} height="100%">
       {formattedData && formattedData.length > 0 ? (
         <AreaChartWrapper
           data={formattedData}

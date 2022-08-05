@@ -1,21 +1,24 @@
-import React, { useRef, useState, useEffect } from 'react'
+import { Trans, t } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
+import React, { useEffect, useRef, useState } from 'react'
+import { isMobile } from 'react-device-detect'
 import { Settings } from 'react-feather'
 import styled, { css } from 'styled-components'
-import { Trans, t } from '@lingui/macro'
+
+import ArrowRight from 'components/Icons/ArrowRight'
+import LanguageSelector from 'components/LanguageSelector'
+import MenuFlyout from 'components/MenuFlyout'
+import ThemeToggle from 'components/Toggle/ThemeToggle'
+import { LOCALE_LABEL, SupportedLocale } from 'constants/locales'
+import useTheme from 'hooks/useTheme'
+import { useDarkModeManager, useUserLocale } from 'state/user/hooks'
+
 import { ApplicationModal } from '../../state/application/actions'
 import { useModalOpen, useToggleSettingsMenu } from '../../state/application/hooks'
-import { useDarkModeManager, useUserLocale } from 'state/user/hooks'
 import { ButtonEmpty } from '../Button'
 import { AutoColumn } from '../Column'
 import { RowBetween, RowFixed } from '../Row'
-import ThemeToggle from 'components/Toggle/ThemeToggle'
-import useTheme from 'hooks/useTheme'
-import ArrowRight from 'components/Icons/ArrowRight'
-import { LOCALE_LABEL, SupportedLocale } from 'constants/locales'
-import LanguageSelector from 'components/LanguageSelector'
-import MenuFlyout from 'components/MenuFlyout'
-import { useLingui } from '@lingui/react'
-import { isMobile } from 'react-device-detect'
+
 const StyledMenuIcon = styled(Settings)`
   height: 20px;
   width: 20px;

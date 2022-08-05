@@ -1,4 +1,5 @@
 import React from 'react'
+
 import Modal from 'components/Modal'
 import Chart from 'pages/TrueSight/components/Chart'
 import { FormattedCoinGeckoChartData } from 'pages/TrueSight/hooks/useGetCoinGeckoChartData'

@@ -1,19 +1,19 @@
-import React from 'react'
 import { Currency, CurrencyAmount, Percent, Token, TokenAmount } from '@kyberswap/ks-sdk-core'
-import { ReactNode, useCallback, useMemo } from 'react'
-import { Field } from './actions'
-import { AppState } from 'state'
-import { typeInput } from './actions'
-import { useAppDispatch, useAppSelector } from 'state/hooks'
-import { PositionDetails } from 'types/position'
 import { Position } from '@kyberswap/ks-sdk-elastic'
-import { useToken } from 'hooks/Tokens'
-import { useActiveWeb3React } from 'hooks'
-import { usePool } from 'hooks/usePools'
-import { unwrappedToken } from 'utils/wrappedCurrency'
 import { Trans } from '@lingui/macro'
+import { ReactNode, useCallback, useMemo } from 'react'
+
+import { useActiveWeb3React } from 'hooks'
+import { useToken } from 'hooks/Tokens'
+import { usePool } from 'hooks/usePools'
 import { useProAmmPositionFees } from 'hooks/useProAmmPositionFees'
+import { AppState } from 'state'
+import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { tryParseAmount } from 'state/swap/hooks'
+import { PositionDetails } from 'types/position'
+import { unwrappedToken } from 'utils/wrappedCurrency'
+
+import { Field, typeInput } from './actions'
 
 export function useBurnProAmmState(): AppState['burnProAmm'] {
   return useAppSelector(state => state.burnProAmm)
@@ -77,7 +77,7 @@ export function useDerivedProAmmBurnInfo(
   // user specified a specific amount of token a or b
   else {
     if (!!tokens[independentField]) {
-      const independentAmount = tryParseAmount(typedValue, tokens[independentField]!!)
+      const independentAmount = tryParseAmount(typedValue, tokens[independentField] ?? undefined)
       const liquidityValue = liquidityValues[independentField]
       if (independentAmount && liquidityValue && !independentAmount.greaterThan(liquidityValue)) {
         liquidityPercentage = new Percent(independentAmount.quotient, liquidityValue.quotient)

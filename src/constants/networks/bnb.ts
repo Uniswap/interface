@@ -1,9 +1,10 @@
 import { ChainId } from '@kyberswap/ks-sdk-core'
-import { NetworkInfo } from '../type'
+
+import BnbLogo from 'assets/images/bnb-logo.png'
+import BSC from 'assets/networks/bsc-network.png'
 import { createClient } from 'utils/client'
 
-import BSC from 'assets/networks/bsc-network.png'
-import BnbLogo from 'assets/images/bnb-logo.png'
+import { NetworkInfo } from '../type'
 
 const EMPTY = ''
 const NOT_SUPPORT = null

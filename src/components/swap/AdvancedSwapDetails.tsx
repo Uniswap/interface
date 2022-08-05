@@ -1,21 +1,24 @@
 import { Trade } from '@kyberswap/ks-sdk-classic'
-import { Currency, TradeType, ChainId } from '@kyberswap/ks-sdk-core'
-import React, { useContext } from 'react'
-import styled, { ThemeContext } from 'styled-components'
-import { t, Trans } from '@lingui/macro'
+import { ChainId, Currency, TradeType } from '@kyberswap/ks-sdk-core'
+import { Trans, t } from '@lingui/macro'
+import React from 'react'
+import styled from 'styled-components'
+
+import { useActiveWeb3React } from 'hooks'
+import useTheme from 'hooks/useTheme'
+import { useCurrencyConvertedToNative } from 'utils/dmm'
+
+import { DMM_ANALYTICS_URL } from '../../constants'
 import { Field } from '../../state/swap/actions'
 import { useUserSlippageTolerance } from '../../state/user/hooks'
-import { TYPE, ExternalLink } from '../../theme'
+import { ExternalLink, TYPE } from '../../theme'
 import { computeSlippageAdjustedAmounts, computeTradePriceBreakdown } from '../../utils/prices'
 import { AutoColumn } from '../Column'
 import QuestionHelper from '../QuestionHelper'
 import { RowBetween, RowFixed } from '../Row'
 import FormattedPriceImpact from './FormattedPriceImpact'
-import { SectionBreak } from './styleds'
 import SwapRoute from './SwapRoute'
-import { DMM_ANALYTICS_URL } from '../../constants'
-import { useActiveWeb3React } from 'hooks'
-import { useCurrencyConvertedToNative } from 'utils/dmm'
+import { SectionBreak } from './styleds'
 
 const InfoLink = styled(ExternalLink)`
   width: 100%;
@@ -28,12 +31,12 @@ const InfoLink = styled(ExternalLink)`
 
 function TradeSummary({
   trade,
-  allowedSlippage
+  allowedSlippage,
 }: {
   trade: Trade<Currency, Currency, TradeType>
   allowedSlippage: number
 }) {
-  const theme = useContext(ThemeContext)
+  const theme = useTheme()
   const { priceImpactWithoutFee, realizedLPFee, accruedFeePercent } = computeTradePriceBreakdown(trade)
   const isExactIn = trade.tradeType === TradeType.EXACT_INPUT
   const slippageAdjustedAmounts = computeSlippageAdjustedAmounts(trade, allowedSlippage)
@@ -98,7 +101,7 @@ export interface AdvancedSwapDetailsProps {
 
 export function AdvancedSwapDetails({ trade }: AdvancedSwapDetailsProps) {
   const { chainId } = useActiveWeb3React()
-  const theme = useContext(ThemeContext)
+  const theme = useTheme()
 
   const [allowedSlippage] = useUserSlippageTolerance()
 

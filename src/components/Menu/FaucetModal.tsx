@@ -1,6 +1,21 @@
+import { ChainId, Fraction } from '@kyberswap/ks-sdk-core'
 import { Trans, t } from '@lingui/macro'
-import React, { useContext, useEffect, useMemo, useState } from 'react'
+import { BigNumber } from 'ethers'
+import JSBI from 'jsbi'
+import { useEffect, useMemo, useState } from 'react'
 import { Flex, Text } from 'rebass'
+import styled from 'styled-components'
+
+import { ButtonPrimary } from 'components/Button'
+import Logo from 'components/Logo'
+import Modal from 'components/Modal'
+import { RowBetween } from 'components/Row'
+import { NETWORKS_INFO } from 'constants/networks'
+import { nativeOnChain } from 'constants/tokens'
+import { useActiveWeb3React } from 'hooks'
+import { useAllTokens } from 'hooks/Tokens'
+import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
+import useTheme from 'hooks/useTheme'
 import { ApplicationModal } from 'state/application/actions'
 import {
   NotificationType,
@@ -9,22 +24,9 @@ import {
   useToggleModal,
   useWalletModalToggle,
 } from 'state/application/hooks'
-import styled, { ThemeContext } from 'styled-components'
-import { ButtonPrimary } from 'components/Button'
-import { getTokenLogoURL, isAddress, shortenAddress } from 'utils'
 import { CloseIcon } from 'theme'
-import { RowBetween } from 'components/Row'
-import { useActiveWeb3React } from 'hooks'
-import Modal from 'components/Modal'
-import { Fraction, ChainId } from '@kyberswap/ks-sdk-core'
-import { BigNumber } from 'ethers'
-import { useAllTokens } from 'hooks/Tokens'
+import { getTokenLogoURL, isAddress, shortenAddress } from 'utils'
 import { filterTokens } from 'utils/filtering'
-import Logo from 'components/Logo'
-import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
-import JSBI from 'jsbi'
-import { nativeOnChain } from 'constants/tokens'
-import { NETWORKS_INFO } from 'constants/networks'
 
 const AddressWrapper = styled.div`
   background: ${({ theme }) => theme.buttonBlack};
@@ -53,7 +55,7 @@ function FaucetModal() {
   const { chainId, account } = useActiveWeb3React()
   const open = useModalOpen(ApplicationModal.FAUCET_POPUP)
   const toggle = useToggleModal(ApplicationModal.FAUCET_POPUP)
-  const theme = useContext(ThemeContext)
+  const theme = useTheme()
   const [rewardData, setRewardData] = useState<{ amount: BigNumber; tokenAddress: string; program: number }>()
   const notify = useNotify()
   const toggleWalletModal = useWalletModalToggle()

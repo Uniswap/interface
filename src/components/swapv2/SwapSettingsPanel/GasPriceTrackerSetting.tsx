@@ -1,8 +1,8 @@
-import React from 'react'
-import styled from 'styled-components'
-import { isMobile } from 'react-device-detect'
 import { Trans } from '@lingui/macro'
+import React from 'react'
+import { isMobile } from 'react-device-detect'
 import { ChevronRight } from 'react-feather'
+import styled from 'styled-components'
 
 import useGasPriceFromDeBank, { GasLevel } from 'hooks/useGasPriceFromDeBank'
 import useTheme from 'hooks/useTheme'

@@ -1,11 +1,11 @@
 import { Price, Token } from '@kyberswap/ks-sdk-core'
 import {
-  encodeSqrtRatioX96,
   FeeAmount,
+  TICK_SPACINGS,
+  TickMath,
+  encodeSqrtRatioX96,
   nearestUsableTick,
   priceToClosestTick,
-  TICK_SPACINGS,
-  TickMath
 } from '@kyberswap/ks-sdk-elastic'
 import JSBI from 'jsbi'
 
@@ -27,7 +27,7 @@ export function tryParsePrice(baseToken?: Token, quoteToken?: Token, value?: str
     baseToken,
     quoteToken,
     JSBI.multiply(JSBI.BigInt(10 ** decimals), JSBI.BigInt(10 ** baseToken.decimals)), //denom
-    JSBI.multiply(withoutDecimals, JSBI.BigInt(10 ** quoteToken.decimals)) //num
+    JSBI.multiply(withoutDecimals, JSBI.BigInt(10 ** quoteToken.decimals)), //num
   )
 }
 
@@ -35,7 +35,7 @@ export function tryParseTick(
   baseToken?: Token,
   quoteToken?: Token,
   feeAmount?: FeeAmount,
-  value?: string
+  value?: string,
 ): number | undefined {
   if (!baseToken || !quoteToken || !feeAmount || !value) {
     return undefined

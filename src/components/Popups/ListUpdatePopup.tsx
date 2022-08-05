@@ -1,17 +1,17 @@
-import { diffTokenLists, TokenList } from '@uniswap/token-lists'
+import { Trans } from '@lingui/macro'
+import { TokenList, diffTokenLists } from '@uniswap/token-lists'
 import React, { useCallback, useMemo } from 'react'
 import { useDispatch } from 'react-redux'
 import { Text } from 'rebass'
-import { Trans } from '@lingui/macro'
 
+import { ButtonSecondary } from 'components/Button'
+import { AutoColumn } from 'components/Column'
+import { AutoRow } from 'components/Row'
 import { AppDispatch } from 'state'
 import { useRemovePopup } from 'state/application/hooks'
 import { acceptListUpdate } from 'state/lists/actions'
 import { TYPE } from 'theme'
 import listVersionLabel from 'utils/listVersionLabel'
-import { ButtonSecondary } from 'components/Button'
-import { AutoColumn } from 'components/Column'
-import { AutoRow } from 'components/Row'
 
 export default function ListUpdatePopup({
   popKey,
@@ -37,7 +37,11 @@ export default function ListUpdatePopup({
     removeThisPopup()
   }, [auto, dispatch, listUrl, removeThisPopup])
 
-  const { added: tokensAdded, changed: tokensChanged, removed: tokensRemoved } = useMemo(() => {
+  const {
+    added: tokensAdded,
+    changed: tokensChanged,
+    removed: tokensRemoved,
+  } = useMemo(() => {
     return diffTokenLists(oldList.tokens, newList.tokens)
   }, [newList.tokens, oldList.tokens])
   const numTokensChanged = useMemo(

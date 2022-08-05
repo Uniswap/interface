@@ -1,46 +1,46 @@
-import { Contract } from '@ethersproject/contracts'
 import { getAddress } from '@ethersproject/address'
-import { AddressZero } from '@ethersproject/constants'
-import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
 import { BigNumber } from '@ethersproject/bignumber'
-import { ethers } from 'ethers'
-import Numeral from 'numeral'
+import { AddressZero } from '@ethersproject/constants'
+import { Contract } from '@ethersproject/contracts'
+import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
+import { ChainId, Currency, CurrencyAmount, Percent, Token, WETH } from '@kyberswap/ks-sdk-core'
 import dayjs from 'dayjs'
+import { ethers } from 'ethers'
+import JSBI from 'jsbi'
+import Numeral from 'numeral'
 
 import { GET_BLOCK, GET_BLOCKS } from 'apollo/queries'
+import ZAP_STATIC_FEE_ABI from 'constants/abis/zap-static-fee.json'
 import {
-  ROPSTEN_TOKEN_LOGOS_MAPPING,
+  DEFAULT_GAS_LIMIT_MARGIN,
+  KNC,
   KNCL_ADDRESS,
   KNCL_ADDRESS_ROPSTEN,
-  KNC,
-  DEFAULT_GAS_LIMIT_MARGIN,
+  ROPSTEN_TOKEN_LOGOS_MAPPING,
   ZERO_ADDRESS,
 } from 'constants/index'
+import { NETWORKS_INFO } from 'constants/networks'
+import store from 'state'
+
+import AGGREGATOR_EXECUTOR_ABI from '../constants/abis/aggregation-executor.json'
+import CLAIM_REWARD_ABI from '../constants/abis/claim-reward.json'
 import ROUTER_DYNAMIC_FEE_ABI from '../constants/abis/dmm-router-dynamic-fee.json'
 import ROUTER_STATIC_FEE_ABI from '../constants/abis/dmm-router-static-fee.json'
 import ROUTER_ABI_V2 from '../constants/abis/dmm-router-v2.json'
 import KS_ROUTER_STATIC_FEE_ABI from '../constants/abis/ks-router-static-fee.json'
-import { abi as ROUTER_PRO_AMM } from '../constants/abis/v2/ProAmmRouter.json'
-import AGGREGATOR_EXECUTOR_ABI from '../constants/abis/aggregation-executor.json'
+import ROUTER_PRO_AMM from '../constants/abis/v2/ProAmmRouter.json'
 import ZAP_ABI from '../constants/abis/zap.json'
-import ZAP_STATIC_FEE_ABI from 'constants/abis/zap-static-fee.json'
-import JSBI from 'jsbi'
-import { Percent, Token, CurrencyAmount, Currency, WETH } from '@kyberswap/ks-sdk-core'
-import { ChainId } from '@kyberswap/ks-sdk-core'
-import CLAIM_REWARD_ABI from '../constants/abis/claim-reward.json'
 import { TokenAddressMap } from '../state/lists/hooks'
-import { getEthereumMainnetTokenLogoURL } from './ethereumMainnetTokenMapping'
-import { getMaticTokenLogoURL } from './maticTokenMapping'
-import { getBscMainnetTokenLogoURL } from './bscMainnetTokenMapping'
-import { getMumbaiTokenLogoURL } from './mumbaiTokenMapping'
-import { getBscTestnetTokenLogoURL } from './bscTestnetTokenMapping'
-import { getAvaxTestnetTokenLogoURL } from './avaxTestnetTokenMapping'
-import { getAvaxMainnetTokenLogoURL } from './avaxMainnetTokenMapping'
-import { getFantomTokenLogoURL } from './fantomTokenMapping'
-import { getCronosTokenLogoURL } from './cronosTokenMapping'
 import { getAuroraTokenLogoURL } from './auroraTokenMapping'
-import { NETWORKS_INFO } from 'constants/networks'
-import store from 'state'
+import { getAvaxMainnetTokenLogoURL } from './avaxMainnetTokenMapping'
+import { getAvaxTestnetTokenLogoURL } from './avaxTestnetTokenMapping'
+import { getBscMainnetTokenLogoURL } from './bscMainnetTokenMapping'
+import { getBscTestnetTokenLogoURL } from './bscTestnetTokenMapping'
+import { getCronosTokenLogoURL } from './cronosTokenMapping'
+import { getEthereumMainnetTokenLogoURL } from './ethereumMainnetTokenMapping'
+import { getFantomTokenLogoURL } from './fantomTokenMapping'
+import { getMaticTokenLogoURL } from './maticTokenMapping'
+import { getMumbaiTokenLogoURL } from './mumbaiTokenMapping'
 
 // returns the checksummed address if the address is valid, otherwise returns false
 export function isAddress(value: any): string | false {
@@ -167,7 +167,7 @@ export function getDynamicFeeRouterContract(chainId: ChainId, library: Web3Provi
 
 // account is optional
 export function getProAmmRouterContract(chainId: ChainId, library: Web3Provider, account?: string): Contract {
-  return getContract(NETWORKS_INFO[chainId].elastic.routers, ROUTER_PRO_AMM, library, account)
+  return getContract(NETWORKS_INFO[chainId].elastic.routers, ROUTER_PRO_AMM.abi, library, account)
 }
 
 export function getRouterV2Contract(chainId: ChainId, library: Web3Provider, account?: string): Contract {
@@ -331,18 +331,9 @@ export const getPercentChange = (valueNow: string, value24HoursAgo: string) => {
 
 export function getTimestampsForChanges(): [number, number, number] {
   const utcCurrentTime = dayjs()
-  const t1 = utcCurrentTime
-    .subtract(1, 'day')
-    .startOf('minute')
-    .unix()
-  const t2 = utcCurrentTime
-    .subtract(2, 'day')
-    .startOf('minute')
-    .unix()
-  const tWeek = utcCurrentTime
-    .subtract(1, 'week')
-    .startOf('minute')
-    .unix()
+  const t1 = utcCurrentTime.subtract(1, 'day').startOf('minute').unix()
+  const t2 = utcCurrentTime.subtract(2, 'day').startOf('minute').unix()
+  const tWeek = utcCurrentTime.subtract(1, 'week').startOf('minute').unix()
   return [t1, t2, tWeek]
 }
 

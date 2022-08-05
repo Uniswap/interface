@@ -1,5 +1,5 @@
-import { ChainId } from '@kyberswap/ks-sdk-core'
 import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
+import { ChainId } from '@kyberswap/ks-sdk-core'
 
 export type NetworkInfo = {
   readonly chainId: ChainId

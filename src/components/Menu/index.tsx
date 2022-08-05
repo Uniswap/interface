@@ -1,28 +1,6 @@
-import React, { useRef } from 'react'
-import styled, { css } from 'styled-components'
-import { NavLink } from 'react-router-dom'
-import { t, Trans } from '@lingui/macro'
-import { Text } from 'rebass'
-
 import { ChainId } from '@kyberswap/ks-sdk-core'
-import { ApplicationModal } from 'state/application/actions'
-import { useModalOpen, useToggleModal } from 'state/application/hooks'
-import { ExternalLink } from 'theme'
-import { DMM_ANALYTICS_URL } from 'constants/index'
-import { useActiveWeb3React } from 'hooks'
-import useTheme from 'hooks/useTheme'
-import { useMedia } from 'react-use'
-import { SlideToUnlock } from 'components/Header'
-import MenuFlyout from 'components/MenuFlyout'
-import { ButtonPrimary } from 'components/Button'
-import useClaimReward from 'hooks/useClaimReward'
-import Loader from 'components/Loader'
-import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
-import ClaimRewardModal from './ClaimRewardModal'
-import FaucetModal from './FaucetModal'
-import DiscoverIcon from 'components/Icons/DiscoverIcon'
-import Faucet from 'components/Icons/Faucet'
-import AboutPageDropwdown from './AboutPageDropDown'
+import { Trans, t } from '@lingui/macro'
+import React, { useRef } from 'react'
 import {
   BookOpen,
   Edit,
@@ -34,8 +12,31 @@ import {
   Triangle,
   UserPlus,
 } from 'react-feather'
+import { NavLink } from 'react-router-dom'
+import { useMedia } from 'react-use'
+import { Text } from 'rebass'
+import styled, { css } from 'styled-components'
+
+import { ButtonPrimary } from 'components/Button'
+import { SlideToUnlock } from 'components/Header'
 import { MoneyBag } from 'components/Icons'
+import DiscoverIcon from 'components/Icons/DiscoverIcon'
+import Faucet from 'components/Icons/Faucet'
+import Loader from 'components/Loader'
+import MenuFlyout from 'components/MenuFlyout'
+import { DMM_ANALYTICS_URL } from 'constants/index'
 import { NETWORKS_INFO } from 'constants/networks'
+import { useActiveWeb3React } from 'hooks'
+import useClaimReward from 'hooks/useClaimReward'
+import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
+import useTheme from 'hooks/useTheme'
+import { ApplicationModal } from 'state/application/actions'
+import { useModalOpen, useToggleModal } from 'state/application/hooks'
+import { ExternalLink } from 'theme'
+
+import AboutPageDropwdown from './AboutPageDropDown'
+import ClaimRewardModal from './ClaimRewardModal'
+import FaucetModal from './FaucetModal'
 
 const sharedStylesMenuItem = css`
   flex: 1;

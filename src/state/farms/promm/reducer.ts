@@ -1,6 +1,6 @@
 import { createReducer } from '@reduxjs/toolkit'
 
-import { updatePrommFarms, setLoading, setShowConfirm, setAttemptingTxn, setVestingTxHash, setError } from './actions'
+import { setAttemptingTxn, setError, setLoading, setShowConfirm, setVestingTxHash, updatePrommFarms } from './actions'
 import { ProMMFarm } from './types'
 
 export interface FarmsState {

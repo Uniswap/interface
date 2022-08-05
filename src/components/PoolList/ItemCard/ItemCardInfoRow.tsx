@@ -1,12 +1,13 @@
+import { Currency, Fraction } from '@kyberswap/ks-sdk-core'
+import { Trans } from '@lingui/macro'
 import React from 'react'
 import { Flex, Text } from 'rebass'
 import styled from 'styled-components'
-import { Currency, Fraction } from '@kyberswap/ks-sdk-core'
-import { priceRangeCalcBySubgraphPool } from 'utils/dmm'
-import { SubgraphPoolData } from 'state/pools/hooks'
-import { Trans } from '@lingui/macro'
-import InfoHelper from 'components/InfoHelper'
+
 import CurrencyLogo from 'components/CurrencyLogo'
+import InfoHelper from 'components/InfoHelper'
+import { SubgraphPoolData } from 'state/pools/hooks'
+import { priceRangeCalcBySubgraphPool } from 'utils/dmm'
 
 const Field = styled.div`
   font-size: 12px;

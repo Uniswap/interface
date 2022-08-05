@@ -1,38 +1,39 @@
-import React, { useState, useRef, useMemo, useEffect, useCallback } from 'react'
-import { useMedia } from 'react-use'
-import { t, Trans } from '@lingui/macro'
+import { ChainId } from '@kyberswap/ks-sdk-core'
+import { Trans, t } from '@lingui/macro'
+import { BigNumber } from 'ethers'
 import { stringify } from 'qs'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useHistory, useLocation } from 'react-router-dom'
+import { useMedia } from 'react-use'
+import { Flex, Text } from 'rebass'
 
-import { AMP_HINT, TOBE_EXTENDED_FARMING_POOLS } from 'constants/index'
-import FairLaunchPools from 'components/YieldPools/FairLaunchPools'
+import Search from 'components/Icons/Search'
 import InfoHelper from 'components/InfoHelper'
+import LocalLoader from 'components/LocalLoader'
+import Toggle from 'components/Toggle'
+import FairLaunchPools from 'components/YieldPools/FairLaunchPools'
+import { AMP_HINT, TOBE_EXTENDED_FARMING_POOLS } from 'constants/index'
+import { useActiveWeb3React } from 'hooks'
+import useDebounce from 'hooks/useDebounce'
+import { useOnClickOutside } from 'hooks/useOnClickOutside'
+import useParsedQueryString from 'hooks/useParsedQueryString'
+import useTheme from 'hooks/useTheme'
+import { useBlockNumber } from 'state/application/hooks'
 import { useFarmsData } from 'state/farms/hooks'
+import { Farm } from 'state/farms/types'
 import { isAddressString } from 'utils'
+
+import ConfirmHarvestingModal from './ConfirmHarvestingModal'
 import {
-  TableHeader,
   ClickableText,
-  StakedOnlyToggleWrapper,
-  StakedOnlyToggleText,
   HeadingContainer,
   HeadingRight,
   SearchContainer,
   SearchInput,
+  StakedOnlyToggleText,
+  StakedOnlyToggleWrapper,
+  TableHeader,
 } from './styleds'
-import ConfirmHarvestingModal from './ConfirmHarvestingModal'
-import { Flex, Text } from 'rebass'
-import LocalLoader from 'components/LocalLoader'
-import useTheme from 'hooks/useTheme'
-import { useBlockNumber } from 'state/application/hooks'
-import { useOnClickOutside } from 'hooks/useOnClickOutside'
-import Search from 'components/Icons/Search'
-import useDebounce from 'hooks/useDebounce'
-import { Farm } from 'state/farms/types'
-import { BigNumber } from 'ethers'
-import useParsedQueryString from 'hooks/useParsedQueryString'
-import { ChainId } from '@kyberswap/ks-sdk-core'
-import { useActiveWeb3React } from 'hooks'
-import { useHistory, useLocation } from 'react-router-dom'
-import Toggle from 'components/Toggle'
 
 const YieldPools = ({ loading, active }: { loading: boolean; active?: boolean }) => {
   const theme = useTheme()

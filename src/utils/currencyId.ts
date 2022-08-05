@@ -1,5 +1,5 @@
-import { Currency, Token, WETH } from '@kyberswap/ks-sdk-core'
-import { ChainId } from '@kyberswap/ks-sdk-core'
+import { ChainId, Currency, Token, WETH } from '@kyberswap/ks-sdk-core'
+
 import { nativeOnChain } from 'constants/tokens'
 
 export function currencyId(currency?: Currency, chainId?: ChainId): string {

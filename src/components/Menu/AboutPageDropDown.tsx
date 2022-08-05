@@ -1,12 +1,12 @@
+import { Trans } from '@lingui/macro'
 import React, { useState } from 'react'
+import { ChevronDown, Info } from 'react-feather'
+import styled from 'styled-components'
+
+import { ApplicationModal } from 'state/application/actions'
+import { useToggleModal } from 'state/application/hooks'
 
 import { NavMenuItem } from '.'
-import { Trans } from '@lingui/macro'
-
-import { Info, ChevronDown } from 'react-feather'
-import { useToggleModal } from 'state/application/hooks'
-import { ApplicationModal } from 'state/application/actions'
-import styled from 'styled-components'
 
 const LinkContainer = styled.div`
   padding-left: 20px;

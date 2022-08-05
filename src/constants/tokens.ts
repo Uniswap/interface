@@ -1,4 +1,4 @@
-import { ChainId, NativeCurrency, Currency, Token, WETH, Ether } from '@kyberswap/ks-sdk-core'
+import { ChainId, Currency, Ether, NativeCurrency, Token, WETH } from '@kyberswap/ks-sdk-core'
 
 function isCro(chainId: number): chainId is ChainId.CRONOS {
   return chainId === ChainId.CRONOS

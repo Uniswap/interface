@@ -1,10 +1,7 @@
-/* eslint-disable @typescript-eslint/camelcase */
 import { TrueSightTokenData } from 'pages/TrueSight/hooks/useGetTrendingSoonData'
 import { formattedNumLong } from 'utils'
 
-export default function getFormattedNumLongDiscoveredDetails(
-  tokenData: TrueSightTokenData,
-): {
+export default function getFormattedNumLongDiscoveredDetails(tokenData: TrueSightTokenData): {
   price: string
   pricePercent: string
   tradingVolume: string

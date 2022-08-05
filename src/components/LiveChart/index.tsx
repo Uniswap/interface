@@ -1,25 +1,29 @@
-import React, { useState, useContext, useEffect, useMemo } from 'react'
-import LineChart from './LineChart'
-import AnimatingNumber from './AnimatingNumber'
-import styled, { ThemeContext } from 'styled-components'
-import { Flex, Text } from 'rebass'
-import { Repeat } from 'react-feather'
 import { Currency } from '@kyberswap/ks-sdk-core'
-import { Field } from 'state/swap/actions'
-import DoubleCurrencyLogo from 'components/DoubleLogo'
-import useLiveChartData, { LiveDataTimeframeEnum } from 'hooks/useLiveChartData'
-import { isMobile } from 'react-device-detect'
-import WarningIcon from './WarningIcon'
-import { useCurrencyConvertedToNative } from 'utils/dmm'
-import Loader from 'components/LocalLoader'
-import CircleInfoIcon from './CircleInfoIcon'
 import { Trans } from '@lingui/macro'
+import React, { useEffect, useMemo, useState } from 'react'
+import { isMobile } from 'react-device-detect'
+import { Repeat } from 'react-feather'
+import { Flex, Text } from 'rebass'
+import styled from 'styled-components'
+
+import DoubleCurrencyLogo from 'components/DoubleLogo'
 import ProChartToggle from 'components/LiveChart/ProChartToggle'
-import { useShowProLiveChart, useToggleProLiveChart } from 'state/user/hooks'
+import Loader from 'components/LocalLoader'
 import ProLiveChart from 'components/TradingViewChart'
 import { checkPairHasDextoolsData } from 'components/TradingViewChart/datafeed'
 import { useActiveWeb3React } from 'hooks'
+import useLiveChartData, { LiveDataTimeframeEnum } from 'hooks/useLiveChartData'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
+import useTheme from 'hooks/useTheme'
+import { Field } from 'state/swap/actions'
+import { useShowProLiveChart, useToggleProLiveChart } from 'state/user/hooks'
+import { useCurrencyConvertedToNative } from 'utils/dmm'
+
+import AnimatingNumber from './AnimatingNumber'
+import CircleInfoIcon from './CircleInfoIcon'
+import LineChart from './LineChart'
+import WarningIcon from './WarningIcon'
+
 const LiveChartWrapper = styled.div`
   width: 100%;
   height: 100%;
@@ -114,7 +118,7 @@ function LiveChart({
   mobileCloseButton?: React.ReactNode
 }) {
   const { chainId } = useActiveWeb3React()
-  const theme = useContext(ThemeContext)
+  const theme = useTheme()
   const nativeInputCurrency = useCurrencyConvertedToNative(currencies[Field.INPUT] || undefined)
   const nativeOutputCurrency = useCurrencyConvertedToNative(currencies[Field.OUTPUT] || undefined)
   const tokens = useMemo(() => {

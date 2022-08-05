@@ -1,8 +1,16 @@
+import { Fraction } from '@kyberswap/ks-sdk-core'
+import axios from 'axios'
+import JSBI from 'jsbi'
+import { stringify } from 'qs'
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { useHistory } from 'react-router-dom'
 import useSWR from 'swr'
 import useSWRImmutable from 'swr/immutable'
-import axios from 'axios'
+
+import { CAMPAIGN_LEADERBOARD_ITEM_PER_PAGE, SWR_KEYS } from 'constants/index'
+import { useActiveWeb3React } from 'hooks'
+import useParsedQueryString from 'hooks/useParsedQueryString'
 import {
   CampaignData,
   CampaignLeaderboard,
@@ -21,14 +29,7 @@ import {
   setSelectedCampaignLuckyWinners,
 } from 'state/campaigns/actions'
 import { AppState } from 'state/index'
-import { useActiveWeb3React } from 'hooks'
-import { CAMPAIGN_LEADERBOARD_ITEM_PER_PAGE, SWR_KEYS } from 'constants/index'
-import useParsedQueryString from 'hooks/useParsedQueryString'
-import { useHistory } from 'react-router-dom'
-import { stringify } from 'qs'
 import { SerializedToken } from 'state/user/actions'
-import { Fraction } from '@kyberswap/ks-sdk-core'
-import JSBI from 'jsbi'
 
 const MAXIMUM_ITEMS_PER_REQUEST = 10000
 
@@ -40,9 +41,11 @@ export default function CampaignsUpdater(): null {
 
   /**********************CAMPAIGN DATA**********************/
 
-  const { data: campaignData, isValidating: isLoadingCampaignData, error: loadingCampaignDataError } = useSWR<
-    CampaignData[]
-  >(isCampaignPage ? SWR_KEYS.getListCampaign : null, async (url: string) => {
+  const {
+    data: campaignData,
+    isValidating: isLoadingCampaignData,
+    error: loadingCampaignDataError,
+  } = useSWR<CampaignData[]>(isCampaignPage ? SWR_KEYS.getListCampaign : null, async (url: string) => {
     const response = await axios({
       method: 'GET',
       url,

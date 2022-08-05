@@ -1,16 +1,18 @@
-import React from 'react'
-import { MouseoverTooltip } from './Tooltip'
-import { Flex, Text } from 'rebass'
-import useParsedQueryString from 'hooks/useParsedQueryString'
-import { VERSION, ELASTIC_NOT_SUPPORTED } from 'constants/v2'
-import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
-import { stringify } from 'qs'
-import { useActiveWeb3React } from 'hooks'
-import { Trans } from '@lingui/macro'
-import { PoolElasticIcon, PoolClassicIcon } from './Icons'
-import useTheme from 'hooks/useTheme'
 import { ChainId } from '@kyberswap/ks-sdk-core'
+import { Trans } from '@lingui/macro'
+import { stringify } from 'qs'
+import React from 'react'
 import { useHistory } from 'react-router-dom'
+import { Flex, Text } from 'rebass'
+
+import { ELASTIC_NOT_SUPPORTED, VERSION } from 'constants/v2'
+import { useActiveWeb3React } from 'hooks'
+import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
+import useParsedQueryString from 'hooks/useParsedQueryString'
+import useTheme from 'hooks/useTheme'
+
+import { PoolClassicIcon, PoolElasticIcon } from './Icons'
+import { MouseoverTooltip } from './Tooltip'
 
 function ClassicElasticTab() {
   const qs = useParsedQueryString()

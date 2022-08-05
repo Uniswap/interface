@@ -1,5 +1,6 @@
 import React from 'react'
 import { Redirect, RouteComponentProps } from 'react-router-dom'
+
 import CreatePool from './index'
 
 const OLD_PATH_STRUCTURE = /^(0x[a-fA-F0-9]{40})-(0x[a-fA-F0-9]{40})$/

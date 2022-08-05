@@ -1,16 +1,16 @@
-import React, { useState, useCallback } from 'react'
-import styled from 'styled-components'
-import { darken } from 'polished'
-import { Trans } from '@lingui/macro'
-import { Currency } from '@kyberswap/ks-sdk-core'
 import { Pair } from '@kyberswap/ks-sdk-classic'
+import { Currency } from '@kyberswap/ks-sdk-core'
+import { Trans } from '@lingui/macro'
+import { darken } from 'polished'
+import React, { useCallback, useState } from 'react'
+import { X } from 'react-feather'
+import styled from 'styled-components'
 
-import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
+import { ReactComponent as DropDown } from 'assets/images/dropdown.svg'
 import CurrencyLogo from 'components/CurrencyLogo'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
-import { ReactComponent as DropDown } from 'assets/images/dropdown.svg'
+import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
 import { useCurrencyConvertedToNative } from 'utils/dmm'
-import { X } from 'react-feather'
 
 const InputRow = styled.div<{ selected: boolean }>`
   ${({ theme }) => theme.flexRowNoWrap}

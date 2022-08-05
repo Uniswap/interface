@@ -1,5 +1,5 @@
-import styled from 'styled-components'
 import { Text } from 'rebass'
+import styled from 'styled-components'
 
 export const ModalContentWrapper = styled.div`
   display: flex;

@@ -1,7 +1,7 @@
+import { stringify } from 'qs'
 import React, { useMemo } from 'react'
 import { useLocation } from 'react-router'
 import styled from 'styled-components'
-import { stringify } from 'qs'
 
 import { DEFAULT_LOCALE, LOCALE_LABEL, SupportedLocale } from 'constants/locales'
 import { navigatorLocale, useActiveLocale } from 'hooks/useActiveLocale'

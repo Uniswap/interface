@@ -1,6 +1,7 @@
-import styled from 'styled-components'
+import { lighten, rgba } from 'polished'
 import { Flex } from 'rebass'
-import { rgba, lighten } from 'polished'
+import styled from 'styled-components'
+
 import { ButtonEmpty } from 'components/Button'
 
 export const PoolsPageWrapper = styled.div`

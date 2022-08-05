@@ -1,13 +1,14 @@
+import { Trans } from '@lingui/macro'
 import React, { useState } from 'react'
-import Modal from 'components/Modal'
-import styled from 'styled-components'
-import { CloseIcon } from 'theme'
+import { CopyToClipboard } from 'react-copy-to-clipboard'
 import { CheckCircle } from 'react-feather'
 import { Flex, Text } from 'rebass'
-import { Trans } from '@lingui/macro'
-import useTheme from 'hooks/useTheme'
-import { CopyToClipboard } from 'react-copy-to-clipboard'
+import styled from 'styled-components'
+
 import { ButtonPrimary } from 'components/Button'
+import Modal from 'components/Modal'
+import useTheme from 'hooks/useTheme'
+import { CloseIcon } from 'theme'
 
 const ContentWrapper = styled.div`
   padding: 24px;

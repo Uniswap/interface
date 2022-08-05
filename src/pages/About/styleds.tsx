@@ -1,7 +1,8 @@
-import styled from 'styled-components'
 import { Flex, Text } from 'rebass'
-import { ButtonPrimary, ButtonOutlined } from 'components/Button'
+import styled from 'styled-components'
+
 import bgimg from 'assets/images/about_background.png'
+import { ButtonOutlined, ButtonPrimary } from 'components/Button'
 
 export const Wrapper = styled.div`
   max-width: 1228px;
@@ -243,7 +244,6 @@ export const Powered = styled.div`
     row-gap: 24px;
     grid-template-columns: repeat(2, minmax(0, 1fr));
   `}
-
 `
 
 export const Exchange = styled.div`

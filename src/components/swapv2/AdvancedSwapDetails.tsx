@@ -1,22 +1,25 @@
-import { TradeType, Currency } from '@kyberswap/ks-sdk-core'
-import React, { useContext, useMemo, useState } from 'react'
-import styled, { ThemeContext } from 'styled-components'
-import { t, Trans } from '@lingui/macro'
-import { Field } from 'state/swap/actions'
-import { useUserSlippageTolerance } from 'state/user/hooks'
-import { TYPE } from 'theme'
-import { computeSlippageAdjustedAmounts } from 'utils/prices'
-import { AutoColumn } from '../Column'
-import { RowBetween, RowFixed } from '../Row'
-import { useCurrencyConvertedToNative } from 'utils/dmm'
-import { Aggregator } from 'utils/aggregator'
-import { formattedNum } from 'utils'
+import { Currency, TradeType } from '@kyberswap/ks-sdk-core'
+import { Trans, t } from '@lingui/macro'
+import React, { useMemo, useState } from 'react'
 import { Text } from 'rebass'
+import styled from 'styled-components'
+
+import { ReactComponent as DropdownSVG } from 'assets/svg/down.svg'
 import Divider from 'components/Divider'
 import InfoHelper from 'components/InfoHelper'
 import { FeeConfig } from 'hooks/useSwapV2Callback'
+import useTheme from 'hooks/useTheme'
+import { Field } from 'state/swap/actions'
+import { useUserSlippageTolerance } from 'state/user/hooks'
+import { TYPE } from 'theme'
+import { formattedNum } from 'utils'
+import { Aggregator } from 'utils/aggregator'
+import { useCurrencyConvertedToNative } from 'utils/dmm'
 import { getFormattedFeeAmountUsd } from 'utils/fee'
-import { ReactComponent as DropdownSVG } from 'assets/svg/down.svg'
+import { computeSlippageAdjustedAmounts } from 'utils/prices'
+
+import { AutoColumn } from '../Column'
+import { RowBetween, RowFixed } from '../Row'
 
 const IconWrapper = styled.div<{ show: boolean }>`
   color: ${({ theme }) => theme.text};
@@ -37,7 +40,7 @@ interface TradeSummaryProps {
 }
 
 function TradeSummary({ trade, feeConfig, allowedSlippage }: TradeSummaryProps) {
-  const theme = useContext(ThemeContext)
+  const theme = useTheme()
   const [show, setShow] = useState(feeConfig ? true : false)
 
   const isExactIn = trade.tradeType === TradeType.EXACT_INPUT
@@ -72,12 +75,14 @@ function TradeSummary({ trade, feeConfig, allowedSlippage }: TradeSummaryProps) 
               <TYPE.black color={theme.text} fontSize={12}>
                 {isExactIn
                   ? !!slippageAdjustedAmounts[Field.OUTPUT]
-                    ? `${formattedNum(slippageAdjustedAmounts[Field.OUTPUT]!.toSignificant(10))} ${
+                    ? `${formattedNum(slippageAdjustedAmounts[Field.OUTPUT]?.toSignificant(10) || '0')} ${
                         nativeOutput?.symbol
                       }`
                     : '-'
                   : !!slippageAdjustedAmounts[Field.INPUT]
-                  ? `${formattedNum(slippageAdjustedAmounts[Field.INPUT]!.toSignificant(10))} ${nativeInput?.symbol}`
+                  ? `${formattedNum(slippageAdjustedAmounts[Field.INPUT]?.toSignificant(10) || '0')} ${
+                      nativeInput?.symbol
+                    }`
                   : '-'}
               </TYPE.black>
             </RowFixed>

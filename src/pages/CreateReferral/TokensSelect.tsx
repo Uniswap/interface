@@ -1,14 +1,15 @@
+import { ChainId, Currency } from '@kyberswap/ks-sdk-core'
+import { Trans } from '@lingui/macro'
 import React, { useState } from 'react'
 import { ChevronDown, X } from 'react-feather'
+import { Text } from 'rebass'
 import styled from 'styled-components'
+
+import CurrencyLogo from 'components/CurrencyLogo'
 import Modal from 'components/Modal'
 import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
-import { Currency, ChainId } from '@kyberswap/ks-sdk-core'
-import CurrencyLogo from 'components/CurrencyLogo'
-import { Text } from 'rebass'
-import { Trans } from '@lingui/macro'
-import { useActiveWeb3React } from 'hooks'
 import { nativeOnChain } from 'constants/tokens'
+import { useActiveWeb3React } from 'hooks'
 
 const TokensSelectWrapper = styled.div`
   background: ${({ theme }) => theme.buttonBlack};

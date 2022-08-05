@@ -1,12 +1,15 @@
-import { useActiveWeb3React } from 'hooks'
 import { Trade } from '@kyberswap/ks-sdk-classic'
 import { Currency, TradeType } from '@kyberswap/ks-sdk-core'
-import React, { useContext, useMemo, useState } from 'react'
+import { Trans, t } from '@lingui/macro'
+import React, { useMemo, useState } from 'react'
 import { Repeat } from 'react-feather'
 import { Text } from 'rebass'
-import { ThemeContext } from 'styled-components'
-import { t, Trans } from '@lingui/macro'
+
+import { useActiveWeb3React } from 'hooks'
+import { AnyTrade } from 'hooks/useSwapCallback'
+import useTheme from 'hooks/useTheme'
 import { useCurrencyConvertedToNative } from 'utils/dmm'
+
 import { Field } from '../../state/swap/actions'
 import { TYPE } from '../../theme'
 import {
@@ -21,7 +24,6 @@ import QuestionHelper from '../QuestionHelper'
 import { AutoRow, RowBetween, RowFixed } from '../Row'
 import FormattedPriceImpact from './FormattedPriceImpact'
 import { StyledBalanceMaxMini, SwapCallbackError } from './styleds'
-import { AnyTrade } from 'hooks/useSwapCallback'
 
 export default function SwapModalFooter({
   trade,
@@ -38,11 +40,11 @@ export default function SwapModalFooter({
 }) {
   const { chainId } = useActiveWeb3React()
   const [showInverted, setShowInverted] = useState<boolean>(false)
-  const theme = useContext(ThemeContext)
-  const slippageAdjustedAmounts = useMemo(() => computeSlippageAdjustedAmounts(trade, allowedSlippage), [
-    allowedSlippage,
-    trade,
-  ])
+  const theme = useTheme()
+  const slippageAdjustedAmounts = useMemo(
+    () => computeSlippageAdjustedAmounts(trade, allowedSlippage),
+    [allowedSlippage, trade],
+  )
   const { priceImpactWithoutFee, realizedLPFee, accruedFeePercent } = useMemo(() => {
     return trade instanceof Trade
       ? computeTradePriceBreakdown(trade)
@@ -117,8 +119,9 @@ export default function SwapModalFooter({
                 <Trans>Liquidity Provider Fee</Trans>
               </TYPE.black>
               <QuestionHelper
-                text={t`A portion of each trade (${accruedFeePercent &&
-                  accruedFeePercent.toSignificant(6)}%) goes to liquidity providers as a protocol incentive`}
+                text={t`A portion of each trade (${
+                  accruedFeePercent && accruedFeePercent.toSignificant(6)
+                }%) goes to liquidity providers as a protocol incentive`}
               />
             </RowFixed>
             <TYPE.black fontSize={14}>

@@ -1,15 +1,17 @@
 import { BigNumber } from '@ethersproject/bignumber'
+import { TransactionResponse } from '@ethersproject/providers'
 import { useCallback, useMemo } from 'react'
+
+import useSendTransactionCallback from 'hooks/useSendTransactionCallback'
+import { useSwapState } from 'state/swap/hooks'
 import { useTransactionAdder } from 'state/transactions/hooks'
+import { useUserSlippageTolerance } from 'state/user/hooks'
 import { isAddress, shortenAddress } from 'utils'
+import { Aggregator } from 'utils/aggregator'
+import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
+
 import { useActiveWeb3React } from './index'
 import useENS from './useENS'
-import { Aggregator } from 'utils/aggregator'
-import { TransactionResponse } from '@ethersproject/providers'
-import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
-import { useSwapState } from 'state/swap/hooks'
-import useSendTransactionCallback from 'hooks/useSendTransactionCallback'
-import { useUserSlippageTolerance } from 'state/user/hooks'
 
 export enum SwapCallbackState {
   INVALID,
@@ -80,7 +82,17 @@ export function useSwapV2Callback(
         },
       })
     },
-    [account, addTransactionWithType, feeConfig, recipient, recipientAddressOrName, saveGas, trade, typedValue],
+    [
+      allowedSlippage,
+      account,
+      addTransactionWithType,
+      feeConfig,
+      recipient,
+      recipientAddressOrName,
+      saveGas,
+      trade,
+      typedValue,
+    ],
   )
 
   const sendTransaction = useSendTransactionCallback()

@@ -1,4 +1,5 @@
 import { Percent } from '@kyberswap/ks-sdk-core'
+
 import { ALLOWED_PRICE_IMPACT_HIGH, PRICE_IMPACT_WITHOUT_FEE_CONFIRM_MIN } from '../../constants'
 
 /**

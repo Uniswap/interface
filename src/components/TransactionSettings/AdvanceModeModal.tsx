@@ -1,12 +1,13 @@
-import React, { useState } from 'react'
-import styled from 'styled-components'
-import { X } from 'react-feather'
-import Modal from 'components/Modal'
-import { useExpertModeManager } from 'state/user/hooks'
-import { Flex, Text } from 'rebass'
 import { Trans } from '@lingui/macro'
-import useTheme from 'hooks/useTheme'
+import React, { useState } from 'react'
+import { X } from 'react-feather'
+import { Flex, Text } from 'rebass'
+import styled from 'styled-components'
+
 import { ButtonOutlined, ButtonPrimary } from 'components/Button'
+import Modal from 'components/Modal'
+import useTheme from 'hooks/useTheme'
+import { useExpertModeManager } from 'state/user/hooks'
 
 const ModalContentWrapper = styled.div`
   display: flex;

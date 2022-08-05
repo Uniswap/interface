@@ -1,21 +1,23 @@
 import { TradeType } from '@kyberswap/ks-sdk-core'
-import React, { useContext, useMemo } from 'react'
-import { ArrowDown, AlertTriangle } from 'react-feather'
+import { Trans, t } from '@lingui/macro'
+import React, { useMemo } from 'react'
+import { AlertTriangle, ArrowDown } from 'react-feather'
 import { Text } from 'rebass'
-import { ThemeContext } from 'styled-components'
-import { t, Trans } from '@lingui/macro'
+
+import useTheme from 'hooks/useTheme'
+import { useSwapState } from 'state/swap/hooks'
+import { useCurrencyConvertedToNative } from 'utils/dmm'
+
 import { Field } from '../../state/swap/actions'
 import { TYPE } from '../../theme'
-import { ButtonPrimary } from '../Button'
 import { isAddress, shortenAddress } from '../../utils'
+import { Aggregator } from '../../utils/aggregator'
 import { computeSlippageAdjustedAmounts } from '../../utils/prices'
+import { ButtonPrimary } from '../Button'
 import { AutoColumn } from '../Column'
 import CurrencyLogo from '../CurrencyLogo'
 import { RowBetween, RowFixed } from '../Row'
-import { TruncatedText, SwapShowAcceptChanges } from './styleds'
-import { useCurrencyConvertedToNative } from 'utils/dmm'
-import { Aggregator } from '../../utils/aggregator'
-import { useSwapState } from 'state/swap/hooks'
+import { SwapShowAcceptChanges, TruncatedText } from './styleds'
 
 export default function SwapModalHeader({
   trade,
@@ -30,12 +32,12 @@ export default function SwapModalHeader({
   showAcceptChanges: boolean
   onAcceptChanges: () => void
 }) {
-  const slippageAdjustedAmounts = useMemo(() => computeSlippageAdjustedAmounts(trade, allowedSlippage), [
-    trade,
-    allowedSlippage,
-  ])
+  const slippageAdjustedAmounts = useMemo(
+    () => computeSlippageAdjustedAmounts(trade, allowedSlippage),
+    [trade, allowedSlippage],
+  )
 
-  const theme = useContext(ThemeContext)
+  const theme = useTheme()
 
   const nativeInput = useCurrencyConvertedToNative(trade.inputAmount.currency)
 

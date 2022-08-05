@@ -1,14 +1,13 @@
+import { Trans } from '@lingui/macro'
 import React from 'react'
 import { Flex } from 'rebass'
-import { Trans } from '@lingui/macro'
 
-import { formattedNum } from 'utils'
-import { ExternalLink } from 'theme'
-import { ButtonOutlined } from 'components/Button'
 import { ReactComponent as BarChartIcon } from 'assets/svg/bar_chart_icon.svg'
+import { ButtonOutlined } from 'components/Button'
+import Divider from 'components/Divider'
+import useTheme from 'hooks/useTheme'
 import ButtonWithOptions from 'pages/TrueSight/components/ButtonWithOptions'
 import Tags from 'pages/TrueSight/components/Tags'
-import Divider from 'components/Divider'
 import {
   FieldName,
   FieldValue,
@@ -16,10 +15,11 @@ import {
 } from 'pages/TrueSight/components/TrendingSoonLayout/TrendingSoonTokenItem'
 import { TrueSightTokenData } from 'pages/TrueSight/hooks/useGetTrendingSoonData'
 import { TrueSightFilter } from 'pages/TrueSight/index'
-import useTheme from 'hooks/useTheme'
+import { ExternalLink } from 'theme'
+import { formattedNum } from 'utils'
 
-import CommunityRowOnMobile from '../CommunityRowOnMobile'
 import AddressRowOnMobile from '../AddressRowOnMobile'
+import CommunityRowOnMobile from '../CommunityRowOnMobile'
 
 const TrendingSoonTokenItemDetailsOnMobile = ({
   tokenData,

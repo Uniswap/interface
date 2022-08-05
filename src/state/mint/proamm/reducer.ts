@@ -7,7 +7,7 @@ import {
   typeInput,
   typeLeftRangeInput,
   typeRightRangeInput,
-  typeStartPriceInput
+  typeStartPriceInput,
 } from './actions'
 
 export type FullRange = true
@@ -25,7 +25,7 @@ const initialState: MintState = {
   typedValue: '',
   startPriceTypedValue: '',
   leftRangeTypedValue: '',
-  rightRangeTypedValue: ''
+  rightRangeTypedValue: '',
 }
 
 export default createReducer<MintState>(initialState, builder =>
@@ -35,25 +35,25 @@ export default createReducer<MintState>(initialState, builder =>
       return {
         ...state,
         leftRangeTypedValue: true,
-        rightRangeTypedValue: true
+        rightRangeTypedValue: true,
       }
     })
     .addCase(typeStartPriceInput, (state, { payload: { typedValue } }) => {
       return {
         ...state,
-        startPriceTypedValue: typedValue
+        startPriceTypedValue: typedValue,
       }
     })
     .addCase(typeLeftRangeInput, (state, { payload: { typedValue } }) => {
       return {
         ...state,
-        leftRangeTypedValue: typedValue
+        leftRangeTypedValue: typedValue,
       }
     })
     .addCase(typeRightRangeInput, (state, { payload: { typedValue } }) => {
       return {
         ...state,
-        rightRangeTypedValue: typedValue
+        rightRangeTypedValue: typedValue,
       }
     })
     .addCase(typeInput, (state, { payload: { field, typedValue, noLiquidity } }) => {
@@ -63,7 +63,7 @@ export default createReducer<MintState>(initialState, builder =>
           return {
             ...state,
             independentField: field,
-            typedValue
+            typedValue,
           }
         }
         // they're typing into a new field, store the other value
@@ -71,15 +71,15 @@ export default createReducer<MintState>(initialState, builder =>
           return {
             ...state,
             independentField: field,
-            typedValue
+            typedValue,
           }
         }
       } else {
         return {
           ...state,
           independentField: field,
-          typedValue
+          typedValue,
         }
       }
-    })
+    }),
 )

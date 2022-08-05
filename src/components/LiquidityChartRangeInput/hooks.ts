@@ -1,8 +1,9 @@
 import { Currency } from '@kyberswap/ks-sdk-core'
 import { FeeAmount } from '@kyberswap/ks-sdk-elastic'
-import { usePoolActiveLiquidity } from 'hooks/usePoolTickData'
 import JSBI from 'jsbi'
 import { useCallback, useMemo } from 'react'
+
+import { usePoolActiveLiquidity } from 'hooks/usePoolTickData'
 
 import { ChartEntry } from './types'
 
@@ -14,7 +15,7 @@ export interface TickProcessed {
 export function useDensityChartData({
   currencyA,
   currencyB,
-  feeAmount
+  feeAmount,
 }: {
   currencyA: Currency | undefined
   currencyB: Currency | undefined
@@ -34,7 +35,7 @@ export function useDensityChartData({
 
       const chartEntry = {
         activeLiquidity: parseFloat(t.liquidityActive.toString()),
-        price0: parseFloat(t.price0)
+        price0: parseFloat(t.price0),
       }
 
       if (chartEntry.activeLiquidity > 0) {
@@ -51,7 +52,7 @@ export function useDensityChartData({
       isUninitialized,
       isError,
       error,
-      formattedData: !isLoading && !isUninitialized ? formatData() : undefined
+      formattedData: !isLoading && !isUninitialized ? formatData() : undefined,
     }
   }, [isLoading, isUninitialized, isError, error, formatData])
 }

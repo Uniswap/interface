@@ -4,8 +4,8 @@
  *
  * This hook should be used after claim reward transaction success.
  */
-import { useLocalStorage } from 'react-use'
 import { useCallback, useMemo } from 'react'
+import { useLocalStorage } from 'react-use'
 
 export default function useTemporaryClaimedRefsManager(): [string[], (claimedRefs: string[]) => void] {
   const [claimedRefs, setClaimedRefs] = useLocalStorage<string[]>('campaign-claimed-refs', [])

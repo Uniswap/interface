@@ -1,34 +1,35 @@
-import React, { lazy, Suspense, useEffect } from 'react'
+import { ApolloProvider } from '@apollo/client'
+import { ChainId } from '@kyberswap/ks-sdk-core'
+import { Popover, Sidetab } from '@typeform/embed-react'
+import { ethers } from 'ethers'
+import { Suspense, lazy, useEffect } from 'react'
+import { isMobile } from 'react-device-detect'
+import { useDispatch } from 'react-redux'
 import { Route, Switch } from 'react-router-dom'
 import styled from 'styled-components'
-import { ApolloProvider } from '@apollo/client'
 
+import Footer from 'components/Footer/Footer'
+import TopBanner from 'components/Header/TopBanner'
 import Loader from 'components/LocalLoader'
+import { BLACKLIST_WALLETS } from 'constants/index'
+import { NETWORKS_INFO } from 'constants/networks'
+import { useActiveWeb3React } from 'hooks'
+import { useGlobalMixpanelEvents } from 'hooks/useMixpanel'
+import useTheme from 'hooks/useTheme'
+import { useWindowSize } from 'hooks/useWindowSize'
+import { AppDispatch } from 'state'
+import { setGasPrice } from 'state/application/actions'
+import { useIsDarkMode } from 'state/user/hooks'
+
 import Header from '../components/Header'
 import Popups from '../components/Popups'
 import Web3ReactManager from '../components/Web3ReactManager'
 import DarkModeQueryParamReader from '../theme/DarkModeQueryParamReader'
-import Swap from './Swap'
-import ProAmmSwap from './SwapProAmm'
-import { RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects'
-import SwapV2 from './SwapV2'
-import { BLACKLIST_WALLETS } from 'constants/index'
-import { useActiveWeb3React } from 'hooks'
-import { ChainId } from '@kyberswap/ks-sdk-core'
-import { useDispatch } from 'react-redux'
-import { AppDispatch } from 'state'
-import { setGasPrice } from 'state/application/actions'
-import Footer from 'components/Footer/Footer'
 import { RedirectDuplicateTokenIds } from './AddLiquidityV2/redirects'
-import { useIsDarkMode } from 'state/user/hooks'
-import { Sidetab, Popover } from '@typeform/embed-react'
-import useTheme from 'hooks/useTheme'
-import { useWindowSize } from 'hooks/useWindowSize'
-import { useGlobalMixpanelEvents } from 'hooks/useMixpanel'
-import { ethers } from 'ethers'
-import TopBanner from 'components/Header/TopBanner'
-import { NETWORKS_INFO } from 'constants/networks'
-import { isMobile } from 'react-device-detect'
+import Swap from './Swap'
+import { RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects'
+import ProAmmSwap from './SwapProAmm'
+import SwapV2 from './SwapV2'
 
 // Route-based code splitting
 const Pools = lazy(() => import(/* webpackChunkName: 'pools-page' */ './Pools'))
@@ -37,18 +38,20 @@ const Pool = lazy(() => import(/* webpackChunkName: 'my-pool-page' */ './Pool'))
 const Yield = lazy(() => import(/* webpackChunkName: 'yield-page' */ './Yield'))
 const PoolFinder = lazy(() => import(/* webpackChunkName: 'pool-finder-page' */ './PoolFinder'))
 const CreatePool = lazy(() => import(/* webpackChunkName: 'create-pool-page' */ './CreatePool'))
-const ProAmmRemoveLiquidity = lazy(() =>
-  import(/* webpackChunkName: 'elastic-remove-liquidity-page' */ './RemoveLiquidityProAmm'),
+const ProAmmRemoveLiquidity = lazy(
+  () => import(/* webpackChunkName: 'elastic-remove-liquidity-page' */ './RemoveLiquidityProAmm'),
 )
-const RedirectCreatePoolDuplicateTokenIds = lazy(() =>
-  import(
-    /* webpackChunkName: 'redirect-create-pool-duplicate-token-ids-page' */ './CreatePool/RedirectDuplicateTokenIds'
-  ),
+const RedirectCreatePoolDuplicateTokenIds = lazy(
+  () =>
+    import(
+      /* webpackChunkName: 'redirect-create-pool-duplicate-token-ids-page' */ './CreatePool/RedirectDuplicateTokenIds'
+    ),
 )
-const RedirectOldCreatePoolPathStructure = lazy(() =>
-  import(
-    /* webpackChunkName: 'redirect-old-create-pool-path-structure-page' */ './CreatePool/RedirectOldCreatePoolPathStructure'
-  ),
+const RedirectOldCreatePoolPathStructure = lazy(
+  () =>
+    import(
+      /* webpackChunkName: 'redirect-old-create-pool-path-structure-page' */ './CreatePool/RedirectOldCreatePoolPathStructure'
+    ),
 )
 
 const AddLiquidity = lazy(() => import(/* webpackChunkName: 'add-liquidity-page' */ './AddLiquidity'))

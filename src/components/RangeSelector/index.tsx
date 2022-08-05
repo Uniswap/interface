@@ -1,10 +1,11 @@
-import React from 'react'
-import { Trans } from '@lingui/macro'
 import { Currency, Price, Token } from '@kyberswap/ks-sdk-core'
+import { Trans } from '@lingui/macro'
+import React from 'react'
+import { Flex } from 'rebass'
+
 import { AutoColumn } from 'components/Column'
 import StepCounter from 'components/InputStepCounter/InputStepCounter'
 import { Bound } from 'state/mint/proamm/actions'
-import { Flex } from 'rebass'
 
 // currencyA is the base token
 export default function RangeSelector({
@@ -19,7 +20,7 @@ export default function RangeSelector({
   currencyA,
   currencyB,
   feeAmount,
-  ticksAtLimit
+  ticksAtLimit,
 }: {
   priceLower?: Price<Token, Token>
   priceUpper?: Price<Token, Token>

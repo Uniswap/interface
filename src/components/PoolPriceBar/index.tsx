@@ -1,22 +1,24 @@
-import { t, Trans } from '@lingui/macro'
+import { Pair } from '@kyberswap/ks-sdk-classic'
+import { Currency, Fraction, Percent, Price } from '@kyberswap/ks-sdk-core'
+import { Trans, t } from '@lingui/macro'
+import JSBI from 'jsbi'
+import { ReactNode, useState } from 'react'
+import { ChevronDown, ChevronUp } from 'react-feather'
+import { useMedia } from 'react-use'
+import { Text } from 'rebass'
+import styled from 'styled-components'
+
 import { ButtonEmpty } from 'components/Button'
 import Card from 'components/Card'
 import QuestionHelper from 'components/QuestionHelper'
-import { Currency, Fraction, Percent, Price } from '@kyberswap/ks-sdk-core'
-import { Pair } from '@kyberswap/ks-sdk-classic'
-import JSBI from 'jsbi'
-import React, { ReactNode, useContext } from 'react'
-import { useState } from 'react'
-import { ChevronDown, ChevronUp } from 'react-feather'
-import { Text } from 'rebass'
-import styled, { ThemeContext } from 'styled-components'
-import { useCurrencyConvertedToNative, priceRangeCalc, priceRangeCalcByPair } from 'utils/dmm'
+import useTheme from 'hooks/useTheme'
+import { priceRangeCalc, priceRangeCalcByPair, useCurrencyConvertedToNative } from 'utils/dmm'
+
 import { AutoColumn } from '../../components/Column'
 import { AutoRow, RowBetween, RowFixed } from '../../components/Row'
 import { ONE_BIPS } from '../../constants'
 import { Field } from '../../state/mint/actions'
 import { TYPE } from '../../theme'
-import { useMedia } from 'react-use'
 
 const DEFAULT_MIN_PRICE = '0.00'
 const DEFAULT_MAX_PRICE = '♾️'
@@ -97,7 +99,7 @@ export function PoolPriceBar({
   price?: Price<Currency, Currency>
   pair: Pair | null | undefined
 }) {
-  const theme = useContext(ThemeContext)
+  const theme = useTheme()
   const above768 = useMedia('(min-width: 768px)')
   const nativeA = useCurrencyConvertedToNative(currencies[Field.CURRENCY_A] as Currency)
   const nativeB = useCurrencyConvertedToNative(currencies[Field.CURRENCY_B] as Currency)
@@ -160,7 +162,7 @@ export function ToggleComponent({
   title: string
   question?: string
 }) {
-  const theme = useContext(ThemeContext)
+  const theme = useTheme()
   const [showDetails, setShowDetails] = useState(true)
   return (
     <>
@@ -225,7 +227,7 @@ export function PoolPriceRangeBar({
   pair: Pair | null | undefined
   amplification?: Fraction
 }) {
-  const theme = useContext(ThemeContext)
+  const theme = useTheme()
   const nativeA = useCurrencyConvertedToNative(currencies[Field.CURRENCY_A] as Currency)
   const nativeB = useCurrencyConvertedToNative(currencies[Field.CURRENCY_B] as Currency)
 

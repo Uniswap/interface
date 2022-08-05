@@ -1,11 +1,18 @@
-import { useActiveWeb3React } from 'hooks'
-import { TradeType, Currency } from '@kyberswap/ks-sdk-core'
-import React, { useContext, useMemo, useState } from 'react'
+import { Currency, TradeType } from '@kyberswap/ks-sdk-core'
+import { Trans, t } from '@lingui/macro'
+import React, { useMemo, useState } from 'react'
 import { Repeat } from 'react-feather'
 import { Text } from 'rebass'
-import { ThemeContext } from 'styled-components'
-import { t, Trans } from '@lingui/macro'
+
+import InfoHelper from 'components/InfoHelper'
+import { useActiveWeb3React } from 'hooks'
+import { FeeConfig } from 'hooks/useSwapV2Callback'
+import useTheme from 'hooks/useTheme'
+import { formattedNum } from 'utils'
+import { Aggregator } from 'utils/aggregator'
 import { useCurrencyConvertedToNative } from 'utils/dmm'
+import { getFormattedFeeAmountUsd } from 'utils/fee'
+
 import { Field } from '../../state/swap/actions'
 import { TYPE } from '../../theme'
 import { computeSlippageAdjustedAmounts, formatExecutionPrice } from '../../utils/prices'
@@ -13,11 +20,6 @@ import { ButtonError } from '../Button'
 import { AutoColumn } from '../Column'
 import { AutoRow, RowBetween, RowFixed } from '../Row'
 import { StyledBalanceMaxMini, SwapCallbackError } from './styleds'
-import { Aggregator } from 'utils/aggregator'
-import { formattedNum } from 'utils'
-import InfoHelper from 'components/InfoHelper'
-import { FeeConfig } from 'hooks/useSwapV2Callback'
-import { getFormattedFeeAmountUsd } from 'utils/fee'
 
 export default function SwapModalFooter({
   trade,
@@ -36,11 +38,11 @@ export default function SwapModalFooter({
 }) {
   const { chainId } = useActiveWeb3React()
   const [showInverted, setShowInverted] = useState<boolean>(false)
-  const theme = useContext(ThemeContext)
-  const slippageAdjustedAmounts = useMemo(() => computeSlippageAdjustedAmounts(trade, allowedSlippage), [
-    allowedSlippage,
-    trade,
-  ])
+  const theme = useTheme()
+  const slippageAdjustedAmounts = useMemo(
+    () => computeSlippageAdjustedAmounts(trade, allowedSlippage),
+    [allowedSlippage, trade],
+  )
 
   const nativeInput = useCurrencyConvertedToNative(trade.inputAmount.currency as Currency)
 

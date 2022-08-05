@@ -1,7 +1,7 @@
 import { createReducer } from '@reduxjs/toolkit'
 
-import { ProMMPoolData, UserPosition } from './hooks'
 import { setError, setLoading, setSelectedPool, setSharedPoolId, updatePools } from './actions'
+import { ProMMPoolData, UserPosition } from './hooks'
 
 interface SelectedPool {
   poolData: ProMMPoolData

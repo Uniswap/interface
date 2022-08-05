@@ -1,12 +1,14 @@
-import React from 'react'
-import { Schedule } from 'state/vesting/hooks'
-import { BigNumber } from 'ethers'
 import { Token } from '@kyberswap/ks-sdk-core'
-import { calculateGasMargin } from 'utils'
-import { useTransactionAdder } from 'state/transactions/hooks'
+import { BigNumber } from 'ethers'
+import React from 'react'
+
 import { ZERO_ADDRESS } from 'constants/index'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
+import { useTransactionAdder } from 'state/transactions/hooks'
+import { Schedule } from 'state/vesting/hooks'
+import { calculateGasMargin } from 'utils'
 import { fixedFormatting } from 'utils/formatBalance'
+
 import VestingCard from './VestingCard'
 
 const ScheduleCard = ({ schedules }: { schedules: Schedule[] }) => {

@@ -1,9 +1,10 @@
 import { ChainId } from '@kyberswap/ks-sdk-core'
-import { NetworkInfo } from '../type'
+
+import EthereumLogo from 'assets/images/ethereum-logo.png'
+import ARBITRUM from 'assets/networks/arbitrum-network.svg'
 import { createClient } from 'utils/client'
 
-import ARBITRUM from 'assets/networks/arbitrum-network.svg'
-import EthereumLogo from 'assets/images/ethereum-logo.png'
+import { NetworkInfo } from '../type'
 
 const EMPTY = ''
 const EMPTY_ARRAY: any[] = []

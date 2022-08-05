@@ -1,17 +1,18 @@
-import React from 'react'
 import { BigNumber } from '@ethersproject/bignumber'
-
 import { Token } from '@kyberswap/ks-sdk-core'
-import { useActiveWeb3React } from 'hooks'
-import useVesting from 'hooks/useVesting'
-import { useAppDispatch } from 'state/hooks'
-import { useBlockNumber, useTokensPrice } from 'state/application/hooks'
-import { setAttemptingTxn, setShowConfirm, setTxHash, setVestingError } from 'state/vesting/actions'
-import { RewardLockerVersion } from 'state/farms/types'
-import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
-import { fixedFormatting } from 'utils/formatBalance'
+import React from 'react'
+
 import { ZERO_ADDRESS } from 'constants/index'
+import { useActiveWeb3React } from 'hooks'
+import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import { useTimestampFromBlock } from 'hooks/useTimestampFromBlock'
+import useVesting from 'hooks/useVesting'
+import { useBlockNumber, useTokensPrice } from 'state/application/hooks'
+import { RewardLockerVersion } from 'state/farms/types'
+import { useAppDispatch } from 'state/hooks'
+import { setAttemptingTxn, setShowConfirm, setTxHash, setVestingError } from 'state/vesting/actions'
+import { fixedFormatting } from 'utils/formatBalance'
+
 import VestingCard from './VestingCard'
 
 const RewardLockerSchedules = ({

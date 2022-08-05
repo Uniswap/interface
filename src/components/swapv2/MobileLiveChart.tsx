@@ -1,15 +1,16 @@
-import React, { useContext } from 'react'
-import { MobileModalWrapper } from 'components/swapv2/styleds'
-import { Flex } from 'rebass'
-import { ButtonText } from 'theme/components'
-import { X } from 'react-feather'
-import LiveChart from 'components/LiveChart'
-import { ThemeContext } from 'styled-components'
-import { MobileView } from 'react-device-detect'
-import { useModalOpen, useToggleModal } from 'state/application/hooks'
-import { ApplicationModal } from 'state/application/actions'
-import { Field } from 'state/swap/actions'
 import { Currency } from '@kyberswap/ks-sdk-core'
+import React from 'react'
+import { MobileView } from 'react-device-detect'
+import { X } from 'react-feather'
+import { Flex } from 'rebass'
+
+import LiveChart from 'components/LiveChart'
+import { MobileModalWrapper } from 'components/swapv2/styleds'
+import useTheme from 'hooks/useTheme'
+import { ApplicationModal } from 'state/application/actions'
+import { useModalOpen, useToggleModal } from 'state/application/hooks'
+import { Field } from 'state/swap/actions'
+import { ButtonText } from 'theme/components'
 
 function MobileLiveChart({
   handleRotateClick,
@@ -18,7 +19,7 @@ function MobileLiveChart({
   handleRotateClick: () => void
   currencies: { [field in Field]?: Currency }
 }) {
-  const theme = useContext(ThemeContext)
+  const theme = useTheme()
   const isOpen = useModalOpen(ApplicationModal.MOBILE_LIVE_CHART)
   const toggle = useToggleModal(ApplicationModal.MOBILE_LIVE_CHART)
   const isHorizontal = window.orientation === 90 || window.orientation === -90

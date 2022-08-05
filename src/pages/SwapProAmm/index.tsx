@@ -1,25 +1,23 @@
-import { Trade } from '@kyberswap/ks-sdk-elastic'
 import { Currency, CurrencyAmount, Token, TradeType } from '@kyberswap/ks-sdk-core'
-import confirmPriceImpactWithoutFee from 'components/swap/confirmPriceImpactWithoutFee'
-import { useActiveWeb3React } from 'hooks'
-import { useAllTokens, useCurrency } from 'hooks/Tokens'
-import { ApprovalState, useProAmmApproveCallback } from 'hooks/useApproveCallback'
-import { useSwapCallback } from 'hooks/useSwapCallback'
-import useWrapCallback, { WrapType } from 'hooks/useWrapCallback'
+import { Trade } from '@kyberswap/ks-sdk-elastic'
+import { Trans, t } from '@lingui/macro'
 import JSBI from 'jsbi'
-import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
-import { Text } from 'rebass'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import { ArrowDown } from 'react-feather'
 import { RouteComponentProps } from 'react-router-dom'
-import { useWalletModalToggle } from 'state/application/hooks'
-import { TradeState } from 'state/routing/types'
-import { Field } from 'state/swap/actions'
-import { useDefaultsFromURLSearch, useSwapActionHandlers, useSwapState } from 'state/swap/hooks'
-import { useProAmmDerivedSwapInfo } from 'state/swap/proamm/hooks'
-import { useExpertModeManager } from 'state/user/hooks'
-import { ThemeContext } from 'styled-components'
-import { maxAmountSpend } from 'utils/maxAmountSpend'
-import { warningSeverity } from 'utils/prices'
+import { Text } from 'rebass'
+
+import AddressInputPanel from 'components/AddressInputPanel'
+import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from 'components/Button'
+import { GreyCard } from 'components/Card'
+import { AutoColumn } from 'components/Column'
+import CurrencyInputPanel from 'components/CurrencyInputPanel'
+import Loader from 'components/Loader'
+import { AutoRow, RowBetween } from 'components/Row'
 import TokenWarningModal from 'components/TokenWarningModal'
+import TransactionSettings from 'components/TransactionSettings'
+import ConfirmSwapModal from 'components/swap/ConfirmSwapModal'
+import confirmPriceImpactWithoutFee from 'components/swap/confirmPriceImpactWithoutFee'
 import {
   ArrowWrapper,
   Container,
@@ -28,20 +26,23 @@ import {
   SwapFormActions,
   Wrapper,
 } from 'components/swapv2/styleds'
+import { useActiveWeb3React } from 'hooks'
+import { useAllTokens, useCurrency } from 'hooks/Tokens'
+import { ApprovalState, useProAmmApproveCallback } from 'hooks/useApproveCallback'
+import { useSwapCallback } from 'hooks/useSwapCallback'
+import useTheme from 'hooks/useTheme'
+import useWrapCallback, { WrapType } from 'hooks/useWrapCallback'
 import { AppBodyWrapped } from 'pages/SwapV2'
-import { AutoRow, RowBetween } from 'components/Row'
-import TransactionSettings from 'components/TransactionSettings'
-import ConfirmSwapModal from 'components/swap/ConfirmSwapModal'
-import { basisPointsToPercent } from 'utils'
-import { AutoColumn } from 'components/Column'
-import CurrencyInputPanel from 'components/CurrencyInputPanel'
-import { t, Trans } from '@lingui/macro'
-import { ArrowDown } from 'react-feather'
+import { useWalletModalToggle } from 'state/application/hooks'
+import { TradeState } from 'state/routing/types'
+import { Field } from 'state/swap/actions'
+import { useDefaultsFromURLSearch, useSwapActionHandlers, useSwapState } from 'state/swap/hooks'
+import { useProAmmDerivedSwapInfo } from 'state/swap/proamm/hooks'
+import { useExpertModeManager } from 'state/user/hooks'
 import { LinkStyledButton, TYPE } from 'theme'
-import AddressInputPanel from 'components/AddressInputPanel'
-import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from 'components/Button'
-import { GreyCard } from 'components/Card'
-import Loader from 'components/Loader'
+import { basisPointsToPercent } from 'utils'
+import { maxAmountSpend } from 'utils/maxAmountSpend'
+import { warningSeverity } from 'utils/prices'
 
 export default function SwapProAmm({ history }: RouteComponentProps) {
   const { account } = useActiveWeb3React()
@@ -72,7 +73,7 @@ export default function SwapProAmm({ history }: RouteComponentProps) {
     [defaultTokens, urlLoadedTokens],
   )
 
-  const theme = useContext(ThemeContext)
+  const theme = useTheme()
 
   // toggle wallet when disconnected
   const toggleWalletModal = useWalletModalToggle()
@@ -90,11 +91,11 @@ export default function SwapProAmm({ history }: RouteComponentProps) {
     inputError: swapInputError,
   } = useProAmmDerivedSwapInfo()
 
-  const { wrapType, execute: onWrap, inputError: wrapInputError } = useWrapCallback(
-    currencies[Field.INPUT],
-    currencies[Field.OUTPUT],
-    typedValue,
-  )
+  const {
+    wrapType,
+    execute: onWrap,
+    inputError: wrapInputError,
+  } = useWrapCallback(currencies[Field.INPUT], currencies[Field.OUTPUT], typedValue)
   const showWrap: boolean = wrapType !== WrapType.NOT_APPLICABLE
   const parsedAmounts = useMemo(
     () =>
@@ -227,7 +228,7 @@ export default function SwapProAmm({ history }: RouteComponentProps) {
   }, [attemptingTxn, showConfirm, swapErrorMessage, trade, txHash])
 
   const handleInputSelect = useCallback(
-    inputCurrency => {
+    (inputCurrency: Currency) => {
       setApprovalSubmitted(false) // reset 2 step UI for approvals
       onCurrencySelection(Field.INPUT, inputCurrency)
     },
@@ -238,9 +239,10 @@ export default function SwapProAmm({ history }: RouteComponentProps) {
     maxInputAmount && onUserInput(Field.INPUT, maxInputAmount.toExact())
   }, [maxInputAmount, onUserInput])
 
-  const handleOutputSelect = useCallback(outputCurrency => onCurrencySelection(Field.OUTPUT, outputCurrency), [
-    onCurrencySelection,
-  ])
+  const handleOutputSelect = useCallback(
+    (outputCurrency: Currency) => onCurrencySelection(Field.OUTPUT, outputCurrency),
+    [onCurrencySelection],
+  )
 
   const priceImpactTooHigh = priceImpactSeverity > 3 && !isExpertMode
   return (

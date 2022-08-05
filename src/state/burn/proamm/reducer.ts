@@ -11,7 +11,7 @@ interface BurnProAmmState {
 const initialState: BurnProAmmState = {
   independentField: Field.LIQUIDITY_PERCENT,
   independentTokenField: Field.CURRENCY_A,
-  typedValue: ''
+  typedValue: '',
 }
 
 export default createReducer<BurnProAmmState>(initialState, builder =>
@@ -19,7 +19,7 @@ export default createReducer<BurnProAmmState>(initialState, builder =>
     return {
       ...state,
       independentField: field,
-      typedValue
+      typedValue,
     }
-  })
+  }),
 )

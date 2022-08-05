@@ -1,43 +1,45 @@
+import { Trans, t } from '@lingui/macro'
+import dayjs from 'dayjs'
+import { stringify } from 'qs'
 import React, { useEffect, useMemo, useRef, useState } from 'react'
-import styled, { css } from 'styled-components'
-import { Flex, Text } from 'rebass'
-import { t, Trans } from '@lingui/macro'
-import useTheme from 'hooks/useTheme'
-import { HideMedium, MediumOnly } from 'theme'
 import { BarChart, ChevronDown, Clock, Share2, Star, Users } from 'react-feather'
+import { useSelector } from 'react-redux'
+import { useHistory } from 'react-router-dom'
+import { useMedia } from 'react-use'
+import { Flex, Text } from 'rebass'
+import styled, { css } from 'styled-components'
+import { useSWRConfig } from 'swr'
+
 import { ButtonEmpty, ButtonLight } from 'components/Button'
-import { formatNumberWithPrecisionRange } from 'utils'
+import Divider from 'components/Divider'
+import LocalLoader from 'components/LocalLoader'
+import ShareModal from 'components/ShareModal'
+import YourCampaignTransactionsModal from 'components/YourCampaignTransactionsModal'
+import { SWR_KEYS } from 'constants/index'
 import { useActiveWeb3React } from 'hooks'
+import useInterval from 'hooks/useInterval'
+import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
+import useTheme from 'hooks/useTheme'
+import CampaignListAndSearch from 'pages/Campaign/CampaignListAndSearch'
+import EnterNowOrClaimButton from 'pages/Campaign/EnterNowOrClaimButton'
+import LeaderboardLayout from 'pages/Campaign/LeaderboardLayout'
+import { Loading } from 'pages/ProAmmPool/ContentLoader'
+import { AppState } from 'state'
+import { ApplicationModal } from 'state/application/actions'
 import {
   useSelectCampaignModalToggle,
   useToggleModal,
   useToggleYourCampaignTransactionsModal,
   useWalletModalToggle,
 } from 'state/application/hooks'
-import Divider from 'components/Divider'
-import LeaderboardLayout from 'pages/Campaign/LeaderboardLayout'
-import ModalSelectCampaign from './ModalSelectCampaign'
-import CampaignListAndSearch from 'pages/Campaign/CampaignListAndSearch'
-import { ApplicationModal } from 'state/application/actions'
-import ShareModal from 'components/ShareModal'
 import { CampaignData, CampaignState, setCampaignData, setSelectedCampaign } from 'state/campaigns/actions'
-import { useSelector } from 'react-redux'
-import { AppState } from 'state'
-import { getFormattedTimeFromSecond } from 'utils/formatTime'
-import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
-import { useHistory } from 'react-router-dom'
-import { stringify } from 'qs'
-import oembed2iframe from 'utils/oembed2iframe'
-import { useMedia } from 'react-use'
-import useInterval from 'hooks/useInterval'
-import { SWR_KEYS } from 'constants/index'
-import { useSWRConfig } from 'swr'
-import { Loading } from 'pages/ProAmmPool/ContentLoader'
 import { useAppDispatch } from 'state/hooks'
-import YourCampaignTransactionsModal from 'components/YourCampaignTransactionsModal'
-import EnterNowOrClaimButton from 'pages/Campaign/EnterNowOrClaimButton'
-import LocalLoader from 'components/LocalLoader'
-import dayjs from 'dayjs'
+import { HideMedium, MediumOnly } from 'theme'
+import { formatNumberWithPrecisionRange } from 'utils'
+import { getFormattedTimeFromSecond } from 'utils/formatTime'
+import oembed2iframe from 'utils/oembed2iframe'
+
+import ModalSelectCampaign from './ModalSelectCampaign'
 
 const LoaderParagraphs = () => (
   <>
@@ -100,81 +102,82 @@ export default function Campaign() {
 
   const TabHowToWinContent = useMemo(
     // eslint-disable-next-line react/display-name
-    () => () => (
-      <Flex
-        flexDirection="column"
-        sx={{
-          padding: '24px',
-        }}
-      >
+    () => () =>
+      (
         <Flex
-          justifyContent="space-between"
-          alignItems="center"
-          style={{ cursor: 'pointer' }}
-          onClick={() => setShowRules(prev => !prev)}
-          padding="0 0 20px 0"
+          flexDirection="column"
+          sx={{
+            padding: '24px',
+          }}
         >
-          <Text fontSize={16} fontWeight={500}>
-            <Trans>Rules</Trans>
-          </Text>
-          <ButtonEmpty width="fit-content" style={{ padding: '0' }}>
-            <ChevronDown size={24} color={theme.subText} />
-          </ButtonEmpty>
+          <Flex
+            justifyContent="space-between"
+            alignItems="center"
+            style={{ cursor: 'pointer' }}
+            onClick={() => setShowRules(prev => !prev)}
+            padding="0 0 20px 0"
+          >
+            <Text fontSize={16} fontWeight={500}>
+              <Trans>Rules</Trans>
+            </Text>
+            <ButtonEmpty width="fit-content" style={{ padding: '0' }}>
+              <ChevronDown size={24} color={theme.subText} />
+            </ButtonEmpty>
+          </Flex>
+          {showRules ? (
+            isSelectedCampaignMediaLoaded ? (
+              <HTMLWrapper dangerouslySetInnerHTML={{ __html: oembed2iframe(rules) }} />
+            ) : (
+              <LoaderParagraphs />
+            )
+          ) : null}
+          <Divider />
+          <Flex
+            justifyContent="space-between"
+            alignItems="center"
+            style={{ cursor: 'pointer' }}
+            onClick={() => setShowTermsAndConditions(prev => !prev)}
+            padding="20px 0"
+          >
+            <Text fontSize={16} fontWeight={500}>
+              <Trans>Terms and Conditions</Trans>
+            </Text>
+            <ButtonEmpty width="fit-content" style={{ padding: '0' }}>
+              <ChevronDown size={24} color={theme.subText} />
+            </ButtonEmpty>
+          </Flex>
+          {showTermsAndConditions ? (
+            isSelectedCampaignMediaLoaded ? (
+              <HTMLWrapper dangerouslySetInnerHTML={{ __html: oembed2iframe(termsAndConditions) }} />
+            ) : (
+              <LoaderParagraphs />
+            )
+          ) : null}
+          <Divider />
+          <Flex
+            justifyContent="space-between"
+            alignItems="center"
+            style={{ cursor: 'pointer' }}
+            onClick={() => setShowOtherDetails(prev => !prev)}
+            padding="20px 0"
+          >
+            <Text fontSize={16} fontWeight={500}>
+              <Trans>Other Details</Trans>
+            </Text>
+            <ButtonEmpty width="fit-content" style={{ padding: '0' }}>
+              <ChevronDown size={24} color={theme.subText} />
+            </ButtonEmpty>
+          </Flex>
+          {showOtherDetails ? (
+            isSelectedCampaignMediaLoaded ? (
+              <HTMLWrapper dangerouslySetInnerHTML={{ __html: oembed2iframe(otherDetails) }} />
+            ) : (
+              <LoaderParagraphs />
+            )
+          ) : null}
+          <Divider />
         </Flex>
-        {showRules ? (
-          isSelectedCampaignMediaLoaded ? (
-            <HTMLWrapper dangerouslySetInnerHTML={{ __html: oembed2iframe(rules) }} />
-          ) : (
-            <LoaderParagraphs />
-          )
-        ) : null}
-        <Divider />
-        <Flex
-          justifyContent="space-between"
-          alignItems="center"
-          style={{ cursor: 'pointer' }}
-          onClick={() => setShowTermsAndConditions(prev => !prev)}
-          padding="20px 0"
-        >
-          <Text fontSize={16} fontWeight={500}>
-            <Trans>Terms and Conditions</Trans>
-          </Text>
-          <ButtonEmpty width="fit-content" style={{ padding: '0' }}>
-            <ChevronDown size={24} color={theme.subText} />
-          </ButtonEmpty>
-        </Flex>
-        {showTermsAndConditions ? (
-          isSelectedCampaignMediaLoaded ? (
-            <HTMLWrapper dangerouslySetInnerHTML={{ __html: oembed2iframe(termsAndConditions) }} />
-          ) : (
-            <LoaderParagraphs />
-          )
-        ) : null}
-        <Divider />
-        <Flex
-          justifyContent="space-between"
-          alignItems="center"
-          style={{ cursor: 'pointer' }}
-          onClick={() => setShowOtherDetails(prev => !prev)}
-          padding="20px 0"
-        >
-          <Text fontSize={16} fontWeight={500}>
-            <Trans>Other Details</Trans>
-          </Text>
-          <ButtonEmpty width="fit-content" style={{ padding: '0' }}>
-            <ChevronDown size={24} color={theme.subText} />
-          </ButtonEmpty>
-        </Flex>
-        {showOtherDetails ? (
-          isSelectedCampaignMediaLoaded ? (
-            <HTMLWrapper dangerouslySetInnerHTML={{ __html: oembed2iframe(otherDetails) }} />
-          ) : (
-            <LoaderParagraphs />
-          )
-        ) : null}
-        <Divider />
-      </Flex>
-    ),
+      ),
     [
       isSelectedCampaignMediaLoaded,
       otherDetails,
@@ -189,18 +192,19 @@ export default function Campaign() {
 
   const TabRewardsContent = useMemo(
     // eslint-disable-next-line react/display-name
-    () => () => (
-      <Flex flexDirection="column" sx={{ gap: '20px', padding: '24px' }}>
-        <Text fontSize={16} fontWeight={500}>
-          <Trans>Rewards</Trans>
-        </Text>
-        {isSelectedCampaignMediaLoaded ? (
-          <HTMLWrapper dangerouslySetInnerHTML={{ __html: oembed2iframe(rewardDetails) }} />
-        ) : (
-          <LoaderParagraphs />
-        )}
-      </Flex>
-    ),
+    () => () =>
+      (
+        <Flex flexDirection="column" sx={{ gap: '20px', padding: '24px' }}>
+          <Text fontSize={16} fontWeight={500}>
+            <Trans>Rewards</Trans>
+          </Text>
+          {isSelectedCampaignMediaLoaded ? (
+            <HTMLWrapper dangerouslySetInnerHTML={{ __html: oembed2iframe(rewardDetails) }} />
+          ) : (
+            <LoaderParagraphs />
+          )}
+        </Flex>
+      ),
     [isSelectedCampaignMediaLoaded, rewardDetails],
   )
 

@@ -1,9 +1,9 @@
-/* eslint-disable @typescript-eslint/camelcase */
 import { useMemo, useRef } from 'react'
-import { TrueSightTimeframe } from 'pages/TrueSight/index'
-import { NETWORKS_INFO, TRUESIGHT_NETWORK_TO_CHAINID } from 'constants/networks'
-import { COINGECKO_API_URL } from 'constants/index'
 import useSWRImmutable from 'swr/immutable'
+
+import { COINGECKO_API_URL } from 'constants/index'
+import { NETWORKS_INFO, TRUESIGHT_NETWORK_TO_CHAINID } from 'constants/networks'
+import { TrueSightTimeframe } from 'pages/TrueSight/index'
 
 export interface CoinGeckoChartData {
   prices: [number, number][]
@@ -38,7 +38,11 @@ export default function useGetCoinGeckoChartData(
   const latestRequestingTime = useRef(0)
   const controller = useRef(new AbortController())
 
-  const { data, isValidating: isLoading, error } = useSWRImmutable<CoinGeckoChartData>(
+  const {
+    data,
+    isValidating: isLoading,
+    error,
+  } = useSWRImmutable<CoinGeckoChartData>(
     ['useGetCoinGeckoChartData', timeframe, tokenAddress ?? '', tokenNetwork ?? ''],
     async () => {
       if (tokenNetwork && tokenAddress) {

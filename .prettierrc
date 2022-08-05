@@ -3,5 +3,12 @@
   "singleQuote": true,
   "printWidth": 120,
   "trailingComma": "all",
-  "arrowParens": "avoid"
+  "arrowParens": "avoid",
+  "importOrder": [
+    "<THIRD_PARTY_MODULES>",
+    "^(apollo|assets|components|connectors|constants|data|hooks|locales|pages|state|theme|types|utils)(/.+)?$",
+    "^[./]"
+  ],
+  "importOrderSeparation": true,
+  "importOrderSortSpecifiers": true
 }

@@ -1,16 +1,17 @@
-import React, { CSSProperties, useEffect, useRef, useState } from 'react'
-import { Box, Flex, Text } from 'rebass'
-import Search from 'components/Search'
-import styled from 'styled-components'
-import useTheme from 'hooks/useTheme'
-import { useOnClickOutside } from 'hooks/useOnClickOutside'
-import { X } from 'react-feather'
-import { ButtonEmpty } from 'components/Button'
-import { OptionsContainer } from 'pages/TrueSight/styled'
 import { Trans } from '@lingui/macro'
+import React, { CSSProperties, useEffect, useRef, useState } from 'react'
+import { X } from 'react-feather'
+import { Box, Flex, Text } from 'rebass'
+import styled from 'styled-components'
+
+import { ButtonEmpty } from 'components/Button'
 import Divider from 'components/Divider'
-import { TrueSightTokenData } from 'pages/TrueSight/hooks/useGetTrendingSoonData'
+import Search from 'components/Search'
+import { useOnClickOutside } from 'hooks/useOnClickOutside'
+import useTheme from 'hooks/useTheme'
 import { TruncatedText } from 'pages/TrueSight/components/TrendingSoonLayout/TrendingSoonTokenItem'
+import { TrueSightTokenData } from 'pages/TrueSight/hooks/useGetTrendingSoonData'
+import { OptionsContainer } from 'pages/TrueSight/styled'
 
 interface TrueSightSearchBoxProps {
   className?: string

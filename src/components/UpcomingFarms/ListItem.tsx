@@ -1,15 +1,16 @@
+import { Trans } from '@lingui/macro'
 import React from 'react'
 import { useMedia } from 'react-use'
-import { Trans } from '@lingui/macro'
 import { Flex } from 'rebass'
 
+import { DataText, DataTitle, GridItem } from 'components/YieldPools/styleds'
 import { NETWORKS_INFO } from 'constants/networks'
 import { UpcomingPool } from 'constants/upcoming-pools'
 import { ExternalLink } from 'theme'
-import { DataText, DataTitle, GridItem } from 'components/YieldPools/styleds'
+
 import PoolTokens from './PoolTokens'
 import StartingIn from './StartingIn'
-import { StyledImg, TableRow, StyledItemCard, NetworkLabel } from './styled'
+import { NetworkLabel, StyledImg, StyledItemCard, TableRow } from './styled'
 
 const ListItem = ({ pool, isLastItem }: { pool: UpcomingPool; isLastItem: boolean }) => {
   const breakpoint = useMedia('(min-width: 1000px)')

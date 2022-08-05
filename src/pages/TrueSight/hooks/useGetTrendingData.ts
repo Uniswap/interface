@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from 'react'
 
-import { TrueSightFilter, TrueSightTimeframe } from 'pages/TrueSight/index'
-import { TrueSightTokenResponse } from 'pages/TrueSight/hooks/useGetTrendingSoonData'
 import { TRENDING_SOON_SUPPORTED_NETWORKS } from 'constants/index'
+import { TrueSightTokenResponse } from 'pages/TrueSight/hooks/useGetTrendingSoonData'
+import { TrueSightFilter, TrueSightTimeframe } from 'pages/TrueSight/index'
 
 export default function useGetTrendingData(filter: TrueSightFilter, currentPage: number, itemPerPage: number) {
   const [isLoading, setIsLoading] = useState(false)
@@ -15,8 +15,9 @@ export default function useGetTrendingData(filter: TrueSightFilter, currentPage:
         const timeframe = filter.timeframe === TrueSightTimeframe.ONE_DAY ? '24h' : '7d'
         const url = `${process.env.REACT_APP_TRUESIGHT_API}/api/v1/trending?timeframe=${timeframe}&page_number=${
           filter.isShowTrueSightOnly ? 0 : currentPage - 1
-        }&page_size=${filter.isShowTrueSightOnly ? 9999 : itemPerPage}&search_token_id=${filter.selectedTokenData
-          ?.token_id ?? ''}&search_token_tag=${filter.selectedTag ?? ''}`
+        }&page_size=${filter.isShowTrueSightOnly ? 9999 : itemPerPage}&search_token_id=${
+          filter.selectedTokenData?.token_id ?? ''
+        }&search_token_tag=${filter.selectedTag ?? ''}`
         setError(undefined)
         setIsLoading(true)
         const response = await fetch(url)
@@ -43,7 +44,7 @@ export default function useGetTrendingData(filter: TrueSightFilter, currentPage:
             const platforms = new Map<string, string>()
             for (let i = 0; i < priorityNetworks.length; i++) {
               const network = priorityNetworks[i]
-              const address = ((token.platforms as unknown) as { [p: string]: string })[network]
+              const address = (token.platforms as unknown as { [p: string]: string })[network]
               if (address) {
                 platforms.set(network, address)
               }
