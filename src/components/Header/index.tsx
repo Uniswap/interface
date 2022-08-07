@@ -133,7 +133,6 @@ const UNIAmount = styled(AccountElement)`
   padding: 4px 8px;
   height: 36px;
   font-weight: 500;
-  background-color: ${({ theme }) => theme.bg3};
   background: radial-gradient(174.47% 188.91% at 1.84% 0%, #ff007a 0%, #2172e5 100%), #edeef2;
 `
 
@@ -261,7 +260,7 @@ export default function Header() {
         </StyledNavLink>
         <StyledNavLink id={`xtt-presale-nav-link`} to={'/xtt-presale'}>
           <ThemedText.Main color={theme.primaryText1}>
-            <Trans>XTT Presale</Trans>
+            <Trans>Presale</Trans>
           </ThemedText.Main>
         </StyledNavLink>
         <ExternalLink
@@ -305,7 +304,7 @@ export default function Header() {
           <AccountElement active={!!account}>
             {account && userEthBalance ? (
               <BalanceText style={{ flexShrink: 0, userSelect: 'none' }} pl="0.75rem" pr="0.5rem" fontWeight={500}>
-                <Trans>{userEthBalance?.toSignificant(6)} XDC</Trans>
+                <Trans>{userEthBalance?.toSignificant(3)} XDC</Trans>
               </BalanceText>
             ) : null}
             <Web3Status />

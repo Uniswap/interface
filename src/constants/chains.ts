@@ -35,7 +35,7 @@ export const CHAIN_INFO: ChainInfo = {
     docs: 'https://howto.xinfin.org/',
     explorer: 'https://explorer.xinfin.network/',
     infoLink: 'https://xinfin.network/',
-    label: 'XinFin Network',
+    label: 'Mainnet',
     logoUrl: xdcLogoUrl,
     nativeCurrency: {
       name: 'XDC',
@@ -47,7 +47,7 @@ export const CHAIN_INFO: ChainInfo = {
     docs: 'https://howto.xinfin.org/',
     explorer: 'https://explorer.apothem.network',
     infoLink: 'https://xinfin.network/',
-    label: 'XinFin Testnet',
+    label: 'Testnet',
     logoUrl: xdcLogoUrl,
     nativeCurrency: {
       name: 'TXDC',
