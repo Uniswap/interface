@@ -1,6 +1,5 @@
 export * from './useCart'
 export * from './useCollectionFilters'
-export * from './useDarkMode'
 export * from './useFiltersExpanded'
 export * from './useGenieList'
 export * from './useIsMobile'
