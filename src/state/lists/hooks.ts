@@ -1,5 +1,4 @@
 import { ChainId } from '@kyberswap/ks-sdk-core'
-import DEFAULT_TOKEN_LIST from '@uniswap/default-token-list'
 import { Tags, TokenList } from '@uniswap/token-lists'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
@@ -65,8 +64,6 @@ function listToTokenMap(list: TokenList): TokenAddressMap {
   listCache?.set(list, map)
   return map
 }
-
-const TRANSFORMED_DEFAULT_TOKEN_LIST = listToTokenMap(DEFAULT_TOKEN_LIST)
 
 // returns all downloaded current lists
 export type ListType = {
@@ -188,10 +185,7 @@ function useDMMTokenList(): TokenAddressMap {
 
 function useDefaultTokenList(): TokenAddressMap {
   const dmmTokens = useDMMTokenList()
-
-  return useMemo(() => {
-    return combineMaps(dmmTokens, TRANSFORMED_DEFAULT_TOKEN_LIST)
-  }, [dmmTokens])
+  return dmmTokens
 }
 
 // get all the tokens from active lists, combine with local default tokens
