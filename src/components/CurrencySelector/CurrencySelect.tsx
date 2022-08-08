@@ -80,7 +80,7 @@ export function CurrencySelect({
   }, [onClearChainFilter, onClearSearchFilter])
 
   return (
-    <Flex gap="lg" px="md" width="100%">
+    <Flex gap="lg" overflow="hidden" px="md" width="100%">
       <SearchBar
         placeholder={t('Search token symbols or address')}
         value={searchFilter}
