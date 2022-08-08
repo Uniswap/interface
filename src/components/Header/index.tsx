@@ -3,6 +3,7 @@ import useScrollPosition from '@react-hook/window-scroll'
 import { useWeb3React } from '@web3-react/core'
 import { getChainInfoOrDefault } from 'constants/chainInfo'
 import { SupportedChainId } from 'constants/chains'
+import { Phase0Variant, usePhase0Flag } from 'featureFlags/flags/phase0'
 import useTheme from 'hooks/useTheme'
 import { darken } from 'polished'
 import { NavLink, useLocation } from 'react-router-dom'
@@ -244,6 +245,8 @@ const StyledExternalLink = styled(ExternalLink)`
 `
 
 export default function Header() {
+  const phase0Flag = usePhase0Flag()
+
   const { account, chainId } = useWeb3React()
 
   const userEthBalance = useNativeCurrencyBalances(account ? [account] : [])?.[account ?? '']
@@ -289,6 +292,11 @@ export default function Header() {
         <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
           <Trans>Swap</Trans>
         </StyledNavLink>
+        {phase0Flag === Phase0Variant.Enabled && (
+          <StyledNavLink id={`explore-nav-link`} to={'/explore'}>
+            <Trans>Explore</Trans>
+          </StyledNavLink>
+        )}
         <StyledNavLink
           data-cy="pool-nav-link"
           id={`pool-nav-link`}
