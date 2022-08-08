@@ -9,8 +9,9 @@ import { NETWORKS_INFO } from 'constants/networks'
  */
 export function convertToSlug(text: string) {
   return text
+    .trim()
     .toLowerCase()
-    .replace(/ /g, '-')
+    .replace(/ +/g, '-')
     .replace(/[^\w-.]+/g, '')
 }
 
