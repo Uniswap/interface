@@ -6,7 +6,7 @@ import { Trans, t } from '@lingui/macro'
 import { ethers } from 'ethers'
 import JSBI from 'jsbi'
 import React, { useMemo, useState } from 'react'
-import { Minus, Plus, X } from 'react-feather'
+import { Clock, Minus, Plus, X } from 'react-feather'
 import { Link } from 'react-router-dom'
 import { useMedia } from 'react-use'
 import { Flex, Text } from 'rebass'
@@ -69,6 +69,7 @@ interface ListItemProps {
 const ListItem = ({ farm }: ListItemProps) => {
   const { account, chainId } = useActiveWeb3React()
   const toggleWalletModal = useWalletModalToggle()
+  const currentTimestamp = Math.floor(Date.now() / 1000)
 
   const qs = useParsedQueryString()
   const tab = qs.tab || 'active'
@@ -523,6 +524,16 @@ const ListItem = ({ farm }: ListItemProps) => {
                   <span>
                     {farm.token0?.symbol} - {farm.token1?.symbol}
                   </span>
+
+                  {(tobeExtended || farm.startTime > currentTimestamp) && (
+                    <MouseoverTooltip
+                      text={tobeExtended ? t`To be extended` : farm.time}
+                      width="fit-content"
+                      placement="top"
+                    >
+                      <Clock size={14} style={{ marginLeft: '6px' }} />
+                    </MouseoverTooltip>
+                  )}
                 </Flex>
                 <Text marginLeft="36px" marginTop="4px" color={theme.subText} fontSize={12}>
                   AMP = {amp}
@@ -530,7 +541,7 @@ const ListItem = ({ farm }: ListItemProps) => {
               </div>
             </DataText>
             <DataText grid-area="liq">{formattedNum(liquidity.toString(), true)}</DataText>
-            <DataText grid-area="end" align="left" flexDirection="column" alignItems="flex-start">
+            {/* <DataText grid-area="end" align="left" flexDirection="column" alignItems="flex-start">
               {farm.time}
               {tobeExtended && (
                 <Text color={theme.subText} fontSize="12px" marginTop="6px">
@@ -538,6 +549,7 @@ const ListItem = ({ farm }: ListItemProps) => {
                 </Text>
               )}
             </DataText>
+            */}
             <APY grid-area="apy" align="right">
               {apr.toFixed(2)}%
               {apr !== 0 && (
@@ -620,6 +632,15 @@ const ListItem = ({ farm }: ListItemProps) => {
               <Text fontWeight={500}>
                 {farm.token0?.symbol} - {farm.token1?.symbol}
               </Text>
+              {(tobeExtended || farm.startTime > currentTimestamp) && (
+                <MouseoverTooltip
+                  text={tobeExtended ? t`To be extended` : farm.time}
+                  width="fit-content"
+                  placement="top"
+                >
+                  <Clock size={14} style={{ marginLeft: '6px' }} />
+                </MouseoverTooltip>
+              )}
             </Flex>
 
             <Flex marginTop="8px" marginBottom="16px" fontSize={12} color={theme.subText}>
@@ -636,7 +657,7 @@ const ListItem = ({ farm }: ListItemProps) => {
               <Text fontWeight="500">{formattedNum(liquidity.toString(), true)}</Text>
             </Flex>
 
-            <Flex justifyContent="space-between" fontSize={12} marginTop="12px">
+            {/* <Flex justifyContent="space-between" fontSize={12} marginTop="12px">
               <Text color={theme.subText}>
                 <Trans>Ending In</Trans>
               </Text>
@@ -650,6 +671,7 @@ const ListItem = ({ farm }: ListItemProps) => {
                 )}
               </Text>
             </Flex>
+            */}
 
             <Flex justifyContent="space-between" fontSize={12} marginTop="12px">
               <Text color={theme.subText}>

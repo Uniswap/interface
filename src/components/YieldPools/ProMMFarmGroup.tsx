@@ -4,7 +4,7 @@ import { Trans, t } from '@lingui/macro'
 import { BigNumber } from 'ethers'
 import { rgba } from 'polished'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
-import { Edit2, Info, Minus, Plus } from 'react-feather'
+import { Clock, Edit2, Info, Minus, Plus } from 'react-feather'
 import { useMedia } from 'react-use'
 import { Flex, Text } from 'rebass'
 import styled from 'styled-components'
@@ -298,7 +298,18 @@ const Row = ({
             <Text fontSize={20} fontWeight="500">
               {token0?.symbol} - {token1?.symbol}
             </Text>
+
+            {farm.startTime > currentTimestamp && (
+              <MouseoverTooltip
+                text={'Starting In ' + getFormattedTimeFromSecond(farm.startTime - currentTimestamp)}
+                width="fit-content"
+                placement="top"
+              >
+                <Clock size={14} style={{ marginLeft: '6px' }} />
+              </MouseoverTooltip>
+            )}
           </Flex>
+
           <Flex
             marginTop="0.5rem"
             alignItems="center"
@@ -329,21 +340,6 @@ const Row = ({
               <Trans>Staked TVL</Trans>
             </Text>
             <Text>{formatDollarAmount(tvl)}</Text>
-          </InfoRow>
-
-          <InfoRow>
-            <Text color={theme.subText}>
-              <Trans>Ending In</Trans>
-              <InfoHelper text={t`Once a farm has ended, you will continue to receive returns through LP Fees`} />
-            </Text>
-
-            <Text>
-              {farm.startTime > currentTimestamp
-                ? 'Starting In ' + getFormattedTimeFromSecond(farm.startTime - currentTimestamp)
-                : farm.endTime > currentTimestamp
-                ? getFormattedTimeFromSecond(farm.endTime - currentTimestamp)
-                : t`ENDED`}
-            </Text>
           </InfoRow>
 
           <InfoRow>
@@ -439,6 +435,16 @@ const Row = ({
             <Text fontSize={14}>
               {token0?.symbol} - {token1?.symbol}
             </Text>
+
+            {farm.startTime > currentTimestamp && (
+              <MouseoverTooltip
+                text={'Starting In ' + getFormattedTimeFromSecond(farm.startTime - currentTimestamp)}
+                width="fit-content"
+                placement="top"
+              >
+                <Clock size={14} style={{ marginLeft: '6px' }} />
+              </MouseoverTooltip>
+            )}
           </Flex>
 
           <Flex
@@ -462,13 +468,6 @@ const Row = ({
         {farm.feeTarget.gt(0) ? loading ? <Loader /> : <FeeTarget percent={targetPercent} /> : '--'}
 
         <Text>{formatDollarAmount(tvl)}</Text>
-        <Text>
-          {farm.startTime > currentTimestamp
-            ? 'Starting In ' + getFormattedTimeFromSecond(farm.startTime - currentTimestamp)
-            : farm.endTime > currentTimestamp
-            ? getFormattedTimeFromSecond(farm.endTime - currentTimestamp)
-            : t`ENDED`}
-        </Text>
         <Text textAlign="end" color={theme.apr}>
           {(farmAPR + poolAPY).toFixed(2)}%
           <InfoHelper text={`${poolAPY.toFixed(2)}% Fee + ${farmAPR.toFixed(2)}% Rewards`} />
@@ -728,7 +727,7 @@ function ProMMFarmGroup({
                     )}
                   </ButtonOutlined>
                 ) : (
-                  <BtnPrimary disabled width="fit-content">
+                  <BtnPrimary disabled width="fit-content" padding="8px 12px">
                     <Withdraw width={20} height={20} />
                     {above768 && (
                       <Text fontSize="14px" marginLeft="4px">

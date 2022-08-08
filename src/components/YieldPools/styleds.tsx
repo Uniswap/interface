@@ -339,8 +339,8 @@ export const ListItemWrapper = styled.div`
 export const TableHeader = styled.div<{ fade?: boolean; oddRow?: boolean }>`
   display: grid;
   grid-gap: 1rem;
-  grid-template-columns: 1.5fr 1fr 1fr 0.75fr 1fr 1.5fr 1fr 1fr;
-  grid-template-areas: 'pools liq end apy vesting_duration reward staked_balance expand action';
+  grid-template-columns: 1.5fr 1fr 0.75fr 1fr 1.5fr 1fr 1fr;
+  grid-template-areas: 'pools liq apy vesting_duration reward staked_balance expand action';
   padding: 16px 20px;
   font-size: 12px;
   align-items: center;
@@ -366,7 +366,7 @@ export const TableHeader = styled.div<{ fade?: boolean; oddRow?: boolean }>`
 `
 
 export const ProMMFarmTableHeader = styled(TableHeader)`
-  grid-template-columns: 150px 120px 1fr 1fr 0.75fr 0.75fr 0.75fr 1fr 1fr;
+  grid-template-columns: 150px 120px 1fr 0.75fr 0.75fr 0.75fr 1fr 1fr;
   grid-template-areas: 'token_pairs pool_fee staked_tvl ending_in apr vesting my_deposit reward action';
   grid-gap: 2rem;
 `
@@ -428,7 +428,7 @@ export const Tag = styled.div<{ tag?: string }>`
 export const TableRow = styled.div<{ fade?: boolean; isExpanded?: boolean }>`
   display: grid;
   grid-gap: 1rem;
-  grid-template-columns: 1.5fr 1fr 1fr 0.75fr 1fr 1.5fr 1fr 1fr;
+  grid-template-columns: 1.5fr 1fr 0.75fr 1fr 1.5fr 1fr 1fr;
   grid-template-areas: 'pools liq end apy vesting_duration reward staked_balance expand';
   padding: 15px 0 13px;
   font-size: 14px;

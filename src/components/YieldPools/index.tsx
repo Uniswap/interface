@@ -2,7 +2,7 @@ import { ChainId } from '@kyberswap/ks-sdk-core'
 import { Trans, t } from '@lingui/macro'
 import { BigNumber } from 'ethers'
 import { stringify } from 'qs'
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useHistory, useLocation } from 'react-router-dom'
 import { useMedia } from 'react-use'
 import { Flex, Text } from 'rebass'
@@ -207,13 +207,6 @@ const YieldPools = ({ loading, active }: { loading: boolean; active?: boolean })
             <ClickableText>
               <Trans>Staked TVL</Trans>
             </ClickableText>
-          </Flex>
-
-          <Flex grid-area="end" alignItems="center" justifyContent="flex-start">
-            <ClickableText>
-              <Trans>Ending In</Trans>
-            </ClickableText>
-            <InfoHelper text={t`Once a farm has ended, you will continue to receive returns through LP Fees`} />
           </Flex>
 
           <Flex grid-area="apy" alignItems="center" justifyContent="flex-end">

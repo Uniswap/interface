@@ -208,13 +208,6 @@ function ProMMFarms({ active }: { active: boolean }) {
             </ClickableText>
           </Flex>
 
-          <Flex grid-area="end" alignItems="center" justifyContent="flex-start">
-            <ClickableText>
-              <Trans>Ending In</Trans>
-            </ClickableText>
-            <InfoHelper text={t`Once a farm has ended, you will continue to receive returns through LP Fees`} />
-          </Flex>
-
           <Flex grid-area="apy" alignItems="center" justifyContent="flex-end">
             <ClickableText>
               <Trans>AVG APR</Trans>

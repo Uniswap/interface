@@ -60,7 +60,6 @@ const Farms = () => {
           <YieldPools loading={loading} active={false} />
         )
       case 'vesting':
-        // TODO: merge 2 vesting pages
         return farmType === VERSION.ELASTIC ? <ProMMVesting /> : <Vesting loading={vestingLoading} />
       default:
         return <YieldPools loading={loading} active />

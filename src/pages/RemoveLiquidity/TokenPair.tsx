@@ -76,7 +76,6 @@ export default function TokenPair({
   const [currencyA, currencyB] = [useCurrency(currencyIdA) ?? undefined, useCurrency(currencyIdB) ?? undefined]
   const { account, chainId, library } = useActiveWeb3React()
 
-  // TODO: viet-nv
   const nativeA = currencyA as Currency
   const nativeB = currencyB as Currency
   const [tokenA, tokenB] = useMemo(() => [currencyA?.wrapped, currencyB?.wrapped], [currencyA, currencyB])
