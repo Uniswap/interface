@@ -1,5 +1,4 @@
 import { scaleLinear } from 'd3'
-import { radius } from 'd3-curve-circlecorners'
 import useTheme from 'hooks/useTheme'
 
 import data from './data.json'
@@ -35,10 +34,9 @@ export default function SparklineChart({ width, height }: SparklineChartProps) {
   return (
     <LineChart
       data={pricePoints}
-      xscale={timeScale}
-      yscale={rdScale}
+      getX={(p: PricePoint) => timeScale(p.timestamp)}
+      getY={(p: PricePoint) => rdScale(p.value)}
       marginTop={0}
-      curve={radius(0.25)}
       color={isPositive ? theme.accentSuccess : theme.accentFailure}
       strokeWidth={1.5}
       width={width}

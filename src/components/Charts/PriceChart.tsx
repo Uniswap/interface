@@ -4,7 +4,6 @@ import { EventType } from '@visx/event/lib/types'
 import { GlyphCircle } from '@visx/glyph'
 import { Line } from '@visx/shape'
 import { bisect, curveBasis, NumberValue, scaleLinear } from 'd3'
-import { radius } from 'd3-curve-circlecorners'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import useTheme from 'hooks/useTheme'
 import { TimePeriod } from 'hooks/useTopTokens'
@@ -206,11 +205,11 @@ export function PriceChart({ width, height }: PriceChartProps) {
       </ChartHeader>
       <LineChart
         data={pricePoints}
-        xscale={timeScale}
-        yscale={rdScale}
+        getX={(p: PricePoint) => timeScale(p.timestamp)}
+        getY={(p: PricePoint) => rdScale(p.value)}
         marginTop={margin.top}
-        curve={activeTimePeriod === TimePeriod.all ? curveBasis : radius(0.25)}
-        color={theme.accentActive}
+        /* Default curve doesn't look good for the ALL chart */
+        curve={activeTimePeriod === TimePeriod.all ? curveBasis : undefined}
         strokeWidth={2}
         width={graphWidth}
         height={graphHeight}

@@ -1,28 +1,28 @@
 import { Group } from '@visx/group'
 import { LinePath } from '@visx/shape'
-import { CurveFactory, ScaleLinear } from 'd3'
+import { CurveFactory } from 'd3'
+import { radius } from 'd3-curve-circlecorners'
 import { ReactNode } from 'react'
+import { useTheme } from 'styled-components/macro'
 import { Color } from 'theme/styled'
 
-type PricePoint = { value: number; timestamp: number }
-
-interface LineChartProps {
-  data: PricePoint[]
-  xscale: ScaleLinear<number, number, never>
-  yscale: ScaleLinear<number, number, never>
+interface LineChartProps<T> {
+  data: T[]
+  getX: (t: T) => number
+  getY: (t: T) => number
   marginTop: number
-  curve: CurveFactory
-  color: Color
+  curve?: CurveFactory
+  color?: Color
   strokeWidth: number
   children?: ReactNode
   width: number
   height: number
 }
 
-export default function LineChart({
+export default function LineChart<T>({
   data,
-  xscale,
-  yscale,
+  getX,
+  getY,
   marginTop,
   curve,
   color,
@@ -30,17 +30,18 @@ export default function LineChart({
   width,
   height,
   children,
-}: LineChartProps) {
+}: LineChartProps<T>) {
+  const theme = useTheme()
   return (
     <svg width={width} height={height}>
       <Group top={marginTop}>
         <LinePath
-          curve={curve}
-          stroke={color}
+          curve={curve ?? radius(0.25)}
+          stroke={color ?? theme.accentAction}
           strokeWidth={strokeWidth}
           data={data}
-          x={(d: PricePoint) => xscale(d.timestamp) ?? 0}
-          y={(d: PricePoint) => yscale(d.value) ?? 0}
+          x={getX}
+          y={getY}
         />
       </Group>
       {children}
