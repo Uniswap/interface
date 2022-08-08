@@ -1,5 +1,5 @@
 import { CurrencyAmount, NativeCurrency, TradeType } from '@uniswap/sdk-core'
-import { providers } from 'ethers'
+import { BigNumber, providers } from 'ethers'
 import { TFunction } from 'i18next'
 import { ChainId } from 'src/constants/chains'
 import {
@@ -22,7 +22,7 @@ export function getSerializableTransactionRequest(
     type,
     to,
     from,
-    nonce: nonce ? parseInt(nonce.toString(), 10) : undefined,
+    nonce: nonce ? BigNumber.from(nonce).toString() : undefined,
     gasLimit: gasLimit?.toString(),
     gasPrice: gasPrice?.toString(),
     data: data?.toString(),

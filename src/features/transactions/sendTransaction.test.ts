@@ -1,4 +1,5 @@
 import dayjs from 'dayjs'
+import { BigNumber } from 'ethers'
 import { expectSaga } from 'redux-saga-test-plan'
 import { call } from 'redux-saga/effects'
 import { getProvider, getProviderManager, getSignerManager } from 'src/app/walletContext'
@@ -67,7 +68,7 @@ describe(sendTransaction, () => {
               from: txRequest.from,
               data: txRequest.data,
               value: txRequest.value,
-              nonce: txRequest.nonce,
+              nonce: BigNumber.from(txRequest.nonce).toString(),
               type: undefined,
               gasLimit: undefined,
               gasPrice: txRequest.gasPrice?.toString(),
