@@ -46,12 +46,6 @@ export enum CUSTOM_USER_PROPERTY_SUFFIXES {
   WALLET_TOKEN_AMOUNT_SUFFIX = '_token_amount',
 }
 
-export enum CUSTOM_USER_PROPERTY_PREFIXES {
-  WALLET_CHAIN_IDS_PREFIX = 'wallet_chain_ids_',
-  WALLET_FIRST_SEEN_DATE_PREFIX = 'first_seen_date_',
-  WALLET_LAST_SEEN_DATE_PREFIX = 'last_seen_date_',
-}
-
 export enum BROWSER {
   FIREFOX = 'Mozilla Firefox',
   SAMSUNG = 'Samsung Internet',
