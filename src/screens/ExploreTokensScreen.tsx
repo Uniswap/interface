@@ -57,17 +57,6 @@ export function ExploreTokensScreen() {
     <>
       <HeaderListScreen
         InitialScreenHeader={
-          <BackHeader>
-            <Text variant="subhead">{t('Tokens')}</Text>
-          </BackHeader>
-        }
-        ItemSeparatorComponent={() => <Separator ml="md" />}
-        ListEmptyComponent={
-          <Box mx="md" my="sm">
-            <Loading repeat={8} type="token" />
-          </Box>
-        }
-        ScrolledScreenHeader={
           <Flex gap="md" mt="sm">
             <BackButton showButtonLabel />
             <Flex row alignItems="center" justifyContent="space-between" my="xs">
@@ -78,6 +67,17 @@ export function ExploreTokensScreen() {
               />
             </Flex>
           </Flex>
+        }
+        ItemSeparatorComponent={() => <Separator ml="md" />}
+        ListEmptyComponent={
+          <Box mx="md" my="sm">
+            <Loading repeat={8} type="token" />
+          </Box>
+        }
+        ScrolledScreenHeader={
+          <BackHeader>
+            <Text variant="subhead">{t('Tokens')}</Text>
+          </BackHeader>
         }
         data={tokens}
         keyExtractor={key}
