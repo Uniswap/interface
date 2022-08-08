@@ -34,21 +34,30 @@ export default function WarningModal({
       name={modalName}
       onClose={onClose}>
       <Flex centered gap="md" mb="lg" padding="xl">
-        <AlertTriangleIcon color={theme.colors.accentWarning} height={24} width={24} />
+        <Flex centered borderColor="accentWarning" borderRadius="md" borderWidth={1} padding="sm">
+          <AlertTriangleIcon color={theme.colors.accentWarning} height={24} width={24} />
+        </Flex>
         <Text textAlign="center" variant="mediumLabel">
           {title}
         </Text>
         {caption && (
-          <Text color="textSecondary" textAlign="center" variant="smallLabel">
+          <Text color="textSecondary" textAlign="center" variant="bodySmall">
             {caption}
           </Text>
         )}
         <Flex centered row gap="sm" paddingTop="lg">
           {closeText && (
-            <PrimaryButton flex={1} label={closeText} variant="gray" onPress={onClose} />
+            <PrimaryButton
+              borderRadius="md"
+              flex={1}
+              label={closeText}
+              variant="transparent"
+              onPress={onClose}
+            />
           )}
           {confirmText && (
             <PrimaryButton
+              borderRadius="md"
               flex={1}
               label={confirmText}
               name={ElementName.Confirm}
