@@ -17,6 +17,7 @@ import Settings from 'components/Settings'
 import Web3Network from 'components/Web3Network'
 import { PROMM_ANALYTICS_URL } from 'constants/index'
 import { useActiveWeb3React } from 'hooks'
+import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import { useWindowSize } from 'hooks/useWindowSize'
 import { useIsDarkMode } from 'state/user/hooks'
 import { ExternalLink } from 'theme/components'
@@ -342,7 +343,7 @@ export default function Header() {
 
   const under369 = width && width < 369
   const under500 = width && width < 500
-
+  const { mixpanelHandler } = useMixpanel()
   return (
     <HeaderFrame>
       <HeaderRow>
@@ -370,7 +371,14 @@ export default function Header() {
                   <Trans>Swap</Trans>
                 </Flex>
               </StyledNavLink>{' '}
-              <StyledNavLink id={`buy-crypto-nav-link`} to={'/buy-crypto'} isActive={match => Boolean(match)}>
+              <StyledNavLink
+                id={`buy-crypto-nav-link`}
+                to={'/buy-crypto'}
+                isActive={match => Boolean(match)}
+                onClick={() => {
+                  mixpanelHandler(MIXPANEL_TYPE.SWAP_BUY_CRYPTO_CLICKED)
+                }}
+              >
                 <Flex alignItems="center" sx={{ gap: '8px' }}>
                   <Dollar />
                   <Trans>Buy Crypto</Trans>

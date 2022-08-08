@@ -611,6 +611,9 @@ function BuyCrypto() {
                   padding="10px"
                   as={Link}
                   to="/swap"
+                  onClick={() => {
+                    mixpanelHandler(MIXPANEL_TYPE.TRANSAK_SWAP_NOW_CLICKED)
+                  }}
                 >
                   <Repeat size={24} />
                   <Text fontSize="14px" marginLeft="8px">

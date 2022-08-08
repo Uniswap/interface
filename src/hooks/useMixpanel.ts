@@ -112,7 +112,8 @@ export enum MIXPANEL_TYPE {
   CAMPAIGN_WALLET_CONNECTED,
   TRANSAK_BUY_CRYPTO_CLICKED,
   TRANSAK_DOWNLOAD_WALLET_CLICKED,
-
+  TRANSAK_SWAP_NOW_CLICKED,
+  SWAP_BUY_CRYPTO_CLICKED,
   // type and swap
   TAS_TYPING_KEYWORD,
   TAS_SELECT_PAIR,
@@ -596,6 +597,14 @@ export default function useMixpanel(trade?: Aggregator | undefined, currencies?:
         }
         case MIXPANEL_TYPE.TRANSAK_BUY_CRYPTO_CLICKED: {
           mixpanel.track('Buy Crypto - To purchase crypto on Transak "Buy Now”')
+          break
+        }
+        case MIXPANEL_TYPE.TRANSAK_SWAP_NOW_CLICKED: {
+          mixpanel.track('Buy Crypto - Swap token on KyberSwap "Swap" button')
+          break
+        }
+        case MIXPANEL_TYPE.SWAP_BUY_CRYPTO_CLICKED: {
+          mixpanel.track('Buy Crypto - Click on Buy Crypto on KyberSwap')
           break
         }
 
