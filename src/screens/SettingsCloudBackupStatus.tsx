@@ -1,9 +1,11 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useAppTheme } from 'src/app/hooks'
+import { Alert } from 'react-native'
+import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { SettingsStackParamList } from 'src/app/navigation/types'
 import Checkmark from 'src/assets/icons/check.svg'
+import { AddressDisplay } from 'src/components/AddressDisplay'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { Flex } from 'src/components/layout'
 import { BackHeader } from 'src/components/layout/BackHeader'
@@ -11,7 +13,11 @@ import { Screen } from 'src/components/layout/Screen'
 import WarningModal from 'src/components/modals/WarningModal'
 import { Text } from 'src/components/Text'
 import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
+import { deleteICloudMnemonicBackup } from 'src/features/CloudBackup/RNICloudBackupsManager'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
+import { AccountType, BackupType, NativeAccount } from 'src/features/wallet/accounts/types'
+import { EditAccountAction, editAccountActions } from 'src/features/wallet/editAccountSaga'
+import { useAccounts } from 'src/features/wallet/hooks'
 import { Screens } from 'src/screens/Screens'
 
 type Props = NativeStackScreenProps<SettingsStackParamList, Screens.SettingsCloudBackupStatus>
@@ -24,6 +30,13 @@ export function SettingsCloudBackupStatus({
 }: Props) {
   const { t } = useTranslation()
   const theme = useAppTheme()
+  const dispatch = useAppDispatch()
+  const accounts = useAccounts()
+
+  const mnemonicId = (accounts[address] as NativeAccount)?.mnemonicId
+  const associatedAccounts = Object.values(accounts).filter(
+    (a) => a.type === AccountType.Native && a.mnemonicId === mnemonicId
+  )
 
   const [showBackupDeleteWarning, setShowBackupDeleteWarning] = useState(false)
   const onConfirmDeleteBackup = () => {
@@ -34,10 +47,28 @@ export function SettingsCloudBackupStatus({
     }
   }
 
-  const deleteBackup = () => {
+  const deleteBackup = async () => {
+    try {
+      await deleteICloudMnemonicBackup(mnemonicId)
+      dispatch(
+        editAccountActions.trigger({
+          type: EditAccountAction.RemoveBackupMethod,
+          address: address,
+          backupMethod: BackupType.Cloud,
+        })
+      )
+      navigation.navigate(Screens.SettingsWallet, { address })
+    } catch (error) {
+      const err = error as Error
+      Alert.alert(t('iCloud error'), err.message, [
+        {
+          text: t('OK'),
+          style: 'default',
+        },
+      ])
+    }
+
     setShowBackupDeleteWarning(false)
-    // @TODO: link to delete backup when capability is created
-    navigation.navigate(Screens.SettingsWallet, { address })
   }
 
   const { requiredForTransactions } = useBiometricAppSettings()
@@ -95,8 +126,28 @@ export function SettingsCloudBackupStatus({
         onClose={() => {
           setShowBackupDeleteWarning(false)
         }}
-        onConfirm={onConfirmDeleteBackup}
-      />
+        onConfirm={onConfirmDeleteBackup}>
+        {associatedAccounts.length > 1 && (
+          <Flex>
+            <Text textAlign="left" variant="subheadSmall">
+              {t(
+                'Because these wallets share a recovery phrase, it will also delete the backups for:'
+              )}
+            </Text>
+            <Flex>
+              {associatedAccounts.map((account) => (
+                <AddressDisplay
+                  showAddressAsSubtitle
+                  address={account.address}
+                  size={36}
+                  variant="subhead"
+                  verticalGap="none"
+                />
+              ))}
+            </Flex>
+          </Flex>
+        )}
+      </WarningModal>
       {BiometricModal}
     </Screen>
   )

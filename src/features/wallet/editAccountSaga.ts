@@ -13,6 +13,7 @@ import { all, call, put } from 'typed-redux-saga'
 
 export enum EditAccountAction {
   AddBackupMethod = 'addbackupmethod',
+  RemoveBackupMethod = 'deletebackupmethod',
   Rename = 'rename',
   Remove = 'remove',
   TogglePushNotificationParams = 'togglepushnotification',
@@ -35,6 +36,11 @@ interface AddBackupMethodParams extends EditParamsBase {
   backupMethod: BackupType
 }
 
+interface RemoveBackupMethodParams extends EditParamsBase {
+  type: EditAccountAction.RemoveBackupMethod
+  backupMethod: BackupType
+}
+
 export interface TogglePushNotificationParams extends EditParamsBase {
   type: EditAccountAction.TogglePushNotificationParams
   enabled: boolean
@@ -42,6 +48,7 @@ export interface TogglePushNotificationParams extends EditParamsBase {
 
 export type EditAccountParams =
   | AddBackupMethodParams
+  | RemoveBackupMethodParams
   | RenameParams
   | RemoveParams
   | TogglePushNotificationParams
@@ -63,6 +70,9 @@ function* editAccount(params: EditAccountParams) {
       break
     case EditAccountAction.AddBackupMethod:
       yield* call(addBackupMethod, params, account)
+      break
+    case EditAccountAction.RemoveBackupMethod:
+      yield* call(removeBackupMethod, params, account)
       break
     case EditAccountAction.TogglePushNotificationParams:
       break
@@ -125,6 +135,41 @@ function* addBackupMethod(params: AddBackupMethodParams, account: Account) {
     'editAccountSaga',
     'addBackupMethod',
     'Adding backup method',
+    mnemonicAccounts.map((a) => a.address)
+  )
+}
+
+// Removes the backup method from all accounts that share the same seed phrase
+function* removeBackupMethod(params: RemoveBackupMethodParams, account: Account) {
+  if (account.type !== AccountType.Native) return
+
+  const { backupMethod } = params
+
+  const accounts = yield* appSelect(selectAccounts)
+  const mnemonicAccounts = Object.values(accounts).filter(
+    (a) => a.type === AccountType.Native && a.mnemonicId === (account as NativeAccount).mnemonicId
+  )
+
+  const updatedBackups = account.backups?.filter((backup) => backup !== backupMethod)
+
+  yield* all(
+    mnemonicAccounts.map((mnemonicAccount) => {
+      return put(
+        editInStore({
+          address: mnemonicAccount.address,
+          updatedAccount: {
+            ...mnemonicAccount,
+            backups: updatedBackups,
+          },
+        })
+      )
+    })
+  )
+
+  logger.info(
+    'editAccountSaga',
+    'removeBackupMethod',
+    'Removing backup method',
     mnemonicAccounts.map((a) => a.address)
   )
 }

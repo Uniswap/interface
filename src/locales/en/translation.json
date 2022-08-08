@@ -364,6 +364,7 @@
   "Delete iCloud backup": "Delete iCloud backup",
   "If you delete your iCloud backup, you’ll only be able to recover your wallet with a manual backup of your recovery phrase. Uniswap Labs can’t recover your assets if you lose your recovery phrase.": "If you delete your iCloud backup, you’ll only be able to recover your wallet with a manual backup of your recovery phrase. Uniswap Labs can’t recover your assets if you lose your recovery phrase.",
   "Delete": "Delete",
+  "Because these wallets share a recovery phrase, it will also delete the backups for:": "Because these wallets share a recovery phrase, it will also delete the backups for:",
   "App access": "App access",
   "Require Face ID to open app": "Require Face ID to open app",
   "Require Face ID to send a transaction": "Require Face ID to send a transaction",

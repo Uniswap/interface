@@ -61,6 +61,9 @@ export function* editAccountDataInFirebase(
     case EditAccountAction.AddBackupMethod:
       // no-op
       break
+    case EditAccountAction.RemoveBackupMethod:
+      // no-op
+      break
     case EditAccountAction.TogglePushNotificationParams:
       yield* call(updateFirebasePushNotificationsSettings, payload)
       break
