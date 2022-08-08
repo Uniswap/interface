@@ -86,7 +86,6 @@ const {  isOpen,
           otherSelectedCurrency={otherSelectedCurrency}
           showCommonBases={showCommonBases}
           showCurrencyAmount={showCurrencyAmount}
-          disableNonToken={disableNonToken}
           showImportView={showImportView}
           setImportToken={setImportToken}
           showManageView={showManageView}
@@ -111,7 +110,8 @@ const {  isOpen,
         />
       ) : (
         ''
-      )}
+      )
+      }
     </Modal>
   )
 })
