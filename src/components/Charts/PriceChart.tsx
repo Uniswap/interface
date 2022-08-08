@@ -24,14 +24,14 @@ import {
 
 import data from './data.json'
 
-const TIME_DISPLAYS: Record<string, TimePeriod> = {
-  '1H': TimePeriod.hour,
-  '1D': TimePeriod.day,
-  '1W': TimePeriod.week,
-  '1M': TimePeriod.month,
-  '1Y': TimePeriod.year,
-  ALL: TimePeriod.all,
-}
+const TIME_DISPLAYS: [TimePeriod, string][] = [
+  [TimePeriod.hour, '1H'],
+  [TimePeriod.day, '1D'],
+  [TimePeriod.week, '1W'],
+  [TimePeriod.month, '1M'],
+  [TimePeriod.year, '1Y'],
+  [TimePeriod.all, 'ALL'],
+]
 
 type PricePoint = { value: number; timestamp: number }
 
@@ -87,7 +87,7 @@ const ArrowCell = styled.div`
 export const TimeOptionsContainer = styled.div`
   display: flex;
   justify-content: flex-end;
-  margin-top: 5px;
+  margin-top: 4px;
   gap: 4px;
 `
 const TimeButton = styled.button<{ active: boolean }>`
@@ -102,19 +102,18 @@ const TimeButton = styled.button<{ active: boolean }>`
 `
 
 function getTicks(startTimestamp: number, endTimestamp: number, numTicks = 5) {
-  const ticks = []
-  for (let i = 1; i < numTicks + 1; i++) {
-    ticks.push(endTimestamp - ((endTimestamp - startTimestamp) / (numTicks + 1)) * i)
-  }
-  return ticks
+  return Array.from(
+    { length: numTicks },
+    (v, i) => endTimestamp - ((endTimestamp - startTimestamp) / (numTicks + 1)) * (i + 1)
+  )
 }
 
-const getTickFormat = (
+function tickFormat(
   startTimestamp: number,
   endTimestamp: number,
   activeTimePeriod: TimePeriod,
   locale: string
-): [TickFormatter<NumberValue>, (v: number) => string, number[]] => {
+): [TickFormatter<NumberValue>, (v: number) => string, number[]] {
   switch (activeTimePeriod) {
     case TimePeriod.hour:
       return [hourFormatter(locale), dayHourFormatter(locale), getTicks(startTimestamp, endTimestamp)]
@@ -130,6 +129,10 @@ const getTickFormat = (
       return [monthYearFormatter(locale), monthYearDayFormatter(locale), getTicks(startTimestamp, endTimestamp)]
   }
 }
+
+const margin = { top: 86, bottom: 32, crosshair: 72 }
+const timeOptionsHeight = 44
+const crosshairDateOverhang = 80
 
 interface PriceChartProps {
   width: number
@@ -148,9 +151,6 @@ export function PriceChart({ width, height }: PriceChartProps) {
   const initialState = { pricePoint: endingPrice, xCoordinate: null }
   const [selected, setSelected] = useState<{ pricePoint: PricePoint; xCoordinate: number | null }>(initialState)
 
-  const margin = { top: 86, bottom: 32, crosshair: 72 }
-  const timeOptionsHeight = 44
-  const crosshairDateOverhang = 80
   const graphWidth = width + crosshairDateOverhang
   const graphHeight = height - timeOptionsHeight
   const graphInnerHeight = graphHeight - margin.top - margin.bottom
@@ -185,14 +185,15 @@ export function PriceChart({ width, height }: PriceChartProps) {
     [timeScale, pricePoints]
   )
 
-  const [tickFormatter, crosshairDateFormatter, ticks] = getTickFormat(
+  const [tickFormatter, crosshairDateFormatter, ticks] = tickFormat(
     startingPrice.timestamp,
     endingPrice.timestamp,
     activeTimePeriod,
     locale
   )
   const [delta, arrow] = getDelta(startingPrice.value, selected.pricePoint.value)
-  const crosshairAtEdge = Boolean(selected.xCoordinate && selected.xCoordinate > width * 0.97)
+  const crosshairEdgeMax = width * 0.97
+  const crosshairAtEdge = !!selected.xCoordinate && selected.xCoordinate > crosshairEdgeMax
 
   return (
     <ChartWrapper>
@@ -277,12 +278,8 @@ export function PriceChart({ width, height }: PriceChartProps) {
         />
       </svg>
       <TimeOptionsContainer>
-        {Object.keys(TIME_DISPLAYS).map((display) => (
-          <TimeButton
-            key={display}
-            active={activeTimePeriod === TIME_DISPLAYS[display]}
-            onClick={() => setTimePeriod(TIME_DISPLAYS[display])}
-          >
+        {TIME_DISPLAYS.map(([value, display]) => (
+          <TimeButton key={display} active={activeTimePeriod === value} onClick={() => setTimePeriod(value)}>
             {display}
           </TimeButton>
         ))}
