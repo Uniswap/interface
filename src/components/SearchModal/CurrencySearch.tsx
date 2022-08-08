@@ -78,7 +78,7 @@ export function CurrencySearch({
   const fixedList = useRef<FixedSizeList>()
 
   const [searchQuery, setSearchQuery] = useState<string>('')
-  const debouncedQuery = useDebounce(searchQuery, 200)
+const debouncedQuery = useMemo(() =>  searchQuery,[searchQuery])
 
   const [invertSearchOrder] = useState<boolean>(false)
 
@@ -104,8 +104,8 @@ export function CurrencySearch({
   const tokenComparator = useTokenComparator(invertSearchOrder)
 
   const filteredTokens: Token[] = useMemo(() => {
-    return filterTokens(Object.values(allTokens), debouncedQuery)
-  }, [allTokens, debouncedQuery])
+    return filterTokens(Object.values(allTokens), searchQuery)
+  }, [allTokens, searchQuery])
 
   const sortedTokens: Token[] = useMemo(() => {
     return filteredTokens.sort(tokenComparator)

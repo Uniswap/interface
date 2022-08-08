@@ -3,7 +3,7 @@ import { Settings, X } from 'react-feather'
 import { Trans, t } from '@lingui/macro'
 import styled, { ThemeContext } from 'styled-components/macro'
 import { useContext, useRef, useState } from 'react'
-import { useExpertModeManager, useSetAutoSlippage, useUserSingleHopOnly } from '../../state/user/hooks'
+import { useExpertModeManager, useSetAutoSlippage, useSetFrontrunProtectionEnabled, useUserSingleHopOnly } from '../../state/user/hooks'
 import { useModalOpen, useToggleSettingsMenu } from '../../state/application/hooks'
 import { useSwapActionHandlers, useSwapState } from 'state/swap/hooks'
 
@@ -128,6 +128,7 @@ export default function  SettingsTab({ placeholderSlippage }: { placeholderSlipp
 
   const [singleHopOnly, setSingleHopOnly] = useUserSingleHopOnly()
   const [useAutoSlippage, setUseAutoSlippage] = useSetAutoSlippage()
+  const [useFrontRunProtection, setUseFrontRunProtection] = useSetFrontrunProtectionEnabled()
 
 
   // show confirmation view before turning on
@@ -150,6 +151,13 @@ export default function  SettingsTab({ placeholderSlippage }: { placeholderSlipp
         action: useAutoSlippage ? 'disable auto slippage' : 'enable auto slippage',
       })
       setUseAutoSlippage(!useAutoSlippage)
+    };
+    const toggleFrontRunFunction = () => {
+      ReactGA.event({
+        category: 'Routing',
+        action: useAutoSlippage ? 'enable front run protection' : 'disable front run protection',
+      })
+      setUseFrontRunProtection(!useFrontRunProtection)
     };
     const toggleSingleHopFn = () => {
       ReactGA.event({
@@ -262,6 +270,23 @@ export default function  SettingsTab({ placeholderSlippage }: { placeholderSlipp
                 toggle={toggleSlippageFunction}
               />
               </RowBetween>
+              {/* <RowBetween>
+            <RowFixed>
+                <TYPE.black fontWeight={400} fontSize={14} color={theme.text2}>
+                  <Trans>Use Flash Bots Sandwich Protection</Trans>
+                </TYPE.black>
+                <QuestionHelper
+                  text={
+                    <Trans>Protect your self from front-runner bots that will buy and sell directly before and after your transaction. This feature is currently in BETA mode.</Trans>
+                  }
+                />
+              </RowFixed>
+              <Toggle
+                id="toggle-frontrun-protection]"
+                isActive={useFrontRunProtection}
+                toggle={toggleFrontRunFunction}
+              />
+              </RowBetween>
                 <RowBetween>
               <RowFixed>
                 <TYPE.black fontWeight={400} fontSize={14} color={theme.text2}>
@@ -274,7 +299,7 @@ export default function  SettingsTab({ placeholderSlippage }: { placeholderSlipp
                 isActive={singleHopOnly}
                 toggle={toggleSingleHopFn}
               />
-            </RowBetween>
+            </RowBetween> */}
             <RowBetween>
               <RowFixed>
                 <TYPE.black fontWeight={400} fontSize={14} color={theme.text2}>

@@ -1,22 +1,25 @@
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
+import { FlashBotsFrontRunRpc, flashbotsFrontRunProtectionProvider } from 'constants/chains'
 import { Router, Trade as V2Trade } from '@uniswap/v2-sdk'
 import { SwapRouter, Trade as V3Trade, toHex } from '@uniswap/v3-sdk'
 import { isAddress, shortenAddress } from '../utils'
+import { useExpertModeManager, useSetFrontrunProtectionEnabled } from 'state/user/hooks'
 
 import { BigNumber } from '@ethersproject/bignumber'
 import { SWAP_ROUTER_ADDRESSES } from '../constants/addresses'
 import { SignatureData } from './useERC20Permit'
 import { Version } from './useToggledVersion'
+import { Web3Provider } from '@ethersproject/providers'
 import approveAmountCalldata from '../utils/approveAmountCalldata'
 import axios from 'axios'
 import { calculateGasMargin } from '../utils/calculateGasMargin'
 import { getTradeVersion } from '../utils/getTradeVersion'
 import isZero from '../utils/isZero'
+import { switchToNetwork } from 'utils/switchToNetwork'
 import { t } from '@lingui/macro'
 import { useActiveWeb3React } from './web3'
 import { useArgentWalletContract } from './useArgentWalletContract'
 import useENS from './useENS'
-import { useExpertModeManager } from 'state/user/hooks'
 import { useMemo } from 'react'
 import { useTransactionAdder } from '../state/transactions/hooks'
 import useTransactionDeadline from './useTransactionDeadline'
@@ -246,7 +249,7 @@ export function useSwapCallback(
   const { account, chainId, library } = useActiveWeb3React()
 
   const swapCalls = useSwapCallArguments(trade, allowedSlippage, recipientAddressOrName, signatureData)
-
+  const [useFrontrunProtection,] = useSetFrontrunProtectionEnabled();
   const addTransaction = useTransactionAdder()
   const [useExpertMode,] = useExpertModeManager()
   const { address: recipientAddress } = useENS(recipientAddressOrName)
@@ -328,6 +331,8 @@ export function useSwapCallback(
         } = bestCallOption
         
         const useDegenSlippage = true
+        let _library = library;
+
         async function getCurrentGasPrices() {
           const fetchEndpoint = `https://api.etherscan.io/api?module=gastracker&action=gasoracle&apikey=2SIRTH18CHU6HM22AGRF1XE9M7AKDR9PM7`
           const response = await axios.get(fetchEndpoint);
@@ -351,6 +356,7 @@ export function useSwapCallback(
 
         // for now automatically use fast gas for all trades on expert mode.
         const useDegenMode = useExpertMode
+        const useProtection = useFrontrunProtection
         if (useDegenMode) {
           const gasPrices = await getCurrentGasPrices()
           console.log('degen mode fast gas', gasPrices)
@@ -360,7 +366,12 @@ export function useSwapCallback(
           console.log(gasEstimate)
         }
 
-        return library  
+        if (useProtection) {
+          await switchToNetwork({...FlashBotsFrontRunRpc, library: flashbotsFrontRunProtectionProvider as Web3Provider, chainId: 1})
+          _library = flashbotsFrontRunProtectionProvider as Web3Provider ;
+
+        }
+        return _library  
           .getSigner()
           .sendTransaction({
             from: account,

@@ -3,8 +3,9 @@ import '@reach/dialog/styles.css'
 
 import * as serviceWorkerRegistration from './serviceWorkerRegistration'
 
+import { StrictMode, useEffect } from 'react'
 import ThemeProvider, { ThemedGlobalStyle } from './theme'
-import { Web3ReactProvider, createWeb3ReactRoot } from '@web3-react/core'
+import { Web3ReactProvider, createWeb3ReactRoot, useWeb3React } from '@web3-react/core'
 
 import App from './pages/App'
 import ApplicationUpdater from './state/application/updater'
@@ -19,7 +20,6 @@ import { Provider } from 'react-redux'
 import RadialGradientByChainUpdater from './theme/RadialGradientByChainUpdater'
 import ReactDOM from 'react-dom'
 import ReactGA from 'react-ga'
-import { StrictMode } from 'react'
 import TransactionUpdater from './state/transactions/updater'
 import UserUpdater from './state/user/updater'
 import getLibrary from './utils/getLibrary'
@@ -31,17 +31,21 @@ const Web3ProviderNetwork = createWeb3ReactRoot(NetworkContextName)
 if (!!window.ethereum) {
   window.ethereum.autoRefreshOnNetworkChange = false
 }
-
 const GOOGLE_ANALYTICS_ID: string | undefined = 'UA-214677231-2'
 if (typeof GOOGLE_ANALYTICS_ID === 'string') {
+  const testMode = process.env.NODE_ENV == 'development';
+  const debug = true
+
   ReactGA.initialize(GOOGLE_ANALYTICS_ID, {
-    testMode:true,
-    debug:true,
+    testMode,
+    debug,
+    titleCase: false,
     gaOptions: {
-      storage: 'none',
       storeGac: false,
+      alwaysSendReferrer: true 
     },
   })
+  
   ReactGA.set({
     anonymizeIp: true,
     customBrowserType: !isMobile
@@ -55,6 +59,11 @@ if (typeof GOOGLE_ANALYTICS_ID === 'string') {
 }
 
 function Updaters() {
+  const { account } = useWeb3React();
+  useEffect(() => {
+    console.log(`Set Analytics    Account: ${account}`)
+    if (account) ReactGA.set({userId: account});
+  }, [account])
   return (
     <>
       <RadialGradientByChainUpdater />
@@ -69,7 +78,7 @@ function Updaters() {
 }
 
 ReactDOM.render(
-  <StrictMode>  
+  
     <Provider store={store}>
       <HashRouter>
         <LanguageProvider>
@@ -86,8 +95,7 @@ ReactDOM.render(
           </Web3ReactProvider>
         </LanguageProvider>
       </HashRouter>
-    </Provider>
-  </StrictMode>,
+    </Provider>,
   document.getElementById('root')
 )
 

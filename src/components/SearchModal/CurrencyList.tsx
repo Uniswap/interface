@@ -16,6 +16,7 @@ import { Text } from 'rebass'
 import TokenListLogo from '../../assets/svg/tokenlist.svg'
 import { Trans } from '@lingui/macro'
 import { WrappedTokenInfo } from '../../state/lists/wrappedTokenInfo'
+import _ from 'lodash'
 import { isTokenOnList } from '../../utils'
 import styled from 'styled-components/macro'
 import { useActiveWeb3React } from '../../hooks/web3'
@@ -220,7 +221,7 @@ export const CurrencyList = React.memo((props: CurrrencyListProps) => {
 
       const token = currency?.wrapped
 
-      const showImport = index > currencies.length
+      const showImport = index >= currencies.length 
 
       if (showImport && token) {
         return (
@@ -271,7 +272,7 @@ export const CurrencyList = React.memo((props: CurrrencyListProps) => {
       {Row}
     </FixedSizeList>
   )
-}, (prevProps, newProps) => true)
+}, (prevProps, newProps) => _.isEqual(prevProps, newProps))
 CurrencyList.displayName = 'clist';
   CurrencyRow.displayName = 'crow';
 export default CurrencyList ;

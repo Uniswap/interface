@@ -41,11 +41,15 @@ export function   createTokenFilterFunction<T extends Token | TokenInfo>(search:
 
 export function filterTokens<T extends Token | TokenInfo>(tokens: T[], search: string): T[] {
     if (!search) return tokens;
-    return tokens.filter((token) => {
-    if (isAddress(search)) return token?.address?.toLowerCase() === search?.toLowerCase()
+    const result  = tokens.filter(createTokenFilterFunction(search))
+    const searched = _.uniq([...result,  ...tokens.filter((token) => {
+    if (isAddress(search) || isAddress(search?.toLowerCase())) 
+      return token?.address?.toLowerCase() === search?.toLowerCase()
+    
     return token?.name?.toLowerCase().includes(search) || token.symbol?.toLowerCase().includes(search)
-  })
-  //return tokens.filter(createTokenFilterFunction(search))
+  })])
+  console.dir(searched)
+  return searched;
 }
 
 export function useSortedTokensByQuery(tokens: Token[] | undefined, searchQuery: string, showOnlyTrumpCoins?:boolean): Token[] {
@@ -74,14 +78,14 @@ export function useSortedTokensByQuery(tokens: Token[] | undefined, searchQuery:
       "Kiba Inu"
     );
   // sort tokens by exact match -> subtring on symbol match -> rest
-    tokens.map((token) => {
+    tokens.forEach((token) => {
       if (token.symbol?.toLowerCase() === symbolMatch[0]) {
-        return exactMatches.push(token)
+         exactMatches.push(token)
       } else if (token.symbol?.toLowerCase().startsWith(searchQuery.toLowerCase().trim())) {
-        return symbolSubtrings.push(token)
-      } else {
-        return rest.push(token)
-      }
+         symbolSubtrings.push(token)
+      } else if (!searchQuery) {
+         rest.push(token)
+      } 
     })
 
     return  _.uniqBy([kibaCoin, ...exactMatches, ...symbolSubtrings, ...rest], a => a.address)

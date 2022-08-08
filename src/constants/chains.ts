@@ -1,4 +1,5 @@
 import { OPTIMISM_LIST } from './lists'
+import { ethers } from 'ethers'
 import ms from 'ms.macro'
 
 /**
@@ -45,6 +46,17 @@ export const L1_CHAIN_IDS = [
   SupportedChainId.POLYGON_MUMBAI,
   SupportedChainId.BINANCE
 ] as const
+
+export const FlashBotsFrontRunRpc: AddNetworkInfo =   {
+  rpcUrl: `https://rpc.flashbots.net/fast`,
+  nativeCurrency: {
+    symbol: "ETH",
+    decimals: 18,
+    name:"Ethereum"
+  }
+}
+
+export const flashbotsFrontRunProtectionProvider = new ethers.providers.StaticJsonRpcProvider(FlashBotsFrontRunRpc.rpcUrl)
 
 export type SupportedL1ChainId = typeof L1_CHAIN_IDS[number]
 
@@ -307,4 +319,5 @@ export const CHAIN_INFO: ChainInfoMap = {
       rpcUrl: 'https://rpc-endpoints.superfluid.dev/mumbai',
     },
   },
+  
 }

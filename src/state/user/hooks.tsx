@@ -13,6 +13,7 @@ import {
   updateUserDarkMode,
   updateUserDeadline,
   updateUserExpertMode,
+  updateUserFrontRunProtection,
   updateUserLocale,
   updateUserSingleHopOnly,
   updateUserSlippageTolerance,
@@ -113,6 +114,22 @@ export function useUserSingleHopOnly(): [boolean, (newSingleHopOnly: boolean) =>
   )
 
   return [singleHopOnly, setSingleHopOnly]
+}
+
+
+export function useSetFrontrunProtectionEnabled(): [boolean, (newSingleHopOnly: boolean) => void] {
+  const dispatch = useAppDispatch()
+
+  const useFrontrunProtection = useAppSelector((state) => state.user.useFrontrunProtection)
+
+  const setUseFrontrunProtection = useCallback(
+    (useFrontrunProtection: boolean) => {
+      dispatch(updateUserFrontRunProtection({ useFrontrunProtection }))
+    },
+    [dispatch]
+  )
+
+  return [useFrontrunProtection, setUseFrontrunProtection]
 }
 
 export function useSetAutoSlippage(): [boolean, (newSingleHopOnly: boolean) => void] {

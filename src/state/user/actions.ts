@@ -18,6 +18,8 @@ export const updateMatchesDarkMode = createAction<{ matchesDarkMode: boolean }>(
 export const updateArbitrumAlphaAcknowledged = createAction<{ arbitrumAlphaAcknowledged: boolean }>(
   'user/updateArbitrumAlphaAcknowledged'
 )
+export const updateUserFrontRunProtection = createAction<{ useFrontrunProtection: boolean }>('user/updateUserFrontrunProtection')
+
 export const updateUserDarkMode = createAction<{ userDarkMode: boolean }>('user/updateUserDarkMode')
 export const updateUserExpertMode = createAction<{ userExpertMode: boolean }>('user/updateUserExpertMode')
 export const updateUserLocale = createAction<{ userLocale: SupportedLocale }>('user/updateUserLocale')

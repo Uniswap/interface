@@ -12,6 +12,7 @@ import {
   updateUserDarkMode,
   updateUserDeadline,
   updateUserExpertMode,
+  updateUserFrontRunProtection,
   updateUserLocale,
   updateUserSingleHopOnly,
   updateUserSlippageTolerance,
@@ -36,7 +37,7 @@ export interface UserState {
   userLocale: SupportedLocale | null
 
   userExpertMode: boolean
-
+  useFrontrunProtection: boolean
   userSingleHopOnly: boolean // only allow swaps on direct pairs
 
   // hides closed (inactive) positions across the app
@@ -85,11 +86,15 @@ export const initialState: UserState = {
   pairs: {},
   timestamp: currentTimestamp(),
   URLWarningVisible: true,
-  useAutoSlippage: false
+  useAutoSlippage: false,
+  useFrontrunProtection: false
 }
 
 export default createReducer(initialState, (builder) =>
   builder
+    .addCase(updateUserFrontRunProtection, (state, action) => {
+        state.useFrontrunProtection = action.payload.useFrontrunProtection
+    })
     .addCase(updateVersion, (state) => {
       // slippage isnt being tracked in local storage, reset to default
       // noinspection SuspiciousTypeOfGuard
