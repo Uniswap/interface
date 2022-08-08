@@ -1,9 +1,9 @@
 import { AnyAction } from '@reduxjs/toolkit'
-import React, { Dispatch } from 'react'
+import React, { Dispatch, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleSheet } from 'react-native'
 import { FadeIn, FadeOut, FadeOutDown } from 'react-native-reanimated'
-import { useAppTheme } from 'src/app/hooks'
+import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import InfoCircle from 'src/assets/icons/info-circle.svg'
 import { Button } from 'src/components/buttons/Button'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
@@ -16,6 +16,8 @@ import { SpinningLoader } from 'src/components/loading/SpinningLoader'
 import { Text } from 'src/components/Text'
 import { WarningAction, WarningModalType } from 'src/components/warnings/types'
 import { getWarningColor } from 'src/components/warnings/utils'
+import { pushNotification } from 'src/features/notifications/notificationSlice'
+import { AppNotificationType } from 'src/features/notifications/types'
 import { ElementName, SectionName } from 'src/features/telemetry/constants'
 import { Trace } from 'src/features/telemetry/Trace'
 import {
@@ -28,6 +30,7 @@ import { getReviewActionName, isWrapAction } from 'src/features/transactions/swa
 import { showWarningInPanel } from 'src/features/transactions/swap/validate'
 import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
 import { createTransactionId } from 'src/features/transactions/utils'
+import usePrevious from 'src/utils/hooks'
 
 interface SwapFormProps {
   dispatch: Dispatch<AnyAction>
@@ -41,6 +44,7 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo, isCompressedView }
   const theme = useAppTheme()
 
   const {
+    chainId,
     currencies,
     currencyAmounts,
     currencyBalances,
@@ -53,6 +57,8 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo, isCompressedView }
     isUSDInput = false,
     warnings,
   } = derivedSwapInfo
+
+  const prevChainId = usePrevious(chainId)
 
   const {
     onSwitchCurrencies,
@@ -109,6 +115,14 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo, isCompressedView }
     const newExactAmount = formattedAmounts[currencyField]
     onUpdateExactCurrencyField(currencyField, newExactAmount)
   }
+
+  const appDispatch = useAppDispatch()
+  useEffect(() => {
+    // don't fire notification toast for first network selection
+    if (!prevChainId || !chainId || prevChainId === chainId) return
+
+    appDispatch(pushNotification({ type: AppNotificationType.SwapNetwork, chainId }))
+  }, [chainId, prevChainId, appDispatch])
 
   return (
     <Flex grow gap="none" justifyContent="space-between">

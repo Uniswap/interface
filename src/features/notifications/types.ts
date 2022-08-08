@@ -11,6 +11,7 @@ export enum AppNotificationType {
   Transaction,
   Favorites,
   Copied,
+  SwapNetwork,
 }
 
 interface AppNotificationBase {
@@ -120,6 +121,11 @@ export interface CopyNotification extends AppNotificationBase {
   type: AppNotificationType.Copied
 }
 
+export interface SwapNetworkNotification extends AppNotificationBase {
+  type: AppNotificationType.SwapNetwork
+  chainId: ChainId
+}
+
 export type AppNotification =
   | AppNotificationDefault
   | AppErrorNotification
@@ -127,3 +133,4 @@ export type AppNotification =
   | WalletConnectNotification
   | TransactionNotification
   | FavoriteNotification
+  | SwapNetworkNotification

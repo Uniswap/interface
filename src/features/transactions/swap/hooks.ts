@@ -59,6 +59,7 @@ export type DerivedSwapInfo<
   TInput = Currency,
   TOutput extends Currency = Currency
 > = BaseDerivedInfo<TInput> & {
+  chainId?: ChainId
   currencies: BaseDerivedInfo<TInput>['currencies'] & {
     [CurrencyField.OUTPUT]: Nullable<TOutput>
   }
@@ -120,6 +121,8 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
       [CurrencyField.OUTPUT]: currencyOut,
     }
   }, [currencyIn, currencyOut])
+
+  const chainId = currencyIn?.chainId ?? currencyOut?.chainId
 
   const { balance: tokenInBalance } = useTokenBalance(
     currencyIn?.isToken ? currencyIn : undefined,
@@ -230,6 +233,7 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
 
   return useMemo(() => {
     return {
+      chainId,
       currencies,
       currencyAmounts,
       currencyBalances,
@@ -254,6 +258,7 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
       warningModalType,
     }
   }, [
+    chainId,
     currencies,
     currencyAmounts,
     currencyBalances,

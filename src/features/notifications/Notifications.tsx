@@ -12,6 +12,7 @@ import { NetworkLogo } from 'src/components/CurrencyLogo/NetworkLogo'
 import { RemoteImage } from 'src/components/images/RemoteImage'
 import { Box } from 'src/components/layout/Box'
 import { WalletConnectModalState } from 'src/components/WalletConnect/constants'
+import { CHAIN_INFO } from 'src/constants/chains'
 import { AssetType } from 'src/entities/assets'
 import { useSpotPrices } from 'src/features/dataApi/prices'
 import { useENS } from 'src/features/ens/useENS'
@@ -26,6 +27,7 @@ import {
   AppNotificationDefault,
   ApproveTxNotification,
   FavoriteNotification as FavoriteNotificationType,
+  SwapNetworkNotification as SwapNetworkNotificationType,
   SwapTxNotification,
   TransactionNotificationBase,
   TransferCurrencyTxNotification,
@@ -362,9 +364,26 @@ export function CopiedNotification() {
 
   return (
     <NotificationToast
+      useSmallDisplay
       icon={<CheckCircle color={theme.colors.accentSuccess} height={20} width={20} />}
       title={t('Copied to clipboard')}
-      useSmallDisplay={true}
+    />
+  )
+}
+
+export function SwapNetworkNotification({
+  notification: { chainId },
+}: {
+  notification: SwapNetworkNotificationType
+}) {
+  const { t } = useTranslation()
+  const network = CHAIN_INFO[chainId].label
+
+  return (
+    <NotificationToast
+      useSmallDisplay
+      icon={<NetworkLogo chainId={chainId} size={24} />}
+      title={t('Swapping on {{ network }}', { network })}
     />
   )
 }
