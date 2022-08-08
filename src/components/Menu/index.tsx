@@ -24,6 +24,7 @@ import {
 import { Link } from 'react-router-dom'
 import { useDarkModeManager } from 'state/user/hooks'
 import styled, { css } from 'styled-components/macro'
+import { isDevelopmentEnv, isStagingEnv } from 'utils/env'
 
 import { ReactComponent as MenuIcon } from '../../assets/images/menu.svg'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
@@ -301,7 +302,7 @@ export default function Menu() {
                         <Trans>Claim UNI</Trans>
                       </UNIbutton>
                     )}
-                    {['development', 'test'].includes(process.env.NODE_ENV) && (
+                    {(isDevelopmentEnv() || isStagingEnv()) && (
                       <ToggleMenuItem onClick={openFeatureFlagsModal}>Feature Flags</ToggleMenuItem>
                     )}
                   </MenuFlyout>
