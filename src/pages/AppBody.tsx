@@ -15,7 +15,7 @@ export const BodyWrapper = styled.main<{ margin?: string; maxWidth?: string; pha
   margin-left: auto;
   margin-right: auto;
   z-index: ${Z_INDEX.deprecated_content};
-  font-feature-settings: ${({ phase0Flag }) => phase0Flag && 'ss02 off'};
+  font-feature-settings: ${({ phase0Flag }) => phase0Flag && "'ss02' off"};
   box-shadow: ${({ phase0Flag }) =>
     !phase0Flag &&
     '0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04), 0px 24px 32px rgba(0, 0, 0, 0.01)'};
