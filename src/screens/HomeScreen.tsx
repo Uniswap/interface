@@ -24,6 +24,7 @@ import { useAllBalancesByChainId } from 'src/features/dataApi/balances'
 import { openModal } from 'src/features/modals/modalSlice'
 import { PendingNotificationBadge } from 'src/features/notifications/PendingNotificationBadge'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
+import { AccountType } from 'src/features/wallet/accounts/types'
 import { useTestAccount } from 'src/features/wallet/accounts/useTestAccount'
 import {
   useActiveAccount,
@@ -51,9 +52,11 @@ export function HomeScreen() {
         <Flex gap="lg" px="sm">
           <Flex gap="md" p="sm">
             <TotalBalance showRelativeChange balances={balances} owner={activeAccount?.address} />
-            <Flex pt="xxs">
-              <QuickActions />
-            </Flex>
+            {activeAccount?.type !== AccountType.Readonly && (
+              <Flex pt="xxs">
+                <QuickActions />
+              </Flex>
+            )}
           </Flex>
           <Flex gap="sm">
             <PortfolioTokensSection count={4} />
