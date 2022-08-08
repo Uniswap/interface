@@ -6,6 +6,7 @@ export enum TimePeriod {
   week = 'week',
   month = 'month',
   year = 'year',
+  all = 'all',
 }
 
 export type TokenData = {
@@ -38,6 +39,7 @@ const FAKE_TOP_TOKENS_RESULT = {
       [TimePeriod.week]: 16_800_000,
       [TimePeriod.month]: 58_920_000,
       [TimePeriod.year]: 690_920_000,
+      [TimePeriod.all]: 690_920_000,
     },
   },
   '0x0cec1a9154ff802e7934fc916ed7ca50bde6844e': {
@@ -53,6 +55,7 @@ const FAKE_TOP_TOKENS_RESULT = {
       [TimePeriod.week]: 800_000,
       [TimePeriod.month]: 4_920_000,
       [TimePeriod.year]: 100_920_000,
+      [TimePeriod.all]: 690_920_000,
     },
   },
   '0x6B175474E89094C44Da98b954EedeAC495271d0F': {
@@ -68,6 +71,7 @@ const FAKE_TOP_TOKENS_RESULT = {
       [TimePeriod.week]: 800_000,
       [TimePeriod.month]: 4_920_000,
       [TimePeriod.year]: 100_920_000,
+      [TimePeriod.all]: 690_920_000,
     },
   },
   '0xdac17f958d2ee523a2206206994597c13d831ec7': {
@@ -83,6 +87,7 @@ const FAKE_TOP_TOKENS_RESULT = {
       [TimePeriod.week]: 800_000,
       [TimePeriod.month]: 4_920_000,
       [TimePeriod.year]: 100_920_000,
+      [TimePeriod.all]: 690_920_000,
     },
   },
   '0xf629cbd94d3791c9250152bd8dfbdf380e2a3b9c': {
@@ -98,6 +103,7 @@ const FAKE_TOP_TOKENS_RESULT = {
       [TimePeriod.week]: 800_000,
       [TimePeriod.month]: 4_920_000,
       [TimePeriod.year]: 100_920_000,
+      [TimePeriod.all]: 690_920_000,
     },
   },
   '0x95ad61b0a150d79219dcf64e1e6cc01f0b64c4ce': {
@@ -113,6 +119,7 @@ const FAKE_TOP_TOKENS_RESULT = {
       [TimePeriod.week]: 800_000,
       [TimePeriod.month]: 4_920_000,
       [TimePeriod.year]: 100_920_000,
+      [TimePeriod.all]: 690_920_000,
     },
   },
   '0x8a2279d4a90b6fe1c4b30fa660cc9f926797baa2': {
@@ -128,6 +135,7 @@ const FAKE_TOP_TOKENS_RESULT = {
       [TimePeriod.week]: 800_000,
       [TimePeriod.month]: 4_920_000,
       [TimePeriod.year]: 100_920_000,
+      [TimePeriod.all]: 690_920_000,
     },
   },
   '0x84ca8bc7997272c7cfb4d0cd3d55cd942b3c9419': {
@@ -143,6 +151,7 @@ const FAKE_TOP_TOKENS_RESULT = {
       [TimePeriod.week]: 800_000,
       [TimePeriod.month]: 4_920_000,
       [TimePeriod.year]: 100_920_000,
+      [TimePeriod.all]: 690_920_000,
     },
   },
   '0x3845badAde8e6dFF049820680d1F14bD3903a5d0': {
@@ -158,6 +167,7 @@ const FAKE_TOP_TOKENS_RESULT = {
       [TimePeriod.week]: 800_000,
       [TimePeriod.month]: 4_920_000,
       [TimePeriod.year]: 100_920_000,
+      [TimePeriod.all]: 690_920_000,
     },
   },
   '0x4c19596f5aaff459fa38b0f7ed92f11ae6543784': {
@@ -173,6 +183,7 @@ const FAKE_TOP_TOKENS_RESULT = {
       [TimePeriod.week]: 800_000,
       [TimePeriod.month]: 4_920_000,
       [TimePeriod.year]: 100_920_000,
+      [TimePeriod.all]: 690_920_000,
     },
   },
   '0x71Ab77b7dbB4fa7e017BC15090b2163221420282': {
@@ -188,6 +199,7 @@ const FAKE_TOP_TOKENS_RESULT = {
       [TimePeriod.week]: 800_000,
       [TimePeriod.month]: 4_920_000,
       [TimePeriod.year]: 100_920_000,
+      [TimePeriod.all]: 690_920_000,
     },
   },
   '0xccc8cb5229b0ac8069c51fd58367fd1e622afd97': {
@@ -203,6 +215,7 @@ const FAKE_TOP_TOKENS_RESULT = {
       [TimePeriod.week]: 800_000,
       [TimePeriod.month]: 4_920_000,
       [TimePeriod.year]: 100_920_000,
+      [TimePeriod.all]: 690_920_000,
     },
   },
   '0x03be5c903c727ee2c8c4e9bc0acc860cca4715e2': {
@@ -218,6 +231,7 @@ const FAKE_TOP_TOKENS_RESULT = {
       [TimePeriod.week]: 800_000,
       [TimePeriod.month]: 4_920_000,
       [TimePeriod.year]: 100_920_000,
+      [TimePeriod.all]: 690_920_000,
     },
   },
   '0x4674672bcddda2ea5300f5207e1158185c944bc0': {
@@ -233,6 +247,7 @@ const FAKE_TOP_TOKENS_RESULT = {
       [TimePeriod.week]: 800_000,
       [TimePeriod.month]: 4_920_000,
       [TimePeriod.year]: 100_920_000,
+      [TimePeriod.all]: 690_920_000,
     },
   },
   '0xdf801468a808a32656d2ed2d2d80b72a129739f4': {
@@ -248,6 +263,7 @@ const FAKE_TOP_TOKENS_RESULT = {
       [TimePeriod.week]: 800_000,
       [TimePeriod.month]: 4_920_000,
       [TimePeriod.year]: 100_920_000,
+      [TimePeriod.all]: 690_920_000,
     },
   },
   '0xaDB2437e6F65682B85F814fBc12FeC0508A7B1D0': {
@@ -263,6 +279,7 @@ const FAKE_TOP_TOKENS_RESULT = {
       [TimePeriod.week]: 800_000,
       [TimePeriod.month]: 4_920_000,
       [TimePeriod.year]: 100_920_000,
+      [TimePeriod.all]: 690_920_000,
     },
   },
   '0x1796ae0b0fa4862485106a0de9b654eFE301D0b2': {
@@ -278,6 +295,7 @@ const FAKE_TOP_TOKENS_RESULT = {
       [TimePeriod.week]: 800_000,
       [TimePeriod.month]: 4_920_000,
       [TimePeriod.year]: 100_920_000,
+      [TimePeriod.all]: 690_920_000,
     },
   },
 }
