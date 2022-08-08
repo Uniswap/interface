@@ -96,6 +96,7 @@ export class InterfaceTrade<
     tradeType: TTradeType
   }) {
     super(routes)
+    this.blockNumber = blockNumber
     this.gasUseEstimateUSD = gasUseEstimateUSD
   }
 }
