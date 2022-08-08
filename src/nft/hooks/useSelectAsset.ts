@@ -4,7 +4,7 @@ import { devtools } from 'zustand/middleware'
 
 import { GenieAsset } from '../types'
 
-type SelectAssetState = {
+interface SelectAssetState {
   selectedAssets: GenieAsset[]
   selectAsset: (asset: GenieAsset) => void
   removeAsset: (asset: GenieAsset) => void

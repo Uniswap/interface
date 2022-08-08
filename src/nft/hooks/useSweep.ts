@@ -3,7 +3,7 @@ import { devtools, persist } from 'zustand/middleware'
 
 import { GenieAsset } from '../types'
 
-type SweepState = {
+interface SweepState {
   sweepAssets: GenieAsset[]
   setSweepAssets: (assets: GenieAsset[]) => void
   removeSweepAsset: (asset: GenieAsset) => void

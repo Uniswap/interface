@@ -1,7 +1,10 @@
 import create from 'zustand'
 import { devtools } from 'zustand/middleware'
 
-type State = { wrongNetwork: boolean; setWrongNetwork: (isWrongNetwork: boolean) => void }
+interface State {
+  wrongNetwork: boolean
+  setWrongNetwork: (isWrongNetwork: boolean) => void
+}
 
 export const useWrongNetwork = create<State>()(
   devtools(

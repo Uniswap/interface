@@ -4,7 +4,7 @@ import create from 'zustand'
 import { devtools } from 'zustand/middleware'
 import { breakpoints } from '../css/sprinkles.css'
 
-type IsMobileState = {
+interface IsMobileState {
   isMobile: boolean
   width: number
   setMobileWidth: (width: number) => void

@@ -3,7 +3,7 @@ import { devtools } from 'zustand/middleware'
 
 import { SellPageStateType } from '../types'
 
-type sellPageState = {
+interface sellPageState {
   /**
    * State of user settings
    */
@@ -20,6 +20,6 @@ export const useSellPageState = create<sellPageState>()(
           state: newState,
         })),
     }),
-    { name: 'use_sell_page_state' }
+    { name: 'useSellPageState' }
   )
 )

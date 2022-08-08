@@ -3,7 +3,7 @@ import { devtools } from 'zustand/middleware'
 
 import { WalletAsset, WalletCollection } from '../types'
 
-type WalletCollectionState = {
+interface WalletCollectionState {
   walletAssets: WalletAsset[]
   walletCollections: WalletCollection[]
   displayAssets: WalletAsset[]

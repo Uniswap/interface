@@ -20,7 +20,7 @@ export const shortenTxHash = (txHash: string, charsToShorten = 4, addCharsToBack
   )}`
 }
 
-type TxState = {
+interface TxState {
   state: TxStateType
   setState: (state: TxStateType) => void
   txHash: string
@@ -88,7 +88,7 @@ export const useSendTransaction = create<TxState>()(
         }
       },
     }),
-    { name: 'use_send_transaction_state' }
+    { name: 'useSendTransactionState' }
   )
 )
 

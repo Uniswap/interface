@@ -3,7 +3,7 @@ import { devtools } from 'zustand/middleware'
 
 import { OpenSeaAsset } from '../types'
 
-type SelectNFTState = {
+interface SelectNFTState {
   /**
    * NFTs selected by a user
    */

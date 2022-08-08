@@ -6,7 +6,7 @@ import { devtools } from 'zustand/middleware'
 
 import { ListingMarket, ListingWarning, WalletAsset } from '../types'
 
-type SellAssetState = {
+interface SellAssetState {
   sellAssets: WalletAsset[]
   selectSellAsset: (asset: WalletAsset) => void
   removeSellAsset: (asset: WalletAsset) => void

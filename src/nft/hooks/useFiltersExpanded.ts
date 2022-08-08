@@ -1,7 +1,7 @@
 import create from 'zustand'
 import { devtools, persist } from 'zustand/middleware'
 
-type State = {
+interface State {
   isExpanded: boolean
   setExpanded: (expanded: boolean) => void
 }
