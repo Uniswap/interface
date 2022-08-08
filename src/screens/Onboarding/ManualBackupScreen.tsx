@@ -80,13 +80,13 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props) {
             onConfirm={nextView}
           />
 
-          <Flex grow alignItems="center" justifyContent="space-between" px="sm">
+          <Flex grow alignItems="center" justifyContent="space-between" px="xs">
             <Flex width="90%">
               <ManualBackupEducationSection />
             </Flex>
             <Flex justifyContent="flex-end" width="100%">
               <PrimaryButton
-                label={t('Backup')}
+                label={t('Continue')}
                 name={ElementName.Next}
                 testID={ElementName.Next}
                 textVariant="largeLabel"

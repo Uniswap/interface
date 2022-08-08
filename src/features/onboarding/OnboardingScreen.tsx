@@ -34,7 +34,7 @@ export function OnboardingScreen({
               {title}
             </Text>
             {subtitle ? (
-              <Text color="textSecondary" textAlign="center" variant="bodySmall">
+              <Text color="textSecondary" mx="lg" textAlign="center" variant="bodySmall">
                 {subtitle}
               </Text>
             ) : null}

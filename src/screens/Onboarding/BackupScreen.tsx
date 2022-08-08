@@ -57,10 +57,10 @@ export function BackupScreen({ navigation, route: { params } }: Props) {
       title={t('Back up your recovery phrase')}>
       <Flex grow>
         <BackupOptions backupMethods={activeAccountBackups} params={params} />
-        <Button alignSelf="flex-start" py="xxs" onPress={onPressEducationButton}>
-          <Flex centered row gap="md">
-            <InfoCircle color={theme.colors.textSecondary} height={24} width={24} />
-            <Text variant="mediumLabel">{t('What’s a recovery phrase?')}</Text>
+        <Button alignSelf="flex-start" py="none" onPress={onPressEducationButton}>
+          <Flex centered row gap="sm">
+            <InfoCircle color={theme.colors.textSecondary} height={20} width={20} />
+            <Text variant="subhead">{t('What’s a recovery phrase?')}</Text>
           </Flex>
         </Button>
         <Flex grow justifyContent="flex-end">
@@ -189,12 +189,12 @@ function BackupOptionButton({
       <Button
         backgroundColor="backgroundContainer"
         borderColor="backgroundOutline"
-        borderRadius="lg"
+        borderRadius="md"
         borderWidth={1}
         disabled={completed}
         name={name}
-        paddingHorizontal="md"
-        paddingVertical="sm"
+        px="md"
+        py="sm"
         testID={name}
         onPress={onPress}>
         <Flex row alignItems="center" gap="xs" justifyContent="space-between">
