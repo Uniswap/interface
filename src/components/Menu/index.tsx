@@ -227,6 +227,9 @@ export default function Menu() {
     setMenu('main')
   }, [open])
 
+  console.log('important info')
+  console.log(process.env.NODE_ENV)
+
   return (
     <>
       {/* // https://github.com/DefinitelyTyped/DefinitelyTyped/issues/30451 */}
