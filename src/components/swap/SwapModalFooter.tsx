@@ -124,8 +124,6 @@ export default function SwapModalFooter({
   const tokenInAmountUsd = useStablecoinValue(trade.inputAmount)?.toFixed(2)
   const tokenOutAmountUsd = useStablecoinValue(trade.outputAmount)?.toFixed(2)
   const routes = getTokenPath(trade)
-  console.log('block number')
-  console.log(trade.blockNumber)
 
   return (
     <>
