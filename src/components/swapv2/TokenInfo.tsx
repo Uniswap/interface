@@ -115,14 +115,14 @@ const TokenInfo = ({ currencies, onBack }: { currencies: { [field in Field]?: Cu
   const outputNativeCurrency = useCurrencyConvertedToNative(currencies[Field.OUTPUT])
   const inputToken = inputNativeCurrency?.wrapped
   const outputToken = outputNativeCurrency?.wrapped
-  const [activeTab, setActiveTab] = useState<string>(inputNativeCurrency?.symbol || '')
-  const selectedToken = activeTab === outputNativeCurrency?.symbol ? outputToken : inputToken
+  const [activeTab, setActiveTab] = useState<string>(inputToken?.address || '')
+  const selectedToken = activeTab === outputToken?.address ? outputToken : inputToken
   const { data: tokenInfo, loading } = useTokenInfo(selectedToken)
   const darkMode = useIsDarkMode()
 
   // Handle switch network case
   useEffect(() => {
-    inputNativeCurrency?.symbol && setActiveTab(inputNativeCurrency.symbol)
+    inputToken?.address && setActiveTab(inputToken?.address)
     //eslint-disable-next-line
   }, [chainId, JSON.stringify(inputNativeCurrency), inputNativeCurrency?.symbol])
 
@@ -170,20 +170,20 @@ const TokenInfo = ({ currencies, onBack }: { currencies: { [field in Field]?: Cu
           )}
           <TabContainer>
             <Tab
-              isActive={activeTab === inputNativeCurrency?.symbol}
+              isActive={activeTab === inputToken?.address}
               padding="0"
-              onClick={() => setActiveTab(inputNativeCurrency?.symbol || '')}
+              onClick={() => setActiveTab(inputToken?.address || '')}
             >
               <CurrencyLogo currency={inputNativeCurrency} size="16px" />
-              <TabText isActive={activeTab === inputNativeCurrency?.symbol}>{inputNativeCurrency?.symbol}</TabText>
+              <TabText isActive={activeTab === inputToken?.address}>{inputNativeCurrency?.symbol}</TabText>
             </Tab>
             <Tab
-              isActive={activeTab === outputNativeCurrency?.symbol}
+              isActive={activeTab === outputToken?.address}
               padding="0"
-              onClick={() => setActiveTab(outputNativeCurrency?.symbol || '')}
+              onClick={() => setActiveTab(outputToken?.address || '')}
             >
               <CurrencyLogo currency={outputNativeCurrency} size="16px" />
-              <TabText isActive={activeTab === outputNativeCurrency?.symbol}>{outputNativeCurrency?.symbol}</TabText>
+              <TabText isActive={activeTab === outputToken?.address}>{outputNativeCurrency?.symbol}</TabText>
             </Tab>
           </TabContainer>
         </Flex>

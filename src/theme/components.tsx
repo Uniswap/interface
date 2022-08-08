@@ -115,12 +115,15 @@ export const StyledInternalLink = styled(Link)`
   }
 `
 
+export const ExternalLinkNoLineHeight = styled(ExternalLink)`
+  line-height: 0;
+`
+
 const StyledLink = styled.a`
   text-decoration: none;
   cursor: pointer;
   color: ${({ theme }) => theme.primary};
   font-weight: 500;
-  line-height: 0;
 
   :hover {
     text-decoration: underline;

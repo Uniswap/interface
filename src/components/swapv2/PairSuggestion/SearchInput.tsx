@@ -49,10 +49,10 @@ const DisabledFrame = styled.div`
   bottom: 0;
 `
 
-const SearchIcon = styled(Search)<{ showList: boolean }>`
+const SearchIcon = styled(Search)<{ $showList: boolean }>`
   position: absolute;
   left: 10px;
-  color: ${({ theme, showList }) => (showList ? theme.subText : theme.border)};
+  color: ${({ theme, $showList }) => ($showList ? theme.subText : theme.border)};
   font-size: 14px;
 `
 const InputIcon = styled.div`
@@ -104,7 +104,7 @@ export default forwardRef<HTMLInputElement, Props>(function SearchComponent(
 
   return (
     <SearchWrapper showList={isShowListPair}>
-      <SearchIcon size={18} showList={isShowListPair} />
+      <SearchIcon size={18} $showList={isShowListPair} />
       <SearchInput
         ref={ref}
         hasBorder={hasBorder}

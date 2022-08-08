@@ -14,7 +14,7 @@ import InfoHelper from 'components/InfoHelper'
 import { KYBER_NETWORK_DISCORD_URL, KYBER_NETWORK_TWITTER_URL } from 'constants/index'
 import useTheme from 'hooks/useTheme'
 import { useIsDarkMode } from 'state/user/hooks'
-import { ExternalLink } from 'theme'
+import { ExternalLink, ExternalLinkNoLineHeight } from 'theme'
 
 const FooterWrapper = styled.div`
   background: ${({ theme }) => theme.buttonGray + '33'};
@@ -85,18 +85,18 @@ export const FooterSocialLink = () => {
   const theme = useTheme()
   return (
     <Flex alignItems="center" justifyContent="center" sx={{ gap: '24px' }}>
-      <ExternalLink href="https://t.me/kybernetwork">
+      <ExternalLinkNoLineHeight href="https://t.me/kybernetwork">
         <Telegram size={16} color={theme.subText} />
-      </ExternalLink>
-      <ExternalLink href={KYBER_NETWORK_TWITTER_URL}>
+      </ExternalLinkNoLineHeight>
+      <ExternalLinkNoLineHeight href={KYBER_NETWORK_TWITTER_URL}>
         <TwitterIcon color={theme.subText} />
-      </ExternalLink>
-      <ExternalLink href={KYBER_NETWORK_DISCORD_URL}>
+      </ExternalLinkNoLineHeight>
+      <ExternalLinkNoLineHeight href={KYBER_NETWORK_DISCORD_URL}>
         <Discord width={16} height={12} color={theme.subText} />
-      </ExternalLink>
-      <ExternalLink href={`https://blog.kyber.network`}>
+      </ExternalLinkNoLineHeight>
+      <ExternalLinkNoLineHeight href={`https://blog.kyber.network`}>
         <Medium />
-      </ExternalLink>
+      </ExternalLinkNoLineHeight>
     </Flex>
   )
 }

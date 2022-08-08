@@ -92,8 +92,7 @@ export default function SuggestItem({
         </div>
       </Flex>
       <Flex height="100%" tabIndex={0} className="no-blur" minWidth={20}>
-        {!isTokenNotImport &&
-          account &&
+        {account &&
           (isFullFavoritePair && !isMobile ? (
             <MouseoverTooltip text={t`You can only favorite up to three token pairs`}>{star}</MouseoverTooltip>
           ) : (
