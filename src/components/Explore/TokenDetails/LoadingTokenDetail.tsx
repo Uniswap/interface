@@ -13,7 +13,6 @@ import {
   Stat,
   StatPair,
   StatsSection,
-  TimeOptionsContainer,
   TokenInfoContainer,
   TokenNameCell,
   TopArea,
@@ -113,9 +112,7 @@ export default function LoadingTokenDetail() {
             </ChartAnimation>
           </ChartWrapper>
         </ChartContainer>
-        <TimeOptionsContainer>
-          <Space heightSize={32} />
-        </TimeOptionsContainer>
+        <Space heightSize={32} />
       </ChartHeader>
       <AboutSection>
         <AboutHeader>
