@@ -8,7 +8,7 @@ const StyledInput = styled.input<{ error?: boolean; fontSize?: string; align?: s
   color: ${({ error, theme }) => (error ? theme.deprecated_red1 : theme.deprecated_text1)};
   width: 0;
   position: relative;
-  font-weight: 400;
+  font-weight: ${({ phase0Flag }) => (phase0Flag ? 400 : 500)};
   outline: none;
   border: none;
   flex: 1 1 auto;

@@ -42,7 +42,6 @@ const StyledCard = styled(OutlineCard)<{ phase0Flag: boolean }>`
 
 const StyledHeaderRow = styled(RowBetween)<{ disabled: boolean; open: boolean; phase0Flag: boolean }>`
   padding: ${({ phase0Flag }) => (phase0Flag ? '8px 0px 0px 0px' : '4px 8px')};
-  background-color: ${({ theme }) => theme.none};
   background-color: ${({ open, theme, phase0Flag }) => (open && !phase0Flag ? theme.deprecated_bg1 : theme.none)};
   align-items: center;
   border-top: 1px solid ${({ theme, phase0Flag }) => (phase0Flag ? theme.backgroundOutline : theme.none)};
