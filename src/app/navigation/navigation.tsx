@@ -238,6 +238,7 @@ export function DrawerNavigator() {
         name="AppStack"
         options={() => ({
           swipeEnabled: getDrawerEnabled(),
+          swipeEdgeWidth: SWIPE_WIDTH,
         })}
       />
     </Drawer.Navigator>
@@ -418,3 +419,4 @@ const DRAWER_ENABLED_SCREENS = [
   Tabs.Profile.valueOf(),
 ]
 const SIDEBAR_WIDTH = Math.min(dimensions.fullWidth * 0.8, 320)
+const SWIPE_WIDTH = dimensions.fullWidth * 0.5
