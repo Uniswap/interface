@@ -89,6 +89,7 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props) {
                 label={t('Backup')}
                 name={ElementName.Next}
                 testID={ElementName.Next}
+                textVariant="largeLabel"
                 variant="onboard"
                 onPress={() => setShowTermsModal(true)}
               />
@@ -120,6 +121,7 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props) {
                 label={t('Continue')}
                 name={ElementName.Next}
                 testID={ElementName.Next}
+                textVariant="largeLabel"
                 variant="onboard"
                 onPress={onValidationSuccessful}
               />

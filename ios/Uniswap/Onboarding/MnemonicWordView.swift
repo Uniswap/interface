@@ -62,7 +62,7 @@ class MnemonicWordView: UIView {
     } else {
       self.layer.backgroundColor = UIColor.init(red: 14/255.0, green: 17/255.0, blue: 26/255.0, alpha: 1.0).cgColor
       self.layer.borderColor = UIColor.init(red: 153/255.0, green: 161/255.0, blue: 189/255.0, alpha: 0.24).cgColor
-      indexLabel.textColor = UIColor.lightGray
+      indexLabel.textColor = UIColor.init(red: 124/255.0, green: 133/255.0, blue: 162/255.0, alpha: 1.0)
       wordLabel.textColor = UIColor.white
     }
   }
