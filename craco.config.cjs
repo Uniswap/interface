@@ -12,8 +12,7 @@ module.exports = {
       const instanceOfMiniCssExtractPlugin = webpackConfig.plugins.find(
         (plugin) => plugin instanceof MiniCssExtractPlugin
       )
-      if (instanceOfMiniCssExtractPlugin.options !== undefined)
-        instanceOfMiniCssExtractPlugin.options.ignoreOrder = true
+      if (instanceOfMiniCssExtractPlugin !== undefined) instanceOfMiniCssExtractPlugin.options.ignoreOrder = true
       return webpackConfig
     },
   },
