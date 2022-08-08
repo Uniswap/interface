@@ -29,7 +29,7 @@ function Page({ text }: { text: ReactNode }) {
               <Text color="textSecondary" variant="mediumLabel">
                 <Trans>What’s a recovery phrase?</Trans>
               </Text>
-              <CloseButton color="textSecondary" size={12} strokeWidth={3} onPress={onDismiss} />
+              <CloseButton color="textSecondary" onPress={onDismiss} />
             </Flex>
             <Flex flex={0.2} />
             <Flex flex={0.8} px="lg">
