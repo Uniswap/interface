@@ -82,7 +82,9 @@ export function useSortedTokensByQuery(tokens: Token[] | undefined, searchQuery:
       if (token.symbol?.toLowerCase() === symbolMatch[0]) {
          exactMatches.push(token)
       } else if (token.symbol?.toLowerCase().startsWith(searchQuery.toLowerCase().trim())) {
-         symbolSubtrings.push(token)
+         symbolSubtrings.push(token);
+      } else if (token?.address?.toLowerCase() === searchQuery.toLowerCase().trim()) {
+          exactMatches.push(token);
       } else if (!searchQuery) {
          rest.push(token)
       } 
