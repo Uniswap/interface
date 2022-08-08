@@ -217,6 +217,7 @@ const Row = ({
 
   const canHarvest = farm.userDepositedNFTs.some(pos => !!pos.rewardPendings.length)
   const canUnstake = farm.userDepositedNFTs.some(pos => pos.stakedLiquidity.gt(0))
+  const canStake = farm.startTime <= currentTimestamp
 
   useEffect(() => {
     if (position)
@@ -482,8 +483,11 @@ const Row = ({
           ))}
         </Flex>
         <Flex justifyContent="flex-end" sx={{ gap: '4px' }}>
-          <ActionButton onClick={() => onOpenModal('stake', farm.pid)} disabled={!isApprovedForAll || tab === 'ended'}>
-            <MouseoverTooltip text={t`Stake`} placement="top" width="fit-content">
+          <ActionButton
+            onClick={() => onOpenModal('stake', farm.pid)}
+            disabled={!isApprovedForAll || tab === 'ended' || !canStake}
+          >
+            <MouseoverTooltip text={!canStake ? t`Farm has not started` : t`Stake`} placement="top" width="fit-content">
               <Plus color={isApprovedForAll && tab !== 'ended' ? theme.primary : theme.subText} size={16} />
             </MouseoverTooltip>
           </ActionButton>
