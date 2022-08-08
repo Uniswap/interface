@@ -1,6 +1,7 @@
 // Copied from https://github.com/Uniswap/interface/blob/main/src/state/lists/wrappedTokenInfo.ts
 import { Currency, Token } from '@uniswap/sdk-core'
 import { Tags, TokenInfo, TokenList } from '@uniswap/token-lists'
+import { ChainIdTo } from 'src/constants/chains'
 import { normalizeAddress } from 'src/utils/addresses'
 
 type TagDetails = Tags[keyof Tags]
@@ -64,6 +65,10 @@ export class WrappedTokenInfo implements Token {
         id: tagId,
       }
     }))
+  }
+
+  public get bridgeInfo(): ChainIdTo<{ tokenAddress: Address }> | undefined {
+    return this.tokenInfo.extensions?.bridgeInfo as ChainIdTo<{ tokenAddress: Address }> | undefined
   }
 
   equals(other: Currency): boolean {
