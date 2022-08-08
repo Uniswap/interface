@@ -97,6 +97,7 @@ const formatAnalyticsEventProperties = ({
   duration_from_first_quote_to_swap_submission_milliseconds: swapQuoteReceivedDate
     ? getDurationFromDateMilliseconds(swapQuoteReceivedDate)
     : undefined,
+  swap_quote_block_number: trade.blockNumber,
   ...formatRoutesEventProperties(routes),
 })
 
@@ -122,7 +123,6 @@ export default function SwapModalFooter({
   const [clientSideRouter] = useClientSideRouter()
   const tokenInAmountUsd = useStablecoinValue(trade.inputAmount)?.toFixed(2)
   const tokenOutAmountUsd = useStablecoinValue(trade.outputAmount)?.toFixed(2)
-  const lpFeePercent = computeRealizedLPFeePercent(trade)
   const routes = getTokenPath(trade)
 
   return (
