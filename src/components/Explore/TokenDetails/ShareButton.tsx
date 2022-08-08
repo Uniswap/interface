@@ -13,6 +13,7 @@ const ShareButtonDisplay = styled.div`
   display: flex;
   cursor: pointer;
   position: relative;
+  z-index: 1;
 
   &:hover {
     color: ${({ theme }) => darken(0.1, theme.textSecondary)};
