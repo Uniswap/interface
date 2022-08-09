@@ -11,7 +11,8 @@ export function initializeAnalytics() {
   const API_KEY = isDevelopmentEnv() ? process.env.REACT_APP_AMPLITUDE_TEST_KEY : process.env.REACT_APP_AMPLITUDE_KEY
 
   if (typeof API_KEY === 'undefined') {
-    throw new Error(`REACT_APP_AMPLITUDE_TEST_KEY must be a defined environment variable`)
+    const keyName = isDevelopmentEnv() ? 'REACT_APP_AMPLITUDE_TEST_KEY' : 'REACT_APP_AMPLITUDE_KEY'
+    throw new Error(`${keyName} must be a defined environment variable`)
   }
 
   init(
