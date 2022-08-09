@@ -18,9 +18,13 @@ import {
   SettingsStackParamList,
   TabParamList,
 } from 'src/app/navigation/types'
+import DiscoverIconFilled from 'src/assets/icons/discover-filled.svg'
 import DiscoverIcon from 'src/assets/icons/discover.svg'
-import LightningIcon from 'src/assets/icons/lightning.svg'
+import ProfileIconFilled from 'src/assets/icons/profile-filled.svg'
+import ProfileIcon from 'src/assets/icons/profile.svg'
+import WalletIconFilled from 'src/assets/icons/wallet-filled.svg'
 import WalletIcon from 'src/assets/icons/wallet.svg'
+
 import { Chevron } from 'src/components/icons/Chevron'
 import { Box, Flex } from 'src/components/layout'
 import { useSelectAddressNotificationCount } from 'src/features/notifications/hooks'
@@ -121,7 +125,13 @@ function TabNavigator() {
         options={{
           tabBarLabel: t('Home'),
           tabBarIcon: ({ focused, color }) => (
-            <WalletIcon color={focused ? theme.colors.userThemeColor : color} height={24} />
+            <>
+              {focused ? (
+                <WalletIconFilled color={theme.colors.userThemeColor} height={24} />
+              ) : (
+                <WalletIcon color={color} height={24} />
+              )}
+            </>
           ),
           tabBarIconStyle: {
             paddingTop: iconTopPaddingMd,
@@ -135,7 +145,13 @@ function TabNavigator() {
           tabBarLabel: t('Explore'),
           tabBarShowLabel: false,
           tabBarIcon: ({ focused, color }) => (
-            <DiscoverIcon color={focused ? theme.colors.userThemeColor : color} height={24} />
+            <>
+              {focused ? (
+                <DiscoverIconFilled color={theme.colors.userThemeColor} height={24} />
+              ) : (
+                <DiscoverIcon color={color} height={24} />
+              )}
+            </>
           ),
           tabBarIconStyle: {
             paddingTop: iconTopPaddingMd,
@@ -149,7 +165,14 @@ function TabNavigator() {
           tabBarLabel: t('Me'),
           tabBarIcon: ({ focused, color }) => (
             <Flex alignItems="center" gap="xxs">
-              <LightningIcon color={focused ? theme.colors.userThemeColor : color} height={24} />
+              <>
+                {focused ? (
+                  <ProfileIconFilled color={theme.colors.userThemeColor} height={24} />
+                ) : (
+                  <ProfileIcon color={color} height={24} />
+                )}
+              </>
+
               {hasUnreadNotifications && (
                 <Box
                   backgroundColor="accentAction"
