@@ -60,6 +60,7 @@ const StatsLoadingContainer = styled.div`
 `
 const ChartAnimation = styled.div`
   display: flex;
+  overflow: hidden;
   animation: wave 8s cubic-bezier(0.36, 0.45, 0.63, 0.53) infinite;
   overflow: hidden;
 

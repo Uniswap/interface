@@ -6,14 +6,22 @@ import { VerifiedIcon } from 'components/TokenSafety/TokenSafetyIcon'
 import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import { getChainInfo } from 'constants/chainInfo'
 import { checkWarning } from 'constants/tokenSafety'
+import { gql } from 'graphql-request'
 import { useCurrency, useIsUserAddedToken, useToken } from 'hooks/Tokens'
 import { useAtomValue } from 'jotai/utils'
 import { useCallback } from 'react'
 import { useState } from 'react'
+<<<<<<< HEAD
 import { ArrowLeft, Heart } from 'react-feather'
 import { Link, useNavigate } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import { ClickableStyle, CopyContractAddress } from 'theme'
+=======
+import { ArrowLeft, Copy, Heart, TrendingUp } from 'react-feather'
+import { Link, useNavigate } from 'react-router-dom'
+import { CHAIN_SUBGRAPH_URL } from 'state/data/slice'
+import styled, { useTheme } from 'styled-components/macro'
+>>>>>>> fa094936 (query)
 
 import { favoritesAtom, useToggleFavorite } from '../state'
 import { ClickFavorited } from '../TokenTable/TokenRow'
@@ -144,6 +152,69 @@ const FavoriteIcon = styled(Heart)<{ isFavorited: boolean }>`
   fill: ${({ isFavorited, theme }) => (isFavorited ? theme.accentAction : 'transparent')};
 `
 
+const ChartEmpty = styled.div`
+  display: flex;
+`
+const NoInfoAvailable = styled.span`
+  color: ${({ theme }) => theme.textTertiary};
+  font-weight: 400;
+  font-size: 16px;
+`
+const MissingChartData = styled.div`
+  color: ${({ theme }) => theme.textTertiary};
+  display: flex;
+  font-weight: 400;
+  font-size: 12px;
+  gap: 4px;
+  align-items: center;
+  border-bottom: 1px solid ${({ theme }) => theme.backgroundOutline};
+  padding: 8px 0px;
+  margin-top: -40px;
+`
+
+const tokenDetailsStatsQuery = gql`
+  query TokenDetailsStatsQuery($contract: ContractInput) {
+    tokenProjects(contracts: [$contract]) {
+      description
+      homepageUrl
+      twitterName
+      name
+      markets(currencies: [USD]) {
+        price {
+          value
+          currency
+        }
+        marketCap {
+          value
+          currency
+        }
+        fullyDilutedMarketCap {
+          value
+          currency
+        }
+        volume24h: volume(duration: DAY) {
+          value
+          currency
+        }
+        priceHigh52W: priceHighLow(duration: YEAR, highLow: HIGH) {
+          value
+          currency
+        }
+        priceLow52W: priceHighLow(duration: YEAR, highLow: LOW) {
+          value
+          currency
+        }
+      }
+      tokens {
+        chain
+        address
+        symbol
+        decimals
+      }
+    }
+  }
+`
+
 export default function LoadedTokenDetail({ address }: { address: string }) {
   const token = useToken(address)
   const currency = useCurrency(address)
@@ -161,13 +232,85 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
   const chainInfo = getChainInfo(token?.chainId)
   const networkLabel = chainInfo?.label
   const networkBadgebackgroundColor = chainInfo?.backgroundColor
+  const truncatedTokenAddress = `${address.slice(0, 4)}...${address.slice(-3)}`
+  const tokenDetailsData = useLazyLoadQuery(tokenDetailsStatsQuery, {
+    contract: {
+      address,
+      chain: token ? CHAIN_SUBGRAPH_URL[token.chainId] : CHAIN_SUBGRAPH_URL[SupportedChainId.MAINNET],
+    },
+  })
 
   // catch token error and loading state
   if (!token || !token.name || !token.symbol) {
-    return <div>No Token</div>
+    return (
+      <TopArea>
+        <BreadcrumbNavLink to="/explore">
+          <ArrowLeft size={14} /> Explore
+        </BreadcrumbNavLink>
+        <ChartHeader>
+          <TokenInfoContainer>
+            <TokenNameCell>
+              <CurrencyLogo currency={currency} size={'32px'} />
+              {!token ? 'No token name available' : token.name} <TokenSymbol>{token && token.symbol}</TokenSymbol>
+              {!warning && <VerifiedIcon size="24px" />}
+              {networkBadgebackgroundColor && (
+                <NetworkBadge networkColor={chainInfo?.color} backgroundColor={networkBadgebackgroundColor}>
+                  {networkLabel}
+                </NetworkBadge>
+              )}
+            </TokenNameCell>
+            <TokenActions></TokenActions>
+          </TokenInfoContainer>
+          <ChartContainer>
+            <ChartEmpty>
+              <svg width="416" height="160" xmlns="http://www.w3.org/2000/svg">
+                <path d="M 0 80 Q 104 10, 208 80 T 416 80" stroke="#99A1BD" fill="transparent" strokeWidth="2" />
+              </svg>
+              <svg width="416" height="160" xmlns="http://www.w3.org/2000/svg">
+                <path d="M 0 80 Q 104 10, 208 80 T 416 80" stroke="#99A1BD" fill="transparent" strokeWidth="2" />
+              </svg>
+            </ChartEmpty>
+          </ChartContainer>
+          <MissingChartData>
+            <TrendingUp size={12} />
+            Missing chart data
+          </MissingChartData>
+        </ChartHeader>
+
+        <AboutSection>
+          <AboutHeader>
+            <Trans>About</Trans>
+          </AboutHeader>
+          <NoInfoAvailable>No token information available</NoInfoAvailable>
+          <ResourcesContainer>
+            <Resource name={'Etherscan'} link={'https://etherscan.io/'} />
+            <Resource name={'Protocol Info'} link={`https://info.uniswap.org/#/tokens/${address}`} />
+          </ResourcesContainer>
+        </AboutSection>
+        <StatsSection>
+          <NoInfoAvailable>No stats available</NoInfoAvailable>
+        </StatsSection>
+        <ContractAddressSection>
+          <Contract>
+            Contract Address
+            <ContractAddress onClick={() => navigator.clipboard.writeText(address)}>
+              <FullAddress>{address}</FullAddress>
+              <TruncatedAddress>{truncatedTokenAddress}</TruncatedAddress>
+              <Copy size={13} color={theme.textSecondary} />
+            </ContractAddress>
+          </Contract>
+        </ContractAddressSection>
+        <TokenSafetyModal
+          isOpen={warningModalOpen}
+          tokenAddress={address}
+          onCancel={() => navigate(-1)}
+          onContinue={handleDismissWarning}
+        />
+      </TopArea>
+    )
   }
-  const tokenName = token.name
-  const tokenSymbol = token.symbol
+  const tokenName = tokenDetailsData.name
+  const tokenSymbol = tokenDetailsData.symbol
 
   // TODO: format price, add sparkline
   const aboutToken =
