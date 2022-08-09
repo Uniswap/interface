@@ -12,18 +12,10 @@ import { useCurrency, useIsUserAddedToken, useToken } from 'hooks/Tokens'
 import { useAtomValue } from 'jotai/utils'
 import { useCallback } from 'react'
 import { useState } from 'react'
-<<<<<<< HEAD
 import { ArrowLeft, Heart } from 'react-feather'
 import { Link, useNavigate } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import { ClickableStyle, CopyContractAddress } from 'theme'
-=======
-import { ArrowLeft, Copy, Heart, TrendingUp } from 'react-feather'
-import { useLazyLoadQuery } from 'react-relay'
-import { Link, useNavigate } from 'react-router-dom'
-import { CHAIN_SUBGRAPH_URL } from 'state/data/slice'
-import styled, { useTheme } from 'styled-components/macro'
->>>>>>> fa094936 (query)
 
 import { favoritesAtom, useToggleFavorite } from '../state'
 import { ClickFavorited } from '../TokenTable/TokenRow'
@@ -174,6 +166,7 @@ const MissingChartData = styled.div`
   margin-top: -40px;
 `
 
+// todo: change duration
 const tokenDetailsStatsQuery = gql`
   query TokenDetailsStatsQuery($contract: ContractInput) {
     tokenProjects(contracts: [$contract]) {
@@ -315,10 +308,9 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
   const tokenSymbol = tokenDetailsData.symbol
 
   // TODO: format price, add sparkline
-  const aboutToken =
-    'Ethereum is a decentralized computing platform that uses ETH (Ether) to pay transaction fees (gas). Developers can use Ethereum to run decentralized applications (dApps) and issue new crypto assets, known as Ethereum tokens.'
-  const tokenMarketCap = '23.02B'
-  const tokenVolume = '1.6B'
+  const aboutToken = tokenDetailsData.description
+  const tokenMarketCap = tokenDetailsData.marketCap
+  const tokenVolume = tokenDetailsData.volume
 
   return (
     <TopArea>
@@ -354,8 +346,10 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
         </AboutHeader>
         {aboutToken}
         <ResourcesContainer>
-          <Resource name={'Etherscan'} link={'https://etherscan.io/'} />
+          <Resource name={'Etherscan'} link={`https://etherscan.io/${address}`} />
           <Resource name={'Protocol Info'} link={`https://info.uniswap.org/#/tokens/${address}`} />
+          <Resource name={'Website'} link={tokenDetailsData.homepageUrl} />
+          <Resource name={'Twitter'} link={`https://twitter.com/${tokenDetailsData.twitterName}`} />
         </ResourcesContainer>
       </AboutSection>
       <StatsSection>
@@ -372,11 +366,11 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
         <StatPair>
           <Stat>
             52W low
-            <StatPrice>$1,790.01</StatPrice>
+            <StatPrice>${tokenDetailsData.priceLow52W}</StatPrice>
           </Stat>
           <Stat>
             52W high
-            <StatPrice>$4,420.71</StatPrice>
+            <StatPrice>${tokenDetailsData.priceHigh52W}</StatPrice>
           </Stat>
         </StatPair>
       </StatsSection>
