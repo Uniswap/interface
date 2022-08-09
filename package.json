@@ -23,6 +23,11 @@
     "cypress:open": "cypress open --browser chrome --e2e",
     "cypress:run": "cypress run --browser chrome --e2e"
   },
+  "relay": {
+    "src": "./src",
+    "language": "typescript",
+    "schema": "https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3"
+  },
   "jest": {
     "collectCoverageFrom": [
       "src/components/**/*.ts*",
@@ -58,6 +63,7 @@
   "devDependencies": {
     "@ethersproject/experimental": "^5.4.0",
     "@graphql-codegen/cli": "1.21.5",
+    "@graphql-codegen/schema-ast": "^2.5.1",
     "@graphql-codegen/typescript": "1.22.3",
     "@graphql-codegen/typescript-operations": "^1.18.2",
     "@graphql-codegen/typescript-rtk-query": "^1.1.1",
