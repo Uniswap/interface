@@ -7,6 +7,7 @@ import { LightGreyCard } from 'components/Card'
 import QuestionHelper from 'components/QuestionHelper'
 import TokenSafetyIcon from 'components/TokenSafety/TokenSafetyIcon'
 import { checkWarning } from 'constants/tokenSafety'
+import { Phase0Variant, usePhase0Flag } from 'featureFlags/flags/phase0'
 import useTheme from 'hooks/useTheme'
 import { CSSProperties, MutableRefObject, useCallback, useMemo } from 'react'
 import { FixedSizeList } from 'react-window'
@@ -139,6 +140,7 @@ function CurrencyRow({
   const customAdded = useIsUserAddedToken(currency)
   const balance = useCurrencyBalance(account ?? undefined, currency)
   const warning = currency.isNative ? null : checkWarning(currency.address)
+  const phase0Flag = usePhase0Flag()
 
   // only show add or remove buttons if not on selected list
   return (
@@ -161,7 +163,7 @@ function CurrencyRow({
         <Column>
           <NameContainer>
             <CurrencyName title={currency.name}>{currency.name}</CurrencyName>
-            <TokenSafetyIcon warning={warning} />
+            {phase0Flag === Phase0Variant.Enabled && <TokenSafetyIcon warning={warning} />}
           </NameContainer>
           <ThemedText.DeprecatedDarkGray ml="0px" fontSize={'12px'} fontWeight={300}>
             {!currency.isNative && !isOnSelectedList && customAdded ? (
