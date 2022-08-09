@@ -239,7 +239,7 @@ export async function signListing(
           },
         ],
       }
-      const order = createSellOrder(signerAddress, asset.expirationTime!, [orderItem])
+      const order = createSellOrder(signerAddress, asset.expirationTime, [orderItem])
       try {
         await signOrderData(provider, order)
         const payload: OrderPayload = {
