@@ -1,15 +1,14 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { useAppSelector, useAppTheme } from 'src/app/hooks'
+import { useAppTheme } from 'src/app/hooks'
 import AlertTriangle from 'src/assets/icons/alert-triangle.svg'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { Flex } from 'src/components/layout'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { Text } from 'src/components/Text'
-import { useBiometricPrompt } from 'src/features/biometrics/hooks'
+import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { ModalName } from 'src/features/telemetry/constants'
 import { AccountType } from 'src/features/wallet/accounts/types'
-import { selectIsBiometricAuthEnabled } from 'src/features/wallet/selectors'
 
 interface RemoveAccountModalProps {
   accountType: AccountType
@@ -20,8 +19,8 @@ interface RemoveAccountModalProps {
 export function RemoveAccountModal({ accountType, onCancel, onConfirm }: RemoveAccountModalProps) {
   const { t } = useTranslation()
   const theme = useAppTheme()
-  const isBiometricAuthEnabled = useAppSelector(selectIsBiometricAuthEnabled)
 
+  const { requiredForTransactions: isBiometricAuthEnabled } = useBiometricAppSettings()
   const { trigger: biometricTrigger, modal: BiometricModal } = useBiometricPrompt(onConfirm)
 
   const onPressConfirm = () => {

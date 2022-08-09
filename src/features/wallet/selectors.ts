@@ -59,8 +59,6 @@ export const makeSelectLocalPfp = (address: Address) =>
 
 export const selectFinishedOnboarding = (state: RootState) => state.wallet.finishedOnboarding
 export const selectFlashbotsEnabled = (state: RootState) => state.wallet.flashbotsEnabled
-export const selectIsBiometricAuthEnabled = (state: RootState) =>
-  state.wallet.isBiometricAuthEnabled
 export const selectNFTViewType = (state: RootState) =>
   state.wallet.settings.nftViewType ?? NFTViewType.Grid
 export const selectHideSmallBalances = (state: RootState) =>

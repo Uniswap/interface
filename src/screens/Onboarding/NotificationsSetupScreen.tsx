@@ -14,13 +14,13 @@ import { CheckmarkCircleSvg } from 'src/components/icons/CheckmarkCircleSvg'
 import OverlayIcon from 'src/components/icons/OverlayIcon'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
+import { useBiometricAppSettings } from 'src/features/biometrics/hooks'
 import { NotificationContentProps } from 'src/features/notifications/NotificationToast'
 import { promptPushPermission } from 'src/features/notifications/Onesignal'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { OnboardingEntryPoint } from 'src/features/onboarding/utils'
 import { ElementName } from 'src/features/telemetry/constants'
 import { EditAccountAction, editAccountActions } from 'src/features/wallet/editAccountSaga'
-import { useIsBiometricAuthEnabled } from 'src/features/wallet/hooks'
 import { selectAccounts } from 'src/features/wallet/selectors'
 import { OnboardingScreens } from 'src/screens/Screens'
 
@@ -45,7 +45,7 @@ export const showNotificationSettingsAlert = () => {
 
 export function NotificationsSetupScreen({ navigation, route: { params } }: Props) {
   const { t } = useTranslation()
-  const isBiometricAuthEnabled = useIsBiometricAuthEnabled()
+  const { requiredForTransactions: isBiometricAuthEnabled } = useBiometricAppSettings()
   const accounts = useAppSelector(selectAccounts)
   const dispatch = useAppDispatch()
   const addresses = Object.keys(accounts)

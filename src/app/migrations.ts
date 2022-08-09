@@ -181,4 +181,14 @@ export const migrations = {
     newState.ens = { ensForAddress: {} }
     return newState
   },
+
+  14: (state: any) => {
+    const newState = { ...state }
+    newState.biometricSettings = {
+      requiredForAppAccess: state.wallet.isBiometricAuthEnabled,
+      requiredForTransactions: state.wallet.isBiometricAuthEnabled,
+    }
+    delete newState.wallet?.isBiometricAuthEnabled
+    return newState
+  },
 }

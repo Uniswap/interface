@@ -18,7 +18,6 @@ interface Wallet {
   finishedOnboarding?: boolean
   flashbotsEnabled: boolean
   isUnlocked: boolean
-  isBiometricAuthEnabled: boolean
   // Persisted UI configs set by the user through interaction with filters and settings
   settings: {
     showSmallBalances?: boolean // default: hide small balances
@@ -36,7 +35,6 @@ export const initialWalletState: Wallet = {
   activeAccountAddress: null,
   flashbotsEnabled: false,
   isUnlocked: false,
-  isBiometricAuthEnabled: false,
   settings: {},
 }
 
@@ -90,12 +88,6 @@ const slice = createSlice({
     ) => {
       state.finishedOnboarding = finishedOnboarding
     },
-    setIsBiometricAuthEnabled: (
-      state,
-      { payload: { isBiometricAuthEnabled } }: PayloadAction<{ isBiometricAuthEnabled: boolean }>
-    ) => {
-      state.isBiometricAuthEnabled = isBiometricAuthEnabled
-    },
     setNFTViewType: (state, action: PayloadAction<NFTViewType>) => {
       state.settings.nftViewType = action.payload
     },
@@ -131,7 +123,6 @@ export const {
   unlockWallet,
   resetWallet,
   setFinishedOnboarding,
-  setIsBiometricAuthEnabled,
   toggleFlashbots,
   setNFTViewType,
   setShowSmallBalances,

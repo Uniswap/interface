@@ -2,8 +2,9 @@ import type { HeaderTitleProps } from '@react-navigation/elements'
 import React from 'react'
 import { useOnboardingStackNavigation } from 'src/app/navigation/types'
 import { Indicator } from 'src/components/carousel/Indicator'
+import { useBiometricAppSettings } from 'src/features/biometrics/hooks'
 import { getFlow, getStepNumber, OnboardingEntryPoint } from 'src/features/onboarding/utils'
-import { useIsBiometricAuthEnabled, useNativeAccountExists } from 'src/features/wallet/hooks'
+import { useNativeAccountExists } from 'src/features/wallet/hooks'
 import { OnboardingScreens } from 'src/screens/Screens'
 
 export const OnboardingHeader = ({ children: routeName }: HeaderTitleProps) => {
@@ -11,7 +12,7 @@ export const OnboardingHeader = ({ children: routeName }: HeaderTitleProps) => {
   const navigationState = navigation.getState()
   const importType = navigationState.routes[navigationState.index]?.params?.importType
   const hasSeedPhrase = useNativeAccountExists()
-  const isBiometricAuthEnabled = useIsBiometricAuthEnabled()
+  const { requiredForTransactions: isBiometricAuthEnabled } = useBiometricAppSettings()
   const isInitialOnboarding =
     navigationState.routes[navigationState.index]?.params?.entryPoint ===
     OnboardingEntryPoint.FreshInstall

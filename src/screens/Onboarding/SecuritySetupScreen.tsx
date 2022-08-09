@@ -9,9 +9,9 @@ import { TextButton } from 'src/components/buttons/TextButton'
 import { Box, Flex } from 'src/components/layout'
 import { tryLocalAuthenticate } from 'src/features/biometrics'
 import { biometricAuthenticationSuccessful } from 'src/features/biometrics/hooks'
+import { setRequiredForAppAccess, setRequiredForTransactions } from 'src/features/biometrics/slice'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { ElementName } from 'src/features/telemetry/constants'
-import { setIsBiometricAuthEnabled } from 'src/features/wallet/walletSlice'
 import { OnboardingScreens } from 'src/screens/Screens'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.Security>
@@ -28,7 +28,8 @@ export function SecuritySetupScreen({ navigation: { navigate } }: Props) {
   const onPressEnableSecurity = async () => {
     const authStatus = await tryLocalAuthenticate()
     if (biometricAuthenticationSuccessful(authStatus)) {
-      dispatch(setIsBiometricAuthEnabled({ isBiometricAuthEnabled: true }))
+      dispatch(setRequiredForAppAccess(true))
+      dispatch(setRequiredForTransactions(true))
       onPressNext()
     }
   }

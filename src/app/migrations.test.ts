@@ -8,6 +8,7 @@ import {
   v10Schema,
   v11Schema,
   v12Schema,
+  v13Schema,
   v1Schema,
   v2Schema,
   v3Schema,
@@ -478,5 +479,23 @@ describe('Redux state migrations', () => {
   it('migrates from v12 to v13', () => {
     const v13 = migrations[13](v12Schema)
     expect(v13.ens.ensForAddress).toEqual({})
+  })
+
+  it('migrates from v13 to v14', () => {
+    const v13Stub = {
+      ...v13Schema,
+      wallet: {
+        ...v13Schema.wallet,
+        isBiometricAuthEnabled: true,
+      },
+      biometricSettings: {
+        requiredForAppAccess: false,
+        requiredForTransactions: false,
+      },
+    }
+
+    const v14 = migrations[14](v13Stub)
+    expect(v14.biometricSettings.requiredForAppAccess).toEqual(true)
+    expect(v14.biometricSettings.requiredForTransactions).toEqual(true)
   })
 })

@@ -11,10 +11,10 @@ import { HiddenMnemonicWordView } from 'src/components/mnemonic/HiddenMnemonicWo
 import { MnemonicDisplay } from 'src/components/mnemonic/MnemonicDisplay'
 import WarningModal from 'src/components/modals/WarningModal'
 import { Text } from 'src/components/Text'
-import { useBiometricPrompt } from 'src/features/biometrics/hooks'
+import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { NativeAccount } from 'src/features/wallet/accounts/types'
-import { useAccounts, useIsBiometricAuthEnabled } from 'src/features/wallet/hooks'
+import { useAccounts } from 'src/features/wallet/hooks'
 import { Screens } from 'src/screens/Screens'
 import { useSecondCountdownTimer } from 'src/utils/timing'
 
@@ -62,7 +62,7 @@ export function SettingsViewSeedPhraseScreen({
     setShowSeedPhraseViewWarningModal(false)
   }
 
-  const isBiometricAuthEnabled = useIsBiometricAuthEnabled()
+  const { requiredForAppAccess: isBiometricAuthEnabled } = useBiometricAppSettings()
   const { trigger: biometricTrigger, modal: BiometricModal } =
     useBiometricPrompt(onShowSeedPhraseConfirmed)
 
