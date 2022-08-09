@@ -124,49 +124,55 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo, isCompressedView }
     appDispatch(pushNotification({ type: AppNotificationType.SwapNetwork, chainId }))
   }, [chainId, prevChainId, appDispatch])
 
+  const ARROW_SIZE = 44
+
   return (
     <Flex grow gap="none" justifyContent="space-between">
-      <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="sm">
+      <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="none">
         <Trace section={SectionName.CurrencyInputPanel}>
-          <CurrencyInputPanel
-            currency={currencies[CurrencyField.INPUT]}
-            currencyAmount={currencyAmounts[CurrencyField.INPUT]}
-            currencyBalance={currencyBalances[CurrencyField.INPUT]}
-            dimTextColor={exactCurrencyField === CurrencyField.OUTPUT && swapDataRefreshing}
-            focus={exactCurrencyField === CurrencyField.INPUT}
-            isUSDInput={isUSDInput}
-            showSoftInputOnFocus={isCompressedView}
-            value={formattedAmounts[CurrencyField.INPUT]}
-            warnings={warnings}
-            onPressIn={onCurrencyInputPress(CurrencyField.INPUT)}
-            onSetAmount={(value) => onSetAmount(CurrencyField.INPUT, value, isUSDInput)}
-            onSetMax={onSetMax}
-            onShowCurrencySelector={() => onShowCurrencySelector(CurrencyField.INPUT)}
-            onToggleUSDInput={() => onToggleUSDInput(!isUSDInput)}
-          />
+          <Flex mt="sm">
+            <CurrencyInputPanel
+              currency={currencies[CurrencyField.INPUT]}
+              currencyAmount={currencyAmounts[CurrencyField.INPUT]}
+              currencyBalance={currencyBalances[CurrencyField.INPUT]}
+              dimTextColor={exactCurrencyField === CurrencyField.OUTPUT && swapDataRefreshing}
+              focus={exactCurrencyField === CurrencyField.INPUT}
+              isUSDInput={isUSDInput}
+              showSoftInputOnFocus={isCompressedView}
+              value={formattedAmounts[CurrencyField.INPUT]}
+              warnings={warnings}
+              onPressIn={onCurrencyInputPress(CurrencyField.INPUT)}
+              onSetAmount={(value) => onSetAmount(CurrencyField.INPUT, value, isUSDInput)}
+              onSetMax={onSetMax}
+              onShowCurrencySelector={() => onShowCurrencySelector(CurrencyField.INPUT)}
+              onToggleUSDInput={() => onToggleUSDInput(!isUSDInput)}
+            />
+          </Flex>
         </Trace>
+
+        <Box mt="xl" zIndex="popover">
+          <Box alignItems="center" height={ARROW_SIZE} style={StyleSheet.absoluteFill}>
+            <Box alignItems="center" bottom={ARROW_SIZE / 2} position="absolute">
+              <TransferArrowButton
+                bg={currencies[CurrencyField.OUTPUT] ? 'backgroundAction' : 'backgroundSurface'}
+                disabled={!currencies[CurrencyField.OUTPUT]}
+                onPress={onSwitchCurrencies}
+              />
+            </Box>
+          </Box>
+        </Box>
 
         <Trace section={SectionName.CurrencyOutputPanel}>
           <Flex
             backgroundColor={currencies[CurrencyField.OUTPUT] ? 'backgroundContainer' : 'none'}
-            borderRadius="lg"
+            borderRadius="xl"
+            gap="xs"
             mb="sm"
-            mt="lg"
+            mt="none"
             mx="md"
             position="relative">
             <Box bottom={12} height={24} position="absolute" right={12} width={24}>
               {swapDataRefreshing ? <SpinningLoader color="textSecondary" size={24} /> : null}
-            </Box>
-            <Box zIndex="popover">
-              <Box alignItems="center" height={36} style={StyleSheet.absoluteFill}>
-                <Box alignItems="center" position="absolute" top="-100%">
-                  <TransferArrowButton
-                    bg={currencies[CurrencyField.OUTPUT] ? 'backgroundAction' : 'backgroundSurface'}
-                    disabled={!currencies[CurrencyField.OUTPUT]}
-                    onPress={onSwitchCurrencies}
-                  />
-                </Box>
-              </Box>
             </Box>
             <Flex>
               <Flex pb={swapWarning ? 'xxs' : 'lg'} pt="xs" px="md">

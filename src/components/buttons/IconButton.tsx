@@ -35,7 +35,7 @@ export function IconButton({ icon, name, ...rest }: IconButtonProps) {
   const baseProps = { hitSlop: defaultHitslopInset, ...rest }
   return (
     <TraceEvent actionProps={ButtonActionProps} elementName={name} elementType="button">
-      <IconBaseButton {...baseProps} p="sm" {...rest}>
+      <IconBaseButton {...baseProps} p="xs" {...rest}>
         {icon}
       </IconBaseButton>
     </TraceEvent>

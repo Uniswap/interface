@@ -85,7 +85,7 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps) {
       centered
       borderRadius="lg"
       gap="sm"
-      pt={isBlankOutputState ? 'lg' : 'md'}
+      pt={isBlankOutputState ? 'xxl' : 'md'}
       {...transformedProps}>
       {!isBlankOutputState && (
         <AmountInput
