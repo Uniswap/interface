@@ -124,10 +124,7 @@ function Footer() {
               <Trans>Audited By</Trans>
               {!above768 && <InfoHelper size={14} text={t`Covers smart-contracts`} placement="top" />}
             </Text>
-            <ExternalLink
-              href="https://chainsecurity.com/security-audit/kyber-network-dynamic-market-maker-dmm/"
-              style={{ display: 'flex' }}
-            >
+            <ExternalLink href="https://chainsecurity.com/security-audit/kyberswap-elastic" style={{ display: 'flex' }}>
               <img
                 src={
                   !isDarkMode

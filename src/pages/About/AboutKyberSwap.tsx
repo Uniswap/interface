@@ -892,7 +892,7 @@ function AboutKyberSwap() {
                 </Text>
 
                 <ButtonEmpty padding="0">
-                  <ExternalLink href="https://chainsecurity.com/security-audit/kyber-network-dynamic-market-maker-dmm/">
+                  <ExternalLink href="https://chainsecurity.com/security-audit/kyberswap-elastic">
                     <img
                       src={
                         !isDarkMode
