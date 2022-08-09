@@ -1,3 +1,4 @@
+import { BigNumber } from 'ethers'
 import { expectSaga } from 'redux-saga-test-plan'
 import { call } from 'redux-saga/effects'
 import { getProvider, getProviderManager } from 'src/app/walletContext'
@@ -138,12 +139,16 @@ describe(watchTransaction, () => {
       .silentRun()
   })
 
-  it('Cancels timed out transaction', () => {
+  it('Cancels timed out transaction if already mined', () => {
+    const higherNonceThanCurrent = BigNumber.from(oldTx.options.request.nonce).add(
+      BigNumber.from(1)
+    )
     return expectSaga(watchTransaction, oldTx)
       .provide([
         [call(getProvider, chainId), provider],
         [call([provider, provider.getTransactionReceipt], hash), null],
-        [call([provider, provider.getTransactionCount], from, 'pending'), 0],
+        [call([provider, provider.getTransactionCount], from, 'pending'), 1],
+        [call([provider, provider.getTransactionCount], from), higherNonceThanCurrent],
       ])
       .put(
         finalizeTransaction({
@@ -153,6 +158,22 @@ describe(watchTransaction, () => {
           addedTime: oldTx.addedTime,
         })
       )
+      .silentRun()
+  })
+
+  it('Cancels timed out transaction if not mined', () => {
+    const currentNonce = BigNumber.from(oldTx.options.request.nonce)
+    const higherNonce = currentNonce.add(BigNumber.from(1))
+    const lowerNonce = currentNonce.sub(BigNumber.from(1))
+    return expectSaga(watchTransaction, oldTx)
+      .provide([
+        [call(getProvider, chainId), provider],
+        [call([provider, provider.getTransactionReceipt], hash), null],
+        [call([provider, provider.getTransactionCount], from, 'pending'), higherNonce],
+        [call([provider, provider.getTransactionCount], from), lowerNonce],
+        [call(attemptCancelTransaction, oldTx), true],
+      ])
+      .call(attemptCancelTransaction, oldTx)
       .silentRun()
   })
 

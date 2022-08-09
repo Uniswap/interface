@@ -64,8 +64,8 @@ export function* attemptReplaceTransaction(
     logger.info('replaceTransaction', '', 'Error while attempting tx replacement', hash, error)
 
     // Caught an invalid replacement, which is a failed cancelation attempt. Aka previous
-    // txn was already mined.
-    if (transaction.status === TransactionStatus.Cancelling) {
+    // txn was already mined. Mark as finalized.
+    if (transaction.status === TransactionStatus.Cancelling && isCancellation) {
       const updatedTransaction: TransactionDetails = {
         ...transaction,
         hash: hash,
@@ -75,10 +75,14 @@ export function* attemptReplaceTransaction(
           ...options,
         },
       }
-      // Finalize and end attempts to replace.
       yield* put(
         finalizeTransaction({ ...updatedTransaction, status: TransactionStatus.FailedCancel })
       )
+    } else {
+      // Finalize and end attempts to replace.
+      // TODO: Can we check for specific errors here?.  Sometimes this might mark actually succesful result.
+      // TODO: should we even finalize this?
+      yield* put(finalizeTransaction({ ...transaction, status: TransactionStatus.Failed }))
     }
 
     yield* put(

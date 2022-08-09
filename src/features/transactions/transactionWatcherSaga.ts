@@ -171,24 +171,35 @@ function* waitForReplacement(chainId: ChainId, id: string) {
 
 function* handleTimedOutTransaction(transaction: TransactionDetails, provider: providers.Provider) {
   const { hash, from, options } = transaction
-  // Check if tx was actually mined
-  // Just a backup to ensure wallet doesn't incorrectly report a failed tx
-  const receipt = yield* call([provider, provider.getTransactionReceipt], hash)
-  if (receipt) yield* call(finalizeTransaction, transaction, receipt)
 
-  // Next, check if tx is still pending. If so, cancel it
+  // Backup to ensure wallet doesn't incorrectly report a failed tx
+  const receipt = yield* call([provider, provider.getTransactionReceipt], hash)
+  if (receipt) {
+    yield* call(finalizeTransaction, transaction, receipt)
+    return
+  }
+
   // TODO blocked by https://github.com/Uniswap/mobile/issues/377
-  // Need a way to query current mempool and look for hash
+  // Need a way to query current mempool and look for hash.
   // Using nonce values as a stopgap solution for now
-  const nonce = options.request.nonce
-  const txCount = yield* call([provider, provider.getTransactionCount], from, 'pending')
-  if (nonce && BigNumber.from(txCount).gt(nonce)) {
-    // NOTE (TB): Seems like weird UX to attempt to cancel a user transaction without warning
-    // The tx may still be pending, attempt to cancel it
-    yield* call(attemptCancelTransaction, transaction)
-  } else {
-    // Otherwise, mark it as failed
+  const currentNonce = options.request.nonce
+  const highestPendingNonce = yield* call([provider, provider.getTransactionCount], from, 'pending')
+  const highestMinedNonce = yield* call([provider, provider.getTransactionCount], from)
+
+  // If a higher nonce has finalized, it MUST be true that our txn with lower nonce is mined as well.
+  if (currentNonce && BigNumber.from(highestMinedNonce).gt(currentNonce)) {
     yield* call(finalizeTransaction, transaction)
+    return
+  }
+
+  // Transaction may still be pending, attempt to cancel.
+  if (
+    currentNonce &&
+    BigNumber.from(highestPendingNonce).gte(currentNonce) &&
+    transaction.status === TransactionStatus.Pending
+  ) {
+    yield* call(attemptCancelTransaction, transaction)
+    return
   }
 }
 
