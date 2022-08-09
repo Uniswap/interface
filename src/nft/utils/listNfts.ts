@@ -2,11 +2,11 @@ import { Signer } from '@ethersproject/abstract-signer'
 import { BigNumber } from '@ethersproject/bignumber'
 import { Contract } from '@ethersproject/contracts'
 import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
+import { parseEther } from '@ethersproject/units'
 import { addressesByNetwork, MakerOrder, signMakerOrder, SupportedChainId } from '@looksrare/sdk'
 import { Seaport } from '@opensea/seaport-js'
 import { ItemType } from '@opensea/seaport-js/lib/constants'
 import { ConsiderationInputItem } from '@opensea/seaport-js/lib/types'
-import { parseEther } from 'ethers/lib/utils'
 import {
   OPENSEA_DEFAULT_CROSS_CHAIN_CONDUIT_KEY,
   OPENSEA_DEFAULT_ZONE,
