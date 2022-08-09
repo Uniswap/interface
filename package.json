@@ -26,7 +26,7 @@
   "relay": {
     "src": "./src",
     "language": "typescript",
-    "schema": "https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3"
+    "schema": "./schema/schema.graphql"
   },
   "jest": {
     "collectCoverageFrom": [
