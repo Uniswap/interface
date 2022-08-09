@@ -1,7 +1,6 @@
 export enum Screens {
   Accounts = 'Accounts',
   AccountStack = 'AccountStack',
-  Camera = 'Camera',
   CurrencySelector = 'CurrencySelector',
   Dev = 'Dev',
   Education = 'Education',
@@ -18,7 +17,6 @@ export enum Screens {
   PortfolioNFTs = 'PortfolioNFTs',
   ProfileStack = 'ProfileStack',
   RecipientSelector = 'RecipientSelector',
-  SeedPhrase = 'SeedPhrase',
   Settings = 'Settings',
   SettingsCloudBackupStatus = 'SettingsCloudBackupStatus',
   SettingsManualBackup = 'SettingsManualBackup',
@@ -34,7 +32,6 @@ export enum Screens {
   SettingsFaceId = 'SettingsFaceId',
   SettingsViewSeedPhrase = 'SettingsViewSeedPhrase',
   Swap = 'Swap',
-  SwapConfig = 'SwapConfig',
   TabNavigator = 'TabNavigator',
   TokenDetails = 'TokenDetails',
   Transfer = 'Transfer',

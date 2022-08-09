@@ -139,9 +139,7 @@ export type AppStackParamList = {
     setSelectedRecipient: (newRecipient: string) => void
   }
   [Screens.ProfileStack]: NavigatorScreenParams<ProfileStackParamList>
-
   [Screens.SettingsStack]: NavigatorScreenParams<SettingsStackParamList>
-  [Screens.SwapConfig]: undefined
   [Screens.TabNavigator]: NavigatorScreenParams<TabParamList>
   [Screens.WebView]: { headerTitle: string; uriLink: string }
 }
