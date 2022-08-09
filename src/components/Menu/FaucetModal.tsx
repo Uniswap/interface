@@ -118,9 +118,9 @@ function FaucetModal() {
         ).then(res => res.json())
         if (data[0])
           setRewardData({
-            amount: BigNumber.from(data[0].Amount),
-            tokenAddress: data[0].Token,
-            program: data[0].ProgramId,
+            amount: BigNumber.from(data[0].amount),
+            tokenAddress: data[0].token,
+            program: data[0].programId,
           })
       } catch (err) {
         console.log(err)
