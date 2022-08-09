@@ -281,7 +281,10 @@ function WithdrawModal({ selectedFarmAddress, onDismiss }: { onDismiss: () => vo
         </Flex>
 
         <Text fontSize="12px" marginTop="20px" color={theme.subText}>
-          <Trans>You will need to unstake your liquidity first before withdrawing it back to your wallet</Trans>
+          <Trans>
+            You will need to unstake your liquidity positions (NFT tokens) first before withdrawing it back to your
+            wallet
+          </Trans>
         </Text>
 
         {!above768 && filterComponent}

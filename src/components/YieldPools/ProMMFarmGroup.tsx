@@ -23,7 +23,7 @@ import Withdraw from 'components/Icons/Withdraw'
 import InfoHelper from 'components/InfoHelper'
 import Loader from 'components/Loader'
 import Modal from 'components/Modal'
-import { MouseoverTooltip } from 'components/Tooltip'
+import { MouseoverTooltip, MouseoverTooltipDesktopOnly } from 'components/Tooltip'
 import { ELASTIC_BASE_FEE_UNIT, ZERO_ADDRESS } from 'constants/index'
 import { VERSION } from 'constants/v2'
 import { useActiveWeb3React } from 'hooks'
@@ -667,8 +667,13 @@ function ProMMFarmGroup({
           <Flex flexDirection="column">
             <Text fontSize="12px" color={theme.subText}>
               <Trans>Deposited Liquidity</Trans>
+              <InfoHelper
+                text={t`Dollar value of NFT tokens you've deposited. NFT tokens represent your liquidity position`}
+              ></InfoHelper>
             </Text>
+
             <HoverDropdown
+              style={{ padding: '8px 0' }}
               content={formatDollarAmount(depositedUsd)}
               dropdownContent={
                 Object.values(userDepositedTokenAmounts).some(amount => amount.greaterThan(0)) ? (
@@ -712,24 +717,32 @@ function ProMMFarmGroup({
               )
             ) : (
               <Flex sx={{ gap: '12px' }} alignItems="center">
-                <BtnLight onClick={() => onOpenModal('deposit')} disabled={tab === 'ended'}>
-                  <Deposit width={20} height={20} />
-                  {above768 && (
-                    <Text fontSize="14px" marginLeft="4px">
-                      <Trans>Deposit</Trans>
-                    </Text>
-                  )}
-                </BtnLight>
-
-                {canWithdraw ? (
-                  <ButtonOutlined padding="8px 12px" onClick={() => onOpenModal('withdraw')}>
-                    <Withdraw width={20} height={20} />
+                <MouseoverTooltipDesktopOnly
+                  text={t`Deposit your liquidity (the NFT tokens that represent your liquidity position)`}
+                >
+                  <BtnLight onClick={() => onOpenModal('deposit')} disabled={tab === 'ended'}>
+                    <Deposit width={20} height={20} />
                     {above768 && (
                       <Text fontSize="14px" marginLeft="4px">
-                        <Trans>Withdraw</Trans>
+                        <Trans>Deposit</Trans>
                       </Text>
                     )}
-                  </ButtonOutlined>
+                  </BtnLight>
+                </MouseoverTooltipDesktopOnly>
+
+                {canWithdraw ? (
+                  <MouseoverTooltipDesktopOnly
+                    text={t`Withdraw your liquidity (the NFT tokens that represent your liquidity position)`}
+                  >
+                    <ButtonOutlined padding="8px 12px" onClick={() => onOpenModal('withdraw')}>
+                      <Withdraw width={20} height={20} />
+                      {above768 && (
+                        <Text fontSize="14px" marginLeft="4px">
+                          <Trans>Withdraw</Trans>
+                        </Text>
+                      )}
+                    </ButtonOutlined>
+                  </MouseoverTooltipDesktopOnly>
                 ) : (
                   <BtnPrimary disabled width="fit-content" padding="8px 12px">
                     <Withdraw width={20} height={20} />
@@ -763,6 +776,7 @@ function ProMMFarmGroup({
             </Text>
 
             <HoverDropdown
+              style={{ padding: '8px 0' }}
               content={formatDollarAmount(totalUserReward.totalUsdValue)}
               dropdownContent={
                 totalUserReward.amounts.length ? (

@@ -54,8 +54,8 @@ function FarmGuide({ farmType }: { farmType: VERSION }) {
           {farmType === VERSION.ELASTIC ? (
             <>
               <Trans>
-                Deposit your liquidity from the Elastic Pools here, and then stake it to earn even more attractive
-                farming rewards.
+                Deposit your liquidity position (NFT token) from the Elastic Pools here, and then stake it to earn even
+                more attractive farming rewards.
               </Trans>
 
               {(!upToMedium || !show) && (

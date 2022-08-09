@@ -1,7 +1,7 @@
 import { Position } from '@kyberswap/ks-sdk-elastic'
 import { Trans } from '@lingui/macro'
 import { BigNumber } from 'ethers'
-import React, { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Info, X } from 'react-feather'
 import { useMedia } from 'react-use'
 import { Flex, Text } from 'rebass'
@@ -257,8 +257,8 @@ function ProMMDepositNFTModal({
 
         <Text fontSize="12px" marginTop="20px" color={theme.subText}>
           <Trans>
-            Deposit your liquidity first to enable farming. Only your in range liquidity positions will earn you farming
-            rewards
+            Deposit your liquidity positions (NFT tokens) first to enable farming. Only your in range liquidity
+            positions (NFT tokens) will earn you farming rewards
           </Trans>
         </Text>
 

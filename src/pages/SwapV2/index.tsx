@@ -736,7 +736,10 @@ export default function Swap({ history }: RouteComponentProps) {
                       </StyledActionButtonSwapForm>
                     }
                   />
-                  <MobileTokenInfo currencies={currencies} onClick={() => setActiveTab(TAB.INFO)} />
+                  <MobileTokenInfo
+                    currencies={currencies}
+                    onClick={() => setActiveTab(prev => (prev === TAB.INFO ? TAB.SWAP : TAB.INFO))}
+                  />
                   <ShareButtonWithModal
                     url={shareUrl}
                     onShared={() => {
@@ -745,11 +748,7 @@ export default function Swap({ history }: RouteComponentProps) {
                   />
                   <StyledActionButtonSwapForm
                     active={activeTab === TAB.SETTINGS}
-                    onClick={() => {
-                      if (activeTab === TAB.SETTINGS) {
-                        setActiveTab(TAB.SWAP)
-                      } else setActiveTab(TAB.SETTINGS)
-                    }}
+                    onClick={() => setActiveTab(prev => (prev === TAB.SETTINGS ? TAB.SWAP : TAB.SETTINGS))}
                     aria-label="Swap Settings"
                   >
                     <MouseoverTooltip

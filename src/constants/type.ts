@@ -6,6 +6,7 @@ export type NetworkInfo = {
   readonly route: string
   readonly name: string
   readonly icon: string
+  readonly iconDark?: string
   readonly classicClient: ApolloClient<NormalizedCacheObject>
   readonly elasticClient: ApolloClient<NormalizedCacheObject>
   readonly blockClient: ApolloClient<NormalizedCacheObject>

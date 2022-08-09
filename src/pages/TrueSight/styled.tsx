@@ -1,5 +1,5 @@
 import { rgba } from 'polished'
-import { Flex, Text } from 'rebass'
+import { Text } from 'rebass'
 import styled from 'styled-components'
 
 import { ButtonEmpty, ButtonPrimary } from 'components/Button'
@@ -67,19 +67,21 @@ export const TrueSightFilterBarLayoutMobile = styled.div`
   position: relative;
 `
 
-export const OptionsContainer = styled(Flex)`
+export const OptionsContainer = styled.div`
+  display: flex;
   position: absolute;
-  bottom: -4px;
+  bottom: -6px;
   right: 0;
-  border-radius: 20px;
+  border-radius: 16px;
   flex-direction: column;
   background: ${({ theme }) => theme.tableHeader};
   overflow: hidden;
   z-index: 9999;
   width: 100%;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  transform: translate(0, 100%);
-  min-width: max-content !important;
+  left: 50%;
+  transform: translate(-50%, 100%);
+  min-width: max-content;
 
   & > * {
     cursor: pointer;

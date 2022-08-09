@@ -271,13 +271,13 @@ function StakeModal({
         <Text fontSize="12px" marginTop="20px" color={theme.subText}>
           {type === 'stake' ? (
             <Trans>
-              Stake your liquidity positions into the farms to start earning rewards. Only your in-range positions will
-              earn rewards
+              Stake your deposited liquidity positions (NFT tokens) into the farms to start earning rewards. Only your
+              in-range positions will earn rewards
             </Trans>
           ) : (
             <Trans>
-              Unstake your liquidity positions from the farm. You will no longer earn rewards on these positions once
-              unstaked
+              Unstake your liquidity positions (NFT tokens) from the farm. You will no longer earn rewards on these
+              positions once unstaked
             </Trans>
           )}
         </Text>
@@ -292,11 +292,15 @@ function StakeModal({
               marginTop="20px"
             >
               <Info size="48px" />
-              <Text marginTop="16px" textAlign="center" maxWidth="480px" lineHeight={1.5}>
+              <Text marginTop="16px" textAlign="center" lineHeight={1.5}>
                 <Trans>
-                  You dont have any relevant liquidity positions yet.
-                  <br /> Add liquidity to the farming pools first. Check out our{' '}
-                  <StyledInternalLink to="/pools">Pools.</StyledInternalLink>
+                  You haven&apos;t deposited any liquidity positions (NFT tokens) for this farming pair yet.
+                  <br />
+                  <br />
+                  Add liquidity to this pool first in our <StyledInternalLink to="/pools">
+                    Pools
+                  </StyledInternalLink>{' '}
+                  page. If you&apos;ve done that, deposit your liquidity position (NFT tokens) before you stake
                 </Trans>
               </Text>
             </Flex>

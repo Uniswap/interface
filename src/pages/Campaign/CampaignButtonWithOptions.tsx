@@ -150,7 +150,7 @@ export default function CampaignButtonWithOptions({
       {isClaimingThisCampaignRewards && <Dots />}
       <ChevronDown style={{ position: 'absolute', top: '50%', right: '12px', transform: 'translateY(-50%)' }} />
       {isShowNetworks && (
-        <OptionsContainer style={{ margin: '0 12px', width: 'calc(100% - 24px)' }}>
+        <OptionsContainer>
           {chainIds.map(chainId => {
             return (
               <Flex

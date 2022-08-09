@@ -10,6 +10,7 @@ import { useActiveWeb3React } from 'hooks'
 import { useActiveNetwork } from 'hooks/useActiveNetwork'
 import { ApplicationModal } from 'state/application/actions'
 import { useModalOpen, useNetworkModalToggle } from 'state/application/hooks'
+import { useIsDarkMode } from 'state/user/hooks'
 
 import { MAINNET_NETWORKS, NETWORKS_INFO, SUPPORTED_NETWORKS } from '../../constants/networks'
 
@@ -81,6 +82,7 @@ export default function NetworkModal(): JSX.Element | null {
   const networkModalOpen = useModalOpen(ApplicationModal.NETWORK)
   const toggleNetworkModal = useNetworkModalToggle()
   const { changeNetwork } = useActiveNetwork()
+  const isDarkMode = useIsDarkMode()
 
   return (
     <Modal isOpen={networkModalOpen} onDismiss={toggleNetworkModal} maxWidth={624}>
@@ -101,7 +103,11 @@ export default function NetworkModal(): JSX.Element | null {
                 <SelectNetworkButton key={i} padding="0">
                   <ListItem selected>
                     <img
-                      src={NETWORKS_INFO[key].icon}
+                      src={
+                        isDarkMode && !!NETWORKS_INFO[key].iconDark
+                          ? NETWORKS_INFO[key].iconDark
+                          : NETWORKS_INFO[key].icon
+                      }
                       alt="Switch Network"
                       style={{ width: '24px', marginRight: '8px' }}
                     />
@@ -122,7 +128,11 @@ export default function NetworkModal(): JSX.Element | null {
               >
                 <ListItem>
                   <img
-                    src={NETWORKS_INFO[key].icon}
+                    src={
+                      isDarkMode && !!NETWORKS_INFO[key].iconDark
+                        ? NETWORKS_INFO[key].iconDark
+                        : NETWORKS_INFO[key].icon
+                    }
                     alt="Switch Network"
                     style={{ width: '24px', marginRight: '8px' }}
                   />
