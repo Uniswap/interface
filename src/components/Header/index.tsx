@@ -33,7 +33,7 @@ const HeaderFrame = styled.div<{ showBackground: boolean }>`
   justify-content: space-between;
   align-items: center;
   flex-direction: row;
-  width: 100%;
+  width: max-content !important;
   top: 0;
   position: relative;
   padding: 1rem;
