@@ -81,15 +81,6 @@ const TokenListLogoWrapper = styled.img`
   height: 20px;
 `
 
-const NameColumn = styled(Column)`
-  width: 70%;
-`
-
-const NameContainer = styled.div`
-  display: flex;
-  align-items: center;
-`
-
 function TokenTags({ currency }: { currency: Currency }) {
   if (!(currency instanceof WrappedTokenInfo)) {
     return null
