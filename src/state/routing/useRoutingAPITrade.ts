@@ -106,7 +106,7 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
     }
 
     try {
-      const trade = transformRoutesToTrade(route, tradeType, gasUseEstimateUSD)
+      const trade = transformRoutesToTrade(route, tradeType, quoteResult?.blockNumber, gasUseEstimateUSD)
       return {
         // always return VALID regardless of isFetching status
         state: isSyncing ? TradeState.SYNCING : TradeState.VALID,
