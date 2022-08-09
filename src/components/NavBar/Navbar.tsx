@@ -2,6 +2,7 @@ import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
 import Web3Status from 'components/Web3Status'
 import { getChainInfoOrDefault } from 'constants/chainInfo'
+import { useWindowSize } from 'hooks/useWindowSize'
 import { ReactNode } from 'react'
 import { NavLink, NavLinkProps, useLocation } from 'react-router-dom'
 import { Text } from 'rebass'
@@ -12,7 +13,6 @@ import { Box } from '../../nft/components/Box'
 import { Row } from '../../nft/components/Flex'
 import { UniIcon, UniIconMobile } from '../../nft/components/icons'
 import { breakpoints } from '../../nft/css/sprinkles.css'
-import { useWindowWidth } from '../../nft/hooks'
 import { ChainSwitcher } from './ChainSwitcher'
 import { MenuDropdown } from './MenuDropdown'
 import { MobileSideBar } from './MobileSidebar'
@@ -84,7 +84,6 @@ const Wallet = () => {
   const { account, chainId } = useWeb3React()
   const userEthBalance = useNativeCurrencyBalances(account ? [account] : [])?.[account ?? '']
   const {
-    infoLink,
     nativeCurrency: { symbol: nativeCurrencySymbol },
   } = getChainInfoOrDefault(chainId)
   return (
@@ -102,7 +101,7 @@ const Wallet = () => {
 }
 
 const Navbar = () => {
-  const windowWidth = useWindowWidth()
+  const { width: windowWidth } = useWindowSize()
   const { pathname } = useLocation()
   const isPoolActive =
     pathname.startsWith('/pool') ||

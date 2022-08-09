@@ -1,12 +1,12 @@
 import create from 'zustand'
 import { devtools } from 'zustand/middleware'
 
-type cartState = {
+interface CartState {
   cartExpanded: boolean
   toggleCart: () => void
 }
 
-export const useCart = create<cartState>()(
+export const useCart = create<CartState>()(
   devtools(
     (set) => ({
       cartExpanded: false,
@@ -15,6 +15,6 @@ export const useCart = create<cartState>()(
           cartExpanded: !cartExpanded,
         })),
     }),
-    { name: 'use_cart' }
+    { name: 'useCart' }
   )
 )

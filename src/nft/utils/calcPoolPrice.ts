@@ -9,7 +9,7 @@ export const calcPoolPrice = (asset: GenieAsset, position = 0) => {
   const decimals = BigNumber.from(1).mul(10).pow(18)
   const ammFee = nft.ammFeePercent ? (100 + nft.ammFeePercent) * 100 : 110 * 100
 
-  if (asset.marketplace == Markets.NFTX) {
+  if (asset.marketplace === Markets.NFTX) {
     const sixteenmul = BigNumber.from(1).mul(10).pow(16)
     amountToBuy = BigNumber.from(ammFee)
       .div(100)

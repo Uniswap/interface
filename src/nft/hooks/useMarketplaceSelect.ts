@@ -3,7 +3,10 @@ import { devtools } from 'zustand/middleware'
 
 export type MarketplaceOption = { name: string; icon: string }
 
-type State = { options: MarketplaceOption[]; select: (o: MarketplaceOption) => void }
+interface State {
+  options: MarketplaceOption[]
+  select: (o: MarketplaceOption) => void
+}
 
 export const useMarketplaceSelect = create<State>()(
   devtools(

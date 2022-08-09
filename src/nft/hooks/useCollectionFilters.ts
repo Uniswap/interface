@@ -22,7 +22,7 @@ export type Trait = {
   floorPrice?: number
 }
 
-type State = {
+interface State {
   traits: Trait[]
   markets: string[]
   minPrice: number | ''
@@ -84,7 +84,7 @@ export const useCollectionFilters = create<CollectionFilters>()(
         set(({ traits }) => ({
           traits: traits.filter((x) => JSON.stringify(x) !== JSON.stringify(trait)),
         })),
-      reset: () => set(({}) => ({ traits: [], minRarity: '', maxRarity: '', markets: [] })),
+      reset: () => set(() => ({ traits: [], minRarity: '', maxRarity: '', markets: [] })),
       setMinPrice: (price) => set(() => ({ minPrice: price })),
       setMaxPrice: (price) => set(() => ({ maxPrice: price })),
       setMinRarity: (range) => set(() => ({ minRarity: range })),
@@ -92,6 +92,6 @@ export const useCollectionFilters = create<CollectionFilters>()(
       toggleShowFullTraitName: ({ shouldShow, trait_value, trait_type }) =>
         set(() => ({ showFullTraitName: { shouldShow, trait_value, trait_type } })),
     }),
-    { name: 'use_collection_traits' }
+    { name: 'useCollectionTraits' }
   )
 )

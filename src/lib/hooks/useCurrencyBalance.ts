@@ -142,5 +142,6 @@ export default function useCurrencyBalance(
   )[0]
 }
 
-export const useCurrencyBalanceString = (account: string): string =>
-  useNativeCurrencyBalances(account ? [account] : [])?.[account ?? '']?.toSignificant(3) ?? ''
+export function useCurrencyBalanceString(account: string): string {
+  return useNativeCurrencyBalances(account ? [account] : [])?.[account ?? '']?.toSignificant(3) ?? ''
+}

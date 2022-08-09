@@ -2,11 +2,11 @@ import { Signer } from '@ethersproject/abstract-signer'
 import { BigNumber } from '@ethersproject/bignumber'
 import { Contract } from '@ethersproject/contracts'
 import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
+import { parseEther } from '@ethersproject/units'
 import { addressesByNetwork, MakerOrder, signMakerOrder, SupportedChainId } from '@looksrare/sdk'
 import { Seaport } from '@opensea/seaport-js'
 import { ItemType } from '@opensea/seaport-js/lib/constants'
 import { ConsiderationInputItem } from '@opensea/seaport-js/lib/types'
-import { parseEther } from 'ethers/lib/utils'
 import {
   OPENSEA_DEFAULT_CROSS_CHAIN_CONDUIT_KEY,
   OPENSEA_DEFAULT_ZONE,
@@ -14,7 +14,7 @@ import {
   OPENSEA_LISTINGS_API_PATH,
 } from 'nft/queries/openSea'
 
-import ERC721 from '../abis/ERC721.json'
+import ERC721 from '../../abis/erc721.json'
 import { PostOpenSeaSellOrder } from '../queries'
 import { createLooksRareOrder } from '../queries'
 import { newX2Y2Order } from '../queries'
@@ -239,7 +239,7 @@ export async function signListing(
           },
         ],
       }
-      const order = createSellOrder(signerAddress, asset.expirationTime!, [orderItem])
+      const order = createSellOrder(signerAddress, asset.expirationTime, [orderItem])
       try {
         await signOrderData(provider, order)
         const payload: OrderPayload = {

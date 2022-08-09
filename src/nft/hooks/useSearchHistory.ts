@@ -2,7 +2,7 @@ import { FungibleToken, GenieCollection } from 'nft/types'
 import create from 'zustand'
 import { devtools, persist } from 'zustand/middleware'
 
-type SearchHistoryProps = {
+interface SearchHistoryProps {
   history: (FungibleToken | GenieCollection)[]
   addItem: (item: FungibleToken | GenieCollection) => void
 }
@@ -19,6 +19,6 @@ export const useSearchHistory = create<SearchHistoryProps>()(
         })
       },
     })),
-    { name: 'searchHistory' }
+    { name: 'useSearchHistory' }
   )
 )

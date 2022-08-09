@@ -1,12 +1,14 @@
 /* eslint-disable no-restricted-globals */
 import useDebounce from 'hooks/useDebounce'
+import { useOnClickOutside } from 'hooks/useOnClickOutside'
+import { useWindowSize } from 'hooks/useWindowSize'
 import uriToHttp from 'lib/utils/uriToHttp'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import { Overlay } from 'nft/components/modals/Overlay'
 import { subheadSmall } from 'nft/css/common.css'
 import { breakpoints } from 'nft/css/sprinkles.css'
-import { useOnClickOutside, useSearchHistory, useWindowWidth } from 'nft/hooks'
+import { useSearchHistory } from 'nft/hooks'
 // import { fetchSearchCollections, fetchTrendingCollections } from 'nft/queries'
 import { fetchSearchTokens } from 'nft/queries/genie/SearchTokensFetcher'
 import { fetchTrendingTokens } from 'nft/queries/genie/TrendingTokensFetcher'
@@ -437,7 +439,7 @@ export const SearchBar = () => {
   const debouncedSearchValue = useDebounce(searchValue, 300)
   const searchRef = useRef<HTMLDivElement>(null)
   const location = useLocation()
-  const windowWidth = useWindowWidth()
+  const { width: windowWidth } = useWindowSize()
 
   useOnClickOutside(searchRef, () => {
     isOpen && toggleOpen()
