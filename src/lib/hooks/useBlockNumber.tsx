@@ -6,7 +6,6 @@ const MISSING_PROVIDER = Symbol()
 const BlockNumberContext = createContext<
   | {
       value?: number
-      fastForward(block: number): void
     }
   | typeof MISSING_PROVIDER
 >(MISSING_PROVIDER)
@@ -73,7 +72,6 @@ export function BlockNumberProvider({ children }: { children: ReactNode }) {
   const value = useMemo(
     () => ({
       value: chainId === activeChainId ? block : undefined,
-      fastForward: (block: number) => setChainBlock({ chainId: activeChainId, block }),
     }),
     [activeChainId, block, chainId]
   )
