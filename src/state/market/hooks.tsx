@@ -261,6 +261,14 @@ export function useDerivedMarketInfo(
     inputError = inputError ?? <Trans>Wrap your native token</Trans>
   }
 
+  if (paymentFees && outputAmount?.lessThan(paymentFees)) {
+    inputError = inputError ?? <Trans>Buy amount lower than fee amount</Trans>
+  }
+
+  if (currencies[Field.OUTPUT] !== null && currencies[Field.OUTPUT]?.symbol !== v2Trade?.paymentToken?.symbol) {
+    inputError = inputError ?? <Trans>Loading ...</Trans>
+  }
+
   const formattedTo = isAddress(to)
   if (!to || !formattedTo) {
     inputError = inputError ?? <Trans>Enter a recipient</Trans>

@@ -53,6 +53,8 @@ export default function ConfirmMarketModal({
   feeImpactHigh,
   updateFeeImpact,
   updatePriceImpact,
+  priceImpactAccepted,
+  feeImpactAccepted,
 }: {
   isOpen: boolean
   trade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType> | undefined
@@ -74,6 +76,8 @@ export default function ConfirmMarketModal({
   feeImpactHigh: boolean
   updateFeeImpact: () => void
   updatePriceImpact: () => void
+  priceImpactAccepted: boolean
+  feeImpactAccepted: boolean
 }) {
   const showAcceptChanges = useMemo(
     () =>
@@ -108,6 +112,8 @@ export default function ConfirmMarketModal({
         feeImpactHigh={feeImpactHigh}
         updateFeeImpact={updateFeeImpact}
         updatePriceImpact={updatePriceImpact}
+        priceImpactAccepted={priceImpactAccepted}
+        feeImpactAccepted={feeImpactAccepted}
       />
     ) : null
   }, [
@@ -130,7 +136,9 @@ export default function ConfirmMarketModal({
       <MarketModalFooter
         onConfirm={onConfirm}
         trade={trade}
-        disabledConfirm={showAcceptChanges}
+        disabledConfirm={
+          showAcceptChanges || (priceImpactHigh && !priceImpactAccepted) || (!feeImpactAccepted && feeImpactHigh)
+        }
         swapErrorMessage={swapErrorMessage}
       />
     ) : null

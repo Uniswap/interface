@@ -741,6 +741,8 @@ export default function Market({ history }: RouteComponentProps) {
                     feeImpactHigh={feeImpactHigh}
                     updateFeeImpact={toggleFeeImpactAccepted}
                     updatePriceImpact={togglePriceImpactAccepted}
+                    priceImpactAccepted={priceImpactAccepted}
+                    feeImpactAccepted={feeImpactAccepted}
                   />
 
                   <AutoColumn gap={'sm'}>
@@ -976,7 +978,11 @@ export default function Market({ history }: RouteComponentProps) {
                       <PriceImpactWarning>
                         <span>
                           Price impact is greater than 20%. Swap anyway?{' '}
-                          <input type="checkbox" onClick={togglePriceImpactAccepted} />{' '}
+                          <input
+                            type="checkbox"
+                            onChange={togglePriceImpactAccepted}
+                            defaultChecked={priceImpactAccepted}
+                          />{' '}
                         </span>
                       </PriceImpactWarning>
                     )}
@@ -985,7 +991,11 @@ export default function Market({ history }: RouteComponentProps) {
                       <PriceImpactWarning>
                         <span>
                           Fee impact is greater than 20%. Swap anyway?{' '}
-                          <input type="checkbox" onClick={toggleFeeImpactAccepted} />{' '}
+                          <input
+                            type="checkbox"
+                            onChange={() => toggleFeeImpactAccepted()}
+                            defaultChecked={feeImpactAccepted}
+                          />{' '}
                         </span>
                       </PriceImpactWarning>
                     )}
@@ -1264,6 +1274,8 @@ export default function Market({ history }: RouteComponentProps) {
               feeImpactHigh={feeImpactHigh}
               updateFeeImpact={toggleFeeImpactAccepted}
               updatePriceImpact={togglePriceImpactAccepted}
+              priceImpactAccepted={priceImpactAccepted}
+              feeImpactAccepted={feeImpactAccepted}
             />
 
             <AutoColumn gap={'sm'}>
@@ -1487,7 +1499,7 @@ export default function Market({ history }: RouteComponentProps) {
                 <PriceImpactWarning>
                   <span>
                     Price impact is greater than 20%. Swap anyway?{' '}
-                    <input type="checkbox" onClick={togglePriceImpactAccepted} />{' '}
+                    <input type="checkbox" onChange={togglePriceImpactAccepted} defaultChecked={priceImpactAccepted} />{' '}
                   </span>
                 </PriceImpactWarning>
               )}
@@ -1496,7 +1508,11 @@ export default function Market({ history }: RouteComponentProps) {
                 <PriceImpactWarning>
                   <span>
                     Fee impact is greater than 20%. Swap anyway?{' '}
-                    <input type="checkbox" onClick={toggleFeeImpactAccepted} />{' '}
+                    <input
+                      type="checkbox"
+                      onChange={() => toggleFeeImpactAccepted()}
+                      defaultChecked={feeImpactAccepted}
+                    />{' '}
                   </span>
                 </PriceImpactWarning>
               )}

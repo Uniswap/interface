@@ -254,6 +254,8 @@ export const CHAIN_NATIVE_TOKEN_SYMBOL: { [chainId: number]: string } = {
   [SupportedChainId.POLYGON]: 'MATIC',
 }
 
+export const NATIVE_TOKEN_ADDRESS = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
+
 export const WETH_POLYGON_MUMBAI = new Token(
   SupportedChainId.POLYGON_MUMBAI,
   '0xa6fa4fb5f76172d178d61b04b0ecd319c5d1c0aa',

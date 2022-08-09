@@ -16,6 +16,7 @@ import { useNetworkGasPrice, useUserSlippageToleranceWithDefault } from 'state/u
 import { SwapTransaction, V3TradeState } from 'state/validator/types'
 import { v2StylePool } from 'state/validator/utils'
 
+import { NATIVE_TOKEN_ADDRESS, WRAPPED_NATIVE_CURRENCY } from './../../constants/tokens'
 import { useGetGaslessQuoteQuery, useGetQuoteQuery } from './slice'
 
 const DEFAULT_REMOVE_LIQUIDITY_SLIPPAGE_TOLERANCE = new Percent(50, 10_000)
@@ -132,7 +133,11 @@ export function useGaslessAPITrade(
       : undefined
   const gasUseEstimateUSD = useUSDCValue(priceGwei) ?? null
 
-  const paymentToken = useToken(quoteResult?.paymentTokenAddress)
+  const paymentToken = useToken(
+    NATIVE_TOKEN_ADDRESS === quoteResult?.paymentTokenAddress
+      ? WRAPPED_NATIVE_CURRENCY[chainId ?? 1].address
+      : quoteResult?.paymentTokenAddress
+  )
 
   return useMemo(() => {
     if (!currencyIn || !currencyOut) {

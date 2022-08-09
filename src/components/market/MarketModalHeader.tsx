@@ -67,6 +67,8 @@ export default function MarketModalHeader({
   feeImpactHigh,
   updateFeeImpact,
   updatePriceImpact,
+  priceImpactAccepted,
+  feeImpactAccepted,
 }: {
   trade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType>
   allowedSlippage: Percent
@@ -80,6 +82,8 @@ export default function MarketModalHeader({
   feeImpactHigh: boolean
   updateFeeImpact: () => void
   updatePriceImpact: () => void
+  priceImpactAccepted: boolean
+  feeImpactAccepted: boolean
 }) {
   const theme = useContext(ThemeContext)
 
@@ -88,8 +92,6 @@ export default function MarketModalHeader({
   const fiatValueInput = useUSDCValue(trade.inputAmount)
   const fiatValueOutput = useUSDCValue(trade.outputAmount)
 
-  const [priceImpactAccepted, setPriceImpactAccepted] = useState(false)
-  const [feeImpactAccepted, setFeeImpactAccepted] = useState(false)
   const { chainId } = useActiveWeb3React()
 
   const calculateMinimumReceived = (
@@ -105,15 +107,6 @@ export default function MarketModalHeader({
   const minimumReceived = paymentFees
     ? Number(calculateMinimumReceived(allowedSlippage, paymentFees, trade.outputAmount))
     : undefined
-
-  const togglePriceImpactAccepted = () => {
-    setPriceImpactAccepted(!priceImpactAccepted)
-    updatePriceImpact()
-  }
-  const toggleFeeImpactAccepted = () => {
-    setFeeImpactAccepted(!feeImpactAccepted)
-    updateFeeImpact()
-  }
 
   const isGaslessMode = useIsGaslessMode() && chainId == SupportedChainId.POLYGON
 
@@ -291,7 +284,7 @@ export default function MarketModalHeader({
           <ImpactWarning>
             <span>
               Price impact is greater than 20%. Swap anyway?{' '}
-              <input type="checkbox" onClick={togglePriceImpactAccepted} />{' '}
+              <input type="checkbox" onChange={updatePriceImpact} defaultChecked={priceImpactAccepted} />{' '}
             </span>
           </ImpactWarning>
         </AutoColumn>
@@ -300,7 +293,8 @@ export default function MarketModalHeader({
         <AutoColumn justify="flex-start" gap="sm" style={{ padding: '0px 0 0 0px' }}>
           <ImpactWarning>
             <span>
-              Fee impact is greater than 20%. Swap anyway? <input type="checkbox" onClick={toggleFeeImpactAccepted} />{' '}
+              Fee impact is greater than 20%. Swap anyway?{' '}
+              <input type="checkbox" onChange={updateFeeImpact} defaultChecked={feeImpactAccepted} />{' '}
             </span>
           </ImpactWarning>{' '}
         </AutoColumn>
