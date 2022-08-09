@@ -80,7 +80,7 @@ export function DappConnectionItem({
               {t('Unsupported chain')}
             </Text>
           )}
-          <Chevron color={theme.colors.textTertiary} direction="s" height="10" width="13" />
+          <Chevron color={theme.colors.textTertiary} direction="s" height="20" width="20" />
         </Flex>
       </Button>
     </Flex>
