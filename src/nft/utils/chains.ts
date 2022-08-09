@@ -1,4 +1,3 @@
-/* eslint-disable no-template-curly-in-string */
 export type Chain = {
   name: string
   chain: string
@@ -78,6 +77,7 @@ export const chains: Chain[] = [
         url: 'https://ropsten.etherscan.io',
       },
     ],
+    // eslint-disable-next-line no-template-curly-in-string
     faucets: ['https://faucet.ropsten.be?${ADDRESS}'],
     infoURL: 'https://github.com/ethereum/ropsten',
     name: 'Ropsten',
@@ -109,6 +109,7 @@ export const chains: Chain[] = [
     chain: 'ETH',
     chainId: 5,
     ens: { registry: '0x112234455c3a32fd11230c42e7bccd4a84e02010' },
+    // eslint-disable-next-line no-template-curly-in-string
     faucets: ['https://goerli-faucet.slock.it/?address=${ADDRESS}', 'https://faucet.goerli.mudit.blog'],
     infoURL: 'https://goerli.net/#about',
     name: 'Görli',
