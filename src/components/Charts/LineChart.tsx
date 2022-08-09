@@ -2,6 +2,7 @@ import { Group } from '@visx/group'
 import { LinePath } from '@visx/shape'
 import { CurveFactory } from 'd3'
 import { radius } from 'd3-curve-circlecorners'
+import React from 'react'
 import { ReactNode } from 'react'
 import { useTheme } from 'styled-components/macro'
 import { Color } from 'theme/styled'
@@ -19,7 +20,7 @@ interface LineChartProps<T> {
   height: number
 }
 
-export default function LineChart<T>({
+function LineChart<T>({
   data,
   getX,
   getY,
@@ -48,3 +49,5 @@ export default function LineChart<T>({
     </svg>
   )
 }
+
+export default React.memo(LineChart) as typeof LineChart

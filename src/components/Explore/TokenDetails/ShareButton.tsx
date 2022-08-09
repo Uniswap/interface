@@ -5,6 +5,7 @@ import { Check, Link, Share, Twitter } from 'react-feather'
 import { useModalIsOpen, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import styled, { useTheme } from 'styled-components/macro'
+import { Z_INDEX } from 'theme'
 
 const TWITTER_WIDTH = 560
 const TWITTER_HEIGHT = 480
@@ -13,7 +14,7 @@ const ShareButtonDisplay = styled.div`
   display: flex;
   cursor: pointer;
   position: relative;
-  z-index: 1;
+  z-index: ${Z_INDEX.dropdown};
 
   &:hover {
     color: ${({ theme }) => darken(0.1, theme.textSecondary)};

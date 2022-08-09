@@ -1,5 +1,6 @@
 import { scaleLinear } from 'd3'
 import useTheme from 'hooks/useTheme'
+import React from 'react'
 
 import data from './data.json'
 import LineChart from './LineChart'
@@ -18,7 +19,7 @@ interface SparklineChartProps {
   height: number
 }
 
-export default function SparklineChart({ width, height }: SparklineChartProps) {
+function SparklineChart({ width, height }: SparklineChartProps) {
   const theme = useTheme()
 
   /* TODO: Implement API calls & cache to use here */
@@ -44,3 +45,5 @@ export default function SparklineChart({ width, height }: SparklineChartProps) {
     ></LineChart>
   )
 }
+
+export default React.memo(SparklineChart)
