@@ -75,7 +75,15 @@ export default async function getTokenList(
     }
 
     const [json] = await Promise.all([response.json(), tokenListValidator])
-    if (BYPASS_LIST.indexOf(listUrl) >= 0) return json
+    const parsedData = !!json?.data?.tokens
+      ? {
+          tokens: json.data.tokens,
+          name: 'KyberSwap Token List',
+          logoURI: 'https://kyberswap.com/favicon.png',
+          keywords: ['kyberswap', 'dmmexchange'],
+        }
+      : json
+    if (BYPASS_LIST.indexOf(listUrl) >= 0) return parsedData
 
     // if (!validator(json)) {
     //   const validationErrors: string =
@@ -85,7 +93,7 @@ export default async function getTokenList(
     //     }, '') ?? 'unknown error'
     //   throw new Error(`Token list failed validation: ${validationErrors}`)
     // }
-    return json
+    return parsedData
   }
   throw new Error('Unrecognized list URL protocol.')
 }

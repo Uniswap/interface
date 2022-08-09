@@ -23,7 +23,7 @@ const velasInfo: NetworkInfo = {
   blockClient: createClient('https://velas-graph.kyberengineering.io/subgraphs/name/kybernetwork/velas-blocks'),
   etherscanUrl: 'https://evmexplorer.velas.com',
   etherscanName: 'Velas EVM Explorer',
-  tokenListUrl: 'https://raw.githubusercontent.com/KyberNetwork/ks-assets/main/tokenLists/velas.tokenlist.json',
+  tokenListUrl: `${process.env.REACT_APP_TOKEN_LIST_API}?chainId=${ChainId.VELAS}`,
   bridgeURL: EMPTY,
   nativeToken: {
     symbol: 'VLX',
