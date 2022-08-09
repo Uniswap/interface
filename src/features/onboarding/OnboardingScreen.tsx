@@ -7,16 +7,19 @@ import { OnboardingBackground } from 'src/components/gradients/OnboardingBackgro
 import { AnimatedFlex, Flex } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
 import { Text } from 'src/components/Text'
+import { Theme } from 'src/styles/theme'
 
 type OnboardingScreenProps = {
   subtitle?: string
   title: string
+  paddingTop?: keyof Theme['spacing']
 }
 
 export function OnboardingScreen({
   title,
   subtitle,
   children,
+  paddingTop = 'none',
 }: PropsWithChildren<OnboardingScreenProps>) {
   const headerHeight = useHeaderHeight()
   const insets = useSafeAreaInsets()
@@ -30,7 +33,7 @@ export function OnboardingScreen({
         <AnimatedFlex grow entering={FadeIn} exiting={FadeOut} pb="md" px="md">
           {/* Text content */}
           <Flex centered gap="sm" m="sm">
-            <Text textAlign="center" variant="headlineSmall">
+            <Text paddingTop={paddingTop} textAlign="center" variant="headlineSmall">
               {title}
             </Text>
             {subtitle ? (

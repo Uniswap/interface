@@ -65,6 +65,7 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props) {
     case View.Education:
       return (
         <OnboardingScreen
+          paddingTop="xs"
           subtitle={t('Keep the following steps in mind before backing up your recovery phrase:')}
           title={t('Back up manually')}>
           <WarningModal
@@ -80,10 +81,8 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props) {
             onConfirm={nextView}
           />
 
-          <Flex grow alignItems="center" justifyContent="space-between" px="xs">
-            <Flex width="90%">
-              <ManualBackupEducationSection />
-            </Flex>
+          <Flex grow justifyContent="space-between" px="xs">
+            <ManualBackupEducationSection />
             <Flex justifyContent="flex-end" width="100%">
               <PrimaryButton
                 label={t('Continue')}

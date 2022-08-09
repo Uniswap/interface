@@ -140,7 +140,7 @@ export function SettingsWallet({
         {
           screen: Screens.SettingsWalletEdit,
           text: t('Edit nickname or theme'),
-          icon: <EditIcon color={theme.colors.textSecondary} />,
+          icon: <EditIcon fill={theme.colors.textSecondary} />,
           screenProps: { address },
         },
         {
