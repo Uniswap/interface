@@ -11,7 +11,7 @@ import { useOnClickOutside, useSearchHistory, useWindowWidth } from 'nft/hooks'
 import { fetchSearchTokens } from 'nft/queries/genie/SearchTokensFetcher'
 import { fetchTrendingTokens } from 'nft/queries/genie/TrendingTokensFetcher'
 import { FungibleToken, GenieCollection, TrendingCollection } from 'nft/types'
-import { ethNumberStandardFormatter, formatEthPrice } from 'nft/utils/currency'
+import { ethNumberStandardFormatter } from 'nft/utils/currency'
 import { putCommas } from 'nft/utils/putCommas'
 import { ChangeEvent, useEffect, useMemo, useReducer, useRef, useState } from 'react'
 import { useQuery } from 'react-query'
@@ -321,27 +321,10 @@ export const SearchBarDropdown = ({ toggleOpen, tokens, collections, hasInput }:
         suggestions={collections}
         header={'NFT Collections'}
       />
-    ) : (
-      <Box className={styles.notFoundContainer}>No NFT collections found.</Box>
-    )
+    ) : null
 
-  const trendingCollectionResults = [] as TrendingCollection[]
-
-  const trendingCollections = useMemo(() => {
-    return trendingCollectionResults
-      ?.map((collection) => {
-        return {
-          ...collection,
-          collectionAddress: collection.address,
-          floorPrice: formatEthPrice(collection.floor.toString()),
-          stats: {
-            total_supply: collection.totalSupply,
-            one_day_change: collection.floorChange,
-          },
-        }
-      })
-      .slice(0, isNFTPage ? 3 : 2)
-  }, [isNFTPage, trendingCollectionResults])
+  // TODO Trending NFT Results implmented here
+  const trendingCollections = [] as TrendingCollection[]
 
   const { data: trendingTokenResults } = useQuery([], () => fetchTrendingTokens(), {
     refetchOnWindowFocus: false,
@@ -460,6 +443,8 @@ export const SearchBar = () => {
     isOpen && toggleOpen()
   })
 
+  // TODO NFT Search Results implmented here
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const collections = [] as GenieCollection[]
   const collectionsAreLoading = false
   const { data: tokens, isLoading: tokensAreLoading } = useQuery(
