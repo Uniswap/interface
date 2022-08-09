@@ -98,6 +98,7 @@ function WalletPreviewList({
   )
 
   const onPress = (address: string) => {
+    if (initialSelectedAccounts?.length === 1) return
     setUnselectedAddresses(address)
   }
 

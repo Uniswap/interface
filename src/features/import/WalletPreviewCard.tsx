@@ -1,4 +1,5 @@
 import React from 'react'
+import Check from 'src/assets/icons/check.svg'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { Button } from 'src/components/buttons/Button'
 import { Flex } from 'src/components/layout'
@@ -23,16 +24,19 @@ export default function WalletPreviewCard({
 }: Props) {
   return (
     <Button
-      backgroundColor={selected ? 'backgroundContainer' : 'backgroundSurface'}
-      borderColor={selected ? 'backgroundAction' : 'none'}
+      backgroundColor={selected ? 'backgroundAction' : 'backgroundSurface'}
+      borderColor={selected ? 'accentActive' : 'none'}
       borderRadius="lg"
       borderWidth={1}
       p="md"
       onPress={() => onSelect(address)}
       {...rest}>
       <Flex row alignItems="center" justifyContent="space-between">
-        <AddressDisplay address={address} variant="bodySmall" />
-        <Text>{formatUSDPrice(balance)}</Text>
+        <Flex row justifyContent="flex-start">
+          {selected && <Check height={24} width={24} />}
+          <AddressDisplay address={address} showUnicon={!selected} variant="bodySmall" />
+        </Flex>
+        <Text variant="caption">{formatUSDPrice(balance)}</Text>
       </Flex>
     </Button>
   )
