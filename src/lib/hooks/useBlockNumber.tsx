@@ -24,10 +24,6 @@ export default function useBlockNumber(): number | undefined {
   return useBlockNumberContext().value
 }
 
-export function useFastForwardBlockNumber(): (block: number) => void {
-  return useBlockNumberContext().fastForward
-}
-
 export function BlockNumberProvider({ children }: { children: ReactNode }) {
   const { chainId: activeChainId, provider } = useWeb3React()
   const [{ chainId, block }, setChainBlock] = useState<{ chainId?: number; block?: number }>({ chainId: activeChainId })
