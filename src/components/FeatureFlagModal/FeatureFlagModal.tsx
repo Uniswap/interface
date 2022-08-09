@@ -110,7 +110,7 @@ export default function FeatureFlagModal() {
         variants={Object.values(Phase1Variant)}
         value={usePhase1Flag()}
         featureFlag={FeatureFlag.phase1}
-        label="All Phase 0 changes (redesign, explore, header)."
+        label="All Phase 1 changes (nft features)."
       />
     </Modal>
   )
