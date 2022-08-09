@@ -35,6 +35,7 @@ import {
   TransactionStatus,
   TransactionType,
 } from 'src/features/transactions/types'
+import { isValidAddress } from 'src/utils/addresses'
 import { buildCurrencyId } from 'src/utils/currencyId'
 import { openTransactionLink } from 'src/utils/linking'
 
@@ -98,8 +99,14 @@ function TransactionSummaryItem({
   const [showCancelModal, setShowCancelModal] = useState(false)
   const dispatch = useAppDispatch()
 
-  const currencyId = buildCurrencyId(chainId, tokenAddress ?? '')
-  const otherCurrencyId = buildCurrencyId(chainId, otherTokenAddress ?? '')
+  const currencyId =
+    tokenAddress && isValidAddress(tokenAddress)
+      ? buildCurrencyId(chainId, tokenAddress)
+      : undefined
+  const otherCurrencyId =
+    otherTokenAddress && isValidAddress(otherTokenAddress)
+      ? buildCurrencyId(chainId, otherTokenAddress)
+      : undefined
   const currency = useCurrency(currencyId)
   const otherCurrency = useCurrency(otherCurrencyId)
 
