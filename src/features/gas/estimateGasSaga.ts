@@ -20,7 +20,7 @@ import {
   updateOptimismL1Fee,
   updateSwapMethodParamaters,
 } from 'src/features/transactions/transactionState/transactionState'
-import { createTransactionRequest } from 'src/features/transactions/transfer/transferTokenSaga'
+import { prepareTransfer } from 'src/features/transactions/transfer/transferTokenSaga'
 import { TransferTokenParams } from 'src/features/transactions/transfer/types'
 import { TransactionType } from 'src/features/transactions/types'
 import { selectActiveAccountAddress } from 'src/features/wallet/selectors'
@@ -244,15 +244,12 @@ function* estimateApproveGasFee(params: EstiamteApproveGasInfo) {
 function* estimateTransferGasLimit(provider: providers.Provider, params: TransferTokenParams) {
   const { chainId } = params
 
-  const transferRequest: providers.TransactionRequest = yield* call(
-    createTransactionRequest,
-    params
-  )
+  const { transferTxRequest } = yield* call(prepareTransfer, params)
 
   const transferGasInfo = yield* call(
     computeGasFee,
     chainId,
-    transferRequest,
+    transferTxRequest,
     provider as providers.JsonRpcProvider
   )
 
