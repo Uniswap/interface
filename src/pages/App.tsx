@@ -140,7 +140,7 @@ export default function App() {
       <ApeModeQueryParamReader />
       <AppWrapper>
         <Trace page={currentPage}>
-          <HeaderWrapper>{phase0Flag === Phase0Variant.Control ? <Navbar /> : <Header />}</HeaderWrapper>
+          <HeaderWrapper>{phase0Flag === Phase0Variant.Enabled ? <Navbar /> : <Header />}</HeaderWrapper>
           <BodyWrapper>
             <Popups />
             <Polling />

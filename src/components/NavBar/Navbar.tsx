@@ -124,7 +124,7 @@ const Navbar = () => {
           </Box>
           <Row gap="8">
             <NavLinkItem href={'/swap'}>Swap</NavLinkItem>
-            <NavLinkItem href={'/tokens'}>Tokens</NavLinkItem>
+            <NavLinkItem href={'/explore'}>Tokens</NavLinkItem>
             <NavLinkItem href={'/pool'} id={'pool-nav-link'} isActive={isPoolActive}>
               Pools
             </NavLinkItem>

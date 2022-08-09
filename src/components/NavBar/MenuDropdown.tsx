@@ -1,3 +1,4 @@
+import FeatureFlagModal from 'components/FeatureFlagModal/FeatureFlagModal'
 import { PrivacyPolicyModal } from 'components/PrivacyPolicy'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { Box } from 'nft/components/Box'
@@ -111,6 +112,7 @@ const Icon = ({ href, children }: { href?: string; children: ReactNode }) => {
 export const MenuDropdown = () => {
   const [isOpen, toggleOpen] = useReducer((s) => !s, false)
   const togglePrivacyPolicy = useToggleModal(ApplicationModal.PRIVACY_POLICY)
+  const openFeatureFlagsModal = useToggleModal(ApplicationModal.FEATURE_FLAGS)
 
   const ref = useRef<HTMLDivElement>(null)
   useOnClickOutside(ref, isOpen ? toggleOpen : undefined)
@@ -149,6 +151,7 @@ export const MenuDropdown = () => {
                     togglePrivacyPolicy()
                   }}
                 >{`Legal & Privacy`}</SecondaryLinkedText>
+                <SecondaryLinkedText onClick={openFeatureFlagsModal}>{`Feature Flags`}</SecondaryLinkedText>
               </Column>
               <IconRow>
                 <Icon href="https://discord.com/invite/FCfyBSbCU5">
@@ -166,6 +169,7 @@ export const MenuDropdown = () => {
         )}
       </Box>
       <PrivacyPolicyModal />
+      <FeatureFlagModal />
     </>
   )
 }
