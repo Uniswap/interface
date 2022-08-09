@@ -1,5 +1,5 @@
 import { Identify, identify, init, track } from '@amplitude/analytics-browser'
-import { isDevelopmentEnv } from 'utils/env'
+import { isProductionEnv } from 'utils/env'
 
 /**
  * Initializes Amplitude with API key for project.
@@ -8,10 +8,10 @@ import { isDevelopmentEnv } from 'utils/env'
  * member of the organization on Amplitude to view details.
  */
 export function initializeAnalytics() {
-  const API_KEY = isDevelopmentEnv() ? process.env.REACT_APP_AMPLITUDE_TEST_KEY : process.env.REACT_APP_AMPLITUDE_KEY
+  const API_KEY = isProductionEnv() ? process.env.REACT_APP_AMPLITUDE_KEY : process.env.REACT_APP_AMPLITUDE_TEST_KEY
 
   if (typeof API_KEY === 'undefined') {
-    const keyName = isDevelopmentEnv() ? 'REACT_APP_AMPLITUDE_TEST_KEY' : 'REACT_APP_AMPLITUDE_KEY'
+    const keyName = isProductionEnv() ? 'REACT_APP_AMPLITUDE_KEY' : 'REACT_APP_AMPLITUDE_TEST_KEY'
     throw new Error(`${keyName} must be a defined environment variable`)
   }
 
@@ -37,7 +37,7 @@ export function initializeAnalytics() {
 
 /** Sends an approved (finalized) event to Amplitude production project. */
 export function sendAnalyticsEvent(eventName: string, eventProperties?: Record<string, unknown>) {
-  if (isDevelopmentEnv()) {
+  if (!isProductionEnv()) {
     console.log(`[amplitude(${eventName})]: ${JSON.stringify(eventProperties)}`)
     return
   }
@@ -47,12 +47,9 @@ export function sendAnalyticsEvent(eventName: string, eventProperties?: Record<s
 
 /** Sends a draft event to Amplitude test project. */
 export function sendTestAnalyticsEvent(eventName: string, eventProperties?: Record<string, unknown>) {
-  if (isDevelopmentEnv()) {
-    track(eventName, eventProperties)
-    return
-  }
+  if (isProductionEnv()) return
 
-  console.log(`[amplitude(${eventName})]: ${JSON.stringify(eventProperties)}`)
+  track(eventName, eventProperties)
 }
 
 type Value = string | number | boolean | string[] | number[]
@@ -70,7 +67,7 @@ class UserModel {
   }
 
   private call(mutate: (event: Identify) => Identify) {
-    if (isDevelopmentEnv()) {
+    if (!isProductionEnv()) {
       const log = (_: Identify, method: string) => this.log.bind(this, method)
       mutate(new Proxy(new Identify(), { get: log }))
       return
