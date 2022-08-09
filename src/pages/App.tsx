@@ -1,5 +1,4 @@
-import { initializeAnalytics } from 'components/AmplitudeAnalytics'
-import { sendAnalyticsEvent, user } from 'components/AmplitudeAnalytics'
+import { initializeAnalytics, sendAnalyticsEvent, user } from 'components/AmplitudeAnalytics'
 import { CUSTOM_USER_PROPERTIES, EventName, PageName } from 'components/AmplitudeAnalytics/constants'
 import { Trace } from 'components/AmplitudeAnalytics/Trace'
 import Loader from 'components/Loader'
@@ -7,11 +6,11 @@ import TopLevelModals from 'components/TopLevelModals'
 import { useFeatureFlagsIsLoaded } from 'featureFlags'
 import { Phase0Variant, usePhase0Flag } from 'featureFlags/flags/phase0'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
-import { lazy, Suspense } from 'react'
-import { useEffect } from 'react'
+import { lazy, Suspense, useEffect } from 'react'
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import { useIsDarkMode } from 'state/user/hooks'
 import styled from 'styled-components/macro'
+import { SpinnerSVG } from 'theme/components'
 import { getBrowser } from 'utils/browser'
 
 import { useAnalyticsReporter } from '../components/analytics'
@@ -27,6 +26,7 @@ import { RedirectDuplicateTokenIds } from './AddLiquidity/redirects'
 import { RedirectDuplicateTokenIdsV2 } from './AddLiquidityV2/redirects'
 import Earn from './Earn'
 import Manage from './Earn/Manage'
+import Explore from './Explore'
 import MigrateV2 from './MigrateV2'
 import MigrateV2Pair from './MigrateV2/MigrateV2Pair'
 import Pool from './Pool'
@@ -38,7 +38,7 @@ import RemoveLiquidityV3 from './RemoveLiquidity/V3'
 import Swap from './Swap'
 import { OpenClaimAddressModalAndRedirectToSwap, RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects'
 
-// lazy load vote related pages
+const TokenDetails = lazy(() => import('./TokenDetails'))
 const Vote = lazy(() => import('./Vote'))
 
 const AppWrapper = styled.div`
@@ -81,10 +81,26 @@ function getCurrentPageFromLocation(locationPathname: string): PageName | undefi
       return PageName.VOTE_PAGE
     case '/pool':
       return PageName.POOL_PAGE
+    case '/explore':
+      return PageName.EXPLORE_PAGE
     default:
       return undefined
   }
 }
+
+// this is the same svg defined in assets/images/blue-loader.svg
+// it is defined here because the remote asset may not have had time to load when this file is executing
+const LazyLoadSpinner = () => (
+  <SpinnerSVG width="94" height="94" viewBox="0 0 94 94" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path
+      d="M92 47C92 22.1472 71.8528 2 47 2C22.1472 2 2 22.1472 2 47C2 71.8528 22.1472 92 47 92"
+      stroke="#2172E5"
+      strokeWidth="3"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </SpinnerSVG>
+)
 
 export default function App() {
   const isLoaded = useFeatureFlagsIsLoaded()
@@ -124,7 +140,6 @@ export default function App() {
       <ApeModeQueryParamReader />
       <AppWrapper>
         <Trace page={currentPage}>
-          {/* TODO swap to Enabled when Feature Flag works properly */}
           <HeaderWrapper>{phase0Flag === Phase0Variant.Control ? <Navbar /> : <Header />}</HeaderWrapper>
           <BodyWrapper>
             <Popups />
@@ -133,7 +148,27 @@ export default function App() {
             <Suspense fallback={<Loader />}>
               {isLoaded ? (
                 <Routes>
-                  <Route path="vote/*" element={<Vote />} />
+                  {phase0Flag === Phase0Variant.Enabled && (
+                    <>
+                      <Route path="/explore" element={<Explore />} />
+                      <Route
+                        path="/tokens/:tokenAddress"
+                        element={
+                          <Suspense fallback={<LazyLoadSpinner />}>
+                            <TokenDetails />
+                          </Suspense>
+                        }
+                      />
+                    </>
+                  )}
+                  <Route
+                    path="vote/*"
+                    element={
+                      <Suspense fallback={<LazyLoadSpinner />}>
+                        <Vote />
+                      </Suspense>
+                    }
+                  />
                   <Route path="create-proposal" element={<Navigate to="/vote/create-proposal" replace />} />
                   <Route path="claim" element={<OpenClaimAddressModalAndRedirectToSwap />} />
                   <Route path="uni" element={<Earn />} />

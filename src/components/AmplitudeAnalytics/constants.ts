@@ -8,6 +8,7 @@ export enum EventName {
   APP_LOADED = 'Application Loaded',
   APPROVE_TOKEN_TXN_SUBMITTED = 'Approve Token Transaction Submitted',
   CONNECT_WALLET_BUTTON_CLICKED = 'Connect Wallet Button Clicked',
+  EXPLORE_TOKEN_ROW_CLICKED = 'Explore Token Row Clicked',
   PAGE_VIEWED = 'Page Viewed',
   SWAP_AUTOROUTER_VISUALIZATION_EXPANDED = 'Swap Autorouter Visualization Expanded',
   SWAP_DETAILS_EXPANDED = 'Swap Details Expanded',
@@ -43,12 +44,6 @@ export enum CUSTOM_USER_PROPERTIES {
 
 export enum CUSTOM_USER_PROPERTY_SUFFIXES {
   WALLET_TOKEN_AMOUNT_SUFFIX = '_token_amount',
-}
-
-export enum CUSTOM_USER_PROPERTY_PREFIXES {
-  WALLET_CHAIN_IDS_PREFIX = 'wallet_chain_ids_',
-  WALLET_FIRST_SEEN_DATE_PREFIX = 'first_seen_date_',
-  WALLET_LAST_SEEN_DATE_PREFIX = 'last_seen_date_',
 }
 
 export enum BROWSER {
