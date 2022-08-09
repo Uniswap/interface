@@ -1,5 +1,6 @@
 import { FeatureFlag, useUpdateFlag } from 'featureFlags'
 import { Phase0Variant, usePhase0Flag } from 'featureFlags/flags/phase0'
+import { Phase1Variant, usePhase1Flag } from 'featureFlags/flags/phase1'
 import { ReactNode } from 'react'
 import { X } from 'react-feather'
 import { useModalIsOpen, useToggleFeatureFlags } from 'state/application/hooks'
@@ -104,6 +105,12 @@ export default function FeatureFlagModal() {
         value={usePhase0Flag()}
         featureFlag={FeatureFlag.phase0}
         label="All Phase 0 changes (redesign, explore, header)."
+      />
+      <FeatureFlagOption
+        variants={Object.values(Phase1Variant)}
+        value={usePhase1Flag()}
+        featureFlag={FeatureFlag.phase1}
+        label="All Phase 1 changes (nft features)."
       />
     </Modal>
   )
