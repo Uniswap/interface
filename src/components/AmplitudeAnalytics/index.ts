@@ -8,11 +8,10 @@ import { isDevelopmentEnv } from 'utils/env'
  * member of the organization on Amplitude to view details.
  */
 export function initializeAnalytics() {
-  if (isDevelopmentEnv()) return
+  const API_KEY = isDevelopmentEnv() ? process.env.REACT_APP_AMPLITUDE_TEST_KEY : process.env.REACT_APP_AMPLITUDE_KEY
 
-  const API_KEY = process.env.REACT_APP_AMPLITUDE_KEY
   if (typeof API_KEY === 'undefined') {
-    throw new Error(`REACT_APP_AMPLITUDE_KEY must be a defined environment variable`)
+    throw new Error(`REACT_APP_AMPLITUDE_TEST_KEY must be a defined environment variable`)
   }
 
   init(
@@ -35,7 +34,7 @@ export function initializeAnalytics() {
   )
 }
 
-/** Sends an event to Amplitude. */
+/** Sends an approved (finalized) event to Amplitude production project. */
 export function sendAnalyticsEvent(eventName: string, eventProperties?: Record<string, unknown>) {
   if (isDevelopmentEnv()) {
     console.log(`[amplitude(${eventName})]: ${JSON.stringify(eventProperties)}`)
@@ -43,6 +42,16 @@ export function sendAnalyticsEvent(eventName: string, eventProperties?: Record<s
   }
 
   track(eventName, eventProperties)
+}
+
+/** Sends a draft event to Amplitude test project. */
+export function sendTestAnalyticsEvent(eventName: string, eventProperties?: Record<string, unknown>) {
+  if (isDevelopmentEnv()) {
+    track(eventName, eventProperties)
+    return
+  }
+
+  console.log(`[amplitude(${eventName})]: ${JSON.stringify(eventProperties)}`)
 }
 
 type Value = string | number | boolean | string[] | number[]
