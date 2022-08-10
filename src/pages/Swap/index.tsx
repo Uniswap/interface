@@ -160,6 +160,7 @@ export default function Swap() {
   const loadedUrlParams = useDefaultsFromURLSearch()
   const [newSwapQuoteNeedsLogging, setNewSwapQuoteNeedsLogging] = useState(true)
   const [fetchingSwapQuoteStartTime, setFetchingSwapQuoteStartTime] = useState<Date | undefined>()
+  const phase0Flag = usePhase0Flag()
 
   // token warning stuff
   const [loadedInputCurrency, loadedOutputCurrency] = [
@@ -525,12 +526,22 @@ export default function Swap() {
   return (
     <Trace page={PageName.SWAP_PAGE} shouldLogImpression>
       <>
-        <TokenWarningModal
-          isOpen={importTokensNotInDefault.length > 0 && !dismissTokenWarning}
-          tokens={importTokensNotInDefault}
-          onConfirm={handleConfirmTokenWarning}
-          onDismiss={handleDismissTokenWarning}
-        />
+        {phase0Flag === Phase0Variant.Enabled ? (
+          <TokenSafetyModal
+            isOpen={importTokensNotInDefault.length > 0 && !dismissTokenWarning}
+            tokenAddress={importTokensNotInDefault[0]?.address}
+            secondTokenAddress={importTokensNotInDefault[1]?.address}
+            onContinue={handleConfirmTokenWarning}
+            onCancel={handleDismissTokenWarning}
+          />
+        ) : (
+          <TokenWarningModal
+            isOpen={importTokensNotInDefault.length > 0 && !dismissTokenWarning}
+            tokens={importTokensNotInDefault}
+            onConfirm={handleConfirmTokenWarning}
+            onDismiss={handleDismissTokenWarning}
+          />
+        )}
         <AppBody>
           <SwapHeader allowedSlippage={allowedSlippage} />
           <Wrapper id="swap-page">

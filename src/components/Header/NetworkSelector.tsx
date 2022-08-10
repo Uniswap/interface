@@ -50,6 +50,7 @@ const ActiveRowWrapper = styled.div`
 `
 const FlyoutHeader = styled.div`
   color: ${({ theme }) => theme.deprecated_text2};
+  cursor: default;
   font-weight: 400;
 `
 const FlyoutMenu = styled.div`
@@ -114,7 +115,6 @@ const Logo = styled.img`
 `
 const NetworkLabel = styled.div`
   flex: 1 1 auto;
-  cursor: default;
 `
 const SelectorLabel = styled(NetworkLabel)`
   display: none;
@@ -153,6 +153,7 @@ const SelectorControls = styled.div<{ supportedChain: boolean }>`
     background-color: ${theme.deprecated_red1};
     border: 2px solid ${theme.deprecated_red1};
   `}
+  cursor: default;
   :focus {
     background-color: ${({ theme }) => darken(0.1, theme.deprecated_red1)};
   }

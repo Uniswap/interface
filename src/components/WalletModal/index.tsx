@@ -5,7 +5,6 @@ import { Connector } from '@web3-react/types'
 import { sendAnalyticsEvent, user } from 'components/AmplitudeAnalytics'
 import {
   CUSTOM_USER_PROPERTIES,
-  CUSTOM_USER_PROPERTY_PREFIXES,
   CUSTOM_USER_PROPERTY_SUFFIXES,
   EventName,
   WALLET_CONNECTION_RESULT,
@@ -163,16 +162,12 @@ const sendAnalyticsEventAndUserInfo = (
     wallet_type: walletType,
     is_reconnect: isReconnect,
   })
-  const currentDate = new Date().toISOString()
   user.set(CUSTOM_USER_PROPERTIES.WALLET_ADDRESS, account)
   user.set(CUSTOM_USER_PROPERTIES.WALLET_TYPE, walletType)
   if (chainId) {
     user.postInsert(CUSTOM_USER_PROPERTIES.ALL_WALLET_CHAIN_IDS, chainId)
-    user.postInsert(`${CUSTOM_USER_PROPERTY_PREFIXES.WALLET_CHAIN_IDS_PREFIX}${account}`, chainId)
   }
   user.postInsert(CUSTOM_USER_PROPERTIES.ALL_WALLET_ADDRESSES_CONNECTED, account)
-  user.setOnce(`${CUSTOM_USER_PROPERTY_PREFIXES.WALLET_FIRST_SEEN_DATE_PREFIX}${account}`, currentDate)
-  user.set(`${CUSTOM_USER_PROPERTY_PREFIXES.WALLET_LAST_SEEN_DATE_PREFIX}${account}`, currentDate)
 }
 
 export default function WalletModal({
