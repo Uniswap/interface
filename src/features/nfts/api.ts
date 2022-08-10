@@ -11,7 +11,7 @@ import {
 import { isEnabled } from 'src/features/remoteConfig'
 import { TestConfig } from 'src/features/remoteConfig/testConfigs'
 import { serializeQueryParams } from 'src/features/transactions/swap/utils'
-import { getAddress } from 'src/utils/addresses'
+import { getChecksumAddress } from 'src/utils/addresses'
 
 const CURSOR_LIMIT = 50
 const OPENSEA_BASE_URL = 'https://api.opensea.io/api/v1/'
@@ -68,7 +68,7 @@ export const nftApi = createApi({
         }
 
         const assetsByCollection = assets.reduce<Record<Address, NFTAsset.Asset[]>>((all, nft) => {
-          const key = getAddress(nft.asset_contract.address)
+          const key = getChecksumAddress(nft.asset_contract.address)
           all[key] ??= []
           all[key]!.push({ ...nft, chainId })
           return all

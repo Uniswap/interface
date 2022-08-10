@@ -9,7 +9,7 @@ import {
   TransactionStatus,
   TransactionType,
 } from 'src/features/transactions/types'
-import { getAddress, normalizeAddress } from 'src/utils/addresses'
+import { getChecksumAddress, normalizeAddress } from 'src/utils/addresses'
 import { currencyIdToAddress } from 'src/utils/currencyId'
 
 /**
@@ -192,8 +192,8 @@ function parseExternalTransactionItem(transaction: Transaction): TransactionSumm
   otherTokenAddress = normalizeIfNativeId(otherTokenAddress)
 
   // Must checksum as Zerion does not, checksum needed for caching
-  tokenAddress = tokenAddress ? getAddress(tokenAddress) : undefined
-  otherTokenAddress = otherTokenAddress ? getAddress(otherTokenAddress) : undefined
+  tokenAddress = tokenAddress ? getChecksumAddress(tokenAddress) : undefined
+  otherTokenAddress = otherTokenAddress ? getChecksumAddress(otherTokenAddress) : undefined
 
   return {
     chainId,

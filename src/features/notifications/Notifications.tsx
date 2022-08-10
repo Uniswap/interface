@@ -49,7 +49,7 @@ import { TransactionStatus, TransactionType } from 'src/features/transactions/ty
 import { selectActiveAccountAddress } from 'src/features/wallet/selectors'
 import { WalletConnectEvent } from 'src/features/walletConnect/saga'
 import { Tabs } from 'src/screens/Screens'
-import { getAddress } from 'src/utils/addresses'
+import { getChecksumAddress } from 'src/utils/addresses'
 import { toSupportedChainId } from 'src/utils/chainId'
 import { buildCurrencyId } from 'src/utils/currencyId'
 
@@ -272,7 +272,7 @@ export function TransferNFTNotification({
   const senderOrRecipient =
     txType === TransactionType.Send ? notification.recipient : notification.sender
   const nftOwner = txType === TransactionType.Send ? notification.recipient : userAddress
-  const { asset: nft } = useNFT(nftOwner, getAddress(tokenAddress), tokenId)
+  const { asset: nft } = useNFT(nftOwner, getChecksumAddress(tokenAddress), tokenId)
   const { name: ensName } = useENS(chainId, senderOrRecipient)
   const title = formTransferNFTNotificationTitle(
     txType,

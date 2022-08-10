@@ -27,7 +27,7 @@ import { NFTViewType } from 'src/features/wallet/types'
 import { setNFTViewType } from 'src/features/wallet/walletSlice'
 import { Screens } from 'src/screens/Screens'
 import { theme } from 'src/styles/theme'
-import { getAddress } from 'src/utils/addresses'
+import { getChecksumAddress } from 'src/utils/addresses'
 
 const MAX_NFT_IMAGE_SIZE = 375
 
@@ -57,7 +57,7 @@ export function PortfolioNFTsScreen({
     (asset: NFTAsset.Asset) => {
       navigation.navigate(Screens.NFTItem, {
         owner: activeAddress ?? '',
-        address: getAddress(asset.asset_contract.address),
+        address: getChecksumAddress(asset.asset_contract.address),
         token_id: asset.token_id,
       })
     },

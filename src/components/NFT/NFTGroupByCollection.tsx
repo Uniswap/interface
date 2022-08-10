@@ -15,7 +15,7 @@ import { Screens } from 'src/screens/Screens'
 import { flex } from 'src/styles/flex'
 import { dimensions } from 'src/styles/sizing'
 import { theme } from 'src/styles/theme'
-import { getAddress } from 'src/utils/addresses'
+import { getChecksumAddress } from 'src/utils/addresses'
 
 interface Props {
   nftAssets: NFTAsset.Asset[]
@@ -63,7 +63,7 @@ function NFTCollectionItem({ nftAssets, owner }: Props) {
       onPress={() =>
         navigation.navigate(Screens.NFTItem, {
           owner: owner || '',
-          address: getAddress(item.asset_contract.address),
+          address: getChecksumAddress(item.asset_contract.address),
           token_id: item.token_id,
         })
       }>
@@ -83,7 +83,7 @@ function NFTCollectionItem({ nftAssets, owner }: Props) {
         name={ElementName.NFTCollectionItem}
         onPress={() =>
           navigation.navigate(Screens.NFTCollection, {
-            collectionAddress: getAddress(collectionAddress),
+            collectionAddress: getChecksumAddress(collectionAddress),
             slug,
             owner,
           })

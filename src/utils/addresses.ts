@@ -9,7 +9,7 @@ export enum AddressStringFormat {
   Shortened,
 }
 
-export function getAddress(address: string): string {
+export function getChecksumAddress(address: string): string {
   return utils.getAddress(address)
 }
 
@@ -56,7 +56,7 @@ export function normalizeAddress(
       return address.substr(0, 8)
     case AddressStringFormat.Checksum:
     default:
-      return getAddress(address)
+      return getChecksumAddress(address)
   }
 }
 
@@ -68,7 +68,7 @@ export function parseAddress(input: Nullable<string>): Address | null {
 export function areAddressesEqual(_a1: Nullable<Address>, _a2: Nullable<Address>) {
   const a1 = validateAddress(_a1, 'compare')
   const a2 = validateAddress(_a2, 'compare')
-  return getAddress(a1) === getAddress(a2)
+  return getChecksumAddress(a1) === getChecksumAddress(a2)
 }
 
 export function trimLeading0x(input: Address): string {
