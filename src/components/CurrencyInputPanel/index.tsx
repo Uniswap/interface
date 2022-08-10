@@ -119,8 +119,6 @@ const InputCurrencySelect = styled(CurrencySelect)<{ phase0Flag: boolean }>`
         ? phase0Flag
           ? theme.backgroundAction
           : theme.deprecated_bg3
-        : phase0Flag
-        ? darken(0.05, theme.accentAction)
         : darken(0.05, theme.deprecated_primary1)};
   }
 `

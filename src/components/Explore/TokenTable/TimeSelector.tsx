@@ -7,7 +7,7 @@ import { useModalIsOpen, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import styled, { useTheme } from 'styled-components/macro'
 
-import { MOBILE_MEDIA_BREAKPOINT } from '../constants'
+import { MOBILE_MEDIA_BREAKPOINT, SMALL_MEDIA_BREAKPOINT } from '../constants'
 import { filterTimeAtom } from '../state'
 
 export const TIME_DISPLAYS: { [key: string]: string } = {
@@ -18,7 +18,7 @@ export const TIME_DISPLAYS: { [key: string]: string } = {
   year: '1Y',
 }
 
-const TIMES = Object.values(TimePeriod)
+const TIMES = [TimePeriod.hour, TimePeriod.day, TimePeriod.week, TimePeriod.month, TimePeriod.year]
 
 const InternalMenuItem = styled.div`
   flex: 1;
@@ -62,13 +62,17 @@ const MenuTimeFlyout = styled.span`
   top: 48px;
   z-index: 100;
   left: 0px;
+
+  @media only screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
+    right: 0px;
+    left: unset;
+  }
 `
 
 const StyledMenuButton = styled.button<{ open: boolean }>`
   width: 100%;
   height: 100%;
   border: none;
-  background-color: transparent;
   color: ${({ theme, open }) => (open ? theme.blue200 : theme.textPrimary)};
   margin: 0;
   background-color: ${({ theme, open }) => (open ? theme.accentActionSoft : theme.backgroundAction)};
@@ -81,9 +85,11 @@ const StyledMenuButton = styled.button<{ open: boolean }>`
   :hover {
     cursor: pointer;
     outline: none;
-    background-color: ${({ theme, open }) => !open && theme.backgroundContainer};
+    background-color: ${({ theme, open }) => (open ? theme.accentActionSoft : theme.backgroundContainer)};
   }
-
+  :focus {
+    background-color: ${({ theme, open }) => (open ? theme.accentActionSoft : theme.backgroundAction)};
+  }
   svg {
     margin-top: 2px;
   }

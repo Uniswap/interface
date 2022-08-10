@@ -73,13 +73,14 @@ const StyledMenuButton = styled.button<{ open: boolean }>`
   line-height: 24px;
   font-weight: 400;
 
-  :hover,
-  :focus {
+  :hover {
     cursor: pointer;
     outline: none;
-    background-color: ${({ theme, open }) => !open && theme.backgroundContainer};
+    background-color: ${({ theme, open }) => (open ? theme.accentActionSoft : theme.backgroundContainer)};
   }
-
+  :focus {
+    background-color: ${({ theme, open }) => (open ? theme.accentActionSoft : theme.backgroundAction)};
+  }
   svg {
     margin-top: 2px;
   }

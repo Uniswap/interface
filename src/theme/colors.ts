@@ -278,7 +278,8 @@ export const colorsLight: Palette = {
   chain_10_background: colors.red900,
   chain_42161_background: colors.blue900,
 
-  flyoutDropShadow: colors.black,
+  flyoutDropShadow:
+    '0px 24px 32px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 0px 1px rgba(0, 0, 0, 0.12);',
 }
 
 export const colorsDark: Palette = {
@@ -286,7 +287,7 @@ export const colorsDark: Palette = {
 
   backgroundBackdrop: colors.black,
   backgroundSurface: colors.gray900,
-  backgroundContainer: opacify(12, colors.gray300),
+  backgroundContainer: opacify(8, colors.gray300),
   backgroundAction: colors.gray700,
   backgroundOutline: opacify(24, colors.gray300),
   backgroundScrim: opacify(72, colors.black),
@@ -334,5 +335,6 @@ export const colorsDark: Palette = {
   chain_10_background: colors.red900,
   chain_42161_background: colors.blue900,
 
-  flyoutDropShadow: colors.black,
+  flyoutDropShadow:
+    '0px 24px 32px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 0px 1px rgba(0, 0, 0, 0.12);',
 }
