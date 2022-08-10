@@ -15,7 +15,7 @@ const FavoriteButtonContent = styled.div`
 const StyledFavoriteButton = styled.button<{ active: boolean }>`
   padding: 0px 16px;
   border-radius: 12px;
-  background-color: ${({ theme, active }) => (active ? theme.accentAction : theme.backgroundAction)};
+  background-color: ${({ theme, active }) => (active ? theme.accentAction : theme.backgroundInteractive)};
   border: none;
   color: ${({ theme }) => theme.textPrimary};
   font-size: 16px;
@@ -23,7 +23,7 @@ const StyledFavoriteButton = styled.button<{ active: boolean }>`
   cursor: pointer;
 
   :hover {
-    background-color: ${({ theme, active }) => !active && theme.backgroundContainer};
+    background-color: ${({ theme, active }) => !active && theme.backgroundModule};
   }
 `
 const FavoriteText = styled.span`
