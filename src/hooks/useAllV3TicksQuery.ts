@@ -1,6 +1,10 @@
 import graphql from 'babel-plugin-relay/macro'
-import { useEffect } from 'react'
-import { usePreloadedQuery, useQueryLoader } from 'react-relay'
+// import { useEffect } from 'react'
+// import { loadQuery, usePreloadedQuery, useQueryLoader } from 'react-relay'
+import { useQuery } from 'relay-hooks'
+
+import type { useAllV3TicksQuery } from './__generated__/useAllV3TicksQuery.graphql'
+//import RelayEnvironment from '../RelayEnvironment'
 
 const testQuery = graphql`
   query useAllV3TicksQuery($poolAddress: String!, $skip: Int!) {
@@ -13,11 +17,7 @@ const testQuery = graphql`
   }
 `
 
-function useAllV3TicksQuery(poolAddress: string, skip: number) {
-  const [queryRef, loadQuery, disposeQuery] = useQueryLoader(testQuery)
-
-  // Load immediately
-  useEffect(() => {
-    loadQuery({ count: 20 }, { fetchPolicy: 'store-or-network' })
-  }, [loadQuery])
+export default function useAllV3TicksQuery2(poolAddress: string | undefined, skip: number) {
+  const data = useQuery<useAllV3TicksQuery>(testQuery, { poolAddress: poolAddress ?? '', skip })
+  return data
 }
