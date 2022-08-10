@@ -7,6 +7,7 @@ import { LightGreyCard } from 'components/Card'
 import QuestionHelper from 'components/QuestionHelper'
 import TokenSafetyIcon from 'components/TokenSafety/TokenSafetyIcon'
 import { checkWarning } from 'constants/tokenSafety'
+import { Phase0Variant, usePhase0Flag } from 'featureFlags/flags/phase0'
 import useTheme from 'hooks/useTheme'
 import { CSSProperties, MutableRefObject, useCallback, useMemo } from 'react'
 import { FixedSizeList } from 'react-window'
@@ -20,10 +21,10 @@ import { useCombinedActiveList } from '../../../state/lists/hooks'
 import { WrappedTokenInfo } from '../../../state/lists/wrappedTokenInfo'
 import { ThemedText } from '../../../theme'
 import { isTokenOnList } from '../../../utils'
-import Column from '../../Column'
+import Column, { AutoColumn } from '../../Column'
 import CurrencyLogo from '../../CurrencyLogo'
 import Loader from '../../Loader'
-import { RowBetween, RowFixed } from '../../Row'
+import Row, { RowBetween, RowFixed } from '../../Row'
 import { MouseoverTooltip } from '../../Tooltip'
 import ImportRow from '../ImportRow'
 import { LoadingRows, MenuItem } from '../styleds'
@@ -40,7 +41,6 @@ const StyledBalanceText = styled(Text)`
 `
 
 const CurrencyName = styled(Text)`
-  max-width: 90%;
   font-weight: 500;
   white-space: nowrap;
   overflow: hidden;
@@ -81,14 +81,9 @@ const TokenListLogoWrapper = styled.img`
   height: 20px;
 `
 
-const NameContainer = styled.div`
-  display: flex;
-  align-items: center;
-`
-
 function TokenTags({ currency }: { currency: Currency }) {
   if (!(currency instanceof WrappedTokenInfo)) {
-    return <span />
+    return null
   }
 
   const tags = currency.tags
@@ -139,6 +134,7 @@ function CurrencyRow({
   const customAdded = useIsUserAddedToken(currency)
   const balance = useCurrencyBalance(account ?? undefined, currency)
   const warning = currency.isNative ? null : checkWarning(currency.address)
+  const phase0Flag = usePhase0Flag()
 
   // only show add or remove buttons if not on selected list
   return (
@@ -157,12 +153,15 @@ function CurrencyRow({
         disabled={isSelected}
         selected={otherSelected}
       >
-        <CurrencyLogo currency={currency} size={'24px'} />
         <Column>
-          <NameContainer>
+          <CurrencyLogo currency={currency} size={'24px'} />
+        </Column>
+        <AutoColumn>
+          <Row>
             <CurrencyName title={currency.name}>{currency.name}</CurrencyName>
-            <TokenSafetyIcon warning={warning} />
-          </NameContainer>
+
+            {phase0Flag === Phase0Variant.Enabled && <TokenSafetyIcon warning={warning} />}
+          </Row>
           <ThemedText.DeprecatedDarkGray ml="0px" fontSize={'12px'} fontWeight={300}>
             {!currency.isNative && !isOnSelectedList && customAdded ? (
               <Trans>{currency.symbol} • Added by user</Trans>
@@ -170,8 +169,12 @@ function CurrencyRow({
               currency.symbol
             )}
           </ThemedText.DeprecatedDarkGray>
+        </AutoColumn>
+        <Column>
+          <RowFixed style={{ justifySelf: 'flex-end' }}>
+            <TokenTags currency={currency} />
+          </RowFixed>
         </Column>
-        <TokenTags currency={currency} />
         {showCurrencyAmount && (
           <RowFixed style={{ justifySelf: 'flex-end' }}>
             {balance ? <Balance balance={balance} /> : account ? <Loader /> : null}

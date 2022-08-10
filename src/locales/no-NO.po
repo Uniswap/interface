@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-04 19:04\n"
+"PO-Revision-Date: 2022-08-05 22:05\n"
 "Last-Translator: \n"
 "Language: no_NO\n"
 "Language-Team: Norwegian\n"
@@ -120,6 +120,7 @@ msgstr "En minimumsterskel på 0,25% av den totale UNI-forsyningen kreves for å
 msgid "A swap of this size may have a high price impact, given the current liquidity in the pool. There may be a large difference between the amount of your input token and what you will receive in the output token"
 msgstr "En swap av denne størrelsen kan ha høy prispåvirkning gitt dagens likviditet i bassenget. Det kan være stor forskjell mellom mengden av input-tokenet og hva du vil motta i output-tokenet"
 
+#: src/components/Explore/TokenDetails/TokenDetail.tsx
 #: src/components/Menu/index.tsx
 msgid "About"
 msgstr "Om"
@@ -348,6 +349,10 @@ msgstr "Ved å koble til en lommebok godtar du Uniswap Labs' <0>vilkår for bruk
 msgid "Canceled"
 msgstr "Avlyst"
 
+#: src/constants/tokenSafety.tsx
+msgid "Caution"
+msgstr "Forsiktighet"
+
 #: src/components/AccountDetails/index.tsx
 msgid "Change"
 msgstr "Endre"
@@ -433,6 +438,7 @@ msgstr "Fjern alle"
 msgid "Clear all"
 msgstr "Fjern alle"
 
+#: src/components/TokenSafety/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Close"
@@ -817,6 +823,10 @@ msgstr "Ekspertmodus deaktiverer ledeteksten for transaksjonen og gir mulighet f
 msgid "Expired"
 msgstr "Utløpt"
 
+#: src/components/Header/index.tsx
+msgid "Explore"
+msgstr "Utforske"
+
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore Uniswap Analytics."
 msgstr "Utforsk Uniswap Analytics."
@@ -877,6 +887,10 @@ msgstr "Gjemme seg"
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
 msgstr "Høy pris konsekvens"
+
+#: src/components/TokenSafety/index.tsx
+msgid "I Understand"
+msgstr "Jeg forstår"
 
 #: src/components/SearchModal/ImportList.tsx
 #: src/pages/AddLiquidity/index.tsx
@@ -984,12 +998,17 @@ msgstr "Språk"
 msgid "Learn"
 msgstr "Finn ut mer"
 
+#: src/components/TokenSafety/index.tsx
+msgid "Learn More"
+msgstr "Lære mer"
+
 #: src/pages/Pool/CTACards.tsx
 msgid "Learn about providing liquidity"
 msgstr "Lær om å skaffe likviditet"
 
 #: src/components/PrivacyPolicy/index.tsx
 #: src/components/PrivacyPolicy/index.tsx
+#: src/components/TokenSafety/TokenSafetyMessage.tsx
 msgid "Learn more"
 msgstr "Lære mer"
 
@@ -1190,6 +1209,10 @@ msgstr "Ingen forslag funnet."
 msgid "No results found."
 msgstr "Ingen resultater."
 
+#: src/constants/tokenSafety.tsx
+msgid "Not Available"
+msgstr "Ikke tilgjengelig"
+
 #: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "Not created"
 msgstr "Ikke opprettet"
@@ -1254,6 +1277,10 @@ msgstr "Bekreft at du vil fjerne denne listen ved å skrive FJERN"
 #: src/components/vote/ProposalEmptyState.tsx
 msgid "Please connect to Layer 1 Ethereum"
 msgstr "Vennligst koble til Layer 1 Ethereum"
+
+#: src/constants/tokenSafety.tsx
+msgid "Please do your own research before trading."
+msgstr "Gjør din egen undersøkelse før handel."
 
 #: src/components/Settings/index.tsx
 msgid "Please type the word \"{confirmWord}\" to enable expert mode."
@@ -1735,6 +1762,10 @@ msgstr "Transaksjonen kunne ikke sendes fordi fristen er passert. Kontroller at 
 msgid "There is no liquidity data."
 msgstr "Det er ingen likviditetsdata."
 
+#: src/components/Explore/TokenDetails/BalanceSummary.tsx
+msgid "There was an error loading your {tokenSymbol} balance"
+msgstr "Det oppsto en feil ved innlasting av {tokenSymbol} -saldoen din"
+
 #: src/components/ConnectedAccountBlocked/index.tsx
 msgid "This address is blocked on the Uniswap Labs interface because it is associated with one or more"
 msgstr "Denne adressen er blokkert på Uniswap Labs-grensesnittet fordi den er knyttet til en eller flere"
@@ -1788,6 +1819,10 @@ msgstr "Til"
 #: src/pages/Swap/index.tsx
 msgid "To (at least)"
 msgstr "Til (minst)"
+
+#: src/components/Explore/TokenTable/TokenRow.tsx
+msgid "Token Name"
+msgstr "Token navn"
 
 #: src/components/SearchModal/BlockedToken.tsx
 msgid "Token not supported"
@@ -2094,6 +2129,10 @@ msgstr "Venter på bekreftelse"
 msgid "Wallet Address or ENS name"
 msgstr "Lommebokadresse eller ENS-navn"
 
+#: src/constants/tokenSafety.tsx
+msgid "Warning"
+msgstr "Advarsel"
+
 #: src/components/earn/StakingModal.tsx
 msgid "Weekly Rewards"
 msgstr "Ukentlige belønninger"
@@ -2350,6 +2389,14 @@ msgstr "via {0} pollett-liste"
 #: src/components/SearchModal/ImportToken.tsx
 msgid "{0, plural, =1 {Import token} other {Import tokens}}"
 msgstr "{0, plural, =1 {Importer token} other {Importer tokens}}"
+
+#: src/constants/tokenSafety.tsx
+msgid "{0, plural, =1 {This token isn't verified} other {These tokens aren't verified}}"
+msgstr "{0, plural, =1 {Dette tokenet er ikke bekreftet} other {Disse tokenene er ikke verifisert}}"
+
+#: src/constants/tokenSafety.tsx
+msgid "{0, plural, =1 {You can't trade this token using the Uniswap App.} other {You can't trade these tokens using the Uniswap App.}}"
+msgstr "{0, plural, =1 {Du kan ikke bytte dette tokenet ved å bruke Uniswap-appen.} other {Du kan ikke bytte disse tokenene ved å bruke Uniswap-appen.}}"
 
 #: src/components/RateToggle/index.tsx
 #: src/components/RateToggle/index.tsx

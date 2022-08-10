@@ -35,7 +35,7 @@ const InternalLinkMenuItem = styled(InternalMenuItem)`
   justify-content: space-between;
   text-decoration: none;
   cursor: pointer;
-  border-radius: 12px;
+  border-radius: 8px;
 
   :hover {
     background-color: ${({ theme }) => theme.hoverState};
@@ -43,7 +43,7 @@ const InternalLinkMenuItem = styled(InternalMenuItem)`
   }
 `
 const MenuTimeFlyout = styled.span`
-  min-width: 200px;
+  min-width: 240px;
   max-height: 350px;
   overflow: auto;
   background-color: ${({ theme }) => theme.backgroundSurface};
@@ -58,21 +58,14 @@ const MenuTimeFlyout = styled.span`
   top: 48px;
   z-index: 100;
   left: 0px;
-
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    bottom: unset;
-    right: 0;
-    left: unset;
-  `};
 `
 
 const StyledMenuButton = styled.button<{ open: boolean }>`
   width: 100%;
   height: 100%;
   color: ${({ theme, open }) => (open ? theme.blue200 : theme.textPrimary)};
-  background-color: transparent;
-  background-color: ${({ theme, open }) => (open ? theme.accentActionSoft : theme.none)};
-  border: 1px solid ${({ theme, open }) => (open ? theme.accentActiveSoft : theme.backgroundOutline)};
+  border: none;
+  background-color: ${({ theme, open }) => (open ? theme.accentActionSoft : theme.backgroundAction)};
   margin: 0;
   padding: 6px 12px 6px 12px;
   border-radius: 12px;
@@ -80,13 +73,14 @@ const StyledMenuButton = styled.button<{ open: boolean }>`
   line-height: 24px;
   font-weight: 400;
 
-  :hover,
-  :focus {
+  :hover {
     cursor: pointer;
     outline: none;
-    background-color: ${({ theme, open }) => !open && theme.backgroundContainer};
+    background-color: ${({ theme, open }) => (open ? theme.accentActionSoft : theme.backgroundContainer)};
   }
-
+  :focus {
+    background-color: ${({ theme, open }) => (open ? theme.accentActionSoft : theme.backgroundAction)};
+  }
   svg {
     margin-top: 2px;
   }

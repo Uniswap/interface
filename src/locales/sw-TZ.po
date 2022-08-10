@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-04 19:04\n"
+"PO-Revision-Date: 2022-08-05 22:05\n"
 "Last-Translator: \n"
 "Language: sw_TZ\n"
 "Language-Team: Swahili, Tanzania\n"
@@ -120,6 +120,7 @@ msgstr "Kiwangu cha chini cha 0.25% ya jumla ya usambazaji wa UNI inahitajika ku
 msgid "A swap of this size may have a high price impact, given the current liquidity in the pool. There may be a large difference between the amount of your input token and what you will receive in the output token"
 msgstr "Kubadilishana kwa ukubwa huu kunaweza kuwa na athari ya bei ya juu, kutokana na ukwasi wa sasa katika bwawa. Kunaweza kuwa na tofauti kubwa kati ya kiasi cha tokeni yako ya ingizo na kile utakachopokea katika tokeni ya matokeo"
 
+#: src/components/Explore/TokenDetails/TokenDetail.tsx
 #: src/components/Menu/index.tsx
 msgid "About"
 msgstr "Kuhusu"
@@ -348,6 +349,10 @@ msgstr "Kwa kuunganisha mkoba, unakubaliana na Uniswap Labs ' <0>Masharti ya Hud
 msgid "Canceled"
 msgstr "Imeghairishwa"
 
+#: src/constants/tokenSafety.tsx
+msgid "Caution"
+msgstr "Tahadhari"
+
 #: src/components/AccountDetails/index.tsx
 msgid "Change"
 msgstr "Badilisha"
@@ -433,6 +438,7 @@ msgstr "Futa Yote"
 msgid "Clear all"
 msgstr "Futa yote"
 
+#: src/components/TokenSafety/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Close"
@@ -817,6 +823,10 @@ msgstr "Hali ya mtaalam inazima kidhibitisho cha manunuzi na inaruhusu biashara 
 msgid "Expired"
 msgstr "Imeisha muda"
 
+#: src/components/Header/index.tsx
+msgid "Explore"
+msgstr "Chunguza"
+
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore Uniswap Analytics."
 msgstr "Gundua Takwimu za Uniswap."
@@ -877,6 +887,10 @@ msgstr "Ficha"
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
 msgstr "Athari ya Bei ya Juu"
+
+#: src/components/TokenSafety/index.tsx
+msgid "I Understand"
+msgstr "Naelewa"
 
 #: src/components/SearchModal/ImportList.tsx
 #: src/pages/AddLiquidity/index.tsx
@@ -984,12 +998,17 @@ msgstr "Lugha"
 msgid "Learn"
 msgstr "Jifunze"
 
+#: src/components/TokenSafety/index.tsx
+msgid "Learn More"
+msgstr "Jifunze zaidi"
+
 #: src/pages/Pool/CTACards.tsx
 msgid "Learn about providing liquidity"
 msgstr "Jifunze juu ya kutoa ukwasi"
 
 #: src/components/PrivacyPolicy/index.tsx
 #: src/components/PrivacyPolicy/index.tsx
+#: src/components/TokenSafety/TokenSafetyMessage.tsx
 msgid "Learn more"
 msgstr "Jifunze zaidi"
 
@@ -1190,6 +1209,10 @@ msgstr "Hakuna mapendekezo yaliyopatikana."
 msgid "No results found."
 msgstr "Hakuna matokeo yaliyopatikana."
 
+#: src/constants/tokenSafety.tsx
+msgid "Not Available"
+msgstr "Haipatikani"
+
 #: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "Not created"
 msgstr "Haijaundwa"
@@ -1254,6 +1277,10 @@ msgstr "Tafadhali thibitisha ungependa kuondoa orodha hii kwa kuandika ONDOA"
 #: src/components/vote/ProposalEmptyState.tsx
 msgid "Please connect to Layer 1 Ethereum"
 msgstr "Tafadhali unganisha kwenye Tabaka 1 Ethereum"
+
+#: src/constants/tokenSafety.tsx
+msgid "Please do your own research before trading."
+msgstr "Tafadhali fanya utafiti wako mwenyewe kabla ya kufanya biashara."
 
 #: src/components/Settings/index.tsx
 msgid "Please type the word \"{confirmWord}\" to enable expert mode."
@@ -1735,6 +1762,10 @@ msgstr "Shughuli haikuweza kutumwa kwa sababu tarehe ya mwisho imepita. Tafadhal
 msgid "There is no liquidity data."
 msgstr "Hakuna data ya ukwasi."
 
+#: src/components/Explore/TokenDetails/BalanceSummary.tsx
+msgid "There was an error loading your {tokenSymbol} balance"
+msgstr "Kulikuwa na hitilafu katika kupakia salio lako {tokenSymbol}"
+
 #: src/components/ConnectedAccountBlocked/index.tsx
 msgid "This address is blocked on the Uniswap Labs interface because it is associated with one or more"
 msgstr "Anwani hii imezuiwa kwenye kiolesura cha Uniswap Labs kwa sababu inahusishwa na moja au zaidi"
@@ -1788,6 +1819,10 @@ msgstr "Kwa"
 #: src/pages/Swap/index.tsx
 msgid "To (at least)"
 msgstr "Kwa (angalau)"
+
+#: src/components/Explore/TokenTable/TokenRow.tsx
+msgid "Token Name"
+msgstr "Jina la Ishara"
 
 #: src/components/SearchModal/BlockedToken.tsx
 msgid "Token not supported"
@@ -2094,6 +2129,10 @@ msgstr "Inasubiri Uthibitisho"
 msgid "Wallet Address or ENS name"
 msgstr "Anwani ya Mkoba au jina la ENS"
 
+#: src/constants/tokenSafety.tsx
+msgid "Warning"
+msgstr "Onyo"
+
 #: src/components/earn/StakingModal.tsx
 msgid "Weekly Rewards"
 msgstr "Tuzo za kila wiki"
@@ -2350,6 +2389,14 @@ msgstr "kupitia orodha ya ishara {0}"
 #: src/components/SearchModal/ImportToken.tsx
 msgid "{0, plural, =1 {Import token} other {Import tokens}}"
 msgstr "{0, plural, =1 {Leta ishara} other {Leta tokeni}}"
+
+#: src/constants/tokenSafety.tsx
+msgid "{0, plural, =1 {This token isn't verified} other {These tokens aren't verified}}"
+msgstr "{0, plural, =1 {Tokeni hii haijathibitishwa} other {Tokeni hizi hazijathibitishwa}}"
+
+#: src/constants/tokenSafety.tsx
+msgid "{0, plural, =1 {You can't trade this token using the Uniswap App.} other {You can't trade these tokens using the Uniswap App.}}"
+msgstr "{0, plural, =1 {Huwezi kufanya biashara ya tokeni hii kwa kutumia Programu ya Uniswap.} other {Huwezi kufanya biashara ya tokeni hizi kwa kutumia Programu ya Uniswap.}}"
 
 #: src/components/RateToggle/index.tsx
 #: src/components/RateToggle/index.tsx

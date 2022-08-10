@@ -1,7 +1,6 @@
-/* tslint:disable */
-/* eslint-disable */
 import create from 'zustand'
 import { devtools } from 'zustand/middleware'
+
 import { breakpoints } from '../css/sprinkles.css'
 
 interface IsMobileState {

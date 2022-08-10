@@ -55,6 +55,7 @@ export enum BaseVariant {
 
 export enum FeatureFlag {
   phase0 = 'phase0',
+  phase1 = 'phase1',
 }
 
 export function useBaseFlag(flag: string): BaseVariant {

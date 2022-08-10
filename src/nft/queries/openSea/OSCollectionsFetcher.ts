@@ -4,7 +4,7 @@ export const OSCollectionsFetcher = async ({ params }: any): Promise<WalletColle
   let hasEmptyFields = false
 
   for (const v of Object.values(params)) {
-    if (v == undefined) {
+    if (v === undefined) {
       hasEmptyFields = true
     }
   }

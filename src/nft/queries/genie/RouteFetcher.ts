@@ -12,7 +12,7 @@ export const fetchRoute = async ({
   const url = `${process.env.REACT_APP_GENIE_API_URL}/route`
   const payload = {
     sell: [...toSell].map((x) => buildRouteItem(x)),
-    buy: [...toBuy].filter((x) => x.tokenType != 'Dust').map((x) => buildRouteItem(x)),
+    buy: [...toBuy].filter((x) => x.tokenType !== 'Dust').map((x) => buildRouteItem(x)),
     sender: senderAddress,
   }
 

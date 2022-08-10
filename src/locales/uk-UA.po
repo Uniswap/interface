@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-04 19:04\n"
+"PO-Revision-Date: 2022-08-05 22:05\n"
 "Last-Translator: \n"
 "Language: uk_UA\n"
 "Language-Team: Ukrainian\n"
@@ -120,6 +120,7 @@ msgstr "Для подання пропозицій необхідний міні
 msgid "A swap of this size may have a high price impact, given the current liquidity in the pool. There may be a large difference between the amount of your input token and what you will receive in the output token"
 msgstr "Своп такого розміру може мати значний вплив на ціну, враховуючи поточну ліквідність пулу. Може бути велика різниця між кількістю вашого вхідного маркера та тим, що ви отримаєте у вихідному маркері"
 
+#: src/components/Explore/TokenDetails/TokenDetail.tsx
 #: src/components/Menu/index.tsx
 msgid "About"
 msgstr "Загальна інформація"
@@ -348,6 +349,10 @@ msgstr "Підключаючи гаманець, ви погоджуєтеся �
 msgid "Canceled"
 msgstr "Скасовано"
 
+#: src/constants/tokenSafety.tsx
+msgid "Caution"
+msgstr "Обережно"
+
 #: src/components/AccountDetails/index.tsx
 msgid "Change"
 msgstr "Змінити"
@@ -433,6 +438,7 @@ msgstr "Очистити все"
 msgid "Clear all"
 msgstr "Очистити все"
 
+#: src/components/TokenSafety/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Close"
@@ -817,6 +823,10 @@ msgstr "Експертний режим вимикає підказку про �
 msgid "Expired"
 msgstr "Термін дії закінчився"
 
+#: src/components/Header/index.tsx
+msgid "Explore"
+msgstr "Досліджуйте"
+
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore Uniswap Analytics."
 msgstr "Ознайомтеся з Uniswap Analytics."
@@ -877,6 +887,10 @@ msgstr "Сховати"
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
 msgstr "Вплив високої ціни"
+
+#: src/components/TokenSafety/index.tsx
+msgid "I Understand"
+msgstr "Я розумію"
 
 #: src/components/SearchModal/ImportList.tsx
 #: src/pages/AddLiquidity/index.tsx
@@ -984,12 +998,17 @@ msgstr "Мову"
 msgid "Learn"
 msgstr "Ознайомитися"
 
+#: src/components/TokenSafety/index.tsx
+msgid "Learn More"
+msgstr "Вивчайте більше"
+
 #: src/pages/Pool/CTACards.tsx
 msgid "Learn about providing liquidity"
 msgstr "Дізнайтеся про забезпечення ліквідності"
 
 #: src/components/PrivacyPolicy/index.tsx
 #: src/components/PrivacyPolicy/index.tsx
+#: src/components/TokenSafety/TokenSafetyMessage.tsx
 msgid "Learn more"
 msgstr "Вчи більше"
 
@@ -1190,6 +1209,10 @@ msgstr "Пропозиції не знайдено."
 msgid "No results found."
 msgstr "Результатів не знайдено."
 
+#: src/constants/tokenSafety.tsx
+msgid "Not Available"
+msgstr "Недоступний"
+
 #: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "Not created"
 msgstr "Не створено"
@@ -1254,6 +1277,10 @@ msgstr "Підтвердьте, що хочете видалити цей спи
 #: src/components/vote/ProposalEmptyState.tsx
 msgid "Please connect to Layer 1 Ethereum"
 msgstr "Будь ласка, підключіться до рівня 1 Ефіріум"
+
+#: src/constants/tokenSafety.tsx
+msgid "Please do your own research before trading."
+msgstr "Будь ласка, проведіть власне дослідження перед торгівлею."
 
 #: src/components/Settings/index.tsx
 msgid "Please type the word \"{confirmWord}\" to enable expert mode."
@@ -1735,6 +1762,10 @@ msgstr "Не вдалося надіслати транзакцію, оскіл�
 msgid "There is no liquidity data."
 msgstr "Даних про ліквідність немає."
 
+#: src/components/Explore/TokenDetails/BalanceSummary.tsx
+msgid "There was an error loading your {tokenSymbol} balance"
+msgstr "Під час завантаження балансу {tokenSymbol} сталася помилка"
+
 #: src/components/ConnectedAccountBlocked/index.tsx
 msgid "This address is blocked on the Uniswap Labs interface because it is associated with one or more"
 msgstr "Ця адреса заблокована в інтерфейсі Uniswap Labs, оскільки вона пов’язана з одним або кількома"
@@ -1788,6 +1819,10 @@ msgstr "Кому"
 #: src/pages/Swap/index.tsx
 msgid "To (at least)"
 msgstr "До (не менше)"
+
+#: src/components/Explore/TokenTable/TokenRow.tsx
+msgid "Token Name"
+msgstr "Назва маркера"
 
 #: src/components/SearchModal/BlockedToken.tsx
 msgid "Token not supported"
@@ -2094,6 +2129,10 @@ msgstr "Очікується підтвердження"
 msgid "Wallet Address or ENS name"
 msgstr "Адреса гаманця або назва ENS"
 
+#: src/constants/tokenSafety.tsx
+msgid "Warning"
+msgstr "УВАГА"
+
 #: src/components/earn/StakingModal.tsx
 msgid "Weekly Rewards"
 msgstr "Винагороди щотижня"
@@ -2350,6 +2389,14 @@ msgstr "через {0} список токенів"
 #: src/components/SearchModal/ImportToken.tsx
 msgid "{0, plural, =1 {Import token} other {Import tokens}}"
 msgstr "{0, plural, =1 {Імпортувати маркер} other {Імпорт токенів}}"
+
+#: src/constants/tokenSafety.tsx
+msgid "{0, plural, =1 {This token isn't verified} other {These tokens aren't verified}}"
+msgstr "{0, plural, =1 {Цей маркер не перевірено} other {Ці токени не перевірені}}"
+
+#: src/constants/tokenSafety.tsx
+msgid "{0, plural, =1 {You can't trade this token using the Uniswap App.} other {You can't trade these tokens using the Uniswap App.}}"
+msgstr "{0, plural, =1 {Ви не можете торгувати цим токеном за допомогою програми Uniswap.} other {Ви не можете торгувати цими токенами за допомогою програми Uniswap.}}"
 
 #: src/components/RateToggle/index.tsx
 #: src/components/RateToggle/index.tsx

@@ -10,7 +10,7 @@ import { LoadingOpacityContainer } from 'components/Loader/styled'
 import Row, { RowBetween, RowFixed } from 'components/Row'
 import { MouseoverTooltipContent } from 'components/Tooltip'
 import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'
-import { darken } from 'polished'
+import { Phase0Variant, usePhase0Flag } from 'featureFlags/flags/phase0'
 import { useState } from 'react'
 import { ChevronDown, Info } from 'react-feather'
 import { InterfaceTrade } from 'state/routing/types'
@@ -35,23 +35,20 @@ const StyledInfoIcon = styled(Info)`
   color: ${({ theme }) => theme.deprecated_text3};
 `
 
-const StyledCard = styled(OutlineCard)`
+const StyledCard = styled(OutlineCard)<{ phase0Flag: boolean }>`
   padding: 12px;
-  border: 1px solid ${({ theme }) => theme.deprecated_bg2};
+  border: 1px solid ${({ theme, phase0Flag }) => (phase0Flag ? theme.backgroundOutline : theme.deprecated_bg3)};
 `
 
-const StyledHeaderRow = styled(RowBetween)<{ disabled: boolean; open: boolean }>`
-  padding: 4px 8px;
-  border-radius: 12px;
-  background-color: ${({ open, theme }) => (open ? theme.deprecated_bg1 : 'transparent')};
+const StyledHeaderRow = styled(RowBetween)<{ disabled: boolean; open: boolean; phase0Flag: boolean }>`
+  padding: ${({ phase0Flag }) => (phase0Flag ? '8px 0px 0px 0px' : '4px 8px')};
+  background-color: ${({ open, theme, phase0Flag }) => (open && !phase0Flag ? theme.deprecated_bg1 : theme.none)};
   align-items: center;
+  border-top: 1px solid ${({ theme, phase0Flag }) => (phase0Flag ? theme.backgroundOutline : theme.none)};
+  margin-top: ${({ phase0Flag }) => phase0Flag && '8px'};
   cursor: ${({ disabled }) => (disabled ? 'initial' : 'pointer')};
   min-height: 40px;
-
-  :hover {
-    background-color: ${({ theme, disabled }) =>
-      disabled ? theme.deprecated_bg1 : darken(0.015, theme.deprecated_bg1)};
-  }
+  border-radius: ${({ phase0Flag }) => !phase0Flag && '12px'};
 `
 
 const RotatingArrow = styled(ChevronDown)<{ open?: boolean }>`
@@ -131,9 +128,11 @@ export default function SwapDetailsDropdown({
   const theme = useTheme()
   const { chainId } = useWeb3React()
   const [showDetails, setShowDetails] = useState(false)
+  const phase0Flag = usePhase0Flag()
+  const phase0FlagEnabled = phase0Flag === Phase0Variant.Enabled
 
   return (
-    <Wrapper>
+    <Wrapper style={{ marginTop: '8px' }}>
       <AutoColumn gap={'8px'} style={{ width: '100%', marginBottom: '-8px' }}>
         <TraceEvent
           events={[Event.onClick]}
@@ -141,7 +140,12 @@ export default function SwapDetailsDropdown({
           element={ElementName.SWAP_DETAILS_DROPDOWN}
           shouldLogImpression={!showDetails}
         >
-          <StyledHeaderRow onClick={() => setShowDetails(!showDetails)} disabled={!trade} open={showDetails}>
+          <StyledHeaderRow
+            phase0Flag={phase0FlagEnabled}
+            onClick={() => setShowDetails(!showDetails)}
+            disabled={!trade}
+            open={showDetails}
+          >
             <RowFixed style={{ position: 'relative' }}>
               {loading || syncing ? (
                 <StyledPolling>
@@ -208,7 +212,7 @@ export default function SwapDetailsDropdown({
         <AnimatedDropdown open={showDetails}>
           <AutoColumn gap={'8px'} style={{ padding: '0', paddingBottom: '8px' }}>
             {trade ? (
-              <StyledCard>
+              <StyledCard phase0Flag={phase0FlagEnabled}>
                 <AdvancedSwapDetails trade={trade} allowedSlippage={allowedSlippage} syncing={syncing} />
               </StyledCard>
             ) : null}

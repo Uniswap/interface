@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-04 19:04\n"
+"PO-Revision-Date: 2022-08-05 22:05\n"
 "Last-Translator: \n"
 "Language: ru_RU\n"
 "Language-Team: Russian\n"
@@ -120,6 +120,7 @@ msgstr "Для внесения предложений требуется мин
 msgid "A swap of this size may have a high price impact, given the current liquidity in the pool. There may be a large difference between the amount of your input token and what you will receive in the output token"
 msgstr "Своп такого размера может сильно повлиять на цену, учитывая текущую ликвидность в пуле. Может быть большая разница между количеством вашего входного токена и тем, что вы получите в выходном токене."
 
+#: src/components/Explore/TokenDetails/TokenDetail.tsx
 #: src/components/Menu/index.tsx
 msgid "About"
 msgstr "О протоколе"
@@ -348,6 +349,10 @@ msgstr "Подключая кошелёк, вы соглашаетесь с <0>�
 msgid "Canceled"
 msgstr "Отменено"
 
+#: src/constants/tokenSafety.tsx
+msgid "Caution"
+msgstr "Осторожность"
+
 #: src/components/AccountDetails/index.tsx
 msgid "Change"
 msgstr "Изменить"
@@ -433,6 +438,7 @@ msgstr "Очистить всё"
 msgid "Clear all"
 msgstr "Очистить всё"
 
+#: src/components/TokenSafety/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Close"
@@ -817,6 +823,10 @@ msgstr "Экспертный режим отключает экран подтв
 msgid "Expired"
 msgstr "Истёк срок"
 
+#: src/components/Header/index.tsx
+msgid "Explore"
+msgstr "Исследовать"
+
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore Uniswap Analytics."
 msgstr "Изучите Uniswap Analytics."
@@ -877,6 +887,10 @@ msgstr "Скрыть"
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
 msgstr "Высокое влияние на цену"
+
+#: src/components/TokenSafety/index.tsx
+msgid "I Understand"
+msgstr "Я понимаю"
 
 #: src/components/SearchModal/ImportList.tsx
 #: src/pages/AddLiquidity/index.tsx
@@ -984,12 +998,17 @@ msgstr "Язык"
 msgid "Learn"
 msgstr "Узнать больше"
 
+#: src/components/TokenSafety/index.tsx
+msgid "Learn More"
+msgstr "Узнать больше"
+
 #: src/pages/Pool/CTACards.tsx
 msgid "Learn about providing liquidity"
 msgstr "Узнать подробнее о предоставлении ликвидности"
 
 #: src/components/PrivacyPolicy/index.tsx
 #: src/components/PrivacyPolicy/index.tsx
+#: src/components/TokenSafety/TokenSafetyMessage.tsx
 msgid "Learn more"
 msgstr "Узнать больше"
 
@@ -1190,6 +1209,10 @@ msgstr "Предложений не найдено."
 msgid "No results found."
 msgstr "Ничего не найдено."
 
+#: src/constants/tokenSafety.tsx
+msgid "Not Available"
+msgstr "Нет в наличии"
+
 #: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "Not created"
 msgstr "Не создано"
@@ -1254,6 +1277,10 @@ msgstr "Чтобы подтвердить, что вы хотите удалит
 #: src/components/vote/ProposalEmptyState.tsx
 msgid "Please connect to Layer 1 Ethereum"
 msgstr "Пожалуйста, подключитесь к Уровню 1 Ethereum"
+
+#: src/constants/tokenSafety.tsx
+msgid "Please do your own research before trading."
+msgstr "Пожалуйста, проведите собственное исследование перед торговлей."
 
 #: src/components/Settings/index.tsx
 msgid "Please type the word \"{confirmWord}\" to enable expert mode."
@@ -1735,6 +1762,10 @@ msgstr "Транзакция не может быть отправлена, по
 msgid "There is no liquidity data."
 msgstr "Нет данных о ликвидности."
 
+#: src/components/Explore/TokenDetails/BalanceSummary.tsx
+msgid "There was an error loading your {tokenSymbol} balance"
+msgstr "Произошла ошибка при загрузке вашего баланса {tokenSymbol}"
+
 #: src/components/ConnectedAccountBlocked/index.tsx
 msgid "This address is blocked on the Uniswap Labs interface because it is associated with one or more"
 msgstr "Этот адрес заблокирован в интерфейсе Uniswap Labs, поскольку он связан с одним или несколькими"
@@ -1788,6 +1819,10 @@ msgstr "На токены"
 #: src/pages/Swap/index.tsx
 msgid "To (at least)"
 msgstr "На токены (минимум)"
+
+#: src/components/Explore/TokenTable/TokenRow.tsx
+msgid "Token Name"
+msgstr "Имя токена"
 
 #: src/components/SearchModal/BlockedToken.tsx
 msgid "Token not supported"
@@ -2094,6 +2129,10 @@ msgstr "Ожидание подтверждения"
 msgid "Wallet Address or ENS name"
 msgstr "Адрес кошелька или ENS-имя"
 
+#: src/constants/tokenSafety.tsx
+msgid "Warning"
+msgstr "Предупреждение"
+
 #: src/components/earn/StakingModal.tsx
 msgid "Weekly Rewards"
 msgstr "Еженедельные вознаграждения"
@@ -2350,6 +2389,14 @@ msgstr "из списка токенов {0}"
 #: src/components/SearchModal/ImportToken.tsx
 msgid "{0, plural, =1 {Import token} other {Import tokens}}"
 msgstr "{0, plural, =1 {Импортировать токен} other {Импортировать токены}}"
+
+#: src/constants/tokenSafety.tsx
+msgid "{0, plural, =1 {This token isn't verified} other {These tokens aren't verified}}"
+msgstr "{0, plural, =1 {Этот токен не проверен} other {Эти токены не проверены}}"
+
+#: src/constants/tokenSafety.tsx
+msgid "{0, plural, =1 {You can't trade this token using the Uniswap App.} other {You can't trade these tokens using the Uniswap App.}}"
+msgstr "{0, plural, =1 {Вы не можете обменять этот токен с помощью приложения Uniswap.} other {Вы не можете торговать этими токенами с помощью приложения Uniswap.}}"
 
 #: src/components/RateToggle/index.tsx
 #: src/components/RateToggle/index.tsx

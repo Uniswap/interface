@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-04 19:04\n"
+"PO-Revision-Date: 2022-08-05 22:05\n"
 "Last-Translator: \n"
 "Language: nl_NL\n"
 "Language-Team: Dutch\n"
@@ -120,6 +120,7 @@ msgstr "Een minimumdrempel van 0,25% van het totale UNI-aanbod is vereist om voo
 msgid "A swap of this size may have a high price impact, given the current liquidity in the pool. There may be a large difference between the amount of your input token and what you will receive in the output token"
 msgstr "Een swap van deze omvang kan een hoge prijsimpact hebben, gezien de huidige liquiditeit in de pool. Er kan een groot verschil zijn tussen het bedrag van uw invoertoken en wat u ontvangt in het uitvoertoken"
 
+#: src/components/Explore/TokenDetails/TokenDetail.tsx
 #: src/components/Menu/index.tsx
 msgid "About"
 msgstr "Over"
@@ -348,6 +349,10 @@ msgstr "Door een portemonnee te koppelen, gaat u akkoord met de <0>Servicevoorwa
 msgid "Canceled"
 msgstr "Geannuleerd"
 
+#: src/constants/tokenSafety.tsx
+msgid "Caution"
+msgstr "Voorzichtigheid"
+
 #: src/components/AccountDetails/index.tsx
 msgid "Change"
 msgstr "Wijzigen"
@@ -433,6 +438,7 @@ msgstr "Alles wissen"
 msgid "Clear all"
 msgstr "Alles wissen"
 
+#: src/components/TokenSafety/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Close"
@@ -817,6 +823,10 @@ msgstr "In de Expertmodus wordt de prompt voor het bevestigen van de transactie 
 msgid "Expired"
 msgstr "Niet meer geldig"
 
+#: src/components/Header/index.tsx
+msgid "Explore"
+msgstr "Ontdekken"
+
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore Uniswap Analytics."
 msgstr "Ontdek Uniswap Analytics."
@@ -877,6 +887,10 @@ msgstr "Zich verstoppen"
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
 msgstr "Hoge prijsimpact"
+
+#: src/components/TokenSafety/index.tsx
+msgid "I Understand"
+msgstr "Ik begrijp"
 
 #: src/components/SearchModal/ImportList.tsx
 #: src/pages/AddLiquidity/index.tsx
@@ -984,12 +998,17 @@ msgstr "Taal"
 msgid "Learn"
 msgstr "Leren"
 
+#: src/components/TokenSafety/index.tsx
+msgid "Learn More"
+msgstr "Leer meer"
+
 #: src/pages/Pool/CTACards.tsx
 msgid "Learn about providing liquidity"
 msgstr "Meer informatie over het verstrekken van liquiditeit"
 
 #: src/components/PrivacyPolicy/index.tsx
 #: src/components/PrivacyPolicy/index.tsx
+#: src/components/TokenSafety/TokenSafetyMessage.tsx
 msgid "Learn more"
 msgstr "Kom meer te weten"
 
@@ -1190,6 +1209,10 @@ msgstr "Geen voorstellen gevonden."
 msgid "No results found."
 msgstr "Geen resultaten gevonden."
 
+#: src/constants/tokenSafety.tsx
+msgid "Not Available"
+msgstr "Niet beschikbaar"
+
 #: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "Not created"
 msgstr "Niet gemaakt"
@@ -1254,6 +1277,10 @@ msgstr "Bevestig dat u deze lijst wilt verwijderen door REMOVE . te typen"
 #: src/components/vote/ProposalEmptyState.tsx
 msgid "Please connect to Layer 1 Ethereum"
 msgstr "Maak verbinding met Layer 1 Ethereum"
+
+#: src/constants/tokenSafety.tsx
+msgid "Please do your own research before trading."
+msgstr "Doe uw eigen onderzoek voordat u handelt."
 
 #: src/components/Settings/index.tsx
 msgid "Please type the word \"{confirmWord}\" to enable expert mode."
@@ -1735,6 +1762,10 @@ msgstr "De transactie kan niet worden verzonden omdat de deadline is verstreken.
 msgid "There is no liquidity data."
 msgstr "Er zijn geen liquiditeitsgegevens."
 
+#: src/components/Explore/TokenDetails/BalanceSummary.tsx
+msgid "There was an error loading your {tokenSymbol} balance"
+msgstr "Er is een fout opgetreden bij het laden van uw {tokenSymbol} -saldo"
+
 #: src/components/ConnectedAccountBlocked/index.tsx
 msgid "This address is blocked on the Uniswap Labs interface because it is associated with one or more"
 msgstr "Dit adres is geblokkeerd op de Uniswap Labs-interface omdat het is gekoppeld aan een of meer"
@@ -1788,6 +1819,10 @@ msgstr "Naar"
 #: src/pages/Swap/index.tsx
 msgid "To (at least)"
 msgstr "Naar (ten minste)"
+
+#: src/components/Explore/TokenTable/TokenRow.tsx
+msgid "Token Name"
+msgstr "Tokennaam"
 
 #: src/components/SearchModal/BlockedToken.tsx
 msgid "Token not supported"
@@ -2094,6 +2129,10 @@ msgstr "Wachten op bevestiging"
 msgid "Wallet Address or ENS name"
 msgstr "Portemonnee-adres of ENS-naam"
 
+#: src/constants/tokenSafety.tsx
+msgid "Warning"
+msgstr "Waarschuwing"
+
 #: src/components/earn/StakingModal.tsx
 msgid "Weekly Rewards"
 msgstr "Wekelijkse beloningen"
@@ -2350,6 +2389,14 @@ msgstr "via {0} tokenlijst"
 #: src/components/SearchModal/ImportToken.tsx
 msgid "{0, plural, =1 {Import token} other {Import tokens}}"
 msgstr "{0, plural, =1 {Token importeren} other {Tokens importeren}}"
+
+#: src/constants/tokenSafety.tsx
+msgid "{0, plural, =1 {This token isn't verified} other {These tokens aren't verified}}"
+msgstr "{0, plural, =1 {Dit token is niet geverifieerd} other {Deze tokens zijn niet geverifieerd}}"
+
+#: src/constants/tokenSafety.tsx
+msgid "{0, plural, =1 {You can't trade this token using the Uniswap App.} other {You can't trade these tokens using the Uniswap App.}}"
+msgstr "{0, plural, =1 {U kunt deze token niet verhandelen met de Uniswap-app.} other {Je kunt deze tokens niet verhandelen met de Uniswap App.}}"
 
 #: src/components/RateToggle/index.tsx
 #: src/components/RateToggle/index.tsx

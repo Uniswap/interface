@@ -4,6 +4,7 @@ import { Price } from '@uniswap/sdk-core'
 import { sendAnalyticsEvent } from 'components/AmplitudeAnalytics'
 import { EventName, SWAP_PRICE_UPDATE_USER_RESPONSE } from 'components/AmplitudeAnalytics/constants'
 import { formatPercentInBasisPointsNumber } from 'components/AmplitudeAnalytics/utils'
+import { Phase0Variant, usePhase0Flag } from 'featureFlags/flags/phase0'
 import { useContext, useEffect, useState } from 'react'
 import { AlertTriangle, ArrowDown } from 'react-feather'
 import { Text } from 'rebass'
@@ -24,11 +25,11 @@ import TradePrice from '../swap/TradePrice'
 import { AdvancedSwapDetails } from './AdvancedSwapDetails'
 import { SwapShowAcceptChanges, TruncatedText } from './styleds'
 
-const ArrowWrapper = styled.div`
+const ArrowWrapper = styled.div<{ phase0Flag: boolean }>`
   padding: 4px;
   border-radius: 12px;
-  height: 32px;
-  width: 32px;
+  height: ${({ phase0Flag }) => (phase0Flag ? '40px' : '32px')};
+  width: ${({ phase0Flag }) => (phase0Flag ? '40px' : '32px')};
   position: relative;
   margin-top: -18px;
   margin-bottom: -18px;
@@ -36,9 +37,9 @@ const ArrowWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: ${({ theme }) => theme.deprecated_bg1};
+  background-color: ${({ theme, phase0Flag }) => (phase0Flag ? theme.backgroundSurface : theme.deprecated_bg1)};
   border: 4px solid;
-  border-color: ${({ theme }) => theme.deprecated_bg0};
+  border-color: ${({ theme, phase0Flag }) => (phase0Flag ? theme.backgroundContainer : theme.deprecated_bg0)};
   z-index: 2;
 `
 
@@ -84,6 +85,8 @@ export default function SwapModalHeader({
   onAcceptChanges: () => void
 }) {
   const theme = useContext(ThemeContext)
+  const phase0Flag = usePhase0Flag()
+  const phase0FlagEnabled = phase0Flag === Phase0Variant.Enabled
 
   const [showInverted, setShowInverted] = useState<boolean>(false)
   const [lastExecutionPrice, setLastExecutionPrice] = useState(trade.executionPrice)
@@ -134,8 +137,8 @@ export default function SwapModalHeader({
           </RowBetween>
         </AutoColumn>
       </LightCard>
-      <ArrowWrapper>
-        <ArrowDown size="16" color={theme.deprecated_text2} />
+      <ArrowWrapper phase0Flag={phase0FlagEnabled}>
+        <ArrowDown size="16" color={phase0FlagEnabled ? theme.textPrimary : theme.deprecated_text2} />
       </ArrowWrapper>
       <LightCard padding="0.75rem 1rem" style={{ marginBottom: '0.25rem' }}>
         <AutoColumn gap={'8px'}>

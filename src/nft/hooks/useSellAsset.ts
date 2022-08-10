@@ -1,5 +1,3 @@
-/* tslint:disable */
-/* eslint-disable */
 import { v4 as uuidv4 } from 'uuid'
 import create from 'zustand'
 import { devtools } from 'zustand/middleware'
@@ -87,6 +85,7 @@ export const useSellAsset = create<SellAssetState>()(
               }
               listingIndex > -1 ? (asset.newListings[listingIndex] = newListing) : asset.newListings.push(newListing)
             }
+            return asset
           })
           return { sellAssets: assetsCopy }
         })
@@ -95,10 +94,11 @@ export const useSellAsset = create<SellAssetState>()(
         set(({ sellAssets }) => {
           const assetsCopy = [...sellAssets]
           const assetIndex = sellAssets.indexOf(asset)
-          const marketplaceIndex = asset.marketplaces?.findIndex((oldMarket) => oldMarket.name === marketplace.name)
+          const marketplaceIndex =
+            asset.marketplaces?.findIndex((oldMarket) => oldMarket.name === marketplace.name) ?? -1
           const listingIndex = asset.newListings?.findIndex((listing) => listing.marketplace.name === marketplace.name)
           const assetCopy = JSON.parse(JSON.stringify(asset))
-          if (marketplaceIndex! > -1) {
+          if (marketplaceIndex > -1) {
             assetCopy.marketplaces.splice(marketplaceIndex, 1)
             assetCopy.newListings.splice(listingIndex, 1)
           }
@@ -118,14 +118,17 @@ export const useSellAsset = create<SellAssetState>()(
       removeMarketplaceWarning: (asset, warning, setGlobalOverride?) => {
         set(({ sellAssets }) => {
           const assetsCopy = [...sellAssets]
-          const warningIndex = asset.listingWarnings?.findIndex((n) => n.marketplace.name === warning.marketplace.name)
-          asset.listingWarnings?.splice(warningIndex!, 1)
+          if (asset.listingWarnings === undefined || asset.newListings === undefined) return { sellAssets: assetsCopy }
+          const warningIndex =
+            asset.listingWarnings?.findIndex((n) => n.marketplace.name === warning.marketplace.name) ?? -1
+          asset.listingWarnings?.splice(warningIndex, 1)
           if (warning?.message?.includes('LISTING BELOW FLOOR')) {
             if (setGlobalOverride) {
               asset.newListings?.forEach((listing) => (listing.overrideFloorPrice = true))
             } else {
-              const listingIndex = asset.newListings?.findIndex((n) => n.marketplace.name === warning.marketplace.name)
-              asset.newListings![listingIndex!].overrideFloorPrice = true
+              const listingIndex =
+                asset.newListings?.findIndex((n) => n.marketplace.name === warning.marketplace.name) ?? -1
+              asset.newListings[listingIndex].overrideFloorPrice = true
             }
           }
           const index = sellAssets.findIndex((n) => n.id === asset.id)
@@ -136,9 +139,7 @@ export const useSellAsset = create<SellAssetState>()(
       removeAllMarketplaceWarnings: () => {
         set(({ sellAssets }) => {
           const assetsCopy = [...sellAssets]
-          assetsCopy.map((asset) => {
-            asset.listingWarnings = []
-          })
+          assetsCopy.map((asset) => (asset.listingWarnings = []))
           return { sellAssets: assetsCopy }
         })
       },

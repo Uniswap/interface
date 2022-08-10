@@ -3,6 +3,7 @@ import { t, Trans } from '@lingui/macro'
 import { Percent } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { sendEvent } from 'components/analytics'
+import { Phase0Variant, usePhase0Flag } from 'featureFlags/flags/phase0'
 import { isSupportedChainId } from 'lib/hooks/routing/clientSideSmartOrderRouter'
 import { useContext, useRef, useState } from 'react'
 import { Settings, X } from 'react-feather'
@@ -22,16 +23,16 @@ import { RowBetween, RowFixed } from '../Row'
 import Toggle from '../Toggle'
 import TransactionSettings from '../TransactionSettings'
 
-const StyledMenuIcon = styled(Settings)`
+const StyledMenuIcon = styled(Settings)<{ phase0Flag: boolean }>`
   height: 20px;
   width: 20px;
 
   > * {
-    stroke: ${({ theme }) => theme.deprecated_text1};
+    stroke: ${({ theme, phase0Flag }) => (phase0Flag ? theme.textSecondary : theme.deprecated_text1)};
   }
 `
 
-const StyledCloseIcon = styled(X)`
+const StyledCloseIcon = styled(X)<{ phase0Flag: boolean }>`
   height: 20px;
   width: 20px;
   :hover {
@@ -39,7 +40,7 @@ const StyledCloseIcon = styled(X)`
   }
 
   > * {
-    stroke: ${({ theme }) => theme.deprecated_text1};
+    stroke: ${({ theme, phase0Flag }) => (phase0Flag ? theme.textSecondary : theme.deprecated_text1)};
   }
 `
 
@@ -82,10 +83,10 @@ const StyledMenu = styled.div`
   text-align: left;
 `
 
-const MenuFlyout = styled.span`
+const MenuFlyout = styled.span<{ phase0Flag: boolean }>`
   min-width: 20.125rem;
-  background-color: ${({ theme }) => theme.deprecated_bg2};
-  border: 1px solid ${({ theme }) => theme.deprecated_bg3};
+  background-color: ${({ theme, phase0Flag }) => (phase0Flag ? theme.backgroundSurface : theme.deprecated_bg2)};
+  border: 1px solid ${({ theme, phase0Flag }) => (phase0Flag ? theme.backgroundOutline : theme.deprecated_bg3)};
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
     0px 24px 32px rgba(0, 0, 0, 0.01);
   border-radius: 12px;
@@ -96,6 +97,7 @@ const MenuFlyout = styled.span`
   top: 2rem;
   right: 0rem;
   z-index: 100;
+  color: ${({ theme, phase0Flag }) => phase0Flag && theme.textPrimary};
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
     min-width: 18.125rem;
@@ -121,6 +123,8 @@ const ModalContentWrapper = styled.div`
 
 export default function SettingsTab({ placeholderSlippage }: { placeholderSlippage: Percent }) {
   const { chainId } = useWeb3React()
+  const phase0Flag = usePhase0Flag()
+  const phase0FlagEnabled = phase0Flag === Phase0Variant.Enabled
 
   const node = useRef<HTMLDivElement>()
   const open = useModalIsOpen(ApplicationModal.SETTINGS)
@@ -148,7 +152,7 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
               <Text fontWeight={500} fontSize={20}>
                 <Trans>Are you sure?</Trans>
               </Text>
-              <StyledCloseIcon onClick={() => setShowConfirmation(false)} />
+              <StyledCloseIcon onClick={() => setShowConfirmation(false)} phase0Flag={phase0FlagEnabled} />
             </RowBetween>
             <Break />
             <AutoColumn gap="lg" style={{ padding: '0 2rem' }}>
@@ -186,7 +190,7 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
         id="open-settings-dialog-button"
         aria-label={t`Transaction Settings`}
       >
-        <StyledMenuIcon />
+        <StyledMenuIcon phase0Flag={phase0FlagEnabled} />
         {expertMode ? (
           <EmojiWrapper>
             <span role="img" aria-label="wizard-icon">
@@ -196,10 +200,10 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
         ) : null}
       </StyledMenuButton>
       {open && (
-        <MenuFlyout>
+        <MenuFlyout phase0Flag={phase0FlagEnabled}>
           <AutoColumn gap="md" style={{ padding: '1rem' }}>
             <Text fontWeight={600} fontSize={14}>
-              <Trans>Transaction Settings</Trans>
+              <Trans>{phase0FlagEnabled ? 'Settings' : 'Transaction Settings'}</Trans>
             </Text>
             <TransactionSettings placeholderSlippage={placeholderSlippage} />
             <Text fontWeight={600} fontSize={14}>

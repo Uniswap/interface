@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-04 19:04\n"
+"PO-Revision-Date: 2022-08-05 22:05\n"
 "Last-Translator: \n"
 "Language: fi_FI\n"
 "Language-Team: Finnish\n"
@@ -120,6 +120,7 @@ msgstr "Ehdotusten jättämiseen vaaditaan vähintään 0,25 prosentin kynnysarv
 msgid "A swap of this size may have a high price impact, given the current liquidity in the pool. There may be a large difference between the amount of your input token and what you will receive in the output token"
 msgstr "Tämän kokoisella swapilla voi olla suuri hintavaikutus, kun otetaan huomioon poolin nykyinen likviditeetti. Saattaa olla suuri ero syöttötunnuksesi määrän ja sen välillä, mitä saat ulostulotunnuksessa"
 
+#: src/components/Explore/TokenDetails/TokenDetail.tsx
 #: src/components/Menu/index.tsx
 msgid "About"
 msgstr "Tietoa"
@@ -348,6 +349,10 @@ msgstr "Yhdistämällä lompakon hyväksyt Uniswap Labsin <0>-palveluehdot</0> j
 msgid "Canceled"
 msgstr "Peruutettu"
 
+#: src/constants/tokenSafety.tsx
+msgid "Caution"
+msgstr "Varoitus"
+
 #: src/components/AccountDetails/index.tsx
 msgid "Change"
 msgstr "Muuta"
@@ -433,6 +438,7 @@ msgstr "Tyhjennä kaikki"
 msgid "Clear all"
 msgstr "Tyhjennä kaikki"
 
+#: src/components/TokenSafety/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Close"
@@ -817,6 +823,10 @@ msgstr "Asiantuntijatila ottaa vahvistuskehotuksen pois käytöstä ja mahdollis
 msgid "Expired"
 msgstr "Vanhentunut"
 
+#: src/components/Header/index.tsx
+msgid "Explore"
+msgstr "Tutkia"
+
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore Uniswap Analytics."
 msgstr "Tutustu Uniswap Analyticsiin."
@@ -877,6 +887,10 @@ msgstr "Piilottaa"
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
 msgstr "Korkea hintavaikutus"
+
+#: src/components/TokenSafety/index.tsx
+msgid "I Understand"
+msgstr "Ymmärrän"
 
 #: src/components/SearchModal/ImportList.tsx
 #: src/pages/AddLiquidity/index.tsx
@@ -984,12 +998,17 @@ msgstr "Kieli"
 msgid "Learn"
 msgstr "Opi"
 
+#: src/components/TokenSafety/index.tsx
+msgid "Learn More"
+msgstr "Lisätietoja"
+
 #: src/pages/Pool/CTACards.tsx
 msgid "Learn about providing liquidity"
 msgstr "Lisätietoja likviditeetin tarjoamisesta"
 
 #: src/components/PrivacyPolicy/index.tsx
 #: src/components/PrivacyPolicy/index.tsx
+#: src/components/TokenSafety/TokenSafetyMessage.tsx
 msgid "Learn more"
 msgstr "Lue lisää"
 
@@ -1190,6 +1209,10 @@ msgstr "Ehdotuksia ei löytynyt."
 msgid "No results found."
 msgstr "Tuloksia ei löytynyt."
 
+#: src/constants/tokenSafety.tsx
+msgid "Not Available"
+msgstr "Ei saatavilla"
+
 #: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "Not created"
 msgstr "Ei luotu"
@@ -1254,6 +1277,10 @@ msgstr "Vahvista, että haluat poistaa tämän luettelon kirjoittamalla POISTA"
 #: src/components/vote/ProposalEmptyState.tsx
 msgid "Please connect to Layer 1 Ethereum"
 msgstr "Muodosta yhteys kerrokseen 1 Ethereum"
+
+#: src/constants/tokenSafety.tsx
+msgid "Please do your own research before trading."
+msgstr "Ole hyvä ja tee oma tutkimus ennen kauppaa."
 
 #: src/components/Settings/index.tsx
 msgid "Please type the word \"{confirmWord}\" to enable expert mode."
@@ -1735,6 +1762,10 @@ msgstr "Tapahtumaa ei voitu lähettää, koska määräaika on ohi. Tarkista, et
 msgid "There is no liquidity data."
 msgstr "Likviditeettitietoja ei ole."
 
+#: src/components/Explore/TokenDetails/BalanceSummary.tsx
+msgid "There was an error loading your {tokenSymbol} balance"
+msgstr "{tokenSymbol} -saldoasi ladattaessa tapahtui virhe"
+
 #: src/components/ConnectedAccountBlocked/index.tsx
 msgid "This address is blocked on the Uniswap Labs interface because it is associated with one or more"
 msgstr "Tämä osoite on estetty Uniswap Labs -käyttöliittymässä, koska se on liitetty yhteen tai useampaan"
@@ -1788,6 +1819,10 @@ msgstr "Vastaanottaja"
 #: src/pages/Swap/index.tsx
 msgid "To (at least)"
 msgstr "Mihin (ainakin)"
+
+#: src/components/Explore/TokenTable/TokenRow.tsx
+msgid "Token Name"
+msgstr "Tokenin nimi"
 
 #: src/components/SearchModal/BlockedToken.tsx
 msgid "Token not supported"
@@ -2094,6 +2129,10 @@ msgstr "Odotetaan vahvistusta"
 msgid "Wallet Address or ENS name"
 msgstr "Lompakon osoite tai ENS-nimi"
 
+#: src/constants/tokenSafety.tsx
+msgid "Warning"
+msgstr "Varoitus"
+
 #: src/components/earn/StakingModal.tsx
 msgid "Weekly Rewards"
 msgstr "Viikoittaiset palkinnot"
@@ -2350,6 +2389,14 @@ msgstr "rahakeluettelon {0} kautta"
 #: src/components/SearchModal/ImportToken.tsx
 msgid "{0, plural, =1 {Import token} other {Import tokens}}"
 msgstr "{0, plural, =1 {Tuo tunnus} other {Tuo tunnuksia}}"
+
+#: src/constants/tokenSafety.tsx
+msgid "{0, plural, =1 {This token isn't verified} other {These tokens aren't verified}}"
+msgstr "{0, plural, =1 {Tätä tunnusta ei ole vahvistettu} other {Näitä tunnuksia ei ole vahvistettu}}"
+
+#: src/constants/tokenSafety.tsx
+msgid "{0, plural, =1 {You can't trade this token using the Uniswap App.} other {You can't trade these tokens using the Uniswap App.}}"
+msgstr "{0, plural, =1 {Et voi vaihtaa tätä merkkiä Uniswap-sovelluksella.} other {Et voi vaihtaa näitä tokeneita Uniswap-sovelluksella.}}"
 
 #: src/components/RateToggle/index.tsx
 #: src/components/RateToggle/index.tsx
