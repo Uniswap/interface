@@ -54,12 +54,6 @@ export const CollectionStatsFetcher = async (addressOrName: string, recursive = 
     body: JSON.stringify(payload),
   })
 
-  /*
-    if (isName) {
-      const data = (await r.json()) as { data: GenieCollection[] };
-      return data?.data ? data.data.slice(0, 6) : [];
-    }
-    */
   const data = await r.json()
   return data?.data ? data.data[0] : {}
 }
