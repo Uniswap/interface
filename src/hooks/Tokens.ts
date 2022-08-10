@@ -31,7 +31,7 @@ function useTokensFromMap(
     // reduce to just tokens
     const mapWithoutUrls = Object.keys(tokenMap[chainId]).reduce<{ [address: string]: Token }>((newMap, address) => {
       const key = lowercaseAddress ? address.toLowerCase() : address
-      newMap[key] = tokenMap[chainId][address].token
+      newMap[key] = tokenMap[chainId][address]
       return newMap
     }, {})
 

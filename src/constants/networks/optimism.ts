@@ -11,7 +11,6 @@ const EMPTY_ARRAY: any[] = []
 const NOT_SUPPORT = null
 
 const optimismInfo: NetworkInfo = {
-  //todo namgold: fill this
   chainId: ChainId.OPTIMISM,
   route: 'optimism',
   name: 'Optimism',

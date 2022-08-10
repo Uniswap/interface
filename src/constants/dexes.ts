@@ -281,8 +281,6 @@ export const dexListConfig: DexList = {
     name: 'Velodrome',
     icon: 'https://s2.coinmarketcap.com/static/img/coins/64x64/20435.png',
   },
-
-  //todo namgold: optimism add dex
 }
 
 type DexTypes = {

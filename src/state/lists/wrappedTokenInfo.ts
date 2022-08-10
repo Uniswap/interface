@@ -10,14 +10,17 @@ interface TagInfo extends TagDetails {
 /**
  * Token instances created from token info on a token list.
  */
+
+export type LiteTokenList = Omit<TokenList, 'tokens'>
+
 export class WrappedTokenInfo extends Token {
   public readonly isNative: false = false
   public readonly isToken: true = true
-  public readonly list: TokenList
+  public readonly list: LiteTokenList
 
   public readonly tokenInfo: TokenInfo
 
-  constructor(tokenInfo: TokenInfo, list: TokenList) {
+  constructor(tokenInfo: TokenInfo, list: LiteTokenList) {
     super(
       tokenInfo.chainId,
       isAddress(tokenInfo.address) || tokenInfo.address,
@@ -26,7 +29,8 @@ export class WrappedTokenInfo extends Token {
       tokenInfo.name,
     )
     this.tokenInfo = tokenInfo
-    this.list = list
+    const { name, timestamp, version, keywords, tags, logoURI } = list
+    this.list = { name, timestamp, version, keywords, tags, logoURI }
   }
 
   public get logoURI(): string | undefined {

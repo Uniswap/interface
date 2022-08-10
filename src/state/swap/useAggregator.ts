@@ -45,10 +45,10 @@ export function useDerivedSwapInfoV2(): {
   const recipientLookup = useENS(recipient ?? undefined)
   const to: string | null = (recipient === null || recipient === '' ? account : recipientLookup.address) ?? null
 
-  const relevantTokenBalances = useCurrencyBalances(account ?? undefined, [
-    inputCurrency ?? undefined,
-    outputCurrency ?? undefined,
-  ])
+  const relevantTokenBalances = useCurrencyBalances(
+    account ?? undefined,
+    useMemo(() => [inputCurrency ?? undefined, outputCurrency ?? undefined], [inputCurrency, outputCurrency]),
+  )
 
   const isExactIn: boolean = independentField === Field.INPUT
 

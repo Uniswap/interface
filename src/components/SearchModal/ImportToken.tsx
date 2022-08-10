@@ -1,6 +1,5 @@
 import { Currency, Token } from '@kyberswap/ks-sdk-core'
 import { Trans, t } from '@lingui/macro'
-import { TokenList } from '@uniswap/token-lists'
 import { rgba, transparentize } from 'polished'
 import { useCallback, useEffect } from 'react'
 import { AlertCircle, ArrowLeft, CornerDownLeft } from 'react-feather'
@@ -15,6 +14,7 @@ import { RowBetween, RowFixed } from 'components/Row'
 import { SectionBreak } from 'components/swap/styleds'
 import { useActiveWeb3React } from 'hooks'
 import useTheme from 'hooks/useTheme'
+import { LiteTokenList } from 'state/lists/wrappedTokenInfo'
 import { useAddUserToken } from 'state/user/hooks'
 import { CloseIcon, TYPE } from 'theme'
 import { getEtherscanLink } from 'utils'
@@ -54,7 +54,7 @@ interface ImportProps {
   enterToImport?: boolean
   tokens: Token[]
   onBack?: () => void
-  list?: TokenList
+  list?: LiteTokenList
   onDismiss?: () => void
   handleCurrencySelect?: (currency: Currency) => void
 }

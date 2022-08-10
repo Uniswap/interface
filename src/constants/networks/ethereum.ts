@@ -29,7 +29,10 @@ const ethereumInfo: NetworkInfo = {
     logo: EthereumLogo,
     decimal: 18,
   },
-  rpcUrl: 'https://proxy.kyberengineering.io/ethereum',
+  rpcUrl:
+    process.env.NODE_ENV === 'development'
+      ? 'https://eth-mainnet.public.blastapi.io'
+      : 'https://proxy.kyberengineering.io/ethereum',
   routerUri: `${process.env.REACT_APP_AGGREGATOR_API}/ethereum/route/encode`,
   classic: {
     static: {

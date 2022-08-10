@@ -1,6 +1,8 @@
 import { Token, TokenAmount } from '@kyberswap/ks-sdk-core'
 import { useMemo } from 'react'
 
+import useDebounce from 'hooks/useDebounce'
+
 import { useAllTokenBalances } from '../../state/wallet/hooks'
 
 // compare two token amounts with highest one coming first
@@ -40,13 +42,11 @@ function getTokenComparator(balances: {
 
 export function useTokenComparator(inverted: boolean): (tokenA: Token, tokenB: Token) => number {
   const balances = useAllTokenBalances()
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const comparator = useMemo(() => getTokenComparator(balances ?? {}), [JSON.stringify(balances)])
   return useMemo(() => {
+    const comparator = getTokenComparator(balances ?? {})
     if (inverted) {
       return (tokenA: Token, tokenB: Token) => comparator(tokenA, tokenB) * -1
-    } else {
-      return comparator
     }
-  }, [inverted, comparator])
+    return comparator
+  }, [balances, inverted])
 }

@@ -193,7 +193,7 @@ export function CurrencySearch({
   // if no results on main list, show option to expand into inactive
   const filteredInactiveTokens: Token[] = useSearchInactiveTokenLists(debouncedQuery)
 
-  const visibleCurrencies: Currency[] = (() => {
+  const visibleCurrencies: Currency[] = useMemo(() => {
     // `concat` always returns a new array
     const currencies: Currency[] = filteredSortedTokens.concat(filteredInactiveTokens)
     if (showETH && chainId) {
@@ -218,7 +218,15 @@ export function CurrencySearch({
     }
 
     return []
-  })()
+  }, [
+    activeTab,
+    chainId,
+    favoriteTokens?.addresses,
+    favoriteTokens?.includeNativeToken,
+    filteredInactiveTokens,
+    filteredSortedTokens,
+    showETH,
+  ])
 
   return (
     <ContentWrapper>

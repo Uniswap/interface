@@ -539,14 +539,27 @@ export const nativeNameFromETH = (chainId: ChainId | undefined) => {
   return NETWORKS_INFO[chainId].nativeToken.symbol
 }
 
+// push unique
+// return original instance if no change
 export const pushUnique = <T>(array: T[] | undefined, element: T): T[] => {
+  if (!array) return [element]
+
   const set = new Set<T>(array)
-  set.add(element)
-  return Array.from(set)
+
+  if (set.has(element)) return array
+  return [...array, element]
 }
 
+// delete unique
+// return original instance if no change
 export const deleteUnique = <T>(array: T[] | undefined, element: T): T[] => {
+  if (!array) return []
+
   const set = new Set<T>(array)
-  set.delete(element)
-  return Array.from(set)
+
+  if (set.has(element)) {
+    set.delete(element)
+    return [...set]
+  }
+  return array
 }

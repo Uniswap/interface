@@ -2,6 +2,7 @@ import { Currency, CurrencyAmount, Token, TokenAmount } from '@kyberswap/ks-sdk-
 import JSBI from 'jsbi'
 import { useMemo } from 'react'
 
+import { EMPTY_ARRAY, EMPTY_OBJECT } from 'constants/index'
 import { nativeOnChain } from 'constants/tokens'
 
 import ERC20_INTERFACE from '../../constants/abis/erc20'
@@ -34,7 +35,7 @@ export function useETHBalances(uncheckedAddresses?: (string | undefined)[]): {
   const results = useSingleContractMultipleData(
     multicallContract,
     'getEthBalance',
-    addresses.map(address => [address]),
+    useMemo(() => addresses.map(address => [address]), [addresses]),
   )
 
   return useMemo(
@@ -47,6 +48,12 @@ export function useETHBalances(uncheckedAddresses?: (string | undefined)[]): {
       }, {}),
     [addresses, results, chainId],
   )
+}
+
+const stringifyBalance = (balanceMap: { [key: string]: TokenAmount }) => {
+  return Object.keys(balanceMap)
+    .map(key => key + balanceMap[key].toExact())
+    .join(',')
 }
 
 /**
@@ -67,23 +74,30 @@ export function useTokenBalancesWithLoadingIndicator(
 
   const anyLoading: boolean = useMemo(() => balances.some(callState => callState.loading), [balances])
 
-  return [
-    useMemo(
-      () =>
-        address && validatedTokens.length > 0
-          ? validatedTokens.reduce<{ [tokenAddress: string]: TokenAmount | undefined }>((memo, token, i) => {
-              const value = balances?.[i]?.result?.[0]
-              const amount = value ? JSBI.BigInt(value.toString()) : undefined
-              if (amount) {
-                memo[token.address] = TokenAmount.fromRawAmount(token, amount)
-              }
-              return memo
-            }, {})
-          : {},
-      [address, validatedTokens, balances],
-    ),
-    anyLoading,
-  ]
+  const balanceResult: { [key: string]: TokenAmount } = useMemo(
+    () =>
+      address && validatedTokens.length > 0
+        ? validatedTokens.reduce<{ [tokenAddress: string]: TokenAmount | undefined }>((memo, token, i) => {
+            const value = balances?.[i]?.result?.[0]
+            const amount = value ? JSBI.BigInt(value.toString()) : undefined
+            if (amount) {
+              memo[token.address] = TokenAmount.fromRawAmount(token, amount)
+            }
+            return memo
+          }, {})
+        : EMPTY_OBJECT,
+    [address, validatedTokens, balances],
+  )
+
+  // `balanceResult` was calculated base on `balances`, when `balances` changes, `balanceResult` recalculated
+  // again and return new instance of the result.
+  // But sometimes (most time likely), new result and old result are same, but have different instance.
+  // Below we are going to cache it, so if new result deep equals to old result, old result's instance will be use instead
+  // This cache helps hooks which calling this hooks and depend on this result don't have to calculating again with new dependency changed
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const balanceResultCached = useMemo(() => balanceResult, [stringifyBalance(balanceResult)])
+
+  return [balanceResultCached, anyLoading]
 }
 
 export function useTokenBalances(
@@ -104,21 +118,23 @@ export function useCurrencyBalances(
   account?: string,
   currencies?: (Currency | undefined)[],
 ): (CurrencyAmount<Currency> | undefined)[] {
-  const tokens = useMemo(
-    () => currencies?.filter((currency): currency is Token => currency?.isToken ?? false) ?? [],
-    [currencies],
-  )
+  const tokens = useMemo(() => {
+    const result = currencies?.filter((currency): currency is Token => currency?.isToken ?? false)
+    return result?.length ? result : EMPTY_ARRAY
+  }, [currencies])
 
   const tokenBalances = useTokenBalances(account, tokens)
   const containsETH: boolean = useMemo(() => currencies?.some(currency => currency?.isNative) ?? false, [currencies])
-  const ethBalance = useETHBalances(containsETH ? [account] : [])
+  const accounts = useMemo(() => (containsETH ? [account] : EMPTY_ARRAY), [containsETH, account])
+  const ethBalance = useETHBalances(accounts)
+
   return useMemo(
     () =>
       currencies?.map(currency => {
         if (!account || !currency) return undefined
         if (currency?.isNative) return ethBalance[account]
         return tokenBalances[currency.address]
-      }) ?? [],
+      }) ?? EMPTY_ARRAY,
     [account, currencies, ethBalance, tokenBalances],
   )
 }
@@ -135,6 +151,5 @@ export function useAllTokenBalances(): { [tokenAddress: string]: TokenAmount | u
   const { account } = useActiveWeb3React()
   const allTokens = useAllTokens()
   const allTokensArray = useMemo(() => Object.values(allTokens ?? {}), [allTokens])
-  const balances = useTokenBalances(account ?? undefined, allTokensArray)
-  return balances ?? {}
+  return useTokenBalances(account ?? undefined, allTokensArray) ?? EMPTY_OBJECT
 }

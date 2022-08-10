@@ -4,6 +4,8 @@ import { Contract } from '@ethersproject/contracts'
 import { useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
+import { EMPTY_ARRAY } from 'constants/index'
+
 import { useActiveWeb3React } from '../../hooks'
 import { useBlockNumber } from '../application/hooks'
 import { AppDispatch, AppState } from '../index'
@@ -93,17 +95,19 @@ function useCallsData(calls: (Call | undefined)[], options?: ListenerOptions): C
 
   return useMemo(
     () =>
-      calls.map<CallResult>(call => {
-        if (!chainId || !call) return INVALID_RESULT
+      calls.length
+        ? calls.map<CallResult>(call => {
+            if (!chainId || !call) return INVALID_RESULT
 
-        const result = callResults[chainId]?.[toCallKey(call)]
-        let data
-        if (result?.data && result?.data !== '0x') {
-          data = result.data
-        }
+            const result = callResults[chainId]?.[toCallKey(call)]
+            let data
+            if (result?.data && result?.data !== '0x') {
+              data = result.data
+            }
 
-        return { valid: true, data, blockNumber: result?.blockNumber }
-      }),
+            return { valid: true, data, blockNumber: result?.blockNumber }
+          })
+        : EMPTY_ARRAY,
     [callResults, calls, chainId],
   )
 }
@@ -178,7 +182,7 @@ export function useSingleContractMultipleData(
               gasRequired,
             }
           })
-        : [],
+        : EMPTY_ARRAY,
     [callInputs, contract, fragment, gasRequired],
   )
 
@@ -207,7 +211,7 @@ export function useSingleContractWithCallData(
               gasRequired,
             }
           })
-        : [],
+        : EMPTY_ARRAY,
     [callDatas, contract, gasRequired],
   )
 
@@ -256,7 +260,7 @@ export function useMultipleContractSingleData(
                 }
               : undefined
           })
-        : [],
+        : EMPTY_ARRAY,
     [addresses, callData, fragment, gasRequired],
   )
 
@@ -286,7 +290,7 @@ export function useSingleCallResult(
             gasRequired,
           },
         ]
-      : []
+      : EMPTY_ARRAY
   }, [contract, fragment, inputs, gasRequired])
 
   const result = useCallsData(calls, options)[0]

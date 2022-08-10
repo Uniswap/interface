@@ -66,6 +66,9 @@ export default function CurrencySearchModal({
   // change min height if not searching
   const minHeight = modalView === CurrencyModalView.importToken || modalView === CurrencyModalView.importList ? 40 : 80
 
+  const showImportView = useCallback(() => setModalView(CurrencyModalView.importToken), [])
+  const showManageView = useCallback(() => setModalView(CurrencyModalView.manage), [])
+
   return (
     <Modal isOpen={isOpen} onDismiss={onDismiss} maxHeight={80} minHeight={minHeight}>
       {modalView === CurrencyModalView.search ? (
@@ -76,9 +79,9 @@ export default function CurrencySearchModal({
           selectedCurrency={selectedCurrency}
           otherSelectedCurrency={otherSelectedCurrency}
           showCommonBases={showCommonBases}
-          showImportView={() => setModalView(CurrencyModalView.importToken)}
+          showImportView={showImportView}
           setImportToken={setImportToken}
-          showManageView={() => setModalView(CurrencyModalView.manage)}
+          showManageView={showManageView}
         />
       ) : modalView === CurrencyModalView.importToken && importToken ? (
         <ImportToken

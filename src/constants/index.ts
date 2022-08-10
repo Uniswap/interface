@@ -7,6 +7,9 @@ import { v4 as uuid } from 'uuid'
 import { coin98InjectedConnector, injected, ledger, walletconnect, walletlink } from '../connectors'
 import { NETWORKS_INFO, SUPPORTED_NETWORKS } from './networks'
 
+export const EMPTY_OBJECT: any = {}
+export const EMPTY_ARRAY: any[] = []
+
 export const BAD_RECIPIENT_ADDRESSES: string[] = [
   NETWORKS_INFO[ChainId.MAINNET].classic.static.factory,
   NETWORKS_INFO[ChainId.MAINNET].classic.static.router,
