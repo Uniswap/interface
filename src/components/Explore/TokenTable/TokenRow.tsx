@@ -72,12 +72,12 @@ const StyledTokenRow = styled.div`
   }
 
   @media only screen and (max-width: ${MEDIUM_MEDIA_BREAKPOINT}) {
-    grid-template-columns: 1.2fr 1fr 8fr 5fr 5fr;
+    grid-template-columns: 1.2fr 1fr 10fr 5fr 3fr;
     width: fit-content;
   }
 
   @media only screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
-    grid-template-columns: 5fr 1fr;
+    grid-template-columns: 4fr 2fr;
     min-width: unset;
     border-bottom: 0.5px solid ${({ theme }) => theme.backgroundContainer};
     padding: 0px 12px;
@@ -230,6 +230,9 @@ const TokenInfoCell = styled(Cell)`
   line-height: 24px;
   font-size: 16px;
   max-width: inherit;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 
   @media only screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
     justify-content: flex-start;
@@ -243,6 +246,7 @@ const TokenName = styled.div`
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  max-width: 100%;
 `
 const TokenSymbol = styled(Cell)`
   color: ${({ theme }) => theme.textTertiary};
