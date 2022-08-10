@@ -1,22 +1,8 @@
 import styled, { useTheme } from 'styled-components/macro'
 
 import { LoadingBubble } from '../loading'
-import { DeltaContainer, TokenPrice } from './PriceChart'
-import {
-  AboutHeader,
-  AboutSection,
-  BreadcrumbNavLink,
-  ChartContainer,
-  ChartHeader,
-  ContractAddressSection,
-  ResourcesContainer,
-  Stat,
-  StatPair,
-  StatsSection,
-  TokenInfoContainer,
-  TokenNameCell,
-  TopArea,
-} from './TokenDetail'
+import { ChartContainer, Stat, StatPair } from './TokenDetail'
+import TokenDetail, { Stat, StatPair } from './TokenDetail'
 
 const LoadingChartContainer = styled(ChartContainer)`
   height: 336px;
@@ -89,47 +75,40 @@ function Wave() {
 /* Loading State: row component with loading bubbles */
 export default function LoadingTokenDetail() {
   return (
-    <TopArea>
-      <BreadcrumbNavLink to="/explore">
-        <Space heightSize={20} />
-      </BreadcrumbNavLink>
-      <ChartHeader>
-        <TokenInfoContainer>
-          <TokenNameCell>
-            <IconLoadingBubble />
-            <TitleLoadingBubble />
-          </TokenNameCell>
-        </TokenInfoContainer>
-        <TokenPrice>
-          <PriceLoadingBubble />
-        </TokenPrice>
-        <DeltaContainer>
-          <Space heightSize={20} />
-        </DeltaContainer>
-        <LoadingChartContainer>
-          <div>
-            <ChartAnimation>
-              <Wave />
-              <Wave />
-              <Wave />
-              <Wave />
-              <Wave />
-            </ChartAnimation>
-          </div>
-        </LoadingChartContainer>
-        <Space heightSize={32} />
-      </ChartHeader>
-      <AboutSection>
-        <AboutHeader>
-          <SquareLoadingBubble />
-        </AboutHeader>
-        <LongLoadingBubble />
-        <LongLoadingBubble />
-        <HalfLoadingBubble />
-
-        <ResourcesContainer>{null}</ResourcesContainer>
-      </AboutSection>
-      <StatsSection>
+    <TokenDetail
+      breadcrumb={<Space heightSize={20} />}
+      tokenName={
+        <>
+          <IconLoadingBubble />
+          <TitleLoadingBubble />
+        </>
+      }
+      chartInfo={
+        <>
+          <LoadingChartContainer>
+            <div>
+              <ChartAnimation>
+                <Wave />
+                <Wave />
+                <Wave />
+                <Wave />
+                <Wave />
+              </ChartAnimation>
+            </div>
+          </LoadingChartContainer>
+          <Space heightSize={32} />
+        </>
+      }
+      aboutHeader={<SquareLoadingBubble />}
+      aboutInfo={
+        <>
+          <LongLoadingBubble />
+          <LongLoadingBubble />
+          <HalfLoadingBubble />
+        </>
+      }
+      resources={null}
+      stats={
         <StatsLoadingContainer>
           <StatPair>
             <Stat>
@@ -152,8 +131,9 @@ export default function LoadingTokenDetail() {
             </Stat>
           </StatPair>
         </StatsLoadingContainer>
-      </StatsSection>
-      <ContractAddressSection>{null}</ContractAddressSection>
-    </TopArea>
+      }
+      contract={null}
+      tokenSafety={null}
+    />
   )
 }
