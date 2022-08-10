@@ -1,6 +1,8 @@
 import { Trans } from '@lingui/macro'
+import { ParentSize } from '@visx/responsive'
 import { sendAnalyticsEvent } from 'components/AmplitudeAnalytics'
 import { EventName } from 'components/AmplitudeAnalytics/constants'
+import SparklineChart from 'components/Charts/SparklineChart'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { useCurrency, useToken } from 'hooks/Tokens'
 import useTheme from 'hooks/useTheme'
@@ -222,15 +224,9 @@ const SparkLineCell = styled(Cell)`
     display: none;
   }
 `
-const SparkLineImg = styled(Cell)<{ isPositive: boolean }>`
-  max-width: 124px;
-  max-height: 28px;
-  flex-direction: column;
-  transform: scale(1.2);
-
-  polyline {
-    stroke: ${({ theme, isPositive }) => (isPositive ? theme.accentSuccess : theme.accentFailure)};
-  }
+const SparkLine = styled(Cell)`
+  width: 124px;
+  height: 42px;
 `
 const StyledLink = styled(Link)`
   text-decoration: none;
@@ -507,7 +503,11 @@ export default function LoadedRow({
         percentChange={<ClickableContent>{tokenPercentChangeInfo}</ClickableContent>}
         marketCap={<ClickableContent>{formatAmount(tokenData.marketCap).toUpperCase()}</ClickableContent>}
         volume={<ClickableContent>{formatAmount(tokenData.volume[timePeriod]).toUpperCase()}</ClickableContent>}
-        sparkLine={<SparkLineImg dangerouslySetInnerHTML={{ __html: tokenData.sparkline }} isPositive={isPositive} />}
+        sparkLine={
+          <SparkLine>
+            <ParentSize>{({ width, height }) => <SparklineChart width={width} height={height} />}</ParentSize>
+          </SparkLine>
+        }
       />
     </StyledLink>
   )

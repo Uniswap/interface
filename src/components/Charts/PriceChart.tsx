@@ -2,10 +2,8 @@ import { AxisBottom, TickFormatter } from '@visx/axis'
 import { localPoint } from '@visx/event'
 import { EventType } from '@visx/event/lib/types'
 import { GlyphCircle } from '@visx/glyph'
-import { Group } from '@visx/group'
-import { Line, LinePath } from '@visx/shape'
+import { Line } from '@visx/shape'
 import { bisect, curveBasis, NumberValue, scaleLinear } from 'd3'
-import { radius } from 'd3-curve-circlecorners'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import useTheme from 'hooks/useTheme'
 import { TimePeriod } from 'hooks/useTopTokens'
@@ -23,6 +21,7 @@ import {
 } from 'utils/formatChartTimes'
 
 import data from './data.json'
+import LineChart from './LineChart'
 
 const TIME_DISPLAYS: [TimePeriod, string][] = [
   [TimePeriod.hour, '1H'],
@@ -204,7 +203,17 @@ export function PriceChart({ width, height }: PriceChartProps) {
           <ArrowCell>{arrow}</ArrowCell>
         </DeltaContainer>
       </ChartHeader>
-      <svg width={graphWidth} height={graphHeight}>
+      <LineChart
+        data={pricePoints}
+        getX={(p: PricePoint) => timeScale(p.timestamp)}
+        getY={(p: PricePoint) => rdScale(p.value)}
+        marginTop={margin.top}
+        /* Default curve doesn't look good for the ALL chart */
+        curve={activeTimePeriod === TimePeriod.all ? curveBasis : undefined}
+        strokeWidth={2}
+        width={graphWidth}
+        height={graphHeight}
+      >
         <AxisBottom
           scale={timeScale}
           stroke={theme.backgroundOutline}
@@ -240,31 +249,16 @@ export function PriceChart({ width, height }: PriceChartProps) {
               pointerEvents="none"
               strokeDasharray="4,4"
             />
+            <GlyphCircle
+              left={selected.xCoordinate}
+              top={rdScale(selected.pricePoint.value) + margin.top}
+              size={50}
+              fill={theme.accentActive}
+              stroke={theme.backgroundOutline}
+              strokeWidth={2}
+            />
           </g>
         )}
-        <Group top={margin.top}>
-          <LinePath
-            /* ALL chart renders poorly using circle corners; use d3 curve for ALL instead */
-            curve={activeTimePeriod === TimePeriod.all ? curveBasis : radius(0.25)}
-            stroke={theme.accentActive}
-            strokeWidth={2}
-            data={pricePoints}
-            x={(d: PricePoint) => timeScale(d.timestamp) ?? 0}
-            y={(d: PricePoint) => rdScale(d.value) ?? 0}
-          />
-          {selected.xCoordinate !== null && (
-            <g>
-              <GlyphCircle
-                left={selected.xCoordinate}
-                top={rdScale(selected.pricePoint.value)}
-                size={50}
-                fill={theme.accentActive}
-                stroke={theme.backgroundOutline}
-                strokeWidth={2}
-              />
-            </g>
-          )}
-        </Group>
         <rect
           x={0}
           y={0}
@@ -276,7 +270,7 @@ export function PriceChart({ width, height }: PriceChartProps) {
           onMouseMove={handleHover}
           onMouseLeave={() => setSelected(initialState)}
         />
-      </svg>
+      </LineChart>
       <TimeOptionsContainer>
         {TIME_DISPLAYS.map(([value, display]) => (
           <TimeButton key={display} active={activeTimePeriod === value} onClick={() => setTimePeriod(value)}>
