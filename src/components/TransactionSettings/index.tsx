@@ -3,6 +3,7 @@ import { Percent } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { L2_CHAIN_IDS } from 'constants/chains'
 import { DEFAULT_DEADLINE_FROM_NOW } from 'constants/misc'
+import { Phase0Variant, usePhase0Flag } from 'featureFlags/flags/phase0'
 import ms from 'ms.macro'
 import { darken } from 'polished'
 import { useContext, useState } from 'react'
@@ -41,8 +42,9 @@ const FancyButton = styled.button`
   }
 `
 
-const Option = styled(FancyButton)<{ active: boolean }>`
+const Option = styled(FancyButton)<{ active: boolean; phase0Flag: boolean }>`
   margin-right: 8px;
+  border-radius: ${({ phase0Flag }) => phase0Flag && '12px'};
   :hover {
     cursor: pointer;
   }
@@ -50,9 +52,10 @@ const Option = styled(FancyButton)<{ active: boolean }>`
   color: ${({ active, theme }) => (active ? theme.deprecated_white : theme.deprecated_text1)};
 `
 
-const Input = styled.input`
+const Input = styled.input<{ phase0Flag: boolean }>`
   background: ${({ theme }) => theme.deprecated_bg1};
   font-size: 16px;
+  border-radius: ${({ phase0Flag }) => phase0Flag && '12px'};
   width: auto;
   outline: none;
   &::-webkit-outer-spin-button,
@@ -63,10 +66,11 @@ const Input = styled.input`
   text-align: right;
 `
 
-const OptionCustom = styled(FancyButton)<{ active?: boolean; warning?: boolean }>`
+const OptionCustom = styled(FancyButton)<{ active?: boolean; warning?: boolean; phase0Flag: boolean }>`
   height: 2rem;
   position: relative;
   padding: 0 0.75rem;
+  border-radius: ${({ phase0Flag }) => phase0Flag && '12px'};
   flex: 1;
   border: ${({ theme, active, warning }) =>
     active
@@ -101,6 +105,8 @@ const THREE_DAYS_IN_SECONDS = ms`3 days` / 1000
 export default function TransactionSettings({ placeholderSlippage }: TransactionSettingsProps) {
   const { chainId } = useWeb3React()
   const theme = useContext(ThemeContext)
+  const phase0Flag = usePhase0Flag()
+  const phase0FlagEnabled = phase0Flag === Phase0Variant.Enabled
 
   const userSlippageTolerance = useUserSlippageTolerance()
   const setUserSlippageTolerance = useSetUserSlippageTolerance()
@@ -176,6 +182,7 @@ export default function TransactionSettings({ placeholderSlippage }: Transaction
         </RowFixed>
         <RowBetween>
           <Option
+            phase0Flag={phase0FlagEnabled}
             onClick={() => {
               parseSlippageInput('')
             }}
@@ -183,7 +190,12 @@ export default function TransactionSettings({ placeholderSlippage }: Transaction
           >
             <Trans>Auto</Trans>
           </Option>
-          <OptionCustom active={userSlippageTolerance !== 'auto'} warning={!!slippageError} tabIndex={-1}>
+          <OptionCustom
+            phase0Flag={phase0FlagEnabled}
+            active={userSlippageTolerance !== 'auto'}
+            warning={!!slippageError}
+            tabIndex={-1}
+          >
             <RowBetween>
               {tooLow || tooHigh ? (
                 <SlippageEmojiContainer>
@@ -193,6 +205,7 @@ export default function TransactionSettings({ placeholderSlippage }: Transaction
                 </SlippageEmojiContainer>
               ) : null}
               <Input
+                phase0Flag={phase0FlagEnabled}
                 placeholder={placeholderSlippage.toFixed(2)}
                 value={
                   slippageInput.length > 0
@@ -242,8 +255,14 @@ export default function TransactionSettings({ placeholderSlippage }: Transaction
             />
           </RowFixed>
           <RowFixed>
-            <OptionCustom style={{ width: '80px' }} warning={!!deadlineError} tabIndex={-1}>
+            <OptionCustom
+              style={{ width: '80px' }}
+              warning={!!deadlineError}
+              tabIndex={-1}
+              phase0Flag={phase0FlagEnabled}
+            >
               <Input
+                phase0Flag={phase0FlagEnabled}
                 placeholder={(DEFAULT_DEADLINE_FROM_NOW / 60).toString()}
                 value={
                   deadlineInput.length > 0

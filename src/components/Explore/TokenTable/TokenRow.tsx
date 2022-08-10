@@ -132,7 +132,7 @@ const StyledHeaderRow = styled(StyledTokenRow)`
   width: 100%;
 
   &:hover {
-    background-color: ${({ theme }) => theme.backgroundSurface};
+    background-color: ${({ theme }) => theme.none};
   }
 
   @media only screen and (max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT}) {
@@ -163,6 +163,7 @@ const DataCell = styled(Cell)<{ sortable: boolean }>`
   }
 `
 const MarketCapCell = styled(DataCell)`
+  padding-right: 8px;
   @media only screen and (max-width: ${MEDIUM_MEDIA_BREAKPOINT}) {
     display: none;
   }
@@ -172,13 +173,12 @@ const NameCell = styled(Cell)`
   padding-left: 8px;
   min-width: 200px;
   gap: 8px;
-
-  @media only screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
-    padding-right: 8px;
-  }
 `
-const PriceCell = styled(DataCell)``
+const PriceCell = styled(DataCell)`
+  padding-right: 8px;
+`
 const PercentChangeCell = styled(DataCell)`
+  padding-right: 8px;
   @media only screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
     display: none;
   }
@@ -212,7 +212,6 @@ const HeaderCellWrapper = styled.span<{ onClick?: () => void }>`
   display: flex;
   height: 100%;
   justify-content: flex-end;
-  padding-right: 8px;
   width: 100%;
 `
 const SparkLineCell = styled(Cell)`
@@ -266,6 +265,7 @@ const TokenSymbol = styled(Cell)`
   }
 `
 const VolumeCell = styled(DataCell)`
+  padding-right: 8px;
   @media only screen and (max-width: ${LARGE_MEDIA_BREAKPOINT}) {
     display: none;
   }
@@ -381,7 +381,7 @@ export function HeaderRow() {
       address={null}
       header={true}
       favorited={null}
-      listNumber={null}
+      listNumber="#"
       tokenInfo={<Trans>Token Name</Trans>}
       price={<HeaderCell category={Category.price} sortable />}
       percentChange={<HeaderCell category={Category.percentChange} sortable />}
@@ -483,7 +483,7 @@ export default function LoadedRow({
               toggleFavorite()
             }}
           >
-            <Heart size={15} color={heartColor} fill={heartColor} />
+            <Heart size={18} color={heartColor} fill={heartColor} />
           </ClickFavorited>
         }
         listNumber={tokenListIndex + 1}
