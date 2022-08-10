@@ -1,7 +1,6 @@
 import { Currency } from '@uniswap/sdk-core'
 import { NATIVE_ADDRESS, NATIVE_ADDRESS_ALT } from 'src/constants/addresses'
 import { ChainId, isPolygonChain } from 'src/constants/chains'
-import { normalizeAddress } from 'src/utils/addresses'
 import { toSupportedChainId } from 'src/utils/chainId'
 
 export type CurrencyId = string
@@ -11,7 +10,7 @@ export function currencyId(currency: Currency): CurrencyId {
 }
 
 export function buildCurrencyId(chainId: ChainId, address: string) {
-  return `${chainId}-${normalizeAddress(address)}`
+  return `${chainId}-${address}`
 }
 
 export function currencyAddressForSwapQuote(currency: Currency): string {
