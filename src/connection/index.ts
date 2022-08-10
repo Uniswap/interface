@@ -20,18 +20,6 @@ export enum ConnectionType {
   NETWORK = 'NETWORK',
   GNOSIS_SAFE = 'GNOSIS_SAFE',
 }
-interface WalletInfo {
-  connector?: Connector
-  connectionType?: ConnectionType
-  name: string
-  iconURL: string
-  description: string
-  href: string | null
-  color: string
-  primary?: true
-  mobile?: true
-  mobileOnly?: true
-}
 
 export interface Connection {
   connector: Connector
