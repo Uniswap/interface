@@ -1,6 +1,8 @@
 import { Trans } from '@lingui/macro'
+import { ParentSize } from '@visx/responsive'
 import { sendAnalyticsEvent } from 'components/AmplitudeAnalytics'
 import { EventName } from 'components/AmplitudeAnalytics/constants'
+import SparklineChart from 'components/Charts/SparklineChart'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { useCurrency, useToken } from 'hooks/Tokens'
 import useTheme from 'hooks/useTheme'
@@ -126,7 +128,7 @@ const StyledHeaderRow = styled(StyledTokenRow)`
   width: 100%;
 
   &:hover {
-    background-color: ${({ theme }) => theme.backgroundSurface};
+    background-color: ${({ theme }) => theme.none};
   }
 
   @media only screen and (max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT}) {
@@ -157,6 +159,7 @@ const DataCell = styled(Cell)<{ sortable: boolean }>`
   }
 `
 const MarketCapCell = styled(DataCell)`
+  padding-right: 8px;
   @media only screen and (max-width: ${MEDIUM_MEDIA_BREAKPOINT}) {
     display: none;
   }
@@ -171,7 +174,9 @@ const NameCell = styled(Cell)`
     padding-right: 8px;
   }
 `
-const PriceCell = styled(DataCell)``
+const PriceCell = styled(DataCell)`
+  padding-right: 8px;
+`
 const PercentChangeCell = styled(DataCell)`
   @media only screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
     display: none;
@@ -206,7 +211,6 @@ const HeaderCellWrapper = styled.span<{ onClick?: () => void }>`
   display: flex;
   height: 100%;
   justify-content: flex-end;
-  padding-right: 8px;
   width: 100%;
 `
 const SparkLineCell = styled(Cell)`
@@ -217,15 +221,9 @@ const SparkLineCell = styled(Cell)`
     display: none;
   }
 `
-const SparkLineImg = styled(Cell)<{ isPositive: boolean }>`
-  max-width: 124px;
-  max-height: 28px;
-  flex-direction: column;
-  transform: scale(1.2);
-
-  polyline {
-    stroke: ${({ theme, isPositive }) => (isPositive ? theme.accentSuccess : theme.accentFailure)};
-  }
+const SparkLine = styled(Cell)`
+  width: 124px;
+  height: 42px;
 `
 const StyledLink = styled(Link)`
   text-decoration: none;
@@ -260,6 +258,7 @@ const TokenSymbol = styled(Cell)`
   }
 `
 const VolumeCell = styled(DataCell)`
+  padding-right: 8px;
   @media only screen and (max-width: ${LARGE_MEDIA_BREAKPOINT}) {
     display: none;
   }
@@ -375,7 +374,7 @@ export function HeaderRow() {
       address={null}
       header={true}
       favorited={null}
-      listNumber={null}
+      listNumber="#"
       tokenInfo={<Trans>Token Name</Trans>}
       price={<HeaderCell category={Category.price} sortable />}
       percentChange={<HeaderCell category={Category.percentChange} sortable />}
@@ -477,7 +476,7 @@ export default function LoadedRow({
               toggleFavorite()
             }}
           >
-            <Heart size={15} color={heartColor} fill={heartColor} />
+            <Heart size={18} color={heartColor} fill={heartColor} />
           </ClickFavorited>
         }
         listNumber={tokenListIndex + 1}
@@ -501,7 +500,11 @@ export default function LoadedRow({
         percentChange={<ClickableContent>{tokenPercentChangeInfo}</ClickableContent>}
         marketCap={<ClickableContent>{formatAmount(tokenData.marketCap).toUpperCase()}</ClickableContent>}
         volume={<ClickableContent>{formatAmount(tokenData.volume[timePeriod]).toUpperCase()}</ClickableContent>}
-        sparkLine={<SparkLineImg dangerouslySetInnerHTML={{ __html: tokenData.sparkline }} isPositive={isPositive} />}
+        sparkLine={
+          <SparkLine>
+            <ParentSize>{({ width, height }) => <SparklineChart width={width} height={height} />}</ParentSize>
+          </SparkLine>
+        }
       />
     </StyledLink>
   )
