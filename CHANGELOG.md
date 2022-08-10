@@ -1,3 +1,11 @@
+## 5.4.4 (August 10, 2022)
+
+### Feat
+* Update audit link in footer ([@nguyenhuudungz](https://github.com/nguyenhuudungz)) in [#1220](https://github.com/KyberNetwork/kyberswap-interface/pull/1220)
+
+### Fix
+*  Warning in faucet modal ([@nguyenhuudungz](https://github.com/nguyenhuudungz))in [#1222](https://github.com/KyberNetwork/kyberswap-interface/pull/1222)
+
 ## 5.4.3 (August 9, 2022)
 
 ### Feat
