@@ -224,24 +224,24 @@ export function PriceChart({ width, height }: PriceChartProps) {
         width={graphWidth}
         height={graphHeight}
       >
-        <AxisBottom
-          scale={timeScale}
-          stroke={theme.backgroundOutline}
-          tickFormat={tickFormatter}
-          tickStroke={theme.backgroundOutline}
-          tickLength={4}
-          tickTransform={'translate(0 -5)'}
-          tickValues={ticks}
-          top={graphHeight - 1}
-          tickLabelProps={() => ({
-            fill: theme.textSecondary,
-            fontSize: 12,
-            textAnchor: 'middle',
-            transform: 'translate(0 -24)',
-          })}
-        />
-        {selected.xCoordinate !== null && (
+        {selected.xCoordinate !== null ? (
           <g>
+            <AxisBottom
+              scale={timeScale}
+              stroke={theme.backgroundOutline}
+              tickFormat={tickFormatter}
+              tickStroke={theme.backgroundOutline}
+              tickLength={4}
+              tickTransform={'translate(0 -5)'}
+              tickValues={ticks}
+              top={graphHeight - 1}
+              tickLabelProps={() => ({
+                fill: theme.textSecondary,
+                fontSize: 12,
+                textAnchor: 'middle',
+                transform: 'translate(0 -24)',
+              })}
+            />
             <text
               x={selected.xCoordinate + (crosshairAtEdge ? -4 : 4)}
               y={margin.crosshair + 10}
@@ -268,6 +268,8 @@ export function PriceChart({ width, height }: PriceChartProps) {
               strokeWidth={2}
             />
           </g>
+        ) : (
+          <AxisBottom scale={timeScale} stroke={theme.backgroundOutline} top={graphHeight - 1} />
         )}
         <rect
           x={0}
