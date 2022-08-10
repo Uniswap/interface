@@ -28,7 +28,7 @@ export function UniconWithVisibilityBadge({ address, size, showViewOnlyBadge }: 
         position="absolute"
         right={-4}
         width={24}>
-        <Eye height={12} stroke={theme.colors.textPrimary} strokeWidth={2} width={16} />
+        <Eye color={theme.colors.textPrimary} height={12} strokeWidth={1} width={16} />
       </Flex>
     </Box>
   )

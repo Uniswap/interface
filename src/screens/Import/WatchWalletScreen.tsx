@@ -20,7 +20,7 @@ import { normalizeTextInput } from 'src/utils/string'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.WatchWallet>
 
-const LIVE_CHECK_DELAY = 500
+const LIVE_CHECK_DELAY = 1000
 
 export function WatchWalletScreen({ navigation, route: { params } }: Props) {
   const dispatch = useAppDispatch()
