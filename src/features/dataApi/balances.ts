@@ -1,6 +1,8 @@
 import { skipToken } from '@reduxjs/toolkit/dist/query'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { graphql } from 'babel-plugin-relay/macro'
 import { useMemo } from 'react'
+import { useLazyLoadQuery } from 'react-relay'
 import { useAppSelector } from 'src/app/hooks'
 import { ChainId } from 'src/constants/chains'
 import { PollingInterval } from 'src/constants/misc'
@@ -16,12 +18,13 @@ import {
   PortfolioBalances,
   SerializablePortfolioBalance,
 } from 'src/features/dataApi/types'
+import { balancesQuery } from 'src/features/dataApi/__generated__/balancesQuery.graphql'
 import { isEnabled } from 'src/features/remoteConfig'
 import { TestConfig } from 'src/features/remoteConfig/testConfigs'
 import { useAllCurrencies } from 'src/features/tokens/useTokens'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { selectHideSmallBalances } from 'src/features/wallet/selectors'
-import { isTestnet } from 'src/utils/chainId'
+import { fromGraphQLChain, isTestnet } from 'src/utils/chainId'
 import { buildCurrencyId, currencyId, CurrencyId } from 'src/utils/currencyId'
 import { flattenObjectOfObjects } from 'src/utils/objects'
 import { percentDifference } from 'src/utils/statistics'
@@ -56,6 +59,87 @@ function useChainBalances(
     }),
     [chainId, knownCurrencies, data, loading]
   )
+}
+
+const query = graphql`
+  query balancesQuery($ownerAddress: String!) {
+    portfolios(ownerAddresses: [$ownerAddress]) {
+      tokenBalances {
+        quantity
+        denominatedValue {
+          currency
+          value
+        }
+        token {
+          chain
+          address
+          name
+          symbol
+          decimals
+        }
+        tokenProjectMarket {
+          relativeChange24: pricePercentChange(duration: DAY) {
+            value
+          }
+        }
+      }
+    }
+  }
+`
+export function usePortfolioBalances(address: Address, onlyKnownCurrencies?: boolean) {
+  const balancesData = useLazyLoadQuery<balancesQuery>(query, { ownerAddress: address })
+  const balancesForAddress = balancesData?.portfolios?.[0]?.tokenBalances
+  const tokensByChainId = useAllCurrencies()
+
+  return useMemo(() => {
+    if (!balancesForAddress) return
+
+    const byId: Record<CurrencyId, PortfolioBalance> = {}
+    balancesForAddress.forEach((balance) => {
+      const chainId = fromGraphQLChain(balance?.token?.chain)
+
+      // require all of these fields to be defined
+      if (
+        !chainId ||
+        !balance ||
+        !balance.quantity ||
+        !balance.denominatedValue ||
+        !balance.denominatedValue.value ||
+        !balance.token ||
+        !balance.token.address ||
+        !balance.token.decimals
+      )
+        return
+
+      const id = buildCurrencyId(chainId, balance.token.address)
+      const knownCurrency = tokensByChainId[chainId]?.[id]
+
+      if (onlyKnownCurrencies && !knownCurrency) return
+
+      const currency =
+        knownCurrency ??
+        new Token(
+          chainId,
+          balance.token.address,
+          balance.token.decimals,
+          balance.token.symbol ?? undefined,
+          balance.token.name ?? undefined
+        )
+
+      const portfolioBalance: PortfolioBalance = {
+        amount: CurrencyAmount.fromRawAmount(
+          currency,
+          balance.quantity * 10 ** balance.token.decimals
+        ),
+        balanceUSD: balance.denominatedValue.value,
+        relativeChange24: balance.tokenProjectMarket?.relativeChange24?.value ?? 0,
+      }
+
+      byId[id] = portfolioBalance
+    })
+
+    return byId
+  }, [balancesForAddress, onlyKnownCurrencies, tokensByChainId])
 }
 
 export function useAllBalancesByChainId(

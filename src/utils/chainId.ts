@@ -22,6 +22,23 @@ export function isTestnet(chainId: ChainId): boolean {
   return TESTNET_CHAIN_IDS.includes(chainId)
 }
 
+export function fromGraphQLChain(chain: GraphQLChain | undefined): ChainId | null {
+  switch (chain) {
+    case 'ETHEREUM':
+      return ChainId.Mainnet
+    case 'ARBITRUM':
+      return ChainId.ArbitrumOne
+    case 'ETHEREUM_GOERLI':
+      return ChainId.Goerli
+    case 'OPTIMISM':
+      return ChainId.Optimism
+    case 'POLYGON':
+      return ChainId.Polygon
+  }
+
+  return null
+}
+
 export function toGraphQLChain(chainId: ChainId): GraphQLChain | null {
   switch (chainId) {
     case ChainId.Mainnet:

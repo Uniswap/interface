@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d3e9e75551f947fa6545eaa10bcdcb4a>>
+ * @generated SignedSource<<3d6fbd440e02c0fd1cabf6a56397f65e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,7 +10,7 @@
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 export type Chain = "ARBITRUM" | "ETHEREUM" | "ETHEREUM_GOERLI" | "OPTIMISM" | "POLYGON" | "%future added value";
-export type Currency = "USD" | "%future added value";
+export type Currency = "ETH" | "USD" | "%future added value";
 export type ContractInput = {
   address?: string | null;
   chain: Chain;
