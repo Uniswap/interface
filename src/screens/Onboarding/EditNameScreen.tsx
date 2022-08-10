@@ -17,7 +17,7 @@ import { Text } from 'src/components/Text'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { ElementName } from 'src/features/telemetry/constants'
 import { EditAccountAction, editAccountActions } from 'src/features/wallet/editAccountSaga'
-import { useActiveAccount, usePendingAccounts } from 'src/features/wallet/hooks'
+import { usePendingAccounts } from 'src/features/wallet/hooks'
 import {
   PendingAccountActions,
   pendingAccountActions,
@@ -33,11 +33,10 @@ export function EditNameScreen({ navigation, route: { params } }: Props) {
   const { t } = useTranslation()
   const theme = useAppTheme()
 
-  const activeAccount = useActiveAccount()
   // Reference pending accounts to avoid any lag in saga import.
-  const pendingAccountName = Object.values(usePendingAccounts())[0]?.name
+  const pendingAccount = Object.values(usePendingAccounts())?.[0]
 
-  const [newAccountName, setNewAccountName] = useState<string>(pendingAccountName ?? '')
+  const [newAccountName, setNewAccountName] = useState<string>(pendingAccount?.name ?? '')
   const [focused, setFocused] = useState(false)
 
   useEffect(() => {
@@ -63,11 +62,11 @@ export function EditNameScreen({ navigation, route: { params } }: Props) {
       params,
     })
 
-    if (activeAccount) {
+    if (pendingAccount) {
       dispatch(
         editAccountActions.trigger({
           type: EditAccountAction.Rename,
-          address: activeAccount.address,
+          address: pendingAccount?.address,
           newName: newAccountName,
         })
       )
@@ -81,10 +80,10 @@ export function EditNameScreen({ navigation, route: { params } }: Props) {
       )}
       title={t('Say hello to your new wallet')}>
       <Box>
-        {activeAccount ? (
+        {pendingAccount ? (
           <CustomizationSection
             accountName={newAccountName}
-            address={activeAccount.address}
+            address={pendingAccount?.address}
             focused={focused}
             setAccountName={setNewAccountName}
             setFocused={setFocused}
