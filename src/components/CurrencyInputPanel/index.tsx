@@ -119,6 +119,8 @@ const InputCurrencySelect = styled(CurrencySelect)<{ phase0Flag: boolean }>`
         ? phase0Flag
           ? theme.backgroundAction
           : theme.deprecated_bg3
+        : phase0Flag
+        ? darken(0.05, theme.accentAction)
         : darken(0.05, theme.deprecated_primary1)};
   }
 `
@@ -191,6 +193,7 @@ const StyledBalanceMax = styled.button<{ disabled?: boolean; phase0Flag: boolean
   background-color: transparent;
   background-color: ${({ theme, phase0Flag }) => !phase0Flag && theme.deprecated_primary5};
   border: none;
+  text-transform: ${({ phase0Flag }) => !phase0Flag && 'uppercase'};
   border-radius: ${({ phase0Flag }) => !phase0Flag && '12px'};
   color: ${({ theme, phase0Flag }) => (phase0Flag ? theme.accentAction : theme.deprecated_primary1)};
   cursor: pointer;
@@ -388,7 +391,7 @@ export default function CurrencyInputPanel({
                       element={ElementName.MAX_TOKEN_AMOUNT_BUTTON}
                     >
                       <StyledBalanceMax onClick={onMax} phase0Flag={phase0FlagEnabled}>
-                        <Trans>{phase0FlagEnabled ? 'Max' : 'MAX'}</Trans>
+                        <Trans>Max</Trans>
                       </StyledBalanceMax>
                     </TraceEvent>
                   ) : null}
