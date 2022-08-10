@@ -10,7 +10,7 @@ export default function computeSurroundingTicks(
   token0: Token,
   token1: Token,
   activeTickProcessed: TickProcessed,
-  sortedTickData: TickData[],
+  sortedTickData: readonly TickData[],
   pivot: number,
   ascending: boolean
 ): TickProcessed[] {

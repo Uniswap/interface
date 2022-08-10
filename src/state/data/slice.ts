@@ -102,6 +102,7 @@ function graphqlRequestBaseQuery(): BaseQueryFn<
         }
       }
 
+      console.log(variables)
       return { data: await new GraphQLClient(subgraphUrl).request(document, variables), meta: {} }
     } catch (error) {
       if (error instanceof ClientError) {
