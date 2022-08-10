@@ -77,7 +77,7 @@ export default function LoadingTokenDetail() {
   return (
     <TokenDetail
       breadcrumb={<Space heightSize={20} />}
-      tokenName={
+      tokenInfo={
         <>
           <IconLoadingBubble />
           <TitleLoadingBubble />
