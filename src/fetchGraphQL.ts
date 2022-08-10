@@ -34,7 +34,7 @@ const fetchQuery = (operation: any, variables: Variables): ObservableFromValue<G
   // TODO: figure out why this returns null
   const chainId = (store.getState() as AppState).application.chainId
 
-  const subgraphUrl = chainId ? CHAIN_SUBGRAPH_URL[1] : ''
+  const subgraphUrl = CHAIN_SUBGRAPH_URL[1]
 
   const body = JSON.stringify({
     query: operation.text, // GraphQL text from input
