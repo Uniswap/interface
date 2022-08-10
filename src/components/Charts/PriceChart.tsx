@@ -3,10 +3,12 @@ import { localPoint } from '@visx/event'
 import { EventType } from '@visx/event/lib/types'
 import { GlyphCircle } from '@visx/glyph'
 import { Line } from '@visx/shape'
+import { filterTimeAtom } from 'components/Explore/state'
 import { bisect, curveBasis, NumberValue, scaleLinear } from 'd3'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import useTheme from 'hooks/useTheme'
 import { TimePeriod } from 'hooks/useTopTokens'
+import { useAtom } from 'jotai'
 import { useCallback, useState } from 'react'
 import { ArrowDownRight, ArrowUpRight } from 'react-feather'
 import styled from 'styled-components/macro'
@@ -23,6 +25,7 @@ import {
 import data from './data.json'
 import LineChart from './LineChart'
 
+// TODO: This should be combined with the logic in TimeSelector.
 const TIME_DISPLAYS: [TimePeriod, string][] = [
   [TimePeriod.hour, '1H'],
   [TimePeriod.day, '1D'],
@@ -110,10 +113,10 @@ function getTicks(startTimestamp: number, endTimestamp: number, numTicks = 5) {
 function tickFormat(
   startTimestamp: number,
   endTimestamp: number,
-  activeTimePeriod: TimePeriod,
+  timePeriod: TimePeriod,
   locale: string
 ): [TickFormatter<NumberValue>, (v: number) => string, number[]] {
-  switch (activeTimePeriod) {
+  switch (timePeriod) {
     case TimePeriod.hour:
       return [hourFormatter(locale), dayHourFormatter(locale), getTicks(startTimestamp, endTimestamp)]
     case TimePeriod.day:
@@ -139,12 +142,12 @@ interface PriceChartProps {
 }
 
 export function PriceChart({ width, height }: PriceChartProps) {
-  const [activeTimePeriod, setTimePeriod] = useState(TimePeriod.hour)
+  const [timePeriod, setTimePeriod] = useAtom(filterTimeAtom)
   const locale = useActiveLocale()
   const theme = useTheme()
 
   /* TODO: Implement API calls & cache to use here */
-  const pricePoints = data[activeTimePeriod]
+  const pricePoints = data[timePeriod]
   const startingPrice = pricePoints[0]
   const endingPrice = pricePoints[pricePoints.length - 1]
   const initialState = { pricePoint: endingPrice, xCoordinate: null }
@@ -187,7 +190,7 @@ export function PriceChart({ width, height }: PriceChartProps) {
   const [tickFormatter, crosshairDateFormatter, ticks] = tickFormat(
     startingPrice.timestamp,
     endingPrice.timestamp,
-    activeTimePeriod,
+    timePeriod,
     locale
   )
   const [delta, arrow] = getDelta(startingPrice.value, selected.pricePoint.value)
@@ -209,7 +212,7 @@ export function PriceChart({ width, height }: PriceChartProps) {
         getY={(p: PricePoint) => rdScale(p.value)}
         marginTop={margin.top}
         /* Default curve doesn't look good for the ALL chart */
-        curve={activeTimePeriod === TimePeriod.all ? curveBasis : undefined}
+        curve={timePeriod === TimePeriod.all ? curveBasis : undefined}
         strokeWidth={2}
         width={graphWidth}
         height={graphHeight}
@@ -273,7 +276,7 @@ export function PriceChart({ width, height }: PriceChartProps) {
       </LineChart>
       <TimeOptionsContainer>
         {TIME_DISPLAYS.map(([value, display]) => (
-          <TimeButton key={display} active={activeTimePeriod === value} onClick={() => setTimePeriod(value)}>
+          <TimeButton key={display} active={timePeriod === value} onClick={() => setTimePeriod(value)}>
             {display}
           </TimeButton>
         ))}
