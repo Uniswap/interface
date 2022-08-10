@@ -33,7 +33,7 @@ const HeaderFrame = styled.div<{ showBackground: boolean }>`
   justify-content: space-between;
   align-items: center;
   flex-direction: row;
-  width: max-content !important;
+  width: 100%;
   top: 0;
   position: relative;
   padding: 1rem;
@@ -90,7 +90,7 @@ const HeaderElement = styled.div`
 const HeaderLinks = styled(Row)`
   justify-self: center;
   background-color: ${({ theme }) => theme.deprecated_bg0};
-  width: fit-content;
+  width: max-content;
   padding: 2px;
   border-radius: 16px;
   display: grid;
