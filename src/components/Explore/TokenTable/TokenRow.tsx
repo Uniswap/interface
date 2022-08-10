@@ -106,6 +106,7 @@ const ClickableContent = styled.div`
 `
 const ClickableName = styled(ClickableContent)`
   gap: 8px;
+  max-width: 100%;
 `
 const FavoriteCell = styled(Cell)`
   min-width: 40px;
@@ -228,6 +229,7 @@ const TokenInfoCell = styled(Cell)`
   gap: 8px;
   line-height: 24px;
   font-size: 16px;
+  max-width: inherit;
 
   @media only screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
     justify-content: flex-start;
@@ -240,7 +242,6 @@ const TokenInfoCell = styled(Cell)`
 const TokenName = styled.div`
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 280px;
   white-space: nowrap;
 `
 const TokenSymbol = styled(Cell)`
