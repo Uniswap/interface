@@ -14,7 +14,6 @@ import invariant from 'tiny-invariant'
 import { DEX_TO_COMPARE, DexConfig, dexIds, dexListConfig, dexTypes } from 'constants/dexes'
 import { ETHER_ADDRESS, KYBERSWAP_SOURCE, sentryRequestId } from 'constants/index'
 import { FeeConfig } from 'hooks/useSwapV2Callback'
-import { GasPrice } from 'state/application/reducer'
 import { AggregationComparer } from 'state/swap/types'
 import { reportException } from 'utils/sentry'
 
@@ -149,7 +148,6 @@ export class Aggregator {
    * @param currencyOut the desired currency out
    * @param saveGas
    * @param dexes
-   * @param gasPrice
    * @param slippageTolerance
    * @param deadline
    * @param to
@@ -162,7 +160,6 @@ export class Aggregator {
     currencyAmountIn: CurrencyAmount<Currency>,
     currencyOut: Currency,
     saveGas = false,
-    gasPrice: GasPrice | undefined,
     dexes = '',
     slippageTolerance: number,
     deadline: number | undefined,
@@ -188,11 +185,6 @@ export class Aggregator {
         amountIn: currencyAmountIn.quotient?.toString(),
         saveGas: saveGas ? '1' : '0',
         gasInclude: saveGas ? '1' : '0',
-        ...(gasPrice && !!+gasPrice.standard
-          ? {
-              gasPrice: gasPrice.standard,
-            }
-          : {}),
         ...(dexes ? { dexes } : {}),
         slippageTolerance: slippageTolerance?.toString() ?? '',
         deadline: deadline?.toString() ?? '',

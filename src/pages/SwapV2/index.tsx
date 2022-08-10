@@ -668,13 +668,6 @@ export default function Swap({ history }: RouteComponentProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isExpertMode])
 
-  useEffect(() => {
-    if (allowedSlippage !== 50) {
-      mixpanelHandler(MIXPANEL_TYPE.SLIPPAGE_CHANGED, { new_slippage: allowedSlippage / 100 })
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [allowedSlippage])
-
   const shareUrl = useMemo(() => {
     return `${window.location.origin}/swap?networkId=${chainId}${
       currencyIn && currencyOut

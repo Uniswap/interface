@@ -126,6 +126,7 @@ export default function Updater(): null {
                     transactionHash: receipt.transactionHash,
                     transactionIndex: receipt.transactionIndex,
                     gasUsed: receipt.gasUsed,
+                    effectiveGasPrice: receipt.effectiveGasPrice,
                   },
                   needCheckSubgraph: NEED_CHECK_SUBGRAPH_TRANSACTION_TYPES.includes(transaction.type || ''),
                 }),
@@ -142,7 +143,8 @@ export default function Updater(): null {
                   case 'Swap': {
                     mixpanelHandler(MIXPANEL_TYPE.SWAP_COMPLETED, {
                       arbitrary: transaction.arbitrary,
-                      actual_gas: transaction.receipt?.gasUsed || BigNumber.from(0),
+                      actual_gas: receipt.gasUsed || BigNumber.from(0),
+                      gas_price: receipt.effectiveGasPrice || BigNumber.from(0),
                       tx_hash: hash,
                     })
                     break

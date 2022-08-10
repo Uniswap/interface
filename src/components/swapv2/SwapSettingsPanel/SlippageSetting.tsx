@@ -6,6 +6,7 @@ import styled, { css } from 'styled-components'
 
 import QuestionHelper from 'components/QuestionHelper'
 import { MAX_SLIPPAGE_IN_BIPS } from 'constants/index'
+import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import useTheme from 'hooks/useTheme'
 import { useUserSlippageTolerance } from 'state/user/hooks'
 
@@ -182,7 +183,7 @@ const SlippageSetting: React.FC = () => {
 
   const isWarning = isValid && !!message
   const isError = !isValid
-
+  const { mixpanelHandler } = useMixpanel()
   const handleCommitChange = () => {
     if (!isValid || slippageInput === '') {
       return
@@ -192,6 +193,7 @@ const SlippageSetting: React.FC = () => {
     if (Number.isNaN(newRawSlippage)) {
       return
     }
+    mixpanelHandler(MIXPANEL_TYPE.SLIPPAGE_CHANGED, { new_slippage: newRawSlippage / 100 })
 
     setRawSlippage(newRawSlippage)
   }
@@ -247,6 +249,7 @@ const SlippageSetting: React.FC = () => {
             onClick={() => {
               setSlippageInput('')
               setRawSlippage(slp)
+              mixpanelHandler(MIXPANEL_TYPE.SLIPPAGE_CHANGED, { new_slippage: slp / 100 })
             }}
             data-active={rawSlippage === slp}
           >

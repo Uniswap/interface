@@ -7,7 +7,6 @@ import {
   PopupType,
   addPopup,
   removePopup,
-  setGasPrice,
   setOpenModal,
   updateBlockNumber,
   updateChainIdWhenNotConnected,
@@ -30,13 +29,6 @@ type ETHPrice = {
   pricePercentChange?: number
 }
 
-export type GasPrice = {
-  fast?: string
-  standard: string
-  low?: string
-  default?: string
-}
-
 export interface ApplicationState {
   readonly blockNumber: { readonly [chainId: number]: number }
   readonly popupList: PopupList
@@ -45,7 +37,6 @@ export interface ApplicationState {
   readonly prommEthPrice: ETHPrice
   readonly kncPrice?: string
   readonly chainIdWhenNotConnected: ChainId
-  readonly gasPrice?: GasPrice
 }
 
 const initialState: ApplicationState = {
@@ -105,15 +96,5 @@ export default createReducer(initialState, builder =>
     })
     .addCase(updateChainIdWhenNotConnected, (state, { payload: chainId }) => {
       state.chainIdWhenNotConnected = chainId
-    })
-    .addCase(setGasPrice, (state, { payload: gasPrice }) => {
-      if (
-        state.gasPrice?.default !== gasPrice?.default ||
-        state.gasPrice?.fast !== gasPrice?.fast ||
-        state.gasPrice?.low !== gasPrice?.low ||
-        state.gasPrice?.standard !== gasPrice?.standard
-      ) {
-        state.gasPrice = gasPrice as GasPrice
-      }
     }),
 )

@@ -32,7 +32,7 @@ const bttcInfo: NetworkInfo = {
     logo: BTT,
     decimal: 18,
   },
-  rpcUrl: 'https://rpc.bt.io',
+  rpcUrl: 'https://bttc.kyberengineering.io',
   routerUri: `${process.env.REACT_APP_AGGREGATOR_API}/bttc/route/encode`,
   classic: {
     static: {

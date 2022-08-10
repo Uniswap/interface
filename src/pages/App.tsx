@@ -1,10 +1,8 @@
 import { ApolloProvider } from '@apollo/client'
 import { ChainId } from '@kyberswap/ks-sdk-core'
 import { Popover, Sidetab } from '@typeform/embed-react'
-import { ethers } from 'ethers'
-import { Suspense, lazy, useEffect } from 'react'
+import { Suspense, lazy } from 'react'
 import { isMobile } from 'react-device-detect'
-import { useDispatch } from 'react-redux'
 import { Route, Switch } from 'react-router-dom'
 import styled from 'styled-components'
 
@@ -17,8 +15,6 @@ import { useActiveWeb3React } from 'hooks'
 import { useGlobalMixpanelEvents } from 'hooks/useMixpanel'
 import useTheme from 'hooks/useTheme'
 import { useWindowSize } from 'hooks/useWindowSize'
-import { AppDispatch } from 'state'
-import { setGasPrice } from 'state/application/actions'
 import { useIsDarkMode } from 'state/user/hooks'
 
 import Header from '../components/Header'
@@ -95,65 +91,10 @@ const BodyWrapper = styled.div`
   ${isMobile && `overflow-x: hidden;`}
 `
 const AppPaths = { SWAP_LEGACY: '/swap-legacy', ABOUT: '/about', SWAP: '/swap' }
-export default function App() {
-  const { account, chainId, library } = useActiveWeb3React()
-  const classicClient = NETWORKS_INFO[chainId || ChainId.MAINNET].classicClient
-  const dispatch = useDispatch<AppDispatch>()
-  useEffect(() => {
-    const fallback = () => {
-      library
-        ?.getGasPrice()
-        .then(res => {
-          dispatch(setGasPrice({ standard: res.toString() }))
-        })
-        .catch(e => {
-          dispatch(setGasPrice(undefined))
-          console.error(e)
-        })
-    }
-    const fetchGas = (chain: string) => {
-      if (!chain) {
-        fallback()
-        return
-      }
-      fetch(process.env.REACT_APP_KRYSTAL_API + `/${chain}/v2/swap/gasPrice`)
-        .then(res => res.json())
-        .then(json => {
-          if (!!json && !json.error && !!json.gasPrice) {
-            console.log('[gas_price] api: ', json.gasPrice.standard + ' gwei')
-            dispatch(setGasPrice({ standard: ethers.utils.parseUnits(json.gasPrice.standard, 'gwei').toString() }))
-          } else {
-            fallback()
-          }
-        })
-        .catch(() => {
-          fallback()
-        })
-    }
 
-    let interval: any = null
-    const chain =
-      chainId === ChainId.MAINNET
-        ? 'ethereum'
-        : chainId === ChainId.BSCMAINNET
-        ? 'bsc'
-        : chainId === ChainId.AVAXMAINNET
-        ? 'avalanche'
-        : chainId === ChainId.MATIC
-        ? 'polygon'
-        : chainId === ChainId.FANTOM
-        ? 'fantom'
-        : chainId === ChainId.CRONOS
-        ? 'cronos'
-        : ''
-    if (!!chainId) {
-      fetchGas(chain)
-      interval = setInterval(() => fetchGas(chain), 10000)
-    } else dispatch(setGasPrice(undefined))
-    return () => {
-      clearInterval(interval)
-    }
-  }, [chainId, dispatch, library])
+export default function App() {
+  const { account, chainId } = useActiveWeb3React()
+  const classicClient = NETWORKS_INFO[chainId || ChainId.MAINNET].classicClient
 
   const theme = useTheme()
   const isDarkTheme = useIsDarkMode()

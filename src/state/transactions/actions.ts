@@ -12,6 +12,7 @@ export interface SerializableTransactionReceipt {
   blockNumber: number
   status?: number
   gasUsed?: BigNumber
+  effectiveGasPrice?: BigNumber
 }
 
 export const addTransaction = createAction<{

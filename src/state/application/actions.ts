@@ -3,7 +3,6 @@ import { createAction } from '@reduxjs/toolkit'
 import { TokenList } from '@uniswap/token-lists'
 
 import { NotificationType } from './hooks'
-import { GasPrice } from './reducer'
 
 export type PopupContentTxn = {
   hash: string
@@ -86,5 +85,3 @@ export const updateETHPrice = createAction<{
 export const updateKNCPrice = createAction<string | undefined>('application/updateKNCPrice')
 
 export const updateChainIdWhenNotConnected = createAction<ChainId>('application/updateChainIdWhenNotConnected')
-
-export const setGasPrice = createAction<GasPrice | undefined>('application/setGasPrice')

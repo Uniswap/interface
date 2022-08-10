@@ -160,7 +160,6 @@ export function useTradeExactInV2(
     return (chainId && NETWORKS_INFO[chainId].routerUri) || ''
   }, [chainId])
 
-  const gasPrice = useSelector((state: AppState) => state.application.gasPrice)
   const ttl = useSelector<AppState, number>(state => state.user.userDeadline)
 
   const { feeConfig } = useSwapState()
@@ -190,7 +189,6 @@ export function useTradeExactInV2(
             debounceCurrencyAmountIn,
             currencyOut,
             saveGas,
-            gasPrice,
             parsedQs.dexes,
             allowedSlippage,
             deadline,
@@ -229,7 +227,6 @@ export function useTradeExactInV2(
       account,
       routerApi,
       saveGas,
-      gasPrice,
       parsedQs.dexes,
       allowedSlippage,
       ttl,

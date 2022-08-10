@@ -3,15 +3,12 @@ import { TransactionResponse } from '@ethersproject/providers'
 import { Trade } from '@kyberswap/ks-sdk-classic'
 import { ChainId, Currency, CurrencyAmount, Percent, TradeType } from '@kyberswap/ks-sdk-core'
 import { Trade as ProAmmTrade } from '@kyberswap/ks-sdk-elastic'
-import { ethers } from 'ethers'
 import JSBI from 'jsbi'
 import { useCallback, useMemo } from 'react'
-import { useSelector } from 'react-redux'
 
 import { NETWORKS_INFO } from 'constants/networks'
 import { nativeOnChain } from 'constants/tokens'
 import { useTokenAllowance } from 'data/Allowances'
-import { AppState } from 'state'
 import { Field } from 'state/swap/actions'
 import { useHasPendingApproval, useTransactionAdder } from 'state/transactions/hooks'
 import { calculateGasMargin } from 'utils'
@@ -63,7 +60,6 @@ export function useApproveCallback(
   const tokenContract = useTokenContract(token?.address)
   const addTransactionWithType = useTransactionAdder()
 
-  const gasPrice = useSelector((state: AppState) => state.application.gasPrice)
   const approve = useCallback(async (): Promise<void> => {
     if (approvalState !== ApprovalState.NOT_APPROVED) {
       console.error('approve was called unnecessarily')
@@ -101,21 +97,14 @@ export function useApproveCallback(
       })
     })
 
-    console.log(
-      '[gas_price] approval used: ',
-      gasPrice?.standard ? `api/node: ${gasPrice?.standard} wei` : 'metamask default',
-    )
-
     if (needRevoke) {
       return tokenContract.approve(spender, '0', {
-        ...(gasPrice?.standard ? { gasPrice: ethers.utils.parseUnits(gasPrice?.standard, 'wei') } : {}),
         gasLimit: calculateGasMargin(estimatedGas),
       })
     }
 
     return tokenContract
       .approve(spender, useExact ? amountToApprove.quotient.toString() : MaxUint256, {
-        ...(gasPrice?.standard ? { gasPrice: ethers.utils.parseUnits(gasPrice?.standard, 'wei') } : {}),
         gasLimit: calculateGasMargin(estimatedGas),
       })
       .then((response: TransactionResponse) => {
@@ -131,7 +120,7 @@ export function useApproveCallback(
         console.debug('Failed to approve token', error)
         throw error
       })
-  }, [approvalState, token, tokenContract, amountToApprove, spender, addTransactionWithType, chainId, gasPrice])
+  }, [approvalState, token, tokenContract, amountToApprove, spender, addTransactionWithType, chainId])
 
   return [approvalState, approve]
 }
