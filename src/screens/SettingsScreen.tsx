@@ -99,7 +99,7 @@ export function SettingsScreen() {
           },
           {
             externalLink: 'https://twitter.com/Uniswap',
-            text: t('Uniswap Labs Twitter'),
+            text: t('Twitter'),
             icon: <TwitterIcon {...iconProps} />,
           },
         ],
@@ -111,18 +111,18 @@ export function SettingsScreen() {
             screen: Screens.WebView,
             screenProps: {
               uriLink: 'https://uniswap.org/terms-of-service',
-              headerTitle: t('Uniswap Labs Privacy Policy'),
+              headerTitle: t('Privacy Policy'),
             },
-            text: t('Uniswap Labs Privacy Policy'),
+            text: t('Privacy Policy'),
             icon: <LockIcon {...iconProps} />,
           },
           {
             screen: Screens.WebView,
             screenProps: {
               uriLink: 'https://uniswap.org/terms-of-service',
-              headerTitle: t('Uniswap Labs Terms of Service'),
+              headerTitle: t('Terms of Service'),
             },
-            text: t('Uniswap Labs Terms of Service'),
+            text: t('Terms of Service'),
             icon: <BookOpenIcon {...iconProps} />,
           },
         ],
