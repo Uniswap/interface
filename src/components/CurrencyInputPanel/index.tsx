@@ -147,12 +147,8 @@ const LabelRow = styled.div`
 
 const FiatRow = styled(LabelRow)<{ phase0Flag: boolean }>`
   justify-content: flex-end;
-  ${({ phase0Flag }) =>
-    phase0Flag &&
-    `
-    padding: 8px 0px; 
-    height: 24px;
-  `};
+  padding: ${({ phase0Flag }) => phase0Flag && '8px 0px'};
+  height: ${({ phase0Flag }) => !phase0Flag && '24px'};
 `
 
 const NoBalanceState = styled.div`
