@@ -65,6 +65,18 @@ export const UNSUPPORTED_V2POOL_CHAIN_IDS = [
   SupportedChainId.ARBITRUM_ONE,
 ]
 
+export const TESTNET_CHAIN_IDS = [
+  SupportedChainId.ROPSTEN,
+  SupportedChainId.RINKEBY,
+  SupportedChainId.GOERLI,
+  SupportedChainId.KOVAN,
+  SupportedChainId.POLYGON_MUMBAI,
+  SupportedChainId.ARBITRUM_RINKEBY,
+  SupportedChainId.OPTIMISTIC_KOVAN,
+] as const
+
+export type SupportedTestnetChainId = typeof TESTNET_CHAIN_IDS[number]
+
 /**
  * All the chain IDs that are running the Ethereum protocol.
  */
