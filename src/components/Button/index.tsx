@@ -86,20 +86,20 @@ export const ButtonLight = styled(BaseButton)<{ phase0Flag?: boolean }>`
   &:focus {
     box-shadow: 0 0 0 1pt
       ${({ theme, disabled, phase0Flag }) =>
-        !disabled && darken(0.03, phase0Flag ? theme.accentActionSoft : theme.deprecated_primary5)};
+        !disabled && (phase0Flag ? theme.accentActionSoft : darken(0.03, theme.deprecated_primary5))};
     background-color: ${({ theme, disabled, phase0Flag }) =>
-      !disabled && darken(0.03, phase0Flag ? theme.accentActionSoft : theme.deprecated_primary5)};
+      !disabled && (phase0Flag ? theme.accentActionSoft : darken(0.03, theme.deprecated_primary5))};
   }
   &:hover {
     background-color: ${({ theme, disabled, phase0Flag }) =>
-      !disabled && darken(0.03, phase0Flag ? theme.accentActionSoft : theme.deprecated_primary5)};
+      !disabled && (phase0Flag ? theme.accentActionSoft : darken(0.03, theme.deprecated_primary5))};
   }
   &:active {
     box-shadow: 0 0 0 1pt
       ${({ theme, disabled, phase0Flag }) =>
-        !disabled && darken(0.05, phase0Flag ? theme.accentActionSoft : theme.deprecated_primary5)};
+        !disabled && (phase0Flag ? theme.accentActionSoft : darken(0.05, theme.deprecated_primary5))};
     background-color: ${({ theme, disabled, phase0Flag }) =>
-      !disabled && darken(0.05, phase0Flag ? theme.accentActionSoft : theme.deprecated_primary5)};
+      !disabled && (phase0Flag ? theme.accentActionSoft : darken(0.05, theme.deprecated_primary5))};
   }
   :disabled {
     opacity: 0.4;
