@@ -1,5 +1,4 @@
 import { skipToken } from '@reduxjs/toolkit/dist/query'
-import { utils } from 'ethers'
 import React, { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
@@ -28,6 +27,7 @@ import { NFTViewType } from 'src/features/wallet/types'
 import { setNFTViewType } from 'src/features/wallet/walletSlice'
 import { Screens } from 'src/screens/Screens'
 import { theme } from 'src/styles/theme'
+import { getAddress } from 'src/utils/addresses'
 
 const MAX_NFT_IMAGE_SIZE = 375
 
@@ -57,7 +57,7 @@ export function PortfolioNFTsScreen({
     (asset: NFTAsset.Asset) => {
       navigation.navigate(Screens.NFTItem, {
         owner: activeAddress ?? '',
-        address: utils.getAddress(asset.asset_contract.address),
+        address: getAddress(asset.asset_contract.address),
         token_id: asset.token_id,
       })
     },

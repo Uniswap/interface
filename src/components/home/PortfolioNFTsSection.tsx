@@ -1,5 +1,4 @@
 import { skipToken } from '@reduxjs/toolkit/dist/query'
-import { utils } from 'ethers'
 import React, { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useHomeStackNavigation } from 'src/app/navigation/types'
@@ -13,6 +12,7 @@ import { NFTAsset } from 'src/features/nfts/types'
 import { getNFTAssetKey } from 'src/features/nfts/utils'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { Screens } from 'src/screens/Screens'
+import { getAddress } from 'src/utils/addresses'
 
 export function PortfolioNFTsSection({ count, owner }: { count?: number; owner?: string }) {
   const navigation = useHomeStackNavigation()
@@ -36,7 +36,7 @@ export function PortfolioNFTsSection({ count, owner }: { count?: number; owner?:
     (asset: NFTAsset.Asset) => {
       navigation.navigate(Screens.NFTItem, {
         owner: activeAddress ?? '',
-        address: utils.getAddress(asset.asset_contract.address),
+        address: getAddress(asset.asset_contract.address),
         token_id: asset.token_id,
       })
     },

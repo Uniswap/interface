@@ -1,5 +1,4 @@
 import { skipToken } from '@reduxjs/toolkit/dist/query'
-import { utils } from 'ethers'
 import React, { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppTheme } from 'src/app/hooks'
@@ -25,6 +24,7 @@ import { ElementName, SectionName } from 'src/features/telemetry/constants'
 import { Trace } from 'src/features/telemetry/Trace'
 import { useActiveAccount, useDisplayName } from 'src/features/wallet/hooks'
 import { Screens } from 'src/screens/Screens'
+import { getAddress } from 'src/utils/addresses'
 import { formatNumber } from 'src/utils/format'
 import { openUri } from 'src/utils/linking'
 
@@ -180,7 +180,7 @@ export function NFTCollectionScreen({
     (asset: NFTAsset.Asset) => {
       navigation.navigate(Screens.NFTItem, {
         owner: owner ?? '',
-        address: utils.getAddress(asset.asset_contract.address),
+        address: getAddress(asset.asset_contract.address),
         token_id: asset.token_id,
       })
     },

@@ -1,6 +1,5 @@
 import { QueryReturnValue } from '@reduxjs/toolkit/dist/query/baseQueryTypes'
 import { createApi, fetchBaseQuery, FetchBaseQueryError } from '@reduxjs/toolkit/query/react'
-import { utils } from 'ethers'
 import { REHYDRATE } from 'redux-persist'
 import { config } from 'src/config'
 import { ChainId } from 'src/constants/chains'
@@ -12,6 +11,7 @@ import {
 import { isEnabled } from 'src/features/remoteConfig'
 import { TestConfig } from 'src/features/remoteConfig/testConfigs'
 import { serializeQueryParams } from 'src/features/transactions/swap/utils'
+import { getAddress } from 'src/utils/addresses'
 
 const CURSOR_LIMIT = 50
 const OPENSEA_BASE_URL = 'https://api.opensea.io/api/v1/'
@@ -68,7 +68,7 @@ export const nftApi = createApi({
         }
 
         const assetsByCollection = assets.reduce<Record<Address, NFTAsset.Asset[]>>((all, nft) => {
-          const key = utils.getAddress(nft.asset_contract.address)
+          const key = getAddress(nft.asset_contract.address)
           all[key] ??= []
           all[key]!.push({ ...nft, chainId })
           return all

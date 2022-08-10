@@ -1,4 +1,3 @@
-import { utils } from 'ethers'
 import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppTheme } from 'src/app/hooks'
@@ -22,6 +21,7 @@ import { ElementName } from 'src/features/telemetry/constants'
 import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
 import { useActiveAccountAddress } from 'src/features/wallet/hooks'
 import { Screens } from 'src/screens/Screens'
+import { getAddress } from 'src/utils/addresses'
 import { openUri } from 'src/utils/linking'
 
 const MAX_NFT_IMAGE_SIZE = 512
@@ -60,7 +60,7 @@ export function NFTItemScreen({
 
   const onPressCollection = () =>
     navigation.navigate(Screens.NFTCollection, {
-      collectionAddress: utils.getAddress(asset.asset_contract.address),
+      collectionAddress: getAddress(asset.asset_contract.address),
       owner,
       slug: asset.collection.slug,
     })

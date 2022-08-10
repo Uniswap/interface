@@ -1,5 +1,4 @@
 import { TradeType } from '@uniswap/sdk-core'
-import { utils } from 'ethers/lib/ethers'
 import { NATIVE_ADDRESS, SWAP_ROUTER_ADDRESSES } from 'src/constants/addresses'
 import { ChainId } from 'src/constants/chains'
 import { AssetType } from 'src/entities/assets'
@@ -10,7 +9,7 @@ import {
   TransactionStatus,
   TransactionType,
 } from 'src/features/transactions/types'
-import { normalizeAddress } from 'src/utils/addresses'
+import { getAddress, normalizeAddress } from 'src/utils/addresses'
 import { currencyIdToAddress } from 'src/utils/currencyId'
 
 /**
@@ -193,8 +192,8 @@ function parseExternalTransactionItem(transaction: Transaction): TransactionSumm
   otherTokenAddress = normalizeIfNativeId(otherTokenAddress)
 
   // Must checksum as Zerion does not, checksum needed for caching
-  tokenAddress = tokenAddress ? utils.getAddress(tokenAddress) : undefined
-  otherTokenAddress = otherTokenAddress ? utils.getAddress(otherTokenAddress) : undefined
+  tokenAddress = tokenAddress ? getAddress(tokenAddress) : undefined
+  otherTokenAddress = otherTokenAddress ? getAddress(otherTokenAddress) : undefined
 
   return {
     chainId,

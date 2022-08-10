@@ -8,6 +8,7 @@ import {
   signMessageForAddress,
   signTransactionHashForAddress,
 } from 'src/lib/RNEthersRs'
+import { getAddress } from 'src/utils/addresses'
 import { toSupportedChainId } from 'src/utils/chainId'
 
 // A signer that uses native keystore to access keys
@@ -56,7 +57,7 @@ export class NativeSigner extends Signer {
   async signTransaction(transaction: providers.TransactionRequest): Promise<string> {
     const tx = await utils.resolveProperties(transaction)
     if (tx.from != null) {
-      if (utils.getAddress(tx.from) !== this.address) {
+      if (getAddress(tx.from) !== this.address) {
         throw new Error('transaction from address mismatch')
       }
       delete tx.from

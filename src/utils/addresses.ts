@@ -9,6 +9,10 @@ export enum AddressStringFormat {
   Shortened,
 }
 
+export function getAddress(address: string): string {
+  return utils.getAddress(address)
+}
+
 // shorten the checksummed version of the input address to have 4 characters at start and end
 export function shortenAddress(address: string, chars = 4): string {
   const parsed = isValidAddress(address)
@@ -52,7 +56,7 @@ export function normalizeAddress(
       return address.substr(0, 8)
     case AddressStringFormat.Checksum:
     default:
-      return utils.getAddress(address)
+      return getAddress(address)
   }
 }
 
@@ -64,7 +68,7 @@ export function parseAddress(input: Nullable<string>): Address | null {
 export function areAddressesEqual(_a1: Nullable<Address>, _a2: Nullable<Address>) {
   const a1 = validateAddress(_a1, 'compare')
   const a2 = validateAddress(_a2, 'compare')
-  return utils.getAddress(a1) === utils.getAddress(a2)
+  return getAddress(a1) === getAddress(a2)
 }
 
 export function trimLeading0x(input: Address): string {

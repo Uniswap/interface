@@ -1,6 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import dayjs from 'dayjs'
-import { utils } from 'ethers/lib/ethers'
 import { REHYDRATE } from 'redux-persist'
 import { config } from 'src/config'
 import { ChainId } from 'src/constants/chains'
@@ -19,6 +18,7 @@ import {
 } from 'src/features/dataApi/types'
 import { serializeQueryParams } from 'src/features/transactions/swap/utils'
 import { HIDE_SMALL_USD_BALANCES_THRESHOLD } from 'src/features/wallet/walletSlice'
+import { getAddress } from 'src/utils/addresses'
 import { buildCurrencyId, CurrencyId } from 'src/utils/currencyId'
 import { percentDifference } from 'src/utils/statistics'
 
@@ -41,7 +41,7 @@ function reduceBalanceItemResponse(
       return memo
     }
 
-    const contract_address = utils.getAddress(item.contract_address)
+    const contract_address = getAddress(item.contract_address)
     memo[buildCurrencyId(chainId, contract_address)] = {
       balance: item.balance,
       balanceUSD: item.quote,
@@ -111,7 +111,7 @@ export const dataApi = createApi({
 
           // first will always be today as result is in chronological descending order
           const [today, yesterday] = cur.prices
-          spotPrices[buildCurrencyId(args.chainId, utils.getAddress(cur.contract_address))] = {
+          spotPrices[buildCurrencyId(args.chainId, getAddress(cur.contract_address))] = {
             price: today.price,
             relativeChange24: percentDifference(yesterday.price, today.price),
           }

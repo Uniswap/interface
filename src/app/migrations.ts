@@ -1,8 +1,8 @@
 import dayjs from 'dayjs'
-import { utils } from 'ethers'
 import { ChainId } from 'src/constants/chains'
 import { ModalName } from 'src/features/telemetry/constants'
 import { Account, AccountType } from 'src/features/wallet/accounts/types'
+import { getAddress } from 'src/utils/addresses'
 
 export const migrations = {
   0: (state: any) => {
@@ -136,7 +136,7 @@ export const migrations = {
   },
 
   10: (state: any) => {
-    const DEMO_ACCOUNT_ADDRESS = utils.getAddress('0xE1d494bC8690b1EF2F0A13B6672C4F2EE5c2D2B7')
+    const DEMO_ACCOUNT_ADDRESS = getAddress('0xE1d494bC8690b1EF2F0A13B6672C4F2EE5c2D2B7')
 
     const newState = { ...state }
     const accounts = newState?.wallet?.accounts ?? {}
