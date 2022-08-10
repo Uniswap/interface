@@ -166,13 +166,9 @@ const MarketCapCell = styled(DataCell)`
 `
 const NameCell = styled(Cell)`
   justify-content: flex-start;
-  padding-left: 8px;
+  padding: 0px 8px;
   min-width: 200px;
   gap: 8px;
-
-  @media only screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
-    padding-right: 8px;
-  }
 `
 const PriceCell = styled(DataCell)`
   padding-right: 8px;
