@@ -84,9 +84,11 @@ function ConfirmationPendingContent({
 export function TransactionPreparingContent({
   onDismiss,
   inline,
+  routeIsNotFound,
 }: {
   onDismiss: () => void
   inline?: boolean // not in modal
+  routeIsNotFound: boolean
 }) {
   return (
     <Wrapper>
@@ -105,7 +107,19 @@ export function TransactionPreparingContent({
             <Trans>Preparing transaction</Trans>
           </Text>
           <Text fontWeight={500} fontSize={14} color="#565A69" textAlign="center" marginBottom="12px">
-            <Trans>Please wait while the transaction is being built</Trans>
+            {routeIsNotFound ? (
+              <Trans>
+                {' '}
+                <Text fontWeight={500} fontSize={15} textAlign="center" color="red">
+                  <Trans>
+                    Error occured, reattempting transaction building! If the error persists, cancel the trade and try
+                    again.
+                  </Trans>
+                </Text>
+              </Trans>
+            ) : (
+              <Trans>Please wait while the transaction is being built</Trans>
+            )}
           </Text>
         </AutoColumn>
       </AutoColumn>

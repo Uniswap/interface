@@ -55,6 +55,7 @@ export default function ConfirmMarketModal({
   updatePriceImpact,
   priceImpactAccepted,
   feeImpactAccepted,
+  routeIsNotFound,
 }: {
   isOpen: boolean
   trade: V2Trade<Currency, Currency, TradeType> | V3Trade<Currency, Currency, TradeType> | undefined
@@ -78,6 +79,7 @@ export default function ConfirmMarketModal({
   updatePriceImpact: () => void
   priceImpactAccepted: boolean
   feeImpactAccepted: boolean
+  routeIsNotFound: boolean
 }) {
   const showAcceptChanges = useMemo(
     () =>
@@ -164,7 +166,7 @@ export default function ConfirmMarketModal({
           bottomContent={modalBottom}
         />
       ) : (
-        <TransactionPreparingContent onDismiss={onDismiss} />
+        <TransactionPreparingContent onDismiss={onDismiss} routeIsNotFound={routeIsNotFound} />
       ),
     [swapErrorMessage, onDismiss, swapTransaction?.data, modalHeader, modalBottom]
   )

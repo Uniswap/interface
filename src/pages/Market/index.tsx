@@ -743,6 +743,7 @@ export default function Market({ history }: RouteComponentProps) {
                     updatePriceImpact={togglePriceImpactAccepted}
                     priceImpactAccepted={priceImpactAccepted}
                     feeImpactAccepted={feeImpactAccepted}
+                    routeIsNotFound={routeNotFound}
                   />
 
                   <AutoColumn gap={'sm'}>
@@ -1276,6 +1277,7 @@ export default function Market({ history }: RouteComponentProps) {
               updatePriceImpact={togglePriceImpactAccepted}
               priceImpactAccepted={priceImpactAccepted}
               feeImpactAccepted={feeImpactAccepted}
+              routeIsNotFound={routeNotFound}
             />
 
             <AutoColumn gap={'sm'}>
