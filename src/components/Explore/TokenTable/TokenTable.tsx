@@ -138,17 +138,15 @@ function NoTokensState({ message }: { message: ReactNode }) {
   )
 }
 
+const LOADING_ROWS = Array.from({ length: 100 })
+  .fill(0)
+  .map((_item, index) => <LoadingRow key={index} />)
+
 function LoadingTokenTable() {
   return (
     <GridContainer>
       <HeaderRow />
-      <TokenRowsContainer>
-        {Array(10)
-          .fill(0)
-          .map((_item, index) => (
-            <LoadingRow key={index} />
-          ))}
-      </TokenRowsContainer>
+      <TokenRowsContainer>{LOADING_ROWS}</TokenRowsContainer>
     </GridContainer>
   )
 }
