@@ -25,6 +25,7 @@ import {
 import data from './data.json'
 import LineChart from './LineChart'
 
+// TODO: This should be combined with the logic in TimeSelector.
 const TIME_DISPLAYS: [TimePeriod, string][] = [
   [TimePeriod.hour, '1H'],
   [TimePeriod.day, '1D'],
