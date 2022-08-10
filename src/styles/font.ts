@@ -40,13 +40,13 @@ export const textVariants = {
     color: 'textPrimary',
   },
   subhead: {
-    fontFamily: fontFamily.sansSerif.medium,
+    fontFamily: fontFamily.sansSerif.semibold,
     fontSize: 16,
     lineHeight: 24,
     color: 'textPrimary',
   },
   subheadSmall: {
-    fontFamily: fontFamily.sansSerif.medium,
+    fontFamily: fontFamily.sansSerif.semibold,
     fontSize: 14,
     lineHeight: 20,
     color: 'textPrimary',

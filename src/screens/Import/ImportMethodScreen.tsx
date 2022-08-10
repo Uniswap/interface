@@ -54,7 +54,7 @@ const backupOption: ImportMethodOption = {
 const options: ImportMethodOption[] = [
   {
     title: (t: TFunction) => t('Import a recovery phrase'),
-    blurb: (t: TFunction) => t('Enter or paste words'),
+    blurb: (t: TFunction) => t('Enter, paste, or scan your words'),
     icon: (theme: Theme) => (
       <SeedPhraseIcon color={theme.colors.textPrimary} height={16} width={16} />
     ),
@@ -64,7 +64,7 @@ const options: ImportMethodOption[] = [
   },
   {
     title: (t: TFunction) => t('View only'),
-    blurb: (t: TFunction) => t('Enter an Ethereum address or ENS name'),
+    blurb: (t: TFunction) => t('Enter an Ethereum address or ENS'),
     icon: (theme: Theme) => <EyeIcon color={theme.colors.textPrimary} height={16} width={16} />,
     nav: OnboardingScreens.WatchWallet,
     importType: ImportType.Watch,
@@ -173,7 +173,7 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props) {
       : [...(cloudBackups.length > 0 ? [backupOption] : []), ...options]
 
   return (
-    <OnboardingScreen title={t('Choose how to connect your wallet')}>
+    <OnboardingScreen title={t('Choose how to add your wallet')}>
       <Flex grow gap="xs">
         {importOptions.map(({ title, blurb, icon, nav, importType, name }) => (
           <OptionCard

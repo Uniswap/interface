@@ -34,9 +34,17 @@ export default function WalletPreviewCard({
       <Flex row alignItems="center" justifyContent="space-between">
         <Flex row justifyContent="flex-start">
           {selected && <Check height={24} width={24} />}
-          <AddressDisplay address={address} showUnicon={!selected} variant="bodySmall" />
+          {/* TODO(MOB-1994): show ENS name AND truncated Ethereum address */}
+          <AddressDisplay
+            address={address}
+            horizontalGap="md"
+            showUnicon={!selected}
+            variant="subheadSmall"
+          />
         </Flex>
-        <Text variant="caption">{formatUSDPrice(balance)}</Text>
+        <Text color="textSecondary" variant="caption">
+          {formatUSDPrice(balance)}
+        </Text>
       </Flex>
     </Button>
   )
