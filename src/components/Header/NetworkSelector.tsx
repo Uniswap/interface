@@ -424,9 +424,7 @@ export default function NetworkSelector() {
               <Trans>Select a {!onSupportedChain ? ' supported ' : ''}network</Trans>
             </FlyoutHeader>
             {NETWORK_SELECTOR_CHAINS.map((chainId: SupportedChainId) =>
-              isChainAllowed(connector, chainId) ? (
-                <Row onSelectChain={onSelectChain} targetChain={chainId} key={chainId} />
-              ) : null
+              isChainAllowed(chainId) ? <Row onSelectChain={onSelectChain} targetChain={chainId} key={chainId} /> : null
             )}
           </FlyoutMenuContents>
         </FlyoutMenu>
