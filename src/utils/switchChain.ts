@@ -34,8 +34,14 @@ function getRpcUrls(chainId: SupportedChainId): [string] {
   throw new Error('RPC URLs must use public endpoints')
 }
 
+export function isChainAllowed(_connector: Connector, _chainId: number) {
+  return true
+}
+
 export const switchChain = async (connector: Connector, chainId: SupportedChainId) => {
-  if (connector === walletConnectConnection.connector || connector === networkConnection.connector) {
+  if (!isChainAllowed(connector, chainId)) {
+    throw new Error(`Chain ${chainId} not supported for connector (${typeof connector})`)
+  } else if (connector === walletConnectConnection.connector || connector === networkConnection.connector) {
     await connector.activate(chainId)
   } else {
     const info = getChainInfo(chainId)
