@@ -141,3 +141,7 @@ export default function useCurrencyBalance(
     useMemo(() => [currency], [currency])
   )[0]
 }
+
+export function useCurrencyBalanceString(account: string): string {
+  return useNativeCurrencyBalances(account ? [account] : [])?.[account ?? '']?.toSignificant(3) ?? ''
+}
