@@ -104,6 +104,7 @@ const TimeButton = styled.button<{ active: boolean }>`
   font-size: 16px;
   padding: 6px 12px;
   border-radius: 12px;
+  line-height: 20px;
   border: none;
   cursor: pointer;
   color: ${({ theme }) => theme.textPrimary};
