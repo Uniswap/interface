@@ -17,7 +17,7 @@ import { useAppDispatch } from 'state/hooks'
 import styled from 'styled-components/macro'
 import { ExternalLink, MEDIA_WIDTHS } from 'theme'
 import { replaceURLParam } from 'utils/routes'
-import { isChainAllowed, switchChain } from 'utils/switchChain'
+import { switchChain } from 'utils/switchChain'
 import { isMobile } from 'utils/userAgent'
 
 const ActiveRowLinkList = styled.div`
@@ -423,11 +423,9 @@ export default function NetworkSelector() {
             <FlyoutHeader>
               <Trans>Select a {!onSupportedChain ? ' supported ' : ''}network</Trans>
             </FlyoutHeader>
-            {NETWORK_SELECTOR_CHAINS.map((chainId: SupportedChainId) =>
-              isChainAllowed(connector, chainId) ? (
-                <Row onSelectChain={onSelectChain} targetChain={chainId} key={chainId} />
-              ) : null
-            )}
+            {NETWORK_SELECTOR_CHAINS.map((chainId: SupportedChainId) => (
+              <Row onSelectChain={onSelectChain} targetChain={chainId} key={chainId} />
+            ))}
           </FlyoutMenuContents>
         </FlyoutMenu>
       )}
