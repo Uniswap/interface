@@ -1,10 +1,12 @@
-import { Protocol, Trade } from '@uniswap/router-sdk'
+import { MixedRoute, partitionMixedRouteByProtocol, Protocol, Trade } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
+import { Pair } from '@uniswap/v2-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'
 import { L2_CHAIN_IDS } from 'constants/chains'
 import JSBI from 'jsbi'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
+import Pool from 'pages/Pool'
 import { useMemo } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
 
@@ -43,8 +45,17 @@ function guesstimateGas(trade: Trade<Currency, Currency, TradeType> | undefined)
         // V3 gas costs scale on initialized ticks being crossed, but we don't have that data here.
         // We bake in some tick crossings into the base 100k cost.
         gas += V3_SWAP_BASE_GAS_ESTIMATE + route.pools.length * V3_SWAP_HOP_GAS_ESTIMATE
+      } else if (route.protocol === Protocol.MIXED) {
+        const sections = partitionMixedRouteByProtocol(route as MixedRoute<Currency, Currency>)
+        sections.forEach((section) => {
+          if (section.every((pool) => pool instanceof Pool)) {
+            gas += V3_SWAP_BASE_GAS_ESTIMATE + section.length * V3_SWAP_HOP_GAS_ESTIMATE
+          } else if (section.every((pool) => pool instanceof Pair)) {
+            gas += V2_SWAP_BASE_GAS_ESTIMATE + (section.length - 1) * V2_SWAP_HOP_GAS_ESTIMATE
+          }
+        })
       } else {
-        // TODO: Update with better estimates once we have interleaved routes.
+        // fallback general gas estimation
         gas += V3_SWAP_BASE_GAS_ESTIMATE + route.pools.length * V3_SWAP_HOP_GAS_ESTIMATE
       }
     }
