@@ -1,5 +1,6 @@
 import React from 'react'
 import { requireNativeComponent, ViewProps } from 'react-native'
+import { dimensions } from 'src/styles/sizing'
 
 interface NativeMnemonicTestProps {
   mnemonicId: Address
@@ -10,7 +11,7 @@ const NativeMnemonicTest = requireNativeComponent<NativeMnemonicTestProps>('Mnem
 
 type MnemonicTestProps = ViewProps & NativeMnemonicTestProps
 
-const MNEMONIC_TEST_HEIGHT = 400
+const MNEMONIC_TEST_HEIGHT = dimensions.fullHeight - 100
 export function MnemonicTest(props: MnemonicTestProps) {
   return <NativeMnemonicTest style={{ height: MNEMONIC_TEST_HEIGHT }} {...props} />
 }
