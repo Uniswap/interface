@@ -1,9 +1,11 @@
 import { outboundLink } from 'components/analytics'
-import React, { HTMLProps } from 'react'
-import { ArrowLeft, ExternalLink as LinkIconFeather, Trash, X } from 'react-feather'
+import useCopyClipboard from 'hooks/useCopyClipboard'
+import React, { HTMLProps, useCallback } from 'react'
+import { ArrowLeft, Copy, ExternalLink as LinkIconFeather, Trash, X } from 'react-feather'
 import { Link } from 'react-router-dom'
-import styled, { keyframes } from 'styled-components/macro'
+import styled, { css, keyframes } from 'styled-components/macro'
 
+import { ReactComponent as TooltipTriangle } from '../assets/svg/tooltip_triangle.svg'
 import { anonymizeLink } from '../utils/anonymizeLink'
 
 export const ButtonText = styled.button`
@@ -38,7 +40,7 @@ export const IconWrapper = styled.div<{ stroke?: string; size?: string; marginRi
   margin-right: ${({ marginRight }) => marginRight ?? 0};
   margin-left: ${({ marginLeft }) => marginLeft ?? 0};
   & > * {
-    stroke: ${({ theme, stroke }) => stroke ?? theme.deprecated_blue1};
+    stroke: ${({ theme, stroke }) => stroke ?? theme.accentActive};
   }
 `
 
@@ -66,80 +68,59 @@ export const LinkStyledButton = styled.button<{ disabled?: boolean }>`
   }
 `
 
-// An internal link from the react-router-dom library that is correctly styled
-export const StyledInternalLink = styled(Link)`
+export const LinkStyle = css`
   text-decoration: none;
+  color: ${({ theme }) => theme.accentAction};
+  stroke: ${({ theme }) => theme.accentAction};
   cursor: pointer;
-  color: ${({ theme }) => theme.deprecated_primary1};
   font-weight: 500;
 
   :hover {
-    text-decoration: underline;
+    opacity: 0.6;
   }
-
-  :focus {
-    outline: none;
-    text-decoration: underline;
-  }
-
   :active {
-    text-decoration: none;
+    opacity: 0.4;
   }
 `
 
-const StyledLink = styled.a`
-  text-decoration: none;
-  cursor: pointer;
-  color: ${({ theme }) => theme.deprecated_primary1};
-  font-weight: 500;
-
-  :hover {
-    text-decoration: underline;
-  }
-
-  :focus {
-    outline: none;
-    text-decoration: underline;
-  }
-
-  :active {
-    text-decoration: none;
-  }
+// An internal link from the react-router-dom library that is correctly styled
+export const StyledInternalLink = styled(Link)`
+  ${LinkStyle}
 `
 
 const LinkIconWrapper = styled.a`
+  align-items: center;
+  justify-content: center;
+  display: flex;
+`
+
+const CopyIconWrapper = styled.div`
   text-decoration: none;
   cursor: pointer;
   align-items: center;
   justify-content: center;
   display: flex;
+`
 
-  :hover {
-    text-decoration: none;
-    opacity: 0.7;
-  }
-
-  :focus {
-    outline: none;
-    text-decoration: none;
-  }
-
-  :active {
-    text-decoration: none;
-  }
+const IconStyle = css`
+  height: 16px;
+  width: 18px;
+  margin-left: 10px;
 `
 
 const LinkIcon = styled(LinkIconFeather)`
-  height: 16px;
-  width: 18px;
-  margin-left: 10px;
-  stroke: ${({ theme }) => theme.deprecated_blue1};
+  ${IconStyle}
+  ${LinkStyle}
+`
+
+const CopyIcon = styled(Copy)`
+  ${IconStyle}
+  ${LinkStyle}
+  stroke: ${({ theme }) => theme.accentActive};
 `
 
 export const TrashIcon = styled(Trash)`
-  height: 16px;
-  width: 18px;
-  margin-left: 10px;
+  ${IconStyle}
   stroke: ${({ theme }) => theme.deprecated_text3};
 
   cursor: pointer;
@@ -187,6 +168,9 @@ function handleClickExternalLink(event: React.MouseEvent<HTMLAnchorElement>) {
   }
 }
 
+const StyledLink = styled.a`
+  ${LinkStyle}
+`
 /**
  * Outbound link that handles firing google analytics events
  */
@@ -212,6 +196,50 @@ export function ExternalLinkIcon({
   )
 }
 
+const ToolTipWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: absolute;
+  transform: translate(5px, 32px);
+  z-index: 9999;
+`
+
+const CopiedTooltip = styled.div`
+  background-color: ${({ theme }) => theme.black};
+  text-align: center;
+  justify-content: center;
+  width: 60px;
+  height: 32px;
+  line-height: 32px;
+  border-radius: 8px;
+
+  color: ${({ theme }) => theme.white};
+  font-size: 12px;
+`
+
+function ToolTip() {
+  return (
+    <ToolTipWrapper>
+      <TooltipTriangle />
+      <CopiedTooltip>Copied!</CopiedTooltip>
+    </ToolTipWrapper>
+  )
+}
+
+export function CopyLinkIcon({ toCopy }: { toCopy: string }) {
+  const [isCopied, setCopied] = useCopyClipboard()
+  const copy = useCallback(() => {
+    setCopied(toCopy)
+  }, [toCopy, setCopied])
+  return (
+    <CopyIconWrapper onClick={copy}>
+      <CopyIcon />
+      {isCopied && <ToolTip />}
+    </CopyIconWrapper>
+  )
+}
+
 const rotate = keyframes`
   from {
     transform: rotate(0deg);
@@ -220,11 +248,17 @@ const rotate = keyframes`
     transform: rotate(360deg);
   }
 `
+const SpinnerCss = css`
+  animation: 2s ${rotate} linear infinite;
+`
 
 const Spinner = styled.img`
-  animation: 2s ${rotate} linear infinite;
+  ${SpinnerCss}
   width: 16px;
   height: 16px;
+`
+export const SpinnerSVG = styled.svg`
+  ${SpinnerCss}
 `
 
 const BackArrowLink = styled(StyledInternalLink)`
