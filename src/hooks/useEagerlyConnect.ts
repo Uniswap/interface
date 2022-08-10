@@ -3,7 +3,8 @@ import { Connection, gnosisSafeConnection, networkConnection } from 'connection'
 import { getConnection } from 'connection/utils'
 import { useEffect } from 'react'
 import { BACKFILLABLE_WALLETS } from 'state/connection/constants'
-import { useAppSelector } from 'state/hooks'
+import { useAppDispatch, useAppSelector } from 'state/hooks'
+import { updateSelectedWallet } from 'state/user/reducer'
 
 async function connect(connector: Connector) {
   try {
@@ -18,6 +19,8 @@ async function connect(connector: Connector) {
 }
 
 export default function useEagerlyConnect() {
+  const dispatch = useAppDispatch()
+
   const selectedWalletBackfilled = useAppSelector((state) => state.user.selectedWalletBackfilled)
   const selectedWallet = useAppSelector((state) => state.user.selectedWallet)
 
@@ -25,7 +28,9 @@ export default function useEagerlyConnect() {
   if (selectedWallet) {
     try {
       selectedConnection = getConnection(selectedWallet)
-    } catch {}
+    } catch {
+      dispatch(updateSelectedWallet({ wallet: undefined }))
+    }
   }
 
   useEffect(() => {
