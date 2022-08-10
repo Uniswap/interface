@@ -1,16 +1,12 @@
 import { Currency } from '@uniswap/sdk-core'
 import React, { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
+import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { HomeStackScreenProp } from 'src/app/navigation/types'
-import { BackButton } from 'src/components/buttons/BackButton'
-import { Button } from 'src/components/buttons/Button'
 import { IconButton } from 'src/components/buttons/IconButton'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { SendButton } from 'src/components/buttons/SendButton'
 import { CurrencyLogo } from 'src/components/CurrencyLogo'
-import { NetworkLogo } from 'src/components/CurrencyLogo/NetworkLogo'
-import { Chevron } from 'src/components/icons/Chevron'
 import { Heart } from 'src/components/icons/Heart'
 import { Flex } from 'src/components/layout'
 import { BackHeader } from 'src/components/layout/BackHeader'
@@ -20,10 +16,10 @@ import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { CurrencyPriceChart } from 'src/components/PriceChart'
 import { Text } from 'src/components/Text'
 import { TokenBalances } from 'src/components/TokenDetails/TokenBalances'
+import { TokenDetailsBackButtonRow } from 'src/components/TokenDetails/TokenDetailsBackButtonRow'
 import { TokenDetailsStats } from 'src/components/TokenDetails/TokenDetailsStats'
 import TokenWarningCard from 'src/components/tokens/TokenWarningCard'
 import TokenWarningModalContent from 'src/components/tokens/TokenWarningModalContent'
-import { CHAIN_INFO } from 'src/constants/chains'
 import { AssetType } from 'src/entities/assets'
 import { useSingleBalance } from 'src/features/dataApi/balances'
 import { useSpotPrices } from 'src/features/dataApi/prices'
@@ -43,24 +39,6 @@ import { formatUSDPrice } from 'src/utils/format'
 
 interface TokenDetailsHeaderProps {
   currency: Currency
-}
-
-function BackButtonRow({ currency }: TokenDetailsHeaderProps) {
-  const theme = useAppTheme()
-  return (
-    <Flex row alignItems="center" justifyContent="space-between" pt="sm">
-      <BackButton showButtonLabel />
-      <Button>
-        <Flex centered row bg="backgroundContainer" borderRadius="sm" gap="xxs" p="xs">
-          <NetworkLogo chainId={currency.chainId} size={16} />
-          <Text color="textSecondary" pl="xxxs" textAlign="center" variant="smallLabel">
-            {CHAIN_INFO[currency.chainId].label}
-          </Text>
-          <Chevron color={theme.colors.textSecondary} direction="s" height={16} width={16} />
-        </Flex>
-      </Button>
-    </Flex>
-  )
 }
 
 function TokenDetailsHeader({ currency }: TokenDetailsHeaderProps) {
@@ -207,7 +185,7 @@ function TokenDetails({ currency }: { currency: Currency }) {
   return (
     <>
       <HeaderScrollScreen
-        contentHeader={<BackButtonRow currency={currency} />}
+        contentHeader={<TokenDetailsBackButtonRow currency={currency} />}
         fixedHeader={
           <BackHeader>
             <HeaderTitleElement currency={currency} />

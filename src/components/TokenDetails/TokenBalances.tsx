@@ -1,13 +1,13 @@
-import React, { useMemo } from 'react'
+import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { CurrencyLogo } from 'src/components/CurrencyLogo'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
+import { useBridgeInfo } from 'src/components/TokenDetails/hooks'
 import { useSingleBalance } from 'src/features/dataApi/balances'
 import { PortfolioBalance } from 'src/features/dataApi/types'
-import { WrappedTokenInfo } from 'src/features/tokenLists/wrappedTokenInfo'
 import { useCurrency } from 'src/features/tokens/useCurrency'
-import { useTokenInfoFromAddress } from 'src/features/tokens/useTokenInfoFromAddress'
+import { toSupportedChainId } from 'src/utils/chainId'
 import { buildCurrencyId, CurrencyId } from 'src/utils/currencyId'
 import { formatCurrencyAmount, formatPrice, formatUSDPrice } from 'src/utils/format'
 import { getKeys } from 'src/utils/objects'
@@ -15,20 +15,7 @@ import { getKeys } from 'src/utils/objects'
 export function TokenBalances({ balance }: { balance: PortfolioBalance }) {
   const { t } = useTranslation()
   const currency = balance.amount.currency
-  const nativeWrappedCurrency = useTokenInfoFromAddress(
-    currency.chainId,
-    currency.isNative ? buildCurrencyId(currency.chainId, currency.wrapped.address) : undefined
-  )
-
-  const bridgeInfo = useMemo(
-    () =>
-      currency instanceof WrappedTokenInfo
-        ? currency.bridgeInfo
-        : nativeWrappedCurrency instanceof WrappedTokenInfo
-        ? nativeWrappedCurrency.bridgeInfo
-        : null,
-    [currency, nativeWrappedCurrency]
-  )
+  const bridgeInfo = useBridgeInfo(currency)
 
   return (
     <Flex bg="backgroundContainer" borderRadius="sm" gap="lg" mx="md" p="md">
@@ -52,8 +39,14 @@ export function TokenBalances({ balance }: { balance: PortfolioBalance }) {
         {bridgeInfo &&
           getKeys(bridgeInfo).map((chainId) => {
             const bridgedTokenAddress = bridgeInfo[chainId]?.tokenAddress
-            if (!bridgedTokenAddress) return null
-            return <OtherChainBalance currencyId={buildCurrencyId(chainId, bridgedTokenAddress)} />
+            const supportedChainId = toSupportedChainId(String(chainId))
+            if (!bridgedTokenAddress || !supportedChainId) return null
+            return (
+              <OtherChainBalance
+                key={chainId}
+                currencyId={buildCurrencyId(supportedChainId, bridgedTokenAddress)}
+              />
+            )
           })}
       </Flex>
     </Flex>
