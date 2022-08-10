@@ -19,7 +19,6 @@ import {
   LARGE_MEDIA_BREAKPOINT,
   MAX_WIDTH_MEDIA_BREAKPOINT,
   MEDIUM_MEDIA_BREAKPOINT,
-  MOBILE_MEDIA_BREAKPOINT,
   SMALL_MEDIA_BREAKPOINT,
 } from '../constants'
 import { LoadingBubble } from '../loading'
@@ -73,17 +72,12 @@ const StyledTokenRow = styled.div`
   }
 
   @media only screen and (max-width: ${MEDIUM_MEDIA_BREAKPOINT}) {
-    grid-template-columns: 1.2fr 1fr 8fr 5fr 5fr;
+    grid-template-columns: 1.2fr 1fr 10fr 5fr 3fr;
     width: fit-content;
   }
 
   @media only screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
-    grid-template-columns: 1fr 7fr 4fr 4fr 0.5px;
-    width: fit-content;
-  }
-
-  @media only screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 4fr 2fr;
     min-width: unset;
     border-bottom: 0.5px solid ${({ theme }) => theme.backgroundContainer};
     padding: 0px 12px;
@@ -112,6 +106,7 @@ const ClickableContent = styled.div`
 `
 const ClickableName = styled(ClickableContent)`
   gap: 8px;
+  max-width: 100%;
 `
 const FavoriteCell = styled(Cell)`
   min-width: 40px;
@@ -141,7 +136,7 @@ const StyledHeaderRow = styled(StyledTokenRow)`
     padding-right: 24px;
   }
 
-  @media only screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
+  @media only screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
     justify-content: space-between;
     padding: 0px 12px;
   }
@@ -150,7 +145,7 @@ const ListNumberCell = styled(Cell)`
   color: ${({ theme }) => theme.textSecondary};
   min-width: 32px;
 
-  @media only screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
+  @media only screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
     display: none;
   }
 `
@@ -172,7 +167,7 @@ const MarketCapCell = styled(DataCell)`
 `
 const NameCell = styled(Cell)`
   justify-content: flex-start;
-  padding-left: 8px;
+  padding: 0px 8px;
   min-width: 200px;
   gap: 8px;
 `
@@ -180,15 +175,14 @@ const PriceCell = styled(DataCell)`
   padding-right: 8px;
 `
 const PercentChangeCell = styled(DataCell)`
-  padding-right: 8px;
-  @media only screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
+  @media only screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
     display: none;
   }
 `
 const PercentChangeInfoCell = styled(Cell)`
   display: none;
 
-  @media only screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
+  @media only screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
     display: flex;
     justify-content: flex-end;
     color: ${({ theme }) => theme.textSecondary};
@@ -200,7 +194,7 @@ const PriceInfoCell = styled(Cell)`
   justify-content: flex-end;
   flex: 1;
 
-  @media only screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
+  @media only screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
     flex-direction: column;
     align-items: flex-end;
   }
@@ -235,8 +229,12 @@ const TokenInfoCell = styled(Cell)`
   gap: 8px;
   line-height: 24px;
   font-size: 16px;
+  max-width: inherit;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 
-  @media only screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
+  @media only screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
     justify-content: flex-start;
     flex-direction: column;
     gap: 0px;
@@ -247,13 +245,13 @@ const TokenInfoCell = styled(Cell)`
 const TokenName = styled.div`
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 160px;
   white-space: nowrap;
+  max-width: 100%;
 `
 const TokenSymbol = styled(Cell)`
   color: ${({ theme }) => theme.textTertiary};
 
-  @media only screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
+  @media only screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
     font-size: 12px;
     height: 16px;
     justify-content: flex-start;
