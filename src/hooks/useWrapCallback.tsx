@@ -1,9 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { Currency } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { sendAnalyticsEvent } from 'components/AmplitudeAnalytics'
-import { EventName } from 'components/AmplitudeAnalytics/constants'
-import { formatToDecimal, getTokenAddress } from 'components/AmplitudeAnalytics/utils'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useMemo } from 'react'
@@ -78,15 +75,6 @@ export default function useWrapCallback(
     const hasInputAmount = Boolean(inputAmount?.greaterThan('0'))
     const sufficientBalance = inputAmount && balance && !balance.lessThan(inputAmount)
 
-    const eventProperties = {
-      token_in_address: getTokenAddress(inputCurrency),
-      token_out_address: getTokenAddress(outputCurrency),
-      token_in_symbol: inputCurrency.symbol,
-      token_out_symbol: outputCurrency.symbol,
-      chain_id: inputCurrency.chainId,
-      amount: inputAmount ? formatToDecimal(inputAmount, inputAmount?.currency.decimals) : undefined,
-    }
-
     if (inputCurrency.isNative && weth.equals(outputCurrency)) {
       return {
         wrapType: WrapType.WRAP,
@@ -101,7 +89,6 @@ export default function useWrapCallback(
                     currencyAmountRaw: inputAmount?.quotient.toString(),
                     chainId,
                   })
-                  sendAnalyticsEvent(EventName.WRAP_TOKEN_TXN_SUBMITTED, { ...eventProperties, type: WrapType.WRAP })
                 } catch (error) {
                   console.error('Could not deposit', error)
                 }
@@ -127,7 +114,6 @@ export default function useWrapCallback(
                     currencyAmountRaw: inputAmount?.quotient.toString(),
                     chainId,
                   })
-                  sendAnalyticsEvent(EventName.WRAP_TOKEN_TXN_SUBMITTED, { ...eventProperties, type: WrapType.UNWRAP })
                 } catch (error) {
                   console.error('Could not withdraw', error)
                 }

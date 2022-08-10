@@ -46,7 +46,7 @@ const SHOULD_SHOW_ALERT = {
   [SupportedChainId.CELO_ALFAJORES]: true,
 }
 
-export type NetworkAlertChains = keyof typeof SHOULD_SHOW_ALERT
+type NetworkAlertChains = keyof typeof SHOULD_SHOW_ALERT
 
 const BG_COLORS_BY_DARK_MODE_AND_CHAIN_ID: {
   [darkMode in 'dark' | 'light']: { [chainId in NetworkAlertChains]: string }

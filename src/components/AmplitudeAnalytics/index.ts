@@ -1,5 +1,4 @@
 import { Identify, identify, init, track } from '@amplitude/analytics-browser'
-import { isDevelopmentEnv } from 'utils/env'
 
 /**
  * Initializes Amplitude with API key for project.
@@ -7,8 +6,8 @@ import { isDevelopmentEnv } from 'utils/env'
  * Uniswap has two Amplitude projects: test and production. You must be a
  * member of the organization on Amplitude to view details.
  */
-export function initializeAnalytics() {
-  if (isDevelopmentEnv()) return
+export function initializeAnalytics(isDevEnvironment = process.env.NODE_ENV === 'development') {
+  if (isDevEnvironment) return
 
   const API_KEY = process.env.REACT_APP_AMPLITUDE_KEY
   if (typeof API_KEY === 'undefined') {
@@ -37,15 +36,13 @@ export function initializeAnalytics() {
 
 /** Sends an event to Amplitude. */
 export function sendAnalyticsEvent(eventName: string, eventProperties?: Record<string, unknown>) {
-  if (isDevelopmentEnv()) {
+  if (process.env.NODE_ENV === 'development') {
     console.log(`[amplitude(${eventName})]: ${JSON.stringify(eventProperties)}`)
     return
   }
 
   track(eventName, eventProperties)
 }
-
-type Value = string | number | boolean | string[] | number[]
 
 /**
  * Class that exposes methods to mutate the User Model's properties in
@@ -55,12 +52,14 @@ type Value = string | number | boolean | string[] | number[]
  * for details.
  */
 class UserModel {
+  constructor(private isDevEnvironment = process.env.NODE_ENV === 'development') {}
+
   private log(method: string, ...parameters: unknown[]) {
     console.debug(`[amplitude(Identify)]: ${method}(${parameters})`)
   }
 
   private call(mutate: (event: Identify) => Identify) {
-    if (isDevelopmentEnv()) {
+    if (this.isDevEnvironment) {
       const log = (_: Identify, method: string) => this.log.bind(this, method)
       mutate(new Proxy(new Identify(), { get: log }))
       return
@@ -68,16 +67,16 @@ class UserModel {
     identify(mutate(new Identify()))
   }
 
-  set(key: string, value: Value) {
+  set(key: string, value: string | number) {
     this.call((event) => event.set(key, value))
   }
 
-  setOnce(key: string, value: Value) {
+  setOnce(key: string, value: string | number) {
     this.call((event) => event.setOnce(key, value))
   }
 
-  add(key: string, value: number) {
-    this.call((event) => event.add(key, value))
+  add(key: string, value: string | number) {
+    this.call((event) => event.add(key, typeof value === 'number' ? value : 0))
   }
 
   postInsert(key: string, value: string | number) {

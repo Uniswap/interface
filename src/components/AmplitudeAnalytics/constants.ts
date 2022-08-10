@@ -5,10 +5,8 @@
  * and logged.
  */
 export enum EventName {
-  APP_LOADED = 'Application Loaded',
   APPROVE_TOKEN_TXN_SUBMITTED = 'Approve Token Transaction Submitted',
   CONNECT_WALLET_BUTTON_CLICKED = 'Connect Wallet Button Clicked',
-  EXPLORE_TOKEN_ROW_CLICKED = 'Explore Token Row Clicked',
   PAGE_VIEWED = 'Page Viewed',
   SWAP_AUTOROUTER_VISUALIZATION_EXPANDED = 'Swap Autorouter Visualization Expanded',
   SWAP_DETAILS_EXPANDED = 'Swap Details Expanded',
@@ -28,34 +26,15 @@ export enum EventName {
 }
 
 export enum CUSTOM_USER_PROPERTIES {
-  ALL_WALLET_ADDRESSES_CONNECTED = 'all_wallet_addresses_connected',
-  ALL_WALLET_CHAIN_IDS = 'all_wallet_chain_ids',
-  BROWSER = 'browser',
-  DARK_MODE = 'is_dark_mode',
-  EXPERT_MODE = 'is_expert_mode',
-  SCREEN_RESOLUTION_HEIGHT = 'screen_resolution_height',
-  SCREEN_RESOLUTION_WIDTH = 'screen_resolution_width',
   WALLET_ADDRESS = 'wallet_address',
-  WALLET_NATIVE_CURRENCY_BALANCE_USD = 'wallet_native_currency_balance_usd',
-  WALLET_TOKENS_ADDRESSES = 'wallet_tokens_addresses',
-  WALLET_TOKENS_SYMBOLS = 'wallet_tokens_symbols',
   WALLET_TYPE = 'wallet_type',
-}
-
-export enum CUSTOM_USER_PROPERTY_SUFFIXES {
-  WALLET_TOKEN_AMOUNT_SUFFIX = '_token_amount',
-}
-
-export enum BROWSER {
-  FIREFOX = 'Mozilla Firefox',
-  SAMSUNG = 'Samsung Internet',
-  OPERA = 'Opera',
-  INTERNET_EXPLORER = 'Microsoft Internet Explorer',
-  EDGE = 'Microsoft Edge (Legacy)',
-  EDGE_CHROMIUM = 'Microsoft Edge (Chromium)',
-  CHROME = 'Google Chrome or Chromium',
-  SAFARI = 'Apple Safari',
-  UNKNOWN = 'unknown',
+  USER_LAST_SEEN_DATE = 'user_last_seen_date',
+  USER_FIRST_SEEN_DATE = 'user_first_seen_date',
+  WALLET_CHAIN_IDS = 'all_wallet_chain_ids',
+  ALL_WALLET_ADDRESSES_CONNECTED = 'all_wallet_addresses_connected',
+  SCREEN_RESOLUTION = 'screen_resolution',
+  BROWSER = 'browser',
+  LIGHT_MODE = 'light_mode',
 }
 
 export enum WALLET_CONNECTION_RESULT {
@@ -73,7 +52,7 @@ export enum SWAP_PRICE_UPDATE_USER_RESPONSE {
 /**
  * Known pages in the app. Highest order context.
  */
-export enum PageName {
+export const enum PageName {
   EXPLORE_PAGE = 'explore-page',
   POOL_PAGE = 'pool-page',
   SWAP_PAGE = 'swap-page',
@@ -86,14 +65,14 @@ export enum PageName {
  * eg a `back` button in a modal will have the same `element`,
  * but a different `section`.
  */
-export enum SectionName {
+export const enum SectionName {
   CURRENCY_INPUT_PANEL = 'swap-currency-input',
   CURRENCY_OUTPUT_PANEL = 'swap-currency-output',
   // alphabetize additional section names.
 }
 
 /** Known modals for analytics purposes. */
-export enum ModalName {
+export const enum ModalName {
   CONFIRM_SWAP = 'confirm-swap-modal',
   TOKEN_SELECTOR = 'token-selector-modal',
   // alphabetize additional modal names.
@@ -103,7 +82,8 @@ export enum ModalName {
  * Known element names for analytics purposes.
  * Use to identify low-level components given a TraceContext
  */
-export enum ElementName {
+export const enum ElementName {
+  APPROVE_TOKEN_BUTTON = 'approve-token-button',
   AUTOROUTER_VISUALIZATION_ROW = 'expandable-autorouter-visualization-row',
   COMMON_BASES_CURRENCY_BUTTON = 'common-bases-currency-button',
   CONFIRM_SWAP_BUTTON = 'confirm-swap-or-send',
@@ -116,6 +96,7 @@ export enum ElementName {
   SWAP_TOKENS_REVERSE_ARROW_BUTTON = 'swap-tokens-reverse-arrow-button',
   TOKEN_SELECTOR_ROW = 'token-selector-row',
   WALLET_TYPE_OPTION = 'wallet-type-option',
+  WRAP_TOKEN_BUTTON = 'wrap-token-button',
   // alphabetize additional element names.
 }
 

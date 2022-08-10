@@ -2,7 +2,7 @@
 
 exports[`renders currency rows correctly when currencies list is non-empty 1`] = `
 <DocumentFragment>
-  .c7 {
+  .c5 {
   color: #6E727D;
 }
 
@@ -24,11 +24,6 @@ exports[`renders currency rows correctly when currencies list is non-empty 1`] =
   -webkit-justify-content: flex-start;
   -ms-flex-pack: start;
   justify-content: flex-start;
-}
-
-.c5 {
-  display: grid;
-  grid-auto-rows: auto;
 }
 
 .c1 {
@@ -55,12 +50,6 @@ exports[`renders currency rows correctly when currencies list is non-empty 1`] =
   justify-content: space-between;
 }
 
-.c8 {
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
-  width: fit-content;
-}
-
 .c3 {
   padding: 4px 20px;
   height: 56px;
@@ -75,13 +64,6 @@ exports[`renders currency rows correctly when currencies list is non-empty 1`] =
   background-color: #EDEEF2;
 }
 
-.c6 {
-  font-weight: 500;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
 <div
     style="position: relative; height: 10px; width: 100%; overflow: auto; will-change: transform; direction: ltr;"
   >
@@ -93,114 +75,69 @@ exports[`renders currency rows correctly when currencies list is non-empty 1`] =
         style="position: absolute; left: 0px; top: 0px; height: 56px; width: 100%;"
         tabindex="0"
       >
+        CurrencyLogo currency=DAI
         <div
           class="c4"
         >
-          CurrencyLogo currency=DAI
-        </div>
-        <div
-          class="c5"
-        >
           <div
-            class="c0 c1"
-          >
-            <div
-              class="c6 css-vurnku"
-              title="Dai Stablecoin"
-            >
-              Dai Stablecoin
-            </div>
-          </div>
-          <div
-            class="c7 css-1j6a53a"
+            class="css-8mokm4"
+            title="Dai Stablecoin"
           >
             DAI
           </div>
-        </div>
-        <div
-          class="c4"
-        >
           <div
-            class="c0 c1 c8"
-            style="justify-self: flex-end;"
-          />
+            class="c5 css-1j6a53a"
+          >
+            Dai Stablecoin
+          </div>
         </div>
+        <span />
       </div>
       <div
         class="c0 c1 c2 c3 token-item-0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
         style="position: absolute; left: 0px; top: 56px; height: 56px; width: 100%;"
         tabindex="0"
       >
+        CurrencyLogo currency=USDC
         <div
           class="c4"
         >
-          CurrencyLogo currency=USDC
-        </div>
-        <div
-          class="c5"
-        >
           <div
-            class="c0 c1"
-          >
-            <div
-              class="c6 css-vurnku"
-              title="USD//C"
-            >
-              USD//C
-            </div>
-          </div>
-          <div
-            class="c7 css-1j6a53a"
+            class="css-8mokm4"
+            title="USD//C"
           >
             USDC
           </div>
-        </div>
-        <div
-          class="c4"
-        >
           <div
-            class="c0 c1 c8"
-            style="justify-self: flex-end;"
-          />
+            class="c5 css-1j6a53a"
+          >
+            USD//C
+          </div>
         </div>
+        <span />
       </div>
       <div
         class="c0 c1 c2 c3 token-item-0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599"
         style="position: absolute; left: 0px; top: 112px; height: 56px; width: 100%;"
         tabindex="0"
       >
+        CurrencyLogo currency=WBTC
         <div
           class="c4"
         >
-          CurrencyLogo currency=WBTC
-        </div>
-        <div
-          class="c5"
-        >
           <div
-            class="c0 c1"
-          >
-            <div
-              class="c6 css-vurnku"
-              title="Wrapped BTC"
-            >
-              Wrapped BTC
-            </div>
-          </div>
-          <div
-            class="c7 css-1j6a53a"
+            class="css-8mokm4"
+            title="Wrapped BTC"
           >
             WBTC
           </div>
-        </div>
-        <div
-          class="c4"
-        >
           <div
-            class="c0 c1 c8"
-            style="justify-self: flex-end;"
-          />
+            class="c5 css-1j6a53a"
+          >
+            Wrapped BTC
+          </div>
         </div>
+        <span />
       </div>
     </div>
   </div>

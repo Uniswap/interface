@@ -1,4 +1,4 @@
-import { Phase0Variant, usePhase0Flag } from 'featureFlags/flags/phase0'
+import { Phase0Variant, usePhase0Flag } from 'featureFlag'
 import React, { useMemo } from 'react'
 import { Text, TextProps as TextPropsOriginal } from 'rebass'
 import styled, {
@@ -110,9 +110,6 @@ function uniswapThemeColors(darkMode: boolean): ThemeColors {
     chain_80001: colorsDark.chain_80001,
 
     blue200: ColorsPalette.blue200,
-    flyoutDropShadow:
-      '0px 24px 32px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 0px 1px rgba(0, 0, 0, 0.12)',
-    hoverState: opacify(24, ColorsPalette.blue200),
   }
 }
 

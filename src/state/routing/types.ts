@@ -74,15 +74,12 @@ export class InterfaceTrade<
   TTradeType extends TradeType
 > extends Trade<TInput, TOutput, TTradeType> {
   gasUseEstimateUSD: CurrencyAmount<Token> | null | undefined
-  blockNumber: string | null | undefined
 
   constructor({
     gasUseEstimateUSD,
-    blockNumber,
     ...routes
   }: {
     gasUseEstimateUSD?: CurrencyAmount<Token> | undefined | null
-    blockNumber?: string | null | undefined
     v2Routes: {
       routev2: V2Route<TInput, TOutput>
       inputAmount: CurrencyAmount<TInput>
@@ -96,7 +93,6 @@ export class InterfaceTrade<
     tradeType: TTradeType
   }) {
     super(routes)
-    this.blockNumber = blockNumber
     this.gasUseEstimateUSD = gasUseEstimateUSD
   }
 }

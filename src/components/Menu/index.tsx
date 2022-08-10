@@ -1,7 +1,6 @@
 // eslint-disable-next-line no-restricted-imports
 import { t, Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
-import FeatureFlagModal from 'components/FeatureFlagModal/FeatureFlagModal'
 import { PrivacyPolicyModal } from 'components/PrivacyPolicy'
 import { L2_CHAIN_IDS } from 'constants/chains'
 import { LOCALE_LABEL, SUPPORTED_LOCALES, SupportedLocale } from 'constants/locales'
@@ -24,7 +23,6 @@ import {
 import { Link } from 'react-router-dom'
 import { useDarkModeManager } from 'state/user/hooks'
 import styled, { css } from 'styled-components/macro'
-import { isDevelopmentEnv, isStagingEnv } from 'utils/env'
 
 import { ReactComponent as MenuIcon } from '../../assets/images/menu.svg'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
@@ -216,7 +214,6 @@ export default function Menu() {
   const toggleMenu = useToggleModal(ApplicationModal.MENU)
   useOnClickOutside(node, open ? toggleMenu : undefined)
   const togglePrivacyPolicy = useToggleModal(ApplicationModal.PRIVACY_POLICY)
-  const openFeatureFlagsModal = useToggleModal(ApplicationModal.FEATURE_FLAGS)
   const openClaimModal = useToggleModal(ApplicationModal.ADDRESS_CLAIM)
   const showUNIClaimOption = Boolean(!!account && !!chainId && !L2_CHAIN_IDS.includes(chainId))
 
@@ -302,16 +299,12 @@ export default function Menu() {
                         <Trans>Claim UNI</Trans>
                       </UNIbutton>
                     )}
-                    {(isDevelopmentEnv() || isStagingEnv()) && (
-                      <ToggleMenuItem onClick={openFeatureFlagsModal}>Feature Flags</ToggleMenuItem>
-                    )}
                   </MenuFlyout>
                 )
             }
           })()}
       </StyledMenu>
       <PrivacyPolicyModal />
-      <FeatureFlagModal />
     </>
   )
 }

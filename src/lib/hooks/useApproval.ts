@@ -2,9 +2,6 @@ import { MaxUint256 } from '@ethersproject/constants'
 import { TransactionResponse } from '@ethersproject/providers'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { sendAnalyticsEvent } from 'components/AmplitudeAnalytics'
-import { EventName } from 'components/AmplitudeAnalytics/constants'
-import { getTokenAddress } from 'components/AmplitudeAnalytics/utils'
 import { useTokenContract } from 'hooks/useContract'
 import { useTokenAllowance } from 'hooks/useTokenAllowance'
 import { useCallback, useMemo } from 'react'
@@ -91,19 +88,11 @@ export function useApproval(
       .approve(spender, useExact ? amountToApprove.quotient.toString() : MaxUint256, {
         gasLimit: calculateGasMargin(estimatedGas),
       })
-      .then((response) => {
-        const eventProperties = {
-          chain_id: chainId,
-          token_symbol: token?.symbol,
-          token_address: getTokenAddress(token),
-        }
-        sendAnalyticsEvent(EventName.APPROVE_TOKEN_TXN_SUBMITTED, eventProperties)
-        return {
-          response,
-          tokenAddress: token.address,
-          spenderAddress: spender,
-        }
-      })
+      .then((response) => ({
+        response,
+        tokenAddress: token.address,
+        spenderAddress: spender,
+      }))
       .catch((error: Error) => {
         logFailure(error)
         throw error
