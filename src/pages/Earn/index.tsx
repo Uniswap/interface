@@ -65,25 +65,25 @@ export default function Earn() {
           <CardSection>
             <AutoColumn gap="md">
               <RowBetween>
-                <ThemedText.White fontWeight={600}>
+                <ThemedText.DeprecatedWhite fontWeight={600}>
                   <Trans>Uniswap liquidity mining</Trans>
-                </ThemedText.White>
+                </ThemedText.DeprecatedWhite>
               </RowBetween>
               <RowBetween>
-                <ThemedText.White fontSize={14}>
+                <ThemedText.DeprecatedWhite fontSize={14}>
                   <Trans>
                     Deposit your Liquidity Provider tokens to receive UNI, the Uniswap protocol governance token.
                   </Trans>
-                </ThemedText.White>
+                </ThemedText.DeprecatedWhite>
               </RowBetween>{' '}
               <ExternalLink
                 style={{ color: theme.deprecated_white, textDecoration: 'underline' }}
                 href="https://uniswap.org/blog/uni/"
                 target="_blank"
               >
-                <ThemedText.White fontSize={14}>
+                <ThemedText.DeprecatedWhite fontSize={14}>
                   <Trans>Read more about UNI</Trans>
-                </ThemedText.White>
+                </ThemedText.DeprecatedWhite>
               </ExternalLink>
             </AutoColumn>
           </CardSection>
@@ -94,9 +94,9 @@ export default function Earn() {
 
       <AutoColumn gap="lg" style={{ width: '100%', maxWidth: '720px' }}>
         <DataRow style={{ alignItems: 'baseline' }}>
-          <ThemedText.MediumHeader style={{ marginTop: '0.5rem' }}>
+          <ThemedText.DeprecatedMediumHeader style={{ marginTop: '0.5rem' }}>
             <Trans>Participating pools</Trans>
-          </ThemedText.MediumHeader>
+          </ThemedText.DeprecatedMediumHeader>
           <Countdown exactEnd={stakingInfos?.[0]?.periodFinish} />
         </DataRow>
 

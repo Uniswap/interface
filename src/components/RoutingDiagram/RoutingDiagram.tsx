@@ -78,7 +78,7 @@ const MixedProtocolBadge = styled(ProtocolBadge)`
   width: 60px;
 `
 
-const BadgeText = styled(ThemedText.Small)`
+const BadgeText = styled(ThemedText.DeprecatedSmall)`
   word-break: normal;
 `
 
@@ -149,7 +149,7 @@ function Pool({ currency0, currency1, feeAmount }: { currency0: Currency; curren
         <Box margin="0 4px 0 12px">
           <DoubleCurrencyLogo currency0={tokenInfo1} currency1={tokenInfo0} size={20} />
         </Box>
-        <ThemedText.Small fontSize={14}>{feeAmount / 10000}%</ThemedText.Small>
+        <ThemedText.DeprecatedSmall fontSize={14}>{feeAmount / 10000}%</ThemedText.DeprecatedSmall>
       </PoolBadge>
     </MouseoverTooltip>
   )

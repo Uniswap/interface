@@ -34,9 +34,9 @@ export default function TransactionPopup({ hash }: { hash: string }) {
         )}
       </div>
       <AutoColumn gap="8px">
-        <ThemedText.Body fontWeight={500}>
+        <ThemedText.DeprecatedBody fontWeight={500}>
           <TransactionSummary info={tx.info} />
-        </ThemedText.Body>
+        </ThemedText.DeprecatedBody>
         {chainId && (
           <ExternalLink href={getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)}>
             View on Explorer

@@ -1,6 +1,11 @@
 import { Trans } from '@lingui/macro'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
-import { useContext, useState } from 'react'
+import { Price } from '@uniswap/sdk-core'
+import { sendAnalyticsEvent } from 'components/AmplitudeAnalytics'
+import { EventName, SWAP_PRICE_UPDATE_USER_RESPONSE } from 'components/AmplitudeAnalytics/constants'
+import { formatPercentInBasisPointsNumber } from 'components/AmplitudeAnalytics/utils'
+import { Phase0Variant, usePhase0Flag } from 'featureFlags/flags/phase0'
+import { useContext, useEffect, useState } from 'react'
 import { AlertTriangle, ArrowDown } from 'react-feather'
 import { Text } from 'rebass'
 import { InterfaceTrade } from 'state/routing/types'
@@ -20,11 +25,11 @@ import TradePrice from '../swap/TradePrice'
 import { AdvancedSwapDetails } from './AdvancedSwapDetails'
 import { SwapShowAcceptChanges, TruncatedText } from './styleds'
 
-const ArrowWrapper = styled.div`
+const ArrowWrapper = styled.div<{ phase0Flag: boolean }>`
   padding: 4px;
   border-radius: 12px;
-  height: 32px;
-  width: 32px;
+  height: ${({ phase0Flag }) => (phase0Flag ? '40px' : '32px')};
+  width: ${({ phase0Flag }) => (phase0Flag ? '40px' : '32px')};
   position: relative;
   margin-top: -18px;
   margin-bottom: -18px;
@@ -32,31 +37,79 @@ const ArrowWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: ${({ theme }) => theme.deprecated_bg1};
+  background-color: ${({ theme, phase0Flag }) => (phase0Flag ? theme.backgroundSurface : theme.deprecated_bg1)};
   border: 4px solid;
-  border-color: ${({ theme }) => theme.deprecated_bg0};
+  border-color: ${({ theme, phase0Flag }) => (phase0Flag ? theme.backgroundContainer : theme.deprecated_bg0)};
   z-index: 2;
 `
 
+const formatAnalyticsEventProperties = (
+  trade: InterfaceTrade<Currency, Currency, TradeType>,
+  priceUpdate: number | undefined,
+  response: SWAP_PRICE_UPDATE_USER_RESPONSE
+) => ({
+  chain_id:
+    trade.inputAmount.currency.chainId === trade.outputAmount.currency.chainId
+      ? trade.inputAmount.currency.chainId
+      : undefined,
+  response,
+  token_in_symbol: trade.inputAmount.currency.symbol,
+  token_out_symbol: trade.outputAmount.currency.symbol,
+  price_update_basis_points: priceUpdate,
+})
+
+const getPriceUpdateBasisPoints = (
+  prevPrice: Price<Currency, Currency>,
+  newPrice: Price<Currency, Currency>
+): number => {
+  const changeFraction = newPrice.subtract(prevPrice).divide(prevPrice)
+  const changePercentage = new Percent(changeFraction.numerator, changeFraction.denominator)
+  return formatPercentInBasisPointsNumber(changePercentage)
+}
+
 export default function SwapModalHeader({
   trade,
+  shouldLogModalCloseEvent,
+  setShouldLogModalCloseEvent,
   allowedSlippage,
   recipient,
   showAcceptChanges,
   onAcceptChanges,
 }: {
   trade: InterfaceTrade<Currency, Currency, TradeType>
+  shouldLogModalCloseEvent: boolean
+  setShouldLogModalCloseEvent: (shouldLog: boolean) => void
   allowedSlippage: Percent
   recipient: string | null
   showAcceptChanges: boolean
   onAcceptChanges: () => void
 }) {
   const theme = useContext(ThemeContext)
+  const phase0Flag = usePhase0Flag()
+  const phase0FlagEnabled = phase0Flag === Phase0Variant.Enabled
 
   const [showInverted, setShowInverted] = useState<boolean>(false)
+  const [lastExecutionPrice, setLastExecutionPrice] = useState(trade.executionPrice)
+  const [priceUpdate, setPriceUpdate] = useState<number | undefined>()
 
   const fiatValueInput = useStablecoinValue(trade.inputAmount)
   const fiatValueOutput = useStablecoinValue(trade.outputAmount)
+
+  useEffect(() => {
+    if (!trade.executionPrice.equalTo(lastExecutionPrice)) {
+      setPriceUpdate(getPriceUpdateBasisPoints(lastExecutionPrice, trade.executionPrice))
+      setLastExecutionPrice(trade.executionPrice)
+    }
+  }, [lastExecutionPrice, setLastExecutionPrice, trade.executionPrice])
+
+  useEffect(() => {
+    if (shouldLogModalCloseEvent && showAcceptChanges)
+      sendAnalyticsEvent(
+        EventName.SWAP_PRICE_UPDATE_ACKNOWLEDGED,
+        formatAnalyticsEventProperties(trade, priceUpdate, SWAP_PRICE_UPDATE_USER_RESPONSE.REJECTED)
+      )
+    setShouldLogModalCloseEvent(false)
+  }, [shouldLogModalCloseEvent, showAcceptChanges, setShouldLogModalCloseEvent, trade, priceUpdate])
 
   return (
     <AutoColumn gap={'4px'} style={{ marginTop: '1rem' }}>
@@ -84,8 +137,8 @@ export default function SwapModalHeader({
           </RowBetween>
         </AutoColumn>
       </LightCard>
-      <ArrowWrapper>
-        <ArrowDown size="16" color={theme.deprecated_text2} />
+      <ArrowWrapper phase0Flag={phase0FlagEnabled}>
+        <ArrowDown size="16" color={phase0FlagEnabled ? theme.textPrimary : theme.deprecated_text2} />
       </ArrowWrapper>
       <LightCard padding="0.75rem 1rem" style={{ marginBottom: '0.25rem' }}>
         <AutoColumn gap={'8px'}>
@@ -103,12 +156,12 @@ export default function SwapModalHeader({
             </RowFixed>
           </RowBetween>
           <RowBetween>
-            <ThemedText.Body fontSize={14} color={theme.deprecated_text3}>
+            <ThemedText.DeprecatedBody fontSize={14} color={theme.deprecated_text3}>
               <FiatValue
                 fiatValue={fiatValueOutput}
                 priceImpact={computeFiatValuePriceImpact(fiatValueInput, fiatValueOutput)}
               />
-            </ThemedText.Body>
+            </ThemedText.DeprecatedBody>
           </RowBetween>
         </AutoColumn>
       </LightCard>
@@ -123,9 +176,9 @@ export default function SwapModalHeader({
           <RowBetween>
             <RowFixed>
               <AlertTriangle size={20} style={{ marginRight: '8px', minWidth: 24 }} />
-              <ThemedText.Main color={theme.deprecated_primary1}>
+              <ThemedText.DeprecatedMain color={theme.deprecated_primary1}>
                 <Trans>Price Updated</Trans>
-              </ThemedText.Main>
+              </ThemedText.DeprecatedMain>
             </RowFixed>
             <ButtonPrimary
               style={{ padding: '.5rem', width: 'fit-content', fontSize: '0.825rem', borderRadius: '12px' }}
@@ -139,7 +192,7 @@ export default function SwapModalHeader({
 
       <AutoColumn justify="flex-start" gap="sm" style={{ padding: '.75rem 1rem' }}>
         {trade.tradeType === TradeType.EXACT_INPUT ? (
-          <ThemedText.Italic fontWeight={400} textAlign="left" style={{ width: '100%' }}>
+          <ThemedText.DeprecatedItalic fontWeight={400} textAlign="left" style={{ width: '100%' }}>
             <Trans>
               Output is estimated. You will receive at least{' '}
               <b>
@@ -147,9 +200,9 @@ export default function SwapModalHeader({
               </b>{' '}
               or the transaction will revert.
             </Trans>
-          </ThemedText.Italic>
+          </ThemedText.DeprecatedItalic>
         ) : (
-          <ThemedText.Italic fontWeight={400} textAlign="left" style={{ width: '100%' }}>
+          <ThemedText.DeprecatedItalic fontWeight={400} textAlign="left" style={{ width: '100%' }}>
             <Trans>
               Input is estimated. You will sell at most{' '}
               <b>
@@ -157,17 +210,17 @@ export default function SwapModalHeader({
               </b>{' '}
               or the transaction will revert.
             </Trans>
-          </ThemedText.Italic>
+          </ThemedText.DeprecatedItalic>
         )}
       </AutoColumn>
       {recipient !== null ? (
         <AutoColumn justify="flex-start" gap="sm" style={{ padding: '12px 0 0 0px' }}>
-          <ThemedText.Main>
+          <ThemedText.DeprecatedMain>
             <Trans>
               Output will be sent to{' '}
               <b title={recipient}>{isAddress(recipient) ? shortenAddress(recipient) : recipient}</b>
             </Trans>
-          </ThemedText.Main>
+          </ThemedText.DeprecatedMain>
         </AutoColumn>
       ) : null}
     </AutoColumn>

@@ -9,7 +9,7 @@ import { darken } from 'polished'
 import { ParsedQs } from 'qs'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { AlertTriangle, ArrowDownCircle, ChevronDown } from 'react-feather'
-import { useHistory } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { useCloseModal, useModalIsOpen, useOpenModal, useToggleModal } from 'state/application/hooks'
 import { addPopup, ApplicationModal } from 'state/application/reducer'
 import { updateConnectionError } from 'state/connection/reducer'
@@ -50,6 +50,7 @@ const ActiveRowWrapper = styled.div`
 `
 const FlyoutHeader = styled.div`
   color: ${({ theme }) => theme.deprecated_text2};
+  cursor: default;
   font-weight: 400;
 `
 const FlyoutMenu = styled.div`
@@ -152,6 +153,7 @@ const SelectorControls = styled.div<{ supportedChain: boolean }>`
     background-color: ${theme.deprecated_red1};
     border: 2px solid ${theme.deprecated_red1};
   `}
+  cursor: default;
   :focus {
     background-color: ${({ theme }) => darken(0.1, theme.deprecated_red1)};
   }
@@ -319,7 +321,8 @@ export default function NetworkSelector() {
   const urlChainId = getParsedChainId(parsedQs)
   const previousUrlChainId = usePrevious(urlChainId)
 
-  const history = useHistory()
+  const navigate = useNavigate()
+  const { search } = useLocation()
 
   const node = useRef<HTMLDivElement>(null)
   const isOpen = useModalIsOpen(ApplicationModal.NETWORK_SELECTOR)
@@ -331,9 +334,9 @@ export default function NetworkSelector() {
 
   const replaceURLChainParam = useCallback(() => {
     if (chainId) {
-      history.replace({ search: replaceURLParam(history.location.search, 'chain', getChainNameFromId(chainId)) })
+      navigate({ search: replaceURLParam(search, 'chain', getChainNameFromId(chainId)) }, { replace: true })
     }
-  }, [chainId, history])
+  }, [chainId, search, navigate])
 
   const onSelectChain = useCallback(
     async (targetChain: SupportedChainId, skipClose?: boolean) => {

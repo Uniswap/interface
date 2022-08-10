@@ -1,4 +1,5 @@
 import { Identify, identify, init, track } from '@amplitude/analytics-browser'
+import { isDevelopmentEnv } from 'utils/env'
 
 /**
  * Initializes Amplitude with API key for project.
@@ -6,8 +7,8 @@ import { Identify, identify, init, track } from '@amplitude/analytics-browser'
  * Uniswap has two Amplitude projects: test and production. You must be a
  * member of the organization on Amplitude to view details.
  */
-export function initializeAnalytics(isDevEnvironment = process.env.NODE_ENV === 'development') {
-  if (isDevEnvironment) return
+export function initializeAnalytics() {
+  if (isDevelopmentEnv()) return
 
   const API_KEY = process.env.REACT_APP_AMPLITUDE_KEY
   if (typeof API_KEY === 'undefined') {
@@ -18,13 +19,16 @@ export function initializeAnalytics(isDevEnvironment = process.env.NODE_ENV === 
     API_KEY,
     /* userId= */ undefined, // User ID should be undefined to let Amplitude default to Device ID
     /* options= */ {
+      // See documentation: https://www.docs.developers.amplitude.com/data/sdks/javascript/#track-referrers
+      includeReferrer: true,
+      // See documentation: https://www.docs.developers.amplitude.com/data/sdks/javascript/#track-utm-parameters
+      includeUtm: true,
       // Disable tracking of private user information by Amplitude
       trackingOptions: {
         ipAddress: false,
         carrier: false,
         city: false,
         region: false,
-        country: false,
         dma: false, // designated market area
       },
     }
@@ -33,13 +37,15 @@ export function initializeAnalytics(isDevEnvironment = process.env.NODE_ENV === 
 
 /** Sends an event to Amplitude. */
 export function sendAnalyticsEvent(eventName: string, eventProperties?: Record<string, unknown>) {
-  if (process.env.NODE_ENV === 'development') {
+  if (isDevelopmentEnv()) {
     console.log(`[amplitude(${eventName})]: ${JSON.stringify(eventProperties)}`)
     return
   }
 
   track(eventName, eventProperties)
 }
+
+type Value = string | number | boolean | string[] | number[]
 
 /**
  * Class that exposes methods to mutate the User Model's properties in
@@ -49,14 +55,12 @@ export function sendAnalyticsEvent(eventName: string, eventProperties?: Record<s
  * for details.
  */
 class UserModel {
-  constructor(private isDevEnvironment = process.env.NODE_ENV === 'development') {}
-
   private log(method: string, ...parameters: unknown[]) {
     console.debug(`[amplitude(Identify)]: ${method}(${parameters})`)
   }
 
   private call(mutate: (event: Identify) => Identify) {
-    if (this.isDevEnvironment) {
+    if (isDevelopmentEnv()) {
       const log = (_: Identify, method: string) => this.log.bind(this, method)
       mutate(new Proxy(new Identify(), { get: log }))
       return
@@ -64,16 +68,16 @@ class UserModel {
     identify(mutate(new Identify()))
   }
 
-  set(key: string, value: string | number) {
+  set(key: string, value: Value) {
     this.call((event) => event.set(key, value))
   }
 
-  setOnce(key: string, value: string | number) {
+  setOnce(key: string, value: Value) {
     this.call((event) => event.setOnce(key, value))
   }
 
-  add(key: string, value: string | number) {
-    this.call((event) => event.add(key, typeof value === 'number' ? value : 0))
+  add(key: string, value: number) {
+    this.call((event) => event.add(key, value))
   }
 
   postInsert(key: string, value: string | number) {

@@ -85,7 +85,7 @@ const MoreOptionsButton = styled(ButtonGray)`
   margin-right: 8px;
 `
 
-const MoreOptionsText = styled(ThemedText.Body)`
+const MoreOptionsText = styled(ThemedText.DeprecatedBody)`
   align-items: center;
   display: flex;
 `
@@ -159,19 +159,19 @@ function WrongNetworkCard() {
         <AutoColumn gap="lg" justify="center">
           <AutoColumn gap="lg" style={{ width: '100%' }}>
             <TitleRow style={{ marginTop: '1rem' }} padding={'0'}>
-              <ThemedText.Body fontSize={'20px'}>
+              <ThemedText.DeprecatedBody fontSize={'20px'}>
                 <Trans>Pools Overview</Trans>
-              </ThemedText.Body>
+              </ThemedText.DeprecatedBody>
             </TitleRow>
 
             <MainContentWrapper>
               <ErrorContainer>
-                <ThemedText.Body color={theme.deprecated_text3} textAlign="center">
+                <ThemedText.DeprecatedBody color={theme.deprecated_text3} textAlign="center">
                   <NetworkIcon strokeWidth={1.2} />
                   <div data-testid="pools-unsupported-err">
                     <Trans>Your connected network is unsupported.</Trans>
                   </div>
-                </ThemedText.Body>
+                </ThemedText.DeprecatedBody>
               </ErrorContainer>
             </MainContentWrapper>
           </AutoColumn>
@@ -257,9 +257,9 @@ export default function Pool() {
           <AutoColumn gap="lg" justify="center">
             <AutoColumn gap="lg" style={{ width: '100%' }}>
               <TitleRow style={{ marginTop: '1rem' }} padding={'0'}>
-                <ThemedText.Body fontSize={'20px'}>
+                <ThemedText.DeprecatedBody fontSize={'20px'}>
                   <Trans>Pools Overview</Trans>
-                </ThemedText.Body>
+                </ThemedText.DeprecatedBody>
                 <ButtonRow>
                   {showV2Features && (
                     <Menu
@@ -292,12 +292,12 @@ export default function Pool() {
                   />
                 ) : (
                   <ErrorContainer>
-                    <ThemedText.Body color={theme.deprecated_text3} textAlign="center">
+                    <ThemedText.DeprecatedBody color={theme.deprecated_text3} textAlign="center">
                       <InboxIcon strokeWidth={1} />
                       <div>
                         <Trans>Your active V3 liquidity positions will appear here.</Trans>
                       </div>
-                    </ThemedText.Body>
+                    </ThemedText.DeprecatedBody>
                     {!showConnectAWallet && closedPositions.length > 0 && (
                       <ButtonText
                         style={{ marginTop: '.5rem' }}

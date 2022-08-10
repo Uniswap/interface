@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-07-21 14:04\n"
+"PO-Revision-Date: 2022-08-05 22:05\n"
 "Last-Translator: \n"
 "Language: cs_CZ\n"
 "Language-Team: Czech\n"
@@ -116,6 +116,11 @@ msgstr "<0>🎉 </0>Vítejte v týmu Unicorn :) <1>🎉</1>"
 msgid "A minimum threshold of 0.25% of the total UNI supply is required to submit proposals"
 msgstr "K podání návrhů je nutná minimální hranice 0,25% z celkové nabídky UNI"
 
+#: src/components/swap/PriceImpactWarning.tsx
+msgid "A swap of this size may have a high price impact, given the current liquidity in the pool. There may be a large difference between the amount of your input token and what you will receive in the output token"
+msgstr "Swap této velikosti může mít vysoký dopad na cenu vzhledem k aktuální likviditě v poolu. Mezi množstvím vašeho vstupního tokenu a tím, co obdržíte ve výstupním tokenu, může být velký rozdíl"
+
+#: src/components/Explore/TokenDetails/TokenDetail.tsx
 #: src/components/Menu/index.tsx
 msgid "About"
 msgstr "O aplikaci"
@@ -344,6 +349,10 @@ msgstr "Připojením peněženky souhlasíte s <0>podmínkami služby</0> a potv
 msgid "Canceled"
 msgstr "Zrušeno"
 
+#: src/constants/tokenSafety.tsx
+msgid "Caution"
+msgstr "Pozor"
+
 #: src/components/AccountDetails/index.tsx
 msgid "Change"
 msgstr "Změnit"
@@ -429,6 +438,7 @@ msgstr "Vymazat vše"
 msgid "Clear all"
 msgstr "Vymazat vše"
 
+#: src/components/TokenSafety/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Close"
@@ -813,6 +823,10 @@ msgstr "Režim Expert vypne výzvu k potvrzení transakce a umožní obchody s v
 msgid "Expired"
 msgstr "Vypršela"
 
+#: src/components/Header/index.tsx
+msgid "Explore"
+msgstr "Prozkoumat"
+
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore Uniswap Analytics."
 msgstr "Prozkoumejte Uniswap Analytics."
@@ -873,6 +887,10 @@ msgstr "Skrýt"
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
 msgstr "Vysoký dopad na cenu"
+
+#: src/components/TokenSafety/index.tsx
+msgid "I Understand"
+msgstr "Rozumím"
 
 #: src/components/SearchModal/ImportList.tsx
 #: src/pages/AddLiquidity/index.tsx
@@ -980,12 +998,17 @@ msgstr "Jazyk"
 msgid "Learn"
 msgstr "Učit se"
 
+#: src/components/TokenSafety/index.tsx
+msgid "Learn More"
+msgstr "Další informace"
+
 #: src/pages/Pool/CTACards.tsx
 msgid "Learn about providing liquidity"
 msgstr "Zjistěte více o poskytování likvidity"
 
 #: src/components/PrivacyPolicy/index.tsx
 #: src/components/PrivacyPolicy/index.tsx
+#: src/components/TokenSafety/TokenSafetyMessage.tsx
 msgid "Learn more"
 msgstr "Zjistěte více"
 
@@ -1186,6 +1209,10 @@ msgstr "Nebyly nalezeny žádné návrhy."
 msgid "No results found."
 msgstr "Nebyly nalezeny žádné výsledky."
 
+#: src/constants/tokenSafety.tsx
+msgid "Not Available"
+msgstr "Není dostupný"
+
 #: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "Not created"
 msgstr "Není vytvořeno"
@@ -1250,6 +1277,10 @@ msgstr "Potvrďte, že chcete tento seznam odstranit, zadáním ODSTRANIT"
 #: src/components/vote/ProposalEmptyState.tsx
 msgid "Please connect to Layer 1 Ethereum"
 msgstr "Připojte se k Ethereu vrstvy 1"
+
+#: src/constants/tokenSafety.tsx
+msgid "Please do your own research before trading."
+msgstr "Před obchodováním si prosím udělejte vlastní průzkum."
 
 #: src/components/Settings/index.tsx
 msgid "Please type the word \"{confirmWord}\" to enable expert mode."
@@ -1327,6 +1358,10 @@ msgstr "Příliš vysoký dopad ceny"
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Price Updated"
 msgstr "Cena byla aktualizována"
+
+#: src/components/swap/PriceImpactWarning.tsx
+msgid "Price impact warning"
+msgstr "Upozornění na cenový dopad"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Price range"
@@ -1727,6 +1762,10 @@ msgstr "Transakci nebylo možno odeslat, protože uplynula lhůta. Zkontrolujte,
 msgid "There is no liquidity data."
 msgstr "Neexistují žádné údaje o likviditě."
 
+#: src/components/Explore/TokenDetails/BalanceSummary.tsx
+msgid "There was an error loading your {tokenSymbol} balance"
+msgstr "Při načítání vašeho zůstatku {tokenSymbol} došlo k chybě"
+
 #: src/components/ConnectedAccountBlocked/index.tsx
 msgid "This address is blocked on the Uniswap Labs interface because it is associated with one or more"
 msgstr "Tato adresa je v rozhraní Uniswap Labs blokována, protože je přidružena k jedné nebo více"
@@ -1780,6 +1819,10 @@ msgstr "Do"
 #: src/pages/Swap/index.tsx
 msgid "To (at least)"
 msgstr "Do (alespoň)"
+
+#: src/components/Explore/TokenTable/TokenRow.tsx
+msgid "Token Name"
+msgstr "Název tokenu"
 
 #: src/components/SearchModal/BlockedToken.tsx
 msgid "Token not supported"
@@ -2086,6 +2129,10 @@ msgstr "Čeká se na potvrzení"
 msgid "Wallet Address or ENS name"
 msgstr "Adresa peněženky nebo název ENS"
 
+#: src/constants/tokenSafety.tsx
+msgid "Warning"
+msgstr "Varování"
+
 #: src/components/earn/StakingModal.tsx
 msgid "Weekly Rewards"
 msgstr "Týdenní odměny"
@@ -2341,6 +2388,14 @@ msgstr "prostřednictvím seznamu žetonů {0}"
 
 #: src/components/SearchModal/ImportToken.tsx
 msgid "{0, plural, =1 {Import token} other {Import tokens}}"
+msgstr ""
+
+#: src/constants/tokenSafety.tsx
+msgid "{0, plural, =1 {This token isn't verified} other {These tokens aren't verified}}"
+msgstr ""
+
+#: src/constants/tokenSafety.tsx
+msgid "{0, plural, =1 {You can't trade this token using the Uniswap App.} other {You can't trade these tokens using the Uniswap App.}}"
 msgstr ""
 
 #: src/components/RateToggle/index.tsx

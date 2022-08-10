@@ -1,10 +1,12 @@
 import { Currency, Token } from '@uniswap/sdk-core'
 import { TokenList } from '@uniswap/token-lists'
+import TokenSafety from 'components/TokenSafety'
+import { Phase0Variant, usePhase0Flag } from 'featureFlags/flags/phase0'
 import usePrevious from 'hooks/usePrevious'
 import { useCallback, useEffect, useState } from 'react'
+import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 
 import useLast from '../../hooks/useLast'
-import { WrappedTokenInfo } from '../../state/lists/wrappedTokenInfo'
 import Modal from '../Modal'
 import { CurrencySearch } from './CurrencySearch'
 import { ImportList } from './ImportList'
@@ -73,8 +75,10 @@ export default function CurrencySearchModal({
     [setModalView, prevView]
   )
 
+  const phase0Flag = usePhase0Flag()
+
   // change min height if not searching
-  const minHeight = modalView === CurrencyModalView.importToken || modalView === CurrencyModalView.importList ? 40 : 80
+  let minHeight: number | undefined = 80
   let content = null
   switch (modalView) {
     case CurrencyModalView.search:
@@ -96,18 +100,27 @@ export default function CurrencySearchModal({
       break
     case CurrencyModalView.importToken:
       if (importToken) {
-        content = (
-          <ImportToken
-            tokens={[importToken]}
-            onDismiss={onDismiss}
-            list={importToken instanceof WrappedTokenInfo ? importToken.list : undefined}
-            onBack={handleBackImport}
-            handleCurrencySelect={handleCurrencySelect}
-          />
-        )
+        minHeight = undefined
+        content =
+          phase0Flag === Phase0Variant.Enabled ? (
+            <TokenSafety
+              tokenAddress={importToken.address}
+              onContinue={() => handleCurrencySelect(importToken)}
+              onCancel={handleBackImport}
+            />
+          ) : (
+            <ImportToken
+              tokens={[importToken]}
+              onDismiss={onDismiss}
+              list={importToken instanceof WrappedTokenInfo ? importToken.list : undefined}
+              onBack={handleBackImport}
+              handleCurrencySelect={handleCurrencySelect}
+            />
+          )
       }
       break
     case CurrencyModalView.importList:
+      minHeight = 40
       if (importList && listURL) {
         content = <ImportList list={importList} listURL={listURL} onDismiss={onDismiss} setModalView={setModalView} />
       }

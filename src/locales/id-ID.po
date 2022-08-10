@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-07-21 14:05\n"
+"PO-Revision-Date: 2022-08-05 22:05\n"
 "Last-Translator: \n"
 "Language: id_ID\n"
 "Language-Team: Indonesian\n"
@@ -94,7 +94,7 @@ msgstr "<0>Kiat:</0> Menghapus token pool akan mengubah posisi Anda kembali ke t
 
 #: src/pages/CreateProposal/index.tsx
 msgid "<0>Tip:</0> Select an action and describe your proposal for the community. The proposal cannot be modified after submission, so please verify all information before submitting. The voting period will begin immediately and last for 7 days. To propose a custom action, <1>read the docs</1>."
-msgstr "<0>Kiat:</0> Pilih tindakan dan jelaskan proposal Anda untuk komunitas. Proposal tidak dapat diubah setelah dikirimkan, jadi harap verifikasi semua informasi sebelum dikirm. Periode pemungutan suara akan segera dimulai dan berlangsung selama 7 hari. Untuk mengusulkan tindakan khusus, <1>baca dokumen</1>."
+msgstr "<0>Tip:</0> Pilih tindakan dan jelaskan proposal Anda untuk komunitas. Proposal tidak dapat diubah setelah pengiriman, jadi harap verifikasi semua informasi sebelum mengirimkan. Periode pemungutan suara akan segera dimulai dan berlangsung selama 7 hari. Untuk mengusulkan tindakan khusus, <1>baca dokumentasi</1>."
 
 #: src/pages/PoolFinder/index.tsx
 msgid "<0>Tip:</0> Use this tool to find v2 pools that don't automatically appear in the interface."
@@ -116,6 +116,11 @@ msgstr "<0>🎉</0>Selamat datang di tim Unicorn :) <1>🎉</1>"
 msgid "A minimum threshold of 0.25% of the total UNI supply is required to submit proposals"
 msgstr "Memerlukan minimal 0,25% dari total pasokan UNI untuk mengirimkan proposal"
 
+#: src/components/swap/PriceImpactWarning.tsx
+msgid "A swap of this size may have a high price impact, given the current liquidity in the pool. There may be a large difference between the amount of your input token and what you will receive in the output token"
+msgstr "Pertukaran dengan ukuran ini mungkin memiliki dampak harga yang tinggi, mengingat likuiditas saat ini di kumpulan. Mungkin ada perbedaan besar antara jumlah token yang Anda masukkan dan apa yang akan Anda terima di token keluaran"
+
+#: src/components/Explore/TokenDetails/TokenDetail.tsx
 #: src/components/Menu/index.tsx
 msgid "About"
 msgstr "Tentang"
@@ -338,11 +343,15 @@ msgstr "Dengan menambahkan daftar ini, Anda secara implisit mempercayai bahwa da
 
 #: src/components/WalletModal/index.tsx
 msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the Uniswap <1>Protocol Disclaimer</1>."
-msgstr "Dengan menghubungkan dompet, Anda menyetujui Persyaratan Layanan</0> <0>dan mengakui bahwa Anda telah membaca dan memahami Penafian Protokol <1></1>."
+msgstr "Dengan menghubungkan dompet, Anda menyetujui <0>Syarat Layanan</0> Uniswap Labs' dan mengakui bahwa Anda telah membaca dan memahami <1>Penafian Protokol</1> Uniswap."
 
 #: src/pages/Vote/styled.tsx
 msgid "Canceled"
 msgstr "Dibatalkan"
+
+#: src/constants/tokenSafety.tsx
+msgid "Caution"
+msgstr "Peringatan"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Change"
@@ -368,7 +377,7 @@ msgstr "Klaim"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Claim <0/> for {0}"
-msgstr "Klaim </> untuk {0}"
+msgstr "Klaim <0/> untuk {0}"
 
 #: src/components/Header/index.tsx
 #: src/components/Menu/index.tsx
@@ -429,6 +438,7 @@ msgstr "Hapus Semua"
 msgid "Clear all"
 msgstr "Hapus semua"
 
+#: src/components/TokenSafety/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Close"
@@ -783,7 +793,7 @@ msgstr "Dieksekusi"
 
 #: src/components/vote/ExecuteModal.tsx
 msgid "Executing"
-msgstr "Pelaksana"
+msgstr "Mengeksekusi"
 
 #: src/components/vote/ExecuteModal.tsx
 msgid "Executing this proposal will enact the calldata on-chain."
@@ -812,6 +822,10 @@ msgstr "Mode ahli mematikan permintaan konfirmasi transaksi dan memungkinkan per
 #: src/pages/Vote/styled.tsx
 msgid "Expired"
 msgstr "kadaluarsa"
+
+#: src/components/Header/index.tsx
+msgid "Explore"
+msgstr "Mengeksplorasi"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore Uniswap Analytics."
@@ -873,6 +887,10 @@ msgstr "Menyembunyikan"
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
 msgstr "Dampak Harga Tinggi"
+
+#: src/components/TokenSafety/index.tsx
+msgid "I Understand"
+msgstr "Saya mengerti"
 
 #: src/components/SearchModal/ImportList.tsx
 #: src/pages/AddLiquidity/index.tsx
@@ -980,12 +998,17 @@ msgstr "Bahasa"
 msgid "Learn"
 msgstr "Belajar"
 
+#: src/components/TokenSafety/index.tsx
+msgid "Learn More"
+msgstr "Belajarlah lagi"
+
 #: src/pages/Pool/CTACards.tsx
 msgid "Learn about providing liquidity"
 msgstr "Pelajari tentang menyediakan likuiditas"
 
 #: src/components/PrivacyPolicy/index.tsx
 #: src/components/PrivacyPolicy/index.tsx
+#: src/components/TokenSafety/TokenSafetyMessage.tsx
 msgid "Learn more"
 msgstr "Pelajari lebih lanjut"
 
@@ -1186,9 +1209,13 @@ msgstr "Proposal tidak ditemukan."
 msgid "No results found."
 msgstr "Hasil tidak ditemukan."
 
+#: src/constants/tokenSafety.tsx
+msgid "Not Available"
+msgstr "Tidak tersedia"
+
 #: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "Not created"
-msgstr "Tidak dibuat"
+msgstr "Belum dibuat"
 
 #: src/components/Settings/index.tsx
 msgid "ONLY USE THIS MODE IF YOU KNOW WHAT YOU ARE DOING."
@@ -1250,6 +1277,10 @@ msgstr "Konfirmasikan bahwa Anda ingin menghapus daftar ini dengan mengetik HAPU
 #: src/components/vote/ProposalEmptyState.tsx
 msgid "Please connect to Layer 1 Ethereum"
 msgstr "Silakan hubungkan ke Layer 1 Ethereum"
+
+#: src/constants/tokenSafety.tsx
+msgid "Please do your own research before trading."
+msgstr "Silakan lakukan riset Anda sendiri sebelum berdagang."
 
 #: src/components/Settings/index.tsx
 msgid "Please type the word \"{confirmWord}\" to enable expert mode."
@@ -1327,6 +1358,10 @@ msgstr "Dampak Harga Terlalu Tinggi"
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Price Updated"
 msgstr "Harga Diperbarui"
+
+#: src/components/swap/PriceImpactWarning.tsx
+msgid "Price impact warning"
+msgstr "Peringatan dampak harga"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Price range"
@@ -1431,7 +1466,7 @@ msgstr "Hapus"
 
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Remove <0/> and <1/>"
-msgstr "Hapus </> dan <1/>"
+msgstr "Hapus <0/> dan <1/>"
 
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Remove Amount"
@@ -1461,7 +1496,7 @@ msgstr "Menghapus {0} {1} dan{2} {3}"
 
 #: src/components/Menu/index.tsx
 msgid "Request Features"
-msgstr "Fitur Permintaan"
+msgstr "Request Fitur"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
@@ -1621,7 +1656,7 @@ msgstr "Ikuti survei 10 menit untuk membantu kami meningkatkan pengalaman Anda d
 
 #: src/components/Popups/SurveyPopup.tsx
 msgid "Tell us what you think ↗"
-msgstr "Beri tahu kami pendapat Anda"
+msgstr "Beri tahu kami apa pendapatmu ↗"
 
 #: src/components/Popups/ClaimPopup.tsx
 msgid "Thanks for being part of the Uniswap community <0/>"
@@ -1727,6 +1762,10 @@ msgstr "Transaksi tidak dapat dikirim karena tenggat waktu telah berlalu. Harap 
 msgid "There is no liquidity data."
 msgstr "Tidak ada data likuiditas."
 
+#: src/components/Explore/TokenDetails/BalanceSummary.tsx
+msgid "There was an error loading your {tokenSymbol} balance"
+msgstr "Terjadi kesalahan saat memuat saldo {tokenSymbol} Anda"
+
 #: src/components/ConnectedAccountBlocked/index.tsx
 msgid "This address is blocked on the Uniswap Labs interface because it is associated with one or more"
 msgstr "Alamat ini diblokir di antarmuka Uniswap Labs karena terkait dengan satu atau lebih"
@@ -1780,6 +1819,10 @@ msgstr "Untuk"
 #: src/pages/Swap/index.tsx
 msgid "To (at least)"
 msgstr "Untuk (setidaknya)"
+
+#: src/components/Explore/TokenTable/TokenRow.tsx
+msgid "Token Name"
+msgstr "Nama Token"
 
 #: src/components/SearchModal/BlockedToken.tsx
 msgid "Token not supported"
@@ -2086,6 +2129,10 @@ msgstr "Menunggu Konfirmasi"
 msgid "Wallet Address or ENS name"
 msgstr "Alamat Dompet atau nama ENS"
 
+#: src/constants/tokenSafety.tsx
+msgid "Warning"
+msgstr "Peringatan"
+
 #: src/components/earn/StakingModal.tsx
 msgid "Weekly Rewards"
 msgstr "Hadiah Mingguan"
@@ -2343,6 +2390,14 @@ msgstr "melalui {0} daftar token"
 msgid "{0, plural, =1 {Import token} other {Import tokens}}"
 msgstr "{0, plural, =1 {Impor tanda} other {Impor token}}"
 
+#: src/constants/tokenSafety.tsx
+msgid "{0, plural, =1 {This token isn't verified} other {These tokens aren't verified}}"
+msgstr "{0, plural, =1 {Token ini tidak diverifikasi} other {Token ini tidak diverifikasi}}"
+
+#: src/constants/tokenSafety.tsx
+msgid "{0, plural, =1 {You can't trade this token using the Uniswap App.} other {You can't trade these tokens using the Uniswap App.}}"
+msgstr "{0, plural, =1 {Anda tidak dapat memperdagangkan token ini menggunakan Aplikasi Uniswap.} other {Anda tidak dapat memperdagangkan token ini menggunakan Aplikasi Uniswap.}}"
+
 #: src/components/RateToggle/index.tsx
 #: src/components/RateToggle/index.tsx
 msgid "{0}"
@@ -2456,7 +2511,7 @@ msgstr "tingkat biaya {0}%"
 
 #: src/components/RoutingDiagram/RoutingDiagram.tsx
 msgid "{0}% pool"
-msgstr "{0}% kolam"
+msgstr "{0}% kumpulan"
 
 #: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "{0}% select"

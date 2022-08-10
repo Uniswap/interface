@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-07-21 14:05\n"
+"PO-Revision-Date: 2022-08-10 10:05\n"
 "Last-Translator: \n"
 "Language: sl_SI\n"
 "Language-Team: Slovenian\n"
@@ -116,6 +116,11 @@ msgstr "<0> 🎉</0> Dobrodošli v ekipi Samorog :) <1> 🎉</1>"
 msgid "A minimum threshold of 0.25% of the total UNI supply is required to submit proposals"
 msgstr "Za predložitev predlogov potrebujete vsaj 0,25 % celotne zaloge UNI."
 
+#: src/components/swap/PriceImpactWarning.tsx
+msgid "A swap of this size may have a high price impact, given the current liquidity in the pool. There may be a large difference between the amount of your input token and what you will receive in the output token"
+msgstr "Menjava te velikosti ima lahko velik vpliv na ceno glede na trenutno likvidnost v skladu. Med vrednostjo vašega vhodnega žetona in vrednostjo, ki jo boste prejeli v izhodnem žetonu, je lahko velika razlika."
+
+#: src/components/Explore/TokenDetails/TokenDetail.tsx
 #: src/components/Menu/index.tsx
 msgid "About"
 msgstr "O Uniswapu"
@@ -344,6 +349,10 @@ msgstr "S tem ko povežete denarnico, se strinjate s <0>pogoji storitve Uniswap 
 msgid "Canceled"
 msgstr "Preklicana"
 
+#: src/constants/tokenSafety.tsx
+msgid "Caution"
+msgstr "Pozor"
+
 #: src/components/AccountDetails/index.tsx
 msgid "Change"
 msgstr "Spremeni"
@@ -429,6 +438,7 @@ msgstr "Počisti vse"
 msgid "Clear all"
 msgstr "Počisti vse"
 
+#: src/components/TokenSafety/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Close"
@@ -813,6 +823,10 @@ msgstr "Strokovni način izklopi poziv za potrditev transakcije in omogoča veli
 msgid "Expired"
 msgstr "Potekla"
 
+#: src/components/Header/index.tsx
+msgid "Explore"
+msgstr "Raziščite"
+
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore Uniswap Analytics."
 msgstr "Raziščite Uniswap Analytics."
@@ -873,6 +887,10 @@ msgstr "Skrij"
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
 msgstr "Visok vpliv na ceno"
+
+#: src/components/TokenSafety/index.tsx
+msgid "I Understand"
+msgstr "Razumem"
 
 #: src/components/SearchModal/ImportList.tsx
 #: src/pages/AddLiquidity/index.tsx
@@ -980,12 +998,17 @@ msgstr "Jezik"
 msgid "Learn"
 msgstr "Informacije"
 
+#: src/components/TokenSafety/index.tsx
+msgid "Learn More"
+msgstr "Več o tem"
+
 #: src/pages/Pool/CTACards.tsx
 msgid "Learn about providing liquidity"
 msgstr "Naučite se vse o polaganju likvidnosti"
 
 #: src/components/PrivacyPolicy/index.tsx
 #: src/components/PrivacyPolicy/index.tsx
+#: src/components/TokenSafety/TokenSafetyMessage.tsx
 msgid "Learn more"
 msgstr "Več o tem"
 
@@ -1186,6 +1209,10 @@ msgstr "Ni predlogov."
 msgid "No results found."
 msgstr "Ni rezultatov."
 
+#: src/constants/tokenSafety.tsx
+msgid "Not Available"
+msgstr "Ni na voljo"
+
 #: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "Not created"
 msgstr "Ni ustvarjeno"
@@ -1250,6 +1277,10 @@ msgstr "Prosimo, vtipkajte REMOVE, s čimer boste potrdili, da želite odstranit
 #: src/components/vote/ProposalEmptyState.tsx
 msgid "Please connect to Layer 1 Ethereum"
 msgstr "Prosimo, povežite se z Ethereumom prvega sloja (layer 1)"
+
+#: src/constants/tokenSafety.tsx
+msgid "Please do your own research before trading."
+msgstr "Pred trgovanjem opravite lastno raziskavo."
 
 #: src/components/Settings/index.tsx
 msgid "Please type the word \"{confirmWord}\" to enable expert mode."
@@ -1327,6 +1358,10 @@ msgstr "Vpliv na ceno previsok"
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Price Updated"
 msgstr "Cena posodobljena"
+
+#: src/components/swap/PriceImpactWarning.tsx
+msgid "Price impact warning"
+msgstr "Opozorilo o vplivu na ceno"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Price range"
@@ -1727,6 +1762,10 @@ msgstr "Transakcije ni bilo mogoče poslati, ker je rok potekel. Preverite, ali 
 msgid "There is no liquidity data."
 msgstr "Podatkov o likvidnosti ni."
 
+#: src/components/Explore/TokenDetails/BalanceSummary.tsx
+msgid "There was an error loading your {tokenSymbol} balance"
+msgstr "Pri nalaganju vašega stanja {tokenSymbol} je prišlo do napake"
+
 #: src/components/ConnectedAccountBlocked/index.tsx
 msgid "This address is blocked on the Uniswap Labs interface because it is associated with one or more"
 msgstr "Ta naslov je blokiran v vmesniku Uniswap Labs, ker je povezan z"
@@ -1780,6 +1819,10 @@ msgstr "Za"
 #: src/pages/Swap/index.tsx
 msgid "To (at least)"
 msgstr "Za (vsaj)"
+
+#: src/components/Explore/TokenTable/TokenRow.tsx
+msgid "Token Name"
+msgstr "Ime žetona"
 
 #: src/components/SearchModal/BlockedToken.tsx
 msgid "Token not supported"
@@ -2086,6 +2129,10 @@ msgstr "Čakanje na potrditev"
 msgid "Wallet Address or ENS name"
 msgstr "Naslov denarnice ali ENS-ime"
 
+#: src/constants/tokenSafety.tsx
+msgid "Warning"
+msgstr "Opozorilo"
+
 #: src/components/earn/StakingModal.tsx
 msgid "Weekly Rewards"
 msgstr "Tedenske nagrade"
@@ -2342,6 +2389,14 @@ msgstr "prek seznama žetonov {0}"
 #: src/components/SearchModal/ImportToken.tsx
 msgid "{0, plural, =1 {Import token} other {Import tokens}}"
 msgstr "{0, plural, =1 {Uvozi žeton} other {Uvozi žetone}}"
+
+#: src/constants/tokenSafety.tsx
+msgid "{0, plural, =1 {This token isn't verified} other {These tokens aren't verified}}"
+msgstr "{0, plural, =1 {Ta žeton ni preverjen} 2 {Ta žetona nista preverjena} other {Ti žetoni niso preverjeni}}"
+
+#: src/constants/tokenSafety.tsx
+msgid "{0, plural, =1 {You can't trade this token using the Uniswap App.} other {You can't trade these tokens using the Uniswap App.}}"
+msgstr "{0, plural, =1 {S tem žetonom ne morete trgovati v aplikaciji Uniswap.} 2 {S tema žetonoma ne morete trgovati v aplikaciji Uniswap.} other {S temi žetoni ne morete trgovati v aplikaciji Uniswap.}}"
 
 #: src/components/RateToggle/index.tsx
 #: src/components/RateToggle/index.tsx

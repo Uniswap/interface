@@ -25,14 +25,14 @@ interface EmptyStateProps {
 }
 const EmptyState = ({ HeaderContent, SubHeaderContent }: EmptyStateProps) => (
   <EmptyProposals>
-    <ThemedText.Body style={{ marginBottom: '8px' }}>
+    <ThemedText.DeprecatedBody style={{ marginBottom: '8px' }}>
       <HeaderContent />
-    </ThemedText.Body>
-    <ThemedText.SubHeader>
+    </ThemedText.DeprecatedBody>
+    <ThemedText.DeprecatedSubHeader>
       <Sub>
         <SubHeaderContent />
       </Sub>
-    </ThemedText.SubHeader>
+    </ThemedText.DeprecatedSubHeader>
   </EmptyProposals>
 )
 

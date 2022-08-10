@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-07-21 14:05\n"
+"PO-Revision-Date: 2022-08-05 22:05\n"
 "Last-Translator: \n"
 "Language: hu_HU\n"
 "Language-Team: Hungarian\n"
@@ -116,6 +116,11 @@ msgstr "<0> 🎉</0> Üdvözöljük az Unicorn csapatában :) <1> 🎉</1>"
 msgid "A minimum threshold of 0.25% of the total UNI supply is required to submit proposals"
 msgstr "A pályázatok benyújtásához az UNI teljes kínálatának minimum 0,25% -a szükséges"
 
+#: src/components/swap/PriceImpactWarning.tsx
+msgid "A swap of this size may have a high price impact, given the current liquidity in the pool. There may be a large difference between the amount of your input token and what you will receive in the output token"
+msgstr "Egy ekkora swapnak nagy árhatása lehet, tekintettel a pool jelenlegi likviditására. Nagy eltérés lehet a bemeneti token mennyisége és a kimeneti tokenben kapott mennyiség között"
+
+#: src/components/Explore/TokenDetails/TokenDetail.tsx
 #: src/components/Menu/index.tsx
 msgid "About"
 msgstr "Körülbelül"
@@ -344,6 +349,10 @@ msgstr "A pénztárca csatlakoztatásával Ön elfogadja az Uniswap Labs <0>szol
 msgid "Canceled"
 msgstr "Törölve"
 
+#: src/constants/tokenSafety.tsx
+msgid "Caution"
+msgstr "Vigyázat"
+
 #: src/components/AccountDetails/index.tsx
 msgid "Change"
 msgstr "Módosítás"
@@ -429,6 +438,7 @@ msgstr "Mindent töröl"
 msgid "Clear all"
 msgstr "Mindent töröl"
 
+#: src/components/TokenSafety/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Close"
@@ -814,6 +824,10 @@ msgstr "A szakértői mód kikapcsolja a tranzakció megerősítését, és lehe
 msgid "Expired"
 msgstr "Lejárt"
 
+#: src/components/Header/index.tsx
+msgid "Explore"
+msgstr "Fedezd fel"
+
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore Uniswap Analytics."
 msgstr "Fedezze fel az Uniswap Analytics szolgáltatást."
@@ -874,6 +888,10 @@ msgstr "Elrejt"
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
 msgstr "Magas árhatás"
+
+#: src/components/TokenSafety/index.tsx
+msgid "I Understand"
+msgstr "Értem"
 
 #: src/components/SearchModal/ImportList.tsx
 #: src/pages/AddLiquidity/index.tsx
@@ -981,12 +999,17 @@ msgstr "Nyelv"
 msgid "Learn"
 msgstr "Tanulás"
 
+#: src/components/TokenSafety/index.tsx
+msgid "Learn More"
+msgstr "Tudj meg többet"
+
 #: src/pages/Pool/CTACards.tsx
 msgid "Learn about providing liquidity"
 msgstr "Tudjon meg többet a likviditás biztosításáról"
 
 #: src/components/PrivacyPolicy/index.tsx
 #: src/components/PrivacyPolicy/index.tsx
+#: src/components/TokenSafety/TokenSafetyMessage.tsx
 msgid "Learn more"
 msgstr "Tudj meg többet"
 
@@ -1187,6 +1210,10 @@ msgstr "Nem található javaslat."
 msgid "No results found."
 msgstr "Nincs találat."
 
+#: src/constants/tokenSafety.tsx
+msgid "Not Available"
+msgstr "Nem elérhető"
+
 #: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "Not created"
 msgstr "Nincs létrehozva"
@@ -1251,6 +1278,10 @@ msgstr "Kérjük, erősítse meg, hogy el szeretné távolítani ezt a listát, 
 #: src/components/vote/ProposalEmptyState.tsx
 msgid "Please connect to Layer 1 Ethereum"
 msgstr "Kérjük, csatlakozzon az 1. réteg Ethereumhoz"
+
+#: src/constants/tokenSafety.tsx
+msgid "Please do your own research before trading."
+msgstr "Kereskedés előtt végezze el saját kutatását."
 
 #: src/components/Settings/index.tsx
 msgid "Please type the word \"{confirmWord}\" to enable expert mode."
@@ -1328,6 +1359,10 @@ msgstr "Az ár hatása túl nagy"
 #: src/components/swap/SwapModalHeader.tsx
 msgid "Price Updated"
 msgstr "Ár frissítve"
+
+#: src/components/swap/PriceImpactWarning.tsx
+msgid "Price impact warning"
+msgstr "Figyelmeztetés az ár hatásáról"
 
 #: src/pages/Pool/PositionPage.tsx
 msgid "Price range"
@@ -1728,6 +1763,10 @@ msgstr "A tranzakciót nem sikerült elküldeni, mert a határidő lejárt. Kér
 msgid "There is no liquidity data."
 msgstr "Nincs likviditási adat."
 
+#: src/components/Explore/TokenDetails/BalanceSummary.tsx
+msgid "There was an error loading your {tokenSymbol} balance"
+msgstr "Hiba történt a {tokenSymbol} egyenlegének betöltésekor"
+
 #: src/components/ConnectedAccountBlocked/index.tsx
 msgid "This address is blocked on the Uniswap Labs interface because it is associated with one or more"
 msgstr "Ez a cím le van tiltva az Uniswap Labs felületén, mert egy vagy több címhez van társítva"
@@ -1781,6 +1820,10 @@ msgstr "-nak/-nek"
 #: src/pages/Swap/index.tsx
 msgid "To (at least)"
 msgstr "(Legalább)"
+
+#: src/components/Explore/TokenTable/TokenRow.tsx
+msgid "Token Name"
+msgstr "Token név"
 
 #: src/components/SearchModal/BlockedToken.tsx
 msgid "Token not supported"
@@ -2087,6 +2130,10 @@ msgstr "Visszaigazolásra vár"
 msgid "Wallet Address or ENS name"
 msgstr "Pénztárca címe vagy ENS neve"
 
+#: src/constants/tokenSafety.tsx
+msgid "Warning"
+msgstr "Figyelem"
+
 #: src/components/earn/StakingModal.tsx
 msgid "Weekly Rewards"
 msgstr "Heti jutalmak"
@@ -2343,6 +2390,14 @@ msgstr "{0} token listán keresztül"
 #: src/components/SearchModal/ImportToken.tsx
 msgid "{0, plural, =1 {Import token} other {Import tokens}}"
 msgstr "{0, plural, =1 {Import token} other {Import tokenek}}"
+
+#: src/constants/tokenSafety.tsx
+msgid "{0, plural, =1 {This token isn't verified} other {These tokens aren't verified}}"
+msgstr "{0, plural, =1 {Ez a token nincs ellenőrizve} other {Ezek a tokenek nincsenek ellenőrizve}}"
+
+#: src/constants/tokenSafety.tsx
+msgid "{0, plural, =1 {You can't trade this token using the Uniswap App.} other {You can't trade these tokens using the Uniswap App.}}"
+msgstr "{0, plural, =1 {Ezzel a tokent nem lehet kereskedni az Uniswap alkalmazással.} other {Ezekkel a tokenekkel nem kereskedhet az Uniswap alkalmazással.}}"
 
 #: src/components/RateToggle/index.tsx
 #: src/components/RateToggle/index.tsx
