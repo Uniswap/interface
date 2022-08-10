@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-04 19:04\n"
+"PO-Revision-Date: 2022-08-06 04:08\n"
 "Last-Translator: \n"
 "Language: th_TH\n"
 "Language-Team: Thai\n"
@@ -120,6 +120,7 @@ msgstr "เกณฑ์ขั้นต่ำ 0.25% ของอุปทาน U
 msgid "A swap of this size may have a high price impact, given the current liquidity in the pool. There may be a large difference between the amount of your input token and what you will receive in the output token"
 msgstr "การแลกเปลี่ยนขนาดนี้อาจมีผลกระทบต่อราคาสูง เมื่อพิจารณาจากสภาพคล่องในปัจจุบันในกลุ่ม อาจมีความแตกต่างกันมากระหว่างจำนวนโทเค็นอินพุตของคุณกับสิ่งที่คุณจะได้รับในโทเค็นเอาต์พุต"
 
+#: src/components/Explore/TokenDetails/TokenDetail.tsx
 #: src/components/Menu/index.tsx
 msgid "About"
 msgstr "เกี่ยวกับ"
@@ -348,6 +349,10 @@ msgstr "การเชื่อมต่อกระเป๋าเงินห
 msgid "Canceled"
 msgstr "ยกเลิก"
 
+#: src/constants/tokenSafety.tsx
+msgid "Caution"
+msgstr "คำเตือน"
+
 #: src/components/AccountDetails/index.tsx
 msgid "Change"
 msgstr "เปลี่ยน"
@@ -433,6 +438,7 @@ msgstr "ลบทั้งหมด"
 msgid "Clear all"
 msgstr "ลบทั้งหมด"
 
+#: src/components/TokenSafety/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Close"
@@ -817,6 +823,10 @@ msgstr "โหมดผู้เชี่ยวชาญจะปิดการ
 msgid "Expired"
 msgstr "หมดอายุ"
 
+#: src/components/Header/index.tsx
+msgid "Explore"
+msgstr "สำรวจ"
+
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore Uniswap Analytics."
 msgstr "สำรวจ Uniswap Analytics"
@@ -877,6 +887,10 @@ msgstr "ซ่อน"
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
 msgstr "ผลกระทบราคาสูง"
+
+#: src/components/TokenSafety/index.tsx
+msgid "I Understand"
+msgstr "ฉันเข้าใจ"
 
 #: src/components/SearchModal/ImportList.tsx
 #: src/pages/AddLiquidity/index.tsx
@@ -984,12 +998,17 @@ msgstr "ภาษา"
 msgid "Learn"
 msgstr "เรียนรู้"
 
+#: src/components/TokenSafety/index.tsx
+msgid "Learn More"
+msgstr "เรียนรู้เพิ่มเติม"
+
 #: src/pages/Pool/CTACards.tsx
 msgid "Learn about providing liquidity"
 msgstr "เรียนรู้เกี่ยวกับการจัดหาสภาพคล่อง"
 
 #: src/components/PrivacyPolicy/index.tsx
 #: src/components/PrivacyPolicy/index.tsx
+#: src/components/TokenSafety/TokenSafetyMessage.tsx
 msgid "Learn more"
 msgstr "เรียนรู้เพิ่มเติม"
 
@@ -1190,6 +1209,10 @@ msgstr "ไม่พบข้อเสนอ"
 msgid "No results found."
 msgstr "ไม่พบผลลัพธ์."
 
+#: src/constants/tokenSafety.tsx
+msgid "Not Available"
+msgstr "ไม่ว่าง"
+
 #: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "Not created"
 msgstr "ไม่ได้สร้าง"
@@ -1254,6 +1277,10 @@ msgstr "โปรดยืนยันว่าคุณต้องการล
 #: src/components/vote/ProposalEmptyState.tsx
 msgid "Please connect to Layer 1 Ethereum"
 msgstr "โปรดเชื่อมต่อกับ Layer 1 Ethereum"
+
+#: src/constants/tokenSafety.tsx
+msgid "Please do your own research before trading."
+msgstr "โปรดทำการศึกษาข้อมูลก่อนทำการซื้อขาย"
 
 #: src/components/Settings/index.tsx
 msgid "Please type the word \"{confirmWord}\" to enable expert mode."
@@ -1735,6 +1762,10 @@ msgstr "ไม่สามารถส่งธุรกรรมได้เน
 msgid "There is no liquidity data."
 msgstr "ไม่มีข้อมูลสภาพคล่อง"
 
+#: src/components/Explore/TokenDetails/BalanceSummary.tsx
+msgid "There was an error loading your {tokenSymbol} balance"
+msgstr "เกิดข้อผิดพลาดในการโหลดยอดคงเหลือ {tokenSymbol} ของคุณ"
+
 #: src/components/ConnectedAccountBlocked/index.tsx
 msgid "This address is blocked on the Uniswap Labs interface because it is associated with one or more"
 msgstr "ที่อยู่นี้ถูกบล็อกบนอินเทอร์เฟซ Uniswap Labs เนื่องจากเชื่อมโยงกับหนึ่งรายการขึ้นไป"
@@ -1788,6 +1819,10 @@ msgstr "ถึง"
 #: src/pages/Swap/index.tsx
 msgid "To (at least)"
 msgstr "ถึง (อย่างน้อย)"
+
+#: src/components/Explore/TokenTable/TokenRow.tsx
+msgid "Token Name"
+msgstr "ชื่อโทเค็น"
 
 #: src/components/SearchModal/BlockedToken.tsx
 msgid "Token not supported"
@@ -2094,6 +2129,10 @@ msgstr "รอการยืนยัน"
 msgid "Wallet Address or ENS name"
 msgstr "ที่อยู่กระเป๋าเงินหรือชื่อ ENS"
 
+#: src/constants/tokenSafety.tsx
+msgid "Warning"
+msgstr "คำเตือน"
+
 #: src/components/earn/StakingModal.tsx
 msgid "Weekly Rewards"
 msgstr "รางวัลประจำสัปดาห์"
@@ -2350,6 +2389,14 @@ msgstr "ผ่าน {0} รายการโทเค็น"
 #: src/components/SearchModal/ImportToken.tsx
 msgid "{0, plural, =1 {Import token} other {Import tokens}}"
 msgstr "{0, plural, =1 {นำเข้าโทเค็น} other {นำเข้าโทเค็น}}"
+
+#: src/constants/tokenSafety.tsx
+msgid "{0, plural, =1 {This token isn't verified} other {These tokens aren't verified}}"
+msgstr "{0, plural, =1 {โทเค็นนี้ไม่ได้รับการยืนยัน} other {โทเค็นเหล่านี้ไม่ได้รับการยืนยัน}}"
+
+#: src/constants/tokenSafety.tsx
+msgid "{0, plural, =1 {You can't trade this token using the Uniswap App.} other {You can't trade these tokens using the Uniswap App.}}"
+msgstr "{0, plural, =1 {คุณไม่สามารถแลกเปลี่ยนโทเค็นนี้โดยใช้แอพ Uniswap} other {คุณไม่สามารถแลกเปลี่ยนโทเค็นเหล่านี้โดยใช้แอพ Uniswap}}"
 
 #: src/components/RateToggle/index.tsx
 #: src/components/RateToggle/index.tsx

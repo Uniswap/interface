@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-04 19:04\n"
+"PO-Revision-Date: 2022-08-05 22:05\n"
 "Last-Translator: \n"
 "Language: ko_KR\n"
 "Language-Team: Korean\n"
@@ -120,6 +120,7 @@ msgstr "제안서를 제출하려면 총 UNI 수량의 최소 0.25 %가 필요�
 msgid "A swap of this size may have a high price impact, given the current liquidity in the pool. There may be a large difference between the amount of your input token and what you will receive in the output token"
 msgstr "풀의 현재 유동성을 고려할 때 이 크기의 스왑은 가격에 큰 영향을 미칠 수 있습니다. 입력 토큰의 양과 출력 토큰으로 받게 될 금액 사이에는 큰 차이가 있을 수 있습니다."
 
+#: src/components/Explore/TokenDetails/TokenDetail.tsx
 #: src/components/Menu/index.tsx
 msgid "About"
 msgstr "정보"
@@ -348,6 +349,10 @@ msgstr "지갑을 연결하면 Uniswap Labs의 <0>서비스 약관</0>을 읽고
 msgid "Canceled"
 msgstr "취소됨"
 
+#: src/constants/tokenSafety.tsx
+msgid "Caution"
+msgstr "주의"
+
 #: src/components/AccountDetails/index.tsx
 msgid "Change"
 msgstr "변경"
@@ -433,6 +438,7 @@ msgstr "모두 지우기"
 msgid "Clear all"
 msgstr "모두 지우기"
 
+#: src/components/TokenSafety/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Close"
@@ -817,6 +823,10 @@ msgstr "전문가 모드를 사용하면 거래 확인창이 꺼지고 안 좋�
 msgid "Expired"
 msgstr "만료 됨"
 
+#: src/components/Header/index.tsx
+msgid "Explore"
+msgstr "탐구하다"
+
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore Uniswap Analytics."
 msgstr "Uniswap 분석 정보를 살펴보세요."
@@ -877,6 +887,10 @@ msgstr "숨기기"
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
 msgstr "높은 가격 영향"
+
+#: src/components/TokenSafety/index.tsx
+msgid "I Understand"
+msgstr "이해 했어요"
 
 #: src/components/SearchModal/ImportList.tsx
 #: src/pages/AddLiquidity/index.tsx
@@ -984,12 +998,17 @@ msgstr "언어"
 msgid "Learn"
 msgstr "학습"
 
+#: src/components/TokenSafety/index.tsx
+msgid "Learn More"
+msgstr "더 알아보기"
+
 #: src/pages/Pool/CTACards.tsx
 msgid "Learn about providing liquidity"
 msgstr "유동성 제공에 대해 알아보기"
 
 #: src/components/PrivacyPolicy/index.tsx
 #: src/components/PrivacyPolicy/index.tsx
+#: src/components/TokenSafety/TokenSafetyMessage.tsx
 msgid "Learn more"
 msgstr "더 알아보기"
 
@@ -1190,6 +1209,10 @@ msgstr "제안이 없습니다."
 msgid "No results found."
 msgstr "결과가 없습니다."
 
+#: src/constants/tokenSafety.tsx
+msgid "Not Available"
+msgstr "사용할 수 없습니다"
+
 #: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "Not created"
 msgstr "생성되지 않음"
@@ -1254,6 +1277,10 @@ msgstr "REMOVE를 입력하여 이 목록을 제거할 것인지 확인해주세
 #: src/components/vote/ProposalEmptyState.tsx
 msgid "Please connect to Layer 1 Ethereum"
 msgstr "레이어 1 Ethereum에 연결하세요"
+
+#: src/constants/tokenSafety.tsx
+msgid "Please do your own research before trading."
+msgstr "거래하기 전에 스스로 조사하십시오."
 
 #: src/components/Settings/index.tsx
 msgid "Please type the word \"{confirmWord}\" to enable expert mode."
@@ -1735,6 +1762,10 @@ msgstr "기한이 지났기 때문에 거래를 보낼 수 없습니다. 거래 
 msgid "There is no liquidity data."
 msgstr "유동성 데이터가 없습니다."
 
+#: src/components/Explore/TokenDetails/BalanceSummary.tsx
+msgid "There was an error loading your {tokenSymbol} balance"
+msgstr "{tokenSymbol} 잔액을 로드하는 중에 오류가 발생했습니다."
+
 #: src/components/ConnectedAccountBlocked/index.tsx
 msgid "This address is blocked on the Uniswap Labs interface because it is associated with one or more"
 msgstr "이 주소는 하나 이상의 주소와 연결되어 있기 때문에 Uniswap Labs 인터페이스에서 차단됩니다."
@@ -1788,6 +1819,10 @@ msgstr "스왑 후"
 #: src/pages/Swap/index.tsx
 msgid "To (at least)"
 msgstr "스왑 후(최소)"
+
+#: src/components/Explore/TokenTable/TokenRow.tsx
+msgid "Token Name"
+msgstr "토큰 이름"
 
 #: src/components/SearchModal/BlockedToken.tsx
 msgid "Token not supported"
@@ -2094,6 +2129,10 @@ msgstr "확인을 기다리는 중"
 msgid "Wallet Address or ENS name"
 msgstr "지갑 주소 또는 ENS 이름"
 
+#: src/constants/tokenSafety.tsx
+msgid "Warning"
+msgstr "경고"
+
 #: src/components/earn/StakingModal.tsx
 msgid "Weekly Rewards"
 msgstr "주간 보상"
@@ -2350,6 +2389,14 @@ msgstr "{0} 토큰 목록을 통해"
 #: src/components/SearchModal/ImportToken.tsx
 msgid "{0, plural, =1 {Import token} other {Import tokens}}"
 msgstr "{0, plural, =1 {토큰 가져오기} other {토큰 가져오기}}"
+
+#: src/constants/tokenSafety.tsx
+msgid "{0, plural, =1 {This token isn't verified} other {These tokens aren't verified}}"
+msgstr "{0, plural, =1 {이 토큰은 확인되지 않았습니다} other {이 토큰은 확인되지 않았습니다}}"
+
+#: src/constants/tokenSafety.tsx
+msgid "{0, plural, =1 {You can't trade this token using the Uniswap App.} other {You can't trade these tokens using the Uniswap App.}}"
+msgstr "{0, plural, =1 {Uniswap 앱을 사용하여 이 토큰을 거래할 수 없습니다.} other {Uniswap 앱을 사용하여 이러한 토큰을 거래할 수 없습니다.}}"
 
 #: src/components/RateToggle/index.tsx
 #: src/components/RateToggle/index.tsx
