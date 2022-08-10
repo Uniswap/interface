@@ -75,7 +75,7 @@ const StyledTokenRow = styled.div`
   }
 
   @media only screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 5fr 1fr;
     min-width: unset;
     border-bottom: 0.5px solid ${({ theme }) => theme.backgroundContainer};
     padding: 0px 12px;
@@ -246,7 +246,7 @@ const TokenInfoCell = styled(Cell)`
 const TokenName = styled.div`
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 160px;
+  max-width: 280px;
   white-space: nowrap;
 `
 const TokenSymbol = styled(Cell)`
