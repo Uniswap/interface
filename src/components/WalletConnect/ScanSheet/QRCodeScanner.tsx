@@ -122,6 +122,7 @@ export function QRCodeScanner({
             frameProcessor={frameProcessor}
             isActive={!shouldFreezeCamera}
             style={StyleSheet.absoluteFill}
+            zoom={backCamera.neutralZoom}
           />
         )}
       </MaskedView>
