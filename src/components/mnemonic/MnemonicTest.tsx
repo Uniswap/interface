@@ -1,6 +1,5 @@
 import React from 'react'
-import { requireNativeComponent, ViewProps } from 'react-native'
-import { dimensions } from 'src/styles/sizing'
+import { requireNativeComponent, ViewProps, ViewStyle } from 'react-native'
 
 interface NativeMnemonicTestProps {
   mnemonicId: Address
@@ -11,7 +10,12 @@ const NativeMnemonicTest = requireNativeComponent<NativeMnemonicTestProps>('Mnem
 
 type MnemonicTestProps = ViewProps & NativeMnemonicTestProps
 
-const MNEMONIC_TEST_HEIGHT = dimensions.fullHeight - 100
+const mnemonicTestStyle: ViewStyle = {
+  // This is the min height needed for native component to function correctly.
+  // We handle padding separately wherever the component is placed.
+  height: 450,
+}
+
 export function MnemonicTest(props: MnemonicTestProps) {
-  return <NativeMnemonicTest style={{ height: MNEMONIC_TEST_HEIGHT }} {...props} />
+  return <NativeMnemonicTest style={mnemonicTestStyle} {...props} />
 }

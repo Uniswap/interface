@@ -12,6 +12,7 @@ import { BackHeader } from 'src/components/layout/BackHeader'
 import { Screen } from 'src/components/layout/Screen'
 import { ManualBackupEducationSection } from 'src/components/mnemonic/ManualBackupEducationSection'
 import { MnemonicDisplay } from 'src/components/mnemonic/MnemonicDisplay'
+import { MnemonicTest } from 'src/components/mnemonic/MnemonicTest'
 import WarningModal from 'src/components/modals/WarningModal'
 import { Text } from 'src/components/Text'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
@@ -56,7 +57,8 @@ export function SettingsManualBackup({
         return <ManualBackupEducationView />
       case BackupViewStep.ViewSeedPhrase:
         return <ViewSeedPhraseView />
-      // @TODO: Implement seed phrase test here
+      case BackupViewStep.SeedPhraseTest:
+        return <SeedPhraseTestView />
       default:
         return null
     }
@@ -112,16 +114,7 @@ export function SettingsManualBackup({
             name={ElementName.AddManualBackup}
             textVariant="largeLabel"
             variant="blue"
-            onPress={() => {
-              dispatch(
-                editAccountActions.trigger({
-                  type: EditAccountAction.AddBackupMethod,
-                  address: address,
-                  backupMethod: BackupType.Manual,
-                })
-              )
-              nextStep()
-            }}
+            onPress={nextStep}
           />
         </Flex>
       </AnimatedFlex>
@@ -141,7 +134,6 @@ export function SettingsManualBackup({
           <Text variant="bodySmall">
             {t('Remember to record your words in the same order as they are below')}
           </Text>
-
           <Flex grow justifyContent="flex-start" mx="sm" my="xl">
             <MnemonicDisplay mnemonicId={mnemonicId} />
           </Flex>
@@ -154,9 +146,7 @@ export function SettingsManualBackup({
               testID={ElementName.Continue}
               textVariant="largeLabel"
               variant="blue"
-              onPress={() => {
-                navigation.goBack()
-              }}
+              onPress={nextStep}
             />
           </Flex>
         </AnimatedFlex>
@@ -170,6 +160,51 @@ export function SettingsManualBackup({
           title={t('Screenshots aren’t secure')}
           onConfirm={() => setShowScreenShotWarningModal(false)}
         />
+      </>
+    )
+  }
+
+  function SeedPhraseTestView() {
+    const [continueEnabled, setContinueEnabled] = useState(false)
+
+    return (
+      <>
+        <AnimatedFlex
+          grow
+          alignItems="stretch"
+          entering={SlideInRight}
+          exiting={SlideOutLeft}
+          gap="lg"
+          justifyContent="space-evenly">
+          <Text variant="bodySmall">
+            {t('Remember to record your words in the same order as they are below')}
+          </Text>
+          <Flex>
+            <MnemonicTest mnemonicId={mnemonicId} onTestComplete={() => setContinueEnabled(true)} />
+          </Flex>
+          <Flex grow justifyContent="flex-end">
+            <PrimaryButton
+              alignSelf="stretch"
+              borderRadius="md"
+              disabled={!continueEnabled}
+              label={t('Continue')}
+              name={ElementName.Continue}
+              testID={ElementName.Continue}
+              textVariant="largeLabel"
+              variant="blue"
+              onPress={() => {
+                dispatch(
+                  editAccountActions.trigger({
+                    type: EditAccountAction.AddBackupMethod,
+                    address: address,
+                    backupMethod: BackupType.Manual,
+                  })
+                )
+                navigation.goBack()
+              }}
+            />
+          </Flex>
+        </AnimatedFlex>
       </>
     )
   }

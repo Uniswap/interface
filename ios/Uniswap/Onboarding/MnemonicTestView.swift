@@ -24,6 +24,7 @@ import SwiftUI
   }
   
   var view: UIView {
+    vc.view.backgroundColor = .clear
     return vc.view
   }
 }
@@ -35,7 +36,6 @@ class MnemonicTestProps : ObservableObject {
   @Published var scrambledWords: [String] = Array(repeating: "", count: 12)
   @Published var typedWords: [String] = Array(repeating: "", count: 12)
   @Published var selectedIndex: Int = 0
-  @Published var shouldEnableContinueButton = false
 }
 
 struct MnemonicTest: View {
@@ -56,12 +56,9 @@ struct MnemonicTest: View {
   func onSuggestionTapped(word: String) {
     props.typedWords[props.selectedIndex] = word
     
-    if (props.selectedIndex == props.mnemonicWords.count - 1) {
-      props.shouldEnableContinueButton = true
-    }
-    
-    // Advance if word is correct
-    if (props.mnemonicWords[props.selectedIndex] == props.typedWords[props.selectedIndex]) {
+    if (props.typedWords == props.mnemonicWords) {
+      props.onTestComplete([:])
+    } else if (props.mnemonicWords[props.selectedIndex] == props.typedWords[props.selectedIndex] && props.selectedIndex < props.mnemonicWords.count - 1) {
       props.selectedIndex += 1
     }
   }
@@ -109,29 +106,13 @@ struct MnemonicTest: View {
           }
         }.frame(maxWidth: .infinity)
       }.frame(maxWidth: .infinity)
-        .padding([.top, .leading, .trailing], 24)
+        .padding([.leading, .trailing], 24)
       
       MnemonicTestWordBankView(words: props.scrambledWords,
                                usedWords: props.typedWords,
                                labelCallback: onSuggestionTapped)
       .frame(maxWidth: .infinity)
       .padding([.top, .leading, .trailing], 24)
-      
-      Spacer()
-      
-      Button("Continue") {
-        props.shouldEnableContinueButton ? self.props.onTestComplete([:]) : ()
-      }
-      .font(Font(interFont!))
-      .foregroundColor(Colors.textPrimary)
-      .padding(16)
-      .frame(maxWidth: .infinity, alignment: .center)
-      .background(Colors.backgroundAction)
-      .opacity(props.shouldEnableContinueButton ? 1.0 : 0.4)
-      .cornerRadius(16.0)
-      .padding(24)
-      
-    }.frame(maxWidth: .infinity, maxHeight: .infinity)
-      .padding(24)
+    }.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
   }
 }

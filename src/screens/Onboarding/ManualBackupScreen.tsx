@@ -8,6 +8,7 @@ import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { Flex } from 'src/components/layout'
 import { ManualBackupEducationSection } from 'src/components/mnemonic/ManualBackupEducationSection'
 import { MnemonicDisplay } from 'src/components/mnemonic/MnemonicDisplay'
+import { MnemonicTest } from 'src/components/mnemonic/MnemonicTest'
 import WarningModal from 'src/components/modals/WarningModal'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
@@ -21,6 +22,7 @@ type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.
 enum View {
   Education,
   View,
+  Test,
 }
 
 export function ManualBackupScreen({ navigation, route: { params } }: Props) {
@@ -33,6 +35,8 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props) {
   const [showTermsModal, setShowTermsModal] = useState(false)
   const [showScreenShotWarningModal, setShowScreenShotWarningModal] = useState(false)
   const [view, nextView] = useReducer((curView: View) => curView + 1, View.Education)
+
+  const [continueButtonEnabled, setContinueButtonEnabled] = useState(false)
 
   const onValidationSuccessful = () => {
     if (activeAccount) {
@@ -122,9 +126,36 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props) {
                 testID={ElementName.Next}
                 textVariant="largeLabel"
                 variant="onboard"
-                onPress={onValidationSuccessful}
+                onPress={nextView}
               />
             </Flex>
+          </Flex>
+        </OnboardingScreen>
+      )
+
+    case View.Test:
+      return (
+        <OnboardingScreen
+          subtitle={t(
+            'Confirm that you correctly wrote down your seed phrase by selecting the missing words.'
+          )}
+          title={t('Confirm your recovery phrase')}>
+          <Flex grow>
+            <MnemonicTest
+              mnemonicId={mnemonicId}
+              onTestComplete={() => setContinueButtonEnabled(true)}
+            />
+          </Flex>
+          <Flex justifyContent="flex-end">
+            <PrimaryButton
+              disabled={!continueButtonEnabled}
+              label={t('Continue')}
+              name={ElementName.Continue}
+              testID={ElementName.Continue}
+              textVariant="largeLabel"
+              variant="onboard"
+              onPress={onValidationSuccessful}
+            />
           </Flex>
         </OnboardingScreen>
       )
