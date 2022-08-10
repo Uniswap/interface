@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-04 19:04\n"
+"PO-Revision-Date: 2022-08-05 22:05\n"
 "Last-Translator: \n"
 "Language: ar_SA\n"
 "Language-Team: Arabic\n"
@@ -120,6 +120,7 @@ msgstr "مطلوب حد أدنى قدره 0.25٪ من إجمالي إمداد UN
 msgid "A swap of this size may have a high price impact, given the current liquidity in the pool. There may be a large difference between the amount of your input token and what you will receive in the output token"
 msgstr "قد يكون لمقايضة بهذا الحجم تأثير كبير على السعر ، بالنظر إلى السيولة الحالية في المجمع. قد يكون هناك اختلاف كبير بين مقدار رمز الإدخال الخاص بك وما ستحصل عليه في رمز الإخراج"
 
+#: src/components/Explore/TokenDetails/TokenDetail.tsx
 #: src/components/Menu/index.tsx
 msgid "About"
 msgstr "حول"
@@ -348,6 +349,10 @@ msgstr "من خلال ربط المحفظة ، فإنك توافق على شرو
 msgid "Canceled"
 msgstr "ألغيت"
 
+#: src/constants/tokenSafety.tsx
+msgid "Caution"
+msgstr "حذر"
+
 #: src/components/AccountDetails/index.tsx
 msgid "Change"
 msgstr "تغيير"
@@ -433,6 +438,7 @@ msgstr "مسح الكل"
 msgid "Clear all"
 msgstr "مسح الكل"
 
+#: src/components/TokenSafety/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Close"
@@ -817,6 +823,10 @@ msgstr "وضع الخبراء يلغي تأكيد سرعة المعاملات و
 msgid "Expired"
 msgstr "منتهي الصلاحية"
 
+#: src/components/Header/index.tsx
+msgid "Explore"
+msgstr "يكتشف"
+
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore Uniswap Analytics."
 msgstr "اكتشف تحليلات Uniswap."
@@ -877,6 +887,10 @@ msgstr "يخفي"
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
 msgstr "تأثير ارتفاع السعر"
+
+#: src/components/TokenSafety/index.tsx
+msgid "I Understand"
+msgstr "اني اتفهم"
 
 #: src/components/SearchModal/ImportList.tsx
 #: src/pages/AddLiquidity/index.tsx
@@ -984,12 +998,17 @@ msgstr "لغة"
 msgid "Learn"
 msgstr "تعلم"
 
+#: src/components/TokenSafety/index.tsx
+msgid "Learn More"
+msgstr "يتعلم أكثر"
+
 #: src/pages/Pool/CTACards.tsx
 msgid "Learn about providing liquidity"
 msgstr "تعرف على توفير السيولة"
 
 #: src/components/PrivacyPolicy/index.tsx
 #: src/components/PrivacyPolicy/index.tsx
+#: src/components/TokenSafety/TokenSafetyMessage.tsx
 msgid "Learn more"
 msgstr "يتعلم أكثر"
 
@@ -1190,6 +1209,10 @@ msgstr "لا توجد مقترحات."
 msgid "No results found."
 msgstr "لا توجد نتائج."
 
+#: src/constants/tokenSafety.tsx
+msgid "Not Available"
+msgstr "غير متوفر"
+
 #: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "Not created"
 msgstr "لم يتم إنشاؤه"
@@ -1254,6 +1277,10 @@ msgstr "يرجى تأكيد رغبتك في إزالة هذه القائمة ب�
 #: src/components/vote/ProposalEmptyState.tsx
 msgid "Please connect to Layer 1 Ethereum"
 msgstr "يرجى الاتصال بـ Layer 1 Ethereum"
+
+#: src/constants/tokenSafety.tsx
+msgid "Please do your own research before trading."
+msgstr "يرجى إجراء البحث الخاص بك قبل التداول."
 
 #: src/components/Settings/index.tsx
 msgid "Please type the word \"{confirmWord}\" to enable expert mode."
@@ -1735,6 +1762,10 @@ msgstr "تعذر إرسال المعاملة لانتهاء الموعد الم�
 msgid "There is no liquidity data."
 msgstr "لا توجد بيانات سيولة."
 
+#: src/components/Explore/TokenDetails/BalanceSummary.tsx
+msgid "There was an error loading your {tokenSymbol} balance"
+msgstr "حدث خطأ أثناء تحميل رصيدك {tokenSymbol}"
+
 #: src/components/ConnectedAccountBlocked/index.tsx
 msgid "This address is blocked on the Uniswap Labs interface because it is associated with one or more"
 msgstr "هذا العنوان محظور في واجهة Uniswap Labs لأنه مرتبط بواحد أو أكثر"
@@ -1788,6 +1819,10 @@ msgstr "إلى"
 #: src/pages/Swap/index.tsx
 msgid "To (at least)"
 msgstr "إلى (على الأقل)"
+
+#: src/components/Explore/TokenTable/TokenRow.tsx
+msgid "Token Name"
+msgstr "اسم الرمز"
 
 #: src/components/SearchModal/BlockedToken.tsx
 msgid "Token not supported"
@@ -2094,6 +2129,10 @@ msgstr "في انتظار التأكيد"
 msgid "Wallet Address or ENS name"
 msgstr "عنوان المحفظة أو اسم ENS"
 
+#: src/constants/tokenSafety.tsx
+msgid "Warning"
+msgstr "تحذير"
+
 #: src/components/earn/StakingModal.tsx
 msgid "Weekly Rewards"
 msgstr "المكافآت الأسبوعية"
@@ -2350,6 +2389,14 @@ msgstr "عبر قائمة الرموز {0}"
 #: src/components/SearchModal/ImportToken.tsx
 msgid "{0, plural, =1 {Import token} other {Import tokens}}"
 msgstr "{0, plural, =1 {رمز الاستيراد} other {استيراد الرموز}}"
+
+#: src/constants/tokenSafety.tsx
+msgid "{0, plural, =1 {This token isn't verified} other {These tokens aren't verified}}"
+msgstr "{0, plural, =1 {لم يتم التحقق من هذا الرمز} other {لم يتم التحقق من هذه الرموز}}"
+
+#: src/constants/tokenSafety.tsx
+msgid "{0, plural, =1 {You can't trade this token using the Uniswap App.} other {You can't trade these tokens using the Uniswap App.}}"
+msgstr "{0, plural, =1 {لا يمكنك تداول هذا الرمز المميز باستخدام تطبيق Uniswap.} other {لا يمكنك تداول هذه الرموز المميزة باستخدام تطبيق Uniswap.}}"
 
 #: src/components/RateToggle/index.tsx
 #: src/components/RateToggle/index.tsx

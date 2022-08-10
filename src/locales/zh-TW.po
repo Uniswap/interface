@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-04 19:04\n"
+"PO-Revision-Date: 2022-08-05 22:05\n"
 "Last-Translator: \n"
 "Language: zh_TW\n"
 "Language-Team: Chinese Traditional\n"
@@ -120,6 +120,7 @@ msgstr "提交提案所需的最低門檻為 UNI 總供應量的 0.25%"
 msgid "A swap of this size may have a high price impact, given the current liquidity in the pool. There may be a large difference between the amount of your input token and what you will receive in the output token"
 msgstr "鑑於池中當前的流動性，這種規模的掉期可能會對價格產生很大影響。您的輸入令牌數量與您將在輸出令牌中收到的數量之間可能存在很大差異"
 
+#: src/components/Explore/TokenDetails/TokenDetail.tsx
 #: src/components/Menu/index.tsx
 msgid "About"
 msgstr "關於"
@@ -348,6 +349,10 @@ msgstr "連接錢包即表示您同意 Uniswap Labs 的 <0>服務條款</0> 並�
 msgid "Canceled"
 msgstr "已取消"
 
+#: src/constants/tokenSafety.tsx
+msgid "Caution"
+msgstr "警告"
+
 #: src/components/AccountDetails/index.tsx
 msgid "Change"
 msgstr "更改"
@@ -433,6 +438,7 @@ msgstr "全部清除"
 msgid "Clear all"
 msgstr "全部清除"
 
+#: src/components/TokenSafety/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Close"
@@ -817,6 +823,10 @@ msgstr "“專家模式”將解除確認交易的提示，並允許兌換率高
 msgid "Expired"
 msgstr "已過期"
 
+#: src/components/Header/index.tsx
+msgid "Explore"
+msgstr "探索"
+
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore Uniswap Analytics."
 msgstr "探索 Uniswap 分析。"
@@ -877,6 +887,10 @@ msgstr "隱藏"
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
 msgstr "高兌換率影響"
+
+#: src/components/TokenSafety/index.tsx
+msgid "I Understand"
+msgstr "瞭解"
 
 #: src/components/SearchModal/ImportList.tsx
 #: src/pages/AddLiquidity/index.tsx
@@ -984,12 +998,17 @@ msgstr "語言"
 msgid "Learn"
 msgstr "瞭解"
 
+#: src/components/TokenSafety/index.tsx
+msgid "Learn More"
+msgstr "了解更多"
+
 #: src/pages/Pool/CTACards.tsx
 msgid "Learn about providing liquidity"
 msgstr "閱讀有關提供流動資金的資訊"
 
 #: src/components/PrivacyPolicy/index.tsx
 #: src/components/PrivacyPolicy/index.tsx
+#: src/components/TokenSafety/TokenSafetyMessage.tsx
 msgid "Learn more"
 msgstr "瞭解更多"
 
@@ -1190,6 +1209,10 @@ msgstr "沒有提案。"
 msgid "No results found."
 msgstr "未找到任何結果。"
 
+#: src/constants/tokenSafety.tsx
+msgid "Not Available"
+msgstr "無法使用"
+
 #: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "Not created"
 msgstr "未創建"
@@ -1254,6 +1277,10 @@ msgstr "請輸入 REMOVE 以確認您要刪除此列表"
 #: src/components/vote/ProposalEmptyState.tsx
 msgid "Please connect to Layer 1 Ethereum"
 msgstr "請連接到以太坊 Layer 1"
+
+#: src/constants/tokenSafety.tsx
+msgid "Please do your own research before trading."
+msgstr "請在交易前進行自己的研究。"
 
 #: src/components/Settings/index.tsx
 msgid "Please type the word \"{confirmWord}\" to enable expert mode."
@@ -1735,6 +1762,10 @@ msgstr "由於期限已過，因此無法發送交易。請檢查您的交易截
 msgid "There is no liquidity data."
 msgstr "沒有流動性數據。"
 
+#: src/components/Explore/TokenDetails/BalanceSummary.tsx
+msgid "There was an error loading your {tokenSymbol} balance"
+msgstr "加載您的 {tokenSymbol} 餘額時出錯"
+
 #: src/components/ConnectedAccountBlocked/index.tsx
 msgid "This address is blocked on the Uniswap Labs interface because it is associated with one or more"
 msgstr "此地址在 Uniswap Labs 界面上被阻止，因為它與一個或多個相關聯"
@@ -1788,6 +1819,10 @@ msgstr "至"
 #: src/pages/Swap/index.tsx
 msgid "To (at least)"
 msgstr "到（至少）"
+
+#: src/components/Explore/TokenTable/TokenRow.tsx
+msgid "Token Name"
+msgstr "令牌名稱"
 
 #: src/components/SearchModal/BlockedToken.tsx
 msgid "Token not supported"
@@ -2094,6 +2129,10 @@ msgstr "等待確認中"
 msgid "Wallet Address or ENS name"
 msgstr "錢包地址或 ENS 名"
 
+#: src/constants/tokenSafety.tsx
+msgid "Warning"
+msgstr "警告"
+
 #: src/components/earn/StakingModal.tsx
 msgid "Weekly Rewards"
 msgstr "每週獎勵"
@@ -2350,6 +2389,14 @@ msgstr "從 {0} 代幣列表"
 #: src/components/SearchModal/ImportToken.tsx
 msgid "{0, plural, =1 {Import token} other {Import tokens}}"
 msgstr "{0, plural, =1 {導入令牌} other {導入代幣}}"
+
+#: src/constants/tokenSafety.tsx
+msgid "{0, plural, =1 {This token isn't verified} other {These tokens aren't verified}}"
+msgstr "{0, plural, =1 {此令牌未經驗證} other {這些令牌未經驗證}}"
+
+#: src/constants/tokenSafety.tsx
+msgid "{0, plural, =1 {You can't trade this token using the Uniswap App.} other {You can't trade these tokens using the Uniswap App.}}"
+msgstr "{0, plural, =1 {您不能使用 Uniswap 應用程序交易此代幣。} other {您不能使用 Uniswap 應用程序交易這些代幣。}}"
 
 #: src/components/RateToggle/index.tsx
 #: src/components/RateToggle/index.tsx

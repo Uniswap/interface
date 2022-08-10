@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-04 19:04\n"
+"PO-Revision-Date: 2022-08-05 22:05\n"
 "Last-Translator: \n"
 "Language: ro_RO\n"
 "Language-Team: Romanian\n"
@@ -120,6 +120,7 @@ msgstr "Pentru depunerea propunerilor este necesar un prag minim de 0,25% din to
 msgid "A swap of this size may have a high price impact, given the current liquidity in the pool. There may be a large difference between the amount of your input token and what you will receive in the output token"
 msgstr "Un swap de această dimensiune poate avea un impact ridicat asupra prețului, având în vedere lichiditatea actuală din pool. Poate fi o diferență mare între cantitatea de jeton de intrare și ceea ce veți primi în jetonul de ieșire"
 
+#: src/components/Explore/TokenDetails/TokenDetail.tsx
 #: src/components/Menu/index.tsx
 msgid "About"
 msgstr "Despre"
@@ -348,6 +349,10 @@ msgstr "Prin conectarea unui portofel, sunteți de acord cu <0>Termenii și cond
 msgid "Canceled"
 msgstr "Anulat"
 
+#: src/constants/tokenSafety.tsx
+msgid "Caution"
+msgstr "Prudență"
+
 #: src/components/AccountDetails/index.tsx
 msgid "Change"
 msgstr "Schimbă"
@@ -433,6 +438,7 @@ msgstr "Șterge tot"
 msgid "Clear all"
 msgstr "Șterge tot"
 
+#: src/components/TokenSafety/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Close"
@@ -817,6 +823,10 @@ msgstr "Modul Expert dezactivează prompt tranzacția de confirmare și permite 
 msgid "Expired"
 msgstr "Expirat"
 
+#: src/components/Header/index.tsx
+msgid "Explore"
+msgstr "Explora"
+
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore Uniswap Analytics."
 msgstr "Explorați Uniswap Analytics."
@@ -877,6 +887,10 @@ msgstr "Ascunde"
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
 msgstr "Impact Preț Ridicat"
+
+#: src/components/TokenSafety/index.tsx
+msgid "I Understand"
+msgstr "Am înțeles"
 
 #: src/components/SearchModal/ImportList.tsx
 #: src/pages/AddLiquidity/index.tsx
@@ -984,12 +998,17 @@ msgstr "Limba"
 msgid "Learn"
 msgstr "Învață"
 
+#: src/components/TokenSafety/index.tsx
+msgid "Learn More"
+msgstr "Aflați mai multe"
+
 #: src/pages/Pool/CTACards.tsx
 msgid "Learn about providing liquidity"
 msgstr "Aflați despre furnizarea de lichiditate"
 
 #: src/components/PrivacyPolicy/index.tsx
 #: src/components/PrivacyPolicy/index.tsx
+#: src/components/TokenSafety/TokenSafetyMessage.tsx
 msgid "Learn more"
 msgstr "Află mai multe"
 
@@ -1190,6 +1209,10 @@ msgstr "Nicio propunere găsită."
 msgid "No results found."
 msgstr "Nici un rezultat găsit."
 
+#: src/constants/tokenSafety.tsx
+msgid "Not Available"
+msgstr "Nu e disponibil"
+
 #: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "Not created"
 msgstr "Nu a fost creat"
@@ -1254,6 +1277,10 @@ msgstr "Vă rugăm să confirmați că doriți să eliminați această listă ta
 #: src/components/vote/ProposalEmptyState.tsx
 msgid "Please connect to Layer 1 Ethereum"
 msgstr "Vă rugăm să vă conectați la Layer 1 Ethereum"
+
+#: src/constants/tokenSafety.tsx
+msgid "Please do your own research before trading."
+msgstr "Vă rugăm să faceți propria cercetare înainte de a tranzacționa."
 
 #: src/components/Settings/index.tsx
 msgid "Please type the word \"{confirmWord}\" to enable expert mode."
@@ -1735,6 +1762,10 @@ msgstr "Tranzacția nu a putut fi trimisă deoarece termenul a trecut. Te rugăm
 msgid "There is no liquidity data."
 msgstr "Nu există date privind lichiditatea."
 
+#: src/components/Explore/TokenDetails/BalanceSummary.tsx
+msgid "There was an error loading your {tokenSymbol} balance"
+msgstr "A apărut o eroare la încărcarea soldului dvs. {tokenSymbol}"
+
 #: src/components/ConnectedAccountBlocked/index.tsx
 msgid "This address is blocked on the Uniswap Labs interface because it is associated with one or more"
 msgstr "Această adresă este blocată pe interfața Uniswap Labs deoarece este asociată cu unul sau mai multe"
@@ -1788,6 +1819,10 @@ msgstr "La"
 #: src/pages/Swap/index.tsx
 msgid "To (at least)"
 msgstr "La (cel puțin)"
+
+#: src/components/Explore/TokenTable/TokenRow.tsx
+msgid "Token Name"
+msgstr "Nume simbol"
 
 #: src/components/SearchModal/BlockedToken.tsx
 msgid "Token not supported"
@@ -2094,6 +2129,10 @@ msgstr "În Așteptarea Confirmării"
 msgid "Wallet Address or ENS name"
 msgstr "Adresa portofelului sau numele ENS"
 
+#: src/constants/tokenSafety.tsx
+msgid "Warning"
+msgstr "Avertizare"
+
 #: src/components/earn/StakingModal.tsx
 msgid "Weekly Rewards"
 msgstr "Recompense Săptămânale"
@@ -2350,6 +2389,14 @@ msgstr "prin {0} lista de jetoane"
 #: src/components/SearchModal/ImportToken.tsx
 msgid "{0, plural, =1 {Import token} other {Import tokens}}"
 msgstr "{0, plural, =1 {Import token} other {Importați jetoane}}"
+
+#: src/constants/tokenSafety.tsx
+msgid "{0, plural, =1 {This token isn't verified} other {These tokens aren't verified}}"
+msgstr "{0, plural, =1 {Acest simbol nu este verificat} other {Aceste jetoane nu sunt verificate}}"
+
+#: src/constants/tokenSafety.tsx
+msgid "{0, plural, =1 {You can't trade this token using the Uniswap App.} other {You can't trade these tokens using the Uniswap App.}}"
+msgstr "{0, plural, =1 {Nu puteți tranzacționa acest token folosind aplicația Uniswap.} other {Nu puteți tranzacționa aceste jetoane folosind aplicația Uniswap.}}"
 
 #: src/components/RateToggle/index.tsx
 #: src/components/RateToggle/index.tsx

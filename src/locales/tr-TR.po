@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-04 19:04\n"
+"PO-Revision-Date: 2022-08-05 22:05\n"
 "Last-Translator: \n"
 "Language: tr_TR\n"
 "Language-Team: Turkish\n"
@@ -120,6 +120,7 @@ msgstr "Teklifleri sunmak için toplam UNI arzının minimum %0,25'i gereklidir"
 msgid "A swap of this size may have a high price impact, given the current liquidity in the pool. There may be a large difference between the amount of your input token and what you will receive in the output token"
 msgstr "Havuzdaki mevcut likidite göz önüne alındığında, bu boyuttaki bir takasın yüksek bir fiyat etkisi olabilir. Girdi jetonunuzun miktarı ile çıktı jetonunuzda alacağınız miktar arasında büyük bir fark olabilir."
 
+#: src/components/Explore/TokenDetails/TokenDetail.tsx
 #: src/components/Menu/index.tsx
 msgid "About"
 msgstr "Hakkında"
@@ -348,6 +349,10 @@ msgstr "Bir cüzdan bağlayarak, Uniswap Labs'ın kabul <0>Hizmet Şartları'nı
 msgid "Canceled"
 msgstr "İptal edildi"
 
+#: src/constants/tokenSafety.tsx
+msgid "Caution"
+msgstr "Dikkat"
+
 #: src/components/AccountDetails/index.tsx
 msgid "Change"
 msgstr "Değiştir"
@@ -433,6 +438,7 @@ msgstr "Tümünü Temizle"
 msgid "Clear all"
 msgstr "Tümünü temizle"
 
+#: src/components/TokenSafety/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Close"
@@ -817,6 +823,10 @@ msgstr "Uzman modu, işlem onayı istemini kapatır ve genellikle düşük oranl
 msgid "Expired"
 msgstr "Süresi doldu"
 
+#: src/components/Header/index.tsx
+msgid "Explore"
+msgstr "Keşfetmek"
+
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore Uniswap Analytics."
 msgstr "Uniswap Analytics'i keşfedin."
@@ -877,6 +887,10 @@ msgstr "Saklamak"
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
 msgstr "Yüksek Fiyat Etkisi"
+
+#: src/components/TokenSafety/index.tsx
+msgid "I Understand"
+msgstr "Anlıyorum"
 
 #: src/components/SearchModal/ImportList.tsx
 #: src/pages/AddLiquidity/index.tsx
@@ -984,12 +998,17 @@ msgstr "Dil"
 msgid "Learn"
 msgstr "Öğren"
 
+#: src/components/TokenSafety/index.tsx
+msgid "Learn More"
+msgstr "Daha fazla bilgi edin"
+
 #: src/pages/Pool/CTACards.tsx
 msgid "Learn about providing liquidity"
 msgstr "Likidite sağlama hakkında bilgi edinin"
 
 #: src/components/PrivacyPolicy/index.tsx
 #: src/components/PrivacyPolicy/index.tsx
+#: src/components/TokenSafety/TokenSafetyMessage.tsx
 msgid "Learn more"
 msgstr "Daha fazla bilgi edin"
 
@@ -1190,6 +1209,10 @@ msgstr "Teklif bulunamadı."
 msgid "No results found."
 msgstr "Sonuç bulunamadı."
 
+#: src/constants/tokenSafety.tsx
+msgid "Not Available"
+msgstr "Müsait değil"
+
 #: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "Not created"
 msgstr "oluşturulmadı"
@@ -1254,6 +1277,10 @@ msgstr "Lütfen KALDIR yazarak bu listeyi kaldırmak istediğinizi onaylayın."
 #: src/components/vote/ProposalEmptyState.tsx
 msgid "Please connect to Layer 1 Ethereum"
 msgstr "Lütfen Katman 1 Ethereum'a bağlanın"
+
+#: src/constants/tokenSafety.tsx
+msgid "Please do your own research before trading."
+msgstr "Lütfen işlem yapmadan önce kendi araştırmanızı yapın."
 
 #: src/components/Settings/index.tsx
 msgid "Please type the word \"{confirmWord}\" to enable expert mode."
@@ -1735,6 +1762,10 @@ msgstr "Son tarih geçtiği için işlem gönderilemedi. Lütfen işlem süreniz
 msgid "There is no liquidity data."
 msgstr "Likidite verisi yok."
 
+#: src/components/Explore/TokenDetails/BalanceSummary.tsx
+msgid "There was an error loading your {tokenSymbol} balance"
+msgstr "{tokenSymbol} bakiyeniz yüklenirken bir hata oluştu"
+
 #: src/components/ConnectedAccountBlocked/index.tsx
 msgid "This address is blocked on the Uniswap Labs interface because it is associated with one or more"
 msgstr "Bu adres, bir veya daha fazla adresle ilişkili olduğu için Uniswap Labs arabiriminde engellendi."
@@ -1788,6 +1819,10 @@ msgstr "Alıcı"
 #: src/pages/Swap/index.tsx
 msgid "To (at least)"
 msgstr "Alıcı (en az)"
+
+#: src/components/Explore/TokenTable/TokenRow.tsx
+msgid "Token Name"
+msgstr "Jeton Adı"
 
 #: src/components/SearchModal/BlockedToken.tsx
 msgid "Token not supported"
@@ -2094,6 +2129,10 @@ msgstr "Onay Bekliyor"
 msgid "Wallet Address or ENS name"
 msgstr "Cüzdan Adresi veya ENS adı"
 
+#: src/constants/tokenSafety.tsx
+msgid "Warning"
+msgstr "Uyarı"
+
 #: src/components/earn/StakingModal.tsx
 msgid "Weekly Rewards"
 msgstr "Haftalık Ödüller"
@@ -2350,6 +2389,14 @@ msgstr "{0} jeton listesi aracılığıyla"
 #: src/components/SearchModal/ImportToken.tsx
 msgid "{0, plural, =1 {Import token} other {Import tokens}}"
 msgstr "{0, plural, =1 {Simgeyi içe aktar} other {Jetonları içe aktarın}}"
+
+#: src/constants/tokenSafety.tsx
+msgid "{0, plural, =1 {This token isn't verified} other {These tokens aren't verified}}"
+msgstr "{0, plural, =1 {Bu jeton doğrulanmadı} other {Bu jetonlar doğrulanmadı}}"
+
+#: src/constants/tokenSafety.tsx
+msgid "{0, plural, =1 {You can't trade this token using the Uniswap App.} other {You can't trade these tokens using the Uniswap App.}}"
+msgstr "{0, plural, =1 {Uniswap Uygulamasını kullanarak bu jetonu takas edemezsiniz.} other {Bu jetonları Uniswap Uygulamasını kullanarak takas edemezsiniz.}}"
 
 #: src/components/RateToggle/index.tsx
 #: src/components/RateToggle/index.tsx

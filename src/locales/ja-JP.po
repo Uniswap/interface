@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-04 19:04\n"
+"PO-Revision-Date: 2022-08-05 22:05\n"
 "Last-Translator: \n"
 "Language: ja_JP\n"
 "Language-Team: Japanese\n"
@@ -120,6 +120,7 @@ msgstr "提案を提出するには、UNIの総供給量の0.25％以上のUNI�
 msgid "A swap of this size may have a high price impact, given the current liquidity in the pool. There may be a large difference between the amount of your input token and what you will receive in the output token"
 msgstr "プールの現在の流動性を考えると、このサイズのスワップは価格に大きな影響を与える可能性があります。入力トークンの量と出力トークンで受け取る量には大きな違いがある可能性があります"
 
+#: src/components/Explore/TokenDetails/TokenDetail.tsx
 #: src/components/Menu/index.tsx
 msgid "About"
 msgstr "概要"
@@ -348,6 +349,10 @@ msgstr "ウォレットを接続することにより、あなたはUniswap Labs
 msgid "Canceled"
 msgstr "キャンセル"
 
+#: src/constants/tokenSafety.tsx
+msgid "Caution"
+msgstr "注意"
+
 #: src/components/AccountDetails/index.tsx
 msgid "Change"
 msgstr "変更"
@@ -433,6 +438,7 @@ msgstr "すべてクリア"
 msgid "Clear all"
 msgstr "すべてクリア"
 
+#: src/components/TokenSafety/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Close"
@@ -817,6 +823,10 @@ msgstr "エキスパートモードは取引確認画面をスキップし、不
 msgid "Expired"
 msgstr "期限切れ"
 
+#: src/components/Header/index.tsx
+msgid "Explore"
+msgstr "探検"
+
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore Uniswap Analytics."
 msgstr "Uniswap Analyticsをご覧ください。"
@@ -877,6 +887,10 @@ msgstr "非表示"
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
 msgstr "大きな価格への影響"
+
+#: src/components/TokenSafety/index.tsx
+msgid "I Understand"
+msgstr "理解しました"
 
 #: src/components/SearchModal/ImportList.tsx
 #: src/pages/AddLiquidity/index.tsx
@@ -984,12 +998,17 @@ msgstr "言語"
 msgid "Learn"
 msgstr "資料"
 
+#: src/components/TokenSafety/index.tsx
+msgid "Learn More"
+msgstr "もっと詳しく知る"
+
 #: src/pages/Pool/CTACards.tsx
 msgid "Learn about providing liquidity"
 msgstr "流動性の提供について学ぶ"
 
 #: src/components/PrivacyPolicy/index.tsx
 #: src/components/PrivacyPolicy/index.tsx
+#: src/components/TokenSafety/TokenSafetyMessage.tsx
 msgid "Learn more"
 msgstr "より詳しく"
 
@@ -1190,6 +1209,10 @@ msgstr "提案が見つかりません。"
 msgid "No results found."
 msgstr "結果が見つかりませんでした。"
 
+#: src/constants/tokenSafety.tsx
+msgid "Not Available"
+msgstr "利用不可"
+
 #: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "Not created"
 msgstr "未作成"
@@ -1254,6 +1277,10 @@ msgstr "REMOVEと入力して、このリストを削除することを確認し
 #: src/components/vote/ProposalEmptyState.tsx
 msgid "Please connect to Layer 1 Ethereum"
 msgstr "イーサリアムのレイヤー1に接続してください"
+
+#: src/constants/tokenSafety.tsx
+msgid "Please do your own research before trading."
+msgstr "取引前に独自の調査を行ってください。"
 
 #: src/components/Settings/index.tsx
 msgid "Please type the word \"{confirmWord}\" to enable expert mode."
@@ -1735,6 +1762,10 @@ msgstr "期限が過ぎたため、取引を送信できませんでした。期
 msgid "There is no liquidity data."
 msgstr "流動性データはありません。"
 
+#: src/components/Explore/TokenDetails/BalanceSummary.tsx
+msgid "There was an error loading your {tokenSymbol} balance"
+msgstr "残高 {tokenSymbol} の読み込み中にエラーが発生しました"
+
 #: src/components/ConnectedAccountBlocked/index.tsx
 msgid "This address is blocked on the Uniswap Labs interface because it is associated with one or more"
 msgstr "このアドレスは、1つ以上に関連付けられているため、UniswapLabsインターフェイスでブロックされています。"
@@ -1788,6 +1819,10 @@ msgstr "買うトークン"
 #: src/pages/Swap/index.tsx
 msgid "To (at least)"
 msgstr "買うトークン（少なくとも）"
+
+#: src/components/Explore/TokenTable/TokenRow.tsx
+msgid "Token Name"
+msgstr "トークン名"
 
 #: src/components/SearchModal/BlockedToken.tsx
 msgid "Token not supported"
@@ -2094,6 +2129,10 @@ msgstr "確認待ち"
 msgid "Wallet Address or ENS name"
 msgstr "ウォレットアドレスまたはENS名"
 
+#: src/constants/tokenSafety.tsx
+msgid "Warning"
+msgstr "警告"
+
 #: src/components/earn/StakingModal.tsx
 msgid "Weekly Rewards"
 msgstr "週次の報酬"
@@ -2350,6 +2389,14 @@ msgstr "{0} トークンリストから"
 #: src/components/SearchModal/ImportToken.tsx
 msgid "{0, plural, =1 {Import token} other {Import tokens}}"
 msgstr "{0, plural, =1 {トークンをインポートしてください} other {トークンをインポートしてください}}"
+
+#: src/constants/tokenSafety.tsx
+msgid "{0, plural, =1 {This token isn't verified} other {These tokens aren't verified}}"
+msgstr "{0, plural, =1 {このトークンは検証されていません} other {これらのトークンは検証されていません}}"
+
+#: src/constants/tokenSafety.tsx
+msgid "{0, plural, =1 {You can't trade this token using the Uniswap App.} other {You can't trade these tokens using the Uniswap App.}}"
+msgstr "{0, plural, =1 {Uniswap アプリを使用してこのトークンを取引することはできません。} other {Uniswap アプリを使用してこれらのトークンを取引することはできません。}}"
 
 #: src/components/RateToggle/index.tsx
 #: src/components/RateToggle/index.tsx

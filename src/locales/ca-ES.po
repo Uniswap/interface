@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-04 19:04\n"
+"PO-Revision-Date: 2022-08-05 22:05\n"
 "Last-Translator: \n"
 "Language: ca_ES\n"
 "Language-Team: Catalan\n"
@@ -120,6 +120,7 @@ msgstr "Per presentar les propostes es requereix un llindar mínim del 0,25% del
 msgid "A swap of this size may have a high price impact, given the current liquidity in the pool. There may be a large difference between the amount of your input token and what you will receive in the output token"
 msgstr "Un swap d'aquesta mida pot tenir un alt impacte en els preus, donada la liquiditat actual del pool. Pot haver-hi una gran diferència entre la quantitat del testimoni d'entrada i el que rebrà al testimoni de sortida"
 
+#: src/components/Explore/TokenDetails/TokenDetail.tsx
 #: src/components/Menu/index.tsx
 msgid "About"
 msgstr "Sobre"
@@ -348,6 +349,10 @@ msgstr "En connectar una cartera, acceptes les Condicions del servei <0></0> i r
 msgid "Canceled"
 msgstr "Cancel·lat"
 
+#: src/constants/tokenSafety.tsx
+msgid "Caution"
+msgstr "Precaució"
+
 #: src/components/AccountDetails/index.tsx
 msgid "Change"
 msgstr "Canvi"
@@ -433,6 +438,7 @@ msgstr "Esborra-ho tot"
 msgid "Clear all"
 msgstr "Esborra-ho tot"
 
+#: src/components/TokenSafety/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Close"
@@ -817,6 +823,10 @@ msgstr "El mode expert desactiva la sol·licitud de confirmació de la transacci
 msgid "Expired"
 msgstr "Caducat"
 
+#: src/components/Header/index.tsx
+msgid "Explore"
+msgstr "Explora"
+
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore Uniswap Analytics."
 msgstr "Exploreu Uniswap Analytics."
@@ -877,6 +887,10 @@ msgstr "Amaga"
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
 msgstr "Alt impacte en els preus"
+
+#: src/components/TokenSafety/index.tsx
+msgid "I Understand"
+msgstr "Entenc"
 
 #: src/components/SearchModal/ImportList.tsx
 #: src/pages/AddLiquidity/index.tsx
@@ -984,12 +998,17 @@ msgstr "Llenguatge"
 msgid "Learn"
 msgstr "Aprendre"
 
+#: src/components/TokenSafety/index.tsx
+msgid "Learn More"
+msgstr "Aprèn més"
+
 #: src/pages/Pool/CTACards.tsx
 msgid "Learn about providing liquidity"
 msgstr "Obteniu informació sobre com proporcionar liquiditat"
 
 #: src/components/PrivacyPolicy/index.tsx
 #: src/components/PrivacyPolicy/index.tsx
+#: src/components/TokenSafety/TokenSafetyMessage.tsx
 msgid "Learn more"
 msgstr "Aprèn més"
 
@@ -1190,6 +1209,10 @@ msgstr "No s'ha trobat cap proposta."
 msgid "No results found."
 msgstr "Sense resultats."
 
+#: src/constants/tokenSafety.tsx
+msgid "Not Available"
+msgstr "No disponible"
+
 #: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "Not created"
 msgstr "No creat"
@@ -1254,6 +1277,10 @@ msgstr "Confirmeu que voleu eliminar aquesta llista escrivint ELIMINA"
 #: src/components/vote/ProposalEmptyState.tsx
 msgid "Please connect to Layer 1 Ethereum"
 msgstr "Connecteu-vos a la capa 1 Ethereum"
+
+#: src/constants/tokenSafety.tsx
+msgid "Please do your own research before trading."
+msgstr "Si us plau, fes la teva pròpia investigació abans de negociar."
 
 #: src/components/Settings/index.tsx
 msgid "Please type the word \"{confirmWord}\" to enable expert mode."
@@ -1735,6 +1762,10 @@ msgstr "No s'ha pogut enviar la transacció perquè s'ha acabat el termini. Comp
 msgid "There is no liquidity data."
 msgstr "No hi ha dades de liquiditat."
 
+#: src/components/Explore/TokenDetails/BalanceSummary.tsx
+msgid "There was an error loading your {tokenSymbol} balance"
+msgstr "S'ha produït un error en carregar el vostre saldo {tokenSymbol}"
+
 #: src/components/ConnectedAccountBlocked/index.tsx
 msgid "This address is blocked on the Uniswap Labs interface because it is associated with one or more"
 msgstr "Aquesta adreça està bloquejada a la interfície d'Uniswap Labs perquè està associada amb una o més"
@@ -1788,6 +1819,10 @@ msgstr "Per a"
 #: src/pages/Swap/index.tsx
 msgid "To (at least)"
 msgstr "A (com a mínim)"
+
+#: src/components/Explore/TokenTable/TokenRow.tsx
+msgid "Token Name"
+msgstr "Nom del testimoni"
 
 #: src/components/SearchModal/BlockedToken.tsx
 msgid "Token not supported"
@@ -2094,6 +2129,10 @@ msgstr "Esperant la confirmació"
 msgid "Wallet Address or ENS name"
 msgstr "Adreça de cartera o nom ENS"
 
+#: src/constants/tokenSafety.tsx
+msgid "Warning"
+msgstr "Avís"
+
 #: src/components/earn/StakingModal.tsx
 msgid "Weekly Rewards"
 msgstr "Recompenses setmanals"
@@ -2350,6 +2389,14 @@ msgstr "mitjançant la llista de tokens {0}"
 #: src/components/SearchModal/ImportToken.tsx
 msgid "{0, plural, =1 {Import token} other {Import tokens}}"
 msgstr "{0, plural, =1 {Fitxa d'importació} other {Importa fitxes}}"
+
+#: src/constants/tokenSafety.tsx
+msgid "{0, plural, =1 {This token isn't verified} other {These tokens aren't verified}}"
+msgstr "{0, plural, =1 {Aquest testimoni no està verificat} other {Aquestes fitxes no estan verificades}}"
+
+#: src/constants/tokenSafety.tsx
+msgid "{0, plural, =1 {You can't trade this token using the Uniswap App.} other {You can't trade these tokens using the Uniswap App.}}"
+msgstr "{0, plural, =1 {No podeu intercanviar aquest testimoni mitjançant l'aplicació Uniswap.} other {No podeu intercanviar aquests fitxes amb l'aplicació Uniswap.}}"
 
 #: src/components/RateToggle/index.tsx
 #: src/components/RateToggle/index.tsx
