@@ -2,6 +2,8 @@ import { logger } from 'src/utils/logger'
 
 const VIEWBOX_REGEX = /viewBox=["']\d+ \d+ (\d+) (\d+)["']/
 const FALLBACK_ASPECT_RATIO = 1
+// TODO: return a nicer SVG asset with an error message
+const INVALID_SVG = { content: 'Invalid SVG', aspectRatio: FALLBACK_ASPECT_RATIO }
 
 export async function fetchSVG(
   uri: string,
@@ -11,6 +13,13 @@ export async function fetchSVG(
   const res = await fetch(uri, { signal })
   const text = await res.text()
 
+  // Do not render SVGs that have a foreignObject tag for security reasons
+  if (text.includes('<foreignObject')) {
+    // TODO: log with Sentry
+    logger.info('images/utils', 'fetchSVG', 'SVG content contains a foreignObject tag', uri)
+    return INVALID_SVG
+  }
+
   const formatted = autoplay ? text : freezeSvgAnimations(text)
   const result = VIEWBOX_REGEX.exec(text)
 
@@ -18,7 +27,9 @@ export async function fetchSVG(
   const viewboxHeight = result?.[2]
 
   if (!formatted) {
-    throw new Error('Could not retrieve and format SVG content')
+    // TODO: log with Sentry
+    logger.info('images/utils', 'fetchSVG', 'Could not retrieve and format SVG content', uri)
+    return INVALID_SVG
   }
 
   let aspectRatio = FALLBACK_ASPECT_RATIO
