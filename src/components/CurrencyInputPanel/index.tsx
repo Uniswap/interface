@@ -186,7 +186,7 @@ const StyledDropDown = styled(DropDown)<{ selected: boolean; phase0Flag: boolean
 const StyledTokenName = styled.span<{ active?: boolean; phase0Flag: boolean }>`
   ${({ active }) => (active ? '  margin: 0 0.25rem 0 0.25rem;' : '  margin: 0 0.25rem 0 0.25rem;')}
   font-size:  ${({ active }) => (active ? '18px' : '18px')};
-  font-weight: ${({ phase0Flag }) => phase0Flag && '600'};
+  font-weight: ${({ phase0Flag }) => (phase0Flag ? '600' : '500')};
 `
 
 const StyledBalanceMax = styled.button<{ disabled?: boolean; phase0Flag: boolean }>`
