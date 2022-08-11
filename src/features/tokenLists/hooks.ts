@@ -100,9 +100,11 @@ function useCombinedTokenMapFromUrls(urls: string[] | undefined): ChainIdToListe
 
 // filter out unsupported lists
 export function useActiveListUrls(): string[] | undefined {
-  return useAppSelector((state) => state.tokenLists.activeListUrls)?.filter(
-    (url) => !UNSUPPORTED_LIST_URLS.includes(url)
-  )
+  const activeUrls = useAppSelector((state) => state.tokenLists.activeListUrls)
+
+  return useMemo(() => {
+    return activeUrls?.filter((url) => !UNSUPPORTED_LIST_URLS.includes(url))
+  }, [activeUrls])
 }
 
 export function useInactiveListUrls(): string[] {
@@ -143,8 +145,9 @@ export function useTokenWarningList(): ChainIdToListedTokens {
   return useMemo(() => listToTokenMap(TOKEN_WARNING_LIST), [])
 }
 
+const ONLY_UNISWAP_LIST = [UNI_LIST]
 export function useUniswapDefaultList(): ChainIdToListedTokens {
-  return useCombinedTokenMapFromUrls([UNI_LIST])
+  return useCombinedTokenMapFromUrls(ONLY_UNISWAP_LIST)
 }
 
 export function useIsListActive(url: string): boolean {
