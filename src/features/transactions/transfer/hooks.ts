@@ -22,7 +22,6 @@ import {
   GasFeeByTransactionType,
   OptimismL1FeeEstimate,
   showNewAddressWarningModal,
-  showNoBalancesWarningModal,
   TransactionState,
 } from 'src/features/transactions/transactionState/transactionState'
 import { BaseDerivedInfo } from 'src/features/transactions/transactionState/types'
@@ -333,40 +332,28 @@ export function useIsSmartContractAddress(address: string | undefined, chainId: 
 }
 
 export function useHandleTransferWarningModals(
-  state: TransactionState,
   dispatch: React.Dispatch<AnyAction>,
   onNext: () => void,
-  recipient: string | undefined,
-  chainId: ChainId
+  recipient: string | undefined
 ) {
-  const { showNewAddressWarning, showNoBalancesWarning } = state
-
-  const recipientHasNoBalances = useRecipientHasZeroBalances(recipient, chainId)
-  const hasNoBalancesWarning = !!recipient && !!recipientHasNoBalances
   const hasNewAddressWarning = useRecipientIsNewAddress(recipient)
 
   const onPressReview = useCallback(() => {
-    if (!hasNewAddressWarning && !hasNoBalancesWarning) {
+    if (!hasNewAddressWarning) {
       onNext()
       return
     }
-    if (hasNoBalancesWarning) dispatch(showNoBalancesWarningModal())
     if (hasNewAddressWarning) dispatch(showNewAddressWarningModal())
-  }, [hasNewAddressWarning, hasNoBalancesWarning, dispatch, onNext])
+  }, [hasNewAddressWarning, dispatch, onNext])
 
-  const moreThanOneModalOpen = showNewAddressWarning && showNoBalancesWarning
-  const onPressWarningContinue = useCallback(
-    () => (moreThanOneModalOpen ? null : onNext()),
-    [moreThanOneModalOpen, onNext]
-  )
+  const onPressWarningContinue = useCallback(() => onNext(), [onNext])
 
   return useMemo(() => {
     return {
-      warningsLoading: recipientHasNoBalances === null,
       onPressReview,
       onPressWarningContinue,
     }
-  }, [recipientHasNoBalances, onPressReview, onPressWarningContinue])
+  }, [onPressReview, onPressWarningContinue])
 }
 
 export function useInputAssetInfo(

@@ -34,7 +34,6 @@ export interface TransactionState {
   optimismL1Fee?: OptimismL1FeeEstimate // Optimism txs have a L1 fee. Not relevant for submitting txs but needs to be accounted for in SwapDetails
   exactApproveRequired?: boolean // undefined except in rare instances when infinite approve is not supported by a token
   showNewAddressWarning?: boolean
-  showNoBalancesWarning?: boolean
   swapMethodParameters?: MethodParameters
   warningModalType?: WarningModalType
   selectingCurrencyField?: CurrencyField
@@ -205,12 +204,6 @@ const slice = createSlice({
     closeNewAddressWarningModal: (state) => {
       state.showNewAddressWarning = false
     },
-    showNoBalancesWarningModal: (state) => {
-      state.showNoBalancesWarning = true
-    },
-    closeNoBalancesWarningModal: (state) => {
-      state.showNoBalancesWarning = false
-    },
     setTxId: (state, action: PayloadAction<string>) => {
       state.txId = action.payload
     },
@@ -237,8 +230,6 @@ export const {
   closeWarningModal,
   showNewAddressWarningModal,
   closeNewAddressWarningModal,
-  showNoBalancesWarningModal,
-  closeNoBalancesWarningModal,
   setTxId,
   showCurrencySelector,
 } = slice.actions

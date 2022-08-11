@@ -12,13 +12,12 @@ import { RecipientInputPanel } from 'src/components/input/RecipientInputPanel'
 import { AnimatedFlex, Box, Flex } from 'src/components/layout'
 import { WarningAction, WarningLabel, WarningSeverity } from 'src/components/warnings/types'
 import { WarningModal } from 'src/components/warnings/WarningModal'
-import { ChainId, CHAIN_INFO } from 'src/constants/chains'
+import { ChainId } from 'src/constants/chains'
 import { ElementName } from 'src/features/telemetry/constants'
 import { useSwapActionHandlers, useUSDTokenUpdater } from 'src/features/transactions/swap/hooks'
 import {
   clearRecipient,
   closeNewAddressWarningModal,
-  closeNoBalancesWarningModal,
   CurrencyField,
   TransactionState,
   transactionStateActions,
@@ -49,7 +48,7 @@ export function TransferTokenForm({
   onNext,
 }: TransferTokenProps) {
   const { t } = useTranslation()
-  const { showNewAddressWarning, showNoBalancesWarning } = state
+  const { showNewAddressWarning } = state
 
   const {
     currencyAmounts,
@@ -76,16 +75,14 @@ export function TransferTokenForm({
     currencyIn ?? undefined
   )
 
-  const { warningsLoading, onPressReview, onPressWarningContinue } = useHandleTransferWarningModals(
-    state,
+  const { onPressReview, onPressWarningContinue } = useHandleTransferWarningModals(
     dispatch,
     () => {
       const txId = createTransactionId()
       dispatch(transactionStateActions.setTxId(txId))
       onNext()
     },
-    recipient,
-    chainId ?? ChainId.Mainnet
+    recipient
   )
   const { isSmartContractAddress, loading: addressLoading } = useIsSmartContractAddress(
     recipient,
@@ -95,7 +92,6 @@ export function TransferTokenForm({
 
   const actionButtonDisabled =
     warnings.some((warning) => warning.action === WarningAction.DisableReview) ||
-    warningsLoading ||
     addressLoading ||
     showAddressIsSmartContractError
 
@@ -110,27 +106,8 @@ export function TransferTokenForm({
     currencyTypes[CurrencyField.INPUT]
   )
 
-  const networkName = CHAIN_INFO[chainId ?? ChainId.Mainnet].label
-
   return (
     <>
-      {showNoBalancesWarning && !showNewAddressWarning && !showAddressIsSmartContractError && (
-        <WarningModal
-          data={recipient}
-          warning={{
-            type: WarningLabel.RecipientZeroBalances,
-            severity: WarningSeverity.Medium,
-            action: WarningAction.WarnBeforeSubmit,
-            title: t('No token balances on {{ network }}', { network: networkName }),
-            message: t(
-              "The address you selected doesn't have any tokens in its wallet on {{ network }}. Please confirm that the address and network are corect before continuing.",
-              { network: networkName }
-            ),
-          }}
-          onClose={() => dispatch(closeNoBalancesWarningModal())}
-          onPressContinue={onPressWarningContinue}
-        />
-      )}
       {showNewAddressWarning && !showAddressIsSmartContractError && (
         <WarningModal
           data={recipient}
