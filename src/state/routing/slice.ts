@@ -28,7 +28,6 @@ const protocols: Protocol[] = [Protocol.V2, Protocol.V3, Protocol.MIXED]
 
 const DEFAULT_QUERY_PARAMS = {
   protocols: protocols.map((p) => p.toLowerCase()).join(','),
-  forceMixedRoutes: true,
   // example other params
   // forceCrossProtocol: 'true',
   // minSplits: '5',
@@ -37,7 +36,7 @@ const DEFAULT_QUERY_PARAMS = {
 export const routingApi = createApi({
   reducerPath: 'routingApi',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'https://beta.api.uniswap.org/v1/',
+    baseUrl: 'https://api.uniswap.org/v1/',
   }),
   endpoints: (build) => ({
     getQuote: build.query<
