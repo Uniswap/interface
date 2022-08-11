@@ -6,6 +6,8 @@ import { Erc1155, Erc20, Erc721 } from 'src/abis/types'
 import { getContractManager, getProvider } from 'src/app/walletContext'
 import { AssetType } from 'src/entities/assets'
 import { ContractManager } from 'src/features/contracts/ContractManager'
+import { FeeInfo } from 'src/features/gas/types'
+import { getTxGasPriceSettings } from 'src/features/gas/utils'
 import { sendTransaction } from 'src/features/transactions/sendTransaction'
 import {
   TransferCurrencyParams,
@@ -34,8 +36,12 @@ export function* transferToken(params: TransferTokenParams) {
   logger.debug('transferToken', '', 'Transfer complete')
 }
 
-export function* prepareTransfer(params: TransferTokenParams) {
-  const { chainId, type: assetType, tokenAddress } = params
+export function* prepareTransfer(
+  params: TransferTokenParams,
+  prepareForEstimation: boolean = false
+) {
+  const { chainId, type: assetType, tokenAddress, feeInfo } = params
+
   const provider = yield* call(getProvider, chainId)
   const contractManager = yield* call(getContractManager)
 
@@ -63,6 +69,15 @@ export function* prepareTransfer(params: TransferTokenParams) {
 
       break
   }
+
+  if (!prepareForEstimation) {
+    // Should never throw because we don't dispatch the action for actual transactions without this param
+    if (!feeInfo) {
+      throw new Error('No fee info provided for transfer')
+    }
+    transferTxRequest = setTxGasParams(transferTxRequest, feeInfo)
+  }
+
   return { transferTxRequest, typeInfo }
 }
 
@@ -147,6 +162,11 @@ function validateTransferAmount(amountInWei: string, currentBalance: BigNumberis
     logger.error('transferToken', 'validateTransferAmount', 'Balance insufficient for transfer')
     throw new Error('Insufficient balance')
   }
+}
+
+export function setTxGasParams(transferTxRequest: providers.TransactionRequest, feeInfo: FeeInfo) {
+  const gasPriceSettings = getTxGasPriceSettings(feeInfo)
+  return { ...transferTxRequest, ...gasPriceSettings, gasLimit: feeInfo.gasLimit }
 }
 
 export const {

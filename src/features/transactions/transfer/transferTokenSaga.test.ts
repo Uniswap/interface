@@ -7,11 +7,31 @@ import { NATIVE_ADDRESS } from 'src/constants/addresses'
 import { ChainId } from 'src/constants/chains'
 import { DAI } from 'src/constants/tokens'
 import { AssetType } from 'src/entities/assets'
+import { FeeInfo, FeeType } from 'src/features/gas/types'
 import { sendTransaction } from 'src/features/transactions/sendTransaction'
-import { transferToken } from 'src/features/transactions/transfer/transferTokenSaga'
+import { setTxGasParams, transferToken } from 'src/features/transactions/transfer/transferTokenSaga'
 import { TransferCurrencyParams, TransferNFTParams } from 'src/features/transactions/transfer/types'
 import { SendTokenTransactionInfo, TransactionType } from 'src/features/transactions/types'
 import { account, mockContractManager, mockProvider, txRequest } from 'src/test/fixtures'
+
+const feeInfo: FeeInfo = {
+  type: FeeType.Eip1559,
+  gasLimit: '100000',
+  fee: {
+    fast: '14508243138800000',
+    normal: '14375759517700000',
+    urgent: '14639580260700000',
+  },
+  feeDetails: {
+    currentBaseFeePerGas: '120281423397',
+    maxBaseFeePerGas: '142082431388',
+    maxPriorityFeePerGas: {
+      fast: '3000000000',
+      normal: '1675163789',
+      urgent: '4313371219',
+    },
+  },
+}
 
 const erc20TranferParams: TransferCurrencyParams = {
   txId: '1',
@@ -21,6 +41,7 @@ const erc20TranferParams: TransferCurrencyParams = {
   chainId: ChainId.Rinkeby,
   toAddress: '0xdefaced',
   amountInWei: '100000000000000000',
+  feeInfo,
 }
 const nativeTranferParams: TransferCurrencyParams = {
   ...erc20TranferParams,
@@ -34,6 +55,7 @@ const erc721TransferParams: TransferNFTParams = {
   toAddress: '0xdefaced',
   tokenAddress: '0xdeadbeef',
   tokenId: '123567',
+  feeInfo,
 }
 const erc1155TransferParams: TransferNFTParams = {
   ...erc721TransferParams,
@@ -50,6 +72,14 @@ const typeInfo: SendTokenTransactionInfo = {
 
 describe('transferTokenSaga', () => {
   it('Transfers native currency', async () => {
+    const rawTx = {
+      from: account.address,
+      to: nativeTranferParams.toAddress,
+      value: nativeTranferParams.amountInWei,
+    }
+
+    if (!nativeTranferParams.feeInfo) throw new Error('missing fee info')
+    const tx = setTxGasParams(rawTx, nativeTranferParams.feeInfo)
     await expectSaga(transferToken, nativeTranferParams)
       .provide([
         [call(getProvider, nativeTranferParams.chainId), mockProvider],
@@ -59,13 +89,7 @@ describe('transferTokenSaga', () => {
       .call(sendTransaction, {
         chainId: nativeTranferParams.chainId,
         account: nativeTranferParams.account,
-        options: {
-          request: {
-            from: account.address,
-            to: nativeTranferParams.toAddress,
-            value: nativeTranferParams.amountInWei,
-          },
-        },
+        options: { request: tx },
         typeInfo: {
           ...typeInfo,
           tokenAddress: nativeTranferParams.tokenAddress,
@@ -79,6 +103,9 @@ describe('transferTokenSaga', () => {
       ...erc20TranferParams,
       tokenAddress: DAI.address,
     }
+
+    if (!params.feeInfo) throw new Error('missing fee info')
+    const tx = setTxGasParams(txRequest, params.feeInfo)
     await expectSaga(transferToken, params)
       .provide([
         [call(getProvider, erc20TranferParams.chainId), mockProvider],
@@ -88,15 +115,15 @@ describe('transferTokenSaga', () => {
       .call(sendTransaction, {
         chainId: erc20TranferParams.chainId,
         account: erc20TranferParams.account,
-        options: {
-          request: txRequest,
-        },
+        options: { request: tx },
         typeInfo,
         txId: '1',
       })
       .silentRun()
   })
   it('Transfers ERC721', async () => {
+    if (!erc721TransferParams.feeInfo) throw new Error('missing fee info')
+    const tx = setTxGasParams(txRequest, erc721TransferParams.feeInfo)
     await expectSaga(transferToken, erc721TransferParams)
       .provide([
         [call(getProvider, erc721TransferParams.chainId), mockProvider],
@@ -106,9 +133,7 @@ describe('transferTokenSaga', () => {
       .call(sendTransaction, {
         chainId: erc721TransferParams.chainId,
         account: erc721TransferParams.account,
-        options: {
-          request: txRequest,
-        },
+        options: { request: tx },
         typeInfo: {
           assetType: AssetType.ERC721,
           recipient: erc721TransferParams.toAddress,
@@ -121,6 +146,8 @@ describe('transferTokenSaga', () => {
       .silentRun()
   })
   it('Transfers ERC1155', async () => {
+    if (!erc1155TransferParams.feeInfo) throw new Error('missing fee info')
+    const gasSettings = setTxGasParams(txRequest, erc1155TransferParams.feeInfo)
     await expectSaga(transferToken, erc1155TransferParams)
       .provide([
         [call(getProvider, erc1155TransferParams.chainId), mockProvider],
@@ -131,7 +158,7 @@ describe('transferTokenSaga', () => {
         chainId: erc1155TransferParams.chainId,
         account: erc1155TransferParams.account,
         options: {
-          request: txRequest,
+          request: { ...txRequest, ...gasSettings },
         },
         typeInfo: {
           assetType: AssetType.ERC1155,

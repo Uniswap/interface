@@ -10,6 +10,7 @@ import { AssetType } from 'src/entities/assets'
 import { useNativeCurrencyBalance, useTokenBalance } from 'src/features/balances/hooks'
 import { useAllBalancesList } from 'src/features/dataApi/balances'
 import { estimateGasAction } from 'src/features/gas/estimateGasSaga'
+import { FeeInfo } from 'src/features/gas/types'
 import { useNFT } from 'src/features/nfts/hooks'
 import { NFTAsset } from 'src/features/nfts/types'
 import { useCurrency } from 'src/features/tokens/useCurrency'
@@ -133,12 +134,13 @@ export function useTransferERC20Callback(
   toAddress?: Address,
   tokenAddress?: Address,
   amountInWei?: string,
+  feeInfo?: FeeInfo,
   onSubmit?: () => void
 ) {
   const account = useActiveAccount()
 
   return useTransferCallback(
-    chainId && toAddress && tokenAddress && amountInWei && account
+    chainId && toAddress && tokenAddress && amountInWei && account && feeInfo
       ? {
           account,
           chainId,
@@ -147,6 +149,7 @@ export function useTransferERC20Callback(
           amountInWei,
           type: AssetType.Currency,
           txId,
+          feeInfo,
         }
       : null,
     onSubmit
@@ -160,12 +163,13 @@ export function useTransferNFTCallback(
   toAddress?: Address,
   tokenAddress?: Address,
   tokenId?: string,
+  feeInfo?: FeeInfo,
   onSubmit?: () => void
 ) {
   const account = useActiveAccount()
 
   return useTransferCallback(
-    account && chainId && toAddress && tokenAddress && tokenId
+    account && chainId && toAddress && tokenAddress && tokenId && feeInfo
       ? {
           account,
           chainId,
@@ -174,6 +178,7 @@ export function useTransferNFTCallback(
           tokenId,
           type: AssetType.ERC721,
           txId,
+          feeInfo,
         }
       : null,
     onSubmit

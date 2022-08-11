@@ -244,7 +244,7 @@ function* estimateApproveGasFee(params: EstiamteApproveGasInfo) {
 function* estimateTransferGasLimit(provider: providers.Provider, params: TransferTokenParams) {
   const { chainId } = params
 
-  const { transferTxRequest } = yield* call(prepareTransfer, params)
+  const { transferTxRequest } = yield* call(prepareTransfer, params, true)
 
   const transferGasInfo = yield* call(
     computeGasFee,

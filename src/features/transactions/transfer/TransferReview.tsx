@@ -81,7 +81,8 @@ export function TransferReview({
     currencyTypes[CurrencyField.INPUT]
   )
 
-  const gasFee = gasFeeEstimate?.[TransactionType.Send]?.fee[GasSpeed.Urgent]
+  const feeInfo = gasFeeEstimate?.[TransactionType.Send]
+  const gasFee = feeInfo?.fee?.[GasSpeed.Urgent]
 
   const transferERC20Callback = useTransferERC20Callback(
     txId,
@@ -89,6 +90,7 @@ export function TransferReview({
     recipient,
     currencyIn ? currencyAddress(currencyIn) : undefined,
     currencyAmounts[CurrencyField.INPUT]?.quotient.toString(),
+    feeInfo,
     onNext
   )
   // TODO: if readonly account, not sendable
@@ -98,6 +100,7 @@ export function TransferReview({
     recipient,
     nftIn?.asset_contract.address,
     nftIn?.token_id,
+    feeInfo,
     onNext
   )
 

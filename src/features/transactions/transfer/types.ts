@@ -1,6 +1,7 @@
 import { Currency } from '@uniswap/sdk-core'
 import { ChainId } from 'src/constants/chains'
 import { AssetType, NFTAssetType } from 'src/entities/assets'
+import { FeeInfo } from 'src/features/gas/types'
 import { NFTAsset } from 'src/features/nfts/types'
 import { Account } from 'src/features/wallet/accounts/types'
 
@@ -10,6 +11,7 @@ interface BaseTransferParams {
   chainId: ChainId
   toAddress: Address
   tokenAddress: Address
+  feeInfo?: FeeInfo
 }
 
 export interface TransferCurrencyParams extends BaseTransferParams {
