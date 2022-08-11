@@ -328,15 +328,17 @@ export const SearchBarDropdown = ({ toggleOpen, tokens, collections, hasInput }:
   // TODO Trending NFT Results implmented here
   const trendingCollections = [] as TrendingCollection[]
 
-  const { data: trendingTokenResults } = useQuery([], () => fetchTrendingTokens(), {
+  const { data: trendingTokenResults } = useQuery([], () => fetchTrendingTokens(4), {
     refetchOnWindowFocus: false,
     refetchOnMount: false,
     refetchOnReconnect: false,
   })
 
   const trendingTokens = useMemo(() => {
-    return trendingTokenResults?.slice(0, isTokenPage ? 3 : 2)
-  }, [isTokenPage, trendingTokenResults])
+    // TODO reimplement this logic with NFT search
+    // return trendingTokenResults?.slice(0, isTokenPage ? 3 : 2)
+    return trendingTokenResults?.slice(0, 4)
+  }, [trendingTokenResults])
 
   const totalSuggestions = hasInput
     ? tokens.length + collections.length
@@ -408,7 +410,7 @@ export const SearchBarDropdown = ({ toggleOpen, tokens, collections, hasInput }:
               setHoveredIndex={setHoveredIndex}
               toggleOpen={toggleOpen}
               suggestions={trendingTokens ?? []}
-              header={'Trending tokens'}
+              header={'Popular tokens'}
               headerIcon={<TrendingArrow />}
             />
           )}
