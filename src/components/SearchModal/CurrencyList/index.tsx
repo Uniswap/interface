@@ -10,6 +10,7 @@ import { checkWarning } from 'constants/tokenSafety'
 import { Phase0Variant, usePhase0Flag } from 'featureFlags/flags/phase0'
 import useTheme from 'hooks/useTheme'
 import { CSSProperties, MutableRefObject, useCallback, useMemo } from 'react'
+import { Check } from 'react-feather'
 import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
 import styled from 'styled-components/macro'
@@ -32,6 +33,10 @@ import { LoadingRows, MenuItem } from '../styleds'
 function currencyKey(currency: Currency): string {
   return currency.isToken ? currency.address : 'ETHER'
 }
+
+const CheckIcon = styled(Check)`
+  color: ${({ theme }) => theme.accentAction};
+`
 
 const StyledBalanceText = styled(Text)`
   white-space: nowrap;
@@ -135,6 +140,7 @@ function CurrencyRow({
   const balance = useCurrencyBalance(account ?? undefined, currency)
   const warning = currency.isNative ? null : checkWarning(currency.address)
   const phase0Flag = usePhase0Flag()
+  const phase0FlagEnabled = phase0Flag === Phase0Variant.Enabled
 
   // only show add or remove buttons if not on selected list
   return (
@@ -160,7 +166,7 @@ function CurrencyRow({
           <Row>
             <CurrencyName title={currency.name}>{currency.name}</CurrencyName>
 
-            {phase0Flag === Phase0Variant.Enabled && <TokenSafetyIcon warning={warning} />}
+            {phase0FlagEnabled && <TokenSafetyIcon warning={warning} />}
           </Row>
           <ThemedText.DeprecatedDarkGray ml="0px" fontSize={'12px'} fontWeight={300}>
             {!currency.isNative && !isOnSelectedList && customAdded ? (
@@ -175,10 +181,18 @@ function CurrencyRow({
             <TokenTags currency={currency} />
           </RowFixed>
         </Column>
-        {showCurrencyAmount && (
+        {showCurrencyAmount ? (
           <RowFixed style={{ justifySelf: 'flex-end' }}>
             {balance ? <Balance balance={balance} /> : account ? <Loader /> : null}
+            {phase0FlagEnabled && isSelected && <CheckIcon />}
           </RowFixed>
+        ) : (
+          phase0FlagEnabled &&
+          isSelected && (
+            <RowFixed style={{ justifySelf: 'flex-end' }}>
+              <CheckIcon />
+            </RowFixed>
+          )
         )}
       </MenuItem>
     </TraceEvent>

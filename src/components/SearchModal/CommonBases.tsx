@@ -6,8 +6,7 @@ import { AutoColumn } from 'components/Column'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { AutoRow } from 'components/Row'
 import { COMMON_BASES } from 'constants/routing'
-import { Phase0Variant } from 'featureFlags/flags/phase0'
-import { usePhase0Flag } from 'featureFlags/flags/phase0'
+import { Phase0Variant, usePhase0Flag } from 'featureFlags/flags/phase0'
 import { useTokenInfoFromActiveList } from 'hooks/useTokenInfoFromActiveList'
 import { Text } from 'rebass'
 import styled from 'styled-components/macro'
@@ -22,8 +21,14 @@ const MobileWrapper = styled(AutoColumn)`
 const BaseWrapper = styled.div<{ disable?: boolean; phase0Flag?: boolean }>`
   border: 1px solid
     ${({ theme, disable, phase0Flag }) =>
-      disable ? (phase0Flag ? theme.accentAction : 'transparent') : theme.deprecated_bg3};
-  border-radius: 10px;
+      disable
+        ? phase0Flag
+          ? theme.accentAction
+          : 'transparent'
+        : phase0Flag
+        ? theme.backgroundOutline
+        : theme.deprecated_bg3};
+  border-radius: ${({ phase0Flag }) => (phase0Flag ? '16px' : '10px')};
   display: flex;
   padding: 6px;
 
@@ -33,7 +38,7 @@ const BaseWrapper = styled.div<{ disable?: boolean; phase0Flag?: boolean }>`
     background-color: ${({ theme, disable }) => !disable && theme.deprecated_bg2};
   }
 
-  color: ${({ theme, disable, phase0Flag }) => disable && (phase0Flag ? theme.accentAction : theme.deprecated_text3)};
+  color: ${({ theme, disable, phase0Flag }) => disable && (phase0Flag ? theme.blue200 : theme.deprecated_text3)};
   background-color: ${({ theme, disable, phase0Flag }) =>
     disable && (phase0Flag ? theme.accentActionSoft : theme.deprecated_bg3)};
   filter: ${({ disable, phase0Flag }) => disable && !phase0Flag && 'grayscale(1)'};
