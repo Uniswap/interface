@@ -47,15 +47,16 @@ function guesstimateGas(trade: Trade<Currency, Currency, TradeType> | undefined)
         gas += V3_SWAP_BASE_GAS_ESTIMATE + route.pools.length * V3_SWAP_HOP_GAS_ESTIMATE
       } else if (route.protocol === Protocol.MIXED) {
         const sections = partitionMixedRouteByProtocol(route as MixedRoute<Currency, Currency>)
-        let acc = 0
-        sections.forEach((section) => {
+        gas += sections.reduce((gas, section) => {
           if (section.every((pool) => pool instanceof Pool)) {
-            acc += V3_SWAP_BASE_GAS_ESTIMATE + section.length * V3_SWAP_HOP_GAS_ESTIMATE
+            return gas + V3_SWAP_BASE_GAS_ESTIMATE + section.length * V3_SWAP_HOP_GAS_ESTIMATE
           } else if (section.every((pool) => pool instanceof Pair)) {
-            acc += V2_SWAP_BASE_GAS_ESTIMATE + (section.length - 1) * V2_SWAP_HOP_GAS_ESTIMATE
+            return gas + V2_SWAP_BASE_GAS_ESTIMATE + (section.length - 1) * V2_SWAP_HOP_GAS_ESTIMATE
+          } else {
+            console.warn('Invalid section')
+            return gas
           }
-        })
-        gas += acc
+        }, 0)
       } else {
         // fallback general gas estimation
         gas += V3_SWAP_BASE_GAS_ESTIMATE + route.pools.length * V3_SWAP_HOP_GAS_ESTIMATE
