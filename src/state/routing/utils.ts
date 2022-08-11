@@ -41,7 +41,7 @@ export function computeRoutes(
         throw new Error('Expected both amountIn and amountOut to be present')
       }
 
-      const routeProtocol: Protocol = getRouteProtocol(route)
+      const routeProtocol = getRouteProtocol(route)
 
       return {
         routev3:
