@@ -75,8 +75,6 @@ function FeatureFlagOption({
         id={featureFlag}
         value={value}
         onChange={(e) => {
-          e.stopPropagation()
-          e.preventDefault()
           updateFlag(featureFlag, e.target.value)
           window.location.reload()
         }}
