@@ -95,7 +95,8 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo, isCompressedView }
 
   const otherAmountNotLoaded = outputNotLoaded || inputNotLoaded
 
-  const swapDataRefreshing = trade.isFetching || trade.loading || otherAmountNotLoaded
+  const swapDataRefreshing =
+    !isWrapAction(wrapType) && (trade.isFetching || trade.loading || otherAmountNotLoaded)
 
   const noValidSwap = !isWrapAction(wrapType) && !trade
   const blockWarning = warnings.some((warning) => warning.action === WarningAction.DisableReview)

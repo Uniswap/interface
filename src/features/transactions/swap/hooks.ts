@@ -188,22 +188,38 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
   )
 
   const getFormattedInput = useCallback(() => {
-    if (isExactIn) {
+    if (isExactIn || isWrapAction(wrapType)) {
       return isUSDInput ? exactAmountUSD : exactAmountToken
     }
 
     return isUSDInput
       ? tradeUSDValue?.toFixed(2)
       : (currencyAmounts[CurrencyField.INPUT]?.toExact() ?? '').toString()
-  }, [currencyAmounts, exactAmountToken, exactAmountUSD, isExactIn, isUSDInput, tradeUSDValue])
+  }, [
+    currencyAmounts,
+    exactAmountToken,
+    exactAmountUSD,
+    isExactIn,
+    isUSDInput,
+    tradeUSDValue,
+    wrapType,
+  ])
 
   const getFormattedOutput = useCallback(() => {
-    if (!isExactIn) {
+    if (!isExactIn || isWrapAction(wrapType)) {
       return isUSDInput ? exactAmountUSD : exactAmountToken
     }
 
     return isUSDInput ? tradeUSDValue?.toFixed(2) : currencyAmounts[CurrencyField.OUTPUT]?.toExact()
-  }, [currencyAmounts, exactAmountToken, exactAmountUSD, isExactIn, isUSDInput, tradeUSDValue])
+  }, [
+    currencyAmounts,
+    exactAmountToken,
+    exactAmountUSD,
+    isExactIn,
+    isUSDInput,
+    tradeUSDValue,
+    wrapType,
+  ])
 
   const currencyBalances = useMemo(() => {
     return {
