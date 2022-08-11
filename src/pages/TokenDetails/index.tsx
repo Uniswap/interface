@@ -5,12 +5,12 @@ import {
   MAX_WIDTH_MEDIA_BREAKPOINT,
   MOBILE_MEDIA_BREAKPOINT,
   SMALL_MEDIA_BREAKPOINT,
-} from 'components/Tokens/constants'
-import BalanceSummary from 'components/Tokens/TokenDetails/BalanceSummary'
-import FooterBalanceSummary from 'components/Tokens/TokenDetails/FooterBalanceSummary'
-import LoadingTokenDetail from 'components/Tokens/TokenDetails/LoadingTokenDetail'
-import NetworkBalance from 'components/Tokens/TokenDetails/NetworkBalance'
-import TokenDetail from 'components/Tokens/TokenDetails/TokenDetail'
+} from 'components/Explore/constants'
+import BalanceSummary from 'components/Explore/TokenDetails/BalanceSummary'
+import FooterBalanceSummary from 'components/Explore/TokenDetails/FooterBalanceSummary'
+import LoadingTokenDetail from 'components/Explore/TokenDetails/LoadingTokenDetail'
+import NetworkBalance from 'components/Explore/TokenDetails/NetworkBalance'
+import { LoadedTokenDetail } from 'components/Explore/TokenDetails/TokenDetail'
 import TokenSafetyMessage from 'components/TokenSafety/TokenSafetyMessage'
 import { getChainInfo } from 'constants/chainInfo'
 import { L1_CHAIN_IDS, L2_CHAIN_IDS, SupportedChainId, TESTNET_CHAIN_IDS } from 'constants/chains'
@@ -88,7 +88,7 @@ export default function TokenDetails() {
   } else if (loading) {
     tokenDetail = <LoadingTokenDetail />
   } else {
-    tokenDetail = <TokenDetail address={tokenAddress} />
+    tokenDetail = <LoadedTokenDetail address={tokenAddress} />
   }
 
   const tokenWarning = tokenAddress ? checkWarning(tokenAddress) : null
