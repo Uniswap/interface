@@ -49,7 +49,12 @@ interface NavLinkItemProps {
 
 const NavLinkItem = ({ href, id, isActive, children }: NavLinkItemProps) => {
   return (
-    <NavLink to={href} className={isActive ? styles.activeMenuItem : styles.menuItem} id={id}>
+    <NavLink
+      to={href}
+      className={isActive ? styles.activeMenuItem : styles.menuItem}
+      id={id}
+      style={{ textDecoration: 'none' }}
+    >
       {children}
     </NavLink>
   )
@@ -122,8 +127,12 @@ const Navbar = () => {
             <UniIcon width="48" height="48" className={styles.logo} />
           </Box>
           <Row gap="8">
-            <NavLinkItem href={'/swap'}>Swap</NavLinkItem>
-            <NavLinkItem href={'/explore'}>Explore</NavLinkItem>
+            <NavLinkItem href={'/swap'} isActive={pathname.startsWith('/swap')}>
+              Swap
+            </NavLinkItem>
+            <NavLinkItem href={'/explore'} isActive={pathname.startsWith('/explore')}>
+              Explore
+            </NavLinkItem>
             <NavLinkItem href={'/pool'} id={'pool-nav-link'} isActive={isPoolActive}>
               Pool
             </NavLinkItem>
@@ -133,7 +142,7 @@ const Navbar = () => {
           <SearchBar />
         </Box>
         <Box className={styles.rightSideContainer}>
-          <Row gap="16">
+          <Row gap="12">
             <MenuDropdown />
             <ChainSwitcher />
             <Wallet />

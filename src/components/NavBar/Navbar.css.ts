@@ -11,7 +11,13 @@ export const nav = style([
     width: 'full',
     height: '72',
     zIndex: '2',
+    borderStyle: 'solid',
   }),
+  {
+    borderColor: '#00000018',
+    borderWidth: '0.5px',
+    backdropFilter: 'blur(24px)',
+  },
 ])
 
 export const logoContainer = style([
@@ -84,10 +90,9 @@ export const rightSideContainer = style([
   }),
 ])
 
-export const menuItem = style([
+const baseMenuItem = style([
   subhead,
   sprinkles({
-    color: 'blackBlue',
     paddingY: '8',
     paddingX: '16',
     marginY: '4',
@@ -99,6 +104,13 @@ export const menuItem = style([
   },
 ])
 
+export const menuItem = style([
+  baseMenuItem,
+  sprinkles({
+    color: 'darkGray',
+  }),
+])
+
 export const rightSideMobileContainer = style([
   baseMobileContainer,
   sprinkles({
@@ -107,8 +119,9 @@ export const rightSideMobileContainer = style([
 ])
 
 export const activeMenuItem = style([
+  baseMenuItem,
   sprinkles({
-    backgroundColor: 'lightGrayButton',
+    color: 'blackBlue',
   }),
 ])
 

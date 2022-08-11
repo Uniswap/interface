@@ -961,21 +961,15 @@ export const FilterIcon = (props: SVGProps) => (
 )
 
 export const MagnifyingGlassIcon = (props: SVGProps) => (
-  <svg {...props} fill="none" xmlns="http://www.w3.org/2000/svg">
+  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
     <path
-      d="M11 19C15.4183 19 19 15.4183 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11C3 15.4183 6.58172 19 11 19Z"
-      stroke="currentColor"
-      strokeWidth="2"
+      d="M9 14C11.7614 14 14 11.7614 14 9C14 6.23858 11.7614 4 9 4C6.23858 4 4 6.23858 4 9C4 11.7614 6.23858 14 9 14Z"
+      stroke="#99A1BD"
+      strokeWidth="1.5"
       strokeLinecap="round"
       strokeLinejoin="round"
     />
-    <path
-      d="M20.9984 21.0004L16.6484 16.6504"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
+    <path d="M16.3 16.3L13 13" stroke="#99A1BD" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
   </svg>
 )
 

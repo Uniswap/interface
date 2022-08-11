@@ -11,7 +11,7 @@ import {
   GovernanceIcon,
   TwitterIconMenu,
 } from 'nft/components/icons'
-import { subhead, subheadSmall } from 'nft/css/common.css'
+import { body, bodySmall } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
 import { ReactNode, useReducer, useRef } from 'react'
 import { NavLink, NavLinkProps } from 'react-router-dom'
@@ -49,7 +49,7 @@ const PrimaryMenuRow = ({
 }
 
 const PrimaryMenuRowText = ({ children }: { children: ReactNode }) => {
-  return <Box className={`${styles.PrimaryText} ${subhead}`}>{children}</Box>
+  return <Box className={`${styles.PrimaryText} ${body}`}>{children}</Box>
 }
 
 PrimaryMenuRow.Text = PrimaryMenuRowText
@@ -69,7 +69,7 @@ const SecondaryLinkedText = ({
       href={href ?? undefined}
       target={href ? '_blank' : undefined}
       rel={href ? 'noopener noreferrer' : undefined}
-      className={`${styles.SecondaryText} ${subheadSmall}`}
+      className={`${styles.SecondaryText} ${bodySmall}`}
       onClick={onClick}
       cursor="pointer"
     >

@@ -32,8 +32,8 @@ export const section = style([
 export const header1 = sprinkles({ fontWeight: 'normal', fontSize: '36' })
 export const header2 = sprinkles({ fontWeight: 'normal', fontSize: '28' })
 export const headlineSmall = sprinkles({ fontWeight: 'normal', fontSize: '20' })
-export const subhead = sprinkles({ fontWeight: 'medium', fontSize: '16' })
-export const subheadSmall = sprinkles({ fontWeight: 'medium', fontSize: '14' })
+export const subhead = sprinkles({ fontWeight: 'semibold', fontSize: '16' })
+export const subheadSmall = sprinkles({ fontWeight: 'semibold', fontSize: '14' })
 export const body = sprinkles({ fontSize: '16' })
 export const bodySmall = sprinkles({
   fontSize: '14',

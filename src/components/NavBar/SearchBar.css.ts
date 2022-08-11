@@ -3,12 +3,14 @@ import { buttonTextSmall, subhead, subheadSmall } from 'nft/css/common.css'
 
 import { breakpoints, sprinkles } from '../../nft/css/sprinkles.css'
 
+const DESKTOP_NAVBAR_WIDTH = '360px'
+
 export const searchBar = style([
   sprinkles({
     height: 'full',
     color: 'placeholder',
     borderStyle: 'solid',
-    borderColor: 'medGray',
+    borderColor: 'lightGrayButton',
     borderWidth: '1px',
     background: 'lightGray',
     paddingX: '16',
@@ -18,7 +20,7 @@ export const searchBar = style([
   {
     '@media': {
       [`screen and (min-width: ${breakpoints.tabletSm}px)`]: {
-        width: '452px',
+        width: DESKTOP_NAVBAR_WIDTH,
       },
     },
   },
@@ -42,19 +44,20 @@ export const searchBarDropdown = style([
     left: '0',
     top: '48',
     borderStyle: 'solid',
-    borderColor: 'medGray',
     borderWidth: '1px',
     borderBottomLeftRadius: '12',
     borderBottomRightRadius: '12',
+    borderColor: 'lightGrayButton',
     background: 'lightGray',
     paddingY: '12',
     width: { mobile: 'viewWidth' },
   }),
   {
     borderTop: 'none',
+    // background: '#293249',
     '@media': {
       [`screen and (min-width: ${breakpoints.tabletSm}px)`]: {
-        width: '452px',
+        width: DESKTOP_NAVBAR_WIDTH,
       },
     },
   },
@@ -129,9 +132,9 @@ export const suggestionIcon = sprinkles({
 
 export const magnifyingGlassIcon = style([
   sprinkles({
-    width: '24',
-    height: '24',
-    marginRight: '16',
+    width: '20',
+    height: '20',
+    marginRight: '12',
   }),
 ])
 

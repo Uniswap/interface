@@ -153,7 +153,7 @@ export const ChainSwitcher = ({ isMobile }: ChainSwitcherProps) => {
     <Box position="relative" ref={ref}>
       <Row as="button" gap="8" className={styles.ChainSwitcher} onClick={toggleOpen}>
         <img src={info.logoUrl} alt={info.label} className={styles.Image} />
-        <Box as="span" fontWeight="semibold" color="explicitWhite" fontSize="16" style={{ lineHeight: '20px' }}>
+        <Box as="span" className={subhead} color="explicitWhite" style={{ lineHeight: '20px' }}>
           {info.label}
         </Box>
         {isOpen ? (

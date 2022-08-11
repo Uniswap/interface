@@ -508,6 +508,7 @@ export const SearchBar = () => {
           borderTopRightRadius={isOpen && !isMobile ? '12' : undefined}
           borderTopLeftRadius={isOpen && !isMobile ? '12' : undefined}
           display={{ mobile: isOpen ? 'flex' : 'none', desktopXl: 'flex' }}
+          justifyContent={isOpen ? 'flex-start' : 'center'}
         >
           <Box display={{ mobile: 'none', tabletSm: 'flex' }}>
             <MagnifyingGlassIcon className={styles.magnifyingGlassIcon} />
@@ -518,7 +519,7 @@ export const SearchBar = () => {
           <Box
             as="input"
             placeholder="Search tokens"
-            width="full"
+            width={isOpen ? 'full' : '120'}
             onChange={(event: ChangeEvent<HTMLInputElement>) => {
               !isOpen && toggleOpen()
               setSearchValue(event.target.value)
