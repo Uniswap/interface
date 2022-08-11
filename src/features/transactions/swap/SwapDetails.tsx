@@ -63,7 +63,7 @@ export function SwapDetails({
   const { onShowSwapWarning } = useSwapActionHandlers(dispatch)
 
   const price = acceptedTrade.executionPrice
-  const usdcPrice = useUSDCPrice(showInverseRate ? price.baseCurrency : price.quoteCurrency)
+  const usdcPrice = useUSDCPrice(showInverseRate ? price.quoteCurrency : price.baseCurrency)
   const acceptedRate = getRateToDisplay(acceptedTrade, showInverseRate)
   const rate = getRateToDisplay(trade, showInverseRate)
   const gasFee = useSwapGasFee(gasFeeEstimate, GasSpeed.Urgent, optimismL1Fee)
