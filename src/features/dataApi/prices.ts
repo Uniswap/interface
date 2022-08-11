@@ -9,7 +9,7 @@ import { SpotPrices } from 'src/features/dataApi/types'
 import { isTestnet } from 'src/utils/chainId'
 
 // Keys for native currency spot prices are the wrapped token addresses
-export function useSpotPrices(currencies: Array<Nullable<Currency>>): {
+export function useSpotPrices(currencies: Array<NullUndefined<Currency>>): {
   spotPrices: SpotPrices
   loading: boolean
 } {

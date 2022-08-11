@@ -70,7 +70,7 @@ export function useMarketTokens({
   )
 
   const tokens = useMemo(() => {
-    const typedCurrentData = currentData as Nullable<CoingeckoMarketCoin[]>
+    const typedCurrentData = currentData as NullUndefined<CoingeckoMarketCoin[]>
     if (!localOrderBy) return typedCurrentData
 
     const compareFn = getCompareFn(localOrderBy)
@@ -88,7 +88,7 @@ export function useMarketTokens({
 export function useTokenSearchResults(query: string) {
   const { currentData: results, isLoading } = useGetSearchQuery({ query })
 
-  return { tokens: (results as Nullable<GetCoinsSearchResponse>)?.coins, isLoading }
+  return { tokens: (results as NullUndefined<GetCoinsSearchResponse>)?.coins, isLoading }
 }
 
 export function useTokenMetadataDisplayType(): [CoingeckoOrderBy | ClientSideOrderBy, () => void] {

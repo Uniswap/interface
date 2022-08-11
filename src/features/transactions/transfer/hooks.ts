@@ -206,7 +206,7 @@ function useTransferCallback(
 
 export function useUpdateTransferGasEstimate(
   transactionStateDispatch: React.Dispatch<AnyAction>,
-  chainId: Nullable<ChainId>,
+  chainId: NullUndefined<ChainId>,
   tokenAddress: string | undefined,
   amount: string | undefined,
   toAddress: string | undefined,
@@ -346,7 +346,7 @@ export function useHandleTransferWarningModals(
 
 export function useInputAssetInfo(
   assetType: AssetType | undefined,
-  inputAsset: Nullable<Currency | NFTAsset.Asset>
+  inputAsset: NullUndefined<Currency | NFTAsset.Asset>
 ) {
   // TODO: consider simplifying this logic
   const isNFT = assetType === AssetType.ERC721 || assetType === AssetType.ERC1155

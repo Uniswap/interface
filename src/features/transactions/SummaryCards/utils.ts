@@ -51,8 +51,8 @@ export function getTransactionSummaryCaption({
   otherCurrency,
 }: {
   transactionSummaryInfo: TransactionSummaryInfo
-  currency: Nullable<Currency>
-  otherCurrency: Nullable<Currency>
+  currency: NullUndefined<Currency>
+  otherCurrency: NullUndefined<Currency>
 }) {
   const {
     type,

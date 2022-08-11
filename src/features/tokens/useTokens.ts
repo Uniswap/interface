@@ -81,7 +81,7 @@ export function useUniswapDefaultTokens(): ChainIdToCurrencyIdToToken {
   return useTokensFromListedMap(uniswapDefaultTokenMap, false)
 }
 
-export function useIsTokenActive(token: Nullable<Token>): boolean {
+export function useIsTokenActive(token: NullUndefined<Token>): boolean {
   const activeTokens = useAllTokens()
   if (!activeTokens || !token) return false
   const chainId = token.chainId as ChainId

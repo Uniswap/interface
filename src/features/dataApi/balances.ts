@@ -198,7 +198,7 @@ export function useAllBalancesByChainId(
  * Retrieves balance for a single currency from the API cache.
  * Assumes the input currency is a known token.
  */
-export function useSingleBalance(currency: Nullable<Currency>): PortfolioBalance | null {
+export function useSingleBalance(currency: NullUndefined<Currency>): PortfolioBalance | null {
   const address = useActiveAccount()?.address
   const hideSmallBalances = useAppSelector(selectHideSmallBalances)
   const balance = dataApi.endpoints.balances.useQueryState(

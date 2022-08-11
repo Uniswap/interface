@@ -30,7 +30,7 @@ const enhancedApi = generatedApi.enhanceEndpoints({
         data?.filter((coin) => Boolean(coin.market_cap)),
     },
     getCoinsList: {
-      transformResponse: (data: Nullable<CoingeckoListCoin[]>) => {
+      transformResponse: (data: NullUndefined<CoingeckoListCoin[]>) => {
         return data?.reduce<CoinIdAndCurrencyIdMappings>(
           (acc, coin) => {
             // Coingecko lists platforms/chains on which the coin is deployed

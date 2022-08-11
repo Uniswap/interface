@@ -20,9 +20,9 @@ export enum ClientSideOrderBy {
   PriceChangePercentage24hDesc = 'price_change_percentage_24h_desc',
 }
 
-export type GetCoinsMarketsResponse = Nullable<CoingeckoMarketCoin[]>
-export type GetCoinsSearchResponse = Nullable<{ coins: CoingeckoSearchCoin[] }>
-export type GetCoinsListResponse = Nullable<CoingeckoListCoin[]>
+export type GetCoinsMarketsResponse = NullUndefined<CoingeckoMarketCoin[]>
+export type GetCoinsSearchResponse = NullUndefined<{ coins: CoingeckoSearchCoin[] }>
+export type GetCoinsListResponse = NullUndefined<CoingeckoListCoin[]>
 
 /** Coin info representation in Coingecko market lists  */
 export interface CoingeckoMarketCoin {
@@ -58,7 +58,7 @@ export interface CoingeckoListCoin {
   id: string
   symbol: string
   name: string
-  platforms: { [name: string]: Nullable<Address> }
+  platforms: { [name: string]: NullUndefined<Address> }
 }
 export type CoinIdAndCurrencyIdMappings = {
   coinIdToCurrencyIds: { [coinId: string]: ChainIdTo<CurrencyId> }

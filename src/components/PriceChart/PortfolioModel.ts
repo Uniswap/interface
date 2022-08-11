@@ -33,7 +33,7 @@ const portfolioCharts = graphql`
   }
 `
 
-export function usePortfolioBalanceGraphs(owner: Address): Nullable<GraphMetadatas> {
+export function usePortfolioBalanceGraphs(owner: Address): NullUndefined<GraphMetadatas> {
   const portfolioData = useLazyLoadQuery<PortfolioModel_PortfolioQuery>(portfolioCharts, {
     ownerAddress: owner,
   })

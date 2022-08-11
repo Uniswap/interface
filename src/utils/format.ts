@@ -75,12 +75,12 @@ export function formatDate(date: Date) {
   })
 }
 
-export function formatUSDPrice(price: Nullable<number | string>) {
+export function formatUSDPrice(price: NullUndefined<number | string>) {
   const options: Intl.NumberFormatOptions = { notation: 'standard' }
   return formatPrice(price, options)
 }
 
-export function formatNumber(num: Nullable<number>) {
+export function formatNumber(num: NullUndefined<number>) {
   if (!num) {
     return '-'
   }

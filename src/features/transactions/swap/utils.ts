@@ -82,7 +82,10 @@ export function tradeToTransactionInfo(
       }
 }
 
-export function requireAcceptNewTrade(oldTrade: Nullable<Trade>, newTrade: Nullable<Trade>) {
+export function requireAcceptNewTrade(
+  oldTrade: NullUndefined<Trade>,
+  newTrade: NullUndefined<Trade>
+) {
   return oldTrade?.quote?.methodParameters?.calldata !== newTrade?.quote?.methodParameters?.calldata
 }
 

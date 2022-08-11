@@ -15,8 +15,8 @@ import { tryParseRawAmount } from 'src/utils/tryParseAmount'
 
 interface props {
   transactionDetails: TransactionDetails | undefined
-  inputCurrency: Nullable<Currency>
-  outputCurrency: Nullable<Currency>
+  inputCurrency: NullUndefined<Currency>
+  outputCurrency: NullUndefined<Currency>
 }
 
 /**

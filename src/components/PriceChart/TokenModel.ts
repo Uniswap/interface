@@ -9,7 +9,7 @@ import { logger } from 'src/utils/logger'
 /**
  * @returns undefined if loading, null if error, `GraphMetadatas` otherwise
  */
-export function useTokenPriceGraphs(token: Token): Nullable<GraphMetadatas> {
+export function useTokenPriceGraphs(token: Token): NullUndefined<GraphMetadatas> {
   const {
     currentData: dailyPrices,
     error,

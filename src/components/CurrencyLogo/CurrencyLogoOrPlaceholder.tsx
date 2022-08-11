@@ -3,7 +3,10 @@ import React from 'react'
 import { CurrencyLogoOnly } from 'src/components/CurrencyLogo'
 import { Box } from 'src/components/layout'
 
-export function CurrencyLogoOrPlaceholder(props: { currency: Nullable<Currency>; size: number }) {
+export function CurrencyLogoOrPlaceholder(props: {
+  currency: NullUndefined<Currency>
+  size: number
+}) {
   const { currency, size } = props
   if (!currency) {
     return (

@@ -41,7 +41,7 @@ export const ensReducer = slice.reducer
 
 export const selectAddressEns = (state: RootState) => state.ens.ensForAddress
 
-export function useCachedEns(address: Nullable<Address>) {
+export function useCachedEns(address: NullUndefined<Address>) {
   const cache = useAppSelector(selectAddressEns)
   const addressEns = address ? cache[address] : undefined
   return useMemo(() => {

@@ -1,10 +1,10 @@
-import { wordlists, utils } from 'ethers'
+import { utils, wordlists } from 'ethers'
 import { TFunction } from 'i18next'
 import { MNEMONIC_LENGTH_MAX, MNEMONIC_LENGTH_MIN } from 'src/constants/accounts'
 
 // Validate if word is part of the BIP-39 word set [https://github.com/bitcoin/bips/blob/master/bip-0039.mediawiki]
 export function isValidWord(
-  mnemonic: Nullable<string>,
+  mnemonic: NullUndefined<string>,
   t: TFunction
 ): {
   valid: boolean
@@ -41,7 +41,7 @@ export function isValidWord(
 
 // Validate phrase by verifying the checksum
 export function isValidMnemonic(
-  mnemonic: Nullable<string>,
+  mnemonic: NullUndefined<string>,
   t: TFunction
 ): {
   valid: boolean

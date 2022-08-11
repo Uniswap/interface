@@ -57,7 +57,7 @@ const tokenDetailsStatsQuery = graphql`
   }
 `
 
-function formatTokenPrice(price: Nullable<number>) {
+function formatTokenPrice(price: NullUndefined<number>) {
   if (!price) return '-'
   return price < 1 ? formatPrice(price) : formatUSDPrice(price)
 }

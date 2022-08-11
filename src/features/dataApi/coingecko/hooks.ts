@@ -4,7 +4,7 @@ import { CoinIdAndCurrencyIdMappings } from 'src/features/dataApi/coingecko/type
 export function useCoinIdAndCurrencyIdMappings() {
   const { currentData, isLoading } = useGetCoinsListQuery({ includePlatform: true })
 
-  const mappings = currentData as Nullable<CoinIdAndCurrencyIdMappings>
+  const mappings = currentData as NullUndefined<CoinIdAndCurrencyIdMappings>
 
   return {
     coinIdToCurrencyIds: mappings?.coinIdToCurrencyIds ?? {},

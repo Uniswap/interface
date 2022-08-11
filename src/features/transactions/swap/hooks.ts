@@ -61,13 +61,13 @@ export type DerivedSwapInfo<
 > = BaseDerivedInfo<TInput> & {
   chainId?: ChainId
   currencies: BaseDerivedInfo<TInput>['currencies'] & {
-    [CurrencyField.OUTPUT]: Nullable<TOutput>
+    [CurrencyField.OUTPUT]: NullUndefined<TOutput>
   }
   currencyAmounts: BaseDerivedInfo<TInput>['currencyAmounts'] & {
-    [CurrencyField.OUTPUT]: Nullable<CurrencyAmount<TOutput>>
+    [CurrencyField.OUTPUT]: NullUndefined<CurrencyAmount<TOutput>>
   }
   currencyBalances: BaseDerivedInfo<TInput>['currencyBalances'] & {
-    [CurrencyField.OUTPUT]: Nullable<CurrencyAmount<TOutput>>
+    [CurrencyField.OUTPUT]: NullUndefined<CurrencyAmount<TOutput>>
   }
   formattedAmounts: BaseDerivedInfo<TInput>['formattedAmounts'] & {
     [CurrencyField.OUTPUT]: string
@@ -569,7 +569,7 @@ export function useSwapGasFee(
 
 // The first shown to the user is implicitly accepted but every subsequent trade
 // update should get an explicit approval
-export function useAcceptedTrade(trade: Nullable<Trade>) {
+export function useAcceptedTrade(trade: NullUndefined<Trade>) {
   const [latestTradeAccepted, setLatestTradeAccepted] = useState<boolean>(false)
   const prevTradeRef = useRef<Trade>()
   useEffect(() => {

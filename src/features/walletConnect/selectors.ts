@@ -6,7 +6,7 @@ import {
 } from 'src/features/walletConnect/walletConnectSlice'
 
 export const selectSessions =
-  (address: Nullable<string>) =>
+  (address: NullUndefined<string>) =>
   (state: RootState): WalletConnectSession[] => {
     if (!address || !state.walletConnect.byAccount[address]) return EMPTY_ARRAY
 

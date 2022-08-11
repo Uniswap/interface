@@ -45,7 +45,7 @@ export function normalizePath(path: Path, precision: number, width: number): Pat
 
 /** Constructs a drawable Path from a PriceList */
 export function buildGraph(
-  priceList: Nullable<PriceList>,
+  priceList: NullUndefined<PriceList>,
   precision: number,
   width = WIDTH,
   height = HEIGHT

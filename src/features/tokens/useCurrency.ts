@@ -11,7 +11,7 @@ import { buildCurrencyId, currencyIdToChain } from 'src/utils/currencyId'
 /**
  * @param currencyId currency address or identifier (ETH for native Ether)
  */
-export function useCurrency(currencyId?: string): Nullable<Currency> {
+export function useCurrency(currencyId?: string): NullUndefined<Currency> {
   const chainId = currencyIdToChain(currencyId)
   const isNative = currencyId?.endsWith(NATIVE_ADDRESS) || currencyId?.endsWith(NATIVE_ADDRESS_ALT)
   const token = useTokenInfoFromAddress(
@@ -35,7 +35,7 @@ export function useCurrency(currencyId?: string): Nullable<Currency> {
 }
 
 // TODO: consider moving this logic to the data backend
-export function useCurrencyIdFromCoingeckoId(coingeckoId?: string): Nullable<string> {
+export function useCurrencyIdFromCoingeckoId(coingeckoId?: string): NullUndefined<string> {
   const { coinIdToCurrencyIds, isLoading } = useCoinIdAndCurrencyIdMappings()
 
   return useMemo(() => {

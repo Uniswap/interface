@@ -66,7 +66,7 @@ export function useSelectAccountNotificationSetting(address: Address) {
 }
 
 export function useDisplayName(
-  address: Nullable<string>,
+  address: NullUndefined<string>,
   showShortenedEns = false
 ):
   | {

@@ -4,13 +4,13 @@ import { CurrencyField } from 'src/features/transactions/transactionState/transa
 
 export type BaseDerivedInfo<TInput = Currency> = {
   currencies: {
-    [CurrencyField.INPUT]: Nullable<TInput>
+    [CurrencyField.INPUT]: NullUndefined<TInput>
   }
   currencyAmounts: {
-    [CurrencyField.INPUT]: Nullable<CurrencyAmount<Currency>>
+    [CurrencyField.INPUT]: NullUndefined<CurrencyAmount<Currency>>
   }
   currencyBalances: {
-    [CurrencyField.INPUT]: Nullable<CurrencyAmount<Currency>>
+    [CurrencyField.INPUT]: NullUndefined<CurrencyAmount<Currency>>
   }
   formattedAmounts: {
     [CurrencyField.INPUT]: string

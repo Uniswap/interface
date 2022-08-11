@@ -21,7 +21,7 @@ export function shortenAddress(address: string, chars = 4): string {
   return `${address.substring(0, chars)}...${address.substring(42 - chars)}`
 }
 
-export function isValidAddress(address: Nullable<Address>, allowZero = true) {
+export function isValidAddress(address: NullUndefined<Address>, allowZero = true) {
   // Need to catch because ethers' isAddress throws in some cases (bad checksum)
   try {
     const isValid = address && utils.isAddress(address)
@@ -32,7 +32,7 @@ export function isValidAddress(address: Nullable<Address>, allowZero = true) {
   }
 }
 
-export function validateAddress(address: Nullable<Address>, context?: string) {
+export function validateAddress(address: NullUndefined<Address>, context?: string) {
   if (!isValidAddress(address)) {
     const errorMsg = `Invalid addresses ${address} (${context})`
     logger.error('addresses', 'validateAddress', errorMsg)
@@ -63,7 +63,7 @@ export function normalizeAddress(address: Address, format: AddressStringFormat):
   }
 }
 
-export function parseAddress(input: Nullable<string>): Address | null {
+export function parseAddress(input: NullUndefined<string>): Address | null {
   if (isValidAddress(input)) {
     return getChecksumAddress(input!)
   } else {
@@ -71,7 +71,7 @@ export function parseAddress(input: Nullable<string>): Address | null {
   }
 }
 
-export function areAddressesEqual(_a1: Nullable<Address>, _a2: Nullable<Address>) {
+export function areAddressesEqual(_a1: NullUndefined<Address>, _a2: NullUndefined<Address>) {
   const a1 = validateAddress(_a1, 'compare')
   const a2 = validateAddress(_a2, 'compare')
   return getChecksumAddress(a1) === getChecksumAddress(a2)

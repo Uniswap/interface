@@ -30,7 +30,7 @@ export const formWCNotificationTitle = (appNotification: WalletConnectNotificati
 
 export const formApproveNotificationTitle = (
   txStatus: TransactionStatus,
-  currency: Nullable<Currency>,
+  currency: NullUndefined<Currency>,
   tokenAddress: Address,
   spender: Address
 ) => {
@@ -50,8 +50,8 @@ export const formApproveNotificationTitle = (
 export const formSwapNotificationTitle = (
   txStatus: TransactionStatus,
   tradeType: TradeType,
-  inputCurrency: Nullable<Currency>,
-  outputCurrency: Nullable<Currency>,
+  inputCurrency: NullUndefined<Currency>,
+  outputCurrency: NullUndefined<Currency>,
   inputCurrencyId: string,
   outputCurrencyId: string,
   inputCurrencyAmountRaw: string,
@@ -91,7 +91,7 @@ export const formSwapNotificationTitle = (
 export const formTransferCurrencyNotificationTitle = (
   txType: TransactionType,
   txStatus: TransactionStatus,
-  currency: Nullable<Currency>,
+  currency: NullUndefined<Currency>,
   tokenAddress: string,
   currencyAmountRaw: string,
   senderOrRecipient: string
@@ -164,7 +164,7 @@ export interface BalanceUpdate {
 export const createBalanceUpdate = (
   txType: TransactionType.Send | TransactionType.Receive | TransactionType.Swap,
   txStatus: TransactionStatus,
-  currency: Nullable<Currency>,
+  currency: NullUndefined<Currency>,
   currencyAmountRaw: string,
   spotPrices?: SpotPrices // despite what typescript says about `useSpotPrices`, `spotPrices` can be undefined while loading
 ): BalanceUpdate | undefined => {
@@ -224,7 +224,7 @@ export function convertScientificNotationToNumber(value: string) {
 }
 
 export const getFormattedCurrencyAmount = (
-  currency: Nullable<Currency>,
+  currency: NullUndefined<Currency>,
   currencyAmountRaw: string,
   isApproximateAmount = false
 ) => {
@@ -247,7 +247,7 @@ export const getFormattedCurrencyAmount = (
 const getUSDValue = (
   spotPrices: SpotPrices | undefined,
   currencyAmountRaw: string,
-  currency: Nullable<Currency>
+  currency: NullUndefined<Currency>
 ) => {
   if (!currency || !spotPrices) return undefined
 
@@ -260,7 +260,7 @@ const getUSDValue = (
 }
 
 export const getCurrencySymbol = (
-  currency: Nullable<Currency>,
+  currency: NullUndefined<Currency>,
   tokenAddressString: Address | undefined
 ) =>
   currency?.symbol

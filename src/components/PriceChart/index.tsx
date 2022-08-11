@@ -22,7 +22,7 @@ export const PortfolioBalanceChart = ({ owner }: { owner: Address }) => {
   return <PriceChart graphs={graphs} />
 }
 
-function PriceChart({ graphs }: { graphs: Nullable<GraphMetadatas> }) {
+function PriceChart({ graphs }: { graphs: NullUndefined<GraphMetadatas> }) {
   const { t } = useTranslation()
 
   // require all graphs to be loaded before rendering the chart

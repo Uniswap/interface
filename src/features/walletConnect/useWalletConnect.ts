@@ -7,7 +7,7 @@ import {
   selectSessions,
 } from 'src/features/walletConnect/selectors'
 
-export function useWalletConnect(address: Nullable<string>) {
+export function useWalletConnect(address: NullUndefined<string>) {
   const sessionSelector = useMemo(() => selectSessions(address), [address])
   const sessions = useAppSelector(sessionSelector)
   const pendingRequests = useAppSelector(selectPendingRequests)
