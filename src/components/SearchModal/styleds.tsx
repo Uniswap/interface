@@ -44,7 +44,7 @@ export const SearchInput = styled.input<{ phase0Flag?: boolean }>`
   width: 100%;
   white-space: nowrap;
   background: none;
-  background-color: ${({ theme, phase0Flag }) => phase0Flag && theme.backgroundContainer};
+  background-color: ${({ theme, phase0Flag }) => phase0Flag && theme.backgroundModule};
   border: none;
   outline: none;
   border-radius: ${({ phase0Flag }) => (phase0Flag ? '12px' : '20px')};
