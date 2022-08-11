@@ -107,7 +107,7 @@ const TimeButton = styled.button<{ active: boolean }>`
   line-height: 20px;
   border: none;
   cursor: pointer;
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme, active }) => (active ? theme.textPrimary : theme.textSecondary)};
 `
 
 function getTicks(startTimestamp: number, endTimestamp: number, numTicks = 5) {
