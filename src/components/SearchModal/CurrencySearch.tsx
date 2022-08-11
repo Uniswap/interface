@@ -5,6 +5,7 @@ import { useWeb3React } from '@web3-react/core'
 import { EventName, ModalName } from 'components/AmplitudeAnalytics/constants'
 import { Trace } from 'components/AmplitudeAnalytics/Trace'
 import { sendEvent } from 'components/analytics'
+import { usePhase0Flag } from 'featureFlags/flags/phase0'
 import useDebounce from 'hooks/useDebounce'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import useTheme from 'hooks/useTheme'
@@ -13,7 +14,6 @@ import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { getTokenFilter } from 'lib/hooks/useTokenList/filtering'
 import { tokenComparator, useSortTokensByQuery } from 'lib/hooks/useTokenList/sorting'
 import { ChangeEvent, KeyboardEvent, RefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { Edit } from 'react-feather'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
@@ -21,10 +21,10 @@ import { useAllTokenBalances } from 'state/connection/hooks'
 import styled from 'styled-components/macro'
 
 import { useAllTokens, useIsUserAddedToken, useSearchInactiveTokenLists, useToken } from '../../hooks/Tokens'
-import { ButtonText, CloseIcon, IconWrapper, ThemedText } from '../../theme'
+import { CloseIcon, ThemedText } from '../../theme'
 import { isAddress } from '../../utils'
 import Column from '../Column'
-import Row, { RowBetween, RowFixed } from '../Row'
+import Row, { RowBetween } from '../Row'
 import CommonBases from './CommonBases'
 import CurrencyList from './CurrencyList'
 import ImportRow from './ImportRow'
@@ -73,6 +73,7 @@ export function CurrencySearch({
   showImportView,
   setImportToken,
 }: CurrencySearchProps) {
+  const phase0Flag = usePhase0Flag()
   const { chainId } = useWeb3React()
   const theme = useTheme()
 
@@ -256,20 +257,6 @@ export function CurrencySearch({
             </ThemedText.DeprecatedMain>
           </Column>
         )}
-        <Footer>
-          <Row justify="center">
-            <ButtonText onClick={showManageView} color={theme.deprecated_primary1} className="list-token-manage-button">
-              <RowFixed>
-                <IconWrapper size="16px" marginRight="6px" stroke={theme.deprecated_primaryText1}>
-                  <Edit />
-                </IconWrapper>
-                <ThemedText.DeprecatedMain color={theme.deprecated_primaryText1}>
-                  <Trans>Manage Token Lists</Trans>
-                </ThemedText.DeprecatedMain>
-              </RowFixed>
-            </ButtonText>
-          </Row>
-        </Footer>
       </Trace>
     </ContentWrapper>
   )
