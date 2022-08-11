@@ -1,9 +1,9 @@
-import * as Sentry from '@sentry/react-native'
 import React, { ErrorInfo } from 'react'
 import RNRestart from 'react-native-restart'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { Box } from 'src/components/layout/Box'
 import { Text } from 'src/components/Text'
+import { logException } from 'src/features/telemetry'
 import { logger } from 'src/utils/logger'
 
 interface ErrorBoundaryState {
@@ -24,7 +24,7 @@ export class ErrorBoundary extends React.Component<unknown, ErrorBoundaryState> 
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     logger.error('ErrorBoundary', 'componentDidCatch', 'Error caught by boundary', error, errorInfo)
-    Sentry.captureException(error)
+    logException(error)
   }
 
   render() {

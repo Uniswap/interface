@@ -1,5 +1,6 @@
 import { Amplitude } from '@amplitude/react-native'
 import { firebase } from '@react-native-firebase/analytics'
+import * as Sentry from '@sentry/react-native'
 import { AMPLITUDE_API_KEY } from 'react-native-dotenv'
 import { logger } from 'src/utils/logger'
 
@@ -30,5 +31,17 @@ export async function logEvent(name: string, params: {}) {
     await firebase.analytics().logEvent(name, params)
   } catch (err) {
     logger.error('telemetry', 'logEvent', 'error from Firebase', err)
+  }
+}
+
+export function logException(error: any) {
+  if (!__DEV__) {
+    Sentry.captureException(error)
+  }
+}
+
+export function logMessage(message: string) {
+  if (!__DEV__) {
+    Sentry.captureMessage(message)
   }
 }

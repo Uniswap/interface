@@ -26,6 +26,14 @@ module.exports = {
       loader: 'svg-react-loader',
     })
 
+    // This would match almost any react-native module
+    config.module.rules.push({
+      test: /(@?react-(navigation|native)).*\.(ts|js)x?$/,
+      include: /node_modules/,
+      exclude: [/react-native-web/, /\.(native|ios|android)\.(ts|js)x?$/],
+      loader: 'babel-loader',
+    })
+
     return config
   },
 }
