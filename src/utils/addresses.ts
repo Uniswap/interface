@@ -1,5 +1,4 @@
 import { utils } from 'ethers'
-import { NATIVE_ADDRESS } from 'src/constants/addresses'
 
 export enum AddressStringFormat {
   Lowercase,
@@ -27,11 +26,10 @@ export function shortenAddress(address: string, chars = 4): string {
  * and then call getChecksum. Please, use ${@link getValidAddress}
  *
  * @param address input address
- * @param allowZero
  * @returns true if the checksum was successful and the address is not the NATIVE_ADDRESS, false otherwise
  */
-export function isValidAddress(address: NullUndefined<Address>, allowZero = true) {
-  return !!getValidAddress(address, allowZero)
+export function isValidAddress(address: NullUndefined<Address>) {
+  return !!getValidAddress(address)
 }
 
 /**
@@ -40,20 +38,15 @@ export function isValidAddress(address: NullUndefined<Address>, allowZero = true
  * Please use this function when you want to get a checksummed and valid address
  *
  * @param address Address to verify checksum
- * @param allowZero
  * @returns checksummed address if the input address is valid, null otherwise
  */
-export function getValidAddress(
-  address: NullUndefined<Address>,
-  allowZero = true
-): Nullable<Address> {
+export function getValidAddress(address: NullUndefined<Address>): Nullable<Address> {
   if (!address) {
     return null
   }
 
   try {
-    const validAddress = getChecksumAddress(address!)
-    return allowZero || address !== NATIVE_ADDRESS ? validAddress : null
+    return getChecksumAddress(address!)
   } catch (error) {
     return null
   }

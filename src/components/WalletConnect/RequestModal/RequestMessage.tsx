@@ -85,7 +85,7 @@ const getParsedObjectDisplay = (chainId: number, obj: any, depth = 0) => {
                 {objKey}
               </Text>
               <Flex flexShrink={1}>
-                {isValidAddress(childValue, true) ? (
+                {isValidAddress(childValue) ? (
                   <AddressButton address={childValue} chainId={chainId} textVariant="code" />
                 ) : (
                   <Text py="xxs" variant="code">

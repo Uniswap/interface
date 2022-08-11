@@ -1,13 +1,14 @@
 import { Contract, providers } from 'ethers'
 import { ChainId } from 'src/constants/chains'
 import { isValidAddress } from 'src/utils/addresses'
+import { isNativeCurrencyAddress } from 'src/utils/currencyId'
 import { logger } from 'src/utils/logger'
 
 export class ContractManager {
   private _contracts: Partial<Record<ChainId, Record<string, Contract>>> = {}
 
   createContract(chainId: ChainId, address: Address, provider: providers.Provider, ABI: any) {
-    if (!isValidAddress(address, false)) {
+    if (isNativeCurrencyAddress(address) || !isValidAddress(address)) {
       throw Error(`Invalid address for contract: ${address}`)
     }
     this._contracts[chainId] ??= {}
