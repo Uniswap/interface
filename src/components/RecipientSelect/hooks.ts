@@ -8,14 +8,14 @@ import { ChainId } from 'src/constants/chains'
 import { useENS } from 'src/features/ens/useENS'
 import { selectRecipientsByRecency } from 'src/features/transactions/selectors'
 import { selectInactiveAccounts } from 'src/features/wallet/selectors'
-import { parseAddress } from 'src/utils/addresses'
+import { getValidAddress } from 'src/utils/addresses'
 
 const MAX_RECENT_RECIPIENTS = 15
 
 export function useFullAddressRecipient(searchTerm: string | null) {
   const { loading, address: ensAddress, name } = useENS(ChainId.Mainnet, searchTerm, true)
   return useMemo(() => {
-    const address = parseAddress(searchTerm) || parseAddress(ensAddress)
+    const address = getValidAddress(searchTerm) || getValidAddress(ensAddress)
     const validatedRecipient = address ? { address, name } : null
     const recipient = validatedRecipient ? [validatedRecipient] : []
     return { recipient, loading }

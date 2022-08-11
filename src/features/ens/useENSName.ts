@@ -11,8 +11,7 @@ import { useENSAddress } from 'src/features/ens/useENSAddress'
 import { useSingleCallResult } from 'src/features/multicall'
 import {
   AddressStringFormat,
-  getChecksumAddress,
-  isValidAddress,
+  getValidAddress,
   normalizeAddress,
   trimLeading0x,
 } from 'src/utils/addresses'
@@ -33,12 +32,14 @@ export function useENSName(
 
   const debouncedAddress = useDebounce(address)
   const ensNodeArgument = useMemo(() => {
-    if (!isValidAddress(debouncedAddress)) {
+    const validAddress = getValidAddress(debouncedAddress)
+    if (validAddress === null) {
       return [undefined]
     }
+    const formattedAddr = trimLeading0x(
+      normalizeAddress(validAddress, AddressStringFormat.Lowercase)
+    )
     try {
-      const checksum = getChecksumAddress(debouncedAddress!)
-      const formattedAddr = trimLeading0x(normalizeAddress(checksum, AddressStringFormat.Lowercase))
       return [utils.namehash(`${formattedAddr}.addr.reverse`)]
     } catch (error) {
       return [undefined]

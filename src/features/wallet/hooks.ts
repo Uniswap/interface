@@ -16,7 +16,7 @@ import {
   selectSignerAccounts,
 } from 'src/features/wallet/selectors'
 import { WalletConnectSession } from 'src/features/walletConnect/walletConnectSlice'
-import { parseAddress, shortenAddress } from 'src/utils/addresses'
+import { getValidAddress, shortenAddress } from 'src/utils/addresses'
 import { trimToLength } from 'src/utils/string'
 
 const ENS_TRIM_LENGTH = 8
@@ -76,7 +76,7 @@ export function useDisplayName(
   | undefined {
   const maybeLocalName = useAccounts()[address ?? '']?.name // if address is a local account with a name
 
-  const validated = parseAddress(address)
+  const validated = getValidAddress(address)
   const ens = useENSName(ChainId.Mainnet, validated ?? undefined)
 
   if (!address) return

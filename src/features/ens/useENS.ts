@@ -3,7 +3,7 @@
 import { ChainId } from 'src/constants/chains'
 import { useENSAddress } from 'src/features/ens/useENSAddress'
 import { useENSName } from 'src/features/ens/useENSName'
-import { parseAddress } from 'src/utils/addresses'
+import { getValidAddress } from 'src/utils/addresses'
 
 /**
  * Given a name or address, does a lookup to resolve to an address and name
@@ -18,7 +18,7 @@ export function useENS(
   address: string | null
   name: string | null
 } {
-  const validated = parseAddress(nameOrAddress)
+  const validated = getValidAddress(nameOrAddress)
   const reverseLookup = useENSName(chainId, validated ? validated : undefined)
   const lookup = useENSAddress(
     chainId,

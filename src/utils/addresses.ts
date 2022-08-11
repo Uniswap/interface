@@ -1,6 +1,5 @@
 import { utils } from 'ethers'
 import { NATIVE_ADDRESS } from 'src/constants/addresses'
-import { logger } from 'src/utils/logger'
 
 export enum AddressStringFormat {
   Lowercase,
@@ -21,24 +20,43 @@ export function shortenAddress(address: string, chars = 4): string {
   return `${address.substring(0, chars)}...${address.substring(42 - chars)}`
 }
 
+/**
+ * Performs a checksum
+ *
+ * **NOTE** This is an expensive operation. If you want to get a valid address there's no need to call this method
+ * and then call getChecksum. Please, use ${@link getValidAddress}
+ *
+ * @param address input address
+ * @param allowZero
+ * @returns true if the checksum was successful and the address is not the NATIVE_ADDRESS, false otherwise
+ */
 export function isValidAddress(address: NullUndefined<Address>, allowZero = true) {
-  // Need to catch because ethers' isAddress throws in some cases (bad checksum)
-  try {
-    const isValid = address && utils.isAddress(address)
-    if (allowZero) return !!isValid
-    else return !!isValid && address !== NATIVE_ADDRESS
-  } catch (error) {
-    return false
-  }
+  return !!getValidAddress(address, allowZero)
 }
 
-export function validateAddress(address: NullUndefined<Address>, context?: string) {
-  if (!isValidAddress(address)) {
-    const errorMsg = `Invalid addresses ${address} (${context})`
-    logger.error('addresses', 'validateAddress', errorMsg)
-    throw new Error(errorMsg)
+/**
+ * Helper function to get the checksum address if valid.
+ *
+ * Please use this function when you want to get a checksummed and valid address
+ *
+ * @param address Address to verify checksum
+ * @param allowZero
+ * @returns checksummed address if the input address is valid, null otherwise
+ */
+export function getValidAddress(
+  address: NullUndefined<Address>,
+  allowZero = true
+): Nullable<Address> {
+  if (!address) {
+    return null
   }
-  return address as Address
+
+  try {
+    const validAddress = getChecksumAddress(address!)
+    return allowZero || address !== NATIVE_ADDRESS ? validAddress : null
+  } catch (error) {
+    return null
+  }
 }
 
 /**
@@ -63,18 +81,10 @@ export function normalizeAddress(address: Address, format: AddressStringFormat):
   }
 }
 
-export function parseAddress(input: NullUndefined<string>): Address | null {
-  if (isValidAddress(input)) {
-    return getChecksumAddress(input!)
-  } else {
-    return null
-  }
-}
-
-export function areAddressesEqual(_a1: NullUndefined<Address>, _a2: NullUndefined<Address>) {
-  const a1 = validateAddress(_a1, 'compare')
-  const a2 = validateAddress(_a2, 'compare')
-  return getChecksumAddress(a1) === getChecksumAddress(a2)
+export function areAddressesEqual(a1: NullUndefined<Address>, a2: NullUndefined<Address>) {
+  const validA1 = getValidAddress(a1)
+  const validA2 = getValidAddress(a2)
+  return validA1 !== null && validA2 !== null && validA1 === validA2
 }
 
 export function trimLeading0x(input: Address): string {
