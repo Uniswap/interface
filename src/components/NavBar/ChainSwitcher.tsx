@@ -151,12 +151,15 @@ export const ChainSwitcher = ({ isMobile }: ChainSwitcherProps) => {
 
   return (
     <Box position="relative" ref={ref}>
-      <Row as="button" className={styles.ChainSwitcher} onClick={toggleOpen}>
+      <Row as="button" gap="8" className={styles.ChainSwitcher} onClick={toggleOpen}>
         <img src={info.logoUrl} alt={info.label} className={styles.Image} />
+        <Box as="span" fontWeight="semibold" color="explicitWhite" fontSize="16" style={{ lineHeight: '20px' }}>
+          {info.label}
+        </Box>
         {isOpen ? (
-          <NewChevronUpIcon width={16} height={16} className={styles.Chevron} />
+          <NewChevronUpIcon width={16} height={16} color="darkGray" />
         ) : (
-          <NewChevronDownIcon width={16} height={16} className={styles.Chevron} />
+          <NewChevronDownIcon width={16} height={16} color="darkGray" />
         )}
       </Row>
       {isOpen && (

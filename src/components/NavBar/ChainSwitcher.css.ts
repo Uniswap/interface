@@ -13,13 +13,6 @@ export const ChainSwitcher = style([
   }),
 ])
 
-export const Chevron = style([
-  sprinkles({
-    color: 'darkGray',
-    marginLeft: '8',
-  }),
-])
-
 export const ChainSwitcherRow = style([
   sprinkles({
     border: 'none',
