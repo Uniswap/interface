@@ -34,7 +34,6 @@ import {
   useActiveAccountAddressWithThrow,
   useActiveAccountWithThrow,
 } from 'src/features/wallet/hooks'
-import { getChecksumAddress } from 'src/utils/addresses'
 import { toSupportedChainId } from 'src/utils/chainId'
 import { buildCurrencyId } from 'src/utils/currencyId'
 import { logger } from 'src/utils/logger'
@@ -72,7 +71,7 @@ export function useDerivedTransferInfo(state: TransactionState): DerivedTransfer
 
   const { asset: nftIn } = useNFT(
     activeAccount?.address,
-    tradeableAsset?.address && getChecksumAddress(tradeableAsset.address),
+    tradeableAsset?.address && tradeableAsset.address,
     tradeableAsset?.type === AssetType.ERC1155 || tradeableAsset?.type === AssetType.ERC721
       ? tradeableAsset.tokenId
       : undefined

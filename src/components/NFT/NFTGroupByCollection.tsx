@@ -63,7 +63,7 @@ function NFTCollectionItem({ nftAssets, owner }: Props) {
       onPress={() =>
         navigation.navigate(Screens.NFTItem, {
           owner: owner || '',
-          address: getChecksumAddress(item.asset_contract.address),
+          address: item.asset_contract.address,
           token_id: item.token_id,
         })
       }>

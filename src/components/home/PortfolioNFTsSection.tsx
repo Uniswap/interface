@@ -12,7 +12,6 @@ import { NFTAsset } from 'src/features/nfts/types'
 import { getNFTAssetKey } from 'src/features/nfts/utils'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { Screens } from 'src/screens/Screens'
-import { getChecksumAddress } from 'src/utils/addresses'
 
 export function PortfolioNFTsSection({ count, owner }: { count?: number; owner?: string }) {
   const navigation = useHomeStackNavigation()
@@ -36,7 +35,7 @@ export function PortfolioNFTsSection({ count, owner }: { count?: number; owner?:
     (asset: NFTAsset.Asset) => {
       navigation.navigate(Screens.NFTItem, {
         owner: activeAddress ?? '',
-        address: getChecksumAddress(asset.asset_contract.address),
+        address: asset.asset_contract.address,
         token_id: asset.token_id,
       })
     },
