@@ -1,6 +1,7 @@
 import { Currency } from '@uniswap/sdk-core'
 import { NATIVE_ADDRESS, NATIVE_ADDRESS_ALT } from 'src/constants/addresses'
 import { ChainId, isPolygonChain } from 'src/constants/chains'
+import { getChecksumAddress } from 'src/utils/addresses'
 import { toSupportedChainId } from 'src/utils/chainId'
 
 export type CurrencyId = string
@@ -68,6 +69,6 @@ export function currencyIdToChain(_currencyId?: string): ChainId | null {
 export function checksumCurrencyId(_currencyId: string) {
   return buildCurrencyId(
     currencyIdToChain(_currencyId) ?? ChainId.Mainnet,
-    currencyIdToAddress(_currencyId)
+    getChecksumAddress(currencyIdToAddress(_currencyId))
   )
 }
