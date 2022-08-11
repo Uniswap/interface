@@ -77,27 +77,35 @@ export const ButtonPrimary = styled(BaseButton)`
   }
 `
 
-export const ButtonLight = styled(BaseButton)`
-  background-color: ${({ theme }) => theme.deprecated_primary5};
-  color: ${({ theme }) => theme.deprecated_primaryText1};
-  font-size: 16px;
-  font-weight: 500;
+export const ButtonLight = styled(BaseButton)<{ phase0Flag?: boolean }>`
+  background-color: ${({ theme, phase0Flag }) => (phase0Flag ? theme.accentActionSoft : theme.deprecated_primary5)};
+  color: ${({ theme, phase0Flag }) => (phase0Flag ? theme.accentAction : theme.deprecated_primaryText1)};
+  font-size: ${({ phase0Flag }) => (phase0Flag ? '20px' : '16px')};
+  font-weight: ${({ phase0Flag }) => (phase0Flag ? '600' : '500')};
+
   &:focus {
-    box-shadow: 0 0 0 1pt ${({ theme, disabled }) => !disabled && darken(0.03, theme.deprecated_primary5)};
-    background-color: ${({ theme, disabled }) => !disabled && darken(0.03, theme.deprecated_primary5)};
+    box-shadow: 0 0 0 1pt
+      ${({ theme, disabled, phase0Flag }) =>
+        !disabled && (phase0Flag ? theme.accentActionSoft : darken(0.03, theme.deprecated_primary5))};
+    background-color: ${({ theme, disabled, phase0Flag }) =>
+      !disabled && (phase0Flag ? theme.accentActionSoft : darken(0.03, theme.deprecated_primary5))};
   }
   &:hover {
-    background-color: ${({ theme, disabled }) => !disabled && darken(0.03, theme.deprecated_primary5)};
+    background-color: ${({ theme, disabled, phase0Flag }) =>
+      !disabled && (phase0Flag ? theme.accentActionSoft : darken(0.03, theme.deprecated_primary5))};
   }
   &:active {
-    box-shadow: 0 0 0 1pt ${({ theme, disabled }) => !disabled && darken(0.05, theme.deprecated_primary5)};
-    background-color: ${({ theme, disabled }) => !disabled && darken(0.05, theme.deprecated_primary5)};
+    box-shadow: 0 0 0 1pt
+      ${({ theme, disabled, phase0Flag }) =>
+        !disabled && (phase0Flag ? theme.accentActionSoft : darken(0.05, theme.deprecated_primary5))};
+    background-color: ${({ theme, disabled, phase0Flag }) =>
+      !disabled && (phase0Flag ? theme.accentActionSoft : darken(0.05, theme.deprecated_primary5))};
   }
   :disabled {
     opacity: 0.4;
     :hover {
       cursor: auto;
-      background-color: ${({ theme }) => theme.deprecated_primary5};
+      background-color: ${({ theme, phase0Flag }) => (phase0Flag ? theme.none : theme.deprecated_primary5)};
       box-shadow: none;
       border: 1px solid transparent;
       outline: none;

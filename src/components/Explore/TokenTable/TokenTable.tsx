@@ -21,7 +21,7 @@ const GridContainer = styled.div`
   display: flex;
   flex-direction: column;
   max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT};
-  background-color: ${({ theme }) => theme.backgroundSurface};
+  background-color: ${({ theme }) => theme.backgroundModule};
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
     0px 24px 32px rgba(0, 0, 0, 0.01);
   margin-left: auto;
@@ -45,6 +45,7 @@ const NoTokenDisplay = styled.div`
 `
 const TokenRowsContainer = styled.div`
   padding: 4px 0px;
+  width: 100%;
 `
 
 function useFilteredTokens(addresses: string[]) {
@@ -138,17 +139,15 @@ function NoTokensState({ message }: { message: ReactNode }) {
   )
 }
 
+const LOADING_ROWS = Array.from({ length: 100 })
+  .fill(0)
+  .map((_item, index) => <LoadingRow key={index} />)
+
 function LoadingTokenTable() {
   return (
     <GridContainer>
       <HeaderRow />
-      <TokenRowsContainer>
-        {Array(10)
-          .fill(0)
-          .map((_item, index) => (
-            <LoadingRow key={index} />
-          ))}
-      </TokenRowsContainer>
+      <TokenRowsContainer>{LOADING_ROWS}</TokenRowsContainer>
     </GridContainer>
   )
 }
