@@ -11,7 +11,7 @@ const StyledModal = styled.div`
   position: fixed;
   display: flex;
   left: 50%;
-  top: 50%;
+  top: 50vh;
   transform: translate(-50%, -50%);
   width: 400px;
   height: fit-content;
@@ -75,6 +75,8 @@ function FeatureFlagOption({
         id={featureFlag}
         value={value}
         onChange={(e) => {
+          e.stopPropagation()
+          e.preventDefault()
           updateFlag(featureFlag, e.target.value)
           window.location.reload()
         }}
