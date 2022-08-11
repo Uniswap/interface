@@ -27,7 +27,7 @@ export const initOneSignal = () => {
     )
 
     const url = (event.notification?.attachments as NotificationAttachments)?.app_url
-    if (url) openUri(url)
+    if (url) openUri(url, true)
   })
 }
 
