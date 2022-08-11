@@ -31,7 +31,7 @@ const ethereumInfo: NetworkInfo = {
   },
   rpcUrl:
     process.env.NODE_ENV === 'development'
-      ? 'https://eth-mainnet.public.blastapi.io'
+      ? 'https://cloudflare-eth.com'
       : 'https://proxy.kyberengineering.io/ethereum',
   routerUri: `${process.env.REACT_APP_AGGREGATOR_API}/ethereum/route/encode`,
   classic: {

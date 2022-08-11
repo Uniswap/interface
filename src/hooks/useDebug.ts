@@ -12,7 +12,7 @@ export default function useDebug(
 ) {
   const prevProps = useRef(props)
   const trace = Error('Trace').stack
-  const skipRealChanged = true // recommend: true
+  // const skipRealChanged = true // recommend: true
 
   useEffect(() => {
     const propKeys = new Set<string>()
@@ -30,7 +30,7 @@ export default function useDebug(
           if (isRealChanged) hasRealChanged = true
         }
       })
-      if (hasRealChanged && skipRealChanged) return
+      // if (hasRealChanged && skipRealChanged) return
 
       console.groupCollapsed(
         `%c[${new Date().toISOString().slice(11, 19)}] %cDebug found changed %c${props.title} ${

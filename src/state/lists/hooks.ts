@@ -7,6 +7,7 @@ import { NETWORKS_INFO, SUPPORTED_NETWORKS } from 'constants/networks'
 import { useActiveWeb3React } from 'hooks'
 import useDebounce from 'hooks/useDebounce'
 import sortByListPriority from 'utils/listSort'
+import { getFormattedAddress } from 'utils/tokenInfo'
 
 import { UNSUPPORTED_LIST_URLS } from '../../constants/lists'
 import UNSUPPORTED_TOKEN_LIST from '../../constants/tokenLists/uniswap-v2-unsupported.tokenlist.json'
@@ -53,17 +54,17 @@ function listToTokenMap(list: TokenList): TokenAddressMap {
   const result = listCache[serializedList]
   if (result) return result
 
-  const map = list.tokens.reduce<TokenAddressMapWriteable>(
-    (tokenMap, tokenInfo) => {
-      if (tokenMap[tokenInfo.chainId][tokenInfo.address] !== undefined) {
-        return tokenMap
-      }
-      const token = new WrappedTokenInfo(tokenInfo, list)
-      tokenMap[tokenInfo.chainId][tokenInfo.address] = token
+  const map = list.tokens.reduce<TokenAddressMapWriteable>((tokenMap, tokenInfo) => {
+    const formattedAddress = getFormattedAddress(tokenInfo.address)
+
+    if (tokenMap[tokenInfo.chainId][formattedAddress] !== undefined) {
       return tokenMap
-    },
-    { ...EMPTY_LIST() },
-  )
+    }
+
+    const token = new WrappedTokenInfo(tokenInfo, list)
+    tokenMap[tokenInfo.chainId][formattedAddress] = token
+    return tokenMap
+  }, EMPTY_LIST())
 
   listCache[serializedList] = map
   return map
