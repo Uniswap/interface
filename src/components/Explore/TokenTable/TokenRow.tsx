@@ -79,7 +79,7 @@ const StyledTokenRow = styled.div`
   @media only screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
     grid-template-columns: 4fr 2fr;
     min-width: unset;
-    border-bottom: 0.5px solid ${({ theme }) => theme.backgroundContainer};
+    border-bottom: 0.5px solid ${({ theme }) => theme.backgroundModule};
     padding: 0px 12px;
 
     :last-of-type {

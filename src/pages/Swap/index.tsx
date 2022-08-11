@@ -94,7 +94,7 @@ const BottomWrapper = styled.div<{ phase0Flag: boolean }>`
   ${({ phase0Flag }) =>
     phase0Flag &&
     css`
-      background-color: ${({ theme }) => theme.backgroundContainer};
+      background-color: ${({ theme }) => theme.backgroundModule};
       border-radius: 12px;
       padding: 8px 12px 10px;
       color: ${({ theme }) => theme.textSecondary};

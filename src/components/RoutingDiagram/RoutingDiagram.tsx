@@ -1,4 +1,5 @@
 import { Trans } from '@lingui/macro'
+import { Protocol } from '@uniswap/router-sdk'
 import { Currency } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import Badge from 'components/Badge'
@@ -73,6 +74,10 @@ const ProtocolBadge = styled(Badge)`
   z-index: ${Z_INDEX.sticky + 1};
 `
 
+const MixedProtocolBadge = styled(ProtocolBadge)`
+  width: 60px;
+`
+
 const BadgeText = styled(ThemedText.DeprecatedSmall)`
   word-break: normal;
 `
@@ -109,9 +114,15 @@ function Route({ entry: { percent, path, protocol } }: { entry: RoutingDiagramEn
         <DotColor />
       </DottedLine>
       <OpaqueBadge>
-        <ProtocolBadge>
-          <BadgeText fontSize={12}>{protocol.toUpperCase()}</BadgeText>
-        </ProtocolBadge>
+        {protocol === Protocol.MIXED ? (
+          <MixedProtocolBadge>
+            <BadgeText fontSize={12}>{'V3 + V2'}</BadgeText>
+          </MixedProtocolBadge>
+        ) : (
+          <ProtocolBadge>
+            <BadgeText fontSize={12}>{protocol.toUpperCase()}</BadgeText>
+          </ProtocolBadge>
+        )}
         <BadgeText fontSize={14} style={{ minWidth: 'auto' }}>
           {percent.toSignificant(2)}%
         </BadgeText>
