@@ -8,7 +8,7 @@
       "jsx": true
     }
   },
-    "ignorePatterns": [
+  "ignorePatterns": [
     "src/locales/**/*.js",
     "src/locales/**/en-US.po",
     "node_modules",
@@ -58,6 +58,5 @@
     "react/react-in-jsx-scope": "off",
     "react/jsx-pascal-case": "off",
     "@typescript-eslint/no-var-requires": "off"
-
   }
 }

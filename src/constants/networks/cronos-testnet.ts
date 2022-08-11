@@ -29,7 +29,7 @@ const cronosTestnetInfo: NetworkInfo = {
   ),
   etherscanUrl: 'https://cronos.org/explorer/testnet3',
   etherscanName: 'Cronos explorer',
-  tokenListUrl: 'https://raw.githubusercontent.com/KyberNetwork/ks-assets/main/tokenLists/cronos.tokenlist.json',
+  tokenListUrl: `${process.env.REACT_APP_TOKEN_LIST_API}?chainId=${ChainId.CRONOSTESTNET}`,
   bridgeURL: 'https://cronos.crypto.org/docs/bridge/cdcapp.html',
   nativeToken: {
     symbol: 'CRO',
