@@ -26,11 +26,16 @@ export function currencyAddressForSwapQuote(currency: Currency): string {
 
 export function currencyAddress(currency: Currency): string {
   if (currency.isNative) {
-    if (currency.chainId === ChainId.Polygon) return NATIVE_ADDRESS_ALT
-    else return NATIVE_ADDRESS
+    return getNativeCurrencyAddressForChain(currency.chainId)
   }
   if (currency.isToken) return currency.address
   throw new Error('invalid currency')
+}
+
+export function getNativeCurrencyAddressForChain(chainId: ChainId) {
+  if (chainId === ChainId.Polygon) return NATIVE_ADDRESS_ALT
+
+  return NATIVE_ADDRESS
 }
 
 export function graphQLCurrencyInfo(currency: Currency): {

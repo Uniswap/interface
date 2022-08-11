@@ -25,7 +25,12 @@ import { useAllCurrencies } from 'src/features/tokens/useTokens'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { selectHideSmallBalances } from 'src/features/wallet/selectors'
 import { fromGraphQLChain, isTestnet } from 'src/utils/chainId'
-import { buildCurrencyId, currencyId, CurrencyId } from 'src/utils/currencyId'
+import {
+  buildCurrencyId,
+  currencyId,
+  CurrencyId,
+  getNativeCurrencyAddressForChain,
+} from 'src/utils/currencyId'
 import { flattenObjectOfObjects } from 'src/utils/objects'
 import { percentDifference } from 'src/utils/statistics'
 
@@ -106,12 +111,14 @@ export function usePortfolioBalances(address: Address, onlyKnownCurrencies?: boo
         !balance.denominatedValue ||
         !balance.denominatedValue.value ||
         !balance.token ||
-        !balance.token.address ||
         !balance.token.decimals
       )
         return
 
-      const id = buildCurrencyId(chainId, balance.token.address)
+      // if token address is null, assume it is the native currency of that chain
+      // note this assumption isn't true the other way around. polygon MATIC does have an address!
+      const tokenAddress = balance.token.address ?? getNativeCurrencyAddressForChain(chainId)
+      const id = buildCurrencyId(chainId, tokenAddress)
       const knownCurrency = tokensByChainId[chainId]?.[id]
 
       if (onlyKnownCurrencies && !knownCurrency) return
@@ -120,7 +127,7 @@ export function usePortfolioBalances(address: Address, onlyKnownCurrencies?: boo
         knownCurrency ??
         new Token(
           chainId,
-          balance.token.address,
+          tokenAddress,
           balance.token.decimals,
           balance.token.symbol ?? undefined,
           balance.token.name ?? undefined
