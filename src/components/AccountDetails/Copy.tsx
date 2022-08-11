@@ -1,12 +1,19 @@
 import { Trans } from '@lingui/macro'
 import useCopyClipboard from 'hooks/useCopyClipboard'
 import React, { useCallback } from 'react'
-import { CheckCircle, Copy } from 'react-feather'
+import { CheckCircle, Copy, Link } from 'react-feather'
 import styled from 'styled-components/macro'
-import { LinkStyledButton } from 'theme'
+import { ClickableStyle, LinkStyledButton } from 'theme'
+import { Color } from 'theme/styled'
 
-const CopyIcon = styled(LinkStyledButton)`
+const CopiedIcon = styled(CheckCircle)<{ size: number }>`
+  color: ${({ theme }) => theme.accentSuccess};
+`
+
+const CopyHelperContainer = styled(LinkStyledButton)`
   color: ${({ color, theme }) => color || theme.accentAction};
+  font-size: inherit;
+  padding: 0;
   flex-shrink: 0;
   display: flex;
   text-decoration: none;
@@ -18,47 +25,57 @@ const CopyIcon = styled(LinkStyledButton)`
   }
 `
 const StyledText = styled.span`
-  margin-left: 0.25rem;
+  ${ClickableStyle}
   ${({ theme }) => theme.flexRowNoWrap};
+  color: inherit;
+  font-size: inherit;
+  padding-left: 10px;
   align-items: center;
 `
 
-const Copied = ({ iconSize }: { iconSize?: number }) => (
-  <StyledText>
-    <CheckCircle size={iconSize ?? '16'} />
-    <StyledText>
-      <Trans>Copied</Trans>
-    </StyledText>
-  </StyledText>
-)
-
-const Icon = ({ iconSize }: { iconSize?: number }) => (
-  <StyledText>
-    <Copy size={iconSize ?? '16'} />
-  </StyledText>
-)
+const CopyIcon = ({ iconSize, link }: { iconSize?: number; link?: boolean }) => {
+  return link ? <Link size={iconSize ?? '16'} /> : <Copy size={iconSize ?? '16'} />
+}
 
 interface BaseProps {
+  link?: boolean
   toCopy: string
-  color?: string
+  color?: Color
   iconSize?: number
   iconPosition?: 'left' | 'right'
+  iconColor?: Color
 }
 export type CopyHelperProps = BaseProps & Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, keyof BaseProps>
 
-export default function CopyHelper({ color, toCopy, children, iconSize, iconPosition }: CopyHelperProps) {
+export default function CopyHelper({ link, color, toCopy, children, iconSize, iconPosition }: CopyHelperProps) {
   const [isCopied, setCopied] = useCopyClipboard()
   const copy = useCallback(() => {
     setCopied(toCopy)
   }, [toCopy, setCopied])
 
   return (
-    <CopyIcon onClick={copy} color={color}>
-      {iconPosition === 'left' ? isCopied ? <Copied iconSize={iconSize} /> : <Icon iconSize={iconSize} /> : null}
-      {iconPosition === 'left' && <>&nbsp;</>}
-      {isCopied ? '' : children}
-      {iconPosition === 'right' && <>&nbsp;</>}
-      {iconPosition === 'right' ? isCopied ? <Copied iconSize={iconSize} /> : <Icon iconSize={iconSize} /> : null}
-    </CopyIcon>
+    <CopyHelperContainer onClick={copy} color={color}>
+      {iconPosition === 'left' ? (
+        isCopied ? (
+          <CopiedIcon size={iconSize ?? 16} />
+        ) : (
+          <CopyIcon link={link} iconSize={iconSize} />
+        )
+      ) : null}
+      {isCopied ? (
+        <StyledText>
+          <Trans>Copied</Trans>
+        </StyledText>
+      ) : (
+        <StyledText>{children}</StyledText>
+      )}
+      {iconPosition === 'right' ? (
+        isCopied ? (
+          <CopiedIcon size={iconSize ?? 16} />
+        ) : (
+          <CopyIcon link={link} iconSize={iconSize} />
+        )
+      ) : null}
+    </CopyHelperContainer>
   )
 }

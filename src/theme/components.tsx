@@ -68,7 +68,7 @@ export const LinkStyledButton = styled.button<{ disabled?: boolean }>`
   }
 `
 
-export const LinkStyle = css`
+export const ClickableStyle = css`
   text-decoration: none;
   color: ${({ theme }) => theme.accentAction};
   stroke: ${({ theme }) => theme.accentAction};
@@ -85,7 +85,7 @@ export const LinkStyle = css`
 
 // An internal link from the react-router-dom library that is correctly styled
 export const StyledInternalLink = styled(Link)`
-  ${LinkStyle}
+  ${ClickableStyle}
 `
 
 const LinkIconWrapper = styled.a`
@@ -110,12 +110,12 @@ const IconStyle = css`
 
 const LinkIcon = styled(LinkIconFeather)`
   ${IconStyle}
-  ${LinkStyle}
+  ${ClickableStyle}
 `
 
 const CopyIcon = styled(Copy)`
   ${IconStyle}
-  ${LinkStyle}
+  ${ClickableStyle}
   stroke: ${({ theme }) => theme.accentActive};
 `
 
@@ -169,7 +169,7 @@ function handleClickExternalLink(event: React.MouseEvent<HTMLAnchorElement>) {
 }
 
 const StyledLink = styled.a`
-  ${LinkStyle}
+  ${ClickableStyle}
 `
 /**
  * Outbound link that handles firing google analytics events

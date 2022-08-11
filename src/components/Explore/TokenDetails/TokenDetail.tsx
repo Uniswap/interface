@@ -114,7 +114,7 @@ export const TokenNameCell = styled.div`
 `
 const TokenActions = styled.div`
   display: flex;
-  gap: 24px;
+  gap: 14px;
   color: ${({ theme }) => theme.textSecondary};
 `
 export const TokenInfoContainer = styled.div`
@@ -207,7 +207,8 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
             <ShareButton tokenName={tokenName} tokenSymbol={tokenSymbol} />
             <ClickFavorited onClick={toggleFavorite}>
               <Heart
-                size={15}
+                height="16px"
+                width="18px"
                 color={isFavorited ? theme.accentAction : theme.textSecondary}
                 fill={isFavorited ? theme.accentAction : theme.none}
               />
