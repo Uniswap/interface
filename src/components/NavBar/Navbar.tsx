@@ -1,12 +1,8 @@
-import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
 import Web3Status from 'components/Web3Status'
-import { getChainInfoOrDefault } from 'constants/chainInfo'
 import { useWindowSize } from 'hooks/useWindowSize'
 import { ReactNode } from 'react'
 import { NavLink, NavLinkProps, useLocation } from 'react-router-dom'
-import { Text } from 'rebass'
-import { useNativeCurrencyBalances } from 'state/connection/hooks'
 import styled from 'styled-components/macro'
 
 import { Box } from '../../nft/components/Box'
@@ -34,12 +30,6 @@ const AccountElement = styled.div<{ active: boolean }>`
   }
 `
 
-const BalanceText = styled(Text)`
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-    display: none;
-  `};
-`
-
 interface NavLinkItemProps {
   href: string
   id?: NavLinkProps['id']
@@ -62,44 +52,35 @@ const NavLinkItem = ({ href, id, isActive, children }: NavLinkItemProps) => {
 
 const MobileNavbar = () => {
   return (
-    <nav className={styles.nav}>
-      <Box display="flex" height="full" flexWrap="nowrap" alignItems="stretch">
-        <Box className={styles.leftSideMobileContainer}>
-          <Box as="a" href="#/swap" className={styles.logoContainer}>
-            <UniIconMobile width="44" height="44" className={styles.logo} />
+    <>
+      <nav className={styles.nav}>
+        <Box display="flex" height="full" flexWrap="nowrap" alignItems="stretch">
+          <Box className={styles.leftSideMobileContainer}>
+            <Box as="a" href="#/swap" className={styles.logoContainer}>
+              <UniIconMobile width="44" height="44" className={styles.logo} />
+            </Box>
+            <ChainSwitcher isMobile={true} />
           </Box>
-          <ChainSwitcher isMobile={true} />
+          <Box className={styles.rightSideMobileContainer}>
+            <Row gap="16">
+              <SearchBar />
+              <MobileSideBar />
+            </Row>
+          </Box>
         </Box>
-        <Box className={styles.rightSideMobileContainer}>
-          <Row gap="16">
-            <SearchBar />
-            <MobileSideBar />
-          </Row>
-        </Box>
-      </Box>
+      </nav>
       <Box className={styles.mobileWalletContainer}>
         <Wallet />
       </Box>
-    </nav>
+    </>
   )
 }
 
-// Phase 0 Wallet aka Old Wallet
+// TODO deprecate old wallet
 const Wallet = () => {
-  const { account, chainId } = useWeb3React()
-  const userEthBalance = useNativeCurrencyBalances(account ? [account] : [])?.[account ?? '']
-  const {
-    nativeCurrency: { symbol: nativeCurrencySymbol },
-  } = getChainInfoOrDefault(chainId)
+  const { account } = useWeb3React()
   return (
     <AccountElement active={!!account}>
-      {account && userEthBalance ? (
-        <BalanceText style={{ flexShrink: 0, userSelect: 'none' }} pl="0.75rem" pr=".4rem" fontWeight={500}>
-          <Trans>
-            {userEthBalance?.toSignificant(3)} {nativeCurrencySymbol}
-          </Trans>
-        </BalanceText>
-      ) : null}
       <Web3Status />
     </AccountElement>
   )
