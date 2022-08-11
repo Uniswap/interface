@@ -28,6 +28,7 @@ const protocols: Protocol[] = [Protocol.V2, Protocol.V3, Protocol.MIXED]
 
 const DEFAULT_QUERY_PARAMS = {
   protocols: protocols.map((p) => p.toLowerCase()).join(','),
+  forceMixedRoutes: true,
   // example other params
   // forceCrossProtocol: 'true',
   // minSplits: '5',
