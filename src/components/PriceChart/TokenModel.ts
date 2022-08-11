@@ -1,31 +1,80 @@
 import { Token } from '@uniswap/sdk-core'
+import { graphql } from 'babel-plugin-relay/macro'
 import { useMemo } from 'react'
+import { useLazyLoadQuery } from 'react-relay'
 import { GraphMetadatas } from 'src/components/PriceChart/types'
-import { buildGraph, GRAPH_PRECISION, takeSubset } from 'src/components/PriceChart/utils'
-import { ChainId } from 'src/constants/chains'
-import { useDailyTokenPricesQuery } from 'src/features/dataApi/slice'
+import { buildGraph, GRAPH_PRECISION } from 'src/components/PriceChart/utils'
+import { TokenModel_PriceQuery } from 'src/components/PriceChart/__generated__/TokenModel_PriceQuery.graphql'
+import { toGraphQLChain } from 'src/utils/chainId'
+import { graphQLCurrencyInfo } from 'src/utils/currencyId'
 import { logger } from 'src/utils/logger'
+
+const priceQuery = graphql`
+  query TokenModel_PriceQuery($contract: ContractInput) {
+    tokenProjects(contracts: [$contract]) {
+      name
+      markets(currencies: [USD]) {
+        priceHistory1H: priceHistory(duration: HOUR) {
+          timestamp
+          close: value
+        }
+        priceHistory1D: priceHistory(duration: DAY) {
+          timestamp
+          close: value
+        }
+        priceHistory1W: priceHistory(duration: WEEK) {
+          timestamp
+          close: value
+        }
+        priceHistory1M: priceHistory(duration: MONTH) {
+          timestamp
+          close: value
+        }
+        priceHistory1Y: priceHistory(duration: YEAR) {
+          timestamp
+          close: value
+        }
+      }
+      tokens {
+        chain
+        address
+        symbol
+        decimals
+      }
+    }
+  }
+`
 
 /**
  * @returns undefined if loading, null if error, `GraphMetadatas` otherwise
  */
 export function useTokenPriceGraphs(token: Token): NullUndefined<GraphMetadatas> {
-  const {
-    currentData: dailyPrices,
-    error,
-    isLoading,
-  } = useDailyTokenPricesQuery({
-    address: token.address,
-    chainId: token.chainId as ChainId,
+  const { address, chain } = graphQLCurrencyInfo(token)
+  const graphQLChain = toGraphQLChain(chain)
+
+  const priceData = useLazyLoadQuery<TokenModel_PriceQuery>(priceQuery, {
+    contract: {
+      address,
+      chain: graphQLChain ?? 'ETHEREUM',
+    },
   })
 
   return useMemo(() => {
-    if (isLoading) {
+    if (!priceData) {
       return undefined
     }
 
-    if (!dailyPrices || error) {
-      logger.debug('TokenModel', 'useTokenPriceGraphs', 'Historical prices error', error)
+    const { priceHistory1H, priceHistory1D, priceHistory1W, priceHistory1M, priceHistory1Y } =
+      priceData.tokenProjects?.[0]?.markets?.[0] ?? {}
+
+    if (
+      !priceHistory1H ||
+      !priceHistory1D ||
+      !priceHistory1W ||
+      !priceHistory1M ||
+      !priceHistory1Y
+    ) {
+      logger.debug('TokenModel', 'useTokenPriceGraphs', 'Token prices error')
       return null
     }
 
@@ -33,31 +82,30 @@ export function useTokenPriceGraphs(token: Token): NullUndefined<GraphMetadatas>
       {
         label: '1H',
         index: 0,
-        // TODO(MOB-1086): use hourly prices
-        data: buildGraph(takeSubset(dailyPrices, 1), GRAPH_PRECISION),
+        data: buildGraph([...priceHistory1H].reverse() as any, GRAPH_PRECISION),
       },
       {
         label: '1D',
         index: 1,
-        data: buildGraph(takeSubset(dailyPrices, 1), GRAPH_PRECISION),
+        data: buildGraph([...priceHistory1D].reverse() as any, GRAPH_PRECISION),
       },
       {
         label: '1W',
         index: 2,
-        data: buildGraph(takeSubset(dailyPrices, 7), GRAPH_PRECISION),
+        data: buildGraph([...priceHistory1W].reverse() as any, GRAPH_PRECISION),
       },
       {
         label: '1M',
         index: 3,
-        data: buildGraph(takeSubset(dailyPrices, 30), GRAPH_PRECISION),
+        data: buildGraph([...priceHistory1M].reverse() as any, GRAPH_PRECISION),
       },
       {
         label: '1Y',
         index: 4,
-        data: buildGraph(takeSubset(dailyPrices, 365), GRAPH_PRECISION),
+        data: buildGraph([...priceHistory1Y].reverse() as any, GRAPH_PRECISION),
       },
     ] as const
 
     return graphs as GraphMetadatas
-  }, [dailyPrices, error, isLoading])
+  }, [priceData])
 }

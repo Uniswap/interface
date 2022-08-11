@@ -1,5 +1,5 @@
 import { Currency } from '@uniswap/sdk-core'
-import React, { useMemo } from 'react'
+import React, { Suspense, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex } from 'src/components/layout'
 import { Box } from 'src/components/layout/Box'
@@ -11,24 +11,36 @@ import { GraphMetadatas } from 'src/components/PriceChart/types'
 import { Text } from 'src/components/Text'
 
 export const CurrencyPriceChart = ({ currency }: { currency: Currency }) => {
+  return (
+    <Suspense fallback={<PriceChartLoading />}>
+      <CurrencyPriceChartInner currency={currency} />
+    </Suspense>
+  )
+}
+
+function CurrencyPriceChartInner({ currency }: { currency: Currency }) {
   const graphs = useTokenPriceGraphs(currency.wrapped)
+  const { t } = useTranslation()
+
+  const error = graphs === null
+
+  if (error) {
+    return (
+      <Flex centered mx="lg" my="md">
+        <Text color="accentFailure" textAlign="center" variant="body">
+          {t('Could not retrieve price history')}
+        </Text>
+      </Flex>
+    )
+  }
 
   return <PriceChart graphs={graphs} />
 }
 
 export const PortfolioBalanceChart = ({ owner }: { owner: Address }) => {
   const graphs = usePortfolioBalanceGraphs(owner)
-
-  return <PriceChart graphs={graphs} />
-}
-
-function PriceChart({ graphs }: { graphs: NullUndefined<GraphMetadatas> }) {
   const { t } = useTranslation()
 
-  // require all graphs to be loaded before rendering the chart
-  // TODO(judo): improve loading state
-  const loading =
-    useMemo(() => graphs?.some((g) => g.data === undefined), [graphs]) || graphs === undefined
   const error = graphs === null
 
   if (error) {
@@ -41,6 +53,15 @@ function PriceChart({ graphs }: { graphs: NullUndefined<GraphMetadatas> }) {
       </Flex>
     )
   }
+
+  return <PriceChart graphs={graphs} />
+}
+
+function PriceChart({ graphs }: { graphs?: GraphMetadatas }) {
+  // require all graphs to be loaded before rendering the chart
+  // TODO(judo): improve loading state
+  const loading =
+    useMemo(() => graphs?.some((g) => g.data === undefined), [graphs]) || graphs === undefined
 
   return (
     <Box overflow="hidden">
