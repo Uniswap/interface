@@ -24,9 +24,13 @@ const ShareButtonDisplay = styled.div`
   }
 `
 
-const Share = styled(ShareIcon)`
+const Share = styled(ShareIcon)<{ open: boolean }>`
   width: 18px;
   height: 18px;
+  :hover {
+    opacity: 0.6;
+  }
+  ${({ open }) => open && `opacity: 0.4 !important`};
 `
 
 const ShareActions = styled.div`
@@ -40,7 +44,7 @@ const ShareActions = styled.div`
   flex-direction: column;
   overflow: auto;
   background-color: ${({ theme }) => theme.backgroundSurface};
-  border: 1px solid ${({ theme }) => theme.backgroundOutline};
+  border: 0.5px solid ${({ theme }) => theme.backgroundOutline};
   box-shadow: ${({ theme }) => theme.flyoutDropShadow};
   border-radius: 12px;
 `
@@ -52,7 +56,8 @@ const ShareAction = styled.div<{ highlighted?: boolean }>`
   margin: 0 8px;
   border-radius: 8px;
   font-size: 16px;
-  gap: 8px;
+  font-weight: 400;
+  gap: 0.75rem;
   height: 40px;
   color: ${({ theme }) => theme.textPrimary};
   background-color: ${({ theme, highlighted }) => (highlighted ? theme.backgroundInteractive : 'transparent')};
@@ -84,17 +89,17 @@ export default function ShareButton(tokenInfo: TokenInfo) {
 
   return (
     <ShareButtonDisplay ref={node}>
-      <Share onClick={toggleShare} aria-label={`ShareOptions`} />
+      <Share onClick={toggleShare} aria-label={`ShareOptions`} open={open} />
       {open && (
         <ShareActions>
           <ShareAction>
-            <CopyHelper link color={theme.textPrimary} iconPosition="left" toCopy={window.location.href}>
+            <CopyHelper color={theme.textPrimary} iconPosition="left" toCopy={window.location.href}>
               Copy Link
             </CopyHelper>
           </ShareAction>
 
           <ShareAction onClick={shareTweet} highlighted>
-            <Twitter color={theme.textSecondary} size={18} />
+            <Twitter color={theme.textSecondary} size={20} strokeWidth={1.5} />
             Share to Twitter
           </ShareAction>
         </ShareActions>

@@ -12,6 +12,7 @@ const ContentWrapper = styled(Column)`
   align-items: center;
   margin: 32px;
   text-align: center;
+  font-size: 12px;
 `
 const WarningIcon = styled(AlertOctagon)`
   min-height: 22px;
@@ -49,7 +50,7 @@ export default function ConnectedAccountBlocked(props: ConnectedAccountBlockedPr
         <ThemedText.DeprecatedMain fontSize={12}>
           <Trans>If you believe this is an error, please send an email including your address to </Trans>{' '}
         </ThemedText.DeprecatedMain>
-        <Copy iconSize={12} toCopy="compliance@uniswap.org" color={theme.deprecated_primary1} iconPosition="right">
+        <Copy toCopy="compliance@uniswap.org" color={theme.deprecated_primary1} iconPosition="right">
           compliance@uniswap.org
         </Copy>
       </ContentWrapper>
