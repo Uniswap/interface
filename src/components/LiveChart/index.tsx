@@ -12,7 +12,7 @@ import Loader from 'components/LocalLoader'
 import ProLiveChart from 'components/TradingViewChart'
 import { checkPairHasDextoolsData } from 'components/TradingViewChart/datafeed'
 import { useActiveWeb3React } from 'hooks'
-import useLiveChartData, { LiveDataTimeframeEnum } from 'hooks/useLiveChartData'
+import useBasicChartData, { LiveDataTimeframeEnum } from 'hooks/useBasicChartData'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import useTheme from 'hooks/useTheme'
 import { Field } from 'state/swap/actions'
@@ -125,7 +125,7 @@ function LiveChart({
     return [nativeInputCurrency, nativeOutputCurrency].map(currency => currency?.wrapped)
   }, [nativeInputCurrency, nativeOutputCurrency])
 
-  const isWrappedToken = tokens[0]?.address === tokens[1]?.address
+  const isWrappedToken = !!tokens[0]?.address && tokens[0]?.address === tokens[1]?.address
   const [hoverValue, setHoverValue] = useState<number | null>(null)
   const [timeFrame, setTimeFrame] = useState<LiveDataTimeframeEnum>(LiveDataTimeframeEnum.DAY)
   const [stateProChart, setStateProChart] = useState({
@@ -134,7 +134,7 @@ function LiveChart({
     apiVersion: '',
     loading: true,
   })
-  const { data: chartData, error: basicChartError, loading: basicChartLoading } = useLiveChartData(tokens, timeFrame)
+  const { data: chartData, error: basicChartError, loading: basicChartLoading } = useBasicChartData(tokens, timeFrame)
   const isProchartError = !stateProChart.hasProChart && !stateProChart.loading
   const isBasicchartError = basicChartError && !basicChartLoading
   const bothChartError = isProchartError && isBasicchartError
@@ -186,27 +186,30 @@ function LiveChart({
     )
   }
 
-  const toggle = (
-    <ProChartToggle
-      activeName={isShowProChart ? 'pro' : 'basic'}
-      toggle={(name: string) => {
-        if (!bothChartError) {
-          if (name !== (isShowProChart ? 'pro' : 'basic')) {
-            if (name === 'pro') {
-              mixpanelHandler(MIXPANEL_TYPE.PRO_CHART_CLICKED)
-            } else {
-              mixpanelHandler(MIXPANEL_TYPE.BASIC_CHART_CLICKED)
+  const toggle = useMemo(() => {
+    return (
+      <ProChartToggle
+        activeName={isShowProChart ? 'pro' : 'basic'}
+        toggle={(name: string) => {
+          if (!bothChartError) {
+            if (name !== (isShowProChart ? 'pro' : 'basic')) {
+              if (name === 'pro') {
+                mixpanelHandler(MIXPANEL_TYPE.PRO_CHART_CLICKED)
+              } else {
+                mixpanelHandler(MIXPANEL_TYPE.BASIC_CHART_CLICKED)
+              }
+              toggleProLiveChart()
             }
-            toggleProLiveChart()
           }
-        }
-      }}
-      buttons={[
-        { name: 'basic', title: 'Basic', disabled: isBasicchartError },
-        { name: 'pro', title: 'Pro', disabled: isProchartError },
-      ]}
-    />
-  )
+        }}
+        buttons={[
+          { name: 'basic', title: 'Basic', disabled: isBasicchartError },
+          { name: 'pro', title: 'Pro', disabled: isProchartError },
+        ]}
+      />
+    )
+  }, [isBasicchartError, isProchartError, isShowProChart, bothChartError, toggleProLiveChart, mixpanelHandler])
+
   return (
     <LiveChartWrapper>
       {isWrappedToken ? (
@@ -314,14 +317,17 @@ function LiveChart({
                     color={theme.disableText}
                     style={{ gap: '16px' }}
                   >
-                    {basicChartLoading && <Loader />}
-                    {isBasicchartError && (
-                      <>
-                        <WarningIcon />
-                        <Text fontSize={16}>
-                          <Trans>Chart is unavailable right now</Trans>
-                        </Text>
-                      </>
+                    {basicChartLoading ? (
+                      <Loader />
+                    ) : (
+                      isBasicchartError && (
+                        <>
+                          <WarningIcon />
+                          <Text fontSize={16}>
+                            <Trans>Chart is unavailable right now</Trans>
+                          </Text>
+                        </>
+                      )
                     )}
                   </Flex>
                 ) : (

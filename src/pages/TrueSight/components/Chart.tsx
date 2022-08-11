@@ -5,7 +5,7 @@ import styled from 'styled-components'
 
 import LineChart from 'components/LiveChart/LineChart'
 import LocalLoader from 'components/LocalLoader'
-import { LiveDataTimeframeEnum } from 'hooks/useLiveChartData'
+import { LiveDataTimeframeEnum } from 'hooks/useBasicChartData'
 import useTheme from 'hooks/useTheme'
 import { FormattedCoinGeckoChartData } from 'pages/TrueSight/hooks/useGetCoinGeckoChartData'
 import { TrueSightChartCategory, TrueSightTimeframe } from 'pages/TrueSight/index'

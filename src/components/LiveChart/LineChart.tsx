@@ -4,7 +4,7 @@ import { isMobile } from 'react-device-detect'
 import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import styled from 'styled-components'
 
-import { LiveDataTimeframeEnum } from 'hooks/useLiveChartData'
+import { LiveDataTimeframeEnum } from 'hooks/useBasicChartData'
 import useTheme from 'hooks/useTheme'
 import { toKInChart } from 'utils'
 

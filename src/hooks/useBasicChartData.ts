@@ -94,7 +94,7 @@ const fetchCoingeckoDataSWR = async (tokenAddresses: any, chainId: any, timeFram
   )
 }
 
-export default function useLiveChartData(tokens: (Token | null | undefined)[], timeFrame: LiveDataTimeframeEnum) {
+export default function useBasicChartData(tokens: (Token | null | undefined)[], timeFrame: LiveDataTimeframeEnum) {
   const { chainId } = useActiveWeb3React()
 
   const isReverse = useMemo(() => {
@@ -110,7 +110,11 @@ export default function useLiveChartData(tokens: (Token | null | undefined)[], t
         .map(token => (token?.isNative ? WETH[chainId || ChainId.MAINNET].address : token?.address)?.toLowerCase()),
     [tokens, chainId],
   )
-  const { data: kyberData, error: kyberError } = useSWR(
+  const {
+    data: kyberData,
+    error: kyberError,
+    isValidating: kyberLoading,
+  } = useSWR(
     tokenAddresses[0] && tokenAddresses[1]
       ? `https://price-chart.kyberswap.com/api/price-chart?chainId=${chainId}&timeWindow=${timeFrame.toLowerCase()}&tokenIn=${
           tokenAddresses[0]
@@ -135,15 +139,15 @@ export default function useLiveChartData(tokens: (Token | null | undefined)[], t
     return false
   }, [kyberError, kyberData])
 
-  const { data: coingeckoData, error: coingeckoError } = useSWR(
-    isKyberDataNotValid ? [tokenAddresses, chainId, timeFrame] : null,
-    fetchCoingeckoDataSWR,
-    {
-      shouldRetryOnError: false,
-      revalidateOnFocus: false,
-      revalidateIfStale: false,
-    },
-  )
+  const {
+    data: coingeckoData,
+    error: coingeckoError,
+    isValidating: coingeckoLoading,
+  } = useSWR(isKyberDataNotValid ? [tokenAddresses, chainId, timeFrame] : null, fetchCoingeckoDataSWR, {
+    shouldRetryOnError: false,
+    revalidateOnFocus: false,
+    revalidateIfStale: false,
+  })
 
   const chartData = useMemo(() => {
     if (!isKyberDataNotValid && kyberData && kyberData.length > 0) {
@@ -213,6 +217,6 @@ export default function useLiveChartData(tokens: (Token | null | undefined)[], t
   return {
     data: useMemo(() => (latestData ? [...chartData, latestData] : chartData), [latestData, chartData]),
     error: error,
-    loading: chartData.length === 0 && !error,
+    loading: !tokenAddresses[0] || !tokenAddresses[1] || kyberLoading || coingeckoLoading,
   }
 }
