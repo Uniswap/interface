@@ -1,3 +1,4 @@
+import { SwapWidget } from '@uniswap/widgets'
 import { useWeb3React } from '@web3-react/core'
 import {
   LARGE_MEDIA_BREAKPOINT,
@@ -53,13 +54,7 @@ const RightPanel = styled.div`
     display: none;
   }
 `
-const Widget = styled.div`
-  height: 348px;
-  width: 284px;
-  background-color: ${({ theme }) => theme.backgroundModule};
-  border-radius: 12px;
-  border: 1px solid ${({ theme }) => theme.backgroundOutline};
-`
+
 function NetworkBalances(tokenAddress: string) {
   return useNetworkTokenBalances({ address: tokenAddress })
 }
@@ -82,7 +77,7 @@ export default function TokenDetails() {
   const tokenWarning = tokenAddress ? checkWarning(tokenAddress) : null
   /* network balance handling */
   const { data: networkData } = tokenAddress ? NetworkBalances(tokenAddress) : { data: null }
-  const { chainId: connectedChainId } = useWeb3React()
+  const { chainId: connectedChainId, provider } = useWeb3React()
   const totalBalance = 4.3 // dummy data
 
   const chainsToList = useMemo(() => {
@@ -122,7 +117,7 @@ export default function TokenDetails() {
       {tokenAddress && (
         <>
           <RightPanel>
-            <Widget />
+            <SwapWidget provider={provider} />
             {tokenWarning && <TokenSafetyMessage tokenAddress={tokenAddress} warning={tokenWarning} />}
             {!loading && (
               <BalanceSummary address={tokenAddress} totalBalance={totalBalance} networkBalances={balancesByNetwork} />
