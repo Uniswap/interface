@@ -1,8 +1,8 @@
 import { Currency } from '@uniswap/sdk-core'
 import Fuse from 'fuse.js'
 import React, { useCallback, useState } from 'react'
-import { Option } from 'src/components/CurrencySelector/Option'
-import { CurrencyWithMetadata } from 'src/components/CurrencySelector/types'
+import { Option } from 'src/components/TokenSelector/Option'
+import { CurrencyWithMetadata } from 'src/components/TokenSelector/types'
 import { Modal } from 'src/components/modals/Modal'
 import TokenWarningModalContent from 'src/components/tokens/TokenWarningModalContent'
 import WarningIcon from 'src/components/tokens/WarningIcon'
@@ -21,7 +21,7 @@ interface OptionProps {
   matches: Fuse.FuseResult<Currency>['matches']
 }
 
-export function WarningOption({
+export function TokenOption({
   currencyWithMetadata,
   onPress,
   tokenWarningLevelMap,

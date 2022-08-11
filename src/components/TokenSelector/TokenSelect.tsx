@@ -3,9 +3,9 @@ import Fuse from 'fuse.js'
 import React, { Suspense, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ListRenderItemInfo } from 'react-native'
-import { FilterGroup } from 'src/components/CurrencySelector/FilterGroup'
-import { CurrencyWithMetadata } from 'src/components/CurrencySelector/types'
-import { WarningOption } from 'src/components/CurrencySelector/WarningOption'
+import { FilterGroup } from 'src/components/TokenSelector/FilterGroup'
+import { CurrencyWithMetadata } from 'src/components/TokenSelector/types'
+import { TokenOption } from 'src/components/TokenSelector/TokenOption'
 import { Flex } from 'src/components/layout'
 import { Loading } from 'src/components/loading'
 import { SearchBar } from 'src/components/SearchBar'
@@ -15,29 +15,29 @@ import { useCombinedTokenWarningLevelMap } from 'src/features/tokens/useTokenWar
 import { useActiveAccountWithThrow } from 'src/features/wallet/hooks'
 import { flattenObjectOfObjects } from 'src/utils/objects'
 import { useFilteredCurrencies } from './hooks'
-import { CurrencySearchResultList } from './SearchResults'
+import { TokenSearchResultList } from './SearchResults'
 
-interface CurrencySearchProps {
+interface TokenSearchProps {
   onSelectCurrency: (currency: Currency) => void
   otherCurrency?: Currency | null
   selectedCurrency?: Currency | null
   showNonZeroBalancesOnly?: boolean
 }
 
-export function CurrencySelect(props: CurrencySearchProps) {
+export function TokenSelect(props: TokenSearchProps) {
   return (
     // TODO: add a more sophisticated loading component here
     <Suspense fallback={<Loading />}>
-      <CurrencySelectContent {...props} />
+      <TokenSelectContent {...props} />
     </Suspense>
   )
 }
 
-export function CurrencySelectContent({
+export function TokenSelectContent({
   onSelectCurrency,
   otherCurrency,
   showNonZeroBalancesOnly,
-}: CurrencySearchProps) {
+}: TokenSearchProps) {
   const activeAccount = useActiveAccountWithThrow()
   const currenciesByChain = useAllCurrencies()
   const currencyIdToBalances = usePortfolioBalances(activeAccount.address, false)
@@ -82,7 +82,7 @@ export function CurrencySelectContent({
     ({ item }: ListRenderItemInfo<Fuse.FuseResult<CurrencyWithMetadata>>) => {
       const currencyWithMetadata = item.item
       return (
-        <WarningOption
+        <TokenOption
           currencyWithMetadata={currencyWithMetadata}
           matches={item.matches}
           tokenWarningLevelMap={tokenWarningLevelMap}
@@ -114,7 +114,7 @@ export function CurrencySelectContent({
         onReset={onClearChainFilter}
       />
 
-      <CurrencySearchResultList
+      <TokenSearchResultList
         currenciesWithMetadata={filteredCurrencies}
         renderItem={renderItem}
         searchFilter={searchFilter}

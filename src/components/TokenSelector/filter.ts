@@ -1,5 +1,5 @@
 import Fuse from 'fuse.js'
-import { CurrencyWithMetadata } from 'src/components/CurrencySelector/types'
+import { CurrencyWithMetadata } from 'src/components/TokenSelector/types'
 import { ChainId } from 'src/constants/chains'
 
 const searchOptions: Fuse.IFuseOptions<CurrencyWithMetadata> = {

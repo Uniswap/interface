@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from 'react'
 import { useAppSelector } from 'src/app/hooks'
-import { CurrencyWithMetadata } from 'src/components/CurrencySelector/types'
+import { CurrencyWithMetadata } from 'src/components/TokenSelector/types'
 import { ChainId } from 'src/constants/chains'
 import { selectFavoriteTokensSet } from 'src/features/favorites/selectors'
 import { currencyId } from 'src/utils/currencyId'

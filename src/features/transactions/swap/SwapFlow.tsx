@@ -4,7 +4,7 @@ import React, { Dispatch, useEffect, useReducer, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Keyboard, LayoutChangeEvent, TouchableWithoutFeedback } from 'react-native'
 import { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated'
-import { CurrencySelect } from 'src/components/CurrencySelector/CurrencySelect'
+import { TokenSelect } from 'src/components/TokenSelector/TokenSelect'
 import { AnimatedFlex, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { WarningAction, WarningModalType } from 'src/components/warnings/types'
@@ -179,7 +179,7 @@ export function SwapFlow({ prefilledState, onClose }: SwapFormProps) {
             onClose={onClose}
           />
         </Flex>
-        <CurrencySelect
+        <TokenSelect
           otherCurrency={
             selectingCurrencyField
               ? currencies[otherCurrencyField(selectingCurrencyField)]

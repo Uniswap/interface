@@ -2,26 +2,26 @@ import Fuse from 'fuse.js'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { FlatList, ListRenderItem, StyleSheet } from 'react-native'
-import { CurrencyWithMetadata } from 'src/components/CurrencySelector/types'
+import { CurrencyWithMetadata } from 'src/components/TokenSelector/types'
 import { ElementName } from 'src/features/telemetry/constants'
 import { currencyId } from 'src/utils/currencyId'
 import { TextButton } from '../buttons/TextButton'
 import { Flex, Inset } from '../layout'
 import { Text } from '../Text'
 
-interface CurrencySearchResultListProps {
+interface TokenSearchResultListProps {
   currenciesWithMetadata: Fuse.FuseResult<CurrencyWithMetadata>[]
   onClearSearchFilter: () => void
   renderItem: ListRenderItem<Fuse.FuseResult<CurrencyWithMetadata>> | null | undefined
   searchFilter: string | null
 }
 
-export function CurrencySearchResultList({
+export function TokenSearchResultList({
   currenciesWithMetadata,
   onClearSearchFilter,
   renderItem,
   searchFilter,
-}: CurrencySearchResultListProps) {
+}: TokenSearchResultListProps) {
   const { t } = useTranslation()
 
   return (

@@ -3,9 +3,9 @@ import { Currency } from '@uniswap/sdk-core'
 import React, { Dispatch, useEffect, useReducer, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated'
-import { CurrencySelect } from 'src/components/CurrencySelector/CurrencySelect'
 import { AnimatedFlex, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
+import { TokenSelect } from 'src/components/TokenSelector/TokenSelect'
 import { useSwapActionHandlers } from 'src/features/transactions/swap/hooks'
 import {
   CurrencyField,
@@ -117,7 +117,7 @@ export function TransferFlow({ prefilledState, onClose }: TransferFormProps) {
             onClose={onClose}
           />
         </Flex>
-        <CurrencySelect
+        <TokenSelect
           showNonZeroBalancesOnly
           onSelectCurrency={(currency: Currency) => onSelectCurrency(CurrencyField.INPUT, currency)}
         />

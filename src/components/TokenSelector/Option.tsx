@@ -3,10 +3,11 @@ import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button } from 'src/components/buttons/Button'
 import { CurrencyLogo } from 'src/components/CurrencyLogo'
-import TokenMetadata from 'src/components/CurrencySelector/TokenMetadata'
-import { CurrencyWithMetadata } from 'src/components/CurrencySelector/types'
+import { CurrencyWithMetadata } from 'src/components/TokenSelector/types'
+import { Box } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { TextWithFuseMatches } from 'src/components/text/TextWithFuseMatches'
+import { formatCurrencyAmount, formatUSDPrice } from 'src/utils/format'
 import { Flex } from '../layout'
 
 interface OptionProps {
@@ -26,7 +27,7 @@ export function Option({
 }: OptionProps) {
   const symbolMatches = matches?.filter((m) => m.key === 'symbol')
   const nameMatches = matches?.filter((m) => m.key === 'name')
-  const { currency } = currencyWithMetadata
+  const { currency, currencyAmount: amount, balanceUSD } = currencyWithMetadata
   const { t } = useTranslation()
 
   return (
@@ -55,7 +56,11 @@ export function Option({
           </Flex>
         </Flex>
         {metadataType !== 'disabled' ? (
-          <TokenMetadata currencyWithMetadata={currencyWithMetadata} />
+          <Flex row justifyContent="flex-end">
+            {amount && !amount.equalTo(0) ? (
+              <DataFormatter main={formatCurrencyAmount(amount)} sub={formatUSDPrice(balanceUSD)} />
+            ) : null}
+          </Flex>
         ) : (
           <Flex backgroundColor="translucentBackground" borderRadius="md" padding="sm">
             <Text variant="mediumLabel">{t('Not available')}</Text>
@@ -63,5 +68,28 @@ export function Option({
         )}
       </Flex>
     </Button>
+  )
+}
+
+interface DataFormatterProps {
+  pre?: React.ReactNode
+  main: React.ReactNode
+  sub?: React.ReactNode
+}
+
+/** Helper component to format rhs metadata for a given token. */
+function DataFormatter({ pre, main, sub }: DataFormatterProps) {
+  return (
+    <Flex row>
+      {pre}
+      <Box alignItems="flex-end" minWidth={70}>
+        <Text variant="body">{main}</Text>
+        {sub && (
+          <Text color="textSecondary" variant="bodySmall">
+            {sub}
+          </Text>
+        )}
+      </Box>
+    </Flex>
   )
 }
