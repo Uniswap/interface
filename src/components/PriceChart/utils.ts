@@ -4,7 +4,7 @@ import { getYForX, parse, Path } from 'react-native-redash'
 import { GraphData, PriceList } from 'src/components/PriceChart/types'
 import { dimensions } from 'src/styles/sizing'
 
-export const HEIGHT = 180
+export const HEIGHT = 300
 export const WIDTH = dimensions.fullWidth
 
 export const NUM_GRAPHS = 5

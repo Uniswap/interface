@@ -53,6 +53,26 @@ export function TokenBalances({ balance }: { balance: PortfolioBalance }) {
   )
 }
 
+export function TokenL1Balance({ balance }: { balance: PortfolioBalance }) {
+  const { t } = useTranslation()
+  const currency = balance.amount.currency
+
+  return (
+    <Flex>
+      <Text color="textSecondary" variant="subheadSmall">
+        {t('Your balance')}
+      </Text>
+
+      <Flex row alignItems="center" justifyContent="space-between">
+        <Text variant="headlineSmall">
+          {`${formatCurrencyAmount(balance.amount)}`} {currency.symbol}
+        </Text>
+        <Text variant="body">{formatUSDPrice(balance.balanceUSD)}</Text>
+      </Flex>
+    </Flex>
+  )
+}
+
 function OtherChainBalance({ currencyId: _currencyId }: { currencyId: CurrencyId }) {
   const currency = useCurrency(_currencyId)
   const balance = useSingleBalance(currency)

@@ -168,10 +168,10 @@ exports[`renders correctly 1`] = `
     }
   >
     <RNSVGSvgView
-      bbHeight={180}
+      bbHeight={300}
       bbWidth={750}
       focusable={false}
-      height={180}
+      height={300}
       style={
         Array [
           Object {
@@ -180,7 +180,7 @@ exports[`renders correctly 1`] = `
           },
           Object {
             "flex": 0,
-            "height": 180,
+            "height": 300,
             "width": 750,
           },
         ]
@@ -189,7 +189,7 @@ exports[`renders correctly 1`] = `
     >
       <RNSVGGroup>
         <RNSVGPath
-          d="M0,0 C0,0 62.5,15 62.5,15 C125,30 250,60 375,90 C500,120 625,150 687.5,165 C687.5,165 750,180 750,180"
+          d="M0,0 C0,0 62.5,25 62.5,25 C125,50 250,100 375,150 C500,200 625,250 687.5,275 C687.5,275 750,300 750,300"
           fill={0}
           propList={
             Array [
@@ -221,7 +221,7 @@ exports[`renders correctly 1`] = `
           />
         </RNSVGDefs>
         <RNSVGPath
-          d="M0,0 C0,0 62.5,15 62.5,15 C125,30 250,60 375,90 C500,120 625,150 687.5,165 C687.5,165 750,180 750,180 L 750 180 L 0 180"
+          d="M0,0 C0,0 62.5,25 62.5,25 C125,50 250,100 375,150 C500,200 625,250 687.5,275 C687.5,275 750,300 750,300 L 750 300 L 0 300"
           fill={
             Array [
               1,
