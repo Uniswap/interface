@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { configureStore } from '@reduxjs/toolkit'
+import { configureStore, Middleware } from '@reduxjs/toolkit'
 import {
   FLUSH,
   PAUSE,
@@ -58,6 +58,13 @@ export const persistConfig = {
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)
 
+const middlewares: Middleware[] = []
+if (__DEV__) {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const createDebugger = require('redux-flipper').default
+  middlewares.push(createDebugger())
+}
+
 export const store = configureStore({
   reducer: persistedReducer,
   middleware: (getDefaultMiddleware) =>
@@ -89,7 +96,8 @@ export const store = configureStore({
       dataApi.middleware,
       nftApi.middleware,
       routingApi.middleware,
-      zerionApi.middleware
+      zerionApi.middleware,
+      ...middlewares
     ),
   devTools: config.debug,
 })
