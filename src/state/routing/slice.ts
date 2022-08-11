@@ -24,7 +24,7 @@ function getRouterProvider(chainId: ChainId): BaseProvider {
   throw new Error(`Router does not support this chain (chainId: ${chainId}).`)
 }
 
-const protocols: Protocol[] = [Protocol.V2, Protocol.V3]
+const protocols: Protocol[] = [Protocol.V2, Protocol.V3, Protocol.MIXED]
 
 const DEFAULT_QUERY_PARAMS = {
   protocols: protocols.map((p) => p.toLowerCase()).join(','),
@@ -36,7 +36,7 @@ const DEFAULT_QUERY_PARAMS = {
 export const routingApi = createApi({
   reducerPath: 'routingApi',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'https://api.uniswap.org/v1/',
+    baseUrl: 'https://beta.api.uniswap.org/v1/',
   }),
   endpoints: (build) => ({
     getQuote: build.query<
