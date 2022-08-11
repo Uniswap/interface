@@ -129,7 +129,7 @@ const AccountControl = styled.div`
   }
 `
 
-const AddressLink = styled(ExternalLink)<{ hasENS: boolean; isENS: boolean }>`
+const AddressLink = styled(ExternalLink)`
   font-size: 0.825rem;
   color: ${({ theme }) => theme.deprecated_text3};
   margin-left: 1rem;
@@ -281,59 +281,21 @@ export default function AccountDetails({
                 </AccountControl>
               </AccountGroupingRow>
               <AccountGroupingRow>
-                {ENSName ? (
-                  <>
-                    <AccountControl>
-                      <div>
-                        {account && (
-                          <CopyHelper toCopy={account} iconPosition="left">
-                            <span style={{ marginLeft: '4px' }}>
-                              <Trans>Copy Address</Trans>
-                            </span>
-                          </CopyHelper>
-                        )}
-                        {chainId && account && (
-                          <AddressLink
-                            hasENS={!!ENSName}
-                            isENS={true}
-                            href={getExplorerLink(chainId, ENSName, ExplorerDataType.ADDRESS)}
-                          >
-                            <LinkIcon size={16} />
-                            <span style={{ marginLeft: '4px' }}>
-                              <Trans>View on Explorer</Trans>
-                            </span>
-                          </AddressLink>
-                        )}
-                      </div>
-                    </AccountControl>
-                  </>
-                ) : (
-                  <>
-                    <AccountControl>
-                      <div>
-                        {account && (
-                          <CopyHelper toCopy={account} iconPosition="left">
-                            <span style={{ marginLeft: '4px' }}>
-                              <Trans>Copy Address</Trans>
-                            </span>
-                          </CopyHelper>
-                        )}
-                        {chainId && account && (
-                          <AddressLink
-                            hasENS={!!ENSName}
-                            isENS={false}
-                            href={getExplorerLink(chainId, account, ExplorerDataType.ADDRESS)}
-                          >
-                            <LinkIcon size={16} />
-                            <span style={{ marginLeft: '4px' }}>
-                              <Trans>View on Explorer</Trans>
-                            </span>
-                          </AddressLink>
-                        )}
-                      </div>
-                    </AccountControl>
-                  </>
-                )}
+                <AccountControl>
+                  <div>
+                    {account && (
+                      <CopyHelper toCopy={account} iconPosition="left">
+                        <Trans>Copy Address</Trans>
+                      </CopyHelper>
+                    )}
+                    {chainId && account && (
+                      <AddressLink href={getExplorerLink(chainId, ENSName ?? account, ExplorerDataType.ADDRESS)}>
+                        <LinkIcon size={16} />
+                        <Trans>View on Explorer</Trans>
+                      </AddressLink>
+                    )}
+                  </div>
+                </AccountControl>
               </AccountGroupingRow>
             </InfoCard>
           </YourAccount>
