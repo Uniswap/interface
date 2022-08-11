@@ -287,7 +287,7 @@ export function PriceChart({ width, height }: PriceChartProps) {
       <TimeOptionsWrapper>
         <TimeOptionsContainer>
           {TIME_DISPLAYS.map(([value, display]) => (
-            <TimeButton key={display} active={activeTimePeriod === value} onClick={() => setTimePeriod(value)}>
+            <TimeButton key={display} active={timePeriod === value} onClick={() => setTimePeriod(value)}>
               {display}
             </TimeButton>
           ))}
