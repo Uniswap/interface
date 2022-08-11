@@ -1,19 +1,19 @@
-import { Currency } from '@uniswap/sdk-core'
 import Fuse from 'fuse.js'
+import { CurrencyWithMetadata } from 'src/components/CurrencySelector/types'
 import { ChainId } from 'src/constants/chains'
 
-const searchOptions: Fuse.IFuseOptions<Currency> = {
+const searchOptions: Fuse.IFuseOptions<CurrencyWithMetadata> = {
   includeMatches: true,
   isCaseSensitive: false,
   threshold: 0.5,
   // require matches to be close to the start of the word
   distance: 10,
   keys: [
-    'chainId',
-    'symbol',
-    'name',
+    'currency.chainId',
+    'currency.symbol',
+    'currency.name',
     // prioritize other fields
-    { name: 'address', weight: 0.2 },
+    { name: 'currency.address', weight: 0.2 },
   ],
   shouldSort: true,
   useExtendedSearch: true,
@@ -22,25 +22,25 @@ const searchOptions: Fuse.IFuseOptions<Currency> = {
 const getChainSearchPattern = (chain: ChainId | null) =>
   chain
     ? // exact match chain
-      { chainId: `=${chain}` }
+      { 'currency.chainId': `=${chain}` }
     : null
 
 const getAddressSearchPattern = (addressPrefix: string | null) =>
   addressPrefix && addressPrefix.startsWith('0x') && addressPrefix.length > 5
     ? // prefix-exact macth address
-      { address: `^${addressPrefix}` }
+      { 'currency.address': `^${addressPrefix}` }
     : null
 
 const getSymbolSearchPattern = (symbol: string | null) =>
   symbol
     ? // fuzzy-match symbol
-      { symbol }
+      { 'currency.symbol': symbol }
     : null
 
 const getNameSearchPattern = (name: string | null) =>
   name
     ? // fuzzy-match name
-      { name }
+      { 'currency.name': name }
     : null
 
 /**
@@ -50,12 +50,13 @@ const getNameSearchPattern = (name: string | null) =>
  * @param searchFilter filter to apply to currency adddress and symbol
  */
 export function filter(
-  currencies: Currency[] | null,
+  currenciesWithMetadata: CurrencyWithMetadata[] | null,
   chainFilter: ChainId | null,
   searchFilter: string | null
-): Fuse.FuseResult<Currency>[] {
-  if (!currencies || !currencies.length) return []
-  if (!chainFilter && !searchFilter) return currencies.map((t) => ({ item: t, refIndex: -1 }))
+): Fuse.FuseResult<CurrencyWithMetadata>[] {
+  if (!currenciesWithMetadata || !currenciesWithMetadata.length) return []
+  if (!chainFilter && !searchFilter)
+    return currenciesWithMetadata.map((t) => ({ item: t, refIndex: -1 }))
 
   let andPatterns: Fuse.Expression[] = []
   let orPatterns: Fuse.Expression[] = []
@@ -85,7 +86,7 @@ export function filter(
     ],
   }
 
-  const fuse = new Fuse(currencies, searchOptions)
+  const fuse = new Fuse(currenciesWithMetadata, searchOptions)
 
   const r = fuse.search(searchPattern)
   return r

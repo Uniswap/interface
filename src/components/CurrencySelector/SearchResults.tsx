@@ -1,8 +1,8 @@
-import { Currency } from '@uniswap/sdk-core'
 import Fuse from 'fuse.js'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { FlatList, ListRenderItem, StyleSheet } from 'react-native'
+import { CurrencyWithMetadata } from 'src/components/CurrencySelector/types'
 import { ElementName } from 'src/features/telemetry/constants'
 import { currencyId } from 'src/utils/currencyId'
 import { TextButton } from '../buttons/TextButton'
@@ -10,14 +10,14 @@ import { Flex, Inset } from '../layout'
 import { Text } from '../Text'
 
 interface CurrencySearchResultListProps {
-  currencies: Fuse.FuseResult<Currency>[]
+  currenciesWithMetadata: Fuse.FuseResult<CurrencyWithMetadata>[]
   onClearSearchFilter: () => void
-  renderItem: ListRenderItem<Fuse.FuseResult<Currency>> | null | undefined
+  renderItem: ListRenderItem<Fuse.FuseResult<CurrencyWithMetadata>> | null | undefined
   searchFilter: string | null
 }
 
 export function CurrencySearchResultList({
-  currencies,
+  currenciesWithMetadata,
   onClearSearchFilter,
   renderItem,
   searchFilter,
@@ -43,7 +43,7 @@ export function CurrencySearchResultList({
         </Flex>
       }
       ListFooterComponent={Footer}
-      data={currencies}
+      data={currenciesWithMetadata}
       keyExtractor={key}
       renderItem={renderItem}
       style={styles.list}
@@ -60,8 +60,8 @@ function Footer() {
   )
 }
 
-function key(item: Fuse.FuseResult<Currency>) {
-  return currencyId(item.item)
+function key(item: Fuse.FuseResult<CurrencyWithMetadata>) {
+  return currencyId(item.item.currency)
 }
 
 const styles = StyleSheet.create({

@@ -1,40 +1,20 @@
-import { Currency } from '@uniswap/sdk-core'
-import React, { useMemo } from 'react'
-import { ActivityIndicator } from 'react-native'
+import React from 'react'
+import { CurrencyWithMetadata } from 'src/components/CurrencySelector/types'
 import { Box } from 'src/components/layout/Box'
 import { Text } from 'src/components/Text'
-import { ChainId } from 'src/constants/chains'
-import { useActiveChainIds } from 'src/features/chains/utils'
-import { useAllBalancesByChainId } from 'src/features/dataApi/balances'
-import { useActiveAccount } from 'src/features/wallet/hooks'
-import { currencyId } from 'src/utils/currencyId'
 import { formatCurrencyAmount, formatUSDPrice } from 'src/utils/format'
 import { Flex } from '../layout'
 
 interface OptionProps {
-  currency: Currency
+  currencyWithMetadata: CurrencyWithMetadata
 }
 
-export default function TokenMetadata({ currency }: OptionProps) {
-  const { balances, loading: balanceLoading } = useAllBalancesByChainId(
-    useActiveAccount()?.address,
-    useActiveChainIds()
-  )
-
-  const balance = useMemo(
-    () => balances[currency.chainId as ChainId]?.[currencyId(currency)],
-    [balances, currency]
-  )
-
+export default function TokenMetadata({ currencyWithMetadata }: OptionProps) {
+  const { currencyAmount: amount, balanceUSD } = currencyWithMetadata
   return (
     <Flex row justifyContent="flex-end">
-      {balanceLoading ? (
-        <ActivityIndicator size={20} />
-      ) : balance?.amount && !balance.amount.equalTo(0) ? (
-        <DataFormatter
-          main={formatCurrencyAmount(balance.amount)}
-          sub={formatUSDPrice(balance.balanceUSD)}
-        />
+      {amount && !amount.equalTo(0) ? (
+        <DataFormatter main={formatCurrencyAmount(amount)} sub={formatUSDPrice(balanceUSD)} />
       ) : null}
     </Flex>
   )

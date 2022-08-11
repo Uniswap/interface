@@ -2,6 +2,7 @@ import { Currency } from '@uniswap/sdk-core'
 import Fuse from 'fuse.js'
 import React, { useCallback, useState } from 'react'
 import { Option } from 'src/components/CurrencySelector/Option'
+import { CurrencyWithMetadata } from 'src/components/CurrencySelector/types'
 import { Modal } from 'src/components/modals/Modal'
 import TokenWarningModalContent from 'src/components/tokens/TokenWarningModalContent'
 import WarningIcon from 'src/components/tokens/WarningIcon'
@@ -14,14 +15,20 @@ import { currencyId } from 'src/utils/currencyId'
 import { Flex } from '../layout'
 
 interface OptionProps {
-  currency: Currency
+  currencyWithMetadata: CurrencyWithMetadata
   onPress: () => void
   tokenWarningLevelMap: TokenWarningLevelMap
   matches: Fuse.FuseResult<Currency>['matches']
 }
 
-export function WarningOption({ currency, onPress, tokenWarningLevelMap, matches }: OptionProps) {
+export function WarningOption({
+  currencyWithMetadata,
+  onPress,
+  tokenWarningLevelMap,
+  matches,
+}: OptionProps) {
   const [showWarningModal, setShowWarningModal] = useState(false)
+  const { currency } = currencyWithMetadata
   const id = currencyId(currency.wrapped)
 
   const tokenWarningLevel =
@@ -62,7 +69,7 @@ export function WarningOption({ currency, onPress, tokenWarningLevelMap, matches
         />
       </Modal>
       <Option
-        currency={currency}
+        currencyWithMetadata={currencyWithMetadata}
         icon={dismissed ? null : <WarningIcon tokenWarningLevel={tokenWarningLevel} />}
         matches={matches}
         metadataType={tokenWarningLevel === TokenWarningLevel.BLOCKED ? 'disabled' : 'balance'}

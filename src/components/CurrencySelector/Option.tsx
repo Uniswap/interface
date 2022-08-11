@@ -1,25 +1,32 @@
-import { Currency } from '@uniswap/sdk-core'
 import Fuse from 'fuse.js'
 import React, { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button } from 'src/components/buttons/Button'
 import { CurrencyLogo } from 'src/components/CurrencyLogo'
 import TokenMetadata from 'src/components/CurrencySelector/TokenMetadata'
+import { CurrencyWithMetadata } from 'src/components/CurrencySelector/types'
 import { Text } from 'src/components/Text'
 import { TextWithFuseMatches } from 'src/components/text/TextWithFuseMatches'
 import { Flex } from '../layout'
 
 interface OptionProps {
-  currency: Currency
+  currencyWithMetadata: CurrencyWithMetadata
   onPress: () => void
-  matches: Fuse.FuseResult<Currency>['matches']
+  matches: Fuse.FuseResult<CurrencyWithMetadata>['matches']
   metadataType: 'balance' | 'disabled'
   icon?: ReactElement | null
 }
 
-export function Option({ currency, onPress, matches, metadataType, icon }: OptionProps) {
+export function Option({
+  currencyWithMetadata,
+  onPress,
+  matches,
+  metadataType,
+  icon,
+}: OptionProps) {
   const symbolMatches = matches?.filter((m) => m.key === 'symbol')
   const nameMatches = matches?.filter((m) => m.key === 'name')
+  const { currency } = currencyWithMetadata
   const { t } = useTranslation()
 
   return (
@@ -48,7 +55,7 @@ export function Option({ currency, onPress, matches, metadataType, icon }: Optio
           </Flex>
         </Flex>
         {metadataType !== 'disabled' ? (
-          <TokenMetadata currency={currency} />
+          <TokenMetadata currencyWithMetadata={currencyWithMetadata} />
         ) : (
           <Flex backgroundColor="translucentBackground" borderRadius="md" padding="sm">
             <Text variant="mediumLabel">{t('Not available')}</Text>
