@@ -111,13 +111,13 @@ const CurrencySelect = styled(ButtonGray)<{
 `
 const InputCurrencySelect = styled(CurrencySelect)<{ phase0Flag: boolean }>`
   background-color: ${({ theme, selected, phase0Flag }) =>
-    phase0Flag && (selected ? theme.backgroundContainer : theme.accentAction)};
+    phase0Flag && (selected ? theme.backgroundModule : theme.accentAction)};
   :focus,
   :hover {
     background-color: ${({ selected, theme, phase0Flag }) =>
       selected
         ? phase0Flag
-          ? theme.backgroundAction
+          ? theme.backgroundInteractive
           : theme.deprecated_bg3
         : darken(0.05, theme.deprecated_primary1)};
   }

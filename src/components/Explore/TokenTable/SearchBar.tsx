@@ -23,13 +23,13 @@ const SearchInput = styled.input<{ expanded: boolean }>`
   height: 100%;
   width: ${({ expanded }) => (expanded ? '100%' : '52px')};
   font-size: 16px;
-  padding-left: 18px;
+  padding-left: 35px;
   color: ${({ theme }) => theme.textPrimary};
   transition: width 0.75s cubic-bezier(0, 0.795, 0, 1);
 
   :hover {
     cursor: ${({ expanded }) => !expanded && 'pointer'};
-    background-color: ${({ theme }) => theme.backgroundContainer};
+    background-color: ${({ theme }) => theme.backgroundModule};
   }
 
   :focus {

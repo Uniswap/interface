@@ -7,7 +7,7 @@ describe('Swap', () => {
     cy.get('#swap-currency-input .token-amount-input').should('have.value', '')
     cy.get('#swap-currency-input .token-symbol-container').should('contain.text', 'ETH')
     cy.get('#swap-currency-output .token-amount-input').should('not.have.value')
-    cy.get('#swap-currency-output .token-symbol-container').should('contain.text', 'Select a token')
+    cy.get('#swap-currency-output .token-symbol-container').should('contain.text', 'Select token')
   })
 
   it('can enter an amount into input', () => {
