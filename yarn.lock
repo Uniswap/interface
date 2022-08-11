@@ -3159,11 +3159,6 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@nomiclabs/hardhat-ethers@^2.0.6":
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/@nomiclabs/hardhat-ethers/-/hardhat-ethers-2.1.0.tgz#9b7dc94d669ad9dc286b94f6f2f1513118c7027b"
-  integrity sha512-vlW90etB3675QWG7tMrHaDoTa7ymMB7irM4DAQ98g8zJoe9YqEggeDnbO6v5b+BLth/ty4vN6Ko/kaqRN1krHw==
-
 "@npmcli/move-file@^1.0.1":
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/@npmcli/move-file/-/move-file-1.1.2.tgz#1a82c3e372f7cae9253eb66d72543d6b8685c674"
@@ -3807,18 +3802,6 @@
   resolved "https://registry.yarnpkg.com/@types/array.prototype.flatmap/-/array.prototype.flatmap-1.2.2.tgz#9041c2dc907d583ffb80b8882a782b42436d57c1"
   integrity sha512-dto5M/8GxPzjaScvQeft2IG0EkoZZfPg2+1noM2BWiU1VR2zsGHf76LonTOnLQKDuJlKDLzKaru4b+5Sci0Yhg==
 
-"@types/async-retry@^1.4.2":
-  version "1.4.3"
-  resolved "https://registry.yarnpkg.com/@types/async-retry/-/async-retry-1.4.3.tgz#8b78f6ce88d97e568961732cdd9e5325cdc8c246"
-  integrity sha512-B3C9QmmNULVPL2uSJQ088eGWTNPIeUk35hca6CV8rRDJ8GXuQJP5CCVWA1ZUCrb9xYP7Js/RkLqnNNwKhe+Zsw==
-  dependencies:
-    "@types/retry" "*"
-
-"@types/await-timeout@^0.3.1":
-  version "0.3.1"
-  resolved "https://registry.yarnpkg.com/@types/await-timeout/-/await-timeout-0.3.1.tgz#3a0baafc3a96c7a14447a4dcfdcc76b21ce97c3b"
-  integrity sha512-H5PzROT4KuP7XQDua13Iw8did//OCKAZ/3TL15DjvMzDonrk4HvhH1+tLko96f2guU6XaD3AoqRa49ZOwbwNig==
-
 "@types/babel__core@^7.0.0", "@types/babel__core@^7.1.7":
   version "7.1.15"
   resolved "https://registry.yarnpkg.com/@types/babel__core/-/babel__core-7.1.15.tgz#2ccfb1ad55a02c83f8e0ad327cbc332f55eb1024"
@@ -3863,20 +3846,6 @@
   version "5.1.0"
   resolved "https://registry.yarnpkg.com/@types/bn.js/-/bn.js-5.1.0.tgz#32c5d271503a12653c62cf4d2b45e6eab8cebc68"
   integrity sha512-QSSVYj7pYFN49kW77o2s9xTCwZ8F2xLbjLLSEVh8D2F4JUhZtPAGOFLTD+ffqksBx/u4cE/KImFjyhqCjn/LIA==
-  dependencies:
-    "@types/node" "*"
-
-"@types/bunyan-blackhole@^0.2.2":
-  version "0.2.2"
-  resolved "https://registry.yarnpkg.com/@types/bunyan-blackhole/-/bunyan-blackhole-0.2.2.tgz#469e58c5d129027a9e08bcf9a36232a69b6ad011"
-  integrity sha512-nbuxFn2FVw1AAT1h6shgluwz1cgpLKaMBYbEZcMU69Jb1UvSsXcwRiIg+FP4+/JjEUp/uPYLC+twWpfCAaVN1g==
-  dependencies:
-    "@types/bunyan" "*"
-
-"@types/bunyan@*", "@types/bunyan@^1.8.6":
-  version "1.8.7"
-  resolved "https://registry.yarnpkg.com/@types/bunyan/-/bunyan-1.8.7.tgz#63cc65b5ecff6217d1509409a575e7b991f80831"
-  integrity sha512-jaNt6xX5poSmXuDAkQrSqx2zkR66OrdRDuVnU8ldvn3k/Ci/7Sf5nooKspQWimDnw337Bzt/yirqSThTjvrHkg==
   dependencies:
     "@types/node" "*"
 
@@ -4264,7 +4233,7 @@
     "@types/lingui__core" "*"
     "@types/react" "*"
 
-"@types/lodash@^4.14.168", "@types/lodash@^4.14.172":
+"@types/lodash@^4.14.172":
   version "4.14.182"
   resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.182.tgz#05301a4d5e62963227eaafe0ce04dd77c54ea5c2"
   integrity sha512-/THyiqyQAP9AfARo4pF+aCGcyiQ94tX/Is2I7HofNRqoYLgN1PBoOWu2/zTA5zMxzP5EFutMtWtGAFRKUe961Q==
@@ -4422,11 +4391,6 @@
   dependencies:
     "@types/node" "*"
 
-"@types/retry@*":
-  version "0.12.1"
-  resolved "https://registry.yarnpkg.com/@types/retry/-/retry-0.12.1.tgz#d8f1c0d0dc23afad6dc16a9e993a0865774b4065"
-  integrity sha512-xoDlM2S4ortawSWORYqsdU+2rxdh4LRW9ytc3zmT37RIKQh6IHyKwwtKhKis9ah8ol07DCkZxPt8BBvPjC6v4g==
-
 "@types/scheduler@*":
   version "0.16.2"
   resolved "https://registry.yarnpkg.com/@types/scheduler/-/scheduler-0.16.2.tgz#1a62f89525723dde24ba1b01b092bf5df8ad4d39"
@@ -4458,11 +4422,6 @@
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/@types/stack-utils/-/stack-utils-2.0.1.tgz#20f18294f797f2209b5f65c8e3b5c8e8261d127c"
   integrity sha512-Hl219/BT5fLAaz6NDkSuhzasy49dwQS/DSdu4MdggFB8zcXv7vflBI3xp7FEmkmdDkBUI2bPUNeMttp2knYdxw==
-
-"@types/stats-lite@^2.2.0":
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/@types/stats-lite/-/stats-lite-2.2.0.tgz#bc8190bf9dfa1e16b89eaa2b433c99dff0804de9"
-  integrity sha512-YV6SS4QC+pbzqjMIV8qVSTDOOazgKBLTVaN+7PfuxELjz/eyzc20KwDVGPrbHt2OcYMA7K2ezLB45Cp6DpNOSQ==
 
 "@types/styled-components@*", "@types/styled-components@^5.1.25":
   version "5.1.25"
@@ -4742,10 +4701,10 @@
   resolved "https://registry.yarnpkg.com/@uniswap/redux-multicall/-/redux-multicall-1.1.5.tgz#7c097047d489c1624038c0fbbd3d76dc705bf153"
   integrity sha512-RSMhfuAX2rPimnevvAAiwoyV2bCGTIKhVHEBOLTMF+oVxYcKKe9hCwx/cffY12t/usXWHlEJ//V7JoxTKI1Lyg==
 
-"@uniswap/router-sdk@^1.0.6", "@uniswap/router-sdk@^1.2.0":
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/@uniswap/router-sdk/-/router-sdk-1.2.0.tgz#3dee393c422f531483d18f8bde29239fdaa8e153"
-  integrity sha512-LSA+Q8gNvYTudwaC1Sgnl7pZasLSheodpjZD6MYkcblusDdvw7fajv6AdJqOjHulsaQwr3WM3F+8JgThakeUPA==
+"@uniswap/router-sdk@^1.3.0":
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@uniswap/router-sdk/-/router-sdk-1.3.0.tgz#8c17e957f65099a18dda536cd05fc34e779628aa"
+  integrity sha512-T6kXQFXrAkIHfCCmhyW+0xgUyuFVepL9rlwG9+MjnfVtmGIBssbMzyFKGk5HGQYlk6WQrm630W1j87kdfXpZ/Q==
   dependencies:
     "@ethersproject/abi" "^5.5.0"
     "@uniswap/sdk-core" "^3.0.1"
@@ -4765,21 +4724,14 @@
     tiny-invariant "^1.1.0"
     toformat "^2.0.0"
 
-"@uniswap/smart-order-router@^2.8.2":
-  version "2.8.2"
-  resolved "https://registry.yarnpkg.com/@uniswap/smart-order-router/-/smart-order-router-2.8.2.tgz#cb521e1e02351ab18b35ca50f7a6c6f3eec2dc55"
-  integrity sha512-wV34O6QkRJPz52VClzCKmJ1wUY/WrIAC/L6oifySeJjqNh92xQ+HfNjZav+NPAjkz6GUD4UN4qCghi5wrR62ZA==
+"@uniswap/smart-order-router@^2.9.2":
+  version "2.9.2"
+  resolved "https://registry.yarnpkg.com/@uniswap/smart-order-router/-/smart-order-router-2.9.2.tgz#3c9296b5b3821e191b6759a870330e4b10a9e9df"
+  integrity sha512-t+ruGvZTOvOJcVjxNPSU4o3GuPU/RYHr8KSKZlAHkZfusjbWrOLrO/aHzy/ncoRMNQz1UMBWQ2n3LDzqBxbTkA==
   dependencies:
-    "@nomiclabs/hardhat-ethers" "^2.0.6"
-    "@types/async-retry" "^1.4.2"
-    "@types/await-timeout" "^0.3.1"
-    "@types/bunyan" "^1.8.6"
-    "@types/bunyan-blackhole" "^0.2.2"
-    "@types/lodash" "^4.14.168"
-    "@types/stats-lite" "^2.2.0"
     "@uniswap/default-token-list" "^2.0.0"
-    "@uniswap/router-sdk" "^1.2.0"
-    "@uniswap/swap-router-contracts" "1.2.0"
+    "@uniswap/router-sdk" "^1.3.0"
+    "@uniswap/swap-router-contracts" "^1.3.0"
     "@uniswap/token-lists" "^1.0.0-beta.25"
     "@uniswap/v2-sdk" "^3.0.1"
     "@uniswap/v3-sdk" "^3.7.0"
@@ -4788,11 +4740,9 @@
     axios "^0.21.1"
     bunyan "^1.8.15"
     bunyan-blackhole "^1.1.1"
-    bunyan-debug-stream "^2.0.0"
     ethers "^5.6.1"
     graphql "^15.5.0"
     graphql-request "^3.4.0"
-    hardhat "^2.9.6"
     lodash "^4.17.21"
     mnemonist "^0.38.3"
     node-cache "^5.1.2"
@@ -4809,22 +4759,10 @@
     "@uniswap/v3-periphery" "1.3.0"
     hardhat-watcher "^2.1.1"
 
-"@uniswap/swap-router-contracts@1.2.0":
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/@uniswap/swap-router-contracts/-/swap-router-contracts-1.2.0.tgz#9fd3be07c40c697cf71804ab450ca7d6c028401d"
-  integrity sha512-wau6xVIrXY/7EQc3uB+A1HlRfxnewS4MAYOgcJBHGHG4OVy+X0WAl8mILC52Xx+y6vx6uQHOwH+sT3SaWi5EGw==
-  dependencies:
-    "@openzeppelin/contracts" "3.4.1-solc-0.7-2"
-    "@uniswap/v2-core" "1.0.1"
-    "@uniswap/v3-core" "1.0.0"
-    "@uniswap/v3-periphery" "1.3.0"
-    dotenv "^14.2.0"
-    hardhat-watcher "^2.1.1"
-
-"@uniswap/swap-router-contracts@^1.2.1":
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/@uniswap/swap-router-contracts/-/swap-router-contracts-1.2.1.tgz#223c8b6672b7754080d95ca917763d98feb5e696"
-  integrity sha512-aRNiZYIOpJ0uYxujPxvQsUEuNJWLC4bvnmU40TlNej1rGWHPyDL1PmnVzebu8UpW9EGeKlvDjsNGTyo53dih9Q==
+"@uniswap/swap-router-contracts@^1.2.1", "@uniswap/swap-router-contracts@^1.3.0":
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@uniswap/swap-router-contracts/-/swap-router-contracts-1.3.0.tgz#8d555ca6d74b888d6e02a26ebb806ce315605f1f"
+  integrity sha512-iKvCuRkHXEe0EMjOf8HFUISTIhlxI57kKFllf3C3PUIE0HmwxrayyoflwAz5u/TRsFGYqJ9IjX2UgzLCsrNa5A==
   dependencies:
     "@openzeppelin/contracts" "3.4.2-solc-0.7"
     "@uniswap/v2-core" "1.0.1"
@@ -6956,14 +6894,6 @@ bunyan-blackhole@^1.1.1:
   dependencies:
     stream-blackhole "^1.0.3"
 
-bunyan-debug-stream@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/bunyan-debug-stream/-/bunyan-debug-stream-2.0.0.tgz#b9593e38753f594e3f9db3eb2fdebdc2af147a9f"
-  integrity sha512-Ovl43CJ7nUwalLzdXc6E1nGIy6ift9Z/QpYXUtsjpDAg35ZFKXifKNZyfpMGuN3N7ijLLqbnxPsMMHsXDdXa9A==
-  dependencies:
-    colors "^1.0.3"
-    exception-formatter "^1.0.4"
-
 bunyan@^1.8.15:
   version "1.8.15"
   resolved "https://registry.yarnpkg.com/bunyan/-/bunyan-1.8.15.tgz#8ce34ca908a17d0776576ca1b2f6cbd916e93b46"
@@ -7621,7 +7551,7 @@ colorette@^1.2.1, colorette@^1.2.2:
   resolved "https://registry.yarnpkg.com/colorette/-/colorette-1.4.0.tgz#5190fbb87276259a86ad700bff2c6d6faa3fca40"
   integrity sha512-Y2oEozpomLn7Q3HFP7dpww7AtMJplbM9lGZP6RDfHqmbeRjiwRg4n6VM6j4KLmRke85uWEI7JqF17f3pqdRA0g==
 
-colors@1.0.3, colors@^1.0.3:
+colors@1.0.3:
   version "1.0.3"
   resolved "https://registry.npmjs.org/colors/-/colors-1.0.3.tgz"
   integrity sha1-BDP0TYCWgP3rYO0mDxsMJi6CpAs=
@@ -10015,13 +9945,6 @@ evp_bytestokey@^1.0.0, evp_bytestokey@^1.0.3:
   dependencies:
     md5.js "^1.3.4"
     safe-buffer "^5.1.1"
-
-exception-formatter@^1.0.4:
-  version "1.0.7"
-  resolved "https://registry.yarnpkg.com/exception-formatter/-/exception-formatter-1.0.7.tgz#3291616b86fceabefa97aee6a4708032c6e3b96d"
-  integrity sha512-zV45vEsjytJrwfGq6X9qd1Ll56cW4NC2mhCO6lqwMk4ZpA1fZ6C3UiaQM/X7if+7wZFmCgss3ahp9B/uVFuLRw==
-  dependencies:
-    colors "^1.0.3"
 
 exec-sh@^0.3.2:
   version "0.3.6"
