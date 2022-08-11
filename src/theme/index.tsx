@@ -8,6 +8,9 @@ import styled, {
   ThemeProvider as StyledComponentsThemeProvider,
 } from 'styled-components/macro'
 
+import { cssStringFromTheme } from '../nft/css/cssStringFromTheme'
+import { darkTheme } from '../nft/themes/darkTheme'
+import { lightTheme } from '../nft/themes/lightTheme'
 import { useIsDarkMode } from '../state/user/hooks'
 import { colors as ColorsPalette, colorsDark, colorsLight } from './colors'
 import { Colors, ThemeColors } from './styled'
@@ -340,5 +343,9 @@ html {
 
 a {
  color: ${({ theme }) => theme.deprecated_blue1}; 
+}
+
+:root {
+  ${({ theme }) => (theme.darkMode ? cssStringFromTheme(darkTheme) : cssStringFromTheme(lightTheme))}
 }
 `
