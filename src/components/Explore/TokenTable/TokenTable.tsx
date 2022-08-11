@@ -45,6 +45,7 @@ const NoTokenDisplay = styled.div`
 `
 const TokenRowsContainer = styled.div`
   padding: 4px 0px;
+  width: 100%;
 `
 
 function useFilteredTokens(addresses: string[]) {
