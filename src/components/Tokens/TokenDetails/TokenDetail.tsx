@@ -12,7 +12,8 @@ import { useCurrency, useIsUserAddedToken, useToken } from 'hooks/Tokens'
 import { useAtomValue } from 'jotai/utils'
 import { ReactElement, useCallback } from 'react'
 import { useState } from 'react'
-import { ArrowLeft, Heart } from 'react-feather'
+import { ArrowLeft, Copy, Heart, TrendingUp } from 'react-feather'
+import { usePreloadedQuery } from 'react-relay'
 import { Link, useNavigate } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import { ClickableStyle, CopyContractAddress } from 'theme'
@@ -269,7 +270,7 @@ export function LoadedTokenDetail({ address }: { address: string }) {
   const networkLabel = chainInfo?.label
   const networkBadgebackgroundColor = chainInfo?.backgroundColor
   const truncatedTokenAddress = `${address.slice(0, 4)}...${address.slice(-3)}`
-  const tokenDetailsData = useLazyLoadQuery(tokenDetailsStatsQuery, {
+  const tokenDetailsData = usePreloadedQuery(tokenDetailsStatsQuery, {
     contract: {
       address,
       chain: token ? CHAIN_SUBGRAPH_URL[token.chainId] : CHAIN_SUBGRAPH_URL[SupportedChainId.MAINNET],
