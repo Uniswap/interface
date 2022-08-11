@@ -54,7 +54,7 @@ function guesstimateGas(trade: Trade<Currency, Currency, TradeType> | undefined)
 }
 
 const MIN_AUTO_SLIPPAGE_TOLERANCE = new Percent(5, 1000) // 0.5%
-const POLYGON_MIN_AUTO_SLIPPAGE_TOLERANCE = new Percent(10, 1000) // 1%
+const POLYGON_MIN_AUTO_SLIPPAGE_TOLERANCE = new Percent(1, 100) // 1%
 const MAX_AUTO_SLIPPAGE_TOLERANCE = new Percent(25, 100) // 25%
 
 /**
