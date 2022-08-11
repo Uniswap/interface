@@ -113,8 +113,8 @@ export default function ProAmmPoolList({
         case SORT_FIELD.FEES:
           return poolA.volumeUSD > poolB.volumeUSD ? (sortDirection ? -1 : 1) * 1 : (sortDirection ? -1 : 1) * -1
         case SORT_FIELD.APR:
-          const a = poolA.volumeUSD / poolA.tvlUSD
-          const b = poolB.volumeUSD / poolB.tvlUSD
+          const a = poolA.apr
+          const b = poolB.apr
           return a > b ? (sortDirection ? -1 : 1) * 1 : (sortDirection ? -1 : 1) * -1
         default:
           break
