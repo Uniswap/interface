@@ -1,4 +1,4 @@
-export default {
+const config = {
   catalogs: [
     {
       path: '<rootDir>/src/locales/{locale}',
@@ -19,3 +19,5 @@ export default {
   runtimeConfigModule: ['@lingui/core', 'i18n'],
   sourceLocale: 'en-US',
 }
+
+export default config

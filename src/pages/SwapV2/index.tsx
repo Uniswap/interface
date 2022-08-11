@@ -656,7 +656,7 @@ export default function Swap({ history }: RouteComponentProps) {
   }, [qs, history])
 
   // swap?inputCurrency=xxx&outputCurrency=yyy. xxx yyy not exist in chain => remove params => select default pair
-  const checkParamWrongDebounce = useCallback(debounce(checkParamWrong, 300), [])
+  const checkParamWrongDebounce = useMemo(() => debounce(checkParamWrong, 300), [checkParamWrong])
   useEffect(() => {
     checkParamWrongDebounce()
   }, [chainId, checkParamWrongDebounce])

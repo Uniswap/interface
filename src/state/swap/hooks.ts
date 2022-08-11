@@ -4,7 +4,7 @@ import { ChainId, Currency, CurrencyAmount, TradeType } from '@kyberswap/ks-sdk-
 import { t } from '@lingui/macro'
 import JSBI from 'jsbi'
 import { ParsedQs } from 'qs'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { BAD_RECIPIENT_ADDRESSES, DEFAULT_OUTPUT_TOKEN_BY_CHAIN } from 'constants/index'
@@ -346,6 +346,9 @@ export const useDefaultsFromURLSearch = ():
 
   const { currencies } = useDerivedSwapInfo()
 
+  const currenciesRef = useRef(currencies)
+  currenciesRef.current = currencies
+
   useEffect(() => {
     if (!chainId) {
       return
@@ -356,8 +359,8 @@ export const useDefaultsFromURLSearch = ():
     const outputCurrencyAddress = DEFAULT_OUTPUT_TOKEN_BY_CHAIN[chainId]?.address || ''
 
     // symbol or address of the input
-    const storedInputValue = getCurrencySymbolOrAddress(currencies[Field.INPUT])
-    const storedOutputValue = getCurrencySymbolOrAddress(currencies[Field.OUTPUT])
+    const storedInputValue = getCurrencySymbolOrAddress(currenciesRef.current[Field.INPUT])
+    const storedOutputValue = getCurrencySymbolOrAddress(currenciesRef.current[Field.OUTPUT])
 
     const parsedInputValue = parsed[Field.INPUT].currencyId // default inputCurrency is the native token
     const parsedOutputValue = parsed[Field.OUTPUT].currencyId || outputCurrencyAddress
