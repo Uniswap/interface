@@ -31,6 +31,7 @@ import { call, takeEvery } from 'typed-redux-saga'
 
 // TODO: remove hardcoded L1 estimates when trade route endpoint can provide accurate Optimism gas estimation
 const OPTIMISM_L1_GAS_LIMIT_ESTIMATES: Partial<Record<TransactionType, string>> = {
+  [TransactionType.Send]: '4000',
   [TransactionType.Approve]: '5000',
   [TransactionType.Swap]: '7200',
 }
@@ -161,14 +162,18 @@ export function* estimateGas({ payload }: ReturnType<typeof estimateGasAction>) 
         const { params, transactionStateDispatch } = payload
         const provider = yield* call(getProvider, params.chainId)
 
-        const transferData = yield* call(estimateTransferGasLimit, provider, params)
+        const transferFeeInfo = yield* call(estimateTransferGasFee, provider, params)
+        const optimismL1Fee = yield* call(
+          estimateOptimismL1Fee,
+          params.chainId,
+          TransactionType.Send
+        )
 
         transactionStateDispatch(
-          updateGasEstimates({
-            gasEstimates: {
-              [TransactionType.Send]: transferData.gasFeeEstimate[TransactionType.Send],
-            },
-          })
+          updateGasEstimates({ gasEstimates: { [TransactionType.Send]: transferFeeInfo } })
+        )
+        transactionStateDispatch(
+          updateOptimismL1Fee({ optimismL1Fee: { [TransactionType.Send]: optimismL1Fee } })
         )
         break
       }
@@ -241,19 +246,19 @@ function* estimateApproveGasFee(params: EstiamteApproveGasInfo) {
   }
 }
 
-function* estimateTransferGasLimit(provider: providers.Provider, params: TransferTokenParams) {
+function* estimateTransferGasFee(provider: providers.Provider, params: TransferTokenParams) {
   const { chainId } = params
 
   const { transferTxRequest } = yield* call(prepareTransfer, params, true)
 
-  const transferGasInfo = yield* call(
+  const transferFeeInfo = yield* call(
     computeGasFee,
     chainId,
     transferTxRequest,
     provider as providers.JsonRpcProvider
   )
 
-  return { gasFeeEstimate: { [TransactionType.Send]: transferGasInfo } }
+  return transferFeeInfo
 }
 
 function* estimateSwapGasInfo(params: EstimateSwapGasInfo) {

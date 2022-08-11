@@ -1,4 +1,5 @@
 import { Currency } from '@uniswap/sdk-core'
+import { BigNumber } from 'ethers'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AnyAction } from 'redux'
@@ -15,8 +16,11 @@ import { useNFT } from 'src/features/nfts/hooks'
 import { NFTAsset } from 'src/features/nfts/types'
 import { useCurrency } from 'src/features/tokens/useCurrency'
 import { useAllTransactionsBetweenAddresses } from 'src/features/transactions/hooks'
+import { GasSpeed } from 'src/features/transactions/swap/hooks'
 import {
   CurrencyField,
+  GasFeeByTransactionType,
+  OptimismL1FeeEstimate,
   showNewAddressWarningModal,
   showNoBalancesWarningModal,
   TransactionState,
@@ -278,6 +282,23 @@ export function useUpdateTransferGasEstimate(
     transactionStateDispatch,
     assetType,
   ])
+}
+
+export function useTransferGasFee(
+  gasFeeEstimate: GasFeeByTransactionType | undefined,
+  gasSpeedPreference: GasSpeed,
+  optimismL1Fee?: OptimismL1FeeEstimate
+) {
+  const txFee = gasFeeEstimate?.[TransactionType.Send]?.fee[gasSpeedPreference]
+  const optimismL1TransferFee = optimismL1Fee?.[TransactionType.Send]
+
+  return useMemo(() => {
+    if (!txFee) return undefined
+
+    return optimismL1TransferFee
+      ? BigNumber.from(txFee).add(optimismL1TransferFee).toString()
+      : txFee
+  }, [txFee, optimismL1TransferFee])
 }
 
 export function useRecipientHasZeroBalances(recipient: string | undefined, chainId: ChainId) {

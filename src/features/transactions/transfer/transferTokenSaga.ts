@@ -7,8 +7,9 @@ import { getContractManager, getProvider } from 'src/app/walletContext'
 import { AssetType } from 'src/entities/assets'
 import { ContractManager } from 'src/features/contracts/ContractManager'
 import { FeeInfo } from 'src/features/gas/types'
-import { getTxGasPriceSettings } from 'src/features/gas/utils'
+import { getTxGasSettings } from 'src/features/gas/utils'
 import { sendTransaction } from 'src/features/transactions/sendTransaction'
+import { formatAsHexString } from 'src/features/transactions/swap/utils'
 import {
   TransferCurrencyParams,
   TransferNFTParams,
@@ -70,12 +71,13 @@ export function* prepareTransfer(
       break
   }
 
+  // feeInfo will be undefined when prepareTransfer is called in estimateTransferGasFee
+  // if prepareTransfer is not being called as part of the estimation saga, then feeInfo should always be defined
   if (!prepareForEstimation) {
-    // Should never throw because we don't dispatch the action for actual transactions without this param
     if (!feeInfo) {
       throw new Error('No fee info provided for transfer')
     }
-    transferTxRequest = setTxGasParams(transferTxRequest, feeInfo)
+    transferTxRequest = setTxGasParamsAndHexifyValues(transferTxRequest, feeInfo)
   }
 
   return { transferTxRequest, typeInfo }
@@ -164,9 +166,18 @@ function validateTransferAmount(amountInWei: string, currentBalance: BigNumberis
   }
 }
 
-export function setTxGasParams(transferTxRequest: providers.TransactionRequest, feeInfo: FeeInfo) {
-  const gasPriceSettings = getTxGasPriceSettings(feeInfo)
-  return { ...transferTxRequest, ...gasPriceSettings, gasLimit: feeInfo.gasLimit }
+export function setTxGasParamsAndHexifyValues(
+  transferTxRequest: providers.TransactionRequest,
+  feeInfo: FeeInfo
+) {
+  const gasSettings = getTxGasSettings(feeInfo)
+  const value = transferTxRequest.value
+    ? formatAsHexString(transferTxRequest.value.toString())
+    : undefined
+  const nonce = transferTxRequest.nonce
+    ? formatAsHexString(transferTxRequest.nonce.toString())
+    : undefined
+  return { ...transferTxRequest, nonce, value, ...gasSettings }
 }
 
 export const {

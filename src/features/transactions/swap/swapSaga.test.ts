@@ -7,7 +7,7 @@ import { getProvider } from 'src/app/walletContext'
 import { NATIVE_ADDRESS, SWAP_ROUTER_ADDRESSES } from 'src/constants/addresses'
 import { ChainId } from 'src/constants/chains'
 import { FeeType } from 'src/features/gas/types'
-import { getTxGasPriceSettings } from 'src/features/gas/utils'
+import { getTxGasSettings } from 'src/features/gas/utils'
 import { NativeCurrency } from 'src/features/tokenLists/NativeCurrency'
 import { ApproveParams, maybeApprove } from 'src/features/transactions/approve/approveSaga'
 import { sendTransaction } from 'src/features/transactions/sendTransaction'
@@ -100,13 +100,13 @@ const nonce = 1
 describe(approveAndSwap, () => {
   const swapGasEstimate = swapParams.gasFeeEstimate[TransactionType.Swap]
   if (!swapGasEstimate) return
-  const gasPriceSettings = getTxGasPriceSettings(swapGasEstimate)
+  const gasSettings = getTxGasSettings(swapGasEstimate)
   const tx = {
     from: swapParams.account.address,
     to: swapRouterAddress,
     data: swapParams.methodParameters.calldata,
     nonce,
-    ...gasPriceSettings,
+    ...gasSettings,
   }
 
   it('sends a swap tx', async () => {

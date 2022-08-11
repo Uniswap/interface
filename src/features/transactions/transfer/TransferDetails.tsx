@@ -19,6 +19,7 @@ export function TransferDetails({
 }: {
   chainId: ChainId | undefined
   gasFee: string | undefined
+  optimismL1Fee?: string | undefined
 }) {
   const { t } = useTranslation()
   const activeAddress = useActiveAccountAddressWithThrow()

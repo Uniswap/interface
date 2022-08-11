@@ -7,10 +7,9 @@ import { SWAP_ROUTER_ADDRESSES } from 'src/constants/addresses'
 import { ChainId } from 'src/constants/chains'
 import { DAI } from 'src/constants/tokens'
 import { FeeType } from 'src/features/gas/types'
-import { getTxGasPriceSettings } from 'src/features/gas/utils'
+import { getTxGasSettings } from 'src/features/gas/utils'
 import { ApproveParams, maybeApprove } from 'src/features/transactions/approve/approveSaga'
 import { sendTransaction } from 'src/features/transactions/sendTransaction'
-import { formatAsHexString } from 'src/features/transactions/swap/utils'
 import { TransactionType } from 'src/features/transactions/types'
 import { account, mockProvider } from 'src/test/fixtures'
 
@@ -61,7 +60,7 @@ describe(maybeApprove, () => {
 
     if (!approveParams.gasFeeEstimate) return
 
-    const gasPriceSettings = getTxGasPriceSettings(approveParams.gasFeeEstimate)
+    const txGasParams = getTxGasSettings(approveParams.gasFeeEstimate)
 
     const tx = {
       to: approveParams.inputTokenAddress,
@@ -69,8 +68,7 @@ describe(maybeApprove, () => {
       nonce: 1,
       data: '0x1230101013',
       chainId: approveParams.chainId,
-      gasLimit: BigNumber.from(approveParams.gasFeeEstimate?.gasLimit),
-      ...gasPriceSettings,
+      ...txGasParams,
     }
 
     const mockTokenContract = {
@@ -102,7 +100,7 @@ describe(maybeApprove, () => {
         mockTokenContract.populateTransaction.approve,
         SWAP_ROUTER_ADDRESSES[approveParams.chainId],
         MaxUint256,
-        { ...gasPriceSettings, gasLimit: formatAsHexString(approveParams.gasFeeEstimate.gasLimit) }
+        txGasParams
       )
       .silentRun()
   })
@@ -140,7 +138,7 @@ describe(maybeApprove, () => {
 
     if (!approveParams.gasFeeEstimate) return
 
-    const gasPriceSettings = getTxGasPriceSettings(approveParams.gasFeeEstimate)
+    const txGasParams = getTxGasSettings(approveParams.gasFeeEstimate)
 
     const tx = {
       to: approveParams.inputTokenAddress,
@@ -148,8 +146,7 @@ describe(maybeApprove, () => {
       nonce: 1,
       data: '0x1230101013',
       chainId: approveParams.chainId,
-      gasLimit: BigNumber.from(approveParams.gasFeeEstimate.gasLimit),
-      ...gasPriceSettings,
+      ...txGasParams,
     }
 
     const mockTokenContract = {
@@ -181,7 +178,7 @@ describe(maybeApprove, () => {
         mockTokenContract.populateTransaction.approve,
         SWAP_ROUTER_ADDRESSES[approveParams.chainId],
         BigNumber.from(approveParams.approveAmount),
-        { ...gasPriceSettings, gasLimit: formatAsHexString(approveParams.gasFeeEstimate.gasLimit) }
+        txGasParams
       )
       .silentRun()
   })

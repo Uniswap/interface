@@ -4,9 +4,8 @@ import { Erc20 } from 'src/abis/types'
 import { getContractManager, getProvider } from 'src/app/walletContext'
 import { ChainId } from 'src/constants/chains'
 import { FeeInfo } from 'src/features/gas/types'
-import { getTxGasPriceSettings } from 'src/features/gas/utils'
+import { getTxGasSettings } from 'src/features/gas/utils'
 import { sendTransaction } from 'src/features/transactions/sendTransaction'
-import { formatAsHexString } from 'src/features/transactions/swap/utils'
 import {
   TransactionOptions,
   TransactionType,
@@ -41,14 +40,16 @@ export function* maybeApprove(params: ApproveParams) {
     ERC20_ABI
   )
 
-  const gasPriceSettings = getTxGasPriceSettings(gasFeeEstimate)
+  const gasSettings = getTxGasSettings(gasFeeEstimate)
 
   try {
     // For whatever reason Ethers throws for L2s if we don't convert strings to hex strings
-    const populatedTx = yield* call(contract.populateTransaction.approve, spender, approveAmount, {
-      ...gasPriceSettings,
-      gasLimit: formatAsHexString(gasFeeEstimate.gasLimit),
-    })
+    const populatedTx = yield* call(
+      contract.populateTransaction.approve,
+      spender,
+      approveAmount,
+      gasSettings
+    )
 
     const typeInfo: TransactionTypeInfo = {
       type: TransactionType.Approve,

@@ -25,6 +25,7 @@ import {
 import {
   DerivedTransferInfo,
   useTransferERC20Callback,
+  useTransferGasFee,
   useTransferNFTCallback,
   useUpdateTransferGasEstimate,
 } from 'src/features/transactions/transfer/hooks'
@@ -63,7 +64,7 @@ export function TransferReview({
     warnings,
   } = derivedTransferInfo
   const { isNFT, currencyIn, nftIn, chainId } = inputAssetInfo
-  const { gasFeeEstimate, txId } = state
+  const { gasFeeEstimate, txId, optimismL1Fee } = state
 
   // TODO: how should we surface this warning?
   const actionButtonDisabled = warnings.some(
@@ -82,7 +83,7 @@ export function TransferReview({
   )
 
   const feeInfo = gasFeeEstimate?.[TransactionType.Send]
-  const gasFee = feeInfo?.fee?.[GasSpeed.Urgent]
+  const gasFee = useTransferGasFee(gasFeeEstimate, GasSpeed.Urgent, optimismL1Fee)
 
   const transferERC20Callback = useTransferERC20Callback(
     txId,

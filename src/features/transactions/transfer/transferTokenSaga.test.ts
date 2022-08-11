@@ -9,7 +9,10 @@ import { DAI } from 'src/constants/tokens'
 import { AssetType } from 'src/entities/assets'
 import { FeeInfo, FeeType } from 'src/features/gas/types'
 import { sendTransaction } from 'src/features/transactions/sendTransaction'
-import { setTxGasParams, transferToken } from 'src/features/transactions/transfer/transferTokenSaga'
+import {
+  setTxGasParamsAndHexifyValues,
+  transferToken,
+} from 'src/features/transactions/transfer/transferTokenSaga'
 import { TransferCurrencyParams, TransferNFTParams } from 'src/features/transactions/transfer/types'
 import { SendTokenTransactionInfo, TransactionType } from 'src/features/transactions/types'
 import { account, mockContractManager, mockProvider, txRequest } from 'src/test/fixtures'
@@ -79,7 +82,7 @@ describe('transferTokenSaga', () => {
     }
 
     if (!nativeTranferParams.feeInfo) throw new Error('missing fee info')
-    const tx = setTxGasParams(rawTx, nativeTranferParams.feeInfo)
+    const tx = setTxGasParamsAndHexifyValues(rawTx, nativeTranferParams.feeInfo)
     await expectSaga(transferToken, nativeTranferParams)
       .provide([
         [call(getProvider, nativeTranferParams.chainId), mockProvider],
@@ -105,7 +108,7 @@ describe('transferTokenSaga', () => {
     }
 
     if (!params.feeInfo) throw new Error('missing fee info')
-    const tx = setTxGasParams(txRequest, params.feeInfo)
+    const tx = setTxGasParamsAndHexifyValues(txRequest, params.feeInfo)
     await expectSaga(transferToken, params)
       .provide([
         [call(getProvider, erc20TranferParams.chainId), mockProvider],
@@ -123,7 +126,7 @@ describe('transferTokenSaga', () => {
   })
   it('Transfers ERC721', async () => {
     if (!erc721TransferParams.feeInfo) throw new Error('missing fee info')
-    const tx = setTxGasParams(txRequest, erc721TransferParams.feeInfo)
+    const tx = setTxGasParamsAndHexifyValues(txRequest, erc721TransferParams.feeInfo)
     await expectSaga(transferToken, erc721TransferParams)
       .provide([
         [call(getProvider, erc721TransferParams.chainId), mockProvider],
@@ -147,7 +150,7 @@ describe('transferTokenSaga', () => {
   })
   it('Transfers ERC1155', async () => {
     if (!erc1155TransferParams.feeInfo) throw new Error('missing fee info')
-    const gasSettings = setTxGasParams(txRequest, erc1155TransferParams.feeInfo)
+    const gasSettings = setTxGasParamsAndHexifyValues(txRequest, erc1155TransferParams.feeInfo)
     await expectSaga(transferToken, erc1155TransferParams)
       .provide([
         [call(getProvider, erc1155TransferParams.chainId), mockProvider],

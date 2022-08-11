@@ -3,7 +3,7 @@ import { MethodParameters } from '@uniswap/v3-sdk'
 import { BigNumber, providers } from 'ethers'
 import { getProvider } from 'src/app/walletContext'
 import { SWAP_ROUTER_ADDRESSES } from 'src/constants/addresses'
-import { getTxGasPriceSettings } from 'src/features/gas/utils'
+import { getTxGasSettings } from 'src/features/gas/utils'
 import { maybeApprove } from 'src/features/transactions/approve/approveSaga'
 import { sendTransaction } from 'src/features/transactions/sendTransaction'
 import { Trade } from 'src/features/transactions/swap/useTrade'
@@ -67,7 +67,7 @@ export function* approveAndSwap(params: SwapParams) {
       gasFeeEstimate: approveGasFeeEstimate,
     })
 
-    const swapGasPriceSettings = getTxGasPriceSettings(swapGasFeeEstimate)
+    const swapGasSettings = getTxGasSettings(swapGasFeeEstimate)
 
     // For whatever reason Ethers throws for L2s if we don't convert strings to hex strings
     const request: providers.TransactionRequest = {
@@ -76,8 +76,7 @@ export function* approveAndSwap(params: SwapParams) {
       data: calldata,
       nonce: formatAsHexString(approveSubmitted ? nonce + 1 : nonce),
       ...(!value || isZero(value) ? {} : { value: formatAsHexString(value) }),
-      ...swapGasPriceSettings,
-      gasLimit: formatAsHexString(swapGasFeeEstimate.gasLimit),
+      ...swapGasSettings,
     }
 
     yield* call(sendTransaction, {
