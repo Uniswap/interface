@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { ClientSideOrderBy, CoingeckoOrderBy } from 'src/features/dataApi/coingecko/types'
 import { Account } from 'src/features/wallet/accounts/types'
 import { NFTViewType } from 'src/features/wallet/types'
-import { areAddressesEqual, normalizeAddress } from 'src/utils/addresses'
+import { areAddressesEqual, getChecksumAddress } from 'src/utils/addresses'
 import { next } from 'src/utils/array'
 
 const tokensMetadataDisplayTypes = [
@@ -44,12 +44,12 @@ const slice = createSlice({
   reducers: {
     addAccount: (state, action: PayloadAction<Account>) => {
       const { address } = action.payload
-      const id = normalizeAddress(address)
+      const id = getChecksumAddress(address)
       state.accounts[id] = action.payload
     },
     removeAccount: (state, action: PayloadAction<Address>) => {
       const address = action.payload
-      const id = normalizeAddress(address)
+      const id = getChecksumAddress(address)
       if (!state.accounts[id]) throw new Error(`Cannot remove missing account ${id}`)
       delete state.accounts[id]
       // If removed account was active, activate first one
@@ -60,19 +60,19 @@ const slice = createSlice({
     },
     markAsNonPending: (state, action: PayloadAction<Address>) => {
       const address = action.payload
-      const id = normalizeAddress(address)
+      const id = getChecksumAddress(address)
       if (!state.accounts[id]) throw new Error(`Cannot enable missing account ${id}`)
       state.accounts[id].pending = false
     },
     editAccount: (state, action: PayloadAction<{ address: Address; updatedAccount: Account }>) => {
       const { address, updatedAccount } = action.payload
-      const id = normalizeAddress(address)
+      const id = getChecksumAddress(address)
       if (!state.accounts[id]) throw new Error(`Cannot edit missing account ${id}`)
       state.accounts[id] = updatedAccount
     },
     activateAccount: (state, action: PayloadAction<Address>) => {
       const address = action.payload
-      const id = normalizeAddress(address)
+      const id = getChecksumAddress(address)
       if (!state.accounts[id]) throw new Error(`Cannot activate missing account ${id}`)
       state.activeAccountAddress = id
     },

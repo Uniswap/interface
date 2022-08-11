@@ -9,7 +9,7 @@ import { ChainId } from 'src/constants/chains'
 import { useBytes32TokenContract, useTokenContract } from 'src/features/contracts/useContract'
 import { useSingleCallResult } from 'src/features/multicall'
 import { useAllTokens } from 'src/features/tokens/useTokens'
-import { isValidAddress, normalizeAddress } from 'src/utils/addresses'
+import { getChecksumAddress, isValidAddress } from 'src/utils/addresses'
 import { checksumCurrencyId, currencyIdToAddress } from 'src/utils/currencyId'
 
 // Uses an Ethers contract for the token address to retrieve info directly from the chain
@@ -19,7 +19,7 @@ export function useTokenInfoFromAddress(
   currencyId?: string | null
 ): Token | undefined | null {
   const tokenAddress = currencyId ? currencyIdToAddress(currencyId) : null
-  const address = isValidAddress(tokenAddress) ? normalizeAddress(tokenAddress) : null
+  const address = isValidAddress(tokenAddress) ? getChecksumAddress(tokenAddress!) : null
 
   const tokenContract = useTokenContract(chainId, address ? address : undefined)
   const tokenContractBytes32 = useBytes32TokenContract(chainId, address ? address : undefined)

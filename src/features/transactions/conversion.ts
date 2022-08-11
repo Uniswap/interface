@@ -9,7 +9,7 @@ import {
   TransactionStatus,
   TransactionType,
 } from 'src/features/transactions/types'
-import { getChecksumAddress, normalizeAddress } from 'src/utils/addresses'
+import { getChecksumAddress } from 'src/utils/addresses'
 import { currencyIdToAddress } from 'src/utils/currencyId'
 
 /**
@@ -142,7 +142,7 @@ function parseExternalTransactionItem(transaction: Transaction): TransactionSumm
       amountRaw = change?.value?.toString()
       tokenAddress = transaction.changes?.[0].asset.id
       if (transaction.address_to) {
-        to = normalizeAddress(transaction.address_to)
+        to = getChecksumAddress(transaction.address_to)
       }
       break
     case 'receive':
@@ -159,7 +159,7 @@ function parseExternalTransactionItem(transaction: Transaction): TransactionSumm
       amountRaw = change?.value?.toString()
       tokenAddress = transaction.changes?.[0].asset.id
       if (transaction.address_from) {
-        from = normalizeAddress(transaction.address_from)
+        from = getChecksumAddress(transaction.address_from)
       }
       break
     case 'trade':

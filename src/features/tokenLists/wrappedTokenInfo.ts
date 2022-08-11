@@ -2,7 +2,7 @@
 import { Currency, Token } from '@uniswap/sdk-core'
 import { Tags, TokenInfo, TokenList } from '@uniswap/token-lists'
 import { ChainIdTo } from 'src/constants/chains'
-import { normalizeAddress } from 'src/utils/addresses'
+import { getChecksumAddress } from 'src/utils/addresses'
 
 type TagDetails = Tags[keyof Tags]
 interface TagInfo extends TagDetails {
@@ -27,7 +27,7 @@ export class WrappedTokenInfo implements Token {
 
   public get address(): string {
     if (!this._checksummedAddress) {
-      this._checksummedAddress = normalizeAddress(this.tokenInfo.address)
+      this._checksummedAddress = getChecksumAddress(this.tokenInfo.address)
     }
     return this._checksummedAddress
   }

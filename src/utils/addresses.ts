@@ -5,7 +5,6 @@ import { logger } from 'src/utils/logger'
 export enum AddressStringFormat {
   Lowercase,
   Uppercase,
-  Checksum,
   Shortened,
 }
 
@@ -42,11 +41,16 @@ export function validateAddress(address: Nullable<Address>, context?: string) {
   return address as Address
 }
 
-export function normalizeAddress(
-  _address: Nullable<Address>,
-  format = AddressStringFormat.Checksum
-): Address {
-  const address = validateAddress(_address, 'normalize')
+/**
+ * Normalizes an address given a format
+ *
+ * **Note**: To get the checksum address please, use {@link getChecksumAddress}
+ *
+ * @param address
+ * @param format One of AddressStringFormat
+ * @returns the normalized address
+ */
+export function normalizeAddress(address: Address, format: AddressStringFormat): Address {
   switch (format) {
     case AddressStringFormat.Lowercase:
       return address.toLowerCase()
@@ -54,15 +58,17 @@ export function normalizeAddress(
       return address.toUpperCase()
     case AddressStringFormat.Shortened:
       return address.substr(0, 8)
-    case AddressStringFormat.Checksum:
     default:
-      return getChecksumAddress(address)
+      throw new Error(`Invalid AddressStringFormat: ${format}`)
   }
 }
 
 export function parseAddress(input: Nullable<string>): Address | null {
-  if (isValidAddress(input)) return normalizeAddress(input)
-  else return null
+  if (isValidAddress(input)) {
+    return getChecksumAddress(input!)
+  } else {
+    return null
+  }
 }
 
 export function areAddressesEqual(_a1: Nullable<Address>, _a2: Nullable<Address>) {

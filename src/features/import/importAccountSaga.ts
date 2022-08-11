@@ -3,7 +3,7 @@ import { ImportAccountParams, ImportAccountType } from 'src/features/import/type
 import { Account, AccountType, BackupType } from 'src/features/wallet/accounts/types'
 import { activateAccount, addAccount, unlockWallet } from 'src/features/wallet/walletSlice'
 import { generateAndStorePrivateKey, importMnemonic } from 'src/lib/RNEthersRs'
-import { normalizeAddress } from 'src/utils/addresses'
+import { getChecksumAddress } from 'src/utils/addresses'
 import { logger } from 'src/utils/logger'
 import { normalizeMnemonic } from 'src/utils/mnemonics'
 import { createMonitoredSaga } from 'src/utils/saga'
@@ -34,7 +34,7 @@ export function* importAccount(params: ImportAccountParams) {
 }
 
 function* importAddressAccount(address: string, name?: string, ignoreActivate?: boolean) {
-  const formattedAddress = normalizeAddress(address)
+  const formattedAddress = getChecksumAddress(address)
   const account: Account = {
     type: AccountType.Readonly,
     address: formattedAddress,

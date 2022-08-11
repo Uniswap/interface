@@ -9,7 +9,7 @@ import { finalizeTransaction, updateTransaction } from 'src/features/transaction
 import { TransactionDetails, TransactionStatus } from 'src/features/transactions/types'
 import { getSerializableTransactionRequest } from 'src/features/transactions/utils'
 import { selectAccounts } from 'src/features/wallet/selectors'
-import { normalizeAddress } from 'src/utils/addresses'
+import { getChecksumAddress } from 'src/utils/addresses'
 import { logger } from 'src/utils/logger'
 import { assert } from 'src/utils/validation'
 import { call, put } from 'typed-redux-saga'
@@ -29,7 +29,7 @@ export function* attemptReplaceTransaction(
     )
 
     const accounts = yield* appSelect(selectAccounts)
-    const account = accounts[normalizeAddress(from)]
+    const account = accounts[getChecksumAddress(from!)]
     assert(account, `Cannot replace transaction, account missing: ${hash}`)
 
     const request: providers.TransactionRequest = {
