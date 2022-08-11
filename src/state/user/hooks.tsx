@@ -4,7 +4,9 @@ import flatMap from 'lodash.flatmap'
 import { useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
+import { BASES_TO_TRACK_LIQUIDITY_FOR, PINNED_PAIRS } from 'constants/index'
 import { SupportedLocale } from 'constants/locales'
+import { useActiveWeb3React } from 'hooks'
 import { useAllTokens } from 'hooks/Tokens'
 import {
   useDynamicFeeFactoryContract,
@@ -16,10 +18,6 @@ import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 import { useSingleContractMultipleData } from 'state/multicall/hooks'
 import { useUserLiquidityPositions } from 'state/pools/hooks'
-import { isAddress } from 'utils'
-
-import { BASES_TO_TRACK_LIQUIDITY_FOR, PINNED_PAIRS } from '../../constants'
-import { useActiveWeb3React } from '../../hooks'
 import {
   SerializedPair,
   SerializedToken,
@@ -40,8 +38,9 @@ import {
   updateUserExpertMode,
   updateUserLocale,
   updateUserSlippageTolerance,
-} from './actions'
-import { defaultShowLiveCharts } from './reducer'
+} from 'state/user/actions'
+import { defaultShowLiveCharts } from 'state/user/reducer'
+import { isAddress } from 'utils'
 
 function serializeToken(token: Token | WrappedTokenInfo): SerializedToken {
   return {

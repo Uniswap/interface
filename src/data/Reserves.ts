@@ -3,7 +3,6 @@ import { Currency, Token, TokenAmount } from '@kyberswap/ks-sdk-core'
 import { useMemo } from 'react'
 
 import DMM_POOL_INTERFACE from 'constants/abis/dmmPool'
-import { EMPTY_ARRAY } from 'constants/index'
 import { NETWORKS_INFO } from 'constants/networks'
 import { useActiveWeb3React } from 'hooks'
 import {
@@ -11,8 +10,7 @@ import {
   useOldStaticFeeFactoryContract,
   useStaticFeeFactoryContract,
 } from 'hooks/useContract'
-
-import { useMultipleContractSingleData, useSingleContractMultipleData } from '../state/multicall/hooks'
+import { useMultipleContractSingleData, useSingleContractMultipleData } from 'state/multicall/hooks'
 
 export enum PairState {
   LOADING,
@@ -31,20 +29,18 @@ export function usePairs(currencies: [Currency | undefined, Currency | undefined
   const staticContract = useStaticFeeFactoryContract()
   const dynamicContract = useDynamicFeeFactoryContract()
 
-  const tokensFormatted = useMemo(() => {
-    const result = tokens
-      .filter(([tokenA, tokenB]) => tokenA && tokenB && !tokenA.equals(tokenB))
-      .map(([tokenA, tokenB]) => [tokenA?.address, tokenB?.address])
-    if (result.length) return result
-    return EMPTY_ARRAY
-  }, [tokens])
-
-  const oldStaticRess = useSingleContractMultipleData(oldStaticContract, 'getPools', tokensFormatted)
-  const staticRess = useSingleContractMultipleData(staticContract, 'getPools', tokensFormatted)
-  const dynamicRess = useSingleContractMultipleData(dynamicContract, 'getPools', tokensFormatted)
-
+  const callInputs = useMemo(
+    () =>
+      tokens
+        .filter(([tokenA, tokenB]) => tokenA && tokenB && !tokenA.equals(tokenB))
+        .map(([tokenA, tokenB]) => [tokenA?.address, tokenB?.address]),
+    [tokens],
+  )
+  const oldStaticRess = useSingleContractMultipleData(oldStaticContract, 'getPools', callInputs)
+  const staticRess = useSingleContractMultipleData(staticContract, 'getPools', callInputs)
+  const dynamicRess = useSingleContractMultipleData(dynamicContract, 'getPools', callInputs)
   const result: any[] = useMemo(() => {
-    const result: any[] = []
+    const res: any[] = []
     let start = 0
 
     tokens.forEach(([tokenA, tokenB]) => {
@@ -52,18 +48,19 @@ export function usePairs(currencies: [Currency | undefined, Currency | undefined
         !!(tokenA && tokenB && !tokenA.equals(tokenB)) &&
         (!!oldStaticRess[start] || !!staticRess[start] || !!dynamicRess[start])
       ) {
-        result.push(oldStaticRess[start])
-        result.push(staticRess[start])
-        result.push(dynamicRess[start])
+        res.push(oldStaticRess[start])
+        res.push(staticRess[start])
+        res.push(dynamicRess[start])
         start += 1
       } else {
-        result.push('')
+        res.push('')
       }
     })
-    return result
+
+    return res
   }, [dynamicRess, oldStaticRess, staticRess, tokens])
 
-  const lens = result.map(item => (!!item?.result ? item.result?.[0].length : 0))
+  const lens = useMemo(() => result.map(item => (!!item?.result ? item.result?.[0].length : 0)), [result])
   const pairAddresses = useMemo(
     () =>
       result.reduce((acc: string[], i) => {

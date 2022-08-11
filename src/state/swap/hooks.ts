@@ -7,20 +7,15 @@ import { ParsedQs } from 'qs'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
+import { BAD_RECIPIENT_ADDRESSES, DEFAULT_OUTPUT_TOKEN_BY_CHAIN } from 'constants/index'
 import { nativeOnChain } from 'constants/tokens'
+import { useActiveWeb3React } from 'hooks'
+import { useCurrency } from 'hooks/Tokens'
+import { useTradeExactIn } from 'hooks/Trades'
+import useENS from 'hooks/useENS'
+import useParsedQueryString from 'hooks/useParsedQueryString'
 import { FeeConfig } from 'hooks/useSwapV2Callback'
-
-import { BAD_RECIPIENT_ADDRESSES, DEFAULT_OUTPUT_TOKEN_BY_CHAIN } from '../../constants'
-import { useActiveWeb3React } from '../../hooks'
-import { useCurrency } from '../../hooks/Tokens'
-import { useTradeExactIn, useTradeExactOut } from '../../hooks/Trades'
-import useENS from '../../hooks/useENS'
-import useParsedQueryString from '../../hooks/useParsedQueryString'
-import { isAddress } from '../../utils'
-import { computeSlippageAdjustedAmounts } from '../../utils/prices'
-import { AppDispatch, AppState } from '../index'
-import { useExpertModeManager, useUserSlippageTolerance } from '../user/hooks'
-import { useCurrencyBalances } from '../wallet/hooks'
+import { AppDispatch, AppState } from 'state/index'
 import {
   Field,
   chooseToSaveGas,
@@ -31,8 +26,12 @@ import {
   switchCurrencies,
   switchCurrenciesV2,
   typeInput,
-} from './actions'
-import { SwapState } from './reducer'
+} from 'state/swap/actions'
+import { SwapState } from 'state/swap/reducer'
+import { useExpertModeManager, useUserSlippageTolerance } from 'state/user/hooks'
+import { useCurrencyBalances } from 'state/wallet/hooks'
+import { isAddress } from 'utils'
+import { computeSlippageAdjustedAmounts } from 'utils/prices'
 
 export function useSwapState(): AppState['swap'] {
   return useSelector<AppState, AppState['swap']>(state => state.swap)
@@ -180,13 +179,17 @@ export function useDerivedSwapInfo(): {
     useMemo(() => [inputCurrency ?? undefined, outputCurrency ?? undefined], [inputCurrency, outputCurrency]),
   )
 
-  const isExactIn: boolean = independentField === Field.INPUT
-  const parsedAmount = tryParseAmount(typedValue, (isExactIn ? inputCurrency : outputCurrency) ?? undefined)
+  const isExactIn = useMemo(() => independentField === Field.INPUT, [independentField])
+  const parsedAmount = useMemo(
+    () => tryParseAmount(typedValue, (isExactIn ? inputCurrency : outputCurrency) ?? undefined),
+    [inputCurrency, isExactIn, outputCurrency, typedValue],
+  )
 
-  const bestTradeExactIn = useTradeExactIn(isExactIn ? parsedAmount : undefined, outputCurrency ?? undefined)
-  const bestTradeExactOut = useTradeExactOut(inputCurrency ?? undefined, !isExactIn ? parsedAmount : undefined)
+  const currencyAmountIn = useMemo(() => (isExactIn ? parsedAmount : undefined), [isExactIn, parsedAmount])
+  const currencyOut = useMemo(() => outputCurrency ?? undefined, [outputCurrency])
+  const bestTradeExactIn = useTradeExactIn(currencyAmountIn, currencyOut)
 
-  const v2Trade = isExactIn ? bestTradeExactIn : bestTradeExactOut
+  const v2Trade = bestTradeExactIn
 
   const currencyBalances = {
     [Field.INPUT]: relevantTokenBalances[0],
@@ -220,8 +223,7 @@ export function useDerivedSwapInfo(): {
   } else {
     if (
       BAD_RECIPIENT_ADDRESSES.indexOf(formattedTo) !== -1 ||
-      (bestTradeExactIn && involvesAddress(bestTradeExactIn, formattedTo)) ||
-      (bestTradeExactOut && involvesAddress(bestTradeExactOut, formattedTo))
+      (bestTradeExactIn && involvesAddress(bestTradeExactIn, formattedTo))
     ) {
       inputError = inputError ?? t`Invalid recipient`
     }

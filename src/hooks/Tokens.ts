@@ -57,6 +57,7 @@ function useTokensFromMap(
 }
 
 export type AllTokenType = { [address: string]: Token }
+
 export function useAllTokens(lowercaseAddress = false): AllTokenType {
   const allTokens = useCombinedActiveList()
   return useTokensFromMap(allTokens, true, lowercaseAddress)
@@ -215,9 +216,12 @@ export function useToken(tokenAddress?: string): Token | NativeCurrency | undefi
 
 export function useCurrency(currencyId: string | undefined): Currency | null | undefined {
   const { chainId } = useActiveWeb3React()
-  const isETH = chainId && currencyId?.toUpperCase() === nativeOnChain(chainId).symbol
+  const isETH = useMemo(
+    () => chainId && currencyId?.toUpperCase() === nativeOnChain(chainId).symbol,
+    [chainId, currencyId],
+  )
   const token = useToken(isETH ? undefined : currencyId)
-  return isETH ? nativeOnChain(chainId as ChainId) : token
+  return useMemo(() => (isETH ? nativeOnChain(chainId as ChainId) : token), [chainId, isETH, token])
 }
 
 export function searchInactiveTokenLists({

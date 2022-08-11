@@ -7,10 +7,6 @@ import { useActiveWeb3React } from './index'
 export function useAllCurrencyCombinations(currencyA?: Currency, currencyB?: Currency): [Token, Token][] {
   const { chainId } = useActiveWeb3React()
 
-  const bases: Token[] = useMemo(() => (chainId ? BASES_TO_CHECK_TRADES_AGAINST[chainId] : []), [chainId])
-
-  const [tokenA, tokenB] = [currencyA?.wrapped, currencyB?.wrapped]
-
   // const basePairs: [Token, Token][] = useMemo(
   //   () =>
   //     flatMap(bases, (base): [Token, Token][] => bases.map(otherBase => [base, otherBase])).filter(
@@ -19,42 +15,36 @@ export function useAllCurrencyCombinations(currencyA?: Currency, currencyB?: Cur
   //   [bases]
   // )
 
-  const basePairs: [Token, Token][] = useMemo(() => {
-    const res: [Token, Token][] = []
+  return useMemo(() => {
+    const tokenA = currencyA?.wrapped
+    const tokenB = currencyB?.wrapped
+    const bases: Token[] = chainId ? BASES_TO_CHECK_TRADES_AGAINST[chainId] : []
+
+    const basePairs: [Token, Token][] = []
     for (let i = 0; i < bases.length - 1; i++) {
       for (let j = i + 1; j < bases.length; j++) {
-        res.push([bases[i], bases[j]])
+        basePairs.push([bases[i], bases[j]])
       }
     }
-    return res
-  }, [bases])
 
-  const AAgainstAllBase = useMemo(
-    () =>
+    const AAgainstAllBase =
       tokenA && bases.filter(base => base.address === tokenA?.address).length <= 0
         ? bases.map((base): [Token, Token] => [tokenA, base])
-        : [],
-    [bases, tokenA],
-  )
+        : []
 
-  const BAgainstAllBase = useMemo(
-    () =>
+    const BAgainstAllBase =
       tokenB && bases.filter(base => base.address === tokenB?.address).length <= 0
         ? bases.map((base): [Token, Token] => [tokenB, base])
-        : [],
-    [bases, tokenB],
-  )
-  const directPair = useMemo(
-    () =>
+        : []
+
+    const directPair =
       tokenA &&
       tokenB &&
       bases.filter(base => base.address === tokenA?.address).length <= 0 &&
       bases.filter(base => base.address === tokenB?.address).length <= 0
         ? [[tokenA, tokenB]]
-        : [],
-    [bases, tokenA, tokenB],
-  )
-  const allPairCombinations: [Token, Token][] = useMemo(() => {
+        : []
+
     return tokenA && tokenB
       ? [
           // the direct pair
@@ -84,6 +74,5 @@ export function useAllCurrencyCombinations(currencyA?: Currency, currencyB?: Cur
             return true
           })
       : []
-  }, [tokenA, tokenB, basePairs, chainId, AAgainstAllBase, BAgainstAllBase, directPair])
-  return allPairCombinations
+  }, [chainId, currencyA, currencyB])
 }
