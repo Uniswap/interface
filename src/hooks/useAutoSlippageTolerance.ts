@@ -1,7 +1,7 @@
 import { Protocol, Trade } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { SupportedChainId, SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'
+import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS, SupportedChainId } from 'constants/chains'
 import { L2_CHAIN_IDS } from 'constants/chains'
 import JSBI from 'jsbi'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
@@ -101,6 +101,8 @@ export default function useAutoSlippageTolerance(
         return MAX_AUTO_SLIPPAGE_TOLERANCE
       }
 
+      // TODO(vm): Added because ~30% of Polygon swaps were failing due to exceeding slippage.
+      // The root cause is likely elsewhere, but added for now to reduce failure rate on production.
       const isPolygon = chainId && [SupportedChainId.POLYGON, SupportedChainId.POLYGON_MUMBAI].includes(chainId)
       const minAutoSlippageTolerance = isPolygon ? POLYGON_MIN_AUTO_SLIPPAGE_TOLERANCE : MIN_AUTO_SLIPPAGE_TOLERANCE
 
