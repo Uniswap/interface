@@ -354,7 +354,7 @@ PODS:
   - CryptoSwift (1.4.3)
   - DoubleConversion (1.1.6)
   - EthersRS (0.0.1)
-  - EXApplication (4.0.0):
+  - EXApplication (4.0.2):
     - ExpoModulesCore
   - EXBlur (10.0.3):
     - ExpoModulesCore
@@ -366,9 +366,9 @@ PODS:
     - ExpoModulesCore
   - EXLocalAuthentication (12.1.0):
     - ExpoModulesCore
-  - Expo (43.0.3):
+  - Expo (43.0.5):
     - ExpoModulesCore
-  - ExpoModulesCore (0.4.8):
+  - ExpoModulesCore (0.4.10):
     - React-Core
   - EXScreenCapture (4.2.0):
     - ExpoModulesCore
@@ -1229,14 +1229,14 @@ SPEC CHECKSUMS:
   CryptoSwift: a0799ee936271bd2253a006f1e4523df21845000
   DoubleConversion: 831926d9b8bf8166fd87886c4abab286c2422662
   EthersRS: fcaf94e30ebdd795bfe1f9332cec8175566ba066
-  EXApplication: 0e15240e4d125b62f1cae48759ffbbd32b9286a6
+  EXApplication: 54fe5bd6268d697771645e8f1aef8b806a65247a
   EXBlur: 71eea96f591726398c1d41f0a8eb527b6c65660e
   EXClipboard: ead52260683fc856e58f5cc70f5ea5999bb9c049
   EXHaptics: f52df335f17192e440d9639c971ebcbb3fb91dec
   EXLinearGradient: 4d727eacb53d19ef25b02dd810e0199b453489ce
   EXLocalAuthentication: 4c7166ed3133d2c75586093833936652e7d2c7fc
-  Expo: 5316c3ecdc34eb0cad340d01dc8beec97c7e879e
-  ExpoModulesCore: a9a9bf32b2da35cd9b7299c80790c03a91ac7d15
+  Expo: d9588796cd19999da4d440d87bf7eb7ae4dbd608
+  ExpoModulesCore: c9438f6add0fb7b04b7c64eb97a833d2752a7834
   EXScreenCapture: cbee2204f313038a1819d31ad99a31e15f8e0f59
   EXSplashScreen: 57f329dbf25c5c12800feed79068a056453dc772
   FBLazyVector: 6816ca39e1cc8beffd2a96783f518296789d1c48
