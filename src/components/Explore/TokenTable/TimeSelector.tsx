@@ -75,7 +75,7 @@ const StyledMenuButton = styled.button<{ open: boolean }>`
   border: none;
   color: ${({ theme, open }) => (open ? theme.blue200 : theme.textPrimary)};
   margin: 0;
-  background-color: ${({ theme, open }) => (open ? theme.accentActionSoft : theme.backgroundAction)};
+  background-color: ${({ theme, open }) => (open ? theme.accentActionSoft : theme.backgroundInteractive)};
   padding: 6px 12px 6px 12px;
   border-radius: 12px;
   font-size: 16px;
@@ -85,10 +85,10 @@ const StyledMenuButton = styled.button<{ open: boolean }>`
   :hover {
     cursor: pointer;
     outline: none;
-    background-color: ${({ theme, open }) => (open ? theme.accentActionSoft : theme.backgroundContainer)};
+    background-color: ${({ theme, open }) => (open ? theme.accentActionSoft : theme.backgroundModule)};
   }
   :focus {
-    background-color: ${({ theme, open }) => (open ? theme.accentActionSoft : theme.backgroundAction)};
+    background-color: ${({ theme, open }) => (open ? theme.accentActionSoft : theme.backgroundInteractive)};
   }
   svg {
     margin-top: 2px;

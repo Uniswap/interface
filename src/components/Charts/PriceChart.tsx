@@ -86,21 +86,31 @@ const ArrowCell = styled.div`
   padding-left: 2px;
   display: flex;
 `
+export const TimeOptionsWrapper = styled.div`
+  display: flex;
+  justify-content: flex-end;
+`
 export const TimeOptionsContainer = styled.div`
   display: flex;
   justify-content: flex-end;
   margin-top: 4px;
   gap: 4px;
+  border: 1px solid ${({ theme }) => theme.backgroundOutline};
+  border-radius: 16px;
+  height: 40px;
+  padding: 4px;
+  width: fit-content;
 `
 const TimeButton = styled.button<{ active: boolean }>`
-  background-color: ${({ theme, active }) => (active ? theme.accentActive : 'transparent')};
-  font-size: 14px;
-  width: 36px;
-  height: 36px;
+  background-color: ${({ theme, active }) => (active ? theme.backgroundInteractive : 'transparent')};
+  font-weight: 600;
+  font-size: 16px;
+  padding: 6px 12px;
   border-radius: 12px;
+  line-height: 20px;
   border: none;
   cursor: pointer;
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme, active }) => (active ? theme.textPrimary : theme.textSecondary)};
 `
 
 function getTicks(startTimestamp: number, endTimestamp: number, numTicks = 5) {
@@ -274,13 +284,15 @@ export function PriceChart({ width, height }: PriceChartProps) {
           onMouseLeave={() => setSelected(initialState)}
         />
       </LineChart>
-      <TimeOptionsContainer>
-        {TIME_DISPLAYS.map(([value, display]) => (
-          <TimeButton key={display} active={timePeriod === value} onClick={() => setTimePeriod(value)}>
-            {display}
-          </TimeButton>
-        ))}
-      </TimeOptionsContainer>
+      <TimeOptionsWrapper>
+        <TimeOptionsContainer>
+          {TIME_DISPLAYS.map(([value, display]) => (
+            <TimeButton key={display} active={activeTimePeriod === value} onClick={() => setTimePeriod(value)}>
+              {display}
+            </TimeButton>
+          ))}
+        </TimeOptionsContainer>
+      </TimeOptionsWrapper>
     </ChartWrapper>
   )
 }

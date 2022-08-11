@@ -29,7 +29,7 @@ const SearchInput = styled.input<{ expanded: boolean }>`
 
   :hover {
     cursor: ${({ expanded }) => !expanded && 'pointer'};
-    background-color: ${({ theme }) => theme.backgroundContainer};
+    background-color: ${({ theme }) => theme.backgroundModule};
   }
 
   :focus {
