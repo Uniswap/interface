@@ -30,7 +30,6 @@ export const searchBar = style([
     paddingX: '16',
     cursor: 'pointer',
   }),
-  {},
 ])
 
 export const searchBarInput = style([
