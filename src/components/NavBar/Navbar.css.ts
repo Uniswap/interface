@@ -5,7 +5,6 @@ import { sprinkles } from '../../nft/css/sprinkles.css'
 
 export const nav = style([
   sprinkles({
-    background: 'white90',
     paddingX: '20',
     paddingY: '12',
     width: 'full',
@@ -17,6 +16,7 @@ export const nav = style([
     borderColor: '#00000018',
     borderWidth: '0.5px',
     backdropFilter: 'blur(24px)',
+    background: '#1B213018',
   },
 ])
 

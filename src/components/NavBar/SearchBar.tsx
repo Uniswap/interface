@@ -509,6 +509,9 @@ export const SearchBar = () => {
           borderTopLeftRadius={isOpen && !isMobile ? '12' : undefined}
           display={{ mobile: isOpen ? 'flex' : 'none', desktopXl: 'flex' }}
           justifyContent={isOpen ? 'flex-start' : 'center'}
+          background={isOpen ? 'white' : 'lightGrayContainer'}
+          onFocus={() => !isOpen && toggleOpen()}
+          onClick={() => !isOpen && toggleOpen()}
         >
           <Box display={{ mobile: 'none', tabletSm: 'flex' }}>
             <MagnifyingGlassIcon className={styles.magnifyingGlassIcon} />
@@ -525,8 +528,6 @@ export const SearchBar = () => {
               setSearchValue(event.target.value)
             }}
             className={styles.searchBarInput}
-            onFocus={() => !isOpen && toggleOpen()}
-            onClick={() => !isOpen && toggleOpen()}
             value={searchValue}
           />
         </Row>
