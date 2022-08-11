@@ -76,7 +76,8 @@ export default function TransactionActionsModal({
         key: ElementName.GetHelp,
         onPress: () => {
           openUri(
-            `mailto:support@uniswap.org?subject=Help with Uniswap Wallet transaction&body=Transaction ID: ${hash}\n\nPlease tell us how we can help you with this transaction:`
+            `mailto:support@uniswap.org?subject=Help with Uniswap Wallet transaction&body=Transaction ID: ${hash}\n\nPlease tell us how we can help you with this transaction:`,
+            true
           )
           handleClose()
         },

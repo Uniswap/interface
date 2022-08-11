@@ -40,6 +40,7 @@ const AddressButton = ({ address, chainId, ...rest }: AddressButtonProps) => {
   const theme = useAppTheme()
   return (
     <LinkButton
+      isSafeUri
       borderRadius="xs"
       label={name || shortenAddress(address)}
       px="xs"

@@ -11,14 +11,22 @@ import { openUri } from 'src/utils/linking'
 interface LinkButtonProps extends Omit<ComponentProps<typeof TextButton>, 'onPress'> {
   label: string
   url: string
+  isSafeUri?: boolean
   color?: keyof Theme['colors']
 }
 
-export function LinkButton({ url, label, textVariant, color, ...rest }: LinkButtonProps) {
+export function LinkButton({
+  url,
+  label,
+  textVariant,
+  color,
+  isSafeUri = false,
+  ...rest
+}: LinkButtonProps) {
   const theme = useAppTheme()
 
   return (
-    <Button onPress={() => openUri(url)} {...rest}>
+    <Button onPress={() => openUri(url, isSafeUri)} {...rest}>
       <Flex row alignItems="center" gap="xs">
         <Text color={color} variant={textVariant}>
           {label}

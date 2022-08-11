@@ -2,7 +2,21 @@ import { Linking } from 'react-native'
 import { ChainId, CHAIN_INFO } from 'src/constants/chains'
 import { logger } from 'src/utils/logger'
 
-export async function openUri(uri: string) {
+const ALLOWED_EXTERNAL_URI_SCHEMES = ['http://', 'https://']
+
+/**
+ * Opens allowed URIs. if isSafeUri is set to true then this will open http:// and https:// as well as some deeplinks.
+ * Only set this flag to true if you have formed the URL yourself in our own app code. For any URLs from an external source
+ * isSafeUri must be false and it will only open http:// and https:// URI schemes.
+ **/
+export async function openUri(uri: string, isSafeUri = false) {
+  const trimmedURI = uri.trim()
+  if (!isSafeUri && !ALLOWED_EXTERNAL_URI_SCHEMES.some((scheme) => trimmedURI.startsWith(scheme))) {
+    // TODO: show a visual warning that the link cannot be opened.
+    logger.info('utils/linking', 'openUri', 'cannot open an unsafe URI scheme', uri)
+    return
+  }
+
   const supported = await Linking.canOpenURL(uri)
   if (!supported) {
     logger.debug('utils/linking', 'openUri', 'cannot open URI', uri)
