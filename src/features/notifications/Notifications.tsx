@@ -343,12 +343,13 @@ export function FavoriteNotification({
 }) {
   const { t } = useTranslation()
   const currency = useCurrency(currencyId)
-  const title = isAddition ? t('Added to favorite tokens') : t('Removed from favorite tokens')
+  const title = isAddition ? t('Added to favorites') : t('Removed from favorites')
   const icon = (
     <CurrencyLogoOrPlaceholder currency={currency} size={NOTIFICATION_SIZING.primaryImage} />
   )
   return (
     <NotificationToast
+      useSmallDisplay
       icon={icon}
       title={title}
       // TODO: re-enable when press on toasts are supported
