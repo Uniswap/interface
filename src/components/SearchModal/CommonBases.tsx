@@ -38,7 +38,7 @@ const BaseWrapper = styled.div<{ disable?: boolean; phase0Flag?: boolean }>`
     background-color: ${({ theme, disable }) => !disable && theme.deprecated_bg2};
   }
 
-  color: ${({ theme, disable, phase0Flag }) => disable && (phase0Flag ? theme.blue200 : theme.deprecated_text3)};
+  color: ${({ theme, disable, phase0Flag }) => disable && (phase0Flag ? theme.accentAction : theme.deprecated_text3)};
   background-color: ${({ theme, disable, phase0Flag }) =>
     disable && (phase0Flag ? theme.accentActionSoft : theme.deprecated_bg3)};
   filter: ${({ disable, phase0Flag }) => disable && !phase0Flag && 'grayscale(1)'};
@@ -72,8 +72,6 @@ export default function CommonBases({
   const bases = typeof chainId !== 'undefined' ? COMMON_BASES[chainId] ?? [] : []
   const phase0Flag = usePhase0Flag()
   const phase0FlagEnabled = phase0Flag === Phase0Variant.Enabled
-
-  console.log('phase 0 flag', phase0FlagEnabled)
 
   return bases.length > 0 ? (
     <MobileWrapper gap="md">

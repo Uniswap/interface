@@ -152,6 +152,7 @@ function CurrencyRow({
     >
       <MenuItem
         tabIndex={0}
+        phase0Flag={phase0FlagEnabled}
         style={style}
         className={`token-item-${key}`}
         onKeyPress={(e) => (!isSelected && e.key === 'Enter' ? onSelect() : null)}

@@ -1,5 +1,7 @@
 import { LoadingRows as BaseLoadingRows } from 'components/Loader/styled'
 import styled from 'styled-components/macro'
+import { colors as ColorsPalette } from 'theme/colors'
+import { opacify } from 'theme/utils'
 
 import { AutoColumn } from '../Column'
 import { RowBetween } from '../Row'
@@ -21,7 +23,7 @@ export const PaddedColumn = styled(AutoColumn)`
   padding: 20px;
 `
 
-export const MenuItem = styled(RowBetween)`
+export const MenuItem = styled(RowBetween)<{ phase0Flag?: boolean }>`
   padding: 4px 20px;
   height: 56px;
   display: grid;
@@ -30,7 +32,8 @@ export const MenuItem = styled(RowBetween)`
   cursor: ${({ disabled }) => !disabled && 'pointer'};
   pointer-events: ${({ disabled }) => disabled && 'none'};
   :hover {
-    background-color: ${({ theme, disabled }) => !disabled && theme.deprecated_bg2};
+    background-color: ${({ theme, disabled, phase0Flag }) =>
+      (phase0Flag && opacify(8, ColorsPalette.gray200)) || (!disabled && theme.deprecated_bg2)};
   }
   opacity: ${({ disabled, selected }) => (disabled || selected ? 0.5 : 1)};
 `
