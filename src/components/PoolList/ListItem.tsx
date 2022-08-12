@@ -11,7 +11,7 @@ import { Flex } from 'rebass'
 import { ButtonEmpty } from 'components/Button'
 import CopyHelper from 'components/Copy'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
-import AgriCulture from 'components/Icons/AgriCulture'
+import { MoneyBag } from 'components/Icons'
 import Loader from 'components/Loader'
 import {
   AMPLiquidityAndTVLContainer,
@@ -189,20 +189,20 @@ const ListItemGroup = ({
         </DataText>
 
         <DataText style={{ position: 'relative' }}>
-          <div
-            style={{
+          <Flex
+            sx={{
               position: 'absolute',
               top: '-1px',
               left: '-28px',
-              display: 'flex',
+              minWidth: '18px', // to match width of IconWrapper
               flexDirection: 'column',
+              rowGap: '4px',
+              alignItems: 'center',
             }}
           >
             {isFarmingPool && (
               <MouseoverTooltip text={t`Available for yield farming`}>
-                <IconWrapper>
-                  <AgriCulture width={12} height={12} color={theme.textReverse} />
-                </IconWrapper>
+                <MoneyBag size={16} color={theme.apr} />
               </MouseoverTooltip>
             )}
             {isWarning && (
@@ -212,7 +212,7 @@ const ListItemGroup = ({
                 </IconWrapper>
               </MouseoverTooltip>
             )}
-          </div>
+          </Flex>
           <PoolAddressContainer>
             <AddressAndAMPContainer>
               <AddressWrapper>

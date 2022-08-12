@@ -11,7 +11,7 @@ import { ButtonEmpty } from 'components/Button'
 import CopyHelper from 'components/Copy'
 import Divider from 'components/Divider'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
-import AgriCulture from 'components/Icons/AgriCulture'
+import { MoneyBag } from 'components/Icons'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { ELASTIC_BASE_FEE_UNIT, PROMM_ANALYTICS_URL } from 'constants/index'
 import { nativeOnChain } from 'constants/tokens'
@@ -19,7 +19,7 @@ import { VERSION } from 'constants/v2'
 import { useActiveWeb3React } from 'hooks'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import useTheme from 'hooks/useTheme'
-import { ButtonIcon, IconWrapper } from 'pages/Pools/styleds'
+import { ButtonIcon } from 'pages/Pools/styleds'
 import { useProMMFarms } from 'state/farms/promm/hooks'
 import { ProMMPoolData } from 'state/prommPools/hooks'
 import { ExternalLink } from 'theme'
@@ -155,23 +155,20 @@ export default function ProAmmPoolListItem({ pair, idx, onShared, userPositions,
 
             <DataText grid-area="pool" style={{ position: 'relative' }}>
               {isFarmingPool && (
-                <div
-                  style={{
+                <Flex
+                  sx={{
                     overflow: 'hidden',
                     borderTopLeftRadius: '8px',
                     position: 'absolute',
-                    top: '-3px',
-                    left: '-26px',
-                    display: 'flex',
+                    top: '0px',
+                    left: '-24px',
                     flexDirection: 'column',
                   }}
                 >
                   <MouseoverTooltip text={t`Available for yield farming`}>
-                    <IconWrapper>
-                      <AgriCulture width={14} height={14} color={theme.textReverse} />
-                    </IconWrapper>
+                    <MoneyBag size={16} color={theme.apr} />
                   </MouseoverTooltip>
-                </div>
+                </Flex>
               )}
 
               <PoolAddressContainer>

@@ -64,7 +64,7 @@ export default function AddLiquidity({
               <LiquidityProviderMode
                 activeTab={activeTab}
                 setActiveTab={setActiveTab}
-                singleTokenInfo={t`You can add liquidity to the pool by supplying a single token (either token from the token pair). We will automatically create LP tokens for you and add them to the liquidity pool - all in a single transaction`}
+                singleTokenInfo={t`Add liquidity to the pool by supplying a single token (either token from the token pair). We will automatically create LP tokens for you and add them to the liquidity pool - all in a single transaction`}
               />
             </LiquidityProviderModeWrapper>
             <PoolName>

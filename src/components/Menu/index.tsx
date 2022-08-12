@@ -20,7 +20,7 @@ import styled, { css } from 'styled-components'
 
 import { ButtonPrimary } from 'components/Button'
 import { SlideToUnlock } from 'components/Header'
-import { MoneyBag } from 'components/Icons'
+import { MoneyBagOutline } from 'components/Icons'
 import DiscoverIcon from 'components/Icons/DiscoverIcon'
 import Faucet from 'components/Icons/Faucet'
 import Loader from 'components/Loader'
@@ -223,7 +223,7 @@ export default function Menu() {
 
         {!above768 && (
           <NavMenuItem to="/farms" onClick={toggle}>
-            <MoneyBag size={16} />
+            <MoneyBagOutline size={16} />
             <Trans>Farm</Trans>
           </NavMenuItem>
         )}

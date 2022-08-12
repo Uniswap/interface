@@ -1,19 +1,18 @@
 import { FeeAmount, Position } from '@kyberswap/ks-sdk-elastic'
 import { t } from '@lingui/macro'
 import { BigNumber } from 'ethers'
-import React from 'react'
+import { rgba } from 'polished'
 import { Flex, Text } from 'rebass'
 
 import RangeBadge from 'components/Badge/RangeBadge'
 import { AutoColumn } from 'components/Column'
 import Copy from 'components/Copy'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
-import AgriCulture from 'components/Icons/AgriCulture'
+import { MoneyBag } from 'components/Icons'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { ELASTIC_BASE_FEE_UNIT } from 'constants/index'
 import useProAmmPoolInfo from 'hooks/useProAmmPoolInfo'
 import useTheme from 'hooks/useTheme'
-import { IconWrapper } from 'pages/Pools/styleds'
 import { shortenAddress } from 'utils'
 import { unwrappedToken } from 'utils/wrappedCurrency'
 
@@ -50,9 +49,18 @@ export default function ProAmmPoolInfo({
             <Flex sx={{ gap: '8px' }}>
               {farmAvailable && (
                 <MouseoverTooltip text={t`Available for yield farming`}>
-                  <IconWrapper style={{ width: '24px', height: '24px' }}>
-                    <AgriCulture width={16} height={16} color={theme.textReverse} />
-                  </IconWrapper>
+                  <Flex
+                    width={24}
+                    height={24}
+                    justifyContent="center"
+                    alignItems={'center'}
+                    sx={{
+                      borderRadius: '999px',
+                      background: rgba(theme.apr, 0.2),
+                    }}
+                  >
+                    <MoneyBag size={16} color={theme.apr} />
+                  </Flex>
                 </MouseoverTooltip>
               )}
               <RangeBadge removed={removed} inRange={!outOfRange} hideText />

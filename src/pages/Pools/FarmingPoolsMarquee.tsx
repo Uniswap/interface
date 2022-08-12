@@ -7,7 +7,7 @@ import styled from 'styled-components'
 
 import { FadeInAnimation } from 'components/Animation'
 import CurrencyLogo from 'components/CurrencyLogo'
-import AgriCulture from 'components/Icons/AgriCulture'
+import { MoneyBag } from 'components/Icons'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { VERSION } from 'constants/v2'
 import { useActiveWeb3React } from 'hooks'
@@ -101,9 +101,7 @@ const FarmingPoolsMarquee = ({ tab }: { tab: string }) => {
       <Container>
         <Title>
           <MouseoverTooltip text="Available for yield farming">
-            <IconWrapper>
-              <AgriCulture width={14} height={14} color={theme.textReverse} />
-            </IconWrapper>
+            <MoneyBag size={16} color={theme.apr} />
           </MouseoverTooltip>
 
           <TitleText>
