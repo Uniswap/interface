@@ -41,6 +41,7 @@ import oembed2iframe from 'utils/oembed2iframe'
 
 // This is needed to make sure the UI looks just like in Editor
 import './CKEditor5.css'
+import './CKEditor5_custom.css'
 import ModalSelectCampaign from './ModalSelectCampaign'
 
 const LoaderParagraphs = () => (
