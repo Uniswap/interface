@@ -265,7 +265,11 @@ export function useDerivedMarketInfo(
     inputError = inputError ?? <Trans>Buy amount lower than fee amount</Trans>
   }
 
-  if (currencies[Field.OUTPUT] !== null && currencies[Field.OUTPUT]?.symbol !== v2Trade?.paymentToken?.symbol) {
+  if (
+    currencies[Field.OUTPUT] !== null &&
+    currencies[Field.OUTPUT]?.symbol !== v2Trade?.paymentToken?.symbol &&
+    currencies[Field.OUTPUT]?.wrapped.symbol !== v2Trade?.paymentToken?.symbol
+  ) {
     inputError = inputError ?? <Trans>Loading ...</Trans>
   }
 
