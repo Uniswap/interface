@@ -23,7 +23,7 @@ export function RelativeChange({
   return (
     <Flex row alignItems="center" gap="none">
       <Text color="textSecondary" variant={variant}>
-        {change ? `${change.toFixed(1)}%` : '-'}{' '}
+        {change ? `${change.toFixed(2)}%` : '-'}{' '}
         {absoluteChange ? `(${formatPrice(absoluteChange)})` : ''}
       </Text>
       {isPositiveChange === undefined ? null : (

@@ -1,8 +1,10 @@
 import { StyleSheet } from 'react-native'
+import { resizeModeContain } from 'src/styles/image'
+import { theme } from 'src/styles/theme'
 
 export const style = StyleSheet.create({
   image: {
-    backgroundColor: 'slategrey', // TODO. Default image?
-    resizeMode: 'cover',
+    backgroundColor: theme.colors.backgroundAction, // Equal to gray500 @ 24%
+    resizeMode: resizeModeContain, // TODO. Default image?
   },
 })

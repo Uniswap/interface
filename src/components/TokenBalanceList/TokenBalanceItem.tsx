@@ -3,11 +3,9 @@ import React from 'react'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { Button } from 'src/components/buttons/Button'
 import { CurrencyLogo } from 'src/components/CurrencyLogo'
-import { AnimatedFlex, Box, Flex } from 'src/components/layout'
-import { InlineNetworkPill } from 'src/components/Network/NetworkPill'
+import { AnimatedFlex, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { RelativeChange } from 'src/components/text/RelativeChange'
-import { ChainId } from 'src/constants/chains'
 import { PortfolioBalance } from 'src/features/dataApi/types'
 import { formatCurrencyAmount, formatUSDPrice } from 'src/utils/format'
 
@@ -40,9 +38,9 @@ export function TokenBalanceItem({ balance, onPressToken }: TokenBalanceItemProp
         entering={FadeIn}
         exiting={FadeOut}
         flexShrink={1}
-        gap="xs"
+        gap="sm"
         overflow="hidden">
-        <CurrencyLogo currency={currency} size={32} />
+        <CurrencyLogo currency={currency} size={36} />
         <Flex alignItems="flex-start" flexShrink={1} gap="none">
           <Text ellipsizeMode="tail" numberOfLines={1} variant="subhead">
             {currency.name ?? currency.symbol}
@@ -51,17 +49,16 @@ export function TokenBalanceItem({ balance, onPressToken }: TokenBalanceItemProp
             <Text color="textSecondary" numberOfLines={1} variant="caption">
               {`${formatCurrencyAmount(amount)}`} {currency.symbol}
             </Text>
-            {currency.chainId !== ChainId.Mainnet && (
-              <InlineNetworkPill chainId={currency.chainId} />
-            )}
           </Flex>
         </Flex>
       </AnimatedFlex>
       <AnimatedFlex entering={FadeIn} exiting={FadeOut} justifyContent="space-between">
-        <Box alignItems="flex-end" flexBasis="auto" flexShrink={1}>
+        <Flex alignItems="flex-end" gap="xxs">
           <Text variant="body">{formatUSDPrice(balance.balanceUSD)}</Text>
-          <RelativeChange change={relativeChange24} />
-        </Box>
+          <Text color="textSecondary" variant="caption">
+            <RelativeChange change={relativeChange24} />
+          </Text>
+        </Flex>
       </AnimatedFlex>
     </Button>
   )

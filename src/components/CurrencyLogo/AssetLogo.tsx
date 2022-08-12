@@ -3,7 +3,7 @@ import { Image, ImageStyle } from 'react-native'
 import { Flex } from 'src/components/layout/Flex'
 import { Text } from 'src/components/Text'
 
-const tokenLogoStyle: ImageStyle = { width: 35, height: 35, borderRadius: 35 / 2 }
+const tokenLogoStyle: ImageStyle = { width: 36, height: 36, borderRadius: 36 / 2 }
 
 interface AssetLogoProps {
   url?: string

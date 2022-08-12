@@ -199,7 +199,7 @@ const CardSections = ({ textInputRef }: CardSectionsProps) => {
   }, [textInputRef, hasWatchedWallets, hasFavoriteTokens])
 
   return (
-    <Flex gap="sm" pb="lg" px="sm">
+    <Flex gap="sm" pb="lg">
       {cardSections.map((card, i) => (
         <AnimatedFlex key={i} entering={FadeIn} exiting={FadeOut}>
           {card}

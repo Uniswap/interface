@@ -224,7 +224,8 @@ function TransactionSummaryItem({
           bg={bg ?? 'backgroundContainer'}
           gap="xs"
           justifyContent="space-between"
-          px="md"
+          pl="xs"
+          pr="md"
           py="sm">
           <Flex row shrink alignItems="center" flexGrow={1} gap="xs" justifyContent="flex-start">
             {icon && (

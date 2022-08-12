@@ -1,20 +1,22 @@
 import { ShadowProps } from '@shopify/restyle'
 import { Currency } from '@uniswap/sdk-core'
-import React from 'react'
+import React, { useState } from 'react'
 import { Image } from 'react-native'
 import { SvgUri } from 'react-native-svg'
+import { useAppTheme } from 'src/app/hooks'
 import { NetworkLogo } from 'src/components/CurrencyLogo/NetworkLogo'
 import { style } from 'src/components/CurrencyLogo/styles'
 import { getCurrencyLogoSrcs, maybeReplaceIPFSScheme } from 'src/components/CurrencyLogo/utils'
 import { Box } from 'src/components/layout/Box'
+import { Text } from 'src/components/Text'
 import { ChainId, CHAIN_ID_TO_LOGO } from 'src/constants/chains'
 import { Theme } from 'src/styles/theme'
 import { toSupportedChainId } from 'src/utils/chainId'
 
-const DEFAULT_SIZE = 40
+const DEFAULT_SIZE = 36
 const NETWORK_LOGO_SIZE = 16
-
 const SHADOW_OFFSET: ShadowProps<Theme>['shadowOffset'] = { width: 0, height: 2 }
+const THIN_BORDER = 0.5
 
 interface CurrencyLogoProps {
   currency: Currency
@@ -25,7 +27,8 @@ export function CurrencyLogo(props: CurrencyLogoProps) {
   const { size, currency } = props
   const networkSize = NETWORK_LOGO_SIZE
   const notOnMainnet = currency.chainId !== ChainId.Mainnet
-  const currencyLogoSize = notOnMainnet ? (size ?? DEFAULT_SIZE) - 4 : size ?? DEFAULT_SIZE
+  const currencyLogoSize = size ?? DEFAULT_SIZE
+
   return (
     <Box alignItems="center" height={size} justifyContent="center" width={size}>
       <CurrencyLogoOnly currency={currency} size={currencyLogoSize} />
@@ -37,7 +40,7 @@ export function CurrencyLogo(props: CurrencyLogoProps) {
           shadowColor="black"
           shadowOffset={SHADOW_OFFSET}
           shadowOpacity={0.1}
-          shadowRadius={4}>
+          shadowRadius={2}>
           <NetworkLogo chainId={currency.chainId} size={networkSize} />
         </Box>
       )}
@@ -47,6 +50,14 @@ export function CurrencyLogo(props: CurrencyLogoProps) {
 
 export function CurrencyLogoOnly({ currency, size = 40 }: CurrencyLogoProps) {
   const srcs: string[] = getCurrencyLogoSrcs(currency)
+
+  const [imageError, setImageError] = useState(false)
+
+  const onImageNotFound = () => {
+    setImageError(true)
+  }
+
+  const theme = useAppTheme()
 
   if (currency?.isNative) {
     const chainId = toSupportedChainId(currency.chainId) ?? ChainId.Mainnet
@@ -64,14 +75,57 @@ export function CurrencyLogoOnly({ currency, size = 40 }: CurrencyLogoProps) {
   if (srcs.length > 0) {
     const src = srcs[0].toLowerCase()
     if (src.includes('.svg')) {
-      return <SvgUri height={size} uri={srcs[0]} width={size} />
+      return (
+        <SvgUri
+          height={size}
+          style={[
+            style.image,
+            {
+              width: size,
+              height: size,
+              borderRadius: size / 2,
+              borderColor: theme.colors.backgroundOutline,
+            },
+          ]}
+          uri={srcs[0]}
+          width={size}
+        />
+      )
     }
-    return (
-      <Image
-        source={srcs.map(maybeReplaceIPFSScheme)}
-        style={[style.image, { width: size, height: size, borderRadius: size / 2 }]}
-      />
-    )
+    if (!imageError) {
+      return (
+        <Image
+          source={srcs.map(maybeReplaceIPFSScheme)}
+          style={[
+            style.image,
+            {
+              width: size,
+              height: size,
+              borderRadius: size / 2,
+              borderColor: theme.colors.backgroundOutline,
+              borderWidth: THIN_BORDER,
+            },
+          ]}
+          onError={() => onImageNotFound()}
+        />
+      )
+    } else {
+      return (
+        <Box
+          alignItems="center"
+          bg="backgroundAction"
+          borderRadius="xl"
+          flex={0}
+          height={size}
+          justifyContent="center"
+          px="xxs"
+          width={size}>
+          <Text adjustsFontSizeToFit color="textSecondary" numberOfLines={1} textAlign="center">
+            {currency.symbol?.slice(0, 5).toUpperCase()}
+          </Text>
+        </Box>
+      )
+    }
   }
 
   return null

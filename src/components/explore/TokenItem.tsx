@@ -19,7 +19,11 @@ import { formatNumber, formatUSDPrice } from 'src/utils/format'
 import { logger } from 'src/utils/logger'
 
 const boxTokenLogoStyle: ImageStyle = { width: 32, height: 32 }
-const tokenLogoStyle: ImageStyle = { width: 32, height: 32 }
+const tokenLogoStyle: ImageStyle = {
+  width: 36,
+  height: 36,
+  resizeMode: 'contain',
+}
 
 interface TokenItemProps {
   coin: CoingeckoMarketCoin
@@ -108,17 +112,19 @@ export const TokenItem = forwardRef<Swipeable, TokenItemProps>(
             px="md"
             py="sm">
             <Flex centered row flexShrink={1} gap="xs" overflow="hidden">
-              {index !== undefined && (
-                <Box minWidth={18}>
-                  <Text color="textSecondary" variant="badge">
-                    {index + 1}
-                  </Text>
-                </Box>
-              )}
+              <Flex centered row flexShrink={1} gap="xxs" overflow="hidden">
+                {index !== undefined && (
+                  <Box minWidth={16}>
+                    <Text color="textSecondary" variant="badge">
+                      {index + 1}
+                    </Text>
+                  </Box>
+                )}
 
-              <Image source={{ uri: coin.image }} style={tokenLogoStyle} />
-              <Flex alignItems="flex-start" flexShrink={1} gap="xxxs">
-                <Text variant="mediumLabel">{coin.name ?? ''}</Text>
+                <Image source={{ uri: coin.image }} style={[tokenLogoStyle]} />
+              </Flex>
+              <Flex alignItems="flex-start" flexShrink={1} gap="xxxs" marginLeft="xxs">
+                <Text variant="subhead">{coin.name ?? ''}</Text>
                 <Text color="textSecondary" variant="caption">
                   {coin.symbol.toUpperCase() ?? ''}
                 </Text>
