@@ -104,9 +104,14 @@ export default function MarketModalHeader({
     return received.subtract(received.multiply(slippage as Fraction)).toSignificant(4)
   }
 
-  const minimumReceived = paymentFees
-    ? Number(calculateMinimumReceived(allowedSlippage, paymentFees, trade.outputAmount))
+  // build fee token with the same currency as output amount, if their currencies differ
+  const fee = paymentFees
+    ? paymentFees.currency !== trade.outputAmount.currency
+      ? CurrencyAmount.fromRawAmount(trade.outputAmount.currency, paymentFees.numerator)
+      : paymentFees
     : undefined
+
+  const minimumReceived = fee ? Number(calculateMinimumReceived(allowedSlippage, fee, trade.outputAmount)) : undefined
 
   const isGaslessMode = useIsGaslessMode() && chainId == SupportedChainId.POLYGON
 
@@ -189,8 +194,7 @@ export default function MarketModalHeader({
               </TYPE.body>
               <RowFixed gap={'0px'}>
                 <TruncatedText fontSize={14} fontWeight={500}>
-                  {paymentFees ? trade.outputAmount.subtract(paymentFees).toSignificant(6) : 'undefined'}{' '}
-                  {paymentToken?.symbol}
+                  {fee ? trade.outputAmount.subtract(fee).toSignificant(6) : 'undefined'} {paymentToken?.symbol}
                 </TruncatedText>
               </RowFixed>
             </RowBetween>
@@ -211,7 +215,7 @@ export default function MarketModalHeader({
           allowedSlippage={allowedSlippage}
           referer={referer}
           paymentToken={paymentToken}
-          paymentFees={paymentFees}
+          paymentFees={fee}
           minimumReceived={minimumReceived}
         />
       </LightCard>
@@ -244,7 +248,7 @@ export default function MarketModalHeader({
                 {isGaslessMode ? (
                   <span>
                     {' '}
-                    {paymentFees && calculateMinimumReceived(allowedSlippage, paymentFees, trade.outputAmount)}{' '}
+                    {fee && calculateMinimumReceived(allowedSlippage, fee, trade.outputAmount)}{' '}
                     {trade.outputAmount.currency.symbol}{' '}
                   </span>
                 ) : (
