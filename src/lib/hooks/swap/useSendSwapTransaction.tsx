@@ -19,8 +19,8 @@ type AnyTrade =
   | Trade<Currency, Currency, TradeType>
 
 interface EncryptResponse {
-  messageLength: number
-  cipherText: string
+  message_length: number
+  cipher_text: string
   proof: string
 }
 
@@ -30,7 +30,8 @@ interface VdfResponse {
   s1: string
   s3: string
   k: string
-  vdfSnarkProof: string
+  vdf_snark_proof: string
+  sym_key: string
   commitment: string
 }
 
@@ -45,17 +46,17 @@ interface EncryptedTx {
 }
 
 interface Path {
-  messageLength: number
+  message_length: number
   nonce: string
   commitment: string
-  cipherText: string[]
+  cipher_text: string[]
   r1: string
   r3: string
   s1: string
   s3: string
   k: string
-  vdfSnarkProof: string
-  encryptionProof: string
+  vdf_snark_proof: string
+  encryption_proof: string
 }
 
 export interface RadiusSwapRequest {
@@ -105,8 +106,8 @@ export default function useSendSwapTransaction(
 
         const signMessage = {
           txOwner: signAddress,
-          amountIn,
-          amountOutMin: amountoutMin,
+          amountIn: `${amountIn}`,
+          amountOutMin: `${amountoutMin}`,
           path,
           to: swapRouterAddress,
           deadline,
@@ -124,10 +125,19 @@ export default function useSendSwapTransaction(
 
         const sig = await signWithEIP712(library, signAddress, signData)
 
+        console.log(sig)
+
         sigHandler()
 
         const vdfData = await getVdfProof()
-        const encryptData = await poseidonEncrypt(vdfData.commitment, `${path[0]},${path[1]}`)
+
+        console.log(vdfData)
+
+        // const encryptData = await poseidonEncrypt(vdfData.sym_key, vdfData.commitment, `${path[0]},${path[1]}`)
+
+        const encryptData = await poseidonEncryptWithoutProof(`${path[0]},${path[1]}`)
+
+        console.log(encryptData)
 
         const txId = solidityKeccak256(
           ['address', 'uint256', 'uint256', 'address[]', 'address', 'uint256'],
@@ -135,17 +145,17 @@ export default function useSendSwapTransaction(
         )
 
         const encryptedPath = {
-          messageLength: encryptData.messageLength,
+          message_length: encryptData.message_length,
           nonce: `${nonce}`,
           commitment: vdfData.commitment,
-          cipherText: [encryptData.cipherText],
+          cipher_text: [encryptData.cipher_text],
           r1: vdfData.r1,
           r3: vdfData.r3,
           s1: vdfData.s1,
           s3: vdfData.s3,
           k: vdfData.k,
-          vdfSnarkProof: vdfData.vdfSnarkProof,
-          encryptionProof: encryptData.proof,
+          vdf_snark_proof: vdfData.vdf_snark_proof,
+          encryption_proof: encryptData.proof,
         }
 
         const encryptedTx: EncryptedTx = {
@@ -196,25 +206,45 @@ async function getVdfProof(): Promise<VdfResponse> {
   const data = await vdf
     .get_vdf_proof()
     .then((res) => {
-      return res.data
+      console.log(res)
+      return res
     })
     .catch((error) => {
-      console.log(error)
+      console.error(error)
       return error
     })
 
   return data
 }
 
-async function poseidonEncrypt(commitment: string, plainText: string): Promise<EncryptResponse> {
+async function poseidonEncrypt(symKey: string, commitment: string, plainText: string): Promise<EncryptResponse> {
+  console.log(symKey, commitment, plainText)
   const poseidon = await import('poseidon')
   const data = await poseidon
-    .encrypt(commitment, plainText)
+    .encrypt(symKey, commitment, plainText)
     .then((res) => {
-      return res.data
+      console.log(res)
+      return res
     })
     .catch((error) => {
-      console.log(error)
+      console.error(error)
+      return error
+    })
+
+  return data
+}
+
+async function poseidonEncryptWithoutProof(plainText: string): Promise<EncryptResponse> {
+  console.log(plainText)
+  const poseidon = await import('poseidon')
+  const data = await poseidon
+    .encrypt_without_proof(plainText)
+    .then((res) => {
+      console.log(res)
+      return res
+    })
+    .catch((error) => {
+      console.error(error)
       return error
     })
 
@@ -222,7 +252,7 @@ async function poseidonEncrypt(commitment: string, plainText: string): Promise<E
 }
 
 async function sendEIP712Tx(encryptedTx: EncryptedTx, signature: Signature): Promise<RadiusSwapResponse> {
-  const sendResponse = await fetch('http://147.46.240.248:40001/txs/sendEIP712Tx', {
+  const sendResponse = await fetch('http://147.46.240.248:40002/txs/sendEIP712Tx', {
     method: 'POST',
     headers,
     body: JSON.stringify({
@@ -236,10 +266,11 @@ async function sendEIP712Tx(encryptedTx: EncryptedTx, signature: Signature): Pro
   })
     .then((res) => res.json())
     .then((res) => {
+      console.log(res)
       return res
     })
     .catch((error) => {
-      console.log(error)
+      console.error(error)
       return error
     })
 
