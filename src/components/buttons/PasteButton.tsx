@@ -27,7 +27,7 @@ export default function PasteButton({ onPress }: { onPress: (text: string) => vo
       <Flex centered row gap="xs">
         <PasteIcon />
         <Text color="accentActive" variant="mediumLabel">
-          {t('paste')}
+          {t('Paste')}
         </Text>
       </Flex>
     </Button>
