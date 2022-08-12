@@ -61,10 +61,7 @@ export function ExploreTokensScreen() {
             <BackButton showButtonLabel />
             <Flex row alignItems="center" justifyContent="space-between" my="xs">
               <Text variant="headlineSmall">{t('Tokens')}</Text>
-              <SortingGroup
-                orderBy={orderBy}
-                onPressOrderBy={() => setOrderByModalIsVisible(true)}
-              />
+              <SortingGroup onPressOrderBy={() => setOrderByModalIsVisible(true)} />
             </Flex>
           </Flex>
         }
