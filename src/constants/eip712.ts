@@ -9,8 +9,8 @@ export const DOMAIN_TYPE = [
 
 export const SWAP_TYPE = [
   { name: 'txOwner', type: 'address' },
-  { name: 'amountIn', type: 'uint256' },
-  { name: 'amountOutMin', type: 'uint256' },
+  { name: 'amountIn', type: 'string' },
+  { name: 'amountOutMin', type: 'string' },
   { name: 'path', type: 'address[]' },
   { name: 'to', type: 'address' },
   { name: 'deadline', type: 'uint256' },
