@@ -1,4 +1,3 @@
-import CopyHelper from 'components/AccountDetails/Copy'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { darken } from 'polished'
 import { useRef } from 'react'
@@ -9,6 +8,7 @@ import styled, { useTheme } from 'styled-components/macro'
 import { ClickableStyle, Z_INDEX } from 'theme'
 
 import { ReactComponent as ShareIcon } from '../../../assets/svg/share.svg'
+import { CopyHelper } from '../../../theme'
 
 const TWITTER_WIDTH = 560
 const TWITTER_HEIGHT = 480
@@ -57,7 +57,7 @@ const ShareAction = styled.div<{ highlighted?: boolean }>`
   border-radius: 8px;
   font-size: 16px;
   font-weight: 400;
-  gap: 0.75rem;
+  gap: 12px;
   height: 40px;
   color: ${({ theme }) => theme.textPrimary};
   background-color: ${({ theme, highlighted }) => (highlighted ? theme.backgroundInteractive : 'transparent')};
@@ -93,7 +93,7 @@ export default function ShareButton(tokenInfo: TokenInfo) {
       {open && (
         <ShareActions>
           <ShareAction>
-            <CopyHelper color={theme.textPrimary} iconPosition="left" toCopy={window.location.href}>
+            <CopyHelper link color={theme.textPrimary} iconPosition="left" toCopy={window.location.href}>
               Copy Link
             </CopyHelper>
           </ShareAction>

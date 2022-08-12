@@ -1,6 +1,5 @@
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
-import CopyHelper from 'components/AccountDetails/Copy'
 import { getConnection, getConnectionName, getIsCoinbaseWallet, getIsMetaMask } from 'connection/utils'
 import { Context, useCallback, useContext } from 'react'
 import { ExternalLink as LinkIcon } from 'react-feather'
@@ -13,7 +12,7 @@ import { isMobile } from 'utils/userAgent'
 
 import { ReactComponent as Close } from '../../assets/images/x.svg'
 import { clearAllTransactions } from '../../state/transactions/reducer'
-import { ExternalLink, LinkStyledButton, ThemedText } from '../../theme'
+import { CopyHelper, ExternalLink, LinkStyledButton, ThemedText } from '../../theme'
 import { shortenAddress } from '../../utils'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
 import { ButtonSecondary } from '../Button'
@@ -130,11 +129,12 @@ const AccountControl = styled.div`
 `
 
 const AddressLink = styled(ExternalLink)`
-  font-size: 0.825rem;
   color: ${({ theme }) => theme.deprecated_text3};
   margin-left: 1rem;
   font-size: 0.825rem;
   display: flex;
+  gap: 6px;
+  text-decoration: none !important;
   :hover {
     color: ${({ theme }) => theme.deprecated_text2};
   }
@@ -284,7 +284,7 @@ export default function AccountDetails({
                 <AccountControl>
                   <div>
                     {account && (
-                      <CopyHelper toCopy={account} iconPosition="left">
+                      <CopyHelper toCopy={account} gap={6} iconSize={16} fontSize={14}>
                         <Trans>Copy Address</Trans>
                       </CopyHelper>
                     )}
