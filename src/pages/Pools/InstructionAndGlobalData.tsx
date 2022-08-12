@@ -138,9 +138,7 @@ export const Instruction = () => {
         <DetailWrapper isOpen={show}>
           <DetailItem>
             <BestPrice size={24} />
-            <Text flex={1}>
-              You can add liquidity in any price range you want and earn more with concentrated liquidity
-            </Text>
+            <Text flex={1}>Add liquidity in any price range you want and earn more with concentrated liquidity</Text>
           </DetailItem>
 
           <DetailItem>
