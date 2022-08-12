@@ -35,6 +35,9 @@ function currencyKey(currency: Currency): string {
 }
 
 const CheckIcon = styled(Check)`
+  height: 20px;
+  width: 20px;
+  margin-left: 4px;
   color: ${({ theme }) => theme.accentAction};
 `
 
