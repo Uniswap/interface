@@ -239,7 +239,7 @@ function ProLiveChart({
           }}
           fullscreen={fullscreen}
           $loading={loading || loadingProp}
-        ></MobileChart>
+        />
       ) : (
         <div
           ref={newRef => setRef(newRef)}
@@ -247,7 +247,7 @@ function ProLiveChart({
           onClick={(e: any) => {
             e.stopPropagation()
           }}
-        ></div>
+        />
       )}
     </ProLiveChartWrapper>
   )

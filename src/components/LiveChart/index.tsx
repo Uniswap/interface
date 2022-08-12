@@ -210,6 +210,8 @@ function LiveChart({
     )
   }, [isBasicchartError, isProchartError, isShowProChart, bothChartError, toggleProLiveChart, mixpanelHandler])
 
+  const currenciesList = useMemo(() => [currencies.INPUT, currencies.OUTPUT], [currencies.INPUT, currencies.OUTPUT])
+
   return (
     <LiveChartWrapper>
       {isWrappedToken ? (
@@ -266,7 +268,7 @@ function LiveChart({
           {isMobile && <Flex marginY="1rem">{toggle}</Flex>}
 
           <ProLiveChartCustom
-            currencies={Object.values(currencies)}
+            currencies={currenciesList}
             stateProChart={stateProChart}
             $isShowProChart={isShowProChart}
           />

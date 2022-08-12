@@ -80,6 +80,7 @@ export default async function getTokenList(
           name: 'KyberSwap Token List',
           logoURI: 'https://kyberswap.com/favicon.png',
           keywords: ['kyberswap', 'dmmexchange'],
+          version: { major: 0, minor: 0, patch: 0 },
         }
       : json
     formatTokensAddress(parsedData)
