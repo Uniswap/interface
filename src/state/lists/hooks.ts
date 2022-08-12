@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux'
 import { NETWORKS_INFO, SUPPORTED_NETWORKS } from 'constants/networks'
 import { useActiveWeb3React } from 'hooks'
 import useDebounce from 'hooks/useDebounce'
+import { isAddress } from 'utils'
 import sortByListPriority from 'utils/listSort'
 import { getFormattedAddress } from 'utils/tokenInfo'
 
@@ -57,10 +58,9 @@ function listToTokenMap(list: TokenList): TokenAddressMap {
   const map = list.tokens.reduce<TokenAddressMapWriteable>((tokenMap, tokenInfo) => {
     const formattedAddress = getFormattedAddress(tokenInfo.address)
 
-    if (tokenMap[tokenInfo.chainId][formattedAddress] !== undefined) {
+    if (tokenMap[tokenInfo.chainId][formattedAddress] !== undefined || !isAddress(tokenInfo.address)) {
       return tokenMap
     }
-
     const token = new WrappedTokenInfo(tokenInfo, list)
     tokenMap[tokenInfo.chainId][formattedAddress] = token
     return tokenMap

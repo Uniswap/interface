@@ -247,7 +247,7 @@ export function searchInactiveTokenLists({
     const list = activeList[url].current
     if (!list) continue
     for (const tokenInfo of list.tokens) {
-      if (tokenInfo.chainId === chainId && tokenFilter(tokenInfo)) {
+      if (isAddress(tokenInfo.address) && tokenInfo.chainId === chainId && tokenFilter(tokenInfo)) {
         const wrapped: WrappedTokenInfo = new WrappedTokenInfo(tokenInfo, list)
         if (!activeTokens[wrapped.address] && !addressSet[wrapped.address]) {
           addressSet[wrapped.address] = true
