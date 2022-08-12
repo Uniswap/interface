@@ -132,16 +132,6 @@ const FarmingPoolsMarquee = ({ tab }: { tab: string }) => {
 
 export default FarmingPoolsMarquee
 
-const IconWrapper = styled.div`
-  border-radius: 50%;
-  background: ${({ theme }) => theme.apr};
-  width: 20px;
-  height: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`
-
 const Container = styled.div`
   overflow: hidden;
   display: flex;

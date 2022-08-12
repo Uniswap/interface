@@ -221,6 +221,7 @@ export default forwardRef<PairSuggestionHandle, Props>(function PairSuggestionIn
         search: stringify(newQs),
       })
       setShowModalImportToken(true)
+      refInput.current?.blur()
       return
     }
     // select pair fill input swap form
