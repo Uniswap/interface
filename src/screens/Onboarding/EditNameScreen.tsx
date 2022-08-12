@@ -109,7 +109,7 @@ export function EditNameScreen({ navigation, route: { params } }: Props) {
 
 const defaultNames = (t: TFunction) => {
   return [
-    [t('Main Wallet'), t('Test Wallet')],
+    [t('Main wallet'), t('Test wallet')],
     [t('Investing'), t('Savings'), t('NFTs')],
   ]
 }
