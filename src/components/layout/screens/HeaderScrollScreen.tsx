@@ -60,6 +60,8 @@ export function HeaderScrollScreen({
   const headerStyle = useAnimatedStyle(() => {
     return {
       opacity: interpolate(scrollY.value, [0, maxScroll], [0, 1], Extrapolate.CLAMP),
+      zIndex: scrollY.value === 0 ? -1 : 10,
+      // need zIndex at -1 if unscrolled otherwise the ContentHeader is not clickable
     }
   })
 
@@ -129,5 +131,4 @@ export const BlurHeaderStyle: ViewStyle = {
   left: 0,
   right: 0,
   top: 0,
-  zIndex: 10,
 }

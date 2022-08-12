@@ -244,6 +244,8 @@ function TokenDetails({ currency }: { currency: Currency }) {
   const headerStyle = useAnimatedStyle(() => {
     return {
       opacity: interpolate(scrollY.value, [0, CONTENT_MAX_SCROLL_Y], [0, 1], Extrapolate.CLAMP),
+      zIndex: scrollY.value === 0 ? -1 : 10,
+      // need zIndex at -1 if unscrolled otherwise the ContentHeader buttons are not clickable
     }
   })
 
@@ -300,8 +302,8 @@ function TokenDetails({ currency }: { currency: Currency }) {
         animatedProps={blurViewProps}
         intensity={95}
         style={[
-          headerStyle,
           BlurHeaderStyle,
+          headerStyle,
           {
             paddingTop: insets.top,
           },
