@@ -223,7 +223,7 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
             borderBottomColor="backgroundOutline"
             borderBottomWidth={shouldHideRemoveOption ? 0 : 1}
             p="md">
-            <Text variant="body">{t('Copy address')}</Text>
+            <Text variant="body">{t('Copy wallet address')}</Text>
           </Box>
         ),
       },
