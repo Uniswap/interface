@@ -13,6 +13,7 @@ import { NETWORKS_INFO } from 'constants/networks'
 import useTheme from 'hooks/useTheme'
 import { AppState } from 'state'
 import { CampaignData, CampaignStatus } from 'state/campaigns/actions'
+import { useIsDarkMode } from 'state/user/hooks'
 
 export default function CampaignListAndSearch({
   onSelectCampaign,
@@ -28,6 +29,8 @@ export default function CampaignListAndSearch({
   const filteredCampaigns = campaigns.filter(item =>
     item.name.toLowerCase().includes(searchCampaign.trim().toLowerCase()),
   )
+
+  const isDarkMode = useIsDarkMode()
 
   return (
     <CampaignListAndSearchContainer>
@@ -72,7 +75,11 @@ export default function CampaignListAndSearch({
                       .map(chainId => (
                         <img
                           key={chainId}
-                          src={NETWORKS_INFO[chainId as any as ChainId].icon}
+                          src={
+                            isDarkMode && !!NETWORKS_INFO[chainId as unknown as ChainId].iconDark
+                              ? NETWORKS_INFO[chainId as unknown as ChainId].iconDark
+                              : NETWORKS_INFO[chainId as unknown as ChainId].icon
+                          }
                           alt="network_icon"
                           style={{ width: '16px', minWidth: '16px', height: '16px', minHeight: '16px' }}
                         />
