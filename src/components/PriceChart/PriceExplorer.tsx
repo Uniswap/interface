@@ -84,7 +84,7 @@ export const PriceExplorer = ({ graphs }: GraphProps) => {
             animatedProps={graphTransitionAnimatedProps}
             fill="transparent"
             stroke={theme.colors.accentAction}
-            strokeWidth={2}
+            strokeWidth={1.5}
           />
 
           <Defs>

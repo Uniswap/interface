@@ -129,12 +129,12 @@ function HeaderTitleElement({ currency }: TokenDetailsHeaderProps) {
 
   return (
     <Flex centered gap="none">
-      <Flex centered row gap="xxs">
-        <CurrencyLogo currency={currency} size={20} />
+      <Flex centered row gap="xs">
+        <CurrencyLogo currency={currency} size={16} />
         <Text variant="subhead">{currency.name ?? t('Unknown token')}</Text>
       </Flex>
       {loading ? null : (
-        <Text color="textTertiary" variant="caption">
+        <Text color="textSecondary" variant="caption">
           {formatUSDPrice(spotPrices[currencyId(currency)]?.price) ?? t('Unknown token')}
         </Text>
       )}
@@ -255,7 +255,7 @@ function TokenDetails({ currency }: { currency: Currency }) {
 
   const blurViewProps = useAnimatedProps(() => {
     return {
-      pointerEvents: (scrollY.value === 0 ? 'none' : 'auto') as PointerEvent,
+      pointerEvents: (scrollY.value === 0 ? 'none' : 'auto') as 'none' | 'auto',
     }
   })
 
@@ -278,7 +278,7 @@ function TokenDetails({ currency }: { currency: Currency }) {
     // had to manually define backgroundSurface as an rgba value for this to run on UI thread
     const opacity = interpolate(
       scrollY.value,
-      [0, CONTENT_MAX_SCROLL_Y],
+      [0, CONTENT_MAX_SCROLL_Y / 2],
       [0, 100],
       Extrapolate.CLAMP
     )
@@ -297,6 +297,7 @@ function TokenDetails({ currency }: { currency: Currency }) {
   const FixedHeaderBar = useMemo(
     () => (
       <AnimatedBlurView
+        animatedProps={blurViewProps}
         intensity={95}
         style={[
           headerStyle,
@@ -315,11 +316,12 @@ function TokenDetails({ currency }: { currency: Currency }) {
         </WithScrollToTop>
       </AnimatedBlurView>
     ),
-    [currency, headerStyle, insets.top, isDarkMode]
+    [blurViewProps, currency, headerStyle, insets.top, isDarkMode]
   )
 
   const FixedFooterBar = useMemo(
     () => (
+      // TODO: add blur here
       <AnimatedFlex
         animatedProps={blurViewProps}
         style={[footerStyle, FooterPositionStyle]}

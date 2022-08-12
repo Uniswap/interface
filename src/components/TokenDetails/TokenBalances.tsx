@@ -19,19 +19,7 @@ export function TokenBalances({ balance }: { balance: PortfolioBalance }) {
 
   return (
     <Flex bg="backgroundContainer" borderRadius="sm" gap="lg" mx="md" p="md">
-      <Flex>
-        <Text color="textSecondary" variant="subheadSmall">
-          {t('Your balance')}
-        </Text>
-
-        <Flex row alignItems="center" justifyContent="space-between">
-          <Text variant="headlineSmall">
-            {`${formatCurrencyAmount(balance.amount)}`} {currency.symbol}
-          </Text>
-          <Text variant="body">{formatUSDPrice(balance.balanceUSD)}</Text>
-        </Flex>
-      </Flex>
-
+      <TokenL1Balance balance={balance} />
       <Flex>
         <Text color="textSecondary" variant="subheadSmall">
           {t('Your balance on other chains')}
@@ -58,13 +46,12 @@ export function TokenL1Balance({ balance }: { balance: PortfolioBalance }) {
   const currency = balance.amount.currency
 
   return (
-    <Flex>
+    <Flex gap="xs">
       <Text color="textSecondary" variant="subheadSmall">
         {t('Your balance')}
       </Text>
-
       <Flex row alignItems="center" justifyContent="space-between">
-        <Text variant="headlineSmall">
+        <Text variant="headlineMedium">
           {`${formatCurrencyAmount(balance.amount)}`} {currency.symbol}
         </Text>
         <Text variant="body">{formatUSDPrice(balance.balanceUSD)}</Text>
