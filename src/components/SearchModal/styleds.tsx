@@ -21,7 +21,7 @@ export const PaddedColumn = styled(AutoColumn)`
   padding: 20px;
 `
 
-export const MenuItem = styled(RowBetween)`
+export const MenuItem = styled(RowBetween)<{ phase0Flag?: boolean }>`
   padding: 4px 20px;
   height: 56px;
   display: grid;
@@ -30,42 +30,47 @@ export const MenuItem = styled(RowBetween)`
   cursor: ${({ disabled }) => !disabled && 'pointer'};
   pointer-events: ${({ disabled }) => disabled && 'none'};
   :hover {
-    background-color: ${({ theme, disabled }) => !disabled && theme.deprecated_bg2};
+    background-color: ${({ theme, disabled, phase0Flag }) =>
+      (phase0Flag && theme.hoverDefault) || (!disabled && theme.deprecated_bg2)};
   }
   opacity: ${({ disabled, selected }) => (disabled || selected ? 0.5 : 1)};
 `
 
-export const SearchInput = styled.input`
+export const SearchInput = styled.input<{ phase0Flag?: boolean }>`
   position: relative;
   display: flex;
   padding: 16px;
+  height: ${({ phase0Flag }) => phase0Flag && '40px'};
   align-items: center;
   width: 100%;
   white-space: nowrap;
   background: none;
+  background-color: ${({ theme, phase0Flag }) => phase0Flag && theme.backgroundModule};
   border: none;
   outline: none;
-  border-radius: 20px;
+  border-radius: ${({ phase0Flag }) => (phase0Flag ? '12px' : '20px')};
   color: ${({ theme }) => theme.deprecated_text1};
   border-style: solid;
-  border: 1px solid ${({ theme }) => theme.deprecated_bg3};
+  border: 1px solid ${({ theme, phase0Flag }) => (phase0Flag ? theme.backgroundOutline : theme.deprecated_bg3)};
   -webkit-appearance: none;
 
-  font-size: 18px;
+  font-size: ${({ phase0Flag }) => (phase0Flag ? '16px' : '18px')};
 
   ::placeholder {
-    color: ${({ theme }) => theme.deprecated_text3};
+    color: ${({ theme, phase0Flag }) => (phase0Flag ? theme.textTertiary : theme.deprecated_text3)};
+    font-size: ${({ phase0Flag }) => phase0Flag && '16px'};
   }
   transition: border 100ms;
   :focus {
-    border: 1px solid ${({ theme }) => theme.deprecated_primary1};
+    border: 1px solid ${({ theme, phase0Flag }) => (phase0Flag ? 'transparent' : theme.deprecated_primary1)};
+    background-color: ${({ theme, phase0Flag }) => phase0Flag && theme.accentActionSoft};
     outline: none;
   }
 `
-export const Separator = styled.div`
+export const Separator = styled.div<{ phase0Flag?: boolean }>`
   width: 100%;
   height: 1px;
-  background-color: ${({ theme }) => theme.deprecated_bg2};
+  background-color: ${({ theme, phase0Flag }) => (phase0Flag ? theme.backgroundOutline : theme.deprecated_bg2)};
 `
 
 export const SeparatorDark = styled.div`

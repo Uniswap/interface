@@ -5,6 +5,7 @@ import { useWeb3React } from '@web3-react/core'
 import { EventName, ModalName } from 'components/AmplitudeAnalytics/constants'
 import { Trace } from 'components/AmplitudeAnalytics/Trace'
 import { sendEvent } from 'components/analytics'
+import { Phase0Variant, usePhase0Flag } from 'featureFlags/flags/phase0'
 import useDebounce from 'hooks/useDebounce'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import useTheme from 'hooks/useTheme'
@@ -30,7 +31,8 @@ import CurrencyList from './CurrencyList'
 import ImportRow from './ImportRow'
 import { PaddedColumn, SearchInput, Separator } from './styleds'
 
-const ContentWrapper = styled(Column)`
+const ContentWrapper = styled(Column)<{ phase0Flag?: boolean }>`
+  background-color: ${({ theme, phase0Flag }) => phase0Flag && theme.backgroundSurface};
   width: 100%;
   flex: 1 1;
   position: relative;
@@ -73,6 +75,9 @@ export function CurrencySearch({
   showImportView,
   setImportToken,
 }: CurrencySearchProps) {
+  const phase0Flag = usePhase0Flag()
+  const phase0FlagEnabled = phase0Flag === Phase0Variant.Enabled
+
   const { chainId } = useWeb3React()
   const theme = useTheme()
 
@@ -191,7 +196,7 @@ export function CurrencySearch({
   }, [])
 
   return (
-    <ContentWrapper>
+    <ContentWrapper phase0Flag={phase0FlagEnabled}>
       <Trace name={EventName.TOKEN_SELECTOR_OPENED} modal={ModalName.TOKEN_SELECTOR} shouldLogImpression>
         <PaddedColumn gap="16px">
           <RowBetween>
@@ -206,6 +211,7 @@ export function CurrencySearch({
               id="token-search-input"
               placeholder={t`Search name or paste address`}
               autoComplete="off"
+              phase0Flag={phase0FlagEnabled}
               value={searchQuery}
               ref={inputRef as RefObject<HTMLInputElement>}
               onChange={handleInput}
@@ -222,7 +228,7 @@ export function CurrencySearch({
             />
           )}
         </PaddedColumn>
-        <Separator />
+        <Separator phase0Flag={phase0FlagEnabled} />
         {searchToken && !searchTokenIsAdded ? (
           <Column style={{ padding: '20px 0', height: '100%' }}>
             <ImportRow token={searchToken} showImportView={showImportView} setImportToken={setImportToken} />
@@ -256,20 +262,26 @@ export function CurrencySearch({
             </ThemedText.DeprecatedMain>
           </Column>
         )}
-        <Footer>
-          <Row justify="center">
-            <ButtonText onClick={showManageView} color={theme.deprecated_primary1} className="list-token-manage-button">
-              <RowFixed>
-                <IconWrapper size="16px" marginRight="6px" stroke={theme.deprecated_primaryText1}>
-                  <Edit />
-                </IconWrapper>
-                <ThemedText.DeprecatedMain color={theme.deprecated_primaryText1}>
-                  <Trans>Manage Token Lists</Trans>
-                </ThemedText.DeprecatedMain>
-              </RowFixed>
-            </ButtonText>
-          </Row>
-        </Footer>
+        {!phase0FlagEnabled && (
+          <Footer>
+            <Row justify="center">
+              <ButtonText
+                onClick={showManageView}
+                color={theme.deprecated_primary1}
+                className="list-token-manage-button"
+              >
+                <RowFixed>
+                  <IconWrapper size="16px" marginRight="6px" stroke={theme.deprecated_primaryText1}>
+                    <Edit />
+                  </IconWrapper>
+                  <ThemedText.DeprecatedMain color={theme.deprecated_primaryText1}>
+                    <Trans>Manage Token Lists</Trans>
+                  </ThemedText.DeprecatedMain>
+                </RowFixed>
+              </ButtonText>
+            </Row>
+          </Footer>
+        )}
       </Trace>
     </ContentWrapper>
   )
