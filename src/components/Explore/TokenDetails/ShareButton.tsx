@@ -46,7 +46,7 @@ const ShareAction = styled.div`
   cursor: pointer;
 
   &:hover {
-    background-color: ${({ theme }) => theme.backgroundContainer};
+    background-color: ${({ theme }) => theme.backgroundModule};
   }
 `
 

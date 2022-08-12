@@ -39,7 +39,7 @@ const ArrowWrapper = styled.div<{ phase0Flag: boolean }>`
   align-items: center;
   background-color: ${({ theme, phase0Flag }) => (phase0Flag ? theme.backgroundSurface : theme.deprecated_bg1)};
   border: 4px solid;
-  border-color: ${({ theme, phase0Flag }) => (phase0Flag ? theme.backgroundContainer : theme.deprecated_bg0)};
+  border-color: ${({ theme, phase0Flag }) => (phase0Flag ? theme.backgroundModule : theme.deprecated_bg0)};
   z-index: 2;
 `
 

@@ -6,8 +6,8 @@ export interface ThemeColors {
 
   backgroundBackdrop: Color
   backgroundSurface: Color
-  backgroundContainer: Color
-  backgroundAction: Color
+  backgroundModule: Color
+  backgroundInteractive: Color
   backgroundOutline: Color
   backgroundScrim: Color
 
