@@ -1,4 +1,3 @@
-import { stringify } from 'qs'
 import React from 'react'
 import { X } from 'react-feather'
 import { useHistory } from 'react-router-dom'
@@ -9,6 +8,7 @@ import CampaignListAndSearch from 'pages/Campaign/CampaignListAndSearch'
 import { ApplicationModal } from 'state/application/actions'
 import { useModalOpen, useSelectCampaignModalToggle } from 'state/application/hooks'
 import { CampaignData } from 'state/campaigns/actions'
+import { getSlugUrlCampaign } from 'utils/campaign'
 
 export default function ModalSelectCampaign() {
   const isSelectCampaignModalOpen = useModalOpen(ApplicationModal.SELECT_CAMPAIGN)
@@ -17,9 +17,7 @@ export default function ModalSelectCampaign() {
 
   const history = useHistory()
   const onSelectCampaign = (campaign: CampaignData) => {
-    history.replace({
-      search: stringify({ selectedCampaignId: campaign.id }),
-    })
+    history.push(getSlugUrlCampaign(campaign))
     setTimeout(() => {
       // UX Improvement
       toggleSelectCampaignModal()

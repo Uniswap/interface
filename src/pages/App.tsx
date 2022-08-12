@@ -90,7 +90,7 @@ const BodyWrapper = styled.div`
 
   ${isMobile && `overflow-x: hidden;`}
 `
-const AppPaths = { SWAP_LEGACY: '/swap-legacy', ABOUT: '/about', SWAP: '/swap' }
+export const AppPaths = { SWAP_LEGACY: '/swap-legacy', ABOUT: '/about', SWAP: '/swap', CAMPAIGN: '/campaigns' }
 
 export default function App() {
   const { account, chainId } = useActiveWeb3React()
@@ -189,7 +189,7 @@ export default function App() {
                     <Route exact path="/referral" component={CreateReferral} />
                     <Route exact path="/discover" component={TrueSight} />
                     <Route exact path="/buy-crypto" component={BuyCrypto} />
-                    <Route exact path="/campaigns" component={Campaign} />
+                    <Route exact path={`${AppPaths.CAMPAIGN}/:slug?`} component={Campaign} />
 
                     <Route component={RedirectPathToSwapOnly} />
                   </Switch>

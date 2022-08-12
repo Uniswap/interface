@@ -1,6 +1,5 @@
 import { Trans, t } from '@lingui/macro'
 import dayjs from 'dayjs'
-import { stringify } from 'qs'
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { BarChart, ChevronDown, Clock, Share2, Star, Users } from 'react-feather'
 import { useSelector } from 'react-redux'
@@ -36,6 +35,7 @@ import { CampaignData, CampaignState, setCampaignData, setSelectedCampaign } fro
 import { useAppDispatch } from 'state/hooks'
 import { HideMedium, MediumOnly } from 'theme'
 import { formatNumberWithPrecisionRange } from 'utils'
+import { getSlugUrlCampaign } from 'utils/campaign'
 import { getFormattedTimeFromSecond } from 'utils/formatTime'
 import oembed2iframe from 'utils/oembed2iframe'
 
@@ -221,9 +221,7 @@ export default function Campaign() {
 
   const history = useHistory()
   const onSelectCampaign = (campaign: CampaignData) => {
-    history.replace({
-      search: stringify({ selectedCampaignId: campaign.id }),
-    })
+    history.push(getSlugUrlCampaign(campaign))
   }
 
   const now = Date.now()
