@@ -31,8 +31,8 @@ import CurrencyList from './CurrencyList'
 import ImportRow from './ImportRow'
 import { PaddedColumn, SearchInput, Separator } from './styleds'
 
-const ContentWrapper = styled(Column)`
-  background-color: ${({ theme }) => theme.backgroundSurface};
+const ContentWrapper = styled(Column)<{ phase0Flag?: boolean }>`
+  background-color: ${({ theme, phase0Flag }) => phase0Flag && theme.backgroundSurface};
   width: 100%;
   flex: 1 1;
   position: relative;
@@ -196,7 +196,7 @@ export function CurrencySearch({
   }, [])
 
   return (
-    <ContentWrapper>
+    <ContentWrapper phase0Flag={phase0FlagEnabled}>
       <Trace name={EventName.TOKEN_SELECTOR_OPENED} modal={ModalName.TOKEN_SELECTOR} shouldLogImpression>
         <PaddedColumn gap="16px">
           <RowBetween>

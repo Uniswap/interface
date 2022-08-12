@@ -36,7 +36,8 @@ const BaseWrapper = styled.div<{ disable?: boolean; phase0Flag?: boolean }>`
   align-items: center;
   :hover {
     cursor: ${({ disable }) => !disable && 'pointer'};
-    background-color: ${({ theme, disable }) => !disable && theme.deprecated_bg2};
+    background-color: ${({ theme, disable, phase0Flag }) =>
+      (phase0Flag && theme.hoverDefault) || (!disable && theme.deprecated_bg2)};
   }
 
   color: ${({ theme, disable, phase0Flag }) => disable && (phase0Flag ? theme.accentAction : theme.deprecated_text3)};
