@@ -2,6 +2,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { TransactionResponse } from '@ethersproject/providers'
 import { Currency, CurrencyAmount, Fraction, TokenAmount, WETH, computePriceImpact } from '@kyberswap/ks-sdk-core'
 import { Trans, t } from '@lingui/macro'
+import { captureException } from '@sentry/react'
 import { parseUnits } from 'ethers/lib/utils'
 import JSBI from 'jsbi'
 import React, { useCallback, useMemo, useState } from 'react'
@@ -46,7 +47,6 @@ import { feeRangeCalc, useCurrencyConvertedToNative } from 'utils/dmm'
 import isZero from 'utils/isZero'
 import { maxAmountSpend } from 'utils/maxAmountSpend'
 import { computePriceImpactWithoutFee, warningSeverity } from 'utils/prices'
-import { reportException } from 'utils/sentry'
 
 import { PairState } from '../../data/Reserves'
 import { Dots, Wrapper } from '../Pool/styleds'
@@ -264,7 +264,10 @@ const ZapIn = ({
       )
       .catch(err => {
         setAttemptingTxn(false)
-        reportException(err)
+        const e = new Error('Classic: ZapIn liquidity Error', { cause: err })
+        e.name = 'ZapError'
+        captureException(e, { extra: { args } })
+
         // we only care if the error is something _other_ than the user rejected the tx
         if (err?.code !== 4001) {
           console.error(err)

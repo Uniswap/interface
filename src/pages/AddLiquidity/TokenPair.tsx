@@ -2,9 +2,10 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { TransactionResponse } from '@ethersproject/providers'
 import { Currency, CurrencyAmount, Fraction, TokenAmount, WETH } from '@kyberswap/ks-sdk-core'
 import { Trans, t } from '@lingui/macro'
+import { captureException } from '@sentry/react'
 import { parseUnits } from 'ethers/lib/utils'
 import JSBI from 'jsbi'
-import React, { useCallback, useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { AlertTriangle } from 'react-feather'
 import { useHistory } from 'react-router-dom'
 import { Flex, Text } from 'rebass'
@@ -20,7 +21,6 @@ import useTheme from 'hooks/useTheme'
 import useTokensMarketPrice from 'hooks/useTokensMarketPrice'
 import { feeRangeCalc, useCurrencyConvertedToNative } from 'utils/dmm'
 import isZero from 'utils/isZero'
-import { reportException } from 'utils/sentry'
 
 import { ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
 import { AutoColumn } from '../../components/Column'
@@ -306,7 +306,9 @@ const TokenPair = ({
       )
       .catch(err => {
         setAttemptingTxn(false)
-        reportException(err)
+        const e = new Error('Classic: Add liquidity Error', { cause: err })
+        e.name = 'AddLiquidityError'
+        captureException(e, { extra: { args } })
         // we only care if the error is something _other_ than the user rejected the tx
         if (err?.code !== 4001) {
           console.error(err)

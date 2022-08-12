@@ -1,7 +1,7 @@
 import { createReducer } from '@reduxjs/toolkit'
+import { Severity, captureException } from '@sentry/react'
 
 import { Farm } from 'state/farms/types'
-import { reportException } from 'utils/sentry'
 
 import { setAttemptingTxn, setFarmsData, setLoading, setShowConfirm, setTxHash, setYieldPoolsError } from './actions'
 
@@ -47,7 +47,13 @@ export default createReducer<FarmsState>(initialState, builder =>
       state.txHash = txHash
     })
     .addCase(setYieldPoolsError, (state, { payload: error }) => {
-      if (error) reportException(error)
+      if (error) {
+        const e = new Error('Classic Farm Error', {
+          cause: error,
+        })
+        e.name = 'FarmError'
+        captureException(e, { level: Severity.Error })
+      }
       return {
         ...state,
         error: error ? error?.message : '',

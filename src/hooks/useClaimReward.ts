@@ -1,6 +1,7 @@
 import { TransactionResponse } from '@ethersproject/providers'
 import { CurrencyAmount } from '@kyberswap/ks-sdk-core'
 import { t } from '@lingui/macro'
+import { captureException } from '@sentry/react'
 import { BigNumber } from 'ethers'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import useSWR from 'swr'
@@ -9,7 +10,6 @@ import { CLAIM_REWARDS_DATA_URL, KNC } from 'constants/index'
 import { useActiveWeb3React } from 'hooks'
 import { useAllTransactions, useTransactionAdder } from 'state/transactions/hooks'
 import { getClaimRewardContract } from 'utils'
-import { reportException } from 'utils/sentry'
 
 export interface IReward {
   index: number
@@ -163,7 +163,10 @@ export default function useClaimReward() {
         .catch((err: any) => {
           //on invalid claim reward
           setAttemptingTxn(false)
-          reportException(err)
+          const e = new Error('Claim Reward error', { cause: err })
+          e.name = 'ClaimRewardError'
+          captureException(e)
+
           setError(err.message || t`Something is wrong. Please try again later!`)
         })
     }

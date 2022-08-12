@@ -4,8 +4,9 @@ import { Contract } from '@ethersproject/contracts'
 import { TransactionResponse } from '@ethersproject/providers'
 import { Currency, CurrencyAmount, Fraction, Percent, Token, WETH } from '@kyberswap/ks-sdk-core'
 import { Trans, t } from '@lingui/macro'
+import { captureException } from '@sentry/react'
 import JSBI from 'jsbi'
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Flex, Text } from 'rebass'
 
 import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from 'components/Button'
@@ -48,7 +49,6 @@ import {
 } from 'utils'
 import { currencyId } from 'utils/currencyId'
 import { formatJSBIValue } from 'utils/formatBalance'
-import { reportException } from 'utils/sentry'
 import useDebouncedChangeHandler from 'utils/useDebouncedChangeHandler'
 
 import { Wrapper } from '../Pool/styleds'
@@ -389,7 +389,9 @@ export default function TokenPair({
         })
         .catch((err: Error) => {
           setAttemptingTxn(false)
-          reportException(err)
+          const e = new Error('Remove Liquidity Error', { cause: err })
+          e.name = 'RemoveLiquidityError'
+          captureException(e, { extra: { args } })
           // we only care if the error is something _other_ than the user rejected the tx
           if ((err as any)?.code !== 4001) {
             console.error(err)

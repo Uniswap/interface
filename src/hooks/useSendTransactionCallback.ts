@@ -1,5 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { TransactionResponse } from '@ethersproject/providers'
+import { Severity, captureException } from '@sentry/react'
 import { ethers } from 'ethers'
 import { useCallback } from 'react'
 
@@ -29,7 +30,14 @@ export default function useSendTransactionCallback() {
       try {
         gasEstimate = await library.getSigner().estimateGas(estimateGasOption)
       } catch (error) {
-        console.error(error)
+        const e = new Error('Swap failed', { cause: error })
+        e.name = 'SwapError'
+
+        captureException(e, {
+          level: Severity.Critical,
+          extra: estimateGasOption,
+        })
+
         throw new Error(
           'gasEstimate not found: Unexpected error. Please contact support: none of the calls threw an error',
         )
@@ -52,8 +60,15 @@ export default function useSendTransactionCallback() {
         if (error?.code === 4001) {
           throw new Error('Transaction rejected.')
         } else {
+          const e = new Error('Swap failed', { cause: error })
+          e.name = 'SwapError'
+
+          captureException(e, {
+            level: Severity.Critical,
+            extra: sendTransactionOption,
+          })
+
           // Otherwise, the error was unexpected, and we need to convey that.
-          console.error(`Send transaction failed`, error)
           throw new Error(error)
         }
       }

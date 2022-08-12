@@ -1,9 +1,9 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Token } from '@kyberswap/ks-sdk-core'
 import { createReducer } from '@reduxjs/toolkit'
+import { Severity, captureException } from '@sentry/react'
 
 import { RewardLockerVersion } from 'state/farms/types'
-import { reportException } from 'utils/sentry'
 
 import {
   setAttemptingTxn,
@@ -52,7 +52,13 @@ export default createReducer<VestingState>(initialState, builder =>
       state.txHash = txHash
     })
     .addCase(setVestingError, (state, { payload: error }) => {
-      if (error) reportException(error)
+      if (error) {
+        const e = new Error('Classic Farm Vesting Error', {
+          cause: error,
+        })
+        e.name = 'VestingError'
+        captureException(e, { level: Severity.Error })
+      }
       state.error = error ? error?.message : ''
     }),
 )

@@ -8,6 +8,7 @@ import {
   TokenAmount,
   TradeType,
 } from '@kyberswap/ks-sdk-core'
+import { Severity, captureException } from '@sentry/react'
 import JSBI from 'jsbi'
 import invariant from 'tiny-invariant'
 
@@ -15,7 +16,6 @@ import { DEX_TO_COMPARE, DexConfig, dexIds, dexListConfig, dexTypes } from 'cons
 import { ETHER_ADDRESS, KYBERSWAP_SOURCE, sentryRequestId } from 'constants/index'
 import { FeeConfig } from 'hooks/useSwapV2Callback'
 import { AggregationComparer } from 'state/swap/types'
-import { reportException } from 'utils/sentry'
 
 import fetchWaiting from './fetchWaiting'
 
@@ -248,10 +248,11 @@ export class Aggregator {
           routerAddress,
         )
       } catch (e) {
-        console.error(e)
         // ignore aborted request error
         if (!e?.message?.includes('Fetch is aborted') && !e?.message?.includes('The user aborted a request')) {
-          reportException(e)
+          const e = new Error('Aggregator API call failed')
+          e.name = 'AggregatorAPIError'
+          captureException(e, { level: Severity.Error })
         }
       }
     }
@@ -362,8 +363,12 @@ export class Aggregator {
           comparedDex,
         }
       } catch (e) {
-        console.error(e)
-        reportException(e)
+        // ignore aborted request error
+        if (!e?.message?.includes('Fetch is aborted') && !e?.message?.includes('The user aborted a request')) {
+          const e = new Error('Aggregator API (comparedDex) call failed')
+          e.name = 'AggregatorAPIError'
+          captureException(e, { level: Severity.Error })
+        }
       }
     }
 

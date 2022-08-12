@@ -7,7 +7,6 @@ import JSBI from 'jsbi'
 import { useMemo } from 'react'
 
 import { formatCurrencyAmount } from 'utils/formatBalance'
-import { reportException } from 'utils/sentry'
 
 import { BIPS_BASE, INITIAL_ALLOWED_SLIPPAGE } from '../constants'
 import { useTransactionAdder } from '../state/transactions/hooks'
@@ -187,19 +186,17 @@ export function useSwapCallback(
                 }
               })
               .catch(gasError => {
+                // This callback only for swap legacy, dont need to track error on sentry
                 console.debug('Gas estimate failed, trying eth_call to extract error', call)
-                reportException(new Error('Gas estimate failed, trying eth_call to extract error'))
 
                 return library
                   .call(tx)
                   .then(result => {
                     console.debug('Unexpected successful call after failed estimate gas', call, gasError, result)
-                    reportException(new Error('Unexpected successful call after failed estimate gas'))
                     return { call, error: new Error('Unexpected issue with estimating the gas. Please try again.') }
                   })
                   .catch(callError => {
                     console.debug('Call threw error', call, callError)
-                    reportException(callError)
                     let errorMessage: string
                     switch (callError.message) {
                       case 'execution reverted: DmmExchangeRouter: INSUFFICIENT_OUTPUT_AMOUNT':

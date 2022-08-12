@@ -13,6 +13,7 @@ import {
   computePriceImpact,
 } from '@kyberswap/ks-sdk-core'
 import { Trans, t } from '@lingui/macro'
+import { captureException } from '@sentry/react'
 import JSBI from 'jsbi'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { Flex, Text } from 'rebass'
@@ -54,7 +55,6 @@ import { currencyId } from 'utils/currencyId'
 import { useCurrencyConvertedToNative } from 'utils/dmm'
 import { formatJSBIValue } from 'utils/formatBalance'
 import { computePriceImpactWithoutFee, warningSeverity } from 'utils/prices'
-import { reportException } from 'utils/sentry'
 import useDebouncedChangeHandler from 'utils/useDebouncedChangeHandler'
 
 import { Wrapper } from '../Pool/styleds'
@@ -422,7 +422,9 @@ export default function ZapOut({
         })
         .catch((err: Error) => {
           setAttemptingTxn(false)
-          reportException(err)
+          const e = new Error('zap out failed', { cause: err })
+          e.name = 'ZapError'
+          captureException(e, { extra: { args } })
           // we only care if the error is something _other_ than the user rejected the tx
           if ((err as any)?.code !== 4001) {
             console.error(err)

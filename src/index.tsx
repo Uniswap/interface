@@ -59,15 +59,18 @@ if (process.env.REACT_APP_GTM_ID) {
   TagManager.initialize(tagManagerArgs)
 }
 
-Sentry.init({
-  dsn: process.env.REACT_APP_SENTRY_DNS,
-  environment: window.location.href.includes('kyberswap.com') ? 'production' : 'development',
-  ignoreErrors: ['AbortError'],
-})
+if (window.location.href.includes('kyberswap.com')) {
+  Sentry.init({
+    dsn: process.env.REACT_APP_SENTRY_DNS,
+    environment: 'production',
+    ignoreErrors: ['AbortError'],
+  })
 
-Sentry.configureScope(scope => {
-  scope.setTag('request_id', sentryRequestId)
-})
+  Sentry.configureScope(scope => {
+    scope.setTag('request_id', sentryRequestId)
+    scope.setTag('version', process.env.REACT_APP_TAG)
+  })
+}
 
 const preloadhtml = document.querySelector('.preloadhtml')
 const preloadhtmlStyle = document.querySelector('.preloadhtml-style')

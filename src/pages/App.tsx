@@ -1,14 +1,19 @@
 import { ApolloProvider } from '@apollo/client'
 import { ChainId } from '@kyberswap/ks-sdk-core'
+import * as Sentry from '@sentry/react'
 import { Popover, Sidetab } from '@typeform/embed-react'
-import { Suspense, lazy } from 'react'
+import { Suspense, lazy, useEffect } from 'react'
 import { isMobile } from 'react-device-detect'
 import { Route, Switch } from 'react-router-dom'
 import styled from 'styled-components'
 
+import ErrorBoundary from 'components/ErrorBoundary'
 import Footer from 'components/Footer/Footer'
+import Header from 'components/Header'
 import TopBanner from 'components/Header/TopBanner'
 import Loader from 'components/LocalLoader'
+import Popups from 'components/Popups'
+import Web3ReactManager from 'components/Web3ReactManager'
 import { BLACKLIST_WALLETS } from 'constants/index'
 import { NETWORKS_INFO } from 'constants/networks'
 import { useActiveWeb3React } from 'hooks'
@@ -16,11 +21,8 @@ import { useGlobalMixpanelEvents } from 'hooks/useMixpanel'
 import useTheme from 'hooks/useTheme'
 import { useWindowSize } from 'hooks/useWindowSize'
 import { useIsDarkMode } from 'state/user/hooks'
+import DarkModeQueryParamReader from 'theme/DarkModeQueryParamReader'
 
-import Header from '../components/Header'
-import Popups from '../components/Popups'
-import Web3ReactManager from '../components/Web3ReactManager'
-import DarkModeQueryParamReader from '../theme/DarkModeQueryParamReader'
 import { RedirectDuplicateTokenIds } from './AddLiquidityV2/redirects'
 import Swap from './Swap'
 import { RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects'
@@ -94,6 +96,24 @@ export const AppPaths = { SWAP_LEGACY: '/swap-legacy', ABOUT: '/about', SWAP: '/
 
 export default function App() {
   const { account, chainId } = useActiveWeb3React()
+
+  useEffect(() => {
+    if (account) {
+      Sentry.setUser({
+        id: account,
+      })
+    }
+  }, [account])
+
+  useEffect(() => {
+    if (chainId) {
+      Sentry.setContext('network', {
+        chainId: chainId,
+        name: NETWORKS_INFO[chainId].name,
+      })
+    }
+  }, [chainId])
+
   const classicClient = NETWORKS_INFO[chainId || ChainId.MAINNET].classicClient
 
   const theme = useTheme()
@@ -105,7 +125,7 @@ export default function App() {
   const showFooter = !pathname.includes(AppPaths.ABOUT)
 
   return (
-    <>
+    <ErrorBoundary>
       {width && width >= 768 ? (
         <Sidetab
           id={isDarkTheme ? 'W5TeOyyH' : 'K0dtSO0v'}
@@ -200,6 +220,6 @@ export default function App() {
           </AppWrapper>
         </ApolloProvider>
       )}
-    </>
+    </ErrorBoundary>
   )
 }

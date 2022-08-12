@@ -101,7 +101,6 @@ import { Aggregator } from 'utils/aggregator'
 import { currencyId } from 'utils/currencyId'
 import { filterTokensWithExactKeyword } from 'utils/filtering'
 import { maxAmountSpend } from 'utils/maxAmountSpend'
-import { reportException } from 'utils/sentry'
 import { convertToSlug, getNetworkSlug, getSymbolSlug } from 'utils/string'
 import { checkPairInWhiteList, convertSymbol } from 'utils/tokenInfo'
 
@@ -374,8 +373,6 @@ export default function Swap({ history }: RouteComponentProps) {
         setSwapState({ attemptingTxn: false, tradeToConfirm, showConfirm, swapErrorMessage: undefined, txHash: hash })
       })
       .catch(error => {
-        // Exclude Transaction rejected from sentry
-        if (!error?.message?.includes('Transaction rejected')) reportException(error)
         setSwapState({
           attemptingTxn: false,
           tradeToConfirm,
