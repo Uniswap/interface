@@ -69,7 +69,7 @@ export function GenericImportForm({
               ? 'accentFailure'
               : 'backgroundContainer'
           }
-          borderRadius="lg"
+          borderRadius="xl"
           borderWidth={1}
           flexShrink={1}
           height={160}
