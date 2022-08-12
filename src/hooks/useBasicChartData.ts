@@ -116,7 +116,7 @@ export default function useBasicChartData(tokens: (Token | null | undefined)[], 
     isValidating: kyberLoading,
   } = useSWR(
     tokenAddresses[0] && tokenAddresses[1]
-      ? `https://price-chart.kyberswap.com/api/price-chart?chainId=${chainId}&timeWindow=${timeFrame.toLowerCase()}&tokenIn=${
+      ? `https://price-chart.dev.kyberengineering.io/api/price-chart?chainId=${chainId}&timeWindow=${timeFrame.toLowerCase()}&tokenIn=${
           tokenAddresses[0]
         }&tokenOut=${tokenAddresses[1]}`
       : null,
