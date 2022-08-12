@@ -72,7 +72,7 @@ export function SettingsManualBackup({
   }, [currentStep])
 
   return (
-    <Screen mt="lg" mx="lg">
+    <Screen mx="lg" my="lg">
       <BackHeader alignment="left" mb="lg">
         <Text variant="subhead">{t('Manual backup')}</Text>
       </BackHeader>
@@ -86,7 +86,7 @@ export function SettingsManualBackup({
         grow
         alignItems="stretch"
         exiting={SlideOutLeft}
-        gap="none"
+        gap="lg"
         justifyContent="space-evenly">
         {hasManualBackup ? (
           <Text variant="bodySmall">
@@ -105,7 +105,7 @@ export function SettingsManualBackup({
         <Flex grow gap="lg" justifyContent="flex-start">
           <ManualBackupEducationSection />
         </Flex>
-        <Flex justifyContent="center">
+        <Flex justifyContent="flex-end">
           <PrimaryButton
             alignSelf="stretch"
             borderRadius="md"
@@ -174,7 +174,6 @@ export function SettingsManualBackup({
           alignItems="stretch"
           entering={SlideInRight}
           exiting={SlideOutLeft}
-          gap="lg"
           justifyContent="space-evenly">
           <Text variant="bodySmall">
             {t('Remember to record your words in the same order as they are below')}
