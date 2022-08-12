@@ -4,6 +4,7 @@ import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { Box } from 'src/components/layout/Box'
 import { Text } from 'src/components/Text'
 import { logException } from 'src/features/telemetry'
+import { LogContext } from 'src/features/telemetry/constants'
 import { logger } from 'src/utils/logger'
 
 interface ErrorBoundaryState {
@@ -23,8 +24,14 @@ export class ErrorBoundary extends React.Component<unknown, ErrorBoundaryState> 
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    logger.error('ErrorBoundary', 'componentDidCatch', 'Error caught by boundary', error, errorInfo)
-    logException(error)
+    logger.error(
+      LogContext.ErrorBoundary,
+      'componentDidCatch',
+      'Error caught by boundary',
+      error,
+      errorInfo
+    )
+    logException(LogContext.ErrorBoundary, error)
   }
 
   render() {

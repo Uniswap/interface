@@ -145,6 +145,18 @@ export const enum ElementName {
 }
 
 /**
+ * Context to pass down to our logMessage and logExceptions methods.
+ *
+ * This can be any context you think its helpful to identify
+ * where these methods are called from.
+ */
+export const enum LogContext {
+  ProviderManager = 'ProviderManager',
+  ErrorBoundary = 'ErrorBoundary',
+  ImageUtils = 'ImageUtils',
+}
+
+/**
  * Known actions and their properties.
  * Use destructure assignments to pick properties.
  * @example

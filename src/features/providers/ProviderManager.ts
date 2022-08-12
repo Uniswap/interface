@@ -7,6 +7,8 @@ import { FLASHBOTS_URLS } from 'src/features/providers/constants'
 import { FLASHBOTS_SUPPORTED_CHAINS } from 'src/features/providers/flashbotsProvider'
 import { getEthersProvider } from 'src/features/providers/getEthersProvider'
 import { getInfuraChainName } from 'src/features/providers/utils'
+import { logException, logMessage } from 'src/features/telemetry'
+import { LogContext } from 'src/features/telemetry/constants'
 import { logger } from 'src/utils/logger'
 import { isStale } from 'src/utils/time'
 import { promiseTimeout, sleep } from 'src/utils/timing'
@@ -26,10 +28,14 @@ interface ProviderDetails {
 export type ChainIdToProvider = Partial<Record<ChainId, ProviderDetails>>
 export type ChainIdToMutex = Partial<Record<ChainId, Mutex>>
 
+const LOG_CONTEXT = LogContext.ProviderManager
+
 const getChainDetails = (chainId: ChainId) => {
   const chainDetails = CHAIN_INFO[chainId]
   if (!chainDetails) {
-    throw new Error(`Cannot create provider for invalid chain details for ${chainId}`)
+    const error = new Error(`Cannot create provider for invalid chain details for ${chainId}`)
+    logException(LOG_CONTEXT, error)
+    throw error
   }
   return chainDetails
 }
@@ -67,8 +73,10 @@ export class ProviderManager {
         this.onUpdate?.()
         return newProvider
       } else {
+        const error = new Error(`Failed to create new provider for ${chainId}`)
+        logException(LOG_CONTEXT, error)
         // Otherwise show error
-        throw new Error(`Failed to create new provider for ${chainId}`)
+        throw error
       }
     })
     return provider!
@@ -85,12 +93,7 @@ export class ProviderManager {
 
   removeProvider(chainId: ChainId) {
     if (!this._providers[chainId]) {
-      logger.warn(
-        'ProviderManager',
-        'removeProvider',
-        'Attempting to remove non-existing provider',
-        chainId
-      )
+      logMessage(LOG_CONTEXT, `Attempting to remove non-existing provider: ${chainId}`)
       return
     }
     this._providers[chainId]?.provider.removeAllListeners()
@@ -153,7 +156,7 @@ export class ProviderManager {
   private async initProvider(chainId: ChainId) {
     try {
       logger.info(
-        'ProviderManager',
+        LOG_CONTEXT,
         'initProvider',
         `Connecting to infura rpc provider for ${getInfuraChainName(chainId)}`
       )
@@ -167,7 +170,7 @@ export class ProviderManager {
           this.isProviderSynced(chainId, blockAndNetwork[0], blockAndNetwork[1])
         ) {
           logger.info(
-            'ProviderManager',
+            LOG_CONTEXT,
             'initProvider',
             `${getInfuraChainName(chainId)} Provider is connected`
           )
@@ -178,8 +181,9 @@ export class ProviderManager {
       }
       throw new Error(`Unable to sync ${getInfuraChainName(chainId)} after 3 attempts`)
     } catch (error) {
+      logException(LOG_CONTEXT, error)
       logger.error(
-        'ProviderManager',
+        LOG_CONTEXT,
         'initProvider',
         `Failed to connect to infura rpc provider for: ${getInfuraChainName(chainId)}`,
         error
@@ -200,7 +204,7 @@ export class ProviderManager {
     }
     if (isStale(block.timestamp * 1000, staleTime)) {
       logger.debug(
-        'ProviderManager',
+        LOG_CONTEXT,
         'isProviderSynced',
         `Provider ${getInfuraChainName(chainId)} is stale`
       )

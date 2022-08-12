@@ -1,4 +1,5 @@
 import { logMessage } from 'src/features/telemetry'
+import { LogContext } from 'src/features/telemetry/constants'
 import { logger } from 'src/utils/logger'
 
 const VIEWBOX_REGEX = /viewBox=["']\d+ \d+ (\d+) (\d+)["']/
@@ -16,7 +17,7 @@ export async function fetchSVG(
 
   // Do not render SVGs that have a foreignObject tag for security reasons
   if (text.includes('<foreignObject')) {
-    logMessage(`SVG content contains a foreignObject tag for uri: ${uri}`)
+    logMessage(LogContext.ImageUtils, `SVG content contains a foreignObject tag for uri: ${uri}`)
     logger.debug('images/utils', 'fetchSVG', 'SVG content contains a foreignObject tag', uri)
     return INVALID_SVG
   }
@@ -28,7 +29,7 @@ export async function fetchSVG(
   const viewboxHeight = result?.[2]
 
   if (!formatted) {
-    logMessage(`Could not retrieve and format SVG content for uri: ${uri}`)
+    logMessage(LogContext.ImageUtils, `Could not retrieve and format SVG content for uri: ${uri}`)
     logger.debug('images/utils', 'fetchSVG', 'Could not retrieve and format SVG content', uri)
     return INVALID_SVG
   }
