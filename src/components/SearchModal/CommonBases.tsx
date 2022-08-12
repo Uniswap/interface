@@ -31,6 +31,7 @@ const BaseWrapper = styled.div<{ disable?: boolean; phase0Flag?: boolean }>`
   border-radius: ${({ phase0Flag }) => (phase0Flag ? '16px' : '10px')};
   display: flex;
   padding: 6px;
+  padding-right: 12px;
 
   align-items: center;
   :hover {
