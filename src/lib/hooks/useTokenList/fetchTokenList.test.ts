@@ -1,6 +1,6 @@
 import fetchTokenList, { DEFAULT_TOKEN_LIST } from './fetchTokenList'
 
-describe('fetchTokenList', () => {
+describe.skip('fetchTokenList', () => {
   const resolver = jest.fn()
 
   it('throws on an invalid list url', async () => {
