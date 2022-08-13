@@ -101,7 +101,7 @@ function* importRestoreBackupAccounts(mnemonicId: string, indexes = [0]) {
         address,
         pending: true,
         timeImportedMs: dayjs().valueOf(),
-        derivationIndex: index + 1,
+        derivationIndex: index,
         mnemonicId,
         backups: [BackupType.Cloud],
       }
