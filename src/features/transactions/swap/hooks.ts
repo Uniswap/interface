@@ -46,7 +46,7 @@ import { tryParseExactAmount } from 'src/utils/tryParseAmount'
 import { useSagaStatus } from 'src/utils/useSagaStatus'
 
 export const DEFAULT_SLIPPAGE_TOLERANCE_PERCENT = new Percent(DEFAULT_SLIPPAGE_TOLERANCE, 100)
-const NUM_CURRENCY_DECIMALS_DISPLAY = 8
+const NUM_CURRENCY_SIG_FIGS = 6
 const NUM_USD_DECIMALS_DISPLAY = 2
 
 export enum GasSpeed {
@@ -194,7 +194,9 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
 
     return isUSDInput
       ? tradeUSDValue?.toFixed(2)
-      : (currencyAmounts[CurrencyField.INPUT]?.toExact() ?? '').toString()
+      : (
+          currencyAmounts[CurrencyField.INPUT]?.toSignificant(NUM_CURRENCY_SIG_FIGS) ?? ''
+        ).toString()
   }, [
     currencyAmounts,
     exactAmountToken,
@@ -210,7 +212,9 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
       return isUSDInput ? exactAmountUSD : exactAmountToken
     }
 
-    return isUSDInput ? tradeUSDValue?.toFixed(2) : currencyAmounts[CurrencyField.OUTPUT]?.toExact()
+    return isUSDInput
+      ? tradeUSDValue?.toFixed(2)
+      : currencyAmounts[CurrencyField.OUTPUT]?.toSignificant(NUM_CURRENCY_SIG_FIGS)
   }, [
     currencyAmounts,
     exactAmountToken,
@@ -324,7 +328,7 @@ export function useUSDTokenUpdater(
 
       return dispatch(
         updateExactAmountToken({
-          amount: currencyAmount?.toFixed(NUM_CURRENCY_DECIMALS_DISPLAY) || '',
+          amount: currencyAmount?.toSignificant(NUM_CURRENCY_SIG_FIGS) || '',
         })
       )
     }
