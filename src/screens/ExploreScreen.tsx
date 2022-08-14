@@ -37,10 +37,10 @@ const AnimatedBlurView = Animated.createAnimatedComponent(BlurView)
 const SEARCH_BAR_HEIGHT = 48
 const HEADER_HEIGHT =
   theme.textVariants.headlineSmall.lineHeight +
-  theme.spacing.lg +
+  theme.spacing.xxxs +
   SEARCH_BAR_HEIGHT +
   theme.spacing.xl
-const CONTENT_MAX_SCROLL_Y = SEARCH_BAR_HEIGHT + theme.spacing.xl // Scroll distance for pinned search bar state
+const CONTENT_MAX_SCROLL_Y = SEARCH_BAR_HEIGHT + theme.spacing.md // Scroll distance for pinned search bar state
 
 export function ExploreScreen() {
   const { t } = useTranslation()
@@ -117,7 +117,7 @@ export function ExploreScreen() {
           },
         ]}
         tint={isDarkMode ? 'dark' : 'default'}>
-        <Flex gap="lg" mb="sm" mt="xl" mx="sm">
+        <Flex gap="lg" mb="sm" mt="md" mx="sm">
           <AnimatedText mx="xs" style={titleStyle} variant="headlineSmall">
             {t('Explore')}
           </AnimatedText>
@@ -137,7 +137,7 @@ export function ExploreScreen() {
         <KeyboardAvoidingView behavior="height" style={flex.fill}>
           <AnimatedFlex grow entering={FadeIn} exiting={FadeOut} px="sm">
             <VirtualizedList>
-              <Box height={CONTENT_MAX_SCROLL_Y} mb="md" />
+              <Box height={CONTENT_MAX_SCROLL_Y} mb="xl" />
               <SearchResultsSection searchQuery={searchQuery} />
             </VirtualizedList>
           </AnimatedFlex>
