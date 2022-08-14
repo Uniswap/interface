@@ -111,19 +111,19 @@ export default function FeatureFlagModal() {
         variants={Object.values(RedesignVariant)}
         value={useRedesignFlag()}
         featureFlag={FeatureFlag.redesign}
-        label="Phase0: Redesign"
+        label="Redesign"
       />
       <FeatureFlagOption
         variants={Object.values(ExploreVariant)}
         value={useExploreFlag()}
         featureFlag={FeatureFlag.explore}
-        label="Phase0: Explore"
+        label="Explore"
       />
       <FeatureFlagOption
         variants={Object.values(ExploreVariant)}
         value={useExploreFlag()}
         featureFlag={FeatureFlag.explore}
-        label="Phase0: Token Safety"
+        label="Token Safety"
       />
     </Modal>
   )
