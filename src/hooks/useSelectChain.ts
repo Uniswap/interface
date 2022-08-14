@@ -7,7 +7,7 @@ import { updateConnectionError } from 'state/connection/reducer'
 import { useAppDispatch } from 'state/hooks'
 import { switchChain } from 'utils/switchChain'
 
-export default function useOnSelectChain() {
+export default function useSelectChain() {
   const dispatch = useAppDispatch()
   const { connector } = useWeb3React()
 

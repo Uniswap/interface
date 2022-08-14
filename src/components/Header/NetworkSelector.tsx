@@ -2,7 +2,7 @@ import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
 import { getChainInfo } from 'constants/chainInfo'
 import { SupportedChainId } from 'constants/chains'
-import useOnSelectChain from 'hooks/useOnSelectChain'
+import useSelectChain from 'hooks/useSelectChain'
 import { darken } from 'polished'
 import { useRef } from 'react'
 import { AlertTriangle, ArrowDownCircle, ChevronDown } from 'react-feather'
@@ -290,7 +290,7 @@ export default function NetworkSelector() {
 
   const info = getChainInfo(chainId)
 
-  const onSelectChain = useOnSelectChain()
+  const selectChain = useSelectChain()
 
   if (!chainId || !provider) {
     return null
@@ -330,7 +330,7 @@ export default function NetworkSelector() {
               isChainAllowed(connector, chainId) ? (
                 <Row
                   onSelectChain={(targetChainId: SupportedChainId) => {
-                    onSelectChain(targetChainId)
+                    selectChain(targetChainId)
                     closeModal()
                   }}
                   targetChain={chainId}
