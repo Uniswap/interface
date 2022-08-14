@@ -4,8 +4,8 @@ import { ParsedQs } from 'qs'
 import { useCallback, useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { replaceURLParam } from 'utils/routes'
-import useOnSelectChain from './useOnSelectChain'
 
+import useOnSelectChain from './useOnSelectChain'
 import useParsedQueryString from './useParsedQueryString'
 import usePrevious from './usePrevious'
 
