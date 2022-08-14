@@ -1,6 +1,8 @@
 import { FeatureFlag, useUpdateFlag } from 'featureFlags'
+import { ExploreVariant, useExploreFlag } from 'featureFlags/flags/explore'
 import { Phase0Variant, usePhase0Flag } from 'featureFlags/flags/phase0'
 import { Phase1Variant, usePhase1Flag } from 'featureFlags/flags/phase1'
+import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
 import { ReactNode } from 'react'
 import { X } from 'react-feather'
 import { useModalIsOpen, useToggleFeatureFlags } from 'state/application/hooks'
@@ -104,13 +106,31 @@ export default function FeatureFlagModal() {
         variants={Object.values(Phase0Variant)}
         value={usePhase0Flag()}
         featureFlag={FeatureFlag.phase0}
-        label="All Phase 0 changes (redesign, explore, header)."
+        label="All Phase 0 changes (explore, header)."
       />
       <FeatureFlagOption
         variants={Object.values(Phase1Variant)}
         value={usePhase1Flag()}
         featureFlag={FeatureFlag.phase1}
         label="All Phase 1 changes (nft features)."
+      />
+      <FeatureFlagOption
+        variants={Object.values(RedesignVariant)}
+        value={useRedesignFlag()}
+        featureFlag={FeatureFlag.redesign}
+        label="Phase0: Redesign"
+      />
+      <FeatureFlagOption
+        variants={Object.values(ExploreVariant)}
+        value={useExploreFlag()}
+        featureFlag={FeatureFlag.explore}
+        label="Phase0: Explore"
+      />
+      <FeatureFlagOption
+        variants={Object.values(ExploreVariant)}
+        value={useExploreFlag()}
+        featureFlag={FeatureFlag.explore}
+        label="Phase0: Token Safety"
       />
     </Modal>
   )

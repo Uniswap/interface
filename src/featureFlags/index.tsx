@@ -54,8 +54,11 @@ export enum BaseVariant {
 }
 
 export enum FeatureFlag {
+  explore = 'explore',
   phase0 = 'phase0',
   phase1 = 'phase1',
+  redesign = 'redesign',
+  tokenSafety = 'tokenSafety',
 }
 
 export function useBaseFlag(flag: string): BaseVariant {

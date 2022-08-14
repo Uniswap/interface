@@ -5,7 +5,7 @@ import { useWeb3React } from '@web3-react/core'
 import { EventName, ModalName } from 'components/AmplitudeAnalytics/constants'
 import { Trace } from 'components/AmplitudeAnalytics/Trace'
 import { sendEvent } from 'components/analytics'
-import { Phase0Variant, usePhase0Flag } from 'featureFlags/flags/phase0'
+import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
 import useDebounce from 'hooks/useDebounce'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import useTheme from 'hooks/useTheme'
@@ -31,8 +31,8 @@ import CurrencyList from './CurrencyList'
 import ImportRow from './ImportRow'
 import { PaddedColumn, SearchInput, Separator } from './styleds'
 
-const ContentWrapper = styled(Column)<{ phase0Flag?: boolean }>`
-  background-color: ${({ theme, phase0Flag }) => phase0Flag && theme.backgroundSurface};
+const ContentWrapper = styled(Column)<{ redesignFlag?: boolean }>`
+  background-color: ${({ theme, redesignFlag }) => redesignFlag && theme.backgroundSurface};
   width: 100%;
   flex: 1 1;
   position: relative;
@@ -75,8 +75,8 @@ export function CurrencySearch({
   showImportView,
   setImportToken,
 }: CurrencySearchProps) {
-  const phase0Flag = usePhase0Flag()
-  const phase0FlagEnabled = phase0Flag === Phase0Variant.Enabled
+  const redesignFlag = useRedesignFlag()
+  const redesignFlagEnabled = redesignFlag === RedesignVariant.Enabled
 
   const { chainId } = useWeb3React()
   const theme = useTheme()
@@ -196,7 +196,7 @@ export function CurrencySearch({
   }, [])
 
   return (
-    <ContentWrapper phase0Flag={phase0FlagEnabled}>
+    <ContentWrapper redesignFlag={redesignFlagEnabled}>
       <Trace name={EventName.TOKEN_SELECTOR_OPENED} modal={ModalName.TOKEN_SELECTOR} shouldLogImpression>
         <PaddedColumn gap="16px">
           <RowBetween>
@@ -211,7 +211,7 @@ export function CurrencySearch({
               id="token-search-input"
               placeholder={t`Search name or paste address`}
               autoComplete="off"
-              phase0Flag={phase0FlagEnabled}
+              redesignFlag={redesignFlagEnabled}
               value={searchQuery}
               ref={inputRef as RefObject<HTMLInputElement>}
               onChange={handleInput}
@@ -228,7 +228,7 @@ export function CurrencySearch({
             />
           )}
         </PaddedColumn>
-        <Separator phase0Flag={phase0FlagEnabled} />
+        <Separator redesignFlag={redesignFlagEnabled} />
         {searchToken && !searchTokenIsAdded ? (
           <Column style={{ padding: '20px 0', height: '100%' }}>
             <ImportRow token={searchToken} showImportView={showImportView} setImportToken={setImportToken} />
@@ -262,7 +262,7 @@ export function CurrencySearch({
             </ThemedText.DeprecatedMain>
           </Column>
         )}
-        {!phase0FlagEnabled && (
+        {!redesignFlagEnabled && (
           <Footer>
             <Row justify="center">
               <ButtonText
