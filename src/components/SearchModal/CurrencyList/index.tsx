@@ -17,7 +17,7 @@ import { Text } from 'rebass'
 import styled from 'styled-components/macro'
 
 import TokenListLogo from '../../../assets/svg/tokenlist.svg'
-import { useIsUserAddedToken, useToken } from '../../../hooks/Tokens'
+import { useIsUserAddedToken } from '../../../hooks/Tokens'
 import { useCurrencyBalance } from '../../../state/connection/hooks'
 import { useCombinedActiveList } from '../../../state/lists/hooks'
 import { WrappedTokenInfo } from '../../../state/lists/wrappedTokenInfo'
