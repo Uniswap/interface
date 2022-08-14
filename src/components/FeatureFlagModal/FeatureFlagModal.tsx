@@ -1,6 +1,5 @@
 import { FeatureFlag, useUpdateFlag } from 'featureFlags'
 import { ExploreVariant, useExploreFlag } from 'featureFlags/flags/explore'
-import { Phase0Variant, usePhase0Flag } from 'featureFlags/flags/phase0'
 import { Phase1Variant, usePhase1Flag } from 'featureFlags/flags/phase1'
 import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
 import { ReactNode } from 'react'
@@ -102,12 +101,6 @@ export default function FeatureFlagModal() {
         </CloseButton>
       </Header>
 
-      <FeatureFlagOption
-        variants={Object.values(Phase0Variant)}
-        value={usePhase0Flag()}
-        featureFlag={FeatureFlag.phase0}
-        label="All Phase 0 changes (explore, header)."
-      />
       <FeatureFlagOption
         variants={Object.values(Phase1Variant)}
         value={usePhase1Flag()}
