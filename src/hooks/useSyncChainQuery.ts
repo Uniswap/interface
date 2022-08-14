@@ -5,9 +5,9 @@ import { useCallback, useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { replaceURLParam } from 'utils/routes'
 
-import useOnSelectChain from './useOnSelectChain'
 import useParsedQueryString from './useParsedQueryString'
 import usePrevious from './usePrevious'
+import useSelectChain from './useSelectChain'
 
 const getChainIdFromName = (name: string) => {
   const entry = Object.entries(CHAIN_IDS_TO_NAMES).find(([_, n]) => n === name)
@@ -36,7 +36,7 @@ export default function useSyncChainQuery() {
   const urlChainId = getParsedChainId(parsedQs)
   const previousUrlChainId = usePrevious(urlChainId)
 
-  const onSelectChain = useOnSelectChain()
+  const selectChain = useSelectChain()
 
   // Can't use `usePrevious` because `chainId` can be undefined while activating.
   const [previousChainId, setPreviousChainId] = useState<number | undefined>(undefined)
@@ -52,21 +52,29 @@ export default function useSyncChainQuery() {
     }
   }, [chainId, search, navigate])
 
-  return useEffect(() => {
-    const chainQueryUnpopulated = !urlChainId
-    const chainChanged = chainId !== previousChainId
-    const chainQueryStale = urlChainId !== chainId
-    const chainQueryManuallyUpdated = urlChainId && urlChainId !== previousUrlChainId
+  const chainQueryUnpopulated = !urlChainId && chainId
+  const chainChanged = chainId !== previousChainId
+  const chainQueryStale = urlChainId !== chainId
+  const chainQueryManuallyUpdated = urlChainId && urlChainId !== previousUrlChainId && isActive
 
-    if (chainQueryUnpopulated && chainId) {
+  return useEffect(() => {
+    if (chainQueryUnpopulated) {
       // If there is no chain query param, set it to the current chain
       replaceURLChainParam()
     } else if (chainChanged && chainQueryStale) {
       // If the chain changed but the query param is stale, update to the current chain
       replaceURLChainParam()
-    } else if (chainQueryManuallyUpdated && isActive) {
+    } else if (chainQueryManuallyUpdated) {
       // If the query param changed, and the chain didn't change, then activate the new chain
-      onSelectChain(urlChainId)
+      selectChain(urlChainId)
     }
-  }, [onSelectChain, urlChainId, previousUrlChainId, isActive, chainId, previousChainId, replaceURLChainParam])
+  }, [
+    chainQueryUnpopulated,
+    chainChanged,
+    chainQueryStale,
+    chainQueryManuallyUpdated,
+    urlChainId,
+    selectChain,
+    replaceURLChainParam,
+  ])
 }
