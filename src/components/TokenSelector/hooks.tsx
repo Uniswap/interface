@@ -4,8 +4,6 @@ import { CurrencyWithMetadata } from 'src/components/TokenSelector/types'
 import { ChainId } from 'src/constants/chains'
 import { selectFavoriteTokensSet } from 'src/features/favorites/selectors'
 import { currencyId } from 'src/utils/currencyId'
-import { useDebounce } from 'src/utils/timing'
-import { filter } from './filter'
 
 export function useFavoriteCurrenciesWithMetadata(currencies: CurrencyWithMetadata[]) {
   const favorites = useAppSelector(selectFavoriteTokensSet)
@@ -15,34 +13,13 @@ export function useFavoriteCurrenciesWithMetadata(currencies: CurrencyWithMetada
   )
 }
 
-export function useFilteredCurrencies(
-  currenciesWithMetadata: CurrencyWithMetadata[],
-  initialChainId: ChainId | undefined | null = null
-) {
+export function useFilterCallbacks(initialChainId: ChainId | undefined | null = null) {
   // TODO: consider merging these into a single state object to ensure no bad
   // state is accessible.
   // only one of chain and favorites filter is considered at a time
   const [chainFilter, setChainFilter] = useState<ChainId | null>(initialChainId)
   const [favoritesFilter, setFavoritesFilter] = useState<boolean>(false)
   const [searchFilter, setSearchFilter] = useState<string | null>(null)
-  const favoriteCurrencies = useFavoriteCurrenciesWithMetadata(currenciesWithMetadata)
-  const debouncedSearchFilter = useDebounce(searchFilter)
-
-  const filteredCurrencies = useMemo(
-    () =>
-      filter(
-        favoritesFilter ? favoriteCurrencies : currenciesWithMetadata ?? null,
-        chainFilter,
-        debouncedSearchFilter
-      ),
-    [
-      chainFilter,
-      currenciesWithMetadata,
-      debouncedSearchFilter,
-      favoriteCurrencies,
-      favoritesFilter,
-    ]
-  )
 
   const onChainPress = useCallback(
     (newChainFilter: typeof chainFilter) => {
@@ -78,8 +55,8 @@ export function useFilteredCurrencies(
 
   return {
     chainFilter,
+    favoritesFilter,
     searchFilter,
-    filteredCurrencies,
     onChainPress,
     onClearChainFilter,
     onClearSearchFilter,

@@ -73,6 +73,7 @@ export function FilterGroup({
 
 const styles = StyleSheet.create({
   scrollView: {
+    flexGrow: 0,
     overflow: 'visible',
   },
 })

@@ -1,28 +1,103 @@
+import { Currency } from '@uniswap/sdk-core'
 import Fuse from 'fuse.js'
-import React from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { FlatList, ListRenderItem, StyleSheet } from 'react-native'
+import { FlatList, ListRenderItemInfo, StyleSheet } from 'react-native'
+import { filter } from 'src/components/TokenSelector/filter'
+import { useFavoriteCurrenciesWithMetadata } from 'src/components/TokenSelector/hooks'
+import { TokenOption } from 'src/components/TokenSelector/TokenOption'
 import { CurrencyWithMetadata } from 'src/components/TokenSelector/types'
+import { ChainId } from 'src/constants/chains'
+import { usePortfolioBalances } from 'src/features/dataApi/balances'
 import { ElementName } from 'src/features/telemetry/constants'
+import { useAllCurrencies } from 'src/features/tokens/useTokens'
+import { useCombinedTokenWarningLevelMap } from 'src/features/tokens/useTokenWarningLevel'
+import { useActiveAccountWithThrow } from 'src/features/wallet/hooks'
 import { currencyId } from 'src/utils/currencyId'
+import { flattenObjectOfObjects } from 'src/utils/objects'
+import { useDebounce } from 'src/utils/timing'
 import { TextButton } from '../buttons/TextButton'
 import { Flex, Inset } from '../layout'
 import { Text } from '../Text'
 
 interface TokenSearchResultListProps {
-  currenciesWithMetadata: Fuse.FuseResult<CurrencyWithMetadata>[]
+  showNonZeroBalancesOnly?: boolean
   onClearSearchFilter: () => void
-  renderItem: ListRenderItem<Fuse.FuseResult<CurrencyWithMetadata>> | null | undefined
+  onSelectCurrency: (currency: Currency) => void
   searchFilter: string | null
+  favoritesFilter: boolean
+  chainFilter: ChainId | null
 }
 
 export function TokenSearchResultList({
-  currenciesWithMetadata,
+  showNonZeroBalancesOnly,
   onClearSearchFilter,
-  renderItem,
+  onSelectCurrency,
+  chainFilter,
+  favoritesFilter,
   searchFilter,
 }: TokenSearchResultListProps) {
   const { t } = useTranslation()
+  const activeAccount = useActiveAccountWithThrow()
+  const currenciesByChain = useAllCurrencies()
+  const currencyIdToBalances = usePortfolioBalances(activeAccount.address, false)
+
+  const currenciesWithBalances: CurrencyWithMetadata[] = useMemo(() => {
+    if (!currencyIdToBalances) return []
+
+    return Object.values(currencyIdToBalances).map(({ amount, balanceUSD }) => ({
+      currency: amount.currency,
+      currencyAmount: amount,
+      balanceUSD: balanceUSD,
+    }))
+  }, [currencyIdToBalances])
+
+  const allCurrencies: CurrencyWithMetadata[] = useMemo(() => {
+    const currencies = flattenObjectOfObjects(currenciesByChain)
+    return currencies.map((currency) => ({
+      currency,
+      currencyAmount: null,
+      balanceUSD: null,
+    }))
+  }, [currenciesByChain])
+
+  const currenciesWithMetadata = showNonZeroBalancesOnly ? currenciesWithBalances : allCurrencies
+
+  const debouncedSearchFilter = useDebounce(searchFilter)
+  const favoriteCurrencies = useFavoriteCurrenciesWithMetadata(currenciesWithMetadata)
+
+  const filteredCurrencies = useMemo(
+    () =>
+      filter(
+        favoritesFilter ? favoriteCurrencies : currenciesWithMetadata ?? null,
+        chainFilter,
+        debouncedSearchFilter
+      ),
+    [
+      chainFilter,
+      currenciesWithMetadata,
+      favoriteCurrencies,
+      favoritesFilter,
+      debouncedSearchFilter,
+    ]
+  )
+
+  const tokenWarningLevelMap = useCombinedTokenWarningLevelMap()
+
+  const renderItem = useCallback(
+    ({ item }: ListRenderItemInfo<Fuse.FuseResult<CurrencyWithMetadata>>) => {
+      const currencyWithMetadata = item.item
+      return (
+        <TokenOption
+          currencyWithMetadata={currencyWithMetadata}
+          matches={item.matches}
+          tokenWarningLevelMap={tokenWarningLevelMap}
+          onPress={() => onSelectCurrency?.(currencyWithMetadata.currency)}
+        />
+      )
+    },
+    [onSelectCurrency, tokenWarningLevelMap]
+  )
 
   return (
     <FlatList
@@ -43,7 +118,7 @@ export function TokenSearchResultList({
         </Flex>
       }
       ListFooterComponent={Footer}
-      data={currenciesWithMetadata}
+      data={filteredCurrencies}
       keyExtractor={key}
       renderItem={renderItem}
       style={styles.list}
