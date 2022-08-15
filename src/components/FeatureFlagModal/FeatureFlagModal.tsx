@@ -1,5 +1,6 @@
 import { FeatureFlag, useUpdateFlag } from 'featureFlags'
 import { ExploreVariant, useExploreFlag } from 'featureFlags/flags/explore'
+import { NavBarVariant, useNavBarFlag } from 'featureFlags/flags/navBar'
 import { Phase1Variant, usePhase1Flag } from 'featureFlags/flags/phase1'
 import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
 import { TokenSafetyVariant, useTokenSafetyFlag } from 'featureFlags/flags/tokenSafety'
@@ -113,6 +114,12 @@ export default function FeatureFlagModal() {
         value={useRedesignFlag()}
         featureFlag={FeatureFlag.redesign}
         label="Redesign"
+      />
+      <FeatureFlagOption
+        variants={Object.values(NavBarVariant)}
+        value={useNavBarFlag()}
+        featureFlag={FeatureFlag.navBar}
+        label="NavBar"
       />
       <FeatureFlagOption
         variants={Object.values(ExploreVariant)}
