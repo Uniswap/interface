@@ -139,7 +139,7 @@ export function SettingsWallet({
       data: [
         {
           screen: Screens.SettingsWalletEdit,
-          text: t('Edit nickname or theme'),
+          text: t('Nickname and theme'),
           icon: <EditIcon fill={theme.colors.textSecondary} />,
           screenProps: { address },
         },

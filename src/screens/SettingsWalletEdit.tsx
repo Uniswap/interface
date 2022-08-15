@@ -69,7 +69,7 @@ export function SettingsWalletEdit({
     <Screen px="lg" py="lg">
       <AppBackground topOnly color={selectedColor} />
       <BackHeader alignment="left" mb="lg">
-        <Text variant="subhead">{t('Edit nickname or theme')}</Text>
+        <Text variant="subhead">{t('Nickname and theme')}</Text>
       </BackHeader>
       <Flex gap="xl">
         <Flex gap="none">
