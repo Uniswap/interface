@@ -1,5 +1,5 @@
-import * as styles from './Overlay.css'
 import { Box } from '../Box'
+import * as styles from './Overlay.css'
 
 interface OverlayProps {
   onClick?: () => void

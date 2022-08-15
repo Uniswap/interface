@@ -1,5 +1,6 @@
 import clsx from 'clsx'
 import React from 'react'
+
 import { themeVars, vars } from '../css/sprinkles.css'
 import * as styles from './icons.css'
 
