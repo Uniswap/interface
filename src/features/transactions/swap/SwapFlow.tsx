@@ -4,9 +4,9 @@ import React, { Dispatch, useEffect, useReducer, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Keyboard, LayoutChangeEvent, TouchableWithoutFeedback } from 'react-native'
 import { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated'
-import { TokenSelect } from 'src/components/TokenSelector/TokenSelect'
 import { AnimatedFlex, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
+import { TokenSelect } from 'src/components/TokenSelector/TokenSelect'
 import { WarningAction, WarningModalType } from 'src/components/warnings/types'
 import { WarningModal } from 'src/components/warnings/WarningModal'
 import {
@@ -97,7 +97,7 @@ export function SwapFlow({ prefilledState, onClose }: SwapFormProps) {
   const [state, dispatch] = useReducer(transactionStateReducer, prefilledState || emptyState)
   const [step, setStep] = useState<SwapStep>(SwapStep.FORM)
   const derivedSwapInfo = useDerivedSwapInfo(state)
-  const { onSelectCurrency } = useSwapActionHandlers(dispatch)
+  const { onSelectCurrency, onHideTokenSelector } = useSwapActionHandlers(dispatch)
 
   // keep currencies list option as state so that rendered list remains stable through the slide animation
   const [showNonZeroBalancesOnly, setShowNonZeroBalancesOnly] = useState<boolean>(true)
@@ -187,6 +187,7 @@ export function SwapFlow({ prefilledState, onClose }: SwapFormProps) {
           }
           selectedCurrency={selectingCurrencyField ? currencies[selectingCurrencyField] : undefined}
           showNonZeroBalancesOnly={showNonZeroBalancesOnly}
+          onBack={onHideTokenSelector}
           onSelectCurrency={(currency: Currency) =>
             selectingCurrencyField && onSelectCurrency(selectingCurrencyField, currency)
           }

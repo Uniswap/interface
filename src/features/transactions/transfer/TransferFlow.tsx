@@ -84,7 +84,7 @@ export function TransferFlow({ prefilledState, onClose }: TransferFormProps) {
   const [state, dispatch] = useReducer(transactionStateReducer, prefilledState || emptyState)
   const [step, setStep] = useState<TransferStep>(TransferStep.FORM)
   const { t } = useTranslation()
-  const { onSelectCurrency } = useSwapActionHandlers(dispatch)
+  const { onSelectCurrency, onHideTokenSelector } = useSwapActionHandlers(dispatch)
 
   const screenXOffset = useSharedValue(0)
   useEffect(() => {
@@ -119,6 +119,7 @@ export function TransferFlow({ prefilledState, onClose }: TransferFormProps) {
         </Flex>
         <TokenSelect
           showNonZeroBalancesOnly
+          onBack={onHideTokenSelector}
           onSelectCurrency={(currency: Currency) => onSelectCurrency(CurrencyField.INPUT, currency)}
         />
       </AnimatedFlex>

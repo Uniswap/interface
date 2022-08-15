@@ -356,9 +356,10 @@ export function useSwapActionHandlers(dispatch: React.Dispatch<AnyAction>) {
     )
 
     // hide screen when done selecting
-    dispatch(transactionStateActions.showTokenSelector(undefined))
+    onHideTokenSelector()
   }
 
+  const onHideTokenSelector = () => dispatch(transactionStateActions.showTokenSelector(undefined))
   const onUpdateExactTokenAmount = (field: CurrencyField, amount: string) =>
     dispatch(transactionStateActions.updateExactAmountToken({ field, amount }))
   const onUpdateExactUSDAmount = (field: CurrencyField, amount: string) =>
@@ -392,6 +393,7 @@ export function useSwapActionHandlers(dispatch: React.Dispatch<AnyAction>) {
 
   return {
     onCreateTxId,
+    onHideTokenSelector,
     onSelectCurrency,
     onSelectRecipient,
     onSwitchCurrencies,

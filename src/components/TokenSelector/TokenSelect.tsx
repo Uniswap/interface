@@ -13,12 +13,14 @@ interface TokenSearchProps {
   otherCurrency?: Currency | null
   selectedCurrency?: Currency | null
   showNonZeroBalancesOnly?: boolean
+  onBack: () => void
 }
 
 export function TokenSelect({
   onSelectCurrency,
   otherCurrency,
   showNonZeroBalancesOnly,
+  onBack,
 }: TokenSearchProps) {
   const {
     onChainPress,
@@ -44,6 +46,7 @@ export function TokenSelect({
       <SearchBar
         placeholder={t('Search token symbols or address')}
         value={searchFilter}
+        onBack={onBack}
         onChangeText={onChangeText}
       />
       <FilterGroup
