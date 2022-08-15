@@ -155,7 +155,6 @@ export const StakedOnlyToggleWrapper = styled.div`
 `
 
 export const StakedOnlyToggleText = styled.div`
-  margin-left: 10px;
   font-size: 14px;
   font-weight: 500;
   color: ${({ theme }) => theme.subText};
@@ -366,9 +365,14 @@ export const TableHeader = styled.div<{ fade?: boolean; oddRow?: boolean }>`
 `
 
 export const ProMMFarmTableHeader = styled(TableHeader)`
-  grid-template-columns: 150px 120px 1fr 0.75fr 0.75fr 0.75fr 1fr 1fr;
-  grid-template-areas: 'token_pairs pool_fee staked_tvl ending_in apr vesting my_deposit reward action';
+  grid-template-columns: 200px 0.5fr 0.75fr 1fr 0.5fr 0.75fr 0.75fr;
+  grid-template-areas: 'token_pairs staked_tvl apr ending_in my_deposit reward action';
   grid-gap: 2rem;
+
+  ${({ theme }) => theme.mediaWidth.upToLarge`
+    grid-template-columns: 170px 0.5fr 0.75fr 1fr 0.5fr 0.75fr 0.75fr;
+    grid-gap: 1rem;
+  `};
 `
 
 export const ProMMFarmTableRow = styled(ProMMFarmTableHeader)`
@@ -574,8 +578,7 @@ export const ProMMFarmTableRowMobile = styled.div`
 export const InfoRow = styled.div`
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin-top: 8px;
+  margin-top: 12px;
   font-size: 12px;
 `
 

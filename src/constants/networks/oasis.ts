@@ -32,7 +32,7 @@ const oasisInfo: NetworkInfo = {
     logo: OASIS,
     decimal: 18,
   },
-  rpcUrl: 'https://emerald.oasis.dev',
+  rpcUrl: 'https://oasis.kyberengineering.io',
   routerUri: `${process.env.REACT_APP_AGGREGATOR_API}/oasis/route/encode`,
   classic: {
     static: {

@@ -29,7 +29,7 @@ const auroraInfo: NetworkInfo = {
     logo: EthereumLogo,
     decimal: 18,
   },
-  rpcUrl: 'https://mainnet.aurora.dev/GvfzNcGULXzWqaVahC8WPTdqEuSmwNCu3Nu3rtcVv9MD',
+  rpcUrl: 'https://aurora.kyberengineering.io',
   routerUri: `${process.env.REACT_APP_AGGREGATOR_API}/aurora/route/encode`,
   classic: {
     static: {

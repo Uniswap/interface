@@ -1,3 +1,4 @@
+import { Token } from '@kyberswap/ks-sdk-core'
 import { BigNumber } from 'ethers'
 
 import { ProMMPoolData } from 'state/prommPools/hooks'
@@ -27,6 +28,8 @@ export interface ProMMFarm {
   currentTick: number
   rewardLocker: string
   feeTarget: BigNumber
+  token0Info?: Token
+  token1Info?: Token
 }
 
 export interface ProMMFarmResponse {

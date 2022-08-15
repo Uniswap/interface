@@ -16,7 +16,7 @@ import { CONTRACT_NOT_FOUND_MSG } from 'constants/messages'
 import { NETWORKS_INFO } from 'constants/networks'
 import { FARM_CONTRACTS, VERSION } from 'constants/v2'
 import { providers, useActiveWeb3React } from 'hooks'
-import { useTokens } from 'hooks/Tokens'
+import { useAllTokens, useTokens } from 'hooks/Tokens'
 import { useProAmmNFTPositionManagerContract, useProMMFarmContract, useProMMFarmContracts } from 'hooks/useContract'
 import { usePools } from 'hooks/usePools'
 import usePrevious from 'hooks/usePrevious'
@@ -39,6 +39,12 @@ export const useGetProMMFarms = () => {
   const dispatch = useAppDispatch()
   const { chainId, account } = useActiveWeb3React()
   const prommFarmContracts = useProMMFarmContracts()
+  const tokens = useAllTokens()
+
+  // dont need all tokens on dependency
+  const allTokensRef = useRef(tokens)
+  allTokensRef.current = tokens
+
   const positionManager = useProAmmNFTPositionManagerContract()
 
   const prevChainId = usePrevious(chainId)
@@ -143,6 +149,8 @@ export const useGetProMMFarms = () => {
             pid: pid,
             userDepositedNFTs: userNFTInfo,
             rewardLocker,
+            token0Info: allTokensRef.current?.[token0],
+            token1Info: allTokensRef.current?.[token1],
           }
         }),
       )
