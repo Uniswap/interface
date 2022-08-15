@@ -1,26 +1,45 @@
 import React, { createContext, PropsWithChildren, useContext, useState } from 'react'
+import { useBiometricAppSettings } from 'src/features/biometrics/hooks'
 
 export interface LockScreenContextValue {
   isLockScreenVisible: boolean
+  animationType: AnimationType
   setIsLockScreenVisible: (value: boolean) => void
+  setAnimationType: (value: AnimationType) => void
 }
 
+type AnimationType = 'none' | 'slide' | 'fade' | undefined
+
 const lockScreenContextValue: LockScreenContextValue = {
-  isLockScreenVisible: false,
+  isLockScreenVisible: true,
+  animationType: 'none',
   setIsLockScreenVisible: () => null,
+  setAnimationType: () => null,
 }
 
 const LockScreenContext = createContext<LockScreenContextValue>(lockScreenContextValue)
 
 export const LockScreenContextProvider = ({ children }: PropsWithChildren<any>) => {
-  const [isVisible, setIsVisible] = useState(lockScreenContextValue.isLockScreenVisible)
+  const { requiredForAppAccess } = useBiometricAppSettings()
+  const [isVisible, setIsVisible] = useState(requiredForAppAccess)
+  const [animation, setAnimation] = useState<AnimationType>('none')
 
   const setIsLockScreenVisible = (value: boolean) => {
     setIsVisible(value)
   }
 
+  const setAnimationType = (value: AnimationType) => {
+    setAnimation(value)
+  }
+
   return (
-    <LockScreenContext.Provider value={{ isLockScreenVisible: isVisible, setIsLockScreenVisible }}>
+    <LockScreenContext.Provider
+      value={{
+        isLockScreenVisible: isVisible,
+        animationType: animation,
+        setIsLockScreenVisible,
+        setAnimationType,
+      }}>
       {children}
     </LockScreenContext.Provider>
   )

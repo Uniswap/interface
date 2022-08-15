@@ -7,10 +7,10 @@ import { useLockScreenContext } from 'src/features/authentication/lockScreenCont
 import { dimensions } from 'src/styles/sizing'
 
 export function LockScreenModal() {
-  const { isLockScreenVisible } = useLockScreenContext()
+  const { isLockScreenVisible, animationType } = useLockScreenContext()
   return (
     <Modal
-      animationType="slide"
+      animationType={animationType}
       dimBackground={true}
       dismissable={false}
       pointerEvents="none"

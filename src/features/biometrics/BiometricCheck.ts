@@ -16,7 +16,6 @@ export function BiometricCheck() {
   useEffect(() => {
     if (requiredForAppAccess) {
       trigger()
-      setIsLockScreenVisible(true)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []) // runs only once so it doesn't run on setting change
