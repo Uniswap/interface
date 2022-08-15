@@ -6,7 +6,7 @@ import { ClientError, gql, GraphQLClient } from 'graphql-request'
 import { AppState } from 'state'
 
 // List of supported subgraphs. Note that the app currently only support one active subgraph at a time
-export const CHAIN_SUBGRAPH_URL: Record<number, string> = {
+const CHAIN_SUBGRAPH_URL: Record<number, string> = {
   [SupportedChainId.MAINNET]: 'https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3',
   [SupportedChainId.RINKEBY]: 'https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3',
 

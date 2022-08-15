@@ -252,7 +252,6 @@ export default function TokenDetail({
 }
 
 export function LoadedTokenDetail({ address }: { address: string }) {
-  const theme = useTheme()
   const token = useToken(address)
   const currency = useCurrency(address)
   const favoriteTokens = useAtomValue<string[]>(favoritesAtom)
@@ -273,7 +272,7 @@ export function LoadedTokenDetail({ address }: { address: string }) {
   const tokenDetailsData = usePreloadedQuery(tokenDetailsStatsQuery, {
     contract: {
       address,
-      chain: token ? CHAIN_SUBGRAPH_URL[token.chainId] : CHAIN_SUBGRAPH_URL[SupportedChainId.MAINNET],
+      chain: token ? token.chainId : SupportedChainId.MAINNET,
     },
   })
 
