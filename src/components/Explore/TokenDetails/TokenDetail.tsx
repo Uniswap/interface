@@ -12,7 +12,7 @@ import { useCallback } from 'react'
 import { useState } from 'react'
 import { ArrowLeft, Heart } from 'react-feather'
 import { Link, useNavigate } from 'react-router-dom'
-import styled, { useTheme } from 'styled-components/macro'
+import styled from 'styled-components/macro'
 import { ClickableStyle, CopyContractAddress } from 'theme'
 
 import { favoritesAtom, useToggleFavorite } from '../state'
