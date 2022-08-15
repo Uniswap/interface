@@ -117,6 +117,9 @@ const FOUR_BYTES_DIR: { [sig: string]: string } = {
   '0x5ef2c7f0': 'setSubnodeRecord(bytes32,bytes32,address,address,uint64)',
   '0x10f13a8c': 'setText(bytes32,string,string)',
   '0xb4720477': 'sendMessageToChild(address,bytes)',
+  '0xa9059cbb': 'transfer(address,uint256)',
+  '0x095ea7b3': 'approve(address,uint256)',
+  '0x7b1837de': 'fund(address,uint256)',
 }
 
 /**

@@ -112,7 +112,6 @@
   },
   "dependencies": {
     "@amplitude/analytics-browser": "^0.5.1",
-    "@amplitude/experiment-js-client": "^1.5.4",
     "@coinbase/wallet-sdk": "^3.3.0",
     "@fontsource/ibm-plex-mono": "^4.5.1",
     "@fontsource/inter": "^4.5.1",
