@@ -2,6 +2,7 @@ import { FeatureFlag, useUpdateFlag } from 'featureFlags'
 import { ExploreVariant, useExploreFlag } from 'featureFlags/flags/explore'
 import { Phase1Variant, usePhase1Flag } from 'featureFlags/flags/phase1'
 import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
+import { TokenSafetyVariant, useTokenSafetyFlag } from 'featureFlags/flags/tokenSafety'
 import { ReactNode } from 'react'
 import { X } from 'react-feather'
 import { useModalIsOpen, useToggleFeatureFlags } from 'state/application/hooks'
@@ -120,9 +121,9 @@ export default function FeatureFlagModal() {
         label="Explore"
       />
       <FeatureFlagOption
-        variants={Object.values(ExploreVariant)}
-        value={useExploreFlag()}
-        featureFlag={FeatureFlag.explore}
+        variants={Object.values(TokenSafetyVariant)}
+        value={useTokenSafetyFlag()}
+        featureFlag={FeatureFlag.tokenSafety}
         label="Token Safety"
       />
     </Modal>
