@@ -21,7 +21,7 @@ export const PaddedColumn = styled(AutoColumn)`
   padding: 20px;
 `
 
-export const MenuItem = styled(RowBetween)<{ phase0Flag?: boolean }>`
+export const MenuItem = styled(RowBetween)<{ redesignFlag?: boolean }>`
   padding: 4px 20px;
   height: 56px;
   display: grid;
@@ -30,47 +30,47 @@ export const MenuItem = styled(RowBetween)<{ phase0Flag?: boolean }>`
   cursor: ${({ disabled }) => !disabled && 'pointer'};
   pointer-events: ${({ disabled }) => disabled && 'none'};
   :hover {
-    background-color: ${({ theme, disabled, phase0Flag }) =>
-      (phase0Flag && theme.hoverDefault) || (!disabled && theme.deprecated_bg2)};
+    background-color: ${({ theme, disabled, redesignFlag }) =>
+      (redesignFlag && theme.hoverDefault) || (!disabled && theme.deprecated_bg2)};
   }
   opacity: ${({ disabled, selected }) => (disabled || selected ? 0.5 : 1)};
 `
 
-export const SearchInput = styled.input<{ phase0Flag?: boolean }>`
+export const SearchInput = styled.input<{ redesignFlag?: boolean }>`
   position: relative;
   display: flex;
   padding: 16px;
-  height: ${({ phase0Flag }) => phase0Flag && '40px'};
+  height: ${({ redesignFlag }) => redesignFlag && '40px'};
   align-items: center;
   width: 100%;
   white-space: nowrap;
   background: none;
-  background-color: ${({ theme, phase0Flag }) => phase0Flag && theme.backgroundModule};
+  background-color: ${({ theme, redesignFlag }) => redesignFlag && theme.backgroundModule};
   border: none;
   outline: none;
-  border-radius: ${({ phase0Flag }) => (phase0Flag ? '12px' : '20px')};
+  border-radius: ${({ redesignFlag }) => (redesignFlag ? '12px' : '20px')};
   color: ${({ theme }) => theme.deprecated_text1};
   border-style: solid;
-  border: 1px solid ${({ theme, phase0Flag }) => (phase0Flag ? theme.backgroundOutline : theme.deprecated_bg3)};
+  border: 1px solid ${({ theme, redesignFlag }) => (redesignFlag ? theme.backgroundOutline : theme.deprecated_bg3)};
   -webkit-appearance: none;
 
-  font-size: ${({ phase0Flag }) => (phase0Flag ? '16px' : '18px')};
+  font-size: ${({ redesignFlag }) => (redesignFlag ? '16px' : '18px')};
 
   ::placeholder {
-    color: ${({ theme, phase0Flag }) => (phase0Flag ? theme.textTertiary : theme.deprecated_text3)};
-    font-size: ${({ phase0Flag }) => phase0Flag && '16px'};
+    color: ${({ theme, redesignFlag }) => (redesignFlag ? theme.textTertiary : theme.deprecated_text3)};
+    font-size: ${({ redesignFlag }) => redesignFlag && '16px'};
   }
   transition: border 100ms;
   :focus {
-    border: 1px solid ${({ theme, phase0Flag }) => (phase0Flag ? 'transparent' : theme.deprecated_primary1)};
-    background-color: ${({ theme, phase0Flag }) => phase0Flag && theme.accentActionSoft};
+    border: 1px solid ${({ theme, redesignFlag }) => (redesignFlag ? 'transparent' : theme.deprecated_primary1)};
+    background-color: ${({ theme, redesignFlag }) => redesignFlag && theme.accentActionSoft};
     outline: none;
   }
 `
-export const Separator = styled.div<{ phase0Flag?: boolean }>`
+export const Separator = styled.div<{ redesignFlag?: boolean }>`
   width: 100%;
   height: 1px;
-  background-color: ${({ theme, phase0Flag }) => (phase0Flag ? theme.backgroundOutline : theme.deprecated_bg2)};
+  background-color: ${({ theme, redesignFlag }) => (redesignFlag ? theme.backgroundOutline : theme.deprecated_bg2)};
 `
 
 export const SeparatorDark = styled.div`

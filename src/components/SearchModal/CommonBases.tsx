@@ -6,7 +6,7 @@ import { AutoColumn } from 'components/Column'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { AutoRow } from 'components/Row'
 import { COMMON_BASES } from 'constants/routing'
-import { Phase0Variant, usePhase0Flag } from 'featureFlags/flags/phase0'
+import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
 import { useTokenInfoFromActiveList } from 'hooks/useTokenInfoFromActiveList'
 import { Text } from 'rebass'
 import styled from 'styled-components/macro'
@@ -18,17 +18,17 @@ const MobileWrapper = styled(AutoColumn)`
   `};
 `
 
-const BaseWrapper = styled.div<{ disable?: boolean; phase0Flag?: boolean }>`
+const BaseWrapper = styled.div<{ disable?: boolean; redesignFlag?: boolean }>`
   border: 1px solid
-    ${({ theme, disable, phase0Flag }) =>
+    ${({ theme, disable, redesignFlag }) =>
       disable
-        ? phase0Flag
+        ? redesignFlag
           ? theme.accentAction
           : theme.none
-        : phase0Flag
+        : redesignFlag
         ? theme.backgroundOutline
         : theme.deprecated_bg3};
-  border-radius: ${({ phase0Flag }) => (phase0Flag ? '16px' : '10px')};
+  border-radius: ${({ redesignFlag }) => (redesignFlag ? '16px' : '10px')};
   display: flex;
   padding: 6px;
   padding-right: 12px;
@@ -36,14 +36,15 @@ const BaseWrapper = styled.div<{ disable?: boolean; phase0Flag?: boolean }>`
   align-items: center;
   :hover {
     cursor: ${({ disable }) => !disable && 'pointer'};
-    background-color: ${({ theme, disable, phase0Flag }) =>
-      (phase0Flag && theme.hoverDefault) || (!disable && theme.deprecated_bg2)};
+    background-color: ${({ theme, disable, redesignFlag }) =>
+      (redesignFlag && theme.hoverDefault) || (!disable && theme.deprecated_bg2)};
   }
 
-  color: ${({ theme, disable, phase0Flag }) => disable && (phase0Flag ? theme.accentAction : theme.deprecated_text3)};
-  background-color: ${({ theme, disable, phase0Flag }) =>
-    disable && (phase0Flag ? theme.accentActionSoft : theme.deprecated_bg3)};
-  filter: ${({ disable, phase0Flag }) => disable && !phase0Flag && 'grayscale(1)'};
+  color: ${({ theme, disable, redesignFlag }) =>
+    disable && (redesignFlag ? theme.accentAction : theme.deprecated_text3)};
+  background-color: ${({ theme, disable, redesignFlag }) =>
+    disable && (redesignFlag ? theme.accentActionSoft : theme.deprecated_bg3)};
+  filter: ${({ disable, redesignFlag }) => disable && !redesignFlag && 'grayscale(1)'};
 `
 
 const formatAnalyticsEventProperties = (currency: Currency, searchQuery: string, isAddressSearch: string | false) => ({
@@ -72,8 +73,8 @@ export default function CommonBases({
   isAddressSearch: string | false
 }) {
   const bases = typeof chainId !== 'undefined' ? COMMON_BASES[chainId] ?? [] : []
-  const phase0Flag = usePhase0Flag()
-  const phase0FlagEnabled = phase0Flag === Phase0Variant.Enabled
+  const redesignFlag = useRedesignFlag()
+  const redesignFlagEnabled = redesignFlag === RedesignVariant.Enabled
 
   return bases.length > 0 ? (
     <MobileWrapper gap="md">
@@ -94,7 +95,7 @@ export default function CommonBases({
                 onKeyPress={(e) => !isSelected && e.key === 'Enter' && onSelect(currency)}
                 onClick={() => !isSelected && onSelect(currency)}
                 disable={isSelected}
-                phase0Flag={phase0FlagEnabled}
+                redesignFlag={redesignFlagEnabled}
                 key={currencyId(currency)}
               >
                 <CurrencyLogoFromList currency={currency} />

@@ -7,7 +7,8 @@ import { LightGreyCard } from 'components/Card'
 import QuestionHelper from 'components/QuestionHelper'
 import TokenSafetyIcon from 'components/TokenSafety/TokenSafetyIcon'
 import { checkWarning } from 'constants/tokenSafety'
-import { Phase0Variant, usePhase0Flag } from 'featureFlags/flags/phase0'
+import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
+import { TokenSafetyVariant, useTokenSafetyFlag } from 'featureFlags/flags/tokenSafety'
 import useTheme from 'hooks/useTheme'
 import { CSSProperties, MutableRefObject, useCallback, useMemo } from 'react'
 import { Check } from 'react-feather'
@@ -142,8 +143,9 @@ function CurrencyRow({
   const customAdded = useIsUserAddedToken(currency)
   const balance = useCurrencyBalance(account ?? undefined, currency)
   const warning = currency.isNative ? null : checkWarning(currency.address)
-  const phase0Flag = usePhase0Flag()
-  const phase0FlagEnabled = phase0Flag === Phase0Variant.Enabled
+  const redesignFlag = useRedesignFlag()
+  const redesignFlagEnabled = redesignFlag === RedesignVariant.Enabled
+  const tokenSafetyFlag = useTokenSafetyFlag()
 
   // only show add or remove buttons if not on selected list
   return (
@@ -155,7 +157,7 @@ function CurrencyRow({
     >
       <MenuItem
         tabIndex={0}
-        phase0Flag={phase0FlagEnabled}
+        redesignFlag={redesignFlagEnabled}
         style={style}
         className={`token-item-${key}`}
         onKeyPress={(e) => (!isSelected && e.key === 'Enter' ? onSelect() : null)}
@@ -170,7 +172,7 @@ function CurrencyRow({
           <Row>
             <CurrencyName title={currency.name}>{currency.name}</CurrencyName>
 
-            {phase0FlagEnabled && <TokenSafetyIcon warning={warning} />}
+            {tokenSafetyFlag === TokenSafetyVariant.Enabled && <TokenSafetyIcon warning={warning} />}
           </Row>
           <ThemedText.DeprecatedDarkGray ml="0px" fontSize={'12px'} fontWeight={300}>
             {!currency.isNative && !isOnSelectedList && customAdded ? (
@@ -188,10 +190,10 @@ function CurrencyRow({
         {showCurrencyAmount ? (
           <RowFixed style={{ justifySelf: 'flex-end' }}>
             {balance ? <Balance balance={balance} /> : account ? <Loader /> : null}
-            {phase0FlagEnabled && isSelected && <CheckIcon />}
+            {redesignFlagEnabled && isSelected && <CheckIcon />}
           </RowFixed>
         ) : (
-          phase0FlagEnabled &&
+          redesignFlagEnabled &&
           isSelected && (
             <RowFixed style={{ justifySelf: 'flex-end' }}>
               <CheckIcon />

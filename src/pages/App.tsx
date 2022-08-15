@@ -4,7 +4,7 @@ import { Trace } from 'components/AmplitudeAnalytics/Trace'
 import Loader from 'components/Loader'
 import TopLevelModals from 'components/TopLevelModals'
 import { useFeatureFlagsIsLoaded } from 'featureFlags'
-import { Phase0Variant, usePhase0Flag } from 'featureFlags/flags/phase0'
+import { ExploreVariant, useExploreFlag } from 'featureFlags/flags/explore'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
 import { lazy, Suspense, useEffect } from 'react'
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
@@ -104,7 +104,7 @@ const LazyLoadSpinner = () => (
 
 export default function App() {
   const isLoaded = useFeatureFlagsIsLoaded()
-  const phase0Flag = usePhase0Flag()
+  const exploreFlag = useExploreFlag()
 
   const { pathname } = useLocation()
   const currentPage = getCurrentPageFromLocation(pathname)
@@ -150,7 +150,7 @@ export default function App() {
             <Suspense fallback={<Loader />}>
               {isLoaded ? (
                 <Routes>
-                  {phase0Flag === Phase0Variant.Enabled && (
+                  {exploreFlag === ExploreVariant.Enabled && (
                     <>
                       <Route path="/explore" element={<Explore />} />
                       <Route
