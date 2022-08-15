@@ -5,11 +5,14 @@ import { useMemo } from 'react'
 import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 
 import EthereumLogo from '../../assets/images/ethereum-logo.png'
+import ArbitrumLogo from '../../assets/svg/arbitrum_logo.svg'
 import CeloLogo from '../../assets/svg/celo_logo.svg'
 import MaticLogo from '../../assets/svg/matic-token-icon.svg'
+import OptimismLogo from '../../assets/svg/optimism_logo.svg'
+import PolygonLogo from '../../assets/svg/polygon-matic-logo.svg'
 import { isCelo, nativeOnChain } from '../../constants/tokens'
 
-type Network = 'ethereum' | 'arbitrum' | 'optimism'
+type Network = 'ethereum' | 'arbitrum' | 'optimism' | 'polygon'
 
 function chainIdToNetworkName(networkId: SupportedChainId): Network {
   switch (networkId) {
@@ -19,12 +22,14 @@ function chainIdToNetworkName(networkId: SupportedChainId): Network {
       return 'arbitrum'
     case SupportedChainId.OPTIMISM:
       return 'optimism'
+    case SupportedChainId.POLYGON:
+      return 'polygon'
     default:
       return 'ethereum'
   }
 }
 
-function getNativeLogoURI(chainId: SupportedChainId = SupportedChainId.MAINNET): string {
+export function getNativeLogoURI(chainId: SupportedChainId = SupportedChainId.MAINNET): string {
   switch (chainId) {
     case SupportedChainId.POLYGON:
     case SupportedChainId.POLYGON_MUMBAI:
@@ -32,6 +37,20 @@ function getNativeLogoURI(chainId: SupportedChainId = SupportedChainId.MAINNET):
     case SupportedChainId.CELO:
     case SupportedChainId.CELO_ALFAJORES:
       return CeloLogo
+    default:
+      return EthereumLogo
+  }
+}
+
+export function getNetworkLogoURL(chainId: SupportedChainId): string {
+  switch (chainId) {
+    case SupportedChainId.POLYGON:
+    case SupportedChainId.POLYGON_MUMBAI:
+      return PolygonLogo
+    case SupportedChainId.ARBITRUM_ONE:
+      return ArbitrumLogo
+    case SupportedChainId.OPTIMISM:
+      return OptimismLogo
     default:
       return EthereumLogo
   }

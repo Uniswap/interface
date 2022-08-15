@@ -4,12 +4,12 @@ import { sendAnalyticsEvent } from 'components/AmplitudeAnalytics'
 import { EventName } from 'components/AmplitudeAnalytics/constants'
 import SparklineChart from 'components/Charts/SparklineChart'
 import CurrencyLogo from 'components/CurrencyLogo'
-import { getChainInfo } from 'constants/chainInfo'
 import { SupportedChainId } from 'constants/chains'
 import { useCurrency, useToken } from 'hooks/Tokens'
 import { TimePeriod, TokenData } from 'hooks/useExplorePageQuery'
 import { useAtom } from 'jotai'
 import { useAtomValue } from 'jotai/utils'
+import { getNativeLogoURI } from 'lib/hooks/useCurrencyLogoURIs'
 import { ReactNode } from 'react'
 import { ArrowDown, ArrowDownRight, ArrowUp, ArrowUpRight, Heart } from 'react-feather'
 import { Link } from 'react-router-dom'
@@ -504,7 +504,7 @@ export default function LoadedRow({
               <CurrencyLogo currency={currency} />
               <L2NetworkLogo
                 L2display={SupportedChainId.MAINNET !== filterNetwork}
-                networkUrl={getChainInfo(filterNetwork).logoUrl}
+                networkUrl={getNativeLogoURI(filterNetwork)}
               />
             </LogoContainer>
             <TokenInfoCell>
