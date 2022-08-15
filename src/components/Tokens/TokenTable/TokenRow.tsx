@@ -5,6 +5,7 @@ import { EventName } from 'components/AmplitudeAnalytics/constants'
 import SparklineChart from 'components/Charts/SparklineChart'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { getChainInfo } from 'constants/chainInfo'
+import { SupportedChainId } from 'constants/chains'
 import { useCurrency, useToken } from 'hooks/Tokens'
 import { TimePeriod, TokenData } from 'hooks/useExplorePageQuery'
 import { useAtom } from 'jotai'
@@ -281,14 +282,20 @@ const SparkLineLoadingBubble = styled(LongLoadingBubble)`
   height: 4px;
 `
 
-const L2Network = styled.div<{ networkURL: string }>`
+const L2NetworkLogo = styled.div<{ networkUrl: string; L2display: boolean }>`
   height: 12px;
   width: 12px;
   border-radius: 50%;
   position: absolute;
   left: 50%;
   top: 50%;
-  background: url(networkURL);
+  background: url(${({ networkUrl }) => networkUrl});
+  display: ${({ L2display }) => !L2display && 'none'};
+`
+const LogoContainer = styled.div`
+  position: relative;
+  align-items: center;
+  display: flex;
 `
 
 /* formatting for volume with timeframe header display */
@@ -493,8 +500,13 @@ export default function LoadedRow({
         listNumber={tokenListIndex + 1}
         tokenInfo={
           <ClickableName>
-            <CurrencyLogo currency={currency} />
-            <L2Network networkURL={getChainInfo(filterNetwork).logoUrl} />
+            <LogoContainer>
+              <CurrencyLogo currency={currency} />
+              <L2NetworkLogo
+                L2display={SupportedChainId.MAINNET !== filterNetwork}
+                networkUrl={getChainInfo(filterNetwork).logoUrl}
+              />
+            </LogoContainer>
             <TokenInfoCell>
               <TokenName>{tokenName}</TokenName>
               <TokenSymbol>{tokenSymbol}</TokenSymbol>
