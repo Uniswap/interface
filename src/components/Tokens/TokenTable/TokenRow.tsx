@@ -4,6 +4,7 @@ import { sendAnalyticsEvent } from 'components/AmplitudeAnalytics'
 import { EventName } from 'components/AmplitudeAnalytics/constants'
 import SparklineChart from 'components/Charts/SparklineChart'
 import CurrencyLogo from 'components/CurrencyLogo'
+import { getChainInfo } from 'constants/chainInfo'
 import { useCurrency, useToken } from 'hooks/Tokens'
 import { TimePeriod, TokenData } from 'hooks/useExplorePageQuery'
 import { useAtom } from 'jotai'
@@ -280,6 +281,16 @@ const SparkLineLoadingBubble = styled(LongLoadingBubble)`
   height: 4px;
 `
 
+const L2Network = styled.div<{ networkURL: string }>`
+  height: 12px;
+  width: 12px;
+  border-radius: 50%;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  background: url(networkURL);
+`
+
 /* formatting for volume with timeframe header display */
 function getHeaderDisplay(category: string, timeframe: string): string {
   if (category === Category.volume) return `${TIME_DISPLAYS[timeframe]} ${category}`
@@ -483,6 +494,7 @@ export default function LoadedRow({
         tokenInfo={
           <ClickableName>
             <CurrencyLogo currency={currency} />
+            <L2Network networkURL={getChainInfo(filterNetwork).logoUrl} />
             <TokenInfoCell>
               <TokenName>{tokenName}</TokenName>
               <TokenSymbol>{tokenSymbol}</TokenSymbol>
