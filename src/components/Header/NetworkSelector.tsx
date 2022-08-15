@@ -3,6 +3,7 @@ import { useWeb3React } from '@web3-react/core'
 import { getChainInfo } from 'constants/chainInfo'
 import { SupportedChainId } from 'constants/chains'
 import useSelectChain from 'hooks/useSelectChain'
+import useSyncChainQuery from 'hooks/useSyncChainQuery'
 import { darken } from 'polished'
 import { useRef } from 'react'
 import { AlertTriangle, ArrowDownCircle, ChevronDown } from 'react-feather'
@@ -291,6 +292,7 @@ export default function NetworkSelector() {
   const info = getChainInfo(chainId)
 
   const selectChain = useSelectChain()
+  useSyncChainQuery()
 
   if (!chainId || !provider) {
     return null
