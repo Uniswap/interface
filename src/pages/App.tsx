@@ -6,6 +6,7 @@ import TopLevelModals from 'components/TopLevelModals'
 import { useFeatureFlagsIsLoaded } from 'featureFlags'
 import { ExploreVariant, useExploreFlag } from 'featureFlags/flags/explore'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
+import useSyncChainQuery from 'hooks/useSyncChainQuery'
 import { lazy, Suspense, useEffect } from 'react'
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import { useIsDarkMode } from 'state/user/hooks'
@@ -113,6 +114,8 @@ export default function App() {
 
   useAnalyticsReporter()
   initializeAnalytics()
+
+  useSyncChainQuery()
 
   useEffect(() => {
     window.scrollTo(0, 0)

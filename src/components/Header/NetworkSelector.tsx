@@ -1,23 +1,16 @@
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
-import { getConnection } from 'connection/utils'
 import { getChainInfo } from 'constants/chainInfo'
-import { CHAIN_IDS_TO_NAMES, SupportedChainId } from 'constants/chains'
-import useParsedQueryString from 'hooks/useParsedQueryString'
-import usePrevious from 'hooks/usePrevious'
+import { SupportedChainId } from 'constants/chains'
+import useSelectChain from 'hooks/useSelectChain'
 import { darken } from 'polished'
-import { ParsedQs } from 'qs'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useRef } from 'react'
 import { AlertTriangle, ArrowDownCircle, ChevronDown } from 'react-feather'
-import { useLocation, useNavigate } from 'react-router-dom'
 import { useCloseModal, useModalIsOpen, useOpenModal, useToggleModal } from 'state/application/hooks'
-import { addPopup, ApplicationModal } from 'state/application/reducer'
-import { updateConnectionError } from 'state/connection/reducer'
-import { useAppDispatch } from 'state/hooks'
+import { ApplicationModal } from 'state/application/reducer'
 import styled from 'styled-components/macro'
 import { ExternalLink, MEDIA_WIDTHS } from 'theme'
-import { replaceURLParam } from 'utils/routes'
-import { isChainAllowed, switchChain } from 'utils/switchChain'
+import { isChainAllowed } from 'utils/switchChain'
 import { isMobile } from 'utils/userAgent'
 
 const ActiveRowLinkList = styled.div`
@@ -278,24 +271,6 @@ function Row({
   return rowContent
 }
 
-const getParsedChainId = (parsedQs?: ParsedQs) => {
-  const chain = parsedQs?.chain
-  if (!chain || typeof chain !== 'string') return
-
-  return getChainIdFromName(chain)
-}
-
-const getChainIdFromName = (name: string) => {
-  const entry = Object.entries(CHAIN_IDS_TO_NAMES).find(([_, n]) => n === name)
-  const chainId = entry?.[0]
-  return chainId ? parseInt(chainId) : undefined
-}
-
-const getChainNameFromId = (id: string | number) => {
-  // casting here may not be right but fine to return undefined if it's not a supported chain ID
-  return CHAIN_IDS_TO_NAMES[id as SupportedChainId] || ''
-}
-
 const NETWORK_SELECTOR_CHAINS = [
   SupportedChainId.MAINNET,
   SupportedChainId.POLYGON,
@@ -305,24 +280,7 @@ const NETWORK_SELECTOR_CHAINS = [
 ]
 
 export default function NetworkSelector() {
-  const dispatch = useAppDispatch()
-
-  const { chainId, provider, connector, isActive } = useWeb3React()
-  const [previousChainId, setPreviousChainId] = useState<number | undefined>(undefined)
-
-  // Can't use `usePrevious` because `chainId` can be undefined while activating.
-  useEffect(() => {
-    if (chainId && chainId !== previousChainId) {
-      setPreviousChainId(chainId)
-    }
-  }, [chainId, previousChainId])
-
-  const parsedQs = useParsedQueryString()
-  const urlChainId = getParsedChainId(parsedQs)
-  const previousUrlChainId = usePrevious(urlChainId)
-
-  const navigate = useNavigate()
-  const { search } = useLocation()
+  const { chainId, provider, connector } = useWeb3React()
 
   const node = useRef<HTMLDivElement>(null)
   const isOpen = useModalIsOpen(ApplicationModal.NETWORK_SELECTOR)
@@ -332,62 +290,7 @@ export default function NetworkSelector() {
 
   const info = getChainInfo(chainId)
 
-  const replaceURLChainParam = useCallback(() => {
-    if (chainId) {
-      navigate({ search: replaceURLParam(search, 'chain', getChainNameFromId(chainId)) }, { replace: true })
-    }
-  }, [chainId, search, navigate])
-
-  const onSelectChain = useCallback(
-    async (targetChain: SupportedChainId, skipClose?: boolean) => {
-      if (!connector) return
-
-      const connectionType = getConnection(connector).type
-
-      try {
-        dispatch(updateConnectionError({ connectionType, error: undefined }))
-        await switchChain(connector, targetChain)
-      } catch (error) {
-        console.error('Failed to switch networks', error)
-
-        dispatch(updateConnectionError({ connectionType, error: error.message }))
-        dispatch(addPopup({ content: { failedSwitchNetwork: targetChain }, key: `failed-network-switch` }))
-
-        // If we activate a chain and it fails, reset the query param to the current chainId
-        replaceURLChainParam()
-      }
-
-      if (!skipClose) {
-        closeModal()
-      }
-    },
-    [connector, closeModal, dispatch, replaceURLChainParam]
-  )
-
-  // If there is no chain query param, set it to the current chain
-  useEffect(() => {
-    const chainQueryUnpopulated = !urlChainId
-    if (chainQueryUnpopulated && chainId) {
-      replaceURLChainParam()
-    }
-  }, [chainId, urlChainId, replaceURLChainParam])
-
-  // If the chain changed but the query param is stale, update to the current chain
-  useEffect(() => {
-    const chainChanged = chainId !== previousChainId
-    const chainQueryStale = urlChainId !== chainId
-    if (chainChanged && chainQueryStale) {
-      replaceURLChainParam()
-    }
-  }, [chainId, previousChainId, replaceURLChainParam, urlChainId])
-
-  // If the query param changed, and the chain didn't change, then activate the new chain
-  useEffect(() => {
-    const chainQueryManuallyUpdated = urlChainId && urlChainId !== previousUrlChainId
-    if (chainQueryManuallyUpdated && isActive) {
-      onSelectChain(urlChainId, true)
-    }
-  }, [onSelectChain, urlChainId, previousUrlChainId, isActive])
+  const selectChain = useSelectChain()
 
   if (!chainId || !provider) {
     return null
@@ -425,7 +328,14 @@ export default function NetworkSelector() {
             </FlyoutHeader>
             {NETWORK_SELECTOR_CHAINS.map((chainId: SupportedChainId) =>
               isChainAllowed(connector, chainId) ? (
-                <Row onSelectChain={onSelectChain} targetChain={chainId} key={chainId} />
+                <Row
+                  onSelectChain={(targetChainId: SupportedChainId) => {
+                    selectChain(targetChainId)
+                    closeModal()
+                  }}
+                  targetChain={chainId}
+                  key={chainId}
+                />
               ) : null
             )}
           </FlyoutMenuContents>
