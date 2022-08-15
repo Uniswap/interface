@@ -14,6 +14,7 @@ import TokenDetail from 'components/Explore/TokenDetails/TokenDetail'
 import TokenSafetyMessage from 'components/TokenSafety/TokenSafetyMessage'
 import { getChainInfo } from 'constants/chainInfo'
 import { L1_CHAIN_IDS, L2_CHAIN_IDS, SupportedChainId, TESTNET_CHAIN_IDS } from 'constants/chains'
+import { RPC_URLS } from 'constants/networks'
 import { checkWarning } from 'constants/tokenSafety'
 import { useToken } from 'hooks/Tokens'
 import { useActiveLocale } from 'hooks/useActiveLocale'
@@ -60,8 +61,13 @@ function NetworkBalances(tokenAddress: string) {
   return useNetworkTokenBalances({ address: tokenAddress })
 }
 
+// widget configuration
 const WIDGET_THEME = {}
 const ROUTER_URL = 'https://api.uniswap.org/v1/'
+const WIDGET_URL_MAP = Object.keys(RPC_URLS).reduce(
+  (acc, cur) => ({ ...acc, [cur]: [RPC_URLS[cur as unknown as SupportedChainId]] }),
+  {}
+)
 
 export default function TokenDetails() {
   const { tokenAddress } = useParams<{ tokenAddress?: string }>()
@@ -136,15 +142,17 @@ export default function TokenDetails() {
               defaultChainId={connectedChainId}
               defaultInputTokenAddress={'NATIVE'}
               defaultOutputTokenAddress={tokenAddress}
-              // tokenList={[]}
+              hideConnectionUI
+              jsonRpcUrlMap={WIDGET_URL_MAP}
               locale={locale}
               onTxSubmit={onTxSubmit}
               onTxSuccess={onTxSuccess}
               onTxFail={onTxFail}
               provider={provider}
-              theme={WIDGET_THEME}
-              width={290}
               routerUrl={ROUTER_URL}
+              theme={WIDGET_THEME}
+              // tokenList={[]}
+              width={290}
             />
             {tokenWarning && <TokenSafetyMessage tokenAddress={tokenAddress} warning={tokenWarning} />}
             {!loading && (
