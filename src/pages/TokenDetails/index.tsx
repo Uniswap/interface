@@ -16,9 +16,10 @@ import { getChainInfo } from 'constants/chainInfo'
 import { L1_CHAIN_IDS, L2_CHAIN_IDS, SupportedChainId, TESTNET_CHAIN_IDS } from 'constants/chains'
 import { checkWarning } from 'constants/tokenSafety'
 import { useToken } from 'hooks/Tokens'
+import { useActiveLocale } from 'hooks/useActiveLocale'
 import { useNetworkTokenBalances } from 'hooks/useNetworkTokenBalances'
 import useTokenDetailPageQuery from 'hooks/useTokenDetailPageQuery'
-import { useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
@@ -59,10 +60,18 @@ function NetworkBalances(tokenAddress: string) {
   return useNetworkTokenBalances({ address: tokenAddress })
 }
 
+const WIDGET_THEME = {}
+const ROUTER_URL = 'https://api.uniswap.org/v1/'
+
 export default function TokenDetails() {
   const { tokenAddress } = useParams<{ tokenAddress?: string }>()
   const { loading } = useTokenDetailPageQuery(tokenAddress)
   const tokenSymbol = useToken(tokenAddress)?.symbol
+
+  const locale = useActiveLocale()
+  const onTxSubmit = useCallback(() => {}, [])
+  const onTxSuccess = useCallback(() => {}, [])
+  const onTxFail = useCallback(() => {}, [])
 
   let tokenDetail
   if (!tokenAddress) {
@@ -117,7 +126,20 @@ export default function TokenDetails() {
       {tokenAddress && (
         <>
           <RightPanel>
-            <SwapWidget provider={provider} />
+            <SwapWidget
+              defaultChainId={connectedChainId}
+              defaultInputTokenAddress={'NATIVE'}
+              defaultOutputTokenAddress={tokenAddress}
+              tokenList={[]}
+              locale={locale}
+              onTxSubmit={onTxSubmit}
+              onTxSuccess={onTxSuccess}
+              onTxFail={onTxFail}
+              provider={provider}
+              theme={WIDGET_THEME}
+              width={290}
+              routerUrl={ROUTER_URL}
+            />
             {tokenWarning && <TokenSafetyMessage tokenAddress={tokenAddress} warning={tokenWarning} />}
             {!loading && (
               <BalanceSummary address={tokenAddress} totalBalance={totalBalance} networkBalances={balancesByNetwork} />
