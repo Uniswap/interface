@@ -1,11 +1,10 @@
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
-import { darken } from 'polished'
 import { useRef } from 'react'
 import { Twitter } from 'react-feather'
 import { useModalIsOpen, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import styled, { useTheme } from 'styled-components/macro'
-import { ClickableStyle, Z_INDEX } from 'theme'
+import { ClickableStyle, OPACITY_CLICK, Z_INDEX } from 'theme'
 
 import { ReactComponent as ShareIcon } from '../../../assets/svg/share.svg'
 import { CopyHelper } from '../../../theme'
@@ -15,34 +14,26 @@ const TWITTER_HEIGHT = 480
 
 const ShareButtonDisplay = styled.div`
   display: flex;
-  cursor: pointer;
   position: relative;
-  z-index: ${Z_INDEX.dropdown};
-
-  &:hover {
-    color: ${({ theme }) => darken(0.1, theme.textSecondary)};
-  }
 `
 
 const Share = styled(ShareIcon)<{ open: boolean }>`
-  width: 18px;
-  height: 18px;
-  :hover {
-    opacity: 0.6;
-  }
-  ${({ open }) => open && `opacity: 0.4 !important`};
+  fill: ${({ theme }) => theme.textSecondary} !important;
+  ${ClickableStyle}
+  ${({ open }) => open && `opacity: ${OPACITY_CLICK} !important`};
 `
 
 const ShareActions = styled.div`
   position: absolute;
+  z-index: ${Z_INDEX.dropdown};
   width: 240px;
-  height: 96px;
   top: 28px;
   right: 0px;
   justify-content: center;
   display: flex;
   flex-direction: column;
   overflow: auto;
+  padding: 8px;
   background-color: ${({ theme }) => theme.backgroundSurface};
   border: 0.5px solid ${({ theme }) => theme.backgroundOutline};
   box-shadow: ${({ theme }) => theme.flyoutDropShadow};
@@ -53,7 +44,6 @@ const ShareAction = styled.div<{ highlighted?: boolean }>`
   display: flex;
   align-items: center;
   padding: 8px;
-  margin: 0 8px;
   border-radius: 8px;
   font-size: 16px;
   font-weight: 400;
@@ -61,7 +51,7 @@ const ShareAction = styled.div<{ highlighted?: boolean }>`
   height: 40px;
   color: ${({ theme }) => theme.textPrimary};
   background-color: ${({ theme, highlighted }) => (highlighted ? theme.backgroundInteractive : 'transparent')};
-  cursor: pointer;
+  ${({ highlighted }) => highlighted && `cursor: pointer`};
 `
 
 interface TokenInfo {
@@ -89,7 +79,7 @@ export default function ShareButton(tokenInfo: TokenInfo) {
 
   return (
     <ShareButtonDisplay ref={node}>
-      <Share onClick={toggleShare} aria-label={`ShareOptions`} open={open} />
+      <Share onClick={toggleShare} aria-label={`ShareOptions`} open={open} color={theme.textSecondary} />
       {open && (
         <ShareActions>
           <ShareAction>

@@ -13,7 +13,7 @@ import { useState } from 'react'
 import { ArrowLeft, Heart } from 'react-feather'
 import { Link, useNavigate } from 'react-router-dom'
 import styled, { useTheme } from 'styled-components/macro'
-import { CopyContractAddress } from 'theme'
+import { ClickableStyle, CopyContractAddress } from 'theme'
 
 import { favoritesAtom, useToggleFavorite } from '../state'
 import { ClickFavorited } from '../TokenTable/TokenRow'
@@ -109,7 +109,7 @@ export const TokenNameCell = styled.div`
 `
 const TokenActions = styled.div`
   display: flex;
-  gap: 14px;
+  gap: 16px;
   color: ${({ theme }) => theme.textSecondary};
 `
 export const TokenInfoContainer = styled.div`
@@ -135,6 +135,13 @@ const NetworkBadge = styled.div<{ networkColor?: string; backgroundColor?: strin
   line-height: 12px;
   color: ${({ theme, networkColor }) => networkColor ?? theme.textPrimary};
   background-color: ${({ theme, backgroundColor }) => backgroundColor ?? theme.backgroundSurface};
+`
+const FavoriteIcon = styled(Heart)<{ isFavorited: boolean }>`
+  ${ClickableStyle}
+  height: 18px;
+  width: 20px;
+  color: ${({ isFavorited, theme }) => (isFavorited ? theme.accentAction : theme.textSecondary)};
+  fill: ${({ isFavorited, theme }) => (isFavorited ? theme.accentAction : theme.none)};
 `
 
 export default function LoadedTokenDetail({ address }: { address: string }) {
@@ -189,12 +196,7 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
           <TokenActions>
             <ShareButton tokenName={tokenName} tokenSymbol={tokenSymbol} />
             <ClickFavorited onClick={toggleFavorite}>
-              <Heart
-                height="16px"
-                width="18px"
-                color={isFavorited ? theme.accentAction : theme.textSecondary}
-                fill={isFavorited ? theme.accentAction : theme.none}
-              />
+              <FavoriteIcon isFavorited={isFavorited} />
             </ClickFavorited>
           </TokenActions>
         </TokenInfoContainer>
