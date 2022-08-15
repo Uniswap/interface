@@ -9,20 +9,20 @@ import useParsedQueryString from './useParsedQueryString'
 import usePrevious from './usePrevious'
 import useSelectChain from './useSelectChain'
 
-const getChainIdFromName = (name: string) => {
+function getChainIdFromName(name: string) {
   const entry = Object.entries(CHAIN_IDS_TO_NAMES).find(([_, n]) => n === name)
   const chainId = entry?.[0]
   return chainId ? parseInt(chainId) : undefined
 }
 
-const getParsedChainId = (parsedQs?: ParsedQs) => {
+function getParsedChainId(parsedQs?: ParsedQs) {
   const chain = parsedQs?.chain
   if (!chain || typeof chain !== 'string') return
 
   return getChainIdFromName(chain)
 }
 
-const getChainNameFromId = (id: string | number) => {
+function getChainNameFromId(id: string | number) {
   // casting here may not be right but fine to return undefined if it's not a supported chain ID
   return CHAIN_IDS_TO_NAMES[id as SupportedChainId] || ''
 }
