@@ -28,6 +28,7 @@ export function useDerivedSwapInfoV2(): {
   inputError?: string
   onRefresh: (resetRoute: boolean, minimumLoadingTime: number) => void
   loading: boolean
+  isPairNotfound: boolean
 } {
   const { account } = useActiveWeb3React()
 
@@ -147,6 +148,9 @@ export function useDerivedSwapInfoV2(): {
     inputError = t`Insufficient ${amountIn.currency.symbol} balance`
   }
 
+  // inputCurrency/outputCurrency null is loading, undefined is not found, see useToken for detail
+  const isPairNotfound = inputCurrency === undefined && outputCurrency === undefined
+
   return useMemo(
     () => ({
       currencies,
@@ -157,7 +161,18 @@ export function useDerivedSwapInfoV2(): {
       inputError,
       onRefresh: onUpdateCallback,
       loading,
+      isPairNotfound,
     }),
-    [currencies, currencyBalances, inputError, loading, onUpdateCallback, parsedAmount, tradeComparer, v2Trade],
+    [
+      currencies,
+      currencyBalances,
+      inputError,
+      loading,
+      onUpdateCallback,
+      parsedAmount,
+      tradeComparer,
+      v2Trade,
+      isPairNotfound,
+    ],
   )
 }

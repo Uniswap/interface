@@ -229,10 +229,19 @@
     jsesc "^2.5.1"
     source-map "^0.5.0"
 
-"@babel/generator@^7.11.6", "@babel/generator@^7.12.1", "@babel/generator@^7.17.3", "@babel/generator@^7.17.7", "@babel/generator@^7.18.10":
+"@babel/generator@^7.11.6", "@babel/generator@^7.12.1", "@babel/generator@^7.18.10":
   version "7.18.10"
   resolved "https://registry.yarnpkg.com/@babel/generator/-/generator-7.18.10.tgz#794f328bfabdcbaf0ebf9bf91b5b57b61fa77a2a"
   integrity sha512-0+sW7e3HjQbiHbj1NeU/vN8ornohYlacAfZIaXhdoGweQqgcNy69COVciYYqEXJ/v+9OBA7Frxm4CVAuNqKeNA==
+  dependencies:
+    "@babel/types" "^7.18.10"
+    "@jridgewell/gen-mapping" "^0.3.2"
+    jsesc "^2.5.1"
+
+"@babel/generator@^7.17.3", "@babel/generator@^7.17.7":
+  version "7.18.12"
+  resolved "https://registry.yarnpkg.com/@babel/generator/-/generator-7.18.12.tgz#fa58daa303757bd6f5e4bbca91b342040463d9f4"
+  integrity sha512-dfQ8ebCN98SvyL7IxNMCUtZQSq5R7kxgN+r8qYTGDmmSion1hX2C0zq2yo1bsCDhXixokv1SAWTZUMYbO/V5zg==
   dependencies:
     "@babel/types" "^7.18.10"
     "@jridgewell/gen-mapping" "^0.3.2"
@@ -453,10 +462,15 @@
   resolved "https://registry.yarnpkg.com/@babel/parser/-/parser-7.17.8.tgz#2817fb9d885dd8132ea0f8eb615a6388cca1c240"
   integrity sha512-BoHhDJrJXqcg+ZL16Xv39H9n+AqJ4pcDrQBGZN+wHxIysrLZ3/ECwCBUch/1zUNhnsXULcONU3Ei5Hmkfk6kiQ==
 
-"@babel/parser@^7.1.0", "@babel/parser@^7.11.5", "@babel/parser@^7.12.3", "@babel/parser@^7.14.7", "@babel/parser@^7.17.3", "@babel/parser@^7.17.8", "@babel/parser@^7.18.10", "@babel/parser@^7.7.0":
+"@babel/parser@^7.1.0", "@babel/parser@^7.11.5", "@babel/parser@^7.12.3", "@babel/parser@^7.14.7", "@babel/parser@^7.18.10", "@babel/parser@^7.7.0":
   version "7.18.10"
   resolved "https://registry.yarnpkg.com/@babel/parser/-/parser-7.18.10.tgz#94b5f8522356e69e8277276adf67ed280c90ecc1"
   integrity sha512-TYk3OA0HKL6qNryUayb5UUEhM/rkOQozIBEA5ITXh5DWrSp0TlUQXMyZmnWxG/DizSWBeeQ0Zbc5z8UGaaqoeg==
+
+"@babel/parser@^7.17.3", "@babel/parser@^7.17.8", "@babel/parser@^7.18.11":
+  version "7.18.11"
+  resolved "https://registry.yarnpkg.com/@babel/parser/-/parser-7.18.11.tgz#68bb07ab3d380affa9a3f96728df07969645d2d9"
+  integrity sha512-9JKn5vN+hDt0Hdqn1PiJ2guflwP+B6Ga8qbDuoF0PzzVhrzsKIJo8yGqVk6CmMHiMei9w1C1Bp9IMJSIK+HPIQ==
 
 "@babel/plugin-bugfix-safari-id-destructuring-collision-in-function-expression@^7.18.6":
   version "7.18.6"
@@ -1242,7 +1256,7 @@
     debug "^4.1.0"
     globals "^11.1.0"
 
-"@babel/traverse@^7.1.0", "@babel/traverse@^7.12.1", "@babel/traverse@^7.17.3", "@babel/traverse@^7.18.10", "@babel/traverse@^7.18.9", "@babel/traverse@^7.4.5", "@babel/traverse@^7.7.0":
+"@babel/traverse@^7.1.0", "@babel/traverse@^7.12.1", "@babel/traverse@^7.18.10", "@babel/traverse@^7.18.9", "@babel/traverse@^7.4.5", "@babel/traverse@^7.7.0":
   version "7.18.10"
   resolved "https://registry.yarnpkg.com/@babel/traverse/-/traverse-7.18.10.tgz#37ad97d1cb00efa869b91dd5d1950f8a6cf0cb08"
   integrity sha512-J7ycxg0/K9XCtLyHf0cz2DqDihonJeIo+z+HEdRe9YuT8TY4A66i+Ab2/xZCEW7Ro60bPCBBfqqboHSamoV3+g==
@@ -1254,6 +1268,22 @@
     "@babel/helper-hoist-variables" "^7.18.6"
     "@babel/helper-split-export-declaration" "^7.18.6"
     "@babel/parser" "^7.18.10"
+    "@babel/types" "^7.18.10"
+    debug "^4.1.0"
+    globals "^11.1.0"
+
+"@babel/traverse@^7.17.3":
+  version "7.18.11"
+  resolved "https://registry.yarnpkg.com/@babel/traverse/-/traverse-7.18.11.tgz#3d51f2afbd83ecf9912bcbb5c4d94e3d2ddaa16f"
+  integrity sha512-TG9PiM2R/cWCAy6BPJKeHzNbu4lPzOSZpeMfeNErskGpTJx6trEvFaVCbDvpcxwy49BKWmEPwiW8mrysNiDvIQ==
+  dependencies:
+    "@babel/code-frame" "^7.18.6"
+    "@babel/generator" "^7.18.10"
+    "@babel/helper-environment-visitor" "^7.18.9"
+    "@babel/helper-function-name" "^7.18.9"
+    "@babel/helper-hoist-variables" "^7.18.6"
+    "@babel/helper-split-export-declaration" "^7.18.6"
+    "@babel/parser" "^7.18.11"
     "@babel/types" "^7.18.10"
     debug "^4.1.0"
     globals "^11.1.0"
@@ -2844,11 +2874,6 @@
     "@babel/runtime" "^7.11.2"
     make-plural "^6.2.2"
     messageformat-parser "^4.1.3"
-
-"@lingui/detect-locale@^3.10.4":
-  version "3.14.0"
-  resolved "https://registry.yarnpkg.com/@lingui/detect-locale/-/detect-locale-3.14.0.tgz#efbec423a8bf0e2785db320c5d015e4023ae8f8b"
-  integrity sha512-IELWULt9I+iyVlxGES21cXoOwTcPSIisElAmr3/KJlqvJ9zXT3s4w4Jxw9j5oHJjdxBDRkifwpnVmGd57wrmzg==
 
 "@lingui/loader@^3.14.0":
   version "3.14.0"

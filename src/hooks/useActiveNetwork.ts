@@ -43,7 +43,6 @@ export function useActiveNetwork() {
 
   const locationWithoutNetworkId = useMemo(() => {
     // Delete networkId from qs object
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { networkId, ...qsWithoutNetworkId } = qs
 
     return { ...location, search: stringify({ ...qsWithoutNetworkId }) }

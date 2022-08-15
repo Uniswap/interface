@@ -1,7 +1,6 @@
 import { ChainId, Currency, CurrencyAmount, NativeCurrency, Token } from '@kyberswap/ks-sdk-core'
 import { Trans, t } from '@lingui/macro'
 import JSBI from 'jsbi'
-import { debounce } from 'lodash'
 import { stringify } from 'qs'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { BrowserView } from 'react-device-detect'
@@ -241,6 +240,7 @@ export default function Swap({ history }: RouteComponentProps) {
     tradeComparer,
     onRefresh,
     loading: loadingAPI,
+    isPairNotfound,
   } = useDerivedSwapInfoV2()
 
   const currencyIn = currencies[Field.INPUT]
@@ -631,32 +631,17 @@ export default function Swap({ history }: RouteComponentProps) {
     if (isSelectCurencyMannual) syncUrl(currencyIn, currencyOut) // when we select token manual
   }, [currencyIn, currencyOut, isSelectCurencyMannual, syncUrl])
 
-  const refLoadedCurrency = useRef<{
-    currencyIn: Currency | null | undefined
-    currencyOut: Currency | null | undefined
-  }>({ currencyIn: null, currencyOut: null })
-
+  // swap?inputCurrency=xxx&outputCurrency=yyy. xxx yyy not exist in chain => remove params => select default pair
   useEffect(() => {
-    refLoadedCurrency.current = { currencyIn: loadedInputCurrency, currencyOut: loadedOutputCurrency }
-  }, [loadedInputCurrency, loadedOutputCurrency])
-
-  const checkParamWrong = useCallback(() => {
-    const { currencyIn, currencyOut } = refLoadedCurrency.current
-    if (!currencyIn || !currencyOut) {
+    if (isPairNotfound) {
       const newQuery = { ...qs }
-      if (!currencyIn) delete newQuery.inputCurrency
-      if (!currencyOut) delete newQuery.outputCurrency
+      delete newQuery.inputCurrency
+      delete newQuery.outputCurrency
       history.replace({
         search: stringify(newQuery),
       })
     }
-  }, [qs, history])
-
-  // swap?inputCurrency=xxx&outputCurrency=yyy. xxx yyy not exist in chain => remove params => select default pair
-  const checkParamWrongDebounce = useMemo(() => debounce(checkParamWrong, 300), [checkParamWrong])
-  useEffect(() => {
-    checkParamWrongDebounce()
-  }, [chainId, checkParamWrongDebounce])
+  }, [isPairNotfound, history, qs])
 
   useEffect(() => {
     if (isExpertMode) {
@@ -674,8 +659,7 @@ export default function Swap({ history }: RouteComponentProps) {
           })}`
         : ''
     }`
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currencyIn, currencyOut, chainId, currencyId, window.location.origin])
+  }, [currencyIn, currencyOut, chainId])
 
   const { isInWhiteList: isPairInWhiteList, canonicalUrl } = checkPairInWhiteList(
     chainId,

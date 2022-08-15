@@ -1,4 +1,5 @@
 import { createReducer } from '@reduxjs/toolkit'
+import { parse } from 'qs'
 
 import { FeeConfig } from 'hooks/useSwapV2Callback'
 
@@ -30,14 +31,17 @@ export interface SwapState {
   readonly feeConfig: FeeConfig | undefined
 }
 
+const { search } = window.location
+const { inputCurrency, outputCurrency } = parse(search.indexOf('?') === 0 ? search.substring(1) : search)
+
 const initialState: SwapState = {
   independentField: Field.INPUT,
   typedValue: '',
   [Field.INPUT]: {
-    currencyId: '',
+    currencyId: inputCurrency?.toString() || '',
   },
   [Field.OUTPUT]: {
-    currencyId: '',
+    currencyId: outputCurrency?.toString() || '',
   },
   recipient: null,
   saveGas: false,
@@ -72,14 +76,14 @@ export default createReducer<SwapState>(initialState, builder =>
           ...state,
           typedValue: '',
           independentField: state.independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT,
-          [field]: { currencyId: currencyId },
+          [field]: { currencyId },
           [otherField]: { currencyId: state[field].currencyId },
         }
       } else {
         // the normal case
         return {
           ...state,
-          [field]: { currencyId: currencyId },
+          [field]: { currencyId },
         }
       }
     })
