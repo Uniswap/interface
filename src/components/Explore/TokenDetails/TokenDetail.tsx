@@ -145,7 +145,6 @@ const FavoriteIcon = styled(Heart)<{ isFavorited: boolean }>`
 `
 
 export default function LoadedTokenDetail({ address }: { address: string }) {
-  const theme = useTheme()
   const token = useToken(address)
   const currency = useCurrency(address)
   const favoriteTokens = useAtomValue<string[]>(favoritesAtom)
