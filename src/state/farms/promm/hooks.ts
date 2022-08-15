@@ -455,11 +455,16 @@ export const useProMMFarmTVL = (fairlaunchAddress: string, pid: number) => {
     fetchPolicy: 'cache-first',
   })
 
-  const rewardAddress = useMemo(() => data?.farmingPool?.rewardTokens.map(item => item.id) || [], [data])
+  const rewardAddress = useMemo(
+    () => data?.farmingPool?.rewardTokens.map(item => isAddressString(item.id)) || [],
+    [data],
+  )
   const rwTokenMap = useTokens(rewardAddress)
 
   const rwTokens = useMemo(() => Object.values(rwTokenMap), [rwTokenMap])
+
   const prices = useTokensPrice(rwTokens, VERSION.ELASTIC)
+
   const priceMap: { [key: string]: number } = useMemo(
     () =>
       prices?.reduce(
