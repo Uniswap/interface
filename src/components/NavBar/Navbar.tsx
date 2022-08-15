@@ -1,3 +1,4 @@
+import Web3Status from 'components/Web3Status'
 import { useWindowSize } from 'hooks/useWindowSize'
 
 import { breakpoints } from '../../nft/css/sprinkles.css'
@@ -8,7 +9,7 @@ const MobileNavbar = () => {
     <>
       <nav className={styles.nav} />
       <div className={styles.mobileWalletContainer}>
-        <Wallet />
+        <Web3Status />
       </div>
     </>
   )
