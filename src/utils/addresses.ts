@@ -10,12 +10,23 @@ export function getChecksumAddress(address: string): string {
   return utils.getAddress(address)
 }
 
-// shorten the checksummed version of the input address to have 4 characters at start and end
+/**
+ * Formats an address to show the first and last #chars with ... in the middle
+ *
+ * @param address Address to format
+ * @param chars Number of chars to show at the beginning and end. This must be between 1 - 19
+ * @returns Formatted string
+ */
 export function shortenAddress(address: string, chars = 4): string {
-  const parsed = isValidAddress(address)
-  if (!parsed) {
+  if (address.length !== 42) {
     throw Error(`Invalid 'address' parameter '${address}'.`)
   }
+
+  // leave enough space for the ellipsis
+  if (chars < 1 || chars > 19) {
+    throw Error(`Invalid 'chars' parameter '${chars}'.`)
+  }
+
   return `${address.substring(0, chars)}...${address.substring(42 - chars)}`
 }
 
