@@ -69,9 +69,15 @@ export default function TokenDetails() {
   const tokenSymbol = useToken(tokenAddress)?.symbol
 
   const locale = useActiveLocale()
-  const onTxSubmit = useCallback(() => {}, [])
-  const onTxSuccess = useCallback(() => {}, [])
-  const onTxFail = useCallback(() => {}, [])
+  const onTxSubmit = useCallback(() => {
+    console.log('onTxSubmit')
+  }, [])
+  const onTxSuccess = useCallback(() => {
+    console.log('onTxSuccess')
+  }, [])
+  const onTxFail = useCallback(() => {
+    console.log('onTxFail')
+  }, [])
 
   let tokenDetail
   if (!tokenAddress) {
@@ -130,7 +136,7 @@ export default function TokenDetails() {
               defaultChainId={connectedChainId}
               defaultInputTokenAddress={'NATIVE'}
               defaultOutputTokenAddress={tokenAddress}
-              tokenList={[]}
+              // tokenList={[]}
               locale={locale}
               onTxSubmit={onTxSubmit}
               onTxSuccess={onTxSuccess}
