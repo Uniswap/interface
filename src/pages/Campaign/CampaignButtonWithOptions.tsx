@@ -159,7 +159,12 @@ export default function CampaignButtonWithOptions({
                 onClick={async () => {
                   if (type === 'enter_now') {
                     mixpanelHandler(MIXPANEL_TYPE.CAMPAIGN_ENTER_NOW_CLICKED, { campaign_name: campaign?.name })
-                    window.open(campaign?.enterNowUrl + '?networkId=' + chainId)
+                    let url = campaign?.enterNowUrl + '?networkId=' + chainId
+                    if (campaign?.eligibleTokens?.length) {
+                      const outputCurrency = campaign?.eligibleTokens[0].address
+                      url += '&outputCurrency=' + outputCurrency
+                    }
+                    window.open(url)
                   } else {
                     mixpanelHandler(MIXPANEL_TYPE.CAMPAIGN_CLAIM_REWARDS_CLICKED, { campaign_name: campaign?.name })
                     await changeNetwork(chainId, () => claimRewards(chainId))

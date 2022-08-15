@@ -141,6 +141,18 @@ export default function CampaignsUpdater(): null {
         chainIds: campaign.chainIds,
         rewardChainIds: campaign.rewardChainIds,
         tradingVolumeRequired: campaign.tradingVolumeRequired,
+        eligibleTokens: campaign.eligibleTokens.map(
+          ({ chainId, name, symbol, address, logoURI, decimals }: any): SerializedToken => {
+            return {
+              chainId,
+              name,
+              symbol,
+              address,
+              logoURI,
+              decimals,
+            }
+          },
+        ),
       }
     })
     return formattedCampaigns

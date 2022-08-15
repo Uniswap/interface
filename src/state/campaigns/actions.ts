@@ -81,6 +81,7 @@ export interface CampaignData {
   enterNowUrl: string
   rewardDistribution: RewardDistribution[]
   campaignState: CampaignState
+  eligibleTokens: SerializedToken[]
   chainIds: string
   rewardChainIds: string
   tradingVolumeRequired: number
