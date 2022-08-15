@@ -2,9 +2,10 @@ import { Currency, Token } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { sendEvent } from 'components/analytics'
 import useBlockNumber from 'lib/hooks/useBlockNumber'
+import ms from 'ms.macro'
 import { useMemo } from 'react'
 
-import useFeeTierDistributionQuery from './graphql/useFeeTierDistributionQuery'
+import useFeeTierDistributionQuery from './graphql/FeeTierDistributionQuery'
 import { PoolState, usePool } from './usePools'
 
 // maximum number of blocks past which we consider the data stale
@@ -76,7 +77,7 @@ export function useFeeTierDistribution(
 function usePoolTVL(token0: Token | undefined, token1: Token | undefined) {
   const latestBlock = useBlockNumber()
 
-  const { isLoading, error, data } = useFeeTierDistributionQuery(token0?.address, token1?.address)
+  const { isLoading, error, data } = useFeeTierDistributionQuery(token0?.address, token1?.address, ms`30s`)
 
   const { asToken0, asToken1, _meta } = data ?? {}
 

@@ -8,8 +8,8 @@
     "contracts:compile:abi": "typechain --target ethers-v5 --out-dir src/abis/types \"./src/abis/**/*.json\"",
     "contracts:compile:v3": "typechain --target ethers-v5 --out-dir src/types/v3 \"./node_modules/@uniswap/**/artifacts/contracts/**/*[!dbg].json\"",
     "contracts:compile": "yarn contracts:compile:abi && yarn contracts:compile:v3",
-    "graphql:generate": "graphql-codegen --config codegen.yml",
     "relay": "relay-compiler",
+    "graphql:generate": "graphql-codegen --config codegen.yml && yarn relay",
     "prei18n:extract": "node prei18n-extract.js",
     "i18n:extract": "lingui extract --locale en-US",
     "i18n:compile": "yarn i18n:extract && lingui compile",
@@ -26,7 +26,7 @@
   "relay": {
     "src": "./src",
     "language": "typescript",
-    "schema": "./schema/schema.graphql"
+    "schema": "./src/schema/schema.graphql"
   },
   "jest": {
     "collectCoverageFrom": [
@@ -64,8 +64,6 @@
     "@ethersproject/experimental": "^5.4.0",
     "@graphql-codegen/cli": "1.21.5",
     "@graphql-codegen/schema-ast": "^2.5.1",
-    "@graphql-codegen/typescript": "1.22.3",
-    "@graphql-codegen/typescript-operations": "^1.18.2",
     "@graphql-codegen/typescript-rtk-query": "^1.1.1",
     "@lingui/cli": "^3.9.0",
     "@testing-library/jest-dom": "^5.16.4",

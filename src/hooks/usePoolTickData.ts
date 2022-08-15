@@ -3,9 +3,10 @@ import { FeeAmount, nearestUsableTick, Pool, TICK_SPACINGS, tickToPrice } from '
 import { useWeb3React } from '@web3-react/core'
 import { SupportedChainId } from 'constants/chains'
 import { ZERO_ADDRESS } from 'constants/misc'
-import useAllV3TicksQuery from 'hooks/graphql/useAllV3TicksQuery'
+import useAllV3TicksQuery from 'hooks/graphql/AllV3TicksQuery'
 import JSBI from 'jsbi'
 import { useSingleContractMultipleData } from 'lib/hooks/multicall'
+import ms from 'ms.macro'
 import { useEffect, useMemo, useState } from 'react'
 import computeSurroundingTicks from 'utils/computeSurroundingTicks'
 
@@ -155,7 +156,7 @@ function useTicksFromSubgraph(
         )
       : undefined
 
-  return useAllV3TicksQuery(poolAddress, 0)
+  return useAllV3TicksQuery(poolAddress, 0, ms`30s`)
 }
 
 // Fetches all ticks for a given pool

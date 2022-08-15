@@ -6,7 +6,7 @@
 
 import { SupportedChainId } from 'constants/chains'
 import { Variables } from 'react-relay'
-import { GraphQLResponse, ObservableFromValue } from 'relay-runtime'
+import { GraphQLResponse, ObservableFromValue, RequestParameters } from 'relay-runtime'
 
 import store, { AppState } from './state/index'
 
@@ -30,14 +30,14 @@ const headers = {
 
 // Define a function that fetches the results of a request (query/mutation/etc)
 // and returns its results as a Promise:
-const fetchQuery = (operation: any, variables: Variables): ObservableFromValue<GraphQLResponse> => {
+const fetchQuery = (params: RequestParameters, variables: Variables): ObservableFromValue<GraphQLResponse> => {
   // TODO: figure out why this returns null
   const chainId = (store.getState() as AppState).application.chainId
 
-  const subgraphUrl = CHAIN_SUBGRAPH_URL[1]
+  const subgraphUrl = CHAIN_SUBGRAPH_URL[chainId ?? SupportedChainId.MAINNET]
 
   const body = JSON.stringify({
-    query: operation.text, // GraphQL text from input
+    query: params.text, // GraphQL text from input
     variables,
   })
 
