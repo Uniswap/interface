@@ -5,7 +5,7 @@ interface OverlayProps {
   onClick?: () => void
 }
 
-export const stopPropagation = (event: any) => {
+export const stopPropagation = (event: React.SyntheticEvent<HTMLElement>) => {
   event.stopPropagation()
   event.nativeEvent.stopImmediatePropagation()
 }
