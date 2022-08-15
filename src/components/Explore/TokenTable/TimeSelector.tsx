@@ -1,5 +1,5 @@
+import { TimePeriod } from 'hooks/useExplorePageQuery'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
-import { TimePeriod } from 'hooks/useTopTokens'
 import { useAtom } from 'jotai'
 import { useRef } from 'react'
 import { Check, ChevronDown, ChevronUp } from 'react-feather'
