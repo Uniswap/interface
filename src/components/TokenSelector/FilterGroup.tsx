@@ -39,7 +39,7 @@ export function FilterGroup({
       showsHorizontalScrollIndicator={false}
       showsVerticalScrollIndicator={false}
       style={styles.scrollView}>
-      <Trace section={SectionName.CurrencySelect}>
+      <Trace section={SectionName.TokenSelect}>
         <Flex row gap="none">
           <Button mr="sm" name={ElementName.FavoritesFilter} onPress={onPressFavorites}>
             <Pill

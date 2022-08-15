@@ -68,7 +68,7 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo, isCompressedView }
     onShowSwapWarning,
     onCreateTxId,
     onUpdateExactCurrencyField,
-    onShowCurrencySelector,
+    onShowTokenSelector,
   } = useSwapActionHandlers(dispatch)
 
   const exactCurrency = currencies[exactCurrencyField]
@@ -145,7 +145,7 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo, isCompressedView }
               onPressIn={onCurrencyInputPress(CurrencyField.INPUT)}
               onSetAmount={(value) => onSetAmount(CurrencyField.INPUT, value, isUSDInput)}
               onSetMax={onSetMax}
-              onShowCurrencySelector={() => onShowCurrencySelector(CurrencyField.INPUT)}
+              onShowTokenSelector={() => onShowTokenSelector(CurrencyField.INPUT)}
               onToggleUSDInput={() => onToggleUSDInput(!isUSDInput)}
             />
           </Flex>
@@ -191,7 +191,7 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo, isCompressedView }
                   warnings={warnings}
                   onPressIn={onCurrencyInputPress(CurrencyField.OUTPUT)}
                   onSetAmount={(value) => onSetAmount(CurrencyField.OUTPUT, value, isUSDInput)}
-                  onShowCurrencySelector={() => onShowCurrencySelector(CurrencyField.OUTPUT)}
+                  onShowTokenSelector={() => onShowTokenSelector(CurrencyField.OUTPUT)}
                 />
               </Flex>
               {swapWarning ? (

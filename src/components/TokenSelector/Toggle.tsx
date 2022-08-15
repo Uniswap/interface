@@ -23,7 +23,7 @@ export function Toggle({
     <Button
       bg={backgroundColor ?? (filled ? 'accentActive' : 'backgroundAction')}
       borderRadius={borderRadius || 'lg'}
-      name={ElementName.CurrencySelectorToggle}
+      name={ElementName.TokenSelectorToggle}
       testID={testID}
       onPress={onToggle}>
       {children}

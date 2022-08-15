@@ -6,7 +6,7 @@ import { TextInput } from 'react-native'
 import { useAppTheme } from 'src/app/hooks'
 import { InlineMaxAmountButton } from 'src/components/buttons/MaxAmountButton'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
-import { CurrencySelector } from 'src/components/TokenSelector'
+import { TokenSelector } from 'src/components/TokenSelector'
 import { AmountInput } from 'src/components/input/AmountInput'
 import { Box } from 'src/components/layout'
 import { Flex } from 'src/components/layout/Flex'
@@ -23,7 +23,7 @@ type CurrentInputPanelProps = {
   currency: Currency | null | undefined
   currencyAmount: CurrencyAmount<Currency> | null | undefined
   currencyBalance: CurrencyAmount<Currency> | null | undefined
-  onShowCurrencySelector: () => void
+  onShowTokenSelector: () => void
   onSetAmount: (amount: string) => void
   value?: string
   showNonZeroBalancesOnly?: boolean
@@ -47,7 +47,7 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps) {
     currencyBalance,
     onSetAmount,
     onSetMax,
-    onShowCurrencySelector,
+    onShowTokenSelector,
     value,
     showNonZeroBalancesOnly = true,
     showSoftInputOnFocus = false,
@@ -136,10 +136,10 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps) {
           <Box alignItems="flex-start" flexBasis={0} flexGrow={1} />
         )}
         <Box alignItems="center">
-          <CurrencySelector
+          <TokenSelector
             selectedCurrency={currency}
             showNonZeroBalancesOnly={showNonZeroBalancesOnly}
-            onPress={onShowCurrencySelector}
+            onPress={onShowTokenSelector}
           />
         </Box>
 

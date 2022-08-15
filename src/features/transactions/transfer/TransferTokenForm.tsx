@@ -64,7 +64,7 @@ export function TransferTokenForm({
 
   const { isNFT, currencyIn, nftIn, chainId } = inputAssetInfo
 
-  const { onShowCurrencySelector, onSetAmount, onSetMax, onSelectRecipient, onToggleUSDInput } =
+  const { onShowTokenSelector, onSetAmount, onSetMax, onSelectRecipient, onToggleUSDInput } =
     useSwapActionHandlers(dispatch)
 
   useUSDTokenUpdater(
@@ -157,7 +157,7 @@ export function TransferTokenForm({
               warnings={warnings}
               onSetAmount={(value) => onSetAmount(CurrencyField.INPUT, value, isUSDInput)}
               onSetMax={onSetMax}
-              onShowCurrencySelector={() => onShowCurrencySelector(CurrencyField.INPUT)}
+              onShowTokenSelector={() => onShowTokenSelector(CurrencyField.INPUT)}
               onToggleUSDInput={() => onToggleUSDInput(!isUSDInput)}
             />
           )}

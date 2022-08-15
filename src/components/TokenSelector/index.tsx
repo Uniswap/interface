@@ -12,17 +12,17 @@ import { CenterBox } from 'src/components/layout/CenterBox'
 import { Text } from 'src/components/Text'
 import { Theme } from 'src/styles/theme'
 
-interface CurrencySelectorProps {
+interface TokenSelectorProps {
   showNonZeroBalancesOnly?: boolean
   onPress: () => void
   selectedCurrency?: Currency | null
 }
 
-export function CurrencySelector({
+export function TokenSelector({
   showNonZeroBalancesOnly,
   selectedCurrency,
   onPress,
-}: CurrencySelectorProps) {
+}: TokenSelectorProps) {
   const { t } = useTranslation()
   const theme = useTheme<Theme>()
 

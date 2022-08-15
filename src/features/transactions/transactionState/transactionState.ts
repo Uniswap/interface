@@ -207,7 +207,7 @@ const slice = createSlice({
     setTxId: (state, action: PayloadAction<string>) => {
       state.txId = action.payload
     },
-    showCurrencySelector: (state, action: PayloadAction<CurrencyField | undefined>) => {
+    showTokenSelector: (state, action: PayloadAction<CurrencyField | undefined>) => {
       state.selectingCurrencyField = action.payload
     },
   },
@@ -231,6 +231,6 @@ export const {
   showNewAddressWarningModal,
   closeNewAddressWarningModal,
   setTxId,
-  showCurrencySelector,
+  showTokenSelector,
 } = slice.actions
 export const { reducer: transactionStateReducer, actions: transactionStateActions } = slice

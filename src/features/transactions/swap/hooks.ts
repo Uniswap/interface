@@ -356,7 +356,7 @@ export function useSwapActionHandlers(dispatch: React.Dispatch<AnyAction>) {
     )
 
     // hide screen when done selecting
-    dispatch(transactionStateActions.showCurrencySelector(undefined))
+    dispatch(transactionStateActions.showTokenSelector(undefined))
   }
 
   const onUpdateExactTokenAmount = (field: CurrencyField, amount: string) =>
@@ -387,8 +387,8 @@ export function useSwapActionHandlers(dispatch: React.Dispatch<AnyAction>) {
   const onShowSwapWarning = (type: WarningModalType) =>
     dispatch(transactionStateActions.showWarningModal(type))
   const onCreateTxId = (txId: string) => dispatch(transactionStateActions.setTxId(txId))
-  const onShowCurrencySelector = (field: CurrencyField) =>
-    dispatch(transactionStateActions.showCurrencySelector(field))
+  const onShowTokenSelector = (field: CurrencyField) =>
+    dispatch(transactionStateActions.showTokenSelector(field))
 
   return {
     onCreateTxId,
@@ -400,7 +400,7 @@ export function useSwapActionHandlers(dispatch: React.Dispatch<AnyAction>) {
     onSetMax,
     onShowSwapWarning,
     onUpdateExactCurrencyField,
-    onShowCurrencySelector,
+    onShowTokenSelector,
   }
 }
 

@@ -6,9 +6,7 @@ import {
   useNavigation,
 } from '@react-navigation/native'
 import { NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack'
-import { Currency } from '@uniswap/sdk-core'
 import { EducationContentType } from 'src/components/education'
-import { ChainId } from 'src/constants/chains'
 import { NFTAsset } from 'src/features/nfts/types'
 import { ImportType, OnboardingEntryPoint } from 'src/features/onboarding/utils'
 import { OnboardingScreens, Screens, Tabs } from 'src/screens/Screens'
@@ -120,14 +118,6 @@ export type OnboardingStackParamList = {
 
 export type AppStackParamList = {
   [Screens.AccountStack]: NavigatorScreenParams<AccountStackParamList>
-  [Screens.CurrencySelector]: {
-    showNonZeroBalancesOnly: boolean
-    onSelectCurrency: (currency: Currency) => void
-    otherCurrencyAddress?: string
-    otherCurrencyChainId?: ChainId
-    selectedCurrencyAddress?: string
-    selectedCurrencyChainId?: ChainId
-  }
   [Screens.Education]: {
     type: EducationContentType
   }
