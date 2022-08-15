@@ -267,6 +267,7 @@ export function useDerivedMarketInfo(
 
   if (
     currencies[Field.OUTPUT] !== null &&
+    v2Trade?.paymentToken?.symbol !== undefined &&
     currencies[Field.OUTPUT]?.symbol !== v2Trade?.paymentToken?.symbol &&
     currencies[Field.OUTPUT]?.wrapped.symbol !== v2Trade?.paymentToken?.symbol
   ) {
