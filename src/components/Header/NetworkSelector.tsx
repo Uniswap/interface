@@ -329,8 +329,8 @@ export default function NetworkSelector() {
             {NETWORK_SELECTOR_CHAINS.map((chainId: SupportedChainId) =>
               isChainAllowed(connector, chainId) ? (
                 <Row
-                  onSelectChain={(targetChainId: SupportedChainId) => {
-                    selectChain(targetChainId)
+                  onSelectChain={async (targetChainId: SupportedChainId) => {
+                    await selectChain(targetChainId)
                     closeModal()
                   }}
                   targetChain={chainId}
