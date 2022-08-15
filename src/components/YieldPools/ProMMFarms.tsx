@@ -160,7 +160,7 @@ function ProMMFarms({ active }: { active: boolean }) {
       </HeadingContainer>
 
       {qs.type === 'ended' && qs.tab !== VERSION.CLASSIC && (
-        <Text fontStyle="italic" fontSize={12} textAlign="right" marginBottom="1rem" color={theme.subText}>
+        <Text fontStyle="italic" fontSize={12} marginBottom="1rem" color={theme.subText}>
           <Trans>
             Your rewards may be automatically harvested a few days after the farm ends. Please check the{' '}
             <StyledInternalLink to="/farms?type=vesting">Vesting</StyledInternalLink> tab to see your rewards
@@ -168,16 +168,16 @@ function ProMMFarms({ active }: { active: boolean }) {
         </Text>
       )}
 
-      {qs.type === 'active' && qs.tab !== VERSION.CLASSIC && (
+      {(!qs.type || qs.type === 'active') && qs.tab !== VERSION.CLASSIC && (
         <>
           <Text fontSize={12} fontWeight="500" marginBottom="0.375rem">
-            <Trans>Farms will run in multiple phases.</Trans>
+            <Trans>Farms will run in multiple phases</Trans>
           </Text>
           <Text fontStyle="italic" fontSize={12} marginBottom="1rem" color={theme.subText}>
             <Trans>
               Once the current phase ends, you can harvest your rewards from the farm in the{' '}
               <StyledInternalLink to="/farms?type=ended">Ended</StyledInternalLink> tab. To continue earning rewards in
-              the new phase, you must restake your NFT position into the active farm.
+              the new phase, you must restake your NFT position into the active farm
             </Trans>
           </Text>
         </>
@@ -249,7 +249,7 @@ function ProMMFarms({ active }: { active: boolean }) {
 
           <Flex grid-area="staked_balance" alignItems="center" justifyContent="flex-end">
             <ClickableText>
-              <Trans>My Deposit</Trans>
+              <Trans>My Staked</Trans>
             </ClickableText>
           </Flex>
 

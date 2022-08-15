@@ -185,10 +185,16 @@ const Row = ({
     token1Amount: CurrencyAmount<Token>
     amountUsd: number
     rewardAmounts: BigNumber[]
+    token0Staked: CurrencyAmount<Token>
+    token1Staked: CurrencyAmount<Token>
+    stakedUsd: number
   } | null = useMemo(() => {
     if (pool && token0 && token1) {
       let token0Amount = CurrencyAmount.fromRawAmount(token0.wrapped, '0')
       let token1Amount = CurrencyAmount.fromRawAmount(token1.wrapped, '0')
+
+      let token0Staked = CurrencyAmount.fromRawAmount(token0.wrapped, '0')
+      let token1Staked = CurrencyAmount.fromRawAmount(token1.wrapped, '0')
 
       const rewardAmounts = farm.rewardTokens.map(_item => BigNumber.from('0'))
 
@@ -209,7 +215,30 @@ const Row = ({
       const amount0Usd = prices[0] * parseFloat(token0Amount.toExact())
       const amount1Usd = prices[1] * parseFloat(token1Amount.toExact())
 
-      return { token1Amount, amountUsd: amount0Usd + amount1Usd, token0Amount, rewardAmounts }
+      farm.userDepositedNFTs.forEach(item => {
+        const pos = new Position({
+          pool,
+          liquidity: item.stakedLiquidity.toString(),
+          tickLower: item.tickLower,
+          tickUpper: item.tickUpper,
+        })
+
+        token0Staked = token0Staked.add(pos.amount0)
+        token1Staked = token1Staked.add(pos.amount1)
+      })
+
+      const amount0StakedUsd = prices[0] * parseFloat(token0Staked.toExact())
+      const amount1StakedUsd = prices[1] * parseFloat(token1Staked.toExact())
+
+      return {
+        token1Amount,
+        amountUsd: amount0Usd + amount1Usd,
+        token0Amount,
+        rewardAmounts,
+        token0Staked,
+        token1Staked,
+        stakedUsd: amount0StakedUsd + amount1StakedUsd,
+      }
     }
     return null
   }, [pool, token0, token1, prices, farm])
@@ -402,9 +431,9 @@ const Row = ({
 
           <InfoRow>
             <Text color={theme.subText}>
-              <Trans>My Deposit</Trans>
+              <Trans>My Staked</Trans>
             </Text>
-            <Text>{!!position?.amountUsd ? formatDollarAmount(position.amountUsd) : '--'}</Text>
+            <Text>{!!position?.stakedUsd ? formatDollarAmount(position.stakedUsd) : '--'}</Text>
           </InfoRow>
 
           <InfoRow>
@@ -514,7 +543,7 @@ const Row = ({
           )}
         </Flex>
 
-        <Text textAlign="right">{!!position?.amountUsd ? formatDollarAmount(position.amountUsd) : '--'}</Text>
+        <Text textAlign="right">{!!position?.stakedUsd ? formatDollarAmount(position.stakedUsd) : '--'}</Text>
         <Flex flexDirection="column" alignItems="flex-end" sx={{ gap: '8px' }}>
           {farm.rewardTokens.map((token, idx) => (
             <Reward key={token} token={token} amount={position?.rewardAmounts[idx]} />

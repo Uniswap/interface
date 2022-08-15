@@ -27,7 +27,7 @@ const maticInfo: NetworkInfo = {
     logo: Polygon,
     decimal: 18,
   },
-  rpcUrl: 'https://proxy.kyberengineering.io/polygon',
+  rpcUrl: 'https://polygon.kyberengineering.io',
   routerUri: `${process.env.REACT_APP_AGGREGATOR_API}/polygon/route/encode`,
   classic: {
     static: {
