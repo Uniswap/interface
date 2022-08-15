@@ -190,7 +190,7 @@ export function TransferTokenForm({
 
         {isNFT ? null : (
           <DecimalPad
-            setValue={(newValue) => onSetAmount(CurrencyField.INPUT, newValue, false)}
+            setValue={(newValue) => onSetAmount(CurrencyField.INPUT, newValue, isUSDInput)}
             value={formattedAmounts[CurrencyField.INPUT]}
           />
         )}
