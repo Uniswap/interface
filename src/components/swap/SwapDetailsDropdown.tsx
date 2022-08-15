@@ -10,7 +10,7 @@ import { LoadingOpacityContainer } from 'components/Loader/styled'
 import Row, { RowBetween, RowFixed } from 'components/Row'
 import { MouseoverTooltipContent } from 'components/Tooltip'
 import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'
-import { Phase0Variant, usePhase0Flag } from 'featureFlags/flags/phase0'
+import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
 import { useState } from 'react'
 import { ChevronDown, Info } from 'react-feather'
 import { InterfaceTrade } from 'state/routing/types'
@@ -35,20 +35,20 @@ const StyledInfoIcon = styled(Info)`
   color: ${({ theme }) => theme.deprecated_text3};
 `
 
-const StyledCard = styled(OutlineCard)<{ phase0Flag: boolean }>`
+const StyledCard = styled(OutlineCard)<{ redesignFlag: boolean }>`
   padding: 12px;
-  border: 1px solid ${({ theme, phase0Flag }) => (phase0Flag ? theme.backgroundOutline : theme.deprecated_bg3)};
+  border: 1px solid ${({ theme, redesignFlag }) => (redesignFlag ? theme.backgroundOutline : theme.deprecated_bg3)};
 `
 
-const StyledHeaderRow = styled(RowBetween)<{ disabled: boolean; open: boolean; phase0Flag: boolean }>`
-  padding: ${({ phase0Flag }) => (phase0Flag ? '8px 0px 0px 0px' : '4px 8px')};
-  background-color: ${({ open, theme, phase0Flag }) => (open && !phase0Flag ? theme.deprecated_bg1 : theme.none)};
+const StyledHeaderRow = styled(RowBetween)<{ disabled: boolean; open: boolean; redesignFlag: boolean }>`
+  padding: ${({ redesignFlag }) => (redesignFlag ? '8px 0px 0px 0px' : '4px 8px')};
+  background-color: ${({ open, theme, redesignFlag }) => (open && !redesignFlag ? theme.deprecated_bg1 : theme.none)};
   align-items: center;
-  border-top: 1px solid ${({ theme, phase0Flag }) => (phase0Flag ? theme.backgroundOutline : theme.none)};
-  margin-top: ${({ phase0Flag }) => phase0Flag && '8px'};
+  border-top: 1px solid ${({ theme, redesignFlag }) => (redesignFlag ? theme.backgroundOutline : theme.none)};
+  margin-top: ${({ redesignFlag }) => redesignFlag && '8px'};
   cursor: ${({ disabled }) => (disabled ? 'initial' : 'pointer')};
   min-height: 40px;
-  border-radius: ${({ phase0Flag }) => !phase0Flag && '12px'};
+  border-radius: ${({ redesignFlag }) => !redesignFlag && '12px'};
 `
 
 const RotatingArrow = styled(ChevronDown)<{ open?: boolean }>`
@@ -128,8 +128,8 @@ export default function SwapDetailsDropdown({
   const theme = useTheme()
   const { chainId } = useWeb3React()
   const [showDetails, setShowDetails] = useState(false)
-  const phase0Flag = usePhase0Flag()
-  const phase0FlagEnabled = phase0Flag === Phase0Variant.Enabled
+  const redesignFlag = useRedesignFlag()
+  const redesignFlagEnabled = redesignFlag === RedesignVariant.Enabled
 
   return (
     <Wrapper style={{ marginTop: '8px' }}>
@@ -141,7 +141,7 @@ export default function SwapDetailsDropdown({
           shouldLogImpression={!showDetails}
         >
           <StyledHeaderRow
-            phase0Flag={phase0FlagEnabled}
+            redesignFlag={redesignFlagEnabled}
             onClick={() => setShowDetails(!showDetails)}
             disabled={!trade}
             open={showDetails}
@@ -212,7 +212,7 @@ export default function SwapDetailsDropdown({
         <AnimatedDropdown open={showDetails}>
           <AutoColumn gap={'8px'} style={{ padding: '0', paddingBottom: '8px' }}>
             {trade ? (
-              <StyledCard phase0Flag={phase0FlagEnabled}>
+              <StyledCard redesignFlag={redesignFlagEnabled}>
                 <AdvancedSwapDetails trade={trade} allowedSlippage={allowedSlippage} syncing={syncing} />
               </StyledCard>
             ) : null}

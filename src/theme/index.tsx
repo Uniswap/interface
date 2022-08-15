@@ -1,4 +1,4 @@
-import { Phase0Variant, usePhase0Flag } from 'featureFlags/flags/phase0'
+import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
 import React, { useMemo } from 'react'
 import { Text, TextProps as TextPropsOriginal } from 'rebass'
 import styled, {
@@ -272,9 +272,12 @@ function getTheme(darkMode: boolean, isNewColorsEnabled: boolean): DefaultTheme 
 }
 
 export default function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const phase0Flag = usePhase0Flag()
+  const redesignFlag = useRedesignFlag()
   const darkMode = useIsDarkMode()
-  const themeObject = useMemo(() => getTheme(darkMode, phase0Flag === Phase0Variant.Enabled), [darkMode, phase0Flag])
+  const themeObject = useMemo(
+    () => getTheme(darkMode, redesignFlag === RedesignVariant.Enabled),
+    [darkMode, redesignFlag]
+  )
   return <StyledComponentsThemeProvider theme={themeObject}>{children}</StyledComponentsThemeProvider>
 }
 

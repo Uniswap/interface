@@ -1,5 +1,5 @@
 import { SupportedChainId } from 'constants/chains'
-import { TimePeriod } from 'hooks/useTopTokens'
+import { TimePeriod } from 'hooks/useExplorePageQuery'
 import { atom, useAtom } from 'jotai'
 import { atomWithReset, atomWithStorage } from 'jotai/utils'
 import { useCallback } from 'react'
