@@ -7,7 +7,7 @@ import {
   sortDirectionAtom,
 } from 'components/Explore/state'
 import { useAllTokens } from 'hooks/Tokens'
-import useTopTokens, { TimePeriod, TokenData } from 'hooks/useTopTokens'
+import useExplorePageQuery, { TimePeriod, TokenData } from 'hooks/useExplorePageQuery'
 import { useAtomValue } from 'jotai/utils'
 import { ReactNode, useCallback, useMemo } from 'react'
 import { AlertTriangle } from 'react-feather'
@@ -153,7 +153,7 @@ function LoadingTokenTable() {
 }
 
 export default function TokenTable() {
-  const { data, error, loading } = useTopTokens()
+  const { data, error, loading } = useExplorePageQuery(/** favoriteTokens */ [])
   const showFavorites = useAtomValue<boolean>(showFavoritesAtom)
   const timePeriod = useAtomValue<TimePeriod>(filterTimeAtom)
   const topTokenAddresses = data ? Object.keys(data) : []
