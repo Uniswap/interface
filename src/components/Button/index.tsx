@@ -105,7 +105,7 @@ export const ButtonLight = styled(BaseButton)<{ redesignFlag?: boolean }>`
     opacity: 0.4;
     :hover {
       cursor: auto;
-      background-color: ${({ theme, redesignFlag }) => (redesignFlag ? theme.none : theme.deprecated_primary5)};
+      background-color: ${({ theme, redesignFlag }) => (redesignFlag ? 'transparent' : theme.deprecated_primary5)};
       box-shadow: none;
       border: 1px solid transparent;
       outline: none;
