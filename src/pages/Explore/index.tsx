@@ -1,13 +1,14 @@
 import { PageName } from 'components/AmplitudeAnalytics/constants'
 import { Trace } from 'components/AmplitudeAnalytics/Trace'
 import { MAX_WIDTH_MEDIA_BREAKPOINT, MEDIUM_MEDIA_BREAKPOINT } from 'components/Explore/constants'
-import { filterStringAtom } from 'components/Explore/state'
+import { favoritesAtom, filterStringAtom } from 'components/Explore/state'
 import FavoriteButton from 'components/Explore/TokenTable/FavoriteButton'
 import NetworkFilter from 'components/Explore/TokenTable/NetworkFilter'
 import SearchBar from 'components/Explore/TokenTable/SearchBar'
 import TimeSelector from 'components/Explore/TokenTable/TimeSelector'
 import TokenTable from 'components/Explore/TokenTable/TokenTable'
-import { useResetAtom } from 'jotai/utils'
+import useExplorePageQuery from 'hooks/useExplorePageQuery'
+import { useAtomValue, useResetAtom } from 'jotai/utils'
 import { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 import styled from 'styled-components/macro'
@@ -58,6 +59,8 @@ const FiltersWrapper = styled.div`
 `
 
 const Explore = () => {
+  const favoriteTokens = useAtomValue<string[]>(favoritesAtom)
+  const { data, error, loading } = useExplorePageQuery(favoriteTokens)
   const resetFilterString = useResetAtom(filterStringAtom)
   const location = useLocation()
   useEffect(() => {
@@ -80,7 +83,7 @@ const Explore = () => {
         </FiltersWrapper>
 
         <TokenTableContainer>
-          <TokenTable />
+          <TokenTable data={data} error={error} loading={loading} />
         </TokenTableContainer>
       </ExploreContainer>
     </Trace>

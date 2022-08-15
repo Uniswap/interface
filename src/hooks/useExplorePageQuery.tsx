@@ -323,7 +323,7 @@ const useExplorePageQuery = (favoriteTokenAddresses: string[]): UseTopTokensResu
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
 
-  const fetchTopTokens = async (): Promise<TokenData | void> => {
+  const fetchTopTokens = async (favoriteTokenAddresses: string[]): Promise<TokenData | void> => {
     const waitRandom = (min: number, max: number): Promise<void> =>
       new Promise((resolve) => setTimeout(resolve, min + Math.round(Math.random() * Math.max(0, max - min))))
     try {
@@ -347,13 +347,13 @@ const useExplorePageQuery = (favoriteTokenAddresses: string[]): UseTopTokensResu
   useEffect(() => {
     setLoading(true)
     setError(null)
-    fetchTopTokens()
+    fetchTopTokens(favoriteTokenAddresses)
       .then((data) => {
         if (data) setData(data)
       })
       .catch((e) => setError(e))
       .finally(() => setLoading(false))
-  }, [])
+  }, [favoriteTokenAddresses])
 
   return { data, error, loading }
 }
