@@ -2,13 +2,13 @@ import { AxisBottom, TickFormatter } from '@visx/axis'
 import { localPoint } from '@visx/event'
 import { EventType } from '@visx/event/lib/types'
 import { GlyphCircle } from '@visx/glyph'
-import { Group } from '@visx/group'
-import { Line, LinePath } from '@visx/shape'
+import { Line } from '@visx/shape'
+import { filterTimeAtom } from 'components/Explore/state'
 import { bisect, curveBasis, NumberValue, scaleLinear } from 'd3'
-import { radius } from 'd3-curve-circlecorners'
 import { useActiveLocale } from 'hooks/useActiveLocale'
+import { TimePeriod } from 'hooks/useExplorePageQuery'
 import useTheme from 'hooks/useTheme'
-import { TimePeriod } from 'hooks/useTopTokens'
+import { useAtom } from 'jotai'
 import { useCallback, useState } from 'react'
 import { ArrowDownRight, ArrowUpRight } from 'react-feather'
 import styled from 'styled-components/macro'
@@ -23,7 +23,9 @@ import {
 } from 'utils/formatChartTimes'
 
 import data from './data.json'
+import LineChart from './LineChart'
 
+// TODO: This should be combined with the logic in TimeSelector.
 const TIME_DISPLAYS: [TimePeriod, string][] = [
   [TimePeriod.hour, '1H'],
   [TimePeriod.day, '1D'],
@@ -84,21 +86,31 @@ const ArrowCell = styled.div`
   padding-left: 2px;
   display: flex;
 `
+export const TimeOptionsWrapper = styled.div`
+  display: flex;
+  justify-content: flex-end;
+`
 export const TimeOptionsContainer = styled.div`
   display: flex;
   justify-content: flex-end;
   margin-top: 4px;
   gap: 4px;
+  border: 1px solid ${({ theme }) => theme.backgroundOutline};
+  border-radius: 16px;
+  height: 40px;
+  padding: 4px;
+  width: fit-content;
 `
 const TimeButton = styled.button<{ active: boolean }>`
-  background-color: ${({ theme, active }) => (active ? theme.accentActive : 'transparent')};
-  font-size: 14px;
-  width: 36px;
-  height: 36px;
+  background-color: ${({ theme, active }) => (active ? theme.backgroundInteractive : 'transparent')};
+  font-weight: 600;
+  font-size: 16px;
+  padding: 6px 12px;
   border-radius: 12px;
+  line-height: 20px;
   border: none;
   cursor: pointer;
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme, active }) => (active ? theme.textPrimary : theme.textSecondary)};
 `
 
 function getTicks(startTimestamp: number, endTimestamp: number, numTicks = 5) {
@@ -111,10 +123,10 @@ function getTicks(startTimestamp: number, endTimestamp: number, numTicks = 5) {
 function tickFormat(
   startTimestamp: number,
   endTimestamp: number,
-  activeTimePeriod: TimePeriod,
+  timePeriod: TimePeriod,
   locale: string
 ): [TickFormatter<NumberValue>, (v: number) => string, number[]] {
-  switch (activeTimePeriod) {
+  switch (timePeriod) {
     case TimePeriod.hour:
       return [hourFormatter(locale), dayHourFormatter(locale), getTicks(startTimestamp, endTimestamp)]
     case TimePeriod.day:
@@ -140,12 +152,12 @@ interface PriceChartProps {
 }
 
 export function PriceChart({ width, height }: PriceChartProps) {
-  const [activeTimePeriod, setTimePeriod] = useState(TimePeriod.hour)
+  const [timePeriod, setTimePeriod] = useAtom(filterTimeAtom)
   const locale = useActiveLocale()
   const theme = useTheme()
 
   /* TODO: Implement API calls & cache to use here */
-  const pricePoints = data[activeTimePeriod]
+  const pricePoints = data[timePeriod]
   const startingPrice = pricePoints[0]
   const endingPrice = pricePoints[pricePoints.length - 1]
   const initialState = { pricePoint: endingPrice, xCoordinate: null }
@@ -188,7 +200,7 @@ export function PriceChart({ width, height }: PriceChartProps) {
   const [tickFormatter, crosshairDateFormatter, ticks] = tickFormat(
     startingPrice.timestamp,
     endingPrice.timestamp,
-    activeTimePeriod,
+    timePeriod,
     locale
   )
   const [delta, arrow] = getDelta(startingPrice.value, selected.pricePoint.value)
@@ -204,7 +216,17 @@ export function PriceChart({ width, height }: PriceChartProps) {
           <ArrowCell>{arrow}</ArrowCell>
         </DeltaContainer>
       </ChartHeader>
-      <svg width={graphWidth} height={graphHeight}>
+      <LineChart
+        data={pricePoints}
+        getX={(p: PricePoint) => timeScale(p.timestamp)}
+        getY={(p: PricePoint) => rdScale(p.value)}
+        marginTop={margin.top}
+        /* Default curve doesn't look good for the ALL chart */
+        curve={timePeriod === TimePeriod.all ? curveBasis : undefined}
+        strokeWidth={2}
+        width={graphWidth}
+        height={graphHeight}
+      >
         <AxisBottom
           scale={timeScale}
           stroke={theme.backgroundOutline}
@@ -240,31 +262,16 @@ export function PriceChart({ width, height }: PriceChartProps) {
               pointerEvents="none"
               strokeDasharray="4,4"
             />
+            <GlyphCircle
+              left={selected.xCoordinate}
+              top={rdScale(selected.pricePoint.value) + margin.top}
+              size={50}
+              fill={theme.accentActive}
+              stroke={theme.backgroundOutline}
+              strokeWidth={2}
+            />
           </g>
         )}
-        <Group top={margin.top}>
-          <LinePath
-            /* ALL chart renders poorly using circle corners; use d3 curve for ALL instead */
-            curve={activeTimePeriod === TimePeriod.all ? curveBasis : radius(0.25)}
-            stroke={theme.accentActive}
-            strokeWidth={2}
-            data={pricePoints}
-            x={(d: PricePoint) => timeScale(d.timestamp) ?? 0}
-            y={(d: PricePoint) => rdScale(d.value) ?? 0}
-          />
-          {selected.xCoordinate !== null && (
-            <g>
-              <GlyphCircle
-                left={selected.xCoordinate}
-                top={rdScale(selected.pricePoint.value)}
-                size={50}
-                fill={theme.accentActive}
-                stroke={theme.backgroundOutline}
-                strokeWidth={2}
-              />
-            </g>
-          )}
-        </Group>
         <rect
           x={0}
           y={0}
@@ -276,14 +283,16 @@ export function PriceChart({ width, height }: PriceChartProps) {
           onMouseMove={handleHover}
           onMouseLeave={() => setSelected(initialState)}
         />
-      </svg>
-      <TimeOptionsContainer>
-        {TIME_DISPLAYS.map(([value, display]) => (
-          <TimeButton key={display} active={activeTimePeriod === value} onClick={() => setTimePeriod(value)}>
-            {display}
-          </TimeButton>
-        ))}
-      </TimeOptionsContainer>
+      </LineChart>
+      <TimeOptionsWrapper>
+        <TimeOptionsContainer>
+          {TIME_DISPLAYS.map(([value, display]) => (
+            <TimeButton key={display} active={timePeriod === value} onClick={() => setTimePeriod(value)}>
+              {display}
+            </TimeButton>
+          ))}
+        </TimeOptionsContainer>
+      </TimeOptionsWrapper>
     </ChartWrapper>
   )
 }

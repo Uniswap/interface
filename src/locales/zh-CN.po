@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-04 19:04\n"
+"PO-Revision-Date: 2022-08-11 19:05\n"
 "Last-Translator: \n"
 "Language: zh_CN\n"
 "Language-Team: Chinese Simplified\n"
@@ -120,6 +120,7 @@ msgstr "提交提案所需的最低门槛为 UNI 总供应量的 0.25%"
 msgid "A swap of this size may have a high price impact, given the current liquidity in the pool. There may be a large difference between the amount of your input token and what you will receive in the output token"
 msgstr "鉴于池中当前的流动性，这种规模的掉期可能会对价格产生很大影响。您的输入令牌数量与您将在输出令牌中收到的数量之间可能存在很大差异"
 
+#: src/components/Explore/TokenDetails/TokenDetail.tsx
 #: src/components/Menu/index.tsx
 msgid "About"
 msgstr "关于"
@@ -348,6 +349,10 @@ msgstr "连接钱包即表示您同意 Uniswap Labs 的 <0>服务条款</0> 并�
 msgid "Canceled"
 msgstr "已取消"
 
+#: src/constants/tokenSafety.tsx
+msgid "Caution"
+msgstr "警告"
+
 #: src/components/AccountDetails/index.tsx
 msgid "Change"
 msgstr "更改"
@@ -433,6 +438,7 @@ msgstr "全部清除"
 msgid "Clear all"
 msgstr "全部清除"
 
+#: src/components/TokenSafety/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Close"
@@ -548,7 +554,6 @@ msgstr "正在连接..."
 msgid "Copied"
 msgstr "已复制"
 
-#: src/components/AccountDetails/index.tsx
 #: src/components/AccountDetails/index.tsx
 msgid "Copy Address"
 msgstr "复制地址"
@@ -817,6 +822,10 @@ msgstr "“专家模式”将解除确认交易的提示，并允许兑换率高
 msgid "Expired"
 msgstr "已过期"
 
+#: src/components/Header/index.tsx
+msgid "Explore"
+msgstr "探索"
+
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore Uniswap Analytics."
 msgstr "查看 Uniswap 分析。"
@@ -877,6 +886,10 @@ msgstr "隐藏"
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
 msgstr "对兑换率有高度影响"
+
+#: src/components/TokenSafety/index.tsx
+msgid "I Understand"
+msgstr "了解"
 
 #: src/components/SearchModal/ImportList.tsx
 #: src/pages/AddLiquidity/index.tsx
@@ -984,12 +997,17 @@ msgstr "语言"
 msgid "Learn"
 msgstr "学习"
 
+#: src/components/TokenSafety/index.tsx
+msgid "Learn More"
+msgstr "了解更多"
+
 #: src/pages/Pool/CTACards.tsx
 msgid "Learn about providing liquidity"
 msgstr "了解提供流动性的相关信息"
 
 #: src/components/PrivacyPolicy/index.tsx
 #: src/components/PrivacyPolicy/index.tsx
+#: src/components/TokenSafety/TokenSafetyMessage.tsx
 msgid "Learn more"
 msgstr "了解更多"
 
@@ -1037,10 +1055,6 @@ msgstr "已加载"
 msgid "Loading"
 msgstr "正在加载"
 
-#: src/components/CurrencyInputPanel/index.tsx
-msgid "MAX"
-msgstr "最大值"
-
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
@@ -1062,6 +1076,7 @@ msgstr "管理代币列表"
 msgid "Manage this pool."
 msgstr "管理此流动池。"
 
+#: src/components/CurrencyInputPanel/index.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Max"
 msgstr "最大值"
@@ -1190,6 +1205,10 @@ msgstr "没有提案。"
 msgid "No results found."
 msgstr "未找到结果。"
 
+#: src/constants/tokenSafety.tsx
+msgid "Not Available"
+msgstr "无法使用"
+
 #: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "Not created"
 msgstr "未创建"
@@ -1254,6 +1273,10 @@ msgstr "请输入 REMOVE 以确认您要删除此列表"
 #: src/components/vote/ProposalEmptyState.tsx
 msgid "Please connect to Layer 1 Ethereum"
 msgstr "请连接到以太坊 Layer 1"
+
+#: src/constants/tokenSafety.tsx
+msgid "Please do your own research before trading."
+msgstr "请在交易前进行自己的研究。"
 
 #: src/components/Settings/index.tsx
 msgid "Please type the word \"{confirmWord}\" to enable expert mode."
@@ -1485,7 +1508,6 @@ msgstr "搜索名称或粘贴地址"
 msgid "Select Pair"
 msgstr "选择币对"
 
-#: src/components/CurrencyInputPanel/index.tsx
 #: src/components/SearchModal/CurrencySearch.tsx
 #: src/pages/PoolFinder/index.tsx
 #: src/pages/PoolFinder/index.tsx
@@ -1504,6 +1526,10 @@ msgstr "选择 {0}网络"
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Select an action"
 msgstr "选择一个操作。"
+
+#: src/components/CurrencyInputPanel/index.tsx
+msgid "Select token"
+msgstr "选择令牌"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Selected Range"
@@ -1735,6 +1761,10 @@ msgstr "由于期限已过，因此无法发送交易。请检查您的交易截
 msgid "There is no liquidity data."
 msgstr "没有流动性数据。"
 
+#: src/components/Explore/TokenDetails/BalanceSummary.tsx
+msgid "There was an error loading your {tokenSymbol} balance"
+msgstr "加载您的 {tokenSymbol} 余额时出错"
+
 #: src/components/ConnectedAccountBlocked/index.tsx
 msgid "This address is blocked on the Uniswap Labs interface because it is associated with one or more"
 msgstr "此地址在 Uniswap Labs 界面上被阻止，因为它与一个或多个相关联"
@@ -1789,6 +1819,10 @@ msgstr "兑换到"
 msgid "To (at least)"
 msgstr "兑换到(至少数额)"
 
+#: src/components/Explore/TokenTable/TokenRow.tsx
+msgid "Token Name"
+msgstr "令牌名称"
+
 #: src/components/SearchModal/BlockedToken.tsx
 msgid "Token not supported"
 msgstr "不支持该代币"
@@ -1817,7 +1851,6 @@ msgstr "存入总额"
 msgid "Trade Route"
 msgstr "交易路由"
 
-#: src/components/Settings/index.tsx
 #: src/components/Settings/index.tsx
 msgid "Transaction Settings"
 msgstr "交易设置"
@@ -2008,7 +2041,6 @@ msgid "View on Etherscan"
 msgstr "在 Etherscan 上查看"
 
 #: src/components/AccountDetails/index.tsx
-#: src/components/AccountDetails/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "View on Explorer"
@@ -2093,6 +2125,10 @@ msgstr "等待确认"
 #: src/components/AddressInputPanel/index.tsx
 msgid "Wallet Address or ENS name"
 msgstr "钱包地址或 ENS 名"
+
+#: src/constants/tokenSafety.tsx
+msgid "Warning"
+msgstr "警告"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Weekly Rewards"
@@ -2351,8 +2387,17 @@ msgstr "从 {0} 代币列表"
 msgid "{0, plural, =1 {Import token} other {Import tokens}}"
 msgstr "{0, plural, =1 {导入令牌} other {导入代币}}"
 
+#: src/constants/tokenSafety.tsx
+msgid "{0, plural, =1 {This token isn't verified} other {These tokens aren't verified}}"
+msgstr "{0, plural, =1 {此令牌未经验证} other {这些令牌未经验证}}"
+
+#: src/constants/tokenSafety.tsx
+msgid "{0, plural, =1 {You can't trade this token using the Uniswap App.} other {You can't trade these tokens using the Uniswap App.}}"
+msgstr "{0, plural, =1 {您不能使用 Uniswap 应用程序交易此代币。} other {您不能使用 Uniswap 应用程序交易这些代币。}}"
+
 #: src/components/RateToggle/index.tsx
 #: src/components/RateToggle/index.tsx
+#: src/components/Settings/index.tsx
 msgid "{0}"
 msgstr "{0}"
 

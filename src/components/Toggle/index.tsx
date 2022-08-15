@@ -1,10 +1,12 @@
+import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
 import { darken } from 'polished'
 import { useState } from 'react'
 import styled, { keyframes } from 'styled-components/macro'
 
-const Wrapper = styled.button<{ isActive?: boolean; activeElement?: boolean }>`
+const Wrapper = styled.button<{ isActive?: boolean; activeElement?: boolean; redesignFlag: boolean }>`
   align-items: center;
-  background: ${({ theme }) => theme.deprecated_bg1};
+  background: ${({ isActive, theme, redesignFlag }) =>
+    redesignFlag && isActive ? theme.accentActionSoft : theme.deprecated_bg1};
   border: none;
   border-radius: 20px;
   cursor: pointer;
@@ -71,6 +73,8 @@ interface ToggleProps {
 
 export default function Toggle({ id, bgColor, isActive, toggle }: ToggleProps) {
   const [isInitialToggleLoad, setIsInitialToggleLoad] = useState(true)
+  const redesignFlag = useRedesignFlag()
+  const redesignFlagEnabled = redesignFlag === RedesignVariant.Enabled
 
   const switchToggle = () => {
     toggle()
@@ -78,7 +82,7 @@ export default function Toggle({ id, bgColor, isActive, toggle }: ToggleProps) {
   }
 
   return (
-    <Wrapper id={id} isActive={isActive} onClick={switchToggle}>
+    <Wrapper id={id} isActive={isActive} onClick={switchToggle} redesignFlag={redesignFlagEnabled}>
       <ToggleElement isActive={isActive} bgColor={bgColor} isInitialToggleLoad={isInitialToggleLoad} />
     </Wrapper>
   )

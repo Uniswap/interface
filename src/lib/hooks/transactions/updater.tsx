@@ -1,7 +1,7 @@
 import { TransactionReceipt } from '@ethersproject/abstract-provider'
 import { useWeb3React } from '@web3-react/core'
 import { SupportedChainId } from 'constants/chains'
-import useBlockNumber, { useFastForwardBlockNumber } from 'lib/hooks/useBlockNumber'
+import useBlockNumber from 'lib/hooks/useBlockNumber'
 import ms from 'ms.macro'
 import { useCallback, useEffect } from 'react'
 import { retry, RetryableError, RetryOptions } from 'utils/retry'
@@ -48,7 +48,6 @@ export default function Updater({ pendingTransactions, onCheck, onReceipt }: Upd
   const { chainId, provider } = useWeb3React()
 
   const lastBlockNumber = useBlockNumber()
-  const fastForwardBlockNumber = useFastForwardBlockNumber()
 
   const getReceipt = useCallback(
     (hash: string) => {
@@ -95,7 +94,7 @@ export default function Updater({ pendingTransactions, onCheck, onReceipt }: Upd
     return () => {
       cancels.forEach((cancel) => cancel())
     }
-  }, [chainId, provider, lastBlockNumber, getReceipt, fastForwardBlockNumber, onReceipt, onCheck, pendingTransactions])
+  }, [chainId, provider, lastBlockNumber, getReceipt, onReceipt, onCheck, pendingTransactions])
 
   return null
 }

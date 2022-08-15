@@ -2,6 +2,7 @@ import { configureStore } from '@reduxjs/toolkit'
 import { setupListeners } from '@reduxjs/toolkit/query/react'
 import multicall from 'lib/state/multicall'
 import { load, save } from 'redux-localstorage-simple'
+import { isTestEnv } from 'utils/env'
 
 import application from './application/reducer'
 import burn from './burn/reducer'
@@ -41,7 +42,7 @@ const store = configureStore({
     getDefaultMiddleware({ thunk: true })
       .concat(routingApi.middleware)
       .concat(save({ states: PERSISTED_KEYS, debounce: 1000 })),
-  preloadedState: load({ states: PERSISTED_KEYS, disableWarnings: process.env.NODE_ENV === 'test' }),
+  preloadedState: load({ states: PERSISTED_KEYS, disableWarnings: isTestEnv() }),
 })
 
 store.dispatch(updateVersion())

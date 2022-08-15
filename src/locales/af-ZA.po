@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-04 19:04\n"
+"PO-Revision-Date: 2022-08-11 19:04\n"
 "Last-Translator: \n"
 "Language: af_ZA\n"
 "Language-Team: Afrikaans\n"
@@ -120,6 +120,7 @@ msgstr "'N Minimum drempel van 0,25% van die totale UNI-aanbod is nodig om voors
 msgid "A swap of this size may have a high price impact, given the current liquidity in the pool. There may be a large difference between the amount of your input token and what you will receive in the output token"
 msgstr "'n Ruil van hierdie grootte kan 'n hoë prysimpak hê, gegewe die huidige likiditeit in die swembad. Daar kan 'n groot verskil wees tussen die hoeveelheid van jou invoertoken en wat jy in die uitvoertoken sal ontvang"
 
+#: src/components/Explore/TokenDetails/TokenDetail.tsx
 #: src/components/Menu/index.tsx
 msgid "About"
 msgstr "Oor"
@@ -348,6 +349,10 @@ msgstr "Deur 'n beursie te koppel, stem jy in tot Uniswap Labs se <0>Diensbepali
 msgid "Canceled"
 msgstr "Gekanselleer"
 
+#: src/constants/tokenSafety.tsx
+msgid "Caution"
+msgstr "Versigtig"
+
 #: src/components/AccountDetails/index.tsx
 msgid "Change"
 msgstr "Verander"
@@ -433,6 +438,7 @@ msgstr "Maak alles skoon"
 msgid "Clear all"
 msgstr "Maak alles skoon"
 
+#: src/components/TokenSafety/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Close"
@@ -548,7 +554,6 @@ msgstr "Koppel tans …"
 msgid "Copied"
 msgstr "Gekopieer"
 
-#: src/components/AccountDetails/index.tsx
 #: src/components/AccountDetails/index.tsx
 msgid "Copy Address"
 msgstr "Kopieer adres"
@@ -817,6 +822,10 @@ msgstr "Die kundige modus skakel die bevestiging van die transaksie uit en laat 
 msgid "Expired"
 msgstr "Verstreke"
 
+#: src/components/Header/index.tsx
+msgid "Explore"
+msgstr "Verken"
+
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore Uniswap Analytics."
 msgstr "Verken Uniswap Analytics."
@@ -877,6 +886,10 @@ msgstr "Steek weg"
 #: src/pages/Swap/index.tsx
 msgid "High Price Impact"
 msgstr "Hoë prysimpak"
+
+#: src/components/TokenSafety/index.tsx
+msgid "I Understand"
+msgstr "Ek verstaan"
 
 #: src/components/SearchModal/ImportList.tsx
 #: src/pages/AddLiquidity/index.tsx
@@ -984,12 +997,17 @@ msgstr "Taal"
 msgid "Learn"
 msgstr "Leer"
 
+#: src/components/TokenSafety/index.tsx
+msgid "Learn More"
+msgstr "Leer meer"
+
 #: src/pages/Pool/CTACards.tsx
 msgid "Learn about providing liquidity"
 msgstr "Kom meer te wete oor die voorsiening van likiditeit"
 
 #: src/components/PrivacyPolicy/index.tsx
 #: src/components/PrivacyPolicy/index.tsx
+#: src/components/TokenSafety/TokenSafetyMessage.tsx
 msgid "Learn more"
 msgstr "Leer meer"
 
@@ -1037,10 +1055,6 @@ msgstr "Gelaai"
 msgid "Loading"
 msgstr "Laai tans"
 
-#: src/components/CurrencyInputPanel/index.tsx
-msgid "MAX"
-msgstr "MAKS"
-
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
@@ -1062,6 +1076,7 @@ msgstr "Bestuur tekenlyste"
 msgid "Manage this pool."
 msgstr "Bestuur hierdie swembad."
 
+#: src/components/CurrencyInputPanel/index.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Max"
 msgstr "Maks"
@@ -1190,6 +1205,10 @@ msgstr "Geen voorstelle gevind nie."
 msgid "No results found."
 msgstr "Geen resultate gevind."
 
+#: src/constants/tokenSafety.tsx
+msgid "Not Available"
+msgstr "Nie beskikbaar nie"
+
 #: src/components/FeeSelector/FeeTierPercentageBadge.tsx
 msgid "Not created"
 msgstr "Nie geskep nie"
@@ -1254,6 +1273,10 @@ msgstr "Bevestig dat u hierdie lys wil verwyder deur REMOVE in te tik"
 #: src/components/vote/ProposalEmptyState.tsx
 msgid "Please connect to Layer 1 Ethereum"
 msgstr "Maak asseblief verbinding met Layer 1 Ethereum"
+
+#: src/constants/tokenSafety.tsx
+msgid "Please do your own research before trading."
+msgstr "Doen asseblief u eie navorsing voordat u handel dryf."
 
 #: src/components/Settings/index.tsx
 msgid "Please type the word \"{confirmWord}\" to enable expert mode."
@@ -1485,7 +1508,6 @@ msgstr "Soek naam of plak adres"
 msgid "Select Pair"
 msgstr "Kies Koppel"
 
-#: src/components/CurrencyInputPanel/index.tsx
 #: src/components/SearchModal/CurrencySearch.tsx
 #: src/pages/PoolFinder/index.tsx
 #: src/pages/PoolFinder/index.tsx
@@ -1504,6 +1526,10 @@ msgstr "Kies 'n {0}netwerk"
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Select an action"
 msgstr "Kies 'n aksie"
+
+#: src/components/CurrencyInputPanel/index.tsx
+msgid "Select token"
+msgstr "Kies teken"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Selected Range"
@@ -1735,6 +1761,10 @@ msgstr "Die transaksie kon nie gestuur word nie omdat die sperdatum verstryk het
 msgid "There is no liquidity data."
 msgstr "Daar is geen likiditeitsdata nie."
 
+#: src/components/Explore/TokenDetails/BalanceSummary.tsx
+msgid "There was an error loading your {tokenSymbol} balance"
+msgstr "Kon nie jou {tokenSymbol} -saldo laai nie"
+
 #: src/components/ConnectedAccountBlocked/index.tsx
 msgid "This address is blocked on the Uniswap Labs interface because it is associated with one or more"
 msgstr "Hierdie adres is geblokkeer op die Uniswap Labs-koppelvlak omdat dit met een of meer geassosieer word"
@@ -1789,6 +1819,10 @@ msgstr "Aan"
 msgid "To (at least)"
 msgstr "Aan (ten minste)"
 
+#: src/components/Explore/TokenTable/TokenRow.tsx
+msgid "Token Name"
+msgstr "Token Naam"
+
 #: src/components/SearchModal/BlockedToken.tsx
 msgid "Token not supported"
 msgstr "Token word nie ondersteun nie"
@@ -1817,7 +1851,6 @@ msgstr "Totale deposito's"
 msgid "Trade Route"
 msgstr "Handelsroete"
 
-#: src/components/Settings/index.tsx
 #: src/components/Settings/index.tsx
 msgid "Transaction Settings"
 msgstr "Transaksie-instellings"
@@ -2008,7 +2041,6 @@ msgid "View on Etherscan"
 msgstr "Uitsig op Etherscan"
 
 #: src/components/AccountDetails/index.tsx
-#: src/components/AccountDetails/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "View on Explorer"
@@ -2093,6 +2125,10 @@ msgstr "Wag op bevestiging"
 #: src/components/AddressInputPanel/index.tsx
 msgid "Wallet Address or ENS name"
 msgstr "Wallet-adres of ENS-naam"
+
+#: src/constants/tokenSafety.tsx
+msgid "Warning"
+msgstr "Waarskuwing"
 
 #: src/components/earn/StakingModal.tsx
 msgid "Weekly Rewards"
@@ -2351,8 +2387,17 @@ msgstr "via {0} tekenlys"
 msgid "{0, plural, =1 {Import token} other {Import tokens}}"
 msgstr "{0, plural, =1 {Voer teken in} other {Voer tekens in}}"
 
+#: src/constants/tokenSafety.tsx
+msgid "{0, plural, =1 {This token isn't verified} other {These tokens aren't verified}}"
+msgstr "{0, plural, =1 {Hierdie teken is nie geverifieer nie} other {Hierdie tekens is nie geverifieer nie}}"
+
+#: src/constants/tokenSafety.tsx
+msgid "{0, plural, =1 {You can't trade this token using the Uniswap App.} other {You can't trade these tokens using the Uniswap App.}}"
+msgstr "{0, plural, =1 {Jy kan nie hierdie teken met die Uniswap-toepassing verhandel nie.} other {Jy kan nie hierdie tokens verhandel met die Uniswap-toepassing nie.}}"
+
 #: src/components/RateToggle/index.tsx
 #: src/components/RateToggle/index.tsx
+#: src/components/Settings/index.tsx
 msgid "{0}"
 msgstr "{0}"
 

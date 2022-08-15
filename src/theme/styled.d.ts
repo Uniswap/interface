@@ -6,8 +6,8 @@ export interface ThemeColors {
 
   backgroundBackdrop: Color
   backgroundSurface: Color
-  backgroundContainer: Color
-  backgroundAction: Color
+  backgroundModule: Color
+  backgroundInteractive: Color
   backgroundOutline: Color
   backgroundScrim: Color
 
@@ -54,6 +54,7 @@ export interface ThemeColors {
   blue200: Color
   flyoutDropShadow: Color
   hoverState: Color
+  hoverDefault: Color
 }
 
 export interface Colors {

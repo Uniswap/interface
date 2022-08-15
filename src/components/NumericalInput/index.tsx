@@ -1,17 +1,18 @@
+import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
 import React from 'react'
 import styled from 'styled-components/macro'
 
 import { escapeRegExp } from '../../utils'
 
-const StyledInput = styled.input<{ error?: boolean; fontSize?: string; align?: string }>`
+const StyledInput = styled.input<{ error?: boolean; fontSize?: string; align?: string; redesignFlag: boolean }>`
   color: ${({ error, theme }) => (error ? theme.deprecated_red1 : theme.deprecated_text1)};
   width: 0;
   position: relative;
-  font-weight: 500;
+  font-weight: ${({ redesignFlag }) => (redesignFlag ? 400 : 500)};
   outline: none;
   border: none;
   flex: 1 1 auto;
-  background-color: ${({ theme }) => theme.deprecated_bg1};
+  background-color: ${({ theme, redesignFlag }) => (redesignFlag ? theme.none : theme.deprecated_bg1)};
   font-size: ${({ fontSize }) => fontSize ?? '28px'};
   text-align: ${({ align }) => align && align};
   white-space: nowrap;
@@ -35,7 +36,7 @@ const StyledInput = styled.input<{ error?: boolean; fontSize?: string; align?: s
   }
 
   ::placeholder {
-    color: ${({ theme }) => theme.deprecated_text4};
+    color: ${({ theme, redesignFlag }) => (redesignFlag ? theme.textSecondary : theme.deprecated_text4)};
   }
 `
 
@@ -55,6 +56,8 @@ export const Input = React.memo(function InnerInput({
   align?: 'right' | 'left'
   prependSymbol?: string | undefined
 } & Omit<React.HTMLProps<HTMLInputElement>, 'ref' | 'onChange' | 'as'>) {
+  const redesignFlag = useRedesignFlag()
+  const redesignFlagEnabled = redesignFlag === RedesignVariant.Enabled
   const enforcer = (nextUserInput: string) => {
     if (nextUserInput === '' || inputRegex.test(escapeRegExp(nextUserInput))) {
       onUserInput(nextUserInput)
@@ -65,6 +68,7 @@ export const Input = React.memo(function InnerInput({
     <StyledInput
       {...rest}
       value={prependSymbol && value ? prependSymbol + value : value}
+      redesignFlag={redesignFlagEnabled}
       onChange={(event) => {
         if (prependSymbol) {
           const value = event.target.value
@@ -87,7 +91,7 @@ export const Input = React.memo(function InnerInput({
       // text-specific options
       type="text"
       pattern="^[0-9]*[.,]?[0-9]*$"
-      placeholder={placeholder || '0.0'}
+      placeholder={placeholder || (redesignFlagEnabled ? '0' : '0.0')}
       minLength={1}
       maxLength={79}
       spellCheck="false"

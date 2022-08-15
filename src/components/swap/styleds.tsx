@@ -15,18 +15,20 @@ export const Wrapper = styled.div`
   padding: 8px;
 `
 
-export const ArrowWrapper = styled.div<{ clickable: boolean }>`
+export const ArrowWrapper = styled.div<{ clickable: boolean; redesignFlag: boolean }>`
   padding: 4px;
   border-radius: 12px;
-  height: 32px;
-  width: 32px;
+  height: ${({ redesignFlag }) => (redesignFlag ? '40px' : '32px')};
+  width: ${({ redesignFlag }) => (redesignFlag ? '40px' : '32px')};
   position: relative;
   margin-top: -14px;
-  margin-bottom: -14px;
+  margin-bottom: ${({ redesignFlag }) => (redesignFlag ? '-18px' : '-14px')};
   left: calc(50% - 16px);
   /* transform: rotate(90deg); */
-  background-color: ${({ theme }) => theme.deprecated_bg1};
-  border: 4px solid ${({ theme }) => theme.deprecated_bg0};
+  background-color: ${({ theme, redesignFlag }) => (redesignFlag ? theme.backgroundSurface : theme.deprecated_bg1)};
+  border: 4px solid;
+  border-color: ${({ theme, redesignFlag }) => (redesignFlag ? theme.backgroundModule : theme.deprecated_bg0)};
+
   z-index: 2;
   ${({ clickable }) =>
     clickable

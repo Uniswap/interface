@@ -1,4 +1,4 @@
-import { Phase0Variant, usePhase0Flag } from 'featureFlags/flags/phase0'
+import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
 import React, { useMemo } from 'react'
 import { Text, TextProps as TextPropsOriginal } from 'rebass'
 import styled, {
@@ -8,6 +8,9 @@ import styled, {
   ThemeProvider as StyledComponentsThemeProvider,
 } from 'styled-components/macro'
 
+import { cssStringFromTheme } from '../nft/css/cssStringFromTheme'
+import { darkTheme } from '../nft/themes/darkTheme'
+import { lightTheme } from '../nft/themes/lightTheme'
 import { useIsDarkMode } from '../state/user/hooks'
 import { colors as ColorsPalette, colorsDark, colorsLight } from './colors'
 import { Colors, ThemeColors } from './styled'
@@ -60,8 +63,8 @@ function uniswapThemeColors(darkMode: boolean): ThemeColors {
 
     backgroundBackdrop: darkMode ? colorsDark.backgroundBackdrop : colorsLight.backgroundBackdrop,
     backgroundSurface: darkMode ? colorsDark.backgroundSurface : colorsLight.backgroundSurface,
-    backgroundContainer: darkMode ? colorsDark.backgroundContainer : colorsLight.backgroundContainer,
-    backgroundAction: darkMode ? colorsDark.backgroundAction : colorsLight.backgroundAction,
+    backgroundModule: darkMode ? colorsDark.backgroundModule : colorsLight.backgroundModule,
+    backgroundInteractive: darkMode ? colorsDark.backgroundInteractive : colorsLight.backgroundInteractive,
     backgroundOutline: darkMode ? colorsDark.backgroundOutline : colorsLight.backgroundOutline,
     backgroundScrim: darkMode ? colorsDark.backgroundScrim : colorsLight.backgroundScrim,
 
@@ -110,6 +113,7 @@ function uniswapThemeColors(darkMode: boolean): ThemeColors {
     flyoutDropShadow:
       '0px 24px 32px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 0px 1px rgba(0, 0, 0, 0.12)',
     hoverState: opacify(24, ColorsPalette.blue200),
+    hoverDefault: opacify(8, ColorsPalette.gray200),
   }
 }
 
@@ -268,9 +272,12 @@ function getTheme(darkMode: boolean, isNewColorsEnabled: boolean): DefaultTheme 
 }
 
 export default function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const phase0Flag = usePhase0Flag()
+  const redesignFlag = useRedesignFlag()
   const darkMode = useIsDarkMode()
-  const themeObject = useMemo(() => getTheme(darkMode, phase0Flag === Phase0Variant.Enabled), [darkMode, phase0Flag])
+  const themeObject = useMemo(
+    () => getTheme(darkMode, redesignFlag === RedesignVariant.Enabled),
+    [darkMode, redesignFlag]
+  )
   return <StyledComponentsThemeProvider theme={themeObject}>{children}</StyledComponentsThemeProvider>
 }
 
@@ -340,5 +347,9 @@ html {
 
 a {
  color: ${({ theme }) => theme.deprecated_blue1}; 
+}
+
+:root {
+  ${({ theme }) => (theme.darkMode ? cssStringFromTheme(darkTheme) : cssStringFromTheme(lightTheme))}
 }
 `

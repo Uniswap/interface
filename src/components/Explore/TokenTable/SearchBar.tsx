@@ -16,20 +16,20 @@ const SearchInput = styled.input<{ expanded: boolean }>`
   background: no-repeat scroll 7px 7px;
   background-image: ${({ expanded }) => !expanded && `url(${searchIcon})`};
   background-size: 20px 20px;
-  background-position: 11px center;
+  background-position: 14px center;
   background-color: ${({ theme }) => theme.none};
   border-radius: 12px;
   border: 1px solid ${({ theme }) => theme.backgroundOutline};
   height: 100%;
-  width: ${({ expanded }) => (expanded ? '100%' : '44px')};
+  width: ${({ expanded }) => (expanded ? '100%' : '52px')};
   font-size: 16px;
-  padding-left: 18px;
+  padding-left: 35px;
   color: ${({ theme }) => theme.textPrimary};
   transition: width 0.75s cubic-bezier(0, 0.795, 0, 1);
 
   :hover {
     cursor: ${({ expanded }) => !expanded && 'pointer'};
-    background-color: ${({ theme }) => theme.backgroundContainer};
+    background-color: ${({ theme }) => theme.backgroundModule};
   }
 
   :focus {
@@ -38,7 +38,7 @@ const SearchInput = styled.input<{ expanded: boolean }>`
     border: none;
   }
   ::placeholder {
-    color: ${({ expanded, theme }) => expanded && theme.textTertiary};
+    color: ${({ expanded, theme }) => (expanded ? theme.textTertiary : theme.none)};
   }
   ::-webkit-search-cancel-button {
     -webkit-appearance: none;

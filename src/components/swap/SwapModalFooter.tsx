@@ -4,6 +4,7 @@ import { ElementName, Event, EventName } from 'components/AmplitudeAnalytics/con
 import { TraceEvent } from 'components/AmplitudeAnalytics/TraceEvent'
 import {
   formatPercentInBasisPointsNumber,
+  formatPercentNumber,
   formatToDecimal,
   getDurationFromDateMilliseconds,
   getDurationUntilTimestampSeconds,
@@ -20,6 +21,7 @@ import { computeRealizedPriceImpact } from 'utils/prices'
 import { ButtonError } from '../Button'
 import { AutoRow } from '../Row'
 import { SwapCallbackError } from './styleds'
+import { getTokenPath, RoutingDiagramEntry } from './SwapRoute'
 
 interface AnalyticsEventProps {
   trade: InterfaceTrade<Currency, Currency, TradeType>
@@ -31,6 +33,34 @@ interface AnalyticsEventProps {
   tokenInAmountUsd: string | undefined
   tokenOutAmountUsd: string | undefined
   swapQuoteReceivedDate: Date | undefined
+  routes: RoutingDiagramEntry[]
+}
+
+const formatRoutesEventProperties = (routes: RoutingDiagramEntry[]) => {
+  const routesEventProperties: Record<string, any[]> = {
+    routes_percentages: [],
+    routes_protocols: [],
+  }
+
+  routes.forEach((route, index) => {
+    routesEventProperties['routes_percentages'].push(formatPercentNumber(route.percent))
+    routesEventProperties['routes_protocols'].push(route.protocol)
+    routesEventProperties[`route_${index}_input_currency_symbols`] = route.path.map(
+      (pathStep) => pathStep[0].symbol ?? ''
+    )
+    routesEventProperties[`route_${index}_output_currency_symbols`] = route.path.map(
+      (pathStep) => pathStep[1].symbol ?? ''
+    )
+    routesEventProperties[`route_${index}_input_currency_addresses`] = route.path.map((pathStep) =>
+      getTokenAddress(pathStep[0])
+    )
+    routesEventProperties[`route_${index}_output_currency_addresses`] = route.path.map((pathStep) =>
+      getTokenAddress(pathStep[1])
+    )
+    routesEventProperties[`route_${index}_fee_amounts_hundredths_of_bps`] = route.path.map((pathStep) => pathStep[2])
+  })
+
+  return routesEventProperties
 }
 
 const formatAnalyticsEventProperties = ({
@@ -43,6 +73,7 @@ const formatAnalyticsEventProperties = ({
   tokenInAmountUsd,
   tokenOutAmountUsd,
   swapQuoteReceivedDate,
+  routes,
 }: AnalyticsEventProps) => ({
   estimated_network_fee_usd: trade.gasUseEstimateUSD ? formatToDecimal(trade.gasUseEstimateUSD, 2) : undefined,
   transaction_hash: txHash,
@@ -66,6 +97,8 @@ const formatAnalyticsEventProperties = ({
   duration_from_first_quote_to_swap_submission_milliseconds: swapQuoteReceivedDate
     ? getDurationFromDateMilliseconds(swapQuoteReceivedDate)
     : undefined,
+  swap_quote_block_number: trade.blockNumber,
+  ...formatRoutesEventProperties(routes),
 })
 
 export default function SwapModalFooter({
@@ -90,6 +123,7 @@ export default function SwapModalFooter({
   const [clientSideRouter] = useClientSideRouter()
   const tokenInAmountUsd = useStablecoinValue(trade.inputAmount)?.toFixed(2)
   const tokenOutAmountUsd = useStablecoinValue(trade.outputAmount)?.toFixed(2)
+  const routes = getTokenPath(trade)
 
   return (
     <>
@@ -108,6 +142,7 @@ export default function SwapModalFooter({
             tokenInAmountUsd,
             tokenOutAmountUsd,
             swapQuoteReceivedDate,
+            routes,
           })}
         >
           <ButtonError

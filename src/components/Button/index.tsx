@@ -77,27 +77,35 @@ export const ButtonPrimary = styled(BaseButton)`
   }
 `
 
-export const ButtonLight = styled(BaseButton)`
-  background-color: ${({ theme }) => theme.deprecated_primary5};
-  color: ${({ theme }) => theme.deprecated_primaryText1};
-  font-size: 16px;
-  font-weight: 500;
+export const ButtonLight = styled(BaseButton)<{ redesignFlag?: boolean }>`
+  background-color: ${({ theme, redesignFlag }) => (redesignFlag ? theme.accentActionSoft : theme.deprecated_primary5)};
+  color: ${({ theme, redesignFlag }) => (redesignFlag ? theme.accentAction : theme.deprecated_primaryText1)};
+  font-size: ${({ redesignFlag }) => (redesignFlag ? '20px' : '16px')};
+  font-weight: ${({ redesignFlag }) => (redesignFlag ? '600' : '500')};
+
   &:focus {
-    box-shadow: 0 0 0 1pt ${({ theme, disabled }) => !disabled && darken(0.03, theme.deprecated_primary5)};
-    background-color: ${({ theme, disabled }) => !disabled && darken(0.03, theme.deprecated_primary5)};
+    box-shadow: 0 0 0 1pt
+      ${({ theme, disabled, redesignFlag }) =>
+        !disabled && (redesignFlag ? theme.accentActionSoft : darken(0.03, theme.deprecated_primary5))};
+    background-color: ${({ theme, disabled, redesignFlag }) =>
+      !disabled && (redesignFlag ? theme.accentActionSoft : darken(0.03, theme.deprecated_primary5))};
   }
   &:hover {
-    background-color: ${({ theme, disabled }) => !disabled && darken(0.03, theme.deprecated_primary5)};
+    background-color: ${({ theme, disabled, redesignFlag }) =>
+      !disabled && (redesignFlag ? theme.accentActionSoft : darken(0.03, theme.deprecated_primary5))};
   }
   &:active {
-    box-shadow: 0 0 0 1pt ${({ theme, disabled }) => !disabled && darken(0.05, theme.deprecated_primary5)};
-    background-color: ${({ theme, disabled }) => !disabled && darken(0.05, theme.deprecated_primary5)};
+    box-shadow: 0 0 0 1pt
+      ${({ theme, disabled, redesignFlag }) =>
+        !disabled && (redesignFlag ? theme.accentActionSoft : darken(0.05, theme.deprecated_primary5))};
+    background-color: ${({ theme, disabled, redesignFlag }) =>
+      !disabled && (redesignFlag ? theme.accentActionSoft : darken(0.05, theme.deprecated_primary5))};
   }
   :disabled {
     opacity: 0.4;
     :hover {
       cursor: auto;
-      background-color: ${({ theme }) => theme.deprecated_primary5};
+      background-color: ${({ theme, redesignFlag }) => (redesignFlag ? theme.none : theme.deprecated_primary5)};
       box-shadow: none;
       border: 1px solid transparent;
       outline: none;
