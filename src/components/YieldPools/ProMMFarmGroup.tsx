@@ -5,6 +5,7 @@ import { BigNumber } from 'ethers'
 import { rgba } from 'polished'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { Edit2, Minus, Plus } from 'react-feather'
+import { Link } from 'react-router-dom'
 import { useMedia } from 'react-use'
 import { Flex, Text } from 'rebass'
 import styled from 'styled-components'
@@ -505,9 +506,16 @@ const Row = ({
         <div>
           <Flex alignItems="center">
             <DoubleCurrencyLogo currency0={token0} currency1={token1} />
-            <Text fontSize={14}>
-              {token0?.symbol} - {token1?.symbol}
-            </Text>
+            <Link
+              to={`/pools?search=${farm.poolAddress}&tab=elastic`}
+              style={{
+                textDecoration: 'none',
+              }}
+            >
+              <Text fontSize={14} fontWeight={500}>
+                {token0?.symbol} - {token1?.symbol}
+              </Text>
+            </Link>
           </Flex>
 
           <Flex

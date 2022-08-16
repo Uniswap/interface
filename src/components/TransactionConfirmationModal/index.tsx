@@ -149,7 +149,7 @@ function TransactionSubmittedContent({
         <ConfirmedIcon>
           <ArrowUpCircle strokeWidth={0.5} size={90} color={theme.primary} />
         </ConfirmedIcon>
-        <AutoColumn gap="12px" justify={'center'}>
+        <AutoColumn gap="16px" justify={'center'}>
           <Text fontWeight={500} fontSize={20}>
             <Trans>Transaction Submitted</Trans>
           </Text>
@@ -161,8 +161,8 @@ function TransactionSubmittedContent({
             </ExternalLink>
           )}
           {tokenAddToMetaMask?.address && <AddTokenToMetaMask token={tokenAddToMetaMask} chainId={chainId} />}
-          <ButtonPrimary onClick={onDismiss} style={{ margin: '20px 0 0 0' }}>
-            <Text fontWeight={500} fontSize={20}>
+          <ButtonPrimary onClick={onDismiss} style={{ margin: '24px 0 0 0' }}>
+            <Text fontWeight={500} fontSize={14}>
               <Trans>Close</Trans>
             </Text>
           </ButtonPrimary>

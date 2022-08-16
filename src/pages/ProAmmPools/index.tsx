@@ -29,6 +29,7 @@ type PoolListProps = {
   searchValue: string
   isShowOnlyActiveFarmPools: boolean
   onlyShowStable: boolean
+  shouldShowLowTVLPools: boolean
 }
 
 const PageWrapper = styled.div`
@@ -85,6 +86,7 @@ export default function ProAmmPoolList({
   searchValue,
   isShowOnlyActiveFarmPools,
   onlyShowStable,
+  shouldShowLowTVLPools,
 }: PoolListProps) {
   const above1000 = useMedia('(min-width: 1000px)')
 
@@ -146,6 +148,10 @@ export default function ProAmmPoolList({
       filteredPools = filteredPools.filter(pool => activePoolFarmAddress.includes(pool.address.toLowerCase()))
     }
 
+    if (!shouldShowLowTVLPools) {
+      filteredPools = filteredPools.filter(pool => pool.tvlUSD > 1)
+    }
+
     if (caId && cbId && caId === cbId) filteredPools = []
     else {
       if (caId)
@@ -173,7 +179,18 @@ export default function ProAmmPoolList({
     }, initPairs)
 
     return Object.values(poolsGroupByPair).sort((a, b) => listComparator(a[0], b[0]))
-  }, [poolDatas, searchValue, caId, cbId, listComparator, farms, isShowOnlyActiveFarmPools, chainId, onlyShowStable])
+  }, [
+    poolDatas,
+    isShowOnlyActiveFarmPools,
+    shouldShowLowTVLPools,
+    caId,
+    cbId,
+    onlyShowStable,
+    searchValue,
+    farms,
+    chainId,
+    listComparator,
+  ])
 
   const renderHeader = () => {
     return above1000 ? (

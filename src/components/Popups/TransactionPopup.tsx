@@ -165,10 +165,10 @@ export default function TransactionPopup({
         </AutoColumn>
       </RowNoFlex>
       {chainId && (
-        <HideSmall>
+        <HideSmall style={{ margin: '8px 0 0 40px', display: 'block' }}>
           <ExternalLink
             href={getEtherscanLink(chainId, hash, 'transaction')}
-            style={{ margin: '8px 0 0 40px', display: 'block', color: success ? theme.primary : theme.red }}
+            style={{ color: success ? theme.primary : theme.red }}
           >
             {getEtherscanLinkText(chainId)}
           </ExternalLink>

@@ -68,6 +68,7 @@ interface PoolListProps {
   searchValue: string
   isShowOnlyActiveFarmPools: boolean
   onlyShowStable: boolean
+  shouldShowLowTVLPools: boolean
 }
 
 const SORT_FIELD = {
@@ -79,7 +80,13 @@ const SORT_FIELD = {
 
 const ITEM_PER_PAGE = 8
 
-const PoolList = ({ currencies, searchValue, isShowOnlyActiveFarmPools, onlyShowStable }: PoolListProps) => {
+const PoolList = ({
+  currencies,
+  searchValue,
+  isShowOnlyActiveFarmPools,
+  onlyShowStable,
+  shouldShowLowTVLPools,
+}: PoolListProps) => {
   const above1000 = useMedia('(min-width: 1000px)')
 
   const [sortDirection, setSortDirection] = useState(true)
@@ -259,6 +266,10 @@ const PoolList = ({ currencies, searchValue, isShowOnlyActiveFarmPools, onlyShow
       res = res.filter(poolData => farmAddresses.includes(poolData.id))
     }
 
+    if (!shouldShowLowTVLPools) {
+      res = res.filter(poolData => parseFloat(poolData.reserveUSD) > 1)
+    }
+
     const ca = currencies[Field.CURRENCY_A]
     const cb = currencies[Field.CURRENCY_B]
 
@@ -299,14 +310,15 @@ const PoolList = ({ currencies, searchValue, isShowOnlyActiveFarmPools, onlyShow
 
     return res
   }, [
-    chainId,
-    onlyShowStable,
     subgraphPoolsData,
     listComparator,
-    currencies,
-    searchValue,
     isShowOnlyActiveFarmPools,
+    shouldShowLowTVLPools,
+    currencies,
+    onlyShowStable,
     farms,
+    searchValue,
+    chainId,
   ])
 
   const [currentPage, setCurrentPage] = useState(1)

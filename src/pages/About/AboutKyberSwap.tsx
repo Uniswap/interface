@@ -57,6 +57,7 @@ import { useDarkModeManager } from 'state/user/hooks'
 import { ExternalLink, StyledInternalLink } from 'theme'
 import { formatBigLiquidity } from 'utils/formatBalance'
 
+import KyberSwapGeneralIntro from './KyberSwapGeneralIntro'
 import {
   AboutKNC,
   AboutPage,
@@ -443,13 +444,6 @@ function AboutKyberSwap() {
             </Trans>
           </Text>
 
-          <Text color={theme.text} fontSize="1rem" marginTop={['40px', '48px']} textAlign="center" lineHeight={1.5}>
-            <Trans>
-              KyberSwap is DeFi’s premier automated market maker, providing the best token prices for traders across
-              multiple exchanges, and maximizing earnings for liquidity providers, in one decentralized platform.
-            </Trans>
-          </Text>
-
           <SupportedChain>
             <Ethereum />
             <Polygon />
@@ -465,36 +459,7 @@ function AboutKyberSwap() {
             <OptimismLogo />
           </SupportedChain>
 
-          <Flex
-            justifyContent="center"
-            maxWidth="456px"
-            margin="auto"
-            marginTop={['40px', '48px']}
-            sx={{ gap: above768 ? '24px' : '16px' }}
-          >
-            <BtnPrimary
-              style={{ flex: 1 }}
-              onClick={() => mixpanelHandler(MIXPANEL_TYPE.ABOUT_SWAP_CLICKED)}
-              as={Link}
-              to="/swap?highlightBox=true"
-            >
-              <Repeat size={20} />
-              <Text fontSize="14px" marginLeft="8px">
-                <Trans>Swap Now</Trans>
-              </Text>
-            </BtnPrimary>
-            <ButtonLight
-              as={Link}
-              to={'/pools?tab=elastic&highlightAddLiquidityButton=true'}
-              onClick={() => mixpanelHandler(MIXPANEL_TYPE.ABOUT_START_EARNING_CLICKED)}
-              style={{ flex: 1 }}
-            >
-              <MoneyBagOutline color={theme.primary} size={20} />
-              <Text fontSize="14px" marginLeft="8px">
-                <Trans>Start Earning</Trans>
-              </Text>
-            </ButtonLight>
-          </Flex>
+          <KyberSwapGeneralIntro />
 
           <OverflowStatisticWrapper>
             <StatisticWrapper>

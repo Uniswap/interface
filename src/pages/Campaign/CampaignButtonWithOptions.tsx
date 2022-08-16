@@ -172,7 +172,7 @@ export default function CampaignButtonWithOptions({
                 }}
               >
                 <img src={NETWORKS_INFO[chainId].icon} alt="Network" style={{ minWidth: '16px', width: '16px' }} />
-                <Text marginLeft="4px" color={theme.subText} fontSize="12px" fontWeight={500} minWidth="fit-content">
+                <Text marginLeft="8px" color={theme.subText} fontSize="12px" fontWeight={500} minWidth="fit-content">
                   {type === 'enter_now'
                     ? t`Swap on ${NETWORKS_INFO[chainId].name}`
                     : t`Claim on ${NETWORKS_INFO[chainId].name}`}
@@ -194,6 +194,7 @@ const StyledCampaignButtonWithOptions = styled(ButtonPrimary)`
   height: 44px;
   font-weight: 500;
   color: ${({ theme }) => theme.textReverse};
+  border: none;
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
     ${css`

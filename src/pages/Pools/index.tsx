@@ -14,6 +14,7 @@ import PoolsCurrencyInputPanel from 'components/PoolsCurrencyInputPanel'
 import Search from 'components/Search'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import Toggle from 'components/Toggle'
+import { MouseoverTooltip } from 'components/Tooltip'
 import Tutorial, { TutorialType } from 'components/Tutorial'
 import { VERSION } from 'constants/v2'
 import { useActiveWeb3React } from 'hooks'
@@ -61,6 +62,22 @@ const ButtonLightWithHighlight = styled(ButtonLight)`
   }
 `
 
+const TextWithTooltip = styled(Text)`
+  position: relative;
+  cursor: pointer;
+
+  ::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(100% - 2px);
+    height: 0;
+    border-bottom: ${({ theme }) => `1px dashed ${theme.subText}`};
+  }
+`
+
 const Pools = ({
   match: {
     params: { currencyIdA, currencyIdB },
@@ -74,6 +91,7 @@ const Pools = ({
   const above1260 = useMedia('(min-width: 1260px)')
   const below1124 = useMedia('(max-width: 1124px)')
   const [isShowOnlyActiveFarmPools, setIsShowOnlyActiveFarmPools] = useState(false)
+  const [shouldShowLowTVLPools, setShowLowTVLPools] = useState(false)
   const qs = useParsedQueryString()
   const searchValueInQs: string = (qs.search as string) ?? ''
   const debouncedSearchValue = useDebounce(searchValueInQs.trim().toLowerCase(), 200)
@@ -214,7 +232,19 @@ const Pools = ({
 
             <Flex style={{ gap: '10px' }}>
               <Flex alignItems="center" style={{ gap: '8px' }}>
-                <Text fontSize="14px" color={theme.subText}>
+                <Text fontSize="14px" color={theme.subText} fontWeight={500}>
+                  <MouseoverTooltip placement="top" width="fit-content" text={t`Total Value Locked is less than $1`}>
+                    <TextWithTooltip>
+                      <Trans>Low TVL Pools</Trans>
+                    </TextWithTooltip>
+                  </MouseoverTooltip>
+                </Text>
+
+                <Toggle isActive={shouldShowLowTVLPools} toggle={() => setShowLowTVLPools(prev => !prev)} />
+              </Flex>
+
+              <Flex alignItems="center" style={{ gap: '8px' }}>
+                <Text fontSize="14px" color={theme.subText} fontWeight={500}>
                   <Trans>Farming Pools</Trans>
                 </Text>
 
@@ -400,10 +430,13 @@ const Pools = ({
                 </ToolbarWrapper>
               </Flex>
             )}
-            <Flex justifyContent="flex-start">
+
+            <Flex justifyContent="space-between" alignItems="center">
               <Flex
                 alignItems={'center'}
-                style={above1260 ? { gap: '8px' } : { gap: '8px', width: '100%', justifyContent: 'space-between' }}
+                sx={{
+                  columnGap: '8px',
+                }}
               >
                 <Text fontSize="14px" color={theme.subText} fontWeight={500}>
                   <Trans>Farming Pools</Trans>
@@ -413,6 +446,18 @@ const Pools = ({
                   isActive={isShowOnlyActiveFarmPools}
                   toggle={() => setIsShowOnlyActiveFarmPools(prev => !prev)}
                 />
+              </Flex>
+
+              <Flex alignItems="center" style={{ gap: '8px' }}>
+                <Text fontSize="14px" color={theme.subText} fontWeight={500}>
+                  <MouseoverTooltip placement="top" width="fit-content" text={t`Total Value Locked is less than $1`}>
+                    <TextWithTooltip>
+                      <Trans>Low TVL Pools</Trans>
+                    </TextWithTooltip>
+                  </MouseoverTooltip>
+                </Text>
+
+                <Toggle isActive={shouldShowLowTVLPools} toggle={() => setShowLowTVLPools(prev => !prev)} />
               </Flex>
             </Flex>
           </>
@@ -424,6 +469,7 @@ const Pools = ({
             searchValue={debouncedSearchValue}
             isShowOnlyActiveFarmPools={isShowOnlyActiveFarmPools}
             onlyShowStable={onlyShowStable}
+            shouldShowLowTVLPools={shouldShowLowTVLPools}
           />
         ) : (
           <ProAmmPoolList
@@ -431,6 +477,7 @@ const Pools = ({
             searchValue={debouncedSearchValue}
             isShowOnlyActiveFarmPools={isShowOnlyActiveFarmPools}
             onlyShowStable={onlyShowStable}
+            shouldShowLowTVLPools={shouldShowLowTVLPools}
           />
         )}
       </PoolsPageWrapper>
