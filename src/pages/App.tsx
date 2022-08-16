@@ -6,6 +6,7 @@ import TopLevelModals from 'components/TopLevelModals'
 import { useFeatureFlagsIsLoaded } from 'featureFlags'
 import { ExploreVariant, useExploreFlag } from 'featureFlags/flags/explore'
 import { NavBarVariant, useNavBarFlag } from 'featureFlags/flags/navBar'
+import { Phase1Variant, usePhase1Flag } from 'featureFlags/flags/phase1'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
 import { lazy, Suspense, useEffect } from 'react'
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
@@ -49,14 +50,24 @@ const AppWrapper = styled.div`
   align-items: flex-start;
 `
 
-const BodyWrapper = styled.div<{ navBarFlag: NavBarVariant }>`
+const BodyWrapper = styled.div<{ navBarFlag: NavBarVariant; phase1Flag: Phase1Variant }>`
   display: flex;
   flex-direction: column;
   width: 100%;
-  padding: ${({ navBarFlag }) => (navBarFlag === NavBarVariant.Enabled ? `72px 16px 0px 16px` : `120px 16px 0px 16px`)};
+  padding: ${({ navBarFlag, phase1Flag }) =>
+    phase1Flag === Phase1Variant.Enabled
+      ? `72px 0px 0px 0px`
+      : navBarFlag === NavBarVariant.Enabled
+      ? `72px 16px 0px 16px`
+      : `120px 16px 0px 16px`};
   align-items: center;
   flex: 1;
-  ${({ theme }) => theme.mediaWidth.upToSmall`
+  ${({ theme, phase1Flag }) =>
+    phase1Flag === Phase1Variant.Enabled
+      ? theme.mediaWidth.upToSmall`
+    padding: 52px 0px 16px 0px;
+  `
+      : theme.mediaWidth.upToSmall`
     padding: 52px 8px 16px 8px;
   `};
 `
@@ -107,6 +118,7 @@ export default function App() {
   const isLoaded = useFeatureFlagsIsLoaded()
   const exploreFlag = useExploreFlag()
   const navBarFlag = useNavBarFlag()
+  const phase1Flag = usePhase1Flag()
 
   const { pathname } = useLocation()
   const currentPage = getCurrentPageFromLocation(pathname)
@@ -146,7 +158,7 @@ export default function App() {
       <AppWrapper>
         <Trace page={currentPage}>
           <HeaderWrapper>{navBarFlag === NavBarVariant.Enabled ? <Navbar /> : <Header />}</HeaderWrapper>
-          <BodyWrapper navBarFlag={navBarFlag}>
+          <BodyWrapper navBarFlag={navBarFlag} phase1Flag={phase1Flag}>
             <Popups />
             <Polling />
             <TopLevelModals />
