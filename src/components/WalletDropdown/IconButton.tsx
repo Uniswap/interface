@@ -3,7 +3,7 @@ import { Icon } from 'react-feather'
 import styled from 'styled-components/macro'
 
 export const IconHoverText = styled.span`
-  color: ${({ theme }) => theme.textTertiary};
+  color: ${({ theme }) => theme.textPrimary};
   position: absolute;
   top: 28px;
   border-radius: 8px;
