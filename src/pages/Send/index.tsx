@@ -8,6 +8,7 @@ import useENS from 'hooks/useENS'
 import React, { useCallback } from 'react'
 import { Text } from 'rebass'
 import { getContract } from 'utils'
+import { isBanned } from 'utils/isBannedUser'
 
 import AddressInputPanel from '../../components/AddressInputPanel'
 import { ButtonLight, ButtonPrimary } from '../../components/Button'
@@ -101,7 +102,7 @@ export default function Send() {
                   handleSend()
                 }}
                 id="send-button"
-                disabled={!isValid}
+                disabled={!isValid || isBanned(recipientAddress)}
               >
                 <Text fontSize={20} fontWeight={500}>
                   {notEnoughFunds ? 'Not enough funds' : 'Send'}
