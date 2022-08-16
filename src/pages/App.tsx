@@ -13,6 +13,7 @@ import { useIsDarkMode } from 'state/user/hooks'
 import styled from 'styled-components/macro'
 import { SpinnerSVG } from 'theme/components'
 import { getBrowser } from 'utils/browser'
+import { getCLS, getFCP, getFID, getLCP, Metric } from 'web-vitals'
 
 import { useAnalyticsReporter } from '../components/analytics'
 import ErrorBoundary from '../components/ErrorBoundary'
@@ -120,11 +121,14 @@ export default function App() {
   }, [pathname])
 
   useEffect(() => {
-    // TODO(zzmp): add web vitals event properties to app loaded event.
     sendAnalyticsEvent(EventName.APP_LOADED)
     user.set(CUSTOM_USER_PROPERTIES.BROWSER, getBrowser())
     user.set(CUSTOM_USER_PROPERTIES.SCREEN_RESOLUTION_HEIGHT, window.screen.height)
     user.set(CUSTOM_USER_PROPERTIES.SCREEN_RESOLUTION_WIDTH, window.screen.width)
+    getCLS(({ delta, id }: Metric) => sendAnalyticsEvent(EventName.WEB_VITALS, { cumulative_layout_shift: delta }))
+    getFCP(({ delta, id }: Metric) => sendAnalyticsEvent(EventName.WEB_VITALS, { first_contentful_paint_ms: delta }))
+    getFID(({ delta, id }: Metric) => sendAnalyticsEvent(EventName.WEB_VITALS, { first_input_delay_ms: delta }))
+    getLCP(({ delta, id }: Metric) => sendAnalyticsEvent(EventName.WEB_VITALS, { largest_contentful_paint_ms: delta }))
   }, [])
 
   useEffect(() => {
