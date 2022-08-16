@@ -4,7 +4,7 @@ import styled from 'styled-components/macro'
 
 import DefaultMenu from './DefaultMenu'
 import { LanguageMenu } from './LanguageMenu'
-import { TransactionHistoryMenu } from './TransactionMenu'
+import { TransactionHistoryMenu } from './TransactionHistoryMenu'
 
 const WalletWrapper = styled.div<{ height: string }>`
   border-radius: 12px;
