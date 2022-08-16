@@ -1,23 +1,18 @@
 import { Trans } from '@lingui/macro'
-import { CurrencyAmount, NativeCurrency, Token } from '@uniswap/sdk-core'
+import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import { getConnection } from 'connection/utils'
 import { getChainInfoOrDefault } from 'constants/chainInfo'
 import { SupportedChainId } from 'constants/chains'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import useCopyClipboard from 'hooks/useCopyClipboard'
-import { useCallback, useEffect, useState, useMemo } from 'react'
-import { ChevronRight, Copy, ExternalLink, Moon, Power, Sun } from 'react-feather'
-import { Text } from 'rebass'
-import { useToken } from 'hooks/Tokens'
-import { unwrappedToken } from 'utils/unwrappedToken'
 import useStablecoinPrice from 'hooks/useStablecoinPrice'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
-import { useNativeCurrencyBalances } from 'state/connection/hooks'
-import { nativeOnChain } from 'constants/tokens'
-
-import { useCurrencyBalanceString } from 'state/connection/hooks'
-import { getConnection } from 'connection/utils'
+import { useCallback, useMemo } from 'react'
+import { ChevronRight, Copy, ExternalLink, Moon, Power, Sun } from 'react-feather'
+import { Text } from 'rebass'
 import { useToggleWalletModal } from 'state/application/hooks'
+import { useCurrencyBalanceString } from 'state/connection/hooks'
 import { useAppDispatch } from 'state/hooks'
 import { useDarkModeManager } from 'state/user/hooks'
 import { updateSelectedWallet } from 'state/user/reducer'
@@ -26,12 +21,11 @@ import styled from 'styled-components/macro'
 import useENS from '../../hooks/useENS'
 import { themeVars, vars } from '../../nft/css/sprinkles.css'
 import { shortenAddress } from '../../nft/utils/address'
-import { Currency, fetchPrice } from '../../nft/utils/fetchPrice'
 import { useUserUnclaimedAmount } from '../../state/claim/hooks'
-import { ButtonPrimary } from '../Button'
-import IconButton, { IconHoverText } from './IconButton'
 import { useAllTransactions } from '../../state/transactions/hooks'
+import { ButtonPrimary } from '../Button'
 import StatusIcon from '../Identicon/StatusIcon'
+import IconButton, { IconHoverText } from './IconButton'
 
 const UNIbutton = styled(ButtonPrimary)`
   background: linear-gradient(to right, #9139b0 0%, #4261d6 100%);
@@ -46,21 +40,6 @@ const Column = styled.div`
   display: flex;
   flex-direction: column;
   text-align: center;
-`
-
-const Img = styled.img`
-  width: 24px;
-  height: 24px;
-  margin-right: 8px;
-`
-
-const WalletWrapper = styled.div`
-  border-radius: 12px;
-  width: 320px;
-  height: 324px;
-  display: flex;
-  flex-direction: column;
-  font-size: 16px;
 `
 
 const ConnectButton = styled.button`
@@ -138,8 +117,8 @@ const AuthenticatedHeader = () => {
   const nativeCurrencyPrice = useStablecoinPrice(nativeCurrency ?? undefined) || 0
 
   const amountUSD = useMemo(() => {
-    let price = parseFloat(nativeCurrencyPrice.toFixed(5))
-    let balance = parseFloat(balanceString || '0')
+    const price = parseFloat(nativeCurrencyPrice.toFixed(5))
+    const balance = parseFloat(balanceString || '0')
     return price * balance
   }, [balanceString, nativeCurrencyPrice])
 

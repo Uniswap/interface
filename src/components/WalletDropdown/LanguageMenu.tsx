@@ -1,3 +1,4 @@
+import { Trans } from '@lingui/macro'
 import { LOCALE_LABEL, SUPPORTED_LOCALES, SupportedLocale } from 'constants/locales'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import { useLocationLinkProps } from 'hooks/useLocationLinkProps'
@@ -5,10 +6,9 @@ import { Check } from 'react-feather'
 import { Link } from 'react-router-dom'
 import { Text } from 'rebass'
 import styled from 'styled-components/macro'
-import { Trans } from '@lingui/macro'
 
-import { SlideOutMenu } from './SlideOutMenu'
 import { themeVars, vars } from '../../nft/css/sprinkles.css'
+import { SlideOutMenu } from './SlideOutMenu'
 
 const InternalMenuItem = styled(Link)`
   flex: 1;

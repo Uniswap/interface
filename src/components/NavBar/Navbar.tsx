@@ -2,8 +2,8 @@ import Web3Status from 'components/Web3Status'
 import { useWindowSize } from 'hooks/useWindowSize'
 
 import { breakpoints } from '../../nft/css/sprinkles.css'
-import * as styles from './Navbar.css'
 import WalletDropdown from '../WalletDropdown'
+import * as styles from './Navbar.css'
 
 const MobileNavbar = () => {
   return (

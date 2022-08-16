@@ -1,4 +1,5 @@
 import { Trans } from '@lingui/macro'
+
 import { SlideOutMenu } from './SlideOutMenu'
 
 export const TransactionHistoryMenu = ({ close }: { close: () => void }) => {

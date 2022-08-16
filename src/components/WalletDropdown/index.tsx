@@ -1,11 +1,11 @@
-import { useState } from 'react'
-import styled from 'styled-components/macro'
 import { useWeb3React } from '@web3-react/core'
 import { themeVars } from 'nft/css/sprinkles.css'
+import { useState } from 'react'
+import styled from 'styled-components/macro'
 
+import DefaultMenu from './DefaultMenu'
 import { LanguageMenu } from './LanguageMenu'
 import { TransactionHistoryMenu } from './TransactionMenu'
-import DefaultMenu from './DefaultMenu'
 
 const WalletWrapper = styled.div<{ height: string }>`
   border-radius: 12px;
