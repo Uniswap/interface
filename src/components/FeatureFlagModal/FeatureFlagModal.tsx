@@ -1,9 +1,10 @@
-import { FeatureFlag, useUpdateFlag } from 'featureFlags'
+import { FeatureFlag, featureFlagSettings, useUpdateFlag } from 'featureFlags'
 import { ExploreVariant, useExploreFlag } from 'featureFlags/flags/explore'
 import { Phase1Variant, usePhase1Flag } from 'featureFlags/flags/phase1'
 import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
 import { TokenSafetyVariant, useTokenSafetyFlag } from 'featureFlags/flags/tokenSafety'
-import { ReactNode } from 'react'
+import { useAtomValue } from 'jotai/utils'
+import { ReactNode, useState } from 'react'
 import { X } from 'react-feather'
 import { useModalIsOpen, useToggleFeatureFlags } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
@@ -49,13 +50,56 @@ const CloseButton = styled.button`
 
 const Header = styled(Row)`
   font-weight: 600;
-  font-size: 20px;
+  font-size: 16px;
   border-bottom: 1px solid ${({ theme }) => theme.backgroundOutline};
   margin-bottom: 8px;
 `
-const FlagOption = styled.span`
-  font-size: 14px;
-  padding-left: 4px;
+const FlagHeaderName = styled.span<{ isHeader?: boolean }>`
+  font-size: ${({ isHeader }) => (isHeader ? '20px' : '16px')};
+  line-height: ${({ isHeader }) => (isHeader ? '24px' : '20px')};
+  padding-left: ${({ isHeader }) => !isHeader && '8px'};
+  color: ${({ theme }) => theme.textPrimary};
+`
+const FlagDescription = styled.span<{ isHeader?: boolean }>`
+  font-size: 12px;
+  line-height: 16px;
+  color: ${({ theme }) => theme.textSecondary};
+  display: flex;
+  align-items: center;
+  padding-left: ${({ isHeader }) => !isHeader && '8px'};
+`
+const FlagVariantSelection = styled.select`
+  border-radius: 12px;
+  padding: 8px;
+  background: ${({ theme }) => theme.backgroundInteractive};
+  font-weight: 600;
+  font-size: 16px;
+  border: none;
+  color: ${({ theme }) => theme.textPrimary};
+  cursor: pointer;
+
+  :hover {
+    background: ${({ theme }) => theme.backgroundOutline};
+  }
+`
+
+const FlagInfo = styled.div<{ isHeader?: boolean }>`
+  display: flex;
+  flex-direction: ${({ isHeader }) => isHeader && 'column'};
+`
+const SaveButton = styled.button`
+  border-radius: 12px;
+  padding: 8px;
+  background: ${({ theme }) => theme.backgroundInteractive};
+  font-weight: 600;
+  font-size: 16px;
+  border: none;
+  color: ${({ theme }) => theme.textPrimary};
+  cursor: pointer;
+
+  :hover {
+    background: ${({ theme }) => theme.backgroundOutline};
+  }
 `
 
 function Variant({ option }: { option: string }) {
@@ -67,28 +111,36 @@ function FeatureFlagOption({
   featureFlag,
   value,
   label,
+  isHeader,
 }: {
   variants: string[]
   featureFlag: FeatureFlag
   value: string
   label: string
+  isHeader?: boolean
 }) {
   const updateFlag = useUpdateFlag()
+  const [count, setCount] = useState(0)
+  const featureFlags = useAtomValue(featureFlagSettings)
 
   return (
     <Row key={featureFlag}>
-      {featureFlag}: {label}
-      <select
+      <FlagInfo isHeader={isHeader}>
+        <FlagHeaderName isHeader={isHeader}>{featureFlag}</FlagHeaderName>
+        <FlagDescription isHeader={isHeader}>{label}</FlagDescription>
+      </FlagInfo>
+      <FlagVariantSelection
         id={featureFlag}
-        value={value}
         onChange={(e) => {
           updateFlag(featureFlag, e.target.value)
+          setCount(count + 1)
         }}
+        value={featureFlags[featureFlag]}
       >
         {variants.map((variant) => (
           <Variant key={variant} option={variant} />
         ))}
-      </select>
+      </FlagVariantSelection>
     </Row>
   )
 }
@@ -110,28 +162,28 @@ export default function FeatureFlagModal() {
         value={usePhase1Flag()}
         featureFlag={FeatureFlag.phase1}
         label="All Phase 1 changes (nft features)."
+        isHeader
       />
-      Phase 0:
-      <FlagOption>
-        <FeatureFlagOption
-          variants={Object.values(RedesignVariant)}
-          value={useRedesignFlag()}
-          featureFlag={FeatureFlag.redesign}
-          label="Redesign"
-        />
-        <FeatureFlagOption
-          variants={Object.values(ExploreVariant)}
-          value={useExploreFlag()}
-          featureFlag={FeatureFlag.explore}
-          label="Explore"
-        />
-        <FeatureFlagOption
-          variants={Object.values(TokenSafetyVariant)}
-          value={useTokenSafetyFlag()}
-          featureFlag={FeatureFlag.tokenSafety}
-          label="Token Safety"
-        />
-      </FlagOption>
+      <FlagHeaderName isHeader>Phase 0: </FlagHeaderName>
+      <FeatureFlagOption
+        variants={Object.values(RedesignVariant)}
+        value={useRedesignFlag()}
+        featureFlag={FeatureFlag.redesign}
+        label="Redesign"
+      />
+      <FeatureFlagOption
+        variants={Object.values(ExploreVariant)}
+        value={useExploreFlag()}
+        featureFlag={FeatureFlag.explore}
+        label="Explore"
+      />
+      <FeatureFlagOption
+        variants={Object.values(TokenSafetyVariant)}
+        value={useTokenSafetyFlag()}
+        featureFlag={FeatureFlag.tokenSafety}
+        label="Token Safety"
+      />
+      <SaveButton onClick={() => window.location.reload()}>Save Settings</SaveButton>
     </Modal>
   )
 }

@@ -1,6 +1,6 @@
 import { useAtom } from 'jotai'
 import { atomWithStorage, useAtomValue } from 'jotai/utils'
-import { createContext, ReactNode, useCallback, useContext, useEffect } from 'react'
+import { createContext, ReactNode, useCallback, useContext } from 'react'
 
 interface FeatureFlagsContextType {
   isLoaded: boolean
@@ -26,23 +26,11 @@ export function useUpdateFlag() {
 
   return useCallback(
     (featureFlag: string, option: string) => {
-      setFeatureFlags({
-        [featureFlag]: option,
-        ...featureFlags,
-      })
+      featureFlags[featureFlag] = option
+      setFeatureFlags(featureFlags)
     },
     [featureFlags, setFeatureFlags]
   )
-}
-
-export default function FeatureFlagsUpdater(): null {
-  const featureFlags = useAtomValue(featureFlagSettings)
-  useEffect(() => {
-    if (!featureFlags) {
-      return
-    }
-  }, [featureFlags])
-  return null
 }
 
 export function FeatureFlagsProvider({ children }: { children: ReactNode }) {
