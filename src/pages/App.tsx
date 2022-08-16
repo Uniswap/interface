@@ -5,6 +5,7 @@ import Loader from 'components/Loader'
 import TopLevelModals from 'components/TopLevelModals'
 import { useFeatureFlagsIsLoaded } from 'featureFlags'
 import { ExploreVariant, useExploreFlag } from 'featureFlags/flags/explore'
+import { NavBarVariant, useNavBarFlag } from 'featureFlags/flags/navBar'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
 import { lazy, Suspense, useEffect } from 'react'
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
@@ -17,6 +18,7 @@ import { useAnalyticsReporter } from '../components/analytics'
 import ErrorBoundary from '../components/ErrorBoundary'
 import Header from '../components/Header'
 import Polling from '../components/Header/Polling'
+import Navbar from '../components/NavBar'
 import Popups from '../components/Popups'
 import { useIsExpertMode } from '../state/user/hooks'
 import DarkModeQueryParamReader from '../theme/DarkModeQueryParamReader'
@@ -46,17 +48,15 @@ const AppWrapper = styled.div`
   align-items: flex-start;
 `
 
-const BodyWrapper = styled.div`
+const BodyWrapper = styled.div<{ navBarFlag: NavBarVariant }>`
   display: flex;
   flex-direction: column;
   width: 100%;
-  padding: 120px 16px 0px 16px;
+  padding: ${({ navBarFlag }) => (navBarFlag === NavBarVariant.Enabled ? `72px 16px 0px 16px` : `120px 16px 0px 16px`)};
   align-items: center;
   flex: 1;
-  z-index: 1;
-
   ${({ theme }) => theme.mediaWidth.upToSmall`
-    padding: 4rem 8px 16px 8px;
+    padding: 52px 8px 16px 8px;
   `};
 `
 
@@ -105,6 +105,7 @@ const LazyLoadSpinner = () => (
 export default function App() {
   const isLoaded = useFeatureFlagsIsLoaded()
   const exploreFlag = useExploreFlag()
+  const navBarFlag = useNavBarFlag()
 
   const { pathname } = useLocation()
   const currentPage = getCurrentPageFromLocation(pathname)
@@ -140,10 +141,8 @@ export default function App() {
       <ApeModeQueryParamReader />
       <AppWrapper>
         <Trace page={currentPage}>
-          <HeaderWrapper>
-            <Header />
-          </HeaderWrapper>
-          <BodyWrapper>
+          <HeaderWrapper>{navBarFlag === NavBarVariant.Enabled ? <Navbar /> : <Header />}</HeaderWrapper>
+          <BodyWrapper navBarFlag={navBarFlag}>
             <Popups />
             <Polling />
             <TopLevelModals />
