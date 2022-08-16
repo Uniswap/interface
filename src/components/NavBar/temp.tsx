@@ -7,16 +7,18 @@ import WalletDropdown from '../WalletDropdown'
 
 const MobileNavbar = () => {
   return (
-    <>
-      <nav className={styles.nav} />
-
-      <div className={styles.mobileWalletContainer}>
-        <Web3Status />
-        <div style={{ position: 'absolute', bottom: 40, left: '50%', transform: 'translateX(-50%)' }}>
-          <WalletDropdown />
-        </div>
+    <div
+      style={{
+        position: 'fixed',
+        bottom: 50,
+        left: '50%',
+        transform: 'translateX(-50%)',
+      }}
+    >
+      <div>
+        <WalletDropdown />
       </div>
-    </>
+    </div>
   )
 }
 
@@ -27,11 +29,7 @@ const Navbar = () => {
     return <MobileNavbar />
   }
 
-  return (
-    <div style={{ position: 'absolute', right: 50, top: 20 }}>
-      <WalletDropdown />
-    </div>
-  )
+  return <WalletDropdown />
 }
 
 export default Navbar
