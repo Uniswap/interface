@@ -161,9 +161,11 @@ export default function LiquidityChartRangeInput({
     sendEvent('exception', { description: error.toString(), fatal: false })
   }
 
+  const isUninitialized = !currencyA || !currencyB || (formattedData === undefined && !isLoading)
+
   return (
     <AutoColumn gap="md" style={{ minHeight: '200px' }}>
-      {!currencyA || !currencyB ? (
+      {isUninitialized ? (
         <InfoBox
           message={<Trans>Your position will appear here.</Trans>}
           icon={<Inbox size={56} stroke={theme.deprecated_text1} />}

@@ -1,6 +1,6 @@
 import graphql from 'babel-plugin-relay/macro'
 import useInterval from 'lib/hooks/useInterval'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { fetchQuery, useRelayEnvironment } from 'relay-hooks'
 import { useAppSelector } from 'state/hooks'
 
@@ -37,31 +37,33 @@ const query = graphql`
   }
 `
 
-type FeeTierDistribitionData = { error: any | null; isLoading: boolean; data: FeeTierDistributionQuery$data | null }
-
 export default function useFeeTierDistributionQuery(
   token0: string | undefined,
   token1: string | undefined,
   interval: number
 ) {
-  const [data, setData] = useState<FeeTierDistribitionData>({ error: null, isLoading: true, data: null })
+  const [data, setData] = useState<FeeTierDistributionQuery$data | null>(null)
+  const [error, setError] = useState<any>(null)
+  const [isLoading, setIsLoading] = useState(true)
   const environment = useRelayEnvironment()
   const chainId = useAppSelector((state) => state.application.chainId)
 
-  const refreshData = () => {
+  const refreshData = useCallback(() => {
     if (token0 && token1 && chainId) {
       fetchQuery<FeeTierDistributionQueryType>(environment, query, {
         token0: token0.toLowerCase(),
         token1: token1.toLowerCase(),
       }).subscribe({
-        next: (data) => setData({ error: null, isLoading: false, data }),
-        error: (error: any) => setData({ error, isLoading: false, data: null }),
+        next: setData,
+        error: setError,
+        complete: () => setIsLoading(false),
       })
     }
-  }
+  }, [token0, token1, chainId, environment])
 
+  // Trigger fetch on first load
   useEffect(refreshData, [refreshData, token0, token1])
 
   useInterval(refreshData, interval, true)
-  return data
+  return { error, isLoading, data }
 }

@@ -1,6 +1,6 @@
 import graphql from 'babel-plugin-relay/macro'
 import useInterval from 'lib/hooks/useInterval'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { fetchQuery, useRelayEnvironment } from 'relay-hooks'
 import { useAppSelector } from 'state/hooks'
 
@@ -22,27 +22,32 @@ const query = graphql`
 
 export type Ticks = AllV3TicksQuery$data['ticks']
 export type TickData = Ticks[number]
-type AllTicksV3Reponse = { error: any | null; isLoading: boolean; data: AllV3TicksQuery$data | null }
 
 export default function useAllV3TicksQuery(poolAddress: string | undefined, skip: number, interval: number) {
-  const [data, setData] = useState<AllTicksV3Reponse>({ error: null, isLoading: true, data: null })
+  const [data, setData] = useState<AllV3TicksQuery$data | null>(null)
+  const [error, setError] = useState<any>(null)
+  const [isLoading, setIsLoading] = useState(true)
   const chainId = useAppSelector((state) => state.application.chainId)
   const environment = useRelayEnvironment()
 
-  const refreshData = () => {
+  const refreshData = useCallback(() => {
     if (poolAddress && chainId) {
       fetchQuery<AllV3TicksQueryType>(environment, query, {
         poolAddress: poolAddress.toLowerCase(),
         skip,
       }).subscribe({
-        next: (data) => setData({ error: null, isLoading: false, data }),
-        error: (error: any) => setData({ error, isLoading: false, data: null }),
+        next: setData,
+        error: setError,
+        complete: () => setIsLoading(false),
       })
+    } else {
+      setIsLoading(false)
     }
-  }
+  }, [poolAddress, skip, chainId, environment])
 
+  // Trigger fetch on first load
   useEffect(refreshData, [refreshData, poolAddress, skip])
 
   useInterval(refreshData, interval, true)
-  return data
+  return { error, isLoading, data }
 }

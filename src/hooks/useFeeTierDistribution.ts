@@ -76,7 +76,6 @@ export function useFeeTierDistribution(
 
 function usePoolTVL(token0: Token | undefined, token1: Token | undefined) {
   const latestBlock = useBlockNumber()
-
   const { isLoading, error, data } = useFeeTierDistributionQuery(token0?.address, token1?.address, ms`30s`)
 
   const { asToken0, asToken1, _meta } = data ?? {}
