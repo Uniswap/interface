@@ -2,10 +2,8 @@ import { PropsWithChildren } from 'react'
 import { Icon } from 'react-feather'
 import styled from 'styled-components/macro'
 
-import { themeVars } from '../../nft/css/sprinkles.css'
-
 export const IconHoverText = styled.span`
-  color: ${({ theme }) => theme.deprecated_text1};
+  color: ${({ theme }) => theme.textTertiary};
   position: absolute;
   top: 28px;
   border-radius: 8px;
@@ -21,13 +19,13 @@ interface BadgeProps {
 }
 
 const IconBlock = styled.div<PropsWithChildren<BadgeProps>>`
-  background-color: ${themeVars.colors.lightGrayButton};
+  background-color: ${({ theme }) => theme.backgroundInteractive};
   border-radius: 12px;
   display: inline-block;
   position: relative;
   height: 32px;
   width: 32px;
-  color: ${themeVars.colors.blackBlue};
+  color: ${({ theme }) => theme.textPrimary};
   :hover {
     background-color: rgba(173, 188, 255, 0.48);
     -webkit-transition: background-color 200ms linear;
@@ -37,7 +35,7 @@ const IconBlock = styled.div<PropsWithChildren<BadgeProps>>`
     }
   }
   :active {
-    background-color: ${themeVars.colors.white95};
+    background-color: ${({ theme }) => theme.backgroundSurface};
     -webkit-transition: background-color 50ms linear;
   }
 `

@@ -17,9 +17,9 @@ import { useAppDispatch } from 'state/hooks'
 import { useDarkModeManager } from 'state/user/hooks'
 import { updateSelectedWallet } from 'state/user/reducer'
 import styled from 'styled-components/macro'
+import { colors } from 'theme/colors'
 
 import useENS from '../../hooks/useENS'
-import { themeVars, vars } from '../../nft/css/sprinkles.css'
 import { shortenAddress } from '../../nft/utils/address'
 import { useUserUnclaimedAmount } from '../../state/claim/hooks'
 import { useAllTransactions } from '../../state/transactions/hooks'
@@ -48,7 +48,7 @@ const ConnectButton = styled.button`
   border-radius: 12px;
   height: 44px;
   width: 288px;
-  background-color: ${vars.color.genieBlue};
+  background-color: ${colors.blue400};
   color: white;
   font-weight: 600;
   font-size: 16px;
@@ -86,15 +86,21 @@ const ToggleMenuItem = styled.button`
   padding: 8px 0px;
   justify-content: space-between;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 400;
   width: 100%;
   margin-bottom: 8px;
-  color: ${({ theme }) => theme.deprecated_text2};
+  color: ${({ theme }) => theme.textTertiary};
   :hover {
-    color: ${({ theme }) => theme.deprecated_text1};
     cursor: pointer;
     text-decoration: none;
   }
+`
+
+const USDText = styled.div`
+  font-size: 16px;
+  font-weight: 500;
+  color: ${({ theme }) => theme.textTertiary};
+  margin-top: 8px;
 `
 
 const AuthenticatedHeader = () => {
@@ -127,7 +133,6 @@ const AuthenticatedHeader = () => {
       <div style={{ marginBottom: 12 }}>
         <div style={{ display: 'inline-block', marginTop: 4 }}>
           <div style={{ display: 'flex' }}>
-            {/* <Img src={iconURL} /> */}
             <StatusIcon connectionType={connectionType} size={24} />
             <Text fontSize={16} fontWeight={600} marginTop="2.5px">
               {account && shortenAddress(account, 2, 4)}
@@ -159,9 +164,7 @@ const AuthenticatedHeader = () => {
           <Text fontSize={36} fontWeight={400}>
             {balanceString} {nativeCurrencySymbol}
           </Text>
-          <Text fontSize={16} fontWeight={500} marginTop="8px" color={themeVars.colors.placeholder}>
-            ${amountUSD.toFixed(2)} USD
-          </Text>
+          <USDText>${amountUSD.toFixed(2)} USD</USDText>
         </div>
         {unclaimedAmount !== undefined && unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-') !== '0' && (
           <UNIbutton style={{ border: 'none' }}>
@@ -192,7 +195,6 @@ const IconWrap = styled.span`
 const DefaultText = styled(Text)`
   font-size: 14px;
   font-weight: 400;
-  color: ${themeVars.colors.darkGray};
 `
 
 const WalletDropdown = ({ setMenu }: { setMenu: (state: 'DEFAULT' | 'LANGUAGE' | 'TRANSACTIONS') => void }) => {
@@ -228,7 +230,7 @@ const WalletDropdown = ({ setMenu }: { setMenu: (state: 'DEFAULT' | 'LANGUAGE' |
             )}
           </DefaultText>
           <IconWrap>
-            <ChevronRight color={themeVars.colors.darkGray} size={16} strokeWidth={3} />
+            <ChevronRight size={16} strokeWidth={3} />
           </IconWrap>
         </ToggleMenuItem>
       )}
@@ -236,24 +238,18 @@ const WalletDropdown = ({ setMenu }: { setMenu: (state: 'DEFAULT' | 'LANGUAGE' |
         <DefaultText>
           <Trans>Language</Trans>
         </DefaultText>
-        <span style={{ display: 'flex', color: themeVars.colors.darkGray }}>
+        <span style={{ display: 'flex' }}>
           <span style={{ marginTop: 'auto', marginBottom: 'auto' }}>
             <DefaultText>{ISO}</DefaultText>
           </span>
           <IconWrap>
-            <ChevronRight color={themeVars.colors.darkGray} size={16} strokeWidth={3} />
+            <ChevronRight size={16} strokeWidth={3} />
           </IconWrap>
         </span>
       </ToggleMenuItem>
       <ToggleMenuItem onClick={toggleDarkMode}>
         <DefaultText>{darkMode ? <Trans> Light theme</Trans> : <Trans>Dark theme</Trans>}</DefaultText>
-        <IconWrap>
-          {darkMode ? (
-            <Sun color={themeVars.colors.darkGray} size={16} />
-          ) : (
-            <Moon color={themeVars.colors.darkGray} size={16} />
-          )}
-        </IconWrap>
+        <IconWrap>{darkMode ? <Sun size={16} /> : <Moon size={16} />}</IconWrap>
       </ToggleMenuItem>
     </div>
   )

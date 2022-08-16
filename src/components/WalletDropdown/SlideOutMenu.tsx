@@ -1,8 +1,7 @@
 import { ChevronLeft } from 'react-feather'
 import { Text } from 'rebass'
 import styled from 'styled-components/macro'
-
-import { themeVars, vars } from '../../nft/css/sprinkles.css'
+import { colors } from 'theme/colors'
 
 const BackSection = styled.div`
   position: relative;
@@ -11,7 +10,7 @@ const BackSection = styled.div`
   text-align: center;
   padding-left: 16px;
   padding-right: 16px;
-  color: ${themeVars.colors.darkGray};
+  color: ${({ theme }) => theme.textTertiary};
   cursor: default;
   :hover {
     text-decoration: none;
@@ -48,7 +47,7 @@ export const SlideOutMenu = ({
           <Text
             onClick={clear}
             marginLeft="auto"
-            color={vars.color.genieBlue}
+            color={colors.blue400}
             fontWeight={600}
             fontSize={14}
             style={{ cursor: 'pointer' }}

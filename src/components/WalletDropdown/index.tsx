@@ -1,5 +1,4 @@
 import { useWeb3React } from '@web3-react/core'
-import { themeVars } from 'nft/css/sprinkles.css'
 import { useState } from 'react'
 import styled from 'styled-components/macro'
 
@@ -16,7 +15,7 @@ const WalletWrapper = styled.div<{ height: string }>`
   font-size: 16px;
   top: 60px;
   right: 70px;
-  background-color: ${themeVars.colors.white95};
+  background-color: ${({ theme }) => theme.backgroundSurface};
   padding-top: 16px;
   padding-bottom: 16px;
 `
