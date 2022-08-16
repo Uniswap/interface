@@ -9,12 +9,49 @@ export const nav = style([
     width: 'full',
     height: '72',
     zIndex: '2',
-    borderStyle: 'solid',
   }),
   {
-    borderWidth: '0.5px',
     backdropFilter: 'blur(24px)',
   },
+])
+
+export const baseContainer = style([
+  sprinkles({
+    display: { mobile: 'none', desktopXl: 'flex' },
+    alignItems: 'center',
+  }),
+])
+
+export const baseMobileContainer = style([
+  sprinkles({
+    display: { mobile: 'flex', desktopXl: 'none' },
+    width: 'full',
+    alignItems: 'center',
+    marginY: '2',
+  }),
+])
+
+export const baseSideContainer = style([
+  baseContainer,
+  sprinkles({
+    width: 'full',
+    flex: '1',
+    flexShrink: '2',
+  }),
+])
+
+export const leftSideMobileContainer = style([
+  baseMobileContainer,
+  sprinkles({
+    justifyContent: 'flex-start',
+  }),
+])
+
+export const rightSideContainer = style([
+  baseSideContainer,
+  sprinkles({
+    justifyContent: 'flex-end',
+  }),
 ])
 
 export const mobileWalletContainer = style([
