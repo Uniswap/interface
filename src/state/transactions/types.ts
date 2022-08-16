@@ -72,7 +72,7 @@ export interface ApproveTransactionInfo extends BaseTransactionInfo {
   spender: string
 }
 
-interface BaseSwapTransactionInfo extends BaseTransactionInfo {
+export interface BaseSwapTransactionInfo extends BaseTransactionInfo {
   type: TransactionType.SWAP
   tradeType: TradeType
   inputCurrencyId: string

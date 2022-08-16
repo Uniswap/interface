@@ -1,3 +1,5 @@
+import { TransactionResponse } from '@ethersproject/abstract-provider'
+import { Percent, TradeType } from '@uniswap/sdk-core'
 import { SwapWidget } from '@uniswap/widgets'
 import { useWeb3React } from '@web3-react/core'
 import {
@@ -18,14 +20,22 @@ import { checkWarning } from 'constants/tokenSafety'
 import { useToken } from 'hooks/Tokens'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import { useNetworkTokenBalances } from 'hooks/useNetworkTokenBalances'
+import { AnyTrade } from 'hooks/useSwapCallArguments'
 import useTokenDetailPageQuery from 'hooks/useTokenDetailPageQuery'
-import { useCallback, useMemo } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
+import { useTransactionAdder } from 'state/transactions/hooks'
+import {
+  BaseSwapTransactionInfo,
+  ExactInputSwapTransactionInfo,
+  ExactOutputSwapTransactionInfo,
+  TransactionType,
+} from 'state/transactions/types'
 import { useIsDarkMode } from 'state/user/hooks'
 import styled from 'styled-components/macro'
 import { DARK_THEME, LIGHT_THEME } from 'theme/token-details-widget-theme'
+import { currencyId } from 'utils/currencyId'
 import { ROUTER_URL, RPC_URL_MAP } from 'utils/token-details-widget-config'
-
 const Footer = styled.div`
   display: none;
   @media only screen and (max-width: ${LARGE_MEDIA_BREAKPOINT}) {
@@ -68,18 +78,42 @@ export default function TokenDetails() {
   const { loading } = useTokenDetailPageQuery(tokenAddress)
   const tokenSymbol = useToken(tokenAddress)?.symbol
 
+  const [trade, setTrade] = useState<AnyTrade | null>(null)
+  const [tradeType, setTradeType] = useState<TradeType | null>(null)
+  const [allowedSlippage, setAllowedSlippage] = useState<Percent | null>(null)
+  const addTransaction = useTransactionAdder()
   const darkMode = useIsDarkMode()
   const widgetTheme = useMemo(() => (darkMode ? DARK_THEME : LIGHT_THEME), [darkMode])
   const locale = useActiveLocale()
-  const onTxSubmit = useCallback(() => {
-    console.log('onTxSubmit')
-  }, [])
-  const onTxSuccess = useCallback(() => {
-    console.log('onTxSuccess')
-  }, [])
-  const onTxFail = useCallback(() => {
-    console.log('onTxFail')
-  }, [])
+  const onTxSubmit = useCallback(
+    (_txHash: string, txResponse: TransactionResponse) => {
+      if (!trade || !tradeType || !allowedSlippage) {
+        return
+      }
+      const baseTxInfo: BaseSwapTransactionInfo = {
+        type: TransactionType.SWAP,
+        tradeType,
+        inputCurrencyId: currencyId(trade.inputAmount.currency),
+        outputCurrencyId: currencyId(trade.outputAmount.currency),
+      }
+      if (tradeType === TradeType.EXACT_OUTPUT) {
+        addTransaction(txResponse, {
+          ...baseTxInfo,
+          maximumInputCurrencyAmountRaw: trade.maximumAmountIn(allowedSlippage).quotient.toString(),
+          outputCurrencyAmountRaw: trade.outputAmount.quotient.toString(),
+          expectedInputCurrencyAmountRaw: trade.inputAmount.quotient.toString(),
+        } as ExactOutputSwapTransactionInfo)
+      } else {
+        addTransaction(txResponse, {
+          ...baseTxInfo,
+          inputCurrencyAmountRaw: trade.inputAmount.quotient.toString(),
+          expectedOutputCurrencyAmountRaw: trade.outputAmount.quotient.toString(),
+          minimumOutputCurrencyAmountRaw: trade.minimumAmountOut(allowedSlippage).quotient.toString(),
+        } as ExactInputSwapTransactionInfo)
+      }
+    },
+    [addTransaction, allowedSlippage, trade, tradeType]
+  )
 
   let tokenDetail
   if (!tokenAddress) {
@@ -143,12 +177,15 @@ export default function TokenDetails() {
               jsonRpcUrlMap={RPC_URL_MAP}
               locale={locale}
               onTxSubmit={onTxSubmit}
-              onTxSuccess={onTxSuccess}
-              onTxFail={onTxFail}
               provider={provider}
               routerUrl={ROUTER_URL}
               theme={widgetTheme}
-              // tokenList={[]}
+              trade={trade}
+              onTradeChange={setTrade}
+              tradeType={tradeType}
+              onTradeTypeChange={setTradeType}
+              allowedSlippage={allowedSlippage}
+              onAllowedSlippageChange={setAllowedSlippage}
               width={290}
             />
             {tokenWarning && <TokenSafetyMessage tokenAddress={tokenAddress} warning={tokenWarning} />}
