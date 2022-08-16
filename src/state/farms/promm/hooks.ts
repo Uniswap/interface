@@ -450,7 +450,7 @@ export const useProMMFarmTVL = (fairlaunchAddress: string, pid: number) => {
   const dataClient = NETWORKS_INFO[chainId || ChainId.MAINNET].elasticClient
   const { block24 } = usePoolBlocks()
 
-  const { data } = useQuery<Response>(PROMM_JOINED_POSITION(fairlaunchAddress.toLowerCase(), pid, block24), {
+  const { data, loading } = useQuery<Response>(PROMM_JOINED_POSITION(fairlaunchAddress.toLowerCase(), pid, block24), {
     client: dataClient,
     fetchPolicy: 'cache-first',
   })
@@ -479,7 +479,16 @@ export const useProMMFarmTVL = (fairlaunchAddress: string, pid: number) => {
 
   const ethPriceUSD = useETHPrice(VERSION.ELASTIC)
 
-  return useMemo(() => {
+  const [farmData, setData] = useState({
+    tvl: 0,
+    poolAPY: 0,
+    farmAPR: 0,
+  })
+
+  useEffect(() => {
+    if (loading || !Object.values(priceMap).length || (farmData.tvl && farmData.poolAPY && farmData.farmAPR)) {
+      return
+    }
     let tvl = 0
     data?.joinedPositions.forEach(({ position, pool }) => {
       const token0 = new Token(chainId as ChainId, pool.token0.id, Number(pool.token0.decimals), pool.token0.symbol)
@@ -529,6 +538,8 @@ export const useProMMFarmTVL = (fairlaunchAddress: string, pid: number) => {
           Number(data?.farmingPool?.pool?.totalValueLockedUSD || 1)
         : 0
 
-    return { tvl, farmAPR, poolAPY }
-  }, [chainId, data, ethPriceUSD.currentPrice, priceMap])
+    setData({ tvl, farmAPR, poolAPY })
+  }, [chainId, data, ethPriceUSD.currentPrice, priceMap, loading, farmData.poolAPY, farmData.tvl, farmData.farmAPR])
+
+  return { ...farmData }
 }

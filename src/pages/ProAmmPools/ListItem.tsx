@@ -1,7 +1,7 @@
 import { ChainId, Token, WETH } from '@kyberswap/ks-sdk-core'
 import { Trans, t } from '@lingui/macro'
 import { rgba } from 'polished'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { BarChart2, ChevronUp, Plus, Share2 } from 'react-feather'
 import { Link } from 'react-router-dom'
 import { Flex, Text } from 'rebass'
@@ -17,13 +17,14 @@ import { ELASTIC_BASE_FEE_UNIT, PROMM_ANALYTICS_URL } from 'constants/index'
 import { nativeOnChain } from 'constants/tokens'
 import { VERSION } from 'constants/v2'
 import { useActiveWeb3React } from 'hooks'
+import { useAllTokens } from 'hooks/Tokens'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import useTheme from 'hooks/useTheme'
 import { ButtonIcon } from 'pages/Pools/styleds'
 import { useProMMFarms } from 'state/farms/promm/hooks'
 import { ProMMPoolData } from 'state/prommPools/hooks'
 import { ExternalLink } from 'theme'
-import { shortenAddress } from 'utils'
+import { isAddressString, shortenAddress } from 'utils'
 import { formatDollarAmount } from 'utils/numbers'
 
 import { ReactComponent as ViewPositionIcon } from '../../assets/svg/view_positions.svg'
@@ -93,8 +94,14 @@ export default function ProAmmPoolListItem({ pair, idx, onShared, userPositions,
   const theme = useTheme()
   const [isOpen, setIsOpen] = useState(pair.length > 1 ? idx === 0 : false)
 
-  const token0 = new Token(chainId as ChainId, pair[0].token0.address, pair[0].token0.decimals, pair[0].token0.symbol)
-  const token1 = new Token(chainId as ChainId, pair[0].token1.address, pair[0].token1.decimals, pair[0].token1.symbol)
+  const allTokens = useAllTokens()
+
+  const token0 =
+    allTokens[isAddressString(pair[0].token0.address)] ||
+    new Token(chainId as ChainId, pair[0].token0.address, pair[0].token0.decimals, pair[0].token0.symbol)
+  const token1 =
+    allTokens[isAddressString(pair[0].token1.address)] ||
+    new Token(chainId as ChainId, pair[0].token1.address, pair[0].token1.decimals, pair[0].token1.symbol)
 
   const { data: farms } = useProMMFarms()
 
@@ -115,7 +122,7 @@ export default function ProAmmPoolListItem({ pair, idx, onShared, userPositions,
         const token0Symbol =
           pool.token0.address === WETH[chainId as ChainId].address.toLowerCase()
             ? nativeOnChain(chainId as ChainId).symbol
-            : pool.token0.symbol
+            : token0.symbol
 
         const token1Address =
           pool.token1.address === WETH[chainId as ChainId].address.toLowerCase()
@@ -124,7 +131,7 @@ export default function ProAmmPoolListItem({ pair, idx, onShared, userPositions,
         const token1Symbol =
           pool.token1.address === WETH[chainId as ChainId].address.toLowerCase()
             ? nativeOnChain(chainId as ChainId).symbol
-            : pool.token1.symbol
+            : token1.symbol
 
         const isFarmingPool = Object.values(farms)
           .flat()

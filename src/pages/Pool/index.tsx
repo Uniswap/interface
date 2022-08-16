@@ -118,7 +118,10 @@ export const FilterRow = styled(Flex)`
   ${({ theme }) => theme.mediaWidth.upToSmall`
     align-items: flex-start;
     flex-direction: column-reverse;
-    >div {
+    gap: 0;
+
+    > div {
+      margin-top: 12px;
       width: 100%
       justify-content: space-between
       &:nth-child(1){

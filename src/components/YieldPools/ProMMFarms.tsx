@@ -249,7 +249,7 @@ function ProMMFarms({ active }: { active: boolean }) {
 
           <Flex grid-area="staked_balance" alignItems="center" justifyContent="flex-end">
             <ClickableText>
-              <Trans>My Staked</Trans>
+              <Trans>My Deposit</Trans>
             </ClickableText>
           </Flex>
 

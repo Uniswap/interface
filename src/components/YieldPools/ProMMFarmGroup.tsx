@@ -4,7 +4,7 @@ import { Trans, t } from '@lingui/macro'
 import { BigNumber } from 'ethers'
 import { rgba } from 'polished'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
-import { Clock, Edit2, Minus, Plus } from 'react-feather'
+import { Edit2, Minus, Plus } from 'react-feather'
 import { useMedia } from 'react-use'
 import { Flex, Text } from 'rebass'
 import styled from 'styled-components'
@@ -295,6 +295,8 @@ const Row = ({
 
   const [showTargetVolInfo, setShowTargetVolInfo] = useState(false)
 
+  const amountCanStaked = (position?.amountUsd || 0) - (position?.stakedUsd || 0)
+
   if (!above1000)
     return (
       <>
@@ -330,7 +332,7 @@ const Row = ({
               {token0?.symbol} - {token1?.symbol}
             </Text>
 
-            {farm.startTime > currentTimestamp && (
+            {/* farm.startTime > currentTimestamp && (
               <MouseoverTooltip
                 text={'Starting In ' + getFormattedTimeFromSecond(farm.startTime - currentTimestamp)}
                 width="fit-content"
@@ -338,7 +340,7 @@ const Row = ({
               >
                 <Clock size={14} style={{ marginLeft: '6px' }} />
               </MouseoverTooltip>
-            )}
+             ) */}
           </Flex>
 
           <Flex
@@ -431,9 +433,20 @@ const Row = ({
 
           <InfoRow>
             <Text color={theme.subText}>
-              <Trans>My Staked</Trans>
+              <Trans>My Deposit</Trans>
             </Text>
-            <Text>{!!position?.stakedUsd ? formatDollarAmount(position.stakedUsd) : '--'}</Text>
+
+            <Flex justifyContent="flex-end" color={!!amountCanStaked ? theme.warning : theme.text}>
+              {!!position?.amountUsd ? formatDollarAmount(position.amountUsd) : '--'}
+              {!!amountCanStaked && (
+                <InfoHelper
+                  color={theme.warning}
+                  text={t`You still have ${formatDollarAmount(
+                    amountCanStaked,
+                  )} liquidity to stake to earn more rewards`}
+                />
+              )}
+            </Flex>
           </InfoRow>
 
           <InfoRow>
@@ -464,7 +477,7 @@ const Row = ({
 
           <Flex sx={{ gap: '16px' }} marginTop="1.25rem">
             <ButtonPrimary
-              disabled={!isApprovedForAll || tab === 'ended'}
+              disabled={!isApprovedForAll || tab === 'ended' || !canStake}
               style={{ height: '36px', flex: 1 }}
               onClick={() => onOpenModal('stake', farm.pid)}
             >
@@ -543,21 +556,41 @@ const Row = ({
           )}
         </Flex>
 
-        <Text textAlign="right">{!!position?.stakedUsd ? formatDollarAmount(position.stakedUsd) : '--'}</Text>
+        <Flex justifyContent="flex-end" color={!!amountCanStaked ? theme.warning : theme.text}>
+          {!!position?.amountUsd ? formatDollarAmount(position.amountUsd) : '--'}
+          {!!amountCanStaked && (
+            <InfoHelper
+              color={theme.warning}
+              text={t`You still have ${formatDollarAmount(amountCanStaked)} liquidity to stake to earn more rewards`}
+            />
+          )}
+        </Flex>
+
         <Flex flexDirection="column" alignItems="flex-end" sx={{ gap: '8px' }}>
           {farm.rewardTokens.map((token, idx) => (
             <Reward key={token} token={token} amount={position?.rewardAmounts[idx]} />
           ))}
         </Flex>
         <Flex justifyContent="flex-end" sx={{ gap: '4px' }}>
-          <ActionButton
-            onClick={() => onOpenModal('stake', farm.pid)}
-            disabled={!isApprovedForAll || tab === 'ended' || !canStake}
-          >
-            <MouseoverTooltip text={!canStake ? t`Farm has not started` : t`Stake`} placement="top" width="fit-content">
-              <Plus color={isApprovedForAll && tab !== 'ended' ? theme.primary : theme.subText} size={16} />
+          {!isApprovedForAll || tab === 'ended' || !canStake ? (
+            <MouseoverTooltip text={t`Farm has not started`} placement="top" width="fit-content">
+              <ActionButton
+                style={{
+                  cursor: 'not-allowed',
+                  backgroundColor: theme.buttonGray,
+                  opacity: 0.4,
+                }}
+              >
+                <Plus color={theme.subText} size={16} style={{ minWidth: '16px' }} />
+              </ActionButton>
             </MouseoverTooltip>
-          </ActionButton>
+          ) : (
+            <ActionButton onClick={() => onOpenModal('stake', farm.pid)}>
+              <MouseoverTooltip text={t`Stake`} placement="top" width="fit-content">
+                <Plus color={theme.primary} size={16} />
+              </MouseoverTooltip>
+            </ActionButton>
+          )}
 
           <ActionButton
             disabled={!canUnstake}
@@ -735,7 +768,7 @@ function ProMMFarmGroup({
             <Text fontSize="12px" color={theme.subText}>
               <Trans>Deposited Liquidity</Trans>
               <InfoHelper
-                text={t`Dollar value of NFT tokens you've deposited. NFT tokens represent your liquidity position`}
+                text={t`Total value of the liquidity positions you've deposited. NFT tokens represent your liquidity positions`}
               ></InfoHelper>
             </Text>
 

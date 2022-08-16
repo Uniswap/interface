@@ -54,6 +54,10 @@ const DetailWrapper = styled.div<{ isOpen?: boolean }>`
 
 const DetailWrapperClassic = styled(DetailWrapper)`
   grid-template-columns: 1fr 1fr 1fr;
+
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+      grid-template-columns: 1fr;
+  `}
 `
 const DetailItem = styled.div`
   border-radius: 20px;

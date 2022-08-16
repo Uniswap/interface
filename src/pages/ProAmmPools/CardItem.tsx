@@ -1,7 +1,7 @@
 import { ChainId, Token, WETH } from '@kyberswap/ks-sdk-core'
 import { Trans, t } from '@lingui/macro'
 import { rgba } from 'polished'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { ChevronUp, Share2 } from 'react-feather'
 import { Link } from 'react-router-dom'
 import { Flex, Text } from 'rebass'
@@ -18,12 +18,13 @@ import { ELASTIC_BASE_FEE_UNIT, PROMM_ANALYTICS_URL } from 'constants/index'
 import { nativeOnChain } from 'constants/tokens'
 import { VERSION } from 'constants/v2'
 import { useActiveWeb3React } from 'hooks'
+import { useAllTokens } from 'hooks/Tokens'
 import useTheme from 'hooks/useTheme'
 import { IconWrapper } from 'pages/Pools/styleds'
 import { useProMMFarms } from 'state/farms/promm/hooks'
 import { ProMMPoolData } from 'state/prommPools/hooks'
 import { ExternalLink } from 'theme'
-import { shortenAddress } from 'utils'
+import { isAddressString, shortenAddress } from 'utils'
 import { formatDollarAmount } from 'utils/numbers'
 
 interface ListItemProps {
@@ -70,9 +71,14 @@ export default function ProAmmPoolCardItem({ pair, onShared, userPositions, idx 
   const theme = useTheme()
   const [isOpen, setIsOpen] = useState(true)
 
+  const allTokens = useAllTokens()
   const { data: farms } = useProMMFarms()
-  const token0 = new Token(chainId as ChainId, pair[0].token0.address, pair[0].token0.decimals, pair[0].token0.symbol)
-  const token1 = new Token(chainId as ChainId, pair[0].token1.address, pair[0].token1.decimals, pair[0].token1.symbol)
+  const token0 =
+    allTokens[isAddressString(pair[0].token0.address)] ||
+    new Token(chainId as ChainId, pair[0].token0.address, pair[0].token0.decimals, pair[0].token0.symbol)
+  const token1 =
+    allTokens[isAddressString(pair[0].token1.address)] ||
+    new Token(chainId as ChainId, pair[0].token1.address, pair[0].token1.decimals, pair[0].token1.symbol)
 
   const token0Address =
     token0.address.toLowerCase() === WETH[chainId as ChainId].address.toLowerCase()
