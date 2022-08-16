@@ -113,12 +113,15 @@ export function TransactionList({
 
       return (
         <TransactionSummaryItem
-          borderBottomColor={borderBottom ? 'none' : 'backgroundOutline'}
           borderBottomLeftRadius={borderBottom ? 'lg' : 'none'}
           borderBottomRightRadius={borderBottom ? 'lg' : 'none'}
-          borderBottomWidth={borderBottom ? 0 : 1}
+          borderBottomWidth={0.25}
+          borderColor="backgroundOutline"
+          borderLeftWidth={borderBottom ? (borderTop ? 0 : 0.25) : 0.25}
+          borderRightWidth={borderBottom ? (borderTop ? 0 : 0.25) : 0.25}
           borderTopLeftRadius={borderTop ? 'lg' : 'none'}
           borderTopRightRadius={borderTop ? 'lg' : 'none'}
+          borderTopWidth={borderTop ? 0.25 : 0}
           mb={currentIsIsolated ? 'md' : 'none'}
           readonly={readonly}
           showInlineWarning={showInlineWarning}

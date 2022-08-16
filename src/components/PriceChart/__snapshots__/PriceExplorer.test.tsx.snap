@@ -385,7 +385,7 @@ exports[`renders correctly 1`] = `
         style={
           Array [
             Object {
-              "backgroundColor": "#F8F9FF",
+              "backgroundColor": "#FFFFFF",
               "borderRadius": 16,
               "display": "flex",
               "width": 150,

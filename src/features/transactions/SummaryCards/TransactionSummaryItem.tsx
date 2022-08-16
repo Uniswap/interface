@@ -71,7 +71,6 @@ function TransactionSummaryItem({
   readonly,
   transactionSummaryInfo,
   showInlineWarning,
-  bg,
   ...rest
 }: {
   readonly: boolean
@@ -214,14 +213,13 @@ function TransactionSummaryItem({
 
   return (
     <>
-      <Button overflow="hidden" onPress={() => setShowActionsModal(true)} {...rest}>
+      <Button bg="backgroundSurface" onPress={() => setShowActionsModal(true)} {...rest}>
         {(canceled || cancelling || failedCancel) && !showInlineWarning && (
           <AlertBanner status={status} />
         )}
         <Flex
           row
           alignItems="flex-start"
-          bg={bg ?? 'backgroundContainer'}
           gap="xs"
           justifyContent="space-between"
           pl="xs"

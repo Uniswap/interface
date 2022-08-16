@@ -1,3 +1,4 @@
+import { ShadowProps } from '@shopify/restyle'
 import React, { ComponentProps, PropsWithChildren, ReactElement, ReactNode } from 'react'
 import { FlatList, FlatListProps } from 'react-native'
 import { useAppTheme } from 'src/app/hooks'
@@ -7,12 +8,24 @@ import { Chevron } from 'src/components/icons/Chevron'
 import { Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { Trace } from 'src/features/telemetry/Trace'
+import { Theme } from 'src/styles/theme'
+
+const SHADOW_OFFSET: ShadowProps<Theme>['shadowOffset'] = { width: 4, height: 8 }
 
 // Container
 export function Container({ children, ...trace }: PropsWithChildren<ComponentProps<typeof Trace>>) {
   return (
     <Trace {...trace}>
-      <Box bg="backgroundContainer" borderRadius="lg" overflow="hidden">
+      <Box
+        bg="backgroundSurface"
+        borderColor="backgroundOutline"
+        borderRadius="lg"
+        borderWidth={0.25}
+        overflow="visible"
+        shadowColor="black"
+        shadowOffset={SHADOW_OFFSET}
+        shadowOpacity={0.05}
+        shadowRadius={10}>
         {children}
       </Box>
     </Trace>
@@ -33,7 +46,7 @@ function Header({ title, subtitle, onPress, icon, ...buttonProps }: HeaderProps)
   return (
     <Button
       borderBottomColor="backgroundOutline"
-      borderBottomWidth={0.5}
+      borderBottomWidth={0.25}
       px="md"
       py="sm"
       onPress={onPress}
@@ -58,7 +71,7 @@ function Header({ title, subtitle, onPress, icon, ...buttonProps }: HeaderProps)
             )
           ) : null}
         </Flex>
-        <Chevron color={theme.colors.textSecondary} direction="e" />
+        <Chevron color={theme.colors.textSecondary} direction="e" height={20} />
       </Flex>
     </Button>
   )
