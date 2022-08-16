@@ -58,6 +58,7 @@ export enum FeatureFlag {
   phase1 = 'phase1',
   redesign = 'redesign',
   tokenSafety = 'tokenSafety',
+  phase0 = 'phase0_group',
 }
 
 export const FeatureFlagGroups = {
