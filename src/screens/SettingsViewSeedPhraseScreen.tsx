@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { SettingsStackParamList } from 'src/app/navigation/types'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
-import { Box, Flex } from 'src/components/layout'
+import { Flex } from 'src/components/layout'
 import { BackHeader } from 'src/components/layout/BackHeader'
 import { Screen } from 'src/components/layout/Screen'
 import { HiddenMnemonicWordView } from 'src/components/mnemonic/HiddenMnemonicWordView'
@@ -86,15 +86,6 @@ export function SettingsViewSeedPhraseScreen({
             <PrimaryButton
               alignSelf="stretch"
               borderRadius="md"
-              icon={
-                <Box
-                  borderColor="textSecondary"
-                  borderRadius="full"
-                  borderWidth={2}
-                  height={16}
-                  width={16}
-                />
-              }
               label={t('Hiding phrase in {{ countdownTime }}s', { countdownTime })}
               name={ElementName.Next}
               testID={ElementName.Next}
