@@ -94,7 +94,6 @@ export function EditNameScreen({ navigation, route: { params } }: Props) {
       </Box>
       <Flex justifyContent="flex-end">
         <PrimaryButton
-          disabled={focused}
           label={t('Continue')}
           name={ElementName.Next}
           testID={ElementName.Next}
