@@ -1,18 +1,20 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
+import { Alert } from 'react-native'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import FaceIcon from 'src/assets/icons/faceid.svg'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { TextButton } from 'src/components/buttons/TextButton'
 import { Box, Flex } from 'src/components/layout'
-import { tryLocalAuthenticate } from 'src/features/biometrics'
+import { BiometricAuthenticationStatus, tryLocalAuthenticate } from 'src/features/biometrics'
 import { biometricAuthenticationSuccessful } from 'src/features/biometrics/hooks'
 import { setRequiredForAppAccess, setRequiredForTransactions } from 'src/features/biometrics/slice'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { ElementName } from 'src/features/telemetry/constants'
 import { OnboardingScreens } from 'src/screens/Screens'
+import { openSettings } from 'src/utils/linking'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.Security>
 
@@ -26,7 +28,19 @@ export function SecuritySetupScreen({ navigation: { navigate } }: Props) {
   }
 
   const onPressEnableSecurity = async () => {
-    const authStatus = await tryLocalAuthenticate()
+    const authStatus = await tryLocalAuthenticate({
+      disableDeviceFallback: true,
+    })
+
+    if (authStatus === BiometricAuthenticationStatus.Unsupported) {
+      Alert.alert(t('Face ID is disabled'), t('To use Face ID, allow access in system settings'), [
+        { text: t('Go to settings'), onPress: openSettings },
+        {
+          text: t('Not now'),
+        },
+      ])
+    }
+
     if (biometricAuthenticationSuccessful(authStatus)) {
       dispatch(setRequiredForAppAccess(true))
       dispatch(setRequiredForTransactions(true))

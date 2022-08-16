@@ -1,4 +1,9 @@
-import { authenticateAsync, hasHardwareAsync, isEnrolledAsync } from 'expo-local-authentication'
+import {
+  authenticateAsync,
+  hasHardwareAsync,
+  isEnrolledAsync,
+  LocalAuthenticationOptions,
+} from 'expo-local-authentication'
 import { logger } from 'src/utils/logger'
 
 /**
@@ -14,7 +19,9 @@ export enum BiometricAuthenticationStatus {
 }
 
 // TODO: Move into a saga
-export async function tryLocalAuthenticate(): Promise<BiometricAuthenticationStatus> {
+export async function tryLocalAuthenticate(
+  authenticateOptions?: LocalAuthenticationOptions
+): Promise<BiometricAuthenticationStatus> {
   try {
     const compatible = await hasHardwareAsync()
     if (!compatible) {
@@ -26,7 +33,7 @@ export async function tryLocalAuthenticate(): Promise<BiometricAuthenticationSta
       return BiometricAuthenticationStatus.MissingEnrollment
     }
 
-    const result = await authenticateAsync()
+    const result = await authenticateAsync(authenticateOptions)
     if (result.success === false) {
       return BiometricAuthenticationStatus.Rejected
     }
