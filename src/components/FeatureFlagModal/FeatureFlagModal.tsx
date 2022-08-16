@@ -55,14 +55,14 @@ const Header = styled(Row)`
   margin-bottom: 8px;
 `
 const FlagName = styled.span`
-  font-size: '16px';
-  line-height: '20px';
-  padding-left: '8px';
+  font-size: 16px;
+  line-height: 20px;
+  padding-left: 8px;
   color: ${({ theme }) => theme.textPrimary};
 `
 const FlagGroupName = styled.span`
-  font-size: '20px';
-  line-height: '24px';
+  font-size: 20px;
+  line-height: 24px;
   color: ${({ theme }) => theme.textPrimary};
   font-weight: 600;
 `
