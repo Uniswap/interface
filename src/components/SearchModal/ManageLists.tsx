@@ -12,8 +12,7 @@ import { ChangeEvent, memo, useCallback, useEffect, useMemo, useRef, useState } 
 import { CheckCircle, Settings } from 'react-feather'
 import { usePopper } from 'react-popper'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
-import styled from 'styled-components/macro'
-import { useTheme } from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components/macro'
 
 import { useFetchListCallback } from '../../hooks/useFetchListCallback'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'

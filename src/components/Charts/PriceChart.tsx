@@ -10,8 +10,7 @@ import { TimePeriod } from 'hooks/useTopTokens'
 import { useAtom } from 'jotai'
 import { useCallback, useState } from 'react'
 import { ArrowDownRight, ArrowUpRight } from 'react-feather'
-import { useTheme } from 'styled-components/macro'
-import styled from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components/macro'
 import {
   dayHourFormatter,
   hourFormatter,

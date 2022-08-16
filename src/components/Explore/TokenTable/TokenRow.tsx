@@ -11,8 +11,7 @@ import { useAtomValue } from 'jotai/utils'
 import { ReactNode } from 'react'
 import { ArrowDown, ArrowDownRight, ArrowUp, ArrowUpRight, Heart } from 'react-feather'
 import { Link } from 'react-router-dom'
-import { useTheme } from 'styled-components/macro'
-import styled from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components/macro'
 import { formatAmount, formatDollarAmount } from 'utils/formatDollarAmt'
 
 import {
