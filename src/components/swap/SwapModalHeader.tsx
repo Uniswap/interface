@@ -5,11 +5,11 @@ import { sendAnalyticsEvent } from 'components/AmplitudeAnalytics'
 import { EventName, SWAP_PRICE_UPDATE_USER_RESPONSE } from 'components/AmplitudeAnalytics/constants'
 import { formatPercentInBasisPointsNumber } from 'components/AmplitudeAnalytics/utils'
 import { Phase0Variant, usePhase0Flag } from 'featureFlags/flags/phase0'
-import { useContext, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { AlertTriangle, ArrowDown } from 'react-feather'
 import { Text } from 'rebass'
 import { InterfaceTrade } from 'state/routing/types'
-import styled, { ThemeContext } from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components/macro'
 
 import { useStablecoinValue } from '../../hooks/useStablecoinPrice'
 import { ThemedText } from '../../theme'
@@ -84,7 +84,7 @@ export default function SwapModalHeader({
   showAcceptChanges: boolean
   onAcceptChanges: () => void
 }) {
-  const theme = useContext(ThemeContext)
+  const theme = useTheme()
   const phase0Flag = usePhase0Flag()
   const phase0FlagEnabled = phase0Flag === Phase0Variant.Enabled
 

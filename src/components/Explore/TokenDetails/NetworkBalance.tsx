@@ -1,4 +1,4 @@
-import useTheme from 'hooks/useTheme'
+import { useTheme } from 'styled-components/macro'
 import styled from 'styled-components/macro'
 
 const Balance = styled.div`

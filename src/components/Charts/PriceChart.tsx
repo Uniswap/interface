@@ -6,11 +6,11 @@ import { Line } from '@visx/shape'
 import { filterTimeAtom } from 'components/Explore/state'
 import { bisect, curveBasis, NumberValue, scaleLinear } from 'd3'
 import { useActiveLocale } from 'hooks/useActiveLocale'
-import useTheme from 'hooks/useTheme'
 import { TimePeriod } from 'hooks/useTopTokens'
 import { useAtom } from 'jotai'
 import { useCallback, useState } from 'react'
 import { ArrowDownRight, ArrowUpRight } from 'react-feather'
+import { useTheme } from 'styled-components/macro'
 import styled from 'styled-components/macro'
 import {
   dayHourFormatter,

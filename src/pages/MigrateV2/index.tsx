@@ -8,9 +8,9 @@ import MigrateSushiPositionCard from 'components/PositionCard/Sushi'
 import MigrateV2PositionCard from 'components/PositionCard/V2'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import { PairState, useV2Pairs } from 'hooks/useV2Pairs'
-import { ReactNode, useContext, useMemo } from 'react'
+import { ReactNode, useMemo } from 'react'
 import { Text } from 'rebass'
-import { ThemeContext } from 'styled-components/macro'
+import { useTheme } from 'styled-components/macro'
 
 import { LightCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
@@ -51,7 +51,7 @@ function toSushiLiquidityToken([tokenA, tokenB]: [Token, Token]): Token {
 }
 
 export default function MigrateV2() {
-  const theme = useContext(ThemeContext)
+  const theme = useTheme()
   const { account, chainId } = useWeb3React()
 
   const v2FactoryAddress = chainId ? V2_FACTORY_ADDRESSES[chainId] : undefined

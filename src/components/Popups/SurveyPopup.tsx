@@ -7,10 +7,10 @@ import { useEffect } from 'react'
 import { MessageCircle, X } from 'react-feather'
 import { useShowSurveyPopup } from 'state/user/hooks'
 import styled from 'styled-components/macro'
+import { useTheme } from 'styled-components/macro'
 import { ExternalLink, ThemedText, Z_INDEX } from 'theme'
 
 import BGImage from '../../assets/images/survey-orb.svg'
-import useTheme from '../../hooks/useTheme'
 
 const Wrapper = styled(AutoColumn)`
   background: #edeef2;

@@ -1,8 +1,8 @@
-import { useCallback, useContext, useEffect } from 'react'
+import { useCallback, useEffect } from 'react'
 import { X } from 'react-feather'
 import { animated } from 'react-spring'
 import { useSpring } from 'react-spring/web'
-import styled, { ThemeContext } from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components/macro'
 
 import { useRemovePopup } from '../../state/application/hooks'
 import { PopupContent } from '../../state/application/reducer'
@@ -70,7 +70,7 @@ export default function PopupItem({
     }
   }, [removeAfterMs, removeThisPopup])
 
-  const theme = useContext(ThemeContext)
+  const theme = useTheme()
 
   let popupContent
   if ('txn' in content) {

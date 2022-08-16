@@ -2,12 +2,12 @@ import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
 import CopyHelper from 'components/AccountDetails/Copy'
 import { getConnection, getConnectionName, getIsCoinbaseWallet, getIsMetaMask } from 'connection/utils'
-import { useCallback, useContext } from 'react'
+import { useCallback } from 'react'
 import { ExternalLink as LinkIcon } from 'react-feather'
 import { useAppDispatch } from 'state/hooks'
 import { updateSelectedWallet } from 'state/user/reducer'
 import { removeConnectedWallet } from 'state/wallets/reducer'
-import styled, { ThemeContext } from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components/macro'
 import { isMobile } from 'utils/userAgent'
 
 import { ReactComponent as Close } from '../../assets/images/x.svg'
@@ -206,7 +206,7 @@ export default function AccountDetails({
   const { chainId, account, connector } = useWeb3React()
   const connectionType = getConnection(connector).type
 
-  const theme = useContext(ThemeContext)
+  const theme = useTheme()
   const dispatch = useAppDispatch()
 
   const isMetaMask = getIsMetaMask()

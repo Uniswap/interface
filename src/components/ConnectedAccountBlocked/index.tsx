@@ -1,8 +1,8 @@
 import { Trans } from '@lingui/macro'
 import CopyHelper from 'components/AccountDetails/Copy'
 import Column from 'components/Column'
-import useTheme from 'hooks/useTheme'
 import { AlertOctagon } from 'react-feather'
+import { useTheme } from 'styled-components/macro'
 import styled from 'styled-components/macro'
 import { ExternalLink, ThemedText } from 'theme'
 
