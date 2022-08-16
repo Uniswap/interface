@@ -1,16 +1,16 @@
-import { Text } from 'rebass'
-import styled from 'styled-components/macro'
-import { useCallback, useMemo } from 'react'
 import { Trans } from '@lingui/macro'
-import { useAppDispatch } from 'state/hooks'
 import { useWeb3React } from '@web3-react/core'
 import { getYear, isSameDay, isSameWeek, isSameYear } from 'date-fns'
+import { useCallback, useMemo } from 'react'
+import { Text } from 'rebass'
+import { useAppDispatch } from 'state/hooks'
+import styled from 'styled-components/macro'
 
 import { useAllTransactions } from '../../state/transactions/hooks'
-import { TransactionDetails } from '../../state/transactions/types'
-import { SlideOutMenu } from './SlideOutMenu'
-import { TransactionSummary } from '../AccountDetailsV2'
 import { clearAllTransactions } from '../../state/transactions/reducer'
+import { TransactionDetails } from '../../state/transactions/types'
+import { TransactionSummary } from '../AccountDetailsV2'
+import { SlideOutMenu } from './SlideOutMenu'
 
 const Divider = styled.div`
   margin-top: 16px;

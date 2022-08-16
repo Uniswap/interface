@@ -1,24 +1,12 @@
-import styled from 'styled-components/macro'
-import { Fraction, TradeType } from '@uniswap/sdk-core'
 import { Trans } from '@lingui/macro'
-import JSBI from 'jsbi'
-import { Text } from 'rebass'
-import { getChainInfoOrDefault } from 'constants/chainInfo'
+import { Fraction, TradeType } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { SupportedChainId } from 'constants/chains'
 import { UNI_ADDRESS } from 'constants/addresses'
-
-import { useAllTransactions } from '../../state/transactions/hooks'
-import { nativeOnChain } from '../../constants/tokens'
-import useENSName from '../../hooks/useENSName'
-import { useCurrency, useToken } from '../../hooks/Tokens'
-import { shortenAddress } from '../../nft/utils/address'
+import { getChainInfoOrDefault } from 'constants/chainInfo'
+import { SupportedChainId } from 'constants/chains'
+import JSBI from 'jsbi'
 import { AlertTriangle, CheckCircle } from 'react-feather'
-import Loader from '../Loader'
-import CurrencyLogo from '../CurrencyLogo'
-import { TransactionDetails } from '../../state/transactions/types'
-import { colors } from 'theme/colors'
-
+import { Text } from 'rebass'
 import {
   AddLiquidityV3PoolTransactionInfo,
   ApproveTransactionInfo,
@@ -31,6 +19,16 @@ import {
   TransactionType,
   WrapTransactionInfo,
 } from 'state/transactions/types'
+import styled from 'styled-components/macro'
+import { colors } from 'theme/colors'
+
+import { nativeOnChain } from '../../constants/tokens'
+import { useCurrency, useToken } from '../../hooks/Tokens'
+import useENSName from '../../hooks/useENSName'
+import { shortenAddress } from '../../nft/utils/address'
+import { TransactionDetails } from '../../state/transactions/types'
+import CurrencyLogo from '../CurrencyLogo'
+import Loader from '../Loader'
 
 enum TransactionState {
   Pending,
@@ -119,7 +117,9 @@ const SwapSummary = ({
   info: ExactInputSwapTransactionInfo | ExactOutputSwapTransactionInfo
   transactionState: TransactionState
 }) => {
-  const action = [<Trans>Swapping</Trans>, <Trans>Swapped</Trans>, <Trans>Swap</Trans>][transactionState]
+  const action = [<Trans key="1">Swapping</Trans>, <Trans key="2">Swapped</Trans>, <Trans key="3">Swap</Trans>][
+    transactionState
+  ]
 
   return (
     <>
@@ -152,9 +152,9 @@ const AddLiquidityV3PoolSummary = ({
   transactionState: TransactionState
 }) => {
   const { createPool, quoteCurrencyId, baseCurrencyId } = info
-  const baseCurrency = useCurrency(baseCurrencyId)
-  const quoteCurrency = useCurrency(quoteCurrencyId)
-  const action = [<Trans>Adding</Trans>, <Trans>Added</Trans>, <Trans>Add</Trans>][transactionState]
+  const action = [<Trans key="1">Adding</Trans>, <Trans key="2">Added</Trans>, <Trans key="3">Add</Trans>][
+    transactionState
+  ]
 
   return (
     <>
@@ -181,7 +181,9 @@ const CollectFeesSummary = ({
   transactionState: TransactionState
 }) => {
   const { currencyId0, expectedCurrencyOwed0 = '0', expectedCurrencyOwed1 = '0', currencyId1 } = info
-  const action = [<Trans>Collecting</Trans>, <Trans>Collected</Trans>, <Trans>Collect</Trans>][transactionState]
+  const action = [<Trans key="1">Collecting</Trans>, <Trans key="2">Collected</Trans>, <Trans key="3">Collect</Trans>][
+    transactionState
+  ]
 
   return (
     <>
@@ -201,7 +203,9 @@ const ApprovalSummary = ({
   transactionState: TransactionState
 }) => {
   const token = useToken(info.tokenAddress)
-  const action = [<Trans>Approving</Trans>, <Trans>Approved</Trans>, <Trans>Approve</Trans>][transactionState]
+  const action = [<Trans key="1">Approving</Trans>, <Trans key="2">Approved</Trans>, <Trans key="3">Approve</Trans>][
+    transactionState
+  ]
 
   return (
     <>
@@ -218,7 +222,9 @@ const ClaimSummary = ({
   transactionState: TransactionState
 }) => {
   const { ENSName } = useENSName()
-  const action = [<Trans>Claiming</Trans>, <Trans>Claimed</Trans>, <Trans>Claim</Trans>][transactionState]
+  const action = [<Trans key="1">Claiming</Trans>, <Trans key="2">Claimed</Trans>, <Trans key="3">Claim</Trans>][
+    transactionState
+  ]
 
   return (
     <>
@@ -244,7 +250,9 @@ const RemoveLiquidityV3Summary = ({
   info: RemoveLiquidityV3TransactionInfo
   transactionState: TransactionState
 }) => {
-  const action = [<Trans>Removing</Trans>, <Trans>Removed</Trans>, <Trans>Remove</Trans>][transactionState]
+  const action = [<Trans key="1">Removing</Trans>, <Trans key="2">Removed</Trans>, <Trans key="3">Remove</Trans>][
+    transactionState
+  ]
 
   return (
     <>
@@ -265,7 +273,9 @@ const CreateV3PoolSummary = ({
 }) => {
   const baseCurrency = useCurrency(baseCurrencyId)
   const quoteCurrency = useCurrency(quoteCurrencyId)
-  const action = [<Trans>Creating</Trans>, <Trans>Created</Trans>, <Trans>Create</Trans>][transactionState]
+  const action = [<Trans key="1">Creating</Trans>, <Trans key="2">Created</Trans>, <Trans key="3">Create</Trans>][
+    transactionState
+  ]
 
   return (
     <>
@@ -291,8 +301,10 @@ const WrapSummary = ({
 
   const amount = formatAmount(currencyAmountRaw, 18, 6)
   const action = unwrapped
-    ? [<Trans>Unwrapping</Trans>, <Trans>Unwrapped</Trans>, <Trans>Unwrap</Trans>][transactionState]
-    : [<Trans>Wrapping</Trans>, <Trans>Wrapped</Trans>, <Trans>Wrap</Trans>][transactionState]
+    ? [<Trans key="1">Unwrapping</Trans>, <Trans key="2">Unwrapped</Trans>, <Trans key="3">Unwrap</Trans>][
+        transactionState
+      ]
+    : [<Trans key="1">Wrapping</Trans>, <Trans key="2">Wrapped</Trans>, <Trans key="3">Wrap</Trans>][transactionState]
 
   return (
     <>
@@ -332,7 +344,7 @@ export const getBody = ({ info, transactionState }: { info: TransactionInfo; tra
 }
 
 export const TransactionSummary = ({ transactionDetails }: { transactionDetails: TransactionDetails }) => {
-  const { chainId } = useWeb3React()
+  const { chainId = 1 } = useWeb3React()
   const tx = transactionDetails
   const { explorer } = getChainInfoOrDefault(chainId ? chainId : SupportedChainId.MAINNET)
   const { info, receipt, hash } = tx
@@ -344,7 +356,7 @@ export const TransactionSummary = ({ transactionDetails }: { transactionDetails:
     ? TransactionState.Success
     : TransactionState.Failed
 
-  const currencyLogo = getCurrencyLogo({ info })
+  const currencyLogo = getCurrencyLogo({ info, chainId })
   const body = getBody({ info, transactionState })
   const link = `${explorer}tx/${hash}`
 
@@ -394,9 +406,7 @@ export const LogoView = ({ currencyId0, currencyId1 }: { currencyId0: string; cu
   )
 }
 
-const getCurrencyLogo = ({ info }: { info: TransactionInfo }) => {
-  const { chainId = 1 } = useWeb3React()
-
+const getCurrencyLogo = ({ info, chainId }: { info: TransactionInfo; chainId: number }) => {
   switch (info.type) {
     case TransactionType.ADD_LIQUIDITY_V3_POOL:
     case TransactionType.REMOVE_LIQUIDITY_V3:
