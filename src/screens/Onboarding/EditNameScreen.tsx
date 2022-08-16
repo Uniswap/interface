@@ -97,7 +97,7 @@ export function EditNameScreen({ navigation, route: { params } }: Props) {
           label={t('Continue')}
           name={ElementName.Next}
           testID={ElementName.Next}
-          textVariant="largeLabel"
+          textVariant="mediumLabel"
           variant="onboard"
           onPress={onPressNext}
         />

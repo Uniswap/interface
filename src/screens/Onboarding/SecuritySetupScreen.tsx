@@ -45,7 +45,23 @@ export function SecuritySetupScreen({ navigation: { navigate } }: Props) {
           <FaceIcon color={theme.colors.textSecondary} height={100} width={100} />
         </Box>
 
-        <Flex alignItems="center" justifyContent="flex-end" width="100%">
+        <Flex alignItems="center" gap="sm" justifyContent="flex-end" width="100%">
+          <TextButton
+            alignSelf="stretch"
+            borderColor="backgroundOutline"
+            borderRadius="lg"
+            borderWidth={1}
+            name={ElementName.Skip}
+            px="md"
+            py="md"
+            testID={ElementName.Skip}
+            textAlign="center"
+            textColor="textPrimary"
+            textVariant="mediumLabel"
+            onPress={onPressNext}>
+            {t('Maybe later')}
+          </TextButton>
+
           <PrimaryButton
             alignSelf="stretch"
             label={t('Turn on Face ID')}
@@ -54,13 +70,6 @@ export function SecuritySetupScreen({ navigation: { navigate } }: Props) {
             variant="onboard"
             onPress={onPressEnableSecurity}
           />
-          <TextButton
-            name={ElementName.Skip}
-            textColor="textPrimary"
-            textVariant="mediumLabel"
-            onPress={onPressNext}>
-            {t('Maybe later')}
-          </TextButton>
         </Flex>
       </Flex>
     </OnboardingScreen>

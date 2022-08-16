@@ -95,7 +95,7 @@ export function NotificationsSetupScreen({ navigation, route: { params } }: Prop
             testID={ElementName.Skip}
             textAlign="center"
             textColor="textPrimary"
-            textVariant="largeLabel"
+            textVariant="mediumLabel"
             onPress={onPressNext}>
             {t('Maybe later')}
           </TextButton>
@@ -105,7 +105,7 @@ export function NotificationsSetupScreen({ navigation, route: { params } }: Prop
             label={t('Turn on notifications')}
             name={ElementName.Enable}
             testID={ElementName.Enable}
-            textVariant="largeLabel"
+            textVariant="mediumLabel"
             variant="onboard"
             onPress={onPressEnableNotifications}
           />

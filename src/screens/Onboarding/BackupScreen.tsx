@@ -58,7 +58,7 @@ export function BackupScreen({ navigation, route: { params } }: Props) {
       <Flex grow>
         <BackupOptions backupMethods={activeAccountBackups} params={params} />
         <Button alignSelf="flex-start" py="none" onPress={onPressEducationButton}>
-          <Flex centered row gap="sm">
+          <Flex centered row gap="xs">
             <InfoCircle color={theme.colors.textSecondary} height={20} width={20} />
             <Text variant="subhead">{t('What’s a recovery phrase?')}</Text>
           </Flex>
@@ -69,7 +69,7 @@ export function BackupScreen({ navigation, route: { params } }: Props) {
             label={disabled ? t('Add backup to continue') : t('Continue')}
             name={ElementName.Next}
             testID={ElementName.Next}
-            textVariant="largeLabel"
+            textVariant="mediumLabel"
             variant="onboard"
             onPress={onPressNext}
           />

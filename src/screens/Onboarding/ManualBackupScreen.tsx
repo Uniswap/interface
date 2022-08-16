@@ -92,7 +92,7 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props) {
                 label={t('Continue')}
                 name={ElementName.Next}
                 testID={ElementName.Next}
-                textVariant="largeLabel"
+                textVariant="mediumLabel"
                 variant="onboard"
                 onPress={() => setShowTermsModal(true)}
               />
@@ -124,7 +124,7 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props) {
                 label={t('Continue')}
                 name={ElementName.Next}
                 testID={ElementName.Next}
-                textVariant="largeLabel"
+                textVariant="mediumLabel"
                 variant="onboard"
                 onPress={nextView}
               />
@@ -152,7 +152,7 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props) {
               label={t('Continue')}
               name={ElementName.Continue}
               testID={ElementName.Continue}
-              textVariant="largeLabel"
+              textVariant="mediumLabel"
               variant="onboard"
               onPress={onValidationSuccessful}
             />
