@@ -62,12 +62,6 @@ export default function useFeeTierDistributionQuery(
 
   useEffect(refreshData, [refreshData, token0, token1])
 
-  useInterval(
-    () => {
-      refreshData()
-    },
-    interval,
-    true
-  )
+  useInterval(refreshData, interval, true)
   return data
 }

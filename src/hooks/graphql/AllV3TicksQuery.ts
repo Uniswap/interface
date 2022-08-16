@@ -20,10 +20,12 @@ const query = graphql`
   }
 `
 
-type TickData = { error: any | null; isLoading: boolean; data: AllV3TicksQuery$data | null }
+export type Ticks = AllV3TicksQuery$data['ticks']
+export type TickData = Ticks[number]
+type AllTicksV3Reponse = { error: any | null; isLoading: boolean; data: AllV3TicksQuery$data | null }
 
 export default function useAllV3TicksQuery(poolAddress: string | undefined, skip: number, interval: number) {
-  const [data, setData] = useState<TickData>({ error: null, isLoading: true, data: null })
+  const [data, setData] = useState<AllTicksV3Reponse>({ error: null, isLoading: true, data: null })
   const chainId = useAppSelector((state) => state.application.chainId)
   const environment = useRelayEnvironment()
 
@@ -41,12 +43,6 @@ export default function useAllV3TicksQuery(poolAddress: string | undefined, skip
 
   useEffect(refreshData, [refreshData, poolAddress, skip])
 
-  useInterval(
-    () => {
-      refreshData()
-    },
-    interval,
-    true
-  )
+  useInterval(refreshData, interval, true)
   return data
 }

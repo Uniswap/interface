@@ -3,7 +3,7 @@ import { FeeAmount, nearestUsableTick, Pool, TICK_SPACINGS, tickToPrice } from '
 import { useWeb3React } from '@web3-react/core'
 import { SupportedChainId } from 'constants/chains'
 import { ZERO_ADDRESS } from 'constants/misc'
-import useAllV3TicksQuery from 'hooks/graphql/AllV3TicksQuery'
+import useAllV3TicksQuery, { TickData } from 'hooks/graphql/AllV3TicksQuery'
 import JSBI from 'jsbi'
 import { useSingleContractMultipleData } from 'lib/hooks/multicall'
 import ms from 'ms.macro'
@@ -16,8 +16,6 @@ import { PoolState, usePool } from './usePools'
 
 const PRICE_FIXED_DIGITS = 8
 const CHAIN_IDS_MISSING_SUBGRAPH_DATA = [SupportedChainId.ARBITRUM_ONE, SupportedChainId.ARBITRUM_RINKEBY]
-
-export type TickData = { readonly liquidityNet: any; readonly price0: any; readonly price1: any; readonly tick: any }
 
 // Tick with fields parsed to JSBIs, and active liquidity computed.
 export interface TickProcessed {

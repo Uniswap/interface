@@ -1,6 +1,7 @@
 import { Token } from '@uniswap/sdk-core'
 import { tickToPrice } from '@uniswap/v3-sdk'
-import { TickData, TickProcessed } from 'hooks/usePoolTickData'
+import { Ticks } from 'hooks/graphql/AllV3TicksQuery'
+import { TickProcessed } from 'hooks/usePoolTickData'
 import JSBI from 'jsbi'
 
 const PRICE_FIXED_DIGITS = 8
@@ -10,7 +11,7 @@ export default function computeSurroundingTicks(
   token0: Token,
   token1: Token,
   activeTickProcessed: TickProcessed,
-  sortedTickData: readonly TickData[],
+  sortedTickData: Ticks,
   pivot: number,
   ascending: boolean
 ): TickProcessed[] {

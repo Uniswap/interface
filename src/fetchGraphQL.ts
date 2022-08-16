@@ -4,7 +4,7 @@
  * https://github.com/relay-tools/relay-compiler-language-typescript/blob/master/example/ts/app.tsx
  */
 
-import { SupportedChainId } from 'constants/chains'
+import { isSupportedChain, SupportedChainId } from 'constants/chains'
 import { Variables } from 'react-relay'
 import { GraphQLResponse, ObservableFromValue, RequestParameters } from 'relay-runtime'
 
@@ -31,10 +31,10 @@ const headers = {
 // Define a function that fetches the results of a request (query/mutation/etc)
 // and returns its results as a Promise:
 const fetchQuery = (params: RequestParameters, variables: Variables): ObservableFromValue<GraphQLResponse> => {
-  // TODO: figure out why this returns null
   const chainId = (store.getState() as AppState).application.chainId
+  const onSupportedChain = isSupportedChain(chainId)
 
-  const subgraphUrl = CHAIN_SUBGRAPH_URL[chainId ?? SupportedChainId.MAINNET]
+  const subgraphUrl = onSupportedChain ? CHAIN_SUBGRAPH_URL[chainId] : CHAIN_SUBGRAPH_URL[SupportedChainId.MAINNET]
 
   const body = JSON.stringify({
     query: params.text, // GraphQL text from input

@@ -9,7 +9,7 @@ import { useColor } from 'hooks/useColor'
 import useTheme from 'hooks/useTheme'
 import { saturate } from 'polished'
 import React, { ReactNode, useCallback, useMemo } from 'react'
-import { BarChart2, CloudOff } from 'react-feather'
+import { BarChart2, CloudOff, Inbox } from 'react-feather'
 import { batch } from 'react-redux'
 import { Bound } from 'state/mint/v3/actions'
 import styled from 'styled-components/macro'
@@ -163,7 +163,12 @@ export default function LiquidityChartRangeInput({
 
   return (
     <AutoColumn gap="md" style={{ minHeight: '200px' }}>
-      {isLoading ? (
+      {!currencyA || !currencyB ? (
+        <InfoBox
+          message={<Trans>Your position will appear here.</Trans>}
+          icon={<Inbox size={56} stroke={theme.deprecated_text1} />}
+        />
+      ) : isLoading ? (
         <InfoBox icon={<Loader size="40px" stroke={theme.deprecated_text4} />} />
       ) : error ? (
         <InfoBox
