@@ -1,9 +1,15 @@
-import React from 'react'
+import React, { ComponentProps } from 'react'
 import { NetworkLogo } from 'src/components/CurrencyLogo/NetworkLogo'
-import { NetworkLabelProps } from 'src/components/Network/NetworkButtonGroup'
 import { Pill } from 'src/components/text/Pill'
-import { CHAIN_INFO } from 'src/constants/chains'
+import { ChainId, CHAIN_INFO } from 'src/constants/chains'
 import { useNetworkColors } from 'src/utils/colors'
+
+export type NetworkPillProps = {
+  chainId: ChainId
+  height?: number
+  showBorder?: boolean
+  showIcon?: boolean
+} & ComponentProps<typeof Pill>
 
 export function NetworkPill({
   chainId,
@@ -11,7 +17,7 @@ export function NetworkPill({
   showIcon = true,
   height = 36,
   ...rest
-}: NetworkLabelProps) {
+}: NetworkPillProps) {
   const info = CHAIN_INFO[chainId]
   const colors = useNetworkColors(chainId)
 
@@ -28,7 +34,7 @@ export function NetworkPill({
   )
 }
 
-export function InlineNetworkPill(props: NetworkLabelProps) {
+export function InlineNetworkPill(props: NetworkPillProps) {
   return (
     <NetworkPill
       borderRadius="xs"
