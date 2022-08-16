@@ -19,11 +19,8 @@ export function initializeAnalytics() {
   init(
     API_KEY,
     /* userId= */ undefined, // User ID should be undefined to let Amplitude default to Device ID
-    /* options= */ {
-      // See documentation: https://www.docs.developers.amplitude.com/data/sdks/javascript/#track-referrers
-      includeReferrer: true,
-      // See documentation: https://www.docs.developers.amplitude.com/data/sdks/javascript/#track-utm-parameters
-      includeUtm: true,
+    /* options= */
+    {
       // Disable tracking of private user information by Amplitude
       trackingOptions: {
         ipAddress: false,

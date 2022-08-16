@@ -35,6 +35,7 @@ Cypress.Commands.overwrite(
         onBeforeLoad(win) {
           options?.onBeforeLoad?.(win)
           win.localStorage.clear()
+          win.localStorage.setItem('redux_localstorage_simple_user', '{"selectedWallet":"INJECTED"}')
           win.ethereum = injected
         },
       })

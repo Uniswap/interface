@@ -14,7 +14,6 @@ import TokenDetail from 'components/Explore/TokenDetails/TokenDetail'
 import TokenSafetyMessage from 'components/TokenSafety/TokenSafetyMessage'
 import { getChainInfo } from 'constants/chainInfo'
 import { L1_CHAIN_IDS, L2_CHAIN_IDS, SupportedChainId, TESTNET_CHAIN_IDS } from 'constants/chains'
-import { RPC_URLS } from 'constants/networks'
 import { checkWarning } from 'constants/tokenSafety'
 import { useToken } from 'hooks/Tokens'
 import { useActiveLocale } from 'hooks/useActiveLocale'
@@ -22,7 +21,10 @@ import { useNetworkTokenBalances } from 'hooks/useNetworkTokenBalances'
 import useTokenDetailPageQuery from 'hooks/useTokenDetailPageQuery'
 import { useCallback, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
+import { useIsDarkMode } from 'state/user/hooks'
 import styled from 'styled-components/macro'
+import { DARK_THEME, LIGHT_THEME } from 'theme/token-details-widget-theme'
+import { ROUTER_URL, RPC_URL_MAP } from 'utils/token-details-widget-config'
 
 const Footer = styled.div`
   display: none;
@@ -61,19 +63,13 @@ function NetworkBalances(tokenAddress: string) {
   return useNetworkTokenBalances({ address: tokenAddress })
 }
 
-// widget configuration
-const WIDGET_THEME = {}
-const ROUTER_URL = 'https://api.uniswap.org/v1/'
-const WIDGET_URL_MAP = Object.keys(RPC_URLS).reduce(
-  (acc, cur) => ({ ...acc, [cur]: [RPC_URLS[cur as unknown as SupportedChainId]] }),
-  {}
-)
-
 export default function TokenDetails() {
   const { tokenAddress } = useParams<{ tokenAddress?: string }>()
   const { loading } = useTokenDetailPageQuery(tokenAddress)
   const tokenSymbol = useToken(tokenAddress)?.symbol
 
+  const darkMode = useIsDarkMode()
+  const widgetTheme = useMemo(() => (darkMode ? DARK_THEME : LIGHT_THEME), [darkMode])
   const locale = useActiveLocale()
   const onTxSubmit = useCallback(() => {
     console.log('onTxSubmit')
@@ -97,6 +93,7 @@ export default function TokenDetails() {
 
   const tokenWarning = tokenAddress ? checkWarning(tokenAddress) : null
   /* network balance handling */
+
   const { data: networkData } = tokenAddress ? NetworkBalances(tokenAddress) : { data: null }
   const { chainId: connectedChainId, provider } = useWeb3React()
   const totalBalance = 4.3 // dummy data
@@ -143,14 +140,14 @@ export default function TokenDetails() {
               defaultInputTokenAddress={'NATIVE'}
               defaultOutputTokenAddress={tokenAddress}
               hideConnectionUI
-              jsonRpcUrlMap={WIDGET_URL_MAP}
+              jsonRpcUrlMap={RPC_URL_MAP}
               locale={locale}
               onTxSubmit={onTxSubmit}
               onTxSuccess={onTxSuccess}
               onTxFail={onTxFail}
               provider={provider}
               routerUrl={ROUTER_URL}
-              theme={WIDGET_THEME}
+              theme={widgetTheme}
               // tokenList={[]}
               width={290}
             />

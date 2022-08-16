@@ -24,7 +24,7 @@ const BaseWrapper = styled.div<{ disable?: boolean; redesignFlag?: boolean }>`
       disable
         ? redesignFlag
           ? theme.accentAction
-          : theme.none
+          : 'transparent'
         : redesignFlag
         ? theme.backgroundOutline
         : theme.deprecated_bg3};

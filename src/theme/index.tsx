@@ -92,7 +92,6 @@ function uniswapThemeColors(darkMode: boolean): ThemeColors {
     accentTextLightSecondary: darkMode ? colorsDark.accentTextLightSecondary : colorsLight.accentTextLightSecondary,
     accentTextLightTertiary: darkMode ? colorsDark.accentTextLightTertiary : colorsLight.accentTextLightTertiary,
 
-    none: colorsDark.none,
     white: ColorsPalette.white,
     black: ColorsPalette.black,
 

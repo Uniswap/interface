@@ -37,7 +37,6 @@ export interface ThemeColors {
 
   white: Color
   black: Color
-  none: Color
 
   chain_1: Color
   chain_3: Color

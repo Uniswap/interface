@@ -31,7 +31,7 @@ const InputPanel = styled.div<{ hideInput?: boolean; redesignFlag: boolean }>`
   position: relative;
   border-radius: ${({ hideInput }) => (hideInput ? '16px' : '20px')};
   background-color: ${({ theme, redesignFlag, hideInput }) =>
-    redesignFlag ? theme.none : hideInput ? 'transparent' : theme.deprecated_bg2};
+    redesignFlag ? 'transparent' : hideInput ? 'transparent' : theme.deprecated_bg2};
   z-index: 1;
   width: ${({ hideInput }) => (hideInput ? '100%' : 'initial')};
   transition: height 1s ease;
@@ -43,7 +43,7 @@ const FixedContainer = styled.div<{ redesignFlag: boolean }>`
   height: 100%;
   position: absolute;
   border-radius: 20px;
-  background-color: ${({ theme, redesignFlag }) => (redesignFlag ? theme.none : theme.deprecated_bg2)};
+  background-color: ${({ theme, redesignFlag }) => (redesignFlag ? 'transparent' : theme.deprecated_bg2)};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -52,8 +52,8 @@ const FixedContainer = styled.div<{ redesignFlag: boolean }>`
 
 const Container = styled.div<{ hideInput: boolean; disabled: boolean; redesignFlag: boolean }>`
   border-radius: ${({ hideInput }) => (hideInput ? '16px' : '20px')};
-  border: 1px solid ${({ theme, redesignFlag }) => (redesignFlag ? theme.none : theme.deprecated_bg0)};
-  background-color: ${({ theme, redesignFlag }) => (redesignFlag ? theme.none : theme.deprecated_bg1)};
+  border: 1px solid ${({ theme, redesignFlag }) => (redesignFlag ? 'transparent' : theme.deprecated_bg0)};
+  background-color: ${({ theme, redesignFlag }) => (redesignFlag ? 'transparent' : theme.deprecated_bg1)};
   width: ${({ hideInput }) => (hideInput ? '100%' : 'initial')};
   ${({ theme, hideInput, disabled, redesignFlag }) =>
     !redesignFlag &&

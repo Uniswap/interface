@@ -38,7 +38,7 @@ export default function FavoriteButton() {
   return (
     <StyledFavoriteButton onClick={() => setShowFavorites(!showFavorites)} active={showFavorites}>
       <FavoriteButtonContent>
-        <Heart size={17} color={theme.textPrimary} fill={theme.none} />
+        <Heart size={17} color={theme.textPrimary} fill="transparent" />
         <FavoriteText>Favorites</FavoriteText>
       </FavoriteButtonContent>
     </StyledFavoriteButton>
