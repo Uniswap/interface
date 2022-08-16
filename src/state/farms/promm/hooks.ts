@@ -21,13 +21,14 @@ import { useProAmmNFTPositionManagerContract, useProMMFarmContract, useProMMFarm
 import { usePools } from 'hooks/usePools'
 import usePrevious from 'hooks/usePrevious'
 import { AppState } from 'state'
-import { useETHPrice, useTokensPrice } from 'state/application/hooks'
+import { useETHPrice } from 'state/application/hooks'
 import { useAppDispatch } from 'state/hooks'
 import { usePoolBlocks } from 'state/prommPools/hooks'
 import { useTransactionAdder } from 'state/transactions/hooks'
 import { PositionDetails } from 'types/position'
 import { calculateGasMargin, getContractForReading, isAddressString } from 'utils'
 
+import { useRewardTokenPrices } from '../hooks'
 import { setLoading, updatePrommFarms } from './actions'
 import { ProMMFarm, ProMMFarmResponse } from './types'
 
@@ -463,7 +464,7 @@ export const useProMMFarmTVL = (fairlaunchAddress: string, pid: number) => {
 
   const rwTokens = useMemo(() => Object.values(rwTokenMap), [rwTokenMap])
 
-  const prices = useTokensPrice(rwTokens, VERSION.ELASTIC)
+  const prices = useRewardTokenPrices(rwTokens)
 
   const priceMap: { [key: string]: number } = useMemo(
     () =>
