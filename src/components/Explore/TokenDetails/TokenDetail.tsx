@@ -138,8 +138,8 @@ const NetworkBadge = styled.div<{ networkColor?: string; backgroundColor?: strin
 `
 const FavoriteIcon = styled(Heart)<{ isFavorited: boolean }>`
   ${ClickableStyle}
-  height: 18px;
-  width: 20px;
+  height: 22px;
+  width: 24px;
   color: ${({ isFavorited, theme }) => (isFavorited ? theme.accentAction : theme.textSecondary)};
   fill: ${({ isFavorited, theme }) => (isFavorited ? theme.accentAction : theme.none)};
 `
@@ -220,7 +220,7 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
           </Stat>
           <Stat>
             {/* TODO: connect to chart's selected time */}
-            1h volume
+            24h volume
             <StatPrice>${tokenVolume}</StatPrice>
           </Stat>
         </StatPair>

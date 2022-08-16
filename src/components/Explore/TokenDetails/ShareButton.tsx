@@ -4,7 +4,7 @@ import { Twitter } from 'react-feather'
 import { useModalIsOpen, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import styled, { useTheme } from 'styled-components/macro'
-import { ClickableStyle, OPACITY_CLICK, Z_INDEX } from 'theme'
+import { ClickableStyle, CopyHelperRefType, OPACITY_CLICK, Z_INDEX } from 'theme'
 
 import { ReactComponent as ShareIcon } from '../../../assets/svg/share.svg'
 import { CopyHelper } from '../../../theme'
@@ -18,7 +18,9 @@ const ShareButtonDisplay = styled.div`
 `
 
 const Share = styled(ShareIcon)<{ open: boolean }>`
-  fill: ${({ theme }) => theme.textSecondary} !important;
+  stroke: ${({ theme }) => theme.textSecondary};
+  height: 24px;
+  width: 24px;
   ${ClickableStyle}
   ${({ open }) => open && `opacity: ${OPACITY_CLICK} !important`};
 `
@@ -27,7 +29,7 @@ const ShareActions = styled.div`
   position: absolute;
   z-index: ${Z_INDEX.dropdown};
   width: 240px;
-  top: 28px;
+  top: 36px;
   right: 0px;
   justify-content: center;
   display: flex;
@@ -39,8 +41,7 @@ const ShareActions = styled.div`
   box-shadow: ${({ theme }) => theme.flyoutDropShadow};
   border-radius: 12px;
 `
-const ShareAction = styled.div<{ highlighted?: boolean }>`
-  ${({ highlighted }) => highlighted && ClickableStyle};
+const ShareAction = styled.div`
   display: flex;
   align-items: center;
   padding: 8px;
@@ -50,8 +51,10 @@ const ShareAction = styled.div<{ highlighted?: boolean }>`
   gap: 12px;
   height: 40px;
   color: ${({ theme }) => theme.textPrimary};
-  background-color: ${({ theme, highlighted }) => (highlighted ? theme.backgroundInteractive : 'transparent')};
-  ${({ highlighted }) => highlighted && `cursor: pointer`};
+  cursor: pointer;
+  :hover {
+    background-color: ${({ theme }) => theme.backgroundInteractive};
+  }
 `
 
 interface TokenInfo {
@@ -77,19 +80,27 @@ export default function ShareButton(tokenInfo: TokenInfo) {
     )
   }
 
+  const copyHelperRef = useRef<CopyHelperRefType>(null)
+
   return (
     <ShareButtonDisplay ref={node}>
-      <Share onClick={toggleShare} aria-label={`ShareOptions`} open={open} color={theme.textSecondary} />
+      <Share onClick={toggleShare} aria-label={`ShareOptions`} open={open} />
       {open && (
         <ShareActions>
-          <ShareAction>
-            <CopyHelper link color={theme.textPrimary} iconPosition="left" toCopy={window.location.href}>
+          <ShareAction onClick={() => copyHelperRef.current?.forceCopy()}>
+            <CopyHelper
+              link
+              color={theme.textPrimary}
+              iconPosition="left"
+              toCopy={window.location.href}
+              ref={copyHelperRef}
+            >
               Copy Link
             </CopyHelper>
           </ShareAction>
 
-          <ShareAction onClick={shareTweet} highlighted>
-            <Twitter color={theme.textSecondary} size={20} strokeWidth={1.5} />
+          <ShareAction onClick={shareTweet}>
+            <Twitter color={theme.textPrimary} size={20} strokeWidth={1.5} />
             Share to Twitter
           </ShareAction>
         </ShareActions>

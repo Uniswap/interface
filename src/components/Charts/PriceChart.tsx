@@ -12,6 +12,7 @@ import { useAtom } from 'jotai'
 import { useCallback, useState } from 'react'
 import { ArrowDownRight, ArrowUpRight } from 'react-feather'
 import styled from 'styled-components/macro'
+import { OPACITY_HOVER } from 'theme'
 import {
   dayHourFormatter,
   hourFormatter,
@@ -32,7 +33,7 @@ const TIME_DISPLAYS: [TimePeriod, string][] = [
   [TimePeriod.week, '1W'],
   [TimePeriod.month, '1M'],
   [TimePeriod.year, '1Y'],
-  [TimePeriod.all, 'ALL'],
+  [TimePeriod.all, 'All'],
 ]
 
 type PricePoint = { value: number; timestamp: number }
@@ -106,6 +107,9 @@ const TimeButton = styled.button<{ active: boolean }>`
   border: none;
   cursor: pointer;
   color: ${({ theme, active }) => (active ? theme.textPrimary : theme.textSecondary)};
+  :hover {
+    ${({ active }) => !active && `opacity: ${OPACITY_HOVER};`}
+  }
 `
 
 function getTicks(startTimestamp: number, endTimestamp: number, numTicks = 5) {

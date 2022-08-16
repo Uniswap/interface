@@ -2,7 +2,7 @@ import { Trans } from '@lingui/macro'
 import { outboundLink } from 'components/analytics'
 import { MOBILE_MEDIA_BREAKPOINT } from 'components/Explore/constants'
 import useCopyClipboard from 'hooks/useCopyClipboard'
-import React, { HTMLProps, ReactNode, useCallback } from 'react'
+import React, { forwardRef, HTMLProps, ReactNode, useCallback, useImperativeHandle } from 'react'
 import {
   ArrowLeft,
   CheckCircle,
@@ -349,34 +349,47 @@ interface CopyHelperProps {
   children: ReactNode
 }
 
-export function CopyHelper({
-  link,
-  toCopy,
-  color,
-  fontSize = 16,
-  iconSize = 20,
-  gap = 12,
-  iconPosition = 'left',
-  iconColor,
-  children,
-}: CopyHelperProps) {
-  const [isCopied, setCopied] = useCopyClipboard()
-  const copy = useCallback(() => {
-    setCopied(toCopy)
-  }, [toCopy, setCopied])
+export type CopyHelperRefType = { forceCopy: () => void }
+export const CopyHelper = forwardRef<CopyHelperRefType, CopyHelperProps>(
+  (
+    {
+      link,
+      toCopy,
+      color,
+      fontSize = 16,
+      iconSize = 20,
+      gap = 12,
+      iconPosition = 'left',
+      iconColor,
+      children,
+    }: CopyHelperProps,
+    ref
+  ) => {
+    const [isCopied, setCopied] = useCopyClipboard()
+    const copy = useCallback(() => {
+      setCopied(toCopy)
+    }, [toCopy, setCopied])
 
-  const BaseIcon = isCopied ? CopiedIcon : link ? LinkIconFeather : Copy
+    useImperativeHandle(ref, () => ({
+      forceCopy() {
+        copy()
+      },
+    }))
 
-  return (
-    <CopyHelperContainer onClick={copy} color={color} clicked={isCopied}>
-      <div style={{ display: 'flex', flexDirection: 'row', gap }}>
-        {iconPosition === 'left' && <BaseIcon size={iconSize} strokeWidth={1.5} color={iconColor} />}
-        <CopyHelperText fontSize={fontSize}>{isCopied ? <Trans>Copied!</Trans> : children}</CopyHelperText>
-        {iconPosition === 'right' && <BaseIcon size={iconSize} strokeWidth={1.5} color={iconColor} />}
-      </div>
-    </CopyHelperContainer>
-  )
-}
+    const BaseIcon = isCopied ? CopiedIcon : link ? LinkIconFeather : Copy
+
+    return (
+      <CopyHelperContainer onClick={copy} color={color} clicked={isCopied}>
+        <div style={{ display: 'flex', flexDirection: 'row', gap }}>
+          {iconPosition === 'left' && <BaseIcon size={iconSize} strokeWidth={1.5} color={iconColor} />}
+          <CopyHelperText fontSize={fontSize}>{isCopied ? <Trans>Copied!</Trans> : children}</CopyHelperText>
+          {iconPosition === 'right' && <BaseIcon size={iconSize} strokeWidth={1.5} color={iconColor} />}
+        </div>
+      </CopyHelperContainer>
+    )
+  }
+)
+CopyHelper.displayName = 'CopyHelper'
 
 const rotate = keyframes`
   from {

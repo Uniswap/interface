@@ -153,14 +153,7 @@ export default function App() {
                   {phase0Flag === Phase0Variant.Enabled && (
                     <>
                       <Route path="/explore" element={<Explore />} />
-                      <Route
-                        path="/tokens/:tokenAddress"
-                        element={
-                          <Suspense fallback={<LazyLoadSpinner />}>
-                            <TokenDetails />
-                          </Suspense>
-                        }
-                      />
+                      <Route path="/tokens/:tokenAddress" element={<TokenDetails />} />
                     </>
                   )}
                   <Route
