@@ -26,7 +26,7 @@
   "relay": {
     "src": "./src",
     "language": "typescript",
-    "schema": "./src/schema/schema.graphql"
+    "schema": "./src/graphql/schema/schema.graphql"
   },
   "jest": {
     "collectCoverageFrom": [
