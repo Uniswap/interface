@@ -9,7 +9,7 @@ import JSBI from 'jsbi'
 import { useSingleCallResult } from 'lib/hooks/multicall'
 import { useMemo, useState } from 'react'
 
-import { SWAP_ROUTER_ADDRESSES, V3_ROUTER_ADDRESS } from '../constants/addresses'
+import { SWAP_ROUTER_ADDRESSES } from '../constants/addresses'
 import { DAI, UNI, USDC_MAINNET } from '../constants/tokens'
 import { useEIP2612Contract } from './useContract'
 import useIsArgentWallet from './useIsArgentWallet'
@@ -273,8 +273,6 @@ export function useERC20PermitFromTrade(
     ? // v2 router does not support
       trade instanceof V2Trade
       ? undefined
-      : trade instanceof V3Trade
-      ? V3_ROUTER_ADDRESS[chainId]
       : SWAP_ROUTER_ADDRESSES[chainId]
     : undefined
   const amountToApprove = useMemo(

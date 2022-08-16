@@ -1,9 +1,9 @@
 import { Protocol, Trade } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
 import { Pair, Route as V2Route, Trade as V2Trade } from '@uniswap/v2-sdk'
-import { Pool, Route as V3Route, Trade as V3Trade } from '@uniswap/v3-sdk'
+import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
-import { SWAP_ROUTER_ADDRESSES, V2_ROUTER_ADDRESS, V3_ROUTER_ADDRESS } from 'constants/addresses'
+import { SWAP_ROUTER_ADDRESSES, V2_ROUTER_ADDRESS } from 'constants/addresses'
 import { useMemo } from 'react'
 import { getTxOptimizedSwapRouter, SwapRouterVersion } from 'utils/getTxOptimizedSwapRouter'
 
@@ -16,7 +16,7 @@ function useSwapApprovalStates(
   trade: Trade<Currency, Currency, TradeType> | undefined,
   allowedSlippage: Percent,
   useIsPendingApproval: (token?: Token, spender?: string) => boolean
-): { v2: ApprovalState; v3: ApprovalState; v2V3: ApprovalState } {
+): { v2: ApprovalState; v2V3: ApprovalState } {
   const { chainId } = useWeb3React()
 
   const amountToApprove = useMemo(
@@ -25,13 +25,11 @@ function useSwapApprovalStates(
   )
 
   const v2RouterAddress = chainId ? V2_ROUTER_ADDRESS[chainId] : undefined
-  const v3RouterAddress = chainId ? V3_ROUTER_ADDRESS[chainId] : undefined
   const swapRouterAddress = chainId ? SWAP_ROUTER_ADDRESSES[chainId] : undefined
   const v2 = useApprovalStateForSpender(amountToApprove, v2RouterAddress, useIsPendingApproval)
-  const v3 = useApprovalStateForSpender(amountToApprove, v3RouterAddress, useIsPendingApproval)
   const v2V3 = useApprovalStateForSpender(amountToApprove, swapRouterAddress, useIsPendingApproval)
 
-  return useMemo(() => ({ v2, v3, v2V3 }), [v2, v2V3, v3])
+  return useMemo(() => ({ v2, v2V3 }), [v2, v2V3])
 }
 
 export function useSwapRouterAddress(
@@ -44,13 +42,7 @@ export function useSwapRouterAddress(
   const { chainId } = useWeb3React()
   return useMemo(
     () =>
-      chainId
-        ? trade instanceof V2Trade
-          ? V2_ROUTER_ADDRESS[chainId]
-          : trade instanceof V3Trade
-          ? V3_ROUTER_ADDRESS[chainId]
-          : SWAP_ROUTER_ADDRESSES[chainId]
-        : undefined,
+      chainId ? (trade instanceof V2Trade ? V2_ROUTER_ADDRESS[chainId] : SWAP_ROUTER_ADDRESSES[chainId]) : undefined,
     [chainId, trade]
   )
 }
@@ -100,25 +92,12 @@ export function useSwapApprovalOptimizedTrade(
 
     try {
       switch (optimizedSwapRouter) {
-        case SwapRouterVersion.V2V3:
-          return trade
         case SwapRouterVersion.V2:
           const pairs = trade.swaps[0].route.pools.filter((pool) => pool instanceof Pair) as Pair[]
           const v2Route = new V2Route(pairs, trade.inputAmount.currency, trade.outputAmount.currency)
           return new V2Trade(v2Route, trade.inputAmount, trade.tradeType)
-        case SwapRouterVersion.V3:
-          return V3Trade.createUncheckedTradeWithMultipleRoutes({
-            routes: trade.swaps.map(({ route, inputAmount, outputAmount }) => ({
-              route: new V3Route(
-                route.pools.filter((p): p is Pool => p instanceof Pool),
-                inputAmount.currency,
-                outputAmount.currency
-              ),
-              inputAmount,
-              outputAmount,
-            })),
-            tradeType: trade.tradeType,
-          })
+        case SwapRouterVersion.V2V3:
+          return trade
         default:
           return undefined
       }

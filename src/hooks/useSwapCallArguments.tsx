@@ -2,9 +2,9 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { SwapRouter, Trade } from '@uniswap/router-sdk'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { Router as V2SwapRouter, Trade as V2Trade } from '@uniswap/v2-sdk'
-import { FeeOptions, SwapRouter as V3SwapRouter, Trade as V3Trade } from '@uniswap/v3-sdk'
+import { FeeOptions, Trade as V3Trade } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
-import { SWAP_ROUTER_ADDRESSES, V3_ROUTER_ADDRESS } from 'constants/addresses'
+import { SWAP_ROUTER_ADDRESSES } from 'constants/addresses'
 import { useMemo } from 'react'
 import approveAmountCalldata from 'utils/approveAmountCalldata'
 
@@ -124,23 +124,13 @@ export function useSwapCallArguments(
           : {}),
       }
 
-      const swapRouterAddress = chainId
-        ? trade instanceof V3Trade
-          ? V3_ROUTER_ADDRESS[chainId]
-          : SWAP_ROUTER_ADDRESSES[chainId]
-        : undefined
+      const swapRouterAddress = chainId ? SWAP_ROUTER_ADDRESSES[chainId] : undefined
       if (!swapRouterAddress) return []
 
-      const { value, calldata } =
-        trade instanceof V3Trade
-          ? V3SwapRouter.swapCallParameters(trade, {
-              ...sharedSwapOptions,
-              deadline: deadline.toString(),
-            })
-          : SwapRouter.swapCallParameters(trade, {
-              ...sharedSwapOptions,
-              deadlineOrPreviousBlockhash: deadline.toString(),
-            })
+      const { value, calldata } = SwapRouter.swapCallParameters(trade, {
+        ...sharedSwapOptions,
+        deadlineOrPreviousBlockhash: deadline.toString(),
+      })
 
       if (argentWalletContract && trade.inputAmount.currency.isToken) {
         return [

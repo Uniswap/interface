@@ -34,19 +34,6 @@ export const V3_CORE_FACTORY_ADDRESSES: AddressMap = {
   [SupportedChainId.CELO_ALFAJORES]: CELO_V3_CORE_FACTORY_ADDRESSES,
 }
 
-export const V3_ROUTER_ADDRESS: AddressMap = {
-  ...constructSameAddressMap('0xE592427A0AEce92De3Edee1F18E0157C05861564', [
-    SupportedChainId.OPTIMISM,
-    SupportedChainId.OPTIMISTIC_KOVAN,
-    SupportedChainId.ARBITRUM_ONE,
-    SupportedChainId.ARBITRUM_RINKEBY,
-    SupportedChainId.POLYGON,
-    SupportedChainId.POLYGON_MUMBAI,
-  ]),
-  [SupportedChainId.CELO]: CELO_V3_ROUTER_ADDRESS,
-  [SupportedChainId.CELO_ALFAJORES]: CELO_V3_ROUTER_ADDRESS,
-}
-
 export const V3_MIGRATOR_ADDRESSES: AddressMap = {
   ...constructSameAddressMap('0xA5644E29708357803b5A882D272c41cC0dF92B34', [
     SupportedChainId.ARBITRUM_ONE,
