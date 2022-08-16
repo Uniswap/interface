@@ -454,7 +454,7 @@ export default function LoadedRow({
   const filterString = useAtomValue(filterStringAtom)
   const filterNetwork = useAtomValue(filterNetworkAtom)
   const filterTime = useAtomValue(filterTimeAtom) // filter time period for top tokens table
-  const L2Icon = getChainInfo(filterNetwork).secondaryLogo
+  const L2Icon = getChainInfo(filterNetwork).circleLogo
 
   const tokenPercentChangeInfo = (
     <>

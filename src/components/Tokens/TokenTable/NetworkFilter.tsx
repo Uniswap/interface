@@ -136,14 +136,14 @@ export default function NetworkFilter() {
   const toggleMenu = useToggleModal(ApplicationModal.NETWORK_FILTER)
   useOnClickOutside(node, open ? toggleMenu : undefined)
   const [activeNetwork, setNetwork] = useAtom(filterNetworkAtom)
-  const { label, secondaryLogo, logoUrl } = getChainInfo(activeNetwork)
+  const { label, circleLogo, logoUrl } = getChainInfo(activeNetwork)
 
   return (
     <StyledMenu ref={node}>
       <StyledMenuButton onClick={toggleMenu} aria-label={`networkFilter`} open={open}>
         <StyledMenuContent>
           <NetworkLabel>
-            <Logo src={secondaryLogo ?? logoUrl} /> {label}
+            <Logo src={circleLogo ?? logoUrl} /> {label}
           </NetworkLabel>
           <Chevron open={open}>
             {open ? <ChevronUp size={15} viewBox="0 0 24 20" /> : <ChevronDown size={15} viewBox="0 0 24 20" />}
@@ -161,7 +161,7 @@ export default function NetworkFilter() {
               }}
             >
               <NetworkLabel>
-                <Logo src={getChainInfo(network).secondaryLogo ?? getChainInfo(network).logoUrl} />
+                <Logo src={getChainInfo(network).circleLogo ?? getChainInfo(network).logoUrl} />
                 {getChainInfo(network).label}
               </NetworkLabel>
               {network === activeNetwork && (

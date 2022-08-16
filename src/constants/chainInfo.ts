@@ -26,7 +26,7 @@ interface BaseChainInfo {
   readonly explorer: string
   readonly infoLink: string
   readonly logoUrl: string
-  readonly secondaryLogo?: string
+  readonly circleLogo?: string
   readonly label: string
   readonly helpCenterUrl?: string
   readonly nativeCurrency: {
@@ -146,7 +146,7 @@ const CHAIN_INFO: ChainInfoMap = {
     infoLink: 'https://info.uniswap.org/#/arbitrum',
     label: 'Arbitrum',
     logoUrl: arbitrumLogoUrl,
-    secondaryLogo: ArbitrumNetwork,
+    circleLogo: ArbitrumNetwork,
     defaultListUrl: ARBITRUM_LIST,
     helpCenterUrl: 'https://help.uniswap.org/en/collections/3137787-uniswap-on-arbitrum',
     nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
@@ -176,7 +176,7 @@ const CHAIN_INFO: ChainInfoMap = {
     infoLink: 'https://info.uniswap.org/#/polygon/',
     label: 'Polygon',
     logoUrl: polygonMaticLogo,
-    secondaryLogo: PolygonNetwork,
+    circleLogo: PolygonNetwork,
     nativeCurrency: { name: 'Polygon Matic', symbol: 'MATIC', decimals: 18 },
     color: colorsDark.chain_137,
     backgroundColor: colorsDark.chain_137_background,
@@ -201,7 +201,7 @@ const CHAIN_INFO: ChainInfoMap = {
     infoLink: 'https://info.uniswap.org/#/celo',
     label: 'Celo',
     logoUrl: celoLogo,
-    secondaryLogo: CeloNetwork,
+    circleLogo: CeloNetwork,
     nativeCurrency: { name: 'Celo', symbol: 'CELO', decimals: 18 },
     defaultListUrl: CELO_LIST,
   },
