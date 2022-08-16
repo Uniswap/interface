@@ -54,19 +54,23 @@ const Header = styled(Row)`
   border-bottom: 1px solid ${({ theme }) => theme.backgroundOutline};
   margin-bottom: 8px;
 `
-const FlagHeaderName = styled.span<{ isHeader?: boolean }>`
-  font-size: ${({ isHeader }) => (isHeader ? '20px' : '16px')};
-  line-height: ${({ isHeader }) => (isHeader ? '24px' : '20px')};
-  padding-left: ${({ isHeader }) => !isHeader && '8px'};
+const FlagName = styled.span`
+  font-size: '16px';
+  line-height: '20px';
+  padding-left: '8px';
   color: ${({ theme }) => theme.textPrimary};
 `
-const FlagDescription = styled.span<{ isHeader?: boolean }>`
+const FlagGroupName = styled.span`
+  font-size: '20px';
+  line-height: '24px';
+  color: ${({ theme }) => theme.textPrimary};
+`
+const FlagDescription = styled.span`
   font-size: 12px;
   line-height: 16px;
   color: ${({ theme }) => theme.textSecondary};
   display: flex;
   align-items: center;
-  padding-left: ${({ isHeader }) => !isHeader && '8px'};
 `
 const FlagVariantSelection = styled.select`
   border-radius: 12px;
@@ -83,10 +87,12 @@ const FlagVariantSelection = styled.select`
   }
 `
 
-const FlagInfo = styled.div<{ isHeader?: boolean }>`
+const FlagInfo = styled.div`
   display: flex;
-  flex-direction: ${({ isHeader }) => isHeader && 'column'};
+  flex-direction: column;
+  padding-left: 8px;
 `
+
 const SaveButton = styled.button`
   border-radius: 12px;
   padding: 8px;
@@ -111,13 +117,11 @@ function FeatureFlagOption({
   featureFlag,
   value,
   label,
-  isHeader,
 }: {
   variants: string[]
   featureFlag: FeatureFlag
   value: string
   label: string
-  isHeader?: boolean
 }) {
   const updateFlag = useUpdateFlag()
   const [count, setCount] = useState(0)
@@ -125,9 +129,9 @@ function FeatureFlagOption({
 
   return (
     <Row key={featureFlag}>
-      <FlagInfo isHeader={isHeader}>
-        <FlagHeaderName isHeader={isHeader}>{featureFlag}</FlagHeaderName>
-        <FlagDescription isHeader={isHeader}>{label}</FlagDescription>
+      <FlagInfo>
+        <FlagName>{featureFlag}</FlagName>
+        <FlagDescription>{label}</FlagDescription>
       </FlagInfo>
       <FlagVariantSelection
         id={featureFlag}
@@ -157,14 +161,14 @@ export default function FeatureFlagModal() {
           <X size={24} />
         </CloseButton>
       </Header>
+      <FlagGroupName>Phase 1: </FlagGroupName>
       <FeatureFlagOption
         variants={Object.values(Phase1Variant)}
         value={usePhase1Flag()}
         featureFlag={FeatureFlag.phase1}
         label="All Phase 1 changes (nft features)."
-        isHeader
       />
-      <FlagHeaderName isHeader>Phase 0: </FlagHeaderName>
+      <FlagGroupName>Phase 0: </FlagGroupName>
       <FeatureFlagOption
         variants={Object.values(RedesignVariant)}
         value={useRedesignFlag()}
