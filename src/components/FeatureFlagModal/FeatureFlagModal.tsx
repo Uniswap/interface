@@ -1,4 +1,4 @@
-import { BaseVariant, FeatureFlag, FeatureFlagGroups, useBaseFlag, useUpdateFlag } from 'featureFlags'
+import { FeatureFlag, useUpdateFlag } from 'featureFlags'
 import { ExploreVariant, useExploreFlag } from 'featureFlags/flags/explore'
 import { Phase1Variant, usePhase1Flag } from 'featureFlags/flags/phase1'
 import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
@@ -54,7 +54,7 @@ const Header = styled(Row)`
   margin-bottom: 8px;
 `
 const FlagOption = styled.span`
-  font-size: 12px;
+  font-size: 14px;
   padding-left: 4px;
 `
 
@@ -74,6 +74,7 @@ function FeatureFlagOption({
   label: string
 }) {
   const updateFlag = useUpdateFlag()
+
   return (
     <Row key={featureFlag}>
       {featureFlag}: {label}
@@ -82,40 +83,6 @@ function FeatureFlagOption({
         value={value}
         onChange={(e) => {
           updateFlag(featureFlag, e.target.value)
-          window.location.reload()
-        }}
-      >
-        {variants.map((variant) => (
-          <Variant key={variant} option={variant} />
-        ))}
-      </select>
-    </Row>
-  )
-}
-
-function FeatureFlagGroup({
-  variants,
-  groupName,
-  featureFlagGroup,
-  value,
-  label,
-}: {
-  variants: string[]
-  groupName: string
-  featureFlagGroup: FeatureFlag[]
-  value: string
-  label: string
-}) {
-  const updateFlag = useUpdateFlag()
-  return (
-    <Row key={groupName}>
-      {groupName}: {label}
-      <select
-        id={groupName}
-        value={value}
-        onChange={(e) => {
-          featureFlagGroup.map((featureFlag) => updateFlag(featureFlag, e.target.value))
-          window.location.reload()
         }}
       >
         {variants.map((variant) => (
@@ -144,29 +111,20 @@ export default function FeatureFlagModal() {
         featureFlag={FeatureFlag.phase1}
         label="All Phase 1 changes (nft features)."
       />
-      <FeatureFlagGroup
-        variants={Object.values(BaseVariant)}
-        groupName={'Phase 0'}
-        featureFlagGroup={FeatureFlagGroups.phase0}
-        value={useBaseFlag(FeatureFlag.phase0)}
-        label={'Redesign, Explore, Token Safety'}
-      />
+      Phase 0:
       <FlagOption>
-        -
         <FeatureFlagOption
           variants={Object.values(RedesignVariant)}
           value={useRedesignFlag()}
           featureFlag={FeatureFlag.redesign}
           label="Redesign"
         />
-        -
         <FeatureFlagOption
           variants={Object.values(ExploreVariant)}
           value={useExploreFlag()}
           featureFlag={FeatureFlag.explore}
           label="Explore"
         />
-        -
         <FeatureFlagOption
           variants={Object.values(TokenSafetyVariant)}
           value={useTokenSafetyFlag()}

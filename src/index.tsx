@@ -3,7 +3,7 @@ import 'inter-ui'
 import 'polyfills'
 import 'components/analytics'
 
-import { FeatureFlagsProvider } from 'featureFlags'
+import FeatureFlagsUpdater, { FeatureFlagsProvider } from 'featureFlags'
 import { BlockNumberProvider } from 'lib/hooks/useBlockNumber'
 import { MulticallUpdater } from 'lib/state/multicall'
 import { StrictMode } from 'react'
@@ -42,6 +42,7 @@ function Updaters() {
       <TransactionUpdater />
       <MulticallUpdater />
       <LogsUpdater />
+      <FeatureFlagsUpdater />
     </>
   )
 }
