@@ -27,17 +27,17 @@ export default function useAllV3TicksQuery(poolAddress: string | undefined, skip
   const chainId = useAppSelector((state) => state.application.chainId)
   const environment = useRelayEnvironment()
 
-  const refreshData = useCallback(() => {
+  const refreshData = () => {
     if (poolAddress && chainId) {
       fetchQuery<AllV3TicksQueryType>(environment, query, {
-        poolAddress: poolAddress ? poolAddress.toLowerCase() : '',
+        poolAddress: poolAddress.toLowerCase(),
         skip,
       }).subscribe({
         next: (data) => setData({ error: null, isLoading: false, data }),
         error: (error: any) => setData({ error, isLoading: false, data: null }),
       })
     }
-  }, [poolAddress, chainId, skip, environment])
+  }
 
   useEffect(refreshData, [refreshData, poolAddress, skip])
 

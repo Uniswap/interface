@@ -48,7 +48,7 @@ export default function useFeeTierDistributionQuery(
   const environment = useRelayEnvironment()
   const chainId = useAppSelector((state) => state.application.chainId)
 
-  const refreshData = useCallback(() => {
+  const refreshData = () => {
     if (token0 && token1 && chainId) {
       fetchQuery<FeeTierDistributionQueryType>(environment, query, {
         token0: token0.toLowerCase(),
@@ -58,7 +58,7 @@ export default function useFeeTierDistributionQuery(
         error: (error: any) => setData({ error, isLoading: false, data: null }),
       })
     }
-  }, [token0, token1, chainId, environment])
+  }
 
   useEffect(refreshData, [refreshData, token0, token1])
 
