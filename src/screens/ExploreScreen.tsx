@@ -137,7 +137,7 @@ export function ExploreScreen() {
         <KeyboardAvoidingView behavior="height" style={flex.fill}>
           <AnimatedFlex grow entering={FadeIn} exiting={FadeOut} px="sm">
             <VirtualizedList>
-              <Box height={CONTENT_MAX_SCROLL_Y} mb="xl" />
+              <Box height={CONTENT_MAX_SCROLL_Y} mb="sm" />
               <SearchResultsSection searchQuery={searchQuery} />
             </VirtualizedList>
           </AnimatedFlex>
