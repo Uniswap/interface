@@ -7,6 +7,7 @@ import { ExploreVariant, useExploreFlag } from 'featureFlags/flags/explore'
 import useTheme from 'hooks/useTheme'
 import { darken } from 'polished'
 import { NavLink, useLocation } from 'react-router-dom'
+import { WalletVariant, useWalletFlag } from 'featureFlags/flags/wallet'
 import { Text } from 'rebass'
 import { useShowClaimPopup, useToggleSelfClaimModal } from 'state/application/hooks'
 import { useUserHasAvailableClaim } from 'state/claim/hooks'
@@ -14,6 +15,7 @@ import { useNativeCurrencyBalances } from 'state/connection/hooks'
 import { useUserHasSubmittedClaim } from 'state/transactions/hooks'
 import { useDarkModeManager } from 'state/user/hooks'
 import styled from 'styled-components/macro'
+import WalletDropdown from 'components/WalletDropdown'
 
 import { ReactComponent as Logo } from '../../assets/svg/logo.svg'
 import { ExternalLink, ThemedText } from '../../theme'
@@ -246,6 +248,7 @@ const StyledExternalLink = styled(ExternalLink)`
 
 export default function Header() {
   const exploreFlag = useExploreFlag()
+  const walletFlag = useWalletFlag()
 
   const { account, chainId } = useWeb3React()
 
@@ -347,6 +350,11 @@ export default function Header() {
             ) : null}
             <Web3Status />
           </AccountElement>
+          {walletFlag === WalletVariant.Enabled && (
+            <div style={{ position: 'absolute', top: 75, right: 20 }}>
+              <WalletDropdown />
+            </div>
+          )}
         </HeaderElement>
         <HeaderElement>
           <Menu />

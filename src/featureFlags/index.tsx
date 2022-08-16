@@ -56,6 +56,7 @@ export enum BaseVariant {
 export enum FeatureFlag {
   explore = 'explore',
   navBar = 'navBar',
+  wallet = 'wallet',
   phase1 = 'phase1',
   redesign = 'redesign',
   tokenSafety = 'tokenSafety',
