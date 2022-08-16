@@ -11,6 +11,8 @@ export const parameters = {
       excludeDecorators: true,
     },
   },
+  // Notifies Chromatic to pause the animations when they finish at a global level
+  chromatic: { pauseAnimationAtEnd: true },
   darkMode: {
     current: 'dark',
     // Override the default dark theme

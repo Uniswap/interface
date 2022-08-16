@@ -65,6 +65,9 @@ WallectConnectNotification.args = {
     chainId: ChainId.Mainnet,
   },
 }
+WallectConnectNotification.parameters = {
+  chromatic: { delay: 5000 },
+}
 
 export const DefaultNotification = Template.bind({})
 DefaultNotification.args = {
@@ -73,4 +76,7 @@ DefaultNotification.args = {
     address: '0x000000',
     title: 'Hello world!',
   },
+}
+DefaultNotification.parameters = {
+  chromatic: { delay: 5000 },
 }
