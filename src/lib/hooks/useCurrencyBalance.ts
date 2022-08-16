@@ -6,6 +6,7 @@ import { Erc20Interface } from 'abis/types/Erc20'
 import JSBI from 'jsbi'
 import { useMultipleContractSingleData, useSingleContractMultipleData } from 'lib/hooks/multicall'
 import { useMemo } from 'react'
+import useStablecoinPrice from 'hooks/useStablecoinPrice'
 
 import { nativeOnChain } from '../../constants/tokens'
 import { useInterfaceMulticall } from '../../hooks/useContract'

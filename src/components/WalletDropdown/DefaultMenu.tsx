@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { CurrencyAmount, NativeCurrency, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { getChainInfoOrDefault } from 'constants/chainInfo'
 import { SupportedChainId } from 'constants/chains'
@@ -8,6 +8,12 @@ import useCopyClipboard from 'hooks/useCopyClipboard'
 import { useCallback, useEffect, useState, useMemo } from 'react'
 import { ChevronRight, Copy, ExternalLink, Moon, Power, Sun } from 'react-feather'
 import { Text } from 'rebass'
+import { useToken } from 'hooks/Tokens'
+import { unwrappedToken } from 'utils/unwrappedToken'
+import useStablecoinPrice from 'hooks/useStablecoinPrice'
+import useNativeCurrency from 'lib/hooks/useNativeCurrency'
+import { useNativeCurrencyBalances } from 'state/connection/hooks'
+import { nativeOnChain } from 'constants/tokens'
 
 import { useCurrencyBalanceString } from 'state/connection/hooks'
 import { getConnection } from 'connection/utils'
@@ -114,12 +120,7 @@ const ToggleMenuItem = styled.button`
 
 const AuthenticatedHeader = () => {
   const { account, chainId, connector } = useWeb3React()
-
   const [isCopied, setCopied] = useCopyClipboard()
-
-  // TODO: we need to improve this experience.  If this price is preloaded into the redux store, that needs to be here.
-  // If its not, we should do that and can update this state in the background
-  const [price, setPrice] = useState(1500)
   const copy = useCallback(() => {
     setCopied(account || '')
   }, [account, setCopied])
@@ -129,15 +130,18 @@ const AuthenticatedHeader = () => {
     nativeCurrency: { symbol: nativeCurrencySymbol },
     explorer,
   } = getChainInfoOrDefault(chainId ? chainId : SupportedChainId.MAINNET)
+
   const { address: parsedAddress } = useENS(account)
   const unclaimedAmount: CurrencyAmount<Token> | undefined = useUserUnclaimedAmount(parsedAddress)
   const connectionType = getConnection(connector).type
+  const nativeCurrency = useNativeCurrency()
+  const nativeCurrencyPrice = useStablecoinPrice(nativeCurrency ?? undefined) || 0
 
-  useEffect(() => {
-    fetchPrice(nativeCurrencySymbol as Currency).then((price = 0) => {
-      setPrice(price)
-    })
-  }, [nativeCurrencySymbol])
+  const amountUSD = useMemo(() => {
+    let price = parseFloat(nativeCurrencyPrice.toFixed(5))
+    let balance = parseFloat(balanceString || '0')
+    return price * balance
+  }, [balanceString, nativeCurrencyPrice])
 
   return (
     <>
@@ -177,7 +181,7 @@ const AuthenticatedHeader = () => {
             {balanceString} {nativeCurrencySymbol}
           </Text>
           <Text fontSize={16} fontWeight={500} marginTop="8px" color={themeVars.colors.placeholder}>
-            ${(price * parseFloat(balanceString || '0')).toFixed(2)} USD
+            ${amountUSD.toFixed(2)} USD
           </Text>
         </div>
         {unclaimedAmount !== undefined && unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-') !== '0' && (
