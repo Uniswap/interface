@@ -14,6 +14,7 @@ import {
   ChevronLeft,
   Coffee,
   FileText,
+  Flag,
   Globe,
   HelpCircle,
   Info,
@@ -291,6 +292,11 @@ export default function Menu() {
                       </div>
                       <FileText opacity={0.6} size={16} />
                     </ToggleMenuItem>
+                    {(isDevelopmentEnv() || isStagingEnv()) && (
+                      <ToggleMenuItem onClick={openFeatureFlagsModal}>
+                        Feature Flags <Flag opacity={0.6} size={16} />
+                      </ToggleMenuItem>
+                    )}
                     {showUNIClaimOption && (
                       <UNIbutton
                         onClick={openClaimModal}
@@ -301,9 +307,6 @@ export default function Menu() {
                       >
                         <Trans>Claim UNI</Trans>
                       </UNIbutton>
-                    )}
-                    {(isDevelopmentEnv() || isStagingEnv()) && (
-                      <ToggleMenuItem onClick={openFeatureFlagsModal}>Feature Flags</ToggleMenuItem>
                     )}
                   </MenuFlyout>
                 )
