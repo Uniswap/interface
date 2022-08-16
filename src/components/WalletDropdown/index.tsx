@@ -23,9 +23,8 @@ const WalletWrapper = styled.div<{ height: string }>`
 
 const WalletDropdown = () => {
   const { account } = useWeb3React()
-  const isAuthenticated = !!account
   const [menu, setMenu] = useState<'DEFAULT' | 'LANGUAGE' | 'TRANSACTIONS'>('DEFAULT')
-
+  const isAuthenticated = !!account
   const height = isAuthenticated ? '324px' : '200px'
 
   return (
