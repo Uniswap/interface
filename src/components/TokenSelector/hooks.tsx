@@ -14,39 +14,16 @@ export function useFavoriteCurrenciesWithMetadata(currencies: CurrencyWithMetada
 }
 
 export function useFilterCallbacks(initialChainId: ChainId | undefined | null = null) {
-  // TODO: consider merging these into a single state object to ensure no bad
-  // state is accessible.
-  // only one of chain and favorites filter is considered at a time
   const [chainFilter, setChainFilter] = useState<ChainId | null>(initialChainId)
-  const [favoritesFilter, setFavoritesFilter] = useState<boolean>(false)
   const [searchFilter, setSearchFilter] = useState<string | null>(null)
 
-  const onChainPress = useCallback(
-    (newChainFilter: typeof chainFilter) => {
-      if (chainFilter === newChainFilter) {
-        setChainFilter(null)
-      } else {
-        setChainFilter(newChainFilter)
-      }
-      setFavoritesFilter(false)
-    },
-    [chainFilter]
-  )
-
-  const onClearChainFilter = useCallback(() => {
-    setFavoritesFilter(false)
-    setChainFilter(null)
+  const onChainPress = useCallback((newChainFilter: typeof chainFilter) => {
+    setChainFilter(newChainFilter)
   }, [])
 
   const onClearSearchFilter = useCallback(() => {
-    setFavoritesFilter(false)
     setSearchFilter(null)
   }, [])
-
-  const onToggleFavoritesFilter = useCallback(() => {
-    onClearChainFilter()
-    setFavoritesFilter((_favoritesFilter) => !_favoritesFilter)
-  }, [onClearChainFilter])
 
   const onChangeText = useCallback(
     (newSearchFilter: string) => setSearchFilter(newSearchFilter),
@@ -55,15 +32,9 @@ export function useFilterCallbacks(initialChainId: ChainId | undefined | null = 
 
   return {
     chainFilter,
-    favoritesFilter,
     searchFilter,
     onChainPress,
-    onClearChainFilter,
     onClearSearchFilter,
     onChangeText,
-    onToggleFavoritesFilter,
-    selected: (chainFilter ??
-      ((favoritesFilter && 'favorites') || (!searchFilter && 'reset')) ??
-      null) as ChainId | 'reset' | 'favorites' | null,
   }
 }

@@ -25,7 +25,6 @@ interface TokenSearchResultListProps {
   onClearSearchFilter: () => void
   onSelectCurrency: (currency: Currency) => void
   searchFilter: string | null
-  favoritesFilter: boolean
   chainFilter: ChainId | null
 }
 
@@ -34,7 +33,6 @@ export function TokenSearchResultList({
   onClearSearchFilter,
   onSelectCurrency,
   chainFilter,
-  favoritesFilter,
   searchFilter,
 }: TokenSearchResultListProps) {
   const { t } = useTranslation()
@@ -64,22 +62,14 @@ export function TokenSearchResultList({
   const currenciesWithMetadata = showNonZeroBalancesOnly ? currenciesWithBalances : allCurrencies
 
   const debouncedSearchFilter = useDebounce(searchFilter)
+
+  // TODO: Add favorites to suggested tokens list
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const favoriteCurrencies = useFavoriteCurrenciesWithMetadata(currenciesWithMetadata)
 
   const filteredCurrencies = useMemo(
-    () =>
-      filter(
-        favoritesFilter ? favoriteCurrencies : currenciesWithMetadata ?? null,
-        chainFilter,
-        debouncedSearchFilter
-      ),
-    [
-      chainFilter,
-      currenciesWithMetadata,
-      favoriteCurrencies,
-      favoritesFilter,
-      debouncedSearchFilter,
-    ]
+    () => filter(currenciesWithMetadata ?? null, chainFilter, debouncedSearchFilter),
+    [chainFilter, currenciesWithMetadata, debouncedSearchFilter]
   )
 
   const tokenWarningLevelMap = useCombinedTokenWarningLevelMap()
