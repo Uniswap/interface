@@ -22,7 +22,7 @@ export const nav = style([
 export const mobileWalletContainer = style([
   sprinkles({
     position: 'fixed',
-    display: { mobile: 'flex', desktopXl: 'none' },
+    display: 'flex',
     bottom: '0',
     right: '1/2',
     marginY: '0',
