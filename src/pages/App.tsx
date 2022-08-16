@@ -4,7 +4,8 @@ import { Trace } from 'components/AmplitudeAnalytics/Trace'
 import Loader from 'components/Loader'
 import TopLevelModals from 'components/TopLevelModals'
 import { useFeatureFlagsIsLoaded } from 'featureFlags'
-import { Phase0Variant, usePhase0Flag } from 'featureFlags/flags/phase0'
+import { ExploreVariant, useExploreFlag } from 'featureFlags/flags/explore'
+import { NavBarVariant, useNavBarFlag } from 'featureFlags/flags/navBar'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
 import { lazy, Suspense, useEffect } from 'react'
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
@@ -12,11 +13,13 @@ import { useIsDarkMode } from 'state/user/hooks'
 import styled from 'styled-components/macro'
 import { SpinnerSVG } from 'theme/components'
 import { getBrowser } from 'utils/browser'
+import { getCLS, getFCP, getFID, getLCP, Metric } from 'web-vitals'
 
 import { useAnalyticsReporter } from '../components/analytics'
 import ErrorBoundary from '../components/ErrorBoundary'
 import Header from '../components/Header'
 import Polling from '../components/Header/Polling'
+import Navbar from '../components/NavBar'
 import Popups from '../components/Popups'
 import { useIsExpertMode } from '../state/user/hooks'
 import DarkModeQueryParamReader from '../theme/DarkModeQueryParamReader'
@@ -46,17 +49,15 @@ const AppWrapper = styled.div`
   align-items: flex-start;
 `
 
-const BodyWrapper = styled.div`
+const BodyWrapper = styled.div<{ navBarFlag: NavBarVariant }>`
   display: flex;
   flex-direction: column;
   width: 100%;
-  padding: 120px 16px 0px 16px;
+  padding: ${({ navBarFlag }) => (navBarFlag === NavBarVariant.Enabled ? `72px 16px 0px 16px` : `120px 16px 0px 16px`)};
   align-items: center;
   flex: 1;
-  z-index: 1;
-
   ${({ theme }) => theme.mediaWidth.upToSmall`
-    padding: 4rem 8px 16px 8px;
+    padding: 52px 8px 16px 8px;
   `};
 `
 
@@ -104,7 +105,8 @@ const LazyLoadSpinner = () => (
 
 export default function App() {
   const isLoaded = useFeatureFlagsIsLoaded()
-  const phase0Flag = usePhase0Flag()
+  const exploreFlag = useExploreFlag()
+  const navBarFlag = useNavBarFlag()
 
   const { pathname } = useLocation()
   const currentPage = getCurrentPageFromLocation(pathname)
@@ -119,11 +121,14 @@ export default function App() {
   }, [pathname])
 
   useEffect(() => {
-    // TODO(zzmp): add web vitals event properties to app loaded event.
     sendAnalyticsEvent(EventName.APP_LOADED)
     user.set(CUSTOM_USER_PROPERTIES.BROWSER, getBrowser())
     user.set(CUSTOM_USER_PROPERTIES.SCREEN_RESOLUTION_HEIGHT, window.screen.height)
     user.set(CUSTOM_USER_PROPERTIES.SCREEN_RESOLUTION_WIDTH, window.screen.width)
+    getCLS(({ delta, id }: Metric) => sendAnalyticsEvent(EventName.WEB_VITALS, { cumulative_layout_shift: delta }))
+    getFCP(({ delta, id }: Metric) => sendAnalyticsEvent(EventName.WEB_VITALS, { first_contentful_paint_ms: delta }))
+    getFID(({ delta, id }: Metric) => sendAnalyticsEvent(EventName.WEB_VITALS, { first_input_delay_ms: delta }))
+    getLCP(({ delta, id }: Metric) => sendAnalyticsEvent(EventName.WEB_VITALS, { largest_contentful_paint_ms: delta }))
   }, [])
 
   useEffect(() => {
@@ -140,17 +145,15 @@ export default function App() {
       <ApeModeQueryParamReader />
       <AppWrapper>
         <Trace page={currentPage}>
-          <HeaderWrapper>
-            <Header />
-          </HeaderWrapper>
-          <BodyWrapper>
+          <HeaderWrapper>{navBarFlag === NavBarVariant.Enabled ? <Navbar /> : <Header />}</HeaderWrapper>
+          <BodyWrapper navBarFlag={navBarFlag}>
             <Popups />
             <Polling />
             <TopLevelModals />
             <Suspense fallback={<Loader />}>
               {isLoaded ? (
                 <Routes>
-                  {phase0Flag === Phase0Variant.Enabled && (
+                  {exploreFlag === ExploreVariant.Enabled && (
                     <>
                       <Route path="/explore" element={<Explore />} />
                       <Route path="/tokens/:tokenAddress" element={<TokenDetails />} />

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-05 22:05\n"
+"PO-Revision-Date: 2022-08-11 19:04\n"
 "Last-Translator: \n"
 "Language: es_ES\n"
 "Language-Team: Spanish\n"
@@ -555,7 +555,6 @@ msgid "Copied"
 msgstr "Copiado"
 
 #: src/components/AccountDetails/index.tsx
-#: src/components/AccountDetails/index.tsx
 msgid "Copy Address"
 msgstr "Copiar dirección"
 
@@ -1056,10 +1055,6 @@ msgstr "Cargado"
 msgid "Loading"
 msgstr "Cargando"
 
-#: src/components/CurrencyInputPanel/index.tsx
-msgid "MAX"
-msgstr "MAX"
-
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
@@ -1081,6 +1076,7 @@ msgstr "Administrar listas de token"
 msgid "Manage this pool."
 msgstr "Administrar este grupo."
 
+#: src/components/CurrencyInputPanel/index.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Max"
 msgstr "Máx"
@@ -1512,7 +1508,6 @@ msgstr "Buscar nombre o pegar dirección"
 msgid "Select Pair"
 msgstr "Seleccione Emparejar"
 
-#: src/components/CurrencyInputPanel/index.tsx
 #: src/components/SearchModal/CurrencySearch.tsx
 #: src/pages/PoolFinder/index.tsx
 #: src/pages/PoolFinder/index.tsx
@@ -1531,6 +1526,10 @@ msgstr "Seleccione una red {0}"
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Select an action"
 msgstr "Seleccione una acción"
+
+#: src/components/CurrencyInputPanel/index.tsx
+msgid "Select token"
+msgstr "Seleccionar token"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Selected Range"
@@ -1853,7 +1852,6 @@ msgid "Trade Route"
 msgstr "Ruta comercial"
 
 #: src/components/Settings/index.tsx
-#: src/components/Settings/index.tsx
 msgid "Transaction Settings"
 msgstr "Ajustes de la transacción"
 
@@ -2042,7 +2040,6 @@ msgstr "Ver lista"
 msgid "View on Etherscan"
 msgstr "Ver en Etherscan"
 
-#: src/components/AccountDetails/index.tsx
 #: src/components/AccountDetails/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
@@ -2400,6 +2397,7 @@ msgstr "{0, plural, =1 {No puede intercambiar este token usando la aplicación U
 
 #: src/components/RateToggle/index.tsx
 #: src/components/RateToggle/index.tsx
+#: src/components/Settings/index.tsx
 msgid "{0}"
 msgstr "{0}"
 

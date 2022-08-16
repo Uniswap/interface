@@ -37,7 +37,6 @@ export interface ThemeColors {
 
   white: Color
   black: Color
-  none: Color
 
   chain_1: Color
   chain_3: Color
@@ -54,6 +53,7 @@ export interface ThemeColors {
   blue200: Color
   flyoutDropShadow: Color
   hoverState: Color
+  hoverDefault: Color
 }
 
 export interface Colors {

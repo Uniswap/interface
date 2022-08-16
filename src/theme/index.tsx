@@ -1,4 +1,4 @@
-import { Phase0Variant, usePhase0Flag } from 'featureFlags/flags/phase0'
+import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
 import React, { useMemo } from 'react'
 import { Text, TextProps as TextPropsOriginal } from 'rebass'
 import styled, {
@@ -92,7 +92,6 @@ function uniswapThemeColors(darkMode: boolean): ThemeColors {
     accentTextLightSecondary: darkMode ? colorsDark.accentTextLightSecondary : colorsLight.accentTextLightSecondary,
     accentTextLightTertiary: darkMode ? colorsDark.accentTextLightTertiary : colorsLight.accentTextLightTertiary,
 
-    none: colorsDark.none,
     white: ColorsPalette.white,
     black: ColorsPalette.black,
 
@@ -113,6 +112,7 @@ function uniswapThemeColors(darkMode: boolean): ThemeColors {
     flyoutDropShadow:
       '0px 24px 32px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 0px 1px rgba(0, 0, 0, 0.12)',
     hoverState: opacify(24, ColorsPalette.blue200),
+    hoverDefault: opacify(8, ColorsPalette.gray200),
   }
 }
 
@@ -271,9 +271,12 @@ function getTheme(darkMode: boolean, isNewColorsEnabled: boolean): DefaultTheme 
 }
 
 export default function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const phase0Flag = usePhase0Flag()
+  const redesignFlag = useRedesignFlag()
   const darkMode = useIsDarkMode()
-  const themeObject = useMemo(() => getTheme(darkMode, phase0Flag === Phase0Variant.Enabled), [darkMode, phase0Flag])
+  const themeObject = useMemo(
+    () => getTheme(darkMode, redesignFlag === RedesignVariant.Enabled),
+    [darkMode, redesignFlag]
+  )
   return <StyledComponentsThemeProvider theme={themeObject}>{children}</StyledComponentsThemeProvider>
 }
 

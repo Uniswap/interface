@@ -5,8 +5,8 @@ import { EventName } from 'components/AmplitudeAnalytics/constants'
 import SparklineChart from 'components/Charts/SparklineChart'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { useCurrency, useToken } from 'hooks/Tokens'
+import { TimePeriod, TokenData } from 'hooks/useExplorePageQuery'
 import useTheme from 'hooks/useTheme'
-import { TimePeriod, TokenData } from 'hooks/useTopTokens'
 import { useAtom } from 'jotai'
 import { useAtomValue } from 'jotai/utils'
 import { ReactNode } from 'react'
@@ -129,7 +129,7 @@ const StyledHeaderRow = styled(StyledTokenRow)`
   width: 100%;
 
   &:hover {
-    background-color: ${({ theme }) => theme.none};
+    background-color: 'transparent';
   }
 
   @media only screen and (max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT}) {

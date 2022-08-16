@@ -17,7 +17,7 @@ const SearchInput = styled.input<{ expanded: boolean }>`
   background-image: ${({ expanded }) => !expanded && `url(${searchIcon})`};
   background-size: 20px 20px;
   background-position: 14px center;
-  background-color: ${({ theme }) => theme.none};
+  background-color: 'transparent';
   border-radius: 12px;
   border: 1px solid ${({ theme }) => theme.backgroundOutline};
   height: 100%;
@@ -38,7 +38,7 @@ const SearchInput = styled.input<{ expanded: boolean }>`
     border: none;
   }
   ::placeholder {
-    color: ${({ expanded, theme }) => (expanded ? theme.textTertiary : theme.none)};
+    color: ${({ expanded, theme }) => (expanded ? theme.textTertiary : 'transparent')};
   }
   ::-webkit-search-cancel-button {
     -webkit-appearance: none;

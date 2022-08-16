@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-05 22:05\n"
+"PO-Revision-Date: 2022-08-11 19:04\n"
 "Last-Translator: \n"
 "Language: el_GR\n"
 "Language-Team: Greek\n"
@@ -555,7 +555,6 @@ msgid "Copied"
 msgstr "Αντιγράφηκε"
 
 #: src/components/AccountDetails/index.tsx
-#: src/components/AccountDetails/index.tsx
 msgid "Copy Address"
 msgstr "Αντιγραφή Διεύθυνσης"
 
@@ -1056,10 +1055,6 @@ msgstr "Φορτώθηκε"
 msgid "Loading"
 msgstr "Φόρτωση"
 
-#: src/components/CurrencyInputPanel/index.tsx
-msgid "MAX"
-msgstr "ΜΕΓΙΣΤΗ"
-
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
@@ -1081,6 +1076,7 @@ msgstr "Διαχείριση Λίστας μάρκας"
 msgid "Manage this pool."
 msgstr "Διαχείριση αυτής της δεξαμενής."
 
+#: src/components/CurrencyInputPanel/index.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Max"
 msgstr "Μέγιστο"
@@ -1512,7 +1508,6 @@ msgstr "Αναζήτηση ονόματος ή επικόλλησης διεύθ
 msgid "Select Pair"
 msgstr "Επιλέξτε Ζεύγος"
 
-#: src/components/CurrencyInputPanel/index.tsx
 #: src/components/SearchModal/CurrencySearch.tsx
 #: src/pages/PoolFinder/index.tsx
 #: src/pages/PoolFinder/index.tsx
@@ -1531,6 +1526,10 @@ msgstr "Επιλέξτε ένα δίκτυο {0}"
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Select an action"
 msgstr "Επιλέξτε μια ενέργεια"
+
+#: src/components/CurrencyInputPanel/index.tsx
+msgid "Select token"
+msgstr "Επιλέξτε διακριτικό"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Selected Range"
@@ -1853,7 +1852,6 @@ msgid "Trade Route"
 msgstr "Εμπορική οδός"
 
 #: src/components/Settings/index.tsx
-#: src/components/Settings/index.tsx
 msgid "Transaction Settings"
 msgstr "Ρυθμίσεις Συναλλαγής"
 
@@ -2042,7 +2040,6 @@ msgstr "Προβολή λίστας"
 msgid "View on Etherscan"
 msgstr "Θέα στο Ethercan"
 
-#: src/components/AccountDetails/index.tsx
 #: src/components/AccountDetails/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
@@ -2400,6 +2397,7 @@ msgstr "{0, plural, =1 {Δεν μπορείτε να ανταλλάξετε αυ
 
 #: src/components/RateToggle/index.tsx
 #: src/components/RateToggle/index.tsx
+#: src/components/Settings/index.tsx
 msgid "{0}"
 msgstr "{0}"
 

@@ -141,7 +141,7 @@ const FavoriteIcon = styled(Heart)<{ isFavorited: boolean }>`
   height: 22px;
   width: 24px;
   color: ${({ isFavorited, theme }) => (isFavorited ? theme.accentAction : theme.textSecondary)};
-  fill: ${({ isFavorited, theme }) => (isFavorited ? theme.accentAction : theme.none)};
+  fill: ${({ isFavorited, theme }) => (isFavorited ? theme.accentAction : 'transparent')};
 `
 
 export default function LoadedTokenDetail({ address }: { address: string }) {

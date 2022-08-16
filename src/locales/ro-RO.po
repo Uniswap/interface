@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-05 22:05\n"
+"PO-Revision-Date: 2022-08-11 19:04\n"
 "Last-Translator: \n"
 "Language: ro_RO\n"
 "Language-Team: Romanian\n"
@@ -555,7 +555,6 @@ msgid "Copied"
 msgstr "Copiat"
 
 #: src/components/AccountDetails/index.tsx
-#: src/components/AccountDetails/index.tsx
 msgid "Copy Address"
 msgstr "Copiază Adresa"
 
@@ -1056,10 +1055,6 @@ msgstr "Încărcat"
 msgid "Loading"
 msgstr "Se încarcă"
 
-#: src/components/CurrencyInputPanel/index.tsx
-msgid "MAX"
-msgstr "MAX"
-
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
@@ -1081,6 +1076,7 @@ msgstr "Gestionează Lista de Jetoane"
 msgid "Manage this pool."
 msgstr "Gestionează acest grup."
 
+#: src/components/CurrencyInputPanel/index.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Max"
 msgstr "Maxim"
@@ -1512,7 +1508,6 @@ msgstr "Caută nume sau lipește adresa"
 msgid "Select Pair"
 msgstr "Selectați Pair"
 
-#: src/components/CurrencyInputPanel/index.tsx
 #: src/components/SearchModal/CurrencySearch.tsx
 #: src/pages/PoolFinder/index.tsx
 #: src/pages/PoolFinder/index.tsx
@@ -1531,6 +1526,10 @@ msgstr "Selectați o rețea {0}"
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Select an action"
 msgstr "Selectați o acțiune"
+
+#: src/components/CurrencyInputPanel/index.tsx
+msgid "Select token"
+msgstr "Selectați jetonul"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Selected Range"
@@ -1853,7 +1852,6 @@ msgid "Trade Route"
 msgstr "Rută comercială"
 
 #: src/components/Settings/index.tsx
-#: src/components/Settings/index.tsx
 msgid "Transaction Settings"
 msgstr "Setări Tranzacție"
 
@@ -2042,7 +2040,6 @@ msgstr "Vizualizează lista"
 msgid "View on Etherscan"
 msgstr "Vizualizare pe Etherscan"
 
-#: src/components/AccountDetails/index.tsx
 #: src/components/AccountDetails/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
@@ -2400,6 +2397,7 @@ msgstr "{0, plural, =1 {Nu puteți tranzacționa acest token folosind aplicația
 
 #: src/components/RateToggle/index.tsx
 #: src/components/RateToggle/index.tsx
+#: src/components/Settings/index.tsx
 msgid "{0}"
 msgstr "{0}"
 
