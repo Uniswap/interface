@@ -89,6 +89,39 @@ function FeatureFlagOption({
   )
 }
 
+function FeatureFlagGroup({
+  groupName,
+  featureFlagGroup,
+  value,
+}: {
+  groupName: string
+  featureFlagGroup: FeatureFlag[]
+  value: string
+}) {
+  const updateFlag = useUpdateFlag()
+  return (
+    <Row key={groupName}>
+      {groupName}
+      <select
+        id={groupName}
+        value={value}
+        onChange={(e) => {
+          featureFlagGroup.map((featureFlag) => updateFlag(featureFlag, e.target.value))
+
+          window.location.reload()
+        }}
+      >
+        {
+          <>
+            <Variant key={'on'} option={'on'} />
+            <Variant key={'off'} option={'off'} />
+          </>
+        }
+      </select>
+    </Row>
+  )
+}
+
 export default function FeatureFlagModal() {
   const open = useModalIsOpen(ApplicationModal.FEATURE_FLAGS)
   const toggle = useToggleFeatureFlags()
@@ -107,6 +140,12 @@ export default function FeatureFlagModal() {
         value={usePhase1Flag()}
         featureFlag={FeatureFlag.phase1}
         label="All Phase 1 changes (nft features)."
+      />
+
+      <FeatureFlagGroup
+        groupName={'Phase 0'}
+        featureFlagGroup={[FeatureFlag.redesign, FeatureFlag.explore, FeatureFlag.tokenSafety]}
+        value={}
       />
       <FeatureFlagOption
         variants={Object.values(RedesignVariant)}

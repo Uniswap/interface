@@ -60,6 +60,10 @@ export enum FeatureFlag {
   tokenSafety = 'tokenSafety',
 }
 
+export const FeatureFlagGroups = {
+  phase0: [FeatureFlag.explore, FeatureFlag.redesign, FeatureFlag.tokenSafety],
+}
+
 export function useBaseFlag(flag: string): BaseVariant {
   switch (useFeatureFlagsContext().flags[flag]) {
     case 'enabled':
