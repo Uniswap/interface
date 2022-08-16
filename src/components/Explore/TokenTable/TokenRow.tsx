@@ -129,7 +129,7 @@ const StyledHeaderRow = styled(StyledTokenRow)`
   width: 100%;
 
   &:hover {
-    background-color: ${({ theme }) => theme.none};
+    background-color: 'transparent';
   }
 
   @media only screen and (max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT}) {

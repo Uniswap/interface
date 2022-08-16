@@ -43,7 +43,7 @@ const Row = styled.div`
 
 const CloseButton = styled.button`
   cursor: pointer;
-  background: ${({ theme }) => theme.none};
+  background: 'transparent';
   border: none;
   color: ${({ theme }) => theme.textPrimary};
 `

@@ -205,7 +205,6 @@ export interface Palette {
 
   white: Color
   black: Color
-  none: Color
 
   chain_1: Color
   chain_3: Color
@@ -227,8 +226,6 @@ export interface Palette {
 
 export const colorsLight: Palette = {
   userThemeColor: colors.magentaVibrant,
-
-  none: 'transparent',
 
   backgroundBackdrop: colors.white,
   backgroundSurface: colors.white,
@@ -321,7 +318,6 @@ export const colorsDark: Palette = {
 
   white: colors.white,
   black: colors.black,
-  none: 'transparent',
 
   chain_1: colors.networkEthereum,
   chain_3: colors.yellow400,

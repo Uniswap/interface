@@ -209,7 +209,7 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
               <Heart
                 size={15}
                 color={isFavorited ? theme.accentAction : theme.textSecondary}
-                fill={isFavorited ? theme.accentAction : theme.none}
+                fill={isFavorited ? theme.accentAction : 'transparent'}
               />
             </ClickFavorited>
           </TokenActions>
