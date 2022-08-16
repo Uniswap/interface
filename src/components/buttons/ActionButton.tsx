@@ -1,5 +1,5 @@
 import { notificationAsync } from 'expo-haptics'
-import React from 'react'
+import React, { ComponentProps } from 'react'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { ElementName } from 'src/features/telemetry/constants'
@@ -11,7 +11,7 @@ type ActionButtonProps = {
   label: string
   onPress: () => void
   textVariant?: keyof Theme['textVariants']
-}
+} & ComponentProps<typeof PrimaryButton>
 
 export default function ActionButton({
   onPress,
@@ -19,6 +19,7 @@ export default function ActionButton({
   label,
   name,
   textVariant = 'largeLabel',
+  ...rest
 }: ActionButtonProps) {
   const { trigger: actionButtonTrigger, modal: BiometricModal } = useBiometricPrompt(onPress)
   const { requiredForTransactions } = useBiometricAppSettings()
@@ -26,6 +27,7 @@ export default function ActionButton({
   return (
     <>
       <PrimaryButton
+        {...rest}
         disabled={disabled}
         label={label}
         name={name}
