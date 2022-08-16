@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-05 22:05\n"
+"PO-Revision-Date: 2022-08-11 19:05\n"
 "Last-Translator: \n"
 "Language: zh_TW\n"
 "Language-Team: Chinese Traditional\n"
@@ -555,7 +555,6 @@ msgid "Copied"
 msgstr "已複製"
 
 #: src/components/AccountDetails/index.tsx
-#: src/components/AccountDetails/index.tsx
 msgid "Copy Address"
 msgstr "複製地址"
 
@@ -1056,10 +1055,6 @@ msgstr "已加載"
 msgid "Loading"
 msgstr "載入中"
 
-#: src/components/CurrencyInputPanel/index.tsx
-msgid "MAX"
-msgstr "最大值"
-
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
@@ -1081,6 +1076,7 @@ msgstr "管理代幣列表"
 msgid "Manage this pool."
 msgstr "管理此流動池。"
 
+#: src/components/CurrencyInputPanel/index.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Max"
 msgstr "最大值"
@@ -1512,7 +1508,6 @@ msgstr "搜索名稱或粘貼地址"
 msgid "Select Pair"
 msgstr "選擇幣對"
 
-#: src/components/CurrencyInputPanel/index.tsx
 #: src/components/SearchModal/CurrencySearch.tsx
 #: src/pages/PoolFinder/index.tsx
 #: src/pages/PoolFinder/index.tsx
@@ -1531,6 +1526,10 @@ msgstr "選擇 {0}網絡"
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Select an action"
 msgstr "選擇操作"
+
+#: src/components/CurrencyInputPanel/index.tsx
+msgid "Select token"
+msgstr "選擇令牌"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Selected Range"
@@ -1853,7 +1852,6 @@ msgid "Trade Route"
 msgstr "交易路由"
 
 #: src/components/Settings/index.tsx
-#: src/components/Settings/index.tsx
 msgid "Transaction Settings"
 msgstr "交易設定"
 
@@ -2042,7 +2040,6 @@ msgstr "查看代幣列表"
 msgid "View on Etherscan"
 msgstr "在Etherscan上查看"
 
-#: src/components/AccountDetails/index.tsx
 #: src/components/AccountDetails/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
@@ -2400,6 +2397,7 @@ msgstr "{0, plural, =1 {您不能使用 Uniswap 應用程序交易此代幣。} 
 
 #: src/components/RateToggle/index.tsx
 #: src/components/RateToggle/index.tsx
+#: src/components/Settings/index.tsx
 msgid "{0}"
 msgstr "{0}"
 

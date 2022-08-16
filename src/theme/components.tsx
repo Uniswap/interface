@@ -296,8 +296,8 @@ export const SmallOnly = styled.span`
   `};
 `
 
-export const Separator = styled.div<{ phase0Flag?: boolean }>`
+export const Separator = styled.div<{ redesignFlag?: boolean }>`
   width: 100%;
   height: 1px;
-  background-color: ${({ theme, phase0Flag }) => (phase0Flag ? theme.backgroundOutline : theme.deprecated_bg2)};
+  background-color: ${({ theme, redesignFlag }) => (redesignFlag ? theme.backgroundOutline : theme.deprecated_bg2)};
 `

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-05 22:05\n"
+"PO-Revision-Date: 2022-08-11 19:05\n"
 "Last-Translator: \n"
 "Language: pt_PT\n"
 "Language-Team: Portuguese\n"
@@ -555,7 +555,6 @@ msgid "Copied"
 msgstr "Copiado"
 
 #: src/components/AccountDetails/index.tsx
-#: src/components/AccountDetails/index.tsx
 msgid "Copy Address"
 msgstr "Copiar Endereço"
 
@@ -1056,10 +1055,6 @@ msgstr "Carregado"
 msgid "Loading"
 msgstr "A carregar"
 
-#: src/components/CurrencyInputPanel/index.tsx
-msgid "MAX"
-msgstr "MAX"
-
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
@@ -1081,6 +1076,7 @@ msgstr "Gerir listas de tokens"
 msgid "Manage this pool."
 msgstr "Gerir esta pool."
 
+#: src/components/CurrencyInputPanel/index.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Max"
 msgstr "Máximo"
@@ -1512,7 +1508,6 @@ msgstr "Pesquisar nome ou colar endereço"
 msgid "Select Pair"
 msgstr "Selecione Par"
 
-#: src/components/CurrencyInputPanel/index.tsx
 #: src/components/SearchModal/CurrencySearch.tsx
 #: src/pages/PoolFinder/index.tsx
 #: src/pages/PoolFinder/index.tsx
@@ -1531,6 +1526,10 @@ msgstr "Selecione uma rede {0}"
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Select an action"
 msgstr "Selecione uma ação"
+
+#: src/components/CurrencyInputPanel/index.tsx
+msgid "Select token"
+msgstr "Selecionar token"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Selected Range"
@@ -1853,7 +1852,6 @@ msgid "Trade Route"
 msgstr "Rota comercial"
 
 #: src/components/Settings/index.tsx
-#: src/components/Settings/index.tsx
 msgid "Transaction Settings"
 msgstr "Configurações de transação"
 
@@ -2042,7 +2040,6 @@ msgstr "Ver lista"
 msgid "View on Etherscan"
 msgstr "Ver no Etherscan"
 
-#: src/components/AccountDetails/index.tsx
 #: src/components/AccountDetails/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
@@ -2400,6 +2397,7 @@ msgstr "{0, plural, =1 {Você não pode negociar este token usando o aplicativo 
 
 #: src/components/RateToggle/index.tsx
 #: src/components/RateToggle/index.tsx
+#: src/components/Settings/index.tsx
 msgid "{0}"
 msgstr "{0}"
 

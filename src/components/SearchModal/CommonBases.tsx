@@ -6,6 +6,7 @@ import { AutoColumn } from 'components/Column'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { AutoRow } from 'components/Row'
 import { COMMON_BASES } from 'constants/routing'
+import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
 import { useTokenInfoFromActiveList } from 'hooks/useTokenInfoFromActiveList'
 import { Text } from 'rebass'
 import styled from 'styled-components/macro'
@@ -17,21 +18,33 @@ const MobileWrapper = styled(AutoColumn)`
   `};
 `
 
-const BaseWrapper = styled.div<{ disable?: boolean }>`
-  border: 1px solid ${({ theme, disable }) => (disable ? 'transparent' : theme.deprecated_bg3)};
-  border-radius: 10px;
+const BaseWrapper = styled.div<{ disable?: boolean; redesignFlag?: boolean }>`
+  border: 1px solid
+    ${({ theme, disable, redesignFlag }) =>
+      disable
+        ? redesignFlag
+          ? theme.accentAction
+          : theme.none
+        : redesignFlag
+        ? theme.backgroundOutline
+        : theme.deprecated_bg3};
+  border-radius: ${({ redesignFlag }) => (redesignFlag ? '16px' : '10px')};
   display: flex;
   padding: 6px;
+  padding-right: 12px;
 
   align-items: center;
   :hover {
     cursor: ${({ disable }) => !disable && 'pointer'};
-    background-color: ${({ theme, disable }) => !disable && theme.deprecated_bg2};
+    background-color: ${({ theme, disable, redesignFlag }) =>
+      (redesignFlag && theme.hoverDefault) || (!disable && theme.deprecated_bg2)};
   }
 
-  color: ${({ theme, disable }) => disable && theme.deprecated_text3};
-  background-color: ${({ theme, disable }) => disable && theme.deprecated_bg3};
-  filter: ${({ disable }) => disable && 'grayscale(1)'};
+  color: ${({ theme, disable, redesignFlag }) =>
+    disable && (redesignFlag ? theme.accentAction : theme.deprecated_text3)};
+  background-color: ${({ theme, disable, redesignFlag }) =>
+    disable && (redesignFlag ? theme.accentActionSoft : theme.deprecated_bg3)};
+  filter: ${({ disable, redesignFlag }) => disable && !redesignFlag && 'grayscale(1)'};
 `
 
 const formatAnalyticsEventProperties = (currency: Currency, searchQuery: string, isAddressSearch: string | false) => ({
@@ -60,6 +73,8 @@ export default function CommonBases({
   isAddressSearch: string | false
 }) {
   const bases = typeof chainId !== 'undefined' ? COMMON_BASES[chainId] ?? [] : []
+  const redesignFlag = useRedesignFlag()
+  const redesignFlagEnabled = redesignFlag === RedesignVariant.Enabled
 
   return bases.length > 0 ? (
     <MobileWrapper gap="md">
@@ -80,6 +95,7 @@ export default function CommonBases({
                 onKeyPress={(e) => !isSelected && e.key === 'Enter' && onSelect(currency)}
                 onClick={() => !isSelected && onSelect(currency)}
                 disable={isSelected}
+                redesignFlag={redesignFlagEnabled}
                 key={currencyId(currency)}
               >
                 <CurrencyLogoFromList currency={currency} />
