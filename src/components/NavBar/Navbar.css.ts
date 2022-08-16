@@ -12,10 +12,8 @@ export const nav = style([
     borderStyle: 'solid',
   }),
   {
-    borderColor: '#00000018',
     borderWidth: '0.5px',
     backdropFilter: 'blur(24px)',
-    background: '#1B213018',
   },
 ])
 
