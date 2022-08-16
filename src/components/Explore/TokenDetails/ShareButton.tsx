@@ -5,6 +5,8 @@ import { useModalIsOpen, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import styled, { useTheme } from 'styled-components/macro'
 import { ClickableStyle, CopyHelperRefType, OPACITY_CLICK, Z_INDEX } from 'theme'
+import { colors } from 'theme/colors'
+import { opacify } from 'theme/utils'
 
 import { ReactComponent as ShareIcon } from '../../../assets/svg/share.svg'
 import { CopyHelper } from '../../../theme'
@@ -53,7 +55,7 @@ const ShareAction = styled.div`
   color: ${({ theme }) => theme.textPrimary};
   cursor: pointer;
   :hover {
-    background-color: ${({ theme }) => theme.backgroundInteractive};
+    background-color: ${({ theme }) => opacify(10, theme.darkMode ? colors.gray200 : colors.gray300)};
   }
 `
 
