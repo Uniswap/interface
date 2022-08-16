@@ -185,7 +185,7 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
           <TokenNameCell>
             <CurrencyLogo currency={currency} size={'32px'} />
             {tokenName} <TokenSymbol>{tokenSymbol}</TokenSymbol>
-            {!warning && <VerifiedIcon size="24px" />}
+            {!warning && <VerifiedIcon size="20px" />}
             {networkBadgebackgroundColor && (
               <NetworkBadge networkColor={chainInfo?.color} backgroundColor={networkBadgebackgroundColor}>
                 {networkLabel}
@@ -220,7 +220,7 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
           </Stat>
           <Stat>
             {/* TODO: connect to chart's selected time */}
-            24h volume
+            24H volume
             <StatPrice>${tokenVolume}</StatPrice>
           </Stat>
         </StatPair>
