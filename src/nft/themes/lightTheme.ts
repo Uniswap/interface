@@ -29,6 +29,7 @@ export const lightTheme: Theme = {
     white95: '#EDEFF7F2',
     white90: '#FFFFFFE5',
     white80: '#FFFFFFCC',
+    white08: '#29324908',
   },
   shadows: {
     menu: '0px 10px 30px rgba(0, 0, 0, 0.1)',

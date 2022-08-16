@@ -10,13 +10,10 @@ export const nav = style([
     width: 'full',
     height: '72',
     zIndex: '2',
-    borderStyle: 'solid',
+    background: 'white08',
   }),
   {
-    borderColor: '#00000018',
-    borderWidth: '0.5px',
     backdropFilter: 'blur(24px)',
-    background: '#1B213018',
   },
 ])
 
