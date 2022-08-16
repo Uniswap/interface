@@ -2,6 +2,7 @@ import { getChainInfo } from 'constants/chainInfo'
 import { SupportedChainId } from 'constants/chains'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { useAtom } from 'jotai'
+import { getNetworkLogoURL } from 'lib/hooks/useCurrencyLogoURIs'
 import { useRef } from 'react'
 import { Check, ChevronDown, ChevronUp } from 'react-feather'
 import { useModalIsOpen, useToggleModal } from 'state/application/hooks'
@@ -136,7 +137,8 @@ export default function NetworkFilter() {
   const toggleMenu = useToggleModal(ApplicationModal.NETWORK_FILTER)
   useOnClickOutside(node, open ? toggleMenu : undefined)
   const [activeNetwork, setNetwork] = useAtom(filterNetworkAtom)
-  const { label, logoUrl } = getChainInfo(activeNetwork)
+  const { label } = getChainInfo(activeNetwork)
+  const logoUrl = getNetworkLogoURL(activeNetwork)
 
   return (
     <StyledMenu ref={node}>
@@ -161,7 +163,7 @@ export default function NetworkFilter() {
               }}
             >
               <NetworkLabel>
-                <Logo src={getChainInfo(network).logoUrl} /> {getChainInfo(network).label}
+                <Logo src={getNetworkLogoURL(network)} /> {getChainInfo(network).label}
               </NetworkLabel>
               {network === activeNetwork && (
                 <CheckContainer>

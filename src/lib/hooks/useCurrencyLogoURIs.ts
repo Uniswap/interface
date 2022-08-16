@@ -4,12 +4,13 @@ import useHttpLocations from 'hooks/useHttpLocations'
 import { useMemo } from 'react'
 import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 
+import CeloNetwork from '../../assets/images/Celo.png'
 import EthereumLogo from '../../assets/images/ethereum-logo.png'
-import ArbitrumLogo from '../../assets/svg/arbitrum_logo.svg'
+import OptimismNetwork from '../../assets/images/Optimism.png'
+import PolygonNetwork from '../../assets/images/Polygon.png'
+import ArbitrumNetwork from '../../assets/svg/arbitrum_logo.svg'
 import CeloLogo from '../../assets/svg/celo_logo.svg'
 import MaticLogo from '../../assets/svg/matic-token-icon.svg'
-import OptimismLogo from '../../assets/svg/optimism_logo.svg'
-import PolygonLogo from '../../assets/svg/polygon-matic-logo.svg'
 import { isCelo, nativeOnChain } from '../../constants/tokens'
 
 type Network = 'ethereum' | 'arbitrum' | 'optimism' | 'polygon'
@@ -46,11 +47,14 @@ export function getNetworkLogoURL(chainId: SupportedChainId): string {
   switch (chainId) {
     case SupportedChainId.POLYGON:
     case SupportedChainId.POLYGON_MUMBAI:
-      return PolygonLogo
+      return PolygonNetwork
     case SupportedChainId.ARBITRUM_ONE:
-      return ArbitrumLogo
+      return ArbitrumNetwork
     case SupportedChainId.OPTIMISM:
-      return OptimismLogo
+    case SupportedChainId.OPTIMISTIC_KOVAN:
+      return OptimismNetwork
+    case SupportedChainId.CELO:
+      return CeloNetwork
     default:
       return EthereumLogo
   }

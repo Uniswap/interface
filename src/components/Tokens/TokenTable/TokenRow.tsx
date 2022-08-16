@@ -9,7 +9,7 @@ import { useCurrency, useToken } from 'hooks/Tokens'
 import { TimePeriod, TokenData } from 'hooks/useExplorePageQuery'
 import { useAtom } from 'jotai'
 import { useAtomValue } from 'jotai/utils'
-import { getNativeLogoURI } from 'lib/hooks/useCurrencyLogoURIs'
+import { getNetworkLogoURL } from 'lib/hooks/useCurrencyLogoURIs'
 import { ReactNode } from 'react'
 import { ArrowDown, ArrowDownRight, ArrowUp, ArrowUpRight, Heart } from 'react-feather'
 import { Link } from 'react-router-dom'
@@ -290,6 +290,8 @@ const L2NetworkLogo = styled.div<{ networkUrl: string; L2display: boolean }>`
   left: 50%;
   top: 50%;
   background: url(${({ networkUrl }) => networkUrl});
+  background-repeat: no-repeat;
+  background-size: 12px 12px;
   display: ${({ L2display }) => !L2display && 'none'};
 `
 const LogoContainer = styled.div`
@@ -504,7 +506,7 @@ export default function LoadedRow({
               <CurrencyLogo currency={currency} />
               <L2NetworkLogo
                 L2display={SupportedChainId.MAINNET !== filterNetwork}
-                networkUrl={getNativeLogoURI(filterNetwork)}
+                networkUrl={getNetworkLogoURL(filterNetwork)}
               />
             </LogoContainer>
             <TokenInfoCell>
