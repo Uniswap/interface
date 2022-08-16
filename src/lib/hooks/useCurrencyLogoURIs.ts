@@ -4,11 +4,7 @@ import useHttpLocations from 'hooks/useHttpLocations'
 import { useMemo } from 'react'
 import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 
-import CeloNetwork from '../../assets/images/Celo.png'
 import EthereumLogo from '../../assets/images/ethereum-logo.png'
-import OptimismNetwork from '../../assets/images/Optimism.png'
-import PolygonNetwork from '../../assets/images/Polygon.png'
-import ArbitrumNetwork from '../../assets/svg/arbitrum_logo.svg'
 import CeloLogo from '../../assets/svg/celo_logo.svg'
 import MaticLogo from '../../assets/svg/matic-token-icon.svg'
 import { isCelo, nativeOnChain } from '../../constants/tokens'
@@ -38,23 +34,6 @@ export function getNativeLogoURI(chainId: SupportedChainId = SupportedChainId.MA
     case SupportedChainId.CELO:
     case SupportedChainId.CELO_ALFAJORES:
       return CeloLogo
-    default:
-      return EthereumLogo
-  }
-}
-
-export function getNetworkLogoURL(chainId: SupportedChainId): string {
-  switch (chainId) {
-    case SupportedChainId.POLYGON:
-    case SupportedChainId.POLYGON_MUMBAI:
-      return PolygonNetwork
-    case SupportedChainId.ARBITRUM_ONE:
-      return ArbitrumNetwork
-    case SupportedChainId.OPTIMISM:
-    case SupportedChainId.OPTIMISTIC_KOVAN:
-      return OptimismNetwork
-    case SupportedChainId.CELO:
-      return CeloNetwork
     default:
       return EthereumLogo
   }

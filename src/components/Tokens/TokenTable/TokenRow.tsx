@@ -4,12 +4,11 @@ import { sendAnalyticsEvent } from 'components/AmplitudeAnalytics'
 import { EventName } from 'components/AmplitudeAnalytics/constants'
 import SparklineChart from 'components/Charts/SparklineChart'
 import CurrencyLogo from 'components/CurrencyLogo'
-import { SupportedChainId } from 'constants/chains'
+import { getChainInfo } from 'constants/chainInfo'
 import { useCurrency, useToken } from 'hooks/Tokens'
 import { TimePeriod, TokenData } from 'hooks/useExplorePageQuery'
 import { useAtom } from 'jotai'
 import { useAtomValue } from 'jotai/utils'
-import { getNetworkLogoURL } from 'lib/hooks/useCurrencyLogoURIs'
 import { ReactNode } from 'react'
 import { ArrowDown, ArrowDownRight, ArrowUp, ArrowUpRight, Heart } from 'react-feather'
 import { Link } from 'react-router-dom'
@@ -282,7 +281,7 @@ const SparkLineLoadingBubble = styled(LongLoadingBubble)`
   height: 4px;
 `
 
-const L2NetworkLogo = styled.div<{ networkUrl: string; L2display: boolean }>`
+const L2NetworkLogo = styled.div<{ networkUrl?: string }>`
   height: 12px;
   width: 12px;
   border-radius: 50%;
@@ -292,7 +291,7 @@ const L2NetworkLogo = styled.div<{ networkUrl: string; L2display: boolean }>`
   background: url(${({ networkUrl }) => networkUrl});
   background-repeat: no-repeat;
   background-size: 12px 12px;
-  display: ${({ L2display }) => !L2display && 'none'};
+  display: ${({ networkUrl }) => !networkUrl && 'none'};
 `
 const LogoContainer = styled.div`
   position: relative;
@@ -455,6 +454,7 @@ export default function LoadedRow({
   const filterString = useAtomValue(filterStringAtom)
   const filterNetwork = useAtomValue(filterNetworkAtom)
   const filterTime = useAtomValue(filterTimeAtom) // filter time period for top tokens table
+  const L2Icon = getChainInfo(filterNetwork).secondaryLogo
 
   const tokenPercentChangeInfo = (
     <>
@@ -504,10 +504,7 @@ export default function LoadedRow({
           <ClickableName>
             <LogoContainer>
               <CurrencyLogo currency={currency} />
-              <L2NetworkLogo
-                L2display={SupportedChainId.MAINNET !== filterNetwork}
-                networkUrl={getNetworkLogoURL(filterNetwork)}
-              />
+              <L2NetworkLogo networkUrl={L2Icon} />
             </LogoContainer>
             <TokenInfoCell>
               <TokenName>{tokenName}</TokenName>
