@@ -17,14 +17,14 @@ export const nav = style([
 
 export const baseContainer = style([
   sprinkles({
-    display: { mobile: 'none', desktopXl: 'flex' },
+    display: 'flex',
     alignItems: 'center',
   }),
 ])
 
 export const baseMobileContainer = style([
   sprinkles({
-    display: { mobile: 'flex', desktopXl: 'none' },
+    display: 'flex',
     width: 'full',
     alignItems: 'center',
     marginY: '2',
