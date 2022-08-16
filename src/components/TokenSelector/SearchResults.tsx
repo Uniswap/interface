@@ -3,6 +3,7 @@ import Fuse from 'fuse.js'
 import React, { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FlatList, ListRenderItemInfo, StyleSheet } from 'react-native'
+import { Separator } from 'src/components/layout/Separator'
 import { filter } from 'src/components/TokenSelector/filter'
 import { useFavoriteCurrenciesWithMetadata } from 'src/components/TokenSelector/hooks'
 import { TokenOption } from 'src/components/TokenSelector/TokenOption'
@@ -91,6 +92,7 @@ export function TokenSearchResultList({
 
   return (
     <FlatList
+      ItemSeparatorComponent={() => <Separator mx="xs" />}
       ListEmptyComponent={
         <Flex centered gap="sm" px="lg">
           <Text variant="mediumLabel">😔</Text>
@@ -111,6 +113,7 @@ export function TokenSearchResultList({
       data={filteredCurrencies}
       keyExtractor={key}
       renderItem={renderItem}
+      showsVerticalScrollIndicator={false}
       style={styles.list}
       windowSize={1}
     />

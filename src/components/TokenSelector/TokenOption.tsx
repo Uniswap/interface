@@ -1,18 +1,18 @@
 import { Currency } from '@uniswap/sdk-core'
 import Fuse from 'fuse.js'
 import React, { useCallback, useState } from 'react'
-import { Option } from 'src/components/TokenSelector/Option'
-import { CurrencyWithMetadata } from 'src/components/TokenSelector/types'
+import { Box } from 'src/components/layout'
 import { Modal } from 'src/components/modals/Modal'
 import TokenWarningModalContent from 'src/components/tokens/TokenWarningModalContent'
 import WarningIcon from 'src/components/tokens/WarningIcon'
+import { Option } from 'src/components/TokenSelector/Option'
+import { CurrencyWithMetadata } from 'src/components/TokenSelector/types'
 import {
   TokenWarningLevel,
   TokenWarningLevelMap,
   useDismissTokenWarnings,
 } from 'src/features/tokens/useTokenWarningLevel'
 import { currencyId } from 'src/utils/currencyId'
-import { Flex } from '../layout'
 
 interface OptionProps {
   currencyWithMetadata: CurrencyWithMetadata
@@ -53,7 +53,7 @@ export function TokenOption({
   }, [dismissed, onPress, tokenWarningLevel])
 
   return (
-    <Flex opacity={tokenWarningLevel === TokenWarningLevel.BLOCKED ? 0.5 : 1}>
+    <Box opacity={tokenWarningLevel === TokenWarningLevel.BLOCKED ? 0.5 : 1}>
       <Modal
         hide={() => setShowWarningModal(false)}
         position="bottom"
@@ -75,6 +75,6 @@ export function TokenOption({
         metadataType={tokenWarningLevel === TokenWarningLevel.BLOCKED ? 'disabled' : 'balance'}
         onPress={handleSelectCurrency}
       />
-    </Flex>
+    </Box>
   )
 }
