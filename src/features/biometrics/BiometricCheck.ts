@@ -32,5 +32,17 @@ export function BiometricCheck() {
     }
   })
 
+  useAppStateTrigger('inactive', 'active', () => {
+    if (requiredForAppAccess) {
+      setIsLockScreenVisible(false)
+    }
+  })
+
+  useAppStateTrigger('active', 'inactive', () => {
+    if (requiredForAppAccess) {
+      setIsLockScreenVisible(true)
+    }
+  })
+
   return modal
 }
