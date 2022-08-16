@@ -4,12 +4,12 @@ import { selectionAsync } from 'expo-haptics'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { CurrencyLogo } from 'src/components/CurrencyLogo'
-import { Toggle } from 'src/components/TokenSelector/Toggle'
 import { Chevron } from 'src/components/icons/Chevron'
 import { Flex } from 'src/components/layout'
 import { Box } from 'src/components/layout/Box'
 import { CenterBox } from 'src/components/layout/CenterBox'
 import { Text } from 'src/components/Text'
+import { Toggle } from 'src/components/TokenSelector/Toggle'
 import { Theme } from 'src/styles/theme'
 
 interface TokenSelectorProps {
@@ -56,7 +56,7 @@ export function TokenSelector({
                 <Text color="accentTextLightPrimary" variant="largeLabel">
                   {t('Choose token')}
                 </Text>
-                <Chevron color={theme.colors.textPrimary} direction="e" />
+                <Chevron color={theme.colors.accentTextLightPrimary} direction="e" />
               </Flex>
             </Flex>
           )}
