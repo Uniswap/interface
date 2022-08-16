@@ -64,6 +64,7 @@ const FlagGroupName = styled.span`
   font-size: '20px';
   line-height: '24px';
   color: ${({ theme }) => theme.textPrimary};
+  font-weight: 600;
 `
 const FlagDescription = styled.span`
   font-size: 12px;
@@ -161,14 +162,14 @@ export default function FeatureFlagModal() {
           <X size={24} />
         </CloseButton>
       </Header>
-      <FlagGroupName>Phase 1: </FlagGroupName>
+      <FlagGroupName>Phase 1</FlagGroupName>
       <FeatureFlagOption
         variants={Object.values(Phase1Variant)}
         value={usePhase1Flag()}
         featureFlag={FeatureFlag.phase1}
         label="All Phase 1 changes (nft features)."
       />
-      <FlagGroupName>Phase 0: </FlagGroupName>
+      <FlagGroupName>Phase 0</FlagGroupName>
       <FeatureFlagOption
         variants={Object.values(RedesignVariant)}
         value={useRedesignFlag()}
