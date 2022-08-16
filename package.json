@@ -96,6 +96,8 @@
     "@typescript-eslint/eslint-plugin": "^4",
     "@typescript-eslint/parser": "^4",
     "babel-plugin-relay": "^14.1.0",
+    "@vanilla-extract/babel-plugin": "^1.1.7",
+    "@vanilla-extract/webpack-plugin": "^2.1.11",
     "cypress": "^10.3.1",
     "env-cmd": "^10.1.0",
     "eslint": "^7.11.0",
@@ -113,12 +115,10 @@
     "relay-compiler": "^14.1.0",
     "serve": "^11.3.2",
     "typechain": "^5.0.0",
-    "typescript": "^4.4.3",
-    "@vanilla-extract/babel-plugin": "^1.1.7",
-    "@vanilla-extract/webpack-plugin": "^2.1.11"
+    "typescript": "^4.4.3"
   },
   "dependencies": {
-    "@amplitude/analytics-browser": "^0.5.1",
+    "@amplitude/analytics-browser": "^1.1.4",
     "@coinbase/wallet-sdk": "^3.3.0",
     "@fontsource/ibm-plex-mono": "^4.5.1",
     "@fontsource/inter": "^4.5.1",
@@ -148,6 +148,7 @@
     "@uniswap/v3-core": "1.0.0",
     "@uniswap/v3-periphery": "^1.1.1",
     "@uniswap/v3-sdk": "^3.9.0",
+    "@uniswap/widgets": "^2.1.1",
     "@vanilla-extract/css": "^1.7.2",
     "@vanilla-extract/css-utils": "^0.1.2",
     "@vanilla-extract/dynamic": "^2.0.2",

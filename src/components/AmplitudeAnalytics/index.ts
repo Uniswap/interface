@@ -12,17 +12,15 @@ export function initializeAnalytics() {
 
   if (typeof API_KEY === 'undefined') {
     const keyName = isProductionEnv() ? 'REACT_APP_AMPLITUDE_KEY' : 'REACT_APP_AMPLITUDE_TEST_KEY'
-    throw new Error(`${keyName} must be a defined environment variable`)
+    console.error(`${keyName} is undefined, Amplitude analytics will not run.`)
+    return
   }
 
   init(
     API_KEY,
     /* userId= */ undefined, // User ID should be undefined to let Amplitude default to Device ID
-    /* options= */ {
-      // See documentation: https://www.docs.developers.amplitude.com/data/sdks/javascript/#track-referrers
-      includeReferrer: true,
-      // See documentation: https://www.docs.developers.amplitude.com/data/sdks/javascript/#track-utm-parameters
-      includeUtm: true,
+    /* options= */
+    {
       // Disable tracking of private user information by Amplitude
       trackingOptions: {
         ipAddress: false,

@@ -1,6 +1,6 @@
 import graphql from 'babel-plugin-relay/macro'
 import useInterval from 'lib/hooks/useInterval'
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { fetchQuery, useRelayEnvironment } from 'relay-hooks'
 import { useAppSelector } from 'state/hooks'
 
