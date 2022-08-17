@@ -15,12 +15,7 @@ export async function fetchSVG(
   const res = await fetch(uri, { signal })
   const text = await res.text()
 
-  // Do not render SVGs that have a foreignObject tag for security reasons
-  if (text.includes('<foreignObject')) {
-    logMessage(LogContext.ImageUtils, `SVG content contains a foreignObject tag for uri: ${uri}`)
-    logger.debug('images/utils', 'fetchSVG', 'SVG content contains a foreignObject tag', uri)
-    return INVALID_SVG
-  }
+  // TODO: add a feature flag in here that will not render NFTs in a webview if malicious NFTs have been detected. The feature flag could check for a foreignObjectTag
 
   const formatted = autoplay ? text : freezeSvgAnimations(text)
   const result = VIEWBOX_REGEX.exec(text)
