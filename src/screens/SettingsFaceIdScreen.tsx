@@ -59,7 +59,7 @@ export function SettingsFaceIdScreen() {
           }),
         value: requiredForTransactions,
         text: t('Transactions'),
-        subText: t('Require Face ID to send a transaction'),
+        subText: t('Require Face ID to transact'),
       },
     ]
   }, [t, requiredForAppAccess, requiredForTransactions, trigger])

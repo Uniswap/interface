@@ -367,7 +367,7 @@
   "Because these wallets share a recovery phrase, it will also delete the backups for:": "Because these wallets share a recovery phrase, it will also delete the backups for:",
   "App access": "App access",
   "Require Face ID to open app": "Require Face ID to open app",
-  "Require Face ID to send a transaction": "Require Face ID to send a transaction",
+  "Require Face ID to transact": "Require Face ID to transact",
   "Help Center": "Help Center",
   "Before backing up your recovery phrase again, make sure that you keep the following steps in mind:": "Before backing up your recovery phrase again, make sure that you keep the following steps in mind:",
   "It looks like you haven’t backed up your recovery phrase manually yet. Before doing so, make sure that you keep the following steps in mind:": "It looks like you haven’t backed up your recovery phrase manually yet. Before doing so, make sure that you keep the following steps in mind:",
