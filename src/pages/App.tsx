@@ -6,6 +6,7 @@ import TopLevelModals from 'components/TopLevelModals'
 import { useFeatureFlagsIsLoaded } from 'featureFlags'
 import { ExploreVariant, useExploreFlag } from 'featureFlags/flags/explore'
 import { NavBarVariant, useNavBarFlag } from 'featureFlags/flags/navBar'
+import { Phase1Variant, usePhase1Flag } from 'featureFlags/flags/phase1'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
 import { lazy, Suspense, useEffect } from 'react'
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
@@ -42,6 +43,7 @@ import { OpenClaimAddressModalAndRedirectToSwap, RedirectPathToSwapOnly, Redirec
 
 const TokenDetails = lazy(() => import('./TokenDetails'))
 const Vote = lazy(() => import('./Vote'))
+const Collection = lazy(() => import('nft/pages/collection'))
 
 const AppWrapper = styled.div`
   display: flex;
@@ -107,6 +109,7 @@ export default function App() {
   const isLoaded = useFeatureFlagsIsLoaded()
   const exploreFlag = useExploreFlag()
   const navBarFlag = useNavBarFlag()
+  const phase1Flag = usePhase1Flag()
 
   const { pathname } = useLocation()
   const currentPage = getCurrentPageFromLocation(pathname)
@@ -206,6 +209,10 @@ export default function App() {
                   <Route path="migrate/v2/:address" element={<MigrateV2Pair />} />
 
                   <Route path="*" element={<RedirectPathToSwapOnly />} />
+
+                  {phase1Flag === Phase1Variant.Enabled && (
+                    <Route path="/nfts/collection/:contractAddress" element={<Collection />} />
+                  )}
                 </Routes>
               ) : (
                 <Loader />
