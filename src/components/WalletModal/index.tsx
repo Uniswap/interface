@@ -441,7 +441,13 @@ export default function WalletModal({
   }
 
   return (
-    <Modal isOpen={walletModalOpen} onDismiss={toggleWalletModal} minHeight={false} maxHeight={90}>
+    <Modal
+      isOpen={walletModalOpen}
+      onDismiss={toggleWalletModal}
+      minHeight={false}
+      maxHeight={90}
+      redesignFlag={redesignFlagEnabled}
+    >
       <Wrapper redesignFlag={redesignFlagEnabled}>{getModalContent()}</Wrapper>
     </Modal>
   )
