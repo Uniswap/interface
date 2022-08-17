@@ -83,8 +83,8 @@ const Navbar = () => {
             <MenuItem href="/swap" isActive={pathname.startsWith('/swap')}>
               Swap
             </MenuItem>
-            <MenuItem href="/explore" isActive={pathname.startsWith('/explore')}>
-              Explore
+            <MenuItem href="/tokens" isActive={pathname.startsWith('/explore')}>
+              Tokens
             </MenuItem>
             <MenuItem href="/pool" id={'pool-nav-link'} isActive={isPoolActive}>
               Pool
