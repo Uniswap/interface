@@ -284,7 +284,6 @@ const SparkLineLoadingBubble = styled(LongLoadingBubble)`
 const L2NetworkLogo = styled.div<{ networkUrl?: string }>`
   height: 12px;
   width: 12px;
-  border-radius: 50%;
   position: absolute;
   left: 50%;
   top: 50%;
