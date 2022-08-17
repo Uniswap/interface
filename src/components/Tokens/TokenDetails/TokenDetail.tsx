@@ -275,7 +275,7 @@ export function LoadedTokenDetail({ address }: { address: string }) {
       chain: token ? token.chainId : SupportedChainId.MAINNET,
     },
   })
-  const tokenDetailsData: {} = usePreloadedQuery(tokenDetailsStatsQuery, queryReference)
+  const tokenDetailsData: any = usePreloadedQuery(tokenDetailsStatsQuery, queryReference)
 
   // catch token error and loading state
   if (!token || !token.name || !token.symbol) {
