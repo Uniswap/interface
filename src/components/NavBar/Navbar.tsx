@@ -11,14 +11,14 @@ import { MenuDropdown } from './MenuDropdown'
 import { MobileSideBar } from './MobileSidebar'
 import * as styles from './Navbar.css'
 
-interface NavLinkItemProps {
+interface MenuItemProps {
   href: string
   id?: NavLinkProps['id']
   isActive?: boolean
   children: ReactNode
 }
 
-const MenuItem = ({ href, id, isActive, children }: NavLinkItemProps) => {
+const MenuItem = ({ href, id, isActive, children }: MenuItemProps) => {
   return (
     <NavLink
       to={href}

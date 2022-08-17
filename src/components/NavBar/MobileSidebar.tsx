@@ -23,7 +23,7 @@ import { isDevelopmentEnv, isStagingEnv } from 'utils/env'
 import * as styles from './MobileSidebar.css'
 import { NavIcon } from './NavIcon'
 
-interface NavLinkItemProps {
+interface MenuItemProps {
   href: string
   id?: NavLinkProps['id']
   isActive?: boolean
@@ -31,7 +31,7 @@ interface NavLinkItemProps {
   children: ReactNode
 }
 
-const MenuItem = ({ href, id, isActive, close, children }: NavLinkItemProps) => {
+const MenuItem = ({ href, id, isActive, close, children }: MenuItemProps) => {
   return (
     <NavLink to={href} className={isActive ? styles.activeLinkRow : styles.linkRow} id={id} onClick={close}>
       {children}
