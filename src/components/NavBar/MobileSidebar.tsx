@@ -31,7 +31,7 @@ interface NavLinkItemProps {
   children: ReactNode
 }
 
-const NavLinkItem = ({ href, id, isActive, close, children }: NavLinkItemProps) => {
+const MenuItem = ({ href, id, isActive, close, children }: NavLinkItemProps) => {
   return (
     <NavLink to={href} className={isActive ? styles.activeLinkRow : styles.linkRow} id={id} onClick={close}>
       {children}
@@ -156,15 +156,15 @@ export const MobileSideBar = () => {
                 </Box>
               </Row>
               <Column gap="4">
-                <NavLinkItem href="/swap" close={toggleOpen} isActive={pathname.startsWith('/swap')}>
+                <MenuItem href="/swap" close={toggleOpen} isActive={pathname.startsWith('/swap')}>
                   Swap
-                </NavLinkItem>
-                <NavLinkItem href="/explore" close={toggleOpen} isActive={pathname.startsWith('/explore')}>
+                </MenuItem>
+                <MenuItem href="/explore" close={toggleOpen} isActive={pathname.startsWith('/explore')}>
                   Tokens
-                </NavLinkItem>
-                <NavLinkItem href="/pool" id={'pool-nav-link'} isActive={isPoolActive} close={toggleOpen}>
+                </MenuItem>
+                <MenuItem href="/pool" id={'pool-nav-link'} isActive={isPoolActive} close={toggleOpen}>
                   Pool
-                </NavLinkItem>
+                </MenuItem>
               </Column>
               <Seperator />
               <Column gap="4">
