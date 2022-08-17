@@ -84,6 +84,7 @@ export function WebSvgUri({ autoplay, maxHeight, uri }: SvgUriProps) {
         scalesPageToFit
         javaScriptEnabled={false}
         originWhitelist={['*']}
+        pointerEvents="none"
         scrollEnabled={false}
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
