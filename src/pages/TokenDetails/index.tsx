@@ -54,7 +54,7 @@ const RightPanel = styled.div`
   display: flex;
   flex-direction: column;
   gap: 20px;
-  width: WIDGET_WIDTH + 'px';
+  width: ${WIDGET_WIDTH}px;
 
   @media only screen and (max-width: ${LARGE_MEDIA_BREAKPOINT}) {
     display: none;
