@@ -7,19 +7,19 @@ import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import { getChainInfo } from 'constants/chainInfo'
 import { SupportedChainId } from 'constants/chains'
 import { checkWarning } from 'constants/tokenSafety'
-import { gql } from 'graphql-request'
 import { useCurrency, useIsUserAddedToken, useToken } from 'hooks/Tokens'
 import { useAtomValue } from 'jotai/utils'
 import { ReactElement, useCallback } from 'react'
 import { useState } from 'react'
-import { ArrowLeft, Copy, Heart, TrendingUp } from 'react-feather'
-import { usePreloadedQuery } from 'react-relay'
+import { ArrowLeft, Heart, TrendingUp } from 'react-feather'
+import { graphql, usePreloadedQuery } from 'react-relay'
 import { Link, useNavigate } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import { ClickableStyle, CopyContractAddress } from 'theme'
 
 import { favoritesAtom, useToggleFavorite } from '../state'
 import { ClickFavorited } from '../TokenTable/TokenRow'
+import { Wave } from './LoadingTokenDetail'
 import Resource from './Resource'
 import ShareButton from './ShareButton'
 
@@ -168,7 +168,7 @@ const MissingChartData = styled.div`
 `
 
 // todo: change duration
-const tokenDetailsStatsQuery = gql`
+const tokenDetailsStatsQuery = graphql`
   query TokenDetailsStatsQuery($contract: ContractInput) {
     tokenProjects(contracts: [$contract]) {
       description
@@ -268,7 +268,6 @@ export function LoadedTokenDetail({ address }: { address: string }) {
   const chainInfo = getChainInfo(token?.chainId)
   const networkLabel = chainInfo?.label
   const networkBadgebackgroundColor = chainInfo?.backgroundColor
-  const truncatedTokenAddress = `${address.slice(0, 4)}...${address.slice(-3)}`
   const tokenDetailsData = usePreloadedQuery(tokenDetailsStatsQuery, {
     contract: {
       address,
@@ -303,12 +302,8 @@ export function LoadedTokenDetail({ address }: { address: string }) {
         chartInfo={
           <>
             <ChartEmpty>
-              <svg width="416" height="160" xmlns="http://www.w3.org/2000/svg">
-                <path d="M 0 80 Q 104 10, 208 80 T 416 80" stroke="#99A1BD" fill="transparent" strokeWidth="2" />
-              </svg>
-              <svg width="416" height="160" xmlns="http://www.w3.org/2000/svg">
-                <path d="M 0 80 Q 104 10, 208 80 T 416 80" stroke="#99A1BD" fill="transparent" strokeWidth="2" />
-              </svg>
+              <Wave />
+              <Wave />
             </ChartEmpty>
             <MissingChartData>
               <TrendingUp size={12} />
@@ -328,10 +323,8 @@ export function LoadedTokenDetail({ address }: { address: string }) {
         contract={
           <Contract>
             Contract Address
-            <ContractAddress onClick={() => navigator.clipboard.writeText(address)}>
-              <FullAddress>{address}</FullAddress>
-              <TruncatedAddress>{truncatedTokenAddress}</TruncatedAddress>
-              <Copy size={13} color={theme.textSecondary} />
+            <ContractAddress>
+              <CopyContractAddress address={address} />
             </ContractAddress>
           </Contract>
         }

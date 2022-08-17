@@ -1,8 +1,9 @@
-import styled, { useTheme } from 'styled-components/macro'
+import { DeltaContainer, TokenPrice } from 'components/Charts/PriceChart'
+import useTheme from 'hooks/useTheme'
+import styled from 'styled-components/macro'
 
 import { LoadingBubble } from '../loading'
-import { ChartContainer, Stat, StatPair } from './TokenDetail'
-import TokenDetail, { Stat, StatPair } from './TokenDetail'
+import TokenDetail, { ChartContainer, Stat, StatPair } from './TokenDetail'
 
 const LoadingChartContainer = styled(ChartContainer)`
   height: 336px;
@@ -63,7 +64,7 @@ const Space = styled.div<{ heightSize: number }>`
   height: ${({ heightSize }) => `${heightSize}px`};
 `
 
-function Wave() {
+export function Wave() {
   const theme = useTheme()
   return (
     <svg width="416" height="160" xmlns="http://www.w3.org/2000/svg">
@@ -85,6 +86,12 @@ export default function LoadingTokenDetail() {
       }
       chartInfo={
         <>
+          <TokenPrice>
+            <PriceLoadingBubble />
+          </TokenPrice>
+          <DeltaContainer>
+            <Space heightSize={20} />
+          </DeltaContainer>
           <LoadingChartContainer>
             <div>
               <ChartAnimation>
