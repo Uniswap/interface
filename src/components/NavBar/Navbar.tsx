@@ -60,16 +60,17 @@ const MobileNavbar = () => {
 const Navbar = () => {
   const { width: windowWidth } = useWindowSize()
   const { pathname } = useLocation()
+
+  if (windowWidth && windowWidth < breakpoints.desktopXl) {
+    return <MobileNavbar />
+  }
+
   const isPoolActive =
     pathname.startsWith('/pool') ||
     pathname.startsWith('/add') ||
     pathname.startsWith('/remove') ||
     pathname.startsWith('/increase') ||
     pathname.startsWith('/find')
-
-  if (windowWidth && windowWidth < breakpoints.desktopXl) {
-    return <MobileNavbar />
-  }
 
   return (
     <nav className={styles.nav}>
