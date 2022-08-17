@@ -130,10 +130,10 @@ const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index }: Toke
   )
   const navigate = useNavigate()
 
-  const handleClick = () => {
+  const handleClick = useCallback(() => {
     addToSearchHistory(token)
     toggleOpen()
-  }
+  }, [addToSearchHistory, toggleOpen, token])
 
   // Close the modal on escape
   useEffect(() => {
@@ -148,8 +148,7 @@ const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index }: Toke
     return () => {
       document.removeEventListener('keydown', keyDownHandler)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [toggleOpen, history, isHovered, token])
+  }, [toggleOpen, isHovered, token, navigate, handleClick])
 
   return (
     <Link
