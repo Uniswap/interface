@@ -1,8 +1,7 @@
-import { DeltaContainer, TokenPrice } from 'components/Charts/PriceChart'
-import useTheme from 'hooks/useTheme'
-import styled from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components/macro'
 
 import { LoadingBubble } from '../loading'
+import { DeltaContainer, TokenPrice } from './PriceChart'
 import TokenDetail, { ChartContainer, Stat, StatPair } from './TokenDetail'
 
 const LoadingChartContainer = styled(ChartContainer)`
