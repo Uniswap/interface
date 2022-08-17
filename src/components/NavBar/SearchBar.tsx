@@ -15,7 +15,7 @@ import { fetchTrendingTokens } from 'nft/queries/genie/TrendingTokensFetcher'
 import { FungibleToken, GenieCollection, TrendingCollection } from 'nft/types'
 import { ethNumberStandardFormatter } from 'nft/utils/currency'
 import { putCommas } from 'nft/utils/putCommas'
-import { ChangeEvent, useEffect, useMemo, useReducer, useRef, useState } from 'react'
+import { ChangeEvent, useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react'
 import { useQuery } from 'react-query'
 import { useLocation, useNavigate } from 'react-router-dom'
 
@@ -47,10 +47,10 @@ const CollectionRow = ({ collection, isHovered, setHoveredIndex, toggleOpen, ind
   )
   const navigate = useNavigate()
 
-  const handleClick = () => {
+  const handleClick = useCallback(() => {
     addToSearchHistory(collection)
     toggleOpen()
-  }
+  }, [addToSearchHistory, collection, toggleOpen])
 
   useEffect(() => {
     const keyDownHandler = (event: KeyboardEvent) => {
@@ -64,8 +64,7 @@ const CollectionRow = ({ collection, isHovered, setHoveredIndex, toggleOpen, ind
     return () => {
       document.removeEventListener('keydown', keyDownHandler)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [toggleOpen, history, isHovered, collection])
+  }, [toggleOpen, isHovered, collection, navigate, handleClick])
 
   return (
     <Row
