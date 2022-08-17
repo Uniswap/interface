@@ -30,6 +30,7 @@ const PageWrapper = styled(AutoColumn)`
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
     max-width: 800px;
+    padding: 0px 8px;
   `};
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
