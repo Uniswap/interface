@@ -10,7 +10,7 @@ export const BodyWrapper = styled.main<{ margin?: string; maxWidth?: string; red
   width: 100%;
   background: ${({ theme, redesignFlag }) => (redesignFlag ? theme.backgroundSurface : theme.deprecated_bg0)};
   border-radius: ${({ redesignFlag }) => (redesignFlag ? '16px' : '24px')};
-  border: 1px solid ${({ theme, redesignFlag }) => (redesignFlag ? theme.backgroundOutline : theme.none)};
+  border: 1px solid ${({ theme, redesignFlag }) => (redesignFlag ? theme.backgroundOutline : 'transparent')};
   margin-top: 1rem;
   margin-left: auto;
   margin-right: auto;
