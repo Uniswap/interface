@@ -12,6 +12,7 @@ import {
   TESTNET_RELATIVE_CHANGE_24,
 } from 'src/features/dataApi/constants'
 import { dataApi, useBalancesQuery } from 'src/features/dataApi/slice'
+import { gqlTokenToCurrency } from 'src/features/dataApi/topTokens'
 import {
   ChainIdToCurrencyIdToPortfolioBalance,
   PortfolioBalance,
@@ -25,12 +26,7 @@ import { useAllCurrencies } from 'src/features/tokens/useTokens'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { selectHideSmallBalances } from 'src/features/wallet/selectors'
 import { fromGraphQLChain, isTestnet } from 'src/utils/chainId'
-import {
-  buildCurrencyId,
-  currencyId,
-  CurrencyId,
-  getNativeCurrencyAddressForChain,
-} from 'src/utils/currencyId'
+import { buildCurrencyId, currencyId, CurrencyId } from 'src/utils/currencyId'
 import { flattenObjectOfObjects } from 'src/utils/objects'
 import { percentDifference } from 'src/utils/statistics'
 
@@ -115,34 +111,23 @@ export function usePortfolioBalances(address: Address, onlyKnownCurrencies?: boo
       )
         return
 
-      // if token address is null, assume it is the native currency of that chain
-      // note this assumption isn't true the other way around. polygon MATIC does have an address!
-      const tokenAddress = balance.token.address ?? getNativeCurrencyAddressForChain(chainId)
-      const id = buildCurrencyId(chainId, tokenAddress)
-      const knownCurrency = tokensByChainId[chainId]?.[id]
-
-      if (onlyKnownCurrencies && !knownCurrency) return
-
-      const currency =
-        knownCurrency ??
-        new Token(
-          chainId,
-          tokenAddress,
-          balance.token.decimals,
-          balance.token.symbol ?? undefined,
-          balance.token.name ?? undefined
-        )
+      const currencyDetails = gqlTokenToCurrency(
+        balance.token,
+        tokensByChainId,
+        onlyKnownCurrencies
+      )
+      if (!currencyDetails) return
 
       const portfolioBalance: PortfolioBalance = {
         amount: CurrencyAmount.fromRawAmount(
-          currency,
+          currencyDetails.currency,
           balance.quantity * 10 ** balance.token.decimals
         ),
         balanceUSD: balance.denominatedValue.value,
         relativeChange24: balance.tokenProjectMarket?.relativeChange24?.value ?? 0,
       }
 
-      byId[id] = portfolioBalance
+      byId[currencyDetails.currencyId] = portfolioBalance
     })
 
     return byId
