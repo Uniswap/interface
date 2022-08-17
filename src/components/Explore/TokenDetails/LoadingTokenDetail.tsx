@@ -1,6 +1,7 @@
+import useTheme from 'hooks/useTheme'
 import styled from 'styled-components/macro'
 
-import { ChartWrapper, DeltaContainer, TokenPrice } from '../../Charts/PriceChart'
+import { DeltaContainer, TokenPrice } from '../../Charts/PriceChart'
 import { LoadingBubble } from '../loading'
 import {
   AboutHeader,
@@ -17,6 +18,11 @@ import {
   TokenNameCell,
   TopArea,
 } from './TokenDetail'
+
+const LoadingChartContainer = styled(ChartContainer)`
+  height: 336px;
+  overflow: hidden;
+`
 
 /* Loading state bubbles */
 const LoadingDetailBubble = styled(LoadingBubble)`
@@ -71,6 +77,15 @@ const Space = styled.div<{ heightSize: number }>`
   height: ${({ heightSize }) => `${heightSize}px`};
 `
 
+function Wave() {
+  const theme = useTheme()
+  return (
+    <svg width="416" height="160" xmlns="http://www.w3.org/2000/svg">
+      <path d="M 0 80 Q 104 10, 208 80 T 416 80" stroke={theme.backgroundOutline} fill="transparent" strokeWidth="2" />
+    </svg>
+  )
+}
+
 /* Loading State: row component with loading bubbles */
 export default function LoadingTokenDetail() {
   return (
@@ -85,35 +100,23 @@ export default function LoadingTokenDetail() {
             <TitleLoadingBubble />
           </TokenNameCell>
         </TokenInfoContainer>
-        <ChartContainer>
-          <ChartWrapper>
-            <ChartHeader>
-              <TokenPrice>
-                <PriceLoadingBubble />
-              </TokenPrice>
-              <DeltaContainer>
-                <Space heightSize={20} />
-              </DeltaContainer>
-            </ChartHeader>
+        <TokenPrice>
+          <PriceLoadingBubble />
+        </TokenPrice>
+        <DeltaContainer>
+          <Space heightSize={20} />
+        </DeltaContainer>
+        <LoadingChartContainer>
+          <div>
             <ChartAnimation>
-              <svg width="416" height="160" xmlns="http://www.w3.org/2000/svg">
-                <path d="M 0 80 Q 104 10, 208 80 T 416 80" stroke="#2e3138" fill="transparent" strokeWidth="2" />
-              </svg>
-              <svg width="416" height="160" xmlns="http://www.w3.org/2000/svg">
-                <path d="M 0 80 Q 104 10, 208 80 T 416 80" stroke="#2e3138" fill="transparent" strokeWidth="2" />
-              </svg>
-              <svg width="416" height="160" xmlns="http://www.w3.org/2000/svg">
-                <path d="M 0 80 Q 104 10, 208 80 T 416 80" stroke="#2e3138" fill="transparent" strokeWidth="2" />
-              </svg>
-              <svg width="416" height="160" xmlns="http://www.w3.org/2000/svg">
-                <path d="M 0 80 Q 104 10, 208 80 T 416 80" stroke="#2e3138" fill="transparent" strokeWidth="2" />
-              </svg>
-              <svg width="416" height="160" xmlns="http://www.w3.org/2000/svg">
-                <path d="M 0 80 Q 104 10, 208 80 T 416 80" stroke="#2e3138" fill="transparent" strokeWidth="2" />
-              </svg>
+              <Wave />
+              <Wave />
+              <Wave />
+              <Wave />
+              <Wave />
             </ChartAnimation>
-          </ChartWrapper>
-        </ChartContainer>
+          </div>
+        </LoadingChartContainer>
         <Space heightSize={32} />
       </ChartHeader>
       <AboutSection>

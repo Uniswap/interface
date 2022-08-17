@@ -29,6 +29,7 @@ export const darkTheme: Theme = {
     white95: '#0E111AF2',
     white90: '#000000E5',
     white80: '#000000CC',
+    white08: '#0000000C',
   },
   shadows: {
     menu: '0px 10px 30px rgba(0, 0, 0, 0.1)',

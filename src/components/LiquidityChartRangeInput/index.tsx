@@ -96,7 +96,7 @@ export default function LiquidityChartRangeInput({
 
   const isSorted = currencyA && currencyB && currencyA?.wrapped.sortsBefore(currencyB?.wrapped)
 
-  const { isLoading, isUninitialized, isError, error, formattedData } = useDensityChartData({
+  const { isLoading, error, formattedData } = useDensityChartData({
     currencyA,
     currencyB,
     feeAmount,
@@ -157,9 +157,11 @@ export default function LiquidityChartRangeInput({
     [isSorted, price, ticksAtLimit]
   )
 
-  if (isError) {
+  if (error) {
     sendEvent('exception', { description: error.toString(), fatal: false })
   }
+
+  const isUninitialized = !currencyA || !currencyB || (formattedData === undefined && !isLoading)
 
   return (
     <AutoColumn gap="md" style={{ minHeight: '200px' }}>
@@ -170,7 +172,7 @@ export default function LiquidityChartRangeInput({
         />
       ) : isLoading ? (
         <InfoBox icon={<Loader size="40px" stroke={theme.deprecated_text4} />} />
-      ) : isError ? (
+      ) : error ? (
         <InfoBox
           message={<Trans>Liquidity data not available.</Trans>}
           icon={<CloudOff size={56} stroke={theme.deprecated_text4} />}

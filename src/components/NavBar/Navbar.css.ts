@@ -1,5 +1,6 @@
 import { style } from '@vanilla-extract/css'
 
+import { subhead } from '../../nft/css/common.css'
 import { sprinkles } from '../../nft/css/sprinkles.css'
 
 export const nav = style([
@@ -9,10 +10,26 @@ export const nav = style([
     width: 'full',
     height: '72',
     zIndex: '2',
+    background: 'white08',
   }),
   {
     backdropFilter: 'blur(24px)',
   },
+])
+
+export const logoContainer = style([
+  sprinkles({
+    display: 'flex',
+    marginRight: { mobile: '12', desktopXl: '20' },
+    alignItems: 'center',
+  }),
+])
+
+export const logo = style([
+  sprinkles({
+    display: 'block',
+    color: 'blackBlue',
+  }),
 ])
 
 export const baseContainer = style([
@@ -31,6 +48,29 @@ export const baseMobileContainer = style([
   }),
 ])
 
+export const baseSideContainer = style([
+  baseContainer,
+  sprinkles({
+    width: 'full',
+    flex: '1',
+    flexShrink: '2',
+  }),
+])
+
+export const leftSideContainer = style([
+  baseSideContainer,
+  sprinkles({
+    justifyContent: 'flex-start',
+  }),
+])
+
+export const leftSideMobileContainer = style([
+  baseMobileContainer,
+  sprinkles({
+    justifyContent: 'flex-start',
+  }),
+])
+
 export const middleContainer = style([
   baseContainer,
   sprinkles({
@@ -40,10 +80,45 @@ export const middleContainer = style([
   }),
 ])
 
+export const rightSideContainer = style([
+  baseSideContainer,
+  sprinkles({
+    justifyContent: 'flex-end',
+  }),
+])
+
+const baseMenuItem = style([
+  subhead,
+  sprinkles({
+    paddingY: '8',
+    paddingX: '16',
+    marginY: '4',
+    borderRadius: '12',
+  }),
+  {
+    lineHeight: '24px',
+    textDecoration: 'none',
+  },
+])
+
+export const menuItem = style([
+  baseMenuItem,
+  sprinkles({
+    color: 'darkGray',
+  }),
+])
+
 export const rightSideMobileContainer = style([
   baseMobileContainer,
   sprinkles({
     justifyContent: 'flex-end',
+  }),
+])
+
+export const activeMenuItem = style([
+  baseMenuItem,
+  sprinkles({
+    color: 'blackBlue',
   }),
 ])
 

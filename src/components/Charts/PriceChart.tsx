@@ -12,6 +12,7 @@ import { useAtom } from 'jotai'
 import { useCallback, useState } from 'react'
 import { ArrowDownRight, ArrowUpRight } from 'react-feather'
 import styled from 'styled-components/macro'
+import { OPACITY_HOVER } from 'theme'
 import {
   dayHourFormatter,
   hourFormatter,
@@ -32,7 +33,7 @@ const TIME_DISPLAYS: [TimePeriod, string][] = [
   [TimePeriod.week, '1W'],
   [TimePeriod.month, '1M'],
   [TimePeriod.year, '1Y'],
-  [TimePeriod.all, 'ALL'],
+  [TimePeriod.all, 'All'],
 ]
 
 type PricePoint = { value: number; timestamp: number }
@@ -63,11 +64,6 @@ function getDelta(start: number, current: number) {
   }
   return [formattedDelta, <StyledDownArrow size={16} key="arrow-down" />]
 }
-
-export const ChartWrapper = styled.div`
-  position: relative;
-  overflow: visible;
-`
 
 export const ChartHeader = styled.div`
   position: absolute;
@@ -111,6 +107,9 @@ const TimeButton = styled.button<{ active: boolean }>`
   border: none;
   cursor: pointer;
   color: ${({ theme, active }) => (active ? theme.textPrimary : theme.textSecondary)};
+  :hover {
+    ${({ active }) => !active && `opacity: ${OPACITY_HOVER};`}
+  }
 `
 
 function getTicks(startTimestamp: number, endTimestamp: number, numTicks = 5) {
@@ -142,7 +141,7 @@ function tickFormat(
   }
 }
 
-const margin = { top: 86, bottom: 32, crosshair: 72 }
+const margin = { top: 86, bottom: 48, crosshair: 72 }
 const timeOptionsHeight = 44
 const crosshairDateOverhang = 80
 
@@ -208,7 +207,7 @@ export function PriceChart({ width, height }: PriceChartProps) {
   const crosshairAtEdge = !!selected.xCoordinate && selected.xCoordinate > crosshairEdgeMax
 
   return (
-    <ChartWrapper>
+    <>
       <ChartHeader>
         <TokenPrice>${selected.pricePoint.value.toFixed(2)}</TokenPrice>
         <DeltaContainer>
@@ -227,24 +226,24 @@ export function PriceChart({ width, height }: PriceChartProps) {
         width={graphWidth}
         height={graphHeight}
       >
-        <AxisBottom
-          scale={timeScale}
-          stroke={theme.backgroundOutline}
-          tickFormat={tickFormatter}
-          tickStroke={theme.backgroundOutline}
-          tickLength={4}
-          tickTransform={'translate(0 -5)'}
-          tickValues={ticks}
-          top={graphHeight - 1}
-          tickLabelProps={() => ({
-            fill: theme.textSecondary,
-            fontSize: 12,
-            textAnchor: 'middle',
-            transform: 'translate(0 -24)',
-          })}
-        />
-        {selected.xCoordinate !== null && (
+        {selected.xCoordinate !== null ? (
           <g>
+            <AxisBottom
+              scale={timeScale}
+              stroke={theme.backgroundOutline}
+              tickFormat={tickFormatter}
+              tickStroke={theme.backgroundOutline}
+              tickLength={4}
+              tickTransform={'translate(0 -5)'}
+              tickValues={ticks}
+              top={graphHeight - 1}
+              tickLabelProps={() => ({
+                fill: theme.textSecondary,
+                fontSize: 12,
+                textAnchor: 'middle',
+                transform: 'translate(0 -24)',
+              })}
+            />
             <text
               x={selected.xCoordinate + (crosshairAtEdge ? -4 : 4)}
               y={margin.crosshair + 10}
@@ -271,6 +270,8 @@ export function PriceChart({ width, height }: PriceChartProps) {
               strokeWidth={2}
             />
           </g>
+        ) : (
+          <AxisBottom scale={timeScale} stroke={theme.backgroundOutline} top={graphHeight - 1} hideTicks />
         )}
         <rect
           x={0}
@@ -293,7 +294,7 @@ export function PriceChart({ width, height }: PriceChartProps) {
           ))}
         </TimeOptionsContainer>
       </TimeOptionsWrapper>
-    </ChartWrapper>
+    </>
   )
 }
 

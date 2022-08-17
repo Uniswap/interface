@@ -1,12 +1,16 @@
 # See https://help.github.com/ignore-files/ for more about ignoring files.
 
+
 # generated contract types
 /src/types/v3
 /src/abis/types
 /src/locales/**/*.js
 /src/locales/**/en-US.po
 /src/locales/**/pseudo.po
-/src/state/data/generated.ts
+
+# generated graphql types
+/src/graphql/schema/
+__generated__/
 
 # dependencies
 /node_modules
