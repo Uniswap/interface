@@ -29,7 +29,7 @@ const AlertTriangleIcon = styled(AlertTriangle)`
   width: 25%;
   height: 25%;
   stroke-width: 1;
-  padding: 3rem 0rem;
+  padding-bottom: 2rem;
   color: ${({ theme }) => theme.accentCritical};
 `
 
@@ -83,7 +83,7 @@ export default function PendingView({
         <LoadingWrapper>
           {error ? (
             <ErrorGroup>
-              {redesignFlagEnabled && <AlertTriangleIcon />}
+              <AlertTriangleIcon />
               <ThemedText.MediumHeader marginBottom={12}>
                 <Trans>Error connecting</Trans>
               </ThemedText.MediumHeader>
@@ -94,7 +94,6 @@ export default function PendingView({
               </ThemedText.BodyPrimary>
               <ButtonPrimary
                 $borderRadius="12px"
-                padding="12px"
                 redesignFlag={true}
                 onClick={() => {
                   tryActivation(connector)
@@ -112,7 +111,7 @@ export default function PendingView({
             <>
               <WaitingToConnectSection>
                 <LoaderContainer style={{ padding: '16px 0px' }}>
-                  <Loader redesignFlag={true} strokeWidth={1} size="90px" />
+                  <Loader redesignFlag={true} strokeWidth={0.8} size="100px" />
                 </LoaderContainer>
                 <ThemedText.MediumHeader>
                   <Trans>Waiting to connect</Trans>

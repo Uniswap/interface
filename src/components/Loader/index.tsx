@@ -15,7 +15,7 @@ const StyledSVG = styled.svg<{ size: string; stroke?: string; redesignFlag?: boo
   width: ${({ size }) => size};
   path {
     stroke: ${({ stroke, redesignFlag, theme }) =>
-      redesignFlag ? theme.accentAction : stroke ?? theme.deprecated_primary1};
+      redesignFlag ? theme.accentActive : stroke ?? theme.deprecated_primary1};
   }
 `
 

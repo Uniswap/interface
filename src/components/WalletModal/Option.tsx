@@ -16,7 +16,8 @@ const InfoCard = styled.button<{ isActive?: boolean; redesignFlag?: boolean }>`
   border-radius: 12px;
   width: 100% !important;
   &:focus {
-    box-shadow: 0 0 0 1px ${({ theme, redesignFlag }) => !redesignFlag && theme.deprecated_primary1};
+    box-shadow: ${({ theme, redesignFlag }) => !redesignFlag && `0 0 0 1px ${theme.deprecated_primary1}`};
+    background-color: ${({ theme, redesignFlag }) => redesignFlag && theme.hoverState};
   }
   border-color: ${({ theme, isActive, redesignFlag }) =>
     redesignFlag ? (isActive ? theme.accentActive : 'transparent') : isActive ? 'transparent' : theme.deprecated_bg3};

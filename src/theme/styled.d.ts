@@ -55,6 +55,7 @@ export interface ThemeColors {
 
   blue200: Color
   flyoutDropShadow: Color
+  deepShadow: Color
   hoverState: Color
   hoverDefault: Color
 }

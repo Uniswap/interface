@@ -60,8 +60,11 @@ const CloseColor = styled(Close)`
   }
 `
 
-const Wrapper = styled.div`
+const Wrapper = styled.div<{ redesignFlag?: boolean }>`
   ${({ theme }) => theme.flexColumnNoWrap}
+  background-color: ${({ redesignFlag, theme }) => redesignFlag && theme.backgroundSurface};
+  outline: ${({ theme, redesignFlag }) => redesignFlag && `1px solid ${theme.backgroundOutline}`};
+  box-shadow: ${({ redesignFlag, theme }) => redesignFlag && theme.deepShadow};
   margin: 0;
   padding: 0;
   width: 100%;
@@ -80,7 +83,7 @@ const HeaderRow = styled.div<{ redesignFlag?: boolean }>`
 
 const ContentWrapper = styled.div<{ redesignFlag?: boolean }>`
   background-color: ${({ theme, redesignFlag }) => (redesignFlag ? theme.backgroundSurface : theme.deprecated_bg0)};
-  border: ${({ theme, redesignFlag }) => (redesignFlag ? `1px solid ${theme.backgroundOutline}` : '')};
+  border: ${({ theme, redesignFlag }) => redesignFlag && `1px solid ${theme.backgroundOutline}`};
   padding: 0 1rem 1rem 1rem;
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
@@ -386,14 +389,9 @@ export default function WalletModal({
           <ThemedText.BodySecondary fontSize={12}>
             <Trans>
               By connecting a wallet, you agree to Uniswap Labs’{' '}
-              <ExternalLink style={{ textDecoration: 'underline' }} href="https://uniswap.org/terms-of-service/">
-                Terms of Service
-              </ExternalLink>{' '}
-              and acknowledge that you have read and understand the Uniswap{' '}
-              <ExternalLink style={{ textDecoration: 'underline' }} href="https://uniswap.org/disclaimer/">
-                Protocol Disclaimer
-              </ExternalLink>
-              .
+              <ExternalLink href="https://uniswap.org/terms-of-service/">Terms of Service</ExternalLink> and acknowledge
+              that you have read and understand the Uniswap{' '}
+              <ExternalLink href="https://uniswap.org/disclaimer/">Protocol Disclaimer</ExternalLink>.
             </Trans>
           </ThemedText.BodySecondary>
         </AutoRow>
@@ -444,7 +442,7 @@ export default function WalletModal({
 
   return (
     <Modal isOpen={walletModalOpen} onDismiss={toggleWalletModal} minHeight={false} maxHeight={90}>
-      <Wrapper>{getModalContent()}</Wrapper>
+      <Wrapper redesignFlag={redesignFlagEnabled}>{getModalContent()}</Wrapper>
     </Modal>
   )
 }
