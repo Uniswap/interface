@@ -17,6 +17,8 @@ import { useAppDispatch } from 'state/hooks'
 import { useDarkModeManager } from 'state/user/hooks'
 import { updateSelectedWallet } from 'state/user/reducer'
 import styled from 'styled-components/macro'
+import { useToggleModal } from '../../state/application/hooks'
+import { ApplicationModal } from '../../state/application/reducer'
 
 import useENS from '../../hooks/useENS'
 import { shortenAddress } from '../../nft/utils/address'
@@ -121,6 +123,7 @@ const AuthenticatedHeader = () => {
   const connectionType = getConnection(connector).type
   const nativeCurrency = useNativeCurrency()
   const nativeCurrencyPrice = useStablecoinPrice(nativeCurrency ?? undefined) || 0
+  const openClaimModal = useToggleModal(ApplicationModal.ADDRESS_CLAIM)
 
   const amountUSD = useMemo(() => {
     const price = parseFloat(nativeCurrencyPrice.toFixed(5))
@@ -163,7 +166,7 @@ const AuthenticatedHeader = () => {
           <USDText>${amountUSD.toFixed(2)} USD</USDText>
         </div>
         {unclaimedAmount !== undefined && unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-') !== '0' && (
-          <UNIbutton style={{ border: 'none' }}>
+          <UNIbutton onClick={openClaimModal} style={{ border: 'none' }}>
             <Trans>Claim</Trans> {unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-')} <Trans>reward</Trans>
           </UNIbutton>
         )}
