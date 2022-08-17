@@ -1,5 +1,6 @@
 import { LayoutProps } from '@shopify/restyle'
 import { default as React, PropsWithChildren, useMemo } from 'react'
+import { FlexAlignType } from 'react-native'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import CopyIcon from 'src/assets/icons/copy-sheets.svg'
 import { Button } from 'src/components/buttons/Button'
@@ -32,6 +33,7 @@ type AddressDisplayProps = {
   showUnicon?: boolean
   showViewOnly?: boolean
   showShortenedEns?: boolean
+  textAlign?: FlexAlignType
 } & LayoutProps<Theme>
 
 type CopyButtonWrapperProps = {
@@ -65,6 +67,7 @@ export function AddressDisplay({
   showUnicon = true,
   showViewOnly = false,
   showShortenedEns = false,
+  textAlign,
   ...rest
 }: AddressDisplayProps) {
   const dispatch = useAppDispatch()
@@ -100,7 +103,7 @@ export function AddressDisplay({
     <Flex alignItems="center" flexDirection={direction} gap={horizontalGap} {...rest}>
       {showUnicon && icon}
       <Flex
-        alignItems={!showUnicon || direction === 'column' ? 'center' : 'flex-start'}
+        alignItems={textAlign || (!showUnicon || direction === 'column' ? 'center' : 'flex-start')}
         flexShrink={1}
         gap={verticalGap}>
         <CopyButtonWrapper onPress={showCopy && !showCaption ? onPressCopyAddress : undefined}>

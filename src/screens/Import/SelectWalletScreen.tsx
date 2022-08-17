@@ -74,7 +74,7 @@ function WalletPreviewList({
     ownerAddresses: addresses,
   }).portfolios
 
-  const initialSelectedAccounts = useMemo(() => {
+  const initialShownAccounts = useMemo(() => {
     const filtered = allAddressBalances?.filter(
       (portfolio) =>
         portfolio?.tokensTotalDenominatedValue?.value &&
@@ -89,25 +89,31 @@ function WalletPreviewList({
       : undefined
   }, [allAddressBalances])
 
-  const [unselectedAddresses, setUnselectedAddresses] = useReducer(
+  const maxBalanceAccount = useMemo(() => {
+    return initialShownAccounts?.reduce((prev, curr) =>
+      prev?.tokensTotalDenominatedValue?.value &&
+      curr?.tokensTotalDenominatedValue?.value &&
+      prev.tokensTotalDenominatedValue.value > curr.tokensTotalDenominatedValue.value
+        ? prev
+        : curr
+    )
+  }, [initialShownAccounts])
+
+  const [selectedAddresses, setSelectedAddresses] = useReducer(
     (currentAddresses: string[], addressToProcess: string) =>
       currentAddresses.includes(addressToProcess)
         ? currentAddresses.filter((a: string) => a !== addressToProcess)
         : [...currentAddresses, addressToProcess],
-    []
+    maxBalanceAccount ? [maxBalanceAccount.ownerAddress] : []
   )
 
   const onPress = (address: string) => {
-    if (initialSelectedAccounts?.length === 1) return
-    setUnselectedAddresses(address)
+    if (initialShownAccounts?.length === 1) return
+    setSelectedAddresses(address)
   }
 
   const isFirstAccountActive = useRef(false) // to keep track of first account activated from the selected accounts
   const onSubmit = useCallback(() => {
-    const selectedAddresses =
-      initialSelectedAccounts
-        ?.filter((portfolio) => !unselectedAddresses.includes(portfolio?.ownerAddress || ''))
-        .map((portfolio) => portfolio?.ownerAddress) || []
     addresses.map((address) => {
       // Remove unselected accounts from store.
       if (!selectedAddresses.includes(address)) {
@@ -125,15 +131,7 @@ function WalletPreviewList({
       }
     })
     navigation.navigate({ name: OnboardingScreens.Notifications, params, merge: true })
-  }, [
-    dispatch,
-    addresses,
-    navigation,
-    unselectedAddresses,
-    isFirstAccountActive,
-    params,
-    initialSelectedAccounts,
-  ])
+  }, [dispatch, addresses, navigation, selectedAddresses, isFirstAccountActive, params])
 
   return (
     <>
@@ -142,7 +140,7 @@ function WalletPreviewList({
       ) : (
         <ScrollView>
           <Flex gap="sm">
-            {initialSelectedAccounts?.map((portfolio, i) => {
+            {initialShownAccounts?.map((portfolio, i) => {
               const { ownerAddress, tokensTotalDenominatedValue } = portfolio!
 
               return (
@@ -151,7 +149,7 @@ function WalletPreviewList({
                   address={ownerAddress}
                   balance={tokensTotalDenominatedValue?.value || 0}
                   name={ElementName.WalletCard}
-                  selected={!unselectedAddresses.includes(ownerAddress)}
+                  selected={selectedAddresses.includes(ownerAddress)}
                   testID={`${ElementName.WalletCard}-${i + 1}`}
                   onSelect={onPress}
                 />
@@ -161,12 +159,11 @@ function WalletPreviewList({
         </ScrollView>
       )}
       <PrimaryButton
-        disabled={
-          initialSelectedAccounts && initialSelectedAccounts.length <= unselectedAddresses.length
-        }
+        disabled={selectedAddresses.length === 0}
         label={t('Continue')}
         name={ElementName.Next}
         testID={ElementName.Next}
+        textVariant="largeLabel"
         variant="onboard"
         onPress={onSubmit}
       />
