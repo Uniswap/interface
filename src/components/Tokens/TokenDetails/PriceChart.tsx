@@ -3,7 +3,7 @@ import { localPoint } from '@visx/event'
 import { EventType } from '@visx/event/lib/types'
 import { GlyphCircle } from '@visx/glyph'
 import { Line } from '@visx/shape'
-import { filterTimeAtom } from 'components/Explore/state'
+import { filterTimeAtom } from 'components/Tokens/state'
 import { bisect, curveBasis, NumberValue, scaleLinear } from 'd3'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import { TimePeriod } from 'hooks/useExplorePageQuery'
@@ -22,8 +22,8 @@ import {
   weekFormatter,
 } from 'utils/formatChartTimes'
 
-import data from './data.json'
-import LineChart from './LineChart'
+import data from '../../Charts/data.json'
+import LineChart from '../../Charts/LineChart'
 
 // TODO: This should be combined with the logic in TimeSelector.
 const TIME_DISPLAYS: [TimePeriod, string][] = [

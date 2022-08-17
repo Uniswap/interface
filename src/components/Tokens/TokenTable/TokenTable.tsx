@@ -5,7 +5,7 @@ import {
   showFavoritesAtom,
   sortCategoryAtom,
   sortDirectionAtom,
-} from 'components/Explore/state'
+} from 'components/Tokens/state'
 import { useAllTokens } from 'hooks/Tokens'
 import { TimePeriod, TokenData } from 'hooks/useExplorePageQuery'
 import { useAtomValue } from 'jotai/utils'

@@ -29,7 +29,6 @@ import { RedirectDuplicateTokenIds } from './AddLiquidity/redirects'
 import { RedirectDuplicateTokenIdsV2 } from './AddLiquidityV2/redirects'
 import Earn from './Earn'
 import Manage from './Earn/Manage'
-import Explore from './Explore'
 import MigrateV2 from './MigrateV2'
 import MigrateV2Pair from './MigrateV2/MigrateV2Pair'
 import Pool from './Pool'
@@ -40,6 +39,7 @@ import RemoveLiquidity from './RemoveLiquidity'
 import RemoveLiquidityV3 from './RemoveLiquidity/V3'
 import Swap from './Swap'
 import { OpenClaimAddressModalAndRedirectToSwap, RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects'
+import Tokens from './Tokens'
 
 const TokenDetails = lazy(() => import('./TokenDetails'))
 const Vote = lazy(() => import('./Vote'))
@@ -158,7 +158,7 @@ export default function App() {
                 <Routes>
                   {tokensFlag === TokensVariant.Enabled && (
                     <>
-                      <Route path="/tokens" element={<Explore />} />
+                      <Route path="/tokens" element={<Tokens />} />
                       <Route path="/tokens/:tokenAddress" element={<TokenDetails />} />
                     </>
                   )}
