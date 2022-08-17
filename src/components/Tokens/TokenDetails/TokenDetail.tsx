@@ -12,7 +12,7 @@ import { useAtomValue } from 'jotai/utils'
 import { ReactElement, useCallback } from 'react'
 import { useState } from 'react'
 import { ArrowLeft, Heart, TrendingUp } from 'react-feather'
-import { graphql, usePreloadedQuery } from 'react-relay'
+import { graphql, loadQuery, usePreloadedQuery, useRelayEnvironment } from 'react-relay'
 import { Link, useNavigate } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import { ClickableStyle, CopyContractAddress } from 'theme'
@@ -268,12 +268,14 @@ export function LoadedTokenDetail({ address }: { address: string }) {
   const chainInfo = getChainInfo(token?.chainId)
   const networkLabel = chainInfo?.label
   const networkBadgebackgroundColor = chainInfo?.backgroundColor
-  const tokenDetailsData = usePreloadedQuery(tokenDetailsStatsQuery, {
+  const environment = useRelayEnvironment()
+  const queryReference = loadQuery(environment, tokenDetailsStatsQuery, {
     contract: {
       address,
       chain: token ? token.chainId : SupportedChainId.MAINNET,
     },
   })
+  const tokenDetailsData: {} = usePreloadedQuery(tokenDetailsStatsQuery, queryReference)
 
   // catch token error and loading state
   if (!token || !token.name || !token.symbol) {
