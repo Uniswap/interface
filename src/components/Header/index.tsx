@@ -293,8 +293,8 @@ export default function Header() {
           <Trans>Swap</Trans>
         </StyledNavLink>
         {exploreFlag === ExploreVariant.Enabled && (
-          <StyledNavLink id={`explore-nav-link`} to={'/explore'}>
-            <Trans>Explore</Trans>
+          <StyledNavLink id={`explore-nav-link`} to={'/tokens'}>
+            <Trans>Tokens</Trans>
           </StyledNavLink>
         )}
         <StyledNavLink

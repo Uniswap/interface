@@ -158,7 +158,7 @@ export default function App() {
                 <Routes>
                   {exploreFlag === ExploreVariant.Enabled && (
                     <>
-                      <Route path="/explore" element={<Explore />} />
+                      <Route path="/tokens" element={<Explore />} />
                       <Route path="/tokens/:tokenAddress" element={<TokenDetails />} />
                     </>
                   )}
