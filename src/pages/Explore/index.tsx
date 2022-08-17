@@ -68,7 +68,7 @@ const Explore = () => {
   }, [location, resetFilterString])
 
   return (
-    <Trace page={PageName.EXPLORE_PAGE} shouldLogImpression>
+    <Trace page={PageName.TOKENS_PAGE} shouldLogImpression>
       <ExploreContainer>
         <TitleContainer>Explore Tokens</TitleContainer>
         <FiltersWrapper>
