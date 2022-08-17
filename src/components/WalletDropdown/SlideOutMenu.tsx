@@ -1,6 +1,5 @@
 import { ChevronLeft } from 'react-feather'
-import { Text } from 'rebass'
-import styled, { useTheme } from 'styled-components/macro'
+import styled from 'styled-components/macro'
 
 const BackSection = styled.div`
   position: relative;
@@ -27,6 +26,17 @@ const Header = styled.span`
   transform: translate(-50%, -50%);
 `
 
+const ClearAll = styled.div`
+  display: inline-block;
+  cursor: pointer;
+  margin-left: auto;
+  color: ${({ theme }) => theme.accentAction};
+  font-weight: 600;
+  font-size: 14px;
+  margin-top: auto;
+  margin-bottom: auto;
+`
+
 export const SlideOutMenu = ({
   children,
   onClose,
@@ -37,28 +47,14 @@ export const SlideOutMenu = ({
   title: JSX.Element
   children: JSX.Element | Array<JSX.Element>
   onClear?: () => void
-}) => {
-  const theme = useTheme()
+}) => (
+  <Menu>
+    <BackSection>
+      <ChevronLeft cursor="pointer" onClick={onClose} size={24} />
 
-  return (
-    <Menu>
-      <BackSection>
-        <ChevronLeft style={{ cursor: 'pointer' }} onClick={onClose} size={24} />
-        <Header>{title}</Header>
-        {onClear && (
-          <Text
-            onClick={onClear}
-            marginLeft="auto"
-            color={theme.accentAction}
-            fontWeight={600}
-            fontSize={14}
-            style={{ cursor: 'pointer' }}
-          >
-            Clear All
-          </Text>
-        )}
-      </BackSection>
-      {children}
-    </Menu>
-  )
-}
+      <Header>{title}</Header>
+      {onClear && <ClearAll onClick={onClear}>Clear All</ClearAll>}
+    </BackSection>
+    {children}
+  </Menu>
+)

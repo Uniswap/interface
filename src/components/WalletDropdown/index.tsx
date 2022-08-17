@@ -1,7 +1,6 @@
 import { useWeb3React } from '@web3-react/core'
 import { useState } from 'react'
 import styled from 'styled-components/macro'
-import { opacify } from 'theme/utils'
 
 import DefaultMenu from './DefaultMenu'
 import { LanguageMenu } from './LanguageMenu'
@@ -16,7 +15,7 @@ const WalletWrapper = styled.div<{ isAuthenticated: boolean }>`
   font-size: 16px;
   top: 60px;
   right: 70px;
-  background-color: ${({ theme }) => opacify(95, theme.backgroundSurface)};
+  background-color: ${({ theme }) => theme.backgroundSurface};
   padding: 16px 0;
 `
 
