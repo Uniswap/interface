@@ -111,7 +111,7 @@ export const PriceExplorer = ({ graphs }: GraphProps) => {
       <Box alignSelf="center" flexDirection="row" width={SELECTION_WIDTH}>
         <View style={StyleSheet.absoluteFill}>
           <AnimatedBox
-            bg="backgroundSurface"
+            bg="backgroundAction"
             borderRadius="lg"
             style={[StyleSheet.absoluteFillObject, sliderStyle]}
             width={BUTTON_WIDTH}
