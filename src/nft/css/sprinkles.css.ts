@@ -32,6 +32,7 @@ const themeContractValues = {
     white95: '',
     white90: '',
     white80: '',
+    white08: '',
   },
 
   shadows: {
@@ -134,7 +135,6 @@ export const vars = createGlobalTheme(':root', {
     dropShadow: '0px 4px 16px rgba(70, 115, 250, 0.4)',
     green: '#209853',
     orange: '#FA2C38',
-    // Pavel's colors, TODO probably remove them after Pavel continues Genie List
     black: 'black',
     whitesmoke: '#F5F5F5',
     blue: '#4C82FB',
