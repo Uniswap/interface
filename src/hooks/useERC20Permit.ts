@@ -2,8 +2,6 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { splitSignature } from '@ethersproject/bytes'
 import { Trade } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
-import { Trade as V2Trade } from '@uniswap/v2-sdk'
-import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
 import JSBI from 'jsbi'
 import { useSingleCallResult } from 'lib/hooks/multicall'
@@ -260,21 +258,12 @@ export function useERC20Permit(
 }
 
 export function useERC20PermitFromTrade(
-  trade:
-    | V2Trade<Currency, Currency, TradeType>
-    | V3Trade<Currency, Currency, TradeType>
-    | Trade<Currency, Currency, TradeType>
-    | undefined,
+  trade: Trade<Currency, Currency, TradeType> | undefined,
   allowedSlippage: Percent,
   transactionDeadline: BigNumber | undefined
 ) {
   const { chainId } = useWeb3React()
-  const swapRouterAddress = chainId
-    ? // v2 router does not support
-      trade instanceof V2Trade
-      ? undefined
-      : SWAP_ROUTER_ADDRESSES[chainId]
-    : undefined
+  const swapRouterAddress = chainId ? SWAP_ROUTER_ADDRESSES[chainId] : undefined
   const amountToApprove = useMemo(
     () => (trade ? trade.maximumAmountIn(allowedSlippage) : undefined),
     [trade, allowedSlippage]
