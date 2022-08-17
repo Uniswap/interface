@@ -26,7 +26,8 @@ export const ButtonText = styled.button`
   }
 `
 
-export const CloseIcon = styled(X)<{ onClick: () => void }>`
+export const CloseIcon = styled(X)<{ onClick: () => void; redesignFlag?: boolean }>`
+  color: ${({ redesignFlag, theme }) => redesignFlag && theme.textSecondary};
   cursor: pointer;
 `
 

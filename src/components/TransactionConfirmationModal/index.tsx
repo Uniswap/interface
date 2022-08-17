@@ -4,6 +4,7 @@ import { useWeb3React } from '@web3-react/core'
 import Badge from 'components/Badge'
 import { getChainInfo } from 'constants/chainInfo'
 import { SupportedL2ChainId } from 'constants/chains'
+import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
 import useCurrencyLogoURIs from 'lib/hooks/useCurrencyLogoURIs'
 import { ReactNode, useCallback, useContext, useState } from 'react'
 import { AlertCircle, AlertTriangle, ArrowUpCircle, CheckCircle } from 'react-feather'
@@ -23,7 +24,10 @@ import Modal from '../Modal'
 import { RowBetween, RowFixed } from '../Row'
 import AnimatedConfirmation from './AnimatedConfirmation'
 
-const Wrapper = styled.div`
+const Wrapper = styled.div<{ redesignFlag?: boolean }>`
+  background-color: ${({ redesignFlag, theme }) => redesignFlag && theme.backgroundSurface};
+  border: ${({ redesignFlag, theme }) => redesignFlag && `1px solid ${theme.backgroundOutline}`};
+  border-radius: ${({ redesignFlag }) => redesignFlag && '20px'};
   width: 100%;
   padding: 1rem;
 `
@@ -193,30 +197,42 @@ export function ConfirmationModalContent({
 }
 
 export function TransactionErrorContent({ message, onDismiss }: { message: ReactNode; onDismiss: () => void }) {
+  const redesignFlag = useRedesignFlag()
+  const redesignFlagEnabled = redesignFlag === RedesignVariant.Enabled
+
   const theme = useContext(ThemeContext)
   return (
-    <Wrapper>
+    <Wrapper redesignFlag={redesignFlagEnabled}>
       <Section>
         <RowBetween>
-          <Text fontWeight={500} fontSize={20}>
+          <Text fontWeight={redesignFlagEnabled ? 600 : 500} fontSize={redesignFlagEnabled ? 16 : 20}>
             <Trans>Error</Trans>
           </Text>
-          <CloseIcon onClick={onDismiss} />
+          <CloseIcon onClick={onDismiss} redesignFlag={redesignFlagEnabled} />
         </RowBetween>
         <AutoColumn style={{ marginTop: 20, padding: '2rem 0' }} gap="24px" justify="center">
-          <AlertTriangle color={theme.deprecated_red1} style={{ strokeWidth: 1.5 }} size={64} />
+          <AlertTriangle
+            color={redesignFlagEnabled ? theme.accentCritical : theme.deprecated_red1}
+            style={{ strokeWidth: redesignFlagEnabled ? 1 : 1.5 }}
+            size={redesignFlagEnabled ? 90 : 64}
+          />
           <Text
-            fontWeight={500}
+            fontWeight={redesignFlagEnabled ? 600 : 500}
             fontSize={16}
-            color={theme.deprecated_red1}
-            style={{ textAlign: 'center', width: '85%', wordBreak: 'break-word' }}
+            color={redesignFlagEnabled ? theme.accentCritical : theme.deprecated_red1}
+            style={{
+              textAlign: 'center',
+              width: '85%',
+              wordBreak: 'break-word',
+              paddingTop: redesignFlagEnabled ? '1.5rem' : '0rem',
+            }}
           >
             {message}
           </Text>
         </AutoColumn>
       </Section>
       <BottomSection gap="12px">
-        <ButtonPrimary onClick={onDismiss}>
+        <ButtonPrimary onClick={onDismiss} redesignFlag={redesignFlagEnabled}>
           <Trans>Dismiss</Trans>
         </ButtonPrimary>
       </BottomSection>
