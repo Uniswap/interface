@@ -1,9 +1,9 @@
 import { Trans } from '@lingui/macro'
 import { Currency, Price } from '@uniswap/sdk-core'
 import useStablecoinPrice from 'hooks/useStablecoinPrice'
-import { useCallback, useContext } from 'react'
+import { useCallback } from 'react'
 import { Text } from 'rebass'
-import styled, { ThemeContext } from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components/macro'
 import { ThemedText } from 'theme'
 
 interface TradePriceProps {
@@ -30,7 +30,7 @@ const StyledPriceContainer = styled.button`
 `
 
 export default function TradePrice({ price, showInverted, setShowInverted }: TradePriceProps) {
-  const theme = useContext(ThemeContext)
+  const theme = useTheme()
 
   const usdcPrice = useStablecoinPrice(showInverted ? price.baseCurrency : price.quoteCurrency)
   /*

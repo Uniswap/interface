@@ -1,8 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { Percent } from '@uniswap/sdk-core'
 import { OutlineCard } from 'components/Card'
-import { useContext } from 'react'
-import styled, { ThemeContext } from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components/macro'
 import { opacify } from 'theme/utils'
 
 import { ThemedText } from '../../theme'
@@ -21,7 +20,7 @@ interface PriceImpactWarningProps {
 }
 
 export default function PriceImpactWarning({ priceImpact }: PriceImpactWarningProps) {
-  const theme = useContext(ThemeContext)
+  const theme = useTheme()
 
   return (
     <StyledCard>
