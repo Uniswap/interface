@@ -32,7 +32,7 @@ import { useProAmmNFTPositionManagerContract } from 'hooks/useContract'
 import useParsedQueryString from 'hooks/useParsedQueryString'
 import useTheme from 'hooks/useTheme'
 import { Dots } from 'pages/Pool/styleds'
-import { useTokensPrice, useWalletModalToggle } from 'state/application/hooks'
+import { useWalletModalToggle } from 'state/application/hooks'
 import { useRewardTokenPrices } from 'state/farms/hooks'
 import { useFarmAction, useProMMFarmTVL } from 'state/farms/promm/hooks'
 import { ProMMFarm } from 'state/farms/promm/types'
@@ -651,7 +651,8 @@ function ProMMFarmGroup({
   const rwTokenMap = useTokens(rewardAddresses)
 
   const rwTokens = useMemo(() => Object.values(rwTokenMap), [rwTokenMap])
-  const prices = useTokensPrice(rwTokens, VERSION.ELASTIC)
+  const prices = useRewardTokenPrices(rwTokens, VERSION.ELASTIC)
+
   const priceMap: { [key: string]: number } = useMemo(
     () =>
       prices?.reduce(
