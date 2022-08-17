@@ -6,7 +6,6 @@ import { Button } from 'src/components/buttons/Button'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { getClipboard } from 'src/utils/clipboard'
-import { opacify } from 'src/utils/colors'
 
 export default function PasteButton({ onPress }: { onPress: (text: string) => void }) {
   const onPressButton = async () => {
@@ -19,14 +18,14 @@ export default function PasteButton({ onPress }: { onPress: (text: string) => vo
   const theme = useAppTheme()
   return (
     <Button
+      backgroundColor="accentActionSoft"
       borderRadius="md"
       px="sm"
       py="xs"
-      style={{ backgroundColor: opacify(10, theme.colors.accentActive) }}
       onPress={onPressButton}>
-      <Flex centered row gap="xs">
-        <PasteIcon />
-        <Text color="accentActive" variant="mediumLabel">
+      <Flex centered row gap="xxs">
+        <PasteIcon color={theme.colors.blue300} />
+        <Text color="blue300" variant="mediumLabel">
           {t('Paste')}
         </Text>
       </Flex>

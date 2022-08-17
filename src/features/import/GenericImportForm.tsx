@@ -10,6 +10,10 @@ import { Text } from 'src/components/Text'
 import { SectionName } from '../telemetry/constants'
 import { Trace } from '../telemetry/Trace'
 
+const INPUT_VALUES = {
+  height: 120,
+  topPosition: 42,
+}
 interface Props {
   value: string | undefined
   error: string | undefined
@@ -72,7 +76,8 @@ export function GenericImportForm({
           borderRadius="xl"
           borderWidth={1}
           flexShrink={1}
-          height={160}
+          gap="none"
+          height={INPUT_VALUES.height}
           p="sm"
           width="100%">
           <Flex row alignItems="flex-end" gap="none">
@@ -94,7 +99,7 @@ export function GenericImportForm({
               testID="import_account_form/input"
               textAlign={value ? 'center' : 'left'}
               value={value}
-              width={value ? 'auto' : layout?.width}
+              width={value ? 'auto' : (layout?.width || 0) + theme.spacing.xs}
               onBlur={handleBlur}
               onChangeText={onChange}
               onFocus={handleFocus}
@@ -112,7 +117,7 @@ export function GenericImportForm({
               row
               gap="xs"
               position="absolute"
-              top={54}
+              top={INPUT_VALUES.topPosition}
               onLayout={(event: any) => setLayout(event.nativeEvent.layout)}>
               <Text color="textSecondary" variant="body">
                 {t('Type or')}

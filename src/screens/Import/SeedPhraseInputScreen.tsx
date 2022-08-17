@@ -84,6 +84,7 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props) 
         label={t('Continue')}
         name={ElementName.Next}
         testID={ElementName.Next}
+        textVariant="largeLabel"
         variant="onboard"
         onPress={onSubmit}
       />
