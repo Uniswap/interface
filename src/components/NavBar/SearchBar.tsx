@@ -139,8 +139,7 @@ const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index }: Toke
     const keyDownHandler = (event: KeyboardEvent) => {
       if (event.key === 'Enter' && isHovered) {
         event.preventDefault()
-        // TODO update with correct token explore URI
-        navigate(`tokens/${token.address}`)
+        navigate(`/tokens/${token.address}`)
         handleClick()
       }
     }
