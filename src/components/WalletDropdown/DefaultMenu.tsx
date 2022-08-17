@@ -142,6 +142,13 @@ const AuthenticatedHeader = () => {
   const nativeCurrency = useNativeCurrency()
   const nativeCurrencyPrice = useStablecoinPrice(nativeCurrency ?? undefined) || 0
   const openClaimModal = useToggleModal(ApplicationModal.ADDRESS_CLAIM)
+  const disconnect = useCallback(() => {
+    if (connector && connector.deactivate) {
+      connector.deactivate()
+    }
+    connector.resetState()
+    dispatch(updateSelectedWallet({ wallet: undefined }))
+  }, [connector, dispatch, updateSelectedWallet])
 
   const amountUSD = useMemo(() => {
     const price = parseFloat(nativeCurrencyPrice.toFixed(5))
@@ -163,17 +170,7 @@ const AuthenticatedHeader = () => {
         <IconContainer>
           <IconButton onClick={copy} Icon={Copy} text={isCopied ? <Trans>Copied!</Trans> : <Trans>Copy</Trans>} />
           <IconButton href={`${explorer}address/${account}`} Icon={ExternalLink} text={<Trans>Explore</Trans>} />
-          <IconButton
-            onClick={() => {
-              if (connector && connector.deactivate) {
-                connector.deactivate()
-              }
-              connector.resetState()
-              dispatch(updateSelectedWallet({ wallet: undefined }))
-            }}
-            Icon={Power}
-            text={<Trans>Disconnect</Trans>}
-          />
+          <IconButton onClick={disconnect} Icon={Power} text={<Trans>Disconnect</Trans>} />
         </IconContainer>
       </HeaderWrapper>
       <Column>
