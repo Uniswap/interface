@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { ListRenderItemInfo } from 'react-native'
 import { FadeInUp } from 'react-native-reanimated'
 import { useExploreStackNavigation } from 'src/app/navigation/types'
+import { ExploreTokenCardEmptyState } from 'src/components/explore/ExploreTokenCardEmptyState'
 import { BaseTokensCardProps, GenericTokensCard } from 'src/components/explore/GenericTokensCard'
 import { TokenItemBox } from 'src/components/explore/TokenItem'
 import { AnimatedBox } from 'src/components/layout'
@@ -15,6 +16,7 @@ import { Screens } from 'src/screens/Screens'
 /** Renders the favorite tokens card on the Explore page */
 export function FavoriteTokensCard(props: BaseTokensCardProps) {
   const { t } = useTranslation()
+  const navigation = useExploreStackNavigation()
 
   const { tokens: favorites, isLoading } = useFavoriteTokenInfo()
 
@@ -32,7 +34,9 @@ export function FavoriteTokensCard(props: BaseTokensCardProps) {
     [props.metadataDisplayType]
   )
 
-  return (
+  const hasFavoriteTokens = favorites?.length > 0
+
+  return hasFavoriteTokens ? (
     <AnimatedBox entering={FadeInUp}>
       <GenericTokensCard
         {...props}
@@ -46,6 +50,15 @@ export function FavoriteTokensCard(props: BaseTokensCardProps) {
         title={t('Favorite tokens')}
       />
     </AnimatedBox>
+  ) : (
+    <ExploreTokenCardEmptyState
+      buttonLabel={t('Explore tokens')}
+      description={t('Favorite tokens to monitor their prices.')}
+      type="favorite"
+      onPress={() => {
+        navigation.navigate(Screens.ExploreTokens)
+      }}
+    />
   )
 }
 
@@ -56,7 +69,7 @@ export function FavoritesEmptyState() {
   return (
     <BaseCard.EmptyState
       buttonLabel={t('Explore tokens')}
-      description={t("When you favorite tokens, they'll appear here.")}
+      description={t('Favorite tokens to monitor their prices.')}
       onPress={() => {
         navigation.navigate(Screens.ExploreTokens)
       }}

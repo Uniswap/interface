@@ -145,7 +145,7 @@ export function ExploreScreen() {
       ) : (
         <VirtualizedList ref={listRef} onScroll={scrollHandler}>
           <Box height={HEADER_HEIGHT} mb="md" />
-          <Flex gap="sm" pb="lg" px="sm">
+          <Flex gap="sm" px="sm">
             <CardSections textInputRef={textInputRef} />
           </Flex>
         </VirtualizedList>

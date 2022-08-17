@@ -5,6 +5,7 @@ import { useAppSelector } from 'src/app/hooks'
 import { useExploreStackNavigation } from 'src/app/navigation/types'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { Button } from 'src/components/buttons/Button'
+import { ExploreTokenCardEmptyState } from 'src/components/explore/ExploreTokenCardEmptyState'
 import { Box } from 'src/components/layout'
 import { BaseCard } from 'src/components/layout/BaseCard'
 import { selectWatchedAddressSet } from 'src/features/favorites/selectors'
@@ -41,7 +42,7 @@ export function WatchedWalletsCard({ onSearchWallets }: { onSearchWallets: () =>
 
   const hasWatchedWallets = watchedWalletsList.length > 0
 
-  return (
+  return hasWatchedWallets ? (
     <BaseCard.Container>
       <BaseCard.Header
         title={t("Wallets you're watching ({{watchedWalletsCount}})", {
@@ -55,22 +56,22 @@ export function WatchedWalletsCard({ onSearchWallets }: { onSearchWallets: () =>
             : undefined
         }
       />
-      {hasWatchedWallets ? (
-        <Box mx="xxs" my="md">
-          <FlatList
-            horizontal
-            data={watchedWalletsList}
-            keyExtractor={(address) => address}
-            renderItem={renderItem}
-          />
-        </Box>
-      ) : (
-        <BaseCard.EmptyState
-          buttonLabel={t('Search wallets')}
-          description={t("When you watch wallets, they'll appear here.")}
-          onPress={onSearchWallets}
+
+      <Box mx="xxs" my="md">
+        <FlatList
+          horizontal
+          data={watchedWalletsList}
+          keyExtractor={(address) => address}
+          renderItem={renderItem}
         />
-      )}
+      </Box>
     </BaseCard.Container>
+  ) : (
+    <ExploreTokenCardEmptyState
+      buttonLabel={t('Search wallets')}
+      description={t('Watch wallets to keep track of their activity.')}
+      type="watched"
+      onPress={onSearchWallets}
+    />
   )
 }
