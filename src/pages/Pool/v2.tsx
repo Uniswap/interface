@@ -32,7 +32,7 @@ const PageWrapper = styled(AutoColumn)`
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
     padding: 0px 8px;
-  `}
+  `};
 `
 
 const VoteCard = styled(DataCard)`
