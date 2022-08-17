@@ -6,10 +6,7 @@ import { colors } from 'theme/colors'
 const BackSection = styled.div`
   position: relative;
   display: flex;
-  align-items: center;
-  text-align: center;
-  padding-left: 16px;
-  padding-right: 16px;
+  padding: 0 16px;
   color: ${({ theme }) => theme.textTertiary};
   cursor: default;
   :hover {
@@ -42,7 +39,9 @@ export const SlideOutMenu = ({
     <Menu>
       <BackSection>
         <ChevronLeft style={{ cursor: 'pointer' }} onClick={close} size={24} />
-        <Text style={{ position: 'absolute', left: '50%', transform: 'translateX(-50%)' }}>{title}</Text>
+        <Text style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)' }}>
+          {title}
+        </Text>
         {clear && (
           <Text
             onClick={clear}

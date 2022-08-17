@@ -220,6 +220,12 @@ const StyledNavLink = styled(NavLink)`
   }
 `
 
+const WalletDropdownWrapper = styled.div`
+  position: absolute;
+  top: 75px;
+  right: 20px;
+`
+
 const StyledExternalLink = styled(ExternalLink)`
   ${({ theme }) => theme.flexRowNoWrap}
   align-items: left;
@@ -351,9 +357,9 @@ export default function Header() {
             <Web3Status />
           </AccountElement>
           {walletFlag === WalletVariant.Enabled && (
-            <div style={{ position: 'absolute', top: 75, right: 20 }}>
+            <WalletDropdownWrapper>
               <WalletDropdown />
-            </div>
+            </WalletDropdownWrapper>
           )}
         </HeaderElement>
         <HeaderElement>

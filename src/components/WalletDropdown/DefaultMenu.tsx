@@ -18,6 +18,7 @@ import { useDarkModeManager } from 'state/user/hooks'
 import { updateSelectedWallet } from 'state/user/reducer'
 import styled from 'styled-components/macro'
 import { colors } from 'theme/colors'
+import { opacify } from 'theme/utils'
 
 import useENS from '../../hooks/useENS'
 import { shortenAddress } from '../../nft/utils/address'
@@ -26,6 +27,7 @@ import { useAllTransactions } from '../../state/transactions/hooks'
 import { ButtonPrimary } from '../Button'
 import StatusIcon from '../Identicon/StatusIcon'
 import IconButton, { IconHoverText } from './IconButton'
+import { MenuState } from './index'
 
 const UNIbutton = styled(ButtonPrimary)`
   background: linear-gradient(to right, #9139b0 0%, #4261d6 100%);
@@ -48,7 +50,7 @@ const ConnectButton = styled.button`
   border-radius: 12px;
   height: 44px;
   width: 288px;
-  background-color: ${colors.blue400};
+  background-color: ${({ theme }) => theme.accentAction};
   color: white;
   font-weight: 600;
   font-size: 16px;
@@ -70,7 +72,7 @@ const IconContainer = styled.div`
 `
 
 const Divider = styled.div`
-  border: 0.5px solid rgba(153, 161, 189, 0.24);
+  border: 0.5px solid ${({ theme }) => theme.backgroundOutline};
   margin-top: 16px;
   margin-bottom: 16px;
 `
@@ -177,27 +179,33 @@ const AuthenticatedHeader = () => {
 }
 
 const PendingBadge = styled.span`
-  background-color: #4c82fb3d;
-  color: #869eff;
+  background-color: ${({ theme }) => theme.accentActionSoft};
+  color: ${({ theme }) => theme.deprecated_primary3};
   font-weight: 600;
-  padding: 4px 6px;
-  border-radius: 5px;
+  padding: 4px 8px;
+  border-radius: 4px;
 `
 
 const IconWrap = styled.span`
+  display: inline-block;
   margin-top: auto;
   margin-bottom: auto;
   margin-left: 4px;
   height: 16px;
-  width: 16px;
 `
 
-const DefaultText = styled(Text)`
+const DefaultMenuWrap = styled.div`
+  padding: 0 16px;
+  width: 100%;
+  height: 100%;
+`
+
+const DefaultText = styled.span`
   font-size: 14px;
   font-weight: 400;
 `
 
-const WalletDropdown = ({ setMenu }: { setMenu: (state: 'DEFAULT' | 'LANGUAGE' | 'TRANSACTIONS') => void }) => {
+const WalletDropdown = ({ setMenu }: { setMenu: (state: MenuState) => void }) => {
   const { account } = useWeb3React()
   const isAuthenticated = !!account
   const [darkMode, toggleDarkMode] = useDarkModeManager()
@@ -212,7 +220,7 @@ const WalletDropdown = ({ setMenu }: { setMenu: (state: 'DEFAULT' | 'LANGUAGE' |
   )
 
   return (
-    <div style={{ paddingLeft: 16, paddingRight: 16, width: '100%', height: '100%' }}>
+    <DefaultMenuWrap>
       {isAuthenticated ? (
         <AuthenticatedHeader />
       ) : (
@@ -220,10 +228,10 @@ const WalletDropdown = ({ setMenu }: { setMenu: (state: 'DEFAULT' | 'LANGUAGE' |
       )}
       <Divider />
       {isAuthenticated && (
-        <ToggleMenuItem onClick={() => setMenu('TRANSACTIONS')}>
+        <ToggleMenuItem onClick={() => setMenu(MenuState.TRANSACTIONS)}>
           <DefaultText>
             <Trans>Transactions</Trans>{' '}
-            {pendingTransactions.length > 0 && (
+            {pendingTransactions.length > -1 && (
               <PendingBadge>
                 {pendingTransactions.length} <Trans>Pending</Trans>
               </PendingBadge>
@@ -234,7 +242,7 @@ const WalletDropdown = ({ setMenu }: { setMenu: (state: 'DEFAULT' | 'LANGUAGE' |
           </IconWrap>
         </ToggleMenuItem>
       )}
-      <ToggleMenuItem onClick={() => setMenu('LANGUAGE')}>
+      <ToggleMenuItem onClick={() => setMenu(MenuState.LANGUAGE)}>
         <DefaultText>
           <Trans>Language</Trans>
         </DefaultText>
@@ -251,7 +259,7 @@ const WalletDropdown = ({ setMenu }: { setMenu: (state: 'DEFAULT' | 'LANGUAGE' |
         <DefaultText>{darkMode ? <Trans> Light theme</Trans> : <Trans>Dark theme</Trans>}</DefaultText>
         <IconWrap>{darkMode ? <Sun size={16} /> : <Moon size={16} />}</IconWrap>
       </ToggleMenuItem>
-    </div>
+    </DefaultMenuWrap>
   )
 }
 

@@ -1,6 +1,8 @@
 import { PropsWithChildren } from 'react'
 import { Icon } from 'react-feather'
 import styled from 'styled-components/macro'
+import { colors } from 'theme/colors'
+import { opacify } from 'theme/utils'
 
 export const IconHoverText = styled.span`
   color: ${({ theme }) => theme.textPrimary};
@@ -27,8 +29,8 @@ const IconBlock = styled.div<PropsWithChildren<BadgeProps>>`
   width: 32px;
   color: ${({ theme }) => theme.textPrimary};
   :hover {
-    background-color: rgba(173, 188, 255, 0.48);
-    -webkit-transition: background-color 200ms linear;
+    background-color: ${opacify(48, colors.blue200)};
+    transition: background-color 200ms linear;
     cursor: pointer;
     ${IconHoverText} {
       opacity: 1;
@@ -36,7 +38,7 @@ const IconBlock = styled.div<PropsWithChildren<BadgeProps>>`
   }
   :active {
     background-color: ${({ theme }) => theme.backgroundSurface};
-    -webkit-transition: background-color 50ms linear;
+    transition: background-color 50ms linear;
   }
 `
 
@@ -50,7 +52,7 @@ const IconWrapper = styled.span`
 `
 
 interface IconButtonProps {
-  text: JSX.Element
+  text: React.ReactNode
   Icon: Icon
   onClick: () => void
 }

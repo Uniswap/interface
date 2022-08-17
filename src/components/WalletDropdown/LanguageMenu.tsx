@@ -15,25 +15,26 @@ const InternalMenuItem = styled(Link)`
   padding: 0.5rem 0.5rem;
   color: ${({ theme }) => theme.textTertiary};
   :hover {
-    color: ${({ theme }) => theme.textTertiary};
     cursor: pointer;
-    text-decoration: none;
   }
 `
 
-const InternalLinkMenuItem = styled(InternalMenuItem)`
+const InternalLinkMenuItem = styled(InternalMenuItem)<{ active: boolean }>`
   display: flex;
   flex-direction: row;
   align-items: center;
   padding: 12px 16px;
   justify-content: space-between;
   text-decoration: none;
+  background-color: ${({ active, theme }) => active && theme.accentActiveSoft};
   color: ${({ theme }) => theme.textPrimary};
   :hover {
-    color: ${({ theme }) => theme.textPrimary};
     cursor: pointer;
-    text-decoration: none;
   }
+`
+
+const LanguageWrap = styled.div`
+  margin-top: 16px;
 `
 
 function LanguageMenuItem({ locale, active }: { locale: SupportedLocale; active: boolean }) {
@@ -42,13 +43,7 @@ function LanguageMenuItem({ locale, active }: { locale: SupportedLocale; active:
   if (!to) return null
 
   return (
-    <InternalLinkMenuItem
-      style={{
-        backgroundColor: active ? 'rgba(76, 130, 251, 0.12)' : '',
-      }}
-      onClick={onClick}
-      to={to}
-    >
+    <InternalLinkMenuItem active={active} onClick={onClick} to={to}>
       <Text fontSize={16} fontWeight={400} lineHeight="24px">
         {LOCALE_LABEL[locale]}
       </Text>
@@ -62,11 +57,11 @@ export const LanguageMenu = ({ close }: { close: () => void }) => {
 
   return (
     <SlideOutMenu title={<Trans>Language</Trans>} close={close}>
-      <div style={{ marginTop: 16 }}>
+      <LanguageWrap>
         {SUPPORTED_LOCALES.map((locale) => (
           <LanguageMenuItem locale={locale} active={activeLocale === locale} key={locale} />
         ))}
-      </div>
+      </LanguageWrap>
     </SlideOutMenu>
   )
 }
