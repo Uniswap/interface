@@ -34,10 +34,9 @@ import { ProposalEditor } from './ProposalEditor'
 import { ProposalSubmissionModal } from './ProposalSubmissionModal'
 
 const PageWrapper = styled(AutoColumn)`
-  ${({ theme }) =>
-    theme.mediaWidth.upToMedium`
+  ${({ theme }) => theme.mediaWidth.upToMedium`
     padding: 0px 8px;
-  `}
+  `};
 `
 
 const CreateProposalButton = ({

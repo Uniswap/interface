@@ -33,10 +33,9 @@ const PageWrapper = styled(AutoColumn)`
     padding: 0px 8px;
   `};
 
-  ${({ theme }) =>
-    theme.mediaWidth.upToSmall`
+  ${({ theme }) => theme.mediaWidth.upToSmall`
     max-width: 500px;
-  `}
+  `};
 `
 const TitleRow = styled(RowBetween)`
   color: ${({ theme }) => theme.deprecated_text2};
