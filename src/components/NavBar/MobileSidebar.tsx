@@ -159,7 +159,7 @@ export const MobileSideBar = () => {
                 <NavLinkRow href="/swap" close={toggleOpen} isActive={pathname.startsWith('/swap')}>
                   Swap
                 </NavLinkRow>
-                <NavLinkRow href="/explore" close={toggleOpen} isActive={pathname.startsWith('/explore')}>
+                <NavLinkRow href="/tokens" close={toggleOpen} isActive={pathname.startsWith('/tokens')}>
                   Tokens
                 </NavLinkRow>
                 <NavLinkRow href="/pool" id={'pool-nav-link'} isActive={isPoolActive} close={toggleOpen}>
