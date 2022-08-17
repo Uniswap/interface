@@ -18,7 +18,7 @@ interface NavLinkItemProps {
   children: ReactNode
 }
 
-const NavLinkItem = ({ href, id, isActive, children }: NavLinkItemProps) => {
+const MenuItem = ({ href, id, isActive, children }: NavLinkItemProps) => {
   return (
     <NavLink
       to={href}
@@ -79,15 +79,15 @@ const Navbar = () => {
             <UniIcon width="48" height="48" className={styles.logo} />
           </Box>
           <Row gap="8">
-            <NavLinkItem href={'/swap'} isActive={pathname.startsWith('/swap')}>
+            <MenuItem href="/swap" isActive={pathname.startsWith('/swap')}>
               Swap
-            </NavLinkItem>
-            <NavLinkItem href={'/explore'} isActive={pathname.startsWith('/explore')}>
+            </MenuItem>
+            <MenuItem href="/explore" isActive={pathname.startsWith('/explore')}>
               Explore
-            </NavLinkItem>
-            <NavLinkItem href={'/pool'} id={'pool-nav-link'} isActive={isPoolActive}>
+            </MenuItem>
+            <MenuItem href="/pool" id={'pool-nav-link'} isActive={isPoolActive}>
               Pool
-            </NavLinkItem>
+            </MenuItem>
           </Row>
         </Box>
         <Box className={styles.middleContainer}>{/* TODO add Searchbar */}</Box>

@@ -144,8 +144,8 @@ export const MenuDropdown = () => {
               </Column>
               <Separator />
               <Column paddingX="16" gap="4">
-                <SecondaryLinkedText href={'https://help.uniswap.org/en/'}>Help center ↗</SecondaryLinkedText>
-                <SecondaryLinkedText href={'https://docs.uniswap.org/'}>Documentation ↗</SecondaryLinkedText>
+                <SecondaryLinkedText href="https://help.uniswap.org/en/">Help center ↗</SecondaryLinkedText>
+                <SecondaryLinkedText href="https://docs.uniswap.org/">Documentation ↗</SecondaryLinkedText>
                 <SecondaryLinkedText
                   onClick={() => {
                     toggleOpen()

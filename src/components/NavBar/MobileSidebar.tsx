@@ -156,13 +156,13 @@ export const MobileSideBar = () => {
                 </Box>
               </Row>
               <Column gap="4">
-                <NavLinkItem href={'/swap'} close={toggleOpen} isActive={pathname.startsWith('/swap')}>
+                <NavLinkItem href="/swap" close={toggleOpen} isActive={pathname.startsWith('/swap')}>
                   Swap
                 </NavLinkItem>
-                <NavLinkItem href={'/explore'} close={toggleOpen} isActive={pathname.startsWith('/explore')}>
+                <NavLinkItem href="/explore" close={toggleOpen} isActive={pathname.startsWith('/explore')}>
                   Tokens
                 </NavLinkItem>
-                <NavLinkItem href={'/pool'} id={'pool-nav-link'} isActive={isPoolActive} close={toggleOpen}>
+                <NavLinkItem href="/pool" id={'pool-nav-link'} isActive={isPoolActive} close={toggleOpen}>
                   Pool
                 </NavLinkItem>
               </Column>
@@ -185,11 +185,11 @@ export const MobileSideBar = () => {
             <Column>
               <Row justifyContent="center" marginBottom="12" flexWrap="wrap">
                 <Row className={styles.bottomExternalLinks}>
-                  <BottomExternalLink href={'https://help.uniswap.org/en/'} onClick={toggleOpen}>
+                  <BottomExternalLink href="https://help.uniswap.org/en/" onClick={toggleOpen}>
                     Help center ↗
                   </BottomExternalLink>
                   <BulletIcon />
-                  <BottomExternalLink href={'https://docs.uniswap.org/'} onClick={toggleOpen}>
+                  <BottomExternalLink href="https://docs.uniswap.org/" onClick={toggleOpen}>
                     Documentation ↗
                   </BottomExternalLink>
                   <BulletIcon />
