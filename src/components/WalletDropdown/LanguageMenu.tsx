@@ -5,8 +5,7 @@ import { useLocationLinkProps } from 'hooks/useLocationLinkProps'
 import { Check } from 'react-feather'
 import { Link } from 'react-router-dom'
 import { Text } from 'rebass'
-import styled from 'styled-components/macro'
-import { colors } from 'theme/colors'
+import styled, { useTheme } from 'styled-components/macro'
 
 import { SlideOutMenu } from './SlideOutMenu'
 
@@ -26,7 +25,7 @@ const InternalLinkMenuItem = styled(InternalMenuItem)<{ active: boolean }>`
   padding: 12px 16px;
   justify-content: space-between;
   text-decoration: none;
-  background-color: ${({ active, theme }) => active && theme.accentActiveSoft};
+  background-color: ${({ active, theme }) => active && theme.accentActionSoft};
   color: ${({ theme }) => theme.textPrimary};
   :hover {
     cursor: pointer;
@@ -39,6 +38,7 @@ const LanguageWrap = styled.div`
 
 function LanguageMenuItem({ locale, active }: { locale: SupportedLocale; active: boolean }) {
   const { to, onClick } = useLocationLinkProps(locale)
+  const theme = useTheme()
 
   if (!to) return null
 
@@ -47,7 +47,7 @@ function LanguageMenuItem({ locale, active }: { locale: SupportedLocale; active:
       <Text fontSize={16} fontWeight={400} lineHeight="24px">
         {LOCALE_LABEL[locale]}
       </Text>
-      {active && <Check color={colors.blue400} opacity={1} size={20} />}
+      {active && <Check color={theme.accentAction} opacity={1} size={20} />}
     </InternalLinkMenuItem>
   )
 }

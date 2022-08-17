@@ -1,7 +1,6 @@
 import { ChevronLeft } from 'react-feather'
 import { Text } from 'rebass'
-import styled from 'styled-components/macro'
-import { colors } from 'theme/colors'
+import styled, { useTheme } from 'styled-components/macro'
 
 const BackSection = styled.div`
   position: relative;
@@ -35,6 +34,8 @@ export const SlideOutMenu = ({
   children: JSX.Element | Array<JSX.Element>
   clear?: () => void
 }) => {
+  const theme = useTheme()
+
   return (
     <Menu>
       <BackSection>
@@ -46,7 +47,7 @@ export const SlideOutMenu = ({
           <Text
             onClick={clear}
             marginLeft="auto"
-            color={colors.blue400}
+            color={theme.accentAction}
             fontWeight={600}
             fontSize={14}
             style={{ cursor: 'pointer' }}
