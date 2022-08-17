@@ -22,8 +22,8 @@ import {
   weekFormatter,
 } from 'utils/formatChartTimes'
 
-import data from './data.json'
-import LineChart from './LineChart'
+import data from '../../Charts/data.json'
+import LineChart from '../../Charts/LineChart'
 
 // TODO: This should be combined with the logic in TimeSelector.
 const TIME_DISPLAYS: [TimePeriod, string][] = [

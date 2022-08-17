@@ -1,7 +1,7 @@
 import styled, { useTheme } from 'styled-components/macro'
 
-import { DeltaContainer, TokenPrice } from '../../Charts/PriceChart'
 import { LoadingBubble } from '../loading'
+import { DeltaContainer, TokenPrice } from './PriceChart'
 import {
   AboutHeader,
   AboutSection,
