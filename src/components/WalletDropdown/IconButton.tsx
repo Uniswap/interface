@@ -1,4 +1,3 @@
-import { PropsWithChildren } from 'react'
 import { Icon } from 'react-feather'
 import styled from 'styled-components/macro'
 import { colors } from 'theme/colors'
@@ -16,11 +15,7 @@ export const IconHoverText = styled.span`
   left: 10px;
 `
 
-interface BadgeProps {
-  onClick: () => void
-}
-
-const IconBlock = styled.div<PropsWithChildren<BadgeProps>>`
+const IconBlock = styled.a`
   background-color: ${({ theme }) => theme.backgroundInteractive};
   border-radius: 12px;
   display: inline-block;
@@ -54,16 +49,19 @@ const IconWrapper = styled.span`
 interface IconButtonProps {
   text: React.ReactNode
   Icon: Icon
-  onClick: () => void
+  onClick?: () => void | undefined
+  href?: string | undefined
 }
 
-const IconButton = ({ Icon, onClick, text }: IconButtonProps) => (
-  <IconBlock onClick={onClick}>
-    <IconWrapper>
-      <Icon strokeWidth={1.5} size={16} />
-      <IconHoverText>{text}</IconHoverText>
-    </IconWrapper>
-  </IconBlock>
-)
+const IconButton = ({ Icon, onClick, text, href }: IconButtonProps) => {
+  return (
+    <IconBlock onClick={onClick} href={href} target="_blank">
+      <IconWrapper>
+        <Icon strokeWidth={1.5} size={16} />
+        <IconHoverText>{text}</IconHoverText>
+      </IconWrapper>
+    </IconBlock>
+  )
+}
 
 export default IconButton

@@ -58,10 +58,10 @@ const ConnectButton = styled.button`
 const IconContainer = styled.div`
   display: inline-block;
   float: right;
-  & > div {
+  & > a {
     margin-right: 8px;
   }
-  & > div:last-child {
+  & > a:last-child {
     margin-right: 0px;
     ${IconHoverText}:last-child {
       left: 0px;
@@ -89,7 +89,7 @@ const ToggleMenuItem = styled.button`
   font-weight: 400;
   width: 100%;
   margin-bottom: 8px;
-  color: ${({ theme }) => theme.textTertiary};
+  color: ${({ theme }) => theme.textSecondary};
   :hover {
     cursor: pointer;
     text-decoration: none;
@@ -99,7 +99,7 @@ const ToggleMenuItem = styled.button`
 const USDText = styled.div`
   font-size: 16px;
   font-weight: 500;
-  color: ${({ theme }) => theme.textTertiary};
+  color: ${({ theme }) => theme.textSecondary};
   margin-top: 8px;
 `
 
@@ -128,6 +128,7 @@ const AuthenticatedHeader = () => {
     return price * balance
   }, [balanceString, nativeCurrencyPrice])
 
+  // "`${explorer}address/${account}`, '_blank'"
   return (
     <>
       <div style={{ marginBottom: 12 }}>
@@ -141,11 +142,7 @@ const AuthenticatedHeader = () => {
         </div>
         <IconContainer>
           <IconButton onClick={copy} Icon={Copy} text={isCopied ? <Trans>Copied!</Trans> : <Trans>Copy</Trans>} />
-          <IconButton
-            onClick={() => window.open(`${explorer}address/${account}`, '_blank')}
-            Icon={ExternalLink}
-            text={<Trans>Explore</Trans>}
-          />
+          <IconButton href={`${explorer}address/${account}`} Icon={ExternalLink} text={<Trans>Explore</Trans>} />
           <IconButton
             onClick={() => {
               if (connector && connector.deactivate) {
@@ -229,7 +226,7 @@ const WalletDropdown = ({ setMenu }: { setMenu: (state: MenuState) => void }) =>
         <ToggleMenuItem onClick={() => setMenu(MenuState.TRANSACTIONS)}>
           <DefaultText>
             <Trans>Transactions</Trans>{' '}
-            {pendingTransactions.length > -1 && (
+            {pendingTransactions.length > 0 && (
               <PendingBadge>
                 {pendingTransactions.length} <Trans>Pending</Trans>
               </PendingBadge>

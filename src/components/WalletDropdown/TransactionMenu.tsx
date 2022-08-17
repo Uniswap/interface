@@ -2,9 +2,9 @@ import { Trans } from '@lingui/macro'
 
 import { SlideOutMenu } from './SlideOutMenu'
 
-export const TransactionHistoryMenu = ({ close }: { close: () => void }) => {
+export const TransactionHistoryMenu = ({ onClose }: { onClose: () => void }) => {
   return (
-    <SlideOutMenu close={close} clear={undefined} title={<Trans>Transactions</Trans>}>
+    <SlideOutMenu onClose={onClose} onClear={undefined} title={<Trans>Transactions</Trans>}>
       <div />
     </SlideOutMenu>
   )

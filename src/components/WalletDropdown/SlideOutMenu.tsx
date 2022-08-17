@@ -6,7 +6,7 @@ const BackSection = styled.div`
   position: relative;
   display: flex;
   padding: 0 16px;
-  color: ${({ theme }) => theme.textTertiary};
+  color: ${({ theme }) => theme.textSecondary};
   cursor: default;
   :hover {
     text-decoration: none;
@@ -18,34 +18,36 @@ const Menu = styled.div`
   height: 100%;
   font-size: 16px;
   overflow-y: scroll;
-  &::-webkit-scrollbar {
-    display: none;
-  }
+`
+
+const Header = styled.span`
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
 `
 
 export const SlideOutMenu = ({
   children,
-  close,
+  onClose,
   title,
-  clear,
+  onClear,
 }: {
-  close: () => void
+  onClose: () => void
   title: JSX.Element
   children: JSX.Element | Array<JSX.Element>
-  clear?: () => void
+  onClear?: () => void
 }) => {
   const theme = useTheme()
 
   return (
     <Menu>
       <BackSection>
-        <ChevronLeft style={{ cursor: 'pointer' }} onClick={close} size={24} />
-        <Text style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)' }}>
-          {title}
-        </Text>
-        {clear && (
+        <ChevronLeft style={{ cursor: 'pointer' }} onClick={onClose} size={24} />
+        <Header>{title}</Header>
+        {onClear && (
           <Text
-            onClick={clear}
+            onClick={onClear}
             marginLeft="auto"
             color={theme.accentAction}
             fontWeight={600}

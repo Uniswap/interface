@@ -7,10 +7,10 @@ import DefaultMenu from './DefaultMenu'
 import { LanguageMenu } from './LanguageMenu'
 import { TransactionHistoryMenu } from './TransactionMenu'
 
-const WalletWrapper = styled.div<{ height: string }>`
+const WalletWrapper = styled.div<{ isAuthenticated: boolean }>`
   border-radius: 12px;
   width: 320px;
-  height: ${(props) => props.height};
+  height: ${({ isAuthenticated }) => (isAuthenticated ? '324px' : '200px')};
   display: flex;
   flex-direction: column;
   font-size: 16px;
@@ -29,13 +29,11 @@ export enum MenuState {
 const WalletDropdown = () => {
   const { account } = useWeb3React()
   const [menu, setMenu] = useState<MenuState>(MenuState.DEFAULT)
-  const isAuthenticated = !!account
-  const height = isAuthenticated ? '324px' : '200px'
 
   return (
-    <WalletWrapper height={height}>
-      {menu === MenuState.TRANSACTIONS && <TransactionHistoryMenu close={() => setMenu(MenuState.DEFAULT)} />}
-      {menu === MenuState.LANGUAGE && <LanguageMenu close={() => setMenu(MenuState.DEFAULT)} />}
+    <WalletWrapper isAuthenticated={!!account}>
+      {menu === MenuState.TRANSACTIONS && <TransactionHistoryMenu onClose={() => setMenu(MenuState.DEFAULT)} />}
+      {menu === MenuState.LANGUAGE && <LanguageMenu onClose={() => setMenu(MenuState.DEFAULT)} />}
       {menu === MenuState.DEFAULT && <DefaultMenu setMenu={setMenu} />}
     </WalletWrapper>
   )

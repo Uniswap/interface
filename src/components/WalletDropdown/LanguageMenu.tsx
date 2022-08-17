@@ -18,14 +18,14 @@ const InternalMenuItem = styled(Link)`
   }
 `
 
-const InternalLinkMenuItem = styled(InternalMenuItem)<{ active: boolean }>`
+const InternalLinkMenuItem = styled(InternalMenuItem)<{ isActive: boolean }>`
   display: flex;
   flex-direction: row;
   align-items: center;
   padding: 12px 16px;
   justify-content: space-between;
   text-decoration: none;
-  background-color: ${({ active, theme }) => active && theme.accentActionSoft};
+  background-color: ${({ isActive, theme }) => isActive && theme.accentActionSoft};
   color: ${({ theme }) => theme.textPrimary};
   :hover {
     cursor: pointer;
@@ -36,30 +36,30 @@ const LanguageWrap = styled.div`
   margin-top: 16px;
 `
 
-function LanguageMenuItem({ locale, active }: { locale: SupportedLocale; active: boolean }) {
+function LanguageMenuItem({ locale, isActive }: { locale: SupportedLocale; isActive: boolean }) {
   const { to, onClick } = useLocationLinkProps(locale)
   const theme = useTheme()
 
   if (!to) return null
 
   return (
-    <InternalLinkMenuItem active={active} onClick={onClick} to={to}>
+    <InternalLinkMenuItem isActive={isActive} onClick={onClick} to={to}>
       <Text fontSize={16} fontWeight={400} lineHeight="24px">
         {LOCALE_LABEL[locale]}
       </Text>
-      {active && <Check color={theme.accentAction} opacity={1} size={20} />}
+      {isActive && <Check color={theme.accentAction} opacity={1} size={20} />}
     </InternalLinkMenuItem>
   )
 }
 
-export const LanguageMenu = ({ close }: { close: () => void }) => {
+export const LanguageMenu = ({ onClose }: { onClose: () => void }) => {
   const activeLocale = useActiveLocale()
 
   return (
-    <SlideOutMenu title={<Trans>Language</Trans>} close={close}>
+    <SlideOutMenu title={<Trans>Language</Trans>} onClose={onClose}>
       <LanguageWrap>
         {SUPPORTED_LOCALES.map((locale) => (
-          <LanguageMenuItem locale={locale} active={activeLocale === locale} key={locale} />
+          <LanguageMenuItem locale={locale} isActive={activeLocale === locale} key={locale} />
         ))}
       </LanguageWrap>
     </SlideOutMenu>
