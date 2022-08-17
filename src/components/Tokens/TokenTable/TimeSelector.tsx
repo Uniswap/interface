@@ -18,7 +18,7 @@ export const TIME_DISPLAYS: { [key: string]: string } = {
   year: '1Y',
 }
 
-const TIMES = [TimePeriod.hour, TimePeriod.day, TimePeriod.week, TimePeriod.month, TimePeriod.year]
+const TIMES = [TimePeriod.HOUR, TimePeriod.DAY, TimePeriod.WEEK, TimePeriod.MONTH, TimePeriod.YEAR]
 
 const InternalMenuItem = styled.div`
   flex: 1;

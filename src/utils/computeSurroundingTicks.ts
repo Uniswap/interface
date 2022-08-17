@@ -3,7 +3,7 @@ import { tickToPrice } from '@uniswap/v3-sdk'
 import { TickProcessed } from 'hooks/usePoolTickData'
 import JSBI from 'jsbi'
 
-import { Ticks } from '../graphql/AllV3TicksQuery'
+import { Ticks } from '../graphql/thegraph/AllV3TicksQuery'
 
 const PRICE_FIXED_DIGITS = 8
 
