@@ -9,7 +9,7 @@ import styled, { useTheme } from 'styled-components/macro'
 import NetworkBalance from './NetworkBalance'
 
 const BalancesCard = styled.div`
-  width: 320px;
+  width: 100%;
   height: fit-content;
   color: ${({ theme }) => theme.textPrimary};
   font-size: 12px;
