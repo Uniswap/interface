@@ -1,12 +1,12 @@
 import { PageName } from 'components/AmplitudeAnalytics/constants'
 import { Trace } from 'components/AmplitudeAnalytics/Trace'
-import { MAX_WIDTH_MEDIA_BREAKPOINT, MEDIUM_MEDIA_BREAKPOINT } from 'components/Explore/constants'
-import { favoritesAtom, filterStringAtom } from 'components/Explore/state'
-import FavoriteButton from 'components/Explore/TokenTable/FavoriteButton'
-import NetworkFilter from 'components/Explore/TokenTable/NetworkFilter'
-import SearchBar from 'components/Explore/TokenTable/SearchBar'
-import TimeSelector from 'components/Explore/TokenTable/TimeSelector'
-import TokenTable from 'components/Explore/TokenTable/TokenTable'
+import { MAX_WIDTH_MEDIA_BREAKPOINT, MEDIUM_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
+import { favoritesAtom, filterStringAtom } from 'components/Tokens/state'
+import FavoriteButton from 'components/Tokens/TokenTable/FavoriteButton'
+import NetworkFilter from 'components/Tokens/TokenTable/NetworkFilter'
+import SearchBar from 'components/Tokens/TokenTable/SearchBar'
+import TimeSelector from 'components/Tokens/TokenTable/TimeSelector'
+import TokenTable from 'components/Tokens/TokenTable/TokenTable'
 import useExplorePageQuery from 'hooks/useExplorePageQuery'
 import { useAtomValue, useResetAtom } from 'jotai/utils'
 import { useEffect } from 'react'
@@ -58,7 +58,7 @@ const FiltersWrapper = styled.div`
   }
 `
 
-const Explore = () => {
+const Tokens = () => {
   const favoriteTokens = useAtomValue<string[]>(favoritesAtom)
   const { data, error, loading } = useExplorePageQuery(favoriteTokens)
   const resetFilterString = useResetAtom(filterStringAtom)
@@ -90,4 +90,4 @@ const Explore = () => {
   )
 }
 
-export default Explore
+export default Tokens
