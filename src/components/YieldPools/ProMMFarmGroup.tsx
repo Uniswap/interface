@@ -33,6 +33,7 @@ import useParsedQueryString from 'hooks/useParsedQueryString'
 import useTheme from 'hooks/useTheme'
 import { Dots } from 'pages/Pool/styleds'
 import { useTokensPrice, useWalletModalToggle } from 'state/application/hooks'
+import { useRewardTokenPrices } from 'state/farms/hooks'
 import { useFarmAction, useProMMFarmTVL } from 'state/farms/promm/hooks'
 import { ProMMFarm } from 'state/farms/promm/types'
 import { useSingleCallResult } from 'state/multicall/hooks'
@@ -165,7 +166,7 @@ const Row = ({
 
   const { tvl, farmAPR, poolAPY } = useProMMFarmTVL(fairlaunchAddress, farm.pid)
 
-  const prices = useTokensPrice([token0, token1], VERSION.ELASTIC)
+  const prices = useRewardTokenPrices([token0?.wrapped, token1?.wrapped], VERSION.ELASTIC)
 
   const pool = useMemo(() => {
     if (token0 && token1)

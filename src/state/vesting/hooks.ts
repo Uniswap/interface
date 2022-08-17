@@ -15,7 +15,7 @@ import { useActiveWeb3React } from 'hooks'
 import { useTokens } from 'hooks/Tokens'
 import { useMultipleContracts, useRewardLockerContracts } from 'hooks/useContract'
 import { AppState } from 'state'
-import { useTokensPrice } from 'state/application/hooks'
+import { useRewardTokenPrices } from 'state/farms/hooks'
 import { useGetProMMFarms, useProMMFarms } from 'state/farms/promm/hooks'
 import { RewardLockerVersion } from 'state/farms/types'
 import { useAppDispatch } from 'state/hooks'
@@ -232,7 +232,7 @@ export const usePrommSchedules = () => {
     return Object.values(rwTokenMap)
   }, [rwTokenMap])
 
-  const prices = useTokensPrice(tokens, VERSION.ELASTIC)
+  const prices = useRewardTokenPrices(tokens, VERSION.ELASTIC)
 
   const tokenPriceMap = useMemo(() => {
     return prices.reduce((priceMap, price, index) => {
