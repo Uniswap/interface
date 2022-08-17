@@ -18,10 +18,11 @@ import TwitterIcon from 'src/assets/logos/twitter.svg'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { Button } from 'src/components/buttons/Button'
 import { Switch } from 'src/components/buttons/Switch'
+import { AppBackground } from 'src/components/gradients/AppBackground'
 import { Chevron } from 'src/components/icons/Chevron'
 import { Box, Flex } from 'src/components/layout'
 import { BackHeader } from 'src/components/layout/BackHeader'
-import { Screen } from 'src/components/layout/Screen'
+import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollScreen'
 import {
   SettingsRow,
   SettingsSection,
@@ -165,23 +166,38 @@ export function SettingsScreen() {
   }
 
   return (
-    <Screen px="lg" py="lg">
-      <SectionList
-        ListFooterComponent={<FooterSettings />}
-        ListHeaderComponent={<WalletSettings />}
-        keyExtractor={(_item, index) => 'settings' + index}
-        renderItem={renderItem}
-        renderSectionHeader={({ section: { subTitle } }) => (
-          <Box bg="backgroundBackdrop" pb="md">
-            <Text color="textSecondary" fontWeight="500" variant="body">
-              {subTitle}
-            </Text>
-          </Box>
-        )}
-        sections={sections.filter((p) => !p.isHidden)}
-        showsVerticalScrollIndicator={false}
-      />
-    </Screen>
+    <HeaderScrollScreen
+      background={<AppBackground isStrongAccent />}
+      contentHeader={
+        <Flex pt="md">
+          <BackHeader alignment="left">
+            <Text variant="subhead">{t('Settings')}</Text>
+          </BackHeader>
+        </Flex>
+      }
+      fixedHeader={
+        <BackHeader mb="xxs">
+          <Text variant="subhead">{t('Settings')}</Text>
+        </BackHeader>
+      }>
+      <Flex px="lg" py="lg">
+        <SectionList
+          ListFooterComponent={<FooterSettings />}
+          ListHeaderComponent={<WalletSettings />}
+          keyExtractor={(_item, index) => 'settings' + index}
+          renderItem={renderItem}
+          renderSectionHeader={({ section: { subTitle } }) => (
+            <Box bg="backgroundBackdrop" pb="md">
+              <Text color="textSecondary" fontWeight="500" variant="body">
+                {subTitle}
+              </Text>
+            </Box>
+          )}
+          sections={sections.filter((p) => !p.isHidden)}
+          showsVerticalScrollIndicator={false}
+        />
+      </Flex>
+    </HeaderScrollScreen>
   )
 }
 
@@ -253,10 +269,6 @@ function WalletSettings() {
 
   return (
     <Box flexDirection="column" mb="md">
-      <BackHeader alignment="left" mb="lg">
-        <Text variant="subhead">{t('Settings')}</Text>
-      </BackHeader>
-
       <Flex row justifyContent="space-between">
         <Text color="textSecondary" fontWeight="500" variant="body">
           {t('Wallet settings')}
