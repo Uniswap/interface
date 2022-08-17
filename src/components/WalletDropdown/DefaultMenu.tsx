@@ -17,8 +17,6 @@ import { useAppDispatch } from 'state/hooks'
 import { useDarkModeManager } from 'state/user/hooks'
 import { updateSelectedWallet } from 'state/user/reducer'
 import styled from 'styled-components/macro'
-import { colors } from 'theme/colors'
-import { opacify } from 'theme/utils'
 
 import useENS from '../../hooks/useENS'
 import { shortenAddress } from '../../nft/utils/address'
