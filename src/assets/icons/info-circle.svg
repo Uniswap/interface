@@ -1,5 +1,3 @@
-<svg width="20" height="21" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <path d="M9.99996 18.8343C14.6023 18.8343 18.3333 15.1034 18.3333 10.501C18.3333 5.89862 14.6023 2.16766 9.99996 2.16766C5.39759 2.16766 1.66663 5.89862 1.66663 10.501C1.66663 15.1034 5.39759 18.8343 9.99996 18.8343Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-  <path d="M10 13.8343V10.501" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-  <path d="M10 7.16768H10.0083" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M15 20C15 20.5523 15.4477 21 16 21C16.5523 21 17 20.5523 17 20H15ZM17 16C17 15.4477 16.5523 15 16 15C15.4477 15 15 15.4477 15 16H17ZM16 11C15.4477 11 15 11.4477 15 12C15 12.5523 15.4477 13 16 13V11ZM16.01 13C16.5623 13 17.01 12.5523 17.01 12C17.01 11.4477 16.5623 11 16.01 11V13ZM25 16C25 20.9706 20.9706 25 16 25V27C22.0751 27 27 22.0751 27 16H25ZM16 25C11.0294 25 7 20.9706 7 16H5C5 22.0751 9.92487 27 16 27V25ZM7 16C7 11.0294 11.0294 7 16 7V5C9.92487 5 5 9.92487 5 16H7ZM16 7C20.9706 7 25 11.0294 25 16H27C27 9.92487 22.0751 5 16 5V7ZM17 20V16H15V20H17ZM16 13H16.01V11H16V13Z" fill="currentColor"/>
 </svg>

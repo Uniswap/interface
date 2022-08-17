@@ -58,8 +58,8 @@ export function BackupScreen({ navigation, route: { params } }: Props) {
       <Flex grow>
         <BackupOptions backupMethods={activeAccountBackups} params={params} />
         <Button alignSelf="flex-start" py="none" onPress={onPressEducationButton}>
-          <Flex centered row gap="xs">
-            <InfoCircle color={theme.colors.textSecondary} height={20} width={20} />
+          <Flex centered row gap="sm">
+            <InfoCircle color={theme.colors.textSecondary} height={32} width={32} />
             <Text variant="subhead">{t('What’s a recovery phrase?')}</Text>
           </Flex>
         </Button>
