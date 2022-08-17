@@ -6,10 +6,16 @@ declare module 'jazzicon' {
 
 declare module 'fortmatic'
 
+interface Navigator {
+  brave?: {
+    isBrave: () => Promise<boolean | undefined>
+  }
+}
 interface Window {
   ethereum?: {
     isMetaMask?: boolean
     isCoin98?: boolean
+    isBraveWallet?: any
     on?: (...args: any[]) => void
     removeListener?: (...args: any[]) => void
     request: (params: { method: string; params?: any }) => Promise<any>

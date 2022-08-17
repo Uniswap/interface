@@ -58,6 +58,8 @@ export const injected = new InjectedConnector(injectedConnectorParam)
 
 export const coin98InjectedConnector = new InjectedConnector(injectedConnectorParam)
 
+export const braveInjectedConnector = new InjectedConnector(injectedConnectorParam)
+
 const WALLET_CONNECT_SUPPORTED_CHAIN_IDS: ChainId[] = [
   ChainId.MAINNET,
   ChainId.ROPSTEN,

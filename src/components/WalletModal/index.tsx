@@ -2,7 +2,7 @@ import { Trans, t } from '@lingui/macro'
 import { AbstractConnector } from '@web3-react/abstract-connector'
 import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { isMobile } from 'react-device-detect'
 import { ChevronLeft } from 'react-feather'
 import { useLocation } from 'react-router-dom'
@@ -12,9 +12,10 @@ import styled from 'styled-components'
 import WrongNetworkModal from 'components/WrongNetworkModal'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import useTheme from 'hooks/useTheme'
+import checkForBraveBrowser from 'utils/checkForBraveBrowser'
 
 import { ReactComponent as Close } from '../../assets/images/x.svg'
-import { coin98InjectedConnector, fortmatic, injected, portis } from '../../connectors'
+import { braveInjectedConnector, coin98InjectedConnector, fortmatic, injected, portis } from '../../connectors'
 import { OVERLAY_READY } from '../../connectors/Fortmatic'
 import { SUPPORTED_WALLETS } from '../../constants'
 import usePrevious from '../../hooks/usePrevious'
@@ -24,6 +25,7 @@ import { useIsDarkMode } from '../../state/user/hooks'
 import { ExternalLink } from '../../theme'
 import AccountDetails from '../AccountDetails'
 import Modal from '../Modal'
+import InstallBraveNote from './InstallBraveNote'
 import Option from './Option'
 import PendingView from './PendingView'
 
@@ -62,7 +64,7 @@ const HeaderRow = styled.div<{ padding?: string }>`
 `
 
 const ContentWrapper = styled.div<{ padding?: string }>`
-  padding: ${({ padding }) => padding ?? '2rem 2rem 8px 2rem'};
+  padding: ${({ padding }) => padding ?? '2rem'};
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
 
@@ -104,7 +106,6 @@ const OptionGrid = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 20px;
-  margin-bottom: 20px;
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
     grid-template-columns: 1fr;
@@ -165,6 +166,9 @@ export default function WalletModal({
   const location = useLocation()
   const { mixpanelHandler } = useMixpanel()
 
+  // need to call this inside a Component as there's an async call in `checkForBraveBrowser`
+  const isBraveBrowser = checkForBraveBrowser()
+
   // close on connection, when logged out before
   useEffect(() => {
     if (account && !previousAccount && walletModalOpen) {
@@ -196,6 +200,11 @@ export default function WalletModal({
   const tryActivation = async (connector: AbstractConnector | undefined) => {
     setPendingWallet(connector) // set wallet for pending view
     setWalletView(WALLET_VIEWS.PENDING)
+
+    if (connector === braveInjectedConnector && !isBraveBrowser) {
+      // we just want the loading indicator, so return here
+      return
+    }
 
     // if the connector is walletconnect and the user has already tried to connect, manually reset the connector
     if (connector instanceof WalletConnectConnector && connector.walletConnectProvider?.wc?.uri) {
@@ -231,102 +240,111 @@ export default function WalletModal({
   // get wallets user can switch too, depending on device/browser
   function getOptions() {
     const isMetamask = window.ethereum && window.ethereum.isMetaMask
-    return Object.keys(SUPPORTED_WALLETS).map(key => {
-      const option = SUPPORTED_WALLETS[key]
-      // check for mobile options
-      if (isMobile) {
-        //disable portis on mobile for now
-        if (option.connector === portis) {
+
+    return Object.keys(SUPPORTED_WALLETS)
+      .map(key => {
+        const option = SUPPORTED_WALLETS[key]
+        // check for mobile options
+        if (isMobile) {
+          //disable portis on mobile for now
+          if (option.connector === portis) {
+            return null
+          }
+
+          if (
+            (!window.web3 && !window.ethereum && option.mobile) ||
+            // add this condition below for Brave browser. In Brave, window.ethereum is not undefined
+            // the above condition fails and there are no wallet options to choose
+            (option.mobile && isBraveBrowser)
+          ) {
+            return (
+              <Option
+                onClick={() => {
+                  option.connector !== connector && !option.href && tryActivation(option.connector)
+                }}
+                id={`connect-${key}`}
+                key={key}
+                active={option.connector && option.connector === connector}
+                color={option.color}
+                link={option.href}
+                header={option.name}
+                subheader={null}
+                icon={require(`../../assets/images/${isDarkMode ? '' : 'light-'}${option.iconName}`).default}
+              />
+            )
+          }
+
           return null
         }
-
-        if (!window.web3 && !window.ethereum && option.mobile) {
-          return (
-            <Option
-              onClick={() => {
-                option.connector !== connector && !option.href && tryActivation(option.connector)
-              }}
-              id={`connect-${key}`}
-              key={key}
-              active={option.connector && option.connector === connector}
-              color={option.color}
-              link={option.href}
-              header={option.name}
-              subheader={null}
-              icon={require(`../../assets/images/${isDarkMode ? '' : 'light-'}${option.iconName}`).default}
-            />
-          )
+        // overwrite injected when needed
+        if (option.connector === injected) {
+          // don't show injected if there's no injected provider
+          if (!(window.web3 || window.ethereum?.isMetaMask)) {
+            if (option.name === 'MetaMask') {
+              return (
+                <Option
+                  id={`connect-${key}`}
+                  key={key}
+                  color={'#E8831D'}
+                  header={'Install Metamask'}
+                  subheader={null}
+                  link={'https://metamask.io/'}
+                  icon={require(`../../assets/images/${isDarkMode ? '' : 'light-'}${option.iconName}`).default}
+                />
+              )
+            } else {
+              return null //dont want to return install twice
+            }
+          }
+          // don't return metamask if injected provider isn't metamask
+          else if (option.name === 'MetaMask' && !isMetamask) {
+            return null
+          }
+          // likewise for generic
+          else if (option.name === 'Injected' && isMetamask) {
+            return null
+          }
         }
-        return null
-      }
-      // overwrite injected when needed
-      if (option.connector === injected) {
-        // don't show injected if there's no injected provider
-        if (!(window.web3 || window.ethereum?.isMetaMask)) {
-          if (option.name === 'MetaMask') {
+
+        if (option.connector === coin98InjectedConnector) {
+          if (!(window.web3 || window.ethereum?.isCoin98)) {
             return (
               <Option
                 id={`connect-${key}`}
                 key={key}
                 color={'#E8831D'}
-                header={'Install Metamask'}
-                subheader={null}
-                link={'https://metamask.io/'}
+                header={'Install Coin98'}
+                link={'https://coin98.com/'}
                 icon={require(`../../assets/images/${isDarkMode ? '' : 'light-'}${option.iconName}`).default}
               />
             )
-          } else {
-            return null //dont want to return install twice
           }
         }
-        // don't return metamask if injected provider isn't metamask
-        else if (option.name === 'MetaMask' && !isMetamask) {
-          return null
-        }
-        // likewise for generic
-        else if (option.name === 'Injected' && isMetamask) {
-          return null
-        }
-      }
 
-      if (option.connector === coin98InjectedConnector) {
-        if (!(window.web3 || window.ethereum?.isCoin98)) {
-          return (
+        // return rest of options
+        return (
+          !isMobile &&
+          !option.mobileOnly && (
             <Option
+              clickable={isAccepted}
               id={`connect-${key}`}
+              onClick={() => {
+                option.connector === connector
+                  ? setWalletView(WALLET_VIEWS.ACCOUNT)
+                  : !option.href && tryActivation(option.connector)
+              }}
               key={key}
-              color={'#E8831D'}
-              header={'Install Coin98'}
-              link={'https://coin98.com/'}
+              active={option.connector === connector}
+              color={option.color}
+              link={option.href}
+              header={option.name}
+              subheader={null} //use option.descriptio to bring back multi-line
               icon={require(`../../assets/images/${isDarkMode ? '' : 'light-'}${option.iconName}`).default}
             />
           )
-        }
-      }
-
-      // return rest of options
-      return (
-        !isMobile &&
-        !option.mobileOnly && (
-          <Option
-            clickable={isAccepted}
-            id={`connect-${key}`}
-            onClick={() => {
-              option.connector === connector
-                ? setWalletView(WALLET_VIEWS.ACCOUNT)
-                : !option.href && tryActivation(option.connector)
-            }}
-            key={key}
-            active={option.connector === connector}
-            color={option.color}
-            link={option.href}
-            header={option.name}
-            subheader={null} //use option.descriptio to bring back multi-line
-            icon={require(`../../assets/images/${isDarkMode ? '' : 'light-'}${option.iconName}`).default}
-          />
         )
-      )
-    })
+      })
+      .filter(Boolean)
   }
 
   function getModalContent() {
@@ -360,6 +378,12 @@ export default function WalletModal({
         />
       )
     }
+
+    const shouldShowInstallBrave = !isBraveBrowser && pendingWallet === braveInjectedConnector
+    const walletOptionKey = Object.keys(SUPPORTED_WALLETS).find(key => {
+      const wallet = SUPPORTED_WALLETS[key]
+      return wallet.connector === connector
+    })
 
     return (
       <UpperSection>
@@ -401,10 +425,18 @@ export default function WalletModal({
         <ContentWrapper>
           {walletView === WALLET_VIEWS.PENDING ? (
             <PendingView
-              connector={pendingWallet}
-              error={pendingError}
-              setPendingError={setPendingError}
-              tryActivation={tryActivation}
+              walletOptionKey={walletOptionKey}
+              hasError={pendingError}
+              renderHelperText={() => {
+                if (shouldShowInstallBrave) {
+                  return <InstallBraveNote />
+                }
+                return null
+              }}
+              onClickTryAgain={() => {
+                setPendingError(false)
+                connector && tryActivation(connector)
+              }}
             />
           ) : (
             <OptionGrid>{getOptions()}</OptionGrid>

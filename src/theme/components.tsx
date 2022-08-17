@@ -125,8 +125,10 @@ const StyledLink = styled.a`
   color: ${({ theme }) => theme.primary};
   font-weight: 500;
 
-  :hover {
-    text-decoration: underline;
+  @media (hover: hover) {
+    :hover {
+      text-decoration: underline;
+    }
   }
 
   :focus {

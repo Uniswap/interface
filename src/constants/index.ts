@@ -4,7 +4,14 @@ import { AbstractConnector } from '@web3-react/abstract-connector'
 import JSBI from 'jsbi'
 import { v4 as uuid } from 'uuid'
 
-import { coin98InjectedConnector, injected, ledger, walletconnect, walletlink } from '../connectors'
+import {
+  braveInjectedConnector,
+  coin98InjectedConnector,
+  injected,
+  ledger,
+  walletconnect,
+  walletlink,
+} from '../connectors'
 import { NETWORKS_INFO, SUPPORTED_NETWORKS } from './networks'
 
 export const EMPTY_OBJECT: any = {}
@@ -746,6 +753,15 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
   //   href: null,
   //   color: '#315CF5'
   // }
+  BRAVE: {
+    connector: braveInjectedConnector,
+    name: 'Brave Wallet',
+    iconName: 'brave_wallet.svg',
+    description: 'Native wallet of Brave browser',
+    href: null,
+    color: '#cc1d83',
+    mobile: true,
+  },
 }
 
 export const BLACKLIST_WALLETS: string[] = [

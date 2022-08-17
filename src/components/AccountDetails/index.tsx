@@ -20,7 +20,15 @@ import FortmaticIcon from '../../assets/images/fortmaticIcon.png'
 import PortisIcon from '../../assets/images/portisIcon.png'
 import WalletConnectIcon from '../../assets/images/walletConnectIcon.svg'
 import { ReactComponent as Close } from '../../assets/images/x.svg'
-import { fortmatic, injected, portis, walletconnect, walletlink } from '../../connectors'
+import {
+  braveInjectedConnector,
+  coin98InjectedConnector,
+  fortmatic,
+  injected,
+  portis,
+  walletconnect,
+  walletlink,
+} from '../../connectors'
 import { AppDispatch } from '../../state'
 import { clearAllTransactions } from '../../state/transactions/actions'
 import { ExternalLink, LinkStyledButton, TYPE } from '../../theme'
@@ -207,13 +215,31 @@ export default function AccountDetails({
 
   function formatConnectorName() {
     const { ethereum } = window
-    const isMetaMask = !!(ethereum && ethereum.isMetaMask)
-    const name = Object.keys(SUPPORTED_WALLETS)
-      .filter(
-        k =>
-          SUPPORTED_WALLETS[k].connector === connector && (connector !== injected || isMetaMask === (k === 'METAMASK')),
-      )
-      .map(k => SUPPORTED_WALLETS[k].name)[0]
+    const isInjected = !!(ethereum && ethereum.isMetaMask)
+    const isCoin98 = isInjected && ethereum.isCoin98
+    const isBraveWallet = isInjected && ethereum.isBraveWallet
+
+    const walletConfig = (() => {
+      if (isInjected) {
+        if (isCoin98) {
+          return SUPPORTED_WALLETS['COIN98']
+        }
+
+        if (isBraveWallet) {
+          return SUPPORTED_WALLETS['BRAVE']
+        }
+
+        return SUPPORTED_WALLETS['METAMASK']
+      }
+
+      return Object.values(SUPPORTED_WALLETS).find(config => config.connector === connector)
+    })()
+
+    const name = walletConfig?.name || ''
+
+    if (!walletConfig) {
+      console.error('Cannot find the wallet connect')
+    }
 
     return (
       <WalletName>
@@ -223,33 +249,43 @@ export default function AccountDetails({
   }
 
   function getStatusIcon() {
-    if (connector === injected) {
-      return (
-        <IconWrapper size={20}>
-          <Identicon />
-        </IconWrapper>
-      )
-    } else if (connector === walletconnect) {
-      return (
-        <IconWrapper size={20}>
-          <img src={WalletConnectIcon} alt={'wallet connect logo'} />
-        </IconWrapper>
-      )
-    } else if (connector === walletlink) {
-      return (
-        <IconWrapper size={20}>
-          <img src={CoinbaseWalletIcon} alt={'coinbase wallet logo'} />
-        </IconWrapper>
-      )
-    } else if (connector === fortmatic) {
-      return (
-        <IconWrapper size={20}>
-          <img src={FortmaticIcon} alt={'fortmatic logo'} />
-        </IconWrapper>
-      )
-    } else if (connector === portis) {
-      return (
-        <>
+    switch (connector) {
+      case injected:
+      case coin98InjectedConnector:
+      case braveInjectedConnector: {
+        return (
+          <IconWrapper size={20}>
+            <Identicon />
+          </IconWrapper>
+        )
+      }
+
+      case walletconnect: {
+        return (
+          <IconWrapper size={20}>
+            <img src={WalletConnectIcon} alt={'wallet connect logo'} />
+          </IconWrapper>
+        )
+      }
+
+      case walletlink: {
+        return (
+          <IconWrapper size={20}>
+            <img src={CoinbaseWalletIcon} alt={'coinbase wallet logo'} />
+          </IconWrapper>
+        )
+      }
+
+      case fortmatic: {
+        return (
+          <IconWrapper size={20}>
+            <img src={FortmaticIcon} alt={'fortmatic logo'} />
+          </IconWrapper>
+        )
+      }
+
+      case portis: {
+        return (
           <IconWrapper size={20}>
             <img src={PortisIcon} alt={'portis logo'} />
             <MainWalletAction
@@ -260,10 +296,13 @@ export default function AccountDetails({
               <Trans>Show Portis</Trans>
             </MainWalletAction>
           </IconWrapper>
-        </>
-      )
+        )
+      }
+
+      default: {
+        return null
+      }
     }
-    return null
   }
 
   const clearAllTransactionsCallback = useCallback(() => {
@@ -297,19 +336,15 @@ export default function AccountDetails({
             <AccountGroupingRow id="web3-account-identifier-row">
               <AccountControl>
                 {ENSName ? (
-                  <>
-                    <div>
-                      {getStatusIcon()}
-                      <p> {ENSName}</p>
-                    </div>
-                  </>
+                  <div>
+                    {getStatusIcon()}
+                    <p> {ENSName}</p>
+                  </div>
                 ) : (
-                  <>
-                    <div>
-                      {getStatusIcon()}
-                      <p> {isMobile && account ? shortenAddress(account, 10) : account}</p>
-                    </div>
-                  </>
+                  <div>
+                    {getStatusIcon()}
+                    <p> {isMobile && account ? shortenAddress(account, 10) : account}</p>
+                  </div>
                 )}
               </AccountControl>
             </AccountGroupingRow>

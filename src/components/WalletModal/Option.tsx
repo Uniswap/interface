@@ -27,7 +27,7 @@ const HeaderText = styled.div`
   font-weight: 500;
 `
 
-const OptionCardClickable = styled.button<{ active?: boolean; clickable?: boolean }>`
+const OptionCardClickable = styled.button<{ clickable?: boolean }>`
   width: 100%;
   outline: none;
   border: none;
@@ -48,12 +48,22 @@ const OptionCardClickable = styled.button<{ active?: boolean; clickable?: boolea
   transition: all 0.2s;
   background-color: ${({ theme }) => theme.buttonBlack};
 
-  ${({ active }) => (active ? '&' : ':hover')} {
+  &[data-active='true'] {
     background-color: ${({ theme }) => theme.bg7};
-    & ${HeaderText} {
+    ${HeaderText} {
       color: ${({ theme }) => theme.darkText} !important;
     }
   }
+
+  @media (hover: hover) {
+    &:hover {
+      background-color: ${({ theme }) => theme.bg7};
+      ${HeaderText} {
+        color: ${({ theme }) => theme.darkText} !important;
+      }
+    }
+  }
+
   opacity: ${({ disabled }) => (disabled ? '0.5' : '1')};
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
@@ -106,7 +116,7 @@ export default function Option({
       id={id}
       onClick={onClick}
       clickable={clickable && !active}
-      active={active}
+      data-active={active}
       disabled={clickable === false}
     >
       <IconWrapper size={size}>

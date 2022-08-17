@@ -1,10 +1,8 @@
 import { Trans } from '@lingui/macro'
-import { AbstractConnector } from '@web3-react/abstract-connector'
 import { darken } from 'polished'
 import React from 'react'
 import styled from 'styled-components'
 
-import { SUPPORTED_WALLETS } from '../../constants'
 import Loader from '../Loader'
 import { WarningBox } from './WarningBox'
 
@@ -22,14 +20,13 @@ const StyledLoader = styled(Loader)`
   margin-right: 1rem;
 `
 
-const LoadingMessage = styled.div<{ error?: boolean }>`
+const LoadingMessage = styled.div<{ hasError?: boolean }>`
   ${({ theme }) => theme.flexRowNoWrap};
   align-items: center;
   justify-content: flex-start;
-  border-radius: 12px;
-  margin-bottom: 20px;
-  color: ${({ theme, error }) => (error ? theme.red1 : 'inherit')};
-  border: 1px solid ${({ theme, error }) => (error ? theme.red1 : theme.text4)};
+  border-radius: 16px;
+  color: ${({ theme, hasError }) => (hasError ? theme.red1 : 'inherit')};
+  border: 1px solid ${({ theme, hasError }) => (hasError ? theme.red1 : theme.text4)};
   width: 100%;
   & > * {
     padding: 1rem;
@@ -67,41 +64,31 @@ const LoadingWrapper = styled.div`
 `
 
 export default function PendingView({
-  connector,
-  error = false,
-  setPendingError,
-  tryActivation,
+  walletOptionKey,
+  hasError = false,
+  renderHelperText = () => null,
+  onClickTryAgain,
 }: {
-  connector?: AbstractConnector
-  error?: boolean
-  setPendingError: (error: boolean) => void
-  tryActivation: (connector: AbstractConnector) => void
+  walletOptionKey?: string // key of SUPPORTED_WALLETS
+  hasError?: boolean
+  renderHelperText?: () => React.ReactNode
+  onClickTryAgain: () => void
 }) {
   const isMetamask = window?.ethereum?.isMetaMask
   const isCoin98 = window?.ethereum?.isCoin98 || !!window.coin98
 
-  const option = Object.keys(SUPPORTED_WALLETS).find(key => {
-    const wallet = SUPPORTED_WALLETS[key]
-    return wallet.connector === connector
-  })
-
-  const isInjected = option === 'INJECTED' || option === 'COIN98'
+  const isInjected = walletOptionKey === 'INJECTED' || walletOptionKey === 'COIN98'
 
   return (
     <PendingSection>
-      <LoadingMessage error={error}>
+      <LoadingMessage hasError={hasError}>
         <LoadingWrapper>
-          {error ? (
+          {hasError ? (
             <ErrorGroup>
               <div>
                 <Trans>Error connecting.</Trans>
               </div>
-              <ErrorButton
-                onClick={() => {
-                  setPendingError(false)
-                  connector && tryActivation(connector)
-                }}
-              >
+              <ErrorButton onClick={onClickTryAgain}>
                 <Trans>Try Again</Trans>
               </ErrorButton>
             </ErrorGroup>
@@ -113,7 +100,8 @@ export default function PendingView({
           )}
         </LoadingWrapper>
       </LoadingMessage>
-      {isMetamask && isCoin98 && isInjected && <WarningBox option={option} />}
+      {isMetamask && isCoin98 && isInjected && <WarningBox option={walletOptionKey} />}
+      {renderHelperText()}
     </PendingSection>
   )
 }
