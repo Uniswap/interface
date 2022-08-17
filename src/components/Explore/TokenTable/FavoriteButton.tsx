@@ -1,7 +1,6 @@
-import useTheme from 'hooks/useTheme'
 import { useAtom } from 'jotai'
 import { Heart } from 'react-feather'
-import styled from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components/macro'
 
 import { SMALL_MEDIA_BREAKPOINT } from '../constants'
 import { showFavoritesAtom } from '../state'

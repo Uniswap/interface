@@ -3,10 +3,9 @@ import { ButtonPrimary } from 'components/Button'
 import { AutoColumn } from 'components/Column'
 import Modal from 'components/Modal'
 import { LoadingView, SubmittedView } from 'components/ModalViews'
-import React, { useContext } from 'react'
 import { Link } from 'react-router-dom'
 import { Text } from 'rebass'
-import { ThemeContext } from 'styled-components/macro'
+import { useTheme } from 'styled-components/macro'
 import { ExternalLink, ThemedText } from 'theme'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
@@ -19,7 +18,7 @@ export const ProposalSubmissionModal = ({
   hash: string | undefined
   onDismiss: () => void
 }) => {
-  const theme = useContext(ThemeContext)
+  const theme = useTheme()
 
   return (
     <Modal isOpen={isOpen} onDismiss={onDismiss}>

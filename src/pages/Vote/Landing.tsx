@@ -13,8 +13,6 @@ import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import Toggle from 'components/Toggle'
 import DelegateModal from 'components/vote/DelegateModal'
 import ProposalEmptyState from 'components/vote/ProposalEmptyState'
-import { Phase1Variant, usePhase1Flag } from 'featureFlags/flags/phase1'
-import useTheme from 'hooks/useTheme'
 import JSBI from 'jsbi'
 import { darken } from 'polished'
 import { useState } from 'react'
@@ -25,7 +23,7 @@ import { ApplicationModal } from 'state/application/reducer'
 import { useTokenBalance } from 'state/connection/hooks'
 import { ProposalData, ProposalState } from 'state/governance/hooks'
 import { useAllProposalData, useUserDelegatee, useUserVotes } from 'state/governance/hooks'
-import styled from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components/macro'
 import { ExternalLink, ThemedText } from 'theme'
 import { shortenAddress } from 'utils'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
@@ -34,9 +32,8 @@ import { ZERO_ADDRESS } from '../../constants/misc'
 import { UNI } from '../../constants/tokens'
 import { ProposalStatus } from './styled'
 
-const PageWrapper = styled(AutoColumn)<{ phase1Flag: Phase1Variant }>`
-  ${({ theme, phase1Flag }) =>
-    phase1Flag === Phase1Variant.Enabled &&
+const PageWrapper = styled(AutoColumn)`
+  ${({ theme }) =>
     theme.mediaWidth.upToSmall`
     padding: 0px 8px;
   `}
@@ -118,7 +115,6 @@ const StyledExternalLink = styled(ExternalLink)`
 
 export default function Landing() {
   const theme = useTheme()
-  const phase1Flag = usePhase1Flag()
   const { account, chainId } = useWeb3React()
 
   const [hideCancelled, setHideCancelled] = useState(true)
@@ -145,7 +141,7 @@ export default function Landing() {
   return (
     <>
       <Trace page={PageName.VOTE_PAGE} shouldLogImpression>
-        <PageWrapper gap="lg" justify="center" phase1Flag={phase1Flag}>
+        <PageWrapper gap="lg" justify="center">
           <DelegateModal
             isOpen={showDelegateModal}
             onDismiss={toggleDelegateModal}

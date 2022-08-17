@@ -1,4 +1,3 @@
-import { loadingOpacityMixin } from 'components/Loader/styled'
 import { TooltipContainer } from 'components/Tooltip'
 import { transparentize } from 'polished'
 import { ReactNode } from 'react'
@@ -6,9 +5,7 @@ import { AlertTriangle } from 'react-feather'
 import { Text } from 'rebass'
 import styled, { css } from 'styled-components/macro'
 
-import { ThemedText } from '../../theme'
 import { AutoColumn } from '../Column'
-import TradePrice from './TradePrice'
 
 export const Wrapper = styled.div`
   position: relative;
@@ -135,11 +132,6 @@ export const SwapShowAcceptChanges = styled(AutoColumn)`
   margin-top: 8px;
 `
 
-export const TransactionDetailsLabel = styled(ThemedText.DeprecatedBlack)`
-  border-bottom: 1px solid ${({ theme }) => theme.deprecated_bg2};
-  padding-bottom: 0.5rem;
-`
-
 export const ResponsiveTooltipContainer = styled(TooltipContainer)<{ origin?: string; width?: string }>`
   background-color: ${({ theme }) => theme.deprecated_bg0};
   border: 1px solid ${({ theme }) => theme.deprecated_bg2};
@@ -150,8 +142,4 @@ export const ResponsiveTooltipContainer = styled(TooltipContainer)<{ origin?: st
     transform: scale(0.8);
     transform-origin: ${origin ?? 'top left'};
   `}
-`
-
-export const StyledTradePrice = styled(TradePrice)<{ $loading: boolean }>`
-  ${loadingOpacityMixin}
 `

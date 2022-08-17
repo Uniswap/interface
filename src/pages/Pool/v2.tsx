@@ -4,13 +4,12 @@ import { useWeb3React } from '@web3-react/core'
 import { PageName } from 'components/AmplitudeAnalytics/constants'
 import { Trace } from 'components/AmplitudeAnalytics/Trace'
 import { UNSUPPORTED_V2POOL_CHAIN_IDS } from 'constants/chains'
-import { Phase1Variant, usePhase1Flag } from 'featureFlags/flags/phase1'
 import JSBI from 'jsbi'
-import { useContext, useMemo } from 'react'
+import { useMemo } from 'react'
 import { ChevronsRight } from 'react-feather'
 import { Link } from 'react-router-dom'
 import { Text } from 'rebass'
-import styled, { ThemeContext } from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components/macro'
 
 import { ButtonOutlined, ButtonPrimary, ButtonSecondary } from '../../components/Button'
 import Card from '../../components/Card'
@@ -27,12 +26,11 @@ import { useStakingInfo } from '../../state/stake/hooks'
 import { toV2LiquidityToken, useTrackedTokenPairs } from '../../state/user/hooks'
 import { ExternalLink, HideSmall, ThemedText } from '../../theme'
 
-const PageWrapper = styled(AutoColumn)<{ phase1Flag: Phase1Variant }>`
+const PageWrapper = styled(AutoColumn)`
   max-width: 640px;
   width: 100%;
 
-  ${({ theme, phase1Flag }) =>
-    phase1Flag === Phase1Variant.Enabled &&
+  ${({ theme }) =>
     theme.mediaWidth.upToSmall`
     padding: 0px 8px;
   `}
@@ -91,8 +89,7 @@ const Layer2Prompt = styled(EmptyProposals)`
 `
 
 export default function Pool() {
-  const phase1Flag = usePhase1Flag()
-  const theme = useContext(ThemeContext)
+  const theme = useTheme()
   const { account, chainId } = useWeb3React()
   const unsupportedV2Network = chainId && UNSUPPORTED_V2POOL_CHAIN_IDS.includes(chainId)
 
@@ -146,7 +143,7 @@ export default function Pool() {
   return (
     <Trace page={PageName.POOL_PAGE} shouldLogImpression>
       <>
-        <PageWrapper phase1Flag={phase1Flag}>
+        <PageWrapper>
           <VoteCard>
             <CardBGImage />
             <CardNoise />

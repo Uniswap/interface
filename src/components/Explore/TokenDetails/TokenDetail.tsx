@@ -8,14 +8,13 @@ import { getChainInfo } from 'constants/chainInfo'
 import { checkWarning } from 'constants/tokenSafety'
 import { useCurrency, useIsUserAddedToken, useToken } from 'hooks/Tokens'
 import { useAtomValue } from 'jotai/utils'
-import { darken } from 'polished'
 import { useCallback } from 'react'
 import { useState } from 'react'
-import { ArrowLeft, Copy, Heart } from 'react-feather'
+import { ArrowLeft, Heart } from 'react-feather'
 import { Link, useNavigate } from 'react-router-dom'
-import styled, { useTheme } from 'styled-components/macro'
+import styled from 'styled-components/macro'
+import { ClickableStyle, CopyContractAddress } from 'theme'
 
-import { MOBILE_MEDIA_BREAKPOINT } from '../constants'
 import { favoritesAtom, useToggleFavorite } from '../state'
 import { ClickFavorited } from '../TokenTable/TokenRow'
 import Resource from './Resource'
@@ -62,10 +61,6 @@ const ContractAddress = styled.button`
   border: none;
   padding: 0px;
   cursor: pointer;
-
-  &:hover {
-    color: ${({ theme }) => darken(0.1, theme.textPrimary)};
-  }
 `
 export const ContractAddressSection = styled.div`
   padding: 24px 0px;
@@ -114,7 +109,7 @@ export const TokenNameCell = styled.div`
 `
 const TokenActions = styled.div`
   display: flex;
-  gap: 24px;
+  gap: 16px;
   color: ${({ theme }) => theme.textSecondary};
 `
 export const TokenInfoContainer = styled.div`
@@ -132,17 +127,6 @@ export const ResourcesContainer = styled.div`
   display: flex;
   gap: 14px;
 `
-const FullAddress = styled.span`
-  @media only screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
-    display: none;
-  }
-`
-const TruncatedAddress = styled.span`
-  display: none;
-  @media only screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
-    display: flex;
-  }
-`
 const NetworkBadge = styled.div<{ networkColor?: string; backgroundColor?: string }>`
   border-radius: 5px;
   padding: 4px 8px;
@@ -152,9 +136,15 @@ const NetworkBadge = styled.div<{ networkColor?: string; backgroundColor?: strin
   color: ${({ theme, networkColor }) => networkColor ?? theme.textPrimary};
   background-color: ${({ theme, backgroundColor }) => backgroundColor ?? theme.backgroundSurface};
 `
+const FavoriteIcon = styled(Heart)<{ isFavorited: boolean }>`
+  ${ClickableStyle}
+  height: 22px;
+  width: 24px;
+  color: ${({ isFavorited, theme }) => (isFavorited ? theme.accentAction : theme.textSecondary)};
+  fill: ${({ isFavorited, theme }) => (isFavorited ? theme.accentAction : 'transparent')};
+`
 
 export default function LoadedTokenDetail({ address }: { address: string }) {
-  const theme = useTheme()
   const token = useToken(address)
   const currency = useCurrency(address)
   const favoriteTokens = useAtomValue<string[]>(favoritesAtom)
@@ -184,7 +174,6 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
     'Ethereum is a decentralized computing platform that uses ETH (Ether) to pay transaction fees (gas). Developers can use Ethereum to run decentralized applications (dApps) and issue new crypto assets, known as Ethereum tokens.'
   const tokenMarketCap = '23.02B'
   const tokenVolume = '1.6B'
-  const truncatedTokenAddress = `${address.slice(0, 4)}...${address.slice(-3)}`
 
   return (
     <TopArea>
@@ -196,7 +185,7 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
           <TokenNameCell>
             <CurrencyLogo currency={currency} size={'32px'} />
             {tokenName} <TokenSymbol>{tokenSymbol}</TokenSymbol>
-            {!warning && <VerifiedIcon size="24px" />}
+            {!warning && <VerifiedIcon size="20px" />}
             {networkBadgebackgroundColor && (
               <NetworkBadge networkColor={chainInfo?.color} backgroundColor={networkBadgebackgroundColor}>
                 {networkLabel}
@@ -206,11 +195,7 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
           <TokenActions>
             <ShareButton tokenName={tokenName} tokenSymbol={tokenSymbol} />
             <ClickFavorited onClick={toggleFavorite}>
-              <Heart
-                size={15}
-                color={isFavorited ? theme.accentAction : theme.textSecondary}
-                fill={isFavorited ? theme.accentAction : 'transparent'}
-              />
+              <FavoriteIcon isFavorited={isFavorited} />
             </ClickFavorited>
           </TokenActions>
         </TokenInfoContainer>
@@ -235,7 +220,7 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
           </Stat>
           <Stat>
             {/* TODO: connect to chart's selected time */}
-            1h volume
+            24H volume
             <StatPrice>${tokenVolume}</StatPrice>
           </Stat>
         </StatPair>
@@ -253,10 +238,8 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
       <ContractAddressSection>
         <Contract>
           Contract Address
-          <ContractAddress onClick={() => navigator.clipboard.writeText(address)}>
-            <FullAddress>{address}</FullAddress>
-            <TruncatedAddress>{truncatedTokenAddress}</TruncatedAddress>
-            <Copy size={13} color={theme.textSecondary} />
+          <ContractAddress>
+            <CopyContractAddress address={address} />
           </ContractAddress>
         </Contract>
       </ContractAddressSection>

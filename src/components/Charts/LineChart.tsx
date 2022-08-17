@@ -11,7 +11,7 @@ interface LineChartProps<T> {
   data: T[]
   getX: (t: T) => number
   getY: (t: T) => number
-  marginTop: number
+  marginTop?: number
   curve?: CurveFactory
   color?: Color
   strokeWidth: number

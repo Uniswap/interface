@@ -1,9 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
-import { Phase1Variant, usePhase1Flag } from 'featureFlags/flags/phase1'
-import useTheme from 'hooks/useTheme'
 import JSBI from 'jsbi'
-import styled from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components/macro'
 
 import { OutlineCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
@@ -16,12 +14,11 @@ import { STAKING_REWARDS_INFO, useStakingInfo } from '../../state/stake/hooks'
 import { ExternalLink, ThemedText } from '../../theme'
 import { Countdown } from './Countdown'
 
-const PageWrapper = styled(AutoColumn)<{ phase1Flag: Phase1Variant }>`
+const PageWrapper = styled(AutoColumn)`
   max-width: 640px;
   width: 100%;
 
-  ${({ theme, phase1Flag }) =>
-    phase1Flag === Phase1Variant.Enabled &&
+  ${({ theme }) =>
     theme.mediaWidth.upToSmall`
     padding: 0px 8px;
   `}
@@ -49,7 +46,6 @@ flex-direction: column;
 
 export default function Earn() {
   const theme = useTheme()
-  const phase1Flag = usePhase1Flag()
   const { chainId } = useWeb3React()
 
   // staking info for connected account
@@ -65,7 +61,7 @@ export default function Earn() {
   const stakingRewardsExist = Boolean(typeof chainId === 'number' && (STAKING_REWARDS_INFO[chainId]?.length ?? 0) > 0)
 
   return (
-    <PageWrapper gap="lg" justify="center" phase1Flag={phase1Flag}>
+    <PageWrapper gap="lg" justify="center">
       <TopSection gap="md">
         <DataCard>
           <CardBGImage />

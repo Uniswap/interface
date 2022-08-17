@@ -6,9 +6,9 @@ import { DEFAULT_DEADLINE_FROM_NOW } from 'constants/misc'
 import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
 import ms from 'ms.macro'
 import { darken } from 'polished'
-import { useContext, useState } from 'react'
+import { useState } from 'react'
 import { useSetUserSlippageTolerance, useUserSlippageTolerance, useUserTransactionTTL } from 'state/user/hooks'
-import styled, { ThemeContext } from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components/macro'
 
 import { ThemedText } from '../../theme'
 import { AutoColumn } from '../Column'
@@ -104,7 +104,7 @@ const THREE_DAYS_IN_SECONDS = ms`3 days` / 1000
 
 export default function TransactionSettings({ placeholderSlippage }: TransactionSettingsProps) {
   const { chainId } = useWeb3React()
-  const theme = useContext(ThemeContext)
+  const theme = useTheme()
   const redesignFlag = useRedesignFlag()
   const redesignFlagEnabled = redesignFlag === RedesignVariant.Enabled
 

@@ -8,7 +8,6 @@ import { Trace } from 'components/AmplitudeAnalytics/Trace'
 import { ButtonError } from 'components/Button'
 import { BlueCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
-import { Phase1Variant, usePhase1Flag } from 'featureFlags/flags/phase1'
 import JSBI from 'jsbi'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { Wrapper } from 'pages/Pool/styleds'
@@ -34,9 +33,8 @@ import { ProposalAction, ProposalActionSelector, ProposalActionSelectorModal } f
 import { ProposalEditor } from './ProposalEditor'
 import { ProposalSubmissionModal } from './ProposalSubmissionModal'
 
-const PageWrapper = styled(AutoColumn)<{ phase1Flag: Phase1Variant }>`
-  ${({ theme, phase1Flag }) =>
-    phase1Flag === Phase1Variant.Enabled &&
+const PageWrapper = styled(AutoColumn)`
+  ${({ theme }) =>
     theme.mediaWidth.upToSmall`
     padding: 0px 8px;
   `}
@@ -97,7 +95,6 @@ const AutonomousProposalCTA = styled.div`
 `
 
 export default function CreateProposal() {
-  const phase1Flag = usePhase1Flag()
   const { account, chainId } = useWeb3React()
 
   const latestProposalId = useLatestProposalId(account ?? undefined) ?? '0'
@@ -238,7 +235,7 @@ ${bodyValue}
 
   return (
     <Trace page={PageName.VOTE_PAGE} shouldLogImpression>
-      <PageWrapper phase1Flag={phase1Flag}>
+      <PageWrapper>
         <AppBody {...{ maxWidth: '800px' }}>
           <CreateProposalTabs />
           <CreateProposalWrapper>

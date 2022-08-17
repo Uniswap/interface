@@ -4,9 +4,9 @@ import { Trace } from 'components/AmplitudeAnalytics/Trace'
 import Loader from 'components/Loader'
 import TopLevelModals from 'components/TopLevelModals'
 import { useFeatureFlagsIsLoaded } from 'featureFlags'
-import { ExploreVariant, useExploreFlag } from 'featureFlags/flags/explore'
 import { NavBarVariant, useNavBarFlag } from 'featureFlags/flags/navBar'
 import { Phase1Variant, usePhase1Flag } from 'featureFlags/flags/phase1'
+import { TokensVariant, useTokensFlag } from 'featureFlags/flags/tokens'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
 import { lazy, Suspense, useEffect } from 'react'
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
@@ -43,6 +43,7 @@ import { OpenClaimAddressModalAndRedirectToSwap, RedirectPathToSwapOnly, Redirec
 
 const TokenDetails = lazy(() => import('./TokenDetails'))
 const Vote = lazy(() => import('./Vote'))
+const Collection = lazy(() => import('nft/pages/collection'))
 
 const AppWrapper = styled.div`
   display: flex;
@@ -50,25 +51,16 @@ const AppWrapper = styled.div`
   align-items: flex-start;
 `
 
-const BodyWrapper = styled.div<{ navBarFlag: NavBarVariant; phase1Flag: Phase1Variant }>`
+const BodyWrapper = styled.div<{ navBarFlag: NavBarVariant }>`
   display: flex;
   flex-direction: column;
   width: 100%;
-  padding: ${({ navBarFlag, phase1Flag }) =>
-    phase1Flag === Phase1Variant.Enabled
-      ? `72px 0px 0px 0px`
-      : navBarFlag === NavBarVariant.Enabled
-      ? `72px 16px 0px 16px`
-      : `120px 16px 0px 16px`};
+  padding: ${({ navBarFlag }) => (navBarFlag === NavBarVariant.Enabled ? `72px 0px 0px 0px` : `120px 0px 0px 0px`)};
   align-items: center;
   flex: 1;
-  ${({ theme, phase1Flag }) =>
-    phase1Flag === Phase1Variant.Enabled
-      ? theme.mediaWidth.upToSmall`
+  ${({ theme }) =>
+    theme.mediaWidth.upToSmall`
     padding: 52px 0px 16px 0px;
-  `
-      : theme.mediaWidth.upToSmall`
-    padding: 52px 8px 16px 8px;
   `};
 `
 
@@ -93,8 +85,8 @@ function getCurrentPageFromLocation(locationPathname: string): PageName | undefi
       return PageName.VOTE_PAGE
     case '/pool':
       return PageName.POOL_PAGE
-    case '/explore':
-      return PageName.EXPLORE_PAGE
+    case '/tokens':
+      return PageName.TOKENS_PAGE
     default:
       return undefined
   }
@@ -116,7 +108,7 @@ const LazyLoadSpinner = () => (
 
 export default function App() {
   const isLoaded = useFeatureFlagsIsLoaded()
-  const exploreFlag = useExploreFlag()
+  const tokensFlag = useTokensFlag()
   const navBarFlag = useNavBarFlag()
   const phase1Flag = usePhase1Flag()
 
@@ -158,24 +150,17 @@ export default function App() {
       <AppWrapper>
         <Trace page={currentPage}>
           <HeaderWrapper>{navBarFlag === NavBarVariant.Enabled ? <Navbar /> : <Header />}</HeaderWrapper>
-          <BodyWrapper navBarFlag={navBarFlag} phase1Flag={phase1Flag}>
+          <BodyWrapper navBarFlag={navBarFlag}>
             <Popups />
             <Polling />
             <TopLevelModals />
             <Suspense fallback={<Loader />}>
               {isLoaded ? (
                 <Routes>
-                  {exploreFlag === ExploreVariant.Enabled && (
+                  {tokensFlag === TokensVariant.Enabled && (
                     <>
-                      <Route path="/explore" element={<Explore />} />
-                      <Route
-                        path="/tokens/:tokenAddress"
-                        element={
-                          <Suspense fallback={<LazyLoadSpinner />}>
-                            <TokenDetails />
-                          </Suspense>
-                        }
-                      />
+                      <Route path="/tokens" element={<Explore />} />
+                      <Route path="/tokens/:tokenAddress" element={<TokenDetails />} />
                     </>
                   )}
                   <Route
@@ -225,6 +210,10 @@ export default function App() {
                   <Route path="migrate/v2/:address" element={<MigrateV2Pair />} />
 
                   <Route path="*" element={<RedirectPathToSwapOnly />} />
+
+                  {phase1Flag === Phase1Variant.Enabled && (
+                    <Route path="/nfts/collection/:contractAddress" element={<Collection />} />
+                  )}
                 </Routes>
               ) : (
                 <Loader />

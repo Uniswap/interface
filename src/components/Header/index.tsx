@@ -3,8 +3,7 @@ import useScrollPosition from '@react-hook/window-scroll'
 import { useWeb3React } from '@web3-react/core'
 import { getChainInfoOrDefault } from 'constants/chainInfo'
 import { SupportedChainId } from 'constants/chains'
-import { ExploreVariant, useExploreFlag } from 'featureFlags/flags/explore'
-import useTheme from 'hooks/useTheme'
+import { TokensVariant, useTokensFlag } from 'featureFlags/flags/tokens'
 import { darken } from 'polished'
 import { NavLink, useLocation } from 'react-router-dom'
 import { Text } from 'rebass'
@@ -13,7 +12,7 @@ import { useUserHasAvailableClaim } from 'state/claim/hooks'
 import { useNativeCurrencyBalances } from 'state/connection/hooks'
 import { useUserHasSubmittedClaim } from 'state/transactions/hooks'
 import { useDarkModeManager } from 'state/user/hooks'
-import styled from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components/macro'
 
 import { ReactComponent as Logo } from '../../assets/svg/logo.svg'
 import { ExternalLink, ThemedText } from '../../theme'
@@ -245,7 +244,7 @@ const StyledExternalLink = styled(ExternalLink)`
 `
 
 export default function Header() {
-  const exploreFlag = useExploreFlag()
+  const tokensFlag = useTokensFlag()
 
   const { account, chainId } = useWeb3React()
 
@@ -292,9 +291,9 @@ export default function Header() {
         <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
           <Trans>Swap</Trans>
         </StyledNavLink>
-        {exploreFlag === ExploreVariant.Enabled && (
-          <StyledNavLink id={`explore-nav-link`} to={'/explore'}>
-            <Trans>Explore</Trans>
+        {tokensFlag === TokensVariant.Enabled && (
+          <StyledNavLink id={`tokens-nav-link`} to={'/tokens'}>
+            <Trans>Tokens</Trans>
           </StyledNavLink>
         )}
         <StyledNavLink

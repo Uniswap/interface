@@ -8,11 +8,11 @@ import { ElementName, Event, EventName } from 'components/AmplitudeAnalytics/con
 import { TraceEvent } from 'components/AmplitudeAnalytics/TraceEvent'
 import { sendEvent } from 'components/analytics'
 import { useV2LiquidityTokenPermit } from 'hooks/useV2LiquidityTokenPermit'
-import { useCallback, useContext, useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { ArrowDown, Plus } from 'react-feather'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Text } from 'rebass'
-import { ThemeContext } from 'styled-components/macro'
+import { useTheme } from 'styled-components/macro'
 
 import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
 import { BlueCard, LightCard } from '../../components/Card'
@@ -54,7 +54,7 @@ export default function RemoveLiquidity() {
   const { account, chainId, provider } = useWeb3React()
   const [tokenA, tokenB] = useMemo(() => [currencyA?.wrapped, currencyB?.wrapped], [currencyA, currencyB])
 
-  const theme = useContext(ThemeContext)
+  const theme = useTheme()
 
   // toggle wallet when disconnected
   const toggleWalletModal = useToggleWalletModal()
