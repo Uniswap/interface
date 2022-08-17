@@ -9,7 +9,6 @@ const FixedPopupColumn = styled.div`
   position: fixed;
   top: 108px;
   right: 1rem;
-  width: 100%;
   z-index: ${Z_INDEXS.POPUP_NOTIFICATION};
   display: flex;
   flex-direction: column;

@@ -609,6 +609,8 @@ export default function Swap({ history }: RouteComponentProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tokenImports])
 
+  const initialTotalTokenDefault = useRef<number | null>(null)
+
   useEffect(() => {
     /**
      * defaultTokens change only when:
@@ -624,6 +626,7 @@ export default function Swap({ history }: RouteComponentProps) {
 
   useEffect(() => {
     checkAutoSelectTokenFromUrl()
+    initialTotalTokenDefault.current = Object.keys(defaultTokens).length
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -669,8 +672,11 @@ export default function Swap({ history }: RouteComponentProps) {
 
   const shouldRenderTokenInfo = isShowTokenInfoSetting && currencyIn && currencyOut && isPairInWhiteList
 
+  const isLoadedTokenDefault =
+    initialTotalTokenDefault.current !== null && Object.keys(defaultTokens).length > initialTotalTokenDefault.current
+
   const isShowModalImportToken =
-    importTokensNotInDefault.length > 0 && (!dismissTokenWarning || showingPairSuggestionImport)
+    isLoadedTokenDefault && importTokensNotInDefault.length > 0 && (!dismissTokenWarning || showingPairSuggestionImport)
 
   return (
     <>
