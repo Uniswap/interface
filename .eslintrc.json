@@ -18,7 +18,6 @@
     "src/abis/types",
     "src/locales/**/*.js",
     "src/locales/**/en-US.po",
-    "src/state/data/generated.ts",
     "node_modules",
     "coverage",
     "build",

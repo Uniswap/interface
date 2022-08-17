@@ -1,30 +1,25 @@
+import { Trans } from '@lingui/macro'
 import { outboundLink } from 'components/analytics'
+import { MOBILE_MEDIA_BREAKPOINT } from 'components/Explore/constants'
 import useCopyClipboard from 'hooks/useCopyClipboard'
-import React, { HTMLProps, useCallback } from 'react'
-import { ArrowLeft, Copy, ExternalLink as LinkIconFeather, Trash, X } from 'react-feather'
+import React, { forwardRef, HTMLProps, ReactNode, useCallback, useImperativeHandle } from 'react'
+import {
+  ArrowLeft,
+  CheckCircle,
+  Copy,
+  ExternalLink as ExternalLinkIconFeather,
+  Link as LinkIconFeather,
+  Trash,
+  X,
+} from 'react-feather'
 import { Link } from 'react-router-dom'
 import styled, { css, keyframes } from 'styled-components/macro'
 
 import { ReactComponent as TooltipTriangle } from '../assets/svg/tooltip_triangle.svg'
 import { anonymizeLink } from '../utils/anonymizeLink'
+import { Color } from './styled'
 
-export const ButtonText = styled.button`
-  outline: none;
-  border: none;
-  font-size: inherit;
-  padding: 0;
-  margin: 0;
-  background: none;
-  cursor: pointer;
-
-  :hover {
-    opacity: 0.7;
-  }
-
-  :focus {
-    text-decoration: underline;
-  }
-`
+// TODO: Break this file into a components folder
 
 export const CloseIcon = styled(X)<{ onClick: () => void }>`
   cursor: pointer;
@@ -68,35 +63,52 @@ export const LinkStyledButton = styled.button<{ disabled?: boolean }>`
   }
 `
 
-export const LinkStyle = css`
-  text-decoration: none;
-  color: ${({ theme }) => theme.accentAction};
-  stroke: ${({ theme }) => theme.accentAction};
+export const OPACITY_HOVER = 0.6
+export const OPACITY_CLICK = 0.4
+
+export const ButtonText = styled.button`
+  outline: none;
+  border: none;
+  font-size: inherit;
+  padding: 0;
+  margin: 0;
+  background: none;
   cursor: pointer;
-  font-weight: 500;
 
   :hover {
-    opacity: 0.6;
+    opacity: ${OPACITY_HOVER};
+  }
+
+  :focus {
+    text-decoration: underline;
+  }
+`
+
+export const ClickableStyle = css`
+  text-decoration: none;
+  cursor: pointer;
+
+  :hover {
+    opacity: ${OPACITY_HOVER};
   }
   :active {
-    opacity: 0.4;
+    opacity: ${OPACITY_CLICK};
   }
+`
+
+export const LinkStyle = css`
+  color: ${({ theme }) => theme.accentAction};
+  stroke: ${({ theme }) => theme.accentAction};
+  font-weight: 500;
 `
 
 // An internal link from the react-router-dom library that is correctly styled
 export const StyledInternalLink = styled(Link)`
+  ${ClickableStyle}
   ${LinkStyle}
 `
 
 const LinkIconWrapper = styled.a`
-  align-items: center;
-  justify-content: center;
-  display: flex;
-`
-
-const CopyIconWrapper = styled.div`
-  text-decoration: none;
-  cursor: pointer;
   align-items: center;
   justify-content: center;
   display: flex;
@@ -108,13 +120,15 @@ const IconStyle = css`
   margin-left: 10px;
 `
 
-const LinkIcon = styled(LinkIconFeather)`
+const LinkIcon = styled(ExternalLinkIconFeather)`
   ${IconStyle}
+  ${ClickableStyle}
   ${LinkStyle}
 `
 
 const CopyIcon = styled(Copy)`
   ${IconStyle}
+  ${ClickableStyle}
   ${LinkStyle}
   stroke: ${({ theme }) => theme.accentActive};
 `
@@ -129,7 +143,7 @@ export const TrashIcon = styled(Trash)`
   display: flex;
 
   :hover {
-    opacity: 0.7;
+    opacity: ${OPACITY_HOVER};
   }
 `
 
@@ -169,6 +183,7 @@ function handleClickExternalLink(event: React.MouseEvent<HTMLAnchorElement>) {
 }
 
 const StyledLink = styled.a`
+  ${ClickableStyle}
   ${LinkStyle}
 `
 /**
@@ -227,6 +242,14 @@ function ToolTip() {
   )
 }
 
+const CopyIconWrapper = styled.div`
+  text-decoration: none;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+`
+
 export function CopyLinkIcon({ toCopy }: { toCopy: string }) {
   const [isCopied, setCopied] = useCopyClipboard()
   const copy = useCallback(() => {
@@ -239,6 +262,134 @@ export function CopyLinkIcon({ toCopy }: { toCopy: string }) {
     </CopyIconWrapper>
   )
 }
+
+const FullAddress = styled.span`
+  @media only screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
+    display: none;
+  }
+`
+const TruncatedAddress = styled.span`
+  display: none;
+  @media only screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
+    display: flex;
+  }
+`
+
+const CopyAddressRow = styled.div<{ isClicked: boolean }>`
+  ${ClickableStyle}
+  color: inherit;
+  stroke: inherit;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  gap: 6px;
+  ${({ isClicked }) => isClicked && `opacity: ` + OPACITY_CLICK + ` !important`}
+`
+
+const CopyContractAddressWrapper = styled.div`
+  position: relative;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+`
+
+export function CopyContractAddress({ address }: { address: string }) {
+  const [isCopied, setCopied] = useCopyClipboard()
+  const copy = useCallback(() => {
+    setCopied(address)
+  }, [address, setCopied])
+
+  const truncated = `${address.slice(0, 4)}...${address.slice(-3)}`
+  return (
+    <CopyContractAddressWrapper onClick={copy}>
+      <CopyAddressRow isClicked={isCopied}>
+        <FullAddress>{address}</FullAddress>
+        <TruncatedAddress>{truncated}</TruncatedAddress>
+        <Copy size={14} />
+      </CopyAddressRow>
+      {isCopied && <ToolTip />}
+    </CopyContractAddressWrapper>
+  )
+}
+
+const CopyHelperContainer = styled(LinkStyledButton)<{ clicked: boolean }>`
+  ${({ clicked }) => !clicked && ClickableStyle};
+  color: ${({ color, theme }) => color || theme.accentAction};
+  padding: 0;
+  flex-shrink: 0;
+  display: flex;
+  text-decoration: none;
+  :hover,
+  :active,
+  :focus {
+    text-decoration: none;
+    color: ${({ color, theme }) => color || theme.accentAction};
+  }
+`
+const CopyHelperText = styled.span<{ fontSize: number }>`
+  ${({ theme }) => theme.flexRowNoWrap};
+  font-size: ${({ fontSize }) => fontSize + 'px'};
+  font-weight: 400;
+  align-items: center;
+`
+const CopiedIcon = styled(CheckCircle)`
+  color: ${({ theme }) => theme.accentSuccess};
+  stroke-width: 1.5px;
+`
+interface CopyHelperProps {
+  link?: boolean
+  toCopy: string
+  color?: Color
+  fontSize?: number
+  iconSize?: number
+  gap?: number
+  iconPosition?: 'left' | 'right'
+  iconColor?: Color
+  children: ReactNode
+}
+
+export type CopyHelperRefType = { forceCopy: () => void }
+export const CopyHelper = forwardRef<CopyHelperRefType, CopyHelperProps>(
+  (
+    {
+      link,
+      toCopy,
+      color,
+      fontSize = 16,
+      iconSize = 20,
+      gap = 12,
+      iconPosition = 'left',
+      iconColor,
+      children,
+    }: CopyHelperProps,
+    ref
+  ) => {
+    const [isCopied, setCopied] = useCopyClipboard()
+    const copy = useCallback(() => {
+      setCopied(toCopy)
+    }, [toCopy, setCopied])
+
+    useImperativeHandle(ref, () => ({
+      forceCopy() {
+        copy()
+      },
+    }))
+
+    const BaseIcon = isCopied ? CopiedIcon : link ? LinkIconFeather : Copy
+
+    return (
+      <CopyHelperContainer onClick={copy} color={color} clicked={isCopied}>
+        <div style={{ display: 'flex', flexDirection: 'row', gap }}>
+          {iconPosition === 'left' && <BaseIcon size={iconSize} strokeWidth={1.5} color={iconColor} />}
+          <CopyHelperText fontSize={fontSize}>{isCopied ? <Trans>Copied!</Trans> : children}</CopyHelperText>
+          {iconPosition === 'right' && <BaseIcon size={iconSize} strokeWidth={1.5} color={iconColor} />}
+        </div>
+      </CopyHelperContainer>
+    )
+  }
+)
+CopyHelper.displayName = 'CopyHelper'
 
 const rotate = keyframes`
   from {
