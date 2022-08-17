@@ -48,20 +48,36 @@ const TopTrendingSoonTokenItem = ({
           width="16px"
           minHeight="16px"
           height="16px"
-          style={{ borderRadius: '50%', cursor: 'pointer' }}
+          sx={{ borderRadius: '50%', cursor: 'pointer' }}
           onClick={onSelectToken}
         />
         <Text
+          as="span"
           fontSize="12px"
           mr="4px"
           color={theme.subText}
-          style={{ cursor: 'pointer', flex: '1' }}
+          sx={{ cursor: 'pointer' }}
           onClick={onSelectToken}
         >
           {tokenData.symbol}
         </Text>
-        <Text fontSize="12px">{formattedNum(tokenData.price.toString(), true)}</Text>
-        <Text fontSize="12px" color={tokenData.price_change_percentage_24h >= 0 ? theme.apr : theme.red}>
+        <Text
+          fontSize="12px"
+          as="span"
+          sx={{
+            whiteSpace: 'nowrap',
+          }}
+        >
+          {formattedNum(tokenData.price.toString(), true)}
+        </Text>
+        <Text
+          as="span"
+          fontSize="12px"
+          sx={{
+            whiteSpace: 'nowrap',
+            color: tokenData.price_change_percentage_24h >= 0 ? theme.apr : theme.red,
+          }}
+        >
           (
           {tokenData.price_change_percentage_24h >= 1
             ? formatNumberWithPrecisionRange(tokenData.price_change_percentage_24h, 0, 0)
