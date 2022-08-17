@@ -3,19 +3,19 @@ import { Box } from 'nft/components/Box'
 import { Center, Column, Row } from 'nft/components/Flex'
 import { VerifiedIcon } from 'nft/components/icons'
 import { bodySmall, buttonMedium, header1, section } from 'nft/css/common.css'
+import { vars } from 'nft/css/sprinkles.css'
 import { fetchTrendingCollections } from 'nft/queries'
 import { TimePeriod, TrendingCollection } from 'nft/types'
 import { formatEthPrice } from 'nft/utils/currency'
 import { putCommas } from 'nft/utils/putCommas'
 import { formatChange, toSignificant } from 'nft/utils/toSignificant'
-import { Dispatch, ReactNode, SetStateAction, useEffect, useReducer, useState } from 'react'
+import { ReactNode, useEffect, useReducer, useState } from 'react'
 import { useQuery } from 'react-query'
-import { useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 import * as styles from './Explore.css'
 
 const Banner = () => {
-  const navigate = useNavigate()
   /* Sets initially displayed collection to random number between 1 and 5  */
   const [current, setCurrent] = useState(Math.floor(Math.random() * 5 + 1))
   const [hovered, toggleHover] = useReducer((state) => !state, false)
@@ -35,7 +35,7 @@ const Banner = () => {
     /* Rotate through Top 5 Collections on 15 second interval */
     const interval = setInterval(async () => {
       if (collections) {
-        const nextCollectionIndex = current === collections.length - 1 ? 0 : current + 1
+        const nextCollectionIndex = (current + 1) % collections.length
         if (!hovered) setCurrent(nextCollectionIndex)
       }
     }, 15000)
@@ -43,42 +43,35 @@ const Banner = () => {
   }, [current, collections, hovered])
 
   return (
-    <Box
-      className={styles.fullWidth}
-      onMouseEnter={toggleHover}
-      onMouseLeave={toggleHover}
-      cursor="pointer"
-      onClick={() => {
-        if (collections) navigate(`/nfts/collection/${collections[current].address}`)
-      }}
-    >
+    <Box className={styles.fullWidth} onMouseEnter={toggleHover} onMouseLeave={toggleHover} cursor="pointer">
       {collections ? (
         collections.map((collection: TrendingCollection, index: number) => (
-          <Box
-            visibility={index === current ? 'visible' : 'hidden'}
-            key={index}
-            style={{
-              height: index === current ? '386px' : '0',
-              opacity: index === current ? 1 : 0,
-              transition: 'visibility 0s linear 0s, opacity 400ms',
-            }}
-          >
-            <CollectionWrapper bannerImageUrl={collection.bannerImageUrl}>
-              <div className={styles.bannerContent}>
-                <Box
-                  as="section"
-                  className={section}
-                  display="flex"
-                  flexDirection="row"
-                  flexWrap="nowrap"
-                  paddingTop="40"
-                >
-                  <CollectionDetails collection={collection} hovered={hovered} rank={index + 1} />
-                </Box>
-                <CarouselProgress length={collections.length} currentIndex={index} setCurrent={setCurrent} />
-              </div>
-            </CollectionWrapper>
-          </Box>
+          <Link to={`/nfts/collection/${collections[current].address}`} key={index} style={{ textDecoration: 'none' }}>
+            <Box
+              visibility={index === current ? 'visible' : 'hidden'}
+              style={{
+                height: index === current ? '386px' : '0',
+                opacity: index === current ? 1 : 0,
+                transition: 'visibility 0s linear 0s, opacity 400ms',
+              }}
+            >
+              <CollectionWrapper bannerImageUrl={collection.bannerImageUrl}>
+                <div className={styles.bannerContent}>
+                  <Box
+                    as="section"
+                    className={section}
+                    display="flex"
+                    flexDirection="row"
+                    flexWrap="nowrap"
+                    paddingTop="40"
+                  >
+                    <CollectionDetails collection={collection} hovered={hovered} rank={index + 1} />
+                  </Box>
+                  <CarouselProgress length={collections.length} currentIndex={index} onClick={setCurrent} />
+                </div>
+              </CollectionWrapper>
+            </Box>
+          </Link>
         ))
       ) : (
         <>
@@ -154,15 +147,13 @@ const CollectionDetails = ({
         ) : null}
       </Box>
     </Row>
-    <Box
-      as="a"
+    <Link
       className={clsx(buttonMedium, styles.exploreCollection)}
-      backgroundColor={hovered ? 'blue400' : 'grey700'}
-      href={`#/nfts/collection/${collection.address}`}
-      style={{ textDecoration: 'none' }}
+      to={`/nfts/collection/${collection.address}`}
+      style={{ textDecoration: 'none', backgroundColor: `${hovered ? vars.color.blue400 : vars.color.grey700}` }}
     >
       Explore collection
-    </Box>
+    </Link>
   </Column>
 )
 
@@ -170,11 +161,11 @@ const CollectionDetails = ({
 const CarouselProgress = ({
   length,
   currentIndex,
-  setCurrent,
+  onClick,
 }: {
   length: number
   currentIndex: number
-  setCurrent: Dispatch<SetStateAction<number>>
+  onClick(index: number): void
 }) => (
   <Center marginTop="16">
     {Array(length)
@@ -187,14 +178,16 @@ const CarouselProgress = ({
           onClick={(e) => {
             e.preventDefault()
             e.stopPropagation()
-            setCurrent(carouselIndex)
+            onClick(carouselIndex)
           }}
           key={carouselIndex}
         >
           <Box
             as="span"
             display="inline-block"
-            className={clsx(styles.carouselIndicator, carouselIndex === currentIndex && styles.carouselIndicatorActive)}
+            className={clsx(styles.carouselIndicator, {
+              [styles.carouselIndicatorActive]: carouselIndex === currentIndex,
+            })}
           />
         </Box>
       ))}
