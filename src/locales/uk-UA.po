@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-11 19:05\n"
+"PO-Revision-Date: 2022-08-17 20:04\n"
 "Last-Translator: \n"
 "Language: uk_UA\n"
 "Language-Team: Ukrainian\n"
@@ -120,8 +120,8 @@ msgstr "Для подання пропозицій необхідний міні
 msgid "A swap of this size may have a high price impact, given the current liquidity in the pool. There may be a large difference between the amount of your input token and what you will receive in the output token"
 msgstr "Своп такого розміру може мати значний вплив на ціну, враховуючи поточну ліквідність пулу. Може бути велика різниця між кількістю вашого вхідного маркера та тим, що ви отримаєте у вихідному маркері"
 
-#: src/components/Explore/TokenDetails/TokenDetail.tsx
 #: src/components/Menu/index.tsx
+#: src/components/Tokens/TokenDetails/TokenDetail.tsx
 msgid "About"
 msgstr "Загальна інформація"
 
@@ -550,9 +550,9 @@ msgstr "Пов'язаний с"
 msgid "Connecting..."
 msgstr "Підключення..."
 
-#: src/components/AccountDetails/Copy.tsx
-msgid "Copied"
-msgstr "Скопійовано"
+#: src/theme/components.tsx
+msgid "Copied!"
+msgstr "Скопійовано!"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Copy Address"
@@ -821,10 +821,6 @@ msgstr "Експертний режим вимикає підказку про �
 #: src/pages/Vote/styled.tsx
 msgid "Expired"
 msgstr "Термін дії закінчився"
-
-#: src/components/Header/index.tsx
-msgid "Explore"
-msgstr "Досліджуйте"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore Uniswap Analytics."
@@ -1761,7 +1757,7 @@ msgstr "Не вдалося надіслати транзакцію, оскіл�
 msgid "There is no liquidity data."
 msgstr "Даних про ліквідність немає."
 
-#: src/components/Explore/TokenDetails/BalanceSummary.tsx
+#: src/components/Tokens/TokenDetails/BalanceSummary.tsx
 msgid "There was an error loading your {tokenSymbol} balance"
 msgstr "Під час завантаження балансу {tokenSymbol} сталася помилка"
 
@@ -1819,7 +1815,7 @@ msgstr "Кому"
 msgid "To (at least)"
 msgstr "До (не менше)"
 
-#: src/components/Explore/TokenTable/TokenRow.tsx
+#: src/components/Tokens/TokenTable/TokenRow.tsx
 msgid "Token Name"
 msgstr "Назва маркера"
 
@@ -1827,6 +1823,7 @@ msgstr "Назва маркера"
 msgid "Token not supported"
 msgstr "Токен не підтримується"
 
+#: src/components/Header/index.tsx
 #: src/components/SearchModal/Manage.tsx
 msgid "Tokens"
 msgstr "Токени"

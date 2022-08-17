@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-11 19:04\n"
+"PO-Revision-Date: 2022-08-17 20:04\n"
 "Last-Translator: \n"
 "Language: he_IL\n"
 "Language-Team: Hebrew\n"
@@ -120,8 +120,8 @@ msgstr "הגשת הצעות נדרשת רף מינימלי של 0.25% מסך ה�
 msgid "A swap of this size may have a high price impact, given the current liquidity in the pool. There may be a large difference between the amount of your input token and what you will receive in the output token"
 msgstr "החלפה בסדר גודל כזה עשויה להשפיע על מחירים גבוהים, בהתחשב בנזילות הנוכחית במאגר. ייתכן שיש הבדל גדול בין כמות אסימון הקלט שלך לבין מה שתקבל באסימון הפלט"
 
-#: src/components/Explore/TokenDetails/TokenDetail.tsx
 #: src/components/Menu/index.tsx
+#: src/components/Tokens/TokenDetails/TokenDetail.tsx
 msgid "About"
 msgstr "אודות"
 
@@ -550,9 +550,9 @@ msgstr "מחובר עם"
 msgid "Connecting..."
 msgstr "מְקַשֵׁר..."
 
-#: src/components/AccountDetails/Copy.tsx
-msgid "Copied"
-msgstr "מוּעֲתָק"
+#: src/theme/components.tsx
+msgid "Copied!"
+msgstr "מוּעֲתָק!"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Copy Address"
@@ -821,10 +821,6 @@ msgstr "מצב מומחה מכבה את בקשת האישור לעסקה ומא�
 #: src/pages/Vote/styled.tsx
 msgid "Expired"
 msgstr "לא בתוקף"
-
-#: src/components/Header/index.tsx
-msgid "Explore"
-msgstr "לַחקוֹר"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore Uniswap Analytics."
@@ -1761,7 +1757,7 @@ msgstr "לא ניתן היה לשלוח את העסקה מכיוון שהמוע�
 msgid "There is no liquidity data."
 msgstr "אין נתוני נזילות."
 
-#: src/components/Explore/TokenDetails/BalanceSummary.tsx
+#: src/components/Tokens/TokenDetails/BalanceSummary.tsx
 msgid "There was an error loading your {tokenSymbol} balance"
 msgstr "אירעה שגיאה בטעינת יתרת ה {tokenSymbol} שלך"
 
@@ -1819,7 +1815,7 @@ msgstr "ל"
 msgid "To (at least)"
 msgstr "עבור (לפחות)"
 
-#: src/components/Explore/TokenTable/TokenRow.tsx
+#: src/components/Tokens/TokenTable/TokenRow.tsx
 msgid "Token Name"
 msgstr "שם אסימון"
 
@@ -1827,6 +1823,7 @@ msgstr "שם אסימון"
 msgid "Token not supported"
 msgstr "אסימון אינו נתמך"
 
+#: src/components/Header/index.tsx
 #: src/components/SearchModal/Manage.tsx
 msgid "Tokens"
 msgstr "אסימונים"

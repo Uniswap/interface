@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-11 19:04\n"
+"PO-Revision-Date: 2022-08-17 20:04\n"
 "Last-Translator: \n"
 "Language: ja_JP\n"
 "Language-Team: Japanese\n"
@@ -120,8 +120,8 @@ msgstr "提案を提出するには、UNIの総供給量の0.25％以上のUNI�
 msgid "A swap of this size may have a high price impact, given the current liquidity in the pool. There may be a large difference between the amount of your input token and what you will receive in the output token"
 msgstr "プールの現在の流動性を考えると、このサイズのスワップは価格に大きな影響を与える可能性があります。入力トークンの量と出力トークンで受け取る量には大きな違いがある可能性があります"
 
-#: src/components/Explore/TokenDetails/TokenDetail.tsx
 #: src/components/Menu/index.tsx
+#: src/components/Tokens/TokenDetails/TokenDetail.tsx
 msgid "About"
 msgstr "概要"
 
@@ -550,9 +550,9 @@ msgstr "つながっている"
 msgid "Connecting..."
 msgstr "接続しています..."
 
-#: src/components/AccountDetails/Copy.tsx
-msgid "Copied"
-msgstr "コピーしました"
+#: src/theme/components.tsx
+msgid "Copied!"
+msgstr "コピーしました！"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Copy Address"
@@ -821,10 +821,6 @@ msgstr "エキスパートモードは取引確認画面をスキップし、不
 #: src/pages/Vote/styled.tsx
 msgid "Expired"
 msgstr "期限切れ"
-
-#: src/components/Header/index.tsx
-msgid "Explore"
-msgstr "探検"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore Uniswap Analytics."
@@ -1761,7 +1757,7 @@ msgstr "期限が過ぎたため、取引を送信できませんでした。期
 msgid "There is no liquidity data."
 msgstr "流動性データはありません。"
 
-#: src/components/Explore/TokenDetails/BalanceSummary.tsx
+#: src/components/Tokens/TokenDetails/BalanceSummary.tsx
 msgid "There was an error loading your {tokenSymbol} balance"
 msgstr "残高 {tokenSymbol} の読み込み中にエラーが発生しました"
 
@@ -1819,7 +1815,7 @@ msgstr "買うトークン"
 msgid "To (at least)"
 msgstr "買うトークン（少なくとも）"
 
-#: src/components/Explore/TokenTable/TokenRow.tsx
+#: src/components/Tokens/TokenTable/TokenRow.tsx
 msgid "Token Name"
 msgstr "トークン名"
 
@@ -1827,6 +1823,7 @@ msgstr "トークン名"
 msgid "Token not supported"
 msgstr "トークンは対応していません"
 
+#: src/components/Header/index.tsx
 #: src/components/SearchModal/Manage.tsx
 msgid "Tokens"
 msgstr "トークン"

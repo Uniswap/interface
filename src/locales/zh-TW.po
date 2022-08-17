@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-11 19:05\n"
+"PO-Revision-Date: 2022-08-17 20:04\n"
 "Last-Translator: \n"
 "Language: zh_TW\n"
 "Language-Team: Chinese Traditional\n"
@@ -120,8 +120,8 @@ msgstr "提交提案所需的最低門檻為 UNI 總供應量的 0.25%"
 msgid "A swap of this size may have a high price impact, given the current liquidity in the pool. There may be a large difference between the amount of your input token and what you will receive in the output token"
 msgstr "鑑於池中當前的流動性，這種規模的掉期可能會對價格產生很大影響。您的輸入令牌數量與您將在輸出令牌中收到的數量之間可能存在很大差異"
 
-#: src/components/Explore/TokenDetails/TokenDetail.tsx
 #: src/components/Menu/index.tsx
+#: src/components/Tokens/TokenDetails/TokenDetail.tsx
 msgid "About"
 msgstr "關於"
 
@@ -550,9 +550,9 @@ msgstr "與"
 msgid "Connecting..."
 msgstr "正在連接..."
 
-#: src/components/AccountDetails/Copy.tsx
-msgid "Copied"
-msgstr "已複製"
+#: src/theme/components.tsx
+msgid "Copied!"
+msgstr "複製！"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Copy Address"
@@ -821,10 +821,6 @@ msgstr "“專家模式”將解除確認交易的提示，並允許兌換率高
 #: src/pages/Vote/styled.tsx
 msgid "Expired"
 msgstr "已過期"
-
-#: src/components/Header/index.tsx
-msgid "Explore"
-msgstr "探索"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore Uniswap Analytics."
@@ -1761,7 +1757,7 @@ msgstr "由於期限已過，因此無法發送交易。請檢查您的交易截
 msgid "There is no liquidity data."
 msgstr "沒有流動性數據。"
 
-#: src/components/Explore/TokenDetails/BalanceSummary.tsx
+#: src/components/Tokens/TokenDetails/BalanceSummary.tsx
 msgid "There was an error loading your {tokenSymbol} balance"
 msgstr "加載您的 {tokenSymbol} 餘額時出錯"
 
@@ -1819,7 +1815,7 @@ msgstr "至"
 msgid "To (at least)"
 msgstr "到（至少）"
 
-#: src/components/Explore/TokenTable/TokenRow.tsx
+#: src/components/Tokens/TokenTable/TokenRow.tsx
 msgid "Token Name"
 msgstr "令牌名稱"
 
@@ -1827,6 +1823,7 @@ msgstr "令牌名稱"
 msgid "Token not supported"
 msgstr "不支持此代幣"
 
+#: src/components/Header/index.tsx
 #: src/components/SearchModal/Manage.tsx
 msgid "Tokens"
 msgstr "代幣"

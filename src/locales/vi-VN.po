@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-11 19:05\n"
+"PO-Revision-Date: 2022-08-17 20:04\n"
 "Last-Translator: \n"
 "Language: vi_VN\n"
 "Language-Team: Vietnamese\n"
@@ -120,8 +120,8 @@ msgstr "Yêu cầu ngưỡng tối thiểu 0,25% tổng nguồn cung cấp UNI �
 msgid "A swap of this size may have a high price impact, given the current liquidity in the pool. There may be a large difference between the amount of your input token and what you will receive in the output token"
 msgstr "Một giao dịch hoán đổi ở quy mô này có thể có tác động đến giá cao, do tính thanh khoản hiện tại của nhóm. Có thể có sự khác biệt lớn giữa số lượng mã thông báo đầu vào của bạn và những gì bạn sẽ nhận được trong mã thông báo đầu ra"
 
-#: src/components/Explore/TokenDetails/TokenDetail.tsx
 #: src/components/Menu/index.tsx
+#: src/components/Tokens/TokenDetails/TokenDetail.tsx
 msgid "About"
 msgstr "Giới thiệu"
 
@@ -550,9 +550,9 @@ msgstr "Kết nối với"
 msgid "Connecting..."
 msgstr "Đang kết nối..."
 
-#: src/components/AccountDetails/Copy.tsx
-msgid "Copied"
-msgstr "Đã sao chép"
+#: src/theme/components.tsx
+msgid "Copied!"
+msgstr "Đã sao chép!"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Copy Address"
@@ -821,10 +821,6 @@ msgstr "Chế độ chuyên gia tắt nhắc nhở xác nhận giao dịch và c
 #: src/pages/Vote/styled.tsx
 msgid "Expired"
 msgstr "Đã hết hạn"
-
-#: src/components/Header/index.tsx
-msgid "Explore"
-msgstr "Khám phá"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore Uniswap Analytics."
@@ -1761,7 +1757,7 @@ msgstr "Không thể gửi giao dịch vì đã hết thời hạn. Vui lòng ki
 msgid "There is no liquidity data."
 msgstr "Không có dữ liệu thanh khoản."
 
-#: src/components/Explore/TokenDetails/BalanceSummary.tsx
+#: src/components/Tokens/TokenDetails/BalanceSummary.tsx
 msgid "There was an error loading your {tokenSymbol} balance"
 msgstr "Đã xảy ra lỗi khi tải số dư {tokenSymbol} của bạn"
 
@@ -1819,7 +1815,7 @@ msgstr "Đến"
 msgid "To (at least)"
 msgstr "Đến (Ít nhất)"
 
-#: src/components/Explore/TokenTable/TokenRow.tsx
+#: src/components/Tokens/TokenTable/TokenRow.tsx
 msgid "Token Name"
 msgstr "Tên mã thông báo"
 
@@ -1827,6 +1823,7 @@ msgstr "Tên mã thông báo"
 msgid "Token not supported"
 msgstr "Mã thông báo không được hỗ trợ"
 
+#: src/components/Header/index.tsx
 #: src/components/SearchModal/Manage.tsx
 msgid "Tokens"
 msgstr "Token"

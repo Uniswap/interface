@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-11 19:04\n"
+"PO-Revision-Date: 2022-08-17 20:04\n"
 "Last-Translator: \n"
 "Language: ca_ES\n"
 "Language-Team: Catalan\n"
@@ -120,8 +120,8 @@ msgstr "Per presentar les propostes es requereix un llindar mínim del 0,25% del
 msgid "A swap of this size may have a high price impact, given the current liquidity in the pool. There may be a large difference between the amount of your input token and what you will receive in the output token"
 msgstr "Un swap d'aquesta mida pot tenir un alt impacte en els preus, donada la liquiditat actual del pool. Pot haver-hi una gran diferència entre la quantitat del testimoni d'entrada i el que rebrà al testimoni de sortida"
 
-#: src/components/Explore/TokenDetails/TokenDetail.tsx
 #: src/components/Menu/index.tsx
+#: src/components/Tokens/TokenDetails/TokenDetail.tsx
 msgid "About"
 msgstr "Sobre"
 
@@ -550,9 +550,9 @@ msgstr "Connectat amb"
 msgid "Connecting..."
 msgstr "Connectant..."
 
-#: src/components/AccountDetails/Copy.tsx
-msgid "Copied"
-msgstr "Copiat"
+#: src/theme/components.tsx
+msgid "Copied!"
+msgstr "Copiat!"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Copy Address"
@@ -821,10 +821,6 @@ msgstr "El mode expert desactiva la sol·licitud de confirmació de la transacci
 #: src/pages/Vote/styled.tsx
 msgid "Expired"
 msgstr "Caducat"
-
-#: src/components/Header/index.tsx
-msgid "Explore"
-msgstr "Explora"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore Uniswap Analytics."
@@ -1761,7 +1757,7 @@ msgstr "No s'ha pogut enviar la transacció perquè s'ha acabat el termini. Comp
 msgid "There is no liquidity data."
 msgstr "No hi ha dades de liquiditat."
 
-#: src/components/Explore/TokenDetails/BalanceSummary.tsx
+#: src/components/Tokens/TokenDetails/BalanceSummary.tsx
 msgid "There was an error loading your {tokenSymbol} balance"
 msgstr "S'ha produït un error en carregar el vostre saldo {tokenSymbol}"
 
@@ -1819,7 +1815,7 @@ msgstr "Per a"
 msgid "To (at least)"
 msgstr "A (com a mínim)"
 
-#: src/components/Explore/TokenTable/TokenRow.tsx
+#: src/components/Tokens/TokenTable/TokenRow.tsx
 msgid "Token Name"
 msgstr "Nom del testimoni"
 
@@ -1827,6 +1823,7 @@ msgstr "Nom del testimoni"
 msgid "Token not supported"
 msgstr "El testimoni no és compatible"
 
+#: src/components/Header/index.tsx
 #: src/components/SearchModal/Manage.tsx
 msgid "Tokens"
 msgstr "Fitxes"
