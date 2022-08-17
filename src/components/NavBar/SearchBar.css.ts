@@ -1,7 +1,7 @@
 import { style } from '@vanilla-extract/css'
 import { buttonTextSmall, subhead, subheadSmall } from 'nft/css/common.css'
 
-import { breakpoints, sprinkles } from '../../nft/css/sprinkles.css'
+import { breakpoints, sprinkles, vars } from '../../nft/css/sprinkles.css'
 
 const DESKTOP_NAVBAR_WIDTH = '360px'
 
@@ -61,6 +61,9 @@ export const searchBarDropdown = style([
 
 export const suggestionRow = style([
   sprinkles({
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
     justifyContent: 'space-between',
     paddingY: '8',
     paddingX: '16',
@@ -68,7 +71,9 @@ export const suggestionRow = style([
   {
     ':hover': {
       cursor: 'pointer',
+      background: vars.color.lightGrayContainer,
     },
+    textDecoration: 'none',
   },
 ])
 

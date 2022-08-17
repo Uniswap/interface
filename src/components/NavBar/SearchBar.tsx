@@ -7,7 +7,7 @@ import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import { Overlay } from 'nft/components/modals/Overlay'
 import { subheadSmall } from 'nft/css/common.css'
-import { breakpoints } from 'nft/css/sprinkles.css'
+import { breakpoints, vars } from 'nft/css/sprinkles.css'
 import { useSearchHistory } from 'nft/hooks'
 // import { fetchSearchCollections, fetchTrendingCollections } from 'nft/queries'
 import { fetchSearchTokens } from 'nft/queries/genie/SearchTokensFetcher'
@@ -17,7 +17,7 @@ import { ethNumberStandardFormatter } from 'nft/utils/currency'
 import { putCommas } from 'nft/utils/putCommas'
 import { ChangeEvent, useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react'
 import { useQuery } from 'react-query'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 
 import {
   ChevronLeftIcon,
@@ -67,14 +67,13 @@ const CollectionRow = ({ collection, isHovered, setHoveredIndex, toggleOpen, ind
   }, [toggleOpen, isHovered, collection, navigate, handleClick])
 
   return (
-    <Row
-      as="a"
-      href={`/#/nft/collection/${collection.address}`}
-      background={isHovered ? 'lightGrayButton' : 'none'}
+    <Link
+      to={`/nft/collection/${collection.address}`}
       onClick={handleClick}
       onMouseEnter={() => !isHovered && setHoveredIndex(index)}
       onMouseLeave={() => isHovered && setHoveredIndex(undefined)}
       className={styles.suggestionRow}
+      style={{ background: isHovered ? vars.color.lightGrayButton : 'none' }}
     >
       <Row style={{ width: '68%' }}>
         {!brokenImage && collection.imageUrl ? (
@@ -110,7 +109,7 @@ const CollectionRow = ({ collection, isHovered, setHoveredIndex, toggleOpen, ind
           <Box className={styles.secondaryText}>Floor</Box>
         </Column>
       )}
-    </Row>
+    </Link>
   )
 }
 
@@ -153,15 +152,14 @@ const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index }: Toke
   }, [toggleOpen, history, isHovered, token])
 
   return (
-    <Row
-      as="a"
+    <Link
       // TODO connect with explore token URI
-      href={`/#/tokens/${token.address}`}
-      background={isHovered ? 'lightGrayButton' : 'none'}
+      to={`/tokens/${token.address}`}
       onClick={handleClick}
       onMouseEnter={() => !isHovered && setHoveredIndex(index)}
       onMouseLeave={() => isHovered && setHoveredIndex(undefined)}
       className={styles.suggestionRow}
+      style={{ background: isHovered ? vars.color.lightGrayButton : 'none' }}
     >
       <Row>
         {!brokenImage && token.logoURI ? (
@@ -206,7 +204,7 @@ const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index }: Toke
           </Box>
         )}
       </Column>
-    </Row>
+    </Link>
   )
 }
 
@@ -216,7 +214,6 @@ const SkeletonRow = () => {
   return (
     <Box className={styles.searchBarDropdown}>
       <Row
-        as="a"
         background={isHovered ? 'lightGrayButton' : 'none'}
         onMouseEnter={toggleHovered}
         onMouseLeave={toggleHovered}
