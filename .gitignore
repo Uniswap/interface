@@ -10,7 +10,7 @@
 
 # generated graphql types
 __generated__/
-schema/
+schema.graphql
 
 # dependencies
 /node_modules
