@@ -75,7 +75,7 @@ export enum SWAP_PRICE_UPDATE_USER_RESPONSE {
  * Known pages in the app. Highest order context.
  */
 export enum PageName {
-  EXPLORE_PAGE = 'explore-page',
+  TOKEN_PAGE = 'token-page',
   POOL_PAGE = 'pool-page',
   SWAP_PAGE = 'swap-page',
   VOTE_PAGE = 'vote-page',

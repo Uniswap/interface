@@ -84,8 +84,8 @@ function getCurrentPageFromLocation(locationPathname: string): PageName | undefi
       return PageName.VOTE_PAGE
     case '/pool':
       return PageName.POOL_PAGE
-    case '/explore':
-      return PageName.EXPLORE_PAGE
+    case '/tokens':
+      return PageName.TOKEN_PAGE
     default:
       return undefined
   }
