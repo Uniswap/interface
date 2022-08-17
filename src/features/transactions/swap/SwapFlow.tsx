@@ -6,6 +6,7 @@ import { Keyboard, LayoutChangeEvent, TouchableWithoutFeedback } from 'react-nat
 import { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated'
 import { AnimatedFlex, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
+import { TokenSelectorVariation } from 'src/components/TokenSelector/SearchResults'
 import { TokenSelect } from 'src/components/TokenSelector/TokenSelect'
 import { WarningAction, WarningModalType } from 'src/components/warnings/types'
 import { WarningModal } from 'src/components/warnings/WarningModal'
@@ -100,7 +101,9 @@ export function SwapFlow({ prefilledState, onClose }: SwapFormProps) {
   const { onSelectCurrency, onHideTokenSelector } = useSwapActionHandlers(dispatch)
 
   // keep currencies list option as state so that rendered list remains stable through the slide animation
-  const [showNonZeroBalancesOnly, setShowNonZeroBalancesOnly] = useState<boolean>(true)
+  const [listVariation, setListVariation] = useState<TokenSelectorVariation>(
+    TokenSelectorVariation.BalancesAndPopular
+  )
   const { swapCallback } = useSwapCallbackFromDerivedSwapInfo(derivedSwapInfo)
   const { warningModalType, warnings, selectingCurrencyField, currencies } = derivedSwapInfo
 
@@ -134,7 +137,11 @@ export function SwapFlow({ prefilledState, onClose }: SwapFormProps) {
 
   useEffect(() => {
     if (selectingCurrencyField) {
-      setShowNonZeroBalancesOnly(selectingCurrencyField === CurrencyField.INPUT)
+      setListVariation(
+        selectingCurrencyField === CurrencyField.INPUT
+          ? TokenSelectorVariation.BalancesAndPopular
+          : TokenSelectorVariation.SuggestedAndPopular
+      )
     }
 
     const screenOffset = selectingCurrencyField !== undefined ? 1 : 0
@@ -186,7 +193,7 @@ export function SwapFlow({ prefilledState, onClose }: SwapFormProps) {
               : undefined
           }
           selectedCurrency={selectingCurrencyField ? currencies[selectingCurrencyField] : undefined}
-          showNonZeroBalancesOnly={showNonZeroBalancesOnly}
+          variation={listVariation}
           onBack={onHideTokenSelector}
           onSelectCurrency={(currency: Currency) =>
             selectingCurrencyField && onSelectCurrency(selectingCurrencyField, currency)

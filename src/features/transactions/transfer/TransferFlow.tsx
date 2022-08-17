@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated'
 import { AnimatedFlex, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
+import { TokenSelectorVariation } from 'src/components/TokenSelector/SearchResults'
 import { TokenSelect } from 'src/components/TokenSelector/TokenSelect'
 import { useSwapActionHandlers } from 'src/features/transactions/swap/hooks'
 import {
@@ -118,7 +119,7 @@ export function TransferFlow({ prefilledState, onClose }: TransferFormProps) {
           />
         </Flex>
         <TokenSelect
-          showNonZeroBalancesOnly
+          variation={TokenSelectorVariation.BalancesOnly}
           onBack={onHideTokenSelector}
           onSelectCurrency={(currency: Currency) => onSelectCurrency(CurrencyField.INPUT, currency)}
         />

@@ -1,8 +1,8 @@
 import { Currency } from '@uniswap/sdk-core'
 import Fuse from 'fuse.js'
-import React, { useCallback, useMemo } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { FlatList, ListRenderItemInfo, StyleSheet } from 'react-native'
+import { ListRenderItemInfo, SectionList, StyleSheet } from 'react-native'
 import { Separator } from 'src/components/layout/Separator'
 import { filter } from 'src/components/TokenSelector/filter'
 import { useFavoriteCurrenciesWithMetadata } from 'src/components/TokenSelector/hooks'
@@ -14,6 +14,7 @@ import { ElementName } from 'src/features/telemetry/constants'
 import { useAllCurrencies } from 'src/features/tokens/useTokens'
 import { useCombinedTokenWarningLevelMap } from 'src/features/tokens/useTokenWarningLevel'
 import { useActiveAccountWithThrow } from 'src/features/wallet/hooks'
+import { differenceWith } from 'src/utils/array'
 import { currencyId } from 'src/utils/currencyId'
 import { flattenObjectOfObjects } from 'src/utils/objects'
 import { useDebounce } from 'src/utils/timing'
@@ -21,21 +22,44 @@ import { TextButton } from '../buttons/TextButton'
 import { Flex, Inset } from '../layout'
 import { Text } from '../Text'
 
+export enum TokenSelectorVariation {
+  // used for Send flow, only show currencies with a balance
+  BalancesOnly = 'balances-only',
+
+  // used for Swap input. tokens with balances + popular
+  BalancesAndPopular = 'balances-and-popular',
+
+  // used for Swap output. tokens with balances, favorites, common + popular
+  SuggestedAndPopular = 'suggested-and-popular',
+}
+
 interface TokenSearchResultListProps {
-  showNonZeroBalancesOnly?: boolean
   onClearSearchFilter: () => void
   onSelectCurrency: (currency: Currency) => void
   searchFilter: string | null
   chainFilter: ChainId | null
+  variation: TokenSelectorVariation
 }
 
-export function TokenSearchResultList({
-  showNonZeroBalancesOnly,
-  onClearSearchFilter,
-  onSelectCurrency,
-  chainFilter,
-  searchFilter,
-}: TokenSearchResultListProps) {
+const currencyMetadataComparator = (
+  currency: CurrencyWithMetadata,
+  otherCurrency: CurrencyWithMetadata
+) => {
+  return currencyId(currency.currency) === currencyId(otherCurrency.currency)
+}
+// get items in `currencies` that are not in `without`
+// e.g. difference([B, C, D], [A, B, C]) would return ([D])
+const difference = (currencies: CurrencyWithMetadata[], without: CurrencyWithMetadata[]) => {
+  return differenceWith(currencies, without, currencyMetadataComparator)
+}
+
+type TokenSection = {
+  title: string
+  data: CurrencyWithMetadata[]
+}
+
+// TODO: alphabetically sort each of these token sections
+export function useTokenSectionsByVariation(variation: TokenSelectorVariation): TokenSection[] {
   const { t } = useTranslation()
   const activeAccount = useActiveAccountWithThrow()
   const currenciesByChain = useAllCurrencies()
@@ -60,18 +84,64 @@ export function TokenSearchResultList({
     }))
   }, [currenciesByChain])
 
-  const currenciesWithMetadata = showNonZeroBalancesOnly ? currenciesWithBalances : allCurrencies
+  const favoriteCurrencies = useFavoriteCurrenciesWithMetadata(allCurrencies)
 
+  return useMemo(() => {
+    if (variation === TokenSelectorVariation.BalancesOnly) {
+      return [{ title: t('Your tokens'), data: currenciesWithBalances }]
+    }
+
+    if (variation === TokenSelectorVariation.BalancesAndPopular) {
+      const popularMinusBalances = difference(allCurrencies, currenciesWithBalances)
+      return [
+        {
+          title: t('Your tokens'),
+          data: currenciesWithBalances,
+        },
+        {
+          title: t('Popular tokens'),
+          data: popularMinusBalances,
+        },
+      ]
+    }
+
+    // TODO: also add "common base" tokens here
+    const balancesAndFavorites = [
+      ...currenciesWithBalances,
+      ...difference(favoriteCurrencies, currenciesWithBalances),
+    ]
+    return [
+      {
+        title: t('Suggested'),
+        data: balancesAndFavorites,
+      },
+      {
+        title: t('Popular tokens'),
+        data: difference(allCurrencies, balancesAndFavorites),
+      },
+    ]
+  }, [allCurrencies, currenciesWithBalances, favoriteCurrencies, t, variation])
+}
+
+export function TokenSearchResultList({
+  onClearSearchFilter,
+  onSelectCurrency,
+  chainFilter,
+  searchFilter,
+  variation,
+}: TokenSearchResultListProps) {
+  const { t } = useTranslation()
+  const sectionListRef = useRef<SectionList<Fuse.FuseResult<CurrencyWithMetadata>>>(null)
+
+  const sections = useTokenSectionsByVariation(variation)
   const debouncedSearchFilter = useDebounce(searchFilter)
 
-  // TODO: Add favorites to suggested tokens list
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const favoriteCurrencies = useFavoriteCurrenciesWithMetadata(currenciesWithMetadata)
-
-  const filteredCurrencies = useMemo(
-    () => filter(currenciesWithMetadata ?? null, chainFilter, debouncedSearchFilter),
-    [chainFilter, currenciesWithMetadata, debouncedSearchFilter]
-  )
+  const filteredSections = useMemo(() => {
+    return sections.map(({ title, data }) => ({
+      title,
+      data: filter(data, chainFilter, debouncedSearchFilter),
+    }))
+  }, [chainFilter, debouncedSearchFilter, sections])
 
   const tokenWarningLevelMap = useCombinedTokenWarningLevelMap()
 
@@ -90,8 +160,18 @@ export function TokenSearchResultList({
     [onSelectCurrency, tokenWarningLevelMap]
   )
 
+  useEffect(() => {
+    // when changing lists to show, resume at the top of the list
+    sectionListRef.current?.scrollToLocation({
+      itemIndex: 0,
+      sectionIndex: 0,
+      animated: false,
+    })
+  }, [variation])
+
   return (
-    <FlatList
+    <SectionList
+      ref={sectionListRef}
       ItemSeparatorComponent={() => <Separator mx="xs" />}
       ListEmptyComponent={
         <Flex centered gap="sm" px="lg">
@@ -110,13 +190,24 @@ export function TokenSearchResultList({
         </Flex>
       }
       ListFooterComponent={Footer}
-      data={filteredCurrencies}
       keyExtractor={key}
       renderItem={renderItem}
+      renderSectionHeader={({ section: { title } }) => <SectionHeader title={title} />}
+      sections={filteredSections}
       showsVerticalScrollIndicator={false}
       style={styles.list}
       windowSize={1}
     />
+  )
+}
+
+function SectionHeader({ title }: { title: string }) {
+  return (
+    <Flex backgroundColor="backgroundSurface" py="sm">
+      <Text color="textSecondary" variant="subheadSmall">
+        {title}
+      </Text>
+    </Flex>
   )
 }
 

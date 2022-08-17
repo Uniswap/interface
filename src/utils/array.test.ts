@@ -1,4 +1,4 @@
-import { next } from 'src/utils/array'
+import { differenceWith, next } from 'src/utils/array'
 
 it('returns undefined for empty arrays', () => {
   expect(next([], '123')).toBe(undefined)
@@ -14,4 +14,18 @@ it('handles wrapping around', () => {
 
 it('returns undefined whenelement not found', () => {
   expect(next([1, 2, 3], 4)).toBe(undefined)
+})
+
+it('calculates difference correctly', () => {
+  const result = differenceWith([1, 2], [2, 4], (a, b) => a === b)
+  expect(result.length).toEqual(1)
+  expect(result[0]).toBe(1)
+
+  const emptyResult = differenceWith([1, 2], [1, 2], (a, b) => a === b)
+  expect(emptyResult.length).toEqual(0)
+
+  const sameResult = differenceWith([1, 2], [3, 4], (a, b) => a === b)
+  expect(sameResult.length).toEqual(2)
+  expect(sameResult[0]).toBe(1)
+  expect(sameResult[1]).toBe(2)
 })

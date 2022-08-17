@@ -6,21 +6,24 @@ import { Loading } from 'src/components/loading'
 import { SearchBar } from 'src/components/SearchBar'
 import { useFilterCallbacks } from 'src/components/TokenSelector/hooks'
 import { NetworkFilter } from 'src/components/TokenSelector/NetworkFilter'
-import { TokenSearchResultList } from 'src/components/TokenSelector/SearchResults'
+import {
+  TokenSearchResultList,
+  TokenSelectorVariation,
+} from 'src/components/TokenSelector/SearchResults'
 
 interface TokenSearchProps {
   onSelectCurrency: (currency: Currency) => void
   otherCurrency?: Currency | null
   selectedCurrency?: Currency | null
-  showNonZeroBalancesOnly?: boolean
   onBack: () => void
+  variation: TokenSelectorVariation
 }
 
 export function TokenSelect({
   onSelectCurrency,
   otherCurrency,
-  showNonZeroBalancesOnly,
   onBack,
+  variation,
 }: TokenSearchProps) {
   const { onChainPress, onChangeText, onClearSearchFilter, searchFilter, chainFilter } =
     useFilterCallbacks(otherCurrency?.chainId ?? null)
@@ -45,7 +48,7 @@ export function TokenSelect({
         <TokenSearchResultList
           chainFilter={chainFilter}
           searchFilter={searchFilter}
-          showNonZeroBalancesOnly={showNonZeroBalancesOnly}
+          variation={variation}
           onClearSearchFilter={onClearFilters}
           onSelectCurrency={onSelectCurrency}
         />
