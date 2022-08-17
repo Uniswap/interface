@@ -2,8 +2,8 @@ import { Trans } from '@lingui/macro'
 // eslint-disable-next-line no-restricted-imports
 import { t } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
-import { ChangeEvent, Context, ReactNode, useCallback, useContext } from 'react'
-import styled, { DefaultTheme, ThemeContext } from 'styled-components/macro'
+import { ChangeEvent, ReactNode, useCallback } from 'react'
+import styled, { useTheme } from 'styled-components/macro'
 
 import useENS from '../../hooks/useENS'
 import { ExternalLink, ThemedText } from '../../theme'
@@ -87,7 +87,7 @@ export default function AddressInputPanel({
   onChange: (value: string) => void
 }) {
   const { chainId } = useWeb3React()
-  const theme = useContext(ThemeContext as Context<DefaultTheme>)
+  const theme = useTheme()
 
   const { address, loading, name } = useENS(value)
 
