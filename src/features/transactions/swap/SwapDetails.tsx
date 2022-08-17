@@ -77,14 +77,18 @@ export function SwapDetails({
           justifyContent="space-between"
           p="xs">
           <Flex centered row flexBasis="30%" gap="none">
-            <Text color="blue300" variant="subheadSmall">
+            <Text color="accentActive" variant="subheadSmall">
               {t('Rate Updated')}
             </Text>
           </Flex>
           <Flex row flexBasis="70%" gap="xxs">
             <Flex centered row flexBasis="66%" flexGrow={1} gap="none">
               <TouchableOpacity onPress={() => setShowInverseRate(!showInverseRate)}>
-                <Text adjustsFontSizeToFit color="blue300" numberOfLines={1} variant="subheadSmall">
+                <Text
+                  adjustsFontSizeToFit
+                  color="accentActive"
+                  numberOfLines={1}
+                  variant="subheadSmall">
                   {rate}
                 </Text>
               </TouchableOpacity>
@@ -95,7 +99,9 @@ export function SwapDetails({
                 borderRadius="md"
                 padding="xs"
                 onPress={onAcceptTrade}>
-                <Text variant="smallLabel">{t('Accept')}</Text>
+                <Text color="accentTextLightPrimary" variant="smallLabel">
+                  {t('Accept')}
+                </Text>
               </Button>
             </Flex>
           </Flex>
