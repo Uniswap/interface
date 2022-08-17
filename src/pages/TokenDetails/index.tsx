@@ -26,7 +26,7 @@ import styled from 'styled-components/macro'
 import { DARK_THEME, LIGHT_THEME } from 'theme/token-details-widget-theme'
 import { ROUTER_URL, RPC_URL_MAP } from 'utils/token-details-widget-config'
 
-const WIDGET_WIDTH = '320'
+const WIDGET_WIDTH = 320
 const Footer = styled.div`
   display: none;
   @media only screen and (max-width: ${LARGE_MEDIA_BREAKPOINT}) {
