@@ -68,7 +68,6 @@ export const ChainSwitcher = ({ isMobile }: ChainSwitcherProps) => {
   const selectChain = useSelectChain()
   useSyncChainQuery()
 
-  // TODO: need to handle unsupported chain
   if (!chainId || !info) {
     return null
   }
