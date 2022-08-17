@@ -14,11 +14,11 @@ import { AnimatedBox } from 'src/components/layout'
 import { Theme } from 'src/styles/theme'
 
 export function SpinningLoader({
-  size,
+  size = 20,
   disabled,
   color,
 }: {
-  size: number
+  size?: number
   disabled?: boolean
   color?: keyof Theme['colors']
 }) {

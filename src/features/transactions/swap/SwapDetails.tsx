@@ -1,19 +1,12 @@
 import { AnyAction } from '@reduxjs/toolkit'
 import { Currency, TradeType } from '@uniswap/sdk-core'
-import React, { ComponentProps, Dispatch, useState } from 'react'
+import React, { Dispatch, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { TouchableOpacity } from 'react-native-gesture-handler'
-import { useAppTheme } from 'src/app/hooks'
-import AlertTriangle from 'src/assets/icons/alert-triangle.svg'
-import InfoCircle from 'src/assets/icons/info-circle.svg'
 import { Button } from 'src/components/buttons/Button'
-import { Box } from 'src/components/layout/Box'
 import { Flex } from 'src/components/layout/Flex'
 import { Text } from 'src/components/Text'
-import { AccountDetails } from 'src/components/WalletConnect/RequestModal/AccountDetails'
 import { Warning, WarningModalType } from 'src/components/warnings/types'
-import { getWarningColor } from 'src/components/warnings/utils'
-import { useUSDGasPrice } from 'src/features/gas/hooks'
 import { useUSDCPrice } from 'src/features/routing/useUSDCPrice'
 import {
   GasSpeed,
@@ -23,11 +16,11 @@ import {
 import { Trade } from 'src/features/transactions/swap/useTrade'
 import { getRateToDisplay } from 'src/features/transactions/swap/utils'
 import { showWarningInPanel } from 'src/features/transactions/swap/validate'
+import { TransactionDetails } from 'src/features/transactions/TransactionDetails'
 import {
   GasFeeByTransactionType,
   OptimismL1FeeEstimate,
 } from 'src/features/transactions/transactionState/transactionState'
-import { useActiveAccountWithThrow } from 'src/features/wallet/hooks'
 import { formatPrice } from 'src/utils/format'
 
 interface SwapDetailsProps {
@@ -41,11 +34,6 @@ interface SwapDetailsProps {
   onAcceptTrade: () => void
 }
 
-const spacerProps: ComponentProps<typeof Box> = {
-  borderBottomColor: 'backgroundOutline',
-  borderBottomWidth: 1,
-}
-
 export function SwapDetails({
   acceptedTrade,
   dispatch,
@@ -57,8 +45,6 @@ export function SwapDetails({
   onAcceptTrade,
 }: SwapDetailsProps) {
   const { t } = useTranslation()
-  const account = useActiveAccountWithThrow()
-  const theme = useAppTheme()
   const [showInverseRate, setShowInverseRate] = useState(false)
   const { onShowSwapWarning } = useSwapActionHandlers(dispatch)
 
@@ -67,18 +53,19 @@ export function SwapDetails({
   const acceptedRate = getRateToDisplay(acceptedTrade, showInverseRate)
   const rate = getRateToDisplay(trade, showInverseRate)
   const gasFee = useSwapGasFee(gasFeeEstimate, GasSpeed.Urgent, optimismL1Fee)
-  const gasFeeUSD = useUSDGasPrice(acceptedTrade.inputAmount.currency.chainId, gasFee)
 
   const swapWarning = warnings.find(showWarningInPanel)
-  const swapWarningColor = getWarningColor(swapWarning)
+  const showWarning = swapWarning && !newTradeToAccept
+  const onShowWarning = () => onShowSwapWarning(WarningModalType.INFORMATIONAL)
 
   return (
-    <Flex
-      backgroundColor="backgroundContainer"
-      borderRadius="lg"
-      gap="none"
-      spacerProps={spacerProps}>
-      {newTradeToAccept ? (
+    <TransactionDetails
+      chainId={acceptedTrade.inputAmount.currency.chainId}
+      gasFee={gasFee}
+      showWarning={showWarning}
+      warning={swapWarning}
+      onShowWarning={onShowWarning}>
+      {newTradeToAccept && (
         <Flex
           row
           alignItems="center"
@@ -113,28 +100,7 @@ export function SwapDetails({
             </Flex>
           </Flex>
         </Flex>
-      ) : null}
-      {!newTradeToAccept && swapWarning ? (
-        <Button onPress={() => onShowSwapWarning(WarningModalType.INFORMATIONAL)}>
-          <Flex
-            row
-            alignItems="center"
-            backgroundColor={swapWarningColor.background}
-            borderTopEndRadius="lg"
-            borderTopStartRadius="lg"
-            flexGrow={1}
-            gap="xs"
-            p="md">
-            <AlertTriangle color={theme.colors[swapWarningColor?.text]} height={18} width={18} />
-            <Flex flexGrow={1}>
-              <Text color={swapWarningColor.text} variant="subheadSmall">
-                {swapWarning.title}
-              </Text>
-            </Flex>
-            <InfoCircle color={theme.colors.accentTextLightSecondary} height={18} width={18} />
-          </Flex>
-        </Button>
-      ) : null}
+      )}
       <Flex row alignItems="center" gap="xs" justifyContent="space-between" p="md">
         <Text fontWeight="500" variant="subheadSmall">
           {t('Rate')}
@@ -149,15 +115,6 @@ export function SwapDetails({
           </Flex>
         </TouchableOpacity>
       </Flex>
-      <Flex row justifyContent="space-between" p="md">
-        <Text fontWeight="500" variant="subheadSmall">
-          {t('Network fee')}
-        </Text>
-        <Text variant="subheadSmall">${gasFeeUSD}</Text>
-      </Flex>
-      <Box p="md">
-        <AccountDetails address={account?.address} iconSize={24} />
-      </Box>
-    </Flex>
+    </TransactionDetails>
   )
 }

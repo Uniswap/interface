@@ -43,7 +43,6 @@ export const TXN_HISTORY_SIZING = {
   primaryImage: TXN_HISTORY_ICON_SIZE * (2 / 3),
   secondaryImage: TXN_HISTORY_ICON_SIZE * (2 / 3) * (2 / 3),
 }
-const LOADING_SPINNER_SIZE = 20
 
 // Key values needed for rendering transaction history item.
 export interface TransactionSummaryInfo {
@@ -250,7 +249,7 @@ function TransactionSummaryItem({
           </Flex>
           {inProgress ? (
             <Flex alignItems="flex-end" gap="xxxs">
-              <SpinningLoader disabled={queued} size={LOADING_SPINNER_SIZE} />
+              <SpinningLoader disabled={queued} />
               {queued && (
                 <Text color="textSecondary" variant="badge">
                   {t('Queued')}

@@ -573,8 +573,8 @@ export function useSwapGasFee(
   }, [approveGasFee, swapGasFee, optimismL1ApproveFee, optimismL1SwapFee])
 }
 
-// The first shown to the user is implicitly accepted but every subsequent trade
-// update should get an explicit approval
+// The first trade shown to the user is implicitly accepted but every subsequent update to
+// the trade params require an explicit user approval
 export function useAcceptedTrade(trade: NullUndefined<Trade>) {
   const [latestTradeAccepted, setLatestTradeAccepted] = useState<boolean>(false)
   const prevTradeRef = useRef<Trade>()

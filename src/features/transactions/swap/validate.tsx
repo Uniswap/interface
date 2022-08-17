@@ -32,7 +32,6 @@ export function showWarningInPanel(warning: Warning) {
   return warning.severity >= WarningSeverity.Medium
 }
 
-// TODO: add swap warnings for: price impact, router errors, insufficient gas funds, low liquidity
 export function getSwapWarnings(t: TFunction, state: PartialDerivedSwapInfo) {
   const {
     currencyBalances,

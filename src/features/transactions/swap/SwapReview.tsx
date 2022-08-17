@@ -38,9 +38,6 @@ interface SwapFormProps {
   derivedSwapInfo: DerivedSwapInfo
 }
 
-// TODO:
-// -handle price impact too high
-// TODO: token warnings
 export function SwapReview({ dispatch, onNext, onPrev, derivedSwapInfo }: SwapFormProps) {
   const { t } = useTranslation()
   const theme = useAppTheme()
@@ -114,7 +111,6 @@ export function SwapReview({ dispatch, onNext, onPrev, derivedSwapInfo }: SwapFo
   return (
     <>
       <AnimatedFlex alignItems="center" entering={FadeInUp} exiting={FadeOut} flexGrow={1} gap="md">
-        {/* TODO: onPressIn here should go back to prev screen */}
         <Flex gap="sm" mt="xxl">
           <AmountInput
             alignSelf="stretch"
@@ -140,13 +136,11 @@ export function SwapReview({ dispatch, onNext, onPrev, derivedSwapInfo }: SwapFo
             </Text>
           </Flex>
         </Flex>
-
         <TransferArrowButton disabled bg="none" borderColor="none" />
         <Flex centered gap="md">
           <Text color="textSecondary" variant="bodySmall">
             {t('For')}
           </Text>
-          {/* TODO: onPressIn here should go back to prev screen */}
           <Flex gap="sm">
             <AmountInput
               alignSelf="stretch"

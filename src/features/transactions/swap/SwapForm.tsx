@@ -32,6 +32,8 @@ import { CurrencyField } from 'src/features/transactions/transactionState/transa
 import { createTransactionId } from 'src/features/transactions/utils'
 import usePrevious from 'src/utils/hooks'
 
+const LOADING_SPINNER_SIZE = 24
+
 interface SwapFormProps {
   dispatch: Dispatch<AnyAction>
   onNext: () => void
@@ -173,7 +175,9 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo, isCompressedView }
             mx="md"
             position="relative">
             <Box bottom={12} height={24} position="absolute" right={12} width={24}>
-              {swapDataRefreshing ? <SpinningLoader color="textSecondary" size={24} /> : null}
+              {swapDataRefreshing ? (
+                <SpinningLoader color="textSecondary" size={LOADING_SPINNER_SIZE} />
+              ) : null}
             </Box>
             <Flex>
               <Flex pb={swapWarning ? 'xxs' : 'lg'} pt="xs" px="md">
