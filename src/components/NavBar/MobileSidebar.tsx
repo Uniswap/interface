@@ -23,7 +23,7 @@ import { isDevelopmentEnv, isStagingEnv } from 'utils/env'
 import * as styles from './MobileSidebar.css'
 import { NavIcon } from './NavIcon'
 
-interface MenuItemProps {
+interface NavLinkRowProps {
   href: string
   id?: NavLinkProps['id']
   isActive?: boolean
@@ -31,7 +31,7 @@ interface MenuItemProps {
   children: ReactNode
 }
 
-const MenuItem = ({ href, id, isActive, close, children }: MenuItemProps) => {
+const NavLinkRow = ({ href, id, isActive, close, children }: NavLinkRowProps) => {
   return (
     <NavLink to={href} className={isActive ? styles.activeLinkRow : styles.linkRow} id={id} onClick={close}>
       {children}
@@ -156,15 +156,15 @@ export const MobileSideBar = () => {
                 </Box>
               </Row>
               <Column gap="4">
-                <MenuItem href="/swap" close={toggleOpen} isActive={pathname.startsWith('/swap')}>
+                <NavLinkRow href="/swap" close={toggleOpen} isActive={pathname.startsWith('/swap')}>
                   Swap
-                </MenuItem>
-                <MenuItem href="/explore" close={toggleOpen} isActive={pathname.startsWith('/explore')}>
+                </NavLinkRow>
+                <NavLinkRow href="/explore" close={toggleOpen} isActive={pathname.startsWith('/explore')}>
                   Tokens
-                </MenuItem>
-                <MenuItem href="/pool" id={'pool-nav-link'} isActive={isPoolActive} close={toggleOpen}>
+                </NavLinkRow>
+                <NavLinkRow href="/pool" id={'pool-nav-link'} isActive={isPoolActive} close={toggleOpen}>
                   Pool
-                </MenuItem>
+                </NavLinkRow>
               </Column>
               <Seperator />
               <Column gap="4">
