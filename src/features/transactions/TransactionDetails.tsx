@@ -14,7 +14,7 @@ import { getWarningColor } from 'src/components/warnings/utils'
 import { ChainId } from 'src/constants/chains'
 import { useUSDGasPrice } from 'src/features/gas/hooks'
 import { useActiveAccountAddressWithThrow } from 'src/features/wallet/hooks'
-import { formatUSDPrice } from 'src/utils/format'
+import { formatUSDGasPrice } from 'src/utils/format'
 
 const ALERT_ICONS_SIZE = 18
 
@@ -42,7 +42,7 @@ export function TransactionDetails({
   const theme = useAppTheme()
   const { t } = useTranslation()
   const userAddress = useActiveAccountAddressWithThrow()
-  const gasFeeUSD = useUSDGasPrice(chainId, gasFee)
+  const gasFeeUSD = formatUSDGasPrice(useUSDGasPrice(chainId, gasFee))
   const warningColor = getWarningColor(warning)
 
   return (
@@ -85,11 +85,7 @@ export function TransactionDetails({
         <Text fontWeight="500" variant="subheadSmall">
           {t('Network fee')}
         </Text>
-        {gasFeeUSD ? (
-          <Text variant="subheadSmall">{formatUSDPrice(gasFeeUSD.toString())}</Text>
-        ) : (
-          <SpinningLoader />
-        )}
+        {gasFeeUSD ? <Text variant="subheadSmall">{gasFeeUSD}</Text> : <SpinningLoader />}
       </Flex>
       <Box p="md">
         <AccountDetails address={userAddress} iconSize={24} />

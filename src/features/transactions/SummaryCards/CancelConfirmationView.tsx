@@ -12,7 +12,7 @@ import { ElementName } from 'src/features/telemetry/constants'
 import { TransactionDetails } from 'src/features/transactions/types'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { shortenAddress } from 'src/utils/addresses'
-import { formatPrice } from 'src/utils/format'
+import { formatUSDGasPrice } from 'src/utils/format'
 
 const spacerProps: ComponentProps<typeof Box> = {
   borderBottomColor: 'backgroundOutline',
@@ -32,7 +32,9 @@ export function CancelConfirmationView({
   const accountAddress = useActiveAccount()?.address
 
   const { feeInfo, isLoading } = useCancelationGasFeeInfo(transactionDetails)
-  const gasFeeUSD = useUSDGasPrice(transactionDetails.chainId, feeInfo?.fee?.fast)
+  const gasFeeUSD = formatUSDGasPrice(
+    useUSDGasPrice(transactionDetails.chainId, feeInfo?.fee?.fast)
+  )
 
   return (
     <Flex centered grow bg="backgroundSurface" borderRadius="xl" gap="lg" p="lg" pb="xxl">
@@ -58,11 +60,7 @@ export function CancelConfirmationView({
           {isLoading ? (
             <ActivityIndicator />
           ) : (
-            gasFeeUSD && (
-              <Text variant="bodySmall">
-                {formatPrice(gasFeeUSD, { maximumFractionDigits: 2, notation: 'standard' })}
-              </Text>
-            )
+            gasFeeUSD && <Text variant="bodySmall">{gasFeeUSD}</Text>
           )}
         </Flex>
         {accountAddress && (

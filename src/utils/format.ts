@@ -80,6 +80,14 @@ export function formatUSDPrice(price: NullUndefined<number | string>) {
   return formatPrice(price, options)
 }
 
+export function formatUSDGasPrice(price: NullUndefined<number | string>) {
+  if (!price) {
+    return undefined
+  }
+
+  return Number(price) >= 0.01 ? formatUSDPrice(price) : `<${formatUSDPrice(0.01)}`
+}
+
 export function formatNumber(num: NullUndefined<number>) {
   if (!num) {
     return '-'
