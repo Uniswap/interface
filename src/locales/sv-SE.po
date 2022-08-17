@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-11 19:05\n"
+"PO-Revision-Date: 2022-08-17 20:04\n"
 "Last-Translator: \n"
 "Language: sv_SE\n"
 "Language-Team: Swedish\n"
@@ -120,8 +120,8 @@ msgstr "En minimitröskel på 0,25% av det totala UNI-utbudet krävs för att sk
 msgid "A swap of this size may have a high price impact, given the current liquidity in the pool. There may be a large difference between the amount of your input token and what you will receive in the output token"
 msgstr "En swap av denna storlek kan ha en hög prispåverkan, givet den nuvarande likviditeten i poolen. Det kan vara en stor skillnad mellan mängden av din inmatningstoken och vad du kommer att få i utdatatoken"
 
-#: src/components/Explore/TokenDetails/TokenDetail.tsx
 #: src/components/Menu/index.tsx
+#: src/components/Tokens/TokenDetails/TokenDetail.tsx
 msgid "About"
 msgstr "Omkring"
 
@@ -550,9 +550,9 @@ msgstr "Ansluten till"
 msgid "Connecting..."
 msgstr "Ansluter..."
 
-#: src/components/AccountDetails/Copy.tsx
-msgid "Copied"
-msgstr "Kopierad"
+#: src/theme/components.tsx
+msgid "Copied!"
+msgstr "Kopierade!"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Copy Address"
@@ -821,10 +821,6 @@ msgstr "Expertläget stänger av bekräftelsetransaktionen och tillåter handel 
 #: src/pages/Vote/styled.tsx
 msgid "Expired"
 msgstr "Utgånget"
-
-#: src/components/Header/index.tsx
-msgid "Explore"
-msgstr "Utforska"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore Uniswap Analytics."
@@ -1761,7 +1757,7 @@ msgstr "Transaktionen kunde inte skickas eftersom tidsfristen har löpt ut. Kont
 msgid "There is no liquidity data."
 msgstr "Det finns inga likviditetsdata."
 
-#: src/components/Explore/TokenDetails/BalanceSummary.tsx
+#: src/components/Tokens/TokenDetails/BalanceSummary.tsx
 msgid "There was an error loading your {tokenSymbol} balance"
 msgstr "Det uppstod ett fel när ditt {tokenSymbol} -saldo skulle laddas"
 
@@ -1819,7 +1815,7 @@ msgstr "Till"
 msgid "To (at least)"
 msgstr "Till (minst)"
 
-#: src/components/Explore/TokenTable/TokenRow.tsx
+#: src/components/Tokens/TokenTable/TokenRow.tsx
 msgid "Token Name"
 msgstr "Tokennamn"
 
@@ -1827,6 +1823,7 @@ msgstr "Tokennamn"
 msgid "Token not supported"
 msgstr "Token stöds inte"
 
+#: src/components/Header/index.tsx
 #: src/components/SearchModal/Manage.tsx
 msgid "Tokens"
 msgstr "Tokens"

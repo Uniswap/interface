@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { ParentSize } from '@visx/responsive'
-import PriceChart from 'components/Charts/PriceChart'
 import CurrencyLogo from 'components/CurrencyLogo'
+import PriceChart from 'components/Tokens/TokenDetails/PriceChart'
 import { VerifiedIcon } from 'components/TokenSafety/TokenSafetyIcon'
 import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import { getChainInfo } from 'constants/chainInfo'

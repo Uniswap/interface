@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-11 19:04\n"
+"PO-Revision-Date: 2022-08-17 20:04\n"
 "Last-Translator: \n"
 "Language: es_ES\n"
 "Language-Team: Spanish\n"
@@ -120,8 +120,8 @@ msgstr "Se requiere un umbral mínimo del 0,25% del suministro total de UNI para
 msgid "A swap of this size may have a high price impact, given the current liquidity in the pool. There may be a large difference between the amount of your input token and what you will receive in the output token"
 msgstr "Un swap de este tamaño puede tener un alto impacto en el precio, dada la liquidez actual en el grupo. Puede haber una gran diferencia entre la cantidad de su token de entrada y lo que recibirá en el token de salida"
 
-#: src/components/Explore/TokenDetails/TokenDetail.tsx
 #: src/components/Menu/index.tsx
+#: src/components/Tokens/TokenDetails/TokenDetail.tsx
 msgid "About"
 msgstr "Acerca de"
 
@@ -550,9 +550,9 @@ msgstr "Conectado con"
 msgid "Connecting..."
 msgstr "Conectando..."
 
-#: src/components/AccountDetails/Copy.tsx
-msgid "Copied"
-msgstr "Copiado"
+#: src/theme/components.tsx
+msgid "Copied!"
+msgstr "¡Copiado!"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Copy Address"
@@ -821,10 +821,6 @@ msgstr "El modo experto desactiva el indicador de transacción de confirmación 
 #: src/pages/Vote/styled.tsx
 msgid "Expired"
 msgstr "Caducado"
-
-#: src/components/Header/index.tsx
-msgid "Explore"
-msgstr "Explorar"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore Uniswap Analytics."
@@ -1761,7 +1757,7 @@ msgstr "No se pudo enviar la transacción porque la fecha límite ha pasado. Ver
 msgid "There is no liquidity data."
 msgstr "No hay datos de liquidez."
 
-#: src/components/Explore/TokenDetails/BalanceSummary.tsx
+#: src/components/Tokens/TokenDetails/BalanceSummary.tsx
 msgid "There was an error loading your {tokenSymbol} balance"
 msgstr "Hubo un error al cargar tu saldo {tokenSymbol}"
 
@@ -1819,7 +1815,7 @@ msgstr "A"
 msgid "To (at least)"
 msgstr "A (al menos)"
 
-#: src/components/Explore/TokenTable/TokenRow.tsx
+#: src/components/Tokens/TokenTable/TokenRow.tsx
 msgid "Token Name"
 msgstr "Nombre de token"
 
@@ -1827,6 +1823,7 @@ msgstr "Nombre de token"
 msgid "Token not supported"
 msgstr "Token no admitido"
 
+#: src/components/Header/index.tsx
 #: src/components/SearchModal/Manage.tsx
 msgid "Tokens"
 msgstr "Tokens"

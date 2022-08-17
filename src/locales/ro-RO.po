@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-11 19:04\n"
+"PO-Revision-Date: 2022-08-17 20:04\n"
 "Last-Translator: \n"
 "Language: ro_RO\n"
 "Language-Team: Romanian\n"
@@ -120,8 +120,8 @@ msgstr "Pentru depunerea propunerilor este necesar un prag minim de 0,25% din to
 msgid "A swap of this size may have a high price impact, given the current liquidity in the pool. There may be a large difference between the amount of your input token and what you will receive in the output token"
 msgstr "Un swap de această dimensiune poate avea un impact ridicat asupra prețului, având în vedere lichiditatea actuală din pool. Poate fi o diferență mare între cantitatea de jeton de intrare și ceea ce veți primi în jetonul de ieșire"
 
-#: src/components/Explore/TokenDetails/TokenDetail.tsx
 #: src/components/Menu/index.tsx
+#: src/components/Tokens/TokenDetails/TokenDetail.tsx
 msgid "About"
 msgstr "Despre"
 
@@ -550,9 +550,9 @@ msgstr "Conectat cu"
 msgid "Connecting..."
 msgstr "Se conectează..."
 
-#: src/components/AccountDetails/Copy.tsx
-msgid "Copied"
-msgstr "Copiat"
+#: src/theme/components.tsx
+msgid "Copied!"
+msgstr "Copiat!"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Copy Address"
@@ -821,10 +821,6 @@ msgstr "Modul Expert dezactivează prompt tranzacția de confirmare și permite 
 #: src/pages/Vote/styled.tsx
 msgid "Expired"
 msgstr "Expirat"
-
-#: src/components/Header/index.tsx
-msgid "Explore"
-msgstr "Explora"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore Uniswap Analytics."
@@ -1761,7 +1757,7 @@ msgstr "Tranzacția nu a putut fi trimisă deoarece termenul a trecut. Te rugăm
 msgid "There is no liquidity data."
 msgstr "Nu există date privind lichiditatea."
 
-#: src/components/Explore/TokenDetails/BalanceSummary.tsx
+#: src/components/Tokens/TokenDetails/BalanceSummary.tsx
 msgid "There was an error loading your {tokenSymbol} balance"
 msgstr "A apărut o eroare la încărcarea soldului dvs. {tokenSymbol}"
 
@@ -1819,7 +1815,7 @@ msgstr "La"
 msgid "To (at least)"
 msgstr "La (cel puțin)"
 
-#: src/components/Explore/TokenTable/TokenRow.tsx
+#: src/components/Tokens/TokenTable/TokenRow.tsx
 msgid "Token Name"
 msgstr "Nume simbol"
 
@@ -1827,6 +1823,7 @@ msgstr "Nume simbol"
 msgid "Token not supported"
 msgstr "Tokenul nu este acceptat"
 
+#: src/components/Header/index.tsx
 #: src/components/SearchModal/Manage.tsx
 msgid "Tokens"
 msgstr "Jetoane"
