@@ -4,8 +4,8 @@ import { localPoint } from '@visx/event'
 import { EventType } from '@visx/event/lib/types'
 import { GlyphCircle } from '@visx/glyph'
 import { Line } from '@visx/shape'
-import { filterTimeAtom } from 'components/Explore/state'
-import { bisect, curveBasis, NumberValue, ScaleLinear, scaleLinear } from 'd3'
+import { filterTimeAtom } from 'components/Tokens/state'
+import { bisect, curveBasis, NumberValue, scaleLinear } from 'd3'
 import { useTokenPriceQuery } from 'graphql/data/TokenPriceQuery'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import { TimePeriod } from 'hooks/useExplorePageQuery'
@@ -24,7 +24,7 @@ import {
   weekFormatter,
 } from 'utils/formatChartTimes'
 
-import LineChart from './LineChart'
+import LineChart from '../../Charts/LineChart'
 
 // TODO: This should be combined with the logic in TimeSelector.
 const TIME_DISPLAYS: [TimePeriod, string][] = [
@@ -184,7 +184,7 @@ export function PriceChart({ width, height, token }: PriceChartProps) {
       setCrosshair(timeScale(pricePoint.timestamp))
       setDisplayPrice(pricePoint)
     },
-    [pricePoints]
+    [timeScale, pricePoints]
   )
 
   const hasData = pricePoints.length !== 0
