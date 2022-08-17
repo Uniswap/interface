@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-11 19:05\n"
+"PO-Revision-Date: 2022-08-17 20:05\n"
 "Last-Translator: \n"
 "Language: th_TH\n"
 "Language-Team: Thai\n"
@@ -120,8 +120,8 @@ msgstr "เกณฑ์ขั้นต่ำ 0.25% ของอุปทาน U
 msgid "A swap of this size may have a high price impact, given the current liquidity in the pool. There may be a large difference between the amount of your input token and what you will receive in the output token"
 msgstr "การแลกเปลี่ยนขนาดนี้อาจมีผลกระทบต่อราคาสูง เมื่อพิจารณาจากสภาพคล่องในปัจจุบันในกลุ่ม อาจมีความแตกต่างกันมากระหว่างจำนวนโทเค็นอินพุตของคุณกับสิ่งที่คุณจะได้รับในโทเค็นเอาต์พุต"
 
-#: src/components/Explore/TokenDetails/TokenDetail.tsx
 #: src/components/Menu/index.tsx
+#: src/components/Tokens/TokenDetails/TokenDetail.tsx
 msgid "About"
 msgstr "เกี่ยวกับ"
 
@@ -550,9 +550,9 @@ msgstr "เชื่อมต่อกับ"
 msgid "Connecting..."
 msgstr "กำลังเชื่อมต่อ..."
 
-#: src/components/AccountDetails/Copy.tsx
-msgid "Copied"
-msgstr "คัดลอกแล้ว"
+#: src/theme/components.tsx
+msgid "Copied!"
+msgstr "คัดลอก!"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Copy Address"
@@ -821,10 +821,6 @@ msgstr "โหมดผู้เชี่ยวชาญจะปิดการ
 #: src/pages/Vote/styled.tsx
 msgid "Expired"
 msgstr "หมดอายุ"
-
-#: src/components/Header/index.tsx
-msgid "Explore"
-msgstr "สำรวจ"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore Uniswap Analytics."
@@ -1761,7 +1757,7 @@ msgstr "ไม่สามารถส่งธุรกรรมได้เน
 msgid "There is no liquidity data."
 msgstr "ไม่มีข้อมูลสภาพคล่อง"
 
-#: src/components/Explore/TokenDetails/BalanceSummary.tsx
+#: src/components/Tokens/TokenDetails/BalanceSummary.tsx
 msgid "There was an error loading your {tokenSymbol} balance"
 msgstr "เกิดข้อผิดพลาดในการโหลดยอดคงเหลือ {tokenSymbol} ของคุณ"
 
@@ -1819,7 +1815,7 @@ msgstr "ถึง"
 msgid "To (at least)"
 msgstr "ถึง (อย่างน้อย)"
 
-#: src/components/Explore/TokenTable/TokenRow.tsx
+#: src/components/Tokens/TokenTable/TokenRow.tsx
 msgid "Token Name"
 msgstr "ชื่อโทเค็น"
 
@@ -1827,6 +1823,7 @@ msgstr "ชื่อโทเค็น"
 msgid "Token not supported"
 msgstr "ไม่รองรับโทเค็น"
 
+#: src/components/Header/index.tsx
 #: src/components/SearchModal/Manage.tsx
 msgid "Tokens"
 msgstr "โทเค็น"

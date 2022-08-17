@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-11 19:05\n"
+"PO-Revision-Date: 2022-08-17 20:04\n"
 "Last-Translator: \n"
 "Language: zh_CN\n"
 "Language-Team: Chinese Simplified\n"
@@ -120,8 +120,8 @@ msgstr "提交提案所需的最低门槛为 UNI 总供应量的 0.25%"
 msgid "A swap of this size may have a high price impact, given the current liquidity in the pool. There may be a large difference between the amount of your input token and what you will receive in the output token"
 msgstr "鉴于池中当前的流动性，这种规模的掉期可能会对价格产生很大影响。您的输入令牌数量与您将在输出令牌中收到的数量之间可能存在很大差异"
 
-#: src/components/Explore/TokenDetails/TokenDetail.tsx
 #: src/components/Menu/index.tsx
+#: src/components/Tokens/TokenDetails/TokenDetail.tsx
 msgid "About"
 msgstr "关于"
 
@@ -550,9 +550,9 @@ msgstr "与"
 msgid "Connecting..."
 msgstr "正在连接..."
 
-#: src/components/AccountDetails/Copy.tsx
-msgid "Copied"
-msgstr "已复制"
+#: src/theme/components.tsx
+msgid "Copied!"
+msgstr "复制！"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Copy Address"
@@ -821,10 +821,6 @@ msgstr "“专家模式”将解除确认交易的提示，并允许兑换率高
 #: src/pages/Vote/styled.tsx
 msgid "Expired"
 msgstr "已过期"
-
-#: src/components/Header/index.tsx
-msgid "Explore"
-msgstr "探索"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore Uniswap Analytics."
@@ -1761,7 +1757,7 @@ msgstr "由于期限已过，因此无法发送交易。请检查您的交易截
 msgid "There is no liquidity data."
 msgstr "没有流动性数据。"
 
-#: src/components/Explore/TokenDetails/BalanceSummary.tsx
+#: src/components/Tokens/TokenDetails/BalanceSummary.tsx
 msgid "There was an error loading your {tokenSymbol} balance"
 msgstr "加载您的 {tokenSymbol} 余额时出错"
 
@@ -1819,7 +1815,7 @@ msgstr "兑换到"
 msgid "To (at least)"
 msgstr "兑换到(至少数额)"
 
-#: src/components/Explore/TokenTable/TokenRow.tsx
+#: src/components/Tokens/TokenTable/TokenRow.tsx
 msgid "Token Name"
 msgstr "令牌名称"
 
@@ -1827,6 +1823,7 @@ msgstr "令牌名称"
 msgid "Token not supported"
 msgstr "不支持该代币"
 
+#: src/components/Header/index.tsx
 #: src/components/SearchModal/Manage.tsx
 msgid "Tokens"
 msgstr "代币"
