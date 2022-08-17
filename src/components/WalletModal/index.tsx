@@ -15,6 +15,7 @@ import { AutoColumn } from 'components/Column'
 import { AutoRow } from 'components/Row'
 import { ConnectionType } from 'connection'
 import { getConnection, getConnectionName, getIsCoinbaseWallet, getIsInjected, getIsMetaMask } from 'connection/utils'
+import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import { useCurrencyBalances } from 'lib/hooks/useCurrencyBalance'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
@@ -59,25 +60,30 @@ const CloseColor = styled(Close)`
   }
 `
 
-const Wrapper = styled.div`
+const Wrapper = styled.div<{ redesignFlag?: boolean }>`
   ${({ theme }) => theme.flexColumnNoWrap}
+  background-color: ${({ redesignFlag, theme }) => redesignFlag && theme.backgroundSurface};
+  outline: ${({ theme, redesignFlag }) => redesignFlag && `1px solid ${theme.backgroundOutline}`};
+  box-shadow: ${({ redesignFlag, theme }) => redesignFlag && theme.deepShadow};
   margin: 0;
   padding: 0;
   width: 100%;
 `
 
-const HeaderRow = styled.div`
+const HeaderRow = styled.div<{ redesignFlag?: boolean }>`
   ${({ theme }) => theme.flexRowNoWrap};
   padding: 1rem 1rem;
-  font-weight: 500;
+  font-weight: ${({ redesignFlag }) => (redesignFlag ? '600' : '500')};
+  size: ${({ redesignFlag }) => redesignFlag && '16px'};
   color: ${(props) => (props.color === 'blue' ? ({ theme }) => theme.deprecated_primary1 : 'inherit')};
   ${({ theme }) => theme.mediaWidth.upToMedium`
     padding: 1rem;
   `};
 `
 
-const ContentWrapper = styled.div`
-  background-color: ${({ theme }) => theme.deprecated_bg0};
+const ContentWrapper = styled.div<{ redesignFlag?: boolean }>`
+  background-color: ${({ theme, redesignFlag }) => (redesignFlag ? theme.backgroundSurface : theme.deprecated_bg0)};
+  border: ${({ theme, redesignFlag }) => redesignFlag && `1px solid ${theme.backgroundOutline}`};
   padding: 0 1rem 1rem 1rem;
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
@@ -183,6 +189,8 @@ export default function WalletModal({
   const { connector, account, chainId } = useWeb3React()
   const [connectedWallets, addWalletToConnectedWallets] = useConnectedWallets()
 
+  const redesignFlag = useRedesignFlag()
+  const redesignFlagEnabled = redesignFlag === RedesignVariant.Enabled
   const [walletView, setWalletView] = useState(WALLET_VIEWS.ACCOUNT)
   const [lastActiveWalletAddress, setLastActiveWalletAddress] = useState<string | undefined>(account)
   const [shouldLogWalletBalances, setShouldLogWalletBalances] = useState(false)
@@ -357,9 +365,7 @@ export default function WalletModal({
     }
 
     let headerRow
-    if (walletView === WALLET_VIEWS.PENDING) {
-      headerRow = null
-    } else if (walletView === WALLET_VIEWS.ACCOUNT || !!account) {
+    if (walletView === WALLET_VIEWS.PENDING || walletView === WALLET_VIEWS.ACCOUNT || !!account) {
       headerRow = (
         <HeaderRow color="blue">
           <HoverText onClick={() => setWalletView(account ? WALLET_VIEWS.ACCOUNT : WALLET_VIEWS.OPTIONS)}>
@@ -369,11 +375,44 @@ export default function WalletModal({
       )
     } else {
       headerRow = (
-        <HeaderRow>
+        <HeaderRow redesignFlag={redesignFlagEnabled}>
           <HoverText>
             <Trans>Connect a wallet</Trans>
           </HoverText>
         </HeaderRow>
+      )
+    }
+
+    function getTermsOfService(redesignFlagEnabled: boolean) {
+      return redesignFlagEnabled ? (
+        <AutoRow style={{ flexWrap: 'nowrap', padding: '4px 16px' }}>
+          <ThemedText.BodySecondary fontSize={12}>
+            <Trans>
+              By connecting a wallet, you agree to Uniswap Labs’{' '}
+              <ExternalLink href="https://uniswap.org/terms-of-service/">Terms of Service</ExternalLink> and acknowledge
+              that you have read and understand the Uniswap{' '}
+              <ExternalLink href="https://uniswap.org/disclaimer/">Protocol Disclaimer</ExternalLink>.
+            </Trans>
+          </ThemedText.BodySecondary>
+        </AutoRow>
+      ) : (
+        <LightCard>
+          <AutoRow style={{ flexWrap: 'nowrap' }}>
+            <ThemedText.DeprecatedBody fontSize={12}>
+              <Trans>
+                By connecting a wallet, you agree to Uniswap Labs’{' '}
+                <ExternalLink style={{ textDecoration: 'underline' }} href="https://uniswap.org/terms-of-service/">
+                  Terms of Service
+                </ExternalLink>{' '}
+                and acknowledge that you have read and understand the Uniswap{' '}
+                <ExternalLink style={{ textDecoration: 'underline' }} href="https://uniswap.org/disclaimer/">
+                  Protocol Disclaimer
+                </ExternalLink>
+                .
+              </Trans>
+            </ThemedText.DeprecatedBody>
+          </AutoRow>
+        </LightCard>
       )
     }
 
@@ -394,28 +433,7 @@ export default function WalletModal({
               />
             )}
             {walletView !== WALLET_VIEWS.PENDING && <OptionGrid data-testid="option-grid">{getOptions()}</OptionGrid>}
-            {!pendingError && (
-              <LightCard>
-                <AutoRow style={{ flexWrap: 'nowrap' }}>
-                  <ThemedText.DeprecatedBody fontSize={12}>
-                    <Trans>
-                      By connecting a wallet, you agree to Uniswap Labs’{' '}
-                      <ExternalLink
-                        style={{ textDecoration: 'underline' }}
-                        href="https://uniswap.org/terms-of-service/"
-                      >
-                        Terms of Service
-                      </ExternalLink>{' '}
-                      and acknowledge that you have read and understand the Uniswap{' '}
-                      <ExternalLink style={{ textDecoration: 'underline' }} href="https://uniswap.org/disclaimer/">
-                        Protocol Disclaimer
-                      </ExternalLink>
-                      .
-                    </Trans>
-                  </ThemedText.DeprecatedBody>
-                </AutoRow>
-              </LightCard>
-            )}
+            {!pendingError && getTermsOfService(redesignFlagEnabled)}
           </AutoColumn>
         </ContentWrapper>
       </UpperSection>
@@ -423,8 +441,14 @@ export default function WalletModal({
   }
 
   return (
-    <Modal isOpen={walletModalOpen} onDismiss={toggleWalletModal} minHeight={false} maxHeight={90}>
-      <Wrapper>{getModalContent()}</Wrapper>
+    <Modal
+      isOpen={walletModalOpen}
+      onDismiss={toggleWalletModal}
+      minHeight={false}
+      maxHeight={90}
+      redesignFlag={redesignFlagEnabled}
+    >
+      <Wrapper redesignFlag={redesignFlagEnabled}>{getModalContent()}</Wrapper>
     </Modal>
   )
 }

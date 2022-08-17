@@ -9,7 +9,7 @@ import { isMobile } from '../../utils/userAgent'
 
 const AnimatedDialogOverlay = animated(DialogOverlay)
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const StyledDialogOverlay = styled(AnimatedDialogOverlay)`
+const StyledDialogOverlay = styled(AnimatedDialogOverlay)<{ redesignFlag?: boolean }>`
   &[data-reach-dialog-overlay] {
     z-index: 2;
     background-color: transparent;
@@ -19,7 +19,7 @@ const StyledDialogOverlay = styled(AnimatedDialogOverlay)`
     align-items: center;
     justify-content: center;
 
-    background-color: ${({ theme }) => theme.deprecated_modalBG};
+    background-color: ${({ theme, redesignFlag }) => (redesignFlag ? theme.backgroundScrim : theme.deprecated_modalBG)};
   }
 `
 
@@ -84,6 +84,7 @@ interface ModalProps {
   maxHeight?: number
   initialFocusRef?: React.RefObject<any>
   children?: React.ReactNode
+  redesignFlag?: boolean
 }
 
 export default function Modal({
@@ -93,6 +94,7 @@ export default function Modal({
   maxHeight = 90,
   initialFocusRef,
   children,
+  redesignFlag,
 }: ModalProps) {
   const fadeTransition = useTransition(isOpen, null, {
     config: { duration: 200 },
@@ -124,6 +126,7 @@ export default function Modal({
               onDismiss={onDismiss}
               initialFocusRef={initialFocusRef}
               unstable_lockFocusAcrossFrames={false}
+              redesignFlag={redesignFlag}
             >
               <StyledDialogContent
                 {...(isMobile
