@@ -41,8 +41,10 @@ export function useSwapCallArguments(
   return useMemo(() => {
     if (!trade || !recipient || !provider || !account || !chainId || !deadline) return []
 
-    // swap options shared by v3 and v2+v3 swap routers
-    const sharedSwapOptions = {
+    const swapRouterAddress = chainId ? SWAP_ROUTER_ADDRESSES[chainId] : undefined
+    if (!swapRouterAddress) return []
+
+    const { value, calldata } = SwapRouter.swapCallParameters(trade, {
       fee: feeOptions,
       recipient,
       slippageTolerance: allowedSlippage,
@@ -66,13 +68,7 @@ export function useSwapCallArguments(
                   },
           }
         : {}),
-    }
 
-    const swapRouterAddress = chainId ? SWAP_ROUTER_ADDRESSES[chainId] : undefined
-    if (!swapRouterAddress) return []
-
-    const { value, calldata } = SwapRouter.swapCallParameters(trade, {
-      ...sharedSwapOptions,
       deadlineOrPreviousBlockhash: deadline.toString(),
     })
 
