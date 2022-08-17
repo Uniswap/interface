@@ -1,3 +1,4 @@
+import clsx from 'clsx'
 import uriToHttp from 'lib/utils/uriToHttp'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
@@ -63,14 +64,9 @@ export const CollectionRow = ({ collection, isHovered, setHoveredIndex, toggleOp
             as="img"
             src={collection.imageUrl}
             alt={collection.name}
-            className={styles.suggestionImage}
+            className={clsx(loaded ? styles.suggestionImage : styles.imageHolder)}
             onError={() => setBrokenImage(true)}
             onLoad={() => setLoaded(true)}
-            style={{
-              background: loaded
-                ? 'none'
-                : 'radial-gradient(167.86% 167.86% at -21.43% -50%, #4C82FB 0%, #09265E 100%)',
-            }}
           />
         ) : (
           <Box className={styles.imageHolder} />
@@ -147,14 +143,9 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index 
             as="img"
             src={token.logoURI.includes('ipfs://') ? uriToHttp(token.logoURI)[0] : token.logoURI}
             alt={token.name}
-            className={styles.suggestionImage}
+            className={clsx(loaded ? styles.suggestionImage : styles.imageHolder)}
             onError={() => setBrokenImage(true)}
             onLoad={() => setLoaded(true)}
-            style={{
-              background: loaded
-                ? 'none'
-                : 'radial-gradient(167.86% 167.86% at -21.43% -50%, #4C82FB 0%, #09265E 100%)',
-            }}
           />
         ) : (
           <Box className={styles.imageHolder} />
