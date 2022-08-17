@@ -1,7 +1,7 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { Alert } from 'react-native'
+import { Alert, StyleSheet } from 'react-native'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import FaceIcon from 'src/assets/icons/faceid.svg'
@@ -51,15 +51,20 @@ export function SecuritySetupScreen({ navigation: { navigate } }: Props) {
   return (
     <OnboardingScreen
       subtitle={t(
-        'Make sure that you’re the only person who can access your app and make transactions.'
+        'Make sure that you’re the only person who can access your app or make transactions by turning on FaceID.'
       )}
-      title={t('Turn on Face ID')}>
+      title={t('Protect your wallet')}>
       <Flex grow alignItems="center" justifyContent="space-between">
-        <Box bg="backgroundAction" borderRadius="lg" p="lg">
-          <FaceIcon color={theme.colors.textSecondary} height={100} width={100} />
-        </Box>
-
-        <Flex alignItems="center" gap="sm" justifyContent="flex-end" width="100%">
+        <Flex centered grow>
+          <Box
+            borderColor="backgroundAction"
+            borderRadius="xl"
+            borderWidth={4}
+            style={styles.faceView}>
+            <FaceIcon color={theme.colors.textSecondary} height={58} width={58} />
+          </Box>
+        </Flex>
+        <Flex alignItems="center" justifyContent="flex-end" width="100%">
           <TextButton
             alignSelf="stretch"
             borderColor="backgroundOutline"
@@ -89,3 +94,11 @@ export function SecuritySetupScreen({ navigation: { navigate } }: Props) {
     </OnboardingScreen>
   )
 }
+
+const styles = StyleSheet.create({
+  faceView: {
+    paddingBottom: 94,
+    paddingHorizontal: 32,
+    paddingTop: 70,
+  },
+})
