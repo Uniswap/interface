@@ -22,10 +22,7 @@ const ChainRow = ({
   targetChain: SupportedChainId
   onSelectChain: (targetChain: number) => void
 }) => {
-  const { provider, chainId } = useWeb3React()
-  if (!provider || !chainId) {
-    return null
-  }
+  const { chainId } = useWeb3React()
   const active = chainId === targetChain
   const { label, logoUrl } = getChainInfo(targetChain)
 
@@ -52,6 +49,7 @@ const NETWORK_SELECTOR_CHAINS = [
   SupportedChainId.POLYGON,
   SupportedChainId.OPTIMISM,
   SupportedChainId.ARBITRUM_ONE,
+  SupportedChainId.CELO,
 ]
 
 interface ChainSwitcherProps {
