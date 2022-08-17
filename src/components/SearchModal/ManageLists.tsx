@@ -12,11 +12,10 @@ import { ChangeEvent, memo, useCallback, useEffect, useMemo, useRef, useState } 
 import { CheckCircle, Settings } from 'react-feather'
 import { usePopper } from 'react-popper'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
-import styled from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components/macro'
 
 import { useFetchListCallback } from '../../hooks/useFetchListCallback'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
-import useTheme from '../../hooks/useTheme'
 import useToggle from '../../hooks/useToggle'
 import { acceptListUpdate, disableList, enableList, removeList } from '../../state/lists/actions'
 import { useActiveListUrls, useAllLists, useIsListActive } from '../../state/lists/hooks'

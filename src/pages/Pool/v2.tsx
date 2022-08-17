@@ -5,11 +5,11 @@ import { PageName } from 'components/AmplitudeAnalytics/constants'
 import { Trace } from 'components/AmplitudeAnalytics/Trace'
 import { UNSUPPORTED_V2POOL_CHAIN_IDS } from 'constants/chains'
 import JSBI from 'jsbi'
-import { useContext, useMemo } from 'react'
+import { useMemo } from 'react'
 import { ChevronsRight } from 'react-feather'
 import { Link } from 'react-router-dom'
 import { Text } from 'rebass'
-import styled, { ThemeContext } from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components/macro'
 
 import { ButtonOutlined, ButtonPrimary, ButtonSecondary } from '../../components/Button'
 import Card from '../../components/Card'
@@ -29,6 +29,10 @@ import { ExternalLink, HideSmall, ThemedText } from '../../theme'
 const PageWrapper = styled(AutoColumn)`
   max-width: 640px;
   width: 100%;
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    padding: 0px 8px;
+  `};
 `
 
 const VoteCard = styled(DataCard)`
@@ -84,7 +88,7 @@ const Layer2Prompt = styled(EmptyProposals)`
 `
 
 export default function Pool() {
-  const theme = useContext(ThemeContext)
+  const theme = useTheme()
   const { account, chainId } = useWeb3React()
   const unsupportedV2Network = chainId && UNSUPPORTED_V2POOL_CHAIN_IDS.includes(chainId)
 

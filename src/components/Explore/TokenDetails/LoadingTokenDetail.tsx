@@ -1,5 +1,4 @@
-import useTheme from 'hooks/useTheme'
-import styled from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components/macro'
 
 import { DeltaContainer, TokenPrice } from '../../Charts/PriceChart'
 import { LoadingBubble } from '../loading'

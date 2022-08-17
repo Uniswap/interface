@@ -5,10 +5,10 @@ import { useWeb3React } from '@web3-react/core'
 import { sendEvent } from 'components/analytics'
 import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
 import { isSupportedChainId } from 'lib/hooks/routing/clientSideSmartOrderRouter'
-import { useContext, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import { Settings, X } from 'react-feather'
 import { Text } from 'rebass'
-import styled, { ThemeContext } from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components/macro'
 
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 import { useModalIsOpen, useToggleSettingsMenu } from '../../state/application/hooks'
@@ -130,7 +130,7 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
   const open = useModalIsOpen(ApplicationModal.SETTINGS)
   const toggle = useToggleSettingsMenu()
 
-  const theme = useContext(ThemeContext)
+  const theme = useTheme()
 
   const [expertMode, toggleExpertMode] = useExpertModeManager()
 

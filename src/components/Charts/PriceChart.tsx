@@ -7,11 +7,10 @@ import { filterTimeAtom } from 'components/Explore/state'
 import { bisect, curveBasis, NumberValue, scaleLinear } from 'd3'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import { TimePeriod } from 'hooks/useExplorePageQuery'
-import useTheme from 'hooks/useTheme'
 import { useAtom } from 'jotai'
 import { useCallback, useState } from 'react'
 import { ArrowDownRight, ArrowUpRight } from 'react-feather'
-import styled from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components/macro'
 import { OPACITY_HOVER } from 'theme'
 import {
   dayHourFormatter,
