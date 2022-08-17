@@ -1,5 +1,4 @@
-import useTheme from 'hooks/useTheme'
-import styled from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components/macro'
 
 const Balance = styled.div`
   width: 100%;

@@ -6,9 +6,9 @@ import { LoadingRows } from 'components/Loader/styled'
 import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'
 import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
-import { useContext, useMemo } from 'react'
+import { useMemo } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
-import styled, { ThemeContext } from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components/macro'
 
 import { Separator, ThemedText } from '../../theme'
 import { computeRealizedPriceImpact } from '../../utils/prices'
@@ -52,7 +52,7 @@ export function AdvancedSwapDetails({
   syncing = false,
   hideInfoTooltips = false,
 }: AdvancedSwapDetailsProps) {
-  const theme = useContext(ThemeContext)
+  const theme = useTheme()
   const { chainId } = useWeb3React()
   const nativeCurrency = useNativeCurrency()
   const redesignFlag = useRedesignFlag()
