@@ -195,14 +195,12 @@ export default function Option({
         >
           <OptionCardLeft>
             <HeaderText color={color} redesignFlag={false}>
-              {isActive ? (
+              {isActive && (
                 <CircleWrapper>
                   <GreenCircle>
                     <div />
                   </GreenCircle>
                 </CircleWrapper>
-              ) : (
-                ''
               )}
               {header}
             </HeaderText>
