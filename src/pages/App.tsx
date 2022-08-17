@@ -4,9 +4,9 @@ import { Trace } from 'components/AmplitudeAnalytics/Trace'
 import Loader from 'components/Loader'
 import TopLevelModals from 'components/TopLevelModals'
 import { useFeatureFlagsIsLoaded } from 'featureFlags'
-import { ExploreVariant, useExploreFlag } from 'featureFlags/flags/explore'
 import { NavBarVariant, useNavBarFlag } from 'featureFlags/flags/navBar'
 import { Phase1Variant, usePhase1Flag } from 'featureFlags/flags/phase1'
+import { TokensVariant, useTokensFlag } from 'featureFlags/flags/tokens'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
 import { lazy, Suspense, useEffect } from 'react'
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
@@ -107,7 +107,7 @@ const LazyLoadSpinner = () => (
 
 export default function App() {
   const isLoaded = useFeatureFlagsIsLoaded()
-  const exploreFlag = useExploreFlag()
+  const tokensFlag = useTokensFlag()
   const navBarFlag = useNavBarFlag()
   const phase1Flag = usePhase1Flag()
 
@@ -156,7 +156,7 @@ export default function App() {
             <Suspense fallback={<Loader />}>
               {isLoaded ? (
                 <Routes>
-                  {exploreFlag === ExploreVariant.Enabled && (
+                  {tokensFlag === TokensVariant.Enabled && (
                     <>
                       <Route path="/tokens" element={<Explore />} />
                       <Route path="/tokens/:tokenAddress" element={<TokenDetails />} />

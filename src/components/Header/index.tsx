@@ -3,7 +3,7 @@ import useScrollPosition from '@react-hook/window-scroll'
 import { useWeb3React } from '@web3-react/core'
 import { getChainInfoOrDefault } from 'constants/chainInfo'
 import { SupportedChainId } from 'constants/chains'
-import { ExploreVariant, useExploreFlag } from 'featureFlags/flags/explore'
+import { TokensVariant, useTokensFlag } from 'featureFlags/flags/tokens'
 import useTheme from 'hooks/useTheme'
 import { darken } from 'polished'
 import { NavLink, useLocation } from 'react-router-dom'
@@ -245,7 +245,7 @@ const StyledExternalLink = styled(ExternalLink)`
 `
 
 export default function Header() {
-  const exploreFlag = useExploreFlag()
+  const tokensFlag = useTokensFlag()
 
   const { account, chainId } = useWeb3React()
 
@@ -292,8 +292,8 @@ export default function Header() {
         <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
           <Trans>Swap</Trans>
         </StyledNavLink>
-        {exploreFlag === ExploreVariant.Enabled && (
-          <StyledNavLink id={`explore-nav-link`} to={'/tokens'}>
+        {tokensFlag === TokensVariant.Enabled && (
+          <StyledNavLink id={`tokens-nav-link`} to={'/tokens'}>
             <Trans>Tokens</Trans>
           </StyledNavLink>
         )}
