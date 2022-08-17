@@ -13,7 +13,7 @@ import { darkTheme } from '../nft/themes/darkTheme'
 import { lightTheme } from '../nft/themes/lightTheme'
 import { useIsDarkMode } from '../state/user/hooks'
 import { colors as ColorsPalette, colorsDark, colorsLight } from './colors'
-import { Colors, ThemeColors } from './styled'
+import { AllColors, Colors, ThemeColors } from './styled'
 import { opacify } from './utils'
 
 export * from './components'
@@ -77,6 +77,7 @@ function uniswapThemeColors(darkMode: boolean): ThemeColors {
     accentSuccess: darkMode ? colorsDark.accentSuccess : colorsLight.accentSuccess,
     accentWarning: darkMode ? colorsDark.accentWarning : colorsLight.accentWarning,
     accentFailure: darkMode ? colorsDark.accentFailure : colorsLight.accentFailure,
+    accentCritical: darkMode ? colorsDark.accentCritical : colorsLight.accentCritical,
 
     accentActionSoft: darkMode ? colorsDark.accentActionSoft : colorsLight.accentActionSoft,
     accentActiveSoft: darkMode ? colorsDark.accentActiveSoft : colorsLight.accentActiveSoft,
@@ -111,6 +112,7 @@ function uniswapThemeColors(darkMode: boolean): ThemeColors {
     blue200: ColorsPalette.blue200,
     flyoutDropShadow:
       '0px 24px 32px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 0px 1px rgba(0, 0, 0, 0.12)',
+    deepShadow: darkMode ? colorsDark.deepShadow : colorsLight.deepShadow,
     hoverState: opacify(24, ColorsPalette.blue200),
     hoverDefault: opacify(8, ColorsPalette.gray200),
   }
@@ -280,7 +282,7 @@ export default function ThemeProvider({ children }: { children: React.ReactNode 
   return <StyledComponentsThemeProvider theme={themeObject}>{children}</StyledComponentsThemeProvider>
 }
 
-const TextWrapper = styled(Text)<{ color: keyof Colors }>`
+const TextWrapper = styled(Text)<{ color: keyof AllColors }>`
   color: ${({ color, theme }) => (theme as any)[color]};
 `
 
@@ -294,6 +296,9 @@ export const ThemedText = {
   DeprecatedLink(props: TextProps) {
     return <TextWrapper fontWeight={500} color={'deprecated_primary1'} {...props} />
   },
+  Link(props: TextProps) {
+    return <TextWrapper fontWeight={600} fontSize={14} color={'accentAction'} {...props} />
+  },
   DeprecatedLabel(props: TextProps) {
     return <TextWrapper fontWeight={600} color={'deprecated_text1'} {...props} />
   },
@@ -306,14 +311,26 @@ export const ThemedText = {
   DeprecatedBody(props: TextProps) {
     return <TextWrapper fontWeight={400} fontSize={16} color={'deprecated_text1'} {...props} />
   },
+  BodySecondary(props: TextProps) {
+    return <TextWrapper fontWeight={400} fontSize={16} color={'textSecondary'} {...props} />
+  },
+  BodyPrimary(props: TextProps) {
+    return <TextWrapper fontWeight={400} fontSize={16} color={'textPrimary'} {...props} />
+  },
   DeprecatedLargeHeader(props: TextProps) {
     return <TextWrapper fontWeight={600} fontSize={24} {...props} />
   },
   DeprecatedMediumHeader(props: TextProps) {
     return <TextWrapper fontWeight={500} fontSize={20} {...props} />
   },
+  MediumHeader(props: TextProps) {
+    return <TextWrapper fontWeight={400} fontSize={20} color={'textPrimary'} {...props} />
+  },
   DeprecatedSubHeader(props: TextProps) {
     return <TextWrapper fontWeight={400} fontSize={14} {...props} />
+  },
+  SubHeader(props: TextProps) {
+    return <TextWrapper fontWeight={600} fontSize={16} color={'textPrimary'} {...props} />
   },
   DeprecatedSmall(props: TextProps) {
     return <TextWrapper fontWeight={500} fontSize={11} {...props} />
