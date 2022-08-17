@@ -2,10 +2,6 @@ overrideExisting: true
 schema: 'https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3'
 documents: 'src/**/!(*.d).{ts,tsx}'
 generates:
-  ./src/state/data/generated.ts:
+  ./src/graphql/schema/schema.graphql:
     plugins:
-      - typescript
-      - typescript-operations
-      - typescript-rtk-query:
-          importBaseApiFrom: './slice'
-          exportHooks: true
+      - schema-ast

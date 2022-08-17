@@ -1,8 +1,8 @@
 import { FeatureFlag, featureFlagSettings, useUpdateFlag } from 'featureFlags'
-import { ExploreVariant, useExploreFlag } from 'featureFlags/flags/explore'
 import { NavBarVariant, useNavBarFlag } from 'featureFlags/flags/navBar'
 import { Phase1Variant, usePhase1Flag } from 'featureFlags/flags/phase1'
 import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
+import { TokensVariant, useTokensFlag } from 'featureFlags/flags/tokens'
 import { TokenSafetyVariant, useTokenSafetyFlag } from 'featureFlags/flags/tokenSafety'
 import { useAtomValue } from 'jotai/utils'
 import { ReactNode, useState } from 'react'
@@ -184,10 +184,10 @@ export default function FeatureFlagModal() {
         label="NavBar"
       />
       <FeatureFlagOption
-        variants={Object.values(ExploreVariant)}
-        value={useExploreFlag()}
-        featureFlag={FeatureFlag.explore}
-        label="Explore"
+        variants={Object.values(TokensVariant)}
+        value={useTokensFlag()}
+        featureFlag={FeatureFlag.tokens}
+        label="Tokens"
       />
       <FeatureFlagOption
         variants={Object.values(TokenSafetyVariant)}

@@ -1,14 +1,13 @@
-import { skipToken } from '@reduxjs/toolkit/query/react'
 import { Currency } from '@uniswap/sdk-core'
 import { FeeAmount, nearestUsableTick, Pool, TICK_SPACINGS, tickToPrice } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { SupportedChainId } from 'constants/chains'
 import { ZERO_ADDRESS } from 'constants/misc'
+import useAllV3TicksQuery, { TickData } from 'graphql/AllV3TicksQuery'
 import JSBI from 'jsbi'
 import { useSingleContractMultipleData } from 'lib/hooks/multicall'
 import ms from 'ms.macro'
 import { useEffect, useMemo, useState } from 'react'
-import { useAllV3TicksQuery } from 'state/data/enhanced'
 import computeSurroundingTicks from 'utils/computeSurroundingTicks'
 
 import { V3_CORE_FACTORY_ADDRESSES } from '../constants/addresses'
@@ -17,12 +16,6 @@ import { PoolState, usePool } from './usePools'
 
 const PRICE_FIXED_DIGITS = 8
 const CHAIN_IDS_MISSING_SUBGRAPH_DATA = [SupportedChainId.ARBITRUM_ONE, SupportedChainId.ARBITRUM_RINKEBY]
-
-export interface TickData {
-  tick: number
-  liquidityNet: JSBI
-  liquidityGross: JSBI
-}
 
 // Tick with fields parsed to JSBIs, and active liquidity computed.
 export interface TickProcessed {
@@ -118,7 +111,6 @@ function useTicksFromTickLens(
               return {
                 tick: tickData.tick,
                 liquidityNet: JSBI.BigInt(tickData.liquidityNet),
-                liquidityGross: JSBI.BigInt(tickData.liquidityGross),
               }
             }) ?? []),
           ],
@@ -162,9 +154,7 @@ function useTicksFromSubgraph(
         )
       : undefined
 
-  return useAllV3TicksQuery(poolAddress ? { poolAddress: poolAddress?.toLowerCase(), skip: 0 } : skipToken, {
-    pollingInterval: ms`30s`,
-  })
+  return useAllV3TicksQuery(poolAddress, 0, ms`30s`)
 }
 
 // Fetches all ticks for a given pool
@@ -174,10 +164,8 @@ function useAllV3Ticks(
   feeAmount: FeeAmount | undefined
 ): {
   isLoading: boolean
-  isUninitialized: boolean
-  isError: boolean
   error: unknown
-  ticks: TickData[] | undefined
+  ticks: readonly TickData[] | undefined
 } {
   const useSubgraph = currencyA ? !CHAIN_IDS_MISSING_SUBGRAPH_DATA.includes(currencyA.chainId) : true
 
@@ -186,8 +174,6 @@ function useAllV3Ticks(
 
   return {
     isLoading: useSubgraph ? subgraphTickData.isLoading : tickLensTickData.isLoading,
-    isUninitialized: useSubgraph ? subgraphTickData.isUninitialized : false,
-    isError: useSubgraph ? subgraphTickData.isError : tickLensTickData.isError,
     error: useSubgraph ? subgraphTickData.error : tickLensTickData.isError,
     ticks: useSubgraph ? subgraphTickData.data?.ticks : tickLensTickData.tickData,
   }
@@ -199,8 +185,6 @@ export function usePoolActiveLiquidity(
   feeAmount: FeeAmount | undefined
 ): {
   isLoading: boolean
-  isUninitialized: boolean
-  isError: boolean
   error: any
   activeTick: number | undefined
   data: TickProcessed[] | undefined
@@ -210,7 +194,7 @@ export function usePoolActiveLiquidity(
   // Find nearest valid tick for pool in case tick is not initialized.
   const activeTick = useMemo(() => getActiveTick(pool[1]?.tickCurrent, feeAmount), [pool, feeAmount])
 
-  const { isLoading, isUninitialized, isError, error, ticks } = useAllV3Ticks(currencyA, currencyB, feeAmount)
+  const { isLoading, error, ticks } = useAllV3Ticks(currencyA, currencyB, feeAmount)
 
   return useMemo(() => {
     if (
@@ -220,13 +204,10 @@ export function usePoolActiveLiquidity(
       pool[0] !== PoolState.EXISTS ||
       !ticks ||
       ticks.length === 0 ||
-      isLoading ||
-      isUninitialized
+      isLoading
     ) {
       return {
         isLoading: isLoading || pool[0] === PoolState.LOADING,
-        isUninitialized,
-        isError,
         error,
         activeTick,
         data: undefined,
@@ -246,8 +227,6 @@ export function usePoolActiveLiquidity(
       console.error('TickData pivot not found')
       return {
         isLoading,
-        isUninitialized,
-        isError,
         error,
         activeTick,
         data: undefined,
@@ -269,11 +248,9 @@ export function usePoolActiveLiquidity(
 
     return {
       isLoading,
-      isUninitialized,
-      isError,
       error,
       activeTick,
       data: ticksProcessed,
     }
-  }, [currencyA, currencyB, activeTick, pool, ticks, isLoading, isUninitialized, isError, error])
+  }, [currencyA, currencyB, activeTick, pool, ticks, isLoading, error])
 }

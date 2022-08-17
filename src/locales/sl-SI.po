@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-11 19:04\n"
+"PO-Revision-Date: 2022-08-17 20:04\n"
 "Last-Translator: \n"
 "Language: sl_SI\n"
 "Language-Team: Slovenian\n"
@@ -120,8 +120,8 @@ msgstr "Za predložitev predlogov potrebujete vsaj 0,25 % celotne zaloge UNI."
 msgid "A swap of this size may have a high price impact, given the current liquidity in the pool. There may be a large difference between the amount of your input token and what you will receive in the output token"
 msgstr "Menjava te velikosti ima lahko velik vpliv na ceno glede na trenutno likvidnost v skladu. Med vrednostjo vašega vhodnega žetona in vrednostjo, ki jo boste prejeli v izhodnem žetonu, je lahko velika razlika."
 
-#: src/components/Explore/TokenDetails/TokenDetail.tsx
 #: src/components/Menu/index.tsx
+#: src/components/Tokens/TokenDetails/TokenDetail.tsx
 msgid "About"
 msgstr "O Uniswapu"
 
@@ -550,9 +550,9 @@ msgstr "Povezano z"
 msgid "Connecting..."
 msgstr "Povezovanje ..."
 
-#: src/components/AccountDetails/Copy.tsx
-msgid "Copied"
-msgstr "Kopirano"
+#: src/theme/components.tsx
+msgid "Copied!"
+msgstr "Skopirano!"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Copy Address"
@@ -821,10 +821,6 @@ msgstr "Strokovni način izklopi poziv za potrditev transakcije in omogoča veli
 #: src/pages/Vote/styled.tsx
 msgid "Expired"
 msgstr "Potekla"
-
-#: src/components/Header/index.tsx
-msgid "Explore"
-msgstr "Raziščite"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore Uniswap Analytics."
@@ -1761,7 +1757,7 @@ msgstr "Transakcije ni bilo mogoče poslati, ker je rok potekel. Preverite, ali 
 msgid "There is no liquidity data."
 msgstr "Podatkov o likvidnosti ni."
 
-#: src/components/Explore/TokenDetails/BalanceSummary.tsx
+#: src/components/Tokens/TokenDetails/BalanceSummary.tsx
 msgid "There was an error loading your {tokenSymbol} balance"
 msgstr "Pri nalaganju vašega stanja {tokenSymbol} je prišlo do napake"
 
@@ -1819,7 +1815,7 @@ msgstr "Za"
 msgid "To (at least)"
 msgstr "Za (vsaj)"
 
-#: src/components/Explore/TokenTable/TokenRow.tsx
+#: src/components/Tokens/TokenTable/TokenRow.tsx
 msgid "Token Name"
 msgstr "Ime žetona"
 
@@ -1827,6 +1823,7 @@ msgstr "Ime žetona"
 msgid "Token not supported"
 msgstr "Žeton ni podprt"
 
+#: src/components/Header/index.tsx
 #: src/components/SearchModal/Manage.tsx
 msgid "Tokens"
 msgstr "Žetoni"

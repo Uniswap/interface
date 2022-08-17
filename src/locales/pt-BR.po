@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-11 19:05\n"
+"PO-Revision-Date: 2022-08-17 20:05\n"
 "Last-Translator: \n"
 "Language: pt_BR\n"
 "Language-Team: Portuguese, Brazilian\n"
@@ -120,8 +120,8 @@ msgstr "Um limite mínimo de 0,25% do fornecimento total da UNI é necessário p
 msgid "A swap of this size may have a high price impact, given the current liquidity in the pool. There may be a large difference between the amount of your input token and what you will receive in the output token"
 msgstr "Um swap desse tamanho pode ter um alto impacto no preço, dada a liquidez atual do pool. Pode haver uma grande diferença entre a quantidade do seu token de entrada e o que você receberá no token de saída"
 
-#: src/components/Explore/TokenDetails/TokenDetail.tsx
 #: src/components/Menu/index.tsx
+#: src/components/Tokens/TokenDetails/TokenDetail.tsx
 msgid "About"
 msgstr "SOBRE"
 
@@ -550,9 +550,9 @@ msgstr "Conectado com"
 msgid "Connecting..."
 msgstr "Conectando..."
 
-#: src/components/AccountDetails/Copy.tsx
-msgid "Copied"
-msgstr "Copiado"
+#: src/theme/components.tsx
+msgid "Copied!"
+msgstr "Copiado!"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Copy Address"
@@ -821,10 +821,6 @@ msgstr "O modo Expert desativa o prompt de confirmação da operação e permite
 #: src/pages/Vote/styled.tsx
 msgid "Expired"
 msgstr "Expirado"
-
-#: src/components/Header/index.tsx
-msgid "Explore"
-msgstr "Explorar"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore Uniswap Analytics."
@@ -1761,7 +1757,7 @@ msgstr "A operação não pode ser enviada após a data-limite. Confirme se a da
 msgid "There is no liquidity data."
 msgstr "Não há dados de liquidez."
 
-#: src/components/Explore/TokenDetails/BalanceSummary.tsx
+#: src/components/Tokens/TokenDetails/BalanceSummary.tsx
 msgid "There was an error loading your {tokenSymbol} balance"
 msgstr "Ocorreu um erro ao carregar seu saldo {tokenSymbol}"
 
@@ -1819,7 +1815,7 @@ msgstr "Para"
 msgid "To (at least)"
 msgstr "Para (pelo menos)"
 
-#: src/components/Explore/TokenTable/TokenRow.tsx
+#: src/components/Tokens/TokenTable/TokenRow.tsx
 msgid "Token Name"
 msgstr "Nome do token"
 
@@ -1827,6 +1823,7 @@ msgstr "Nome do token"
 msgid "Token not supported"
 msgstr "Token não suportado"
 
+#: src/components/Header/index.tsx
 #: src/components/SearchModal/Manage.tsx
 msgid "Tokens"
 msgstr "Tokens"

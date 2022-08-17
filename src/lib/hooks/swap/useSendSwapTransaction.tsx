@@ -4,17 +4,10 @@ import { JsonRpcProvider, TransactionResponse } from '@ethersproject/providers'
 import { t, Trans } from '@lingui/macro'
 import { Trade } from '@uniswap/router-sdk'
 import { Currency, TradeType } from '@uniswap/sdk-core'
-import { Trade as V2Trade } from '@uniswap/v2-sdk'
-import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { useMemo } from 'react'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
 import isZero from 'utils/isZero'
 import { swapErrorToUserReadableMessage } from 'utils/swapErrorToUserReadableMessage'
-
-type AnyTrade =
-  | V2Trade<Currency, Currency, TradeType>
-  | V3Trade<Currency, Currency, TradeType>
-  | Trade<Currency, Currency, TradeType>
 
 interface SwapCall {
   address: string
@@ -41,7 +34,7 @@ export default function useSendSwapTransaction(
   account: string | null | undefined,
   chainId: number | undefined,
   provider: JsonRpcProvider | undefined,
-  trade: AnyTrade | undefined, // trade to execute, required
+  trade: Trade<Currency, Currency, TradeType> | undefined, // trade to execute, required
   swapCalls: SwapCall[]
 ): { callback: null | (() => Promise<TransactionResponse>) } {
   return useMemo(() => {
