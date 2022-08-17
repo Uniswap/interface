@@ -15,6 +15,7 @@ import { AutoColumn } from 'components/Column'
 import { AutoRow } from 'components/Row'
 import { ConnectionType } from 'connection'
 import { getConnection, getConnectionName, getIsCoinbaseWallet, getIsInjected, getIsMetaMask } from 'connection/utils'
+import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import { useCurrencyBalances } from 'lib/hooks/useCurrencyBalance'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
@@ -66,10 +67,11 @@ const Wrapper = styled.div`
   width: 100%;
 `
 
-const HeaderRow = styled.div`
+const HeaderRow = styled.div<{ redesignFlag?: boolean }>`
   ${({ theme }) => theme.flexRowNoWrap};
   padding: 1rem 1rem;
-  font-weight: 500;
+  font-weight: ${({ redesignFlag }) => (redesignFlag ? '600' : '500')};
+  size: ${({ redesignFlag }) => redesignFlag && '16px'};
   color: ${(props) => (props.color === 'blue' ? ({ theme }) => theme.deprecated_primary1 : 'inherit')};
   ${({ theme }) => theme.mediaWidth.upToMedium`
     padding: 1rem;
@@ -183,6 +185,8 @@ export default function WalletModal({
   const { connector, account, chainId } = useWeb3React()
   const [connectedWallets, addWalletToConnectedWallets] = useConnectedWallets()
 
+  const redesignFlag = useRedesignFlag()
+  const redesignFlagEnabled = redesignFlag === RedesignVariant.Enabled
   const [walletView, setWalletView] = useState(WALLET_VIEWS.ACCOUNT)
   const [lastActiveWalletAddress, setLastActiveWalletAddress] = useState<string | undefined>(account)
   const [shouldLogWalletBalances, setShouldLogWalletBalances] = useState(false)
@@ -369,11 +373,49 @@ export default function WalletModal({
       )
     } else {
       headerRow = (
-        <HeaderRow>
+        <HeaderRow redesignFlag={redesignFlagEnabled}>
           <HoverText>
             <Trans>Connect a wallet</Trans>
           </HoverText>
         </HeaderRow>
+      )
+    }
+
+    function getTermsOfService(redesignFlagEnabled: boolean) {
+      return redesignFlagEnabled ? (
+        <AutoRow style={{ flexWrap: 'nowrap', padding: '4px 16px' }}>
+          <ThemedText.Body fontSize={12}>
+            <Trans>
+              By connecting a wallet, you agree to Uniswap Labs’{' '}
+              <ExternalLink style={{ textDecoration: 'underline' }} href="https://uniswap.org/terms-of-service/">
+                Terms of Service
+              </ExternalLink>{' '}
+              and acknowledge that you have read and understand the Uniswap{' '}
+              <ExternalLink style={{ textDecoration: 'underline' }} href="https://uniswap.org/disclaimer/">
+                Protocol Disclaimer
+              </ExternalLink>
+              .
+            </Trans>
+          </ThemedText.Body>
+        </AutoRow>
+      ) : (
+        <LightCard>
+          <AutoRow style={{ flexWrap: 'nowrap' }}>
+            <ThemedText.DeprecatedBody fontSize={12}>
+              <Trans>
+                By connecting a wallet, you agree to Uniswap Labs’{' '}
+                <ExternalLink style={{ textDecoration: 'underline' }} href="https://uniswap.org/terms-of-service/">
+                  Terms of Service
+                </ExternalLink>{' '}
+                and acknowledge that you have read and understand the Uniswap{' '}
+                <ExternalLink style={{ textDecoration: 'underline' }} href="https://uniswap.org/disclaimer/">
+                  Protocol Disclaimer
+                </ExternalLink>
+                .
+              </Trans>
+            </ThemedText.DeprecatedBody>
+          </AutoRow>
+        </LightCard>
       )
     }
 
@@ -394,28 +436,7 @@ export default function WalletModal({
               />
             )}
             {walletView !== WALLET_VIEWS.PENDING && <OptionGrid data-testid="option-grid">{getOptions()}</OptionGrid>}
-            {!pendingError && (
-              <LightCard>
-                <AutoRow style={{ flexWrap: 'nowrap' }}>
-                  <ThemedText.DeprecatedBody fontSize={12}>
-                    <Trans>
-                      By connecting a wallet, you agree to Uniswap Labs’{' '}
-                      <ExternalLink
-                        style={{ textDecoration: 'underline' }}
-                        href="https://uniswap.org/terms-of-service/"
-                      >
-                        Terms of Service
-                      </ExternalLink>{' '}
-                      and acknowledge that you have read and understand the Uniswap{' '}
-                      <ExternalLink style={{ textDecoration: 'underline' }} href="https://uniswap.org/disclaimer/">
-                        Protocol Disclaimer
-                      </ExternalLink>
-                      .
-                    </Trans>
-                  </ThemedText.DeprecatedBody>
-                </AutoRow>
-              </LightCard>
-            )}
+            {!pendingError && getTermsOfService(redesignFlagEnabled)}
           </AutoColumn>
         </ContentWrapper>
       </UpperSection>

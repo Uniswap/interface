@@ -13,7 +13,7 @@ import { darkTheme } from '../nft/themes/darkTheme'
 import { lightTheme } from '../nft/themes/lightTheme'
 import { useIsDarkMode } from '../state/user/hooks'
 import { colors as ColorsPalette, colorsDark, colorsLight } from './colors'
-import { Colors, ThemeColors } from './styled'
+import { AllColors, Colors, ThemeColors } from './styled'
 import { opacify } from './utils'
 
 export * from './components'
@@ -280,7 +280,7 @@ export default function ThemeProvider({ children }: { children: React.ReactNode 
   return <StyledComponentsThemeProvider theme={themeObject}>{children}</StyledComponentsThemeProvider>
 }
 
-const TextWrapper = styled(Text)<{ color: keyof Colors }>`
+const TextWrapper = styled(Text)<{ color: keyof AllColors }>`
   color: ${({ color, theme }) => (theme as any)[color]};
 `
 
@@ -305,6 +305,9 @@ export const ThemedText = {
   },
   DeprecatedBody(props: TextProps) {
     return <TextWrapper fontWeight={400} fontSize={16} color={'deprecated_text1'} {...props} />
+  },
+  Body(props: TextProps) {
+    return <TextWrapper fontWeight={400} fontSize={16} color={'textSecondary'} {...props} />
   },
   DeprecatedLargeHeader(props: TextProps) {
     return <TextWrapper fontWeight={600} fontSize={24} {...props} />
