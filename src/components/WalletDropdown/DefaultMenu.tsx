@@ -148,7 +148,7 @@ const AuthenticatedHeader = () => {
     }
     connector.resetState()
     dispatch(updateSelectedWallet({ wallet: undefined }))
-  }, [connector, dispatch, updateSelectedWallet])
+  }, [connector, dispatch])
 
   const amountUSD = useMemo(() => {
     const price = parseFloat(nativeCurrencyPrice.toFixed(5))
