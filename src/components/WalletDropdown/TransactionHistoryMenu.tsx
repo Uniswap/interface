@@ -14,8 +14,7 @@ import { SlideOutMenu } from './SlideOutMenu'
 
 const Divider = styled.div`
   margin-top: 16px;
-  border-bottom: 1px solid #99a1bd;
-  opacity: 0.24;
+  border-bottom: ${({ theme }) => `1px solid ${theme.backgroundOutline}`};
 `
 
 const TransactionListWrapper = styled.div`
@@ -27,8 +26,8 @@ interface TransactionInformation {
   transactions: TransactionDetails[]
 }
 
-const TransactionTitle = styled(Text)`
-  pading-bottom: 8px;
+const TransactionTitle = styled.span`
+  padding-bottom: 8px;
   padding-top: 20px;
   padding-left: 12px;
   padding-right: 12px;
@@ -112,7 +111,7 @@ const EmptyTransaction = styled(Text)`
   margin-top: 24px;
   font-weight: 400;
   font-size: 14px;
-  color: ${({ theme }) => theme.textTertiary};
+  color: ${({ theme }) => theme.textSecondary};
 `
 
 export const TransactionHistoryMenu = ({ close }: { close: () => void }) => {

@@ -6,7 +6,6 @@ import { getChainInfoOrDefault } from 'constants/chainInfo'
 import { SupportedChainId } from 'constants/chains'
 import JSBI from 'jsbi'
 import { AlertTriangle, CheckCircle } from 'react-feather'
-import { Text } from 'rebass'
 import {
   AddLiquidityV3PoolTransactionInfo,
   ApproveTransactionInfo,
@@ -19,7 +18,7 @@ import {
   TransactionType,
   WrapTransactionInfo,
 } from 'state/transactions/types'
-import styled from 'styled-components/macro'
+import styled, { css } from 'styled-components/macro'
 import { colors } from 'theme/colors'
 
 import { nativeOnChain } from '../../constants/tokens'
@@ -71,15 +70,22 @@ const Grid = styled.a`
   grid-template-columns: 44px auto 24px;
   width: 100%;
   text-decoration: none;
-  border-bottom: 0.5px solid rgba(153, 161, 189, 0.24);
+  border-bottom: ${({ theme }) => `1px solid ${theme.backgroundOutline}`};
   padding: 12px;
 `
 
-const TextContainer = styled(Text)`
+const TextContainer = styled.span`
   font-size: 14px;
   margin-top: auto;
   margin-bottom: auto;
   color: ${({ theme }) => theme.textTertiary};
+`
+
+const IconStyleWrap = styled.span`
+  margin-top: auto;
+  margin-bottom: auto;
+  margin-left: auto;
+  height: 16px;
 `
 
 const TransactionContainer = ({
@@ -93,18 +99,22 @@ const TransactionContainer = ({
   link?: string
   transactionState: TransactionState
 }) => {
-  const iconStyle = { marginTop: 'auto', marginBottom: 'auto', marginLeft: 'auto' }
-
   return (
     <Grid href={link}>
       {currencyLogo}
       <TextContainer as="span">{children}</TextContainer>
       {transactionState === TransactionState.Pending ? (
-        <Loader style={iconStyle} />
+        <IconStyleWrap>
+          <Loader />
+        </IconStyleWrap>
       ) : transactionState === TransactionState.Success ? (
-        <CheckCircle style={iconStyle} color={colors.green200} size="16px" />
+        <IconStyleWrap>
+          <CheckCircle color={colors.green200} size="16px" />
+        </IconStyleWrap>
       ) : (
-        <AlertTriangle style={iconStyle} color={colors.gold200} size="16px" />
+        <IconStyleWrap>
+          <AlertTriangle color={colors.gold200} size="16px" />
+        </IconStyleWrap>
       )}
     </Grid>
   )
@@ -335,7 +345,6 @@ export const getBody = ({ info, transactionState }: { info: TransactionInfo; tra
       return <CollectFeesSummary info={info} transactionState={transactionState} />
     case TransactionType.APPROVAL:
       return <ApprovalSummary info={info} transactionState={transactionState} />
-
     case TransactionType.CLAIM:
       return <ClaimSummary info={info} transactionState={transactionState} />
     default:
@@ -373,34 +382,37 @@ const CurrencyWrap = styled.div`
   height: 36px;
 `
 
-const CurrencyLogoWrap = styled.span`
+const CurrencyWrapStyles = css`
   position: absolute;
-  height: 24;
-  width: 24;
+  height: 24px;
+`
+
+const CurrencyLogoWrap = styled.span<{ isCentered: boolean }>`
+  ${CurrencyWrapStyles};
+  left: ${({ isCentered }) => (isCentered ? '50%' : '0')};
+  top: ${({ isCentered }) => (isCentered ? '50%' : '0')};
+  transform: ${({ isCentered }) => isCentered && 'translate(-50%, -50%)'};
+`
+const CurrencyLogoWrapTwo = styled.span`
+  ${CurrencyWrapStyles};
+  bottom: 0px;
+  right: 0px;
 `
 
 export const LogoView = ({ currencyId0, currencyId1 }: { currencyId0: string; currencyId1?: string }) => {
   const currency0 = useCurrency(currencyId0)
   const currency1 = useCurrency(currencyId1)
-
-  const currencyOneLogoWrapStyle =
-    currency0 && currency1
-      ? { left: 0, top: 0 }
-      : {
-          left: '50%',
-          top: '50%',
-          transform: 'translate(-50%, -50%)',
-        }
+  const isCentered = !(currency0 && currency1)
 
   return (
     <CurrencyWrap>
-      <CurrencyLogoWrap style={currencyOneLogoWrapStyle}>
+      <CurrencyLogoWrap isCentered={isCentered}>
         <CurrencyLogo size="24px" currency={currency0} />
       </CurrencyLogoWrap>
-      {currency1 && (
-        <CurrencyLogoWrap style={{ right: 0, bottom: 0 }}>
+      {!isCentered && (
+        <CurrencyLogoWrapTwo>
           <CurrencyLogo size="24px" currency={currency1} />
-        </CurrencyLogoWrap>
+        </CurrencyLogoWrapTwo>
       )}
     </CurrencyWrap>
   )
