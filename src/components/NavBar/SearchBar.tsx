@@ -56,7 +56,7 @@ const CollectionRow = ({ collection, isHovered, setHoveredIndex, toggleOpen, ind
     const keyDownHandler = (event: KeyboardEvent) => {
       if (event.key === 'Enter' && isHovered) {
         event.preventDefault()
-        navigate(`/nft/collection/${collection.address}`)
+        navigate(`/nfts/collection/${collection.address}`)
         handleClick()
       }
     }
@@ -68,7 +68,7 @@ const CollectionRow = ({ collection, isHovered, setHoveredIndex, toggleOpen, ind
 
   return (
     <Link
-      to={`/nft/collection/${collection.address}`}
+      to={`/nfts/collection/${collection.address}`}
       onClick={handleClick}
       onMouseEnter={() => !isHovered && setHoveredIndex(index)}
       onMouseLeave={() => isHovered && setHoveredIndex(undefined)}
@@ -291,8 +291,9 @@ export const SearchBarDropdown = ({ toggleOpen, tokens, collections, hasInput }:
   const searchHistory = useSearchHistory(
     (state: { history: (FungibleToken | GenieCollection)[] }) => state.history
   ).slice(0, 2)
-  const isNFTPage = location.hash.includes('/nft')
-  const isTokenPage = location.hash.includes('/token')
+  const location = useLocation()
+  const isNFTPage = location.hash.includes('/nfts')
+  const isTokenPage = location.hash.includes('/tokens')
 
   const tokenSearchResults =
     tokens.length > 0 ? (
@@ -456,7 +457,7 @@ export const SearchBar = () => {
     }
   )
 
-  const isNFTPage = location.hash.includes('/nft')
+  const isNFTPage = location.hash.includes('/nfts')
 
   // If not an nft page show up to 5 tokens, else up to 3. Max total suggestions of 8
   // eslint-disable-next-line react-hooks/exhaustive-deps
