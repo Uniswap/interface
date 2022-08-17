@@ -149,7 +149,7 @@ export default function TokenDetails() {
               routerUrl={ROUTER_URL}
               theme={widgetTheme}
               // tokenList={[]}
-              width={290}
+              width={320}
             />
             {tokenWarning && <TokenSafetyMessage tokenAddress={tokenAddress} warning={tokenWarning} />}
             {!loading && (
