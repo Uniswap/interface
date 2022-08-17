@@ -128,7 +128,6 @@ const AuthenticatedHeader = () => {
     return price * balance
   }, [balanceString, nativeCurrencyPrice])
 
-  // "`${explorer}address/${account}`, '_blank'"
   return (
     <>
       <div style={{ marginBottom: 12 }}>
