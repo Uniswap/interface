@@ -91,9 +91,9 @@ export const SearchBarDropdown = ({ toggleOpen, tokens, collections, hasInput }:
   const searchHistory = useSearchHistory(
     (state: { history: (FungibleToken | GenieCollection)[] }) => state.history
   ).slice(0, 2)
-  const location = useLocation()
-  const isNFTPage = location.hash.includes('/nfts')
-  const isTokenPage = location.hash.includes('/tokens')
+  const { pathname } = useLocation()
+  const isNFTPage = pathname.includes('/nfts')
+  const isTokenPage = pathname.includes('/tokens')
 
   const tokenSearchResults =
     tokens.length > 0 ? (
@@ -236,7 +236,7 @@ export const SearchBar = () => {
   const [searchValue, setSearchValue] = useState('')
   const debouncedSearchValue = useDebounce(searchValue, 300)
   const searchRef = useRef<HTMLDivElement>(null)
-  const location = useLocation()
+  const { pathname } = useLocation()
   const { width: windowWidth } = useWindowSize()
 
   useOnClickOutside(searchRef, () => {
@@ -257,7 +257,7 @@ export const SearchBar = () => {
     }
   )
 
-  const isNFTPage = location.hash.includes('/nfts')
+  const isNFTPage = pathname.includes('/nfts')
 
   const [reducedTokens, reducedCollections] = organizeSearchResults(isNFTPage, tokens ?? [], collections ?? [])
 
@@ -279,7 +279,7 @@ export const SearchBar = () => {
   // clear searchbar when changing pages
   useEffect(() => {
     setSearchValue('')
-  }, [location.pathname])
+  }, [pathname])
 
   const isMobile = useMemo(() => windowWidth && windowWidth <= breakpoints.tabletSm, [windowWidth])
 
