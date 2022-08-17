@@ -16,7 +16,7 @@ const InfoCard = styled.button<{ isActive?: boolean; redesignFlag?: boolean }>`
   border-radius: 12px;
   width: 100% !important;
   &:focus {
-    box-shadow: 0 0 0 1px ${({ theme, redesignFlag }) => (redesignFlag ? '' : theme.deprecated_primary1)};
+    box-shadow: 0 0 0 1px ${({ theme, redesignFlag }) => !redesignFlag && theme.deprecated_primary1};
   }
   border-color: ${({ theme, isActive, redesignFlag }) =>
     redesignFlag ? (isActive ? theme.accentActive : 'transparent') : isActive ? 'transparent' : theme.deprecated_bg3};
@@ -55,12 +55,12 @@ const OptionCardClickable = styled(OptionCard as any)<{
   redesignFlag?: boolean
 }>`
   margin-top: 0;
-  border: ${({ active, theme }) => (active ? `1px solid ${theme.accentActive}` : ``)};
+  border: ${({ active, theme }) => active && `1px solid ${theme.accentActive}`};
   &:hover {
-    cursor: ${({ clickable }) => (clickable ? 'pointer' : '')};
+    cursor: ${({ clickable }) => clickable && 'pointer'};
     background-color: ${({ theme, redesignFlag }) => redesignFlag && theme.hoverState};
     border: ${({ clickable, redesignFlag, theme }) =>
-      !clickable || redesignFlag ? `` : `1px solid ${theme.deprecated_primary1}`};
+      clickable && !redesignFlag && `1px solid ${theme.deprecated_primary1}`};
   }
   opacity: ${({ disabled }) => (disabled ? '0.5' : '1')};
 `
@@ -120,7 +120,7 @@ const IconWrapper = styled.div<{ size?: number | null }>`
   ${({ theme }) => theme.flexColumnNoWrap};
   align-items: center;
   justify-content: center;
-  padding-right: 16px;
+  padding-right: 12px;
   & > img,
   span {
     height: ${({ size }) => (size ? size + 'px' : '28px')};
@@ -190,11 +190,11 @@ export default function Option({
           onClick={onClick}
           clickable={clickable && !isActive}
           active={isActive}
-          redesignFlag={redesignFlagEnabled}
+          redesignFlag={false}
           data-testid="wallet-modal-option"
         >
           <OptionCardLeft>
-            <HeaderText color={color} redesignFlag={redesignFlagEnabled}>
+            <HeaderText color={color} redesignFlag={false}>
               {isActive ? (
                 <CircleWrapper>
                   <GreenCircle>

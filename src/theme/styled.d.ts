@@ -22,6 +22,7 @@ export interface ThemeColors {
   accentSuccess: Color
   accentWarning: Color
   accentFailure: Color
+  accentCritical: Color
 
   accentActionSoft: Color
   accentActiveSoft: Color

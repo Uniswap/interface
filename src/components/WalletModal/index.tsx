@@ -78,8 +78,9 @@ const HeaderRow = styled.div<{ redesignFlag?: boolean }>`
   `};
 `
 
-const ContentWrapper = styled.div`
-  background-color: ${({ theme }) => theme.deprecated_bg0};
+const ContentWrapper = styled.div<{ redesignFlag?: boolean }>`
+  background-color: ${({ theme, redesignFlag }) => (redesignFlag ? theme.backgroundSurface : theme.deprecated_bg0)};
+  border: ${({ theme, redesignFlag }) => (redesignFlag ? `1px solid ${theme.backgroundOutline}` : '')};
   padding: 0 1rem 1rem 1rem;
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
@@ -361,9 +362,7 @@ export default function WalletModal({
     }
 
     let headerRow
-    if (walletView === WALLET_VIEWS.PENDING) {
-      headerRow = null
-    } else if (walletView === WALLET_VIEWS.ACCOUNT || !!account) {
+    if (walletView === WALLET_VIEWS.PENDING || walletView === WALLET_VIEWS.ACCOUNT || !!account) {
       headerRow = (
         <HeaderRow color="blue">
           <HoverText onClick={() => setWalletView(account ? WALLET_VIEWS.ACCOUNT : WALLET_VIEWS.OPTIONS)}>
@@ -384,7 +383,7 @@ export default function WalletModal({
     function getTermsOfService(redesignFlagEnabled: boolean) {
       return redesignFlagEnabled ? (
         <AutoRow style={{ flexWrap: 'nowrap', padding: '4px 16px' }}>
-          <ThemedText.Body fontSize={12}>
+          <ThemedText.BodySecondary fontSize={12}>
             <Trans>
               By connecting a wallet, you agree to Uniswap Labs’{' '}
               <ExternalLink style={{ textDecoration: 'underline' }} href="https://uniswap.org/terms-of-service/">
@@ -396,7 +395,7 @@ export default function WalletModal({
               </ExternalLink>
               .
             </Trans>
-          </ThemedText.Body>
+          </ThemedText.BodySecondary>
         </AutoRow>
       ) : (
         <LightCard>

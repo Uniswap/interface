@@ -77,6 +77,7 @@ function uniswapThemeColors(darkMode: boolean): ThemeColors {
     accentSuccess: darkMode ? colorsDark.accentSuccess : colorsLight.accentSuccess,
     accentWarning: darkMode ? colorsDark.accentWarning : colorsLight.accentWarning,
     accentFailure: darkMode ? colorsDark.accentFailure : colorsLight.accentFailure,
+    accentCritical: ColorsPalette.red300,
 
     accentActionSoft: darkMode ? colorsDark.accentActionSoft : colorsLight.accentActionSoft,
     accentActiveSoft: darkMode ? colorsDark.accentActiveSoft : colorsLight.accentActiveSoft,
@@ -294,6 +295,9 @@ export const ThemedText = {
   DeprecatedLink(props: TextProps) {
     return <TextWrapper fontWeight={500} color={'deprecated_primary1'} {...props} />
   },
+  Link(props: TextProps) {
+    return <TextWrapper fontWeight={500} fontSize={16} color={'accentAction'} {...props} />
+  },
   DeprecatedLabel(props: TextProps) {
     return <TextWrapper fontWeight={600} color={'deprecated_text1'} {...props} />
   },
@@ -306,8 +310,11 @@ export const ThemedText = {
   DeprecatedBody(props: TextProps) {
     return <TextWrapper fontWeight={400} fontSize={16} color={'deprecated_text1'} {...props} />
   },
-  Body(props: TextProps) {
+  BodySecondary(props: TextProps) {
     return <TextWrapper fontWeight={400} fontSize={16} color={'textSecondary'} {...props} />
+  },
+  BodyPrimary(props: TextProps) {
+    return <TextWrapper fontWeight={400} fontSize={16} color={'textPrimary'} {...props} />
   },
   DeprecatedLargeHeader(props: TextProps) {
     return <TextWrapper fontWeight={600} fontSize={24} {...props} />
@@ -315,8 +322,14 @@ export const ThemedText = {
   DeprecatedMediumHeader(props: TextProps) {
     return <TextWrapper fontWeight={500} fontSize={20} {...props} />
   },
+  MediumHeader(props: TextProps) {
+    return <TextWrapper fontWeight={400} fontSize={20} color={'textPrimary'} {...props} />
+  },
   DeprecatedSubHeader(props: TextProps) {
     return <TextWrapper fontWeight={400} fontSize={14} {...props} />
+  },
+  SubHeader(props: TextProps) {
+    return <TextWrapper fontWeight={600} fontSize={16} color={'textPrimary'} {...props} />
   },
   DeprecatedSmall(props: TextProps) {
     return <TextWrapper fontWeight={500} fontSize={11} {...props} />
