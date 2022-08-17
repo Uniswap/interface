@@ -16,6 +16,7 @@ import { PortfolioNFTsSection } from 'src/components/home/PortfolioNFTsSection'
 import { PortfolioTokensSection } from 'src/components/home/PortfolioTokensSection'
 import { Box, Flex } from 'src/components/layout'
 import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollScreen'
+import { Pill } from 'src/components/text/Pill'
 import { WalletConnectModalState } from 'src/components/WalletConnect/constants'
 import { TotalBalance } from 'src/features/balances/TotalBalance'
 import { BiometricCheck } from 'src/features/biometrics/BiometricCheck'
@@ -107,7 +108,21 @@ function ContentHeader() {
       mt="sm"
       px="xs"
       py="sm">
-      <AccountHeader onPress={onPressAccountHeader} />
+      <Flex row alignItems="center" gap="xs">
+        <AccountHeader onPress={onPressAccountHeader} />
+        {activeAccount?.type === AccountType.Readonly && (
+          <Pill
+            alignItems="center"
+            borderRadius="xs"
+            customBackgroundColor={theme.colors.backgroundContainer}
+            foregroundColor={theme.colors.textPrimary}
+            label="View only"
+            px="xxs"
+            py="xxs"
+            textVariant="badge"
+          />
+        )}
+      </Flex>
       <Flex row alignItems="center" gap="sm">
         <PendingNotificationBadge />
         {isWalletConnectSupportedAccount(activeAccount) && (
