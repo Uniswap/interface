@@ -20,15 +20,12 @@ import { Pill } from 'src/components/text/Pill'
 import { WalletConnectModalState } from 'src/components/WalletConnect/constants'
 import { TotalBalance } from 'src/features/balances/TotalBalance'
 import { BiometricCheck } from 'src/features/biometrics/BiometricCheck'
-import { useActiveChainIds } from 'src/features/chains/utils'
-import { useAllBalancesByChainId } from 'src/features/dataApi/balances'
 import { openModal } from 'src/features/modals/modalSlice'
 import { PendingNotificationBadge } from 'src/features/notifications/PendingNotificationBadge'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { AccountType } from 'src/features/wallet/accounts/types'
 import { useTestAccount } from 'src/features/wallet/accounts/useTestAccount'
 import {
-  useActiveAccount,
   useActiveAccountAddressWithThrow,
   useActiveAccountWithThrow,
 } from 'src/features/wallet/hooks'
@@ -38,11 +35,7 @@ import { isWalletConnectSupportedAccount } from 'src/utils/walletConnect'
 export function HomeScreen() {
   // imports test account for easy development/testing
   useTestAccount()
-
-  const activeAccount = useActiveAccount()
-  const currentChains = useActiveChainIds()
-
-  const { balances } = useAllBalancesByChainId(activeAccount?.address, currentChains)
+  const activeAccount = useActiveAccountWithThrow()
 
   return (
     <>
@@ -52,7 +45,7 @@ export function HomeScreen() {
         fixedHeader={<FixedHeader />}>
         <Flex gap="lg" px="sm">
           <Flex gap="md" p="sm">
-            <TotalBalance showRelativeChange balances={balances} owner={activeAccount?.address} />
+            <TotalBalance showRelativeChange owner={activeAccount.address} />
             {activeAccount?.type !== AccountType.Readonly && (
               <Flex pt="xxs">
                 <QuickActions />
@@ -60,8 +53,8 @@ export function HomeScreen() {
             )}
           </Flex>
           <Flex gap="sm">
-            <PortfolioTokensSection count={4} />
-            <PortfolioNFTsSection count={6} owner={activeAccount?.address} />
+            <PortfolioTokensSection count={4} owner={activeAccount.address} />
+            <PortfolioNFTsSection count={6} owner={activeAccount.address} />
           </Flex>
         </Flex>
       </HeaderScrollScreen>

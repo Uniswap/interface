@@ -1,16 +1,9 @@
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
-import { useAppSelector } from 'src/app/hooks'
 import { ChainId, ChainIdToCurrencyIdTo } from 'src/constants/chains'
-import { useActiveChainIds } from 'src/features/chains/utils'
 import { useMulticall2Contract, useTokenContract } from 'src/features/contracts/useContract'
-import { useAllBalancesByChainId } from 'src/features/dataApi/balances'
-import { selectFavoriteTokensSet } from 'src/features/favorites/selectors'
 import { useSingleCallResult } from 'src/features/multicall'
 import { NativeCurrency } from 'src/features/tokenLists/NativeCurrency'
-import { useActiveAccount } from 'src/features/wallet/hooks'
-import { currencyId } from 'src/utils/currencyId'
-import { flattenObjectOfObjects } from 'src/utils/objects'
 
 export type ChainIdToCurrencyIdToCurrencyAmount = ChainIdToCurrencyIdTo<CurrencyAmount<Currency>>
 export type ChainIdToCurrencyIdToNativeCurrencyAmount = ChainIdToCurrencyIdTo<
@@ -70,25 +63,4 @@ export function useNativeCurrencyBalance(
   }, [callState, chainId])
 
   return { balance, loading }
-}
-
-/**
- * Return map of balances by chainId for all favorited tkens
- * @todo refactor for perf with selectFromResult https://redux-toolkit.js.org/rtk-query/usage/queries#selecting-data-from-a-query-result
- */
-export function useFavoriteCurrencyBalances() {
-  const chainIds = useActiveChainIds()
-  const activeAccount = useActiveAccount()
-  const favoriteCurrencies = useAppSelector(selectFavoriteTokensSet)
-  const { balances, loading } = useAllBalancesByChainId(activeAccount?.address, chainIds)
-  const balanceMap = flattenObjectOfObjects(balances)
-
-  const favoriteBalances = balanceMap.filter((b) =>
-    favoriteCurrencies.has(currencyId(b.amount.currency))
-  )
-
-  return {
-    loading,
-    favoriteBalances,
-  }
 }

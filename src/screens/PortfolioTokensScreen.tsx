@@ -1,5 +1,5 @@
 import { Currency } from '@uniswap/sdk-core'
-import React, { Suspense, useCallback } from 'react'
+import React, { Suspense, useCallback, useMemo } from 'react'
 import { ListRenderItemInfo } from 'react-native'
 import { HomeStackScreenProp, useHomeStackNavigation } from 'src/app/navigation/types'
 import { AddressDisplay } from 'src/components/AddressDisplay'
@@ -12,9 +12,9 @@ import { Loading } from 'src/components/loading'
 import { PortfolioBalanceChart } from 'src/components/PriceChart'
 import { PriceChartLoading } from 'src/components/PriceChart/PriceChartLoading'
 import { TokenBalanceItem } from 'src/components/TokenBalanceList/TokenBalanceItem'
+import { EMPTY_ARRAY } from 'src/constants/misc'
 import { TotalBalance } from 'src/features/balances/TotalBalance'
-import { useActiveChainIds } from 'src/features/chains/utils'
-import { useAllBalancesList } from 'src/features/dataApi/balances'
+import { usePortfolioBalances } from 'src/features/dataApi/balances'
 import { PortfolioBalance } from 'src/features/dataApi/types'
 import { useActiveAccountAddressWithThrow } from 'src/features/wallet/hooks'
 import { Screens } from 'src/screens/Screens'
@@ -25,13 +25,29 @@ export function PortfolioTokensScreen({
     params: { owner },
   },
 }: HomeStackScreenProp<Screens.PortfolioTokens>) {
+  return (
+    <Suspense
+      fallback={
+        <Box mx="md" my="sm">
+          <Loading repeat={8} type="token" />
+        </Box>
+      }>
+      <PortfolioTokensContent owner={owner} />
+    </Suspense>
+  )
+}
+
+function PortfolioTokensContent({ owner }: { owner?: string }) {
   // TODO: Figure out how to make nav available across stacks
   const navigation = useHomeStackNavigation()
   const accountAddress = useActiveAccountAddressWithThrow()
   const activeAddress = owner ?? accountAddress
-  const currentChains = useActiveChainIds()
 
-  const { balances, balancesByChain } = useAllBalancesList(activeAddress, currentChains)
+  const balancesById = usePortfolioBalances(activeAddress, true)
+  const balances: PortfolioBalance[] = useMemo(
+    () => (!balancesById ? EMPTY_ARRAY : Object.values(balancesById)),
+    [balancesById]
+  )
 
   const renderItem = useCallback(
     ({ item }: ListRenderItemInfo<PortfolioBalance>) => (
@@ -80,7 +96,7 @@ export function PortfolioTokensScreen({
             {isOtherOwner ? (
               <AddressDisplay address={owner} size={16} variant="subhead" />
             ) : (
-              <TotalBalance balances={balancesByChain} variant="subheadSmall" />
+              <TotalBalance owner={activeAddress} variant="subheadSmall" />
             )}
           </Flex>
         </BackHeader>

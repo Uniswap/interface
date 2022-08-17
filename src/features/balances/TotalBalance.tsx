@@ -6,49 +6,49 @@ import { Loading } from 'src/components/loading'
 import { Text } from 'src/components/Text'
 import { RelativeChange } from 'src/components/text/RelativeChange'
 import { TotalBalanceQuery } from 'src/features/balances/__generated__/TotalBalanceQuery.graphql'
-import { ChainIdToCurrencyIdToPortfolioBalance } from 'src/features/dataApi/types'
+import { usePortfolioBalancesList } from 'src/features/dataApi/balances'
 import { Theme } from 'src/styles/theme'
 import { isTestnet, toSupportedChainId } from 'src/utils/chainId'
 import { formatUSDPrice } from 'src/utils/format'
-import { getKeys } from 'src/utils/objects'
 
 interface TotalBalanceViewProps {
-  balances: ChainIdToCurrencyIdToPortfolioBalance
-  owner?: Address
+  owner: Address
   showRelativeChange?: boolean
   variant?: keyof Theme['textVariants']
 }
 
 export function TotalBalance({
-  balances,
   owner,
   showRelativeChange,
   variant = 'headlineLarge',
 }: TotalBalanceViewProps) {
-  const totalBalance = useMemo(
-    () =>
-      getKeys(balances)
-        // always remove stub balances from  total
-        .filter((chainId) => !isTestnet(toSupportedChainId(chainId)!))
-        .reduce((sum, chainId) => {
-          return (
-            sum +
-            Object.values(balances[chainId]!)
-              .map((b) => b.balanceUSD)
-              .reduce((chainSum, balanceUSD) => chainSum + balanceUSD, 0)
-          )
-        }, 0),
-    [balances]
-  )
-
   return (
     <Suspense fallback={<Loading type="header" />}>
       <Flex gap="xxs">
-        <Text fontWeight="400" variant={variant}>{`${formatUSDPrice(totalBalance)}`}</Text>
+        <TotalUSDBalance owner={owner} variant={variant} />
         {showRelativeChange && owner && <BalanceRelativeChange owner={owner} />}
       </Flex>
     </Suspense>
   )
+}
+
+function TotalUSDBalance({
+  owner,
+  variant,
+}: {
+  owner: Address
+  variant?: keyof Theme['textVariants']
+}) {
+  const balances = usePortfolioBalancesList(owner, true)
+  const totalUSDBalance = useMemo(
+    () =>
+      balances
+        .filter(({ amount }) => !isTestnet(toSupportedChainId(amount.currency.chainId)!))
+        .reduce((sum, balance) => sum + balance.balanceUSD, 0),
+    [balances]
+  )
+
+  return <Text fontWeight="400" variant={variant}>{`${formatUSDPrice(totalUSDBalance)}`}</Text>
 }
 
 function BalanceRelativeChange({

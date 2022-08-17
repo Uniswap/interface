@@ -1,15 +1,19 @@
 import { Currency } from '@uniswap/sdk-core'
 import React, { ReactElement, useCallback, useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 import { FlatList, ListRenderItemInfo, SectionList } from 'react-native'
+import { useHomeStackNavigation } from 'src/app/navigation/types'
 import { Inset } from 'src/components/layout'
+import { BaseCard } from 'src/components/layout/BaseCard'
 import { Separator } from 'src/components/layout/Separator'
-import { Loading } from 'src/components/loading'
 import { TokenBalanceItem } from 'src/components/TokenBalanceList/TokenBalanceItem'
 import { TokenBalanceListHeader } from 'src/components/TokenBalanceList/TokenBalanceListHeader'
 import { balancesToSectionListData } from 'src/components/TokenBalanceList/utils'
-import { ChainIdToCurrencyIdToPortfolioBalance, PortfolioBalance } from 'src/features/dataApi/types'
+import { usePortfolioBalancesList } from 'src/features/dataApi/balances'
+import { PortfolioBalance } from 'src/features/dataApi/types'
 import { SectionName } from 'src/features/telemetry/constants'
 import { Trace } from 'src/features/telemetry/Trace'
+import { Screens } from 'src/screens/Screens'
 import { toSupportedChainId } from 'src/utils/chainId'
 import { currencyId } from 'src/utils/currencyId'
 
@@ -20,55 +24,59 @@ export enum ViewType {
 
 type FlatViewProps = {
   view: ViewType.Flat
-  balances: PortfolioBalance[]
+  count?: number
 }
 
 type NetworkViewProps = {
   view: ViewType.Network
-  balances: ChainIdToCurrencyIdToPortfolioBalance
+  count?: number
 }
 
 type ViewProps = FlatViewProps | NetworkViewProps
 
 type TokenBalanceListProps = {
   empty?: ReactElement | null
-  header: ReactElement | null
-  loading: boolean
   onPressToken: (currency: Currency) => void
   onRefresh?: () => void
   refreshing?: boolean
+  owner: Address
 } & ViewProps
 
 export function TokenBalanceList({
-  balances,
+  owner,
   empty,
-  header,
-  loading,
   onPressToken,
   view,
+  count,
 }: TokenBalanceListProps) {
-  if (loading) {
-    return (
-      <>
-        {header}
-        <Loading showSeparator repeat={4} type="token" />
-      </>
-    )
-  }
+  const balances = usePortfolioBalancesList(owner, true)
+  const { t } = useTranslation()
+  const navigation = useHomeStackNavigation()
+
+  const header: ReactElement = useMemo(
+    () => (
+      <BaseCard.Header
+        title={t('Tokens ({{totalCount}})', { totalCount: balances.length })}
+        onPress={() => navigation.navigate(Screens.PortfolioTokens, { owner })}
+      />
+    ),
+    [balances.length, navigation, owner, t]
+  )
+
+  const sortedBalances = useMemo(
+    () => balances.sort((a, b) => (a.balanceUSD > b.balanceUSD ? -1 : 1)).slice(0, count),
+    [balances, count]
+  )
 
   return view === ViewType.Flat ? (
     <FlatBalanceList
-      balances={balances as FlatViewProps['balances']}
+      balances={sortedBalances}
       empty={empty}
       header={header}
       onPressToken={onPressToken}
     />
   ) : (
-    <NetworkBalanceList
-      balances={balances as NetworkViewProps['balances']}
-      header={header}
-      onPressToken={onPressToken}
-    />
+    <NetworkBalanceList balances={sortedBalances} header={header} onPressToken={onPressToken} />
   )
 }
 
@@ -81,8 +89,10 @@ function FlatBalanceList({
   empty,
   header,
   onPressToken,
-}: Pick<FlatViewProps, 'balances'> &
-  Pick<TokenBalanceListProps, 'onPressToken' | 'empty' | 'header'>) {
+}: Pick<TokenBalanceListProps, 'onPressToken' | 'empty'> & {
+  header: ReactElement
+  balances: PortfolioBalance[]
+}) {
   return (
     <FlatList
       ItemSeparatorComponent={() => <Separator />}
@@ -106,7 +116,10 @@ function NetworkBalanceList({
   balances,
   header,
   onPressToken,
-}: Pick<NetworkViewProps, 'balances'> & Pick<TokenBalanceListProps, 'onPressToken' | 'header'>) {
+}: Pick<TokenBalanceListProps, 'onPressToken'> & {
+  header: ReactElement
+  balances: PortfolioBalance[]
+}) {
   const chainIdToCurrencyAmounts = useMemo(() => {
     return balancesToSectionListData(balances)
   }, [balances])

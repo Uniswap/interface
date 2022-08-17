@@ -1,31 +1,23 @@
 import { Currency } from '@uniswap/sdk-core'
 import { selectionAsync } from 'expo-haptics'
-import React from 'react'
+import React, { Suspense } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch } from 'src/app/hooks'
 import { useHomeStackNavigation } from 'src/app/navigation/types'
 import { BaseCard } from 'src/components/layout/BaseCard'
+import { Loading } from 'src/components/loading'
 import { TokenBalanceList, ViewType } from 'src/components/TokenBalanceList/TokenBalanceList'
 import { WalletConnectModalState } from 'src/components/WalletConnect/constants'
-import { useActiveChainIds } from 'src/features/chains/utils'
-import { useAllBalancesList } from 'src/features/dataApi/balances'
-import { PortfolioBalance } from 'src/features/dataApi/types'
 import { openModal } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
-import { useActiveAccount } from 'src/features/wallet/hooks'
 import { removePendingSession } from 'src/features/walletConnect/walletConnectSlice'
 import { Screens } from 'src/screens/Screens'
 import { currencyId } from 'src/utils/currencyId'
 
-export function PortfolioTokensSection({ count, owner }: { count?: number; owner?: string }) {
+export function PortfolioTokensSection({ count, owner }: { count?: number; owner: string }) {
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
   const navigation = useHomeStackNavigation()
-  const accountAddress = useActiveAccount()?.address
-  const activeAddress = owner ?? accountAddress
-  const currentChains = useActiveChainIds()
-
-  const { balances, loading, totalCount } = useAllBalancesList(activeAddress, currentChains, count)
 
   const onPressToken = (currency: Currency) =>
     navigation.navigate(Screens.TokenDetails, { currencyId: currencyId(currency) })
@@ -42,30 +34,35 @@ export function PortfolioTokensSection({ count, owner }: { count?: number; owner
 
   return (
     <BaseCard.Container>
-      <TokenBalanceList
-        balances={balances as PortfolioBalance[]}
-        empty={
-          <BaseCard.EmptyState
-            additionalButtonLabel={t('Transfer')}
-            buttonLabel={t('Scan')}
-            description={t(
-              'Fund your wallet by buying tokens with a credit card or transferring from an exchange.'
-            )}
-            title={t('Add tokens')}
-            onPress={onPressScan}
-            onPressAdditional={onPressScan}
-          />
-        }
-        header={
-          <BaseCard.Header
-            title={t('Tokens ({{totalCount}})', { totalCount })}
-            onPress={() => navigation.navigate(Screens.PortfolioTokens, { owner })}
-          />
-        }
-        loading={loading}
-        view={ViewType.Flat}
-        onPressToken={onPressToken}
-      />
+      <Suspense
+        fallback={
+          <>
+            <BaseCard.Header
+              title={t('Tokens')}
+              onPress={() => navigation.navigate(Screens.PortfolioTokens, { owner })}
+            />
+            <Loading showSeparator repeat={4} type="token" />
+          </>
+        }>
+        <TokenBalanceList
+          count={count}
+          empty={
+            <BaseCard.EmptyState
+              additionalButtonLabel={t('Transfer')}
+              buttonLabel={t('Scan')}
+              description={t(
+                'Fund your wallet by buying tokens with a credit card or transferring from an exchange.'
+              )}
+              title={t('Add tokens')}
+              onPress={onPressScan}
+              onPressAdditional={onPressScan}
+            />
+          }
+          owner={owner}
+          view={ViewType.Flat}
+          onPressToken={onPressToken}
+        />
+      </Suspense>
     </BaseCard.Container>
   )
 }

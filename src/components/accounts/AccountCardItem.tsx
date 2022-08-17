@@ -6,8 +6,6 @@ import { AddressDisplay } from 'src/components/AddressDisplay'
 import { Button } from 'src/components/buttons/Button'
 import { Flex } from 'src/components/layout'
 import { TotalBalance } from 'src/features/balances/TotalBalance'
-import { useActiveChainIds } from 'src/features/chains/utils'
-import { useAllBalancesByChainId } from 'src/features/dataApi/balances'
 import { ElementName } from 'src/features/telemetry/constants'
 import { Account } from 'src/features/wallet/accounts/types'
 import { opacify } from 'src/utils/colors'
@@ -31,10 +29,6 @@ export function AccountCardItem({
 }: Props) {
   const { address } = account
   const theme = useAppTheme()
-
-  const currentChains = useActiveChainIds()
-  const { balances } = useAllBalancesByChainId(address, currentChains)
-
   return (
     <Button mx="lg" onPress={onPress ? () => onPress(address) : undefined}>
       <Flex
@@ -76,7 +70,7 @@ export function AccountCardItem({
           )}
         </Flex>
         <Flex row alignItems="center" justifyContent="space-between">
-          <TotalBalance balances={balances} variant="body" />
+          <TotalBalance owner={address} variant="body" />
           {onPressEdit && (
             <Button name={ElementName.Edit} onPress={() => onPressEdit(address)}>
               <TripleDots

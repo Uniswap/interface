@@ -6,6 +6,12 @@ import { GraphMetadatas } from 'src/components/PriceChart/types'
 import { buildGraph, GRAPH_PRECISION } from 'src/components/PriceChart/utils'
 import { PortfolioModel_PortfolioQuery } from 'src/components/PriceChart/__generated__/PortfolioModel_PortfolioQuery.graphql'
 
+/*
+TODO: Added the tokenBalances fields here because usePortfolioBalances's `balancesQuery'
+is querying the same endpoint, and somehow, when this portfolioCharts query is run,
+react-relay overrides the return value of `balancesQuery` to be undefined. Figure out
+how to cache in react-relay properly
+*/
 const portfolioCharts = graphql`
   query PortfolioModel_PortfolioQuery($ownerAddress: String!) {
     portfolios(ownerAddresses: [$ownerAddress]) {
@@ -28,6 +34,25 @@ const portfolioCharts = graphql`
       yearlyValues: tokensTotalDenominatedValueHistory(duration: YEAR) {
         timestamp
         close: value
+      }
+      tokenBalances {
+        quantity
+        denominatedValue {
+          currency
+          value
+        }
+        token {
+          chain
+          address
+          name
+          symbol
+          decimals
+        }
+        tokenProjectMarket {
+          relativeChange24: pricePercentChange(duration: DAY) {
+            value
+          }
+        }
       }
     }
   }

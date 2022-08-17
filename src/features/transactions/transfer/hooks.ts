@@ -9,7 +9,6 @@ import { WarningModalType } from 'src/components/warnings/types'
 import { ChainId } from 'src/constants/chains'
 import { AssetType } from 'src/entities/assets'
 import { useNativeCurrencyBalance, useTokenBalance } from 'src/features/balances/hooks'
-import { useAllBalancesList } from 'src/features/dataApi/balances'
 import { estimateGasAction } from 'src/features/gas/estimateGasSaga'
 import { FeeInfo } from 'src/features/gas/types'
 import { useNFT } from 'src/features/nfts/hooks'
@@ -298,11 +297,6 @@ export function useTransferGasFee(
       ? BigNumber.from(txFee).add(optimismL1TransferFee).toString()
       : txFee
   }, [txFee, optimismL1TransferFee])
-}
-
-export function useRecipientHasZeroBalances(recipient: string | undefined, chainId: ChainId) {
-  const { totalCount, loading } = useAllBalancesList(recipient, [chainId])
-  return loading ? null : totalCount === 0
 }
 
 export function useRecipientIsNewAddress(recipient: string | undefined) {
