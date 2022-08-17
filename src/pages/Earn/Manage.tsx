@@ -1,6 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import { Phase1Variant, usePhase1Flag } from 'featureFlags/flags/phase1'
 import JSBI from 'jsbi'
 import { useCallback, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
@@ -28,9 +29,15 @@ import { useStakingInfo } from '../../state/stake/hooks'
 import { ThemedText } from '../../theme'
 import { currencyId } from '../../utils/currencyId'
 
-const PageWrapper = styled(AutoColumn)`
+const PageWrapper = styled(AutoColumn)<{ phase1Flag: Phase1Variant }>`
   max-width: 640px;
   width: 100%;
+
+  ${({ theme, phase1Flag }) =>
+    phase1Flag === Phase1Variant.Enabled &&
+    theme.mediaWidth.upToSmall`
+    padding: 0px 8px;
+  `}
 `
 
 const PositionInfo = styled(AutoColumn)<{ dim: any }>`
@@ -88,6 +95,8 @@ const DataRow = styled(RowBetween)`
 `
 
 export default function Manage() {
+  const phase1Flag = usePhase1Flag()
+
   const { currencyIdA, currencyIdB } = useParams<{ currencyIdA: string; currencyIdB: string }>()
   const { account } = useWeb3React()
 
@@ -151,7 +160,7 @@ export default function Manage() {
   }, [account, toggleWalletModal])
 
   return (
-    <PageWrapper gap="lg" justify="center">
+    <PageWrapper gap="lg" justify="center" phase1Flag={phase1Flag}>
       <RowBetween style={{ gap: '24px' }}>
         <ThemedText.DeprecatedMediumHeader style={{ margin: 0 }}>
           <Trans>

@@ -13,6 +13,7 @@ import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import Toggle from 'components/Toggle'
 import DelegateModal from 'components/vote/DelegateModal'
 import ProposalEmptyState from 'components/vote/ProposalEmptyState'
+import { Phase1Variant, usePhase1Flag } from 'featureFlags/flags/phase1'
 import useTheme from 'hooks/useTheme'
 import JSBI from 'jsbi'
 import { darken } from 'polished'
@@ -33,7 +34,13 @@ import { ZERO_ADDRESS } from '../../constants/misc'
 import { UNI } from '../../constants/tokens'
 import { ProposalStatus } from './styled'
 
-const PageWrapper = styled(AutoColumn)``
+const PageWrapper = styled(AutoColumn)<{ phase1Flag: Phase1Variant }>`
+  ${({ theme, phase1Flag }) =>
+    phase1Flag === Phase1Variant.Enabled &&
+    theme.mediaWidth.upToSmall`
+    padding: 0px 8px;
+  `}
+`
 
 const TopSection = styled(AutoColumn)`
   max-width: 640px;
@@ -111,6 +118,7 @@ const StyledExternalLink = styled(ExternalLink)`
 
 export default function Landing() {
   const theme = useTheme()
+  const phase1Flag = usePhase1Flag()
   const { account, chainId } = useWeb3React()
 
   const [hideCancelled, setHideCancelled] = useState(true)
@@ -137,7 +145,7 @@ export default function Landing() {
   return (
     <>
       <Trace page={PageName.VOTE_PAGE} shouldLogImpression>
-        <PageWrapper gap="lg" justify="center">
+        <PageWrapper gap="lg" justify="center" phase1Flag={phase1Flag}>
           <DelegateModal
             isOpen={showDelegateModal}
             onDismiss={toggleDelegateModal}

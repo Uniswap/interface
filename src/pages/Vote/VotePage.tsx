@@ -6,6 +6,7 @@ import { PageName } from 'components/AmplitudeAnalytics/constants'
 import { Trace } from 'components/AmplitudeAnalytics/Trace'
 import ExecuteModal from 'components/vote/ExecuteModal'
 import QueueModal from 'components/vote/QueueModal'
+import { Phase1Variant, usePhase1Flag } from 'featureFlags/flags/phase1'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import JSBI from 'jsbi'
@@ -55,8 +56,13 @@ import { isAddress } from '../../utils'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
 import { ProposalStatus } from './styled'
 
-const PageWrapper = styled(AutoColumn)`
+const PageWrapper = styled(AutoColumn)<{ phase1Flag: Phase1Variant }>`
   width: 100%;
+  ${({ theme, phase1Flag }) =>
+    phase1Flag === Phase1Variant.Enabled &&
+    theme.mediaWidth.upToSmall`
+    padding: 0px 8px;
+  `}
 `
 
 const ProposalInfo = styled(AutoColumn)`
@@ -153,6 +159,7 @@ function getDateFromBlock(
 }
 
 export default function VotePage() {
+  const phase1Flag = usePhase1Flag()
   // see https://github.com/remix-run/react-router/issues/8200#issuecomment-962520661
   const { governorIndex, id } = useParams() as { governorIndex: string; id: string }
   const parsedGovernorIndex = Number.parseInt(governorIndex)
@@ -260,7 +267,7 @@ export default function VotePage() {
   return (
     <Trace page={PageName.VOTE_PAGE} shouldLogImpression>
       <>
-        <PageWrapper gap="lg" justify="center">
+        <PageWrapper gap="lg" justify="center" phase1Flag={phase1Flag}>
           <VoteModal
             isOpen={showVoteModal}
             onDismiss={toggleVoteModal}

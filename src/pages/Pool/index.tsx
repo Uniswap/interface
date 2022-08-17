@@ -11,6 +11,7 @@ import PositionList from 'components/PositionList'
 import { RowBetween, RowFixed } from 'components/Row'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import { isSupportedChain } from 'constants/chains'
+import { Phase1Variant, usePhase1Flag } from 'featureFlags/flags/phase1'
 import { useV3Positions } from 'hooks/useV3Positions'
 import { useContext } from 'react'
 import { AlertTriangle, BookOpen, ChevronDown, ChevronsRight, Inbox, Layers, PlusCircle } from 'react-feather'
@@ -25,7 +26,7 @@ import { V2_FACTORY_ADDRESSES } from '../../constants/addresses'
 import CTACards from './CTACards'
 import { LoadingRows } from './styleds'
 
-const PageWrapper = styled(AutoColumn)`
+const PageWrapper = styled(AutoColumn)<{ phase1Flag: Phase1Variant }>`
   max-width: 870px;
   width: 100%;
 
@@ -33,9 +34,15 @@ const PageWrapper = styled(AutoColumn)`
     max-width: 800px;
   `};
 
-  ${({ theme }) => theme.mediaWidth.upToSmall`
+  ${({ theme, phase1Flag }) =>
+    phase1Flag === Phase1Variant.Enabled
+      ? theme.mediaWidth.upToSmall`
     max-width: 500px;
-  `};
+    padding: 0px 8px;
+  `
+      : theme.mediaWidth.upToSmall`
+    max-width: 500px;
+  `}
 `
 const TitleRow = styled(RowBetween)`
   color: ${({ theme }) => theme.deprecated_text2};
@@ -153,9 +160,10 @@ function PositionsLoadingPlaceholder() {
 
 function WrongNetworkCard() {
   const theme = useContext(ThemeContext)
+  const phase1Flag = usePhase1Flag()
   return (
     <>
-      <PageWrapper>
+      <PageWrapper phase1Flag={phase1Flag}>
         <AutoColumn gap="lg" justify="center">
           <AutoColumn gap="lg" style={{ width: '100%' }}>
             <TitleRow style={{ marginTop: '1rem' }} padding={'0'}>
@@ -183,6 +191,7 @@ function WrongNetworkCard() {
 }
 
 export default function Pool() {
+  const phase1Flag = usePhase1Flag()
   const { account, chainId } = useWeb3React()
   const toggleWalletModal = useToggleWalletModal()
 
@@ -253,7 +262,7 @@ export default function Pool() {
   return (
     <Trace page={PageName.POOL_PAGE} shouldLogImpression>
       <>
-        <PageWrapper>
+        <PageWrapper phase1Flag={phase1Flag}>
           <AutoColumn gap="lg" justify="center">
             <AutoColumn gap="lg" style={{ width: '100%' }}>
               <TitleRow style={{ marginTop: '1rem' }} padding={'0'}>
