@@ -1,231 +1,31 @@
-/* eslint-disable no-restricted-globals */
 import useDebounce from 'hooks/useDebounce'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { useWindowSize } from 'hooks/useWindowSize'
 import { organizeSearchResults } from 'lib/utils/searchBar'
-import uriToHttp from 'lib/utils/uriToHttp'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import { Overlay } from 'nft/components/modals/Overlay'
 import { subheadSmall } from 'nft/css/common.css'
-import { breakpoints, vars } from 'nft/css/sprinkles.css'
+import { breakpoints } from 'nft/css/sprinkles.css'
 import { useSearchHistory } from 'nft/hooks'
 // import { fetchSearchCollections, fetchTrendingCollections } from 'nft/queries'
 import { fetchSearchTokens } from 'nft/queries/genie/SearchTokensFetcher'
 import { fetchTrendingTokens } from 'nft/queries/genie/TrendingTokensFetcher'
 import { FungibleToken, GenieCollection, TrendingCollection } from 'nft/types'
-import { ethNumberStandardFormatter } from 'nft/utils/currency'
-import { putCommas } from 'nft/utils/putCommas'
-import { ChangeEvent, useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react'
+import { ChangeEvent, useEffect, useMemo, useReducer, useRef, useState } from 'react'
 import { useQuery } from 'react-query'
-import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 
 import {
   ChevronLeftIcon,
   ClockIcon,
   MagnifyingGlassIcon,
   NavMagnifyingGlassIcon,
-  TokenWarningRedIcon,
   TrendingArrow,
-  VerifiedIcon,
 } from '../../nft/components/icons'
 import { NavIcon } from './NavIcon'
 import * as styles from './SearchBar.css'
-
-interface CollectionRowProps {
-  collection: GenieCollection
-  isHovered: boolean
-  setHoveredIndex: (index: number | undefined) => void
-  toggleOpen: () => void
-  index: number
-}
-
-const CollectionRow = ({ collection, isHovered, setHoveredIndex, toggleOpen, index }: CollectionRowProps) => {
-  const [brokenImage, setBrokenImage] = useState(false)
-  const [loaded, setLoaded] = useState(false)
-  const addToSearchHistory = useSearchHistory(
-    (state: { addItem: (item: FungibleToken | GenieCollection) => void }) => state.addItem
-  )
-  const navigate = useNavigate()
-
-  const handleClick = useCallback(() => {
-    addToSearchHistory(collection)
-    toggleOpen()
-  }, [addToSearchHistory, collection, toggleOpen])
-
-  useEffect(() => {
-    const keyDownHandler = (event: KeyboardEvent) => {
-      if (event.key === 'Enter' && isHovered) {
-        event.preventDefault()
-        navigate(`/nfts/collection/${collection.address}`)
-        handleClick()
-      }
-    }
-    document.addEventListener('keydown', keyDownHandler)
-    return () => {
-      document.removeEventListener('keydown', keyDownHandler)
-    }
-  }, [toggleOpen, isHovered, collection, navigate, handleClick])
-
-  return (
-    <Link
-      to={`/nfts/collection/${collection.address}`}
-      onClick={handleClick}
-      onMouseEnter={() => !isHovered && setHoveredIndex(index)}
-      onMouseLeave={() => isHovered && setHoveredIndex(undefined)}
-      className={styles.suggestionRow}
-      style={{ background: isHovered ? vars.color.lightGrayButton : 'none' }}
-    >
-      <Row style={{ width: '68%' }}>
-        {!brokenImage && collection.imageUrl ? (
-          <Box
-            as="img"
-            src={collection.imageUrl}
-            alt={collection.name}
-            className={styles.suggestionImage}
-            onError={() => setBrokenImage(true)}
-            onLoad={() => setLoaded(true)}
-            style={{
-              background: loaded
-                ? 'none'
-                : 'radial-gradient(167.86% 167.86% at -21.43% -50%, #4C82FB 0%, #09265E 100%)',
-            }}
-          />
-        ) : (
-          <Box className={styles.imageHolder} />
-        )}
-        <Column className={styles.suggestionPrimaryContainer}>
-          <Row gap="4" width="full">
-            <Box className={styles.primaryText}>{collection.name}</Box>
-            {collection.isVerified && <VerifiedIcon className={styles.suggestionIcon} />}
-          </Row>
-          <Box className={styles.secondaryText}>{putCommas(collection.stats.total_supply)} items</Box>
-        </Column>
-      </Row>
-      {collection.floorPrice && (
-        <Column className={styles.suggestionSecondaryContainer}>
-          <Row gap="4">
-            <Box className={styles.primaryText}>{ethNumberStandardFormatter(collection.floorPrice)} ETH</Box>
-          </Row>
-          <Box className={styles.secondaryText}>Floor</Box>
-        </Column>
-      )}
-    </Link>
-  )
-}
-
-interface TokenRowProps {
-  token: FungibleToken
-  isHovered: boolean
-  setHoveredIndex: (index: number | undefined) => void
-  toggleOpen: () => void
-  index: number
-}
-
-const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index }: TokenRowProps) => {
-  const [brokenImage, setBrokenImage] = useState(false)
-  const [loaded, setLoaded] = useState(false)
-  const addToSearchHistory = useSearchHistory(
-    (state: { addItem: (item: FungibleToken | GenieCollection) => void }) => state.addItem
-  )
-  const navigate = useNavigate()
-
-  const handleClick = useCallback(() => {
-    addToSearchHistory(token)
-    toggleOpen()
-  }, [addToSearchHistory, toggleOpen, token])
-
-  // Close the modal on escape
-  useEffect(() => {
-    const keyDownHandler = (event: KeyboardEvent) => {
-      if (event.key === 'Enter' && isHovered) {
-        event.preventDefault()
-        navigate(`/tokens/${token.address}`)
-        handleClick()
-      }
-    }
-    document.addEventListener('keydown', keyDownHandler)
-    return () => {
-      document.removeEventListener('keydown', keyDownHandler)
-    }
-  }, [toggleOpen, isHovered, token, navigate, handleClick])
-
-  return (
-    <Link
-      // TODO connect with explore token URI
-      to={`/tokens/${token.address}`}
-      onClick={handleClick}
-      onMouseEnter={() => !isHovered && setHoveredIndex(index)}
-      onMouseLeave={() => isHovered && setHoveredIndex(undefined)}
-      className={styles.suggestionRow}
-      style={{ background: isHovered ? vars.color.lightGrayButton : 'none' }}
-    >
-      <Row>
-        {!brokenImage && token.logoURI ? (
-          <Box
-            as="img"
-            src={token.logoURI.includes('ipfs://') ? uriToHttp(token.logoURI)[0] : token.logoURI}
-            alt={token.name}
-            className={styles.suggestionImage}
-            onError={() => setBrokenImage(true)}
-            onLoad={() => setLoaded(true)}
-            style={{
-              background: loaded
-                ? 'none'
-                : 'radial-gradient(167.86% 167.86% at -21.43% -50%, #4C82FB 0%, #09265E 100%)',
-            }}
-          />
-        ) : (
-          <Box className={styles.imageHolder} />
-        )}
-        <Column className={styles.suggestionPrimaryContainer}>
-          <Row gap="4" width="full">
-            <Box className={styles.primaryText}>{token.name}</Box>
-            {token.onDefaultList ? (
-              <VerifiedIcon className={styles.suggestionIcon} />
-            ) : (
-              <TokenWarningRedIcon className={styles.suggestionIcon} />
-            )}
-          </Row>
-          <Box className={styles.secondaryText}>{token.symbol}</Box>
-        </Column>
-      </Row>
-
-      <Column className={styles.suggestionSecondaryContainer}>
-        {token.priceUsd && (
-          <Row gap="4">
-            <Box className={styles.primaryText}>{ethNumberStandardFormatter(token.priceUsd, true)}</Box>
-          </Row>
-        )}
-        {token.price24hChange && (
-          <Box className={styles.secondaryText} color={token.price24hChange >= 0 ? 'green400' : 'red400'}>
-            {token.price24hChange.toFixed(2)}%
-          </Box>
-        )}
-      </Column>
-    </Link>
-  )
-}
-
-const SkeletonRow = () => {
-  const [isHovered, toggleHovered] = useReducer((s) => !s, false)
-
-  return (
-    <Box className={styles.searchBarDropdown}>
-      <Row
-        background={isHovered ? 'lightGrayButton' : 'none'}
-        onMouseEnter={toggleHovered}
-        onMouseLeave={toggleHovered}
-        className={styles.suggestionRow}
-      >
-        <Row>
-          <Box className={styles.suggestionImage} style={{ background: '#7C85A24D' }} />
-          <Box borderRadius="round" height="16" width="160" style={{ background: '#7C85A24D' }} />
-        </Row>
-      </Row>
-    </Box>
-  )
-}
+import { CollectionRow, SkeletonRow, TokenRow } from './SuggestionRow'
 
 interface SearchBarDropdownSectionProps {
   toggleOpen: () => void
