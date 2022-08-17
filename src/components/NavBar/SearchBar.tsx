@@ -2,6 +2,7 @@
 import useDebounce from 'hooks/useDebounce'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { useWindowSize } from 'hooks/useWindowSize'
+import { organizeSearchResults } from 'lib/utils/searchBar'
 import uriToHttp from 'lib/utils/uriToHttp'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
@@ -459,14 +460,7 @@ export const SearchBar = () => {
 
   const isNFTPage = location.hash.includes('/nfts')
 
-  // If not an nft page show up to 5 tokens, else up to 3. Max total suggestions of 8
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const [reducedTokens, reducedCollections]: [FungibleToken[], GenieCollection[]] = useMemo(() => {
-    const reducedTokens =
-      tokens?.slice(0, isNFTPage ? 3 : (collections?.length ?? 0) < 3 ? 8 - (collections?.length ?? 0) : 5) ?? []
-    const reducedCollections = searchValue.length > 0 ? collections?.slice(0, 8 - reducedTokens.length) ?? [] : []
-    return [reducedTokens, reducedCollections]
-  }, [collections, isNFTPage, searchValue.length, tokens])
+  const [reducedTokens, reducedCollections] = organizeSearchResults(isNFTPage, tokens ?? [], collections ?? [])
 
   useEffect(() => {
     const escapeKeyDownHandler = (event: KeyboardEvent) => {
