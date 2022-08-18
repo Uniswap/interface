@@ -50,7 +50,7 @@ const banner = {
       Important Announcement: If you’re currently participating in our Elastic Farms on Polygon & Avalanche, please read
       this{' '}
       <ExternalLink
-        href="https://medium.com/@kyberteam/important-community-update-about-kyberswap-elastic-farms-6f90b40bb88"
+        href="https://blog.kyber.network/important-community-update-about-kyberswap-elastic-farms-4f69d7ada1e8"
         style={{ color: '#fff', fontWeight: 500, textDecoration: 'underline' }}
       >
         announcement!
