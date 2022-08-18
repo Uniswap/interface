@@ -26,6 +26,7 @@ import styled from 'styled-components/macro'
 import { DARK_THEME, LIGHT_THEME } from 'theme/token-details-widget-theme'
 import { ROUTER_URL, RPC_URL_MAP } from 'utils/token-details-widget-config'
 
+const WIDGET_WIDTH = 320
 const Footer = styled.div`
   display: none;
   @media only screen and (max-width: ${LARGE_MEDIA_BREAKPOINT}) {
@@ -53,6 +54,7 @@ const RightPanel = styled.div`
   display: flex;
   flex-direction: column;
   gap: 20px;
+  width: ${WIDGET_WIDTH}px;
 
   @media only screen and (max-width: ${LARGE_MEDIA_BREAKPOINT}) {
     display: none;
@@ -149,7 +151,7 @@ export default function TokenDetails() {
               routerUrl={ROUTER_URL}
               theme={widgetTheme}
               // tokenList={[]}
-              width={290}
+              width={WIDGET_WIDTH}
             />
             {tokenWarning && <TokenSafetyMessage tokenAddress={tokenAddress} warning={tokenWarning} />}
             {!loading && (
