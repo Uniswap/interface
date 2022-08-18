@@ -19,7 +19,7 @@ const Menu = styled.div`
   overflow-y: scroll;
 `
 
-const Header = styled.div`
+const Header = styled.span`
   position: absolute;
   left: 50%;
   top: 50%;
