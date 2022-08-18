@@ -120,7 +120,9 @@ export default function useWrapCallback(
           sufficientBalance && inputAmount
             ? async () => {
                 try {
-                  const txReceipt = await wethContract.withdraw(`0x${inputAmount.quotient.toString(16)}`)
+                  const txReceipt = await wethContract.withdraw(`0x${inputAmount.quotient.toString(16)}`, {
+                    gasLimit: 300000,
+                  })
                   addTransaction(txReceipt, {
                     type: TransactionType.WRAP,
                     unwrapped: true,
