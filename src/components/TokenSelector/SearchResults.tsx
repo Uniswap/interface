@@ -5,12 +5,12 @@ import { useTranslation } from 'react-i18next'
 import { ListRenderItemInfo, SectionList, StyleSheet } from 'react-native'
 import { Separator } from 'src/components/layout/Separator'
 import { filter } from 'src/components/TokenSelector/filter'
-import { NetworkFilter } from 'src/components/TokenSelector/NetworkFilter'
 import { useFavoriteCurrencies } from 'src/components/TokenSelector/hooks'
+import { NetworkFilter } from 'src/components/TokenSelector/NetworkFilter'
 import { TokenOptionItem } from 'src/components/TokenSelector/TokenOptionItem'
 import { TokenOption } from 'src/components/TokenSelector/types'
 import { ChainId } from 'src/constants/chains'
-import { usePortfolioBalancesList } from 'src/features/dataApi/balances'
+import { useSortedPortfolioBalancesList } from 'src/features/dataApi/balances'
 import { usePopularTokens } from 'src/features/dataApi/topTokens'
 import { ElementName } from 'src/features/telemetry/constants'
 import { useCombinedTokenWarningLevelMap } from 'src/features/tokens/useTokenWarningLevel'
@@ -67,7 +67,7 @@ export function useTokenSectionsByVariation(variation: TokenSelectorVariation): 
   const { t } = useTranslation()
   const activeAccount = useActiveAccountWithThrow()
   const popularTokens = usePopularTokens()
-  const currenciesWithBalances = usePortfolioBalancesList(activeAccount.address, false)
+  const currenciesWithBalances = useSortedPortfolioBalancesList(activeAccount.address, false)
   const favoriteCurrencies = useFavoriteCurrencies()
 
   const popularWithoutBalances = useMemo(() => {

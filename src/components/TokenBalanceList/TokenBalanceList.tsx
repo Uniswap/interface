@@ -9,7 +9,7 @@ import { Separator } from 'src/components/layout/Separator'
 import { TokenBalanceItem } from 'src/components/TokenBalanceList/TokenBalanceItem'
 import { TokenBalanceListHeader } from 'src/components/TokenBalanceList/TokenBalanceListHeader'
 import { balancesToSectionListData } from 'src/components/TokenBalanceList/utils'
-import { usePortfolioBalancesList } from 'src/features/dataApi/balances'
+import { useSortedPortfolioBalancesList } from 'src/features/dataApi/balances'
 import { PortfolioBalance } from 'src/features/dataApi/types'
 import { SectionName } from 'src/features/telemetry/constants'
 import { Trace } from 'src/features/telemetry/Trace'
@@ -49,7 +49,7 @@ export function TokenBalanceList({
   view,
   count,
 }: TokenBalanceListProps) {
-  const balances = usePortfolioBalancesList(owner, true)
+  const balances = useSortedPortfolioBalancesList(owner, true)
   const { t } = useTranslation()
   const navigation = useHomeStackNavigation()
 
@@ -63,20 +63,17 @@ export function TokenBalanceList({
     [balances.length, navigation, owner, t]
   )
 
-  const sortedBalances = useMemo(
-    () => balances.sort((a, b) => (a.balanceUSD > b.balanceUSD ? -1 : 1)).slice(0, count),
-    [balances, count]
-  )
+  const truncatedBalances = useMemo(() => balances.slice(0, count), [balances, count])
 
   return view === ViewType.Flat ? (
     <FlatBalanceList
-      balances={sortedBalances}
+      balances={truncatedBalances}
       empty={empty}
       header={header}
       onPressToken={onPressToken}
     />
   ) : (
-    <NetworkBalanceList balances={sortedBalances} header={header} onPressToken={onPressToken} />
+    <NetworkBalanceList balances={truncatedBalances} header={header} onPressToken={onPressToken} />
   )
 }
 

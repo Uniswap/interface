@@ -81,13 +81,19 @@ export function usePortfolioBalances(address: Address, onlyKnownCurrencies?: boo
   }, [balancesForAddress, onlyKnownCurrencies, tokensByChainId])
 }
 
-export function usePortfolioBalancesList(
+export function useSortedPortfolioBalancesList(
   address: Address,
   onlyKnownCurrencies?: boolean
 ): PortfolioBalance[] {
   const balancesById = usePortfolioBalances(address, onlyKnownCurrencies)
 
-  return useMemo(() => (!balancesById ? EMPTY_ARRAY : Object.values(balancesById)), [balancesById])
+  return useMemo(
+    () =>
+      !balancesById
+        ? EMPTY_ARRAY
+        : Object.values(balancesById).sort((a, b) => b.balanceUSD - a.balanceUSD),
+    [balancesById]
+  )
 }
 
 /**

@@ -1,5 +1,5 @@
 import { Currency } from '@uniswap/sdk-core'
-import React, { Suspense, useCallback, useMemo } from 'react'
+import React, { Suspense, useCallback } from 'react'
 import { ListRenderItemInfo } from 'react-native'
 import { HomeStackScreenProp, useHomeStackNavigation } from 'src/app/navigation/types'
 import { AddressDisplay } from 'src/components/AddressDisplay'
@@ -12,9 +12,8 @@ import { Loading } from 'src/components/loading'
 import { PortfolioBalanceChart } from 'src/components/PriceChart'
 import { PriceChartLoading } from 'src/components/PriceChart/PriceChartLoading'
 import { TokenBalanceItem } from 'src/components/TokenBalanceList/TokenBalanceItem'
-import { EMPTY_ARRAY } from 'src/constants/misc'
 import { TotalBalance } from 'src/features/balances/TotalBalance'
-import { usePortfolioBalances } from 'src/features/dataApi/balances'
+import { useSortedPortfolioBalancesList } from 'src/features/dataApi/balances'
 import { PortfolioBalance } from 'src/features/dataApi/types'
 import { useActiveAccountAddressWithThrow } from 'src/features/wallet/hooks'
 import { Screens } from 'src/screens/Screens'
@@ -43,11 +42,7 @@ function PortfolioTokensContent({ owner }: { owner?: string }) {
   const accountAddress = useActiveAccountAddressWithThrow()
   const activeAddress = owner ?? accountAddress
 
-  const balancesById = usePortfolioBalances(activeAddress, true)
-  const balances: PortfolioBalance[] = useMemo(
-    () => (!balancesById ? EMPTY_ARRAY : Object.values(balancesById)),
-    [balancesById]
-  )
+  const balances = useSortedPortfolioBalancesList(activeAddress, true)
 
   const renderItem = useCallback(
     ({ item }: ListRenderItemInfo<PortfolioBalance>) => (
