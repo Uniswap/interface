@@ -128,7 +128,7 @@ const StyledHeaderRow = styled(StyledTokenRow)`
   width: 100%;
 
   &:hover {
-    background-color: 'transparent';
+    background-color: transparent;
   }
 
   @media only screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
@@ -170,6 +170,7 @@ const PriceCell = styled(DataCell)`
   padding-right: 8px;
 `
 const PercentChangeCell = styled(DataCell)`
+  padding-right: 8px;
   @media only screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
     display: none;
   }
