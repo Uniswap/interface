@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-17 20:04\n"
+"PO-Revision-Date: 2022-08-18 18:04\n"
 "Last-Translator: \n"
 "Language: ca_ES\n"
 "Language-Team: Catalan\n"
@@ -290,6 +290,7 @@ msgid "Available to deposit: {0}"
 msgstr "Disponible per ingressar: {0}"
 
 #: src/components/WalletModal/PendingView.tsx
+#: src/components/WalletModal/PendingView.tsx
 msgid "Back to wallet selection"
 msgstr "Torna a la selecció de cartera"
 
@@ -342,6 +343,7 @@ msgid "By adding this list you are implicitly trusting that the data is correct.
 msgstr "En afegir aquesta llista, confieu implícitament que les dades són correctes. Qualsevol persona pot crear una llista, inclosa la creació de versions falses de llistes existents i llistes que afirmen representar projectes que no en tenen cap."
 
 #: src/components/WalletModal/index.tsx
+#: src/components/WalletModal/index.tsx
 msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the Uniswap <1>Protocol Disclaimer</1>."
 msgstr "En connectar una cartera, acceptes les Condicions del servei <0></0> i reconeixes que has llegit i entén l'exempció <1>responsabilitat del protocol d'</1>."
 
@@ -369,6 +371,7 @@ msgstr "Comproveu l'estat de la xarxa"
 msgid "Check out our v3 LP walkthrough and migration guides."
 msgstr "Consulteu les nostres guies de migració i tutorial v3 LP."
 
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/pages/Earn/Manage.tsx
@@ -495,6 +498,10 @@ msgstr "Confirmeu el subministrament"
 msgid "Confirm Swap"
 msgstr "Confirmeu l'intercanvi"
 
+#: src/components/WalletModal/PendingView.tsx
+msgid "Confirm this connection in your wallet"
+msgstr "Confirmeu aquesta connexió a la vostra cartera"
+
 #: src/components/ModalViews/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
@@ -550,9 +557,14 @@ msgstr "Connectat amb"
 msgid "Connecting..."
 msgstr "Connectant..."
 
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
 #: src/theme/components.tsx
 msgid "Copied!"
 msgstr "Copiat!"
+
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
+msgid "Copy"
+msgstr "Còpia"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Copy Address"
@@ -603,6 +615,10 @@ msgstr "Preu actual {0}"
 
 #: src/components/Menu/index.tsx
 msgid "Dark Theme"
+msgstr "Tema fosc"
+
+#: src/components/WalletDropdown/DefaultMenu.tsx
+msgid "Dark theme"
 msgstr "Tema fosc"
 
 #: src/pages/Vote/styled.tsx
@@ -677,6 +693,7 @@ msgid "Details"
 msgstr "Detalls"
 
 #: src/components/AccountDetails/index.tsx
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
 msgid "Disconnect"
 msgstr "Desconnecta"
 
@@ -754,6 +771,7 @@ msgid "Error"
 msgstr "Error"
 
 #: src/components/WalletModal/PendingView.tsx
+#: src/components/WalletModal/PendingView.tsx
 msgid "Error connecting"
 msgstr "Error de connexió"
 
@@ -822,6 +840,14 @@ msgstr "El mode expert desactiva la sol·licitud de confirmació de la transacci
 msgid "Expired"
 msgstr "Caducat"
 
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
+msgid "Explore"
+msgstr "Explora"
+
+#: src/pages/Tokens/index.tsx
+msgid "Explore Tokens"
+msgstr "Exploreu fitxes"
+
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore Uniswap Analytics."
 msgstr "Exploreu Uniswap Analytics."
@@ -883,11 +909,8 @@ msgstr "Amaga"
 msgid "High Price Impact"
 msgstr "Alt impacte en els preus"
 
-#: src/components/TokenSafety/index.tsx
-msgid "I Understand"
-msgstr "Entenc"
-
 #: src/components/SearchModal/ImportList.tsx
+#: src/components/TokenSafety/index.tsx
 #: src/pages/AddLiquidity/index.tsx
 msgid "I understand"
 msgstr "Entenc"
@@ -986,16 +1009,14 @@ msgid "Invalid recipient"
 msgstr "Destinatari no vàlid"
 
 #: src/components/Menu/index.tsx
+#: src/components/WalletDropdown/DefaultMenu.tsx
+#: src/components/WalletDropdown/LanguageMenu.tsx
 msgid "Language"
 msgstr "Llenguatge"
 
 #: src/pages/Pool/index.tsx
 msgid "Learn"
 msgstr "Aprendre"
-
-#: src/components/TokenSafety/index.tsx
-msgid "Learn More"
-msgstr "Aprèn més"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Learn about providing liquidity"
@@ -1004,6 +1025,7 @@ msgstr "Obteniu informació sobre com proporcionar liquiditat"
 #: src/components/PrivacyPolicy/index.tsx
 #: src/components/PrivacyPolicy/index.tsx
 #: src/components/TokenSafety/TokenSafetyMessage.tsx
+#: src/components/TokenSafety/index.tsx
 msgid "Learn more"
 msgstr "Aprèn més"
 
@@ -1015,6 +1037,10 @@ msgstr "Legal i Privacitat"
 #: src/components/Menu/index.tsx
 msgid "Light Theme"
 msgstr "Tema de la llum"
+
+#: src/components/WalletDropdown/DefaultMenu.tsx
+msgid "Light theme"
+msgstr "Tema lleuger"
 
 #: src/components/claim/ClaimModal.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -1258,6 +1284,7 @@ msgstr "Propietari"
 msgid "Participating pools"
 msgstr "Grups participants"
 
+#: src/components/WalletDropdown/DefaultMenu.tsx
 #: src/pages/Vote/styled.tsx
 msgid "Pending"
 msgstr "Pendents"
@@ -1320,8 +1347,8 @@ msgstr "Agrupat {0}:"
 
 #: src/pages/Pool/index.tsx
 #: src/pages/Pool/index.tsx
-msgid "Pools Overview"
-msgstr "Visió general dels grups"
+msgid "Pools"
+msgstr "Piscines"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Portal Bridge"
@@ -1690,6 +1717,7 @@ msgid "The app securely collects your wallet address and shares it with TRM Labs
 msgstr "L'aplicació recopila de manera segura l'adreça de la cartera i la comparteix amb TRM Labs Inc. per motius de risc i compliment."
 
 #: src/components/WalletModal/PendingView.tsx
+#: src/components/WalletModal/PendingView.tsx
 msgid "The connection attempt failed. Please click try again and follow the steps to connect in your wallet."
 msgstr "L'intent de connexió ha fallat. Feu clic a prova de nou i seguiu els passos per connectar-vos a la vostra cartera."
 
@@ -1876,10 +1904,16 @@ msgstr "Termini de transacció"
 msgid "Transaction rejected."
 msgstr "S'ha rebutjat la transacció."
 
+#: src/components/WalletDropdown/DefaultMenu.tsx
+#: src/components/WalletDropdown/TransactionMenu.tsx
+msgid "Transactions"
+msgstr "Transaccions"
+
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Transfer Token"
 msgstr "Transferir el testimoni"
 
+#: src/components/WalletModal/PendingView.tsx
 #: src/components/WalletModal/PendingView.tsx
 msgid "Try Again"
 msgstr "Torna-ho a provar"
@@ -2118,6 +2152,10 @@ msgstr "La votació comença aproximadament a {0}"
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Waiting For Confirmation"
 msgstr "Esperant la confirmació"
+
+#: src/components/WalletModal/PendingView.tsx
+msgid "Waiting to connect"
+msgstr "Esperant per connectar"
 
 #: src/components/AddressInputPanel/index.tsx
 msgid "Wallet Address or ENS name"
@@ -2372,6 +2410,10 @@ msgstr "https: // o ipfs: // o nom ENS"
 msgid "minutes"
 msgstr "minuts"
 
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
+msgid "reward"
+msgstr "recompensa"
+
 #: src/components/SearchModal/ImportRow.tsx
 msgid "via {0}"
 msgstr "mitjançant {0}"
@@ -2549,6 +2591,6 @@ msgid "{tokenB} per {tokenA}"
 msgstr "{tokenB} per {tokenA}"
 
 #: src/pages/Pool/PositionPage.tsx
-msgid "← Back to Pools Overview"
-msgstr "← Torna a la descripció general dels grups"
+msgid "← Back to Pools"
+msgstr "← Torna a Piscines"
 
