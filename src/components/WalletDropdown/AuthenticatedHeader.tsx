@@ -41,7 +41,6 @@ const Column = styled.div`
 
 const IconContainer = styled.div`
   display: flex;
-  float: right;
   align-items: center;
   & > a,
   & > button {
@@ -55,8 +54,6 @@ const IconContainer = styled.div`
     }
   }
 `
-
-const IconContainerFlex = styled.div``
 
 const USDText = styled.div`
   font-size: 16px;
@@ -80,6 +77,8 @@ const BalanceWrapper = styled.div`
 
 const HeaderWrapper = styled.div`
   margin-bottom: 12px;
+  display: flex;
+  justify-content: space-between;
 `
 
 const AuthenticatedHeader = () => {
