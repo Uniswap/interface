@@ -596,7 +596,7 @@ export function PositionPage() {
                 to="/pool"
               >
                 <HoverText>
-                  <Trans>← Back to Pools Overview</Trans>
+                  <Trans>← Back to Pools</Trans>
                 </HoverText>
               </Link>
               <ResponsiveRow>

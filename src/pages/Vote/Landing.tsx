@@ -32,7 +32,11 @@ import { ZERO_ADDRESS } from '../../constants/misc'
 import { UNI } from '../../constants/tokens'
 import { ProposalStatus } from './styled'
 
-const PageWrapper = styled(AutoColumn)``
+const PageWrapper = styled(AutoColumn)`
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    padding: 0px 8px;
+  `};
+`
 
 const TopSection = styled(AutoColumn)`
   max-width: 640px;

@@ -4,6 +4,7 @@ import { sendAnalyticsEvent } from 'components/AmplitudeAnalytics'
 import { EventName } from 'components/AmplitudeAnalytics/constants'
 import SparklineChart from 'components/Charts/SparklineChart'
 import CurrencyLogo from 'components/CurrencyLogo'
+import { getChainInfo } from 'constants/chainInfo'
 import { useCurrency, useToken } from 'hooks/Tokens'
 import { TimePeriod, TokenData } from 'hooks/useExplorePageQuery'
 import { useAtom } from 'jotai'
@@ -92,7 +93,7 @@ export const ClickFavorited = styled.span`
   cursor: pointer;
 
   &:hover {
-    color: ${({ theme }) => theme.textPrimary};
+    opacity: 60%;
   }
 `
 
@@ -280,6 +281,23 @@ const SparkLineLoadingBubble = styled(LongLoadingBubble)`
   height: 4px;
 `
 
+const L2NetworkLogo = styled.div<{ networkUrl?: string }>`
+  height: 12px;
+  width: 12px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  background: url(${({ networkUrl }) => networkUrl});
+  background-repeat: no-repeat;
+  background-size: 12px 12px;
+  display: ${({ networkUrl }) => !networkUrl && 'none'};
+`
+const LogoContainer = styled.div`
+  position: relative;
+  align-items: center;
+  display: flex;
+`
+
 /* formatting for volume with timeframe header display */
 function getHeaderDisplay(category: string, timeframe: string): string {
   if (category === Category.volume) return `${TIME_DISPLAYS[timeframe]} ${category}`
@@ -435,6 +453,7 @@ export default function LoadedRow({
   const filterString = useAtomValue(filterStringAtom)
   const filterNetwork = useAtomValue(filterNetworkAtom)
   const filterTime = useAtomValue(filterTimeAtom) // filter time period for top tokens table
+  const L2Icon = getChainInfo(filterNetwork).circleLogoUrl
 
   const tokenPercentChangeInfo = (
     <>
@@ -476,13 +495,16 @@ export default function LoadedRow({
               toggleFavorite()
             }}
           >
-            <Heart size={18} color={heartColor} fill={heartColor} />
+            <Heart size={24} color={heartColor} fill={heartColor} />
           </ClickFavorited>
         }
         listNumber={tokenListIndex + 1}
         tokenInfo={
           <ClickableName>
-            <CurrencyLogo currency={currency} />
+            <LogoContainer>
+              <CurrencyLogo currency={currency} />
+              <L2NetworkLogo networkUrl={L2Icon} />
+            </LogoContainer>
             <TokenInfoCell>
               <TokenName>{tokenName}</TokenName>
               <TokenSymbol>{tokenSymbol}</TokenSymbol>

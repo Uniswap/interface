@@ -7,6 +7,7 @@ import { Box } from '../../nft/components/Box'
 import { Row } from '../../nft/components/Flex'
 import { UniIcon, UniIconMobile } from '../../nft/components/icons'
 import { breakpoints } from '../../nft/css/sprinkles.css'
+import { ChainSwitcher } from './ChainSwitcher'
 import { MenuDropdown } from './MenuDropdown'
 import { MobileSideBar } from './MobileSidebar'
 import * as styles from './Navbar.css'
@@ -40,7 +41,7 @@ const MobileNavbar = () => {
             <Box as="a" href="#/swap" className={styles.logoContainer}>
               <UniIconMobile width="44" height="44" className={styles.logo} />
             </Box>
-            {/* TODO add ChainSwitcher */}
+            <ChainSwitcher isMobile={true} />
           </Box>
           <Box className={styles.rightSideMobileContainer}>
             <Row gap="16">
@@ -95,7 +96,7 @@ const Navbar = () => {
         <Box className={styles.rightSideContainer}>
           <Row gap="12">
             <MenuDropdown />
-            {/* TODO add ChainSwitcher */}
+            <ChainSwitcher />
             <Web3Status />
           </Row>
         </Box>

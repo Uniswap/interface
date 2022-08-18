@@ -17,6 +17,9 @@ import { Countdown } from './Countdown'
 const PageWrapper = styled(AutoColumn)`
   max-width: 640px;
   width: 100%;
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    padding: 0px 8px;
+  `};
 `
 
 const TopSection = styled(AutoColumn)`
