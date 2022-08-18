@@ -167,7 +167,7 @@ const PositionRow = ({
 function WithdrawModal({
   selectedFarmAddress,
   onDismiss,
-  forced,
+  forced = false,
 }: {
   onDismiss: () => void
   selectedFarmAddress: string
@@ -361,7 +361,7 @@ function WithdrawModal({
                 selected={selectedNFTs.includes(pos.tokenId.toString())}
                 key={pos.tokenId.toString()}
                 position={pos}
-                forced
+                forced={forced}
                 onChange={(selected: boolean) => {
                   if (selected) setSeletedNFTs(prev => [...prev, pos.tokenId.toString()])
                   else {
