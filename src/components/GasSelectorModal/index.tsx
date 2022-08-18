@@ -1,3 +1,4 @@
+import { CheckCircle, RefreshCw, X } from "react-feather";
 import { CloseIcon, TYPE } from "theme";
 import { RowBetween, RowFixed } from "components/Row";
 import { useSetUserGasPreference, useUserGasPreference } from "state/user/hooks";
@@ -5,7 +6,6 @@ import { useSetUserGasPreference, useUserGasPreference } from "state/user/hooks"
 import { AutoColumn } from "components/Column";
 import Badge from "components/Badge";
 import { ButtonError } from "components/Button";
-import { CheckCircle } from "react-feather";
 import Modal from "components/Modal";
 import React from 'react'
 import { Trans } from "@lingui/react";
@@ -31,6 +31,18 @@ const StyledAutoColumn = styled(AutoColumn)`
 }
 `
 
+const ToolbarItem = styled(AutoColumn)`
+ cursor: pointer;
+ padding:9px;
+ background:#222;
+ transition: ease all 0.2s;
+ &:hover{
+     > * { 
+         background:#ccc; color: #222;  transition: ease all 0.2s;
+     }
+ }
+`;
+
 export const GasSelectorModal = (props: GasSelectorProps) => {
     const {isOpen, onDismiss} = props;
 
@@ -52,9 +64,11 @@ export const GasSelectorModal = (props: GasSelectorProps) => {
     const setUserGasSettings = useSetUserGasPreference()
     const [view, setView] = React.useState<'advanced' | 'basic'>(gasSettings?.custom && gasSettings?.custom > 0 ? 'advanced' : 'basic')
 
+    const fetchGasPrices = ( ) => getCurrentGasPrices().then(setPrices)
+    
     const customGas = gasSettings?.custom && gasSettings?.custom > 0 ? gasSettings?.custom : undefined
     React.useEffect(() => {
-        getCurrentGasPrices().then(setPrices)
+        fetchGasPrices()
     }, [isOpen])
 
     const updateToBasicView = () => setView('basic')
@@ -75,9 +89,17 @@ export const GasSelectorModal = (props: GasSelectorProps) => {
     const onChangeOfGas = (e: any) => {
         setUserGasSettings({...gasSettings, custom: e.target.value });
     }
+
+    const resetToDefaults = () => {
+        setUserGasSettings({low:false,medium:false,high:false, custom: undefined})
+    }
+
+    const refreshGasPrices = () => {
+        fetchGasPrices()
+    }
     return (
-        <Modal maxHeight={600} isOpen={isOpen} onDismiss={onDismiss}>
-             <ContentWrapper gap="lg">
+        <Modal size={500} maxHeight={600}  isOpen={isOpen} onDismiss={onDismiss}>
+             <ContentWrapper gap="sm">
           <RowBetween>
             <TYPE.mediumHeader>
               <>Gas Settings</><br/>
@@ -85,10 +107,14 @@ export const GasSelectorModal = (props: GasSelectorProps) => {
             </TYPE.mediumHeader>
             <CloseIcon onClick={onDismiss} />
           </RowBetween>
-          <RowFixed style={{columnGap: 15}}>
+          <RowFixed style={{marginBottom:15, columnGap: 15}}>
               <Badge style={{cursor: 'pointer'}} onClick={updateToBasicView}>Basic {view === 'basic' && <CheckCircle /> }</Badge>
               <Badge style={{cursor: 'pointer'}} onClick={updateToAdvancedView}>Advanced {view === 'advanced' && <CheckCircle /> }</Badge>
           </RowFixed>
+          {view === 'basic' && <div style={{display:'flex', justifyContent:'center', alignItems: 'center', columnGap:10}}>
+              <ToolbarItem onClick={refreshGasPrices}><Badge>Refresh Gas &nbsp;<RefreshCw /></Badge></ToolbarItem>
+              { Boolean(gasSettings?.high || gasSettings?.low || gasSettings?.medium) && <ToolbarItem onClick={resetToDefaults}><Badge>Clear Selection <X /></Badge></ToolbarItem>}
+          </div>}
           {view !== 'advanced' && (
            <RowBetween style={{ columnGap: 30, justifyContent: 'center'}}> 
              {!!prices &&  <StyledAutoColumn onClick={updateSettingsForLow} style={{cursor: 'pointer', padding:5, borderRadius:12, border: `1px solid ${gasSettings?.low ? '#fff' : 'transparent'}`}} justify="center" gap="md">
@@ -119,9 +145,11 @@ export const GasSelectorModal = (props: GasSelectorProps) => {
           )}
 
           {view === 'advanced' && (
-              <RowFixed style={{columnGap: 15}}>
-                  <label style={{display:'block'}}> Custom Gas W</label>
-                  <input onChange={onChangeOfGas} value={customGas} style={{height:40, border: '1px solid #ccc', borderRadius:12}} type="number" placeholder="Enter custom gas" />
+              <RowFixed style={{marginTop: 15, columnGap: 15}}>
+                  <AutoColumn justify="center" gap="md">
+                  <label style={{display:'block', width:'100%'}}> Custom Gas </label>
+                  <input onChange={onChangeOfGas} value={customGas} style={{width: '100%', height:40, border: '1px solid #ccc', borderRadius:12}} type="number" placeholder="Custom GWEI" />
+                  </AutoColumn>
             </RowFixed>
           )}
         </ContentWrapper>

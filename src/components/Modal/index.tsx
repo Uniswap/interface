@@ -1,7 +1,8 @@
-import React from 'react'
+import { DialogContent, DialogOverlay } from '@reach/dialog'
+import { animated, useSpring, useTransition } from 'react-spring'
 import styled, { css } from 'styled-components/macro'
-import { animated, useTransition, useSpring } from 'react-spring'
-import { DialogOverlay, DialogContent } from '@reach/dialog'
+
+import React from 'react'
 import { isMobile } from 'react-device-detect'
 import { transparentize } from 'polished'
 import { useGesture } from 'react-use-gesture'
@@ -44,7 +45,7 @@ const StyledDialogContent = styled(({ minHeight, maxHeight, mobile, isOpen, ...r
 
     align-self: ${({ mobile }) => (mobile ? 'flex-end' : 'center')};
 
-    max-width: 850px;
+    max-width: ${({size}) => size || 850}px;
     ${({ maxHeight }) =>
       maxHeight &&
       css`
@@ -84,6 +85,7 @@ interface ModalProps {
   maxHeight?: number
   initialFocusRef?: React.RefObject<any>
   children?: React.ReactNode
+  size?:number;
 }
 
 export default function Modal({
@@ -92,6 +94,7 @@ export default function Modal({
   minHeight = false,
   maxHeight = 90,
   initialFocusRef,
+  size = 850,
   children,
 }: ModalProps) {
   const fadeTransition = useTransition(isOpen, null, {
@@ -134,6 +137,7 @@ export default function Modal({
                     }
                   : {})}
                 aria-label="dialog content"
+                size={size}
                 minHeight={minHeight}
                 maxHeight={maxHeight}
                 mobile={isMobile}
