@@ -15,9 +15,11 @@ const Collection = () => {
     CollectionStatsFetcher(contractAddress as string)
   )
 
-  if (isMobile) return <CollectionMobile collectionStats={collectionStats} />
-
-  return <CollectionDesktop collectionStats={collectionStats} />
+  return isMobile ? (
+    <CollectionMobile collectionStats={collectionStats} />
+  ) : (
+    <CollectionDesktop collectionStats={collectionStats} />
+  )
 }
 
 export default Collection

@@ -7,7 +7,7 @@ function getIsMobile() {
   return isClient ? window.innerWidth < breakpoints.tabletSm : false
 }
 
-export function useIsMobile() {
+export function useIsMobile(): boolean {
   const [isMobile, setIsMobile] = useState(getIsMobile)
 
   useEffect(() => {
