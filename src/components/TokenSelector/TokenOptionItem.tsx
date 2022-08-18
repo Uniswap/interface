@@ -6,7 +6,7 @@ import { Modal } from 'src/components/modals/Modal'
 import TokenWarningModalContent from 'src/components/tokens/TokenWarningModalContent'
 import WarningIcon from 'src/components/tokens/WarningIcon'
 import { Option } from 'src/components/TokenSelector/Option'
-import { CurrencyWithMetadata } from 'src/components/TokenSelector/types'
+import { TokenOption } from 'src/components/TokenSelector/types'
 import {
   TokenWarningLevel,
   TokenWarningLevelMap,
@@ -15,20 +15,15 @@ import {
 import { currencyId } from 'src/utils/currencyId'
 
 interface OptionProps {
-  currencyWithMetadata: CurrencyWithMetadata
+  option: TokenOption
   onPress: () => void
   tokenWarningLevelMap: TokenWarningLevelMap
   matches: Fuse.FuseResult<Currency>['matches']
 }
 
-export function TokenOption({
-  currencyWithMetadata,
-  onPress,
-  tokenWarningLevelMap,
-  matches,
-}: OptionProps) {
+export function TokenOptionItem({ option, onPress, tokenWarningLevelMap, matches }: OptionProps) {
   const [showWarningModal, setShowWarningModal] = useState(false)
-  const { currency } = currencyWithMetadata
+  const { currency } = option
   const id = currencyId(currency.wrapped)
 
   const tokenWarningLevel =
@@ -69,10 +64,10 @@ export function TokenOption({
         />
       </Modal>
       <Option
-        currencyWithMetadata={currencyWithMetadata}
         icon={dismissed ? null : <WarningIcon tokenWarningLevel={tokenWarningLevel} />}
         matches={matches}
         metadataType={tokenWarningLevel === TokenWarningLevel.BLOCKED ? 'disabled' : 'balance'}
+        option={option}
         onPress={handleSelectCurrency}
       />
     </Box>

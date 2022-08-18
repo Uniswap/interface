@@ -6,28 +6,22 @@ import { CurrencyLogo } from 'src/components/CurrencyLogo'
 import { Box } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { TextWithFuseMatches } from 'src/components/text/TextWithFuseMatches'
-import { CurrencyWithMetadata } from 'src/components/TokenSelector/types'
-import { formatCurrencyAmount, formatUSDPrice } from 'src/utils/format'
+import { TokenOption } from 'src/components/TokenSelector/types'
+import { formatNumberBalance, formatUSDPrice } from 'src/utils/format'
 import { Flex } from '../layout'
 
 interface OptionProps {
-  currencyWithMetadata: CurrencyWithMetadata
+  option: TokenOption
   onPress: () => void
-  matches: Fuse.FuseResult<CurrencyWithMetadata>['matches']
+  matches: Fuse.FuseResult<TokenOption>['matches']
   metadataType: 'balance' | 'disabled'
   icon?: ReactElement | null
 }
 
-export function Option({
-  currencyWithMetadata,
-  onPress,
-  matches,
-  metadataType,
-  icon,
-}: OptionProps) {
+export function Option({ option, onPress, matches, metadataType, icon }: OptionProps) {
   const symbolMatches = matches?.filter((m) => m.key === 'symbol')
   const nameMatches = matches?.filter((m) => m.key === 'name')
-  const { currency, currencyAmount: amount, balanceUSD } = currencyWithMetadata
+  const { currency, quantity, balanceUSD } = option
   const { t } = useTranslation()
 
   return (
@@ -57,8 +51,11 @@ export function Option({
         </Flex>
         {metadataType !== 'disabled' ? (
           <Flex row justifyContent="flex-end">
-            {amount && !amount.equalTo(0) ? (
-              <DataFormatter main={formatCurrencyAmount(amount)} sub={formatUSDPrice(balanceUSD)} />
+            {quantity && quantity !== 0 ? (
+              <DataFormatter
+                main={formatNumberBalance(quantity)}
+                sub={formatUSDPrice(balanceUSD)}
+              />
             ) : null}
           </Flex>
         ) : (

@@ -80,8 +80,8 @@ export function TokenBalanceList({
   )
 }
 
-function key({ amount }: PortfolioBalance) {
-  return currencyId(amount.currency)
+function key({ currency }: PortfolioBalance) {
+  return currencyId(currency)
 }
 
 function FlatBalanceList({
@@ -99,11 +99,11 @@ function FlatBalanceList({
       ListEmptyComponent={empty}
       ListHeaderComponent={header}
       data={balances}
-      keyExtractor={(item: PortfolioBalance) => currencyId(item.amount.currency)}
+      keyExtractor={key}
       renderItem={({ item }) => (
         <TokenBalanceItem
-          key={currencyId(item.amount.currency)}
-          balance={item}
+          key={currencyId(item.currency)}
+          portfolioBalance={item}
           onPressToken={onPressToken}
         />
       )}
@@ -126,7 +126,7 @@ function NetworkBalanceList({
 
   const renderItem = useCallback(
     ({ item }: ListRenderItemInfo<PortfolioBalance>) => (
-      <TokenBalanceItem balance={item} onPressToken={onPressToken} />
+      <TokenBalanceItem portfolioBalance={item} onPressToken={onPressToken} />
     ),
     [onPressToken]
   )

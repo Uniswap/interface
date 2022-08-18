@@ -1,11 +1,11 @@
 import { useCallback, useMemo, useState } from 'react'
 import { useAppSelector } from 'src/app/hooks'
-import { CurrencyWithMetadata } from 'src/components/TokenSelector/types'
+import { TokenOption } from 'src/components/TokenSelector/types'
 import { ChainId } from 'src/constants/chains'
 import { selectFavoriteTokensSet } from 'src/features/favorites/selectors'
 import { currencyId } from 'src/utils/currencyId'
 
-export function useFavoriteCurrenciesWithMetadata(currencies: CurrencyWithMetadata[]) {
+export function useFavoriteTokenOptions(currencies: TokenOption[]) {
   const favorites = useAppSelector(selectFavoriteTokensSet)
   return useMemo(
     () => currencies.filter((c) => favorites.has(currencyId(c.currency))),

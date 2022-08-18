@@ -9,12 +9,12 @@ import { PortfolioBalance } from 'src/features/dataApi/types'
 import { useCurrency } from 'src/features/tokens/useCurrency'
 import { toSupportedChainId } from 'src/utils/chainId'
 import { buildCurrencyId, CurrencyId } from 'src/utils/currencyId'
-import { formatCurrencyAmount, formatPrice, formatUSDPrice } from 'src/utils/format'
+import { formatNumberBalance, formatPrice, formatUSDPrice } from 'src/utils/format'
 import { getKeys } from 'src/utils/objects'
 
 export function TokenBalances({ balance }: { balance: PortfolioBalance }) {
   const { t } = useTranslation()
-  const currency = balance.amount.currency
+  const { currency } = balance
   const bridgeInfo = useBridgeInfo(currency)
 
   return (
@@ -43,7 +43,7 @@ export function TokenBalances({ balance }: { balance: PortfolioBalance }) {
 
 export function TokenL1Balance({ balance }: { balance: PortfolioBalance }) {
   const { t } = useTranslation()
-  const currency = balance.amount.currency
+  const { currency } = balance
 
   return (
     <Flex gap="xs">
@@ -52,7 +52,7 @@ export function TokenL1Balance({ balance }: { balance: PortfolioBalance }) {
       </Text>
       <Flex row alignItems="center" justifyContent="space-between">
         <Text variant="headlineMedium">
-          {`${formatCurrencyAmount(balance.amount)}`} {currency.symbol}
+          {`${formatNumberBalance(balance.quantity)}`} {currency.symbol}
         </Text>
         <Text variant="body">{formatUSDPrice(balance.balanceUSD)}</Text>
       </Flex>
@@ -72,7 +72,7 @@ function OtherChainBalance({ currencyId: _currencyId }: { currencyId: CurrencyId
         <CurrencyLogo currency={currency} />
         <Flex alignItems="center">
           <Text variant="body">
-            {formatCurrencyAmount(balance.amount)} {currency.symbol}
+            {formatNumberBalance(balance.quantity)} {currency.symbol}
           </Text>
         </Flex>
       </Flex>

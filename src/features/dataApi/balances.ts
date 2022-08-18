@@ -1,20 +1,15 @@
-import { skipToken } from '@reduxjs/toolkit/dist/query'
-import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { Currency } from '@uniswap/sdk-core'
 import { graphql } from 'babel-plugin-relay/macro'
 import { useMemo } from 'react'
 import { useLazyLoadQuery } from 'react-relay'
-import { useAppSelector } from 'src/app/hooks'
 import { EMPTY_ARRAY } from 'src/constants/misc'
-import { dataApi } from 'src/features/dataApi/slice'
 import { gqlTokenToCurrency } from 'src/features/dataApi/topTokens'
 import { PortfolioBalance } from 'src/features/dataApi/types'
 import { balancesQuery } from 'src/features/dataApi/__generated__/balancesQuery.graphql'
 import { useAllCurrencies } from 'src/features/tokens/useTokens'
-import { useActiveAccount } from 'src/features/wallet/hooks'
-import { selectHideSmallBalances } from 'src/features/wallet/selectors'
+import { useActiveAccountAddressWithThrow } from 'src/features/wallet/hooks'
 import { fromGraphQLChain } from 'src/utils/chainId'
 import { currencyId, CurrencyId } from 'src/utils/currencyId'
-import { percentDifference } from 'src/utils/statistics'
 
 const query = graphql`
   query balancesQuery($ownerAddress: String!) {
@@ -73,11 +68,9 @@ export function usePortfolioBalances(address: Address, onlyKnownCurrencies?: boo
       if (!currencyDetails) return
 
       const portfolioBalance: PortfolioBalance = {
-        amount: CurrencyAmount.fromRawAmount(
-          currencyDetails.currency,
-          balance.quantity * 10 ** balance.token.decimals
-        ),
+        quantity: balance.quantity,
         balanceUSD: balance.denominatedValue.value,
+        currency: currencyDetails.currency,
         relativeChange24: balance.tokenProjectMarket?.relativeChange24?.value ?? 0,
       }
 
@@ -102,31 +95,13 @@ export function usePortfolioBalancesList(
  * Assumes the input currency is a known token.
  */
 export function useSingleBalance(currency: NullUndefined<Currency>): PortfolioBalance | null {
-  const address = useActiveAccount()?.address
-  const hideSmallBalances = useAppSelector(selectHideSmallBalances)
-  const balance = dataApi.endpoints.balances.useQueryState(
-    address && currency
-      ? {
-          chainId: currency.chainId,
-          address,
-          ignoreSmallBalances: hideSmallBalances,
-        }
-      : skipToken,
-    {
-      // selectFromResult allows for performant re-renders
-      selectFromResult: ({ data }) => data?.[currencyId(currency!)],
-    }
-  )
+  const address = useActiveAccountAddressWithThrow()
+  const portfolioBalances = usePortfolioBalances(address)
 
-  return useMemo(
-    () =>
-      balance && currency
-        ? {
-            amount: CurrencyAmount.fromRawAmount(currency, balance.balance),
-            balanceUSD: balance.balanceUSD,
-            relativeChange24: percentDifference(balance.quote_rate, balance.quote_rate_24h),
-          }
-        : null,
-    [balance, currency]
-  )
+  return useMemo(() => {
+    if (!currency || !portfolioBalances) return null
+
+    const id = currencyId(currency)
+    return portfolioBalances[id] ?? null
+  }, [portfolioBalances, currency])
 }

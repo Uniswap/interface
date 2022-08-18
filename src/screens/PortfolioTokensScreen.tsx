@@ -52,8 +52,8 @@ function PortfolioTokensContent({ owner }: { owner?: string }) {
   const renderItem = useCallback(
     ({ item }: ListRenderItemInfo<PortfolioBalance>) => (
       <TokenBalanceItem
-        key={currencyId(item.amount.currency)}
-        balance={item}
+        key={currencyId(item.currency)}
+        portfolioBalance={item}
         onPressToken={(currency: Currency) =>
           navigation.navigate(Screens.TokenDetails, { currencyId: currencyId(currency) })
         }
@@ -102,7 +102,7 @@ function PortfolioTokensContent({ owner }: { owner?: string }) {
         </BackHeader>
       }
       data={balances}
-      keyExtractor={(item: PortfolioBalance) => currencyId(item.amount.currency)}
+      keyExtractor={(item: PortfolioBalance) => currencyId(item.currency)}
       renderItem={renderItem}
     />
   )

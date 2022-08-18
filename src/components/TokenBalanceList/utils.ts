@@ -8,7 +8,7 @@ export function balancesToSectionListData(balances: PortfolioBalance[]): {
 }[] {
   return ALL_SUPPORTED_CHAIN_IDS.map((chainId: ChainId) => {
     const balancesOnChain = balances
-      .filter((balance) => balance.amount.currency.chainId === chainId)
+      .filter((balance) => balance.currency.chainId === chainId)
       .sort((a, b) => (a.balanceUSD > b.balanceUSD ? -1 : 1))
 
     return balancesOnChain.length

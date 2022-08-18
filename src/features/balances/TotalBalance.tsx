@@ -43,7 +43,7 @@ function TotalUSDBalance({
   const totalUSDBalance = useMemo(
     () =>
       balances
-        .filter(({ amount }) => !isTestnet(toSupportedChainId(amount.currency.chainId)!))
+        .filter(({ currency }) => !isTestnet(toSupportedChainId(currency.chainId)!))
         .reduce((sum, balance) => sum + balance.balanceUSD, 0),
     [balances]
   )

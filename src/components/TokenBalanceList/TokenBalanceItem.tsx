@@ -7,16 +7,15 @@ import { AnimatedFlex, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { RelativeChange } from 'src/components/text/RelativeChange'
 import { PortfolioBalance } from 'src/features/dataApi/types'
-import { formatCurrencyAmount, formatUSDPrice } from 'src/utils/format'
+import { formatNumberBalance, formatUSDPrice } from 'src/utils/format'
 
 interface TokenBalanceItemProps {
-  balance: PortfolioBalance
+  portfolioBalance: PortfolioBalance
   onPressToken?: (currency: Currency) => void
 }
 
-export function TokenBalanceItem({ balance, onPressToken }: TokenBalanceItemProps) {
-  const { amount, relativeChange24 } = balance
-  const { currency } = amount
+export function TokenBalanceItem({ portfolioBalance, onPressToken }: TokenBalanceItemProps) {
+  const { quantity, currency, relativeChange24 } = portfolioBalance
 
   const onPress = () => {
     onPressToken?.(currency)
@@ -47,14 +46,14 @@ export function TokenBalanceItem({ balance, onPressToken }: TokenBalanceItemProp
           </Text>
           <Flex row alignItems="center" gap="xs" height={20}>
             <Text color="textSecondary" numberOfLines={1} variant="caption">
-              {`${formatCurrencyAmount(amount)}`} {currency.symbol}
+              {`${formatNumberBalance(quantity)}`} {currency.symbol}
             </Text>
           </Flex>
         </Flex>
       </AnimatedFlex>
       <AnimatedFlex entering={FadeIn} exiting={FadeOut} justifyContent="space-between">
         <Flex alignItems="flex-end" gap="xxs">
-          <Text variant="body">{formatUSDPrice(balance.balanceUSD)}</Text>
+          <Text variant="body">{formatUSDPrice(portfolioBalance.balanceUSD)}</Text>
           <Text color="textSecondary" variant="caption">
             <RelativeChange change={relativeChange24} />
           </Text>

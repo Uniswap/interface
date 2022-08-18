@@ -1,6 +1,31 @@
 import { Currency, CurrencyAmount, Fraction, Percent, Price } from '@uniswap/sdk-core'
 import JSBI from 'jsbi'
 
+export function formatNumberBalance(
+  balance?: number,
+  compact: boolean = true,
+  sigFigs: number = 4
+) {
+  if (balance === undefined) {
+    return '-'
+  }
+
+  if (balance === 0) {
+    return '0'
+  }
+
+  if (balance < 0.00001) {
+    return '<0.00001'
+  }
+
+  const formatter = new Intl.NumberFormat('en-US', {
+    notation: compact ? 'compact' : 'standard',
+    maximumFractionDigits: sigFigs,
+  })
+
+  return formatter.format(balance)
+}
+
 export function formatCurrencyAmount(
   amount?: CurrencyAmount<Currency> | null,
   compact: boolean = true,

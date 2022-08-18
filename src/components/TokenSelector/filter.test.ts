@@ -1,31 +1,31 @@
 import { filter } from 'src/components/TokenSelector/filter'
-import { CurrencyWithMetadata } from 'src/components/TokenSelector/types'
+import { TokenOption } from 'src/components/TokenSelector/types'
 import { ChainId } from 'src/constants/chains'
 import { DAI, DAI_ARBITRUM_ONE } from 'src/constants/tokens'
 import { NativeCurrency } from 'src/features/tokenLists/NativeCurrency'
 
 const ETH = NativeCurrency.onChain(ChainId.Mainnet)
 
-const TEST_TOKEN_INPUT: CurrencyWithMetadata[] = [
+const TEST_TOKEN_INPUT: TokenOption[] = [
   {
     currency: DAI,
-    currencyAmount: null,
     balanceUSD: null,
+    quantity: null,
   },
   {
     currency: ETH,
-    currencyAmount: null,
     balanceUSD: null,
+    quantity: null,
   },
   {
     currency: DAI_ARBITRUM_ONE,
-    currencyAmount: null,
     balanceUSD: null,
+    quantity: null,
   },
 ]
 
 const filterAndGetCurrencies = (
-  currencies: CurrencyWithMetadata[],
+  currencies: TokenOption[],
   chainFilter: ChainId | null,
   searchFilter: string | null
 ) =>

@@ -5,11 +5,11 @@ import { useTranslation } from 'react-i18next'
 import { ListRenderItemInfo, SectionList, StyleSheet } from 'react-native'
 import { Separator } from 'src/components/layout/Separator'
 import { filter } from 'src/components/TokenSelector/filter'
-import { useFavoriteCurrenciesWithMetadata } from 'src/components/TokenSelector/hooks'
-import { TokenOption } from 'src/components/TokenSelector/TokenOption'
-import { CurrencyWithMetadata } from 'src/components/TokenSelector/types'
+import { useFavoriteTokenOptions } from 'src/components/TokenSelector/hooks'
+import { TokenOptionItem } from 'src/components/TokenSelector/TokenOptionItem'
+import { TokenOption } from 'src/components/TokenSelector/types'
 import { ChainId } from 'src/constants/chains'
-import { usePortfolioBalances } from 'src/features/dataApi/balances'
+import { usePortfolioBalancesList } from 'src/features/dataApi/balances'
 import { ElementName } from 'src/features/telemetry/constants'
 import { useAllCurrencies } from 'src/features/tokens/useTokens'
 import { useCombinedTokenWarningLevelMap } from 'src/features/tokens/useTokenWarningLevel'
@@ -41,21 +41,18 @@ interface TokenSearchResultListProps {
   variation: TokenSelectorVariation
 }
 
-const currencyMetadataComparator = (
-  currency: CurrencyWithMetadata,
-  otherCurrency: CurrencyWithMetadata
-) => {
+const tokenOptionComparator = (currency: TokenOption, otherCurrency: TokenOption) => {
   return currencyId(currency.currency) === currencyId(otherCurrency.currency)
 }
 // get items in `currencies` that are not in `without`
 // e.g. difference([B, C, D], [A, B, C]) would return ([D])
-const difference = (currencies: CurrencyWithMetadata[], without: CurrencyWithMetadata[]) => {
-  return differenceWith(currencies, without, currencyMetadataComparator)
+const difference = (currencies: TokenOption[], without: TokenOption[]) => {
+  return differenceWith(currencies, without, tokenOptionComparator)
 }
 
 type TokenSection = {
   title: string
-  data: CurrencyWithMetadata[]
+  data: TokenOption[]
 }
 
 // TODO: alphabetically sort each of these token sections
@@ -63,28 +60,18 @@ export function useTokenSectionsByVariation(variation: TokenSelectorVariation): 
   const { t } = useTranslation()
   const activeAccount = useActiveAccountWithThrow()
   const currenciesByChain = useAllCurrencies()
-  const currencyIdToBalances = usePortfolioBalances(activeAccount.address, false)
+  const currenciesWithBalances = usePortfolioBalancesList(activeAccount.address, false)
 
-  const currenciesWithBalances: CurrencyWithMetadata[] = useMemo(() => {
-    if (!currencyIdToBalances) return []
-
-    return Object.values(currencyIdToBalances).map(({ amount, balanceUSD }) => ({
-      currency: amount.currency,
-      currencyAmount: amount,
-      balanceUSD: balanceUSD,
-    }))
-  }, [currencyIdToBalances])
-
-  const allCurrencies: CurrencyWithMetadata[] = useMemo(() => {
+  const allCurrencies: TokenOption[] = useMemo(() => {
     const currencies = flattenObjectOfObjects(currenciesByChain)
     return currencies.map((currency) => ({
       currency,
-      currencyAmount: null,
+      quantity: null,
       balanceUSD: null,
     }))
   }, [currenciesByChain])
 
-  const favoriteCurrencies = useFavoriteCurrenciesWithMetadata(allCurrencies)
+  const favoriteCurrencies = useFavoriteTokenOptions(allCurrencies)
 
   return useMemo(() => {
     if (variation === TokenSelectorVariation.BalancesOnly) {
@@ -131,7 +118,7 @@ export function TokenSearchResultList({
   variation,
 }: TokenSearchResultListProps) {
   const { t } = useTranslation()
-  const sectionListRef = useRef<SectionList<Fuse.FuseResult<CurrencyWithMetadata>>>(null)
+  const sectionListRef = useRef<SectionList<Fuse.FuseResult<TokenOption>>>(null)
 
   const sections = useTokenSectionsByVariation(variation)
   const debouncedSearchFilter = useDebounce(searchFilter)
@@ -146,14 +133,14 @@ export function TokenSearchResultList({
   const tokenWarningLevelMap = useCombinedTokenWarningLevelMap()
 
   const renderItem = useCallback(
-    ({ item }: ListRenderItemInfo<Fuse.FuseResult<CurrencyWithMetadata>>) => {
-      const currencyWithMetadata = item.item
+    ({ item }: ListRenderItemInfo<Fuse.FuseResult<TokenOption>>) => {
+      const tokenOption = item.item
       return (
-        <TokenOption
-          currencyWithMetadata={currencyWithMetadata}
+        <TokenOptionItem
           matches={item.matches}
+          option={tokenOption}
           tokenWarningLevelMap={tokenWarningLevelMap}
-          onPress={() => onSelectCurrency?.(currencyWithMetadata.currency)}
+          onPress={() => onSelectCurrency?.(tokenOption.currency)}
         />
       )
     },
@@ -219,7 +206,7 @@ function Footer() {
   )
 }
 
-function key(item: Fuse.FuseResult<CurrencyWithMetadata>) {
+function key(item: Fuse.FuseResult<TokenOption>) {
   return currencyId(item.item.currency)
 }
 

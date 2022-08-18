@@ -1,8 +1,8 @@
 import Fuse from 'fuse.js'
-import { CurrencyWithMetadata } from 'src/components/TokenSelector/types'
+import { TokenOption } from 'src/components/TokenSelector/types'
 import { ChainId } from 'src/constants/chains'
 
-const searchOptions: Fuse.IFuseOptions<CurrencyWithMetadata> = {
+const searchOptions: Fuse.IFuseOptions<TokenOption> = {
   includeMatches: true,
   isCaseSensitive: false,
   threshold: 0.5,
@@ -50,13 +50,12 @@ const getNameSearchPattern = (name: string | null) =>
  * @param searchFilter filter to apply to currency adddress and symbol
  */
 export function filter(
-  currenciesWithMetadata: CurrencyWithMetadata[] | null,
+  tokenOptions: TokenOption[] | null,
   chainFilter: ChainId | null,
   searchFilter: string | null
-): Fuse.FuseResult<CurrencyWithMetadata>[] {
-  if (!currenciesWithMetadata || !currenciesWithMetadata.length) return []
-  if (!chainFilter && !searchFilter)
-    return currenciesWithMetadata.map((t) => ({ item: t, refIndex: -1 }))
+): Fuse.FuseResult<TokenOption>[] {
+  if (!tokenOptions || !tokenOptions.length) return []
+  if (!chainFilter && !searchFilter) return tokenOptions.map((t) => ({ item: t, refIndex: -1 }))
 
   let andPatterns: Fuse.Expression[] = []
   let orPatterns: Fuse.Expression[] = []
@@ -86,7 +85,7 @@ export function filter(
     ],
   }
 
-  const fuse = new Fuse(currenciesWithMetadata, searchOptions)
+  const fuse = new Fuse(tokenOptions, searchOptions)
 
   const r = fuse.search(searchPattern)
   return r
