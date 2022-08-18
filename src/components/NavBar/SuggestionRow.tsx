@@ -191,8 +191,8 @@ export const SkeletonRow = () => {
         className={styles.suggestionRow}
       >
         <Row>
-          <Box className={styles.suggestionImage} style={{ background: '#7C85A24D' }} />
-          <Box borderRadius="round" height="16" width="160" style={{ background: '#7C85A24D' }} />
+          <Box className={styles.imageHolder} />
+          <Box borderRadius="round" height="16" width="160" background="loading" />
         </Row>
       </Row>
     </Box>

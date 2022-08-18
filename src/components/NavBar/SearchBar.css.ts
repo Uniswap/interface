@@ -121,9 +121,10 @@ export const secondaryText = style([
 
 export const imageHolder = style([
   suggestionImage,
-  {
-    background: 'radial-gradient(167.86% 167.86% at -21.43% -50%, #4C82FB 0%, #09265E 100%)',
-  },
+  sprinkles({
+    background: 'loading',
+    flexShrink: '0',
+  }),
 ])
 
 export const suggestionIcon = sprinkles({
