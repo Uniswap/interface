@@ -55,11 +55,11 @@ const BodyWrapper = styled.div<{ navBarFlag: NavBarVariant }>`
   display: flex;
   flex-direction: column;
   width: 100%;
-  padding: ${({ navBarFlag }) => (navBarFlag === NavBarVariant.Enabled ? `72px 0px 0px 0px` : `120px 0px 0px 0px`)};
+  padding: ${({ navBarFlag }) => (navBarFlag === NavBarVariant.Enabled ? `120px 16px 0px 16px` : `72px 16px 0px 16px`)};
   align-items: center;
   flex: 1;
   ${({ theme }) => theme.mediaWidth.upToSmall`
-    padding: 52px 0px 16px 0px;
+    padding: 52px 8px 16px 8px;
   `};
 `
 
