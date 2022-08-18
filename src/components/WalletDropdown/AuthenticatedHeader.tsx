@@ -40,12 +40,8 @@ const Column = styled.div`
 `
 
 const IconContainer = styled.div`
-  display: inline-block;
-  float: right;
-`
-
-const IconContainerFlex = styled.div`
   display: flex;
+  float: right;
   align-items: center;
   & > a,
   & > button {
@@ -57,7 +53,10 @@ const IconContainerFlex = styled.div`
     ${IconHoverText}:last-child {
       left: 0px;
     }
+  }
 `
+
+const IconContainerFlex = styled.div``
 
 const USDText = styled.div`
   font-size: 16px;
@@ -128,11 +127,9 @@ const AuthenticatedHeader = () => {
           </FlexContainer>
         </StatusWrapper>
         <IconContainer>
-          <IconContainerFlex>
-            <IconButton onClick={copy} Icon={Copy} text={isCopied ? <Trans>Copied!</Trans> : <Trans>Copy</Trans>} />
-            <IconButton href={`${explorer}address/${account}`} Icon={ExternalLink} text={<Trans>Explore</Trans>} />
-            <IconButton onClick={disconnect} Icon={Power} text={<Trans>Disconnect</Trans>} />
-          </IconContainerFlex>
+          <IconButton onClick={copy} Icon={Copy} text={isCopied ? <Trans>Copied!</Trans> : <Trans>Copy</Trans>} />
+          <IconButton href={`${explorer}address/${account}`} Icon={ExternalLink} text={<Trans>Explore</Trans>} />
+          <IconButton onClick={disconnect} Icon={Power} text={<Trans>Disconnect</Trans>} />
         </IconContainer>
       </HeaderWrapper>
       <Column>
