@@ -1,5 +1,5 @@
 import { Currency } from '@uniswap/sdk-core'
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useAppSelector } from 'src/app/hooks'
 import { ChainId } from 'src/constants/chains'
 import { selectFavoriteTokensSet } from 'src/features/favorites/selectors'
@@ -24,9 +24,13 @@ export function useFavoriteCurrencies(): Currency[] {
   )
 }
 
-export function useFilterCallbacks(initialChainId: ChainId | undefined | null = null) {
-  const [chainFilter, setChainFilter] = useState<ChainId | null>(initialChainId)
+export function useFilterCallbacks(chainId: ChainId | null) {
+  const [chainFilter, setChainFilter] = useState<ChainId | null>(chainId)
   const [searchFilter, setSearchFilter] = useState<string | null>(null)
+
+  useEffect(() => {
+    setChainFilter(chainId)
+  }, [chainId])
 
   const onChangeChainFilter = useCallback((newChainFilter: typeof chainFilter) => {
     setChainFilter(newChainFilter)
