@@ -42,7 +42,6 @@ const Column = styled.div`
 const IconContainer = styled.div`
   display: inline-block;
   float: right;
-  }
 `
 
 const IconContainerFlex = styled.div`
