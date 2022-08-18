@@ -1,13 +1,11 @@
-import { useWeb3React } from '@web3-react/core'
 import { useState } from 'react'
 import styled from 'styled-components/macro'
 
-import { useUserHasAvailableClaim } from '../../state/claim/hooks'
 import DefaultMenu from './DefaultMenu'
 import LanguageMenu from './LanguageMenu'
 import { TransactionHistoryMenu } from './TransactionMenu'
 
-const WalletWrapper = styled.div<{ isAuthenticated: boolean; hasUnclaimed: boolean }>`
+const WalletWrapper = styled.div`
   border-radius: 12px;
   width: 320px;
   max-height: 376px;
@@ -28,12 +26,10 @@ export enum MenuState {
 }
 
 const WalletDropdown = () => {
-  const { account } = useWeb3React()
   const [menu, setMenu] = useState<MenuState>(MenuState.DEFAULT)
-  const hasUnclaimed = useUserHasAvailableClaim(account)
 
   return (
-    <WalletWrapper isAuthenticated={!!account} hasUnclaimed={hasUnclaimed}>
+    <WalletWrapper>
       {menu === MenuState.TRANSACTIONS && <TransactionHistoryMenu onClose={() => setMenu(MenuState.DEFAULT)} />}
       {menu === MenuState.LANGUAGE && <LanguageMenu onClose={() => setMenu(MenuState.DEFAULT)} />}
       {menu === MenuState.DEFAULT && <DefaultMenu setMenu={setMenu} />}
