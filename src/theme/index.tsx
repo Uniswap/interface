@@ -77,11 +77,7 @@ function uniswapThemeColors(darkMode: boolean): ThemeColors {
     accentSuccess: darkMode ? colorsDark.accentSuccess : colorsLight.accentSuccess,
     accentWarning: darkMode ? colorsDark.accentWarning : colorsLight.accentWarning,
     accentFailure: darkMode ? colorsDark.accentFailure : colorsLight.accentFailure,
-<<<<<<< HEAD
-    accentCritical: ColorsPalette.red300,
-=======
     accentCritical: darkMode ? colorsDark.accentCritical : colorsLight.accentCritical,
->>>>>>> main
 
     accentActionSoft: darkMode ? colorsDark.accentActionSoft : colorsLight.accentActionSoft,
     accentActiveSoft: darkMode ? colorsDark.accentActiveSoft : colorsLight.accentActiveSoft,

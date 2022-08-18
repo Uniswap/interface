@@ -26,12 +26,13 @@ const StyledDialogOverlay = styled(AnimatedDialogOverlay)<{ redesignFlag?: boole
 const AnimatedDialogContent = animated(DialogContent)
 // destructure to not pass custom props to Dialog DOM element
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const StyledDialogContent = styled(({ minHeight, maxHeight, mobile, isOpen, ...rest }) => (
+const StyledDialogContent = styled(({ minHeight, maxHeight, mobile, isOpen, redesignFlag, ...rest }) => (
   <AnimatedDialogContent {...rest} />
 )).attrs({
   'aria-label': 'dialog',
 })`
   overflow-y: auto;
+  box-shadow: ${({ theme, redesignFlag }) => redesignFlag && theme.deepShadow};
 
   &[data-reach-dialog-content] {
     margin: 0 0 2rem 0;
@@ -139,6 +140,7 @@ export default function Modal({
                 minHeight={minHeight}
                 maxHeight={maxHeight}
                 mobile={isMobile}
+                redesignFlag={redesignFlag}
               >
                 {/* prevents the automatic focusing of inputs on mobile by the reach dialog */}
                 {!initialFocusRef && isMobile ? <div tabIndex={1} /> : null}
