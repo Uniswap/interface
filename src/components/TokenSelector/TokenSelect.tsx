@@ -3,8 +3,8 @@ import React, { Suspense, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex } from 'src/components/layout'
 import { Loading } from 'src/components/loading'
-import { SearchBar } from 'src/components/SearchBar'
 import { useFilterCallbacks } from 'src/components/TokenSelector/hooks'
+import { SearchBar } from 'src/components/TokenSelector/SearchBar'
 import {
   TokenSearchResultList,
   TokenSelectorVariation,
@@ -37,7 +37,8 @@ export function TokenSelect({
   return (
     <Flex gap="sm" overflow="hidden" px="md" width="100%">
       <SearchBar
-        placeholder={t('Search token symbols or address')}
+        backgroundColor="backgroundContainer"
+        placeholder={t('Search tokens')}
         value={searchFilter}
         onBack={onBack}
         onChangeText={onChangeText}

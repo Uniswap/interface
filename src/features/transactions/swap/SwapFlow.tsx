@@ -160,8 +160,8 @@ export function SwapFlow({ prefilledState, onClose }: SwapFormProps) {
 
   return (
     <TouchableWithoutFeedback onPress={onBackgroundPress}>
-      <AnimatedFlex grow row flex={1} gap="none" style={wrapperStyle}>
-        <Flex grow gap="xs" py="xs" width="100%" onLayout={onLayout}>
+      <AnimatedFlex grow row flex={1} gap="none" py="md" style={wrapperStyle}>
+        <Flex grow gap="xs" width="100%" onLayout={onLayout}>
           <WarningModal
             cancelLabel={t('Cancel swap')}
             continueLabel={t('Swap anyway')}
