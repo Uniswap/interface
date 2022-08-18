@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-17 20:04\n"
+"PO-Revision-Date: 2022-08-18 18:04\n"
 "Last-Translator: \n"
 "Language: zh_TW\n"
 "Language-Team: Chinese Traditional\n"
@@ -290,6 +290,7 @@ msgid "Available to deposit: {0}"
 msgstr "可存入的數額：{0}"
 
 #: src/components/WalletModal/PendingView.tsx
+#: src/components/WalletModal/PendingView.tsx
 msgid "Back to wallet selection"
 msgstr "返回錢包選擇"
 
@@ -342,6 +343,7 @@ msgid "By adding this list you are implicitly trusting that the data is correct.
 msgstr "添加此代幣列表代表您信任其數據是正確的。任何人都可以創建代幣列表，包括創建假冒實際列表的造假版本，以及自我聲稱代表了某項目的代幣列表。"
 
 #: src/components/WalletModal/index.tsx
+#: src/components/WalletModal/index.tsx
 msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the Uniswap <1>Protocol Disclaimer</1>."
 msgstr "連接錢包即表示您同意 Uniswap Labs 的 <0>服務條款</0> 並確認您已閱讀並理解 Uniswap <1>協議免責聲明</1>。"
 
@@ -369,6 +371,7 @@ msgstr "檢查網絡狀態"
 msgid "Check out our v3 LP walkthrough and migration guides."
 msgstr "查看我們的 v3 流動池介紹和遷移指南。"
 
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/pages/Earn/Manage.tsx
@@ -495,6 +498,10 @@ msgstr "確認供應"
 msgid "Confirm Swap"
 msgstr "確認兌換"
 
+#: src/components/WalletModal/PendingView.tsx
+msgid "Confirm this connection in your wallet"
+msgstr "在您的錢包中確認此連接"
+
 #: src/components/ModalViews/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
@@ -550,9 +557,14 @@ msgstr "與"
 msgid "Connecting..."
 msgstr "正在連接..."
 
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
 #: src/theme/components.tsx
 msgid "Copied!"
 msgstr "複製！"
+
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
+msgid "Copy"
+msgstr "複製"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Copy Address"
@@ -604,6 +616,10 @@ msgstr "當前 {0} 兌換率："
 #: src/components/Menu/index.tsx
 msgid "Dark Theme"
 msgstr "深色"
+
+#: src/components/WalletDropdown/DefaultMenu.tsx
+msgid "Dark theme"
+msgstr "深色主題"
 
 #: src/pages/Vote/styled.tsx
 msgid "Defeated"
@@ -677,6 +693,7 @@ msgid "Details"
 msgstr "詳細信息"
 
 #: src/components/AccountDetails/index.tsx
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
 msgid "Disconnect"
 msgstr "斷開"
 
@@ -754,6 +771,7 @@ msgid "Error"
 msgstr "錯誤"
 
 #: src/components/WalletModal/PendingView.tsx
+#: src/components/WalletModal/PendingView.tsx
 msgid "Error connecting"
 msgstr "連接錯誤"
 
@@ -822,6 +840,14 @@ msgstr "“專家模式”將解除確認交易的提示，並允許兌換率高
 msgid "Expired"
 msgstr "已過期"
 
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
+msgid "Explore"
+msgstr "探索"
+
+#: src/pages/Tokens/index.tsx
+msgid "Explore Tokens"
+msgstr "探索代幣"
+
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore Uniswap Analytics."
 msgstr "探索 Uniswap 分析。"
@@ -883,11 +909,8 @@ msgstr "隱藏"
 msgid "High Price Impact"
 msgstr "高兌換率影響"
 
-#: src/components/TokenSafety/index.tsx
-msgid "I Understand"
-msgstr "瞭解"
-
 #: src/components/SearchModal/ImportList.tsx
+#: src/components/TokenSafety/index.tsx
 #: src/pages/AddLiquidity/index.tsx
 msgid "I understand"
 msgstr "我已知悉"
@@ -986,16 +1009,14 @@ msgid "Invalid recipient"
 msgstr "無效的接收方"
 
 #: src/components/Menu/index.tsx
+#: src/components/WalletDropdown/DefaultMenu.tsx
+#: src/components/WalletDropdown/LanguageMenu.tsx
 msgid "Language"
 msgstr "語言"
 
 #: src/pages/Pool/index.tsx
 msgid "Learn"
 msgstr "瞭解"
-
-#: src/components/TokenSafety/index.tsx
-msgid "Learn More"
-msgstr "了解更多"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Learn about providing liquidity"
@@ -1004,6 +1025,7 @@ msgstr "閱讀有關提供流動資金的資訊"
 #: src/components/PrivacyPolicy/index.tsx
 #: src/components/PrivacyPolicy/index.tsx
 #: src/components/TokenSafety/TokenSafetyMessage.tsx
+#: src/components/TokenSafety/index.tsx
 msgid "Learn more"
 msgstr "瞭解更多"
 
@@ -1015,6 +1037,10 @@ msgstr "法律與隱私"
 #: src/components/Menu/index.tsx
 msgid "Light Theme"
 msgstr "淺色"
+
+#: src/components/WalletDropdown/DefaultMenu.tsx
+msgid "Light theme"
+msgstr "輕主題"
 
 #: src/components/claim/ClaimModal.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -1258,6 +1284,7 @@ msgstr "擁有者"
 msgid "Participating pools"
 msgstr "參與的流動池"
 
+#: src/components/WalletDropdown/DefaultMenu.tsx
 #: src/pages/Vote/styled.tsx
 msgid "Pending"
 msgstr "待辦"
@@ -1320,8 +1347,8 @@ msgstr "流動池匯集 {0}:"
 
 #: src/pages/Pool/index.tsx
 #: src/pages/Pool/index.tsx
-msgid "Pools Overview"
-msgstr "流動池概覽"
+msgid "Pools"
+msgstr "游泳池"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Portal Bridge"
@@ -1690,6 +1717,7 @@ msgid "The app securely collects your wallet address and shares it with TRM Labs
 msgstr "出於風險和合規性原因，該應用程序會安全地收集您的錢包地址並與 TRM Labs Inc. 共享。"
 
 #: src/components/WalletModal/PendingView.tsx
+#: src/components/WalletModal/PendingView.tsx
 msgid "The connection attempt failed. Please click try again and follow the steps to connect in your wallet."
 msgstr "連接嘗試失敗。請單擊重試並按照步驟在您的錢包中連接。"
 
@@ -1876,10 +1904,16 @@ msgstr "交易截止期限"
 msgid "Transaction rejected."
 msgstr "交易被拒絕。"
 
+#: src/components/WalletDropdown/DefaultMenu.tsx
+#: src/components/WalletDropdown/TransactionMenu.tsx
+msgid "Transactions"
+msgstr "交易"
+
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Transfer Token"
 msgstr "代幣轉賬"
 
+#: src/components/WalletModal/PendingView.tsx
 #: src/components/WalletModal/PendingView.tsx
 msgid "Try Again"
 msgstr "再試一次"
@@ -2118,6 +2152,10 @@ msgstr "投票大約於 {0} 開始"
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Waiting For Confirmation"
 msgstr "等待確認中"
+
+#: src/components/WalletModal/PendingView.tsx
+msgid "Waiting to connect"
+msgstr "等待連接"
 
 #: src/components/AddressInputPanel/index.tsx
 msgid "Wallet Address or ENS name"
@@ -2372,6 +2410,10 @@ msgstr "https:// 或 ipfs:// 或 ENS 名"
 msgid "minutes"
 msgstr "分鐘"
 
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
+msgid "reward"
+msgstr "報酬"
+
 #: src/components/SearchModal/ImportRow.tsx
 msgid "via {0}"
 msgstr "通過 {0}"
@@ -2549,6 +2591,6 @@ msgid "{tokenB} per {tokenA}"
 msgstr "{tokenB} 每 {tokenA}"
 
 #: src/pages/Pool/PositionPage.tsx
-msgid "← Back to Pools Overview"
-msgstr "← 返回流動池概述"
+msgid "← Back to Pools"
+msgstr "← 返回游泳池"
 

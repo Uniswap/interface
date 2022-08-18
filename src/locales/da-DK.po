@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-17 20:04\n"
+"PO-Revision-Date: 2022-08-18 18:04\n"
 "Last-Translator: \n"
 "Language: da_DK\n"
 "Language-Team: Danish\n"
@@ -290,6 +290,7 @@ msgid "Available to deposit: {0}"
 msgstr "Tilgængelig for depositum: {0}"
 
 #: src/components/WalletModal/PendingView.tsx
+#: src/components/WalletModal/PendingView.tsx
 msgid "Back to wallet selection"
 msgstr "Tilbage til valg af pung"
 
@@ -342,6 +343,7 @@ msgid "By adding this list you are implicitly trusting that the data is correct.
 msgstr "Ved at tilføje denne liste har du implicit tillid til, at dataene er korrekte. Alle kan oprette en liste, herunder skabe falske versioner af eksisterende lister og lister, der hævder at repræsentere projekter, der ikke har en."
 
 #: src/components/WalletModal/index.tsx
+#: src/components/WalletModal/index.tsx
 msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the Uniswap <1>Protocol Disclaimer</1>."
 msgstr "Ved at tilslutte en tegnebog accepterer du Uniswap Labs' <0>Servicevilkår</0> og anerkender, at du har læst og forstået Uniswap <1>Protocol Disclaimer</1>."
 
@@ -369,6 +371,7 @@ msgstr "Kontroller netværksstatus"
 msgid "Check out our v3 LP walkthrough and migration guides."
 msgstr "Tjek vores v3 LP-gennemgang og migrationsguider."
 
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/pages/Earn/Manage.tsx
@@ -495,6 +498,10 @@ msgstr "Bekræft levering"
 msgid "Confirm Swap"
 msgstr "Bekræft skift"
 
+#: src/components/WalletModal/PendingView.tsx
+msgid "Confirm this connection in your wallet"
+msgstr "Bekræft denne forbindelse i din tegnebog"
+
 #: src/components/ModalViews/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
@@ -550,9 +557,14 @@ msgstr "Forbundet med"
 msgid "Connecting..."
 msgstr "Tilslutning..."
 
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
 #: src/theme/components.tsx
 msgid "Copied!"
 msgstr "Kopieret!"
+
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
+msgid "Copy"
+msgstr "Kopi"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Copy Address"
@@ -603,6 +615,10 @@ msgstr "Nuværende {0}-pris:"
 
 #: src/components/Menu/index.tsx
 msgid "Dark Theme"
+msgstr "Mørkt tema"
+
+#: src/components/WalletDropdown/DefaultMenu.tsx
+msgid "Dark theme"
 msgstr "Mørkt tema"
 
 #: src/pages/Vote/styled.tsx
@@ -677,6 +693,7 @@ msgid "Details"
 msgstr "Detaljer"
 
 #: src/components/AccountDetails/index.tsx
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
 msgid "Disconnect"
 msgstr "Afbryd"
 
@@ -754,6 +771,7 @@ msgid "Error"
 msgstr "Fejl"
 
 #: src/components/WalletModal/PendingView.tsx
+#: src/components/WalletModal/PendingView.tsx
 msgid "Error connecting"
 msgstr "Fejl ved tilslutning"
 
@@ -822,6 +840,14 @@ msgstr "Eksperttilstand slukker for bekræft transaktion-prompten og tillader h�
 msgid "Expired"
 msgstr "Udløbet"
 
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
+msgid "Explore"
+msgstr "Udforske"
+
+#: src/pages/Tokens/index.tsx
+msgid "Explore Tokens"
+msgstr "Udforsk Tokens"
+
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore Uniswap Analytics."
 msgstr "Udforsk Uniswap Analytics."
@@ -883,11 +909,8 @@ msgstr "Skjule"
 msgid "High Price Impact"
 msgstr "Høj prispåvirkning"
 
-#: src/components/TokenSafety/index.tsx
-msgid "I Understand"
-msgstr "Jeg forstår"
-
 #: src/components/SearchModal/ImportList.tsx
+#: src/components/TokenSafety/index.tsx
 #: src/pages/AddLiquidity/index.tsx
 msgid "I understand"
 msgstr "Jeg har forstået"
@@ -986,16 +1009,14 @@ msgid "Invalid recipient"
 msgstr "Ugyldig modtager"
 
 #: src/components/Menu/index.tsx
+#: src/components/WalletDropdown/DefaultMenu.tsx
+#: src/components/WalletDropdown/LanguageMenu.tsx
 msgid "Language"
 msgstr "Sprog"
 
 #: src/pages/Pool/index.tsx
 msgid "Learn"
 msgstr "Lær"
-
-#: src/components/TokenSafety/index.tsx
-msgid "Learn More"
-msgstr "Lær mere"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Learn about providing liquidity"
@@ -1004,6 +1025,7 @@ msgstr "Lær om levering af likviditet"
 #: src/components/PrivacyPolicy/index.tsx
 #: src/components/PrivacyPolicy/index.tsx
 #: src/components/TokenSafety/TokenSafetyMessage.tsx
+#: src/components/TokenSafety/index.tsx
 msgid "Learn more"
 msgstr "Lær mere"
 
@@ -1015,6 +1037,10 @@ msgstr "Juridisk og privatliv"
 #: src/components/Menu/index.tsx
 msgid "Light Theme"
 msgstr "Let tema"
+
+#: src/components/WalletDropdown/DefaultMenu.tsx
+msgid "Light theme"
+msgstr "Lys tema"
 
 #: src/components/claim/ClaimModal.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -1258,6 +1284,7 @@ msgstr "Ejer"
 msgid "Participating pools"
 msgstr "Deltagende puljer"
 
+#: src/components/WalletDropdown/DefaultMenu.tsx
 #: src/pages/Vote/styled.tsx
 msgid "Pending"
 msgstr "Verserende"
@@ -1320,8 +1347,8 @@ msgstr "Pulje {0}:"
 
 #: src/pages/Pool/index.tsx
 #: src/pages/Pool/index.tsx
-msgid "Pools Overview"
-msgstr "Puljeoversigt"
+msgid "Pools"
+msgstr "Pools"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Portal Bridge"
@@ -1690,6 +1717,7 @@ msgid "The app securely collects your wallet address and shares it with TRM Labs
 msgstr "Appen indsamler sikkert din tegnebogsadresse og deler den med TRM Labs Inc. af risiko- og overholdelsesårsager."
 
 #: src/components/WalletModal/PendingView.tsx
+#: src/components/WalletModal/PendingView.tsx
 msgid "The connection attempt failed. Please click try again and follow the steps to connect in your wallet."
 msgstr "Tilslutningsforsøget mislykkedes. Klik venligst på prøv igen og følg trinene for at oprette forbindelse i din tegnebog."
 
@@ -1876,10 +1904,16 @@ msgstr "Frist for transaktion"
 msgid "Transaction rejected."
 msgstr "Transaktionen blev afvist."
 
+#: src/components/WalletDropdown/DefaultMenu.tsx
+#: src/components/WalletDropdown/TransactionMenu.tsx
+msgid "Transactions"
+msgstr "Transaktioner"
+
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Transfer Token"
 msgstr "Overførselstoken"
 
+#: src/components/WalletModal/PendingView.tsx
 #: src/components/WalletModal/PendingView.tsx
 msgid "Try Again"
 msgstr "Prøv igen"
@@ -2118,6 +2152,10 @@ msgstr "Afstemningen starter cirka {0}"
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Waiting For Confirmation"
 msgstr "Afventer bekræftelse"
+
+#: src/components/WalletModal/PendingView.tsx
+msgid "Waiting to connect"
+msgstr "Venter på at oprette forbindelse"
 
 #: src/components/AddressInputPanel/index.tsx
 msgid "Wallet Address or ENS name"
@@ -2372,6 +2410,10 @@ msgstr "https: // eller ipfs: // eller ENS-navn"
 msgid "minutes"
 msgstr "minutter"
 
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
+msgid "reward"
+msgstr "belønning"
+
 #: src/components/SearchModal/ImportRow.tsx
 msgid "via {0}"
 msgstr "via {0}"
@@ -2549,6 +2591,6 @@ msgid "{tokenB} per {tokenA}"
 msgstr "{tokenB} pr. {tokenA}"
 
 #: src/pages/Pool/PositionPage.tsx
-msgid "← Back to Pools Overview"
-msgstr "← Tilbage til puljeoversigt"
+msgid "← Back to Pools"
+msgstr "← Tilbage til Pools"
 

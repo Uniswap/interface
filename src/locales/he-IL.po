@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-17 20:04\n"
+"PO-Revision-Date: 2022-08-18 18:04\n"
 "Last-Translator: \n"
 "Language: he_IL\n"
 "Language-Team: Hebrew\n"
@@ -290,6 +290,7 @@ msgid "Available to deposit: {0}"
 msgstr "זמין להפקדה: {0}"
 
 #: src/components/WalletModal/PendingView.tsx
+#: src/components/WalletModal/PendingView.tsx
 msgid "Back to wallet selection"
 msgstr "חזרה לבחירת הארנק"
 
@@ -342,6 +343,7 @@ msgid "By adding this list you are implicitly trusting that the data is correct.
 msgstr "על ידי הוספת רשימה זו אתה סומך באופן מרומז על כך שהנתונים נכונים. כל אחד יכול ליצור רשימה, כולל יצירת גרסאות מזויפות של רשימות קיימות ורשימות המתיימרות לייצג פרויקטים שאין להם."
 
 #: src/components/WalletModal/index.tsx
+#: src/components/WalletModal/index.tsx
 msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the Uniswap <1>Protocol Disclaimer</1>."
 msgstr "על ידי חיבור ארנק, אתה מסכים לתנאי השירות</0> <0>ומאשר שקראת והבנת את כתב ויתור פרוטוקול <1></1>."
 
@@ -369,6 +371,7 @@ msgstr "בדוק את מצב הרשת"
 msgid "Check out our v3 LP walkthrough and migration guides."
 msgstr "עיין במדריכי ההדרכה וההעברה של v3 LP שלנו."
 
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/pages/Earn/Manage.tsx
@@ -495,6 +498,10 @@ msgstr "אשר אספקה"
 msgid "Confirm Swap"
 msgstr "אשר החלפה"
 
+#: src/components/WalletModal/PendingView.tsx
+msgid "Confirm this connection in your wallet"
+msgstr "אשר את החיבור הזה בארנק שלך"
+
 #: src/components/ModalViews/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
@@ -550,9 +557,14 @@ msgstr "מחובר עם"
 msgid "Connecting..."
 msgstr "מְקַשֵׁר..."
 
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
 #: src/theme/components.tsx
 msgid "Copied!"
 msgstr "מוּעֲתָק!"
+
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
+msgid "Copy"
+msgstr "עותק"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Copy Address"
@@ -603,6 +615,10 @@ msgstr "מחיר {0} נוכחי:"
 
 #: src/components/Menu/index.tsx
 msgid "Dark Theme"
+msgstr "ערכת נושא כהה"
+
+#: src/components/WalletDropdown/DefaultMenu.tsx
+msgid "Dark theme"
 msgstr "ערכת נושא כהה"
 
 #: src/pages/Vote/styled.tsx
@@ -677,6 +693,7 @@ msgid "Details"
 msgstr "פרטים"
 
 #: src/components/AccountDetails/index.tsx
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
 msgid "Disconnect"
 msgstr "לְנַתֵק"
 
@@ -754,6 +771,7 @@ msgid "Error"
 msgstr "שְׁגִיאָה"
 
 #: src/components/WalletModal/PendingView.tsx
+#: src/components/WalletModal/PendingView.tsx
 msgid "Error connecting"
 msgstr "שגיאה בהתחברות"
 
@@ -822,6 +840,14 @@ msgstr "מצב מומחה מכבה את בקשת האישור לעסקה ומא�
 msgid "Expired"
 msgstr "לא בתוקף"
 
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
+msgid "Explore"
+msgstr "לַחקוֹר"
+
+#: src/pages/Tokens/index.tsx
+msgid "Explore Tokens"
+msgstr "חקור אסימונים"
+
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore Uniswap Analytics."
 msgstr "חקור את Uniswap Analytics."
@@ -883,11 +909,8 @@ msgstr "להתחבא"
 msgid "High Price Impact"
 msgstr "השפעה על מחיר גבוה"
 
-#: src/components/TokenSafety/index.tsx
-msgid "I Understand"
-msgstr "אני מבין"
-
 #: src/components/SearchModal/ImportList.tsx
+#: src/components/TokenSafety/index.tsx
 #: src/pages/AddLiquidity/index.tsx
 msgid "I understand"
 msgstr "אני מבין"
@@ -986,16 +1009,14 @@ msgid "Invalid recipient"
 msgstr "נמען לא חוקי"
 
 #: src/components/Menu/index.tsx
+#: src/components/WalletDropdown/DefaultMenu.tsx
+#: src/components/WalletDropdown/LanguageMenu.tsx
 msgid "Language"
 msgstr "שפה"
 
 #: src/pages/Pool/index.tsx
 msgid "Learn"
 msgstr "לִלמוֹד"
-
-#: src/components/TokenSafety/index.tsx
-msgid "Learn More"
-msgstr "למד עוד"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Learn about providing liquidity"
@@ -1004,6 +1025,7 @@ msgstr "למד אודות מתן נזילות"
 #: src/components/PrivacyPolicy/index.tsx
 #: src/components/PrivacyPolicy/index.tsx
 #: src/components/TokenSafety/TokenSafetyMessage.tsx
+#: src/components/TokenSafety/index.tsx
 msgid "Learn more"
 msgstr "למד עוד"
 
@@ -1015,6 +1037,10 @@ msgstr "משפטי ופרטיות"
 #: src/components/Menu/index.tsx
 msgid "Light Theme"
 msgstr "נושא קל"
+
+#: src/components/WalletDropdown/DefaultMenu.tsx
+msgid "Light theme"
+msgstr "נושא קליל"
 
 #: src/components/claim/ClaimModal.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -1258,6 +1284,7 @@ msgstr "בעלים"
 msgid "Participating pools"
 msgstr "בריכות המשתתפות"
 
+#: src/components/WalletDropdown/DefaultMenu.tsx
 #: src/pages/Vote/styled.tsx
 msgid "Pending"
 msgstr "ממתין ל"
@@ -1320,8 +1347,8 @@ msgstr "מאוגד {0}:"
 
 #: src/pages/Pool/index.tsx
 #: src/pages/Pool/index.tsx
-msgid "Pools Overview"
-msgstr "סקירת מאגרים"
+msgid "Pools"
+msgstr "בריכות"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Portal Bridge"
@@ -1690,6 +1717,7 @@ msgid "The app securely collects your wallet address and shares it with TRM Labs
 msgstr "האפליקציה אוספת בצורה מאובטחת את כתובת הארנק שלך ומשתפת אותה עם TRM Labs Inc. מסיבות סיכון ותאימות."
 
 #: src/components/WalletModal/PendingView.tsx
+#: src/components/WalletModal/PendingView.tsx
 msgid "The connection attempt failed. Please click try again and follow the steps to connect in your wallet."
 msgstr "ניסיון החיבור נכשל. אנא לחץ על נסה שוב ובצע את השלבים לחיבור בארנק שלך."
 
@@ -1876,10 +1904,16 @@ msgstr "מועד אחרון לעסקה"
 msgid "Transaction rejected."
 msgstr "העסקה נדחתה."
 
+#: src/components/WalletDropdown/DefaultMenu.tsx
+#: src/components/WalletDropdown/TransactionMenu.tsx
+msgid "Transactions"
+msgstr "עסקאות"
+
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Transfer Token"
 msgstr "העברת אסימון"
 
+#: src/components/WalletModal/PendingView.tsx
 #: src/components/WalletModal/PendingView.tsx
 msgid "Try Again"
 msgstr "נסה שוב"
@@ -2118,6 +2152,10 @@ msgstr "ההצבעה מתחילה בערך {0}"
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Waiting For Confirmation"
 msgstr "מחכה לאישור"
+
+#: src/components/WalletModal/PendingView.tsx
+msgid "Waiting to connect"
+msgstr "מחכה לחיבור"
 
 #: src/components/AddressInputPanel/index.tsx
 msgid "Wallet Address or ENS name"
@@ -2372,6 +2410,10 @@ msgstr "https: // או ipfs: // או שם ENS"
 msgid "minutes"
 msgstr "דקות"
 
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
+msgid "reward"
+msgstr "פרס"
+
 #: src/components/SearchModal/ImportRow.tsx
 msgid "via {0}"
 msgstr "דרך {0}"
@@ -2549,6 +2591,6 @@ msgid "{tokenB} per {tokenA}"
 msgstr "{tokenB} לכל {tokenA}"
 
 #: src/pages/Pool/PositionPage.tsx
-msgid "← Back to Pools Overview"
-msgstr "← חזרה לסקירת מאגרים"
+msgid "← Back to Pools"
+msgstr "← חזרה לבריכות"
 

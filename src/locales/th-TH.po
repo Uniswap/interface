@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-17 20:05\n"
+"PO-Revision-Date: 2022-08-18 18:04\n"
 "Last-Translator: \n"
 "Language: th_TH\n"
 "Language-Team: Thai\n"
@@ -290,6 +290,7 @@ msgid "Available to deposit: {0}"
 msgstr "สามารถฝากได้: {0}"
 
 #: src/components/WalletModal/PendingView.tsx
+#: src/components/WalletModal/PendingView.tsx
 msgid "Back to wallet selection"
 msgstr "กลับไปที่การเลือกกระเป๋าเงิน"
 
@@ -342,6 +343,7 @@ msgid "By adding this list you are implicitly trusting that the data is correct.
 msgstr "การเพิ่มรายการนี้แสดงว่าคุณเชื่อมั่นโดยปริยายว่าข้อมูลถูกต้อง ใครๆ ก็สร้างรายการได้ ซึ่งรวมถึงการสร้างเวอร์ชันปลอมของรายการที่มีอยู่และรายการที่อ้างว่าเป็นตัวแทนของโครงการที่ไม่มีอยู่"
 
 #: src/components/WalletModal/index.tsx
+#: src/components/WalletModal/index.tsx
 msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the Uniswap <1>Protocol Disclaimer</1>."
 msgstr "การเชื่อมต่อกระเป๋าเงินหมายความว่าคุณยอมรับข้อกำหนดในการให้บริการ <0></0> และรับทราบว่าคุณได้อ่านและทำความเข้าใจ Uniswap <1>Protocol Disclaimer</1>แล้ว"
 
@@ -369,6 +371,7 @@ msgstr "ตรวจสอบสถานะเครือข่าย"
 msgid "Check out our v3 LP walkthrough and migration guides."
 msgstr "ดูคำแนะนำการใช้งาน v3 LP และคู่มือการย้ายข้อมูล"
 
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/pages/Earn/Manage.tsx
@@ -495,6 +498,10 @@ msgstr "ยืนยันการจัดหา"
 msgid "Confirm Swap"
 msgstr "ยืนยันการสลับ"
 
+#: src/components/WalletModal/PendingView.tsx
+msgid "Confirm this connection in your wallet"
+msgstr "ยืนยันการเชื่อมต่อนี้ในกระเป๋าเงินของคุณ"
+
 #: src/components/ModalViews/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
@@ -550,9 +557,14 @@ msgstr "เชื่อมต่อกับ"
 msgid "Connecting..."
 msgstr "กำลังเชื่อมต่อ..."
 
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
 #: src/theme/components.tsx
 msgid "Copied!"
 msgstr "คัดลอก!"
+
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
+msgid "Copy"
+msgstr "สำเนา"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Copy Address"
@@ -603,6 +615,10 @@ msgstr "ปัจจุบัน {0} ราคา:"
 
 #: src/components/Menu/index.tsx
 msgid "Dark Theme"
+msgstr "ธีมมืด"
+
+#: src/components/WalletDropdown/DefaultMenu.tsx
+msgid "Dark theme"
 msgstr "ธีมมืด"
 
 #: src/pages/Vote/styled.tsx
@@ -677,6 +693,7 @@ msgid "Details"
 msgstr "รายละเอียด"
 
 #: src/components/AccountDetails/index.tsx
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
 msgid "Disconnect"
 msgstr "ตัดการเชื่อมต่อ"
 
@@ -754,6 +771,7 @@ msgid "Error"
 msgstr "ข้อผิดพลาด"
 
 #: src/components/WalletModal/PendingView.tsx
+#: src/components/WalletModal/PendingView.tsx
 msgid "Error connecting"
 msgstr "เกิดข้อผิดพลาดในการเชื่อมต่อ"
 
@@ -822,6 +840,14 @@ msgstr "โหมดผู้เชี่ยวชาญจะปิดการ
 msgid "Expired"
 msgstr "หมดอายุ"
 
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
+msgid "Explore"
+msgstr "สำรวจ"
+
+#: src/pages/Tokens/index.tsx
+msgid "Explore Tokens"
+msgstr "สำรวจโทเค็น"
+
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore Uniswap Analytics."
 msgstr "สำรวจ Uniswap Analytics"
@@ -883,11 +909,8 @@ msgstr "ซ่อน"
 msgid "High Price Impact"
 msgstr "ผลกระทบราคาสูง"
 
-#: src/components/TokenSafety/index.tsx
-msgid "I Understand"
-msgstr "ฉันเข้าใจ"
-
 #: src/components/SearchModal/ImportList.tsx
+#: src/components/TokenSafety/index.tsx
 #: src/pages/AddLiquidity/index.tsx
 msgid "I understand"
 msgstr "ฉันเข้าใจ"
@@ -986,16 +1009,14 @@ msgid "Invalid recipient"
 msgstr "ผู้รับไม่ถูกต้อง"
 
 #: src/components/Menu/index.tsx
+#: src/components/WalletDropdown/DefaultMenu.tsx
+#: src/components/WalletDropdown/LanguageMenu.tsx
 msgid "Language"
 msgstr "ภาษา"
 
 #: src/pages/Pool/index.tsx
 msgid "Learn"
 msgstr "เรียนรู้"
-
-#: src/components/TokenSafety/index.tsx
-msgid "Learn More"
-msgstr "เรียนรู้เพิ่มเติม"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Learn about providing liquidity"
@@ -1004,6 +1025,7 @@ msgstr "เรียนรู้เกี่ยวกับการจัดห
 #: src/components/PrivacyPolicy/index.tsx
 #: src/components/PrivacyPolicy/index.tsx
 #: src/components/TokenSafety/TokenSafetyMessage.tsx
+#: src/components/TokenSafety/index.tsx
 msgid "Learn more"
 msgstr "เรียนรู้เพิ่มเติม"
 
@@ -1014,6 +1036,10 @@ msgstr "กฎหมาย & ความเป็นส่วนตัว"
 
 #: src/components/Menu/index.tsx
 msgid "Light Theme"
+msgstr "ธีมไฟ"
+
+#: src/components/WalletDropdown/DefaultMenu.tsx
+msgid "Light theme"
 msgstr "ธีมไฟ"
 
 #: src/components/claim/ClaimModal.tsx
@@ -1258,6 +1284,7 @@ msgstr "เจ้าของ"
 msgid "Participating pools"
 msgstr "สระว่ายน้ำที่เข้าร่วม"
 
+#: src/components/WalletDropdown/DefaultMenu.tsx
 #: src/pages/Vote/styled.tsx
 msgid "Pending"
 msgstr "รอดำเนินการ"
@@ -1320,8 +1347,8 @@ msgstr "รวม {0}:"
 
 #: src/pages/Pool/index.tsx
 #: src/pages/Pool/index.tsx
-msgid "Pools Overview"
-msgstr "ภาพรวมสระน้ำ"
+msgid "Pools"
+msgstr "สระว่ายน้ำ"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Portal Bridge"
@@ -1690,6 +1717,7 @@ msgid "The app securely collects your wallet address and shares it with TRM Labs
 msgstr "แอปจะรวบรวมที่อยู่กระเป๋าเงินของคุณอย่างปลอดภัยและแชร์กับ TRM Labs Inc. ด้วยเหตุผลด้านความเสี่ยงและการปฏิบัติตามข้อกำหนด"
 
 #: src/components/WalletModal/PendingView.tsx
+#: src/components/WalletModal/PendingView.tsx
 msgid "The connection attempt failed. Please click try again and follow the steps to connect in your wallet."
 msgstr "ความพยายามในการเชื่อมต่อล้มเหลว โปรดคลิกลองอีกครั้งและทำตามขั้นตอนเพื่อเชื่อมต่อในกระเป๋าเงินของคุณ"
 
@@ -1876,10 +1904,16 @@ msgstr "กำหนดเวลาการทำธุรกรรม"
 msgid "Transaction rejected."
 msgstr "ธุรกรรมถูกปฏิเสธ"
 
+#: src/components/WalletDropdown/DefaultMenu.tsx
+#: src/components/WalletDropdown/TransactionMenu.tsx
+msgid "Transactions"
+msgstr "ธุรกรรม"
+
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Transfer Token"
 msgstr "โทเค็นการโอน"
 
+#: src/components/WalletModal/PendingView.tsx
 #: src/components/WalletModal/PendingView.tsx
 msgid "Try Again"
 msgstr "ลองอีกครั้ง"
@@ -2118,6 +2152,10 @@ msgstr "การลงคะแนนเริ่มต้นประมาณ
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Waiting For Confirmation"
 msgstr "รอการยืนยัน"
+
+#: src/components/WalletModal/PendingView.tsx
+msgid "Waiting to connect"
+msgstr "กำลังรอการเชื่อมต่อ"
 
 #: src/components/AddressInputPanel/index.tsx
 msgid "Wallet Address or ENS name"
@@ -2372,6 +2410,10 @@ msgstr "https:// หรือ ipfs:// หรือชื่อ ENS"
 msgid "minutes"
 msgstr "นาที"
 
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
+msgid "reward"
+msgstr "รางวัล"
+
 #: src/components/SearchModal/ImportRow.tsx
 msgid "via {0}"
 msgstr "ผ่าน {0}"
@@ -2549,6 +2591,6 @@ msgid "{tokenB} per {tokenA}"
 msgstr "{tokenB} ต่อ {tokenA}"
 
 #: src/pages/Pool/PositionPage.tsx
-msgid "← Back to Pools Overview"
-msgstr "← กลับไปที่ภาพรวมพูล"
+msgid "← Back to Pools"
+msgstr "← กลับไปที่สระ"
 

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-17 20:04\n"
+"PO-Revision-Date: 2022-08-18 18:04\n"
 "Last-Translator: \n"
 "Language: ru_RU\n"
 "Language-Team: Russian\n"
@@ -290,6 +290,7 @@ msgid "Available to deposit: {0}"
 msgstr "Доступно для внесения: {0}"
 
 #: src/components/WalletModal/PendingView.tsx
+#: src/components/WalletModal/PendingView.tsx
 msgid "Back to wallet selection"
 msgstr "Назад к выбору кошелька"
 
@@ -342,6 +343,7 @@ msgid "By adding this list you are implicitly trusting that the data is correct.
 msgstr "Добавляя этот список, вы подразумеваете, что доверяете его данным. Любой может создать список, включая создание поддельных версий существующих списков, а также списков, якобы сделанных проектами, у которых нет списков."
 
 #: src/components/WalletModal/index.tsx
+#: src/components/WalletModal/index.tsx
 msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the Uniswap <1>Protocol Disclaimer</1>."
 msgstr "Подключая кошелёк, вы соглашаетесь с <0>Условиями предоставления услуг</0> Uniswap Labs и подтверждаете, что прочитали и поняли <1>Отказ от претензий протокола Uniswap</1>."
 
@@ -369,6 +371,7 @@ msgstr "Проверьте состояние сети"
 msgid "Check out our v3 LP walkthrough and migration guides."
 msgstr "Ознакомьтесь с нашими руководствами по предоставлению и переносу ликвидности в V3."
 
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/pages/Earn/Manage.tsx
@@ -495,6 +498,10 @@ msgstr "Подтвердить внесение"
 msgid "Confirm Swap"
 msgstr "Подтвердить обмен"
 
+#: src/components/WalletModal/PendingView.tsx
+msgid "Confirm this connection in your wallet"
+msgstr "Подтвердите это подключение в своем кошельке"
+
 #: src/components/ModalViews/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
@@ -550,9 +557,14 @@ msgstr "Связано с"
 msgid "Connecting..."
 msgstr "Подключение..."
 
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
 #: src/theme/components.tsx
 msgid "Copied!"
 msgstr "Скопировано!"
+
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
+msgid "Copy"
+msgstr "Копировать"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Copy Address"
@@ -604,6 +616,10 @@ msgstr "Текущая цена {0}:"
 #: src/components/Menu/index.tsx
 msgid "Dark Theme"
 msgstr "Тёмная тема"
+
+#: src/components/WalletDropdown/DefaultMenu.tsx
+msgid "Dark theme"
+msgstr "Темная тема"
 
 #: src/pages/Vote/styled.tsx
 msgid "Defeated"
@@ -677,6 +693,7 @@ msgid "Details"
 msgstr "Подробности"
 
 #: src/components/AccountDetails/index.tsx
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
 msgid "Disconnect"
 msgstr "Отключить"
 
@@ -754,6 +771,7 @@ msgid "Error"
 msgstr "Ошибка"
 
 #: src/components/WalletModal/PendingView.tsx
+#: src/components/WalletModal/PendingView.tsx
 msgid "Error connecting"
 msgstr "Ошибка подключения"
 
@@ -822,6 +840,14 @@ msgstr "Экспертный режим отключает экран подтв
 msgid "Expired"
 msgstr "Истёк срок"
 
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
+msgid "Explore"
+msgstr "Исследовать"
+
+#: src/pages/Tokens/index.tsx
+msgid "Explore Tokens"
+msgstr "Исследуйте жетоны"
+
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore Uniswap Analytics."
 msgstr "Изучите Uniswap Analytics."
@@ -883,11 +909,8 @@ msgstr "Скрыть"
 msgid "High Price Impact"
 msgstr "Высокое влияние на цену"
 
-#: src/components/TokenSafety/index.tsx
-msgid "I Understand"
-msgstr "Я понимаю"
-
 #: src/components/SearchModal/ImportList.tsx
+#: src/components/TokenSafety/index.tsx
 #: src/pages/AddLiquidity/index.tsx
 msgid "I understand"
 msgstr "Я понимаю"
@@ -986,15 +1009,13 @@ msgid "Invalid recipient"
 msgstr "Неверный получатель"
 
 #: src/components/Menu/index.tsx
+#: src/components/WalletDropdown/DefaultMenu.tsx
+#: src/components/WalletDropdown/LanguageMenu.tsx
 msgid "Language"
 msgstr "Язык"
 
 #: src/pages/Pool/index.tsx
 msgid "Learn"
-msgstr "Узнать больше"
-
-#: src/components/TokenSafety/index.tsx
-msgid "Learn More"
 msgstr "Узнать больше"
 
 #: src/pages/Pool/CTACards.tsx
@@ -1004,6 +1025,7 @@ msgstr "Узнать подробнее о предоставлении ликв
 #: src/components/PrivacyPolicy/index.tsx
 #: src/components/PrivacyPolicy/index.tsx
 #: src/components/TokenSafety/TokenSafetyMessage.tsx
+#: src/components/TokenSafety/index.tsx
 msgid "Learn more"
 msgstr "Узнать больше"
 
@@ -1014,6 +1036,10 @@ msgstr "Юридическая информация и политика конф
 
 #: src/components/Menu/index.tsx
 msgid "Light Theme"
+msgstr "Светлая тема"
+
+#: src/components/WalletDropdown/DefaultMenu.tsx
+msgid "Light theme"
 msgstr "Светлая тема"
 
 #: src/components/claim/ClaimModal.tsx
@@ -1258,6 +1284,7 @@ msgstr "Владелец"
 msgid "Participating pools"
 msgstr "Участвующие пулы"
 
+#: src/components/WalletDropdown/DefaultMenu.tsx
 #: src/pages/Vote/styled.tsx
 msgid "Pending"
 msgstr "Ожидает"
@@ -1320,8 +1347,8 @@ msgstr "{0} в пуле:"
 
 #: src/pages/Pool/index.tsx
 #: src/pages/Pool/index.tsx
-msgid "Pools Overview"
-msgstr "Обзор пулов"
+msgid "Pools"
+msgstr "Бассейны"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Portal Bridge"
@@ -1690,6 +1717,7 @@ msgid "The app securely collects your wallet address and shares it with TRM Labs
 msgstr "Приложение безопасно получает адрес вашего кошелька и передает его TRM Labs Inc. в целях управления рисками и соблюдения требований законодательства."
 
 #: src/components/WalletModal/PendingView.tsx
+#: src/components/WalletModal/PendingView.tsx
 msgid "The connection attempt failed. Please click try again and follow the steps to connect in your wallet."
 msgstr "Попытка подключения не удалась. Нажмите «Повторить попытку» и следуйте инструкциям по подключению в своем кошельке."
 
@@ -1876,10 +1904,16 @@ msgstr "Cрок действия транзакции"
 msgid "Transaction rejected."
 msgstr "Транзакция отклонена."
 
+#: src/components/WalletDropdown/DefaultMenu.tsx
+#: src/components/WalletDropdown/TransactionMenu.tsx
+msgid "Transactions"
+msgstr "Транзакции"
+
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Transfer Token"
 msgstr "Перевести токен"
 
+#: src/components/WalletModal/PendingView.tsx
 #: src/components/WalletModal/PendingView.tsx
 msgid "Try Again"
 msgstr "Попробовать ещё раз"
@@ -2118,6 +2152,10 @@ msgstr "Голосование начнется примерно {0}"
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Waiting For Confirmation"
 msgstr "Ожидание подтверждения"
+
+#: src/components/WalletModal/PendingView.tsx
+msgid "Waiting to connect"
+msgstr "Ожидание подключения"
 
 #: src/components/AddressInputPanel/index.tsx
 msgid "Wallet Address or ENS name"
@@ -2372,6 +2410,10 @@ msgstr "https:// или ipfs:// или ENS-имя"
 msgid "minutes"
 msgstr "минут(-ы)"
 
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
+msgid "reward"
+msgstr "награда"
+
 #: src/components/SearchModal/ImportRow.tsx
 msgid "via {0}"
 msgstr "из {0}"
@@ -2549,6 +2591,6 @@ msgid "{tokenB} per {tokenA}"
 msgstr "{tokenB} за {tokenA}"
 
 #: src/pages/Pool/PositionPage.tsx
-msgid "← Back to Pools Overview"
-msgstr "← Назад к пулам"
+msgid "← Back to Pools"
+msgstr "← Назад к Бассейны"
 
