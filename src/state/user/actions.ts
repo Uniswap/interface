@@ -19,7 +19,7 @@ export const updateArbitrumAlphaAcknowledged = createAction<{ arbitrumAlphaAckno
   'user/updateArbitrumAlphaAcknowledged'
 )
 export const updateUserFrontRunProtection = createAction<{ useFrontrunProtection: boolean }>('user/updateUserFrontrunProtection')
-
+export const updateUserGasPreferences = createAction<{high?: boolean; low?:boolean; medium?:boolean; custom?: number;}>('user/updateCustomGasSettings')
 export const updateUserDarkMode = createAction<{ userDarkMode: boolean }>('user/updateUserDarkMode')
 export const updateUserExpertMode = createAction<{ userExpertMode: boolean }>('user/updateUserExpertMode')
 export const updateUserLocale = createAction<{ userLocale: SupportedLocale }>('user/updateUserLocale')

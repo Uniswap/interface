@@ -13,6 +13,7 @@ import {
   updateUserDeadline,
   updateUserExpertMode,
   updateUserFrontRunProtection,
+  updateUserGasPreferences,
   updateUserLocale,
   updateUserSingleHopOnly,
   updateUserSlippageTolerance,
@@ -65,6 +66,12 @@ export interface UserState {
 
   timestamp: number
   URLWarningVisible: boolean
+  preferredGas: {
+    low?: boolean,
+    medium?: boolean,
+    high?: boolean,
+    custom?: any
+  }
 }
 
 function pairKey(token0Address: string, token1Address: string) {
@@ -87,7 +94,13 @@ export const initialState: UserState = {
   timestamp: currentTimestamp(),
   URLWarningVisible: true,
   useAutoSlippage: false,
-  useFrontrunProtection: false
+  useFrontrunProtection: false,
+  preferredGas: {
+    low: false,
+    medium: false,
+    high: false,
+    custom: 0
+  }
 }
 
 export default createReducer(initialState, (builder) =>
@@ -157,6 +170,9 @@ export default createReducer(initialState, (builder) =>
     })
     .addCase(updateUserSingleHopOnly, (state, action) => {
       state.userSingleHopOnly = action.payload.userSingleHopOnly
+    })
+    .addCase(updateUserGasPreferences, (state,action) => {
+        state.preferredGas = action.payload;
     })
     .addCase(updateHideClosedPositions, (state, action) => {
       state.userHideClosedPositions = action.payload.userHideClosedPositions

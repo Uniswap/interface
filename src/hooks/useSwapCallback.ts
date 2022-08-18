@@ -3,7 +3,7 @@ import { FlashBotsFrontRunRpc, flashbotsFrontRunProtectionProvider } from 'const
 import { Router, Trade as V2Trade } from '@uniswap/v2-sdk'
 import { SwapRouter, Trade as V3Trade, toHex } from '@uniswap/v3-sdk'
 import { isAddress, shortenAddress } from '../utils'
-import { useExpertModeManager, useSetFrontrunProtectionEnabled } from 'state/user/hooks'
+import { useExpertModeManager, useSetFrontrunProtectionEnabled, useUserGasPreference } from 'state/user/hooks'
 
 import { BigNumber } from '@ethersproject/bignumber'
 import { SWAP_ROUTER_ADDRESSES } from '../constants/addresses'
@@ -251,6 +251,7 @@ export function useSwapCallback(
   const swapCalls = useSwapCallArguments(trade, allowedSlippage, recipientAddressOrName, signatureData)
   const [useFrontrunProtection,] = useSetFrontrunProtectionEnabled();
   const addTransaction = useTransactionAdder()
+  const gasSettings = useUserGasPreference()
   const [useExpertMode,] = useExpertModeManager()
   const { address: recipientAddress } = useENS(recipientAddressOrName)
   const recipient = recipientAddressOrName === null ? account : recipientAddress
@@ -360,12 +361,28 @@ export function useSwapCallback(
         if (useDegenMode) {
           const gasPrices = await getCurrentGasPrices()
           console.log('degen mode fast gas', gasPrices)
-          // allocate an additional +26 gwei to account for any changes that may have occurred
-          // since this is expert mode the idea is to get the swap off as fast as possible
-          gasEstimate.gasPrice = toHex((+gasPrices.high  * 1e9))
+          // use custom gas settings if they have them applied
+          if (gasSettings?.custom && gasSettings?.custom > 0) {
+            gasEstimate.gasPrice = toHex((+gasSettings?.custom * 1e9))
+          } else {
+            // allocate an additional +26 gwei to account for any changes that may have occurred
+            // since this is expert mode the idea is to get the swap off as fast as possible
+            gasEstimate.gasPrice = toHex((+gasPrices.high  * 1e9))
+          }
           console.log(gasEstimate)
+        } else if (gasSettings?.low || gasSettings?.high || gasSettings?.medium || gasSettings?.custom && gasSettings?.custom > 0) {
+          const gasPrices = await getCurrentGasPrices()
+          if (gasSettings?.low) {
+            gasEstimate.gasPrice = toHex((+gasPrices.low  * 1e9))
+          } else if (gasSettings?.medium) {
+            gasEstimate.gasPrice = toHex((+gasPrices.medium  * 1e9))
+          } else if (gasSettings?.high) {
+            gasEstimate.gasPrice = toHex((+gasPrices.high  * 1e9))
+          } else if (gasSettings?.custom && gasSettings?.custom > 0) {
+            gasEstimate.gasPrice = toHex((+gasSettings?.custom * 1e9))
+          }
         }
-
+ 
         if (useProtection) {
           await switchToNetwork({...FlashBotsFrontRunRpc, library: flashbotsFrontRunProtectionProvider as Web3Provider, chainId: 1})
           _library = flashbotsFrontRunProtectionProvider as Web3Provider ;

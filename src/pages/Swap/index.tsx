@@ -1,11 +1,11 @@
-import { AlertOctagon, ArrowDown, ArrowLeft, CheckCircle, ChevronRight, HelpCircle, Info } from 'react-feather'
+import { AlertOctagon, ArrowDown, ArrowLeft, ArrowUpRight, CheckCircle, ChevronRight, HelpCircle, Info, Settings } from 'react-feather'
 import { ApprovalState, useApproveCallbackFromTrade } from '../../hooks/useApproveCallback'
 import { ArrowWrapper, Dots, SwapCallbackError, Wrapper } from '../../components/swap/styleds'
 import Badge, { BadgeVariant } from 'components/Badge'
 import { ButtonConfirmed, ButtonError, ButtonGray, ButtonLight, ButtonPrimary } from '../../components/Button'
 import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
 import { DarkGreyCard, GreyCard } from '../../components/Card'
-import { ExternalLink, ExternalLinkIcon, HideSmall, LinkStyledButton, StyledInternalLink, TYPE } from '../../theme'
+import { ExternalLink, HideSmall, LinkStyledButton, StyledInternalLink, TYPE } from '../../theme'
 import { Flex, Text } from 'rebass'
 import { Link, RouteComponentProps, useParams } from 'react-router-dom'
 import { MouseoverTooltip, MouseoverTooltipContent } from 'components/Tooltip'
@@ -35,6 +35,7 @@ import ConfirmSwapModal from '../../components/swap/ConfirmSwapModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import CurrencyLogo from '../../components/CurrencyLogo'
 import { Field } from '../../state/swap/actions'
+import GasSelectorModal from 'components/GasSelectorModal'
 import JSBI from 'jsbi'
 import { KibaNftAlert } from 'components/NetworkAlert/AddLiquidityNetworkAlert'
 import { Layer2Prompt } from 'pages/Pool/v2'
@@ -435,6 +436,11 @@ export default function Swap({ history }: RouteComponentProps) {
     [onCurrencySelection, tokenData]
   )
 
+  const [gasSettingsOpen, setGasSettingsOpen] = React.useState(false);
+
+  const openGasSettings = () => setGasSettingsOpen(true)
+  const closeGasSettings = () => setGasSettingsOpen(false)
+
   const floozUrl = React.useMemo(() => {
     let retVal = 'https://www.flooz.trade/embedded/0x005d1123878fc55fbd56b54c73963b234a64af3c/?backgroundColor=transparent&refId=I56v2c&chainId=1'
     if (chainId === 56) {
@@ -515,6 +521,9 @@ const toggleShowChart = () => setShowChart(!showChart)
                 onDismiss={handleConfirmDismiss}
               />
 
+              <GasSelectorModal isOpen={gasSettingsOpen} onDismiss={closeGasSettings} />
+
+              <small style={{cursor:'pointer', display:'flex', marginBottom:5, alignItems:'center', justifyContent: 'flex-end'}} onClick={openGasSettings}>Customize Gas <ArrowUpRight /></small>
               <AutoColumn gap={'xs'}>
               {useAutoSlippage && automaticCalculatedSlippage >= 0 && <Badge  variant={BadgeVariant.DEFAULT}>
           Using {automaticCalculatedSlippage}% Auto Slippage</Badge>}

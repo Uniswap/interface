@@ -78,16 +78,16 @@ export function CurrencySearch({
   const fixedList = useRef<FixedSizeList>()
 
   const [searchQuery, setSearchQuery] = useState<string>('')
-const debouncedQuery = useMemo(() =>  searchQuery,[searchQuery])
+  const debouncedQuery = useMemo(() =>  searchQuery,[searchQuery])
 
   const [invertSearchOrder] = useState<boolean>(false)
 
   const allTokens = useAllTokens()
 
   // if they input an address, use it
-  const isAddressSearch = isAddress(debouncedQuery)
+  const isAddressSearch = isAddress(searchQuery)
 
-  const searchToken = useToken(debouncedQuery)
+  const searchToken = useToken(searchQuery)
 
   const searchTokenIsAdded = useIsUserAddedToken(searchToken)
 

@@ -14,6 +14,7 @@ import {
   updateUserDeadline,
   updateUserExpertMode,
   updateUserFrontRunProtection,
+  updateUserGasPreferences,
   updateUserLocale,
   updateUserSingleHopOnly,
   updateUserSlippageTolerance,
@@ -169,6 +170,22 @@ export function useSetUserSlippageTolerance(): (slippageTolerance: Percent | 'au
   )
 }
 
+
+export function useSetUserGasPreference(): (gasSettings: any) => void {
+  const dispatch = useAppDispatch()
+
+  return useCallback(
+    (userGasSettings: any) => {
+      dispatch(
+        updateUserGasPreferences({
+          ...userGasSettings
+        })
+      )
+    },
+    [dispatch]
+  )
+}
+
 /**
  * Return the user's slippage tolerance, from the redux store, and a function to update the slippage tolerance
  */
@@ -180,6 +197,18 @@ export function useUserSlippageTolerance(): Percent | 'auto' {
   return useMemo(
     () => (userSlippageTolerance === 'auto' ? 'auto' : new Percent(userSlippageTolerance, 10_000)),
     [userSlippageTolerance]
+  )
+}
+
+export function useUserGasPreference(): { low?: boolean, medium?:boolean, high?:boolean, custom?: 0} {
+
+  const userGasSelection = useAppSelector((state) => {
+    return state.user.preferredGas
+  })
+
+  return useMemo(
+    () => userGasSelection,
+    [userGasSelection]
   )
 }
 
