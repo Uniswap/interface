@@ -84,11 +84,13 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo, isCompressedView }
 
   const outputNotLoaded = !!(
     formattedAmounts[CurrencyField.INPUT] &&
+    Number(formattedAmounts[CurrencyField.INPUT]) &&
     currencies[CurrencyField.OUTPUT] &&
     !formattedAmounts[CurrencyField.OUTPUT]
   )
   const inputNotLoaded = !!(
     formattedAmounts[CurrencyField.OUTPUT] &&
+    Number(formattedAmounts[CurrencyField.OUTPUT]) &&
     currencies[CurrencyField.INPUT] &&
     !formattedAmounts[CurrencyField.INPUT]
   )
