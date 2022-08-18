@@ -77,6 +77,7 @@ export const ChartContainer = styled.div`
   display: flex;
   height: 436px;
   align-items: center;
+  overflow: hidden;
 `
 export const Stat = styled.div`
   display: flex;
@@ -204,14 +205,16 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
             </TokenNameCell>
           </TokenInfoContainer>
           <ChartContainer>
-            <ChartEmpty>
-              <Wave />
-              <Wave />
-            </ChartEmpty>
-            <MissingChartData>
-              <TrendingUp size={12} />
-              Missing chart data
-            </MissingChartData>
+            <>
+              <ChartEmpty>
+                <Wave />
+                <Wave />
+              </ChartEmpty>
+              <MissingChartData>
+                <TrendingUp size={12} />
+                Missing chart data
+              </MissingChartData>
+            </>
           </ChartContainer>
         </ChartHeader>
         <AboutSection>
