@@ -9,7 +9,7 @@ const WalletWrapper = styled.div`
   border-radius: 12px;
   width: 320px;
   max-height: 376px;
-  max-height: 388px;
+
   display: flex;
   flex-direction: column;
   font-size: 16px;
