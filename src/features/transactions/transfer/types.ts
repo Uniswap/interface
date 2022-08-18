@@ -27,7 +27,6 @@ export interface TransferNFTParams extends BaseTransferParams {
 export type TransferTokenParams = TransferCurrencyParams | TransferNFTParams
 
 export interface InputAssetInfo {
-  isNFT: boolean
   currencyIn: Currency | undefined
   nftIn: NFTAsset.Asset | undefined
   chainId: ChainId | undefined

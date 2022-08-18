@@ -62,7 +62,7 @@ export function TransferTokenForm({
     warnings,
   } = derivedTransferInfo
 
-  const { isNFT, currencyIn, nftIn, chainId } = inputAssetInfo
+  const { currencyIn, nftIn, chainId } = inputAssetInfo
 
   const { onShowTokenSelector, onSetAmount, onSetMax, onSelectRecipient, onToggleUSDInput } =
     useSwapActionHandlers(dispatch)
@@ -99,7 +99,7 @@ export function TransferTokenForm({
   useUpdateTransferGasEstimate(
     dispatch,
     chainId,
-    isNFT ? nftIn?.asset_contract.address : currencyIn ? currencyAddress(currencyIn) : undefined,
+    nftIn ? nftIn?.asset_contract.address : currencyIn ? currencyAddress(currencyIn) : undefined,
     !actionButtonDisabled ? currencyAmounts[CurrencyField.INPUT]?.quotient.toString() : undefined,
     recipient,
     nftIn?.token_id,
@@ -142,9 +142,9 @@ export function TransferTokenForm({
       )}
       <AnimatedFlex grow entering={FadeIn} exiting={FadeOut} justifyContent="space-between" p="md">
         <Flex gap="md">
-          {isNFT ? (
+          {nftIn ? (
             <Flex centered mx="xl">
-              {nftIn && <NFTViewer uri={nftIn.image_url} />}
+              <NFTViewer uri={nftIn.image_url} />
             </Flex>
           ) : (
             <CurrencyInputPanel
@@ -188,7 +188,7 @@ export function TransferTokenForm({
           </Flex>
         </Flex>
 
-        {isNFT ? null : (
+        {nftIn ? null : (
           <DecimalPad
             setValue={(newValue) => onSetAmount(CurrencyField.INPUT, newValue, isUSDInput)}
             value={formattedAmounts[CurrencyField.INPUT]}

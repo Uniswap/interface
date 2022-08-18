@@ -73,7 +73,7 @@ export function useDerivedTransferInfo(state: TransactionState): DerivedTransfer
 
   const { asset: nftIn } = useNFT(
     activeAccount?.address,
-    tradeableAsset?.address && tradeableAsset.address,
+    tradeableAsset?.address,
     tradeableAsset?.type === AssetType.ERC1155 || tradeableAsset?.type === AssetType.ERC721
       ? tradeableAsset.tokenId
       : undefined
@@ -354,10 +354,9 @@ export function useInputAssetInfo(
   assetType: AssetType | undefined,
   inputAsset: NullUndefined<Currency | NFTAsset.Asset>
 ) {
-  // TODO: consider simplifying this logic
   const isNFT = assetType === AssetType.ERC721 || assetType === AssetType.ERC1155
   const currencyIn = !isNFT ? (inputAsset as Currency) : undefined
   const nftIn = isNFT ? (inputAsset as NFTAsset.Asset) : undefined
-  const chainId = toSupportedChainId(isNFT ? nftIn?.chainId : currencyIn?.chainId) ?? undefined
-  return { isNFT, currencyIn, nftIn, chainId }
+  const chainId = toSupportedChainId(nftIn?.chainId ?? currencyIn?.chainId) ?? undefined
+  return { currencyIn, nftIn, chainId }
 }

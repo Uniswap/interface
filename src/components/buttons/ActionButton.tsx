@@ -5,7 +5,7 @@ import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biomet
 import { ElementName } from 'src/features/telemetry/constants'
 import { Theme } from 'src/styles/theme'
 
-type ActionButtonProps = {
+export type ActionButtonProps = {
   disabled: boolean
   name: ElementName
   label: string

@@ -1,17 +1,6 @@
 import { AnyAction } from '@reduxjs/toolkit'
-import { Currency } from '@uniswap/sdk-core'
 import React, { Dispatch } from 'react'
 import { useTranslation } from 'react-i18next'
-import { FadeInUp, FadeOut } from 'react-native-reanimated'
-import { useAppTheme } from 'src/app/hooks'
-import ActionButton from 'src/components/buttons/ActionButton'
-import { Button } from 'src/components/buttons/Button'
-import { TransferArrowButton } from 'src/components/buttons/TransferArrowButton'
-import { CurrencyLogo } from 'src/components/CurrencyLogo'
-import { Arrow } from 'src/components/icons/Arrow'
-import { AmountInput } from 'src/components/input/AmountInput'
-import { AnimatedFlex, Flex } from 'src/components/layout'
-import { Text } from 'src/components/Text'
 import { WarningAction, WarningModalType } from 'src/components/warnings/types'
 import { ElementName } from 'src/features/telemetry/constants'
 import {
@@ -29,6 +18,7 @@ import {
   requireAcceptNewTrade,
 } from 'src/features/transactions/swap/utils'
 import { WrapType } from 'src/features/transactions/swap/wrapSaga'
+import { TransactionReview } from 'src/features/transactions/TransactionReview'
 import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
 
 interface SwapFormProps {
@@ -40,7 +30,6 @@ interface SwapFormProps {
 
 export function SwapReview({ dispatch, onNext, onPrev, derivedSwapInfo }: SwapFormProps) {
   const { t } = useTranslation()
-  const theme = useAppTheme()
 
   const {
     currencies,
@@ -70,8 +59,6 @@ export function SwapReview({ dispatch, onNext, onPrev, derivedSwapInfo }: SwapFo
   )
   const newTradeToAccept = requireAcceptNewTrade(acceptedTrade, trade)
 
-  const swapDisabled = noValidSwap || blockingWarning || newTradeToAccept
-
   const { swapCallback } = useSwapCallback(
     trade,
     gasFeeEstimate,
@@ -97,127 +84,59 @@ export function SwapReview({ dispatch, onNext, onPrev, derivedSwapInfo }: SwapFo
     txId
   )
 
+  const actionButtonProps = {
+    disabled: noValidSwap || blockingWarning || newTradeToAccept,
+    label: getActionName(t, wrapType),
+    name:
+      wrapType === WrapType.Wrap
+        ? ElementName.Wrap
+        : wrapType === WrapType.Unwrap
+        ? ElementName.Unwrap
+        : ElementName.Swap,
+    onPress: isWrapAction(wrapType) ? onWrap : onSwap,
+  }
+
+  const getTransactionDetails = () => {
+    if (isWrapAction(wrapType) || !acceptedTrade || !trade) {
+      return
+    }
+
+    return (
+      <SwapDetails
+        acceptedTrade={acceptedTrade}
+        dispatch={dispatch}
+        gasFeeEstimate={gasFeeEstimate}
+        newTradeToAccept={newTradeToAccept}
+        optimismL1Fee={optimismL1Fee}
+        trade={trade}
+        warnings={warnings}
+        onAcceptTrade={onAcceptTrade}
+      />
+    )
+  }
+
+  const currencyIn = currencies[CurrencyField.INPUT]
+  const currencyOut = currencies[CurrencyField.OUTPUT]
+
   if (
-    !currencies[CurrencyField.OUTPUT] ||
-    !currencies[CurrencyField.INPUT] ||
+    !currencyIn ||
+    !currencyOut ||
     !currencyAmounts[CurrencyField.INPUT] ||
     !currencyAmounts[CurrencyField.OUTPUT]
-  )
+  ) {
     return null
-
-  const currencyIn = currencies[CurrencyField.INPUT] as Currency
-  const currencyOut = currencies[CurrencyField.OUTPUT] as Currency
+  }
 
   return (
-    <>
-      <AnimatedFlex alignItems="center" entering={FadeInUp} exiting={FadeOut} flexGrow={1} gap="md">
-        <Flex gap="sm" mt="xxl">
-          <AmountInput
-            alignSelf="stretch"
-            backgroundColor="none"
-            borderWidth={0}
-            editable={false}
-            fontFamily={theme.textVariants.headlineLarge.fontFamily}
-            fontSize={48}
-            height={48}
-            placeholder="0"
-            px="md"
-            py="none"
-            showCurrencySign={isUSDInput}
-            showSoftInputOnFocus={false}
-            testID="amount-input-in"
-            textAlign="center"
-            value={formattedAmounts[CurrencyField.INPUT]}
-          />
-          <Flex centered row gap="xs">
-            <CurrencyLogo currency={currencyIn} size={28} />
-            <Text color="textPrimary" variant="largeLabel">
-              {currencyIn.symbol}
-            </Text>
-          </Flex>
-        </Flex>
-        <TransferArrowButton disabled bg="none" borderColor="none" />
-        <Flex centered gap="md">
-          <Text color="textSecondary" variant="bodySmall">
-            {t('For')}
-          </Text>
-          <Flex gap="sm">
-            <AmountInput
-              alignSelf="stretch"
-              backgroundColor="none"
-              borderWidth={0}
-              editable={false}
-              fontFamily={theme.textVariants.headlineLarge.fontFamily}
-              fontSize={48}
-              height={48}
-              placeholder="0"
-              px="md"
-              py="none"
-              showCurrencySign={isUSDInput}
-              showSoftInputOnFocus={false}
-              testID="amount-input-out"
-              textAlign="center"
-              value={formattedAmounts[CurrencyField.OUTPUT]}
-            />
-            <Flex centered row gap="xs">
-              <CurrencyLogo currency={currencyOut} size={28} />
-              <Text color="textPrimary" variant="largeLabel">
-                {currencyOut.symbol}
-              </Text>
-            </Flex>
-          </Flex>
-        </Flex>
-      </AnimatedFlex>
-      <AnimatedFlex
-        entering={FadeInUp}
-        exiting={FadeOut}
-        flexGrow={1}
-        gap="sm"
-        justifyContent="flex-end"
-        mb="xl"
-        mt="xs"
-        px="sm">
-        {!isWrapAction(wrapType) && acceptedTrade && trade && (
-          <SwapDetails
-            acceptedTrade={acceptedTrade}
-            dispatch={dispatch}
-            gasFeeEstimate={gasFeeEstimate}
-            newTradeToAccept={newTradeToAccept}
-            optimismL1Fee={optimismL1Fee}
-            trade={trade}
-            warnings={warnings}
-            onAcceptTrade={onAcceptTrade}
-          />
-        )}
-        <Flex row gap="xs">
-          <Button
-            alignItems="center"
-            borderColor="backgroundOutline"
-            borderRadius="lg"
-            borderWidth={1}
-            flexDirection="row"
-            justifyContent="center"
-            px="md"
-            py="sm"
-            onPress={onPrev}>
-            <Arrow color={theme.colors.textPrimary} direction="w" size={20} />
-          </Button>
-          <Flex grow>
-            <ActionButton
-              disabled={swapDisabled}
-              label={getActionName(t, wrapType)}
-              name={
-                wrapType === WrapType.Wrap
-                  ? ElementName.Wrap
-                  : wrapType === WrapType.Unwrap
-                  ? ElementName.Unwrap
-                  : ElementName.Swap
-              }
-              onPress={isWrapAction(wrapType) ? onWrap : onSwap}
-            />
-          </Flex>
-        </Flex>
-      </AnimatedFlex>
-    </>
+    <TransactionReview
+      actionButtonProps={actionButtonProps}
+      currencyIn={currencyIn}
+      currencyOut={currencyOut}
+      formattedAmountIn={formattedAmounts[CurrencyField.INPUT]}
+      formattedAmountOut={formattedAmounts[CurrencyField.OUTPUT]}
+      isUSDInput={isUSDInput}
+      transactionDetails={getTransactionDetails()}
+      onPrev={onPrev}
+    />
   )
 }
