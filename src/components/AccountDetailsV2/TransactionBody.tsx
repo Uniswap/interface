@@ -151,7 +151,13 @@ const CreateV3PoolSummary = ({
   )
 }
 
-export const getBody = ({ info, transactionState }: { info: TransactionInfo; transactionState: TransactionState }) => {
+export const getTransactionBody = ({
+  info,
+  transactionState,
+}: {
+  info: TransactionInfo
+  transactionState: TransactionState
+}) => {
   switch (info.type) {
     case TransactionType.SWAP:
       return <SwapSummary info={info} transactionState={transactionState} />
