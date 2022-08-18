@@ -63,7 +63,6 @@ const StyledTokenRow = styled.div`
   @media only screen and (max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT}) {
     grid-template-columns: 1fr 6.5fr 4.5fr 4.5fr 4.5fr 4.5fr 1.7fr;
     width: fit-content;
-    padding-right: 24px;
   }
 
   @media only screen and (max-width: ${LARGE_MEDIA_BREAKPOINT}) {
@@ -130,10 +129,6 @@ const StyledHeaderRow = styled(StyledTokenRow)`
 
   &:hover {
     background-color: 'transparent';
-  }
-
-  @media only screen and (max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT}) {
-    padding-right: 24px;
   }
 
   @media only screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
@@ -495,7 +490,7 @@ export default function LoadedRow({
               toggleFavorite()
             }}
           >
-            <Heart size={24} color={heartColor} fill={heartColor} />
+            <Heart size={18} color={heartColor} fill={heartColor} />
           </ClickFavorited>
         }
         listNumber={tokenListIndex + 1}
