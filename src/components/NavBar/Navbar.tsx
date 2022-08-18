@@ -11,6 +11,7 @@ import { ChainSwitcher } from './ChainSwitcher'
 import { MenuDropdown } from './MenuDropdown'
 import { MobileSideBar } from './MobileSidebar'
 import * as styles from './Navbar.css'
+import { SearchBar } from './SearchBar'
 
 interface MenuItemProps {
   href: string
@@ -45,7 +46,7 @@ const MobileNavbar = () => {
           </Box>
           <Box className={styles.rightSideMobileContainer}>
             <Row gap="16">
-              {/* TODO add Searchbar */}
+              <SearchBar />
               <MobileSideBar />
             </Row>
           </Box>
@@ -92,7 +93,9 @@ const Navbar = () => {
             </MenuItem>
           </Row>
         </Box>
-        <Box className={styles.middleContainer}>{/* TODO add Searchbar */}</Box>
+        <Box className={styles.middleContainer}>
+          <SearchBar />
+        </Box>
         <Box className={styles.rightSideContainer}>
           <Row gap="12">
             <MenuDropdown />
