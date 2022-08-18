@@ -5,6 +5,7 @@ import styled from 'styled-components'
 import { ReactComponent as DropdownSvg } from 'assets/svg/down.svg'
 import Card from 'components/Card'
 import Row from 'components/Row'
+import { TutorialIds } from 'components/Tutorial/TutorialSwap/constant'
 import { nativeOnChain } from 'constants/tokens'
 import { useActiveWeb3React } from 'hooks'
 import { ApplicationModal } from 'state/application/actions'
@@ -85,7 +86,7 @@ function Web3Network(): JSX.Element | null {
   if (!chainId) return null
 
   return (
-    <NetworkCard onClick={() => toggleNetworkModal()} role="button">
+    <NetworkCard onClick={() => toggleNetworkModal()} role="button" id={TutorialIds.SELECT_NETWORK}>
       <NetworkSwitchContainer>
         <Row>
           <img

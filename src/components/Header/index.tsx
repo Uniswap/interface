@@ -14,6 +14,7 @@ import { ReactComponent as DropdownSVG } from 'assets/svg/down.svg'
 import DiscoverIcon from 'components/Icons/DiscoverIcon'
 import Menu, { NewLabel } from 'components/Menu'
 import Settings from 'components/Settings'
+import { TutorialIds } from 'components/Tutorial/TutorialSwap/constant'
 import Web3Network from 'components/Web3Network'
 import { PROMM_ANALYTICS_URL } from 'constants/index'
 import { useActiveWeb3React } from 'hooks'
@@ -139,9 +140,9 @@ const AnalyticsWrapper = styled.span`
 `
 
 const DiscoverWrapper = styled.span`
-  @media (max-width: 576px) {
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
     display: none;
-  }
+  `};
 `
 
 const CampaignWrapper = styled.span``
@@ -249,10 +250,9 @@ const StyledNavExternalLink = styled(ExternalLink).attrs({
 `
 
 const YieldMenuWrapper = styled.div`
-  @media (max-width: 576px) {
-    display: none;
-  }
-
+  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+      display: none;
+  `}
   position: relative;
 `
 
@@ -391,45 +391,47 @@ export default function Header() {
             </Dropdown>
           </HoverDropdown>
 
-          <HoverDropdown active={pathname.toLowerCase().includes('pools')}>
-            <Flex alignItems="center">
-              <Trans>Earn</Trans>
-              <DropdownIcon />
-            </Flex>
-            <Dropdown>
-              <StyledNavLink
-                id={`pools-nav-link`}
-                to="/pools"
-                isActive={(match, { pathname }) => Boolean(match) || pathname.startsWith('/pools')}
-                style={{ width: '100%' }}
-              >
-                <Trans>Pools</Trans>
-              </StyledNavLink>
+          <Flex id={TutorialIds.EARNING_LINKS} alignItems="center">
+            <HoverDropdown active={pathname.toLowerCase().includes('pools')}>
+              <Flex alignItems="center">
+                <Trans>Earn</Trans>
+                <DropdownIcon />
+              </Flex>
+              <Dropdown>
+                <StyledNavLink
+                  id="pools-nav-link"
+                  to="/pools"
+                  isActive={(match, { pathname }) => Boolean(match) || pathname.startsWith('/pools')}
+                  style={{ width: '100%' }}
+                >
+                  <Trans>Pools</Trans>
+                </StyledNavLink>
 
-              <StyledNavLink
-                id={`my-pools-nav-link`}
-                to={'/myPools'}
-                isActive={(match, { pathname }) =>
-                  Boolean(match) ||
-                  pathname.startsWith('/add') ||
-                  pathname.startsWith('/remove') ||
-                  pathname.startsWith('/create') ||
-                  (pathname.startsWith('/find') && pathname.endsWith('find'))
-                }
-              >
-                <Trans>My Pools</Trans>
-              </StyledNavLink>
-            </Dropdown>
-          </HoverDropdown>
+                <StyledNavLink
+                  id="my-pools-nav-link"
+                  to={'/myPools'}
+                  isActive={(match, { pathname }) =>
+                    Boolean(match) ||
+                    pathname.startsWith('/add') ||
+                    pathname.startsWith('/remove') ||
+                    pathname.startsWith('/create') ||
+                    (pathname.startsWith('/find') && pathname.endsWith('find'))
+                  }
+                >
+                  <Trans>My Pools</Trans>
+                </StyledNavLink>
+              </Dropdown>
+            </HoverDropdown>
 
-          <YieldMenuWrapper>
-            <StyledNavLink id={`farms-nav-link`} to={'/farms'} isActive={match => Boolean(match)}>
-              <Trans>Farm</Trans>
-            </StyledNavLink>
-          </YieldMenuWrapper>
+            <YieldMenuWrapper>
+              <StyledNavLink id={`farms-nav-link`} to={'/farms'} isActive={match => Boolean(match)}>
+                <Trans>Farm</Trans>
+              </StyledNavLink>
+            </YieldMenuWrapper>
+          </Flex>
 
           {!under369 && (
-            <CampaignWrapper>
+            <CampaignWrapper id={TutorialIds.CAMPAIGN_LINK}>
               <StyledNavLink id={`campaigns`} to={'/campaigns'} isActive={match => Boolean(match)}>
                 <Trans>Campaigns</Trans>
                 {!under500 && (
@@ -441,7 +443,7 @@ export default function Header() {
             </CampaignWrapper>
           )}
 
-          <DiscoverWrapper>
+          <DiscoverWrapper id={TutorialIds.DISCOVER_LINK}>
             <StyledNavLink
               to={'/discover?tab=trending_soon'}
               isActive={match => Boolean(match)}

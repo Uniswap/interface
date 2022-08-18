@@ -114,6 +114,13 @@ export enum MIXPANEL_TYPE {
   TRANSAK_DOWNLOAD_WALLET_CLICKED,
   TRANSAK_SWAP_NOW_CLICKED,
   SWAP_BUY_CRYPTO_CLICKED,
+
+  // for tutorial swap
+  TUTORIAL_CLICK_START,
+  TUTORIAL_CLICK_DONE,
+  TUTORIAL_CLICK_DENY,
+  TUTORIAL_VIEW_VIDEO_SWAP,
+
   // type and swap
   TAS_TYPING_KEYWORD,
   TAS_SELECT_PAIR,
@@ -619,6 +626,22 @@ export default function useMixpanel(trade?: Aggregator | undefined, currencies?:
         }
         case MIXPANEL_TYPE.SWAP_BUY_CRYPTO_CLICKED: {
           mixpanel.track('Buy Crypto - Click on Buy Crypto on KyberSwap')
+          break
+        }
+        case MIXPANEL_TYPE.TUTORIAL_CLICK_START: {
+          mixpanel.track('On-Screen Guide - User click on "View" in Setting to view guide')
+          break
+        }
+        case MIXPANEL_TYPE.TUTORIAL_CLICK_DENY: {
+          mixpanel.track('On-Screen Guide - User click on "Dismiss" button', { step: payload })
+          break
+        }
+        case MIXPANEL_TYPE.TUTORIAL_CLICK_DONE: {
+          mixpanel.track('On-Screen Guide - User click on "Done" button at Step 8')
+          break
+        }
+        case MIXPANEL_TYPE.TUTORIAL_VIEW_VIDEO_SWAP: {
+          mixpanel.track('On-Screen Guide - User click on Step 3 Embedded video')
           break
         }
 

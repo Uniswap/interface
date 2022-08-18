@@ -7,10 +7,18 @@ import { Activity } from 'react-feather'
 import { useMedia } from 'react-use'
 import styled from 'styled-components'
 
-import CoinbaseWalletIcon from 'assets/images/coinbaseWalletIcon.svg'
-import FortmaticIcon from 'assets/images/fortmaticIcon.png'
-import PortisIcon from 'assets/images/portisIcon.png'
-import WalletConnectIcon from 'assets/images/walletConnectIcon.svg'
+import { TutorialIds } from 'components/Tutorial/TutorialSwap/constant'
+import useENSName from 'hooks/useENSName'
+import { useHasSocks } from 'hooks/useSocksBalance'
+import { useWalletModalToggle } from 'state/application/hooks'
+import { isTransactionRecent, useAllTransactions } from 'state/transactions/hooks'
+import { TransactionDetails } from 'state/transactions/reducer'
+import { shortenAddress } from 'utils'
+
+import CoinbaseWalletIcon from '../../assets/images/coinbaseWalletIcon.svg'
+import FortmaticIcon from '../../assets/images/fortmaticIcon.png'
+import PortisIcon from '../../assets/images/portisIcon.png'
+import WalletConnectIcon from '../../assets/images/walletConnectIcon.svg'
 import {
   braveInjectedConnector,
   coin98InjectedConnector,
@@ -19,14 +27,7 @@ import {
   portis,
   walletconnect,
   walletlink,
-} from 'connectors'
-import useENSName from 'hooks/useENSName'
-import { useHasSocks } from 'hooks/useSocksBalance'
-import { useWalletModalToggle } from 'state/application/hooks'
-import { isTransactionRecent, useAllTransactions } from 'state/transactions/hooks'
-import { TransactionDetails } from 'state/transactions/reducer'
-import { shortenAddress } from 'utils'
-
+} from '../../connectors'
 import { NetworkContextName } from '../../constants'
 import { ButtonLight, ButtonSecondary } from '../Button'
 import Identicon from '../Identicon'
@@ -113,7 +114,6 @@ const SOCK = (
   </span>
 )
 
-// eslint-disable-next-line react/prop-types
 function StatusIcon({ connector }: { connector: AbstractConnector }) {
   switch (connector) {
     case injected:
@@ -186,7 +186,11 @@ function Web3StatusInner() {
 
   if (account) {
     return (
-      <Web3StatusConnected id="web3-status-connected" onClick={toggleWalletModal} pending={hasPendingTransactions}>
+      <Web3StatusConnected
+        id={TutorialIds.BUTTON_ADDRESS_WALLET}
+        onClick={toggleWalletModal}
+        pending={hasPendingTransactions}
+      >
         {hasPendingTransactions ? (
           <RowBetween>
             <Text>
@@ -212,7 +216,7 @@ function Web3StatusInner() {
     )
   } else {
     return (
-      <ButtonLight onClick={toggleWalletModal} padding="10px 12px">
+      <ButtonLight onClick={toggleWalletModal} padding="10px 12px" id={TutorialIds.BUTTON_CONNECT_WALLET}>
         <Trans>Connect Wallet</Trans>
       </ButtonLight>
     )

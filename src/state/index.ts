@@ -16,6 +16,7 @@ import pair from './pair/reducer'
 import pools from './pools/reducer'
 import swap from './swap/reducer'
 import transactions from './transactions/reducer'
+import tutorial from './tutorial/reducer'
 import user from './user/reducer'
 import vesting from './vesting/reducer'
 
@@ -41,6 +42,7 @@ const store = configureStore({
     vesting,
     // [dataApi.reducerPath]: dataApi.reducer
     campaigns,
+    tutorial,
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({ thunk: false, immutableCheck: false, serializableCheck: false })

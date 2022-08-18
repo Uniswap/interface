@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import { BigNumber } from '@ethersproject/bignumber'
 import { MaxUint256 } from '@ethersproject/constants'
 import { ChainId, Fraction, Token, TokenAmount } from '@kyberswap/ks-sdk-core'

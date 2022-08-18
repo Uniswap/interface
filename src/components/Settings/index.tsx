@@ -3,19 +3,24 @@ import { useLingui } from '@lingui/react'
 import React, { useEffect, useRef, useState } from 'react'
 import { isMobile } from 'react-device-detect'
 import { Settings } from 'react-feather'
+import { useLocation } from 'react-router-dom'
 import styled, { css } from 'styled-components'
 
 import ArrowRight from 'components/Icons/ArrowRight'
 import LanguageSelector from 'components/LanguageSelector'
 import MenuFlyout from 'components/MenuFlyout'
 import ThemeToggle from 'components/Toggle/ThemeToggle'
+import { TutorialIds } from 'components/Tutorial/TutorialSwap/constant'
 import { LOCALE_LABEL, SupportedLocale } from 'constants/locales'
+import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import useTheme from 'hooks/useTheme'
+import { AppPaths } from 'pages/App'
+import { useTutorialSwapGuide } from 'state/tutorial/hooks'
 import { useDarkModeManager, useUserLocale } from 'state/user/hooks'
 
 import { ApplicationModal } from '../../state/application/actions'
 import { useModalOpen, useToggleSettingsMenu } from '../../state/application/hooks'
-import { ButtonEmpty } from '../Button'
+import { ButtonEmpty, ButtonLight } from '../Button'
 import { AutoColumn } from '../Column'
 import { RowBetween, RowFixed } from '../Row'
 
@@ -83,6 +88,13 @@ const StyledLabel = styled.div`
   font-weight: 400;
   line-height: 20px;
 `
+
+const ButtonViewGuide = styled(ButtonLight)`
+  display: flex;
+  align-items: center;
+  padding: 2px 5px;
+  width: 55px;
+`
 export default function SettingsTab() {
   const theme = useTheme()
   const [darkMode, toggleSetDarkMode] = useDarkModeManager()
@@ -98,10 +110,19 @@ export default function SettingsTab() {
     if (!open) setIsSelectingLanguage(false)
   }, [open])
 
+  const { mixpanelHandler } = useMixpanel()
+  const setShowTutorialSwapGuide = useTutorialSwapGuide()[1]
+  const openTutorialSwapGuide = () => {
+    setShowTutorialSwapGuide({ show: true, step: 0 })
+    mixpanelHandler(MIXPANEL_TYPE.TUTORIAL_CLICK_START)
+    toggle()
+  }
+  const location = useLocation()
+  const isShowTutorialBtn = location.pathname.startsWith(AppPaths.SWAP)
   return (
     // https://github.com/DefinitelyTyped/DefinitelyTyped/issues/30451
     <StyledMenu ref={node as any}>
-      <StyledMenuButton active={open} onClick={toggle} id="open-settings-dialog-button" aria-label="Settings">
+      <StyledMenuButton active={open} onClick={toggle} id={TutorialIds.BUTTON_SETTING} aria-label="Settings">
         <StyledMenuIcon />
       </StyledMenuButton>
       <MenuFlyout
@@ -113,6 +134,21 @@ export default function SettingsTab() {
         hasArrow
         mobileCustomStyle={{ paddingBottom: '40px' }}
       >
+        {isShowTutorialBtn && (
+          <RowBetween style={{ marginTop: '15px' }} id={TutorialIds.BUTTON_VIEW_GUIDE_SWAP}>
+            <RowFixed>
+              <StyledLabel>
+                <Trans>KyberSwap Guide</Trans>
+              </StyledLabel>
+            </RowFixed>
+            <ButtonViewGuide onClick={openTutorialSwapGuide}>
+              <StyledLabel style={{ color: theme.primary }}>
+                <Trans>View</Trans>
+              </StyledLabel>
+            </ButtonViewGuide>
+          </RowBetween>
+        )}
+
         {!isSelectingLanguage ? (
           <>
             <RowBetween style={{ marginTop: '15px' }}>

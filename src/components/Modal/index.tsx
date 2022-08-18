@@ -8,7 +8,7 @@ import { useGesture } from 'react-use-gesture'
 import styled from 'styled-components'
 
 const AnimatedDialogOverlay = animated(DialogOverlay)
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+
 const StyledDialogOverlay = styled(AnimatedDialogOverlay)<{ zindex: string | number }>`
   &[data-reach-dialog-overlay] {
     z-index: ${({ zindex }) => zindex};
@@ -25,10 +25,11 @@ const StyledDialogOverlay = styled(AnimatedDialogOverlay)<{ zindex: string | num
 
 const AnimatedDialogContent = animated(DialogContent)
 // destructure to not pass custom props to Dialog DOM element
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const StyledDialogContent = styled(({ minHeight, maxHeight, maxWidth, width, mobile, isOpen, ...rest }) => (
-  <AnimatedDialogContent {...rest} />
-)).attrs({
+const StyledDialogContent = styled(
+  ({ borderRadius, minHeight, maxHeight, maxWidth, width, mobile, isOpen, ...rest }) => (
+    <AnimatedDialogContent {...rest} />
+  ),
+).attrs({
   'aria-label': 'dialog',
 })`
   overflow-y: ${({ mobile }) => (mobile ? 'scroll' : 'hidden')};
@@ -54,18 +55,22 @@ const StyledDialogContent = styled(({ minHeight, maxHeight, maxWidth, width, mob
         min-height: ${minHeight}vh;
       `}
     display: flex;
-    border-radius: 20px;
+    ${({ borderRadius }) =>
+      borderRadius &&
+      `
+        border-radius: ${borderRadius};
+      `}
     ${({ theme, width }) => theme.mediaWidth.upToMedium`
       width:  ${width || '65vw'};
       margin: 0;
     `}
-    ${({ theme, mobile }) => theme.mediaWidth.upToSmall`
+    ${({ theme, mobile, borderRadius }) => theme.mediaWidth.upToSmall`
       width:  85vw;
       ${
         mobile &&
         `
           width: 100vw;
-          border-radius: 20px;
+          border-radius: ${borderRadius};
           border-bottom-left-radius: 0;
           border-bottom-right-radius: 0;
         `
@@ -80,6 +85,7 @@ export interface ModalProps {
   minHeight?: number | false
   maxHeight?: number | string
   maxWidth?: number | string
+  borderRadius?: number | string
   width?: string
   zindex?: number | string
   enableInitialFocusInput?: boolean
@@ -100,6 +106,7 @@ export default function Modal({
   children,
   transition = true,
   zindex = 100,
+  borderRadius = '20px',
 }: ModalProps) {
   const fadeTransition = useTransition(isOpen, {
     config: { duration: transition ? 200 : 0 },
@@ -119,7 +126,6 @@ export default function Modal({
       }
     },
   })
-
   return (
     <>
       {fadeTransition(
@@ -138,6 +144,7 @@ export default function Modal({
                 maxHeight={maxHeight}
                 maxWidth={maxWidth}
                 width={width}
+                borderRadius={borderRadius}
                 mobile={isMobile}
                 className={className}
               >

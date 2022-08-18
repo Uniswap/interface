@@ -226,7 +226,6 @@ const LineChart = ({
           <Tooltip
             contentStyle={{ display: 'none' }}
             formatter={(tooltipValue: any, name: string, props: any) => (
-              // eslint-disable-next-line react/prop-types
               <HoverUpdater payload={props.payload} setHoverValue={setHoverValue} />
             )}
             cursor={<CustomizedCursor timeFrame={timeFrame} />}

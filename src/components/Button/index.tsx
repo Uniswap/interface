@@ -220,7 +220,6 @@ export const ButtonWhite = styled(Base)`
   color: black;
 
   &:focus {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     box-shadow: 0 0 0 1pt ${darken(0.05, '#edeef2')};
   }
   &:hover {

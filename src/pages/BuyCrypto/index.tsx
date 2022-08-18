@@ -14,6 +14,7 @@ import gPay from 'assets/buy-crypto/google-pay.svg'
 import introImg from 'assets/buy-crypto/intro.png'
 import masterCard from 'assets/buy-crypto/master-card.svg'
 import visa from 'assets/buy-crypto/visa.svg'
+import { ReactComponent as Brave } from 'assets/images/brave_wallet.svg'
 import c98 from 'assets/images/coin98.svg'
 import { ReactComponent as Ledger } from 'assets/images/ledger.svg'
 import metamask from 'assets/images/metamask.svg'
@@ -27,6 +28,7 @@ import CopyHelper from 'components/Copy'
 import Cart from 'components/Icons/Cart'
 import Deposit from 'components/Icons/Deposit'
 import Modal from 'components/Modal'
+import { SUPPORTED_WALLETS } from 'constants/index'
 import { useActiveWeb3React } from 'hooks'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import useTheme from 'hooks/useTheme'
@@ -260,33 +262,22 @@ function BuyCrypto() {
           </Flex>
 
           <Flex sx={{ gap: '20px' }} marginTop="24px" flexDirection="column" justifyContent="center">
-            <DownloadWalletRow href="https://metamask.io/download/" target="_blank" rel="noopener noreferrer">
-              <Image src={metamask} width="24px" />
-              MetaMask
-            </DownloadWalletRow>
-            <DownloadWalletRow href="https://wallet.coin98.com/" target="_blank" rel="noopener noreferrer">
-              <Image src={c98} width="24px" />
-              Coin98
-            </DownloadWalletRow>
-
-            <DownloadWalletRow href="https://walletconnect.com/" target="_blank" rel="noopener noreferrer">
-              <Image src={walletConnect} width="24px" />
-              WalletConnect
-            </DownloadWalletRow>
-
-            <DownloadWalletRow href="https://www.coinbase.com/wallet" target="_blank" rel="noopener noreferrer">
-              <Coinbase width={'24px'} height="24px" />
-              <Text>Coinbase Wallet</Text>
-            </DownloadWalletRow>
-
-            <DownloadWalletRow
-              href="https://www.ledger.com/ledger-live/download"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Ledger width={'24px'} height="24px" />
-              <Text>Ledger</Text>
-            </DownloadWalletRow>
+            {Object.values(SUPPORTED_WALLETS)
+              .filter(e => e.installLink)
+              .map(item => (
+                <DownloadWalletRow
+                  key={item.installLink}
+                  href={item.installLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Image
+                    width="24px"
+                    src={require(`../../assets/images/${isDarkMode ? '' : 'light-'}${item.iconName}`).default}
+                  />
+                  {item.name}
+                </DownloadWalletRow>
+              ))}
           </Flex>
         </Flex>
       </Modal>
@@ -394,12 +385,13 @@ function BuyCrypto() {
                   </Trans>
                 </Text>
 
-                <Flex sx={{ gap: upToMedium ? '28px' : '44px' }} marginTop="28px">
+                <Flex sx={{ gap: upToMedium ? '28px' : '40px' }} marginTop="28px">
                   <Image src={metamask} width={upToSmall ? '36px' : '48px'} />
                   <Image src={c98} width={upToSmall ? '36px' : '48px'} />
                   <Image src={walletConnect} width={upToSmall ? '36px' : '48px'} />
                   <CoinbaseSVG width={upToSmall ? '36px' : '48px'} />
                   <LedgerSVG width={upToSmall ? '36px' : '48px'} />
+                  <Brave width={upToSmall ? '36px' : '48px'} height="48px" />
                 </Flex>
 
                 <Flex margin={upToMedium ? '40px 0 0' : '48px 0 0'} sx={{ gap: '24px' }}>

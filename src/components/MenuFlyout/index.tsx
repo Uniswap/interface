@@ -1,5 +1,5 @@
 import React from 'react'
-import { BrowserView, MobileView, isMobile } from 'react-device-detect'
+import { isMobile } from 'react-device-detect'
 import { Text } from 'rebass'
 import styled, { css } from 'styled-components'
 
@@ -95,25 +95,22 @@ const MenuFlyout = (props: {
 }) => {
   useOnClickOutside(props.node, props.isOpen && !isMobile ? props.toggle : undefined)
   if (!props.isOpen) return null
-  return (
-    <>
-      <BrowserView>
-        <BrowserStyle hasArrow={!!props.hasArrow} customStyle={props.browserCustomStyle}>
+  if (isMobile)
+    return (
+      <Modal isOpen={true} onDismiss={props.toggle} maxWidth={900}>
+        <MobileStyle customStyle={props.mobileCustomStyle}>
           <MenuTitleWrapper toggle={props.toggle} translatedTitle={props.translatedTitle} fontSize={16}>
             {props.children}
           </MenuTitleWrapper>
-        </BrowserStyle>
-      </BrowserView>
-      <MobileView>
-        <Modal isOpen={true} onDismiss={props.toggle} maxWidth={900}>
-          <MobileStyle customStyle={props.mobileCustomStyle}>
-            <MenuTitleWrapper toggle={props.toggle} translatedTitle={props.translatedTitle} fontSize={16}>
-              {props.children}
-            </MenuTitleWrapper>
-          </MobileStyle>
-        </Modal>
-      </MobileView>
-    </>
+        </MobileStyle>
+      </Modal>
+    )
+  return (
+    <BrowserStyle hasArrow={!!props.hasArrow} customStyle={props.browserCustomStyle}>
+      <MenuTitleWrapper toggle={props.toggle} translatedTitle={props.translatedTitle} fontSize={16}>
+        {props.children}
+      </MenuTitleWrapper>
+    </BrowserStyle>
   )
 }
 

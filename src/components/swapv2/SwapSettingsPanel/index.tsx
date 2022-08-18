@@ -11,6 +11,7 @@ import QuestionHelper from 'components/QuestionHelper'
 import { RowBetween, RowFixed } from 'components/Row'
 import Toggle from 'components/Toggle'
 import useTopTrendingSoonTokensInCurrentNetwork from 'components/TopTrendingSoonTokensInCurrentNetwork/useTopTrendingSoonTokensInCurrentNetwork'
+import { TutorialIds } from 'components/Tutorial/TutorialSwap/constant'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import useTheme from 'hooks/useTheme'
 import { ApplicationModal } from 'state/application/actions'
@@ -38,7 +39,6 @@ type Props = {
   onClickGasPriceTracker: () => void
   onClickLiquiditySources: () => void
 }
-
 const BackIconWrapper = styled(ArrowLeft)`
   height: 20px;
   width: 20px;
@@ -74,6 +74,7 @@ const SettingsPanel: React.FC<Props> = ({ className, onBack, onClickLiquiditySou
   const toggleMobileTradeRoutes = useToggleModal(ApplicationModal.MOBILE_TRADE_ROUTES)
   const toggleTradeRoutes = useToggleTradeRoutes()
   const toggleTokenInfo = useToggleTokenInfo()
+
   const isShowTrendingSoonTokens = useShowTopTrendingSoonTokens()
   const toggleTopTrendingTokens = useToggleTopTrendingTokens()
 
@@ -105,7 +106,7 @@ const SettingsPanel: React.FC<Props> = ({ className, onBack, onClickLiquiditySou
   }
 
   return (
-    <Box width="100%" className={className}>
+    <Box width="100%" className={className} id={TutorialIds.TRADING_SETTING_CONTENT}>
       <Flex width={'100%'} flexDirection={'column'} marginBottom="4px">
         <Flex
           alignItems="center"
@@ -138,13 +139,12 @@ const SettingsPanel: React.FC<Props> = ({ className, onBack, onClickLiquiditySou
           <GasPriceTrackerSetting onClick={onClickGasPriceTracker} />
 
           <LiquiditySourcesSetting onClick={onClickLiquiditySources} />
-
           <Flex
             sx={{
               flexDirection: 'column',
               rowGap: '12px',
-              borderTop: `1px solid ${theme.border}`,
               paddingTop: '16px',
+              borderTop: `1px solid ${theme.border}`,
             }}
           >
             <span className="settingTitle">

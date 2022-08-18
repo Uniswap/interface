@@ -117,18 +117,11 @@
     "analyze": "source-map-explorer 'build/static/js/*.js'",
     "lint": "yarn eslint ."
   },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not op_mini all"
+  ],
   "license": "GPL-3.0-or-later",
   "dependencies": {
     "@apollo/client": "^3.3.11",
@@ -162,6 +155,7 @@
     "swiper": "^8.0.7",
     "swr": "^1.0.1",
     "ua-parser-js": "^1.0.2",
-    "uuidv4": "^6.2.12"
+    "uuidv4": "^6.2.12",
+    "walktour": "^5.1.1"
   }
 }

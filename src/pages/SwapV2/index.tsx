@@ -32,6 +32,8 @@ import { MouseoverTooltip } from 'components/Tooltip'
 import TopTrendingSoonTokensInCurrentNetwork from 'components/TopTrendingSoonTokensInCurrentNetwork'
 import TrendingSoonTokenBanner from 'components/TrendingSoonTokenBanner'
 import Tutorial, { TutorialType } from 'components/Tutorial'
+import TutorialSwap from 'components/Tutorial/TutorialSwap'
+import { TutorialIds } from 'components/Tutorial/TutorialSwap/constant'
 import AdvancedSwapDetailsDropdown from 'components/swapv2/AdvancedSwapDetailsDropdown'
 import ConfirmSwapModal from 'components/swapv2/ConfirmSwapModal'
 import GasPriceTrackerPanel from 'components/swapv2/GasPriceTrackerPanel'
@@ -86,6 +88,7 @@ import { useToggleTransactionSettingsMenu, useWalletModalToggle } from 'state/ap
 import { Field } from 'state/swap/actions'
 import { useDefaultsFromURLSearch, useSwapActionHandlers, useSwapState } from 'state/swap/hooks'
 import { useDerivedSwapInfoV2 } from 'state/swap/useAggregator'
+import { useTutorialSwapGuide } from 'state/tutorial/hooks'
 import {
   useExpertModeManager,
   useShowLiveChart,
@@ -121,7 +124,7 @@ enum TAB {
   // LIMIT = 'limit'
 }
 
-const SwapFormWrapper = styled.div`
+const SwapFormWrapper = styled.div<{ isShowTutorial: boolean }>`
   width: 100%;
   max-width: 425px;
 
@@ -129,7 +132,11 @@ const SwapFormWrapper = styled.div`
     max-width: 404px;
   }
   @media only screen and (min-width: 1100px) {
-    position: sticky;
+    position: ${({ isShowTutorial }) => (isShowTutorial ? 'unset' : 'sticky')};
+    /**
+      When tutorial appear, there is no need sticky form. 
+      Besides, it is also easy for us control position of tutorial popup when scroll page. 
+    */
     top: 16px;
   }
 `
@@ -182,6 +189,7 @@ export default function Swap({ history }: RouteComponentProps) {
   const isShowTradeRoutes = useShowTradeRoutes()
   const isShowTokenInfoSetting = useShowTokenInfo()
   const qs = useParsedQueryString()
+  const [{ show: isShowTutorial = false }] = useTutorialSwapGuide()
 
   const refSuggestPair = useRef<PairSuggestionHandle>(null)
   const [showingPairSuggestionImport, setShowingPairSuggestionImport] = useState<boolean>(false) // show modal import when click pair suggestion
@@ -612,23 +620,27 @@ export default function Swap({ history }: RouteComponentProps) {
   const initialTotalTokenDefault = useRef<number | null>(null)
 
   useEffect(() => {
+    checkAutoSelectTokenFromUrl()
+    initialTotalTokenDefault.current = Object.keys(defaultTokens).length // it will be equal with tokenImports.length
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  const isLoadedTokenDefault = account
+    ? Object.keys(defaultTokens).length > 0
+    : initialTotalTokenDefault.current !== null && Object.keys(defaultTokens).length > initialTotalTokenDefault.current //
+
+  useEffect(() => {
     /**
      * defaultTokens change only when:
      * - the first time get data
      * - change network
      * - import/remove token */
-    if (refIsCheckNetworkAutoSelect.current && !refIsImportUserToken.current && Object.keys(defaultTokens).length) {
+    if (refIsCheckNetworkAutoSelect.current && !refIsImportUserToken.current && isLoadedTokenDefault) {
       findTokenPairFromUrl()
     }
     refIsImportUserToken.current = false
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [defaultTokens, refIsCheckNetworkAutoSelect.current])
-
-  useEffect(() => {
-    checkAutoSelectTokenFromUrl()
-    initialTotalTokenDefault.current = Object.keys(defaultTokens).length
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
 
   useEffect(() => {
     if (isSelectCurencyMannual) syncUrl(currencyIn, currencyOut) // when we select token manual
@@ -672,9 +684,6 @@ export default function Swap({ history }: RouteComponentProps) {
 
   const shouldRenderTokenInfo = isShowTokenInfoSetting && currencyIn && currencyOut && isPairInWhiteList
 
-  const isLoadedTokenDefault =
-    initialTotalTokenDefault.current !== null && Object.keys(defaultTokens).length > initialTotalTokenDefault.current
-
   const isShowModalImportToken =
     isLoadedTokenDefault && importTokensNotInDefault.length > 0 && (!dismissTokenWarning || showingPairSuggestionImport)
 
@@ -685,7 +694,7 @@ export default function Swap({ history }: RouteComponentProps) {
        * => add canonical link that specify which is main page, => /swap/bnb/knc-to-usdt
        */}
       <SEOSwap canonicalUrl={canonicalUrl} />
-
+      <TutorialSwap />
       <TokenWarningModal
         isOpen={isShowModalImportToken}
         tokens={importTokensNotInDefault}
@@ -697,7 +706,7 @@ export default function Swap({ history }: RouteComponentProps) {
         <TopTrendingSoonTokensInCurrentNetwork />
         <Container>
           <StyledFlex justifyContent={'center'} alignItems="flex-start" flexWrap={'wrap'}>
-            <SwapFormWrapper>
+            <SwapFormWrapper isShowTutorial={isShowTutorial}>
               <RowBetween mb={'16px'}>
                 <TabContainer>
                   <TabWrapper>
@@ -736,7 +745,9 @@ export default function Swap({ history }: RouteComponentProps) {
                       placement="top"
                       width="fit-content"
                     >
-                      <TransactionSettingsIcon fill={isExpertMode ? theme.warning : theme.subText} />
+                      <span id={TutorialIds.BUTTON_SETTING_SWAP_FORM}>
+                        <TransactionSettingsIcon fill={isExpertMode ? theme.warning : theme.subText} />
+                      </span>
                     </MouseoverTooltip>
                   </StyledActionButtonSwapForm>
                   {/* <TransactionSettings isShowDisplaySettings /> */}
@@ -751,10 +762,10 @@ export default function Swap({ history }: RouteComponentProps) {
                 />
               </RowBetween>
 
-              <AppBodyWrapped data-highlight={shouldHighlightSwapBox}>
+              <AppBodyWrapped data-highlight={shouldHighlightSwapBox} id={TutorialIds.SWAP_FORM}>
                 {activeTab === TAB.SWAP && (
                   <>
-                    <Wrapper id="swap-page">
+                    <Wrapper id={TutorialIds.SWAP_FORM_CONTENT}>
                       <ConfirmSwapModal
                         isOpen={showConfirm}
                         trade={trade}
