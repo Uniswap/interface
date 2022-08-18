@@ -1,5 +1,5 @@
 import { ChainId, Currency, Token } from '@kyberswap/ks-sdk-core'
-import { Trans } from '@lingui/macro'
+import { Trans, t } from '@lingui/macro'
 import React, { useState } from 'react'
 import { ArrowUpCircle } from 'react-feather'
 import { Text } from 'rebass'
@@ -7,10 +7,11 @@ import styled from 'styled-components'
 
 import { ReactComponent as Alert } from 'assets/images/alert.svg'
 import Circle from 'assets/images/blue-loader.svg'
-import MetaMaskLogo from 'assets/images/metamask.png'
 import Banner from 'components/Banner'
+import { SUPPORTED_WALLETS } from 'constants/index'
 import { useActiveWeb3React } from 'hooks'
 import useTheme from 'hooks/useTheme'
+import { useIsDarkMode } from 'state/user/hooks'
 import { ExternalLink } from 'theme'
 import { CloseIcon, CustomLightSpinner } from 'theme/components'
 import { getEtherscanLink, getEtherscanLinkText, getTokenLogoURL } from 'utils'
@@ -44,6 +45,38 @@ const StyledLogo = styled.img`
   width: 16px;
   margin-left: 6px;
 `
+
+const getBrowserWalletConfig = () => {
+  const { ethereum } = window
+  const hasInjectedWallet = !!ethereum
+  const { isCoin98, isBraveWallet, isMetaMask } = ethereum || {}
+
+  if (hasInjectedWallet) {
+    if (isCoin98) {
+      const { name, iconName } = SUPPORTED_WALLETS.COIN98
+      return { name, iconName }
+    }
+
+    if (isBraveWallet) {
+      const { name, iconName } = SUPPORTED_WALLETS.BRAVE
+      return { name, iconName }
+    }
+
+    if (isMetaMask) {
+      const { name, iconName } = SUPPORTED_WALLETS.METAMASK
+      return { name, iconName }
+    }
+
+    const config = SUPPORTED_WALLETS.INJECTED
+    return {
+      name: t`your wallet`,
+      iconName: config.iconName,
+    }
+  }
+
+  return undefined
+}
+
 function ConfirmationPendingContent({
   onDismiss,
   pendingText,
@@ -79,17 +112,18 @@ function ConfirmationPendingContent({
   )
 }
 
-function AddTokenToMetaMask({ token, chainId }: { token: Token; chainId: ChainId }) {
-  async function addToMetaMask() {
+function AddTokenToInjectedWallet({ token, chainId }: { token: Token; chainId: ChainId }) {
+  const isDarkMode = useIsDarkMode()
+
+  const handleClick = async () => {
     const tokenAddress = token.address
     const tokenSymbol = token.symbol
     const tokenDecimals = token.decimals
     const tokenImage = getTokenLogoURL(token.address, chainId)
 
     try {
-      const { ethereum } = window
-      const isMetaMask = !!(ethereum && ethereum.isMetaMask)
-      if (isMetaMask) {
+      const hasInjectedWallet = !!window.ethereum
+      if (hasInjectedWallet) {
         await (window.ethereum as any).request({
           method: 'wallet_watchAsset',
           params: {
@@ -108,10 +142,20 @@ function AddTokenToMetaMask({ token, chainId }: { token: Token; chainId: ChainId
     }
   }
 
+  const walletConfig = getBrowserWalletConfig()
+  if (!walletConfig) {
+    return null
+  }
+
   return (
-    <ButtonLight mt="12px" padding="6px 12px" width="fit-content" onClick={addToMetaMask}>
+    <ButtonLight mt="12px" padding="6px 12px" width="fit-content" onClick={handleClick}>
       <RowFixed>
-        <Trans>Add {token.symbol} to Metamask</Trans> <StyledLogo src={MetaMaskLogo} />
+        <Trans>
+          Add {token.symbol} to {walletConfig.name}
+        </Trans>{' '}
+        <StyledLogo
+          src={require(`../../assets/images/${isDarkMode ? '' : 'light-'}${walletConfig.iconName}`).default}
+        />
       </RowFixed>
     </ButtonLight>
   )
@@ -131,6 +175,8 @@ function TransactionSubmittedContent({
   showTxBanner?: boolean
 }) {
   const theme = useTheme()
+  const hasInjectedWallet = !!window.ethereum
+
   return (
     <Wrapper>
       <Section>
@@ -160,7 +206,9 @@ function TransactionSubmittedContent({
               </Text>
             </ExternalLink>
           )}
-          {tokenAddToMetaMask?.address && <AddTokenToMetaMask token={tokenAddToMetaMask} chainId={chainId} />}
+          {hasInjectedWallet && tokenAddToMetaMask?.address && (
+            <AddTokenToInjectedWallet token={tokenAddToMetaMask} chainId={chainId} />
+          )}
           <ButtonPrimary onClick={onDismiss} style={{ margin: '24px 0 0 0' }}>
             <Text fontWeight={500} fontSize={14}>
               <Trans>Close</Trans>
