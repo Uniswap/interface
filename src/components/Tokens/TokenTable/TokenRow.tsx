@@ -93,7 +93,7 @@ export const ClickFavorited = styled.span`
   cursor: pointer;
 
   &:hover {
-    color: ${({ theme }) => theme.textPrimary};
+    opacity: 60%;
   }
 `
 
@@ -495,7 +495,7 @@ export default function LoadedRow({
               toggleFavorite()
             }}
           >
-            <Heart size={18} color={heartColor} fill={heartColor} />
+            <Heart size={24} color={heartColor} fill={heartColor} />
           </ClickFavorited>
         }
         listNumber={tokenListIndex + 1}
