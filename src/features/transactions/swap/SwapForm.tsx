@@ -12,7 +12,7 @@ import { CurrencyInputPanel } from 'src/components/input/CurrencyInputPanel'
 import { DecimalPad } from 'src/components/input/DecimalPad'
 import { AnimatedFlex, Flex } from 'src/components/layout'
 import { Box } from 'src/components/layout/Box'
-import { SpinningLoader } from 'src/components/loading/SpinningLoader'
+import { LaserLoader } from 'src/components/loading/LaserLoader'
 import { Text } from 'src/components/Text'
 import { WarningAction, WarningModalType } from 'src/components/warnings/types'
 import { getWarningColor } from 'src/components/warnings/utils'
@@ -31,8 +31,6 @@ import { showWarningInPanel } from 'src/features/transactions/swap/validate'
 import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
 import { createTransactionId } from 'src/features/transactions/utils'
 import usePrevious from 'src/utils/hooks'
-
-const LOADING_SPINNER_SIZE = 24
 
 interface SwapFormProps {
   dispatch: Dispatch<AnyAction>
@@ -173,11 +171,10 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo, isCompressedView }
             mb="sm"
             mt="none"
             mx="md"
+            overflow="hidden"
             position="relative">
-            <Box bottom={12} height={24} position="absolute" right={12} width={24}>
-              {swapDataRefreshing ? (
-                <SpinningLoader color="textSecondary" size={LOADING_SPINNER_SIZE} />
-              ) : null}
+            <Box bottom={0} left={0} position="absolute" right={0}>
+              {swapDataRefreshing ? <LaserLoader /> : null}
             </Box>
             <Flex>
               <Flex pb={swapWarning ? 'xxs' : 'lg'} pt="xs" px="md">
@@ -235,7 +232,7 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo, isCompressedView }
         ) : null}
         <PrimaryButton
           disabled={actionButtonDisabled}
-          label={getReviewActionName(t, wrapType)}
+          label={swapDataRefreshing ? t('Price updating...') : getReviewActionName(t, wrapType)}
           name={ElementName.ReviewSwap}
           py="md"
           testID={ElementName.ReviewSwap}
