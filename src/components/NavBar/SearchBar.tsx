@@ -148,14 +148,21 @@ export const SearchBarDropdown = ({ toggleOpen, tokens, collections, hasInput }:
       .slice(0, isNFTPage ? 3 : 2)
   }, [isNFTPage, trendingCollectionResults])
 
+  const showTrendingTokens: Boolean = useMemo(
+    () => (trendingCollections?.length ?? 0) > 0 && !isTokenPage && phase1Flag === Phase1Variant.Enabled,
+    [trendingCollections?.length, isTokenPage, phase1Flag]
+  )
+
   const { data: trendingTokenResults } = useQuery([], () => fetchTrendingTokens(4), {
     refetchOnWindowFocus: false,
     refetchOnMount: false,
     refetchOnReconnect: false,
   })
 
+  const trendingTokensLength = phase1Flag === Phase1Variant.Enabled ? (isTokenPage ? 3 : 2) : 4
+
   const trendingTokens = useMemo(() => {
-    return trendingTokenResults?.slice(0, phase1Flag === Phase1Variant.Enabled ? (isTokenPage ? 3 : 2) : 4)
+    return trendingTokenResults?.slice(0, trendingTokensLength)
   }, [trendingTokenResults, isTokenPage, phase1Flag])
 
   const totalSuggestions = hasInput
@@ -232,7 +239,7 @@ export const SearchBarDropdown = ({ toggleOpen, tokens, collections, hasInput }:
               headerIcon={<TrendingArrow />}
             />
           )}
-          {(trendingCollections?.length ?? 0) > 0 && !isTokenPage && phase1Flag === Phase1Variant.Enabled && (
+          {showTrendingTokens && (
             <SearchBarDropdownSection
               hoveredIndex={hoveredIndex}
               startingIndex={searchHistory.length + (isNFTPage ? 0 : trendingTokens?.length ?? 0)}
