@@ -76,6 +76,10 @@ export function ExploreScreen() {
     scrollY.value = event.contentOffset.y
   })
 
+  const resultsScrollHandler = useAnimatedScrollHandler((event) => {
+    scrollY.value = event.contentOffset.y + CONTENT_MAX_SCROLL_Y
+  })
+
   const headerStyle = useAnimatedStyle(() => {
     return {
       transform: [
@@ -93,7 +97,12 @@ export function ExploreScreen() {
 
   const blurViewProps = useAnimatedProps(() => {
     return {
-      intensity: interpolate(scrollY.value, [0, CONTENT_MAX_SCROLL_Y], [1, 90], Extrapolate.CLAMP),
+      intensity: interpolate(
+        scrollY.value,
+        [CONTENT_MAX_SCROLL_Y, CONTENT_MAX_SCROLL_Y * 1.25],
+        [0, 90],
+        Extrapolate.CLAMP
+      ),
     }
   })
 
@@ -110,17 +119,19 @@ export function ExploreScreen() {
         animatedProps={blurViewProps}
         intensity={0}
         style={[
-          headerStyle,
+          ...(!isSearchMode ? [headerStyle] : []),
           BlurHeaderStyle,
           {
             paddingTop: insets.top,
           },
         ]}
         tint={isDarkMode ? 'dark' : 'default'}>
-        <Flex gap="lg" mb="sm" mt="md" mx="sm">
-          <AnimatedText mx="xs" style={titleStyle} variant="headlineSmall">
-            {t('Explore')}
-          </AnimatedText>
+        <Flex gap={isSearchMode ? 'none' : 'lg'} mb="sm" mt={isSearchMode ? 'sm' : 'md'} mx="sm">
+          <Flex height={isSearchMode ? 0 : 'auto'} opacity={isSearchMode ? 0 : 1}>
+            <AnimatedText mx="xs" style={titleStyle} variant="headlineSmall">
+              {t('Explore')}
+            </AnimatedText>
+          </Flex>
           <SearchTextInput
             ref={textInputRef}
             backgroundColor="backgroundContainer"
@@ -132,11 +143,10 @@ export function ExploreScreen() {
           />
         </Flex>
       </AnimatedBlurView>
-
       {isSearchMode ? (
         <KeyboardAvoidingView behavior="height" style={flex.fill}>
           <AnimatedFlex grow entering={FadeIn} exiting={FadeOut} px="sm">
-            <VirtualizedList>
+            <VirtualizedList onScroll={resultsScrollHandler}>
               <Box height={CONTENT_MAX_SCROLL_Y} mb="sm" />
               <SearchResultsSection searchQuery={searchQuery} />
             </VirtualizedList>
