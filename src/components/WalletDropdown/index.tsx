@@ -10,7 +10,7 @@ import { TransactionHistoryMenu } from './TransactionMenu'
 const WalletWrapper = styled.div<{ isAuthenticated: boolean; hasUnclaimed: boolean }>`
   border-radius: 12px;
   width: 320px;
-  height: ${({ isAuthenticated, hasUnclaimed }) => (isAuthenticated ? (hasUnclaimed ? ' 376px' : '324px') : '200px')};
+  max-height: 376px;
   max-height: 388px;
   display: flex;
   flex-direction: column;

@@ -40,7 +40,7 @@ const IconBlockLink = styled.a`
   ${IconStyles};
 `
 
-const IconBlockButton = styled.div`
+const IconBlockButton = styled.button`
   ${IconStyles};
   border: none;
   outline: none;
