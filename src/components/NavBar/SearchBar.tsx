@@ -155,9 +155,7 @@ export const SearchBarDropdown = ({ toggleOpen, tokens, collections, hasInput }:
   })
 
   const trendingTokens = useMemo(() => {
-    return phase1Flag === Phase1Variant.Enabled
-      ? trendingTokenResults?.slice(0, isTokenPage ? 3 : 2)
-      : trendingTokenResults?.slice(0, 4)
+    return trendingTokenResults?.slice(0, phase1Flag === Phase1Variant.Enabled ? (isTokenPage ? 3 : 2) : 4)
   }, [trendingTokenResults, isTokenPage, phase1Flag])
 
   const totalSuggestions = hasInput
