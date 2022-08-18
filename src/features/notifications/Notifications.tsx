@@ -128,7 +128,7 @@ export function ApproveNotification({
 export function SwapNotification({
   notification: {
     chainId,
-    txHash,
+    txId,
     txType,
     txStatus,
     inputCurrencyId,
@@ -154,7 +154,7 @@ export function SwapNotification({
     outputCurrencyAmountRaw
   )
 
-  const swapFormState = useCreateSwapFormState(address, chainId, txHash)
+  const swapFormState = useCreateSwapFormState(address, chainId, txId)
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
   const retryButton =

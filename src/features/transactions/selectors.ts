@@ -20,26 +20,6 @@ export const makeSelectAddressTransactions = (address: Address | null) =>
   })
 
 export const makeSelectTransaction = (
-  address: Address | null,
-  chainId: ChainId | undefined,
-  txHash: string | undefined
-) =>
-  createSelector(selectTransactions, (transactions) => {
-    if (!address || !transactions[address] || !chainId || !txHash) {
-      return undefined
-    }
-
-    const addressTxs = transactions[address]?.[chainId]
-    if (!addressTxs) {
-      return undefined
-    }
-
-    return Object.values(addressTxs).find(
-      (txDetails) => txDetails.hash.toLowerCase() === txHash.toLowerCase()
-    )
-  })
-
-export const makeSelectTransactionById = (
   address: Address | undefined,
   chainId: ChainId | undefined,
   txId: string | undefined

@@ -18,12 +18,15 @@ import {
 } from 'src/features/transactions/types'
 import { finalizedTxAction } from 'src/test/fixtures'
 
+const txId = 'uuid-4'
+
 const createFinalizedTxAction = (
   typeInfo: TransactionTypeInfo
 ): ReturnType<typeof finalizeTransaction> => ({
   payload: {
     ...finalizedTxAction.payload,
     typeInfo: typeInfo,
+    id: txId,
   },
   type: '',
 })
@@ -59,6 +62,7 @@ describe(pushTransactionNotification, () => {
           txType: TransactionType.Approve,
           tokenAddress: approveTypeInfo.tokenAddress,
           spender: approveTypeInfo.spender,
+          txId,
         })
       )
       .silentRun()
@@ -114,6 +118,7 @@ describe(pushTransactionNotification, () => {
           inputCurrencyAmountRaw: swapTypeInfo.expectedInputCurrencyAmountRaw,
           outputCurrencyAmountRaw: swapTypeInfo.outputCurrencyAmountRaw,
           tradeType: swapTypeInfo.tradeType,
+          txId,
         })
       )
       .silentRun()
@@ -143,6 +148,7 @@ describe(pushTransactionNotification, () => {
           tokenAddress: sendCurrencyTypeInfo.tokenAddress,
           currencyAmountRaw: '1000',
           recipient: sendCurrencyTypeInfo.recipient,
+          txId,
         })
       )
       .silentRun()
@@ -172,6 +178,7 @@ describe(pushTransactionNotification, () => {
           tokenAddress: sendNftTypeInfo.tokenAddress,
           tokenId: '420',
           recipient: sendNftTypeInfo.recipient,
+          txId,
         })
       )
       .silentRun()
@@ -201,6 +208,7 @@ describe(pushTransactionNotification, () => {
           tokenAddress: receiveCurrencyTypeInfo.tokenAddress,
           currencyAmountRaw: '1000',
           sender: receiveCurrencyTypeInfo.sender,
+          txId,
         })
       )
       .silentRun()
@@ -230,6 +238,7 @@ describe(pushTransactionNotification, () => {
           tokenAddress: receiveNftTypeInfo.tokenAddress,
           tokenId: '420',
           sender: receiveNftTypeInfo.sender,
+          txId,
         })
       )
       .silentRun()
@@ -253,6 +262,7 @@ describe(pushTransactionNotification, () => {
           type: AppNotificationType.Transaction,
           txType: TransactionType.Unknown,
           tokenAddress: unknownTxTypeInfo.tokenAddress,
+          txId,
         })
       )
       .silentRun()

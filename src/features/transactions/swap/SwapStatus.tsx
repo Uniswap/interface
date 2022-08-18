@@ -4,7 +4,7 @@ import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ChainId } from 'src/constants/chains'
 import { getFormattedCurrencyAmount } from 'src/features/notifications/utils'
-import { useSelectTransactionById } from 'src/features/transactions/hooks'
+import { useSelectTransaction } from 'src/features/transactions/hooks'
 import { DerivedSwapInfo } from 'src/features/transactions/swap/hooks'
 import { TransactionPending } from 'src/features/transactions/TransactionPending/TransactionPending'
 import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
@@ -97,7 +97,7 @@ export function SwapStatus({ derivedSwapInfo, onNext, onTryAgain }: SwapStatusPr
   const { txId, currencies } = derivedSwapInfo
   const chainId = toSupportedChainId(currencies[CurrencyField.INPUT]?.chainId) ?? ChainId.Mainnet
   const activeAddress = useActiveAccountAddressWithThrow()
-  const transaction = useSelectTransactionById(activeAddress, chainId, txId)
+  const transaction = useSelectTransaction(activeAddress, chainId, txId)
 
   const { title, description } = useMemo(() => {
     return getTextFromSwapStatus(t, derivedSwapInfo, transaction)

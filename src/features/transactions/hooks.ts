@@ -12,7 +12,6 @@ import { extractTransactionSummaryInfo } from 'src/features/transactions/convers
 import {
   makeSelectAddressTransactions,
   makeSelectTransaction,
-  makeSelectTransactionById,
 } from 'src/features/transactions/selectors'
 import { TransactionSummaryInfo } from 'src/features/transactions/SummaryCards/TransactionSummaryItem'
 import createSwapFromStateFromDetails from 'src/features/transactions/swap/createSwapFromStateFromDetails'
@@ -51,19 +50,11 @@ export function useSortedPendingTransactions(address: Address | null) {
 }
 
 export function useSelectTransaction(
-  address: Address | null,
-  chainId: ChainId | undefined,
-  txHash: string | undefined
-) {
-  return useAppSelector(makeSelectTransaction(address, chainId, txHash))
-}
-
-export function useSelectTransactionById(
   address: Address | undefined,
   chainId: ChainId | undefined,
   txId: string | undefined
 ): TransactionDetails | undefined {
-  return useAppSelector(makeSelectTransactionById(address, chainId, txId))
+  return useAppSelector(makeSelectTransaction(address, chainId, txId))
 }
 
 export function useSelectAddressTransactions(address: Address | null) {
@@ -73,9 +64,9 @@ export function useSelectAddressTransactions(address: Address | null) {
 export function useCreateSwapFormState(
   address: Address | undefined,
   chainId: ChainId | undefined,
-  txHash: string | undefined
+  txId: string | undefined
 ) {
-  const transaction = useSelectTransaction(address ?? null, chainId, txHash)
+  const transaction = useSelectTransaction(address, chainId, txId)
 
   const inputCurrencyId =
     transaction?.typeInfo.type === TransactionType.Swap
@@ -91,14 +82,16 @@ export function useCreateSwapFormState(
   const outputCurrency = useCurrency(outputCurrencyId)
 
   return useMemo(() => {
-    if (!chainId || !txHash) return undefined
+    if (!chainId || !txId || !transaction) {
+      return undefined
+    }
 
     return createSwapFromStateFromDetails({
       transactionDetails: transaction,
       inputCurrency,
       outputCurrency,
     })
-  }, [chainId, inputCurrency, outputCurrency, transaction, txHash])
+  }, [chainId, inputCurrency, outputCurrency, transaction, txId])
 }
 
 export interface AllFormattedTransactions {

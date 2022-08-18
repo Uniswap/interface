@@ -2,9 +2,8 @@ import { Currency } from '@uniswap/sdk-core'
 import { TFunction } from 'i18next'
 import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ChainId } from 'src/constants/chains'
 import { NFTAsset } from 'src/features/nfts/types'
-import { useSelectTransactionById } from 'src/features/transactions/hooks'
+import { useSelectTransaction } from 'src/features/transactions/hooks'
 import { TransactionPending } from 'src/features/transactions/TransactionPending/TransactionPending'
 import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
 import { DerivedTransferInfo } from 'src/features/transactions/transfer/hooks'
@@ -89,7 +88,7 @@ export function TransferStatus({
   const { formattedAmounts, recipient } = derivedTransferInfo
   const { currencyIn, nftIn, chainId } = inputAssetInfo
 
-  const transaction = useSelectTransactionById(activeAddress, chainId ?? ChainId.Mainnet, txId)
+  const transaction = useSelectTransaction(activeAddress, chainId, txId)
 
   const recipientName = useDisplayName(recipient)?.name ?? recipient
   const { title, description } = useMemo(() => {

@@ -41,6 +41,7 @@ export interface TransactionNotificationBase extends AppNotificationBase {
   txType: TransactionType
   txStatus: TransactionStatus.Success | TransactionStatus.Failed | TransactionStatus.FailedCancel
   txHash: string
+  txId: string
   chainId: ChainId
   tokenAddress?: string
 }

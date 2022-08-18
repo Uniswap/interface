@@ -16,7 +16,7 @@ export function* notificationWatcher() {
 }
 
 export function* pushTransactionNotification(action: ReturnType<typeof finalizeTransaction>) {
-  const { chainId, status, typeInfo, hash, from, addedTime } = action.payload
+  const { chainId, status, typeInfo, hash, id, from, addedTime } = action.payload
 
   // TODO: Build notifications for `cancelled` txs
   if (status === TransactionStatus.Cancelled) {
@@ -33,6 +33,7 @@ export function* pushTransactionNotification(action: ReturnType<typeof finalizeT
     chainId,
     txHash: hash,
     address: from,
+    txId: id,
   }
 
   switch (typeInfo.type) {
