@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { useWeb3React } from '@web3-react/core'
 import { getChainInfoOrDefault } from 'constants/chainInfo'
 import { SupportedChainId } from 'constants/chains'
@@ -77,13 +78,18 @@ export const TransactionSummary = ({ transactionDetails }: { transactionDetails:
   const tx = transactionDetails
   const { explorer } = getChainInfoOrDefault(chainId ? chainId : SupportedChainId.MAINNET)
   const { info, receipt, hash } = tx
-  const pending = !receipt
-  const success = !pending && tx && (receipt?.status === 1 || typeof receipt?.status === 'undefined')
-  const transactionState = pending
-    ? TransactionState.Pending
-    : success
-    ? TransactionState.Success
-    : TransactionState.Failed
+
+  const transactionState = useMemo(() => {
+    const pending = !receipt
+    const success = !pending && tx && (receipt?.status === 1 || typeof receipt?.status === 'undefined')
+    const transactionState = pending
+      ? TransactionState.Pending
+      : success
+      ? TransactionState.Success
+      : TransactionState.Failed
+
+    return transactionState
+  }, [receipt])
 
   const logoView = getLogoView({ info })
   const body = getTransactionBody({ info, transactionState })
