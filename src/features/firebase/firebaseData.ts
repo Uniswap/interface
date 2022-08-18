@@ -8,7 +8,7 @@ import {
   getFirestoreUidRef,
   getOneSignalUserIdOrError,
 } from 'src/features/firebase/utils'
-import { AccountBase } from 'src/features/wallet/accounts/types'
+import { AccountType } from 'src/features/wallet/accounts/types'
 import {
   EditAccountAction,
   editAccountActions,
@@ -19,7 +19,11 @@ import { addAccount, editAccount } from 'src/features/wallet/walletSlice'
 import { logger } from 'src/utils/logger'
 import { call, fork, put, takeEvery } from 'typed-redux-saga'
 
-type AccountMetadata = Pick<AccountBase, 'name'> & { avatar?: string }
+interface AccountMetadata {
+  name?: string
+  type?: AccountType
+  avatar?: string
+}
 
 export function* firebaseDataWatcher() {
   yield* fork(firebaseAddAddressWatcher)
@@ -94,11 +98,14 @@ export function* updateFirebasePushNotificationsSettings(params: TogglePushNotif
   const accounts = yield* appSelect(selectAccounts)
   const { address, enabled } = params
   const account = accounts[address]
+  const { name, type } = account
 
   try {
     if (enabled) {
-      if (account.name) {
-        yield* call(updateAccountMetadata, address, { name: account.name })
+      if (name) {
+        yield* call(updateAccountMetadata, address, { name, type })
+      } else {
+        yield* call(updateAccountMetadata, address, { type })
       }
       yield* call(mapPushTokenToAddresses, [address])
     } else {
