@@ -148,12 +148,13 @@ export const enum ElementName {
  * Context to pass down to our logMessage and logExceptions methods.
  *
  * This can be any context you think its helpful to identify
- * where these methods are called from.
+ * where these methods are called from (e.g. component name, function name, file name).
  */
 export const enum LogContext {
-  ProviderManager = 'ProviderManager',
   ErrorBoundary = 'ErrorBoundary',
   ImageUtils = 'ImageUtils',
+  ProviderManager = 'ProviderManager',
+  SecurityConcern = 'SecurityConcern',
 }
 
 /**
