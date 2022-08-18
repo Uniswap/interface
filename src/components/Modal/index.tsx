@@ -32,13 +32,13 @@ const StyledDialogContent = styled(({ minHeight, maxHeight, mobile, isOpen, rede
   'aria-label': 'dialog',
 })`
   overflow-y: auto;
-  box-shadow: ${({ theme, redesignFlag }) => redesignFlag && theme.deepShadow};
 
   &[data-reach-dialog-content] {
     margin: 0 0 2rem 0;
     background-color: ${({ theme }) => theme.deprecated_bg0};
     border: 1px solid ${({ theme }) => theme.deprecated_bg1};
-    box-shadow: 0 4px 8px 0 ${({ theme }) => transparentize(0.95, theme.shadow1)};
+    box-shadow: ${({ theme, redesignFlag }) =>
+      redesignFlag ? theme.deepShadow : `0 4px 8px 0 ${transparentize(0.95, theme.shadow1)}`};
     padding: 0px;
     width: 50vw;
     overflow-y: auto;
