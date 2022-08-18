@@ -18,6 +18,11 @@ import SwiftUI
     get { return vc.rootView.props.mnemonicId }
   }
   
+  var shouldShowSmallText: Bool {
+    set { vc.rootView.props.shouldShowSmallText = newValue}
+    get { return vc.rootView.props.shouldShowSmallText }
+  }
+  
   var onTestComplete: RCTDirectEventBlock {
     set { vc.rootView.props.onTestComplete = newValue }
     get { return vc.rootView.props.onTestComplete }
@@ -31,6 +36,7 @@ import SwiftUI
 
 class MnemonicTestProps : ObservableObject {
   @Published var mnemonicId: String = ""
+  @Published var shouldShowSmallText: Bool = false
   @Published var onTestComplete: RCTDirectEventBlock = { _ in }
   @Published var mnemonicWords: [String] = Array(repeating: "", count: 12)
   @Published var scrambledWords: [String] = Array(repeating: "", count: 12)
@@ -88,6 +94,7 @@ struct MnemonicTest: View {
           ForEach((0...5), id: \.self) {index in
             MnemonicTextField(index: index + 1,
                               initialText: props.typedWords[index],
+                              shouldShowSmallText: props.shouldShowSmallText,
                               focusState: getLabelFocusState(index: index),
                               onFieldTapped: onFieldTapped
             )
@@ -98,6 +105,7 @@ struct MnemonicTest: View {
           ForEach((6...11), id: \.self) {index in
             MnemonicTextField(index: index + 1,
                               initialText: props.typedWords[index],
+                              shouldShowSmallText: props.shouldShowSmallText,
                               focusState: getLabelFocusState(index: index),
                               onFieldTapped: onFieldTapped
             )
@@ -110,7 +118,8 @@ struct MnemonicTest: View {
       
       MnemonicTestWordBankView(words: props.scrambledWords,
                                usedWords: props.typedWords,
-                               labelCallback: onSuggestionTapped)
+                               labelCallback: onSuggestionTapped,
+                               shouldShowSmallText: props.shouldShowSmallText)
       .frame(maxWidth: .infinity)
       .padding([.top, .leading, .trailing], 24)
     }.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)

@@ -9,19 +9,22 @@ import SwiftUI
 
 struct MnemonicTestWordBankView: View {
   
-  let interFont = UIFont(name: "Inter-Regular", size: 16)
+  let smallFont = UIFont(name: "Inter-Regular", size: 14)
+  let mediumFont = UIFont(name: "Inter-Regular", size: 16)
   
   let words: [String]
   let usedWords: [String]
   var groupedWords: [[String]] = [[String]]()
   let screenWidth = UIScreen.main.bounds.width // Used to calculate max number of tags per row
   var labelCallback: ((String) -> Void)?
+  let shouldShowSmallText: Bool
   
-  init(words: [String], usedWords: [String], labelCallback: @escaping (String) -> Void) {
+  init(words: [String], usedWords: [String], labelCallback: @escaping (String) -> Void, shouldShowSmallText: Bool) {
     self.words = words
     self.usedWords = usedWords
-    self.groupedWords = createGroupedWords(words)
     self.labelCallback = labelCallback
+    self.shouldShowSmallText = shouldShowSmallText
+    self.groupedWords = createGroupedWords(words)
   }
   
   private func createGroupedWords(_ items: [String]) -> [[String]] {
@@ -62,9 +65,9 @@ struct MnemonicTestWordBankView: View {
         HStack(spacing: 8) {
           ForEach(subItems, id: \.self) { word in
             let text = Text(word)
-              .font(Font(interFont!))
+              .font(Font((shouldShowSmallText ? smallFont : mediumFont)!))
               .fixedSize()
-              .padding(EdgeInsets(top: 6, leading: 12, bottom: 6, trailing: 12))
+              .padding(shouldShowSmallText ? EdgeInsets(top: 4, leading: 12, bottom: 4, trailing: 12) : EdgeInsets(top: 6, leading: 12, bottom: 6, trailing: 12))
               .background(Colors.backgroundSurface)
               .foregroundColor(Colors.textPrimary)
               .clipShape(RoundedRectangle(cornerRadius: 16.0, style: .continuous))

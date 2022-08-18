@@ -176,7 +176,9 @@ export function SettingsManualBackup({
           exiting={SlideOutLeft}
           justifyContent="space-evenly">
           <Text variant="bodySmall">
-            {t('Remember to record your words in the same order as they are below')}
+            {t(
+              'Confirm that you correctly wrote down your seed phrase by selecting the missing words.'
+            )}
           </Text>
           <Flex>
             <MnemonicTest mnemonicId={mnemonicId} onTestComplete={() => setContinueEnabled(true)} />

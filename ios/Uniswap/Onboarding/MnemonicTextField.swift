@@ -16,20 +16,26 @@ enum InputFocusState {
 struct MnemonicTextField: View {
   
   @Environment(\.colorScheme) var colorScheme
+
+  let smallFont = UIFont(name: "Inter-Regular", size: 14)
+  let mediumFont = UIFont(name: "Inter-Regular", size: 16)
   
   var index: Int
   var initialText = ""
+  var shouldShowSmallText: Bool
   var onFieldTapped: ((Int) -> Void)?
   var focusState: InputFocusState = InputFocusState.notFocused
   
   
   init(index: Int,
        initialText: String,
+       shouldShowSmallText: Bool,
        focusState: InputFocusState,
        onFieldTapped: @escaping (Int) -> Void
   ) {
     self.index = index
     self.initialText = initialText
+    self.shouldShowSmallText = shouldShowSmallText
     self.focusState = focusState
     self.onFieldTapped = onFieldTapped
   }
@@ -63,15 +69,16 @@ struct MnemonicTextField: View {
     HStack(alignment: VerticalAlignment.center, spacing: 0) {
       
       Text(String(index)).cornerRadius(16)
+        .font(Font((shouldShowSmallText ? smallFont : mediumFont)!))
         .foregroundColor(Colors.textTertiary)
-        .padding(EdgeInsets(top: 12, leading: 16, bottom: 12, trailing: 16))
+        .padding(shouldShowSmallText ? EdgeInsets(top: 6, leading: 16, bottom: 6, trailing: 16) : EdgeInsets(top: 12, leading: 16, bottom: 12, trailing: 16))
         .frame(alignment: Alignment.leading)
       
       Text(initialText)
-        .autocapitalization(.none)
+        .font(Font((shouldShowSmallText ? smallFont : mediumFont)!))
         .multilineTextAlignment(TextAlignment.leading)
         .foregroundColor(Colors.textPrimary)
-        .padding(EdgeInsets(top: 12, leading: 0, bottom: 12, trailing: 16))
+        .padding(shouldShowSmallText ? EdgeInsets(top: 6, leading: 0, bottom: 6, trailing: 16) : EdgeInsets(top: 12, leading: 16, bottom: 12, trailing: 16))
         .frame(maxWidth: .infinity, alignment: Alignment.leading)
     }
     .background(getLabelBackground(focusState: focusState))
