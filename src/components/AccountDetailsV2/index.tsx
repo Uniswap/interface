@@ -1,7 +1,7 @@
-import { useMemo } from 'react'
 import { useWeb3React } from '@web3-react/core'
 import { getChainInfoOrDefault } from 'constants/chainInfo'
 import { SupportedChainId } from 'constants/chains'
+import { useMemo } from 'react'
 import { AlertTriangle, CheckCircle } from 'react-feather'
 import styled from 'styled-components/macro'
 import { colors } from 'theme/colors'
@@ -89,7 +89,7 @@ export const TransactionSummary = ({ transactionDetails }: { transactionDetails:
       : TransactionState.Failed
 
     return transactionState
-  }, [receipt])
+  }, [receipt, tx])
 
   const logoView = getLogoView({ info })
   const body = getTransactionBody({ info, transactionState })
