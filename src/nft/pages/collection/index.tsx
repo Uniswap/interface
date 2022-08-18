@@ -1,8 +1,7 @@
 import { useWindowSize } from 'hooks/useWindowSize'
-import { GenieCollection } from 'nft/types'
-import { useEffect, useMemo } from 'react'
+import { useEffect } from 'react'
 import { useQuery } from 'react-query'
-import { useLocation, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 
 import { useIsMobile } from '../../hooks/useIsMobile'
 import { CollectionStatsFetcher } from '../../queries'
@@ -12,10 +11,7 @@ import { CollectionMobile } from './CollectionMobile'
 const Collection = () => {
   const { contractAddress } = useParams()
 
-  const isMobile = useIsMobile((state) => state.isMobile)
-  const setMobileWidth = useIsMobile((state) => state.setMobileWidth)
-  const location = useLocation()
-  const isActivityToggled = useMemo(() => location.pathname.includes('/activity'), [location])
+  const { isMobile, setMobileWidth } = useIsMobile()
 
   const { data: collectionStats } = useQuery(['collectionStats', contractAddress], () =>
     CollectionStatsFetcher(contractAddress as string)
@@ -26,10 +22,9 @@ const Collection = () => {
     setMobileWidth(width ?? 0)
   }, [width, setMobileWidth])
 
-  if (isMobile)
-    return <CollectionMobile {...{ collectionStats: collectionStats ?? ({} as GenieCollection), isActivityToggled }} />
+  if (isMobile) return <CollectionMobile {...{ collectionStats }} />
 
-  return <CollectionDesktop {...{ collectionStats: collectionStats ?? ({} as GenieCollection), isActivityToggled }} />
+  return <CollectionDesktop {...{ collectionStats }} />
 }
 
 export default Collection
