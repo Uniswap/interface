@@ -52,7 +52,7 @@ function LanguageMenuItem({ locale, isActive }: { locale: SupportedLocale; isAct
   )
 }
 
-export const LanguageMenu = ({ onClose }: { onClose: () => void }) => {
+const LanguageMenu = ({ onClose }: { onClose: () => void }) => {
   const activeLocale = useActiveLocale()
 
   return (
@@ -65,3 +65,5 @@ export const LanguageMenu = ({ onClose }: { onClose: () => void }) => {
     </SlideOutMenu>
   )
 }
+
+export default LanguageMenu

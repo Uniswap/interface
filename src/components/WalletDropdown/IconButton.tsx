@@ -1,5 +1,5 @@
 import { Icon } from 'react-feather'
-import styled from 'styled-components/macro'
+import styled, { css } from 'styled-components/macro'
 
 export const IconHoverText = styled.span`
   color: ${({ theme }) => theme.textPrimary};
@@ -13,7 +13,7 @@ export const IconHoverText = styled.span`
   left: 10px;
 `
 
-const IconBlock = styled.a`
+const IconStyles = css`
   background-color: ${({ theme }) => theme.backgroundInteractive};
   border-radius: 12px;
   display: inline-block;
@@ -36,6 +36,16 @@ const IconBlock = styled.a`
   }
 `
 
+const IconBlockLink = styled.a`
+  ${IconStyles};
+`
+
+const IconBlockButton = styled.div`
+  ${IconStyles};
+  border: none;
+  outline: none;
+`
+
 const IconWrapper = styled.span`
   position: absolute;
   left: 50%;
@@ -52,13 +62,22 @@ interface IconButtonProps {
   href?: string
 }
 
-const IconButton = ({ Icon, onClick, text, href }: IconButtonProps) => (
-  <IconBlock onClick={onClick} href={href} target="_blank">
-    <IconWrapper>
-      <Icon strokeWidth={1.5} size={16} />
-      <IconHoverText>{text}</IconHoverText>
-    </IconWrapper>
-  </IconBlock>
-)
+const IconButton = ({ Icon, onClick, text, href }: IconButtonProps) => {
+  return href ? (
+    <IconBlockLink href={href} target="_blank">
+      <IconWrapper>
+        <Icon strokeWidth={1.5} size={16} />
+        <IconHoverText>{text}</IconHoverText>
+      </IconWrapper>
+    </IconBlockLink>
+  ) : (
+    <IconBlockButton onClick={onClick}>
+      <IconWrapper>
+        <Icon strokeWidth={1.5} size={16} />
+        <IconHoverText>{text}</IconHoverText>
+      </IconWrapper>
+    </IconBlockButton>
+  )
+}
 
 export default IconButton

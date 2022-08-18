@@ -24,6 +24,7 @@ const Header = styled.span`
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
+  height: 200px;
 `
 
 const ClearAll = styled.div`
@@ -44,8 +45,8 @@ export const SlideOutMenu = ({
   onClear,
 }: {
   onClose: () => void
-  title: JSX.Element
-  children: JSX.Element | Array<JSX.Element>
+  title: React.ReactNode
+  children: React.ReactNode
   onClear?: () => void
 }) => (
   <Menu>
