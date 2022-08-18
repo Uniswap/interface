@@ -152,6 +152,8 @@ export interface CollectFeesTransactionInfo {
   type: TransactionType.COLLECT_FEES
   currencyId0: string
   currencyId1: string
+  expectedCurrencyOwed0: string
+  expectedCurrencyOwed1: string
 }
 
 export interface RemoveLiquidityV3TransactionInfo {
