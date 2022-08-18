@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c795bb6d53c8ecc3ef67d78b92f47c30>>
+ * @generated SignedSource<<2e9a8e3dfba7c8bede6e3d02f1f92e9c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,6 +15,7 @@ export type TotalBalanceQuery$variables = {
 export type TotalBalanceQuery$data = {
   readonly portfolio: {
     readonly absoluteChange24H: number | null;
+    readonly assetsValueUSD: number | null;
     readonly relativeChange24H: number | null;
   } | null;
 };
@@ -42,10 +43,17 @@ v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "absoluteChange24H",
+  "name": "assetsValueUSD",
   "storageKey": null
 },
 v3 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "absoluteChange24H",
+  "storageKey": null
+},
+v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -68,7 +76,8 @@ return {
         "plural": false,
         "selections": [
           (v2/*: any*/),
-          (v3/*: any*/)
+          (v3/*: any*/),
+          (v4/*: any*/)
         ],
         "storageKey": null
       }
@@ -92,6 +101,7 @@ return {
         "selections": [
           (v2/*: any*/),
           (v3/*: any*/),
+          (v4/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -105,16 +115,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "b0370369957244776db4bfc9e2d1a186",
+    "cacheID": "3ca0a3ad65dcbab759d1096434072d66",
     "id": null,
     "metadata": {},
     "name": "TotalBalanceQuery",
     "operationKind": "query",
-    "text": "query TotalBalanceQuery(\n  $owner: String!\n) {\n  portfolio(ownerAddress: $owner) {\n    absoluteChange24H\n    relativeChange24H\n    id\n  }\n}\n"
+    "text": "query TotalBalanceQuery(\n  $owner: String!\n) {\n  portfolio(ownerAddress: $owner) {\n    assetsValueUSD\n    absoluteChange24H\n    relativeChange24H\n    id\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "2c52d7390a486e9264260b1c23777371";
+(node as any).hash = "2cbd43f8e1ab35e5ebebe8f62a97f75e";
 
 export default node;
