@@ -1,5 +1,3 @@
-import { useWindowSize } from 'hooks/useWindowSize'
-import { useEffect } from 'react'
 import { useQuery } from 'react-query'
 import { useParams } from 'react-router-dom'
 
@@ -11,20 +9,15 @@ import { CollectionMobile } from './CollectionMobile'
 const Collection = () => {
   const { contractAddress } = useParams()
 
-  const { isMobile, setMobileWidth } = useIsMobile()
+  const isMobile = useIsMobile()
 
   const { data: collectionStats } = useQuery(['collectionStats', contractAddress], () =>
     CollectionStatsFetcher(contractAddress as string)
   )
 
-  const { width } = useWindowSize()
-  useEffect(() => {
-    setMobileWidth(width ?? 0)
-  }, [width, setMobileWidth])
+  if (isMobile) return <CollectionMobile collectionStats={collectionStats} />
 
-  if (isMobile) return <CollectionMobile {...{ collectionStats }} />
-
-  return <CollectionDesktop {...{ collectionStats }} />
+  return <CollectionDesktop collectionStats={collectionStats} />
 }
 
 export default Collection

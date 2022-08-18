@@ -23,7 +23,6 @@ export const CollectionMobile = ({ collectionStats }: CollectionProps) => {
         </Row>
       )}
       <Row alignItems="flex-start" position="relative" paddingLeft="32" paddingRight="32">
-        {/* // @ts-ignore */}
         <AnimatedBox width="full">CollectionNfts</AnimatedBox>
       </Row>
     </Column>
