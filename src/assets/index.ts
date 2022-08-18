@@ -12,3 +12,6 @@ export const UNISWAP_SPLASH_LOGO = require('./logos/uniswap-splash-logo.png')
 
 export const FAVORITE_TOKENS_EMPTY_BG = require('./backgrounds/favorite-tokens-bg.png')
 export const WATCHED_TOKENS_EMPTY_BG = require('./backgrounds/watched-tokens-bg.png')
+
+export const ONBOARDING_BACKGROUND_LIGHT = require('./backgrounds/onboardingBackgroundLight.png')
+export const ONBOARDING_BACKGROUND_DARK = require('./backgrounds/onboardingBackgroundDark.png')

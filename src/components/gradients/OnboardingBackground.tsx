@@ -1,23 +1,14 @@
-import { Blur, Canvas, Circle, Group } from '@shopify/react-native-skia'
 import React, { memo } from 'react'
-import { useAppTheme } from 'src/app/hooks'
+import { Image, useColorScheme } from 'react-native'
+import { ONBOARDING_BACKGROUND_DARK, ONBOARDING_BACKGROUND_LIGHT } from 'src/assets'
 import { GradientBackground } from 'src/components/gradients/GradientBackground'
-import { flex } from 'src/styles/flex'
-import { dimensions } from 'src/styles/sizing'
-
-const ACCENT_BLUR_WIDTH = dimensions.fullWidth
 
 export const OnboardingBackground = memo(({}: { color?: string }) => {
-  const theme = useAppTheme()
+  const isDarkMode = useColorScheme() === 'dark'
 
   return (
     <GradientBackground>
-      <Canvas style={flex.fill}>
-        <Group>
-          <Circle color={theme.colors.backgroundAction} cx={76} cy={37} r={ACCENT_BLUR_WIDTH / 2} />
-          <Blur blur={80} />
-        </Group>
-      </Canvas>
+      <Image source={isDarkMode ? ONBOARDING_BACKGROUND_DARK : ONBOARDING_BACKGROUND_LIGHT} />
     </GradientBackground>
   )
 })
