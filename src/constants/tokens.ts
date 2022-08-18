@@ -307,13 +307,6 @@ export const PORTAL_ETH_CELO = new Token(
   'ETH',
   'Portal Ether'
 )
-export const CMC02_CELO = new Token(
-  SupportedChainId.CELO,
-  '0x32A9FE697a32135BFd313a6Ac28792DaE4D9979d',
-  18,
-  'cMCO2',
-  'Celo Moss Carbon Credit'
-)
 export const CELO_CELO_ALFAJORES = new Token(
   SupportedChainId.CELO_ALFAJORES,
   '0xF194afDf50B03e69Bd7D057c1Aa9e10c9954E4C9',
