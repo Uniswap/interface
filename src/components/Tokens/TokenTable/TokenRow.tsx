@@ -79,7 +79,6 @@ const StyledTokenRow = styled.div`
     grid-template-columns: 2fr 3fr;
     min-width: unset;
     border-bottom: 0.5px solid ${({ theme }) => theme.backgroundModule};
-    padding: 0px 12px;
 
     :last-of-type {
       border-bottom: none;
@@ -133,7 +132,6 @@ const StyledHeaderRow = styled(StyledTokenRow)`
 
   @media only screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
     justify-content: space-between;
-    padding: 0px 12px;
   }
 `
 const ListNumberCell = styled(Cell)`
