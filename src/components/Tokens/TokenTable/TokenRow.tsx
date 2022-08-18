@@ -71,12 +71,12 @@ const StyledTokenRow = styled.div`
   }
 
   @media only screen and (max-width: ${MEDIUM_MEDIA_BREAKPOINT}) {
-    grid-template-columns: 1fr 10fr 5fr 3fr 1.2fr;
+    grid-template-columns: 1fr 10fr 5fr 5fr 1.2fr;
     width: fit-content;
   }
 
   @media only screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
-    grid-template-columns: 4fr 2fr;
+    grid-template-columns: 2fr 3fr;
     min-width: unset;
     border-bottom: 0.5px solid ${({ theme }) => theme.backgroundModule};
     padding: 0px 12px;
