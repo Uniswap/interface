@@ -11,6 +11,9 @@ import { TransactionDetails } from '../../state/transactions/types'
 import { TransactionSummary } from '../AccountDetailsV2'
 import { SlideOutMenu } from './SlideOutMenu'
 
+const ONE_DAY = 1000 * 60 * 60 * 24
+const THIRTY_DAYS = ONE_DAY * 30
+
 const Divider = styled.div`
   margin-top: 16px;
   border-bottom: ${({ theme }) => `1px solid ${theme.backgroundOutline}`};
@@ -34,7 +37,7 @@ const TransactionTitle = styled.span`
   color: ${({ theme }) => theme.textTertiary};
 `
 
-const renderTransactions = (transactionInformation: TransactionInformation) => {
+const TransactionList = ({ transactionInformation }: { transactionInformation: TransactionInformation }) => {
   const { title, transactions } = transactionInformation
 
   return (
@@ -48,51 +51,52 @@ const renderTransactions = (transactionInformation: TransactionInformation) => {
 }
 
 const getConfirmedTransactions = (confirmedTransactions: Array<TransactionDetails>) => {
-  const ONE_DAY = 1000 * 60 * 60 * 24
-  const THIRTY_DAYS = ONE_DAY * 30
-  const NOW = new Date().getTime()
+  const now = new Date().getTime()
 
-  const TODAY: Array<TransactionDetails> = []
-  const CURRENT_WEEK: Array<TransactionDetails> = []
-  const LAST_30_DAYS: Array<TransactionDetails> = []
-  const CURRENY_YEAR: Array<TransactionDetails> = []
+  const today: Array<TransactionDetails> = []
+  const currentWeek: Array<TransactionDetails> = []
+  const last30Days: Array<TransactionDetails> = []
+  const currentYear: Array<TransactionDetails> = []
   const yearMap: { [key: string]: Array<TransactionDetails> } = {}
 
   confirmedTransactions.forEach((transaction) => {
     const { addedTime } = transaction
 
-    if (isSameDay(NOW, addedTime)) {
-      TODAY.push(transaction)
-    } else if (isSameWeek(addedTime, NOW)) {
-      CURRENT_WEEK.push(transaction)
-    } else if (NOW - addedTime < THIRTY_DAYS) {
-      LAST_30_DAYS.push(transaction)
-    } else if (isSameYear(addedTime, NOW)) {
-      CURRENY_YEAR.push(transaction)
+    if (isSameDay(now, addedTime)) {
+      today.push(transaction)
+    } else if (isSameWeek(addedTime, now)) {
+      currentWeek.push(transaction)
+    } else if (now - addedTime < THIRTY_DAYS) {
+      last30Days.push(transaction)
+    } else if (isSameYear(addedTime, now)) {
+      currentYear.push(transaction)
     } else {
       const year = getYear(addedTime)
 
-      if (!yearMap[year]) yearMap[year] = [transaction]
-      else yearMap[year].push(transaction)
+      if (!yearMap[year]) {
+        yearMap[year] = [transaction]
+      } else {
+        yearMap[year].push(transaction)
+      }
     }
   })
 
-  const allTransactions: Array<TransactionInformation> = [
+  const transactionGroups: Array<TransactionInformation> = [
     {
       title: 'Today',
-      transactions: TODAY,
+      transactions: today,
     },
     {
       title: 'This week',
-      transactions: CURRENT_WEEK,
+      transactions: currentWeek,
     },
     {
       title: 'Past 30 Days',
-      transactions: LAST_30_DAYS,
+      transactions: last30Days,
     },
     {
       title: 'This year',
-      transactions: CURRENY_YEAR,
+      transactions: currentYear,
     },
   ]
 
@@ -100,9 +104,9 @@ const getConfirmedTransactions = (confirmedTransactions: Array<TransactionDetail
     .sort((a, b) => parseInt(b) - parseInt(a))
     .map((year) => ({ title: year, transactions: yearMap[year] }))
 
-  allTransactions.push(...sortedYears)
+  transactionGroups.push(...sortedYears)
 
-  return allTransactions.filter((transactionInformation) => transactionInformation.transactions.length > 0)
+  return transactionGroups.filter((transactionInformation) => transactionInformation.transactions.length > 0)
 }
 
 const EmptyTransaction = styled.div`
@@ -119,7 +123,7 @@ export const TransactionHistoryMenu = ({ onClose }: { onClose: () => void }) => 
   const allTransactions = useAllTransactions()
   const { chainId } = useWeb3React()
   const dispatch = useAppDispatch()
-  const allTransactionInformation = []
+  const transactionGroupsInformation = []
 
   const clearAllTransactionsCallback = useCallback(() => {
     if (chainId) dispatch(clearAllTransactions({ chainId }))
@@ -137,18 +141,22 @@ export const TransactionHistoryMenu = ({ onClose }: { onClose: () => void }) => 
 
   const confirmedTransactions = useMemo(() => getConfirmedTransactions(confirmed), [confirmed])
 
-  if (pending.length) allTransactionInformation.push({ title: `Pending (${pending.length})`, transactions: pending })
-  if (confirmedTransactions.length) allTransactionInformation.push(...confirmedTransactions)
+  if (pending.length) transactionGroupsInformation.push({ title: `Pending (${pending.length})`, transactions: pending })
+  if (confirmedTransactions.length) transactionGroupsInformation.push(...confirmedTransactions)
 
   return (
     <SlideOutMenu
       onClose={onClose}
-      onClear={allTransactionInformation.length > 0 ? clearAllTransactionsCallback : undefined}
+      onClear={transactionGroupsInformation.length > 0 ? clearAllTransactionsCallback : undefined}
       title={<Trans>Transactions</Trans>}
     >
       <Divider />
-      {allTransactionInformation.length > 0 ? (
-        <>{allTransactionInformation.map((transactionInformation) => renderTransactions(transactionInformation))}</>
+      {transactionGroupsInformation.length > 0 ? (
+        <>
+          {transactionGroupsInformation.map((transactionInformation) => (
+            <TransactionList transactionInformation={transactionInformation} />
+          ))}
+        </>
       ) : (
         <EmptyTransaction>
           <Trans>Your transactions will appear here</Trans>

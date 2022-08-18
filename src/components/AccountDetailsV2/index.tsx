@@ -8,8 +8,8 @@ import { colors } from 'theme/colors'
 
 import { TransactionDetails } from '../../state/transactions/types'
 import Loader from '../Loader'
-import { getLogoView } from './LogoView'
-import { getTransactionBody } from './TransactionBody'
+import LogoView from './LogoView'
+import TransactionBody from './TransactionBody'
 
 export enum TransactionState {
   Pending,
@@ -41,38 +41,6 @@ const IconStyleWrap = styled.span`
   height: 16px;
 `
 
-const TransactionContainer = ({
-  logoView,
-  children,
-  link,
-  transactionState,
-}: {
-  logoView: React.ReactNode
-  children: React.ReactNode
-  link?: string
-  transactionState: TransactionState
-}) => {
-  return (
-    <Grid href={link} target="_blank">
-      {logoView}
-      <TextContainer as="span">{children}</TextContainer>
-      {transactionState === TransactionState.Pending ? (
-        <IconStyleWrap>
-          <Loader />
-        </IconStyleWrap>
-      ) : transactionState === TransactionState.Success ? (
-        <IconStyleWrap>
-          <CheckCircle color={colors.green200} size="16px" />
-        </IconStyleWrap>
-      ) : (
-        <IconStyleWrap>
-          <AlertTriangle color={colors.gold200} size="16px" />
-        </IconStyleWrap>
-      )}
-    </Grid>
-  )
-}
-
 export const TransactionSummary = ({ transactionDetails }: { transactionDetails: TransactionDetails }) => {
   const { chainId = 1 } = useWeb3React()
   const tx = transactionDetails
@@ -91,13 +59,28 @@ export const TransactionSummary = ({ transactionDetails }: { transactionDetails:
     return transactionState
   }, [receipt, tx])
 
-  const logoView = getLogoView({ info })
-  const body = getTransactionBody({ info, transactionState })
+  // const body = getTransactionBody({ info, transactionState })
   const link = `${explorer}tx/${hash}`
 
   return chainId ? (
-    <TransactionContainer transactionState={transactionState} link={link} logoView={logoView}>
-      {body}
-    </TransactionContainer>
+    <Grid href={link} target="_blank">
+      <LogoView info={info} />
+      <TextContainer as="span">
+        <TransactionBody info={info} transactionState={transactionState} />
+      </TextContainer>
+      {transactionState === TransactionState.Pending ? (
+        <IconStyleWrap>
+          <Loader />
+        </IconStyleWrap>
+      ) : transactionState === TransactionState.Success ? (
+        <IconStyleWrap>
+          <CheckCircle color={colors.green200} size="16px" />
+        </IconStyleWrap>
+      ) : (
+        <IconStyleWrap>
+          <AlertTriangle color={colors.gold200} size="16px" />
+        </IconStyleWrap>
+      )}
+    </Grid>
   ) : null
 }

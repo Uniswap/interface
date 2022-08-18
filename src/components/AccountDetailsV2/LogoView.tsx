@@ -27,7 +27,27 @@ const CurrencyLogoWrapTwo = styled.span`
   right: 0px;
 `
 
-export const LogoView = ({ currencyId0, currencyId1 }: { currencyId0: string; currencyId1?: string }) => {
+interface CurrencyPair {
+  currencyId0: string | undefined
+  currencyId1: string | undefined
+}
+
+const getCurrency = ({ info }: { info: TransactionInfo }): CurrencyPair => {
+  switch (info.type) {
+    case TransactionType.ADD_LIQUIDITY_V3_POOL:
+    case TransactionType.REMOVE_LIQUIDITY_V3:
+      const { baseCurrencyId, quoteCurrencyId } = info
+      return { currencyId0: baseCurrencyId, currencyId1: quoteCurrencyId }
+    case TransactionType.SWAP:
+      const { inputCurrencyId, outputCurrencyId } = info
+      return { currencyId0: inputCurrencyId, currencyId1: outputCurrencyId }
+    default:
+      return { currencyId0: undefined, currencyId1: undefined }
+  }
+}
+
+const LogoView = ({ info }: { info: TransactionInfo }) => {
+  const { currencyId0, currencyId1 } = getCurrency({ info })
   const currency0 = useCurrency(currencyId0)
   const currency1 = useCurrency(currencyId1)
   const isCentered = !(currency0 && currency1)
@@ -46,16 +66,4 @@ export const LogoView = ({ currencyId0, currencyId1 }: { currencyId0: string; cu
   )
 }
 
-export const getLogoView = ({ info }: { info: TransactionInfo }) => {
-  switch (info.type) {
-    case TransactionType.ADD_LIQUIDITY_V3_POOL:
-    case TransactionType.REMOVE_LIQUIDITY_V3:
-      const { baseCurrencyId, quoteCurrencyId } = info
-      return <LogoView currencyId0={baseCurrencyId} currencyId1={quoteCurrencyId} />
-    case TransactionType.SWAP:
-      const { inputCurrencyId, outputCurrencyId } = info
-      return <LogoView currencyId0={inputCurrencyId} currencyId1={outputCurrencyId} />
-    default:
-      return <LogoView currencyId0="" />
-  }
-}
+export default LogoView
