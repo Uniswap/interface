@@ -32,7 +32,10 @@ export function SecuritySetupScreen({ navigation: { navigate } }: Props) {
       disableDeviceFallback: true,
     })
 
-    if (authStatus === BiometricAuthenticationStatus.Unsupported) {
+    if (
+      authStatus === BiometricAuthenticationStatus.Unsupported ||
+      authStatus === BiometricAuthenticationStatus.MissingEnrollment
+    ) {
       Alert.alert(t('Face ID is disabled'), t('To use Face ID, allow access in system settings'), [
         { text: t('Go to settings'), onPress: openSettings },
         {
