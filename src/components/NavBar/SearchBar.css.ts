@@ -71,7 +71,7 @@ export const suggestionRow = style([
   {
     ':hover': {
       cursor: 'pointer',
-      background: vars.color.lightGrayContainer,
+      background: vars.color.lightGrayButton,
     },
     textDecoration: 'none',
   },
