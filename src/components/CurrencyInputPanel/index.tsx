@@ -151,18 +151,6 @@ const FiatRow = styled(LabelRow)<{ redesignFlag: boolean }>`
   height: ${({ redesignFlag }) => !redesignFlag && '24px'};
 `
 
-const NoBalanceState = styled.div`
-  color: ${({ theme }) => theme.textTertiary};
-  font-weight: 400;
-  justify-content: space-between;
-  padding: 0px 4px;
-`
-const NoBalanceDash = styled.span`
-  color: ${({ theme }) => theme.textTertiary};
-  font-variant: small-caps;
-  font-feature-settings: 'pnum' on, 'lnum' on;
-`
-
 const Aligner = styled.span`
   display: flex;
   align-items: center;
@@ -349,16 +337,6 @@ export default function CurrencyInputPanel({
             </Aligner>
           </InputCurrencySelect>
         </InputRow>
-        {redesignFlagEnabled && !currency && (
-          <NoBalanceState>
-            <FiatRow redesignFlag={redesignFlagEnabled}>
-              <RowBetween>
-                <NoBalanceDash>-</NoBalanceDash>
-                <NoBalanceDash>-</NoBalanceDash>
-              </RowBetween>
-            </FiatRow>
-          </NoBalanceState>
-        )}
         {!hideInput && !hideBalance && currency && (
           <FiatRow redesignFlag={redesignFlagEnabled}>
             <RowBetween>
