@@ -10,10 +10,10 @@ import {
   makeSelectLocalPfp,
   selectActiveAccount,
   selectActiveAccountAddress,
-  selectNativeAccountExists,
   selectNonPendingAccounts,
   selectPendingAccounts,
   selectSignerAccounts,
+  selectSignerMnemonicAccountExists,
 } from 'src/features/wallet/selectors'
 import { WalletConnectSession } from 'src/features/walletConnect/walletConnectSlice'
 import { getValidAddress, shortenAddress } from 'src/utils/addresses'
@@ -42,7 +42,7 @@ export function useActiveAccountAddress(): Address | null {
 }
 
 export function useNativeAccountExists(): boolean {
-  return useAppSelector(selectNativeAccountExists)
+  return useAppSelector(selectSignerMnemonicAccountExists)
 }
 
 export function useActiveAccountAddressWithThrow(): Address {

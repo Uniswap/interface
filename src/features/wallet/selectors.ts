@@ -3,7 +3,7 @@ import type { RootState } from 'src/app/rootReducer'
 import { ClientSideOrderBy, CoingeckoOrderBy } from 'src/features/dataApi/coingecko/types'
 import { DEMO_ACCOUNT_ADDRESS } from 'src/features/wallet/accounts/useTestAccount'
 import { NFTViewType } from 'src/features/wallet/types'
-import { AccountType, NativeAccount } from './accounts/types'
+import { AccountType, SignerMnemonicAccount } from './accounts/types'
 
 const DEFAULT_TOKENS_ORDER_BY = CoingeckoOrderBy.MarketCapDesc
 const DEFAULT_TOKENS_METADATA_DISPLAY_TYPE = ClientSideOrderBy.PriceChangePercentage24hDesc
@@ -22,22 +22,26 @@ export const selectSignerAccounts = createSelector(selectAccounts, (accounts) =>
   Object.values(accounts).filter((a) => a.type !== AccountType.Readonly)
 )
 
-export const selectSortedMnemonicAccounts = createSelector(selectAccounts, (accounts) =>
+export const selectSortedSignerMnemonicAccounts = createSelector(selectAccounts, (accounts) =>
   Object.values(accounts)
     .filter(
       // We filter out demo account to avoid account creation issues
-      (account) => account.type === AccountType.Native && account.address !== DEMO_ACCOUNT_ADDRESS
+      (account) =>
+        account.type === AccountType.SignerMnemonic && account.address !== DEMO_ACCOUNT_ADDRESS
     )
-    .sort((a, b) => (a as NativeAccount).derivationIndex - (b as NativeAccount).derivationIndex)
-    .map((account) => account as NativeAccount)
+    .sort(
+      (a, b) =>
+        (a as SignerMnemonicAccount).derivationIndex - (b as SignerMnemonicAccount).derivationIndex
+    )
+    .map((account) => account as SignerMnemonicAccount)
 )
 
-export const selectNativeAccountExists = createSelector(
+export const selectSignerMnemonicAccountExists = createSelector(
   selectNonPendingAccounts,
   (accounts) =>
     Object.values(accounts).findIndex((value) => {
       // We filter out demo account to avoid account creation issues
-      return value.type === AccountType.Native && value.address !== DEMO_ACCOUNT_ADDRESS
+      return value.type === AccountType.SignerMnemonic && value.address !== DEMO_ACCOUNT_ADDRESS
     }) >= 0
 )
 

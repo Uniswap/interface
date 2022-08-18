@@ -22,7 +22,7 @@ import { Account, AccountType } from 'src/features/wallet/accounts/types'
 import { WalletConnectEvent } from 'src/features/walletConnect/saga'
 
 export const account: Account = {
-  type: AccountType.Native,
+  type: AccountType.SignerMnemonic,
   address: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266',
   derivationIndex: 0,
   name: 'Test Account',

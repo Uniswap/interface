@@ -35,7 +35,7 @@ export function RemoveAccountModal({ accountType, onCancel, onConfirm }: RemoveA
     switch (accountType) {
       case AccountType.Readonly:
         return t('This action will remove this view-only wallet from appearing in your app.')
-      case AccountType.Native:
+      case AccountType.SignerMnemonic:
         return t(
           'This action will only remove your wallet from appearing in Uniswap Wallet. Your recovery phrase will remain stored until you delete the app.'
         )

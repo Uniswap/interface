@@ -16,7 +16,7 @@ import { MnemonicTest } from 'src/components/mnemonic/MnemonicTest'
 import WarningModal from 'src/components/modals/WarningModal'
 import { Text } from 'src/components/Text'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
-import { BackupType, NativeAccount } from 'src/features/wallet/accounts/types'
+import { BackupType, SignerMnemonicAccount } from 'src/features/wallet/accounts/types'
 import { EditAccountAction, editAccountActions } from 'src/features/wallet/editAccountSaga'
 import { useAccounts } from 'src/features/wallet/hooks'
 import { Screens } from 'src/screens/Screens'
@@ -41,7 +41,7 @@ export function SettingsManualBackup({
 
   const accounts = useAccounts()
   const account = accounts[address]
-  const mnemonicId = (account as NativeAccount)?.mnemonicId
+  const mnemonicId = (account as SignerMnemonicAccount)?.mnemonicId
   const hasManualBackup = account.backups?.includes(BackupType.Manual)
 
   const [showScreenShotWarningModal, setShowScreenShotWarningModal] = useState(false)

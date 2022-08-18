@@ -63,7 +63,7 @@ function* importMnemonicAccounts(
   yield* all(
     addresses.slice(1, addresses.length).map((address, index) => {
       const account: Account = {
-        type: AccountType.Native,
+        type: AccountType.SignerMnemonic,
         address,
         name,
         pending: true,
@@ -76,7 +76,7 @@ function* importMnemonicAccounts(
   )
 
   const activeAccount: Account = {
-    type: AccountType.Native,
+    type: AccountType.SignerMnemonic,
     address: addresses[0],
     name,
     pending: !markAsActive,
@@ -97,7 +97,7 @@ function* importRestoreBackupAccounts(mnemonicId: string, indexes = [0]) {
   yield* all(
     addresses.map((address, index) => {
       const account: Account = {
-        type: AccountType.Native,
+        type: AccountType.SignerMnemonic,
         address,
         pending: true,
         timeImportedMs: dayjs().valueOf(),

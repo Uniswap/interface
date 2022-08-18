@@ -59,7 +59,7 @@ export const migrations = {
     let derivationIndex = 0
     for (const account of Object.keys(accounts)) {
       newState.wallet.accounts[account].timeImportedMs = dayjs().valueOf()
-      if (newState.wallet.accounts[account].type === AccountType.Native) {
+      if (newState.wallet.accounts[account].type === 'native') {
         newState.wallet.accounts[account].derivationIndex = derivationIndex
         derivationIndex += 1
       }
@@ -102,15 +102,9 @@ export const migrations = {
     let accounts = newState?.wallet?.accounts ?? {}
     const originalAccountValues = Object.keys(accounts)
     for (const account of originalAccountValues) {
-      if (
-        accounts[account].type === AccountType.Native &&
-        accounts[account].derivationIndex !== 0
-      ) {
+      if (accounts[account].type === 'native' && accounts[account].derivationIndex !== 0) {
         delete accounts[account]
-      } else if (
-        accounts[account].type === AccountType.Native &&
-        accounts[account].derivationIndex === 0
-      ) {
+      } else if (accounts[account].type === 'native' && accounts[account].derivationIndex === 0) {
         accounts[account].mnemonicId = accounts[account].address
       }
     }
@@ -188,6 +182,17 @@ export const migrations = {
       requiredForTransactions: state.wallet.isBiometricAuthEnabled,
     }
     delete newState.wallet?.isBiometricAuthEnabled
+    return newState
+  },
+
+  15: (state: any) => {
+    const newState = { ...state }
+    const accounts = newState?.wallet?.accounts ?? {}
+    for (const account of Object.keys(accounts)) {
+      if (newState.wallet.accounts[account].type === 'native') {
+        newState.wallet.accounts[account].type = AccountType.SignerMnemonic
+      }
+    }
     return newState
   },
 }

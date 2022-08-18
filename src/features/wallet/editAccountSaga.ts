@@ -1,5 +1,10 @@
 import { appSelect } from 'src/app/hooks'
-import { Account, AccountType, BackupType, NativeAccount } from 'src/features/wallet/accounts/types'
+import {
+  Account,
+  AccountType,
+  BackupType,
+  SignerMnemonicAccount,
+} from 'src/features/wallet/accounts/types'
 import { selectAccounts } from 'src/features/wallet/selectors'
 import {
   editAccount as editInStore,
@@ -107,13 +112,15 @@ function* removeAccount(params: RemoveParams) {
 
 // Adds the backup to all accounts that share the same seed phrase
 function* addBackupMethod(params: AddBackupMethodParams, account: Account) {
-  if (account.type !== AccountType.Native) return
+  if (account.type !== AccountType.SignerMnemonic) return
 
   const { backupMethod } = params
 
   const accounts = yield* appSelect(selectAccounts)
   const mnemonicAccounts = Object.values(accounts).filter(
-    (a) => a.type === AccountType.Native && a.mnemonicId === (account as NativeAccount).mnemonicId
+    (a) =>
+      a.type === AccountType.SignerMnemonic &&
+      a.mnemonicId === (account as SignerMnemonicAccount).mnemonicId
   )
 
   const updatedBackups: BackupType[] = unique([...(account.backups ?? []), backupMethod])
@@ -141,13 +148,15 @@ function* addBackupMethod(params: AddBackupMethodParams, account: Account) {
 
 // Removes the backup method from all accounts that share the same seed phrase
 function* removeBackupMethod(params: RemoveBackupMethodParams, account: Account) {
-  if (account.type !== AccountType.Native) return
+  if (account.type !== AccountType.SignerMnemonic) return
 
   const { backupMethod } = params
 
   const accounts = yield* appSelect(selectAccounts)
   const mnemonicAccounts = Object.values(accounts).filter(
-    (a) => a.type === AccountType.Native && a.mnemonicId === (account as NativeAccount).mnemonicId
+    (a) =>
+      a.type === AccountType.SignerMnemonic &&
+      a.mnemonicId === (account as SignerMnemonicAccount).mnemonicId
   )
 
   const updatedBackups = account.backups?.filter((backup) => backup !== backupMethod)

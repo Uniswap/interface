@@ -13,7 +13,7 @@ import WarningModal from 'src/components/modals/WarningModal'
 import { Text } from 'src/components/Text'
 import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
-import { NativeAccount } from 'src/features/wallet/accounts/types'
+import { SignerMnemonicAccount } from 'src/features/wallet/accounts/types'
 import { useAccounts } from 'src/features/wallet/hooks'
 import { Screens } from 'src/screens/Screens'
 import { useSecondCountdownTimer } from 'src/utils/timing'
@@ -31,7 +31,7 @@ export function SettingsViewSeedPhraseScreen({
 
   const accounts = useAccounts()
   const account = accounts[address]
-  const mnemonicId = (account as NativeAccount)?.mnemonicId
+  const mnemonicId = (account as SignerMnemonicAccount)?.mnemonicId
 
   const [showSeedPhrase, setShowSeedPhrase] = useState(false)
   const [showSeedPhraseViewWarningModal, setShowSeedPhraseViewWarningModal] = useState(true)

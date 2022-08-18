@@ -38,7 +38,7 @@ import { EditAccountAction, editAccountActions } from 'src/features/wallet/editA
 import { useAccounts, useSelectAccountNotificationSetting } from 'src/features/wallet/hooks'
 import {
   selectHideSmallBalances,
-  selectSortedMnemonicAccounts,
+  selectSortedSignerMnemonicAccounts,
 } from 'src/features/wallet/selectors'
 import { setShowSmallBalances } from 'src/features/wallet/walletSlice'
 import { showNotificationSettingsAlert } from 'src/screens/Onboarding/NotificationsSetupScreen'
@@ -57,7 +57,7 @@ export function SettingsWallet({
   const { t } = useTranslation()
   const theme = useTheme()
   const addressToAccount = useAccounts()
-  const mnemonicWallets = useAppSelector(selectSortedMnemonicAccounts)
+  const mnemonicWallets = useAppSelector(selectSortedSignerMnemonicAccounts)
   const currentAccount = addressToAccount[address]
   const readonly = currentAccount?.type === AccountType.Readonly
   const navigation = useSettingsStackNavigation()
@@ -67,7 +67,7 @@ export function SettingsWallet({
   // Should not show remove option if we have only one account remaining, or only one seed phrase wallet remaining
   const shouldHideRemoveOption =
     Object.values(addressToAccount).length === 1 ||
-    (mnemonicWallets.length === 1 && currentAccount.type === AccountType.Native)
+    (mnemonicWallets.length === 1 && currentAccount.type === AccountType.SignerMnemonic)
 
   const notificationOSPermission = useNotificationOSPermissionsEnabled()
   const notificationsEnabledOnFirebase = useSelectAccountNotificationSetting(address)

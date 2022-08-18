@@ -1,7 +1,7 @@
 import dayjs from 'dayjs'
 import { appSelect } from 'src/app/hooks'
-import { AccountType, BackupType, NativeAccount } from 'src/features/wallet/accounts/types'
-import { selectSortedMnemonicAccounts } from 'src/features/wallet/selectors'
+import { AccountType, BackupType, SignerMnemonicAccount } from 'src/features/wallet/accounts/types'
+import { selectSortedSignerMnemonicAccounts } from 'src/features/wallet/selectors'
 import { activateAccount, addAccount } from 'src/features/wallet/walletSlice'
 import { generateAndStoreMnemonic, generateAndStorePrivateKey } from 'src/lib/RNEthersRs'
 import { logger } from 'src/utils/logger'
@@ -9,7 +9,9 @@ import { createMonitoredSaga } from 'src/utils/saga'
 import { call, put } from 'typed-redux-saga'
 
 export function* createAccount() {
-  const sortedMnemonicAccounts: NativeAccount[] = yield* appSelect(selectSortedMnemonicAccounts)
+  const sortedMnemonicAccounts: SignerMnemonicAccount[] = yield* appSelect(
+    selectSortedSignerMnemonicAccounts
+  )
   const { nextDerivationIndex, mnemonicId, existingBackups } = yield* call(
     getNewAccountParams,
     sortedMnemonicAccounts
@@ -18,7 +20,7 @@ export function* createAccount() {
 
   yield* put(
     addAccount({
-      type: AccountType.Native,
+      type: AccountType.SignerMnemonic,
       address: address,
       pending: true,
       timeImportedMs: dayjs().valueOf(),
@@ -31,7 +33,7 @@ export function* createAccount() {
   logger.info('createAccountSaga', '', 'New account created:', address)
 }
 
-async function getNewAccountParams(sortedAccounts: NativeAccount[]): Promise<{
+async function getNewAccountParams(sortedAccounts: SignerMnemonicAccount[]): Promise<{
   nextDerivationIndex: number
   mnemonicId: string
   existingBackups?: BackupType[]
@@ -47,7 +49,7 @@ async function getNewAccountParams(sortedAccounts: NativeAccount[]): Promise<{
   }
 }
 
-function getNextDerivationIndex(sortedAccounts: NativeAccount[]): number {
+function getNextDerivationIndex(sortedAccounts: SignerMnemonicAccount[]): number {
   // if there is a missing index in the series (0, 1, _, 3), return this missing index
   let nextIndex = 0
   for (const account of sortedAccounts) {

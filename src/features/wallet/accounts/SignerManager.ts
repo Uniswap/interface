@@ -11,7 +11,7 @@ export class SignerManager {
       return this._signers[account.address]
     }
 
-    if (account.type === AccountType.Native) {
+    if (account.type === AccountType.SignerMnemonic) {
       const addresses = await getAddressesForStoredPrivateKeys()
       if (!addresses.includes(account.address)) {
         throw Error('No private key found for address')

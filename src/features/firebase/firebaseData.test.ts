@@ -64,7 +64,7 @@ const readonlyAccount: Account = {
 }
 
 const importedAccount: Account = {
-  type: AccountType.Native,
+  type: AccountType.SignerMnemonic,
   address: MOCK_ADDRESS_2,
   name: 'IMPORTED ACCOUNT',
   timeImportedMs: dayjs().valueOf(),
@@ -73,7 +73,7 @@ const importedAccount: Account = {
 }
 
 const importedNamelessAccount: Account = {
-  type: AccountType.Native,
+  type: AccountType.SignerMnemonic,
   address: MOCK_ADDRESS_2,
   timeImportedMs: dayjs().valueOf(),
   derivationIndex: 4,

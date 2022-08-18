@@ -15,7 +15,7 @@ import { Text } from 'src/components/Text'
 import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { deleteICloudMnemonicBackup } from 'src/features/CloudBackup/RNICloudBackupsManager'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
-import { AccountType, BackupType, NativeAccount } from 'src/features/wallet/accounts/types'
+import { AccountType, BackupType, SignerMnemonicAccount } from 'src/features/wallet/accounts/types'
 import { EditAccountAction, editAccountActions } from 'src/features/wallet/editAccountSaga'
 import { useAccounts } from 'src/features/wallet/hooks'
 import { Screens } from 'src/screens/Screens'
@@ -33,9 +33,9 @@ export function SettingsCloudBackupStatus({
   const dispatch = useAppDispatch()
   const accounts = useAccounts()
 
-  const mnemonicId = (accounts[address] as NativeAccount)?.mnemonicId
+  const mnemonicId = (accounts[address] as SignerMnemonicAccount)?.mnemonicId
   const associatedAccounts = Object.values(accounts).filter(
-    (a) => a.type === AccountType.Native && a.mnemonicId === mnemonicId
+    (a) => a.type === AccountType.SignerMnemonic && a.mnemonicId === mnemonicId
   )
 
   const [showBackupDeleteWarning, setShowBackupDeleteWarning] = useState(false)

@@ -9,6 +9,7 @@ import {
   v11Schema,
   v12Schema,
   v13Schema,
+  v14Schema,
   v1Schema,
   v2Schema,
   v3Schema,
@@ -42,7 +43,7 @@ import {
   TransactionStatus,
   TransactionType,
 } from 'src/features/transactions/types'
-import { Account, AccountType, NativeAccount } from 'src/features/wallet/accounts/types'
+import { Account, AccountType } from 'src/features/wallet/accounts/types'
 import { initialWalletState } from 'src/features/wallet/walletSlice'
 import { initialWalletConnectState } from 'src/features/walletConnect/walletConnectSlice'
 
@@ -275,13 +276,13 @@ describe('Redux state migrations', () => {
             pending: false,
           },
           {
-            type: AccountType.Native,
+            type: 'native',
             address: TEST_ADDRESSES[2],
             name: 'Test Account 3',
             pending: false,
           },
           {
-            type: AccountType.Native,
+            type: 'native',
             address: TEST_ADDRESSES[3],
             name: 'Test Account 4',
             pending: false,
@@ -328,7 +329,7 @@ describe('Redux state migrations', () => {
         ...v6Schema.wallet,
         accounts: {
           [TEST_ADDRESSES[0]]: {
-            type: AccountType.Native,
+            type: 'native',
             address: TEST_ADDRESSES[0],
             name: 'Test Account 1',
             pending: false,
@@ -336,7 +337,7 @@ describe('Redux state migrations', () => {
             timeImportedMs: TEST_IMPORT_TIME_MS,
           },
           [TEST_ADDRESSES[1]]: {
-            type: AccountType.Native,
+            type: 'native',
             address: TEST_ADDRESSES[1],
             name: 'Test Account 2',
             pending: false,
@@ -344,7 +345,7 @@ describe('Redux state migrations', () => {
             timeImportedMs: TEST_IMPORT_TIME_MS,
           },
           [TEST_ADDRESSES[2]]: {
-            type: AccountType.Native,
+            type: 'native',
             address: TEST_ADDRESSES[2],
             name: 'Test Account 3',
             pending: false,
@@ -352,7 +353,7 @@ describe('Redux state migrations', () => {
             timeImportedMs: TEST_IMPORT_TIME_MS,
           },
           [TEST_ADDRESSES[3]]: {
-            type: AccountType.Native,
+            type: 'native',
             address: TEST_ADDRESSES[3],
             name: 'Test Account 4',
             pending: false,
@@ -368,7 +369,7 @@ describe('Redux state migrations', () => {
 
     const accounts = Object.values(v7.wallet.accounts)
     expect(accounts).toHaveLength(1)
-    expect((accounts[0] as NativeAccount).mnemonicId).toEqual(TEST_ADDRESSES[0])
+    expect((accounts[0] as any)?.mnemonicId).toEqual(TEST_ADDRESSES[0])
   })
 
   it('migrates from v7 to v8', () => {
@@ -386,7 +387,7 @@ describe('Redux state migrations', () => {
         ...v6Schema.wallet,
         accounts: {
           [TEST_ADDRESSES[0]]: {
-            type: AccountType.Native,
+            type: 'native',
             address: TEST_ADDRESSES[0],
             name: 'Test Account 1',
             pending: false,
@@ -418,8 +419,8 @@ describe('Redux state migrations', () => {
       acc[address] = {
         address,
         timeImportedMs: TEST_IMPORT_TIME_MS,
-        type: AccountType.Native,
-      } as Account
+        type: 'native',
+      } as unknown as Account
 
       return acc
     }, {} as { [address: string]: Account })
@@ -457,7 +458,7 @@ describe('Redux state migrations', () => {
         ...v11Schema.wallet,
         accounts: {
           [TEST_ADDRESS]: {
-            type: AccountType.Native,
+            type: 'native',
             address: TEST_ADDRESS,
             name: ACCOUNT_NAME,
             pending: false,
@@ -471,7 +472,7 @@ describe('Redux state migrations', () => {
     const v12 = migrations[12](v11Stub)
 
     expect(v12.wallet.accounts[TEST_ADDRESS].pushNotificationsEnabled).toEqual(false)
-    expect(v12.wallet.accounts[TEST_ADDRESS].type).toEqual(AccountType.Native)
+    expect(v12.wallet.accounts[TEST_ADDRESS].type).toEqual('native')
     expect(v12.wallet.accounts[TEST_ADDRESS].address).toEqual(TEST_ADDRESS)
     expect(v12.wallet.accounts[TEST_ADDRESS].name).toEqual(ACCOUNT_NAME)
   })
@@ -497,5 +498,30 @@ describe('Redux state migrations', () => {
     const v14 = migrations[14](v13Stub)
     expect(v14.biometricSettings.requiredForAppAccess).toEqual(true)
     expect(v14.biometricSettings.requiredForTransactions).toEqual(true)
+  })
+
+  it('migrates from v14 to v15', () => {
+    const TEST_ADDRESS = '0xTestAddress'
+    const ACCOUNT_NAME = 'Test Account'
+    const v14Stub = {
+      ...v14Schema,
+      wallet: {
+        ...v14Schema.wallet,
+        accounts: {
+          [TEST_ADDRESS]: {
+            type: 'native',
+            address: TEST_ADDRESS,
+            name: ACCOUNT_NAME,
+            pending: false,
+            derivationIndex: 0,
+            timeImportedMs: 123,
+          },
+        },
+      },
+    }
+
+    const v15 = migrations[15](v14Stub)
+    const accounts = Object.values(v15.wallet.accounts)
+    expect((accounts[0] as Account)?.type).toEqual(AccountType.SignerMnemonic)
   })
 })

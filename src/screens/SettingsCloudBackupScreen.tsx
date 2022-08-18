@@ -17,7 +17,7 @@ import WarningModal from 'src/components/modals/WarningModal'
 import { Text } from 'src/components/Text'
 import { PIN_LENGTH } from 'src/features/CloudBackup/cloudBackupSlice'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
-import { BackupType, NativeAccount } from 'src/features/wallet/accounts/types'
+import { BackupType, SignerMnemonicAccount } from 'src/features/wallet/accounts/types'
 import { EditAccountAction, editAccountActions } from 'src/features/wallet/editAccountSaga'
 import { useAccounts } from 'src/features/wallet/hooks'
 import { backupMnemonicToICloud } from 'src/lib/RNEthersRs'
@@ -50,7 +50,7 @@ export function SettingsCloudBackupScreen({
 
   const backup = useCallback(async () => {
     try {
-      const mnemonicId = (accounts[address] as NativeAccount)?.mnemonicId
+      const mnemonicId = (accounts[address] as SignerMnemonicAccount)?.mnemonicId
       if (!mnemonicId) return
 
       await backupMnemonicToICloud(mnemonicId, pin ?? '')

@@ -36,7 +36,7 @@ import { setChainActiveStatus } from 'src/features/chains/chainsSlice'
 import { useActiveChainIds } from 'src/features/chains/utils'
 import { isEnabled } from 'src/features/remoteConfig'
 import { TestConfig } from 'src/features/remoteConfig/testConfigs'
-import { AccountType, NativeAccount } from 'src/features/wallet/accounts/types'
+import { AccountType, SignerMnemonicAccount } from 'src/features/wallet/accounts/types'
 import { useAccounts } from 'src/features/wallet/hooks'
 import { resetWallet, setFinishedOnboarding } from 'src/features/wallet/walletSlice'
 import { Screens } from 'src/screens/Screens'
@@ -247,7 +247,7 @@ function WalletSettings() {
   const allAccounts = useMemo(() => {
     const accounts = Object.values(addressToAccount)
     const _mnemonicWallets = accounts
-      .filter((a): a is NativeAccount => a.type === AccountType.Native)
+      .filter((a): a is SignerMnemonicAccount => a.type === AccountType.SignerMnemonic)
       .sort((a, b) => {
         return a.derivationIndex - b.derivationIndex
       })

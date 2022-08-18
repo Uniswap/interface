@@ -52,7 +52,7 @@ export const persistConfig = {
     dataApi.reducerPath,
     nftApi.reducerPath,
   ],
-  version: 14,
+  version: 15,
   migrate: createMigrate(migrations),
 }
 

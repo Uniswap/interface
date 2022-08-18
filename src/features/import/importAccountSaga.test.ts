@@ -54,7 +54,7 @@ describe(importAccount, () => {
     // assert on dispatched actions
     expect(dispatched).toEqual([
       addAccount({
-        type: AccountType.Native,
+        type: AccountType.SignerMnemonic,
         address: SAMPLE_SEED_ADDRESS,
         name: 'WALLET',
         pending: true,

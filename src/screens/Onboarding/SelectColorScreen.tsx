@@ -21,7 +21,7 @@ function useNextOnboardingScreen(currentScreen: OnboardingScreens) {
 
   switch (currentScreen) {
     case OnboardingScreens.SelectColor:
-      if (activeAccount?.type === AccountType.Native && !hasImportedSeedPhrase) {
+      if (activeAccount?.type === AccountType.SignerMnemonic && !hasImportedSeedPhrase) {
         return OnboardingScreens.Backup
       }
       return OnboardingScreens.Notifications

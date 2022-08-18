@@ -12,7 +12,7 @@ import { MnemonicTest } from 'src/components/mnemonic/MnemonicTest'
 import WarningModal from 'src/components/modals/WarningModal'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
-import { BackupType, NativeAccount } from 'src/features/wallet/accounts/types'
+import { BackupType, SignerMnemonicAccount } from 'src/features/wallet/accounts/types'
 import { EditAccountAction, editAccountActions } from 'src/features/wallet/editAccountSaga'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { OnboardingScreens } from 'src/screens/Screens'
@@ -30,7 +30,7 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props) {
   const dispatch = useAppDispatch()
 
   const activeAccount = useActiveAccount()
-  const mnemonicId = (activeAccount as NativeAccount)?.mnemonicId
+  const mnemonicId = (activeAccount as SignerMnemonicAccount)?.mnemonicId
 
   const [showTermsModal, setShowTermsModal] = useState(false)
   const [showScreenShotWarningModal, setShowScreenShotWarningModal] = useState(false)

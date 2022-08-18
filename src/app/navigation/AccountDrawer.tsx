@@ -28,7 +28,7 @@ import { pushNotification } from 'src/features/notifications/notificationSlice'
 import { AppNotificationType } from 'src/features/notifications/types'
 import { ImportType, OnboardingEntryPoint } from 'src/features/onboarding/utils'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
-import { Account, AccountType, NativeAccount } from 'src/features/wallet/accounts/types'
+import { Account, AccountType, SignerMnemonicAccount } from 'src/features/wallet/accounts/types'
 import { createAccountActions } from 'src/features/wallet/createAccountSaga'
 import { EditAccountAction, editAccountActions } from 'src/features/wallet/editAccountSaga'
 import { useAccounts, useActiveAccount, useNativeAccountExists } from 'src/features/wallet/hooks'
@@ -62,9 +62,12 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
   const { accountsData, mnemonicWallets } = useMemo(() => {
     const accounts = Object.values(addressToAccount)
     const _mnemonicWallets = accounts
-      .filter((a) => a.type === AccountType.Native)
+      .filter((a) => a.type === AccountType.SignerMnemonic)
       .sort((a, b) => {
-        return (a as NativeAccount).derivationIndex - (b as NativeAccount).derivationIndex
+        return (
+          (a as SignerMnemonicAccount).derivationIndex -
+          (b as SignerMnemonicAccount).derivationIndex
+        )
       })
     const _viewOnlyWallets = accounts
       .filter((a) => a.type === AccountType.Readonly)
@@ -234,7 +237,7 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
       accountsData.length === 1 ||
       (mnemonicWallets.length === 1 &&
         !!pendingEditAddress &&
-        addressToAccount[pendingEditAddress]?.type === AccountType.Native)
+        addressToAccount[pendingEditAddress]?.type === AccountType.SignerMnemonic)
 
     if (!shouldHideRemoveOption) {
       editWalletOptions.push({
