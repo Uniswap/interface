@@ -6,6 +6,7 @@ import { useHistory, useLocation } from 'react-router-dom'
 import { useMedia } from 'react-use'
 import { Flex, Text } from 'rebass'
 
+import FarmIssueAnnouncement from 'components/FarmIssueAnnouncement'
 import InfoHelper from 'components/InfoHelper'
 import LocalLoader from 'components/LocalLoader'
 import Toggle from 'components/Toggle'
@@ -14,7 +15,7 @@ import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import useParsedQueryString from 'hooks/useParsedQueryString'
 import useTheme from 'hooks/useTheme'
 import { useBlockNumber } from 'state/application/hooks'
-import { useGetProMMFarms, useProMMFarms } from 'state/farms/promm/hooks'
+import { useFailedNFTs, useGetProMMFarms, useProMMFarms } from 'state/farms/promm/hooks'
 import { ProMMFarm } from 'state/farms/promm/types'
 import { StyledInternalLink } from 'theme'
 
@@ -33,7 +34,7 @@ import {
   StakedOnlyToggleWrapper,
 } from './styleds'
 
-type ModalType = 'deposit' | 'withdraw' | 'stake' | 'unstake' | 'harvest'
+type ModalType = 'deposit' | 'withdraw' | 'stake' | 'unstake' | 'harvest' | 'forcedWithdraw'
 
 function ProMMFarms({ active }: { active: boolean }) {
   const theme = useTheme()
@@ -46,6 +47,8 @@ function ProMMFarms({ active }: { active: boolean }) {
   const getProMMFarms = useGetProMMFarms()
 
   const blockNumber = useBlockNumber()
+
+  const failedNFTs = useFailedNFTs()
 
   useEffect(() => {
     getProMMFarms()
@@ -132,6 +135,10 @@ function ProMMFarms({ active }: { active: boolean }) {
         <WithdrawModal selectedFarmAddress={selectedFarm} onDismiss={onDismiss} />
       )}
 
+      {selectedFarm && selectedModal === 'forcedWithdraw' && (
+        <WithdrawModal selectedFarmAddress={selectedFarm} onDismiss={onDismiss} forced />
+      )}
+
       {selectedFarm && selectedModal === 'harvest' && (
         <HarvestModal farmsAddress={selectedFarm} poolId={selectedPoolId} onDismiss={onDismiss} />
       )}
@@ -180,6 +187,8 @@ function ProMMFarms({ active }: { active: boolean }) {
               the new phase, you must restake your NFT position into the active farm
             </Trans>
           </Text>
+
+          {!!failedNFTs.length && <FarmIssueAnnouncement />}
         </>
       )}
 
@@ -292,7 +301,7 @@ function ProMMFarms({ active }: { active: boolean }) {
             <ProMMFarmGroup
               key={fairLaunchAddress}
               address={fairLaunchAddress}
-              onOpenModal={(modalType: ModalType, pid?: number) => {
+              onOpenModal={(modalType: ModalType, pid?: number, forced?: boolean) => {
                 setSeletedModal(modalType)
                 setSeletedFarm(fairLaunchAddress)
                 setSeletedPoolId(pid ?? null)

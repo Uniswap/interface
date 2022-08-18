@@ -28,6 +28,8 @@ const maticInfo: NetworkInfo = {
     decimal: 18,
   },
   rpcUrl: 'https://polygon.kyberengineering.io',
+  // Sometime, our rpc is quite slow, keep this for testing purpose on local
+  // rpcUrl: 'https://polygon-rpc.com',
   routerUri: `${process.env.REACT_APP_AGGREGATOR_API}/polygon/route/encode`,
   classic: {
     static: {

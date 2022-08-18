@@ -1,7 +1,7 @@
 import { ChainId } from '@kyberswap/ks-sdk-core'
 import { Trans } from '@lingui/macro'
 import { darken } from 'polished'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { Repeat } from 'react-feather'
 import { Link, NavLink, useLocation } from 'react-router-dom'
 import { Flex } from 'rebass'

@@ -72,6 +72,10 @@ export const Checkbox = styled.input`
     top: 5.5px;
     left: 3px;
   }
+
+  :disabled {
+    background-color: ${({ theme }) => theme.disableText};
+  }
 `
 
 export const Select = styled.div`

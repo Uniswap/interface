@@ -21,7 +21,7 @@ import useParsedQueryString from 'hooks/useParsedQueryString'
 import { usePool } from 'hooks/usePools'
 import useTheme from 'hooks/useTheme'
 import { useTokensPrice } from 'state/application/hooks'
-import { useFarmAction, usePostionFilter, useProMMFarms } from 'state/farms/promm/hooks'
+import { useFailedNFTs, useFarmAction, usePostionFilter, useProMMFarms } from 'state/farms/promm/hooks'
 import { UserPositionFarm } from 'state/farms/promm/types'
 import { formatDollarAmount } from 'utils/numbers'
 import { unwrappedToken } from 'utils/wrappedCurrency'
@@ -42,10 +42,12 @@ const PositionRow = ({
   position,
   onChange,
   selected,
+  forced,
 }: {
   selected: boolean
   position: UserPositionFarm
   onChange: (value: boolean) => void
+  forced: boolean
 }) => {
   const { token0: token0Address, token1: token1Address, fee: feeAmount, liquidity, tickLower, tickUpper } = position
 
@@ -79,9 +81,24 @@ const PositionRow = ({
 
   const above768 = useMedia('(min-width: 768px)')
 
+  const disableCheckbox = (
+    <Flex
+      width={'17.5px'}
+      height="17.5px"
+      backgroundColor={theme.disableText}
+      sx={{ borderRadius: '2px' }}
+      alignItems="center"
+      justifyContent="center"
+    >
+      <X size={14} color="#333" />
+    </Flex>
+  )
+
   return (
     <TableRow>
-      {!position.stakedLiquidity.gt(BigNumber.from(0)) ? (
+      {forced ? (
+        <Checkbox type="checkbox" disabled checked />
+      ) : !position.stakedLiquidity.gt(BigNumber.from(0)) ? (
         <Checkbox
           type="checkbox"
           onChange={e => {
@@ -91,16 +108,7 @@ const PositionRow = ({
         />
       ) : (
         <MouseoverTooltip text="You will need to unstake this position first before you can withdraw it">
-          <Flex
-            width={'17.5px'}
-            height="17.5px"
-            backgroundColor={theme.disableText}
-            sx={{ borderRadius: '2px' }}
-            alignItems="center"
-            justifyContent="center"
-          >
-            <X size={14} color="#333" />
-          </Flex>
+          {disableCheckbox}
         </MouseoverTooltip>
       )}
       {above768 ? (
@@ -156,7 +164,15 @@ const PositionRow = ({
   )
 }
 
-function WithdrawModal({ selectedFarmAddress, onDismiss }: { onDismiss: () => void; selectedFarmAddress: string }) {
+function WithdrawModal({
+  selectedFarmAddress,
+  onDismiss,
+  forced,
+}: {
+  onDismiss: () => void
+  selectedFarmAddress: string
+  forced?: boolean
+}) {
   const theme = useTheme()
   const above768 = useMedia('(min-width: 768px)')
 
@@ -170,6 +186,8 @@ function WithdrawModal({ selectedFarmAddress, onDismiss }: { onDismiss: () => vo
   const poolAddresses = selectedFarm
     ?.filter(farm => (tab === 'active' ? farm.endTime > +new Date() / 1000 : farm.endTime < +new Date() / 1000))
     .map(farm => farm.poolAddress.toLowerCase())
+
+  const failedNFTs = useFailedNFTs()
 
   const userDepositedNFTs = useMemo(() => {
     const uniqueNfts: { [id: string]: UserPositionFarm } = {}
@@ -199,10 +217,15 @@ function WithdrawModal({ selectedFarmAddress, onDismiss }: { onDismiss: () => vo
 
   const [selectedNFTs, setSeletedNFTs] = useState<string[]>([])
 
-  const { withdraw } = useFarmAction(selectedFarmAddress)
+  const { withdraw, emergencyWithdraw } = useFarmAction(selectedFarmAddress)
 
   useEffect(() => {
     if (!checkboxGroupRef.current) return
+    if (forced) {
+      checkboxGroupRef.current.checked = true
+      checkboxGroupRef.current.indeterminate = false
+      return
+    }
     if (selectedNFTs.length === 0) {
       checkboxGroupRef.current.checked = false
       checkboxGroupRef.current.indeterminate = false
@@ -213,7 +236,7 @@ function WithdrawModal({ selectedFarmAddress, onDismiss }: { onDismiss: () => vo
       checkboxGroupRef.current.checked = true
       checkboxGroupRef.current.indeterminate = false
     }
-  }, [selectedNFTs.length, withDrawableNFTs])
+  }, [selectedNFTs.length, withDrawableNFTs, forced])
 
   const [showMenu, setShowMenu] = useState(false)
 
@@ -224,6 +247,12 @@ function WithdrawModal({ selectedFarmAddress, onDismiss }: { onDismiss: () => vo
   if (!selectedFarmAddress) return null
 
   const handleWithdraw = async () => {
+    if (forced) {
+      await emergencyWithdraw(failedNFTs.map(BigNumber.from))
+      onDismiss()
+      return
+    }
+
     const txHash = await withdraw(selectedNFTs.map(item => BigNumber.from(item)))
     if (txHash) {
       const finishedPoses = eligiblePositions.filter(pos => selectedNFTs.includes(pos.tokenId.toString()))
@@ -268,12 +297,10 @@ function WithdrawModal({ selectedFarmAddress, onDismiss }: { onDismiss: () => vo
     <Modal isOpen={!!selectedFarm} onDismiss={onDismiss} width="80vw" maxHeight={80} maxWidth="808px">
       <ModalContentWrapper>
         <Flex alignItems="center" justifyContent="space-between">
-          <Title>
-            <Trans>Withdraw your liquidity</Trans>
-          </Title>
+          <Title>{forced ? <Trans>Force Withdraw</Trans> : <Trans>Withdraw your liquidity</Trans>}</Title>
 
           <Flex sx={{ gap: '12px' }}>
-            {above768 && filterComponent}
+            {above768 && !forced && filterComponent}
             <ButtonEmpty onClick={onDismiss} width="36px" height="36px" padding="0">
               <X color={theme.text} />
             </ButtonEmpty>
@@ -281,16 +308,21 @@ function WithdrawModal({ selectedFarmAddress, onDismiss }: { onDismiss: () => vo
         </Flex>
 
         <Text fontSize="12px" marginTop="20px" color={theme.subText}>
-          <Trans>
-            You will need to unstake your liquidity positions (NFT tokens) first before withdrawing it back to your
-            wallet
-          </Trans>
+          {forced ? (
+            <Trans>Below is a list of your affected liquidity positions</Trans>
+          ) : (
+            <Trans>
+              You will need to unstake your liquidity positions (NFT tokens) first before withdrawing it back to your
+              wallet
+            </Trans>
+          )}
         </Text>
 
-        {!above768 && filterComponent}
+        {!above768 && !forced && filterComponent}
 
         <TableHeader>
           <Checkbox
+            disabled={forced}
             type="checkbox"
             ref={checkboxGroupRef}
             onChange={e => {
@@ -316,19 +348,28 @@ function WithdrawModal({ selectedFarmAddress, onDismiss }: { onDismiss: () => vo
         </TableHeader>
 
         <div style={{ overflowY: 'scroll' }}>
-          {(eligiblePositions as UserPositionFarm[]).map(pos => (
-            <PositionRow
-              selected={selectedNFTs.includes(pos.tokenId.toString())}
-              key={pos.tokenId.toString()}
-              position={pos}
-              onChange={(selected: boolean) => {
-                if (selected) setSeletedNFTs(prev => [...prev, pos.tokenId.toString()])
-                else {
-                  setSeletedNFTs(prev => prev.filter(item => item !== pos.tokenId.toString()))
-                }
-              }}
-            />
-          ))}
+          {(eligiblePositions as UserPositionFarm[])
+            .filter(pos => {
+              if (forced) {
+                return failedNFTs.includes(pos.tokenId.toString())
+              }
+
+              return true
+            })
+            .map(pos => (
+              <PositionRow
+                selected={selectedNFTs.includes(pos.tokenId.toString())}
+                key={pos.tokenId.toString()}
+                position={pos}
+                forced
+                onChange={(selected: boolean) => {
+                  if (selected) setSeletedNFTs(prev => [...prev, pos.tokenId.toString()])
+                  else {
+                    setSeletedNFTs(prev => prev.filter(item => item !== pos.tokenId.toString()))
+                  }
+                }}
+              />
+            ))}
         </div>
         <Flex justifyContent="space-between" marginTop="24px">
           <div></div>
@@ -337,9 +378,10 @@ function WithdrawModal({ selectedFarmAddress, onDismiss }: { onDismiss: () => vo
             padding="10px 24px"
             width="fit-content"
             onClick={handleWithdraw}
-            disabled={!selectedNFTs.length}
+            disabled={forced ? false : !selectedNFTs.length}
+            style={forced ? { background: theme.red, color: theme.textReverse } : undefined}
           >
-            <Trans>Withdraw Selected</Trans>
+            {forced ? <Trans>Forced Withdraw</Trans> : <Trans>Withdraw Selected</Trans>}
           </ButtonPrimary>
         </Flex>
       </ModalContentWrapper>

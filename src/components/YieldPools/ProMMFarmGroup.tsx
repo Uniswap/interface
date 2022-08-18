@@ -34,7 +34,7 @@ import useTheme from 'hooks/useTheme'
 import { Dots } from 'pages/Pool/styleds'
 import { useWalletModalToggle } from 'state/application/hooks'
 import { useRewardTokenPrices } from 'state/farms/hooks'
-import { useFarmAction, useProMMFarmTVL } from 'state/farms/promm/hooks'
+import { useFailedNFTs, useFarmAction, useProMMFarmTVL } from 'state/farms/promm/hooks'
 import { ProMMFarm } from 'state/farms/promm/types'
 import { useSingleCallResult } from 'state/multicall/hooks'
 import { useIsTransactionPending } from 'state/transactions/hooks'
@@ -628,7 +628,10 @@ function ProMMFarmGroup({
   farms,
 }: {
   address: string
-  onOpenModal: (modalType: 'harvest' | 'deposit' | 'withdraw' | 'stake' | 'unstake', pid?: number) => void
+  onOpenModal: (
+    modalType: 'forcedWithdraw' | 'harvest' | 'deposit' | 'withdraw' | 'stake' | 'unstake',
+    pid?: number,
+  ) => void
   farms: ProMMFarm[]
 }) {
   const theme = useTheme()
@@ -716,6 +719,10 @@ function ProMMFarmGroup({
     return result
   }, {})
 
+  const failedNFTs = useFailedNFTs()
+  const userNFTs = farms.map(farm => farm.userDepositedNFTs.map(item => item.tokenId.toString())).flat()
+  const hasAffectedByFarmIssue = userNFTs.some(id => failedNFTs.includes(id))
+
   const toggleWalletModal = useWalletModalToggle()
   const posManager = useProAmmNFTPositionManagerContract()
 
@@ -768,6 +775,19 @@ function ProMMFarmGroup({
   return (
     <FarmContent>
       <FarmRow>
+        {hasAffectedByFarmIssue && !above768 && (
+          <BtnPrimary
+            style={{ color: theme.red, border: `1px solid ${theme.red}`, background: theme.red + '33' }}
+            padding={'12px'}
+            onClick={() => onOpenModal('forcedWithdraw')}
+          >
+            <Withdraw width={20} height={20} />
+            <Text fontSize="14px" marginLeft="4px">
+              <Trans>Force Withdraw</Trans>
+            </Text>
+          </BtnPrimary>
+        )}
+
         <Flex
           sx={{ gap: '20px' }}
           alignItems="center"
@@ -844,7 +864,7 @@ function ProMMFarmGroup({
                   <MouseoverTooltipDesktopOnly
                     text={t`Withdraw your liquidity (the NFT tokens that represent your liquidity position)`}
                   >
-                    <ButtonOutlined padding="8px 12px" onClick={() => onOpenModal('withdraw')}>
+                    <ButtonOutlined padding={above768 ? '8px 12px' : '8px'} onClick={() => onOpenModal('withdraw')}>
                       <Withdraw width={20} height={20} />
                       {above768 && (
                         <Text fontSize="14px" marginLeft="4px">
@@ -854,13 +874,27 @@ function ProMMFarmGroup({
                     </ButtonOutlined>
                   </MouseoverTooltipDesktopOnly>
                 ) : (
-                  <BtnPrimary disabled width="fit-content" padding="8px 12px">
+                  <BtnPrimary disabled width="fit-content" padding={above768 ? '8px 12px' : '8px'}>
                     <Withdraw width={20} height={20} />
                     {above768 && (
                       <Text fontSize="14px" marginLeft="4px">
                         <Trans>Withdraw</Trans>
                       </Text>
                     )}
+                  </BtnPrimary>
+                )}
+
+                {hasAffectedByFarmIssue && above768 && (
+                  <BtnPrimary
+                    style={{ color: theme.red, border: `1px solid ${theme.red}`, background: theme.red + '33' }}
+                    width="fit-content"
+                    padding={above768 ? '8px 12px' : '8px'}
+                    onClick={() => onOpenModal('forcedWithdraw')}
+                  >
+                    <Withdraw width={20} height={20} />
+                    <Text fontSize="14px" marginLeft="4px">
+                      <Trans>Force Withdraw</Trans>
+                    </Text>
                   </BtnPrimary>
                 )}
               </Flex>

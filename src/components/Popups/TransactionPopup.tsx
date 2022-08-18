@@ -123,6 +123,12 @@ export const SUMMARY: {
     pending: summary => 'Withdrawing ' + summary,
     failure: summary => 'Error withdrawing ' + summary,
   },
+
+  ForceWithdraw: {
+    success: () => 'Force Withdrawn ',
+    pending: () => 'Force Withdrawing ',
+    failure: () => 'Error Force withdrawing ',
+  },
 }
 
 export default function TransactionPopup({

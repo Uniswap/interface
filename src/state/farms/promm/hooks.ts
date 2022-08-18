@@ -29,7 +29,7 @@ import { PositionDetails } from 'types/position'
 import { calculateGasMargin, getContractForReading, isAddressString } from 'utils'
 
 import { useRewardTokenPrices } from '../hooks'
-import { setLoading, updatePrommFarms } from './actions'
+import { addFailedNFTs, setLoading, updatePrommFarms } from './actions'
 import { ProMMFarm, ProMMFarmResponse } from './types'
 
 export const useProMMFarms = () => {
@@ -39,6 +39,9 @@ export const useProMMFarms = () => {
 export const useGetProMMFarms = () => {
   const dispatch = useAppDispatch()
   const { chainId, account } = useActiveWeb3React()
+
+  // TODO: revert this address belongs to user which affected by farm issue
+  // const account = '0x6f0Ca88060F91b5eF839bE5a7211293Bfc27c06C'
   const prommFarmContracts = useProMMFarmContracts()
   const tokens = useAllTokens()
 
@@ -117,6 +120,16 @@ export const useGetProMMFarms = () => {
                 .catch((e: any) => new Error(JSON.stringify(e))),
             ),
           )
+
+          const errorNFTs: string[] = []
+          userInfo.forEach((info, index) => {
+            if (info instanceof Error && info.message.includes('Panic'))
+              errorNFTs.push(userNFTForPool[index].tokenId.toString())
+          })
+
+          if (errorNFTs.length) {
+            dispatch(addFailedNFTs(errorNFTs))
+          }
 
           const userNFTInfo = userInfo
             // .filter(item => item.pid === pid)
@@ -249,6 +262,22 @@ export const useFarmAction = (address: string) => {
     [addTransactionWithType, contract],
   )
 
+  const emergencyWithdraw = useCallback(
+    async (nftIds: BigNumber[]) => {
+      if (!contract) {
+        throw new Error(CONTRACT_NOT_FOUND_MSG)
+      }
+      const estimateGas = await contract.estimateGas.emergencyWithdraw(nftIds)
+      const tx = await contract.emergencyWithdraw(nftIds, {
+        gasLimit: calculateGasMargin(estimateGas),
+      })
+      addTransactionWithType(tx, { type: 'ForceWithdraw' })
+
+      return tx.hash
+    },
+    [addTransactionWithType, contract],
+  )
+
   const stake = useCallback(
     async (pid: BigNumber, nftIds: BigNumber[], liqs: BigNumber[]) => {
       if (!contract) {
@@ -306,7 +335,7 @@ export const useFarmAction = (address: string) => {
     [addTransactionWithType, contract],
   )
 
-  return { deposit, withdraw, approve, stake, unstake, harvest }
+  return { deposit, withdraw, approve, stake, unstake, harvest, emergencyWithdraw }
 }
 
 export const usePostionFilter = (positions: PositionDetails[], validPools: string[]) => {
@@ -543,4 +572,8 @@ export const useProMMFarmTVL = (fairlaunchAddress: string, pid: number) => {
   }, [chainId, data, ethPriceUSD.currentPrice, priceMap, loading, farmData.poolAPY, farmData.tvl, farmData.farmAPR])
 
   return { ...farmData }
+}
+
+export const useFailedNFTs = () => {
+  return useSelector((state: AppState) => state.prommFarms.failedNFTs)
 }
