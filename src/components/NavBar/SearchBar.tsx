@@ -158,7 +158,7 @@ export const SearchBarDropdown = ({ toggleOpen, tokens, collections, hasInput }:
     return phase1Flag === Phase1Variant.Enabled
       ? trendingTokenResults?.slice(0, isTokenPage ? 3 : 2)
       : trendingTokenResults?.slice(0, 4)
-  }, [trendingTokenResults])
+  }, [trendingTokenResults, isTokenPage, phase1Flag])
 
   const totalSuggestions = hasInput
     ? tokens.length + collections.length
