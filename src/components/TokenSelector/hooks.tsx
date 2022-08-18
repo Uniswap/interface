@@ -1,15 +1,26 @@
+import { Currency } from '@uniswap/sdk-core'
 import { useCallback, useMemo, useState } from 'react'
 import { useAppSelector } from 'src/app/hooks'
-import { TokenOption } from 'src/components/TokenSelector/types'
 import { ChainId } from 'src/constants/chains'
 import { selectFavoriteTokensSet } from 'src/features/favorites/selectors'
-import { currencyId } from 'src/utils/currencyId'
+import { useAllCurrencies } from 'src/features/tokens/useTokens'
+import { currencyIdToChain } from 'src/utils/currencyId'
 
-export function useFavoriteTokenOptions(currencies: TokenOption[]) {
+export function useFavoriteCurrencies(): Currency[] {
   const favorites = useAppSelector(selectFavoriteTokensSet)
+  const allTokens = useAllCurrencies()
+
   return useMemo(
-    () => currencies.filter((c) => favorites.has(currencyId(c.currency))),
-    [currencies, favorites]
+    () =>
+      Array.from(favorites)
+        .map((favoriteId: string) => {
+          const chainId = currencyIdToChain(favoriteId)
+          if (!chainId) return undefined
+
+          return allTokens[chainId]?.[favoriteId]
+        })
+        .filter(Boolean) as Currency[],
+    [allTokens, favorites]
   )
 }
 
