@@ -5,7 +5,6 @@ import { Flex } from 'src/components/layout'
 import { Loading } from 'src/components/loading'
 import { SearchBar } from 'src/components/SearchBar'
 import { useFilterCallbacks } from 'src/components/TokenSelector/hooks'
-import { NetworkFilter } from 'src/components/TokenSelector/NetworkFilter'
 import {
   TokenSearchResultList,
   TokenSelectorVariation,
@@ -25,15 +24,15 @@ export function TokenSelect({
   onBack,
   variation,
 }: TokenSearchProps) {
-  const { onChainPress, onChangeText, onClearSearchFilter, searchFilter, chainFilter } =
+  const { onChangeChainFilter, onChangeText, onClearSearchFilter, searchFilter, chainFilter } =
     useFilterCallbacks(otherCurrency?.chainId ?? null)
 
   const { t } = useTranslation()
 
   const onClearFilters = useCallback(() => {
     onClearSearchFilter()
-    onChainPress(null)
-  }, [onChainPress, onClearSearchFilter])
+    onChangeChainFilter(null)
+  }, [onChangeChainFilter, onClearSearchFilter])
 
   return (
     <Flex gap="sm" overflow="hidden" px="md" width="100%">
@@ -43,12 +42,12 @@ export function TokenSelect({
         onBack={onBack}
         onChangeText={onChangeText}
       />
-      <NetworkFilter selectedChain={chainFilter} onPressChain={onChainPress} />
       <Suspense fallback={<TokenSearchResultsLoading />}>
         <TokenSearchResultList
           chainFilter={chainFilter}
           searchFilter={searchFilter}
           variation={variation}
+          onChangeChainFilter={onChangeChainFilter}
           onClearSearchFilter={onClearFilters}
           onSelectCurrency={onSelectCurrency}
         />

@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { ListRenderItemInfo, SectionList, StyleSheet } from 'react-native'
 import { Separator } from 'src/components/layout/Separator'
 import { filter } from 'src/components/TokenSelector/filter'
+import { NetworkFilter } from 'src/components/TokenSelector/NetworkFilter'
 import { useFavoriteCurrencies } from 'src/components/TokenSelector/hooks'
 import { TokenOptionItem } from 'src/components/TokenSelector/TokenOptionItem'
 import { TokenOption } from 'src/components/TokenSelector/types'
@@ -18,7 +19,7 @@ import { differenceWith } from 'src/utils/array'
 import { currencyId } from 'src/utils/currencyId'
 import { useDebounce } from 'src/utils/timing'
 import { TextButton } from '../buttons/TextButton'
-import { Flex, Inset } from '../layout'
+import { Box, Flex, Inset } from '../layout'
 import { Text } from '../Text'
 
 export enum TokenSelectorVariation {
@@ -33,6 +34,7 @@ export enum TokenSelectorVariation {
 }
 
 interface TokenSearchResultListProps {
+  onChangeChainFilter: (newChainFilter: ChainId | null) => void
   onClearSearchFilter: () => void
   onSelectCurrency: (currency: Currency) => void
   searchFilter: string | null
@@ -114,6 +116,7 @@ export function useTokenSectionsByVariation(variation: TokenSelectorVariation): 
 }
 
 export function TokenSearchResultList({
+  onChangeChainFilter,
   onClearSearchFilter,
   onSelectCurrency,
   chainFilter,
@@ -160,34 +163,39 @@ export function TokenSearchResultList({
   }, [variation])
 
   return (
-    <SectionList
-      ref={sectionListRef}
-      ItemSeparatorComponent={() => <Separator mx="xs" />}
-      ListEmptyComponent={
-        <Flex centered gap="sm" px="lg">
-          <Text variant="mediumLabel">😔</Text>
-          <Text color="textTertiary" textAlign="center" variant="mediumLabel">
-            {searchFilter
-              ? t('No tokens found for ”{{searchFilter}}”', { searchFilter })
-              : t('No tokens found')}
-          </Text>
-          <TextButton
-            name={ElementName.ClearSearch}
-            textColor="accentActive"
-            onPress={onClearSearchFilter}>
-            {t('Clear search')}
-          </TextButton>
-        </Flex>
-      }
-      ListFooterComponent={Footer}
-      keyExtractor={key}
-      renderItem={renderItem}
-      renderSectionHeader={({ section: { title } }) => <SectionHeader title={title} />}
-      sections={filteredSections}
-      showsVerticalScrollIndicator={false}
-      style={styles.list}
-      windowSize={1}
-    />
+    <Box>
+      <SectionList
+        ref={sectionListRef}
+        ItemSeparatorComponent={() => <Separator mx="xs" />}
+        ListEmptyComponent={
+          <Flex centered gap="sm" px="lg">
+            <Text variant="mediumLabel">😔</Text>
+            <Text color="textTertiary" textAlign="center" variant="mediumLabel">
+              {searchFilter
+                ? t('No tokens found for ”{{searchFilter}}”', { searchFilter })
+                : t('No tokens found')}
+            </Text>
+            <TextButton
+              name={ElementName.ClearSearch}
+              textColor="accentActive"
+              onPress={onClearSearchFilter}>
+              {t('Clear search')}
+            </TextButton>
+          </Flex>
+        }
+        ListFooterComponent={Footer}
+        keyExtractor={key}
+        renderItem={renderItem}
+        renderSectionHeader={({ section: { title } }) => <SectionHeader title={title} />}
+        sections={filteredSections}
+        showsVerticalScrollIndicator={false}
+        style={styles.list}
+        windowSize={1}
+      />
+      <Box position="absolute" right={0}>
+        <NetworkFilter selectedChain={chainFilter} onPressChain={onChangeChainFilter} />
+      </Box>
+    </Box>
   )
 }
 

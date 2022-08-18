@@ -85,17 +85,15 @@ export function NetworkFilter({ selectedChain, onPressChain }: NetworkFilterProp
 
   return (
     <>
-      <Flex alignItems="flex-end" justifyContent="space-between">
-        <Button onPress={() => setShowModal(true)}>
-          <Flex centered row bg="backgroundContainer" borderRadius="sm" gap="xxs" p="xs">
-            {selectedChain && <NetworkLogo chainId={selectedChain} size={16} />}
-            <Text color="textSecondary" pl="xxxs" textAlign="center" variant="smallLabel">
-              {selectedChain ? CHAIN_INFO[selectedChain].label : t('All networks')}
-            </Text>
-            <Chevron color={theme.colors.textSecondary} direction="s" height={16} width={16} />
-          </Flex>
-        </Button>
-      </Flex>
+      <Button py="xs" onPress={() => setShowModal(true)}>
+        <Flex centered row bg="backgroundContainer" borderRadius="sm" gap="xxs" p="xs">
+          {selectedChain && <NetworkLogo chainId={selectedChain} size={16} />}
+          <Text color="textSecondary" pl="xxxs" textAlign="center" variant="smallLabel">
+            {selectedChain ? CHAIN_INFO[selectedChain].label : t('All networks')}
+          </Text>
+          <Chevron color={theme.colors.textSecondary} direction="s" height={16} width={16} />
+        </Flex>
+      </Button>
 
       <ActionSheetModal
         header={

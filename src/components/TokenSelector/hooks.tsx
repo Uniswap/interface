@@ -28,7 +28,7 @@ export function useFilterCallbacks(initialChainId: ChainId | undefined | null = 
   const [chainFilter, setChainFilter] = useState<ChainId | null>(initialChainId)
   const [searchFilter, setSearchFilter] = useState<string | null>(null)
 
-  const onChainPress = useCallback((newChainFilter: typeof chainFilter) => {
+  const onChangeChainFilter = useCallback((newChainFilter: typeof chainFilter) => {
     setChainFilter(newChainFilter)
   }, [])
 
@@ -44,7 +44,7 @@ export function useFilterCallbacks(initialChainId: ChainId | undefined | null = 
   return {
     chainFilter,
     searchFilter,
-    onChainPress,
+    onChangeChainFilter,
     onClearSearchFilter,
     onChangeText,
   }
