@@ -125,7 +125,7 @@ jobs:
           # Create new Sentry release
           export SENTRY_RELEASE="com.uniswap.mobile.dev@$IOS_VERSION_NUMBER+$IOS_BUILD_NUMBER"
           sentry-cli releases new -p $SENTRY_PROJECT $SENTRY_RELEASE --log-level=info
-          sentry-cli releases set-commits --auto $SENTRY_RELEASE --log-level=info
+          sentry-cli releases set-commits $SENTRY_RELEASE --auto --ignore-missing --log-level=info
 
           #Upload sourcemaps
           sentry-cli releases files $SENTRY_RELEASE upload-sourcemaps main.jsbundle.map --dist $IOS_BUILD_NUMBER --log-level=info
