@@ -10,11 +10,14 @@ import { ExternalLink } from 'theme'
 
 const BannerWrapper = styled.div`
   width: 100%;
-  padding: 10px 20px;
+  padding: 10px 12px 10px 20px;
   background: ${({ theme }) => rgba(theme.warning, 0.7)};
   display: flex;
   align-items: center;
   justify-content: space-between;
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    align-items: flex-start;
+  `}
 `
 
 const StyledClose = styled(X)`
@@ -29,9 +32,11 @@ const Content = styled.div`
   align-items: center;
   justify-content: center;
   border-radius: 4px;
+  gap: 8px;
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
     font-size: 14px;
+    align-items: flex-start;
     flex: 1;
   `}
 `
@@ -43,8 +48,11 @@ const banner = {
   text: (
     <Text marginLeft="4px" marginRight="1rem" lineHeight="20px" color="#fff" fontSize="14px" flex={1}>
       Important Announcement: If you’re currently participating in our Elastic Farms on Polygon & Avalanche, please read
-      this
-      <ExternalLink href="https://kyberswap.com/?utm_source=kyberswap&utm_medium=banner&utm_campaign=benqi&utm_content=launch#/farms?networkId=43114">
+      this{' '}
+      <ExternalLink
+        href="https://medium.com/@kyberteam/important-community-update-about-kyberswap-elastic-farms-6f90b40bb88"
+        style={{ color: '#fff', fontWeight: 500, textDecoration: 'underline' }}
+      >
         announcement!
       </ExternalLink>
     </Text>

@@ -10,6 +10,7 @@ import styled from 'styled-components'
 import ErrorBoundary from 'components/ErrorBoundary'
 import Footer from 'components/Footer/Footer'
 import Header from 'components/Header'
+import TopBanner from 'components/Header/TopBanner'
 import Loader from 'components/LocalLoader'
 import Popups from 'components/Popups'
 import Web3ReactManager from 'components/Web3ReactManager'
@@ -143,7 +144,7 @@ export default function App() {
         <ApolloProvider client={classicClient}>
           <Route component={DarkModeQueryParamReader} />
           <AppWrapper>
-            {/*<TopBanner />*/}
+            <TopBanner />
             {/* <URLWarning /> */}
             <HeaderWrapper>
               <Header />
