@@ -1,9 +1,10 @@
 import { FeatureFlag, featureFlagSettings, useUpdateFlag } from 'featureFlags'
-import { ExploreVariant, useExploreFlag } from 'featureFlags/flags/explore'
 import { NavBarVariant, useNavBarFlag } from 'featureFlags/flags/navBar'
 import { Phase1Variant, usePhase1Flag } from 'featureFlags/flags/phase1'
 import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
+import { TokensVariant, useTokensFlag } from 'featureFlags/flags/tokens'
 import { TokenSafetyVariant, useTokenSafetyFlag } from 'featureFlags/flags/tokenSafety'
+import { useWalletFlag, WalletVariant } from 'featureFlags/flags/wallet'
 import { useAtomValue } from 'jotai/utils'
 import { ReactNode, useState } from 'react'
 import { X } from 'react-feather'
@@ -184,16 +185,22 @@ export default function FeatureFlagModal() {
         label="NavBar"
       />
       <FeatureFlagOption
-        variants={Object.values(ExploreVariant)}
-        value={useExploreFlag()}
-        featureFlag={FeatureFlag.explore}
-        label="Explore"
+        variants={Object.values(TokensVariant)}
+        value={useTokensFlag()}
+        featureFlag={FeatureFlag.tokens}
+        label="Tokens"
       />
       <FeatureFlagOption
         variants={Object.values(TokenSafetyVariant)}
         value={useTokenSafetyFlag()}
         featureFlag={FeatureFlag.tokenSafety}
         label="Token Safety"
+      />
+      <FeatureFlagOption
+        variants={Object.values(WalletVariant)}
+        value={useWalletFlag()}
+        featureFlag={FeatureFlag.wallet}
+        label="Wallet Flag"
       />
       <SaveButton onClick={() => window.location.reload()}>Save Settings</SaveButton>
     </Modal>

@@ -77,7 +77,11 @@ function uniswapThemeColors(darkMode: boolean): ThemeColors {
     accentSuccess: darkMode ? colorsDark.accentSuccess : colorsLight.accentSuccess,
     accentWarning: darkMode ? colorsDark.accentWarning : colorsLight.accentWarning,
     accentFailure: darkMode ? colorsDark.accentFailure : colorsLight.accentFailure,
+<<<<<<< HEAD
     accentCritical: ColorsPalette.red300,
+=======
+    accentCritical: darkMode ? colorsDark.accentCritical : colorsLight.accentCritical,
+>>>>>>> main
 
     accentActionSoft: darkMode ? colorsDark.accentActionSoft : colorsLight.accentActionSoft,
     accentActiveSoft: darkMode ? colorsDark.accentActiveSoft : colorsLight.accentActiveSoft,
@@ -112,6 +116,7 @@ function uniswapThemeColors(darkMode: boolean): ThemeColors {
     blue200: ColorsPalette.blue200,
     flyoutDropShadow:
       '0px 24px 32px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 0px 1px rgba(0, 0, 0, 0.12)',
+    deepShadow: darkMode ? colorsDark.deepShadow : colorsLight.deepShadow,
     hoverState: opacify(24, ColorsPalette.blue200),
     hoverDefault: opacify(8, ColorsPalette.gray200),
   }
@@ -296,7 +301,7 @@ export const ThemedText = {
     return <TextWrapper fontWeight={500} color={'deprecated_primary1'} {...props} />
   },
   Link(props: TextProps) {
-    return <TextWrapper fontWeight={500} fontSize={16} color={'accentAction'} {...props} />
+    return <TextWrapper fontWeight={600} fontSize={14} color={'accentAction'} {...props} />
   },
   DeprecatedLabel(props: TextProps) {
     return <TextWrapper fontWeight={600} color={'deprecated_text1'} {...props} />
@@ -318,6 +323,9 @@ export const ThemedText = {
   },
   DeprecatedLargeHeader(props: TextProps) {
     return <TextWrapper fontWeight={600} fontSize={24} {...props} />
+  },
+  LargeHeader(props: TextProps) {
+    return <TextWrapper fontWeight={400} fontSize={36} color={'textPrimary'} {...props} />
   },
   DeprecatedMediumHeader(props: TextProps) {
     return <TextWrapper fontWeight={500} fontSize={20} {...props} />

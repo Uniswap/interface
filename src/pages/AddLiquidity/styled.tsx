@@ -36,6 +36,7 @@ export const ScrollablePage = styled.div`
   ${({ theme }) => theme.mediaWidth.upToMedium`
     max-width: 480px;
     margin: 0 auto;
+    padding: 0px 8px;
   `};
 `
 

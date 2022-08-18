@@ -17,7 +17,7 @@ export enum ApprovalState {
   APPROVED = 'APPROVED',
 }
 
-export function useApprovalStateForSpender(
+function useApprovalStateForSpender(
   amountToApprove: CurrencyAmount<Currency> | undefined,
   spender: string | undefined,
   useIsPendingApproval: (token?: Token, spender?: string) => boolean

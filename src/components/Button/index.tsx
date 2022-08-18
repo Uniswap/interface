@@ -1,8 +1,7 @@
-import useTheme from 'hooks/useTheme'
 import { darken } from 'polished'
 import { Check, ChevronDown } from 'react-feather'
 import { Button as RebassButton, ButtonProps as ButtonPropsOriginal } from 'rebass/styled-components'
-import styled from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components/macro'
 
 import { RowBetween } from '../Row'
 
@@ -55,6 +54,7 @@ export const ButtonPrimary = styled(BaseButton)<{ redesignFlag?: boolean }>`
   background-color: ${({ theme, redesignFlag }) => (redesignFlag ? theme.accentAction : theme.deprecated_primary1)};
   font-size: ${({ redesignFlag }) => redesignFlag && '20px'};
   font-weight: ${({ redesignFlag }) => redesignFlag && '600'};
+  padding: ${({ redesignFlag }) => redesignFlag && '16px'};
   color: ${({ theme, redesignFlag }) => (redesignFlag ? theme.accentTextLightPrimary : 'white')};
   &:focus {
     box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.05, theme.deprecated_primary1)};

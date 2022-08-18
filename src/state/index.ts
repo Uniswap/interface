@@ -8,7 +8,6 @@ import application from './application/reducer'
 import burn from './burn/reducer'
 import burnV3 from './burn/v3/reducer'
 import connection from './connection/reducer'
-import { api as dataApi } from './data/slice'
 import { updateVersion } from './global/actions'
 import lists from './lists/reducer'
 import logs from './logs/slice'
@@ -37,12 +36,10 @@ const store = configureStore({
     multicall: multicall.reducer,
     lists,
     logs,
-    [dataApi.reducerPath]: dataApi.reducer,
     [routingApi.reducerPath]: routingApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({ thunk: true })
-      .concat(dataApi.middleware)
       .concat(routingApi.middleware)
       .concat(save({ states: PERSISTED_KEYS, debounce: 1000 })),
   preloadedState: load({ states: PERSISTED_KEYS, disableWarnings: isTestEnv() }),

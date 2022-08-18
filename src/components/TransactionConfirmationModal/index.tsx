@@ -6,11 +6,11 @@ import { getChainInfo } from 'constants/chainInfo'
 import { SupportedL2ChainId } from 'constants/chains'
 import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
 import useCurrencyLogoURIs from 'lib/hooks/useCurrencyLogoURIs'
-import { ReactNode, useCallback, useContext, useState } from 'react'
+import { ReactNode, useCallback, useState } from 'react'
 import { AlertCircle, AlertTriangle, ArrowUpCircle, CheckCircle } from 'react-feather'
 import { Text } from 'rebass'
 import { useIsTransactionConfirmed, useTransaction } from 'state/transactions/hooks'
-import styled, { ThemeContext } from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components/macro'
 import { isL2ChainId } from 'utils/chains'
 
 import Circle from '../../assets/images/blue-loader.svg'
@@ -99,7 +99,7 @@ function TransactionSubmittedContent({
   currencyToAdd?: Currency | undefined
   inline?: boolean // not in modal
 }) {
-  const theme = useContext(ThemeContext)
+  const theme = useTheme()
 
   const { connector } = useWeb3React()
 
@@ -199,8 +199,7 @@ export function ConfirmationModalContent({
 export function TransactionErrorContent({ message, onDismiss }: { message: ReactNode; onDismiss: () => void }) {
   const redesignFlag = useRedesignFlag()
   const redesignFlagEnabled = redesignFlag === RedesignVariant.Enabled
-
-  const theme = useContext(ThemeContext)
+  const theme = useTheme()
   return (
     <Wrapper redesignFlag={redesignFlagEnabled}>
       <Section>
@@ -254,7 +253,7 @@ function L2Content({
   pendingText: ReactNode
   inline?: boolean // not in modal
 }) {
-  const theme = useContext(ThemeContext)
+  const theme = useTheme()
 
   const transaction = useTransaction(hash)
   const confirmed = useIsTransactionConfirmed(hash)

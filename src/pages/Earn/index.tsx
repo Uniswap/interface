@@ -1,8 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
-import useTheme from 'hooks/useTheme'
 import JSBI from 'jsbi'
-import styled from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components/macro'
 
 import { OutlineCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
@@ -18,6 +17,9 @@ import { Countdown } from './Countdown'
 const PageWrapper = styled(AutoColumn)`
   max-width: 640px;
   width: 100%;
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    padding: 0px 8px;
+  `};
 `
 
 const TopSection = styled(AutoColumn)`
