@@ -6,7 +6,7 @@ import { WRAPPED_NATIVE_CURRENCY } from 'src/constants/tokens'
 import { useCoinIdAndCurrencyIdMappings } from 'src/features/dataApi/coingecko/hooks'
 import { NativeCurrency } from 'src/features/tokenLists/NativeCurrency'
 import { useTokenInfoFromAddress } from 'src/features/tokens/useTokenInfoFromAddress'
-import { buildCurrencyId, currencyIdToChain } from 'src/utils/currencyId'
+import { currencyIdToChain } from 'src/utils/currencyId'
 
 /**
  * @param currencyId currency address or identifier (ETH for native Ether)
@@ -39,11 +39,6 @@ export function useCurrencyIdFromCoingeckoId(coingeckoId?: string): NullUndefine
   const { coinIdToCurrencyIds, isLoading } = useCoinIdAndCurrencyIdMappings()
 
   return useMemo(() => {
-    // HACK: add native ETH mapping in hook as I couldn't figure out how to add it to the cache
-    //       data backend should handle this case regardless / we can improve locally when data
-    //       backend is ready
-    if (coingeckoId === 'ethereum') return buildCurrencyId(ChainId.Mainnet, NATIVE_ADDRESS)
-
     if (isLoading || !coingeckoId) return undefined
 
     // always default to mainnet
