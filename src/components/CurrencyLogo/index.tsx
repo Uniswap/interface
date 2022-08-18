@@ -6,12 +6,13 @@ import { SvgUri } from 'react-native-svg'
 import { useAppTheme } from 'src/app/hooks'
 import { NetworkLogo } from 'src/components/CurrencyLogo/NetworkLogo'
 import { style } from 'src/components/CurrencyLogo/styles'
-import { getCurrencyLogoSrcs, maybeReplaceIPFSScheme } from 'src/components/CurrencyLogo/utils'
+import { getCurrencyLogoSrcs } from 'src/components/CurrencyLogo/utils'
 import { Box } from 'src/components/layout/Box'
 import { Text } from 'src/components/Text'
 import { ChainId, CHAIN_ID_TO_LOGO } from 'src/constants/chains'
 import { Theme } from 'src/styles/theme'
 import { toSupportedChainId } from 'src/utils/chainId'
+import { uriToHttp } from 'src/utils/uriToHttp'
 
 const DEFAULT_SIZE = 36
 const NETWORK_LOGO_SIZE = 16
@@ -95,7 +96,11 @@ export function CurrencyLogoOnly({ currency, size = 40 }: CurrencyLogoProps) {
     if (!imageError) {
       return (
         <Image
-          source={srcs.map(maybeReplaceIPFSScheme)}
+          source={srcs.map((uri) => {
+            return {
+              uri: uriToHttp(uri)[0],
+            }
+          })}
           style={[
             style.image,
             {
