@@ -72,7 +72,7 @@ const ChartAnimation = styled.div`
     }
   }
 `
-export const Space = styled.div<{ heightSize: number }>`
+const Space = styled.div<{ heightSize: number }>`
   height: ${({ heightSize }) => `${heightSize}px`};
 `
 

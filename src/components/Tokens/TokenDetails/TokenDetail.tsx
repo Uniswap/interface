@@ -166,6 +166,11 @@ const MissingChartData = styled.div`
   padding: 8px 0px;
   margin-top: -40px;
 `
+const MissingData = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+`
 
 export default function LoadedTokenDetail({ address }: { address: string }) {
   const token = useToken(address)
@@ -215,31 +220,33 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
             Missing chart data
           </MissingChartData>
         </ChartHeader>
-        <AboutSection>
-          <AboutHeader>
-            <Trans>About</Trans>
-          </AboutHeader>
-          <NoInfoAvailable>
-            <Trans>No token information available</Trans>
-          </NoInfoAvailable>
-          <ResourcesContainer>
-            <Resource name={'Etherscan'} link={'https://etherscan.io/'} />
-            <Resource name={'Protocol Info'} link={`https://info.uniswap.org/#/tokens/${address}`} />
-          </ResourcesContainer>
-        </AboutSection>
-        <StatsSection>
-          <NoInfoAvailable>
-            <Trans>No stats available</Trans>
-          </NoInfoAvailable>
-        </StatsSection>
-        <ContractAddressSection>
-          <Contract>
-            Contract Address
-            <ContractAddress>
-              <CopyContractAddress address={address} />
-            </ContractAddress>
-          </Contract>
-        </ContractAddressSection>
+        <MissingData>
+          <AboutSection>
+            <AboutHeader>
+              <Trans>About</Trans>
+            </AboutHeader>
+            <NoInfoAvailable>
+              <Trans>No token information available</Trans>
+            </NoInfoAvailable>
+            <ResourcesContainer>
+              <Resource name={'Etherscan'} link={'https://etherscan.io/'} />
+              <Resource name={'Protocol Info'} link={`https://info.uniswap.org/#/tokens/${address}`} />
+            </ResourcesContainer>
+          </AboutSection>
+          <StatsSection>
+            <NoInfoAvailable>
+              <Trans>No stats available</Trans>
+            </NoInfoAvailable>
+          </StatsSection>
+          <ContractAddressSection>
+            <Contract>
+              Contract Address
+              <ContractAddress>
+                <CopyContractAddress address={address} />
+              </ContractAddress>
+            </Contract>
+          </ContractAddressSection>
+        </MissingData>
         <TokenSafetyModal
           isOpen={warningModalOpen}
           tokenAddress={address}
