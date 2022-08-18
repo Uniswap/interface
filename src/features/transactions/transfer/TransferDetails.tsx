@@ -8,7 +8,6 @@ export function TransferDetails({
 }: {
   chainId: ChainId | undefined
   gasFee: string | undefined
-  optimismL1Fee?: string | undefined
 }) {
   return <TransactionDetails chainId={chainId} gasFee={gasFee} />
 }

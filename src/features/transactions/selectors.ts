@@ -1,5 +1,4 @@
 import { createSelector } from '@reduxjs/toolkit'
-import { useMemo } from 'react'
 import { RootState } from 'src/app/rootReducer'
 import { SearchableRecipient } from 'src/components/RecipientSelect/types'
 import { uniqueAddressesOnly } from 'src/components/RecipientSelect/utils'
@@ -20,30 +19,43 @@ export const makeSelectAddressTransactions = (address: Address | null) =>
     return flattenObjectOfObjects(transactions[address])
   })
 
-export const makeSelectTransaction =
-  (address: Address | null, chainId: ChainId | undefined, txHash: string | undefined) =>
-  (state: RootState) =>
-    useMemo(() => {
-      if (!address || !state.transactions[address] || !chainId || !txHash) return undefined
-      const transactions = state.transactions[address]?.[chainId]
-      if (!transactions) return undefined
-      return Object.values(transactions).find(
-        (txDetails) => txDetails.hash.toLowerCase() === txHash.toLowerCase()
-      )
-    }, [state.transactions])
+export const makeSelectTransaction = (
+  address: Address | null,
+  chainId: ChainId | undefined,
+  txHash: string | undefined
+) =>
+  createSelector(selectTransactions, (transactions) => {
+    if (!address || !transactions[address] || !chainId || !txHash) {
+      return undefined
+    }
 
-export const makeSelectTransactionById =
-  (address: Address | undefined, chainId: ChainId | undefined, txId: string | undefined) =>
-  (state: RootState) => {
-    return useMemo(() => {
-      if (!address || !state.transactions[address] || !chainId || !txId) {
-        return undefined
-      }
-      const transactions = state.transactions[address]?.[chainId]
-      if (!transactions) return undefined
-      return Object.values(transactions).find((txDetails) => txDetails.id === txId)
-    }, [state.transactions])
-  }
+    const addressTxs = transactions[address]?.[chainId]
+    if (!addressTxs) {
+      return undefined
+    }
+
+    return Object.values(addressTxs).find(
+      (txDetails) => txDetails.hash.toLowerCase() === txHash.toLowerCase()
+    )
+  })
+
+export const makeSelectTransactionById = (
+  address: Address | undefined,
+  chainId: ChainId | undefined,
+  txId: string | undefined
+) =>
+  createSelector(selectTransactions, (transactions) => {
+    if (!address || !transactions[address] || !chainId || !txId) {
+      return undefined
+    }
+
+    const addressTxs = transactions[address]?.[chainId]
+    if (!addressTxs) {
+      return undefined
+    }
+
+    return Object.values(addressTxs).find((txDetails) => txDetails.id === txId)
+  })
 
 // Returns a list of past recipients ordered from most to least recent
 // TODO: either revert this to return addresses or keep but also return
