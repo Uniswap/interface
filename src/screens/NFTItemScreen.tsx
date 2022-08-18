@@ -88,15 +88,16 @@ export function NFTItemScreen({
                 borderColor="backgroundOutline"
                 borderRadius="md"
                 borderWidth={1}
-                justifyContent="space-between"
-                p="sm">
-                <Flex row gap="md">
+                gap="xs"
+                px="md"
+                py="sm">
+                <Flex grow row flexBasis={0} gap="sm">
                   {asset.collection.image_url ? (
                     <Box borderRadius="full" height={32} overflow="hidden" width={32}>
                       <NFTViewer uri={asset.collection.image_url} />
                     </Box>
                   ) : null}
-                  <Flex centered row gap="xs">
+                  <Flex centered grow row flexBasis={0} gap="xs">
                     <Text color="textPrimary" variant="subhead">
                       {asset.collection.name}
                     </Text>
