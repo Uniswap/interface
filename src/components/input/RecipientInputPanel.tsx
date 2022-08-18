@@ -1,16 +1,12 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { ActivityIndicator } from 'react-native'
 import { useAppTheme } from 'src/app/hooks'
 import { navigate } from 'src/app/navigation/rootNavigation'
+import { AddressDisplay } from 'src/components/AddressDisplay'
 import { Button } from 'src/components/buttons/Button'
 import { Chevron } from 'src/components/icons/Chevron'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
-import { FormattedAddress } from 'src/components/text/FormattedAddress'
-import { Unicon } from 'src/components/unicons/Unicon'
-import { ChainId } from 'src/constants/chains'
-import { useENS } from 'src/features/ens/useENS'
 import { ElementName } from 'src/features/telemetry/constants'
 import { useNumTransactionsBetweenAddresses } from 'src/features/transactions/hooks'
 import { useActiveAccountAddressWithThrow } from 'src/features/wallet/hooks'
@@ -48,7 +44,7 @@ export function RecipientInputPanel({
         <Flex gap="xxs">
           <Flex centered row gap="sm">
             {recipientAddress ? (
-              <RecipientMetadata recipient={recipientAddress} />
+              <AddressDisplay address={recipientAddress} variant="headlineSmall" />
             ) : (
               <RecipientInput />
             )}
@@ -68,21 +64,6 @@ function RecipientInput() {
     <Text color="white" variant="mediumLabel">
       {t('Select Recipient')}
     </Text>
-  )
-}
-
-function RecipientMetadata({ recipient }: { recipient: string }) {
-  const { loading, address, name } = useENS(ChainId.Mainnet, recipient)
-
-  if (loading || !address) {
-    return <ActivityIndicator />
-  }
-
-  return (
-    <Flex centered row gap="sm">
-      <Unicon address={address} size={24} />
-      <FormattedAddress address={address} name={name} variant="headlineSmall" />
-    </Flex>
   )
 }
 
