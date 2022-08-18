@@ -159,9 +159,9 @@ function WrongNetworkCard() {
         <AutoColumn gap="lg" justify="center">
           <AutoColumn gap="lg" style={{ width: '100%' }}>
             <TitleRow style={{ marginTop: '1rem' }} padding={'0'}>
-              <ThemedText.DeprecatedBody fontSize={'20px'}>
-                <Trans>Pools Overview</Trans>
-              </ThemedText.DeprecatedBody>
+              <ThemedText.LargeHeader>
+                <Trans>Pools</Trans>
+              </ThemedText.LargeHeader>
             </TitleRow>
 
             <MainContentWrapper>
@@ -257,9 +257,9 @@ export default function Pool() {
           <AutoColumn gap="lg" justify="center">
             <AutoColumn gap="lg" style={{ width: '100%' }}>
               <TitleRow style={{ marginTop: '1rem' }} padding={'0'}>
-                <ThemedText.DeprecatedBody fontSize={'20px'}>
-                  <Trans>Pools Overview</Trans>
-                </ThemedText.DeprecatedBody>
+                <ThemedText.LargeHeader>
+                  <Trans>Pools</Trans>
+                </ThemedText.LargeHeader>
                 <ButtonRow>
                   {showV2Features && (
                     <Menu
