@@ -77,7 +77,6 @@ export const ChartContainer = styled.div`
   display: flex;
   height: 436px;
   align-items: center;
-  overflow: hidden;
 `
 export const Stat = styled.div`
   display: flex;
@@ -96,6 +95,7 @@ const StatPrice = styled.span`
 export const StatsSection = styled.div`
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
 `
 export const StatPair = styled.div`
   display: flex;
@@ -147,6 +147,8 @@ const FavoriteIcon = styled(Heart)<{ isFavorited: boolean }>`
 `
 const ChartEmpty = styled.div`
   display: flex;
+  height: 400px;
+  align-items: center;
 `
 const NoInfoAvailable = styled.span`
   color: ${({ theme }) => theme.textTertiary};
@@ -204,18 +206,14 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
               )}
             </TokenNameCell>
           </TokenInfoContainer>
-          <ChartContainer>
-            <>
-              <ChartEmpty>
-                <Wave />
-                <Wave />
-              </ChartEmpty>
-              <MissingChartData>
-                <TrendingUp size={12} />
-                Missing chart data
-              </MissingChartData>
-            </>
-          </ChartContainer>
+          <ChartEmpty>
+            <Wave />
+            <Wave />
+          </ChartEmpty>
+          <MissingChartData>
+            <TrendingUp size={12} />
+            Missing chart data
+          </MissingChartData>
         </ChartHeader>
         <AboutSection>
           <AboutHeader>
