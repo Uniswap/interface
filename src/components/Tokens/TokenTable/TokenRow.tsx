@@ -5,6 +5,7 @@ import { EventName } from 'components/AmplitudeAnalytics/constants'
 import SparklineChart from 'components/Charts/SparklineChart'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { getChainInfo } from 'constants/chainInfo'
+import { useTokenDetailQuery } from 'graphql/data/TokenDetailQuery'
 import { useCurrency, useToken } from 'hooks/Tokens'
 import { TimePeriod, TokenData } from 'hooks/useExplorePageQuery'
 import { useAtom } from 'jotai'
@@ -13,7 +14,7 @@ import { ReactNode } from 'react'
 import { ArrowDown, ArrowDownRight, ArrowUp, ArrowUpRight, Heart } from 'react-feather'
 import { Link } from 'react-router-dom'
 import styled, { useTheme } from 'styled-components/macro'
-import { formatAmount, formatDollarAmount } from 'utils/formatDollarAmt'
+import { formatDollarAmount } from 'utils/formatDollarAmt'
 
 import {
   LARGE_MEDIA_BREAKPOINT,
@@ -473,6 +474,7 @@ export default function LoadedRow({
   }
 
   const heartColor = isFavorited ? theme.accentActive : undefined
+  const tokenDetailData: any = useTokenDetailQuery(tokenAddress, 'ETHEREUM')
   // TODO: currency logo sizing mobile (32px) vs. desktop (24px)
   return (
     <StyledLink
@@ -508,14 +510,22 @@ export default function LoadedRow({
         price={
           <ClickableContent>
             <PriceInfoCell>
-              {formatDollarAmount(tokenData.price)}
+              {formatDollarAmount(tokenDetailData.tokenProjects?.[0]?.markets?.[0]?.price?.value).toUpperCase()}
               <PercentChangeInfoCell>{tokenPercentChangeInfo}</PercentChangeInfoCell>
             </PriceInfoCell>
           </ClickableContent>
         }
         percentChange={<ClickableContent>{tokenPercentChangeInfo}</ClickableContent>}
-        marketCap={<ClickableContent>{formatAmount(tokenData.marketCap).toUpperCase()}</ClickableContent>}
-        volume={<ClickableContent>{formatAmount(tokenData.volume[timePeriod]).toUpperCase()}</ClickableContent>}
+        marketCap={
+          <ClickableContent>
+            {formatDollarAmount(tokenDetailData.tokenProjects?.[0]?.markets?.[0]?.marketCap?.value).toUpperCase()}
+          </ClickableContent>
+        }
+        volume={
+          <ClickableContent>
+            {formatDollarAmount(tokenDetailData.tokenProjects?.[0]?.markets?.[0]?.marketCap?.value).toUpperCase()}
+          </ClickableContent>
+        }
         sparkLine={
           <SparkLine>
             <ParentSize>{({ width, height }) => <SparklineChart width={width} height={height} />}</ParentSize>

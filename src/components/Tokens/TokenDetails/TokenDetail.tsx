@@ -322,7 +322,7 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
 >>>>>>> d88e938b (fix)
 =======
             <StatPrice>
-              {formatDollarAmount(tokenDetailData.tokenProjects?.[0]?.markets?.[0]?.volume24h?.value).toUpperCase() ??
+              {formatDollarAmount(tokenDetailData.tokenProjects?.[0]?.markets?.[0]?.marketCap?.value).toUpperCase() ??
                 '-'}
             </StatPrice>
 >>>>>>> 21958ee9 (token details flowing)
