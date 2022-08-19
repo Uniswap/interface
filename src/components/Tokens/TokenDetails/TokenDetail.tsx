@@ -14,6 +14,7 @@ import { ArrowLeft, Heart, TrendingUp } from 'react-feather'
 import { Link, useNavigate } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import { ClickableStyle, CopyContractAddress } from 'theme'
+import { formatDollarAmount } from 'utils/formatDollarAmt'
 
 import { favoritesAtom, useToggleFavorite } from '../state'
 import { ClickFavorited } from '../TokenTable/TokenRow'
@@ -259,11 +260,8 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
   const tokenName = token.name
   const tokenSymbol = token.symbol
 
-  // TODO: format price, add sparkline
-  const aboutToken =
-    'Ethereum is a decentralized computing platform that uses ETH (Ether) to pay transaction fees (gas). Developers can use Ethereum to run decentralized applications (dApps) and issue new crypto assets, known as Ethereum tokens.'
-  const tokenMarketCap = '23.02B'
-  const tokenVolume = '1.6B'
+  const tokenName = tokenDetailData.tokenProjects?.[0]?.name
+  const tokenSymbol = tokenDetailData.tokenProjects?.[0]?.symbol
 
   return (
     <TopArea>
@@ -297,30 +295,43 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
         <AboutHeader>
           <Trans>About</Trans>
         </AboutHeader>
-        {aboutToken}
+        {tokenDetailData.tokenProjects?.[0]?.description}
         <ResourcesContainer>
           <Resource name={'Etherscan'} link={'https://etherscan.io/'} />
           <Resource name={'Protocol Info'} link={`https://info.uniswap.org/#/tokens/${address}`} />
+          <Resource name={'Website'} link={tokenDetailData.tokenProjects?.[0]?.homepageUrl} />
+          <Resource name={'Twitter'} link={`https://twitter.com/${tokenDetailData.tokenProjects?.[0]?.twitterName}`} />
         </ResourcesContainer>
       </AboutSection>
       <StatsSection>
         <StatPair>
           <Stat>
-            Market cap<StatPrice>${tokenMarketCap}</StatPrice>
+            Market cap
+            <StatPrice>
+              {formatDollarAmount(tokenDetailData.tokenProjects?.[0]?.markets?.[0]?.marketCap?.value).toUpperCase() ??
+                '-'}
+            </StatPrice>
           </Stat>
           <Stat>
-            {/* TODO: connect to chart's selected time */}
             24H volume
+<<<<<<< HEAD
 <<<<<<< HEAD
             <StatPrice>${tokenVolume}</StatPrice>
 =======
             <StatPrice>${tokenDetailData.markets.volume24h.value ?? '-'}</StatPrice>
 >>>>>>> d88e938b (fix)
+=======
+            <StatPrice>
+              {formatDollarAmount(tokenDetailData.tokenProjects?.[0]?.markets?.[0]?.volume24h?.value).toUpperCase() ??
+                '-'}
+            </StatPrice>
+>>>>>>> 21958ee9 (token details flowing)
           </Stat>
         </StatPair>
         <StatPair>
           <Stat>
             52W low
+<<<<<<< HEAD
 <<<<<<< HEAD
             <StatPrice>$1,790.01</StatPrice>
           </Stat>
@@ -334,6 +345,20 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
             52W high
             <StatPrice>${tokenDetailData.markets.priceHigh52W.value ?? '-'}</StatPrice>
 >>>>>>> d88e938b (fix)
+=======
+            <StatPrice>
+              {formatDollarAmount(tokenDetailData.tokenProjects?.[0]?.markets?.[0]?.priceLow52W?.value).toUpperCase() ??
+                '-'}
+            </StatPrice>
+          </Stat>
+          <Stat>
+            52W high
+            <StatPrice>
+              {formatDollarAmount(
+                tokenDetailData.tokenProjects?.[0]?.markets?.[0]?.priceHigh52W?.value
+              ).toUpperCase() ?? '-'}
+            </StatPrice>
+>>>>>>> 21958ee9 (token details flowing)
           </Stat>
         </StatPair>
       </StatsSection>
