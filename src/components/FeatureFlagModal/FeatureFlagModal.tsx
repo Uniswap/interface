@@ -1,6 +1,6 @@
 import { FeatureFlag, featureFlagSettings, useUpdateFlag } from 'featureFlags'
 import { NavBarVariant, useNavBarFlag } from 'featureFlags/flags/navBar'
-import { Phase1Variant, usePhase1Flag } from 'featureFlags/flags/phase1'
+import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
 import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
 import { TokensVariant, useTokensFlag } from 'featureFlags/flags/tokens'
 import { TokenSafetyVariant, useTokenSafetyFlag } from 'featureFlags/flags/tokenSafety'
@@ -166,10 +166,10 @@ export default function FeatureFlagModal() {
       </Header>
       <FlagGroupName>Phase 1</FlagGroupName>
       <FeatureFlagOption
-        variants={Object.values(Phase1Variant)}
-        value={usePhase1Flag()}
-        featureFlag={FeatureFlag.phase1}
-        label="All Phase 1 changes (nft features)."
+        variants={Object.values(NftVariant)}
+        value={useNftFlag()}
+        featureFlag={FeatureFlag.nft}
+        label="NFTs"
       />
       <FlagGroupName>Phase 0</FlagGroupName>
       <FeatureFlagOption
