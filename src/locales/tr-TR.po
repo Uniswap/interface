@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-17 20:04\n"
+"PO-Revision-Date: 2022-08-18 18:04\n"
 "Last-Translator: \n"
 "Language: tr_TR\n"
 "Language-Team: Turkish\n"
@@ -290,6 +290,7 @@ msgid "Available to deposit: {0}"
 msgstr "Para yatırmaya uygun: {0}"
 
 #: src/components/WalletModal/PendingView.tsx
+#: src/components/WalletModal/PendingView.tsx
 msgid "Back to wallet selection"
 msgstr "Cüzdan seçimine geri dön"
 
@@ -342,6 +343,7 @@ msgid "By adding this list you are implicitly trusting that the data is correct.
 msgstr "Bu listeyi ekleyerek, verilerin doğru olduğuna dolaylı olarak güveniyorsunuz. Mevcut listelerin sahte sürümlerini ve listesi olmayan projeleri temsil ettiğini iddia eden listeler de dahil olmak üzere herkes bir liste oluşturabilir."
 
 #: src/components/WalletModal/index.tsx
+#: src/components/WalletModal/index.tsx
 msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the Uniswap <1>Protocol Disclaimer</1>."
 msgstr "Bir cüzdan bağlayarak, Uniswap Labs'ın kabul <0>Hizmet Şartları'nı</0> ve okuduğunuzu ve Uniswap anladığımı teyit <1>Protokol Uyarı</1>."
 
@@ -369,6 +371,7 @@ msgstr "Ağ durumunu kontrol edin"
 msgid "Check out our v3 LP walkthrough and migration guides."
 msgstr "V3 LP adım adım açıklamalı kılavuzumuza ve geçiş kılavuzlarımıza göz atın."
 
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/pages/Earn/Manage.tsx
@@ -495,6 +498,10 @@ msgstr "Kaynağı Onayla"
 msgid "Confirm Swap"
 msgstr "Swap'ı Onayla"
 
+#: src/components/WalletModal/PendingView.tsx
+msgid "Confirm this connection in your wallet"
+msgstr "Cüzdanınızda bu bağlantıyı onaylayın"
+
 #: src/components/ModalViews/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
@@ -550,9 +557,14 @@ msgstr "ile bağlantılı"
 msgid "Connecting..."
 msgstr "Bağlanıyor..."
 
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
 #: src/theme/components.tsx
 msgid "Copied!"
 msgstr "kopyalandı!"
+
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
+msgid "Copy"
+msgstr "kopyala"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Copy Address"
@@ -604,6 +616,10 @@ msgstr "Güncel {0} Fiyatı:"
 #: src/components/Menu/index.tsx
 msgid "Dark Theme"
 msgstr "Karanlık Tema"
+
+#: src/components/WalletDropdown/DefaultMenu.tsx
+msgid "Dark theme"
+msgstr "Karanlık tema"
 
 #: src/pages/Vote/styled.tsx
 msgid "Defeated"
@@ -677,6 +693,7 @@ msgid "Details"
 msgstr "Detaylar"
 
 #: src/components/AccountDetails/index.tsx
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
 msgid "Disconnect"
 msgstr "Bağlantıyı Kes"
 
@@ -754,6 +771,7 @@ msgid "Error"
 msgstr "Hata"
 
 #: src/components/WalletModal/PendingView.tsx
+#: src/components/WalletModal/PendingView.tsx
 msgid "Error connecting"
 msgstr "Bağlantı hatası"
 
@@ -822,6 +840,14 @@ msgstr "Uzman modu, işlem onayı istemini kapatır ve genellikle düşük oranl
 msgid "Expired"
 msgstr "Süresi doldu"
 
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
+msgid "Explore"
+msgstr "Keşfetmek"
+
+#: src/pages/Tokens/index.tsx
+msgid "Explore Tokens"
+msgstr "Jetonları Keşfedin"
+
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore Uniswap Analytics."
 msgstr "Uniswap Analytics'i keşfedin."
@@ -883,11 +909,8 @@ msgstr "Saklamak"
 msgid "High Price Impact"
 msgstr "Yüksek Fiyat Etkisi"
 
-#: src/components/TokenSafety/index.tsx
-msgid "I Understand"
-msgstr "Anlıyorum"
-
 #: src/components/SearchModal/ImportList.tsx
+#: src/components/TokenSafety/index.tsx
 #: src/pages/AddLiquidity/index.tsx
 msgid "I understand"
 msgstr "Anladım"
@@ -986,16 +1009,14 @@ msgid "Invalid recipient"
 msgstr "Geçersiz alıcı"
 
 #: src/components/Menu/index.tsx
+#: src/components/WalletDropdown/DefaultMenu.tsx
+#: src/components/WalletDropdown/LanguageMenu.tsx
 msgid "Language"
 msgstr "Dil"
 
 #: src/pages/Pool/index.tsx
 msgid "Learn"
 msgstr "Öğren"
-
-#: src/components/TokenSafety/index.tsx
-msgid "Learn More"
-msgstr "Daha fazla bilgi edin"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Learn about providing liquidity"
@@ -1004,6 +1025,7 @@ msgstr "Likidite sağlama hakkında bilgi edinin"
 #: src/components/PrivacyPolicy/index.tsx
 #: src/components/PrivacyPolicy/index.tsx
 #: src/components/TokenSafety/TokenSafetyMessage.tsx
+#: src/components/TokenSafety/index.tsx
 msgid "Learn more"
 msgstr "Daha fazla bilgi edin"
 
@@ -1015,6 +1037,10 @@ msgstr "Yasal ve Gizlilik"
 #: src/components/Menu/index.tsx
 msgid "Light Theme"
 msgstr "Işık Tema"
+
+#: src/components/WalletDropdown/DefaultMenu.tsx
+msgid "Light theme"
+msgstr "hafif tema"
 
 #: src/components/claim/ClaimModal.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -1258,6 +1284,7 @@ msgstr "Sahip"
 msgid "Participating pools"
 msgstr "Katılımcı havuzlar"
 
+#: src/components/WalletDropdown/DefaultMenu.tsx
 #: src/pages/Vote/styled.tsx
 msgid "Pending"
 msgstr "Bekliyor"
@@ -1320,8 +1347,8 @@ msgstr "Havuza alınmış {0}:"
 
 #: src/pages/Pool/index.tsx
 #: src/pages/Pool/index.tsx
-msgid "Pools Overview"
-msgstr "Havuzlara Genel Bakış"
+msgid "Pools"
+msgstr "Havuzlar"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Portal Bridge"
@@ -1690,6 +1717,7 @@ msgid "The app securely collects your wallet address and shares it with TRM Labs
 msgstr "Uygulama, cüzdan adresinizi güvenli bir şekilde toplar ve risk ve uyumluluk nedenleriyle TRM Labs Inc. ile paylaşır."
 
 #: src/components/WalletModal/PendingView.tsx
+#: src/components/WalletModal/PendingView.tsx
 msgid "The connection attempt failed. Please click try again and follow the steps to connect in your wallet."
 msgstr "Bağlantı girişimi başarısız oldu. Lütfen tekrar dene'yi tıklayın ve cüzdanınıza bağlanmak için adımları izleyin."
 
@@ -1876,10 +1904,16 @@ msgstr "İşlem son tarihi"
 msgid "Transaction rejected."
 msgstr "İşlem reddedildi."
 
+#: src/components/WalletDropdown/DefaultMenu.tsx
+#: src/components/WalletDropdown/TransactionMenu.tsx
+msgid "Transactions"
+msgstr "işlemler"
+
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Transfer Token"
 msgstr "Transfer Jetonu"
 
+#: src/components/WalletModal/PendingView.tsx
 #: src/components/WalletModal/PendingView.tsx
 msgid "Try Again"
 msgstr "Tekrar deneyin"
@@ -2118,6 +2152,10 @@ msgstr "Oylama yaklaşık {0}"
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Waiting For Confirmation"
 msgstr "Onay Bekliyor"
+
+#: src/components/WalletModal/PendingView.tsx
+msgid "Waiting to connect"
+msgstr "bağlanmak için bekleniyor"
 
 #: src/components/AddressInputPanel/index.tsx
 msgid "Wallet Address or ENS name"
@@ -2372,6 +2410,10 @@ msgstr "https:// veya ipfs:// veya ENS adı"
 msgid "minutes"
 msgstr "dakika"
 
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
+msgid "reward"
+msgstr "ödül"
+
 #: src/components/SearchModal/ImportRow.tsx
 msgid "via {0}"
 msgstr "{0} üzerinden"
@@ -2549,6 +2591,6 @@ msgid "{tokenB} per {tokenA}"
 msgstr "{tokenB} / {tokenA}"
 
 #: src/pages/Pool/PositionPage.tsx
-msgid "← Back to Pools Overview"
-msgstr "← Havuzlara Genel Bakış'a geri dön"
+msgid "← Back to Pools"
+msgstr "← Havuzlar'e geri dön"
 

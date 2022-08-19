@@ -48,7 +48,7 @@ const StyledTokenRow = styled.div`
   width: 100%;
   height: 60px;
   display: grid;
-  grid-template-columns: 1.2fr 1fr 7fr 4fr 4fr 4fr 4fr 5fr;
+  grid-template-columns: 1fr 7fr 4fr 4fr 4fr 4fr 5fr 1.2fr;
   font-size: 15px;
   line-height: 24px;
 
@@ -61,26 +61,24 @@ const StyledTokenRow = styled.div`
   }
 
   @media only screen and (max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT}) {
-    grid-template-columns: 1.7fr 1fr 6.5fr 4.5fr 4.5fr 4.5fr 4.5fr;
+    grid-template-columns: 1fr 6.5fr 4.5fr 4.5fr 4.5fr 4.5fr 1.7fr;
     width: fit-content;
-    padding-right: 24px;
   }
 
   @media only screen and (max-width: ${LARGE_MEDIA_BREAKPOINT}) {
-    grid-template-columns: 1.7fr 1fr 7.5fr 4.5fr 4.5fr 4.5fr;
+    grid-template-columns: 1fr 7.5fr 4.5fr 4.5fr 4.5fr 1.7fr;
     width: fit-content;
   }
 
   @media only screen and (max-width: ${MEDIUM_MEDIA_BREAKPOINT}) {
-    grid-template-columns: 1.2fr 1fr 10fr 5fr 3fr;
+    grid-template-columns: 1fr 10fr 5fr 5fr 1.2fr;
     width: fit-content;
   }
 
   @media only screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
-    grid-template-columns: 4fr 2fr;
+    grid-template-columns: 2fr 3fr;
     min-width: unset;
     border-bottom: 0.5px solid ${({ theme }) => theme.backgroundModule};
-    padding: 0px 12px;
 
     :last-of-type {
       border-bottom: none;
@@ -129,16 +127,11 @@ const StyledHeaderRow = styled(StyledTokenRow)`
   width: 100%;
 
   &:hover {
-    background-color: 'transparent';
-  }
-
-  @media only screen and (max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT}) {
-    padding-right: 24px;
+    background-color: transparent;
   }
 
   @media only screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
     justify-content: space-between;
-    padding: 0px 12px;
   }
 `
 const ListNumberCell = styled(Cell)`
@@ -175,6 +168,7 @@ const PriceCell = styled(DataCell)`
   padding-right: 8px;
 `
 const PercentChangeCell = styled(DataCell)`
+  padding-right: 8px;
   @media only screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
     display: none;
   }
@@ -371,7 +365,6 @@ export function TokenRow({
 }) {
   const rowCells = (
     <>
-      <FavoriteCell>{favorited}</FavoriteCell>
       <ListNumberCell>{listNumber}</ListNumberCell>
       <NameCell>{tokenInfo}</NameCell>
       <PriceCell sortable={header}>{price}</PriceCell>
@@ -379,6 +372,7 @@ export function TokenRow({
       <MarketCapCell sortable={header}>{marketCap}</MarketCapCell>
       <VolumeCell sortable={header}>{volume}</VolumeCell>
       <SparkLineCell>{sparkLine}</SparkLineCell>
+      <FavoriteCell>{favorited}</FavoriteCell>
     </>
   )
   if (header) return <StyledHeaderRow>{rowCells}</StyledHeaderRow>
@@ -495,7 +489,7 @@ export default function LoadedRow({
               toggleFavorite()
             }}
           >
-            <Heart size={24} color={heartColor} fill={heartColor} />
+            <Heart size={18} color={heartColor} fill={heartColor} />
           </ClickFavorited>
         }
         listNumber={tokenListIndex + 1}

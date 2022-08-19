@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-17 20:04\n"
+"PO-Revision-Date: 2022-08-18 18:04\n"
 "Last-Translator: \n"
 "Language: fi_FI\n"
 "Language-Team: Finnish\n"
@@ -290,6 +290,7 @@ msgid "Available to deposit: {0}"
 msgstr "Talletettavissa: {0}"
 
 #: src/components/WalletModal/PendingView.tsx
+#: src/components/WalletModal/PendingView.tsx
 msgid "Back to wallet selection"
 msgstr "Takaisin lompakon valintaan"
 
@@ -342,6 +343,7 @@ msgid "By adding this list you are implicitly trusting that the data is correct.
 msgstr "Lisäämällä tämän luettelon luotat ehdottomasti siihen, että tiedot ovat oikein. Kuka tahansa voi luoda luettelon ja luoda myös väärennettyjä versioita olemassa olevista luetteloista ja luetteloista, jotka väittävät edustavansa hankkeita, joilla ei sellaista ole."
 
 #: src/components/WalletModal/index.tsx
+#: src/components/WalletModal/index.tsx
 msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the Uniswap <1>Protocol Disclaimer</1>."
 msgstr "Yhdistämällä lompakon hyväksyt Uniswap Labsin <0>-palveluehdot</0> ja vahvistat lukeneesi ja ymmärtäväsi Uniswap <1>-protokollan vastuuvapauslausekkeen</1>."
 
@@ -369,6 +371,7 @@ msgstr "Tarkista verkon tila"
 msgid "Check out our v3 LP walkthrough and migration guides."
 msgstr "Tutustu v3 LP -läpikävelyymme ja siirto-oppaisiimme."
 
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/pages/Earn/Manage.tsx
@@ -495,6 +498,10 @@ msgstr "Vahvista tarjonta"
 msgid "Confirm Swap"
 msgstr "Vahvista vaihto"
 
+#: src/components/WalletModal/PendingView.tsx
+msgid "Confirm this connection in your wallet"
+msgstr "Vahvista tämä yhteys lompakossasi"
+
 #: src/components/ModalViews/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
@@ -550,9 +557,14 @@ msgstr "Yhdistetty"
 msgid "Connecting..."
 msgstr "Yhdistetään..."
 
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
 #: src/theme/components.tsx
 msgid "Copied!"
 msgstr "Kopioitu!"
+
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
+msgid "Copy"
+msgstr "Kopio"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Copy Address"
@@ -603,6 +615,10 @@ msgstr "Nykyinen {0} hinta:"
 
 #: src/components/Menu/index.tsx
 msgid "Dark Theme"
+msgstr "Tumma teema"
+
+#: src/components/WalletDropdown/DefaultMenu.tsx
+msgid "Dark theme"
 msgstr "Tumma teema"
 
 #: src/pages/Vote/styled.tsx
@@ -677,6 +693,7 @@ msgid "Details"
 msgstr "Tiedot"
 
 #: src/components/AccountDetails/index.tsx
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
 msgid "Disconnect"
 msgstr "Katkaise yhteys"
 
@@ -754,6 +771,7 @@ msgid "Error"
 msgstr "Virhe"
 
 #: src/components/WalletModal/PendingView.tsx
+#: src/components/WalletModal/PendingView.tsx
 msgid "Error connecting"
 msgstr "Virhe yhdistettäessä"
 
@@ -822,6 +840,14 @@ msgstr "Asiantuntijatila ottaa vahvistuskehotuksen pois käytöstä ja mahdollis
 msgid "Expired"
 msgstr "Vanhentunut"
 
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
+msgid "Explore"
+msgstr "Tutkia"
+
+#: src/pages/Tokens/index.tsx
+msgid "Explore Tokens"
+msgstr "Tutustu Tokeneihin"
+
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore Uniswap Analytics."
 msgstr "Tutustu Uniswap Analyticsiin."
@@ -883,11 +909,8 @@ msgstr "Piilottaa"
 msgid "High Price Impact"
 msgstr "Korkea hintavaikutus"
 
-#: src/components/TokenSafety/index.tsx
-msgid "I Understand"
-msgstr "Ymmärrän"
-
 #: src/components/SearchModal/ImportList.tsx
+#: src/components/TokenSafety/index.tsx
 #: src/pages/AddLiquidity/index.tsx
 msgid "I understand"
 msgstr "Ymmärrän"
@@ -986,16 +1009,14 @@ msgid "Invalid recipient"
 msgstr "Virheellinen vastaanottaja"
 
 #: src/components/Menu/index.tsx
+#: src/components/WalletDropdown/DefaultMenu.tsx
+#: src/components/WalletDropdown/LanguageMenu.tsx
 msgid "Language"
 msgstr "Kieli"
 
 #: src/pages/Pool/index.tsx
 msgid "Learn"
 msgstr "Opi"
-
-#: src/components/TokenSafety/index.tsx
-msgid "Learn More"
-msgstr "Lisätietoja"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Learn about providing liquidity"
@@ -1004,6 +1025,7 @@ msgstr "Lisätietoja likviditeetin tarjoamisesta"
 #: src/components/PrivacyPolicy/index.tsx
 #: src/components/PrivacyPolicy/index.tsx
 #: src/components/TokenSafety/TokenSafetyMessage.tsx
+#: src/components/TokenSafety/index.tsx
 msgid "Learn more"
 msgstr "Lue lisää"
 
@@ -1014,6 +1036,10 @@ msgstr "Laki ja yksityisyys"
 
 #: src/components/Menu/index.tsx
 msgid "Light Theme"
+msgstr "Kevyt teema"
+
+#: src/components/WalletDropdown/DefaultMenu.tsx
+msgid "Light theme"
 msgstr "Kevyt teema"
 
 #: src/components/claim/ClaimModal.tsx
@@ -1258,6 +1284,7 @@ msgstr "Omistaja"
 msgid "Participating pools"
 msgstr "Osallistuvat poolit"
 
+#: src/components/WalletDropdown/DefaultMenu.tsx
 #: src/pages/Vote/styled.tsx
 msgid "Pending"
 msgstr "Odottaa"
@@ -1320,8 +1347,8 @@ msgstr "Poolattu {0}:"
 
 #: src/pages/Pool/index.tsx
 #: src/pages/Pool/index.tsx
-msgid "Pools Overview"
-msgstr "Poolien yleiskatsaus"
+msgid "Pools"
+msgstr "Altaat"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Portal Bridge"
@@ -1690,6 +1717,7 @@ msgid "The app securely collects your wallet address and shares it with TRM Labs
 msgstr "Sovellus kerää turvallisesti lompakkosi osoitteesi ja jakaa sen TRM Labs Inc:n kanssa riskien ja vaatimustenmukaisuuden vuoksi."
 
 #: src/components/WalletModal/PendingView.tsx
+#: src/components/WalletModal/PendingView.tsx
 msgid "The connection attempt failed. Please click try again and follow the steps to connect in your wallet."
 msgstr "Yhteysyritys epäonnistui. Napsauta Yritä uudelleen ja seuraa ohjeita muodostaaksesi yhteyden lompakkoosi."
 
@@ -1876,10 +1904,16 @@ msgstr "Tapahtuman määräaika"
 msgid "Transaction rejected."
 msgstr "Tapahtuma hylätty."
 
+#: src/components/WalletDropdown/DefaultMenu.tsx
+#: src/components/WalletDropdown/TransactionMenu.tsx
+msgid "Transactions"
+msgstr "Tapahtumat"
+
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Transfer Token"
 msgstr "Siirtotunnus"
 
+#: src/components/WalletModal/PendingView.tsx
 #: src/components/WalletModal/PendingView.tsx
 msgid "Try Again"
 msgstr "Yritä uudelleen"
@@ -2118,6 +2152,10 @@ msgstr "Äänestys alkaa noin {0}"
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Waiting For Confirmation"
 msgstr "Odotetaan vahvistusta"
+
+#: src/components/WalletModal/PendingView.tsx
+msgid "Waiting to connect"
+msgstr "Odotetaan yhteyden muodostamista"
 
 #: src/components/AddressInputPanel/index.tsx
 msgid "Wallet Address or ENS name"
@@ -2372,6 +2410,10 @@ msgstr "https:// tai ipfs:// tai ENS-nimi"
 msgid "minutes"
 msgstr "minuuttia"
 
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
+msgid "reward"
+msgstr "palkinto"
+
 #: src/components/SearchModal/ImportRow.tsx
 msgid "via {0}"
 msgstr "kohteen {0} kautta"
@@ -2549,6 +2591,6 @@ msgid "{tokenB} per {tokenA}"
 msgstr "{tokenB} per {tokenA}"
 
 #: src/pages/Pool/PositionPage.tsx
-msgid "← Back to Pools Overview"
-msgstr "← Takaisin poolien yleiskatsaukseen"
+msgid "← Back to Pools"
+msgstr "← Takaisin altaat"
 

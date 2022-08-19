@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-17 20:04\n"
+"PO-Revision-Date: 2022-08-18 18:04\n"
 "Last-Translator: \n"
 "Language: hu_HU\n"
 "Language-Team: Hungarian\n"
@@ -290,6 +290,7 @@ msgid "Available to deposit: {0}"
 msgstr "Letétbe helyezhető: {0}"
 
 #: src/components/WalletModal/PendingView.tsx
+#: src/components/WalletModal/PendingView.tsx
 msgid "Back to wallet selection"
 msgstr "Vissza a pénztárca kiválasztásához"
 
@@ -342,6 +343,7 @@ msgid "By adding this list you are implicitly trusting that the data is correct.
 msgstr "A lista hozzáadásával hallgatólagosan megbízik az adatok helyességében. Bárki létrehozhat egy listát, beleértve a meglévő listák hamisított változatait is és olyan listákat is, amelyek azt állítják, hogy olyan projekteket képviselnek, amelyeknek nincs."
 
 #: src/components/WalletModal/index.tsx
+#: src/components/WalletModal/index.tsx
 msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the Uniswap <1>Protocol Disclaimer</1>."
 msgstr "A pénztárca csatlakoztatásával Ön elfogadja az Uniswap Labs <0>szolgáltatási feltételeit</0> és elismeri, hogy elolvasta és megértette az Uniswap <1>Protokoll Jogi nyilatkozatát</1>."
 
@@ -369,6 +371,7 @@ msgstr "Ellenőrizze a hálózat állapotát"
 msgid "Check out our v3 LP walkthrough and migration guides."
 msgstr "Nézze meg a v3 LP használati és migrációs útmutatókat."
 
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/pages/Earn/Manage.tsx
@@ -495,6 +498,10 @@ msgstr "Kínálat megerősítése"
 msgid "Confirm Swap"
 msgstr "Swap megerősítése"
 
+#: src/components/WalletModal/PendingView.tsx
+msgid "Confirm this connection in your wallet"
+msgstr "Erősítse meg ezt a kapcsolatot a pénztárcájában"
+
 #: src/components/ModalViews/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
@@ -550,9 +557,14 @@ msgstr "Kapcsolatban"
 msgid "Connecting..."
 msgstr "Csatlakozás..."
 
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
 #: src/theme/components.tsx
 msgid "Copied!"
 msgstr "Másolva!"
+
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
+msgid "Copy"
+msgstr "Másolat"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Copy Address"
@@ -603,6 +615,10 @@ msgstr "Jelenlegi {0} ár:"
 
 #: src/components/Menu/index.tsx
 msgid "Dark Theme"
+msgstr "Sötét téma"
+
+#: src/components/WalletDropdown/DefaultMenu.tsx
+msgid "Dark theme"
 msgstr "Sötét téma"
 
 #: src/pages/Vote/styled.tsx
@@ -677,6 +693,7 @@ msgid "Details"
 msgstr "Részletek"
 
 #: src/components/AccountDetails/index.tsx
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
 msgid "Disconnect"
 msgstr "Kapcsolat bontása"
 
@@ -754,6 +771,7 @@ msgid "Error"
 msgstr "Hiba"
 
 #: src/components/WalletModal/PendingView.tsx
+#: src/components/WalletModal/PendingView.tsx
 msgid "Error connecting"
 msgstr "Hiba történt a csatlakozáskor"
 
@@ -823,6 +841,14 @@ msgstr "A szakértői mód kikapcsolja a tranzakció megerősítését, és lehe
 msgid "Expired"
 msgstr "Lejárt"
 
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
+msgid "Explore"
+msgstr "Fedezd fel"
+
+#: src/pages/Tokens/index.tsx
+msgid "Explore Tokens"
+msgstr "Fedezze fel a Tokeneket"
+
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore Uniswap Analytics."
 msgstr "Fedezze fel az Uniswap Analytics szolgáltatást."
@@ -884,11 +910,8 @@ msgstr "Elrejt"
 msgid "High Price Impact"
 msgstr "Magas árhatás"
 
-#: src/components/TokenSafety/index.tsx
-msgid "I Understand"
-msgstr "Értem"
-
 #: src/components/SearchModal/ImportList.tsx
+#: src/components/TokenSafety/index.tsx
 #: src/pages/AddLiquidity/index.tsx
 msgid "I understand"
 msgstr "Értem"
@@ -987,16 +1010,14 @@ msgid "Invalid recipient"
 msgstr "Érvénytelen címzett"
 
 #: src/components/Menu/index.tsx
+#: src/components/WalletDropdown/DefaultMenu.tsx
+#: src/components/WalletDropdown/LanguageMenu.tsx
 msgid "Language"
 msgstr "Nyelv"
 
 #: src/pages/Pool/index.tsx
 msgid "Learn"
 msgstr "Tanulás"
-
-#: src/components/TokenSafety/index.tsx
-msgid "Learn More"
-msgstr "Tudj meg többet"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Learn about providing liquidity"
@@ -1005,6 +1026,7 @@ msgstr "Tudjon meg többet a likviditás biztosításáról"
 #: src/components/PrivacyPolicy/index.tsx
 #: src/components/PrivacyPolicy/index.tsx
 #: src/components/TokenSafety/TokenSafetyMessage.tsx
+#: src/components/TokenSafety/index.tsx
 msgid "Learn more"
 msgstr "Tudj meg többet"
 
@@ -1016,6 +1038,10 @@ msgstr "Jogi és adatvédelem"
 #: src/components/Menu/index.tsx
 msgid "Light Theme"
 msgstr "Fény téma"
+
+#: src/components/WalletDropdown/DefaultMenu.tsx
+msgid "Light theme"
+msgstr "Világos téma"
 
 #: src/components/claim/ClaimModal.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -1259,6 +1285,7 @@ msgstr "Tulajdonos"
 msgid "Participating pools"
 msgstr "Résztvevő poolok"
 
+#: src/components/WalletDropdown/DefaultMenu.tsx
 #: src/pages/Vote/styled.tsx
 msgid "Pending"
 msgstr "Függőben levő"
@@ -1321,8 +1348,8 @@ msgstr "Összevonva {0}:"
 
 #: src/pages/Pool/index.tsx
 #: src/pages/Pool/index.tsx
-msgid "Pools Overview"
-msgstr "Poolok áttekintése"
+msgid "Pools"
+msgstr "Medencék"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Portal Bridge"
@@ -1691,6 +1718,7 @@ msgid "The app securely collects your wallet address and shares it with TRM Labs
 msgstr "Az alkalmazás biztonságosan összegyűjti a pénztárca címét, és kockázati és megfelelőségi okokból megosztja a TRM Labs Inc.-vel."
 
 #: src/components/WalletModal/PendingView.tsx
+#: src/components/WalletModal/PendingView.tsx
 msgid "The connection attempt failed. Please click try again and follow the steps to connect in your wallet."
 msgstr "A csatlakozási kísérlet meghiúsult. Kérjük, kattintson az Újbóli próbálkozás gombra, és kövesse a lépéseket a pénztárcájához való csatlakozáshoz."
 
@@ -1877,10 +1905,16 @@ msgstr "Tranzakció határideje"
 msgid "Transaction rejected."
 msgstr "A tranzakció elutasítva."
 
+#: src/components/WalletDropdown/DefaultMenu.tsx
+#: src/components/WalletDropdown/TransactionMenu.tsx
+msgid "Transactions"
+msgstr "Tranzakciók"
+
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Transfer Token"
 msgstr "Transfer Token"
 
+#: src/components/WalletModal/PendingView.tsx
 #: src/components/WalletModal/PendingView.tsx
 msgid "Try Again"
 msgstr "Próbálja meg újra"
@@ -2119,6 +2153,10 @@ msgstr "A szavazás {0}"
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Waiting For Confirmation"
 msgstr "Visszaigazolásra vár"
+
+#: src/components/WalletModal/PendingView.tsx
+msgid "Waiting to connect"
+msgstr "Várakozás a csatlakozásra"
 
 #: src/components/AddressInputPanel/index.tsx
 msgid "Wallet Address or ENS name"
@@ -2373,6 +2411,10 @@ msgstr "https: // vagy ipfs: // vagy ENS név"
 msgid "minutes"
 msgstr "perc"
 
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
+msgid "reward"
+msgstr "jutalom"
+
 #: src/components/SearchModal/ImportRow.tsx
 msgid "via {0}"
 msgstr "{0}-on keresztül"
@@ -2551,6 +2593,6 @@ msgid "{tokenB} per {tokenA}"
 msgstr "{tokenB} per {tokenA}"
 
 #: src/pages/Pool/PositionPage.tsx
-msgid "← Back to Pools Overview"
-msgstr "← Vissza a poolok áttekintéséhez"
+msgid "← Back to Pools"
+msgstr "← Vissza (Medencék)."
 
