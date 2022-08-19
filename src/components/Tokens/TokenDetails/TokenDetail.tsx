@@ -6,7 +6,7 @@ import { VerifiedIcon } from 'components/TokenSafety/TokenSafetyIcon'
 import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import { getChainInfo } from 'constants/chainInfo'
 import { checkWarning } from 'constants/tokenSafety'
-import { useTokenDetailQuery } from 'graphql/data/TokenDetailQuery'
+import { chainIdToChainName, useTokenDetailQuery } from 'graphql/data/TokenDetailQuery'
 import { useCurrency, useIsUserAddedToken, useToken } from 'hooks/Tokens'
 import { useAtomValue } from 'jotai/utils'
 import { useCallback } from 'react'
@@ -17,7 +17,7 @@ import styled from 'styled-components/macro'
 import { ClickableStyle, CopyContractAddress } from 'theme'
 import { formatDollarAmount } from 'utils/formatDollarAmt'
 
-import { favoritesAtom, useToggleFavorite } from '../state'
+import { favoritesAtom, filterNetworkAtom, useToggleFavorite } from '../state'
 import { ClickFavorited } from '../TokenTable/TokenRow'
 import { Wave } from './LoadingTokenDetail'
 import Resource from './Resource'
@@ -190,7 +190,8 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
   const chainInfo = getChainInfo(token?.chainId)
   const networkLabel = chainInfo?.label
   const networkBadgebackgroundColor = chainInfo?.backgroundColor
-  const tokenDetailData = useTokenDetailQuery(address, 'ETHEREUM')
+  const filterNetwork = useAtomValue(filterNetworkAtom)
+  const tokenDetailData = useTokenDetailQuery(address, chainIdToChainName(filterNetwork))
 
   // catch token error and loading state
   if (!token || !token.name || !token.symbol) {

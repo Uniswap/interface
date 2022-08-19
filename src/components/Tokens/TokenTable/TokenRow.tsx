@@ -5,13 +5,14 @@ import { EventName } from 'components/AmplitudeAnalytics/constants'
 import SparklineChart from 'components/Charts/SparklineChart'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { getChainInfo } from 'constants/chainInfo'
-import { useTokenDetailQuery } from 'graphql/data/TokenDetailQuery'
+import { chainIdToChainName, useTokenDetailQuery } from 'graphql/data/TokenDetailQuery'
+import { useTokenPriceQuery } from 'graphql/data/TokenPriceQuery'
 import { useCurrency, useToken } from 'hooks/Tokens'
 import { TimePeriod, TokenData } from 'hooks/useExplorePageQuery'
 import { useAtom } from 'jotai'
 import { useAtomValue } from 'jotai/utils'
 import { ReactNode } from 'react'
-import { ArrowDown, ArrowDownRight, ArrowUp, ArrowUpRight, Heart } from 'react-feather'
+import { ArrowDown, ArrowUp, Heart } from 'react-feather'
 import { Link } from 'react-router-dom'
 import styled, { useTheme } from 'styled-components/macro'
 import { formatDollarAmount } from 'utils/formatDollarAmt'
@@ -33,6 +34,7 @@ import {
   useSetSortCategory,
   useToggleFavorite,
 } from '../state'
+import { DATA_EMPTY, getDelta, PricePoint } from '../TokenDetails/PriceChart'
 import { Category, SortDirection } from '../types'
 import { DISPLAYS } from './TimeSelector'
 
@@ -439,29 +441,25 @@ export default function LoadedRow({
   const currency = useCurrency(tokenAddress)
   const tokenName = token?.name ?? ''
   const tokenSymbol = token?.symbol ?? ''
-  const tokenData = data[tokenAddress]
   const theme = useTheme()
   const [favoriteTokens] = useAtom(favoritesAtom)
   const isFavorited = favoriteTokens.includes(tokenAddress)
   const toggleFavorite = useToggleFavorite(tokenAddress)
-  const isPositive = Math.sign(tokenData.delta) > 0
   const filterString = useAtomValue(filterStringAtom)
   const filterNetwork = useAtomValue(filterNetworkAtom)
   const filterTime = useAtomValue(filterTimeAtom) // filter time period for top tokens table
   const L2Icon = getChainInfo(filterNetwork).circleLogoUrl
 
-  const tokenPercentChangeInfo = (
-    <>
-      {tokenData.delta}%
-      <ArrowCell>
-        {isPositive ? (
-          <ArrowUpRight size={16} color={theme.accentSuccess} />
-        ) : (
-          <ArrowDownRight size={16} color={theme.accentFailure} />
-        )}
-      </ArrowCell>
-    </>
+  // TODO: make delta shareable and fix based on future changes
+  const pricePoints: PricePoint[] = useTokenPriceQuery(tokenAddress, timePeriod, 'ETHEREUM').filter(
+    (p): p is PricePoint => Boolean(p && p.value)
   )
+  const hasData = pricePoints.length !== 0
+
+  /* TODO: Implement API calls & cache to use here */
+  const startingPrice = hasData ? pricePoints[0] : DATA_EMPTY
+  const endingPrice = hasData ? pricePoints[pricePoints.length - 1] : DATA_EMPTY
+  const [delta, arrow] = getDelta(startingPrice.value, endingPrice.value)
 
   const exploreTokenSelectedEventProperties = {
     chain_id: filterNetwork,
@@ -474,7 +472,7 @@ export default function LoadedRow({
   }
 
   const heartColor = isFavorited ? theme.accentActive : undefined
-  const tokenDetailData = useTokenDetailQuery(tokenAddress, 'ETHEREUM')
+  const tokenDetailData = useTokenDetailQuery(tokenAddress, chainIdToChainName(filterNetwork))
   // TODO: currency logo sizing mobile (32px) vs. desktop (24px)
   return (
     <StyledLink
@@ -511,11 +509,19 @@ export default function LoadedRow({
           <ClickableContent>
             <PriceInfoCell>
               {tokenDetailData.price?.value ? formatDollarAmount(tokenDetailData.price?.value) : '-'}
-              <PercentChangeInfoCell>{tokenPercentChangeInfo}</PercentChangeInfoCell>
+              <PercentChangeInfoCell>
+                {delta}
+                {arrow}
+              </PercentChangeInfoCell>
             </PriceInfoCell>
           </ClickableContent>
         }
-        percentChange={<ClickableContent>{tokenPercentChangeInfo}</ClickableContent>}
+        percentChange={
+          <ClickableContent>
+            {delta}
+            {arrow}
+          </ClickableContent>
+        }
         marketCap={
           <ClickableContent>
             {tokenDetailData.marketCap?.value ? formatDollarAmount(tokenDetailData.marketCap?.value) : '-'}

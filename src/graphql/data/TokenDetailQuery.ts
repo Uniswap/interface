@@ -1,12 +1,28 @@
 import graphql from 'babel-plugin-relay/macro'
+import { SupportedChainId } from 'constants/chains'
 import { useLazyLoadQuery } from 'react-relay'
 
 import type { Chain, TokenDetailQuery as TokenDetailQueryType } from './__generated__/TokenDetailQuery.graphql'
 
+export function chainIdToChainName(networkId: SupportedChainId): Chain {
+  switch (networkId) {
+    case SupportedChainId.MAINNET:
+      return 'ETHEREUM'
+    case SupportedChainId.ARBITRUM_ONE:
+      return 'ARBITRUM'
+    case SupportedChainId.OPTIMISM:
+      return 'OPTIMISM'
+    case SupportedChainId.POLYGON:
+      return 'POLYGON'
+    default:
+      return 'ETHEREUM'
+  }
+}
+
 export function useTokenDetailQuery(address: string, chain: Chain) {
   const tokenDetail = useLazyLoadQuery<TokenDetailQueryType>(
     graphql`
-      query TokenDetailQuery($contract: ContractInput) {
+      query TokenDetailQuery($contract: ContractInput!) {
         tokenProjects(contracts: [$contract]) {
           description
           homepageUrl
