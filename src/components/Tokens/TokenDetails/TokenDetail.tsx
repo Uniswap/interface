@@ -6,18 +6,19 @@ import { VerifiedIcon } from 'components/TokenSafety/TokenSafetyIcon'
 import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import { getChainInfo } from 'constants/chainInfo'
 import { checkWarning } from 'constants/tokenSafety'
+import { useTokenDetailQuery } from 'graphql/data/TokenDetailQuery'
 import { useCurrency, useIsUserAddedToken, useToken } from 'hooks/Tokens'
 import { useAtomValue } from 'jotai/utils'
 import { useCallback } from 'react'
 import { useState } from 'react'
-import { ArrowLeft, Heart, TrendingUp } from 'react-feather'
+import { ArrowLeft, Heart } from 'react-feather'
 import { Link, useNavigate } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import { ClickableStyle, CopyContractAddress } from 'theme'
+import { formatDollarAmount } from 'utils/formatDollarAmt'
 
 import { favoritesAtom, useToggleFavorite } from '../state'
 import { ClickFavorited } from '../TokenTable/TokenRow'
-import { Wave } from './LoadingTokenDetail'
 import Resource from './Resource'
 import ShareButton from './ShareButton'
 
@@ -95,7 +96,6 @@ const StatPrice = styled.span`
 export const StatsSection = styled.div`
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
 `
 export const StatPair = styled.div`
   display: flex;
@@ -145,32 +145,6 @@ const FavoriteIcon = styled(Heart)<{ isFavorited: boolean }>`
   color: ${({ isFavorited, theme }) => (isFavorited ? theme.accentAction : theme.textSecondary)};
   fill: ${({ isFavorited, theme }) => (isFavorited ? theme.accentAction : 'transparent')};
 `
-const ChartEmpty = styled.div`
-  display: flex;
-  height: 400px;
-  align-items: center;
-`
-const NoInfoAvailable = styled.span`
-  color: ${({ theme }) => theme.textTertiary};
-  font-weight: 400;
-  font-size: 16px;
-`
-const MissingChartData = styled.div`
-  color: ${({ theme }) => theme.textTertiary};
-  display: flex;
-  font-weight: 400;
-  font-size: 12px;
-  gap: 4px;
-  align-items: center;
-  border-bottom: 1px solid ${({ theme }) => theme.backgroundOutline};
-  padding: 8px 0px;
-  margin-top: -40px;
-`
-const MissingData = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-`
 
 export default function LoadedTokenDetail({ address }: { address: string }) {
   const token = useToken(address)
@@ -189,86 +163,20 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
   const chainInfo = getChainInfo(token?.chainId)
   const networkLabel = chainInfo?.label
   const networkBadgebackgroundColor = chainInfo?.backgroundColor
+  const tokenDetailData: any = useTokenDetailQuery(address, 'ETHEREUM')
 
   // catch token error and loading state
   if (!token || !token.name || !token.symbol) {
-    return (
-      <TopArea>
-        <BreadcrumbNavLink to="/explore">
-          <ArrowLeft size={14} /> Explore
-        </BreadcrumbNavLink>
-        <ChartHeader>
-          <TokenInfoContainer>
-            <TokenNameCell>
-              <CurrencyLogo currency={currency} size={'32px'} />
-              <Trans>{!token ? 'Name not found' : token.name}</Trans>
-              <TokenSymbol>{token && token.symbol}</TokenSymbol>
-              {!warning && <VerifiedIcon size="20px" />}
-              {networkBadgebackgroundColor && (
-                <NetworkBadge networkColor={chainInfo?.color} backgroundColor={networkBadgebackgroundColor}>
-                  {networkLabel}
-                </NetworkBadge>
-              )}
-            </TokenNameCell>
-          </TokenInfoContainer>
-          <ChartEmpty>
-            <Wave />
-            <Wave />
-          </ChartEmpty>
-          <MissingChartData>
-            <TrendingUp size={12} />
-            Missing chart data
-          </MissingChartData>
-        </ChartHeader>
-        <MissingData>
-          <AboutSection>
-            <AboutHeader>
-              <Trans>About</Trans>
-            </AboutHeader>
-            <NoInfoAvailable>
-              <Trans>No token information available</Trans>
-            </NoInfoAvailable>
-            <ResourcesContainer>
-              <Resource name={'Etherscan'} link={'https://etherscan.io/'} />
-              <Resource name={'Protocol Info'} link={`https://info.uniswap.org/#/tokens/${address}`} />
-            </ResourcesContainer>
-          </AboutSection>
-          <StatsSection>
-            <NoInfoAvailable>
-              <Trans>No stats available</Trans>
-            </NoInfoAvailable>
-          </StatsSection>
-          <ContractAddressSection>
-            <Contract>
-              Contract Address
-              <ContractAddress>
-                <CopyContractAddress address={address} />
-              </ContractAddress>
-            </Contract>
-          </ContractAddressSection>
-        </MissingData>
-        <TokenSafetyModal
-          isOpen={warningModalOpen}
-          tokenAddress={address}
-          onCancel={() => navigate(-1)}
-          onContinue={handleDismissWarning}
-        />
-      </TopArea>
-    )
+    return <div>No Token</div>
   }
-  const tokenName = token.name
-  const tokenSymbol = token.symbol
 
-  // TODO: format price, add sparkline
-  const aboutToken =
-    'Ethereum is a decentralized computing platform that uses ETH (Ether) to pay transaction fees (gas). Developers can use Ethereum to run decentralized applications (dApps) and issue new crypto assets, known as Ethereum tokens.'
-  const tokenMarketCap = '23.02B'
-  const tokenVolume = '1.6B'
+  const tokenName = tokenDetailData.tokenProjects?.[0]?.name
+  const tokenSymbol = tokenDetailData.tokenProjects?.[0]?.symbol
 
   return (
     <TopArea>
-      <BreadcrumbNavLink to="/explore">
-        <ArrowLeft size={14} /> Explore
+      <BreadcrumbNavLink to="/tokens">
+        <ArrowLeft size={14} /> Tokens
       </BreadcrumbNavLink>
       <ChartHeader>
         <TokenInfoContainer>
@@ -297,31 +205,46 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
         <AboutHeader>
           <Trans>About</Trans>
         </AboutHeader>
-        {aboutToken}
+        {tokenDetailData.tokenProjects?.[0]?.description}
         <ResourcesContainer>
           <Resource name={'Etherscan'} link={'https://etherscan.io/'} />
           <Resource name={'Protocol Info'} link={`https://info.uniswap.org/#/tokens/${address}`} />
+          <Resource name={'Website'} link={tokenDetailData.tokenProjects?.[0]?.homepageUrl} />
+          <Resource name={'Twitter'} link={`https://twitter.com/${tokenDetailData.tokenProjects?.[0]?.twitterName}`} />
         </ResourcesContainer>
       </AboutSection>
       <StatsSection>
         <StatPair>
           <Stat>
-            Market cap<StatPrice>${tokenMarketCap}</StatPrice>
+            Market cap
+            <StatPrice>
+              {formatDollarAmount(tokenDetailData.tokenProjects?.[0]?.markets?.[0]?.marketCap?.value).toUpperCase() ??
+                '-'}
+            </StatPrice>
           </Stat>
           <Stat>
-            {/* TODO: connect to chart's selected time */}
             24H volume
-            <StatPrice>${tokenVolume}</StatPrice>
+            <StatPrice>
+              {formatDollarAmount(tokenDetailData.tokenProjects?.[0]?.markets?.[0]?.volume24h?.value).toUpperCase() ??
+                '-'}
+            </StatPrice>
           </Stat>
         </StatPair>
         <StatPair>
           <Stat>
             52W low
-            <StatPrice>$1,790.01</StatPrice>
+            <StatPrice>
+              {formatDollarAmount(tokenDetailData.tokenProjects?.[0]?.markets?.[0]?.priceLow52W?.value).toUpperCase() ??
+                '-'}
+            </StatPrice>
           </Stat>
           <Stat>
             52W high
-            <StatPrice>$4,420.71</StatPrice>
+            <StatPrice>
+              {formatDollarAmount(
+                tokenDetailData.tokenProjects?.[0]?.markets?.[0]?.priceHigh52W?.value
+              ).toUpperCase() ?? '-'}
+            </StatPrice>
           </Stat>
         </StatPair>
       </StatsSection>
