@@ -1,9 +1,10 @@
 import { AnimatedBox, Box } from 'nft/components/Box'
+import { CollectionNfts } from 'nft/components/collection/CollectionNfts'
 import { CollectionStats } from 'nft/components/collection/CollectionStats'
 import { Column, Row } from 'nft/components/Flex'
 import { useIsMobile } from 'nft/hooks/useIsMobile'
 import * as styles from 'nft/pages/collection/index.css'
-import { CollectionStatsFetcher } from 'nft/queries/genie/CollectionStatsFetcher'
+import { CollectionStatsFetcher } from 'nft/queries'
 import { useQuery } from 'react-query'
 import { useParams } from 'react-router-dom'
 
@@ -34,7 +35,9 @@ const Collection = () => {
         </Row>
       )}
       <Row alignItems="flex-start" position="relative" paddingLeft="32" paddingRight="32">
-        <AnimatedBox width="full">CollectionNfts</AnimatedBox>
+        <AnimatedBox width="full">
+          {contractAddress && <CollectionNfts contractAddress={contractAddress} />}
+        </AnimatedBox>
       </Row>
     </Column>
   )
