@@ -4,6 +4,7 @@ import { useWeb3React } from '@web3-react/core'
 import Badge from 'components/Badge'
 import { getChainInfo } from 'constants/chainInfo'
 import { SupportedL2ChainId } from 'constants/chains'
+import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
 import useCurrencyLogoURIs from 'lib/hooks/useCurrencyLogoURIs'
 import { ReactNode, useCallback, useState } from 'react'
 import { AlertCircle, AlertTriangle, ArrowUpCircle, CheckCircle } from 'react-feather'
@@ -13,7 +14,7 @@ import styled, { useTheme } from 'styled-components/macro'
 import { isL2ChainId } from 'utils/chains'
 
 import Circle from '../../assets/images/blue-loader.svg'
-import { ExternalLink } from '../../theme'
+import { ExternalLink, ThemedText } from '../../theme'
 import { CloseIcon, CustomLightSpinner } from '../../theme'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
 import { TransactionSummary } from '../AccountDetails/TransactionSummary'
@@ -23,7 +24,9 @@ import Modal from '../Modal'
 import { RowBetween, RowFixed } from '../Row'
 import AnimatedConfirmation from './AnimatedConfirmation'
 
-const Wrapper = styled.div`
+const Wrapper = styled.div<{ redesignFlag?: boolean }>`
+  background-color: ${({ redesignFlag, theme }) => redesignFlag && theme.backgroundSurface};
+  outline: ${({ redesignFlag, theme }) => redesignFlag && `1px solid ${theme.backgroundOutline}`};
   width: 100%;
   padding: 1rem;
 `
@@ -34,6 +37,7 @@ const Section = styled(AutoColumn)<{ inline?: boolean }>`
 const BottomSection = styled(Section)`
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
+  padding-bottom: 10px;
 `
 
 const ConfirmedIcon = styled(ColumnCenter)<{ inline?: boolean }>`
@@ -55,7 +59,36 @@ function ConfirmationPendingContent({
   pendingText: ReactNode
   inline?: boolean // not in modal
 }) {
-  return (
+  const redesignFlag = useRedesignFlag()
+  const redesignFlagEnabled = redesignFlag === RedesignVariant.Enabled
+  const theme = useTheme()
+
+  return redesignFlagEnabled ? (
+    <Wrapper>
+      <AutoColumn gap="md">
+        {!inline && (
+          <RowBetween>
+            <div />
+            <CloseIcon onClick={onDismiss} />
+          </RowBetween>
+        )}
+        <ConfirmedIcon inline={inline}>
+          <CustomLightSpinner src={Circle} alt="loader" size={inline ? '40px' : '90px'} />
+        </ConfirmedIcon>
+        <AutoColumn gap="12px" justify={'center'}>
+          <Text fontWeight={500} fontSize={20} color={theme.textPrimary} textAlign="center">
+            <Trans>Waiting for confirmation</Trans>
+          </Text>
+          <Text fontWeight={600} fontSize={16} color={theme.textPrimary} textAlign="center">
+            {pendingText}
+          </Text>
+          <Text fontWeight={400} fontSize={12} color={theme.textSecondary} textAlign="center" marginBottom="12px">
+            <Trans>Confirm this transaction in your wallet</Trans>
+          </Text>
+        </AutoColumn>
+      </AutoColumn>
+    </Wrapper>
+  ) : (
     <Wrapper>
       <AutoColumn gap="md">
         {!inline && (
@@ -102,6 +135,9 @@ function TransactionSubmittedContent({
   const token = currencyToAdd?.wrapped
   const logoURL = useCurrencyLogoURIs(token)[0]
 
+  const redesignFlag = useRedesignFlag()
+  const redesignFlagEnabled = redesignFlag === RedesignVariant.Enabled
+
   const [success, setSuccess] = useState<boolean | undefined>()
 
   const addToken = useCallback(() => {
@@ -117,7 +153,52 @@ function TransactionSubmittedContent({
       .catch(() => setSuccess(false))
   }, [connector, logoURL, token])
 
-  return (
+  return redesignFlagEnabled ? (
+    <Wrapper>
+      <Section inline={inline}>
+        {!inline && (
+          <RowBetween>
+            <div />
+            <CloseIcon onClick={onDismiss} />
+          </RowBetween>
+        )}
+        <ConfirmedIcon inline={inline}>
+          <ArrowUpCircle strokeWidth={1} size={inline ? '40px' : '75px'} color={theme.accentActive} />
+        </ConfirmedIcon>
+        <AutoColumn gap="12px" justify={'center'} style={{ paddingBottom: '12px' }}>
+          <ThemedText.MediumHeader textAlign="center">
+            <Trans>Transaction submitted</Trans>
+          </ThemedText.MediumHeader>
+          {currencyToAdd && connector.watchAsset && (
+            <ButtonLight mt="12px" padding="6px 12px" width="fit-content" onClick={addToken}>
+              {!success ? (
+                <RowFixed>
+                  <Trans>Add {currencyToAdd.symbol}</Trans>
+                </RowFixed>
+              ) : (
+                <RowFixed>
+                  <Trans>Added {currencyToAdd.symbol} </Trans>
+                  <CheckCircle size={'16px'} stroke={theme.deprecated_green1} style={{ marginLeft: '6px' }} />
+                </RowFixed>
+              )}
+            </ButtonLight>
+          )}
+          <ButtonPrimary onClick={onDismiss} style={{ margin: '20px 0 0 0' }}>
+            <Text fontWeight={600} fontSize={20} color={theme.accentTextLightPrimary}>
+              {inline ? <Trans>Return</Trans> : <Trans>Close</Trans>}
+            </Text>
+          </ButtonPrimary>
+          {chainId && hash && (
+            <ExternalLink href={getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)}>
+              <Text fontWeight={600} fontSize={14} color={theme.accentAction}>
+                <Trans>View on Etherscan</Trans>
+              </Text>
+            </ExternalLink>
+          )}
+        </AutoColumn>
+      </Section>
+    </Wrapper>
+  ) : (
     <Wrapper>
       <Section inline={inline}>
         {!inline && (
@@ -193,8 +274,30 @@ export function ConfirmationModalContent({
 }
 
 export function TransactionErrorContent({ message, onDismiss }: { message: ReactNode; onDismiss: () => void }) {
+  const redesignFlag = useRedesignFlag()
+  const redesignFlagEnabled = redesignFlag === RedesignVariant.Enabled
   const theme = useTheme()
-  return (
+  return redesignFlagEnabled ? (
+    <Wrapper redesignFlag={true}>
+      <Section>
+        <RowBetween>
+          <Text fontWeight={600} fontSize={16}>
+            <Trans>Error</Trans>
+          </Text>
+          <CloseIcon onClick={onDismiss} redesignFlag={true} />
+        </RowBetween>
+        <AutoColumn style={{ marginTop: 20, padding: '2rem 0' }} gap="24px" justify="center">
+          <AlertTriangle color={theme.accentCritical} style={{ strokeWidth: 1 }} size={90} />
+          <ThemedText.MediumHeader textAlign="center">{message}</ThemedText.MediumHeader>
+        </AutoColumn>
+      </Section>
+      <BottomSection gap="12px">
+        <ButtonPrimary onClick={onDismiss} redesignFlag={true}>
+          <Trans>Dismiss</Trans>
+        </ButtonPrimary>
+      </BottomSection>
+    </Wrapper>
+  ) : (
     <Wrapper>
       <Section>
         <RowBetween>
@@ -344,12 +447,14 @@ export default function TransactionConfirmationModal({
   currencyToAdd,
 }: ConfirmationModalProps) {
   const { chainId } = useWeb3React()
+  const redesignFlag = useRedesignFlag()
+  const redesignFlagEnabled = redesignFlag === RedesignVariant.Enabled
 
   if (!chainId) return null
 
   // confirmation screen
   return (
-    <Modal isOpen={isOpen} onDismiss={onDismiss} maxHeight={90}>
+    <Modal isOpen={isOpen} onDismiss={onDismiss} maxHeight={90} redesignFlag={redesignFlagEnabled}>
       {isL2ChainId(chainId) && (hash || attemptingTxn) ? (
         <L2Content chainId={chainId} hash={hash} onDismiss={onDismiss} pendingText={pendingText} />
       ) : attemptingTxn ? (
