@@ -1,4 +1,4 @@
-import { aws4Interceptor } from 'aws4-axios'
+import { AwsClient } from 'aws4fetch'
 import axiosStatic from 'axios'
 import { Variables } from 'react-relay'
 import { GraphQLResponse, RequestParameters } from 'relay-runtime'
@@ -13,6 +13,18 @@ if (!AWS_API_REGION || !AWS_API_ACCESS_KEY || !AWS_API_ACCESS_SECRET || !AWS_X_A
   throw new Error('AWS KEYS MISSING FROM ENVIRONMENT')
 }
 
+const aws = new AwsClient({
+  accessKeyId: AWS_API_ACCESS_KEY, // required, akin to AWS_ACCESS_KEY_ID
+  secretAccessKey: AWS_API_ACCESS_SECRET, // required, akin to AWS_SECRET_ACCESS_KEY
+  service: 'execute-api',
+  region: AWS_API_REGION, // AWS region, by default parsed at fetch time
+})
+
+const headers = {
+  'Content-Type': 'application/json',
+  'x-api-key': AWS_X_API_KEY,
+}
+
 const axios = axiosStatic.create()
 const fetchQuery = (params: RequestParameters, variables: Variables): Promise<GraphQLResponse> => {
   const body = JSON.stringify({
@@ -20,28 +32,7 @@ const fetchQuery = (params: RequestParameters, variables: Variables): Promise<Gr
     variables,
   })
 
-  const interceptor = aws4Interceptor(
-    {
-      region: AWS_API_REGION,
-      service: 'execute-api',
-    },
-    {
-      accessKeyId: AWS_API_ACCESS_KEY,
-      secretAccessKey: AWS_API_ACCESS_SECRET,
-    }
-  )
-  axios.interceptors.request.use(interceptor)
-
-  const option: any = {
-    method: 'POST',
-    url: URL,
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': AWS_X_API_KEY,
-    },
-    data: body,
-  }
-  return axios(option).then((x) => x.data)
+  return aws.fetch(URL, { body, headers }).then((res) => res.json())
 }
 
 export default fetchQuery
