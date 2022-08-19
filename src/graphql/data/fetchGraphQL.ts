@@ -1,5 +1,4 @@
 import { AwsClient } from 'aws4fetch'
-import axiosStatic from 'axios'
 import { Variables } from 'react-relay'
 import { GraphQLResponse, RequestParameters } from 'relay-runtime'
 
@@ -24,8 +23,6 @@ const headers = {
   'Content-Type': 'application/json',
   'x-api-key': AWS_X_API_KEY,
 }
-
-const axios = axiosStatic.create()
 const fetchQuery = (params: RequestParameters, variables: Variables): Promise<GraphQLResponse> => {
   const body = JSON.stringify({
     query: params.text, // GraphQL text from input
