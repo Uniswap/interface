@@ -28,7 +28,7 @@ const bnbInfo: NetworkInfo = {
     logo: BnbLogo,
     decimal: 18,
   },
-  rpcUrl: 'https://bscrpc.com',
+  rpcUrl: 'https://bsc.kyberengineering.io',
   routerUri: `${process.env.REACT_APP_AGGREGATOR_API}/bsc/route/encode`,
   classic: {
     static: {
@@ -42,8 +42,6 @@ const bnbInfo: NetworkInfo = {
       router: '0x78df70615ffc8066cc0887917f2Cd72092C86409',
       factory: '0x878dFE971d44e9122048308301F540910Bbd934c',
     },
-    routerV2: '0x00555513Acf282B42882420E5e5bA87b44D8fA6E',
-    aggregationExecutor: '0x41684b361557E9282E0373CA51260D9331e518C9',
     claimReward: EMPTY,
     fairlaunch: [
       '0x597e3FeDBC02579232799Ecd4B7edeC4827B0435',

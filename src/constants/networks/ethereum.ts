@@ -46,8 +46,6 @@ const ethereumInfo: NetworkInfo = {
       router: '0x1c87257F5e8609940Bc751a07BB085Bb7f8cDBE6',
       factory: '0x833e4083B7ae46CeA85695c4f7ed25CDAd8886dE',
     },
-    routerV2: '0x00555513Acf282B42882420E5e5bA87b44D8fA6E',
-    aggregationExecutor: '0x41684b361557E9282E0373CA51260D9331e518C9',
     claimReward: EMPTY,
     fairlaunch: [
       '0xc0601973451d9369252Aee01397c0270CD2Ecd60',

@@ -45,8 +45,6 @@ const arbitrumInfo: NetworkInfo = {
       factory: '0x51E8D106C646cA58Caf32A47812e95887C071a62',
     },
     dynamic: NOT_SUPPORT,
-    routerV2: '0x00555513Acf282B42882420E5e5bA87b44D8fA6E',
-    aggregationExecutor: '0x41684b361557E9282E0373CA51260D9331e518C9',
     claimReward: EMPTY,
     fairlaunch: EMPTY_ARRAY,
     fairlaunchV2: EMPTY_ARRAY,

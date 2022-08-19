@@ -39,8 +39,6 @@ export type NetworkInfo = {
       readonly router: string
       readonly factory: string
     } | null
-    readonly routerV2: string //todo: remove in future
-    readonly aggregationExecutor: string //todo: remove in future
     readonly claimReward: string
     readonly fairlaunch: string[]
     readonly fairlaunchV2: string[]
