@@ -311,17 +311,29 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
           <Stat>
             {/* TODO: connect to chart's selected time */}
             24H volume
+<<<<<<< HEAD
             <StatPrice>${tokenVolume}</StatPrice>
+=======
+            <StatPrice>${tokenDetailData.markets.volume24h.value ?? '-'}</StatPrice>
+>>>>>>> d88e938b (fix)
           </Stat>
         </StatPair>
         <StatPair>
           <Stat>
             52W low
+<<<<<<< HEAD
             <StatPrice>$1,790.01</StatPrice>
           </Stat>
           <Stat>
             52W high
             <StatPrice>$4,420.71</StatPrice>
+=======
+            <StatPrice>${tokenDetailData.markets.priceLow52W.value ?? '-'}</StatPrice>
+          </Stat>
+          <Stat>
+            52W high
+            <StatPrice>${tokenDetailData.markets.priceHigh52W.value ?? '-'}</StatPrice>
+>>>>>>> d88e938b (fix)
           </Stat>
         </StatPair>
       </StatsSection>
