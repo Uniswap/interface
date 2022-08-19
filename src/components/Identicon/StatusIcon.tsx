@@ -21,7 +21,7 @@ const IconWrapper = styled.div<{ size?: number }>`
   `};
 `
 
-export default function StatusIcon({ connectionType }: { connectionType: ConnectionType }) {
+export default function StatusIcon({ connectionType, size }: { connectionType: ConnectionType; size?: number }) {
   let image
   switch (connectionType) {
     case ConnectionType.INJECTED:
@@ -38,5 +38,5 @@ export default function StatusIcon({ connectionType }: { connectionType: Connect
       break
   }
 
-  return <IconWrapper size={16}>{image}</IconWrapper>
+  return <IconWrapper size={size ?? 16}>{image}</IconWrapper>
 }

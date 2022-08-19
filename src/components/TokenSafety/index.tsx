@@ -91,7 +91,7 @@ const Buttons = ({
   return warning.canProceed ? (
     <>
       <StyledButton buttonColor={buttonColor} textColor={textColor} onClick={onContinue}>
-        <Trans>I Understand</Trans>
+        <Trans>I understand</Trans>
       </StyledButton>
       <StyledCancelButton color={cancelColor} onClick={onCancel}>
         Cancel
@@ -255,7 +255,7 @@ export default function TokenSafety({ tokenAddress, secondTokenAddress, onContin
             <InfoText>
               {description}{' '}
               <ExternalLink href={TOKEN_SAFETY_ARTICLE}>
-                <Trans>Learn More</Trans>
+                <Trans>Learn more</Trans>
               </ExternalLink>
             </InfoText>
           </ShortColumn>

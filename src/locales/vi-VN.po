@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-17 20:04\n"
+"PO-Revision-Date: 2022-08-18 18:04\n"
 "Last-Translator: \n"
 "Language: vi_VN\n"
 "Language-Team: Vietnamese\n"
@@ -290,6 +290,7 @@ msgid "Available to deposit: {0}"
 msgstr "Có sẵn để đặt cọc: {0}"
 
 #: src/components/WalletModal/PendingView.tsx
+#: src/components/WalletModal/PendingView.tsx
 msgid "Back to wallet selection"
 msgstr "Quay lại lựa chọn ví"
 
@@ -342,6 +343,7 @@ msgid "By adding this list you are implicitly trusting that the data is correct.
 msgstr "Bằng cách thêm danh sách này, bạn hoàn toàn tin tưởng rằng dữ liệu là chính xác. Bất kỳ ai cũng có thể tạo danh sách, bao gồm cả việc tạo các phiên bản giả mạo của danh sách hiện có và danh sách yêu cầu đại diện cho các dự án không có danh sách đó."
 
 #: src/components/WalletModal/index.tsx
+#: src/components/WalletModal/index.tsx
 msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the Uniswap <1>Protocol Disclaimer</1>."
 msgstr "Bằng cách kết nối ví, bạn đồng ý với <0>Điều khoản dịch vụ</0> của Uniswap Labs và xác nhận rằng bạn đã đọc và hiểu Tuyên bố từ chối trách nhiệm</1><1>."
 
@@ -369,6 +371,7 @@ msgstr "Kiểm tra trạng thái mạng"
 msgid "Check out our v3 LP walkthrough and migration guides."
 msgstr "Xem hướng dẫn di chuyển và hướng dẫn v3 LP của chúng tôi."
 
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/pages/Earn/Manage.tsx
@@ -495,6 +498,10 @@ msgstr "Xác nhận cung cấp"
 msgid "Confirm Swap"
 msgstr "Xác nhận Hoán đổi"
 
+#: src/components/WalletModal/PendingView.tsx
+msgid "Confirm this connection in your wallet"
+msgstr "Xác nhận kết nối này trong ví của bạn"
+
 #: src/components/ModalViews/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
@@ -550,9 +557,14 @@ msgstr "Kết nối với"
 msgid "Connecting..."
 msgstr "Đang kết nối..."
 
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
 #: src/theme/components.tsx
 msgid "Copied!"
 msgstr "Đã sao chép!"
+
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
+msgid "Copy"
+msgstr "Sao chép"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Copy Address"
@@ -603,6 +615,10 @@ msgstr "Giá {0} hiện tại:"
 
 #: src/components/Menu/index.tsx
 msgid "Dark Theme"
+msgstr "Chủ đề tối"
+
+#: src/components/WalletDropdown/DefaultMenu.tsx
+msgid "Dark theme"
 msgstr "Chủ đề tối"
 
 #: src/pages/Vote/styled.tsx
@@ -677,6 +693,7 @@ msgid "Details"
 msgstr "Chi tiết"
 
 #: src/components/AccountDetails/index.tsx
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
 msgid "Disconnect"
 msgstr "Ngắt kết nối"
 
@@ -754,6 +771,7 @@ msgid "Error"
 msgstr "Lỗi"
 
 #: src/components/WalletModal/PendingView.tsx
+#: src/components/WalletModal/PendingView.tsx
 msgid "Error connecting"
 msgstr "Lỗi kết nối"
 
@@ -822,6 +840,14 @@ msgstr "Chế độ chuyên gia tắt nhắc nhở xác nhận giao dịch và c
 msgid "Expired"
 msgstr "Đã hết hạn"
 
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
+msgid "Explore"
+msgstr "Khám phá"
+
+#: src/pages/Tokens/index.tsx
+msgid "Explore Tokens"
+msgstr "Khám phá mã thông báo"
+
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore Uniswap Analytics."
 msgstr "Khám phá Uniswap Analytics."
@@ -883,11 +909,8 @@ msgstr "Ẩn giấu"
 msgid "High Price Impact"
 msgstr "Tác động giá cao"
 
-#: src/components/TokenSafety/index.tsx
-msgid "I Understand"
-msgstr "Tôi hiểu"
-
 #: src/components/SearchModal/ImportList.tsx
+#: src/components/TokenSafety/index.tsx
 #: src/pages/AddLiquidity/index.tsx
 msgid "I understand"
 msgstr "Tôi hiểu"
@@ -986,16 +1009,14 @@ msgid "Invalid recipient"
 msgstr "Người nhận không hợp lệ"
 
 #: src/components/Menu/index.tsx
+#: src/components/WalletDropdown/DefaultMenu.tsx
+#: src/components/WalletDropdown/LanguageMenu.tsx
 msgid "Language"
 msgstr "Ngôn ngữ"
 
 #: src/pages/Pool/index.tsx
 msgid "Learn"
 msgstr "Học hỏi"
-
-#: src/components/TokenSafety/index.tsx
-msgid "Learn More"
-msgstr "Tìm hiểu thêm"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Learn about providing liquidity"
@@ -1004,6 +1025,7 @@ msgstr "Tìm hiểu về cung cấp tính thanh khoản"
 #: src/components/PrivacyPolicy/index.tsx
 #: src/components/PrivacyPolicy/index.tsx
 #: src/components/TokenSafety/TokenSafetyMessage.tsx
+#: src/components/TokenSafety/index.tsx
 msgid "Learn more"
 msgstr "Tìm hiểu thêm"
 
@@ -1014,6 +1036,10 @@ msgstr "Pháp lý & Quyền riêng tư"
 
 #: src/components/Menu/index.tsx
 msgid "Light Theme"
+msgstr "Chủ đề ánh sáng"
+
+#: src/components/WalletDropdown/DefaultMenu.tsx
+msgid "Light theme"
 msgstr "Chủ đề ánh sáng"
 
 #: src/components/claim/ClaimModal.tsx
@@ -1258,6 +1284,7 @@ msgstr "Chủ sở hữu"
 msgid "Participating pools"
 msgstr "Pool tham gia"
 
+#: src/components/WalletDropdown/DefaultMenu.tsx
 #: src/pages/Vote/styled.tsx
 msgid "Pending"
 msgstr "Đang chờ xử lý"
@@ -1320,8 +1347,8 @@ msgstr "Pool {0}:"
 
 #: src/pages/Pool/index.tsx
 #: src/pages/Pool/index.tsx
-msgid "Pools Overview"
-msgstr "Tổng quan về pool"
+msgid "Pools"
+msgstr "Hồ bơi"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Portal Bridge"
@@ -1690,6 +1717,7 @@ msgid "The app securely collects your wallet address and shares it with TRM Labs
 msgstr "Ứng dụng thu thập địa chỉ ví của bạn một cách an toàn và chia sẻ nó với TRM Labs Inc. vì lý do rủi ro và tuân thủ."
 
 #: src/components/WalletModal/PendingView.tsx
+#: src/components/WalletModal/PendingView.tsx
 msgid "The connection attempt failed. Please click try again and follow the steps to connect in your wallet."
 msgstr "Nỗ lực kết nối không thành công. Vui lòng nhấp vào thử lại và làm theo các bước để kết nối trong ví của bạn."
 
@@ -1876,10 +1904,16 @@ msgstr "Thời hạn giao dịch"
 msgid "Transaction rejected."
 msgstr "Giao dịch bị từ chối."
 
+#: src/components/WalletDropdown/DefaultMenu.tsx
+#: src/components/WalletDropdown/TransactionMenu.tsx
+msgid "Transactions"
+msgstr "Giao dịch"
+
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Transfer Token"
 msgstr "Mã thông báo chuyển"
 
+#: src/components/WalletModal/PendingView.tsx
 #: src/components/WalletModal/PendingView.tsx
 msgid "Try Again"
 msgstr "Thử lại"
@@ -2118,6 +2152,10 @@ msgstr "Bỏ phiếu bắt đầu khoảng {0}"
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Waiting For Confirmation"
 msgstr "Chờ đợi sự xác nhận"
+
+#: src/components/WalletModal/PendingView.tsx
+msgid "Waiting to connect"
+msgstr "Đang chờ kết nối"
 
 #: src/components/AddressInputPanel/index.tsx
 msgid "Wallet Address or ENS name"
@@ -2372,6 +2410,10 @@ msgstr "https:// hoặc ipfs:// hoặc tên ENS"
 msgid "minutes"
 msgstr "phút"
 
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
+msgid "reward"
+msgstr "giải thưởng"
+
 #: src/components/SearchModal/ImportRow.tsx
 msgid "via {0}"
 msgstr "qua {0}"
@@ -2549,6 +2591,6 @@ msgid "{tokenB} per {tokenA}"
 msgstr "{tokenB} trên {tokenA}"
 
 #: src/pages/Pool/PositionPage.tsx
-msgid "← Back to Pools Overview"
-msgstr "← Quay lại Tổng quan về pool"
+msgid "← Back to Pools"
+msgstr "← Quay lại Hồ bơi"
 
