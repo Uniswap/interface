@@ -13,6 +13,24 @@ if (packageChanged && !lockfileChanged) {
   warn(`${msg} - <i>${idea}</i>`)
 }
 
+// Checks for any logging and reminds the developer not to log sensitive data
+const updatedTsFiles = danger.git.modified_files
+  .concat(danger.git.created_files)
+  .filter((file) => file.endsWith('.ts') || file.endsWith('.tsx'))
+for (const file of updatedTsFiles) {
+  danger.git.structuredDiffForFile(file).then((diff) => {
+    for (const chunk of diff?.chunks || []) {
+      for (const change of chunk.changes) {
+        if (change.type === 'add') {
+          if (change.content.includes('logMessage') || change.content.includes('logger.')) {
+            warn('You are logging data. Please confirm that nothing sensitive is being logged!')
+          }
+        }
+      }
+    }
+  })
+}
+
 // More tests
 const modifiedAppFiles = danger.git.modified_files.filter(
   (f) =>
