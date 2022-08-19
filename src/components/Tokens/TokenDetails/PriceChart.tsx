@@ -158,12 +158,31 @@ export function PriceChart({ width, height, token }: PriceChartProps) {
   const locale = useActiveLocale()
   const theme = useTheme()
 
+  // TODO: Add network selector input, consider using backend type instead of current front end selector type
   const pricePoints: PricePoint[] = useTokenPriceQuery(token.address, timePeriod, 'ETHEREUM').filter(
     (p): p is PricePoint => Boolean(p && p.value)
   )
 
+  const hasData = pricePoints.length !== 0
+
+  /* TODO: Implement API calls & cache to use here */
+  const startingPrice = hasData ? pricePoints[0] : DATA_EMPTY
+  const endingPrice = hasData ? pricePoints[pricePoints.length - 1] : DATA_EMPTY
+  const [displayPrice, setDisplayPrice] = useState(startingPrice)
+  const [crosshair, setCrosshair] = useState<number | null>(null)
+
+  const graphWidth = width + crosshairDateOverhang
+  const graphHeight = height - timeOptionsHeight
+  const graphInnerHeight = graphHeight - margin.top - margin.bottom
+
+  // Defining scales
+  // x scale
+  const timeScale = scaleLinear().domain([startingPrice.timestamp, endingPrice.timestamp]).range([0, width])
+  // y scale
+  const rdScale = scaleLinear().domain(getPriceBounds(pricePoints)).range([graphInnerHeight, 0])
+
   const handleHover = useCallback(
-    (event: Element | EventType, timeScale: ScaleLinear<number, number, never>) => {
+    (event: Element | EventType) => {
       const { x } = localPoint(event) || { x: 0 }
       const x0 = timeScale.invert(x) // get timestamp from the scale
       const index = bisect(
@@ -187,27 +206,15 @@ export function PriceChart({ width, height, token }: PriceChartProps) {
     [timeScale, pricePoints]
   )
 
-  const hasData = pricePoints.length !== 0
+  const resetDisplay = useCallback(() => {
+    setCrosshair(null)
+    setDisplayPrice(endingPrice)
+  }, [setCrosshair, setDisplayPrice, endingPrice])
 
-  /* TODO: Implement API calls & cache to use here */
-  const startingPrice = hasData ? pricePoints[0] : DATA_EMPTY
-  const endingPrice = hasData ? pricePoints[pricePoints.length - 1] : DATA_EMPTY
-  const [displayPrice, setDisplayPrice] = useState(startingPrice)
-  const [crosshair, setCrosshair] = useState<number | null>(null)
-
+  // TODO: connect to loading state
   if (!hasData) {
     return null
   }
-
-  const graphWidth = width + crosshairDateOverhang
-  const graphHeight = height - timeOptionsHeight
-  const graphInnerHeight = graphHeight - margin.top - margin.bottom
-
-  // Defining scales
-  // x scale
-  const timeScale = scaleLinear().domain([startingPrice.timestamp, endingPrice.timestamp]).range([0, width])
-  // y scale
-  const rdScale = scaleLinear().domain(getPriceBounds(pricePoints)).range([graphInnerHeight, 0])
 
   const [tickFormatter, crosshairDateFormatter, ticks] = tickFormat(
     startingPrice.timestamp,
@@ -292,13 +299,10 @@ export function PriceChart({ width, height, token }: PriceChartProps) {
           width={width}
           height={graphHeight}
           fill={'transparent'}
-          onTouchStart={(e) => handleHover(e, timeScale)}
-          onTouchMove={(e) => handleHover(e, timeScale)}
-          onMouseMove={(e) => handleHover(e, timeScale)}
-          onMouseLeave={() => {
-            setCrosshair(null)
-            setDisplayPrice(endingPrice)
-          }}
+          onTouchStart={handleHover}
+          onTouchMove={handleHover}
+          onMouseMove={handleHover}
+          onMouseLeave={resetDisplay}
         />
       </LineChart>
       <TimeOptionsWrapper>

@@ -1,6 +1,9 @@
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const defaultConfig = require('./relay.config')
+
 module.exports = {
-  src: './src',
-  language: 'typescript',
-  schema: './src/graphql/thegraph/schema/schema.graphql',
+  src: defaultConfig.src,
+  language: defaultConfig.language,
+  schema: './src/graphql/thegraph/schema.graphql',
   exclude: ['**/node_modules/**', '**/__mocks__/**', '**/__generated__/**', '**/data/**'],
 }

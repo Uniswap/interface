@@ -48,7 +48,6 @@ export function useTokenPriceQuery(address: string, timePeriod: TimePeriod, chai
       },
     }
   )
-
   const { priceHistory1H, priceHistory1D, priceHistory1W, priceHistory1M, priceHistory1Y } =
     tokenPrices.tokenProjects?.[0]?.markets?.[0] ?? {}
 
@@ -64,6 +63,7 @@ export function useTokenPriceQuery(address: string, timePeriod: TimePeriod, chai
     case TimePeriod.YEAR:
       return priceHistory1Y ?? []
     case TimePeriod.ALL:
+      //TODO: Add functionality for ALL, without requesting it at same time as rest of data for performance reasons
       return priceHistory1Y ?? []
   }
 }
