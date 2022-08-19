@@ -57,7 +57,7 @@ interface ChainSwitcherProps {
 }
 
 export const ChainSwitcher = ({ isMobile }: ChainSwitcherProps) => {
-  const { chainId, connector } = useWeb3React()
+  const { chainId } = useWeb3React()
   const [isOpen, toggleOpen] = useReducer((s) => !s, false)
 
   const ref = useRef<HTMLDivElement>(null)
@@ -89,7 +89,7 @@ export const ChainSwitcher = ({ isMobile }: ChainSwitcherProps) => {
         <NavDropdown top={60} leftAligned={isMobile}>
           <Column gap="4">
             {NETWORK_SELECTOR_CHAINS.map((chainId: SupportedChainId) =>
-              isChainAllowed(connector, chainId) ? (
+              isChainAllowed(chainId) ? (
                 <ChainRow
                   onSelectChain={async (targetChainId: SupportedChainId) => {
                     await selectChain(targetChainId)

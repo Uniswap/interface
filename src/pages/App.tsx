@@ -5,7 +5,7 @@ import Loader from 'components/Loader'
 import TopLevelModals from 'components/TopLevelModals'
 import { useFeatureFlagsIsLoaded } from 'featureFlags'
 import { NavBarVariant, useNavBarFlag } from 'featureFlags/flags/navBar'
-import { Phase1Variant, usePhase1Flag } from 'featureFlags/flags/phase1'
+import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
 import { TokensVariant, useTokensFlag } from 'featureFlags/flags/tokens'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
 import { lazy, Suspense, useEffect } from 'react'
@@ -109,7 +109,7 @@ export default function App() {
   const isLoaded = useFeatureFlagsIsLoaded()
   const tokensFlag = useTokensFlag()
   const navBarFlag = useNavBarFlag()
-  const phase1Flag = usePhase1Flag()
+  const nftFlag = useNftFlag()
 
   const { pathname } = useLocation()
   const currentPage = getCurrentPageFromLocation(pathname)
@@ -210,7 +210,7 @@ export default function App() {
 
                   <Route path="*" element={<RedirectPathToSwapOnly />} />
 
-                  {phase1Flag === Phase1Variant.Enabled && (
+                  {nftFlag === NftVariant.Enabled && (
                     <Route path="/nfts/collection/:contractAddress" element={<Collection />} />
                   )}
                 </Routes>

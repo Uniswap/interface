@@ -281,7 +281,7 @@ const NETWORK_SELECTOR_CHAINS = [
 ]
 
 export default function NetworkSelector() {
-  const { chainId, provider, connector } = useWeb3React()
+  const { chainId, provider } = useWeb3React()
 
   const node = useRef<HTMLDivElement>(null)
   const isOpen = useModalIsOpen(ApplicationModal.NETWORK_SELECTOR)
@@ -329,7 +329,7 @@ export default function NetworkSelector() {
               <Trans>Select a {!onSupportedChain ? ' supported ' : ''}network</Trans>
             </FlyoutHeader>
             {NETWORK_SELECTOR_CHAINS.map((chainId: SupportedChainId) =>
-              isChainAllowed(connector, chainId) ? (
+              isChainAllowed(chainId) ? (
                 <Row
                   onSelectChain={async (targetChainId: SupportedChainId) => {
                     await selectChain(targetChainId)

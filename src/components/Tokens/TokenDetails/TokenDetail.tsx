@@ -290,7 +290,7 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
           </TokenActions>
         </TokenInfoContainer>
         <ChartContainer>
-          <ParentSize>{({ width, height }) => <PriceChart width={width} height={height} />}</ParentSize>
+          <ParentSize>{({ width, height }) => <PriceChart token={token} width={width} height={height} />}</ParentSize>
         </ChartContainer>
       </ChartHeader>
       <AboutSection>
