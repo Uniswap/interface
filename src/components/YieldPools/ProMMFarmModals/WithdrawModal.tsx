@@ -177,7 +177,7 @@ function WithdrawModal({
   const above768 = useMedia('(min-width: 768px)')
 
   const qs = useParsedQueryString()
-  const tab = qs.tab || 'active'
+  const tab = qs.type || 'active'
 
   const checkboxGroupRef = useRef<any>()
   const { data: farms } = useProMMFarms()
