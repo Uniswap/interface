@@ -11,6 +11,7 @@ import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
 import { darken } from 'polished'
 import { ReactNode, useCallback, useState } from 'react'
 import { Lock } from 'react-feather'
+import { useLocation } from 'react-router-dom'
 import styled, { useTheme } from 'styled-components/macro'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 
@@ -151,6 +152,18 @@ const FiatRow = styled(LabelRow)<{ redesignFlag: boolean }>`
   height: ${({ redesignFlag }) => !redesignFlag && '24px'};
 `
 
+const NoBalanceState = styled.div`
+  color: ${({ theme }) => theme.textTertiary};
+  font-weight: 400;
+  justify-content: space-between;
+  padding: 0px 4px;
+`
+const NoBalanceDash = styled.span`
+  color: ${({ theme }) => theme.textTertiary};
+  font-variant: small-caps;
+  font-feature-settings: 'pnum' on, 'lnum' on;
+`
+
 const Aligner = styled.span`
   display: flex;
   align-items: center;
@@ -257,6 +270,8 @@ export default function CurrencyInputPanel({
   const redesignFlagEnabled = redesignFlag === RedesignVariant.Enabled
   const selectedCurrencyBalance = useCurrencyBalance(account ?? undefined, currency ?? undefined)
   const theme = useTheme()
+  const { pathname } = useLocation()
+  const isAddLiquidityPage = pathname.includes('/add') && !pathname.includes('/add/v2')
 
   const handleDismissSearch = useCallback(() => {
     setModalOpen(false)
@@ -337,6 +352,16 @@ export default function CurrencyInputPanel({
             </Aligner>
           </InputCurrencySelect>
         </InputRow>
+        {redesignFlagEnabled && !currency && !isAddLiquidityPage && (
+          <NoBalanceState>
+            <FiatRow redesignFlag={redesignFlagEnabled}>
+              <RowBetween>
+                <NoBalanceDash>-</NoBalanceDash>
+                <NoBalanceDash>-</NoBalanceDash>
+              </RowBetween>
+            </FiatRow>
+          </NoBalanceState>
+        )}
         {!hideInput && !hideBalance && currency && (
           <FiatRow redesignFlag={redesignFlagEnabled}>
             <RowBetween>
