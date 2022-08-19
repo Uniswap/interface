@@ -9,16 +9,16 @@ import { TimePeriod, TrendingCollection } from 'nft/types'
 import { formatEthPrice } from 'nft/utils/currency'
 import { putCommas } from 'nft/utils/putCommas'
 import { formatChange, toSignificant } from 'nft/utils/toSignificant'
-import { ReactNode, useEffect, useReducer, useState } from 'react'
+import { ReactNode, useEffect, useState } from 'react'
 import { useQuery } from 'react-query'
 import { Link } from 'react-router-dom'
 
-import * as styles from './Explore.css'
+import * as styles from './Banner.css'
 
 const Banner = () => {
-  /* Sets initially displayed collection to random number between 1 and 5  */
-  const [current, setCurrent] = useState(Math.floor(Math.random() * 5 + 1))
-  const [hovered, toggleHover] = useReducer((state) => !state, false)
+  /* Sets initially displayed collection to random number between 0 and 4  */
+  const [current, setCurrent] = useState(Math.floor(Math.random() * 5))
+  const [hovered, setHover] = useState(false)
   const { data: collections } = useQuery(
     ['trendingCollections'],
     () => {
@@ -34,19 +34,28 @@ const Banner = () => {
   useEffect(() => {
     /* Rotate through Top 5 Collections on 15 second interval */
     const interval = setInterval(async () => {
-      if (collections) {
+      if (collections && !hovered && !stale) {
         const nextCollectionIndex = (current + 1) % collections.length
-        if (!hovered) setCurrent(nextCollectionIndex)
+        setCurrent(nextCollectionIndex)
       }
-    }, 15000)
-    return () => clearInterval(interval)
+    }, 15_000)
+    let stale = false
+    return () => {
+      stale = true
+      clearInterval(interval)
+    }
   }, [current, collections, hovered])
 
   return (
-    <Box className={styles.fullWidth} onMouseEnter={toggleHover} onMouseLeave={toggleHover} cursor="pointer">
+    <Box
+      className={styles.fullWidth}
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+      cursor="pointer"
+    >
       {collections ? (
         collections.map((collection: TrendingCollection, index: number) => (
-          <Link to={`/nfts/collection/${collections[current].address}`} key={index} style={{ textDecoration: 'none' }}>
+          <Link to={`/nfts/collection/${collection.address}`} key={index} style={{ textDecoration: 'none' }}>
             <Box
               visibility={index === current ? 'visible' : 'hidden'}
               style={{
@@ -67,7 +76,17 @@ const Banner = () => {
                   >
                     <CollectionDetails collection={collection} hovered={hovered} rank={index + 1} />
                   </Box>
-                  <CarouselProgress length={collections.length} currentIndex={index} onClick={setCurrent} />
+                  <Center marginTop="16">
+                    {Array(collections.length)
+                      .fill(null)
+                      .map((value, carouselIndex) => (
+                        <CarouselIndicator
+                          active={carouselIndex === current}
+                          onClick={() => setCurrent(carouselIndex)}
+                          key={carouselIndex}
+                        />
+                      ))}
+                  </Center>
                 </div>
               </CollectionWrapper>
             </Box>
@@ -103,10 +122,8 @@ const CollectionDetails = ({
   rank: number
   hovered: boolean
 }) => (
-  <Column className={styles.collectionDetails} paddingTop="16">
-    <div>
-      <span className={styles.volumeRank}>#{rank} volume in 24hr</span>
-    </div>
+  <Column className={styles.collectionDetails} paddingTop="24">
+    <div className={styles.volumeRank}>#{rank} volume in 24hr</div>
     <Row>
       <Box as="span" marginTop="16" className={clsx(header1, styles.collectionName)}>
         {collection.name}
@@ -157,39 +174,22 @@ const CollectionDetails = ({
   </Column>
 )
 
-/* Carousel Progress indicators */
-const CarouselProgress = ({
-  length,
-  currentIndex,
-  onClick,
-}: {
-  length: number
-  currentIndex: number
-  onClick(index: number): void
-}) => (
-  <Center marginTop="16">
-    {Array(length)
-      .fill(null)
-      .map((value, carouselIndex) => (
-        <Box
-          cursor="pointer"
-          paddingTop="16"
-          paddingBottom="16"
-          onClick={(e) => {
-            e.preventDefault()
-            e.stopPropagation()
-            onClick(carouselIndex)
-          }}
-          key={carouselIndex}
-        >
-          <Box
-            as="span"
-            display="inline-block"
-            className={clsx(styles.carouselIndicator, {
-              [styles.carouselIndicatorActive]: carouselIndex === currentIndex,
-            })}
-          />
-        </Box>
-      ))}
-  </Center>
+/* Carousel Progress Indicators */
+const CarouselIndicator = ({ active, onClick }: { active: boolean; onClick: () => void }) => (
+  <Box
+    cursor="pointer"
+    paddingTop="16"
+    paddingBottom="16"
+    onClick={(e) => {
+      e.preventDefault()
+      e.stopPropagation()
+      onClick()
+    }}
+  >
+    <Box
+      as="span"
+      display="inline-block"
+      className={clsx(styles.carouselIndicator, active && styles.carouselIndicatorActive)}
+    />
+  </Box>
 )

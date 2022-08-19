@@ -87,6 +87,7 @@ export const volumeRank = style([
   {
     background: 'rgba(92, 254, 157, 0.12)',
     borderRadius: '64px',
+    maxWidth: '175px',
   },
 ])
 
