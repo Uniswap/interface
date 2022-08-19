@@ -1,3 +1,4 @@
+import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
 import useDebounce from 'hooks/useDebounce'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { useWindowSize } from 'hooks/useWindowSize'
@@ -8,10 +9,11 @@ import { Overlay } from 'nft/components/modals/Overlay'
 import { subheadSmall } from 'nft/css/common.css'
 import { breakpoints } from 'nft/css/sprinkles.css'
 import { useSearchHistory } from 'nft/hooks'
-// import { fetchSearchCollections, fetchTrendingCollections } from 'nft/queries'
+import { fetchSearchCollections, fetchTrendingCollections } from 'nft/queries'
 import { fetchSearchTokens } from 'nft/queries/genie/SearchTokensFetcher'
 import { fetchTrendingTokens } from 'nft/queries/genie/TrendingTokensFetcher'
-import { FungibleToken, GenieCollection, TrendingCollection } from 'nft/types'
+import { FungibleToken, GenieCollection, TimePeriod, TrendingCollection } from 'nft/types'
+import { formatEthPrice } from 'nft/utils/currency'
 import { ChangeEvent, useEffect, useMemo, useReducer, useRef, useState } from 'react'
 import { useQuery } from 'react-query'
 import { useLocation } from 'react-router-dom'
@@ -94,6 +96,7 @@ export const SearchBarDropdown = ({ toggleOpen, tokens, collections, hasInput }:
   const { pathname } = useLocation()
   const isNFTPage = pathname.includes('/nfts')
   const isTokenPage = pathname.includes('/tokens')
+  const phase1Flag = useNftFlag()
 
   const tokenSearchResults =
     tokens.length > 0 ? (
@@ -110,19 +113,45 @@ export const SearchBarDropdown = ({ toggleOpen, tokens, collections, hasInput }:
     )
 
   const collectionSearchResults =
-    collections.length > 0 ? (
-      <SearchBarDropdownSection
-        hoveredIndex={hoveredIndex}
-        startingIndex={isNFTPage ? 0 : tokens.length}
-        setHoveredIndex={setHoveredIndex}
-        toggleOpen={toggleOpen}
-        suggestions={collections}
-        header={'NFT Collections'}
-      />
+    phase1Flag === NftVariant.Enabled ? (
+      collections.length > 0 ? (
+        <SearchBarDropdownSection
+          hoveredIndex={hoveredIndex}
+          startingIndex={isNFTPage ? 0 : tokens.length}
+          setHoveredIndex={setHoveredIndex}
+          toggleOpen={toggleOpen}
+          suggestions={collections}
+          header={'NFT Collections'}
+        />
+      ) : (
+        <Box className={styles.notFoundContainer}>No NFT collections found.</Box>
+      )
     ) : null
 
-  // TODO Trending NFT Results implmented here
-  const trendingCollections = [] as TrendingCollection[]
+  const { data: trendingCollectionResults } = useQuery(['trendingCollections', 'eth', 'twenty_four_hours'], () =>
+    fetchTrendingCollections({ volumeType: 'eth', timePeriod: 'ONE_DAY' as TimePeriod, size: 3 })
+  )
+
+  const trendingCollections = useMemo(() => {
+    return trendingCollectionResults
+      ?.map((collection) => {
+        return {
+          ...collection,
+          collectionAddress: collection.address,
+          floorPrice: formatEthPrice(collection.floor.toString()),
+          stats: {
+            total_supply: collection.totalSupply,
+            one_day_change: collection.floorChange,
+          },
+        }
+      })
+      .slice(0, isNFTPage ? 3 : 2)
+  }, [isNFTPage, trendingCollectionResults])
+
+  const showTrendingCollections: boolean = useMemo(
+    () => (trendingCollections?.length ?? 0) > 0 && !isTokenPage && phase1Flag === NftVariant.Enabled,
+    [trendingCollections?.length, isTokenPage, phase1Flag]
+  )
 
   const { data: trendingTokenResults } = useQuery([], () => fetchTrendingTokens(4), {
     refetchOnWindowFocus: false,
@@ -130,11 +159,11 @@ export const SearchBarDropdown = ({ toggleOpen, tokens, collections, hasInput }:
     refetchOnReconnect: false,
   })
 
+  const trendingTokensLength = phase1Flag === NftVariant.Enabled ? (isTokenPage ? 3 : 2) : 4
+
   const trendingTokens = useMemo(() => {
-    // TODO reimplement this logic with NFT search
-    // return trendingTokenResults?.slice(0, isTokenPage ? 3 : 2)
-    return trendingTokenResults?.slice(0, 4)
-  }, [trendingTokenResults])
+    return trendingTokenResults?.slice(0, trendingTokensLength)
+  }, [trendingTokenResults, trendingTokensLength])
 
   const totalSuggestions = hasInput
     ? tokens.length + collections.length
@@ -210,14 +239,14 @@ export const SearchBarDropdown = ({ toggleOpen, tokens, collections, hasInput }:
               headerIcon={<TrendingArrow />}
             />
           )}
-          {(trendingCollections?.length ?? 0) > 0 && !isTokenPage && (
+          {showTrendingCollections && (
             <SearchBarDropdownSection
               hoveredIndex={hoveredIndex}
               startingIndex={searchHistory.length + (isNFTPage ? 0 : trendingTokens?.length ?? 0)}
               setHoveredIndex={setHoveredIndex}
               toggleOpen={toggleOpen}
               suggestions={trendingCollections as unknown as GenieCollection[]}
-              header={'Trending NFT collections'}
+              header={'Popular NFT collections'}
               headerIcon={<TrendingArrow />}
             />
           )}
@@ -238,15 +267,22 @@ export const SearchBar = () => {
   const searchRef = useRef<HTMLDivElement>(null)
   const { pathname } = useLocation()
   const { width: windowWidth } = useWindowSize()
+  const phase1Flag = useNftFlag()
 
   useOnClickOutside(searchRef, () => {
     isOpen && toggleOpen()
   })
 
-  // TODO NFT Search Results implmented here
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const collections = [] as GenieCollection[]
-  const collectionsAreLoading = false
+  const { data: collections, isLoading: collectionsAreLoading } = useQuery(
+    ['searchCollections', debouncedSearchValue],
+    () => fetchSearchCollections(debouncedSearchValue),
+    {
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+      refetchOnReconnect: false,
+    }
+  )
+
   const { data: tokens, isLoading: tokensAreLoading } = useQuery(
     ['searchTokens', debouncedSearchValue],
     () => fetchSearchTokens(debouncedSearchValue),
@@ -299,7 +335,7 @@ export const SearchBar = () => {
           borderTopRightRadius={isOpen && !isMobile ? '12' : undefined}
           borderTopLeftRadius={isOpen && !isMobile ? '12' : undefined}
           display={{ mobile: isOpen ? 'flex' : 'none', desktopXl: 'flex' }}
-          justifyContent={isOpen ? 'flex-start' : 'center'}
+          justifyContent={isOpen || phase1Flag === NftVariant.Enabled ? 'flex-start' : 'center'}
           background={isOpen ? 'white' : 'lightGrayContainer'}
           onFocus={() => !isOpen && toggleOpen()}
           onClick={() => !isOpen && toggleOpen()}
@@ -312,8 +348,8 @@ export const SearchBar = () => {
           </Box>
           <Box
             as="input"
-            placeholder="Search tokens"
-            width={isOpen ? 'full' : '120'}
+            placeholder={`Search tokens${phase1Flag === NftVariant.Enabled ? ' and NFT collections' : ''}`}
+            width={isOpen || phase1Flag === NftVariant.Enabled ? 'full' : '120'}
             onChange={(event: ChangeEvent<HTMLInputElement>) => {
               !isOpen && toggleOpen()
               setSearchValue(event.target.value)
