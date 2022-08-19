@@ -14,7 +14,6 @@ import { Provider } from 'react-redux'
 import { RelayEnvironmentProvider } from 'react-relay'
 import { HashRouter } from 'react-router-dom'
 
-import Blocklist from './components/Blocklist'
 import Web3Provider from './components/Web3Provider'
 import { LanguageProvider } from './i18n'
 import App from './pages/App'
@@ -59,15 +58,13 @@ createRoot(container).render(
             <LanguageProvider>
               <Web3Provider>
                 <RelayEnvironmentProvider environment={RelayEnvironment}>
-                  <Blocklist>
-                    <BlockNumberProvider>
-                      <Updaters />
-                      <ThemeProvider>
-                        <ThemedGlobalStyle />
-                        <App />
-                      </ThemeProvider>
-                    </BlockNumberProvider>
-                  </Blocklist>
+                  <BlockNumberProvider>
+                    <Updaters />
+                    <ThemeProvider>
+                      <ThemedGlobalStyle />
+                      <App />
+                    </ThemeProvider>
+                  </BlockNumberProvider>
                 </RelayEnvironmentProvider>
               </Web3Provider>
             </LanguageProvider>

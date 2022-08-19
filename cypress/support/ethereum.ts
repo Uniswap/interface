@@ -18,7 +18,7 @@ export const TEST_ADDRESS_NEVER_USE_SHORTENED = `${TEST_ADDRESS_NEVER_USE.substr
   6
 )}...${TEST_ADDRESS_NEVER_USE.substr(-4, 4)}`
 
-const provider = new JsonRpcProvider('https://rinkeby.infura.io/v3/4bf032f2d38a4ed6bb975b80d6340847', 4)
+const provider = new JsonRpcProvider('https://ethereum.keydonix.com/v1/rinkeby', 4)
 const signer = new Wallet(TEST_PRIVATE_KEY, provider)
 export const injected = new (class extends Eip1193Bridge {
   chainId = 4

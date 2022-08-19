@@ -56,20 +56,6 @@ const EXTERNAL_APIS = [
     description: <Trans>The app fetches on-chain data and constructs contract calls with an Infura API.</Trans>,
   },
   {
-    name: 'TRM Labs',
-    description: (
-      <>
-        <Trans>
-          The app securely collects your wallet address and shares it with TRM Labs Inc. for risk and compliance
-          reasons.
-        </Trans>{' '}
-        <ExternalLink href="https://help.uniswap.org/en/articles/5675203-terms-of-service-faq">
-          <Trans>Learn more</Trans>
-        </ExternalLink>
-      </>
-    ),
-  },
-  {
     name: 'Google Analytics & Amplitude',
     description: <Trans>The app logs anonymized usage statistics in order to improve over time.</Trans>,
   },
