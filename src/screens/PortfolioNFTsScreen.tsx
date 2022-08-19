@@ -84,13 +84,15 @@ export function PortfolioNFTsScreen({
     <HeaderScrollScreen
       contentHeader={
         <Flex gap="md">
-          {isOtherOwner ? (
-            <BackHeader>
-              <AddressDisplay address={owner} color="textSecondary" size={16} variant="subhead" />
-            </BackHeader>
-          ) : (
-            <BackButton showButtonLabel />
-          )}
+          <Flex gap="none" my="sm">
+            {isOtherOwner ? (
+              <BackHeader>
+                <AddressDisplay address={owner} color="textSecondary" size={16} variant="subhead" />
+              </BackHeader>
+            ) : (
+              <BackButton showButtonLabel />
+            )}
+          </Flex>
           <Flex row alignItems="center" mb="md">
             <Flex grow>
               <Text mx="xs" variant="headlineSmall">
