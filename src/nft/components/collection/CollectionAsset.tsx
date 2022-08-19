@@ -1,5 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { Card } from 'nft/components/collection/Card'
+import * as Card from 'nft/components/collection/Card'
 import { MouseEvent, useMemo } from 'react'
 
 import { GenieAsset } from '../../types'
@@ -20,7 +20,7 @@ export const CollectionAsset = ({ asset }: { asset: GenieAsset }) => {
   }, [asset])
 
   return (
-    <Card asset={asset}>
+    <Card.Container asset={asset}>
       <Card.Image />
       <Card.DetailsContainer>
         <Card.InfoContainer>
@@ -52,6 +52,6 @@ export const CollectionAsset = ({ asset }: { asset: GenieAsset }) => {
           {'Buy now'}
         </Card.Button>
       </Card.DetailsContainer>
-    </Card>
+    </Card.Container>
   )
 }

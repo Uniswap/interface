@@ -75,45 +75,6 @@ export const marketplaceIcon = style([
   },
 ])
 
-export const toolTip = style([
-  sprinkles({
-    display: 'flex',
-    flexShrink: '0',
-  }),
-])
-
-export const susToolTip = sprinkles({
-  marginLeft: '2',
-})
-
-export const poolToolTip = sprinkles({
-  marginLeft: '4',
-  color: 'darkGray',
-})
-
-export const rarityInfo = style([
-  sprinkles({
-    display: 'flex',
-    borderRadius: '4',
-    height: '16',
-    width: 'full',
-    color: 'blackBlue',
-    background: 'lightGrayButton',
-    fontSize: '10',
-    fontWeight: 'semibold',
-    paddingX: '4',
-  }),
-  {
-    lineHeight: '12px',
-    letterSpacing: '0.04em',
-    backdropFilter: 'blur(6px)',
-  },
-])
-
-export const rarityToolTip = sprinkles({
-  marginLeft: '8',
-})
-
 export const erc1155ButtonRow = sprinkles({
   flexShrink: '0',
   gap: '12',

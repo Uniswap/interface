@@ -30,16 +30,12 @@ export interface CardContextProps {
   setHref: (href: string) => void
 }
 
-const CardContext = createContext<CardContextProps>({
-  asset: {} as GenieAsset,
-  hovered: false,
-  selected: false,
-  href: '',
-  setHref: () => undefined,
-})
+const CardContext = createContext<CardContextProps | undefined>(undefined)
 
 const useCardContext = () => {
-  return useContext(CardContext)
+  const context = useContext(CardContext)
+  if (!context) throw new Error('Must use context inside of provider')
+  return context
 }
 
 const baseHref = (asset: GenieAsset) => `/#/nft/asset/${asset.address}/${asset.tokenId}?origin=collection`
@@ -50,7 +46,7 @@ interface CardProps {
   children: ReactNode
 }
 
-export const Card = ({ asset, children }: CardProps) => {
+const Container = ({ asset, children }: CardProps) => {
   const [hovered, toggleHovered] = useReducer((s) => !s, false)
   const [href, setHref] = useState(baseHref(asset))
 
@@ -93,7 +89,7 @@ export const Card = ({ asset, children }: CardProps) => {
 }
 
 /* -------- CARD IMAGE -------- */
-const CardImage = () => {
+const Image = () => {
   const { hovered, asset } = useCardContext()
   const [noContent, setNoContent] = useState(!asset.smallImageUrl && !asset.imageUrl)
   const [loaded, setLoaded] = useState(false)
@@ -130,14 +126,12 @@ const CardImage = () => {
   )
 }
 
-Card.Image = CardImage
-
 /* -------- CARD DETAILS CONTAINER -------- */
 interface CardDetailsContainerProps {
   children: ReactNode
 }
 
-const CardDetailsContainer = ({ children }: CardDetailsContainerProps) => {
+const DetailsContainer = ({ children }: CardDetailsContainerProps) => {
   return (
     <Row
       position="relative"
@@ -152,9 +146,6 @@ const CardDetailsContainer = ({ children }: CardDetailsContainerProps) => {
   )
 }
 
-Card.DetailsContainer = CardDetailsContainer
-
-/* -------- CARD INFO CONTAINER -------- */
 const InfoContainer = ({ children }: { children: ReactNode }) => {
   return (
     <Box overflow="hidden" width="full">
@@ -163,23 +154,14 @@ const InfoContainer = ({ children }: { children: ReactNode }) => {
   )
 }
 
-Card.InfoContainer = InfoContainer
-
-/* -------- PRIMARY ROW CONTAINER -------- */
 const PrimaryRow = ({ children }: { children: ReactNode }) => <Row justifyContent="space-between">{children}</Row>
 
-Card.PrimaryRow = PrimaryRow
-
-/* -------- PRIMARY DETAILS CONTAINER -------- */
 const PrimaryDetails = ({ children }: { children: ReactNode }) => (
   <Row overflow="hidden" whiteSpace="nowrap">
     {children}
   </Row>
 )
 
-Card.PrimaryDetails = PrimaryDetails
-
-/* -------- PRIMARY INFO -------- */
 const PrimaryInfo = ({ children }: { children: ReactNode }) => {
   return (
     <Box
@@ -196,23 +178,14 @@ const PrimaryInfo = ({ children }: { children: ReactNode }) => {
   )
 }
 
-Card.PrimaryInfo = PrimaryInfo
-
-/* -------- SECONDARY ROW CONTAINER -------- */
 const SecondaryRow = ({ children }: { children: ReactNode }) => (
   <Row height="20" justifyContent="space-between" marginTop="6">
     {children}
   </Row>
 )
 
-Card.SecondaryRow = SecondaryRow
-
-/* -------- SECONDARY DETAILS CONTAINER -------- */
 const SecondaryDetails = ({ children }: { children: ReactNode }) => <Row>{children}</Row>
 
-Card.SecondaryDetails = SecondaryDetails
-
-/* -------- SECONDARY INFO -------- */
 const SecondaryInfo = ({ children }: { children: ReactNode }) => {
   return (
     <Box
@@ -229,9 +202,6 @@ const SecondaryInfo = ({ children }: { children: ReactNode }) => {
   )
 }
 
-Card.SecondaryInfo = SecondaryInfo
-
-/* -------- TERTIARY INFO -------- */
 const TertiaryInfo = ({ children }: { children: ReactNode }) => {
   return (
     <Box marginTop={'8'} color="darkGray">
@@ -240,9 +210,6 @@ const TertiaryInfo = ({ children }: { children: ReactNode }) => {
   )
 }
 
-Card.TertiaryInfo = TertiaryInfo
-
-/* -------- CARD BUTTON -------- */
 interface ButtonProps {
   children: ReactNode
   selectedChildren: ReactNode
@@ -250,7 +217,7 @@ interface ButtonProps {
   onSelectedClick: (e: MouseEvent) => void
 }
 
-const CardButton = ({ children, selectedChildren, onClick, onSelectedClick }: ButtonProps) => {
+const Button = ({ children, selectedChildren, onClick, onSelectedClick }: ButtonProps) => {
   const [buttonHovered, toggleButtonHovered] = useReducer((s) => !s, false)
   const { asset, selected, setHref } = useCardContext()
   const buttonRef = useRef<HTMLDivElement>(null)
@@ -337,11 +304,6 @@ const CardButton = ({ children, selectedChildren, onClick, onSelectedClick }: Bu
   )
 }
 
-Card.Button = CardButton
-
-export default Card
-
-/* -------- MARKETPLACE ICON -------- */
 const MarketplaceIcon = ({ marketplace }: { marketplace: string }) => {
   return (
     <Box
@@ -353,9 +315,6 @@ const MarketplaceIcon = ({ marketplace }: { marketplace: string }) => {
   )
 }
 
-Card.MarketplaceIcon = MarketplaceIcon
-
-/* -------- NO CONTENT CARD -------- */
 const NoContentContainer = () => (
   <Box
     position="relative"
@@ -381,3 +340,19 @@ const NoContentContainer = () => (
     </Box>
   </Box>
 )
+
+export {
+  Button,
+  Container,
+  DetailsContainer,
+  Image,
+  InfoContainer,
+  MarketplaceIcon,
+  PrimaryDetails,
+  PrimaryInfo,
+  PrimaryRow,
+  SecondaryDetails,
+  SecondaryInfo,
+  SecondaryRow,
+  TertiaryInfo,
+}
