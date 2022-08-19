@@ -21,7 +21,7 @@ const KyberSwapGeneralIntro = () => {
         as="span"
         sx={{
           fontWeight: 400,
-          fontSize: '20px',
+          fontSize: '18px',
           lineHeight: '28px',
           textAlign: 'center',
         }}
@@ -40,14 +40,14 @@ const KyberSwapGeneralIntro = () => {
         as="span"
         sx={{
           fontWeight: 400,
-          fontSize: '20px',
+          fontSize: '18px',
           lineHeight: '28px',
           textAlign: 'center',
         }}
       >
         <Trans>
-          KyberSwap is also an automated market maker (AMM) with industry-leading liquidity protocols like Classic &
-          Elastic. Liquidity providers can add liquidity to our pools & <b>earn fees</b>!
+          KyberSwap is also an automated market maker (AMM) with industry-leading liquidity protocols and{' '}
+          <b>concentrated liquidity</b>. Liquidity providers can add liquidity to our pools & <b>earn fees</b>!
         </Trans>
       </Text>
     )

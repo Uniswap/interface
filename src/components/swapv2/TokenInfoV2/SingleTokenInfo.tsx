@@ -270,7 +270,7 @@ const SingleTokenInfo = ({
         className="desc"
         ref={ref}
         dangerouslySetInnerHTML={{
-          __html: description.replaceAll('\r\n\r\n', '<br><br>'),
+          __html: description.replace(/\r\n\r\n/g, '<br><br>'),
         }}
       />
       <InfoRowWrapper>
