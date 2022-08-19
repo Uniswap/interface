@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-05 22:05\n"
+"PO-Revision-Date: 2022-08-18 18:04\n"
 "Last-Translator: \n"
 "Language: ja_JP\n"
 "Language-Team: Japanese\n"
@@ -50,7 +50,7 @@ msgstr "(編集)"
 
 #: src/pages/Swap/index.tsx
 msgid "- Remove recipient"
-msgstr "-受信者を削除します"
+msgstr "宛先を削除"
 
 #: src/components/earn/PoolCard.tsx
 #: src/components/earn/PoolCard.tsx
@@ -120,8 +120,8 @@ msgstr "提案を提出するには、UNIの総供給量の0.25％以上のUNI�
 msgid "A swap of this size may have a high price impact, given the current liquidity in the pool. There may be a large difference between the amount of your input token and what you will receive in the output token"
 msgstr "プールの現在の流動性を考えると、このサイズのスワップは価格に大きな影響を与える可能性があります。入力トークンの量と出力トークンで受け取る量には大きな違いがある可能性があります"
 
-#: src/components/Explore/TokenDetails/TokenDetail.tsx
 #: src/components/Menu/index.tsx
+#: src/components/Tokens/TokenDetails/TokenDetail.tsx
 msgid "About"
 msgstr "概要"
 
@@ -290,6 +290,7 @@ msgid "Available to deposit: {0}"
 msgstr "預け入れ可能： {0}"
 
 #: src/components/WalletModal/PendingView.tsx
+#: src/components/WalletModal/PendingView.tsx
 msgid "Back to wallet selection"
 msgstr "ウォレットの選択に戻る"
 
@@ -342,6 +343,7 @@ msgid "By adding this list you are implicitly trusting that the data is correct.
 msgstr "このリストを追加することで、データが正しいことを暗黙的に信頼することになります。 誰でもリストを作成することができます。そのため、既存リストの偽のバージョンや、実体のないプロジェクトを掲載するリストが作成されている可能性があります。"
 
 #: src/components/WalletModal/index.tsx
+#: src/components/WalletModal/index.tsx
 msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the Uniswap <1>Protocol Disclaimer</1>."
 msgstr "ウォレットを接続することにより、あなたはUniswap Labsのに <0>サービス規約</0>に同意し、あなたがUniswap<1>プロトコル免責事項</1>を読み、理解していることに同意するものとします。"
 
@@ -369,6 +371,7 @@ msgstr "ネットワークの状態を確認"
 msgid "Check out our v3 LP walkthrough and migration guides."
 msgstr "V3の流動性と移行ガイドをご覧ください。"
 
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/pages/Earn/Manage.tsx
@@ -495,6 +498,10 @@ msgstr "供給を確認"
 msgid "Confirm Swap"
 msgstr "スワップの確認"
 
+#: src/components/WalletModal/PendingView.tsx
+msgid "Confirm this connection in your wallet"
+msgstr "ウォレットでこの接続を確認します"
+
 #: src/components/ModalViews/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
@@ -548,13 +555,17 @@ msgstr "つながっている"
 
 #: src/components/WalletModal/PendingView.tsx
 msgid "Connecting..."
-msgstr "接続しています..."
+msgstr "接続中..."
 
-#: src/components/AccountDetails/Copy.tsx
-msgid "Copied"
-msgstr "コピーしました"
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
+#: src/theme/components.tsx
+msgid "Copied!"
+msgstr "コピーしました！"
 
-#: src/components/AccountDetails/index.tsx
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
+msgid "Copy"
+msgstr "コピー"
+
 #: src/components/AccountDetails/index.tsx
 msgid "Copy Address"
 msgstr "アドレスをコピー"
@@ -605,6 +616,10 @@ msgstr "{0} の現在価格:"
 #: src/components/Menu/index.tsx
 msgid "Dark Theme"
 msgstr "ダークテーマ"
+
+#: src/components/WalletDropdown/DefaultMenu.tsx
+msgid "Dark theme"
+msgstr "暗いテーマ"
 
 #: src/pages/Vote/styled.tsx
 msgid "Defeated"
@@ -678,6 +693,7 @@ msgid "Details"
 msgstr "詳細"
 
 #: src/components/AccountDetails/index.tsx
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
 msgid "Disconnect"
 msgstr "接続を解除"
 
@@ -755,6 +771,7 @@ msgid "Error"
 msgstr "エラー"
 
 #: src/components/WalletModal/PendingView.tsx
+#: src/components/WalletModal/PendingView.tsx
 msgid "Error connecting"
 msgstr "接続エラー"
 
@@ -823,9 +840,13 @@ msgstr "エキスパートモードは取引確認画面をスキップし、不
 msgid "Expired"
 msgstr "期限切れ"
 
-#: src/components/Header/index.tsx
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
 msgid "Explore"
 msgstr "探検"
+
+#: src/pages/Tokens/index.tsx
+msgid "Explore Tokens"
+msgstr "トークンを調べる"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore Uniswap Analytics."
@@ -888,11 +909,8 @@ msgstr "非表示"
 msgid "High Price Impact"
 msgstr "大きな価格への影響"
 
-#: src/components/TokenSafety/index.tsx
-msgid "I Understand"
-msgstr "理解しました"
-
 #: src/components/SearchModal/ImportList.tsx
+#: src/components/TokenSafety/index.tsx
 #: src/pages/AddLiquidity/index.tsx
 msgid "I understand"
 msgstr "理解しました"
@@ -991,16 +1009,14 @@ msgid "Invalid recipient"
 msgstr "受け取りアドレスが無効です"
 
 #: src/components/Menu/index.tsx
+#: src/components/WalletDropdown/DefaultMenu.tsx
+#: src/components/WalletDropdown/LanguageMenu.tsx
 msgid "Language"
 msgstr "言語"
 
 #: src/pages/Pool/index.tsx
 msgid "Learn"
 msgstr "資料"
-
-#: src/components/TokenSafety/index.tsx
-msgid "Learn More"
-msgstr "もっと詳しく知る"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Learn about providing liquidity"
@@ -1009,6 +1025,7 @@ msgstr "流動性の提供について学ぶ"
 #: src/components/PrivacyPolicy/index.tsx
 #: src/components/PrivacyPolicy/index.tsx
 #: src/components/TokenSafety/TokenSafetyMessage.tsx
+#: src/components/TokenSafety/index.tsx
 msgid "Learn more"
 msgstr "より詳しく"
 
@@ -1019,6 +1036,10 @@ msgstr "法律とプライバシー"
 
 #: src/components/Menu/index.tsx
 msgid "Light Theme"
+msgstr "ライトテーマ"
+
+#: src/components/WalletDropdown/DefaultMenu.tsx
+msgid "Light theme"
 msgstr "ライトテーマ"
 
 #: src/components/claim/ClaimModal.tsx
@@ -1056,10 +1077,6 @@ msgstr "読み込まれました"
 msgid "Loading"
 msgstr "読み込み中"
 
-#: src/components/CurrencyInputPanel/index.tsx
-msgid "MAX"
-msgstr "最大"
-
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
@@ -1081,6 +1098,7 @@ msgstr "トークンリストを管理"
 msgid "Manage this pool."
 msgstr "プールを管理"
 
+#: src/components/CurrencyInputPanel/index.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Max"
 msgstr "最大"
@@ -1266,6 +1284,7 @@ msgstr "所有者"
 msgid "Participating pools"
 msgstr "参加中のプール"
 
+#: src/components/WalletDropdown/DefaultMenu.tsx
 #: src/pages/Vote/styled.tsx
 msgid "Pending"
 msgstr "保留中"
@@ -1328,8 +1347,8 @@ msgstr "プールしている {0}:"
 
 #: src/pages/Pool/index.tsx
 #: src/pages/Pool/index.tsx
-msgid "Pools Overview"
-msgstr "プールの概要"
+msgid "Pools"
+msgstr "プール"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Portal Bridge"
@@ -1512,7 +1531,6 @@ msgstr "トークン名またはアドレス"
 msgid "Select Pair"
 msgstr "ペアを選択"
 
-#: src/components/CurrencyInputPanel/index.tsx
 #: src/components/SearchModal/CurrencySearch.tsx
 #: src/pages/PoolFinder/index.tsx
 #: src/pages/PoolFinder/index.tsx
@@ -1531,6 +1549,10 @@ msgstr "{0}ネットワークを選択します"
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Select an action"
 msgstr "アクションの選択"
+
+#: src/components/CurrencyInputPanel/index.tsx
+msgid "Select token"
+msgstr "トークンを選択"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Selected Range"
@@ -1695,6 +1717,7 @@ msgid "The app securely collects your wallet address and shares it with TRM Labs
 msgstr "アプリはリスクとコンプライアンスの理由からウォレットアドレスを安全に収集し、TRM LabsInc. と共有します。"
 
 #: src/components/WalletModal/PendingView.tsx
+#: src/components/WalletModal/PendingView.tsx
 msgid "The connection attempt failed. Please click try again and follow the steps to connect in your wallet."
 msgstr "接続に失敗しました。 [再試行]をクリックして、手順に従ってウォレットに接続してください。"
 
@@ -1762,7 +1785,7 @@ msgstr "期限が過ぎたため、取引を送信できませんでした。期
 msgid "There is no liquidity data."
 msgstr "流動性データはありません。"
 
-#: src/components/Explore/TokenDetails/BalanceSummary.tsx
+#: src/components/Tokens/TokenDetails/BalanceSummary.tsx
 msgid "There was an error loading your {tokenSymbol} balance"
 msgstr "残高 {tokenSymbol} の読み込み中にエラーが発生しました"
 
@@ -1820,7 +1843,7 @@ msgstr "買うトークン"
 msgid "To (at least)"
 msgstr "買うトークン（少なくとも）"
 
-#: src/components/Explore/TokenTable/TokenRow.tsx
+#: src/components/Tokens/TokenTable/TokenRow.tsx
 msgid "Token Name"
 msgstr "トークン名"
 
@@ -1828,6 +1851,7 @@ msgstr "トークン名"
 msgid "Token not supported"
 msgstr "トークンは対応していません"
 
+#: src/components/Header/index.tsx
 #: src/components/SearchModal/Manage.tsx
 msgid "Tokens"
 msgstr "トークン"
@@ -1852,7 +1876,6 @@ msgstr "合計預入額"
 msgid "Trade Route"
 msgstr "取引ルート"
 
-#: src/components/Settings/index.tsx
 #: src/components/Settings/index.tsx
 msgid "Transaction Settings"
 msgstr "取引設定"
@@ -1881,10 +1904,16 @@ msgstr "取引期限"
 msgid "Transaction rejected."
 msgstr "取引が拒否されました"
 
+#: src/components/WalletDropdown/DefaultMenu.tsx
+#: src/components/WalletDropdown/TransactionMenu.tsx
+msgid "Transactions"
+msgstr "取引"
+
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Transfer Token"
 msgstr "トークンを転送する"
 
+#: src/components/WalletModal/PendingView.tsx
 #: src/components/WalletModal/PendingView.tsx
 msgid "Try Again"
 msgstr "もう一度試す"
@@ -2019,7 +2048,7 @@ msgstr "ユーザー"
 
 #: src/pages/Pool/v2.tsx
 msgid "V2 Pool is not available on Layer 2. Switch to Layer 1 Ethereum."
-msgstr "V2プールはレイヤー2では使用できません。レイヤー1イーサリアムに切り替えます。"
+msgstr "V2プールはレイヤー2では使用できません。イーサリアムのレイヤー1に切り替えて下さい。"
 
 #: src/pages/Pool/index.tsx
 msgid "V2 liquidity"
@@ -2042,7 +2071,6 @@ msgstr "リストを表示"
 msgid "View on Etherscan"
 msgstr "Etherscanで見る"
 
-#: src/components/AccountDetails/index.tsx
 #: src/components/AccountDetails/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
@@ -2124,6 +2152,10 @@ msgstr "投票はおよそ {0} から始まります"
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Waiting For Confirmation"
 msgstr "確認待ち"
+
+#: src/components/WalletModal/PendingView.tsx
+msgid "Waiting to connect"
+msgstr "接続待機中"
 
 #: src/components/AddressInputPanel/index.tsx
 msgid "Wallet Address or ENS name"
@@ -2257,7 +2289,7 @@ msgstr "V2の流動性"
 
 #: src/pages/Pool/index.tsx
 msgid "Your active V3 liquidity positions will appear here."
-msgstr "アクティブなV3流動性ポジションがここに表示されます。"
+msgstr "V3の流動性ポジションはこちらに表示されます。"
 
 #: src/pages/Pool/index.tsx
 msgid "Your connected network is unsupported."
@@ -2378,6 +2410,10 @@ msgstr "https://、ipfs://またはENS名"
 msgid "minutes"
 msgstr "分"
 
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
+msgid "reward"
+msgstr "褒美"
+
 #: src/components/SearchModal/ImportRow.tsx
 msgid "via {0}"
 msgstr "{0} から"
@@ -2400,6 +2436,7 @@ msgstr "{0, plural, =1 {Uniswap アプリを使用してこのトークンを取
 
 #: src/components/RateToggle/index.tsx
 #: src/components/RateToggle/index.tsx
+#: src/components/Settings/index.tsx
 msgid "{0}"
 msgstr "{0}"
 
@@ -2554,6 +2591,6 @@ msgid "{tokenB} per {tokenA}"
 msgstr "{tokenB} / {tokenA}"
 
 #: src/pages/Pool/PositionPage.tsx
-msgid "← Back to Pools Overview"
-msgstr "プール概要に戻る"
+msgid "← Back to Pools"
+msgstr "← プールに戻る"
 

@@ -12,12 +12,11 @@ import { RowBetween, RowFixed } from 'components/Row'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import { isSupportedChain } from 'constants/chains'
 import { useV3Positions } from 'hooks/useV3Positions'
-import { useContext } from 'react'
 import { AlertTriangle, BookOpen, ChevronDown, ChevronsRight, Inbox, Layers, PlusCircle } from 'react-feather'
 import { Link } from 'react-router-dom'
 import { useToggleWalletModal } from 'state/application/hooks'
 import { useUserHideClosedPositions } from 'state/user/hooks'
-import styled, { css, ThemeContext } from 'styled-components/macro'
+import styled, { css, useTheme } from 'styled-components/macro'
 import { HideSmall, ThemedText } from 'theme'
 import { PositionDetails } from 'types/position'
 
@@ -31,6 +30,7 @@ const PageWrapper = styled(AutoColumn)`
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
     max-width: 800px;
+    padding: 0px 8px;
   `};
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
@@ -152,16 +152,16 @@ function PositionsLoadingPlaceholder() {
 }
 
 function WrongNetworkCard() {
-  const theme = useContext(ThemeContext)
+  const theme = useTheme()
   return (
     <>
       <PageWrapper>
         <AutoColumn gap="lg" justify="center">
           <AutoColumn gap="lg" style={{ width: '100%' }}>
             <TitleRow style={{ marginTop: '1rem' }} padding={'0'}>
-              <ThemedText.DeprecatedBody fontSize={'20px'}>
-                <Trans>Pools Overview</Trans>
-              </ThemedText.DeprecatedBody>
+              <ThemedText.LargeHeader>
+                <Trans>Pools</Trans>
+              </ThemedText.LargeHeader>
             </TitleRow>
 
             <MainContentWrapper>
@@ -186,7 +186,7 @@ export default function Pool() {
   const { account, chainId } = useWeb3React()
   const toggleWalletModal = useToggleWalletModal()
 
-  const theme = useContext(ThemeContext)
+  const theme = useTheme()
   const [userHideClosedPositions, setUserHideClosedPositions] = useUserHideClosedPositions()
 
   const { positions, loading: positionsLoading } = useV3Positions(account)
@@ -257,9 +257,9 @@ export default function Pool() {
           <AutoColumn gap="lg" justify="center">
             <AutoColumn gap="lg" style={{ width: '100%' }}>
               <TitleRow style={{ marginTop: '1rem' }} padding={'0'}>
-                <ThemedText.DeprecatedBody fontSize={'20px'}>
-                  <Trans>Pools Overview</Trans>
-                </ThemedText.DeprecatedBody>
+                <ThemedText.LargeHeader>
+                  <Trans>Pools</Trans>
+                </ThemedText.LargeHeader>
                 <ButtonRow>
                   {showV2Features && (
                     <Menu

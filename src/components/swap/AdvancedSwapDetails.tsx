@@ -4,11 +4,11 @@ import { useWeb3React } from '@web3-react/core'
 import Card from 'components/Card'
 import { LoadingRows } from 'components/Loader/styled'
 import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'
-import { Phase0Variant, usePhase0Flag } from 'featureFlags/flags/phase0'
+import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
-import { useContext, useMemo } from 'react'
+import { useMemo } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
-import styled, { ThemeContext } from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components/macro'
 
 import { Separator, ThemedText } from '../../theme'
 import { computeRealizedPriceImpact } from '../../utils/prices'
@@ -52,11 +52,11 @@ export function AdvancedSwapDetails({
   syncing = false,
   hideInfoTooltips = false,
 }: AdvancedSwapDetailsProps) {
-  const theme = useContext(ThemeContext)
+  const theme = useTheme()
   const { chainId } = useWeb3React()
   const nativeCurrency = useNativeCurrency()
-  const phase0Flag = usePhase0Flag()
-  const phase0FlagEnabled = phase0Flag === Phase0Variant.Enabled
+  const redesignFlag = useRedesignFlag()
+  const redesignFlagEnabled = redesignFlag === RedesignVariant.Enabled
 
   const { expectedOutputAmount, priceImpact } = useMemo(() => {
     return {
@@ -109,7 +109,7 @@ export function AdvancedSwapDetails({
             </ThemedText.DeprecatedBlack>
           </TextWithLoadingPlaceholder>
         </RowBetween>
-        <Separator phase0Flag={phase0FlagEnabled} />
+        <Separator redesignFlag={redesignFlagEnabled} />
         <RowBetween>
           <RowFixed style={{ marginRight: '20px' }}>
             <MouseoverTooltip

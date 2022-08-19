@@ -1,7 +1,7 @@
 import { Currency, Token } from '@uniswap/sdk-core'
 import { TokenList } from '@uniswap/token-lists'
 import TokenSafety from 'components/TokenSafety'
-import { Phase0Variant, usePhase0Flag } from 'featureFlags/flags/phase0'
+import { TokenSafetyVariant, useTokenSafetyFlag } from 'featureFlags/flags/tokenSafety'
 import usePrevious from 'hooks/usePrevious'
 import { useCallback, useEffect, useState } from 'react'
 import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
@@ -75,7 +75,7 @@ export default function CurrencySearchModal({
     [setModalView, prevView]
   )
 
-  const phase0Flag = usePhase0Flag()
+  const tokenSafetyFlag = useTokenSafetyFlag()
 
   // change min height if not searching
   let minHeight: number | undefined = 80
@@ -102,7 +102,7 @@ export default function CurrencySearchModal({
       if (importToken) {
         minHeight = undefined
         content =
-          phase0Flag === Phase0Variant.Enabled ? (
+          tokenSafetyFlag === TokenSafetyVariant.Enabled ? (
             <TokenSafety
               tokenAddress={importToken.address}
               onContinue={() => handleCurrencySelect(importToken)}

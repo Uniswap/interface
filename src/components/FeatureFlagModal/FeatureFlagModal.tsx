@@ -1,7 +1,12 @@
-import { FeatureFlag, useUpdateFlag } from 'featureFlags'
-import { Phase0Variant, usePhase0Flag } from 'featureFlags/flags/phase0'
+import { FeatureFlag, featureFlagSettings, useUpdateFlag } from 'featureFlags'
+import { NavBarVariant, useNavBarFlag } from 'featureFlags/flags/navBar'
 import { Phase1Variant, usePhase1Flag } from 'featureFlags/flags/phase1'
-import { ReactNode } from 'react'
+import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
+import { TokensVariant, useTokensFlag } from 'featureFlags/flags/tokens'
+import { TokenSafetyVariant, useTokenSafetyFlag } from 'featureFlags/flags/tokenSafety'
+import { useWalletFlag, WalletVariant } from 'featureFlags/flags/wallet'
+import { useAtomValue } from 'jotai/utils'
+import { ReactNode, useState } from 'react'
 import { X } from 'react-feather'
 import { useModalIsOpen, useToggleFeatureFlags } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
@@ -11,7 +16,7 @@ const StyledModal = styled.div`
   position: fixed;
   display: flex;
   left: 50%;
-  top: 50%;
+  top: 50vh;
   transform: translate(-50%, -50%);
   width: 400px;
   height: fit-content;
@@ -40,16 +45,70 @@ const Row = styled.div`
 
 const CloseButton = styled.button`
   cursor: pointer;
-  background: ${({ theme }) => theme.none};
+  background: 'transparent';
   border: none;
   color: ${({ theme }) => theme.textPrimary};
 `
 
 const Header = styled(Row)`
   font-weight: 600;
-  font-size: 20px;
+  font-size: 16px;
   border-bottom: 1px solid ${({ theme }) => theme.backgroundOutline};
   margin-bottom: 8px;
+`
+const FlagName = styled.span`
+  font-size: 16px;
+  line-height: 20px;
+  padding-left: 8px;
+  color: ${({ theme }) => theme.textPrimary};
+`
+const FlagGroupName = styled.span`
+  font-size: 20px;
+  line-height: 24px;
+  color: ${({ theme }) => theme.textPrimary};
+  font-weight: 600;
+`
+const FlagDescription = styled.span`
+  font-size: 12px;
+  line-height: 16px;
+  color: ${({ theme }) => theme.textSecondary};
+  display: flex;
+  align-items: center;
+`
+const FlagVariantSelection = styled.select`
+  border-radius: 12px;
+  padding: 8px;
+  background: ${({ theme }) => theme.backgroundInteractive};
+  font-weight: 600;
+  font-size: 16px;
+  border: none;
+  color: ${({ theme }) => theme.textPrimary};
+  cursor: pointer;
+
+  :hover {
+    background: ${({ theme }) => theme.backgroundOutline};
+  }
+`
+
+const FlagInfo = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding-left: 8px;
+`
+
+const SaveButton = styled.button`
+  border-radius: 12px;
+  padding: 8px;
+  background: ${({ theme }) => theme.backgroundInteractive};
+  font-weight: 600;
+  font-size: 16px;
+  border: none;
+  color: ${({ theme }) => theme.textPrimary};
+  cursor: pointer;
+
+  :hover {
+    background: ${({ theme }) => theme.backgroundOutline};
+  }
 `
 
 function Variant({ option }: { option: string }) {
@@ -68,21 +127,27 @@ function FeatureFlagOption({
   label: string
 }) {
   const updateFlag = useUpdateFlag()
+  const [count, setCount] = useState(0)
+  const featureFlags = useAtomValue(featureFlagSettings)
+
   return (
     <Row key={featureFlag}>
-      {featureFlag}: {label}
-      <select
+      <FlagInfo>
+        <FlagName>{featureFlag}</FlagName>
+        <FlagDescription>{label}</FlagDescription>
+      </FlagInfo>
+      <FlagVariantSelection
         id={featureFlag}
-        value={value}
         onChange={(e) => {
           updateFlag(featureFlag, e.target.value)
-          window.location.reload()
+          setCount(count + 1)
         }}
+        value={featureFlags[featureFlag]}
       >
         {variants.map((variant) => (
           <Variant key={variant} option={variant} />
         ))}
-      </select>
+      </FlagVariantSelection>
     </Row>
   )
 }
@@ -99,19 +164,45 @@ export default function FeatureFlagModal() {
           <X size={24} />
         </CloseButton>
       </Header>
-
-      <FeatureFlagOption
-        variants={Object.values(Phase0Variant)}
-        value={usePhase0Flag()}
-        featureFlag={FeatureFlag.phase0}
-        label="All Phase 0 changes (redesign, explore, header)."
-      />
+      <FlagGroupName>Phase 1</FlagGroupName>
       <FeatureFlagOption
         variants={Object.values(Phase1Variant)}
         value={usePhase1Flag()}
         featureFlag={FeatureFlag.phase1}
         label="All Phase 1 changes (nft features)."
       />
+      <FlagGroupName>Phase 0</FlagGroupName>
+      <FeatureFlagOption
+        variants={Object.values(RedesignVariant)}
+        value={useRedesignFlag()}
+        featureFlag={FeatureFlag.redesign}
+        label="Redesign"
+      />
+      <FeatureFlagOption
+        variants={Object.values(NavBarVariant)}
+        value={useNavBarFlag()}
+        featureFlag={FeatureFlag.navBar}
+        label="NavBar"
+      />
+      <FeatureFlagOption
+        variants={Object.values(TokensVariant)}
+        value={useTokensFlag()}
+        featureFlag={FeatureFlag.tokens}
+        label="Tokens"
+      />
+      <FeatureFlagOption
+        variants={Object.values(TokenSafetyVariant)}
+        value={useTokenSafetyFlag()}
+        featureFlag={FeatureFlag.tokenSafety}
+        label="Token Safety"
+      />
+      <FeatureFlagOption
+        variants={Object.values(WalletVariant)}
+        value={useWalletFlag()}
+        featureFlag={FeatureFlag.wallet}
+        label="Wallet Flag"
+      />
+      <SaveButton onClick={() => window.location.reload()}>Save Settings</SaveButton>
     </Modal>
   )
 }

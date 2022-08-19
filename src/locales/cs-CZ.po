@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-05 22:05\n"
+"PO-Revision-Date: 2022-08-18 18:04\n"
 "Last-Translator: \n"
 "Language: cs_CZ\n"
 "Language-Team: Czech\n"
@@ -120,8 +120,8 @@ msgstr "K podání návrhů je nutná minimální hranice 0,25% z celkové nabí
 msgid "A swap of this size may have a high price impact, given the current liquidity in the pool. There may be a large difference between the amount of your input token and what you will receive in the output token"
 msgstr "Swap této velikosti může mít vysoký dopad na cenu vzhledem k aktuální likviditě v poolu. Mezi množstvím vašeho vstupního tokenu a tím, co obdržíte ve výstupním tokenu, může být velký rozdíl"
 
-#: src/components/Explore/TokenDetails/TokenDetail.tsx
 #: src/components/Menu/index.tsx
+#: src/components/Tokens/TokenDetails/TokenDetail.tsx
 msgid "About"
 msgstr "O aplikaci"
 
@@ -290,6 +290,7 @@ msgid "Available to deposit: {0}"
 msgstr "K dispozici k uložení: {0}"
 
 #: src/components/WalletModal/PendingView.tsx
+#: src/components/WalletModal/PendingView.tsx
 msgid "Back to wallet selection"
 msgstr "Zpět k výběru peněženky"
 
@@ -342,6 +343,7 @@ msgid "By adding this list you are implicitly trusting that the data is correct.
 msgstr "Přidáním tohoto seznamu implicitně vyjadřujete důvěru v to, že data jsou správná. Seznam může vytvořit kdokoli, včetně vytváření falešných verzí existujících seznamů a seznamů, které prohlašují, že reprezentují projekty, které žádný seznam nemají."
 
 #: src/components/WalletModal/index.tsx
+#: src/components/WalletModal/index.tsx
 msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the Uniswap <1>Protocol Disclaimer</1>."
 msgstr "Připojením peněženky souhlasíte s <0>podmínkami služby</0> a potvrzujete, že jste si přečetli a rozumíte prohlášení o vyloučení odpovědnosti za protokol <1></1>."
 
@@ -369,6 +371,7 @@ msgstr "Zkontrolujte stav sítě"
 msgid "Check out our v3 LP walkthrough and migration guides."
 msgstr "Podívejte se na naše průvodce v3 LP a migrační průvodce."
 
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/pages/Earn/Manage.tsx
@@ -495,6 +498,10 @@ msgstr "Potvrdit zásobu"
 msgid "Confirm Swap"
 msgstr "Potvrdit výměnu"
 
+#: src/components/WalletModal/PendingView.tsx
+msgid "Confirm this connection in your wallet"
+msgstr "Potvrďte toto spojení ve své peněžence"
+
 #: src/components/ModalViews/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
@@ -550,11 +557,15 @@ msgstr "Spojen s"
 msgid "Connecting..."
 msgstr "Spojovací..."
 
-#: src/components/AccountDetails/Copy.tsx
-msgid "Copied"
-msgstr "Zkopírováno"
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
+#: src/theme/components.tsx
+msgid "Copied!"
+msgstr "Zkopírováno!"
 
-#: src/components/AccountDetails/index.tsx
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
+msgid "Copy"
+msgstr "kopírovat"
+
 #: src/components/AccountDetails/index.tsx
 msgid "Copy Address"
 msgstr "Zkopírovat adresu"
@@ -604,6 +615,10 @@ msgstr "Aktuální {0} cena:"
 
 #: src/components/Menu/index.tsx
 msgid "Dark Theme"
+msgstr "Tmavé téma"
+
+#: src/components/WalletDropdown/DefaultMenu.tsx
+msgid "Dark theme"
 msgstr "Tmavé téma"
 
 #: src/pages/Vote/styled.tsx
@@ -678,6 +693,7 @@ msgid "Details"
 msgstr "Podrobnosti"
 
 #: src/components/AccountDetails/index.tsx
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
 msgid "Disconnect"
 msgstr "Odpojit"
 
@@ -755,6 +771,7 @@ msgid "Error"
 msgstr "Chyba"
 
 #: src/components/WalletModal/PendingView.tsx
+#: src/components/WalletModal/PendingView.tsx
 msgid "Error connecting"
 msgstr "Chyba připojení"
 
@@ -823,9 +840,13 @@ msgstr "Režim Expert vypne výzvu k potvrzení transakce a umožní obchody s v
 msgid "Expired"
 msgstr "Vypršela"
 
-#: src/components/Header/index.tsx
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
 msgid "Explore"
 msgstr "Prozkoumat"
+
+#: src/pages/Tokens/index.tsx
+msgid "Explore Tokens"
+msgstr "Prozkoumejte tokeny"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore Uniswap Analytics."
@@ -888,11 +909,8 @@ msgstr "Skrýt"
 msgid "High Price Impact"
 msgstr "Vysoký dopad na cenu"
 
-#: src/components/TokenSafety/index.tsx
-msgid "I Understand"
-msgstr "Rozumím"
-
 #: src/components/SearchModal/ImportList.tsx
+#: src/components/TokenSafety/index.tsx
 #: src/pages/AddLiquidity/index.tsx
 msgid "I understand"
 msgstr "Rozumím"
@@ -991,16 +1009,14 @@ msgid "Invalid recipient"
 msgstr "Neplatný příjemce"
 
 #: src/components/Menu/index.tsx
+#: src/components/WalletDropdown/DefaultMenu.tsx
+#: src/components/WalletDropdown/LanguageMenu.tsx
 msgid "Language"
 msgstr "Jazyk"
 
 #: src/pages/Pool/index.tsx
 msgid "Learn"
 msgstr "Učit se"
-
-#: src/components/TokenSafety/index.tsx
-msgid "Learn More"
-msgstr "Další informace"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Learn about providing liquidity"
@@ -1009,6 +1025,7 @@ msgstr "Zjistěte více o poskytování likvidity"
 #: src/components/PrivacyPolicy/index.tsx
 #: src/components/PrivacyPolicy/index.tsx
 #: src/components/TokenSafety/TokenSafetyMessage.tsx
+#: src/components/TokenSafety/index.tsx
 msgid "Learn more"
 msgstr "Zjistěte více"
 
@@ -1020,6 +1037,10 @@ msgstr "Právní otázky a soukromí"
 #: src/components/Menu/index.tsx
 msgid "Light Theme"
 msgstr "Lehké téma"
+
+#: src/components/WalletDropdown/DefaultMenu.tsx
+msgid "Light theme"
+msgstr "Světlé téma"
 
 #: src/components/claim/ClaimModal.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -1056,10 +1077,6 @@ msgstr "Načteno"
 msgid "Loading"
 msgstr "Načítání"
 
-#: src/components/CurrencyInputPanel/index.tsx
-msgid "MAX"
-msgstr "MAX"
-
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
@@ -1081,6 +1098,7 @@ msgstr "Spravovat seznamy žetonů"
 msgid "Manage this pool."
 msgstr "Spravovat tento fond."
 
+#: src/components/CurrencyInputPanel/index.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Max"
 msgstr "Max."
@@ -1266,6 +1284,7 @@ msgstr "Vlastník"
 msgid "Participating pools"
 msgstr "Zúčastněné fondy"
 
+#: src/components/WalletDropdown/DefaultMenu.tsx
 #: src/pages/Vote/styled.tsx
 msgid "Pending"
 msgstr "čekající"
@@ -1328,8 +1347,8 @@ msgstr "Sestaveno do fondu {0}:"
 
 #: src/pages/Pool/index.tsx
 #: src/pages/Pool/index.tsx
-msgid "Pools Overview"
-msgstr "Přehled fondů"
+msgid "Pools"
+msgstr "Bazény"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Portal Bridge"
@@ -1512,7 +1531,6 @@ msgstr "Vyhledejte název nebo vložte adresu"
 msgid "Select Pair"
 msgstr "Vyberte možnost Párovat"
 
-#: src/components/CurrencyInputPanel/index.tsx
 #: src/components/SearchModal/CurrencySearch.tsx
 #: src/pages/PoolFinder/index.tsx
 #: src/pages/PoolFinder/index.tsx
@@ -1531,6 +1549,10 @@ msgstr "Vyberte síť {0}"
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Select an action"
 msgstr "Vyberte akci"
+
+#: src/components/CurrencyInputPanel/index.tsx
+msgid "Select token"
+msgstr "Vyberte token"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Selected Range"
@@ -1695,6 +1717,7 @@ msgid "The app securely collects your wallet address and shares it with TRM Labs
 msgstr "Aplikace bezpečně shromažďuje adresu vaší peněženky a sdílí ji s TRM Labs Inc. z důvodu rizika a dodržování předpisů."
 
 #: src/components/WalletModal/PendingView.tsx
+#: src/components/WalletModal/PendingView.tsx
 msgid "The connection attempt failed. Please click try again and follow the steps to connect in your wallet."
 msgstr "Pokus o připojení se nezdařil. Klikněte prosím na zkusit znovu a postupujte podle pokynů pro připojení v peněžence."
 
@@ -1762,7 +1785,7 @@ msgstr "Transakci nebylo možno odeslat, protože uplynula lhůta. Zkontrolujte,
 msgid "There is no liquidity data."
 msgstr "Neexistují žádné údaje o likviditě."
 
-#: src/components/Explore/TokenDetails/BalanceSummary.tsx
+#: src/components/Tokens/TokenDetails/BalanceSummary.tsx
 msgid "There was an error loading your {tokenSymbol} balance"
 msgstr "Při načítání vašeho zůstatku {tokenSymbol} došlo k chybě"
 
@@ -1820,7 +1843,7 @@ msgstr "Do"
 msgid "To (at least)"
 msgstr "Do (alespoň)"
 
-#: src/components/Explore/TokenTable/TokenRow.tsx
+#: src/components/Tokens/TokenTable/TokenRow.tsx
 msgid "Token Name"
 msgstr "Název tokenu"
 
@@ -1828,6 +1851,7 @@ msgstr "Název tokenu"
 msgid "Token not supported"
 msgstr "Token není podporován"
 
+#: src/components/Header/index.tsx
 #: src/components/SearchModal/Manage.tsx
 msgid "Tokens"
 msgstr "Žetony"
@@ -1852,7 +1876,6 @@ msgstr "Vklady celkem"
 msgid "Trade Route"
 msgstr "Obchodní cesta"
 
-#: src/components/Settings/index.tsx
 #: src/components/Settings/index.tsx
 msgid "Transaction Settings"
 msgstr "Nastavení transakcí"
@@ -1881,10 +1904,16 @@ msgstr "Lhůta pro transakce"
 msgid "Transaction rejected."
 msgstr "Transakce zamítnuta."
 
+#: src/components/WalletDropdown/DefaultMenu.tsx
+#: src/components/WalletDropdown/TransactionMenu.tsx
+msgid "Transactions"
+msgstr "Transakce"
+
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Transfer Token"
 msgstr "Přenosový token"
 
+#: src/components/WalletModal/PendingView.tsx
 #: src/components/WalletModal/PendingView.tsx
 msgid "Try Again"
 msgstr "Zkusit znovu"
@@ -2043,7 +2072,6 @@ msgid "View on Etherscan"
 msgstr "Pohled na Etherscan"
 
 #: src/components/AccountDetails/index.tsx
-#: src/components/AccountDetails/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "View on Explorer"
@@ -2124,6 +2152,10 @@ msgstr "Hlasování začíná přibližně od {0}"
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Waiting For Confirmation"
 msgstr "Čeká se na potvrzení"
+
+#: src/components/WalletModal/PendingView.tsx
+msgid "Waiting to connect"
+msgstr "Čekání na připojení"
 
 #: src/components/AddressInputPanel/index.tsx
 msgid "Wallet Address or ENS name"
@@ -2378,6 +2410,10 @@ msgstr "https:// nebo ipfs:// nebo název ENS"
 msgid "minutes"
 msgstr "minuty"
 
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
+msgid "reward"
+msgstr "odměna"
+
 #: src/components/SearchModal/ImportRow.tsx
 msgid "via {0}"
 msgstr "přes {0}"
@@ -2400,6 +2436,7 @@ msgstr ""
 
 #: src/components/RateToggle/index.tsx
 #: src/components/RateToggle/index.tsx
+#: src/components/Settings/index.tsx
 msgid "{0}"
 msgstr "{0}"
 
@@ -2554,6 +2591,6 @@ msgid "{tokenB} per {tokenA}"
 msgstr "{tokenB} na {tokenA}"
 
 #: src/pages/Pool/PositionPage.tsx
-msgid "← Back to Pools Overview"
-msgstr "← Zpět na přehled fondů"
+msgid "← Back to Pools"
+msgstr "← Zpět na Bazény"
 

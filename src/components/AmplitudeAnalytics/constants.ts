@@ -23,6 +23,7 @@ export enum EventName {
   TOKEN_SELECTOR_OPENED = 'Token Selector Opened',
   WALLET_CONNECT_TXN_COMPLETED = 'Wallet Connect Transaction Completed',
   WALLET_SELECTED = 'Wallet Selected',
+  WEB_VITALS = 'Web Vitals',
   WRAP_TOKEN_TXN_SUBMITTED = 'Wrap Token Transaction Submitted',
   // alphabetize additional event names.
 }
@@ -74,7 +75,7 @@ export enum SWAP_PRICE_UPDATE_USER_RESPONSE {
  * Known pages in the app. Highest order context.
  */
 export enum PageName {
-  EXPLORE_PAGE = 'explore-page',
+  TOKENS_PAGE = 'tokens-page',
   POOL_PAGE = 'pool-page',
   SWAP_PAGE = 'swap-page',
   VOTE_PAGE = 'vote-page',

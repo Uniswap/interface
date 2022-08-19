@@ -4,12 +4,12 @@ import { Price } from '@uniswap/sdk-core'
 import { sendAnalyticsEvent } from 'components/AmplitudeAnalytics'
 import { EventName, SWAP_PRICE_UPDATE_USER_RESPONSE } from 'components/AmplitudeAnalytics/constants'
 import { formatPercentInBasisPointsNumber } from 'components/AmplitudeAnalytics/utils'
-import { Phase0Variant, usePhase0Flag } from 'featureFlags/flags/phase0'
-import { useContext, useEffect, useState } from 'react'
+import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
+import { useEffect, useState } from 'react'
 import { AlertTriangle, ArrowDown } from 'react-feather'
 import { Text } from 'rebass'
 import { InterfaceTrade } from 'state/routing/types'
-import styled, { ThemeContext } from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components/macro'
 
 import { useStablecoinValue } from '../../hooks/useStablecoinPrice'
 import { ThemedText } from '../../theme'
@@ -25,11 +25,11 @@ import TradePrice from '../swap/TradePrice'
 import { AdvancedSwapDetails } from './AdvancedSwapDetails'
 import { SwapShowAcceptChanges, TruncatedText } from './styleds'
 
-const ArrowWrapper = styled.div<{ phase0Flag: boolean }>`
+const ArrowWrapper = styled.div<{ redesignFlag: boolean }>`
   padding: 4px;
   border-radius: 12px;
-  height: ${({ phase0Flag }) => (phase0Flag ? '40px' : '32px')};
-  width: ${({ phase0Flag }) => (phase0Flag ? '40px' : '32px')};
+  height: ${({ redesignFlag }) => (redesignFlag ? '40px' : '32px')};
+  width: ${({ redesignFlag }) => (redesignFlag ? '40px' : '32px')};
   position: relative;
   margin-top: -18px;
   margin-bottom: -18px;
@@ -37,9 +37,9 @@ const ArrowWrapper = styled.div<{ phase0Flag: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: ${({ theme, phase0Flag }) => (phase0Flag ? theme.backgroundSurface : theme.deprecated_bg1)};
+  background-color: ${({ theme, redesignFlag }) => (redesignFlag ? theme.backgroundSurface : theme.deprecated_bg1)};
   border: 4px solid;
-  border-color: ${({ theme, phase0Flag }) => (phase0Flag ? theme.backgroundContainer : theme.deprecated_bg0)};
+  border-color: ${({ theme, redesignFlag }) => (redesignFlag ? theme.backgroundModule : theme.deprecated_bg0)};
   z-index: 2;
 `
 
@@ -84,9 +84,9 @@ export default function SwapModalHeader({
   showAcceptChanges: boolean
   onAcceptChanges: () => void
 }) {
-  const theme = useContext(ThemeContext)
-  const phase0Flag = usePhase0Flag()
-  const phase0FlagEnabled = phase0Flag === Phase0Variant.Enabled
+  const theme = useTheme()
+  const redesignFlag = useRedesignFlag()
+  const redesignFlagEnabled = redesignFlag === RedesignVariant.Enabled
 
   const [showInverted, setShowInverted] = useState<boolean>(false)
   const [lastExecutionPrice, setLastExecutionPrice] = useState(trade.executionPrice)
@@ -137,8 +137,8 @@ export default function SwapModalHeader({
           </RowBetween>
         </AutoColumn>
       </LightCard>
-      <ArrowWrapper phase0Flag={phase0FlagEnabled}>
-        <ArrowDown size="16" color={phase0FlagEnabled ? theme.textPrimary : theme.deprecated_text2} />
+      <ArrowWrapper redesignFlag={redesignFlagEnabled}>
+        <ArrowDown size="16" color={redesignFlagEnabled ? theme.textPrimary : theme.deprecated_text2} />
       </ArrowWrapper>
       <LightCard padding="0.75rem 1rem" style={{ marginBottom: '0.25rem' }}>
         <AutoColumn gap={'8px'}>

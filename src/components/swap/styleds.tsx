@@ -1,4 +1,3 @@
-import { loadingOpacityMixin } from 'components/Loader/styled'
 import { TooltipContainer } from 'components/Tooltip'
 import { transparentize } from 'polished'
 import { ReactNode } from 'react'
@@ -6,28 +5,26 @@ import { AlertTriangle } from 'react-feather'
 import { Text } from 'rebass'
 import styled, { css } from 'styled-components/macro'
 
-import { ThemedText } from '../../theme'
 import { AutoColumn } from '../Column'
-import TradePrice from './TradePrice'
 
 export const Wrapper = styled.div`
   position: relative;
   padding: 8px;
 `
 
-export const ArrowWrapper = styled.div<{ clickable: boolean; phase0Flag: boolean }>`
+export const ArrowWrapper = styled.div<{ clickable: boolean; redesignFlag: boolean }>`
   padding: 4px;
   border-radius: 12px;
-  height: ${({ phase0Flag }) => (phase0Flag ? '40px' : '32px')};
-  width: ${({ phase0Flag }) => (phase0Flag ? '40px' : '32px')};
+  height: ${({ redesignFlag }) => (redesignFlag ? '40px' : '32px')};
+  width: ${({ redesignFlag }) => (redesignFlag ? '40px' : '32px')};
   position: relative;
   margin-top: -14px;
-  margin-bottom: ${({ phase0Flag }) => (phase0Flag ? '-18px' : '-14px')};
+  margin-bottom: ${({ redesignFlag }) => (redesignFlag ? '-18px' : '-14px')};
   left: calc(50% - 16px);
   /* transform: rotate(90deg); */
-  background-color: ${({ theme, phase0Flag }) => (phase0Flag ? theme.backgroundSurface : theme.deprecated_bg1)};
+  background-color: ${({ theme, redesignFlag }) => (redesignFlag ? theme.backgroundSurface : theme.deprecated_bg1)};
   border: 4px solid;
-  border-color: ${({ theme, phase0Flag }) => (phase0Flag ? theme.backgroundContainer : theme.deprecated_bg0)};
+  border-color: ${({ theme, redesignFlag }) => (redesignFlag ? theme.backgroundModule : theme.deprecated_bg0)};
 
   z-index: 2;
   ${({ clickable }) =>
@@ -135,11 +132,6 @@ export const SwapShowAcceptChanges = styled(AutoColumn)`
   margin-top: 8px;
 `
 
-export const TransactionDetailsLabel = styled(ThemedText.DeprecatedBlack)`
-  border-bottom: 1px solid ${({ theme }) => theme.deprecated_bg2};
-  padding-bottom: 0.5rem;
-`
-
 export const ResponsiveTooltipContainer = styled(TooltipContainer)<{ origin?: string; width?: string }>`
   background-color: ${({ theme }) => theme.deprecated_bg0};
   border: 1px solid ${({ theme }) => theme.deprecated_bg2};
@@ -150,8 +142,4 @@ export const ResponsiveTooltipContainer = styled(TooltipContainer)<{ origin?: st
     transform: scale(0.8);
     transform-origin: ${origin ?? 'top left'};
   `}
-`
-
-export const StyledTradePrice = styled(TradePrice)<{ $loading: boolean }>`
-  ${loadingOpacityMixin}
 `

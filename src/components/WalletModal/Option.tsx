@@ -1,21 +1,38 @@
 import { ElementName, Event, EventName } from 'components/AmplitudeAnalytics/constants'
 import { TraceEvent } from 'components/AmplitudeAnalytics/TraceEvent'
+import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
 import React from 'react'
+import { Check } from 'react-feather'
 import styled from 'styled-components/macro'
 
 import { ExternalLink } from '../../theme'
 
-const InfoCard = styled.button<{ isActive?: boolean }>`
-  background-color: ${({ theme, isActive }) => (isActive ? theme.deprecated_bg3 : theme.deprecated_bg2)};
+const InfoCard = styled.button<{ isActive?: boolean; redesignFlag?: boolean }>`
+  background-color: ${({ theme, isActive, redesignFlag }) =>
+    redesignFlag ? theme.backgroundInteractive : isActive ? theme.deprecated_bg3 : theme.deprecated_bg2};
   padding: 1rem;
   outline: none;
   border: 1px solid;
   border-radius: 12px;
   width: 100% !important;
   &:focus {
-    box-shadow: 0 0 0 1px ${({ theme }) => theme.deprecated_primary1};
+    box-shadow: ${({ theme, redesignFlag }) => !redesignFlag && `0 0 0 1px ${theme.deprecated_primary1}`};
+    background-color: ${({ theme, redesignFlag }) => redesignFlag && theme.hoverState};
   }
-  border-color: ${({ theme, isActive }) => (isActive ? 'transparent' : theme.deprecated_bg3)};
+  border-color: ${({ theme, isActive, redesignFlag }) =>
+    redesignFlag ? (isActive ? theme.accentActive : 'transparent') : isActive ? 'transparent' : theme.deprecated_bg3};
+`
+
+const CheckIcon = styled(Check)`
+  ${({ theme }) => theme.flexColumnNoWrap};
+  height: 20px;
+  width: 20px;
+  align-items: center;
+  justify-content: center;
+  color: ${({ theme }) => theme.accentAction};
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    align-items: flex-end;
+  `};
 `
 
 const OptionCard = styled(InfoCard as any)`
@@ -33,11 +50,18 @@ const OptionCardLeft = styled.div`
   height: 100%;
 `
 
-const OptionCardClickable = styled(OptionCard as any)<{ clickable?: boolean }>`
+const OptionCardClickable = styled(OptionCard as any)<{
+  active?: boolean
+  clickable?: boolean
+  redesignFlag?: boolean
+}>`
   margin-top: 0;
+  border: ${({ active, theme }) => active && `1px solid ${theme.accentActive}`};
   &:hover {
-    cursor: ${({ clickable }) => (clickable ? 'pointer' : '')};
-    border: ${({ clickable, theme }) => (clickable ? `1px solid ${theme.deprecated_primary1}` : ``)};
+    cursor: ${({ clickable }) => clickable && 'pointer'};
+    background-color: ${({ theme, redesignFlag }) => redesignFlag && theme.hoverState};
+    border: ${({ clickable, redesignFlag, theme }) =>
+      clickable && !redesignFlag && `1px solid ${theme.deprecated_primary1}`};
   }
   opacity: ${({ disabled }) => (disabled ? '0.5' : '1')};
 `
@@ -63,12 +87,14 @@ const CircleWrapper = styled.div`
   align-items: center;
 `
 
-const HeaderText = styled.div`
+const HeaderText = styled.div<{ redesignFlag?: boolean }>`
   ${({ theme }) => theme.flexRowNoWrap};
+  align-items: center;
+  justify-content: center;
   color: ${(props) =>
     props.color === 'blue' ? ({ theme }) => theme.deprecated_primary1 : ({ theme }) => theme.deprecated_text1};
-  font-size: 1rem;
-  font-weight: 500;
+  font-size: ${({ redesignFlag }) => (redesignFlag ? '16px' : '1rem')};
+  font-weight: ${({ redesignFlag }) => (redesignFlag ? '600' : '500')};
 `
 
 const SubHeader = styled.div`
@@ -77,7 +103,7 @@ const SubHeader = styled.div`
   font-size: 12px;
 `
 
-const IconWrapper = styled.div<{ size?: number | null }>`
+const IconWrapperDeprecated = styled.div<{ size?: number | null }>`
   ${({ theme }) => theme.flexColumnNoWrap};
   align-items: center;
   justify-content: center;
@@ -85,6 +111,21 @@ const IconWrapper = styled.div<{ size?: number | null }>`
   span {
     height: ${({ size }) => (size ? size + 'px' : '24px')};
     width: ${({ size }) => (size ? size + 'px' : '24px')};
+  }
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    align-items: flex-end;
+  `};
+`
+
+const IconWrapper = styled.div<{ size?: number | null }>`
+  ${({ theme }) => theme.flexColumnNoWrap};
+  align-items: center;
+  justify-content: center;
+  padding-right: 12px;
+  & > img,
+  span {
+    height: ${({ size }) => (size ? size + 'px' : '28px')};
+    width: ${({ size }) => (size ? size + 'px' : '28px')};
   }
   ${({ theme }) => theme.mediaWidth.upToMedium`
     align-items: flex-end;
@@ -114,6 +155,9 @@ export default function Option({
   isActive?: boolean
   id: string
 }) {
+  const redesignFlag = useRedesignFlag()
+  const redesignFlagEnabled = redesignFlag === RedesignVariant.Enabled
+
   const content = (
     <TraceEvent
       events={[Event.onClick]}
@@ -121,32 +165,53 @@ export default function Option({
       properties={{ wallet_type: header }}
       element={ElementName.WALLET_TYPE_OPTION}
     >
-      <OptionCardClickable
-        id={id}
-        onClick={onClick}
-        clickable={clickable && !isActive}
-        active={isActive}
-        data-testid="wallet-modal-option"
-      >
-        <OptionCardLeft>
-          <HeaderText color={color}>
-            {isActive ? (
-              <CircleWrapper>
-                <GreenCircle>
-                  <div />
-                </GreenCircle>
-              </CircleWrapper>
-            ) : (
-              ''
-            )}
-            {header}
-          </HeaderText>
-          {subheader && <SubHeader>{subheader}</SubHeader>}
-        </OptionCardLeft>
-        <IconWrapper size={size}>
-          <img src={icon} alt={'Icon'} />
-        </IconWrapper>
-      </OptionCardClickable>
+      {redesignFlagEnabled ? (
+        <OptionCardClickable
+          id={id}
+          onClick={onClick}
+          clickable={clickable && !isActive}
+          active={isActive}
+          redesignFlag={true}
+          data-testid="wallet-modal-option"
+        >
+          <OptionCardLeft>
+            <HeaderText color={color} redesignFlag={true}>
+              <IconWrapper size={size}>
+                <img src={icon} alt={'Icon'} />
+              </IconWrapper>
+              {header}
+            </HeaderText>
+            {subheader && <SubHeader>{subheader}</SubHeader>}
+          </OptionCardLeft>
+          {isActive && <CheckIcon />}
+        </OptionCardClickable>
+      ) : (
+        <OptionCardClickable
+          id={id}
+          onClick={onClick}
+          clickable={clickable && !isActive}
+          active={isActive}
+          redesignFlag={false}
+          data-testid="wallet-modal-option"
+        >
+          <OptionCardLeft>
+            <HeaderText color={color} redesignFlag={false}>
+              {isActive && (
+                <CircleWrapper>
+                  <GreenCircle>
+                    <div />
+                  </GreenCircle>
+                </CircleWrapper>
+              )}
+              {header}
+            </HeaderText>
+            {subheader && <SubHeader>{subheader}</SubHeader>}
+          </OptionCardLeft>
+          <IconWrapperDeprecated size={size}>
+            <img src={icon} alt={'Icon'} />
+          </IconWrapperDeprecated>
+        </OptionCardClickable>
+      )}
     </TraceEvent>
   )
   if (link) {

@@ -1,8 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { Trade } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
-import { Trade as V2Trade } from '@uniswap/v2-sdk'
-import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { sendAnalyticsEvent } from 'components/AmplitudeAnalytics'
 import { ElementName, Event, EventName, PageName, SectionName } from 'components/AmplitudeAnalytics/constants'
@@ -22,11 +20,11 @@ import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter
 import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { isSupportedChain } from 'constants/chains'
-import { Phase0Variant, usePhase0Flag } from 'featureFlags/flags/phase0'
+import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
 import { useSwapCallback } from 'hooks/useSwapCallback'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import JSBI from 'jsbi'
-import { Context, useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { ReactNode } from 'react'
 import { ArrowDown, ArrowUp, CheckCircle, HelpCircle } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
@@ -34,7 +32,7 @@ import { Text } from 'rebass'
 import { useToggleWalletModal } from 'state/application/hooks'
 import { InterfaceTrade } from 'state/routing/types'
 import { TradeState } from 'state/routing/types'
-import styled, { css, DefaultTheme, ThemeContext } from 'styled-components/macro'
+import styled, { css, useTheme } from 'styled-components/macro'
 
 import AddressInputPanel from '../../components/AddressInputPanel'
 import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
@@ -52,7 +50,7 @@ import { SwitchLocaleLink } from '../../components/SwitchLocaleLink'
 import TokenWarningModal from '../../components/TokenWarningModal'
 import { TOKEN_SHORTHANDS } from '../../constants/tokens'
 import { useAllTokens, useCurrency } from '../../hooks/Tokens'
-import { ApprovalState, useApprovalOptimizedTrade, useApproveCallbackFromTrade } from '../../hooks/useApproveCallback'
+import { ApprovalState, useApproveCallbackFromTrade } from '../../hooks/useApproveCallback'
 import useENSAddress from '../../hooks/useENSAddress'
 import { useERC20PermitFromTrade, UseERC20PermitState } from '../../hooks/useERC20Permit'
 import useIsArgentWallet from '../../hooks/useIsArgentWallet'
@@ -90,11 +88,11 @@ const ArrowUpWrapper = styled.div`
   margin-left: 56%;
   margin-top: -18%;
 `
-const BottomWrapper = styled.div<{ phase0Flag: boolean }>`
-  ${({ phase0Flag }) =>
-    phase0Flag &&
+const BottomWrapper = styled.div<{ redesignFlag: boolean }>`
+  ${({ redesignFlag }) =>
+    redesignFlag &&
     css`
-      background-color: ${({ theme }) => theme.backgroundContainer};
+      background-color: ${({ theme }) => theme.backgroundModule};
       border-radius: 12px;
       padding: 8px 12px 10px;
       color: ${({ theme }) => theme.textSecondary};
@@ -103,12 +101,12 @@ const BottomWrapper = styled.div<{ phase0Flag: boolean }>`
       font-weight: 500;
     `}
 `
-const TopInputWrapper = styled.div<{ phase0Flag: boolean }>`
-  padding: ${({ phase0Flag }) => phase0Flag && '0px 12px'};
-  visibility: ${({ phase0Flag }) => !phase0Flag && 'none'};
+const TopInputWrapper = styled.div<{ redesignFlag: boolean }>`
+  padding: ${({ redesignFlag }) => redesignFlag && '0px 12px'};
+  visibility: ${({ redesignFlag }) => !redesignFlag && 'none'};
 `
-const BottomInputWrapper = styled.div<{ phase0Flag: boolean }>`
-  padding: ${({ phase0Flag }) => phase0Flag && '8px 0px'};
+const BottomInputWrapper = styled.div<{ redesignFlag: boolean }>`
+  padding: ${({ redesignFlag }) => redesignFlag && '8px 0px'};
 `
 
 export function getIsValidSwapQuote(
@@ -153,10 +151,12 @@ const formatSwapQuoteReceivedEventProperties = (
   }
 }
 
+const TRADE_STRING = 'SwapRouter'
+
 export default function Swap() {
   const navigate = useNavigate()
-  const phase0Flag = usePhase0Flag()
-  const phase0FlagEnabled = phase0Flag === Phase0Variant.Enabled
+  const redesignFlag = useRedesignFlag()
+  const redesignFlagEnabled = redesignFlag === RedesignVariant.Enabled
   const { account, chainId } = useWeb3React()
   const loadedUrlParams = useDefaultsFromURLSearch()
   const [newSwapQuoteNeedsLogging, setNewSwapQuoteNeedsLogging] = useState(true)
@@ -197,7 +197,7 @@ export default function Swap() {
     [chainId, defaultTokens, urlLoadedTokens]
   )
 
-  const theme = useContext(ThemeContext as Context<DefaultTheme>)
+  const theme = useTheme()
 
   // toggle wallet when disconnected
   const toggleWalletModal = useToggleWalletModal()
@@ -305,22 +305,14 @@ export default function Swap() {
     currencies[Field.INPUT] && currencies[Field.OUTPUT] && parsedAmounts[independentField]?.greaterThan(JSBI.BigInt(0))
   )
 
-  const approvalOptimizedTrade = useApprovalOptimizedTrade(trade, allowedSlippage)
-  const approvalOptimizedTradeString =
-    approvalOptimizedTrade instanceof V2Trade
-      ? 'V2SwapRouter'
-      : approvalOptimizedTrade instanceof V3Trade
-      ? 'V3SwapRouter'
-      : 'SwapRouter'
-
   // check whether the user has approved the router on the input token
-  const [approvalState, approveCallback] = useApproveCallbackFromTrade(approvalOptimizedTrade, allowedSlippage)
+  const [approvalState, approveCallback] = useApproveCallbackFromTrade(trade, allowedSlippage)
   const transactionDeadline = useTransactionDeadline()
   const {
     state: signatureState,
     signatureData,
     gatherPermitSignature,
-  } = useERC20PermitFromTrade(approvalOptimizedTrade, allowedSlippage, transactionDeadline)
+  } = useERC20PermitFromTrade(trade, allowedSlippage, transactionDeadline)
 
   const handleApprove = useCallback(async () => {
     if (signatureState === UseERC20PermitState.NOT_SIGNED && gatherPermitSignature) {
@@ -338,16 +330,10 @@ export default function Swap() {
       sendEvent({
         category: 'Swap',
         action: 'Approve',
-        label: [approvalOptimizedTradeString, approvalOptimizedTrade?.inputAmount?.currency.symbol].join('/'),
+        label: [TRADE_STRING, trade?.inputAmount?.currency.symbol].join('/'),
       })
     }
-  }, [
-    signatureState,
-    gatherPermitSignature,
-    approveCallback,
-    approvalOptimizedTradeString,
-    approvalOptimizedTrade?.inputAmount?.currency.symbol,
-  ])
+  }, [signatureState, gatherPermitSignature, approveCallback, trade?.inputAmount?.currency.symbol])
 
   // check if user has gone through approval process, used to show two step buttons, reset on token change
   const [approvalSubmitted, setApprovalSubmitted] = useState<boolean>(false)
@@ -367,7 +353,7 @@ export default function Swap() {
 
   // the callback to execute the swap
   const { callback: swapCallback, error: swapCallbackError } = useSwapCallback(
-    approvalOptimizedTrade,
+    trade,
     allowedSlippage,
     recipient,
     signatureData
@@ -397,12 +383,9 @@ export default function Swap() {
               : (recipientAddress ?? recipient) === account
               ? 'Swap w/o Send + recipient'
               : 'Swap w/ Send',
-          label: [
-            approvalOptimizedTradeString,
-            approvalOptimizedTrade?.inputAmount?.currency?.symbol,
-            approvalOptimizedTrade?.outputAmount?.currency?.symbol,
-            'MH',
-          ].join('/'),
+          label: [TRADE_STRING, trade?.inputAmount?.currency?.symbol, trade?.outputAmount?.currency?.symbol, 'MH'].join(
+            '/'
+          ),
         })
       })
       .catch((error) => {
@@ -422,9 +405,8 @@ export default function Swap() {
     recipient,
     recipientAddress,
     account,
-    approvalOptimizedTradeString,
-    approvalOptimizedTrade?.inputAmount?.currency?.symbol,
-    approvalOptimizedTrade?.outputAmount?.currency?.symbol,
+    trade?.inputAmount?.currency?.symbol,
+    trade?.outputAmount?.currency?.symbol,
   ])
 
   // errors
@@ -526,7 +508,7 @@ export default function Swap() {
   return (
     <Trace page={PageName.SWAP_PAGE} shouldLogImpression>
       <>
-        {phase0Flag === Phase0Variant.Enabled ? (
+        {redesignFlag === RedesignVariant.Enabled ? (
           <TokenSafetyModal
             isOpen={importTokensNotInDefault.length > 0 && !dismissTokenWarning}
             tokenAddress={importTokensNotInDefault[0]?.address}
@@ -562,7 +544,7 @@ export default function Swap() {
 
             <AutoColumn gap={'0px'}>
               <div style={{ display: 'relative' }}>
-                <TopInputWrapper phase0Flag={phase0FlagEnabled}>
+                <TopInputWrapper redesignFlag={redesignFlagEnabled}>
                   <Trace section={SectionName.CURRENCY_INPUT_PANEL}>
                     <CurrencyInputPanel
                       label={
@@ -586,13 +568,13 @@ export default function Swap() {
                     />
                   </Trace>
                 </TopInputWrapper>
-                <ArrowWrapper clickable={isSupportedChain(chainId)} phase0Flag={phase0FlagEnabled}>
+                <ArrowWrapper clickable={isSupportedChain(chainId)} redesignFlag={redesignFlagEnabled}>
                   <TraceEvent
                     events={[Event.onClick]}
                     name={EventName.SWAP_TOKENS_REVERSED}
                     element={ElementName.SWAP_TOKENS_REVERSE_ARROW_BUTTON}
                   >
-                    {phase0FlagEnabled ? (
+                    {redesignFlagEnabled ? (
                       <ArrowContainer
                         onClick={() => {
                           setApprovalSubmitted(false) // reset 2 step UI for approvals
@@ -624,10 +606,10 @@ export default function Swap() {
                   </TraceEvent>
                 </ArrowWrapper>
               </div>
-              <BottomWrapper phase0Flag={phase0FlagEnabled}>
-                {phase0FlagEnabled && 'For'}
-                <AutoColumn gap={phase0FlagEnabled ? '0px' : '8px'}>
-                  <BottomInputWrapper phase0Flag={phase0FlagEnabled}>
+              <BottomWrapper redesignFlag={redesignFlagEnabled}>
+                {redesignFlagEnabled && 'For'}
+                <AutoColumn gap={redesignFlagEnabled ? '0px' : '8px'}>
+                  <BottomInputWrapper redesignFlag={redesignFlagEnabled}>
                     <Trace section={SectionName.CURRENCY_OUTPUT_PANEL}>
                       <CurrencyInputPanel
                         value={formattedAmounts[Field.OUTPUT]}
@@ -655,7 +637,7 @@ export default function Swap() {
                     {recipient !== null && !showWrap ? (
                       <>
                         <AutoRow justify="space-between" style={{ padding: '0 1rem' }}>
-                          <ArrowWrapper clickable={false} phase0Flag={phase0FlagEnabled}>
+                          <ArrowWrapper clickable={false} redesignFlag={redesignFlagEnabled}>
                             <ArrowDown size="16" color={theme.deprecated_text2} />
                           </ArrowWrapper>
                           <LinkStyledButton id="remove-recipient-button" onClick={() => onChangeRecipient(null)}>
@@ -691,7 +673,7 @@ export default function Swap() {
                         properties={{ received_swap_quote: getIsValidSwapQuote(trade, tradeState, swapInputError) }}
                         element={ElementName.CONNECT_WALLET_BUTTON}
                       >
-                        <ButtonLight onClick={toggleWalletModal} phase0Flag={phase0FlagEnabled}>
+                        <ButtonLight onClick={toggleWalletModal} redesignFlag={redesignFlagEnabled}>
                           <Trans>Connect Wallet</Trans>
                         </ButtonLight>
                       </TraceEvent>

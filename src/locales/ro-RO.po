@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-05 22:05\n"
+"PO-Revision-Date: 2022-08-18 18:04\n"
 "Last-Translator: \n"
 "Language: ro_RO\n"
 "Language-Team: Romanian\n"
@@ -120,8 +120,8 @@ msgstr "Pentru depunerea propunerilor este necesar un prag minim de 0,25% din to
 msgid "A swap of this size may have a high price impact, given the current liquidity in the pool. There may be a large difference between the amount of your input token and what you will receive in the output token"
 msgstr "Un swap de această dimensiune poate avea un impact ridicat asupra prețului, având în vedere lichiditatea actuală din pool. Poate fi o diferență mare între cantitatea de jeton de intrare și ceea ce veți primi în jetonul de ieșire"
 
-#: src/components/Explore/TokenDetails/TokenDetail.tsx
 #: src/components/Menu/index.tsx
+#: src/components/Tokens/TokenDetails/TokenDetail.tsx
 msgid "About"
 msgstr "Despre"
 
@@ -290,6 +290,7 @@ msgid "Available to deposit: {0}"
 msgstr "Disponibil pentru depunere: {0}"
 
 #: src/components/WalletModal/PendingView.tsx
+#: src/components/WalletModal/PendingView.tsx
 msgid "Back to wallet selection"
 msgstr "Înapoi la selecția portofelului"
 
@@ -342,6 +343,7 @@ msgid "By adding this list you are implicitly trusting that the data is correct.
 msgstr "Prin adăugarea acestei liste ești încrezător implicit că datele sunt corecte. Oricine poate crea o listă, inclusiv crearea de versiuni false ale listelor și liste existente care pretind că reprezintă proiecte care nu au unul."
 
 #: src/components/WalletModal/index.tsx
+#: src/components/WalletModal/index.tsx
 msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the Uniswap <1>Protocol Disclaimer</1>."
 msgstr "Prin conectarea unui portofel, sunteți de acord cu <0>Termenii și condițiile</0> și confirmați că ați citit și înțeles Declinarea răspunderii privind protocolul <1></1>."
 
@@ -369,6 +371,7 @@ msgstr "Verificați starea rețelei"
 msgid "Check out our v3 LP walkthrough and migration guides."
 msgstr "Vezi ghicurile noastre v3 LP de utilizare și migrare."
 
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/pages/Earn/Manage.tsx
@@ -495,6 +498,10 @@ msgstr "Confirmă Aprovizionarea"
 msgid "Confirm Swap"
 msgstr "Confirmă Schimbul"
 
+#: src/components/WalletModal/PendingView.tsx
+msgid "Confirm this connection in your wallet"
+msgstr "Confirmați această conexiune în portofel"
+
 #: src/components/ModalViews/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
@@ -550,11 +557,15 @@ msgstr "Conectat cu"
 msgid "Connecting..."
 msgstr "Se conectează..."
 
-#: src/components/AccountDetails/Copy.tsx
-msgid "Copied"
-msgstr "Copiat"
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
+#: src/theme/components.tsx
+msgid "Copied!"
+msgstr "Copiat!"
 
-#: src/components/AccountDetails/index.tsx
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
+msgid "Copy"
+msgstr "Copie"
+
 #: src/components/AccountDetails/index.tsx
 msgid "Copy Address"
 msgstr "Copiază Adresa"
@@ -604,6 +615,10 @@ msgstr "Prețul actual {0}:"
 
 #: src/components/Menu/index.tsx
 msgid "Dark Theme"
+msgstr "Tema întunecată"
+
+#: src/components/WalletDropdown/DefaultMenu.tsx
+msgid "Dark theme"
 msgstr "Tema întunecată"
 
 #: src/pages/Vote/styled.tsx
@@ -678,6 +693,7 @@ msgid "Details"
 msgstr "Detalii"
 
 #: src/components/AccountDetails/index.tsx
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
 msgid "Disconnect"
 msgstr "Deconectare"
 
@@ -755,6 +771,7 @@ msgid "Error"
 msgstr "Eroare"
 
 #: src/components/WalletModal/PendingView.tsx
+#: src/components/WalletModal/PendingView.tsx
 msgid "Error connecting"
 msgstr "Eroare de conectare"
 
@@ -823,9 +840,13 @@ msgstr "Modul Expert dezactivează prompt tranzacția de confirmare și permite 
 msgid "Expired"
 msgstr "Expirat"
 
-#: src/components/Header/index.tsx
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
 msgid "Explore"
 msgstr "Explora"
+
+#: src/pages/Tokens/index.tsx
+msgid "Explore Tokens"
+msgstr "Explorați jetoanele"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore Uniswap Analytics."
@@ -888,11 +909,8 @@ msgstr "Ascunde"
 msgid "High Price Impact"
 msgstr "Impact Preț Ridicat"
 
-#: src/components/TokenSafety/index.tsx
-msgid "I Understand"
-msgstr "Am înțeles"
-
 #: src/components/SearchModal/ImportList.tsx
+#: src/components/TokenSafety/index.tsx
 #: src/pages/AddLiquidity/index.tsx
 msgid "I understand"
 msgstr "Înţeleg"
@@ -991,16 +1009,14 @@ msgid "Invalid recipient"
 msgstr "Destinatar nevalid"
 
 #: src/components/Menu/index.tsx
+#: src/components/WalletDropdown/DefaultMenu.tsx
+#: src/components/WalletDropdown/LanguageMenu.tsx
 msgid "Language"
 msgstr "Limba"
 
 #: src/pages/Pool/index.tsx
 msgid "Learn"
 msgstr "Învață"
-
-#: src/components/TokenSafety/index.tsx
-msgid "Learn More"
-msgstr "Aflați mai multe"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Learn about providing liquidity"
@@ -1009,6 +1025,7 @@ msgstr "Aflați despre furnizarea de lichiditate"
 #: src/components/PrivacyPolicy/index.tsx
 #: src/components/PrivacyPolicy/index.tsx
 #: src/components/TokenSafety/TokenSafetyMessage.tsx
+#: src/components/TokenSafety/index.tsx
 msgid "Learn more"
 msgstr "Află mai multe"
 
@@ -1020,6 +1037,10 @@ msgstr "Legal și confidențialitate"
 #: src/components/Menu/index.tsx
 msgid "Light Theme"
 msgstr "Tema luminii"
+
+#: src/components/WalletDropdown/DefaultMenu.tsx
+msgid "Light theme"
+msgstr "Tema ușoară"
 
 #: src/components/claim/ClaimModal.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -1056,10 +1077,6 @@ msgstr "Încărcat"
 msgid "Loading"
 msgstr "Se încarcă"
 
-#: src/components/CurrencyInputPanel/index.tsx
-msgid "MAX"
-msgstr "MAX"
-
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
@@ -1081,6 +1098,7 @@ msgstr "Gestionează Lista de Jetoane"
 msgid "Manage this pool."
 msgstr "Gestionează acest grup."
 
+#: src/components/CurrencyInputPanel/index.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Max"
 msgstr "Maxim"
@@ -1266,6 +1284,7 @@ msgstr "Proprietar"
 msgid "Participating pools"
 msgstr "Grupuri participante"
 
+#: src/components/WalletDropdown/DefaultMenu.tsx
 #: src/pages/Vote/styled.tsx
 msgid "Pending"
 msgstr "In asteptarea"
@@ -1328,8 +1347,8 @@ msgstr "Grupat {0}:"
 
 #: src/pages/Pool/index.tsx
 #: src/pages/Pool/index.tsx
-msgid "Pools Overview"
-msgstr "Prezentare Generală Grupuri"
+msgid "Pools"
+msgstr "Piscine"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Portal Bridge"
@@ -1512,7 +1531,6 @@ msgstr "Caută nume sau lipește adresa"
 msgid "Select Pair"
 msgstr "Selectați Pair"
 
-#: src/components/CurrencyInputPanel/index.tsx
 #: src/components/SearchModal/CurrencySearch.tsx
 #: src/pages/PoolFinder/index.tsx
 #: src/pages/PoolFinder/index.tsx
@@ -1531,6 +1549,10 @@ msgstr "Selectați o rețea {0}"
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Select an action"
 msgstr "Selectați o acțiune"
+
+#: src/components/CurrencyInputPanel/index.tsx
+msgid "Select token"
+msgstr "Selectați jetonul"
 
 #: src/pages/AddLiquidity/index.tsx
 msgid "Selected Range"
@@ -1695,6 +1717,7 @@ msgid "The app securely collects your wallet address and shares it with TRM Labs
 msgstr "Aplicația vă colectează în siguranță adresa portofelului și o partajează cu TRM Labs Inc. din motive de risc și de conformitate."
 
 #: src/components/WalletModal/PendingView.tsx
+#: src/components/WalletModal/PendingView.tsx
 msgid "The connection attempt failed. Please click try again and follow the steps to connect in your wallet."
 msgstr "Încercarea de conectare a eșuat. Dați clic pe Încercați din nou și urmați pașii pentru a vă conecta în portofel."
 
@@ -1762,7 +1785,7 @@ msgstr "Tranzacția nu a putut fi trimisă deoarece termenul a trecut. Te rugăm
 msgid "There is no liquidity data."
 msgstr "Nu există date privind lichiditatea."
 
-#: src/components/Explore/TokenDetails/BalanceSummary.tsx
+#: src/components/Tokens/TokenDetails/BalanceSummary.tsx
 msgid "There was an error loading your {tokenSymbol} balance"
 msgstr "A apărut o eroare la încărcarea soldului dvs. {tokenSymbol}"
 
@@ -1820,7 +1843,7 @@ msgstr "La"
 msgid "To (at least)"
 msgstr "La (cel puțin)"
 
-#: src/components/Explore/TokenTable/TokenRow.tsx
+#: src/components/Tokens/TokenTable/TokenRow.tsx
 msgid "Token Name"
 msgstr "Nume simbol"
 
@@ -1828,6 +1851,7 @@ msgstr "Nume simbol"
 msgid "Token not supported"
 msgstr "Tokenul nu este acceptat"
 
+#: src/components/Header/index.tsx
 #: src/components/SearchModal/Manage.tsx
 msgid "Tokens"
 msgstr "Jetoane"
@@ -1852,7 +1876,6 @@ msgstr "Depozite totale"
 msgid "Trade Route"
 msgstr "Rută comercială"
 
-#: src/components/Settings/index.tsx
 #: src/components/Settings/index.tsx
 msgid "Transaction Settings"
 msgstr "Setări Tranzacție"
@@ -1881,10 +1904,16 @@ msgstr "Termen limită tranzacție"
 msgid "Transaction rejected."
 msgstr "Tranzacția respinsă."
 
+#: src/components/WalletDropdown/DefaultMenu.tsx
+#: src/components/WalletDropdown/TransactionMenu.tsx
+msgid "Transactions"
+msgstr "Tranzacții"
+
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Transfer Token"
 msgstr "Jeton de transfer"
 
+#: src/components/WalletModal/PendingView.tsx
 #: src/components/WalletModal/PendingView.tsx
 msgid "Try Again"
 msgstr "Încearcă din nou"
@@ -2043,7 +2072,6 @@ msgid "View on Etherscan"
 msgstr "Vizualizare pe Etherscan"
 
 #: src/components/AccountDetails/index.tsx
-#: src/components/AccountDetails/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "View on Explorer"
@@ -2124,6 +2152,10 @@ msgstr "Votarea începe cu aproximativ {0}"
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Waiting For Confirmation"
 msgstr "În Așteptarea Confirmării"
+
+#: src/components/WalletModal/PendingView.tsx
+msgid "Waiting to connect"
+msgstr "În așteptarea conectării"
 
 #: src/components/AddressInputPanel/index.tsx
 msgid "Wallet Address or ENS name"
@@ -2378,6 +2410,10 @@ msgstr "https:// sau ipfs:// sau numele ENS"
 msgid "minutes"
 msgstr "minute"
 
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
+msgid "reward"
+msgstr "Răsplată"
+
 #: src/components/SearchModal/ImportRow.tsx
 msgid "via {0}"
 msgstr "prin {0}"
@@ -2400,6 +2436,7 @@ msgstr "{0, plural, =1 {Nu puteți tranzacționa acest token folosind aplicația
 
 #: src/components/RateToggle/index.tsx
 #: src/components/RateToggle/index.tsx
+#: src/components/Settings/index.tsx
 msgid "{0}"
 msgstr "{0}"
 
@@ -2554,6 +2591,6 @@ msgid "{tokenB} per {tokenA}"
 msgstr "{tokenB} per {tokenA}"
 
 #: src/pages/Pool/PositionPage.tsx
-msgid "← Back to Pools Overview"
-msgstr "← Înapoi la Rezumatul Grupurilor"
+msgid "← Back to Pools"
+msgstr "← Înapoi la Piscine"
 

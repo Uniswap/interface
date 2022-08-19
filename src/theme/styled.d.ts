@@ -1,13 +1,15 @@
 import { FlattenSimpleInterpolation, ThemedCssFunction } from 'styled-components/macro'
 
 export type Color = string
+export type AllColors = ThemeColors | Colors
+
 export interface ThemeColors {
   userThemeColor: string
 
   backgroundBackdrop: Color
   backgroundSurface: Color
-  backgroundContainer: Color
-  backgroundAction: Color
+  backgroundModule: Color
+  backgroundInteractive: Color
   backgroundOutline: Color
   backgroundScrim: Color
 
@@ -20,6 +22,7 @@ export interface ThemeColors {
   accentSuccess: Color
   accentWarning: Color
   accentFailure: Color
+  accentCritical: Color
 
   accentActionSoft: Color
   accentActiveSoft: Color
@@ -37,7 +40,6 @@ export interface ThemeColors {
 
   white: Color
   black: Color
-  none: Color
 
   chain_1: Color
   chain_3: Color
@@ -53,7 +55,9 @@ export interface ThemeColors {
 
   blue200: Color
   flyoutDropShadow: Color
+  deepShadow: Color
   hoverState: Color
+  hoverDefault: Color
 }
 
 export interface Colors {
