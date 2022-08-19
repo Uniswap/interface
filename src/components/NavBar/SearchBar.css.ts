@@ -67,11 +67,12 @@ export const suggestionRow = style([
     justifyContent: 'space-between',
     paddingY: '8',
     paddingX: '16',
+    transition: '250',
   }),
   {
     ':hover': {
       cursor: 'pointer',
-      background: vars.color.lightGrayContainer,
+      background: vars.color.lightGrayButton,
     },
     textDecoration: 'none',
   },

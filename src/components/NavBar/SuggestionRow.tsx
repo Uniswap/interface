@@ -8,7 +8,7 @@ import { useSearchHistory } from 'nft/hooks'
 import { FungibleToken, GenieCollection } from 'nft/types'
 import { ethNumberStandardFormatter } from 'nft/utils/currency'
 import { putCommas } from 'nft/utils/putCommas'
-import { useCallback, useEffect, useReducer, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 
 import { TokenWarningRedIcon, VerifiedIcon } from '../../nft/components/icons'
@@ -58,7 +58,7 @@ export const CollectionRow = ({ collection, isHovered, setHoveredIndex, toggleOp
       className={styles.suggestionRow}
       style={{ background: isHovered ? vars.color.lightGrayButton : 'none' }}
     >
-      <Row style={{ width: '68%' }}>
+      <Row style={{ width: '60%' }}>
         {!brokenImage && collection.imageUrl ? (
           <Box
             as="img"
@@ -137,7 +137,7 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index 
       className={styles.suggestionRow}
       style={{ background: isHovered ? vars.color.lightGrayButton : 'none' }}
     >
-      <Row>
+      <Row style={{ width: '65%' }}>
         {!brokenImage && token.logoURI ? (
           <Box
             as="img"
@@ -180,16 +180,9 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index 
 }
 
 export const SkeletonRow = () => {
-  const [isHovered, toggleHovered] = useReducer((s) => !s, false)
-
   return (
     <Box className={styles.searchBarDropdown}>
-      <Row
-        background={isHovered ? 'lightGrayButton' : 'none'}
-        onMouseEnter={toggleHovered}
-        onMouseLeave={toggleHovered}
-        className={styles.suggestionRow}
-      >
+      <Row className={styles.suggestionRow}>
         <Row>
           <Box className={styles.imageHolder} />
           <Box borderRadius="round" height="16" width="160" background="loading" />

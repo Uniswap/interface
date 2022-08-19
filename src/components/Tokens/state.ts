@@ -10,7 +10,7 @@ export const favoritesAtom = atomWithStorage<string[]>('favorites', [])
 export const showFavoritesAtom = atomWithStorage<boolean>('showFavorites', false)
 export const filterStringAtom = atomWithReset<string>('')
 export const filterNetworkAtom = atom<SupportedChainId>(SupportedChainId.MAINNET)
-export const filterTimeAtom = atom<TimePeriod>(TimePeriod.day)
+export const filterTimeAtom = atom<TimePeriod>(TimePeriod.DAY)
 export const sortCategoryAtom = atom<Category>(Category.marketCap)
 export const sortDirectionAtom = atom<SortDirection>(SortDirection.decreasing)
 

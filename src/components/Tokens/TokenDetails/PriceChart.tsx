@@ -1,3 +1,4 @@
+import { Token } from '@uniswap/sdk-core'
 import { AxisBottom, TickFormatter } from '@visx/axis'
 import { localPoint } from '@visx/event'
 import { EventType } from '@visx/event/lib/types'
@@ -5,6 +6,7 @@ import { GlyphCircle } from '@visx/glyph'
 import { Line } from '@visx/shape'
 import { filterTimeAtom } from 'components/Tokens/state'
 import { bisect, curveBasis, NumberValue, scaleLinear } from 'd3'
+import { useTokenPriceQuery } from 'graphql/data/TokenPriceQuery'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import { TimePeriod } from 'hooks/useExplorePageQuery'
 import { useAtom } from 'jotai'
@@ -22,20 +24,21 @@ import {
   weekFormatter,
 } from 'utils/formatChartTimes'
 
-import data from '../../Charts/data.json'
 import LineChart from '../../Charts/LineChart'
 
 // TODO: This should be combined with the logic in TimeSelector.
 const TIME_DISPLAYS: [TimePeriod, string][] = [
-  [TimePeriod.hour, '1H'],
-  [TimePeriod.day, '1D'],
-  [TimePeriod.week, '1W'],
-  [TimePeriod.month, '1M'],
-  [TimePeriod.year, '1Y'],
-  [TimePeriod.all, 'All'],
+  [TimePeriod.HOUR, '1H'],
+  [TimePeriod.DAY, '1D'],
+  [TimePeriod.WEEK, '1W'],
+  [TimePeriod.MONTH, '1M'],
+  [TimePeriod.YEAR, '1Y'],
+  [TimePeriod.ALL, 'All'],
 ]
 
 type PricePoint = { value: number; timestamp: number }
+
+const DATA_EMPTY = { value: 0, timestamp: 0 }
 
 function getPriceBounds(pricePoints: PricePoint[]): [number, number] {
   const prices = pricePoints.map((x) => x.value)
@@ -125,17 +128,17 @@ function tickFormat(
   locale: string
 ): [TickFormatter<NumberValue>, (v: number) => string, number[]] {
   switch (timePeriod) {
-    case TimePeriod.hour:
+    case TimePeriod.HOUR:
       return [hourFormatter(locale), dayHourFormatter(locale), getTicks(startTimestamp, endTimestamp)]
-    case TimePeriod.day:
+    case TimePeriod.DAY:
       return [hourFormatter(locale), dayHourFormatter(locale), getTicks(startTimestamp, endTimestamp)]
-    case TimePeriod.week:
+    case TimePeriod.WEEK:
       return [weekFormatter(locale), dayHourFormatter(locale), getTicks(startTimestamp, endTimestamp, 6)]
-    case TimePeriod.month:
+    case TimePeriod.MONTH:
       return [monthDayFormatter(locale), dayHourFormatter(locale), getTicks(startTimestamp, endTimestamp)]
-    case TimePeriod.year:
+    case TimePeriod.YEAR:
       return [monthFormatter(locale), monthYearDayFormatter(locale), getTicks(startTimestamp, endTimestamp)]
-    case TimePeriod.all:
+    case TimePeriod.ALL:
       return [monthYearFormatter(locale), monthYearDayFormatter(locale), getTicks(startTimestamp, endTimestamp)]
   }
 }
@@ -147,19 +150,26 @@ const crosshairDateOverhang = 80
 interface PriceChartProps {
   width: number
   height: number
+  token: Token
 }
 
-export function PriceChart({ width, height }: PriceChartProps) {
+export function PriceChart({ width, height, token }: PriceChartProps) {
   const [timePeriod, setTimePeriod] = useAtom(filterTimeAtom)
   const locale = useActiveLocale()
   const theme = useTheme()
 
+  // TODO: Add network selector input, consider using backend type instead of current front end selector type
+  const pricePoints: PricePoint[] = useTokenPriceQuery(token.address, timePeriod, 'ETHEREUM').filter(
+    (p): p is PricePoint => Boolean(p && p.value)
+  )
+
+  const hasData = pricePoints.length !== 0
+
   /* TODO: Implement API calls & cache to use here */
-  const pricePoints = data[timePeriod]
-  const startingPrice = pricePoints[0]
-  const endingPrice = pricePoints[pricePoints.length - 1]
-  const initialState = { pricePoint: endingPrice, xCoordinate: null }
-  const [selected, setSelected] = useState<{ pricePoint: PricePoint; xCoordinate: number | null }>(initialState)
+  const startingPrice = hasData ? pricePoints[0] : DATA_EMPTY
+  const endingPrice = hasData ? pricePoints[pricePoints.length - 1] : DATA_EMPTY
+  const [displayPrice, setDisplayPrice] = useState(startingPrice)
+  const [crosshair, setCrosshair] = useState<number | null>(null)
 
   const graphWidth = width + crosshairDateOverhang
   const graphHeight = height - timeOptionsHeight
@@ -190,10 +200,21 @@ export function PriceChart({ width, height }: PriceChartProps) {
         pricePoint = x0.valueOf() - d0.timestamp.valueOf() > d1.timestamp.valueOf() - x0.valueOf() ? d1 : d0
       }
 
-      setSelected({ pricePoint, xCoordinate: timeScale(pricePoint.timestamp) })
+      setCrosshair(timeScale(pricePoint.timestamp))
+      setDisplayPrice(pricePoint)
     },
     [timeScale, pricePoints]
   )
+
+  const resetDisplay = useCallback(() => {
+    setCrosshair(null)
+    setDisplayPrice(endingPrice)
+  }, [setCrosshair, setDisplayPrice, endingPrice])
+
+  // TODO: connect to loading state
+  if (!hasData) {
+    return null
+  }
 
   const [tickFormatter, crosshairDateFormatter, ticks] = tickFormat(
     startingPrice.timestamp,
@@ -201,14 +222,14 @@ export function PriceChart({ width, height }: PriceChartProps) {
     timePeriod,
     locale
   )
-  const [delta, arrow] = getDelta(startingPrice.value, selected.pricePoint.value)
+  const [delta, arrow] = getDelta(startingPrice.value, displayPrice.value)
   const crosshairEdgeMax = width * 0.97
-  const crosshairAtEdge = !!selected.xCoordinate && selected.xCoordinate > crosshairEdgeMax
+  const crosshairAtEdge = !!crosshair && crosshair > crosshairEdgeMax
 
   return (
     <>
       <ChartHeader>
-        <TokenPrice>${selected.pricePoint.value.toFixed(2)}</TokenPrice>
+        <TokenPrice>${displayPrice.value.toFixed(2)}</TokenPrice>
         <DeltaContainer>
           {delta}
           <ArrowCell>{arrow}</ArrowCell>
@@ -220,12 +241,12 @@ export function PriceChart({ width, height }: PriceChartProps) {
         getY={(p: PricePoint) => rdScale(p.value)}
         marginTop={margin.top}
         /* Default curve doesn't look good for the ALL chart */
-        curve={timePeriod === TimePeriod.all ? curveBasis : undefined}
+        curve={timePeriod === TimePeriod.ALL ? curveBasis : undefined}
         strokeWidth={2}
         width={graphWidth}
         height={graphHeight}
       >
-        {selected.xCoordinate !== null ? (
+        {crosshair !== null ? (
           <g>
             <AxisBottom
               scale={timeScale}
@@ -244,25 +265,25 @@ export function PriceChart({ width, height }: PriceChartProps) {
               })}
             />
             <text
-              x={selected.xCoordinate + (crosshairAtEdge ? -4 : 4)}
+              x={crosshair + (crosshairAtEdge ? -4 : 4)}
               y={margin.crosshair + 10}
               textAnchor={crosshairAtEdge ? 'end' : 'start'}
               fontSize={12}
               fill={theme.textSecondary}
             >
-              {crosshairDateFormatter(selected.pricePoint.timestamp)}
+              {crosshairDateFormatter(displayPrice.timestamp)}
             </text>
             <Line
-              from={{ x: selected.xCoordinate, y: margin.crosshair }}
-              to={{ x: selected.xCoordinate, y: graphHeight }}
+              from={{ x: crosshair, y: margin.crosshair }}
+              to={{ x: crosshair, y: graphHeight }}
               stroke={theme.backgroundOutline}
               strokeWidth={1}
               pointerEvents="none"
               strokeDasharray="4,4"
             />
             <GlyphCircle
-              left={selected.xCoordinate}
-              top={rdScale(selected.pricePoint.value) + margin.top}
+              left={crosshair}
+              top={rdScale(displayPrice.value) + margin.top}
               size={50}
               fill={theme.accentActive}
               stroke={theme.backgroundOutline}
@@ -281,7 +302,7 @@ export function PriceChart({ width, height }: PriceChartProps) {
           onTouchStart={handleHover}
           onTouchMove={handleHover}
           onMouseMove={handleHover}
-          onMouseLeave={() => setSelected(initialState)}
+          onMouseLeave={resetDisplay}
         />
       </LineChart>
       <TimeOptionsWrapper>

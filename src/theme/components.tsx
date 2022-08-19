@@ -21,7 +21,8 @@ import { Color } from './styled'
 
 // TODO: Break this file into a components folder
 
-export const CloseIcon = styled(X)<{ onClick: () => void }>`
+export const CloseIcon = styled(X)<{ onClick: () => void; redesignFlag?: boolean }>`
+  color: ${({ redesignFlag, theme }) => redesignFlag && theme.textSecondary};
   cursor: pointer;
 `
 
