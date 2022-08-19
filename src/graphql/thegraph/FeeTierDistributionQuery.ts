@@ -59,7 +59,7 @@ export default function useFeeTierDistributionQuery(
         complete: () => setIsLoading(false),
       })
     }
-  }, [token0, token1, chainId, environment])
+  }, [token0, token1, chainId])
 
   // Trigger fetch on first load
   useEffect(refreshData, [refreshData, token0, token1])
