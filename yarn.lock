@@ -10284,11 +10284,6 @@ form-data@~2.3.2:
     combined-stream "^1.0.6"
     mime-types "^2.1.12"
 
-fortmatic@^2.4.0:
-  version "2.4.0"
-  resolved "https://registry.yarnpkg.com/fortmatic/-/fortmatic-2.4.0.tgz#0546803d5c6187c06b3367eba66235cf4a195ece"
-  integrity sha512-4LVxybyWcz8eFkTjIW12JRyRCUV9/qih435l0+5ncTVIb+zzXjvjQ5dZU0eBAXXyAgmV9BIRYkQL9H/lc76w/w==
-
 forwarded@0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/forwarded/-/forwarded-0.2.0.tgz#2269936428aad4c15c7ebe9779a84bf0b2a81811"
