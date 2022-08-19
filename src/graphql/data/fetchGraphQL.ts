@@ -28,7 +28,6 @@ const fetchQuery = (params: RequestParameters, variables: Variables): Promise<Gr
     query: params.text, // GraphQL text from input
     variables,
   })
-  console.log('here')
 
   return aws.fetch(URL, { body, headers }).then((res) => res.json())
 }

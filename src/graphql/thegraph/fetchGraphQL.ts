@@ -41,8 +41,6 @@ const fetchQuery = (params: RequestParameters, variables: Variables): Observable
     variables,
   })
 
-  console.log('WHAT')
-
   const response = fetch(subgraphUrl, {
     method: 'POST',
     headers,
