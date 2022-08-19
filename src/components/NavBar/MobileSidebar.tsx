@@ -1,6 +1,6 @@
 import FeatureFlagModal from 'components/FeatureFlagModal/FeatureFlagModal'
 import { PrivacyPolicyModal } from 'components/PrivacyPolicy'
-import { Phase1Variant, usePhase1Flag } from 'featureFlags/flags/phase1'
+import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
 import { Box } from 'nft/components/Box'
 import { Portal } from 'nft/components/common/Portal'
 import { Column, Row } from 'nft/components/Flex'
@@ -135,7 +135,7 @@ export const MobileSideBar = () => {
   const togglePrivacyPolicy = useTogglePrivacyPolicy()
   const openFeatureFlagsModal = useToggleModal(ApplicationModal.FEATURE_FLAGS)
   const { pathname } = useLocation()
-  const phase1Flag = usePhase1Flag()
+  const nftFlag = useNftFlag()
   const isPoolActive =
     pathname.startsWith('/pool') ||
     pathname.startsWith('/add') ||
@@ -164,7 +164,7 @@ export const MobileSideBar = () => {
                 <NavLinkRow href="/tokens" close={toggleOpen} isActive={pathname.startsWith('/tokens')}>
                   Tokens
                 </NavLinkRow>
-                {phase1Flag === Phase1Variant.Enabled && (
+                {nftFlag === NftVariant.Enabled && (
                   <NavLinkRow href="/nfts" close={toggleOpen} isActive={pathname.startsWith('/nfts')}>
                     NFTs
                   </NavLinkRow>
