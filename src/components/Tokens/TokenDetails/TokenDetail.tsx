@@ -11,7 +11,7 @@ import { useCurrency, useIsUserAddedToken, useToken } from 'hooks/Tokens'
 import { useAtomValue } from 'jotai/utils'
 import { useCallback } from 'react'
 import { useState } from 'react'
-import { ArrowLeft, Heart } from 'react-feather'
+import { ArrowLeft, Heart, TrendingUp } from 'react-feather'
 import { Link, useNavigate } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import { ClickableStyle, CopyContractAddress } from 'theme'
@@ -19,6 +19,7 @@ import { formatDollarAmount } from 'utils/formatDollarAmt'
 
 import { favoritesAtom, useToggleFavorite } from '../state'
 import { ClickFavorited } from '../TokenTable/TokenRow'
+import { Wave } from './LoadingTokenDetail'
 import Resource from './Resource'
 import ShareButton from './ShareButton'
 
@@ -195,8 +196,8 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
   if (!token || !token.name || !token.symbol) {
     return (
       <TopArea>
-        <BreadcrumbNavLink to="/explore">
-          <ArrowLeft size={14} /> Explore
+        <BreadcrumbNavLink to="/tokens">
+          <ArrowLeft size={14} /> Tokens
         </BreadcrumbNavLink>
         <ChartHeader>
           <TokenInfoContainer>
