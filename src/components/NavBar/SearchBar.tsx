@@ -148,7 +148,7 @@ export const SearchBarDropdown = ({ toggleOpen, tokens, collections, hasInput }:
       .slice(0, isNFTPage ? 3 : 2)
   }, [isNFTPage, trendingCollectionResults])
 
-  const showTrendingTokens: Boolean = useMemo(
+  const showTrendingCollections: boolean = useMemo(
     () => (trendingCollections?.length ?? 0) > 0 && !isTokenPage && phase1Flag === Phase1Variant.Enabled,
     [trendingCollections?.length, isTokenPage, phase1Flag]
   )
@@ -239,7 +239,7 @@ export const SearchBarDropdown = ({ toggleOpen, tokens, collections, hasInput }:
               headerIcon={<TrendingArrow />}
             />
           )}
-          {showTrendingTokens && (
+          {showTrendingCollections && (
             <SearchBarDropdownSection
               hoveredIndex={hoveredIndex}
               startingIndex={searchHistory.length + (isNFTPage ? 0 : trendingTokens?.length ?? 0)}
