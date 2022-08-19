@@ -62,6 +62,14 @@ const PageWrapper = styled(AutoColumn)`
   `};
 `
 
+const MarkDownDescription = styled(ReactMarkdown)`
+  & > p > img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+`
+
 const ProposalInfo = styled(AutoColumn)`
   background: ${({ theme }) => theme.deprecated_bg0};
   border-radius: 12px;
@@ -468,7 +476,7 @@ export default function VotePage() {
                 <Trans>Description</Trans>
               </ThemedText.DeprecatedMediumHeader>
               <MarkDownWrapper>
-                <ReactMarkdown source={proposalData?.description} />
+                <MarkDownDescription source={proposalData?.description} />
               </MarkDownWrapper>
             </AutoColumn>
             <AutoColumn gap="md">
