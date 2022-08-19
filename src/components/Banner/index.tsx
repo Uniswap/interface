@@ -103,14 +103,6 @@ function Banner({
 
   const ALL_BANNERS = [
     {
-      // Polygon LM
-      id: 'polygon-lm',
-      start: new Date('2022-08-17T00:00:00.000Z'),
-      end: new Date('2022-09-17T00:00:00.000Z'),
-      img: isInModal ? PolygonMobile : w > 768 ? PolygonDesktop : w > 500 ? PolygonTablet : PolygonMobile,
-      link: 'https://kyberswap.com/farms?tab=elastic&networkId=137',
-    },
-    {
       // KyberSwap Trading Campaign ATH
       id: 'kyberSwap-trading-campaign-polygon',
       start: new Date('2022-08-15T11:00:00.000Z'),
@@ -123,6 +115,14 @@ function Banner({
         ? KyberSwapTradingCampaignTablet
         : KyberSwapTradingCampaignMobile,
       link: 'https://kyberswap.com/campaigns/kyberswap-trading-campaigns-with-polygon-chain-5?networkId=137&utm_source=partner&utm_medium=banner&utm_campaign=polygontradingcontest&utm_content=onsite',
+    },
+    {
+      // Polygon LM
+      id: 'polygon-lm',
+      start: new Date('2022-08-17T00:00:00.000Z'),
+      end: new Date('2022-09-17T00:00:00.000Z'),
+      img: isInModal ? PolygonMobile : w > 768 ? PolygonDesktop : w > 500 ? PolygonTablet : PolygonMobile,
+      link: 'https://kyberswap.com/farms?tab=elastic&networkId=137',
     },
   ]
 
