@@ -510,7 +510,7 @@ export default function LoadedRow({
         price={
           <ClickableContent>
             <PriceInfoCell>
-              {formatDollarAmount(tokenDetailData.tokenProjects?.[0]?.markets?.[0]?.price?.value).toUpperCase()}
+              {formatDollarAmount(tokenDetailData.tokenProjects?.[0]?.markets?.[0]?.price?.value).toUpperCase() ?? '-'}
               <PercentChangeInfoCell>{tokenPercentChangeInfo}</PercentChangeInfoCell>
             </PriceInfoCell>
           </ClickableContent>
@@ -518,12 +518,14 @@ export default function LoadedRow({
         percentChange={<ClickableContent>{tokenPercentChangeInfo}</ClickableContent>}
         marketCap={
           <ClickableContent>
-            {formatDollarAmount(tokenDetailData.tokenProjects?.[0]?.markets?.[0]?.marketCap?.value).toUpperCase()}
+            {formatDollarAmount(tokenDetailData.tokenProjects?.[0]?.markets?.[0]?.marketCap?.value).toUpperCase() ??
+              '-'}
           </ClickableContent>
         }
         volume={
           <ClickableContent>
-            {formatDollarAmount(tokenDetailData.tokenProjects?.[0]?.markets?.[0]?.marketCap?.value).toUpperCase()}
+            {formatDollarAmount(tokenDetailData.tokenProjects?.[0]?.markets?.[0]?.marketCap?.value).toUpperCase() ??
+              '-'}
           </ClickableContent>
         }
         sparkLine={
