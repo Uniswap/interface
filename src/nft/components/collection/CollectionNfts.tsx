@@ -50,6 +50,7 @@ export const CollectionNfts = ({ contractAddress }: CollectionNftsProps) => {
   }, [collectionAssets, AssetsFetchSuccess])
 
   if (!collectionNfts) {
+    // TODO: collection unavailable page
     return <div>No CollectionAssets</div>
   }
 
