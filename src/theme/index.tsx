@@ -13,7 +13,7 @@ import { darkTheme } from '../nft/themes/darkTheme'
 import { lightTheme } from '../nft/themes/lightTheme'
 import { useIsDarkMode } from '../state/user/hooks'
 import { colors as ColorsPalette, colorsDark, colorsLight } from './colors'
-import { AllColors, Colors, ThemeColors } from './styled'
+import { AllColors, Colors, Fonts, ThemeColors } from './styled'
 import { opacify } from './utils'
 
 export * from './components'
@@ -242,11 +242,22 @@ function oldColorsUpdated(darkMode: boolean): Colors {
   }
 }
 
+function themeFonts(): Fonts {
+  return {
+    headline: css`
+      font-weight: 400;
+      font-size: 36px;
+      line-height: 44px;
+    `,
+  }
+}
+
 function getTheme(darkMode: boolean, isNewColorsEnabled: boolean): DefaultTheme {
   const useColors = isNewColorsEnabled ? oldColorsUpdated(darkMode) : oldColors(darkMode)
   return {
     ...uniswapThemeColors(darkMode),
     ...useColors,
+    ...themeFonts(),
 
     grids: {
       sm: 8,

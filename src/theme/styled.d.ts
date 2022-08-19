@@ -119,8 +119,12 @@ export interface Colors {
   deprecated_warning: Color
 }
 
+export interface Fonts {
+  headline: FlattenSimpleInterpolation
+}
+
 declare module 'styled-components/macro' {
-  export interface DefaultTheme extends Colors, ThemeColors {
+  export interface DefaultTheme extends Colors, ThemeColors, Fonts {
     grids: Grids
 
     // shadows

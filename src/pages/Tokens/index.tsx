@@ -13,7 +13,6 @@ import { useAtomValue, useResetAtom } from 'jotai/utils'
 import { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 import styled from 'styled-components/macro'
-import { ThemedText } from 'theme'
 
 const ExploreContainer = styled.div`
   width: 100%;
@@ -29,6 +28,7 @@ export const TitleContainer = styled.div`
   margin-left: auto;
   margin-right: auto;
   display: flex;
+  ${({ theme }) => theme.headline}
 `
 const FiltersContainer = styled.div`
   display: flex;
@@ -72,9 +72,7 @@ const Tokens = () => {
     <Trace page={PageName.TOKENS_PAGE} shouldLogImpression>
       <ExploreContainer>
         <TitleContainer>
-          <ThemedText.LargeHeader>
-            <Trans>Explore Tokens</Trans>
-          </ThemedText.LargeHeader>
+          <Trans>Explore Tokens</Trans>
         </TitleContainer>
         <FiltersWrapper>
           <FiltersContainer>
