@@ -7,7 +7,7 @@ import type { Chain, TokenPriceQuery as TokenPriceQueryType } from './__generate
 export function useTokenPriceQuery(address: string, timePeriod: TimePeriod, chain: Chain) {
   const tokenPrices = useLazyLoadQuery<TokenPriceQueryType>(
     graphql`
-      query TokenPriceQuery($contract: ContractInput) {
+      query TokenPriceQuery($contract: ContractInput!) {
         tokenProjects(contracts: [$contract]) {
           name
           markets(currencies: [USD]) {
