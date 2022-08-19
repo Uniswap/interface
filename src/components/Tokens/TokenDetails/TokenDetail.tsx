@@ -231,7 +231,7 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
               <Trans>No token information available</Trans>
             </NoInfoAvailable>
             <ResourcesContainer>
-              <Resource name={'Etherscan'} link={'https://etherscan.io/'} />
+              <Resource name={'Etherscan'} link={`https://etherscan.io/address/${address}`} />
               <Resource name={'Protocol Info'} link={`https://info.uniswap.org/#/tokens/${address}`} />
             </ResourcesContainer>
           </AboutSection>
@@ -296,7 +296,7 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
         </AboutHeader>
         {tokenDetailData.tokenProjects?.[0]?.description}
         <ResourcesContainer>
-          <Resource name={'Etherscan'} link={'https://etherscan.io/'} />
+          <Resource name={'Etherscan'} link={`https://etherscan.io/address/${address}`} />
           <Resource name={'Protocol Info'} link={`https://info.uniswap.org/#/tokens/${address}`} />
           <Resource name={'Website'} link={tokenDetailData.tokenProjects?.[0]?.homepageUrl} />
           <Resource name={'Twitter'} link={`https://twitter.com/${tokenDetailData.tokenProjects?.[0]?.twitterName}`} />
@@ -307,15 +307,13 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
           <Stat>
             Market cap
             <StatPrice>
-              {formatDollarAmount(tokenDetailData.tokenProjects?.[0]?.markets?.[0]?.marketCap?.value).toUpperCase() ??
-                '-'}
+              {formatDollarAmount(tokenDetailData.tokenProjects?.[0]?.markets?.[0]?.marketCap?.value) ?? '-'}
             </StatPrice>
           </Stat>
           <Stat>
             24H volume
             <StatPrice>
-              {formatDollarAmount(tokenDetailData.tokenProjects?.[0]?.markets?.[0]?.volume24h?.value).toUpperCase() ??
-                '-'}
+              {formatDollarAmount(tokenDetailData.tokenProjects?.[0]?.markets?.[0]?.volume24h?.value) ?? '-'}
             </StatPrice>
           </Stat>
         </StatPair>
@@ -323,16 +321,13 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
           <Stat>
             52W low
             <StatPrice>
-              {formatDollarAmount(tokenDetailData.tokenProjects?.[0]?.markets?.[0]?.priceLow52W?.value).toUpperCase() ??
-                '-'}
+              {formatDollarAmount(tokenDetailData.tokenProjects?.[0]?.markets?.[0]?.priceLow52W?.value) ?? '-'}
             </StatPrice>
           </Stat>
           <Stat>
             52W high
             <StatPrice>
-              {formatDollarAmount(
-                tokenDetailData.tokenProjects?.[0]?.markets?.[0]?.priceHigh52W?.value
-              ).toUpperCase() ?? '-'}
+              {formatDollarAmount(tokenDetailData.tokenProjects?.[0]?.markets?.[0]?.priceHigh52W?.value) ?? '-'}
             </StatPrice>
           </Stat>
         </StatPair>
