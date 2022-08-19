@@ -151,7 +151,7 @@ function ProMMDepositNFTModal({
   selectedFarmAddress: string
 }) {
   const qs = useParsedQueryString()
-  const tab = qs.tab || 'active'
+  const tab = qs.type || 'active'
 
   const { account } = useActiveWeb3React()
   const theme = useTheme()
@@ -162,6 +162,7 @@ function ProMMDepositNFTModal({
   const poolAddresses = selectedFarm
     ?.filter(farm => (tab === 'active' ? farm.endTime > +new Date() / 1000 : farm.endTime < +new Date() / 1000))
     .map(farm => farm.poolAddress.toLowerCase())
+
   const [selectedNFTs, setSeletedNFTs] = useState<string[]>([])
   const tokens = useTokens(selectedFarm.map(farm => [farm.token0, farm.token1]).reduce((arr, cur) => [...arr, ...cur]))
 
