@@ -53,45 +53,36 @@ const Banner = () => {
       onMouseLeave={() => setHover(false)}
       cursor="pointer"
     >
-      {collections ? (
-        collections.map((collection: TrendingCollection, index: number) => (
-          <Link to={`/nfts/collection/${collection.address}`} key={index} style={{ textDecoration: 'none' }}>
-            <Box
-              visibility={index === current ? 'visible' : 'hidden'}
-              style={{
-                height: index === current ? '386px' : '0',
-                opacity: index === current ? 1 : 0,
-                transition: 'visibility 0s linear 0s, opacity 400ms',
-              }}
-            >
-              <CollectionWrapper bannerImageUrl={collection.bannerImageUrl}>
-                <div className={styles.bannerContent}>
-                  <Box
-                    as="section"
-                    className={section}
-                    display="flex"
-                    flexDirection="row"
-                    flexWrap="nowrap"
-                    paddingTop="40"
-                  >
-                    <CollectionDetails collection={collection} hovered={hovered} rank={index + 1} />
-                  </Box>
-                  <Center marginTop="16">
-                    {Array(collections.length)
-                      .fill(null)
-                      .map((value, carouselIndex) => (
-                        <CarouselIndicator
-                          active={carouselIndex === current}
-                          onClick={() => setCurrent(carouselIndex)}
-                          key={carouselIndex}
-                        />
-                      ))}
-                  </Center>
-                </div>
-              </CollectionWrapper>
-            </Box>
-          </Link>
-        ))
+      {collections && collections[current] ? (
+        <Link to={`/nfts/collection/${collections[current].address}`} style={{ textDecoration: 'none' }}>
+          <Box style={{ height: '386px' }}>
+            <CollectionWrapper bannerImageUrl={collections[current].bannerImageUrl}>
+              <div className={styles.bannerContent}>
+                <Box
+                  as="section"
+                  className={section}
+                  display="flex"
+                  flexDirection="row"
+                  flexWrap="nowrap"
+                  paddingTop="40"
+                >
+                  <CollectionDetails collection={collections[current]} hovered={hovered} rank={current + 1} />
+                </Box>
+                <Center marginTop="16">
+                  {Array(collections.length)
+                    .fill(null)
+                    .map((value, carouselIndex) => (
+                      <CarouselIndicator
+                        active={carouselIndex === current}
+                        onClick={() => setCurrent(carouselIndex)}
+                        key={carouselIndex}
+                      />
+                    ))}
+                </Center>
+              </div>
+            </CollectionWrapper>
+          </Box>
+        </Link>
       ) : (
         <>
           {/* TODO: Improve Loading State */}

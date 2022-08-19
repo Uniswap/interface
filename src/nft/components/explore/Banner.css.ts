@@ -2,20 +2,12 @@ import { style } from '@vanilla-extract/css'
 import { breakpoints, sprinkles } from 'nft/css/sprinkles.css'
 
 /* Override for BodyWrapper properties */
-export const fullWidth = style([
-  sprinkles({
-    left: '1/2',
-    right: '1/2',
-    width: 'full',
-    maxWidth: 'full',
-    position: 'absolute',
-  }),
-  {
-    top: '72px',
-    marginLeft: '-50vw',
-    marginRight: '-50vw',
-  },
-])
+export const fullWidth = sprinkles({
+  left: '0',
+  top: '72',
+  width: 'full',
+  position: 'absolute',
+})
 
 export const bannerWrap = style([
   sprinkles({
@@ -82,18 +74,18 @@ export const volumeRank = style([
     paddingBottom: '8',
     paddingRight: '16',
     paddingLeft: '16',
-    color: 'green200',
+    color: 'blue400',
   }),
   {
     background: 'rgba(92, 254, 157, 0.12)',
     borderRadius: '64px',
-    maxWidth: '175px',
+    maxWidth: '172px',
   },
 ])
 
 export const exploreCollection = style([
   {
-    width: '174px',
+    width: '176px',
   },
   sprinkles({
     color: 'explicitWhite',
