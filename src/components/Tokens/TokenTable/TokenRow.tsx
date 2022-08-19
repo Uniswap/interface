@@ -524,7 +524,7 @@ export default function LoadedRow({
         }
         volume={
           <ClickableContent>
-            {formatDollarAmount(tokenDetailData.tokenProjects?.[0]?.markets?.[0]?.marketCap?.value).toUpperCase() ??
+            {formatDollarAmount(tokenDetailData.tokenProjects?.[0]?.markets?.[0]?.volume24h?.value).toUpperCase() ??
               '-'}
           </ClickableContent>
         }
