@@ -15,7 +15,7 @@ import { formatPrice, formatUSDPrice } from 'src/utils/format'
 import { ExplorerDataType, getExplorerLink, getTwitterLink } from 'src/utils/linking'
 
 const tokenDetailsStatsQuery = graphql`
-  query TokenDetailsStatsQuery($contract: ContractInput) {
+  query TokenDetailsStatsQuery($contract: ContractInput!) {
     tokenProjects(contracts: [$contract]) {
       description
       homepageUrl

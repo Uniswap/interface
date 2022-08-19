@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9b0575c85ed5959523e044b7dcc6a16d>>
+ * @generated SignedSource<<ca6c26efcc6adaf45d85e21f51f56dc2>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,7 +15,7 @@ export type ContractInput = {
   chain: Chain;
 };
 export type TokenModel_PriceQuery$variables = {
-  contract?: ContractInput | null;
+  contract: ContractInput;
 };
 export type TokenModel_PriceQuery$data = {
   readonly tokenProjects: ReadonlyArray<{
@@ -384,16 +384,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "afbb4499d0aae2fee288bb96f94f2a4b",
+    "cacheID": "4e94b361f0b21108d26a42d38f21f56e",
     "id": null,
     "metadata": {},
     "name": "TokenModel_PriceQuery",
     "operationKind": "query",
-    "text": "query TokenModel_PriceQuery(\n  $contract: ContractInput\n) {\n  tokenProjects(contracts: [$contract]) {\n    name\n    markets(currencies: [USD]) {\n      priceHistory1H: priceHistory(duration: HOUR) {\n        timestamp\n        close: value\n        id\n      }\n      priceHistory1D: priceHistory(duration: DAY) {\n        timestamp\n        close: value\n        id\n      }\n      priceHistory1W: priceHistory(duration: WEEK) {\n        timestamp\n        close: value\n        id\n      }\n      priceHistory1M: priceHistory(duration: MONTH) {\n        timestamp\n        close: value\n        id\n      }\n      priceHistory1Y: priceHistory(duration: YEAR) {\n        timestamp\n        close: value\n        id\n      }\n      id\n    }\n    tokens {\n      chain\n      address\n      symbol\n      decimals\n      id\n    }\n    id\n  }\n}\n"
+    "text": "query TokenModel_PriceQuery(\n  $contract: ContractInput!\n) {\n  tokenProjects(contracts: [$contract]) {\n    name\n    markets(currencies: [USD]) {\n      priceHistory1H: priceHistory(duration: HOUR) {\n        timestamp\n        close: value\n        id\n      }\n      priceHistory1D: priceHistory(duration: DAY) {\n        timestamp\n        close: value\n        id\n      }\n      priceHistory1W: priceHistory(duration: WEEK) {\n        timestamp\n        close: value\n        id\n      }\n      priceHistory1M: priceHistory(duration: MONTH) {\n        timestamp\n        close: value\n        id\n      }\n      priceHistory1Y: priceHistory(duration: YEAR) {\n        timestamp\n        close: value\n        id\n      }\n      id\n    }\n    tokens {\n      chain\n      address\n      symbol\n      decimals\n      id\n    }\n    id\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "2c6b9a3ce1f84e8bbd3f1ddd0f0b359c";
+(node as any).hash = "e04452eb92d6d71abb7ce40c33b80c9a";
 
 export default node;

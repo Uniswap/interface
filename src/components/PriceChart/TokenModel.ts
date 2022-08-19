@@ -10,7 +10,7 @@ import { graphQLCurrencyInfo } from 'src/utils/currencyId'
 import { logger } from 'src/utils/logger'
 
 const priceQuery = graphql`
-  query TokenModel_PriceQuery($contract: ContractInput) {
+  query TokenModel_PriceQuery($contract: ContractInput!) {
     tokenProjects(contracts: [$contract]) {
       name
       markets(currencies: [USD]) {

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3d6fbd440e02c0fd1cabf6a56397f65e>>
+ * @generated SignedSource<<98e4ac5e239770f2343f992136837f8a>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,7 +16,7 @@ export type ContractInput = {
   chain: Chain;
 };
 export type TokenDetailsStatsQuery$variables = {
-  contract?: ContractInput | null;
+  contract: ContractInput;
 };
 export type TokenDetailsStatsQuery$data = {
   readonly tokenProjects: ReadonlyArray<{
@@ -432,16 +432,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "5d664bbd3b184e657672ab7a8b0eeee0",
+    "cacheID": "da1dc6e5bbc8f3a7c59d2f832f2bb542",
     "id": null,
     "metadata": {},
     "name": "TokenDetailsStatsQuery",
     "operationKind": "query",
-    "text": "query TokenDetailsStatsQuery(\n  $contract: ContractInput\n) {\n  tokenProjects(contracts: [$contract]) {\n    description\n    homepageUrl\n    twitterName\n    name\n    markets(currencies: [USD]) {\n      price {\n        value\n        currency\n        id\n      }\n      marketCap {\n        value\n        currency\n        id\n      }\n      fullyDilutedMarketCap {\n        value\n        currency\n        id\n      }\n      volume24h: volume(duration: DAY) {\n        value\n        currency\n        id\n      }\n      priceHigh52W: priceHighLow(duration: YEAR, highLow: HIGH) {\n        value\n        currency\n        id\n      }\n      priceLow52W: priceHighLow(duration: YEAR, highLow: LOW) {\n        value\n        currency\n        id\n      }\n      id\n    }\n    tokens {\n      chain\n      address\n      symbol\n      decimals\n      id\n    }\n    id\n  }\n}\n"
+    "text": "query TokenDetailsStatsQuery(\n  $contract: ContractInput!\n) {\n  tokenProjects(contracts: [$contract]) {\n    description\n    homepageUrl\n    twitterName\n    name\n    markets(currencies: [USD]) {\n      price {\n        value\n        currency\n        id\n      }\n      marketCap {\n        value\n        currency\n        id\n      }\n      fullyDilutedMarketCap {\n        value\n        currency\n        id\n      }\n      volume24h: volume(duration: DAY) {\n        value\n        currency\n        id\n      }\n      priceHigh52W: priceHighLow(duration: YEAR, highLow: HIGH) {\n        value\n        currency\n        id\n      }\n      priceLow52W: priceHighLow(duration: YEAR, highLow: LOW) {\n        value\n        currency\n        id\n      }\n      id\n    }\n    tokens {\n      chain\n      address\n      symbol\n      decimals\n      id\n    }\n    id\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "d1c5eb65ddab56d5556d6ae5f17941b7";
+(node as any).hash = "8b9bc082f26513a0a8003916c431aae4";
 
 export default node;

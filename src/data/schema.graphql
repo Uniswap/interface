@@ -283,8 +283,8 @@ type Portfolio {
 }
 
 type Query {
-  tokens(contracts: [ContractInput]): [Token]
-  tokenProjects(contracts: [ContractInput]): [TokenProject]
+  tokens(contracts: [ContractInput!]!): [Token]
+  tokenProjects(contracts: [ContractInput!]!): [TokenProject]
   topTokenProjects(orderBy: MarketSortableField, page: Int, pageSize: Int, currency: Currency): [TokenProject]
   searchTokens(searchQuery: String!): [Token]
   assetActivities(address: String!, page: Int, pageSize: Int): [AssetActivity]
