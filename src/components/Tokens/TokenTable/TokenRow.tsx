@@ -474,7 +474,7 @@ export default function LoadedRow({
   }
 
   const heartColor = isFavorited ? theme.accentActive : undefined
-  const tokenDetailData: any = useTokenDetailQuery(tokenAddress, 'ETHEREUM')
+  const tokenDetailData = useTokenDetailQuery(tokenAddress, 'ETHEREUM')
   // TODO: currency logo sizing mobile (32px) vs. desktop (24px)
   return (
     <StyledLink
@@ -510,7 +510,7 @@ export default function LoadedRow({
         price={
           <ClickableContent>
             <PriceInfoCell>
-              {formatDollarAmount(tokenDetailData.tokenProjects?.[0]?.markets?.[0]?.price?.value).toUpperCase() ?? '-'}
+              {tokenDetailData.price?.value ? formatDollarAmount(tokenDetailData.price?.value) : '-'}
               <PercentChangeInfoCell>{tokenPercentChangeInfo}</PercentChangeInfoCell>
             </PriceInfoCell>
           </ClickableContent>
@@ -518,14 +518,12 @@ export default function LoadedRow({
         percentChange={<ClickableContent>{tokenPercentChangeInfo}</ClickableContent>}
         marketCap={
           <ClickableContent>
-            {formatDollarAmount(tokenDetailData.tokenProjects?.[0]?.markets?.[0]?.marketCap?.value).toUpperCase() ??
-              '-'}
+            {tokenDetailData.marketCap?.value ? formatDollarAmount(tokenDetailData.marketCap?.value) : '-'}
           </ClickableContent>
         }
         volume={
           <ClickableContent>
-            {formatDollarAmount(tokenDetailData.tokenProjects?.[0]?.markets?.[0]?.volume24h?.value).toUpperCase() ??
-              '-'}
+            {tokenDetailData.volume24h?.value ? formatDollarAmount(tokenDetailData.volume24h?.value) : '-'}
           </ClickableContent>
         }
         sparkLine={

@@ -190,7 +190,7 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
   const chainInfo = getChainInfo(token?.chainId)
   const networkLabel = chainInfo?.label
   const networkBadgebackgroundColor = chainInfo?.backgroundColor
-  const tokenDetailData: any = useTokenDetailQuery(address, 'ETHEREUM')
+  const tokenDetailData = useTokenDetailQuery(address, 'ETHEREUM')
 
   // catch token error and loading state
   if (!token || !token.name || !token.symbol) {
@@ -259,8 +259,8 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
     )
   }
 
-  const tokenName = tokenDetailData.tokenProjects?.[0]?.name
-  const tokenSymbol = tokenDetailData.tokenProjects?.[0]?.symbol
+  const tokenName = tokenDetailData.name ?? 'Name not found'
+  const tokenSymbol = tokenDetailData.tokens?.[0].symbol ?? 'Symbol not found'
 
   return (
     <TopArea>
@@ -294,12 +294,14 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
         <AboutHeader>
           <Trans>About</Trans>
         </AboutHeader>
-        {tokenDetailData.tokenProjects?.[0]?.description}
+        {tokenDetailData.description}
         <ResourcesContainer>
           <Resource name={'Etherscan'} link={`https://etherscan.io/address/${address}`} />
           <Resource name={'Protocol Info'} link={`https://info.uniswap.org/#/tokens/${address}`} />
-          <Resource name={'Website'} link={tokenDetailData.tokenProjects?.[0]?.homepageUrl} />
-          <Resource name={'Twitter'} link={`https://twitter.com/${tokenDetailData.tokenProjects?.[0]?.twitterName}`} />
+          {tokenDetailData.homepageUrl && <Resource name={'Website'} link={tokenDetailData.homepageUrl} />}
+          {tokenDetailData.twitterName && (
+            <Resource name={'Twitter'} link={`https://twitter.com/${tokenDetailData.twitterName}`} />
+          )}
         </ResourcesContainer>
       </AboutSection>
       <StatsSection>
@@ -307,13 +309,13 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
           <Stat>
             Market cap
             <StatPrice>
-              {formatDollarAmount(tokenDetailData.tokenProjects?.[0]?.markets?.[0]?.marketCap?.value) ?? '-'}
+              {tokenDetailData.marketCap?.value ? formatDollarAmount(tokenDetailData.marketCap?.value) : '-'}
             </StatPrice>
           </Stat>
           <Stat>
             24H volume
             <StatPrice>
-              {formatDollarAmount(tokenDetailData.tokenProjects?.[0]?.markets?.[0]?.volume24h?.value) ?? '-'}
+              {tokenDetailData.volume24h?.value ? formatDollarAmount(tokenDetailData.volume24h?.value) : '-'}
             </StatPrice>
           </Stat>
         </StatPair>
@@ -321,13 +323,13 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
           <Stat>
             52W low
             <StatPrice>
-              {formatDollarAmount(tokenDetailData.tokenProjects?.[0]?.markets?.[0]?.priceLow52W?.value) ?? '-'}
+              {tokenDetailData.priceLow52W?.value ? formatDollarAmount(tokenDetailData.priceLow52W?.value) : '-'}
             </StatPrice>
           </Stat>
           <Stat>
             52W high
             <StatPrice>
-              {formatDollarAmount(tokenDetailData.tokenProjects?.[0]?.markets?.[0]?.priceHigh52W?.value) ?? '-'}
+              {tokenDetailData.priceHigh52W?.value ? formatDollarAmount(tokenDetailData.priceHigh52W?.value) : '-'}
             </StatPrice>
           </Stat>
         </StatPair>

@@ -54,5 +54,20 @@ export function useTokenDetailQuery(address: string, chain: Chain) {
       },
     }
   )
-  return tokenDetail
+  const { description, homepageUrl, twitterName, name, markets, tokens } = tokenDetail?.tokenProjects?.[0] ?? {}
+  const { price, marketCap, fullyDilutedMarketCap, volume24h, priceHigh52W, priceLow52W } = markets?.[0] ?? {}
+  return {
+    description,
+    homepageUrl,
+    twitterName,
+    name,
+    markets,
+    tokens,
+    price,
+    marketCap,
+    fullyDilutedMarketCap,
+    volume24h,
+    priceHigh52W,
+    priceLow52W,
+  }
 }
