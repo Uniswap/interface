@@ -1,4 +1,4 @@
-import { Phase1Variant, usePhase1Flag } from 'featureFlags/flags/phase1'
+import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
 import useDebounce from 'hooks/useDebounce'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { useWindowSize } from 'hooks/useWindowSize'
@@ -96,7 +96,7 @@ export const SearchBarDropdown = ({ toggleOpen, tokens, collections, hasInput }:
   const { pathname } = useLocation()
   const isNFTPage = pathname.includes('/nfts')
   const isTokenPage = pathname.includes('/tokens')
-  const phase1Flag = usePhase1Flag()
+  const phase1Flag = useNftFlag()
 
   const tokenSearchResults =
     tokens.length > 0 ? (
@@ -113,7 +113,7 @@ export const SearchBarDropdown = ({ toggleOpen, tokens, collections, hasInput }:
     )
 
   const collectionSearchResults =
-    phase1Flag === Phase1Variant.Enabled ? (
+    phase1Flag === NftVariant.Enabled ? (
       collections.length > 0 ? (
         <SearchBarDropdownSection
           hoveredIndex={hoveredIndex}
@@ -149,7 +149,7 @@ export const SearchBarDropdown = ({ toggleOpen, tokens, collections, hasInput }:
   }, [isNFTPage, trendingCollectionResults])
 
   const showTrendingCollections: boolean = useMemo(
-    () => (trendingCollections?.length ?? 0) > 0 && !isTokenPage && phase1Flag === Phase1Variant.Enabled,
+    () => (trendingCollections?.length ?? 0) > 0 && !isTokenPage && phase1Flag === NftVariant.Enabled,
     [trendingCollections?.length, isTokenPage, phase1Flag]
   )
 
@@ -159,11 +159,11 @@ export const SearchBarDropdown = ({ toggleOpen, tokens, collections, hasInput }:
     refetchOnReconnect: false,
   })
 
-  const trendingTokensLength = phase1Flag === Phase1Variant.Enabled ? (isTokenPage ? 3 : 2) : 4
+  const trendingTokensLength = phase1Flag === NftVariant.Enabled ? (isTokenPage ? 3 : 2) : 4
 
   const trendingTokens = useMemo(() => {
     return trendingTokenResults?.slice(0, trendingTokensLength)
-  }, [trendingTokenResults, isTokenPage, phase1Flag])
+  }, [trendingTokenResults, trendingTokensLength])
 
   const totalSuggestions = hasInput
     ? tokens.length + collections.length
@@ -267,7 +267,7 @@ export const SearchBar = () => {
   const searchRef = useRef<HTMLDivElement>(null)
   const { pathname } = useLocation()
   const { width: windowWidth } = useWindowSize()
-  const phase1Flag = usePhase1Flag()
+  const phase1Flag = useNftFlag()
 
   useOnClickOutside(searchRef, () => {
     isOpen && toggleOpen()
@@ -335,7 +335,7 @@ export const SearchBar = () => {
           borderTopRightRadius={isOpen && !isMobile ? '12' : undefined}
           borderTopLeftRadius={isOpen && !isMobile ? '12' : undefined}
           display={{ mobile: isOpen ? 'flex' : 'none', desktopXl: 'flex' }}
-          justifyContent={isOpen || phase1Flag === Phase1Variant.Enabled ? 'flex-start' : 'center'}
+          justifyContent={isOpen || phase1Flag === NftVariant.Enabled ? 'flex-start' : 'center'}
           background={isOpen ? 'white' : 'lightGrayContainer'}
           onFocus={() => !isOpen && toggleOpen()}
           onClick={() => !isOpen && toggleOpen()}
@@ -348,8 +348,8 @@ export const SearchBar = () => {
           </Box>
           <Box
             as="input"
-            placeholder={`Search tokens${phase1Flag === Phase1Variant.Enabled ? ' and NFT collections' : ''}`}
-            width={isOpen || phase1Flag === Phase1Variant.Enabled ? 'full' : '120'}
+            placeholder={`Search tokens${phase1Flag === NftVariant.Enabled ? ' and NFT collections' : ''}`}
+            width={isOpen || phase1Flag === NftVariant.Enabled ? 'full' : '120'}
             onChange={(event: ChangeEvent<HTMLInputElement>) => {
               !isOpen && toggleOpen()
               setSearchValue(event.target.value)
