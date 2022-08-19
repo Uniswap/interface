@@ -395,4 +395,3 @@ enum TransactionStatus {
   CONFIRMED
   PENDING
 }
-
