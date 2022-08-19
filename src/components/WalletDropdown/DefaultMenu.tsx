@@ -1,5 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
+import { ButtonPrimary } from 'components/Button'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import { useMemo } from 'react'
 import { ChevronRight, Moon, Sun } from 'react-feather'
@@ -11,17 +12,12 @@ import { useAllTransactions } from '../../state/transactions/hooks'
 import AuthenticatedHeader from './AuthenticatedHeader'
 import { MenuState } from './index'
 
-const ConnectButton = styled.button`
-  border: none;
-  outline: none;
+const ConnectButton = styled(ButtonPrimary)`
   border-radius: 12px;
   height: 44px;
   width: 288px;
-  background-color: ${({ theme }) => theme.accentAction};
-  color: white;
   font-weight: 600;
   font-size: 16px;
-  cursor: pointer;
 `
 
 const Divider = styled.div`
@@ -47,7 +43,8 @@ const ToggleMenuItem = styled.button`
   margin-bottom: 8px;
   color: ${({ theme }) => theme.textSecondary};
   :hover {
-    text-decoration: none;
+    color: ${({ theme }) => theme.textPrimary};
+    transition: 250ms color ease;
   }
 `
 
