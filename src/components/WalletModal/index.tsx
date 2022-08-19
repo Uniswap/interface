@@ -1,15 +1,14 @@
 import { Trans } from '@lingui/macro'
-import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { Connector } from '@web3-react/types'
 import { sendAnalyticsEvent, user } from 'components/AmplitudeAnalytics'
 import {
   CUSTOM_USER_PROPERTIES,
-  CUSTOM_USER_PROPERTY_SUFFIXES,
   EventName,
+  TOKENS_TO_TRACK,
   WALLET_CONNECTION_RESULT,
 } from 'components/AmplitudeAnalytics/constants'
-import { formatToDecimal, getTokenAddress } from 'components/AmplitudeAnalytics/utils'
+import { formatToDecimal } from 'components/AmplitudeAnalytics/utils'
 import { sendEvent } from 'components/analytics'
 import { AutoColumn } from 'components/Column'
 import { AutoRow } from 'components/Row'
@@ -17,12 +16,10 @@ import { ConnectionType } from 'connection'
 import { getConnection, getConnectionName, getIsCoinbaseWallet, getIsInjected, getIsMetaMask } from 'connection/utils'
 import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
-import { useCurrencyBalances } from 'lib/hooks/useCurrencyBalance'
+import useCurrencyBalance, { useTokenBalance } from 'lib/hooks/useCurrencyBalance'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
-import { tokenComparator } from 'lib/hooks/useTokenList/sorting'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { ArrowLeft } from 'react-feather'
-import { useAllTokenBalances } from 'state/connection/hooks'
 import { updateConnectionError } from 'state/connection/reducer'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { updateSelectedWallet } from 'state/user/reducer'
@@ -31,7 +28,6 @@ import styled from 'styled-components/macro'
 import { isMobile } from 'utils/userAgent'
 
 import { ReactComponent as Close } from '../../assets/images/x.svg'
-import { useAllTokens } from '../../hooks/Tokens'
 import { useModalIsOpen, useToggleWalletModal } from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/reducer'
 import { ExternalLink, ThemedText } from '../../theme'
@@ -133,29 +129,6 @@ const WALLET_VIEWS = {
   PENDING: 'pending',
 }
 
-const sendAnalyticsWalletBalanceUserInfo = (
-  balances: (CurrencyAmount<Currency> | undefined)[],
-  nativeCurrencyBalanceUsd: number
-) => {
-  const walletTokensSymbols: string[] = []
-  const walletTokensAddresses: string[] = []
-  balances.forEach((currencyAmount) => {
-    if (currencyAmount !== undefined) {
-      const tokenBalanceAmount = formatToDecimal(currencyAmount, currencyAmount.currency.decimals)
-      if (tokenBalanceAmount > 0) {
-        const tokenAddress = getTokenAddress(currencyAmount.currency)
-        walletTokensAddresses.push(getTokenAddress(currencyAmount.currency))
-        walletTokensSymbols.push(currencyAmount.currency.symbol ?? '')
-        const tokenPrefix = currencyAmount.currency.symbol ?? tokenAddress
-        user.set(`${tokenPrefix}${CUSTOM_USER_PROPERTY_SUFFIXES.WALLET_TOKEN_AMOUNT_SUFFIX}`, tokenBalanceAmount)
-      }
-    }
-  })
-  user.set(CUSTOM_USER_PROPERTIES.WALLET_NATIVE_CURRENCY_BALANCE_USD, nativeCurrencyBalanceUsd)
-  user.set(CUSTOM_USER_PROPERTIES.WALLET_TOKENS_ADDRESSES, walletTokensAddresses)
-  user.set(CUSTOM_USER_PROPERTIES.WALLET_TOKENS_SYMBOLS, walletTokensSymbols)
-}
-
 const sendAnalyticsEventAndUserInfo = (
   account: string,
   walletType: string,
@@ -193,7 +166,9 @@ export default function WalletModal({
   const redesignFlagEnabled = redesignFlag === RedesignVariant.Enabled
   const [walletView, setWalletView] = useState(WALLET_VIEWS.ACCOUNT)
   const [lastActiveWalletAddress, setLastActiveWalletAddress] = useState<string | undefined>(account)
-  const [shouldLogWalletBalances, setShouldLogWalletBalances] = useState(false)
+  const [shouldLogUsdcBalance, setShouldLogUsdcBalance] = useState(false)
+  const [shouldLogWethBalance, setShouldLogWethBalance] = useState(false)
+  const [shouldLogNativeBalance, setShouldLogNativeBalance] = useState(false)
 
   const [pendingConnector, setPendingConnector] = useState<Connector | undefined>()
   const pendingError = useAppSelector((state) =>
@@ -203,24 +178,14 @@ export default function WalletModal({
   const walletModalOpen = useModalIsOpen(ApplicationModal.WALLET)
   const toggleWalletModal = useToggleWalletModal()
 
-  const allTokens = useAllTokens()
-  const [tokenBalances, tokenBalancesIsLoading] = useAllTokenBalances()
-  const sortedTokens: Token[] = useMemo(
-    () => (!tokenBalancesIsLoading ? Object.values(allTokens).sort(tokenComparator.bind(null, tokenBalances)) : []),
-    [tokenBalances, allTokens, tokenBalancesIsLoading]
-  )
   const native = useNativeCurrency()
+  const usdcBalance = useTokenBalance(account, TOKENS_TO_TRACK.USDC)
+  const wethBalance = useTokenBalance(account, TOKENS_TO_TRACK.WETH)
+  const nativeCurrencyBalance = useCurrencyBalance(account, native)
 
-  const sortedTokensWithETH: Currency[] = useMemo(
-    () =>
-      // Always bump the native token to the top of the list.
-      native ? [native, ...sortedTokens.filter((t) => !t.equals(native))] : sortedTokens,
-    [native, sortedTokens]
-  )
-
-  const balances = useCurrencyBalances(account, sortedTokensWithETH)
-  const nativeBalance = balances.length > 0 ? balances[0] : null
-  const nativeCurrencyBalanceUsdValue = useStablecoinValue(nativeBalance)?.toFixed(2)
+  const usdcBalanceUsdValue = useStablecoinValue(usdcBalance)?.toFixed(2)
+  const wethBalanceUsdValue = useStablecoinValue(wethBalance)?.toFixed(2)
+  const nativeCurrencyBalanceUsdValue = useStablecoinValue(nativeCurrencyBalance)?.toFixed(2)
 
   const openOptions = useCallback(() => {
     setWalletView(WALLET_VIEWS.OPTIONS)
@@ -246,28 +211,48 @@ export default function WalletModal({
       const isReconnect =
         connectedWallets.filter((wallet) => wallet.account === account && wallet.walletType === walletType).length > 0
       sendAnalyticsEventAndUserInfo(account, walletType, chainId, isReconnect)
-      setShouldLogWalletBalances(true)
+      setShouldLogNativeBalance(true)
+      setShouldLogUsdcBalance(true)
+      setShouldLogWethBalance(true)
       if (!isReconnect) addWalletToConnectedWallets({ account, walletType })
     }
     setLastActiveWalletAddress(account)
   }, [connectedWallets, addWalletToConnectedWallets, lastActiveWalletAddress, account, connector, chainId])
 
-  // Send wallet balance info once it becomes available.
+  // Send wallet balances info once it becomes available.
   useEffect(() => {
-    if (!tokenBalancesIsLoading && shouldLogWalletBalances && balances && nativeCurrencyBalanceUsdValue) {
+    if (shouldLogNativeBalance && nativeCurrencyBalanceUsdValue && nativeCurrencyBalance) {
       const nativeCurrencyBalanceUsd =
         native && nativeCurrencyBalanceUsdValue ? parseFloat(nativeCurrencyBalanceUsdValue) : 0
-      sendAnalyticsWalletBalanceUserInfo(balances, nativeCurrencyBalanceUsd)
-      setShouldLogWalletBalances(false)
+      const nativeCurrencyBalanceAmount = formatToDecimal(
+        nativeCurrencyBalance,
+        nativeCurrencyBalance.currency.decimals
+      )
+      user.set(CUSTOM_USER_PROPERTIES.WALLET_NATIVE_CURRENCY_AMOUNT, nativeCurrencyBalanceAmount)
+      user.set(CUSTOM_USER_PROPERTIES.WALLET_NATIVE_CURRENCY_BALANCE_USD, nativeCurrencyBalanceUsd)
+      setShouldLogNativeBalance(false)
     }
-  }, [
-    balances,
-    nativeCurrencyBalanceUsdValue,
-    shouldLogWalletBalances,
-    setShouldLogWalletBalances,
-    tokenBalancesIsLoading,
-    native,
-  ])
+  }, [nativeCurrencyBalanceUsdValue, nativeCurrencyBalance, shouldLogNativeBalance, setShouldLogNativeBalance, native])
+
+  useEffect(() => {
+    if (shouldLogUsdcBalance && usdcBalance && usdcBalanceUsdValue) {
+      const usdcBalanceUsd = usdcBalanceUsdValue ? parseFloat(usdcBalanceUsdValue) : 0
+      const usdcBalanceAmount = formatToDecimal(usdcBalance, usdcBalance.currency.decimals)
+      user.set(CUSTOM_USER_PROPERTIES.WALLET_USDC_AMOUNT, usdcBalanceAmount)
+      user.set(CUSTOM_USER_PROPERTIES.WALLET_USDC_BALANCE_USD, usdcBalanceUsd)
+      setShouldLogUsdcBalance(false)
+    }
+  }, [usdcBalanceUsdValue, usdcBalance, shouldLogUsdcBalance, setShouldLogUsdcBalance])
+
+  useEffect(() => {
+    if (shouldLogWethBalance && wethBalance && wethBalanceUsdValue) {
+      const wethBalanceUsd = wethBalanceUsdValue ? parseFloat(wethBalanceUsdValue) : 0
+      const wethBalanceAmount = formatToDecimal(wethBalance, wethBalance.currency.decimals)
+      user.set(CUSTOM_USER_PROPERTIES.WALLET_WETH_AMOUNT, wethBalanceAmount)
+      user.set(CUSTOM_USER_PROPERTIES.WALLET_USDC_BALANCE_USD, wethBalanceUsd)
+      setShouldLogWethBalance(false)
+    }
+  }, [wethBalanceUsdValue, wethBalance, shouldLogWethBalance, setShouldLogWethBalance])
 
   const tryActivation = useCallback(
     async (connector: Connector) => {

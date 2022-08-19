@@ -1,3 +1,7 @@
+import { Token } from '@uniswap/sdk-core'
+
+import { nativeOnChain } from '../../constants/tokens'
+
 /**
  * Event names that can occur in this application.
  *
@@ -37,14 +41,21 @@ export enum CUSTOM_USER_PROPERTIES {
   SCREEN_RESOLUTION_HEIGHT = 'screen_resolution_height',
   SCREEN_RESOLUTION_WIDTH = 'screen_resolution_width',
   WALLET_ADDRESS = 'wallet_address',
+  WALLET_NATIVE_CURRENCY_AMOUNT = 'wallet_native_currency_amount',
   WALLET_NATIVE_CURRENCY_BALANCE_USD = 'wallet_native_currency_balance_usd',
-  WALLET_TOKENS_ADDRESSES = 'wallet_tokens_addresses',
-  WALLET_TOKENS_SYMBOLS = 'wallet_tokens_symbols',
   WALLET_TYPE = 'wallet_type',
+  WALLET_USDC_AMOUNT = 'wallet_usdc_amount',
+  WALLET_USDC_BALANCE_USD = 'wallet_usdc_balance_usd',
+  WALLET_WETH_AMOUNT = 'wallet_weth_amount',
+  WALLET_WETH_BALANCE_USD = 'wallet_weth_balance_usd',
 }
 
-export enum CUSTOM_USER_PROPERTY_SUFFIXES {
-  WALLET_TOKEN_AMOUNT_SUFFIX = '_token_amount',
+const ETH = nativeOnChain(1)
+const USDC = new Token(1, '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', 6, 'USDC')
+
+export const TOKENS_TO_TRACK = {
+  USDC,
+  WETH: ETH.wrapped,
 }
 
 export enum BROWSER {
