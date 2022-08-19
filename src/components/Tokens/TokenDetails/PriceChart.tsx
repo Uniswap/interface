@@ -27,7 +27,7 @@ import {
 import LineChart from '../../Charts/LineChart'
 
 // TODO: This should be combined with the logic in TimeSelector.
-const TIME_DISPLAYS: [TimePeriod, string][] = [
+export const TIME_DISPLAYS: [TimePeriod, string][] = [
   [TimePeriod.HOUR, '1H'],
   [TimePeriod.DAY, '1D'],
   [TimePeriod.WEEK, '1W'],

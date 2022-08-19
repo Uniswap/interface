@@ -1,4 +1,3 @@
-import { TimePeriod } from 'hooks/useExplorePageQuery'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { useAtom } from 'jotai'
 import { useRef } from 'react'
@@ -9,16 +8,7 @@ import styled, { useTheme } from 'styled-components/macro'
 
 import { MOBILE_MEDIA_BREAKPOINT, SMALL_MEDIA_BREAKPOINT } from '../constants'
 import { filterTimeAtom } from '../state'
-
-export const TIME_DISPLAYS: { [key: string]: string } = {
-  hour: '1H',
-  day: '1D',
-  week: '1W',
-  month: '1M',
-  year: '1Y',
-}
-
-const TIMES = [TimePeriod.HOUR, TimePeriod.DAY, TimePeriod.WEEK, TimePeriod.MONTH, TimePeriod.YEAR]
+import { TIME_DISPLAYS } from '../TokenDetails/PriceChart'
 
 const InternalMenuItem = styled.div`
   flex: 1;
@@ -136,7 +126,7 @@ export default function TimeSelector() {
     <StyledMenu ref={node}>
       <StyledMenuButton onClick={toggleMenu} aria-label={`timeSelector`} open={open}>
         <StyledMenuContent>
-          {TIME_DISPLAYS[activeTime]}
+          {TIME_DISPLAYS[activeTime][1]}
           <Chevron open={open}>
             {open ? <ChevronUp size={15} viewBox="0 0 24 20" /> : <ChevronDown size={15} viewBox="0 0 24 20" />}
           </Chevron>
@@ -144,16 +134,16 @@ export default function TimeSelector() {
       </StyledMenuButton>
       {open && (
         <MenuTimeFlyout>
-          {TIMES.map((time) => (
+          {TIME_DISPLAYS.map((time) => (
             <InternalLinkMenuItem
-              key={time}
+              key={time[1]}
               onClick={() => {
-                setTime(time)
+                setTime(time[0])
                 toggleMenu()
               }}
             >
-              <div>{TIME_DISPLAYS[time]}</div>
-              {time === activeTime && <Check color={theme.accentAction} size={16} />}
+              <div>{time[1]}</div>
+              {time[0] === activeTime && <Check color={theme.accentAction} size={16} />}
             </InternalLinkMenuItem>
           ))}
         </MenuTimeFlyout>
