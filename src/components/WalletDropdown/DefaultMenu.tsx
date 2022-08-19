@@ -6,22 +6,18 @@ import { ChevronRight, Moon, Sun } from 'react-feather'
 import { useToggleWalletModal } from 'state/application/hooks'
 import { useDarkModeManager } from 'state/user/hooks'
 import styled from 'styled-components/macro'
+import { ButtonPrimary } from 'components/Button'
 
 import { useAllTransactions } from '../../state/transactions/hooks'
 import AuthenticatedHeader from './AuthenticatedHeader'
 import { MenuState } from './index'
 
-const ConnectButton = styled.button`
-  border: none;
-  outline: none;
+const ConnectButton = styled(ButtonPrimary)`
   border-radius: 12px;
   height: 44px;
   width: 288px;
-  background-color: ${({ theme }) => theme.accentAction};
-  color: white;
   font-weight: 600;
   font-size: 16px;
-  cursor: pointer;
 `
 
 const Divider = styled.div`
@@ -47,7 +43,7 @@ const ToggleMenuItem = styled.button`
   margin-bottom: 8px;
   color: ${({ theme }) => theme.textSecondary};
   :hover {
-    text-decoration: none;
+    color: ${({ theme }) => theme.textPrimary};
   }
 `
 

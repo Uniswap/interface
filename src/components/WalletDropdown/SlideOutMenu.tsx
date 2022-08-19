@@ -37,6 +37,14 @@ const ClearAll = styled.div`
   margin-bottom: auto;
 `
 
+const StyledChevron = styled(ChevronLeft)`
+  cursor: pointer;
+
+  &:hover {
+    color: ${({ theme }) => theme.textPrimary};
+  }
+`
+
 export const SlideOutMenu = ({
   children,
   onClose,
@@ -50,8 +58,7 @@ export const SlideOutMenu = ({
 }) => (
   <Menu>
     <BackSection>
-      <ChevronLeft cursor="pointer" onClick={onClose} size={24} />
-
+      <StyledChevron onClick={onClose} size={24} />
       <Header>{title}</Header>
       {onClear && <ClearAll onClick={onClear}>Clear All</ClearAll>}
     </BackSection>

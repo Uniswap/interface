@@ -59,7 +59,6 @@ export const TransactionSummary = ({ transactionDetails }: { transactionDetails:
     return transactionState
   }, [receipt, tx])
 
-  // const body = getTransactionBody({ info, transactionState })
   const link = `${explorer}tx/${hash}`
 
   return chainId ? (

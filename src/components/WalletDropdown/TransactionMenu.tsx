@@ -4,6 +4,7 @@ import { getYear, isSameDay, isSameWeek, isSameYear } from 'date-fns'
 import { useCallback, useMemo } from 'react'
 import { useAppDispatch } from 'state/hooks'
 import styled from 'styled-components/macro'
+import ms from 'ms.macro'
 
 import { useAllTransactions } from '../../state/transactions/hooks'
 import { clearAllTransactions } from '../../state/transactions/reducer'
@@ -11,8 +12,8 @@ import { TransactionDetails } from '../../state/transactions/types'
 import { TransactionSummary } from '../AccountDetailsV2'
 import { SlideOutMenu } from './SlideOutMenu'
 
-const ONE_DAY = 1000 * 60 * 60 * 24
-const THIRTY_DAYS = ONE_DAY * 30
+const ONE_DAY = ms`1 day`
+const THIRTY_DAYS = ms`30 days`
 
 const Divider = styled.div`
   margin-top: 16px;
@@ -43,8 +44,8 @@ const TransactionList = ({ transactionInformation }: { transactionInformation: T
   return (
     <TransactionListWrapper key={title}>
       <TransactionTitle>{title}</TransactionTitle>
-      {transactions.map((transactionDetails, i) => (
-        <TransactionSummary key={i} transactionDetails={transactionDetails} />
+      {transactions.map((transactionDetails) => (
+        <TransactionSummary key={transactionDetails.hash} transactionDetails={transactionDetails} />
       ))}
     </TransactionListWrapper>
   )
