@@ -1,10 +1,10 @@
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
 import { getYear, isSameDay, isSameWeek, isSameYear } from 'date-fns'
+import ms from 'ms.macro'
 import { useCallback, useMemo } from 'react'
 import { useAppDispatch } from 'state/hooks'
 import styled from 'styled-components/macro'
-import ms from 'ms.macro'
 
 import { useAllTransactions } from '../../state/transactions/hooks'
 import { clearAllTransactions } from '../../state/transactions/reducer'
@@ -12,7 +12,6 @@ import { TransactionDetails } from '../../state/transactions/types'
 import { TransactionSummary } from '../AccountDetailsV2'
 import { SlideOutMenu } from './SlideOutMenu'
 
-const ONE_DAY = ms`1 day`
 const THIRTY_DAYS = ms`30 days`
 
 const Divider = styled.div`
