@@ -472,6 +472,7 @@ export default function LoadedRow({
   }
 
   const heartColor = isFavorited ? theme.accentActive : undefined
+  // TODO: consider using backend network?
   const tokenDetailData = useTokenDetailQuery(tokenAddress, chainIdToChainName(filterNetwork))
   // TODO: currency logo sizing mobile (32px) vs. desktop (24px)
   return (
