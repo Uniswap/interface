@@ -28,7 +28,7 @@ export const TitleContainer = styled.div`
   margin-left: auto;
   margin-right: auto;
   display: flex;
-  ${({ theme }) => theme.headline}
+  ${({ theme }) => theme.headlineLarge}
 `
 const FiltersContainer = styled.div`
   display: flex;

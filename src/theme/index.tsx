@@ -244,10 +244,84 @@ function oldColorsUpdated(darkMode: boolean): Colors {
 
 function themeFonts(): Fonts {
   return {
-    headline: css`
+    headlineLarge: css`
+      font-style: normal;
       font-weight: 400;
       font-size: 36px;
       line-height: 44px;
+    `,
+    headlineMedium: css`
+      font-style: normal;
+      font-weight: 400;
+      font-size: 28px;
+      line-height: 36px;
+    `,
+    headlineSmall: css`
+      font-style: normal;
+      font-weight: 400;
+      font-size: 20px;
+      line-height: 28px;
+    `,
+    subhead: css`
+      font-style: normal;
+      font-weight: 500;
+      font-size: 16px;
+      line-height: 16px;
+    `,
+    subheadSmall: css`
+      font-style: normal;
+      font-weight: 500;
+      font-size: 14px;
+      line-height: 14px;
+    `,
+    body: css`
+      font-style: normal;
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 24px;
+    `,
+    bodySmall: css`
+      font-style: normal;
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 20px;
+    `,
+    caption: css`
+      font-style: normal;
+      font-weight: 400;
+      font-size: 12px;
+      line-height: 16px;
+    `,
+    code: css`
+      font-family: 'Input Mono';
+      font-style: normal;
+      font-weight: 300;
+      font-size: 12px;
+      line-height: 16px;
+    `,
+    badge: css`
+      font-style: normal;
+      font-weight: 600;
+      font-size: 10px;
+      line-height: 12px;
+    `,
+    buttonLabelLarge: css`
+      font-style: normal;
+      font-weight: 600;
+      font-size: 20px;
+      line-height: 24px;
+    `,
+    buttonLabelMedium: css`
+      font-style: normal;
+      font-weight: 600;
+      font-size: 16px;
+      line-height: 20px;
+    `,
+    buttonLabelSmall: css`
+      font-style: normal;
+      font-weight: 600;
+      font-size: 14px;
+      line-height: 16px;
     `,
   }
 }

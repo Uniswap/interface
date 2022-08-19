@@ -120,7 +120,19 @@ export interface Colors {
 }
 
 export interface Fonts {
-  headline: FlattenSimpleInterpolation
+  headlineLarge: FlattenSimpleInterpolation
+  headlineMedium: FlattenSimpleInterpolation
+  headlineSmall: FlattenSimpleInterpolation
+  subhead: FlattenSimpleInterpolation
+  subheadSmall: FlattenSimpleInterpolation
+  body: FlattenSimpleInterpolation
+  bodySmall: FlattenSimpleInterpolation
+  caption: FlattenSimpleInterpolation
+  code: FlattenSimpleInterpolation
+  badge: FlattenSimpleInterpolation
+  buttonLabelLarge: FlattenSimpleInterpolation
+  buttonLabelMedium: FlattenSimpleInterpolation
+  buttonLabelSmall: FlattenSimpleInterpolation
 }
 
 declare module 'styled-components/macro' {
