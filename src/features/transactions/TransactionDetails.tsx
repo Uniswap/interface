@@ -1,4 +1,4 @@
-import React, { ComponentProps, PropsWithChildren } from 'react'
+import React, { PropsWithChildren } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppTheme } from 'src/app/hooks'
 import AlertTriangle from 'src/assets/icons/alert-triangle.svg'
@@ -14,6 +14,7 @@ import { getWarningColor } from 'src/components/warnings/utils'
 import { ChainId } from 'src/constants/chains'
 import { useUSDGasPrice } from 'src/features/gas/hooks'
 import { useActiveAccountAddressWithThrow } from 'src/features/wallet/hooks'
+import { Theme } from 'src/styles/theme'
 import { formatUSDGasPrice } from 'src/utils/format'
 
 const ALERT_ICONS_SIZE = 18
@@ -26,9 +27,9 @@ interface TransactionDetailsProps {
   onShowWarning?: () => void
 }
 
-const spacerProps: ComponentProps<typeof Box> = {
-  borderBottomColor: 'backgroundOutline',
-  borderBottomWidth: 1,
+export const TRANSACTION_DETAILS_SPACER: { color: keyof Theme['colors']; width: number } = {
+  color: 'backgroundOutline',
+  width: 0.5,
 }
 
 export function TransactionDetails({
@@ -46,11 +47,7 @@ export function TransactionDetails({
   const warningColor = getWarningColor(warning)
 
   return (
-    <Flex
-      backgroundColor="backgroundContainer"
-      borderRadius="lg"
-      gap="none"
-      spacerProps={spacerProps}>
+    <Flex backgroundColor="backgroundContainer" borderRadius="lg" gap="none">
       {showWarning && warning && onShowWarning && (
         <Button onPress={onShowWarning}>
           <Flex
@@ -81,7 +78,12 @@ export function TransactionDetails({
         </Button>
       )}
       {children}
-      <Flex row justifyContent="space-between" p="md">
+      <Flex
+        row
+        borderBottomColor={TRANSACTION_DETAILS_SPACER.color}
+        borderBottomWidth={TRANSACTION_DETAILS_SPACER.width}
+        justifyContent="space-between"
+        p="md">
         <Text fontWeight="500" variant="subheadSmall">
           {t('Network fee')}
         </Text>

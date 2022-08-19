@@ -58,7 +58,7 @@ export function TransactionReview({
 
   return (
     <>
-      <AnimatedFlex alignItems="center" entering={FadeInUp} exiting={FadeOut} flexGrow={1} gap="md">
+      <AnimatedFlex alignItems="center" entering={FadeInUp} exiting={FadeOut} flexGrow={1}>
         {currencyIn ? (
           <Flex gap="sm" mt="xxl">
             <AmountInput
@@ -66,9 +66,9 @@ export function TransactionReview({
               backgroundColor="none"
               borderWidth={0}
               editable={false}
-              fontFamily={theme.textVariants.headlineLarge.fontFamily}
-              fontSize={48}
-              height={48}
+              fontFamily={theme.textVariants.headlineHero.fontFamily}
+              fontSize={theme.textVariants.headlineHero.fontSize}
+              height={theme.textVariants.headlineHero.lineHeight}
               px="md"
               py="none"
               showCurrencySign={isUSDInput}
@@ -98,8 +98,8 @@ export function TransactionReview({
                 borderWidth={0}
                 editable={false}
                 fontFamily={theme.textVariants.headlineLarge.fontFamily}
-                fontSize={48}
-                height={48}
+                fontSize={theme.textVariants.headlineHero.fontSize}
+                height={theme.textVariants.headlineHero.lineHeight}
                 px="md"
                 py="none"
                 showCurrencySign={isUSDInput}
@@ -126,7 +126,7 @@ export function TransactionReview({
         justifyContent="flex-end"
         mb="xl"
         mt="xs"
-        px="sm">
+        px="md">
         {transactionDetails}
         <Flex row gap="xs">
           <Button

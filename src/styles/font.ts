@@ -21,6 +21,12 @@ export const fontFamily = {
 }
 
 export const textVariants = {
+  headlineHero: {
+    fontFamily: fontFamily.sansSerif.regular,
+    fontSize: 48,
+    lineHeight: 48,
+    color: 'textPrimary',
+  },
   headlineLarge: {
     fontFamily: fontFamily.sansSerif.regular,
     fontSize: 36,

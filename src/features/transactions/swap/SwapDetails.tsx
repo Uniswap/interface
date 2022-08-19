@@ -16,7 +16,10 @@ import {
 import { Trade } from 'src/features/transactions/swap/useTrade'
 import { getRateToDisplay } from 'src/features/transactions/swap/utils'
 import { showWarningInPanel } from 'src/features/transactions/swap/validate'
-import { TransactionDetails } from 'src/features/transactions/TransactionDetails'
+import {
+  TransactionDetails,
+  TRANSACTION_DETAILS_SPACER,
+} from 'src/features/transactions/TransactionDetails'
 import {
   GasFeeByTransactionType,
   OptimismL1FeeEstimate,
@@ -72,42 +75,49 @@ export function SwapDetails({
           backgroundColor="accentActiveSoft"
           borderTopEndRadius="lg"
           borderTopStartRadius="lg"
-          flexGrow={1}
-          gap="xs"
+          flexShrink={1}
+          gap="sm"
           justifyContent="space-between"
-          p="xs">
-          <Flex centered row flexBasis="30%" gap="none">
+          p="xs"
+          pl="md">
+          <Flex centered row gap="none">
             <Text color="accentActive" variant="subheadSmall">
-              {t('Rate Updated')}
+              {t('New rate')}
             </Text>
           </Flex>
-          <Flex row flexBasis="70%" gap="xxs">
-            <Flex centered row flexBasis="66%" flexGrow={1} gap="none">
-              <TouchableOpacity onPress={() => setShowInverseRate(!showInverseRate)}>
-                <Text
-                  adjustsFontSizeToFit
-                  color="accentActive"
-                  numberOfLines={1}
-                  variant="subheadSmall">
-                  {rate}
-                </Text>
-              </TouchableOpacity>
-            </Flex>
-            <Flex centered row flexBasis="33%" flexGrow={1} gap="none">
-              <Button
-                backgroundColor="accentActive"
-                borderRadius="md"
-                padding="xs"
-                onPress={onAcceptTrade}>
-                <Text color="accentTextLightPrimary" variant="smallLabel">
-                  {t('Accept')}
-                </Text>
-              </Button>
-            </Flex>
+          <Flex row flex={1} flexBasis="100%" flexShrink={1} gap="none" justifyContent="flex-end">
+            <TouchableOpacity onPress={() => setShowInverseRate(!showInverseRate)}>
+              <Text
+                adjustsFontSizeToFit
+                color="accentActive"
+                numberOfLines={1}
+                textAlign="center"
+                variant="subheadSmall">
+                {rate}
+              </Text>
+            </TouchableOpacity>
+          </Flex>
+          <Flex centered row gap="none">
+            <Button
+              backgroundColor="accentActive"
+              borderRadius="md"
+              padding="xs"
+              onPress={onAcceptTrade}>
+              <Text color="accentTextLightPrimary" variant="smallLabel">
+                {t('Accept')}
+              </Text>
+            </Button>
           </Flex>
         </Flex>
       )}
-      <Flex row alignItems="center" gap="xs" justifyContent="space-between" p="md">
+      <Flex
+        row
+        alignItems="center"
+        borderBottomColor={TRANSACTION_DETAILS_SPACER.color}
+        borderBottomWidth={TRANSACTION_DETAILS_SPACER.width}
+        gap="xs"
+        justifyContent="space-between"
+        p="md">
         <Text fontWeight="500" variant="subheadSmall">
           {t('Rate')}
         </Text>
