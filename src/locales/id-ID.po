@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-17 20:05\n"
+"PO-Revision-Date: 2022-08-18 18:04\n"
 "Last-Translator: \n"
 "Language: id_ID\n"
 "Language-Team: Indonesian\n"
@@ -290,6 +290,7 @@ msgid "Available to deposit: {0}"
 msgstr "Tersedia untuk disetor: {0}"
 
 #: src/components/WalletModal/PendingView.tsx
+#: src/components/WalletModal/PendingView.tsx
 msgid "Back to wallet selection"
 msgstr "Kembali ke pemilihan dompet"
 
@@ -342,6 +343,7 @@ msgid "By adding this list you are implicitly trusting that the data is correct.
 msgstr "Dengan menambahkan daftar ini, Anda secara implisit mempercayai bahwa datanya benar. Siapa pun dapat membuat daftar, termasuk membuat versi palsu dari daftar yang sudah ada dan daftar yang mengklaim mewakili proyek yang tidak memiliki proyek apapun."
 
 #: src/components/WalletModal/index.tsx
+#: src/components/WalletModal/index.tsx
 msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the Uniswap <1>Protocol Disclaimer</1>."
 msgstr "Dengan menghubungkan dompet, Anda menyetujui <0>Syarat Layanan</0> Uniswap Labs' dan mengakui bahwa Anda telah membaca dan memahami <1>Penafian Protokol</1> Uniswap."
 
@@ -369,6 +371,7 @@ msgstr "Periksa status jaringan"
 msgid "Check out our v3 LP walkthrough and migration guides."
 msgstr "Lihat panduan migrasi dan tutorial LP v3 kami."
 
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/pages/Earn/Manage.tsx
@@ -495,6 +498,10 @@ msgstr "Konfirmasikan Pasokan"
 msgid "Confirm Swap"
 msgstr "Konfirmasikan Swap"
 
+#: src/components/WalletModal/PendingView.tsx
+msgid "Confirm this connection in your wallet"
+msgstr "Konfirmasikan koneksi ini di dompet Anda"
+
 #: src/components/ModalViews/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
@@ -550,9 +557,14 @@ msgstr "Terhubung dengan"
 msgid "Connecting..."
 msgstr "Menghubungkan..."
 
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
 #: src/theme/components.tsx
 msgid "Copied!"
 msgstr "Disalin!"
+
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
+msgid "Copy"
+msgstr "Salinan"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Copy Address"
@@ -603,6 +615,10 @@ msgstr "Harga {0} saat ini:"
 
 #: src/components/Menu/index.tsx
 msgid "Dark Theme"
+msgstr "Tema gelap"
+
+#: src/components/WalletDropdown/DefaultMenu.tsx
+msgid "Dark theme"
 msgstr "Tema gelap"
 
 #: src/pages/Vote/styled.tsx
@@ -677,6 +693,7 @@ msgid "Details"
 msgstr "Perincian"
 
 #: src/components/AccountDetails/index.tsx
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
 msgid "Disconnect"
 msgstr "Putuskan"
 
@@ -754,6 +771,7 @@ msgid "Error"
 msgstr "Kesalahan"
 
 #: src/components/WalletModal/PendingView.tsx
+#: src/components/WalletModal/PendingView.tsx
 msgid "Error connecting"
 msgstr "Terjadi kesalahan saat menyambungkan"
 
@@ -822,6 +840,14 @@ msgstr "Mode ahli mematikan permintaan konfirmasi transaksi dan memungkinkan per
 msgid "Expired"
 msgstr "kadaluarsa"
 
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
+msgid "Explore"
+msgstr "Mengeksplorasi"
+
+#: src/pages/Tokens/index.tsx
+msgid "Explore Tokens"
+msgstr "Jelajahi Token"
+
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore Uniswap Analytics."
 msgstr "Jelajahi Uniswap Analytics."
@@ -883,11 +909,8 @@ msgstr "Menyembunyikan"
 msgid "High Price Impact"
 msgstr "Dampak Harga Tinggi"
 
-#: src/components/TokenSafety/index.tsx
-msgid "I Understand"
-msgstr "Saya mengerti"
-
 #: src/components/SearchModal/ImportList.tsx
+#: src/components/TokenSafety/index.tsx
 #: src/pages/AddLiquidity/index.tsx
 msgid "I understand"
 msgstr "Saya mengerti"
@@ -986,16 +1009,14 @@ msgid "Invalid recipient"
 msgstr "Penerima tidak valid"
 
 #: src/components/Menu/index.tsx
+#: src/components/WalletDropdown/DefaultMenu.tsx
+#: src/components/WalletDropdown/LanguageMenu.tsx
 msgid "Language"
 msgstr "Bahasa"
 
 #: src/pages/Pool/index.tsx
 msgid "Learn"
 msgstr "Belajar"
-
-#: src/components/TokenSafety/index.tsx
-msgid "Learn More"
-msgstr "Belajarlah lagi"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Learn about providing liquidity"
@@ -1004,6 +1025,7 @@ msgstr "Pelajari tentang menyediakan likuiditas"
 #: src/components/PrivacyPolicy/index.tsx
 #: src/components/PrivacyPolicy/index.tsx
 #: src/components/TokenSafety/TokenSafetyMessage.tsx
+#: src/components/TokenSafety/index.tsx
 msgid "Learn more"
 msgstr "Pelajari lebih lanjut"
 
@@ -1015,6 +1037,10 @@ msgstr "Hukum & Privasi"
 #: src/components/Menu/index.tsx
 msgid "Light Theme"
 msgstr "Tema Terang"
+
+#: src/components/WalletDropdown/DefaultMenu.tsx
+msgid "Light theme"
+msgstr "Tema ringan"
 
 #: src/components/claim/ClaimModal.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -1258,6 +1284,7 @@ msgstr "Pemilik"
 msgid "Participating pools"
 msgstr "Kolam yang berpartisipasi"
 
+#: src/components/WalletDropdown/DefaultMenu.tsx
 #: src/pages/Vote/styled.tsx
 msgid "Pending"
 msgstr "Tertunda"
@@ -1320,8 +1347,8 @@ msgstr "Dikumpulkan {0}:"
 
 #: src/pages/Pool/index.tsx
 #: src/pages/Pool/index.tsx
-msgid "Pools Overview"
-msgstr "Gambaran Umum Pool"
+msgid "Pools"
+msgstr "Kolam renang"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Portal Bridge"
@@ -1690,6 +1717,7 @@ msgid "The app securely collects your wallet address and shares it with TRM Labs
 msgstr "Aplikasi ini dengan aman mengumpulkan alamat dompet Anda dan membagikannya dengan TRM Labs Inc. untuk alasan risiko dan kepatuhan."
 
 #: src/components/WalletModal/PendingView.tsx
+#: src/components/WalletModal/PendingView.tsx
 msgid "The connection attempt failed. Please click try again and follow the steps to connect in your wallet."
 msgstr "Upaya koneksi gagal. Silakan klik coba lagi dan ikuti langkah-langkah untuk terhubung di dompet Anda."
 
@@ -1876,10 +1904,16 @@ msgstr "Batas waktu transaksi"
 msgid "Transaction rejected."
 msgstr "Transaksi ditolak."
 
+#: src/components/WalletDropdown/DefaultMenu.tsx
+#: src/components/WalletDropdown/TransactionMenu.tsx
+msgid "Transactions"
+msgstr "Transaksi"
+
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Transfer Token"
 msgstr "Transfer Token"
 
+#: src/components/WalletModal/PendingView.tsx
 #: src/components/WalletModal/PendingView.tsx
 msgid "Try Again"
 msgstr "Coba Lagi"
@@ -2118,6 +2152,10 @@ msgstr "Pemungutan suara dimulai sekitar {0}"
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Waiting For Confirmation"
 msgstr "Menunggu Konfirmasi"
+
+#: src/components/WalletModal/PendingView.tsx
+msgid "Waiting to connect"
+msgstr "Menunggu untuk terhubung"
 
 #: src/components/AddressInputPanel/index.tsx
 msgid "Wallet Address or ENS name"
@@ -2372,6 +2410,10 @@ msgstr "https:// atau ipfs:// atau nama ENS"
 msgid "minutes"
 msgstr "menit"
 
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
+msgid "reward"
+msgstr "Penghargaan"
+
 #: src/components/SearchModal/ImportRow.tsx
 msgid "via {0}"
 msgstr "melalui {0}"
@@ -2549,6 +2591,6 @@ msgid "{tokenB} per {tokenA}"
 msgstr "{tokenB} per {tokenA}"
 
 #: src/pages/Pool/PositionPage.tsx
-msgid "← Back to Pools Overview"
-msgstr "← Kembali ke Gambaran Umum Pool"
+msgid "← Back to Pools"
+msgstr "Kembali ke Pools"
 

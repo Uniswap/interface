@@ -320,6 +320,9 @@ export const ThemedText = {
   DeprecatedLargeHeader(props: TextProps) {
     return <TextWrapper fontWeight={600} fontSize={24} {...props} />
   },
+  LargeHeader(props: TextProps) {
+    return <TextWrapper fontWeight={400} fontSize={36} color={'textPrimary'} {...props} />
+  },
   DeprecatedMediumHeader(props: TextProps) {
     return <TextWrapper fontWeight={500} fontSize={20} {...props} />
   },

@@ -2,7 +2,6 @@ import { ConnectionType } from 'connection'
 import styled from 'styled-components/macro'
 
 import CoinbaseWalletIcon from '../../assets/images/coinbaseWalletIcon.svg'
-import FortmaticIcon from '../../assets/images/fortmaticIcon.png'
 import WalletConnectIcon from '../../assets/images/walletConnectIcon.svg'
 import Identicon from '../Identicon'
 
@@ -21,7 +20,7 @@ const IconWrapper = styled.div<{ size?: number }>`
   `};
 `
 
-export default function StatusIcon({ connectionType }: { connectionType: ConnectionType }) {
+export default function StatusIcon({ connectionType, size }: { connectionType: ConnectionType; size?: number }) {
   let image
   switch (connectionType) {
     case ConnectionType.INJECTED:
@@ -33,10 +32,7 @@ export default function StatusIcon({ connectionType }: { connectionType: Connect
     case ConnectionType.COINBASE_WALLET:
       image = <img src={CoinbaseWalletIcon} alt="Coinbase Wallet" />
       break
-    case ConnectionType.FORTMATIC:
-      image = <img src={FortmaticIcon} alt="Fortmatic" />
-      break
   }
 
-  return <IconWrapper size={16}>{image}</IconWrapper>
+  return <IconWrapper size={size ?? 16}>{image}</IconWrapper>
 }

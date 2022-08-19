@@ -1,4 +1,5 @@
 import Web3Status from 'components/Web3Status'
+import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
 import { useWindowSize } from 'hooks/useWindowSize'
 import { ReactNode } from 'react'
 import { NavLink, NavLinkProps, useLocation } from 'react-router-dom'
@@ -11,6 +12,7 @@ import { ChainSwitcher } from './ChainSwitcher'
 import { MenuDropdown } from './MenuDropdown'
 import { MobileSideBar } from './MobileSidebar'
 import * as styles from './Navbar.css'
+import { SearchBar } from './SearchBar'
 
 interface MenuItemProps {
   href: string
@@ -45,7 +47,7 @@ const MobileNavbar = () => {
           </Box>
           <Box className={styles.rightSideMobileContainer}>
             <Row gap="16">
-              {/* TODO add Searchbar */}
+              <SearchBar />
               <MobileSideBar />
             </Row>
           </Box>
@@ -61,6 +63,7 @@ const MobileNavbar = () => {
 const Navbar = () => {
   const { width: windowWidth } = useWindowSize()
   const { pathname } = useLocation()
+  const nftFlag = useNftFlag()
 
   if (windowWidth && windowWidth < breakpoints.desktopXl) {
     return <MobileNavbar />
@@ -87,12 +90,19 @@ const Navbar = () => {
             <MenuItem href="/tokens" isActive={pathname.startsWith('/explore')}>
               Tokens
             </MenuItem>
+            {nftFlag === NftVariant.Enabled && (
+              <MenuItem href="/nfts" isActive={pathname.startsWith('/nfts')}>
+                NFTs
+              </MenuItem>
+            )}
             <MenuItem href="/pool" id={'pool-nav-link'} isActive={isPoolActive}>
               Pool
             </MenuItem>
           </Row>
         </Box>
-        <Box className={styles.middleContainer}>{/* TODO add Searchbar */}</Box>
+        <Box className={styles.middleContainer}>
+          <SearchBar />
+        </Box>
         <Box className={styles.rightSideContainer}>
           <Row gap="12">
             <MenuDropdown />

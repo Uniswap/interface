@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-17 20:04\n"
+"PO-Revision-Date: 2022-08-18 18:04\n"
 "Last-Translator: \n"
 "Language: ko_KR\n"
 "Language-Team: Korean\n"
@@ -290,6 +290,7 @@ msgid "Available to deposit: {0}"
 msgstr "입금 가능 : {0}"
 
 #: src/components/WalletModal/PendingView.tsx
+#: src/components/WalletModal/PendingView.tsx
 msgid "Back to wallet selection"
 msgstr "지갑 선택으로 돌아가기"
 
@@ -342,6 +343,7 @@ msgid "By adding this list you are implicitly trusting that the data is correct.
 msgstr "이 목록을 추가하면 데이터가 정확하다는 것을 암시적으로 신뢰하게 됩니다. 기존 목록의 가짜 버전 및 목록이 없는 프로젝트를 나타낸다고 주장하는 목록을 만드는 등 누구나 목록을 만들 수 있습니다."
 
 #: src/components/WalletModal/index.tsx
+#: src/components/WalletModal/index.tsx
 msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the Uniswap <1>Protocol Disclaimer</1>."
 msgstr "지갑을 연결하면 Uniswap Labs의 <0>서비스 약관</0>을 읽고 이해하여 <1>프로토콜 면책 조항</1>을 인정하는 것입니다."
 
@@ -369,6 +371,7 @@ msgstr "네트워크 상태 확인"
 msgid "Check out our v3 LP walkthrough and migration guides."
 msgstr "v3 LP 연습 및 마이그레이션 가이드를 확인하세요."
 
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/pages/Earn/Manage.tsx
@@ -495,6 +498,10 @@ msgstr "공급 확인"
 msgid "Confirm Swap"
 msgstr "스왑 확인"
 
+#: src/components/WalletModal/PendingView.tsx
+msgid "Confirm this connection in your wallet"
+msgstr "지갑에서 이 연결을 확인하세요"
+
 #: src/components/ModalViews/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
@@ -550,9 +557,14 @@ msgstr "와 연결되다"
 msgid "Connecting..."
 msgstr "연결 중..."
 
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
 #: src/theme/components.tsx
 msgid "Copied!"
 msgstr "복사되었습니다!"
+
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
+msgid "Copy"
+msgstr "복사"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Copy Address"
@@ -603,6 +615,10 @@ msgstr "현재 {0} 가격 :"
 
 #: src/components/Menu/index.tsx
 msgid "Dark Theme"
+msgstr "어두운 테마"
+
+#: src/components/WalletDropdown/DefaultMenu.tsx
+msgid "Dark theme"
 msgstr "어두운 테마"
 
 #: src/pages/Vote/styled.tsx
@@ -677,6 +693,7 @@ msgid "Details"
 msgstr "세부 정보"
 
 #: src/components/AccountDetails/index.tsx
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
 msgid "Disconnect"
 msgstr "연결 해제"
 
@@ -754,6 +771,7 @@ msgid "Error"
 msgstr "오류"
 
 #: src/components/WalletModal/PendingView.tsx
+#: src/components/WalletModal/PendingView.tsx
 msgid "Error connecting"
 msgstr "연결 오류"
 
@@ -822,6 +840,14 @@ msgstr "전문가 모드를 사용하면 거래 확인창이 꺼지고 안 좋�
 msgid "Expired"
 msgstr "만료 됨"
 
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
+msgid "Explore"
+msgstr "탐구하다"
+
+#: src/pages/Tokens/index.tsx
+msgid "Explore Tokens"
+msgstr "토큰 탐색"
+
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore Uniswap Analytics."
 msgstr "Uniswap 분석 정보를 살펴보세요."
@@ -883,11 +909,8 @@ msgstr "숨기기"
 msgid "High Price Impact"
 msgstr "높은 가격 영향"
 
-#: src/components/TokenSafety/index.tsx
-msgid "I Understand"
-msgstr "이해 했어요"
-
 #: src/components/SearchModal/ImportList.tsx
+#: src/components/TokenSafety/index.tsx
 #: src/pages/AddLiquidity/index.tsx
 msgid "I understand"
 msgstr "알겠습니다"
@@ -986,16 +1009,14 @@ msgid "Invalid recipient"
 msgstr "잘못된 수령인"
 
 #: src/components/Menu/index.tsx
+#: src/components/WalletDropdown/DefaultMenu.tsx
+#: src/components/WalletDropdown/LanguageMenu.tsx
 msgid "Language"
 msgstr "언어"
 
 #: src/pages/Pool/index.tsx
 msgid "Learn"
 msgstr "학습"
-
-#: src/components/TokenSafety/index.tsx
-msgid "Learn More"
-msgstr "더 알아보기"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Learn about providing liquidity"
@@ -1004,6 +1025,7 @@ msgstr "유동성 제공에 대해 알아보기"
 #: src/components/PrivacyPolicy/index.tsx
 #: src/components/PrivacyPolicy/index.tsx
 #: src/components/TokenSafety/TokenSafetyMessage.tsx
+#: src/components/TokenSafety/index.tsx
 msgid "Learn more"
 msgstr "더 알아보기"
 
@@ -1014,6 +1036,10 @@ msgstr "법률 및 개인 정보 보호"
 
 #: src/components/Menu/index.tsx
 msgid "Light Theme"
+msgstr "밝은 테마"
+
+#: src/components/WalletDropdown/DefaultMenu.tsx
+msgid "Light theme"
 msgstr "밝은 테마"
 
 #: src/components/claim/ClaimModal.tsx
@@ -1258,6 +1284,7 @@ msgstr "소유자"
 msgid "Participating pools"
 msgstr "참여 풀"
 
+#: src/components/WalletDropdown/DefaultMenu.tsx
 #: src/pages/Vote/styled.tsx
 msgid "Pending"
 msgstr "대기 중"
@@ -1320,8 +1347,8 @@ msgstr "{0} 풀링 됨:"
 
 #: src/pages/Pool/index.tsx
 #: src/pages/Pool/index.tsx
-msgid "Pools Overview"
-msgstr "풀 개요"
+msgid "Pools"
+msgstr "수영장"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Portal Bridge"
@@ -1690,6 +1717,7 @@ msgid "The app securely collects your wallet address and shares it with TRM Labs
 msgstr "앱은 위험 및 규정 준수를 위해 지갑 주소를 안전하게 수집하고 TRM Labs Inc.와 공유합니다."
 
 #: src/components/WalletModal/PendingView.tsx
+#: src/components/WalletModal/PendingView.tsx
 msgid "The connection attempt failed. Please click try again and follow the steps to connect in your wallet."
 msgstr "연결 시도가 실패했습니다. 다시 시도를 클릭하고 단계에 따라 지갑에 연결하십시오."
 
@@ -1876,10 +1904,16 @@ msgstr "거래 마감 시간"
 msgid "Transaction rejected."
 msgstr "거래가 거부되었습니다."
 
+#: src/components/WalletDropdown/DefaultMenu.tsx
+#: src/components/WalletDropdown/TransactionMenu.tsx
+msgid "Transactions"
+msgstr "업무"
+
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Transfer Token"
 msgstr "이전 토큰"
 
+#: src/components/WalletModal/PendingView.tsx
 #: src/components/WalletModal/PendingView.tsx
 msgid "Try Again"
 msgstr "다시 시도하십시오"
@@ -2118,6 +2152,10 @@ msgstr "투표 시작 약 {0}"
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Waiting For Confirmation"
 msgstr "확인을 기다리는 중"
+
+#: src/components/WalletModal/PendingView.tsx
+msgid "Waiting to connect"
+msgstr "연결 대기 중"
 
 #: src/components/AddressInputPanel/index.tsx
 msgid "Wallet Address or ENS name"
@@ -2372,6 +2410,10 @@ msgstr "https:// 또는 ipfs:// 또는 ENS 이름"
 msgid "minutes"
 msgstr "분"
 
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
+msgid "reward"
+msgstr "보상"
+
 #: src/components/SearchModal/ImportRow.tsx
 msgid "via {0}"
 msgstr "{0} 경유"
@@ -2549,6 +2591,6 @@ msgid "{tokenB} per {tokenA}"
 msgstr "{tokenB} / {tokenA}"
 
 #: src/pages/Pool/PositionPage.tsx
-msgid "← Back to Pools Overview"
-msgstr "← 풀 개요로 돌아 가기"
+msgid "← Back to Pools"
+msgstr "← 풀로 돌아가기"
 

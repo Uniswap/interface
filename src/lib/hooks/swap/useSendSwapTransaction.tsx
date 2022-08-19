@@ -119,7 +119,7 @@ export default function useSendSwapTransaction(
           .catch((error) => {
             // if the user rejected the tx, pass this along
             if (error?.code === 4001) {
-              throw new Error(t`Transaction rejected.`)
+              throw new Error(t`Transaction rejected`)
             } else {
               // otherwise, the error was unexpected and we need to convey that
               console.error(`Swap failed`, error, address, calldata, value)

@@ -143,6 +143,7 @@ export const vars = createGlobalTheme(':root', {
     transculent: '#7F7F7F',
     transparent: 'transparent',
     none: 'none',
+    loading: '#7C85A24D',
 
     // new uniswap colors:
     blue400: '#4C82FB',

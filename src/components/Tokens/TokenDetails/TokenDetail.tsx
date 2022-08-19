@@ -10,13 +10,14 @@ import { useCurrency, useIsUserAddedToken, useToken } from 'hooks/Tokens'
 import { useAtomValue } from 'jotai/utils'
 import { useCallback } from 'react'
 import { useState } from 'react'
-import { ArrowLeft, Heart } from 'react-feather'
+import { ArrowLeft, Heart, TrendingUp } from 'react-feather'
 import { Link, useNavigate } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import { ClickableStyle, CopyContractAddress } from 'theme'
 
 import { favoritesAtom, useToggleFavorite } from '../state'
 import { ClickFavorited } from '../TokenTable/TokenRow'
+import { Wave } from './LoadingTokenDetail'
 import Resource from './Resource'
 import ShareButton from './ShareButton'
 
@@ -94,6 +95,7 @@ const StatPrice = styled.span`
 export const StatsSection = styled.div`
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
 `
 export const StatPair = styled.div`
   display: flex;
@@ -143,6 +145,32 @@ const FavoriteIcon = styled(Heart)<{ isFavorited: boolean }>`
   color: ${({ isFavorited, theme }) => (isFavorited ? theme.accentAction : theme.textSecondary)};
   fill: ${({ isFavorited, theme }) => (isFavorited ? theme.accentAction : 'transparent')};
 `
+const ChartEmpty = styled.div`
+  display: flex;
+  height: 400px;
+  align-items: center;
+`
+const NoInfoAvailable = styled.span`
+  color: ${({ theme }) => theme.textTertiary};
+  font-weight: 400;
+  font-size: 16px;
+`
+const MissingChartData = styled.div`
+  color: ${({ theme }) => theme.textTertiary};
+  display: flex;
+  font-weight: 400;
+  font-size: 12px;
+  gap: 4px;
+  align-items: center;
+  border-bottom: 1px solid ${({ theme }) => theme.backgroundOutline};
+  padding: 8px 0px;
+  margin-top: -40px;
+`
+const MissingData = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+`
 
 export default function LoadedTokenDetail({ address }: { address: string }) {
   const token = useToken(address)
@@ -164,7 +192,69 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
 
   // catch token error and loading state
   if (!token || !token.name || !token.symbol) {
-    return <div>No Token</div>
+    return (
+      <TopArea>
+        <BreadcrumbNavLink to="/explore">
+          <ArrowLeft size={14} /> Explore
+        </BreadcrumbNavLink>
+        <ChartHeader>
+          <TokenInfoContainer>
+            <TokenNameCell>
+              <CurrencyLogo currency={currency} size={'32px'} />
+              <Trans>{!token ? 'Name not found' : token.name}</Trans>
+              <TokenSymbol>{token && token.symbol}</TokenSymbol>
+              {!warning && <VerifiedIcon size="20px" />}
+              {networkBadgebackgroundColor && (
+                <NetworkBadge networkColor={chainInfo?.color} backgroundColor={networkBadgebackgroundColor}>
+                  {networkLabel}
+                </NetworkBadge>
+              )}
+            </TokenNameCell>
+          </TokenInfoContainer>
+          <ChartEmpty>
+            <Wave />
+            <Wave />
+          </ChartEmpty>
+          <MissingChartData>
+            <TrendingUp size={12} />
+            Missing chart data
+          </MissingChartData>
+        </ChartHeader>
+        <MissingData>
+          <AboutSection>
+            <AboutHeader>
+              <Trans>About</Trans>
+            </AboutHeader>
+            <NoInfoAvailable>
+              <Trans>No token information available</Trans>
+            </NoInfoAvailable>
+            <ResourcesContainer>
+              <Resource name={'Etherscan'} link={'https://etherscan.io/'} />
+              <Resource name={'Protocol Info'} link={`https://info.uniswap.org/#/tokens/${address}`} />
+            </ResourcesContainer>
+          </AboutSection>
+          <StatsSection>
+            <NoInfoAvailable>
+              <Trans>No stats available</Trans>
+            </NoInfoAvailable>
+          </StatsSection>
+          <ContractAddressSection>
+            <Contract>
+              Contract Address
+              <ContractAddress>
+                <CopyContractAddress address={address} />
+              </ContractAddress>
+            </Contract>
+          </ContractAddressSection>
+        </MissingData>
+        <TokenSafetyModal
+          isOpen={warningModalOpen}
+          tokenAddress={address}
+          onCancel={() => navigate(-1)}
+          onContinue={handleDismissWarning}
+        />
+      </TopArea>
+    )
   }
   const tokenName = token.name
   const tokenSymbol = token.symbol

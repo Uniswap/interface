@@ -1,25 +1,28 @@
-import create from 'zustand'
-import { devtools } from 'zustand/middleware'
+import { breakpoints } from 'nft/css/sprinkles.css'
+import { useEffect, useState } from 'react'
 
-import { breakpoints } from '../css/sprinkles.css'
+const isClient = typeof window === 'object'
 
-interface IsMobileState {
-  isMobile: boolean
-  width: number
-  setMobileWidth: (width: number) => void
+function getIsMobile() {
+  return isClient ? window.innerWidth < breakpoints.tabletSm : false
 }
 
-export const useIsMobile = create<IsMobileState>()(
-  devtools(
-    (set) => ({
-      isMobile: true,
-      width: 800,
-      setMobileWidth: (width: number) =>
-        set(() => ({
-          width,
-          isMobile: width < breakpoints.tabletSm,
-        })),
-    }),
-    { name: 'isMobile' }
-  )
-)
+export function useIsMobile(): boolean {
+  const [isMobile, setIsMobile] = useState(getIsMobile)
+
+  useEffect(() => {
+    function handleResize() {
+      setIsMobile(getIsMobile())
+    }
+
+    if (isClient) {
+      window.addEventListener('resize', handleResize)
+      return () => {
+        window.removeEventListener('resize', handleResize)
+      }
+    }
+    return undefined
+  }, [])
+
+  return isMobile
+}

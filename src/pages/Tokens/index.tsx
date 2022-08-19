@@ -1,3 +1,4 @@
+import { Trans } from '@lingui/macro'
 import { PageName } from 'components/AmplitudeAnalytics/constants'
 import { Trace } from 'components/AmplitudeAnalytics/Trace'
 import { MAX_WIDTH_MEDIA_BREAKPOINT, MEDIUM_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
@@ -12,6 +13,7 @@ import { useAtomValue, useResetAtom } from 'jotai/utils'
 import { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 import styled from 'styled-components/macro'
+import { ThemedText } from 'theme'
 
 const ExploreContainer = styled.div`
   width: 100%;
@@ -21,8 +23,7 @@ const ExploreContainer = styled.div`
 const TokenTableContainer = styled.div`
   padding: 16px 0px;
 `
-const TitleContainer = styled.div`
-  font-size: 32px;
+export const TitleContainer = styled.div`
   margin-bottom: 16px;
   max-width: 960px;
   margin-left: auto;
@@ -70,7 +71,11 @@ const Tokens = () => {
   return (
     <Trace page={PageName.TOKENS_PAGE} shouldLogImpression>
       <ExploreContainer>
-        <TitleContainer>Explore Tokens</TitleContainer>
+        <TitleContainer>
+          <ThemedText.LargeHeader>
+            <Trans>Explore Tokens</Trans>
+          </ThemedText.LargeHeader>
+        </TitleContainer>
         <FiltersWrapper>
           <FiltersContainer>
             <NetworkFilter />
