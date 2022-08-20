@@ -160,6 +160,8 @@ export const vars = createGlobalTheme(':root', {
     grey200: '#B7BED4',
     grey100: '#DDE3F7',
     grey50: '#EDEFF7',
+    accentActionSoft: 'rgba(76, 130, 251, 0.24)',
+    accentTextLightTertiary: 'rgba(255, 255, 255, 0.12)',
   },
   border: {
     transculent: '1.5px solid rgba(0, 0, 0, 0.1)',

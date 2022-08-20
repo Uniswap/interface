@@ -57,29 +57,28 @@ const Banner = () => {
         <Link to={`/nfts/collection/${collections[current].address}`} style={{ textDecoration: 'none' }}>
           <Box style={{ height: '386px' }}>
             <CollectionWrapper bannerImageUrl={collections[current].bannerImageUrl}>
-              <div className={styles.bannerContent}>
-                <Box
-                  as="section"
-                  className={section}
-                  display="flex"
-                  flexDirection="row"
-                  flexWrap="nowrap"
-                  paddingTop="40"
-                >
-                  <CollectionDetails collection={collections[current]} hovered={hovered} rank={current + 1} />
-                </Box>
-                <Center marginTop="16">
-                  {Array(collections.length)
-                    .fill(null)
-                    .map((value, carouselIndex) => (
-                      <CarouselIndicator
-                        active={carouselIndex === current}
-                        onClick={() => setCurrent(carouselIndex)}
-                        key={carouselIndex}
-                      />
-                    ))}
-                </Center>
-              </div>
+              <Box
+                as="section"
+                className={section}
+                display="flex"
+                flexDirection="row"
+                flexWrap="nowrap"
+                paddingTop="40"
+                position="relative"
+              >
+                <CollectionDetails collection={collections[current]} hovered={hovered} rank={current + 1} />
+              </Box>
+              <Center marginTop="16" position="relative">
+                {Array(collections.length)
+                  .fill(null)
+                  .map((value, carouselIndex) => (
+                    <CarouselIndicator
+                      active={carouselIndex === current}
+                      onClick={() => setCurrent(carouselIndex)}
+                      key={carouselIndex}
+                    />
+                  ))}
+              </Center>
             </CollectionWrapper>
           </Box>
         </Link>
@@ -179,8 +178,8 @@ const CarouselIndicator = ({ active, onClick }: { active: boolean; onClick: () =
   >
     <Box
       as="span"
-      display="inline-block"
-      className={clsx(styles.carouselIndicator, active && styles.carouselIndicatorActive)}
+      className={styles.carouselIndicator}
+      backgroundColor={active ? 'explicitWhite' : 'accentTextLightTertiary'}
     />
   </Box>
 )

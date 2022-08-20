@@ -36,11 +36,6 @@ export const bannerOverlay = style([
   }),
 ])
 
-export const bannerContent = sprinkles({
-  position: 'relative',
-  zIndex: '1',
-})
-
 export const collectionName = style([
   sprinkles({
     textAlign: 'left',
@@ -75,9 +70,9 @@ export const volumeRank = style([
     paddingRight: '16',
     paddingLeft: '16',
     color: 'blue400',
+    background: 'accentActionSoft',
   }),
   {
-    background: 'rgba(92, 254, 157, 0.12)',
     borderRadius: '64px',
     maxWidth: '172px',
   },
@@ -97,17 +92,10 @@ export const exploreCollection = style([
   }),
 ])
 
-export const carouselIndicator = style([
-  sprinkles({
-    backgroundColor: 'explicitWhite',
-    width: '36',
-    height: '4',
-    marginRight: '6',
-    borderRadius: 'round',
-  }),
-  {
-    opacity: '0.4',
-  },
-])
-
-export const carouselIndicatorActive = style({ opacity: '1.0' })
+export const carouselIndicator = sprinkles({
+  width: '36',
+  height: '4',
+  marginRight: '6',
+  borderRadius: 'round',
+  display: 'inline-block',
+})
