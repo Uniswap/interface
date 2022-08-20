@@ -30,8 +30,8 @@ function parseStringOrBytes32(str: string | undefined, bytes32: string | undefin
  * Returns undefined if tokenAddress is invalid or token does not exist.
  */
 export function useTokenFromNetwork(tokenAddress: string | null | undefined): Token | null | undefined {
-  const { chainId, connector } = useWeb3React()
-  const chainAllowed = chainId && isChainAllowed(connector, chainId)
+  const { chainId } = useWeb3React()
+  const chainAllowed = chainId && isChainAllowed(chainId)
 
   const formattedAddress = isAddress(tokenAddress)
 
@@ -96,7 +96,7 @@ export function useTokenFromMapOrNetwork(tokens: TokenMap, tokenAddress?: string
  */
 export function useCurrencyFromMap(tokens: TokenMap, currencyId?: string | null): Currency | null | undefined {
   const nativeCurrency = useNativeCurrency()
-  const { chainId, connector } = useWeb3React()
+  const { chainId } = useWeb3React()
   const isNative = Boolean(nativeCurrency && currencyId?.toUpperCase() === 'ETH')
   const shorthandMatchAddress = useMemo(() => {
     const chain = supportedChainId(chainId)
@@ -105,7 +105,7 @@ export function useCurrencyFromMap(tokens: TokenMap, currencyId?: string | null)
 
   const token = useTokenFromMapOrNetwork(tokens, isNative ? undefined : shorthandMatchAddress ?? currencyId)
 
-  const chainAllowed = chainId && isChainAllowed(connector, chainId)
+  const chainAllowed = chainId && isChainAllowed(chainId)
   if (currencyId === null || currencyId === undefined || !chainAllowed) return null
 
   // this case so we use our builtin wrapped token instead of wrapped tokens on token lists

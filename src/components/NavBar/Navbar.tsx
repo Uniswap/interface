@@ -1,5 +1,5 @@
 import Web3Status from 'components/Web3Status'
-import { Phase1Variant, usePhase1Flag } from 'featureFlags/flags/phase1'
+import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
 import { useWindowSize } from 'hooks/useWindowSize'
 import { ReactNode } from 'react'
 import { NavLink, NavLinkProps, useLocation } from 'react-router-dom'
@@ -63,7 +63,7 @@ const MobileNavbar = () => {
 const Navbar = () => {
   const { width: windowWidth } = useWindowSize()
   const { pathname } = useLocation()
-  const phase1Flag = usePhase1Flag()
+  const nftFlag = useNftFlag()
 
   if (windowWidth && windowWidth < breakpoints.desktopXl) {
     return <MobileNavbar />
@@ -90,7 +90,7 @@ const Navbar = () => {
             <MenuItem href="/tokens" isActive={pathname.startsWith('/explore')}>
               Tokens
             </MenuItem>
-            {phase1Flag === Phase1Variant.Enabled && (
+            {nftFlag === NftVariant.Enabled && (
               <MenuItem href="/nfts" isActive={pathname.startsWith('/nfts')}>
                 NFTs
               </MenuItem>

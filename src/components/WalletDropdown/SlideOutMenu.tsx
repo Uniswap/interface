@@ -24,7 +24,6 @@ const Header = styled.span`
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  height: 200px;
 `
 
 const ClearAll = styled.div`
@@ -36,6 +35,15 @@ const ClearAll = styled.div`
   font-size: 14px;
   margin-top: auto;
   margin-bottom: auto;
+`
+
+const StyledChevron = styled(ChevronLeft)`
+  cursor: pointer;
+
+  &:hover {
+    color: ${({ theme }) => theme.textPrimary};
+    transition: 250ms color ease;
+  }
 `
 
 export const SlideOutMenu = ({
@@ -51,8 +59,7 @@ export const SlideOutMenu = ({
 }) => (
   <Menu>
     <BackSection>
-      <ChevronLeft cursor="pointer" onClick={onClose} size={24} />
-
+      <StyledChevron onClick={onClose} size={24} />
       <Header>{title}</Header>
       {onClear && <ClearAll onClick={onClear}>Clear All</ClearAll>}
     </BackSection>

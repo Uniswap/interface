@@ -58,7 +58,7 @@ export const CollectionRow = ({ collection, isHovered, setHoveredIndex, toggleOp
       className={styles.suggestionRow}
       style={{ background: isHovered ? vars.color.lightGrayButton : 'none' }}
     >
-      <Row style={{ width: '68%' }}>
+      <Row style={{ width: '60%' }}>
         {!brokenImage && collection.imageUrl ? (
           <Box
             as="img"
@@ -137,7 +137,7 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index 
       className={styles.suggestionRow}
       style={{ background: isHovered ? vars.color.lightGrayButton : 'none' }}
     >
-      <Row>
+      <Row style={{ width: '65%' }}>
         {!brokenImage && token.logoURI ? (
           <Box
             as="img"

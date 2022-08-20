@@ -8,7 +8,7 @@ import { SupportedChainId } from 'constants/chains'
 import { Variables } from 'react-relay'
 import { GraphQLResponse, ObservableFromValue, RequestParameters } from 'relay-runtime'
 
-import store, { AppState } from '../state/index'
+import store, { AppState } from '../../state/index'
 
 const CHAIN_SUBGRAPH_URL: Record<number, string> = {
   [SupportedChainId.MAINNET]: 'https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3',

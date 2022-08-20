@@ -1,13 +1,14 @@
 import graphql from 'babel-plugin-relay/macro'
 import useInterval from 'lib/hooks/useInterval'
 import { useCallback, useEffect, useState } from 'react'
-import { fetchQuery, useRelayEnvironment } from 'relay-hooks'
+import { fetchQuery } from 'react-relay'
 import { useAppSelector } from 'state/hooks'
 
 import type {
   FeeTierDistributionQuery as FeeTierDistributionQueryType,
   FeeTierDistributionQuery$data,
 } from './__generated__/FeeTierDistributionQuery.graphql'
+import environment from './RelayEnvironment'
 
 const query = graphql`
   query FeeTierDistributionQuery($token0: String!, $token1: String!) {
@@ -45,7 +46,6 @@ export default function useFeeTierDistributionQuery(
   const [data, setData] = useState<FeeTierDistributionQuery$data | null>(null)
   const [error, setError] = useState<any>(null)
   const [isLoading, setIsLoading] = useState(true)
-  const environment = useRelayEnvironment()
   const chainId = useAppSelector((state) => state.application.chainId)
 
   const refreshData = useCallback(() => {
@@ -59,7 +59,7 @@ export default function useFeeTierDistributionQuery(
         complete: () => setIsLoading(false),
       })
     }
-  }, [token0, token1, chainId, environment])
+  }, [token0, token1, chainId])
 
   // Trigger fetch on first load
   useEffect(refreshData, [refreshData, token0, token1])
