@@ -1,4 +1,3 @@
-import { TransactionResponse } from '@ethersproject/abstract-provider'
 import { Percent, TradeType } from '@uniswap/sdk-core'
 import { SwapWidget } from '@uniswap/widgets'
 import { useWeb3React } from '@web3-react/core'
@@ -20,7 +19,6 @@ import { checkWarning } from 'constants/tokenSafety'
 import { useToken } from 'hooks/Tokens'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import { useNetworkTokenBalances } from 'hooks/useNetworkTokenBalances'
-import { AnyTrade } from 'hooks/useSwapCallArguments'
 import useTokenDetailPageQuery from 'hooks/useTokenDetailPageQuery'
 import { useCallback, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
@@ -78,18 +76,17 @@ export default function TokenDetails() {
   const { loading } = useTokenDetailPageQuery(tokenAddress)
   const tokenSymbol = useToken(tokenAddress)?.symbol
 
-  const [trade, setTrade] = useState<AnyTrade | null>(null)
-  const [tradeType, setTradeType] = useState<TradeType | null>(null)
-  const [allowedSlippage, setAllowedSlippage] = useState<Percent | null>(null)
+  const [maxSlippage, setMaxSlippage] = useState<Percent | null>(null)
   const addTransaction = useTransactionAdder()
   const darkMode = useIsDarkMode()
   const widgetTheme = useMemo(() => (darkMode ? DARK_THEME : LIGHT_THEME), [darkMode])
   const locale = useActiveLocale()
   const onTxSubmit = useCallback(
-    (_txHash: string, txResponse: TransactionResponse) => {
-      if (!trade || !tradeType || !allowedSlippage) {
+    (_txHash: string, data: any) => {
+      if (!data?.trade || !data.tradeType || !maxSlippage) {
         return
       }
+      const { trade, tradeType } = data
       const baseTxInfo: BaseSwapTransactionInfo = {
         type: TransactionType.SWAP,
         tradeType,
@@ -97,22 +94,22 @@ export default function TokenDetails() {
         outputCurrencyId: currencyId(trade.outputAmount.currency),
       }
       if (tradeType === TradeType.EXACT_OUTPUT) {
-        addTransaction(txResponse, {
+        addTransaction(data.txResponse, {
           ...baseTxInfo,
-          maximumInputCurrencyAmountRaw: trade.maximumAmountIn(allowedSlippage).quotient.toString(),
+          maximumInputCurrencyAmountRaw: trade.maximumAmountIn(maxSlippage).quotient.toString(),
           outputCurrencyAmountRaw: trade.outputAmount.quotient.toString(),
           expectedInputCurrencyAmountRaw: trade.inputAmount.quotient.toString(),
         } as ExactOutputSwapTransactionInfo)
       } else {
-        addTransaction(txResponse, {
+        addTransaction(data.txResponse, {
           ...baseTxInfo,
           inputCurrencyAmountRaw: trade.inputAmount.quotient.toString(),
           expectedOutputCurrencyAmountRaw: trade.outputAmount.quotient.toString(),
-          minimumOutputCurrencyAmountRaw: trade.minimumAmountOut(allowedSlippage).quotient.toString(),
+          minimumOutputCurrencyAmountRaw: trade.minimumAmountOut(maxSlippage).quotient.toString(),
         } as ExactInputSwapTransactionInfo)
       }
     },
-    [addTransaction, allowedSlippage, trade, tradeType]
+    [addTransaction, maxSlippage]
   )
 
   let tokenDetail
@@ -180,12 +177,8 @@ export default function TokenDetails() {
               provider={provider}
               routerUrl={ROUTER_URL}
               theme={widgetTheme}
-              trade={trade}
-              onTradeChange={setTrade}
-              tradeType={tradeType}
-              onTradeTypeChange={setTradeType}
-              allowedSlippage={allowedSlippage}
-              onAllowedSlippageChange={setAllowedSlippage}
+              maxSlippage={maxSlippage}
+              onAllowedSlippageChange={setMaxSlippage}
               width={290}
             />
             {tokenWarning && <TokenSafetyMessage tokenAddress={tokenAddress} warning={tokenWarning} />}
