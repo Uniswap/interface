@@ -62,14 +62,6 @@ const PageWrapper = styled(AutoColumn)`
   `};
 `
 
-const MarkDownDescription = styled(ReactMarkdown)`
-  & > p > img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-`
-
 const ProposalInfo = styled(AutoColumn)`
   background: ${({ theme }) => theme.deprecated_bg0};
   border-radius: 12px;
@@ -266,6 +258,10 @@ export default function VotePage() {
       )
     }
     return <span>{content}</span>
+  }
+
+  function MarkdownImage({ ...rest }) {
+    return <img {...rest} style={{ width: '100%', height: '100$', objectFit: 'cover' }} alt="" />
   }
 
   return (
@@ -476,7 +472,12 @@ export default function VotePage() {
                 <Trans>Description</Trans>
               </ThemedText.DeprecatedMediumHeader>
               <MarkDownWrapper>
-                <MarkDownDescription source={proposalData?.description} />
+                <ReactMarkdown
+                  source={proposalData?.description}
+                  renderers={{
+                    image: MarkdownImage,
+                  }}
+                />
               </MarkDownWrapper>
             </AutoColumn>
             <AutoColumn gap="md">
