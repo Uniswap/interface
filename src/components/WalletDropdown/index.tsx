@@ -1,8 +1,8 @@
 import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
 import { useWalletFlag, WalletVariant } from 'featureFlags/flags/wallet'
+import { useWindowSize } from 'hooks/useWindowSize'
 import { useMemo, useState } from 'react'
 import styled, { css } from 'styled-components/macro'
-import { useWindowSize } from 'hooks/useWindowSize'
 
 import { useModalIsOpen } from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/reducer'
