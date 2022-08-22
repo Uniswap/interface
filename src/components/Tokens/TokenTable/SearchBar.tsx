@@ -16,14 +16,14 @@ const SearchInput = styled.input`
   background-image: url(${searchIcon});
   background-size: 20px 20px;
   background-position: 12px center;
-  background-color: 'transparent';
+  background-color: ${({ theme }) => theme.backgroundSurface};
   border-radius: 12px;
   border: 1px solid ${({ theme }) => theme.backgroundOutline};
   height: 100%;
   width: min(300px, 100%);
   font-size: 16px;
   padding-left: 40px;
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.textSecondary};
 
   :hover {
     background-color: ${({ theme }) => theme.backgroundModule};
