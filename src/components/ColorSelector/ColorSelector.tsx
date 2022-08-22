@@ -22,7 +22,7 @@ export function ColorSelector({ selectedColor, updateColor }: ColorSelectorProps
       borderRadius="full"
       borderWidth={1}
       name={ElementName.SelectColor + '-' + color}
-      padding="sm"
+      padding="xs"
       style={{
         backgroundColor: theme.colors.neutralSurface,
         borderColor: selectedColor === color ? color : theme.colors.none,
