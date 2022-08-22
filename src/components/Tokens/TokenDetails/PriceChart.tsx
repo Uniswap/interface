@@ -25,16 +25,9 @@ import {
 } from 'utils/formatChartTimes'
 
 import LineChart from '../../Charts/LineChart'
+import { DISPLAYS, ORDERED_TIMES } from '../TokenTable/TimeSelector'
 
 // TODO: This should be combined with the logic in TimeSelector.
-const TIME_DISPLAYS: [TimePeriod, string][] = [
-  [TimePeriod.HOUR, '1H'],
-  [TimePeriod.DAY, '1D'],
-  [TimePeriod.WEEK, '1W'],
-  [TimePeriod.MONTH, '1M'],
-  [TimePeriod.YEAR, '1Y'],
-  [TimePeriod.ALL, 'All'],
-]
 
 type PricePoint = { value: number; timestamp: number }
 
@@ -307,9 +300,9 @@ export function PriceChart({ width, height, token }: PriceChartProps) {
       </LineChart>
       <TimeOptionsWrapper>
         <TimeOptionsContainer>
-          {TIME_DISPLAYS.map(([value, display]) => (
-            <TimeButton key={display} active={timePeriod === value} onClick={() => setTimePeriod(value)}>
-              {display}
+          {ORDERED_TIMES.map((time) => (
+            <TimeButton key={DISPLAYS[time]} active={timePeriod === time} onClick={() => setTimePeriod(time)}>
+              {DISPLAYS[time]}
             </TimeButton>
           ))}
         </TimeOptionsContainer>

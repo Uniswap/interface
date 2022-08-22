@@ -10,15 +10,23 @@ import styled, { useTheme } from 'styled-components/macro'
 import { MOBILE_MEDIA_BREAKPOINT, SMALL_MEDIA_BREAKPOINT } from '../constants'
 import { filterTimeAtom } from '../state'
 
-export const TIME_DISPLAYS: { [key: string]: string } = {
-  hour: '1H',
-  day: '1D',
-  week: '1W',
-  month: '1M',
-  year: '1Y',
+export const DISPLAYS: Record<TimePeriod, string> = {
+  [TimePeriod.HOUR]: '1H',
+  [TimePeriod.DAY]: '1D',
+  [TimePeriod.WEEK]: '1W',
+  [TimePeriod.MONTH]: '1M',
+  [TimePeriod.YEAR]: '1Y',
+  [TimePeriod.ALL]: 'All',
 }
 
-const TIMES = [TimePeriod.HOUR, TimePeriod.DAY, TimePeriod.WEEK, TimePeriod.MONTH, TimePeriod.YEAR]
+export const ORDERED_TIMES = [
+  TimePeriod.HOUR,
+  TimePeriod.DAY,
+  TimePeriod.WEEK,
+  TimePeriod.MONTH,
+  TimePeriod.YEAR,
+  TimePeriod.ALL,
+]
 
 const InternalMenuItem = styled.div`
   flex: 1;
@@ -136,7 +144,7 @@ export default function TimeSelector() {
     <StyledMenu ref={node}>
       <StyledMenuButton onClick={toggleMenu} aria-label={`timeSelector`} open={open}>
         <StyledMenuContent>
-          {TIME_DISPLAYS[activeTime]}
+          {DISPLAYS[activeTime]}
           <Chevron open={open}>
             {open ? <ChevronUp size={15} viewBox="0 0 24 20" /> : <ChevronDown size={15} viewBox="0 0 24 20" />}
           </Chevron>
@@ -144,15 +152,15 @@ export default function TimeSelector() {
       </StyledMenuButton>
       {open && (
         <MenuTimeFlyout>
-          {TIMES.map((time) => (
+          {ORDERED_TIMES.map((time) => (
             <InternalLinkMenuItem
-              key={time}
+              key={DISPLAYS[time]}
               onClick={() => {
                 setTime(time)
                 toggleMenu()
               }}
             >
-              <div>{TIME_DISPLAYS[time]}</div>
+              <div>{DISPLAYS[time]}</div>
               {time === activeTime && <Check color={theme.accentAction} size={16} />}
             </InternalLinkMenuItem>
           ))}
