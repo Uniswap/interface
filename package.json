@@ -94,7 +94,7 @@
     "no-yolo-signatures": "^0.0.2",
     "react": "17.0.2",
     "react-i18next": "^11.12.0",
-    "react-native": "~0.67.0",
+    "react-native": "0.68.3",
     "react-native-device-info": "^10.0.2",
     "react-native-gesture-handler": "^2.4.2",
     "react-native-get-random-values": "^1.7.0",
@@ -182,8 +182,7 @@
     "typescript": "^4.4.3"
   },
   "resolutions": {
-    "@types/react": "^17",
-    "hermes-engine": "^0.10.0"
+    "@types/react": "^17"
   },
   "jest": {
     "preset": "react-native",
