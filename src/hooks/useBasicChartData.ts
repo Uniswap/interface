@@ -71,6 +71,7 @@ const liveDataApi: { [chainId in ChainId]?: string } = {
   [ChainId.CRONOS]: `${process.env.REACT_APP_AGGREGATOR_API}/cronos/tokens`,
   [ChainId.ARBITRUM]: `${process.env.REACT_APP_AGGREGATOR_API}/arbitrum/tokens`,
 }
+
 const fetchKyberDataSWR = async (url: string) => {
   const res = await fetch(url)
   if (!res.ok) throw new Error()
@@ -140,9 +141,11 @@ export default function useBasicChartData(tokens: (Token | null | undefined)[], 
     isValidating: kyberLoading,
   } = useSWR(
     coingeckoError && tokenAddresses[0] && tokenAddresses[1]
-      ? `https://price-chart.dev.kyberengineering.io/api/price-chart?chainId=${chainId}&timeWindow=${timeFrame.toLowerCase()}&tokenIn=${
-          tokenAddresses[0]
-        }&tokenOut=${tokenAddresses[1]}`
+      ? `${
+          process.env.REACT_APP_PRICE_CHART_API
+        }/price-chart?chainId=${chainId}&timeWindow=${timeFrame.toLowerCase()}&tokenIn=${tokenAddresses[0]}&tokenOut=${
+          tokenAddresses[1]
+        }`
       : null,
     fetchKyberDataSWR,
     {
