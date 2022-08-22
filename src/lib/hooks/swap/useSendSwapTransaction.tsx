@@ -33,12 +33,13 @@ interface VdfResponse {
   vdf_snark_proof: string
   sym_key: string
   commitment: string
+  commitment_le: string
 }
 
 interface EncryptedTx {
   txOwner: string
-  amountIn: number
-  amountoutMin: number
+  amountIn: string
+  amountOutMin: string
   path: Path
   to: string
   deadline: number
@@ -109,21 +110,21 @@ export default function useSendSwapTransaction(
           amountIn: `${amountIn}`,
           amountOutMin: `${amountoutMin}`,
           path,
-          to: swapRouterAddress,
+          to: signAddress,
           deadline,
         }
 
-        const signData = JSON.stringify({
+        const typedData = JSON.stringify({
           types: {
             EIP712Domain: DOMAIN_TYPE,
             Swap: SWAP_TYPE,
           },
-          domain: domain(chainId),
           primaryType: 'Swap',
+          domain: domain(chainId),
           message: signMessage,
         })
 
-        const sig = await signWithEIP712(library, signAddress, signData)
+        const sig = await signWithEIP712(library, signAddress, typedData)
 
         console.log(sig)
 
@@ -133,9 +134,9 @@ export default function useSendSwapTransaction(
 
         console.log(vdfData)
 
-        // const encryptData = await poseidonEncrypt(vdfData.sym_key, vdfData.commitment, `${path[0]},${path[1]}`)
+        const encryptData = await poseidonEncrypt(vdfData.sym_key, vdfData.commitment_le, `${path[0]},${path[1]}`)
 
-        const encryptData = await poseidonEncryptWithoutProof(`${path[0]},${path[1]}`)
+        // const encryptData = await poseidonEncryptWithoutProof(vdfData.sym_key, `${path[0]},${path[1]}`)
 
         console.log(encryptData)
 
@@ -159,11 +160,11 @@ export default function useSendSwapTransaction(
         }
 
         const encryptedTx: EncryptedTx = {
-          txOwner: signAddress.toLowerCase(),
-          amountIn,
-          amountoutMin,
+          txOwner: signAddress,
+          amountIn: `${amountIn}`,
+          amountOutMin: `${amountoutMin}`,
           path: encryptedPath,
-          to: signAddress.toLowerCase(),
+          to: signAddress,
           deadline,
           txId,
         }
@@ -179,10 +180,13 @@ export default function useSendSwapTransaction(
   }, [account, chainId, library, swapCalls, trade, sigHandler])
 }
 
-async function signWithEIP712(library: JsonRpcProvider, signAddress: string, signData: string): Promise<Signature> {
-  const sig = await library
-    .send('eth_signTypedData_v4', [signAddress.toLowerCase(), signData])
+async function signWithEIP712(library: JsonRpcProvider, signAddress: string, typedData: string): Promise<Signature> {
+  console.log(signAddress, typedData)
+  const signer = library.getSigner()
+  const sig = await signer.provider
+    .send('eth_signTypedData_v4', [signAddress, typedData])
     .then((response) => {
+      console.log(response)
       const sig = splitSignature(response)
       return sig
     })
@@ -192,7 +196,7 @@ async function signWithEIP712(library: JsonRpcProvider, signAddress: string, sig
         throw new Error(`Sign rejected.`)
       } else {
         // otherwise, the error was unexpected and we need to convey that
-        console.error(`Sign failed`, error, signAddress, signData)
+        console.error(`Sign failed`, error, signAddress, typedData)
 
         throw new Error(`Sign failed: ${swapErrorToUserReadableMessage(error)}`)
       }
@@ -234,11 +238,11 @@ async function poseidonEncrypt(symKey: string, commitment: string, plainText: st
   return data
 }
 
-async function poseidonEncryptWithoutProof(plainText: string): Promise<EncryptResponse> {
-  console.log(plainText)
+async function poseidonEncryptWithoutProof(symKey: string, plainText: string): Promise<EncryptResponse> {
+  console.log(symKey, plainText)
   const poseidon = await import('poseidon')
   const data = await poseidon
-    .encrypt_without_proof(plainText)
+    .encrypt_without_proof(symKey, plainText)
     .then((res) => {
       console.log(res)
       return res
