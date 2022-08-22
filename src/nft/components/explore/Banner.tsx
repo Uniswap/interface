@@ -2,14 +2,15 @@ import clsx from 'clsx'
 import { Box } from 'nft/components/Box'
 import { Center, Column, Row } from 'nft/components/Flex'
 import { VerifiedIcon } from 'nft/components/icons'
-import { bodySmall, buttonMedium, header1, section } from 'nft/css/common.css'
+import { bodySmall, buttonMedium, header1 } from 'nft/css/common.css'
+import { section } from 'nft/css/common.css'
 import { vars } from 'nft/css/sprinkles.css'
 import { fetchTrendingCollections } from 'nft/queries'
 import { TimePeriod, TrendingCollection } from 'nft/types'
 import { formatEthPrice } from 'nft/utils/currency'
 import { putCommas } from 'nft/utils/putCommas'
 import { formatChange, toSignificant } from 'nft/utils/toSignificant'
-import { ReactNode, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useQuery } from 'react-query'
 import { Link } from 'react-router-dom'
 
@@ -33,13 +34,14 @@ const Banner = () => {
 
   useEffect(() => {
     /* Rotate through Top 5 Collections on 15 second interval */
+    let stale = false
+    if (hovered || stale) return
     const interval = setInterval(async () => {
-      if (collections && !hovered && !stale) {
+      if (collections) {
         const nextCollectionIndex = (current + 1) % collections.length
         setCurrent(nextCollectionIndex)
       }
     }, 15_000)
-    let stale = false
     return () => {
       stale = true
       clearInterval(interval)
@@ -56,30 +58,36 @@ const Banner = () => {
       {collections && collections[current] ? (
         <Link to={`/nfts/collection/${collections[current].address}`} style={{ textDecoration: 'none' }}>
           <Box style={{ height: '386px' }}>
-            <CollectionWrapper bannerImageUrl={collections[current].bannerImageUrl}>
-              <Box
-                as="section"
-                className={section}
-                display="flex"
-                flexDirection="row"
-                flexWrap="nowrap"
-                paddingTop="40"
-                position="relative"
-              >
-                <CollectionDetails collection={collections[current]} hovered={hovered} rank={current + 1} />
-              </Box>
-              <Center marginTop="16" position="relative">
+            <div
+              className={styles.bannerWrap}
+              style={{ backgroundImage: `url(${collections[current].bannerImageUrl})` }}
+            >
+              <Box className={styles.bannerOverlay} width="full" />
+              <CollectionDetails collection={collections[current]} hovered={hovered} rank={current + 1} />
+              <Center marginTop="32" position="relative">
                 {Array(collections.length)
                   .fill(null)
                   .map((value, carouselIndex) => (
-                    <CarouselIndicator
-                      active={carouselIndex === current}
-                      onClick={() => setCurrent(carouselIndex)}
+                    <Box
+                      cursor="pointer"
+                      paddingTop="16"
+                      paddingBottom="16"
                       key={carouselIndex}
-                    />
+                      onClick={(e) => {
+                        e.preventDefault()
+                        e.stopPropagation()
+                        setCurrent(carouselIndex)
+                      }}
+                    >
+                      <Box
+                        as="span"
+                        className={styles.carouselIndicator}
+                        backgroundColor={carouselIndex === current ? 'explicitWhite' : 'accentTextLightTertiary'}
+                      />
+                    </Box>
                   ))}
               </Center>
-            </CollectionWrapper>
+            </div>
           </Box>
         </Link>
       ) : (
@@ -94,14 +102,6 @@ const Banner = () => {
 
 export default Banner
 
-/* Collection Wrapper: applies background image to entire banner */
-const CollectionWrapper = ({ bannerImageUrl, children }: { bannerImageUrl: string; children: ReactNode }) => (
-  <div className={styles.bannerWrap} style={{ backgroundImage: `url(${bannerImageUrl})` }}>
-    <Box className={styles.bannerOverlay} width="full" />
-    {children}
-  </div>
-)
-
 /* Collection Details: displays collection stats within Banner  */
 const CollectionDetails = ({
   collection,
@@ -112,74 +112,64 @@ const CollectionDetails = ({
   rank: number
   hovered: boolean
 }) => (
-  <Column className={styles.collectionDetails} paddingTop="24">
-    <div className={styles.volumeRank}>#{rank} volume in 24hr</div>
-    <Row>
-      <Box as="span" marginTop="16" className={clsx(header1, styles.collectionName)}>
-        {collection.name}
-      </Box>
-      {collection.isVerified && (
-        <Box as="span" marginTop="24">
-          <VerifiedIcon height="32" width="32" />
-        </Box>
-      )}
-    </Row>
-    <Row className={bodySmall} marginTop="12" color="explicitWhite">
-      <Box>
-        <Box as="span" color="darkGray" marginRight="4">
-          Floor:
-        </Box>
-        {collection.floor ? formatEthPrice(collection.floor.toString()) : '--'} ETH
-      </Box>
-      <Box>
-        {collection.floorChange ? (
-          <Box as="span" color={collection.floorChange > 0 ? 'green200' : 'error'} marginLeft="4">
-            {collection.floorChange > 0 && '+'}
-            {formatChange(collection.floorChange)}%
-          </Box>
-        ) : null}
-      </Box>
-      <Box marginLeft="24" color="explicitWhite">
-        <Box as="span" color="darkGray" marginRight="4">
-          Volume:
-        </Box>
-        {collection.volume ? putCommas(+toSignificant(collection.volume.toString())) : '--'} ETH
-      </Box>
-      <Box>
-        {collection.volumeChange ? (
-          <Box as="span" color={collection.volumeChange > 0 ? 'green200' : 'error'} marginLeft="4">
-            {collection.volumeChange > 0 && '+'}
-            {formatChange(collection.volumeChange)}%
-          </Box>
-        ) : null}
-      </Box>
-    </Row>
-    <Link
-      className={clsx(buttonMedium, styles.exploreCollection)}
-      to={`/nfts/collection/${collection.address}`}
-      style={{ textDecoration: 'none', backgroundColor: `${hovered ? vars.color.blue400 : vars.color.grey700}` }}
-    >
-      Explore collection
-    </Link>
-  </Column>
-)
-
-/* Carousel Progress Indicators */
-const CarouselIndicator = ({ active, onClick }: { active: boolean; onClick: () => void }) => (
   <Box
-    cursor="pointer"
-    paddingTop="16"
-    paddingBottom="16"
-    onClick={(e) => {
-      e.preventDefault()
-      e.stopPropagation()
-      onClick()
-    }}
+    as="section"
+    className={section}
+    display="flex"
+    flexDirection="row"
+    flexWrap="nowrap"
+    paddingTop="40"
+    position="relative"
   >
-    <Box
-      as="span"
-      className={styles.carouselIndicator}
-      backgroundColor={active ? 'explicitWhite' : 'accentTextLightTertiary'}
-    />
+    <Column className={styles.collectionDetails} paddingTop="24">
+      <div className={styles.volumeRank}>#{rank} volume in 24hr</div>
+      <Row>
+        <Box as="span" marginTop="16" className={clsx(header1, styles.collectionName)}>
+          {collection.name}
+        </Box>
+        {collection.isVerified && (
+          <Box as="span" marginTop="24">
+            <VerifiedIcon height="32" width="32" />
+          </Box>
+        )}
+      </Row>
+      <Row className={bodySmall} marginTop="12" color="explicitWhite">
+        <Box>
+          <Box as="span" color="darkGray" marginRight="4">
+            Floor:
+          </Box>
+          {collection.floor ? formatEthPrice(collection.floor.toString()) : '--'} ETH
+        </Box>
+        <Box>
+          {collection.floorChange ? (
+            <Box as="span" color={collection.floorChange > 0 ? 'green200' : 'error'} marginLeft="4">
+              {collection.floorChange > 0 && '+'}
+              {formatChange(collection.floorChange)}%
+            </Box>
+          ) : null}
+        </Box>
+        <Box marginLeft="24" color="explicitWhite">
+          <Box as="span" color="darkGray" marginRight="4">
+            Volume:
+          </Box>
+          {collection.volume ? putCommas(+toSignificant(collection.volume.toString())) : '--'} ETH
+        </Box>
+        <Box>
+          {collection.volumeChange ? (
+            <Box as="span" color={collection.volumeChange > 0 ? 'green200' : 'error'} marginLeft="4">
+              {collection.volumeChange > 0 && '+'}
+              {formatChange(collection.volumeChange)}%
+            </Box>
+          ) : null}
+        </Box>
+      </Row>
+      <Link
+        className={clsx(buttonMedium, styles.exploreCollection)}
+        to={`/nfts/collection/${collection.address}`}
+        style={{ textDecoration: 'none', backgroundColor: `${hovered ? vars.color.blue400 : vars.color.grey700}` }}
+      >
+        Explore collection
+      </Link>
+    </Column>
   </Box>
 )

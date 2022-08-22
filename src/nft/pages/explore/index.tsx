@@ -1,4 +1,4 @@
-import Banner from '../../components/explore/Banner'
+import Banner from 'nft/components/explore/Banner'
 
 const NftExplore = () => {
   return (
