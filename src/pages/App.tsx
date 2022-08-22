@@ -44,6 +44,8 @@ import Tokens from './Tokens'
 const TokenDetails = lazy(() => import('./TokenDetails'))
 const Vote = lazy(() => import('./Vote'))
 const Collection = lazy(() => import('nft/pages/collection'))
+const Sell = lazy(() => import('nft/pages/sell/sell'))
+const Asset = lazy(() => import('nft/pages/asset/Asset'))
 
 const AppWrapper = styled.div`
   display: flex;
@@ -211,7 +213,11 @@ export default function App() {
                   <Route path="*" element={<RedirectPathToSwapOnly />} />
 
                   {nftFlag === NftVariant.Enabled && (
-                    <Route path="/nfts/collection/:contractAddress" element={<Collection />} />
+                    <>
+                      <Route path="/nfts/collection/:contractAddress" element={<Collection />} />
+                      <Route path="/nft/sell" element={<Sell />} />
+                      <Route path="/nft/asset/:contractAddress/:tokenId" element={<Asset />} />
+                    </>
                   )}
                 </Routes>
               ) : (

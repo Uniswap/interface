@@ -12,6 +12,7 @@ import {
   GithubIconMenuMobile,
   GovernanceIconMobile,
   HamburgerIcon,
+  ThinTagIconMobile,
   TwitterIconMenuMobile,
 } from 'nft/components/icons'
 import { themeVars } from 'nft/css/sprinkles.css'
@@ -175,6 +176,14 @@ export const MobileSideBar = () => {
               </Column>
               <Seperator />
               <Column gap="4">
+                {nftFlag === NftVariant.Enabled && (
+                  <ExtraLinkRow to="/nft/sell" close={toggleOpen}>
+                    <Icon>
+                      <ThinTagIconMobile width={24} height={24} />
+                    </Icon>
+                    Sell NFTs
+                  </ExtraLinkRow>
+                )}
                 <ExtraLinkRow to="/vote" close={toggleOpen}>
                   <Icon>
                     <GovernanceIconMobile width={24} height={24} />
