@@ -57,7 +57,7 @@ export function useTopTokenQuery(page: number): TokenData {
     }
   )
   const topTokens: Record<string, TokenData> =
-    topTokenData.topTokenProjects?.forEach((token) => ({
+    topTokenData.topTokenProjects?.map((token) => ({
       [token?.tokens?.[0].address ?? '']: {
         name: token?.name,
         chain: token?.tokens?.[0].chain,
