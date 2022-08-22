@@ -76,7 +76,7 @@ const Space = styled.div<{ heightSize: number }>`
   height: ${({ heightSize }) => `${heightSize}px`};
 `
 
-function Wave() {
+export function Wave() {
   const theme = useTheme()
   return (
     <svg width="416" height="160" xmlns="http://www.w3.org/2000/svg">

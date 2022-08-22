@@ -110,8 +110,7 @@ function uniswapThemeColors(darkMode: boolean): ThemeColors {
     chain_80001: colorsDark.chain_80001,
 
     blue200: ColorsPalette.blue200,
-    flyoutDropShadow:
-      '0px 24px 32px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 0px 1px rgba(0, 0, 0, 0.12)',
+    shallowShadow: darkMode ? colorsDark.shallowShadow : colorsLight.shallowShadow,
     deepShadow: darkMode ? colorsDark.deepShadow : colorsLight.deepShadow,
     hoverState: opacify(24, ColorsPalette.blue200),
     hoverDefault: opacify(8, ColorsPalette.gray200),
@@ -319,6 +318,9 @@ export const ThemedText = {
   },
   DeprecatedLargeHeader(props: TextProps) {
     return <TextWrapper fontWeight={600} fontSize={24} {...props} />
+  },
+  LargeHeader(props: TextProps) {
+    return <TextWrapper fontWeight={400} fontSize={36} color={'textPrimary'} {...props} />
   },
   DeprecatedMediumHeader(props: TextProps) {
     return <TextWrapper fontWeight={500} fontSize={20} {...props} />

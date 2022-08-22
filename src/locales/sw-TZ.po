@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-17 20:05\n"
+"PO-Revision-Date: 2022-08-18 18:04\n"
 "Last-Translator: \n"
 "Language: sw_TZ\n"
 "Language-Team: Swahili, Tanzania\n"
@@ -290,6 +290,7 @@ msgid "Available to deposit: {0}"
 msgstr "Inapatikana kwa kutuma: {0}"
 
 #: src/components/WalletModal/PendingView.tsx
+#: src/components/WalletModal/PendingView.tsx
 msgid "Back to wallet selection"
 msgstr "Rudi kwenye uteuzi wa pochi"
 
@@ -342,6 +343,7 @@ msgid "By adding this list you are implicitly trusting that the data is correct.
 msgstr "Kwa kuongeza orodha hii unaamini kabisa kuwa data ni sahihi. Mtu yeyote anaweza kuunda orodha, pamoja na kuunda matoleo bandia ya orodha zilizopo na orodha ambazo zinadai kuwakilisha miradi ambayo haina moja."
 
 #: src/components/WalletModal/index.tsx
+#: src/components/WalletModal/index.tsx
 msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the Uniswap <1>Protocol Disclaimer</1>."
 msgstr "Kwa kuunganisha mkoba, unakubaliana na Uniswap Labs ' <0>Masharti ya Huduma</0> na kutambua kwamba umesoma na kuelewa Uniswap <1>Itifaki Kanusho</1>."
 
@@ -369,6 +371,7 @@ msgstr "Angalia hali ya mtandao"
 msgid "Check out our v3 LP walkthrough and migration guides."
 msgstr "Angalia mwongozo wetu wa v3 LP na mwongozo wa uhamiaji."
 
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/pages/Earn/Manage.tsx
@@ -495,6 +498,10 @@ msgstr "Thibitisha Ugavi"
 msgid "Confirm Swap"
 msgstr "Thibitisha Kubadilisha"
 
+#: src/components/WalletModal/PendingView.tsx
+msgid "Confirm this connection in your wallet"
+msgstr "Thibitisha muunganisho huu kwenye pochi yako"
+
 #: src/components/ModalViews/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
@@ -550,9 +557,14 @@ msgstr "Imeunganishwa na"
 msgid "Connecting..."
 msgstr "Inaunganisha..."
 
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
 #: src/theme/components.tsx
 msgid "Copied!"
 msgstr "Imenakiliwa!"
+
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
+msgid "Copy"
+msgstr "Nakili"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Copy Address"
@@ -603,6 +615,10 @@ msgstr "Bei ya sasa ya {0}"
 
 #: src/components/Menu/index.tsx
 msgid "Dark Theme"
+msgstr "Mandhari meusi"
+
+#: src/components/WalletDropdown/DefaultMenu.tsx
+msgid "Dark theme"
 msgstr "Mandhari meusi"
 
 #: src/pages/Vote/styled.tsx
@@ -677,6 +693,7 @@ msgid "Details"
 msgstr "Maelezo"
 
 #: src/components/AccountDetails/index.tsx
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
 msgid "Disconnect"
 msgstr "Tenganisha"
 
@@ -754,6 +771,7 @@ msgid "Error"
 msgstr "Kosa"
 
 #: src/components/WalletModal/PendingView.tsx
+#: src/components/WalletModal/PendingView.tsx
 msgid "Error connecting"
 msgstr "Hitilafu wakati wa kuunganisha"
 
@@ -822,6 +840,14 @@ msgstr "Hali ya mtaalam inazima kidhibitisho cha manunuzi na inaruhusu biashara 
 msgid "Expired"
 msgstr "Imeisha muda"
 
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
+msgid "Explore"
+msgstr "Chunguza"
+
+#: src/pages/Tokens/index.tsx
+msgid "Explore Tokens"
+msgstr "Chunguza Tokeni"
+
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore Uniswap Analytics."
 msgstr "Gundua Takwimu za Uniswap."
@@ -883,11 +909,8 @@ msgstr "Ficha"
 msgid "High Price Impact"
 msgstr "Athari ya Bei ya Juu"
 
-#: src/components/TokenSafety/index.tsx
-msgid "I Understand"
-msgstr "Naelewa"
-
 #: src/components/SearchModal/ImportList.tsx
+#: src/components/TokenSafety/index.tsx
 #: src/pages/AddLiquidity/index.tsx
 msgid "I understand"
 msgstr "Naelewa"
@@ -986,16 +1009,14 @@ msgid "Invalid recipient"
 msgstr "Mpokeaji si sahihi"
 
 #: src/components/Menu/index.tsx
+#: src/components/WalletDropdown/DefaultMenu.tsx
+#: src/components/WalletDropdown/LanguageMenu.tsx
 msgid "Language"
 msgstr "Lugha"
 
 #: src/pages/Pool/index.tsx
 msgid "Learn"
 msgstr "Jifunze"
-
-#: src/components/TokenSafety/index.tsx
-msgid "Learn More"
-msgstr "Jifunze zaidi"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Learn about providing liquidity"
@@ -1004,6 +1025,7 @@ msgstr "Jifunze juu ya kutoa ukwasi"
 #: src/components/PrivacyPolicy/index.tsx
 #: src/components/PrivacyPolicy/index.tsx
 #: src/components/TokenSafety/TokenSafetyMessage.tsx
+#: src/components/TokenSafety/index.tsx
 msgid "Learn more"
 msgstr "Jifunze zaidi"
 
@@ -1015,6 +1037,10 @@ msgstr "Kisheria na Faragha"
 #: src/components/Menu/index.tsx
 msgid "Light Theme"
 msgstr "Mandhari mepesi"
+
+#: src/components/WalletDropdown/DefaultMenu.tsx
+msgid "Light theme"
+msgstr "Mandhari nyepesi"
 
 #: src/components/claim/ClaimModal.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -1258,6 +1284,7 @@ msgstr "Mmiliki"
 msgid "Participating pools"
 msgstr "Mabwawa ya kushiriki"
 
+#: src/components/WalletDropdown/DefaultMenu.tsx
 #: src/pages/Vote/styled.tsx
 msgid "Pending"
 msgstr "Inasubiri"
@@ -1320,8 +1347,8 @@ msgstr "Iliyounganishwa {0}:"
 
 #: src/pages/Pool/index.tsx
 #: src/pages/Pool/index.tsx
-msgid "Pools Overview"
-msgstr "Muhtasari wa Mabwawa"
+msgid "Pools"
+msgstr "Mabwawa"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Portal Bridge"
@@ -1690,6 +1717,7 @@ msgid "The app securely collects your wallet address and shares it with TRM Labs
 msgstr "Programu hukusanya kwa usalama anwani ya mkoba wako na kuishiriki na TRM Labs Inc. kwa sababu za hatari na kufuata."
 
 #: src/components/WalletModal/PendingView.tsx
+#: src/components/WalletModal/PendingView.tsx
 msgid "The connection attempt failed. Please click try again and follow the steps to connect in your wallet."
 msgstr "Jaribio la kuunganisha halikufaulu. Tafadhali bofya jaribu tena na ufuate hatua za kuunganisha kwenye pochi yako."
 
@@ -1876,10 +1904,16 @@ msgstr "Mwisho wa shughuli"
 msgid "Transaction rejected."
 msgstr "Ununuzi umekataliwa."
 
+#: src/components/WalletDropdown/DefaultMenu.tsx
+#: src/components/WalletDropdown/TransactionMenu.tsx
+msgid "Transactions"
+msgstr "Shughuli"
+
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Transfer Token"
 msgstr "Hati ya Kuhamisha"
 
+#: src/components/WalletModal/PendingView.tsx
 #: src/components/WalletModal/PendingView.tsx
 msgid "Try Again"
 msgstr "Jaribu tena"
@@ -2118,6 +2152,10 @@ msgstr "Upigaji kura huanza takriban {0}"
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Waiting For Confirmation"
 msgstr "Inasubiri Uthibitisho"
+
+#: src/components/WalletModal/PendingView.tsx
+msgid "Waiting to connect"
+msgstr "Inasubiri kuunganishwa"
 
 #: src/components/AddressInputPanel/index.tsx
 msgid "Wallet Address or ENS name"
@@ -2372,6 +2410,10 @@ msgstr "https: // au ipfs: // au jina la ENS"
 msgid "minutes"
 msgstr "dakika"
 
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
+msgid "reward"
+msgstr "zawadi"
+
 #: src/components/SearchModal/ImportRow.tsx
 msgid "via {0}"
 msgstr "kupitia {0}"
@@ -2549,6 +2591,6 @@ msgid "{tokenB} per {tokenA}"
 msgstr "{tokenB} kwa {tokenA}"
 
 #: src/pages/Pool/PositionPage.tsx
-msgid "← Back to Pools Overview"
-msgstr "Rudi kwa Muhtasari wa Mabwawa"
+msgid "← Back to Pools"
+msgstr "← Rudi kwenye Madimbwi"
 

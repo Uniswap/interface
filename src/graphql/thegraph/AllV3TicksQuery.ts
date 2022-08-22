@@ -1,13 +1,14 @@
 import graphql from 'babel-plugin-relay/macro'
 import useInterval from 'lib/hooks/useInterval'
 import { useCallback, useEffect, useState } from 'react'
-import { fetchQuery, useRelayEnvironment } from 'relay-hooks'
+import { fetchQuery } from 'react-relay'
 import { useAppSelector } from 'state/hooks'
 
 import type {
   AllV3TicksQuery as AllV3TicksQueryType,
   AllV3TicksQuery$data,
 } from './__generated__/AllV3TicksQuery.graphql'
+import environment from './RelayEnvironment'
 
 const query = graphql`
   query AllV3TicksQuery($poolAddress: String!, $skip: Int!) {
@@ -28,7 +29,6 @@ export default function useAllV3TicksQuery(poolAddress: string | undefined, skip
   const [error, setError] = useState<any>(null)
   const [isLoading, setIsLoading] = useState(true)
   const chainId = useAppSelector((state) => state.application.chainId)
-  const environment = useRelayEnvironment()
 
   const refreshData = useCallback(() => {
     if (poolAddress && chainId) {
@@ -43,7 +43,7 @@ export default function useAllV3TicksQuery(poolAddress: string | undefined, skip
     } else {
       setIsLoading(false)
     }
-  }, [poolAddress, skip, chainId, environment])
+  }, [poolAddress, skip, chainId])
 
   // Trigger fetch on first load
   useEffect(refreshData, [refreshData, poolAddress, skip])

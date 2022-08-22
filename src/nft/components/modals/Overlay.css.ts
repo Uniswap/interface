@@ -6,15 +6,15 @@ export const overlay = style([
   sprinkles({
     top: '0',
     left: '0',
-    width: 'full',
-    height: 'full',
+    width: 'viewWidth',
+    height: 'viewHeight',
     position: 'fixed',
     display: 'block',
     background: 'black',
-    zIndex: '3',
   }),
   {
-    opacity: 0.75,
+    zIndex: 10,
+    opacity: 0.72,
     overflow: 'hidden',
   },
 ])

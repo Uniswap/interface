@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-17 20:04\n"
+"PO-Revision-Date: 2022-08-18 18:04\n"
 "Last-Translator: \n"
 "Language: sl_SI\n"
 "Language-Team: Slovenian\n"
@@ -290,6 +290,7 @@ msgid "Available to deposit: {0}"
 msgstr "Na voljo za polog: {0}"
 
 #: src/components/WalletModal/PendingView.tsx
+#: src/components/WalletModal/PendingView.tsx
 msgid "Back to wallet selection"
 msgstr "Nazaj na izbiro denarnice"
 
@@ -342,6 +343,7 @@ msgid "By adding this list you are implicitly trusting that the data is correct.
 msgstr "Z dodajanjem tega seznama zaupate pravilnosti podatkov. Vsakdo lahko ustvari seznam; ustvari lahko tudi ponarejeno različico obstoječega seznama ali pa seznam, ki naj bi pripadal resničnemu projektu, ki nima uradnega seznama."
 
 #: src/components/WalletModal/index.tsx
+#: src/components/WalletModal/index.tsx
 msgid "By connecting a wallet, you agree to Uniswap Labs’ <0>Terms of Service</0> and acknowledge that you have read and understand the Uniswap <1>Protocol Disclaimer</1>."
 msgstr "S tem ko povežete denarnico, se strinjate s <0>pogoji storitve Uniswap Labs</0> in potrjujete, da ste prebrali in razumeli <1>izjavo o omejitvi odgovornosti</1> protokola Uniswap."
 
@@ -369,6 +371,7 @@ msgstr "Stanje omrežja preverite"
 msgid "Check out our v3 LP walkthrough and migration guides."
 msgstr "Oglejte si naše vodnike za V3-likvidnost in navodila za migracijo."
 
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/pages/Earn/Manage.tsx
@@ -495,6 +498,10 @@ msgstr "Potrdi polog"
 msgid "Confirm Swap"
 msgstr "Potrdi menjavo"
 
+#: src/components/WalletModal/PendingView.tsx
+msgid "Confirm this connection in your wallet"
+msgstr "Potrdite to povezavo v svoji denarnici"
+
 #: src/components/ModalViews/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
@@ -550,9 +557,14 @@ msgstr "Povezano z"
 msgid "Connecting..."
 msgstr "Povezovanje ..."
 
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
 #: src/theme/components.tsx
 msgid "Copied!"
 msgstr "Skopirano!"
+
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
+msgid "Copy"
+msgstr "Kopirati"
 
 #: src/components/AccountDetails/index.tsx
 msgid "Copy Address"
@@ -604,6 +616,10 @@ msgstr "Trenutna cena {0}:"
 #: src/components/Menu/index.tsx
 msgid "Dark Theme"
 msgstr "Temna preobleka"
+
+#: src/components/WalletDropdown/DefaultMenu.tsx
+msgid "Dark theme"
+msgstr "Temna tema"
 
 #: src/pages/Vote/styled.tsx
 msgid "Defeated"
@@ -677,6 +693,7 @@ msgid "Details"
 msgstr "Podrobnosti"
 
 #: src/components/AccountDetails/index.tsx
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
 msgid "Disconnect"
 msgstr "Prekini povezavo"
 
@@ -754,6 +771,7 @@ msgid "Error"
 msgstr "Napaka"
 
 #: src/components/WalletModal/PendingView.tsx
+#: src/components/WalletModal/PendingView.tsx
 msgid "Error connecting"
 msgstr "Napaka pri povezovanju"
 
@@ -822,6 +840,14 @@ msgstr "Strokovni način izklopi poziv za potrditev transakcije in omogoča veli
 msgid "Expired"
 msgstr "Potekla"
 
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
+msgid "Explore"
+msgstr "Raziščite"
+
+#: src/pages/Tokens/index.tsx
+msgid "Explore Tokens"
+msgstr "Raziščite žetone"
+
 #: src/pages/Pool/CTACards.tsx
 msgid "Explore Uniswap Analytics."
 msgstr "Raziščite Uniswap Analytics."
@@ -883,11 +909,8 @@ msgstr "Skrij"
 msgid "High Price Impact"
 msgstr "Visok vpliv na ceno"
 
-#: src/components/TokenSafety/index.tsx
-msgid "I Understand"
-msgstr "Razumem"
-
 #: src/components/SearchModal/ImportList.tsx
+#: src/components/TokenSafety/index.tsx
 #: src/pages/AddLiquidity/index.tsx
 msgid "I understand"
 msgstr "Razumem"
@@ -986,16 +1009,14 @@ msgid "Invalid recipient"
 msgstr "Neveljaven prejemnik"
 
 #: src/components/Menu/index.tsx
+#: src/components/WalletDropdown/DefaultMenu.tsx
+#: src/components/WalletDropdown/LanguageMenu.tsx
 msgid "Language"
 msgstr "Jezik"
 
 #: src/pages/Pool/index.tsx
 msgid "Learn"
 msgstr "Informacije"
-
-#: src/components/TokenSafety/index.tsx
-msgid "Learn More"
-msgstr "Več o tem"
 
 #: src/pages/Pool/CTACards.tsx
 msgid "Learn about providing liquidity"
@@ -1004,6 +1025,7 @@ msgstr "Naučite se vse o polaganju likvidnosti"
 #: src/components/PrivacyPolicy/index.tsx
 #: src/components/PrivacyPolicy/index.tsx
 #: src/components/TokenSafety/TokenSafetyMessage.tsx
+#: src/components/TokenSafety/index.tsx
 msgid "Learn more"
 msgstr "Več o tem"
 
@@ -1015,6 +1037,10 @@ msgstr "Pravna obvestila in zasebnost"
 #: src/components/Menu/index.tsx
 msgid "Light Theme"
 msgstr "Svetla preobleka"
+
+#: src/components/WalletDropdown/DefaultMenu.tsx
+msgid "Light theme"
+msgstr "Svetla tema"
 
 #: src/components/claim/ClaimModal.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -1258,6 +1284,7 @@ msgstr "Lastnik"
 msgid "Participating pools"
 msgstr "Sodelujoči skladi"
 
+#: src/components/WalletDropdown/DefaultMenu.tsx
 #: src/pages/Vote/styled.tsx
 msgid "Pending"
 msgstr "V teku"
@@ -1320,8 +1347,8 @@ msgstr "{0} v skladu:"
 
 #: src/pages/Pool/index.tsx
 #: src/pages/Pool/index.tsx
-msgid "Pools Overview"
-msgstr "Pregled skladov"
+msgid "Pools"
+msgstr "Bazeni"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Portal Bridge"
@@ -1690,6 +1717,7 @@ msgid "The app securely collects your wallet address and shares it with TRM Labs
 msgstr "Aplikacija na varen način prebere naslov vaše denarnice in ga deli s TRM Labs Inc. zaradi ocene tveganja in skladnosti z zakoni."
 
 #: src/components/WalletModal/PendingView.tsx
+#: src/components/WalletModal/PendingView.tsx
 msgid "The connection attempt failed. Please click try again and follow the steps to connect in your wallet."
 msgstr "Poskus povezave ni uspel. Kliknite Poskusi znova in sledite navodilom za povezavo v svoji denarnici."
 
@@ -1876,10 +1904,16 @@ msgstr "Rok za transakcijo"
 msgid "Transaction rejected."
 msgstr "Transakcija zavrnjena."
 
+#: src/components/WalletDropdown/DefaultMenu.tsx
+#: src/components/WalletDropdown/TransactionMenu.tsx
+msgid "Transactions"
+msgstr "Transakcije"
+
 #: src/pages/CreateProposal/ProposalActionSelector.tsx
 msgid "Transfer Token"
 msgstr "Prenos žetona"
 
+#: src/components/WalletModal/PendingView.tsx
 #: src/components/WalletModal/PendingView.tsx
 msgid "Try Again"
 msgstr "Poskusi ponovno"
@@ -2118,6 +2152,10 @@ msgstr "Glasovanje se začne okrog {0}"
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Waiting For Confirmation"
 msgstr "Čakanje na potrditev"
+
+#: src/components/WalletModal/PendingView.tsx
+msgid "Waiting to connect"
+msgstr "Čakam na povezavo"
 
 #: src/components/AddressInputPanel/index.tsx
 msgid "Wallet Address or ENS name"
@@ -2372,6 +2410,10 @@ msgstr "https:// ali ipfs:// ali ENS-ime"
 msgid "minutes"
 msgstr "minut"
 
+#: src/components/WalletDropdown/AuthenticatedHeader.tsx
+msgid "reward"
+msgstr "nagrada"
+
 #: src/components/SearchModal/ImportRow.tsx
 msgid "via {0}"
 msgstr "preko {0}"
@@ -2549,6 +2591,6 @@ msgid "{tokenB} per {tokenA}"
 msgstr "{tokenB} na {tokenA}"
 
 #: src/pages/Pool/PositionPage.tsx
-msgid "← Back to Pools Overview"
-msgstr "← Nazaj na pregled skladov"
+msgid "← Back to Pools"
+msgstr "← Nazaj na Bazeni"
 

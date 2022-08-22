@@ -8,7 +8,7 @@ import { ExternalLink } from 'theme'
 import { Color } from 'theme/styled'
 
 const Label = styled.div<{ color: Color }>`
-  width: 284px;
+  width: 100%;
   padding: 12px 20px;
   background-color: ${({ color }) => color + '1F'};
   border-radius: 16px;

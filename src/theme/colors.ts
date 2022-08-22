@@ -222,7 +222,7 @@ export interface Palette {
   chain_10_background: Color
   chain_42161_background: Color
 
-  flyoutDropShadow: Color
+  shallowShadow: Color
   deepShadow: Color
   shallowShadow: Color
 }
@@ -249,10 +249,10 @@ export const colorsLight: Palette = {
   accentFailure: colors.red400,
   accentCritical: colors.red400,
 
-  accentActionSoft: opacify(12, colors.pink400),
-  accentActiveSoft: opacify(12, colors.blue400),
-  accentSuccessSoft: opacify(12, colors.green400),
-  accentWarningSoft: opacify(12, colors.gold200),
+  accentActionSoft: opacify(24, colors.pink400),
+  accentActiveSoft: opacify(24, colors.blue400),
+  accentSuccessSoft: opacify(24, colors.green400),
+  accentWarningSoft: opacify(24, colors.gold200),
   accentFailureSoft: opacify(12, colors.red400),
 
   accentTextDarkPrimary: opacify(80, colors.gray900),
@@ -281,7 +281,7 @@ export const colorsLight: Palette = {
   chain_10_background: colors.red900,
   chain_42161_background: colors.blue900,
 
-  flyoutDropShadow:
+  shallowShadow:
     '0px 24px 32px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 0px 1px rgba(0, 0, 0, 0.12);',
   deepShadow:
     '8px 12px 20px rgba(51, 53, 72, 0.04), 4px 6px 12px rgba(51, 53, 72, 0.02), 4px 4px 8px rgba(51, 53, 72, 0.04);',
@@ -302,7 +302,7 @@ export const colorsDark: Palette = {
 
   textPrimary: colors.white,
   textSecondary: colors.gray300,
-  textTertiary: colors.gray400,
+  textTertiary: colors.gray500,
 
   accentAction: colors.blue400,
   accentActive: colors.blue400,
@@ -312,10 +312,10 @@ export const colorsDark: Palette = {
   accentCritical: colors.red300,
 
   accentActionSoft: opacify(24, colors.blue400),
-  accentActiveSoft: opacify(12, colors.blue400),
-  accentSuccessSoft: opacify(12, colors.green200),
-  accentWarningSoft: opacify(12, colors.gold200),
-  accentFailureSoft: opacify(12, colors.red300),
+  accentActiveSoft: opacify(24, colors.blue400),
+  accentSuccessSoft: opacify(24, colors.green400),
+  accentWarningSoft: opacify(24, colors.gold200),
+  accentFailureSoft: opacify(12, colors.red400),
 
   accentTextDarkPrimary: opacify(80, colors.gray900),
   accentTextDarkSecondary: opacify(60, colors.gray900),
@@ -343,8 +343,7 @@ export const colorsDark: Palette = {
   chain_10_background: colors.red900,
   chain_42161_background: colors.blue900,
 
-  flyoutDropShadow:
-    '0px 24px 32px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 0px 1px rgba(0, 0, 0, 0.12);',
+  shallowShadow: '4px 4px 10px rgba(0, 0, 0, 0.24), 2px 2px 4px rgba(0, 0, 0, 0.12), 1px 2px 2px rgba(0, 0, 0, 0.12);',
   deepShadow: '12px 16px 24px rgba(0, 0, 0, 0.24), 12px 8px 12px rgba(0, 0, 0, 0.24), 4px 4px 8px rgba(0, 0, 0, 0.32);',
   shallowShadow: '4px 4px 10px rgba(0, 0, 0, 0.24), 2px 2px 4px rgba(0, 0, 0, 0.12), 1px 2px 2px rgba(0, 0, 0, 0.12);',
 }

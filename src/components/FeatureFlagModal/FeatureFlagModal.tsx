@@ -1,9 +1,10 @@
 import { FeatureFlag, featureFlagSettings, useUpdateFlag } from 'featureFlags'
 import { NavBarVariant, useNavBarFlag } from 'featureFlags/flags/navBar'
-import { Phase1Variant, usePhase1Flag } from 'featureFlags/flags/phase1'
+import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
 import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
 import { TokensVariant, useTokensFlag } from 'featureFlags/flags/tokens'
 import { TokenSafetyVariant, useTokenSafetyFlag } from 'featureFlags/flags/tokenSafety'
+import { useWalletFlag, WalletVariant } from 'featureFlags/flags/wallet'
 import { useAtomValue } from 'jotai/utils'
 import { ReactNode, useState } from 'react'
 import { X } from 'react-feather'
@@ -165,10 +166,10 @@ export default function FeatureFlagModal() {
       </Header>
       <FlagGroupName>Phase 1</FlagGroupName>
       <FeatureFlagOption
-        variants={Object.values(Phase1Variant)}
-        value={usePhase1Flag()}
-        featureFlag={FeatureFlag.phase1}
-        label="All Phase 1 changes (nft features)."
+        variants={Object.values(NftVariant)}
+        value={useNftFlag()}
+        featureFlag={FeatureFlag.nft}
+        label="NFTs"
       />
       <FlagGroupName>Phase 0</FlagGroupName>
       <FeatureFlagOption
@@ -194,6 +195,12 @@ export default function FeatureFlagModal() {
         value={useTokenSafetyFlag()}
         featureFlag={FeatureFlag.tokenSafety}
         label="Token Safety"
+      />
+      <FeatureFlagOption
+        variants={Object.values(WalletVariant)}
+        value={useWalletFlag()}
+        featureFlag={FeatureFlag.wallet}
+        label="Wallet Flag"
       />
       <SaveButton onClick={() => window.location.reload()}>Save Settings</SaveButton>
     </Modal>

@@ -5,7 +5,7 @@ import useBlockNumber from 'lib/hooks/useBlockNumber'
 import ms from 'ms.macro'
 import { useMemo } from 'react'
 
-import useFeeTierDistributionQuery from '../graphql/FeeTierDistributionQuery'
+import useFeeTierDistributionQuery from '../graphql/thegraph/FeeTierDistributionQuery'
 import { PoolState, usePool } from './usePools'
 
 // maximum number of blocks past which we consider the data stale

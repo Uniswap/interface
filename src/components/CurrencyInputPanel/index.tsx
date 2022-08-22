@@ -11,6 +11,7 @@ import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
 import { darken } from 'polished'
 import { ReactNode, useCallback, useState } from 'react'
 import { Lock } from 'react-feather'
+import { useLocation } from 'react-router-dom'
 import styled, { useTheme } from 'styled-components/macro'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 
@@ -269,6 +270,8 @@ export default function CurrencyInputPanel({
   const redesignFlagEnabled = redesignFlag === RedesignVariant.Enabled
   const selectedCurrencyBalance = useCurrencyBalance(account ?? undefined, currency ?? undefined)
   const theme = useTheme()
+  const { pathname } = useLocation()
+  const isAddLiquidityPage = pathname.includes('/add') && !pathname.includes('/add/v2')
 
   const handleDismissSearch = useCallback(() => {
     setModalOpen(false)
@@ -349,7 +352,7 @@ export default function CurrencyInputPanel({
             </Aligner>
           </InputCurrencySelect>
         </InputRow>
-        {redesignFlagEnabled && !currency && (
+        {redesignFlagEnabled && !currency && !isAddLiquidityPage && (
           <NoBalanceState>
             <FiatRow redesignFlag={redesignFlagEnabled}>
               <RowBetween>

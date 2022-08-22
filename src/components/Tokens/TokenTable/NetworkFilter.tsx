@@ -47,8 +47,8 @@ const MenuTimeFlyout = styled.span`
   max-height: 350px;
   overflow: auto;
   background-color: ${({ theme }) => theme.backgroundSurface};
-  box-shadow: ${({ theme }) => theme.flyoutDropShadow};
-  border: 1px solid ${({ theme }) => theme.backgroundOutline};
+  box-shadow: ${({ theme }) => theme.deepShadow};
+  border: 0.5px solid ${({ theme }) => theme.backgroundOutline};
   border-radius: 12px;
   padding: 8px;
   display: flex;
@@ -65,7 +65,7 @@ const StyledMenuButton = styled.button<{ open: boolean }>`
   height: 100%;
   color: ${({ theme, open }) => (open ? theme.blue200 : theme.textPrimary)};
   border: none;
-  background-color: ${({ theme, open }) => (open ? theme.accentActionSoft : theme.backgroundInteractive)};
+  background-color: ${({ theme, open }) => (open ? theme.accentActiveSoft : theme.backgroundInteractive)};
   margin: 0;
   padding: 6px 12px 6px 12px;
   border-radius: 12px;
@@ -76,10 +76,13 @@ const StyledMenuButton = styled.button<{ open: boolean }>`
   :hover {
     cursor: pointer;
     outline: none;
-    background-color: ${({ theme, open }) => (open ? theme.accentActionSoft : theme.backgroundModule)};
+    border: none;
+    background-color: ${({ theme, open }) => (open ? theme.accentActiveSoft : theme.backgroundModule)};
   }
   :focus {
-    background-color: ${({ theme, open }) => (open ? theme.accentActionSoft : theme.backgroundInteractive)};
+    background-color: ${({ theme, open }) => (open ? theme.accentActiveSoft : theme.backgroundInteractive)};
+    border: none;
+    outline: none;
   }
   svg {
     margin-top: 2px;

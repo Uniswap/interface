@@ -1,28 +1,65 @@
 """
-creates a virtual field on the entity that may be queried but cannot be set manually through the mappings API.
-"""
-directive @derivedFrom(field: String!) on FIELD_DEFINITION
-
-"""
-Marks the GraphQL type as indexable entity.  Each type that should be an entity is required to be annotated with this directive.
+Marks the GraphQL type as indexable entity.  Each type that should be an entity
+is required to be annotated with this directive.
 """
 directive @entity on OBJECT
 
 """Defined a Subgraph ID for an object type"""
 directive @subgraphId(id: String!) on OBJECT
 
+"""
+creates a virtual field on the entity that may be queried but cannot be set manually through the mappings API.
+"""
+directive @derivedFrom(field: String!) on FIELD_DEFINITION
+
+type _Block_ {
+  """The hash of the block"""
+  hash: Bytes
+
+  """The block number"""
+  number: Int!
+}
+
+"""The type for the top-level _meta field"""
+type _Meta_ {
+  """
+  Information about a specific subgraph block. The hash of the block
+  will be null if the _meta field has a block constraint that asks for
+  a block number. It will be filled if the _meta field has no block constraint
+  and therefore asks for the latest  block
+  
+  """
+  block: _Block_!
+
+  """The deployment ID"""
+  deployment: String!
+
+  """If `true`, the subgraph encountered indexing errors at some past block"""
+  hasIndexingErrors: Boolean!
+}
+
+enum _SubgraphErrorPolicy_ {
+  """Data will be returned even if the subgraph has indexing errors"""
+  allow
+
+  """
+  If the subgraph has indexing errors, data will be omitted. The default.
+  """
+  deny
+}
+
 scalar BigDecimal
 
 scalar BigInt
-
-input BlockChangedFilter {
-  number_gte: Int!
-}
 
 input Block_height {
   hash: Bytes
   number: Int
   number_gte: Int
+}
+
+input BlockChangedFilter {
+  number_gte: Int!
 }
 
 type Bundle {
@@ -974,6 +1011,316 @@ type Pool {
   ticks(skip: Int = 0, first: Int = 100, orderBy: Tick_orderBy, orderDirection: OrderDirection, where: Tick_filter): [Tick!]!
 }
 
+input Pool_filter {
+  id: ID
+  id_not: ID
+  id_gt: ID
+  id_lt: ID
+  id_gte: ID
+  id_lte: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  createdAtTimestamp: BigInt
+  createdAtTimestamp_not: BigInt
+  createdAtTimestamp_gt: BigInt
+  createdAtTimestamp_lt: BigInt
+  createdAtTimestamp_gte: BigInt
+  createdAtTimestamp_lte: BigInt
+  createdAtTimestamp_in: [BigInt!]
+  createdAtTimestamp_not_in: [BigInt!]
+  createdAtBlockNumber: BigInt
+  createdAtBlockNumber_not: BigInt
+  createdAtBlockNumber_gt: BigInt
+  createdAtBlockNumber_lt: BigInt
+  createdAtBlockNumber_gte: BigInt
+  createdAtBlockNumber_lte: BigInt
+  createdAtBlockNumber_in: [BigInt!]
+  createdAtBlockNumber_not_in: [BigInt!]
+  token0: String
+  token0_not: String
+  token0_gt: String
+  token0_lt: String
+  token0_gte: String
+  token0_lte: String
+  token0_in: [String!]
+  token0_not_in: [String!]
+  token0_contains: String
+  token0_contains_nocase: String
+  token0_not_contains: String
+  token0_not_contains_nocase: String
+  token0_starts_with: String
+  token0_starts_with_nocase: String
+  token0_not_starts_with: String
+  token0_not_starts_with_nocase: String
+  token0_ends_with: String
+  token0_ends_with_nocase: String
+  token0_not_ends_with: String
+  token0_not_ends_with_nocase: String
+  token0_: Token_filter
+  token1: String
+  token1_not: String
+  token1_gt: String
+  token1_lt: String
+  token1_gte: String
+  token1_lte: String
+  token1_in: [String!]
+  token1_not_in: [String!]
+  token1_contains: String
+  token1_contains_nocase: String
+  token1_not_contains: String
+  token1_not_contains_nocase: String
+  token1_starts_with: String
+  token1_starts_with_nocase: String
+  token1_not_starts_with: String
+  token1_not_starts_with_nocase: String
+  token1_ends_with: String
+  token1_ends_with_nocase: String
+  token1_not_ends_with: String
+  token1_not_ends_with_nocase: String
+  token1_: Token_filter
+  feeTier: BigInt
+  feeTier_not: BigInt
+  feeTier_gt: BigInt
+  feeTier_lt: BigInt
+  feeTier_gte: BigInt
+  feeTier_lte: BigInt
+  feeTier_in: [BigInt!]
+  feeTier_not_in: [BigInt!]
+  liquidity: BigInt
+  liquidity_not: BigInt
+  liquidity_gt: BigInt
+  liquidity_lt: BigInt
+  liquidity_gte: BigInt
+  liquidity_lte: BigInt
+  liquidity_in: [BigInt!]
+  liquidity_not_in: [BigInt!]
+  sqrtPrice: BigInt
+  sqrtPrice_not: BigInt
+  sqrtPrice_gt: BigInt
+  sqrtPrice_lt: BigInt
+  sqrtPrice_gte: BigInt
+  sqrtPrice_lte: BigInt
+  sqrtPrice_in: [BigInt!]
+  sqrtPrice_not_in: [BigInt!]
+  feeGrowthGlobal0X128: BigInt
+  feeGrowthGlobal0X128_not: BigInt
+  feeGrowthGlobal0X128_gt: BigInt
+  feeGrowthGlobal0X128_lt: BigInt
+  feeGrowthGlobal0X128_gte: BigInt
+  feeGrowthGlobal0X128_lte: BigInt
+  feeGrowthGlobal0X128_in: [BigInt!]
+  feeGrowthGlobal0X128_not_in: [BigInt!]
+  feeGrowthGlobal1X128: BigInt
+  feeGrowthGlobal1X128_not: BigInt
+  feeGrowthGlobal1X128_gt: BigInt
+  feeGrowthGlobal1X128_lt: BigInt
+  feeGrowthGlobal1X128_gte: BigInt
+  feeGrowthGlobal1X128_lte: BigInt
+  feeGrowthGlobal1X128_in: [BigInt!]
+  feeGrowthGlobal1X128_not_in: [BigInt!]
+  token0Price: BigDecimal
+  token0Price_not: BigDecimal
+  token0Price_gt: BigDecimal
+  token0Price_lt: BigDecimal
+  token0Price_gte: BigDecimal
+  token0Price_lte: BigDecimal
+  token0Price_in: [BigDecimal!]
+  token0Price_not_in: [BigDecimal!]
+  token1Price: BigDecimal
+  token1Price_not: BigDecimal
+  token1Price_gt: BigDecimal
+  token1Price_lt: BigDecimal
+  token1Price_gte: BigDecimal
+  token1Price_lte: BigDecimal
+  token1Price_in: [BigDecimal!]
+  token1Price_not_in: [BigDecimal!]
+  tick: BigInt
+  tick_not: BigInt
+  tick_gt: BigInt
+  tick_lt: BigInt
+  tick_gte: BigInt
+  tick_lte: BigInt
+  tick_in: [BigInt!]
+  tick_not_in: [BigInt!]
+  observationIndex: BigInt
+  observationIndex_not: BigInt
+  observationIndex_gt: BigInt
+  observationIndex_lt: BigInt
+  observationIndex_gte: BigInt
+  observationIndex_lte: BigInt
+  observationIndex_in: [BigInt!]
+  observationIndex_not_in: [BigInt!]
+  volumeToken0: BigDecimal
+  volumeToken0_not: BigDecimal
+  volumeToken0_gt: BigDecimal
+  volumeToken0_lt: BigDecimal
+  volumeToken0_gte: BigDecimal
+  volumeToken0_lte: BigDecimal
+  volumeToken0_in: [BigDecimal!]
+  volumeToken0_not_in: [BigDecimal!]
+  volumeToken1: BigDecimal
+  volumeToken1_not: BigDecimal
+  volumeToken1_gt: BigDecimal
+  volumeToken1_lt: BigDecimal
+  volumeToken1_gte: BigDecimal
+  volumeToken1_lte: BigDecimal
+  volumeToken1_in: [BigDecimal!]
+  volumeToken1_not_in: [BigDecimal!]
+  volumeUSD: BigDecimal
+  volumeUSD_not: BigDecimal
+  volumeUSD_gt: BigDecimal
+  volumeUSD_lt: BigDecimal
+  volumeUSD_gte: BigDecimal
+  volumeUSD_lte: BigDecimal
+  volumeUSD_in: [BigDecimal!]
+  volumeUSD_not_in: [BigDecimal!]
+  untrackedVolumeUSD: BigDecimal
+  untrackedVolumeUSD_not: BigDecimal
+  untrackedVolumeUSD_gt: BigDecimal
+  untrackedVolumeUSD_lt: BigDecimal
+  untrackedVolumeUSD_gte: BigDecimal
+  untrackedVolumeUSD_lte: BigDecimal
+  untrackedVolumeUSD_in: [BigDecimal!]
+  untrackedVolumeUSD_not_in: [BigDecimal!]
+  feesUSD: BigDecimal
+  feesUSD_not: BigDecimal
+  feesUSD_gt: BigDecimal
+  feesUSD_lt: BigDecimal
+  feesUSD_gte: BigDecimal
+  feesUSD_lte: BigDecimal
+  feesUSD_in: [BigDecimal!]
+  feesUSD_not_in: [BigDecimal!]
+  txCount: BigInt
+  txCount_not: BigInt
+  txCount_gt: BigInt
+  txCount_lt: BigInt
+  txCount_gte: BigInt
+  txCount_lte: BigInt
+  txCount_in: [BigInt!]
+  txCount_not_in: [BigInt!]
+  collectedFeesToken0: BigDecimal
+  collectedFeesToken0_not: BigDecimal
+  collectedFeesToken0_gt: BigDecimal
+  collectedFeesToken0_lt: BigDecimal
+  collectedFeesToken0_gte: BigDecimal
+  collectedFeesToken0_lte: BigDecimal
+  collectedFeesToken0_in: [BigDecimal!]
+  collectedFeesToken0_not_in: [BigDecimal!]
+  collectedFeesToken1: BigDecimal
+  collectedFeesToken1_not: BigDecimal
+  collectedFeesToken1_gt: BigDecimal
+  collectedFeesToken1_lt: BigDecimal
+  collectedFeesToken1_gte: BigDecimal
+  collectedFeesToken1_lte: BigDecimal
+  collectedFeesToken1_in: [BigDecimal!]
+  collectedFeesToken1_not_in: [BigDecimal!]
+  collectedFeesUSD: BigDecimal
+  collectedFeesUSD_not: BigDecimal
+  collectedFeesUSD_gt: BigDecimal
+  collectedFeesUSD_lt: BigDecimal
+  collectedFeesUSD_gte: BigDecimal
+  collectedFeesUSD_lte: BigDecimal
+  collectedFeesUSD_in: [BigDecimal!]
+  collectedFeesUSD_not_in: [BigDecimal!]
+  totalValueLockedToken0: BigDecimal
+  totalValueLockedToken0_not: BigDecimal
+  totalValueLockedToken0_gt: BigDecimal
+  totalValueLockedToken0_lt: BigDecimal
+  totalValueLockedToken0_gte: BigDecimal
+  totalValueLockedToken0_lte: BigDecimal
+  totalValueLockedToken0_in: [BigDecimal!]
+  totalValueLockedToken0_not_in: [BigDecimal!]
+  totalValueLockedToken1: BigDecimal
+  totalValueLockedToken1_not: BigDecimal
+  totalValueLockedToken1_gt: BigDecimal
+  totalValueLockedToken1_lt: BigDecimal
+  totalValueLockedToken1_gte: BigDecimal
+  totalValueLockedToken1_lte: BigDecimal
+  totalValueLockedToken1_in: [BigDecimal!]
+  totalValueLockedToken1_not_in: [BigDecimal!]
+  totalValueLockedETH: BigDecimal
+  totalValueLockedETH_not: BigDecimal
+  totalValueLockedETH_gt: BigDecimal
+  totalValueLockedETH_lt: BigDecimal
+  totalValueLockedETH_gte: BigDecimal
+  totalValueLockedETH_lte: BigDecimal
+  totalValueLockedETH_in: [BigDecimal!]
+  totalValueLockedETH_not_in: [BigDecimal!]
+  totalValueLockedUSD: BigDecimal
+  totalValueLockedUSD_not: BigDecimal
+  totalValueLockedUSD_gt: BigDecimal
+  totalValueLockedUSD_lt: BigDecimal
+  totalValueLockedUSD_gte: BigDecimal
+  totalValueLockedUSD_lte: BigDecimal
+  totalValueLockedUSD_in: [BigDecimal!]
+  totalValueLockedUSD_not_in: [BigDecimal!]
+  totalValueLockedUSDUntracked: BigDecimal
+  totalValueLockedUSDUntracked_not: BigDecimal
+  totalValueLockedUSDUntracked_gt: BigDecimal
+  totalValueLockedUSDUntracked_lt: BigDecimal
+  totalValueLockedUSDUntracked_gte: BigDecimal
+  totalValueLockedUSDUntracked_lte: BigDecimal
+  totalValueLockedUSDUntracked_in: [BigDecimal!]
+  totalValueLockedUSDUntracked_not_in: [BigDecimal!]
+  liquidityProviderCount: BigInt
+  liquidityProviderCount_not: BigInt
+  liquidityProviderCount_gt: BigInt
+  liquidityProviderCount_lt: BigInt
+  liquidityProviderCount_gte: BigInt
+  liquidityProviderCount_lte: BigInt
+  liquidityProviderCount_in: [BigInt!]
+  liquidityProviderCount_not_in: [BigInt!]
+  poolHourData_: PoolHourData_filter
+  poolDayData_: PoolDayData_filter
+  mints_: Mint_filter
+  burns_: Burn_filter
+  swaps_: Swap_filter
+  collects_: Collect_filter
+  ticks_: Tick_filter
+
+  """Filter for the block changed event."""
+  _change_block: BlockChangedFilter
+}
+
+enum Pool_orderBy {
+  id
+  createdAtTimestamp
+  createdAtBlockNumber
+  token0
+  token1
+  feeTier
+  liquidity
+  sqrtPrice
+  feeGrowthGlobal0X128
+  feeGrowthGlobal1X128
+  token0Price
+  token1Price
+  tick
+  observationIndex
+  volumeToken0
+  volumeToken1
+  volumeUSD
+  untrackedVolumeUSD
+  feesUSD
+  txCount
+  collectedFeesToken0
+  collectedFeesToken1
+  collectedFeesUSD
+  totalValueLockedToken0
+  totalValueLockedToken1
+  totalValueLockedETH
+  totalValueLockedUSD
+  totalValueLockedUSDUntracked
+  liquidityProviderCount
+  poolHourData
+  poolDayData
+  mints
+  burns
+  swaps
+  collects
+  ticks
+}
+
 type PoolDayData {
   id: ID!
   date: Int!
@@ -1424,316 +1771,6 @@ enum PoolHourData_orderBy {
   close
 }
 
-input Pool_filter {
-  id: ID
-  id_not: ID
-  id_gt: ID
-  id_lt: ID
-  id_gte: ID
-  id_lte: ID
-  id_in: [ID!]
-  id_not_in: [ID!]
-  createdAtTimestamp: BigInt
-  createdAtTimestamp_not: BigInt
-  createdAtTimestamp_gt: BigInt
-  createdAtTimestamp_lt: BigInt
-  createdAtTimestamp_gte: BigInt
-  createdAtTimestamp_lte: BigInt
-  createdAtTimestamp_in: [BigInt!]
-  createdAtTimestamp_not_in: [BigInt!]
-  createdAtBlockNumber: BigInt
-  createdAtBlockNumber_not: BigInt
-  createdAtBlockNumber_gt: BigInt
-  createdAtBlockNumber_lt: BigInt
-  createdAtBlockNumber_gte: BigInt
-  createdAtBlockNumber_lte: BigInt
-  createdAtBlockNumber_in: [BigInt!]
-  createdAtBlockNumber_not_in: [BigInt!]
-  token0: String
-  token0_not: String
-  token0_gt: String
-  token0_lt: String
-  token0_gte: String
-  token0_lte: String
-  token0_in: [String!]
-  token0_not_in: [String!]
-  token0_contains: String
-  token0_contains_nocase: String
-  token0_not_contains: String
-  token0_not_contains_nocase: String
-  token0_starts_with: String
-  token0_starts_with_nocase: String
-  token0_not_starts_with: String
-  token0_not_starts_with_nocase: String
-  token0_ends_with: String
-  token0_ends_with_nocase: String
-  token0_not_ends_with: String
-  token0_not_ends_with_nocase: String
-  token0_: Token_filter
-  token1: String
-  token1_not: String
-  token1_gt: String
-  token1_lt: String
-  token1_gte: String
-  token1_lte: String
-  token1_in: [String!]
-  token1_not_in: [String!]
-  token1_contains: String
-  token1_contains_nocase: String
-  token1_not_contains: String
-  token1_not_contains_nocase: String
-  token1_starts_with: String
-  token1_starts_with_nocase: String
-  token1_not_starts_with: String
-  token1_not_starts_with_nocase: String
-  token1_ends_with: String
-  token1_ends_with_nocase: String
-  token1_not_ends_with: String
-  token1_not_ends_with_nocase: String
-  token1_: Token_filter
-  feeTier: BigInt
-  feeTier_not: BigInt
-  feeTier_gt: BigInt
-  feeTier_lt: BigInt
-  feeTier_gte: BigInt
-  feeTier_lte: BigInt
-  feeTier_in: [BigInt!]
-  feeTier_not_in: [BigInt!]
-  liquidity: BigInt
-  liquidity_not: BigInt
-  liquidity_gt: BigInt
-  liquidity_lt: BigInt
-  liquidity_gte: BigInt
-  liquidity_lte: BigInt
-  liquidity_in: [BigInt!]
-  liquidity_not_in: [BigInt!]
-  sqrtPrice: BigInt
-  sqrtPrice_not: BigInt
-  sqrtPrice_gt: BigInt
-  sqrtPrice_lt: BigInt
-  sqrtPrice_gte: BigInt
-  sqrtPrice_lte: BigInt
-  sqrtPrice_in: [BigInt!]
-  sqrtPrice_not_in: [BigInt!]
-  feeGrowthGlobal0X128: BigInt
-  feeGrowthGlobal0X128_not: BigInt
-  feeGrowthGlobal0X128_gt: BigInt
-  feeGrowthGlobal0X128_lt: BigInt
-  feeGrowthGlobal0X128_gte: BigInt
-  feeGrowthGlobal0X128_lte: BigInt
-  feeGrowthGlobal0X128_in: [BigInt!]
-  feeGrowthGlobal0X128_not_in: [BigInt!]
-  feeGrowthGlobal1X128: BigInt
-  feeGrowthGlobal1X128_not: BigInt
-  feeGrowthGlobal1X128_gt: BigInt
-  feeGrowthGlobal1X128_lt: BigInt
-  feeGrowthGlobal1X128_gte: BigInt
-  feeGrowthGlobal1X128_lte: BigInt
-  feeGrowthGlobal1X128_in: [BigInt!]
-  feeGrowthGlobal1X128_not_in: [BigInt!]
-  token0Price: BigDecimal
-  token0Price_not: BigDecimal
-  token0Price_gt: BigDecimal
-  token0Price_lt: BigDecimal
-  token0Price_gte: BigDecimal
-  token0Price_lte: BigDecimal
-  token0Price_in: [BigDecimal!]
-  token0Price_not_in: [BigDecimal!]
-  token1Price: BigDecimal
-  token1Price_not: BigDecimal
-  token1Price_gt: BigDecimal
-  token1Price_lt: BigDecimal
-  token1Price_gte: BigDecimal
-  token1Price_lte: BigDecimal
-  token1Price_in: [BigDecimal!]
-  token1Price_not_in: [BigDecimal!]
-  tick: BigInt
-  tick_not: BigInt
-  tick_gt: BigInt
-  tick_lt: BigInt
-  tick_gte: BigInt
-  tick_lte: BigInt
-  tick_in: [BigInt!]
-  tick_not_in: [BigInt!]
-  observationIndex: BigInt
-  observationIndex_not: BigInt
-  observationIndex_gt: BigInt
-  observationIndex_lt: BigInt
-  observationIndex_gte: BigInt
-  observationIndex_lte: BigInt
-  observationIndex_in: [BigInt!]
-  observationIndex_not_in: [BigInt!]
-  volumeToken0: BigDecimal
-  volumeToken0_not: BigDecimal
-  volumeToken0_gt: BigDecimal
-  volumeToken0_lt: BigDecimal
-  volumeToken0_gte: BigDecimal
-  volumeToken0_lte: BigDecimal
-  volumeToken0_in: [BigDecimal!]
-  volumeToken0_not_in: [BigDecimal!]
-  volumeToken1: BigDecimal
-  volumeToken1_not: BigDecimal
-  volumeToken1_gt: BigDecimal
-  volumeToken1_lt: BigDecimal
-  volumeToken1_gte: BigDecimal
-  volumeToken1_lte: BigDecimal
-  volumeToken1_in: [BigDecimal!]
-  volumeToken1_not_in: [BigDecimal!]
-  volumeUSD: BigDecimal
-  volumeUSD_not: BigDecimal
-  volumeUSD_gt: BigDecimal
-  volumeUSD_lt: BigDecimal
-  volumeUSD_gte: BigDecimal
-  volumeUSD_lte: BigDecimal
-  volumeUSD_in: [BigDecimal!]
-  volumeUSD_not_in: [BigDecimal!]
-  untrackedVolumeUSD: BigDecimal
-  untrackedVolumeUSD_not: BigDecimal
-  untrackedVolumeUSD_gt: BigDecimal
-  untrackedVolumeUSD_lt: BigDecimal
-  untrackedVolumeUSD_gte: BigDecimal
-  untrackedVolumeUSD_lte: BigDecimal
-  untrackedVolumeUSD_in: [BigDecimal!]
-  untrackedVolumeUSD_not_in: [BigDecimal!]
-  feesUSD: BigDecimal
-  feesUSD_not: BigDecimal
-  feesUSD_gt: BigDecimal
-  feesUSD_lt: BigDecimal
-  feesUSD_gte: BigDecimal
-  feesUSD_lte: BigDecimal
-  feesUSD_in: [BigDecimal!]
-  feesUSD_not_in: [BigDecimal!]
-  txCount: BigInt
-  txCount_not: BigInt
-  txCount_gt: BigInt
-  txCount_lt: BigInt
-  txCount_gte: BigInt
-  txCount_lte: BigInt
-  txCount_in: [BigInt!]
-  txCount_not_in: [BigInt!]
-  collectedFeesToken0: BigDecimal
-  collectedFeesToken0_not: BigDecimal
-  collectedFeesToken0_gt: BigDecimal
-  collectedFeesToken0_lt: BigDecimal
-  collectedFeesToken0_gte: BigDecimal
-  collectedFeesToken0_lte: BigDecimal
-  collectedFeesToken0_in: [BigDecimal!]
-  collectedFeesToken0_not_in: [BigDecimal!]
-  collectedFeesToken1: BigDecimal
-  collectedFeesToken1_not: BigDecimal
-  collectedFeesToken1_gt: BigDecimal
-  collectedFeesToken1_lt: BigDecimal
-  collectedFeesToken1_gte: BigDecimal
-  collectedFeesToken1_lte: BigDecimal
-  collectedFeesToken1_in: [BigDecimal!]
-  collectedFeesToken1_not_in: [BigDecimal!]
-  collectedFeesUSD: BigDecimal
-  collectedFeesUSD_not: BigDecimal
-  collectedFeesUSD_gt: BigDecimal
-  collectedFeesUSD_lt: BigDecimal
-  collectedFeesUSD_gte: BigDecimal
-  collectedFeesUSD_lte: BigDecimal
-  collectedFeesUSD_in: [BigDecimal!]
-  collectedFeesUSD_not_in: [BigDecimal!]
-  totalValueLockedToken0: BigDecimal
-  totalValueLockedToken0_not: BigDecimal
-  totalValueLockedToken0_gt: BigDecimal
-  totalValueLockedToken0_lt: BigDecimal
-  totalValueLockedToken0_gte: BigDecimal
-  totalValueLockedToken0_lte: BigDecimal
-  totalValueLockedToken0_in: [BigDecimal!]
-  totalValueLockedToken0_not_in: [BigDecimal!]
-  totalValueLockedToken1: BigDecimal
-  totalValueLockedToken1_not: BigDecimal
-  totalValueLockedToken1_gt: BigDecimal
-  totalValueLockedToken1_lt: BigDecimal
-  totalValueLockedToken1_gte: BigDecimal
-  totalValueLockedToken1_lte: BigDecimal
-  totalValueLockedToken1_in: [BigDecimal!]
-  totalValueLockedToken1_not_in: [BigDecimal!]
-  totalValueLockedETH: BigDecimal
-  totalValueLockedETH_not: BigDecimal
-  totalValueLockedETH_gt: BigDecimal
-  totalValueLockedETH_lt: BigDecimal
-  totalValueLockedETH_gte: BigDecimal
-  totalValueLockedETH_lte: BigDecimal
-  totalValueLockedETH_in: [BigDecimal!]
-  totalValueLockedETH_not_in: [BigDecimal!]
-  totalValueLockedUSD: BigDecimal
-  totalValueLockedUSD_not: BigDecimal
-  totalValueLockedUSD_gt: BigDecimal
-  totalValueLockedUSD_lt: BigDecimal
-  totalValueLockedUSD_gte: BigDecimal
-  totalValueLockedUSD_lte: BigDecimal
-  totalValueLockedUSD_in: [BigDecimal!]
-  totalValueLockedUSD_not_in: [BigDecimal!]
-  totalValueLockedUSDUntracked: BigDecimal
-  totalValueLockedUSDUntracked_not: BigDecimal
-  totalValueLockedUSDUntracked_gt: BigDecimal
-  totalValueLockedUSDUntracked_lt: BigDecimal
-  totalValueLockedUSDUntracked_gte: BigDecimal
-  totalValueLockedUSDUntracked_lte: BigDecimal
-  totalValueLockedUSDUntracked_in: [BigDecimal!]
-  totalValueLockedUSDUntracked_not_in: [BigDecimal!]
-  liquidityProviderCount: BigInt
-  liquidityProviderCount_not: BigInt
-  liquidityProviderCount_gt: BigInt
-  liquidityProviderCount_lt: BigInt
-  liquidityProviderCount_gte: BigInt
-  liquidityProviderCount_lte: BigInt
-  liquidityProviderCount_in: [BigInt!]
-  liquidityProviderCount_not_in: [BigInt!]
-  poolHourData_: PoolHourData_filter
-  poolDayData_: PoolDayData_filter
-  mints_: Mint_filter
-  burns_: Burn_filter
-  swaps_: Swap_filter
-  collects_: Collect_filter
-  ticks_: Tick_filter
-
-  """Filter for the block changed event."""
-  _change_block: BlockChangedFilter
-}
-
-enum Pool_orderBy {
-  id
-  createdAtTimestamp
-  createdAtBlockNumber
-  token0
-  token1
-  feeTier
-  liquidity
-  sqrtPrice
-  feeGrowthGlobal0X128
-  feeGrowthGlobal1X128
-  token0Price
-  token1Price
-  tick
-  observationIndex
-  volumeToken0
-  volumeToken1
-  volumeUSD
-  untrackedVolumeUSD
-  feesUSD
-  txCount
-  collectedFeesToken0
-  collectedFeesToken1
-  collectedFeesUSD
-  totalValueLockedToken0
-  totalValueLockedToken1
-  totalValueLockedETH
-  totalValueLockedUSD
-  totalValueLockedUSDUntracked
-  liquidityProviderCount
-  poolHourData
-  poolDayData
-  mints
-  burns
-  swaps
-  collects
-  ticks
-}
-
 type Position {
   id: ID!
   owner: Bytes!
@@ -1752,215 +1789,6 @@ type Position {
   transaction: Transaction!
   feeGrowthInside0LastX128: BigInt!
   feeGrowthInside1LastX128: BigInt!
-}
-
-type PositionSnapshot {
-  id: ID!
-  owner: Bytes!
-  pool: Pool!
-  position: Position!
-  blockNumber: BigInt!
-  timestamp: BigInt!
-  liquidity: BigInt!
-  depositedToken0: BigDecimal!
-  depositedToken1: BigDecimal!
-  withdrawnToken0: BigDecimal!
-  withdrawnToken1: BigDecimal!
-  collectedFeesToken0: BigDecimal!
-  collectedFeesToken1: BigDecimal!
-  transaction: Transaction!
-  feeGrowthInside0LastX128: BigInt!
-  feeGrowthInside1LastX128: BigInt!
-}
-
-input PositionSnapshot_filter {
-  id: ID
-  id_not: ID
-  id_gt: ID
-  id_lt: ID
-  id_gte: ID
-  id_lte: ID
-  id_in: [ID!]
-  id_not_in: [ID!]
-  owner: Bytes
-  owner_not: Bytes
-  owner_in: [Bytes!]
-  owner_not_in: [Bytes!]
-  owner_contains: Bytes
-  owner_not_contains: Bytes
-  pool: String
-  pool_not: String
-  pool_gt: String
-  pool_lt: String
-  pool_gte: String
-  pool_lte: String
-  pool_in: [String!]
-  pool_not_in: [String!]
-  pool_contains: String
-  pool_contains_nocase: String
-  pool_not_contains: String
-  pool_not_contains_nocase: String
-  pool_starts_with: String
-  pool_starts_with_nocase: String
-  pool_not_starts_with: String
-  pool_not_starts_with_nocase: String
-  pool_ends_with: String
-  pool_ends_with_nocase: String
-  pool_not_ends_with: String
-  pool_not_ends_with_nocase: String
-  pool_: Pool_filter
-  position: String
-  position_not: String
-  position_gt: String
-  position_lt: String
-  position_gte: String
-  position_lte: String
-  position_in: [String!]
-  position_not_in: [String!]
-  position_contains: String
-  position_contains_nocase: String
-  position_not_contains: String
-  position_not_contains_nocase: String
-  position_starts_with: String
-  position_starts_with_nocase: String
-  position_not_starts_with: String
-  position_not_starts_with_nocase: String
-  position_ends_with: String
-  position_ends_with_nocase: String
-  position_not_ends_with: String
-  position_not_ends_with_nocase: String
-  position_: Position_filter
-  blockNumber: BigInt
-  blockNumber_not: BigInt
-  blockNumber_gt: BigInt
-  blockNumber_lt: BigInt
-  blockNumber_gte: BigInt
-  blockNumber_lte: BigInt
-  blockNumber_in: [BigInt!]
-  blockNumber_not_in: [BigInt!]
-  timestamp: BigInt
-  timestamp_not: BigInt
-  timestamp_gt: BigInt
-  timestamp_lt: BigInt
-  timestamp_gte: BigInt
-  timestamp_lte: BigInt
-  timestamp_in: [BigInt!]
-  timestamp_not_in: [BigInt!]
-  liquidity: BigInt
-  liquidity_not: BigInt
-  liquidity_gt: BigInt
-  liquidity_lt: BigInt
-  liquidity_gte: BigInt
-  liquidity_lte: BigInt
-  liquidity_in: [BigInt!]
-  liquidity_not_in: [BigInt!]
-  depositedToken0: BigDecimal
-  depositedToken0_not: BigDecimal
-  depositedToken0_gt: BigDecimal
-  depositedToken0_lt: BigDecimal
-  depositedToken0_gte: BigDecimal
-  depositedToken0_lte: BigDecimal
-  depositedToken0_in: [BigDecimal!]
-  depositedToken0_not_in: [BigDecimal!]
-  depositedToken1: BigDecimal
-  depositedToken1_not: BigDecimal
-  depositedToken1_gt: BigDecimal
-  depositedToken1_lt: BigDecimal
-  depositedToken1_gte: BigDecimal
-  depositedToken1_lte: BigDecimal
-  depositedToken1_in: [BigDecimal!]
-  depositedToken1_not_in: [BigDecimal!]
-  withdrawnToken0: BigDecimal
-  withdrawnToken0_not: BigDecimal
-  withdrawnToken0_gt: BigDecimal
-  withdrawnToken0_lt: BigDecimal
-  withdrawnToken0_gte: BigDecimal
-  withdrawnToken0_lte: BigDecimal
-  withdrawnToken0_in: [BigDecimal!]
-  withdrawnToken0_not_in: [BigDecimal!]
-  withdrawnToken1: BigDecimal
-  withdrawnToken1_not: BigDecimal
-  withdrawnToken1_gt: BigDecimal
-  withdrawnToken1_lt: BigDecimal
-  withdrawnToken1_gte: BigDecimal
-  withdrawnToken1_lte: BigDecimal
-  withdrawnToken1_in: [BigDecimal!]
-  withdrawnToken1_not_in: [BigDecimal!]
-  collectedFeesToken0: BigDecimal
-  collectedFeesToken0_not: BigDecimal
-  collectedFeesToken0_gt: BigDecimal
-  collectedFeesToken0_lt: BigDecimal
-  collectedFeesToken0_gte: BigDecimal
-  collectedFeesToken0_lte: BigDecimal
-  collectedFeesToken0_in: [BigDecimal!]
-  collectedFeesToken0_not_in: [BigDecimal!]
-  collectedFeesToken1: BigDecimal
-  collectedFeesToken1_not: BigDecimal
-  collectedFeesToken1_gt: BigDecimal
-  collectedFeesToken1_lt: BigDecimal
-  collectedFeesToken1_gte: BigDecimal
-  collectedFeesToken1_lte: BigDecimal
-  collectedFeesToken1_in: [BigDecimal!]
-  collectedFeesToken1_not_in: [BigDecimal!]
-  transaction: String
-  transaction_not: String
-  transaction_gt: String
-  transaction_lt: String
-  transaction_gte: String
-  transaction_lte: String
-  transaction_in: [String!]
-  transaction_not_in: [String!]
-  transaction_contains: String
-  transaction_contains_nocase: String
-  transaction_not_contains: String
-  transaction_not_contains_nocase: String
-  transaction_starts_with: String
-  transaction_starts_with_nocase: String
-  transaction_not_starts_with: String
-  transaction_not_starts_with_nocase: String
-  transaction_ends_with: String
-  transaction_ends_with_nocase: String
-  transaction_not_ends_with: String
-  transaction_not_ends_with_nocase: String
-  transaction_: Transaction_filter
-  feeGrowthInside0LastX128: BigInt
-  feeGrowthInside0LastX128_not: BigInt
-  feeGrowthInside0LastX128_gt: BigInt
-  feeGrowthInside0LastX128_lt: BigInt
-  feeGrowthInside0LastX128_gte: BigInt
-  feeGrowthInside0LastX128_lte: BigInt
-  feeGrowthInside0LastX128_in: [BigInt!]
-  feeGrowthInside0LastX128_not_in: [BigInt!]
-  feeGrowthInside1LastX128: BigInt
-  feeGrowthInside1LastX128_not: BigInt
-  feeGrowthInside1LastX128_gt: BigInt
-  feeGrowthInside1LastX128_lt: BigInt
-  feeGrowthInside1LastX128_gte: BigInt
-  feeGrowthInside1LastX128_lte: BigInt
-  feeGrowthInside1LastX128_in: [BigInt!]
-  feeGrowthInside1LastX128_not_in: [BigInt!]
-
-  """Filter for the block changed event."""
-  _change_block: BlockChangedFilter
-}
-
-enum PositionSnapshot_orderBy {
-  id
-  owner
-  pool
-  position
-  blockNumber
-  timestamp
-  liquidity
-  depositedToken0
-  depositedToken1
-  withdrawnToken0
-  withdrawnToken1
-  collectedFeesToken0
-  collectedFeesToken1
-  transaction
-  feeGrowthInside0LastX128
-  feeGrowthInside1LastX128
 }
 
 input Position_filter {
@@ -2201,12 +2029,226 @@ enum Position_orderBy {
   feeGrowthInside1LastX128
 }
 
+type PositionSnapshot {
+  id: ID!
+  owner: Bytes!
+  pool: Pool!
+  position: Position!
+  blockNumber: BigInt!
+  timestamp: BigInt!
+  liquidity: BigInt!
+  depositedToken0: BigDecimal!
+  depositedToken1: BigDecimal!
+  withdrawnToken0: BigDecimal!
+  withdrawnToken1: BigDecimal!
+  collectedFeesToken0: BigDecimal!
+  collectedFeesToken1: BigDecimal!
+  transaction: Transaction!
+  feeGrowthInside0LastX128: BigInt!
+  feeGrowthInside1LastX128: BigInt!
+}
+
+input PositionSnapshot_filter {
+  id: ID
+  id_not: ID
+  id_gt: ID
+  id_lt: ID
+  id_gte: ID
+  id_lte: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  owner: Bytes
+  owner_not: Bytes
+  owner_in: [Bytes!]
+  owner_not_in: [Bytes!]
+  owner_contains: Bytes
+  owner_not_contains: Bytes
+  pool: String
+  pool_not: String
+  pool_gt: String
+  pool_lt: String
+  pool_gte: String
+  pool_lte: String
+  pool_in: [String!]
+  pool_not_in: [String!]
+  pool_contains: String
+  pool_contains_nocase: String
+  pool_not_contains: String
+  pool_not_contains_nocase: String
+  pool_starts_with: String
+  pool_starts_with_nocase: String
+  pool_not_starts_with: String
+  pool_not_starts_with_nocase: String
+  pool_ends_with: String
+  pool_ends_with_nocase: String
+  pool_not_ends_with: String
+  pool_not_ends_with_nocase: String
+  pool_: Pool_filter
+  position: String
+  position_not: String
+  position_gt: String
+  position_lt: String
+  position_gte: String
+  position_lte: String
+  position_in: [String!]
+  position_not_in: [String!]
+  position_contains: String
+  position_contains_nocase: String
+  position_not_contains: String
+  position_not_contains_nocase: String
+  position_starts_with: String
+  position_starts_with_nocase: String
+  position_not_starts_with: String
+  position_not_starts_with_nocase: String
+  position_ends_with: String
+  position_ends_with_nocase: String
+  position_not_ends_with: String
+  position_not_ends_with_nocase: String
+  position_: Position_filter
+  blockNumber: BigInt
+  blockNumber_not: BigInt
+  blockNumber_gt: BigInt
+  blockNumber_lt: BigInt
+  blockNumber_gte: BigInt
+  blockNumber_lte: BigInt
+  blockNumber_in: [BigInt!]
+  blockNumber_not_in: [BigInt!]
+  timestamp: BigInt
+  timestamp_not: BigInt
+  timestamp_gt: BigInt
+  timestamp_lt: BigInt
+  timestamp_gte: BigInt
+  timestamp_lte: BigInt
+  timestamp_in: [BigInt!]
+  timestamp_not_in: [BigInt!]
+  liquidity: BigInt
+  liquidity_not: BigInt
+  liquidity_gt: BigInt
+  liquidity_lt: BigInt
+  liquidity_gte: BigInt
+  liquidity_lte: BigInt
+  liquidity_in: [BigInt!]
+  liquidity_not_in: [BigInt!]
+  depositedToken0: BigDecimal
+  depositedToken0_not: BigDecimal
+  depositedToken0_gt: BigDecimal
+  depositedToken0_lt: BigDecimal
+  depositedToken0_gte: BigDecimal
+  depositedToken0_lte: BigDecimal
+  depositedToken0_in: [BigDecimal!]
+  depositedToken0_not_in: [BigDecimal!]
+  depositedToken1: BigDecimal
+  depositedToken1_not: BigDecimal
+  depositedToken1_gt: BigDecimal
+  depositedToken1_lt: BigDecimal
+  depositedToken1_gte: BigDecimal
+  depositedToken1_lte: BigDecimal
+  depositedToken1_in: [BigDecimal!]
+  depositedToken1_not_in: [BigDecimal!]
+  withdrawnToken0: BigDecimal
+  withdrawnToken0_not: BigDecimal
+  withdrawnToken0_gt: BigDecimal
+  withdrawnToken0_lt: BigDecimal
+  withdrawnToken0_gte: BigDecimal
+  withdrawnToken0_lte: BigDecimal
+  withdrawnToken0_in: [BigDecimal!]
+  withdrawnToken0_not_in: [BigDecimal!]
+  withdrawnToken1: BigDecimal
+  withdrawnToken1_not: BigDecimal
+  withdrawnToken1_gt: BigDecimal
+  withdrawnToken1_lt: BigDecimal
+  withdrawnToken1_gte: BigDecimal
+  withdrawnToken1_lte: BigDecimal
+  withdrawnToken1_in: [BigDecimal!]
+  withdrawnToken1_not_in: [BigDecimal!]
+  collectedFeesToken0: BigDecimal
+  collectedFeesToken0_not: BigDecimal
+  collectedFeesToken0_gt: BigDecimal
+  collectedFeesToken0_lt: BigDecimal
+  collectedFeesToken0_gte: BigDecimal
+  collectedFeesToken0_lte: BigDecimal
+  collectedFeesToken0_in: [BigDecimal!]
+  collectedFeesToken0_not_in: [BigDecimal!]
+  collectedFeesToken1: BigDecimal
+  collectedFeesToken1_not: BigDecimal
+  collectedFeesToken1_gt: BigDecimal
+  collectedFeesToken1_lt: BigDecimal
+  collectedFeesToken1_gte: BigDecimal
+  collectedFeesToken1_lte: BigDecimal
+  collectedFeesToken1_in: [BigDecimal!]
+  collectedFeesToken1_not_in: [BigDecimal!]
+  transaction: String
+  transaction_not: String
+  transaction_gt: String
+  transaction_lt: String
+  transaction_gte: String
+  transaction_lte: String
+  transaction_in: [String!]
+  transaction_not_in: [String!]
+  transaction_contains: String
+  transaction_contains_nocase: String
+  transaction_not_contains: String
+  transaction_not_contains_nocase: String
+  transaction_starts_with: String
+  transaction_starts_with_nocase: String
+  transaction_not_starts_with: String
+  transaction_not_starts_with_nocase: String
+  transaction_ends_with: String
+  transaction_ends_with_nocase: String
+  transaction_not_ends_with: String
+  transaction_not_ends_with_nocase: String
+  transaction_: Transaction_filter
+  feeGrowthInside0LastX128: BigInt
+  feeGrowthInside0LastX128_not: BigInt
+  feeGrowthInside0LastX128_gt: BigInt
+  feeGrowthInside0LastX128_lt: BigInt
+  feeGrowthInside0LastX128_gte: BigInt
+  feeGrowthInside0LastX128_lte: BigInt
+  feeGrowthInside0LastX128_in: [BigInt!]
+  feeGrowthInside0LastX128_not_in: [BigInt!]
+  feeGrowthInside1LastX128: BigInt
+  feeGrowthInside1LastX128_not: BigInt
+  feeGrowthInside1LastX128_gt: BigInt
+  feeGrowthInside1LastX128_lt: BigInt
+  feeGrowthInside1LastX128_gte: BigInt
+  feeGrowthInside1LastX128_lte: BigInt
+  feeGrowthInside1LastX128_in: [BigInt!]
+  feeGrowthInside1LastX128_not_in: [BigInt!]
+
+  """Filter for the block changed event."""
+  _change_block: BlockChangedFilter
+}
+
+enum PositionSnapshot_orderBy {
+  id
+  owner
+  pool
+  position
+  blockNumber
+  timestamp
+  liquidity
+  depositedToken0
+  depositedToken1
+  withdrawnToken0
+  withdrawnToken1
+  collectedFeesToken0
+  collectedFeesToken1
+  transaction
+  feeGrowthInside0LastX128
+  feeGrowthInside1LastX128
+}
+
 type Query {
   factory(
     id: ID!
 
     """
-    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
     """
     block: Block_height
 
@@ -2223,7 +2265,12 @@ type Query {
     where: Factory_filter
 
     """
-    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
     """
     block: Block_height
 
@@ -2236,7 +2283,12 @@ type Query {
     id: ID!
 
     """
-    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
     """
     block: Block_height
 
@@ -2253,7 +2305,12 @@ type Query {
     where: Bundle_filter
 
     """
-    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
     """
     block: Block_height
 
@@ -2266,7 +2323,12 @@ type Query {
     id: ID!
 
     """
-    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
     """
     block: Block_height
 
@@ -2283,7 +2345,12 @@ type Query {
     where: Token_filter
 
     """
-    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
     """
     block: Block_height
 
@@ -2296,7 +2363,12 @@ type Query {
     id: ID!
 
     """
-    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
     """
     block: Block_height
 
@@ -2313,7 +2385,12 @@ type Query {
     where: Pool_filter
 
     """
-    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
     """
     block: Block_height
 
@@ -2326,7 +2403,12 @@ type Query {
     id: ID!
 
     """
-    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
     """
     block: Block_height
 
@@ -2343,7 +2425,12 @@ type Query {
     where: Tick_filter
 
     """
-    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
     """
     block: Block_height
 
@@ -2356,7 +2443,12 @@ type Query {
     id: ID!
 
     """
-    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
     """
     block: Block_height
 
@@ -2373,7 +2465,12 @@ type Query {
     where: Position_filter
 
     """
-    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
     """
     block: Block_height
 
@@ -2386,7 +2483,12 @@ type Query {
     id: ID!
 
     """
-    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
     """
     block: Block_height
 
@@ -2403,7 +2505,12 @@ type Query {
     where: PositionSnapshot_filter
 
     """
-    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
     """
     block: Block_height
 
@@ -2416,7 +2523,12 @@ type Query {
     id: ID!
 
     """
-    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
     """
     block: Block_height
 
@@ -2433,7 +2545,12 @@ type Query {
     where: Transaction_filter
 
     """
-    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
     """
     block: Block_height
 
@@ -2446,7 +2563,12 @@ type Query {
     id: ID!
 
     """
-    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
     """
     block: Block_height
 
@@ -2463,7 +2585,12 @@ type Query {
     where: Mint_filter
 
     """
-    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
     """
     block: Block_height
 
@@ -2476,7 +2603,12 @@ type Query {
     id: ID!
 
     """
-    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
     """
     block: Block_height
 
@@ -2493,7 +2625,12 @@ type Query {
     where: Burn_filter
 
     """
-    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
     """
     block: Block_height
 
@@ -2506,7 +2643,12 @@ type Query {
     id: ID!
 
     """
-    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
     """
     block: Block_height
 
@@ -2523,7 +2665,12 @@ type Query {
     where: Swap_filter
 
     """
-    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
     """
     block: Block_height
 
@@ -2536,7 +2683,12 @@ type Query {
     id: ID!
 
     """
-    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
     """
     block: Block_height
 
@@ -2553,7 +2705,12 @@ type Query {
     where: Collect_filter
 
     """
-    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
     """
     block: Block_height
 
@@ -2566,7 +2723,12 @@ type Query {
     id: ID!
 
     """
-    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
     """
     block: Block_height
 
@@ -2583,7 +2745,12 @@ type Query {
     where: Flash_filter
 
     """
-    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
     """
     block: Block_height
 
@@ -2596,7 +2763,12 @@ type Query {
     id: ID!
 
     """
-    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
     """
     block: Block_height
 
@@ -2613,7 +2785,12 @@ type Query {
     where: UniswapDayData_filter
 
     """
-    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
     """
     block: Block_height
 
@@ -2626,7 +2803,12 @@ type Query {
     id: ID!
 
     """
-    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
     """
     block: Block_height
 
@@ -2643,7 +2825,12 @@ type Query {
     where: PoolDayData_filter
 
     """
-    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
     """
     block: Block_height
 
@@ -2656,7 +2843,12 @@ type Query {
     id: ID!
 
     """
-    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
     """
     block: Block_height
 
@@ -2673,7 +2865,12 @@ type Query {
     where: PoolHourData_filter
 
     """
-    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
     """
     block: Block_height
 
@@ -2686,7 +2883,12 @@ type Query {
     id: ID!
 
     """
-    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
     """
     block: Block_height
 
@@ -2703,7 +2905,12 @@ type Query {
     where: TickHourData_filter
 
     """
-    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
     """
     block: Block_height
 
@@ -2716,7 +2923,12 @@ type Query {
     id: ID!
 
     """
-    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
     """
     block: Block_height
 
@@ -2733,7 +2945,12 @@ type Query {
     where: TickDayData_filter
 
     """
-    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
     """
     block: Block_height
 
@@ -2746,7 +2963,12 @@ type Query {
     id: ID!
 
     """
-    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
     """
     block: Block_height
 
@@ -2763,7 +2985,12 @@ type Query {
     where: TokenDayData_filter
 
     """
-    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
     """
     block: Block_height
 
@@ -2776,7 +3003,12 @@ type Query {
     id: ID!
 
     """
-    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
     """
     block: Block_height
 
@@ -2793,7 +3025,12 @@ type Query {
     where: TokenHourData_filter
 
     """
-    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
     """
     block: Block_height
 
@@ -2812,7 +3049,12 @@ type Subscription {
     id: ID!
 
     """
-    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
     """
     block: Block_height
 
@@ -2829,7 +3071,12 @@ type Subscription {
     where: Factory_filter
 
     """
-    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
     """
     block: Block_height
 
@@ -2842,7 +3089,12 @@ type Subscription {
     id: ID!
 
     """
-    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
     """
     block: Block_height
 
@@ -2859,7 +3111,12 @@ type Subscription {
     where: Bundle_filter
 
     """
-    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
     """
     block: Block_height
 
@@ -2872,7 +3129,12 @@ type Subscription {
     id: ID!
 
     """
-    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
     """
     block: Block_height
 
@@ -2889,7 +3151,12 @@ type Subscription {
     where: Token_filter
 
     """
-    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
     """
     block: Block_height
 
@@ -2902,7 +3169,12 @@ type Subscription {
     id: ID!
 
     """
-    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
     """
     block: Block_height
 
@@ -2919,7 +3191,12 @@ type Subscription {
     where: Pool_filter
 
     """
-    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
     """
     block: Block_height
 
@@ -2932,7 +3209,12 @@ type Subscription {
     id: ID!
 
     """
-    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
     """
     block: Block_height
 
@@ -2949,7 +3231,12 @@ type Subscription {
     where: Tick_filter
 
     """
-    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
     """
     block: Block_height
 
@@ -2962,7 +3249,12 @@ type Subscription {
     id: ID!
 
     """
-    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
     """
     block: Block_height
 
@@ -2979,7 +3271,12 @@ type Subscription {
     where: Position_filter
 
     """
-    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
     """
     block: Block_height
 
@@ -2992,7 +3289,12 @@ type Subscription {
     id: ID!
 
     """
-    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
     """
     block: Block_height
 
@@ -3009,7 +3311,12 @@ type Subscription {
     where: PositionSnapshot_filter
 
     """
-    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
     """
     block: Block_height
 
@@ -3022,7 +3329,12 @@ type Subscription {
     id: ID!
 
     """
-    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
     """
     block: Block_height
 
@@ -3039,7 +3351,12 @@ type Subscription {
     where: Transaction_filter
 
     """
-    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
     """
     block: Block_height
 
@@ -3052,7 +3369,12 @@ type Subscription {
     id: ID!
 
     """
-    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
     """
     block: Block_height
 
@@ -3069,7 +3391,12 @@ type Subscription {
     where: Mint_filter
 
     """
-    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
     """
     block: Block_height
 
@@ -3082,7 +3409,12 @@ type Subscription {
     id: ID!
 
     """
-    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
     """
     block: Block_height
 
@@ -3099,7 +3431,12 @@ type Subscription {
     where: Burn_filter
 
     """
-    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
     """
     block: Block_height
 
@@ -3112,7 +3449,12 @@ type Subscription {
     id: ID!
 
     """
-    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
     """
     block: Block_height
 
@@ -3129,7 +3471,12 @@ type Subscription {
     where: Swap_filter
 
     """
-    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
     """
     block: Block_height
 
@@ -3142,7 +3489,12 @@ type Subscription {
     id: ID!
 
     """
-    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
     """
     block: Block_height
 
@@ -3159,7 +3511,12 @@ type Subscription {
     where: Collect_filter
 
     """
-    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
     """
     block: Block_height
 
@@ -3172,7 +3529,12 @@ type Subscription {
     id: ID!
 
     """
-    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
     """
     block: Block_height
 
@@ -3189,7 +3551,12 @@ type Subscription {
     where: Flash_filter
 
     """
-    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
     """
     block: Block_height
 
@@ -3202,7 +3569,12 @@ type Subscription {
     id: ID!
 
     """
-    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
     """
     block: Block_height
 
@@ -3219,7 +3591,12 @@ type Subscription {
     where: UniswapDayData_filter
 
     """
-    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
     """
     block: Block_height
 
@@ -3232,7 +3609,12 @@ type Subscription {
     id: ID!
 
     """
-    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
     """
     block: Block_height
 
@@ -3249,7 +3631,12 @@ type Subscription {
     where: PoolDayData_filter
 
     """
-    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
     """
     block: Block_height
 
@@ -3262,7 +3649,12 @@ type Subscription {
     id: ID!
 
     """
-    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
     """
     block: Block_height
 
@@ -3279,7 +3671,12 @@ type Subscription {
     where: PoolHourData_filter
 
     """
-    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
     """
     block: Block_height
 
@@ -3292,7 +3689,12 @@ type Subscription {
     id: ID!
 
     """
-    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
     """
     block: Block_height
 
@@ -3309,7 +3711,12 @@ type Subscription {
     where: TickHourData_filter
 
     """
-    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
     """
     block: Block_height
 
@@ -3322,7 +3729,12 @@ type Subscription {
     id: ID!
 
     """
-    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
     """
     block: Block_height
 
@@ -3339,7 +3751,12 @@ type Subscription {
     where: TickDayData_filter
 
     """
-    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
     """
     block: Block_height
 
@@ -3352,7 +3769,12 @@ type Subscription {
     id: ID!
 
     """
-    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
     """
     block: Block_height
 
@@ -3369,7 +3791,12 @@ type Subscription {
     where: TokenDayData_filter
 
     """
-    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
     """
     block: Block_height
 
@@ -3382,7 +3809,12 @@ type Subscription {
     id: ID!
 
     """
-    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
     """
     block: Block_height
 
@@ -3399,7 +3831,12 @@ type Subscription {
     where: TokenHourData_filter
 
     """
-    The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.
+    The block at which the query should be executed. Can either be a `{ hash:
+    Bytes }` value containing a block hash, a `{ number: Int }` containing the
+    block number, or a `{ number_gte: Int }` containing the minimum block
+    number. In the case of `number_gte`, the query will be executed on the
+    latest block only if the subgraph has progressed to or past the minimum
+    block number. Defaults to the latest block when omitted.
     """
     block: Block_height
 
@@ -3643,6 +4080,229 @@ type Tick {
   liquidityProviderCount: BigInt!
   feeGrowthOutside0X128: BigInt!
   feeGrowthOutside1X128: BigInt!
+}
+
+input Tick_filter {
+  id: ID
+  id_not: ID
+  id_gt: ID
+  id_lt: ID
+  id_gte: ID
+  id_lte: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  poolAddress: String
+  poolAddress_not: String
+  poolAddress_gt: String
+  poolAddress_lt: String
+  poolAddress_gte: String
+  poolAddress_lte: String
+  poolAddress_in: [String!]
+  poolAddress_not_in: [String!]
+  poolAddress_contains: String
+  poolAddress_contains_nocase: String
+  poolAddress_not_contains: String
+  poolAddress_not_contains_nocase: String
+  poolAddress_starts_with: String
+  poolAddress_starts_with_nocase: String
+  poolAddress_not_starts_with: String
+  poolAddress_not_starts_with_nocase: String
+  poolAddress_ends_with: String
+  poolAddress_ends_with_nocase: String
+  poolAddress_not_ends_with: String
+  poolAddress_not_ends_with_nocase: String
+  tickIdx: BigInt
+  tickIdx_not: BigInt
+  tickIdx_gt: BigInt
+  tickIdx_lt: BigInt
+  tickIdx_gte: BigInt
+  tickIdx_lte: BigInt
+  tickIdx_in: [BigInt!]
+  tickIdx_not_in: [BigInt!]
+  pool: String
+  pool_not: String
+  pool_gt: String
+  pool_lt: String
+  pool_gte: String
+  pool_lte: String
+  pool_in: [String!]
+  pool_not_in: [String!]
+  pool_contains: String
+  pool_contains_nocase: String
+  pool_not_contains: String
+  pool_not_contains_nocase: String
+  pool_starts_with: String
+  pool_starts_with_nocase: String
+  pool_not_starts_with: String
+  pool_not_starts_with_nocase: String
+  pool_ends_with: String
+  pool_ends_with_nocase: String
+  pool_not_ends_with: String
+  pool_not_ends_with_nocase: String
+  pool_: Pool_filter
+  liquidityGross: BigInt
+  liquidityGross_not: BigInt
+  liquidityGross_gt: BigInt
+  liquidityGross_lt: BigInt
+  liquidityGross_gte: BigInt
+  liquidityGross_lte: BigInt
+  liquidityGross_in: [BigInt!]
+  liquidityGross_not_in: [BigInt!]
+  liquidityNet: BigInt
+  liquidityNet_not: BigInt
+  liquidityNet_gt: BigInt
+  liquidityNet_lt: BigInt
+  liquidityNet_gte: BigInt
+  liquidityNet_lte: BigInt
+  liquidityNet_in: [BigInt!]
+  liquidityNet_not_in: [BigInt!]
+  price0: BigDecimal
+  price0_not: BigDecimal
+  price0_gt: BigDecimal
+  price0_lt: BigDecimal
+  price0_gte: BigDecimal
+  price0_lte: BigDecimal
+  price0_in: [BigDecimal!]
+  price0_not_in: [BigDecimal!]
+  price1: BigDecimal
+  price1_not: BigDecimal
+  price1_gt: BigDecimal
+  price1_lt: BigDecimal
+  price1_gte: BigDecimal
+  price1_lte: BigDecimal
+  price1_in: [BigDecimal!]
+  price1_not_in: [BigDecimal!]
+  volumeToken0: BigDecimal
+  volumeToken0_not: BigDecimal
+  volumeToken0_gt: BigDecimal
+  volumeToken0_lt: BigDecimal
+  volumeToken0_gte: BigDecimal
+  volumeToken0_lte: BigDecimal
+  volumeToken0_in: [BigDecimal!]
+  volumeToken0_not_in: [BigDecimal!]
+  volumeToken1: BigDecimal
+  volumeToken1_not: BigDecimal
+  volumeToken1_gt: BigDecimal
+  volumeToken1_lt: BigDecimal
+  volumeToken1_gte: BigDecimal
+  volumeToken1_lte: BigDecimal
+  volumeToken1_in: [BigDecimal!]
+  volumeToken1_not_in: [BigDecimal!]
+  volumeUSD: BigDecimal
+  volumeUSD_not: BigDecimal
+  volumeUSD_gt: BigDecimal
+  volumeUSD_lt: BigDecimal
+  volumeUSD_gte: BigDecimal
+  volumeUSD_lte: BigDecimal
+  volumeUSD_in: [BigDecimal!]
+  volumeUSD_not_in: [BigDecimal!]
+  untrackedVolumeUSD: BigDecimal
+  untrackedVolumeUSD_not: BigDecimal
+  untrackedVolumeUSD_gt: BigDecimal
+  untrackedVolumeUSD_lt: BigDecimal
+  untrackedVolumeUSD_gte: BigDecimal
+  untrackedVolumeUSD_lte: BigDecimal
+  untrackedVolumeUSD_in: [BigDecimal!]
+  untrackedVolumeUSD_not_in: [BigDecimal!]
+  feesUSD: BigDecimal
+  feesUSD_not: BigDecimal
+  feesUSD_gt: BigDecimal
+  feesUSD_lt: BigDecimal
+  feesUSD_gte: BigDecimal
+  feesUSD_lte: BigDecimal
+  feesUSD_in: [BigDecimal!]
+  feesUSD_not_in: [BigDecimal!]
+  collectedFeesToken0: BigDecimal
+  collectedFeesToken0_not: BigDecimal
+  collectedFeesToken0_gt: BigDecimal
+  collectedFeesToken0_lt: BigDecimal
+  collectedFeesToken0_gte: BigDecimal
+  collectedFeesToken0_lte: BigDecimal
+  collectedFeesToken0_in: [BigDecimal!]
+  collectedFeesToken0_not_in: [BigDecimal!]
+  collectedFeesToken1: BigDecimal
+  collectedFeesToken1_not: BigDecimal
+  collectedFeesToken1_gt: BigDecimal
+  collectedFeesToken1_lt: BigDecimal
+  collectedFeesToken1_gte: BigDecimal
+  collectedFeesToken1_lte: BigDecimal
+  collectedFeesToken1_in: [BigDecimal!]
+  collectedFeesToken1_not_in: [BigDecimal!]
+  collectedFeesUSD: BigDecimal
+  collectedFeesUSD_not: BigDecimal
+  collectedFeesUSD_gt: BigDecimal
+  collectedFeesUSD_lt: BigDecimal
+  collectedFeesUSD_gte: BigDecimal
+  collectedFeesUSD_lte: BigDecimal
+  collectedFeesUSD_in: [BigDecimal!]
+  collectedFeesUSD_not_in: [BigDecimal!]
+  createdAtTimestamp: BigInt
+  createdAtTimestamp_not: BigInt
+  createdAtTimestamp_gt: BigInt
+  createdAtTimestamp_lt: BigInt
+  createdAtTimestamp_gte: BigInt
+  createdAtTimestamp_lte: BigInt
+  createdAtTimestamp_in: [BigInt!]
+  createdAtTimestamp_not_in: [BigInt!]
+  createdAtBlockNumber: BigInt
+  createdAtBlockNumber_not: BigInt
+  createdAtBlockNumber_gt: BigInt
+  createdAtBlockNumber_lt: BigInt
+  createdAtBlockNumber_gte: BigInt
+  createdAtBlockNumber_lte: BigInt
+  createdAtBlockNumber_in: [BigInt!]
+  createdAtBlockNumber_not_in: [BigInt!]
+  liquidityProviderCount: BigInt
+  liquidityProviderCount_not: BigInt
+  liquidityProviderCount_gt: BigInt
+  liquidityProviderCount_lt: BigInt
+  liquidityProviderCount_gte: BigInt
+  liquidityProviderCount_lte: BigInt
+  liquidityProviderCount_in: [BigInt!]
+  liquidityProviderCount_not_in: [BigInt!]
+  feeGrowthOutside0X128: BigInt
+  feeGrowthOutside0X128_not: BigInt
+  feeGrowthOutside0X128_gt: BigInt
+  feeGrowthOutside0X128_lt: BigInt
+  feeGrowthOutside0X128_gte: BigInt
+  feeGrowthOutside0X128_lte: BigInt
+  feeGrowthOutside0X128_in: [BigInt!]
+  feeGrowthOutside0X128_not_in: [BigInt!]
+  feeGrowthOutside1X128: BigInt
+  feeGrowthOutside1X128_not: BigInt
+  feeGrowthOutside1X128_gt: BigInt
+  feeGrowthOutside1X128_lt: BigInt
+  feeGrowthOutside1X128_gte: BigInt
+  feeGrowthOutside1X128_lte: BigInt
+  feeGrowthOutside1X128_in: [BigInt!]
+  feeGrowthOutside1X128_not_in: [BigInt!]
+
+  """Filter for the block changed event."""
+  _change_block: BlockChangedFilter
+}
+
+enum Tick_orderBy {
+  id
+  poolAddress
+  tickIdx
+  pool
+  liquidityGross
+  liquidityNet
+  price0
+  price1
+  volumeToken0
+  volumeToken1
+  volumeUSD
+  untrackedVolumeUSD
+  feesUSD
+  collectedFeesToken0
+  collectedFeesToken1
+  collectedFeesUSD
+  createdAtTimestamp
+  createdAtBlockNumber
+  liquidityProviderCount
+  feeGrowthOutside0X128
+  feeGrowthOutside1X128
 }
 
 type TickDayData {
@@ -3941,7 +4601,27 @@ enum TickHourData_orderBy {
   feesUSD
 }
 
-input Tick_filter {
+type Token {
+  id: ID!
+  symbol: String!
+  name: String!
+  decimals: BigInt!
+  totalSupply: BigInt!
+  volume: BigDecimal!
+  volumeUSD: BigDecimal!
+  untrackedVolumeUSD: BigDecimal!
+  feesUSD: BigDecimal!
+  txCount: BigInt!
+  poolCount: BigInt!
+  totalValueLocked: BigDecimal!
+  totalValueLockedUSD: BigDecimal!
+  totalValueLockedUSDUntracked: BigDecimal!
+  derivedETH: BigDecimal!
+  whitelistPools(skip: Int = 0, first: Int = 100, orderBy: Pool_orderBy, orderDirection: OrderDirection, where: Pool_filter): [Pool!]!
+  tokenDayData(skip: Int = 0, first: Int = 100, orderBy: TokenDayData_orderBy, orderDirection: OrderDirection, where: TokenDayData_filter): [TokenDayData!]!
+}
+
+input Token_filter {
   id: ID
   id_not: ID
   id_gt: ID
@@ -3950,103 +4630,70 @@ input Tick_filter {
   id_lte: ID
   id_in: [ID!]
   id_not_in: [ID!]
-  poolAddress: String
-  poolAddress_not: String
-  poolAddress_gt: String
-  poolAddress_lt: String
-  poolAddress_gte: String
-  poolAddress_lte: String
-  poolAddress_in: [String!]
-  poolAddress_not_in: [String!]
-  poolAddress_contains: String
-  poolAddress_contains_nocase: String
-  poolAddress_not_contains: String
-  poolAddress_not_contains_nocase: String
-  poolAddress_starts_with: String
-  poolAddress_starts_with_nocase: String
-  poolAddress_not_starts_with: String
-  poolAddress_not_starts_with_nocase: String
-  poolAddress_ends_with: String
-  poolAddress_ends_with_nocase: String
-  poolAddress_not_ends_with: String
-  poolAddress_not_ends_with_nocase: String
-  tickIdx: BigInt
-  tickIdx_not: BigInt
-  tickIdx_gt: BigInt
-  tickIdx_lt: BigInt
-  tickIdx_gte: BigInt
-  tickIdx_lte: BigInt
-  tickIdx_in: [BigInt!]
-  tickIdx_not_in: [BigInt!]
-  pool: String
-  pool_not: String
-  pool_gt: String
-  pool_lt: String
-  pool_gte: String
-  pool_lte: String
-  pool_in: [String!]
-  pool_not_in: [String!]
-  pool_contains: String
-  pool_contains_nocase: String
-  pool_not_contains: String
-  pool_not_contains_nocase: String
-  pool_starts_with: String
-  pool_starts_with_nocase: String
-  pool_not_starts_with: String
-  pool_not_starts_with_nocase: String
-  pool_ends_with: String
-  pool_ends_with_nocase: String
-  pool_not_ends_with: String
-  pool_not_ends_with_nocase: String
-  pool_: Pool_filter
-  liquidityGross: BigInt
-  liquidityGross_not: BigInt
-  liquidityGross_gt: BigInt
-  liquidityGross_lt: BigInt
-  liquidityGross_gte: BigInt
-  liquidityGross_lte: BigInt
-  liquidityGross_in: [BigInt!]
-  liquidityGross_not_in: [BigInt!]
-  liquidityNet: BigInt
-  liquidityNet_not: BigInt
-  liquidityNet_gt: BigInt
-  liquidityNet_lt: BigInt
-  liquidityNet_gte: BigInt
-  liquidityNet_lte: BigInt
-  liquidityNet_in: [BigInt!]
-  liquidityNet_not_in: [BigInt!]
-  price0: BigDecimal
-  price0_not: BigDecimal
-  price0_gt: BigDecimal
-  price0_lt: BigDecimal
-  price0_gte: BigDecimal
-  price0_lte: BigDecimal
-  price0_in: [BigDecimal!]
-  price0_not_in: [BigDecimal!]
-  price1: BigDecimal
-  price1_not: BigDecimal
-  price1_gt: BigDecimal
-  price1_lt: BigDecimal
-  price1_gte: BigDecimal
-  price1_lte: BigDecimal
-  price1_in: [BigDecimal!]
-  price1_not_in: [BigDecimal!]
-  volumeToken0: BigDecimal
-  volumeToken0_not: BigDecimal
-  volumeToken0_gt: BigDecimal
-  volumeToken0_lt: BigDecimal
-  volumeToken0_gte: BigDecimal
-  volumeToken0_lte: BigDecimal
-  volumeToken0_in: [BigDecimal!]
-  volumeToken0_not_in: [BigDecimal!]
-  volumeToken1: BigDecimal
-  volumeToken1_not: BigDecimal
-  volumeToken1_gt: BigDecimal
-  volumeToken1_lt: BigDecimal
-  volumeToken1_gte: BigDecimal
-  volumeToken1_lte: BigDecimal
-  volumeToken1_in: [BigDecimal!]
-  volumeToken1_not_in: [BigDecimal!]
+  symbol: String
+  symbol_not: String
+  symbol_gt: String
+  symbol_lt: String
+  symbol_gte: String
+  symbol_lte: String
+  symbol_in: [String!]
+  symbol_not_in: [String!]
+  symbol_contains: String
+  symbol_contains_nocase: String
+  symbol_not_contains: String
+  symbol_not_contains_nocase: String
+  symbol_starts_with: String
+  symbol_starts_with_nocase: String
+  symbol_not_starts_with: String
+  symbol_not_starts_with_nocase: String
+  symbol_ends_with: String
+  symbol_ends_with_nocase: String
+  symbol_not_ends_with: String
+  symbol_not_ends_with_nocase: String
+  name: String
+  name_not: String
+  name_gt: String
+  name_lt: String
+  name_gte: String
+  name_lte: String
+  name_in: [String!]
+  name_not_in: [String!]
+  name_contains: String
+  name_contains_nocase: String
+  name_not_contains: String
+  name_not_contains_nocase: String
+  name_starts_with: String
+  name_starts_with_nocase: String
+  name_not_starts_with: String
+  name_not_starts_with_nocase: String
+  name_ends_with: String
+  name_ends_with_nocase: String
+  name_not_ends_with: String
+  name_not_ends_with_nocase: String
+  decimals: BigInt
+  decimals_not: BigInt
+  decimals_gt: BigInt
+  decimals_lt: BigInt
+  decimals_gte: BigInt
+  decimals_lte: BigInt
+  decimals_in: [BigInt!]
+  decimals_not_in: [BigInt!]
+  totalSupply: BigInt
+  totalSupply_not: BigInt
+  totalSupply_gt: BigInt
+  totalSupply_lt: BigInt
+  totalSupply_gte: BigInt
+  totalSupply_lte: BigInt
+  totalSupply_in: [BigInt!]
+  totalSupply_not_in: [BigInt!]
+  volume: BigDecimal
+  volume_not: BigDecimal
+  volume_gt: BigDecimal
+  volume_lt: BigDecimal
+  volume_gte: BigDecimal
+  volume_lte: BigDecimal
+  volume_in: [BigDecimal!]
+  volume_not_in: [BigDecimal!]
   volumeUSD: BigDecimal
   volumeUSD_not: BigDecimal
   volumeUSD_gt: BigDecimal
@@ -4071,117 +4718,85 @@ input Tick_filter {
   feesUSD_lte: BigDecimal
   feesUSD_in: [BigDecimal!]
   feesUSD_not_in: [BigDecimal!]
-  collectedFeesToken0: BigDecimal
-  collectedFeesToken0_not: BigDecimal
-  collectedFeesToken0_gt: BigDecimal
-  collectedFeesToken0_lt: BigDecimal
-  collectedFeesToken0_gte: BigDecimal
-  collectedFeesToken0_lte: BigDecimal
-  collectedFeesToken0_in: [BigDecimal!]
-  collectedFeesToken0_not_in: [BigDecimal!]
-  collectedFeesToken1: BigDecimal
-  collectedFeesToken1_not: BigDecimal
-  collectedFeesToken1_gt: BigDecimal
-  collectedFeesToken1_lt: BigDecimal
-  collectedFeesToken1_gte: BigDecimal
-  collectedFeesToken1_lte: BigDecimal
-  collectedFeesToken1_in: [BigDecimal!]
-  collectedFeesToken1_not_in: [BigDecimal!]
-  collectedFeesUSD: BigDecimal
-  collectedFeesUSD_not: BigDecimal
-  collectedFeesUSD_gt: BigDecimal
-  collectedFeesUSD_lt: BigDecimal
-  collectedFeesUSD_gte: BigDecimal
-  collectedFeesUSD_lte: BigDecimal
-  collectedFeesUSD_in: [BigDecimal!]
-  collectedFeesUSD_not_in: [BigDecimal!]
-  createdAtTimestamp: BigInt
-  createdAtTimestamp_not: BigInt
-  createdAtTimestamp_gt: BigInt
-  createdAtTimestamp_lt: BigInt
-  createdAtTimestamp_gte: BigInt
-  createdAtTimestamp_lte: BigInt
-  createdAtTimestamp_in: [BigInt!]
-  createdAtTimestamp_not_in: [BigInt!]
-  createdAtBlockNumber: BigInt
-  createdAtBlockNumber_not: BigInt
-  createdAtBlockNumber_gt: BigInt
-  createdAtBlockNumber_lt: BigInt
-  createdAtBlockNumber_gte: BigInt
-  createdAtBlockNumber_lte: BigInt
-  createdAtBlockNumber_in: [BigInt!]
-  createdAtBlockNumber_not_in: [BigInt!]
-  liquidityProviderCount: BigInt
-  liquidityProviderCount_not: BigInt
-  liquidityProviderCount_gt: BigInt
-  liquidityProviderCount_lt: BigInt
-  liquidityProviderCount_gte: BigInt
-  liquidityProviderCount_lte: BigInt
-  liquidityProviderCount_in: [BigInt!]
-  liquidityProviderCount_not_in: [BigInt!]
-  feeGrowthOutside0X128: BigInt
-  feeGrowthOutside0X128_not: BigInt
-  feeGrowthOutside0X128_gt: BigInt
-  feeGrowthOutside0X128_lt: BigInt
-  feeGrowthOutside0X128_gte: BigInt
-  feeGrowthOutside0X128_lte: BigInt
-  feeGrowthOutside0X128_in: [BigInt!]
-  feeGrowthOutside0X128_not_in: [BigInt!]
-  feeGrowthOutside1X128: BigInt
-  feeGrowthOutside1X128_not: BigInt
-  feeGrowthOutside1X128_gt: BigInt
-  feeGrowthOutside1X128_lt: BigInt
-  feeGrowthOutside1X128_gte: BigInt
-  feeGrowthOutside1X128_lte: BigInt
-  feeGrowthOutside1X128_in: [BigInt!]
-  feeGrowthOutside1X128_not_in: [BigInt!]
+  txCount: BigInt
+  txCount_not: BigInt
+  txCount_gt: BigInt
+  txCount_lt: BigInt
+  txCount_gte: BigInt
+  txCount_lte: BigInt
+  txCount_in: [BigInt!]
+  txCount_not_in: [BigInt!]
+  poolCount: BigInt
+  poolCount_not: BigInt
+  poolCount_gt: BigInt
+  poolCount_lt: BigInt
+  poolCount_gte: BigInt
+  poolCount_lte: BigInt
+  poolCount_in: [BigInt!]
+  poolCount_not_in: [BigInt!]
+  totalValueLocked: BigDecimal
+  totalValueLocked_not: BigDecimal
+  totalValueLocked_gt: BigDecimal
+  totalValueLocked_lt: BigDecimal
+  totalValueLocked_gte: BigDecimal
+  totalValueLocked_lte: BigDecimal
+  totalValueLocked_in: [BigDecimal!]
+  totalValueLocked_not_in: [BigDecimal!]
+  totalValueLockedUSD: BigDecimal
+  totalValueLockedUSD_not: BigDecimal
+  totalValueLockedUSD_gt: BigDecimal
+  totalValueLockedUSD_lt: BigDecimal
+  totalValueLockedUSD_gte: BigDecimal
+  totalValueLockedUSD_lte: BigDecimal
+  totalValueLockedUSD_in: [BigDecimal!]
+  totalValueLockedUSD_not_in: [BigDecimal!]
+  totalValueLockedUSDUntracked: BigDecimal
+  totalValueLockedUSDUntracked_not: BigDecimal
+  totalValueLockedUSDUntracked_gt: BigDecimal
+  totalValueLockedUSDUntracked_lt: BigDecimal
+  totalValueLockedUSDUntracked_gte: BigDecimal
+  totalValueLockedUSDUntracked_lte: BigDecimal
+  totalValueLockedUSDUntracked_in: [BigDecimal!]
+  totalValueLockedUSDUntracked_not_in: [BigDecimal!]
+  derivedETH: BigDecimal
+  derivedETH_not: BigDecimal
+  derivedETH_gt: BigDecimal
+  derivedETH_lt: BigDecimal
+  derivedETH_gte: BigDecimal
+  derivedETH_lte: BigDecimal
+  derivedETH_in: [BigDecimal!]
+  derivedETH_not_in: [BigDecimal!]
+  whitelistPools: [String!]
+  whitelistPools_not: [String!]
+  whitelistPools_contains: [String!]
+  whitelistPools_contains_nocase: [String!]
+  whitelistPools_not_contains: [String!]
+  whitelistPools_not_contains_nocase: [String!]
+  whitelistPools_: Pool_filter
+  tokenDayData_: TokenDayData_filter
 
   """Filter for the block changed event."""
   _change_block: BlockChangedFilter
 }
 
-enum Tick_orderBy {
+enum Token_orderBy {
   id
-  poolAddress
-  tickIdx
-  pool
-  liquidityGross
-  liquidityNet
-  price0
-  price1
-  volumeToken0
-  volumeToken1
+  symbol
+  name
+  decimals
+  totalSupply
+  volume
   volumeUSD
   untrackedVolumeUSD
   feesUSD
-  collectedFeesToken0
-  collectedFeesToken1
-  collectedFeesUSD
-  createdAtTimestamp
-  createdAtBlockNumber
-  liquidityProviderCount
-  feeGrowthOutside0X128
-  feeGrowthOutside1X128
-}
-
-type Token {
-  id: ID!
-  symbol: String!
-  name: String!
-  decimals: BigInt!
-  totalSupply: BigInt!
-  volume: BigDecimal!
-  volumeUSD: BigDecimal!
-  untrackedVolumeUSD: BigDecimal!
-  feesUSD: BigDecimal!
-  txCount: BigInt!
-  poolCount: BigInt!
-  totalValueLocked: BigDecimal!
-  totalValueLockedUSD: BigDecimal!
-  totalValueLockedUSDUntracked: BigDecimal!
-  derivedETH: BigDecimal!
-  whitelistPools(skip: Int = 0, first: Int = 100, orderBy: Pool_orderBy, orderDirection: OrderDirection, where: Pool_filter): [Pool!]!
-  tokenDayData(skip: Int = 0, first: Int = 100, orderBy: TokenDayData_orderBy, orderDirection: OrderDirection, where: TokenDayData_filter): [TokenDayData!]!
+  txCount
+  poolCount
+  totalValueLocked
+  totalValueLockedUSD
+  totalValueLockedUSDUntracked
+  derivedETH
+  whitelistPools
+  tokenDayData
 }
 
 type TokenDayData {
@@ -4514,184 +5129,6 @@ enum TokenHourData_orderBy {
   close
 }
 
-input Token_filter {
-  id: ID
-  id_not: ID
-  id_gt: ID
-  id_lt: ID
-  id_gte: ID
-  id_lte: ID
-  id_in: [ID!]
-  id_not_in: [ID!]
-  symbol: String
-  symbol_not: String
-  symbol_gt: String
-  symbol_lt: String
-  symbol_gte: String
-  symbol_lte: String
-  symbol_in: [String!]
-  symbol_not_in: [String!]
-  symbol_contains: String
-  symbol_contains_nocase: String
-  symbol_not_contains: String
-  symbol_not_contains_nocase: String
-  symbol_starts_with: String
-  symbol_starts_with_nocase: String
-  symbol_not_starts_with: String
-  symbol_not_starts_with_nocase: String
-  symbol_ends_with: String
-  symbol_ends_with_nocase: String
-  symbol_not_ends_with: String
-  symbol_not_ends_with_nocase: String
-  name: String
-  name_not: String
-  name_gt: String
-  name_lt: String
-  name_gte: String
-  name_lte: String
-  name_in: [String!]
-  name_not_in: [String!]
-  name_contains: String
-  name_contains_nocase: String
-  name_not_contains: String
-  name_not_contains_nocase: String
-  name_starts_with: String
-  name_starts_with_nocase: String
-  name_not_starts_with: String
-  name_not_starts_with_nocase: String
-  name_ends_with: String
-  name_ends_with_nocase: String
-  name_not_ends_with: String
-  name_not_ends_with_nocase: String
-  decimals: BigInt
-  decimals_not: BigInt
-  decimals_gt: BigInt
-  decimals_lt: BigInt
-  decimals_gte: BigInt
-  decimals_lte: BigInt
-  decimals_in: [BigInt!]
-  decimals_not_in: [BigInt!]
-  totalSupply: BigInt
-  totalSupply_not: BigInt
-  totalSupply_gt: BigInt
-  totalSupply_lt: BigInt
-  totalSupply_gte: BigInt
-  totalSupply_lte: BigInt
-  totalSupply_in: [BigInt!]
-  totalSupply_not_in: [BigInt!]
-  volume: BigDecimal
-  volume_not: BigDecimal
-  volume_gt: BigDecimal
-  volume_lt: BigDecimal
-  volume_gte: BigDecimal
-  volume_lte: BigDecimal
-  volume_in: [BigDecimal!]
-  volume_not_in: [BigDecimal!]
-  volumeUSD: BigDecimal
-  volumeUSD_not: BigDecimal
-  volumeUSD_gt: BigDecimal
-  volumeUSD_lt: BigDecimal
-  volumeUSD_gte: BigDecimal
-  volumeUSD_lte: BigDecimal
-  volumeUSD_in: [BigDecimal!]
-  volumeUSD_not_in: [BigDecimal!]
-  untrackedVolumeUSD: BigDecimal
-  untrackedVolumeUSD_not: BigDecimal
-  untrackedVolumeUSD_gt: BigDecimal
-  untrackedVolumeUSD_lt: BigDecimal
-  untrackedVolumeUSD_gte: BigDecimal
-  untrackedVolumeUSD_lte: BigDecimal
-  untrackedVolumeUSD_in: [BigDecimal!]
-  untrackedVolumeUSD_not_in: [BigDecimal!]
-  feesUSD: BigDecimal
-  feesUSD_not: BigDecimal
-  feesUSD_gt: BigDecimal
-  feesUSD_lt: BigDecimal
-  feesUSD_gte: BigDecimal
-  feesUSD_lte: BigDecimal
-  feesUSD_in: [BigDecimal!]
-  feesUSD_not_in: [BigDecimal!]
-  txCount: BigInt
-  txCount_not: BigInt
-  txCount_gt: BigInt
-  txCount_lt: BigInt
-  txCount_gte: BigInt
-  txCount_lte: BigInt
-  txCount_in: [BigInt!]
-  txCount_not_in: [BigInt!]
-  poolCount: BigInt
-  poolCount_not: BigInt
-  poolCount_gt: BigInt
-  poolCount_lt: BigInt
-  poolCount_gte: BigInt
-  poolCount_lte: BigInt
-  poolCount_in: [BigInt!]
-  poolCount_not_in: [BigInt!]
-  totalValueLocked: BigDecimal
-  totalValueLocked_not: BigDecimal
-  totalValueLocked_gt: BigDecimal
-  totalValueLocked_lt: BigDecimal
-  totalValueLocked_gte: BigDecimal
-  totalValueLocked_lte: BigDecimal
-  totalValueLocked_in: [BigDecimal!]
-  totalValueLocked_not_in: [BigDecimal!]
-  totalValueLockedUSD: BigDecimal
-  totalValueLockedUSD_not: BigDecimal
-  totalValueLockedUSD_gt: BigDecimal
-  totalValueLockedUSD_lt: BigDecimal
-  totalValueLockedUSD_gte: BigDecimal
-  totalValueLockedUSD_lte: BigDecimal
-  totalValueLockedUSD_in: [BigDecimal!]
-  totalValueLockedUSD_not_in: [BigDecimal!]
-  totalValueLockedUSDUntracked: BigDecimal
-  totalValueLockedUSDUntracked_not: BigDecimal
-  totalValueLockedUSDUntracked_gt: BigDecimal
-  totalValueLockedUSDUntracked_lt: BigDecimal
-  totalValueLockedUSDUntracked_gte: BigDecimal
-  totalValueLockedUSDUntracked_lte: BigDecimal
-  totalValueLockedUSDUntracked_in: [BigDecimal!]
-  totalValueLockedUSDUntracked_not_in: [BigDecimal!]
-  derivedETH: BigDecimal
-  derivedETH_not: BigDecimal
-  derivedETH_gt: BigDecimal
-  derivedETH_lt: BigDecimal
-  derivedETH_gte: BigDecimal
-  derivedETH_lte: BigDecimal
-  derivedETH_in: [BigDecimal!]
-  derivedETH_not_in: [BigDecimal!]
-  whitelistPools: [String!]
-  whitelistPools_not: [String!]
-  whitelistPools_contains: [String!]
-  whitelistPools_contains_nocase: [String!]
-  whitelistPools_not_contains: [String!]
-  whitelistPools_not_contains_nocase: [String!]
-  whitelistPools_: Pool_filter
-  tokenDayData_: TokenDayData_filter
-
-  """Filter for the block changed event."""
-  _change_block: BlockChangedFilter
-}
-
-enum Token_orderBy {
-  id
-  symbol
-  name
-  decimals
-  totalSupply
-  volume
-  volumeUSD
-  untrackedVolumeUSD
-  feesUSD
-  txCount
-  poolCount
-  totalValueLocked
-  totalValueLockedUSD
-  totalValueLockedUSDUntracked
-  derivedETH
-  whitelistPools
-  tokenDayData
-}
-
 type Transaction {
   id: ID!
   blockNumber: BigInt!
@@ -4861,32 +5298,3 @@ enum UniswapDayData_orderBy {
   tvlUSD
 }
 
-type _Block_ {
-  """The hash of the block"""
-  hash: Bytes
-
-  """The block number"""
-  number: Int!
-}
-
-"""The type for the top-level _meta field"""
-type _Meta_ {
-  "Information about a specific subgraph block. The hash of the block\nwill be null if the _meta field has a block constraint that asks for\na block number. It will be filled if the _meta field has no block constraint\nand therefore asks for the latest  block\n"
-  block: _Block_!
-
-  """The deployment ID"""
-  deployment: String!
-
-  """If `true`, the subgraph encountered indexing errors at some past block"""
-  hasIndexingErrors: Boolean!
-}
-
-enum _SubgraphErrorPolicy_ {
-  """Data will be returned even if the subgraph has indexing errors"""
-  allow
-
-  """
-  If the subgraph has indexing errors, data will be omitted. The default.
-  """
-  deny
-}

@@ -1,7 +1,6 @@
 import searchIcon from 'assets/svg/search.svg'
 import xIcon from 'assets/svg/x.svg'
 import { useAtom } from 'jotai'
-import { useState } from 'react'
 import styled from 'styled-components/macro'
 
 import { MEDIUM_MEDIA_BREAKPOINT } from '../constants'
@@ -12,33 +11,31 @@ const SearchBarContainer = styled.div`
   display: flex;
   flex: 1;
 `
-const SearchInput = styled.input<{ expanded: boolean }>`
+const SearchInput = styled.input`
   background: no-repeat scroll 7px 7px;
-  background-image: ${({ expanded }) => !expanded && `url(${searchIcon})`};
+  background-image: url(${searchIcon});
   background-size: 20px 20px;
-  background-position: 14px center;
+  background-position: 12px center;
   background-color: 'transparent';
   border-radius: 12px;
   border: 1px solid ${({ theme }) => theme.backgroundOutline};
   height: 100%;
-  width: ${({ expanded }) => (expanded ? '100%' : '52px')};
+  width: min(300px, 100%);
   font-size: 16px;
-  padding-left: 35px;
+  padding-left: 40px;
   color: ${({ theme }) => theme.textPrimary};
-  transition: width 0.75s cubic-bezier(0, 0.795, 0, 1);
 
   :hover {
-    cursor: ${({ expanded }) => !expanded && 'pointer'};
     background-color: ${({ theme }) => theme.backgroundModule};
   }
 
   :focus {
     outline: none;
-    background-color: ${({ theme }) => theme.accentActionSoft};
-    border: none;
+    background-color: ${({ theme }) => theme.backgroundSurface};
+    border: 1.5px solid ${({ theme }) => theme.accentActionSoft};
   }
   ::placeholder {
-    color: ${({ expanded, theme }) => (expanded ? theme.textTertiary : 'transparent')};
+    color: ${({ theme }) => theme.textTertiary};
   }
   ::-webkit-search-cancel-button {
     -webkit-appearance: none;
@@ -58,16 +55,12 @@ const SearchInput = styled.input<{ expanded: boolean }>`
 
 export default function SearchBar() {
   const [filterString, setFilterString] = useAtom(filterStringAtom)
-  const [isExpanded, setExpanded] = useState(false)
   return (
     <SearchBarContainer>
       <SearchInput
-        expanded={isExpanded}
         type="search"
-        placeholder="Search by name or token address"
+        placeholder="Search tokens"
         id="searchBar"
-        onBlur={() => isExpanded && filterString.length === 0 && setExpanded(false)}
-        onFocus={() => setExpanded(true)}
         autoComplete="off"
         value={filterString}
         onChange={({ target: { value } }) => setFilterString(value)}
