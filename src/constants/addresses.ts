@@ -15,10 +15,11 @@ export const MULTICALL_ADDRESS: AddressMap = {
   [SupportedChainId.ARBITRUM_ONE]: '0xadF885960B47eA2CD9B55E6DAc6B42b7Cb2806dB',
   [SupportedChainId.ARBITRUM_RINKEBY]: '0xa501c031958F579dB7676fF1CE78AD305794d579',
 }
-export const V2_FACTORY_ADDRESSES: AddressMap = constructSameAddressMap('0xC0d08cdeE3eB0Ef716C4171caD784554c8D4346B')
+export const V2_FACTORY_ADDRESSES: AddressMap = constructSameAddressMap('0xe829770F38873491c43125C76C5B7451ded73D88')
 
-export const V2_ROUTER_ADDRESS: AddressMap = constructSameAddressMap('0xe50612c8Fa184bA75c63f8531E00c2F9F812cCE9')
-export const V3_ROUTER_ADDRESS: AddressMap = constructSameAddressMap('0xe50612c8Fa184bA75c63f8531E00c2F9F812cCE9', [
+export const RECORDER_ADDRESS = '0xC5A79C11747b729dBc73c5632e012B9c577954FA'
+export const V2_ROUTER_ADDRESS: AddressMap = constructSameAddressMap('0x234A135C71e267E89f4520988dCd4b828CEc4610')
+export const V3_ROUTER_ADDRESS: AddressMap = constructSameAddressMap('0x234A135C71e267E89f4520988dCd4b828CEc4610', [
   SupportedChainId.OPTIMISM,
   SupportedChainId.OPTIMISTIC_KOVAN,
   SupportedChainId.ARBITRUM_ONE,
@@ -26,7 +27,7 @@ export const V3_ROUTER_ADDRESS: AddressMap = constructSameAddressMap('0xe50612c8
   SupportedChainId.POLYGON,
   SupportedChainId.POLYGON_MUMBAI,
 ])
-export const SWAP_ROUTER_ADDRESSES: AddressMap = constructSameAddressMap('0xe50612c8Fa184bA75c63f8531E00c2F9F812cCE9', [
+export const SWAP_ROUTER_ADDRESSES: AddressMap = constructSameAddressMap('0x234A135C71e267E89f4520988dCd4b828CEc4610', [
   SupportedChainId.OPTIMISM,
   SupportedChainId.OPTIMISTIC_KOVAN,
   SupportedChainId.ARBITRUM_ONE,
@@ -63,7 +64,7 @@ export const ARGENT_WALLET_DETECTOR_ADDRESS: AddressMap = {
   [SupportedChainId.MAINNET]: '0xeca4B0bDBf7c55E9b7925919d03CbF8Dc82537E8',
 }
 export const V3_CORE_FACTORY_ADDRESSES: AddressMap = constructSameAddressMap(
-  '0x1dbe4d2Ec5aE1Ebd0128255b711B13ca757765f7',
+  '0x6e3930cc62C837036635c9a66ad4152D2b1e3925',
   [
     SupportedChainId.OPTIMISM,
     SupportedChainId.OPTIMISTIC_KOVAN,
