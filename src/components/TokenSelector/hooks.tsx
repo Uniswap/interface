@@ -2,7 +2,6 @@ import { Currency } from '@uniswap/sdk-core'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useAppSelector } from 'src/app/hooks'
 import { ChainId } from 'src/constants/chains'
-import { EMPTY_ARRAY } from 'src/constants/misc'
 import { COMMON_BASES } from 'src/constants/tokens'
 import { selectFavoriteTokensSet } from 'src/features/favorites/selectors'
 import { useAllCurrencies } from 'src/features/tokens/useTokens'
@@ -30,14 +29,11 @@ export function useCommonBases(chainFilter: ChainId | null): Currency[] {
   const allTokens = useAllCurrencies()
 
   return useMemo(() => {
-    if (!chainFilter) {
-      return EMPTY_ARRAY
-    }
-
-    const baseCurrencies = COMMON_BASES[chainFilter] ?? []
+    // If no chain filter is selected (All networks), use mainnet common bases
+    const baseCurrencies = COMMON_BASES[chainFilter ?? ChainId.Mainnet] ?? []
     return baseCurrencies
       .map((currency) => {
-        return allTokens[chainFilter]?.[currencyId(currency)]
+        return allTokens[chainFilter ?? ChainId.Mainnet]?.[currencyId(currency)]
       })
       .filter(Boolean) as Currency[]
   }, [allTokens, chainFilter])
