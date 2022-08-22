@@ -260,8 +260,8 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
     )
   }
 
-  const tokenName = tokenDetailData.name ?? 'Name not found'
-  const tokenSymbol = tokenDetailData.tokens?.[0].symbol ?? 'Symbol not found'
+  const tokenName = tokenDetailData.name
+  const tokenSymbol = tokenDetailData.tokens?.[0].symbol?.toUpperCase()
 
   return (
     <TopArea>
@@ -272,7 +272,8 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
         <TokenInfoContainer>
           <TokenNameCell>
             <CurrencyLogo currency={currency} size={'32px'} />
-            {tokenName} <TokenSymbol>{tokenSymbol}</TokenSymbol>
+            {tokenName ?? <Trans>Name not found</Trans>}
+            <TokenSymbol>{tokenSymbol ?? <Trans>Symbol not found</Trans>}</TokenSymbol>
             {!warning && <VerifiedIcon size="20px" />}
             {networkBadgebackgroundColor && (
               <NetworkBadge networkColor={chainInfo?.color} backgroundColor={networkBadgebackgroundColor}>
@@ -281,7 +282,7 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
             )}
           </TokenNameCell>
           <TokenActions>
-            <ShareButton tokenName={tokenName} tokenSymbol={tokenSymbol} />
+            {tokenName && tokenSymbol && <ShareButton tokenName={tokenName} tokenSymbol={tokenSymbol} />}
             <ClickFavorited onClick={toggleFavorite}>
               <FavoriteIcon isFavorited={isFavorited} />
             </ClickFavorited>
