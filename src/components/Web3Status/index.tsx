@@ -4,6 +4,8 @@ import { useWeb3React } from '@web3-react/core'
 import { ElementName, Event, EventName } from 'components/AmplitudeAnalytics/constants'
 import { TraceEvent } from 'components/AmplitudeAnalytics/TraceEvent'
 import { getConnection } from 'connection/utils'
+import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
+import { useWalletFlag, WalletVariant } from 'featureFlags/flags/wallet'
 import { getIsValidSwapQuote } from 'pages/Swap'
 import { darken } from 'polished'
 import { useMemo } from 'react'
@@ -13,7 +15,7 @@ import { useDerivedSwapInfo } from 'state/swap/hooks'
 import styled, { css } from 'styled-components/macro'
 
 import { useHasSocks } from '../../hooks/useSocksBalance'
-import { useToggleWalletModal } from '../../state/application/hooks'
+import { useToggleWalletDropdown, useToggleWalletModal } from '../../state/application/hooks'
 import { isTransactionRecent, useAllTransactions } from '../../state/transactions/hooks'
 import { TransactionDetails } from '../../state/transactions/types'
 import { shortenAddress } from '../../utils'
@@ -133,6 +135,11 @@ function Web3StatusInner() {
     inputError: swapInputError,
   } = useDerivedSwapInfo()
   const validSwapQuote = getIsValidSwapQuote(trade, tradeState, swapInputError)
+  const walletFlag = useWalletFlag()
+  const redesignFlag = useRedesignFlag()
+  const flagEnabled = redesignFlag === RedesignVariant.Enabled || walletFlag === WalletVariant.Enabled
+  const toggleWalletDropdown = useToggleWalletDropdown()
+  const toggleWalletModal = useToggleWalletModal()
 
   const error = useAppSelector((state) => state.connection.errorByConnectionType[getConnection(connector).type])
 
@@ -147,13 +154,13 @@ function Web3StatusInner() {
 
   const hasPendingTransactions = !!pending.length
   const hasSocks = useHasSocks()
-  const toggleWalletModal = useToggleWalletModal()
+  const toggleWallet = flagEnabled ? toggleWalletDropdown : toggleWalletModal
 
   if (!chainId) {
     return null
   } else if (error) {
     return (
-      <Web3StatusError onClick={toggleWalletModal}>
+      <Web3StatusError onClick={toggleWallet}>
         <NetworkIcon />
         <Text>
           <Trans>Error</Trans>
@@ -162,11 +169,7 @@ function Web3StatusInner() {
     )
   } else if (account) {
     return (
-      <Web3StatusConnected
-        data-testid="web3-status-connected"
-        onClick={toggleWalletModal}
-        pending={hasPendingTransactions}
-      >
+      <Web3StatusConnected data-testid="web3-status-connected" onClick={toggleWallet} pending={hasPendingTransactions}>
         {hasPendingTransactions ? (
           <RowBetween>
             <Text>
@@ -191,7 +194,7 @@ function Web3StatusInner() {
         properties={{ received_swap_quote: validSwapQuote }}
         element={ElementName.CONNECT_WALLET_BUTTON}
       >
-        <Web3StatusConnect onClick={toggleWalletModal} faded={!account}>
+        <Web3StatusConnect onClick={toggleWallet} faded={!account}>
           <Text>
             <Trans>Connect Wallet</Trans>
           </Text>

@@ -1,11 +1,10 @@
 import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
 import { useWalletFlag, WalletVariant } from 'featureFlags/flags/wallet'
-import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { useMemo, useRef } from 'react'
 import { useState } from 'react'
 import styled from 'styled-components/macro'
 
-import { useModalIsOpen, useToggleWalletModal } from '../../state/application/hooks'
+import { useModalIsOpen } from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/reducer'
 import DefaultMenu from './DefaultMenu'
 import LanguageMenu from './LanguageMenu'
@@ -39,16 +38,18 @@ const WalletDropdownWrapper = styled.div`
 const WalletDropdown = () => {
   const [menu, setMenu] = useState<MenuState>(MenuState.DEFAULT)
   const walletFlag = useWalletFlag()
-  const walletModalOpen = useModalIsOpen(ApplicationModal.WALLET)
-  const toggleWalletModal = useToggleWalletModal()
   const redesignFlag = useRedesignFlag()
+  const walletModalOpen = useModalIsOpen(ApplicationModal.WALLET_DROPDOWN)
+
   const isOpen = useMemo(
     () => (redesignFlag === RedesignVariant.Enabled || walletFlag === WalletVariant.Enabled) && walletModalOpen,
     [redesignFlag, walletFlag, walletModalOpen]
   )
 
   const ref = useRef<HTMLDivElement>(null)
-  useOnClickOutside(ref, isOpen ? toggleWalletModal : undefined)
+  // import { useCloseModal } from '../../state/application/hooks'
+  // const closeModal = useCloseModal(ApplicationModal.WALLET_DROPDOWN)
+  // useOnClickOutside(ref, isOpen ? closeModal : undefined)
 
   return (
     <>
