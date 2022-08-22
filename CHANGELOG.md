@@ -1,3 +1,14 @@
+## 5.4.11 (August 17, 2022)
+
+### Feat
+* Support Brave wallet ([#1221](https://github.com/KyberNetwork/kyberswap-interface/pull/1221))
+* feat: add banner for polygon lido farming ([#1256](https://github.com/KyberNetwork/kyberswap-interface/pull/1256))
+
+### Fix
+* fix(trending-token-banner): avoid words from breaking at white spaces ([#1251](https://github.com/KyberNetwork/kyberswap-interface/pull/1251))
+* fix bug popup noti overlap + import token ([#1255](https://github.com/KyberNetwork/kyberswap-interface/pull/1255))
+* fix: hide ATH pro live chart ([#1254](https://github.com/KyberNetwork/kyberswap-interface/pull/1254))
+
 ## 5.4.4 (August 10, 2022)
 
 ### Feat
