@@ -17,16 +17,12 @@ interface IAmount {
 }
 
 export type TokenData = {
-  [address: string]: {
-    name: string | null | undefined
-    address: string | null | undefined
-    chain: Chain | undefined
-    symbol: string | null | undefined
-    price: IAmount | null | undefined
-    marketCap: IAmount | null | undefined
-    volume: Record<TimePeriod, IAmount | null | undefined>
-    isFavorite: boolean
-  }
+  name: string | null | undefined
+  chain: Chain | undefined
+  symbol: string | null | undefined
+  price: IAmount | null | undefined
+  marketCap: IAmount | null | undefined
+  volume: Record<TimePeriod, IAmount | null | undefined>
 }
 
 interface UseTopTokensResult {

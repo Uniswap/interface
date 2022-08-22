@@ -4,7 +4,7 @@ import { useLazyLoadQuery } from 'react-relay'
 
 import type { TopTokenQuery as TopTokenQueryType } from './__generated__/TopTokenQuery.graphql'
 
-export function useTopTokenQuery(page: number): TokenData {
+export function useTopTokenQuery(page: number) {
   const topTokenData = useLazyLoadQuery<TopTokenQueryType>(
     graphql`
       query TopTokenQuery($page: Int!) {
@@ -56,9 +56,11 @@ export function useTopTokenQuery(page: number): TokenData {
       page,
     }
   )
-  const topTokens: Record<string, TokenData> =
-    topTokenData.topTokenProjects?.map((token) => ({
-      [token?.tokens?.[0].address ?? '']: {
+  let topTokens: Record<string, TokenData>
+
+  topTokenData.topTokenProjects?.forEach(
+    (token) =>
+      (topTokens[token?.tokens?.[0].address ?? ''] = {
         name: token?.name,
         chain: token?.tokens?.[0].chain,
         symbol: token?.tokens?.[0].symbol,
@@ -72,7 +74,7 @@ export function useTopTokenQuery(page: number): TokenData {
           [TimePeriod.YEAR]: token?.markets?.[0]?.volume1Y,
           [TimePeriod.ALL]: token?.markets?.[0]?.volume1Y, // todo: figure out all
         },
-      },
-    })) ?? []
+      })
+  )
   return topTokens
 }
