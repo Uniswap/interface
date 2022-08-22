@@ -1,8 +1,5 @@
-import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
-import { useWalletFlag, WalletVariant } from 'featureFlags/flags/wallet'
-import { useIsDesktopView } from 'hooks/useWindowSize'
-import { useMemo, useState } from 'react'
-import styled, { css } from 'styled-components/macro'
+import { useState } from 'react'
+import styled from 'styled-components/macro'
 
 import { useModalIsOpen } from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/reducer'
@@ -29,38 +26,29 @@ export enum MenuState {
   TRANSACTIONS = 'TRANSACTIONS',
 }
 
-const WalletDesktop = css`
-  top: 65px;
-  right: 20px;
-`
-
-const WalletMobile = css`
-  left: 50%;
-  bottom: 45px;
-  transform: translateX(-50%);
-`
-
-const WalletDropdownWrapper = styled.div<{ isMobile: boolean }>`
+const WalletDropdownWrapper = styled.div`
   position: absolute;
-  ${({ isMobile }) => (isMobile ? WalletMobile : WalletDesktop)};
+
+  @media only screen and (min-width: 1280px) {
+    top: 65px;
+    right: 20px;
+  }
+
+  @media only screen and (max-width: 1280px) {
+    left: 50%;
+    bottom: 45px;
+    transform: translateX(-50%);
+  }
 `
 
 const WalletDropdown = () => {
   const [menu, setMenu] = useState<MenuState>(MenuState.DEFAULT)
-  const walletFlag = useWalletFlag()
-  const redesignFlag = useRedesignFlag()
   const walletDropdownOpen = useModalIsOpen(ApplicationModal.WALLET_DROPDOWN)
-  const isMobile = !useIsDesktopView()
-
-  const isOpen = useMemo(
-    () => (redesignFlag === RedesignVariant.Enabled || walletFlag === WalletVariant.Enabled) && walletDropdownOpen,
-    [redesignFlag, walletFlag, walletDropdownOpen]
-  )
 
   return (
     <>
-      {isOpen && (
-        <WalletDropdownWrapper isMobile={isMobile}>
+      {walletDropdownOpen && (
+        <WalletDropdownWrapper>
           <WalletWrapper>
             {menu === MenuState.TRANSACTIONS && <TransactionHistoryMenu onClose={() => setMenu(MenuState.DEFAULT)} />}
             {menu === MenuState.LANGUAGE && <LanguageMenu onClose={() => setMenu(MenuState.DEFAULT)} />}

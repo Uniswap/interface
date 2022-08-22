@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 const isClient = typeof window === 'object'
 
@@ -28,9 +28,4 @@ export function useWindowSize() {
   }, [])
 
   return windowSize
-}
-
-export function useIsDesktopView() {
-  const { width: windowWidth } = useWindowSize()
-  return useMemo(() => !!(windowWidth && windowWidth > 1260), [windowWidth])
 }

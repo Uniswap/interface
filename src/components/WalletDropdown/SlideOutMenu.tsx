@@ -46,6 +46,8 @@ const BackSection = styled.div`
   padding: 0 16px 16px 16px;
   color: ${({ theme }) => theme.textSecondary};
   cursor: default;
+  display: flex;
+  justify-content: space-between;
 `
 
 const BackSectionContainer = styled.div`
@@ -55,7 +57,7 @@ const BackSectionContainer = styled.div`
   width: 100%;
 `
 
-const ChildComponentsWrap = styled.div`
+const ChildrenContainer = styled.div`
   margin-top: 40px;
 `
 
@@ -79,6 +81,6 @@ export const SlideOutMenu = ({
       </BackSectionContainer>
     </BackSection>
 
-    <ChildComponentsWrap>{children}</ChildComponentsWrap>
+    <ChildrenContainer>{children}</ChildrenContainer>
   </Menu>
 )

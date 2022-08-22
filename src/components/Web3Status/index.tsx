@@ -5,8 +5,7 @@ import { ElementName, Event, EventName } from 'components/AmplitudeAnalytics/con
 import { TraceEvent } from 'components/AmplitudeAnalytics/TraceEvent'
 import WalletDropdown from 'components/WalletDropdown'
 import { getConnection } from 'connection/utils'
-import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
-import { useWalletFlag, WalletVariant } from 'featureFlags/flags/wallet'
+import { NavBarVariant, useNavBarFlag } from 'featureFlags/flags/navBar'
 import { getIsValidSwapQuote } from 'pages/Swap'
 import { darken } from 'polished'
 import { useMemo, useRef } from 'react'
@@ -139,9 +138,7 @@ function Web3StatusInner() {
     inputError: swapInputError,
   } = useDerivedSwapInfo()
   const validSwapQuote = getIsValidSwapQuote(trade, tradeState, swapInputError)
-  const walletFlag = useWalletFlag()
-  const redesignFlag = useRedesignFlag()
-  const flagEnabled = redesignFlag === RedesignVariant.Enabled || walletFlag === WalletVariant.Enabled
+  const navbarFlag = useNavBarFlag()
   const toggleWalletDropdown = useToggleWalletDropdown()
   const toggleWalletModal = useToggleWalletModal()
 
@@ -158,7 +155,7 @@ function Web3StatusInner() {
 
   const hasPendingTransactions = !!pending.length
   const hasSocks = useHasSocks()
-  const toggleWallet = flagEnabled ? toggleWalletDropdown : toggleWalletModal
+  const toggleWallet = navbarFlag === NavBarVariant.Enabled ? toggleWalletDropdown : toggleWalletModal
 
   if (!chainId) {
     return null
@@ -210,13 +207,9 @@ function Web3StatusInner() {
 
 const useIsOpen = () => {
   const walletDropdownOpen = useModalIsOpen(ApplicationModal.WALLET_DROPDOWN)
-  const walletFlag = useWalletFlag()
-  const redesignFlag = useRedesignFlag()
+  const navbarFlag = useNavBarFlag()
 
-  return useMemo(
-    () => (redesignFlag === RedesignVariant.Enabled || walletFlag === WalletVariant.Enabled) && walletDropdownOpen,
-    [redesignFlag, walletFlag, walletDropdownOpen]
-  )
+  return useMemo(() => navbarFlag === NavBarVariant.Enabled && walletDropdownOpen, [navbarFlag, walletDropdownOpen])
 }
 
 export default function Web3Status() {
