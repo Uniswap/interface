@@ -63,25 +63,25 @@ const getAllKeysOfNestedObject = (obj: any, prefix = ''): string[] => {
 
 describe('Redux state migrations', () => {
   it('is able to perform all migrations starting from the initial schema', async () => {
-    const intialSchemaStub = {
+    const initialSchemaStub = {
       ...initialSchema,
       _persist: { version: -1, rehydrated: false },
     }
 
     const migrate = createMigrate(migrations)
-    const migratedSchema = await migrate(intialSchemaStub, persistConfig.version)
+    const migratedSchema = await migrate(initialSchemaStub, persistConfig.version)
     expect(typeof migratedSchema).toBe('object')
   })
 
   // If this test fails then it's likely a required property was added to the Redux state but a migration was not defined
   it('migrates all the properties correctly', async () => {
-    const intialSchemaStub = {
+    const initialSchemaStub = {
       ...initialSchema,
       _persist: { version: -1, rehydrated: false },
     }
 
     const migrate = createMigrate(migrations)
-    const migratedSchema = await migrate(intialSchemaStub, persistConfig.version)
+    const migratedSchema = await migrate(initialSchemaStub, persistConfig.version)
 
     // Add new slices here!
     const initialState = {
@@ -181,7 +181,7 @@ describe('Redux state migrations', () => {
       hash: '0x123',
     }
 
-    const intialSchemaStub = {
+    const initialSchemaStub = {
       ...initialSchema,
       transactions: {
         byChainId: {
@@ -199,7 +199,7 @@ describe('Redux state migrations', () => {
       },
     }
 
-    const newSchema = migrations[0](intialSchemaStub)
+    const newSchema = migrations[0](initialSchemaStub)
     expect(newSchema.transactions[ChainId.Mainnet]).toBeUndefined()
     expect(newSchema.transactions.lastTxHistoryUpdate).toBeUndefined()
 

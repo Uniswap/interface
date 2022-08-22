@@ -90,7 +90,7 @@ export interface SendNFTNotification extends TransferNFTNotificationBase {
   recipient: Address
 }
 
-export interface RecieveNFTNotification extends TransferNFTNotificationBase {
+export interface ReceiveNFTNotification extends TransferNFTNotificationBase {
   txType: TransactionType.Receive
   sender: Address
 }
@@ -103,7 +103,7 @@ export type TransferCurrencyTxNotification =
   | SendCurrencyTxNotifcation
   | ReceiveCurrencyTxNotifcation
 
-export type TransferNFTTxNotification = SendNFTNotification | RecieveNFTNotification
+export type TransferNFTTxNotification = SendNFTNotification | ReceiveNFTNotification
 
 export type TransactionNotification =
   | ApproveTxNotification

@@ -176,7 +176,7 @@ export function useAllFormattedTransactions(
         } else if (item.msTimestampAdded > msTimestampCutoffYear) {
           accum[3].push(item)
         } else {
-          accum[4].push
+          accum[4].push(item)
         }
         return accum
       },
