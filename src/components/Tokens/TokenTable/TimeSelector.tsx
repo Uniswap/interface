@@ -1,3 +1,4 @@
+import { TimePeriod } from 'hooks/useExplorePageQuery'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { useAtom } from 'jotai'
 import { useRef } from 'react'
@@ -8,7 +9,24 @@ import styled, { useTheme } from 'styled-components/macro'
 
 import { MOBILE_MEDIA_BREAKPOINT, SMALL_MEDIA_BREAKPOINT } from '../constants'
 import { filterTimeAtom } from '../state'
-import { TIME_DISPLAYS } from '../TokenDetails/PriceChart'
+
+export const DISPLAYS: Record<TimePeriod, string> = {
+  [TimePeriod.HOUR]: '1H',
+  [TimePeriod.DAY]: '1D',
+  [TimePeriod.WEEK]: '1W',
+  [TimePeriod.MONTH]: '1M',
+  [TimePeriod.YEAR]: '1Y',
+  [TimePeriod.ALL]: 'All',
+}
+
+export const ORDERED_TIMES = [
+  TimePeriod.HOUR,
+  TimePeriod.DAY,
+  TimePeriod.WEEK,
+  TimePeriod.MONTH,
+  TimePeriod.YEAR,
+  TimePeriod.ALL,
+]
 
 const InternalMenuItem = styled.div`
   flex: 1;
@@ -126,7 +144,7 @@ export default function TimeSelector() {
     <StyledMenu ref={node}>
       <StyledMenuButton onClick={toggleMenu} aria-label={`timeSelector`} open={open}>
         <StyledMenuContent>
-          {TIME_DISPLAYS[activeTime][1]}
+          {DISPLAYS[activeTime]}
           <Chevron open={open}>
             {open ? <ChevronUp size={15} viewBox="0 0 24 20" /> : <ChevronDown size={15} viewBox="0 0 24 20" />}
           </Chevron>
@@ -134,16 +152,16 @@ export default function TimeSelector() {
       </StyledMenuButton>
       {open && (
         <MenuTimeFlyout>
-          {TIME_DISPLAYS.map((time) => (
+          {ORDERED_TIMES.map((time) => (
             <InternalLinkMenuItem
-              key={time[1]}
+              key={DISPLAYS[time]}
               onClick={() => {
-                setTime(time[0])
+                setTime(time)
                 toggleMenu()
               }}
             >
-              <div>{time[1]}</div>
-              {time[0] === activeTime && <Check color={theme.accentAction} size={16} />}
+              <div>{DISPLAYS[time]}</div>
+              {time === activeTime && <Check color={theme.accentAction} size={16} />}
             </InternalLinkMenuItem>
           ))}
         </MenuTimeFlyout>
