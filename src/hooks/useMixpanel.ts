@@ -823,7 +823,7 @@ export default function useMixpanel(trade?: Aggregator | undefined, currencies?:
             if (!res.data?.transaction?.mints || res.data.transaction.mints.length === 0) break
           }
           const { amount0, amount1, amountUSD } = res.data.transaction.mints[0]
-          mixpanelHandler(MIXPANEL_TYPE.ELASTIC_CREATE_POOL_COMPLETED, {
+          mixpanelHandler(MIXPANEL_TYPE.CREATE_POOL_COMPLETED, {
             token_1: transaction.arbitrary.token_1,
             token_2: transaction.arbitrary.token_2,
             amp: transaction.arbitrary.amp,

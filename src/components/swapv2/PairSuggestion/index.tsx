@@ -141,7 +141,7 @@ export default forwardRef<PairSuggestionHandle, Props>(function PairSuggestionIn
       .finally(() => {
         refLoading.current = false
       })
-    mixpanelHandler(MIXPANEL_TYPE.TAS_LIKE_PAIR, { token_1: item.tokenIn, token_2: item.tokenOut })
+    mixpanelHandler(MIXPANEL_TYPE.TAS_LIKE_PAIR, { token_1: item.tokenInSymbol, token_2: item.tokenOutSymbol })
   }
 
   const removeFavorite = (item: SuggestionPairData) => {
@@ -157,7 +157,7 @@ export default forwardRef<PairSuggestionHandle, Props>(function PairSuggestionIn
       .finally(() => {
         refLoading.current = false
       })
-    mixpanelHandler(MIXPANEL_TYPE.TAS_DISLIKE_PAIR, { token_1: item.tokenIn, token_2: item.tokenOut })
+    mixpanelHandler(MIXPANEL_TYPE.TAS_DISLIKE_PAIR, { token_1: item.tokenInSymbol, token_2: item.tokenOutSymbol })
   }
 
   const onClickStar = (item: SuggestionPairData) => {
