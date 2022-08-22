@@ -23,7 +23,8 @@
     "lint": "yarn eslint .",
     "test": "craco test --coverage",
     "cypress:open": "cypress open --browser chrome --e2e",
-    "cypress:run": "cypress run --browser chrome --e2e"
+    "cypress:run": "cypress run --browser chrome --e2e",
+    "postinstall": "patch-package"
   },
   "jest": {
     "collectCoverageFrom": [
@@ -104,6 +105,8 @@
     "eslint-plugin-unused-imports": "^2.0.0",
     "jest-styled-components": "^7.0.8",
     "ms.macro": "^2.0.0",
+    "patch-package": "^6.4.7",
+    "postinstall-postinstall": "^2.1.0",
     "prettier": "^2.7.1",
     "react-scripts": "^4.0.3",
     "relay-compiler": "^14.1.0",
