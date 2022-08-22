@@ -71,10 +71,6 @@ import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { computeRealizedPriceImpact, warningSeverity } from '../../utils/prices'
 import { supportedChainId } from '../../utils/supportedChainId'
 
-const AlertWrapper = styled.div`
-  max-width: 460px;
-  width: 100%;
-`
 const ArrowContainer = styled.div`
   display: inline-block;
   margin-left: 6%;
@@ -820,9 +816,7 @@ export default function Swap() {
               </BottomWrapper>
             </AutoColumn>
           </SwapWrapper>
-          <AlertWrapper>
-            <NetworkAlert />
-          </AlertWrapper>
+          <NetworkAlert />
         </PageWrapper>
         <SwitchLocaleLink />
         {!swapIsUnsupported ? null : (
