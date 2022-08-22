@@ -176,12 +176,14 @@ export const MobileSideBar = () => {
               </Column>
               <Seperator />
               <Column gap="4">
-                <ExtraLinkRow to="/nft/sell" close={toggleOpen}>
-                  <Icon>
-                    <ThinTagIconMobile width={24} height={24} />
-                  </Icon>
-                  Sell NFTs
-                </ExtraLinkRow>
+                {nftFlag === NftVariant.Enabled && (
+                  <ExtraLinkRow to="/nft/sell" close={toggleOpen}>
+                    <Icon>
+                      <ThinTagIconMobile width={24} height={24} />
+                    </Icon>
+                    Sell NFTs
+                  </ExtraLinkRow>
+                )}
                 <ExtraLinkRow to="/vote" close={toggleOpen}>
                   <Icon>
                     <GovernanceIconMobile width={24} height={24} />
