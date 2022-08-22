@@ -15,10 +15,11 @@ import { AutoColumn } from 'components/Column'
 import { AutoRow } from 'components/Row'
 import { getConnection, getConnectionName, getIsCoinbaseWallet, getIsInjected, getIsMetaMask } from 'connection/utils'
 import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
+import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import useCurrencyBalance, { useTokenBalance } from 'lib/hooks/useCurrencyBalance'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { ArrowLeft } from 'react-feather'
 import { updateConnectionError } from 'state/connection/reducer'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
@@ -202,6 +203,9 @@ export default function WalletModal({
 
   const walletModalOpen = useModalIsOpen(ApplicationModal.WALLET)
   const toggleWalletModal = useToggleWalletModal()
+
+  const node = useRef<HTMLDivElement | null>(null)
+  useOnClickOutside(node, walletModalOpen ? toggleWalletModal : undefined)
 
   const native = useNativeCurrency()
   const usdcBalance = useTokenBalance(account, TOKENS_TO_TRACK.USDC)
@@ -409,26 +413,28 @@ export default function WalletModal({
     }
 
     return (
-      <UpperSection>
-        <CloseIcon onClick={toggleWalletModal}>
-          <CloseColor />
-        </CloseIcon>
-        {headerRow}
-        <ContentWrapper>
-          <AutoColumn gap="16px">
-            {walletView === WALLET_VIEWS.PENDING && pendingConnector && (
-              <PendingView
-                openOptions={openOptions}
-                connector={pendingConnector}
-                error={!!pendingError}
-                tryActivation={tryActivation}
-              />
-            )}
-            {walletView !== WALLET_VIEWS.PENDING && <OptionGrid data-testid="option-grid">{getOptions()}</OptionGrid>}
-            {!pendingError && getTermsOfService(redesignFlagEnabled)}
-          </AutoColumn>
-        </ContentWrapper>
-      </UpperSection>
+      <div ref={node}>
+        <UpperSection>
+          <CloseIcon onClick={toggleWalletModal}>
+            <CloseColor />
+          </CloseIcon>
+          {headerRow}
+          <ContentWrapper>
+            <AutoColumn gap="16px">
+              {walletView === WALLET_VIEWS.PENDING && pendingConnector && (
+                <PendingView
+                  openOptions={openOptions}
+                  connector={pendingConnector}
+                  error={!!pendingError}
+                  tryActivation={tryActivation}
+                />
+              )}
+              {walletView !== WALLET_VIEWS.PENDING && <OptionGrid data-testid="option-grid">{getOptions()}</OptionGrid>}
+              {!pendingError && getTermsOfService(redesignFlagEnabled)}
+            </AutoColumn>
+          </ContentWrapper>
+        </UpperSection>
+      </div>
     )
   }
 
