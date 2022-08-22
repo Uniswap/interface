@@ -43,11 +43,9 @@ const BackSection = styled.div`
   position: absolute;
   background-color: ${({ theme }) => theme.backgroundSurface};
   width: 100%;
-  display: flex;
   padding: 0 16px 16px 16px;
   color: ${({ theme }) => theme.textSecondary};
   cursor: default;
-  text-decoration: none;
 `
 
 const BackSectionContainer = styled.div`
