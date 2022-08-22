@@ -38,10 +38,6 @@ import { DATA_EMPTY, getDelta, PricePoint } from '../TokenDetails/PriceChart'
 import { Category, SortDirection } from '../types'
 import { DISPLAYS } from './TimeSelector'
 
-const ArrowCell = styled.div`
-  padding-left: 2px;
-  display: flex;
-`
 const Cell = styled.div`
   display: flex;
   align-items: center;
