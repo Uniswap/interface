@@ -1,4 +1,5 @@
 import { Trans } from '@lingui/macro'
+import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { Connector } from '@web3-react/types'
 import { sendAnalyticsEvent, user } from 'components/AmplitudeAnalytics'
@@ -147,6 +148,32 @@ const sendAnalyticsEventAndUserInfo = (
   user.postInsert(CUSTOM_USER_PROPERTIES.ALL_WALLET_ADDRESSES_CONNECTED, account)
 }
 
+function useLogToken(
+  tokenBalanceUsdValue: string | undefined,
+  tokenBalance: CurrencyAmount<Token | Currency> | undefined,
+  shouldLogTokenBalance: boolean,
+  setShouldLogTokenBalance: (shouldLog: boolean) => void,
+  tokenAmountProperty: string,
+  tokenUsdBalanceProperty: string
+) {
+  useEffect(() => {
+    if (shouldLogTokenBalance && tokenBalance && tokenBalanceUsdValue) {
+      const tokenBalanceUsd = tokenBalanceUsdValue ? parseFloat(tokenBalanceUsdValue) : 0
+      const tokenBalanceAmount = formatToDecimal(tokenBalance, tokenBalance.currency.decimals)
+      user.set(tokenAmountProperty, tokenBalanceAmount)
+      user.set(tokenUsdBalanceProperty, tokenBalanceUsd)
+      setShouldLogTokenBalance(false)
+    }
+  }, [
+    tokenBalanceUsdValue,
+    tokenBalance,
+    shouldLogTokenBalance,
+    setShouldLogTokenBalance,
+    tokenAmountProperty,
+    tokenUsdBalanceProperty,
+  ])
+}
+
 export default function WalletModal({
   pendingTransactions,
   confirmedTransactions,
@@ -218,39 +245,30 @@ export default function WalletModal({
   }, [connectedWallets, addWalletToConnectedWallets, lastActiveWalletAddress, account, connector, chainId])
 
   // Send wallet balances info once it becomes available.
-  useEffect(() => {
-    if (shouldLogNativeBalance && nativeCurrencyBalanceUsdValue && nativeCurrencyBalance) {
-      const nativeCurrencyBalanceUsd =
-        native && nativeCurrencyBalanceUsdValue ? parseFloat(nativeCurrencyBalanceUsdValue) : 0
-      const nativeCurrencyBalanceAmount = formatToDecimal(
-        nativeCurrencyBalance,
-        nativeCurrencyBalance.currency.decimals
-      )
-      user.set(CUSTOM_USER_PROPERTIES.WALLET_NATIVE_CURRENCY_AMOUNT, nativeCurrencyBalanceAmount)
-      user.set(CUSTOM_USER_PROPERTIES.WALLET_NATIVE_CURRENCY_BALANCE_USD, nativeCurrencyBalanceUsd)
-      setShouldLogNativeBalance(false)
-    }
-  }, [nativeCurrencyBalanceUsdValue, nativeCurrencyBalance, shouldLogNativeBalance, setShouldLogNativeBalance, native])
-
-  useEffect(() => {
-    if (shouldLogUsdcBalance && usdcBalance && usdcBalanceUsdValue) {
-      const usdcBalanceUsd = usdcBalanceUsdValue ? parseFloat(usdcBalanceUsdValue) : 0
-      const usdcBalanceAmount = formatToDecimal(usdcBalance, usdcBalance.currency.decimals)
-      user.set(CUSTOM_USER_PROPERTIES.WALLET_USDC_AMOUNT, usdcBalanceAmount)
-      user.set(CUSTOM_USER_PROPERTIES.WALLET_USDC_BALANCE_USD, usdcBalanceUsd)
-      setShouldLogUsdcBalance(false)
-    }
-  }, [usdcBalanceUsdValue, usdcBalance, shouldLogUsdcBalance, setShouldLogUsdcBalance])
-
-  useEffect(() => {
-    if (shouldLogWethBalance && wethBalance && wethBalanceUsdValue) {
-      const wethBalanceUsd = wethBalanceUsdValue ? parseFloat(wethBalanceUsdValue) : 0
-      const wethBalanceAmount = formatToDecimal(wethBalance, wethBalance.currency.decimals)
-      user.set(CUSTOM_USER_PROPERTIES.WALLET_WETH_AMOUNT, wethBalanceAmount)
-      user.set(CUSTOM_USER_PROPERTIES.WALLET_USDC_BALANCE_USD, wethBalanceUsd)
-      setShouldLogWethBalance(false)
-    }
-  }, [wethBalanceUsdValue, wethBalance, shouldLogWethBalance, setShouldLogWethBalance])
+  useLogToken(
+    nativeCurrencyBalanceUsdValue,
+    nativeCurrencyBalance,
+    shouldLogNativeBalance,
+    setShouldLogNativeBalance,
+    CUSTOM_USER_PROPERTIES.WALLET_NATIVE_CURRENCY_AMOUNT,
+    CUSTOM_USER_PROPERTIES.WALLET_NATIVE_CURRENCY_BALANCE_USD
+  )
+  useLogToken(
+    usdcBalanceUsdValue,
+    usdcBalance,
+    shouldLogUsdcBalance,
+    setShouldLogUsdcBalance,
+    CUSTOM_USER_PROPERTIES.WALLET_USDC_AMOUNT,
+    CUSTOM_USER_PROPERTIES.WALLET_USDC_BALANCE_USD
+  )
+  useLogToken(
+    wethBalanceUsdValue,
+    wethBalance,
+    shouldLogWethBalance,
+    setShouldLogWethBalance,
+    CUSTOM_USER_PROPERTIES.WALLET_WETH_AMOUNT,
+    CUSTOM_USER_PROPERTIES.WALLET_USDC_BALANCE_USD
+  )
 
   const tryActivation = useCallback(
     async (connector: Connector) => {
