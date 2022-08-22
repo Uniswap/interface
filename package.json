@@ -229,7 +229,8 @@
     "zustand": "^4.0.0-rc.1"
   },
   "engines": {
-    "npm" : "8",
-    "node" : "14"
+    "npm": "please-use-yarn",
+    "node": "14",
+    "yarn": ">=1.22"
   }
 }
