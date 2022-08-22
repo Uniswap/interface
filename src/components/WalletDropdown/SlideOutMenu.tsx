@@ -3,13 +3,7 @@ import styled from 'styled-components/macro'
 
 const BackSection = styled.div`
   position: relative;
-  display: flex;
-  padding: 0 16px;
-  color: ${({ theme }) => theme.textSecondary};
-  cursor: default;
-  :hover {
-    text-decoration: none;
-  }
+  width: 100%;
 `
 
 const Menu = styled.div`
@@ -24,6 +18,7 @@ const Header = styled.span`
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
+  font-size: 16px;
 `
 
 const ClearAll = styled.div`
@@ -46,6 +41,22 @@ const StyledChevron = styled(ChevronLeft)`
   }
 `
 
+const BackSectionTwo = styled.div`
+  position: absolute;
+  background-color: ${({ theme }) => theme.backgroundSurface};
+  width: 100%;
+  display: flex;
+  padding: 0 16px;
+  padding-bottom: 16px;
+  color: ${({ theme }) => theme.textSecondary};
+  cursor: default;
+  text-decoration: none;
+`
+
+const ChildComponentsWrap = styled.div`
+  margin-top: 44px;
+`
+
 export const SlideOutMenu = ({
   children,
   onClose,
@@ -58,11 +69,14 @@ export const SlideOutMenu = ({
   onClear?: () => void
 }) => (
   <Menu>
-    <BackSection>
-      <StyledChevron onClick={onClose} size={24} />
-      <Header>{title}</Header>
-      {onClear && <ClearAll onClick={onClear}>Clear All</ClearAll>}
-    </BackSection>
-    {children}
+    <BackSectionTwo>
+      <BackSection>
+        <StyledChevron onClick={onClose} size={24} />
+        <Header>{title}</Header>
+        {onClear && <ClearAll onClick={onClear}>Clear All</ClearAll>}
+      </BackSection>
+    </BackSectionTwo>
+
+    <ChildComponentsWrap>{children}</ChildComponentsWrap>
   </Menu>
 )

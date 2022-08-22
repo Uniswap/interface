@@ -35,16 +35,16 @@ const ToggleMenuItem = styled.button`
   flex: 1;
   flex-direction: row;
   align-items: center;
-  padding: 8px 0px;
   justify-content: space-between;
   font-size: 14px;
   font-weight: 400;
   width: 100%;
-  margin-bottom: 8px;
+  padding: 12px 16px;
   color: ${({ theme }) => theme.textSecondary};
   :hover {
     color: ${({ theme }) => theme.textPrimary};
     transition: 250ms color ease;
+    background-color: ${({ theme }) => theme.backgroundModule};
   }
 `
 
@@ -69,7 +69,6 @@ const IconWrap = styled.span`
 `
 
 const DefaultMenuWrap = styled.div`
-  padding: 0 16px;
   width: 100%;
   height: 100%;
 `
