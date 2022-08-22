@@ -45,8 +45,8 @@ const ToggleMenuItem = styled.button`
   color: ${({ theme }) => theme.textSecondary};
   :hover {
     color: ${({ theme }) => theme.textPrimary};
-    transition: 250ms color ease;
     background-color: ${({ theme }) => theme.backgroundModule};
+    ${({ theme }) => theme.transitions};
   }
 `
 

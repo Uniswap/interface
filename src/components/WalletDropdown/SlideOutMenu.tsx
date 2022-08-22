@@ -26,7 +26,7 @@ const ClearAll = styled.div`
 
   :hover {
     opacity: 0.6;
-    transition: 250ms opacity ease;
+    ${({ theme }) => theme.transitions};
   }
 `
 
@@ -35,7 +35,7 @@ const StyledChevron = styled(ChevronLeft)`
 
   &:hover {
     color: ${({ theme }) => theme.textPrimary};
-    transition: 250ms color ease;
+    ${({ theme }) => theme.transitions};
   }
 `
 

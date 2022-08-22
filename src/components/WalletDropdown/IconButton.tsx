@@ -24,7 +24,7 @@ const IconStyles = css`
   color: ${({ theme }) => theme.textPrimary};
   :hover {
     background-color: ${({ theme }) => theme.hoverState};
-    transition: background-color 200ms linear;
+    ${({ theme }) => theme.transitions};
 
     ${IconHoverText} {
       opacity: 1;
@@ -32,7 +32,7 @@ const IconStyles = css`
   }
   :active {
     background-color: ${({ theme }) => theme.backgroundSurface};
-    transition: background-color 50ms linear;
+    ${({ theme }) => theme.transitions};
   }
 `
 
