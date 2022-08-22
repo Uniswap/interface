@@ -1,21 +1,14 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import React, { useMemo } from 'react'
+import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { Alert } from 'react-native'
-import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
+import { Alert, StyleSheet } from 'react-native'
+import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { i18n } from 'src/app/i18n'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
-import DaiIcon from 'src/assets/icons/dai-icon.svg'
-import EthIcon from 'src/assets/icons/eth-icon.svg'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { TextButton } from 'src/components/buttons/TextButton'
-import { ArrowCircle } from 'src/components/icons/ArrowCircle'
-import { CheckmarkCircleSvg } from 'src/components/icons/CheckmarkCircleSvg'
-import OverlayIcon from 'src/components/icons/OverlayIcon'
-import { Flex } from 'src/components/layout'
-import { Text } from 'src/components/Text'
+import { Box, Flex } from 'src/components/layout'
 import { useBiometricAppSettings } from 'src/features/biometrics/hooks'
-import { NotificationContentProps } from 'src/features/notifications/NotificationToast'
 import { promptPushPermission } from 'src/features/notifications/Onesignal'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { OnboardingEntryPoint } from 'src/features/onboarding/utils'
@@ -79,10 +72,10 @@ export function NotificationsSetupScreen({ navigation, route: { params } }: Prop
 
   return (
     <OnboardingScreen
-      subtitle={t('Receive transaction status updates when you:')}
+      subtitle={t('Get notified when your transfers, swaps, and approvals complete.')}
       title={t('Turn on push notifications')}>
       <Flex grow justifyContent="space-between">
-        <SampleNotifications />
+        <NotificationLinesWrapper />
         <Flex alignItems="center" gap="sm" justifyContent="flex-end" width="100%">
           <TextButton
             alignSelf="stretch"
@@ -115,78 +108,55 @@ export function NotificationsSetupScreen({ navigation, route: { params } }: Prop
   )
 }
 
-function SampleNotifications() {
-  const { t } = useTranslation()
-  const theme = useAppTheme()
+interface NotificationLineProps {
+  active?: boolean
+}
 
-  const sampleNotifications: NotificationContentProps[] = useMemo(
-    () => [
-      {
-        title: t('Send or receive tokens or NFTs'),
-        icon: (
-          <Flex centered height={32} width={32}>
-            <OverlayIcon
-              icon={<EthIcon />}
-              left={16}
-              overlay={
-                <ArrowCircle
-                  fill={theme.colors.backgroundSurface}
-                  stroke={theme.colors.accentSuccess}
-                />
-              }
-              top={16}
-            />
-          </Flex>
-        ),
-      },
-      {
-        title: t('Swap tokens'),
-        icon: (
-          <Flex height={32} width={32}>
-            <OverlayIcon icon={<EthIcon />} left="33.33%" overlay={<DaiIcon />} top="33.33%" />
-          </Flex>
-        ),
-      },
-      {
-        title: t('Approve tokens for use with apps'),
-        icon: (
-          <Flex centered height={32} width={32}>
-            <OverlayIcon
-              icon={<EthIcon />}
-              left={16}
-              overlay={
-                <CheckmarkCircleSvg
-                  fill={theme.colors.backgroundSurface}
-                  stroke={theme.colors.accentSuccess}
-                />
-              }
-              top={16}
-            />
-          </Flex>
-        ),
-      },
-    ],
-    [t, theme]
-  )
-
+function NotificationLine({ active = true }: NotificationLineProps) {
   return (
-    <Flex gap="md">
-      {sampleNotifications.map((value, i) => (
-        <Flex
-          key={i}
-          row
-          alignItems="center"
-          backgroundColor="backgroundContainer"
-          borderColor="backgroundOutline"
-          borderRadius="md"
-          borderWidth={1}
-          gap="sm"
-          px="md"
-          py="sm">
-          {value.icon}
-          <Text variant="subhead">{value.title}</Text>
-        </Flex>
-      ))}
+    <Flex
+      row
+      alignItems="center"
+      backgroundColor={active ? 'textTertiary' : 'textPrimary'}
+      gap="xxs"
+      px="xs"
+      style={styles.lineWrapper}>
+      <Box backgroundColor="backgroundBackdrop" height={10} style={styles.rectangle} width={10} />
+      <Box backgroundColor="backgroundBackdrop" borderRadius="xs" flex={1} height={5} />
     </Flex>
   )
 }
+
+function NotificationLinesWrapper() {
+  return (
+    <Flex centered grow>
+      <Flex
+        borderColor="textTertiary"
+        borderWidth={4}
+        gap="xs"
+        px="sm"
+        style={styles.notifLinesWrapper}
+        width={123}>
+        <NotificationLine active={false} />
+        <NotificationLine />
+        <NotificationLine />
+      </Flex>
+    </Flex>
+  )
+}
+
+const styles = StyleSheet.create({
+  lineWrapper: {
+    borderRadius: 6,
+    paddingBottom: 5,
+    paddingTop: 6,
+  },
+  notifLinesWrapper: {
+    borderRadius: 24,
+    paddingBottom: 53,
+    paddingTop: 90,
+  },
+  rectangle: {
+    borderRadius: 3,
+  },
+})
