@@ -140,7 +140,7 @@ export function* pushTransactionNotification(action: ReturnType<typeof finalizeT
       yield* put(
         pushNotification({
           type: AppNotificationType.WalletConnect,
-          event: WalletConnectEvent.Confirmed,
+          event: WalletConnectEvent.TransactionConfirmed,
           dappName: typeInfo.dapp.name,
           imageUrl: typeInfo.dapp.icon,
           chainId: typeInfo.dapp.chain_id,

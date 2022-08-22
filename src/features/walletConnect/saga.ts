@@ -55,7 +55,8 @@ export enum WalletConnectEvent {
   Connected,
   Disconnected,
   NetworkChanged,
-  Confirmed,
+  TransactionConfirmed,
+  TransactionFailed,
 }
 
 function createWalletConnectChannel(wcEventEmitter: NativeEventEmitter) {
@@ -285,9 +286,12 @@ export function* signWcRequest(params: SignMessageParams | SignTransactionParams
     yield* call(rejectRequest, requestInternalId)
     yield* put(
       pushNotification({
-        type: AppNotificationType.Error,
+        type: AppNotificationType.WalletConnect,
+        event: WalletConnectEvent.TransactionFailed,
+        dappName: params.dapp.name,
+        imageUrl: params.dapp.icon,
+        chainId: params.dapp.chain_id,
         address: account.address,
-        errorMessage: i18n.t('There was an issue submitting your transaction.'),
       })
     )
     logger.info('wcSaga', 'signMessage', 'signing error:', err)

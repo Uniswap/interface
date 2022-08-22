@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { store } from 'src/app/store'
+import AlertTriangle from 'src/assets/icons/alert-triangle.svg'
 import Approve from 'src/assets/icons/approve.svg'
 import CheckCircle from 'src/assets/icons/check-circle.svg'
 import { CurrencyLogoOrPlaceholder } from 'src/components/CurrencyLogo/CurrencyLogoOrPlaceholder'
@@ -64,29 +65,47 @@ export function WCNotification({ notification }: { notification: WalletConnectNo
   const dispatch = useAppDispatch()
   const validChainId = toSupportedChainId(chainId)
   const title = formWCNotificationTitle(notification)
+
+  const useSmallDisplayEvents = [
+    WalletConnectEvent.Connected,
+    WalletConnectEvent.Disconnected,
+    WalletConnectEvent.NetworkChanged,
+  ]
+  const useSmallDisplay = useSmallDisplayEvents.includes(event)
   const icon = (
-    <>
+    <Box>
       <RemoteImage
         borderRadius={theme.borderRadii.none}
         height={NOTIFICATION_SIZING.primaryImage}
         uri={imageUrl}
         width={NOTIFICATION_SIZING.primaryImage}
       />
-      {(validChainId || event === WalletConnectEvent.Confirmed) && (
+      {(validChainId ||
+        event === WalletConnectEvent.TransactionConfirmed ||
+        event === WalletConnectEvent.TransactionFailed) && (
         <Box bottom={0} position="absolute" right={0}>
-          {event === WalletConnectEvent.Confirmed ? (
+          {event === WalletConnectEvent.TransactionConfirmed && (
             <Approve
               color={theme.colors.accentSuccess}
               fill={theme.colors.backgroundBackdrop}
               height={NOTIFICATION_SIZING.secondaryImage}
               width={NOTIFICATION_SIZING.secondaryImage}
             />
-          ) : (
+          )}
+          {event === WalletConnectEvent.TransactionFailed && (
+            <AlertTriangle
+              color={theme.colors.accentSuccess}
+              fill={theme.colors.backgroundBackdrop}
+              height={NOTIFICATION_SIZING.secondaryImage}
+              width={NOTIFICATION_SIZING.secondaryImage}
+            />
+          )}
+          {event === WalletConnectEvent.NetworkChanged && (
             <NetworkLogo chainId={validChainId!} size={NOTIFICATION_SIZING.secondaryImage} />
           )}
         </Box>
       )}
-    </>
+    </Box>
   )
 
   const onPressNotification = () => {
@@ -99,7 +118,13 @@ export function WCNotification({ notification }: { notification: WalletConnectNo
   }
 
   return (
-    <NotificationToast address={address} icon={icon} title={title} onPress={onPressNotification} />
+    <NotificationToast
+      address={address}
+      icon={icon}
+      title={title}
+      useSmallDisplay={useSmallDisplay}
+      onPress={onPressNotification}
+    />
   )
 }
 
