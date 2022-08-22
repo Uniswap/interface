@@ -15,6 +15,7 @@ import { AutoColumn } from 'components/Column'
 import { AutoRow } from 'components/Row'
 import { getConnection, getConnectionName, getIsCoinbaseWallet, getIsInjected, getIsMetaMask } from 'connection/utils'
 import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
+import { useWalletFlag, WalletVariant } from 'featureFlags/flags/wallet'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import { useCurrencyBalances } from 'lib/hooks/useCurrencyBalance'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
@@ -188,6 +189,7 @@ export default function WalletModal({
   const [connectedWallets, addWalletToConnectedWallets] = useConnectedWallets()
 
   const redesignFlag = useRedesignFlag()
+  const walletFlag = useWalletFlag()
   const redesignFlagEnabled = redesignFlag === RedesignVariant.Enabled
   const [walletView, setWalletView] = useState(WALLET_VIEWS.ACCOUNT)
   const [lastActiveWalletAddress, setLastActiveWalletAddress] = useState<string | undefined>(account)
@@ -198,7 +200,7 @@ export default function WalletModal({
     pendingConnector ? state.connection.errorByConnectionType[getConnection(pendingConnector).type] : undefined
   )
 
-  const walletModalOpen = useModalIsOpen(ApplicationModal.WALLET)
+  const walletModalOpen = useModalIsOpen(ApplicationModal.WALLET) && walletFlag !== WalletVariant.Enabled
   const toggleWalletModal = useToggleWalletModal()
 
   const allTokens = useAllTokens()

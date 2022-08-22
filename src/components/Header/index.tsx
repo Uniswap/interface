@@ -5,7 +5,6 @@ import WalletDropdown from 'components/WalletDropdown'
 import { getChainInfoOrDefault } from 'constants/chainInfo'
 import { SupportedChainId } from 'constants/chains'
 import { TokensVariant, useTokensFlag } from 'featureFlags/flags/tokens'
-import { useWalletFlag, WalletVariant } from 'featureFlags/flags/wallet'
 import { darken } from 'polished'
 import { NavLink, useLocation } from 'react-router-dom'
 import { Text } from 'rebass'
@@ -219,12 +218,6 @@ const StyledNavLink = styled(NavLink)`
   }
 `
 
-const WalletDropdownWrapper = styled.div`
-  position: absolute;
-  top: 75px;
-  right: 20px;
-`
-
 const StyledExternalLink = styled(ExternalLink)`
   ${({ theme }) => theme.flexRowNoWrap}
   align-items: left;
@@ -252,7 +245,6 @@ const StyledExternalLink = styled(ExternalLink)`
 `
 
 export default function Header() {
-  const walletFlag = useWalletFlag()
   const tokensFlag = useTokensFlag()
 
   const { account, chainId } = useWeb3React()
@@ -355,11 +347,7 @@ export default function Header() {
             ) : null}
             <Web3Status />
           </AccountElement>
-          {walletFlag === WalletVariant.Enabled && (
-            <WalletDropdownWrapper>
-              <WalletDropdown />
-            </WalletDropdownWrapper>
-          )}
+          <WalletDropdown />
         </HeaderElement>
         <HeaderElement>
           <Menu />
