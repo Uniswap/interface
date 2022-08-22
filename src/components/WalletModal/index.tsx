@@ -267,7 +267,7 @@ export default function WalletModal({
     shouldLogWethBalance,
     setShouldLogWethBalance,
     CUSTOM_USER_PROPERTIES.WALLET_WETH_AMOUNT,
-    CUSTOM_USER_PROPERTIES.WALLET_USDC_BALANCE_USD
+    CUSTOM_USER_PROPERTIES.WALLET_WETH_BALANCE_USD
   )
 
   const tryActivation = useCallback(
