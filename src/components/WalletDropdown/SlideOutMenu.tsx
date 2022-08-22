@@ -13,18 +13,21 @@ const Header = styled.span`
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  font-size: 16px;
 `
 
 const ClearAll = styled.div`
   display: inline-block;
   cursor: pointer;
-
   color: ${({ theme }) => theme.accentAction};
   font-weight: 600;
   font-size: 14px;
   margin-top: auto;
   margin-bottom: auto;
+
+  :hover {
+    opacity: 0.6;
+    transition: 250ms opacity ease;
+  }
 `
 
 const StyledChevron = styled(ChevronLeft)`
@@ -41,8 +44,7 @@ const BackSection = styled.div`
   background-color: ${({ theme }) => theme.backgroundSurface};
   width: 100%;
   display: flex;
-  padding: 0 16px;
-  padding-bottom: 16px;
+  padding: 0 16px 16px 16px;
   color: ${({ theme }) => theme.textSecondary};
   cursor: default;
   text-decoration: none;
@@ -56,7 +58,7 @@ const BackSectionContainer = styled.div`
 `
 
 const ChildComponentsWrap = styled.div`
-  margin-top: 44px;
+  margin-top: 40px;
 `
 
 export const SlideOutMenu = ({
