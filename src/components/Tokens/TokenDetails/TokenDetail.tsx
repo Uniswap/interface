@@ -6,6 +6,7 @@ import { VerifiedIcon } from 'components/TokenSafety/TokenSafetyIcon'
 import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import { getChainInfo } from 'constants/chainInfo'
 import { checkWarning } from 'constants/tokenSafety'
+import { chainIdToChainName, useTokenDetailQuery } from 'graphql/data/TokenDetailQuery'
 import { useCurrency, useIsUserAddedToken, useToken } from 'hooks/Tokens'
 import { useAtomValue } from 'jotai/utils'
 import { useCallback } from 'react'
@@ -14,8 +15,9 @@ import { ArrowLeft, Heart, TrendingUp } from 'react-feather'
 import { Link, useNavigate } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import { ClickableStyle, CopyContractAddress } from 'theme'
+import { formatDollarAmount } from 'utils/formatDollarAmt'
 
-import { favoritesAtom, useToggleFavorite } from '../state'
+import { favoritesAtom, filterNetworkAtom, useToggleFavorite } from '../state'
 import { ClickFavorited } from '../TokenTable/TokenRow'
 import { Wave } from './LoadingTokenDetail'
 import Resource from './Resource'
@@ -95,7 +97,6 @@ const StatPrice = styled.span`
 export const StatsSection = styled.div`
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
 `
 export const StatPair = styled.div`
   display: flex;
@@ -189,13 +190,15 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
   const chainInfo = getChainInfo(token?.chainId)
   const networkLabel = chainInfo?.label
   const networkBadgebackgroundColor = chainInfo?.backgroundColor
+  const filterNetwork = useAtomValue(filterNetworkAtom)
+  const tokenDetailData = useTokenDetailQuery(address, chainIdToChainName(filterNetwork))
 
   // catch token error and loading state
   if (!token || !token.name || !token.symbol) {
     return (
       <TopArea>
-        <BreadcrumbNavLink to="/explore">
-          <ArrowLeft size={14} /> Explore
+        <BreadcrumbNavLink to="/tokens">
+          <ArrowLeft size={14} /> Tokens
         </BreadcrumbNavLink>
         <ChartHeader>
           <TokenInfoContainer>
@@ -229,7 +232,7 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
               <Trans>No token information available</Trans>
             </NoInfoAvailable>
             <ResourcesContainer>
-              <Resource name={'Etherscan'} link={'https://etherscan.io/'} />
+              <Resource name={'Etherscan'} link={`https://etherscan.io/address/${address}`} />
               <Resource name={'Protocol Info'} link={`https://info.uniswap.org/#/tokens/${address}`} />
             </ResourcesContainer>
           </AboutSection>
@@ -256,25 +259,21 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
       </TopArea>
     )
   }
-  const tokenName = token.name
-  const tokenSymbol = token.symbol
 
-  // TODO: format price, add sparkline
-  const aboutToken =
-    'Ethereum is a decentralized computing platform that uses ETH (Ether) to pay transaction fees (gas). Developers can use Ethereum to run decentralized applications (dApps) and issue new crypto assets, known as Ethereum tokens.'
-  const tokenMarketCap = '23.02B'
-  const tokenVolume = '1.6B'
+  const tokenName = tokenDetailData.name
+  const tokenSymbol = tokenDetailData.tokens?.[0].symbol?.toUpperCase()
 
   return (
     <TopArea>
-      <BreadcrumbNavLink to="/explore">
-        <ArrowLeft size={14} /> Explore
+      <BreadcrumbNavLink to="/tokens">
+        <ArrowLeft size={14} /> Tokens
       </BreadcrumbNavLink>
       <ChartHeader>
         <TokenInfoContainer>
           <TokenNameCell>
             <CurrencyLogo currency={currency} size={'32px'} />
-            {tokenName} <TokenSymbol>{tokenSymbol}</TokenSymbol>
+            {tokenName ?? <Trans>Name not found</Trans>}
+            <TokenSymbol>{tokenSymbol ?? <Trans>Symbol not found</Trans>}</TokenSymbol>
             {!warning && <VerifiedIcon size="20px" />}
             {networkBadgebackgroundColor && (
               <NetworkBadge networkColor={chainInfo?.color} backgroundColor={networkBadgebackgroundColor}>
@@ -283,7 +282,7 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
             )}
           </TokenNameCell>
           <TokenActions>
-            <ShareButton tokenName={tokenName} tokenSymbol={tokenSymbol} />
+            {tokenName && tokenSymbol && <ShareButton tokenName={tokenName} tokenSymbol={tokenSymbol} />}
             <ClickFavorited onClick={toggleFavorite}>
               <FavoriteIcon isFavorited={isFavorited} />
             </ClickFavorited>
@@ -297,31 +296,43 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
         <AboutHeader>
           <Trans>About</Trans>
         </AboutHeader>
-        {aboutToken}
+        {tokenDetailData.description}
         <ResourcesContainer>
-          <Resource name={'Etherscan'} link={'https://etherscan.io/'} />
+          <Resource name={'Etherscan'} link={`https://etherscan.io/address/${address}`} />
           <Resource name={'Protocol Info'} link={`https://info.uniswap.org/#/tokens/${address}`} />
+          {tokenDetailData.homepageUrl && <Resource name={'Website'} link={tokenDetailData.homepageUrl} />}
+          {tokenDetailData.twitterName && (
+            <Resource name={'Twitter'} link={`https://twitter.com/${tokenDetailData.twitterName}`} />
+          )}
         </ResourcesContainer>
       </AboutSection>
       <StatsSection>
         <StatPair>
           <Stat>
-            Market cap<StatPrice>${tokenMarketCap}</StatPrice>
+            Market cap
+            <StatPrice>
+              {tokenDetailData.marketCap?.value ? formatDollarAmount(tokenDetailData.marketCap?.value) : '-'}
+            </StatPrice>
           </Stat>
           <Stat>
-            {/* TODO: connect to chart's selected time */}
             24H volume
-            <StatPrice>${tokenVolume}</StatPrice>
+            <StatPrice>
+              {tokenDetailData.volume24h?.value ? formatDollarAmount(tokenDetailData.volume24h?.value) : '-'}
+            </StatPrice>
           </Stat>
         </StatPair>
         <StatPair>
           <Stat>
             52W low
-            <StatPrice>$1,790.01</StatPrice>
+            <StatPrice>
+              {tokenDetailData.priceLow52W?.value ? formatDollarAmount(tokenDetailData.priceLow52W?.value) : '-'}
+            </StatPrice>
           </Stat>
           <Stat>
             52W high
-            <StatPrice>$4,420.71</StatPrice>
+            <StatPrice>
+              {tokenDetailData.priceHigh52W?.value ? formatDollarAmount(tokenDetailData.priceHigh52W?.value) : '-'}
+            </StatPrice>
           </Stat>
         </StatPair>
       </StatsSection>
