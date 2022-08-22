@@ -11,50 +11,33 @@ import { useCurrency, useIsUserAddedToken, useToken } from 'hooks/Tokens'
 import { useAtomValue } from 'jotai/utils'
 import { useCallback } from 'react'
 import { useState } from 'react'
-import { ArrowLeft, Heart, TrendingUp } from 'react-feather'
-import { Link, useNavigate } from 'react-router-dom'
+import { ArrowLeft, Heart } from 'react-feather'
+import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import { ClickableStyle, CopyContractAddress } from 'theme'
 import { formatDollarAmount } from 'utils/formatDollarAmt'
 
 import { favoritesAtom, filterNetworkAtom, useToggleFavorite } from '../state'
 import { ClickFavorited } from '../TokenTable/TokenRow'
-import { Wave } from './LoadingTokenDetail'
+import LoadingTokenDetail from './LoadingTokenDetail'
 import Resource from './Resource'
 import ShareButton from './ShareButton'
+import {
+  AboutHeader,
+  AboutSection,
+  BreadcrumbNavLink,
+  ChartContainer,
+  ChartHeader,
+  ContractAddressSection,
+  ResourcesContainer,
+  Stat,
+  StatPair,
+  StatsSection,
+  TokenInfoContainer,
+  TokenNameCell,
+  TopArea,
+} from './TokenDetailContainers'
 
-export const AboutSection = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  padding: 24px 0px;
-`
-export const AboutHeader = styled.span`
-  font-size: 28px;
-  line-height: 36px;
-`
-export const BreadcrumbNavLink = styled(Link)`
-  display: flex;
-  color: ${({ theme }) => theme.textSecondary};
-  font-size: 14px;
-  line-height: 20px;
-  align-items: center;
-  gap: 4px;
-  text-decoration: none;
-  margin-bottom: 16px;
-
-  &:hover {
-    color: ${({ theme }) => theme.textTertiary};
-  }
-`
-export const ChartHeader = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  color: ${({ theme }) => theme.textPrimary};
-  gap: 4px;
-  margin-bottom: 24px;
-`
 const ContractAddress = styled.button`
   display: flex;
   color: ${({ theme }) => theme.textPrimary};
@@ -65,9 +48,6 @@ const ContractAddress = styled.button`
   padding: 0px;
   cursor: pointer;
 `
-export const ContractAddressSection = styled.div`
-  padding: 24px 0px;
-`
 const Contract = styled.div`
   display: flex;
   flex-direction: column;
@@ -75,61 +55,17 @@ const Contract = styled.div`
   font-size: 14px;
   gap: 4px;
 `
-export const ChartContainer = styled.div`
-  display: flex;
-  height: 436px;
-  align-items: center;
-`
-export const Stat = styled.div`
-  display: flex;
-  flex-direction: column;
-  color: ${({ theme }) => theme.textSecondary};
-  font-size: 14px;
-  min-width: 168px;
-  flex: 1;
-  gap: 4px;
-  padding: 24px 0px;
-`
 const StatPrice = styled.span`
   font-size: 28px;
   color: ${({ theme }) => theme.textPrimary};
-`
-export const StatsSection = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-`
-export const StatPair = styled.div`
-  display: flex;
-  flex: 1;
-  flex-wrap: wrap;
-`
-export const TokenNameCell = styled.div`
-  display: flex;
-  gap: 8px;
-  font-size: 20px;
-  line-height: 28px;
-  align-items: center;
 `
 const TokenActions = styled.div`
   display: flex;
   gap: 16px;
   color: ${({ theme }) => theme.textSecondary};
 `
-export const TokenInfoContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`
 const TokenSymbol = styled.span`
   color: ${({ theme }) => theme.textSecondary};
-`
-export const TopArea = styled.div`
-  max-width: 832px;
-  overflow: hidden;
-`
-export const ResourcesContainer = styled.div`
-  display: flex;
-  gap: 14px;
 `
 const NetworkBadge = styled.div<{ networkColor?: string; backgroundColor?: string }>`
   border-radius: 5px;
@@ -196,69 +132,70 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
 
   // catch token error and loading state
   if (!token || !token.name || !token.symbol) {
-    return (
-      <TopArea>
-        <BreadcrumbNavLink to="/tokens">
-          <ArrowLeft size={14} /> Tokens
-        </BreadcrumbNavLink>
-        <ChartHeader>
-          <TokenInfoContainer>
-            <TokenNameCell>
-              <CurrencyLogo currency={currency} size={'32px'} />
-              <Trans>{!token ? 'Name not found' : token.name}</Trans>
-              <TokenSymbol>{token && token.symbol}</TokenSymbol>
-              {!warning && <VerifiedIcon size="20px" />}
-              {networkBadgebackgroundColor && (
-                <NetworkBadge networkColor={chainInfo?.color} backgroundColor={networkBadgebackgroundColor}>
-                  {networkLabel}
-                </NetworkBadge>
-              )}
-            </TokenNameCell>
-          </TokenInfoContainer>
-          <ChartEmpty>
-            <Wave />
-            <Wave />
-          </ChartEmpty>
-          <MissingChartData>
-            <TrendingUp size={12} />
-            Missing chart data
-          </MissingChartData>
-        </ChartHeader>
-        <MissingData>
-          <AboutSection>
-            <AboutHeader>
-              <Trans>About</Trans>
-            </AboutHeader>
-            <NoInfoAvailable>
-              <Trans>No token information available</Trans>
-            </NoInfoAvailable>
-            <ResourcesContainer>
-              <Resource name={'Etherscan'} link={`https://etherscan.io/address/${address}`} />
-              <Resource name={'Protocol Info'} link={`https://info.uniswap.org/#/tokens/${address}`} />
-            </ResourcesContainer>
-          </AboutSection>
-          <StatsSection>
-            <NoInfoAvailable>
-              <Trans>No stats available</Trans>
-            </NoInfoAvailable>
-          </StatsSection>
-          <ContractAddressSection>
-            <Contract>
-              Contract Address
-              <ContractAddress>
-                <CopyContractAddress address={address} />
-              </ContractAddress>
-            </Contract>
-          </ContractAddressSection>
-        </MissingData>
-        <TokenSafetyModal
-          isOpen={warningModalOpen}
-          tokenAddress={address}
-          onCancel={() => navigate(-1)}
-          onContinue={handleDismissWarning}
-        />
-      </TopArea>
-    )
+    return <LoadingTokenDetail />
+    // return (
+    //   <TopArea>
+    //     <BreadcrumbNavLink to="/tokens">
+    //       <ArrowLeft size={14} /> Tokens
+    //     </BreadcrumbNavLink>
+    //     <ChartHeader>
+    //       <TokenInfoContainer>
+    //         <TokenNameCell>
+    //           <CurrencyLogo currency={currency} size={'32px'} />
+    //           <Trans>{!token ? 'Name not found' : token.name}</Trans>
+    //           <TokenSymbol>{token && token.symbol}</TokenSymbol>
+    //           {!warning && <VerifiedIcon size="20px" />}
+    //           {networkBadgebackgroundColor && (
+    //             <NetworkBadge networkColor={chainInfo?.color} backgroundColor={networkBadgebackgroundColor}>
+    //               {networkLabel}
+    //             </NetworkBadge>
+    //           )}
+    //         </TokenNameCell>
+    //       </TokenInfoContainer>
+    //       <ChartEmpty>
+    //         <Wave />
+    //         <Wave />
+    //       </ChartEmpty>
+    //       <MissingChartData>
+    //         <TrendingUp size={12} />
+    //         Missing chart data
+    //       </MissingChartData>
+    //     </ChartHeader>
+    //     <MissingData>
+    //       <AboutSection>
+    //         <AboutHeader>
+    //           <Trans>About</Trans>
+    //         </AboutHeader>
+    //         <NoInfoAvailable>
+    //           <Trans>No token information available</Trans>
+    //         </NoInfoAvailable>
+    //         <ResourcesContainer>
+    //           <Resource name={'Etherscan'} link={`https://etherscan.io/address/${address}`} />
+    //           <Resource name={'Protocol Info'} link={`https://info.uniswap.org/#/tokens/${address}`} />
+    //         </ResourcesContainer>
+    //       </AboutSection>
+    //       <StatsSection>
+    //         <NoInfoAvailable>
+    //           <Trans>No stats available</Trans>
+    //         </NoInfoAvailable>
+    //       </StatsSection>
+    //       <ContractAddressSection>
+    //         <Contract>
+    //           Contract Address
+    //           <ContractAddress>
+    //             <CopyContractAddress address={address} />
+    //           </ContractAddress>
+    //         </Contract>
+    //       </ContractAddressSection>
+    //     </MissingData>
+    //     <TokenSafetyModal
+    //       isOpen={warningModalOpen}
+    //       tokenAddress={address}
+    //       onCancel={() => navigate(-1)}
+    //       onContinue={handleDismissWarning}
+    //     />
+    //   </TopArea>
+    // )
   }
 
   const tokenName = tokenDetailData.name

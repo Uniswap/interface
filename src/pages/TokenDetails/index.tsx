@@ -8,7 +8,6 @@ import {
 } from 'components/Tokens/constants'
 import BalanceSummary from 'components/Tokens/TokenDetails/BalanceSummary'
 import FooterBalanceSummary from 'components/Tokens/TokenDetails/FooterBalanceSummary'
-import LoadingTokenDetail from 'components/Tokens/TokenDetails/LoadingTokenDetail'
 import NetworkBalance from 'components/Tokens/TokenDetails/NetworkBalance'
 import TokenDetail from 'components/Tokens/TokenDetails/TokenDetail'
 import TokenSafetyMessage from 'components/TokenSafety/TokenSafetyMessage'
@@ -18,7 +17,6 @@ import { checkWarning } from 'constants/tokenSafety'
 import { useToken } from 'hooks/Tokens'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import { useNetworkTokenBalances } from 'hooks/useNetworkTokenBalances'
-import useTokenDetailPageQuery from 'hooks/useTokenDetailPageQuery'
 import { useCallback, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 import { useIsDarkMode } from 'state/user/hooks'
@@ -67,7 +65,6 @@ function NetworkBalances(tokenAddress: string) {
 
 export default function TokenDetails() {
   const { tokenAddress } = useParams<{ tokenAddress?: string }>()
-  const { loading } = useTokenDetailPageQuery(tokenAddress)
   const tokenSymbol = useToken(tokenAddress)?.symbol
 
   const darkMode = useIsDarkMode()
@@ -87,8 +84,6 @@ export default function TokenDetails() {
   if (!tokenAddress) {
     // TODO: handle no address / invalid address cases
     tokenDetail = 'invalid token'
-  } else if (loading) {
-    tokenDetail = <LoadingTokenDetail />
   } else {
     tokenDetail = <TokenDetail address={tokenAddress} />
   }
@@ -154,12 +149,12 @@ export default function TokenDetails() {
               width={WIDGET_WIDTH}
             />
             {tokenWarning && <TokenSafetyMessage tokenAddress={tokenAddress} warning={tokenWarning} />}
-            {!loading && (
+            {true && (
               <BalanceSummary address={tokenAddress} totalBalance={totalBalance} networkBalances={balancesByNetwork} />
             )}
           </RightPanel>
           <Footer>
-            {!loading && (
+            {true && (
               <FooterBalanceSummary
                 address={tokenAddress}
                 totalBalance={totalBalance}

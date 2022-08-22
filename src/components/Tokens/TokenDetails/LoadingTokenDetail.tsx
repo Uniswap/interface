@@ -16,7 +16,7 @@ import {
   TokenInfoContainer,
   TokenNameCell,
   TopArea,
-} from './TokenDetail'
+} from './TokenDetailContainers'
 
 const LoadingChartContainer = styled(ChartContainer)`
   height: 336px;
