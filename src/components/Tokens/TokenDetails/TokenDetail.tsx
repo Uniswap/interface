@@ -124,6 +124,7 @@ const TokenSymbol = styled.span`
 `
 export const TopArea = styled.div`
   max-width: 832px;
+  overflow: hidden;
 `
 export const ResourcesContainer = styled.div`
   display: flex;
