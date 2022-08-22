@@ -1,7 +1,8 @@
 import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
 import { useWalletFlag, WalletVariant } from 'featureFlags/flags/wallet'
 import { useMemo, useState } from 'react'
-import styled from 'styled-components/macro'
+import styled, { css } from 'styled-components/macro'
+import { useWindowSize } from 'hooks/useWindowSize'
 
 import { useModalIsOpen } from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/reducer'
@@ -28,10 +29,20 @@ export enum MenuState {
   TRANSACTIONS = 'TRANSACTIONS',
 }
 
-const WalletDropdownWrapper = styled.div`
-  position: absolute;
+const WalletDesktop = css`
   top: 65px;
   right: 20px;
+`
+
+const WalletMobile = css`
+  left: 50%;
+  bottom: 45px;
+  transform: translateX(-50%);
+`
+
+const WalletDropdownWrapper = styled.div<{ isMobile: boolean }>`
+  position: absolute;
+  ${({ isMobile }) => (isMobile ? WalletMobile : WalletDesktop)};
 `
 
 const WalletDropdown = () => {
@@ -39,6 +50,10 @@ const WalletDropdown = () => {
   const walletFlag = useWalletFlag()
   const redesignFlag = useRedesignFlag()
   const walletDropdownOpen = useModalIsOpen(ApplicationModal.WALLET_DROPDOWN)
+  const { width: windowWidth } = useWindowSize()
+  const isMobile = useMemo(() => {
+    return !!(windowWidth && windowWidth < 1260)
+  }, [windowWidth])
 
   const isOpen = useMemo(
     () => (redesignFlag === RedesignVariant.Enabled || walletFlag === WalletVariant.Enabled) && walletDropdownOpen,
@@ -48,7 +63,7 @@ const WalletDropdown = () => {
   return (
     <>
       {isOpen && (
-        <WalletDropdownWrapper>
+        <WalletDropdownWrapper isMobile={isMobile}>
           <WalletWrapper>
             {menu === MenuState.TRANSACTIONS && <TransactionHistoryMenu onClose={() => setMenu(MenuState.DEFAULT)} />}
             {menu === MenuState.LANGUAGE && <LanguageMenu onClose={() => setMenu(MenuState.DEFAULT)} />}
