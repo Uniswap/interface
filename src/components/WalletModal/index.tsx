@@ -191,6 +191,7 @@ export default function WalletModal({
   const redesignFlag = useRedesignFlag()
   const walletFlag = useWalletFlag()
   const redesignFlagEnabled = redesignFlag === RedesignVariant.Enabled
+  const walletFlagEnabled = walletFlag === WalletVariant.Enabled
   const [walletView, setWalletView] = useState(WALLET_VIEWS.ACCOUNT)
   const [lastActiveWalletAddress, setLastActiveWalletAddress] = useState<string | undefined>(account)
   const [shouldLogWalletBalances, setShouldLogWalletBalances] = useState(false)
@@ -200,7 +201,8 @@ export default function WalletModal({
     pendingConnector ? state.connection.errorByConnectionType[getConnection(pendingConnector).type] : undefined
   )
 
-  const walletModalOpen = useModalIsOpen(ApplicationModal.WALLET) && walletFlag !== WalletVariant.Enabled
+  const walletModalOpen = useModalIsOpen(ApplicationModal.WALLET) && !walletFlagEnabled && !redesignFlagEnabled
+
   const toggleWalletModal = useToggleWalletModal()
 
   const allTokens = useAllTokens()

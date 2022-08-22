@@ -1,5 +1,7 @@
-import { DialogOverlay } from '@reach/dialog'
+import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
 import { useWalletFlag, WalletVariant } from 'featureFlags/flags/wallet'
+import { useOnClickOutside } from 'hooks/useOnClickOutside'
+import { useMemo, useRef } from 'react'
 import { useState } from 'react'
 import styled from 'styled-components/macro'
 
@@ -13,7 +15,6 @@ const WalletWrapper = styled.div`
   border-radius: 12px;
   width: 320px;
   max-height: 376px;
-
   display: flex;
   flex-direction: column;
   font-size: 16px;
@@ -29,18 +30,6 @@ export enum MenuState {
   TRANSACTIONS = 'TRANSACTIONS',
 }
 
-const StyledDialogOverlay = styled(DialogOverlay)`
-  &[data-reach-dialog-overlay] {
-    z-index: 2;
-    background-color: transparent;
-    overflow: hidden;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-`
-
 const WalletDropdownWrapper = styled.div`
   position: absolute;
   top: 65px;
@@ -52,19 +41,25 @@ const WalletDropdown = () => {
   const walletFlag = useWalletFlag()
   const walletModalOpen = useModalIsOpen(ApplicationModal.WALLET)
   const toggleWalletModal = useToggleWalletModal()
+  const redesignFlag = useRedesignFlag()
+  const isOpen = useMemo(
+    () => (redesignFlag === RedesignVariant.Enabled || walletFlag === WalletVariant.Enabled) && walletModalOpen,
+    [redesignFlag, walletFlag, walletModalOpen]
+  )
+
+  const ref = useRef<HTMLDivElement>(null)
+  useOnClickOutside(ref, isOpen ? toggleWalletModal : undefined)
 
   return (
     <>
-      {walletFlag === WalletVariant.Enabled && walletModalOpen && (
-        <StyledDialogOverlay onClick={toggleWalletModal}>
-          <WalletDropdownWrapper>
-            <WalletWrapper>
-              {menu === MenuState.TRANSACTIONS && <TransactionHistoryMenu onClose={() => setMenu(MenuState.DEFAULT)} />}
-              {menu === MenuState.LANGUAGE && <LanguageMenu onClose={() => setMenu(MenuState.DEFAULT)} />}
-              {menu === MenuState.DEFAULT && <DefaultMenu setMenu={setMenu} />}
-            </WalletWrapper>
-          </WalletDropdownWrapper>
-        </StyledDialogOverlay>
+      {isOpen && (
+        <WalletDropdownWrapper ref={ref}>
+          <WalletWrapper>
+            {menu === MenuState.TRANSACTIONS && <TransactionHistoryMenu onClose={() => setMenu(MenuState.DEFAULT)} />}
+            {menu === MenuState.LANGUAGE && <LanguageMenu onClose={() => setMenu(MenuState.DEFAULT)} />}
+            {menu === MenuState.DEFAULT && <DefaultMenu setMenu={setMenu} />}
+          </WalletWrapper>
+        </WalletDropdownWrapper>
       )}
     </>
   )
