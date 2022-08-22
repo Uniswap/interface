@@ -29,9 +29,9 @@ import { DISPLAYS, ORDERED_TIMES } from '../TokenTable/TimeSelector'
 
 // TODO: This should be combined with the logic in TimeSelector.
 
-type PricePoint = { value: number; timestamp: number }
+export type PricePoint = { value: number; timestamp: number }
 
-const DATA_EMPTY = { value: 0, timestamp: 0 }
+export const DATA_EMPTY = { value: 0, timestamp: 0 }
 
 function getPriceBounds(pricePoints: PricePoint[]): [number, number] {
   const prices = pricePoints.map((x) => x.value)
@@ -47,7 +47,7 @@ const StyledDownArrow = styled(ArrowDownRight)`
   color: ${({ theme }) => theme.accentFailure};
 `
 
-function getDelta(start: number, current: number) {
+export function getDelta(start: number, current: number) {
   const delta = (current / start - 1) * 100
   const isPositive = Math.sign(delta) > 0
 
