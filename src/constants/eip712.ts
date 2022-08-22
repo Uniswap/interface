@@ -9,8 +9,8 @@ export const DOMAIN_TYPE = [
 
 export const SWAP_TYPE = [
   { name: 'txOwner', type: 'address' },
-  { name: 'amountIn', type: 'string' },
-  { name: 'amountOutMin', type: 'string' },
+  { name: 'amountIn', type: 'uint256' },
+  { name: 'amountOutMin', type: 'uint256' },
   { name: 'path', type: 'address[]' },
   { name: 'to', type: 'address' },
   { name: 'deadline', type: 'uint256' },
@@ -18,7 +18,7 @@ export const SWAP_TYPE = [
 
 export const domain = (chainId: number) => {
   return {
-    name: 'TEX swap',
+    name: 'Tex swap',
     version: '1',
     chainId,
     verifyingContract: SWAP_ROUTER_ADDRESSES[chainId],
