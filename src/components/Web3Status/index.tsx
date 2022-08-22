@@ -144,7 +144,6 @@ function Web3StatusInner() {
   const flagEnabled = redesignFlag === RedesignVariant.Enabled || walletFlag === WalletVariant.Enabled
   const toggleWalletDropdown = useToggleWalletDropdown()
   const toggleWalletModal = useToggleWalletModal()
-  const ref = useRef<HTMLDivElement>(null)
 
   const error = useAppSelector((state) => state.connection.errorByConnectionType[getConnection(connector).type])
 
@@ -174,12 +173,7 @@ function Web3StatusInner() {
     )
   } else if (account) {
     return (
-      <Web3StatusConnected
-        ref={ref}
-        data-testid="web3-status-connected"
-        onClick={toggleWallet}
-        pending={hasPendingTransactions}
-      >
+      <Web3StatusConnected data-testid="web3-status-connected" onClick={toggleWallet} pending={hasPendingTransactions}>
         {hasPendingTransactions ? (
           <RowBetween>
             <Text>
@@ -214,19 +208,24 @@ function Web3StatusInner() {
   }
 }
 
+const useIsOpen = () => {
+  const walletDropdownOpen = useModalIsOpen(ApplicationModal.WALLET_DROPDOWN)
+  const walletFlag = useWalletFlag()
+  const redesignFlag = useRedesignFlag()
+
+  return useMemo(
+    () => (redesignFlag === RedesignVariant.Enabled || walletFlag === WalletVariant.Enabled) && walletDropdownOpen,
+    [redesignFlag, walletFlag, walletDropdownOpen]
+  )
+}
+
 export default function Web3Status() {
   const { ENSName } = useWeb3React()
 
   const allTransactions = useAllTransactions()
-  const closeModal = useCloseModal(ApplicationModal.WALLET_DROPDOWN)
-  const walletDropdownOpen = useModalIsOpen(ApplicationModal.WALLET_DROPDOWN)
-  const walletFlag = useWalletFlag()
-  const redesignFlag = useRedesignFlag()
   const ref = useRef<HTMLDivElement>(null)
-  const isOpen = useMemo(
-    () => (redesignFlag === RedesignVariant.Enabled || walletFlag === WalletVariant.Enabled) && walletDropdownOpen,
-    [redesignFlag, walletFlag, walletDropdownOpen]
-  )
+  const closeModal = useCloseModal(ApplicationModal.WALLET_DROPDOWN)
+  const isOpen = useIsOpen()
 
   useOnClickOutside(ref, isOpen ? closeModal : undefined)
 

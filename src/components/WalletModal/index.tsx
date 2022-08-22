@@ -199,7 +199,6 @@ export default function WalletModal({
   )
 
   const walletModalOpen = useModalIsOpen(ApplicationModal.WALLET)
-
   const toggleWalletModal = useToggleWalletModal()
 
   const allTokens = useAllTokens()
