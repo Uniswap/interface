@@ -165,8 +165,9 @@ export function PriceChart({ width, height, token }: PriceChartProps) {
   const [crosshair, setCrosshair] = useState<number | null>(null)
 
   const graphWidth = width + crosshairDateOverhang
-  const graphHeight = height - timeOptionsHeight
-  const graphInnerHeight = graphHeight - margin.top - margin.bottom
+  // TODO: remove this logic after suspense is properly added
+  const graphHeight = height - timeOptionsHeight > 0 ? height - timeOptionsHeight : 0
+  const graphInnerHeight = graphHeight - margin.top - margin.bottom > 0 ? graphHeight - margin.top - margin.bottom : 0
 
   // Defining scales
   // x scale
@@ -177,7 +178,7 @@ export function PriceChart({ width, height, token }: PriceChartProps) {
   const handleHover = useCallback(
     (event: Element | EventType) => {
       const { x } = localPoint(event) || { x: 0 }
-      const x0 = timeScale.invert(x) // get timestamp from the scale
+      const x0 = timeScale.invert(x) // get timestamp from the scalexw
       const index = bisect(
         pricePoints.map((x) => x.timestamp),
         x0,
