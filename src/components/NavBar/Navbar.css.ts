@@ -119,6 +119,7 @@ export const activeMenuItem = style([
   baseMenuItem,
   sprinkles({
     color: 'blackBlue',
+    background: 'backgroundFloating',
   }),
 ])
 

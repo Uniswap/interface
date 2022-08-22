@@ -4,23 +4,24 @@ import { sprinkles } from '../../nft/css/sprinkles.css'
 
 export const ChainSwitcher = style([
   sprinkles({
-    background: 'lightGrayContainer',
     borderRadius: '8',
     paddingY: '8',
     paddingX: '12',
     cursor: 'pointer',
     border: 'none',
+    color: 'blackBlue',
+    background: 'none',
   }),
 ])
 
 export const ChainSwitcherRow = style([
   sprinkles({
     border: 'none',
-    color: 'blackBlue',
     justifyContent: 'space-between',
     paddingX: '16',
     paddingY: '12',
     cursor: 'pointer',
+    color: 'blackBlue',
   }),
   {
     lineHeight: '24px',

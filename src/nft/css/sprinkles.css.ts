@@ -28,11 +28,12 @@ const themeContractValues = {
     lightGrayContainer: ',',
     lightGrayOverlay: '',
 
-    // Opacities of black and whit
+    // Opacities of black and white
     white95: '',
     white90: '',
     white80: '',
     white08: '',
+    backgroundFloating: '',
   },
 
   shadows: {
