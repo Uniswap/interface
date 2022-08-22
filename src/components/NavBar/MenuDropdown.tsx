@@ -9,6 +9,7 @@ import {
   EllipsisIcon,
   GithubIconMenu,
   GovernanceIcon,
+  ThinTagIcon,
   TwitterIconMenu,
 } from 'nft/components/icons'
 import { body, bodySmall } from 'nft/css/common.css'
@@ -129,6 +130,12 @@ export const MenuDropdown = () => {
           <NavDropdown top={60}>
             <Column gap="12">
               <Column paddingX="16" gap="4">
+                <PrimaryMenuRow to="/nft/sell" close={toggleOpen}>
+                  <Icon>
+                    <ThinTagIcon width={24} height={24} />
+                  </Icon>
+                  <PrimaryMenuRow.Text>Sell NFTs</PrimaryMenuRow.Text>
+                </PrimaryMenuRow>
                 <PrimaryMenuRow to="/vote" close={toggleOpen}>
                   <Icon>
                     <GovernanceIcon width={24} height={24} />
