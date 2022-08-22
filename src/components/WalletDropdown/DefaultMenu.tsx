@@ -18,6 +18,8 @@ const ConnectButton = styled(ButtonPrimary)`
   width: 288px;
   font-weight: 600;
   font-size: 16px;
+  margin-left: auto;
+  margin-right: auto;
 `
 
 const Divider = styled.div`

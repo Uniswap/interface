@@ -1,11 +1,6 @@
 import { ChevronLeft } from 'react-feather'
 import styled from 'styled-components/macro'
 
-const BackSection = styled.div`
-  position: relative;
-  width: 100%;
-`
-
 const Menu = styled.div`
   width: 100%;
   height: 100%;
@@ -24,7 +19,7 @@ const Header = styled.span`
 const ClearAll = styled.div`
   display: inline-block;
   cursor: pointer;
-  margin-left: auto;
+
   color: ${({ theme }) => theme.accentAction};
   font-weight: 600;
   font-size: 14px;
@@ -41,7 +36,7 @@ const StyledChevron = styled(ChevronLeft)`
   }
 `
 
-const BackSectionTwo = styled.div`
+const BackSection = styled.div`
   position: absolute;
   background-color: ${({ theme }) => theme.backgroundSurface};
   width: 100%;
@@ -51,6 +46,13 @@ const BackSectionTwo = styled.div`
   color: ${({ theme }) => theme.textSecondary};
   cursor: default;
   text-decoration: none;
+`
+
+const BackSectionContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  width: 100%;
 `
 
 const ChildComponentsWrap = styled.div`
@@ -69,13 +71,13 @@ export const SlideOutMenu = ({
   onClear?: () => void
 }) => (
   <Menu>
-    <BackSectionTwo>
-      <BackSection>
+    <BackSection>
+      <BackSectionContainer>
         <StyledChevron onClick={onClose} size={24} />
         <Header>{title}</Header>
         {onClear && <ClearAll onClick={onClear}>Clear All</ClearAll>}
-      </BackSection>
-    </BackSectionTwo>
+      </BackSectionContainer>
+    </BackSection>
 
     <ChildComponentsWrap>{children}</ChildComponentsWrap>
   </Menu>
