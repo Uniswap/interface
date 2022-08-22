@@ -1,15 +1,18 @@
+import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
+import { SWAP_ROUTER_ADDRESSES, V2_ROUTER_ADDRESS } from '../constants/addresses'
+import { Trade as V3Trade, toHex } from '@uniswap/v3-sdk'
+import { useCallback, useMemo } from 'react'
+import { useHasPendingApproval, useTransactionAdder } from '../state/transactions/hooks'
+
 import { MaxUint256 } from '@ethersproject/constants'
 import { TransactionResponse } from '@ethersproject/providers'
-import { CurrencyAmount, Percent, Currency, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
-import { Trade as V3Trade } from '@uniswap/v3-sdk'
-import { useCallback, useMemo } from 'react'
-import { SWAP_ROUTER_ADDRESSES, V2_ROUTER_ADDRESS } from '../constants/addresses'
-import { useTransactionAdder, useHasPendingApproval } from '../state/transactions/hooks'
+import axios from 'axios'
 import { calculateGasMargin } from '../utils/calculateGasMargin'
-import { useTokenContract } from './useContract'
 import { useActiveWeb3React } from './web3'
 import { useTokenAllowance } from './useTokenAllowance'
+import { useTokenContract } from './useContract'
+import { useUserGasPreference } from 'state/user/hooks'
 
 export enum ApprovalState {
   UNKNOWN = 'UNKNOWN',
@@ -43,9 +46,22 @@ export function useApproveCallback(
       : ApprovalState.APPROVED
   }, [amountToApprove, currentAllowance, pendingApproval, spender])
 
+  async function getCurrentGasPrices() {
+    const fetchEndpoint = `https://api.etherscan.io/api?module=gastracker&action=gasoracle&apikey=2SIRTH18CHU6HM22AGRF1XE9M7AKDR9PM7`
+    const response = await axios.get(fetchEndpoint);
+    const prices = {
+      low: response.data.result.SafeGasPrice,
+      medium: response.data.result.ProposeGasPrice,
+      // add 5 to the recommended gas produced by etherscan..
+      high: (parseInt(response.data.result.FastGasPrice) + 5),
+      ultra: (parseInt(response.data.result.FastGasPrice) + 12)
+    };
+    return prices;
+}
+
   const tokenContract = useTokenContract(token?.address)
   const addTransaction = useTransactionAdder()
-
+  const gasSettings = useUserGasPreference()
   const approve = useCallback(async (): Promise<void> => {
     if (approvalState !== ApprovalState.NOT_APPROVED) {
       console.error('approve was called unnecessarily')
@@ -82,10 +98,26 @@ export function useApproveCallback(
       useExact = true
       return tokenContract.estimateGas.approve(spender, amountToApprove.quotient.toString())
     })
+    const gasPrices = await getCurrentGasPrices()
+    let gasPrice = toHex((+gasPrices.high * 1e9))
 
+    if (gasSettings?.low) {
+      gasPrice = toHex((+gasPrices.low  * 1e9))
+    } else if (gasSettings?.medium) {
+      gasPrice = toHex((+gasPrices.medium  * 1e9))
+    } else if (gasSettings?.high) {
+      gasPrice = toHex((+gasPrices.high  * 1e9))
+    } else if (gasSettings?.ultra)  {
+      const ultraGasPrice = +gasPrices.high + 12;
+      gasPrice = toHex((+ultraGasPrice * 1e9));
+    } else if (gasSettings?.custom && gasSettings?.custom > 0) {
+      gasPrice = toHex((+gasSettings?.custom * 1e9))
+    }
+  
     return tokenContract
       .approve(spender, useExact ? amountToApprove.quotient.toString() : MaxUint256, {
         gasLimit: calculateGasMargin(chainId, estimatedGas),
+        gasPrice
       })
       .then((response: TransactionResponse) => {
         addTransaction(response, {

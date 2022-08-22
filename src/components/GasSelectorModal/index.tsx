@@ -27,8 +27,10 @@ type GasSelectorProps = {
 }
 
 const StyledAutoColumn = styled(AutoColumn)`
-:hover {
-    border: 1px solid green;
+padding:1px;
+&:hover {
+    border: 1px solid lightgreen !important;
+    transition: ease in all 0.055s;
 }
 `
 
@@ -107,7 +109,7 @@ export const GasSelectorModal = (props: GasSelectorProps) => {
         fetchGasPrices()
     }
     return (
-        <Modal size={view == 'advanced' ? 400 : 600} maxHeight={600}  isOpen={isOpen} onDismiss={onDismiss}>
+        <Modal size={view == 'advanced' ? 500 : 600} maxHeight={600}  isOpen={isOpen} onDismiss={onDismiss}>
              <ContentWrapper gap="sm">
           <RowBetween>
             <TYPE.mediumHeader>
@@ -125,8 +127,8 @@ export const GasSelectorModal = (props: GasSelectorProps) => {
               { Boolean(gasSettings?.ultra || gasSettings?.high || gasSettings?.low || gasSettings?.medium) && <ToolbarItem onClick={resetToDefaults}><Badge>Clear Selection <X /></Badge></ToolbarItem>}
           </div>}
           {view !== 'advanced' && (
-           <RowBetween style={{ flexDirection: isMobile ? 'column': 'row', columnGap: 30, justifyContent: 'center'}}> 
-             {!!prices &&  <StyledAutoColumn onClick={updateSettingsForLow} style={{cursor: 'pointer', padding:5, borderRadius:12, border: `1px solid ${gasSettings?.low ? '#fff' : 'transparent'}`}} justify="center" gap="md">
+           <RowBetween style={{ flexDirection: isMobile ? 'column': 'row', gap: isMobile ? 15 : 20, justifyContent: 'center'}}> 
+             {!!prices &&  <StyledAutoColumn onClick={updateSettingsForLow} style={{cursor: 'pointer', padding:5, borderRadius:12, border: `1px solid ${gasSettings?.low ? 'lightgreen' : 'transparent'}`}} justify="center" gap="md">
               <TYPE.body fontWeight={600} fontSize={36}>
                   Low
               </TYPE.body>
@@ -134,7 +136,7 @@ export const GasSelectorModal = (props: GasSelectorProps) => {
                 {prices.low}
               </TYPE.body>
             </StyledAutoColumn>}
-            {!!prices &&  <StyledAutoColumn onClick={updateSettingsForMed} style={{ cursor: 'pointer', padding:5, borderRadius:12, border: `1px solid ${gasSettings?.medium ? '#fff' : 'transparent'}`}} justify="center" gap="md">
+            {!!prices &&  <StyledAutoColumn onClick={updateSettingsForMed} style={{ cursor: 'pointer', padding:5, borderRadius:12, border: `1px solid ${gasSettings?.medium ? 'lightgreen' : 'transparent'}`}} justify="center" gap="md">
               <TYPE.body fontWeight={600} fontSize={36}>
                   Medium
               </TYPE.body>
@@ -142,7 +144,7 @@ export const GasSelectorModal = (props: GasSelectorProps) => {
                 {prices.medium}
               </TYPE.body>
             </StyledAutoColumn>}
-            {!!prices &&  <StyledAutoColumn onClick={updateSettingsForHigh} style={{ padding:5, borderRadius:12,cursor: 'pointer', border: `1px solid ${gasSettings?.high ? '#fff' : 'transparent'}`}} justify="center" gap="md">
+            {!!prices &&  <StyledAutoColumn onClick={updateSettingsForHigh} style={{ padding:5, borderRadius:12,cursor: 'pointer', border: `1px solid ${gasSettings?.high ? 'lightgreen' : 'transparent'}`}} justify="center" gap="md">
               <TYPE.body fontWeight={600} fontSize={36}>
                   High
               </TYPE.body>
@@ -151,7 +153,7 @@ export const GasSelectorModal = (props: GasSelectorProps) => {
                 </TYPE.body>
                 </StyledAutoColumn>
             }
-              {!!prices &&  <StyledAutoColumn onClick={updateSettingsForUltra} style={{ padding:5, borderRadius:12,cursor: 'pointer', border: `1px solid ${gasSettings?.ultra ? '#fff' : 'transparent'}`}} justify="center" gap="md">
+              {!!prices &&  <StyledAutoColumn onClick={updateSettingsForUltra} style={{ padding:5, borderRadius:12,cursor: 'pointer', border: `1px solid ${gasSettings?.ultra ? 'lightgreen' : 'transparent'}`}} justify="center" gap="md">
               <TYPE.body fontWeight={600} fontSize={36}>
                   Ultra
               </TYPE.body>
