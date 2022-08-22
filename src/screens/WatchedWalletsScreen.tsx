@@ -40,7 +40,7 @@ function WatchedWalletsItem({
           <AddressDisplay
             showAddressAsSubtitle
             address={address}
-            size={32}
+            size={30}
             variant="subhead"
             verticalGap="none"
           />
@@ -53,7 +53,7 @@ function WatchedWalletsItem({
           p="xs"
           textVariant="smallLabel"
           onPress={isWatched ? onUnwatch : onWatch}>
-          {isWatched ? t('Unwatch') : t('Watch')}
+          {isWatched ? t('Remove') : t('Watch')}
         </TextButton>
       </Flex>
     </Button>
