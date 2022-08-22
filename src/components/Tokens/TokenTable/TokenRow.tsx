@@ -5,9 +5,7 @@ import { EventName } from 'components/AmplitudeAnalytics/constants'
 import SparklineChart from 'components/Charts/SparklineChart'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { getChainInfo } from 'constants/chainInfo'
-import { chainIdToChainName } from 'graphql/data/TokenDetailQuery'
 import { useTokenPriceQuery } from 'graphql/data/TokenPriceQuery'
-import { useTokenRowQuery } from 'graphql/data/TokenRowQuery'
 import { useCurrency, useToken } from 'hooks/Tokens'
 import { TimePeriod, TokenData } from 'hooks/useExplorePageQuery'
 import { useAtom } from 'jotai'
@@ -469,7 +467,7 @@ export default function LoadedRow({
 
   const heartColor = isFavorited ? theme.accentActive : undefined
   // TODO: consider using backend network?
-  const tokenRowData = useTokenRowQuery(tokenAddress, timePeriod, chainIdToChainName(filterNetwork))
+  // const topTokenData: any = useTopTokenQuery(favo, 1)
   // TODO: currency logo sizing mobile (32px) vs. desktop (24px)
   return (
     <StyledLink
@@ -505,7 +503,7 @@ export default function LoadedRow({
         price={
           <ClickableContent>
             <PriceInfoCell>
-              {tokenRowData.price?.value ? formatDollarAmount(tokenRowData.price?.value) : '-'}
+              {topTokenData.price?.value ? formatDollarAmount(topTokenData.price?.value) : '-'}
               <PercentChangeInfoCell>
                 {delta}
                 {arrow}
@@ -521,12 +519,12 @@ export default function LoadedRow({
         }
         marketCap={
           <ClickableContent>
-            {tokenRowData.marketCap?.value ? formatDollarAmount(tokenRowData.marketCap?.value) : '-'}
+            {topTokenData.marketCap?.value ? formatDollarAmount(topTokenData.marketCap?.value) : '-'}
           </ClickableContent>
         }
         volume={
           <ClickableContent>
-            {tokenRowData.volume?.value ? formatDollarAmount(tokenRowData.volume?.value) : '-'}
+            {topTokenData.volume?.value ? formatDollarAmount(topTokenData.volume?.value) : '-'}
           </ClickableContent>
         }
         sparkLine={

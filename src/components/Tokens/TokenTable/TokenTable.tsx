@@ -98,8 +98,8 @@ function useSortedTokens(addresses: string[], tokenData: TokenData | null) {
         if (!tokenData) {
           return 0
         }
-        const token1 = tokenData[token1Address] as any
-        const token2 = tokenData[token2Address] as any
+        const token1 = tokenData.token1Address as any
+        const token2 = tokenData.token2Address as any
 
         if (!token1 || !token2 || !sortDirection || !sortCategory) {
           return 0
@@ -153,7 +153,7 @@ function LoadingTokenTable() {
 }
 
 interface TokenTableProps {
-  data: TokenData | null
+  data: TokenData[] | null
   error: string | null
   loading: boolean
 }

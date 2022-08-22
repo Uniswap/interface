@@ -1,3 +1,5 @@
+import { Chain, Currency } from 'graphql/data/__generated__/TopTokenQuery.graphql'
+import { useTopTokenQuery } from 'graphql/data/TopTokenQuery'
 import { useEffect, useState } from 'react'
 
 export enum TimePeriod {
@@ -9,13 +11,20 @@ export enum TimePeriod {
   ALL,
 }
 
+interface IAmount {
+  currency: Currency | null
+  value: number | null
+}
+
 export type TokenData = {
   [address: string]: {
-    sparkline: string // svg string
-    price: number // usdc price
-    delta: number // basis points
-    marketCap: number
-    volume: Record<TimePeriod, number>
+    name: string | null | undefined
+    address: string | null | undefined
+    chain: Chain | undefined
+    symbol: string | null | undefined
+    price: IAmount | null | undefined
+    marketCap: IAmount | null | undefined
+    volume: Record<TimePeriod, IAmount | null | undefined>
     isFavorite: boolean
   }
 }
@@ -26,6 +35,7 @@ interface UseTopTokensResult {
   loading: boolean
 }
 
+/*
 const FAKE_TOP_TOKENS_RESULT: TokenData = {
   '0x03ab458634910aad20ef5f1c8ee96f1d6ac54919': {
     sparkline: `<svg width="135" height="50" viewBox="0 0 135 50" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -317,26 +327,23 @@ const FAKE_TOP_TOKENS_RESULT: TokenData = {
     isFavorite: false,
   },
 }
+*/
 
 const useExplorePageQuery = (favoriteTokenAddresses: string[]): UseTopTokensResult => {
   const [data, setData] = useState<TokenData | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
+  const topTokens = useTopTokenQuery(1)
+  console.log(topTokens)
 
   const fetchTopTokens = async (favoriteTokenAddresses: string[]): Promise<TokenData | void> => {
-    const waitRandom = (min: number, max: number): Promise<void> =>
-      new Promise((resolve) => setTimeout(resolve, min + Math.round(Math.random() * Math.max(0, max - min))))
     try {
       setLoading(true)
       setError(null)
-      await waitRandom(250, 2000)
-      if (Math.random() < 0.05) {
-        throw new Error('fake error')
-      }
       favoriteTokenAddresses.forEach((address) => {
-        FAKE_TOP_TOKENS_RESULT[address as keyof TokenData].isFavorite = true
+        topTokens[address as keyof TokenData].isFavorite = true
       })
-      return FAKE_TOP_TOKENS_RESULT
+      return topTokens
     } catch (e) {
       setError('something went wrong')
     } finally {
