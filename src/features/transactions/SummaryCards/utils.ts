@@ -39,7 +39,7 @@ export function getTransactionSummaryTitle({
       title = t('Receive')
       break
     default:
-      title = t('Unknown transaction')
+      title = t('Contract interaction')
   }
   // Lowercase title if prefix
   return prefix + (prefix ? title.toLocaleLowerCase() : title)

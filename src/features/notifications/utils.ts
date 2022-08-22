@@ -133,8 +133,8 @@ export const formUnknownTxTitle = (
   }
 
   return txStatus === TransactionStatus.Success
-    ? i18n.t('Completed unknown transaction{{addressText}}.', { addressText })
-    : i18n.t('Failed to complete unknown transaction{{addressText}}.', { addressText })
+    ? i18n.t('Completed contract interaction {{addressText}}.', { addressText })
+    : i18n.t('Failed to complete contract interaction {{addressText}}.', { addressText })
 }
 
 const formTransferTxTitle = (
