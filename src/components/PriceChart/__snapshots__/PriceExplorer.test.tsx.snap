@@ -266,10 +266,6 @@ exports[`renders correctly 1`] = `
           }
         }
         collapsable={false}
-        forwardedRef={[Function]}
-        handlerTag={1}
-        handlerType="PanGestureHandler"
-        onGestureHandlerEvent={[Function]}
         style={
           Array [
             Object {

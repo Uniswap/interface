@@ -1,14 +1,16 @@
+import { impactAsync, ImpactFeedbackStyle } from 'expo-haptics'
 import React from 'react'
 import { StyleSheet } from 'react-native'
-import { PanGestureHandler } from 'react-native-gesture-handler'
+import { Gesture, GestureDetector } from 'react-native-gesture-handler'
 import {
+  runOnJS,
   SharedValue,
-  useAnimatedGestureHandler,
   useAnimatedStyle,
+  useSharedValue,
   withSpring,
   withTiming,
 } from 'react-native-reanimated'
-import { getYForX } from 'react-native-redash'
+import { getYForX, round } from 'react-native-redash'
 import { AnimatedBox, Box } from 'src/components/layout/Box'
 import {
   AnimatedNumber,
@@ -21,6 +23,10 @@ const CURSOR_INNER_SIZE = 12
 const CURSOR_SIZE = CURSOR_INNER_SIZE + 6
 const LINE_WIDTH = 1
 
+// Length in screen unit of a single tick
+// TODO(MOB-2255): correlate ticks to scale
+const TICK_LENGTH = 10
+
 interface CursorProps {
   graphs: GraphMetadatas
   index: AnimatedNumber
@@ -29,18 +35,42 @@ interface CursorProps {
 }
 
 export const Cursor = ({ graphs, index, isActive, translation }: CursorProps) => {
-  const onGestureEvent = useAnimatedGestureHandler({
-    onStart: () => {
+  const isLongPressActive = useSharedValue(false)
+
+  const longPressGesture = Gesture.LongPress()
+    .onStart(() => {
+      isLongPressActive.value = true
+    })
+    .minDuration(100)
+
+  const panGesture = Gesture.Pan()
+    .manualActivation(true)
+    .onTouchesMove((_e, state) => {
+      if (isLongPressActive.value) {
+        state.activate()
+      } else {
+        state.fail()
+      }
+    })
+    .onStart(() => {
       isActive.value = true
-    },
-    onActive: (event) => {
+      runOnJS(impactAsync)(ImpactFeedbackStyle.Light)
+    })
+    .onUpdate((event) => {
+      // First verify if we're crossing a tick for haptic feedback
+      const hasCrossedTick =
+        round(event.x / TICK_LENGTH) * TICK_LENGTH !==
+        round(translation.x.value / TICK_LENGTH) * TICK_LENGTH
+      if (hasCrossedTick) {
+        runOnJS(impactAsync)(ImpactFeedbackStyle.Light)
+      }
+
+      // Then update value continuously
       translation.x.value = event.x
       translation.y.value = getYForX(graphs[index.value].data.path, translation.x.value) || 0
-    },
-    onEnd: () => {
-      isActive.value = false
-    },
-  })
+    })
+    .onFinalize(() => (isActive.value = false))
+    .simultaneousWithExternalGesture(longPressGesture)
 
   const containerStyles = useAnimatedStyle(() => ({
     opacity: withTiming(isActive.value ? 1 : 0),
@@ -54,7 +84,6 @@ export const Cursor = ({ graphs, index, isActive, translation }: CursorProps) =>
       transform: [{ translateX }, { translateY }, { scale: withSpring(isActive.value ? 1 : 0) }],
     }
   })
-
   const verticalLineAnimatedStyles = useAnimatedStyle(() => {
     const translateX = translation.x.value - LINE_WIDTH
     return {
@@ -62,9 +91,11 @@ export const Cursor = ({ graphs, index, isActive, translation }: CursorProps) =>
     }
   })
 
+  const composedGesture = Gesture.Race(panGesture, longPressGesture)
+
   return (
     <Box flex={1} style={StyleSheet.absoluteFill}>
-      <PanGestureHandler onGestureEvent={onGestureEvent}>
+      <GestureDetector gesture={composedGesture}>
         <AnimatedBox style={[StyleSheet.absoluteFill, containerStyles]}>
           {/* Vertical line */}
           <AnimatedBox
@@ -101,7 +132,7 @@ export const Cursor = ({ graphs, index, isActive, translation }: CursorProps) =>
             />
           </AnimatedBox>
         </AnimatedBox>
-      </PanGestureHandler>
+      </GestureDetector>
     </Box>
   )
 }
