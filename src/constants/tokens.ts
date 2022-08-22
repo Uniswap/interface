@@ -1,7 +1,7 @@
 // Copied from https://github.com/Uniswap/interface/blob/main/src/constants/tokens.ts
-import { Token, WETH9 } from '@uniswap/sdk-core'
+import { Currency, Ether, NativeCurrency, Token, WETH9 } from '@uniswap/sdk-core'
 import { UNI_ADDRESS } from './addresses'
-import { ChainId } from './chains'
+import { ChainId, isPolygonChain } from './chains'
 
 export const AMPL = new Token(
   ChainId.Mainnet,
@@ -75,6 +75,27 @@ export const USDC_GOERLI = new Token(
   'USD//C'
 )
 
+export const DAI_POLYGON = new Token(
+  ChainId.Polygon,
+  '0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063',
+  18,
+  'DAI',
+  'Dai Stablecoin'
+)
+export const USDT_POLYGON = new Token(
+  ChainId.Polygon,
+  '0xc2132d05d31c914a87c6611c10748aeb04b58e8f',
+  6,
+  'USDT',
+  'Tether USD'
+)
+export const WBTC_POLYGON = new Token(
+  ChainId.Polygon,
+  '0x1bfd67037b42cf73acf2047067bd4f2c47d9bfd6',
+  8,
+  'WBTC',
+  'Wrapped BTC'
+)
 export const USDT = new Token(
   ChainId.Mainnet,
   '0xdAC17F958D2ee523a2206206994597C13D831ec7',
@@ -116,6 +137,22 @@ export const WBTC_OPTIMISM = new Token(
   8,
   'WBTC',
   'Wrapped BTC'
+)
+
+export const WETH_POLYGON_MUMBAI = new Token(
+  ChainId.PolygonMumbai,
+  '0xa6fa4fb5f76172d178d61b04b0ecd319c5d1c0aa',
+  18,
+  'WETH',
+  'Wrapped Ether'
+)
+
+export const WETH_POLYGON = new Token(
+  ChainId.Polygon,
+  '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619',
+  18,
+  'WETH',
+  'Wrapped Ether'
 )
 export const FEI = new Token(
   ChainId.Mainnet,
@@ -211,4 +248,111 @@ export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token } = {
     'WMATIC',
     'Wrapped MATIC'
   ),
+}
+
+class MaticNativeCurrency extends NativeCurrency {
+  equals(other: Currency): boolean {
+    return other.isNative && other.chainId === this.chainId
+  }
+
+  get wrapped(): Token {
+    if (!isPolygonChain(this.chainId)) throw new Error('Not matic')
+    const wrapped = WRAPPED_NATIVE_CURRENCY[this.chainId]
+    return wrapped
+  }
+
+  public constructor(chainId: number) {
+    if (!isPolygonChain(chainId)) throw new Error('Not matic')
+    super(chainId, 18, 'MATIC', 'Polygon Matic')
+  }
+}
+
+export class ExtendedEther extends Ether {
+  public get wrapped(): Token {
+    const wrapped = WRAPPED_NATIVE_CURRENCY[this.chainId]
+    if (wrapped) return wrapped
+    throw new Error('Unsupported chain ID')
+  }
+
+  private static _cachedExtendedEther: { [chainId: number]: NativeCurrency } = {}
+
+  public static onChain(chainId: number): ExtendedEther {
+    return (
+      this._cachedExtendedEther[chainId] ??
+      (this._cachedExtendedEther[chainId] = new ExtendedEther(chainId))
+    )
+  }
+}
+
+const cachedNativeCurrency: { [chainId: number]: NativeCurrency | Token } = {}
+export function nativeOnChain(chainId: number): NativeCurrency | Token {
+  if (cachedNativeCurrency[chainId]) return cachedNativeCurrency[chainId]
+  let nativeCurrency: NativeCurrency | Token
+  if (isPolygonChain(chainId)) {
+    nativeCurrency = new MaticNativeCurrency(chainId)
+  } else {
+    nativeCurrency = ExtendedEther.onChain(chainId)
+  }
+  return (cachedNativeCurrency[chainId] = nativeCurrency)
+}
+
+type ChainCurrencyList = {
+  readonly [chainId: number]: Currency[]
+}
+
+export const COMMON_BASES: ChainCurrencyList = {
+  [ChainId.Mainnet]: [
+    nativeOnChain(ChainId.Mainnet),
+    DAI,
+    USDC,
+    USDT,
+    WBTC,
+    WRAPPED_NATIVE_CURRENCY[ChainId.Mainnet] as Token,
+  ],
+  [ChainId.Ropsten]: [
+    nativeOnChain(ChainId.Ropsten),
+    WRAPPED_NATIVE_CURRENCY[ChainId.Ropsten] as Token,
+  ],
+  [ChainId.Rinkeby]: [
+    nativeOnChain(ChainId.Rinkeby),
+    WRAPPED_NATIVE_CURRENCY[ChainId.Rinkeby] as Token,
+  ],
+  [ChainId.Goerli]: [
+    nativeOnChain(ChainId.Goerli),
+    WRAPPED_NATIVE_CURRENCY[ChainId.Goerli] as Token,
+  ],
+  [ChainId.Kovan]: [nativeOnChain(ChainId.Kovan), WRAPPED_NATIVE_CURRENCY[ChainId.Kovan] as Token],
+  [ChainId.ArbitrumOne]: [
+    nativeOnChain(ChainId.ArbitrumOne),
+    DAI_ARBITRUM_ONE,
+    USDC_ARBITRUM,
+    USDT_ARBITRUM_ONE,
+    WBTC_ARBITRUM_ONE,
+    WRAPPED_NATIVE_CURRENCY[ChainId.ArbitrumOne] as Token,
+  ],
+  [ChainId.ArbitrumRinkeby]: [
+    nativeOnChain(ChainId.ArbitrumRinkeby),
+    WRAPPED_NATIVE_CURRENCY[ChainId.ArbitrumRinkeby] as Token,
+  ],
+  [ChainId.Optimism]: [
+    nativeOnChain(ChainId.Optimism),
+    DAI_OPTIMISM,
+    USDC_OPTIMISM,
+    USDT_OPTIMISM,
+    WBTC_OPTIMISM,
+  ],
+  [ChainId.OptimisticKovan]: [nativeOnChain(ChainId.OptimisticKovan)],
+  [ChainId.Polygon]: [
+    nativeOnChain(ChainId.Polygon),
+    WETH_POLYGON,
+    USDC_POLYGON,
+    DAI_POLYGON,
+    USDT_POLYGON,
+    WBTC_POLYGON,
+  ],
+  [ChainId.PolygonMumbai]: [
+    nativeOnChain(ChainId.PolygonMumbai),
+    WRAPPED_NATIVE_CURRENCY[ChainId.PolygonMumbai] as Token,
+    WETH_POLYGON_MUMBAI,
+  ],
 }

@@ -2,9 +2,11 @@ import { Currency } from '@uniswap/sdk-core'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useAppSelector } from 'src/app/hooks'
 import { ChainId } from 'src/constants/chains'
+import { EMPTY_ARRAY } from 'src/constants/misc'
+import { COMMON_BASES } from 'src/constants/tokens'
 import { selectFavoriteTokensSet } from 'src/features/favorites/selectors'
 import { useAllCurrencies } from 'src/features/tokens/useTokens'
-import { currencyIdToChain } from 'src/utils/currencyId'
+import { currencyId, currencyIdToChain } from 'src/utils/currencyId'
 
 export function useFavoriteCurrencies(): Currency[] {
   const favorites = useAppSelector(selectFavoriteTokensSet)
@@ -22,6 +24,23 @@ export function useFavoriteCurrencies(): Currency[] {
         .filter(Boolean) as Currency[],
     [allTokens, favorites]
   )
+}
+
+export function useCommonBases(chainFilter: ChainId | null): Currency[] {
+  const allTokens = useAllCurrencies()
+
+  return useMemo(() => {
+    if (!chainFilter) {
+      return EMPTY_ARRAY
+    }
+
+    const baseCurrencies = COMMON_BASES[chainFilter] ?? []
+    return baseCurrencies
+      .map((currency) => {
+        return allTokens[chainFilter]?.[currencyId(currency)]
+      })
+      .filter(Boolean) as Currency[]
+  }, [allTokens, chainFilter])
 }
 
 export function useFilterCallbacks(chainId: ChainId | null) {
