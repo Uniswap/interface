@@ -234,7 +234,7 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo, isCompressedView }
         ) : null}
         <PrimaryButton
           disabled={actionButtonDisabled}
-          label={swapDataRefreshing ? t('Price updating...') : getReviewActionName(t, wrapType)}
+          label={getReviewActionName(t, wrapType)}
           name={ElementName.ReviewSwap}
           py="md"
           testID={ElementName.ReviewSwap}
