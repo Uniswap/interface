@@ -17,13 +17,8 @@ import {
 } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
-import { HomeStackScreenProp } from 'src/app/navigation/types'
-import {
-  Button as UDSButton,
-  ButtonEmphasis,
-  ButtonSize,
-  ButtonState,
-} from 'src/components-uds/Button/Button'
+import { AppStackScreenProp } from 'src/app/navigation/types'
+import { Button, ButtonEmphasis, ButtonSize, ButtonState } from 'src/components-uds/Button/Button'
 import { IconButton } from 'src/components/buttons/IconButton'
 import { SendButton } from 'src/components/buttons/SendButton'
 import { CurrencyLogo } from 'src/components/CurrencyLogo'
@@ -149,7 +144,7 @@ enum SwapType {
 
 const CONTENT_MAX_SCROLL_Y = 75
 
-export function TokenDetailsScreen({ route }: HomeStackScreenProp<Screens.TokenDetails>) {
+export function TokenDetailsScreen({ route }: AppStackScreenProp<Screens.TokenDetails>) {
   const { currencyId: _currencyId } = route.params
 
   const currency = useCurrency(_currencyId)
@@ -391,8 +386,9 @@ function TokenDetails({ currency }: { currency: Currency }) {
         {/* Fixed footer that appears on scroll */}
         {FixedFooterBar}
       </Screen>
-      <AnimatedFlex row gap="sm" px="sm" py="xs" style={bottomButtonStyle}>
-        <UDSButton
+
+      <AnimatedFlex row gap="sm" mb="lg" px="sm" py="xs" style={bottomButtonStyle}>
+        <Button
           emphasis={ButtonEmphasis.High}
           flex={1}
           label={t('Swap')}
@@ -405,6 +401,7 @@ function TokenDetails({ currency }: { currency: Currency }) {
           onPress={() => onPressSwap(balance ? SwapType.SELL : SwapType.BUY)}
         />
       </AnimatedFlex>
+
       <BottomSheetModal
         isVisible={
           activeSwapAttemptType === SwapType.BUY || activeSwapAttemptType === SwapType.SELL

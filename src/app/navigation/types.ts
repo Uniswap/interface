@@ -23,7 +23,6 @@ export type TabParamList = {
 export type HomeStackParamList = {
   [Screens.Home]: undefined
   [Screens.PortfolioTokens]: { owner: Address | undefined }
-  [Screens.TokenDetails]: { currencyId: string }
   [Screens.PortfolioNFTs]: { owner: Address | undefined }
   [Screens.NFTItem]: NFTItem
   [Screens.NFTCollection]: {
@@ -38,7 +37,6 @@ export type ExploreStackParamList = {
   [Screens.ExploreTokens]: undefined
   [Screens.ExploreFavorites]: undefined
   [Screens.WatchedWallets]: undefined
-  [Screens.TokenDetails]: { currencyId: string }
   [Screens.PortfolioNFTs]: { owner: Address | undefined }
   [Screens.User]: { address: string }
   [Screens.NFTItem]: NFTItem
@@ -131,6 +129,7 @@ export type AppStackParamList = {
   [Screens.ProfileStack]: NavigatorScreenParams<ProfileStackParamList>
   [Screens.SettingsStack]: NavigatorScreenParams<SettingsStackParamList>
   [Screens.TabNavigator]: NavigatorScreenParams<TabParamList>
+  [Screens.TokenDetails]: { currencyId: string }
   [Screens.WebView]: { headerTitle: string; uriLink: string }
 }
 

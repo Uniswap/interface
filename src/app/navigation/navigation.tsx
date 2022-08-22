@@ -291,7 +291,6 @@ export function HomeStackNavigator() {
 
       {/* Tokens */}
       <HomeStack.Screen component={PortfolioTokensScreen} name={Screens.PortfolioTokens} />
-      <HomeStack.Screen component={TokenDetailsScreen} name={Screens.TokenDetails} />
 
       {/* NFTS */}
       <HomeStack.Screen component={PortfolioNFTsScreen} name={Screens.PortfolioNFTs} />
@@ -311,7 +310,6 @@ export function ExploreStackNavigator() {
       <ExploreStack.Screen component={ExploreScreen} name={Screens.Explore} />
       <ExploreStack.Screen component={ExploreTokensScreen} name={Screens.ExploreTokens} />
       <ExploreStack.Screen component={ExploreFavoritesScreen} name={Screens.ExploreFavorites} />
-      <ExploreStack.Screen component={TokenDetailsScreen} name={Screens.TokenDetails} />
       <ExploreStack.Screen component={UserScreen} name={Screens.User} />
       <ExploreStack.Screen component={PortfolioNFTsScreen} name={Screens.PortfolioNFTs} />
       <ExploreStack.Screen component={PortfolioTokensScreen} name={Screens.PortfolioTokens} />
@@ -412,6 +410,9 @@ export function AppStackNavigator() {
             : OnboardingEntryPoint.FreshInstall.valueOf()
         }
       />
+
+      <AppStack.Screen component={TokenDetailsScreen} name={Screens.TokenDetails} />
+
       <AppStack.Group screenOptions={navOptions.presentationModal}>
         <AccountStack.Screen component={ImportAccountScreen} name={Screens.ImportAccount} />
       </AppStack.Group>
