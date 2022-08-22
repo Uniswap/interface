@@ -47,8 +47,8 @@ const MenuTimeFlyout = styled.span`
   max-height: 350px;
   overflow: auto;
   background-color: ${({ theme }) => theme.backgroundSurface};
-  box-shadow: ${({ theme }) => theme.flyoutDropShadow};
-  border: 1px solid ${({ theme }) => theme.backgroundOutline};
+  box-shadow: ${({ theme }) => theme.deepShadow};
+  border: 0.5px solid ${({ theme }) => theme.backgroundOutline};
   border-radius: 12px;
   padding: 8px;
   display: flex;

@@ -222,7 +222,7 @@ export interface Palette {
   chain_10_background: Color
   chain_42161_background: Color
 
-  flyoutDropShadow: Color
+  shallowShadow: Color
   deepShadow: Color
 }
 
@@ -280,7 +280,7 @@ export const colorsLight: Palette = {
   chain_10_background: colors.red900,
   chain_42161_background: colors.blue900,
 
-  flyoutDropShadow:
+  shallowShadow:
     '0px 24px 32px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 0px 1px rgba(0, 0, 0, 0.12);',
   deepShadow:
     '8px 12px 20px rgba(51, 53, 72, 0.04), 4px 6px 12px rgba(51, 53, 72, 0.02), 4px 4px 8px rgba(51, 53, 72, 0.04);',
@@ -340,7 +340,6 @@ export const colorsDark: Palette = {
   chain_10_background: colors.red900,
   chain_42161_background: colors.blue900,
 
-  flyoutDropShadow:
-    '0px 24px 32px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 0px 1px rgba(0, 0, 0, 0.12);',
+  shallowShadow: '4px 4px 10px rgba(0, 0, 0, 0.24), 2px 2px 4px rgba(0, 0, 0, 0.12), 1px 2px 2px rgba(0, 0, 0, 0.12);',
   deepShadow: '12px 16px 24px rgba(0, 0, 0, 0.24), 12px 8px 12px rgba(0, 0, 0, 0.24), 4px 4px 8px rgba(0, 0, 0, 0.32);',
 }
