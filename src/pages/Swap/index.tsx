@@ -44,7 +44,7 @@ import Loader from '../../components/Loader'
 import { AutoRow } from '../../components/Row'
 import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
 import ConfirmSwapModal from '../../components/swap/ConfirmSwapModal'
-import { ArrowWrapper, SwapCallbackError, Wrapper } from '../../components/swap/styleds'
+import { ArrowWrapper, PageWrapper, SwapCallbackError, SwapWrapper } from '../../components/swap/styleds'
 import SwapHeader from '../../components/swap/SwapHeader'
 import { SwitchLocaleLink } from '../../components/SwitchLocaleLink'
 import TokenWarningModal from '../../components/TokenWarningModal'
@@ -70,12 +70,7 @@ import { computeFiatValuePriceImpact } from '../../utils/computeFiatValuePriceIm
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { computeRealizedPriceImpact, warningSeverity } from '../../utils/prices'
 import { supportedChainId } from '../../utils/supportedChainId'
-import AppBody from '../AppBody'
 
-const AlertWrapper = styled.div`
-  max-width: 460px;
-  width: 100%;
-`
 const ArrowContainer = styled.div`
   display: inline-block;
   margin-left: 6%;
@@ -508,7 +503,7 @@ export default function Swap() {
   return (
     <Trace page={PageName.SWAP_PAGE} shouldLogImpression>
       <>
-        {redesignFlag === RedesignVariant.Enabled ? (
+        {redesignFlagEnabled ? (
           <TokenSafetyModal
             isOpen={importTokensNotInDefault.length > 0 && !dismissTokenWarning}
             tokenAddress={importTokensNotInDefault[0]?.address}
@@ -524,9 +519,9 @@ export default function Swap() {
             onDismiss={handleDismissTokenWarning}
           />
         )}
-        <AppBody>
-          <SwapHeader allowedSlippage={allowedSlippage} />
-          <Wrapper id="swap-page">
+        <PageWrapper redesignFlag={redesignFlagEnabled}>
+          <SwapWrapper id="swap-page" redesignFlag={redesignFlagEnabled}>
+            <SwapHeader allowedSlippage={allowedSlippage} />
             <ConfirmSwapModal
               isOpen={showConfirm}
               trade={trade}
@@ -820,11 +815,9 @@ export default function Swap() {
                 </AutoColumn>
               </BottomWrapper>
             </AutoColumn>
-          </Wrapper>
-        </AppBody>
-        <AlertWrapper>
+          </SwapWrapper>
           <NetworkAlert />
-        </AlertWrapper>
+        </PageWrapper>
         <SwitchLocaleLink />
         {!swapIsUnsupported ? null : (
           <UnsupportedCurrencyFooter
