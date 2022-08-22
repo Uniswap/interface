@@ -137,6 +137,5 @@ declare module 'styled-components/macro' {
     // css snippets
     flexColumnNoWrap: FlattenSimpleInterpolation
     flexRowNoWrap: FlattenSimpleInterpolation
-    transitions: FlattenSimpleInterpolation
   }
 }

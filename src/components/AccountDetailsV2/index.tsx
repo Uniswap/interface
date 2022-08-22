@@ -28,7 +28,7 @@ const Grid = styled.a`
 
   &:hover {
     background-color: ${({ theme }) => theme.backgroundModule};
-    ${({ theme }) => theme.transitions};
+    transition: 250ms background-color ease;
   }
 `
 

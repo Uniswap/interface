@@ -1,6 +1,6 @@
 import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
 import { useWalletFlag, WalletVariant } from 'featureFlags/flags/wallet'
-import { useWindowSize } from 'hooks/useWindowSize'
+import { useIsDesktopView } from 'hooks/useWindowSize'
 import { useMemo, useState } from 'react'
 import styled, { css } from 'styled-components/macro'
 
@@ -50,8 +50,7 @@ const WalletDropdown = () => {
   const walletFlag = useWalletFlag()
   const redesignFlag = useRedesignFlag()
   const walletDropdownOpen = useModalIsOpen(ApplicationModal.WALLET_DROPDOWN)
-  const { width: windowWidth } = useWindowSize()
-  const isMobile = useMemo(() => !!(windowWidth && windowWidth < 1260), [windowWidth])
+  const isMobile = !useIsDesktopView()
 
   const isOpen = useMemo(
     () => (redesignFlag === RedesignVariant.Enabled || walletFlag === WalletVariant.Enabled) && walletDropdownOpen,

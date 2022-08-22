@@ -269,9 +269,6 @@ function getTheme(darkMode: boolean, isNewColorsEnabled: boolean): DefaultTheme 
       display: flex;
       flex-flow: row nowrap;
     `,
-    transitions: css`
-      transition: 250ms all ease;
-    `,
   }
 }
 
