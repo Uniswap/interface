@@ -5,8 +5,9 @@ import { EventName } from 'components/AmplitudeAnalytics/constants'
 import SparklineChart from 'components/Charts/SparklineChart'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { getChainInfo } from 'constants/chainInfo'
-import { chainIdToChainName, useTokenDetailQuery } from 'graphql/data/TokenDetailQuery'
+import { chainIdToChainName } from 'graphql/data/TokenDetailQuery'
 import { useTokenPriceQuery } from 'graphql/data/TokenPriceQuery'
+import { useTokenRowQuery } from 'graphql/data/TokenRowQuery'
 import { useCurrency, useToken } from 'hooks/Tokens'
 import { TimePeriod, TokenData } from 'hooks/useExplorePageQuery'
 import { useAtom } from 'jotai'
@@ -443,7 +444,6 @@ export default function LoadedRow({
   const toggleFavorite = useToggleFavorite(tokenAddress)
   const filterString = useAtomValue(filterStringAtom)
   const filterNetwork = useAtomValue(filterNetworkAtom)
-  const filterTime = useAtomValue(filterTimeAtom) // filter time period for top tokens table
   const L2Icon = getChainInfo(filterNetwork).circleLogoUrl
 
   // TODO: make delta shareable and fix based on future changes
@@ -463,13 +463,13 @@ export default function LoadedRow({
     token_symbol: token?.symbol,
     token_list_index: tokenListIndex,
     token_list_length: tokenListLength,
-    time_frame: filterTime,
+    time_frame: timePeriod,
     search_token_address_input: filterString,
   }
 
   const heartColor = isFavorited ? theme.accentActive : undefined
   // TODO: consider using backend network?
-  const tokenDetailData = useTokenDetailQuery(tokenAddress, chainIdToChainName(filterNetwork))
+  const tokenRowData = useTokenRowQuery(tokenAddress, timePeriod, chainIdToChainName(filterNetwork))
   // TODO: currency logo sizing mobile (32px) vs. desktop (24px)
   return (
     <StyledLink
@@ -505,7 +505,7 @@ export default function LoadedRow({
         price={
           <ClickableContent>
             <PriceInfoCell>
-              {tokenDetailData.price?.value ? formatDollarAmount(tokenDetailData.price?.value) : '-'}
+              {tokenRowData.price?.value ? formatDollarAmount(tokenRowData.price?.value) : '-'}
               <PercentChangeInfoCell>
                 {delta}
                 {arrow}
@@ -521,12 +521,12 @@ export default function LoadedRow({
         }
         marketCap={
           <ClickableContent>
-            {tokenDetailData.marketCap?.value ? formatDollarAmount(tokenDetailData.marketCap?.value) : '-'}
+            {tokenRowData.marketCap?.value ? formatDollarAmount(tokenRowData.marketCap?.value) : '-'}
           </ClickableContent>
         }
         volume={
           <ClickableContent>
-            {tokenDetailData.volume24h?.value ? formatDollarAmount(tokenDetailData.volume24h?.value) : '-'}
+            {tokenRowData.volume?.value ? formatDollarAmount(tokenRowData.volume?.value) : '-'}
           </ClickableContent>
         }
         sparkLine={
