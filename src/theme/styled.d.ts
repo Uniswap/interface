@@ -54,7 +54,7 @@ export interface ThemeColors {
   chain_80001: Color
 
   blue200: Color
-  flyoutDropShadow: Color
+  shallowShadow: Color
   deepShadow: Color
   hoverState: Color
   hoverDefault: Color

@@ -1,6 +1,5 @@
-import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import * as connectionUtils from 'connection/utils'
-import JSBI from 'jsbi'
 import { ApplicationModal } from 'state/application/reducer'
 
 import { nativeOnChain } from '../../constants/tokens'
@@ -12,10 +11,7 @@ afterEach(() => {
   jest.resetModules()
 })
 
-const currencyAmount = (token: Currency, amount: number) => CurrencyAmount.fromRawAmount(token, JSBI.BigInt(amount))
-
 const mockEth = () => nativeOnChain(1)
-const mockCurrencyAmount = currencyAmount(mockEth(), 1)
 
 const UserAgentMock = jest.requireMock('utils/userAgent')
 jest.mock('utils/userAgent', () => ({
@@ -39,24 +35,14 @@ jest.mock('hooks/useStablecoinPrice', () => {
   }
 })
 
-jest.mock('state/connection/hooks', () => {
-  return {
-    useAllTokenBalances: () => {
-      return [{}, false]
-    },
-  }
-})
-
-jest.mock('../../hooks/Tokens', () => {
-  return {
-    useAllTokens: () => ({}),
-  }
-})
-
 jest.mock('lib/hooks/useCurrencyBalance', () => {
   return {
-    useCurrencyBalances: (account?: string, currencies?: (Currency | undefined)[]) => {
-      return [mockCurrencyAmount]
+    __esModule: true,
+    default: (account?: string, currency?: Currency) => {
+      return
+    },
+    useTokenBalance: (account?: string, token?: Token) => {
+      return
     },
   }
 })

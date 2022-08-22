@@ -87,7 +87,7 @@ const Navbar = () => {
             <MenuItem href="/swap" isActive={pathname.startsWith('/swap')}>
               Swap
             </MenuItem>
-            <MenuItem href="/tokens" isActive={pathname.startsWith('/explore')}>
+            <MenuItem href="/tokens" isActive={pathname.startsWith('/tokens')}>
               Tokens
             </MenuItem>
             {nftFlag === NftVariant.Enabled && (
