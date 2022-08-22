@@ -1,4 +1,3 @@
-import WalletDropdown from 'components/WalletDropdown'
 import Web3Status from 'components/Web3Status'
 import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
 import { useWindowSize } from 'hooks/useWindowSize'
@@ -109,7 +108,6 @@ const Navbar = () => {
             <MenuDropdown />
             <ChainSwitcher />
             <Web3Status />
-            <WalletDropdown />
           </Row>
         </Box>
       </Box>

@@ -1,7 +1,6 @@
 import { Trans } from '@lingui/macro'
 import useScrollPosition from '@react-hook/window-scroll'
 import { useWeb3React } from '@web3-react/core'
-import WalletDropdown from 'components/WalletDropdown'
 import { getChainInfoOrDefault } from 'constants/chainInfo'
 import { SupportedChainId } from 'constants/chains'
 import { TokensVariant, useTokensFlag } from 'featureFlags/flags/tokens'
@@ -347,7 +346,6 @@ export default function Header() {
             ) : null}
             <Web3Status />
           </AccountElement>
-          <WalletDropdown />
         </HeaderElement>
         <HeaderElement>
           <Menu />
