@@ -49,7 +49,7 @@ const StyledDownArrow = styled(ArrowDownRight)`
 
 export function getDelta(start: number, current: number) {
   const delta = (current / start - 1) * 100
-  if (Number.isNaN(delta)) return '-'
+  if (isNaN(delta)) return '-'
   const isPositive = Math.sign(delta) > 0
 
   const formattedDelta = delta.toFixed(2) + '%'
