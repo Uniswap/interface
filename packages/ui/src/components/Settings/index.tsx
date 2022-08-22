@@ -1,8 +1,9 @@
-import React, { useContext, useRef, useState } from 'react'
+import useThemedContext from 'hooks/useThemedContext'
+import React, { useRef, useState } from 'react'
 import { Settings, X } from 'react-feather'
 import ReactGA from 'react-ga'
 import { Text } from 'rebass'
-import styled, { ThemeContext } from 'styled-components'
+import styled from 'styled-components'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 import { ApplicationModal } from '../../state/application/actions'
 import { useModalOpen, useToggleSettingsMenu } from '../../state/application/hooks'
@@ -125,7 +126,7 @@ export default function SettingsTab() {
   const open = useModalOpen(ApplicationModal.SETTINGS)
   const toggle = useToggleSettingsMenu()
 
-  const theme = useContext(ThemeContext)
+  const theme = useThemedContext()
   const [userSlippageTolerance, setUserslippageTolerance] = useUserSlippageTolerance()
 
   const [ttl, setTtl] = useUserTransactionTTL()

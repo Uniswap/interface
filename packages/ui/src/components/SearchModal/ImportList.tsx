@@ -6,7 +6,7 @@ import Card from 'components/Card'
 import { AutoColumn } from 'components/Column'
 import { RowBetween, RowFixed, AutoRow } from 'components/Row'
 import { ArrowLeft, AlertTriangle } from 'react-feather'
-import useTheme from 'hooks/useTheme'
+import useThemedContext from 'hooks/useThemedContext'
 import { transparentize } from 'polished'
 import { ButtonPrimary } from 'components/Button'
 import { SectionBreak } from 'components/swap/styleds'
@@ -35,7 +35,7 @@ interface ImportProps {
 }
 
 export function ImportList({ listURL, list, setModalView, onDismiss }: ImportProps) {
-  const theme = useTheme()
+  const theme = useThemedContext()
   const dispatch = useDispatch<AppDispatch>()
 
   // user must accept

@@ -13,7 +13,7 @@ import { useProposalData, useUserVotesAsOfBlock, ProposalData, useUserDelegatee 
 import { DateTime } from 'luxon'
 import ReactMarkdown from 'react-markdown'
 import VoteModal from '../../components/vote/VoteModal'
-import { TokenAmount, JSBI } from '@teleswap/sdk'
+import * as sdk from '@teleswap/sdk'
 import { useActiveWeb3React } from '../../hooks'
 import { AVERAGE_BLOCK_TIME_IN_SECS, COMMON_CONTRACT_NAMES, UNI, ZERO_ADDRESS } from '../../constants'
 import { isAddress, getEtherscanLink } from '../../utils'
@@ -145,21 +145,21 @@ export default function VotePage({
     proposalData && totalVotes ? ((proposalData.againstCount * 100) / totalVotes).toFixed(0) + '%' : '0%'
 
   // only count available votes as of the proposal start block
-  const availableVotes: TokenAmount | undefined = useUserVotesAsOfBlock(proposalData?.startBlock ?? undefined)
+  const availableVotes: sdk.TokenAmount | undefined = useUserVotesAsOfBlock(proposalData?.startBlock ?? undefined)
 
   // only show voting if user has > 0 votes at proposal start block and proposal is active,
   const showVotingButtons =
     availableVotes &&
-    JSBI.greaterThan(availableVotes.raw, JSBI.BigInt(0)) &&
+    sdk.JSBI.greaterThan(availableVotes.raw, sdk.JSBI.BigInt(0)) &&
     proposalData &&
     proposalData.status === 'active'
 
-  const uniBalance: TokenAmount | undefined = useTokenBalance(account ?? undefined, chainId ? UNI[chainId] : undefined)
+  const uniBalance: sdk.TokenAmount | undefined = useTokenBalance(account ?? undefined, chainId ? UNI[chainId] : undefined)
   const userDelegatee: string | undefined = useUserDelegatee()
 
   // in blurb link to home page if they are able to unlock
   const showLinkForUnlock = Boolean(
-    uniBalance && JSBI.notEqual(uniBalance.raw, JSBI.BigInt(0)) && userDelegatee === ZERO_ADDRESS
+    uniBalance && sdk.JSBI.notEqual(uniBalance.raw, sdk.JSBI.BigInt(0)) && userDelegatee === ZERO_ADDRESS
   )
 
   // show links in propsoal details if content is an address

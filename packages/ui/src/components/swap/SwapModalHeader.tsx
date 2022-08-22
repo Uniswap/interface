@@ -1,8 +1,7 @@
 import { Trade, TradeType } from '@teleswap/sdk'
-import React, { useContext, useMemo } from 'react'
+import React, { useMemo } from 'react'
 import { ArrowDown, AlertTriangle } from 'react-feather'
 import { Text } from 'rebass'
-import { ThemeContext } from 'styled-components'
 import { Field } from '../../state/swap/actions'
 import { TYPE } from '../../theme'
 import { ButtonPrimary } from '../Button'
@@ -12,6 +11,7 @@ import { AutoColumn } from '../Column'
 import CurrencyLogo from '../CurrencyLogo'
 import { RowBetween, RowFixed } from '../Row'
 import { TruncatedText, SwapShowAcceptChanges } from './styleds'
+import useThemedContext from 'hooks/useThemedContext'
 
 export default function SwapModalHeader({
   trade,
@@ -33,7 +33,7 @@ export default function SwapModalHeader({
   const { priceImpactWithoutFee } = useMemo(() => computeTradePriceBreakdown(trade), [trade])
   const priceImpactSeverity = warningSeverity(priceImpactWithoutFee)
 
-  const theme = useContext(ThemeContext)
+  const theme = useThemedContext()
 
   return (
     <AutoColumn gap={'md'} style={{ marginTop: '20px' }}>

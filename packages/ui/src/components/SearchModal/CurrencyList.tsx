@@ -20,7 +20,7 @@ import { wrappedCurrency } from 'utils/wrappedCurrency'
 import { LightGreyCard } from 'components/Card'
 import TokenListLogo from '../../assets/svg/tokenlist.svg'
 import QuestionHelper from 'components/QuestionHelper'
-import useTheme from 'hooks/useTheme'
+import useThemedContext from 'hooks/useThemedContext'
 
 function currencyKey(currency: Currency): string {
   return currency instanceof Token ? currency.address : currency === ETHER ? 'ETHER' : ''
@@ -175,7 +175,7 @@ export default function CurrencyList({
   }, [breakIndex, currencies, showETH])
 
   const { chainId } = useActiveWeb3React()
-  const theme = useTheme()
+  const theme = useThemedContext()
 
   const inactiveTokens: {
     [address: string]: Token

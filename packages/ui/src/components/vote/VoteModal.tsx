@@ -1,9 +1,9 @@
-import React, { useState, useContext } from 'react'
+import React, { useState } from 'react'
 import { useActiveWeb3React } from '../../hooks'
 
 import Modal from '../Modal'
 import { AutoColumn, ColumnCenter } from '../Column'
-import styled, { ThemeContext } from 'styled-components'
+import styled from 'styled-components'
 import { RowBetween } from '../Row'
 import { TYPE, CustomLightSpinner } from '../../theme'
 import { X, ArrowUpCircle } from 'react-feather'
@@ -13,6 +13,7 @@ import { useVoteCallback, useUserVotes } from '../../state/governance/hooks'
 import { getEtherscanLink } from '../../utils'
 import { ExternalLink } from '../../theme/components'
 import { TokenAmount } from '@teleswap/sdk'
+import useThemedContext from 'hooks/useThemedContext'
 
 const ContentWrapper = styled(AutoColumn)`
   width: 100%;
@@ -55,7 +56,7 @@ export default function VoteModal({ isOpen, onDismiss, proposalId, support }: Vo
   const [attempting, setAttempting] = useState<boolean>(false)
 
   // get theme for colors
-  const theme = useContext(ThemeContext)
+  const theme = useThemedContext()
 
   // wrapper to reset state on modal close
   function wrappedOndismiss() {

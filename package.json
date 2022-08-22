@@ -9,9 +9,8 @@
       "packages/*"
     ],
     "nohoist": [
-      "**/react-native",
-      "**/react-native/**",
-      "jest"
+      "**/jest",
+      "**/jest/**"
     ]
   },
   "scripts": {

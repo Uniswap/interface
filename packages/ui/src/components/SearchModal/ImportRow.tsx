@@ -7,7 +7,7 @@ import { TYPE } from 'theme'
 import ListLogo from 'components/ListLogo'
 import { useActiveWeb3React } from 'hooks'
 import { useCombinedInactiveList } from 'state/lists/hooks'
-import useTheme from 'hooks/useTheme'
+import useThemedContext from 'hooks/useThemedContext'
 import { ButtonPrimary } from 'components/Button'
 import styled from 'styled-components'
 import { useIsUserAddedToken, useIsTokenActive } from 'hooks/Tokens'
@@ -55,7 +55,7 @@ export default function ImportRow({
 }) {
   // gloabls
   const { chainId } = useActiveWeb3React()
-  const theme = useTheme()
+  const theme = useThemedContext()
 
   // check if token comes from list
   const inactiveTokenList = useCombinedInactiveList()

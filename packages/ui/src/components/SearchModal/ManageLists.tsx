@@ -23,7 +23,7 @@ import ListLogo from '../ListLogo'
 import Row, { RowFixed, RowBetween } from '../Row'
 import { PaddedColumn, SearchInput, Separator, SeparatorDark } from './styleds'
 import { useListColor } from 'hooks/useColor'
-import useTheme from '../../hooks/useTheme'
+import useThemedContext from '../../hooks/useThemedContext'
 import ListToggle from '../Toggle/ListToggle'
 import Card from 'components/Card'
 import { CurrencyModalView } from './CurrencySearchModal'
@@ -97,7 +97,7 @@ const ListRow = memo(function ListRow({ listUrl }: { listUrl: string }) {
   const dispatch = useDispatch<AppDispatch>()
   const { current: list, pendingUpdate: pending } = listsByUrl[listUrl]
 
-  const theme = useTheme()
+  const theme = useThemedContext()
   const listColor = useListColor(list?.logoURI)
   const isActive = useIsListActive(listUrl)
 
@@ -222,7 +222,7 @@ export function ManageLists({
   setImportList: (list: TokenList) => void
   setListUrl: (url: string) => void
 }) {
-  const theme = useTheme()
+  const theme = useThemedContext()
 
   const [listUrlInput, setListUrlInput] = useState<string>('')
 

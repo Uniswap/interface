@@ -1,5 +1,5 @@
-import React, { useContext, useMemo } from 'react'
-import styled, { ThemeContext } from 'styled-components'
+import React, { useMemo } from 'react'
+import styled from 'styled-components'
 import { Pair, JSBI } from '@teleswap/sdk'
 import { Link } from 'react-router-dom'
 import { SwapPoolTabs } from '../../components/NavigationTabs'
@@ -21,6 +21,7 @@ import { Dots } from '../../components/swap/styleds'
 import { CardSection, DataCard, CardNoise, CardBGImage } from '../../components/earn/styled'
 import { useStakingInfo } from '../../state/stake/hooks'
 import { BIG_INT_ZERO } from '../../constants'
+import useThemedContext from 'hooks/useThemedContext'
 
 const PageWrapper = styled(AutoColumn)`
   max-width: 640px;
@@ -80,7 +81,7 @@ const BlockWrapper = styled(Flex)`
 `
 
 export default function Pool() {
-  const theme = useContext(ThemeContext)
+  const theme = useThemedContext()
   const { account } = useActiveWeb3React()
 
   // fetch the user's balances of all tracked V2 LP tokens

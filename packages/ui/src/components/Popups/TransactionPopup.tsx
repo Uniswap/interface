@@ -1,6 +1,7 @@
-import React, { useContext } from 'react'
+import useThemedContext from 'hooks/useThemedContext'
+import React from 'react'
 import { AlertCircle, CheckCircle } from 'react-feather'
-import styled, { ThemeContext } from 'styled-components'
+import styled from 'styled-components'
 import { useActiveWeb3React } from '../../hooks'
 import { TYPE } from '../../theme'
 import { ExternalLink } from '../../theme/components'
@@ -23,7 +24,7 @@ export default function TransactionPopup({
 }) {
   const { chainId } = useActiveWeb3React()
 
-  const theme = useContext(ThemeContext)
+  const theme = useThemedContext()
 
   return (
     <RowNoFlex>

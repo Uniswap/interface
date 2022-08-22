@@ -8,7 +8,7 @@ import { RowBetween, RowFixed, AutoRow } from 'components/Row'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { ArrowLeft, AlertTriangle } from 'react-feather'
 import { transparentize } from 'polished'
-import useTheme from 'hooks/useTheme'
+import useThemedContext from 'hooks/useThemedContext'
 import { ButtonPrimary } from 'components/Button'
 import { SectionBreak } from 'components/swap/styleds'
 import { useAddUserToken } from 'state/user/hooks'
@@ -47,7 +47,7 @@ interface ImportProps {
 }
 
 export function ImportToken({ tokens, onBack, onDismiss, handleCurrencySelect }: ImportProps) {
-  const theme = useTheme()
+  const theme = useThemedContext()
 
   const { chainId } = useActiveWeb3React()
 

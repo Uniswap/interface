@@ -1,6 +1,6 @@
 import { ChainId, Currency } from '@teleswap/sdk'
-import React, { useContext } from 'react'
-import styled, { ThemeContext } from 'styled-components'
+import React from 'react'
+import styled from 'styled-components'
 import Modal from '../Modal'
 import { ExternalLink } from '../../theme'
 import { Text } from 'rebass'
@@ -14,6 +14,7 @@ import MetaMaskLogo from '../../assets/images/metamask.png'
 import { getEtherscanLink } from '../../utils'
 import { useActiveWeb3React } from '../../hooks'
 import useAddTokenToMetamask from 'hooks/useAddTokenToMetamask'
+import useThemedContext from 'hooks/useThemedContext'
 
 const Wrapper = styled.div`
   width: 100%;
@@ -78,7 +79,7 @@ function TransactionSubmittedContent({
   chainId: ChainId
   currencyToAdd?: Currency | undefined
 }) {
-  const theme = useContext(ThemeContext)
+  const theme = useThemedContext()
 
   const { library } = useActiveWeb3React()
 
@@ -158,7 +159,7 @@ export function ConfirmationModalContent({
 }
 
 export function TransactionErrorContent({ message, onDismiss }: { message: string; onDismiss: () => void }) {
-  const theme = useContext(ThemeContext)
+  const theme = useThemedContext()
   return (
     <Wrapper>
       <Section>

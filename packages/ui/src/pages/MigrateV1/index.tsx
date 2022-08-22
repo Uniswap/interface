@@ -1,6 +1,5 @@
 import { JSBI, Token } from '@teleswap/sdk'
-import React, { useCallback, useContext, useMemo, useState, useEffect } from 'react'
-import { ThemeContext } from 'styled-components'
+import React, { useCallback, useMemo, useState, useEffect } from 'react'
 import { AutoColumn } from '../../components/Column'
 import { AutoRow } from '../../components/Row'
 import { SearchInput } from '../../components/SearchModal/styleds'
@@ -18,9 +17,10 @@ import { Dots } from '../../components/swap/styleds'
 import { useAddUserToken } from '../../state/user/hooks'
 import { isTokenOnList } from '../../utils'
 import { useCombinedActiveList } from '../../state/lists/hooks'
+import useThemedContext from 'hooks/useThemedContext'
 
 export default function MigrateV1() {
-  const theme = useContext(ThemeContext)
+  const theme = useThemedContext()
   const { account, chainId } = useActiveWeb3React()
 
   const [tokenSearch, setTokenSearch] = useState<string>('')

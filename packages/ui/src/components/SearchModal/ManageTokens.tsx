@@ -12,7 +12,7 @@ import { getEtherscanLink, isAddress } from 'utils'
 import { useActiveWeb3React } from 'hooks'
 import Card from 'components/Card'
 import ImportRow from './ImportRow'
-import useTheme from '../../hooks/useTheme'
+import useThemedContext from '../../hooks/useThemedContext'
 
 import { CurrencyModalView } from './CurrencySearchModal'
 
@@ -45,7 +45,7 @@ export default function ManageTokens({
   const { chainId } = useActiveWeb3React()
 
   const [searchQuery, setSearchQuery] = useState<string>('')
-  const theme = useTheme()
+  const theme = useThemedContext()
 
   // manage focus on modal show
   const inputRef = useRef<HTMLInputElement>()

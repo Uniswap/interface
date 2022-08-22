@@ -98,7 +98,7 @@ export function useAllProposalData() {
   const proposalCount = useProposalCount()
   const govContract = useGovernanceContract()
 
-  const proposalIndexes = []
+  const proposalIndexes: Array<number[]> = []
   for (let i = 1; i <= (proposalCount ?? 0); i++) {
     proposalIndexes.push([i])
   }

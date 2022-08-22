@@ -19,7 +19,7 @@ import AutoSizer from 'react-virtualized-auto-sizer'
 import styled from 'styled-components'
 import useToggle from 'hooks/useToggle'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
-import useTheme from 'hooks/useTheme'
+import useThemedContext from 'hooks/useThemedContext'
 import ImportRow from './ImportRow'
 import { Edit } from 'react-feather'
 import useDebounce from 'hooks/useDebounce'
@@ -65,7 +65,7 @@ export function CurrencySearch({
 }: CurrencySearchProps) {
   const { t } = useTranslation()
   const { chainId } = useActiveWeb3React()
-  const theme = useTheme()
+  const theme = useThemedContext()
 
   // refs for fixed size lists
   const fixedList = useRef<FixedSizeList>()

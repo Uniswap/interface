@@ -5,6 +5,7 @@
   "description": "🛠 An SDK for building applications on top of Uniswap V2",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
+  "module": "dist/esm/sdk.esm.js",
   "private": true,
   "files": [
     "dist"
@@ -14,9 +15,7 @@
     "uniswap",
     "ethereum"
   ],
-  "module": "dist/v2-sdk.esm.js",
   "scripts": {
-    "postinstall": "npm run build",
     "lint": "tsdx lint src test",
     "build": "tsdx build",
     "start": "tsdx watch",

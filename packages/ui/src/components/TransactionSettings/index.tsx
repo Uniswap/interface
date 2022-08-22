@@ -1,5 +1,5 @@
-import React, { useState, useRef, useContext } from 'react'
-import styled, { ThemeContext } from 'styled-components'
+import React, { useState, useRef } from 'react'
+import styled from 'styled-components'
 
 import QuestionHelper from '../QuestionHelper'
 import { TYPE } from '../../theme'
@@ -7,6 +7,7 @@ import { AutoColumn } from '../Column'
 import { RowBetween, RowFixed } from '../Row'
 
 import { darken } from 'polished'
+import useThemedContext from 'hooks/useThemedContext'
 
 enum SlippageError {
   InvalidInput = 'InvalidInput',
@@ -93,7 +94,7 @@ export interface SlippageTabsProps {
 }
 
 export default function SlippageTabs({ rawSlippage, setRawSlippage, deadline, setDeadline }: SlippageTabsProps) {
-  const theme = useContext(ThemeContext)
+  const theme = useThemedContext()
 
   const inputRef = useRef<HTMLInputElement>()
 
