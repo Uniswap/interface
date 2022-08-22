@@ -34,6 +34,7 @@ import { ProposalEditor } from './ProposalEditor'
 import { ProposalSubmissionModal } from './ProposalSubmissionModal'
 
 const PageWrapper = styled(AutoColumn)`
+  padding: 48px 0px 0px;
   ${({ theme }) => theme.mediaWidth.upToMedium`
     padding: 0px 8px;
   `};

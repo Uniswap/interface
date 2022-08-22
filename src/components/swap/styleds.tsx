@@ -9,7 +9,7 @@ import { Z_INDEX } from 'theme'
 import { AutoColumn } from '../Column'
 
 export const PageWrapper = styled.div<{ redesignFlag: boolean }>`
-  padding: 0 8px;
+  padding: 48px 8px 0px;
   max-width: ${({ redesignFlag }) => (redesignFlag ? '420px' : '480px')};
   width: 100%;
 `

@@ -57,6 +57,8 @@ import { ProposalStatus } from './styled'
 
 const PageWrapper = styled(AutoColumn)`
   width: 100%;
+  padding: 48px 0px 0px;
+
   ${({ theme }) => theme.mediaWidth.upToSmall`
     padding: 0px 8px;
   `};

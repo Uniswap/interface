@@ -1,7 +1,11 @@
 import { Trans } from '@lingui/macro'
 import { PageName } from 'components/AmplitudeAnalytics/constants'
 import { Trace } from 'components/AmplitudeAnalytics/Trace'
-import { MAX_WIDTH_MEDIA_BREAKPOINT, MEDIUM_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
+import {
+  LARGE_MEDIA_BREAKPOINT,
+  MAX_WIDTH_MEDIA_BREAKPOINT,
+  MEDIUM_MEDIA_BREAKPOINT,
+} from 'components/Tokens/constants'
 import { favoritesAtom, filterStringAtom } from 'components/Tokens/state'
 import FavoriteButton from 'components/Tokens/TokenTable/FavoriteButton'
 import NetworkFilter from 'components/Tokens/TokenTable/NetworkFilter'
@@ -18,7 +22,11 @@ import { ThemedText } from 'theme'
 const ExploreContainer = styled.div`
   width: 100%;
   min-width: 320px;
-  padding: 0px 12px;
+  padding: 60px 12px 0px;
+
+  @media only screen and (max-width: ${LARGE_MEDIA_BREAKPOINT}) {
+    padding: 32px 12px 0px;
+  } ;
 `
 const TokenTableContainer = styled.div`
   padding: 16px 0px;

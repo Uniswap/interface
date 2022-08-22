@@ -31,6 +31,7 @@ import { currencyId } from '../../utils/currencyId'
 const PageWrapper = styled(AutoColumn)`
   max-width: 640px;
   width: 100%;
+  padding: 48px 0px 0px;
   ${({ theme }) => theme.mediaWidth.upToSmall`
     padding: 0px 8px;
   `};

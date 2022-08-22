@@ -33,6 +33,7 @@ import { UNI } from '../../constants/tokens'
 import { ProposalStatus } from './styled'
 
 const PageWrapper = styled(AutoColumn)`
+  padding: 48px 0px 0px;
   ${({ theme }) => theme.mediaWidth.upToSmall`
     padding: 0px 8px;
   `};

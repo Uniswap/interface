@@ -27,13 +27,15 @@ import { LoadingRows } from './styleds'
 const PageWrapper = styled(AutoColumn)`
   max-width: 870px;
   width: 100%;
+  padding: 68px 0px 0px;
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
     max-width: 800px;
-    padding: 0px 8px;
+    padding: 32px 8px 0px;
   `};
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
+    padding: 12px 8px 0px;
     max-width: 500px;
   `};
 `

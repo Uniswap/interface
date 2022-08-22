@@ -33,10 +33,14 @@ export const ScrollablePage = styled.div`
   position: relative;
   display: flex;
   flex-direction: column;
+  padding: 68px 0px 0px;
   ${({ theme }) => theme.mediaWidth.upToMedium`
     max-width: 480px;
     margin: 0 auto;
-    padding: 0px 8px;
+    padding: 32px 8px 0px;
+  `};
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    padding: 12px 8px 0px;
   `};
 `
 

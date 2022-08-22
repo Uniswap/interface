@@ -51,20 +51,24 @@ import { LoadingRows } from './styleds'
 const PageWrapper = styled.div`
   min-width: 800px;
   max-width: 960px;
+  padding: 68px 0px 0px;
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
     min-width: 680px;
     max-width: 680px;
+    padding: 32px 8px 0px;
   `};
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
     min-width: 600px;
     max-width: 600px;
+    padding: 12px 8px 0px;
   `};
 
   @media only screen and (max-width: 620px) {
     min-width: 500px;
     max-width: 500px;
+    padding: 12px 8px 0px;
   }
 
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
