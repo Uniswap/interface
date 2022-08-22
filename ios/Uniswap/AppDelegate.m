@@ -93,4 +93,15 @@ static void InitializeFlipper(UIApplication *application) {
                     restorationHandler:restorationHandler];
 }
 
+// Disable 3rd party keyboard
+-(BOOL)application:(UIApplication *)application shouldAllowExtensionPointIdentifier:(NSString *)extensionPointIdentifier
+{
+  if (extensionPointIdentifier == UIApplicationKeyboardExtensionPointIdentifier)
+  {
+      return NO;
+  }
+
+  return YES;
+}
+
 @end
