@@ -51,9 +51,7 @@ const WalletDropdown = () => {
   const redesignFlag = useRedesignFlag()
   const walletDropdownOpen = useModalIsOpen(ApplicationModal.WALLET_DROPDOWN)
   const { width: windowWidth } = useWindowSize()
-  const isMobile = useMemo(() => {
-    return !!(windowWidth && windowWidth < 1260)
-  }, [windowWidth])
+  const isMobile = useMemo(() => !!(windowWidth && windowWidth < 1260), [windowWidth])
 
   const isOpen = useMemo(
     () => (redesignFlag === RedesignVariant.Enabled || walletFlag === WalletVariant.Enabled) && walletDropdownOpen,
