@@ -43,9 +43,7 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
     backgroundColor = 'backgroundSurface',
     clearIcon,
     disableClearable,
-    endAdornment = (
-      <SearchIcon color={theme.colors.textTertiary} height={20} strokeWidth={2} width={20} />
-    ),
+    endAdornment = <SearchIcon color={theme.colors.textTertiary} height={20} width={20} />,
     onCancel,
     onChangeText,
     onFocus,
@@ -196,17 +194,15 @@ interface ClearButtonProps {
 function ClearButton(props: ClearButtonProps) {
   const theme = useAppTheme()
 
-  const {
-    onPress,
-    clearIcon = <X color={theme.colors.textSecondary} height={10} strokeWidth={4} width={10} />,
-  } = props
+  const { onPress, clearIcon = <X color={theme.colors.textSecondary} height={16} width={16} /> } =
+    props
 
   return (
     <IconButton
-      bg="backgroundSurface"
+      bg="backgroundOutline"
       borderRadius="full"
       icon={clearIcon}
-      p="xs"
+      p="xxs"
       onPress={onPress}
     />
   )
