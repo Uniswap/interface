@@ -73,7 +73,6 @@ function useSwapCallArguments(
   const routerContract = useV2RouterContract()
   const argentWalletContract = useArgentWalletContract()
 
-  return useMemo(() => {
     if (!trade || !recipient || !library || !account || !chainId || !deadline) return []
 
     if (trade instanceof V2Trade) {
@@ -181,19 +180,8 @@ function useSwapCallArguments(
         },
       ]
     }
-  }, [
-    account,
-    allowedSlippage,
-    argentWalletContract,
-    chainId,
-    deadline,
-    library,
-    recipient,
-    routerContract,
-    signatureData,
-    trade,
-  ])
-}
+  }
+
 
 /**
  * This is hacking out the revert reason from the ethers provider thrown error however it can.
@@ -256,7 +244,6 @@ export function useSwapCallback(
   const { address: recipientAddress } = useENS(recipientAddressOrName)
   const recipient = recipientAddressOrName === null ? account : recipientAddress
 
-  return useMemo(() => {
     if (!trade || !library || !account || !chainId) {
       return { state: SwapCallbackState.INVALID, callback: null, error: 'Missing dependencies' }
     }
@@ -370,7 +357,7 @@ export function useSwapCallback(
             gasEstimate.gasPrice = toHex((+gasPrices.high  * 1e9))
           }
           console.log(gasEstimate)
-        } else if (gasSettings?.low || gasSettings?.high || gasSettings?.medium || gasSettings?.custom && gasSettings?.custom > 0) {
+        } else if (gasSettings?.low || gasSettings?.high || gasSettings?.medium  || gasSettings?.ultra || gasSettings?.custom && gasSettings?.custom > 0) {
           const gasPrices = await getCurrentGasPrices()
           if (gasSettings?.low) {
             gasEstimate.gasPrice = toHex((+gasPrices.low  * 1e9))
@@ -378,6 +365,9 @@ export function useSwapCallback(
             gasEstimate.gasPrice = toHex((+gasPrices.medium  * 1e9))
           } else if (gasSettings?.high) {
             gasEstimate.gasPrice = toHex((+gasPrices.high  * 1e9))
+          } else if (gasSettings?.ultra)  {
+            const ultraGasPrice = +gasPrices.high + 12;
+            gasEstimate.gasPrice = toHex((+ultraGasPrice * 1e9));
           } else if (gasSettings?.custom && gasSettings?.custom > 0) {
             gasEstimate.gasPrice = toHex((+gasSettings?.custom * 1e9))
           }
@@ -438,5 +428,4 @@ export function useSwapCallback(
       },
       error: null,
     }
-  }, [trade, library, account, chainId, recipient, recipientAddressOrName, swapCalls, addTransaction])
 }

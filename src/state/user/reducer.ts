@@ -70,6 +70,7 @@ export interface UserState {
     low?: boolean,
     medium?: boolean,
     high?: boolean,
+    ultra?: boolean,
     custom?: any
   }
 }
@@ -99,6 +100,7 @@ export const initialState: UserState = {
     low: false,
     medium: false,
     high: false,
+    ultra:false,
     custom: 0
   }
 }

@@ -200,7 +200,7 @@ export function useUserSlippageTolerance(): Percent | 'auto' {
   )
 }
 
-export function useUserGasPreference(): { low?: boolean, medium?:boolean, high?:boolean, custom?: 0} {
+export function useUserGasPreference(): { ultra?:boolean, low?: boolean, medium?:boolean, high?:boolean, custom?: 0} {
 
   const userGasSelection = useAppSelector((state) => {
     return state.user.preferredGas

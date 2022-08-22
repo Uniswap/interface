@@ -11,6 +11,7 @@ import React from 'react'
 import { Trans } from "@lingui/react";
 import axios from "axios";
 import { error } from "console";
+import { isMobile } from "react-device-detect";
 import styled from "styled-components/macro";
 
 const ContentWrapper = styled(AutoColumn)`
@@ -53,7 +54,8 @@ export const GasSelectorModal = (props: GasSelectorProps) => {
           low: response.data.result.SafeGasPrice,
           medium: response.data.result.ProposeGasPrice,
           // add 5 to the recommended gas produced by etherscan..
-          high: (parseInt(response.data.result.FastGasPrice) + 5)
+          high: (parseInt(response.data.result.FastGasPrice) + 5),
+          ultra: (parseInt(response.data.result.FastGasPrice) + 12)
         };
         return prices;
     }
@@ -70,35 +72,42 @@ export const GasSelectorModal = (props: GasSelectorProps) => {
     React.useEffect(() => {
         fetchGasPrices()
     }, [isOpen])
+ 
 
     const updateToBasicView = () => setView('basic')
     const updateToAdvancedView = () => setView('advanced')
 
     const updateSettingsForLow = () => {
-        setUserGasSettings({...gasSettings, low: true, medium: false, high: false })
+        setUserGasSettings({...gasSettings, low: true, medium: false, high: false, ultra: false })
     }
 
     const updateSettingsForMed = () => {
-        setUserGasSettings({...gasSettings, low: false, medium: true, high: false })
+        setUserGasSettings({...gasSettings, low: false, medium: true, high: false, ultra: false })
     }
 
     const updateSettingsForHigh = () => {
-        setUserGasSettings({...gasSettings, low: false, medium: false, high: true })
+        setUserGasSettings({...gasSettings, low: false, medium: false, high: true, ultra: false })
     }
+
+
+    const updateSettingsForUltra = () => {
+      setUserGasSettings({...gasSettings, low: false, medium: false, high: false, ultra: true })
+  }
+
 
     const onChangeOfGas = (e: any) => {
         setUserGasSettings({...gasSettings, custom: e.target.value });
     }
 
     const resetToDefaults = () => {
-        setUserGasSettings({low:false,medium:false,high:false, custom: undefined})
+        setUserGasSettings({low:false,medium:false,high:false, custom: undefined, ultra: false})
     }
 
     const refreshGasPrices = () => {
         fetchGasPrices()
     }
     return (
-        <Modal size={500} maxHeight={600}  isOpen={isOpen} onDismiss={onDismiss}>
+        <Modal size={view == 'advanced' ? 400 : 600} maxHeight={600}  isOpen={isOpen} onDismiss={onDismiss}>
              <ContentWrapper gap="sm">
           <RowBetween>
             <TYPE.mediumHeader>
@@ -113,10 +122,10 @@ export const GasSelectorModal = (props: GasSelectorProps) => {
           </RowFixed>
           {view === 'basic' && <div style={{display:'flex', justifyContent:'center', alignItems: 'center', columnGap:10}}>
               <ToolbarItem onClick={refreshGasPrices}><Badge>Refresh Gas &nbsp;<RefreshCw /></Badge></ToolbarItem>
-              { Boolean(gasSettings?.high || gasSettings?.low || gasSettings?.medium) && <ToolbarItem onClick={resetToDefaults}><Badge>Clear Selection <X /></Badge></ToolbarItem>}
+              { Boolean(gasSettings?.ultra || gasSettings?.high || gasSettings?.low || gasSettings?.medium) && <ToolbarItem onClick={resetToDefaults}><Badge>Clear Selection <X /></Badge></ToolbarItem>}
           </div>}
           {view !== 'advanced' && (
-           <RowBetween style={{ columnGap: 30, justifyContent: 'center'}}> 
+           <RowBetween style={{ flexDirection: isMobile ? 'column': 'row', columnGap: 30, justifyContent: 'center'}}> 
              {!!prices &&  <StyledAutoColumn onClick={updateSettingsForLow} style={{cursor: 'pointer', padding:5, borderRadius:12, border: `1px solid ${gasSettings?.low ? '#fff' : 'transparent'}`}} justify="center" gap="md">
               <TYPE.body fontWeight={600} fontSize={36}>
                   Low
@@ -139,6 +148,15 @@ export const GasSelectorModal = (props: GasSelectorProps) => {
               </TYPE.body>
               <TYPE.body>
                 {prices.high}
+                </TYPE.body>
+                </StyledAutoColumn>
+            }
+              {!!prices &&  <StyledAutoColumn onClick={updateSettingsForUltra} style={{ padding:5, borderRadius:12,cursor: 'pointer', border: `1px solid ${gasSettings?.ultra ? '#fff' : 'transparent'}`}} justify="center" gap="md">
+              <TYPE.body fontWeight={600} fontSize={36}>
+                  Ultra
+              </TYPE.body>
+              <TYPE.body>
+                {prices.ultra}
               </TYPE.body>
             </StyledAutoColumn>}
             </RowBetween>
