@@ -260,7 +260,9 @@ exports[`renders correctly 1`] = `
       <View
         animatedStyle={
           Object {
-            "value": Object {},
+            "value": Object {
+              "opacity": 0,
+            },
           }
         }
         collapsable={false}
@@ -276,6 +278,7 @@ exports[`renders correctly 1`] = `
             Object {
               "bottom": 0,
               "left": 0,
+              "opacity": 0,
               "position": "absolute",
               "right": 0,
               "top": 0,
@@ -289,10 +292,55 @@ exports[`renders correctly 1`] = `
               "value": Object {
                 "transform": Array [
                   Object {
-                    "translateX": -25,
+                    "translateX": -1,
                   },
                   Object {
-                    "translateY": -25,
+                    "scale": 0,
+                  },
+                ],
+              },
+            }
+          }
+          collapsable={false}
+          style={
+            Array [
+              Object {
+                "borderColor": "#5E68873d",
+                "borderRadius": 4,
+                "borderStyle": "dashed",
+                "borderWidth": 1,
+                "display": "flex",
+                "height": 300,
+                "width": 1,
+              },
+              Object {
+                "bottom": 0,
+                "left": 0,
+                "position": "absolute",
+                "right": 0,
+                "top": 0,
+                "transform": Array [
+                  Object {
+                    "translateX": -1,
+                  },
+                  Object {
+                    "scale": 0,
+                  },
+                ],
+              },
+            ]
+          }
+        />
+        <View
+          animatedStyle={
+            Object {
+              "value": Object {
+                "transform": Array [
+                  Object {
+                    "translateX": -9,
+                  },
+                  Object {
+                    "translateY": -9,
                   },
                   Object {
                     "scale": 0,
@@ -306,20 +354,19 @@ exports[`renders correctly 1`] = `
             Array [
               Object {
                 "alignItems": "center",
-                "borderRadius": 999999,
                 "display": "flex",
-                "height": 50,
+                "height": 18,
                 "justifyContent": "center",
-                "width": 50,
+                "position": "relative",
+                "width": 18,
               },
               Object {
-                "backgroundColor": "rgba(243, 71, 191, 0.171)",
                 "transform": Array [
                   Object {
-                    "translateX": -25,
+                    "translateX": -9,
                   },
                   Object {
-                    "translateY": -25,
+                    "translateY": -9,
                   },
                   Object {
                     "scale": 0,
@@ -333,11 +380,31 @@ exports[`renders correctly 1`] = `
             style={
               Array [
                 Object {
-                  "backgroundColor": "#FB118E",
+                  "backgroundColor": "#5E68873d",
                   "borderRadius": 999999,
                   "display": "flex",
-                  "height": 15,
-                  "width": 15,
+                  "height": 18,
+                  "width": 18,
+                },
+                Object {
+                  "bottom": 0,
+                  "left": 0,
+                  "position": "absolute",
+                  "right": 0,
+                  "top": 0,
+                },
+              ]
+            }
+          />
+          <View
+            style={
+              Array [
+                Object {
+                  "backgroundColor": "#5E6887",
+                  "borderRadius": 999999,
+                  "display": "flex",
+                  "height": 12,
+                  "width": 12,
                 },
               ]
             }
