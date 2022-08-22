@@ -447,7 +447,7 @@ export default function LoadedRow({
   const L2Icon = getChainInfo(filterNetwork).circleLogoUrl
 
   // TODO: make delta shareable and fix based on future changes
-  const pricePoints: PricePoint[] = useTokenPriceQuery(tokenAddress, timePeriod, 'ETHEREUM').filter(
+  const pricePoints: PricePoint[] = useTokenPriceQuery(tokenAddress, filterTime, 'ETHEREUM').filter(
     (p): p is PricePoint => Boolean(p && p.value)
   )
   const hasData = pricePoints.length !== 0
