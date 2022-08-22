@@ -67,6 +67,20 @@ export const T2_OPTIMISTIC_KOVAN = new Token(
   'T2',
   'Test token-2'
 )
+export const GLD_OPTIMISTIC_KOVAN = new Token(
+  SupportedChainId.OPTIMISTIC_KOVAN,
+  '0x6C3D016A3Bd72D49BF1C4bDFe601e2C37700a01A',
+  18,
+  'GLD',
+  'Gold'
+)
+export const SLVR_OPTIMISTIC_KOVAN = new Token(
+  SupportedChainId.OPTIMISTIC_KOVAN,
+  '0xE9e84b42E53A8784dF45c761aCE4d1cf4f948Eb3',
+  18,
+  'SLVR',
+  'Silver'
+)
 export const USDC_ARBITRUM = new Token(
   SupportedChainId.ARBITRUM_ONE,
   '0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8',
