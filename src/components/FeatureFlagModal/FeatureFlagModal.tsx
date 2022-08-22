@@ -4,6 +4,7 @@ import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
 import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
 import { TokensVariant, useTokensFlag } from 'featureFlags/flags/tokens'
 import { TokenSafetyVariant, useTokenSafetyFlag } from 'featureFlags/flags/tokenSafety'
+import { TokensNetworkFilterVariant, useTokensNetworkFilterFlag } from 'featureFlags/flags/tokensNetworkFilter'
 import { useWalletFlag, WalletVariant } from 'featureFlags/flags/wallet'
 import { useAtomValue } from 'jotai/utils'
 import { ReactNode, useState } from 'react'
@@ -189,6 +190,12 @@ export default function FeatureFlagModal() {
         value={useTokensFlag()}
         featureFlag={FeatureFlag.tokens}
         label="Tokens"
+      />
+      <FeatureFlagOption
+        variants={Object.values(TokensNetworkFilterVariant)}
+        value={useTokensNetworkFilterFlag()}
+        featureFlag={FeatureFlag.tokensNetworkFilter}
+        label="Tokens Network Filter"
       />
       <FeatureFlagOption
         variants={Object.values(TokenSafetyVariant)}
