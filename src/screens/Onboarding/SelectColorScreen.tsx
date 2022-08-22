@@ -26,7 +26,7 @@ function useNextOnboardingScreen(currentScreen: OnboardingScreens) {
       }
       return OnboardingScreens.Notifications
     default:
-      undefined
+      return undefined
   }
 }
 

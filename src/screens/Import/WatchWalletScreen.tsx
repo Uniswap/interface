@@ -102,7 +102,7 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props) {
           value={value}
           onChange={onChange}
           onSubmit={() => {
-            isValid ? Keyboard.dismiss() : null
+            isValid && Keyboard.dismiss()
           }}
         />
       </Flex>

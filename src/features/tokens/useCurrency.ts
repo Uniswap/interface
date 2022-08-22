@@ -46,6 +46,6 @@ export function useCurrencyIdFromCoingeckoId(coingeckoId?: string): NullUndefine
       return coinIdToCurrencyIds[coingeckoId][ChainId.Mainnet]
 
     // if mainnet address not provided, then return any
-    Object.values(coinIdToCurrencyIds[coingeckoId])[0]
+    return Object.values(coinIdToCurrencyIds[coingeckoId])[0]
   }, [coinIdToCurrencyIds, coingeckoId, isLoading])
 }

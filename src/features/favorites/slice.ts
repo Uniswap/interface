@@ -21,13 +21,15 @@ export const slice = createSlice({
       state,
       { payload: { currencyId } }: PayloadAction<{ currencyId: string }>
     ) => {
-      state.tokens.indexOf(currencyId) === -1
-        ? state.tokens.push(currencyId)
-        : logger.warn(
-            'slice',
-            'addFavoriteToken',
-            `Attempting to favorite a token twice (${currencyId})`
-          )
+      if (state.tokens.indexOf(currencyId) === -1) {
+        state.tokens.push(currencyId)
+      } else {
+        logger.warn(
+          'slice',
+          'addFavoriteToken',
+          `Attempting to favorite a token twice (${currencyId})`
+        )
+      }
     },
     removeFavoriteToken: (
       state,
@@ -46,13 +48,15 @@ export const slice = createSlice({
       state.tokens = newTokens
     },
     addWatchedAddress: (state, { payload: { address } }: PayloadAction<{ address: Address }>) => {
-      !state.watchedAddresses.includes(address)
-        ? state.watchedAddresses.push(address)
-        : logger.warn(
-            'slice',
-            'addWatchedAddress',
-            `Attempting to watch an address twice (${address})`
-          )
+      if (!state.watchedAddresses.includes(address)) {
+        state.watchedAddresses.push(address)
+      } else {
+        logger.warn(
+          'slice',
+          'addWatchedAddress',
+          `Attempting to watch an address twice (${address})`
+        )
+      }
     },
     removeWatchedAddress: (
       state,
