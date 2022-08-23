@@ -60,9 +60,9 @@ function useFilteredTokens(tokens: TokenData[] | undefined) {
           return true
         }
         const lowercaseFilterString = filterString.toLowerCase()
-        const addressIncludesFilterString = token.address.toLowerCase().includes(lowercaseFilterString)
-        const nameIncludesFilterString = token.name?.toLowerCase().includes(lowercaseFilterString)
-        const symbolIncludesFilterString = token.symbol?.toLowerCase().includes(lowercaseFilterString)
+        const addressIncludesFilterString = token?.address?.toLowerCase().includes(lowercaseFilterString)
+        const nameIncludesFilterString = token?.name?.toLowerCase().includes(lowercaseFilterString)
+        const symbolIncludesFilterString = token?.symbol?.toLowerCase().includes(lowercaseFilterString)
         return nameIncludesFilterString || symbolIncludesFilterString || addressIncludesFilterString
       }),
     [shownTokens, filterString]
