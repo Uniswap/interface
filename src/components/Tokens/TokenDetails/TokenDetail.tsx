@@ -170,8 +170,6 @@ const MissingData = styled.div`
 `
 
 export const AboutContainer = styled.div`
-  display: flex;
-  flex-direction: column;
   gap: 16px;
   padding: 24px 0px;
 `
@@ -181,13 +179,15 @@ const TokenDescriptionContainer = styled.div`
   text-overflow: ellipsis;
   max-width: 100%;
   max-height: fit-content;
+  padding-top: 12px;
+  white-space: pre-wrap;
 `
 
 const TruncateDescriptionButton = styled.div`
   color: ${({ theme }) => theme.textSecondary};
   font-weight: 400;
   font-size: 14px;
-  padding: 12px 0px;
+  padding: 14px 0px;
 
   &:hover,
   &:focus {
@@ -196,7 +196,7 @@ const TruncateDescriptionButton = styled.div`
   }
 `
 
-const TRUNCATE_WORDCOUNT = 60
+const TRUNCATE_CHARACTER_COUNT = 400
 
 type TokenDetailData = {
   description: string | null
@@ -223,32 +223,36 @@ export function AboutSection({ address, tokenDetailData }: { address: string; to
       </AboutContainer>
     )
   } else {
-    const tokenDescriptionArray = tokenDetailData.description.split(' ')
-    const shouldTruncate = tokenDescriptionArray.length > TRUNCATE_WORDCOUNT
-    const tokenDescriptionTruncated = shouldTruncate
-      ? tokenDescriptionArray.slice(0, TRUNCATE_WORDCOUNT - 1).join(' ') + '...'
-      : undefined
+    const shouldTruncate = tokenDetailData.description.length > TRUNCATE_CHARACTER_COUNT
+    const truncateDescription = (desc: string) => {
+      //trim the string to the maximum length
+      let tokenDescriptionTruncated = desc.slice(0, TRUNCATE_CHARACTER_COUNT)
+      //re-trim if we are in the middle of a word
+      tokenDescriptionTruncated =
+        tokenDescriptionTruncated.slice(
+          0,
+          Math.min(tokenDescriptionTruncated.length, tokenDescriptionTruncated.lastIndexOf(' '))
+        ) + '...'
+      return tokenDescriptionTruncated
+    }
+
+    const tokenDescription =
+      shouldTruncate && isDescriptionTruncated
+        ? truncateDescription(tokenDetailData.description)
+        : tokenDetailData.description
 
     return (
       <AboutContainer>
         <AboutHeader>
           <Trans>About</Trans>
         </AboutHeader>
-        {!shouldTruncate && tokenDetailData.description}
+        {!shouldTruncate && tokenDescription}
         <TokenDescriptionContainer>
-          {shouldTruncate && isDescriptionTruncated && (
+          {shouldTruncate && (
             <div>
-              {tokenDescriptionTruncated}
-              <TruncateDescriptionButton onClick={() => setIsDescriptionTruncated(false)}>
-                <Trans>Read more</Trans>
-              </TruncateDescriptionButton>
-            </div>
-          )}
-          {shouldTruncate && !isDescriptionTruncated && (
-            <div>
-              {tokenDetailData.description}
-              <TruncateDescriptionButton onClick={() => setIsDescriptionTruncated(true)}>
-                <Trans>Hide</Trans>
+              {tokenDescription}
+              <TruncateDescriptionButton onClick={() => setIsDescriptionTruncated(!isDescriptionTruncated)}>
+                {isDescriptionTruncated ? <Trans>Read more</Trans> : <Trans>Hide</Trans>}
               </TruncateDescriptionButton>
             </div>
           )}
