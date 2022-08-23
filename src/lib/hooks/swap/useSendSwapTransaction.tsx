@@ -31,9 +31,9 @@ interface VdfResponse {
   s3: string
   k: string
   vdf_snark_proof: string
-  sym_key: string
-  commitment: string
-  commitment_le: string
+  s2_string: string
+  s2_field_hex: string
+  commitment_hex: string
 }
 
 interface EncryptedTx {
@@ -134,7 +134,12 @@ export default function useSendSwapTransaction(
 
         console.log(vdfData)
 
-        const encryptData = await poseidonEncrypt(vdfData.sym_key, vdfData.commitment_le, `${path[0]},${path[1]}`)
+        const encryptData = await poseidonEncrypt(
+          vdfData.s2_string,
+          vdfData.s2_field_hex,
+          vdfData.commitment_hex,
+          `${path[0]},${path[1]}`
+        )
 
         // const encryptData = await poseidonEncryptWithoutProof(vdfData.sym_key, `${path[0]},${path[1]}`)
 
@@ -148,7 +153,7 @@ export default function useSendSwapTransaction(
         const encryptedPath = {
           message_length: encryptData.message_length,
           nonce: `${nonce}`,
-          commitment: vdfData.commitment,
+          commitment: vdfData.commitment_hex,
           cipher_text: [encryptData.cipher_text],
           r1: vdfData.r1,
           r3: vdfData.r3,
@@ -221,11 +226,16 @@ async function getVdfProof(): Promise<VdfResponse> {
   return data
 }
 
-async function poseidonEncrypt(symKey: string, commitment: string, plainText: string): Promise<EncryptResponse> {
-  console.log(symKey, commitment, plainText)
+async function poseidonEncrypt(
+  s2_string: string,
+  s2_field_hex: string,
+  commitment: string,
+  plainText: string
+): Promise<EncryptResponse> {
+  console.log(s2_string, commitment, plainText)
   const poseidon = await import('poseidon')
   const data = await poseidon
-    .encrypt(symKey, commitment, plainText)
+    .encrypt(s2_string, s2_field_hex, commitment, plainText)
     .then((res) => {
       console.log(res)
       return res
@@ -238,11 +248,11 @@ async function poseidonEncrypt(symKey: string, commitment: string, plainText: st
   return data
 }
 
-async function poseidonEncryptWithoutProof(symKey: string, plainText: string): Promise<EncryptResponse> {
-  console.log(symKey, plainText)
+async function poseidonEncryptWithoutProof(s2_string: string, plainText: string): Promise<EncryptResponse> {
+  console.log(s2_string, plainText)
   const poseidon = await import('poseidon')
   const data = await poseidon
-    .encrypt_without_proof(symKey, plainText)
+    .encrypt_without_proof(s2_string, plainText)
     .then((res) => {
       console.log(res)
       return res
