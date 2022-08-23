@@ -5,9 +5,7 @@ import { EventName } from 'components/AmplitudeAnalytics/constants'
 import SparklineChart from 'components/Charts/SparklineChart'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { getChainInfo } from 'constants/chainInfo'
-import { chainIdToChainName } from 'graphql/data/TokenDetailQuery'
 import { useTokenPriceQuery } from 'graphql/data/TokenPriceQuery'
-import { useTokenRowQuery } from 'graphql/data/TokenRowQuery'
 import { useCurrency, useToken } from 'hooks/Tokens'
 import { TimePeriod, TokenData } from 'hooks/useExplorePageQuery'
 import { useAtom } from 'jotai'
@@ -425,13 +423,13 @@ export default function LoadedRow({
   tokenAddress,
   tokenListIndex,
   tokenListLength,
-  data,
+  tokenData,
   timePeriod,
 }: {
   tokenAddress: string
   tokenListIndex: number
   tokenListLength: number
-  data: TokenData
+  tokenData: TokenData
   timePeriod: TimePeriod
 }) {
   const token = useToken(tokenAddress)
@@ -468,8 +466,6 @@ export default function LoadedRow({
   }
 
   const heartColor = isFavorited ? theme.accentActive : undefined
-  // TODO: consider using backend network?
-  const tokenRowData = useTokenRowQuery(tokenAddress, timePeriod, chainIdToChainName(filterNetwork))
   // TODO: currency logo sizing mobile (32px) vs. desktop (24px)
   return (
     <StyledLink
@@ -505,7 +501,7 @@ export default function LoadedRow({
         price={
           <ClickableContent>
             <PriceInfoCell>
-              {tokenRowData.price?.value ? formatDollarAmount(tokenRowData.price?.value) : '-'}
+              {tokenData.price?.value ? formatDollarAmount(tokenData.price?.value) : '-'}
               <PercentChangeInfoCell>
                 {delta}
                 {arrow}
@@ -521,12 +517,14 @@ export default function LoadedRow({
         }
         marketCap={
           <ClickableContent>
-            {tokenRowData.marketCap?.value ? formatDollarAmount(tokenRowData.marketCap?.value) : '-'}
+            {tokenData.marketCap?.value ? formatDollarAmount(tokenData.marketCap?.value) : '-'}
           </ClickableContent>
         }
         volume={
           <ClickableContent>
-            {tokenRowData.volume?.value ? formatDollarAmount(tokenRowData.volume?.value) : '-'}
+            {tokenData.volume?.[timePeriod]?.value
+              ? formatDollarAmount(tokenData.volume?.[timePeriod]?.value ?? undefined)
+              : '-'}
           </ClickableContent>
         }
         sparkLine={

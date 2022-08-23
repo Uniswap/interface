@@ -29,7 +29,7 @@ const ChainRow = ({
   return (
     <Row
       as="button"
-      background={active ? 'lightGrayContainer' : 'none'}
+      background={active ? 'lightGrayOverlay' : 'none'}
       className={`${styles.ChainSwitcherRow} ${subhead}`}
       onClick={() => onSelectChain(targetChain)}
     >
@@ -76,13 +76,13 @@ export const ChainSwitcher = ({ isMobile }: ChainSwitcherProps) => {
     <Box position="relative" ref={ref}>
       <Row as="button" gap="8" className={styles.ChainSwitcher} onClick={toggleOpen}>
         <img src={info.logoUrl} alt={info.label} className={styles.Image} />
-        <Box as="span" className={subhead} color="explicitWhite" style={{ lineHeight: '20px' }}>
+        <Box as="span" className={subhead} style={{ lineHeight: '20px' }}>
           {info.label}
         </Box>
         {isOpen ? (
-          <NewChevronUpIcon width={16} height={16} color="darkGray" />
+          <NewChevronUpIcon width={16} height={16} color="blackBlue" />
         ) : (
-          <NewChevronDownIcon width={16} height={16} color="darkGray" />
+          <NewChevronDownIcon width={16} height={16} color="blackBlue" />
         )}
       </Row>
       {isOpen && (

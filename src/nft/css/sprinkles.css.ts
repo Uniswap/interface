@@ -25,14 +25,13 @@ const themeContractValues = {
     magicGradient: '',
     placeholder: '',
     lightGrayButton: '',
-    lightGrayContainer: ',',
-    lightGrayOverlay: '',
 
-    // Opacities of black and whit
+    // Opacities of black and white
     white95: '',
     white90: '',
     white80: '',
     white08: '',
+    backgroundFloating: '',
   },
 
   shadows: {
@@ -162,6 +161,7 @@ export const vars = createGlobalTheme(':root', {
     grey50: '#EDEFF7',
     accentActionSoft: 'rgba(76, 130, 251, 0.24)',
     accentTextLightTertiary: 'rgba(255, 255, 255, 0.12)',
+    lightGrayOverlay: '#99A1BD14',
   },
   border: {
     transculent: '1.5px solid rgba(0, 0, 0, 0.1)',

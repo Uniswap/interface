@@ -1,3 +1,4 @@
+import clsx from 'clsx'
 import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
 import useDebounce from 'hooks/useDebounce'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
@@ -6,7 +7,7 @@ import { organizeSearchResults } from 'lib/utils/searchBar'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import { Overlay } from 'nft/components/modals/Overlay'
-import { subheadSmall } from 'nft/css/common.css'
+import { magicalGradientOnHover, subheadSmall } from 'nft/css/common.css'
 import { breakpoints } from 'nft/css/sprinkles.css'
 import { useSearchHistory } from 'nft/hooks'
 import { fetchSearchCollections, fetchTrendingCollections } from 'nft/queries'
@@ -330,13 +331,12 @@ export const SearchBar = () => {
         style={{ zIndex: '1000' }}
       >
         <Row
-          className={styles.searchBar}
+          className={clsx(`${styles.searchBar} ${!isOpen && magicalGradientOnHover}`)}
           borderRadius={isOpen ? undefined : '12'}
           borderTopRightRadius={isOpen && !isMobile ? '12' : undefined}
           borderTopLeftRadius={isOpen && !isMobile ? '12' : undefined}
           display={{ mobile: isOpen ? 'flex' : 'none', desktopXl: 'flex' }}
           justifyContent={isOpen || phase1Flag === NftVariant.Enabled ? 'flex-start' : 'center'}
-          background={isOpen ? 'white' : 'lightGrayContainer'}
           onFocus={() => !isOpen && toggleOpen()}
           onClick={() => !isOpen && toggleOpen()}
         >

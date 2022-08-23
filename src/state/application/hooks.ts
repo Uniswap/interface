@@ -30,6 +30,10 @@ export function useToggleWalletModal(): () => void {
   return useToggleModal(ApplicationModal.WALLET)
 }
 
+export function useToggleWalletDropdown(): () => void {
+  return useToggleModal(ApplicationModal.WALLET_DROPDOWN)
+}
+
 export function useToggleSettingsMenu(): () => void {
   return useToggleModal(ApplicationModal.SETTINGS)
 }

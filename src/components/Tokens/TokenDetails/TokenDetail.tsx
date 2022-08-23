@@ -9,6 +9,7 @@ import { checkWarning } from 'constants/tokenSafety'
 import { chainIdToChainName, useTokenDetailQuery } from 'graphql/data/TokenDetailQuery'
 import { useCurrency, useIsUserAddedToken, useToken } from 'hooks/Tokens'
 import { useAtomValue } from 'jotai/utils'
+import { darken } from 'polished'
 import { useCallback } from 'react'
 import { useState } from 'react'
 import { ArrowLeft, Heart, TrendingUp } from 'react-feather'
@@ -23,12 +24,6 @@ import { Wave } from './LoadingTokenDetail'
 import Resource from './Resource'
 import ShareButton from './ShareButton'
 
-export const AboutSection = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  padding: 24px 0px;
-`
 export const AboutHeader = styled.span`
   font-size: 28px;
   line-height: 36px;
@@ -174,6 +169,94 @@ const MissingData = styled.div`
   gap: 20px;
 `
 
+export const AboutContainer = styled.div`
+  gap: 16px;
+  padding: 24px 0px;
+`
+
+const TokenDescriptionContainer = styled.div`
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  max-height: fit-content;
+  padding-top: 16px;
+  line-height: 24px;
+  white-space: pre-wrap;
+`
+
+const TruncateDescriptionButton = styled.div`
+  color: ${({ theme }) => theme.textSecondary};
+  font-weight: 400;
+  font-size: 14px;
+  padding: 14px 0px;
+
+  &:hover,
+  &:focus {
+    color: ${({ theme }) => darken(0.1, theme.textSecondary)};
+    cursor: pointer;
+  }
+`
+
+const TRUNCATE_CHARACTER_COUNT = 400
+
+type TokenDetailData = {
+  description: string | null | undefined
+  homepageUrl: string | null | undefined
+  twitterName: string | null | undefined
+}
+
+const truncateDescription = (desc: string) => {
+  //trim the string to the maximum length
+  let tokenDescriptionTruncated = desc.slice(0, TRUNCATE_CHARACTER_COUNT)
+  //re-trim if we are in the middle of a word
+  tokenDescriptionTruncated = `${tokenDescriptionTruncated.slice(
+    0,
+    Math.min(tokenDescriptionTruncated.length, tokenDescriptionTruncated.lastIndexOf(' '))
+  )}...`
+  return tokenDescriptionTruncated
+}
+
+export function AboutSection({ address, tokenDetailData }: { address: string; tokenDetailData: TokenDetailData }) {
+  const [isDescriptionTruncated, setIsDescriptionTruncated] = useState(true)
+
+  const shouldTruncate =
+    tokenDetailData && tokenDetailData.description
+      ? tokenDetailData.description.length > TRUNCATE_CHARACTER_COUNT
+      : false
+
+  const tokenDescription =
+    tokenDetailData && tokenDetailData.description && shouldTruncate && isDescriptionTruncated
+      ? truncateDescription(tokenDetailData.description)
+      : tokenDetailData.description
+
+  return (
+    <AboutContainer>
+      <AboutHeader>
+        <Trans>About</Trans>
+      </AboutHeader>
+      {(!tokenDetailData || !tokenDetailData.description) && (
+        <NoInfoAvailable>
+          <Trans>No token information available</Trans>
+        </NoInfoAvailable>
+      )}
+      <TokenDescriptionContainer>
+        {tokenDescription}
+        <TruncateDescriptionButton onClick={() => setIsDescriptionTruncated(!isDescriptionTruncated)}>
+          {isDescriptionTruncated ? <Trans>Read more</Trans> : <Trans>Hide</Trans>}
+        </TruncateDescriptionButton>
+      </TokenDescriptionContainer>
+      <ResourcesContainer>
+        <Resource name={'Etherscan'} link={`https://etherscan.io/address/${address}`} />
+        <Resource name={'Protocol info'} link={`https://info.uniswap.org/#/tokens/${address}`} />
+        {tokenDetailData?.homepageUrl && <Resource name={'Website'} link={tokenDetailData.homepageUrl} />}
+        {tokenDetailData?.twitterName && (
+          <Resource name={'Twitter'} link={`https://twitter.com/${tokenDetailData.twitterName}`} />
+        )}
+      </ResourcesContainer>
+    </AboutContainer>
+  )
+}
+
 export default function LoadedTokenDetail({ address }: { address: string }) {
   const token = useToken(address)
   const currency = useCurrency(address)
@@ -193,6 +276,11 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
   const networkBadgebackgroundColor = chainInfo?.backgroundColor
   const filterNetwork = useAtomValue(filterNetworkAtom)
   const tokenDetailData = useTokenDetailQuery(address, chainIdToChainName(filterNetwork))
+  const relevantTokenDetailData = (({ description, homepageUrl, twitterName }) => ({
+    description,
+    homepageUrl,
+    twitterName,
+  }))(tokenDetailData)
 
   // catch token error and loading state
   if (!token || !token.name || !token.symbol) {
@@ -225,18 +313,7 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
           </MissingChartData>
         </ChartHeader>
         <MissingData>
-          <AboutSection>
-            <AboutHeader>
-              <Trans>About</Trans>
-            </AboutHeader>
-            <NoInfoAvailable>
-              <Trans>No token information available</Trans>
-            </NoInfoAvailable>
-            <ResourcesContainer>
-              <Resource name={'Etherscan'} link={`https://etherscan.io/address/${address}`} />
-              <Resource name={'Protocol Info'} link={`https://info.uniswap.org/#/tokens/${address}`} />
-            </ResourcesContainer>
-          </AboutSection>
+          <AboutSection address={address} tokenDetailData={relevantTokenDetailData} />
           <StatsSection>
             <NoInfoAvailable>
               <Trans>No stats available</Trans>
@@ -244,7 +321,7 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
           </StatsSection>
           <ContractAddressSection>
             <Contract>
-              Contract Address
+              Contract address
               <ContractAddress>
                 <CopyContractAddress address={address} />
               </ContractAddress>
@@ -293,20 +370,7 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
           <ParentSize>{({ width, height }) => <PriceChart token={token} width={width} height={height} />}</ParentSize>
         </ChartContainer>
       </ChartHeader>
-      <AboutSection>
-        <AboutHeader>
-          <Trans>About</Trans>
-        </AboutHeader>
-        {tokenDetailData.description}
-        <ResourcesContainer>
-          <Resource name={'Etherscan'} link={`https://etherscan.io/address/${address}`} />
-          <Resource name={'Protocol Info'} link={`https://info.uniswap.org/#/tokens/${address}`} />
-          {tokenDetailData.homepageUrl && <Resource name={'Website'} link={tokenDetailData.homepageUrl} />}
-          {tokenDetailData.twitterName && (
-            <Resource name={'Twitter'} link={`https://twitter.com/${tokenDetailData.twitterName}`} />
-          )}
-        </ResourcesContainer>
-      </AboutSection>
+      <AboutSection address={address} tokenDetailData={relevantTokenDetailData} />
       <StatsSection>
         <StatPair>
           <Stat>
@@ -339,7 +403,7 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
       </StatsSection>
       <ContractAddressSection>
         <Contract>
-          Contract Address
+          Contract address
           <ContractAddress>
             <CopyContractAddress address={address} />
           </ContractAddress>

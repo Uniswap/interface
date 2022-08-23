@@ -32,8 +32,9 @@ const SearchInput = styled.input`
   :focus {
     outline: none;
     background-color: ${({ theme }) => theme.backgroundSurface};
-    border: 1.5px solid ${({ theme }) => theme.accentActionSoft};
+    border-color: ${({ theme }) => theme.accentActionSoft};
   }
+
   ::placeholder {
     color: ${({ theme }) => theme.textTertiary};
   }
