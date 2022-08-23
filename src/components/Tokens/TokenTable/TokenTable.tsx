@@ -98,6 +98,7 @@ function useSortedTokens(addresses: string[], tokenData: Record<string, TokenDat
         if (!tokenData) {
           return 0
         }
+        // fix any, delta property
         const token1 = tokenData[token1Address] as any
         const token2 = tokenData[token2Address] as any
 
