@@ -62,8 +62,8 @@ const FiltersWrapper = styled.div`
 const Tokens = () => {
   const favoriteTokens = useAtomValue<string[]>(favoritesAtom)
   const { data, error, loading } = useExplorePageQuery(favoriteTokens)
-
-  // const topTokenData = useTopTokenQuery(timePeriod, 1)
+  console.log('in index')
+  console.log({ data, error, loading })
   const resetFilterString = useResetAtom(filterStringAtom)
   const location = useLocation()
   useEffect(() => {
