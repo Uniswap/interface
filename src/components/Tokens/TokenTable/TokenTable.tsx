@@ -97,25 +97,25 @@ function useSortedTokens(tokenData: TokenData[] | null) {
         if (!token1 || !token2 || !sortDirection || !sortCategory) {
           return 0
         }
-        let a: number
-        let b: number
+        let a: number | null | undefined
+        let b: number | null | undefined
         switch (sortCategory) {
           case Category.marketCap:
-            a = token1.marketCap?.value ?? 0
-            b = token2.marketCap?.value ?? 0
+            a = token1.marketCap?.value
+            b = token2.marketCap?.value
             break
           case Category.price:
-            a = token1.price?.value ?? 0
-            b = token2.price?.value ?? 0
+            a = token1.price?.value
+            b = token2.price?.value
             break
           case Category.volume:
-            a = token1.volume?.[timePeriod]?.value ?? 0
-            b = token2.volume?.[timePeriod]?.value ?? 0
+            a = token1.volume?.[timePeriod]?.value
+            b = token2.volume?.[timePeriod]?.value
             break
           // fix this is wrong right now -- don't store delta rn
           case Category.percentChange:
-            a = token1.marketCap?.value ?? 0
-            b = token2.marketCap?.value ?? 0
+            a = token1.marketCap?.value
+            b = token2.marketCap?.value
             break
         }
         return sortFn(a, b)
