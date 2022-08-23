@@ -187,7 +187,6 @@ const TruncateDescriptionButton = styled.div`
   color: ${({ theme }) => theme.textSecondary};
   font-weight: 400;
   font-size: 14px;
-  flex: none;
   padding: 12px 0px;
 
   &:hover,
@@ -197,13 +196,15 @@ const TruncateDescriptionButton = styled.div`
   }
 `
 
-type TokenDetailDataProps = {
+const TRUNCATE_WORDCOUNT = 60
+
+type TokenDetailData = {
   description: string | null
   homepageUrl: string | null
   twitterName: string | null
 }
 
-export function AboutSection({ address, tokenDetailData }: { address: string; tokenDetailData: TokenDetailDataProps }) {
+export function AboutSection({ address, tokenDetailData }: { address: string; tokenDetailData: TokenDetailData }) {
   const [isDescriptionTruncated, setIsDescriptionTruncated] = useState(true)
 
   if (!tokenDetailData || !tokenDetailData.description) {
@@ -223,8 +224,10 @@ export function AboutSection({ address, tokenDetailData }: { address: string; to
     )
   } else {
     const tokenDescriptionArray = tokenDetailData.description.split(' ')
-    const shouldTruncate = tokenDescriptionArray.length > 60
-    const tokenDescriptionTruncated = shouldTruncate ? tokenDescriptionArray.slice(0, 59).join(' ') + '...' : undefined
+    const shouldTruncate = tokenDescriptionArray.length > TRUNCATE_WORDCOUNT
+    const tokenDescriptionTruncated = shouldTruncate
+      ? tokenDescriptionArray.slice(0, TRUNCATE_WORDCOUNT - 1).join(' ') + '...'
+      : undefined
 
     return (
       <AboutContainer>
@@ -232,22 +235,24 @@ export function AboutSection({ address, tokenDetailData }: { address: string; to
           <Trans>About</Trans>
         </AboutHeader>
         {!shouldTruncate && tokenDetailData.description}
-        {shouldTruncate && isDescriptionTruncated && (
-          <TokenDescriptionContainer>
-            {tokenDescriptionTruncated}
-            <TruncateDescriptionButton onClick={() => setIsDescriptionTruncated(false)}>
-              <Trans>Read more</Trans>
-            </TruncateDescriptionButton>
-          </TokenDescriptionContainer>
-        )}
-        {shouldTruncate && !isDescriptionTruncated && (
-          <TokenDescriptionContainer>
-            {tokenDetailData.description}
-            <TruncateDescriptionButton onClick={() => setIsDescriptionTruncated(true)}>
-              <Trans>Hide</Trans>
-            </TruncateDescriptionButton>
-          </TokenDescriptionContainer>
-        )}
+        <TokenDescriptionContainer>
+          {shouldTruncate && isDescriptionTruncated && (
+            <div>
+              {tokenDescriptionTruncated}
+              <TruncateDescriptionButton onClick={() => setIsDescriptionTruncated(false)}>
+                <Trans>Read more</Trans>
+              </TruncateDescriptionButton>
+            </div>
+          )}
+          {shouldTruncate && !isDescriptionTruncated && (
+            <div>
+              {tokenDetailData.description}
+              <TruncateDescriptionButton onClick={() => setIsDescriptionTruncated(true)}>
+                <Trans>Hide</Trans>
+              </TruncateDescriptionButton>
+            </div>
+          )}
+        </TokenDescriptionContainer>
         <ResourcesContainer>
           <Resource name={'Etherscan'} link={`https://etherscan.io/address/${address}`} />
           <Resource name={'Protocol Info'} link={`https://info.uniswap.org/#/tokens/${address}`} />
@@ -312,7 +317,7 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
           </MissingChartData>
         </ChartHeader>
         <MissingData>
-          <AboutSection address={address} tokenDetailData={tokenDetailData as TokenDetailDataProps} />
+          <AboutSection address={address} tokenDetailData={tokenDetailData as TokenDetailData} />
           <StatsSection>
             <NoInfoAvailable>
               <Trans>No stats available</Trans>
@@ -369,7 +374,7 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
           <ParentSize>{({ width, height }) => <PriceChart token={token} width={width} height={height} />}</ParentSize>
         </ChartContainer>
       </ChartHeader>
-      <AboutSection address={address} tokenDetailData={tokenDetailData as TokenDetailDataProps} />
+      <AboutSection address={address} tokenDetailData={tokenDetailData as TokenDetailData} />
       <StatsSection>
         <StatPair>
           <Stat>
