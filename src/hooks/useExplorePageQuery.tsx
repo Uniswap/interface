@@ -36,15 +36,11 @@ const useExplorePageQuery = (): UseTopTokensResult => {
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const topTokens = useTopTokenQuery(1)
-  console.log('getting data...')
-  console.log(topTokens)
 
   useEffect(() => {
-    console.log('in use effect')
     try {
       setLoading(true)
       setError(null)
-      console.log('in use effect')
       if (topTokens) setData(topTokens)
     } catch (e) {
       setError('Error fetching top tokens')

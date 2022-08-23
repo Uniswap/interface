@@ -98,8 +98,8 @@ function useSortedTokens(addresses: string[], tokenData: Record<string, TokenDat
         if (!tokenData) {
           return 0
         }
-        const token1 = tokenData.token1Address as any
-        const token2 = tokenData.token2Address as any
+        const token1 = tokenData[token1Address] as any
+        const token2 = tokenData[token2Address] as any
 
         if (!token1 || !token2 || !sortDirection || !sortCategory) {
           return 0
@@ -193,7 +193,7 @@ export default function TokenTable({ data, error, loading }: UseTopTokensResult)
             tokenAddress={tokenAddress}
             tokenListIndex={index}
             tokenListLength={filteredAndSortedTokens.length}
-            tokenData={data.tokenAddress}
+            tokenData={data[tokenAddress]}
             timePeriod={timePeriod}
           />
         ))}
