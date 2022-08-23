@@ -44,7 +44,6 @@ const NoTokenDisplay = styled.div`
   gap: 8px;
 `
 const TokenRowsContainer = styled.div`
-  padding: 4px 0px;
   width: 100%;
 `
 
