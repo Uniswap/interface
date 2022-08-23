@@ -16,11 +16,9 @@ import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { SignerMnemonicAccount } from 'src/features/wallet/accounts/types'
 import { useAccounts } from 'src/features/wallet/hooks'
 import { Screens } from 'src/screens/Screens'
-import { useSecondCountdownTimer } from 'src/utils/timing'
 
 type Props = NativeStackScreenProps<SettingsStackParamList, Screens.SettingsViewSeedPhrase>
 
-const COUNTDOWN_DURATION = 20
 export function SettingsViewSeedPhraseScreen({
   navigation,
   route: {
@@ -36,11 +34,6 @@ export function SettingsViewSeedPhraseScreen({
   const [showSeedPhrase, setShowSeedPhrase] = useState(false)
   const [showSeedPhraseViewWarningModal, setShowSeedPhraseViewWarningModal] = useState(true)
   const [showScreenShotWarningModal, setShowScreenShotWarningModal] = useState(false)
-
-  const countdownTime = useSecondCountdownTimer(showSeedPhrase, COUNTDOWN_DURATION, () => {
-    setShowSeedPhraseViewWarningModal(true)
-    setShowSeedPhrase(false)
-  })
 
   // navigate back when warning modal is not confirmed or closed
   useEffect(() => {
@@ -86,7 +79,7 @@ export function SettingsViewSeedPhraseScreen({
             <PrimaryButton
               alignSelf="stretch"
               borderRadius="md"
-              label={t('Hiding phrase in {{ countdownTime }}s', { countdownTime })}
+              label={t('Hide recovery phrase')}
               name={ElementName.Next}
               testID={ElementName.Next}
               textVariant="largeLabel"
