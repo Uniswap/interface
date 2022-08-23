@@ -1,13 +1,20 @@
 import { style } from '@vanilla-extract/css'
 import { breakpoints, sprinkles } from 'nft/css/sprinkles.css'
 
-/* Override for BodyWrapper properties */
-export const fullWidth = sprinkles({
-  left: '0',
-  top: '72',
-  width: 'full',
-  position: 'absolute',
-})
+export const section = style([
+  sprinkles({
+    paddingLeft: { mobile: '16', desktopL: '0' },
+    paddingRight: { mobile: '16', desktopL: '0' },
+  }),
+  {
+    maxWidth: '1000px',
+    margin: '0 auto',
+    display: 'flex',
+    flexDirection: 'row',
+    flexWrap: 'nowrap',
+    position: 'relative',
+  },
+])
 
 export const bannerWrap = style([
   sprinkles({

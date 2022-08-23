@@ -3,7 +3,6 @@ import { Box } from 'nft/components/Box'
 import { Center, Column, Row } from 'nft/components/Flex'
 import { VerifiedIcon } from 'nft/components/icons'
 import { bodySmall, buttonMedium, header1 } from 'nft/css/common.css'
-import { section } from 'nft/css/common.css'
 import { vars } from 'nft/css/sprinkles.css'
 import { fetchTrendingCollections } from 'nft/queries'
 import { TimePeriod, TrendingCollection } from 'nft/types'
@@ -15,6 +14,7 @@ import { useQuery } from 'react-query'
 import { Link } from 'react-router-dom'
 
 import * as styles from './Banner.css'
+import CarouselIndicator from './CarouselIndicator'
 
 const Banner = () => {
   /* Sets initially displayed collection to random number between 0 and 4  */
@@ -49,12 +49,7 @@ const Banner = () => {
   }, [current, collections, hovered])
 
   return (
-    <Box
-      className={styles.fullWidth}
-      onMouseEnter={() => setHover(true)}
-      onMouseLeave={() => setHover(false)}
-      cursor="pointer"
-    >
+    <Box onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)} cursor="pointer" width="full">
       {collections && collections[current] ? (
         <Link to={`/nfts/collection/${collections[current].address}`} style={{ textDecoration: 'none' }}>
           <Box style={{ height: '386px' }}>
@@ -68,23 +63,11 @@ const Banner = () => {
                 {Array(collections.length)
                   .fill(null)
                   .map((value, carouselIndex) => (
-                    <Box
-                      cursor="pointer"
-                      paddingTop="16"
-                      paddingBottom="16"
+                    <CarouselIndicator
+                      active={current === carouselIndex}
+                      onClick={() => setCurrent(carouselIndex)}
                       key={carouselIndex}
-                      onClick={(e) => {
-                        e.preventDefault()
-                        e.stopPropagation()
-                        setCurrent(carouselIndex)
-                      }}
-                    >
-                      <Box
-                        as="span"
-                        className={styles.carouselIndicator}
-                        backgroundColor={carouselIndex === current ? 'explicitWhite' : 'accentTextLightTertiary'}
-                      />
-                    </Box>
+                    />
                   ))}
               </Center>
             </div>
@@ -112,15 +95,7 @@ const CollectionDetails = ({
   rank: number
   hovered: boolean
 }) => (
-  <Box
-    as="section"
-    className={section}
-    display="flex"
-    flexDirection="row"
-    flexWrap="nowrap"
-    paddingTop="40"
-    position="relative"
-  >
+  <Box as="section" className={styles.section} paddingTop="40">
     <Column className={styles.collectionDetails} paddingTop="24">
       <div className={styles.volumeRank}>#{rank} volume in 24hr</div>
       <Row>
