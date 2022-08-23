@@ -1,3 +1,4 @@
+import { t } from '@lingui/macro'
 import React from 'react'
 import { Box, Text } from 'rebass'
 import styled from 'styled-components'
@@ -10,7 +11,7 @@ import { useActiveWeb3React } from 'hooks'
 import useTheme from 'hooks/useTheme'
 import { NotificationType } from 'state/application/hooks'
 import { ExternalLink, HideSmall } from 'theme'
-import { getEtherscanLink, getEtherscanLinkText } from 'utils'
+import { getEtherscanLink } from 'utils'
 
 const RowNoFlex = styled(AutoRow)`
   flex-wrap: nowrap;
@@ -174,9 +175,9 @@ export default function TransactionPopup({
         <HideSmall style={{ margin: '8px 0 0 40px', display: 'block' }}>
           <ExternalLink
             href={getEtherscanLink(chainId, hash, 'transaction')}
-            style={{ color: success ? theme.primary : theme.red }}
+            style={{ color: success ? theme.primary : theme.red, fontSize: 14 }}
           >
-            {getEtherscanLinkText(chainId)}
+            {t`View transaction`}
           </ExternalLink>
         </HideSmall>
       )}

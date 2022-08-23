@@ -154,7 +154,7 @@ export default function ListPair({
         </>
       )}
       <Break />
-      <TextWithIcon color={theme.subText} text={t`You can try "10 ETH to KNC"`} />
+      <TextWithIcon color={theme.subText} text={t`Try typing "10 ETH to KNC"`} />
     </MenuFlyout>
   ) : null
 }

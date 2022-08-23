@@ -14,7 +14,7 @@ import useTheme from 'hooks/useTheme'
 import { useIsDarkMode } from 'state/user/hooks'
 import { ExternalLink } from 'theme'
 import { CloseIcon, CustomLightSpinner } from 'theme/components'
-import { getEtherscanLink, getEtherscanLinkText, getTokenLogoURL } from 'utils'
+import { getEtherscanLink, getTokenLogoURL } from 'utils'
 import { errorFriendly } from 'utils/dmm'
 
 import { ButtonLight, ButtonPrimary } from '../Button'
@@ -202,7 +202,7 @@ function TransactionSubmittedContent({
           {chainId && hash && (
             <ExternalLink href={getEtherscanLink(chainId, hash, 'transaction')}>
               <Text fontWeight={500} fontSize={14} color={theme.primary}>
-                {getEtherscanLinkText(chainId)}
+                {t`View transaction`}
               </Text>
             </ExternalLink>
           )}
