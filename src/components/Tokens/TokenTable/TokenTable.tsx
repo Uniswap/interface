@@ -46,22 +46,23 @@ const TokenRowsContainer = styled.div`
   width: 100%;
 `
 
-function useFilteredTokens(tokens: TokenData[]) {
+function useFilteredTokens(tokens: TokenData[] | null | undefined) {
   const filterString = useAtomValue(filterStringAtom)
   const favoriteTokenAddresses = useAtomValue(favoritesAtom)
   const showFavorites = useAtomValue(showFavoritesAtom)
-  const shownTokens = showFavorites ? tokens.filter((token) => favoriteTokenAddresses.includes(token.address)) : tokens
+  const shownTokens =
+    showFavorites && tokens ? tokens.filter((token) => favoriteTokenAddresses.includes(token.address)) : tokens
 
   return useMemo(
     () =>
-      shownTokens.filter((token) => {
+      (shownTokens ?? []).filter((token) => {
         if (!filterString) {
           return true
         }
         const lowercaseFilterString = filterString.toLowerCase()
         const addressIncludesFilterString = token.address.toLowerCase().includes(lowercaseFilterString)
-        const nameIncludesFilterString = token?.name?.toLowerCase().includes(lowercaseFilterString)
-        const symbolIncludesFilterString = token?.symbol?.toLowerCase().includes(lowercaseFilterString)
+        const nameIncludesFilterString = token.name?.toLowerCase().includes(lowercaseFilterString)
+        const symbolIncludesFilterString = token.symbol?.toLowerCase().includes(lowercaseFilterString)
         return nameIncludesFilterString || symbolIncludesFilterString || addressIncludesFilterString
       }),
     [shownTokens, filterString]
@@ -148,8 +149,8 @@ export function LoadingTokenTable() {
 export default function TokenTable({ data }: { data: Record<string, TokenData> | null }) {
   const showFavorites = useAtomValue<boolean>(showFavoritesAtom)
   const timePeriod = useAtomValue<TimePeriod>(filterTimeAtom)
-  const filteredTokens = useFilteredTokens(data ?? [])
-  const filteredAndSortedTokens = useSortedTokens(filteredTokens)
+  const filteredTokens = useFilteredTokens(data)
+  const sortedFilteredTokens = useSortedTokens(filteredTokens)
 
   /* loading and error state */
   if (data === null) {
@@ -165,11 +166,11 @@ export default function TokenTable({ data }: { data: Record<string, TokenData> |
     )
   }
 
-  if (showFavorites && filteredAndSortedTokens?.length === 0) {
+  if (showFavorites && sortedFilteredTokens?.length === 0) {
     return <NoTokensState message="You have no favorited tokens" />
   }
 
-  if (!showFavorites && filteredAndSortedTokens?.length === 0) {
+  if (!showFavorites && sortedFilteredTokens?.length === 0) {
     return <NoTokensState message="No tokens found" />
   }
 
@@ -178,12 +179,12 @@ export default function TokenTable({ data }: { data: Record<string, TokenData> |
       <GridContainer>
         <HeaderRow />
         <TokenRowsContainer>
-          {filteredAndSortedTokens?.map((token, index) => (
+          {sortedFilteredTokens?.map((token, index) => (
             <LoadedRow
               key={token.address}
               tokenAddress={token.address}
               tokenListIndex={index}
-              tokenListLength={filteredAndSortedTokens.length}
+              tokenListLength={sortedFilteredTokens.length}
               tokenData={token}
               timePeriod={timePeriod}
             />

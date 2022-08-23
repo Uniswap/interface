@@ -245,6 +245,7 @@ const TokenName = styled.div`
 `
 const TokenSymbol = styled(Cell)`
   color: ${({ theme }) => theme.textTertiary};
+  text-transform: uppercase;
 
   @media only screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
     font-size: 12px;
@@ -445,7 +446,7 @@ export default function LoadedRow({
 }) {
   const currency = useCurrency(tokenAddress)
   const tokenName = tokenData.name
-  const tokenSymbol = tokenData.symbol?.toUpperCase()
+  const tokenSymbol = tokenData.symbol
   const theme = useTheme()
   const [favoriteTokens] = useAtom(favoritesAtom)
   const isFavorited = favoriteTokens.includes(tokenAddress)
@@ -460,7 +461,7 @@ export default function LoadedRow({
   const exploreTokenSelectedEventProperties = {
     chain_id: filterNetwork,
     token_address: tokenAddress,
-    token_symbol: tokenData?.symbol,
+    token_symbol: tokenSymbol,
     token_list_index: tokenListIndex,
     token_list_length: tokenListLength,
     time_frame: timePeriod,
