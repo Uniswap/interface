@@ -29,13 +29,7 @@ We do not check in Flipper into source. To prevent `pod install` from adding Fli
 export USE_FLIPPER=1
 ```
 
-We currently have CI exclude arm64 builds given it is not using the M1 architecture. Because of this we have a discrepancy between our pbxproj file in CI vs development when we run `pod install`. To avoid this please DON'T use the regular `pod install` command, instead always run: `yarn pod`.
-
-- Run `chmod +x ./podinstall.sh` in the mobile folder
-
 - Run `yarn` to install packages, then run `yarn pod` in the main directory.
-
-**NOTE:** If you want to build and run the app on XCode, please run `pod install` as that would make XCode build for arm64 and speed up your build times on an M1 Mac
 
 ### Important Libraries
 
