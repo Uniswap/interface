@@ -9,9 +9,11 @@ export const KOVAN_LOGO = require('./logos/ropsten-logo.png')
 export const RINKEBY_LOGO = require('./logos/rinkeby-logo.png')
 export const ROPSTEN_LOGO = require('./logos/ropsten-logo.png')
 export const UNISWAP_SPLASH_LOGO = require('./logos/uniswap-splash-logo.png')
-
 export const FAVORITE_TOKENS_EMPTY_BG = require('./backgrounds/favorite-tokens-bg.png')
 export const WATCHED_TOKENS_EMPTY_BG = require('./backgrounds/watched-tokens-bg.png')
-
 export const ONBOARDING_BACKGROUND_LIGHT = require('./backgrounds/onboardingBackgroundLight.png')
 export const ONBOARDING_BACKGROUND_DARK = require('./backgrounds/onboardingBackgroundDark.png')
+export const LANDING_BACKGROUND = require('./backgrounds/landingBackground.png')
+export const LANDING_BLUR_BACKGROUND_LIGHT = require('./backgrounds/landingBlurBackgroundLight.png')
+export const LANDING_BLUR_BACKGROUND_DARK = require('./backgrounds/landingBlurBackgroundDark.png')
+export const UNISWAP_LOGO = require('./logos/uniswap-logo.png')

@@ -1,16 +1,15 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { Image, StyleSheet, View } from 'react-native'
+import { Image, StyleSheet, useColorScheme } from 'react-native'
 import { useAppDispatch } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
-import { UNISWAP_SPLASH_LOGO } from 'src/assets'
+import { UNISWAP_LOGO } from 'src/assets'
 import { Button } from 'src/components/buttons/Button'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { TextButton } from 'src/components/buttons/TextButton'
 import { DevelopmentOnly } from 'src/components/DevelopmentOnly/DevelopmentOnly'
-import { RainbowLinearGradientStops } from 'src/components/gradients'
-import { LinearGradientBox } from 'src/components/gradients/LinearGradient'
+import { LandingBackground } from 'src/components/gradients/LandingBackground'
 import { Box, Flex } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
 import { Text } from 'src/components/Text'
@@ -23,6 +22,7 @@ import {
 } from 'src/features/wallet/pendingAcccountsSaga'
 import { setFinishedOnboarding } from 'src/features/wallet/walletSlice'
 import { OnboardingScreens } from 'src/screens/Screens'
+import { colors } from 'src/styles/color'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.Landing>
 
@@ -30,6 +30,7 @@ export function LandingScreen({ navigation }: Props) {
   const dispatch = useAppDispatch()
 
   const { t } = useTranslation()
+  const isDarkMode = useColorScheme() === 'dark'
 
   const onPressCreateWallet = () => {
     // Clear any existing pending accounts first.
@@ -56,23 +57,17 @@ export function LandingScreen({ navigation }: Props) {
 
   return (
     <Screen edges={['bottom']}>
+      <LandingBackground />
       <Box flex={1} justifyContent="flex-end">
-        <Box alignItems="center" flex={1} justifyContent="center">
-          <Box>
-            <LinearGradientBox radius="xl" stops={RainbowLinearGradientStops}>
-              <View style={styles.padded}>
-                <Box bg="backgroundBackdrop" borderRadius="xl">
-                  <Image source={UNISWAP_SPLASH_LOGO} />
-                </Box>
-              </View>
-            </LinearGradientBox>
-          </Box>
+        <Box alignItems="center" flex={1} justifyContent="center" paddingTop="xxxl">
+          <Image source={UNISWAP_LOGO} style={styles.logo} />
         </Box>
         <Flex centered gap="lg" mx="md" my="sm">
           <PrimaryButton
             flexGrow={1}
             label={t('Create a wallet')}
             name={ElementName.OnboardingCreateWallet}
+            style={{ backgroundColor: colors.magenta300 }}
             testID={ElementName.OnboardingCreateWallet}
             variant="onboard"
             width="100%"
@@ -82,7 +77,9 @@ export function LandingScreen({ navigation }: Props) {
             name={ElementName.OnboardingImportWallet}
             testID={ElementName.OnboardingImportWallet}
             onPress={onPressImportWallet}>
-            <Text color="textPrimary" variant="mediumLabel">
+            <Text
+              style={{ color: isDarkMode ? colors.white : colors.magenta300 }}
+              variant="mediumLabel">
               {t('I already have a wallet')}
             </Text>
           </TextButton>
@@ -109,5 +106,8 @@ export function LandingScreen({ navigation }: Props) {
 }
 
 const styles = StyleSheet.create({
-  padded: { padding: 1 },
+  logo: {
+    height: 172,
+    width: 160,
+  },
 })
