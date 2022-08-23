@@ -23,7 +23,6 @@ export type TokenData = {
   price: IAmount | null | undefined
   marketCap: IAmount | null | undefined
   volume: Record<TimePeriod, IAmount | null | undefined>
-  isFavorite: boolean
 }
 
 export interface UseTopTokensResult {
@@ -32,7 +31,7 @@ export interface UseTopTokensResult {
   loading: boolean
 }
 
-const useExplorePageQuery = (favoriteTokenAddresses: string[]): UseTopTokensResult => {
+const useExplorePageQuery = (): UseTopTokensResult => {
   const [data, setData] = useState<Record<string, TokenData> | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
@@ -41,12 +40,10 @@ const useExplorePageQuery = (favoriteTokenAddresses: string[]): UseTopTokensResu
   console.log(topTokens)
 
   useEffect(() => {
+    console.log('in use effect')
     try {
       setLoading(true)
       setError(null)
-      favoriteTokenAddresses.forEach((address) => {
-        topTokens[address].isFavorite = true
-      })
       console.log('in use effect')
       if (topTokens) setData(topTokens)
     } catch (e) {
@@ -54,7 +51,7 @@ const useExplorePageQuery = (favoriteTokenAddresses: string[]): UseTopTokensResu
     } finally {
       setLoading(false)
     }
-  }, [favoriteTokenAddresses, topTokens])
+  }, [topTokens])
 
   return { data, error, loading }
 }

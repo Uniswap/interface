@@ -59,10 +59,10 @@ export function useTopTokenQuery(page: number) {
 
   const topTokens: Record<string, TokenData> =
     topTokenData.topTokenProjects?.reduce((acc, token) => {
-      if (token?.tokens?.[0].address) {
-        acc[token?.tokens?.[0].address] = {
+      const tokenAddress = token?.tokens?.[0].address
+      if (tokenAddress) {
+        acc[tokenAddress] = {
           name: token?.name,
-          isFavorite: false,
           chain: token?.tokens?.[0].chain,
           symbol: token?.tokens?.[0].symbol,
           price: token?.markets?.[0]?.price,
