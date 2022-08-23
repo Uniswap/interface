@@ -207,66 +207,59 @@ type TokenDetailData = {
 export function AboutSection({ address, tokenDetailData }: { address: string; tokenDetailData: TokenDetailData }) {
   const [isDescriptionTruncated, setIsDescriptionTruncated] = useState(true)
 
-  if (!tokenDetailData || !tokenDetailData.description) {
-    return (
-      <AboutContainer>
-        <AboutHeader>
-          <Trans>About</Trans>
-        </AboutHeader>
+  const shouldTruncate =
+    tokenDetailData && tokenDetailData.description
+      ? tokenDetailData.description.length > TRUNCATE_CHARACTER_COUNT
+      : false
+  const truncateDescription = (desc: string) => {
+    //trim the string to the maximum length
+    let tokenDescriptionTruncated = desc.slice(0, TRUNCATE_CHARACTER_COUNT)
+    //re-trim if we are in the middle of a word
+    tokenDescriptionTruncated = `${tokenDescriptionTruncated.slice(
+      0,
+      Math.min(tokenDescriptionTruncated.length, tokenDescriptionTruncated.lastIndexOf(' '))
+    )}...`
+    return tokenDescriptionTruncated
+  }
+
+  const tokenDescription =
+    tokenDetailData && tokenDetailData.description && shouldTruncate && isDescriptionTruncated
+      ? truncateDescription(tokenDetailData.description)
+      : tokenDetailData.description
+
+  return (
+    <AboutContainer>
+      <AboutHeader>
+        <Trans>About</Trans>
+      </AboutHeader>
+      {(!tokenDetailData || !tokenDetailData.description) && (
         <NoInfoAvailable>
           <Trans>No token information available</Trans>
         </NoInfoAvailable>
-        <ResourcesContainer>
-          <Resource name={'Etherscan'} link={`https://etherscan.io/address/${address}`} />
-          <Resource name={'Protocol Info'} link={`https://info.uniswap.org/#/tokens/${address}`} />
-        </ResourcesContainer>
-      </AboutContainer>
-    )
-  } else {
-    const shouldTruncate = tokenDetailData.description.length > TRUNCATE_CHARACTER_COUNT
-    const truncateDescription = (desc: string) => {
-      //trim the string to the maximum length
-      let tokenDescriptionTruncated = desc.slice(0, TRUNCATE_CHARACTER_COUNT)
-      //re-trim if we are in the middle of a word
-      tokenDescriptionTruncated = `${tokenDescriptionTruncated.slice(
-        0,
-        Math.min(tokenDescriptionTruncated.length, tokenDescriptionTruncated.lastIndexOf(' '))
-      )}...`
-      return tokenDescriptionTruncated
-    }
-
-    const tokenDescription =
-      shouldTruncate && isDescriptionTruncated
-        ? truncateDescription(tokenDetailData.description)
-        : tokenDetailData.description
-
-    return (
-      <AboutContainer>
-        <AboutHeader>
-          <Trans>About</Trans>
-        </AboutHeader>
-        {!shouldTruncate && tokenDescription}
-        <TokenDescriptionContainer>
-          {shouldTruncate && (
-            <div>
-              {tokenDescription}
-              <TruncateDescriptionButton onClick={() => setIsDescriptionTruncated(!isDescriptionTruncated)}>
-                {isDescriptionTruncated ? <Trans>Read more</Trans> : <Trans>Hide</Trans>}
-              </TruncateDescriptionButton>
-            </div>
-          )}
-        </TokenDescriptionContainer>
-        <ResourcesContainer>
-          <Resource name={'Etherscan'} link={`https://etherscan.io/address/${address}`} />
-          <Resource name={'Protocol Info'} link={`https://info.uniswap.org/#/tokens/${address}`} />
-          {tokenDetailData.homepageUrl && <Resource name={'Website'} link={tokenDetailData.homepageUrl} />}
-          {tokenDetailData.twitterName && (
-            <Resource name={'Twitter'} link={`https://twitter.com/${tokenDetailData.twitterName}`} />
-          )}
-        </ResourcesContainer>
-      </AboutContainer>
-    )
-  }
+      )}
+      {!shouldTruncate && tokenDescription}
+      <TokenDescriptionContainer>
+        {shouldTruncate && (
+          <div>
+            {tokenDescription}
+            <TruncateDescriptionButton onClick={() => setIsDescriptionTruncated(!isDescriptionTruncated)}>
+              {isDescriptionTruncated ? <Trans>Read more</Trans> : <Trans>Hide</Trans>}
+            </TruncateDescriptionButton>
+          </div>
+        )}
+      </TokenDescriptionContainer>
+      <ResourcesContainer>
+        <Resource name={'Etherscan'} link={`https://etherscan.io/address/${address}`} />
+        <Resource name={'Protocol Info'} link={`https://info.uniswap.org/#/tokens/${address}`} />
+        {tokenDetailData && tokenDetailData.homepageUrl && (
+          <Resource name={'Website'} link={tokenDetailData.homepageUrl} />
+        )}
+        {tokenDetailData && tokenDetailData.twitterName && (
+          <Resource name={'Twitter'} link={`https://twitter.com/${tokenDetailData.twitterName}`} />
+        )}
+      </ResourcesContainer>
+    </AboutContainer>
+  )
 }
 
 export default function LoadedTokenDetail({ address }: { address: string }) {
