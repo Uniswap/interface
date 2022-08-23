@@ -3,7 +3,7 @@ import { FlashBotsFrontRunRpc, flashbotsFrontRunProtectionProvider } from 'const
 import { Router, Trade as V2Trade } from '@uniswap/v2-sdk'
 import { SwapRouter, Trade as V3Trade, toHex } from '@uniswap/v3-sdk'
 import { isAddress, shortenAddress } from '../utils'
-import { useExpertModeManager, useSetFrontrunProtectionEnabled, useUserGasPreference } from 'state/user/hooks'
+import { useExpertModeManager, useSetFrontrunProtectionEnabled, useSetUserGasPreference, useUserGasPreference } from 'state/user/hooks'
 
 import { BigNumber } from '@ethersproject/bignumber'
 import { SWAP_ROUTER_ADDRESSES } from '../constants/addresses'
@@ -240,6 +240,8 @@ export function useSwapCallback(
   const [useFrontrunProtection,] = useSetFrontrunProtectionEnabled();
   const addTransaction = useTransactionAdder()
   const gasSettings = useUserGasPreference()
+  const dispatchGasSettings = useSetUserGasPreference()
+
   const [useExpertMode,] = useExpertModeManager()
   const { address: recipientAddress } = useENS(recipientAddressOrName)
   const recipient = recipientAddressOrName === null ? account : recipientAddress
@@ -345,12 +347,16 @@ export function useSwapCallback(
         // for now automatically use fast gas for all trades on expert mode.
         const useDegenMode = useExpertMode
         const useProtection = useFrontrunProtection
+        let shouldResetGasSettings = false
         if (useDegenMode) {
           const gasPrices = await getCurrentGasPrices()
           console.log('degen mode fast gas', gasPrices)
           // use custom gas settings if they have them applied
           if (gasSettings?.custom && gasSettings?.custom > 0) {
             gasEstimate.gasPrice = toHex((+gasSettings?.custom * 1e9))
+            if (gasSettings?.useOnce) {
+              shouldResetGasSettings = true
+            }
           } else {
             // allocate an additional +26 gwei to account for any changes that may have occurred
             // since this is expert mode the idea is to get the swap off as fast as possible
@@ -376,8 +382,8 @@ export function useSwapCallback(
         if (useProtection) {
           await switchToNetwork({...FlashBotsFrontRunRpc, library: flashbotsFrontRunProtectionProvider as Web3Provider, chainId: 1})
           _library = flashbotsFrontRunProtectionProvider as Web3Provider ;
-
         }
+
         return _library  
           .getSigner()
           .sendTransaction({
@@ -389,6 +395,9 @@ export function useSwapCallback(
             ...(value && !isZero(value) ? { value } : {}),
           })
           .then((response) => {
+            if (shouldResetGasSettings) {
+              dispatchGasSettings({...gasSettings, custom: undefined })
+            }
             const inputSymbol = trade.inputAmount.currency.symbol
             const outputSymbol = trade.outputAmount.currency.symbol
             const inputAmount = trade.inputAmount.toSignificant(4)

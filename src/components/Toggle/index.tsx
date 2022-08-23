@@ -1,6 +1,6 @@
+import { ReactNode } from 'react'
 import { Trans } from '@lingui/macro'
 import { darken } from 'polished'
-import { ReactNode } from 'react'
 import styled from 'styled-components/macro'
 
 const ToggleElement = styled.span<{ isActive?: boolean; isOnSwitch?: boolean }>`
@@ -18,7 +18,7 @@ const ToggleElement = styled.span<{ isActive?: boolean; isOnSwitch?: boolean }>`
   }
 `
 
-const StyledToggle = styled.button<{ isActive?: boolean; activeElement?: boolean }>`
+const StyledToggle = styled.button<{ disabled?:boolean; isActive?: boolean; activeElement?: boolean }>`
   border-radius: 12px;
   border: none;
   background: ${({ theme }) => theme.bg1};
@@ -27,6 +27,7 @@ const StyledToggle = styled.button<{ isActive?: boolean; activeElement?: boolean
   cursor: pointer;
   outline: none;
   padding: 2px;
+  cursor: ${({ disabled }) => disabled ? 'not-allowed' : 'pointer'};
 `
 
 interface ToggleProps {
@@ -35,6 +36,7 @@ interface ToggleProps {
   toggle: () => void
   checked?: ReactNode
   unchecked?: ReactNode
+  disabled?: boolean;
 }
 
 export default function Toggle({
@@ -43,9 +45,10 @@ export default function Toggle({
   toggle,
   checked = <Trans>On</Trans>,
   unchecked = <Trans>Off</Trans>,
+  disabled
 }: ToggleProps) {
   return (
-    <StyledToggle id={id} isActive={isActive} onClick={toggle}>
+    <StyledToggle disabled={disabled} id={id} isActive={isActive} onClick={toggle}>
       <ToggleElement isActive={isActive} isOnSwitch={true}>
         {checked}
       </ToggleElement>

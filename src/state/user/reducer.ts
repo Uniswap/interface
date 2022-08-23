@@ -71,6 +71,7 @@ export interface UserState {
     medium?: boolean,
     high?: boolean,
     ultra?: boolean,
+    useOnce?: boolean,    
     custom?: any
   }
 }
@@ -101,6 +102,7 @@ export const initialState: UserState = {
     medium: false,
     high: false,
     ultra:false,
+    useOnce:false,
     custom: 0
   }
 }

@@ -6,8 +6,11 @@ import { useSetUserGasPreference, useUserGasPreference } from "state/user/hooks"
 import { AutoColumn } from "components/Column";
 import Badge from "components/Badge";
 import { ButtonError } from "components/Button";
+import Card from "components/Card";
 import Modal from "components/Modal";
+import QuestionHelper from "components/QuestionHelper";
 import React from 'react'
+import Toggle from "components/Toggle";
 import { Trans } from "@lingui/react";
 import axios from "axios";
 import { error } from "console";
@@ -108,6 +111,10 @@ export const GasSelectorModal = (props: GasSelectorProps) => {
     const refreshGasPrices = () => {
         fetchGasPrices()
     }
+
+    const toggleUseCustomGweiOnce = () => {
+      setUserGasSettings({...gasSettings, useOnce: !gasSettings?.useOnce })
+    }
     return (
         <Modal size={view == 'advanced' ? 500 : 600} maxHeight={600}  isOpen={isOpen} onDismiss={onDismiss}>
              <ContentWrapper gap="sm">
@@ -165,12 +172,29 @@ export const GasSelectorModal = (props: GasSelectorProps) => {
           )}
 
           {view === 'advanced' && (
-              <RowFixed style={{marginTop: 15, columnGap: 15}}>
+            <>
+              <RowFixed style={{display:'block', width: '100%', marginTop: 15, marginBottom:15, columnGap: 15}}>
                   <AutoColumn justify="center" gap="md">
-                  <label style={{display:'block', width:'100%'}}> Custom Gas </label>
-                  <input onChange={onChangeOfGas} value={customGas} style={{width: '100%', height:40, border: '1px solid #ccc', borderRadius:12}} type="number" placeholder="Custom GWEI" />
+                  <label style={{display:'block', width:'100%'}}> Enter a custom GWEI to execute transactions </label>
+                  <input onChange={onChangeOfGas} value={customGas} style={{width: '100%', height:40, border: '1px solid #ccc', borderRadius:12}} type="number" placeholder="Enter a custom GWEI, i.e. 185" />
                   </AutoColumn>
-            </RowFixed>
+               </RowFixed>
+              <TYPE.mediumHeader>Custom GWEI Settings</TYPE.mediumHeader>
+              <RowBetween style={{background:!Boolean(gasSettings?.custom) ? '#222' : 'inherit', opacity: !Boolean(gasSettings?.custom) ? 0.5 : 1}}>
+                <RowFixed>
+                  <TYPE.black fontWeight={400} fontSize={14} color={'lightgreen'}>
+                    <>Use Custom GWEI One Time Only</>
+                  </TYPE.black>
+                  <QuestionHelper text={<>Uses the custom gwei specified on the next executed transaction only.</>} />
+                </RowFixed>
+                <Toggle
+                  disabled={!Boolean(gasSettings?.custom)}
+                  id="toggle-disable-multihop-button"
+                  isActive={Boolean(gasSettings?.useOnce)}
+                  toggle={toggleUseCustomGweiOnce}
+                />
+                </RowBetween>
+              </>
           )}
         </ContentWrapper>
         </Modal>
