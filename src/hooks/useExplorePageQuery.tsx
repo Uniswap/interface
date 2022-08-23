@@ -37,33 +37,24 @@ const useExplorePageQuery = (favoriteTokenAddresses: string[]): UseTopTokensResu
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const topTokens = useTopTokenQuery(1)
-  //console.log(topTokens)
+  console.log('getting data...')
+  console.log(topTokens)
 
-  const fetchTopTokens = async (favoriteTokenAddresses: string[]): Promise<Record<string, TokenData> | void> => {
+  useEffect(() => {
     try {
       setLoading(true)
       setError(null)
       favoriteTokenAddresses.forEach((address) => {
         topTokens[address].isFavorite = true
       })
-      return topTokens
+      console.log('in use effect')
+      if (topTokens) setData(topTokens)
     } catch (e) {
       setError('Error fetching top tokens')
     } finally {
       setLoading(false)
     }
-  }
-
-  useEffect(() => {
-    setLoading(true)
-    setError(null)
-    fetchTopTokens(favoriteTokenAddresses)
-      .then((data) => {
-        if (data) setData(data)
-      })
-      .catch((e) => setError(e))
-      .finally(() => setLoading(false))
-  }, [favoriteTokenAddresses])
+  }, [favoriteTokenAddresses, topTokens])
 
   return { data, error, loading }
 }
