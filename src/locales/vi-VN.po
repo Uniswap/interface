@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-22 19:04\n"
+"PO-Revision-Date: 2022-08-23 20:04\n"
 "Last-Translator: \n"
 "Language: vi_VN\n"
 "Language-Team: Vietnamese\n"
@@ -121,7 +121,6 @@ msgid "A swap of this size may have a high price impact, given the current liqui
 msgstr "Một giao dịch hoán đổi ở quy mô này có thể có tác động đến giá cao, do tính thanh khoản hiện tại của nhóm. Có thể có sự khác biệt lớn giữa số lượng mã thông báo đầu vào của bạn và những gì bạn sẽ nhận được trong mã thông báo đầu ra"
 
 #: src/components/Menu/index.tsx
-#: src/components/Tokens/TokenDetails/TokenDetail.tsx
 #: src/components/Tokens/TokenDetails/TokenDetail.tsx
 msgid "About"
 msgstr "Giới thiệu"
@@ -930,6 +929,7 @@ msgid "Help Center"
 msgstr "Trung tâm trợ giúp"
 
 #: src/components/FeeSelector/index.tsx
+#: src/components/Tokens/TokenDetails/TokenDetail.tsx
 msgid "Hide"
 msgstr "Ẩn giấu"
 
@@ -1491,6 +1491,10 @@ msgstr "Xếp hàng"
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Rates"
 msgstr "Tỷ giá"
+
+#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+msgid "Read more"
+msgstr "Đọc thêm"
 
 #: src/pages/Earn/index.tsx
 msgid "Read more about UNI"

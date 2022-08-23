@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-22 19:04\n"
+"PO-Revision-Date: 2022-08-23 20:04\n"
 "Last-Translator: \n"
 "Language: id_ID\n"
 "Language-Team: Indonesian\n"
@@ -121,7 +121,6 @@ msgid "A swap of this size may have a high price impact, given the current liqui
 msgstr "Pertukaran dengan ukuran ini mungkin memiliki dampak harga yang tinggi, mengingat likuiditas saat ini di kumpulan. Mungkin ada perbedaan besar antara jumlah token yang Anda masukkan dan apa yang akan Anda terima di token keluaran"
 
 #: src/components/Menu/index.tsx
-#: src/components/Tokens/TokenDetails/TokenDetail.tsx
 #: src/components/Tokens/TokenDetails/TokenDetail.tsx
 msgid "About"
 msgstr "Tentang"
@@ -930,6 +929,7 @@ msgid "Help Center"
 msgstr "Pusat Bantuan"
 
 #: src/components/FeeSelector/index.tsx
+#: src/components/Tokens/TokenDetails/TokenDetail.tsx
 msgid "Hide"
 msgstr "Menyembunyikan"
 
@@ -1491,6 +1491,10 @@ msgstr "mengantri"
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Rates"
 msgstr "Tarif"
+
+#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+msgid "Read more"
+msgstr "Baca lebih lajut"
 
 #: src/pages/Earn/index.tsx
 msgid "Read more about UNI"
