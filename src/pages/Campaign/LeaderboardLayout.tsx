@@ -90,7 +90,7 @@ export default function LeaderboardLayout({
         noColumns={isRewardShown ? 4 : 3}
         showMedal={data.rankNo <= 3}
         style={{
-          background: leaderboardTableBodyBackgroundColorsByRank[data.rankNo.toString()] ?? 'transparent',
+          background: leaderboardTableBodyBackgroundColorsByRank[data.rankNo] ?? 'transparent',
         }}
       >
         <LeaderboardTableBodyItem
