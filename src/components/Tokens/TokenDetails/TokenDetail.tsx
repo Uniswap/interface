@@ -179,7 +179,8 @@ const TokenDescriptionContainer = styled.div`
   text-overflow: ellipsis;
   max-width: 100%;
   max-height: fit-content;
-  padding-top: 12px;
+  padding-top: 16px;
+  line-height: 24px;
   white-space: pre-wrap;
 `
 
