@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-22 19:04\n"
+"PO-Revision-Date: 2022-08-23 20:04\n"
 "Last-Translator: \n"
 "Language: sw_TZ\n"
 "Language-Team: Swahili, Tanzania\n"
@@ -121,7 +121,6 @@ msgid "A swap of this size may have a high price impact, given the current liqui
 msgstr "Kubadilishana kwa ukubwa huu kunaweza kuwa na athari ya bei ya juu, kutokana na ukwasi wa sasa katika bwawa. Kunaweza kuwa na tofauti kubwa kati ya kiasi cha tokeni yako ya ingizo na kile utakachopokea katika tokeni ya matokeo"
 
 #: src/components/Menu/index.tsx
-#: src/components/Tokens/TokenDetails/TokenDetail.tsx
 #: src/components/Tokens/TokenDetails/TokenDetail.tsx
 msgid "About"
 msgstr "Kuhusu"
@@ -930,6 +929,7 @@ msgid "Help Center"
 msgstr "Kituo cha Usaidizi"
 
 #: src/components/FeeSelector/index.tsx
+#: src/components/Tokens/TokenDetails/TokenDetail.tsx
 msgid "Hide"
 msgstr "Ficha"
 
@@ -1491,6 +1491,10 @@ msgstr "Kupanga foleni"
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Rates"
 msgstr "Viwango"
+
+#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+msgid "Read more"
+msgstr "Soma zaidi"
 
 #: src/pages/Earn/index.tsx
 msgid "Read more about UNI"
