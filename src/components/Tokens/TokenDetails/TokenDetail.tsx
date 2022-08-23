@@ -9,6 +9,7 @@ import { checkWarning } from 'constants/tokenSafety'
 import { chainIdToChainName, useTokenDetailQuery } from 'graphql/data/TokenDetailQuery'
 import { useCurrency, useIsUserAddedToken, useToken } from 'hooks/Tokens'
 import { useAtomValue } from 'jotai/utils'
+import { darken } from 'polished'
 import { useCallback } from 'react'
 import { useState } from 'react'
 import { ArrowLeft, Heart, TrendingUp } from 'react-feather'
@@ -23,12 +24,6 @@ import { Wave } from './LoadingTokenDetail'
 import Resource from './Resource'
 import ShareButton from './ShareButton'
 
-export const AboutSection = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  padding: 24px 0px;
-`
 export const AboutHeader = styled.span`
   font-size: 28px;
   line-height: 36px;
@@ -174,6 +169,98 @@ const MissingData = styled.div`
   gap: 20px;
 `
 
+export const AboutContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 24px 0px;
+`
+
+const TokenDescriptionContainer = styled.div`
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  max-height: fit-content;
+`
+
+const TruncateDescriptionButton = styled.div`
+  color: ${({ theme }) => theme.textSecondary};
+  font-weight: 400;
+  font-size: 14px;
+  flex: none;
+  padding: 12px 0px;
+
+  &:hover,
+  &:focus {
+    color: ${({ theme }) => darken(0.1, theme.textSecondary)};
+    cursor: pointer;
+  }
+`
+
+type TokenDetailDataProps = {
+  description: string | null
+  homepageUrl: string | null
+  twitterName: string | null
+}
+
+export function AboutSection({ address, tokenDetailData }: { address: string; tokenDetailData: TokenDetailDataProps }) {
+  const [isDescriptionTruncated, setIsDescriptionTruncated] = useState(true)
+
+  if (!tokenDetailData || !tokenDetailData.description) {
+    return (
+      <AboutContainer>
+        <AboutHeader>
+          <Trans>About</Trans>
+        </AboutHeader>
+        <NoInfoAvailable>
+          <Trans>No token information available</Trans>
+        </NoInfoAvailable>
+        <ResourcesContainer>
+          <Resource name={'Etherscan'} link={`https://etherscan.io/address/${address}`} />
+          <Resource name={'Protocol Info'} link={`https://info.uniswap.org/#/tokens/${address}`} />
+        </ResourcesContainer>
+      </AboutContainer>
+    )
+  } else {
+    const tokenDescriptionArray = tokenDetailData.description.split(' ')
+    const shouldTruncate = tokenDescriptionArray.length > 60
+    const tokenDescriptionTruncated = shouldTruncate ? tokenDescriptionArray.slice(0, 59).join(' ') + '...' : undefined
+
+    return (
+      <AboutContainer>
+        <AboutHeader>
+          <Trans>About</Trans>
+        </AboutHeader>
+        {!shouldTruncate && tokenDetailData.description}
+        {shouldTruncate && isDescriptionTruncated && (
+          <TokenDescriptionContainer>
+            {tokenDescriptionTruncated}
+            <TruncateDescriptionButton onClick={() => setIsDescriptionTruncated(false)}>
+              <Trans>Read more</Trans>
+            </TruncateDescriptionButton>
+          </TokenDescriptionContainer>
+        )}
+        {shouldTruncate && !isDescriptionTruncated && (
+          <TokenDescriptionContainer>
+            {tokenDetailData.description}
+            <TruncateDescriptionButton onClick={() => setIsDescriptionTruncated(true)}>
+              <Trans>Hide</Trans>
+            </TruncateDescriptionButton>
+          </TokenDescriptionContainer>
+        )}
+        <ResourcesContainer>
+          <Resource name={'Etherscan'} link={`https://etherscan.io/address/${address}`} />
+          <Resource name={'Protocol Info'} link={`https://info.uniswap.org/#/tokens/${address}`} />
+          {tokenDetailData.homepageUrl && <Resource name={'Website'} link={tokenDetailData.homepageUrl} />}
+          {tokenDetailData.twitterName && (
+            <Resource name={'Twitter'} link={`https://twitter.com/${tokenDetailData.twitterName}`} />
+          )}
+        </ResourcesContainer>
+      </AboutContainer>
+    )
+  }
+}
+
 export default function LoadedTokenDetail({ address }: { address: string }) {
   const token = useToken(address)
   const currency = useCurrency(address)
@@ -225,18 +312,7 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
           </MissingChartData>
         </ChartHeader>
         <MissingData>
-          <AboutSection>
-            <AboutHeader>
-              <Trans>About</Trans>
-            </AboutHeader>
-            <NoInfoAvailable>
-              <Trans>No token information available</Trans>
-            </NoInfoAvailable>
-            <ResourcesContainer>
-              <Resource name={'Etherscan'} link={`https://etherscan.io/address/${address}`} />
-              <Resource name={'Protocol Info'} link={`https://info.uniswap.org/#/tokens/${address}`} />
-            </ResourcesContainer>
-          </AboutSection>
+          <AboutSection address={address} tokenDetailData={tokenDetailData as TokenDetailDataProps} />
           <StatsSection>
             <NoInfoAvailable>
               <Trans>No stats available</Trans>
@@ -293,20 +369,7 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
           <ParentSize>{({ width, height }) => <PriceChart token={token} width={width} height={height} />}</ParentSize>
         </ChartContainer>
       </ChartHeader>
-      <AboutSection>
-        <AboutHeader>
-          <Trans>About</Trans>
-        </AboutHeader>
-        {tokenDetailData.description}
-        <ResourcesContainer>
-          <Resource name={'Etherscan'} link={`https://etherscan.io/address/${address}`} />
-          <Resource name={'Protocol Info'} link={`https://info.uniswap.org/#/tokens/${address}`} />
-          {tokenDetailData.homepageUrl && <Resource name={'Website'} link={tokenDetailData.homepageUrl} />}
-          {tokenDetailData.twitterName && (
-            <Resource name={'Twitter'} link={`https://twitter.com/${tokenDetailData.twitterName}`} />
-          )}
-        </ResourcesContainer>
-      </AboutSection>
+      <AboutSection address={address} tokenDetailData={tokenDetailData as TokenDetailDataProps} />
       <StatsSection>
         <StatPair>
           <Stat>
