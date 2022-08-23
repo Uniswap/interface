@@ -1,5 +1,5 @@
 import { JSBI, TokenAmount } from '@teleswap/sdk'
-import { isAddress } from 'ethers/lib/utils'
+// import { isAddress } from 'ethers/lib/utils'
 import React, { useEffect, useState } from 'react'
 import { Text } from 'rebass'
 import styled from 'styled-components'
@@ -8,11 +8,15 @@ import tokenLogo from '../../assets/images/token-logo.png'
 import { useActiveWeb3React } from '../../hooks'
 import { ApplicationModal } from '../../state/application/actions'
 import { useModalOpen, useToggleSelfClaimModal } from '../../state/application/hooks'
-import { useClaimCallback, useUserClaimData, useUserUnclaimedAmount } from '../../state/claim/hooks'
+import {
+  // useClaimCallback,
+  useUserClaimData,
+  useUserUnclaimedAmount
+} from '../../state/claim/hooks'
 import { useUserHasSubmittedClaim } from '../../state/transactions/hooks'
 import { CloseIcon, CustomLightSpinner, ExternalLink, TYPE, UniTokenAnimated } from '../../theme'
 import { getEtherscanLink } from '../../utils'
-import { ButtonPrimary } from '../Button'
+// import { ButtonPrimary } from '../Button'
 import { AutoColumn, ColumnCenter } from '../Column'
 import Confetti from '../Confetti'
 import { Break, CardBGImage, CardBGImageSmaller, CardNoise, CardSection, DataCard } from '../earn/styled'
@@ -58,20 +62,20 @@ export default function ClaimModal() {
   const userClaimData = useUserClaimData(account)
 
   // monitor the status of the claim from contracts and txns
-  const { claimCallback } = useClaimCallback(account)
+  // const { claimCallback } = useClaimCallback(account)
   const unclaimedAmount: TokenAmount | undefined = useUserUnclaimedAmount(account)
   const { claimSubmitted, claimTxn } = useUserHasSubmittedClaim(account ?? undefined)
   const claimConfirmed = Boolean(claimTxn?.receipt)
 
-  function onClaim() {
-    setAttempting(true)
-    claimCallback()
-      // reset modal and log error
-      .catch(error => {
-        setAttempting(false)
-        console.log(error)
-      })
-  }
+  // function onClaim() {
+  //   setAttempting(true)
+  //   claimCallback()
+  //     // reset modal and log error
+  //     .catch(error => {
+  //       setAttempting(false)
+  //       console.log(error)
+  //     })
+  // }
 
   // once confirmed txn is found, if modal is closed open, mark as not attempting regradless
   useEffect(() => {
@@ -139,7 +143,7 @@ export default function ClaimModal() {
               As a member of the Uniswap community you may claim UNI to be used for voting and governance. <br /> <br />
               <ExternalLink href="https://uniswap.org/blog/uni">Read more about UNI</ExternalLink>
             </TYPE.subHeader>
-            <ButtonPrimary
+            {/* <ButtonPrimary
               disabled={!isAddress(account ?? '')}
               padding="16px 16px"
               width="100%"
@@ -148,7 +152,7 @@ export default function ClaimModal() {
               onClick={onClaim}
             >
               Claim UNI
-            </ButtonPrimary>
+            </ButtonPrimary> */}
           </AutoColumn>
         </ContentWrapper>
       )}
@@ -196,7 +200,7 @@ export default function ClaimModal() {
             )}
             {attempting && claimSubmitted && !claimConfirmed && chainId && claimTxn?.hash && (
               <ExternalLink href={getEtherscanLink(chainId, claimTxn?.hash, 'transaction')} style={{ zIndex: 99 }}>
-                View transaction on Etherscan
+                View transaction on Blockchain Exploerer
               </ExternalLink>
             )}
           </AutoColumn>
