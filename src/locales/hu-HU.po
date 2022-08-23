@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-18 18:04\n"
+"PO-Revision-Date: 2022-08-22 19:04\n"
 "Last-Translator: \n"
 "Language: hu_HU\n"
 "Language-Team: Hungarian\n"
@@ -122,6 +122,7 @@ msgstr "Egy ekkora swapnak nagy árhatása lehet, tekintettel a pool jelenlegi l
 
 #: src/components/Menu/index.tsx
 #: src/components/Tokens/TokenDetails/TokenDetail.tsx
+#: src/components/Tokens/TokenDetails/TokenDetail.tsx
 msgid "About"
 msgstr "Körülbelül"
 
@@ -138,6 +139,7 @@ msgstr "Számla"
 msgid "Active"
 msgstr "Aktív"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/PositionCard/index.tsx
 #: src/pages/AddLiquidity/index.tsx
 msgid "Add"
@@ -169,6 +171,7 @@ msgid "Add more liquidity"
 msgstr "Adjon hozzá több likviditást"
 
 #: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
 msgid "Add {0}"
 msgstr "Adjunk hozzá {0}"
 
@@ -180,9 +183,18 @@ msgstr "Adjon hozzá {0}-{1} likviditást"
 msgid "Add {0}/{1} V3 liquidity"
 msgstr "Adjon hozzá {0}/{1} V3 likviditást"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
+msgid "Added"
+msgstr "Hozzáadva"
+
+#: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Added {0}"
 msgstr "Hozzáadva {0}"
+
+#: src/components/AccountDetailsV2/TransactionBody.tsx
+msgid "Adding"
+msgstr "Hozzáadás"
 
 #: src/components/vote/QueueModal.tsx
 msgid "Adding this proposal to the queue will allow it to be executed, after a delay."
@@ -444,6 +456,7 @@ msgstr "Mindent töröl"
 #: src/components/TokenSafety/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
 msgid "Close"
 msgstr "Bezárás"
 
@@ -503,6 +516,7 @@ msgid "Confirm this connection in your wallet"
 msgstr "Erősítse meg ezt a kapcsolatot a pénztárcájában"
 
 #: src/components/ModalViews/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
@@ -570,6 +584,10 @@ msgstr "Másolat"
 msgid "Copy Address"
 msgstr "Cím másolása"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
+msgid "Create"
+msgstr "Teremt"
+
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Create Pool & Supply"
 msgstr "Pool és kínálat létrehozása"
@@ -603,6 +621,14 @@ msgstr "Pool létrehozása."
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Create {0}/{1} V3 pool"
 msgstr "Készítsen {0}/{1} V3 medence"
+
+#: src/components/AccountDetailsV2/TransactionBody.tsx
+msgid "Created"
+msgstr "Létrehozva"
+
+#: src/components/AccountDetailsV2/TransactionBody.tsx
+msgid "Creating"
+msgstr "Létrehozás"
 
 #: src/components/PositionPreview/index.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -702,6 +728,7 @@ msgid "Discord"
 msgstr "Viszály"
 
 #: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
 msgid "Dismiss"
 msgstr "Elvetés"
 
@@ -764,6 +791,7 @@ msgstr "Adja meg az érvényes token címet"
 msgid "Enter {0} amount"
 msgstr "Adjon meg {0} összeget"
 
+#: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/Web3Status/index.tsx
@@ -1179,6 +1207,10 @@ msgstr "Hiányzó függőségek"
 msgid "More"
 msgstr "Több"
 
+#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+msgid "Name not found"
+msgstr "A név nem található"
+
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Network Fee"
 msgstr "Hálózati díj"
@@ -1227,6 +1259,14 @@ msgstr "Nem található javaslat."
 #: src/components/SearchModal/CurrencySearch.tsx
 msgid "No results found."
 msgstr "Nincs találat."
+
+#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+msgid "No stats available"
+msgstr "Nem áll rendelkezésre statisztika"
+
+#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+msgid "No token information available"
+msgstr "Nem áll rendelkezésre token információ"
 
 #: src/constants/tokenSafety.tsx
 msgid "Not Available"
@@ -1314,6 +1354,7 @@ msgstr "Sokszög híd"
 msgid "Polygonscan"
 msgstr "Polygonscan"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/Header/index.tsx
 msgid "Pool"
 msgstr "Pool"
@@ -1476,6 +1517,7 @@ msgstr "Legutóbbi tranzakciók"
 msgid "Recipient"
 msgstr "Befogadó"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
@@ -1506,6 +1548,14 @@ msgstr "Likviditás eltávolítása"
 msgid "Remove list"
 msgstr "Lista eltávolítása"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
+msgid "Removed"
+msgstr "Eltávolítva"
+
+#: src/components/AccountDetailsV2/TransactionBody.tsx
+msgid "Removing"
+msgstr "Eltávolítás"
+
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Removing {0} {1} and {2} {3}"
 msgstr "{0} {1} és {2} {3} eltávolítása"
@@ -1518,6 +1568,7 @@ msgstr "{0} {1} és{2} {3}eltávolítása"
 msgid "Request Features"
 msgstr "Funkciók kérése"
 
+#: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
@@ -1643,6 +1694,7 @@ msgstr "Kínálat"
 msgid "Supplying {0} {1} and {2} {3}"
 msgstr "{0} {1} és {2} {3} kínálása"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/Header/index.tsx
 #: src/components/swap/SwapHeader.tsx
 #: src/pages/Swap/index.tsx
@@ -1669,9 +1721,21 @@ msgstr "Pontosan cserélje ki a <0/> értéket a <1/> értékre"
 msgid "Swap failed: {0}"
 msgstr "A csere nem sikerült: {0}"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
+msgid "Swapped"
+msgstr "Cserélve"
+
+#: src/components/AccountDetailsV2/TransactionBody.tsx
+msgid "Swapping"
+msgstr "Csere"
+
 #: src/components/swap/ConfirmSwapModal.tsx
 msgid "Swapping {0} {1} for {2} {3}"
 msgstr "{0} {1} cseréje a következőre {2} {3}"
+
+#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+msgid "Symbol not found"
+msgstr "A szimbólum nem található"
 
 #: src/components/Popups/SurveyPopup.tsx
 msgid "Take a 10 minute survey to help us improve your experience in the Uniswap app."
@@ -1902,8 +1966,12 @@ msgstr "Tranzakció határideje"
 
 #: src/lib/hooks/swap/useSendSwapTransaction.tsx
 #: src/lib/hooks/swap/useSendSwapTransaction.tsx
-msgid "Transaction rejected."
-msgstr "A tranzakció elutasítva."
+msgid "Transaction rejected"
+msgstr "Tranzakció elutasítva"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Transaction submitted"
+msgstr "Tranzakció elküldve"
 
 #: src/components/WalletDropdown/DefaultMenu.tsx
 #: src/components/WalletDropdown/TransactionMenu.tsx
@@ -2068,6 +2136,7 @@ msgstr "Felhalmozott díjak és elemzések megtekintése<0></0>"
 msgid "View list"
 msgstr "Lista megtekintése"
 
+#: src/components/TransactionConfirmationModal/index.tsx
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "View on Etherscan"
 msgstr "Nézd meg az Etherscan webhelyen"
@@ -2153,6 +2222,10 @@ msgstr "A szavazás {0}"
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Waiting For Confirmation"
 msgstr "Visszaigazolásra vár"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Waiting for confirmation"
+msgstr "visszaigazolásra vár"
 
 #: src/components/WalletModal/PendingView.tsx
 msgid "Waiting to connect"
@@ -2367,6 +2440,10 @@ msgstr "Tranzakciója visszaáll, ha az ennél hosszabb ideig van függőben."
 msgid "Your transaction will revert if the price changes unfavorably by more than this percentage."
 msgstr "A tranzakciója visszaáll, ha az ár ennél a százaléknál nagyobb mértékben változik kedvezőtlenül."
 
+#: src/components/WalletDropdown/TransactionMenu.tsx
+msgid "Your transactions will appear here"
+msgstr "Itt jelennek meg tranzakciói"
+
 #: src/components/AccountDetails/index.tsx
 msgid "Your transactions will appear here..."
 msgstr "A tranzakciói itt jelennek meg..."
@@ -2379,6 +2456,11 @@ msgstr "Nem igényelt UNI"
 msgid "after slippage"
 msgstr "csúszás után"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
+#: src/components/AccountDetailsV2/TransactionBody.tsx
+msgid "and"
+msgstr "és"
+
 #: src/components/ConnectedAccountBlocked/index.tsx
 msgid "blocked activities"
 msgstr "blokkolt tevékenységek"
@@ -2386,6 +2468,14 @@ msgstr "blokkolt tevékenységek"
 #: src/components/Settings/index.tsx
 msgid "confirm"
 msgstr "megerősítés"
+
+#: src/components/AccountDetailsV2/TransactionBody.tsx
+msgid "failed"
+msgstr "nem sikerült"
+
+#: src/components/AccountDetailsV2/TransactionBody.tsx
+msgid "for"
+msgstr "számára"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "for {0}"
@@ -2438,6 +2528,7 @@ msgstr "{0, plural, =1 {Ezzel a tokent nem lehet kereskedni az Uniswap alkalmaz�
 #: src/components/RateToggle/index.tsx
 #: src/components/RateToggle/index.tsx
 #: src/components/Settings/index.tsx
+#: src/components/Tokens/TokenDetails/TokenDetail.tsx
 msgid "{0}"
 msgstr "{0}"
 
