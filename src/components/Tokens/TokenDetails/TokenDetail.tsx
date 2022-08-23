@@ -239,15 +239,10 @@ export function AboutSection({ address, tokenDetailData }: { address: string; to
         </NoInfoAvailable>
       )}
       <TokenDescriptionContainer>
-        {!shouldTruncate && tokenDescription}
-        {shouldTruncate && (
-          <div>
-            {tokenDescription}
-            <TruncateDescriptionButton onClick={() => setIsDescriptionTruncated(!isDescriptionTruncated)}>
-              {isDescriptionTruncated ? <Trans>Read more</Trans> : <Trans>Hide</Trans>}
-            </TruncateDescriptionButton>
-          </div>
-        )}
+        {tokenDescription}
+        <TruncateDescriptionButton onClick={() => setIsDescriptionTruncated(!isDescriptionTruncated)}>
+          {isDescriptionTruncated ? <Trans>Read more</Trans> : <Trans>Hide</Trans>}
+        </TruncateDescriptionButton>
       </TokenDescriptionContainer>
       <ResourcesContainer>
         <Resource name={'Etherscan'} link={`https://etherscan.io/address/${address}`} />
