@@ -20,7 +20,7 @@ interface IAmount {
 export type TokenData = {
   name: string | null
   address: string
-  chain: Chain | undefined
+  chain: Chain | null
   symbol: string | null
   price: IAmount | null | undefined
   marketCap: IAmount | null | undefined
