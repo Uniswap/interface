@@ -35,19 +35,28 @@ const useExplorePageQuery = (): UseTopTokensResult => {
   const [data, setData] = useState<Record<string, TokenData> | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
-  const topTokens = useTopTokenQuery(1)
 
-  useEffect(() => {
+  const FetchTopTokens = async (): Promise<Record<string, TokenData> | void> => {
     try {
-      setLoading(true)
-      setError(null)
-      if (topTokens) setData(topTokens)
+      const topTokens = useTopTokenQuery(1)
+      return topTokens
     } catch (e) {
       setError('Error fetching top tokens')
     } finally {
       setLoading(false)
     }
-  }, [topTokens])
+  }
+
+  useEffect(() => {
+    setError(null)
+    setLoading(true)
+    FetchTopTokens()
+      .then((data) => {
+        if (data) setData(data)
+      })
+      .catch((e) => setError(e))
+      .finally(() => setLoading(false))
+  }, [])
 
   return { data, error, loading }
 }

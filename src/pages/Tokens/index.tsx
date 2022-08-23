@@ -8,7 +8,7 @@ import NetworkFilter from 'components/Tokens/TokenTable/NetworkFilter'
 import SearchBar from 'components/Tokens/TokenTable/SearchBar'
 import TimeSelector from 'components/Tokens/TokenTable/TimeSelector'
 import TokenTable from 'components/Tokens/TokenTable/TokenTable'
-import useExplorePageQuery from 'hooks/useExplorePageQuery'
+import { useTopTokenQuery } from 'graphql/data/TopTokenQuery'
 import { useResetAtom } from 'jotai/utils'
 import { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
@@ -60,9 +60,11 @@ const FiltersWrapper = styled.div`
 `
 
 const Tokens = () => {
-  const { data, error, loading } = useExplorePageQuery()
+  const topTokens = useTopTokenQuery(1)
   const resetFilterString = useResetAtom(filterStringAtom)
   const location = useLocation()
+  const error = null
+  const loading = false
   useEffect(() => {
     resetFilterString()
   }, [location, resetFilterString])
@@ -87,7 +89,7 @@ const Tokens = () => {
         </FiltersWrapper>
 
         <TokenTableContainer>
-          <TokenTable data={data} error={error} loading={loading} />
+          <TokenTable data={topTokens} error={error} loading={loading} />
         </TokenTableContainer>
       </ExploreContainer>
     </Trace>
