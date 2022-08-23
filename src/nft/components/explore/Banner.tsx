@@ -14,7 +14,6 @@ import { useQuery } from 'react-query'
 import { Link } from 'react-router-dom'
 
 import * as styles from './Banner.css'
-import CarouselIndicator from './CarouselIndicator'
 
 const Banner = () => {
   /* Sets initially displayed collection to random number between 0 and 4  */
@@ -59,17 +58,7 @@ const Banner = () => {
             >
               <Box className={styles.bannerOverlay} width="full" />
               <CollectionDetails collection={collections[current]} hovered={hovered} rank={current + 1} />
-              <Center marginTop="32" position="relative">
-                {Array(collections.length)
-                  .fill(null)
-                  .map((value, carouselIndex) => (
-                    <CarouselIndicator
-                      active={current === carouselIndex}
-                      onClick={() => setCurrent(carouselIndex)}
-                      key={carouselIndex}
-                    />
-                  ))}
-              </Center>
+              <CarouselProgress length={collections.length} currentIndex={current} setCurrent={setCurrent} />
             </div>
           </Box>
         </Link>
@@ -147,4 +136,40 @@ const CollectionDetails = ({
       </Link>
     </Column>
   </Box>
+)
+
+/* Carousel Progress indicators */
+const CarouselProgress = ({
+  length,
+  currentIndex,
+  setCurrent,
+}: {
+  length: number
+  currentIndex: number
+  setCurrent: React.Dispatch<React.SetStateAction<number>>
+}) => (
+  <Center marginTop="16">
+    {Array(length)
+      .fill(null)
+      .map((value, carouselIndex) => (
+        <Box
+          cursor="pointer"
+          paddingTop="16"
+          paddingBottom="16"
+          onClick={(e) => {
+            e.preventDefault()
+            e.stopPropagation()
+            setCurrent(carouselIndex)
+          }}
+          key={carouselIndex}
+        >
+          <Box
+            as="span"
+            className={styles.carouselIndicator}
+            display="inline-block"
+            backgroundColor={currentIndex === carouselIndex ? 'explicitWhite' : 'accentTextLightTertiary'}
+          />
+        </Box>
+      ))}
+  </Center>
 )
