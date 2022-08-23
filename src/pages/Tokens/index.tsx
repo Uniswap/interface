@@ -2,15 +2,15 @@ import { Trans } from '@lingui/macro'
 import { PageName } from 'components/AmplitudeAnalytics/constants'
 import { Trace } from 'components/AmplitudeAnalytics/Trace'
 import { MAX_WIDTH_MEDIA_BREAKPOINT, MEDIUM_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
-import { favoritesAtom, filterStringAtom } from 'components/Tokens/state'
+import { filterStringAtom } from 'components/Tokens/state'
 import FavoriteButton from 'components/Tokens/TokenTable/FavoriteButton'
 import NetworkFilter from 'components/Tokens/TokenTable/NetworkFilter'
 import SearchBar from 'components/Tokens/TokenTable/SearchBar'
 import TimeSelector from 'components/Tokens/TokenTable/TimeSelector'
 import TokenTable from 'components/Tokens/TokenTable/TokenTable'
 import { TokensNetworkFilterVariant, useTokensNetworkFilterFlag } from 'featureFlags/flags/tokensNetworkFilter'
-import useExplorePageQuery from 'hooks/useExplorePageQuery'
-import { useAtomValue, useResetAtom } from 'jotai/utils'
+import { useTopTokenQuery } from 'graphql/data/TopTokenQuery'
+import { useResetAtom } from 'jotai/utils'
 import { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 import styled from 'styled-components/macro'
@@ -61,11 +61,12 @@ const FiltersWrapper = styled.div`
 `
 
 const Tokens = () => {
+  const topTokens = useTopTokenQuery(1)
   const tokensNetworkFilterFlag = useTokensNetworkFilterFlag()
-  const favoriteTokens = useAtomValue<string[]>(favoritesAtom)
-  const { data, error, loading } = useExplorePageQuery(favoriteTokens)
   const resetFilterString = useResetAtom(filterStringAtom)
   const location = useLocation()
+  const error = null
+  const loading = false
   useEffect(() => {
     resetFilterString()
   }, [location, resetFilterString])
@@ -90,7 +91,7 @@ const Tokens = () => {
         </FiltersWrapper>
 
         <TokenTableContainer>
-          <TokenTable data={data} error={error} loading={loading} />
+          <TokenTable data={topTokens} error={error} loading={loading} />
         </TokenTableContainer>
       </ExploreContainer>
     </Trace>
