@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-18 18:04\n"
+"PO-Revision-Date: 2022-08-22 19:04\n"
 "Last-Translator: \n"
 "Language: ca_ES\n"
 "Language-Team: Catalan\n"
@@ -122,6 +122,7 @@ msgstr "Un swap d'aquesta mida pot tenir un alt impacte en els preus, donada la 
 
 #: src/components/Menu/index.tsx
 #: src/components/Tokens/TokenDetails/TokenDetail.tsx
+#: src/components/Tokens/TokenDetails/TokenDetail.tsx
 msgid "About"
 msgstr "Sobre"
 
@@ -138,6 +139,7 @@ msgstr "Compte"
 msgid "Active"
 msgstr "Actiu"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/PositionCard/index.tsx
 #: src/pages/AddLiquidity/index.tsx
 msgid "Add"
@@ -169,6 +171,7 @@ msgid "Add more liquidity"
 msgstr "Afegiu més liquiditat"
 
 #: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
 msgid "Add {0}"
 msgstr "Afegeix {0}"
 
@@ -180,9 +183,18 @@ msgstr "Afegir {0}-{1} liquiditat"
 msgid "Add {0}/{1} V3 liquidity"
 msgstr "Afegir {0}/{1} liquiditat V3"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
+msgid "Added"
+msgstr "Afegit"
+
+#: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Added {0}"
 msgstr "Afegit {0}"
+
+#: src/components/AccountDetailsV2/TransactionBody.tsx
+msgid "Adding"
+msgstr "Afegint"
 
 #: src/components/vote/QueueModal.tsx
 msgid "Adding this proposal to the queue will allow it to be executed, after a delay."
@@ -444,6 +456,7 @@ msgstr "Esborra-ho tot"
 #: src/components/TokenSafety/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
 msgid "Close"
 msgstr "Tanca"
 
@@ -503,6 +516,7 @@ msgid "Confirm this connection in your wallet"
 msgstr "Confirmeu aquesta connexió a la vostra cartera"
 
 #: src/components/ModalViews/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
@@ -570,6 +584,10 @@ msgstr "Còpia"
 msgid "Copy Address"
 msgstr "Copia l'adreça"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
+msgid "Create"
+msgstr "Crear"
+
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Create Pool & Supply"
 msgstr "Crea grup i subministrament"
@@ -603,6 +621,14 @@ msgstr "Crea un grup."
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Create {0}/{1} V3 pool"
 msgstr "Crear {0}/{1} piscina V3"
+
+#: src/components/AccountDetailsV2/TransactionBody.tsx
+msgid "Created"
+msgstr "Creat"
+
+#: src/components/AccountDetailsV2/TransactionBody.tsx
+msgid "Creating"
+msgstr "Creant"
 
 #: src/components/PositionPreview/index.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -702,6 +728,7 @@ msgid "Discord"
 msgstr "Discòrdia"
 
 #: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
 msgid "Dismiss"
 msgstr "Destitueix"
 
@@ -764,6 +791,7 @@ msgstr "Introduïu una adreça de fitxa vàlida"
 msgid "Enter {0} amount"
 msgstr "Introduïu {0} import"
 
+#: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/Web3Status/index.tsx
@@ -1178,6 +1206,10 @@ msgstr "Falten dependències"
 msgid "More"
 msgstr "Més"
 
+#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+msgid "Name not found"
+msgstr "No s'ha trobat el nom"
+
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Network Fee"
 msgstr "Tarifa de xarxa"
@@ -1226,6 +1258,14 @@ msgstr "No s'ha trobat cap proposta."
 #: src/components/SearchModal/CurrencySearch.tsx
 msgid "No results found."
 msgstr "Sense resultats."
+
+#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+msgid "No stats available"
+msgstr "No hi ha estadístiques disponibles"
+
+#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+msgid "No token information available"
+msgstr "No hi ha informació de testimoni disponible"
 
 #: src/constants/tokenSafety.tsx
 msgid "Not Available"
@@ -1313,6 +1353,7 @@ msgstr "Pont del polígon"
 msgid "Polygonscan"
 msgstr "Polygonscan"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/Header/index.tsx
 msgid "Pool"
 msgstr "Grup"
@@ -1475,6 +1516,7 @@ msgstr "Transaccions recents"
 msgid "Recipient"
 msgstr "Destinatari"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
@@ -1505,6 +1547,14 @@ msgstr "Elimina la liquiditat"
 msgid "Remove list"
 msgstr "Elimina la llista"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
+msgid "Removed"
+msgstr "Eliminat"
+
+#: src/components/AccountDetailsV2/TransactionBody.tsx
+msgid "Removing"
+msgstr "Eliminant"
+
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Removing {0} {1} and {2} {3}"
 msgstr "Eliminació de {0} {1} i {2} {3}"
@@ -1517,6 +1567,7 @@ msgstr "Eliminació de {0} {1} i{2} {3}"
 msgid "Request Features"
 msgstr "Sol·licitud de característiques"
 
+#: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
@@ -1642,6 +1693,7 @@ msgstr "Subministrament"
 msgid "Supplying {0} {1} and {2} {3}"
 msgstr "Subministrant {0} {1} i {2} {3}"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/Header/index.tsx
 #: src/components/swap/SwapHeader.tsx
 #: src/pages/Swap/index.tsx
@@ -1668,9 +1720,21 @@ msgstr "Canvieu exactament <0 /> per <1 />"
 msgid "Swap failed: {0}"
 msgstr "Ha fallat l'intercanvi: {0}"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
+msgid "Swapped"
+msgstr "Canviat"
+
+#: src/components/AccountDetailsV2/TransactionBody.tsx
+msgid "Swapping"
+msgstr "Canvi"
+
 #: src/components/swap/ConfirmSwapModal.tsx
 msgid "Swapping {0} {1} for {2} {3}"
 msgstr "Intercanvi de {0} {1} per {2} {3}"
+
+#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+msgid "Symbol not found"
+msgstr "No s'ha trobat el símbol"
 
 #: src/components/Popups/SurveyPopup.tsx
 msgid "Take a 10 minute survey to help us improve your experience in the Uniswap app."
@@ -1901,8 +1965,12 @@ msgstr "Termini de transacció"
 
 #: src/lib/hooks/swap/useSendSwapTransaction.tsx
 #: src/lib/hooks/swap/useSendSwapTransaction.tsx
-msgid "Transaction rejected."
-msgstr "S'ha rebutjat la transacció."
+msgid "Transaction rejected"
+msgstr "Transacció rebutjada"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Transaction submitted"
+msgstr "Transacció enviada"
 
 #: src/components/WalletDropdown/DefaultMenu.tsx
 #: src/components/WalletDropdown/TransactionMenu.tsx
@@ -2067,6 +2135,7 @@ msgstr "Consulteu els honoraris i les taxes acumulades <0> ↗</0>"
 msgid "View list"
 msgstr "Veure llista"
 
+#: src/components/TransactionConfirmationModal/index.tsx
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "View on Etherscan"
 msgstr "Veure a Etherscan"
@@ -2151,6 +2220,10 @@ msgstr "La votació comença aproximadament a {0}"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Waiting For Confirmation"
+msgstr "Esperant la confirmació"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Waiting for confirmation"
 msgstr "Esperant la confirmació"
 
 #: src/components/WalletModal/PendingView.tsx
@@ -2366,6 +2439,10 @@ msgstr "La vostra transacció es revertirà si està pendent durant més d’aqu
 msgid "Your transaction will revert if the price changes unfavorably by more than this percentage."
 msgstr "La vostra transacció es revertirà si el preu canvia desfavorablement en més d’aquest percentatge."
 
+#: src/components/WalletDropdown/TransactionMenu.tsx
+msgid "Your transactions will appear here"
+msgstr "Les teves transaccions apareixeran aquí"
+
 #: src/components/AccountDetails/index.tsx
 msgid "Your transactions will appear here..."
 msgstr "Les vostres transaccions apareixeran aquí..."
@@ -2378,6 +2455,11 @@ msgstr "La vostra UNI no reclamada"
 msgid "after slippage"
 msgstr "després del lliscament"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
+#: src/components/AccountDetailsV2/TransactionBody.tsx
+msgid "and"
+msgstr "i"
+
 #: src/components/ConnectedAccountBlocked/index.tsx
 msgid "blocked activities"
 msgstr "activitats bloquejades"
@@ -2385,6 +2467,14 @@ msgstr "activitats bloquejades"
 #: src/components/Settings/index.tsx
 msgid "confirm"
 msgstr "confirmar"
+
+#: src/components/AccountDetailsV2/TransactionBody.tsx
+msgid "failed"
+msgstr "fracassat"
+
+#: src/components/AccountDetailsV2/TransactionBody.tsx
+msgid "for"
+msgstr "per"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "for {0}"
@@ -2437,6 +2527,7 @@ msgstr "{0, plural, =1 {No podeu intercanviar aquest testimoni mitjançant l'apl
 #: src/components/RateToggle/index.tsx
 #: src/components/RateToggle/index.tsx
 #: src/components/Settings/index.tsx
+#: src/components/Tokens/TokenDetails/TokenDetail.tsx
 msgid "{0}"
 msgstr "{0}"
 

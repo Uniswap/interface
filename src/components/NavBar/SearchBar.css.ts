@@ -7,11 +7,11 @@ const DESKTOP_NAVBAR_WIDTH = '360px'
 
 const baseSearchStyle = style([
   sprinkles({
-    borderStyle: 'solid',
-    borderColor: 'lightGrayButton',
-    borderWidth: '1px',
     paddingY: '12',
     width: { mobile: 'viewWidth' },
+    borderStyle: 'solid',
+    borderWidth: '1px',
+    borderColor: 'medGray',
   }),
   {
     '@media': {
@@ -29,6 +29,7 @@ export const searchBar = style([
     color: 'placeholder',
     paddingX: '16',
     cursor: 'pointer',
+    background: 'lightGray',
   }),
 ])
 
@@ -52,7 +53,7 @@ export const searchBarDropdown = style([
     top: '48',
     borderBottomLeftRadius: '12',
     borderBottomRightRadius: '12',
-    background: 'white',
+    background: 'lightGray',
   }),
   {
     borderTop: 'none',
@@ -72,7 +73,7 @@ export const suggestionRow = style([
   {
     ':hover': {
       cursor: 'pointer',
-      background: vars.color.lightGrayButton,
+      background: vars.color.lightGrayOverlay,
     },
     textDecoration: 'none',
   },

@@ -1,17 +1,6 @@
 import { ChevronLeft } from 'react-feather'
 import styled from 'styled-components/macro'
 
-const BackSection = styled.div`
-  position: relative;
-  display: flex;
-  padding: 0 16px;
-  color: ${({ theme }) => theme.textSecondary};
-  cursor: default;
-  :hover {
-    text-decoration: none;
-  }
-`
-
 const Menu = styled.div`
   width: 100%;
   height: 100%;
@@ -29,12 +18,16 @@ const Header = styled.span`
 const ClearAll = styled.div`
   display: inline-block;
   cursor: pointer;
-  margin-left: auto;
   color: ${({ theme }) => theme.accentAction};
   font-weight: 600;
   font-size: 14px;
   margin-top: auto;
   margin-bottom: auto;
+
+  :hover {
+    opacity: 0.6;
+    transition: 250ms opacity ease;
+  }
 `
 
 const StyledChevron = styled(ChevronLeft)`
@@ -44,6 +37,28 @@ const StyledChevron = styled(ChevronLeft)`
     color: ${({ theme }) => theme.textPrimary};
     transition: 250ms color ease;
   }
+`
+
+const BackSection = styled.div`
+  position: absolute;
+  background-color: ${({ theme }) => theme.backgroundSurface};
+  width: 100%;
+  padding: 0 16px 16px 16px;
+  color: ${({ theme }) => theme.textSecondary};
+  cursor: default;
+  display: flex;
+  justify-content: space-between;
+`
+
+const BackSectionContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  width: 100%;
+`
+
+const ChildrenContainer = styled.div`
+  margin-top: 40px;
 `
 
 export const SlideOutMenu = ({
@@ -59,10 +74,13 @@ export const SlideOutMenu = ({
 }) => (
   <Menu>
     <BackSection>
-      <StyledChevron onClick={onClose} size={24} />
-      <Header>{title}</Header>
-      {onClear && <ClearAll onClick={onClear}>Clear All</ClearAll>}
+      <BackSectionContainer>
+        <StyledChevron onClick={onClose} size={24} />
+        <Header>{title}</Header>
+        {onClear && <ClearAll onClick={onClear}>Clear All</ClearAll>}
+      </BackSectionContainer>
     </BackSection>
-    {children}
+
+    <ChildrenContainer>{children}</ChildrenContainer>
   </Menu>
 )

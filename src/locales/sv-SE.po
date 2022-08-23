@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-18 18:04\n"
+"PO-Revision-Date: 2022-08-22 19:04\n"
 "Last-Translator: \n"
 "Language: sv_SE\n"
 "Language-Team: Swedish\n"
@@ -122,6 +122,7 @@ msgstr "En swap av denna storlek kan ha en hög prispåverkan, givet den nuvaran
 
 #: src/components/Menu/index.tsx
 #: src/components/Tokens/TokenDetails/TokenDetail.tsx
+#: src/components/Tokens/TokenDetails/TokenDetail.tsx
 msgid "About"
 msgstr "Omkring"
 
@@ -138,6 +139,7 @@ msgstr "Konto"
 msgid "Active"
 msgstr "Aktivt"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/PositionCard/index.tsx
 #: src/pages/AddLiquidity/index.tsx
 msgid "Add"
@@ -169,6 +171,7 @@ msgid "Add more liquidity"
 msgstr "Lägg till mer likviditet"
 
 #: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
 msgid "Add {0}"
 msgstr "Lägg till {0}"
 
@@ -180,9 +183,18 @@ msgstr "Lägg till {0}-{1}-likviditet"
 msgid "Add {0}/{1} V3 liquidity"
 msgstr "Lägg {0}/{1} V3-likviditet"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
+msgid "Added"
+msgstr "Lagt till"
+
+#: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Added {0}"
 msgstr "Tillagt {0}"
+
+#: src/components/AccountDetailsV2/TransactionBody.tsx
+msgid "Adding"
+msgstr "Lägger till"
 
 #: src/components/vote/QueueModal.tsx
 msgid "Adding this proposal to the queue will allow it to be executed, after a delay."
@@ -444,6 +456,7 @@ msgstr "Rensa alla"
 #: src/components/TokenSafety/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
 msgid "Close"
 msgstr "Stäng"
 
@@ -503,6 +516,7 @@ msgid "Confirm this connection in your wallet"
 msgstr "Bekräfta denna anslutning i din plånbok"
 
 #: src/components/ModalViews/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
@@ -570,6 +584,10 @@ msgstr "Kopiera"
 msgid "Copy Address"
 msgstr "Kopiera adress"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
+msgid "Create"
+msgstr "Skapa"
+
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Create Pool & Supply"
 msgstr "Skapa pool & tillgång"
@@ -603,6 +621,14 @@ msgstr "Skapa en pool."
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Create {0}/{1} V3 pool"
 msgstr "Skapa {0}/{1} V3 pool"
+
+#: src/components/AccountDetailsV2/TransactionBody.tsx
+msgid "Created"
+msgstr "Skapad"
+
+#: src/components/AccountDetailsV2/TransactionBody.tsx
+msgid "Creating"
+msgstr "Skapande"
 
 #: src/components/PositionPreview/index.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -702,6 +728,7 @@ msgid "Discord"
 msgstr "Brist på överensstämmelse"
 
 #: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
 msgid "Dismiss"
 msgstr "Avfärda"
 
@@ -764,6 +791,7 @@ msgstr "Ange giltig tokenadress"
 msgid "Enter {0} amount"
 msgstr "Ange {0} belopp"
 
+#: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/Web3Status/index.tsx
@@ -1178,6 +1206,10 @@ msgstr "Beroenden saknas"
 msgid "More"
 msgstr "Mer"
 
+#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+msgid "Name not found"
+msgstr "Namnet hittades inte"
+
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Network Fee"
 msgstr "Nätverksavgift"
@@ -1226,6 +1258,14 @@ msgstr "Inga förslag hittades."
 #: src/components/SearchModal/CurrencySearch.tsx
 msgid "No results found."
 msgstr "Inga resultat hittades."
+
+#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+msgid "No stats available"
+msgstr "Ingen statistik tillgänglig"
+
+#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+msgid "No token information available"
+msgstr "Ingen tokeninformation tillgänglig"
 
 #: src/constants/tokenSafety.tsx
 msgid "Not Available"
@@ -1313,6 +1353,7 @@ msgstr "Polygon bro"
 msgid "Polygonscan"
 msgstr "Polygonscan"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/Header/index.tsx
 msgid "Pool"
 msgstr "Pool"
@@ -1475,6 +1516,7 @@ msgstr "Nyligen genomförda transaktioner"
 msgid "Recipient"
 msgstr "Mottagare"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
@@ -1505,6 +1547,14 @@ msgstr "Ta bort likviditet"
 msgid "Remove list"
 msgstr "Ta bort lista"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
+msgid "Removed"
+msgstr "Tog bort"
+
+#: src/components/AccountDetailsV2/TransactionBody.tsx
+msgid "Removing"
+msgstr "Ta bort"
+
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Removing {0} {1} and {2} {3}"
 msgstr "Tar bort {0} {1} och {2} {3}"
@@ -1517,6 +1567,7 @@ msgstr "Ta bort {0} {1} och{2} {3}"
 msgid "Request Features"
 msgstr "Begär funktioner"
 
+#: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
@@ -1642,6 +1693,7 @@ msgstr "Tillgång"
 msgid "Supplying {0} {1} and {2} {3}"
 msgstr "Levererar {0} {1} och {2} {3}"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/Header/index.tsx
 #: src/components/swap/SwapHeader.tsx
 #: src/pages/Swap/index.tsx
@@ -1668,9 +1720,21 @@ msgstr "Byt exakt <0/> för <1/>"
 msgid "Swap failed: {0}"
 msgstr "Byte misslyckades: {0}"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
+msgid "Swapped"
+msgstr "Bytt"
+
+#: src/components/AccountDetailsV2/TransactionBody.tsx
+msgid "Swapping"
+msgstr "Byte"
+
 #: src/components/swap/ConfirmSwapModal.tsx
 msgid "Swapping {0} {1} for {2} {3}"
 msgstr "Byter ut {0} {1} mot {2} {3}"
+
+#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+msgid "Symbol not found"
+msgstr "Symbolen hittades inte"
 
 #: src/components/Popups/SurveyPopup.tsx
 msgid "Take a 10 minute survey to help us improve your experience in the Uniswap app."
@@ -1901,8 +1965,12 @@ msgstr "Tidsfrist för transaktion"
 
 #: src/lib/hooks/swap/useSendSwapTransaction.tsx
 #: src/lib/hooks/swap/useSendSwapTransaction.tsx
-msgid "Transaction rejected."
-msgstr "Transaktionen avvisades."
+msgid "Transaction rejected"
+msgstr "Transaktionen avvisad"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Transaction submitted"
+msgstr "Transaktionen har skickats"
 
 #: src/components/WalletDropdown/DefaultMenu.tsx
 #: src/components/WalletDropdown/TransactionMenu.tsx
@@ -2067,6 +2135,7 @@ msgstr "Visa upplupna avgifter och analyser <0> ↗</0>"
 msgid "View list"
 msgstr "Visa lista"
 
+#: src/components/TransactionConfirmationModal/index.tsx
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "View on Etherscan"
 msgstr "Visa på Etherscan"
@@ -2151,6 +2220,10 @@ msgstr "Omröstningen börjar cirka {0}"
 
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Waiting For Confirmation"
+msgstr "Väntar på bekräftelse"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Waiting for confirmation"
 msgstr "Väntar på bekräftelse"
 
 #: src/components/WalletModal/PendingView.tsx
@@ -2366,6 +2439,10 @@ msgstr "Din transaktion återställs om den väntar längre än denna tidsperiod
 msgid "Your transaction will revert if the price changes unfavorably by more than this percentage."
 msgstr "Din transaktion kommer att återgå om priset ändras ogynnsamt med mer än denna procentsats."
 
+#: src/components/WalletDropdown/TransactionMenu.tsx
+msgid "Your transactions will appear here"
+msgstr "Dina transaktioner kommer att visas här"
+
 #: src/components/AccountDetails/index.tsx
 msgid "Your transactions will appear here..."
 msgstr "Dina transaktioner kommer att visas här..."
@@ -2378,6 +2455,11 @@ msgstr "Din outnyttjade UNI"
 msgid "after slippage"
 msgstr "efter glidning"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
+#: src/components/AccountDetailsV2/TransactionBody.tsx
+msgid "and"
+msgstr "och"
+
 #: src/components/ConnectedAccountBlocked/index.tsx
 msgid "blocked activities"
 msgstr "blockerade aktiviteter"
@@ -2385,6 +2467,14 @@ msgstr "blockerade aktiviteter"
 #: src/components/Settings/index.tsx
 msgid "confirm"
 msgstr "bekräfta"
+
+#: src/components/AccountDetailsV2/TransactionBody.tsx
+msgid "failed"
+msgstr "misslyckades"
+
+#: src/components/AccountDetailsV2/TransactionBody.tsx
+msgid "for"
+msgstr "för"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "for {0}"
@@ -2437,6 +2527,7 @@ msgstr "{0, plural, =1 {Du kan inte byta denna token med Uniswap-appen.} other {
 #: src/components/RateToggle/index.tsx
 #: src/components/RateToggle/index.tsx
 #: src/components/Settings/index.tsx
+#: src/components/Tokens/TokenDetails/TokenDetail.tsx
 msgid "{0}"
 msgstr "{0}"
 

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-18 18:04\n"
+"PO-Revision-Date: 2022-08-22 19:04\n"
 "Last-Translator: \n"
 "Language: el_GR\n"
 "Language-Team: Greek\n"
@@ -122,6 +122,7 @@ msgstr "Μια ανταλλαγή αυτού του μεγέθους μπορε�
 
 #: src/components/Menu/index.tsx
 #: src/components/Tokens/TokenDetails/TokenDetail.tsx
+#: src/components/Tokens/TokenDetails/TokenDetail.tsx
 msgid "About"
 msgstr "Σχετικά με εμάς"
 
@@ -138,6 +139,7 @@ msgstr "Λογαριασμός"
 msgid "Active"
 msgstr "Ενεργός"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/PositionCard/index.tsx
 #: src/pages/AddLiquidity/index.tsx
 msgid "Add"
@@ -169,6 +171,7 @@ msgid "Add more liquidity"
 msgstr "Προσθέστε περισσότερη ρευστότητα"
 
 #: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
 msgid "Add {0}"
 msgstr "Προσθέστε {0}"
 
@@ -180,9 +183,18 @@ msgstr "Προσθήκη {0}-{1} ρευστότητας"
 msgid "Add {0}/{1} V3 liquidity"
 msgstr "Προσθήκη {0}/{1} V3 ρευστότητας"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
+msgid "Added"
+msgstr "Προστέθηκε"
+
+#: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Added {0}"
 msgstr "Προστέθηκε {0}"
+
+#: src/components/AccountDetailsV2/TransactionBody.tsx
+msgid "Adding"
+msgstr "Προσθέτωντας"
 
 #: src/components/vote/QueueModal.tsx
 msgid "Adding this proposal to the queue will allow it to be executed, after a delay."
@@ -444,6 +456,7 @@ msgstr "Εκκαθάριση όλων"
 #: src/components/TokenSafety/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
 msgid "Close"
 msgstr "Κλείσιμο"
 
@@ -503,6 +516,7 @@ msgid "Confirm this connection in your wallet"
 msgstr "Επιβεβαιώστε αυτήν τη σύνδεση στο πορτοφόλι σας"
 
 #: src/components/ModalViews/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
@@ -570,6 +584,10 @@ msgstr "αντίγραφο"
 msgid "Copy Address"
 msgstr "Αντιγραφή Διεύθυνσης"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
+msgid "Create"
+msgstr "Δημιουργώ"
+
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Create Pool & Supply"
 msgstr "Δημιουργία Ψηφοφορίας & Παροχής"
@@ -603,6 +621,14 @@ msgstr "Δημιουργία δεξαμενής."
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Create {0}/{1} V3 pool"
 msgstr "Δημιουργία {0}/{1} πισίνα V3"
+
+#: src/components/AccountDetailsV2/TransactionBody.tsx
+msgid "Created"
+msgstr "Δημιουργήθηκε"
+
+#: src/components/AccountDetailsV2/TransactionBody.tsx
+msgid "Creating"
+msgstr "Δημιουργία"
 
 #: src/components/PositionPreview/index.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -702,6 +728,7 @@ msgid "Discord"
 msgstr "Discord"
 
 #: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
 msgid "Dismiss"
 msgstr "Απόρριψη"
 
@@ -764,6 +791,7 @@ msgstr "Εισάγετε μια διεύθυνση έγκυρης μάρκας"
 msgid "Enter {0} amount"
 msgstr "Εισαγάγετε {0} ποσό"
 
+#: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/Web3Status/index.tsx
@@ -1178,6 +1206,10 @@ msgstr "Λείπουν εξαρτήσεις"
 msgid "More"
 msgstr "Περισσότερα"
 
+#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+msgid "Name not found"
+msgstr "Το όνομα δεν βρέθηκε"
+
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Network Fee"
 msgstr "Τέλος δικτύου"
@@ -1226,6 +1258,14 @@ msgstr "Δεν βρέθηκαν προτάσεις."
 #: src/components/SearchModal/CurrencySearch.tsx
 msgid "No results found."
 msgstr "Δεν βρέθηκαν αποτελέσματα."
+
+#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+msgid "No stats available"
+msgstr "Δεν υπάρχουν διαθέσιμα στατιστικά στοιχεία"
+
+#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+msgid "No token information available"
+msgstr "Δεν υπάρχουν διαθέσιμες πληροφορίες συμβολικών"
 
 #: src/constants/tokenSafety.tsx
 msgid "Not Available"
@@ -1313,6 +1353,7 @@ msgstr "Γέφυρα Πολυγώνου"
 msgid "Polygonscan"
 msgstr "Πολυγωνική σάρωση"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/Header/index.tsx
 msgid "Pool"
 msgstr "Δεξαμενή"
@@ -1475,6 +1516,7 @@ msgstr "Πρόσφατες Συναλλαγές"
 msgid "Recipient"
 msgstr "Παραλήπτης"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
@@ -1505,6 +1547,14 @@ msgstr "Αφαίρεση Ρευστότητας"
 msgid "Remove list"
 msgstr "Αφαίρεση λίστας"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
+msgid "Removed"
+msgstr "Καταργήθηκε"
+
+#: src/components/AccountDetailsV2/TransactionBody.tsx
+msgid "Removing"
+msgstr "Αφαίρεση"
+
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Removing {0} {1} and {2} {3}"
 msgstr "Αφαίρεση των {0} {1} και {2} {3}"
@@ -1517,6 +1567,7 @@ msgstr "Αφαίρεση {0} {1} και{2} {3}"
 msgid "Request Features"
 msgstr "Χαρακτηριστικά αιτήματος"
 
+#: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
@@ -1642,6 +1693,7 @@ msgstr "Παροχή"
 msgid "Supplying {0} {1} and {2} {3}"
 msgstr "Γίνεται παροχή {0} {1} και {2} {3}"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/Header/index.tsx
 #: src/components/swap/SwapHeader.tsx
 #: src/pages/Swap/index.tsx
@@ -1668,9 +1720,21 @@ msgstr "Αντικαταστήστε ακριβώς <0/> με <1/>"
 msgid "Swap failed: {0}"
 msgstr "Η ανταλλαγή απέτυχε: {0}"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
+msgid "Swapped"
+msgstr "Ανταλλάχθηκε"
+
+#: src/components/AccountDetailsV2/TransactionBody.tsx
+msgid "Swapping"
+msgstr "Ανταλλαγή"
+
 #: src/components/swap/ConfirmSwapModal.tsx
 msgid "Swapping {0} {1} for {2} {3}"
 msgstr "Ανταλλαγή {0} {1} για {2} {3}"
+
+#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+msgid "Symbol not found"
+msgstr "Το σύμβολο δεν βρέθηκε"
 
 #: src/components/Popups/SurveyPopup.tsx
 msgid "Take a 10 minute survey to help us improve your experience in the Uniswap app."
@@ -1901,8 +1965,12 @@ msgstr "Προθεσμία συναλλαγής"
 
 #: src/lib/hooks/swap/useSendSwapTransaction.tsx
 #: src/lib/hooks/swap/useSendSwapTransaction.tsx
-msgid "Transaction rejected."
-msgstr "Η συναλλαγή απορρίφθηκε."
+msgid "Transaction rejected"
+msgstr "Η συναλλαγή απορρίφθηκε"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Transaction submitted"
+msgstr "Η συναλλαγή υποβλήθηκε"
 
 #: src/components/WalletDropdown/DefaultMenu.tsx
 #: src/components/WalletDropdown/TransactionMenu.tsx
@@ -2067,6 +2135,7 @@ msgstr "Προβολή δεδουλευμένων τελών και αναλύσ
 msgid "View list"
 msgstr "Προβολή λίστας"
 
+#: src/components/TransactionConfirmationModal/index.tsx
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "View on Etherscan"
 msgstr "Θέα στο Ethercan"
@@ -2152,6 +2221,10 @@ msgstr "Η ψηφοφορία ξεκινά περίπου {0}"
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Waiting For Confirmation"
 msgstr "Αναμονή Επιβεβαίωσης"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Waiting for confirmation"
+msgstr "Αναμονή για επιβεβαίωση"
 
 #: src/components/WalletModal/PendingView.tsx
 msgid "Waiting to connect"
@@ -2366,6 +2439,10 @@ msgstr "Η συναλλαγή σας θα επανέλθει αν είναι σ�
 msgid "Your transaction will revert if the price changes unfavorably by more than this percentage."
 msgstr "Η συναλλαγή σας θα επανέλθει αν η τιμή αλλάξει δυσμενώς περισσότερο από αυτό το ποσοστό."
 
+#: src/components/WalletDropdown/TransactionMenu.tsx
+msgid "Your transactions will appear here"
+msgstr "Οι συναλλαγές σας θα εμφανίζονται εδώ"
+
 #: src/components/AccountDetails/index.tsx
 msgid "Your transactions will appear here..."
 msgstr "Οι συναλλαγές σας θα εμφανιστούν εδώ..."
@@ -2378,6 +2455,11 @@ msgstr "Το αζήτητο UNI σας"
 msgid "after slippage"
 msgstr "μετά από ολίσθηση"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
+#: src/components/AccountDetailsV2/TransactionBody.tsx
+msgid "and"
+msgstr "και"
+
 #: src/components/ConnectedAccountBlocked/index.tsx
 msgid "blocked activities"
 msgstr "μπλοκαρισμένες δραστηριότητες"
@@ -2385,6 +2467,14 @@ msgstr "μπλοκαρισμένες δραστηριότητες"
 #: src/components/Settings/index.tsx
 msgid "confirm"
 msgstr "επιβεβαίωση"
+
+#: src/components/AccountDetailsV2/TransactionBody.tsx
+msgid "failed"
+msgstr "απέτυχε"
+
+#: src/components/AccountDetailsV2/TransactionBody.tsx
+msgid "for"
+msgstr "Για"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "for {0}"
@@ -2437,6 +2527,7 @@ msgstr "{0, plural, =1 {Δεν μπορείτε να ανταλλάξετε αυ
 #: src/components/RateToggle/index.tsx
 #: src/components/RateToggle/index.tsx
 #: src/components/Settings/index.tsx
+#: src/components/Tokens/TokenDetails/TokenDetail.tsx
 msgid "{0}"
 msgstr "{0}"
 

@@ -4,7 +4,7 @@ import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
 import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
 import { TokensVariant, useTokensFlag } from 'featureFlags/flags/tokens'
 import { TokenSafetyVariant, useTokenSafetyFlag } from 'featureFlags/flags/tokenSafety'
-import { useWalletFlag, WalletVariant } from 'featureFlags/flags/wallet'
+import { TokensNetworkFilterVariant, useTokensNetworkFilterFlag } from 'featureFlags/flags/tokensNetworkFilter'
 import { useAtomValue } from 'jotai/utils'
 import { ReactNode, useState } from 'react'
 import { X } from 'react-feather'
@@ -191,16 +191,16 @@ export default function FeatureFlagModal() {
         label="Tokens"
       />
       <FeatureFlagOption
+        variants={Object.values(TokensNetworkFilterVariant)}
+        value={useTokensNetworkFilterFlag()}
+        featureFlag={FeatureFlag.tokensNetworkFilter}
+        label="Tokens Network Filter"
+      />
+      <FeatureFlagOption
         variants={Object.values(TokenSafetyVariant)}
         value={useTokenSafetyFlag()}
         featureFlag={FeatureFlag.tokenSafety}
         label="Token Safety"
-      />
-      <FeatureFlagOption
-        variants={Object.values(WalletVariant)}
-        value={useWalletFlag()}
-        featureFlag={FeatureFlag.wallet}
-        label="Wallet Flag"
       />
       <SaveButton onClick={() => window.location.reload()}>Save Settings</SaveButton>
     </Modal>

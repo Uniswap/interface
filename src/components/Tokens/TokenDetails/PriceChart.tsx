@@ -136,7 +136,7 @@ function tickFormat(
   }
 }
 
-const margin = { top: 86, bottom: 48, crosshair: 72 }
+const margin = { top: 100, bottom: 48, crosshair: 72 }
 const timeOptionsHeight = 44
 const crosshairDateOverhang = 80
 
@@ -216,7 +216,7 @@ export function PriceChart({ width, height, token }: PriceChartProps) {
     locale
   )
   const [delta, arrow] = getDelta(startingPrice.value, displayPrice.value)
-  const crosshairEdgeMax = width * 0.97
+  const crosshairEdgeMax = width * 0.85
   const crosshairAtEdge = !!crosshair && crosshair > crosshairEdgeMax
 
   return (

@@ -22,14 +22,13 @@ export const darkTheme: Theme = {
     magicGradient: vars.color.blue400,
     placeholder: vars.color.grey400,
     lightGrayButton: vars.color.grey700,
-    lightGrayContainer: `#99A1BD14`,
-    lightGrayOverlay: '#35373F',
 
     // Opacities of black and white
     white95: '#0E111AF2',
     white90: '#000000E5',
     white80: '#000000CC',
     white08: '#0000000C',
+    backgroundFloating: '0000000C',
   },
   shadows: {
     menu: '0px 10px 30px rgba(0, 0, 0, 0.1)',

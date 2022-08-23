@@ -1,5 +1,5 @@
 import { style } from '@vanilla-extract/css'
-import { breakpoints, sprinkles, themeVars } from 'nft/css/sprinkles.css'
+import { breakpoints, sprinkles, themeVars, vars } from 'nft/css/sprinkles.css'
 
 export const card = style([
   sprinkles({
@@ -15,7 +15,7 @@ export const card = style([
         ':hover': {
           borderColor: themeVars.colors.medGray,
           cursor: 'pointer',
-          background: themeVars.colors.lightGrayOverlay,
+          background: vars.color.lightGrayOverlay,
         },
       },
     },
