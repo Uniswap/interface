@@ -228,11 +228,10 @@ export function AboutSection({ address, tokenDetailData }: { address: string; to
       //trim the string to the maximum length
       let tokenDescriptionTruncated = desc.slice(0, TRUNCATE_CHARACTER_COUNT)
       //re-trim if we are in the middle of a word
-      tokenDescriptionTruncated =
-        tokenDescriptionTruncated.slice(
-          0,
-          Math.min(tokenDescriptionTruncated.length, tokenDescriptionTruncated.lastIndexOf(' '))
-        ) + '...'
+      tokenDescriptionTruncated = `${tokenDescriptionTruncated.slice(
+        0,
+        Math.min(tokenDescriptionTruncated.length, tokenDescriptionTruncated.lastIndexOf(' '))
+      )}...`
       return tokenDescriptionTruncated
     }
 
