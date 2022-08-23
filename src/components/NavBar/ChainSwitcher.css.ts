@@ -1,6 +1,6 @@
 import { style } from '@vanilla-extract/css'
 
-import { sprinkles } from '../../nft/css/sprinkles.css'
+import { sprinkles, vars } from '../../nft/css/sprinkles.css'
 
 export const ChainSwitcher = style([
   sprinkles({
@@ -12,6 +12,11 @@ export const ChainSwitcher = style([
     color: 'blackBlue',
     background: 'none',
   }),
+  {
+    ':hover': {
+      background: vars.color.lightGrayOverlay,
+    },
+  },
 ])
 
 export const ChainSwitcherRow = style([

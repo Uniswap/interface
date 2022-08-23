@@ -22,8 +22,6 @@ export const lightTheme: Theme = {
     magicGradient: vars.color.pink400,
     placeholder: vars.color.grey300,
     lightGrayButton: vars.color.grey100,
-    lightGrayContainer: vars.color.grey50,
-    lightGrayOverlay: '#E6E8F0',
 
     // Opacities of black and white
     white95: '#EDEFF7F2',

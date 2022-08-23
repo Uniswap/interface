@@ -25,8 +25,6 @@ const themeContractValues = {
     magicGradient: '',
     placeholder: '',
     lightGrayButton: '',
-    lightGrayContainer: ',',
-    lightGrayOverlay: '',
 
     // Opacities of black and white
     white95: '',
@@ -161,6 +159,7 @@ export const vars = createGlobalTheme(':root', {
     grey200: '#B7BED4',
     grey100: '#DDE3F7',
     grey50: '#EDEFF7',
+    lightGrayOverlay: '#99A1BD14',
   },
   border: {
     transculent: '1.5px solid rgba(0, 0, 0, 0.1)',

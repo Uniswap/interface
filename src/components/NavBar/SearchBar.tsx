@@ -1,3 +1,4 @@
+import clsx from 'clsx'
 import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
 import useDebounce from 'hooks/useDebounce'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
@@ -330,7 +331,7 @@ export const SearchBar = () => {
         style={{ zIndex: '1000' }}
       >
         <Row
-          className={styles.searchBar}
+          className={clsx(`${styles.searchBar} ${!isOpen && styles.hoveredSearchBar}`)}
           borderRadius={isOpen ? undefined : '12'}
           borderTopRightRadius={isOpen && !isMobile ? '12' : undefined}
           borderTopLeftRadius={isOpen && !isMobile ? '12' : undefined}

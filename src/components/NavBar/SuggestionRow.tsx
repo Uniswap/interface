@@ -56,7 +56,7 @@ export const CollectionRow = ({ collection, isHovered, setHoveredIndex, toggleOp
       onMouseEnter={() => !isHovered && setHoveredIndex(index)}
       onMouseLeave={() => isHovered && setHoveredIndex(undefined)}
       className={styles.suggestionRow}
-      style={{ background: isHovered ? vars.color.lightGrayContainer : 'none' }}
+      style={{ background: isHovered ? vars.color.lightGrayOverlay : 'none' }}
     >
       <Row style={{ width: '60%' }}>
         {!brokenImage && collection.imageUrl ? (
@@ -134,7 +134,7 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index 
       onMouseEnter={() => !isHovered && setHoveredIndex(index)}
       onMouseLeave={() => isHovered && setHoveredIndex(undefined)}
       className={styles.suggestionRow}
-      style={{ background: isHovered ? vars.color.lightGrayContainer : 'none' }}
+      style={{ background: isHovered ? vars.color.lightGrayOverlay : 'none' }}
     >
       <Row style={{ width: '65%' }}>
         {!brokenImage && token.logoURI ? (

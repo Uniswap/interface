@@ -29,7 +29,7 @@ const ChainRow = ({
   return (
     <Row
       as="button"
-      background={active ? 'lightGrayContainer' : 'none'}
+      background={active ? 'lightGrayOverlay' : 'none'}
       className={`${styles.ChainSwitcherRow} ${subhead}`}
       onClick={() => onSelectChain(targetChain)}
     >

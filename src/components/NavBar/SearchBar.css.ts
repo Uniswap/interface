@@ -7,11 +7,11 @@ const DESKTOP_NAVBAR_WIDTH = '360px'
 
 const baseSearchStyle = style([
   sprinkles({
-    borderStyle: 'solid',
-    borderColor: 'medGray',
-    borderWidth: '1px',
     paddingY: '12',
     width: { mobile: 'viewWidth' },
+    borderStyle: 'solid',
+    borderWidth: '1px',
+    borderColor: 'medGray',
   }),
   {
     '@media': {
@@ -33,6 +33,33 @@ export const searchBar = style([
   }),
 ])
 
+export const hoveredSearchBar = style({
+  selectors: {
+    '&::before': {
+      content: '',
+      position: 'absolute',
+      inset: 0,
+      background: 'linear-gradient(91.46deg, #4673FA 0%, #9646FA 100.13%) border-box',
+      borderColor: 'transparent',
+      WebkitMask: 'linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);',
+      WebkitMaskComposite: 'xor;',
+      maskComposite: 'exclude',
+      borderStyle: 'solid',
+      borderWidth: '1px',
+      borderRadius: '12px',
+      pointerEvents: 'none',
+      opacity: '0',
+      WebkitTransition: 'opacity 0.25s ease',
+      MozTransition: 'opacity 0.25s ease',
+      msTransition: 'opacity 0.25s ease',
+      transition: 'opacity 0.25s ease-out',
+    },
+    '&:hover::before': {
+      opacity: '1',
+    },
+  },
+})
+
 export const searchBarInput = style([
   sprinkles({
     padding: '0',
@@ -42,7 +69,12 @@ export const searchBarInput = style([
     border: 'none',
     background: 'none',
   }),
-  { lineHeight: '24px' },
+  {
+    lineHeight: '24px',
+    // selectors: {
+    //   '&:hover::placeholder': { color: themeVars.colors.blackBlue },
+    // },
+  },
 ])
 
 export const searchBarDropdown = style([
@@ -73,7 +105,7 @@ export const suggestionRow = style([
   {
     ':hover': {
       cursor: 'pointer',
-      background: vars.color.lightGrayContainer,
+      background: vars.color.lightGrayOverlay,
     },
     textDecoration: 'none',
   },

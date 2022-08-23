@@ -1,6 +1,6 @@
 import { style } from '@vanilla-extract/css'
 
-import { sprinkles, themeVars } from '../../nft/css/sprinkles.css'
+import { sprinkles, vars } from '../../nft/css/sprinkles.css'
 
 export const navIcon = style([
   sprinkles({
@@ -18,7 +18,7 @@ export const navIcon = style([
   }),
   {
     ':hover': {
-      background: themeVars.colors.lightGrayContainer,
+      background: vars.color.lightGrayOverlay,
     },
     zIndex: 2,
   },
