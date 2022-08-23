@@ -23,7 +23,7 @@ export default function SessionsButton({
   const siteText = sessions.length > 1 ? 'sites' : 'site'
 
   const sessionIcons = sessions.slice(0, 3).map((session) => {
-    return (
+    return session.dapp.icon ? (
       <RemoteImage
         key={session.id}
         backgroundColor={theme.colors.backgroundAction}
@@ -32,7 +32,7 @@ export default function SessionsButton({
         uri={session.dapp.icon}
         width={ICON_SIZE}
       />
-    )
+    ) : null
   })
 
   return (

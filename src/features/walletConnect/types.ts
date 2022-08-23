@@ -61,7 +61,7 @@ export interface SessionPendingEvent extends BaseSessionEvent {}
 export interface DappInfo {
   name: string
   url: string
-  icon: string
+  icon: string | null
   chain_id: number
 }
 

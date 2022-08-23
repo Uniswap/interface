@@ -26,7 +26,10 @@ export function HeaderIcon({
 
   return (
     <>
-      <Image source={{ uri: dapp.icon, height: DAPP_IMAGE_SIZE, width: DAPP_IMAGE_SIZE }} />
+      {/* TODO: Add placeholder logo here for dapps without icons */}
+      {dapp.icon ? (
+        <Image source={{ uri: dapp.icon, height: DAPP_IMAGE_SIZE, width: DAPP_IMAGE_SIZE }} />
+      ) : null}
       {showChain && (
         <Box bottom={-4} position="absolute" right={-4}>
           <NetworkLogo chainId={chainId} size={20} />

@@ -40,7 +40,7 @@ export function DappConnectionItem({
       width="48%">
       <Button name={ElementName.WCOpenDapp} onPress={() => openUri(dapp.url)}>
         <Flex centered gap="xs">
-          {dapp.icon && (
+          {dapp.icon ? (
             <Flex>
               <RemoteImage
                 borderRadius={theme.borderRadii.none}
@@ -49,7 +49,7 @@ export function DappConnectionItem({
                 width={40}
               />
             </Flex>
-          )}
+          ) : null}
           <Text numberOfLines={2} textAlign="center" variant="mediumLabel">
             {dapp.name}
           </Text>

@@ -74,12 +74,14 @@ export function WCNotification({ notification }: { notification: WalletConnectNo
   const useSmallDisplay = useSmallDisplayEvents.includes(event)
   const icon = (
     <Box>
-      <RemoteImage
-        borderRadius={theme.borderRadii.none}
-        height={NOTIFICATION_SIZING.primaryImage}
-        uri={imageUrl}
-        width={NOTIFICATION_SIZING.primaryImage}
-      />
+      {imageUrl ? (
+        <RemoteImage
+          borderRadius={theme.borderRadii.none}
+          height={NOTIFICATION_SIZING.primaryImage}
+          uri={imageUrl}
+          width={NOTIFICATION_SIZING.primaryImage}
+        />
+      ) : null}
       {(validChainId ||
         event === WalletConnectEvent.TransactionConfirmed ||
         event === WalletConnectEvent.TransactionFailed) && (

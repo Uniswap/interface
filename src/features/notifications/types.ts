@@ -32,7 +32,7 @@ export interface WalletConnectNotification extends AppNotificationBase {
   type: AppNotificationType.WalletConnect
   event: WalletConnectEvent
   dappName: string
-  imageUrl: string
+  imageUrl: string | null
   chainId: number
 }
 
