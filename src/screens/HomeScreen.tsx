@@ -19,7 +19,7 @@ import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollSc
 import { Pill } from 'src/components/text/Pill'
 import { WalletConnectModalState } from 'src/components/WalletConnect/constants'
 import { TotalBalance } from 'src/features/balances/TotalBalance'
-import { BiometricCheck } from 'src/features/biometrics/BiometricCheck'
+import { useBiometricCheck } from 'src/features/biometrics/useBiometricCheck'
 import { openModal } from 'src/features/modals/modalSlice'
 import { PendingNotificationBadge } from 'src/features/notifications/PendingNotificationBadge'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
@@ -35,6 +35,7 @@ import { isWalletConnectSupportedAccount } from 'src/utils/walletConnect'
 export function HomeScreen() {
   // imports test account for easy development/testing
   useTestAccount()
+  useBiometricCheck()
   const activeAccount = useActiveAccountWithThrow()
 
   return (
@@ -58,7 +59,6 @@ export function HomeScreen() {
           </Flex>
         </Flex>
       </HeaderScrollScreen>
-      <BiometricCheck />
     </>
   )
 }

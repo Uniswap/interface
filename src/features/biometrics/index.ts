@@ -16,6 +16,7 @@ export enum BiometricAuthenticationStatus {
   Rejected = 'REJECTED',
   Authenticated = 'AUTHENTICATED',
   Canceled = 'CANCELED',
+  Authenticating = 'AUTHENTICATING',
 }
 
 // TODO: Move into a saga

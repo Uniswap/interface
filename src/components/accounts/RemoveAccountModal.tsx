@@ -21,7 +21,7 @@ export function RemoveAccountModal({ accountType, onCancel, onConfirm }: RemoveA
   const theme = useAppTheme()
 
   const { requiredForTransactions: isBiometricAuthEnabled } = useBiometricAppSettings()
-  const { trigger: biometricTrigger, modal: BiometricModal } = useBiometricPrompt(onConfirm)
+  const { trigger: biometricTrigger } = useBiometricPrompt(onConfirm)
 
   const onPressConfirm = () => {
     if (isBiometricAuthEnabled && accountType !== AccountType.Readonly) {
@@ -83,7 +83,6 @@ export function RemoveAccountModal({ accountType, onCancel, onConfirm }: RemoveA
           </Flex>
         </Flex>
       </BottomSheetModal>
-      {BiometricModal}
     </>
   )
 }

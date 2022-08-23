@@ -4,13 +4,14 @@ import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biomet
 import { useAppStateTrigger } from 'src/utils/useAppStateTrigger'
 
 // TODO: handle scenario where user has biometrics enabled as in-app security but disables it at the OS level
-export function BiometricCheck() {
+export function useBiometricCheck() {
   const { requiredForAppAccess } = useBiometricAppSettings()
   const { setIsLockScreenVisible } = useLockScreenContext()
   const successCallback = () => {
     setIsLockScreenVisible(false)
   }
-  const { trigger, modal } = useBiometricPrompt(successCallback)
+
+  const { trigger } = useBiometricPrompt(successCallback)
 
   // on mount
   useEffect(() => {
@@ -31,6 +32,4 @@ export function BiometricCheck() {
       setIsLockScreenVisible(true)
     }
   })
-
-  return modal
 }

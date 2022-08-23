@@ -72,7 +72,7 @@ export function SettingsCloudBackupStatus({
   }
 
   const { requiredForTransactions } = useBiometricAppSettings()
-  const { trigger: biometricTrigger, modal: BiometricModal } = useBiometricPrompt(deleteBackup)
+  const { trigger: biometricTrigger } = useBiometricPrompt(deleteBackup)
 
   return (
     <Screen mt="lg" mx="lg">
@@ -148,7 +148,6 @@ export function SettingsCloudBackupStatus({
           </Flex>
         )}
       </WarningModal>
-      {BiometricModal}
     </Screen>
   )
 }

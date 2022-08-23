@@ -56,8 +56,7 @@ export function SettingsViewSeedPhraseScreen({
   }
 
   const { requiredForAppAccess: isBiometricAuthEnabled } = useBiometricAppSettings()
-  const { trigger: biometricTrigger, modal: BiometricModal } =
-    useBiometricPrompt(onShowSeedPhraseConfirmed)
+  const { trigger: biometricTrigger } = useBiometricPrompt(onShowSeedPhraseConfirmed)
 
   useEffect(() => {
     const listener = addScreenshotListener(() => setShowScreenShotWarningModal(showSeedPhrase))
@@ -118,7 +117,6 @@ export function SettingsViewSeedPhraseScreen({
         title={t('Screenshots aren’t secure')}
         onConfirm={() => setShowScreenShotWarningModal(false)}
       />
-      {BiometricModal}
     </Screen>
   )
 }

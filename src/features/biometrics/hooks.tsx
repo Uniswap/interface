@@ -1,51 +1,29 @@
 import { AuthenticationType, supportedAuthenticationTypesAsync } from 'expo-local-authentication'
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useAppSelector } from 'src/app/hooks'
 import { BiometricAuthenticationStatus, tryLocalAuthenticate } from 'src/features/biometrics'
-import { BiometricModal } from 'src/features/biometrics/Modal'
+import { useBiometricContext } from 'src/features/biometrics/context'
 import { BiometricSettingsState } from 'src/features/biometrics/slice'
 
 /**
- * Wrapper around the biometric prompt.
- * Note. Be careful with using `trigger` and `modal` in large components as it could cause
- *       re-renders. Try to encapsulate this hook in a component if possible.
- * @returns trigger Trigger the OS biometric flow and invokes successCallback on success,
- *  or opens modal on failure
- * @returns modal Custom biometric modal displayed on biometric auth failure
+ * Hook shortcut to use the biometric prompt.
+ * @returns trigger Trigger the OS biometric flow and invokes successCallback on success.
  */
 export function useBiometricPrompt(successCallback?: (params?: any) => void) {
-  const [authenticationStatus, setAuthenticationStatus] = useState<BiometricAuthenticationStatus>()
+  const { setAuthenticationStatus } = useBiometricContext()
 
-  const trigger = useCallback(
-    async (params?: any) => {
-      const authStatus = await tryLocalAuthenticate()
+  const trigger = async (params?: any) => {
+    setAuthenticationStatus(BiometricAuthenticationStatus.Authenticating)
+    const authStatus = await tryLocalAuthenticate()
 
-      setAuthenticationStatus(authStatus)
+    setAuthenticationStatus(authStatus)
 
-      if (biometricAuthenticationSuccessful(authStatus)) {
-        successCallback?.(params)
-      }
-    },
-    [successCallback]
-  )
+    if (biometricAuthenticationSuccessful(authStatus)) {
+      successCallback?.(params)
+    }
+  }
 
-  const cancel = () => setAuthenticationStatus(undefined)
-
-  const show = !!authenticationStatus && !biometricAuthenticationSuccessful(authenticationStatus)
-
-  const modal = useMemo(
-    () => (
-      <BiometricModal
-        authenticationStatus={authenticationStatus}
-        cancel={cancel}
-        show={show}
-        tryAuthenticate={trigger}
-      />
-    ),
-    [authenticationStatus, show, trigger]
-  )
-
-  return { trigger, modal }
+  return { trigger }
 }
 
 export function biometricAuthenticationSuccessful(status: BiometricAuthenticationStatus) {

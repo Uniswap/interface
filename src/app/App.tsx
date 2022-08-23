@@ -16,6 +16,7 @@ import { WalletContextProvider } from 'src/app/walletContext'
 import { config } from 'src/config'
 import RelayEnvironment from 'src/data/relay'
 import { LockScreenContextProvider } from 'src/features/authentication/lockScreenContext'
+import { BiometricContextProvider } from 'src/features/biometrics/context'
 import { TransactionHistoryUpdater } from 'src/features/dataApi/zerion/updater'
 import { MulticallUpdaters } from 'src/features/multicall'
 import { NotificationToastWrapper } from 'src/features/notifications/NotificationToastWrapper'
@@ -62,13 +63,15 @@ function App() {
               <DynamicThemeProvider>
                 <ErrorBoundary>
                   <WalletContextProvider>
-                    <LockScreenContextProvider>
-                      <DataUpdaters />
-                      <BottomSheetModalProvider>
-                        <AppModals />
-                        <NavStack isDarkMode={isDarkMode} />
-                      </BottomSheetModalProvider>
-                    </LockScreenContextProvider>
+                    <BiometricContextProvider>
+                      <LockScreenContextProvider>
+                        <DataUpdaters />
+                        <BottomSheetModalProvider>
+                          <AppModals />
+                          <NavStack isDarkMode={isDarkMode} />
+                        </BottomSheetModalProvider>
+                      </LockScreenContextProvider>
+                    </BiometricContextProvider>
                   </WalletContextProvider>
                 </ErrorBoundary>
               </DynamicThemeProvider>

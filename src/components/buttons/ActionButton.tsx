@@ -21,7 +21,7 @@ export default function ActionButton({
   textVariant = 'largeLabel',
   ...rest
 }: ActionButtonProps) {
-  const { trigger: actionButtonTrigger, modal: BiometricModal } = useBiometricPrompt(onPress)
+  const { trigger: actionButtonTrigger } = useBiometricPrompt(onPress)
   const { requiredForTransactions } = useBiometricAppSettings()
 
   return (
@@ -43,8 +43,6 @@ export default function ActionButton({
           }
         }}
       />
-
-      {BiometricModal}
     </>
   )
 }

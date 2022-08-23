@@ -130,7 +130,7 @@ function SubmitButton({ onSuccess }: SubmitButtonProps) {
 
   const { handleSubmit, values, isValid, isSubmitting } = useFormikContext<FormValues>()
 
-  const { trigger, modal } = useBiometricPrompt(handleSubmit)
+  const { trigger } = useBiometricPrompt(handleSubmit)
 
   const { t } = useTranslation()
 
@@ -146,7 +146,6 @@ function SubmitButton({ onSuccess }: SubmitButtonProps) {
         width="100%"
         onPress={trigger}
       />
-      {modal}
     </>
   )
 }

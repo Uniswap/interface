@@ -4,6 +4,7 @@ import { ListRenderItemInfo } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
 import { useAppDispatch } from 'src/app/hooks'
 import { BackButton } from 'src/components/buttons/BackButton'
+import { Button } from 'src/components/buttons/Button'
 import { Switch } from 'src/components/buttons/Switch'
 import { Box } from 'src/components/layout/Box'
 import { Flex } from 'src/components/layout/Flex'
@@ -28,7 +29,7 @@ export function SettingsFaceIdScreen() {
   const dispatch = useAppDispatch()
 
   const { requiredForAppAccess, requiredForTransactions } = useBiometricAppSettings()
-  const { trigger, modal } = useBiometricPrompt(({ biometricAppSettingType, newValue }) => {
+  const { trigger } = useBiometricPrompt(({ biometricAppSettingType, newValue }) => {
     switch (biometricAppSettingType) {
       case BiometricSettingType.RequiredForAppAccess:
         dispatch(setRequiredForAppAccess(newValue))
@@ -42,21 +43,23 @@ export function SettingsFaceIdScreen() {
   const options: FaceIdSetting[] = useMemo((): FaceIdSetting[] => {
     return [
       {
-        onValueChange: (newValue) =>
+        onValueChange: (newValue) => {
           trigger({
             biometricAppSettingType: BiometricSettingType.RequiredForAppAccess,
             newValue,
-          }),
+          })
+        },
         value: requiredForAppAccess,
         text: t('App access'),
         subText: t('Require Face ID to open app'),
       },
       {
-        onValueChange: (newValue) =>
+        onValueChange: (newValue) => {
           trigger({
             biometricAppSettingType: BiometricSettingType.RequiredForTransactions,
             newValue,
-          }),
+          })
+        },
         value: requiredForTransactions,
         text: t('Transactions'),
         subText: t('Require Face ID to transact'),
@@ -79,7 +82,13 @@ export function SettingsFaceIdScreen() {
             </Text>
           </Flex>
         </Flex>
-        <Switch value={value} onValueChange={onValueChange} />
+        <Button
+          activeOpacity={1}
+          onPress={() => {
+            onValueChange(!value)
+          }}>
+          <Switch pointerEvents="none" value={value} onValueChange={onValueChange} />
+        </Button>
       </Box>
     )
   }
@@ -96,7 +105,6 @@ export function SettingsFaceIdScreen() {
         data={options}
         renderItem={renderItem}
       />
-      {modal}
     </Screen>
   )
 }
