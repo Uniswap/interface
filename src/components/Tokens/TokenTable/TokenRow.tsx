@@ -466,8 +466,6 @@ export default function LoadedRow({
   }
 
   const heartColor = isFavorited ? theme.accentActive : undefined
-  // TODO: consider using backend network?
-  // const topTokenData: any = useTopTokenQuery(favo, 1)
   // TODO: currency logo sizing mobile (32px) vs. desktop (24px)
   return (
     <StyledLink
