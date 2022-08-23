@@ -16,7 +16,7 @@ import { popNotification } from 'src/features/notifications/notificationSlice'
 import { selectActiveAccountNotifications } from 'src/features/notifications/selectors'
 import { useTimeout } from 'src/utils/timing'
 
-const NOTIFICATION_HEIGHT = 72
+const NOTIFICATION_HEIGHT = 64
 const NOTIFICATION_ICON_SIZE = 36
 export const NOTIFICATION_SIZING = {
   primaryImage: NOTIFICATION_ICON_SIZE * (2 / 3),
@@ -111,7 +111,7 @@ export function NotificationToast({
   return (
     <FlingGestureHandler direction={Directions.UP} onHandlerStateChange={onFling}>
       <AnimatedBox
-        borderColor={useSmallDisplay ? 'none' : 'backgroundContainer'}
+        borderColor={useSmallDisplay ? 'none' : 'backgroundAction'}
         borderRadius="lg"
         borderWidth={1}
         left={0}
