@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { AutoColumn } from '../../components/Column'
 import styled from 'styled-components'
 import { TYPE, ExternalLink } from '../../theme'
@@ -7,6 +7,8 @@ import { CardSection, DataCard, CardNoise, CardBGImage } from '../../components/
 // import { Countdown } from './Countdown'
 import { useActiveWeb3React } from '../../hooks'
 import PoolCard from './PoolCard'
+import { useChefPositions } from 'hooks/farm/useChefPositions'
+import { useMasterChefContract } from 'hooks/useContract'
 // import { JSBI } from '@teleswap/sdk'
 // import { BIG_INT_ZERO } from '../../constants'
 // import { OutlineCard } from '../../components/Card'
@@ -39,6 +41,13 @@ flex-direction: column;
 export default function FarmList() {
   const { chainId } = useActiveWeb3React()
   console.debug('chainId', chainId)
+
+  const mchefContract = useMasterChefContract()
+  const positions = useChefPositions(mchefContract, undefined, chainId)
+
+  useEffect(() => {
+    console.info('useChefPositions', positions);
+  }, [positions])
   // // staking info for connected account
   // const stakingInfos = useStakingInfo()
 

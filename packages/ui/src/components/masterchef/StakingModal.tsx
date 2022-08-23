@@ -60,9 +60,9 @@ export default function StakingModal({ isOpen, onDismiss, pid }: StakingModalPro
   // disabled
   // const [signatureData, setSignatureData] = useState<{ v: number; r: string; s: string; deadline: number } | null>(null)
   const signatureData = null
-  const stakingCurrency = new Token(ChainId.RINKEBY, '0x9F9757b641c37e2Ae61b65e10e1A09FFc4946409', 18)
+  const stakingCurrency = new Token(ChainId.OP_GOERLI, '0x0093d164e9C57dc0EbC00d58E429AdCf383B65d1', 18)
   const tokenAmount = new TokenAmount(stakingCurrency, typedValue)
-  const [approval, approve] = useApproveCallback(tokenAmount, MASTERCHEF_ADDRESSBOOK[chainId ?? 4])
+  const [approval, approve] = useApproveCallback(tokenAmount, MASTERCHEF_ADDRESSBOOK[chainId ?? 420])
   // const [parsedAmount, setParsedAmount] = useState('0')
   // const stakingContract = useStakingContract(stakingInfo.stakingRewardAddress)
   const stakingContract = useMasterChef(Chef.MASTERCHEF)

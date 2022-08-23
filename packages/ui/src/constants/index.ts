@@ -49,7 +49,7 @@ export const UNI: { [chainId in ChainId]: Token } = {
 }
 
 export const MASTERCHEF_ADDRESSBOOK: { [chainId in ChainId]?: string } = {
-  [ChainId.RINKEBY]: '0xe87ce36b28c80f46a0d5e200b1c528e051b7a201',
+  [ChainId.RINKEBY]: '0xe87ce36b28c80f46a0d5e200b1c528e051b7a201'
 }
 
 export const MASTERCHEFV2_ADDRESSBOOK: { [chainId in ChainId]?: string } = {
