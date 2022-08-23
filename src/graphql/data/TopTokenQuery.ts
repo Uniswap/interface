@@ -56,25 +56,28 @@ export function useTopTokenQuery(page: number) {
       page,
     }
   )
-  let topTokens: Record<string, TokenData>
 
-  topTokenData.topTokenProjects?.forEach(
-    (token) =>
-      (topTokens[token?.tokens?.[0].address ?? ''] = {
-        name: token?.name,
-        chain: token?.tokens?.[0].chain,
-        symbol: token?.tokens?.[0].symbol,
-        price: token?.markets?.[0]?.price,
-        marketCap: token?.markets?.[0]?.marketCap,
-        volume: {
-          [TimePeriod.HOUR]: token?.markets?.[0]?.volume1H,
-          [TimePeriod.DAY]: token?.markets?.[0]?.volume1D,
-          [TimePeriod.WEEK]: token?.markets?.[0]?.volume1W,
-          [TimePeriod.MONTH]: token?.markets?.[0]?.volume1M,
-          [TimePeriod.YEAR]: token?.markets?.[0]?.volume1Y,
-          [TimePeriod.ALL]: token?.markets?.[0]?.volume1Y, // todo: figure out all
-        },
-      })
-  )
+  const topTokens: Record<string, TokenData> =
+    topTokenData.topTokenProjects?.reduce((acc, token) => {
+      if (token?.tokens?.[0].address) {
+        acc[token?.tokens?.[0].address] = {
+          name: token?.name,
+          isFavorite: false,
+          chain: token?.tokens?.[0].chain,
+          symbol: token?.tokens?.[0].symbol,
+          price: token?.markets?.[0]?.price,
+          marketCap: token?.markets?.[0]?.marketCap,
+          volume: {
+            [TimePeriod.HOUR]: token?.markets?.[0]?.volume1H,
+            [TimePeriod.DAY]: token?.markets?.[0]?.volume1D,
+            [TimePeriod.WEEK]: token?.markets?.[0]?.volume1W,
+            [TimePeriod.MONTH]: token?.markets?.[0]?.volume1M,
+            [TimePeriod.YEAR]: token?.markets?.[0]?.volume1Y,
+            [TimePeriod.ALL]: token?.markets?.[0]?.volume1Y, // todo: figure out all
+          },
+        }
+      }
+      return acc
+    }, {} as Record<string, TokenData>) ?? {}
   return topTokens
 }

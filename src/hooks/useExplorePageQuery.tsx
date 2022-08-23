@@ -23,10 +23,11 @@ export type TokenData = {
   price: IAmount | null | undefined
   marketCap: IAmount | null | undefined
   volume: Record<TimePeriod, IAmount | null | undefined>
+  isFavorite: boolean
 }
 
-interface UseTopTokensResult {
-  data: TokenData | null
+export interface UseTopTokensResult {
+  data: Record<string, TokenData> | null
   error: string | null
   loading: boolean
 }
@@ -326,13 +327,13 @@ const FAKE_TOP_TOKENS_RESULT: TokenData = {
 */
 
 const useExplorePageQuery = (favoriteTokenAddresses: string[]): UseTopTokensResult => {
-  const [data, setData] = useState<TokenData | null>(null)
+  const [data, setData] = useState<Record<string, TokenData> | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const topTokens = useTopTokenQuery(1)
   console.log(topTokens)
 
-  const fetchTopTokens = async (favoriteTokenAddresses: string[]): Promise<TokenData | void> => {
+  const fetchTopTokens = async (favoriteTokenAddresses: string[]): Promise<Record<string, TokenData> | void> => {
     try {
       setLoading(true)
       setError(null)
@@ -341,7 +342,7 @@ const useExplorePageQuery = (favoriteTokenAddresses: string[]): UseTopTokensResu
       })
       return topTokens
     } catch (e) {
-      setError('something went wrong')
+      setError('Error fetching top tokens')
     } finally {
       setLoading(false)
     }

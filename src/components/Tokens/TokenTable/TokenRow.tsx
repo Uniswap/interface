@@ -423,13 +423,13 @@ export default function LoadedRow({
   tokenAddress,
   tokenListIndex,
   tokenListLength,
-  data,
+  tokenData,
   timePeriod,
 }: {
   tokenAddress: string
   tokenListIndex: number
   tokenListLength: number
-  data: TokenData
+  tokenData: TokenData
   timePeriod: TimePeriod
 }) {
   const token = useToken(tokenAddress)
@@ -503,7 +503,7 @@ export default function LoadedRow({
         price={
           <ClickableContent>
             <PriceInfoCell>
-              {topTokenData.price?.value ? formatDollarAmount(topTokenData.price?.value) : '-'}
+              {tokenData.price?.value ? formatDollarAmount(tokenData.price?.value) : '-'}
               <PercentChangeInfoCell>
                 {delta}
                 {arrow}
@@ -519,12 +519,14 @@ export default function LoadedRow({
         }
         marketCap={
           <ClickableContent>
-            {topTokenData.marketCap?.value ? formatDollarAmount(topTokenData.marketCap?.value) : '-'}
+            {tokenData.marketCap?.value ? formatDollarAmount(tokenData.marketCap?.value) : '-'}
           </ClickableContent>
         }
         volume={
           <ClickableContent>
-            {topTokenData.volume?.value ? formatDollarAmount(topTokenData.volume?.value) : '-'}
+            {tokenData.volume?.[timePeriod]?.value
+              ? formatDollarAmount(tokenData.volume?.[timePeriod]?.value ?? undefined)
+              : '-'}
           </ClickableContent>
         }
         sparkLine={
