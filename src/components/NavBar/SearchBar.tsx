@@ -7,7 +7,7 @@ import { organizeSearchResults } from 'lib/utils/searchBar'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import { Overlay } from 'nft/components/modals/Overlay'
-import { subheadSmall } from 'nft/css/common.css'
+import { magicalGradientOnHover, subheadSmall } from 'nft/css/common.css'
 import { breakpoints } from 'nft/css/sprinkles.css'
 import { useSearchHistory } from 'nft/hooks'
 import { fetchSearchCollections, fetchTrendingCollections } from 'nft/queries'
@@ -331,7 +331,7 @@ export const SearchBar = () => {
         style={{ zIndex: '1000' }}
       >
         <Row
-          className={clsx(`${styles.searchBar} ${!isOpen && styles.hoveredSearchBar}`)}
+          className={clsx(`${styles.searchBar} ${!isOpen && magicalGradientOnHover}`)}
           borderRadius={isOpen ? undefined : '12'}
           borderTopRightRadius={isOpen && !isMobile ? '12' : undefined}
           borderTopLeftRadius={isOpen && !isMobile ? '12' : undefined}
