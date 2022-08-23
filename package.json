@@ -183,7 +183,8 @@
   },
   "resolutions": {
     "@types/react": "^17",
-    "jpeg-js": "^0.4.4"
+    "jpeg-js": "^0.4.4",
+    "node-fetch": "^2.6.7"
   },
   "jest": {
     "preset": "react-native",
