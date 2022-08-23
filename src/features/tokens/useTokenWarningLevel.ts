@@ -103,7 +103,6 @@ export function useTokenWarningLevel(currency: Currency): {
   }
 }
 
-// returns raw hex needed for opacity manipulations, and also theme color key
 export function useTokenWarningLevelColors(tokenWarningLevel: TokenWarningLevel | undefined) {
   switch (tokenWarningLevel) {
     case TokenWarningLevel.LOW:

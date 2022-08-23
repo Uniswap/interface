@@ -2,8 +2,7 @@ import { Currency } from '@uniswap/sdk-core'
 import Fuse from 'fuse.js'
 import React, { useCallback, useState } from 'react'
 import { Box } from 'src/components/layout'
-import { Modal } from 'src/components/modals/Modal'
-import TokenWarningModalContent from 'src/components/tokens/TokenWarningModalContent'
+import TokenWarningModal from 'src/components/tokens/TokenWarningModal'
 import WarningIcon from 'src/components/tokens/WarningIcon'
 import { Option } from 'src/components/TokenSelector/Option'
 import { TokenOption } from 'src/components/TokenSelector/types'
@@ -34,35 +33,37 @@ export function TokenOptionItem({ option, onPress, tokenWarningLevelMap, matches
 
   const handleSelectCurrency = useCallback(() => {
     if (tokenWarningLevel === TokenWarningLevel.BLOCKED) {
-      return null
+      setShowWarningModal(true)
+      return
     }
+
     if (
       (tokenWarningLevel === TokenWarningLevel.LOW ||
         tokenWarningLevel === TokenWarningLevel.MEDIUM) &&
       !dismissed
     ) {
       setShowWarningModal(true)
-    } else {
-      onPress()
+      return
     }
+
+    onPress()
   }, [dismissed, onPress, tokenWarningLevel])
 
   return (
     <Box opacity={tokenWarningLevel === TokenWarningLevel.BLOCKED ? 0.5 : 1}>
-      <Modal
-        hide={() => setShowWarningModal(false)}
-        position="bottom"
-        visible={showWarningModal}
-        width="100%">
-        <TokenWarningModalContent
+      {showWarningModal ? (
+        <TokenWarningModal
+          isVisible
           currency={currency}
+          tokenWarningLevel={tokenWarningLevel}
           onAccept={() => {
             dismissTokenWarning(currency)
+            setShowWarningModal(false)
             onPress()
           }}
           onClose={() => setShowWarningModal(false)}
         />
-      </Modal>
+      ) : null}
       <Option
         icon={dismissed ? null : <WarningIcon tokenWarningLevel={tokenWarningLevel} />}
         matches={matches}

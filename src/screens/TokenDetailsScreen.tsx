@@ -30,14 +30,13 @@ import { Screen } from 'src/components/layout/Screen'
 import { AnimatedBlurView, BlurHeaderStyle } from 'src/components/layout/screens/HeaderScrollScreen'
 import { WithScrollToTop } from 'src/components/layout/screens/WithScrollToTop'
 import { VirtualizedList } from 'src/components/layout/VirtualizedList'
-import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { CurrencyPriceChart } from 'src/components/PriceChart'
 import { Text } from 'src/components/Text'
 import { TokenL1Balance } from 'src/components/TokenDetails/TokenBalances'
 import { TokenDetailsBackButtonRow } from 'src/components/TokenDetails/TokenDetailsBackButtonRow'
 import { TokenDetailsStats } from 'src/components/TokenDetails/TokenDetailsStats'
 import TokenWarningCard from 'src/components/tokens/TokenWarningCard'
-import TokenWarningModalContent from 'src/components/tokens/TokenWarningModalContent'
+import TokenWarningModal from 'src/components/tokens/TokenWarningModal'
 import { AssetType } from 'src/entities/assets'
 import { useSingleBalance } from 'src/features/dataApi/balances'
 import { useSpotPrices } from 'src/features/dataApi/prices'
@@ -402,18 +401,15 @@ function TokenDetails({ currency }: { currency: Currency }) {
         />
       </AnimatedFlex>
 
-      <BottomSheetModal
-        isVisible={
-          activeSwapAttemptType === SwapType.BUY || activeSwapAttemptType === SwapType.SELL
-        }
-        name={ModalName.TokenWarningModal}
-        onClose={() => setActiveSwapAttemptType(undefined)}>
-        <TokenWarningModalContent
+      {activeSwapAttemptType === SwapType.BUY || activeSwapAttemptType === SwapType.SELL ? (
+        <TokenWarningModal
+          isVisible
           currency={currency}
+          tokenWarningLevel={tokenWarningLevel}
           onAccept={activeSwapAttemptType === SwapType.BUY ? navigateToSwapBuy : navigateToSwapSell}
           onClose={() => setActiveSwapAttemptType(undefined)}
         />
-      </BottomSheetModal>
+      ) : null}
     </>
   )
 }

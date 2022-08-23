@@ -119,11 +119,10 @@ export function CurrencyLogoOnly({ currency, size = 40 }: CurrencyLogoProps) {
         <Box
           alignItems="center"
           bg="backgroundAction"
-          borderRadius="xl"
-          flex={0}
           height={size}
           justifyContent="center"
           px="xxs"
+          style={{ borderRadius: size / 2 }}
           width={size}>
           <Text adjustsFontSizeToFit color="textSecondary" numberOfLines={1} textAlign="center">
             {currency.symbol?.slice(0, 5).toUpperCase()}
