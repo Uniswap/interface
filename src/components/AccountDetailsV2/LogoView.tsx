@@ -35,7 +35,7 @@ interface CurrencyPair {
   currencyId1: string | undefined
 }
 
-const getCurrency = ({ info, chainId }: { info: TransactionInfo; chainId: number }): CurrencyPair => {
+const getCurrency = ({ info, chainId }: { info: TransactionInfo; chainId: number | undefined }): CurrencyPair => {
   switch (info.type) {
     case TransactionType.ADD_LIQUIDITY_V3_POOL:
     case TransactionType.REMOVE_LIQUIDITY_V3:
@@ -57,7 +57,7 @@ const getCurrency = ({ info, chainId }: { info: TransactionInfo; chainId: number
     case TransactionType.APPROVAL:
       return { currencyId0: info.tokenAddress, currencyId1: undefined }
     case TransactionType.CLAIM:
-      const uniAddress = UNI_ADDRESS[chainId]
+      const uniAddress = UNI_ADDRESS[chainId || -1]
       return { currencyId0: uniAddress, currencyId1: undefined }
     default:
       return { currencyId0: undefined, currencyId1: undefined }
@@ -65,7 +65,7 @@ const getCurrency = ({ info, chainId }: { info: TransactionInfo; chainId: number
 }
 
 const LogoView = ({ info }: { info: TransactionInfo }) => {
-  const { chainId = 1 } = useWeb3React()
+  const { chainId } = useWeb3React()
   const { currencyId0, currencyId1 } = getCurrency({ info, chainId })
   const currency0 = useCurrency(currencyId0)
   const currency1 = useCurrency(currencyId1)
