@@ -40,6 +40,11 @@ export function EditNameScreen({ navigation, route: { params } }: Props) {
   const [focused, setFocused] = useState(false)
 
   useEffect(() => {
+    const beforeRemoveListener = () => {
+      dispatch(pendingAccountActions.trigger(PendingAccountActions.DELETE))
+    }
+    navigation.addListener('beforeRemove', beforeRemoveListener)
+
     const shouldRenderBackButton = navigation.getState().index === 0
     if (shouldRenderBackButton) {
       navigation.setOptions({
@@ -47,12 +52,12 @@ export function EditNameScreen({ navigation, route: { params } }: Props) {
           <BackButton
             onPressBack={() => {
               navigation.goBack()
-              dispatch(pendingAccountActions.trigger(PendingAccountActions.DELETE))
             }}
           />
         ),
       })
     }
+    return () => navigation.removeListener('beforeRemove', beforeRemoveListener)
   }, [dispatch, navigation, theme.colors.textPrimary])
 
   const onPressNext = () => {
