@@ -59,6 +59,7 @@ export enum FeatureFlag {
   nft = 'nfts',
   redesign = 'redesign',
   tokens = 'tokens',
+  tokensNetworkFilter = 'tokensNetworkFilter',
   tokenSafety = 'tokenSafety',
 }
 

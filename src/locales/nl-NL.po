@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-18 18:04\n"
+"PO-Revision-Date: 2022-08-22 19:04\n"
 "Last-Translator: \n"
 "Language: nl_NL\n"
 "Language-Team: Dutch\n"
@@ -122,6 +122,7 @@ msgstr "Een swap van deze omvang kan een hoge prijsimpact hebben, gezien de huid
 
 #: src/components/Menu/index.tsx
 #: src/components/Tokens/TokenDetails/TokenDetail.tsx
+#: src/components/Tokens/TokenDetails/TokenDetail.tsx
 msgid "About"
 msgstr "Over"
 
@@ -138,6 +139,7 @@ msgstr "Rekening"
 msgid "Active"
 msgstr "Actief"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/PositionCard/index.tsx
 #: src/pages/AddLiquidity/index.tsx
 msgid "Add"
@@ -169,6 +171,7 @@ msgid "Add more liquidity"
 msgstr "Voeg meer liquiditeit toe"
 
 #: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
 msgid "Add {0}"
 msgstr "{0}. toevoegen"
 
@@ -180,9 +183,18 @@ msgstr "Voeg {0}-{1} liquiditeit toe"
 msgid "Add {0}/{1} V3 liquidity"
 msgstr "Voeg {0}/{1} V3 liquiditeit toe"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
+msgid "Added"
+msgstr "Toegevoegd"
+
+#: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Added {0}"
 msgstr "Toegevoegd {0}"
+
+#: src/components/AccountDetailsV2/TransactionBody.tsx
+msgid "Adding"
+msgstr "Toevoegen"
 
 #: src/components/vote/QueueModal.tsx
 msgid "Adding this proposal to the queue will allow it to be executed, after a delay."
@@ -444,6 +456,7 @@ msgstr "Alles wissen"
 #: src/components/TokenSafety/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
 msgid "Close"
 msgstr "Sluiten"
 
@@ -503,6 +516,7 @@ msgid "Confirm this connection in your wallet"
 msgstr "Bevestig deze verbinding in je portemonnee"
 
 #: src/components/ModalViews/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
@@ -570,6 +584,10 @@ msgstr "Kopiëren"
 msgid "Copy Address"
 msgstr "Adres kopiëren"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
+msgid "Create"
+msgstr "Creëren"
+
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Create Pool & Supply"
 msgstr "Maak pool en levering aan"
@@ -603,6 +621,14 @@ msgstr "Maak een pool aan."
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Create {0}/{1} V3 pool"
 msgstr "Maak {0}/{1} V3 pool"
+
+#: src/components/AccountDetailsV2/TransactionBody.tsx
+msgid "Created"
+msgstr "Gemaakt"
+
+#: src/components/AccountDetailsV2/TransactionBody.tsx
+msgid "Creating"
+msgstr "Creëren"
 
 #: src/components/PositionPreview/index.tsx
 #: src/pages/Pool/PositionPage.tsx
@@ -702,6 +728,7 @@ msgid "Discord"
 msgstr "Onenigheid"
 
 #: src/components/TransactionConfirmationModal/index.tsx
+#: src/components/TransactionConfirmationModal/index.tsx
 msgid "Dismiss"
 msgstr "Afwijzen"
 
@@ -764,6 +791,7 @@ msgstr "Voer geldig tokenadres in"
 msgid "Enter {0} amount"
 msgstr "Voer {0} bedrag in"
 
+#: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/Web3Status/index.tsx
@@ -1178,6 +1206,10 @@ msgstr "Ontbrekende afhankelijkheden"
 msgid "More"
 msgstr "Meer"
 
+#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+msgid "Name not found"
+msgstr "Naam niet gevonden"
+
 #: src/components/swap/AdvancedSwapDetails.tsx
 msgid "Network Fee"
 msgstr "Netwerkkosten"
@@ -1226,6 +1258,14 @@ msgstr "Geen voorstellen gevonden."
 #: src/components/SearchModal/CurrencySearch.tsx
 msgid "No results found."
 msgstr "Geen resultaten gevonden."
+
+#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+msgid "No stats available"
+msgstr "Geen statistieken beschikbaar"
+
+#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+msgid "No token information available"
+msgstr "Geen tokeninformatie beschikbaar"
 
 #: src/constants/tokenSafety.tsx
 msgid "Not Available"
@@ -1313,6 +1353,7 @@ msgstr "Polygoonbrug"
 msgid "Polygonscan"
 msgstr "Veelhoekscan"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/Header/index.tsx
 msgid "Pool"
 msgstr "Pool"
@@ -1475,6 +1516,7 @@ msgstr "Recente transacties"
 msgid "Recipient"
 msgstr "Ontvanger"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
@@ -1505,6 +1547,14 @@ msgstr "Verwijder liquiditeit"
 msgid "Remove list"
 msgstr "Verwijder lijst"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
+msgid "Removed"
+msgstr "VERWIJDERD"
+
+#: src/components/AccountDetailsV2/TransactionBody.tsx
+msgid "Removing"
+msgstr "Verwijderen"
+
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Removing {0} {1} and {2} {3}"
 msgstr "Verwijderen van {0} {1} en {2} {3}"
@@ -1517,6 +1567,7 @@ msgstr "Verwijderen {0} {1} en{2} {3}"
 msgid "Request Features"
 msgstr "Functies aanvragen"
 
+#: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/components/TransactionConfirmationModal/index.tsx
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
@@ -1642,6 +1693,7 @@ msgstr "Levering"
 msgid "Supplying {0} {1} and {2} {3}"
 msgstr "{0} {1} en {2} {3} aanbieden"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/Header/index.tsx
 #: src/components/swap/SwapHeader.tsx
 #: src/pages/Swap/index.tsx
@@ -1668,9 +1720,21 @@ msgstr "Wissel exact <0/> in voor <1/>"
 msgid "Swap failed: {0}"
 msgstr "Wissel mislukt: {0}"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
+msgid "Swapped"
+msgstr "geruild"
+
+#: src/components/AccountDetailsV2/TransactionBody.tsx
+msgid "Swapping"
+msgstr "Ruilen"
+
 #: src/components/swap/ConfirmSwapModal.tsx
 msgid "Swapping {0} {1} for {2} {3}"
 msgstr "{0} {1} ruilen voor {2} {3}"
+
+#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+msgid "Symbol not found"
+msgstr "Symbool niet gevonden"
 
 #: src/components/Popups/SurveyPopup.tsx
 msgid "Take a 10 minute survey to help us improve your experience in the Uniswap app."
@@ -1901,8 +1965,12 @@ msgstr "Transactiedeadline"
 
 #: src/lib/hooks/swap/useSendSwapTransaction.tsx
 #: src/lib/hooks/swap/useSendSwapTransaction.tsx
-msgid "Transaction rejected."
-msgstr "Transactie afgewezen."
+msgid "Transaction rejected"
+msgstr "Transactie afgewezen"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Transaction submitted"
+msgstr "Transactie ingediend"
 
 #: src/components/WalletDropdown/DefaultMenu.tsx
 #: src/components/WalletDropdown/TransactionMenu.tsx
@@ -2067,6 +2135,7 @@ msgstr "Opgebouwde vergoedingen en analytics bekijken<0>↗</0>"
 msgid "View list"
 msgstr "Lijst bekijken"
 
+#: src/components/TransactionConfirmationModal/index.tsx
 #: src/pages/CreateProposal/ProposalSubmissionModal.tsx
 msgid "View on Etherscan"
 msgstr "Bekijk op Etherscan"
@@ -2152,6 +2221,10 @@ msgstr "Stemmen begint ongeveer {0}"
 #: src/components/TransactionConfirmationModal/index.tsx
 msgid "Waiting For Confirmation"
 msgstr "Wachten op bevestiging"
+
+#: src/components/TransactionConfirmationModal/index.tsx
+msgid "Waiting for confirmation"
+msgstr "op bevestiging wachten"
 
 #: src/components/WalletModal/PendingView.tsx
 msgid "Waiting to connect"
@@ -2366,6 +2439,10 @@ msgstr "Uw transactie zal worden teruggedraaid als deze langer dan deze periode 
 msgid "Your transaction will revert if the price changes unfavorably by more than this percentage."
 msgstr "Uw transactie zal terugdraaien als de prijs onvoordelig met meer dan dit percentage verandert."
 
+#: src/components/WalletDropdown/TransactionMenu.tsx
+msgid "Your transactions will appear here"
+msgstr "Uw transacties verschijnen hier"
+
 #: src/components/AccountDetails/index.tsx
 msgid "Your transactions will appear here..."
 msgstr "Uw transacties zullen hier verschijnen..."
@@ -2378,6 +2455,11 @@ msgstr "Uw niet-opgeëiste UNI"
 msgid "after slippage"
 msgstr "na slippen"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
+#: src/components/AccountDetailsV2/TransactionBody.tsx
+msgid "and"
+msgstr "en"
+
 #: src/components/ConnectedAccountBlocked/index.tsx
 msgid "blocked activities"
 msgstr "geblokkeerde activiteiten"
@@ -2385,6 +2467,14 @@ msgstr "geblokkeerde activiteiten"
 #: src/components/Settings/index.tsx
 msgid "confirm"
 msgstr "bevestig"
+
+#: src/components/AccountDetailsV2/TransactionBody.tsx
+msgid "failed"
+msgstr "gefaald"
+
+#: src/components/AccountDetailsV2/TransactionBody.tsx
+msgid "for"
+msgstr "voor"
 
 #: src/components/claim/AddressClaimModal.tsx
 msgid "for {0}"
@@ -2437,6 +2527,7 @@ msgstr "{0, plural, =1 {U kunt deze token niet verhandelen met de Uniswap-app.} 
 #: src/components/RateToggle/index.tsx
 #: src/components/RateToggle/index.tsx
 #: src/components/Settings/index.tsx
+#: src/components/Tokens/TokenDetails/TokenDetail.tsx
 msgid "{0}"
 msgstr "{0}"
 

@@ -8,6 +8,7 @@ import NetworkFilter from 'components/Tokens/TokenTable/NetworkFilter'
 import SearchBar from 'components/Tokens/TokenTable/SearchBar'
 import TimeSelector from 'components/Tokens/TokenTable/TimeSelector'
 import TokenTable from 'components/Tokens/TokenTable/TokenTable'
+import { TokensNetworkFilterVariant, useTokensNetworkFilterFlag } from 'featureFlags/flags/tokensNetworkFilter'
 import useExplorePageQuery from 'hooks/useExplorePageQuery'
 import { useAtomValue, useResetAtom } from 'jotai/utils'
 import { useEffect } from 'react'
@@ -60,6 +61,7 @@ const FiltersWrapper = styled.div`
 `
 
 const Tokens = () => {
+  const tokensNetworkFilterFlag = useTokensNetworkFilterFlag()
   const favoriteTokens = useAtomValue<string[]>(favoritesAtom)
   const { data, error, loading } = useExplorePageQuery(favoriteTokens)
   const resetFilterString = useResetAtom(filterStringAtom)
@@ -78,7 +80,7 @@ const Tokens = () => {
         </TitleContainer>
         <FiltersWrapper>
           <FiltersContainer>
-            <NetworkFilter />
+            {tokensNetworkFilterFlag === TokensNetworkFilterVariant.Enabled && <NetworkFilter />}
             <FavoriteButton />
             <TimeSelector />
           </FiltersContainer>
