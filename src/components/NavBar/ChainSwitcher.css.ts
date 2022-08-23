@@ -11,6 +11,7 @@ export const ChainSwitcher = style([
     border: 'none',
     color: 'blackBlue',
     background: 'none',
+    transition: '250',
   }),
   {
     ':hover': {

@@ -15,6 +15,7 @@ export const navIcon = style([
     cursor: 'pointer',
     padding: '8',
     borderRadius: '8',
+    transition: '250',
   }),
   {
     ':hover': {

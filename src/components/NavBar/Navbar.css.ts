@@ -94,6 +94,7 @@ const baseMenuItem = style([
     paddingX: '16',
     marginY: '4',
     borderRadius: '12',
+    transition: '250',
   }),
   {
     lineHeight: '24px',
