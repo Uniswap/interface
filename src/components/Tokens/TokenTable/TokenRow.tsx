@@ -42,7 +42,7 @@ const Cell = styled.div`
   align-items: center;
   justify-content: center;
 `
-const StyledTokenRow = styled.div`
+const StyledTokenRow = styled.div<{ first?: boolean; last?: boolean }>`
   width: 100%;
   height: 60px;
   display: grid;
@@ -52,10 +52,14 @@ const StyledTokenRow = styled.div`
 
   max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT};
   min-width: 390px;
-  padding: 0px 12px;
+  padding-top: ${({ first }) => (first ? '4px' : '0px')};
+  padding-bottom: ${({ last }) => (last ? '4px' : '0px')};
+  padding-left: 12px;
+  padding-right: 12px;
 
   &:hover {
     background-color: ${({ theme }) => theme.accentActionSoft};
+    ${({ last }) => last && 'border-radius: 0px 0px 8px 8px;'}
   }
 
   @media only screen and (max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT}) {
@@ -349,6 +353,8 @@ export function TokenRow({
   marketCap,
   volume,
   sparkLine,
+  first,
+  last,
 }: {
   address: ReactNode
   header: boolean
@@ -360,6 +366,8 @@ export function TokenRow({
   marketCap: ReactNode
   volume: ReactNode
   sparkLine: ReactNode
+  first?: boolean
+  last?: boolean
 }) {
   const rowCells = (
     <>
@@ -374,7 +382,11 @@ export function TokenRow({
     </>
   )
   if (header) return <StyledHeaderRow>{rowCells}</StyledHeaderRow>
-  return <StyledTokenRow>{rowCells}</StyledTokenRow>
+  return (
+    <StyledTokenRow first={first} last={last}>
+      {rowCells}
+    </StyledTokenRow>
+  )
 }
 
 /* Header Row: top header row component for table */
@@ -532,6 +544,8 @@ export default function LoadedRow({
             <ParentSize>{({ width, height }) => <SparklineChart width={width} height={height} />}</ParentSize>
           </SparkLine>
         }
+        first={tokenListIndex === 0}
+        last={tokenListIndex === tokenListLength - 1}
       />
     </StyledLink>
   )

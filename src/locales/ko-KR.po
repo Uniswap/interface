@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-22 19:04\n"
+"PO-Revision-Date: 2022-08-23 20:04\n"
 "Last-Translator: \n"
 "Language: ko_KR\n"
 "Language-Team: Korean\n"
@@ -121,7 +121,6 @@ msgid "A swap of this size may have a high price impact, given the current liqui
 msgstr "풀의 현재 유동성을 고려할 때 이 크기의 스왑은 가격에 큰 영향을 미칠 수 있습니다. 입력 토큰의 양과 출력 토큰으로 받게 될 금액 사이에는 큰 차이가 있을 수 있습니다."
 
 #: src/components/Menu/index.tsx
-#: src/components/Tokens/TokenDetails/TokenDetail.tsx
 #: src/components/Tokens/TokenDetails/TokenDetail.tsx
 msgid "About"
 msgstr "정보"
@@ -930,6 +929,7 @@ msgid "Help Center"
 msgstr "도움말 센터"
 
 #: src/components/FeeSelector/index.tsx
+#: src/components/Tokens/TokenDetails/TokenDetail.tsx
 msgid "Hide"
 msgstr "숨기기"
 
@@ -1491,6 +1491,10 @@ msgstr "큐잉"
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Rates"
 msgstr "요율"
+
+#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+msgid "Read more"
+msgstr "더 읽기"
 
 #: src/pages/Earn/index.tsx
 msgid "Read more about UNI"

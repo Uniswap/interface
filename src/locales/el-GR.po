@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-22 19:04\n"
+"PO-Revision-Date: 2022-08-23 20:04\n"
 "Last-Translator: \n"
 "Language: el_GR\n"
 "Language-Team: Greek\n"
@@ -121,7 +121,6 @@ msgid "A swap of this size may have a high price impact, given the current liqui
 msgstr "Μια ανταλλαγή αυτού του μεγέθους μπορεί να έχει υψηλό αντίκτυπο στην τιμή, δεδομένης της τρέχουσας ρευστότητας στη συγκέντρωση. Μπορεί να υπάρχει μεγάλη διαφορά μεταξύ της ποσότητας του διακριτικού εισόδου και αυτού που θα λάβετε στο διακριτικό εξόδου"
 
 #: src/components/Menu/index.tsx
-#: src/components/Tokens/TokenDetails/TokenDetail.tsx
 #: src/components/Tokens/TokenDetails/TokenDetail.tsx
 msgid "About"
 msgstr "Σχετικά με εμάς"
@@ -930,6 +929,7 @@ msgid "Help Center"
 msgstr "Κέντρο βοηθείας"
 
 #: src/components/FeeSelector/index.tsx
+#: src/components/Tokens/TokenDetails/TokenDetail.tsx
 msgid "Hide"
 msgstr "Κρύβω"
 
@@ -1491,6 +1491,10 @@ msgstr "Ουρά"
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Rates"
 msgstr "Τιμές"
+
+#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+msgid "Read more"
+msgstr "Διαβάστε περισσότερα"
 
 #: src/pages/Earn/index.tsx
 msgid "Read more about UNI"

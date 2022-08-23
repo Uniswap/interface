@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-22 19:04\n"
+"PO-Revision-Date: 2022-08-23 20:04\n"
 "Last-Translator: \n"
 "Language: tr_TR\n"
 "Language-Team: Turkish\n"
@@ -121,7 +121,6 @@ msgid "A swap of this size may have a high price impact, given the current liqui
 msgstr "Havuzdaki mevcut likidite göz önüne alındığında, bu boyuttaki bir takasın yüksek bir fiyat etkisi olabilir. Girdi jetonunuzun miktarı ile çıktı jetonunuzda alacağınız miktar arasında büyük bir fark olabilir."
 
 #: src/components/Menu/index.tsx
-#: src/components/Tokens/TokenDetails/TokenDetail.tsx
 #: src/components/Tokens/TokenDetails/TokenDetail.tsx
 msgid "About"
 msgstr "Hakkında"
@@ -930,6 +929,7 @@ msgid "Help Center"
 msgstr "Yardım Merkezi"
 
 #: src/components/FeeSelector/index.tsx
+#: src/components/Tokens/TokenDetails/TokenDetail.tsx
 msgid "Hide"
 msgstr "Saklamak"
 
@@ -1491,6 +1491,10 @@ msgstr "Kuyruk"
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Rates"
 msgstr "Oranlar"
+
+#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+msgid "Read more"
+msgstr "Devamını oku"
 
 #: src/pages/Earn/index.tsx
 msgid "Read more about UNI"
