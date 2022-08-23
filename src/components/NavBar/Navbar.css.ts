@@ -1,7 +1,7 @@
 import { style } from '@vanilla-extract/css'
 
 import { subhead } from '../../nft/css/common.css'
-import { sprinkles } from '../../nft/css/sprinkles.css'
+import { sprinkles, vars } from '../../nft/css/sprinkles.css'
 
 export const nav = style([
   sprinkles({
@@ -94,10 +94,14 @@ const baseMenuItem = style([
     paddingX: '16',
     marginY: '4',
     borderRadius: '12',
+    transition: '250',
   }),
   {
     lineHeight: '24px',
     textDecoration: 'none',
+    ':hover': {
+      background: vars.color.lightGrayOverlay,
+    },
   },
 ])
 
@@ -119,6 +123,7 @@ export const activeMenuItem = style([
   baseMenuItem,
   sprinkles({
     color: 'blackBlue',
+    background: 'backgroundFloating',
   }),
 ])
 

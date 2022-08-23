@@ -1,26 +1,33 @@
 import { style } from '@vanilla-extract/css'
 
-import { sprinkles } from '../../nft/css/sprinkles.css'
+import { sprinkles, vars } from '../../nft/css/sprinkles.css'
 
 export const ChainSwitcher = style([
   sprinkles({
-    background: 'lightGrayContainer',
     borderRadius: '8',
     paddingY: '8',
     paddingX: '12',
     cursor: 'pointer',
     border: 'none',
+    color: 'blackBlue',
+    background: 'none',
+    transition: '250',
   }),
+  {
+    ':hover': {
+      background: vars.color.lightGrayOverlay,
+    },
+  },
 ])
 
 export const ChainSwitcherRow = style([
   sprinkles({
     border: 'none',
-    color: 'blackBlue',
     justifyContent: 'space-between',
     paddingX: '16',
     paddingY: '12',
     cursor: 'pointer',
+    color: 'blackBlue',
   }),
   {
     lineHeight: '24px',
