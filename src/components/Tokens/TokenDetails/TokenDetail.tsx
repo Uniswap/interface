@@ -247,10 +247,8 @@ export function AboutSection({ address, tokenDetailData }: { address: string; to
       <ResourcesContainer>
         <Resource name={'Etherscan'} link={`https://etherscan.io/address/${address}`} />
         <Resource name={'Protocol Info'} link={`https://info.uniswap.org/#/tokens/${address}`} />
-        {tokenDetailData && tokenDetailData.homepageUrl && (
-          <Resource name={'Website'} link={tokenDetailData.homepageUrl} />
-        )}
-        {tokenDetailData && tokenDetailData.twitterName && (
+        {tokenDetailData?.homepageUrl && <Resource name={'Website'} link={tokenDetailData.homepageUrl} />}
+        {tokenDetailData?.twitterName && (
           <Resource name={'Twitter'} link={`https://twitter.com/${tokenDetailData.twitterName}`} />
         )}
       </ResourcesContainer>
