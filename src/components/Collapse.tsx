@@ -56,13 +56,14 @@ type Props = {
   activeStyle?: CSSProperties
   children: ReactNode
   onExpand?: () => void
+  className?: string
 }
 
-export const CollapseItem: React.FC<Props> = ({ header, children, expandedOnMount = false, style = {} }) => {
+export const CollapseItem: React.FC<Props> = ({ header, children, expandedOnMount = false, style = {}, className }) => {
   const [isExpanded, setExpanded] = useState(expandedOnMount)
 
   return (
-    <ItemWrapper style={style}>
+    <ItemWrapper style={style} className={className}>
       <Header
         onClick={() => {
           setExpanded(e => !e)
