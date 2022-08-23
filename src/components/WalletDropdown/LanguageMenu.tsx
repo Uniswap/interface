@@ -29,6 +29,8 @@ const InternalLinkMenuItem = styled(InternalMenuItem)<{ isActive: boolean }>`
   color: ${({ theme }) => theme.textPrimary};
   :hover {
     cursor: pointer;
+    background-color: ${({ isActive, theme }) => !isActive && theme.backgroundModule};
+    transition: 250ms background-color ease;
   }
 `
 

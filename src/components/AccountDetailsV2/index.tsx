@@ -25,6 +25,11 @@ const Grid = styled.a`
   text-decoration: none;
   border-bottom: ${({ theme }) => `1px solid ${theme.backgroundOutline}`};
   padding: 12px;
+
+  &:hover {
+    background-color: ${({ theme }) => theme.backgroundModule};
+    transition: 250ms background-color ease;
+  }
 `
 
 const TextContainer = styled.span`
