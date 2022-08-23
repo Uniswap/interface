@@ -19,6 +19,8 @@ import {
 } from './AddLiquidity/redirects'
 import Earn from './Earn'
 import Manage from './Earn/Manage'
+import SimpleSushiMCManage from './Farm/FarmDetail'
+import FarmList from './Farm'
 import Pool from './Pool'
 import PoolFinder from './PoolFinder'
 import RemoveLiquidity from './RemoveLiquidity'
@@ -105,6 +107,8 @@ export default function App() {
               <Route exact strict path="/remove/:currencyIdA/:currencyIdB" component={RemoveLiquidity} />
               <Route exact strict path="/uni/:currencyIdA/:currencyIdB" component={Manage} />
               <Route exact strict path="/vote/:id" component={VotePage} />
+              <Route exact strict path="/farm" component={FarmList} />
+              <Route exact strict path="/farm/:pid" component={SimpleSushiMCManage} />
               <Route component={RedirectPathToSwapOnly} />
             </Switch>
           </Web3ReactManager>
