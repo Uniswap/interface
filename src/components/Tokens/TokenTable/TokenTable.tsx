@@ -56,7 +56,7 @@ function useFilteredTokens(tokens: TokenData[] | undefined) {
   return useMemo(
     () =>
       (shownTokens ?? []).filter((token) => {
-        if (!filterString) {
+        if (!filterString || filterString === '') {
           return true
         }
         const lowercaseFilterString = filterString.toLowerCase()
