@@ -444,8 +444,8 @@ export default function LoadedRow({
   timePeriod: TimePeriod
 }) {
   const currency = useCurrency(tokenAddress)
-  const tokenName = tokenData.name ?? ''
-  const tokenSymbol = tokenData.symbol?.toUpperCase() ?? ''
+  const tokenName = tokenData.name
+  const tokenSymbol = tokenData.symbol?.toUpperCase()
   const theme = useTheme()
   const [favoriteTokens] = useAtom(favoritesAtom)
   const isFavorited = favoriteTokens.includes(tokenAddress)
