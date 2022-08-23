@@ -131,7 +131,7 @@ export const magicalGradientOnHover = style({
       maskComposite: 'exclude',
       borderStyle: 'solid',
       borderWidth: '1px',
-      borderRadius: '12px',
+      borderRadius: 'inherit',
       pointerEvents: 'none',
       opacity: '0',
       WebkitTransition: 'opacity 0.25s ease',
