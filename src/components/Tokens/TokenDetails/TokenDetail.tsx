@@ -247,7 +247,7 @@ export function AboutSection({ address, tokenDetailData }: { address: string; to
       </TokenDescriptionContainer>
       <ResourcesContainer>
         <Resource name={'Etherscan'} link={`https://etherscan.io/address/${address}`} />
-        <Resource name={'Protocol Info'} link={`https://info.uniswap.org/#/tokens/${address}`} />
+        <Resource name={'Protocol info'} link={`https://info.uniswap.org/#/tokens/${address}`} />
         {tokenDetailData?.homepageUrl && <Resource name={'Website'} link={tokenDetailData.homepageUrl} />}
         {tokenDetailData?.twitterName && (
           <Resource name={'Twitter'} link={`https://twitter.com/${tokenDetailData.twitterName}`} />
@@ -321,7 +321,7 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
           </StatsSection>
           <ContractAddressSection>
             <Contract>
-              Contract Address
+              Contract address
               <ContractAddress>
                 <CopyContractAddress address={address} />
               </ContractAddress>
@@ -403,7 +403,7 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
       </StatsSection>
       <ContractAddressSection>
         <Contract>
-          Contract Address
+          Contract address
           <ContractAddress>
             <CopyContractAddress address={address} />
           </ContractAddress>
