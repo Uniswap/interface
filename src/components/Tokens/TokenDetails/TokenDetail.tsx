@@ -9,7 +9,7 @@ import { checkWarning } from 'constants/tokenSafety'
 import { chainIdToChainName, useTokenDetailQuery } from 'graphql/data/TokenDetailQuery'
 import { useCurrency, useIsUserAddedToken, useToken } from 'hooks/Tokens'
 import { useAtomValue } from 'jotai/utils'
-import { useCallback } from 'react'
+import { useCallback, useEffect } from 'react'
 import { useState } from 'react'
 import { ArrowLeft, Heart } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
@@ -130,8 +130,14 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
   const filterNetwork = useAtomValue(filterNetworkAtom)
   const tokenDetailData = useTokenDetailQuery(address, chainIdToChainName(filterNetwork))
 
+  useEffect(() => {
+    return function cleanup() {
+      console.log('Unmounted')
+    }
+  }, [])
+
   // catch token error and loading state
-  if (!token || !token.name || !token.symbol) {
+  if (!token || !token.name || !token.symbol || !token) {
     return <LoadingTokenDetail />
     // return (
     //   <TopArea>

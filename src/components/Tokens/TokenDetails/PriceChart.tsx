@@ -207,10 +207,8 @@ export function PriceChart({ width, height, token }: PriceChartProps) {
 
   // TODO: connect to loading state
   if (!hasData) {
-    console.log('What the fuck')
     return null
   }
-  console.log('Not the fuck')
 
   const [tickFormatter, crosshairDateFormatter, ticks] = tickFormat(
     startingPrice.timestamp,

@@ -88,6 +88,8 @@ export default function TokenDetails() {
     tokenDetail = <TokenDetail address={tokenAddress} />
   }
 
+  console.log('here')
+
   const tokenWarning = tokenAddress ? checkWarning(tokenAddress) : null
   /* network balance handling */
 
