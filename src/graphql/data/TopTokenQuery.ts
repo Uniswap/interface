@@ -28,7 +28,7 @@ export type TokenData = {
 }
 
 export interface UseTopTokensResult {
-  data: TokenData[] | null | undefined
+  data: TokenData[] | undefined
   error: string | null
   loading: boolean
 }

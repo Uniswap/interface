@@ -46,7 +46,7 @@ const TokenRowsContainer = styled.div`
   width: 100%;
 `
 
-function useFilteredTokens(tokens: TokenData[] | null | undefined) {
+function useFilteredTokens(tokens: TokenData[] | undefined) {
   const filterString = useAtomValue(filterStringAtom)
   const favoriteTokenAddresses = useAtomValue(favoritesAtom)
   const showFavorites = useAtomValue(showFavoritesAtom)
