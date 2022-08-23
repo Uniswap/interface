@@ -1,12 +1,10 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Signature, splitSignature } from '@ethersproject/bytes'
-import { NonceManager } from '@ethersproject/experimental'
 import { JsonRpcProvider } from '@ethersproject/providers'
 import { Trade } from '@uniswap/router-sdk'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
-import { SWAP_ROUTER_ADDRESSES } from 'constants/addresses'
 import { domain, DOMAIN_TYPE, SWAP_TYPE } from 'constants/eip712'
 import { solidityKeccak256 } from 'ethers/lib/utils'
 import { SwapCall } from 'hooks/useSwapCallArguments'
@@ -22,6 +20,7 @@ interface EncryptResponse {
   message_length: number
   cipher_text: string
   proof: string
+  nonce: string
 }
 
 interface VdfResponse {
@@ -99,9 +98,6 @@ export default function useSendSwapTransaction(
         const { deadline, amountIn, amountoutMin, path } = resolvedCalls[0]
 
         const signer = library.getSigner()
-        const nonceManager = new NonceManager(signer)
-        const nonce = await nonceManager.getTransactionCount()
-        const swapRouterAddress = SWAP_ROUTER_ADDRESSES[chainId]
 
         const signAddress = await signer.getAddress()
 
@@ -152,7 +148,7 @@ export default function useSendSwapTransaction(
 
         const encryptedPath = {
           message_length: encryptData.message_length,
-          nonce: `${nonce}`,
+          nonce: encryptData.nonce,
           commitment: vdfData.commitment_hex,
           cipher_text: [encryptData.cipher_text],
           r1: vdfData.r1,
