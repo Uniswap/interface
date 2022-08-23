@@ -238,8 +238,8 @@ export function AboutSection({ address, tokenDetailData }: { address: string; to
           <Trans>No token information available</Trans>
         </NoInfoAvailable>
       )}
-      {!shouldTruncate && tokenDescription}
       <TokenDescriptionContainer>
+        {!shouldTruncate && tokenDescription}
         {shouldTruncate && (
           <div>
             {tokenDescription}
