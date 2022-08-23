@@ -6,7 +6,7 @@ import { VerifiedIcon } from 'components/TokenSafety/TokenSafetyIcon'
 import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import { getChainInfo } from 'constants/chainInfo'
 import { checkWarning } from 'constants/tokenSafety'
-import { chainIdToChainName, useTokenDetailQuery } from 'graphql/data/TokenDetailQuery'
+//import { chainIdToChainName, useTokenDetailQuery } from 'graphql/data/TokenDetailQuery'
 import { useCurrency, useIsUserAddedToken, useToken } from 'hooks/Tokens'
 import { useAtomValue } from 'jotai/utils'
 import { useCallback, useEffect } from 'react'
@@ -128,13 +128,29 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
   const networkLabel = chainInfo?.label
   const networkBadgebackgroundColor = chainInfo?.backgroundColor
   const filterNetwork = useAtomValue(filterNetworkAtom)
-  const tokenDetailData = useTokenDetailQuery(address, chainIdToChainName(filterNetwork))
+  const tokenDetailData = {
+    description: 'hi',
+    homepageUrl: 'wow',
+    twitterName: 'yes',
+    priceLow52: { value: 12 },
+    volume24h: { value: 12 },
+    priceLow52W: { value: 12 },
+    priceHigh52W: { value: 12 },
+    name: 'yes',
+    tokens: [{ symbol: 'yes' }],
+    marketCap: { value: 12 },
+  }
+  //useTokenDetailQuery(address, chainIdToChainName(filterNetwork))
 
   useEffect(() => {
     return function cleanup() {
       console.log('Unmounted')
     }
   }, [])
+
+  useEffect(() => {
+    console.log('Changed')
+  }, [address])
 
   // catch token error and loading state
   if (!token || !token.name || !token.symbol || !token) {

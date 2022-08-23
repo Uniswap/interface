@@ -17,7 +17,7 @@ import { checkWarning } from 'constants/tokenSafety'
 import { useToken } from 'hooks/Tokens'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import { useNetworkTokenBalances } from 'hooks/useNetworkTokenBalances'
-import { useCallback, useMemo } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 import { useIsDarkMode } from 'state/user/hooks'
 import styled from 'styled-components/macro'
@@ -80,15 +80,11 @@ export default function TokenDetails() {
     console.log('onTxFail')
   }, [])
 
-  let tokenDetail
-  if (!tokenAddress) {
-    // TODO: handle no address / invalid address cases
-    tokenDetail = 'invalid token'
-  } else {
-    tokenDetail = <TokenDetail address={tokenAddress} />
-  }
-
-  console.log('here')
+  useEffect(() => {
+    return function cleanup() {
+      console.log('Unmounted higher')
+    }
+  }, [])
 
   const tokenWarning = tokenAddress ? checkWarning(tokenAddress) : null
   /* network balance handling */
@@ -130,9 +126,9 @@ export default function TokenDetails() {
 
   return (
     <TokenDetailsLayout>
-      {tokenDetail}
       {tokenAddress && (
         <>
+          <TokenDetail address={tokenAddress} />
           <RightPanel>
             <SwapWidget
               defaultChainId={connectedChainId}
