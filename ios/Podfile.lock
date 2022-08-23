@@ -961,14 +961,14 @@ PODS:
   - RNScreens (3.8.0):
     - React-Core
     - React-RCTImage
-  - RNSentry (4.2.2):
+  - RNSentry (4.2.4):
     - React-Core
-    - Sentry (= 7.22.0)
+    - Sentry (= 7.23.0)
   - RNSVG (12.4.4):
     - React-Core
-  - Sentry (7.22.0):
-    - Sentry/Core (= 7.22.0)
-  - Sentry/Core (7.22.0)
+  - Sentry (7.23.0):
+    - Sentry/Core (= 7.23.0)
+  - Sentry/Core (7.23.0)
   - Shake (15.2.0)
   - Starscream (3.1.1)
   - vision-camera-code-scanner (0.1.6):
@@ -1361,9 +1361,9 @@ SPEC CHECKSUMS:
   RNPermissions: de7b7c3fe1680d974ac7a85e3e97aa539c0e68ea
   RNReanimated: 3d1432ce7b6b7fc31f375dcabe5b4585e0634a43
   RNScreens: 6e1ea5787989f92b0671049b808aef64fa1ef98c
-  RNSentry: f03937a2cf86c7029ba31fbbf5618c55d223cd62
+  RNSentry: 7495ba091f09f12902d8cf916024efd99b058efe
   RNSVG: ecd661f380a07ba690c9c5929c475a44f432d674
-  Sentry: 30b51086ca9aac23337880152e95538f7e177f7f
+  Sentry: a0d4563fa4ddacba31fdcc35daaa8573d87224d6
   Shake: bee1ae1ce17a4f2b51ab1494fa4d4b26927d4a3d
   Starscream: 4bb2f9942274833f7b4d296a55504dcfc7edb7b0
   vision-camera-code-scanner: 75a4ac3c9ce9b4605f5d87cc0f0001bb64bfb4de
