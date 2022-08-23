@@ -5,8 +5,8 @@ import { EventName } from 'components/AmplitudeAnalytics/constants'
 import SparklineChart from 'components/Charts/SparklineChart'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { getChainInfo } from 'constants/chainInfo'
-import { useCurrency, useToken } from 'hooks/Tokens'
-import { TimePeriod, TokenData } from 'hooks/useExplorePageQuery'
+import { TimePeriod, TokenData } from 'graphql/data/TopTokenQuery'
+import { useCurrency } from 'hooks/Tokens'
 import { useAtom } from 'jotai'
 import { useAtomValue } from 'jotai/utils'
 import { ReactNode } from 'react'
@@ -443,10 +443,9 @@ export default function LoadedRow({
   tokenData: TokenData
   timePeriod: TimePeriod
 }) {
-  const token = useToken(tokenAddress)
   const currency = useCurrency(tokenAddress)
-  const tokenName = token?.name ?? ''
-  const tokenSymbol = token?.symbol ?? ''
+  const tokenName = tokenData.name ?? ''
+  const tokenSymbol = tokenData.symbol ?? ''
   const theme = useTheme()
   const [favoriteTokens] = useAtom(favoritesAtom)
   const isFavorited = favoriteTokens.includes(tokenAddress)
@@ -461,7 +460,7 @@ export default function LoadedRow({
   const exploreTokenSelectedEventProperties = {
     chain_id: filterNetwork,
     token_address: tokenAddress,
-    token_symbol: token?.symbol,
+    token_symbol: tokenData?.symbol,
     token_list_index: tokenListIndex,
     token_list_length: tokenListLength,
     time_frame: timePeriod,
