@@ -18,10 +18,10 @@ interface IAmount {
 }
 
 export type TokenData = {
-  name: string | null | undefined
+  name: string | null
   address: string
   chain: Chain | undefined
-  symbol: string | null | undefined
+  symbol: string | null
   price: IAmount | null | undefined
   marketCap: IAmount | null | undefined
   volume: Record<TimePeriod, IAmount | null | undefined>
