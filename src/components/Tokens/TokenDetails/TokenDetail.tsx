@@ -200,9 +200,9 @@ const TruncateDescriptionButton = styled.div`
 const TRUNCATE_CHARACTER_COUNT = 400
 
 type TokenDetailData = {
-  description: string | null
-  homepageUrl: string | null
-  twitterName: string | null
+  description: string | null | undefined
+  homepageUrl: string | null | undefined
+  twitterName: string | null | undefined
 }
 
 const truncateDescription = (desc: string) => {
@@ -276,6 +276,11 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
   const networkBadgebackgroundColor = chainInfo?.backgroundColor
   const filterNetwork = useAtomValue(filterNetworkAtom)
   const tokenDetailData = useTokenDetailQuery(address, chainIdToChainName(filterNetwork))
+  const relevantTokenDetailData = (({ description, homepageUrl, twitterName }) => ({
+    description,
+    homepageUrl,
+    twitterName,
+  }))(tokenDetailData)
 
   // catch token error and loading state
   if (!token || !token.name || !token.symbol) {
@@ -308,7 +313,7 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
           </MissingChartData>
         </ChartHeader>
         <MissingData>
-          <AboutSection address={address} tokenDetailData={tokenDetailData as TokenDetailData} />
+          <AboutSection address={address} tokenDetailData={relevantTokenDetailData} />
           <StatsSection>
             <NoInfoAvailable>
               <Trans>No stats available</Trans>
@@ -365,7 +370,7 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
           <ParentSize>{({ width, height }) => <PriceChart token={token} width={width} height={height} />}</ParentSize>
         </ChartContainer>
       </ChartHeader>
-      <AboutSection address={address} tokenDetailData={tokenDetailData as TokenDetailData} />
+      <AboutSection address={address} tokenDetailData={relevantTokenDetailData} />
       <StatsSection>
         <StatPair>
           <Stat>
