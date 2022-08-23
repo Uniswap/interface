@@ -1,9 +1,9 @@
+import { NavBarVariant, useNavBarFlag } from 'featureFlags/flags/navBar'
 import { useCallback, useEffect } from 'react'
 import { X } from 'react-feather'
 import { animated } from 'react-spring'
 import { useSpring } from 'react-spring/web'
 import styled, { useTheme } from 'styled-components/macro'
-import { NavBarVariant, useNavBarFlag } from 'featureFlags/flags/navBar'
 
 import { useRemovePopup } from '../../state/application/hooks'
 import { PopupContent } from '../../state/application/reducer'
@@ -73,6 +73,11 @@ export default function PopupItem({
   }, [removeAfterMs, removeThisPopup])
 
   const theme = useTheme()
+  const faderStyle = useSpring({
+    from: { width: '100%' },
+    to: { width: '0%' },
+    config: { duration: removeAfterMs ?? undefined },
+  })
 
   let popupContent
   if ('txn' in content) {
@@ -85,12 +90,6 @@ export default function PopupItem({
   } else if ('failedSwitchNetwork' in content) {
     popupContent = <FailedNetworkSwitchPopup chainId={content.failedSwitchNetwork} />
   }
-
-  const faderStyle = useSpring({
-    from: { width: '100%' },
-    to: { width: '0%' },
-    config: { duration: removeAfterMs ?? undefined },
-  })
 
   return (
     <Popup>

@@ -1,11 +1,11 @@
+import { useWeb3React } from '@web3-react/core'
+import { UNI_ADDRESS } from 'constants/addresses'
 import { TransactionInfo, TransactionType } from 'state/transactions/types'
 import styled, { css } from 'styled-components/macro'
-import { UNI_ADDRESS } from 'constants/addresses'
 
+import { nativeOnChain } from '../../constants/tokens'
 import { useCurrency } from '../../hooks/Tokens'
 import CurrencyLogo from '../CurrencyLogo'
-import { nativeOnChain } from '../../constants/tokens'
-import { useWeb3React } from '@web3-react/core'
 
 const CurrencyWrap = styled.div`
   position: relative;
@@ -53,7 +53,7 @@ const getCurrency = ({ info, chainId }: { info: TransactionInfo; chainId: number
       return { currencyId0: unwrapped ? wrappedCurrency : base, currencyId1: unwrapped ? base : wrappedCurrency }
     case TransactionType.COLLECT_FEES:
       const { currencyId0, currencyId1 } = info
-      return { currencyId0: currencyId0, currencyId1: currencyId1 }
+      return { currencyId0, currencyId1 }
     case TransactionType.APPROVAL:
       return { currencyId0: info.tokenAddress, currencyId1: undefined }
     case TransactionType.CLAIM:

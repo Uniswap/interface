@@ -15,11 +15,11 @@ import {
 } from 'state/transactions/types'
 import styled from 'styled-components/macro'
 
+import { nativeOnChain } from '../../constants/tokens'
 import { useCurrency, useToken } from '../../hooks/Tokens'
-import { TransactionState } from './index'
 import useENSName from '../../hooks/useENSName'
 import { shortenAddress } from '../../utils'
-import { nativeOnChain } from '../../constants/tokens'
+import { TransactionState } from './index'
 
 const HighlightText = styled.span`
   color: ${({ theme }) => theme.textPrimary};
