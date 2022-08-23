@@ -27,7 +27,7 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props) 
     valid: validWord,
     errorText: errorTextWord,
     tooShort,
-  } = isValidWord(value ? normalizeTextInput(value) : null, t)
+  } = isValidWord(value ? normalizeTextInput(value, false) : null, t)
   const [errorTextPhrase, setErrorPhrase] = useState<string | undefined>()
 
   const showValidation = !focused || (focused && !tooShort)
@@ -38,7 +38,7 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props) 
   const onSubmit = useCallback(() => {
     if (validWord && value) {
       // Check phrase validation
-      const { valid: validPhrase, errorText } = isValidMnemonic(normalizeTextInput(value), t)
+      const { valid: validPhrase, errorText } = isValidMnemonic(normalizeTextInput(value, false), t)
       if (!validPhrase) {
         setErrorPhrase(errorText)
         return
