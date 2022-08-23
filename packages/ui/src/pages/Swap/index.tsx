@@ -21,7 +21,6 @@ import ProgressSteps from '../../components/ProgressSteps'
 import SwapHeader from '../../components/swap/SwapHeader'
 
 import { INITIAL_ALLOWED_SLIPPAGE } from '../../constants'
-import { getTradeVersion } from '../../data/V1'
 import { useActiveWeb3React } from '../../hooks'
 import { useCurrency, useAllTokens } from '../../hooks/Tokens'
 import { ApprovalState, useApproveCallbackFromTrade } from '../../hooks/useApproveCallback'
@@ -46,7 +45,7 @@ import { ClickableText } from '../Pool/styleds'
 import Loader from '../../components/Loader'
 import { useIsTransactionUnsupported } from 'hooks/Trades'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
-import { isTradeBetter } from 'utils/trades'
+import { getTradeVersion } from 'utils/tradeVersion'
 import { RouteComponentProps } from 'react-router-dom'
 import useThemedContext from 'hooks/useThemedContext'
 
@@ -91,7 +90,6 @@ export default function Swap({ history }: RouteComponentProps) {
   // swap state
   const { independentField, typedValue, recipient } = useSwapState()
   const {
-    v1Trade,
     v2Trade,
     currencyBalances,
     parsedAmount,
@@ -108,14 +106,12 @@ export default function Swap({ history }: RouteComponentProps) {
   const { address: recipientAddress } = useENSAddress(recipient)
   const toggledVersion = useToggledVersion()
   const tradesByVersion = {
-    [Version.v1]: v1Trade,
     [Version.v2]: v2Trade
   }
   const trade = showWrap ? undefined : tradesByVersion[toggledVersion]
   const defaultTrade = showWrap ? undefined : tradesByVersion[DEFAULT_VERSION]
 
-  const betterTradeLinkV2: Version | undefined =
-    toggledVersion === Version.v1 && isTradeBetter(v1Trade, v2Trade) ? Version.v2 : undefined
+  const betterTradeLinkV2: Version | undefined = Version.v2
 
   const parsedAmounts = showWrap
     ? {
