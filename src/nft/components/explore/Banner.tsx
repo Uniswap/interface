@@ -156,6 +156,7 @@ const CarouselProgress = ({
           cursor="pointer"
           paddingTop="16"
           paddingBottom="16"
+          position="relative"
           onClick={(e) => {
             e.preventDefault()
             e.stopPropagation()
