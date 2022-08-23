@@ -204,6 +204,17 @@ type TokenDetailData = {
   twitterName: string | null
 }
 
+const truncateDescription = (desc: string) => {
+  //trim the string to the maximum length
+  let tokenDescriptionTruncated = desc.slice(0, TRUNCATE_CHARACTER_COUNT)
+  //re-trim if we are in the middle of a word
+  tokenDescriptionTruncated = `${tokenDescriptionTruncated.slice(
+    0,
+    Math.min(tokenDescriptionTruncated.length, tokenDescriptionTruncated.lastIndexOf(' '))
+  )}...`
+  return tokenDescriptionTruncated
+}
+
 export function AboutSection({ address, tokenDetailData }: { address: string; tokenDetailData: TokenDetailData }) {
   const [isDescriptionTruncated, setIsDescriptionTruncated] = useState(true)
 
@@ -211,16 +222,6 @@ export function AboutSection({ address, tokenDetailData }: { address: string; to
     tokenDetailData && tokenDetailData.description
       ? tokenDetailData.description.length > TRUNCATE_CHARACTER_COUNT
       : false
-  const truncateDescription = (desc: string) => {
-    //trim the string to the maximum length
-    let tokenDescriptionTruncated = desc.slice(0, TRUNCATE_CHARACTER_COUNT)
-    //re-trim if we are in the middle of a word
-    tokenDescriptionTruncated = `${tokenDescriptionTruncated.slice(
-      0,
-      Math.min(tokenDescriptionTruncated.length, tokenDescriptionTruncated.lastIndexOf(' '))
-    )}...`
-    return tokenDescriptionTruncated
-  }
 
   const tokenDescription =
     tokenDetailData && tokenDetailData.description && shouldTruncate && isDescriptionTruncated
