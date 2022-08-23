@@ -57,7 +57,7 @@ const getCurrency = ({ info, chainId }: { info: TransactionInfo; chainId: number
     case TransactionType.APPROVAL:
       return { currencyId0: info.tokenAddress, currencyId1: undefined }
     case TransactionType.CLAIM:
-      const uniAddress = UNI_ADDRESS[chainId || -1]
+      const uniAddress = chainId ? UNI_ADDRESS[chainId] : undefined
       return { currencyId0: uniAddress, currencyId1: undefined }
     default:
       return { currencyId0: undefined, currencyId1: undefined }
