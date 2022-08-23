@@ -146,7 +146,7 @@ export const MobileSideBar = () => {
 
   return (
     <>
-      <NavIcon onClick={toggleOpen}>
+      <NavIcon isActive={isOpen} onClick={toggleOpen}>
         <HamburgerIcon width={28} height={28} />
       </NavIcon>
       {isOpen && (
