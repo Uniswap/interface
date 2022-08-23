@@ -118,7 +118,7 @@ export const imageHover = style({
   transform: 'scale(1.25)',
 })
 
-export const magicalGradientOnHover = style({
+export const magicalGradient = style({
   selectors: {
     '&::before': {
       content: '',
@@ -133,14 +133,24 @@ export const magicalGradientOnHover = style({
       borderWidth: '1px',
       borderRadius: 'inherit',
       pointerEvents: 'none',
-      opacity: '0',
-      WebkitTransition: 'opacity 0.25s ease',
-      MozTransition: 'opacity 0.25s ease',
-      msTransition: 'opacity 0.25s ease',
-      transition: 'opacity 0.25s ease-out',
-    },
-    '&:hover::before': {
-      opacity: '1',
     },
   },
 })
+
+export const magicalGradientOnHover = style([
+  magicalGradient,
+  {
+    selectors: {
+      '&::before': {
+        opacity: '0',
+        WebkitTransition: 'opacity 0.25s ease',
+        MozTransition: 'opacity 0.25s ease',
+        msTransition: 'opacity 0.25s ease',
+        transition: 'opacity 0.25s ease-out',
+      },
+      '&:hover::before': {
+        opacity: '1',
+      },
+    },
+  },
+])
