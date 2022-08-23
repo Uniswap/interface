@@ -13,20 +13,20 @@ jobs:
     # TODO matrix across APIs, at least 11 and 15 (lowest to highest)
     timeout-minutes: 60
     steps:
-      - uses: styfle/cancel-workflow-action@0.9.1
+      - uses: styfle/cancel-workflow-action@860d4c7374d6e4a1c482e80897cb913ae46692ac
         with:
           all_but_latest: true
 
       # Set up tool versions
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@1f8c6b94b26d0feae1e387ca63ccbdc44d27b561
         with:
           node-version: 16
 
-      - uses: maxim-lobanov/setup-xcode@v1
+      - uses: maxim-lobanov/setup-xcode@4aa4176a819ae7c019451acfda0bba67bffc6704
         with:
           xcode-version: 'latest-stable'
 
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@7884fcad6b5d53d10323aee724dc68d8b9096a2e
         with:
           fetch-depth: 0
 
@@ -36,7 +36,7 @@ jobs:
         run: |
           echo "::set-output name=xcode-version::$(xcodebuild -version|tail -1|cut -f3 -d' ')"
           echo "::set-output name=yarn-cache-dir::$(yarn cache dir)"
-      - uses: actions/cache@v2
+      - uses: actions/cache@937d24475381cd9c75ae6db12cb4e79714b926ed
         name: Yarn Cache
         id: yarn-cache
         with:
@@ -45,14 +45,14 @@ jobs:
           restore-keys: ${{ runner.os }}-yarn-v1
 
       # Detox is compiled during yarn install, using Xcode, set up cache first
-      - uses: hendrikmuhs/ccache-action@v1
+      - uses: hendrikmuhs/ccache-action@40bf560936a8022e68a3c00e7d2abefaf01305a6
         name: Xcode Compile Cache
         with:
           key: ${{ runner.os }}-v2 # makes a unique key w/related restore key internally
           max-size: 400M
 
       - name: Yarn Install
-        uses: nick-fields/retry@v2
+        uses: nick-fields/retry@7d4a37704547a311dbb66ebdf5b23ec19374a767
         with:
           timeout_minutes: 10
           retry_wait_seconds: 2
@@ -60,14 +60,14 @@ jobs:
           command: yarn
 
       - name: Update Ruby build tools
-        uses: nick-fields/retry@v2
+        uses: nick-fields/retry@7d4a37704547a311dbb66ebdf5b23ec19374a767
         with:
           timeout_minutes: 2
           retry_wait_seconds: 2
           max_attempts: 3
           command: gem update cocoapods xcodeproj
 
-      - uses: actions/cache@v2
+      - uses: actions/cache@937d24475381cd9c75ae6db12cb4e79714b926ed
         name: Cache Pods
         id: pods-cache
         with:
@@ -76,7 +76,7 @@ jobs:
           restore-keys: ${{ runner.os }}-pods-v2
 
       - name: Pod Install
-        uses: nick-fields/retry@v2
+        uses: nick-fields/retry@7d4a37704547a311dbb66ebdf5b23ec19374a767
         with:
           timeout_minutes: 20
           retry_wait_seconds: 2
@@ -137,7 +137,7 @@ jobs:
           sentry-cli releases deploys $SENTRY_RELEASE new -e production
 
       - name: Push changes
-        uses: ad-m/github-push-action@master
+        uses: ad-m/github-push-action@9a46ba8d86d3171233e861a4351b1278a2805c83
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: ${{ github.ref }}
