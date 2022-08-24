@@ -51,6 +51,7 @@ export function useChefPositions(contract?: Contract | null, rewarder?: Contract
           pendingSushi: data[0]?.result?.[0] || Zero,
           amount: data[1]?.result?.[0] || Zero,
           chef: getChef(),
+          rewardDebt: data[1]?.result?.[1] || Zero,
           // pendingTokens: data?.[2]?.result,
         }))
         .filter(({ pendingSushi, amount }) => {

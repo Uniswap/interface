@@ -1,6 +1,8 @@
 import {
+  CurrencyAmount,
   // Currency,
-  JSBI
+  JSBI,
+  Token
 } from '@teleswap/sdk'
 import { ButtonPrimary, ButtonEmpty } from 'components/Button'
 import { AutoColumn } from 'components/Column'
@@ -13,14 +15,17 @@ import UnstakingModal from 'components/masterchef/UnstakingModal'
 // import UnstakingModal from 'components/earn/UnstakingModal'
 import { RowBetween } from 'components/Row'
 import { Chef } from 'constants/farm/chef.enum'
-import { BIG_INT_SECONDS_IN_WEEK } from 'constants/index'
+import { BIG_INT_SECONDS_IN_WEEK, UNI, ZERO_ADDRESS } from 'constants/index'
 import { BigNumber } from 'ethers'
 import useMasterChef from 'hooks/farm/useMasterChef'
 import { useColor } from 'hooks/useColor'
-import React, { useState } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 // import { Link } from 'react-router-dom'
 import styled from 'styled-components'
+import { useActiveWeb3React } from 'hooks/index'
+import { useMasterChefContract } from 'hooks/useContract'
+import { useChefPositions } from 'hooks/farm/useChefPositions'
 import { TYPE } from 'theme'
 // import { CountUp } from 'use-count-up'
 // import { currencyId } from 'utils/currencyId'
@@ -83,6 +88,8 @@ const DataRow = styled(RowBetween)`
 `
 
 export default function SimpleSushiMCManage() {
+  const { chainId } = useActiveWeb3React()
+
   const masterChef = useMasterChef(Chef.MASTERCHEF)
   const { pid: pidInHex } = useParams<{ pid: string }>()
   const pid = parseInt(pidInHex)
@@ -92,11 +99,55 @@ export default function SimpleSushiMCManage() {
   const backgroundColor = useColor()
   const disableTop = true
   const stakingInfo: any = undefined
-
+  const mchefContract = useMasterChefContract()
+  const positions = useChefPositions(mchefContract, undefined, chainId)
   // toggle for staking modal and unstaking modal
   const [showStakingModal, setShowStakingModal] = useState(false)
   const [showUnstakingModal, setShowUnstakingModal] = useState(false)
   // const [showClaimRewardModal, setShowClaimRewardModal] = useState(false)
+  useEffect(() => {
+    if (positions) console.debug('positions[pid]', positions[pid])
+  }, [positions])
+
+  const rewardToken = UNI[chainId || 420]
+
+  const parsedPendingSushiAmount = useMemo(() => {
+    try {
+      if (positions && positions[pid] && positions[pid].pendingSushi) {
+        const bi = (positions[pid].pendingSushi as BigNumber).toBigInt();
+        console.debug('parsedPendingSushiAmount::bi', bi)
+        return CurrencyAmount.fromRawAmount(rewardToken, bi).toFixed(6)
+      }
+    } catch (error) {
+      console.error('parsedPendingSushiAmount::error', error)
+    }
+    return '--.--'
+  }, [rewardToken, positions, pid])
+
+  const parsedStakedAmount = useMemo(() => {
+    try {
+      if (positions && positions[pid] && positions[pid].amount) {
+        const bi = (positions[pid].amount as BigNumber).toBigInt();
+        return CurrencyAmount.fromRawAmount(new Token(chainId || 420, ZERO_ADDRESS, 18), bi)?.toSignificant(6)
+      }
+    } catch (error) {
+      console.error('parsedStakedAmount::error', error)
+    }
+    return '--.--'
+  }, [chainId, positions, pid])
+
+  const parsedEarnedToken = useMemo(() => {
+    try {
+      if (positions && positions[pid] && positions[pid].rewardDebt) {
+        const bi = (positions[pid].rewardDebt as BigNumber).toBigInt();
+        return CurrencyAmount.fromRawAmount(rewardToken, bi)?.toSignificant(6)
+      }
+    } catch (error) {
+      console.error('parsedEarnedToken::error', error)
+    }
+    return '--.--'
+  }, [rewardToken, positions, pid])
+  
 
   return (
     <PageWrapper gap="lg" justify="center">
@@ -108,12 +159,10 @@ export default function SimpleSushiMCManage() {
       <DataRow style={{ gap: '24px' }}>
         <PoolData>
           <AutoColumn gap="sm">
-            <TYPE.body style={{ margin: 0 }}>Total deposits</TYPE.body>
-            {/* <TYPE.body fontSize={24} fontWeight={500}>
-              {valueOfTotalStakedAmountInUSDC
-                ? `$${valueOfTotalStakedAmountInUSDC.toFixed(0, { groupSeparator: ',' })}`
-                : `${valueOfTotalStakedAmountInWETH?.toSignificant(4, { groupSeparator: ',' }) ?? '-'} ETH`}
-            </TYPE.body> */}
+            <TYPE.body style={{ margin: 0 }}>Earned SUSHIs</TYPE.body>
+            <TYPE.body fontSize={24} fontWeight={500}>
+              { parsedEarnedToken }
+            </TYPE.body>
           </AutoColumn>
         </PoolData>
         <PoolData>
@@ -183,7 +232,7 @@ export default function SimpleSushiMCManage() {
                 </RowBetween>
                 <RowBetween style={{ alignItems: 'baseline' }}>
                   <TYPE.white fontSize={36} fontWeight={600}>
-                    {stakingInfo?.stakedAmount?.toSignificant(6) ?? '-'}
+                    {parsedStakedAmount}
                   </TYPE.white>
                   <TYPE.white>{poolName}</TYPE.white>
                 </RowBetween>
@@ -227,12 +276,8 @@ export default function SimpleSushiMCManage() {
                   <span role="img" aria-label="wizard-icon" style={{ marginRight: '8px ' }}>
                     ⚡
                   </span>
-                  {stakingInfo?.active
-                    ? stakingInfo?.rewardRate
-                        ?.multiply(BIG_INT_SECONDS_IN_WEEK)
-                        ?.toSignificant(4, { groupSeparator: ',' }) ?? '-'
-                    : '0'}
-                  {' UNI / week'}
+                  { parsedPendingSushiAmount } {" "}
+                  {rewardToken.symbol}
                 </TYPE.black>
               </RowBetween>
             </AutoColumn>

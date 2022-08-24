@@ -9,6 +9,7 @@ import { useActiveWeb3React } from '../../hooks'
 import PoolCard from './PoolCard'
 import { useChefPositions } from 'hooks/farm/useChefPositions'
 import { useMasterChefContract } from 'hooks/useContract'
+import { useMasterChefPoolInfo } from 'hooks/farm/useMasterChefPoolInfo'
 // import { JSBI } from '@teleswap/sdk'
 // import { BIG_INT_ZERO } from '../../constants'
 // import { OutlineCard } from '../../components/Card'
@@ -44,10 +45,14 @@ export default function FarmList() {
 
   const mchefContract = useMasterChefContract()
   const positions = useChefPositions(mchefContract, undefined, chainId)
+  const poolInfos = useMasterChefPoolInfo()
 
   useEffect(() => {
     console.info('useChefPositions', positions);
   }, [positions])
+  useEffect(() => {
+    console.info('useMasterChefPoolInfo', poolInfos);
+  }, [poolInfos])
   // // staking info for connected account
   // const stakingInfos = useStakingInfo()
 
@@ -88,9 +93,11 @@ export default function FarmList() {
         </DataRow>
 
         <PoolSection>
-          {[0].map((pid) => (
-            <PoolCard key={pid} pid={pid} />
-          ))}
+          {
+            poolInfos.length === 0 ? 'Loading...' : poolInfos.map((_poolInfo, pid) => {
+              return <PoolCard key={pid} pid={pid} />
+            })
+          }
         </PoolSection>
       </AutoColumn>
     </PageWrapper>
