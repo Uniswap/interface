@@ -14,7 +14,7 @@ import { AppNotificationType } from 'src/features/notifications/types'
 import { ElementName } from 'src/features/telemetry/constants'
 import { useDisplayName } from 'src/features/wallet/hooks'
 import { Theme } from 'src/styles/theme'
-import { shortenAddress } from 'src/utils/addresses'
+import { sanitizeAddressText, shortenAddress } from 'src/utils/addresses'
 import { setClipboard } from 'src/utils/clipboard'
 
 type AddressDisplayProps = {
@@ -116,6 +116,7 @@ export function AddressDisplay({
               variant={variant}>
               {displayName?.name}
             </Text>
+
             {showCopy && !showCaption && (
               <CopyIcon color={theme.colors.textPrimary} height={mainSize} width={mainSize} />
             )}
@@ -125,7 +126,7 @@ export function AddressDisplay({
           <CopyButtonWrapper onPress={showCopy ? onPressCopyAddress : undefined}>
             <Flex centered row gap="sm">
               <Text color={captionColor} variant={captionVariant}>
-                {shortenAddress(address)}
+                {sanitizeAddressText(shortenAddress(address))}
               </Text>
               {showCopy && (
                 <CopyIcon

@@ -16,7 +16,7 @@ import {
   selectSignerMnemonicAccountExists,
 } from 'src/features/wallet/selectors'
 import { WalletConnectSession } from 'src/features/walletConnect/walletConnectSlice'
-import { getValidAddress, shortenAddress } from 'src/utils/addresses'
+import { getValidAddress, sanitizeAddressText, shortenAddress } from 'src/utils/addresses'
 import { trimToLength } from 'src/utils/string'
 
 const ENS_TRIM_LENGTH = 8
@@ -87,7 +87,7 @@ export function useDisplayName(
       name: showShortenedEns ? trimToLength(ens.ENSName, ENS_TRIM_LENGTH) : ens.ENSName,
       type: 'ens',
     }
-  return { name: shortenAddress(address), type: 'address' }
+  return { name: `${sanitizeAddressText(shortenAddress(address))}`, type: 'address' }
 }
 
 export function useWCTimeoutError(

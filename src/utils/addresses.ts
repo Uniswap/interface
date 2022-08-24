@@ -11,6 +11,18 @@ export function getChecksumAddress(address: string): string {
 }
 
 /**
+ * Replaces any instance of 'x' letter in address string with an added zero-width-space invisible character
+ * this is done to solve an issue with the Inter font where an 'x' character between to numbers will be replaced as a muliplication sign
+ *
+ * @param address Address to sanitize
+ * @returns Sanitized address string
+ */
+export function sanitizeAddressText(address?: string): NullUndefined<string> {
+  const zws = '\u{200b}' // Zero-width space unicode
+  return address?.replace('x', `x${zws}`)
+}
+
+/**
  * Formats an address to show the first and last #chars with ... in the middle
  *
  * @param address Address to format
