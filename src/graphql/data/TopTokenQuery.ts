@@ -38,7 +38,7 @@ export function useTopTokenQuery(page: number) {
   const topTokenData = useLazyLoadQuery<TopTokenQueryType>(
     graphql`
       query TopTokenQuery($page: Int!) {
-        topTokenProjects(orderBy: MARKET_CAP, pageSize: 50, currency: USD, page: $page) {
+        topTokenProjects(orderBy: MARKET_CAP, pageSize: 100, currency: USD, page: $page) {
           name
           tokens {
             chain
@@ -143,5 +143,6 @@ export function useTopTokenQuery(page: number) {
         }
       : ({} as TokenData)
   )
+  console.log(topTokens)
   return topTokens
 }
