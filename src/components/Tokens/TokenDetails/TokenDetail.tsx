@@ -124,6 +124,7 @@ export const TopArea = styled.div`
 `
 export const ResourcesContainer = styled.div`
   display: flex;
+  padding-top: 12px;
   gap: 14px;
 `
 const NetworkBadge = styled.div<{ networkColor?: string; backgroundColor?: string }>`
@@ -188,7 +189,7 @@ const TruncateDescriptionButton = styled.div`
   color: ${({ theme }) => theme.textSecondary};
   font-weight: 400;
   font-size: 14px;
-  padding: 14px 0px;
+  padding-top: 14px;
 
   &:hover,
   &:focus {
@@ -234,16 +235,18 @@ export function AboutSection({ address, tokenDetailData }: { address: string; to
       <AboutHeader>
         <Trans>About</Trans>
       </AboutHeader>
-      {(!tokenDetailData || !tokenDetailData.description) && (
-        <NoInfoAvailable>
-          <Trans>No token information available</Trans>
-        </NoInfoAvailable>
-      )}
       <TokenDescriptionContainer>
+        {(!tokenDetailData || !tokenDetailData.description) && (
+          <NoInfoAvailable>
+            <Trans>No token information available</Trans>
+          </NoInfoAvailable>
+        )}
         {tokenDescription}
-        <TruncateDescriptionButton onClick={() => setIsDescriptionTruncated(!isDescriptionTruncated)}>
-          {isDescriptionTruncated ? <Trans>Read more</Trans> : <Trans>Hide</Trans>}
-        </TruncateDescriptionButton>
+        {shouldTruncate && (
+          <TruncateDescriptionButton onClick={() => setIsDescriptionTruncated(!isDescriptionTruncated)}>
+            {isDescriptionTruncated ? <Trans>Read more</Trans> : <Trans>Hide</Trans>}
+          </TruncateDescriptionButton>
+        )}
       </TokenDescriptionContainer>
       <ResourcesContainer>
         <Resource name={'Etherscan'} link={`https://etherscan.io/address/${address}`} />
