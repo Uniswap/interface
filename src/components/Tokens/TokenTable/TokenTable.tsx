@@ -115,10 +115,9 @@ function useSortedTokens(tokenData: TokenData[] | null) {
             a = token1.volume?.[timePeriod]?.value
             b = token2.volume?.[timePeriod]?.value
             break
-          // fix this is wrong right now -- don't store delta rn
           case Category.percentChange:
-            a = token1.marketCap?.value
-            b = token2.marketCap?.value
+            a = token1.percentChange?.[timePeriod]?.value
+            b = token2.percentChange?.[timePeriod]?.value
             break
         }
         return sortFn(a, b)
