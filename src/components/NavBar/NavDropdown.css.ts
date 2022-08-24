@@ -10,7 +10,6 @@ export const NavDropdown = style([
     borderStyle: 'solid',
     borderColor: 'medGray',
     paddingTop: '16',
-    paddingBottom: '24',
     borderWidth: '1px',
   }),
   {

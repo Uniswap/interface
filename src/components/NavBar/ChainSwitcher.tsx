@@ -6,8 +6,13 @@ import useSelectChain from 'hooks/useSelectChain'
 import useSyncChainQuery from 'hooks/useSyncChainQuery'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
-import { NewChevronDownIcon, NewChevronUpIcon, TokenWarningRedIcon } from 'nft/components/icons'
-import { CheckMarkIcon } from 'nft/components/icons'
+import {
+  ActiveNetworkIcon,
+  NewChevronDownIcon,
+  NewChevronUpIcon,
+  NewTabIcon,
+  TokenWarningRedIcon,
+} from 'nft/components/icons'
 import { subhead } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
 import { ReactNode, useReducer, useRef } from 'react'
@@ -19,31 +24,50 @@ import { NavDropdown } from './NavDropdown'
 const ChainRow = ({
   targetChain,
   onSelectChain,
+  toggleOpen,
 }: {
   targetChain: SupportedChainId
   onSelectChain: (targetChain: number) => void
+  toggleOpen: () => void
 }) => {
   const { chainId } = useWeb3React()
   const active = chainId === targetChain
-  const { label, logoUrl } = getChainInfo(targetChain)
+  const { helpCenterUrl, explorer, bridge, label, logoUrl } = getChainInfo(targetChain)
 
   return (
-    <Row
-      as="button"
-      background={active ? 'lightGrayOverlay' : 'none'}
-      className={`${styles.ChainSwitcherRow} ${subhead}`}
-      onClick={() => onSelectChain(targetChain)}
-    >
-      <ChainDetails>
-        <img src={logoUrl} alt={label} className={styles.Icon} />
-        {label}
-      </ChainDetails>
-      {active && <CheckMarkIcon width={20} height={20} />}
-    </Row>
+    <Column background={active ? 'lightGrayOverlay' : 'none'} borderRadius="12">
+      <Row
+        as="button"
+        background="none"
+        className={`${styles.ChainSwitcherRow} ${subhead}`}
+        onClick={() => (active ? toggleOpen() : onSelectChain(targetChain))}
+      >
+        <ChainDetails>
+          <img src={logoUrl} alt={label} className={styles.Icon} />
+          {label}
+        </ChainDetails>
+        {active && <ActiveNetworkIcon />}
+      </Row>
+      {active && (
+        <Column gap="8" paddingBottom="16">
+          <Box className={styles.Separator} />
+          {bridge && <ChainLinkOut externalLink={bridge} label={`${label} bridge`} />}
+          {explorer && <ChainLinkOut externalLink={explorer} label={`${label} scan`} />}
+          {helpCenterUrl && <ChainLinkOut externalLink={helpCenterUrl} label={`Learn more`} />}
+        </Column>
+      )}
+    </Column>
   )
 }
 
 const ChainDetails = ({ children }: { children: ReactNode }) => <Row>{children}</Row>
+
+const ChainLinkOut = ({ externalLink, label }: { externalLink: string; label: string }) => (
+  <Row as="a" href={externalLink} className={styles.ChainInfo} target={'_blank'} rel={'noopener noreferrer'}>
+    <Box as="span">{label}</Box>
+    <NewTabIcon />
+  </Row>
+)
 
 const NETWORK_SELECTOR_CHAINS = [
   SupportedChainId.MAINNET,
@@ -100,15 +124,15 @@ export const ChainSwitcher = ({ isMobile }: ChainSwitcherProps) => {
         )}
       </Row>
       {isOpen && (
-        <NavDropdown top={60} leftAligned={isMobile}>
-          <Column gap="4">
+        <NavDropdown top={60} leftAligned={isMobile} paddingBottom={16}>
+          <Column marginX="8">
             {NETWORK_SELECTOR_CHAINS.map((chainId: SupportedChainId) =>
               isChainAllowed(chainId) ? (
                 <ChainRow
                   onSelectChain={async (targetChainId: SupportedChainId) => {
                     await selectChain(targetChainId)
-                    toggleOpen()
                   }}
+                  toggleOpen={toggleOpen}
                   targetChain={chainId}
                   key={chainId}
                 />

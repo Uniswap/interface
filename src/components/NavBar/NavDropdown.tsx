@@ -9,6 +9,7 @@ interface NavDropdownProps {
   leftAligned?: boolean
   horizontalPadding?: boolean
   centerHorizontally?: boolean
+  paddingBottom?: number
   children: ReactNode
 }
 
@@ -17,6 +18,7 @@ export const NavDropdown = ({
   centerHorizontally,
   leftAligned,
   horizontalPadding,
+  paddingBottom,
   children,
 }: NavDropdownProps) => {
   return (
@@ -27,6 +29,7 @@ export const NavDropdown = ({
         left: centerHorizontally ? '50%' : leftAligned ? '0px' : 'auto',
         right: centerHorizontally || leftAligned ? 'auto' : '0px',
         transform: centerHorizontally ? 'translateX(-50%)' : 'unset',
+        paddingBottom: paddingBottom ?? '24px',
         zIndex: 3,
       }}
       className={styles.NavDropdown}
