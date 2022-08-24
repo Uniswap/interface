@@ -34,7 +34,7 @@ import {
   useSetSortCategory,
   useToggleFavorite,
 } from '../state'
-import { formatDelta, getDeltaArrow, getPriceBounds, PricePoint } from '../TokenDetails/PriceChart'
+import { DATA_EMPTY, formatDelta, getDeltaArrow, getPriceBounds, PricePoint } from '../TokenDetails/PriceChart'
 import { Category, SortDirection } from '../types'
 import { DISPLAYS } from './TimeSelector'
 
@@ -477,7 +477,10 @@ export default function LoadedRow({
   const pricePoints: PricePoint[] = useTokenPriceQuery(tokenAddress, timePeriod, 'ETHEREUM').filter(
     (p): p is PricePoint => Boolean(p && p.value)
   )
-  const widthScale = scaleLinear().domain(getPriceBounds(pricePoints)).range([0, 100])
+  const hasData = pricePoints.length !== 0
+  const startingPrice = hasData ? pricePoints[0] : DATA_EMPTY
+  const endingPrice = hasData ? pricePoints[pricePoints.length - 1] : DATA_EMPTY
+  const widthScale = scaleLinear().domain([startingPrice.timestamp, endingPrice.timestamp]).range([0, 100])
   const rdScale = scaleLinear().domain(getPriceBounds(pricePoints)).range([60, 0])
 
   const exploreTokenSelectedEventProperties = {
