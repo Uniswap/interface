@@ -13,6 +13,7 @@ import { ReactNode } from 'react'
 import { ArrowDown, ArrowUp, Heart } from 'react-feather'
 import { Link } from 'react-router-dom'
 import styled, { useTheme } from 'styled-components/macro'
+import { opacify } from 'theme/utils'
 import { formatDollarAmount } from 'utils/formatDollarAmt'
 
 import {
@@ -57,7 +58,7 @@ const StyledTokenRow = styled.div<{ first?: boolean; last?: boolean }>`
   padding-right: 12px;
 
   &:hover {
-    background-color: ${({ theme }) => theme.accentActionSoft};
+    background-color: ${({ theme }) => opacify(3, theme.accentAction)};
     ${({ last }) => last && 'border-radius: 0px 0px 8px 8px;'}
   }
 
@@ -147,11 +148,6 @@ const DataCell = styled(Cell)<{ sortable: boolean }>`
   justify-content: flex-end;
   min-width: 80px;
   user-select: ${({ sortable }) => (sortable ? 'none' : 'unset')};
-
-  &:hover {
-    color: ${({ theme, sortable }) => sortable && theme.white};
-    background-color: ${({ theme, sortable }) => sortable && theme.accentActionSoft};
-  }
 `
 const MarketCapCell = styled(DataCell)`
   padding-right: 8px;
@@ -204,6 +200,10 @@ const HeaderCellWrapper = styled.span<{ onClick?: () => void }>`
   height: 100%;
   justify-content: flex-end;
   width: 100%;
+
+  &:hover {
+    opacity: 60%;
+  }
 `
 const SparkLineCell = styled(Cell)`
   padding: 0px 24px;
