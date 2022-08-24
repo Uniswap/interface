@@ -72,8 +72,8 @@ export function RestoreCloudBackupScreen({ navigation, route: { params } }: Prop
 
   return (
     <OnboardingScreen
-      subtitle={t("Please select which backup you'd like to recover")}
-      title={t('We found multiple recovery phrase backups')}>
+      subtitle={t('There are multiple recovery phrases backed up to your iCloud.')}
+      title={t('Select backup to restore')}>
       <ScrollView>
         <Flex gap="xs">
           {sortedBackups.map((backup, index) => {
