@@ -1,0 +1,752 @@
+{
+  "version": "3.2",
+  "log": [
+    {
+      "TeleswapV2ERC20": {
+        "src": "contracts/TeleswapV2ERC20.sol:6",
+        "version": {
+          "withMetadata": "48c98b5cd8e5e86511db85caa747ea5e5b372319e2b493d48a599b3e428bbbef",
+          "withoutMetadata": "48c98b5cd8e5e86511db85caa747ea5e5b372319e2b493d48a599b3e428bbbef",
+          "linkedWithoutMetadata": "48c98b5cd8e5e86511db85caa747ea5e5b372319e2b493d48a599b3e428bbbef"
+        },
+        "inherit": [
+          "ITeleswapV2ERC20"
+        ],
+        "libraries": [
+          "SafeMath"
+        ],
+        "methods": [
+          "()",
+          "approve(address,uint256)",
+          "transfer(address,uint256)",
+          "transferFrom(address,address,uint256)",
+          "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)"
+        ],
+        "linkReferences": [],
+        "errors": [
+          {
+            "kind": "constructor",
+            "contract": "TeleswapV2ERC20",
+            "src": "contracts/TeleswapV2ERC20.sol:24"
+          },
+          {
+            "kind": "state-variable-assignment",
+            "name": "name",
+            "src": "contracts/TeleswapV2ERC20.sol:9"
+          },
+          {
+            "kind": "state-variable-assignment",
+            "name": "symbol",
+            "src": "contracts/TeleswapV2ERC20.sol:10"
+          }
+        ],
+        "layout": {
+          "storage": [
+            {
+              "label": "name",
+              "offset": 0,
+              "slot": "0",
+              "type": "t_string_storage",
+              "contract": "TeleswapV2ERC20",
+              "src": "contracts/TeleswapV2ERC20.sol:9"
+            },
+            {
+              "label": "symbol",
+              "offset": 0,
+              "slot": "1",
+              "type": "t_string_storage",
+              "contract": "TeleswapV2ERC20",
+              "src": "contracts/TeleswapV2ERC20.sol:10"
+            },
+            {
+              "label": "totalSupply",
+              "offset": 0,
+              "slot": "2",
+              "type": "t_uint256",
+              "contract": "TeleswapV2ERC20",
+              "src": "contracts/TeleswapV2ERC20.sol:12"
+            },
+            {
+              "label": "balanceOf",
+              "offset": 0,
+              "slot": "3",
+              "type": "t_mapping(t_address,t_uint256)",
+              "contract": "TeleswapV2ERC20",
+              "src": "contracts/TeleswapV2ERC20.sol:13"
+            },
+            {
+              "label": "allowance",
+              "offset": 0,
+              "slot": "4",
+              "type": "t_mapping(t_address,t_mapping(t_address,t_uint256))",
+              "contract": "TeleswapV2ERC20",
+              "src": "contracts/TeleswapV2ERC20.sol:14"
+            },
+            {
+              "label": "DOMAIN_SEPARATOR",
+              "offset": 0,
+              "slot": "5",
+              "type": "t_bytes32",
+              "contract": "TeleswapV2ERC20",
+              "src": "contracts/TeleswapV2ERC20.sol:16"
+            },
+            {
+              "label": "nonces",
+              "offset": 0,
+              "slot": "6",
+              "type": "t_mapping(t_address,t_uint256)",
+              "contract": "TeleswapV2ERC20",
+              "src": "contracts/TeleswapV2ERC20.sol:19"
+            }
+          ],
+          "types": {
+            "t_address": {
+              "label": "address",
+              "numberOfBytes": "20"
+            },
+            "t_bytes32": {
+              "label": "bytes32",
+              "numberOfBytes": "32"
+            },
+            "t_mapping(t_address,t_mapping(t_address,t_uint256))": {
+              "label": "mapping(address => mapping(address => uint256))",
+              "numberOfBytes": "32"
+            },
+            "t_mapping(t_address,t_uint256)": {
+              "label": "mapping(address => uint256)",
+              "numberOfBytes": "32"
+            },
+            "t_string_storage": {
+              "label": "string",
+              "numberOfBytes": "32"
+            },
+            "t_uint256": {
+              "label": "uint256",
+              "numberOfBytes": "32"
+            }
+          },
+          "layoutVersion": "1.1",
+          "flat": true
+        }
+      },
+      "TeleswapV2Factory": {
+        "src": "contracts/TeleswapV2Factory.sol:6",
+        "version": {
+          "withMetadata": "76f80f34d26189926351d8b9ab0e5068a3004a2648887b257711e8f9637b89b2",
+          "withoutMetadata": "a2d98ddf89261546631f3d2d01cc33faa79b659700f9937bd4b2c8f0f6098edf",
+          "linkedWithoutMetadata": "a2d98ddf89261546631f3d2d01cc33faa79b659700f9937bd4b2c8f0f6098edf"
+        },
+        "inherit": [
+          "ITeleswapV2Factory"
+        ],
+        "libraries": [],
+        "methods": [
+          "initialize(address)",
+          "allPairsLength()",
+          "createPair(address,address,bool)",
+          "setFeeTo(address)",
+          "setFeeToSetter(address)",
+          "pairInitCodeHash()"
+        ],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [
+            {
+              "label": "feeTo",
+              "offset": 0,
+              "slot": "0",
+              "type": "t_address",
+              "contract": "TeleswapV2Factory",
+              "src": "contracts/TeleswapV2Factory.sol:7"
+            },
+            {
+              "label": "feeToSetter",
+              "offset": 0,
+              "slot": "1",
+              "type": "t_address",
+              "contract": "TeleswapV2Factory",
+              "src": "contracts/TeleswapV2Factory.sol:8"
+            },
+            {
+              "label": "getPair",
+              "offset": 0,
+              "slot": "2",
+              "type": "t_mapping(t_address,t_mapping(t_address,t_mapping(t_bool,t_address)))",
+              "contract": "TeleswapV2Factory",
+              "src": "contracts/TeleswapV2Factory.sol:10"
+            },
+            {
+              "label": "allPairs",
+              "offset": 0,
+              "slot": "3",
+              "type": "t_array(t_address)dyn_storage",
+              "contract": "TeleswapV2Factory",
+              "src": "contracts/TeleswapV2Factory.sol:11"
+            }
+          ],
+          "types": {
+            "t_address": {
+              "label": "address",
+              "numberOfBytes": "20"
+            },
+            "t_array(t_address)dyn_storage": {
+              "label": "address[]",
+              "numberOfBytes": "32"
+            },
+            "t_bool": {
+              "label": "bool",
+              "numberOfBytes": "1"
+            },
+            "t_mapping(t_address,t_mapping(t_address,t_mapping(t_bool,t_address)))": {
+              "label": "mapping(address => mapping(address => mapping(bool => address)))",
+              "numberOfBytes": "32"
+            },
+            "t_mapping(t_address,t_mapping(t_bool,t_address))": {
+              "label": "mapping(address => mapping(bool => address))",
+              "numberOfBytes": "32"
+            },
+            "t_mapping(t_bool,t_address)": {
+              "label": "mapping(bool => address)",
+              "numberOfBytes": "32"
+            }
+          },
+          "layoutVersion": "1.1",
+          "flat": true
+        }
+      },
+      "TeleswapV2Pair": {
+        "src": "contracts/TeleswapV2Pair.sol:11",
+        "version": {
+          "withMetadata": "fbc5907db2edae44de84d86828483225d9c63ecb5c846ece3e2b15c2a1ab0d21",
+          "withoutMetadata": "fbc5907db2edae44de84d86828483225d9c63ecb5c846ece3e2b15c2a1ab0d21",
+          "linkedWithoutMetadata": "fbc5907db2edae44de84d86828483225d9c63ecb5c846ece3e2b15c2a1ab0d21"
+        },
+        "inherit": [
+          "TeleswapV2ERC20",
+          "ITeleswapV2ERC20",
+          "ITeleswapV2Pair"
+        ],
+        "libraries": [
+          "SafeMath",
+          "UQ112x112",
+          "Math"
+        ],
+        "methods": [
+          "getReserves()",
+          "()",
+          "initialize(address,address,bool)",
+          "mint(address)",
+          "burn(address)",
+          "swap(uint256,uint256,address,bytes)",
+          "skim(address)",
+          "sync()"
+        ],
+        "linkReferences": [],
+        "errors": [
+          {
+            "kind": "constructor",
+            "contract": "TeleswapV2Pair",
+            "src": "contracts/TeleswapV2Pair.sol:64"
+          },
+          {
+            "kind": "state-variable-assignment",
+            "name": "unlocked",
+            "src": "contracts/TeleswapV2Pair.sol:33"
+          }
+        ],
+        "layout": {
+          "storage": [
+            {
+              "label": "name",
+              "offset": 0,
+              "slot": "0",
+              "type": "t_string_storage",
+              "contract": "TeleswapV2ERC20",
+              "src": "contracts/TeleswapV2ERC20.sol:9"
+            },
+            {
+              "label": "symbol",
+              "offset": 0,
+              "slot": "1",
+              "type": "t_string_storage",
+              "contract": "TeleswapV2ERC20",
+              "src": "contracts/TeleswapV2ERC20.sol:10"
+            },
+            {
+              "label": "totalSupply",
+              "offset": 0,
+              "slot": "2",
+              "type": "t_uint256",
+              "contract": "TeleswapV2ERC20",
+              "src": "contracts/TeleswapV2ERC20.sol:12"
+            },
+            {
+              "label": "balanceOf",
+              "offset": 0,
+              "slot": "3",
+              "type": "t_mapping(t_address,t_uint256)",
+              "contract": "TeleswapV2ERC20",
+              "src": "contracts/TeleswapV2ERC20.sol:13"
+            },
+            {
+              "label": "allowance",
+              "offset": 0,
+              "slot": "4",
+              "type": "t_mapping(t_address,t_mapping(t_address,t_uint256))",
+              "contract": "TeleswapV2ERC20",
+              "src": "contracts/TeleswapV2ERC20.sol:14"
+            },
+            {
+              "label": "DOMAIN_SEPARATOR",
+              "offset": 0,
+              "slot": "5",
+              "type": "t_bytes32",
+              "contract": "TeleswapV2ERC20",
+              "src": "contracts/TeleswapV2ERC20.sol:16"
+            },
+            {
+              "label": "nonces",
+              "offset": 0,
+              "slot": "6",
+              "type": "t_mapping(t_address,t_uint256)",
+              "contract": "TeleswapV2ERC20",
+              "src": "contracts/TeleswapV2ERC20.sol:19"
+            },
+            {
+              "label": "stable",
+              "offset": 0,
+              "slot": "7",
+              "type": "t_bool",
+              "contract": "TeleswapV2Pair",
+              "src": "contracts/TeleswapV2Pair.sol:16"
+            },
+            {
+              "label": "factory",
+              "offset": 1,
+              "slot": "7",
+              "type": "t_address",
+              "contract": "TeleswapV2Pair",
+              "src": "contracts/TeleswapV2Pair.sol:21"
+            },
+            {
+              "label": "token0",
+              "offset": 0,
+              "slot": "8",
+              "type": "t_address",
+              "contract": "TeleswapV2Pair",
+              "src": "contracts/TeleswapV2Pair.sol:22"
+            },
+            {
+              "label": "token1",
+              "offset": 0,
+              "slot": "9",
+              "type": "t_address",
+              "contract": "TeleswapV2Pair",
+              "src": "contracts/TeleswapV2Pair.sol:23"
+            },
+            {
+              "label": "reserve0",
+              "offset": 0,
+              "slot": "10",
+              "type": "t_uint112",
+              "contract": "TeleswapV2Pair",
+              "src": "contracts/TeleswapV2Pair.sol:25"
+            },
+            {
+              "label": "reserve1",
+              "offset": 14,
+              "slot": "10",
+              "type": "t_uint112",
+              "contract": "TeleswapV2Pair",
+              "src": "contracts/TeleswapV2Pair.sol:26"
+            },
+            {
+              "label": "blockTimestampLast",
+              "offset": 28,
+              "slot": "10",
+              "type": "t_uint32",
+              "contract": "TeleswapV2Pair",
+              "src": "contracts/TeleswapV2Pair.sol:27"
+            },
+            {
+              "label": "price0CumulativeLast",
+              "offset": 0,
+              "slot": "11",
+              "type": "t_uint256",
+              "contract": "TeleswapV2Pair",
+              "src": "contracts/TeleswapV2Pair.sol:29"
+            },
+            {
+              "label": "price1CumulativeLast",
+              "offset": 0,
+              "slot": "12",
+              "type": "t_uint256",
+              "contract": "TeleswapV2Pair",
+              "src": "contracts/TeleswapV2Pair.sol:30"
+            },
+            {
+              "label": "kLast",
+              "offset": 0,
+              "slot": "13",
+              "type": "t_uint256",
+              "contract": "TeleswapV2Pair",
+              "src": "contracts/TeleswapV2Pair.sol:31"
+            },
+            {
+              "label": "unlocked",
+              "offset": 0,
+              "slot": "14",
+              "type": "t_uint256",
+              "contract": "TeleswapV2Pair",
+              "src": "contracts/TeleswapV2Pair.sol:33"
+            }
+          ],
+          "types": {
+            "t_address": {
+              "label": "address",
+              "numberOfBytes": "20"
+            },
+            "t_bool": {
+              "label": "bool",
+              "numberOfBytes": "1"
+            },
+            "t_bytes32": {
+              "label": "bytes32",
+              "numberOfBytes": "32"
+            },
+            "t_mapping(t_address,t_mapping(t_address,t_uint256))": {
+              "label": "mapping(address => mapping(address => uint256))",
+              "numberOfBytes": "32"
+            },
+            "t_mapping(t_address,t_uint256)": {
+              "label": "mapping(address => uint256)",
+              "numberOfBytes": "32"
+            },
+            "t_string_storage": {
+              "label": "string",
+              "numberOfBytes": "32"
+            },
+            "t_uint112": {
+              "label": "uint112",
+              "numberOfBytes": "14"
+            },
+            "t_uint256": {
+              "label": "uint256",
+              "numberOfBytes": "32"
+            },
+            "t_uint32": {
+              "label": "uint32",
+              "numberOfBytes": "4"
+            }
+          },
+          "layoutVersion": "1.1",
+          "flat": true
+        }
+      },
+      "IERC20": {
+        "src": "contracts/interfaces/IERC20.sol:3",
+        "inherit": [],
+        "libraries": [],
+        "methods": [
+          "name()",
+          "symbol()",
+          "decimals()",
+          "totalSupply()",
+          "balanceOf(address)",
+          "allowance(address,address)",
+          "approve(address,uint256)",
+          "transfer(address,uint256)",
+          "transferFrom(address,address,uint256)"
+        ],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.1",
+          "flat": false
+        }
+      },
+      "ITeleswapV2Callee": {
+        "src": "contracts/interfaces/ITeleswapV2Callee.sol:3",
+        "inherit": [],
+        "libraries": [],
+        "methods": [
+          "uniswapV2Call(address,uint256,uint256,bytes)"
+        ],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.1",
+          "flat": false
+        }
+      },
+      "ITeleswapV2ERC20": {
+        "src": "contracts/interfaces/ITeleswapV2ERC20.sol:3",
+        "inherit": [],
+        "libraries": [],
+        "methods": [
+          "name()",
+          "symbol()",
+          "decimals()",
+          "totalSupply()",
+          "balanceOf(address)",
+          "allowance(address,address)",
+          "approve(address,uint256)",
+          "transfer(address,uint256)",
+          "transferFrom(address,address,uint256)",
+          "DOMAIN_SEPARATOR()",
+          "PERMIT_TYPEHASH()",
+          "nonces(address)",
+          "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)"
+        ],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.1",
+          "flat": false
+        }
+      },
+      "ITeleswapV2Factory": {
+        "src": "contracts/interfaces/ITeleswapV2Factory.sol:3",
+        "inherit": [],
+        "libraries": [],
+        "methods": [
+          "feeTo()",
+          "feeToSetter()",
+          "getPair(address,address,bool)",
+          "allPairs(uint256)",
+          "allPairsLength()",
+          "createPair(address,address,bool)",
+          "setFeeTo(address)",
+          "setFeeToSetter(address)",
+          "pairInitCodeHash()"
+        ],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.1",
+          "flat": false
+        }
+      },
+      "ITeleswapV2Pair": {
+        "src": "contracts/interfaces/ITeleswapV2Pair.sol:3",
+        "inherit": [],
+        "libraries": [],
+        "methods": [
+          "name()",
+          "symbol()",
+          "decimals()",
+          "totalSupply()",
+          "balanceOf(address)",
+          "allowance(address,address)",
+          "approve(address,uint256)",
+          "transfer(address,uint256)",
+          "transferFrom(address,address,uint256)",
+          "DOMAIN_SEPARATOR()",
+          "PERMIT_TYPEHASH()",
+          "nonces(address)",
+          "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)",
+          "MINIMUM_LIQUIDITY()",
+          "factory()",
+          "token0()",
+          "token1()",
+          "getReserves()",
+          "price0CumulativeLast()",
+          "price1CumulativeLast()",
+          "kLast()",
+          "mint(address)",
+          "burn(address)",
+          "swap(uint256,uint256,address,bytes)",
+          "skim(address)",
+          "sync()",
+          "initialize(address,address,bool)"
+        ],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.1",
+          "flat": false
+        }
+      },
+      "Math": {
+        "src": "contracts/libraries/Math.sol:5",
+        "version": {
+          "withMetadata": "f457d56f34ea9ffd0ffeacad724e4f048b7896fc621d4cee79484202bbc39879",
+          "withoutMetadata": "84fb217c68f538a0f01a573a7f9b991a4d3395eb699ba1c1542256b37f46c48b",
+          "linkedWithoutMetadata": "84fb217c68f538a0f01a573a7f9b991a4d3395eb699ba1c1542256b37f46c48b"
+        },
+        "inherit": [],
+        "libraries": [],
+        "methods": [],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.1",
+          "flat": false
+        }
+      },
+      "SafeMath": {
+        "src": "contracts/libraries/SafeMath.sol:5",
+        "version": {
+          "withMetadata": "bef7da5b733ade28320439fdaa92de2612fd61b3eb396f3f9d03ca1428d5f45b",
+          "withoutMetadata": "84fb217c68f538a0f01a573a7f9b991a4d3395eb699ba1c1542256b37f46c48b",
+          "linkedWithoutMetadata": "84fb217c68f538a0f01a573a7f9b991a4d3395eb699ba1c1542256b37f46c48b"
+        },
+        "inherit": [],
+        "libraries": [],
+        "methods": [],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.1",
+          "flat": false
+        }
+      },
+      "UQ112x112": {
+        "src": "contracts/libraries/UQ112x112.sol:8",
+        "version": {
+          "withMetadata": "218d190ec299aa0db8f3bdb0ccf31bd3bc7ad6367eb25a6e6ab510458dcc58ae",
+          "withoutMetadata": "84fb217c68f538a0f01a573a7f9b991a4d3395eb699ba1c1542256b37f46c48b",
+          "linkedWithoutMetadata": "84fb217c68f538a0f01a573a7f9b991a4d3395eb699ba1c1542256b37f46c48b"
+        },
+        "inherit": [],
+        "libraries": [],
+        "methods": [],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.1",
+          "flat": false
+        }
+      },
+      "ERC20": {
+        "src": "contracts/test/ERC20.sol:5",
+        "version": {
+          "withMetadata": "84ac83792602a79e029e17b0532dfbe74e125378e33306b006e2bb0387b1418c",
+          "withoutMetadata": "84ac83792602a79e029e17b0532dfbe74e125378e33306b006e2bb0387b1418c",
+          "linkedWithoutMetadata": "84ac83792602a79e029e17b0532dfbe74e125378e33306b006e2bb0387b1418c"
+        },
+        "inherit": [
+          "TeleswapV2ERC20",
+          "ITeleswapV2ERC20"
+        ],
+        "libraries": [],
+        "methods": [
+          "(uint256)"
+        ],
+        "linkReferences": [],
+        "errors": [
+          {
+            "kind": "constructor",
+            "contract": "ERC20",
+            "src": "contracts/test/ERC20.sol:6"
+          }
+        ],
+        "layout": {
+          "storage": [
+            {
+              "label": "name",
+              "offset": 0,
+              "slot": "0",
+              "type": "t_string_storage",
+              "contract": "TeleswapV2ERC20",
+              "src": "contracts/TeleswapV2ERC20.sol:9"
+            },
+            {
+              "label": "symbol",
+              "offset": 0,
+              "slot": "1",
+              "type": "t_string_storage",
+              "contract": "TeleswapV2ERC20",
+              "src": "contracts/TeleswapV2ERC20.sol:10"
+            },
+            {
+              "label": "totalSupply",
+              "offset": 0,
+              "slot": "2",
+              "type": "t_uint256",
+              "contract": "TeleswapV2ERC20",
+              "src": "contracts/TeleswapV2ERC20.sol:12"
+            },
+            {
+              "label": "balanceOf",
+              "offset": 0,
+              "slot": "3",
+              "type": "t_mapping(t_address,t_uint256)",
+              "contract": "TeleswapV2ERC20",
+              "src": "contracts/TeleswapV2ERC20.sol:13"
+            },
+            {
+              "label": "allowance",
+              "offset": 0,
+              "slot": "4",
+              "type": "t_mapping(t_address,t_mapping(t_address,t_uint256))",
+              "contract": "TeleswapV2ERC20",
+              "src": "contracts/TeleswapV2ERC20.sol:14"
+            },
+            {
+              "label": "DOMAIN_SEPARATOR",
+              "offset": 0,
+              "slot": "5",
+              "type": "t_bytes32",
+              "contract": "TeleswapV2ERC20",
+              "src": "contracts/TeleswapV2ERC20.sol:16"
+            },
+            {
+              "label": "nonces",
+              "offset": 0,
+              "slot": "6",
+              "type": "t_mapping(t_address,t_uint256)",
+              "contract": "TeleswapV2ERC20",
+              "src": "contracts/TeleswapV2ERC20.sol:19"
+            }
+          ],
+          "types": {
+            "t_address": {
+              "label": "address",
+              "numberOfBytes": "20"
+            },
+            "t_bytes32": {
+              "label": "bytes32",
+              "numberOfBytes": "32"
+            },
+            "t_mapping(t_address,t_mapping(t_address,t_uint256))": {
+              "label": "mapping(address => mapping(address => uint256))",
+              "numberOfBytes": "32"
+            },
+            "t_mapping(t_address,t_uint256)": {
+              "label": "mapping(address => uint256)",
+              "numberOfBytes": "32"
+            },
+            "t_string_storage": {
+              "label": "string",
+              "numberOfBytes": "32"
+            },
+            "t_uint256": {
+              "label": "uint256",
+              "numberOfBytes": "32"
+            }
+          },
+          "layoutVersion": "1.1",
+          "flat": true
+        }
+      }
+    }
+  ]
+}

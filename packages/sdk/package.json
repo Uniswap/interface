@@ -20,8 +20,7 @@
     "build": "tsdx build",
     "start": "tsdx watch",
     "test": "tsdx test",
-    "prepublishOnly": "tsdx build",
-    "postinstall": "npm run build"
+    "prepublishOnly": "tsdx build"
   },
   "dependencies": {
     "@ethersproject/address": "^5.0.0",
@@ -33,7 +32,7 @@
   "devDependencies": {
     "@types/big.js": "^4.0.5",
     "@types/jest": "^24.0.25",
-    "@uniswap/v2-core": "^1.0.1",
+    "@teleswap/core": "1.0.1",
     "tsdx": "^0.14.1"
   },
   "engines": {
