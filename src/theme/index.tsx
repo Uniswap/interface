@@ -36,6 +36,10 @@ const BREAKPOINTS = {
   xxxl: 1920,
 }
 
+const transitions = {
+  default: 'transition: ease-in all 125ms',
+}
+
 // Migrating to a standard z-index system https://getbootstrap.com/docs/5.0/layout/z-index/
 // Please avoid using deprecated numbers
 export enum Z_INDEX {
@@ -269,6 +273,8 @@ function getTheme(darkMode: boolean, isNewColorsEnabled: boolean): DefaultTheme 
 
     //breakpoints
     breakpoint: BREAKPOINTS,
+
+    transition: transitions,
 
     // css snippets
     flexColumnNoWrap: css`
