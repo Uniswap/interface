@@ -216,18 +216,23 @@ const ToolTipWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  position: absolute;
+  position: fixed;
   transform: translate(5px, 32px);
   z-index: 9999;
+`
+
+const StyledTooltipTriangle = styled(TooltipTriangle)`
+  path {
+    fill: ${({ theme }) => theme.black};
+  }
 `
 
 const CopiedTooltip = styled.div`
   background-color: ${({ theme }) => theme.black};
   text-align: center;
   justify-content: center;
-  width: 60px;
-  height: 32px;
   line-height: 32px;
+  padding: 0px 12px;
   border-radius: 8px;
 
   color: ${({ theme }) => theme.white};
@@ -237,7 +242,7 @@ const CopiedTooltip = styled.div`
 function ToolTip() {
   return (
     <ToolTipWrapper>
-      <TooltipTriangle />
+      <StyledTooltipTriangle />
       <CopiedTooltip>Copied!</CopiedTooltip>
     </ToolTipWrapper>
   )
