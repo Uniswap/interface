@@ -216,7 +216,8 @@ const ToolTipWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  position: fixed;
+  position: relative;
+  right: 50%;
   transform: translate(5px, 32px);
   z-index: 9999;
 `
@@ -231,8 +232,7 @@ const CopiedTooltip = styled.div`
   background-color: ${({ theme }) => theme.black};
   text-align: center;
   justify-content: center;
-  line-height: 32px;
-  padding: 0px 12px;
+  padding: 8px;
   border-radius: 8px;
 
   color: ${({ theme }) => theme.white};

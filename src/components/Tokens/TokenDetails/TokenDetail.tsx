@@ -57,11 +57,12 @@ const ContractAddress = styled.button`
   align-items: center;
   background: transparent;
   border: none;
+  min-height: 38px;
   padding: 0px;
   cursor: pointer;
 `
 export const ContractAddressSection = styled.div`
-  padding: 24px 0px;
+  padding: 36px 0px;
 `
 const Contract = styled.div`
   display: flex;
