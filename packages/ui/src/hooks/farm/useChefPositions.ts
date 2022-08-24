@@ -46,7 +46,8 @@ export function useChefPositions(contract?: Contract | null, rewarder?: Contract
       }
       return zip(pendingSushi, userInfo)
         .map((data, i) => ({
-          id: args[i][0],
+          // @todo: possible undefined
+          id: (args as string[][])[i][0],
           pendingSushi: data[0]?.result?.[0] || Zero,
           amount: data[1]?.result?.[0] || Zero,
           chef: getChef(),
