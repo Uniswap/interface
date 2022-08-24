@@ -63,9 +63,9 @@ const StyledCloseButton = styled(StyledButton)`
   }
 `
 
-const StyledCancelButton = styled(ButtonText)<{ color?: Color }>`
+const StyledCancelButton = styled(ButtonText)`
   margin-top: 16px;
-  color: ${({ color, theme }) => color ?? theme.textSecondary};
+  color: ${({ theme }) => theme.textSecondary};
   font-weight: 600;
   font-size: 14px;
 `
