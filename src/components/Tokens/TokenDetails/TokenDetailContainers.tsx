@@ -76,5 +76,6 @@ export const TopArea = styled.div`
 `
 export const ResourcesContainer = styled.div`
   display: flex;
+  padding-top: 12px;
   gap: 14px;
 `

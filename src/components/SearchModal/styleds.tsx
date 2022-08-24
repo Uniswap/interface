@@ -1,3 +1,4 @@
+import searchIcon from 'assets/svg/search.svg'
 import { LoadingRows as BaseLoadingRows } from 'components/Loader/styled'
 import styled from 'styled-components/macro'
 
@@ -37,14 +38,18 @@ export const MenuItem = styled(RowBetween)<{ redesignFlag?: boolean }>`
 `
 
 export const SearchInput = styled.input<{ redesignFlag?: boolean }>`
+  background: no-repeat scroll 7px 7px;
+  background-image: url(${searchIcon});
+  background-size: 20px 20px;
+  background-position: 12px center;
   position: relative;
   display: flex;
   padding: 16px;
+  padding-left: 40px;
   height: ${({ redesignFlag }) => redesignFlag && '40px'};
   align-items: center;
   width: 100%;
   white-space: nowrap;
-  background: none;
   background-color: ${({ theme, redesignFlag }) => redesignFlag && theme.backgroundModule};
   border: none;
   outline: none;
@@ -62,8 +67,9 @@ export const SearchInput = styled.input<{ redesignFlag?: boolean }>`
   }
   transition: border 100ms;
   :focus {
-    border: 1px solid ${({ theme, redesignFlag }) => (redesignFlag ? 'transparent' : theme.deprecated_primary1)};
-    background-color: ${({ theme, redesignFlag }) => redesignFlag && theme.accentActionSoft};
+    border: 1px solid
+      ${({ theme, redesignFlag }) => (redesignFlag ? theme.accentActiveSoft : theme.deprecated_primary1)};
+    background-color: ${({ theme, redesignFlag }) => redesignFlag && theme.backgroundSurface};
     outline: none;
   }
 `
