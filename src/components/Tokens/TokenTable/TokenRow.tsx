@@ -13,7 +13,6 @@ import { ReactNode } from 'react'
 import { ArrowDown, ArrowUp, Heart } from 'react-feather'
 import { Link } from 'react-router-dom'
 import styled, { useTheme } from 'styled-components/macro'
-import { opacify } from 'theme/utils'
 import { formatDollarAmount } from 'utils/formatDollarAmt'
 
 import {
@@ -58,7 +57,7 @@ const StyledTokenRow = styled.div<{ first?: boolean; last?: boolean }>`
   padding-right: 12px;
 
   &:hover {
-    background-color: ${({ theme }) => opacify(2, theme.accentAction)};
+    background-color: ${({ theme }) => theme.hoverDefault};
     ${({ last }) => last && 'border-radius: 0px 0px 8px 8px;'}
   }
 
