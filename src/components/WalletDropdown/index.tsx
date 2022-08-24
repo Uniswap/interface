@@ -33,10 +33,9 @@ const WalletDropdownWrapper = styled.div`
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.xl}px`}) {
     top: unset;
-    right: unset;
-    left: 50%;
+    right: 50%;
     bottom: 45px;
-    transform: translateX(-50%);
+    transform: translateX(50%);
   }
 `
 
