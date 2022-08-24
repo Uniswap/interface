@@ -6,9 +6,9 @@ import useSelectChain from 'hooks/useSelectChain'
 import useSyncChainQuery from 'hooks/useSyncChainQuery'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
-import { NewChevronDownIcon, NewChevronUpIcon } from 'nft/components/icons'
-import { CheckMarkIcon } from 'nft/components/icons'
+import { CheckMarkIcon, NewChevronDownIcon, NewChevronUpIcon, TokenWarningRedIcon } from 'nft/components/icons'
 import { subhead } from 'nft/css/common.css'
+import { themeVars, vars } from 'nft/css/sprinkles.css'
 import { ReactNode, useReducer, useRef } from 'react'
 import { isChainAllowed } from 'utils/switchChain'
 
@@ -27,18 +27,20 @@ const ChainRow = ({
   const { label, logoUrl } = getChainInfo(targetChain)
 
   return (
-    <Row
-      as="button"
-      background={active ? 'lightGrayOverlay' : 'none'}
-      className={`${styles.ChainSwitcherRow} ${subhead}`}
-      onClick={() => onSelectChain(targetChain)}
-    >
-      <ChainDetails>
-        <img src={logoUrl} alt={label} className={styles.Icon} />
-        {label}
-      </ChainDetails>
-      {active && <CheckMarkIcon width={20} height={20} />}
-    </Row>
+    <Column borderRadius="12">
+      <Row
+        as="button"
+        background="none"
+        className={`${styles.ChainSwitcherRow} ${subhead}`}
+        onClick={() => onSelectChain(targetChain)}
+      >
+        <ChainDetails>
+          <img src={logoUrl} alt={label} className={styles.Icon} />
+          {label}
+        </ChainDetails>
+        {active && <CheckMarkIcon width={20} height={20} color={vars.color.blue400} />}
+      </Row>
+    </Column>
   )
 }
 
@@ -72,13 +74,32 @@ export const ChainSwitcher = ({ isMobile }: ChainSwitcherProps) => {
     return null
   }
 
+  const isSupported = isChainAllowed(chainId)
+
   return (
     <Box position="relative" ref={ref}>
-      <Row as="button" gap="8" className={styles.ChainSwitcher} onClick={toggleOpen}>
-        <img src={info.logoUrl} alt={info.label} className={styles.Image} />
-        <Box as="span" className={subhead} style={{ lineHeight: '20px' }}>
-          {info.label}
-        </Box>
+      <Row
+        as="button"
+        gap="8"
+        className={styles.ChainSwitcher}
+        background={isOpen ? 'accentActiveSoft' : 'none'}
+        onClick={toggleOpen}
+      >
+        {!isSupported ? (
+          <>
+            <TokenWarningRedIcon fill={themeVars.colors.darkGray} width={24} height={24} />
+            <Box as="span" className={subhead} style={{ lineHeight: '20px' }}>
+              {info?.label ?? 'Unsupported'}
+            </Box>
+          </>
+        ) : (
+          <>
+            <img src={info.logoUrl} alt={info.label} className={styles.Image} />
+            <Box as="span" className={subhead} style={{ lineHeight: '20px' }}>
+              {info.label}
+            </Box>
+          </>
+        )}
         {isOpen ? (
           <NewChevronUpIcon width={16} height={16} color="blackBlue" />
         ) : (
@@ -86,10 +107,10 @@ export const ChainSwitcher = ({ isMobile }: ChainSwitcherProps) => {
         )}
       </Row>
       {isOpen && (
-        <NavDropdown top={60} leftAligned={isMobile}>
-          <Column gap="4">
+        <NavDropdown top={60} leftAligned={isMobile} paddingBottom={8} paddingTop={8}>
+          <Column marginX="8">
             {NETWORK_SELECTOR_CHAINS.map((chainId: SupportedChainId) =>
-              isChainAllowed(chainId) ? (
+              isSupported ? (
                 <ChainRow
                   onSelectChain={async (targetChainId: SupportedChainId) => {
                     await selectChain(targetChainId)

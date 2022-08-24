@@ -16,7 +16,7 @@ import {
   TokenInfoContainer,
   TokenNameCell,
   TopArea,
-} from './TokenDetail'
+} from './TokenDetailContainers'
 
 const LoadingChartContainer = styled(ChartContainer)`
   height: 336px;
@@ -34,15 +34,17 @@ const TitleLoadingBubble = styled(LoadingDetailBubble)`
 const SquareLoadingBubble = styled(LoadingDetailBubble)`
   height: 32px;
   border-radius: 8px;
-  margin-top: 4px;
+  margin-bottom: 10px;
 `
 const PriceLoadingBubble = styled(SquareLoadingBubble)`
   height: 40px;
 `
 const LongLoadingBubble = styled(LoadingDetailBubble)`
+  margin-top: 6px;
   width: 100%;
 `
 const HalfLoadingBubble = styled(LoadingDetailBubble)`
+  margin-top: 6px;
   width: 50%;
 `
 const IconLoadingBubble = styled(LoadingDetailBubble)`

@@ -1,8 +1,10 @@
 import { style } from '@vanilla-extract/css'
+import { lightGrayOverlayOnHover } from 'nft/css/common.css'
 
-import { sprinkles, vars } from '../../nft/css/sprinkles.css'
+import { sprinkles } from '../../nft/css/sprinkles.css'
 
 export const ChainSwitcher = style([
+  lightGrayOverlayOnHover,
   sprinkles({
     borderRadius: '8',
     paddingY: '8',
@@ -11,34 +13,30 @@ export const ChainSwitcher = style([
     border: 'none',
     color: 'blackBlue',
     background: 'none',
-    transition: '250',
   }),
-  {
-    ':hover': {
-      background: vars.color.lightGrayOverlay,
-    },
-  },
 ])
 
 export const ChainSwitcherRow = style([
+  lightGrayOverlayOnHover,
   sprinkles({
     border: 'none',
     justifyContent: 'space-between',
-    paddingX: '16',
-    paddingY: '12',
+    paddingX: '8',
+    paddingY: '8',
     cursor: 'pointer',
     color: 'blackBlue',
+    borderRadius: '12',
   }),
   {
     lineHeight: '24px',
-    width: '308px',
+    width: '204px',
   },
 ])
 
 export const Image = style([
   sprinkles({
-    width: '28',
-    height: '28',
+    width: '20',
+    height: '20',
   }),
 ])
 
@@ -46,11 +44,5 @@ export const Icon = style([
   Image,
   sprinkles({
     marginRight: '12',
-  }),
-])
-
-export const Indicator = style([
-  sprinkles({
-    marginLeft: '8',
   }),
 ])

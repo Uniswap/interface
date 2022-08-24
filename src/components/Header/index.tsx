@@ -46,16 +46,16 @@ const HeaderFrame = styled.div<{ showBackground: boolean }>`
   transition: background-position 0.1s, box-shadow 0.1s;
   background-blend-mode: hard-light;
 
-  ${({ theme }) => theme.mediaWidth.upToLarge`
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToLarge`
     grid-template-columns: 48px 1fr 1fr;
   `};
 
-  ${({ theme }) => theme.mediaWidth.upToMedium`
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToMedium`
     padding:  1rem;
     grid-template-columns: 1fr 1fr;
   `};
 
-  ${({ theme }) => theme.mediaWidth.upToSmall`
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
     padding:  1rem;
     grid-template-columns: 36px 1fr;
   `};
@@ -81,7 +81,7 @@ const HeaderElement = styled.div`
     margin-left: 8px;
   }
 
-  ${({ theme }) => theme.mediaWidth.upToMedium`
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToMedium`
     align-items: center;
   `};
 `
@@ -97,13 +97,13 @@ const HeaderLinks = styled(Row)`
   grid-gap: 10px;
   overflow: auto;
   align-items: center;
-  ${({ theme }) => theme.mediaWidth.upToLarge`
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToLarge`
     justify-self: start;
     `};
-  ${({ theme }) => theme.mediaWidth.upToMedium`
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToMedium`
     justify-self: center;
   `};
-  ${({ theme }) => theme.mediaWidth.upToMedium`
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToMedium`
     flex-direction: row;
     justify-content: space-between;
     justify-self: center;
@@ -157,7 +157,7 @@ const UNIWrapper = styled.span`
 `
 
 const BalanceText = styled(Text)`
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToExtraSmall`
     display: none;
   `};
 `
@@ -168,7 +168,7 @@ const Title = styled.a`
   pointer-events: auto;
   justify-self: flex-start;
   margin-right: 12px;
-  ${({ theme }) => theme.mediaWidth.upToSmall`
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
     justify-self: center;
   `};
   :hover {

@@ -99,7 +99,7 @@ const MenuFlyout = styled.span<{ redesignFlag: boolean }>`
   z-index: 100;
   color: ${({ theme, redesignFlag }) => redesignFlag && theme.textPrimary};
 
-  ${({ theme }) => theme.mediaWidth.upToMedium`
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToMedium`
     min-width: 18.125rem;
   `};
 

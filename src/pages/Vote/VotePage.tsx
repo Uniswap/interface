@@ -57,7 +57,7 @@ import { ProposalStatus } from './styled'
 
 const PageWrapper = styled(AutoColumn)`
   width: 100%;
-  ${({ theme }) => theme.mediaWidth.upToSmall`
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
     padding: 0px 8px;
   `};
 `
@@ -123,7 +123,7 @@ const MarkDownWrapper = styled.div`
 `
 
 const WrapSmall = styled(RowBetween)`
-  ${({ theme }) => theme.mediaWidth.upToSmall`
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
     align-items: flex-start;
     flex-direction: column;
   `};

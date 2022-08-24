@@ -71,7 +71,7 @@ const HeaderRow = styled.div<{ redesignFlag?: boolean }>`
   font-weight: ${({ redesignFlag }) => (redesignFlag ? '600' : '500')};
   size: ${({ redesignFlag }) => redesignFlag && '16px'};
   color: ${(props) => (props.color === 'blue' ? ({ theme }) => theme.deprecated_primary1 : 'inherit')};
-  ${({ theme }) => theme.mediaWidth.upToMedium`
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToMedium`
     padding: 1rem;
   `};
 `
@@ -82,7 +82,7 @@ const ContentWrapper = styled.div<{ redesignFlag?: boolean }>`
   padding: 0 1rem 1rem 1rem;
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
-  ${({ theme }) => theme.mediaWidth.upToMedium`padding: 0 1rem 1rem 1rem`};
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToMedium`padding: 0 1rem 1rem 1rem`};
 `
 
 const UpperSection = styled.div`
@@ -105,7 +105,7 @@ const UpperSection = styled.div`
 const OptionGrid = styled.div`
   display: grid;
   grid-gap: 10px;
-  ${({ theme }) => theme.mediaWidth.upToMedium`
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToMedium`
     grid-template-columns: 1fr;
     grid-gap: 10px;
   `};

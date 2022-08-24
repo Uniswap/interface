@@ -7,7 +7,7 @@ import FavoriteButton from 'components/Tokens/TokenTable/FavoriteButton'
 import NetworkFilter from 'components/Tokens/TokenTable/NetworkFilter'
 import SearchBar from 'components/Tokens/TokenTable/SearchBar'
 import TimeSelector from 'components/Tokens/TokenTable/TimeSelector'
-import TokenTable from 'components/Tokens/TokenTable/TokenTable'
+import TokenTable, { LoadingTokenTable } from 'components/Tokens/TokenTable/TokenTable'
 import { TokensNetworkFilterVariant, useTokensNetworkFilterFlag } from 'featureFlags/flags/tokensNetworkFilter'
 import { useTopTokenQuery } from 'graphql/data/TopTokenQuery'
 import { useResetAtom } from 'jotai/utils'
@@ -65,8 +65,6 @@ const Tokens = () => {
   const tokensNetworkFilterFlag = useTokensNetworkFilterFlag()
   const resetFilterString = useResetAtom(filterStringAtom)
   const location = useLocation()
-  const error = null
-  const loading = false
   useEffect(() => {
     resetFilterString()
   }, [location, resetFilterString])
@@ -91,10 +89,29 @@ const Tokens = () => {
         </FiltersWrapper>
 
         <TokenTableContainer>
-          <TokenTable data={topTokens} error={error} loading={loading} />
+          <TokenTable data={topTokens} />
         </TokenTableContainer>
       </ExploreContainer>
     </Trace>
+  )
+}
+
+export const LoadingTokens = () => {
+  return (
+    <ExploreContainer>
+      <TitleContainer>
+        <ThemedText.LargeHeader>
+          <Trans>Explore Tokens</Trans>
+        </ThemedText.LargeHeader>
+      </TitleContainer>
+      <FiltersWrapper>
+        <FiltersContainer />
+        <SearchContainer />
+      </FiltersWrapper>
+      <TokenTableContainer>
+        <LoadingTokenTable />
+      </TokenTableContainer>
+    </ExploreContainer>
   )
 }
 
