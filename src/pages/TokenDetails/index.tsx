@@ -18,7 +18,7 @@ import { checkWarning } from 'constants/tokenSafety'
 import { useToken } from 'hooks/Tokens'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import { useNetworkTokenBalances } from 'hooks/useNetworkTokenBalances'
-import { useCallback, useEffect, useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 import { useIsDarkMode } from 'state/user/hooks'
 import styled from 'styled-components/macro'
@@ -79,12 +79,6 @@ export default function TokenDetails() {
   }, [])
   const onTxFail = useCallback(() => {
     console.log('onTxFail')
-  }, [])
-
-  useEffect(() => {
-    return function cleanup() {
-      console.log('Unmounted higher')
-    }
   }, [])
 
   const tokenWarning = tokenAddress ? checkWarning(tokenAddress) : null
