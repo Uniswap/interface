@@ -27,7 +27,7 @@ const ChainRow = ({
   const { label, logoUrl } = getChainInfo(targetChain)
 
   return (
-    <Column background={active ? 'lightGrayOverlay' : 'none'} borderRadius="12">
+    <Column borderRadius="12">
       <Row
         as="button"
         background="none"
@@ -101,7 +101,7 @@ export const ChainSwitcher = ({ isMobile }: ChainSwitcherProps) => {
         )}
       </Row>
       {isOpen && (
-        <NavDropdown top={60} leftAligned={isMobile} paddingBottom={16}>
+        <NavDropdown top={60} leftAligned={isMobile} paddingBottom={8} paddingTop={8}>
           <Column marginX="8">
             {NETWORK_SELECTOR_CHAINS.map((chainId: SupportedChainId) =>
               isChainAllowed(chainId) ? (
