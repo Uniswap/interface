@@ -143,6 +143,5 @@ export function useTopTokenQuery(page: number) {
         }
       : ({} as TokenData)
   )
-  console.log(topTokens)
   return topTokens
 }
