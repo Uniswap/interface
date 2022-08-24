@@ -37,7 +37,9 @@ const BREAKPOINTS = {
 }
 
 const transitions = {
-  default: 'transition: ease-in all 125ms',
+  slow: 'transition: ease-in all 250ms',
+  medium: 'transition: ease-in all 125ms',
+  fast: 'transition: ease-in all 50ms',
 }
 
 // Migrating to a standard z-index system https://getbootstrap.com/docs/5.0/layout/z-index/
