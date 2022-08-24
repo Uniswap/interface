@@ -18,7 +18,10 @@ export function useBiometricPrompt(successCallback?: (params?: any) => void) {
 
     setAuthenticationStatus(authStatus)
 
-    if (biometricAuthenticationSuccessful(authStatus)) {
+    if (
+      biometricAuthenticationSuccessful(authStatus) ||
+      biometricAuthenticationDisabledByOS(authStatus)
+    ) {
       successCallback?.(params)
     }
   }
@@ -28,6 +31,13 @@ export function useBiometricPrompt(successCallback?: (params?: any) => void) {
 
 export function biometricAuthenticationSuccessful(status: BiometricAuthenticationStatus) {
   return status === BiometricAuthenticationStatus.Authenticated
+}
+
+export function biometricAuthenticationDisabledByOS(status: BiometricAuthenticationStatus) {
+  return (
+    status === BiometricAuthenticationStatus.Unsupported ||
+    status === BiometricAuthenticationStatus.MissingEnrollment
+  )
 }
 
 /**
@@ -48,6 +58,24 @@ export function useDeviceSupportsFaceId() {
   }, [])
 
   return deviceSupportsFaceId
+}
+
+export function useOSFaceIdEnabled() {
+  // check if OS settings for Face ID are enabled
+  const [osFaceIdEnabled, setOsFaceIdEnabled] = useState<boolean | null>(null)
+  useEffect(() => {
+    const checkOsFaceIdEnabled = async () => {
+      const res = await tryLocalAuthenticate()
+      const isDisabled = [
+        BiometricAuthenticationStatus.Unsupported,
+        BiometricAuthenticationStatus.MissingEnrollment,
+      ].includes(res)
+      setOsFaceIdEnabled(!isDisabled)
+    }
+    checkOsFaceIdEnabled()
+  }, [])
+
+  return osFaceIdEnabled
 }
 
 export function useBiometricAppSettings(): BiometricSettingsState {

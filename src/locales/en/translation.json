@@ -357,6 +357,7 @@
   "If you delete your iCloud backup, you’ll only be able to recover your wallet with a manual backup of your recovery phrase. Uniswap Labs can’t recover your assets if you lose your recovery phrase.": "If you delete your iCloud backup, you’ll only be able to recover your wallet with a manual backup of your recovery phrase. Uniswap Labs can’t recover your assets if you lose your recovery phrase.",
   "Delete": "Delete",
   "Because these wallets share a recovery phrase, it will also delete the backups for:": "Because these wallets share a recovery phrase, it will also delete the backups for:",
+  "Face ID is currently turned off for Uniswap Wallet—you can turn it on it in your system settings.": "Face ID is currently turned off for Uniswap Wallet—you can turn it on it in your system settings.",
   "App access": "App access",
   "Require Face ID to open app": "Require Face ID to open app",
   "Require Face ID to transact": "Require Face ID to transact",
