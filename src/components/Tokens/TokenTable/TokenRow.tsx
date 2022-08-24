@@ -5,7 +5,6 @@ import { EventName } from 'components/AmplitudeAnalytics/constants'
 import SparklineChart from 'components/Charts/SparklineChart'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { getChainInfo } from 'constants/chainInfo'
-import { useTokenPriceQuery } from 'graphql/data/TokenPriceQuery'
 import { useCurrency, useToken } from 'hooks/Tokens'
 import { TimePeriod, TokenData } from 'hooks/useExplorePageQuery'
 import { useAtom } from 'jotai'
@@ -33,7 +32,7 @@ import {
   useSetSortCategory,
   useToggleFavorite,
 } from '../state'
-import { DATA_EMPTY, getDelta, PricePoint } from '../TokenDetails/PriceChart'
+import { formatDelta, getDeltaArrow } from '../TokenDetails/PriceChart'
 import { Category, SortDirection } from '../types'
 import { DISPLAYS } from './TimeSelector'
 
@@ -455,17 +454,9 @@ export default function LoadedRow({
   const filterString = useAtomValue(filterStringAtom)
   const filterNetwork = useAtomValue(filterNetworkAtom)
   const L2Icon = getChainInfo(filterNetwork).circleLogoUrl
-
-  // TODO: make delta shareable and fix based on future changes
-  const pricePoints: PricePoint[] = useTokenPriceQuery(tokenAddress, timePeriod, 'ETHEREUM').filter(
-    (p): p is PricePoint => Boolean(p && p.value)
-  )
-  const hasData = pricePoints.length !== 0
-
-  /* TODO: Implement API calls & cache to use here */
-  const startingPrice = hasData ? pricePoints[0] : DATA_EMPTY
-  const endingPrice = hasData ? pricePoints[pricePoints.length - 1] : DATA_EMPTY
-  const [delta, arrow] = getDelta(startingPrice.value, endingPrice.value)
+  const delta = tokenData.percentChange[timePeriod]?.value
+  const arrow = delta ? getDeltaArrow(delta) : null
+  const formattedDelta = delta ? formatDelta(delta) : null
 
   const exploreTokenSelectedEventProperties = {
     chain_id: filterNetwork,
@@ -523,7 +514,7 @@ export default function LoadedRow({
         }
         percentChange={
           <ClickableContent>
-            {delta}
+            {formattedDelta}
             {arrow}
           </ClickableContent>
         }

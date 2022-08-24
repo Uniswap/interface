@@ -47,17 +47,26 @@ const StyledDownArrow = styled(ArrowDownRight)`
   color: ${({ theme }) => theme.accentFailure};
 `
 
-export function getDelta(start: number, current: number) {
-  const delta = (current / start - 1) * 100
-  const isPositive = Math.sign(delta) > 0
+export function calculateDelta(start: number, current: number) {
+  return (current / start - 1) * 100
+}
 
-  const formattedDelta = delta.toFixed(2) + '%'
-  if (isPositive) {
-    return ['+' + formattedDelta, <StyledUpArrow size={16} key="arrow-up" />]
+export function getDeltaArrow(delta: number) {
+  if (Math.sign(delta) > 0) {
+    return <StyledUpArrow size={16} key="arrow-up" />
   } else if (delta === 0) {
-    return [formattedDelta, null]
+    return null
+  } else {
+    return <StyledDownArrow size={16} key="arrow-down" />
   }
-  return [formattedDelta, <StyledDownArrow size={16} key="arrow-down" />]
+}
+
+export function formatDelta(delta: number) {
+  let formattedDelta = delta.toFixed(2) + '%'
+  if (Math.sign(delta) > 0) {
+    formattedDelta = '+' + formattedDelta
+  }
+  return formattedDelta
 }
 
 export const ChartHeader = styled.div`
@@ -165,8 +174,9 @@ export function PriceChart({ width, height, token }: PriceChartProps) {
   const [crosshair, setCrosshair] = useState<number | null>(null)
 
   const graphWidth = width + crosshairDateOverhang
-  const graphHeight = height - timeOptionsHeight
-  const graphInnerHeight = graphHeight - margin.top - margin.bottom
+  // TODO: remove this logic after suspense is properly added
+  const graphHeight = height - timeOptionsHeight > 0 ? height - timeOptionsHeight : 0
+  const graphInnerHeight = graphHeight - margin.top - margin.bottom > 0 ? graphHeight - margin.top - margin.bottom : 0
 
   // Defining scales
   // x scale
@@ -177,7 +187,7 @@ export function PriceChart({ width, height, token }: PriceChartProps) {
   const handleHover = useCallback(
     (event: Element | EventType) => {
       const { x } = localPoint(event) || { x: 0 }
-      const x0 = timeScale.invert(x) // get timestamp from the scale
+      const x0 = timeScale.invert(x) // get timestamp from the scalexw
       const index = bisect(
         pricePoints.map((x) => x.timestamp),
         x0,
@@ -215,7 +225,9 @@ export function PriceChart({ width, height, token }: PriceChartProps) {
     timePeriod,
     locale
   )
-  const [delta, arrow] = getDelta(startingPrice.value, displayPrice.value)
+  const delta = calculateDelta(startingPrice.value, displayPrice.value)
+  const formattedDelta = formatDelta(delta)
+  const arrow = getDeltaArrow(delta)
   const crosshairEdgeMax = width * 0.85
   const crosshairAtEdge = !!crosshair && crosshair > crosshairEdgeMax
 
@@ -224,7 +236,7 @@ export function PriceChart({ width, height, token }: PriceChartProps) {
       <ChartHeader>
         <TokenPrice>${displayPrice.value.toFixed(2)}</TokenPrice>
         <DeltaContainer>
-          {delta}
+          {formattedDelta}
           <ArrowCell>{arrow}</ArrowCell>
         </DeltaContainer>
       </ChartHeader>

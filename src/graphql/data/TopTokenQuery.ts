@@ -48,6 +48,34 @@ export function useTopTokenQuery(page: number) {
               value
               currency
             }
+            volumeAll: volume(duration: MAX) {
+              value
+              currency
+            }
+            pricePercentChange1H: pricePercentChange(duration: HOUR) {
+              currency
+              value
+            }
+            pricePercentChange24h {
+              currency
+              value
+            }
+            pricePercentChange1W: pricePercentChange(duration: WEEK) {
+              currency
+              value
+            }
+            pricePercentChange1M: pricePercentChange(duration: MONTH) {
+              currency
+              value
+            }
+            pricePercentChange1Y: pricePercentChange(duration: YEAR) {
+              currency
+              value
+            }
+            pricePercentChangeAll: pricePercentChange(duration: MAX) {
+              currency
+              value
+            }
           }
         }
       }
@@ -73,7 +101,15 @@ export function useTopTokenQuery(page: number) {
             [TimePeriod.WEEK]: token?.markets?.[0]?.volume1W,
             [TimePeriod.MONTH]: token?.markets?.[0]?.volume1M,
             [TimePeriod.YEAR]: token?.markets?.[0]?.volume1Y,
-            [TimePeriod.ALL]: token?.markets?.[0]?.volume1Y, // todo: figure out all
+            [TimePeriod.ALL]: token?.markets?.[0]?.volumeAll,
+          },
+          percentChange: {
+            [TimePeriod.HOUR]: token?.markets?.[0]?.pricePercentChange1H,
+            [TimePeriod.DAY]: token?.markets?.[0]?.pricePercentChange24h,
+            [TimePeriod.WEEK]: token?.markets?.[0]?.pricePercentChange1W,
+            [TimePeriod.MONTH]: token?.markets?.[0]?.pricePercentChange1M,
+            [TimePeriod.YEAR]: token?.markets?.[0]?.pricePercentChange1Y,
+            [TimePeriod.ALL]: token?.markets?.[0]?.pricePercentChangeAll,
           },
         }
       }

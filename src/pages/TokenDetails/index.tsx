@@ -18,7 +18,6 @@ import { checkWarning } from 'constants/tokenSafety'
 import { useToken } from 'hooks/Tokens'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import { useNetworkTokenBalances } from 'hooks/useNetworkTokenBalances'
-import useTokenDetailPageQuery from 'hooks/useTokenDetailPageQuery'
 import { useCallback, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 import { useIsDarkMode } from 'state/user/hooks'
@@ -67,7 +66,6 @@ function NetworkBalances(tokenAddress: string) {
 
 export default function TokenDetails() {
   const { tokenAddress } = useParams<{ tokenAddress?: string }>()
-  const { loading } = useTokenDetailPageQuery(tokenAddress)
   const tokenSymbol = useToken(tokenAddress)?.symbol
 
   const darkMode = useIsDarkMode()
@@ -82,16 +80,6 @@ export default function TokenDetails() {
   const onTxFail = useCallback(() => {
     console.log('onTxFail')
   }, [])
-
-  let tokenDetail
-  if (!tokenAddress) {
-    // TODO: handle no address / invalid address cases
-    tokenDetail = 'invalid token address'
-  } else if (loading) {
-    tokenDetail = <LoadingTokenDetail />
-  } else {
-    tokenDetail = <TokenDetail address={tokenAddress} />
-  }
 
   const tokenWarning = tokenAddress ? checkWarning(tokenAddress) : null
   /* network balance handling */
@@ -133,9 +121,9 @@ export default function TokenDetails() {
 
   return (
     <TokenDetailsLayout>
-      {tokenDetail}
       {tokenAddress && (
         <>
+          <TokenDetail address={tokenAddress} />
           <RightPanel>
             <SwapWidget
               defaultChainId={connectedChainId}
@@ -154,21 +142,27 @@ export default function TokenDetails() {
               width={WIDGET_WIDTH}
             />
             {tokenWarning && <TokenSafetyMessage tokenAddress={tokenAddress} warning={tokenWarning} />}
-            {!loading && (
-              <BalanceSummary address={tokenAddress} totalBalance={totalBalance} networkBalances={balancesByNetwork} />
-            )}
+            <BalanceSummary address={tokenAddress} totalBalance={totalBalance} networkBalances={balancesByNetwork} />
           </RightPanel>
           <Footer>
-            {!loading && (
-              <FooterBalanceSummary
-                address={tokenAddress}
-                totalBalance={totalBalance}
-                networkBalances={balancesByNetwork}
-              />
-            )}
+            <FooterBalanceSummary
+              address={tokenAddress}
+              totalBalance={totalBalance}
+              networkBalances={balancesByNetwork}
+            />
           </Footer>
         </>
       )}
+    </TokenDetailsLayout>
+  )
+}
+
+export function LoadingTokenDetails() {
+  return (
+    <TokenDetailsLayout>
+      <LoadingTokenDetail />
+      <RightPanel></RightPanel>
+      <Footer />
     </TokenDetailsLayout>
   )
 }

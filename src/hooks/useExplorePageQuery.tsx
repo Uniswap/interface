@@ -23,6 +23,7 @@ export type TokenData = {
   price: IAmount | null | undefined
   marketCap: IAmount | null | undefined
   volume: Record<TimePeriod, IAmount | null | undefined>
+  percentChange: Record<TimePeriod, IAmount | null | undefined>
 }
 
 export interface UseTopTokensResult {

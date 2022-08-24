@@ -7,9 +7,9 @@ import {
   sortDirectionAtom,
 } from 'components/Tokens/state'
 import { useAllTokens } from 'hooks/Tokens'
-import { TimePeriod, TokenData, UseTopTokensResult } from 'hooks/useExplorePageQuery'
+import { TimePeriod, TokenData } from 'hooks/useExplorePageQuery'
 import { useAtomValue } from 'jotai/utils'
-import { ReactNode, useCallback, useMemo } from 'react'
+import { ReactNode, Suspense, useCallback, useMemo } from 'react'
 import { AlertTriangle } from 'react-feather'
 import styled from 'styled-components/macro'
 
@@ -143,7 +143,7 @@ const LOADING_ROWS = Array.from({ length: 100 })
   .fill(0)
   .map((_item, index) => <LoadingRow key={index} />)
 
-function LoadingTokenTable() {
+export function LoadingTokenTable() {
   return (
     <GridContainer>
       <HeaderRow />
@@ -152,7 +152,7 @@ function LoadingTokenTable() {
   )
 }
 
-export default function TokenTable({ data, error, loading }: UseTopTokensResult) {
+export default function TokenTable({ data }: { data: Record<string, TokenData> | null }) {
   const showFavorites = useAtomValue<boolean>(showFavoritesAtom)
   const timePeriod = useAtomValue<TimePeriod>(filterTimeAtom)
   const topTokenAddresses = data ? Object.keys(data) : []
@@ -160,9 +160,7 @@ export default function TokenTable({ data, error, loading }: UseTopTokensResult)
   const filteredAndSortedTokens = useSortedTokens(filteredTokens, data)
 
   /* loading and error state */
-  if (loading) {
-    return <LoadingTokenTable />
-  } else if (error || data === null) {
+  if (data === null) {
     return (
       <NoTokensState
         message={
@@ -184,20 +182,22 @@ export default function TokenTable({ data, error, loading }: UseTopTokensResult)
   }
 
   return (
-    <GridContainer>
-      <HeaderRow />
-      <TokenRowsContainer>
-        {filteredAndSortedTokens.map((tokenAddress, index) => (
-          <LoadedRow
-            key={tokenAddress}
-            tokenAddress={tokenAddress}
-            tokenListIndex={index}
-            tokenListLength={filteredAndSortedTokens.length}
-            tokenData={data[tokenAddress]}
-            timePeriod={timePeriod}
-          />
-        ))}
-      </TokenRowsContainer>
-    </GridContainer>
+    <Suspense fallback={<LoadingTokenTable />}>
+      <GridContainer>
+        <HeaderRow />
+        <TokenRowsContainer>
+          {filteredAndSortedTokens.map((tokenAddress, index) => (
+            <LoadedRow
+              key={tokenAddress}
+              tokenAddress={tokenAddress}
+              tokenListIndex={index}
+              tokenListLength={filteredAndSortedTokens.length}
+              tokenData={data[tokenAddress]}
+              timePeriod={timePeriod}
+            />
+          ))}
+        </TokenRowsContainer>
+      </GridContainer>
+    </Suspense>
   )
 }
