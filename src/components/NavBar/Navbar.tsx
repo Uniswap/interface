@@ -3,11 +3,11 @@ import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
 import { useWindowSize } from 'hooks/useWindowSize'
 import { ReactNode } from 'react'
 import { NavLink, NavLinkProps, useLocation } from 'react-router-dom'
-import { useTheme } from 'styled-components/macro'
 
 import { Box } from '../../nft/components/Box'
 import { Row } from '../../nft/components/Flex'
 import { UniIcon, UniIconMobile } from '../../nft/components/icons'
+import { breakpoints } from '../../nft/css/sprinkles.css'
 import { ChainSwitcher } from './ChainSwitcher'
 import { MenuDropdown } from './MenuDropdown'
 import { MobileSideBar } from './MobileSidebar'
@@ -64,9 +64,8 @@ const Navbar = () => {
   const { width: windowWidth } = useWindowSize()
   const { pathname } = useLocation()
   const nftFlag = useNftFlag()
-  const theme = useTheme()
 
-  if (windowWidth && windowWidth <= theme.breakpoint.xl) {
+  if (windowWidth && windowWidth < breakpoints.desktopXl) {
     return <MobileNavbar />
   }
 
