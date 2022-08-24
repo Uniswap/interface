@@ -70,6 +70,12 @@ export const ChainSwitcher = ({ isMobile }: ChainSwitcherProps) => {
   const selectChain = useSelectChain()
   useSyncChainQuery()
 
+  if (!chainId || !info) {
+    return null
+  }
+
+  const isSupported = isChainAllowed(chainId)
+
   return (
     <Box position="relative" ref={ref}>
       <Row
@@ -79,7 +85,7 @@ export const ChainSwitcher = ({ isMobile }: ChainSwitcherProps) => {
         background={isOpen ? 'accentActiveSoft' : 'none'}
         onClick={toggleOpen}
       >
-        {!chainId || !info ? (
+        {!isSupported ? (
           <>
             <TokenWarningRedIcon fill={themeVars.colors.darkGray} width={24} height={24} />
             <Box as="span" className={subhead} style={{ lineHeight: '20px' }}>
@@ -104,7 +110,7 @@ export const ChainSwitcher = ({ isMobile }: ChainSwitcherProps) => {
         <NavDropdown top={60} leftAligned={isMobile} paddingBottom={8} paddingTop={8}>
           <Column marginX="8">
             {NETWORK_SELECTOR_CHAINS.map((chainId: SupportedChainId) =>
-              isChainAllowed(chainId) ? (
+              isSupported ? (
                 <ChainRow
                   onSelectChain={async (targetChainId: SupportedChainId) => {
                     await selectChain(targetChainId)
