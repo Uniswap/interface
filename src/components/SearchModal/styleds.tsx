@@ -45,11 +45,11 @@ export const SearchInput = styled.input<{ redesignFlag?: boolean }>`
   position: relative;
   display: flex;
   padding: 16px;
+  padding-left: 40px;
   height: ${({ redesignFlag }) => redesignFlag && '40px'};
   align-items: center;
   width: 100%;
   white-space: nowrap;
-  background: none;
   background-color: ${({ theme, redesignFlag }) => redesignFlag && theme.backgroundModule};
   border: none;
   outline: none;
