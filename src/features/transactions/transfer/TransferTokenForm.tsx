@@ -143,8 +143,10 @@ export function TransferTokenForm({
       <AnimatedFlex grow entering={FadeIn} exiting={FadeOut} justifyContent="space-between" p="md">
         <Flex gap="md">
           {nftIn ? (
-            <Flex centered mx="xl">
-              <NFTViewer uri={nftIn.image_url} />
+            <Flex centered maxHeight="60%" mx="xl">
+              <Box>
+                <NFTViewer uri={nftIn.image_url} />
+              </Box>
             </Flex>
           ) : (
             <CurrencyInputPanel

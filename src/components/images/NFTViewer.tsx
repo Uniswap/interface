@@ -28,13 +28,14 @@ export function NFTViewer({ autoplay = false, maxHeight, uri, placeholderContent
         aspectRatio={1}
         bg="backgroundAction"
         justifyContent="center"
+        maxHeight={maxHeight ?? '100%'}
         width="100%">
         <Text color="textSecondary" variant="subheadSmall">
           {placeholderContent || t('Content not available')}
         </Text>
       </Box>
     ),
-    [placeholderContent, t]
+    [placeholderContent, maxHeight, t]
   )
 
   if (!imageHttpUri) {

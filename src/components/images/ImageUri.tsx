@@ -46,7 +46,7 @@ export function ImageUri({
       style={[
         {
           aspectRatio: width / height,
-          maxHeight,
+          maxHeight: maxHeight ?? '100%',
         },
         styles.fullWidth,
       ]}

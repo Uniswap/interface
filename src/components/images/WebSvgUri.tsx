@@ -93,7 +93,7 @@ export function WebSvgUri({ autoplay, maxHeight, uri }: SvgUriProps) {
           webviewStyle.fullWidth,
           {
             aspectRatio,
-            maxHeight,
+            maxHeight: maxHeight ?? '100%',
           },
         ]}
         useWebKit={false}
