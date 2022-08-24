@@ -16,7 +16,7 @@ export function SearchBar({ onBack, ...rest }: SearchBarProps) {
   return (
     <Flex centered row gap="sm" mx="md">
       <Button name={ElementName.Back} testID={ElementName.Back} onPress={onBack}>
-        <Chevron color={theme.colors.textSecondary} />
+        <Chevron color={theme.colors.textPrimary} />
       </Button>
       <SearchTextInput {...rest} />
     </Flex>

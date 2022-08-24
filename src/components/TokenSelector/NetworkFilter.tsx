@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Keyboard } from 'react-native'
 import { useAppTheme } from 'src/app/hooks'
 import Check from 'src/assets/icons/check.svg'
 import { Button } from 'src/components/buttons/Button'
@@ -85,7 +86,12 @@ export function NetworkFilter({ selectedChain, onPressChain }: NetworkFilterProp
 
   return (
     <>
-      <Button py="xs" onPress={() => setShowModal(true)}>
+      <Button
+        py="xs"
+        onPress={() => {
+          Keyboard.dismiss()
+          setShowModal(true)
+        }}>
         <Flex centered row bg="backgroundContainer" borderRadius="sm" gap="xxs" p="xs">
           {selectedChain && <NetworkLogo chainId={selectedChain} size={16} />}
           <Text color="textSecondary" pl="xxxs" textAlign="center" variant="smallLabel">

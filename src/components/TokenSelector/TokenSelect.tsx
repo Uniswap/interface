@@ -1,6 +1,7 @@
 import { Currency } from '@uniswap/sdk-core'
 import React, { Suspense, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Keyboard, KeyboardAvoidingView } from 'react-native'
 import { Flex } from 'src/components/layout'
 import { Loading } from 'src/components/loading'
 import { useFilterCallbacks } from 'src/components/TokenSelector/hooks'
@@ -40,19 +41,24 @@ export function TokenSelect({
         backgroundColor="backgroundContainer"
         placeholder={t('Search tokens')}
         value={searchFilter}
-        onBack={onBack}
+        onBack={() => {
+          Keyboard.dismiss()
+          onBack()
+        }}
         onChangeText={onChangeText}
       />
-      <Suspense fallback={<TokenSearchResultsLoading />}>
-        <TokenSearchResultList
-          chainFilter={chainFilter}
-          searchFilter={searchFilter}
-          variation={variation}
-          onChangeChainFilter={onChangeChainFilter}
-          onClearSearchFilter={onClearFilters}
-          onSelectCurrency={onSelectCurrency}
-        />
-      </Suspense>
+      <KeyboardAvoidingView behavior="height">
+        <Suspense fallback={<TokenSearchResultsLoading />}>
+          <TokenSearchResultList
+            chainFilter={chainFilter}
+            searchFilter={searchFilter}
+            variation={variation}
+            onChangeChainFilter={onChangeChainFilter}
+            onClearSearchFilter={onClearFilters}
+            onSelectCurrency={onSelectCurrency}
+          />
+        </Suspense>
+      </KeyboardAvoidingView>
     </Flex>
   )
 }
