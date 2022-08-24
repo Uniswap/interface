@@ -58,7 +58,7 @@ const StyledTokenRow = styled.div<{ first?: boolean; last?: boolean }>`
   padding-right: 12px;
 
   &:hover {
-    background-color: ${({ theme }) => opacify(3, theme.accentAction)};
+    background-color: ${({ theme }) => opacify(2, theme.accentAction)};
     ${({ last }) => last && 'border-radius: 0px 0px 8px 8px;'}
   }
 
