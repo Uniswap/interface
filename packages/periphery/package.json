@@ -15,8 +15,8 @@
     "contracts"
   ],
   "dependencies": {
-    "@teleswap/core": "1.0.1",
-    "@uniswap/lib": "4.0.1-alpha"
+    "@uniswap/lib": "4.0.1-alpha",
+    "@teleswap/core": "1.0.1"
   },
   "devDependencies": {
     "@ethersproject/abi": "^5.6.4",
@@ -36,6 +36,7 @@
     "ethereumjs-util": "^6.2.0",
     "ethers": "^5.6.9",
     "hardhat": "^2.10.1",
+    "hardhat-abi-exporter": "^2.10.0",
     "hardhat-gas-reporter": "^1.0.8",
     "mocha": "^6.2.2",
     "ncp": "^2.0.0",

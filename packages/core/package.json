@@ -36,6 +36,7 @@
     "@types/mocha": "^5.2.7",
     "chai": "^4.3.6",
     "dotenv": "^16.0.1",
+    "ethereum-waffle": "^3.4.4",
     "ethereumjs-util": "^6.2.0",
     "ethers": "^5.7.0",
     "hardhat": "^2.10.1",
