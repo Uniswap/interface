@@ -69,7 +69,10 @@ const FiltersWrapper = styled.div`
 `
 
 const Tokens = () => {
-  const topTokens = useTopTokenQuery(1)
+  let topTokens = useTopTokenQuery(1)
+  if (topTokens) {
+    topTokens = topTokens.filter((token) => token.address)
+  }
   const tokensNetworkFilterFlag = useTokensNetworkFilterFlag()
   const resetFilterString = useResetAtom(filterStringAtom)
   const location = useLocation()

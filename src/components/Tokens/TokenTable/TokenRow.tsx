@@ -2,9 +2,11 @@ import { Trans } from '@lingui/macro'
 import { ParentSize } from '@visx/responsive'
 import { sendAnalyticsEvent } from 'components/AmplitudeAnalytics'
 import { EventName } from 'components/AmplitudeAnalytics/constants'
-import SparklineChart from 'components/Charts/SparklineChart'
+import LineChart from 'components/Charts/LineChart'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { getChainInfo } from 'constants/chainInfo'
+import { scaleLinear } from 'd3'
+import { useTokenPriceQuery } from 'graphql/data/TokenPriceQuery'
 import { TimePeriod, TokenData } from 'graphql/data/TopTokenQuery'
 import { useCurrency } from 'hooks/Tokens'
 import { useAtom } from 'jotai'
@@ -32,7 +34,7 @@ import {
   useSetSortCategory,
   useToggleFavorite,
 } from '../state'
-import { formatDelta, getDeltaArrow } from '../TokenDetails/PriceChart'
+import { formatDelta, getDeltaArrow, getPriceBounds, PricePoint } from '../TokenDetails/PriceChart'
 import { Category, SortDirection } from '../types'
 import { DISPLAYS } from './TimeSelector'
 
@@ -471,6 +473,13 @@ export default function LoadedRow({
   const arrow = delta ? getDeltaArrow(delta) : null
   const formattedDelta = delta ? formatDelta(delta) : null
 
+  // for sparkline
+  const pricePoints: PricePoint[] = useTokenPriceQuery(tokenAddress, timePeriod, 'ETHEREUM').filter(
+    (p): p is PricePoint => Boolean(p && p.value)
+  )
+  const widthScale = scaleLinear().domain(getPriceBounds(pricePoints)).range([0, 100])
+  const rdScale = scaleLinear().domain(getPriceBounds(pricePoints)).range([60, 0])
+
   const exploreTokenSelectedEventProperties = {
     chain_id: filterNetwork,
     token_address: tokenAddress,
@@ -544,7 +553,20 @@ export default function LoadedRow({
         }
         sparkLine={
           <SparkLine>
-            <ParentSize>{({ width, height }) => <SparklineChart width={width} height={height} />}</ParentSize>
+            <ParentSize>
+              {({ width, height }) => (
+                <LineChart
+                  data={pricePoints}
+                  getX={(p: PricePoint) => widthScale(p.value)}
+                  getY={(p: PricePoint) => rdScale(p.value)}
+                  /* Default curve doesn't look good for the ALL chart */
+                  curve={undefined}
+                  strokeWidth={2}
+                  width={width}
+                  height={height}
+                />
+              )}
+            </ParentSize>
           </SparkLine>
         }
         first={tokenListIndex === 0}

@@ -57,9 +57,6 @@ function useFilteredTokens(tokens: TokenData[] | undefined) {
   return useMemo(
     () =>
       (shownTokens ?? []).filter((token) => {
-        if (!token.address) {
-          return false
-        }
         if (!filterString) {
           return true
         }
