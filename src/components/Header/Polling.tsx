@@ -26,7 +26,7 @@ const StyledPolling = styled.div<{ warning: boolean }>`
   color: ${({ theme, warning }) => (warning ? theme.deprecated_yellow3 : theme.deprecated_green1)};
   transition: 250ms ease color;
 
-  ${({ theme }) => theme.mediaWidth.upToMedium`
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToMedium`
     display: none;
   `}
 `

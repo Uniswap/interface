@@ -28,18 +28,18 @@ const PageWrapper = styled(AutoColumn)`
   max-width: 870px;
   width: 100%;
 
-  ${({ theme }) => theme.mediaWidth.upToMedium`
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToMedium`
     max-width: 800px;
     padding: 0px 8px;
   `};
 
-  ${({ theme }) => theme.mediaWidth.upToSmall`
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
     max-width: 500px;
   `};
 `
 const TitleRow = styled(RowBetween)`
   color: ${({ theme }) => theme.deprecated_text2};
-  ${({ theme }) => theme.mediaWidth.upToSmall`
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
     flex-wrap: wrap;
     gap: 12px;
     width: 100%;
@@ -50,7 +50,7 @@ const ButtonRow = styled(RowFixed)`
     margin-left: 8px;
   }
 
-  ${({ theme }) => theme.mediaWidth.upToSmall`
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
     width: 100%;
     flex-direction: row;
     justify-content: space-between;
@@ -59,7 +59,7 @@ const ButtonRow = styled(RowFixed)`
 `
 const Menu = styled(NewMenu)`
   margin-left: 0;
-  ${({ theme }) => theme.mediaWidth.upToSmall`
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
     flex: 1 1 auto;
     width: 49%;
     right: 0px;
@@ -118,7 +118,7 @@ const ResponsiveButtonPrimary = styled(ButtonPrimary)`
   border-radius: 12px;
   padding: 6px 8px;
   width: fit-content;
-  ${({ theme }) => theme.mediaWidth.upToSmall`
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
     flex: 1 1 auto;
     width: 100%;
   `};

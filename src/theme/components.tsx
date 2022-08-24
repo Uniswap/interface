@@ -430,20 +430,20 @@ export const CustomLightSpinner = styled(Spinner)<{ size: string }>`
 `
 
 export const HideSmall = styled.span`
-  ${({ theme }) => theme.mediaWidth.upToSmall`
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
     display: none;
   `};
 `
 
 export const HideExtraSmall = styled.span`
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToExtraSmall`
     display: none;
   `};
 `
 
 export const SmallOnly = styled.span`
   display: none;
-  ${({ theme }) => theme.mediaWidth.upToSmall`
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
     display: block;
   `};
 `

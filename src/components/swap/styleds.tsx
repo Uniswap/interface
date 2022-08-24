@@ -154,7 +154,7 @@ export const ResponsiveTooltipContainer = styled(TooltipContainer)<{ origin?: st
   padding: 1rem;
   width: ${({ width }) => width ?? 'auto'};
 
-  ${({ theme, origin }) => theme.mediaWidth.upToExtraSmall`
+  ${({ theme, origin }) => theme.deprecated_mediaWidth.deprecated_upToExtraSmall`
     transform: scale(0.8);
     transform-origin: ${origin ?? 'top left'};
   `}

@@ -39,7 +39,6 @@ import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from '../../
 import { GreyCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
 import SwapCurrencyInputPanel from '../../components/CurrencyInputPanel/SwapCurrencyInputPanel'
-import CurrencyLogo from '../../components/CurrencyLogo'
 import Loader from '../../components/Loader'
 import { AutoRow } from '../../components/Row'
 import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
@@ -702,11 +701,6 @@ export default function Swap() {
                           >
                             <AutoRow justify="space-between" style={{ flexWrap: 'nowrap' }}>
                               <span style={{ display: 'flex', alignItems: 'center' }}>
-                                <CurrencyLogo
-                                  currency={currencies[Field.INPUT]}
-                                  size={'20px'}
-                                  style={{ marginRight: '8px', flexShrink: 0 }}
-                                />
                                 {/* we need to shorten this string on mobile */}
                                 {approvalState === ApprovalState.APPROVED ||
                                 signatureState === UseERC20PermitState.SIGNED ? (

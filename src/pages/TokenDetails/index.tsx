@@ -86,7 +86,7 @@ export default function TokenDetails() {
   let tokenDetail
   if (!tokenAddress) {
     // TODO: handle no address / invalid address cases
-    tokenDetail = 'invalid token'
+    tokenDetail = 'invalid token address'
   } else if (loading) {
     tokenDetail = <LoadingTokenDetail />
   } else {

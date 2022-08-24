@@ -64,6 +64,10 @@ const Input = styled.input<{ redesignFlag: boolean }>`
   }
   color: ${({ theme, color }) => (color === 'red' ? theme.deprecated_red1 : theme.deprecated_text1)};
   text-align: right;
+
+  ::placeholder {
+    color: ${({ theme, redesignFlag }) => redesignFlag && theme.textTertiary};
+  }
 `
 
 const OptionCustom = styled(FancyButton)<{ active?: boolean; warning?: boolean; redesignFlag: boolean }>`
@@ -91,7 +95,7 @@ const OptionCustom = styled(FancyButton)<{ active?: boolean; warning?: boolean; 
 
 const SlippageEmojiContainer = styled.span`
   color: #f3841e;
-  ${({ theme }) => theme.mediaWidth.upToSmall`
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
     display: none;
   `}
 `

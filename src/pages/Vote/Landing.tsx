@@ -33,7 +33,7 @@ import { UNI } from '../../constants/tokens'
 import { ProposalStatus } from './styled'
 
 const PageWrapper = styled(AutoColumn)`
-  ${({ theme }) => theme.mediaWidth.upToSmall`
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
     padding: 0px 8px;
   `};
 `
@@ -86,7 +86,7 @@ const VoteCard = styled(DataCard)`
 
 const WrapSmall = styled(RowBetween)`
   margin-bottom: 1rem;
-  ${({ theme }) => theme.mediaWidth.upToSmall`
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
     flex-wrap: wrap;
   `};
 `
