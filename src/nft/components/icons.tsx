@@ -1293,7 +1293,7 @@ export const PlusIconLarge = (props: SVGProps) => (
 
 export const ChevronLeftIcon = (props: SVGProps) => (
   <svg width="8" height="16" viewBox="0 0 8 16" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
-    <path d="M7 1L1 7L7 13" stroke="#99A1BD" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M7 1L1 7L7 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
   </svg>
 )
 
