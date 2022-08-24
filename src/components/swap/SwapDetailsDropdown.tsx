@@ -67,7 +67,7 @@ const StyledPolling = styled.div`
   color: ${({ theme }) => theme.deprecated_text1};
   transition: 250ms ease color;
 
-  ${({ theme }) => theme.mediaWidth.upToMedium`
+  ${({ theme }) => theme.mediaWidth.breakpointLg`
     display: none;
   `}
 `

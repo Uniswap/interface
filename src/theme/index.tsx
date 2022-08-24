@@ -21,10 +21,12 @@ export * from './components'
 type TextProps = Omit<TextPropsOriginal, 'css'>
 
 export const MEDIA_WIDTHS = {
-  upToExtraSmall: 500,
-  upToSmall: 720,
-  upToMedium: 960,
-  upToLarge: 1280,
+  breakpointSm: 640,
+  breakpointMd: 768,
+  breakpointLg: 1024,
+  breakpointXl: 1280,
+  breakpoint2xl: 1536,
+  breakpoint3xl: 1920,
 }
 
 // Migrating to a standard z-index system https://getbootstrap.com/docs/5.0/layout/z-index/

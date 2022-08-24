@@ -13,7 +13,7 @@ const CTASection = styled.section`
   gap: 8px;
   opacity: 0.8;
 
-  ${({ theme }) => theme.mediaWidth.upToSmall`
+  ${({ theme }) => theme.mediaWidth.breakpointMd`
     grid-template-columns: auto;
     grid-template-rows: auto;
   `};
@@ -75,7 +75,7 @@ const HeaderText = styled(ThemedText.DeprecatedLabel)`
 
   font-weight: 400;
   font-size: 16px;
-  ${({ theme }) => theme.mediaWidth.upToMedium`
+  ${({ theme }) => theme.mediaWidth.breakpointLg`
     font-size: 16px;
   `};
 `
@@ -85,7 +85,7 @@ const ResponsiveColumn = styled(AutoColumn)`
   width: 100%;
   gap: 8px;
 
-  ${({ theme }) => theme.mediaWidth.upToMedium`
+  ${({ theme }) => theme.mediaWidth.breakpointLg`
     gap: 8px;
   `};
   justify-content: space-between;

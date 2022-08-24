@@ -61,7 +61,7 @@ const BodyWrapper = styled.div<{ navBarFlag: NavBarVariant }>`
   padding: ${({ navBarFlag }) => (navBarFlag === NavBarVariant.Enabled ? `72px 0px 0px 0px` : `120px 0px 0px 0px`)};
   align-items: center;
   flex: 1;
-  ${({ theme }) => theme.mediaWidth.upToSmall`
+  ${({ theme }) => theme.mediaWidth.breakpointMd`
     padding: 52px 0px 16px 0px;
   `};
 `

@@ -128,10 +128,12 @@ declare module 'styled-components/macro' {
 
     // media queries
     mediaWidth: {
-      upToExtraSmall: ThemedCssFunction<DefaultTheme>
-      upToSmall: ThemedCssFunction<DefaultTheme>
-      upToMedium: ThemedCssFunction<DefaultTheme>
-      upToLarge: ThemedCssFunction<DefaultTheme>
+      breakpointSm: ThemedCssFunction<DefaultTheme>
+      breakpointMd: ThemedCssFunction<DefaultTheme>
+      breakpointLg: ThemedCssFunction<DefaultTheme>
+      breakpointXl: ThemedCssFunction<DefaultTheme>
+      breakpoint2xl: ThemedCssFunction<DefaultTheme>
+      breakpoint3xl: ThemedCssFunction<DefaultTheme>
     }
 
     // css snippets

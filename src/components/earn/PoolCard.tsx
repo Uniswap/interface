@@ -26,7 +26,7 @@ const StatContainer = styled.div`
   margin-bottom: 1rem;
   margin-right: 1rem;
   margin-left: 1rem;
-  ${({ theme }) => theme.mediaWidth.upToSmall`
+  ${({ theme }) => theme.mediaWidth.breakpointMd`
   display: none;
 `};
 `
@@ -57,7 +57,7 @@ const TopSection = styled.div`
   align-items: center;
   padding: 1rem;
   z-index: 1;
-  ${({ theme }) => theme.mediaWidth.upToSmall`
+  ${({ theme }) => theme.mediaWidth.breakpointMd`
     grid-template-columns: 48px 1fr 96px;
   `};
 `

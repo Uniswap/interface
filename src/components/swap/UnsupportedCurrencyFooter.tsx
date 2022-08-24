@@ -40,7 +40,7 @@ const StyledButtonEmpty = styled(ButtonEmpty)`
 const AddressText = styled(ThemedText.DeprecatedBlue)`
   font-size: 12px;
 
-  ${({ theme }) => theme.mediaWidth.upToSmall`
+  ${({ theme }) => theme.mediaWidth.breakpointMd`
     font-size: 10px;
 `}
 `
