@@ -83,7 +83,14 @@ export function useTokenSectionsByVariation(
   const commonBaseCurrencies = useCommonBases(chainFilter)
 
   const popularWithoutBalances = useMemo(() => {
-    return popularTokens.map(createEmptyBalanceOption)
+    return popularTokens
+      .sort((a, b) => {
+        if (a.name && b.name) {
+          return a.name.localeCompare(b.name)
+        }
+        return 0
+      })
+      .map(createEmptyBalanceOption)
   }, [popularTokens])
 
   const favoritesWithoutBalances = useMemo(() => {

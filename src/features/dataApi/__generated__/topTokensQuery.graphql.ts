@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7d6edcf37a4ced7fca6eebdab5652d3a>>
+ * @generated SignedSource<<287888bdcc60cb8aa61c3dcb312fe80f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -32,13 +32,8 @@ const node: ConcreteRequest = (function(){
 var v0 = [
   {
     "kind": "Literal",
-    "name": "currency",
-    "value": "USD"
-  },
-  {
-    "kind": "Literal",
     "name": "orderBy",
-    "value": "VOLUME"
+    "value": "MARKET_CAP"
   },
   {
     "kind": "Literal",
@@ -126,7 +121,7 @@ return {
             "storageKey": null
           }
         ],
-        "storageKey": "topTokenProjects(currency:\"USD\",orderBy:\"VOLUME\",page:1,pageSize:100)"
+        "storageKey": "topTokenProjects(orderBy:\"MARKET_CAP\",page:1,pageSize:100)"
       }
     ],
     "type": "Query",
@@ -166,21 +161,21 @@ return {
           },
           (v6/*: any*/)
         ],
-        "storageKey": "topTokenProjects(currency:\"USD\",orderBy:\"VOLUME\",page:1,pageSize:100)"
+        "storageKey": "topTokenProjects(orderBy:\"MARKET_CAP\",page:1,pageSize:100)"
       }
     ]
   },
   "params": {
-    "cacheID": "6941d8b2289615682f3899a8b2006299",
+    "cacheID": "55bed639d86d03e894b6600c90bd0598",
     "id": null,
     "metadata": {},
     "name": "topTokensQuery",
     "operationKind": "query",
-    "text": "query topTokensQuery {\n  topTokenProjects(orderBy: VOLUME, page: 1, pageSize: 100, currency: USD) {\n    name\n    tokens {\n      chain\n      address\n      decimals\n      name\n      symbol\n      id\n    }\n    id\n  }\n}\n"
+    "text": "query topTokensQuery {\n  topTokenProjects(orderBy: MARKET_CAP, page: 1, pageSize: 100) {\n    name\n    tokens {\n      chain\n      address\n      decimals\n      name\n      symbol\n      id\n    }\n    id\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "f65f9184c5a771627dc2e199a06c6502";
+(node as any).hash = "b7b7380bfaf61cd64a560e6a46d478c8";
 
 export default node;

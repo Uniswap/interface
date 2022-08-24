@@ -13,7 +13,7 @@ import { buildCurrencyId, getNativeCurrencyAddressForChain } from 'src/utils/cur
 
 const query = graphql`
   query topTokensQuery {
-    topTokenProjects(orderBy: VOLUME, page: 1, pageSize: 100, currency: USD) {
+    topTokenProjects(orderBy: MARKET_CAP, page: 1, pageSize: 100) {
       name
       tokens {
         chain
