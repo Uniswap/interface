@@ -4,7 +4,7 @@ import { abi as UNI_ABI } from '@uniswap/governance/build/Uni.json'
 import { abi as STAKING_REWARDS_ABI } from '@uniswap/liquidity-staker/build/StakingRewards.json'
 import { abi as MERKLE_DISTRIBUTOR_ABI } from '@uniswap/merkle-distributor/build/MerkleDistributor.json'
 import { ChainId, WETH } from '@teleswap/sdk'
-import ITeleswapV2PairABI from '@teleswap/core/build/ITeleswapV2Pair.json'
+import ITeleswapV2PairABI from '@teleswap/contracts/build/ITeleswapV2Pair.json'
 import { useMemo } from 'react'
 import {
   GOVERNANCE_ADDRESS,

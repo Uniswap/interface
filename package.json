@@ -14,7 +14,9 @@
     ]
   },
   "scripts": {
-    "cleanup": "rimraf **/node_modules"
+    "cleanup": "rimraf **/node_modules",
+    "postinstall": "lerna run build --stream --ignore  @teleswap/ui",
+    "start":"yarn workspace @teleswap/ui run start"
   },
   "repository": {
     "type": "git",

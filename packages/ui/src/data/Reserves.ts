@@ -1,6 +1,6 @@
 import { TokenAmount, Pair, Currency } from '@teleswap/sdk'
 import { useMemo } from 'react'
-import ITeleswapV2PairABI from '@teleswap/core/build/ITeleswapV2Pair.json'
+import ITeleswapV2PairABI from '@teleswap/contracts/build/ITeleswapV2Pair.json'
 import { Interface } from '@ethersproject/abi'
 import { useActiveWeb3React } from '../hooks'
 
