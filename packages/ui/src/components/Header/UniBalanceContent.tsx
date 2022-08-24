@@ -1,18 +1,28 @@
-import { ChainId, TokenAmount } from '@teleswap/sdk'
-import React, { useMemo } from 'react'
+import {
+  // ChainId,
+  TokenAmount
+} from '@teleswap/sdk'
+import React from 'react' // useMemo
 import { X } from 'react-feather'
 import styled from 'styled-components'
-import tokenLogo from '../../assets/images/token-logo.png'
+// import tokenLogo from '../../assets/images/token-logo.png'
 import { UNI } from '../../constants'
-import { useTotalSupply } from '../../data/TotalSupply'
+// import { useTotalSupply } from '../../data/TotalSupply'
 import { useActiveWeb3React } from '../../hooks'
-import { useMerkleDistributorContract } from '../../hooks/useContract'
-import useCurrentBlockTimestamp from '../../hooks/useCurrentBlockTimestamp'
-import { useTotalUniEarned } from '../../state/stake/hooks'
-import { useAggregateUniBalance, useTokenBalance } from '../../state/wallet/hooks'
-import { ExternalLink, StyledInternalLink, TYPE, UniTokenAnimated } from '../../theme'
-import { computeUniCirculation } from '../../utils/computeUniCirculation'
-import useUSDCPrice from '../../utils/useUSDCPrice'
+// import { useMerkleDistributorContract } from '../../hooks/useContract'
+// import useCurrentBlockTimestamp from '../../hooks/useCurrentBlockTimestamp'
+// import { useTotalUniEarned } from '../../state/stake/hooks'
+import {
+  // useAggregateUniBalance,
+  useTokenBalance
+} from '../../state/wallet/hooks'
+import {
+  // ExternalLink, StyledInternalLink,
+  TYPE
+  // UniTokenAnimated
+} from '../../theme'
+// import { computeUniCirculation } from '../../utils/computeUniCirculation'
+// import useUSDCPrice from '../../utils/useUSDCPrice'
 import { AutoColumn } from '../Column'
 import { RowBetween } from '../Row'
 import { Break, CardBGImage, CardNoise, CardSection, DataCard } from '../earn/styled'
@@ -44,21 +54,21 @@ export default function UniBalanceContent({ setShowUniBalanceModal }: { setShowU
   const { account, chainId } = useActiveWeb3React()
   const uni = chainId ? UNI[chainId] : undefined
 
-  const total = useAggregateUniBalance()
+  // const total = useAggregateUniBalance()
   const uniBalance: TokenAmount | undefined = useTokenBalance(account ?? undefined, uni)
-  const uniToClaim: TokenAmount | undefined = useTotalUniEarned()
+  // const uniToClaim: TokenAmount | undefined = useTotalUniEarned()
 
-  const totalSupply: TokenAmount | undefined = useTotalSupply(uni)
-  const uniPrice = useUSDCPrice(uni)
-  const blockTimestamp = useCurrentBlockTimestamp()
-  const unclaimedUni = useTokenBalance(useMerkleDistributorContract()?.address, uni)
-  const circulation: TokenAmount | undefined = useMemo(
-    () =>
-      blockTimestamp && uni && chainId === ChainId.MAINNET
-        ? computeUniCirculation(uni, blockTimestamp, unclaimedUni)
-        : totalSupply,
-    [blockTimestamp, chainId, totalSupply, unclaimedUni, uni]
-  )
+  // const totalSupply: TokenAmount | undefined = useTotalSupply(uni)
+  // const uniPrice = useUSDCPrice(uni)
+  // const blockTimestamp = useCurrentBlockTimestamp()
+  // const unclaimedUni = useTokenBalance(useMerkleDistributorContract()?.address, uni)
+  // const circulation: TokenAmount | undefined = useMemo(
+  //   () =>
+  //     blockTimestamp && uni && chainId === ChainId.MAINNET
+  //       ? computeUniCirculation(uni, blockTimestamp, unclaimedUni)
+  //       : totalSupply,
+  //   [blockTimestamp, chainId, totalSupply, unclaimedUni, uni]
+  // )
 
   return (
     <ContentWrapper gap="lg">
@@ -67,7 +77,7 @@ export default function UniBalanceContent({ setShowUniBalanceModal }: { setShowU
         <CardNoise />
         <CardSection gap="md">
           <RowBetween>
-            <TYPE.white color="white">Your UNI Breakdown</TYPE.white>
+            <TYPE.white color="white">Your WTELE Breakdown</TYPE.white>
             <StyledClose stroke="white" onClick={() => setShowUniBalanceModal(false)} />
           </RowBetween>
         </CardSection>
@@ -76,17 +86,17 @@ export default function UniBalanceContent({ setShowUniBalanceModal }: { setShowU
           <>
             <CardSection gap="sm">
               <AutoColumn gap="md" justify="center">
-                <UniTokenAnimated width="48px" src={tokenLogo} />{' '}
-                <TYPE.white fontSize={48} fontWeight={600} color="white">
+                {/* <UniTokenAnimated width="48px" src={tokenLogo} />{' '} */}
+                {/* <TYPE.white fontSize={48} fontWeight={600} color="white">
                   {total?.toFixed(2, { groupSeparator: ',' })}
-                </TYPE.white>
+                </TYPE.white> */}
               </AutoColumn>
               <AutoColumn gap="md">
                 <RowBetween>
                   <TYPE.white color="white">Balance:</TYPE.white>
                   <TYPE.white color="white">{uniBalance?.toFixed(2, { groupSeparator: ',' })}</TYPE.white>
                 </RowBetween>
-                <RowBetween>
+                {/* <RowBetween>
                   <TYPE.white color="white">Unclaimed:</TYPE.white>
                   <TYPE.white color="white">
                     {uniToClaim?.toFixed(4, { groupSeparator: ',' })}{' '}
@@ -96,13 +106,13 @@ export default function UniBalanceContent({ setShowUniBalanceModal }: { setShowU
                       </StyledInternalLink>
                     )}
                   </TYPE.white>
-                </RowBetween>
+                </RowBetween> */}
               </AutoColumn>
             </CardSection>
             <Break />
           </>
         )}
-        <CardSection gap="sm">
+        {/* <CardSection gap="sm">
           <AutoColumn gap="md">
             <RowBetween>
               <TYPE.white color="white">UNI price:</TYPE.white>
@@ -120,7 +130,7 @@ export default function UniBalanceContent({ setShowUniBalanceModal }: { setShowU
               <ExternalLink href={`https://uniswap.info/token/${uni.address}`}>View UNI Analytics</ExternalLink>
             ) : null}
           </AutoColumn>
-        </CardSection>
+        </CardSection> */}
       </ModalUpper>
     </ContentWrapper>
   )
