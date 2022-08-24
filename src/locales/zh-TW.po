@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-22 19:04\n"
+"PO-Revision-Date: 2022-08-23 20:04\n"
 "Last-Translator: \n"
 "Language: zh_TW\n"
 "Language-Team: Chinese Traditional\n"
@@ -121,7 +121,6 @@ msgid "A swap of this size may have a high price impact, given the current liqui
 msgstr "鑑於池中當前的流動性，這種規模的掉期可能會對價格產生很大影響。您的輸入令牌數量與您將在輸出令牌中收到的數量之間可能存在很大差異"
 
 #: src/components/Menu/index.tsx
-#: src/components/Tokens/TokenDetails/TokenDetail.tsx
 #: src/components/Tokens/TokenDetails/TokenDetail.tsx
 msgid "About"
 msgstr "關於"
@@ -930,6 +929,7 @@ msgid "Help Center"
 msgstr "幫助中心"
 
 #: src/components/FeeSelector/index.tsx
+#: src/components/Tokens/TokenDetails/TokenDetail.tsx
 msgid "Hide"
 msgstr "隱藏"
 
@@ -1491,6 +1491,10 @@ msgstr "排隊"
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Rates"
 msgstr "費率"
+
+#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+msgid "Read more"
+msgstr "閱讀更多"
 
 #: src/pages/Earn/index.tsx
 msgid "Read more about UNI"

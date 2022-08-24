@@ -3,8 +3,8 @@ import styled, { useTheme } from 'styled-components/macro'
 import { LoadingBubble } from '../loading'
 import { DeltaContainer, TokenPrice } from './PriceChart'
 import {
+  AboutContainer,
   AboutHeader,
-  AboutSection,
   BreadcrumbNavLink,
   ChartContainer,
   ChartHeader,
@@ -34,15 +34,17 @@ const TitleLoadingBubble = styled(LoadingDetailBubble)`
 const SquareLoadingBubble = styled(LoadingDetailBubble)`
   height: 32px;
   border-radius: 8px;
-  margin-top: 4px;
+  margin-bottom: 10px;
 `
 const PriceLoadingBubble = styled(SquareLoadingBubble)`
   height: 40px;
 `
 const LongLoadingBubble = styled(LoadingDetailBubble)`
+  margin-top: 6px;
   width: 100%;
 `
 const HalfLoadingBubble = styled(LoadingDetailBubble)`
+  margin-top: 6px;
   width: 50%;
 `
 const IconLoadingBubble = styled(LoadingDetailBubble)`
@@ -118,7 +120,7 @@ export default function LoadingTokenDetail() {
         </LoadingChartContainer>
         <Space heightSize={32} />
       </ChartHeader>
-      <AboutSection>
+      <AboutContainer>
         <AboutHeader>
           <SquareLoadingBubble />
         </AboutHeader>
@@ -127,7 +129,7 @@ export default function LoadingTokenDetail() {
         <HalfLoadingBubble />
 
         <ResourcesContainer>{null}</ResourcesContainer>
-      </AboutSection>
+      </AboutContainer>
       <StatsSection>
         <StatsLoadingContainer>
           <StatPair>

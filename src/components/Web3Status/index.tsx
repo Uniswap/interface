@@ -3,17 +3,22 @@ import { t, Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
 import { ElementName, Event, EventName } from 'components/AmplitudeAnalytics/constants'
 import { TraceEvent } from 'components/AmplitudeAnalytics/TraceEvent'
+import WalletDropdown from 'components/WalletDropdown'
 import { getConnection } from 'connection/utils'
+import { NavBarVariant, useNavBarFlag } from 'featureFlags/flags/navBar'
 import { getIsValidSwapQuote } from 'pages/Swap'
 import { darken } from 'polished'
-import { useMemo } from 'react'
+import { useMemo, useRef } from 'react'
 import { AlertTriangle } from 'react-feather'
 import { useAppSelector } from 'state/hooks'
 import { useDerivedSwapInfo } from 'state/swap/hooks'
 import styled, { css } from 'styled-components/macro'
 
+import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 import { useHasSocks } from '../../hooks/useSocksBalance'
-import { useToggleWalletModal } from '../../state/application/hooks'
+import { useModalIsOpen, useToggleWalletDropdown, useToggleWalletModal } from '../../state/application/hooks'
+import { useCloseModal } from '../../state/application/hooks'
+import { ApplicationModal } from '../../state/application/reducer'
 import { isTransactionRecent, useAllTransactions } from '../../state/transactions/hooks'
 import { TransactionDetails } from '../../state/transactions/types'
 import { shortenAddress } from '../../utils'
@@ -133,6 +138,9 @@ function Web3StatusInner() {
     inputError: swapInputError,
   } = useDerivedSwapInfo()
   const validSwapQuote = getIsValidSwapQuote(trade, tradeState, swapInputError)
+  const navbarFlag = useNavBarFlag()
+  const toggleWalletDropdown = useToggleWalletDropdown()
+  const toggleWalletModal = useToggleWalletModal()
 
   const error = useAppSelector((state) => state.connection.errorByConnectionType[getConnection(connector).type])
 
@@ -147,13 +155,13 @@ function Web3StatusInner() {
 
   const hasPendingTransactions = !!pending.length
   const hasSocks = useHasSocks()
-  const toggleWalletModal = useToggleWalletModal()
+  const toggleWallet = navbarFlag === NavBarVariant.Enabled ? toggleWalletDropdown : toggleWalletModal
 
   if (!chainId) {
     return null
   } else if (error) {
     return (
-      <Web3StatusError onClick={toggleWalletModal}>
+      <Web3StatusError onClick={toggleWallet}>
         <NetworkIcon />
         <Text>
           <Trans>Error</Trans>
@@ -162,11 +170,7 @@ function Web3StatusInner() {
     )
   } else if (account) {
     return (
-      <Web3StatusConnected
-        data-testid="web3-status-connected"
-        onClick={toggleWalletModal}
-        pending={hasPendingTransactions}
-      >
+      <Web3StatusConnected data-testid="web3-status-connected" onClick={toggleWallet} pending={hasPendingTransactions}>
         {hasPendingTransactions ? (
           <RowBetween>
             <Text>
@@ -191,7 +195,7 @@ function Web3StatusInner() {
         properties={{ received_swap_quote: validSwapQuote }}
         element={ElementName.CONNECT_WALLET_BUTTON}
       >
-        <Web3StatusConnect onClick={toggleWalletModal} faded={!account}>
+        <Web3StatusConnect onClick={toggleWallet} faded={!account}>
           <Text>
             <Trans>Connect Wallet</Trans>
           </Text>
@@ -201,10 +205,22 @@ function Web3StatusInner() {
   }
 }
 
+const useIsOpen = () => {
+  const walletDropdownOpen = useModalIsOpen(ApplicationModal.WALLET_DROPDOWN)
+  const navbarFlag = useNavBarFlag()
+
+  return useMemo(() => navbarFlag === NavBarVariant.Enabled && walletDropdownOpen, [navbarFlag, walletDropdownOpen])
+}
+
 export default function Web3Status() {
   const { ENSName } = useWeb3React()
 
   const allTransactions = useAllTransactions()
+  const ref = useRef<HTMLDivElement>(null)
+  const closeModal = useCloseModal(ApplicationModal.WALLET_DROPDOWN)
+  const isOpen = useIsOpen()
+
+  useOnClickOutside(ref, isOpen ? closeModal : undefined)
 
   const sortedRecentTransactions = useMemo(() => {
     const txs = Object.values(allTransactions)
@@ -215,9 +231,10 @@ export default function Web3Status() {
   const confirmed = sortedRecentTransactions.filter((tx) => tx.receipt).map((tx) => tx.hash)
 
   return (
-    <>
+    <span ref={ref}>
       <Web3StatusInner />
       <WalletModal ENSName={ENSName ?? undefined} pendingTransactions={pending} confirmedTransactions={confirmed} />
-    </>
+      <WalletDropdown />
+    </span>
   )
 }

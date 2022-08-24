@@ -8,6 +8,7 @@ import {
 } from 'components/Tokens/constants'
 import BalanceSummary from 'components/Tokens/TokenDetails/BalanceSummary'
 import FooterBalanceSummary from 'components/Tokens/TokenDetails/FooterBalanceSummary'
+import LoadingTokenDetail from 'components/Tokens/TokenDetails/LoadingTokenDetail'
 import NetworkBalance from 'components/Tokens/TokenDetails/NetworkBalance'
 import TokenDetail from 'components/Tokens/TokenDetails/TokenDetail'
 import TokenSafetyMessage from 'components/TokenSafety/TokenSafetyMessage'
@@ -147,21 +148,27 @@ export default function TokenDetails() {
               width={WIDGET_WIDTH}
             />
             {tokenWarning && <TokenSafetyMessage tokenAddress={tokenAddress} warning={tokenWarning} />}
-            {true && (
-              <BalanceSummary address={tokenAddress} totalBalance={totalBalance} networkBalances={balancesByNetwork} />
-            )}
+            <BalanceSummary address={tokenAddress} totalBalance={totalBalance} networkBalances={balancesByNetwork} />
           </RightPanel>
           <Footer>
-            {true && (
-              <FooterBalanceSummary
-                address={tokenAddress}
-                totalBalance={totalBalance}
-                networkBalances={balancesByNetwork}
-              />
-            )}
+            <FooterBalanceSummary
+              address={tokenAddress}
+              totalBalance={totalBalance}
+              networkBalances={balancesByNetwork}
+            />
           </Footer>
         </>
       )}
+    </TokenDetailsLayout>
+  )
+}
+
+export function LoadingTokenDetails() {
+  return (
+    <TokenDetailsLayout>
+      <LoadingTokenDetail />
+      <RightPanel></RightPanel>
+      <Footer />
     </TokenDetailsLayout>
   )
 }

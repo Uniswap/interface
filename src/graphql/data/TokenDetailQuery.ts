@@ -20,7 +20,6 @@ export function chainIdToChainName(networkId: SupportedChainId): Chain {
 }
 
 export function useTokenDetailQuery(address: string, chain: Chain) {
-  console.log(address, chain)
   const tokenDetail = useLazyLoadQuery<TokenDetailQueryType>(
     graphql`
       query TokenDetailQuery($contract: ContractInput!) {

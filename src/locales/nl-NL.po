@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-22 19:04\n"
+"PO-Revision-Date: 2022-08-23 20:04\n"
 "Last-Translator: \n"
 "Language: nl_NL\n"
 "Language-Team: Dutch\n"
@@ -121,7 +121,6 @@ msgid "A swap of this size may have a high price impact, given the current liqui
 msgstr "Een swap van deze omvang kan een hoge prijsimpact hebben, gezien de huidige liquiditeit in de pool. Er kan een groot verschil zijn tussen het bedrag van uw invoertoken en wat u ontvangt in het uitvoertoken"
 
 #: src/components/Menu/index.tsx
-#: src/components/Tokens/TokenDetails/TokenDetail.tsx
 #: src/components/Tokens/TokenDetails/TokenDetail.tsx
 msgid "About"
 msgstr "Over"
@@ -930,6 +929,7 @@ msgid "Help Center"
 msgstr "Helpcentrum"
 
 #: src/components/FeeSelector/index.tsx
+#: src/components/Tokens/TokenDetails/TokenDetail.tsx
 msgid "Hide"
 msgstr "Zich verstoppen"
 
@@ -1491,6 +1491,10 @@ msgstr "In de rij staan"
 #: src/pages/AddLiquidityV2/ConfirmAddModalBottom.tsx
 msgid "Rates"
 msgstr "Tarieven"
+
+#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+msgid "Read more"
+msgstr "Lees verder"
 
 #: src/pages/Earn/index.tsx
 msgid "Read more about UNI"

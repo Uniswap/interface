@@ -1,9 +1,7 @@
 import { Link } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
-export const AboutSection = styled.div`
-  display: flex;
-  flex-direction: column;
+export const AboutContainer = styled.div`
   gap: 16px;
   padding: 24px 0px;
 `

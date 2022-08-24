@@ -9,7 +9,7 @@ import {
 import { useAllTokens } from 'hooks/Tokens'
 import { TimePeriod, TokenData } from 'hooks/useExplorePageQuery'
 import { useAtomValue } from 'jotai/utils'
-import { ReactNode, useCallback, useMemo } from 'react'
+import { ReactNode, Suspense, useCallback, useMemo } from 'react'
 import { AlertTriangle } from 'react-feather'
 import styled from 'styled-components/macro'
 
@@ -44,7 +44,6 @@ const NoTokenDisplay = styled.div`
   gap: 8px;
 `
 const TokenRowsContainer = styled.div`
-  padding: 4px 0px;
   width: 100%;
 `
 
@@ -75,7 +74,7 @@ function useFilteredTokens(addresses: string[]) {
   )
 }
 
-function useSortedTokens(addresses: string[], tokenData: TokenData | null) {
+function useSortedTokens(addresses: string[], tokenData: Record<string, TokenData> | null) {
   const sortCategory = useAtomValue(sortCategoryAtom)
   const sortDirection = useAtomValue(sortDirectionAtom)
   const timePeriod = useAtomValue<TimePeriod>(filterTimeAtom)
@@ -98,6 +97,7 @@ function useSortedTokens(addresses: string[], tokenData: TokenData | null) {
         if (!tokenData) {
           return 0
         }
+        // fix any, delta property
         const token1 = tokenData[token1Address] as any
         const token2 = tokenData[token2Address] as any
 
@@ -143,7 +143,7 @@ const LOADING_ROWS = Array.from({ length: 100 })
   .fill(0)
   .map((_item, index) => <LoadingRow key={index} />)
 
-function LoadingTokenTable() {
+export function LoadingTokenTable() {
   return (
     <GridContainer>
       <HeaderRow />
@@ -152,13 +152,7 @@ function LoadingTokenTable() {
   )
 }
 
-interface TokenTableProps {
-  data: TokenData | null
-  error: string | null
-  loading: boolean
-}
-
-export default function TokenTable({ data, error, loading }: TokenTableProps) {
+export default function TokenTable({ data }: { data: Record<string, TokenData> | null }) {
   const showFavorites = useAtomValue<boolean>(showFavoritesAtom)
   const timePeriod = useAtomValue<TimePeriod>(filterTimeAtom)
   const topTokenAddresses = data ? Object.keys(data) : []
@@ -166,9 +160,7 @@ export default function TokenTable({ data, error, loading }: TokenTableProps) {
   const filteredAndSortedTokens = useSortedTokens(filteredTokens, data)
 
   /* loading and error state */
-  if (loading) {
-    return <LoadingTokenTable />
-  } else if (error || data === null) {
+  if (data === null) {
     return (
       <NoTokensState
         message={
@@ -190,20 +182,22 @@ export default function TokenTable({ data, error, loading }: TokenTableProps) {
   }
 
   return (
-    <GridContainer>
-      <HeaderRow />
-      <TokenRowsContainer>
-        {filteredAndSortedTokens.map((tokenAddress, index) => (
-          <LoadedRow
-            key={tokenAddress}
-            tokenAddress={tokenAddress}
-            tokenListIndex={index}
-            tokenListLength={filteredAndSortedTokens.length}
-            data={data}
-            timePeriod={timePeriod}
-          />
-        ))}
-      </TokenRowsContainer>
-    </GridContainer>
+    <Suspense fallback={<LoadingTokenTable />}>
+      <GridContainer>
+        <HeaderRow />
+        <TokenRowsContainer>
+          {filteredAndSortedTokens.map((tokenAddress, index) => (
+            <LoadedRow
+              key={tokenAddress}
+              tokenAddress={tokenAddress}
+              tokenListIndex={index}
+              tokenListLength={filteredAndSortedTokens.length}
+              tokenData={data[tokenAddress]}
+              timePeriod={timePeriod}
+            />
+          ))}
+        </TokenRowsContainer>
+      </GridContainer>
+    </Suspense>
   )
 }

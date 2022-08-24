@@ -5,9 +5,6 @@ import { EventName } from 'components/AmplitudeAnalytics/constants'
 import SparklineChart from 'components/Charts/SparklineChart'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { getChainInfo } from 'constants/chainInfo'
-import { chainIdToChainName } from 'graphql/data/TokenDetailQuery'
-import { useTokenPriceQuery } from 'graphql/data/TokenPriceQuery'
-import { useTokenRowQuery } from 'graphql/data/TokenRowQuery'
 import { useCurrency, useToken } from 'hooks/Tokens'
 import { TimePeriod, TokenData } from 'hooks/useExplorePageQuery'
 import { useAtom } from 'jotai'
@@ -35,7 +32,7 @@ import {
   useSetSortCategory,
   useToggleFavorite,
 } from '../state'
-import { DATA_EMPTY, getDelta, PricePoint } from '../TokenDetails/PriceChart'
+import { formatDelta, getDeltaArrow } from '../TokenDetails/PriceChart'
 import { Category, SortDirection } from '../types'
 import { DISPLAYS } from './TimeSelector'
 
@@ -44,7 +41,7 @@ const Cell = styled.div`
   align-items: center;
   justify-content: center;
 `
-const StyledTokenRow = styled.div`
+const StyledTokenRow = styled.div<{ first?: boolean; last?: boolean }>`
   width: 100%;
   height: 60px;
   display: grid;
@@ -54,10 +51,14 @@ const StyledTokenRow = styled.div`
 
   max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT};
   min-width: 390px;
-  padding: 0px 12px;
+  padding-top: ${({ first }) => (first ? '4px' : '0px')};
+  padding-bottom: ${({ last }) => (last ? '4px' : '0px')};
+  padding-left: 12px;
+  padding-right: 12px;
 
   &:hover {
     background-color: ${({ theme }) => theme.accentActionSoft};
+    ${({ last }) => last && 'border-radius: 0px 0px 8px 8px;'}
   }
 
   @media only screen and (max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT}) {
@@ -351,6 +352,8 @@ export function TokenRow({
   marketCap,
   volume,
   sparkLine,
+  first,
+  last,
 }: {
   address: ReactNode
   header: boolean
@@ -362,6 +365,8 @@ export function TokenRow({
   marketCap: ReactNode
   volume: ReactNode
   sparkLine: ReactNode
+  first?: boolean
+  last?: boolean
 }) {
   const rowCells = (
     <>
@@ -376,7 +381,11 @@ export function TokenRow({
     </>
   )
   if (header) return <StyledHeaderRow>{rowCells}</StyledHeaderRow>
-  return <StyledTokenRow>{rowCells}</StyledTokenRow>
+  return (
+    <StyledTokenRow first={first} last={last}>
+      {rowCells}
+    </StyledTokenRow>
+  )
 }
 
 /* Header Row: top header row component for table */
@@ -425,13 +434,13 @@ export default function LoadedRow({
   tokenAddress,
   tokenListIndex,
   tokenListLength,
-  data,
+  tokenData,
   timePeriod,
 }: {
   tokenAddress: string
   tokenListIndex: number
   tokenListLength: number
-  data: TokenData
+  tokenData: TokenData
   timePeriod: TimePeriod
 }) {
   const token = useToken(tokenAddress)
@@ -447,15 +456,17 @@ export default function LoadedRow({
   const L2Icon = getChainInfo(filterNetwork).circleLogoUrl
 
   // TODO: make delta shareable and fix based on future changes
-  const pricePoints: PricePoint[] = useTokenPriceQuery(tokenAddress, timePeriod, 'ETHEREUM').filter(
-    (p): p is PricePoint => Boolean(p && p.value)
-  )
-  const hasData = pricePoints.length !== 0
+  // const pricePoints: PricePoint[] = useTokenPriceQuery(tokenAddress, timePeriod, 'ETHEREUM').filter(
+  //   (p): p is PricePoint => Boolean(p && p.value)
+  // )
+  // const hasData = pricePoints.length !== 0
 
-  /* TODO: Implement API calls & cache to use here */
-  const startingPrice = hasData ? pricePoints[0] : DATA_EMPTY
-  const endingPrice = hasData ? pricePoints[pricePoints.length - 1] : DATA_EMPTY
-  const [delta, arrow] = getDelta(startingPrice.value, endingPrice.value)
+  // /* TODO: Implement API calls & cache to use here */
+  // const startingPrice = hasData ? pricePoints[0] : DATA_EMPTY
+  // const endingPrice = hasData ? pricePoints[pricePoints.length - 1] : DATA_EMPTY
+  const delta = tokenData.percentChange[timePeriod]?.value
+  const arrow = delta ? getDeltaArrow(delta) : null
+  const formattedDelta = delta ? formatDelta(delta) : null
 
   const exploreTokenSelectedEventProperties = {
     chain_id: filterNetwork,
@@ -468,8 +479,6 @@ export default function LoadedRow({
   }
 
   const heartColor = isFavorited ? theme.accentActive : undefined
-  // TODO: consider using backend network?
-  const tokenRowData = useTokenRowQuery(tokenAddress, timePeriod, chainIdToChainName(filterNetwork))
   // TODO: currency logo sizing mobile (32px) vs. desktop (24px)
   return (
     <StyledLink
@@ -505,7 +514,7 @@ export default function LoadedRow({
         price={
           <ClickableContent>
             <PriceInfoCell>
-              {tokenRowData.price?.value ? formatDollarAmount(tokenRowData.price?.value) : '-'}
+              {tokenData.price?.value ? formatDollarAmount(tokenData.price?.value) : '-'}
               <PercentChangeInfoCell>
                 {delta}
                 {arrow}
@@ -515,18 +524,20 @@ export default function LoadedRow({
         }
         percentChange={
           <ClickableContent>
-            {delta}
+            {formattedDelta}
             {arrow}
           </ClickableContent>
         }
         marketCap={
           <ClickableContent>
-            {tokenRowData.marketCap?.value ? formatDollarAmount(tokenRowData.marketCap?.value) : '-'}
+            {tokenData.marketCap?.value ? formatDollarAmount(tokenData.marketCap?.value) : '-'}
           </ClickableContent>
         }
         volume={
           <ClickableContent>
-            {tokenRowData.volume?.value ? formatDollarAmount(tokenRowData.volume?.value) : '-'}
+            {tokenData.volume?.[timePeriod]?.value
+              ? formatDollarAmount(tokenData.volume?.[timePeriod]?.value ?? undefined)
+              : '-'}
           </ClickableContent>
         }
         sparkLine={
@@ -534,6 +545,8 @@ export default function LoadedRow({
             <ParentSize>{({ width, height }) => <SparklineChart width={width} height={height} />}</ParentSize>
           </SparkLine>
         }
+        first={tokenListIndex === 0}
+        last={tokenListIndex === tokenListLength - 1}
       />
     </StyledLink>
   )
