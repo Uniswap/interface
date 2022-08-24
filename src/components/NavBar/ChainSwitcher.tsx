@@ -6,9 +6,10 @@ import useSelectChain from 'hooks/useSelectChain'
 import useSyncChainQuery from 'hooks/useSyncChainQuery'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
-import { NewChevronDownIcon, NewChevronUpIcon } from 'nft/components/icons'
+import { NewChevronDownIcon, NewChevronUpIcon, TokenWarningRedIcon } from 'nft/components/icons'
 import { CheckMarkIcon } from 'nft/components/icons'
 import { subhead } from 'nft/css/common.css'
+import { themeVars } from 'nft/css/sprinkles.css'
 import { ReactNode, useReducer, useRef } from 'react'
 import { isChainAllowed } from 'utils/switchChain'
 
@@ -68,17 +69,30 @@ export const ChainSwitcher = ({ isMobile }: ChainSwitcherProps) => {
   const selectChain = useSelectChain()
   useSyncChainQuery()
 
-  if (!chainId || !info) {
-    return null
-  }
-
   return (
     <Box position="relative" ref={ref}>
-      <Row as="button" gap="8" className={styles.ChainSwitcher} onClick={toggleOpen}>
-        <img src={info.logoUrl} alt={info.label} className={styles.Image} />
-        <Box as="span" className={subhead} style={{ lineHeight: '20px' }}>
-          {info.label}
-        </Box>
+      <Row
+        as="button"
+        gap="8"
+        className={styles.ChainSwitcher}
+        background={isOpen ? 'accentActiveSoft' : 'none'}
+        onClick={toggleOpen}
+      >
+        {!chainId || !info ? (
+          <>
+            <TokenWarningRedIcon fill={themeVars.colors.darkGray} width={24} height={24} />
+            <Box as="span" className={subhead} style={{ lineHeight: '20px' }}>
+              {info?.label ?? 'Unsupported'}
+            </Box>
+          </>
+        ) : (
+          <>
+            <img src={info.logoUrl} alt={info.label} className={styles.Image} />
+            <Box as="span" className={subhead} style={{ lineHeight: '20px' }}>
+              {info.label}
+            </Box>
+          </>
+        )}
         {isOpen ? (
           <NewChevronUpIcon width={16} height={16} color="blackBlue" />
         ) : (

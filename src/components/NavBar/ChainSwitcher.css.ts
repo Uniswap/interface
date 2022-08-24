@@ -37,8 +37,8 @@ export const ChainSwitcherRow = style([
 
 export const Image = style([
   sprinkles({
-    width: '28',
-    height: '28',
+    width: '20',
+    height: '20',
   }),
 ])
 
