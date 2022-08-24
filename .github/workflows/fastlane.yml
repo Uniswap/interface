@@ -45,7 +45,7 @@ jobs:
           restore-keys: ${{ runner.os }}-yarn-v1
 
       # Detox is compiled during yarn install, using Xcode, set up cache first
-      - uses: hendrikmuhs/ccache-action@40bf560936a8022e68a3c00e7d2abefaf01305a6
+      - uses: hendrikmuhs/ccache-action@ed038da2f2f09b0c8387c00e1498290a4808da2e
         name: Xcode Compile Cache
         with:
           key: ${{ runner.os }}-v2 # makes a unique key w/related restore key internally
