@@ -69,7 +69,7 @@ export function NFTItemScreen({
 
   return (
     <HeaderScrollScreen
-      contentHeader={<BackButton showButtonLabel />}
+      contentHeader={<BackButton showButtonLabel px="md" />}
       fixedHeader={<BackButton showButtonLabel />}>
       <Flex my="sm">
         <Flex centered>

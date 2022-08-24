@@ -65,7 +65,7 @@ export function UserScreen({
         </GradientBackground>
       }
       contentHeader={
-        <Flex gap="md" pt="md">
+        <Flex gap="md" mx="md" pt="md">
           <BackButton showButtonLabel />
           <AddressDisplay
             address={address}

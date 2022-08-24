@@ -169,7 +169,7 @@ export function SettingsScreen() {
     <HeaderScrollScreen
       background={<AppBackground isStrongAccent />}
       contentHeader={
-        <Flex pt="md">
+        <Flex mx="md" pt="md">
           <BackHeader alignment="left">
             <Text variant="subhead">{t('Settings')}</Text>
           </BackHeader>

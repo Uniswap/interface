@@ -21,7 +21,7 @@ export function TransactionsScreen({
   return (
     <HeaderScrollScreen
       contentHeader={
-        <Flex pt="md">
+        <Flex mx="md" pt="md">
           <BackHeader>
             <AddressDisplay
               address={owner}

@@ -199,13 +199,13 @@ export function NFTCollectionScreen({
 
   return (
     <HeaderScrollScreen
-      contentHeader={<BackButton showButtonLabel />}
+      contentHeader={<BackButton showButtonLabel px="md" />}
       fixedHeader={
         <BackHeader>
           <Text variant="subhead">{collection?.name}</Text>
         </BackHeader>
       }>
-      <Flex gap="lg">
+      <Flex gap="lg" mt="lg">
         <Box mx="lg">
           {collectionLoading ? (
             <Box mt="xl">

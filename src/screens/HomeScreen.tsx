@@ -99,8 +99,8 @@ function ContentHeader() {
       justifyContent="space-between"
       mb="xxs"
       mt="sm"
-      px="xs"
-      py="sm">
+      mx="sm"
+      px="xs">
       <Flex row alignItems="center" gap="xs">
         <AccountHeader onPress={onPressAccountHeader} />
         {activeAccount?.type === AccountType.Readonly && (

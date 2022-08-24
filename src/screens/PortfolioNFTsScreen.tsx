@@ -83,8 +83,8 @@ export function PortfolioNFTsScreen({
   return (
     <HeaderScrollScreen
       contentHeader={
-        <Flex gap="md">
-          <Flex gap="none" my="sm">
+        <Flex gap="md" mx="md">
+          <Flex gap="none">
             {isOtherOwner ? (
               <BackHeader>
                 <AddressDisplay address={owner} color="textSecondary" size={16} variant="subhead" />

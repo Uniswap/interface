@@ -69,9 +69,9 @@ export function ProfileScreen({ navigation }: Props) {
 
   const ContentHeader = useMemo(
     () => (
-      <Flex gap="lg" my="sm">
+      <Flex gap="lg" m="sm">
         {/* nav header */}
-        <Flex row justifyContent="space-between">
+        <Flex row justifyContent="space-between" mx="xs">
           <Text variant="headlineSmall">{t('Activity')}</Text>
           <Flex centered row gap="md">
             <Button name={ElementName.WalletConnectScan} onPress={onPressScan}>

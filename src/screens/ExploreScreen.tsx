@@ -126,7 +126,7 @@ export function ExploreScreen() {
           },
         ]}
         tint={isDarkMode ? 'dark' : 'default'}>
-        <Flex gap={isSearchMode ? 'none' : 'lg'} mb="sm" mt={isSearchMode ? 'sm' : 'md'} mx="sm">
+        <Flex gap={isSearchMode ? 'none' : 'lg'} m="sm">
           <Flex height={isSearchMode ? 0 : 'auto'} opacity={isSearchMode ? 0 : 1}>
             <AnimatedText mx="xs" style={titleStyle} variant="headlineSmall">
               {t('Explore')}
