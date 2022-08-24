@@ -66,7 +66,7 @@ const Navbar = () => {
   const nftFlag = useNftFlag()
   const theme = useTheme()
 
-  if (windowWidth && windowWidth < theme.breakpoint.xl) {
+  if (windowWidth && windowWidth <= theme.breakpoint.xl) {
     return <MobileNavbar />
   }
 
