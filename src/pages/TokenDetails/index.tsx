@@ -81,19 +81,6 @@ export default function TokenDetails() {
     console.log('onTxFail')
   }, [])
 
-<<<<<<< HEAD
-=======
-  let tokenDetail
-  if (!tokenAddress) {
-    // TODO: handle no address / invalid address cases
-    tokenDetail = 'invalid token address'
-  } else if (loading) {
-    tokenDetail = <LoadingTokenDetail />
-  } else {
-    tokenDetail = <TokenDetail address={tokenAddress} />
-  }
-
->>>>>>> main
   const tokenWarning = tokenAddress ? checkWarning(tokenAddress) : null
   /* network balance handling */
 
