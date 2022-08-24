@@ -7,14 +7,13 @@ import { RecipientList, RecipientLoadingRow } from 'src/components/RecipientSele
 import { filterSections } from 'src/components/RecipientSelect/utils'
 import { Text } from 'src/components/Text'
 import { SearchBar } from 'src/components/TokenSelector/SearchBar'
+import { QRScannerIconButton } from 'src/components/WalletConnect/QRScannerIconButton'
 
 interface RecipientSelectProps {
   onSelectRecipient: (newRecipientAddress: string) => void
   onToggleShowRecipientSelector: () => void
 }
 
-// TODO:
-// - change search bar icon to pressable scan
 export function RecipientSelect({
   onSelectRecipient,
   onToggleShowRecipientSelector,
@@ -38,6 +37,7 @@ export function RecipientSelect({
     <Flex gap="sm" px="md" width="100%">
       <SearchBar
         backgroundColor="backgroundContainer"
+        endAdornment={<QRScannerIconButton size={20} />}
         placeholder={t('Input address or ENS')}
         value={pattern}
         onBack={onToggleShowRecipientSelector}

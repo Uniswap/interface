@@ -8,7 +8,6 @@ import ScanQRIcon from 'src/assets/icons/scan-qr.svg'
 import SwapIcon from 'src/assets/icons/swap.svg'
 import { AccountHeader } from 'src/components/accounts/AccountHeader'
 import { AddressDisplay } from 'src/components/AddressDisplay'
-import { Button } from 'src/components/buttons/Button'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { SendButton } from 'src/components/buttons/SendButton'
 import { AppBackground } from 'src/components/gradients/AppBackground'
@@ -18,6 +17,7 @@ import { Box, Flex } from 'src/components/layout'
 import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollScreen'
 import { Pill } from 'src/components/text/Pill'
 import { WalletConnectModalState } from 'src/components/WalletConnect/constants'
+import { QRScannerIconButton } from 'src/components/WalletConnect/QRScannerIconButton'
 import { TotalBalance } from 'src/features/balances/TotalBalance'
 import { useBiometricCheck } from 'src/features/biometrics/useBiometricCheck'
 import { openModal } from 'src/features/modals/modalSlice'
@@ -74,17 +74,7 @@ function FixedHeader() {
 
 function ContentHeader() {
   const navigation = useHomeStackNavigation()
-  const dispatch = useAppDispatch()
   const theme = useAppTheme()
-
-  const onPressScan = useCallback(() => {
-    selectionAsync()
-    // in case we received a pending session from a previous scan after closing modal
-    dispatch(removePendingSession())
-    dispatch(
-      openModal({ name: ModalName.WalletConnectScan, initialState: WalletConnectModalState.ScanQr })
-    )
-  }, [dispatch])
 
   const onPressAccountHeader = useCallback(() => {
     navigation.dispatch(DrawerActions.openDrawer())
@@ -118,11 +108,7 @@ function ContentHeader() {
       </Flex>
       <Flex row alignItems="center" gap="sm">
         <PendingNotificationBadge />
-        {isWalletConnectSupportedAccount(activeAccount) && (
-          <Button name={ElementName.WalletConnectScan} onPress={onPressScan}>
-            <ScanQRIcon color={theme.colors.textSecondary} height={24} width={24} />
-          </Button>
-        )}
+        {isWalletConnectSupportedAccount(activeAccount) && <QRScannerIconButton />}
       </Flex>
     </Box>
   )
