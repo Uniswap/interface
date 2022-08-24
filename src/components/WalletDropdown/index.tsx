@@ -29,12 +29,12 @@ export enum MenuState {
 const WalletDropdownWrapper = styled.div`
   position: absolute;
 
-  @media only screen and (min-width: 1280px) {
+  @media only screen and (min-width: ${({ theme }) => theme.breakpoint.xl}px) {
     top: 65px;
     right: 20px;
   }
 
-  @media only screen and (max-width: 1280px) {
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.xl}px`}) {
     left: 50%;
     bottom: 45px;
     transform: translateX(-50%);
