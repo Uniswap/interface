@@ -298,12 +298,6 @@ export function useTransferGasFee(
   }, [txFee, optimismL1TransferFee])
 }
 
-export function useRecipientIsNewAddress(recipient: string | undefined) {
-  const activeAddress = useActiveAccountAddressWithThrow()
-  const txnsToSelectedAddress = useAllTransactionsBetweenAddresses(activeAddress, recipient)
-  return txnsToSelectedAddress?.length === 0
-}
-
 export function useIsSmartContractAddress(address: string | undefined, chainId: ChainId) {
   const provider = useProvider(chainId)
   const [state, setState] = useState<{ loading: boolean; isSmartContractAddress: boolean }>({
@@ -329,15 +323,13 @@ export function useHandleTransferWarningModals(
   onNext: () => void,
   recipient: string | undefined
 ) {
-  const hasNewAddressWarning = useRecipientIsNewAddress(recipient)
+  const activeAddress = useActiveAccountAddressWithThrow()
+  const isNewRecipient = useAllTransactionsBetweenAddresses(activeAddress, recipient).length === 0
 
-  const onPressReview = useCallback(() => {
-    if (!hasNewAddressWarning) {
-      onNext()
-      return
-    }
-    if (hasNewAddressWarning) dispatch(showNewAddressWarningModal())
-  }, [hasNewAddressWarning, dispatch, onNext])
+  const onPressReview = useCallback(
+    () => (isNewRecipient ? dispatch(showNewAddressWarningModal()) : onNext()),
+    [isNewRecipient, dispatch, onNext]
+  )
 
   const onPressWarningContinue = useCallback(() => onNext(), [onNext])
 

@@ -3,6 +3,7 @@ import { BigNumberish } from 'ethers'
 import { useMemo } from 'react'
 import { useAppSelector } from 'src/app/hooks'
 import { ChainId } from 'src/constants/chains'
+import { EMPTY_ARRAY } from 'src/constants/misc'
 import { useCurrency } from 'src/features/tokens/useCurrency'
 import extractTransactionDetails from 'src/features/transactions/history/conversion/extractTransactionDetails'
 import { useTransactionHistoryForOwner } from 'src/features/transactions/history/transactionHistory'
@@ -223,21 +224,13 @@ export function useLowestPendingNonce() {
 export function useAllTransactionsBetweenAddresses(
   sender: Address,
   recipient: string | undefined | null
-): TransactionDetails[] | undefined {
+): TransactionDetails[] {
   const txnsToSearch = useAllFormattedTransactions(sender ?? null)
   return useMemo(() => {
-    if (!sender || !recipient) return undefined
-    return txnsToSearch.combinedTransactionList.filter(
+    if (!sender || !recipient) return EMPTY_ARRAY
+    const commonTxs = txnsToSearch.combinedTransactionList.filter(
       (tx) => tx.typeInfo.type === TransactionType.Send && tx.typeInfo.recipient === recipient
     )
+    return commonTxs.length ? commonTxs : EMPTY_ARRAY
   }, [recipient, sender, txnsToSearch.combinedTransactionList])
-}
-
-// Counts number of transactions from a given sender and to a given recipient
-export function useNumTransactionsBetweenAddresses(
-  sender: Address,
-  recipient: string | undefined | null
-): number | undefined {
-  const prevTxns = useAllTransactionsBetweenAddresses(sender, recipient)
-  return prevTxns?.length
 }

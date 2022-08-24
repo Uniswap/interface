@@ -7,7 +7,7 @@ import { Chevron } from 'src/components/icons/Chevron'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { ElementName } from 'src/features/telemetry/constants'
-import { useNumTransactionsBetweenAddresses } from 'src/features/transactions/hooks'
+import { useAllTransactionsBetweenAddresses } from 'src/features/transactions/hooks'
 import { useActiveAccountAddressWithThrow } from 'src/features/wallet/hooks'
 
 interface RecipientInputPanelProps {
@@ -56,7 +56,7 @@ export function RecipientInputPanel({
 export function RecipientPrevTransfers({ recipient }: { recipient: string }) {
   const { t } = useTranslation()
   const activeAddress = useActiveAccountAddressWithThrow()
-  const prevTxns = useNumTransactionsBetweenAddresses(activeAddress, recipient) ?? 0
+  const prevTxns = useAllTransactionsBetweenAddresses(activeAddress, recipient).length
 
   return (
     <Text color="textSecondary" textAlign="center" variant="caption">
