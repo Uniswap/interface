@@ -30,15 +30,14 @@ export function getNetworkLibrary(): Web3Provider {
 }
 
 export const injected = new InjectedConnector({
-  supportedChainIds: [ChainId.OP_GOERLI]
+  supportedChainIds: [1, 3, 4, 5, 42, 420]
 })
 
 // mainnet only
 export const walletconnect = new WalletConnectConnector({
   rpc: { 1: NETWORK_URL },
   bridge: WALLETCONNECT_BRIDGE_URL,
-  qrcode: true,
-  pollingInterval: 15000
+  qrcode: true
 })
 
 // mainnet only

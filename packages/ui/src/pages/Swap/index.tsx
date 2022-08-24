@@ -91,7 +91,7 @@ export default function Swap({ history }: RouteComponentProps) {
   // swap state
   const { independentField, typedValue, recipient } = useSwapState()
   const {
-    v1Trade,
+    // v1Trade,
     v2Trade,
     currencyBalances,
     parsedAmount,
@@ -108,14 +108,14 @@ export default function Swap({ history }: RouteComponentProps) {
   const { address: recipientAddress } = useENSAddress(recipient)
   const toggledVersion = useToggledVersion()
   const tradesByVersion = {
-    [Version.v1]: v1Trade,
+    // [Version.v1]: v1Trade,
     [Version.v2]: v2Trade
   }
   const trade = showWrap ? undefined : tradesByVersion[toggledVersion]
   const defaultTrade = showWrap ? undefined : tradesByVersion[DEFAULT_VERSION]
 
   const betterTradeLinkV2: Version | undefined =
-    toggledVersion === Version.v1 && isTradeBetter(v1Trade, v2Trade) ? Version.v2 : undefined
+    /*   toggledVersion === Version.v1 && isTradeBetter(v1Trade, v2Trade) ? */ Version.v2 /* : undefined */
 
   const parsedAmounts = showWrap
     ? {

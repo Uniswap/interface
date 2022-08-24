@@ -84,13 +84,21 @@ export function FindPoolTabs() {
   )
 }
 
-export function AddRemoveTabs({ adding, creating }: { adding: boolean; creating: boolean }) {
+export function AddRemoveTabs({
+  adding,
+  creating,
+  settings = true
+}: {
+  adding: boolean
+  creating: boolean
+  settings?: boolean
+}) {
   // reset states on back
   const dispatch = useDispatch<AppDispatch>()
 
   return (
     <Tabs>
-      <RowBetween style={{ padding: '1rem 1rem 0 1rem' }}>
+      <RowBetween style={{ padding: '1rem 1rem 1rem 1rem' }}>
         <HistoryLink
           to="/pool"
           onClick={() => {
@@ -100,7 +108,7 @@ export function AddRemoveTabs({ adding, creating }: { adding: boolean; creating:
           <StyledArrowLeft />
         </HistoryLink>
         <ActiveText>{creating ? 'Create a pair' : adding ? 'Add Liquidity' : 'Remove Liquidity'}</ActiveText>
-        <Settings />
+        {settings && <Settings />}
       </RowBetween>
     </Tabs>
   )

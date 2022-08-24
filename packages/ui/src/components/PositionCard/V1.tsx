@@ -7,7 +7,7 @@ import { AutoColumn } from '../Column'
 import { ButtonSecondary } from '../Button'
 import { RowBetween, RowFixed } from '../Row'
 import { FixedHeightRow, HoverCard } from './index'
-import DoubleCurrencyLogo from '../DoubleLogo'
+import DoubleCurrencyLogoHorizontal from '../DoubleLogo'
 import { useActiveWeb3React } from '../../hooks'
 import useThemedContext from 'hooks/useThemedContext'
 
@@ -26,7 +26,7 @@ function V1PositionCard({ token, V1LiquidityBalance }: PositionCardProps) {
       <AutoColumn gap="12px">
         <FixedHeightRow>
           <RowFixed>
-            <DoubleCurrencyLogo currency0={token} margin={true} size={20} />
+            <DoubleCurrencyLogoHorizontal currency0={token} margin={true} size={20} />
             <Text fontWeight={500} fontSize={20} style={{ marginLeft: '' }}>
               {`${chainId && token.equals(WETH[chainId]) ? 'WETH' : token.symbol}/ETH`}
             </Text>

@@ -39,6 +39,7 @@
   "include": [
     "./src/**/*.ts",
     "./src/**/*.tsx",
-    "src/components/Confetti/index.js"
+    "src/components/Confetti/index.js",
+    "public"
   ]
 }

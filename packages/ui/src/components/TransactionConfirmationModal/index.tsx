@@ -131,6 +131,37 @@ function TransactionSubmittedContent({
   )
 }
 
+// const BorderWrapper = styled(Box)`
+//   // border: 1px solid rgba(255, 255, 255, 0.2);
+//   border: 1px solid rgba(0, 0, 0, 0.2); //test usage
+//   border-radius: 24px;
+// `
+
+export function AddLiquidityConfirmationModalContent({
+  bottomContent,
+  onDismiss,
+  topContent
+}: {
+  onDismiss: () => void
+  topContent: () => React.ReactNode
+  bottomContent: () => React.ReactNode
+}) {
+  return (
+    <Wrapper>
+      <Section>
+        <RowBetween>
+          <Text fontWeight={500} fontSize={20}>
+            {'Add Liquidity'}
+          </Text>
+          <CloseIcon onClick={onDismiss} />
+        </RowBetween>
+        {topContent()}
+      </Section>
+      <BottomSection gap="12px">{bottomContent()}</BottomSection>
+    </Wrapper>
+  )
+}
+
 export function ConfirmationModalContent({
   title,
   bottomContent,

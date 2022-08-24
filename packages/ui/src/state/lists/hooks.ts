@@ -41,8 +41,8 @@ const EMPTY_LIST: TokenAddressMap = {
   [ChainId.RINKEBY]: {},
   [ChainId.ROPSTEN]: {},
   [ChainId.GÖRLI]: {},
-  [ChainId.OP_GOERLI]: {},
-  [ChainId.MAINNET]: {}
+  [ChainId.MAINNET]: {},
+  [ChainId.OP_GOERLI]: {}
 }
 
 const listCache: WeakMap<TokenList, TokenAddressMap> | null =
@@ -62,9 +62,8 @@ export function listToTokenMap(list: TokenList): TokenAddressMap {
           })
           ?.filter((x): x is TagInfo => Boolean(x)) ?? []
       const token = new WrappedTokenInfo(tokenInfo, tags)
-      if (tokenMap[token.chainId][token.address] !== undefined) {
+      if (tokenMap[token.chainId] && tokenMap[token.chainId][token.address] !== undefined) {
         console.error(new Error(`Duplicate token! ${token.address}`))
-        return tokenMap
       }
       return {
         ...tokenMap,
@@ -100,16 +99,18 @@ function combineMaps(map1: TokenAddressMap, map2: TokenAddressMap): TokenAddress
     3: { ...map1[3], ...map2[3] },
     4: { ...map1[4], ...map2[4] },
     5: { ...map1[5], ...map2[5] },
-    420: { ...map1[420], ...map2[420] },
-    42: { ...map1[42], ...map2[42] }
+    42: { ...map1[42], ...map2[42] },
+    420: { ...map1[420], ...map2[420] }
   }
 }
 
 // merge tokens contained within lists from urls
 function useCombinedTokenMapFromUrls(urls: string[] | undefined): TokenAddressMap {
   const lists = useAllLists()
+
   return useMemo(() => {
     if (!urls) return EMPTY_LIST
+
     return (
       urls
         .slice()

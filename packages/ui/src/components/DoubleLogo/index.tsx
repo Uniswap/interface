@@ -1,5 +1,6 @@
 import { Currency } from '@teleswap/sdk'
 import React from 'react'
+import { Flex } from 'rebass'
 import styled from 'styled-components'
 import CurrencyLogo from '../CurrencyLogo'
 
@@ -25,7 +26,7 @@ const CoveredLogo = styled(CurrencyLogo)<{ sizeraw: number }>`
   left: ${({ sizeraw }) => '-' + (sizeraw / 2).toString() + 'px'} !important;
 `
 
-export default function DoubleCurrencyLogo({
+export default function DoubleCurrencyLogoHorizontal({
   currency0,
   currency1,
   size = 16,
@@ -36,5 +37,26 @@ export default function DoubleCurrencyLogo({
       {currency0 && <HigherLogo currency={currency0} size={size.toString() + 'px'} />}
       {currency1 && <CoveredLogo currency={currency1} size={size.toString() + 'px'} sizeraw={size} />}
     </Wrapper>
+  )
+}
+
+export function DoubleCurrencyLogoVertical({
+  currency0,
+  currency1,
+  size = 16,
+  margin = false
+}: DoubleCurrencyLogoProps) {
+  return (
+    <Flex
+      sx={{
+        position: 'relative',
+        display: 'flex',
+        flexDirection: 'column',
+        margin: `${({ sizeraw, margin }) => margin && (sizeraw / 3 + 8).toString() + 'px'} 0px`
+      }}
+    >
+      {currency0 && <HigherLogo currency={currency0} size={size.toString() + 'px'} />}
+      {currency1 && <CoveredLogo currency={currency1} size={size.toString() + 'px'} sizeraw={size} />}
+    </Flex>
   )
 }

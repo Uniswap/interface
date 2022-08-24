@@ -21,15 +21,15 @@ import QuestionHelper from '../QuestionHelper'
 import { RowBetween, RowFixed } from '../Row'
 import Toggle from '../Toggle'
 import TransactionSettings from '../TransactionSettings'
+import SettingsIcon from 'assets/svg/Settings.svg'
 
-const StyledMenuIcon = styled(Settings)`
+const StyledMenuIcon = styled.img`
   height: 20px;
   width: 20px;
 
   > * {
     stroke: ${({ theme }) => theme.text2};
   }
-
   :hover {
     opacity: 0.7;
   }
@@ -181,7 +181,7 @@ export default function SettingsTab() {
         </ModalContentWrapper>
       </Modal>
       <StyledMenuButton onClick={toggle} id="open-settings-dialog-button">
-        <StyledMenuIcon />
+        <StyledMenuIcon src={SettingsIcon} />
         {expertMode ? (
           <EmojiWrapper>
             <span role="img" aria-label="wizard-icon">
