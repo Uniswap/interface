@@ -71,7 +71,7 @@
   "Search Results": "Search Results",
   "Recent": "Recent",
   "Your Wallets": "Your Wallets",
-  "Input address or ENS": "Input address or ENS",
+  "Search addresses or ENS names": "Search addresses or ENS names",
   "No results found": "No results found",
   "The address you typed either does not exist or is spelled incorrectly.": "The address you typed either does not exist or is spelled incorrectly.",
   "Tokens ({{totalCount}})": "Tokens ({{totalCount}})",

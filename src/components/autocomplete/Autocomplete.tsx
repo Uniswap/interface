@@ -66,7 +66,7 @@ export function Autocomplete<T>({
           disableClearable={disableClearable}
           endAdornment={inputEndAdornment}
           placeholder={placeholder}
-          value={pattern}
+          value={pattern ?? ''}
           onChangeText={(newPattern: string) => {
             setPattern(newPattern)
             onChangePattern?.(newPattern)

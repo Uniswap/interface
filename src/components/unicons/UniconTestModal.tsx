@@ -172,7 +172,6 @@ export function UniconTestModal({ onClose }: { onClose: () => void }) {
               backgroundColor="backgroundBackdrop"
               placeholder={t('Input an address or ENS to view its Unicon')}
               value={searchQuery}
-              onCancel={() => setSearchQuery('')}
               onChangeText={setSearchQuery}
               onFocus={() => null}
             />

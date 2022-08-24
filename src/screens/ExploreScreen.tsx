@@ -134,6 +134,7 @@ export function ExploreScreen() {
           </Flex>
           <SearchTextInput
             ref={textInputRef}
+            showCancelButton
             backgroundColor="backgroundContainer"
             placeholder={t('Search tokens or addresses')}
             value={searchQuery}

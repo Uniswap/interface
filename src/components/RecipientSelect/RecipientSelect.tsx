@@ -19,7 +19,6 @@ export function RecipientSelect({
   onToggleShowRecipientSelector,
 }: RecipientSelectProps) {
   const { t } = useTranslation()
-
   const { sections, searchableRecipientOptions, pattern, onChangePattern, loading } =
     useRecipients()
 
@@ -36,10 +35,11 @@ export function RecipientSelect({
   return (
     <Flex gap="sm" px="md" width="100%">
       <SearchBar
+        autoFocus
         backgroundColor="backgroundContainer"
         endAdornment={<QRScannerIconButton size={20} />}
-        placeholder={t('Input address or ENS')}
-        value={pattern}
+        placeholder={t('Search addresses or ENS names')}
+        value={pattern ?? ''}
         onBack={onToggleShowRecipientSelector}
         onChangeText={onChangePattern}
       />

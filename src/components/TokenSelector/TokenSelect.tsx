@@ -40,7 +40,7 @@ export function TokenSelect({
       <SearchBar
         backgroundColor="backgroundContainer"
         placeholder={t('Search tokens')}
-        value={searchFilter}
+        value={searchFilter ?? ''}
         onBack={() => {
           Keyboard.dismiss()
           onBack()

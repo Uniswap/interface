@@ -7,11 +7,10 @@ import X from 'src/assets/icons/x.svg'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { AnimatedButton } from 'src/components/buttons/Button'
 import { IconButton } from 'src/components/buttons/IconButton'
-import { TextInput } from 'src/components/input/TextInput'
+import { TextInput, TextInputProps } from 'src/components/input/TextInput'
 import { AnimatedFlex, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { dimensions } from 'src/styles/sizing'
-import { Theme } from 'src/styles/theme'
 import SearchIcon from '../../assets/icons/search.svg'
 
 export const springConfig = {
@@ -23,23 +22,22 @@ export const springConfig = {
   restSpeedThreshold: 0.01,
 }
 
-export interface SearchTextInputProps {
-  value: string | null
-  onChangeText: (newText: string) => void
+export type SearchTextInputProps = TextInputProps & {
+  value: string
   onFocus?: () => void
   onCancel?: () => void
-  backgroundColor?: keyof Theme['colors']
   clearIcon?: ReactElement
   disableClearable?: boolean
   endAdornment?: ReactElement
-  placeholder?: string
   showBackButton?: boolean
+  showCancelButton?: boolean
 }
 
 export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>((props, ref) => {
   const theme = useAppTheme()
   const { t } = useTranslation()
   const {
+    autoFocus,
     backgroundColor = 'backgroundSurface',
     clearIcon,
     disableClearable,
@@ -49,12 +47,13 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
     onFocus,
     placeholder,
     showBackButton,
+    showCancelButton,
     value,
   } = props
 
   const isFocus = useSharedValue(false)
-  const showClearButton = useSharedValue((value?.length as number) > 0 && !disableClearable)
-  const cancelButtonWidth = useSharedValue(40)
+  const showClearButton = useSharedValue(value.length > 0 && !disableClearable)
+  const cancelButtonWidth = useSharedValue(showCancelButton ? 40 : 0)
 
   const onPressCancel = () => {
     isFocus.value = false
@@ -147,6 +146,7 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
           ref={ref}
           autoCapitalize="none"
           autoCorrect={false}
+          autoFocus={autoFocus}
           backgroundColor="none"
           borderWidth={0}
           flex={1}
@@ -156,7 +156,7 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
           placeholderTextColor={theme.colors.textTertiary}
           returnKeyType="done"
           textContentType="none"
-          value={value ?? undefined}
+          value={value}
           onChangeText={onChangeTextInput}
           onFocus={onTextInputFocus}
           onSubmitEditing={onTextInputSubmitEditing}
@@ -171,12 +171,14 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
           </AnimatedFlex>
         )}
       </AnimatedFlex>
-      <AnimatedButton
-        style={[cancelButtonStyle, CancelButtonDefaultStyle]}
-        onLayout={onCancelLayout}
-        onPress={onPressCancel}>
-        <Text variant="subhead">{t('Cancel')}</Text>
-      </AnimatedButton>
+      {showCancelButton && (
+        <AnimatedButton
+          style={[cancelButtonStyle, CancelButtonDefaultStyle]}
+          onLayout={onCancelLayout}
+          onPress={onPressCancel}>
+          <Text variant="subhead">{t('Cancel')}</Text>
+        </AnimatedButton>
+      )}
     </Flex>
   )
 })
