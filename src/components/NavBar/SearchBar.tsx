@@ -318,15 +318,15 @@ export const SearchBar = () => {
     setSearchValue('')
   }, [pathname])
 
-  const isMobile = useMemo(() => windowWidth && windowWidth <= breakpoints.tabletSm, [windowWidth])
+  const isMobile = useMemo(() => windowWidth && windowWidth <= breakpoints.sm, [windowWidth])
 
   return (
     <>
       <Box
-        position={{ mobile: isOpen ? 'absolute' : 'relative', tabletSm: 'relative' }}
-        top={{ mobile: '0', tabletSm: 'unset' }}
-        left={{ mobile: '0', tabletSm: 'unset' }}
-        width={{ mobile: isOpen ? 'viewWidth' : 'auto', tabletSm: 'auto' }}
+        position={{ sm: isOpen ? 'absolute' : 'relative', md: 'relative' }}
+        top={{ sm: '0', md: 'unset' }}
+        left={{ sm: '0', md: 'unset' }}
+        width={{ sm: isOpen ? 'viewWidth' : 'auto', md: 'auto' }}
         ref={searchRef}
         style={{ zIndex: '1000' }}
       >
@@ -335,16 +335,16 @@ export const SearchBar = () => {
           borderRadius={isOpen ? undefined : '12'}
           borderTopRightRadius={isOpen && !isMobile ? '12' : undefined}
           borderTopLeftRadius={isOpen && !isMobile ? '12' : undefined}
-          display={{ mobile: isOpen ? 'flex' : 'none', desktopXl: 'flex' }}
+          display={{ sm: isOpen ? 'flex' : 'none', xxl: 'flex' }}
           justifyContent={isOpen || phase1Flag === NftVariant.Enabled ? 'flex-start' : 'center'}
           onFocus={() => !isOpen && toggleOpen()}
           onClick={() => !isOpen && toggleOpen()}
           gap="12"
         >
-          <Box display={{ mobile: 'none', tabletSm: 'flex' }}>
+          <Box display={{ sm: 'none', md: 'flex' }}>
             <MagnifyingGlassIcon />
           </Box>
-          <Box display={{ mobile: 'flex', tabletSm: 'none' }} color="placeholder" onClick={toggleOpen}>
+          <Box display={{ sm: 'flex', md: 'none' }} color="placeholder" onClick={toggleOpen}>
             <ChevronLeftIcon />
           </Box>
           <Box
@@ -359,7 +359,7 @@ export const SearchBar = () => {
             value={searchValue}
           />
         </Row>
-        <Box display={{ mobile: isOpen ? 'none' : 'flex', desktopXl: 'none' }}>
+        <Box display={{ sm: isOpen ? 'none' : 'flex', xxl: 'none' }}>
           <NavIcon onClick={toggleOpen}>
             <NavMagnifyingGlassIcon width={28} height={28} />
           </NavIcon>

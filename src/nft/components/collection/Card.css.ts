@@ -11,7 +11,7 @@ export const card = style([
     boxSizing: 'border-box',
     WebkitBoxSizing: 'border-box',
     '@media': {
-      [`(max-width: ${breakpoints.tabletSm - 1}px)`]: {
+      [`(max-width: ${breakpoints.sm - 1}px)`]: {
         ':hover': {
           borderColor: themeVars.colors.medGray,
           cursor: 'pointer',
@@ -48,7 +48,7 @@ export const button = style([
     width: 'full',
     position: 'relative',
     paddingY: '8',
-    marginTop: { mobile: '8', tabletSm: '10' },
+    marginTop: { sm: '8', md: '10' },
     marginBottom: '12',
     borderRadius: '12',
     border: 'none',
@@ -78,7 +78,7 @@ export const marketplaceIcon = style([
 export const erc1155ButtonRow = sprinkles({
   flexShrink: '0',
   gap: '12',
-  marginTop: { mobile: '8', tabletSm: '10' },
+  marginTop: { sm: '8', md: '10' },
   marginBottom: '12',
 })
 

@@ -8,14 +8,14 @@ const DESKTOP_NAVBAR_WIDTH = '360px'
 const baseSearchStyle = style([
   sprinkles({
     paddingY: '12',
-    width: { mobile: 'viewWidth' },
+    width: { sm: 'viewWidth' },
     borderStyle: 'solid',
     borderWidth: '1px',
     borderColor: 'medGray',
   }),
   {
     '@media': {
-      [`screen and (min-width: ${breakpoints.tabletSm}px)`]: {
+      [`screen and (min-width: ${breakpoints.sm}px)`]: {
         width: DESKTOP_NAVBAR_WIDTH,
       },
     },
