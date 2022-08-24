@@ -3,8 +3,8 @@ import { LinePath } from '@visx/shape'
 import { CurveFactory } from 'd3'
 import { radius } from 'd3-curve-circlecorners'
 import React from 'react'
-import { ReactNode } from 'react'
-import { useTheme } from 'styled-components/macro'
+import { ReactNode, useEffect, useRef, useState } from 'react'
+import { animated, useSpring } from 'react-spring/web'
 import { Color } from 'theme/styled'
 
 interface LineChartProps<T> {
@@ -20,6 +20,10 @@ interface LineChartProps<T> {
   height: number
 }
 
+const springConfig = {
+  tension: 20,
+}
+
 function LineChart<T>({
   data,
   getX,
@@ -32,22 +36,61 @@ function LineChart<T>({
   height,
   children,
 }: LineChartProps<T>) {
-  const theme = useTheme()
+  const lineRef = useRef<SVGPathElement>(null)
+  const [shouldAnimate, setShouldAnimate] = useState<boolean>(false)
+
+  const spring = useSpring({
+    frame: shouldAnimate ? 0 : 1,
+    config: springConfig,
+    onRest: () => setShouldAnimate(false),
+  })
+  const [lineLength, setLineLength] = useState<number>(0)
+  // set line length once it is known after initial render
+  const effectDependency = lineRef.current
+  useEffect(() => {
+    if (lineRef.current) {
+      console.log('LINE LENGTH: ', lineRef.current.getTotalLength())
+      setLineLength(lineRef.current.getTotalLength())
+    }
+  }, [effectDependency])
+
   return (
-    <svg width={width} height={height}>
+    <svg width={width} height={height} onClick={() => setShouldAnimate(true)}>
       <Group top={marginTop}>
-        <LinePath
-          curve={curve ?? radius(0.25)}
-          stroke={color ?? theme.accentAction}
-          strokeWidth={strokeWidth}
-          data={data}
-          x={getX}
-          y={getY}
-        />
+        <LinePath curve={curve ?? radius(0.25)} x={getX} y={getY}>
+          {({ path }) => {
+            const d = path(data) || ''
+            return (
+              <>
+                <animated.path
+                  d={d}
+                  ref={lineRef}
+                  strokeWidth={2}
+                  strokeOpacity={0.1}
+                  strokeLinecap="round"
+                  fill="none"
+                  stroke={'white'}
+                />
+                {shouldAnimate && (
+                  <animated.path
+                    d={d}
+                    strokeWidth={2}
+                    strokeOpacity={1}
+                    strokeLinecap="round"
+                    fill="none"
+                    stroke={'green'}
+                    strokeDashoffset={spring.frame.interpolate((v: any) => v * lineLength)}
+                    strokeDasharray={lineLength}
+                  />
+                )}
+              </>
+            )
+          }}
+        </LinePath>
       </Group>
       {children}
     </svg>
   )
 }
 
-export default React.memo(LineChart) as typeof LineChart
+export default LineChart
