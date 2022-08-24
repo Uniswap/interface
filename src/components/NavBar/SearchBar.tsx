@@ -19,7 +19,13 @@ import { ChangeEvent, useEffect, useMemo, useReducer, useRef, useState } from 'r
 import { useQuery } from 'react-query'
 import { useLocation } from 'react-router-dom'
 
-import { ClockIcon, MagnifyingGlassIcon, NavMagnifyingGlassIcon, TrendingArrow } from '../../nft/components/icons'
+import {
+  ChevronLeftIcon,
+  ClockIcon,
+  MagnifyingGlassIcon,
+  NavMagnifyingGlassIcon,
+  TrendingArrow,
+} from '../../nft/components/icons'
 import { NavIcon } from './NavIcon'
 import * as styles from './SearchBar.css'
 import { CollectionRow, SkeletonRow, TokenRow } from './SuggestionRow'
@@ -335,7 +341,12 @@ export const SearchBar = () => {
           onClick={() => !isOpen && toggleOpen()}
           gap="12"
         >
-          <MagnifyingGlassIcon onClick={() => isMobile && toggleOpen()} />
+          <Box display={{ mobile: 'none', tabletSm: 'flex' }}>
+            <MagnifyingGlassIcon />
+          </Box>
+          <Box display={{ mobile: 'flex', tabletSm: 'none' }} color="placeholder" onClick={toggleOpen}>
+            <ChevronLeftIcon />
+          </Box>
           <Box
             as="input"
             placeholder={`Search tokens${phase1Flag === NftVariant.Enabled ? ' and NFT collections' : ''}`}
