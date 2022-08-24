@@ -1,8 +1,8 @@
 import graphql from 'babel-plugin-relay/macro'
-import { TimePeriod } from 'hooks/useExplorePageQuery'
 import { useLazyLoadQuery } from 'react-relay'
 
 import type { Chain, TokenPriceQuery as TokenPriceQueryType } from './__generated__/TokenPriceQuery.graphql'
+import { TimePeriod } from './TopTokenQuery'
 
 export function useTokenPriceQuery(address: string, timePeriod: TimePeriod, chain: Chain) {
   const tokenPrices = useLazyLoadQuery<TokenPriceQueryType>(

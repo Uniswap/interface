@@ -1,4 +1,4 @@
-import { TimePeriod } from 'hooks/useExplorePageQuery'
+import { TimePeriod } from 'graphql/data/TopTokenQuery'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { useAtom } from 'jotai'
 import { useRef } from 'react'

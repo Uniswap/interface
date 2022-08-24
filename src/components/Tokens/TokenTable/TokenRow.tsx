@@ -5,8 +5,8 @@ import { EventName } from 'components/AmplitudeAnalytics/constants'
 import SparklineChart from 'components/Charts/SparklineChart'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { getChainInfo } from 'constants/chainInfo'
-import { useCurrency, useToken } from 'hooks/Tokens'
-import { TimePeriod, TokenData } from 'hooks/useExplorePageQuery'
+import { TimePeriod, TokenData } from 'graphql/data/TopTokenQuery'
+import { useCurrency } from 'hooks/Tokens'
 import { useAtom } from 'jotai'
 import { useAtomValue } from 'jotai/utils'
 import { ReactNode } from 'react'
@@ -245,6 +245,7 @@ const TokenName = styled.div`
 `
 const TokenSymbol = styled(Cell)`
   color: ${({ theme }) => theme.textTertiary};
+  text-transform: uppercase;
 
   @media only screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
     font-size: 12px;
@@ -443,10 +444,9 @@ export default function LoadedRow({
   tokenData: TokenData
   timePeriod: TimePeriod
 }) {
-  const token = useToken(tokenAddress)
   const currency = useCurrency(tokenAddress)
-  const tokenName = token?.name ?? ''
-  const tokenSymbol = token?.symbol ?? ''
+  const tokenName = tokenData.name
+  const tokenSymbol = tokenData.symbol
   const theme = useTheme()
   const [favoriteTokens] = useAtom(favoritesAtom)
   const isFavorited = favoriteTokens.includes(tokenAddress)
@@ -454,14 +454,14 @@ export default function LoadedRow({
   const filterString = useAtomValue(filterStringAtom)
   const filterNetwork = useAtomValue(filterNetworkAtom)
   const L2Icon = getChainInfo(filterNetwork).circleLogoUrl
-  const delta = tokenData.percentChange[timePeriod]?.value
+  const delta = tokenData.percentChange?.[timePeriod]?.value
   const arrow = delta ? getDeltaArrow(delta) : null
   const formattedDelta = delta ? formatDelta(delta) : null
 
   const exploreTokenSelectedEventProperties = {
     chain_id: filterNetwork,
     token_address: tokenAddress,
-    token_symbol: token?.symbol,
+    token_symbol: tokenSymbol,
     token_list_index: tokenListIndex,
     token_list_length: tokenListLength,
     time_frame: timePeriod,

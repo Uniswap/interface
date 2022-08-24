@@ -1,14 +1,44 @@
 import graphql from 'babel-plugin-relay/macro'
-import { TimePeriod, TokenData } from 'hooks/useExplorePageQuery'
 import { useLazyLoadQuery } from 'react-relay'
 
-import type { TopTokenQuery as TopTokenQueryType } from './__generated__/TopTokenQuery.graphql'
+import type { Chain, Currency, TopTokenQuery as TopTokenQueryType } from './__generated__/TopTokenQuery.graphql'
+
+export enum TimePeriod {
+  HOUR,
+  DAY,
+  WEEK,
+  MONTH,
+  YEAR,
+  ALL,
+}
+
+interface IAmount {
+  currency: Currency | null
+  value: number | null
+}
+
+export type TokenData = {
+  name: string | null
+  address: string
+  chain: Chain | null
+  symbol: string | null
+  price: IAmount | null | undefined
+  marketCap: IAmount | null | undefined
+  volume: Record<TimePeriod, IAmount | null | undefined>
+  percentChange: Record<TimePeriod, IAmount | null | undefined>
+}
+
+export interface UseTopTokensResult {
+  data: TokenData[] | undefined
+  error: string | null
+  loading: boolean
+}
 
 export function useTopTokenQuery(page: number) {
   const topTokenData = useLazyLoadQuery<TopTokenQueryType>(
     graphql`
       query TopTokenQuery($page: Int!) {
-        topTokenProjects(orderBy: MARKET_CAP, pageSize: 50, currency: USD, page: $page) {
+        topTokenProjects(orderBy: MARKET_CAP, pageSize: 100, currency: USD, page: $page) {
           name
           tokens {
             chain
@@ -85,12 +115,11 @@ export function useTopTokenQuery(page: number) {
     }
   )
 
-  const topTokens: Record<string, TokenData> =
-    topTokenData.topTokenProjects?.reduce((acc, token) => {
-      const tokenAddress = token?.tokens?.[0].address
-      if (tokenAddress) {
-        acc[tokenAddress] = {
+  const topTokens: TokenData[] | undefined = topTokenData.topTokenProjects?.map((token) =>
+    token?.tokens?.[0].address
+      ? {
           name: token?.name,
+          address: token?.tokens?.[0].address,
           chain: token?.tokens?.[0].chain,
           symbol: token?.tokens?.[0].symbol,
           price: token?.markets?.[0]?.price,
@@ -112,8 +141,7 @@ export function useTopTokenQuery(page: number) {
             [TimePeriod.ALL]: token?.markets?.[0]?.pricePercentChangeAll,
           },
         }
-      }
-      return acc
-    }, {} as Record<string, TokenData>) ?? {}
+      : ({} as TokenData)
+  )
   return topTokens
 }
