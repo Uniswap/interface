@@ -7,6 +7,7 @@ import { TraceEvent } from 'components/AmplitudeAnalytics/TraceEvent'
 import { AutoColumn } from 'components/Column'
 import { LoadingOpacityContainer, loadingOpacityMixin } from 'components/Loader/styled'
 import { isSupportedChain } from 'constants/chains'
+import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
 import { darken } from 'polished'
 import { ReactNode, useCallback, useState } from 'react'
 import { Lock } from 'react-feather'
@@ -114,9 +115,10 @@ const LabelRow = styled.div`
   }
 `
 
-const FiatRow = styled(LabelRow)`
+const FiatRow = styled(LabelRow)<{ redesignFlag: boolean }>`
   justify-content: flex-end;
-  height: 16px;
+  padding: ${({ redesignFlag }) => redesignFlag && '0px 1rem 0.75rem'};
+  height: ${({ redesignFlag }) => (redesignFlag ? '32px' : '16px')};
 `
 
 const Aligner = styled.span`
@@ -218,6 +220,8 @@ export default function CurrencyInputPanel({
   const { account, chainId } = useWeb3React()
   const selectedCurrencyBalance = useCurrencyBalance(account ?? undefined, currency ?? undefined)
   const theme = useTheme()
+  const redesignFlag = useRedesignFlag()
+  const redesignFlagEnabled = redesignFlag === RedesignVariant.Enabled
 
   const handleDismissSearch = useCallback(() => {
     setModalOpen(false)
@@ -289,7 +293,7 @@ export default function CurrencyInputPanel({
           </CurrencySelect>
         </InputRow>
         {!hideInput && !hideBalance && currency && (
-          <FiatRow>
+          <FiatRow redesignFlag={redesignFlagEnabled}>
             <RowBetween>
               <LoadingOpacityContainer $loading={loading}>
                 <FiatValue fiatValue={fiatValue} priceImpact={priceImpact} />
