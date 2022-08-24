@@ -79,7 +79,7 @@ const Buttons = ({
   onContinue: () => void
   onCancel: () => void
 }) => {
-  return !warning.canProceed ? (
+  return warning.canProceed ? (
     <>
       <StyledButton onClick={onContinue}>
         <Trans>I understand</Trans>
