@@ -1,13 +1,27 @@
 import { style } from '@vanilla-extract/css'
 
-import { sprinkles, themeVars } from '../../nft/css/sprinkles.css'
+import { sprinkles, themeVars, vars } from '../../nft/css/sprinkles.css'
+
+export const hover = style([
+  sprinkles({
+    transition: '250',
+    borderRadius: '12',
+  }),
+  {
+    ':hover': {
+      background: vars.color.lightGrayOverlay,
+    },
+  },
+])
 
 export const MenuRow = style([
+  hover,
   sprinkles({
     color: 'blackBlue',
-    paddingY: '12',
-    width: 'max',
-    marginRight: '52',
+    paddingY: '8',
+    paddingX: '8',
+    width: 'full',
+    whiteSpace: 'nowrap',
   }),
   {
     lineHeight: '24px',
@@ -22,8 +36,10 @@ export const PrimaryText = style([
 ])
 
 export const SecondaryText = style([
+  hover,
   sprinkles({
     paddingY: '8',
+    paddingX: '8',
     color: 'darkGray',
   }),
   {
@@ -34,6 +50,7 @@ export const SecondaryText = style([
 export const Separator = style([
   sprinkles({
     height: '0',
+    marginX: '16',
   }),
   {
     borderTop: 'solid',
@@ -45,6 +62,6 @@ export const Separator = style([
 export const IconRow = style([
   sprinkles({
     paddingX: '16',
-    paddingY: '8',
+    marginTop: '4',
   }),
 ])

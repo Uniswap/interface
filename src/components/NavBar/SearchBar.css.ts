@@ -134,14 +134,6 @@ export const suggestionIcon = sprinkles({
   flexShrink: '0',
 })
 
-export const magnifyingGlassIcon = style([
-  sprinkles({
-    width: '20',
-    height: '20',
-    marginRight: '12',
-  }),
-])
-
 export const sectionHeader = style([
   subheadSmall,
   sprinkles({

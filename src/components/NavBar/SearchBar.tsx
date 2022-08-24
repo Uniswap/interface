@@ -339,12 +339,13 @@ export const SearchBar = () => {
           justifyContent={isOpen || phase1Flag === NftVariant.Enabled ? 'flex-start' : 'center'}
           onFocus={() => !isOpen && toggleOpen()}
           onClick={() => !isOpen && toggleOpen()}
+          gap="12"
         >
           <Box display={{ mobile: 'none', tabletSm: 'flex' }}>
-            <MagnifyingGlassIcon className={styles.magnifyingGlassIcon} />
+            <MagnifyingGlassIcon />
           </Box>
-          <Box display={{ mobile: 'flex', tabletSm: 'none' }} color="blackBlue" onClick={toggleOpen}>
-            <ChevronLeftIcon className={styles.magnifyingGlassIcon} />
+          <Box display={{ mobile: 'flex', tabletSm: 'none' }} color="placeholder" onClick={toggleOpen}>
+            <ChevronLeftIcon />
           </Box>
           <Box
             as="input"

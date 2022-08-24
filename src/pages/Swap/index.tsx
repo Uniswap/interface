@@ -38,7 +38,7 @@ import AddressInputPanel from '../../components/AddressInputPanel'
 import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
 import { GreyCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
-import CurrencyInputPanel from '../../components/CurrencyInputPanel'
+import SwapCurrencyInputPanel from '../../components/CurrencyInputPanel/SwapCurrencyInputPanel'
 import CurrencyLogo from '../../components/CurrencyLogo'
 import Loader from '../../components/Loader'
 import { AutoRow } from '../../components/Row'
@@ -541,7 +541,7 @@ export default function Swap() {
               <div style={{ display: 'relative' }}>
                 <TopInputWrapper redesignFlag={redesignFlagEnabled}>
                   <Trace section={SectionName.CURRENCY_INPUT_PANEL}>
-                    <CurrencyInputPanel
+                    <SwapCurrencyInputPanel
                       label={
                         independentField === Field.OUTPUT && !showWrap ? (
                           <Trans>From (at most)</Trans>
@@ -606,7 +606,7 @@ export default function Swap() {
                 <AutoColumn gap={redesignFlagEnabled ? '0px' : '8px'}>
                   <BottomInputWrapper redesignFlag={redesignFlagEnabled}>
                     <Trace section={SectionName.CURRENCY_OUTPUT_PANEL}>
-                      <CurrencyInputPanel
+                      <SwapCurrencyInputPanel
                         value={formattedAmounts[Field.OUTPUT]}
                         onUserInput={handleTypeOutput}
                         label={

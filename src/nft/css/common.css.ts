@@ -20,14 +20,6 @@ export const column = sprinkles({
   alignItems: 'center',
 })
 
-export const section = style([
-  sprinkles({
-    paddingLeft: { mobile: '16', desktopL: '0' },
-    paddingRight: { mobile: '16', desktopL: '0' },
-  }),
-  { maxWidth: '1000px', margin: '0 auto' },
-])
-
 // TYPOGRAPHY
 export const header1 = sprinkles({ fontWeight: 'normal', fontSize: '36' })
 export const header2 = sprinkles({ fontWeight: 'normal', fontSize: '28' })
