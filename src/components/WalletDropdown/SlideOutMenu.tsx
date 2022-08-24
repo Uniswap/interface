@@ -48,6 +48,7 @@ const BackSection = styled.div`
   cursor: default;
   display: flex;
   justify-content: space-between;
+  z-index: 1;
 `
 
 const BackSectionContainer = styled.div`
