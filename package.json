@@ -57,7 +57,6 @@
     "@react-navigation/stack": "^6.2.2",
     "@reduxjs/toolkit": "^1.6.1",
     "@sentry/react-native": "^4.2.2",
-    "@shakebugs/react-native-shake": "^15.3.0",
     "@shopify/react-native-skia": "^0.1.132",
     "@shopify/restyle": "^1.6.1",
     "@uniswap/ethers-rs-mobile": "0.0.1",

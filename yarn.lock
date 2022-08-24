@@ -4426,11 +4426,6 @@
     xcode "3.0.1"
     yargs "^16.2.0"
 
-"@shakebugs/react-native-shake@^15.3.0":
-  version "15.3.0"
-  resolved "https://registry.yarnpkg.com/@shakebugs/react-native-shake/-/react-native-shake-15.3.0.tgz#34d4d6ed0ffb05e5af2f5b82d188e7a8cf8e5786"
-  integrity sha512-orVet1b4TW3/tC1yYV+von09qjDwDynRZ4O3ChOJcgH0y/yD+yAYibqHai4cO98GzOdadqzamaBBpyvaNszrcQ==
-
 "@shopify/react-native-skia@^0.1.132":
   version "0.1.132"
   resolved "https://registry.yarnpkg.com/@shopify/react-native-skia/-/react-native-skia-0.1.132.tgz#73020fb03f73335931b4c46b6a64c3198351f191"

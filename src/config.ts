@@ -9,8 +9,6 @@ import {
   ONESIGNAL_APP_ID,
   OPENSEA_API_KEY,
   SENTRY_DSN,
-  SHAKE_CLIENT_ID,
-  SHAKE_CLIENT_SECRET,
   UNISWAP_API_KEY,
   UNISWAP_API_URL,
   VERSION,
@@ -34,8 +32,6 @@ export interface Config {
   onesignalAppId: string
   openseaApiKey: string
   sentryDsn: string
-  shakeClientId: string
-  shakeClientSecret: string
   version: string
   zerionApiKey: string
 }
@@ -53,8 +49,6 @@ const _config: Config = {
   onesignalAppId: ONESIGNAL_APP_ID,
   openseaApiKey: OPENSEA_API_KEY,
   sentryDsn: SENTRY_DSN,
-  shakeClientId: SHAKE_CLIENT_ID,
-  shakeClientSecret: SHAKE_CLIENT_SECRET,
   version: VERSION,
   zerionApiKey: ZERION_API_KEY,
 }
