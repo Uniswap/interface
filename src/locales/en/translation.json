@@ -228,6 +228,8 @@
   "Network fees are paid in the native token. Buy more {{ nativeCurrency }}.": "Network fees are paid in the native token. Buy more {{ nativeCurrency }}.",
   "Rate impacted by swap size ({{ swapSize }})": "Rate impacted by swap size ({{ swapSize }})",
   "Due to the amount of {{ currencyOut }} liquidity currently available, the more {{ currencyIn }} you try to swap, the less {{ currencyOut }} you will receive.": "Due to the amount of {{ currencyOut }} liquidity currently available, the more {{ currencyIn }} you try to swap, the less {{ currencyOut }} you will receive.",
+  "This wallet is view-only": "This wallet is view-only",
+  "You need to import this wallet via recovery phrase to swap tokens.": "You need to import this wallet via recovery phrase to swap tokens.",
   "View transaction": "View transaction",
   "Error while checking transaction status": "Error while checking transaction status",
   "Your transaction has failed.": "Your transaction has failed.",

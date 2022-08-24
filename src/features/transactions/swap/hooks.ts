@@ -242,6 +242,7 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
   const gasFee = useSwapGasFee(state.gasFeeEstimate, GasSpeed.Urgent)
 
   const warnings = getSwapWarnings(t, {
+    account: activeAccount ?? undefined,
     currencyAmounts,
     currencyBalances,
     exactCurrencyField,

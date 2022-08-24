@@ -40,6 +40,7 @@ export enum WarningLabel {
   RecipientZeroBalances = 'recipient_zero_balances',
   RecipientNewAddress = 'recipient_new_address',
   RecipientIsSmartContract = 'recipient_is_smart_contract',
+  ViewOnlyAccount = 'view_only_account',
 }
 
 export enum WarningModalType {

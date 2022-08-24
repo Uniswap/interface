@@ -10,6 +10,7 @@ import { SWAP_NO_ROUTE_ERROR } from 'src/features/routing/routingApi'
 import { DerivedSwapInfo } from 'src/features/transactions/swap/hooks'
 import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
 import { hasSufficientFundsIncludingGas } from 'src/features/transactions/utils'
+import { Account, AccountType } from 'src/features/wallet/accounts/types'
 import { formatPriceImpact } from 'src/utils/format'
 
 const PRICE_IMPACT_THRESHOLD_MEDIUM = new Percent(3, 100) // 3%
@@ -25,6 +26,7 @@ export type PartialDerivedSwapInfo = Pick<
   | 'nativeCurrencyBalance'
 > & {
   gasFee?: string
+  account?: Account
 }
 
 export function showWarningInPanel(warning: Warning) {
@@ -34,6 +36,7 @@ export function showWarningInPanel(warning: Warning) {
 
 export function getSwapWarnings(t: TFunction, state: PartialDerivedSwapInfo) {
   const {
+    account,
     currencyBalances,
     currencyAmounts,
     currencies,
@@ -171,6 +174,16 @@ export function getSwapWarnings(t: TFunction, state: PartialDerivedSwapInfo) {
           currencyOut: currencies[CurrencyField.OUTPUT]?.symbol,
         }
       ),
+    })
+  }
+
+  if (account?.type === AccountType.Readonly) {
+    warnings.push({
+      type: WarningLabel.ViewOnlyAccount,
+      severity: WarningSeverity.Medium,
+      action: WarningAction.DisableSubmit,
+      title: t('This wallet is view-only'),
+      message: t('You need to import this wallet via recovery phrase to swap tokens.'),
     })
   }
 
