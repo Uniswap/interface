@@ -26,6 +26,10 @@ const HighlightText = styled.span`
   font-weight: 600;
 `
 
+const BodyWrap = styled.div`
+  line-height: 20px;
+`
+
 interface ActionProps {
   pending: JSX.Element
   success: JSX.Element
@@ -92,13 +96,13 @@ const SwapSummary = ({
   const { rawAmountFrom, rawAmountTo } = getRawAmounts(info)
 
   return (
-    <>
+    <BodyWrap>
       <Action {...actionProps} />{' '}
       <FormattedCurrencyAmount rawAmount={rawAmountFrom} currencyId={info.inputCurrencyId} sigFigs={2} />{' '}
       <Trans>for </Trans>{' '}
       <FormattedCurrencyAmount rawAmount={rawAmountTo} currencyId={info.outputCurrencyId} sigFigs={2} />{' '}
       <FailedText transactionState={transactionState} />
-    </>
+    </BodyWrap>
   )
 }
 
@@ -119,7 +123,7 @@ const AddLiquidityV3PoolSummary = ({
   }
 
   return (
-    <>
+    <BodyWrap>
       {createPool ? (
         <CreateV3PoolSummary info={info} transactionState={transactionState} />
       ) : (
@@ -131,7 +135,7 @@ const AddLiquidityV3PoolSummary = ({
         </>
       )}{' '}
       <FailedText transactionState={transactionState} />
-    </>
+    </BodyWrap>
   )
 }
 
@@ -150,13 +154,13 @@ const RemoveLiquidityV3Summary = ({
   }
 
   return (
-    <>
+    <BodyWrap>
       <Action {...actionProps} />{' '}
       <FormattedCurrencyAmount rawAmount={expectedAmountBaseRaw} currencyId={baseCurrencyId} sigFigs={2} />{' '}
       <Trans>and</Trans>{' '}
       <FormattedCurrencyAmount rawAmount={expectedAmountQuoteRaw} currencyId={quoteCurrencyId} sigFigs={2} />{' '}
       <FailedText transactionState={transactionState} />
-    </>
+    </BodyWrap>
   )
 }
 
@@ -177,13 +181,13 @@ const CreateV3PoolSummary = ({
   }
 
   return (
-    <>
+    <BodyWrap>
       <Action {...actionProps} />{' '}
       <HighlightText>
         {baseCurrency?.symbol}/{quoteCurrency?.symbol}{' '}
       </HighlightText>
       <Trans>Pool</Trans> <FailedText transactionState={transactionState} />
-    </>
+    </BodyWrap>
   )
 }
 
@@ -203,13 +207,13 @@ const CollectFeesSummary = ({
   }
 
   return (
-    <>
+    <BodyWrap>
       <Action {...actionProps} />{' '}
       <FormattedCurrencyAmount rawAmount={expectedCurrencyOwed0} currencyId={currencyId0} sigFigs={2} />{' '}
       <Trans>and</Trans>{' '}
       <FormattedCurrencyAmount rawAmount={expectedCurrencyOwed1} currencyId={currencyId1} sigFigs={2} />{' '}
       <Trans>fees</Trans> <FailedText transactionState={transactionState} />
-    </>
+    </BodyWrap>
   )
 }
 
@@ -229,10 +233,10 @@ const ApprovalSummary = ({
   }
 
   return (
-    <>
+    <BodyWrap>
       <Action {...actionProps} /> <HighlightText>{token?.symbol}</HighlightText>{' '}
       <FailedText transactionState={transactionState} />
-    </>
+    </BodyWrap>
   )
 }
 
@@ -252,7 +256,7 @@ const ClaimSummary = ({
   }
 
   return (
-    <>
+    <BodyWrap>
       {uniAmountRaw && (
         <>
           <Action {...actionProps} />{' '}
@@ -264,7 +268,7 @@ const ClaimSummary = ({
         </>
       )}{' '}
       <FailedText transactionState={transactionState} />
-    </>
+    </BodyWrap>
   )
 }
 
@@ -295,7 +299,7 @@ const WrapSummary = ({
       }
 
   return (
-    <>
+    <BodyWrap>
       <Action {...actionProps} />{' '}
       <HighlightText>
         {amount} {from}
@@ -305,7 +309,7 @@ const WrapSummary = ({
         {amount} {to}
       </HighlightText>{' '}
       <FailedText transactionState={transactionState} />
-    </>
+    </BodyWrap>
   )
 }
 
