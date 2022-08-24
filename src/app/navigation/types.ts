@@ -122,10 +122,6 @@ export type AppStackParamList = {
   [Screens.SettingsWalletManageConnection]: { address: Address }
   [Screens.Notifications]: undefined | { txHash: string }
   [Screens.OnboardingStack]: NavigatorScreenParams<OnboardingStackParamList>
-  [Screens.RecipientSelector]: {
-    selectedRecipient?: string
-    setSelectedRecipient: (newRecipient: string) => void
-  }
   [Screens.ProfileStack]: NavigatorScreenParams<ProfileStackParamList>
   [Screens.SettingsStack]: NavigatorScreenParams<SettingsStackParamList>
   [Screens.TabNavigator]: NavigatorScreenParams<TabParamList>

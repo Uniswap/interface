@@ -20,8 +20,10 @@ import {
   updateOptimismL1Fee,
   updateSwapMethodParamaters,
 } from 'src/features/transactions/transactionState/transactionState'
-import { prepareTransfer } from 'src/features/transactions/transfer/transferTokenSaga'
-import { TransferTokenParams } from 'src/features/transactions/transfer/types'
+import {
+  prepareTransfer,
+  TransferTokenParams,
+} from 'src/features/transactions/transfer/transferTokenSaga'
 import { TransactionType } from 'src/features/transactions/types'
 import { selectActiveAccountAddress } from 'src/features/wallet/selectors'
 import { currencyAddress, isNativeCurrencyAddress } from 'src/utils/currencyId'

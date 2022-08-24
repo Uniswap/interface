@@ -26,9 +26,9 @@ import {
 import { BaseDerivedInfo } from 'src/features/transactions/transactionState/types'
 import {
   transferTokenActions,
+  TransferTokenParams,
   transferTokenSagaName,
 } from 'src/features/transactions/transfer/transferTokenSaga'
-import { TransferTokenParams } from 'src/features/transactions/transfer/types'
 import { getTransferWarnings } from 'src/features/transactions/transfer/validate'
 import { TransactionType } from 'src/features/transactions/types'
 import {
@@ -36,7 +36,6 @@ import {
   useActiveAccountAddressWithThrow,
   useActiveAccountWithThrow,
 } from 'src/features/wallet/hooks'
-import { toSupportedChainId } from 'src/utils/chainId'
 import { buildCurrencyId } from 'src/utils/currencyId'
 import { logger } from 'src/utils/logger'
 import { SagaStatus } from 'src/utils/saga'
@@ -348,15 +347,4 @@ export function useHandleTransferWarningModals(
       onPressWarningContinue,
     }
   }, [onPressReview, onPressWarningContinue])
-}
-
-export function useInputAssetInfo(
-  assetType: AssetType | undefined,
-  inputAsset: NullUndefined<Currency | NFTAsset.Asset>
-) {
-  const isNFT = assetType === AssetType.ERC721 || assetType === AssetType.ERC1155
-  const currencyIn = !isNFT ? (inputAsset as Currency) : undefined
-  const nftIn = isNFT ? (inputAsset as NFTAsset.Asset) : undefined
-  const chainId = toSupportedChainId(nftIn?.chainId ?? currencyIn?.chainId) ?? undefined
-  return { currencyIn, nftIn, chainId }
 }

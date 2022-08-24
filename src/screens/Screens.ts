@@ -15,7 +15,6 @@ export enum Screens {
   PortfolioTokens = 'PortfolioTokens',
   PortfolioNFTs = 'PortfolioNFTs',
   ProfileStack = 'ProfileStack',
-  RecipientSelector = 'RecipientSelector',
   Settings = 'Settings',
   SettingsCloudBackupStatus = 'SettingsCloudBackupStatus',
   SettingsManualBackup = 'SettingsManualBackup',

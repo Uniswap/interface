@@ -1,22 +1,24 @@
-import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { SearchTextInput } from 'src/components/input/SearchTextInput'
 import { Flex } from 'src/components/layout'
 import { filterRecipientByNameAndAddress } from 'src/components/RecipientSelect/filter'
 import { useRecipients } from 'src/components/RecipientSelect/hooks'
 import { RecipientList, RecipientLoadingRow } from 'src/components/RecipientSelect/RecipientList'
 import { filterSections } from 'src/components/RecipientSelect/utils'
 import { Text } from 'src/components/Text'
+import { SearchBar } from 'src/components/TokenSelector/SearchBar'
 
 interface RecipientSelectProps {
-  setRecipientAddress: (newRecipientAddress: string) => void
+  onSelectRecipient: (newRecipientAddress: string) => void
+  onToggleShowRecipientSelector: () => void
 }
 
 // TODO:
 // - change search bar icon to pressable scan
-// - add new address warning modal
-export function RecipientSelect({ setRecipientAddress }: RecipientSelectProps) {
+export function RecipientSelect({
+  onSelectRecipient,
+  onToggleShowRecipientSelector,
+}: RecipientSelectProps) {
   const { t } = useTranslation()
 
   const { sections, searchableRecipientOptions, pattern, onChangePattern, loading } =
@@ -33,36 +35,30 @@ export function RecipientSelect({ setRecipientAddress }: RecipientSelectProps) {
   const noResults = pattern && pattern?.length > 0 && !loading && filteredSections.length === 0
 
   return (
-    // We need this provider otherwise the modal opens behind the recipient select screen and isn't visible
-    <BottomSheetModalProvider>
-      <Flex px="md">
-        <Flex>
-          <Flex row alignItems="center" gap="sm">
-            <SearchTextInput
-              showBackButton
-              placeholder={t('Input address or ENS')}
-              value={pattern}
-              onChangeText={onChangePattern}
-            />
-          </Flex>
-          {loading && <RecipientLoadingRow />}
-          {noResults ? (
-            <Flex centered gap="sm" mt="lg" px="lg">
-              <Text variant="mediumLabel">😔</Text>
-              <Text variant="mediumLabel">{t('No results found')}</Text>
-              <Text color="textTertiary" textAlign="center" variant="body">
-                {t('The address you typed either does not exist or is spelled incorrectly.')}
-              </Text>
-            </Flex>
-          ) : (
-            // Show either suggested recipients or filtered sections based on query
-            <RecipientList
-              sections={filteredSections.length === 0 ? sections : filteredSections}
-              onPress={setRecipientAddress}
-            />
-          )}
+    <Flex gap="sm" px="md" width="100%">
+      <SearchBar
+        backgroundColor="backgroundContainer"
+        placeholder={t('Input address or ENS')}
+        value={pattern}
+        onBack={onToggleShowRecipientSelector}
+        onChangeText={onChangePattern}
+      />
+      {loading && <RecipientLoadingRow />}
+      {noResults ? (
+        <Flex centered gap="sm" mt="lg" px="lg">
+          <Text variant="mediumLabel">😔</Text>
+          <Text variant="mediumLabel">{t('No results found')}</Text>
+          <Text color="textTertiary" textAlign="center" variant="body">
+            {t('The address you typed either does not exist or is spelled incorrectly.')}
+          </Text>
         </Flex>
-      </Flex>
-    </BottomSheetModalProvider>
+      ) : (
+        // Show either suggested recipients or filtered sections based on query
+        <RecipientList
+          sections={filteredSections.length === 0 ? sections : filteredSections}
+          onPress={onSelectRecipient}
+        />
+      )}
+    </Flex>
   )
 }

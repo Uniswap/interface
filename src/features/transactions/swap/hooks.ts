@@ -360,16 +360,21 @@ export function useSwapActionHandlers(dispatch: React.Dispatch<AnyAction>) {
   }
 
   const onHideTokenSelector = () => dispatch(transactionStateActions.showTokenSelector(undefined))
+
   const onUpdateExactTokenAmount = (field: CurrencyField, amount: string) =>
     dispatch(transactionStateActions.updateExactAmountToken({ field, amount }))
+
   const onUpdateExactUSDAmount = (field: CurrencyField, amount: string) =>
     dispatch(transactionStateActions.updateExactAmountUSD({ field, amount }))
+
   const onUpdateExactCurrencyField = (currencyField: CurrencyField, newExactAmount: string) =>
     dispatch(transactionStateActions.updateExactCurrencyField({ currencyField, newExactAmount }))
+
   const onSetAmount = (field: CurrencyField, value: string, isUSDInput: boolean) => {
     const updater = isUSDInput ? onUpdateExactUSDAmount : onUpdateExactTokenAmount
     updater(field, value)
   }
+
   const onSetMax = (amount: string) => {
     // when setting max amount, always switch to token mode because
     // our token/usd updater doesnt handle this case yet
@@ -381,13 +386,15 @@ export function useSwapActionHandlers(dispatch: React.Dispatch<AnyAction>) {
     dispatch(transactionStateActions.switchCurrencySides())
     dispatch(clearGasSwapData)
   }
-  const onSelectRecipient = (recipient: Address) =>
-    dispatch(transactionStateActions.selectRecipient({ recipient }))
+
   const onToggleUSDInput = (isUSDInput: boolean) =>
     dispatch(transactionStateActions.toggleUSDInput(isUSDInput))
+
   const onShowSwapWarning = (type: WarningModalType) =>
     dispatch(transactionStateActions.showWarningModal(type))
+
   const onCreateTxId = (txId: string) => dispatch(transactionStateActions.setTxId(txId))
+
   const onShowTokenSelector = (field: CurrencyField) =>
     dispatch(transactionStateActions.showTokenSelector(field))
 
@@ -395,7 +402,6 @@ export function useSwapActionHandlers(dispatch: React.Dispatch<AnyAction>) {
     onCreateTxId,
     onHideTokenSelector,
     onSelectCurrency,
-    onSelectRecipient,
     onSwitchCurrencies,
     onToggleUSDInput,
     onSetAmount,
@@ -430,7 +436,6 @@ export function useSwapCallback(
 } {
   const appDispatch = useAppDispatch()
   const account = useActiveAccount()
-
   const swapState = useSagaStatus(swapSagaName, onSubmit, true)
 
   useEffect(() => {
@@ -491,7 +496,6 @@ export function useWrapCallback(
 ) {
   const appDispatch = useAppDispatch()
   const account = useActiveAccount()
-
   const wrapState = useSagaStatus(tokenWrapSagaName, onSuccess)
 
   useEffect(() => {

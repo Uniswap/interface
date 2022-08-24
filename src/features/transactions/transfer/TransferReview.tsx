@@ -17,7 +17,7 @@ import {
   useUpdateTransferGasEstimate,
 } from 'src/features/transactions/transfer/hooks'
 import { TransferDetails } from 'src/features/transactions/transfer/TransferDetails'
-import { InputAssetInfo } from 'src/features/transactions/transfer/types'
+import { InputAssetInfo } from 'src/features/transactions/transfer/utils'
 import { TransactionType } from 'src/features/transactions/types'
 import { currencyAddress } from 'src/utils/currencyId'
 

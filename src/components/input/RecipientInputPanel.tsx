@@ -1,7 +1,6 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppTheme } from 'src/app/hooks'
-import { navigate } from 'src/app/navigation/rootNavigation'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { Button } from 'src/components/buttons/Button'
 import { Chevron } from 'src/components/icons/Chevron'
@@ -10,11 +9,10 @@ import { Text } from 'src/components/Text'
 import { ElementName } from 'src/features/telemetry/constants'
 import { useNumTransactionsBetweenAddresses } from 'src/features/transactions/hooks'
 import { useActiveAccountAddressWithThrow } from 'src/features/wallet/hooks'
-import { Screens } from 'src/screens/Screens'
 
 interface RecipientInputPanelProps {
   recipientAddress?: string
-  setRecipientAddress: (newRecipient: string) => void
+  onToggleShowRecipientSelector: () => void
 }
 
 /**
@@ -23,9 +21,10 @@ interface RecipientInputPanelProps {
  */
 export function RecipientInputPanel({
   recipientAddress,
-  setRecipientAddress,
+  onToggleShowRecipientSelector,
 }: RecipientInputPanelProps) {
   const theme = useAppTheme()
+  const { t } = useTranslation()
 
   return (
     <Flex centered gap="sm">
@@ -35,18 +34,15 @@ export function RecipientInputPanel({
         name={ElementName.SelectRecipient}
         p="xs"
         px="sm"
-        onPress={() => {
-          navigate(Screens.RecipientSelector, {
-            selectedRecipient: recipientAddress,
-            setSelectedRecipient: (newRecipient: string) => setRecipientAddress(newRecipient),
-          })
-        }}>
+        onPress={onToggleShowRecipientSelector}>
         <Flex gap="xxs">
           <Flex centered row gap="sm">
             {recipientAddress ? (
               <AddressDisplay address={recipientAddress} variant="headlineSmall" />
             ) : (
-              <RecipientInput />
+              <Text color="white" variant="mediumLabel">
+                {t('Choose recipient')}
+              </Text>
             )}
             <Chevron color={theme.colors.textPrimary} direction="e" />
           </Flex>
@@ -54,16 +50,6 @@ export function RecipientInputPanel({
         </Flex>
       </Button>
     </Flex>
-  )
-}
-
-function RecipientInput() {
-  const { t } = useTranslation()
-
-  return (
-    <Text color="white" variant="mediumLabel">
-      {t('Select Recipient')}
-    </Text>
   )
 }
 

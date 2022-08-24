@@ -4,6 +4,7 @@ import React, { Dispatch, useEffect, useReducer, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated'
 import { AnimatedFlex, Flex } from 'src/components/layout'
+import { RecipientSelect } from 'src/components/RecipientSelect/RecipientSelect'
 import { Text } from 'src/components/Text'
 import { TokenSelectorVariation } from 'src/components/TokenSelector/SearchResults'
 import { TokenSelect } from 'src/components/TokenSelector/TokenSelect'
@@ -14,10 +15,15 @@ import {
   TransactionState,
   transactionStateReducer,
 } from 'src/features/transactions/transactionState/transactionState'
-import { useDerivedTransferInfo, useInputAssetInfo } from 'src/features/transactions/transfer/hooks'
+import { useDerivedTransferInfo } from 'src/features/transactions/transfer/hooks'
 import { TransferReview } from 'src/features/transactions/transfer/TransferReview'
 import { TransferStatus } from 'src/features/transactions/transfer/TransferStatus'
 import { TransferTokenForm } from 'src/features/transactions/transfer/TransferTokenForm'
+import {
+  createInputAssetInfo,
+  createOnSelectRecipient,
+  createOnToggleShowRecipientSelector,
+} from 'src/features/transactions/transfer/utils'
 import { ANIMATE_SPRING_CONFIG } from 'src/features/transactions/utils'
 import { dimensions } from 'src/styles/sizing'
 
@@ -44,7 +50,7 @@ function TransferInnerContent({ dispatch, state, step, setStep, onClose }: Inner
   const derivedTransferInfo = useDerivedTransferInfo(state)
   const assetType = derivedTransferInfo.currencyTypes[CurrencyField.INPUT]
   const inputAsset = derivedTransferInfo.currencies[CurrencyField.INPUT]
-  const inputAssetInfo = useInputAssetInfo(assetType, inputAsset)
+  const inputAssetInfo = createInputAssetInfo({ assetType, inputAsset })
 
   switch (step) {
     case TransferStep.SUBMITTED:
@@ -86,12 +92,15 @@ export function TransferFlow({ prefilledState, onClose }: TransferFormProps) {
   const [step, setStep] = useState<TransferStep>(TransferStep.FORM)
   const { t } = useTranslation()
   const { onSelectCurrency, onHideTokenSelector } = useSwapActionHandlers(dispatch)
+  const onSelectRecipient = createOnSelectRecipient(dispatch)
+  const onToggleShowRecipientSelector = createOnToggleShowRecipientSelector(dispatch)
 
   const screenXOffset = useSharedValue(0)
   useEffect(() => {
-    const screenOffset = state.selectingCurrencyField !== undefined ? 1 : 0
+    const screenOffset =
+      state.selectingCurrencyField !== undefined || state.showRecipientSelector ? 1 : 0
     screenXOffset.value = withSpring(-(dimensions.fullWidth * screenOffset), ANIMATE_SPRING_CONFIG)
-  }, [screenXOffset, state.selectingCurrencyField])
+  }, [screenXOffset, state.selectingCurrencyField, state.showRecipientSelector])
 
   const wrapperStyle = useAnimatedStyle(() => {
     return {
@@ -118,11 +127,21 @@ export function TransferFlow({ prefilledState, onClose }: TransferFormProps) {
             onClose={onClose}
           />
         </Flex>
-        <TokenSelect
-          variation={TokenSelectorVariation.BalancesOnly}
-          onBack={onHideTokenSelector}
-          onSelectCurrency={(currency: Currency) => onSelectCurrency(CurrencyField.INPUT, currency)}
-        />
+        {state.selectingCurrencyField && (
+          <TokenSelect
+            variation={TokenSelectorVariation.BalancesOnly}
+            onBack={onHideTokenSelector}
+            onSelectCurrency={(currency: Currency) =>
+              onSelectCurrency(CurrencyField.INPUT, currency)
+            }
+          />
+        )}
+        {state.showRecipientSelector && (
+          <RecipientSelect
+            onSelectRecipient={onSelectRecipient}
+            onToggleShowRecipientSelector={onToggleShowRecipientSelector}
+          />
+        )}
       </AnimatedFlex>
     </Flex>
   )

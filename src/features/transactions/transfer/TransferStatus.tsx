@@ -7,7 +7,7 @@ import { useSelectTransaction } from 'src/features/transactions/hooks'
 import { TransactionPending } from 'src/features/transactions/TransactionPending/TransactionPending'
 import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
 import { DerivedTransferInfo } from 'src/features/transactions/transfer/hooks'
-import { InputAssetInfo } from 'src/features/transactions/transfer/types'
+import { InputAssetInfo } from 'src/features/transactions/transfer/utils'
 import {
   TransactionDetails,
   TransactionStatus,

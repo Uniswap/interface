@@ -14,8 +14,6 @@ export function SwapModal() {
     appDispatch(closeModal({ name: ModalName.Swap }))
   }
 
-  if (!modalState.isOpen) return null
-
   return (
     <BottomSheetModal
       fullScreen

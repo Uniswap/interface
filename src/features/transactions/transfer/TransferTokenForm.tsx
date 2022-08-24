@@ -28,7 +28,10 @@ import {
   useIsSmartContractAddress,
   useUpdateTransferGasEstimate,
 } from 'src/features/transactions/transfer/hooks'
-import { InputAssetInfo } from 'src/features/transactions/transfer/types'
+import {
+  createOnToggleShowRecipientSelector,
+  InputAssetInfo,
+} from 'src/features/transactions/transfer/utils'
 import { createTransactionId } from 'src/features/transactions/utils'
 import { currencyAddress } from 'src/utils/currencyId'
 
@@ -64,8 +67,9 @@ export function TransferTokenForm({
 
   const { currencyIn, nftIn, chainId } = inputAssetInfo
 
-  const { onShowTokenSelector, onSetAmount, onSetMax, onSelectRecipient, onToggleUSDInput } =
+  const { onShowTokenSelector, onSetAmount, onSetMax, onToggleUSDInput } =
     useSwapActionHandlers(dispatch)
+  const onToggleShowRecipientSelector = createOnToggleShowRecipientSelector(dispatch)
 
   useUSDTokenUpdater(
     dispatch,
@@ -182,9 +186,7 @@ export function TransferTokenForm({
             <Flex pb="xl" pt="xl" px="md">
               <RecipientInputPanel
                 recipientAddress={recipient}
-                setRecipientAddress={(newRecipient) => {
-                  onSelectRecipient(newRecipient)
-                }}
+                onToggleShowRecipientSelector={onToggleShowRecipientSelector}
               />
             </Flex>
           </Flex>

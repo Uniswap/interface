@@ -58,7 +58,6 @@ import { SecuritySetupScreen } from 'src/screens/Onboarding/SecuritySetupScreen'
 import { PortfolioNFTsScreen } from 'src/screens/PortfolioNFTsScreen'
 import { PortfolioTokensScreen } from 'src/screens/PortfolioTokensScreen'
 import { ProfileScreen } from 'src/screens/ProfileScreen'
-import { RecipientSelectoScreen } from 'src/screens/RecipientSelectorScreen'
 import { OnboardingScreens, Screens, Tabs } from 'src/screens/Screens'
 import { SettingsChainsScreen } from 'src/screens/SettingsChainsScreen'
 import { SettingsCloudBackupScreen } from 'src/screens/SettingsCloudBackupScreen'
@@ -423,7 +422,6 @@ export function AppStackNavigator() {
         name={Screens.SettingsWalletManageConnection}
       />
       <AppStack.Group screenOptions={navOptions.presentationModal}>
-        <AppStack.Screen component={RecipientSelectoScreen} name={Screens.RecipientSelector} />
         <AppStack.Screen component={ProfileStackGroup} name={Screens.ProfileStack} />
         <AppStack.Screen component={EducationScreen} name={Screens.Education} />
       </AppStack.Group>

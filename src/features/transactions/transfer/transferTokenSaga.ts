@@ -4,22 +4,41 @@ import ERC20_ABI from 'src/abis/erc20.json'
 import ERC721_ABI from 'src/abis/erc721.json'
 import { Erc1155, Erc20, Erc721 } from 'src/abis/types'
 import { getContractManager, getProvider } from 'src/app/walletContext'
-import { AssetType } from 'src/entities/assets'
+import { ChainId } from 'src/constants/chains'
+import { AssetType, NFTAssetType } from 'src/entities/assets'
 import { ContractManager } from 'src/features/contracts/ContractManager'
 import { FeeInfo } from 'src/features/gas/types'
 import { getTxGasSettings } from 'src/features/gas/utils'
 import { sendTransaction } from 'src/features/transactions/sendTransaction'
 import { formatAsHexString } from 'src/features/transactions/swap/utils'
-import {
-  TransferCurrencyParams,
-  TransferNFTParams,
-  TransferTokenParams,
-} from 'src/features/transactions/transfer/types'
 import { SendTokenTransactionInfo, TransactionType } from 'src/features/transactions/types'
+import { Account } from 'src/features/wallet/accounts/types'
 import { isNativeCurrencyAddress } from 'src/utils/currencyId'
 import { logger } from 'src/utils/logger'
 import { createMonitoredSaga } from 'src/utils/saga'
 import { call } from 'typed-redux-saga'
+
+interface BaseTransferParams {
+  type: AssetType
+  txId?: string
+  account: Account
+  chainId: ChainId
+  toAddress: Address
+  tokenAddress: Address
+  feeInfo?: FeeInfo
+}
+
+export interface TransferCurrencyParams extends BaseTransferParams {
+  type: AssetType.Currency
+  amountInWei: string
+}
+
+export interface TransferNFTParams extends BaseTransferParams {
+  type: NFTAssetType
+  tokenId: string
+}
+
+export type TransferTokenParams = TransferCurrencyParams | TransferNFTParams
 
 export function* transferToken(params: TransferTokenParams) {
   const { txId, account, chainId } = params
@@ -86,7 +105,9 @@ export function* prepareTransfer(
 async function prepareNativeTransfer(params: TransferCurrencyParams, provider: providers.Provider) {
   const { account, toAddress, amountInWei } = params
   const currentBalance = await provider.getBalance(account.address)
+
   validateTransferAmount(amountInWei, currentBalance)
+
   const transactionRequest: providers.TransactionRequest = {
     from: account.address,
     to: toAddress,
@@ -108,7 +129,9 @@ async function prepareTokenTransfer(
     ERC20_ABI
   )
   const currentBalance = await tokenContract.balanceOf(account.address)
+
   validateTransferAmount(amountInWei, currentBalance)
+
   const transactionRequest = await tokenContract.populateTransaction.transfer(
     toAddress,
     amountInWei,

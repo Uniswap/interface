@@ -11,9 +11,10 @@ import { FeeInfo, FeeType } from 'src/features/gas/types'
 import { sendTransaction } from 'src/features/transactions/sendTransaction'
 import {
   setTxGasParamsAndHexifyValues,
+  TransferCurrencyParams,
+  TransferNFTParams,
   transferToken,
 } from 'src/features/transactions/transfer/transferTokenSaga'
-import { TransferCurrencyParams, TransferNFTParams } from 'src/features/transactions/transfer/types'
 import { SendTokenTransactionInfo, TransactionType } from 'src/features/transactions/types'
 import { account, mockContractManager, mockProvider, txRequest } from 'src/test/fixtures'
 

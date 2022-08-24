@@ -10,6 +10,7 @@ interface SearchBarProps extends SearchTextInputProps {
   onBack: () => void
 }
 
+// Use instead of SearchTextInput when you need back button functionality outside of nav stack (i.e., inside BottomSheetModals)
 export function SearchBar({ onBack, ...rest }: SearchBarProps) {
   const theme = useAppTheme()
   return (
