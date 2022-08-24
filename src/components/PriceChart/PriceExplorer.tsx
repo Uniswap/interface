@@ -1,6 +1,5 @@
-import { useTheme } from '@shopify/restyle'
 import React from 'react'
-import { StyleSheet, TouchableWithoutFeedback, View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import Animated, {
   useAnimatedProps,
   useAnimatedStyle,
@@ -9,18 +8,21 @@ import Animated, {
 } from 'react-native-reanimated'
 import { mixPath, useVector } from 'react-native-redash'
 import Svg, { Defs, LinearGradient, Path, Stop } from 'react-native-svg'
+import { useAppTheme } from 'src/app/hooks'
+import { TouchableArea } from 'src/components-uds/TouchableArea'
 import { AnimatedBox, Box } from 'src/components/layout/Box'
 import { Cursor } from 'src/components/PriceChart/Cursor'
 import { PriceHeader } from 'src/components/PriceChart/PriceHeader'
 import { TimeRangeLabel } from 'src/components/PriceChart/TimeRangeLabel'
 import { GraphMetadatas } from 'src/components/PriceChart/types'
 import { HEIGHT, NUM_GRAPHS, WIDTH } from 'src/components/PriceChart/utils'
-import { Theme } from 'src/styles/theme'
+import { theme as styles } from 'src/styles/theme'
 
 const AnimatedPath = Animated.createAnimatedComponent(Path)
 
-const SELECTION_WIDTH = WIDTH
-const BUTTON_WIDTH = SELECTION_WIDTH / NUM_GRAPHS
+const BUTTON_PADDING = styles.spacing.lg
+const BUTTON_WIDTH = WIDTH / NUM_GRAPHS
+const LABEL_WIDTH = BUTTON_WIDTH - BUTTON_PADDING * 2
 
 interface GraphProps {
   graphs: GraphMetadatas
@@ -31,7 +33,7 @@ interface GraphProps {
  * Inspired by https://github.com/wcandillon/can-it-be-done-in-react-native/tree/master/season4/src/Rainbow
  */
 export const PriceExplorer = ({ graphs }: GraphProps) => {
-  const theme = useTheme<Theme>()
+  const theme = useAppTheme()
 
   // whether the graph pan gesture is active
   const isPanning = useSharedValue(false)
@@ -67,7 +69,9 @@ export const PriceExplorer = ({ graphs }: GraphProps) => {
 
   // animates slider (time range label background) on press
   const sliderStyle = useAnimatedStyle(() => ({
-    transform: [{ translateX: withTiming(BUTTON_WIDTH * currentGraphIndex.value) }],
+    transform: [
+      { translateX: withTiming(BUTTON_WIDTH * currentGraphIndex.value + BUTTON_PADDING) },
+    ],
   }))
 
   return (
@@ -108,34 +112,34 @@ export const PriceExplorer = ({ graphs }: GraphProps) => {
           translation={translation}
         />
       </Box>
-      <Box alignSelf="center" flexDirection="row" width={SELECTION_WIDTH}>
+      <Box alignSelf="center" flexDirection="row" width={WIDTH}>
         <View style={StyleSheet.absoluteFill}>
           <AnimatedBox
-            bg="backgroundAction"
-            borderRadius="lg"
+            bg="backgroundSurface"
+            borderRadius="xs"
             style={[StyleSheet.absoluteFillObject, sliderStyle]}
-            width={BUTTON_WIDTH}
+            width={LABEL_WIDTH}
           />
         </View>
         {graphs.map((graph, index) => {
           return (
-            <TouchableWithoutFeedback
+            <TouchableArea
               key={graph.label}
+              p="xs"
+              width={BUTTON_WIDTH}
               onPress={() => {
                 previousGraphIndex.value = currentGraphIndex.value
                 transition.value = 0
                 currentGraphIndex.value = index
                 transition.value = withTiming(1)
               }}>
-              <Box padding="xs" width={BUTTON_WIDTH}>
-                <TimeRangeLabel
-                  index={index}
-                  label={graph.label}
-                  selectedIndex={currentGraphIndex}
-                  transition={transition}
-                />
-              </Box>
-            </TouchableWithoutFeedback>
+              <TimeRangeLabel
+                index={index}
+                label={graph.label}
+                selectedIndex={currentGraphIndex}
+                transition={transition}
+              />
+            </TouchableArea>
           )
         })}
       </Box>

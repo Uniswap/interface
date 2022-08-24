@@ -438,7 +438,7 @@ exports[`renders correctly 1`] = `
             "value": Object {
               "transform": Array [
                 Object {
-                  "translateX": 150,
+                  "translateX": 174,
                 },
               ],
             },
@@ -448,10 +448,10 @@ exports[`renders correctly 1`] = `
         style={
           Array [
             Object {
-              "backgroundColor": "#DDE3F7",
-              "borderRadius": 16,
+              "backgroundColor": "#FFFFFF",
+              "borderRadius": 4,
               "display": "flex",
-              "width": 150,
+              "width": 102,
             },
             Object {
               "bottom": 0,
@@ -461,7 +461,7 @@ exports[`renders correctly 1`] = `
               "top": 0,
               "transform": Array [
                 Object {
-                  "translateX": 150,
+                  "translateX": 174,
                 },
               ],
             },
@@ -471,7 +471,16 @@ exports[`renders correctly 1`] = `
     </View>
     <View
       accessible={true}
+      collapsable={false}
       focusable={true}
+      hitSlop={
+        Object {
+          "bottom": 5,
+          "left": 5,
+          "right": 5,
+          "top": 5,
+        }
+      }
       onClick={[Function]}
       onResponderGrant={[Function]}
       onResponderMove={[Function]}
@@ -480,13 +489,12 @@ exports[`renders correctly 1`] = `
       onResponderTerminationRequest={[Function]}
       onStartShouldSetResponder={[Function]}
       style={
-        Array [
-          Object {
-            "display": "flex",
-            "padding": 8,
-            "width": 150,
-          },
-        ]
+        Object {
+          "display": "flex",
+          "opacity": 1,
+          "padding": 8,
+          "width": 150,
+        }
       }
     >
       <Text
@@ -504,7 +512,7 @@ exports[`renders correctly 1`] = `
             "display": "flex",
             "fontFamily": "Inter-SemiBold",
             "fontSize": 14,
-            "lineHeight": 16,
+            "lineHeight": 20,
             "textAlign": "center",
           }
         }
@@ -514,7 +522,16 @@ exports[`renders correctly 1`] = `
     </View>
     <View
       accessible={true}
+      collapsable={false}
       focusable={true}
+      hitSlop={
+        Object {
+          "bottom": 5,
+          "left": 5,
+          "right": 5,
+          "top": 5,
+        }
+      }
       onClick={[Function]}
       onResponderGrant={[Function]}
       onResponderMove={[Function]}
@@ -523,13 +540,12 @@ exports[`renders correctly 1`] = `
       onResponderTerminationRequest={[Function]}
       onStartShouldSetResponder={[Function]}
       style={
-        Array [
-          Object {
-            "display": "flex",
-            "padding": 8,
-            "width": 150,
-          },
-        ]
+        Object {
+          "display": "flex",
+          "opacity": 1,
+          "padding": 8,
+          "width": 150,
+        }
       }
     >
       <Text
@@ -547,7 +563,7 @@ exports[`renders correctly 1`] = `
             "display": "flex",
             "fontFamily": "Inter-SemiBold",
             "fontSize": 14,
-            "lineHeight": 16,
+            "lineHeight": 20,
             "textAlign": "center",
           }
         }
@@ -557,7 +573,16 @@ exports[`renders correctly 1`] = `
     </View>
     <View
       accessible={true}
+      collapsable={false}
       focusable={true}
+      hitSlop={
+        Object {
+          "bottom": 5,
+          "left": 5,
+          "right": 5,
+          "top": 5,
+        }
+      }
       onClick={[Function]}
       onResponderGrant={[Function]}
       onResponderMove={[Function]}
@@ -566,13 +591,12 @@ exports[`renders correctly 1`] = `
       onResponderTerminationRequest={[Function]}
       onStartShouldSetResponder={[Function]}
       style={
-        Array [
-          Object {
-            "display": "flex",
-            "padding": 8,
-            "width": 150,
-          },
-        ]
+        Object {
+          "display": "flex",
+          "opacity": 1,
+          "padding": 8,
+          "width": 150,
+        }
       }
     >
       <Text
@@ -590,7 +614,7 @@ exports[`renders correctly 1`] = `
             "display": "flex",
             "fontFamily": "Inter-SemiBold",
             "fontSize": 14,
-            "lineHeight": 16,
+            "lineHeight": 20,
             "textAlign": "center",
           }
         }
@@ -600,7 +624,16 @@ exports[`renders correctly 1`] = `
     </View>
     <View
       accessible={true}
+      collapsable={false}
       focusable={true}
+      hitSlop={
+        Object {
+          "bottom": 5,
+          "left": 5,
+          "right": 5,
+          "top": 5,
+        }
+      }
       onClick={[Function]}
       onResponderGrant={[Function]}
       onResponderMove={[Function]}
@@ -609,13 +642,12 @@ exports[`renders correctly 1`] = `
       onResponderTerminationRequest={[Function]}
       onStartShouldSetResponder={[Function]}
       style={
-        Array [
-          Object {
-            "display": "flex",
-            "padding": 8,
-            "width": 150,
-          },
-        ]
+        Object {
+          "display": "flex",
+          "opacity": 1,
+          "padding": 8,
+          "width": 150,
+        }
       }
     >
       <Text
@@ -633,7 +665,7 @@ exports[`renders correctly 1`] = `
             "display": "flex",
             "fontFamily": "Inter-SemiBold",
             "fontSize": 14,
-            "lineHeight": 16,
+            "lineHeight": 20,
             "textAlign": "center",
           }
         }
@@ -643,7 +675,16 @@ exports[`renders correctly 1`] = `
     </View>
     <View
       accessible={true}
+      collapsable={false}
       focusable={true}
+      hitSlop={
+        Object {
+          "bottom": 5,
+          "left": 5,
+          "right": 5,
+          "top": 5,
+        }
+      }
       onClick={[Function]}
       onResponderGrant={[Function]}
       onResponderMove={[Function]}
@@ -652,13 +693,12 @@ exports[`renders correctly 1`] = `
       onResponderTerminationRequest={[Function]}
       onStartShouldSetResponder={[Function]}
       style={
-        Array [
-          Object {
-            "display": "flex",
-            "padding": 8,
-            "width": 150,
-          },
-        ]
+        Object {
+          "display": "flex",
+          "opacity": 1,
+          "padding": 8,
+          "width": 150,
+        }
       }
     >
       <Text
@@ -676,7 +716,7 @@ exports[`renders correctly 1`] = `
             "display": "flex",
             "fontFamily": "Inter-SemiBold",
             "fontSize": 14,
-            "lineHeight": 16,
+            "lineHeight": 20,
             "textAlign": "center",
           }
         }
