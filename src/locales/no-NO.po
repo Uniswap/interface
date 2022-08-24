@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-23 20:04\n"
+"PO-Revision-Date: 2022-08-24 19:05\n"
 "Last-Translator: \n"
 "Language: no_NO\n"
 "Language-Team: Norwegian\n"
@@ -231,6 +231,7 @@ msgstr "Beløp"
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "Det oppstod en feil under forsøket på å utføre dette byttet. Det kan hende du må øke glidetoleransen. Hvis det ikke fungerer, kan det være en inkompatibilitet med symbolet du handler. Merk: gebyr ved overføring og rebase-tokens er inkompatibelt med Uniswap V3."
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/earn/StakingModal.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approve"
@@ -248,10 +249,12 @@ msgstr "Godkjenn token"
 msgid "Approve {0}"
 msgstr "Godkjenn {0}"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approved"
 msgstr "Godkjent"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approving"
@@ -305,6 +308,7 @@ msgstr "Tilgjengelig for innskudd: {0}"
 msgid "Back to wallet selection"
 msgstr "Tilbake til lommebokvalg"
 
+#: src/components/CurrencyInputPanel/SwapCurrencyInputPanel.tsx
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "Balance: {0}"
 msgstr "Saldo: {0}"
@@ -382,6 +386,7 @@ msgstr "Sjekk nettverksstatus"
 msgid "Check out our v3 LP walkthrough and migration guides."
 msgstr "Sjekk ut våre v3 LP-gjennomgangs- og migrasjonsguider."
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/WalletDropdown/AuthenticatedHeader.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/ClaimRewardModal.tsx
@@ -417,6 +422,7 @@ msgstr "Hent gebyrer"
 msgid "Claim your UNI tokens"
 msgstr "Hent dine UNI-polletter"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Claimed"
 msgstr "Påtatt"
@@ -430,6 +436,7 @@ msgstr "Hentet UNI!"
 msgid "Claimed!"
 msgstr "Påstått!"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
 msgid "Claiming"
@@ -464,6 +471,7 @@ msgstr "Lukk"
 msgid "Closed"
 msgstr "Lukket"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collect"
 msgstr "Samle"
@@ -481,10 +489,12 @@ msgstr "Samle inn avgifter"
 msgid "Collect {0}/{1} fees"
 msgstr "Samle {0}/{1} avgifter"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collected"
 msgstr "Samlet"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collecting"
 msgstr "Samler"
@@ -872,6 +882,7 @@ msgid "Explore"
 msgstr "Utforske"
 
 #: src/pages/Tokens/index.tsx
+#: src/pages/Tokens/index.tsx
 msgid "Explore Tokens"
 msgstr "Utforsk tokens"
 
@@ -1105,6 +1116,10 @@ msgstr "Lastet"
 msgid "Loading"
 msgstr "Laster"
 
+#: src/components/CurrencyInputPanel/index.tsx
+msgid "MAX"
+msgstr "MAKS"
+
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
@@ -1126,7 +1141,7 @@ msgstr "Behandle pollettlister"
 msgid "Manage this pool."
 msgstr "Administrere denne reserven."
 
-#: src/components/CurrencyInputPanel/index.tsx
+#: src/components/CurrencyInputPanel/SwapCurrencyInputPanel.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Max"
 msgstr "Maks"
@@ -1258,10 +1273,6 @@ msgstr "Ingen forslag funnet."
 #: src/components/SearchModal/CurrencySearch.tsx
 msgid "No results found."
 msgstr "Ingen resultater."
-
-#: src/components/Tokens/TokenDetails/TokenDetail.tsx
-msgid "No stats available"
-msgstr "Ingen statistikk tilgjengelig"
 
 #: src/components/Tokens/TokenDetails/TokenDetail.tsx
 msgid "No token information available"
@@ -1586,6 +1597,7 @@ msgstr "Søk navn eller lim inn adresse"
 msgid "Select Pair"
 msgstr "Velg Par"
 
+#: src/components/CurrencyInputPanel/index.tsx
 #: src/components/SearchModal/CurrencySearch.tsx
 #: src/pages/PoolFinder/index.tsx
 #: src/pages/PoolFinder/index.tsx
@@ -1605,7 +1617,7 @@ msgstr "Velg et {0}-nettverk"
 msgid "Select an action"
 msgstr "Velg en handling"
 
-#: src/components/CurrencyInputPanel/index.tsx
+#: src/components/CurrencyInputPanel/SwapCurrencyInputPanel.tsx
 msgid "Select token"
 msgstr "Velg token"
 
@@ -1813,6 +1825,7 @@ msgstr "Påvirkningen din handel har på markedsprisen for denne poolen."
 msgid "The input token cannot be transferred. There may be an issue with the input token."
 msgstr "Inngangspolletten kan ikke overføres. Det kan være et problem med inndatapolletten."
 
+#: src/components/CurrencyInputPanel/SwapCurrencyInputPanel.tsx
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "The market price is outside your specified price range. Single-asset deposit only."
 msgstr "Markedsprisen er kun utenfor ditt angitte prisintervall."
@@ -2094,6 +2107,7 @@ msgstr "Ikke støttede aktiva"
 msgid "Untitled"
 msgstr "Uten navn"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/pages/Swap/index.tsx
 msgid "Unwrap"
 msgstr "Pakk opp"
@@ -2101,6 +2115,14 @@ msgstr "Pakk opp"
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Unwrap <0/> to {0}"
 msgstr "Pakk ut <0/> til {0}"
+
+#: src/components/AccountDetailsV2/TransactionBody.tsx
+msgid "Unwrapped"
+msgstr "Utpakket"
+
+#: src/components/AccountDetailsV2/TransactionBody.tsx
+msgid "Unwrapping"
+msgstr "Utpakking"
 
 #: src/pages/Vote/Landing.tsx
 msgid "Update Delegation"
@@ -2283,6 +2305,7 @@ msgstr "Trekker tilbake {0} UNI-V2"
 msgid "Withdrew UNI-V2!"
 msgstr "Avsluttet UNI-V2!"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/pages/Swap/index.tsx
 msgid "Wrap"
 msgstr "Bryt"
@@ -2290,6 +2313,14 @@ msgstr "Bryt"
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Wrap <0/> to {0}"
 msgstr "Pakk <0/> til {0}"
+
+#: src/components/AccountDetailsV2/TransactionBody.tsx
+msgid "Wrapped"
+msgstr "Pakket inn"
+
+#: src/components/AccountDetailsV2/TransactionBody.tsx
+msgid "Wrapping"
+msgstr "Innpakning"
 
 #: src/pages/CreateProposal/index.tsx
 msgid "You already have an active or pending proposal"
@@ -2461,6 +2492,7 @@ msgstr "etter utglidning"
 
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/AccountDetailsV2/TransactionBody.tsx
+#: src/components/AccountDetailsV2/TransactionBody.tsx
 msgid "and"
 msgstr "og"
 
@@ -2476,6 +2508,11 @@ msgstr "bekreft"
 msgid "failed"
 msgstr "mislyktes"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
+msgid "fees"
+msgstr "avgifter"
+
+#: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 msgid "for"
 msgstr "til"
@@ -2508,6 +2545,10 @@ msgstr "minutter"
 msgid "reward"
 msgstr "belønning"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
+msgid "to"
+msgstr "til"
+
 #: src/components/SearchModal/ImportRow.tsx
 msgid "via {0}"
 msgstr "via {0}"
@@ -2531,7 +2572,6 @@ msgstr "{0, plural, =1 {Du kan ikke bytte dette tokenet ved å bruke Uniswap-app
 #: src/components/RateToggle/index.tsx
 #: src/components/RateToggle/index.tsx
 #: src/components/Settings/index.tsx
-#: src/components/Tokens/TokenDetails/TokenDetail.tsx
 msgid "{0}"
 msgstr "{0}"
 

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-23 20:04\n"
+"PO-Revision-Date: 2022-08-24 19:05\n"
 "Last-Translator: \n"
 "Language: ar_SA\n"
 "Language-Team: Arabic\n"
@@ -231,6 +231,7 @@ msgstr "المبلغ"
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "حدث خطأ أثناء محاولة تنفيذ هذا التبادل. قد تحتاج إلى زيادة تحملك للانزلاق. إذا لم يفلح ذلك ، فقد يكون هناك عدم توافق مع الرمز الذي تتداوله. ملاحظة: رسوم النقل وإعادة الرموز المميزة غير متوافقة مع Uniswap V3."
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/earn/StakingModal.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approve"
@@ -248,10 +249,12 @@ msgstr "الموافقة على رمز"
 msgid "Approve {0}"
 msgstr "الموافقة على {0}"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approved"
 msgstr "معتمد"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approving"
@@ -305,6 +308,7 @@ msgstr "متاح للإيداع: {0}"
 msgid "Back to wallet selection"
 msgstr "العودة إلى اختيار المحفظة"
 
+#: src/components/CurrencyInputPanel/SwapCurrencyInputPanel.tsx
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "Balance: {0}"
 msgstr "التوازن: {0}"
@@ -382,6 +386,7 @@ msgstr "تحقق من حالة الشبكة"
 msgid "Check out our v3 LP walkthrough and migration guides."
 msgstr "تحقق من أدلة التجول والترحيل الخاصة بـ v3 LP."
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/WalletDropdown/AuthenticatedHeader.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/ClaimRewardModal.tsx
@@ -417,6 +422,7 @@ msgstr "المطالبة بالرسوم"
 msgid "Claim your UNI tokens"
 msgstr "طالب برموز UNI الخاصة بك"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Claimed"
 msgstr "مطالب"
@@ -430,6 +436,7 @@ msgstr "طالبَ بـ UNI!"
 msgid "Claimed!"
 msgstr "ادعى!"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
 msgid "Claiming"
@@ -464,6 +471,7 @@ msgstr "إغلاق"
 msgid "Closed"
 msgstr "مغلق"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collect"
 msgstr "اجمع"
@@ -481,10 +489,12 @@ msgstr "تحصيل الرسوم"
 msgid "Collect {0}/{1} fees"
 msgstr "اجمع {0}/{1} رسوم"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collected"
 msgstr "مجمّع"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collecting"
 msgstr "جمع"
@@ -872,6 +882,7 @@ msgid "Explore"
 msgstr "يكتشف"
 
 #: src/pages/Tokens/index.tsx
+#: src/pages/Tokens/index.tsx
 msgid "Explore Tokens"
 msgstr "اكتشف الرموز"
 
@@ -1105,6 +1116,10 @@ msgstr "تحميل"
 msgid "Loading"
 msgstr "جاري التحميل"
 
+#: src/components/CurrencyInputPanel/index.tsx
+msgid "MAX"
+msgstr "الأعلى"
+
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
@@ -1126,7 +1141,7 @@ msgstr "إدارة قوائم الرمز المميز"
 msgid "Manage this pool."
 msgstr "إدارة هذه المجموعة."
 
-#: src/components/CurrencyInputPanel/index.tsx
+#: src/components/CurrencyInputPanel/SwapCurrencyInputPanel.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Max"
 msgstr "الحد الأقصى"
@@ -1258,10 +1273,6 @@ msgstr "لا توجد مقترحات."
 #: src/components/SearchModal/CurrencySearch.tsx
 msgid "No results found."
 msgstr "لا توجد نتائج."
-
-#: src/components/Tokens/TokenDetails/TokenDetail.tsx
-msgid "No stats available"
-msgstr "لا توجد احصائيات متاحة"
 
 #: src/components/Tokens/TokenDetails/TokenDetail.tsx
 msgid "No token information available"
@@ -1586,6 +1597,7 @@ msgstr "البحث عن اسم أو لصق العنوان"
 msgid "Select Pair"
 msgstr "حدد زوج"
 
+#: src/components/CurrencyInputPanel/index.tsx
 #: src/components/SearchModal/CurrencySearch.tsx
 #: src/pages/PoolFinder/index.tsx
 #: src/pages/PoolFinder/index.tsx
@@ -1605,7 +1617,7 @@ msgstr "حدد شبكة {0}"
 msgid "Select an action"
 msgstr "حدد إجراء"
 
-#: src/components/CurrencyInputPanel/index.tsx
+#: src/components/CurrencyInputPanel/SwapCurrencyInputPanel.tsx
 msgid "Select token"
 msgstr "حدد رمز"
 
@@ -1813,6 +1825,7 @@ msgstr "تأثير تجارتك على سعر السوق لهذا التجمع."
 msgid "The input token cannot be transferred. There may be an issue with the input token."
 msgstr "لا يمكن نقل رمز الإدخال. قد تكون هناك مشكلة في رمز الإدخال."
 
+#: src/components/CurrencyInputPanel/SwapCurrencyInputPanel.tsx
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "The market price is outside your specified price range. Single-asset deposit only."
 msgstr "سعر السوق خارج نطاق السعر المحدد الخاص بك. إيداع أصل واحد فقط."
@@ -2094,6 +2107,7 @@ msgstr "الأصول غير المدعومة"
 msgid "Untitled"
 msgstr "بدون عنوان"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/pages/Swap/index.tsx
 msgid "Unwrap"
 msgstr "Unwrap"
@@ -2101,6 +2115,14 @@ msgstr "Unwrap"
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Unwrap <0/> to {0}"
 msgstr "قم بفك التفاف <0/> إلى {0}"
+
+#: src/components/AccountDetailsV2/TransactionBody.tsx
+msgid "Unwrapped"
+msgstr "يفك ربطة"
+
+#: src/components/AccountDetailsV2/TransactionBody.tsx
+msgid "Unwrapping"
+msgstr "فك"
 
 #: src/pages/Vote/Landing.tsx
 msgid "Update Delegation"
@@ -2283,6 +2305,7 @@ msgstr "سحب {0} UNI-V2"
 msgid "Withdrew UNI-V2!"
 msgstr "سحب UNI-V2!"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/pages/Swap/index.tsx
 msgid "Wrap"
 msgstr "التفاف"
@@ -2290,6 +2313,14 @@ msgstr "التفاف"
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Wrap <0/> to {0}"
 msgstr "لف من <0/> إلى {0}"
+
+#: src/components/AccountDetailsV2/TransactionBody.tsx
+msgid "Wrapped"
+msgstr "مغطى"
+
+#: src/components/AccountDetailsV2/TransactionBody.tsx
+msgid "Wrapping"
+msgstr "يلف"
 
 #: src/pages/CreateProposal/index.tsx
 msgid "You already have an active or pending proposal"
@@ -2461,6 +2492,7 @@ msgstr "بعد الانزلاق السعري"
 
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/AccountDetailsV2/TransactionBody.tsx
+#: src/components/AccountDetailsV2/TransactionBody.tsx
 msgid "and"
 msgstr "و"
 
@@ -2476,6 +2508,11 @@ msgstr "تأكيد"
 msgid "failed"
 msgstr "باءت بالفشل"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
+msgid "fees"
+msgstr "مصاريف"
+
+#: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 msgid "for"
 msgstr "إلى عن على"
@@ -2508,6 +2545,10 @@ msgstr "دقائق"
 msgid "reward"
 msgstr "جائزة"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
+msgid "to"
+msgstr "إلى"
+
 #: src/components/SearchModal/ImportRow.tsx
 msgid "via {0}"
 msgstr "عبر {0}"
@@ -2531,7 +2572,6 @@ msgstr "{0, plural, =1 {لا يمكنك تداول هذا الرمز الممي�
 #: src/components/RateToggle/index.tsx
 #: src/components/RateToggle/index.tsx
 #: src/components/Settings/index.tsx
-#: src/components/Tokens/TokenDetails/TokenDetail.tsx
 msgid "{0}"
 msgstr "{0}"
 
