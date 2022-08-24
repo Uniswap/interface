@@ -17,6 +17,8 @@ const SUPPORTED_L1_L2_CHAINS = [
 /** Address that represents native currencies on ETH, Polygon, etc. */
 export const NATIVE_ADDRESS = '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE'
 
+export const WETH_ADDRESS = '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2'
+
 /** Alternative addres used to denote a native currency (e.g. MATIC on Polygon) */
 export const NATIVE_ADDRESS_ALT = '0x0000000000000000000000000000000000001010'
 

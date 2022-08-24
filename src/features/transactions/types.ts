@@ -15,9 +15,6 @@ export interface TransactionId {
 export interface TransactionDetails extends TransactionId {
   from: Address
 
-  // Info for submitting the tx
-  options: TransactionOptions
-
   // Specific info for the tx type
   typeInfo: TransactionTypeInfo
 
@@ -27,6 +24,10 @@ export interface TransactionDetails extends TransactionId {
   // Note: hash is mandatory for now but may be made optional if
   // we start tracking txs before they're actually sent
   hash: string
+
+  // Info for submitting the tx
+  options: TransactionOptions
+
   receipt?: TransactionReceipt
 
   isFlashbots?: boolean
@@ -65,16 +66,38 @@ export interface TransactionReceipt {
   confirmations: number
 }
 
+export interface NFTSummaryInfo {
+  tokenId: string
+  name: string
+  collectionName: string
+  imageURL: string
+}
+
+export enum NFTTradeType {
+  BUY = 'buy',
+  SELL = 'sell',
+}
+
 /**
  * Be careful adding to this enum, always assign a unique value (typescript will not prevent duplicate values).
  * These values are persisted in state and if you change the value it will cause errors
  */
 export enum TransactionType {
+  // Token Specific
   Approve = 'approve',
   Swap = 'swap',
   Wrap = 'wrap',
+
+  // NFT specific
+  NFTApprove = 'nft-approve',
+  NFTTrade = 'nft-trade',
+  NFTMint = 'nft-mint',
+
+  // All asset types
   Send = 'send',
   Receive = 'receive',
+
+  // General
   WCConfirm = 'wc-confirm',
   Unknown = 'unknown',
 }
@@ -119,10 +142,11 @@ export interface WrapTransactionInfo {
 export interface SendTokenTransactionInfo extends BaseTransactionInfo {
   type: TransactionType.Send
   assetType: AssetType
-  currencyAmountRaw?: string
   recipient: string
   tokenAddress: string
+  currencyAmountRaw?: string
   tokenId?: string // optional. NFT token id
+  nftSummaryInfo?: NFTSummaryInfo // optional. NFT metadata
 }
 
 export interface ReceiveTokenTransactionInfo extends BaseTransactionInfo {
@@ -132,6 +156,28 @@ export interface ReceiveTokenTransactionInfo extends BaseTransactionInfo {
   sender: string
   tokenAddress: string
   tokenId?: string // optional. NFT token id
+  nftSummaryInfo?: NFTSummaryInfo
+}
+
+export interface NFTMintTransactionInfo extends BaseTransactionInfo {
+  type: TransactionType.NFTMint
+  nftSummaryInfo: NFTSummaryInfo
+  purchaseCurrencyId: string
+  purchaseCurrencyAmountRaw: string
+}
+
+export interface NFTTradeTransactionInfo extends BaseTransactionInfo {
+  type: TransactionType.NFTTrade
+  nftSummaryInfo: NFTSummaryInfo
+  purchaseCurrencyId: string
+  purchaseCurrencyAmountRaw: string
+  tradeType: NFTTradeType
+}
+
+export interface NFTApproveTransactionInfo extends BaseTransactionInfo {
+  type: TransactionType.NFTApprove
+  nftSummaryInfo: NFTSummaryInfo
+  spender: string
 }
 
 export interface WCConfirmInfo extends BaseTransactionInfo {
@@ -151,5 +197,8 @@ export type TransactionTypeInfo =
   | WrapTransactionInfo
   | SendTokenTransactionInfo
   | ReceiveTokenTransactionInfo
+  | NFTTradeTransactionInfo
+  | NFTApproveTransactionInfo
+  | NFTMintTransactionInfo
   | WCConfirmInfo
   | UnknownTransactionInfo

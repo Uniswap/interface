@@ -1,35 +1,34 @@
-import React, { useMemo } from 'react'
+import React, { Suspense, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FlatList, ListRenderItemInfo } from 'react-native'
 import { useExploreStackNavigation } from 'src/app/navigation/types'
 import { BaseCard } from 'src/components/layout/BaseCard'
-import { Box } from 'src/components/layout/Box'
 import { Separator } from 'src/components/layout/Separator'
 import { Loading } from 'src/components/loading'
-import TransactionSummaryItem, {
-  TransactionSummaryInfo,
-} from 'src/features/transactions/SummaryCards/TransactionSummaryItem'
+import { useAllFormattedTransactions } from 'src/features/transactions/hooks'
+import TransactionSummaryRouter from 'src/features/transactions/SummaryCards/TransactionSummaryRouter'
+import { TransactionDetails } from 'src/features/transactions/types'
 import { Screens } from 'src/screens/Screens'
 
-const renderItem = (item: ListRenderItemInfo<TransactionSummaryInfo>) => {
-  return <TransactionSummaryItem bg="none" readonly={true} transactionSummaryInfo={item.item} />
+const renderItem = (item: ListRenderItemInfo<TransactionDetails>) => {
+  return <TransactionSummaryRouter readonly showInlineWarning bg="none" transaction={item.item} />
 }
 
-const key = (info: TransactionSummaryInfo) => info.hash
+const key = (info: TransactionDetails) => info.hash
 
-export function TransactionListSection({
-  owner,
-  loading,
-  transactions,
-  count = 3,
-}: {
-  owner: Address
-  loading: boolean
-  transactions: TransactionSummaryInfo[]
-  count?: number
-}) {
+export function TransactionListSection({ owner, count = 3 }: { owner: Address; count?: number }) {
+  return (
+    <Suspense fallback={<Loading repeat={3} type="box" />}>
+      <TransactionListSectionInner count={count} owner={owner} />
+    </Suspense>
+  )
+}
+
+function TransactionListSectionInner({ owner, count = 3 }: { owner: Address; count?: number }) {
   const { t } = useTranslation()
   const navigation = useExploreStackNavigation()
+
+  const { combinedTransactionList: transactions } = useAllFormattedTransactions(owner)
 
   let totalTransactionCount = transactions.length
   const transactionsToDisplay = useMemo(() => transactions.slice(0, count), [transactions, count])
@@ -41,14 +40,6 @@ export function TransactionListSection({
         : t('Transactions'),
     [t, totalTransactionCount]
   )
-
-  if (loading) {
-    return (
-      <Box padding="sm">
-        <Loading repeat={4} type="box" />
-      </Box>
-    )
-  }
 
   return (
     <BaseCard.Container>

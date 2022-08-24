@@ -1,26 +1,22 @@
-import { skipToken } from '@reduxjs/toolkit/dist/query'
 import dayjs from 'dayjs'
 import { BigNumberish } from 'ethers'
 import { useMemo } from 'react'
 import { useAppSelector } from 'src/app/hooks'
 import { ChainId } from 'src/constants/chains'
-import { useTransactionHistoryQuery } from 'src/features/dataApi/zerion/api'
-import { Namespace } from 'src/features/dataApi/zerion/types'
-import { requests } from 'src/features/dataApi/zerion/utils'
 import { useCurrency } from 'src/features/tokens/useCurrency'
-import { extractTransactionSummaryInfo } from 'src/features/transactions/conversion'
+import extractTransactionDetails from 'src/features/transactions/history/conversion/extractTransactionDetails'
+import { useTransactionHistoryForOwner } from 'src/features/transactions/history/transactionHistory'
 import {
   makeSelectAddressTransactions,
   makeSelectTransaction,
 } from 'src/features/transactions/selectors'
-import { TransactionSummaryInfo } from 'src/features/transactions/SummaryCards/TransactionSummaryItem'
 import createSwapFromStateFromDetails from 'src/features/transactions/swap/createSwapFromStateFromDetails'
 import {
   TransactionDetails,
   TransactionStatus,
   TransactionType,
 } from 'src/features/transactions/types'
-import { useActiveAccountAddress } from 'src/features/wallet/hooks'
+import { useActiveAccountAddressWithThrow } from 'src/features/wallet/hooks'
 
 // sorted oldest to newest
 export function useSortedTransactions(address: Address | null) {
@@ -95,59 +91,41 @@ export function useCreateSwapFormState(
 }
 
 export interface AllFormattedTransactions {
-  combinedTransactionList: TransactionSummaryInfo[]
-  todayTransactionList: TransactionSummaryInfo[]
-  monthTransactionList: TransactionSummaryInfo[]
-  yearTransactionList: TransactionSummaryInfo[]
+  combinedTransactionList: TransactionDetails[]
+  todayTransactionList: TransactionDetails[]
+  monthTransactionList: TransactionDetails[]
+  yearTransactionList: TransactionDetails[]
   // Maps year <-> TransactionSummaryInfo[] for all priors years
-  priorByYearTransactionList: Record<string, TransactionSummaryInfo[]>
-  pending: TransactionSummaryInfo[]
-  loading: boolean
+  priorByYearTransactionList: Record<string, TransactionDetails[]>
+  pending: TransactionDetails[]
 }
 
 /**
  * @param address Account address for lookup
  * @returns Combined arrays of local and external txns, split into time periods.
  */
-export function useAllFormattedTransactions(
-  address: string | undefined | null
-): AllFormattedTransactions {
-  // Retrieve all transactions for account.
-  const { currentData: txData, isLoading } = useTransactionHistoryQuery(
-    address ? requests[Namespace.Address].transactions([address]) : skipToken
-  )
-
-  const allTransactionsFromApi = useMemo(
-    () => txData?.info?.[address ?? ''] ?? [],
-    [address, txData?.info]
-  )
-
-  const localTransactions = useSelectAddressTransactions(address ?? null)
+export function useAllFormattedTransactions(address: Address): AllFormattedTransactions {
+  const remoteTransactions = useTransactionHistoryForOwner(address)
+  const localTransactions = useSelectAddressTransactions(address)
 
   // Merge local and remote txns into array of single type.
   const combinedTransactionList = useMemo(() => {
+    if (!address) return []
     const localHashes: Set<string> = new Set()
-    const formattedLocal = (localTransactions ?? []).reduce(
-      (accum: TransactionSummaryInfo[], t) => {
-        localHashes.add(t.hash)
-        const txn = extractTransactionSummaryInfo(t)
-        accum.push(txn)
-        return accum
-      },
-      []
-    )
-    const formattedExternal = allTransactionsFromApi.reduce(
-      (accum: TransactionSummaryInfo[], t) => {
-        const txn = extractTransactionSummaryInfo(t)
-        if (!localHashes.has(txn.hash)) accum.push(txn) // dedupe
-        return accum
-      },
-      []
-    )
-    return formattedLocal
-      .concat(formattedExternal)
-      .sort((a, b) => (a.msTimestampAdded > b.msTimestampAdded ? -1 : 1))
-  }, [allTransactionsFromApi, localTransactions])
+    localTransactions?.map((t) => {
+      localHashes.add(t.hash)
+    })
+    const formattedRemote = remoteTransactions.assetActivities
+      ? remoteTransactions.assetActivities.reduce((accum: TransactionDetails[], t) => {
+          const txn = extractTransactionDetails(t)
+          if (txn && !localHashes.has(txn.hash)) accum.push(txn) // dedupe
+          return accum
+        }, [])
+      : []
+    return (localTransactions ?? [])
+      .concat(formattedRemote)
+      .sort((a, b) => (a.addedTime > b.addedTime ? -1 : 1))
+  }, [address, localTransactions, remoteTransactions.assetActivities])
 
   // Segement by time periods.
   const [
@@ -157,11 +135,12 @@ export function useAllFormattedTransactions(
     yearTransactionList,
     beforeCurrentYear,
   ] = useMemo(() => {
-    const msTimestampCutoffDay = dayjs().startOf('day').unix() * 1000 // timestamp in ms for start of day local time
-    const msTimestampCutoffMonth = dayjs().startOf('month').unix() * 1000
-    const msTimestampCutoffYear = dayjs().startOf('year').unix() * 1000
+    const msTimestampCutoffDay = dayjs().startOf('day').unix() // timestamp in ms for start of day local time
+    const msTimestampCutoffMonth = dayjs().startOf('month').unix()
+    const msTimestampCutoffYear = dayjs().startOf('year').unix()
+
     const formatted = combinedTransactionList.reduce(
-      (accum: TransactionSummaryInfo[][], item) => {
+      (accum: TransactionDetails[][], item) => {
         if (
           // Want all incomplete transactions
           item.status === TransactionStatus.Pending ||
@@ -169,11 +148,11 @@ export function useAllFormattedTransactions(
           item.status === TransactionStatus.Replacing
         ) {
           accum[0].push(item)
-        } else if (item.msTimestampAdded > msTimestampCutoffDay) {
+        } else if (item.addedTime > msTimestampCutoffDay) {
           accum[1].push(item)
-        } else if (item.msTimestampAdded > msTimestampCutoffMonth) {
+        } else if (item.addedTime > msTimestampCutoffMonth) {
           accum[2].push(item)
-        } else if (item.msTimestampAdded > msTimestampCutoffYear) {
+        } else if (item.addedTime > msTimestampCutoffYear) {
           accum[3].push(item)
         } else {
           accum[4].push(item)
@@ -184,8 +163,8 @@ export function useAllFormattedTransactions(
     )
     // sort pending txns based on nonces
     formatted[0] = formatted[0].sort((a, b) => {
-      const nonceA = a.fullDetails?.options?.request?.nonce
-      const nonceB = b.fullDetails?.options?.request?.nonce
+      const nonceA = a.options?.request?.nonce
+      const nonceB = b.options?.request?.nonce
       return nonceA && nonceB ? (nonceA < nonceB ? -1 : 1) : -1
     })
 
@@ -194,8 +173,8 @@ export function useAllFormattedTransactions(
 
   // For all transaction before current year, group by years
   const priorByYearTransactionList = useMemo(() => {
-    return beforeCurrentYear.reduce((accum: Record<string, TransactionSummaryInfo[]>, item) => {
-      const currentYear = dayjs(item.msTimestampAdded).year().toString()
+    return beforeCurrentYear.reduce((accum: Record<string, TransactionDetails[]>, item) => {
+      const currentYear = dayjs(item.addedTime).year().toString()
       const currentYearList = accum[currentYear] ?? []
       currentYearList.push(item)
       accum[currentYear] = currentYearList
@@ -211,12 +190,10 @@ export function useAllFormattedTransactions(
       monthTransactionList,
       yearTransactionList,
       priorByYearTransactionList,
-      loading: isLoading,
     }
   }, [
     priorByYearTransactionList,
     combinedTransactionList,
-    isLoading,
     monthTransactionList,
     pending,
     todayTransactionList,
@@ -225,13 +202,13 @@ export function useAllFormattedTransactions(
 }
 
 export function useLowestPendingNonce() {
-  const activeAccountAddress = useActiveAccountAddress()
+  const activeAccountAddress = useActiveAccountAddressWithThrow()
   const { pending } = useAllFormattedTransactions(activeAccountAddress)
 
   return useMemo(() => {
     let min: BigNumberish | undefined
     pending.map((txn) => {
-      const currentNonce = txn.fullDetails?.options?.request?.nonce
+      const currentNonce = txn.options?.request?.nonce
       min = min ? (currentNonce ? (min < currentNonce ? min : currentNonce) : min) : currentNonce
     })
     return min
@@ -244,23 +221,21 @@ export function useLowestPendingNonce() {
  * @param recipient Then filter so that we only keep txns to this recipient
  */
 export function useAllTransactionsBetweenAddresses(
-  sender: string | undefined | null,
+  sender: Address,
   recipient: string | undefined | null
-): TransactionSummaryInfo[] | undefined {
-  const txnsToSearch = useAllFormattedTransactions(sender)
+): TransactionDetails[] | undefined {
+  const txnsToSearch = useAllFormattedTransactions(sender ?? null)
   return useMemo(() => {
     if (!sender || !recipient) return undefined
     return txnsToSearch.combinedTransactionList.filter(
-      (tx) =>
-        tx.fullDetails?.typeInfo.type === TransactionType.Send &&
-        tx.fullDetails.typeInfo.recipient === recipient
+      (tx) => tx.typeInfo.type === TransactionType.Send && tx.typeInfo.recipient === recipient
     )
   }, [recipient, sender, txnsToSearch.combinedTransactionList])
 }
 
 // Counts number of transactions from a given sender and to a given recipient
 export function useNumTransactionsBetweenAddresses(
-  sender: string | undefined | null,
+  sender: Address,
   recipient: string | undefined | null
 ): number | undefined {
   const prevTxns = useAllTransactionsBetweenAddresses(sender, recipient)

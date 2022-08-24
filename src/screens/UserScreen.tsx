@@ -20,7 +20,6 @@ import { VirtualizedList } from 'src/components/layout/VirtualizedList'
 import { TransactionListSection } from 'src/components/TransactionList/TransactionListSection'
 import { selectWatchedAddressSet } from 'src/features/favorites/selectors'
 import { addWatchedAddress, removeWatchedAddress } from 'src/features/favorites/slice'
-import { useAllFormattedTransactions } from 'src/features/transactions/hooks'
 import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
 import { Screens } from 'src/screens/Screens'
 
@@ -36,7 +35,6 @@ export function UserScreen({
   const { t } = useTranslation()
 
   const isWatching = useAppSelector(selectWatchedAddressSet).has(address)
-  const { combinedTransactionList, loading } = useAllFormattedTransactions(address)
 
   const onWatchPress = () => {
     if (isWatching) {
@@ -115,11 +113,7 @@ export function UserScreen({
               onPress={onWatchPress}
             />
           </Flex>
-          <TransactionListSection
-            loading={loading}
-            owner={address}
-            transactions={combinedTransactionList}
-          />
+          <TransactionListSection owner={address} />
           <PortfolioNFTsSection count={4} owner={address} />
           <PortfolioTokensSection count={3} owner={address} />
         </Flex>

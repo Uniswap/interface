@@ -1,22 +1,42 @@
 import dayjs from 'dayjs'
 import { TFunction } from 'i18next'
-import React, { useMemo } from 'react'
+import React, { ReactElement, Suspense, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { SectionList, SectionListData } from 'react-native'
 import { Box } from 'src/components/layout'
+import { Loading } from 'src/components/loading'
 import { Text } from 'src/components/Text'
-import { AllFormattedTransactions } from 'src/features/transactions/hooks'
-import TransactionSummaryItem, {
-  TransactionSummaryInfo,
-} from 'src/features/transactions/SummaryCards/TransactionSummaryItem'
-import { TransactionStatus } from 'src/features/transactions/types'
+import { EMPTY_ARRAY } from 'src/constants/misc'
+import { useAllFormattedTransactions } from 'src/features/transactions/hooks'
+import TransactionSummaryRouter from 'src/features/transactions/SummaryCards/TransactionSummaryRouter'
+import { TransactionDetails, TransactionStatus } from 'src/features/transactions/types'
 
 const PENDING_TITLE = (t: TFunction) => t('Pending')
 const TODAY_TITLE = (t: TFunction) => t('Today')
 const MONTH_TITLE = dayjs().format('MMMM')
 const YEAR_TITLE = dayjs().year().toString()
 
-const key = (info: TransactionSummaryInfo) => info.hash
+const key = (info: TransactionDetails) => info.hash
+
+export default function TransactionList({
+  address,
+  readonly,
+  emptyStateContent,
+}: {
+  address: Address
+  readonly: boolean
+  emptyStateContent: React.ReactElement | null
+}) {
+  return (
+    <Suspense fallback={<Loading repeat={4} type="box" />}>
+      <TransactionSectionList
+        address={address}
+        emptyStateContent={emptyStateContent}
+        readonly={readonly}
+      />
+    </Suspense>
+  )
+}
 
 const SectionTitle: SectionList['props']['renderSectionHeader'] = ({ section: { title } }) => (
   <Box px="xs" py="md">
@@ -27,23 +47,32 @@ const SectionTitle: SectionList['props']['renderSectionHeader'] = ({ section: { 
 )
 
 /** Displays historical and pending transactions for a given address. */
-export function TransactionList({
-  transactions,
+export function TransactionSectionList({
+  address,
   readonly,
+  emptyStateContent,
 }: {
-  transactions: AllFormattedTransactions
+  address: Address
   readonly: boolean
+  emptyStateContent: ReactElement | null
 }) {
   const { t } = useTranslation()
+
   const {
     pending,
     todayTransactionList,
     monthTransactionList,
     yearTransactionList,
     priorByYearTransactionList,
-  } = transactions
+    combinedTransactionList,
+  } = useAllFormattedTransactions(address)
+
+  const hasTransactions = combinedTransactionList?.length > 0
 
   const sectionData = useMemo(() => {
+    if (!hasTransactions) {
+      return EMPTY_ARRAY
+    }
     return [
       ...(pending.length > 0 ? [{ title: PENDING_TITLE(t), data: pending }] : []),
       ...(todayTransactionList.length > 0
@@ -58,7 +87,7 @@ export function TransactionList({
         (
           accum: {
             title: string
-            data: TransactionSummaryInfo[]
+            data: TransactionDetails[]
           }[],
           year
         ) => {
@@ -72,6 +101,7 @@ export function TransactionList({
       ),
     ]
   }, [
+    hasTransactions,
     monthTransactionList,
     pending,
     priorByYearTransactionList,
@@ -86,9 +116,9 @@ export function TransactionList({
       index,
       section,
     }: {
-      item: TransactionSummaryInfo
+      item: TransactionDetails
       index: number
-      section: SectionListData<TransactionSummaryInfo>
+      section: SectionListData<TransactionDetails>
     }) => {
       // Logic to render border radius and margins on groups of items.
       const aboveItem = index > 0 ? section.data[index - 1] : undefined
@@ -107,12 +137,14 @@ export function TransactionList({
 
       const borderTop = aboveIsIsolated || index === 0
       const borderBottom = currentIsIsolated || index === section.data.length - 1
+
       // Only show banner if first element in pending or daily section.
       const showInlineWarning =
         index !== 0 || !(section.title === TODAY_TITLE(t) || section.title === PENDING_TITLE(t))
 
       return (
-        <TransactionSummaryItem
+        <TransactionSummaryRouter
+          borderBottomColor={borderBottom ? 'none' : 'backgroundOutline'}
           borderBottomLeftRadius={borderBottom ? 'lg' : 'none'}
           borderBottomRightRadius={borderBottom ? 'lg' : 'none'}
           borderBottomWidth={0.25}
@@ -125,11 +157,15 @@ export function TransactionList({
           mb={currentIsIsolated ? 'md' : 'none'}
           readonly={readonly}
           showInlineWarning={showInlineWarning}
-          transactionSummaryInfo={item}
+          transaction={item}
         />
       )
     }
   }, [readonly, t])
+
+  if (!hasTransactions) {
+    return emptyStateContent
+  }
 
   return (
     <SectionList

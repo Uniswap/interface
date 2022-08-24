@@ -14,6 +14,11 @@ export function buildCurrencyId(chainId: ChainId, address: string) {
   return `${chainId}-${address}`
 }
 
+export function buildNativeCurrencyId(chainId: ChainId) {
+  const nativeAddress = getNativeCurrencyAddressForChain(chainId)
+  return buildCurrencyId(chainId, nativeAddress)
+}
+
 export function currencyAddressForSwapQuote(currency: Currency): string {
   if (currency.isNative) {
     // swap router API special cases these strings to represent native currencies

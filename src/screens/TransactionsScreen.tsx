@@ -6,8 +6,7 @@ import { Flex } from 'src/components/layout'
 import { BackHeader } from 'src/components/layout/BackHeader'
 import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollScreen'
 import { Text } from 'src/components/Text'
-import { TransactionList } from 'src/components/TransactionList/TransactionList'
-import { useAllFormattedTransactions } from 'src/features/transactions/hooks'
+import TransactionList from 'src/components/TransactionList/TransactionList'
 import { Screens } from 'src/screens/Screens'
 
 export function TransactionsScreen({
@@ -16,8 +15,6 @@ export function TransactionsScreen({
   },
 }: ExploreStackScreenProp<Screens.UserTransactions>) {
   const { t } = useTranslation()
-  const transactions = useAllFormattedTransactions(owner)
-
   return (
     <HeaderScrollScreen
       contentHeader={
@@ -45,7 +42,7 @@ export function TransactionsScreen({
         </BackHeader>
       }>
       <Flex pb="lg" px="sm">
-        <TransactionList readonly={true} transactions={transactions} />
+        <TransactionList readonly address={owner} emptyStateContent={null} />
       </Flex>
     </HeaderScrollScreen>
   )

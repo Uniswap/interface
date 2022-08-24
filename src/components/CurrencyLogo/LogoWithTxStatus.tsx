@@ -6,11 +6,13 @@ import Approve from 'src/assets/icons/approve.svg'
 import IncomingArrow from 'src/assets/icons/arrow-down-in-circle.svg'
 import OutgoingArrow from 'src/assets/icons/arrow-up-in-circle.svg'
 import UnknownStatus from 'src/assets/icons/question-in-circle.svg'
+import SlashCircleIcon from 'src/assets/icons/slash-circle.svg'
 import { CurrencyLogoOrPlaceholder } from 'src/components/CurrencyLogo/CurrencyLogoOrPlaceholder'
 import { NFTViewer } from 'src/components/images/NFTViewer'
 import { Box } from 'src/components/layout/Box'
 import { AssetType } from 'src/entities/assets'
-import { TransactionStatus, TransactionType } from 'src/features/transactions/types'
+import { TXN_HISTORY_SIZING } from 'src/features/transactions/SummaryCards/TransactionSummaryRouter'
+import { NFTTradeType, TransactionStatus, TransactionType } from 'src/features/transactions/types'
 import { logger } from 'src/utils/logger'
 
 interface LogoWithTxStatusProps {
@@ -31,6 +33,7 @@ interface CurrencyStatusProps extends LogoWithTxStatusProps {
 interface NFTStatusProps extends LogoWithTxStatusProps {
   assetType: AssetType.ERC721 | AssetType.ERC1155
   nftImageUrl?: string
+  nftTradeType?: NFTTradeType
 }
 
 export function LogoWithTxStatus(props: CurrencyStatusProps | NFTStatusProps) {
@@ -57,9 +60,16 @@ export function LogoWithTxStatus(props: CurrencyStatusProps | NFTStatusProps) {
     switch (txType) {
       case TransactionType.Approve:
         return <Approve color={green} fill={fill} height={statusSize} width={statusSize} />
+      case TransactionType.NFTApprove:
+        return <Approve color={green} fill={fill} height={statusSize} width={statusSize} />
       case TransactionType.Send:
         return <OutgoingArrow color={green} fill={fill} height={statusSize} width={statusSize} />
       case TransactionType.Receive:
+        return <IncomingArrow color={green} fill={fill} height={statusSize} width={statusSize} />
+      case TransactionType.NFTTrade:
+        if (assetType === AssetType.ERC721 && props.nftTradeType === NFTTradeType.SELL) {
+          return <OutgoingArrow color={green} fill={fill} height={statusSize} width={statusSize} />
+        }
         return <IncomingArrow color={green} fill={fill} height={statusSize} width={statusSize} />
       case TransactionType.Unknown:
         return <UnknownStatus color={gray} fill={fill} height={statusSize} width={statusSize} />
@@ -96,5 +106,55 @@ function NFTLogoOrPlaceholder(props: { nftImageUrl?: string; size: number }) {
       width={size}>
       {nftImageUrl && <NFTViewer uri={nftImageUrl} />}
     </Box>
+  )
+}
+
+/**
+ * Swap icons lockup, fall back to single icon plus warning if in failed state.
+ */
+export function DoubleCurrencyLogoWithTxStatus({
+  currency,
+  otherCurrency,
+  status,
+  showCancelIcon,
+}: {
+  currency: NullUndefined<Currency>
+  otherCurrency: NullUndefined<Currency>
+  status: TransactionStatus
+  showCancelIcon: boolean
+}) {
+  const theme = useAppTheme()
+  if (status === TransactionStatus.Failed) {
+    return (
+      <LogoWithTxStatus
+        assetType={AssetType.Currency}
+        currency={currency}
+        size={TXN_HISTORY_SIZING}
+        txStatus={status}
+        txType={TransactionType.Swap}
+      />
+    )
+  }
+  return (
+    <>
+      <Box left={2} position="absolute" top={2}>
+        <CurrencyLogoOrPlaceholder
+          currency={otherCurrency}
+          size={TXN_HISTORY_SIZING.primaryImage}
+        />
+      </Box>
+      <Box bottom={showCancelIcon ? 5 : 0} position="absolute" right={showCancelIcon ? 5 : 0}>
+        {showCancelIcon ? (
+          <SlashCircleIcon
+            color={theme.colors.backgroundOutline}
+            fillOpacity={1}
+            height={TXN_HISTORY_SIZING.secondaryImage}
+            width={TXN_HISTORY_SIZING.secondaryImage}
+          />
+        ) : (
+          <CurrencyLogoOrPlaceholder currency={currency} size={TXN_HISTORY_SIZING.primaryImage} />
+        )}
+      </Box>
+    </>
   )
 }

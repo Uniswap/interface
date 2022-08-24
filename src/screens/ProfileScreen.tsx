@@ -13,13 +13,12 @@ import { AppBackground } from 'src/components/gradients/AppBackground'
 import { Flex } from 'src/components/layout'
 import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollScreen'
 import { Text } from 'src/components/Text'
-import { TransactionList } from 'src/components/TransactionList/TransactionList'
+import TransactionList from 'src/components/TransactionList/TransactionList'
 import { WalletConnectModalState } from 'src/components/WalletConnect/constants'
 import SessionsButton from 'src/components/WalletConnect/SessionsButton'
 import { openModal } from 'src/features/modals/modalSlice'
 import { clearNotificationCount } from 'src/features/notifications/notificationSlice'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
-import { useAllFormattedTransactions } from 'src/features/transactions/hooks'
 import { useActiveAccountWithThrow } from 'src/features/wallet/hooks'
 import { useWalletConnect } from 'src/features/walletConnect/useWalletConnect'
 import { Screens } from 'src/screens/Screens'
@@ -37,10 +36,6 @@ export function ProfileScreen({ navigation }: Props) {
   const address = activeAccount.address
 
   const { sessions } = useWalletConnect(address)
-
-  const transactions = useAllFormattedTransactions(address)
-  const hasTransactions =
-    transactions.pending.length > 0 || transactions.combinedTransactionList.length > 0
 
   const onPressScan = useCallback(() => {
     selectionAsync()
@@ -114,32 +109,34 @@ export function ProfileScreen({ navigation }: Props) {
           <SessionsButton sessions={sessions} onPress={onPressSessions} />
         </Flex>
       )}
-      {hasTransactions ? (
-        <Flex pb="lg" px="sm">
-          <TransactionList readonly={false} transactions={transactions} />
-        </Flex>
-      ) : (
-        <Flex centered gap="xxl" mt="xl" mx="xl">
-          <Flex centered gap="xs">
-            <Text variant="subhead">{t('No activity yet')}</Text>
-            <Text color="textSecondary" variant="bodySmall">
-              {t(
-                'When you make transactions or interact with sites, details of your activity will appear here.'
-              )}
-            </Text>
-          </Flex>
-          <Flex row>
-            {/* TODO: Add a buy button when fiat OR is implemented */}
-            <PrimaryButton
-              borderRadius="md"
-              icon={<Scan color={theme.colors.textPrimary} height={20} width={20} />}
-              label={t('Receive')}
-              variant="transparent"
-              onPress={onPressScan}
-            />
-          </Flex>
-        </Flex>
-      )}
+      <Flex pb="lg" px="sm">
+        <TransactionList
+          address={address}
+          emptyStateContent={
+            <Flex centered gap="xxl" mt="xl" mx="xl">
+              <Flex centered gap="xs">
+                <Text variant="subhead">{t('No activity yet')}</Text>
+                <Text color="textSecondary" variant="bodySmall">
+                  {t(
+                    'When you make transactions or interact with sites, details of your activity will appear here.'
+                  )}
+                </Text>
+              </Flex>
+              <Flex row>
+                {/* TODO: Add a buy button when fiat OR is implemented */}
+                <PrimaryButton
+                  borderRadius="md"
+                  icon={<Scan color={theme.colors.textPrimary} height={20} width={20} />}
+                  label={t('Receive')}
+                  variant="transparent"
+                  onPress={onPressScan}
+                />
+              </Flex>
+            </Flex>
+          }
+          readonly={false}
+        />
+      </Flex>
     </HeaderScrollScreen>
   )
 }
