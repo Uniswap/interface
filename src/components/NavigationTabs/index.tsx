@@ -23,7 +23,7 @@ const Tabs = styled.div`
 const StyledHistoryLink = styled(HistoryLink)<{ flex: string | undefined }>`
   flex: ${({ flex }) => flex ?? 'none'};
 
-  ${({ theme }) => theme.mediaWidth.upToMedium`
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToMedium`
     flex: none;
     margin-right: 10px;
   `};

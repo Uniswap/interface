@@ -24,7 +24,7 @@ const HeaderRow = styled.div`
   padding: 1rem 1rem;
   font-weight: 500;
   color: ${(props) => (props.color === 'blue' ? ({ theme }) => theme.deprecated_primary1 : 'inherit')};
-  ${({ theme }) => theme.mediaWidth.upToMedium`
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToMedium`
     padding: 1rem;
   `};
 `
@@ -74,7 +74,7 @@ const AccountGroupingRow = styled.div`
 
 const AccountSection = styled.div`
   padding: 0rem 1rem;
-  ${({ theme }) => theme.mediaWidth.upToMedium`padding: 0rem 1rem 1.5rem 1rem;`};
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToMedium`padding: 0rem 1rem 1.5rem 1rem;`};
 `
 
 const YourAccount = styled.div`

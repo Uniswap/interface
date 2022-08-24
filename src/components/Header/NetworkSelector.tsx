@@ -53,7 +53,7 @@ const FlyoutMenu = styled.div`
   width: 272px;
   z-index: 99;
   padding-top: 10px;
-  @media screen and (min-width: ${MEDIA_WIDTHS.upToSmall}px) {
+  @media screen and (min-width: ${MEDIA_WIDTHS.deprecated_upToSmall}px) {
     top: 40px;
   }
 `
@@ -112,7 +112,7 @@ const NetworkLabel = styled.div`
 `
 const SelectorLabel = styled(NetworkLabel)`
   display: none;
-  @media screen and (min-width: ${MEDIA_WIDTHS.upToSmall}px) {
+  @media screen and (min-width: ${MEDIA_WIDTHS.deprecated_upToSmall}px) {
     display: block;
     margin-right: 8px;
   }
@@ -126,7 +126,7 @@ const NetworkAlertLabel = styled(NetworkLabel)`
   font-size: 1rem;
   width: fit-content;
   font-weight: 500;
-  @media screen and (min-width: ${MEDIA_WIDTHS.upToSmall}px) {
+  @media screen and (min-width: ${MEDIA_WIDTHS.deprecated_upToSmall}px) {
     display: block;
   }
 `
@@ -153,12 +153,12 @@ const SelectorControls = styled.div<{ supportedChain: boolean }>`
   }
 `
 const SelectorLogo = styled(Logo)`
-  @media screen and (min-width: ${MEDIA_WIDTHS.upToSmall}px) {
+  @media screen and (min-width: ${MEDIA_WIDTHS.deprecated_upToSmall}px) {
     margin-right: 8px;
   }
 `
 const SelectorWrapper = styled.div`
-  @media screen and (min-width: ${MEDIA_WIDTHS.upToSmall}px) {
+  @media screen and (min-width: ${MEDIA_WIDTHS.deprecated_upToSmall}px) {
     position: relative;
   }
 `

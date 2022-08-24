@@ -127,11 +127,20 @@ declare module 'styled-components/macro' {
     shadow1: Color
 
     // media queries
-    mediaWidth: {
-      upToExtraSmall: ThemedCssFunction<DefaultTheme>
-      upToSmall: ThemedCssFunction<DefaultTheme>
-      upToMedium: ThemedCssFunction<DefaultTheme>
-      upToLarge: ThemedCssFunction<DefaultTheme>
+    deprecated_mediaWidth: {
+      deprecated_upToExtraSmall: ThemedCssFunction<DefaultTheme>
+      deprecated_upToSmall: ThemedCssFunction<DefaultTheme>
+      deprecated_upToMedium: ThemedCssFunction<DefaultTheme>
+      deprecated_upToLarge: ThemedCssFunction<DefaultTheme>
+    }
+
+    breakpoint: {
+      sm: number
+      md: number
+      lg: number
+      xl: number
+      xxl: number
+      xxxl: number
     }
 
     // css snippets

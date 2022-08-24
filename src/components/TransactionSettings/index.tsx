@@ -95,7 +95,7 @@ const OptionCustom = styled(FancyButton)<{ active?: boolean; warning?: boolean; 
 
 const SlippageEmojiContainer = styled.span`
   color: #f3841e;
-  ${({ theme }) => theme.mediaWidth.upToSmall`
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
     display: none;
   `}
 `
