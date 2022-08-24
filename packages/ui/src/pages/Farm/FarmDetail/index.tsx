@@ -128,7 +128,7 @@ export default function SimpleSushiMCManage() {
     try {
       if (positions && positions[pid] && positions[pid].amount) {
         const bi = (positions[pid].amount as BigNumber).toBigInt();
-        return CurrencyAmount.fromRawAmount(new Token(chainId || 420, ZERO_ADDRESS, 18), bi)?.toSignificant(6)
+        return CurrencyAmount.fromRawAmount(new Token(chainId || 420, ZERO_ADDRESS, 6), bi)?.toSignificant(6)
       }
     } catch (error) {
       console.error('parsedStakedAmount::error', error)
