@@ -79,7 +79,7 @@ const Buttons = ({
   onContinue: () => void
   onCancel: () => void
 }) => {
-  return warning.canProceed ? (
+  return !warning.canProceed ? (
     <>
       <StyledButton onClick={onContinue}>
         <Trans>I understand</Trans>
@@ -179,6 +179,10 @@ function ExplorerView({ token }: { token: Token }) {
   }
 }
 
+const StyledExternalLink = styled(ExternalLink)`
+  font-weight: 600;
+`
+
 interface TokenSafetyProps {
   tokenAddress: string | null
   secondTokenAddress?: string
@@ -243,9 +247,9 @@ export default function TokenSafety({ tokenAddress, secondTokenAddress, onContin
           <ShortColumn>
             <InfoText>
               {description}{' '}
-              <ExternalLink style={{ fontWeight: 600 }} href={TOKEN_SAFETY_ARTICLE}>
+              <StyledExternalLink href={TOKEN_SAFETY_ARTICLE}>
                 <Trans>Learn more</Trans>
-              </ExternalLink>
+              </StyledExternalLink>
             </InfoText>
           </ShortColumn>
           <LinkColumn>{urls}</LinkColumn>
