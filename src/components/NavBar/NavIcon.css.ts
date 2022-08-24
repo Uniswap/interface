@@ -8,7 +8,6 @@ export const navIcon = style([
     display: 'flex',
     flexDirection: 'column',
     color: 'blackBlue',
-    background: 'none',
     border: 'none',
     justifyContent: 'center',
     textAlign: 'center',

@@ -25,7 +25,7 @@ export const NavDropdown = ({
       style={{
         top: `${top}px`,
         left: centerHorizontally ? '50%' : leftAligned ? '0px' : 'auto',
-        right: centerHorizontally || leftAligned ? 'auto' : '10px',
+        right: centerHorizontally || leftAligned ? 'auto' : '0px',
         transform: centerHorizontally ? 'translateX(-50%)' : 'unset',
         zIndex: 3,
       }}

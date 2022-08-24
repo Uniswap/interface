@@ -124,14 +124,14 @@ export const MenuDropdown = () => {
   return (
     <>
       <Box position="relative" ref={ref}>
-        <NavIcon onClick={toggleOpen}>
+        <NavIcon isActive={isOpen} onClick={toggleOpen}>
           <EllipsisIcon width={28} height={28} />
         </NavIcon>
 
         {isOpen && (
           <NavDropdown top={60}>
-            <Column gap="12">
-              <Column paddingX="16" gap="4">
+            <Column gap="16">
+              <Column paddingX="8" gap="4">
                 {nftFlag === NftVariant.Enabled && (
                   <PrimaryMenuRow to="/nft/sell" close={toggleOpen}>
                     <Icon>
@@ -150,11 +150,11 @@ export const MenuDropdown = () => {
                   <Icon>
                     <BarChartIcon width={24} height={24} />
                   </Icon>
-                  <PrimaryMenuRow.Text>View token analytics ↗</PrimaryMenuRow.Text>
+                  <PrimaryMenuRow.Text>View token analytics</PrimaryMenuRow.Text>
                 </PrimaryMenuRow>
               </Column>
               <Separator />
-              <Column paddingX="16" gap="4">
+              <Column paddingX="8">
                 <SecondaryLinkedText href="https://help.uniswap.org/en/">Help center ↗</SecondaryLinkedText>
                 <SecondaryLinkedText href="https://docs.uniswap.org/">Documentation ↗</SecondaryLinkedText>
                 <SecondaryLinkedText
@@ -162,20 +162,20 @@ export const MenuDropdown = () => {
                     toggleOpen()
                     togglePrivacyPolicy()
                   }}
-                >{`Legal & Privacy`}</SecondaryLinkedText>
+                >{`Legal & Privacy ↗`}</SecondaryLinkedText>
                 {(isDevelopmentEnv() || isStagingEnv()) && (
                   <SecondaryLinkedText onClick={openFeatureFlagsModal}>{`Feature Flags`}</SecondaryLinkedText>
                 )}
               </Column>
               <IconRow>
                 <Icon href="https://discord.com/invite/FCfyBSbCU5">
-                  <DiscordIconMenu width={24} height={24} color={themeVars.colors.darkGray} />
+                  <DiscordIconMenu className={styles.hover} width={24} height={24} color={themeVars.colors.darkGray} />
                 </Icon>
                 <Icon href="https://twitter.com/Uniswap">
-                  <TwitterIconMenu width={24} height={24} color={themeVars.colors.darkGray} />
+                  <TwitterIconMenu className={styles.hover} width={24} height={24} color={themeVars.colors.darkGray} />
                 </Icon>
                 <Icon href="https://github.com/Uniswap">
-                  <GithubIconMenu width={24} height={24} color={themeVars.colors.darkGray} />
+                  <GithubIconMenu className={styles.hover} width={24} height={24} color={themeVars.colors.darkGray} />
                 </Icon>
               </IconRow>
             </Column>
