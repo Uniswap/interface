@@ -11,7 +11,7 @@ interface NavIconProps {
 
 export const NavIcon = ({ children, isActive, onClick }: NavIconProps) => {
   return (
-    <Box as="button" className={styles.navIcon} background={isActive ? 'blue200' : 'none'} onClick={onClick}>
+    <Box as="button" className={styles.navIcon} background={isActive ? 'accentActiveSoft' : 'none'} onClick={onClick}>
       {children}
     </Box>
   )

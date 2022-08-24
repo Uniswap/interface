@@ -161,6 +161,7 @@ export const vars = createGlobalTheme(':root', {
     grey100: '#DDE3F7',
     grey50: '#EDEFF7',
     lightGrayOverlay: '#99A1BD14',
+    accentActiveSoft: '#4c82fb3d',
   },
   border: {
     transculent: '1.5px solid rgba(0, 0, 0, 0.1)',
