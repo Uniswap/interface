@@ -146,7 +146,7 @@ export function LoadingTokenTable() {
   )
 }
 
-export default function TokenTable({ data }: { data: Record<string, TokenData> | null }) {
+export default function TokenTable({ data }: { data: TokenData[] | undefined }) {
   const showFavorites = useAtomValue<boolean>(showFavoritesAtom)
   const timePeriod = useAtomValue<TimePeriod>(filterTimeAtom)
   const filteredTokens = useFilteredTokens(data)
