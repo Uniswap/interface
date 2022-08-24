@@ -262,7 +262,7 @@ const ClaimSummary = ({
           <Action {...actionProps} />{' '}
           <HighlightText>
             {formatAmount(uniAmountRaw, 18, 4)}
-            <Trans>UNI</Trans>{' '}
+            UNI{' '}
           </HighlightText>{' '}
           <Trans>for</Trans> <HighlightText>{ENSName ?? shortenAddress(recipient)}</HighlightText>
         </>
