@@ -212,33 +212,42 @@ export function ExternalLinkIcon({
   )
 }
 
-const ToolTipWrapper = styled.div`
+const ToolTipWrapper = styled.div<{ isCopyContractTooltip?: boolean }>`
   display: flex;
   flex-direction: column;
   align-items: center;
-  position: absolute;
+  position: ${({ isCopyContractTooltip }) => (isCopyContractTooltip ? 'relative' : 'absolute')};
+  right: ${({ isCopyContractTooltip }) => isCopyContractTooltip && '50%'};
   transform: translate(5px, 32px);
   z-index: 9999;
 `
 
-const CopiedTooltip = styled.div`
+const StyledTooltipTriangle = styled(TooltipTriangle)`
+  path {
+    fill: ${({ theme }) => theme.black};
+  }
+`
+
+const CopiedTooltip = styled.div<{ isCopyContractTooltip?: boolean }>`
   background-color: ${({ theme }) => theme.black};
   text-align: center;
   justify-content: center;
-  width: 60px;
-  height: 32px;
-  line-height: 32px;
+  width: ${({ isCopyContractTooltip }) => !isCopyContractTooltip && '60px'};
+  height: ${({ isCopyContractTooltip }) => !isCopyContractTooltip && '32px'};
+  line-height: ${({ isCopyContractTooltip }) => !isCopyContractTooltip && '32px'};
+
+  padding: ${({ isCopyContractTooltip }) => isCopyContractTooltip && '8px'};
   border-radius: 8px;
 
   color: ${({ theme }) => theme.white};
   font-size: 12px;
 `
 
-function ToolTip() {
+function Tooltip({ isCopyContractTooltip }: { isCopyContractTooltip: boolean }) {
   return (
-    <ToolTipWrapper>
-      <TooltipTriangle />
-      <CopiedTooltip>Copied!</CopiedTooltip>
+    <ToolTipWrapper isCopyContractTooltip={isCopyContractTooltip}>
+      <StyledTooltipTriangle />
+      <CopiedTooltip isCopyContractTooltip={isCopyContractTooltip}>Copied!</CopiedTooltip>
     </ToolTipWrapper>
   )
 }
@@ -259,7 +268,7 @@ export function CopyLinkIcon({ toCopy }: { toCopy: string }) {
   return (
     <CopyIconWrapper onClick={copy}>
       <CopyIcon />
-      {isCopied && <ToolTip />}
+      {isCopied && <Tooltip isCopyContractTooltip={false} />}
     </CopyIconWrapper>
   )
 }
@@ -309,7 +318,7 @@ export function CopyContractAddress({ address }: { address: string }) {
         <TruncatedAddress>{truncated}</TruncatedAddress>
         <Copy size={14} />
       </CopyAddressRow>
-      {isCopied && <ToolTip />}
+      {isCopied && <Tooltip isCopyContractTooltip={true} />}
     </CopyContractAddressWrapper>
   )
 }

@@ -32,7 +32,7 @@ export const ChartHeader = styled.div`
   margin-bottom: 24px;
 `
 export const ContractAddressSection = styled.div`
-  padding: 24px 0px;
+  padding: 36px 0px;
 `
 export const ChartContainer = styled.div`
   display: flex;
