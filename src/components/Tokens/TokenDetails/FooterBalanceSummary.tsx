@@ -82,7 +82,7 @@ const SwapButton = styled.button`
   display: flex;
   align-items: center;
   border: none;
-  color: ${({ theme }) => theme.textPrimary};
+  color: ${({ theme }) => theme.accentTextLightPrimary};
   padding: 12px 16px;
   width: 120px;
   height: 44px;
