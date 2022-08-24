@@ -64,6 +64,10 @@ const Input = styled.input<{ redesignFlag: boolean }>`
   }
   color: ${({ theme, color }) => (color === 'red' ? theme.deprecated_red1 : theme.deprecated_text1)};
   text-align: right;
+
+  ::placeholder {
+    color: ${({ theme, redesignFlag }) => redesignFlag && theme.textTertiary};
+  }
 `
 
 const OptionCustom = styled(FancyButton)<{ active?: boolean; warning?: boolean; redesignFlag: boolean }>`
