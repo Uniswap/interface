@@ -203,7 +203,7 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
   }
 
   const tokenName = tokenDetailData.name
-  const tokenSymbol = tokenDetailData.tokens?.[0]?.symbol ?? token.symbol
+  const tokenSymbol = tokenDetailData.tokens?.[0]?.symbol?.toUpperCase() ?? token.symbol
 
   return (
     <Suspense fallback={<LoadingTokenDetail />}>
