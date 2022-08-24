@@ -70,7 +70,7 @@ export default function StakingModal({ isOpen, onDismiss, pid }: StakingModalPro
   const [approval, approve] = useApproveCallback(tokenAmount, MASTERCHEF_ADDRESSBOOK[chainId ?? 420])
   // const [parsedAmount, setParsedAmount] = useState('0')
   // const stakingContract = useStakingContract(stakingInfo.stakingRewardAddress)
-  const stakingContract = useMasterChef(Chef.MASTERCHEF)
+  const stakingContract = useMasterChef(Chef.MINICHEF)
   async function onStake() {
     setAttempting(true)
     if (stakingContract && deadline) {

@@ -49,11 +49,15 @@ export const UNI: { [chainId in ChainId]: Token } = {
 }
 
 export const MASTERCHEF_ADDRESSBOOK: { [chainId in ChainId]?: string } = {
-  [ChainId.RINKEBY]: '0xe87ce36b28c80f46a0d5e200b1c528e051b7a201'
+  [ChainId.RINKEBY]: '0xe87ce36b28c80f46a0d5e200b1c528e051b7a201',
 }
 
 export const MASTERCHEFV2_ADDRESSBOOK: { [chainId in ChainId]?: string } = {
   // [ChainId.RINKEBY]: ''
+}
+
+export const MINICHEF_ADDRESS: { [chainId in ChainId]?: string } = {
+  [ChainId.OP_GOERLI]: '0x32aB42f082D0522Ac445010D6DB48b3c69A8044b',
 }
 
 export const SUSHI_ADDRESS: { [chainId in ChainId]?: string } = {

@@ -34,7 +34,7 @@ export default function UnstakingModal({ isOpen, onDismiss, pid }: StakingModalP
   const [hash, setHash] = useState<string | undefined>()
   const [attempting, setAttempting] = useState(false)
 
-  const masterChef = useMasterChef(Chef.MASTERCHEF)
+  const masterChef = useMasterChef(Chef.MINICHEF)
 
   function wrappedOndismiss() {
     setHash(undefined)

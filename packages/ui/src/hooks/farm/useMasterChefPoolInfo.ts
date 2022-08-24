@@ -1,17 +1,14 @@
-import { CurrencyAmount, JSBI } from "@teleswap/sdk"
-import { UNI } from "constants/"
 import { Chef } from "constants/farm/chef.enum"
 import { BigNumber } from "ethers"
 import { useActiveWeb3React } from "hooks"
-import { useMasterChefContract } from "hooks/useContract"
 import { useMemo } from "react"
 import { NEVER_RELOAD, useSingleCallResult, useSingleContractMultipleData } from "state/multicall/hooks"
+import { useChefContract } from "./useChefContract"
 // import useMasterChef from "./useMasterChef"
 
-export function useMasterChefPoolInfo(farm?: { chef: Chef, id: any }) {
+export function useMasterChefPoolInfo(chef: Chef) {
     const { account } = useActiveWeb3React()
-    // const contract = useMasterChef(farm.chef)
-    const contract = useMasterChefContract()
+    const contract = useChefContract(chef)
     const numberOfPools = useSingleCallResult(contract ? contract : null, 'poolLength', undefined, NEVER_RELOAD)
       ?.result?.[0]
 

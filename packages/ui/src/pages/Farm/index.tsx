@@ -8,8 +8,9 @@ import { CardSection, DataCard, CardNoise, CardBGImage } from '../../components/
 import { useActiveWeb3React } from '../../hooks'
 import PoolCard from './PoolCard'
 import { useChefPositions } from 'hooks/farm/useChefPositions'
-import { useMasterChefContract } from 'hooks/useContract'
 import { useMasterChefPoolInfo } from 'hooks/farm/useMasterChefPoolInfo'
+import { Chef } from 'constants/farm/chef.enum'
+import { useChefContract } from 'hooks/farm/useChefContract'
 // import { JSBI } from '@teleswap/sdk'
 // import { BIG_INT_ZERO } from '../../constants'
 // import { OutlineCard } from '../../components/Card'
@@ -43,9 +44,9 @@ export default function FarmList() {
   const { chainId } = useActiveWeb3React()
   console.debug('chainId', chainId)
 
-  const mchefContract = useMasterChefContract()
+  const mchefContract = useChefContract(Chef.MINICHEF)
   const positions = useChefPositions(mchefContract, undefined, chainId)
-  const poolInfos = useMasterChefPoolInfo()
+  const poolInfos = useMasterChefPoolInfo(Chef.MINICHEF)
 
   useEffect(() => {
     console.info('useChefPositions', positions);

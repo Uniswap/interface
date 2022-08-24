@@ -24,9 +24,9 @@ import { useParams } from 'react-router-dom'
 // import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { useActiveWeb3React } from 'hooks/index'
-import { useMasterChefContract } from 'hooks/useContract'
 import { useChefPositions } from 'hooks/farm/useChefPositions'
 import { TYPE } from 'theme'
+import { useChefContract } from 'hooks/farm/useChefContract'
 // import { CountUp } from 'use-count-up'
 // import { currencyId } from 'utils/currencyId'
 
@@ -90,7 +90,7 @@ const DataRow = styled(RowBetween)`
 export default function SimpleSushiMCManage() {
   const { chainId } = useActiveWeb3React()
 
-  const masterChef = useMasterChef(Chef.MASTERCHEF)
+  const masterChef = useMasterChef(Chef.MINICHEF)
   const { pid: pidInHex } = useParams<{ pid: string }>()
   const pid = parseInt(pidInHex)
   const poolName = `DAI/UNI`
@@ -99,7 +99,7 @@ export default function SimpleSushiMCManage() {
   const backgroundColor = useColor()
   const disableTop = true
   const stakingInfo: any = undefined
-  const mchefContract = useMasterChefContract()
+  const mchefContract = useChefContract(Chef.MINICHEF)
   const positions = useChefPositions(mchefContract, undefined, chainId)
   // toggle for staking modal and unstaking modal
   const [showStakingModal, setShowStakingModal] = useState(false)
