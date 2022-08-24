@@ -19,7 +19,7 @@ import { VirtualizedList } from 'src/components/layout/VirtualizedList'
 
 const CONTENT_MAX_SCROLL_Y = 50
 
-export const AnimatedBlurView = Animated.createAnimatedComponent(BlurView)
+const AnimatedBlurView = Animated.createAnimatedComponent(BlurView)
 
 // Types for React Native View prop pointerEvents, necessary typing for AnimatedBlurView's animatedProps
 type PointerEvent = 'auto' | 'none'
@@ -122,7 +122,7 @@ export function HeaderScrollScreen({
   )
 }
 
-export const BlurHeaderStyle: ViewStyle = {
+const BlurHeaderStyle: ViewStyle = {
   position: 'absolute',
   left: 0,
   right: 0,
