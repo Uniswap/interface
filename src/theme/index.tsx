@@ -25,12 +25,15 @@ export const MEDIA_WIDTHS = {
   deprecated_upToSmall: 720,
   deprecated_upToMedium: 960,
   deprecated_upToLarge: 1280,
-  breakpointSm: 640,
-  breakpointMd: 768,
-  breakpointLg: 1024,
-  breakpointXl: 1280,
-  breakpoint2xl: 1536,
-  breakpoint3xl: 1920,
+}
+
+const BREAKPOINTS = {
+  sm: 640,
+  md: 768,
+  lg: 1024,
+  xl: 1280,
+  xxl: 1536,
+  xxxl: 1920,
 }
 
 // Migrating to a standard z-index system https://getbootstrap.com/docs/5.0/layout/z-index/
@@ -48,17 +51,16 @@ export enum Z_INDEX {
   tooltip = 1080,
 }
 
-const mediaWidthTemplates: { [width in keyof typeof MEDIA_WIDTHS]: typeof css } = Object.keys(MEDIA_WIDTHS).reduce(
-  (accumulator, size) => {
-    ;(accumulator as any)[size] = (a: any, b: any, c: any) => css`
-      @media (max-width: ${(MEDIA_WIDTHS as any)[size]}px) {
-        ${css(a, b, c)}
-      }
-    `
-    return accumulator
-  },
-  {}
-) as any
+const deprecated_mediaWidthTemplates: { [width in keyof typeof MEDIA_WIDTHS]: typeof css } = Object.keys(
+  MEDIA_WIDTHS
+).reduce((accumulator, size) => {
+  ;(accumulator as any)[size] = (a: any, b: any, c: any) => css`
+    @media (max-width: ${(MEDIA_WIDTHS as any)[size]}px) {
+      ${css(a, b, c)}
+    }
+  `
+  return accumulator
+}, {}) as any
 
 const deprecated_white = ColorsPalette.white
 const deprecated_black = ColorsPalette.black
@@ -263,7 +265,10 @@ function getTheme(darkMode: boolean, isNewColorsEnabled: boolean): DefaultTheme 
     shadow1: darkMode ? '#000' : '#2F80ED',
 
     // media queries
-    mediaWidth: mediaWidthTemplates,
+    deprecated_mediaWidth: deprecated_mediaWidthTemplates,
+
+    //breakpoints
+    breakpoint: BREAKPOINTS,
 
     // css snippets
     flexColumnNoWrap: css`
