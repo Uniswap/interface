@@ -17,7 +17,7 @@ const MobilePopupWrapper = styled.div<{ height: string | number }>`
   margin-bottom: ${({ height }) => (height ? '20px' : 0)};
 
   display: none;
-  ${({ theme }) => theme.mediaWidth.breakpointMd`
+  ${({ theme }) => theme.mediaWidth.deprecated_upToSmall`
     display: block;
     padding-top: 20px;
   `};
@@ -35,8 +35,8 @@ const MobilePopupInner = styled.div`
   }
 `
 
-const StopOverflowQuery = `@media screen and (min-width: ${MEDIA_WIDTHS.breakpointLg + 1}px) and (max-width: ${
-  MEDIA_WIDTHS.breakpointLg + 500
+const StopOverflowQuery = `@media screen and (min-width: ${MEDIA_WIDTHS.deprecated_upToMedium + 1}px) and (max-width: ${
+  MEDIA_WIDTHS.deprecated_upToMedium + 500
 }px)`
 
 const FixedPopupColumn = styled(AutoColumn)<{ extraPadding: boolean; xlPadding: boolean }>`
@@ -47,7 +47,7 @@ const FixedPopupColumn = styled(AutoColumn)<{ extraPadding: boolean; xlPadding: 
   width: 100%;
   z-index: 3;
 
-  ${({ theme }) => theme.mediaWidth.breakpointMd`
+  ${({ theme }) => theme.mediaWidth.deprecated_upToSmall`
     display: none;
   `};
 

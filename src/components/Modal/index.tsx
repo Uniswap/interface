@@ -59,11 +59,11 @@ const StyledDialogContent = styled(({ minHeight, maxHeight, mobile, isOpen, rede
       `}
     display: flex;
     border-radius: 20px;
-    ${({ theme }) => theme.mediaWidth.breakpointLg`
+    ${({ theme }) => theme.mediaWidth.deprecated_upToMedium`
       width: 65vw;
       margin: 0;
     `}
-    ${({ theme, mobile }) => theme.mediaWidth.breakpointMd`
+    ${({ theme, mobile }) => theme.mediaWidth.deprecated_upToSmall`
       width:  85vw;
       ${
         mobile &&

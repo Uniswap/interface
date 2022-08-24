@@ -21,7 +21,7 @@ const Wrapper = styled(AutoColumn)`
   color: ${({ theme }) => theme.deprecated_text1};
   overflow: hidden;
 
-  ${({ theme }) => theme.mediaWidth.breakpointMd`
+  ${({ theme }) => theme.mediaWidth.deprecated_upToSmall`
     max-width: 100%;
   `}
 `

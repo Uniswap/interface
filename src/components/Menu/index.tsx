@@ -110,7 +110,7 @@ const MenuFlyout = styled.span<{ flyoutAlignment?: FlyoutAlignment }>`
       : css`
           left: 0rem;
         `};
-  ${({ theme }) => theme.mediaWidth.breakpointLg`
+  ${({ theme }) => theme.mediaWidth.deprecated_upToMedium`
     bottom: unset;
     right: 0;
     left: unset;

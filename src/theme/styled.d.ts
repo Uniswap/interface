@@ -128,6 +128,10 @@ declare module 'styled-components/macro' {
 
     // media queries
     mediaWidth: {
+      deprecated_upToExtraSmall: ThemedCssFunction<DefaultTheme>
+      deprecated_upToSmall: ThemedCssFunction<DefaultTheme>
+      deprecated_upToMedium: ThemedCssFunction<DefaultTheme>
+      deprecated_upToLarge: ThemedCssFunction<DefaultTheme>
       breakpointSm: ThemedCssFunction<DefaultTheme>
       breakpointMd: ThemedCssFunction<DefaultTheme>
       breakpointLg: ThemedCssFunction<DefaultTheme>

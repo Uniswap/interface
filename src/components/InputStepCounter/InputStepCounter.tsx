@@ -48,11 +48,11 @@ const StyledInput = styled(NumericalInput)<{ usePercent?: boolean }>`
   font-weight: 500;
   padding: 0 10px;
 
-  ${({ theme }) => theme.mediaWidth.breakpointMd`
+  ${({ theme }) => theme.mediaWidth.deprecated_upToSmall`
     font-size: 16px;
   `};
 
-  ${({ theme }) => theme.mediaWidth.breakpointSm`
+  ${({ theme }) => theme.mediaWidth.deprecated_upToExtraSmall`
     font-size: 12px;
   `};
 `

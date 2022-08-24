@@ -21,6 +21,10 @@ export * from './components'
 type TextProps = Omit<TextPropsOriginal, 'css'>
 
 export const MEDIA_WIDTHS = {
+  deprecated_upToExtraSmall: 500,
+  deprecated_upToSmall: 720,
+  deprecated_upToMedium: 960,
+  deprecated_upToLarge: 1280,
   breakpointSm: 640,
   breakpointMd: 768,
   breakpointLg: 1024,
