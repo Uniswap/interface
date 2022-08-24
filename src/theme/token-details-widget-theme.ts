@@ -1,4 +1,4 @@
-import { colors } from './colors'
+import { colors, colorsDark, colorsLight } from './colors'
 
 export const LIGHT_THEME = {
   // surface
@@ -7,6 +7,7 @@ export const LIGHT_THEME = {
   module: '#E1E4EE',
   accent: colors.pink400,
   dialog: '#E1E4EE',
+  outline: colorsLight.backgroundOutline,
   // text
   primary: colors.gray900,
   secondary: colors.gray500,
@@ -23,6 +24,7 @@ export const DARK_THEME = {
   module: '#191D27',
   accent: colors.blue400,
   dialog: '#191D27',
+  outline: colorsDark.backgroundOutline,
   // text
   primary: colors.white,
   secondary: colors.gray300,
