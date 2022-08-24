@@ -363,7 +363,9 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
             )}
           </TokenNameCell>
           <TokenActions>
-            {tokenName && tokenSymbol && <ShareButton tokenName={tokenName} tokenSymbol={tokenSymbol} />}
+            {tokenName && tokenSymbol && (
+              <ShareButton tokenName={tokenName} tokenSymbol={tokenSymbol} tokenAddress={address} />
+            )}
             <ClickFavorited onClick={toggleFavorite}>
               <FavoriteIcon isFavorited={isFavorited} />
             </ClickFavorited>
