@@ -207,7 +207,7 @@ async function signWithEIP712(library: JsonRpcProvider, signAddress: string, typ
 }
 
 async function getVdfProof(): Promise<VdfResponse> {
-  const vdf = await import('vdf')
+  const vdf = await import('wasm-vdf-zkp')
   const data = await vdf
     .get_vdf_proof()
     .then((res) => {
@@ -229,7 +229,7 @@ async function poseidonEncrypt(
   plainText: string
 ): Promise<EncryptResponse> {
   console.log(s2_string, commitment, plainText)
-  const poseidon = await import('poseidon')
+  const poseidon = await import('wasm-encryptor-zkp')
   const data = await poseidon
     .encrypt(s2_string, s2_field_hex, commitment, plainText)
     .then((res) => {
@@ -246,7 +246,7 @@ async function poseidonEncrypt(
 
 async function poseidonEncryptWithoutProof(s2_string: string, plainText: string): Promise<EncryptResponse> {
   console.log(s2_string, plainText)
-  const poseidon = await import('poseidon')
+  const poseidon = await import('wasm-encryptor-zkp')
   const data = await poseidon
     .encrypt_without_proof(s2_string, plainText)
     .then((res) => {
