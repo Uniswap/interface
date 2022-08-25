@@ -105,7 +105,7 @@ export const ChainSwitcher = ({ leftAlign }: ChainSwitcherProps) => {
         background={isOpen ? 'accentActiveSoft' : 'none'}
         onClick={toggleOpen}
       >
-        {!isSupported || !info ? (
+        {!isSupported ? (
           <>
             <TokenWarningRedIcon fill={themeVars.colors.darkGray} width={24} height={24} />
             <Box as="span" className={subhead} display={{ sm: 'none', xl: 'flex' }} style={{ lineHeight: '20px' }}>
@@ -114,9 +114,9 @@ export const ChainSwitcher = ({ leftAlign }: ChainSwitcherProps) => {
           </>
         ) : (
           <>
-            <img src={info.logoUrl} alt={info.label} className={styles.Image} />
+            <img src={info?.logoUrl} alt={info?.label} className={styles.Image} />
             <Box as="span" className={subhead} display={{ sm: 'none', xl: 'flex' }} style={{ lineHeight: '20px' }}>
-              {info.label}
+              {info?.label}
             </Box>
           </>
         )}
