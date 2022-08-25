@@ -63,9 +63,21 @@ export default function useSendTransactionCallback() {
           const e = new Error('Swap failed', { cause: error })
           e.name = 'SwapError'
 
+          const tmp = JSON.stringify(error)
+          const tag = tmp.includes('minTotalAmountOut')
+            ? 'minTotalAmountOut'
+            : tmp.includes('ERR_LIMIT_OUT')
+            ? 'ERR_LIMIT_OUT'
+            : tmp.toLowerCase().includes('1inch')
+            ? 'call1InchFailed'
+            : 'other'
+
           captureException(e, {
             level: Severity.Critical,
             extra: sendTransactionOption,
+            tags: {
+              type: tag,
+            },
           })
 
           // Otherwise, the error was unexpected, and we need to convey that.
