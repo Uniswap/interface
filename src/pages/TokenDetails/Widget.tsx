@@ -1,6 +1,6 @@
 import { TransactionReceipt } from '@ethersproject/abstract-provider'
 import { Percent } from '@uniswap/sdk-core'
-import { Currency, Field, Slippage, SwapWidget } from '@uniswap/widgets'
+import { Currency, Field, Slippage, SwapEventHandlers, SwapSettingsController, SwapWidget } from '@uniswap/widgets'
 import { useWeb3React } from '@web3-react/core'
 import { DEFAULT_DEADLINE_FROM_NOW } from 'constants/misc'
 import { RPC_URLS } from 'constants/networks'
@@ -54,11 +54,11 @@ export default function Widget() {
     setSlippage(undefined)
     setUserSlippage('auto')
   }, [setUserSlippage, setUserTtl])
-  const settings /*: SwapSettingsController */ = useMemo(() => {
+  const settings: SwapSettingsController = useMemo(() => {
     const auto = userSlippage === 'auto'
     return { slippage: { auto, max: slippage }, transactionTtl: ttl }
   }, [slippage, ttl, userSlippage])
-  const settingsHandlers /*: SwapEventHandlers */ = useMemo(
+  const settingsHandlers: SwapEventHandlers = useMemo(
     () => ({
       onSettingsReset,
       onSlippageChange,
