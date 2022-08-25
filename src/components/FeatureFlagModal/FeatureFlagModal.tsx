@@ -1,12 +1,12 @@
-import { FeatureFlag, featureFlagSettings, useUpdateFlag } from 'featureFlags'
+import { BaseVariant, FeatureFlag, featureFlagSettings, useUpdateFlag } from 'featureFlags'
 import { NavBarVariant, useNavBarFlag } from 'featureFlags/flags/navBar'
 import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
 import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
 import { TokensVariant, useTokensFlag } from 'featureFlags/flags/tokens'
 import { TokenSafetyVariant, useTokenSafetyFlag } from 'featureFlags/flags/tokenSafety'
 import { TokensNetworkFilterVariant, useTokensNetworkFilterFlag } from 'featureFlags/flags/tokensNetworkFilter'
-import { useAtomValue } from 'jotai/utils'
-import { ReactNode, useState } from 'react'
+import { useAtomValue, useUpdateAtom } from 'jotai/utils'
+import { Children, PropsWithChildren, ReactElement, ReactNode, useCallback, useState } from 'react'
 import { X } from 'react-feather'
 import { useModalIsOpen, useToggleFeatureFlags } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
@@ -45,7 +45,14 @@ const Row = styled.div`
 
 const CloseButton = styled.button`
   cursor: pointer;
-  background: 'transparent';
+  background: transparent;
+  border: none;
+  color: ${({ theme }) => theme.textPrimary};
+`
+
+const ToggleButton = styled.button`
+  cursor: pointer;
+  background: transparent;
   border: none;
   color: ${({ theme }) => theme.textPrimary};
 `
@@ -59,7 +66,6 @@ const Header = styled(Row)`
 const FlagName = styled.span`
   font-size: 16px;
   line-height: 20px;
-  padding-left: 8px;
   color: ${({ theme }) => theme.textPrimary};
 `
 const FlagGroupName = styled.span`
@@ -115,17 +121,53 @@ function Variant({ option }: { option: string }) {
   return <option value={option}>{option}</option>
 }
 
-function FeatureFlagOption({
-  variants,
-  featureFlag,
-  value,
-  label,
-}: {
-  variants: string[]
+interface FeatureFlagProps {
+  variant: Record<string, string>
   featureFlag: FeatureFlag
   value: string
   label: string
-}) {
+}
+
+function FeatureFlagGroup({ name, children }: PropsWithChildren<{ name: string }>) {
+  // type FeatureFlagOption = { props: FeatureFlagProps }
+  const togglableOptions = Children.toArray(children)
+    .filter<ReactElement<FeatureFlagProps>>(
+      (child): child is ReactElement<FeatureFlagProps> =>
+        child instanceof Object && 'type' in child && child.type === FeatureFlagOption
+    )
+    .map(({ props }) => props)
+    .filter(({ variant }) => {
+      const values = Object.values(variant)
+      return values.includes(BaseVariant.Control) && values.includes(BaseVariant.Enabled)
+    })
+
+  const setFeatureFlags = useUpdateAtom(featureFlagSettings)
+  const allEnabled = togglableOptions.every(({ value }) => value === BaseVariant.Enabled)
+  const onToggle = useCallback(() => {
+    setFeatureFlags((flags) => ({
+      ...flags,
+      ...togglableOptions.reduce(
+        (flags, { featureFlag }) => ({
+          ...flags,
+          [featureFlag]: allEnabled ? BaseVariant.Control : BaseVariant.Enabled,
+        }),
+        {}
+      ),
+    }))
+  }, [allEnabled, setFeatureFlags, togglableOptions])
+
+  return (
+    <>
+      <Row key={name}>
+        <FlagGroupName>{name}</FlagGroupName>
+        <ToggleButton onClick={onToggle}>{allEnabled ? 'Disable' : 'Enable'} group</ToggleButton>
+      </Row>
+      {children}
+    </>
+  )
+}
+
+function FeatureFlagOption({ variant, featureFlag, value, label }: FeatureFlagProps) {
   const updateFlag = useUpdateFlag()
   const [count, setCount] = useState(0)
   const featureFlags = useAtomValue(featureFlagSettings)
@@ -144,7 +186,7 @@ function FeatureFlagOption({
         }}
         value={featureFlags[featureFlag]}
       >
-        {variants.map((variant) => (
+        {Object.values(variant).map((variant) => (
           <Variant key={variant} option={variant} />
         ))}
       </FlagVariantSelection>
@@ -164,45 +206,42 @@ export default function FeatureFlagModal() {
           <X size={24} />
         </CloseButton>
       </Header>
-      <FlagGroupName>Phase 1</FlagGroupName>
-      <FeatureFlagOption
-        variants={Object.values(NftVariant)}
-        value={useNftFlag()}
-        featureFlag={FeatureFlag.nft}
-        label="NFTs"
-      />
-      <FlagGroupName>Phase 0</FlagGroupName>
-      <FeatureFlagOption
-        variants={Object.values(RedesignVariant)}
-        value={useRedesignFlag()}
-        featureFlag={FeatureFlag.redesign}
-        label="Redesign"
-      />
-      <FeatureFlagOption
-        variants={Object.values(NavBarVariant)}
-        value={useNavBarFlag()}
-        featureFlag={FeatureFlag.navBar}
-        label="NavBar"
-      />
-      <FeatureFlagOption
-        variants={Object.values(TokensVariant)}
-        value={useTokensFlag()}
-        featureFlag={FeatureFlag.tokens}
-        label="Tokens"
-      />
-      <FeatureFlagOption
-        variants={Object.values(TokensNetworkFilterVariant)}
-        value={useTokensNetworkFilterFlag()}
-        featureFlag={FeatureFlag.tokensNetworkFilter}
-        label="Tokens Network Filter"
-      />
-      <FeatureFlagOption
-        variants={Object.values(TokenSafetyVariant)}
-        value={useTokenSafetyFlag()}
-        featureFlag={FeatureFlag.tokenSafety}
-        label="Token Safety"
-      />
-      <SaveButton onClick={() => window.location.reload()}>Save Settings</SaveButton>
+      <FeatureFlagGroup name="Phase 0">
+        <FeatureFlagOption
+          variant={RedesignVariant}
+          value={useRedesignFlag()}
+          featureFlag={FeatureFlag.redesign}
+          label="Redesign"
+        />
+        <FeatureFlagOption
+          variant={NavBarVariant}
+          value={useNavBarFlag()}
+          featureFlag={FeatureFlag.navBar}
+          label="NavBar"
+        />
+        <FeatureFlagOption
+          variant={TokensVariant}
+          value={useTokensFlag()}
+          featureFlag={FeatureFlag.tokens}
+          label="Tokens"
+        />
+        <FeatureFlagOption
+          variant={TokensNetworkFilterVariant}
+          value={useTokensNetworkFilterFlag()}
+          featureFlag={FeatureFlag.tokensNetworkFilter}
+          label="Tokens Network Filter"
+        />
+        <FeatureFlagOption
+          variant={TokenSafetyVariant}
+          value={useTokenSafetyFlag()}
+          featureFlag={FeatureFlag.tokenSafety}
+          label="Token Safety"
+        />
+      </FeatureFlagGroup>
+      <FeatureFlagGroup name="Phase 1">
+        <FeatureFlagOption variant={NftVariant} value={useNftFlag()} featureFlag={FeatureFlag.nft} label="NFTs" />
+      </FeatureFlagGroup>
+      <SaveButton onClick={() => window.location.reload()}>Reload</SaveButton>
     </Modal>
   )
 }
