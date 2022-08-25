@@ -1,22 +1,32 @@
 import { useState } from 'react'
 import { X } from 'react-feather'
 import styled, { useTheme } from 'styled-components/macro'
+import { opacify } from 'theme/utils'
+
+import tokensPromoDark from '../../assets/images/tokensPromoDark.png'
+import tokensPromoLight from '../../assets/images/tokensPromoLight.png'
 
 const PopupContainer = styled.div<{ show: boolean }>`
   position: absolute;
   display: ${({ show }) => (show ? 'flex' : 'none')};
   flex-direction: column;
-  padding: 12px 20px;
+  padding: 12px 16px 12px 20px;
   gap: 8px;
   right: 16px;
   bottom: 48px;
   width: 320px;
   height: 88px;
   z-index: 5;
-  background-color: ${({ theme }) => theme.backgroundScrim};
+  background-color: ${({ theme }) => (theme.darkMode ? theme.backgroundScrim : opacify(60, theme.white))};
   color: ${({ theme }) => theme.textPrimary};
   border: 1px solid ${({ theme }) => theme.backgroundOutline};
   border-radius: 12px;
+  transition-timing-function: ${({ theme }) => theme.transition.timing.in};
+  transition: ${({ theme }) => `${theme.transition.duration.slow}ms`};
+
+  background-image: url(${({ theme }) => (theme.darkMode ? `${tokensPromoDark}` : `${tokensPromoLight}`)});
+  background-size: cover;
+  background-blend-mode: overlay;
 `
 const Header = styled.div`
   display: flex;
@@ -39,13 +49,16 @@ const Description = styled.span`
 export default function TokensBanner({ showTokensBanner }: { showTokensBanner: boolean }) {
   const theme = useTheme()
   const [showBanner, setShowBanner] = useState(showTokensBanner)
+  // const { pathname } = useLocation()
+  // const currentPage = getCurrentPageFromLocation(pathname)
+  // if (currentPage === PageName.TOKENS_PAGE) {
+  //   setShowBanner(false)
+  // }
 
   return (
-    <PopupContainer show={showBanner}>
+    <PopupContainer show={showBanner} onClick={() => (window.location.href = 'https://app.uniswap.org/#/tokens')}>
       <Header>
-        <HeaderText onClick={() => (window.location.href = 'https://app.uniswap.org/#/tokens')}>
-          Explore Top Tokens
-        </HeaderText>
+        <HeaderText>Explore Top Tokens</HeaderText>
         <X size={20} color={theme.textSecondary} onClick={() => setShowBanner(false)} style={{ cursor: 'pointer' }} />
       </Header>
 

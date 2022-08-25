@@ -81,7 +81,7 @@ const Marginer = styled.div`
   margin-top: 5rem;
 `
 
-function getCurrentPageFromLocation(locationPathname: string): PageName | undefined {
+export function getCurrentPageFromLocation(locationPathname: string): PageName | undefined {
   switch (locationPathname) {
     case '/swap':
       return PageName.SWAP_PAGE
