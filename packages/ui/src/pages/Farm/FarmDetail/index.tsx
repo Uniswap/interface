@@ -107,7 +107,7 @@ export default function SimpleSushiMCManage() {
   // const [showClaimRewardModal, setShowClaimRewardModal] = useState(false)
   useEffect(() => {
     if (positions) console.debug('positions[pid]', positions[pid])
-  }, [positions])
+  }, [pid, positions])
 
   const rewardToken = UNI[chainId || 420]
 
