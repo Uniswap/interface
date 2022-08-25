@@ -70,7 +70,7 @@ export function TransactionDetails({
               </Text>
             </Flex>
             <InfoCircle
-              color={theme.colors.textSecondary}
+              color={theme.colors[warningColor.text]}
               height={ALERT_ICONS_SIZE}
               width={ALERT_ICONS_SIZE}
             />
