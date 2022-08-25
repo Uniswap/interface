@@ -12,7 +12,6 @@ import { subhead } from 'nft/css/common.css'
 import { themeVars, vars } from 'nft/css/sprinkles.css'
 import { useIsMobile } from 'nft/hooks'
 import { ReactNode, useReducer, useRef } from 'react'
-import { isChainAllowed } from 'utils/switchChain'
 
 import * as styles from './ChainSwitcher.css'
 import { NavDropdown } from './NavDropdown'
@@ -77,7 +76,7 @@ export const ChainSwitcher = ({ leftAlign }: ChainSwitcherProps) => {
     return null
   }
 
-  const isSupported = isChainAllowed(chainId)
+  const isSupported = !!info
 
   const dropdown = (
     <NavDropdown top={54} leftAligned={leftAlign} paddingBottom={8} paddingTop={8}>
@@ -109,14 +108,14 @@ export const ChainSwitcher = ({ leftAlign }: ChainSwitcherProps) => {
           <>
             <TokenWarningRedIcon fill={themeVars.colors.darkGray} width={24} height={24} />
             <Box as="span" className={subhead} display={{ sm: 'none', xl: 'flex' }} style={{ lineHeight: '20px' }}>
-              {info?.label ?? 'Unsupported'}
+              Unsupported
             </Box>
           </>
         ) : (
           <>
-            <img src={info?.logoUrl} alt={info?.label} className={styles.Image} />
+            <img src={info.logoUrl} alt={info.label} className={styles.Image} />
             <Box as="span" className={subhead} display={{ sm: 'none', xl: 'flex' }} style={{ lineHeight: '20px' }}>
-              {info?.label}
+              {info.label}
             </Box>
           </>
         )}
