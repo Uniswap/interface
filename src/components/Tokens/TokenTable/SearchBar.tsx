@@ -60,7 +60,7 @@ export default function SearchBar() {
     <SearchBarContainer>
       <SearchInput
         type="search"
-        placeholder="Search tokens"
+        placeholder="Filter tokens"
         id="searchBar"
         autoComplete="off"
         value={filterString}
