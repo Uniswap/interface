@@ -11,6 +11,7 @@ import { useChefPositions } from 'hooks/farm/useChefPositions'
 import { useMasterChefPoolInfo } from 'hooks/farm/useMasterChefPoolInfo'
 import { Chef } from 'constants/farm/chef.enum'
 import { useChefContract } from 'hooks/farm/useChefContract'
+import { CHAINID_TO_FARMING_CONFIG } from 'constants/farming.config'
 // import { JSBI } from '@teleswap/sdk'
 // import { BIG_INT_ZERO } from '../../constants'
 // import { OutlineCard } from '../../components/Card'
@@ -43,14 +44,12 @@ flex-direction: column;
 export default function FarmList() {
   const { chainId } = useActiveWeb3React()
   console.debug('chainId', chainId)
+  const farmingConfig = CHAINID_TO_FARMING_CONFIG[chainId || 420]
+  // const mchefContract = useChefContract(farmingConfig?.chefType || Chef.MINICHEF)
+  // const positions = useChefPositions(mchefContract, undefined, chainId)
+  const poolInfos = useMasterChefPoolInfo(farmingConfig?.chefType || Chef.MINICHEF)
 
-  const mchefContract = useChefContract(Chef.MINICHEF)
-  const positions = useChefPositions(mchefContract, undefined, chainId)
-  const poolInfos = useMasterChefPoolInfo(Chef.MINICHEF)
 
-  useEffect(() => {
-    console.info('useChefPositions', positions);
-  }, [positions])
   useEffect(() => {
     console.info('useMasterChefPoolInfo', poolInfos);
   }, [poolInfos])
