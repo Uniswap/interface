@@ -40,6 +40,9 @@ export function useTopTokenQuery(page: number) {
       query TopTokenQuery($page: Int!) {
         topTokenProjects(orderBy: MARKET_CAP, pageSize: 100, currency: USD, page: $page) {
           name
+          description
+          homepageUrl
+          twitterName
           tokens {
             chain
             address
@@ -105,6 +108,14 @@ export function useTopTokenQuery(page: number) {
             pricePercentChangeAll: pricePercentChange(duration: MAX) {
               currency
               value
+            }
+            priceHigh52W: priceHighLow(duration: YEAR, highLow: HIGH) {
+              value
+              currency
+            }
+            priceLow52W: priceHighLow(duration: YEAR, highLow: LOW) {
+              value
+              currency
             }
           }
         }
