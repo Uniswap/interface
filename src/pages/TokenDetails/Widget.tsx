@@ -1,6 +1,6 @@
 import { TransactionReceipt } from '@ethersproject/abstract-provider'
-import { Currency, Percent } from '@uniswap/sdk-core'
-import { SwapWidget } from '@uniswap/widgets'
+import { Percent } from '@uniswap/sdk-core'
+import { Currency, Field, Slippage, SwapWidget } from '@uniswap/widgets'
 import { useWeb3React } from '@web3-react/core'
 import { DEFAULT_DEADLINE_FROM_NOW } from 'constants/misc'
 import { RPC_URLS } from 'constants/networks'
@@ -16,18 +16,6 @@ import { DARK_THEME, LIGHT_THEME } from 'theme/widget'
 
 export const WIDGET_WIDTH = 320
 
-// TODO(zzmp): Export more types from @uniswap/widgets.
-interface Slippage {
-  auto: boolean
-  max: number | undefined
-}
-enum Field {
-  INPUT = 'INPUT',
-  OUTPUT = 'OUTPUT',
-}
-
-// TODO(zzmp): Allow singletons in @uniswap/widgets' SwapWidget.jsonRpcUrlMap.
-const WIDGET_RPC_URLS = Object.entries(RPC_URLS).reduce((urls, [id, url]) => ({ ...urls, [id]: [url] }), {})
 const WIDGET_ROUTER_URL = 'https://api.uniswap.org/v1/'
 
 export default function Widget() {
@@ -80,8 +68,7 @@ export default function Widget() {
     () => ({
       onTxSubmit: (hash: string, tx: unknown) => console.log('onTxSubmit'),
       onTxSuccess: (hash: string, receipt: TransactionReceipt) => console.log('onTxSuccess'),
-      // TODO(zzmp): Pass hash as the first argument.
-      onTxFail: (error: Error, receipt: TransactionReceipt) => console.log('onTxFail'),
+      onTxFail: (hash: string, receipt: TransactionReceipt) => console.log('onTxFail'),
     }),
     []
   )
@@ -89,7 +76,7 @@ export default function Widget() {
   return (
     <SwapWidget
       hideConnectionUI
-      jsonRpcUrlMap={WIDGET_RPC_URLS}
+      jsonRpcUrlMap={RPC_URLS}
       routerUrl={WIDGET_ROUTER_URL}
       width={WIDGET_WIDTH}
       locale={locale}
