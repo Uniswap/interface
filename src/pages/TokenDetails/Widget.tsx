@@ -11,6 +11,7 @@ import {
   TradeType,
 } from '@uniswap/widgets'
 import { useWeb3React } from '@web3-react/core'
+import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
 import { DEFAULT_DEADLINE_FROM_NOW } from 'constants/misc'
 import { RPC_URLS } from 'constants/networks'
 import { useActiveLocale } from 'hooks/useActiveLocale'
@@ -82,21 +83,42 @@ export default function Widget({ defaultToken }: WidgetProps) {
     setIsExactInput(field === Field.INPUT)
     setAmount(amount)
   }, [])
-  const [inputToken, setInputToken] = useState<Currency>()
-  const [outputToken, setOutputToken] = useState<Currency | undefined>(defaultToken)
+  const [tokens, setTokens] = useState<{ [Field.INPUT]?: Currency; [Field.OUTPUT]?: Currency }>({
+    [Field.OUTPUT]: defaultToken,
+  })
   const onSwitchTokens = useCallback(() => {
-    setIsExactInput(!isExactInput)
-    setInputToken(outputToken)
-    setOutputToken(inputToken)
-  }, [inputToken, isExactInput, outputToken])
+    setIsExactInput((isExactInput) => !isExactInput)
+    setTokens((tokens) => ({
+      [Field.INPUT]: tokens[Field.OUTPUT],
+      [Field.OUTPUT]: tokens[Field.INPUT],
+    }))
+  }, [])
+  const [selectingField, setSelectingField] = useState<Field>()
+  const otherField = useMemo(() => (selectingField === Field.INPUT ? Field.OUTPUT : Field.INPUT), [selectingField])
+  const [selectingToken, otherToken] = useMemo(() => {
+    if (selectingField === undefined) return [undefined, undefined]
+    return [tokens[selectingField], tokens[otherField]]
+  }, [otherField, selectingField, tokens])
   const onTokenSelectorClick = useCallback((field: Field) => {
-    // TODO(zzmp): Integrate in-app token selector.
-    console.log('onTokenSelectorClick', field)
+    setSelectingField(field)
     return false
   }, [])
+  const onTokenSelect = useCallback(
+    (token: Currency) => {
+      if (selectingField === undefined) return
+      setIsExactInput(selectingField === Field.INPUT)
+      setTokens(() => {
+        return {
+          [otherField]: token === otherToken ? selectingToken : otherToken,
+          [selectingField]: token,
+        }
+      })
+    },
+    [otherField, otherToken, selectingField, selectingToken]
+  )
   const value: SwapController = useMemo(
-    () => ({ type: isExactInput ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT, amount, inputToken, outputToken }),
-    [amount, inputToken, isExactInput, outputToken]
+    () => ({ type: isExactInput ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT, amount, ...tokens }),
+    [amount, isExactInput, tokens]
   )
   const valueHandlers: SwapEventHandlers = useMemo(
     () => ({ onAmountChange, onSwitchTokens, onTokenSelectorClick }),
@@ -113,20 +135,29 @@ export default function Widget({ defaultToken }: WidgetProps) {
   )
 
   return (
-    <SwapWidget
-      hideConnectionUI
-      jsonRpcUrlMap={RPC_URLS}
-      routerUrl={WIDGET_ROUTER_URL}
-      width={WIDGET_WIDTH}
-      locale={locale}
-      theme={theme}
-      provider={provider}
-      {...txHandlers}
-      settings={settings}
-      {...settingsHandlers}
-      value={value}
-      {...valueHandlers}
-    />
+    <>
+      <SwapWidget
+        hideConnectionUI
+        jsonRpcUrlMap={RPC_URLS}
+        routerUrl={WIDGET_ROUTER_URL}
+        width={WIDGET_WIDTH}
+        locale={locale}
+        theme={theme}
+        provider={provider}
+        {...txHandlers}
+        settings={settings}
+        {...settingsHandlers}
+        value={value}
+        {...valueHandlers}
+      />
+      <CurrencySearchModal
+        isOpen={selectingField !== undefined}
+        onDismiss={() => setSelectingField(undefined)}
+        selectedCurrency={selectingToken}
+        otherSelectedCurrency={otherToken}
+        onCurrencySelect={onTokenSelect}
+      />
+    </>
   )
 }
 
