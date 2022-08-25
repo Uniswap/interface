@@ -675,11 +675,14 @@ export default function Swap({ history }: RouteComponentProps) {
     STABLE_COINS_ADDRESS[chainId].includes(INPUT?.currencyId) &&
     STABLE_COINS_ADDRESS[chainId].includes(OUTPUT?.currencyId)
 
+  const rawSlippageRef = useRef(rawSlippage)
+  rawSlippageRef.current = rawSlippage
+
   useEffect(() => {
-    if (isStableCoinSwap && rawSlippage > 10) {
+    if (isStableCoinSwap && rawSlippageRef.current > 10) {
       setRawSlippage(10)
     }
-    if (!isStableCoinSwap && rawSlippage === 10) {
+    if (!isStableCoinSwap && rawSlippageRef.current === 10) {
       setRawSlippage(50)
     }
   }, [isStableCoinSwap, setRawSlippage])
