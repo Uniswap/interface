@@ -158,7 +158,11 @@ export default function App() {
             <Popups />
             <Polling />
             <TopLevelModals />
-            <TokensBanner />
+            {tokensFlag === TokensVariant.Enabled && (
+              <TokensBanner
+                showTokensBanner={currentPage === PageName.SWAP_PAGE || currentPage === PageName.POOL_PAGE}
+              />
+            )}
             <Suspense fallback={<Loader />}>
               {isLoaded ? (
                 <Routes>

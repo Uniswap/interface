@@ -1,9 +1,10 @@
+import { useState } from 'react'
 import { X } from 'react-feather'
 import styled, { useTheme } from 'styled-components/macro'
 
-const PopupContainer = styled.div`
+const PopupContainer = styled.div<{ show: boolean }>`
   position: absolute;
-  display: flex;
+  display: ${({ show }) => (show ? 'flex' : 'none')};
   flex-direction: column;
   padding: 12px 20px;
   gap: 8px;
@@ -26,6 +27,7 @@ const HeaderText = styled.div`
   font-weight: 600;
   font-size: 14px;
   line-height: 20px;
+  cursor: pointer;
 `
 const Description = styled.span`
   font-weight: 400;
@@ -34,13 +36,17 @@ const Description = styled.span`
   width: 240px;
 `
 
-export default function TokensBanner() {
+export default function TokensBanner({ showTokensBanner }: { showTokensBanner: boolean }) {
   const theme = useTheme()
+  const [showBanner, setShowBanner] = useState(showTokensBanner)
+
   return (
-    <PopupContainer>
+    <PopupContainer show={showBanner}>
       <Header>
-        <HeaderText>Explore Top Tokens</HeaderText>
-        <X size={20} color={theme.textSecondary} />
+        <HeaderText onClick={() => (window.location.href = 'https://app.uniswap.org/#/tokens')}>
+          Explore Top Tokens
+        </HeaderText>
+        <X size={20} color={theme.textSecondary} onClick={() => setShowBanner(false)} style={{ cursor: 'pointer' }} />
       </Header>
 
       <Description>Check out the new explore tab to discover and learn more</Description>
