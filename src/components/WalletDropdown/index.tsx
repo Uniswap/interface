@@ -18,6 +18,10 @@ const WalletWrapper = styled.div`
   right: 70px;
   background-color: ${({ theme }) => theme.backgroundSurface};
   padding: 16px 0;
+
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+    width: 100%;
+  }
 `
 
 export enum MenuState {
@@ -31,11 +35,12 @@ const WalletDropdownWrapper = styled.div`
   top: 65px;
   right: 20px;
 
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.xl}px`}) {
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
     top: unset;
-    right: 50%;
-    bottom: 45px;
-    transform: translateX(50%);
+    left: 0;
+    right: 0;
+    bottom: 56px;
+    z-index: 1;
   }
 `
 
