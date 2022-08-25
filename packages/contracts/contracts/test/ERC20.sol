@@ -20,7 +20,7 @@ contract ERC20 {
     event Approval(address indexed owner, address indexed spender, uint value);
     event Transfer(address indexed from, address indexed to, uint value);
 
-    constructor(uint _totalSupply) public {
+    constructor() public {
         uint chainId;
         assembly {
             chainId := chainid()
@@ -34,7 +34,6 @@ contract ERC20 {
                 address(this)
             )
         );
-        _mint(msg.sender, _totalSupply);
     }
 
     function mint(address to) public {
