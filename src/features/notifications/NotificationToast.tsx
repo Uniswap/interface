@@ -166,7 +166,7 @@ export function NotificationContent({
           gap="xs"
           justifyContent="flex-start">
           {icon && (
-            <Flex height={NOTIFICATION_ICON_SIZE} width={NOTIFICATION_ICON_SIZE}>
+            <Flex centered height={NOTIFICATION_ICON_SIZE} width={NOTIFICATION_ICON_SIZE}>
               {icon}
             </Flex>
           )}

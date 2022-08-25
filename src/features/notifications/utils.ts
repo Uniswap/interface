@@ -43,6 +43,11 @@ export const formApproveNotificationTitle = (
         currencySymbol,
         address,
       })
+    : txStatus === TransactionStatus.Cancelled
+    ? i18n.t('Canceled {{currencySymbol}} approve.', {
+        currencySymbol,
+        address,
+      })
     : i18n.t('Failed to approve {{currencySymbol}} for use with {{address}}.', {
         currencySymbol,
         address,
@@ -83,6 +88,11 @@ export const formSwapNotificationTitle = (
     ? i18n.t('Swapped {{inputAssetInfo}} for {{outputAssetInfo}}.', {
         inputAssetInfo,
         outputAssetInfo,
+      })
+    : txStatus === TransactionStatus.Cancelled
+    ? i18n.t('Canceled {{inputCurrencySymbol}}-{{outputCurrencySymbol}} swap.', {
+        inputCurrencySymbol,
+        outputCurrencySymbol,
       })
     : i18n.t('Failed to swap {{inputAssetInfo}} for {{outputAssetInfo}}.', {
         inputAssetInfo,
@@ -146,6 +156,8 @@ const formTransferTxTitle = (
   if (txType === TransactionType.Send) {
     return txStatus === TransactionStatus.Success
       ? i18n.t('Sent {{assetInfo}} to {{senderOrRecipient}}.', { assetInfo, senderOrRecipient })
+      : txStatus === TransactionStatus.Cancelled
+      ? i18n.t('Canceled {{assetInfo}} send.', { assetInfo, senderOrRecipient })
       : i18n.t('Failed to send {{assetInfo}} to {{senderOrRecipient}}.', {
           assetInfo,
           senderOrRecipient,

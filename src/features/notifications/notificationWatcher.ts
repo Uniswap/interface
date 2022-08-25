@@ -5,10 +5,9 @@ import { pushNotification } from 'src/features/notifications/notificationSlice'
 import { AppNotificationType } from 'src/features/notifications/types'
 import { selectTransactions } from 'src/features/transactions/selectors'
 import { finalizeTransaction } from 'src/features/transactions/slice'
-import { TransactionStatus, TransactionType } from 'src/features/transactions/types'
+import { TransactionType } from 'src/features/transactions/types'
 import { getInputAmountFromTrade, getOutputAmountFromTrade } from 'src/features/transactions/utils'
 import { WalletConnectEvent } from 'src/features/walletConnect/saga'
-import { logger } from 'src/utils/logger'
 import { call, put, takeLatest } from 'typed-redux-saga'
 
 export function* notificationWatcher() {
@@ -17,16 +16,6 @@ export function* notificationWatcher() {
 
 export function* pushTransactionNotification(action: ReturnType<typeof finalizeTransaction>) {
   const { chainId, status, typeInfo, hash, id, from, addedTime } = action.payload
-
-  // TODO: Build notifications for `cancelled` txs
-  if (status === TransactionStatus.Cancelled) {
-    logger.info(
-      'notificationWatcher',
-      'pushTransactionNotification',
-      'Notifications for cancelled transactions are not yet built'
-    )
-    return
-  }
 
   const baseNotificationData = {
     txStatus: status,

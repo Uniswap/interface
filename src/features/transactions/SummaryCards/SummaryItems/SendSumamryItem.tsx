@@ -7,11 +7,10 @@ import { AssetType } from 'src/entities/assets'
 import { useSpotPricesQuery } from 'src/features/dataApi/slice'
 import { createBalanceUpdate } from 'src/features/notifications/utils'
 import { useCurrency } from 'src/features/tokens/useCurrency'
-import TransactionSummaryLayout from 'src/features/transactions/SummaryCards/TransactionSummaryLayout'
-import {
-  BaseTransactionSummaryProps,
+import TransactionSummaryLayout, {
   TXN_HISTORY_SIZING,
-} from 'src/features/transactions/SummaryCards/TransactionSummaryRouter'
+} from 'src/features/transactions/SummaryCards/TransactionSummaryLayout'
+import { BaseTransactionSummaryProps } from 'src/features/transactions/SummaryCards/TransactionSummaryRouter'
 import { formatTitleWithStatus } from 'src/features/transactions/SummaryCards/utils'
 import { SendTokenTransactionInfo } from 'src/features/transactions/types'
 import { shortenAddress } from 'src/utils/addresses'

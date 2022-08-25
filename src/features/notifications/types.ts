@@ -39,7 +39,11 @@ export interface WalletConnectNotification extends AppNotificationBase {
 export interface TransactionNotificationBase extends AppNotificationBase {
   type: AppNotificationType.Transaction
   txType: TransactionType
-  txStatus: TransactionStatus.Success | TransactionStatus.Failed | TransactionStatus.FailedCancel
+  txStatus:
+    | TransactionStatus.Success
+    | TransactionStatus.Failed
+    | TransactionStatus.FailedCancel
+    | TransactionStatus.Cancelled
   txHash: string
   txId: string
   chainId: ChainId

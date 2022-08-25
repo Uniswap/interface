@@ -11,7 +11,7 @@ import { CurrencyLogoOrPlaceholder } from 'src/components/CurrencyLogo/CurrencyL
 import { NFTViewer } from 'src/components/images/NFTViewer'
 import { Box } from 'src/components/layout/Box'
 import { AssetType } from 'src/entities/assets'
-import { TXN_HISTORY_SIZING } from 'src/features/transactions/SummaryCards/TransactionSummaryRouter'
+import { TXN_HISTORY_SIZING } from 'src/features/transactions/SummaryCards/TransactionSummaryLayout'
 import { NFTTradeType, TransactionStatus, TransactionType } from 'src/features/transactions/types'
 import { logger } from 'src/utils/logger'
 
@@ -56,6 +56,17 @@ export function LogoWithTxStatus(props: CurrencyStatusProps | NFTStatusProps) {
   const getTxStatusIcon = () => {
     if (txStatus === TransactionStatus.Failed) {
       return <AlertTriangle color={yellow} fill={fill} height={statusSize} width={statusSize} />
+    }
+    if (txStatus === TransactionStatus.Cancelled) {
+      return (
+        <SlashCircleIcon
+          color={theme.colors.backgroundOutline}
+          fill={theme.colors.black}
+          fillOpacity={1}
+          height={statusSize}
+          width={statusSize}
+        />
+      )
     }
     switch (txType) {
       case TransactionType.Approve:
@@ -123,8 +134,10 @@ export function DoubleCurrencyLogoWithTxStatus({
   status: TransactionStatus
   showCancelIcon: boolean
 }) {
-  const theme = useAppTheme()
-  if (status === TransactionStatus.Failed) {
+  if (
+    status === TransactionStatus.Failed ||
+    (showCancelIcon && status === TransactionStatus.Cancelled)
+  ) {
     return (
       <LogoWithTxStatus
         assetType={AssetType.Currency}
@@ -143,17 +156,8 @@ export function DoubleCurrencyLogoWithTxStatus({
           size={TXN_HISTORY_SIZING.primaryImage}
         />
       </Box>
-      <Box bottom={showCancelIcon ? 5 : 0} position="absolute" right={showCancelIcon ? 5 : 0}>
-        {showCancelIcon ? (
-          <SlashCircleIcon
-            color={theme.colors.backgroundOutline}
-            fillOpacity={1}
-            height={TXN_HISTORY_SIZING.secondaryImage}
-            width={TXN_HISTORY_SIZING.secondaryImage}
-          />
-        ) : (
-          <CurrencyLogoOrPlaceholder currency={currency} size={TXN_HISTORY_SIZING.primaryImage} />
-        )}
+      <Box bottom={0} position="absolute" right={0}>
+        <CurrencyLogoOrPlaceholder currency={currency} size={TXN_HISTORY_SIZING.primaryImage} />
       </Box>
     </>
   )

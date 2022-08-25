@@ -24,12 +24,6 @@ import {
   WrapTransactionInfo,
 } from 'src/features/transactions/types'
 
-export const TXN_HISTORY_ICON_SIZE = 36
-export const TXN_HISTORY_SIZING = {
-  primaryImage: TXN_HISTORY_ICON_SIZE * (2 / 3),
-  secondaryImage: TXN_HISTORY_ICON_SIZE * (2 / 3) * (2 / 3),
-}
-
 export type BaseTransactionSummaryProps = {
   transaction: TransactionDetails
   showInlineWarning: boolean

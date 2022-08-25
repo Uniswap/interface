@@ -3,11 +3,10 @@ import { useTranslation } from 'react-i18next'
 import { LogoWithTxStatus } from 'src/components/CurrencyLogo/LogoWithTxStatus'
 import { AssetType } from 'src/entities/assets'
 import { useCurrency } from 'src/features/tokens/useCurrency'
-import TransactionSummaryLayout from 'src/features/transactions/SummaryCards/TransactionSummaryLayout'
-import {
-  BaseTransactionSummaryProps,
+import TransactionSummaryLayout, {
   TXN_HISTORY_SIZING,
-} from 'src/features/transactions/SummaryCards/TransactionSummaryRouter'
+} from 'src/features/transactions/SummaryCards/TransactionSummaryLayout'
+import { BaseTransactionSummaryProps } from 'src/features/transactions/SummaryCards/TransactionSummaryRouter'
 import { formatTitleWithStatus } from 'src/features/transactions/SummaryCards/utils'
 import { ApproveTransactionInfo, TransactionType } from 'src/features/transactions/types'
 import { shortenAddress } from 'src/utils/addresses'
