@@ -18,7 +18,7 @@ const maticInfo: NetworkInfo = {
   blockClient: createClient('https://api.thegraph.com/subgraphs/name/dynamic-amm/ethereum-blocks-polygon'),
   etherscanUrl: 'https://polygonscan.com',
   etherscanName: 'Polygonscan',
-  tokenListUrl: `${process.env.REACT_APP_TOKEN_LIST_API}?chainId=${ChainId.MATIC}`,
+  tokenListUrl: `${process.env.REACT_APP_KS_SETTING_API}/v1/tokens?chainId=${ChainId.MATIC}`,
   bridgeURL: 'https://wallet.matic.network/bridge',
   nativeToken: {
     symbol: 'MATIC',

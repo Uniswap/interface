@@ -23,7 +23,7 @@ const bttcInfo: NetworkInfo = {
   blockClient: createClient('https://bttc-graph.kyberengineering.io/subgraphs/name/kybernetwork/bttc-blocks'),
   etherscanUrl: 'https://bttcscan.com',
   etherscanName: 'Bttcscan',
-  tokenListUrl: `${process.env.REACT_APP_TOKEN_LIST_API}?chainId=${ChainId.BTTC}`,
+  tokenListUrl: `${process.env.REACT_APP_KS_SETTING_API}/v1/tokens?chainId=${ChainId.BTTC}`,
   bridgeURL: 'https://wallet.bt.io/bridge',
   nativeToken: {
     symbol: 'BTT',

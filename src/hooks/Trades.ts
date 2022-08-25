@@ -9,8 +9,8 @@ import { PairState, usePairs } from 'data/Reserves'
 import { useActiveWeb3React } from 'hooks/index'
 import { useAllCurrencyCombinations } from 'hooks/useAllCurrencyCombinations'
 import useDebounce from 'hooks/useDebounce'
-import useParsedQueryString from 'hooks/useParsedQueryString'
 import { AppState } from 'state'
+import { useAllDexes, useExcludeDexes } from 'state/customizeDexes/hooks'
 import { useSwapState } from 'state/swap/hooks'
 import { AggregationComparer } from 'state/swap/types'
 import { isAddress } from 'utils'
@@ -98,7 +98,16 @@ export function useTradeExactInV2(
   loading: boolean
 } {
   const { account, chainId } = useActiveWeb3React()
-  const parsedQs: { dexes?: string } = useParsedQueryString()
+
+  const allDexes = useAllDexes()
+  const [excludeDexes] = useExcludeDexes()
+
+  const dexes =
+    allDexes
+      ?.filter(item => !excludeDexes.includes(item.id))
+      .map(item => item.id)
+      .join(',')
+      .replace('kyberswapv1', 'kyberswap,kyberswap-static') || ''
 
   const [trade, setTrade] = useState<Aggregator | null>(null)
   const [comparer, setComparer] = useState<AggregationComparer | null>(null)
@@ -139,7 +148,7 @@ export function useTradeExactInV2(
             debounceCurrencyAmountIn,
             currencyOut,
             saveGas,
-            parsedQs.dexes,
+            dexes,
             allowedSlippage,
             deadline,
             to,
@@ -177,7 +186,7 @@ export function useTradeExactInV2(
       account,
       routerApi,
       saveGas,
-      parsedQs.dexes,
+      dexes,
       allowedSlippage,
       ttl,
       feeConfig,

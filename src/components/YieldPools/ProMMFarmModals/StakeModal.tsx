@@ -258,7 +258,7 @@ function StakeModal({
         <Flex alignItems="center" justifyContent="space-between">
           <Title display="flex">
             <DoubleCurrencyLogo size={24} currency0={token0} currency1={token1} />
-            {type === 'stake' ? <Trans>Stake your liquidity</Trans> : <Trans>Unstaked your liquidity</Trans>}
+            {type === 'stake' ? <Trans>Stake your liquidity</Trans> : <Trans>Unstake your liquidity</Trans>}
           </Title>
 
           <Flex sx={{ gap: '12px' }}>

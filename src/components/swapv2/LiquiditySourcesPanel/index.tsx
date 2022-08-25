@@ -1,30 +1,20 @@
-import { t } from '@lingui/macro'
-import React, { useState } from 'react'
+import { Trans, t } from '@lingui/macro'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { ArrowLeft } from 'react-feather'
-import { Box, Flex } from 'rebass'
+import { Box, Flex, Text } from 'rebass'
 import styled from 'styled-components'
 
-import { DexConfig, dexListConfig } from 'constants/dexes'
+import { Checkbox } from 'components/YieldPools/ProMMFarmModals/styled'
+import { kyberswapDexes } from 'constants/dexes'
+import { ELASTIC_NOT_SUPPORTED } from 'constants/v2'
 import { useActiveWeb3React } from 'hooks'
-import useAggregatorStats from 'hooks/useAggregatorStats'
 import useDebounce from 'hooks/useDebounce'
+import { useAllDexes, useExcludeDexes } from 'state/customizeDexes/hooks'
 
 import SearchBar from './SearchBar'
 
 type Props = {
   onBack: () => void
-}
-
-export const extractUniqueDEXes = (dexIDs: string[]): DexConfig[] => {
-  const visibleDEXes = dexIDs.map(id => dexListConfig[id]).filter(Boolean)
-
-  // Names of different IDs can be the same
-  const dexConfigByName = visibleDEXes.reduce((acc, dex) => {
-    acc[dex.name] = dex
-    return acc
-  }, {} as Record<string, DexConfig>)
-
-  return Object.values(dexConfigByName)
 }
 
 const BackIconWrapper = styled(ArrowLeft)`
@@ -81,6 +71,7 @@ const Source = styled.div`
   display: flex;
   align-items: center;
   column-gap: 16px;
+  padding: 12px;
 `
 
 const ImageWrapper = styled.div`
@@ -103,24 +94,76 @@ const SourceName = styled.span`
   color: ${({ theme }) => theme.text};
 `
 
+const LiquiditySourceHeader = styled.div`
+  border-top-right-radius: 8px;
+  border-top-left-radius: 8px;
+  background: ${({ theme }) => theme.tableHeader};
+  text-transform: uppercase;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 12px;
+  color: ${({ theme }) => theme.subText};
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+`
+
 const LiquiditySourcesPanel: React.FC<Props> = ({ onBack }) => {
-  const { chainId } = useActiveWeb3React()
   const [searchText, setSearchText] = useState('')
-  const debouncedSearchText = useDebounce(searchText.toLowerCase(), 200)
+  const debouncedSearchText = useDebounce(searchText.toLowerCase(), 200).trim()
+  const { chainId } = useActiveWeb3React()
 
-  const { data, error } = useAggregatorStats(chainId)
-  if (error || !data) {
-    onBack()
-    return null
+  const dexes = useAllDexes()
+  const [excludeDexes, setExcludeDexes] = useExcludeDexes()
+
+  const checkAllRef = useRef<HTMLInputElement>(null)
+  const kyberSwapRef = useRef<HTMLInputElement>(null)
+
+  useEffect(() => {
+    const selectedDexes = dexes?.filter(item => !excludeDexes.includes(item.id)) || []
+
+    if (!checkAllRef.current) return
+
+    if (selectedDexes.length === dexes?.length) {
+      checkAllRef.current.checked = true
+      checkAllRef.current.indeterminate = false
+    } else if (!selectedDexes.length) {
+      checkAllRef.current.checked = false
+      checkAllRef.current.indeterminate = false
+    } else if (selectedDexes.length < (dexes?.length || 0)) {
+      checkAllRef.current.checked = false
+      checkAllRef.current.indeterminate = true
+    }
+  }, [excludeDexes, dexes])
+
+  const ksDexes = useMemo(
+    () => kyberswapDexes.filter(item => (ELASTIC_NOT_SUPPORTED[chainId || 1] ? item.id !== 'kyberswapv2' : true)),
+    [chainId],
+  )
+
+  useEffect(() => {
+    if (!kyberSwapRef.current) return
+    const ksDexesId = ksDexes.map(i => i.id)
+    if (ksDexesId.every(item => excludeDexes.includes(item))) {
+      kyberSwapRef.current.checked = false
+      kyberSwapRef.current.indeterminate = false
+    } else if (ksDexesId.some(item => excludeDexes.includes(item))) {
+      kyberSwapRef.current.checked = false
+      kyberSwapRef.current.indeterminate = true
+    } else {
+      kyberSwapRef.current.checked = true
+      kyberSwapRef.current.indeterminate = false
+    }
+  }, [excludeDexes, ksDexes])
+
+  const handleToggleDex = (id: string) => {
+    const isExclude = excludeDexes.find(item => item === id)
+    if (isExclude) {
+      setExcludeDexes(excludeDexes.filter(item => item !== id))
+    } else {
+      setExcludeDexes([...excludeDexes, id])
+    }
   }
-
-  const dexIDs = Object.keys(data.pools)
-  if (dexIDs.length === 0) {
-    onBack()
-    return null
-  }
-
-  const visibleDEXes = extractUniqueDEXes(dexIDs).filter(({ name }) => name.toLowerCase().includes(debouncedSearchText))
 
   return (
     <Box width="100%">
@@ -144,16 +187,83 @@ const LiquiditySourcesPanel: React.FC<Props> = ({ onBack }) => {
 
         <SearchBar text={searchText} setText={setSearchText} />
 
-        <SourceList>
-          {visibleDEXes.map(({ name, icon }) => (
-            <Source key={name}>
-              <ImageWrapper>
-                <img src={icon} alt="" />
-              </ImageWrapper>
+        <LiquiditySourceHeader>
+          <Checkbox
+            type="checkbox"
+            ref={checkAllRef}
+            onChange={e => {
+              if (!e.currentTarget.checked) {
+                setExcludeDexes(dexes?.map(item => item.id) || [])
+              } else {
+                setExcludeDexes([])
+              }
+            }}
+          />
+          <Text>
+            <Trans>Liquidity Sources</Trans>
+          </Text>
+        </LiquiditySourceHeader>
 
-              <SourceName>{name}</SourceName>
-            </Source>
-          ))}
+        <SourceList>
+          {!!ksDexes.filter(item => item.name.toLowerCase().includes(debouncedSearchText)).length && (
+            <>
+              <Source>
+                <Checkbox
+                  type="checkbox"
+                  ref={kyberSwapRef}
+                  checked={!ksDexes.map(i => i.id).every(item => excludeDexes.includes(item))}
+                  onChange={e => {
+                    if (e.target.checked) {
+                      setExcludeDexes(excludeDexes.filter(item => !item.includes('kyberswap')))
+                    } else {
+                      const newData = [
+                        ...excludeDexes.filter(item => !item.includes('kyberswap')),
+                        ...ksDexes.map(item => item.id),
+                      ]
+                      setExcludeDexes(newData)
+                    }
+                  }}
+                />
+                <ImageWrapper>
+                  <img src="https://kyberswap.com/favicon.ico" alt="ks logo" />
+                </ImageWrapper>
+                <SourceName>Kyberswap - All</SourceName>
+              </Source>
+
+              {ksDexes
+                .filter(item => item.name.toLowerCase().includes(debouncedSearchText))
+                .map(({ name, logoURL, id }) => {
+                  return (
+                    <Source key={name} style={{ padding: '12px 48px' }}>
+                      <Checkbox
+                        type="checkbox"
+                        checked={!excludeDexes.includes(id)}
+                        onChange={() => handleToggleDex(id)}
+                      />
+
+                      <ImageWrapper>
+                        <img src={logoURL} alt="" />
+                      </ImageWrapper>
+
+                      <SourceName>{name}</SourceName>
+                    </Source>
+                  )
+                })}
+            </>
+          )}
+          {dexes
+            ?.filter(item => !item.id.includes('kyberswap') && item.name.toLowerCase().includes(debouncedSearchText))
+            .map(({ name, logoURL, id }) => (
+              <Source key={name}>
+                <Checkbox type="checkbox" checked={!excludeDexes.includes(id)} onChange={() => handleToggleDex(id)} />
+
+                <ImageWrapper>
+                  <img src={logoURL} alt="" />
+                </ImageWrapper>
+
+                <SourceName>{name}</SourceName>
+              </Source>
+            ))}
         </SourceList>
       </Flex>
     </Box>

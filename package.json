@@ -77,6 +77,7 @@
     "react": "^18.2.0",
     "react-device-detect": "^1.6.2",
     "react-dom": "^18.2.0",
+    "react-error-overlay": "^6.0.9",
     "react-feather": "^2.0.8",
     "react-popper": "^2.2.3",
     "react-redux": "^7.2.6",
@@ -96,8 +97,9 @@
     "workbox-routing": "^6.3.0"
   },
   "resolutions": {
-    "@kyberswap/ks-sdk-core": "^0.0.13",
-    "trezor-connect": "8.1.15"
+    "@kyberswap/ks-sdk-core": "^0.0.14",
+    "trezor-connect": "8.1.15",
+    "react-error-overlay": "6.0.9"
   },
   "scripts": {
     "i18n:extract": "lingui extract",
@@ -126,7 +128,7 @@
   "dependencies": {
     "@apollo/client": "^3.3.11",
     "@kyberswap/ks-sdk-classic": "^0.0.13",
-    "@kyberswap/ks-sdk-core": "^0.0.13",
+    "@kyberswap/ks-sdk-core": "^0.0.14",
     "@kyberswap/ks-sdk-elastic": "^0.0.43",
     "@lingui/react": "^3.14.0",
     "@sentry/react": "^6.16.1",

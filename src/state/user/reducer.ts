@@ -16,11 +16,9 @@ import {
   toggleFavoriteToken,
   toggleLiveChart,
   toggleProLiveChart,
-  toggleRebrandingAnnouncement,
   toggleTokenInfo,
   toggleTopTrendingTokens,
   toggleTradeRoutes,
-  toggleURLWarning,
   updateMatchesDarkMode,
   updateUserDarkMode,
   updateUserDeadline,
@@ -62,8 +60,6 @@ export interface UserState {
   }
 
   timestamp: number
-  URLWarningVisible: boolean
-  rebrandingAnnouncement: boolean
   showLiveCharts: {
     [chainId: number]: boolean
   }
@@ -122,8 +118,6 @@ export const initialState: UserState = {
   tokens: {},
   pairs: {},
   timestamp: currentTimestamp(),
-  URLWarningVisible: true,
-  rebrandingAnnouncement: true,
   showLiveCharts: defaultShowLiveCharts,
   showProLiveChart: true,
   showTradeRoutes: !isMobile,
@@ -201,12 +195,6 @@ export default createReducer(initialState, builder =>
         delete state.pairs[chainId][pairKey(tokenBAddress, tokenAAddress)]
       }
       state.timestamp = currentTimestamp()
-    })
-    .addCase(toggleURLWarning, state => {
-      state.URLWarningVisible = !state.URLWarningVisible
-    })
-    .addCase(toggleRebrandingAnnouncement, state => {
-      state.rebrandingAnnouncement = !state.rebrandingAnnouncement
     })
     .addCase(toggleLiveChart, (state, { payload: { chainId } }) => {
       if (typeof state.showLiveCharts?.[chainId] !== 'boolean') {

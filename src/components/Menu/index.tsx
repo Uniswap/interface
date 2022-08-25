@@ -3,6 +3,7 @@ import { Trans, t } from '@lingui/macro'
 import React, { useRef } from 'react'
 import { isMobile } from 'react-device-detect'
 import {
+  Award,
   BookOpen,
   Edit,
   FileText,
@@ -158,6 +159,7 @@ export default function Menu() {
   const under1440 = useMedia('(max-width: 1440px)')
   const above1321 = useMedia('(min-width: 1321px)')
   const above768 = useMedia('(min-width: 768px)')
+  const under369 = useMedia('(max-width: 370px)')
 
   const getBridgeLink = () => {
     if (!chainId) return ''
@@ -225,6 +227,13 @@ export default function Menu() {
           <NavMenuItem to="/farms" onClick={toggle}>
             <MoneyBagOutline size={16} />
             <Trans>Farm</Trans>
+          </NavMenuItem>
+        )}
+
+        {under369 && (
+          <NavMenuItem to="/campaigns" onClick={toggle}>
+            <Award size={14} />
+            <Trans>Campaigns</Trans>
           </NavMenuItem>
         )}
 

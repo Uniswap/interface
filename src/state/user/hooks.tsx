@@ -28,11 +28,9 @@ import {
   toggleFavoriteToken as toggleFavoriteTokenAction,
   toggleLiveChart,
   toggleProLiveChart,
-  toggleRebrandingAnnouncement,
   toggleTokenInfo,
   toggleTopTrendingTokens,
   toggleTradeRoutes,
-  toggleURLWarning,
   updateUserDarkMode,
   updateUserDeadline,
   updateUserExpertMode,
@@ -223,28 +221,6 @@ export function usePairAdderByTokens(): (token0: Token, token1: Token) => void {
     },
     [dispatch],
   )
-}
-
-export function useRebrandingAnnouncement(): boolean {
-  const rebrandingAnnouncement = useSelector((state: AppState) => state.user.rebrandingAnnouncement)
-  return rebrandingAnnouncement === undefined || rebrandingAnnouncement
-}
-
-export function useToggleRebrandingAnnouncement(): () => void {
-  const dispatch = useDispatch()
-  return useCallback(() => dispatch(toggleRebrandingAnnouncement()), [dispatch])
-}
-
-export function useURLWarningVisible(): boolean {
-  const rebrandingAnnouncement = useRebrandingAnnouncement()
-  const urlWarningVisible = useSelector((state: AppState) => state.user.URLWarningVisible)
-
-  return !rebrandingAnnouncement && urlWarningVisible
-}
-
-export function useURLWarningToggle(): () => void {
-  const dispatch = useDispatch()
-  return useCallback(() => dispatch(toggleURLWarning()), [dispatch])
 }
 
 export function useToV2LiquidityTokens(

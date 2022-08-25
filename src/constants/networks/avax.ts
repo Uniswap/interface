@@ -17,7 +17,7 @@ const avaxInfo: NetworkInfo = {
   blockClient: createClient('https://api.thegraph.com/subgraphs/name/ducquangkstn/avalache-blocks'),
   etherscanUrl: 'https://snowtrace.io',
   etherscanName: 'Snowtrace',
-  tokenListUrl: `${process.env.REACT_APP_TOKEN_LIST_API}?chainId=${ChainId.AVAXMAINNET}`,
+  tokenListUrl: `${process.env.REACT_APP_KS_SETTING_API}/v1/tokens?chainId=${ChainId.AVAXMAINNET}`,
   bridgeURL: 'https://bridge.avax.network',
   nativeToken: {
     symbol: 'AVAX',

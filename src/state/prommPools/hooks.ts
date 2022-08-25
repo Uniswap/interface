@@ -72,9 +72,6 @@ export interface Bundle {
 export interface UserPosition {
   id: string
   liquidity: string
-  amountDepositedUSD: string
-  depositedToken0: string
-  depositedToken1: string
   tickLower: {
     tickIdx: string
   }
@@ -112,9 +109,6 @@ const PROMM_USER_POSITIONS = gql`
       id
       owner
       liquidity
-      amountDepositedUSD
-      depositedToken0
-      depositedToken1
       tickLower {
         tickIdx
       }

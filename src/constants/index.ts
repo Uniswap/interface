@@ -256,8 +256,8 @@ export const USDT: { [chainId in ChainId]: Token } = {
   ),
   [ChainId.AVAXTESTNET]: new Token(
     ChainId.AVAXTESTNET,
-    '0xBD1EEAf651aEB210106E1c1aFb3BC41C388ee577',
-    6,
+    '0x42296280d753ecdfafe9dbdfa912c9e6221a4e05',
+    18,
     'USDT',
     'Tether USD',
   ),

@@ -20,7 +20,7 @@ const görliInfo: NetworkInfo = {
   blockClient: createClient('https://api.thegraph.com/subgraphs/name/edwardevans094/ropsten-blocks'), //todo: not exits yet
   etherscanUrl: 'https://goerli.etherscan.io',
   etherscanName: 'Goerli Explorer',
-  tokenListUrl: `${process.env.REACT_APP_TOKEN_LIST_API}?chainId=${ChainId.ROPSTEN}`,
+  tokenListUrl: `${process.env.REACT_APP_KS_SETTING_API}/v1/tokens?chainId=${ChainId.ROPSTEN}`,
   bridgeURL: EMPTY,
   nativeToken: {
     symbol: 'ETH',

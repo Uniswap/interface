@@ -2715,10 +2715,10 @@
     tiny-warning "^1.0.3"
     toformat "^2.0.0"
 
-"@kyberswap/ks-sdk-core@^0.0.12", "@kyberswap/ks-sdk-core@^0.0.13":
-  version "0.0.13"
-  resolved "https://registry.yarnpkg.com/@kyberswap/ks-sdk-core/-/ks-sdk-core-0.0.13.tgz#5331007fdbbe22bec8c258ef4ad7d0fcdff33a9b"
-  integrity sha512-WcuSJzey7b2NXNVm4PEULqiqMoNmBE8uI1t8Vak2sSpsdy+p82sICCQqAn4oYimdW2U1JZG0svgaBGdKZsiapQ==
+"@kyberswap/ks-sdk-core@^0.0.12", "@kyberswap/ks-sdk-core@^0.0.14":
+  version "0.0.14"
+  resolved "https://registry.yarnpkg.com/@kyberswap/ks-sdk-core/-/ks-sdk-core-0.0.14.tgz#e317f702c586de83ed4e6aa0ba48c34f3cd56f66"
+  integrity sha512-NXxrpT0ILpgQnQi+ytmU6PuRepEDtabPODzff2bukYO0WkdBwSMsR7AGmz+jkln+FbG8xCI+JdaQNjsNPdt/sQ==
   dependencies:
     "@ethersproject/address" "^5.0.2"
     big.js "^5.2.2"
@@ -16104,10 +16104,10 @@ react-dom@^18.2.0:
     loose-envify "^1.1.0"
     scheduler "^0.23.0"
 
-react-error-overlay@^6.0.9:
-  version "6.0.11"
-  resolved "https://registry.yarnpkg.com/react-error-overlay/-/react-error-overlay-6.0.11.tgz#92835de5841c5cf08ba00ddd2d677b6d17ff9adb"
-  integrity sha512-/6UZ2qgEyH2aqzYZgQPxEnz33NJ2gNsnHA2o5+o4wW9bLM/JYQitNP9xPhsXwC08hMMovfGe/8retsdDsczPRg==
+react-error-overlay@6.0.9, react-error-overlay@^6.0.9:
+  version "6.0.9"
+  resolved "https://registry.yarnpkg.com/react-error-overlay/-/react-error-overlay-6.0.9.tgz#3c743010c9359608c375ecd6bc76f35d93995b0a"
+  integrity sha512-nQTTcUu+ATDbrSD1BZHr5kgSD4oF8OFjxun8uAaL8RwPBacGBNPf/yAuVVdx17N8XNzRDMrZ9XcKZHCjPW+9ew==
 
 react-fast-compare@^3.0.1, react-fast-compare@^3.1.1:
   version "3.2.0"

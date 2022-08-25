@@ -3,17 +3,6 @@ import useSWR from 'swr'
 
 import { NETWORKS_INFO } from 'constants/networks'
 
-type Response = {
-  pools: Record<
-    string,
-    {
-      poolSize: number
-      tvl: number
-      tokenSize: number
-    }
-  >
-}
-
 // It's recommended to use NETWORKS_INFO[chainId].route,
 // but very unfortunately that BE uses `bsc` instead of `bnb`
 const chainIdMapping: Partial<Record<ChainId, string>> = {
@@ -21,37 +10,35 @@ const chainIdMapping: Partial<Record<ChainId, string>> = {
   [ChainId.BTTC]: 'bttc',
 }
 
-const useAggregatorStats = (chainId?: ChainId) => {
+const useLiquiditySources = (chainId?: ChainId) => {
   const chainString = chainId ? chainIdMapping[chainId] || NETWORKS_INFO[chainId].route : ''
 
-  return useSWR<Response>(`${process.env.REACT_APP_AGGREGATOR_API}/${chainString}/stats`, async (url: string) => {
-    if (!chainId || !chainString) {
-      const err = `chain (${chainId}) is not supported`
-      console.error(err)
-      throw err
-    }
-
-    const response = await fetch(url, {
-      headers: {
-        // need this to get it work in Optimism, it must be capital L
-        'Accept-Version': 'Latest',
-      },
-    })
-    if (response.ok) {
-      const data = await response.json()
-      if (data && data.pools) {
-        return data
+  return useSWR<{ name: string; logoURL: string; dexId: string }[]>(
+    `${process.env.REACT_APP_KS_SETTING_API}/v1/dexes?chain=${chainString}&isEnabled=true&pageSize=100`,
+    async (url: string) => {
+      if (!chainId || !chainString) {
+        const err = `chain (${chainId}) is not supported`
+        console.error(err)
+        throw err
       }
 
-      const err = `no pools found on ${chainString}`
+      const response = await fetch(url)
+      if (response.ok) {
+        const data = await response.json()
+        if (data && data.data.dexes) {
+          return data.data.dexes
+        }
+
+        const err = `no pools found on ${chainString}`
+        console.error(err)
+        throw err
+      }
+
+      const err = `fetching stats on ${chainString} failed`
       console.error(err)
       throw err
-    }
-
-    const err = `fetching stats on ${chainString} failed`
-    console.error(err)
-    throw err
-  })
+    },
+  )
 }
 
-export default useAggregatorStats
+export default useLiquiditySources

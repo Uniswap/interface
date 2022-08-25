@@ -19,7 +19,7 @@ const bnbInfo: NetworkInfo = {
   blockClient: createClient('https://api.thegraph.com/subgraphs/name/dynamic-amm/ethereum-blocks-bsc'),
   etherscanUrl: 'https://bscscan.com',
   etherscanName: 'BscScan',
-  tokenListUrl: `${process.env.REACT_APP_TOKEN_LIST_API}?chainId=${ChainId.BSCMAINNET}`,
+  tokenListUrl: `${process.env.REACT_APP_KS_SETTING_API}/v1/tokens?chainId=${ChainId.BSCMAINNET}`,
   bridgeURL: 'https://www.binance.org/en/bridge',
   nativeToken: {
     symbol: 'BNB',
@@ -28,7 +28,7 @@ const bnbInfo: NetworkInfo = {
     logo: BnbLogo,
     decimal: 18,
   },
-  rpcUrl: 'https://bscrpc.com',
+  rpcUrl: 'https://bsc.kyberengineering.io',
   routerUri: `${process.env.REACT_APP_AGGREGATOR_API}/bsc/route/encode`,
   classic: {
     static: {

@@ -6,11 +6,8 @@ import { Flex } from 'rebass'
 import styled from 'styled-components'
 
 import QuestionHelper from 'components/QuestionHelper'
-import { useActiveWeb3React } from 'hooks'
-import useAggregatorStats from 'hooks/useAggregatorStats'
 import useTheme from 'hooks/useTheme'
-
-import { extractUniqueDEXes } from '../LiquiditySourcesPanel'
+import { useAllDexes, useExcludeDexes } from 'state/customizeDexes/hooks'
 
 type Props = {
   onClick: () => void
@@ -37,20 +34,17 @@ const NumberOfSources = styled.span`
 `
 
 const LiquiditySourcesSetting: React.FC<Props> = ({ onClick }) => {
-  const { chainId } = useActiveWeb3React()
-  const { data, error } = useAggregatorStats(chainId)
   const theme = useTheme()
 
-  if (error || !data) {
+  const allDexes = useAllDexes()
+  const [excludeDexes] = useExcludeDexes()
+
+  if (!allDexes?.length) {
     return null
   }
 
-  const dexIDs = Object.keys(data.pools)
-  if (dexIDs.length === 0) {
-    return null
-  }
-
-  const numberOfDEXes = extractUniqueDEXes(dexIDs).length
+  const numberOfDEXes = allDexes?.length
+  const selectedDexes = allDexes.filter(item => !excludeDexes.includes(item.id))
 
   return (
     <Flex
@@ -69,7 +63,9 @@ const LiquiditySourcesSetting: React.FC<Props> = ({ onClick }) => {
       </Group>
 
       <Group>
-        <NumberOfSources>{numberOfDEXes}</NumberOfSources>
+        <NumberOfSources>
+          {selectedDexes.length || numberOfDEXes} out of {numberOfDEXes} selected
+        </NumberOfSources>
         <ChevronRight size={20} color={theme.subText} />
       </Group>
     </Flex>
