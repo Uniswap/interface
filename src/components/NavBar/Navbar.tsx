@@ -70,7 +70,7 @@ const Navbar = () => {
   const { pathname } = useLocation()
   const nftFlag = useNftFlag()
 
-  if (windowWidth && windowWidth < breakpoints.xl) {
+  if (windowWidth && windowWidth <= breakpoints.xl) {
     return <MobileNavbar />
   }
 

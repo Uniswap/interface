@@ -17,6 +17,8 @@ const WalletWrapper = styled.div`
   top: 60px;
   right: 70px;
   background-color: ${({ theme }) => theme.backgroundSurface};
+  border: ${({ theme }) => `1px solid ${theme.backgroundOutline}`};
+  box-shadow: ${({ theme }) => theme.deepShadow};
   padding: 16px 0;
 `
 
