@@ -16,7 +16,8 @@
   "scripts": {
     "cleanup": "rimraf **/node_modules",
     "postinstall": "lerna run build --stream --ignore  @teleswap/ui",
-    "start":"yarn workspace @teleswap/ui run start"
+    "start": "yarn workspace @teleswap/ui run start",
+    "prepare": "husky install"
   },
   "repository": {
     "type": "git",
@@ -30,7 +31,9 @@
   },
   "homepage": "https://github.com/teleport-network/interface#readme",
   "devDependencies": {
+    "husky": "^8.0.1",
     "lerna": "^5.1.8",
+    "post-merge-install": "^0.5.1",
     "rimraf": "^3.0.2"
   }
 }
