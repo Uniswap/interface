@@ -2,7 +2,7 @@ import { Percent } from '@uniswap/sdk-core'
 import { Slippage, SwapEventHandlers, SwapSettingsController } from '@uniswap/widgets'
 import { DEFAULT_DEADLINE_FROM_NOW } from 'constants/misc'
 import { useCallback, useMemo, useState } from 'react'
-import { useSetUserSlippageTolerance, useUserSlippageTolerance, useUserTransactionTTL } from 'state/user/hooks'
+import { useUserSlippageTolerance, useUserTransactionTTL } from 'state/user/hooks'
 
 // Integrates the Widget's settings, keeping the widget and app settings in sync.
 export function useSyncWidgetSettings() {
@@ -16,7 +16,7 @@ export function useSyncWidgetSettings() {
     },
     [setUserTtl]
   )
-  const [userSlippage, setUserSlippage] = [useUserSlippageTolerance(), useSetUserSlippageTolerance()]
+  const [userSlippage, setUserSlippage] = useUserSlippageTolerance()
   const [slippage, setSlippage] = useState<string | undefined>(
     userSlippage === 'auto' ? undefined : userSlippage.toFixed(2)
   )
