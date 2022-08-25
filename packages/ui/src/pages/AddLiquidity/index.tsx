@@ -24,7 +24,6 @@ import { AddRemoveTabs } from '../../components/NavigationTabs'
 import { MinimalPositionCard } from '../../components/PositionCard'
 import Row, { AutoRow, RowBetween, RowFlat } from '../../components/Row'
 
-import { ROUTER_ADDRESS } from '../../constants'
 import { PairState } from '../../data/Reserves'
 import { useActiveWeb3React } from '../../hooks'
 import { useCurrency } from '../../hooks/Tokens'
@@ -51,6 +50,7 @@ import useThemedContext from 'hooks/useThemedContext'
 import styled from 'styled-components'
 import Settings from 'components/Settings'
 import CurrencyLogo from 'components/CurrencyLogo'
+import { ROUTER_ADDRESS } from '@teleswap/sdk/dist/constants'
 
 const BorderVerticalContainer = styled(Flex)`
   // border: 1px solid rgba(255, 255, 255, 0.2);
@@ -63,9 +63,9 @@ const BorderVerticalContainer = styled(Flex)`
 
 export default function AddLiquidity({
   match: {
-    params: { currencyIdA, currencyIdB }
+    params: { currencyIdA, currencyIdB },
   },
-  history
+  history,
 }: RouteComponentProps<{ currencyIdA?: string; currencyIdB?: string }>) {
   const { account, chainId, library } = useActiveWeb3React()
   const theme = useThemedContext()
@@ -96,7 +96,7 @@ export default function AddLiquidity({
     noLiquidity,
     liquidityMinted,
     poolTokenPercentage,
-    error
+    error,
   } = useDerivedMintInfo(currencyA ?? undefined, currencyB ?? undefined)
 
   const { onFieldAInput, onFieldBInput } = useMintActionHandlers(noLiquidity)
@@ -115,7 +115,7 @@ export default function AddLiquidity({
   // get formatted amounts
   const formattedAmounts = {
     [independentField]: typedValue,
-    [dependentField]: noLiquidity ? otherTypedValue : parsedAmounts[dependentField]?.toSignificant(6) ?? ''
+    [dependentField]: noLiquidity ? otherTypedValue : parsedAmounts[dependentField]?.toSignificant(6) ?? '',
   }
 
   // get the max amounts user can add
@@ -123,7 +123,7 @@ export default function AddLiquidity({
     (accumulator, field) => {
       return {
         ...accumulator,
-        [field]: maxAmountSpend(currencyBalances[field])
+        [field]: maxAmountSpend(currencyBalances[field]),
       }
     },
     {}
@@ -133,7 +133,7 @@ export default function AddLiquidity({
     (accumulator, field) => {
       return {
         ...accumulator,
-        [field]: maxAmounts[field]?.equalTo(parsedAmounts[field] ?? '0')
+        [field]: maxAmounts[field]?.equalTo(parsedAmounts[field] ?? '0'),
       }
     },
     {}
@@ -156,7 +156,7 @@ export default function AddLiquidity({
 
     const amountsMin = {
       [Field.CURRENCY_A]: calculateSlippageAmount(parsedAmountA, noLiquidity ? 0 : allowedSlippage)[0],
-      [Field.CURRENCY_B]: calculateSlippageAmount(parsedAmountB, noLiquidity ? 0 : allowedSlippage)[0]
+      [Field.CURRENCY_B]: calculateSlippageAmount(parsedAmountB, noLiquidity ? 0 : allowedSlippage)[0],
     }
 
     let estimate,
@@ -172,13 +172,13 @@ export default function AddLiquidity({
         {
           from: wrappedCurrency(currencyA, chainId)?.address,
           to: wrappedCurrency(currencyB, chainId)?.address,
-          stable: true
+          stable: true,
         },
         (tokenBIsETH ? parsedAmountA : parsedAmountB).raw.toString(), // token desired
         amountsMin[tokenBIsETH ? Field.CURRENCY_A : Field.CURRENCY_B].toString(), // token min
         amountsMin[tokenBIsETH ? Field.CURRENCY_B : Field.CURRENCY_A].toString(), // eth min
         account,
-        deadline.toHexString()
+        deadline.toHexString(),
       ]
       value = BigNumber.from((tokenBIsETH ? parsedAmountB : parsedAmountA).raw.toString())
     } else {
@@ -192,18 +192,18 @@ export default function AddLiquidity({
         amountsMin[Field.CURRENCY_A].toString(),
         amountsMin[Field.CURRENCY_B].toString(),
         account,
-        deadline.toHexString()
+        deadline.toHexString(),
       ]
       value = null
     }
 
     setAttemptingTxn(true)
     await estimate(...args, value ? { value } : {})
-      .then(estimatedGasLimit =>
+      .then((estimatedGasLimit) =>
         method(...args, {
           ...(value ? { value } : {}),
-          gasLimit: calculateGasMargin(estimatedGasLimit)
-        }).then(response => {
+          gasLimit: calculateGasMargin(estimatedGasLimit),
+        }).then((response) => {
           setAttemptingTxn(false)
 
           addTransaction(response, {
@@ -215,7 +215,7 @@ export default function AddLiquidity({
               ' and ' +
               parsedAmounts[Field.CURRENCY_B]?.toSignificant(3) +
               ' ' +
-              currencies[Field.CURRENCY_B]?.symbol
+              currencies[Field.CURRENCY_B]?.symbol,
           })
 
           setTxHash(response.hash)
@@ -223,11 +223,11 @@ export default function AddLiquidity({
           ReactGA.event({
             category: 'Liquidity',
             action: 'Add',
-            label: [currencies[Field.CURRENCY_A]?.symbol, currencies[Field.CURRENCY_B]?.symbol].join('/')
+            label: [currencies[Field.CURRENCY_A]?.symbol, currencies[Field.CURRENCY_B]?.symbol].join('/'),
           })
         })
       )
-      .catch(error => {
+      .catch((error) => {
         setAttemptingTxn(false)
         // we only care if the error is something _other_ than the user rejected the tx
         if (error?.code !== 4001) {
@@ -264,8 +264,9 @@ export default function AddLiquidity({
           </Text>
         </Row>
         <TYPE.italic fontSize={12} textAlign="left" padding={'8px 0 0 0 '}>
-          {`Output is estimated. If the price changes by more than ${allowedSlippage /
-            100}% your transaction will revert.`}
+          {`Output is estimated. If the price changes by more than ${
+            allowedSlippage / 100
+          }% your transaction will revert.`}
         </TYPE.italic>
       </AutoColumn>
     )
@@ -344,7 +345,7 @@ export default function AddLiquidity({
           background: 'rgba(51, 51, 51, 0.5)',
           boxShadow: '0px -2px 0px #39E1BA',
           backdropFilter: 'blur(60px)',
-          borderRadius: '48px'
+          borderRadius: '48px',
         }}
       >
         <TransactionConfirmationModal
@@ -455,7 +456,7 @@ export default function AddLiquidity({
             fontSize: '12px',
             lineHeight: '18px',
             margin: '28px 0',
-            color: '#D7DCE0'
+            color: '#D7DCE0',
           }}
         >
           By adding liquidity to this pair,you’ll earn 0.3% of all the trades on this pair proportional to your share of
@@ -567,7 +568,7 @@ export function BackToMyLiquidity() {
           height={'14px'}
           style={{
             display: 'flex',
-            alignItems: 'baseline'
+            alignItems: 'baseline',
           }}
         />
       </HistoryLink>
@@ -579,7 +580,7 @@ export function BackToMyLiquidity() {
           fontSize: '14px',
           lineHeight: '14px',
           height: '14px',
-          color: '#FFFFFF'
+          color: '#FFFFFF',
         }}
       >
         Back to My Liquidity

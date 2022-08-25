@@ -5,7 +5,7 @@
   "description": "🛠 An SDK for building applications on top of Uniswap V2",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
-  "module": "dist/esm/sdk.esm.js",
+  "module": "dist/sdk.esm.js",
   "private": true,
   "files": [
     "dist"

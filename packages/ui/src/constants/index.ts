@@ -3,8 +3,6 @@ import { AbstractConnector } from '@web3-react/abstract-connector'
 
 import { fortmatic, injected, portis, walletconnect, walletlink } from '../connectors'
 
-export const ROUTER_ADDRESS = '0x87f3C84Fc7a6f9361Dc6865984D03D1156522A9c'
-
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 
 export { PRELOADED_PROPOSALS } from './proposals'
@@ -40,12 +38,18 @@ export const UNI: { [chainId in ChainId]: Token } = {
   [ChainId.RINKEBY]: new Token(ChainId.RINKEBY, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
   [ChainId.ROPSTEN]: new Token(ChainId.ROPSTEN, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
   [ChainId.GÖRLI]: new Token(ChainId.GÖRLI, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
-  [ChainId.OP_GOERLI]: new Token(ChainId.OP_GOERLI, '0xED59D07e00118b7ab76EE6fB29D738e266aAca02', 18, 'SUSHI', 'SUSHI Token'),
-  [ChainId.KOVAN]: new Token(ChainId.KOVAN, UNI_ADDRESS, 18, 'UNI', 'Uniswap')
+  [ChainId.OP_GOERLI]: new Token(
+    ChainId.OP_GOERLI,
+    '0xED59D07e00118b7ab76EE6fB29D738e266aAca02',
+    18,
+    'SUSHI',
+    'SUSHI Token'
+  ),
+  [ChainId.KOVAN]: new Token(ChainId.KOVAN, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
 }
 
 export const MASTERCHEF_ADDRESSBOOK: { [chainId in ChainId]?: string } = {
-  [ChainId.RINKEBY]: '0xe87ce36b28c80f46a0d5e200b1c528e051b7a201'
+  [ChainId.RINKEBY]: '0xe87ce36b28c80f46a0d5e200b1c528e051b7a201',
 }
 
 export const MASTERCHEFV2_ADDRESSBOOK: { [chainId in ChainId]?: string } = {
@@ -54,18 +58,18 @@ export const MASTERCHEFV2_ADDRESSBOOK: { [chainId in ChainId]?: string } = {
 
 export const SUSHI_ADDRESS: { [chainId in ChainId]?: string } = {
   [ChainId.RINKEBY]: '0xdaa8093513e9698f37e36332d43cc27e196d9ada',
-  [ChainId.OP_GOERLI]: '0xED59D07e00118b7ab76EE6fB29D738e266aAca02'
+  [ChainId.OP_GOERLI]: '0xED59D07e00118b7ab76EE6fB29D738e266aAca02',
 }
 
 export const COMMON_CONTRACT_NAMES: { [address: string]: string } = {
   [UNI_ADDRESS]: 'UNI',
   [GOVERNANCE_ADDRESS]: 'Governance',
-  [TIMELOCK_ADDRESS]: 'Timelock'
+  [TIMELOCK_ADDRESS]: 'Timelock',
 }
 
 // TODO: specify merkle distributor for mainnet
 export const MERKLE_DISTRIBUTOR_ADDRESS: { [chainId in ChainId]?: string } = {
-  [ChainId.MAINNET]: '0x090D4613473dEE047c3f2706764f49E0821D256e'
+  [ChainId.MAINNET]: '0x090D4613473dEE047c3f2706764f49E0821D256e',
 }
 
 const WETH_ONLY: ChainTokenList = {
@@ -74,13 +78,13 @@ const WETH_ONLY: ChainTokenList = {
   [ChainId.RINKEBY]: [WETH[ChainId.RINKEBY]],
   [ChainId.GÖRLI]: [WETH[ChainId.GÖRLI]],
   [ChainId.KOVAN]: [WETH[ChainId.KOVAN]],
-  [ChainId.OP_GOERLI]: [WETH[ChainId.OP_GOERLI]]
+  [ChainId.OP_GOERLI]: [WETH[ChainId.OP_GOERLI]],
 }
 
 // used to construct intermediary pairs for trading
 export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
   ...WETH_ONLY,
-  [ChainId.MAINNET]: [...WETH_ONLY[ChainId.MAINNET], DAI, USDC, USDT, WBTC]
+  [ChainId.MAINNET]: [...WETH_ONLY[ChainId.MAINNET], DAI, USDC, USDT, WBTC],
 }
 
 export const ADDITIONAL_BASES: { [chainId in ChainId]?: { [tokenAddress: string]: Token[] } } = {
@@ -92,8 +96,8 @@ export const ADDITIONAL_BASES: { [chainId in ChainId]?: { [tokenAddress: string]
     [FRAX.address]: [FXS],
     [FXS.address]: [FRAX],
     [WBTC.address]: [renBTC],
-    [renBTC.address]: [WBTC]
-  }
+    [renBTC.address]: [WBTC],
+  },
 }
 
 /**
@@ -102,31 +106,31 @@ export const ADDITIONAL_BASES: { [chainId in ChainId]?: { [tokenAddress: string]
  */
 export const CUSTOM_BASES: { [chainId in ChainId]?: { [tokenAddress: string]: Token[] } } = {
   [ChainId.MAINNET]: {
-    [AMPL.address]: [DAI, WETH[ChainId.MAINNET]]
-  }
+    [AMPL.address]: [DAI, WETH[ChainId.MAINNET]],
+  },
 }
 
 // used for display in the default list when adding liquidity
 export const SUGGESTED_BASES: ChainTokenList = {
   ...WETH_ONLY,
-  [ChainId.MAINNET]: [...WETH_ONLY[ChainId.MAINNET], DAI, USDC, USDT, WBTC]
+  [ChainId.MAINNET]: [...WETH_ONLY[ChainId.MAINNET], DAI, USDC, USDT, WBTC],
 }
 
 // used to construct the list of all pairs we consider by default in the frontend
 export const BASES_TO_TRACK_LIQUIDITY_FOR: ChainTokenList = {
   ...WETH_ONLY,
-  [ChainId.MAINNET]: [...WETH_ONLY[ChainId.MAINNET], DAI, USDC, USDT, WBTC]
+  [ChainId.MAINNET]: [...WETH_ONLY[ChainId.MAINNET], DAI, USDC, USDT, WBTC],
 }
 
 export const PINNED_PAIRS: { readonly [chainId in ChainId]?: [Token, Token][] } = {
   [ChainId.MAINNET]: [
     [
       new Token(ChainId.MAINNET, '0x5d3a536E4D6DbD6114cc1Ead35777bAB948E3643', 8, 'cDAI', 'Compound Dai'),
-      new Token(ChainId.MAINNET, '0x39AA39c021dfbaE8faC545936693aC917d5E7563', 8, 'cUSDC', 'Compound USD Coin')
+      new Token(ChainId.MAINNET, '0x39AA39c021dfbaE8faC545936693aC917d5E7563', 8, 'cUSDC', 'Compound USD Coin'),
     ],
     [USDC, USDT],
-    [DAI, USDT]
-  ]
+    [DAI, USDT],
+  ],
 }
 
 export interface WalletInfo {
@@ -149,7 +153,7 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
     description: 'Injected web3 provider.',
     href: null,
     color: '#010101',
-    primary: true
+    primary: true,
   },
   METAMASK: {
     connector: injected,
@@ -157,7 +161,7 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
     iconName: 'metamask.png',
     description: 'Easy-to-use browser extension.',
     href: null,
-    color: '#E8831D'
+    color: '#E8831D',
   },
   TELEPORT: {
     connector: injected,
@@ -165,7 +169,7 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
     iconName: 'teleport.png',
     description: 'Easy-to-use browser extension.',
     href: null,
-    color: '#E8831D'
+    color: '#E8831D',
   },
   WALLET_CONNECT: {
     connector: walletconnect,
@@ -174,7 +178,7 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
     description: 'Connect to Trust Wallet, Rainbow Wallet and more...',
     href: null,
     color: '#4196FC',
-    mobile: true
+    mobile: true,
   },
   WALLET_LINK: {
     connector: walletlink,
@@ -182,7 +186,7 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
     iconName: 'coinbaseWalletIcon.svg',
     description: 'Use Coinbase Wallet app on mobile device',
     href: null,
-    color: '#315CF5'
+    color: '#315CF5',
   },
   COINBASE_LINK: {
     name: 'Open in Coinbase Wallet',
@@ -191,7 +195,7 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
     href: 'https://go.cb-w.com/mtUDhEZPy1',
     color: '#315CF5',
     mobile: true,
-    mobileOnly: true
+    mobileOnly: true,
   },
   FORTMATIC: {
     connector: fortmatic,
@@ -200,7 +204,7 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
     description: 'Login using Fortmatic hosted wallet',
     href: null,
     color: '#6748FF',
-    mobile: true
+    mobile: true,
   },
   Portis: {
     connector: portis,
@@ -209,8 +213,8 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
     description: 'Login using Portis hosted wallet',
     href: null,
     color: '#4A6C9B',
-    mobile: true
-  }
+    mobile: true,
+  },
 }
 
 export const NetworkContextName = 'NETWORK'
@@ -250,5 +254,5 @@ export const BLOCKED_ADDRESSES: string[] = [
   '0xd882cFc20F52f2599D84b8e8D58C7FB62cfE344b',
   '0x901bb9583b24D97e995513C6778dc6888AB6870e',
   '0xA7e5d5A720f06526557c513402f2e6B5fA20b008',
-  '0x8576aCC5C05D6Ce88f4e49bf65BdF0C62F91353C'
+  '0x8576aCC5C05D6Ce88f4e49bf65BdF0C62F91353C',
 ]

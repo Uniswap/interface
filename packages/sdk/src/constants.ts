@@ -27,6 +27,8 @@ export const FACTORY_ADDRESS = '0xDE15CBA96deAD6Bdd201aa27fc19e15F2bAB6D02'
 
 export const INIT_CODE_HASH = '0xfbc5907db2edae44de84d86828483225d9c63ecb5c846ece3e2b15c2a1ab0d21'
 
+export const ROUTER_ADDRESS = '0x87f3C84Fc7a6f9361Dc6865984D03D1156522A9c'
+
 export const MINIMUM_LIQUIDITY = JSBI.BigInt(1000)
 
 // exports for internal consumption
