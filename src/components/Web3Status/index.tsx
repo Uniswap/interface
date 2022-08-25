@@ -162,6 +162,11 @@ const StyledConnect = styled.div`
 
   &:hover {
     color: ${({ theme }) => theme.accentActionSoft};
+    transition: ${({
+      theme: {
+        transition: { duration, timing },
+      },
+    }) => `${duration.fast}ms color ${timing.in}`};
   }
 `
 
@@ -172,6 +177,11 @@ const StyledChevron = styled.span`
 
   &:hover {
     color: ${({ theme }) => theme.accentActionSoft};
+    transition: ${({
+      theme: {
+        transition: { duration, timing },
+      },
+    }) => `${duration.fast}ms color ${timing.in}`};
   }
 `
 
