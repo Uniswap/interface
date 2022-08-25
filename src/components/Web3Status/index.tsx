@@ -55,13 +55,15 @@ const Web3StatusError = styled(Web3StatusGeneric)`
 `
 
 const Web3StatusConnectNavbar = styled.button<{ faded?: boolean }>`
+  dispay: flex;
+  align-items: center;
   ${({ theme }) => theme.flexRowNoWrap}
   background-color: ${({ theme }) => theme.accentActionSoft};
   border-radius: 12px;
   border: none;
   cursor: pointer;
+  padding: 10px 12px;
 
-  padding: 10px 12px 10px 12px;
   :hover,
   :active,
   :focus {
@@ -148,8 +150,6 @@ const VerticalDivider = styled.div`
   height: 20px;
   width: 1px;
   background-color: ${({ theme }) => theme.accentAction};
-  margin-top: auto;
-  margin-bottom: auto;
 `
 
 const StyledConnect = styled.div`
@@ -157,8 +157,6 @@ const StyledConnect = styled.div`
   font-weight: 600;
   font-size: 16px;
   margin-right: 8px;
-  margin-top: auto;
-  margin-bottom: auto;
 
   &:hover {
     color: ${({ theme }) => theme.accentActionSoft};
