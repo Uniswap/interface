@@ -266,7 +266,6 @@ export const SearchBar = () => {
   const debouncedSearchValue = useDebounce(searchValue, 300)
   const searchRef = useRef<HTMLDivElement>(null)
   const { pathname } = useLocation()
-  const { width: windowWidth } = useWindowSize()
   const phase1Flag = useNftFlag()
   const isMobile = useIsMobile()
 
