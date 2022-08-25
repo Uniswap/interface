@@ -34,9 +34,35 @@ export interface WidgetProps {
 
 export default function Widget({ defaultToken }: WidgetProps) {
   const locale = useActiveLocale()
-  const theme = useWidgetTheme()
+  const darkMode = useIsDarkMode()
+  const theme = useMemo(() => (darkMode ? DARK_THEME : LIGHT_THEME), [darkMode])
   const { provider } = useWeb3React()
 
+  const { value, tokenSelector } = useSyncWidgetValue(defaultToken)
+  const { settings } = useSyncWidgetSettings()
+  const { transactions } = useSyncWidgetTransactions()
+
+  return (
+    <>
+      <SwapWidget
+        hideConnectionUI
+        jsonRpcUrlMap={RPC_URLS}
+        routerUrl={WIDGET_ROUTER_URL}
+        width={WIDGET_WIDTH}
+        locale={locale}
+        theme={theme}
+        provider={provider}
+        {...value}
+        {...settings}
+        {...transactions}
+      />
+      {tokenSelector}
+    </>
+  )
+}
+
+// Integrates the Widget's settings, keeping the widget and app settings in sync.
+function useSyncWidgetSettings() {
   const [userTtl, setUserTtl] = useUserTransactionTTL()
   const [ttl, setTtl] = useState<number | undefined>(userTtl / 60)
   const onTransactionDeadlineChange = useCallback(
@@ -77,6 +103,11 @@ export default function Widget({ defaultToken }: WidgetProps) {
     [onSettingsReset, onSlippageChange, onTransactionDeadlineChange]
   )
 
+  return { settings: { settings, ...settingsHandlers } }
+}
+
+// Integrates the Widget's controlled value, using the app's CurrencySearchModal for token selection.
+function useSyncWidgetValue(defaultToken: Currency) {
   const [isExactInput, setIsExactInput] = useState(false)
   const [amount, setAmount] = useState<string>()
   const onAmountChange = useCallback((field: Field, amount: string) => {
@@ -125,6 +156,20 @@ export default function Widget({ defaultToken }: WidgetProps) {
     [onAmountChange, onSwitchTokens, onTokenSelectorClick]
   )
 
+  const tokenSelector = (
+    <CurrencySearchModal
+      isOpen={selectingField !== undefined}
+      onDismiss={() => setSelectingField(undefined)}
+      selectedCurrency={selectingToken}
+      otherSelectedCurrency={otherToken}
+      onCurrencySelect={onTokenSelect}
+    />
+  )
+  return { value: { value, ...valueHandlers }, tokenSelector }
+}
+
+// Integrates the Widget's transactions, showing the widget's transactions in the app.
+function useSyncWidgetTransactions() {
   const txHandlers /*: TransactionEventHandlers */ = useMemo(
     () => ({
       onTxSubmit: (hash: string, tx: unknown) => console.log('onTxSubmit'),
@@ -134,34 +179,5 @@ export default function Widget({ defaultToken }: WidgetProps) {
     []
   )
 
-  return (
-    <>
-      <SwapWidget
-        hideConnectionUI
-        jsonRpcUrlMap={RPC_URLS}
-        routerUrl={WIDGET_ROUTER_URL}
-        width={WIDGET_WIDTH}
-        locale={locale}
-        theme={theme}
-        provider={provider}
-        {...txHandlers}
-        settings={settings}
-        {...settingsHandlers}
-        value={value}
-        {...valueHandlers}
-      />
-      <CurrencySearchModal
-        isOpen={selectingField !== undefined}
-        onDismiss={() => setSelectingField(undefined)}
-        selectedCurrency={selectingToken}
-        otherSelectedCurrency={otherToken}
-        onCurrencySelect={onTokenSelect}
-      />
-    </>
-  )
-}
-
-function useWidgetTheme() {
-  const darkMode = useIsDarkMode()
-  return useMemo(() => (darkMode ? DARK_THEME : LIGHT_THEME), [darkMode])
+  return { transactions: { ...txHandlers } }
 }
