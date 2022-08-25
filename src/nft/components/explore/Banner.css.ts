@@ -3,8 +3,8 @@ import { breakpoints, sprinkles } from 'nft/css/sprinkles.css'
 
 export const section = style([
   sprinkles({
-    paddingLeft: { mobile: '16', desktopL: '0' },
-    paddingRight: { mobile: '16', desktopL: '0' },
+    paddingLeft: { sm: '16', xl: '0' },
+    paddingRight: { sm: '16', xl: '0' },
   }),
   {
     maxWidth: '1000px',
@@ -63,7 +63,7 @@ export const collectionDetails = style([
   }),
   {
     '@media': {
-      [`screen and (min-width: ${breakpoints.tabletL}px)`]: {
+      [`screen and (min-width: ${breakpoints.md}px)`]: {
         width: '40%',
       },
     },

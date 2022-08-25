@@ -20,7 +20,7 @@ export const nav = style([
 export const logoContainer = style([
   sprinkles({
     display: 'flex',
-    marginRight: { mobile: '12', desktopXl: '20' },
+    marginRight: { sm: '12', xxl: '20' },
     alignItems: 'center',
   }),
 ])

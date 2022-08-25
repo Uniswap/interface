@@ -235,27 +235,24 @@ const borderWidth = ['1px', '1.5px', '2px', '4px']
 const borderStyle = ['none', 'solid'] as const
 
 export const breakpoints = {
-  tabletSm: 656,
-  tablet: 708,
-  tabletL: 784,
-  tabletXl: 830,
-  desktop: 948,
-  desktopL: 1030,
-  desktopXl: 1260,
+  sm: 640,
+  md: 768,
+  lg: 1024,
+  xl: 1280,
+  xxl: 1536,
+  xxxl: 1920,
 }
 
 const layoutStyles = defineProperties({
   conditions: {
-    mobile: {},
-    tabletSm: { '@media': `screen and (min-width: ${breakpoints.tabletSm}px)` },
-    tablet: { '@media': `screen and (min-width: ${breakpoints.tablet})` },
-    tabletL: { '@media': `screen and (min-width: ${breakpoints.tabletL}px)` },
-    tabletXl: { '@media': `screen and (min-width: ${breakpoints.tabletXl}px)` },
-    desktop: { '@media': `screen and (min-width: ${breakpoints.desktop}px)` },
-    desktopL: { '@media': `screen and (min-width: ${breakpoints.desktopL}px)` },
-    desktopXl: { '@media': `screen and (min-width: ${breakpoints.desktopXl}px)` },
+    sm: {},
+    md: { '@media': `screen and (min-width: ${breakpoints.sm}px)` },
+    lg: { '@media': `screen and (min-width: ${breakpoints.md}px)` },
+    xl: { '@media': `screen and (min-width: ${breakpoints.lg}px)` },
+    xxl: { '@media': `screen and (min-width: ${breakpoints.xl}px)` },
+    xxxl: { '@media': `screen and (min-width: ${breakpoints.xxl}px)` },
   },
-  defaultCondition: 'mobile',
+  defaultCondition: 'sm',
   properties: {
     alignItems: flexAlignment,
     alignSelf: flexAlignment,
