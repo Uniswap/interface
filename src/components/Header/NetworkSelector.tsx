@@ -11,7 +11,6 @@ import { useCloseModal, useModalIsOpen, useOpenModal, useToggleModal } from 'sta
 import { ApplicationModal } from 'state/application/reducer'
 import styled from 'styled-components/macro'
 import { ExternalLink, MEDIA_WIDTHS } from 'theme'
-import { isChainAllowed } from 'utils/switchChain'
 import { isMobile } from 'utils/userAgent'
 
 const ActiveRowLinkList = styled.div`
@@ -328,18 +327,16 @@ export default function NetworkSelector() {
             <FlyoutHeader>
               <Trans>Select a {!onSupportedChain ? ' supported ' : ''}network</Trans>
             </FlyoutHeader>
-            {NETWORK_SELECTOR_CHAINS.map((chainId: SupportedChainId) =>
-              isChainAllowed(chainId) ? (
-                <Row
-                  onSelectChain={async (targetChainId: SupportedChainId) => {
-                    await selectChain(targetChainId)
-                    closeModal()
-                  }}
-                  targetChain={chainId}
-                  key={chainId}
-                />
-              ) : null
-            )}
+            {NETWORK_SELECTOR_CHAINS.map((chainId: SupportedChainId) => (
+              <Row
+                onSelectChain={async (targetChainId: SupportedChainId) => {
+                  await selectChain(targetChainId)
+                  closeModal()
+                }}
+                targetChain={chainId}
+                key={chainId}
+              />
+            ))}
           </FlyoutMenuContents>
         </FlyoutMenu>
       )}
