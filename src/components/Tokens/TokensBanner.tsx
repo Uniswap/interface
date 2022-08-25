@@ -1,5 +1,4 @@
 import { useAtom } from 'jotai'
-import { useState } from 'react'
 import { X } from 'react-feather'
 import { Link } from 'react-router-dom'
 import styled, { useTheme } from 'styled-components/macro'
@@ -50,11 +49,9 @@ const Description = styled.span`
 
 export default function TokensBanner() {
   const theme = useTheme()
-  const [showBanner, setShowBanner] = useState(false)
   const [tokensBannerDismissed, setTokensBannerDismissed] = useAtom(tokensBannerDismissedAtom)
 
   const closeBanner = () => {
-    setShowBanner(false)
     setTokensBannerDismissed(true)
   }
   const clickBanner = () => {
@@ -62,7 +59,7 @@ export default function TokensBanner() {
   }
 
   return (
-    <PopupContainer show={showBanner && !tokensBannerDismissed}>
+    <PopupContainer show={!tokensBannerDismissed}>
       <Header>
         <HeaderText to={'https://app.uniswap.org/#/tokens'} onClick={clickBanner}>
           Explore Top Tokens
