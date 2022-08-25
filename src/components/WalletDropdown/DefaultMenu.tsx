@@ -41,7 +41,7 @@ const ToggleMenuItem = styled.button`
   font-size: 14px;
   font-weight: 400;
   width: 100%;
-  padding: 12px 16px;
+  padding: 12px 0;
   color: ${({ theme }) => theme.textSecondary};
   :hover {
     color: ${({ theme }) => theme.textPrimary};
