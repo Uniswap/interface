@@ -1,4 +1,3 @@
-import { SwapWidget } from '@uniswap/widgets'
 import { useWeb3React } from '@web3-react/core'
 import {
   LARGE_MEDIA_BREAKPOINT,
@@ -16,16 +15,13 @@ import { getChainInfo } from 'constants/chainInfo'
 import { L1_CHAIN_IDS, L2_CHAIN_IDS, SupportedChainId, TESTNET_CHAIN_IDS } from 'constants/chains'
 import { checkWarning } from 'constants/tokenSafety'
 import { useToken } from 'hooks/Tokens'
-import { useActiveLocale } from 'hooks/useActiveLocale'
 import { useNetworkTokenBalances } from 'hooks/useNetworkTokenBalances'
-import { useCallback, useMemo } from 'react'
+import { useMemo } from 'react'
 import { useParams } from 'react-router-dom'
-import { useIsDarkMode } from 'state/user/hooks'
 import styled from 'styled-components/macro'
-import { DARK_THEME, LIGHT_THEME } from 'theme/token-details-widget-theme'
-import { ROUTER_URL, RPC_URL_MAP } from 'utils/token-details-widget-config'
 
-const WIDGET_WIDTH = 320
+import Widget, { WIDGET_WIDTH } from './Widget'
+
 const Footer = styled.div`
   display: none;
   @media only screen and (max-width: ${LARGE_MEDIA_BREAKPOINT}) {
@@ -68,24 +64,11 @@ export default function TokenDetails() {
   const { tokenAddress } = useParams<{ tokenAddress?: string }>()
   const tokenSymbol = useToken(tokenAddress)?.symbol
 
-  const darkMode = useIsDarkMode()
-  const widgetTheme = useMemo(() => (darkMode ? DARK_THEME : LIGHT_THEME), [darkMode])
-  const locale = useActiveLocale()
-  const onTxSubmit = useCallback(() => {
-    console.log('onTxSubmit')
-  }, [])
-  const onTxSuccess = useCallback(() => {
-    console.log('onTxSuccess')
-  }, [])
-  const onTxFail = useCallback(() => {
-    console.log('onTxFail')
-  }, [])
-
   const tokenWarning = tokenAddress ? checkWarning(tokenAddress) : null
   /* network balance handling */
 
   const { data: networkData } = tokenAddress ? NetworkBalances(tokenAddress) : { data: null }
-  const { chainId: connectedChainId, provider } = useWeb3React()
+  const { chainId: connectedChainId } = useWeb3React()
   const totalBalance = 4.3 // dummy data
 
   const chainsToList = useMemo(() => {
@@ -125,22 +108,7 @@ export default function TokenDetails() {
         <>
           <TokenDetail address={tokenAddress} />
           <RightPanel>
-            <SwapWidget
-              defaultChainId={connectedChainId}
-              defaultInputTokenAddress={'NATIVE'}
-              defaultOutputTokenAddress={tokenAddress}
-              hideConnectionUI
-              jsonRpcUrlMap={RPC_URL_MAP}
-              locale={locale}
-              onTxSubmit={onTxSubmit}
-              onTxSuccess={onTxSuccess}
-              onTxFail={onTxFail}
-              provider={provider}
-              routerUrl={ROUTER_URL}
-              theme={widgetTheme}
-              // tokenList={[]}
-              width={WIDGET_WIDTH}
-            />
+            <Widget />
             {tokenWarning && <TokenSafetyMessage tokenAddress={tokenAddress} warning={tokenWarning} />}
             <BalanceSummary address={tokenAddress} totalBalance={totalBalance} networkBalances={balancesByNetwork} />
           </RightPanel>

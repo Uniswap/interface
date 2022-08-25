@@ -16,6 +16,7 @@ export const LIGHT_THEME = {
   warning: colors.gold200,
   error: colors.red400,
 }
+
 export const DARK_THEME = {
   // surface
   container: colors.gray900,
