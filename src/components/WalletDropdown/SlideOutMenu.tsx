@@ -5,7 +5,20 @@ const Menu = styled.div`
   width: 100%;
   height: 100%;
   font-size: 16px;
-  overflow-y: scroll;
+  overflow: auto;
+  scrollbar-width: thin;
+
+  ::-webkit-scrollbar {
+    background: transparent;
+    width: 4px;
+  }
+  ::-webkit-scrollbar-track {
+    margin-top: 40px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: ${({ theme }) => theme.backgroundOutline};
+    border-radius: 8px;
+  }
 `
 
 const Header = styled.span`
@@ -67,7 +80,23 @@ const BackSectionContainer = styled.div`
 `
 
 const ChildrenContainer = styled.div`
+  overflow-y: auto;
+  // height: calc(100% - 30px);
   margin-top: 40px;
+
+  &::-webkit-scrollbar {
+    background: transparent;
+    border-radius: 8px;
+    width: 4px;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #999;
+    border-radius: 8px;
+    height: 10px;
+  }
 `
 
 export const SlideOutMenu = ({

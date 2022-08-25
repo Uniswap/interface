@@ -37,9 +37,7 @@ const InternalLinkMenuItem = styled(InternalMenuItem)`
   }
 `
 
-const LanguageWrap = styled.div`
-  margin-top: 16px;
-`
+const LanguageWrap = styled.div``
 
 function LanguageMenuItem({ locale, isActive }: { locale: SupportedLocale; isActive: boolean }) {
   const { to, onClick } = useLocationLinkProps(locale)
