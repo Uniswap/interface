@@ -82,13 +82,6 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>ShakeBugsConfig</key>
-	<dict>
-		<key>SHAKE_CLIENT_ID</key>
-		<string>9bgtXsNl5elttAyFUCCXJFYQyNKjVS7StF7oLpWk</string>
-		<key>SHAKE_CLIENT_SECRET</key>
-		<string>LcZeccXtiLuo4O0T5pwdFXysmdpsY25JsIKExd3XzABh4VoDEzXpe30</string>
-	</dict>
   <key>NSUbiquitousContainers</key>
    <dict>
        <key>iCloud.Uniswap.UserBackups</key>

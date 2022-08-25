@@ -12,6 +12,8 @@ declare module 'react-native-dotenv' {
   export const LOG_BUFFER_SIZE: string
   export const OPENSEA_API_KEY: string
   export const SENTRY_DSN: string
+  export const SHAKE_CLIENT_ID: string
+  export const SHAKE_CLIENT_SECRET: string
   export const VERSION: string
   export const ONESIGNAL_APP_ID: string
   export const ZERION_API_KEY: string
