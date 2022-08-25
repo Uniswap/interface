@@ -18,18 +18,17 @@ const InternalMenuItem = styled(Link)`
   }
 `
 
-const InternalLinkMenuItem = styled(InternalMenuItem)<{ isActive: boolean }>`
+const InternalLinkMenuItem = styled(InternalMenuItem)`
   display: flex;
   flex-direction: row;
   align-items: center;
   padding: 12px 16px;
   justify-content: space-between;
   text-decoration: none;
-  background-color: ${({ isActive, theme }) => isActive && theme.accentActionSoft};
   color: ${({ theme }) => theme.textPrimary};
   :hover {
     cursor: pointer;
-    background-color: ${({ isActive, theme }) => !isActive && theme.backgroundModule};
+    background-color: ${({ theme }) => theme.backgroundModule};
     transition: 250ms background-color ease;
   }
 `
@@ -45,11 +44,11 @@ function LanguageMenuItem({ locale, isActive }: { locale: SupportedLocale; isAct
   if (!to) return null
 
   return (
-    <InternalLinkMenuItem isActive={isActive} onClick={onClick} to={to}>
+    <InternalLinkMenuItem onClick={onClick} to={to}>
       <Text fontSize={16} fontWeight={400} lineHeight="24px">
         {LOCALE_LABEL[locale]}
       </Text>
-      {isActive && <Check color={theme.accentAction} opacity={1} size={20} />}
+      {isActive && <Check color={theme.accentActive} opacity={1} size={20} />}
     </InternalLinkMenuItem>
   )
 }
