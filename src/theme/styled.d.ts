@@ -148,7 +148,7 @@ declare module 'styled-components/macro' {
         medium: number
         fast: number
       }
-      easing: {
+      timing: {
         in: string
         out: string
         inOut: string
