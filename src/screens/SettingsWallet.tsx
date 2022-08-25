@@ -3,6 +3,7 @@ import { useTheme } from '@shopify/restyle'
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ListRenderItemInfo, SectionList } from 'react-native'
+import { SvgProps } from 'react-native-svg'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { SettingsStackParamList, useSettingsStackNavigation } from 'src/app/navigation/types'
 import NotificationIcon from 'src/assets/icons/bell.svg'
@@ -16,9 +17,9 @@ import { RemoveAccountModal } from 'src/components/accounts/RemoveAccountModal'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { Switch } from 'src/components/buttons/Switch'
+import { Flex } from 'src/components/layout'
 import { BackHeader } from 'src/components/layout/BackHeader'
 import { Box } from 'src/components/layout/Box'
-import { Flex } from 'src/components/layout/Flex'
 import { Screen } from 'src/components/layout/Screen'
 import {
   SettingsRow,
@@ -133,6 +134,15 @@ export function SettingsWallet({
     dispatch(setShowSmallBalances(hideSmallBalancesEnabled))
   }
 
+  const iconProps: SvgProps = {
+    color: theme.colors.textSecondary,
+    height: 24,
+    strokeLinecap: 'round',
+    strokeLinejoin: 'round',
+    strokeWidth: '2',
+    width: 24,
+  }
+
   const sections: SettingsSection[] = [
     {
       subTitle: t('Wallet preferences'),
@@ -140,7 +150,7 @@ export function SettingsWallet({
         {
           screen: Screens.SettingsWalletEdit,
           text: t('Nickname and theme'),
-          icon: <EditIcon fill={theme.colors.textSecondary} />,
+          icon: <EditIcon fill={theme.colors.textSecondary} {...iconProps} />,
           screenProps: { address },
         },
         {
@@ -152,19 +162,19 @@ export function SettingsWallet({
             />
           ),
           text: t('Notifications'),
-          icon: <NotificationIcon color={theme.colors.textSecondary} />,
+          icon: <NotificationIcon color={theme.colors.textSecondary} {...iconProps} />,
         },
         {
           action: (
             <Switch value={hideSmallBalancesEnabled} onValueChange={toggleHideSmallBalances} />
           ),
           text: t('Hide small balances'),
-          icon: <TrendingUpIcon color={theme.colors.textSecondary} />,
+          icon: <TrendingUpIcon color={theme.colors.textSecondary} {...iconProps} />,
         },
         {
           screen: Screens.SettingsWalletManageConnection,
           text: t('Manage connections'),
-          icon: <GlobalIcon color={theme.colors.textSecondary} />,
+          icon: <GlobalIcon color={theme.colors.textSecondary} {...iconProps} />,
           screenProps: { address },
           isHidden: readonly,
         },
@@ -177,11 +187,7 @@ export function SettingsWallet({
         {
           screen: Screens.SettingsViewSeedPhrase,
           text: t('Recovery phrase'),
-          icon: (
-            <Flex px="xxs">
-              <BriefcaseIcon color={theme.colors.textSecondary} height={22} width={22} />
-            </Flex>
-          ),
+          icon: <BriefcaseIcon color={theme.colors.textSecondary} {...iconProps} />,
           screenProps: { address },
           isHidden: readonly,
         },
@@ -191,22 +197,14 @@ export function SettingsWallet({
             : Screens.SettingsCloudBackupScreen,
           screenProps: { address },
           text: t('iCloud backup'),
-          icon: (
-            <Flex px="xxs">
-              <CloudIcon color={theme.colors.textSecondary} height={22} width={22} />
-            </Flex>
-          ),
+          icon: <CloudIcon color={theme.colors.textSecondary} {...iconProps} />,
           isHidden: readonly,
         },
         {
           screen: Screens.SettingsManualBackup,
           screenProps: { address },
           text: t('Manual backup'),
-          icon: (
-            <Flex px="xxs">
-              <PencilIcon color={theme.colors.textSecondary} height={20} width={20} />
-            </Flex>
-          ),
+          icon: <PencilIcon color={theme.colors.textSecondary} {...iconProps} />,
           isHidden: readonly,
         },
       ],
@@ -235,10 +233,12 @@ export function SettingsWallet({
           />
         </BackHeader>
         <SectionList
+          ItemSeparatorComponent={() => <Flex pt="xs" />}
           keyExtractor={(_item, index) => 'wallet_settings' + index}
           renderItem={renderItem}
+          renderSectionFooter={() => <Flex pt="lg" />}
           renderSectionHeader={({ section: { subTitle } }) => (
-            <Box bg="backgroundBackdrop" pb="md">
+            <Box bg="backgroundBackdrop" pb="sm">
               <Text color="textSecondary" fontWeight="500" variant="body">
                 {subTitle}
               </Text>
@@ -246,6 +246,7 @@ export function SettingsWallet({
           )}
           sections={sections.filter((p) => !p.isHidden)}
           showsVerticalScrollIndicator={false}
+          stickySectionHeadersEnabled={false}
         />
       </Box>
       <PrimaryButton

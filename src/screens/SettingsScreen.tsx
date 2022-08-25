@@ -8,9 +8,8 @@ import { useDispatch } from 'react-redux'
 import { useAppDispatch } from 'src/app/hooks'
 import { useSettingsStackNavigation } from 'src/app/navigation/types'
 import BookOpenIcon from 'src/assets/icons/book-open.svg'
-import CoffeeIcon from 'src/assets/icons/coffee.svg'
 import FaceIdIcon from 'src/assets/icons/faceid.svg'
-import HeartIcon from 'src/assets/icons/heart.svg'
+import FlashbotsIcon from 'src/assets/icons/flashbots.svg'
 import HelpIcon from 'src/assets/icons/help.svg'
 import LockIcon from 'src/assets/icons/lock.svg'
 import TestnetsIcon from 'src/assets/icons/testnets.svg'
@@ -64,10 +63,10 @@ export function SettingsScreen() {
   const sections: SettingsSection[] = useMemo((): SettingsSection[] => {
     const iconProps: SvgProps = {
       color: theme.colors.textSecondary,
-      height: 20,
+      height: 24,
       strokeLinecap: 'round',
-      strokeWidth: '1.5',
-      width: 20,
+      strokeWidth: '2',
+      width: 24,
     }
 
     return [
@@ -134,24 +133,24 @@ export function SettingsScreen() {
             screen: Screens.SettingsChains,
             text: t('Chains'),
             // TODO use chains icon when available
-            icon: <CoffeeIcon {...iconProps} />,
+            icon: <FlashbotsIcon {...iconProps} />,
           },
           {
             screen: Screens.SettingsSupport,
             text: t('Support'),
-            icon: <CoffeeIcon {...iconProps} />,
+            icon: <FlashbotsIcon {...iconProps} />,
           },
           {
             screen: Screens.SettingsTestConfigs,
             text: 'Test Configs',
-            icon: <CoffeeIcon {...iconProps} />,
+            icon: <FlashbotsIcon {...iconProps} />,
           },
           {
             screen: Screens.Dev,
             text: t('Dev Options'),
-            icon: <CoffeeIcon {...iconProps} />,
+            icon: <FlashbotsIcon {...iconProps} />,
           },
-          { component: <OnboardingRow /> },
+          { component: <OnboardingRow iconProps={iconProps} /> },
         ],
       },
     ]
@@ -182,12 +181,14 @@ export function SettingsScreen() {
       }>
       <Flex px="lg" py="lg">
         <SectionList
+          ItemSeparatorComponent={() => <Flex pt="xs" />}
           ListFooterComponent={<FooterSettings />}
           ListHeaderComponent={<WalletSettings />}
           keyExtractor={(_item, index) => 'settings' + index}
           renderItem={renderItem}
+          renderSectionFooter={() => <Flex pt="lg" />}
           renderSectionHeader={({ section: { subTitle } }) => (
-            <Box bg="backgroundBackdrop" pb="md">
+            <Box bg="backgroundBackdrop" pb="sm">
               <Text color="textSecondary" fontWeight="500" variant="body">
                 {subTitle}
               </Text>
@@ -201,7 +202,7 @@ export function SettingsScreen() {
   )
 }
 
-function OnboardingRow() {
+function OnboardingRow({ iconProps }: { iconProps: SvgProps }) {
   const theme = useTheme()
   const { t } = useTranslation()
   const dispatch = useDispatch()
@@ -209,6 +210,7 @@ function OnboardingRow() {
 
   return (
     <Button
+      mt="xs"
       name="DEBUG_Settings_Navigate"
       pl="xxs"
       onPress={() => {
@@ -218,14 +220,8 @@ function OnboardingRow() {
       }}>
       <Box alignItems="center" flexDirection="row" justifyContent="space-between">
         <Box alignItems="center" flexDirection="row">
-          <HeartIcon
-            color={theme.colors.textSecondary}
-            height={20}
-            strokeLinecap="round"
-            strokeWidth="1.5"
-            width={20}
-          />
-          <Text fontWeight="500" ml="sm" variant="subhead">
+          <FlashbotsIcon {...iconProps} />
+          <Text fontWeight="500" ml="md" variant="subhead">
             {t('Onboarding')}
           </Text>
         </Box>
