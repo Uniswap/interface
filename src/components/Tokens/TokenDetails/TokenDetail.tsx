@@ -5,6 +5,7 @@ import PriceChart from 'components/Tokens/TokenDetails/PriceChart'
 import { VerifiedIcon } from 'components/TokenSafety/TokenSafetyIcon'
 import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import { getChainInfo } from 'constants/chainInfo'
+import { nativeOnChain, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import { checkWarning } from 'constants/tokenSafety'
 import { chainIdToChainName, useTokenDetailQuery } from 'graphql/data/TokenDetailQuery'
 import { useCurrency, useIsUserAddedToken, useToken } from 'hooks/Tokens'
@@ -174,9 +175,15 @@ export function AboutSection({ address, tokenDetailData }: { address: string; to
   )
 }
 
-export default function LoadedTokenDetail({ address }: { address: string }) {
+export default function LoadedTokenDetail({
+  address,
+  connectedChainId,
+}: {
+  address: string
+  connectedChainId: number | undefined
+}) {
   const token = useToken(address)
-  const currency = useCurrency(address)
+  let currency = useCurrency(address)
   const favoriteTokens = useAtomValue<string[]>(favoritesAtom)
   const isFavorited = favoriteTokens.includes(address)
   const toggleFavorite = useToggleFavorite(address)
@@ -199,12 +206,22 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
     twitterName,
   }))(tokenDetailData)
 
-  if (!token || !token.name || !token.symbol) {
+  if (!token || !token.name || !token.symbol || !connectedChainId) {
     return <LoadingTokenDetail />
   }
 
-  const tokenName = tokenDetailData.name
-  const tokenSymbol = tokenDetailData.tokens?.[0]?.symbol?.toUpperCase() ?? token.symbol
+  const wrappedNativeCurrency = WRAPPED_NATIVE_CURRENCY[connectedChainId]
+  const isWrappedNativeToken = wrappedNativeCurrency && wrappedNativeCurrency.address === token.address
+
+  if (isWrappedNativeToken) {
+    currency = nativeOnChain(connectedChainId)
+  }
+
+  const tokenName = isWrappedNativeToken && currency ? currency.name : tokenDetailData.name
+  const tokenSymbol =
+    isWrappedNativeToken && currency
+      ? currency.symbol
+      : tokenDetailData.tokens?.[0]?.symbol?.toUpperCase() ?? token.symbol
 
   return (
     <Suspense fallback={<LoadingTokenDetail />}>

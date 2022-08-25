@@ -135,7 +135,7 @@ export default function TokenDetails() {
     <TokenDetailsLayout>
       {tokenAddress && (
         <>
-          <TokenDetail address={tokenAddress} />
+          <TokenDetail address={tokenAddress} connectedChainId={connectedChainId} />
           <RightPanel>
             <SwapWidget
               defaultChainId={connectedChainId}
