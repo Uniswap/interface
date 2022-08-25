@@ -1,10 +1,13 @@
 import { ApolloProvider } from '@apollo/client'
 import { ChainId } from '@kyberswap/ks-sdk-core'
+import { Trans } from '@lingui/macro'
 import * as Sentry from '@sentry/react'
 import { Popover, Sidetab } from '@typeform/embed-react'
 import { Suspense, lazy, useEffect } from 'react'
 import { isMobile } from 'react-device-detect'
+import { AlertTriangle } from 'react-feather'
 import { Route, Switch } from 'react-router-dom'
+import { Flex, Text } from 'rebass'
 import styled from 'styled-components'
 
 import ErrorBoundary from 'components/ErrorBoundary'
@@ -12,6 +15,7 @@ import Footer from 'components/Footer/Footer'
 import Header from 'components/Header'
 import TopBanner from 'components/Header/TopBanner'
 import Loader from 'components/LocalLoader'
+import Modal from 'components/Modal'
 import Popups from 'components/Popups'
 import Web3ReactManager from 'components/Web3ReactManager'
 import { BLACKLIST_WALLETS } from 'constants/index'
@@ -22,6 +26,7 @@ import useTheme from 'hooks/useTheme'
 import { useWindowSize } from 'hooks/useWindowSize'
 import { useIsDarkMode } from 'state/user/hooks'
 import DarkModeQueryParamReader from 'theme/DarkModeQueryParamReader'
+import { isAddressString, shortenAddress } from 'utils'
 
 import { RedirectDuplicateTokenIds } from './AddLiquidityV2/redirects'
 import Swap from './Swap'
@@ -138,6 +143,43 @@ export default function App() {
           id={isDarkTheme ? 'W5TeOyyH' : 'K0dtSO0v'}
           customIcon={isDarkTheme ? 'https://i.imgur.com/iTOOKnr.png' : 'https://i.imgur.com/aPCpnGg.png'}
         />
+      )}
+      {(BLACKLIST_WALLETS.includes(isAddressString(account)) ||
+        BLACKLIST_WALLETS.includes(account?.toLowerCase() || '')) && (
+        <Modal
+          isOpen
+          onDismiss={function (): void {
+            //
+          }}
+          maxWidth="600px"
+          width="80vw"
+        >
+          <Flex flexDirection="column" padding="24px" width="100%">
+            <Flex alignItems="center">
+              <AlertTriangle color={theme.red} />
+              <Text fontWeight="500" fontSize={24} color={theme.red} marginLeft="8px">
+                <Trans>Warning</Trans>
+              </Text>
+            </Flex>
+            <Text marginTop="24px" fontSize="14px" lineHeight={2}>
+              The US Treasury&apos;s OFAC has published a list of addresses associated with Tornado Cash. Your wallet
+              address below is flagged as one of the addresses on this list, provided by our compliance vendor. As a
+              result, it is blocked from using KyberSwap and all of its related services at this juncture.
+            </Text>
+            <Flex
+              marginTop="24px"
+              padding="12px"
+              backgroundColor={theme.buttonBlack}
+              sx={{ borderRadius: '12px' }}
+              flexDirection="column"
+            >
+              <Text>Your wallet address</Text>
+              <Text color={theme.subText} fontSize={20} marginTop="12px" fontWeight="500">
+                {isMobile ? shortenAddress(account || '', 10) : account}
+              </Text>
+            </Flex>
+          </Flex>
+        </Modal>
       )}
 
       {(!account || !BLACKLIST_WALLETS.includes(account)) && (
