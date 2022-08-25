@@ -102,12 +102,12 @@ export function useTradeExactInV2(
   const allDexes = useAllDexes()
   const [excludeDexes] = useExcludeDexes()
 
+  const selectedDexes = allDexes?.filter(item => !excludeDexes.includes(item.id)).map(item => item.id)
+
   const dexes =
-    allDexes
-      ?.filter(item => !excludeDexes.includes(item.id))
-      .map(item => item.id)
-      .join(',')
-      .replace('kyberswapv1', 'kyberswap,kyberswap-static') || ''
+    selectedDexes?.length === allDexes?.length
+      ? ''
+      : selectedDexes?.join(',').replace('kyberswapv1', 'kyberswap,kyberswap-static') || ''
 
   const [trade, setTrade] = useState<Aggregator | null>(null)
   const [comparer, setComparer] = useState<AggregationComparer | null>(null)
