@@ -5,10 +5,12 @@ import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import useSelectChain from 'hooks/useSelectChain'
 import useSyncChainQuery from 'hooks/useSyncChainQuery'
 import { Box } from 'nft/components/Box'
+import { Portal } from 'nft/components/common/Portal'
 import { Column, Row } from 'nft/components/Flex'
 import { CheckMarkIcon, NewChevronDownIcon, NewChevronUpIcon, TokenWarningRedIcon } from 'nft/components/icons'
 import { subhead } from 'nft/css/common.css'
 import { themeVars, vars } from 'nft/css/sprinkles.css'
+import { useIsMobile } from 'nft/hooks'
 import { ReactNode, useReducer, useRef } from 'react'
 import { isChainAllowed } from 'utils/switchChain'
 
@@ -55,12 +57,13 @@ const NETWORK_SELECTOR_CHAINS = [
 ]
 
 interface ChainSwitcherProps {
-  isMobile?: boolean
+  leftAlign?: boolean
 }
 
-export const ChainSwitcher = ({ isMobile }: ChainSwitcherProps) => {
+export const ChainSwitcher = ({ leftAlign }: ChainSwitcherProps) => {
   const { chainId } = useWeb3React()
   const [isOpen, toggleOpen] = useReducer((s) => !s, false)
+  const isMobile = useIsMobile()
 
   const ref = useRef<HTMLDivElement>(null)
   useOnClickOutside(ref, isOpen ? toggleOpen : undefined)
@@ -76,6 +79,25 @@ export const ChainSwitcher = ({ isMobile }: ChainSwitcherProps) => {
 
   const isSupported = isChainAllowed(chainId)
 
+  const dropdown = (
+    <NavDropdown top={54} leftAligned={leftAlign} paddingBottom={8} paddingTop={8}>
+      <Column marginX="8">
+        {NETWORK_SELECTOR_CHAINS.map((chainId: SupportedChainId) =>
+          isSupported ? (
+            <ChainRow
+              onSelectChain={async (targetChainId: SupportedChainId) => {
+                await selectChain(targetChainId)
+                toggleOpen()
+              }}
+              targetChain={chainId}
+              key={chainId}
+            />
+          ) : null
+        )}
+      </Column>
+    </NavDropdown>
+  )
+
   return (
     <Box position="relative" ref={ref}>
       <Row
@@ -88,14 +110,14 @@ export const ChainSwitcher = ({ isMobile }: ChainSwitcherProps) => {
         {!isSupported ? (
           <>
             <TokenWarningRedIcon fill={themeVars.colors.darkGray} width={24} height={24} />
-            <Box as="span" className={subhead} style={{ lineHeight: '20px' }}>
+            <Box as="span" className={subhead} display={{ sm: 'none', xl: 'flex' }} style={{ lineHeight: '20px' }}>
               {info?.label ?? 'Unsupported'}
             </Box>
           </>
         ) : (
           <>
             <img src={info.logoUrl} alt={info.label} className={styles.Image} />
-            <Box as="span" className={subhead} style={{ lineHeight: '20px' }}>
+            <Box as="span" className={subhead} display={{ sm: 'none', xl: 'flex' }} style={{ lineHeight: '20px' }}>
               {info.label}
             </Box>
           </>
@@ -106,24 +128,7 @@ export const ChainSwitcher = ({ isMobile }: ChainSwitcherProps) => {
           <NewChevronDownIcon width={16} height={16} color="blackBlue" />
         )}
       </Row>
-      {isOpen && (
-        <NavDropdown top={60} leftAligned={isMobile} paddingBottom={8} paddingTop={8}>
-          <Column marginX="8">
-            {NETWORK_SELECTOR_CHAINS.map((chainId: SupportedChainId) =>
-              isSupported ? (
-                <ChainRow
-                  onSelectChain={async (targetChainId: SupportedChainId) => {
-                    await selectChain(targetChainId)
-                    toggleOpen()
-                  }}
-                  targetChain={chainId}
-                  key={chainId}
-                />
-              ) : null
-            )}
-          </Column>
-        </NavDropdown>
-      )}
+      {isOpen && (isMobile ? <Portal>{dropdown}</Portal> : <>{dropdown}</>)}
     </Box>
   )
 }
