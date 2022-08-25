@@ -130,7 +130,6 @@ DataCard.displayName = 'DataCard';
   const [t24, t48, ,] = getDeltaTimestamps()
   const timestampsFromBlocks = useBlocksFromTimestamps([t24, t48])
   const kibaPair = useKibaPairData()
-  const culturePairs = useCulturePairData()
   const [hasEffectRan, setHasEffectRan] = React.useState(false);
   React.useEffect(() => {
     //clear out the tokens for refetch on network switch
@@ -138,7 +137,6 @@ DataCard.displayName = 'DataCard';
     setAllTokens([])
   }, [chainId])
   const fn = useCallback(async (isIntervalled: boolean) => {
-    console.log(culturePairs)
     // validate the required parameters are all met before initializing a fetch
     const { blocks } = timestampsFromBlocks;
     const shouldEffectRun = !hasEffectRan || isIntervalled;
@@ -151,8 +149,6 @@ DataCard.displayName = 'DataCard';
         kibaPair.data &&
         allTokenData.data.pairs &&
         kibaPair.data.pairs && 
-        culturePairs.data && 
-        culturePairs.data.pairs &&
         ((chainId === 1 && 
           ethPrice &&
           ethPriceOld || 
@@ -167,25 +163,33 @@ DataCard.displayName = 'DataCard';
         const allTokens = await Promise.all(
           [
             ...kibaPair.data.pairs,
-            ...culturePairs.data.pairs,
             ...allTokenData.data.pairs,
+            ...cultureTokens.map((token) => ({
+              token0: {
+                id: token.address
+              }
+            })),
+            {
+              token0: {
+                id: `0x79a06acb8bdd138beeecce0f1605971f3ac7c09b`
+              }
+            }
           ].map(async (pair: any) => {
             const value = (!chainId || chainId === 1) ? await getTokenData(pair.token0.id, ethPrice, ethPriceOld, blockOne, blockTwo) as any : await fetchBscTokenData(pair.token0.id, bnbPrices?.current, bnbPrices?.oneDay, blockOne, blockTwo)
-            value.chainId = chainId ?? 1;
+            if (value) value.chainId = chainId ? chainId : 1;
             return value;
           })
         );
         setAllTokens(allTokens);
       }
     }
-  }, [timestampsFromBlocks, ethPrice, ethPriceOld, bnbPrices, hasEffectRan, chainId, kibaPair, allTokens, allTokenData, culturePairs])
+  }, [timestampsFromBlocks, ethPrice, ethPriceOld, bnbPrices, hasEffectRan, chainId, kibaPair, allTokens, allTokenData])
 
   let cancelled = false;
 
   React.useEffect(() => {
     if (allTokenData.loading) return;
     if (kibaPair.loading) return;
-    if (culturePairs.loading) return;
     if (!hasEffectRan &&
       !cancelled &&
       allTokenData &&
@@ -203,7 +207,6 @@ DataCard.displayName = 'DataCard';
 
   },
     [
-      culturePairs,
       hasEffectRan,
       allTokenData,
       ethPrice,

@@ -3,7 +3,7 @@ import { Settings, X } from 'react-feather'
 import { Trans, t } from '@lingui/macro'
 import styled, { ThemeContext } from 'styled-components/macro'
 import { useContext, useRef, useState } from 'react'
-import { useExpertModeManager, useSetAutoSlippage, useSetFrontrunProtectionEnabled, useUserSingleHopOnly } from '../../state/user/hooks'
+import { useExpertModeManager, useSetAutoSlippage, useSetFrontrunProtectionEnabled, useUserDetectRenounced, useUserSingleHopOnly } from '../../state/user/hooks'
 import { useModalOpen, useToggleSettingsMenu } from '../../state/application/hooks'
 import { useSwapActionHandlers, useSwapState } from 'state/swap/hooks'
 
@@ -129,6 +129,7 @@ export default function  SettingsTab({ placeholderSlippage }: { placeholderSlipp
   const [singleHopOnly, setSingleHopOnly] = useUserSingleHopOnly()
   const [useAutoSlippage, setUseAutoSlippage] = useSetAutoSlippage()
   const [useFrontRunProtection, setUseFrontRunProtection] = useSetFrontrunProtectionEnabled()
+  const [useDetectRenounced, setUseDetectRenounced] = useUserDetectRenounced()
 
 
   // show confirmation view before turning on
@@ -165,6 +166,10 @@ export default function  SettingsTab({ placeholderSlippage }: { placeholderSlipp
         action: singleHopOnly ? 'disable single hop' : 'enable single hop',
       })
       setSingleHopOnly(!singleHopOnly)
+    }
+
+    const toggleDetectRenounced = () => {
+      setUseDetectRenounced(!useDetectRenounced)
     }
 
     const specifyReceiver = () => {
@@ -300,6 +305,19 @@ export default function  SettingsTab({ placeholderSlippage }: { placeholderSlipp
                 toggle={toggleSingleHopFn}
               />
             </RowBetween> */}
+               <RowBetween>
+              <RowFixed>
+                <TYPE.black fontWeight={400} fontSize={14} color={theme.text2}>
+                  <Trans>Detect Renouce</Trans>
+                </TYPE.black>
+                <QuestionHelper text={<Trans>Adds an extra check to all the tokens you are swapping to determine if the contract has been renounced. Will show a visual indicator in the UI.</Trans>} />
+              </RowFixed>
+              <Toggle
+                id="toggle-detect-renounced-button"
+                isActive={useDetectRenounced}
+                toggle={toggleDetectRenounced}
+              />
+            </RowBetween>
             <RowBetween>
               <RowFixed>
                 <TYPE.black fontWeight={400} fontSize={14} color={theme.text2}>

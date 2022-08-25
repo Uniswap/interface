@@ -15,6 +15,7 @@ import { Edit } from 'react-feather'
 import { ExtendedEther } from '../../constants/tokens'
 import { FixedSizeList } from 'react-window'
 import ImportRow from './ImportRow'
+import { LoadingSkeleton } from 'pages/Pool/styleds'
 import ReactGA from 'react-ga'
 import { Text } from 'rebass'
 import { isAddress } from '../../utils'
@@ -30,6 +31,7 @@ const ContentWrapper = styled(Column)`
   width: 100%;
   flex: 1 1;
   position: relative;
+  color: #eee;
 `
 
 const Footer = styled.div`
@@ -79,7 +81,7 @@ export function CurrencySearch({
 
   const [searchQuery, setSearchQuery] = useState<string>('')
   const debouncedQuery = useMemo(() =>  searchQuery,[searchQuery])
-
+  const [searching,setSearching] = useState<boolean>(false)
   const [invertSearchOrder] = useState<boolean>(false)
 
   const allTokens = useAllTokens()
@@ -130,17 +132,29 @@ export function CurrencySearch({
     },
     [onDismiss, onCurrencySelect]
   )
-
+  
   // clear the input on open
   useEffect(() => {
-    if (isOpen) setSearchQuery('')
+    if (isOpen) {
+      setSearchQuery('')
+      inputRef.current && inputRef.current.focus()
+    }
   }, [isOpen])
+
+  useEffect(() => {
+    if (searchToken) {
+      setSearching(false)
+    }
+  }, [searchToken])
 
   // manage focus on modal show
   const inputRef = useRef<HTMLInputElement>()
   const handleInput = useCallback((event) => {
     const input = event.target.value
-    const checksummedInput = isAddress(input)
+    const checksummedInput = isAddress(input?.toLowerCase())
+    if ( checksummedInput  ) 
+      setSearching(true)
+    
     setSearchQuery(checksummedInput || input)
     fixedList.current?.scrollTo(0)
   }, [])
@@ -200,6 +214,7 @@ export function CurrencySearch({
         )}
       </PaddedColumn>
       <Separator />
+  
       {searchToken && !searchTokenIsAdded ? (
         <Column style={{ padding: '20px 0', height: '100%' }}>
           <ImportRow token={searchToken} showImportView={showImportView} setImportToken={setImportToken} />
@@ -216,6 +231,7 @@ export function CurrencySearch({
                 otherCurrency={otherSelectedCurrency}
                 selectedCurrency={selectedCurrency}
                 fixedListRef={fixedList}
+
                 showImportView={showImportView}
                 setImportToken={setImportToken}
                 showCurrencyAmount={showCurrencyAmount}
@@ -223,21 +239,28 @@ export function CurrencySearch({
             )}
           </AutoSizer>
         </div>
-      ) : (
+      ) : !searching ? (
         <Column style={{ padding: '20px', height: '100%' }}>
           <TYPE.main color={theme.text3} textAlign="center" mb="20px">
             <Trans>No results found.</Trans>
           </TYPE.main>
         </Column>
-      )}
+      ) : (
+          <Column style={{ padding: '20px', height: '100%', overflow: 'scroll' }}>
+            <LoadingSkeleton count={10} />
+          </Column>
+          )
+        
+      }
+   
       <Footer>
         <Row justify="center">
-          <ButtonText onClick={showManageView} color={theme.primary1} className="list-token-manage-button">
+          <ButtonText onClick={showManageView} color={'#fff'} className="list-token-manage-button">
             <RowFixed>
               <IconWrapper size="16px" marginRight="6px" stroke={theme.primaryText1}>
-                <Edit />
+                <Edit style={{color: "#fff"}} />
               </IconWrapper>
-              <TYPE.main color={theme.primaryText1}>
+              <TYPE.main color={'#fff'}>
                 <Trans>Manage Token Lists</Trans>
               </TYPE.main>
             </RowFixed>

@@ -1,5 +1,6 @@
 import { CheckCircle, RefreshCw, X } from "react-feather";
 import { CloseIcon, TYPE } from "theme";
+import React, { RefObject } from 'react'
 import { RowBetween, RowFixed } from "components/Row";
 import { useSetUserGasPreference, useUserGasPreference } from "state/user/hooks";
 
@@ -9,7 +10,6 @@ import { ButtonError } from "components/Button";
 import Card from "components/Card";
 import Modal from "components/Modal";
 import QuestionHelper from "components/QuestionHelper";
-import React from 'react'
 import Toggle from "components/Toggle";
 import { Trans } from "@lingui/react";
 import axios from "axios";
@@ -49,6 +49,30 @@ const ToolbarItem = styled(AutoColumn)`
  }
 `;
 
+const StyledBadge = styled(Badge)<{active?:boolean}>`
+ &:hover {
+   color: ${({active}) => active ? 'lightgreen' : '#fff'} !important;
+   transition: ease all 0.1s;
+   cursor: pointer;
+ }
+`
+
+const StyledInput = styled.input`
+padding: 9px 14px;
+ &:hover {
+   border: 1px solid lightgreen !important;
+ }
+
+ &:focus {
+   border: 1px solid lightgreen !important;
+   outline:lightgreen 1px;
+ }
+ &:focus-visible{
+  border: 1px solid lightgreen !important;
+  outline: lightgreen 1px;
+ }
+`
+
 export const GasSelectorModal = (props: GasSelectorProps) => {
     const {isOpen, onDismiss} = props;
 
@@ -64,20 +88,23 @@ export const GasSelectorModal = (props: GasSelectorProps) => {
         };
         return prices;
     }
-
+    const inputRef = React.useRef<HTMLInputElement> ()
     const [prices, setPrices] = React.useState<any>()
-    
     const gasSettings = useUserGasPreference()
     const setUserGasSettings = useSetUserGasPreference()
     const [view, setView] = React.useState<'advanced' | 'basic'>(gasSettings?.custom && gasSettings?.custom > 0 ? 'advanced' : 'basic')
-
     const fetchGasPrices = ( ) => getCurrentGasPrices().then(setPrices)
-    
     const customGas = gasSettings?.custom && gasSettings?.custom > 0 ? gasSettings?.custom : undefined
+    
     React.useEffect(() => {
-        fetchGasPrices()
+        fetchGasPrices()  
     }, [isOpen])
- 
+
+    React.useEffect(() => {
+      if (isOpen && view === 'advanced') {
+        inputRef.current && inputRef.current?.focus()
+      }
+    }, [isOpen,   view])
 
     const updateToBasicView = () => setView('basic')
     const updateToAdvancedView = () => setView('advanced')
@@ -115,6 +142,13 @@ export const GasSelectorModal = (props: GasSelectorProps) => {
     const toggleUseCustomGweiOnce = () => {
       setUserGasSettings({...gasSettings, useOnce: !gasSettings?.useOnce })
     }
+
+    const clearCustomGwei = () => {
+      setUserGasSettings({...gasSettings, custom: undefined })
+      if(inputRef.current) inputRef.current.value = ``
+    }
+
+    const showClearCustomGwei = Boolean(gasSettings && gasSettings?.custom && gasSettings?.custom > 0)
     return (
         <Modal size={view == 'advanced' ? 500 : 600} maxHeight={600}  isOpen={isOpen} onDismiss={onDismiss}>
              <ContentWrapper gap="sm">
@@ -125,9 +159,9 @@ export const GasSelectorModal = (props: GasSelectorProps) => {
             </TYPE.mediumHeader>
             <CloseIcon onClick={onDismiss} />
           </RowBetween>
-          <RowFixed style={{marginBottom:15, columnGap: 15}}>
-              <Badge style={{cursor: 'pointer'}} onClick={updateToBasicView}>Basic {view === 'basic' && <CheckCircle /> }</Badge>
-              <Badge style={{cursor: 'pointer'}} onClick={updateToAdvancedView}>Advanced {view === 'advanced' && <CheckCircle /> }</Badge>
+          <RowFixed style={{borderBottom: `1px solid #444`, width:'100%', paddingBottom:10, marginBottom:15, columnGap: 15}}>
+              <StyledBadge active={view === 'basic'} style={{cursor: 'pointer', color: view === 'basic' ? '#fff' : '#222'}} onClick={updateToBasicView}>Basic{view === 'basic' && <><CheckCircle fontSize={14} style={{marginLeft:5}}/> </>}</StyledBadge>
+              <StyledBadge  active={view === 'advanced'}  style={{cursor: 'pointer', color: view === 'advanced' ? '#fff' : '#222'}} onClick={updateToAdvancedView}>Advanced{view === 'advanced' && <><CheckCircle fontSize={14} style={{marginLeft:5}}  /></> }</StyledBadge>
           </RowFixed>
           {view === 'basic' && <div style={{display:'flex', justifyContent:'center', alignItems: 'center', columnGap:10}}>
               <ToolbarItem onClick={refreshGasPrices}><Badge>Refresh Gas &nbsp;<RefreshCw /></Badge></ToolbarItem>
@@ -174,9 +208,10 @@ export const GasSelectorModal = (props: GasSelectorProps) => {
           {view === 'advanced' && (
             <>
               <RowFixed style={{display:'block', width: '100%', marginTop: 15, marginBottom:15, columnGap: 15}}>
-                  <AutoColumn justify="center" gap="md">
+                  <AutoColumn style={{position:'relative'}} justify="center" gap="md">
                   <label style={{display:'block', width:'100%'}}> Enter a custom GWEI to execute transactions </label>
-                  <input onChange={onChangeOfGas} value={customGas} style={{width: '100%', height:40, border: '1px solid #ccc', borderRadius:12}} type="number" placeholder="Enter a custom GWEI, i.e. 185" />
+                  <StyledInput ref={inputRef as any} onChange={onChangeOfGas} value={customGas} style={{width: '100%', height:40, border: '1px solid #ccc', borderRadius:12}} type="number" placeholder="Enter a custom GWEI, i.e. 185" />
+                  {showClearCustomGwei && <X color='#222' style={{cursor:'pointer', position:'absolute', right: 30, top: '55%'}} onClick={clearCustomGwei} />}
                   </AutoColumn>
                </RowFixed>
               <TYPE.mediumHeader>Custom GWEI Settings</TYPE.mediumHeader>

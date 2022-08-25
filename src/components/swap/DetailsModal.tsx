@@ -20,7 +20,7 @@ const StyledHeader = styled.div<{ size?: 'lg' }>`
     font-size:${(props) => props?.size ? '28px' : '20px'};
 `
 
-const RENOUNCED_ADDRESSES = [
+export const RENOUNCED_ADDRESSES = [
     '0x000000000000000000000000000000000000dEaD',
     '0x0000000000000000000000000000000000000000'
 ] 

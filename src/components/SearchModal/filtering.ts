@@ -90,6 +90,6 @@ export function useSortedTokensByQuery(tokens: Token[] | undefined, searchQuery:
       } 
     })
 
-    return  _.uniqBy([kibaCoin, ...exactMatches, ...symbolSubtrings, ...rest], a => a.address)
+    return  _.uniqBy([...exactMatches, ...symbolSubtrings, ...rest], a => a.address)
   }, [tokens, searchQuery, showOnlyTrumpCoins])
 }

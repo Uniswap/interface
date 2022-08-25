@@ -13,12 +13,12 @@ export function useTotalSupply(token?: Currency): CurrencyAmount<Token> | any | 
 
   useEffect(() => {
     const asyncFetch = async () => {
-      const ts: BigNumber =  await contract.totalSupply();
+      const ts: BigNumber =  await contract?.totalSupply();
       if (ts && !totalSupply && token) setTotalSupply(CurrencyAmount.fromRawAmount(token, ts.toString()))
     }
     if (!totalSupply && token) 
       asyncFetch()
-}, [totalSupply, token]
+}, [totalSupply, contract, token]
 )
 
   const tSupply: BigNumber = useSingleCallResult(contract, 'totalSupply')?.result?.[0]

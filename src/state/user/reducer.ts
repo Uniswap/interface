@@ -11,6 +11,7 @@ import {
   updateUseAutoSlippage,
   updateUserDarkMode,
   updateUserDeadline,
+  updateUserDetectRenouncedOwnership,
   updateUserExpertMode,
   updateUserFrontRunProtection,
   updateUserGasPreferences,
@@ -40,6 +41,7 @@ export interface UserState {
   userExpertMode: boolean
   useFrontrunProtection: boolean
   userSingleHopOnly: boolean // only allow swaps on direct pairs
+  detectRenouncedOwnership: boolean
 
   // hides closed (inactive) positions across the app
   userHideClosedPositions: boolean
@@ -97,6 +99,7 @@ export const initialState: UserState = {
   URLWarningVisible: true,
   useAutoSlippage: false,
   useFrontrunProtection: false,
+  detectRenouncedOwnership:false,
   preferredGas: {
     low: false,
     medium: false,
@@ -175,8 +178,11 @@ export default createReducer(initialState, (builder) =>
     .addCase(updateUserSingleHopOnly, (state, action) => {
       state.userSingleHopOnly = action.payload.userSingleHopOnly
     })
+    .addCase(updateUserDetectRenouncedOwnership, (state, action) => {
+      state.detectRenouncedOwnership = action.payload.detectRenouncedOwnership
+    })
     .addCase(updateUserGasPreferences, (state,action) => {
-        state.preferredGas = action.payload;
+        state.preferredGas = action.payload
     })
     .addCase(updateHideClosedPositions, (state, action) => {
       state.userHideClosedPositions = action.payload.userHideClosedPositions

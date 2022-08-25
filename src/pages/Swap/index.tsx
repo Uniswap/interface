@@ -1,8 +1,9 @@
-import { AlertOctagon, ArrowDown, ArrowLeft, ArrowUpRight, CheckCircle, ChevronRight, HelpCircle, Info, Settings } from 'react-feather'
+import { AlertOctagon, ArrowDown, ArrowLeft, ArrowUpRight, CheckCircle, ChevronRight, Circle, HelpCircle, Info, Settings } from 'react-feather'
 import { ApprovalState, useApproveCallbackFromTrade } from '../../hooks/useApproveCallback'
 import { ArrowWrapper, Dots, SwapCallbackError, Wrapper } from '../../components/swap/styleds'
 import Badge, { BadgeVariant } from 'components/Badge'
 import { ButtonConfirmed, ButtonError, ButtonGray, ButtonLight, ButtonPrimary } from '../../components/Button'
+import ConfirmSwapModal, { useContractOwner } from '../../components/swap/ConfirmSwapModal'
 import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
 import { DarkGreyCard, GreyCard } from '../../components/Card'
 import { ExternalLink, HideSmall, LinkStyledButton, StyledInternalLink, TYPE } from '../../theme'
@@ -20,7 +21,7 @@ import {
   useSwapActionHandlers,
   useSwapState,
 } from '../../state/swap/hooks'
-import { useExpertModeManager, useSetAutoSlippage, useSetUserSlippageTolerance, useUserSingleHopOnly } from '../../state/user/hooks'
+import { useExpertModeManager, useSetAutoSlippage, useSetUserSlippageTolerance, useUserDetectRenounced, useUserSingleHopOnly } from '../../state/user/hooks'
 import useToggledVersion, { Version } from '../../hooks/useToggledVersion'
 import { useUSDCValue, useUSDCValueV2AndV3 } from '../../hooks/useUSDCPrice'
 import useWrapCallback, { WrapType } from '../../hooks/useWrapCallback'
@@ -31,7 +32,6 @@ import AppBody from '../AppBody'
 import { AutoColumn } from '../../components/Column'
 import BetterTradeLink from '../../components/swap/BetterTradeLink'
 import { ChartModal } from 'components/swap/ChartModal'
-import ConfirmSwapModal from '../../components/swap/ConfirmSwapModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import CurrencyLogo from '../../components/CurrencyLogo'
 import { Field } from '../../state/swap/actions'
@@ -44,6 +44,7 @@ import Loader from '../../components/Loader'
 import { ReactComponent as Majgic } from '../../assets/svg/arrows.svg'
 import Marquee from "react-marquee-slider";
 import Modal from 'components/Modal'
+import { RENOUNCED_ADDRESSES } from 'components/swap/DetailsModal'
 import React from 'react'
 import ReactGA from 'react-ga'
 import { ShowSellTaxComponent } from 'components/ShowSellTax'
@@ -56,6 +57,7 @@ import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { V3TradeState } from '../../hooks/useBestV3Trade'
+import _ from 'lodash'
 import { borderRadius } from 'polished'
 import { computeFiatValuePriceImpact } from '../../utils/computeFiatValuePriceImpact'
 import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
@@ -65,6 +67,7 @@ import { isTradeBetter } from '../../utils/isTradeBetter'
 import logo from '../../assets/images/download.png'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { useActiveWeb3React } from '../../hooks/web3'
+import useClippy  from 'use-clippy'
 import useENSAddress from '../../hooks/useENSAddress'
 import { useGelatoLimitOrders } from '@gelatonetwork/limit-orders-react'
 import useIsArgentWallet from '../../hooks/useIsArgentWallet'
@@ -75,6 +78,54 @@ import { useTokenData } from 'state/logs/utils'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { warningSeverity } from '../../utils/prices'
 
+// In addition to the navigator object, we also have a clipboard
+//   property.
+interface ClipboardNavigator extends Navigator {
+  clipboard: Clipboard & ClipboardEventTarget & {
+    read: () => Promise<any>;
+    write: (v: any) => Promise<void>;
+  };
+
+}
+// The Clipboard API supports readText and writeText methods.
+interface Clipboard {
+  readText(): Promise<string>;
+  writeText(text: string): Promise<void>;
+}
+// A ClipboardEventTarget is an EventTarget that additionally
+//   supports clipboard events (copy, cut, and paste).
+interface ClipboardEventTarget extends EventTarget {
+  addEventListener(
+    type: 'copy',
+    eventListener: ClipboardEventListener,
+  ): void;
+  addEventListener(
+    type: 'cut',
+    eventListener: ClipboardEventListener,
+  ): void;
+  addEventListener(
+    type: 'paste',
+    eventListener: ClipboardEventListener,
+  ): void;
+  removeEventListener(
+    type: 'copy',
+    eventListener: ClipboardEventListener,
+  ): void;
+  removeEventListener(
+    type: 'cut',
+    eventListener: ClipboardEventListener,
+  ): void;
+  removeEventListener(
+    type: 'paste',
+    eventListener: ClipboardEventListener
+  ): void;
+}
+// A ClipboardEventListener is an event listener that accepts a
+//   ClipboardEvent.
+type ClipboardEventListener =
+  | EventListenerObject
+  | null
+  | ((event: ClipboardEvent) => void);
 export const CardWrapper = styled(ExternalLink)`
   min-width: 190px;
   width:100%;
@@ -110,7 +161,9 @@ export const ScrollableRow = styled.div`
     display: none;
   }
 `
-
+interface ClipboardDataWindow extends Window {
+  clipboardData: DataTransfer | null;
+}
 
 export default function Swap({ history }: RouteComponentProps) {
   const params = useParams<{ tokenAddress?: string }>()
@@ -119,6 +172,7 @@ export default function Swap({ history }: RouteComponentProps) {
   const tokenAddress = React.useMemo(() => isBinance && params.tokenAddress ? params.tokenAddress : undefined, [params.tokenAddress, isBinance])
   const binanceSwapURL = React.useMemo(() => isBinance ? `https://kibaswapbsc.app/#/swap?outputCurrency=${tokenAddress}` : undefined, [tokenAddress, isBinance])
   const loadedUrlParams = useDefaultsFromURLSearch()
+  const [clipboard, setClipboard] = useClippy()
 
   // token warning stuff
   const [loadedInputCurrency, loadedOutputCurrency] = [
@@ -136,6 +190,12 @@ export default function Swap({ history }: RouteComponentProps) {
 
   // dismiss warning if all imported tokens are in active lists
   const defaultTokens = useAllTokens()
+  // Determine if the asynchronous clipboard API is enabled.
+const IS_CLIPBOARD_API_ENABLED: boolean = (
+  typeof navigator === 'object' &&
+  typeof (navigator as ClipboardNavigator).clipboard === 'object'
+);
+
   const importTokensNotInDefault =
     urlLoadedTokens &&
     urlLoadedTokens.filter((token: Token) => {
@@ -146,6 +206,7 @@ export default function Swap({ history }: RouteComponentProps) {
 
   // toggle wallet when disconnected
   const toggleWalletModal = useWalletModalToggle()
+
 
   // for expert mode
   const [isExpertMode] = useExpertModeManager()
@@ -173,6 +234,7 @@ export default function Swap({ history }: RouteComponentProps) {
   const showWrap: boolean = wrapType !== WrapType.NOT_APPLICABLE
   const { address: recipientAddress } = useENSAddress(recipient)
   const [useAutoSlippage,] = useSetAutoSlippage()
+  const [useDetectRenounced, ] = useUserDetectRenounced()
 
   const parsedAmounts = useMemo(
     () =>
@@ -228,7 +290,20 @@ export default function Swap({ history }: RouteComponentProps) {
     library, 
     useAutoSlippage
   ])
+  
+  const isOutputCurrencyRenounced =  useContractOwner((currencies?.OUTPUT as any)?.address, useDetectRenounced ? 'eth' : undefined)
+  const isInputCurrencyRenounced = useContractOwner((currencies?.INPUT as any)?.address, useDetectRenounced ? 'eth' : undefined)
 
+  const isEqualShallow = React.useCallback(
+    (address: string) => _.isEqual(isOutputCurrencyRenounced.toLowerCase(), address.toLowerCase()), 
+  [isOutputCurrencyRenounced])
+
+  const isEqualShallowInput = React.useCallback(
+    (address: string) => _.isEqual(isInputCurrencyRenounced.toLowerCase(), address.toLowerCase()), 
+  [isInputCurrencyRenounced])
+
+  const isOutputRenounced = React.useMemo(() => RENOUNCED_ADDRESSES.some(isEqualShallow), [isOutputCurrencyRenounced, isEqualShallow])
+  const isInputRenounced = React.useMemo(() => RENOUNCED_ADDRESSES.some(isEqualShallowInput), [isInputCurrencyRenounced, isEqualShallowInput])
   const fiatValueInput = useUSDCValueV2AndV3(parsedAmounts[Field.INPUT])
   const fiatValueOutput = useUSDCValueV2AndV3(parsedAmounts[Field.OUTPUT])
   const priceImpact = computeFiatValuePriceImpact(fiatValueInput as any, fiatValueOutput as any)
@@ -376,9 +451,10 @@ export default function Swap({ history }: RouteComponentProps) {
     singleHopOnly,
   ])
 
+  
   // errors
   const [showInverted, setShowInverted] = useState<boolean>(false)
-
+  
   // warnings on the greater of fiat value price impact and execution price impact
   const priceImpactSeverity = useMemo(() => {
     const executionPriceImpact = trade?.priceImpact
@@ -547,6 +623,8 @@ const toggleShowChart = () => setShowChart(!showChart)
                     
                     id="swap-currency-input"
                   />
+                            {Boolean(useDetectRenounced && currencies.INPUT?.symbol && !currencies.INPUT.isNative) && <Badge style={{color: '#fff', fontSize:12, display:'flex',  margin:0}}>renounced? &nbsp;<Circle fontSize={8} fill={isInputRenounced ? 'green' : 'red'} /></Badge>}
+
                   <ArrowWrapper clickable>
                     < Majgic 
                       
@@ -556,18 +634,20 @@ const toggleShowChart = () => setShowChart(!showChart)
                   <CurrencyInputPanel
                     value={formattedAmounts[Field.OUTPUT]}
                     onUserInput={handleTypeOutput}
-                    label={independentField === Field.INPUT && !showWrap ? <Trans>To (at least)</Trans> : <Trans>To</Trans>}
+                    label={independentField === Field.INPUT && !showWrap ? <Trans><> To (at least)  </></Trans> :<Trans> <>To </></Trans> }
                     showMaxButton={false}
                     hideBalance={false}
+                    
                     showOnlyTrumpCoins={true}
                     fiatValue={fiatValueOutput ?? undefined}
                     priceImpact={priceImpact}
                     currency={currencies[Field.OUTPUT]}
                     onCurrencySelect={handleOutputSelect}
                     otherCurrency={currencies[Field.INPUT]}
-                    showCommonBases={true}
+                    showCommonBases={true}  
                     id="swap-currency-output"
                   />
+          {Boolean(useDetectRenounced && currencies.OUTPUT?.symbol && !currencies?.OUTPUT?.isNative) && <Badge style={{color: '#fff', fontSize:12,  display:'flex',  margin:0}}>renounced? &nbsp;<Circle fontSize={8} fill={isOutputRenounced ? 'green' : 'red'} /></Badge>}
                 </div>
 
                 {!cannotUseFeature && useOtherAddress && !showWrap ? (

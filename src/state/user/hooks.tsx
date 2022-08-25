@@ -12,6 +12,7 @@ import {
   updateUseAutoSlippage,
   updateUserDarkMode,
   updateUserDeadline,
+  updateUserDetectRenouncedOwnership,
   updateUserExpertMode,
   updateUserFrontRunProtection,
   updateUserGasPreferences,
@@ -101,6 +102,22 @@ export function useExpertModeManager(): [boolean, () => void] {
 
   return [expertMode, toggleSetExpertMode]
 }
+
+export function useUserDetectRenounced(): [boolean, (newDetectRenounced: boolean) => void] {
+  const dispatch = useAppDispatch()
+
+  const singleHopOnly = useAppSelector((state) => state.user.detectRenouncedOwnership)
+
+  const setSingleHopOnly = useCallback(
+    (useUserDetectRenounced: boolean) => {
+      dispatch(updateUserDetectRenouncedOwnership({ detectRenouncedOwnership: useUserDetectRenounced }))
+    },
+    [dispatch]
+  )
+
+  return [singleHopOnly, setSingleHopOnly]
+}
+
 
 export function useUserSingleHopOnly(): [boolean, (newSingleHopOnly: boolean) => void] {
   const dispatch = useAppDispatch()

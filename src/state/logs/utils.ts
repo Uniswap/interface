@@ -140,7 +140,7 @@ export const TOKEN_DATA = (tokenAddress: string, block: any, isBnb?: boolean) =>
       tokens(${block && block !== null && typeof (block) === 'string' ? `block : {number: ${block}}` : ``} where: {id:"${tokenAddress}"}) {
         ...TokenFields
       }
-      pairs0: pairs(where: {token0: "${tokenAddress}"}, first: 2, orderBy: reserveUSD, orderDirection: desc){
+      pairs0: pairs(where: {token0: "${tokenAddress}"}, first: 10, orderBy: reserveUSD, orderDirection: desc){
         id
         token0 {
           id
@@ -151,7 +151,7 @@ export const TOKEN_DATA = (tokenAddress: string, block: any, isBnb?: boolean) =>
           symbol
         }
       }
-      pairs1: pairs(where: {token1: "${tokenAddress}"}, first: 2, orderBy: reserveUSD, orderDirection: desc){
+      pairs1: pairs(where: {token1: "${tokenAddress}"}, first: 10, orderBy: reserveUSD, orderDirection: desc){
         id
         token0 {
           id
@@ -453,9 +453,43 @@ export function useTokenTransactions(tokenAddress: string, interval: null | numb
   return { data: data.data, lastFetched: new Date(), loading: tokenTxns.loading };
 }
 
-export const usePairs = (tokenAddress: string) => {
-  const { data, loading, error } = useQuery(TOKEN_DATA(tokenAddress, null))
-  return data?.['pairs0'].concat(data?.['pairs1'])
+export const usePairs = (tokenAddress?: string) => {
+  console.log(tokenAddress)
+  const defaultState:any[] = []
+  const [pairData, setPairData] = React.useReducer(function(state: any[], action: {type: any,payload: any}) {
+    switch(action.type) {
+        case "UPDATE":
+            return {
+                ...state,
+                ...action.payload
+            };
+        default:
+            return state;
+    }
+  }, defaultState)
+  const { data, loading, error } = useQuery(TOKEN_DATA(tokenAddress || '', null, false), 
+  {
+    onCompleted: (params) => {
+    console.log(`query params completed`, params)
+    if (params && params.pairs1 && params.pairs0 && Boolean(params.pairs1.length || params.pairs0.length)) {
+      console.log(`got pairs data`)
+      const pairs = [...params.pairs0, ...params.pairs1];
+      console.log(`Formatted pairs array`, pairs)
+      setPairData({type: "UPDATE", payload:  pairs})
+    }
+  }, pollInterval:1000000, })
+return React.useMemo(() => {
+
+
+  if (data && (data?.pairs0?.length || data?.pairs1.length) && !_.isEqual([...data.pairs0, ...data.pairs1], pairData)) {
+    const pairs = [...data.pairs0, ...data.pairs1];
+    console.log(`Formatted pairs array`, pairs)
+    return pairs
+  }
+    if (pairData && Array.isArray(pairData) && pairData.length) return pairData;
+    if (!tokenAddress || loading || error) return []
+    return  data?.['pairs0'].concat(data?.['pairs1'])
+  }, [data, pairData, tokenAddress])
 }
 
 export const ETH_PRICE = (block?: any) => {
@@ -809,7 +843,9 @@ query trackerdata {
 
 const CULTURE_TOKENS = gql`
 query culturetokens {
-  pairs(first: ${makeCultureString().length}, orderBy: volumeUSD, orderDirection:desc,  where: {token0_in:[
+  pairs(first: ${makeCultureString().length + 1}, orderBy: volumeUSD, orderDirection:desc,  where: {token0_in:[
+    ${makeCultureString()}
+  ]}, or: { token1_in:[
     ${makeCultureString()}
   ]}) {
     id

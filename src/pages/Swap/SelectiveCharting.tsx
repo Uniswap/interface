@@ -4,7 +4,7 @@ import { Dots, LoadingSkeleton } from 'pages/Pool/styleds';
 import React, { useCallback } from 'react';
 import TradingViewWidget, { Themes } from 'react-tradingview-widget';
 import { fetchBscTokenData, useBnbPrices, useBscTokenTransactions } from 'state/logs/bscUtils';
-import { getTokenData, useEthPrice, useTokenData, useTokenTransactions } from 'state/logs/utils';
+import { getTokenData, useEthPrice, usePairs, useTokenData, useTokenTransactions } from 'state/logs/utils';
 import { useAllTokens, useCurrency } from 'hooks/Tokens';
 
 import Badge from 'components/Badge';
@@ -168,10 +168,6 @@ export const SelectiveChart = () => {
         })
     }, [transactionData, bscTransactionData, chainId])
     const hasAccess = useHasAccess();
-   
-    React.useEffect(() => {
-        console.log(ref.current, selectedCurrency)
-    }, [ref.current])
     const PanelMemo = React.useMemo(() => {
         return (!chainId || chainId && chainId === 1) ? <CurrencyInputPanel
             label={'GAINS'}
@@ -205,29 +201,33 @@ export const SelectiveChart = () => {
             id="swap-currency-input"
         /> : undefined
     }, [selectedCurrency.selectedCurrency, chainId, hasAccess])
-
-    const getRetVal = React.useMemo(function() {
+    const pairs: Array<any> = usePairs((tokenAddressSupplied?.toLowerCase()))
+    const getRetVal = React.useMemo(function() {    
         let retVal = '';
         const {selectedCurrency:currency}=selectedCurrency
         if (chainId === 1 || !chainId) {
             retVal = 'UNISWAP:'
+            if (pairs && pairs.length) {
+                retVal += `${currency?.symbol}${pairs[0].token0.symbol === currency?.symbol ? pairs[0].token1.symbol : pairs[0].token0.symbol}`
+            } else {
             if (params.tokenAddress && params.tokenSymbol && params.tokenSymbol !== 'WETH')
-                retVal = `${retVal}${params.tokenSymbol}WETH`;
-            else if (currency && currency.symbol && currency.symbol !== 'WETH') retVal = `UNISWAP:${currency.symbol}WETH`;
+                retVal = `${retVal}${params.tokenSymbol}WETH`
+            else if (currency && currency.symbol && currency.symbol !== 'WETH') retVal = `UNISWAP:${currency.symbol}WETH`
             else if (currency && currency.symbol && currency.symbol === 'WETH') retVal = "UNISWAP:WETHUSDT";   
 
             if (retVal == 'UNISWAP:' && params?.tokenSymbol || prebuilt?.symbol) {
                 retVal = `UNISWAP:${params?.tokenSymbol ? params?.tokenSymbol : prebuilt?.symbol}WETH`
+            }
             }
         }
         else if (chainId && chainId === 56) {
             retVal = 'PANCAKESWAP:' + params?.tokenSymbol + "WBNB" 
         }
         return retVal;
-    }, [params?.tokenSymbol, selectedCurrency.selectedCurrency, params?.tokenAddress, selectedCurrency, prebuilt])
+    }, [params?.tokenSymbol, pairs.length, selectedCurrency.selectedCurrency, params?.tokenAddress, selectedCurrency, prebuilt])
     // this page will not use access denied, all users can view top token charts
     const accessDenied = false;
-    const deps = [selectedCurrency, getRetVal, params?.tokenSymbol, prebuilt?.symbol, chainId];
+    const deps = [selectedCurrency, pairs,  getRetVal, params?.tokenSymbol, prebuilt?.symbol, chainId];
     const tokenSymbolForChart = React.useMemo(() => getRetVal, deps)
     const chainLabel = React.useMemo(() => !chainId || chainId === 1 ? `WETH` : chainId === 56 ? 'WBNB' : '', [chainId])
     const [collapsed, setCollapsed] = React.useState(false)
@@ -257,6 +257,7 @@ export const SelectiveChart = () => {
                 }}><ChevronLeft /> Back</StyledDiv>
                 <CardSection>
                     <StyledDiv>KibaCharts <BarChart /></StyledDiv>
+
                     <p style={{ margin: 0 }}>Select a token to view the associated chart/transaction data</p>
                 </CardSection>
                 {!accessDenied && (
@@ -288,10 +289,11 @@ export const SelectiveChart = () => {
                             <div style={{ marginTop: '0.25rem', marginBottom: '0.25rem' }}>
                                 {PanelMemo}
                             </div>
-                            <div style={{ height: '500px' }}>
-                                {tokenSymbolForChart && <TradingViewWidget hide_side_toolbar={false} symbol={
-                                tokenSymbolForChart} theme={'Dark'} locale={"en"} autosize={true} />}
-                            </div>
+                            <ChartComponent pairData={pairs} 
+                                            symbol={params?.tokenSymbol || selectedCurrency?.selectedCurrency?.symbol || '' as string} 
+                                            address={address as string}
+                                            tokenSymbolForChart={tokenSymbolForChart}
+                                            />
                             {(selectedCurrency || !!prebuilt?.symbol) && (
                                 <div style={{ display: 'block', width: '100%', overflowY: 'auto', maxHeight: 500 }}>
                                     {transactionData?.lastFetched && <small>Data last updated {moment(transactionData.lastFetched).fromNow()}</small>}
@@ -302,7 +304,7 @@ export const SelectiveChart = () => {
                                                     Date
                                                 </th>
                                                 <th>Type</th>
-                                                <th>Amt {(!chainId || chainId === 1) ? 'ETH' : 'BNB'}</th>
+                                                <th>Amt {(!chainId || chainId === 1) ? pairs && pairs?.length ? pairs[0]?.token0?.symbol === params?.tokenSymbol ? pairs[0]?.token1?.symbol : pairs[0]?.token0?.symbol : 'WETH' : 'BNB'}</th>
                                                 <th>Amt USD</th>
                                                 <th>Amt Tokens</th>
                                                 <th>Maker</th>
@@ -314,8 +316,8 @@ export const SelectiveChart = () => {
                                             {formattedTransactions && formattedTransactions?.map((item: any, index: number) => (
                                                 <tr style={{ paddingBottom: 5 }} key={`${item.token0Symbol}_${item.timestamp * 1000}_${item.hash}_${index}`}>
                                                     <td style={{ fontSize: 12 }}>{new Date(item.timestamp * 1000).toLocaleString()}</td>
-                                                    {[item.token0Symbol, item.token1Symbol].includes(chainLabel) && <td style={{ color: item.token0Symbol === chainLabel ? '#971B1C' : '#779681' }}>{item.token0Symbol === chainLabel ? 'SELL' : 'BUY'}</td>}
-                                                    {![item.token0Symbol, item.token1Symbol].includes(chainLabel) && <td style={{ color: item.token0Symbol !== tokenData?.symbol ? '#971B1C' : '#779681' }}>{item.token0Symbol === tokenData?.symbol ? 'BUY' : 'SELL'}</td>}
+                                                    {[item.token0Symbol, item.token1Symbol].includes(chainLabel) && <td style={{ color: item.token0Symbol !== params?.tokenSymbol ? '#971B1C' : '#779681' }}>{item.token0Symbol !== params?.tokenSymbol ? 'SELL' : 'BUY'}</td>}
+                                                    {![item.token0Symbol, item.token1Symbol].includes(chainLabel) && <td style={{ color: item.token1Symbol !== params?.tokenSymbol ? '#971B1C' : '#779681' }}>{item.token1Symbol === params?.tokenSymbol ? 'BUY' : 'SELL'}</td>}
                                                     {[item.token0Symbol, item.token1Symbol].includes(chainLabel) &&
                                                         <>
                                                             <td>{item.token0Symbol === chainLabel && <>{Number(+item.token0Amount?.toFixed(2))?.toLocaleString()} {item.token0Symbol}</>}
@@ -328,12 +330,12 @@ export const SelectiveChart = () => {
                                                         </>}
                                                     {![item.token0Symbol, item.token1Symbol].includes(chainLabel) &&
                                                         <>
-                                                            <td>{item.token0Symbol === tokenData?.symbol && <>{Number(+item.token0Amount?.toFixed(2))?.toLocaleString()} {item.token0Symbol}</>}
-                                                                {item.token1Symbol === tokenData?.symbol && <>{Number(+item.token1Amount?.toFixed(2))?.toLocaleString()} {item.token1Symbol}</>}
+                                                            <td>{item.token0Symbol !== params?.tokenSymbol && <>{Number(+item.token0Amount?.toFixed(2))?.toLocaleString()} {item.token0Symbol}</>}
+                                                                {item.token1Symbol !== params?.tokenSymbol && <>{Number(+item.token1Amount?.toFixed(2))?.toLocaleString()} {item.token1Symbol}</>}
                                                             </td>
                                                             <td>${Number((+item?.amountUSD)?.toFixed(2)).toLocaleString()}</td>
-                                                            <td>{item.token0Symbol !== tokenData?.symbol && <>{Number(+item.token0Amount?.toFixed(2))?.toLocaleString()} {item.token0Symbol}</>}
-                                                                {item.token1Symbol !== tokenData?.symbol && <>{Number(+item.token1Amount?.toFixed(2))?.toLocaleString()} {item.token1Symbol}</>}
+                                                            <td>{item.token0Symbol === params?.tokenSymbol && <>{Number(+item.token0Amount?.toFixed(2))?.toLocaleString()} {item.token0Symbol}</>}
+                                                                {item.token1Symbol === params?.tokenSymbol && <>{Number(+item.token1Amount?.toFixed(2))?.toLocaleString()} {item.token1Symbol}</>}
                                                             </td>
                                                         </>}
                                                     <td>
@@ -365,3 +367,24 @@ export const SelectiveChart = () => {
         </DarkCard>
     )
 }
+
+const ChartComponent = React.memo((props: { symbol: string, address: string, tokenSymbolForChart: string, pairData?: any[] }) => {
+    const {symbol, address, tokenSymbolForChart,pairData} = props
+    const chartKey = React.useMemo(() => {
+        if (pairData && pairData.length) {
+            const pairSymbol = `${pairData[0].token0.symbol?.toLowerCase() === symbol?.toLowerCase() ? pairData[0].token1.symbol : pairData[0].token0.symbol}`
+            if (pairSymbol === 'DAI') return `DOLLAR${symbol.replace('$', '')}DAI`;
+            return `UNISWAP:${symbol.replace("$", '') || ''}${pairSymbol}`
+        }
+        return `pair.not.found`
+    }, [pairData, symbol])
+    const symbolForChart = chartKey ? chartKey : tokenSymbolForChart.replace('$', '')
+    console.log(`pairs.chartKey`, {chartKey, pairData})
+    return (
+        <div style={{ height: '500px' }}>
+            {symbolForChart && <TradingViewWidget hide_side_toolbar={false} symbol={
+            symbolForChart} theme={'Dark'} locale={"en"} autosize={true} />}
+        </div>
+    )
+}, _.isEqual)
+ChartComponent.displayName = 'CComponent'

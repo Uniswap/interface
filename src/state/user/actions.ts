@@ -23,6 +23,7 @@ export const updateUserGasPreferences = createAction<{high?: boolean; low?:boole
 export const updateUserDarkMode = createAction<{ userDarkMode: boolean }>('user/updateUserDarkMode')
 export const updateUserExpertMode = createAction<{ userExpertMode: boolean }>('user/updateUserExpertMode')
 export const updateUserLocale = createAction<{ userLocale: SupportedLocale }>('user/updateUserLocale')
+export const updateUserDetectRenouncedOwnership = createAction<{ detectRenouncedOwnership: boolean }>('user/updatedDetectRenouncedOwnership')
 export const updateUserSingleHopOnly = createAction<{ userSingleHopOnly: boolean }>('user/updateUserSingleHopOnly')
 export const updateHideClosedPositions = createAction<{ userHideClosedPositions: boolean }>('user/hideClosedPositions')
 export const updateUserSlippageTolerance = createAction<{ userSlippageTolerance: number | 'auto' }>(

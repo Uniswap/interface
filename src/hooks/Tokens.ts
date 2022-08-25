@@ -130,7 +130,7 @@ export function useToken(tokenAddress?: string): Token | undefined | null {
   const { chainId } = useActiveWeb3React()
   const tokens = useAllTokens()
 
-  const address = isAddress(tokenAddress)
+  const address = isAddress(tokenAddress?.toLowerCase())
 
   const tokenContract = useTokenContract(address ? address : undefined, false)
   const tokenContractBytes32 = useBytes32TokenContract(address ? address : undefined, false)
@@ -173,6 +173,7 @@ export function useToken(tokenAddress?: string): Token | undefined | null {
     tokenName.loading,
     tokenName.result,
     tokenNameBytes32.result,
+    tokenAddress
   ])
 }
 

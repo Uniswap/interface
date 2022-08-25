@@ -1,8 +1,9 @@
-import React, { HTMLProps } from 'react'
 import { ArrowLeft, ExternalLink as LinkIconFeather, Trash, X } from 'react-feather'
-import ReactGA from 'react-ga'
-import { Link } from 'react-router-dom'
+import React, { HTMLProps } from 'react'
 import styled, { keyframes } from 'styled-components/macro'
+
+import { Link } from 'react-router-dom'
+import ReactGA from 'react-ga'
 import { anonymizeLink } from '../utils/anonymizeLink'
 
 export const ButtonText = styled.button`
@@ -32,6 +33,7 @@ export const IconWrapper = styled.div<{ stroke?: string; size?: string; marginRi
   display: flex;
   align-items: center;
   justify-content: center;
+  color: #fff;
   width: ${({ size }) => size ?? '20px'};
   height: ${({ size }) => size ?? '20px'};
   margin-right: ${({ marginRight }) => marginRight ?? 0};
