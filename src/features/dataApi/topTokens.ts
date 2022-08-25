@@ -34,7 +34,8 @@ export function usePopularTokens(): Currency[] {
     if (!data || !data.topTokenProjects) return EMPTY_ARRAY
 
     const tokens = data.topTokenProjects
-      .map((project) => project?.tokens[0])
+      .map((project) => project?.tokens)
+      .flat()
       .filter(Boolean) as GqlToken[]
 
     return tokens
@@ -76,6 +77,7 @@ export function gqlTokenToCurrency(
     return { currency: knownCurrency, currencyId }
   }
 
+  // TODO: Always returns null since API does not currently return decimal data (https://uniswaplabs.atlassian.net/browse/DATA-201)
   return token.decimals
     ? {
         currency: new Token(
