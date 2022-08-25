@@ -1,4 +1,4 @@
-import { Currency, Percent, Price } from '@teleswap/sdk'
+import type { Currency, Percent, Price } from '@teleswap/sdk'
 import React from 'react'
 import { Text } from 'rebass'
 import { AutoColumn } from '../../components/Column'
@@ -12,7 +12,7 @@ export function PoolPriceBar({
   currencies,
   noLiquidity,
   poolTokenPercentage,
-  price
+  price,
 }: {
   currencies: { [field in Field]?: Currency }
   noLiquidity?: boolean

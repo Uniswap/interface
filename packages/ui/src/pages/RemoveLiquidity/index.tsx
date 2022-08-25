@@ -42,7 +42,7 @@ import { useWalletModalToggle } from '../../state/application/hooks'
 import { useUserSlippageTolerance } from '../../state/user/hooks'
 import { BigNumber } from '@ethersproject/bignumber'
 import useThemedContext from 'hooks/useThemedContext'
-import { ROUTER_ADDRESS } from '@teleswap/sdk/dist/constants'
+import { ROUTER_ADDRESS } from '@teleswap/sdk'
 
 export default function RemoveLiquidity({
   history,

@@ -7,7 +7,7 @@ import ITeleswapV2Router02ABI from '@teleswap/contracts/build/ITeleswapV2Router0
 // import { abi as IUniswapV2Router02ABI } from 'constants/abis/TeleswapV2Router02.json'
 import { ChainId, JSBI, Percent, Token, CurrencyAmount, Currency, ETHER } from '@teleswap/sdk'
 import { TokenAddressMap } from '../state/lists/hooks'
-import { ROUTER_ADDRESS } from '@teleswap/sdk/dist/constants'
+import { ROUTER_ADDRESS } from '@teleswap/sdk'
 
 // returns the checksummed address if the address is valid, otherwise returns false
 export function isAddress(value: any): string | false {
