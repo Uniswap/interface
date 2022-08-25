@@ -7,7 +7,6 @@ import { useSelectTransaction } from 'src/features/transactions/hooks'
 import { TransactionPending } from 'src/features/transactions/TransactionPending/TransactionPending'
 import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
 import { DerivedTransferInfo } from 'src/features/transactions/transfer/hooks'
-import { InputAssetInfo } from 'src/features/transactions/transfer/utils'
 import {
   TransactionDetails,
   TransactionStatus,
@@ -17,7 +16,6 @@ import { useActiveAccountAddressWithThrow, useDisplayName } from 'src/features/w
 
 type TransferStatusProps = {
   derivedTransferInfo: DerivedTransferInfo
-  inputAssetInfo: InputAssetInfo
   txId: string | undefined
   onNext: () => void
   onTryAgain: () => void
@@ -77,7 +75,6 @@ const getTextFromTransferStatus = (
 
 export function TransferStatus({
   derivedTransferInfo,
-  inputAssetInfo,
   txId,
   onNext,
   onTryAgain,
@@ -85,8 +82,7 @@ export function TransferStatus({
   const { t } = useTranslation()
   const activeAddress = useActiveAccountAddressWithThrow()
 
-  const { formattedAmounts, recipient } = derivedTransferInfo
-  const { currencyIn, nftIn, chainId } = inputAssetInfo
+  const { formattedAmounts, recipient, currencyIn, nftIn, chainId } = derivedTransferInfo
 
   const transaction = useSelectTransaction(activeAddress, chainId, txId)
 

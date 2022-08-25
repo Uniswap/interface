@@ -36,7 +36,7 @@ import {
   useActiveAccountAddressWithThrow,
   useActiveAccountWithThrow,
 } from 'src/features/wallet/hooks'
-import { buildCurrencyId } from 'src/utils/currencyId'
+import { buildCurrencyId, currencyAddress } from 'src/utils/currencyId'
 import { logger } from 'src/utils/logger'
 import { SagaStatus } from 'src/utils/saga'
 import { tryParseExactAmount } from 'src/utils/tryParseAmount'
@@ -44,10 +44,23 @@ import { useSagaStatus } from 'src/utils/useSagaStatus'
 
 export type DerivedTransferInfo = BaseDerivedInfo<Currency | NFTAsset.Asset> & {
   currencyTypes: { [CurrencyField.INPUT]?: AssetType }
+  currencyIn: Currency | undefined
+  nftIn: NFTAsset.Asset | undefined
+  chainId: ChainId | undefined
   exactCurrencyField: CurrencyField.INPUT
   recipient?: string
   isUSDInput?: boolean
   warningModalType?: WarningModalType
+}
+
+interface UpdateTransferGasEstimateParams {
+  transactionStateDispatch: React.Dispatch<AnyAction>
+  chainId: NullUndefined<ChainId>
+  currencyIn: Currency | undefined
+  nftIn: NFTAsset.Asset | undefined
+  amount: string | undefined
+  recipient: Address | undefined
+  assetType: AssetType | undefined
 }
 
 export function useDerivedTransferInfo(state: TransactionState): DerivedTransferInfo {
@@ -62,7 +75,7 @@ export function useDerivedTransferInfo(state: TransactionState): DerivedTransfer
   const { t } = useTranslation()
 
   const activeAccount = useActiveAccount()
-  const chainId = tradeableAsset?.chainId ?? ChainId.Mainnet
+  const chainId = tradeableAsset?.chainId
 
   const currencyIn = useCurrency(
     tradeableAsset?.type === AssetType.Currency
@@ -87,7 +100,10 @@ export function useDerivedTransferInfo(state: TransactionState): DerivedTransfer
     activeAccount?.address
   )
 
-  const { balance: nativeInBalance } = useNativeCurrencyBalance(chainId, activeAccount?.address)
+  const { balance: nativeInBalance } = useNativeCurrencyBalance(
+    chainId ?? ChainId.Mainnet,
+    activeAccount?.address
+  )
 
   const amountSpecified = useMemo(
     () => tryParseExactAmount(exactAmountToken, currencyIn),
@@ -111,9 +127,10 @@ export function useDerivedTransferInfo(state: TransactionState): DerivedTransfer
     currencies,
     currencyAmounts,
     currencyBalances,
-    currencyTypes: {
-      [CurrencyField.INPUT]: tradeableAsset?.type,
-    },
+    currencyTypes: { [CurrencyField.INPUT]: tradeableAsset?.type },
+    chainId,
+    currencyIn: currencyIn ?? undefined,
+    nftIn: nftIn ?? undefined,
     exactAmountUSD,
     exactAmountToken,
     exactCurrencyField: CurrencyField.INPUT,
@@ -209,28 +226,21 @@ function useTransferCallback(
   }, [dispatch, transferTokenParams])
 }
 
-export function useUpdateTransferGasEstimate(
-  transactionStateDispatch: React.Dispatch<AnyAction>,
-  chainId: NullUndefined<ChainId>,
-  tokenAddress: string | undefined,
-  amount: string | undefined,
-  toAddress: string | undefined,
-  tokenId: string | undefined,
-  assetType: AssetType | undefined
-) {
+export function useUpdateTransferGasEstimate({
+  transactionStateDispatch,
+  chainId,
+  currencyIn,
+  nftIn,
+  amount,
+  recipient,
+  assetType,
+}: UpdateTransferGasEstimateParams) {
   const dispatch = useAppDispatch()
   const account = useActiveAccountWithThrow()
+  const tokenAddress = currencyIn ? currencyAddress(currencyIn) : nftIn?.asset_contract.address
 
   useEffect(() => {
-    const isNFT = assetType === AssetType.ERC1155 || assetType === AssetType.ERC721
-    if (
-      !chainId ||
-      !tokenAddress ||
-      !toAddress ||
-      !assetType ||
-      (!isNFT && !amount) ||
-      (isNFT && !tokenId)
-    ) {
+    if (!chainId || !tokenAddress || !recipient || !assetType || (!currencyIn && !nftIn)) {
       logger.info(
         'hooks',
         'useUpdateTransferGasEstimate',
@@ -240,24 +250,41 @@ export function useUpdateTransferGasEstimate(
     }
 
     let params: TransferTokenParams
-    if (isNFT) {
-      if (!tokenId) return // already checked this but ts is dumb
+    if (assetType === AssetType.ERC1155 || assetType === AssetType.ERC721) {
+      if (!nftIn) {
+        logger.info(
+          'hooks',
+          'useUpdateTransferGasEstimate',
+          'Asset type corresponds to a NFT but `nftIn` is undefined'
+        )
+        return
+      }
+
       params = {
         account,
         chainId,
-        toAddress,
+        toAddress: recipient,
         tokenAddress,
         type: assetType,
-        tokenId,
+        tokenId: nftIn.token_id,
       }
     } else {
+      if (!currencyIn || amount === undefined) {
+        logger.info(
+          'hooks',
+          'useUpdateTransferGasEstimate',
+          'Asset type corresponds to a Currency but `currencyIn` or `amount` is undefined'
+        )
+        return
+      }
+
       params = {
         account,
         chainId,
-        toAddress,
+        toAddress: recipient,
         tokenAddress,
         type: AssetType.Currency,
-        amountInWei: amount || '1',
+        amountInWei: amount,
       }
     }
 
@@ -270,14 +297,15 @@ export function useUpdateTransferGasEstimate(
     )
   }, [
     account,
-    toAddress,
-    tokenId,
+    recipient,
     chainId,
     dispatch,
     amount,
     tokenAddress,
     transactionStateDispatch,
     assetType,
+    currencyIn,
+    nftIn,
   ])
 }
 

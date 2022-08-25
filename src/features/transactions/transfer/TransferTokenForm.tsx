@@ -28,18 +28,13 @@ import {
   useIsSmartContractAddress,
   useUpdateTransferGasEstimate,
 } from 'src/features/transactions/transfer/hooks'
-import {
-  createOnToggleShowRecipientSelector,
-  InputAssetInfo,
-} from 'src/features/transactions/transfer/utils'
+import { createOnToggleShowRecipientSelector } from 'src/features/transactions/transfer/utils'
 import { createTransactionId } from 'src/features/transactions/utils'
-import { currencyAddress } from 'src/utils/currencyId'
 
 interface TransferTokenProps {
   state: TransactionState
   dispatch: React.Dispatch<AnyAction>
   derivedTransferInfo: DerivedTransferInfo
-  inputAssetInfo: InputAssetInfo
   onNext: () => void
 }
 
@@ -47,7 +42,6 @@ export function TransferTokenForm({
   state,
   dispatch,
   derivedTransferInfo,
-  inputAssetInfo,
   onNext,
 }: TransferTokenProps) {
   const { t } = useTranslation()
@@ -63,9 +57,10 @@ export function TransferTokenForm({
     recipient,
     isUSDInput = false,
     warnings,
+    currencyIn,
+    nftIn,
+    chainId,
   } = derivedTransferInfo
-
-  const { currencyIn, nftIn, chainId } = inputAssetInfo
 
   const { onShowTokenSelector, onSetAmount, onSetMax, onToggleUSDInput } =
     useSwapActionHandlers(dispatch)
@@ -100,15 +95,19 @@ export function TransferTokenForm({
     showAddressIsSmartContractError
 
   // if action button is disabled, make amount undefined so that gas estimate doesn't run
-  useUpdateTransferGasEstimate(
-    dispatch,
+  const amount = !actionButtonDisabled
+    ? currencyAmounts[CurrencyField.INPUT]?.quotient.toString()
+    : undefined
+
+  useUpdateTransferGasEstimate({
+    transactionStateDispatch: dispatch,
     chainId,
-    nftIn ? nftIn?.asset_contract.address : currencyIn ? currencyAddress(currencyIn) : undefined,
-    !actionButtonDisabled ? currencyAmounts[CurrencyField.INPUT]?.quotient.toString() : undefined,
+    currencyIn,
+    nftIn,
+    amount,
     recipient,
-    nftIn?.token_id,
-    currencyTypes[CurrencyField.INPUT]
-  )
+    assetType: currencyTypes[CurrencyField.INPUT],
+  })
 
   return (
     <>
@@ -145,9 +144,9 @@ export function TransferTokenForm({
         />
       )}
       <AnimatedFlex grow entering={FadeIn} exiting={FadeOut} justifyContent="space-between" p="md">
-        <Flex gap="md">
+        <Flex gap="sm">
           {nftIn ? (
-            <Flex centered maxHeight="60%" mx="xl">
+            <Flex centered maxHeight="50%" mx="xl">
               <Box>
                 <NFTViewer uri={nftIn.image_url} />
               </Box>
@@ -192,7 +191,7 @@ export function TransferTokenForm({
           </Flex>
         </Flex>
 
-        {nftIn ? null : (
+        {!nftIn && (
           <DecimalPad
             setValue={(newValue) => onSetAmount(CurrencyField.INPUT, newValue, isUSDInput)}
             value={formattedAmounts[CurrencyField.INPUT]}

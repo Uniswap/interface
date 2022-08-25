@@ -31,7 +31,6 @@ export function getTransferWarnings(t: TFunction, state: PartialDerivedTransferI
       }),
     })
   }
-
   // transfer form is missing fields
   if (!currencies[CurrencyField.INPUT] || !recipient || !currencyAmountIn) {
     warnings.push({

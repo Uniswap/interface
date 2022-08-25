@@ -21,7 +21,6 @@ import { TransferReview } from 'src/features/transactions/transfer/TransferRevie
 import { TransferStatus } from 'src/features/transactions/transfer/TransferStatus'
 import { TransferTokenForm } from 'src/features/transactions/transfer/TransferTokenForm'
 import {
-  createInputAssetInfo,
   createOnSelectRecipient,
   createOnToggleShowRecipientSelector,
 } from 'src/features/transactions/transfer/utils'
@@ -49,16 +48,12 @@ type InnerContentProps = {
 
 function TransferInnerContent({ dispatch, state, step, setStep, onClose }: InnerContentProps) {
   const derivedTransferInfo = useDerivedTransferInfo(state)
-  const assetType = derivedTransferInfo.currencyTypes[CurrencyField.INPUT]
-  const inputAsset = derivedTransferInfo.currencies[CurrencyField.INPUT]
-  const inputAssetInfo = createInputAssetInfo({ assetType, inputAsset })
 
   switch (step) {
     case TransferStep.SUBMITTED:
       return (
         <TransferStatus
           derivedTransferInfo={derivedTransferInfo}
-          inputAssetInfo={inputAssetInfo}
           txId={state.txId}
           onNext={onClose}
           onTryAgain={() => setStep(TransferStep.FORM)}
@@ -70,7 +65,6 @@ function TransferInnerContent({ dispatch, state, step, setStep, onClose }: Inner
           <TransferTokenForm
             derivedTransferInfo={derivedTransferInfo}
             dispatch={dispatch}
-            inputAssetInfo={inputAssetInfo}
             state={state}
             onNext={() => setStep(TransferStep.REVIEW)}
           />
@@ -81,7 +75,6 @@ function TransferInnerContent({ dispatch, state, step, setStep, onClose }: Inner
         <TransferReview
           derivedTransferInfo={derivedTransferInfo}
           dispatch={dispatch}
-          inputAssetInfo={inputAssetInfo}
           state={state}
           onNext={() => setStep(TransferStep.SUBMITTED)}
           onPrev={() => setStep(TransferStep.FORM)}

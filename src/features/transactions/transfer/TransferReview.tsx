@@ -17,14 +17,12 @@ import {
   useUpdateTransferGasEstimate,
 } from 'src/features/transactions/transfer/hooks'
 import { TransferDetails } from 'src/features/transactions/transfer/TransferDetails'
-import { InputAssetInfo } from 'src/features/transactions/transfer/utils'
 import { TransactionType } from 'src/features/transactions/types'
 import { currencyAddress } from 'src/utils/currencyId'
 
 interface TransferFormProps {
   state: TransactionState
   derivedTransferInfo: DerivedTransferInfo
-  inputAssetInfo: InputAssetInfo
   dispatch: Dispatch<AnyAction>
   onNext: () => void
   onPrev: () => void
@@ -32,7 +30,6 @@ interface TransferFormProps {
 
 export function TransferReview({
   derivedTransferInfo,
-  inputAssetInfo,
   state,
   dispatch,
   onNext,
@@ -47,8 +44,10 @@ export function TransferReview({
     recipient,
     isUSDInput = false,
     warnings,
+    currencyIn,
+    nftIn,
+    chainId,
   } = derivedTransferInfo
-  const { currencyIn, nftIn, chainId } = inputAssetInfo
   const { gasFeeEstimate, txId, optimismL1Fee } = state
 
   // TODO: how should we surface this warning?
@@ -56,16 +55,15 @@ export function TransferReview({
     (warning) => warning.action === WarningAction.DisableReview
   )
 
-  // if action button is disabled, make amount undefined so that gas estimate doesn't run
-  useUpdateTransferGasEstimate(
-    dispatch,
+  useUpdateTransferGasEstimate({
+    transactionStateDispatch: dispatch,
     chainId,
-    nftIn ? nftIn.asset_contract.address : currencyIn ? currencyAddress(currencyIn) : undefined,
-    !actionButtonDisabled ? currencyAmounts[CurrencyField.INPUT]?.quotient.toString() : undefined,
+    currencyIn,
+    nftIn,
+    amount: currencyAmounts[CurrencyField.INPUT]?.quotient.toString(),
     recipient,
-    nftIn?.token_id,
-    currencyTypes[CurrencyField.INPUT]
-  )
+    assetType: currencyTypes[CurrencyField.INPUT],
+  })
 
   const feeInfo = gasFeeEstimate?.[TransactionType.Send]
   const gasFee = useTransferGasFee(gasFeeEstimate, GasSpeed.Urgent, optimismL1Fee)
