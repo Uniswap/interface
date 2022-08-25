@@ -43,7 +43,7 @@ const MobileNavbar = () => {
             <Box as="a" href="#/swap" className={styles.logoContainer}>
               <UniIconMobile width="44" height="44" className={styles.logo} />
             </Box>
-            <ChainSwitcher isMobile={true} />
+            <ChainSwitcher leftAlign={true} />
           </Box>
           <Box className={styles.rightSideMobileContainer}>
             <Row gap="16">
