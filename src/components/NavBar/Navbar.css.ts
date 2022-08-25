@@ -34,7 +34,6 @@ export const logo = style([
 
 export const baseContainer = style([
   sprinkles({
-    display: 'flex',
     alignItems: 'center',
   }),
 ])
@@ -51,6 +50,7 @@ export const baseMobileContainer = style([
 export const baseSideContainer = style([
   baseContainer,
   sprinkles({
+    display: 'flex',
     width: 'full',
     flex: '1',
     flexShrink: '2',
