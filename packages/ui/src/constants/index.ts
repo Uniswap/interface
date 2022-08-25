@@ -159,6 +159,14 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
     href: null,
     color: '#E8831D'
   },
+  TELEPORT: {
+    connector: injected,
+    name: 'Teleport',
+    iconName: 'teleport.png',
+    description: 'Easy-to-use browser extension.',
+    href: null,
+    color: '#E8831D'
+  },
   WALLET_CONNECT: {
     connector: walletconnect,
     name: 'WalletConnect',

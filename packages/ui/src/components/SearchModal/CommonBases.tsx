@@ -11,10 +11,9 @@ import CurrencyLogo from '../CurrencyLogo'
 
 const BaseWrapper = styled.div<{ disable?: boolean }>`
   border: 1px solid ${({ theme, disable }) => (disable ? 'transparent' : theme.bg3)};
-  border-radius: 10px;
+  border-radius: 1rem;
   display: flex;
-  padding: 6px;
-
+  padding: 0.4rem;
   align-items: center;
   :hover {
     cursor: ${({ disable }) => !disable && 'pointer'};
@@ -38,7 +37,8 @@ export default function CommonBases({
     <AutoColumn gap="md">
       <AutoRow>
         <Text fontWeight={500} fontSize={14}>
-          Common bases
+          {/* Common bases */}
+          Most searched
         </Text>
         <QuestionHelper text="These tokens are commonly paired with other tokens." />
       </AutoRow>
@@ -52,7 +52,7 @@ export default function CommonBases({
           disable={selectedCurrency === ETHER}
         >
           <CurrencyLogo currency={ETHER} style={{ marginRight: 8 }} />
-          <Text fontWeight={500} fontSize={16}>
+          <Text fontWeight={500} style={{ fontSize: '0.6rem'}}>
             ETH
           </Text>
         </BaseWrapper>
@@ -61,7 +61,7 @@ export default function CommonBases({
           return (
             <BaseWrapper onClick={() => !selected && onSelect(token)} disable={selected} key={token.address}>
               <CurrencyLogo currency={token} style={{ marginRight: 8 }} />
-              <Text fontWeight={500} fontSize={16}>
+              <Text fontWeight={500} style={{ fontSize: '0.6rem'}}>
                 {token.symbol}
               </Text>
             </BaseWrapper>

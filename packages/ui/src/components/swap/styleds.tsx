@@ -32,6 +32,11 @@ export const SectionBreak = styled.div`
 
 export const BottomGrouping = styled.div`
   margin-top: 1rem;
+  position: absolute;
+  bottom: -6rem;
+  width: 100%;
+  left: 0;
+  /* background: ${({theme }) => theme.bgGreen}; */
 `
 
 export const ErrorText = styled(Text)<{ severity?: 0 | 1 | 2 | 3 | 4 }>`

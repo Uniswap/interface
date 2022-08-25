@@ -161,10 +161,10 @@ export function CurrencySearch({
 
   return (
     <ContentWrapper>
-      <PaddedColumn gap="16px">
+      <PaddedColumn gap="1rem">
         <RowBetween>
-          <Text fontWeight={500} fontSize={16}>
-            Select a token
+          <Text style={{fontSize: '1rem', fontFamily: 'Dela Gothic One'}} fontWeight={500}>
+            Select Token
           </Text>
           <CloseIcon onClick={onDismiss} />
         </RowBetween>
@@ -190,7 +190,7 @@ export function CurrencySearch({
           <ImportRow token={searchToken} showImportView={showImportView} setImportToken={setImportToken} />
         </Column>
       ) : filteredSortedTokens?.length > 0 || filteredInactiveTokens?.length > 0 ? (
-        <div style={{ flex: '1' }}>
+        <div style={{ flex: '1', margin: '1rem 1.6rem', border: '1px solid rgba(255, 255, 255, 0.2)', borderRadius: '.8rem', padding: '1rem 0'}}>
           <AutoSizer disableWidth>
             {({ height }) => (
               <CurrencyList
