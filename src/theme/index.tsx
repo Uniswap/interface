@@ -43,6 +43,7 @@ const transitions = {
     fast: 125,
   },
   timing: {
+    ease: 'ease',
     in: 'ease-in',
     out: 'ease-out',
     inOut: 'ease-in-out',

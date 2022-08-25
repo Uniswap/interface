@@ -54,7 +54,11 @@ const StyledTokenRow = styled.div<{ first?: boolean; last?: boolean; loading?: b
   padding-bottom: ${({ last }) => (last ? '4px' : '0px')};
   padding-left: 12px;
   padding-right: 12px;
-  transition: background-color 250ms ease;
+  transition: ${({
+    theme: {
+      transition: { duration, timing },
+    },
+  }) => css`background-color ${duration.medium} ${timing.ease}`};
   width: 100%;
 
   &:hover {
@@ -156,7 +160,11 @@ const DataCell = styled(Cell)<{ sortable: boolean }>`
   justify-content: flex-end;
   min-width: 80px;
   user-select: ${({ sortable }) => (sortable ? 'none' : 'unset')};
-  transition: background-color 250ms ease;
+  transition: ${({
+    theme: {
+      transition: { duration, timing },
+    },
+  }) => css`background-color ${duration.medium} ${timing.ease}`};
 
   &:hover {
     color: ${({ theme, sortable }) => sortable && theme.white};
