@@ -117,10 +117,12 @@ export function useDerivedTransferInfo(state: TransactionState): DerivedTransfer
   }
 
   const warnings = getTransferWarnings(t, {
-    currencies,
-    currencyAmounts,
     currencyBalances,
+    currencyAmounts,
     recipient,
+    currencyIn: currencyIn ?? undefined,
+    nftIn,
+    chainId,
   })
 
   return {
