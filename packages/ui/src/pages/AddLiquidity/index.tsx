@@ -50,7 +50,7 @@ import useThemedContext from 'hooks/useThemedContext'
 import styled from 'styled-components'
 import Settings from 'components/Settings'
 import CurrencyLogo from 'components/CurrencyLogo'
-import { ROUTER_ADDRESS } from '@teleswap/sdk/dist/constants'
+import { ROUTER_ADDRESS } from '@teleswap/sdk'
 
 const BorderVerticalContainer = styled(Flex)`
   // border: 1px solid rgba(255, 255, 255, 0.2);
