@@ -62,7 +62,7 @@ function NetworkBalances(tokenAddress: string) {
 
 export default function TokenDetails() {
   const { tokenAddress } = useParams<{ tokenAddress?: string }>()
-  const tokenSymbol = useToken(tokenAddress)?.symbol
+  const token = useToken(tokenAddress)
 
   const tokenWarning = tokenAddress ? checkWarning(tokenAddress) : null
   /* network balance handling */
@@ -84,7 +84,7 @@ export default function TokenDetails() {
     ? chainsToList.map((chainId) => {
         const amount = networkData[chainId]
         const fiatValue = amount // for testing purposes
-        if (!fiatValue || !tokenSymbol) return null
+        if (!fiatValue || !token?.symbol) return null
         const chainInfo = getChainInfo(chainId)
         const networkColor = chainInfo.color
         if (!chainInfo) return null
@@ -93,7 +93,7 @@ export default function TokenDetails() {
             key={chainId}
             logoUrl={chainInfo.logoUrl}
             balance={'1'}
-            tokenSymbol={tokenSymbol}
+            tokenSymbol={token?.symbol}
             fiatValue={fiatValue.toSignificant(2)}
             label={chainInfo.label}
             networkColor={networkColor}
@@ -108,7 +108,7 @@ export default function TokenDetails() {
         <>
           <TokenDetail address={tokenAddress} />
           <RightPanel>
-            <Widget />
+            {token && <Widget defaultToken={token} />}
             {tokenWarning && <TokenSafetyMessage tokenAddress={tokenAddress} warning={tokenWarning} />}
             <BalanceSummary address={tokenAddress} totalBalance={totalBalance} networkBalances={balancesByNetwork} />
           </RightPanel>

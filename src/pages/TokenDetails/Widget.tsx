@@ -1,6 +1,15 @@
 import { TransactionReceipt } from '@ethersproject/abstract-provider'
 import { Percent } from '@uniswap/sdk-core'
-import { Currency, Field, Slippage, SwapEventHandlers, SwapSettingsController, SwapWidget } from '@uniswap/widgets'
+import {
+  Currency,
+  Field,
+  Slippage,
+  SwapController,
+  SwapEventHandlers,
+  SwapSettingsController,
+  SwapWidget,
+  TradeType,
+} from '@uniswap/widgets'
 import { useWeb3React } from '@web3-react/core'
 import { DEFAULT_DEADLINE_FROM_NOW } from 'constants/misc'
 import { RPC_URLS } from 'constants/networks'
@@ -18,7 +27,11 @@ export const WIDGET_WIDTH = 320
 
 const WIDGET_ROUTER_URL = 'https://api.uniswap.org/v1/'
 
-export default function Widget() {
+export interface WidgetProps {
+  defaultToken: Currency
+}
+
+export default function Widget({ defaultToken }: WidgetProps) {
   const locale = useActiveLocale()
   const theme = useWidgetTheme()
   const { provider } = useWeb3React()
@@ -63,17 +76,33 @@ export default function Widget() {
     [onSettingsReset, onSlippageChange, onTransactionDeadlineChange]
   )
 
-  const value /*: SwapController */ = useMemo(() => ({}), [])
-  const valueHandlers /*: SwapEventHandlers */ = useMemo(
-    () => ({
-      onTokenChange: (field: Field, token: Currency) => console.log('onTokenChange', field, token),
-      onAmountChange: (field: Field, amount: string) => console.log('onAmountChange', field, amount),
-      onSwitchTokens: (update: typeof value) => console.log('onSwitchTokens', update),
-      onReviewSwapClick: () => console.log('onReviewSwapClick'),
-      onTokenSelectorClick: (field: Field) => console.log('onTokenSelectorClick', field),
-    }),
-    []
+  const [isExactInput, setIsExactInput] = useState(false)
+  const [amount, setAmount] = useState<string>()
+  const onAmountChange = useCallback((field: Field, amount: string) => {
+    setIsExactInput(field === Field.INPUT)
+    setAmount(amount)
+  }, [])
+  const [inputToken, setInputToken] = useState<Currency>()
+  const [outputToken, setOutputToken] = useState<Currency | undefined>(defaultToken)
+  const onSwitchTokens = useCallback(() => {
+    setIsExactInput(!isExactInput)
+    setInputToken(outputToken)
+    setOutputToken(inputToken)
+  }, [inputToken, isExactInput, outputToken])
+  const onTokenSelectorClick = useCallback((field: Field) => {
+    // TODO(zzmp): Integrate in-app token selector.
+    console.log('onTokenSelectorClick', field)
+    return false
+  }, [])
+  const value: SwapController = useMemo(
+    () => ({ type: isExactInput ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT, amount, inputToken, outputToken }),
+    [amount, inputToken, isExactInput, outputToken]
   )
+  const valueHandlers: SwapEventHandlers = useMemo(
+    () => ({ onAmountChange, onSwitchTokens, onTokenSelectorClick }),
+    [onAmountChange, onSwitchTokens, onTokenSelectorClick]
+  )
+
   const txHandlers /*: TransactionEventHandlers */ = useMemo(
     () => ({
       onTxSubmit: (hash: string, tx: unknown) => console.log('onTxSubmit'),
