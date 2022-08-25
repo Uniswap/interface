@@ -94,7 +94,7 @@ export function WatchedWalletsScreen() {
     [unwatchedWallets, dispatch]
   )
 
-  const headerText = t("Wallets you're watching")
+  const headerText = t('Watched wallets')
 
   return (
     <HeaderListScreen

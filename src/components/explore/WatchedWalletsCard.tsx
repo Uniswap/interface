@@ -45,7 +45,7 @@ export function WatchedWalletsCard({ onSearchWallets }: { onSearchWallets: () =>
   return hasWatchedWallets ? (
     <BaseCard.Container>
       <BaseCard.Header
-        title={t("Wallets you're watching ({{watchedWalletsCount}})", {
+        title={t('Watched wallets ({{watchedWalletsCount}})', {
           watchedWalletsCount: watchedWalletsList.length,
         })}
         onPress={
