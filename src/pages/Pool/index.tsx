@@ -11,6 +11,7 @@ import PositionList from 'components/PositionList'
 import { RowBetween, RowFixed } from 'components/Row'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import { isSupportedChain } from 'constants/chains'
+import { NavBarVariant, useNavBarFlag } from 'featureFlags/flags/navBar'
 import { useV3Positions } from 'hooks/useV3Positions'
 import { AlertTriangle, BookOpen, ChevronDown, ChevronsRight, Inbox, Layers, PlusCircle } from 'react-feather'
 import { Link } from 'react-router-dom'
@@ -24,18 +25,26 @@ import { V2_FACTORY_ADDRESSES } from '../../constants/addresses'
 import CTACards from './CTACards'
 import { LoadingRows } from './styleds'
 
-const PageWrapper = styled(AutoColumn)`
+const PageWrapper = styled(AutoColumn)<{ navBarFlag: boolean }>`
+  padding: ${({ navBarFlag }) => (navBarFlag ? '68px 8px 0px' : '0px')};
   max-width: 870px;
   width: 100%;
 
   ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToMedium`
     max-width: 800px;
-    padding: 0px 8px;
   `};
 
   ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
     max-width: 500px;
   `};
+
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
+    padding-top: ${({ navBarFlag }) => (navBarFlag ? '48px' : '0px')};
+  }
+
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+    padding-top: ${({ navBarFlag }) => (navBarFlag ? '20px' : '0px')};
+  }
 `
 const TitleRow = styled(RowBetween)`
   color: ${({ theme }) => theme.deprecated_text2};
@@ -152,13 +161,15 @@ function PositionsLoadingPlaceholder() {
 }
 
 function WrongNetworkCard() {
+  const navBarFlag = useNavBarFlag()
+  const navBarFlagEnabled = navBarFlag === NavBarVariant.Enabled
   const theme = useTheme()
   return (
     <>
-      <PageWrapper>
+      <PageWrapper navBarFlag={navBarFlagEnabled}>
         <AutoColumn gap="lg" justify="center">
           <AutoColumn gap="lg" style={{ width: '100%' }}>
-            <TitleRow style={{ marginTop: '1rem' }} padding={'0'}>
+            <TitleRow padding={'0'}>
               <ThemedText.LargeHeader>
                 <Trans>Pools</Trans>
               </ThemedText.LargeHeader>
@@ -183,6 +194,8 @@ function WrongNetworkCard() {
 }
 
 export default function Pool() {
+  const navBarFlag = useNavBarFlag()
+  const navBarFlagEnabled = navBarFlag === NavBarVariant.Enabled
   const { account, chainId } = useWeb3React()
   const toggleWalletModal = useToggleWalletModal()
 
@@ -253,10 +266,10 @@ export default function Pool() {
   return (
     <Trace page={PageName.POOL_PAGE} shouldLogImpression>
       <>
-        <PageWrapper>
+        <PageWrapper navBarFlag={navBarFlagEnabled}>
           <AutoColumn gap="lg" justify="center">
             <AutoColumn gap="lg" style={{ width: '100%' }}>
-              <TitleRow style={{ marginTop: '1rem' }} padding={'0'}>
+              <TitleRow padding={'0'}>
                 <ThemedText.LargeHeader>
                   <Trans>Pools</Trans>
                 </ThemedText.LargeHeader>

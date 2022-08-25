@@ -8,10 +8,18 @@ import { Z_INDEX } from 'theme'
 
 import { AutoColumn } from '../Column'
 
-export const PageWrapper = styled.div<{ redesignFlag: boolean }>`
-  padding: 0 8px;
+export const PageWrapper = styled.div<{ redesignFlag: boolean; navBarFlag: boolean }>`
+  padding: ${({ navBarFlag }) => (navBarFlag ? '68px 8px 0px' : '0px 8px')};
   max-width: ${({ redesignFlag }) => (redesignFlag ? '420px' : '480px')};
   width: 100%;
+
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
+    padding-top: ${({ navBarFlag }) => (navBarFlag ? '48px' : '0px')};
+  }
+
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+    padding-top: ${({ navBarFlag }) => (navBarFlag ? '20px' : '0px')};
+  }
 `
 
 // Mostly copied from `AppBody` but it was getting too hard to maintain backwards compatibility.
