@@ -17,7 +17,9 @@
     }
   },
   "plugins": [
-    "react-hooks"
+    "react-hooks",
+    "prettier",
+    "@typescript-eslint"
   ],
   "extends": [
     "plugin:react/recommended",

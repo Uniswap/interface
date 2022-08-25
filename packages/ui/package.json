@@ -29,7 +29,7 @@
     "@types/styled-components": "^5.1.0",
     "@types/testing-library__cypress": "^5.0.5",
     "@types/wcag-contrast": "^3.0.0",
-    "@typescript-eslint/eslint-plugin": "^2.31.0",
+    "@typescript-eslint/eslint-plugin": "^5.35.1",
     "@typescript-eslint/parser": "^2.31.0",
     "@uniswap/governance": "^1.0.2",
     "@uniswap/liquidity-staker": "^1.0.2",
@@ -119,6 +119,7 @@
   "license": "GPL-3.0-or-later",
   "dependencies": {
     "@uniswap/default-token-list": "^2.0.0",
+    "prettier": "^2.7.1",
     "react-table": "^7.8.0"
   }
 }
