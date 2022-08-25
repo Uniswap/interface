@@ -1,7 +1,7 @@
 import { style } from '@vanilla-extract/css'
 import { lightGrayOverlayOnHover } from 'nft/css/common.css'
 
-import { sprinkles } from '../../nft/css/sprinkles.css'
+import { breakpoints, sprinkles } from '../../nft/css/sprinkles.css'
 
 export const ChainSwitcher = style([
   lightGrayOverlayOnHover,
@@ -26,10 +26,15 @@ export const ChainSwitcherRow = style([
     cursor: 'pointer',
     color: 'blackBlue',
     borderRadius: '12',
+    width: { sm: 'full' },
   }),
   {
     lineHeight: '24px',
-    width: '204px',
+    '@media': {
+      [`screen and (min-width: ${breakpoints.sm}px)`]: {
+        width: '204px',
+      },
+    },
   },
 ])
 

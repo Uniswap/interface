@@ -335,7 +335,7 @@ export const SearchBar = () => {
           borderRadius={isOpen ? undefined : '12'}
           borderTopRightRadius={isOpen && !isMobile ? '12' : undefined}
           borderTopLeftRadius={isOpen && !isMobile ? '12' : undefined}
-          display={{ sm: isOpen ? 'flex' : 'none', xxl: 'flex' }}
+          display={{ sm: isOpen ? 'flex' : 'none', md: 'flex' }}
           justifyContent={isOpen || phase1Flag === NftVariant.Enabled ? 'flex-start' : 'center'}
           onFocus={() => !isOpen && toggleOpen()}
           onClick={() => !isOpen && toggleOpen()}
@@ -359,7 +359,7 @@ export const SearchBar = () => {
             value={searchValue}
           />
         </Row>
-        <Box display={{ sm: isOpen ? 'none' : 'flex', xxl: 'none' }}>
+        <Box display={{ sm: isOpen ? 'none' : 'flex', md: 'none' }}>
           <NavIcon onClick={toggleOpen}>
             <NavMagnifyingGlassIcon width={28} height={28} />
           </NavIcon>
