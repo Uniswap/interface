@@ -5,6 +5,7 @@ import { TokenSafetyVariant, useTokenSafetyFlag } from 'featureFlags/flags/token
 import usePrevious from 'hooks/usePrevious'
 import { useCallback, useEffect, useState } from 'react'
 import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
+import { useUserAddedTokens } from 'state/user/hooks'
 
 import useLast from '../../hooks/useLast'
 import Modal from '../Modal'
@@ -44,6 +45,7 @@ export default function CurrencySearchModal({
 }: CurrencySearchModalProps) {
   const [modalView, setModalView] = useState<CurrencyModalView>(CurrencyModalView.manage)
   const lastOpen = useLast(isOpen)
+  const userAddedTokens = useUserAddedTokens()
 
   useEffect(() => {
     if (isOpen && !lastOpen) {
@@ -56,16 +58,23 @@ export default function CurrencySearchModal({
     setModalView(CurrencyModalView.tokenSafety)
   }
 
+  const tokenSafetyFlag = useTokenSafetyFlag()
+
   const handleCurrencySelect = useCallback(
     (currency: Currency, hasWarning?: boolean) => {
-      if (hasWarning && currency.isToken) {
+      if (
+        tokenSafetyFlag === TokenSafetyVariant.Enabled &&
+        hasWarning &&
+        currency.isToken &&
+        !userAddedTokens.find((token) => token.equals(currency))
+      ) {
         showTokenSafetySpeedbump(currency)
       } else {
         onCurrencySelect(currency)
         onDismiss()
       }
     },
-    [onDismiss, onCurrencySelect]
+    [onDismiss, onCurrencySelect, tokenSafetyFlag, userAddedTokens]
   )
 
   // for token import view
@@ -87,8 +96,6 @@ export default function CurrencySearchModal({
     () => setModalView(prevView && prevView !== CurrencyModalView.importToken ? prevView : CurrencyModalView.search),
     [setModalView, prevView]
   )
-
-  const tokenSafetyFlag = useTokenSafetyFlag()
 
   // change min height if not searching
   let minHeight: number | undefined = 80
