@@ -74,7 +74,6 @@ export const L2_CHAIN_IDS = [
   SupportedChainId.ARBITRUM_RINKEBY,
   SupportedChainId.OPTIMISM,
   SupportedChainId.OPTIMISTIC_KOVAN,
-  SupportedChainId.TEX_PRIVATE,
 ] as const
 
 export type SupportedL2ChainId = typeof L2_CHAIN_IDS[number]
