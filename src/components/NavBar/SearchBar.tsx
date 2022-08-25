@@ -8,8 +8,7 @@ import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import { Overlay } from 'nft/components/modals/Overlay'
 import { magicalGradientOnHover, subheadSmall } from 'nft/css/common.css'
-import { breakpoints } from 'nft/css/sprinkles.css'
-import { useSearchHistory } from 'nft/hooks'
+import { useIsMobile, useSearchHistory } from 'nft/hooks'
 import { fetchSearchCollections, fetchTrendingCollections } from 'nft/queries'
 import { fetchSearchTokens } from 'nft/queries/genie/SearchTokensFetcher'
 import { fetchTrendingTokens } from 'nft/queries/genie/TrendingTokensFetcher'
@@ -269,6 +268,7 @@ export const SearchBar = () => {
   const { pathname } = useLocation()
   const { width: windowWidth } = useWindowSize()
   const phase1Flag = useNftFlag()
+  const isMobile = useIsMobile()
 
   useOnClickOutside(searchRef, () => {
     isOpen && toggleOpen()
@@ -317,8 +317,6 @@ export const SearchBar = () => {
   useEffect(() => {
     setSearchValue('')
   }, [pathname])
-
-  const isMobile = useMemo(() => windowWidth && windowWidth <= breakpoints.sm, [windowWidth])
 
   return (
     <>
