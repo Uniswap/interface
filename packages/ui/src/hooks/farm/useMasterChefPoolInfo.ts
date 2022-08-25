@@ -21,13 +21,13 @@ export function useMasterChefPoolInfo(chef: Chef) {
 
   
     const result = useSingleContractMultipleData(args ? contract : null, 'poolInfo', args)
+    const mcv2LpToken = useSingleContractMultipleData(chef !== Chef.MASTERCHEF ? contract : null, 'lpToken', args)
   
-    console.info('useMasterChefPoolInfo::result', result)
-  
-    return result.map((callResult) => ({
+    return result.map((callResult, idx) => ({
       accSushiPerShare: callResult.result?.accSushiPerShare as BigNumber | undefined,
+      lastRewardTime: callResult.result?.lastRewardTime as BigNumber | undefined,
       allocPoint: callResult.result?.allocPoint as BigNumber | undefined,
-      lpToken: callResult.result?.lpToken as string | undefined,
+      lpToken: callResult.result?.lpToken || mcv2LpToken[idx].result?.at(0) as string | undefined,
       lastRewardBlock: callResult.result?.lastRewardBlock as BigNumber | undefined,
     }))
 }
