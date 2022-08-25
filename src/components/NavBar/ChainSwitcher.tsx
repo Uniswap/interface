@@ -82,18 +82,16 @@ export const ChainSwitcher = ({ leftAlign }: ChainSwitcherProps) => {
   const dropdown = (
     <NavDropdown top={54} leftAligned={leftAlign} paddingBottom={8} paddingTop={8}>
       <Column marginX="8">
-        {NETWORK_SELECTOR_CHAINS.map((chainId: SupportedChainId) =>
-          isChainAllowed(chainId) ? (
-            <ChainRow
-              onSelectChain={async (targetChainId: SupportedChainId) => {
-                await selectChain(targetChainId)
-                toggleOpen()
-              }}
-              targetChain={chainId}
-              key={chainId}
-            />
-          ) : null
-        )}
+        {NETWORK_SELECTOR_CHAINS.map((chainId: SupportedChainId) => (
+          <ChainRow
+            onSelectChain={async (targetChainId: SupportedChainId) => {
+              await selectChain(targetChainId)
+              toggleOpen()
+            }}
+            targetChain={chainId}
+            key={chainId}
+          />
+        ))}
       </Column>
     </NavDropdown>
   )
