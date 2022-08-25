@@ -3,7 +3,7 @@ import { TokenList } from '@uniswap/token-lists'
 import TokenSafety from 'components/TokenSafety'
 import { TokenSafetyVariant, useTokenSafetyFlag } from 'featureFlags/flags/tokenSafety'
 import usePrevious from 'hooks/usePrevious'
-import { useCallback, useEffect, useState } from 'react'
+import { memo, useCallback, useEffect, useState } from 'react'
 import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 
 import useLast from '../../hooks/useLast'
@@ -31,7 +31,7 @@ export enum CurrencyModalView {
   importList,
 }
 
-export default function CurrencySearchModal({
+export default memo(function CurrencySearchModal({
   isOpen,
   onDismiss,
   onCurrencySelect,
@@ -142,4 +142,4 @@ export default function CurrencySearchModal({
       {content}
     </Modal>
   )
-}
+})
