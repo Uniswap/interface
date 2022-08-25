@@ -1,7 +1,8 @@
 import { Currency } from '@uniswap/sdk-core'
 import { TFunction } from 'i18next'
-import React, { useMemo } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
+import { goBack } from 'src/app/navigation/rootNavigation'
 import { NFTAsset } from 'src/features/nfts/types'
 import { useSelectTransaction } from 'src/features/transactions/hooks'
 import { TransactionPending } from 'src/features/transactions/TransactionPending/TransactionPending'
@@ -49,9 +50,9 @@ const getTextFromTransferStatus = (
   if (status === TransactionStatus.Success) {
     return {
       title: t('Send successful!'),
-      description: t('You sent {{ inputAmount }} {{ tokenName }} to {{ recipient }}.', {
+      description: t('You sent {{ inputAmount }}{{ tokenName }} to {{ recipient }}.', {
         inputAmount,
-        tokenName: nftIn?.name ?? currencyIn?.symbol ?? 'tokens',
+        tokenName: nftIn?.name ?? ` ${currencyIn?.symbol}` ?? ' tokens',
         recipient,
       }),
     }
@@ -98,6 +99,11 @@ export function TransferStatus({
     )
   }, [t, currencyIn, formattedAmounts, nftIn, recipientName, transaction])
 
+  const onClose = useCallback(() => {
+    onNext()
+    goBack()
+  }, [onNext])
+
   if (!chainId) return null
 
   return (
@@ -106,7 +112,7 @@ export function TransferStatus({
       description={description}
       title={title}
       transaction={transaction}
-      onNext={onNext}
+      onNext={onClose}
       onTryAgain={onTryAgain}
     />
   )

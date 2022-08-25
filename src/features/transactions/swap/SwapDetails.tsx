@@ -8,11 +8,7 @@ import { Flex } from 'src/components/layout/Flex'
 import { Text } from 'src/components/Text'
 import { Warning, WarningModalType } from 'src/components/warnings/types'
 import { useUSDCPrice } from 'src/features/routing/useUSDCPrice'
-import {
-  GasSpeed,
-  useSwapActionHandlers,
-  useSwapGasFee,
-} from 'src/features/transactions/swap/hooks'
+import { useSwapActionHandlers } from 'src/features/transactions/swap/hooks'
 import { Trade } from 'src/features/transactions/swap/useTrade'
 import { getRateToDisplay } from 'src/features/transactions/swap/utils'
 import { showWarningInPanel } from 'src/features/transactions/swap/validate'
@@ -20,18 +16,13 @@ import {
   TransactionDetails,
   TRANSACTION_DETAILS_SPACER,
 } from 'src/features/transactions/TransactionDetails'
-import {
-  GasFeeByTransactionType,
-  OptimismL1FeeEstimate,
-} from 'src/features/transactions/transactionState/transactionState'
 import { formatPrice } from 'src/utils/format'
 
 interface SwapDetailsProps {
   acceptedTrade: Trade<Currency, Currency, TradeType>
   trade: Trade<Currency, Currency, TradeType>
   dispatch: Dispatch<AnyAction>
-  gasFeeEstimate?: GasFeeByTransactionType
-  optimismL1Fee?: OptimismL1FeeEstimate
+  gasFee: string | undefined
   newTradeToAccept: boolean
   warnings: Warning[]
   onAcceptTrade: () => void
@@ -40,8 +31,7 @@ interface SwapDetailsProps {
 export function SwapDetails({
   acceptedTrade,
   dispatch,
-  gasFeeEstimate,
-  optimismL1Fee,
+  gasFee,
   newTradeToAccept,
   trade,
   warnings,
@@ -55,7 +45,6 @@ export function SwapDetails({
   const usdcPrice = useUSDCPrice(showInverseRate ? price.quoteCurrency : price.baseCurrency)
   const acceptedRate = getRateToDisplay(acceptedTrade, showInverseRate)
   const rate = getRateToDisplay(trade, showInverseRate)
-  const gasFee = useSwapGasFee(gasFeeEstimate, GasSpeed.Urgent, optimismL1Fee)
 
   const swapWarning = warnings.find(showWarningInPanel)
   const showWarning = swapWarning && !newTradeToAccept

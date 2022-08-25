@@ -5,9 +5,11 @@ import { WarningAction, WarningModalType } from 'src/components/warnings/types'
 import { ElementName } from 'src/features/telemetry/constants'
 import {
   DerivedSwapInfo,
+  GasSpeed,
   useAcceptedTrade,
   useSwapActionHandlers,
   useSwapCallback,
+  useSwapGasFee,
   useUpdateSwapGasEstimate,
   useWrapCallback,
 } from 'src/features/transactions/swap/hooks'
@@ -47,6 +49,8 @@ export function SwapReview({ dispatch, onNext, onPrev, derivedSwapInfo }: SwapFo
   } = derivedSwapInfo
 
   useUpdateSwapGasEstimate(dispatch, trade)
+  const gasFee = useSwapGasFee(gasFeeEstimate, GasSpeed.Urgent, optimismL1Fee)
+
   const { onAcceptTrade, acceptedTrade } = useAcceptedTrade(trade)
 
   const { onShowSwapWarning } = useSwapActionHandlers(dispatch)
@@ -85,7 +89,7 @@ export function SwapReview({ dispatch, onNext, onPrev, derivedSwapInfo }: SwapFo
   )
 
   const actionButtonProps = {
-    disabled: noValidSwap || blockingWarning || newTradeToAccept,
+    disabled: noValidSwap || blockingWarning || newTradeToAccept || !gasFee,
     label: getActionName(t, wrapType),
     name:
       wrapType === WrapType.Wrap
@@ -105,9 +109,8 @@ export function SwapReview({ dispatch, onNext, onPrev, derivedSwapInfo }: SwapFo
       <SwapDetails
         acceptedTrade={acceptedTrade}
         dispatch={dispatch}
-        gasFeeEstimate={gasFeeEstimate}
+        gasFee={gasFee}
         newTradeToAccept={newTradeToAccept}
-        optimismL1Fee={optimismL1Fee}
         trade={trade}
         warnings={warnings}
         onAcceptTrade={onAcceptTrade}

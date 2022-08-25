@@ -49,11 +49,12 @@ export function TransferReview({
     chainId,
   } = derivedTransferInfo
   const { gasFeeEstimate, txId, optimismL1Fee } = state
+  const feeInfo = gasFeeEstimate?.[TransactionType.Send]
+  const gasFee = useTransferGasFee(gasFeeEstimate, GasSpeed.Urgent, optimismL1Fee)
 
   // TODO: how should we surface this warning?
-  const actionButtonDisabled = warnings.some(
-    (warning) => warning.action === WarningAction.DisableReview
-  )
+  const actionButtonDisabled =
+    warnings.some((warning) => warning.action === WarningAction.DisableReview) || !gasFee
 
   useUpdateTransferGasEstimate({
     transactionStateDispatch: dispatch,
@@ -64,9 +65,6 @@ export function TransferReview({
     recipient,
     assetType: currencyTypes[CurrencyField.INPUT],
   })
-
-  const feeInfo = gasFeeEstimate?.[TransactionType.Send]
-  const gasFee = useTransferGasFee(gasFeeEstimate, GasSpeed.Urgent, optimismL1Fee)
 
   const transferERC20Callback = useTransferERC20Callback(
     txId,

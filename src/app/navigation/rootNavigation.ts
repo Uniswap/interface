@@ -24,5 +24,5 @@ export async function goBack() {
     return
   }
 
-  navigationRef.goBack()
+  if (navigationRef.canGoBack()) navigationRef.goBack()
 }
