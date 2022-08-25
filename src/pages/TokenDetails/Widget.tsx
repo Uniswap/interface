@@ -59,11 +59,7 @@ export default function Widget() {
     return { slippage: { auto, max: slippage }, transactionTtl: ttl }
   }, [slippage, ttl, userSlippage])
   const settingsHandlers: SwapEventHandlers = useMemo(
-    () => ({
-      onSettingsReset,
-      onSlippageChange,
-      onTransactionDeadlineChange,
-    }),
+    () => ({ onSettingsReset, onSlippageChange, onTransactionDeadlineChange }),
     [onSettingsReset, onSlippageChange, onTransactionDeadlineChange]
   )
 
