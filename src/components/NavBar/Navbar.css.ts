@@ -61,7 +61,7 @@ export const middleContainer = style([
     flex: '1',
     flexShrink: '1',
     justifyContent: 'center',
-    display: { sm: 'none', md: 'flex' },
+    display: { sm: 'none', lg: 'flex' },
   }),
 ])
 

@@ -323,10 +323,10 @@ export const SearchBar = () => {
   return (
     <>
       <Box
-        position={{ sm: isOpen ? 'absolute' : 'relative', md: 'relative' }}
-        top={{ sm: '0', md: 'unset' }}
-        left={{ sm: '0', md: 'unset' }}
-        width={{ sm: isOpen ? 'viewWidth' : 'auto', md: 'auto' }}
+        position={{ sm: isOpen ? 'absolute' : 'relative', lg: 'relative' }}
+        top={{ sm: '0', lg: 'unset' }}
+        left={{ sm: '0', lg: 'unset' }}
+        width={{ sm: isOpen ? 'viewWidth' : 'auto', lg: 'auto' }}
         ref={searchRef}
         style={{ zIndex: '1000' }}
       >
@@ -335,16 +335,16 @@ export const SearchBar = () => {
           borderRadius={isOpen ? undefined : '12'}
           borderTopRightRadius={isOpen && !isMobile ? '12' : undefined}
           borderTopLeftRadius={isOpen && !isMobile ? '12' : undefined}
-          display={{ sm: isOpen ? 'flex' : 'none', md: 'flex' }}
+          display={{ sm: isOpen ? 'flex' : 'none', lg: 'flex' }}
           justifyContent={isOpen || phase1Flag === NftVariant.Enabled ? 'flex-start' : 'center'}
           onFocus={() => !isOpen && toggleOpen()}
           onClick={() => !isOpen && toggleOpen()}
           gap="12"
         >
-          <Box display={{ sm: 'none', md: 'flex' }}>
+          <Box display={{ sm: 'none', lg: 'flex' }}>
             <MagnifyingGlassIcon />
           </Box>
-          <Box display={{ sm: 'flex', md: 'none' }} color="placeholder" onClick={toggleOpen}>
+          <Box display={{ sm: 'flex', lg: 'none' }} color="placeholder" onClick={toggleOpen}>
             <ChevronLeftIcon />
           </Box>
           <Box
@@ -359,7 +359,7 @@ export const SearchBar = () => {
             value={searchValue}
           />
         </Row>
-        <Box display={{ sm: isOpen ? 'none' : 'flex', md: 'none' }}>
+        <Box display={{ sm: isOpen ? 'none' : 'flex', lg: 'none' }}>
           <NavIcon onClick={toggleOpen}>
             <NavMagnifyingGlassIcon width={28} height={28} />
           </NavIcon>
