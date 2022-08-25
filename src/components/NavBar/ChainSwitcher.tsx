@@ -73,7 +73,7 @@ export const ChainSwitcher = ({ leftAlign }: ChainSwitcherProps) => {
   const selectChain = useSelectChain()
   useSyncChainQuery()
 
-  if (!chainId || !info) {
+  if (!chainId) {
     return null
   }
 
@@ -83,7 +83,7 @@ export const ChainSwitcher = ({ leftAlign }: ChainSwitcherProps) => {
     <NavDropdown top={54} leftAligned={leftAlign} paddingBottom={8} paddingTop={8}>
       <Column marginX="8">
         {NETWORK_SELECTOR_CHAINS.map((chainId: SupportedChainId) =>
-          isSupported ? (
+          isChainAllowed(chainId) ? (
             <ChainRow
               onSelectChain={async (targetChainId: SupportedChainId) => {
                 await selectChain(targetChainId)
@@ -107,7 +107,7 @@ export const ChainSwitcher = ({ leftAlign }: ChainSwitcherProps) => {
         background={isOpen ? 'accentActiveSoft' : 'none'}
         onClick={toggleOpen}
       >
-        {!isSupported ? (
+        {!isSupported || !info ? (
           <>
             <TokenWarningRedIcon fill={themeVars.colors.darkGray} width={24} height={24} />
             <Box as="span" className={subhead} display={{ sm: 'none', xl: 'flex' }} style={{ lineHeight: '20px' }}>
