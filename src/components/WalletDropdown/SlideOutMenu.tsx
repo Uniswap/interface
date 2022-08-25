@@ -80,23 +80,7 @@ const BackSectionContainer = styled.div`
 `
 
 const ChildrenContainer = styled.div`
-  overflow-y: auto;
-  // height: calc(100% - 30px);
   margin-top: 40px;
-
-  &::-webkit-scrollbar {
-    background: transparent;
-    border-radius: 8px;
-    width: 4px;
-  }
-  &::-webkit-scrollbar-track {
-    background: transparent;
-  }
-  &::-webkit-scrollbar-thumb {
-    background: #999;
-    border-radius: 8px;
-    height: 10px;
-  }
 `
 
 export const SlideOutMenu = ({

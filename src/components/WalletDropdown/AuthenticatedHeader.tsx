@@ -81,7 +81,7 @@ const HeaderWrapper = styled.div`
   justify-content: space-between;
 `
 
-const AuthenticatedHeaderWrap = styled.div`
+const AuthenticatedHeaderWrapper = styled.div`
   padding: 0 16px;
 `
 
@@ -119,7 +119,7 @@ const AuthenticatedHeader = () => {
   }, [balanceString, nativeCurrencyPrice])
 
   return (
-    <AuthenticatedHeaderWrap>
+    <AuthenticatedHeaderWrapper>
       <HeaderWrapper>
         <StatusWrapper>
           <FlexContainer>
@@ -148,7 +148,7 @@ const AuthenticatedHeader = () => {
           </UNIbutton>
         )}
       </Column>
-    </AuthenticatedHeaderWrap>
+    </AuthenticatedHeaderWrapper>
   )
 }
 
