@@ -2,7 +2,8 @@ import { Currency } from '@uniswap/sdk-core'
 import React, { Suspense, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Keyboard, KeyboardAvoidingView } from 'react-native'
-import { Flex } from 'src/components/layout'
+import { FadeIn, FadeOut } from 'react-native-reanimated'
+import { AnimatedFlex, Flex } from 'src/components/layout'
 import { Loading } from 'src/components/loading'
 import { useFilterCallbacks } from 'src/components/TokenSelector/hooks'
 import { SearchBar } from 'src/components/TokenSelector/SearchBar'
@@ -36,8 +37,15 @@ export function TokenSelect({
   }, [onChangeChainFilter, onClearSearchFilter])
 
   return (
-    <Flex gap="sm" overflow="hidden" px="md" width="100%">
+    <AnimatedFlex
+      entering={FadeIn}
+      exiting={FadeOut}
+      gap="sm"
+      overflow="hidden"
+      px="md"
+      width="100%">
       <SearchBar
+        autoFocus
         backgroundColor="backgroundContainer"
         placeholder={t('Search tokens')}
         value={searchFilter ?? ''}
@@ -47,8 +55,8 @@ export function TokenSelect({
         }}
         onChangeText={onChangeText}
       />
-      <KeyboardAvoidingView behavior="height">
-        <Suspense fallback={<TokenSearchResultsLoading />}>
+      <Suspense fallback={<TokenSearchResultsLoading />}>
+        <KeyboardAvoidingView behavior="height">
           <TokenSearchResultList
             chainFilter={chainFilter}
             searchFilter={searchFilter}
@@ -57,9 +65,9 @@ export function TokenSelect({
             onClearSearchFilter={onClearFilters}
             onSelectCurrency={onSelectCurrency}
           />
-        </Suspense>
-      </KeyboardAvoidingView>
-    </Flex>
+        </KeyboardAvoidingView>
+      </Suspense>
+    </AnimatedFlex>
   )
 }
 

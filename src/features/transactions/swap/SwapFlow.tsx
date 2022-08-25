@@ -186,19 +186,23 @@ export function SwapFlow({ prefilledState, onClose }: SwapFormProps) {
             onClose={onClose}
           />
         </Flex>
-        <TokenSelect
-          otherCurrency={
-            selectingCurrencyField
-              ? currencies[otherCurrencyField(selectingCurrencyField)]
-              : undefined
-          }
-          selectedCurrency={selectingCurrencyField ? currencies[selectingCurrencyField] : undefined}
-          variation={listVariation}
-          onBack={onHideTokenSelector}
-          onSelectCurrency={(currency: Currency) =>
-            selectingCurrencyField && onSelectCurrency(selectingCurrencyField, currency)
-          }
-        />
+        {selectingCurrencyField ? (
+          <TokenSelect
+            otherCurrency={
+              selectingCurrencyField
+                ? currencies[otherCurrencyField(selectingCurrencyField)]
+                : undefined
+            }
+            selectedCurrency={
+              selectingCurrencyField ? currencies[selectingCurrencyField] : undefined
+            }
+            variation={listVariation}
+            onBack={onHideTokenSelector}
+            onSelectCurrency={(currency: Currency) =>
+              selectingCurrencyField && onSelectCurrency(selectingCurrencyField, currency)
+            }
+          />
+        ) : null}
       </AnimatedFlex>
     </TouchableWithoutFeedback>
   )

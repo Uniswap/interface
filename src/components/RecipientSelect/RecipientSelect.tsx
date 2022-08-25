@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Flex } from 'src/components/layout'
+import { FadeIn, FadeOut } from 'react-native-reanimated'
+import { AnimatedFlex, Flex } from 'src/components/layout'
 import { filterRecipientByNameAndAddress } from 'src/components/RecipientSelect/filter'
 import { useRecipients } from 'src/components/RecipientSelect/hooks'
 import { RecipientList, RecipientLoadingRow } from 'src/components/RecipientSelect/RecipientList'
@@ -33,7 +34,7 @@ export function RecipientSelect({
   const noResults = pattern && pattern?.length > 0 && !loading && filteredSections.length === 0
 
   return (
-    <Flex gap="sm" px="md" width="100%">
+    <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="sm" px="md" width="100%">
       <SearchBar
         autoFocus
         backgroundColor="backgroundContainer"
@@ -59,6 +60,6 @@ export function RecipientSelect({
           onPress={onSelectRecipient}
         />
       )}
-    </Flex>
+    </AnimatedFlex>
   )
 }

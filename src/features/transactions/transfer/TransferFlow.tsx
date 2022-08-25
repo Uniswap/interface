@@ -123,7 +123,7 @@ export function TransferFlow({ prefilledState, onClose }: TransferFormProps) {
             onClose={onClose}
           />
         </Flex>
-        {state.selectingCurrencyField && (
+        {state.selectingCurrencyField ? (
           <TokenSelect
             variation={TokenSelectorVariation.BalancesOnly}
             onBack={onHideTokenSelector}
@@ -131,13 +131,13 @@ export function TransferFlow({ prefilledState, onClose }: TransferFormProps) {
               onSelectCurrency(CurrencyField.INPUT, currency)
             }
           />
-        )}
-        {state.showRecipientSelector && (
+        ) : null}
+        {state.showRecipientSelector ? (
           <RecipientSelect
             onSelectRecipient={onSelectRecipient}
             onToggleShowRecipientSelector={onToggleShowRecipientSelector}
           />
-        )}
+        ) : null}
       </AnimatedFlex>
     </Flex>
   )

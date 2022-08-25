@@ -218,6 +218,7 @@ export function TokenSearchResultList({
         }
         ListFooterComponent={Footer}
         keyExtractor={key}
+        keyboardShouldPersistTaps="always"
         renderItem={renderItem}
         renderSectionHeader={({ section: { title } }) => <SectionHeader title={title} />}
         sections={filteredSections}
