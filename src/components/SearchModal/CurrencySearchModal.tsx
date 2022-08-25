@@ -29,6 +29,7 @@ export enum CurrencyModalView {
   manage,
   importToken,
   importList,
+  tokenSafety,
 }
 
 export default function CurrencySearchModal({
@@ -50,10 +51,19 @@ export default function CurrencySearchModal({
     }
   }, [isOpen, lastOpen])
 
+  const showTokenSafetySpeedbump = (token: Token) => {
+    setWarningToken(token)
+    setModalView(CurrencyModalView.tokenSafety)
+  }
+
   const handleCurrencySelect = useCallback(
-    (currency: Currency) => {
-      onCurrencySelect(currency)
-      onDismiss()
+    (currency: Currency, hasWarning?: boolean) => {
+      if (hasWarning && currency.isToken) {
+        showTokenSafetySpeedbump(currency)
+      } else {
+        onCurrencySelect(currency)
+        onDismiss()
+      }
     },
     [onDismiss, onCurrencySelect]
   )
@@ -67,6 +77,9 @@ export default function CurrencySearchModal({
   // used for import list
   const [importList, setImportList] = useState<TokenList | undefined>()
   const [listURL, setListUrl] = useState<string | undefined>()
+
+  // used for token safety
+  const [warningToken, setWarningToken] = useState<Token | undefined>()
 
   const showImportView = useCallback(() => setModalView(CurrencyModalView.importToken), [setModalView])
   const showManageView = useCallback(() => setModalView(CurrencyModalView.manage), [setModalView])
@@ -98,25 +111,32 @@ export default function CurrencySearchModal({
         />
       )
       break
+    case CurrencyModalView.tokenSafety:
+      if (tokenSafetyFlag === TokenSafetyVariant.Enabled && warningToken) {
+        content = (
+          <TokenSafety
+            tokenAddress={warningToken.address}
+            onContinue={() => handleCurrencySelect(warningToken)}
+            onCancel={handleBackImport}
+          />
+        )
+      }
+      break
     case CurrencyModalView.importToken:
       if (importToken) {
         minHeight = undefined
-        content =
-          tokenSafetyFlag === TokenSafetyVariant.Enabled ? (
-            <TokenSafety
-              tokenAddress={importToken.address}
-              onContinue={() => handleCurrencySelect(importToken)}
-              onCancel={handleBackImport}
-            />
-          ) : (
-            <ImportToken
-              tokens={[importToken]}
-              onDismiss={onDismiss}
-              list={importToken instanceof WrappedTokenInfo ? importToken.list : undefined}
-              onBack={handleBackImport}
-              handleCurrencySelect={handleCurrencySelect}
-            />
-          )
+        if (tokenSafetyFlag === TokenSafetyVariant.Enabled) {
+          showTokenSafetySpeedbump(importToken)
+        }
+        content = (
+          <ImportToken
+            tokens={[importToken]}
+            onDismiss={onDismiss}
+            list={importToken instanceof WrappedTokenInfo ? importToken.list : undefined}
+            onBack={handleBackImport}
+            handleCurrencySelect={handleCurrencySelect}
+          />
+        )
       }
       break
     case CurrencyModalView.importList:
