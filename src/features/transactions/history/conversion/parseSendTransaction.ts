@@ -6,7 +6,7 @@ import { AssetType } from 'src/entities/assets'
 import { TransactionHistoryResponse } from 'src/features/transactions/history/transactionHistory'
 import { SendTokenTransactionInfo, TransactionType } from 'src/features/transactions/types'
 
-export default function parseSendTransction(
+export default function parseSendTransaction(
   transaction: Nullable<TransactionHistoryResponse>
 ): SendTokenTransactionInfo | undefined {
   const change = transaction?.assetChanges[0]

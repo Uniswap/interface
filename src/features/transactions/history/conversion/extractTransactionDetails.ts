@@ -1,7 +1,7 @@
 import { ChainId } from 'src/constants/chains'
-import parseAppoveTransction from 'src/features/transactions/history/conversion/parseApproveTransaction'
-import parseReceiveTransction from 'src/features/transactions/history/conversion/parseReceiveTransaction'
-import parseSendTransction from 'src/features/transactions/history/conversion/parseSendTransaction'
+import parseAppoveTransaction from 'src/features/transactions/history/conversion/parseApproveTransaction'
+import parseReceiveTransaction from 'src/features/transactions/history/conversion/parseReceiveTransaction'
+import parseSendTransaction from 'src/features/transactions/history/conversion/parseSendTransaction'
 import parseTradeTransaction from 'src/features/transactions/history/conversion/parseTradeTransaction'
 import { TransactionHistoryResponse } from 'src/features/transactions/history/transactionHistory'
 import {
@@ -26,13 +26,13 @@ export default function extractTransactionDetails(
   let typeInfo: TransactionTypeInfo | undefined
   switch (transaction.type) {
     case 'APPROVE':
-      typeInfo = parseAppoveTransction(transaction)
+      typeInfo = parseAppoveTransaction(transaction)
       break
     case 'SEND':
-      typeInfo = parseSendTransction(transaction)
+      typeInfo = parseSendTransaction(transaction)
       break
     case 'RECEIVE':
-      typeInfo = parseReceiveTransction(transaction)
+      typeInfo = parseReceiveTransaction(transaction)
       break
     case 'SWAP':
       typeInfo = parseTradeTransaction(transaction)
@@ -52,7 +52,7 @@ export default function extractTransactionDetails(
     // @TODO: update with chainId from txn when backened supports other networks
     chainId: ChainId.Mainnet,
     hash: transaction.transaction.hash,
-    addedTime: transaction.timestamp,
+    addedTime: transaction.timestamp * 1000, // convert to ms
     status: TransactionStatus.Success,
     from: transaction.transaction.from,
     typeInfo,

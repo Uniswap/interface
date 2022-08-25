@@ -63,6 +63,9 @@ function TransactionSummaryLayout({
   const nonce = transaction?.options?.request?.nonce
   const queued = nonce && lowestPendingNonce ? nonce > lowestPendingNonce : false
 
+  const isCancelable =
+    status === TransactionStatus.Pending && !readonly && Boolean(transaction.options?.request)
+
   function handleCancel() {
     if (!transaction) return
     dispatch(
@@ -82,14 +85,15 @@ function TransactionSummaryLayout({
           <AlertBanner status={status} />
         )}
         <Flex
+          grow
           row
           alignItems="flex-start"
           bg={bg ?? 'backgroundContainer'}
-          gap="xs"
+          gap="md"
           justifyContent="space-between"
           px="md"
           py="sm">
-          <Flex row shrink alignItems="center" flexGrow={1} gap="xs" justifyContent="flex-start">
+          <Flex row alignItems="center" gap="xs" height="100%" justifyContent="flex-start">
             {icon && (
               <Flex centered height={TXN_HISTORY_ICON_SIZE} width={TXN_HISTORY_ICON_SIZE}>
                 {icon}
@@ -122,8 +126,8 @@ function TransactionSummaryLayout({
               )}
             </Flex>
           ) : (
-            <Flex alignItems="flex-end" gap="xxxs">
-              <Text adjustsFontSizeToFit numberOfLines={1} variant="body">
+            <Flex shrink alignItems="flex-end" gap="xxxs">
+              <Text numberOfLines={1} variant="body">
                 {endTitle}
               </Text>
               {endCaption && (
@@ -138,10 +142,8 @@ function TransactionSummaryLayout({
       <TransactionActionsModal
         hash={hash}
         isVisible={showActionsModal}
-        msTimestampAdded={addedTime * 1000}
-        showCancelButton={
-          status === TransactionStatus.Pending && !readonly && Boolean(transaction.options?.request)
-        }
+        msTimestampAdded={addedTime}
+        showCancelButton={isCancelable}
         transactionDetails={transaction}
         onCancel={() => {
           setShowActionsModal(false)

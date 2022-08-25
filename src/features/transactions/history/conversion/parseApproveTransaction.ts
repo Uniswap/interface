@@ -5,7 +5,7 @@ import {
   TransactionType,
 } from 'src/features/transactions/types'
 
-export default function parseAppoveTransction(
+export default function parseAppoveTransaction(
   transaction: Nullable<TransactionHistoryResponse>
 ): ApproveTransactionInfo | NFTApproveTransactionInfo | undefined {
   const change = transaction?.assetChanges[0]
