@@ -17,6 +17,13 @@ import { ArrowDown, CheckCircle, HelpCircle } from 'react-feather'
 import ReactGA from 'react-ga4'
 import { RouteComponentProps } from 'react-router-dom'
 import { Text } from 'rebass'
+import {
+  useEncryptionParamManager,
+  useEncryptionProverKeyManager,
+  useEncryptionVerifierDataManager,
+  useVdfParamManager,
+  useVdfSnarkParamManager,
+} from 'state/parameters/hooks'
 import { TradeState } from 'state/routing/types'
 import styled, { ThemeContext } from 'styled-components/macro'
 
@@ -110,6 +117,116 @@ export default function Swap({ history }: RouteComponentProps) {
 
   // for expert mode
   const [isExpertMode] = useExpertModeManager()
+
+  const [vdfParam, updateVdfParam] = useVdfParamManager()
+  const [vdfSnarkParam, updateVdfSnarkParam] = useVdfSnarkParamManager()
+  const [encryptionVerifierData, updateEncryptionVerifierData] = useEncryptionVerifierDataManager()
+  const [encryptionParam, updateEncryptionParam] = useEncryptionParamManager()
+  const [encryptionProverKey, updateEncryptionProverKey] = useEncryptionProverKeyManager()
+
+  useEffect(() => {
+    if (!vdfParam) {
+      console.log('vdfParam: ', vdfParam)
+      const fetchAndUpdateVdfParam = async () => {
+        console.log('fetch vdfparam!')
+        await fetch('http://147.46.240.248:40002/zkp/getVdfParams', {
+          method: 'GET',
+        })
+          .then((res) => res.json())
+          .then((res) => {
+            console.log(res)
+            updateVdfParam(res)
+          })
+      }
+      fetchAndUpdateVdfParam()
+    }
+  }, [updateVdfParam, vdfParam])
+
+  useEffect(() => {
+    if (!vdfSnarkParam) {
+      console.log('vdfSnarkParam: ', vdfSnarkParam)
+      const fetchAndUpdateVdfSnarkParam = async () => {
+        console.log('fetch vdfsnarkparam!')
+        await fetch('http://147.46.240.248:40002/zkp/getVdfSnarkParams', {
+          method: 'GET',
+        }).then(async (res) => {
+          console.log(res)
+          if (res.body) {
+            console.log(res.body)
+            const bytes = await res.arrayBuffer()
+            const uint8bytes = new Uint8Array(bytes)
+            console.log(bytes)
+            console.log(uint8bytes)
+            const string = Buffer.from(uint8bytes).toString('hex')
+            console.log(string)
+            const rebyte = new Buffer(string, 'hex')
+            console.log(rebyte)
+            updateVdfSnarkParam(string)
+          }
+        })
+      }
+      fetchAndUpdateVdfSnarkParam()
+    }
+  }, [updateVdfSnarkParam, vdfSnarkParam])
+
+  useEffect(() => {
+    if (!encryptionParam) {
+      console.log('encryptionParam: ', encryptionParam)
+      const fetchAndUpdateEncryptionParam = async () => {
+        console.log('fetch EncryptionParam!')
+        await fetch('http://147.46.240.248:40002/zkp/getEncryptionParams', {
+          method: 'GET',
+        }).then(async (res) => {
+          console.log(res)
+          if (res.body) {
+            const text = await res.text()
+            console.log(text)
+            updateEncryptionParam(text)
+          }
+        })
+      }
+      fetchAndUpdateEncryptionParam()
+    }
+  }, [encryptionParam, updateEncryptionParam])
+
+  useEffect(() => {
+    if (!encryptionProverKey) {
+      console.log('encryptionProverKey: ', encryptionProverKey)
+      const fetchAndUpdateEncryptionProverKey = async () => {
+        console.log('fetch EncryptionProverKey!')
+        await fetch('http://147.46.240.248:40002/zkp/getEncryptionProverKey', {
+          method: 'GET',
+        }).then(async (res) => {
+          console.log(res)
+          if (res.body) {
+            const text = await res.text()
+            updateEncryptionProverKey(text)
+          }
+        })
+      }
+      fetchAndUpdateEncryptionProverKey()
+    }
+  }, [encryptionProverKey, updateEncryptionProverKey])
+
+  useEffect(() => {
+    if (!encryptionVerifierData) {
+      console.log('encryptionVerifierData: ', encryptionVerifierData)
+      const fetchAndUpdateEncryptionVerifierData = async () => {
+        console.log('fetch EncryptionVerifierData!')
+        await fetch('http://147.46.240.248:40002/zkp/getEncryptionVerifierData', {
+          method: 'GET',
+        }).then(async (res) => {
+          console.log(res)
+          if (res.body) {
+            const text = await res.text()
+            console.log(text)
+            updateEncryptionVerifierData(text)
+          }
+        })
+      }
+      fetchAndUpdateEncryptionVerifierData()
+    }
+  }, [encryptionVerifierData, updateEncryptionVerifierData])
 
   // swap state
   const { independentField, typedValue, recipient } = useSwapState()
