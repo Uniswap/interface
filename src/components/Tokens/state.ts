@@ -13,6 +13,7 @@ export const filterNetworkAtom = atom<SupportedChainId>(SupportedChainId.MAINNET
 export const filterTimeAtom = atom<TimePeriod>(TimePeriod.DAY)
 export const sortCategoryAtom = atom<Category>(Category.marketCap)
 export const sortDirectionAtom = atom<SortDirection>(SortDirection.decreasing)
+export const tokensBannerDismissedAtom = atomWithStorage<boolean>('tokensBannerDismissed', false)
 
 /* for favoriting tokens */
 export function useToggleFavorite(tokenAddress: string) {

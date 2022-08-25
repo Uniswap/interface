@@ -1,10 +1,15 @@
-import { useState } from 'react'
+import { PageName } from 'components/AmplitudeAnalytics/constants'
+import { useAtom } from 'jotai'
+import { getCurrentPageFromLocation } from 'pages/App'
+import { useEffect, useState } from 'react'
 import { X } from 'react-feather'
+import { useLocation } from 'react-router-dom'
 import styled, { useTheme } from 'styled-components/macro'
 import { opacify } from 'theme/utils'
 
 import tokensPromoDark from '../../assets/images/tokensPromoDark.png'
 import tokensPromoLight from '../../assets/images/tokensPromoLight.png'
+import { tokensBannerDismissedAtom } from './state'
 
 const PopupContainer = styled.div<{ show: boolean }>`
   position: absolute;
@@ -12,17 +17,16 @@ const PopupContainer = styled.div<{ show: boolean }>`
   flex-direction: column;
   padding: 12px 16px 12px 20px;
   gap: 8px;
-  right: 16px;
   bottom: 48px;
+  right: 16px;
   width: 320px;
   height: 88px;
   z-index: 5;
-  background-color: ${({ theme }) => (theme.darkMode ? theme.backgroundScrim : opacify(60, theme.white))};
+  background-color: ${({ theme }) => (theme.darkMode ? theme.backgroundScrim : opacify(60, '#FDF0F8'))};
   color: ${({ theme }) => theme.textPrimary};
   border: 1px solid ${({ theme }) => theme.backgroundOutline};
   border-radius: 12px;
-  transition-timing-function: ${({ theme }) => theme.transition.timing.in};
-  transition: ${({ theme }) => `${theme.transition.duration.slow}ms`};
+  box-shadow: ${({ theme }) => theme.deepShadow};
 
   background-image: url(${({ theme }) => (theme.darkMode ? `${tokensPromoDark}` : `${tokensPromoLight}`)});
   background-size: cover;
@@ -46,23 +50,37 @@ const Description = styled.span`
   width: 240px;
 `
 
-export default function TokensBanner({ showTokensBanner }: { showTokensBanner: boolean }) {
+export default function TokensBanner() {
   const theme = useTheme()
-  const [showBanner, setShowBanner] = useState(showTokensBanner)
-  // const { pathname } = useLocation()
-  // const currentPage = getCurrentPageFromLocation(pathname)
-  // if (currentPage === PageName.TOKENS_PAGE) {
-  //   setShowBanner(false)
-  // }
+  const { pathname } = useLocation()
+  const currentPage = getCurrentPageFromLocation(pathname)
+  const [showBanner, setShowBanner] = useState(false)
+  const [tokensBannerDismissed, setTokensBannerDismissed] = useAtom(tokensBannerDismissedAtom)
+
+  useEffect(() => {
+    setShowBanner(currentPage === PageName.SWAP_PAGE || currentPage === PageName.POOL_PAGE)
+    if (currentPage === PageName.TOKENS_PAGE) {
+      setTokensBannerDismissed(true)
+    }
+  }, [currentPage, setTokensBannerDismissed])
+
+  const closeBanner = () => {
+    setShowBanner(false)
+    setTokensBannerDismissed(true)
+  }
+  const clickBanner = () => {
+    window.location.href = 'https://app.uniswap.org/#/tokens'
+    setTokensBannerDismissed(true)
+  }
 
   return (
-    <PopupContainer show={showBanner} onClick={() => (window.location.href = 'https://app.uniswap.org/#/tokens')}>
+    <PopupContainer show={showBanner && !tokensBannerDismissed}>
       <Header>
-        <HeaderText>Explore Top Tokens</HeaderText>
-        <X size={20} color={theme.textSecondary} onClick={() => setShowBanner(false)} style={{ cursor: 'pointer' }} />
+        <HeaderText onClick={clickBanner}>Explore Top Tokens</HeaderText>
+        <X size={20} color={theme.textSecondary} onClick={closeBanner} style={{ cursor: 'pointer' }} />
       </Header>
 
-      <Description>Check out the new explore tab to discover and learn more</Description>
+      <Description onClick={clickBanner}>Check out the new explore tab to discover and learn more</Description>
     </PopupContainer>
   )
 }
