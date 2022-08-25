@@ -1,6 +1,8 @@
 import { ChainId } from '@kyberswap/ks-sdk-core'
 import { Trans } from '@lingui/macro'
+import { stringify } from 'qs'
 import { X } from 'react-feather'
+import { useHistory } from 'react-router-dom'
 import { Flex, Text } from 'rebass'
 import styled from 'styled-components'
 
@@ -8,6 +10,7 @@ import { ButtonEmpty } from 'components/Button'
 import Modal from 'components/Modal'
 import { useActiveWeb3React } from 'hooks'
 import { useActiveNetwork } from 'hooks/useActiveNetwork'
+import useParsedQueryString from 'hooks/useParsedQueryString'
 import { ApplicationModal } from 'state/application/actions'
 import { useModalOpen, useNetworkModalToggle } from 'state/application/hooks'
 import { useIsDarkMode } from 'state/user/hooks'
@@ -83,6 +86,8 @@ export default function NetworkModal(): JSX.Element | null {
   const toggleNetworkModal = useNetworkModalToggle()
   const { changeNetwork } = useActiveNetwork()
   const isDarkMode = useIsDarkMode()
+  const history = useHistory()
+  const qs = useParsedQueryString()
 
   return (
     <Modal isOpen={networkModalOpen} onDismiss={toggleNetworkModal} maxWidth={624}>
@@ -123,7 +128,12 @@ export default function NetworkModal(): JSX.Element | null {
                 padding="0"
                 onClick={() => {
                   toggleNetworkModal()
-                  changeNetwork(key)
+                  changeNetwork(key, () => {
+                    const { networkId, inputCurrency, outputCurrency, ...rest } = qs
+                    history.replace({
+                      search: stringify(rest),
+                    })
+                  })
                 }}
               >
                 <ListItem>

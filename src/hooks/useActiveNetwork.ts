@@ -44,9 +44,9 @@ export function useActiveNetwork() {
   const locationWithoutNetworkId = useMemo(() => {
     // Delete networkId from qs object
     const { networkId, ...qsWithoutNetworkId } = qs
-
     return { ...location, search: stringify({ ...qsWithoutNetworkId }) }
   }, [location, qs])
+
   const changeNetwork = useCallback(
     async (desiredChainId: ChainId, successCallback?: () => void, failureCallback?: () => void) => {
       const switchNetworkParams = {
@@ -58,6 +58,7 @@ export function useActiveNetwork() {
       const isWrongNetwork = error instanceof UnsupportedChainIdError
       if (isNotConnected && !isWrongNetwork) {
         dispatch(updateChainIdWhenNotConnected(desiredChainId))
+        successCallback && successCallback()
         return
       }
 
