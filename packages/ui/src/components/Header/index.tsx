@@ -10,10 +10,10 @@ import { useTranslation } from 'react-i18next'
 
 import styled from 'styled-components'
 
-// import Logo from '../../assets/svg/logo.svg'
-// import LogoDark from '../../assets/svg/logo_white.svg'
+import Logo from '../../assets/svg/logo.svg'
+import LogoDark from '../../assets/svg/logo_white.svg'
 import { useActiveWeb3React } from '../../hooks'
-// import { useDarkModeManager } from '../../state/user/hooks'
+import { useDarkModeManager } from '../../state/user/hooks'
 import {
   useETHBalances
   // useAggregateUniBalance
@@ -22,7 +22,7 @@ import {
 // import { CountUp } from 'use-count-up'
 // import { TYPE, ExternalLink } from '../../theme'
 import { YellowCard } from '../Card'
-// import { Moon, Sun } from 'react-feather'
+import { Moon, Sun } from 'react-feather'
 // import Menu from '../Menu'
 
 import Row, { RowFixed } from '../Row'
@@ -188,26 +188,26 @@ const BalanceText = styled(Text)`
   `};
 `
 
-// const Title = styled.a`
-//   display: flex;
-//   align-items: center;
-//   pointer-events: auto;
-//   justify-self: flex-start;
-//   margin-right: 12px;
-//   ${({ theme }) => theme.mediaWidth.upToSmall`
-//     justify-self: center;
-//   `};
-//   :hover {
-//     cursor: pointer;
-//   }
-// `
+const Title = styled.a`
+  display: flex;
+  align-items: center;
+  pointer-events: auto;
+  justify-self: flex-start;
+  margin-right: 12px;
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    justify-self: center;
+  `};
+  :hover {
+    cursor: pointer;
+  }
+`
 
-// const UniIcon = styled.div`
-//   transition: transform 0.3s ease;
-//   :hover {
-//     transform: rotate(-5deg);
-//   }
-// `
+const UniIcon = styled.div`
+  transition: transform 0.3s ease;
+  :hover {
+    transform: rotate(-5deg);
+  }
+`
 
 const activeClassName = 'ACTIVE'
 
@@ -320,7 +320,7 @@ export default function Header() {
 
   const userEthBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
   // const [isDark] = useDarkModeManager()
-  // const [darkMode, toggleDarkMode] = useDarkModeManager()
+  const [darkMode, toggleDarkMode] = useDarkModeManager()
 
   // const toggleClaimModal = useToggleSelfClaimModal()
 
