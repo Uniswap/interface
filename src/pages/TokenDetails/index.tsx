@@ -11,6 +11,7 @@ import LoadingTokenDetail from 'components/Tokens/TokenDetails/LoadingTokenDetai
 import NetworkBalance from 'components/Tokens/TokenDetails/NetworkBalance'
 import TokenDetail from 'components/Tokens/TokenDetails/TokenDetail'
 import TokenSafetyMessage from 'components/TokenSafety/TokenSafetyMessage'
+import Widget, { WIDGET_WIDTH } from 'components/Widget'
 import { getChainInfo } from 'constants/chainInfo'
 import { L1_CHAIN_IDS, L2_CHAIN_IDS, SupportedChainId, TESTNET_CHAIN_IDS } from 'constants/chains'
 import { checkWarning } from 'constants/tokenSafety'
@@ -19,8 +20,6 @@ import { useNetworkTokenBalances } from 'hooks/useNetworkTokenBalances'
 import { useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components/macro'
-
-import Widget, { WIDGET_WIDTH } from './Widget'
 
 const Footer = styled.div`
   display: none;
