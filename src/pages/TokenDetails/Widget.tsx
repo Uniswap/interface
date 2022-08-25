@@ -5,7 +5,7 @@ import { useWeb3React } from '@web3-react/core'
 import { DEFAULT_DEADLINE_FROM_NOW } from 'constants/misc'
 import { RPC_URLS } from 'constants/networks'
 import { useActiveLocale } from 'hooks/useActiveLocale'
-import { useMemo } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import {
   useIsDarkMode,
   useSetUserSlippageTolerance,
@@ -24,33 +24,47 @@ export default function Widget() {
   const { provider } = useWeb3React()
 
   const [userTtl, setUserTtl] = useUserTransactionTTL()
+  const [ttl, setTtl] = useState<number | undefined>(userTtl / 60)
+  const onTransactionDeadlineChange = useCallback(
+    (ttl: number | undefined) => {
+      setTtl(ttl)
+      const userTtl = ttl === undefined ? ttl : ttl * 60
+      setUserTtl(userTtl ?? DEFAULT_DEADLINE_FROM_NOW)
+    },
+    [setUserTtl]
+  )
   const [userSlippage, setUserSlippage] = [useUserSlippageTolerance(), useSetUserSlippageTolerance()]
+  const [slippage, setSlippage] = useState<string | undefined>(
+    userSlippage === 'auto' ? undefined : userSlippage.toFixed(2)
+  )
+  const onSlippageChange = useCallback(
+    (slippage: Slippage) => {
+      setSlippage(slippage.max)
+      if (slippage.auto || !slippage.max) {
+        setUserSlippage('auto')
+      } else {
+        setUserSlippage(new Percent(Math.floor(Number(slippage.max) * 100), 10_000))
+      }
+    },
+    [setUserSlippage]
+  )
+  const onSettingsReset = useCallback(() => {
+    setTtl(undefined)
+    setUserTtl(DEFAULT_DEADLINE_FROM_NOW)
+    setSlippage(undefined)
+    setUserSlippage('auto')
+  }, [setUserSlippage, setUserTtl])
   const settings /*: SwapSettingsController */ = useMemo(() => {
     const auto = userSlippage === 'auto'
-    const slippage = { auto, max: auto ? 0 : Number(userSlippage.toFixed(2)) }
-    const transactionTtl = userTtl === undefined ? userTtl : userTtl / 60
-    return { slippage, transactionTtl }
-  }, [userSlippage, userTtl])
+    return { slippage: { auto, max: slippage }, transactionTtl: ttl }
+  }, [slippage, ttl, userSlippage])
   const settingsHandlers /*: SwapEventHandlers */ = useMemo(
     () => ({
-      onSettingsReset: () => {
-        setUserSlippage('auto')
-        // TODO(zzmp): Implement default settings props in @uniswap/widgets' SwapWidget.
-        setUserTtl(DEFAULT_DEADLINE_FROM_NOW)
-      },
-      onSlippageChange: (slippage: Slippage) => {
-        if (slippage.auto || !slippage.max) {
-          setUserSlippage('auto')
-        } else {
-          setUserSlippage(new Percent(Math.floor(slippage.max * 100), 10_000))
-        }
-      },
-      onTransactionDeadlineChange: (ttl: number | undefined) => {
-        const userTtl = ttl === undefined ? DEFAULT_DEADLINE_FROM_NOW : ttl * 60
-        setUserTtl(userTtl)
-      },
+      onSettingsReset,
+      onSlippageChange,
+      onTransactionDeadlineChange,
     }),
-    [setUserSlippage, setUserTtl]
+    [onSettingsReset, onSlippageChange, onTransactionDeadlineChange]
   )
 
   const value /*: SwapController */ = useMemo(() => ({}), [])
