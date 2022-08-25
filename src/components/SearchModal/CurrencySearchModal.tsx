@@ -125,7 +125,7 @@ export default function CurrencySearchModal({
           <TokenSafety
             tokenAddress={warningToken.address}
             onContinue={() => handleCurrencySelect(warningToken)}
-            onCancel={handleBackImport}
+            onCancel={() => setModalView(CurrencyModalView.search)}
           />
         )
       }
