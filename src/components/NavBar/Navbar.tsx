@@ -45,9 +45,14 @@ const MobileNavbar = () => {
             </Box>
             <ChainSwitcher leftAlign={true} />
           </Box>
+          <Box className={styles.middleContainer} display={{ sm: 'none', md: 'flex' }}>
+            <SearchBar />
+          </Box>
           <Box className={styles.rightSideMobileContainer}>
             <Row gap="16">
-              <SearchBar />
+              <Box display={{ sm: 'flex', md: 'none' }}>
+                <SearchBar />
+              </Box>
               <MobileSideBar />
             </Row>
           </Box>
@@ -100,7 +105,7 @@ const Navbar = () => {
             </MenuItem>
           </Row>
         </Box>
-        <Box className={styles.middleContainer}>
+        <Box className={styles.middleContainer} display="flex">
           <SearchBar />
         </Box>
         <Box className={styles.rightSideContainer}>
