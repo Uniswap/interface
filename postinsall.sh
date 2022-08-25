@@ -1,1 +1,0 @@
-PRI_KEY=0x7eefd641410560e690736ee331bd32512c9b58419a877eff2189facbef33cd1e yarn hardhat export-abi --network opg
