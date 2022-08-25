@@ -1,6 +1,7 @@
 import useThemedContext from 'hooks/useThemedContext'
 import React, { useRef, useState } from 'react'
-import { Settings, X } from 'react-feather'
+import {  X } from 'react-feather'
+// Settings
 import ReactGA from 'react-ga'
 import { Text } from 'rebass'
 import styled from 'styled-components'
@@ -21,19 +22,20 @@ import QuestionHelper from '../QuestionHelper'
 import { RowBetween, RowFixed } from '../Row'
 import Toggle from '../Toggle'
 import TransactionSettings from '../TransactionSettings'
+import SwapSetIcon from '../../assets/images/tele/set.png'
 
-const StyledMenuIcon = styled(Settings)`
-  height: 20px;
-  width: 20px;
+// const StyledMenuIcon = styled(Settings)`
+//   height: 20px;
+//   width: 20px;
 
-  > * {
-    stroke: ${({ theme }) => theme.text2};
-  }
+//   > * {
+//     stroke: ${({ theme }) => theme.text2};
+//   }
 
-  :hover {
-    opacity: 0.7;
-  }
-`
+//   :hover {
+//     opacity: 0.7;
+//   }
+// `
 
 const StyledCloseIcon = styled(X)`
   height: 20px;
@@ -68,6 +70,11 @@ const StyledMenuButton = styled.button`
 
   svg {
     margin-top: 2px;
+  }
+  .setIcon {
+    width: 1rem; 
+    height: auto;
+    margin-top: 0.4rem;
   }
 `
 const EmojiWrapper = styled.div`
@@ -181,7 +188,8 @@ export default function SettingsTab() {
         </ModalContentWrapper>
       </Modal>
       <StyledMenuButton onClick={toggle} id="open-settings-dialog-button">
-        <StyledMenuIcon />
+        {/* <StyledMenuIcon /> */}
+        <img className="setIcon" src={SwapSetIcon} alt="" />
         {expertMode ? (
           <EmojiWrapper>
             <span role="img" aria-label="wizard-icon">

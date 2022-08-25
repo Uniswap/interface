@@ -9,6 +9,7 @@ import styled, {
 import { useIsDarkMode } from '../state/user/hooks'
 import { Text, TextProps } from 'rebass'
 import { Colors } from './styled'
+import swapBottomBg from '../assets/images/tele/swapBottomBg.svg'
 
 export * from './components'
 
@@ -21,7 +22,7 @@ const MEDIA_WIDTHS = {
 
 const mediaWidthTemplates: { [width in keyof typeof MEDIA_WIDTHS]: typeof css } = Object.keys(MEDIA_WIDTHS).reduce(
   (accumulator, size) => {
-    ;(accumulator as any)[size] = (a: any, b: any, c: any) => css`
+    ; (accumulator as any)[size] = (a: any, b: any, c: any) => css`
       @media (max-width: ${(MEDIA_WIDTHS as any)[size]}px) {
         ${css(a, b, c)}
       }
@@ -46,25 +47,32 @@ export function colors(darkMode: boolean): Colors {
     text3: darkMode ? '#6C7284' : '#888D9B',
     text4: darkMode ? '#565A69' : '#C3C5CB',
     text5: darkMode ? '#2C2F36' : '#EDEEF2',
+    textBlack: darkMode ? '#05050E' : '#05050E',
 
     // backgrounds / greys
     bg1: darkMode ? '#212429' : '#FFFFFF',
-    bg2: darkMode ? '#2C2F36' : '#F7F8FA',
+    bg2: darkMode ? 'rgba(5, 5, 14, 0.8)' : '#F7F8FA',
     bg3: darkMode ? '#40444F' : '#EDEEF2',
     bg4: darkMode ? '#565A69' : '#CED0D9',
     bg5: darkMode ? '#6C7284' : '#888D9B',
+    bgSwap: darkMode ? '#1d2f38' : '#1d2f38',
+    bgSwapInput: darkMode ? 'rgba(5, 5, 14, 0.5)' : 'rgba(5, 5, 14, 0.5)',
+    bgHtml: darkMode ? '#05050e' : '#05050e',
+    bgTransparent: darkMode ? 'transparent' : 'transparent',
+    bgGreen: darkMode ? '#39E1BA' : '#39E1BA',
+    bgDisable: darkMode ? '#CCCCCC' : '#CCCCCC',
 
     //specialty colors
     modalBG: darkMode ? 'rgba(0,0,0,.425)' : 'rgba(0,0,0,0.3)',
     advancedBG: darkMode ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.6)',
 
     //primary colors
-    primary1: darkMode ? '#2172E5' : '#ff007a',
+    primary1: darkMode ? '#00C6A9' : '#ff007a',
     primary2: darkMode ? '#3680E7' : '#FF8CC3',
     primary3: darkMode ? '#4D8FEA' : '#FF99C9',
     primary4: darkMode ? '#376bad70' : '#F6DDE8',
     primary5: darkMode ? '#153d6f70' : '#FDEAF1',
-
+  
     // color text
     primaryText1: darkMode ? '#6da8ff' : '#ff007a',
 
@@ -80,11 +88,21 @@ export function colors(darkMode: boolean): Colors {
     green1: '#27AE60',
     yellow1: '#FFE270',
     yellow2: '#F3841E',
-    blue1: '#2172E5'
+    blue1: '#2172E5',
 
     // dont wanna forget these blue yet
     // blue4: darkMode ? '#153d6f70' : '#C4D9F8',
     // blue5: darkMode ? '#153d6f70' : '#EBF4FF',
+    
+    btnNormal: darkMode ? '#39E1BA' : '#ff007a',
+    btnHover: darkMode ? '#74EACF' : '#ff007a',
+    btnSelect: darkMode ? '#2FB598' : '#ff007a',
+    btnDisable : darkMode ? '#CCCCCC' : '#ff007a',
+
+    textNormal: darkMode ? '#05050E' : '#ff007a',
+    textHover: darkMode ? '#05050E' : '#ff007a',
+    textSelect: darkMode ? '#05050E' : '#ff007a',
+    textDisable : darkMode ? '#05050E' : '#ff007a',
   }
 }
 
@@ -124,7 +142,7 @@ export default function ThemeProvider({ children }: { children: React.ReactNode 
   return <StyledComponentsThemeProvider theme={themeObject}>{children}</StyledComponentsThemeProvider>
 }
 
-const TextWrapper = styled(Text)<{ color: keyof Colors }>`
+const TextWrapper = styled(Text) <{ color: keyof Colors }>`
   color: ${({ color, theme }) => (theme as any)[color]};
 `
 
@@ -219,7 +237,9 @@ html {
 export const ThemedGlobalStyle = createGlobalStyle`
 html {
   color: ${({ theme }) => theme.text1};
-  background-color: ${({ theme }) => theme.bg2};
+  background-color: ${({ theme }) => theme.bgHtml};
+  background: url(${swapBottomBg}) center top 7rem no-repeat rgba(0,0,0,1);
+  background-size: 61%;
 }
 
 body {

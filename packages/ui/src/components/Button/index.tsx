@@ -39,24 +39,27 @@ const Base = styled(RebassButton)<{
 `
 
 export const ButtonPrimary = styled(Base)`
-  background-color: ${({ theme }) => theme.primary1};
+  background-color: ${({ theme }) => theme.btnNormal};
   color: white;
   &:focus {
-    box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.05, theme.primary1)};
-    background-color: ${({ theme }) => darken(0.05, theme.primary1)};
+    box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.05, theme.btnHover)};
+    background-color: ${({ theme }) => darken(0.05, theme.btnHover)};
+    color: ${({theme }) => theme.textHover}
   }
   &:hover {
-    background-color: ${({ theme }) => darken(0.05, theme.primary1)};
+    background-color: ${({ theme }) => darken(0.05, theme.btnHover)};
+    color: ${({theme }) => theme.textHover}
   }
   &:active {
-    box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.1, theme.primary1)};
-    background-color: ${({ theme }) => darken(0.1, theme.primary1)};
+    box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.1, theme.btnHover)};
+    background-color: ${({ theme }) => darken(0.1, theme.btnHover)};
+    color: ${({theme }) => theme.textHover}
   }
   &:disabled {
     background-color: ${({ theme, altDisabledStyle, disabled }) =>
-      altDisabledStyle ? (disabled ? theme.bg3 : theme.primary1) : theme.bg3};
+      altDisabledStyle ? (disabled ? theme.btnDisable : theme.primary1) : theme.btnDisable};
     color: ${({ theme, altDisabledStyle, disabled }) =>
-      altDisabledStyle ? (disabled ? theme.text3 : 'white') : theme.text3};
+      altDisabledStyle ? (disabled ? theme.textDisable : 'white') : theme.textDisable};
     cursor: auto;
     box-shadow: none;
     border: 1px solid transparent;
