@@ -169,7 +169,7 @@ function WrongNetworkCard() {
       <PageWrapper navBarFlag={navBarFlagEnabled}>
         <AutoColumn gap="lg" justify="center">
           <AutoColumn gap="lg" style={{ width: '100%' }}>
-            <TitleRow style={{ marginTop: '1rem' }} padding={'0'}>
+            <TitleRow padding={'0'}>
               <ThemedText.LargeHeader>
                 <Trans>Pools</Trans>
               </ThemedText.LargeHeader>
@@ -269,7 +269,7 @@ export default function Pool() {
         <PageWrapper navBarFlag={navBarFlagEnabled}>
           <AutoColumn gap="lg" justify="center">
             <AutoColumn gap="lg" style={{ width: '100%' }}>
-              <TitleRow style={{ marginTop: '1rem' }} padding={'0'}>
+              <TitleRow padding={'0'}>
                 <ThemedText.LargeHeader>
                   <Trans>Pools</Trans>
                 </ThemedText.LargeHeader>
