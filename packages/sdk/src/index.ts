@@ -9,6 +9,7 @@ export {
   FACTORY_ADDRESS,
   INIT_CODE_HASH,
   ROUTER_ADDRESS,
+  WETH_ADDRESS,
   MINIMUM_LIQUIDITY,
 } from './constants'
 
