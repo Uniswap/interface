@@ -10,7 +10,7 @@ import { ExternalLink as LinkIconFeather } from 'react-feather'
 import { Text } from 'rebass'
 import { useAddUserToken } from 'state/user/hooks'
 import styled, { useTheme } from 'styled-components/macro'
-import { ButtonText, CopyLinkIcon, ExternalLink } from 'theme'
+import { CopyLinkIcon, ExternalLink } from 'theme'
 import { Color } from 'theme/styled'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
@@ -54,11 +54,6 @@ const StyledButton = styled(ButtonPrimary)<{ buttonColor: Color; textColor: Colo
   :hover {
     background-color: ${({ buttonColor, theme }) => buttonColor ?? theme.accentAction};
   }
-`
-
-const StyledCancelButton = styled(ButtonText)<{ color?: Color }>`
-  margin-top: 16px;
-  color: ${({ color, theme }) => color ?? theme.accentAction};
 `
 
 const Buttons = ({
