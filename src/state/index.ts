@@ -10,12 +10,13 @@ import { updateVersion } from './global/actions'
 import lists from './lists/reducer'
 import logs from './logs/slice'
 import mint from './mint/reducer'
+import parameters from './parameters/reducer'
 import { routingApi } from './routing/slice'
 import swap from './swap/reducer'
 import transactions from './transactions/reducer'
 import user from './user/reducer'
 
-const PERSISTED_KEYS: string[] = ['user', 'transactions', 'lists']
+const PERSISTED_KEYS: string[] = ['user', 'transactions', 'lists', 'parameters']
 
 const store = configureStore({
   reducer: {
@@ -24,6 +25,7 @@ const store = configureStore({
     transactions,
     swap,
     mint,
+    parameters,
     burn,
     multicall: multicall.reducer,
     lists,
