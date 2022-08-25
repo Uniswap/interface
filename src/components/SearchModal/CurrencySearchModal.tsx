@@ -112,6 +112,7 @@ export default function CurrencySearchModal({
       )
       break
     case CurrencyModalView.tokenSafety:
+      minHeight = undefined
       if (tokenSafetyFlag === TokenSafetyVariant.Enabled && warningToken) {
         content = (
           <TokenSafety
