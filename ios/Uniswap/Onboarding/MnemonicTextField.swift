@@ -11,6 +11,7 @@ enum InputFocusState {
   case notFocused
   case focusedNoInput
   case focusedWrongInput
+  case notFocusedWrongInput
 }
 
 struct MnemonicTextField: View {
@@ -53,6 +54,13 @@ struct MnemonicTextField: View {
       return AnyView(RoundedRectangle(cornerRadius: 20)
         .strokeBorder(Colors.accentCritical, lineWidth: 2)
         .background(Colors.backgroundAction)
+        .cornerRadius(20)
+      )
+      
+    case .notFocusedWrongInput:
+      return AnyView(RoundedRectangle(cornerRadius: 20)
+        .strokeBorder(Colors.accentCritical, lineWidth: 2)
+        .background(Colors.backgroundSurface)
         .cornerRadius(20)
       )
       

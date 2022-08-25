@@ -83,6 +83,8 @@ struct MnemonicTest: View {
       return InputFocusState.focusedWrongInput
     } else if (isTextFieldFocused) {
       return InputFocusState.focusedNoInput
+    } else if (!isTextFieldEmpty && !isTextFieldValid) {
+      return InputFocusState.notFocusedWrongInput
     }
     return InputFocusState.notFocused
   }
