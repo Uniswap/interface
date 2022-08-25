@@ -238,7 +238,6 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
             <ParentSize>{({ width, height }) => <PriceChart token={token} width={width} height={height} />}</ParentSize>
           </ChartContainer>
         </ChartHeader>
-        <AboutSection address={address} tokenDetailData={relevantTokenDetailData} />
         <StatsSection>
           <StatPair>
             <Stat>
@@ -269,6 +268,7 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
             </Stat>
           </StatPair>
         </StatsSection>
+        <AboutSection address={address} tokenDetailData={relevantTokenDetailData} />
         <ContractAddressSection>
           <Contract>
             Contract address
