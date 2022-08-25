@@ -211,9 +211,13 @@ body {
   padding: 0;
 }
 
- a {
+iframe {
+  pointer-events: none;
+}
+
+a {
    color: ${colors(false).blue1}; 
- }
+}
 
 * {
   box-sizing: border-box;

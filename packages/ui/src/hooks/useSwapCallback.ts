@@ -3,16 +3,14 @@ import { Contract } from '@ethersproject/contracts'
 import { JSBI, Percent, Router, SwapParameters, Trade, TradeType } from '@teleswap/sdk'
 import { useMemo } from 'react'
 import { BIPS_BASE, INITIAL_ALLOWED_SLIPPAGE } from '../constants'
-import { getTradeVersion, useV1TradeExchangeAddress } from '../data/V1'
 import { useTransactionAdder } from '../state/transactions/hooks'
 import { calculateGasMargin, getRouterContract, isAddress, shortenAddress } from '../utils'
 import isZero from '../utils/isZero'
-import v1SwapArguments from '../utils/v1SwapArguments'
 import { useActiveWeb3React } from './index'
-import { useV1ExchangeContract } from './useContract'
 import useTransactionDeadline from './useTransactionDeadline'
 import useENS from './useENS'
 import { Version } from './useToggledVersion'
+import { getTradeVersion } from 'utils/tradeVersion'
 
 export enum SwapCallbackState {
   INVALID,
@@ -54,14 +52,11 @@ function useSwapCallArguments(
   const recipient = recipientAddressOrName === null ? account : recipientAddress
   const deadline = useTransactionDeadline()
 
-  const v1Exchange = useV1ExchangeContract(useV1TradeExchangeAddress(trade), true)
-
   return useMemo(() => {
     const tradeVersion = getTradeVersion(trade)
     if (!trade || !recipient || !library || !account || !tradeVersion || !chainId || !deadline) return []
 
-    const contract: Contract | null =
-      tradeVersion === Version.v2 ? getRouterContract(chainId, library, account) : v1Exchange
+    const contract: Contract | null = tradeVersion === Version.v2 ? getRouterContract(chainId, library, account) : null
     if (!contract) {
       return []
     }
@@ -90,18 +85,9 @@ function useSwapCallArguments(
           )
         }
         break
-      case Version.v1:
-        swapMethods.push(
-          v1SwapArguments(trade, {
-            allowedSlippage: new Percent(JSBI.BigInt(allowedSlippage), BIPS_BASE),
-            recipient,
-            deadline: deadline.toNumber()
-          })
-        )
-        break
     }
     return swapMethods.map(parameters => ({ parameters, contract }))
-  }, [account, allowedSlippage, chainId, deadline, library, recipient, trade, v1Exchange])
+  }, [account, allowedSlippage, chainId, deadline, library, recipient, trade])
 }
 
 // returns a function that will execute a swap, if the parameters are all valid

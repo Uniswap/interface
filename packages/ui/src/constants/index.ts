@@ -40,8 +40,21 @@ export const UNI: { [chainId in ChainId]: Token } = {
   [ChainId.RINKEBY]: new Token(ChainId.RINKEBY, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
   [ChainId.ROPSTEN]: new Token(ChainId.ROPSTEN, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
   [ChainId.GÖRLI]: new Token(ChainId.GÖRLI, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
-  [ChainId.KOVAN]: new Token(ChainId.KOVAN, UNI_ADDRESS, 18, 'UNI', 'Uniswap'),
-  [ChainId.TELE]: new Token(ChainId.TELE, UNI_ADDRESS, 18, 'UNI', 'Uniswap')
+  [ChainId.OP_GOERLI]: new Token(ChainId.OP_GOERLI, '0xED59D07e00118b7ab76EE6fB29D738e266aAca02', 18, 'SUSHI', 'SUSHI Token'),
+  [ChainId.KOVAN]: new Token(ChainId.KOVAN, UNI_ADDRESS, 18, 'UNI', 'Uniswap')
+}
+
+export const MASTERCHEF_ADDRESSBOOK: { [chainId in ChainId]?: string } = {
+  [ChainId.RINKEBY]: '0xe87ce36b28c80f46a0d5e200b1c528e051b7a201'
+}
+
+export const MASTERCHEFV2_ADDRESSBOOK: { [chainId in ChainId]?: string } = {
+  // [ChainId.RINKEBY]: ''
+}
+
+export const SUSHI_ADDRESS: { [chainId in ChainId]?: string } = {
+  [ChainId.RINKEBY]: '0xdaa8093513e9698f37e36332d43cc27e196d9ada',
+  [ChainId.OP_GOERLI]: '0xED59D07e00118b7ab76EE6fB29D738e266aAca02'
 }
 
 export const COMMON_CONTRACT_NAMES: { [address: string]: string } = {
@@ -61,7 +74,7 @@ const WETH_ONLY: ChainTokenList = {
   [ChainId.RINKEBY]: [WETH[ChainId.RINKEBY]],
   [ChainId.GÖRLI]: [WETH[ChainId.GÖRLI]],
   [ChainId.KOVAN]: [WETH[ChainId.KOVAN]],
-  [ChainId.TELE]: [WETH[ChainId.TELE]]
+  [ChainId.OP_GOERLI]: [WETH[ChainId.OP_GOERLI]]
 }
 
 // used to construct intermediary pairs for trading

@@ -19,9 +19,8 @@ import {
 } from './AddLiquidity/redirects'
 import Earn from './Earn'
 import Manage from './Earn/Manage'
-import MigrateV1 from './MigrateV1'
-import MigrateV1Exchange from './MigrateV1/MigrateV1Exchange'
-import RemoveV1Exchange from './MigrateV1/RemoveV1Exchange'
+import SimpleSushiMCManage from './Farm/FarmDetail'
+import FarmList from './Farm'
 import Pool from './Pool'
 import PoolFinder from './PoolFinder'
 import RemoveLiquidity from './RemoveLiquidity'
@@ -104,13 +103,15 @@ export default function App() {
               <Route exact path="/create" component={AddLiquidity} />
               <Route exact path="/create/:currencyIdA" component={RedirectOldAddLiquidityPathStructure} />
               <Route exact path="/create/:currencyIdA/:currencyIdB" component={RedirectDuplicateTokenIds} />
-              <Route exact strict path="/remove/v1/:address" component={RemoveV1Exchange} />
+              {/* <Route exact strict path="/remove/v1/:address" component={RemoveV1Exchange} /> */}
               <Route exact strict path="/remove/:tokens" component={RedirectOldRemoveLiquidityPathStructure} />
               <Route exact strict path="/remove/:currencyIdA/:currencyIdB" component={RemoveLiquidity} />
-              <Route exact strict path="/migrate/v1" component={MigrateV1} />
-              <Route exact strict path="/migrate/v1/:address" component={MigrateV1Exchange} />
+              {/*    <Route exact strict path="/migrate/v1" component={MigrateV1} />
+              <Route exact strict path="/migrate/v1/:address" component={MigrateV1Exchange} /> */}
               <Route exact strict path="/uni/:currencyIdA/:currencyIdB" component={Manage} />
               <Route exact strict path="/vote/:id" component={VotePage} />
+              <Route exact strict path="/farm" component={FarmList} />
+              <Route exact strict path="/farm/:pid" component={SimpleSushiMCManage} />
               <Route component={RedirectPathToSwapOnly} />
             </Switch>
           </Web3ReactManager>

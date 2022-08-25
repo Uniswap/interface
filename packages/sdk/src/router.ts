@@ -139,6 +139,6 @@ export abstract class Router {
       methodName,
       args,
       value
-    } as SwapParameters
+    }
   }
 }

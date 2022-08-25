@@ -5,7 +5,7 @@ import { darken } from 'polished'
 import { useCurrencyBalance } from '../../state/wallet/hooks'
 import CurrencySearchModal from '../SearchModal/CurrencySearchModal'
 import CurrencyLogo from '../CurrencyLogo'
-import DoubleCurrencyLogo from '../DoubleLogo'
+import DoubleCurrencyLogoHorizontal from '../DoubleLogo'
 import { RowBetween } from '../Row'
 import { TYPE } from '../../theme'
 import { Input as NumericalInput } from '../NumericalInput'
@@ -14,6 +14,9 @@ import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
 import { useActiveWeb3React } from '../../hooks'
 import { useTranslation } from 'react-i18next'
 import useThemedContext from '../../hooks/useThemedContext'
+import DownArrow from 'assets/svg/DownArrow.svg'
+import { Flex } from 'rebass'
+import DoubleCurrencyLogo from 'components/DoubleLogo'
 
 const InputRow = styled.div<{ selected: boolean }>`
   ${({ theme }) => theme.flexRowNoWrap}
@@ -26,9 +29,12 @@ const CurrencySelect = styled.button<{ selected: boolean }>`
   height: 2.2rem;
   font-size: 20px;
   font-weight: 500;
-  background-color: ${({ selected, theme }) => (selected ? theme.bg1 : theme.primary1)};
-  color: ${({ selected, theme }) => (selected ? theme.text1 : theme.white)};
-  border-radius: 12px;
+  // background-color: ${({ selected, theme }) => (selected ? theme.bg1 : theme.primary1)};
+  // color: ${({ selected, theme }) => (selected ? theme.text1 : theme.white)};
+  // border-radius: 12px;
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border-radius: 47px;
   box-shadow: ${({ selected }) => (selected ? 'none' : '0px 6px 10px rgba(0, 0, 0, 0.075)')};
   outline: none;
   cursor: pointer;

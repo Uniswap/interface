@@ -3,7 +3,8 @@ import { getAddress } from '@ethersproject/address'
 import { AddressZero } from '@ethersproject/constants'
 import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
 import { BigNumber } from '@ethersproject/bignumber'
-import { abi as IUniswapV2Router02ABI } from '@uniswap/v2-periphery/build/IUniswapV2Router02.json'
+import ITeleswapV2Router02ABI from '@teleswap/contracts/build/ITeleswapV2Router02.json'
+// import { abi as IUniswapV2Router02ABI } from 'constants/abis/TeleswapV2Router02.json'
 import { ROUTER_ADDRESS } from '../constants'
 import { ChainId, JSBI, Percent, Token, CurrencyAmount, Currency, ETHER } from '@teleswap/sdk'
 import { TokenAddressMap } from '../state/lists/hooks'
@@ -17,13 +18,13 @@ export function isAddress(value: any): string | false {
   }
 }
 
-const ETHERSCAN_PREFIXES: { [chainId in ChainId]: string } = {
-  1: '',
-  3: 'ropsten.',
-  4: 'rinkeby.',
-  5: 'goerli.',
-  42: 'kovan.',
-  420: 'blockscout.com/optimism/goerli/'
+const SCAN_PREFIXES: { [chainId in ChainId]: string } = {
+  1: 'etherscan.io',
+  3: 'ropsten.etherscan.io',
+  4: 'rinkeby.etherscan.io',
+  5: 'goerli.etherscan.io',
+  42: 'kovan.etherscan.io',
+  420: 'blockscout.com/optimism/goerli'
 }
 
 export function getEtherscanLink(
@@ -31,7 +32,7 @@ export function getEtherscanLink(
   data: string,
   type: 'transaction' | 'token' | 'address' | 'block'
 ): string {
-  const prefix = `https://${ETHERSCAN_PREFIXES[chainId] || ETHERSCAN_PREFIXES[1]}etherscan.io`
+  const prefix = `https://${SCAN_PREFIXES[chainId] || SCAN_PREFIXES[1]}`
 
   switch (type) {
     case 'transaction': {
@@ -100,7 +101,7 @@ export function getContract(address: string, ABI: any, library: Web3Provider, ac
 
 // account is optional
 export function getRouterContract(_: number, library: Web3Provider, account?: string): Contract {
-  return getContract(ROUTER_ADDRESS, IUniswapV2Router02ABI, library, account)
+  return getContract(ROUTER_ADDRESS, ITeleswapV2Router02ABI, library, account)
 }
 
 export function escapeRegExp(string: string): string {

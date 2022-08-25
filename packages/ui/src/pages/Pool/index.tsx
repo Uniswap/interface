@@ -2,13 +2,14 @@ import React, { useMemo } from 'react'
 import styled from 'styled-components'
 import { Pair, JSBI } from '@teleswap/sdk'
 import { Link } from 'react-router-dom'
-import { SwapPoolTabs } from '../../components/NavigationTabs'
+import namor from 'namor'
+import { useTable, usePagination } from 'react-table'
 
+import { SwapPoolTabs } from '../../components/NavigationTabs'
 import FullPositionCard from '../../components/PositionCard'
-import { useUserHasLiquidityInAllTokens } from '../../data/V1'
 import { useTokenBalancesWithLoadingIndicator } from '../../state/wallet/hooks'
 import { StyledInternalLink, ExternalLink, TYPE, HideSmall } from '../../theme'
-import { Text, Flex } from 'rebass'
+import { Text, Flex, Box } from 'rebass'
 import Card from '../../components/Card'
 import { RowBetween, RowFixed } from '../../components/Row'
 import { ButtonPrimary, ButtonSecondary } from '../../components/Button'
@@ -75,9 +76,44 @@ const EmptyProposals = styled.div`
   align-items: center;
 `
 
-const BlockWrapper = styled(Flex)`
-  border: 1px solid rgba(255, 255, 255, 0.2);
+const YourLiquidityGrid = styled(Box)`
+  // border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(0, 0, 0, 0.2); //test usage
   border-radius: 24px;
+  padding: 48px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+  grid-template-rows: repeat(40px);
+  grid-row-gap: 24px;
+  grid-auto-flow: row;
+  justify-items: center;
+  align-items: center;
+  place-content: center center;
+`
+
+const TopPoolsGrid = styled(Box)`
+  // border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(0, 0, 0, 0.2); //test usage
+  border-radius: 24px;
+  padding: 48px;
+  display: grid;
+  grid-template-columns: 1fr 3fr 3fr 3fr;
+  grid-template-rows: repeat(40px);
+  grid-row-gap: 24px;
+  grid-auto-flow: row;
+  justify-items: center;
+  align-items: center;
+  place-content: center center;
+`
+
+const HeaderItem = styled(Box)`
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 18px;
+  color: rgba(255, 255, 255, 0.6);
+  white-space: nowrap;
 `
 
 export default function Pool() {
@@ -113,8 +149,6 @@ export default function Pool() {
 
   const allV2PairsWithLiquidity = v2Pairs.map(([, pair]) => pair).filter((v2Pair): v2Pair is Pair => Boolean(v2Pair))
 
-  const hasV1Liquidity = useUserHasLiquidityInAllTokens()
-
   // show liquidity even if its deposited in rewards contract
   const stakingInfo = useStakingInfo()
   const stakingInfosWithBalance = stakingInfo?.filter(pool => JSBI.greaterThan(pool.stakedAmount.raw, BIG_INT_ZERO))
@@ -133,7 +167,7 @@ export default function Pool() {
     <>
       <PageWrapper>
         <SwapPoolTabs active={'pool'} />
-        <VoteCard>
+        {/*   <VoteCard>
           <CardBGImage />
           <CardNoise />
           <CardSection>
@@ -157,20 +191,31 @@ export default function Pool() {
           </CardSection>
           <CardBGImage />
           <CardNoise />
-        </VoteCard>
+        </VoteCard> */}
 
         <AutoColumn gap="lg" justify="center">
           <AutoColumn gap="lg" style={{ width: '100%' }}>
             <TitleRow style={{ marginTop: '1rem' }} padding={'0'}>
               <HideSmall>
-                <TYPE.mediumHeader style={{ marginTop: '0.5rem', justifySelf: 'flex-start' }}>
+                <TYPE.mediumHeader
+                  style={{
+                    marginTop: '0.5rem',
+                    justifySelf: 'flex-start',
+                    fontFamily: 'Dela Gothic One',
+                    fontStyle: 'normal',
+                    fontWeight: '400',
+                    fontSize: '24px',
+                    color: '#FFFFFF',
+                    lineHeight: '32px'
+                  }}
+                >
                   Your liquidity
                 </TYPE.mediumHeader>
               </HideSmall>
               <ButtonRow>
-                <ResponsiveButtonSecondary as={Link} padding="6px 8px" to="/create/ETH">
+                {/* <ResponsiveButtonSecondary as={Link} padding="6px 8px" to="/create/ETH">
                   Create a pair
-                </ResponsiveButtonSecondary>
+                </ResponsiveButtonSecondary> */}
                 <ResponsiveButtonPrimary
                   id="join-pool-button"
                   as={Link}
@@ -208,14 +253,14 @@ export default function Pool() {
                   </RowBetween>
                 </ButtonSecondary>
                 {v2PairsWithoutStakedAmount.map(v2Pair => (
-                  <BlockWrapper key={v2Pair.liquidityToken.address}>
+                  <YourLiquidityGrid key={v2Pair.liquidityToken.address}>
                     <FullPositionCard
                       pair={v2Pair}
                       needBgColor={false}
-                      border={`1px solid rgba(255, 255, 255, 0.2)!important`}
-                      borderRadius={`24px`}
+                      // border={`1px solid rgba(255, 255, 255, 0.2)!important`}
+                      // borderRadius={`24px`}
                     />
-                  </BlockWrapper>
+                  </YourLiquidityGrid>
                 ))}
                 {stakingPairs.map(
                   (stakingPair, i) =>
@@ -238,18 +283,208 @@ export default function Pool() {
                 </TYPE.body>
               </EmptyProposals>
             )}
-
-            <AutoColumn justify={'center'} gap="md">
+            <YourLiquidityGrid>
+              {/*   <Table /> */}
+              <HeaderItem>Pool</HeaderItem>
+              <HeaderItem>Token</HeaderItem>
+              <HeaderItem>Amount</HeaderItem>
+              <HeaderItem>Value</HeaderItem>
+              <HeaderItem>Unclaimed Earnings</HeaderItem>
+              <HeaderItem></HeaderItem>
+              {}
+            </YourLiquidityGrid>
+            <TitleRow style={{ marginTop: '1rem' }} padding={'0'}>
+              <HideSmall>
+                <TYPE.mediumHeader
+                  style={{
+                    marginTop: '0.5rem',
+                    justifySelf: 'flex-start',
+                    fontFamily: 'Dela Gothic One',
+                    fontStyle: 'normal',
+                    fontWeight: '400',
+                    fontSize: '24px',
+                    lineHeight: '32px',
+                    color: '#FFFFFF'
+                  }}
+                >
+                  Top Pools
+                </TYPE.mediumHeader>
+              </HideSmall>
+            </TitleRow>
+            <TopPoolsGrid>
+              {/*   <Table /> */}
+              <HeaderItem>#</HeaderItem>
+              <HeaderItem>Pools</HeaderItem>
+              <HeaderItem>TVL</HeaderItem>
+              <HeaderItem></HeaderItem>
+              {}
+            </TopPoolsGrid>
+            {/*  <AutoColumn justify={'center'} gap="md">
               <Text textAlign="center" fontSize={14} style={{ padding: '.5rem 0 .5rem 0' }}>
-                {hasV1Liquidity ? 'Uniswap V1 liquidity found!' : "Don't see a pool you joined?"}{' '}
-                <StyledInternalLink id="import-pool-link" to={hasV1Liquidity ? '/migrate/v1' : '/find'}>
-                  {hasV1Liquidity ? 'Migrate now.' : 'Import it.'}
+                Don't see a pool you joined?{' '}
+                <StyledInternalLink id="import-pool-link" to="/find">
+                  Import it.
                 </StyledInternalLink>
               </Text>
-            </AutoColumn>
+            </AutoColumn> */}
           </AutoColumn>
         </AutoColumn>
       </PageWrapper>
     </>
   )
+}
+/* 
+function Table() {
+  const columns = React.useMemo(
+    () => [
+      {
+        Header: 'Pool',
+        accessor: 'Pool'
+      },
+      {
+        Header: 'Token',
+        accessor: 'Token'
+      },
+      {
+        Header: 'Amount',
+        accessor: 'Amount'
+      },
+      {
+        Header: 'Value',
+        accessor: 'Value'
+      },
+      {
+        Header: 'Unclaimed Earnings',
+        accessor: 'Unclaimed Earnings'
+      }
+    ],
+    []
+  )
+  const data = React.useMemo(() => makeData(100000), [])
+
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    prepareRow,
+    page,
+    canPreviousPage,
+    canNextPage,
+    pageOptions,
+    pageCount,
+    gotoPage,
+    nextPage,
+    previousPage,
+    setPageSize,
+    state: { pageIndex, pageSize }
+  } = useTable(
+    {
+      columns,
+      data,
+      initialState: { pageIndex: 2 }
+    },
+    usePagination
+  )
+  return (
+    <Flex flexDirection={'column'}>
+      <table {...getTableProps()} style={{ textAlign: 'center' }}>
+        <thead>
+          {headerGroups.map(headerGroup => (
+            <tr {...headerGroup.getHeaderGroupProps()}>
+              {headerGroup.headers.map(column => (
+                <th {...column.getHeaderProps()}>{column.render('Header')}</th>
+              ))}
+            </tr>
+          ))}
+        </thead>
+        <tbody {...getTableBodyProps()}>
+          {page.map((row, i) => {
+            prepareRow(row)
+            return (
+              <tr {...row.getRowProps()}>
+                {row.cells.map(cell => {
+                  return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                })}
+              </tr>
+            )
+          })}
+        </tbody>
+      </table>
+      <div className="pagination">
+        <button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
+          {'<<'}
+        </button>{' '}
+        <button onClick={() => previousPage()} disabled={!canPreviousPage}>
+          {'<'}
+        </button>{' '}
+        <button onClick={() => nextPage()} disabled={!canNextPage}>
+          {'>'}
+        </button>{' '}
+        <button onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>
+          {'>>'}
+        </button>{' '}
+        <span>
+          Page{' '}
+          <strong>
+            {pageIndex + 1} of {pageOptions.length}
+          </strong>{' '}
+        </span>
+        <span>
+          | Go to page:{' '}
+          <input
+            type="number"
+            defaultValue={pageIndex + 1}
+            onChange={e => {
+              const page = e.target.value ? Number(e.target.value) - 1 : 0
+              gotoPage(page)
+            }}
+            style={{ width: '100px' }}
+          />
+        </span>{' '}
+        <select
+          value={pageSize}
+          onChange={e => {
+            setPageSize(Number(e.target.value))
+          }}
+        >
+          {[10, 20, 30, 40, 50].map(pageSize => (
+            <option key={pageSize} value={pageSize}>
+              Show {pageSize}
+            </option>
+          ))}
+        </select>
+      </div>
+    </Flex>
+  )
+} */
+
+const range = len => {
+  const arr: number[] = []
+  for (let i = 0; i < len; i++) {
+    arr.push(i)
+  }
+  return arr
+}
+
+const newPerson = () => {
+  return {
+    Pool: namor.generate({ words: 1, numbers: 0 }),
+    Token: namor.generate({ words: 1, numbers: 0 }),
+    Amount: Math.floor(Math.random() * 30),
+    Value: Math.floor(Math.random() * 100),
+    'Unclaimed Earnings': Math.floor(Math.random() * 100)
+  }
+}
+
+function makeData(...lens) {
+  const makeDataLevel = (depth = 0) => {
+    const len = lens[depth]
+    return range(len).map(d => {
+      return {
+        ...newPerson()
+      }
+    })
+  }
+
+  return makeDataLevel()
 }

@@ -14,7 +14,9 @@
     ]
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "cleanup": "rimraf **/node_modules",
+    "postinstall": "lerna run build --stream --ignore  @teleswap/ui",
+    "start":"yarn workspace @teleswap/ui run start"
   },
   "repository": {
     "type": "git",
@@ -28,6 +30,7 @@
   },
   "homepage": "https://github.com/teleport-network/interface#readme",
   "devDependencies": {
-    "lerna": "^5.4.3"
+    "lerna": "^5.1.8",
+    "rimraf": "^3.0.2"
   }
 }

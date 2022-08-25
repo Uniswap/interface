@@ -102,7 +102,7 @@ function TransactionSubmittedContent({
           {chainId && hash && (
             <ExternalLink href={getEtherscanLink(chainId, hash, 'transaction')}>
               <Text fontWeight={500} fontSize={14} color={theme.primary1}>
-                View on Etherscan
+                View on Blockchain Exploerer
               </Text>
             </ExternalLink>
           )}
@@ -127,6 +127,37 @@ function TransactionSubmittedContent({
           </ButtonPrimary>
         </AutoColumn>
       </Section>
+    </Wrapper>
+  )
+}
+
+// const BorderWrapper = styled(Box)`
+//   // border: 1px solid rgba(255, 255, 255, 0.2);
+//   border: 1px solid rgba(0, 0, 0, 0.2); //test usage
+//   border-radius: 24px;
+// `
+
+export function AddLiquidityConfirmationModalContent({
+  bottomContent,
+  onDismiss,
+  topContent
+}: {
+  onDismiss: () => void
+  topContent: () => React.ReactNode
+  bottomContent: () => React.ReactNode
+}) {
+  return (
+    <Wrapper>
+      <Section>
+        <RowBetween>
+          <Text fontWeight={500} fontSize={20}>
+            {'Add Liquidity'}
+          </Text>
+          <CloseIcon onClick={onDismiss} />
+        </RowBetween>
+        {topContent()}
+      </Section>
+      <BottomSection gap="12px">{bottomContent()}</BottomSection>
     </Wrapper>
   )
 }
