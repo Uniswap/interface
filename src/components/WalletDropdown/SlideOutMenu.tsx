@@ -6,9 +6,12 @@ const Menu = styled.div`
   height: 100%;
   font-size: 16px;
   overflow: auto;
+
+  // Firefox scrollbar styling
   scrollbar-width: thin;
   scrollbar-color: ${({ theme }) => `${theme.backgroundOutline} transparent`};
 
+  // safari and chrome scrollbar styling
   ::-webkit-scrollbar {
     background: transparent;
     width: 4px;
