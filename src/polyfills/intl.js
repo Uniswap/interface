@@ -19,4 +19,7 @@ if (Platform.OS === 'ios') {
 
   require('@formatjs/intl-datetimeformat/polyfill').default
   require('@formatjs/intl-datetimeformat/locale-data/en').default // locale-data for en
+
+  require('@formatjs/intl-relativetimeformat/polyfill').default
+  require('@formatjs/intl-relativetimeformat/locale-data/en').default
 }
