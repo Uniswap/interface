@@ -10,7 +10,7 @@ import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import useTheme from 'hooks/useTheme'
 import { useUserSlippageTolerance } from 'state/user/hooks'
 
-const DefaultSlippages = [10, 50, 100]
+const DefaultSlippages = [5, 10, 50, 100]
 
 const parseSlippageInput = (str: string): number => Math.round(Number.parseFloat(str) * 100)
 
@@ -108,6 +108,11 @@ const SlippageOptionCSS = css`
 `
 const DefaultSlippageOption = styled.button`
   ${SlippageOptionCSS}
+  flex: 0 0 18%;
+  @media only screen and (max-width: 375px) {
+    font-size: 10px;
+    flex: 0 0 15%;
+  }
 `
 
 const CustomSlippageOption = styled.div`
@@ -117,7 +122,7 @@ const CustomSlippageOption = styled.div`
   align-items: center;
   padding: 0 4px;
   column-gap: 2px;
-
+  flex: 1;
   input {
     width: 100%;
     height: 100%;
@@ -169,6 +174,14 @@ const Message = styled.div`
   }
 `
 
+const CustomInput = styled.input`
+  ::placeholder {
+    font-size: 12px;
+  }
+  @media only screen and (max-width: 375px) {
+    font-size: 10px;
+  }
+`
 const SlippageSetting: React.FC = () => {
   const theme = useTheme()
   const inputRef = useRef<HTMLInputElement>(null)
@@ -179,7 +192,7 @@ const SlippageSetting: React.FC = () => {
 
   const isCustomOptionActive = !DefaultSlippages.includes(rawSlippage)
   const [slippageInput, setSlippageInput] = useState(isCustomOptionActive ? (rawSlippage / 100).toFixed(2) : '')
-  const { isValid, message } = validateSlippageInput(slippageInput)
+  const { isValid, message } = validateSlippageInput(slippageInput || String(rawSlippage / 100))
 
   const isWarning = isValid && !!message
   const isError = !isValid
@@ -269,7 +282,7 @@ const SlippageSetting: React.FC = () => {
               </span>
             </EmojiContainer>
           )}
-          <input
+          <CustomInput
             ref={inputRef}
             placeholder={t`Custom`}
             value={slippageInput}
