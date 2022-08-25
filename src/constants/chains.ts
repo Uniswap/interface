@@ -133,7 +133,7 @@ export const CHAIN_INFO: ChainInfo = {
     infoLink: 'https://info.uniswap.org/#/arbitrum',
     label: 'Arbitrum',
     logo: ARBITRUM_LOGO,
-    nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
+    nativeCurrency: { name: 'Arbitrum ETH', symbol: 'ETH', decimals: 18 },
     rpcUrls: ['https://arb1.arbitrum.io/rpc'],
   },
   [ChainId.ArbitrumRinkeby]: {
@@ -153,7 +153,7 @@ export const CHAIN_INFO: ChainInfo = {
     infoLink: 'https://info.uniswap.org/#/',
     label: 'Ethereum',
     logo: ETHEREUM_LOGO,
-    nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
+    nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
   },
   [ChainId.Rinkeby]: {
     docs: 'https://docs.uniswap.org/',
