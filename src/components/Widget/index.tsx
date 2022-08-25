@@ -6,9 +6,9 @@ import { useMemo } from 'react'
 import { useIsDarkMode } from 'state/user/hooks'
 import { DARK_THEME, LIGHT_THEME } from 'theme/widget'
 
+import { useSyncWidgetInputs } from './inputs'
 import { useSyncWidgetSettings } from './settings'
 import { useSyncWidgetTransactions } from './transactions'
-import { useSyncWidgetValue } from './value'
 
 export const WIDGET_WIDTH = 320
 
@@ -24,7 +24,7 @@ export default function Widget({ defaultToken }: WidgetProps) {
   const theme = useMemo(() => (darkMode ? DARK_THEME : LIGHT_THEME), [darkMode])
   const { provider } = useWeb3React()
 
-  const { value, tokenSelector } = useSyncWidgetValue(defaultToken)
+  const { inputs, tokenSelector } = useSyncWidgetInputs(defaultToken)
   const { settings } = useSyncWidgetSettings()
   const { transactions } = useSyncWidgetTransactions()
 
@@ -38,7 +38,7 @@ export default function Widget({ defaultToken }: WidgetProps) {
         locale={locale}
         theme={theme}
         provider={provider}
-        {...value}
+        {...inputs}
         {...settings}
         {...transactions}
       />

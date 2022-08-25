@@ -3,7 +3,7 @@ import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
 import { useCallback, useMemo, useState } from 'react'
 
 // Integrates the Widget's controlled value, using the app's CurrencySearchModal for token selection.
-export function useSyncWidgetValue(defaultToken: Currency) {
+export function useSyncWidgetInputs(defaultToken: Currency) {
   const [isExactInput, setIsExactInput] = useState(false)
   const [amount, setAmount] = useState<string>()
   const onAmountChange = useCallback((field: Field, amount: string) => {
@@ -61,5 +61,6 @@ export function useSyncWidgetValue(defaultToken: Currency) {
       onCurrencySelect={onTokenSelect}
     />
   )
-  return { value: { value, ...valueHandlers }, tokenSelector }
+
+  return { inputs: { value, ...valueHandlers }, tokenSelector }
 }
