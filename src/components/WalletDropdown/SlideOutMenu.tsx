@@ -7,6 +7,7 @@ const Menu = styled.div`
   font-size: 16px;
   overflow: auto;
   scrollbar-width: thin;
+  scrollbar-color: ${({ theme }) => `${theme.backgroundOutline} transparent`};
 
   ::-webkit-scrollbar {
     background: transparent;
