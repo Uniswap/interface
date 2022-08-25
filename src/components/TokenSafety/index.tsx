@@ -71,17 +71,15 @@ const Buttons = ({
   onCancel: () => void
 }) => {
   const theme = useTheme()
-  let textColor, buttonColor, cancelColor
+  let textColor, buttonColor
   switch (warning.level) {
     case WARNING_LEVEL.MEDIUM:
       textColor = theme.white
       buttonColor = theme.accentAction
-      cancelColor = theme.accentAction
       break
     case WARNING_LEVEL.UNKNOWN:
       textColor = theme.accentFailure
       buttonColor = theme.accentFailureSoft
-      cancelColor = theme.textPrimary
       break
     case WARNING_LEVEL.BLOCKED:
       textColor = theme.textPrimary
@@ -93,9 +91,6 @@ const Buttons = ({
       <StyledButton buttonColor={buttonColor} textColor={textColor} onClick={onContinue}>
         <Trans>I understand</Trans>
       </StyledButton>
-      <StyledCancelButton color={cancelColor} onClick={onCancel}>
-        Cancel
-      </StyledCancelButton>
     </>
   ) : (
     <StyledButton buttonColor={buttonColor} textColor={textColor} onClick={onCancel}>
