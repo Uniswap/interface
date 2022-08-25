@@ -29,7 +29,11 @@ const InternalLinkMenuItem = styled(InternalMenuItem)`
   :hover {
     cursor: pointer;
     background-color: ${({ theme }) => theme.backgroundModule};
-    transition: 250ms background-color ease;
+    transition: ${({
+      theme: {
+        transition: { duration, timing },
+      },
+    }) => `${duration.fast}ms background-color ${timing.in}`};
   }
 `
 
