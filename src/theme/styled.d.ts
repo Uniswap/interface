@@ -149,6 +149,7 @@ declare module 'styled-components/macro' {
         fast: number
       }
       timing: {
+        ease: string
         in: string
         out: string
         inOut: string
