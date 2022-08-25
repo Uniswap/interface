@@ -1,34 +1,36 @@
-import { colors } from './colors'
+import { colorsDark, colorsLight } from './colors'
 
 export const LIGHT_THEME = {
   // surface
-  container: '#EDEFF7',
-  interactive: '#EDEFF7',
-  module: '#E1E4EE',
-  accent: colors.pink400,
-  dialog: '#E1E4EE',
+  container: colorsLight.backgroundSurface,
+  interactive: colorsLight.backgroundInteractive,
+  module: colorsLight.backgroundModule,
+  accent: colorsLight.accentAction,
+  dialog: colorsLight.backgroundBackdrop,
+  outline: colorsLight.backgroundOutline,
   // text
-  primary: colors.gray900,
-  secondary: colors.gray500,
-  onInteractive: colors.gray900,
+  primary: colorsLight.textPrimary,
+  secondary: colorsLight.textSecondary,
+  onInteractive: colorsLight.accentTextDarkPrimary,
   // state
-  success: colors.green400,
-  warning: colors.gold200,
-  error: colors.red400,
+  success: colorsLight.accentSuccess,
+  warning: colorsLight.accentWarning,
+  error: colorsLight.accentCritical,
 }
 export const DARK_THEME = {
   // surface
-  container: colors.gray900,
-  interactive: 'rgba(153, 161, 189, 0.08)',
-  module: '#191D27',
-  accent: colors.blue400,
-  dialog: '#191D27',
+  container: colorsDark.backgroundSurface,
+  interactive: colorsDark.backgroundInteractive,
+  module: colorsDark.backgroundModule,
+  accent: colorsDark.accentAction,
+  dialog: colorsDark.backgroundBackdrop,
+  outline: colorsDark.backgroundOutline,
   // text
-  primary: colors.white,
-  secondary: colors.gray300,
-  onInteractive: colors.white,
+  primary: colorsDark.textPrimary,
+  secondary: colorsDark.textSecondary,
+  onInteractive: colorsDark.accentTextLightPrimary,
   // state
-  success: colors.greenVibrant,
-  warning: colors.gold200,
-  error: colors.red400,
+  success: colorsDark.accentSuccess,
+  warning: colorsDark.accentWarning,
+  error: colorsDark.accentCritical,
 }
