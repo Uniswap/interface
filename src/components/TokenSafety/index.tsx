@@ -4,14 +4,13 @@ import { ButtonPrimary } from 'components/Button'
 import { AutoColumn } from 'components/Column'
 import CurrencyLogo from 'components/CurrencyLogo'
 import TokenSafetyLabel from 'components/TokenSafety/TokenSafetyLabel'
-import { checkWarning, getWarningCopy, TOKEN_SAFETY_ARTICLE, Warning, WARNING_LEVEL } from 'constants/tokenSafety'
+import { checkWarning, getWarningCopy, TOKEN_SAFETY_ARTICLE, Warning } from 'constants/tokenSafety'
 import { useToken } from 'hooks/Tokens'
 import { ExternalLink as LinkIconFeather } from 'react-feather'
 import { Text } from 'rebass'
 import { useAddUserToken } from 'state/user/hooks'
-import styled, { useTheme } from 'styled-components/macro'
+import styled from 'styled-components/macro'
 import { ButtonText, CopyLinkIcon, ExternalLink } from 'theme'
-import { Color } from 'theme/styled'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 const Wrapper = styled.div`
@@ -46,19 +45,28 @@ const InfoText = styled(Text)`
   text-align: center;
 `
 
-const StyledButton = styled(ButtonPrimary)<{ buttonColor: Color; textColor: Color }>`
-  color: ${({ textColor }) => textColor};
-  background-color: ${({ buttonColor }) => buttonColor};
+const StyledButton = styled(ButtonPrimary)`
   margin-top: 24px;
   width: 100%;
-  :hover {
-    background-color: ${({ buttonColor, theme }) => buttonColor ?? theme.accentAction};
+  font-weight: 600;
+`
+
+const StyledCloseButton = styled(StyledButton)`
+  background-color: ${({ theme }) => theme.backgroundInteractive};
+  color: ${({ theme }) => theme.textPrimary};
+
+  &:hover {
+    background-color: ${({ theme }) => theme.backgroundInteractive};
+    opacity: 0.6;
+    transition: opacity 250ms ease;
   }
 `
 
-const StyledCancelButton = styled(ButtonText)<{ color?: Color }>`
+const StyledCancelButton = styled(ButtonText)`
   margin-top: 16px;
-  color: ${({ color, theme }) => color ?? theme.accentAction};
+  color: ${({ theme }) => theme.textSecondary};
+  font-weight: 600;
+  font-size: 14px;
 `
 
 const Buttons = ({
@@ -70,37 +78,17 @@ const Buttons = ({
   onContinue: () => void
   onCancel: () => void
 }) => {
-  const theme = useTheme()
-  let textColor, buttonColor, cancelColor
-  switch (warning.level) {
-    case WARNING_LEVEL.MEDIUM:
-      textColor = theme.white
-      buttonColor = theme.accentAction
-      cancelColor = theme.accentAction
-      break
-    case WARNING_LEVEL.UNKNOWN:
-      textColor = theme.accentFailure
-      buttonColor = theme.accentFailureSoft
-      cancelColor = theme.textPrimary
-      break
-    case WARNING_LEVEL.BLOCKED:
-      textColor = theme.textPrimary
-      buttonColor = theme.backgroundInteractive
-      break
-  }
   return warning.canProceed ? (
     <>
-      <StyledButton buttonColor={buttonColor} textColor={textColor} onClick={onContinue}>
+      <StyledButton onClick={onContinue}>
         <Trans>I understand</Trans>
       </StyledButton>
-      <StyledCancelButton color={cancelColor} onClick={onCancel}>
-        Cancel
-      </StyledCancelButton>
+      <StyledCancelButton onClick={onCancel}>Cancel</StyledCancelButton>
     </>
   ) : (
-    <StyledButton buttonColor={buttonColor} textColor={textColor} onClick={onCancel}>
+    <StyledCloseButton onClick={onCancel}>
       <Trans>Close</Trans>
-    </StyledButton>
+    </StyledCloseButton>
   )
 }
 
@@ -124,8 +112,8 @@ const ExplorerContainer = styled.div`
   height: 32px;
   margin-top: 10px;
   font-size: 20px;
-  background-color: ${({ theme }) => theme.accentActiveSoft};
-  color: ${({ theme }) => theme.accentActive};
+  background-color: ${({ theme }) => theme.accentActionSoft};
+  color: ${({ theme }) => theme.accentAction};
   border-radius: 8px;
   padding: 2px 12px;
   display: flex;
@@ -189,6 +177,10 @@ function ExplorerView({ token }: { token: Token }) {
     return null
   }
 }
+
+const StyledExternalLink = styled(ExternalLink)`
+  font-weight: 600;
+`
 
 interface TokenSafetyProps {
   tokenAddress: string | null
@@ -254,9 +246,9 @@ export default function TokenSafety({ tokenAddress, secondTokenAddress, onContin
           <ShortColumn>
             <InfoText>
               {description}{' '}
-              <ExternalLink href={TOKEN_SAFETY_ARTICLE}>
+              <StyledExternalLink href={TOKEN_SAFETY_ARTICLE}>
                 <Trans>Learn more</Trans>
-              </ExternalLink>
+              </StyledExternalLink>
             </InfoText>
           </ShortColumn>
           <LinkColumn>{urls}</LinkColumn>

@@ -137,7 +137,7 @@ const CollectionName = ({
         </Box>
         {isVerified && <VerifiedIcon style={{ width: '32px', height: '32px' }} />}
         <Row
-          display={{ mobile: 'none', tabletSm: 'flex' }}
+          display={{ sm: 'none', md: 'flex' }}
           alignItems="center"
           justifyContent="center"
           marginLeft="32"
@@ -211,7 +211,7 @@ const CollectionDescription = ({ description }: { description: string }) => {
   }, [descriptionRef, baseRef])
 
   return (
-    <Box ref={baseRef} marginTop={{ mobile: '12', tabletSm: '16' }} style={{ maxWidth: '680px' }}>
+    <Box ref={baseRef} marginTop={{ sm: '12', md: '16' }} style={{ maxWidth: '680px' }}>
       <Box
         ref={descriptionRef}
         className={clsx(styles.description, styles.nameText, readMore && styles.descriptionOpen)}
@@ -248,7 +248,7 @@ const StatsRow = ({ stats, isMobile, ...props }: { stats: GenieCollection; isMob
   const floorPriceStr = ethNumberStandardFormatter(stats.floorPrice)
 
   return (
-    <Row gap={{ mobile: '20', tabletSm: '60' }} {...props}>
+    <Row gap={{ sm: '20', md: '60' }} {...props}>
       <StatsItem label="Items" isMobile={isMobile ?? false}>
         {totalSupplyStr}
       </StatsItem>

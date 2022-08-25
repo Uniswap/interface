@@ -46,6 +46,7 @@ const ContractAddress = styled.button`
   align-items: center;
   background: transparent;
   border: none;
+  min-height: 38px;
   padding: 0px;
   cursor: pointer;
 `

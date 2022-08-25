@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-23 20:04\n"
+"PO-Revision-Date: 2022-08-24 19:05\n"
 "Last-Translator: \n"
 "Language: id_ID\n"
 "Language-Team: Indonesian\n"
@@ -231,6 +231,7 @@ msgstr "Jumlah"
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "Terjadi kesalahan saat mengeksekusi swap ini. Anda mungkin memerlukan peningkatan toleransi slip Anda. Jika tidak berhasil, kemungkinan token yang anda perdagangkan tidak cocok. Catatan: biaya transfer token rebase tidak cocok dengan Uniswap V3."
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/earn/StakingModal.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approve"
@@ -248,10 +249,12 @@ msgstr "Setujui Token"
 msgid "Approve {0}"
 msgstr "Setujui {0}"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approved"
 msgstr "Disetujui"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approving"
@@ -305,6 +308,7 @@ msgstr "Tersedia untuk disetor: {0}"
 msgid "Back to wallet selection"
 msgstr "Kembali ke pemilihan dompet"
 
+#: src/components/CurrencyInputPanel/SwapCurrencyInputPanel.tsx
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "Balance: {0}"
 msgstr "Saldo: {0}"
@@ -382,6 +386,7 @@ msgstr "Periksa status jaringan"
 msgid "Check out our v3 LP walkthrough and migration guides."
 msgstr "Lihat panduan migrasi dan tutorial LP v3 kami."
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/WalletDropdown/AuthenticatedHeader.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/ClaimRewardModal.tsx
@@ -417,6 +422,7 @@ msgstr "Biaya klaim"
 msgid "Claim your UNI tokens"
 msgstr "Klaim token UNI Anda"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Claimed"
 msgstr "Diklaim"
@@ -430,6 +436,7 @@ msgstr "UNI diklaim!"
 msgid "Claimed!"
 msgstr "Diklaim!"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
 msgid "Claiming"
@@ -464,6 +471,7 @@ msgstr "Tutup"
 msgid "Closed"
 msgstr "Ditutup"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collect"
 msgstr "Tagih"
@@ -481,10 +489,12 @@ msgstr "Tagih biaya"
 msgid "Collect {0}/{1} fees"
 msgstr "Kumpulkan {0}/{1} biaya"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collected"
 msgstr "Ditagihkan"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collecting"
 msgstr "Menagih"
@@ -872,6 +882,7 @@ msgid "Explore"
 msgstr "Mengeksplorasi"
 
 #: src/pages/Tokens/index.tsx
+#: src/pages/Tokens/index.tsx
 msgid "Explore Tokens"
 msgstr "Jelajahi Token"
 
@@ -1105,6 +1116,10 @@ msgstr "Sarat"
 msgid "Loading"
 msgstr "Memuat"
 
+#: src/components/CurrencyInputPanel/index.tsx
+msgid "MAX"
+msgstr "MAKSIMAL"
+
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
@@ -1126,7 +1141,7 @@ msgstr "Kelola Daftar Token"
 msgid "Manage this pool."
 msgstr "Kelola pangkalan ini."
 
-#: src/components/CurrencyInputPanel/index.tsx
+#: src/components/CurrencyInputPanel/SwapCurrencyInputPanel.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Max"
 msgstr "Max"
@@ -1258,10 +1273,6 @@ msgstr "Proposal tidak ditemukan."
 #: src/components/SearchModal/CurrencySearch.tsx
 msgid "No results found."
 msgstr "Hasil tidak ditemukan."
-
-#: src/components/Tokens/TokenDetails/TokenDetail.tsx
-msgid "No stats available"
-msgstr "Tidak ada statistik yang tersedia"
 
 #: src/components/Tokens/TokenDetails/TokenDetail.tsx
 msgid "No token information available"
@@ -1586,6 +1597,7 @@ msgstr "Cari nama atau tempel alamat"
 msgid "Select Pair"
 msgstr "Pilih Pasangan"
 
+#: src/components/CurrencyInputPanel/index.tsx
 #: src/components/SearchModal/CurrencySearch.tsx
 #: src/pages/PoolFinder/index.tsx
 #: src/pages/PoolFinder/index.tsx
@@ -1605,7 +1617,7 @@ msgstr "Pilih jaringan {0}"
 msgid "Select an action"
 msgstr "Pilih tindakan"
 
-#: src/components/CurrencyInputPanel/index.tsx
+#: src/components/CurrencyInputPanel/SwapCurrencyInputPanel.tsx
 msgid "Select token"
 msgstr "Pilih token"
 
@@ -1813,6 +1825,7 @@ msgstr "Dampak perdagangan Anda terhadap harga pasar kumpulan ini."
 msgid "The input token cannot be transferred. There may be an issue with the input token."
 msgstr "Token input tidak dapat ditransfer. Mungkin ada masalah dengan token input."
 
+#: src/components/CurrencyInputPanel/SwapCurrencyInputPanel.tsx
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "The market price is outside your specified price range. Single-asset deposit only."
 msgstr "Harga pasar di luar rentang harga yang Anda tentukan. Khusus setoran aset tunggal."
@@ -2094,6 +2107,7 @@ msgstr "Aset Tidak Didukung"
 msgid "Untitled"
 msgstr "Tanpa Judul"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/pages/Swap/index.tsx
 msgid "Unwrap"
 msgstr "Membuka"
@@ -2101,6 +2115,14 @@ msgstr "Membuka"
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Unwrap <0/> to {0}"
 msgstr "Buka bungkus <0/> hingga {0}"
+
+#: src/components/AccountDetailsV2/TransactionBody.tsx
+msgid "Unwrapped"
+msgstr "membuka bungkusnya"
+
+#: src/components/AccountDetailsV2/TransactionBody.tsx
+msgid "Unwrapping"
+msgstr "membuka bungkus"
 
 #: src/pages/Vote/Landing.tsx
 msgid "Update Delegation"
@@ -2283,6 +2305,7 @@ msgstr "Menarik {0} UNI-V2"
 msgid "Withdrew UNI-V2!"
 msgstr "Menarik UNI-V2!"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/pages/Swap/index.tsx
 msgid "Wrap"
 msgstr "Wrap"
@@ -2290,6 +2313,14 @@ msgstr "Wrap"
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Wrap <0/> to {0}"
 msgstr "Bungkus <0/> hingga {0}"
+
+#: src/components/AccountDetailsV2/TransactionBody.tsx
+msgid "Wrapped"
+msgstr "Dibungkus"
+
+#: src/components/AccountDetailsV2/TransactionBody.tsx
+msgid "Wrapping"
+msgstr "Pembungkus"
 
 #: src/pages/CreateProposal/index.tsx
 msgid "You already have an active or pending proposal"
@@ -2461,6 +2492,7 @@ msgstr "setelah tergelincir"
 
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/AccountDetailsV2/TransactionBody.tsx
+#: src/components/AccountDetailsV2/TransactionBody.tsx
 msgid "and"
 msgstr "dan"
 
@@ -2476,6 +2508,11 @@ msgstr "konfirmasikan"
 msgid "failed"
 msgstr "gagal"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
+msgid "fees"
+msgstr "biaya"
+
+#: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 msgid "for"
 msgstr "untuk"
@@ -2508,6 +2545,10 @@ msgstr "menit"
 msgid "reward"
 msgstr "Penghargaan"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
+msgid "to"
+msgstr "ke"
+
 #: src/components/SearchModal/ImportRow.tsx
 msgid "via {0}"
 msgstr "melalui {0}"
@@ -2531,7 +2572,6 @@ msgstr "{0, plural, =1 {Anda tidak dapat memperdagangkan token ini menggunakan A
 #: src/components/RateToggle/index.tsx
 #: src/components/RateToggle/index.tsx
 #: src/components/Settings/index.tsx
-#: src/components/Tokens/TokenDetails/TokenDetail.tsx
 msgid "{0}"
 msgstr "{0}"
 

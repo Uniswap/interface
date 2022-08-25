@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 const isClient = typeof window === 'object'
 
 function getIsMobile() {
-  return isClient ? window.innerWidth < breakpoints.tabletSm : false
+  return isClient ? window.innerWidth < breakpoints.sm : false
 }
 
 export function useIsMobile(): boolean {
