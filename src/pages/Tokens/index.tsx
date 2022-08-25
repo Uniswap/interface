@@ -105,6 +105,8 @@ const Tokens = () => {
 }
 
 export const LoadingTokens = () => {
+  const tokensNetworkFilterFlag = useTokensNetworkFilterFlag()
+
   return (
     <ExploreContainer>
       <TitleContainer>
@@ -113,8 +115,14 @@ export const LoadingTokens = () => {
         </ThemedText.LargeHeader>
       </TitleContainer>
       <FiltersWrapper>
-        <FiltersContainer />
-        <SearchContainer />
+        <FiltersContainer>
+          {tokensNetworkFilterFlag === TokensNetworkFilterVariant.Enabled && <NetworkFilter />}
+          <FavoriteButton />
+          <TimeSelector />
+        </FiltersContainer>
+        <SearchContainer>
+          <SearchBar />
+        </SearchContainer>
       </FiltersWrapper>
       <TokenTableContainer>
         <LoadingTokenTable />
