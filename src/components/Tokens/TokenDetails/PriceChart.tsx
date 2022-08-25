@@ -81,6 +81,7 @@ export const DeltaContainer = styled.div`
   height: 16px;
   display: flex;
   align-items: center;
+  margin-top: 4px;
 `
 const ArrowCell = styled.div`
   padding-left: 2px;
