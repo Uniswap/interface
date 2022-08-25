@@ -1,9 +1,7 @@
-import { PageName } from 'components/AmplitudeAnalytics/constants'
 import { useAtom } from 'jotai'
-import { getCurrentPageFromLocation } from 'pages/App'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { X } from 'react-feather'
-import { useLocation } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import styled, { useTheme } from 'styled-components/macro'
 import { opacify } from 'theme/utils'
 
@@ -37,7 +35,7 @@ const Header = styled.div`
   align-items: center;
   justify-content: space-between;
 `
-const HeaderText = styled.div`
+const HeaderText = styled(Link)`
   font-weight: 600;
   font-size: 14px;
   line-height: 20px;
@@ -52,31 +50,23 @@ const Description = styled.span`
 
 export default function TokensBanner() {
   const theme = useTheme()
-  const { pathname } = useLocation()
-  const currentPage = getCurrentPageFromLocation(pathname)
   const [showBanner, setShowBanner] = useState(false)
   const [tokensBannerDismissed, setTokensBannerDismissed] = useAtom(tokensBannerDismissedAtom)
-
-  useEffect(() => {
-    setShowBanner(currentPage === PageName.SWAP_PAGE || currentPage === PageName.POOL_PAGE)
-    if (currentPage === PageName.TOKENS_PAGE) {
-      setTokensBannerDismissed(true)
-    }
-  }, [currentPage, setTokensBannerDismissed])
 
   const closeBanner = () => {
     setShowBanner(false)
     setTokensBannerDismissed(true)
   }
   const clickBanner = () => {
-    window.location.href = 'https://app.uniswap.org/#/tokens'
     setTokensBannerDismissed(true)
   }
 
   return (
     <PopupContainer show={showBanner && !tokensBannerDismissed}>
       <Header>
-        <HeaderText onClick={clickBanner}>Explore Top Tokens</HeaderText>
+        <HeaderText to={'https://app.uniswap.org/#/tokens'} onClick={clickBanner}>
+          Explore Top Tokens
+        </HeaderText>
         <X size={20} color={theme.textSecondary} onClick={closeBanner} style={{ cursor: 'pointer' }} />
       </Header>
 

@@ -2,7 +2,6 @@ import { initializeAnalytics, sendAnalyticsEvent, user } from 'components/Amplit
 import { CUSTOM_USER_PROPERTIES, EventName, PageName } from 'components/AmplitudeAnalytics/constants'
 import { Trace } from 'components/AmplitudeAnalytics/Trace'
 import Loader from 'components/Loader'
-import TokensBanner from 'components/Tokens/TokensBanner'
 import TopLevelModals from 'components/TopLevelModals'
 import { useFeatureFlagsIsLoaded } from 'featureFlags'
 import { NavBarVariant, useNavBarFlag } from 'featureFlags/flags/navBar'
@@ -158,7 +157,6 @@ export default function App() {
             <Popups />
             <Polling />
             <TopLevelModals />
-            {tokensFlag === TokensVariant.Enabled && <TokensBanner />}
             <Suspense fallback={<Loader />}>
               {isLoaded ? (
                 <Routes>
