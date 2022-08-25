@@ -38,13 +38,13 @@ const HeaderText = styled(Link)`
   font-weight: 600;
   font-size: 14px;
   line-height: 20px;
-  cursor: pointer;
+  text-decoration: none;
 `
 const Description = styled.span`
   font-weight: 400;
   font-size: 12px;
   line-height: 16px;
-  width: 240px;
+  width: 75%;
 `
 
 export default function TokensBanner() {
