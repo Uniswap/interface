@@ -37,8 +37,6 @@ const InternalLinkMenuItem = styled(InternalMenuItem)`
   }
 `
 
-const LanguageWrap = styled.div``
-
 function LanguageMenuItem({ locale, isActive }: { locale: SupportedLocale; isActive: boolean }) {
   const { to, onClick } = useLocationLinkProps(locale)
   const theme = useTheme()
@@ -60,11 +58,9 @@ const LanguageMenu = ({ onClose }: { onClose: () => void }) => {
 
   return (
     <SlideOutMenu title={<Trans>Language</Trans>} onClose={onClose}>
-      <LanguageWrap>
-        {SUPPORTED_LOCALES.map((locale) => (
-          <LanguageMenuItem locale={locale} isActive={activeLocale === locale} key={locale} />
-        ))}
-      </LanguageWrap>
+      {SUPPORTED_LOCALES.map((locale) => (
+        <LanguageMenuItem locale={locale} isActive={activeLocale === locale} key={locale} />
+      ))}
     </SlideOutMenu>
   )
 }
