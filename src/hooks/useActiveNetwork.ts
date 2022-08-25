@@ -78,7 +78,12 @@ export function useActiveNetwork() {
           if (switchError?.code === 4902 || switchError?.code === -32603 || isSwitchError) {
             try {
               await activeProvider.request({ method: 'wallet_addEthereumChain', params: [addNetworkParams] })
-              if (chainId !== desiredChainId) {
+              try {
+                await activeProvider.request({
+                  method: 'wallet_switchEthereumChain',
+                  params: [switchNetworkParams],
+                })
+              } catch {
                 notify({
                   title: t`Failed to switch network`,
                   type: NotificationType.ERROR,
@@ -87,12 +92,19 @@ export function useActiveNetwork() {
               }
               successCallback && successCallback()
             } catch (addError) {
-              console.error(addError)
+              console.error('add', addError)
+              if (addError?.code === 4001) {
+                notify({
+                  title: t`Failed to switch network`,
+                  type: NotificationType.ERROR,
+                  summary: t`In order to use KyberSwap on ${NETWORKS_INFO[desiredChainId].name}, you must change the network in your wallet.`,
+                })
+              }
               failureCallback && failureCallback()
             }
           } else {
             // handle other "switch" errors
-            console.error(switchError)
+            console.error('switch', switchError)
             failureCallback && failureCallback()
             notify({
               title: t`Failed to switch network`,
@@ -103,7 +115,7 @@ export function useActiveNetwork() {
         }
       }
     },
-    [dispatch, history, library, locationWithoutNetworkId, error, notify, chainId],
+    [dispatch, history, library, locationWithoutNetworkId, error, notify],
   )
 
   useEffect(() => {
