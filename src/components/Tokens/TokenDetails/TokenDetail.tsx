@@ -241,7 +241,7 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
         <StatsSection>
           <StatPair>
             <Stat>
-              Market cap
+              <Trans>Market cap</Trans>
               <StatPrice>
                 {tokenDetailData.marketCap?.value ? formatDollarAmount(tokenDetailData.marketCap?.value) : '-'}
               </StatPrice>
@@ -271,7 +271,7 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
         <AboutSection address={address} tokenDetailData={relevantTokenDetailData} />
         <ContractAddressSection>
           <Contract>
-            Contract address
+            <Trans>Contract address</Trans>
             <ContractAddress>
               <CopyContractAddress address={address} />
             </ContractAddress>

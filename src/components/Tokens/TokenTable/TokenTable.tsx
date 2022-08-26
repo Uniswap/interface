@@ -1,3 +1,4 @@
+import { Trans } from '@lingui/macro'
 import {
   favoritesAtom,
   filterStringAtom,
@@ -161,7 +162,7 @@ export default function TokenTable({ data }: { data: TokenData[] | undefined }) 
         message={
           <>
             <AlertTriangle size={16} />
-            An error occured loading tokens. Please try again.
+            <Trans>An error occured loading tokens. Please try again.</Trans>
           </>
         }
       />
@@ -169,11 +170,11 @@ export default function TokenTable({ data }: { data: TokenData[] | undefined }) 
   }
 
   if (showFavorites && sortedFilteredTokens?.length === 0) {
-    return <NoTokensState message="You have no favorited tokens" />
+    return <NoTokensState message={<Trans>You have no favorited tokens</Trans>} />
   }
 
   if (!showFavorites && sortedFilteredTokens?.length === 0) {
-    return <NoTokensState message="No tokens found" />
+    return <NoTokensState message={<Trans>No tokens found</Trans>} />
   }
 
   return (
