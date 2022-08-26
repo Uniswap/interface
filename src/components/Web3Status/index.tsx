@@ -7,7 +7,6 @@ import WalletDropdown from 'components/WalletDropdown'
 import { getConnection } from 'connection/utils'
 import { NavBarVariant, useNavBarFlag } from 'featureFlags/flags/navBar'
 import { Portal } from 'nft/components/common/Portal'
-import { useIsMobile } from 'nft/hooks'
 import { getIsValidSwapQuote } from 'pages/Swap'
 import { darken } from 'polished'
 import { useMemo, useRef } from 'react'
@@ -288,7 +287,6 @@ export default function Web3Status() {
   const walletRef = useRef<HTMLDivElement>(null)
   const closeModal = useCloseModal(ApplicationModal.WALLET_DROPDOWN)
   const isOpen = useIsOpen()
-  const isMobile = useIsMobile()
 
   useOnClickOutside(ref, isOpen ? closeModal : undefined, [walletRef])
 
