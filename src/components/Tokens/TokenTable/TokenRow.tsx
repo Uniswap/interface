@@ -480,8 +480,8 @@ export default function LoadedRow({
   const hasData = pricePoints.length !== 0
   const startingPrice = hasData ? pricePoints[0] : DATA_EMPTY
   const endingPrice = hasData ? pricePoints[pricePoints.length - 1] : DATA_EMPTY
-  const widthScale = scaleLinear().domain([startingPrice.timestamp, endingPrice.timestamp]).range([0, 100])
-  const rdScale = scaleLinear().domain(getPriceBounds(pricePoints)).range([48, 0])
+  const widthScale = scaleLinear().domain([startingPrice.timestamp, endingPrice.timestamp]).range([0, 124])
+  const rdScale = scaleLinear().domain(getPriceBounds(pricePoints)).range([42, 0])
 
   const exploreTokenSelectedEventProperties = {
     chain_id: filterNetwork,
@@ -564,6 +564,7 @@ export default function LoadedRow({
                   getY={(p: PricePoint) => rdScale(p.value)}
                   /* Default curve doesn't look good for the ALL chart */
                   curve={undefined}
+                  color={delta && delta < 0 ? theme.accentFailure : theme.accentSuccess}
                   strokeWidth={2}
                   width={width}
                   height={height}
