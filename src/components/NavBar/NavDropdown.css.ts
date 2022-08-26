@@ -13,7 +13,6 @@ const baseNavDropdown = style([
   }),
   {
     boxShadow: '0px 4px 12px 0px #00000026',
-    zIndex: 10,
   },
 ])
 
@@ -36,5 +35,6 @@ export const mobileNavDropdown = style([
     bottom: '56',
     left: '0',
     right: '0',
+    width: 'full',
   }),
 ])

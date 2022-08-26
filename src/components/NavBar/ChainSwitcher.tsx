@@ -65,7 +65,8 @@ export const ChainSwitcher = ({ leftAlign }: ChainSwitcherProps) => {
   const isMobile = useIsMobile()
 
   const ref = useRef<HTMLDivElement>(null)
-  useOnClickOutside(ref, isOpen ? toggleOpen : undefined)
+  const modalRef = useRef<HTMLDivElement>(null)
+  useOnClickOutside(ref, isOpen ? toggleOpen : undefined, [modalRef])
 
   const info = chainId ? getChainInfo(chainId) : undefined
 
@@ -79,7 +80,7 @@ export const ChainSwitcher = ({ leftAlign }: ChainSwitcherProps) => {
   const isSupported = !!info
 
   const dropdown = (
-    <NavDropdown top="56" left={leftAlign ? '0' : 'auto'} right={leftAlign ? 'auto' : '0'}>
+    <NavDropdown top="56" left={leftAlign ? '0' : 'auto'} right={leftAlign ? 'auto' : '0'} ref={modalRef}>
       <Column marginX="8">
         {NETWORK_SELECTOR_CHAINS.map((chainId: SupportedChainId) => (
           <ChainRow
