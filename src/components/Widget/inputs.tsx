@@ -7,10 +7,10 @@ import { useCallback, useMemo, useState } from 'react'
  * Treats the Widget as a controlled component, using the app's own token selector for selection.
  */
 export function useSyncWidgetInputs(defaultToken?: Currency) {
-  const [isExactInput, setIsExactInput] = useState(false)
+  const [type, setType] = useState(TradeType.EXACT_INPUT)
   const [amount, setAmount] = useState<string>()
   const onAmountChange = useCallback((field: Field, amount: string) => {
-    setIsExactInput(field === Field.INPUT)
+    setType(toTradeType(field))
     setAmount(amount)
   }, [])
 
@@ -18,7 +18,7 @@ export function useSyncWidgetInputs(defaultToken?: Currency) {
     [Field.OUTPUT]: defaultToken,
   })
   const onSwitchTokens = useCallback(() => {
-    setIsExactInput((isExactInput) => !isExactInput)
+    setType((type) => invertTradeType(type))
     setTokens((tokens) => ({
       [Field.INPUT]: tokens[Field.OUTPUT],
       [Field.OUTPUT]: tokens[Field.INPUT],
@@ -38,7 +38,7 @@ export function useSyncWidgetInputs(defaultToken?: Currency) {
   const onTokenSelect = useCallback(
     (token: Currency) => {
       if (selectingField === undefined) return
-      setIsExactInput(selectingField === Field.INPUT)
+      setType(TradeType.EXACT_INPUT)
       setTokens(() => {
         return {
           [otherField]: token === otherToken ? selectingToken : otherToken,
@@ -58,14 +58,31 @@ export function useSyncWidgetInputs(defaultToken?: Currency) {
     />
   )
 
-  const value: SwapController = useMemo(
-    () => ({ type: isExactInput ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT, amount, ...tokens }),
-    [amount, isExactInput, tokens]
-  )
+  const value: SwapController = useMemo(() => ({ type, amount, ...tokens }), [amount, tokens, type])
   const valueHandlers: SwapEventHandlers = useMemo(
     () => ({ onAmountChange, onSwitchTokens, onTokenSelectorClick }),
     [onAmountChange, onSwitchTokens, onTokenSelectorClick]
   )
 
   return { inputs: { value, ...valueHandlers }, tokenSelector }
+}
+
+// TODO(zzmp): Move to @uniswap/widgets.
+function toTradeType(modifiedField: Field) {
+  switch (modifiedField) {
+    case Field.INPUT:
+      return TradeType.EXACT_INPUT
+    case Field.OUTPUT:
+      return TradeType.EXACT_OUTPUT
+  }
+}
+
+// TODO(zzmp): Include in @uniswap/sdk-core (on TradeType, if possible).
+function invertTradeType(tradeType: TradeType) {
+  switch (tradeType) {
+    case TradeType.EXACT_INPUT:
+      return TradeType.EXACT_OUTPUT
+    case TradeType.EXACT_OUTPUT:
+      return TradeType.EXACT_INPUT
+  }
 }
