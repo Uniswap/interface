@@ -27,6 +27,12 @@ const PopupContainer = styled.div<{ show: boolean }>`
   background-image: url(${({ theme }) => (theme.darkMode ? `${tokensPromoDark}` : `${tokensPromoLight}`)});
   background-size: cover;
   background-blend-mode: overlay;
+
+  transition: ${({
+    theme: {
+      transition: { duration, timing },
+    },
+  }) => `${duration.slow}ms opacity ${timing.in}`};
 `
 const Header = styled.div`
   display: flex;
