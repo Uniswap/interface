@@ -105,7 +105,7 @@ function useAvatarFromNFT(
   // ignore the chain from eip155
   // TODO: when we are able, pull only from the specified chain
   const [, erc] = standard?.split('/') ?? []
-  const [contractAddress, id] = tokenIdentifier?.split('/') ?? []
+  const [contractAddress, id] = tokenIdentifier?.split('/').map((a) => a?.trim()) ?? []
   const isERC721 = protocol === 'eip155' && erc === 'erc721'
   const isERC1155 = protocol === 'eip155' && erc === 'erc1155'
   const erc721 = useERC721Uri(isERC721 ? contractAddress : undefined, id)
