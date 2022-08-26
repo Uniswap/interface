@@ -1,7 +1,7 @@
 import { Currency } from '@uniswap/sdk-core'
 import React, { Suspense, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Keyboard, KeyboardAvoidingView } from 'react-native'
+import { KeyboardAvoidingView } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { AnimatedFlex, Flex } from 'src/components/layout'
 import { Loading } from 'src/components/loading'
@@ -49,10 +49,7 @@ export function TokenSelect({
         backgroundColor="backgroundContainer"
         placeholder={t('Search tokens')}
         value={searchFilter ?? ''}
-        onBack={() => {
-          Keyboard.dismiss()
-          onBack()
-        }}
+        onBack={onBack}
         onChangeText={onChangeText}
       />
       <Suspense fallback={<TokenSearchResultsLoading />}>

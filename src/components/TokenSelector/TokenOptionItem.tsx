@@ -1,6 +1,7 @@
 import { Currency } from '@uniswap/sdk-core'
 import Fuse from 'fuse.js'
 import React, { useCallback, useState } from 'react'
+import { Keyboard } from 'react-native'
 import { Box } from 'src/components/layout'
 import TokenWarningModal from 'src/components/tokens/TokenWarningModal'
 import WarningIcon from 'src/components/tokens/WarningIcon'
@@ -32,16 +33,13 @@ export function TokenOptionItem({ option, onPress, tokenWarningLevelMap, matches
   const dismissed = Boolean(dismissedWarningTokens[currency.chainId]?.[currency.wrapped.address])
 
   const handleSelectCurrency = useCallback(() => {
-    if (tokenWarningLevel === TokenWarningLevel.BLOCKED) {
-      setShowWarningModal(true)
-      return
-    }
-
     if (
-      (tokenWarningLevel === TokenWarningLevel.LOW ||
+      tokenWarningLevel === TokenWarningLevel.BLOCKED ||
+      ((tokenWarningLevel === TokenWarningLevel.LOW ||
         tokenWarningLevel === TokenWarningLevel.MEDIUM) &&
-      !dismissed
+        !dismissed)
     ) {
+      Keyboard.dismiss()
       setShowWarningModal(true)
       return
     }
