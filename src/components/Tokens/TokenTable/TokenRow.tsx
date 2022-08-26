@@ -314,7 +314,7 @@ const LogoContainer = styled.div`
 
 /* formatting for volume with timeframe header display */
 function getHeaderDisplay(category: string, timeframe: TimePeriod): string {
-  if (category === Category.volume) return `${DISPLAYS[timeframe]} ${category}`
+  if (category === Category.volume || category === Category.percentChange) return `${DISPLAYS[timeframe]} ${category}`
   return category
 }
 
