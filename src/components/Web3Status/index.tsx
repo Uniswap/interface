@@ -18,8 +18,12 @@ import styled, { css } from 'styled-components/macro'
 
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 import { useHasSocks } from '../../hooks/useSocksBalance'
-import { useModalIsOpen, useToggleWalletDropdown, useToggleWalletModal } from '../../state/application/hooks'
-import { useCloseModal } from '../../state/application/hooks'
+import {
+  useCloseModal,
+  useModalIsOpen,
+  useToggleWalletDropdown,
+  useToggleWalletModal,
+} from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/reducer'
 import { isTransactionRecent, useAllTransactions } from '../../state/transactions/hooks'
 import { TransactionDetails } from '../../state/transactions/types'
