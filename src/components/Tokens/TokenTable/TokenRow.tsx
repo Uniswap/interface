@@ -518,7 +518,7 @@ export default function LoadedRow({
             <PriceInfoCell>
               {tokenData.price?.value ? formatDollarAmount(tokenData.price?.value) : '-'}
               <PercentChangeInfoCell>
-                {delta}
+                {formattedDelta}
                 {arrow}
               </PercentChangeInfoCell>
             </PriceInfoCell>
