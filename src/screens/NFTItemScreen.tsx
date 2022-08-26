@@ -134,6 +134,7 @@ export function NFTItemScreen({
                   {t('Description')}
                 </Text>
                 <LongText
+                  renderAsMarkdown
                   color="textPrimary"
                   initialDisplayedLines={5}
                   text={asset.collection.description}
