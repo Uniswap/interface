@@ -1,5 +1,5 @@
 import graphql from 'babel-plugin-relay/macro'
-import { useEffect } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 // import useInterval from 'lib/hooks/useInterval'
 // import ms from 'ms.macro'
@@ -9,6 +9,7 @@ import type { HistoryDuration, TokenPriceSingleQuery } from './__generated__/Tok
 import TokenAPICache from './cache'
 import { TimePeriod } from './TopTokenQuery'
 import { useDataQueryer } from './useIntervalDataQuery'
+import { PriceHistory } from './types'
 //import { PriceHistory } from './types'
 
 function toHistoryDuration(timePeriod: TimePeriod): HistoryDuration {
@@ -89,6 +90,7 @@ const query = graphql`
 `
 
 export function useTokenPriceQuery(address: string, timePeriod: TimePeriod, chain: Chain) {
+  const [prices, setPrices] = useState<PriceHistory>()
   const { refreshData, error, isLoading, data } = useDataQueryer<TokenPriceSingleQuery>(query, {
     contract: {
       address,
@@ -97,18 +99,27 @@ export function useTokenPriceQuery(address: string, timePeriod: TimePeriod, chai
     duration: toHistoryDuration(timePeriod),
   })
 
-  //const [prices, setPrices] = useState({} as Record<TimePeriod, PriceHistory>)
+  const getData = useCallback(() => {
+    const cached = TokenAPICache.checkPriceHistory(address, timePeriod)
+    if (cached) {
+      setPrices(cached)
+    } else {
+      refreshData()
+    }
+  }, [timePeriod])
 
-  useEffect(refreshData, [])
-  useEffect(refreshData, [timePeriod])
+  useEffect(getData, [])
+  useEffect(getData, [timePeriod])
 
   useEffect(() => {
-    if (data) {
-      TokenAPICache.setPriceHistory(data?.tokenProjects?.[0]?.markets?.[0]?.priceHistory, address, timePeriod)
+    const newData = data?.tokenProjects?.[0]?.markets?.[0]?.priceHistory
+    if (newData) {
+      TokenAPICache.setPriceHistory(newData, address, timePeriod)
+      setPrices(newData)
     }
   }, [data])
 
-  return { error, isLoading, data: data?.tokenProjects?.[0]?.markets?.[0]?.priceHistory ?? [] }
+  return { error, isLoading, data: prices ?? [] }
 }
 
 // export function useTokenPriceQuery(address: string, timePeriod: TimePeriod, chain: Chain) {
