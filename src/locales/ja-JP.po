@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-24 19:05\n"
+"PO-Revision-Date: 2022-08-26 17:08\n"
 "Last-Translator: \n"
 "Language: ja_JP\n"
 "Language-Team: Japanese\n"
@@ -540,6 +540,10 @@ msgid "Confirm transaction in wallet"
 msgstr "ウォレットで取引を確認する"
 
 #: src/components/Web3Status/index.tsx
+msgid "Connect"
+msgstr "接続"
+
+#: src/components/Web3Status/index.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
@@ -745,6 +749,10 @@ msgstr "注文を取り下げる"
 msgid "Docs"
 msgstr "資料"
 
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "Documentation"
+msgstr "ドキュメンテーション"
+
 #: src/pages/MigrateV2/index.tsx
 msgid "Don’t see one of your v2 positions? <0>Import it.</0>"
 msgstr "V2の流動性が表示されない場合、該当のトークンを<0>インポート</0>してください"
@@ -894,6 +902,10 @@ msgstr "Uniswap Analyticsをご覧ください。"
 msgid "Failed to switch networks from the Uniswap Interface. In order to use Uniswap on {0}, you must change the network in your wallet."
 msgstr "Uniswapのインターフェイスからのネットワークの切り替えに失敗しました。 {0} でUniswapを使用するには、ウォレットのネットワークを変更する必要があります。"
 
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "Feature Flags"
+msgstr "機能フラグ"
+
 #: src/components/PositionPreview/index.tsx
 msgid "Fee Tier"
 msgstr "設定手数料"
@@ -905,6 +917,10 @@ msgstr "手数料レベル"
 #: src/components/swap/SwapDetailsDropdown.tsx
 msgid "Fetching best price..."
 msgstr "ベストな価格を取得中…"
+
+#: src/components/Tokens/TokenTable/SearchBar.tsx
+msgid "Filter tokens"
+msgstr "トークンのフィルター"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "For"
@@ -937,6 +953,10 @@ msgstr "Discordでサポートを受ける"
 #: src/components/Header/NetworkSelector.tsx
 #: src/components/Menu/index.tsx
 msgid "Help Center"
+msgstr "ヘルプセンター"
+
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "Help center"
 msgstr "ヘルプセンター"
 
 #: src/components/FeeSelector/index.tsx
@@ -1069,6 +1089,7 @@ msgid "Learn more"
 msgstr "より詳しく"
 
 #: src/components/Menu/index.tsx
+#: src/components/NavBar/MenuDropdown.tsx
 #: src/components/PrivacyPolicy/index.tsx
 msgid "Legal & Privacy"
 msgstr "法律とプライバシー"
@@ -1221,6 +1242,14 @@ msgstr "依存関係がありません"
 msgid "More"
 msgstr "もっと見る"
 
+#: src/components/NavBar/SearchBar.tsx
+msgid "NFT Collections"
+msgstr "NFTコレクション"
+
+#: src/components/NavBar/Navbar.tsx
+msgid "NFTs"
+msgstr "NFT"
+
 #: src/components/Tokens/TokenDetails/TokenDetail.tsx
 msgid "Name not found"
 msgstr "名前が見つかりません"
@@ -1277,6 +1306,10 @@ msgstr "結果が見つかりませんでした。"
 #: src/components/Tokens/TokenDetails/TokenDetail.tsx
 msgid "No token information available"
 msgstr "トークン情報がありません"
+
+#: src/components/NavBar/SearchBar.tsx
+msgid "No tokens found."
+msgstr "トークンが見つかりません。"
 
 #: src/constants/tokenSafety.tsx
 msgid "Not Available"
@@ -1366,6 +1399,7 @@ msgstr "Polygonscan"
 
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/Header/index.tsx
+#: src/components/NavBar/Navbar.tsx
 msgid "Pool"
 msgstr "プール"
 
@@ -1401,6 +1435,14 @@ msgstr "プールしている {0}:"
 #: src/pages/Pool/index.tsx
 msgid "Pools"
 msgstr "プール"
+
+#: src/components/NavBar/SearchBar.tsx
+msgid "Popular NFT collections"
+msgstr "人気の NFT コレクション"
+
+#: src/components/NavBar/SearchBar.tsx
+msgid "Popular tokens"
+msgstr "人気のトークン"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Portal Bridge"
@@ -1527,6 +1569,10 @@ msgstr "サポートされていないアセットの詳細を見る"
 msgid "Recent Transactions"
 msgstr "最近の取引"
 
+#: src/components/NavBar/SearchBar.tsx
+msgid "Recent searches"
+msgstr "最近の検索"
+
 #: src/components/AddressInputPanel/index.tsx
 msgid "Recipient"
 msgstr "受取人"
@@ -1593,6 +1639,14 @@ msgstr "戻る"
 msgid "Search name or paste address"
 msgstr "トークン名またはアドレス"
 
+#: src/components/NavBar/SearchBar.tsx
+msgid "Search tokens"
+msgstr "検索トークン"
+
+#: src/components/NavBar/SearchBar.tsx
+msgid "Search tokens and NFT collections"
+msgstr "検索トークンと NFT コレクション"
+
 #: src/pages/AddLiquidity/index.tsx
 msgid "Select Pair"
 msgstr "ペアを選択"
@@ -1632,6 +1686,10 @@ msgstr "自分"
 #: src/components/vote/DelegateModal.tsx
 msgid "Self Delegate"
 msgstr "自己委任する"
+
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "Sell NFTs"
+msgstr "NFTを売る"
 
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
@@ -1711,6 +1769,7 @@ msgstr "{0} {1} と {2} {3} を追加中"
 
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/Header/index.tsx
+#: src/components/NavBar/Navbar.tsx
 #: src/components/swap/SwapHeader.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
@@ -1933,6 +1992,8 @@ msgid "Token not supported"
 msgstr "トークンは対応していません"
 
 #: src/components/Header/index.tsx
+#: src/components/NavBar/Navbar.tsx
+#: src/components/NavBar/SearchBar.tsx
 #: src/components/SearchModal/Manage.tsx
 msgid "Tokens"
 msgstr "トークン"
@@ -2172,6 +2233,10 @@ msgstr "Etherscanで見る"
 msgid "View on Explorer"
 msgstr "エクスプローラーで見る"
 
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "View token analytics"
+msgstr "トークン分析を表示する"
+
 #: src/components/ModalViews/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
@@ -2218,6 +2283,10 @@ msgstr "提案{proposalKey} に賛成票を入れる"
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Vote for proposal {proposalKey} with reason \"{0}\""
 msgstr "「{0} 」という理由で提案 {proposalKey} に賛成票を入れる"
+
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "Vote in governance"
+msgstr "ガバナンスに投票する"
 
 #: src/components/vote/VoteModal.tsx
 #: src/components/vote/VoteModal.tsx

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-24 19:05\n"
+"PO-Revision-Date: 2022-08-26 17:08\n"
 "Last-Translator: \n"
 "Language: ko_KR\n"
 "Language-Team: Korean\n"
@@ -540,6 +540,10 @@ msgid "Confirm transaction in wallet"
 msgstr "지갑에서 트랜잭션 승인"
 
 #: src/components/Web3Status/index.tsx
+msgid "Connect"
+msgstr "연결하다"
+
+#: src/components/Web3Status/index.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
@@ -745,6 +749,10 @@ msgstr "해제"
 msgid "Docs"
 msgstr "문서"
 
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "Documentation"
+msgstr "선적 서류 비치"
+
 #: src/pages/MigrateV2/index.tsx
 msgid "Don’t see one of your v2 positions? <0>Import it.</0>"
 msgstr "v2 포지션 중 하나가 보이지 않습니까? <0>가져 오십시오.</0>"
@@ -894,6 +902,10 @@ msgstr "Uniswap 분석 정보를 살펴보세요."
 msgid "Failed to switch networks from the Uniswap Interface. In order to use Uniswap on {0}, you must change the network in your wallet."
 msgstr "Uniswap 인터페이스에서 네트워크를 전환하지 못했습니다. Uniswap을 {0} 에서 사용하려면 지갑에서 네트워크를 변경해야 합니다."
 
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "Feature Flags"
+msgstr "기능 플래그"
+
 #: src/components/PositionPreview/index.tsx
 msgid "Fee Tier"
 msgstr "수수료 등급"
@@ -905,6 +917,10 @@ msgstr "수수료 등급"
 #: src/components/swap/SwapDetailsDropdown.tsx
 msgid "Fetching best price..."
 msgstr "최적 가격을 가져오는 중..."
+
+#: src/components/Tokens/TokenTable/SearchBar.tsx
+msgid "Filter tokens"
+msgstr "필터 토큰"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "For"
@@ -938,6 +954,10 @@ msgstr "Discord에서 지원 받기"
 #: src/components/Menu/index.tsx
 msgid "Help Center"
 msgstr "도움말 센터"
+
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "Help center"
+msgstr "지원 센터"
 
 #: src/components/FeeSelector/index.tsx
 #: src/components/Tokens/TokenDetails/TokenDetail.tsx
@@ -1069,6 +1089,7 @@ msgid "Learn more"
 msgstr "더 알아보기"
 
 #: src/components/Menu/index.tsx
+#: src/components/NavBar/MenuDropdown.tsx
 #: src/components/PrivacyPolicy/index.tsx
 msgid "Legal & Privacy"
 msgstr "법률 및 개인 정보 보호"
@@ -1221,6 +1242,14 @@ msgstr "누락된 종속성"
 msgid "More"
 msgstr "추가"
 
+#: src/components/NavBar/SearchBar.tsx
+msgid "NFT Collections"
+msgstr "NFT 컬렉션"
+
+#: src/components/NavBar/Navbar.tsx
+msgid "NFTs"
+msgstr "NFT"
+
 #: src/components/Tokens/TokenDetails/TokenDetail.tsx
 msgid "Name not found"
 msgstr "이름을 찾을 수 없습니다"
@@ -1277,6 +1306,10 @@ msgstr "결과가 없습니다."
 #: src/components/Tokens/TokenDetails/TokenDetail.tsx
 msgid "No token information available"
 msgstr "사용 가능한 토큰 정보가 없습니다."
+
+#: src/components/NavBar/SearchBar.tsx
+msgid "No tokens found."
+msgstr "토큰을 찾을 수 없습니다."
 
 #: src/constants/tokenSafety.tsx
 msgid "Not Available"
@@ -1366,6 +1399,7 @@ msgstr "다각형 스캔"
 
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/Header/index.tsx
+#: src/components/NavBar/Navbar.tsx
 msgid "Pool"
 msgstr "풀"
 
@@ -1401,6 +1435,14 @@ msgstr "{0} 풀링 됨:"
 #: src/pages/Pool/index.tsx
 msgid "Pools"
 msgstr "수영장"
+
+#: src/components/NavBar/SearchBar.tsx
+msgid "Popular NFT collections"
+msgstr "인기 있는 NFT 컬렉션"
+
+#: src/components/NavBar/SearchBar.tsx
+msgid "Popular tokens"
+msgstr "인기있는 토큰"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Portal Bridge"
@@ -1527,6 +1569,10 @@ msgstr "지원되지 않는 자산에 대해 자세히 알아보기"
 msgid "Recent Transactions"
 msgstr "최근 거래"
 
+#: src/components/NavBar/SearchBar.tsx
+msgid "Recent searches"
+msgstr "최근 검색"
+
 #: src/components/AddressInputPanel/index.tsx
 msgid "Recipient"
 msgstr "받는 사람"
@@ -1593,6 +1639,14 @@ msgstr "반환"
 msgid "Search name or paste address"
 msgstr "이름 검색 또는 주소 붙여 넣기"
 
+#: src/components/NavBar/SearchBar.tsx
+msgid "Search tokens"
+msgstr "토큰 검색"
+
+#: src/components/NavBar/SearchBar.tsx
+msgid "Search tokens and NFT collections"
+msgstr "토큰 및 NFT 컬렉션 검색"
+
 #: src/pages/AddLiquidity/index.tsx
 msgid "Select Pair"
 msgstr "쌍 선택"
@@ -1632,6 +1686,10 @@ msgstr "본인"
 #: src/components/vote/DelegateModal.tsx
 msgid "Self Delegate"
 msgstr "셀프 위임"
+
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "Sell NFTs"
+msgstr "NFT 판매"
 
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
@@ -1711,6 +1769,7 @@ msgstr "{0} {1} 및 {2} {3} 공급 중"
 
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/Header/index.tsx
+#: src/components/NavBar/Navbar.tsx
 #: src/components/swap/SwapHeader.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
@@ -1933,6 +1992,8 @@ msgid "Token not supported"
 msgstr "지원되지 않는 토큰"
 
 #: src/components/Header/index.tsx
+#: src/components/NavBar/Navbar.tsx
+#: src/components/NavBar/SearchBar.tsx
 #: src/components/SearchModal/Manage.tsx
 msgid "Tokens"
 msgstr "토큰"
@@ -2172,6 +2233,10 @@ msgstr "Etherscan에서보기"
 msgid "View on Explorer"
 msgstr "Explorer에서 보기"
 
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "View token analytics"
+msgstr "토큰 분석 보기"
+
 #: src/components/ModalViews/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
@@ -2218,6 +2283,10 @@ msgstr "제안 {proposalKey}"
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Vote for proposal {proposalKey} with reason \"{0}\""
 msgstr "이유가 \"{0}\"인 {proposalKey} 투표하십시오."
+
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "Vote in governance"
+msgstr "거버넌스 투표"
 
 #: src/components/vote/VoteModal.tsx
 #: src/components/vote/VoteModal.tsx

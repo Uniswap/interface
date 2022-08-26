@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-24 19:05\n"
+"PO-Revision-Date: 2022-08-26 17:08\n"
 "Last-Translator: \n"
 "Language: th_TH\n"
 "Language-Team: Thai\n"
@@ -540,6 +540,10 @@ msgid "Confirm transaction in wallet"
 msgstr "ยืนยันการทำธุรกรรมในกระเป๋าเงิน"
 
 #: src/components/Web3Status/index.tsx
+msgid "Connect"
+msgstr "เชื่อมต่อ"
+
+#: src/components/Web3Status/index.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
@@ -745,6 +749,10 @@ msgstr "อนุญาตให้ออกไป"
 msgid "Docs"
 msgstr "เอกสาร"
 
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "Documentation"
+msgstr "เอกสาร"
+
 #: src/pages/MigrateV2/index.tsx
 msgid "Don’t see one of your v2 positions? <0>Import it.</0>"
 msgstr "ไม่เห็นหนึ่งในตำแหน่ง v2 ของคุณใช่หรือไม่ <0>นำเข้า.</0>"
@@ -894,6 +902,10 @@ msgstr "สำรวจ Uniswap Analytics"
 msgid "Failed to switch networks from the Uniswap Interface. In order to use Uniswap on {0}, you must change the network in your wallet."
 msgstr "ไม่สามารถสลับเครือข่ายจากอินเทอร์เฟซ Uniswap ในการใช้ Uniswap บน {0}คุณต้องเปลี่ยนเครือข่ายในกระเป๋าเงินของคุณ"
 
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "Feature Flags"
+msgstr "คุณสมบัติแฟล็ก"
+
 #: src/components/PositionPreview/index.tsx
 msgid "Fee Tier"
 msgstr "ระดับค่าธรรมเนียม"
@@ -905,6 +917,10 @@ msgstr "ระดับค่าธรรมเนียม"
 #: src/components/swap/SwapDetailsDropdown.tsx
 msgid "Fetching best price..."
 msgstr "กำลังเรียกราคาที่ดีที่สุด..."
+
+#: src/components/Tokens/TokenTable/SearchBar.tsx
+msgid "Filter tokens"
+msgstr "โทเค็นตัวกรอง"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "For"
@@ -937,6 +953,10 @@ msgstr "รับการสนับสนุนบน Discord"
 #: src/components/Header/NetworkSelector.tsx
 #: src/components/Menu/index.tsx
 msgid "Help Center"
+msgstr "ศูนย์ช่วยเหลือ"
+
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "Help center"
 msgstr "ศูนย์ช่วยเหลือ"
 
 #: src/components/FeeSelector/index.tsx
@@ -1069,6 +1089,7 @@ msgid "Learn more"
 msgstr "เรียนรู้เพิ่มเติม"
 
 #: src/components/Menu/index.tsx
+#: src/components/NavBar/MenuDropdown.tsx
 #: src/components/PrivacyPolicy/index.tsx
 msgid "Legal & Privacy"
 msgstr "กฎหมาย & ความเป็นส่วนตัว"
@@ -1221,6 +1242,14 @@ msgstr "ไม่มีการพึ่งพา"
 msgid "More"
 msgstr "มากกว่า"
 
+#: src/components/NavBar/SearchBar.tsx
+msgid "NFT Collections"
+msgstr "คอลเลกชัน NFT"
+
+#: src/components/NavBar/Navbar.tsx
+msgid "NFTs"
+msgstr "NFTs"
+
 #: src/components/Tokens/TokenDetails/TokenDetail.tsx
 msgid "Name not found"
 msgstr "ไม่พบชื่อ"
@@ -1277,6 +1306,10 @@ msgstr "ไม่พบผลลัพธ์."
 #: src/components/Tokens/TokenDetails/TokenDetail.tsx
 msgid "No token information available"
 msgstr "ไม่มีข้อมูลโทเค็น"
+
+#: src/components/NavBar/SearchBar.tsx
+msgid "No tokens found."
+msgstr "ไม่พบโทเค็น"
 
 #: src/constants/tokenSafety.tsx
 msgid "Not Available"
@@ -1366,6 +1399,7 @@ msgstr "รูปหลายเหลี่ยม"
 
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/Header/index.tsx
+#: src/components/NavBar/Navbar.tsx
 msgid "Pool"
 msgstr "สระน้ำ"
 
@@ -1401,6 +1435,14 @@ msgstr "รวม {0}:"
 #: src/pages/Pool/index.tsx
 msgid "Pools"
 msgstr "สระว่ายน้ำ"
+
+#: src/components/NavBar/SearchBar.tsx
+msgid "Popular NFT collections"
+msgstr "คอลเลกชัน NFT ยอดนิยม"
+
+#: src/components/NavBar/SearchBar.tsx
+msgid "Popular tokens"
+msgstr "โทเค็นยอดนิยม"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Portal Bridge"
@@ -1527,6 +1569,10 @@ msgstr "อ่านเพิ่มเติมเกี่ยวกับเน
 msgid "Recent Transactions"
 msgstr "ธุรกรรมล่าสุด"
 
+#: src/components/NavBar/SearchBar.tsx
+msgid "Recent searches"
+msgstr "ผลค้นหาล่าสุด"
+
 #: src/components/AddressInputPanel/index.tsx
 msgid "Recipient"
 msgstr "ผู้รับ"
@@ -1593,6 +1639,14 @@ msgstr "กลับ"
 msgid "Search name or paste address"
 msgstr "ค้นหาชื่อหรือวางที่อยู่"
 
+#: src/components/NavBar/SearchBar.tsx
+msgid "Search tokens"
+msgstr "ค้นหาโทเค็น"
+
+#: src/components/NavBar/SearchBar.tsx
+msgid "Search tokens and NFT collections"
+msgstr "ค้นหาโทเค็นและคอลเลกชัน NFT"
+
 #: src/pages/AddLiquidity/index.tsx
 msgid "Select Pair"
 msgstr "เลือกคู่"
@@ -1632,6 +1686,10 @@ msgstr "ตัวเอง"
 #: src/components/vote/DelegateModal.tsx
 msgid "Self Delegate"
 msgstr "ผู้แทนตนเอง"
+
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "Sell NFTs"
+msgstr "ขาย NFTs"
 
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
@@ -1711,6 +1769,7 @@ msgstr "การจัดหา {0} {1} และ {2} {3}"
 
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/Header/index.tsx
+#: src/components/NavBar/Navbar.tsx
 #: src/components/swap/SwapHeader.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
@@ -1933,6 +1992,8 @@ msgid "Token not supported"
 msgstr "ไม่รองรับโทเค็น"
 
 #: src/components/Header/index.tsx
+#: src/components/NavBar/Navbar.tsx
+#: src/components/NavBar/SearchBar.tsx
 #: src/components/SearchModal/Manage.tsx
 msgid "Tokens"
 msgstr "โทเค็น"
@@ -2172,6 +2233,10 @@ msgstr "ดูบน Etherscan"
 msgid "View on Explorer"
 msgstr "ดูบน Explorer"
 
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "View token analytics"
+msgstr "ดูการวิเคราะห์โทเค็น"
+
 #: src/components/ModalViews/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
@@ -2218,6 +2283,10 @@ msgstr "โหวตข้อเสนอ {proposalKey}"
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Vote for proposal {proposalKey} with reason \"{0}\""
 msgstr "โหวตข้อเสนอ {proposalKey} ด้วยเหตุผล \"{0}\""
+
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "Vote in governance"
+msgstr "โหวตในการปกครอง"
 
 #: src/components/vote/VoteModal.tsx
 #: src/components/vote/VoteModal.tsx
