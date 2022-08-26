@@ -181,7 +181,7 @@ export default function FooterBalanceSummary({
         <NetworkBalancesSection>
           <NetworkBalancesLabel>
             <Trans>Your balances by network</Trans>
-          </NetworkBalancesLabel>{' '}
+          </NetworkBalancesLabel>
           {networkBalances}
         </NetworkBalancesSection>
       )}
