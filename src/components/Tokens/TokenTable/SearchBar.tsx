@@ -21,7 +21,7 @@ const SearchInput = styled.input`
   border-radius: 12px;
   border: 1px solid ${({ theme }) => theme.backgroundOutline};
   height: 100%;
-  width: min(300px, 100%);
+  width: min(200px, 100%);
   font-size: 16px;
   padding-left: 40px;
   color: ${({ theme }) => theme.textSecondary};

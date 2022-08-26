@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-24 19:05\n"
+"PO-Revision-Date: 2022-08-26 17:08\n"
 "Last-Translator: \n"
 "Language: hu_HU\n"
 "Language-Team: Hungarian\n"
@@ -540,6 +540,10 @@ msgid "Confirm transaction in wallet"
 msgstr "A tranzakció megerősítése a pénztárcában"
 
 #: src/components/Web3Status/index.tsx
+msgid "Connect"
+msgstr "Csatlakozás"
+
+#: src/components/Web3Status/index.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
@@ -745,6 +749,10 @@ msgstr "Elvetés"
 msgid "Docs"
 msgstr "Dokumentumok"
 
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "Documentation"
+msgstr "Dokumentáció"
+
 #: src/pages/MigrateV2/index.tsx
 msgid "Don’t see one of your v2 positions? <0>Import it.</0>"
 msgstr "Nem látja az egyik v2 pozícióját? <0> Importálja.</0>"
@@ -895,6 +903,10 @@ msgstr "Fedezze fel az Uniswap Analytics szolgáltatást."
 msgid "Failed to switch networks from the Uniswap Interface. In order to use Uniswap on {0}, you must change the network in your wallet."
 msgstr "Nem sikerült hálózatot váltani az Uniswap interfészről. Az Uniswap {0}történő használatához meg kell változtatnia a hálózatot a pénztárcájában."
 
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "Feature Flags"
+msgstr "Jellemző zászlók"
+
 #: src/components/PositionPreview/index.tsx
 msgid "Fee Tier"
 msgstr "Díjszint"
@@ -906,6 +918,10 @@ msgstr "Díjszint"
 #: src/components/swap/SwapDetailsDropdown.tsx
 msgid "Fetching best price..."
 msgstr "A legjobb ár lekérése..."
+
+#: src/components/Tokens/TokenTable/SearchBar.tsx
+msgid "Filter tokens"
+msgstr "Szűrő tokenek"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "For"
@@ -938,6 +954,10 @@ msgstr "Kérjen támogatást a Discordon"
 #: src/components/Header/NetworkSelector.tsx
 #: src/components/Menu/index.tsx
 msgid "Help Center"
+msgstr "Segítség Központ"
+
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "Help center"
 msgstr "Segítség Központ"
 
 #: src/components/FeeSelector/index.tsx
@@ -1070,6 +1090,7 @@ msgid "Learn more"
 msgstr "Tudj meg többet"
 
 #: src/components/Menu/index.tsx
+#: src/components/NavBar/MenuDropdown.tsx
 #: src/components/PrivacyPolicy/index.tsx
 msgid "Legal & Privacy"
 msgstr "Jogi és adatvédelem"
@@ -1222,6 +1243,14 @@ msgstr "Hiányzó függőségek"
 msgid "More"
 msgstr "Több"
 
+#: src/components/NavBar/SearchBar.tsx
+msgid "NFT Collections"
+msgstr "NFT gyűjtemények"
+
+#: src/components/NavBar/Navbar.tsx
+msgid "NFTs"
+msgstr "NFT-k"
+
 #: src/components/Tokens/TokenDetails/TokenDetail.tsx
 msgid "Name not found"
 msgstr "A név nem található"
@@ -1278,6 +1307,10 @@ msgstr "Nincs találat."
 #: src/components/Tokens/TokenDetails/TokenDetail.tsx
 msgid "No token information available"
 msgstr "Nem áll rendelkezésre token információ"
+
+#: src/components/NavBar/SearchBar.tsx
+msgid "No tokens found."
+msgstr "Nem található token."
 
 #: src/constants/tokenSafety.tsx
 msgid "Not Available"
@@ -1367,6 +1400,7 @@ msgstr "Polygonscan"
 
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/Header/index.tsx
+#: src/components/NavBar/Navbar.tsx
 msgid "Pool"
 msgstr "Pool"
 
@@ -1402,6 +1436,14 @@ msgstr "Összevonva {0}:"
 #: src/pages/Pool/index.tsx
 msgid "Pools"
 msgstr "Medencék"
+
+#: src/components/NavBar/SearchBar.tsx
+msgid "Popular NFT collections"
+msgstr "Népszerű NFT gyűjtemények"
+
+#: src/components/NavBar/SearchBar.tsx
+msgid "Popular tokens"
+msgstr "Népszerű tokenek"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Portal Bridge"
@@ -1528,6 +1570,10 @@ msgstr "További információk a nem támogatott eszközökről"
 msgid "Recent Transactions"
 msgstr "Legutóbbi tranzakciók"
 
+#: src/components/NavBar/SearchBar.tsx
+msgid "Recent searches"
+msgstr "Legutóbbi keresések"
+
 #: src/components/AddressInputPanel/index.tsx
 msgid "Recipient"
 msgstr "Befogadó"
@@ -1594,6 +1640,14 @@ msgstr "Visszatérés"
 msgid "Search name or paste address"
 msgstr "Név keresése vagy cím beillesztése"
 
+#: src/components/NavBar/SearchBar.tsx
+msgid "Search tokens"
+msgstr "Tokenek keresése"
+
+#: src/components/NavBar/SearchBar.tsx
+msgid "Search tokens and NFT collections"
+msgstr "Keresési tokenek és NFT-gyűjtemények"
+
 #: src/pages/AddLiquidity/index.tsx
 msgid "Select Pair"
 msgstr "Válassza a Párosítás lehetőséget"
@@ -1633,6 +1687,10 @@ msgstr "Saját"
 #: src/components/vote/DelegateModal.tsx
 msgid "Self Delegate"
 msgstr "Saját delegált"
+
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "Sell NFTs"
+msgstr "NFT-k eladása"
 
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
@@ -1712,6 +1770,7 @@ msgstr "{0} {1} és {2} {3} kínálása"
 
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/Header/index.tsx
+#: src/components/NavBar/Navbar.tsx
 #: src/components/swap/SwapHeader.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
@@ -1934,6 +1993,8 @@ msgid "Token not supported"
 msgstr "A token nem támogatott"
 
 #: src/components/Header/index.tsx
+#: src/components/NavBar/Navbar.tsx
+#: src/components/NavBar/SearchBar.tsx
 #: src/components/SearchModal/Manage.tsx
 msgid "Tokens"
 msgstr "Tokenek"
@@ -2173,6 +2234,10 @@ msgstr "Nézd meg az Etherscan webhelyen"
 msgid "View on Explorer"
 msgstr "Megtekintés az Explorerben"
 
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "View token analytics"
+msgstr "Token elemzés megtekintése"
+
 #: src/components/ModalViews/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
@@ -2219,6 +2284,10 @@ msgstr "Szavazás a {proposalKey}"
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Vote for proposal {proposalKey} with reason \"{0}\""
 msgstr "Szavazzon a {proposalKey} javaslatra az \"{0}\" indokkal"
+
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "Vote in governance"
+msgstr "Szavazz a kormányzásban"
 
 #: src/components/vote/VoteModal.tsx
 #: src/components/vote/VoteModal.tsx

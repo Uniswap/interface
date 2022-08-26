@@ -15,7 +15,7 @@ const baseSearchStyle = style([
   }),
   {
     '@media': {
-      [`screen and (min-width: ${breakpoints.sm}px)`]: {
+      [`screen and (min-width: ${breakpoints.md}px)`]: {
         width: DESKTOP_NAVBAR_WIDTH,
       },
     },

@@ -7,7 +7,7 @@ import { VerifiedIcon } from 'components/TokenSafety/TokenSafetyIcon'
 import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import { getChainInfo } from 'constants/chainInfo'
 import { nativeOnChain, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
-import { checkWarning } from 'constants/tokenSafety'
+import { checkWarning, WARNING_LEVEL } from 'constants/tokenSafety'
 import { chainIdToChainName, useTokenDetailQuery } from 'graphql/data/TokenDetailQuery'
 import { useCurrency, useIsUserAddedToken, useToken } from 'hooks/Tokens'
 import { useAtomValue } from 'jotai/utils'
@@ -192,6 +192,10 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
   const handleDismissWarning = useCallback(() => {
     setWarningModalOpen(false)
   }, [setWarningModalOpen])
+  const handleCancel = useCallback(() => {
+    setWarningModalOpen(false)
+    warning && warning.level === WARNING_LEVEL.BLOCKED && navigate(-1)
+  }, [setWarningModalOpen, navigate, warning])
   const chainInfo = getChainInfo(token?.chainId)
   const networkLabel = chainInfo?.label
   const networkBadgebackgroundColor = chainInfo?.backgroundColor
@@ -250,7 +254,6 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
             <ParentSize>{({ width, height }) => <PriceChart token={token} width={width} height={height} />}</ParentSize>
           </ChartContainer>
         </ChartHeader>
-        <AboutSection address={address} tokenDetailData={relevantTokenDetailData} />
         <StatsSection>
           <StatPair>
             <Stat>
@@ -281,6 +284,7 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
             </Stat>
           </StatPair>
         </StatsSection>
+        <AboutSection address={address} tokenDetailData={relevantTokenDetailData} />
         <ContractAddressSection>
           <Contract>
             Contract address
@@ -292,7 +296,7 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
         <TokenSafetyModal
           isOpen={warningModalOpen}
           tokenAddress={address}
-          onCancel={() => navigate(-1)}
+          onCancel={handleCancel}
           onContinue={handleDismissWarning}
         />
       </TopArea>

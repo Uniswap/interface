@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-24 19:05\n"
+"PO-Revision-Date: 2022-08-26 17:08\n"
 "Last-Translator: \n"
 "Language: el_GR\n"
 "Language-Team: Greek\n"
@@ -540,6 +540,10 @@ msgid "Confirm transaction in wallet"
 msgstr "Επιβεβαίωση συναλλαγής στο πορτοφόλι"
 
 #: src/components/Web3Status/index.tsx
+msgid "Connect"
+msgstr "Συνδέω-συωδεομαι"
+
+#: src/components/Web3Status/index.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
@@ -745,6 +749,10 @@ msgstr "Απόρριψη"
 msgid "Docs"
 msgstr "Έγγραφα"
 
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "Documentation"
+msgstr "Τεκμηρίωση"
+
 #: src/pages/MigrateV2/index.tsx
 msgid "Don’t see one of your v2 positions? <0>Import it.</0>"
 msgstr "Δεν βλέπετε μία από τις θέσεις σας στο v2; <0> Εισαγάγετε τη.</0>"
@@ -894,6 +902,10 @@ msgstr "Εξερευνήστε το Uniswap Analytics."
 msgid "Failed to switch networks from the Uniswap Interface. In order to use Uniswap on {0}, you must change the network in your wallet."
 msgstr "Αποτυχία εναλλαγής δικτύων από τη διεπαφή Uniswap. Για να χρησιμοποιήσετε το Uniswap στο {0}, πρέπει να αλλάξετε το δίκτυο στο πορτοφόλι σας."
 
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "Feature Flags"
+msgstr "Σημαίες χαρακτηριστικών"
+
 #: src/components/PositionPreview/index.tsx
 msgid "Fee Tier"
 msgstr "Βαθμίδα Χρέωσης"
@@ -905,6 +917,10 @@ msgstr "Επίπεδο χρεώσεων"
 #: src/components/swap/SwapDetailsDropdown.tsx
 msgid "Fetching best price..."
 msgstr "Λήψη της καλύτερης τιμής..."
+
+#: src/components/Tokens/TokenTable/SearchBar.tsx
+msgid "Filter tokens"
+msgstr "Φιλτράρισμα διακριτικών"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "For"
@@ -937,6 +953,10 @@ msgstr "Βρείτε υποστήριξη για τη Διαφωνία"
 #: src/components/Header/NetworkSelector.tsx
 #: src/components/Menu/index.tsx
 msgid "Help Center"
+msgstr "Κέντρο βοηθείας"
+
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "Help center"
 msgstr "Κέντρο βοηθείας"
 
 #: src/components/FeeSelector/index.tsx
@@ -1069,6 +1089,7 @@ msgid "Learn more"
 msgstr "Μάθε περισσότερα"
 
 #: src/components/Menu/index.tsx
+#: src/components/NavBar/MenuDropdown.tsx
 #: src/components/PrivacyPolicy/index.tsx
 msgid "Legal & Privacy"
 msgstr "Νομική και Απόρρητο"
@@ -1221,6 +1242,14 @@ msgstr "Λείπουν εξαρτήσεις"
 msgid "More"
 msgstr "Περισσότερα"
 
+#: src/components/NavBar/SearchBar.tsx
+msgid "NFT Collections"
+msgstr "Συλλογές NFT"
+
+#: src/components/NavBar/Navbar.tsx
+msgid "NFTs"
+msgstr "NFTs"
+
 #: src/components/Tokens/TokenDetails/TokenDetail.tsx
 msgid "Name not found"
 msgstr "Το όνομα δεν βρέθηκε"
@@ -1277,6 +1306,10 @@ msgstr "Δεν βρέθηκαν αποτελέσματα."
 #: src/components/Tokens/TokenDetails/TokenDetail.tsx
 msgid "No token information available"
 msgstr "Δεν υπάρχουν διαθέσιμες πληροφορίες συμβολικών"
+
+#: src/components/NavBar/SearchBar.tsx
+msgid "No tokens found."
+msgstr "Δεν βρέθηκαν μάρκες."
 
 #: src/constants/tokenSafety.tsx
 msgid "Not Available"
@@ -1366,6 +1399,7 @@ msgstr "Πολυγωνική σάρωση"
 
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/Header/index.tsx
+#: src/components/NavBar/Navbar.tsx
 msgid "Pool"
 msgstr "Δεξαμενή"
 
@@ -1401,6 +1435,14 @@ msgstr "Συγκεντρώθηκε(αν) {0}:"
 #: src/pages/Pool/index.tsx
 msgid "Pools"
 msgstr "Πισίνες"
+
+#: src/components/NavBar/SearchBar.tsx
+msgid "Popular NFT collections"
+msgstr "Δημοφιλείς συλλογές NFT"
+
+#: src/components/NavBar/SearchBar.tsx
+msgid "Popular tokens"
+msgstr "Δημοφιλή μάρκες"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Portal Bridge"
@@ -1527,6 +1569,10 @@ msgstr "Διαβάστε περισσότερα για τα μη υποστηρ�
 msgid "Recent Transactions"
 msgstr "Πρόσφατες Συναλλαγές"
 
+#: src/components/NavBar/SearchBar.tsx
+msgid "Recent searches"
+msgstr "Πρόσφατες αναζητήσεις"
+
 #: src/components/AddressInputPanel/index.tsx
 msgid "Recipient"
 msgstr "Παραλήπτης"
@@ -1593,6 +1639,14 @@ msgstr "Επιστροφή"
 msgid "Search name or paste address"
 msgstr "Αναζήτηση ονόματος ή επικόλλησης διεύθυνσης"
 
+#: src/components/NavBar/SearchBar.tsx
+msgid "Search tokens"
+msgstr "Αναζήτηση διακριτικών"
+
+#: src/components/NavBar/SearchBar.tsx
+msgid "Search tokens and NFT collections"
+msgstr "Αναζήτηση διακριτικών και συλλογών NFT"
+
 #: src/pages/AddLiquidity/index.tsx
 msgid "Select Pair"
 msgstr "Επιλέξτε Ζεύγος"
@@ -1632,6 +1686,10 @@ msgstr "Αυτοπροσώπως"
 #: src/components/vote/DelegateModal.tsx
 msgid "Self Delegate"
 msgstr "Ανάθεση στον εαυτό μου"
+
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "Sell NFTs"
+msgstr "Πουλήστε NFT"
 
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
@@ -1711,6 +1769,7 @@ msgstr "Γίνεται παροχή {0} {1} και {2} {3}"
 
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/Header/index.tsx
+#: src/components/NavBar/Navbar.tsx
 #: src/components/swap/SwapHeader.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
@@ -1933,6 +1992,8 @@ msgid "Token not supported"
 msgstr "Το διακριτικό δεν υποστηρίζεται"
 
 #: src/components/Header/index.tsx
+#: src/components/NavBar/Navbar.tsx
+#: src/components/NavBar/SearchBar.tsx
 #: src/components/SearchModal/Manage.tsx
 msgid "Tokens"
 msgstr "Μάρκες"
@@ -2172,6 +2233,10 @@ msgstr "Θέα στο Ethercan"
 msgid "View on Explorer"
 msgstr "Προβολή στον Explorer"
 
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "View token analytics"
+msgstr "Προβολή αναλυτικών στοιχείων διακριτικών"
+
 #: src/components/ModalViews/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
@@ -2218,6 +2283,10 @@ msgstr "Vηφίστε την πρόταση {proposalKey}"
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Vote for proposal {proposalKey} with reason \"{0}\""
 msgstr "Vηφίστε την πρόταση {proposalKey} με αιτιολογία \"{0}\""
+
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "Vote in governance"
+msgstr "Ψηφοφορία στη διακυβέρνηση"
 
 #: src/components/vote/VoteModal.tsx
 #: src/components/vote/VoteModal.tsx

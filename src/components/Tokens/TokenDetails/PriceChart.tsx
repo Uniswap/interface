@@ -81,6 +81,7 @@ export const DeltaContainer = styled.div`
   height: 16px;
   display: flex;
   align-items: center;
+  margin-top: 4px;
 `
 const ArrowCell = styled.div`
   padding-left: 2px;
@@ -234,7 +235,7 @@ export function PriceChart({ width, height, token }: PriceChartProps) {
   return (
     <>
       <ChartHeader>
-        <TokenPrice>${displayPrice.value.toFixed(2)}</TokenPrice>
+        <TokenPrice>${displayPrice.value < 0.000001 ? '<0.000001' : displayPrice.value.toFixed(6)}</TokenPrice>
         <DeltaContainer>
           {formattedDelta}
           <ArrowCell>{arrow}</ArrowCell>

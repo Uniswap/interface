@@ -5,6 +5,7 @@ import { TokenSafetyVariant, useTokenSafetyFlag } from 'featureFlags/flags/token
 import usePrevious from 'hooks/usePrevious'
 import { useCallback, useEffect, useState } from 'react'
 import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
+import { useUserAddedTokens } from 'state/user/hooks'
 
 import useLast from '../../hooks/useLast'
 import Modal from '../Modal'
@@ -29,6 +30,7 @@ export enum CurrencyModalView {
   manage,
   importToken,
   importList,
+  tokenSafety,
 }
 
 export default function CurrencySearchModal({
@@ -43,6 +45,7 @@ export default function CurrencySearchModal({
 }: CurrencySearchModalProps) {
   const [modalView, setModalView] = useState<CurrencyModalView>(CurrencyModalView.manage)
   const lastOpen = useLast(isOpen)
+  const userAddedTokens = useUserAddedTokens()
 
   useEffect(() => {
     if (isOpen && !lastOpen) {
@@ -50,12 +53,28 @@ export default function CurrencySearchModal({
     }
   }, [isOpen, lastOpen])
 
+  const showTokenSafetySpeedbump = (token: Token) => {
+    setWarningToken(token)
+    setModalView(CurrencyModalView.tokenSafety)
+  }
+
+  const tokenSafetyFlag = useTokenSafetyFlag()
+
   const handleCurrencySelect = useCallback(
-    (currency: Currency) => {
-      onCurrencySelect(currency)
-      onDismiss()
+    (currency: Currency, hasWarning?: boolean) => {
+      if (
+        tokenSafetyFlag === TokenSafetyVariant.Enabled &&
+        hasWarning &&
+        currency.isToken &&
+        !userAddedTokens.find((token) => token.equals(currency))
+      ) {
+        showTokenSafetySpeedbump(currency)
+      } else {
+        onCurrencySelect(currency)
+        onDismiss()
+      }
     },
-    [onDismiss, onCurrencySelect]
+    [onDismiss, onCurrencySelect, tokenSafetyFlag, userAddedTokens]
   )
 
   // for token import view
@@ -68,14 +87,15 @@ export default function CurrencySearchModal({
   const [importList, setImportList] = useState<TokenList | undefined>()
   const [listURL, setListUrl] = useState<string | undefined>()
 
+  // used for token safety
+  const [warningToken, setWarningToken] = useState<Token | undefined>()
+
   const showImportView = useCallback(() => setModalView(CurrencyModalView.importToken), [setModalView])
   const showManageView = useCallback(() => setModalView(CurrencyModalView.manage), [setModalView])
   const handleBackImport = useCallback(
     () => setModalView(prevView && prevView !== CurrencyModalView.importToken ? prevView : CurrencyModalView.search),
     [setModalView, prevView]
   )
-
-  const tokenSafetyFlag = useTokenSafetyFlag()
 
   // change min height if not searching
   let minHeight: number | undefined = 80
@@ -98,25 +118,33 @@ export default function CurrencySearchModal({
         />
       )
       break
+    case CurrencyModalView.tokenSafety:
+      minHeight = undefined
+      if (tokenSafetyFlag === TokenSafetyVariant.Enabled && warningToken) {
+        content = (
+          <TokenSafety
+            tokenAddress={warningToken.address}
+            onContinue={() => handleCurrencySelect(warningToken)}
+            onCancel={() => setModalView(CurrencyModalView.search)}
+          />
+        )
+      }
+      break
     case CurrencyModalView.importToken:
       if (importToken) {
         minHeight = undefined
-        content =
-          tokenSafetyFlag === TokenSafetyVariant.Enabled ? (
-            <TokenSafety
-              tokenAddress={importToken.address}
-              onContinue={() => handleCurrencySelect(importToken)}
-              onCancel={handleBackImport}
-            />
-          ) : (
-            <ImportToken
-              tokens={[importToken]}
-              onDismiss={onDismiss}
-              list={importToken instanceof WrappedTokenInfo ? importToken.list : undefined}
-              onBack={handleBackImport}
-              handleCurrencySelect={handleCurrencySelect}
-            />
-          )
+        if (tokenSafetyFlag === TokenSafetyVariant.Enabled) {
+          showTokenSafetySpeedbump(importToken)
+        }
+        content = (
+          <ImportToken
+            tokens={[importToken]}
+            onDismiss={onDismiss}
+            list={importToken instanceof WrappedTokenInfo ? importToken.list : undefined}
+            onBack={handleBackImport}
+            handleCurrencySelect={handleCurrencySelect}
+          />
+        )
       }
       break
     case CurrencyModalView.importList:

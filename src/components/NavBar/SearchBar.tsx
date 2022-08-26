@@ -1,15 +1,15 @@
+// eslint-disable-next-line no-restricted-imports
+import { t, Trans } from '@lingui/macro'
 import clsx from 'clsx'
 import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
 import useDebounce from 'hooks/useDebounce'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
-import { useWindowSize } from 'hooks/useWindowSize'
 import { organizeSearchResults } from 'lib/utils/searchBar'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import { Overlay } from 'nft/components/modals/Overlay'
 import { magicalGradientOnHover, subheadSmall } from 'nft/css/common.css'
-import { breakpoints } from 'nft/css/sprinkles.css'
-import { useSearchHistory } from 'nft/hooks'
+import { useIsMobile, useSearchHistory } from 'nft/hooks'
 import { fetchSearchCollections, fetchTrendingCollections } from 'nft/queries'
 import { fetchSearchTokens } from 'nft/queries/genie/SearchTokensFetcher'
 import { fetchTrendingTokens } from 'nft/queries/genie/TrendingTokensFetcher'
@@ -33,7 +33,7 @@ import { CollectionRow, SkeletonRow, TokenRow } from './SuggestionRow'
 interface SearchBarDropdownSectionProps {
   toggleOpen: () => void
   suggestions: (GenieCollection | FungibleToken)[]
-  header: string
+  header: JSX.Element
   headerIcon?: JSX.Element
   hoveredIndex: number | undefined
   startingIndex: number
@@ -107,10 +107,12 @@ export const SearchBarDropdown = ({ toggleOpen, tokens, collections, hasInput }:
         setHoveredIndex={setHoveredIndex}
         toggleOpen={toggleOpen}
         suggestions={tokens}
-        header={'Tokens'}
+        header={<Trans>Tokens</Trans>}
       />
     ) : (
-      <Box className={styles.notFoundContainer}>No tokens found.</Box>
+      <Box className={styles.notFoundContainer}>
+        <Trans>No tokens found.</Trans>
+      </Box>
     )
 
   const collectionSearchResults =
@@ -122,7 +124,7 @@ export const SearchBarDropdown = ({ toggleOpen, tokens, collections, hasInput }:
           setHoveredIndex={setHoveredIndex}
           toggleOpen={toggleOpen}
           suggestions={collections}
-          header={'NFT Collections'}
+          header={<Trans>NFT Collections</Trans>}
         />
       ) : (
         <Box className={styles.notFoundContainer}>No NFT collections found.</Box>
@@ -225,7 +227,7 @@ export const SearchBarDropdown = ({ toggleOpen, tokens, collections, hasInput }:
               setHoveredIndex={setHoveredIndex}
               toggleOpen={toggleOpen}
               suggestions={searchHistory}
-              header={'Recent searches'}
+              header={<Trans>Recent searches</Trans>}
               headerIcon={<ClockIcon />}
             />
           )}
@@ -236,7 +238,7 @@ export const SearchBarDropdown = ({ toggleOpen, tokens, collections, hasInput }:
               setHoveredIndex={setHoveredIndex}
               toggleOpen={toggleOpen}
               suggestions={trendingTokens ?? []}
-              header={'Popular tokens'}
+              header={<Trans>Popular tokens</Trans>}
               headerIcon={<TrendingArrow />}
             />
           )}
@@ -247,7 +249,7 @@ export const SearchBarDropdown = ({ toggleOpen, tokens, collections, hasInput }:
               setHoveredIndex={setHoveredIndex}
               toggleOpen={toggleOpen}
               suggestions={trendingCollections as unknown as GenieCollection[]}
-              header={'Popular NFT collections'}
+              header={<Trans>Popular NFT collections</Trans>}
               headerIcon={<TrendingArrow />}
             />
           )}
@@ -267,8 +269,8 @@ export const SearchBar = () => {
   const debouncedSearchValue = useDebounce(searchValue, 300)
   const searchRef = useRef<HTMLDivElement>(null)
   const { pathname } = useLocation()
-  const { width: windowWidth } = useWindowSize()
   const phase1Flag = useNftFlag()
+  const isMobile = useIsMobile()
 
   useOnClickOutside(searchRef, () => {
     isOpen && toggleOpen()
@@ -318,15 +320,15 @@ export const SearchBar = () => {
     setSearchValue('')
   }, [pathname])
 
-  const isMobile = useMemo(() => windowWidth && windowWidth <= breakpoints.sm, [windowWidth])
+  const placeholderText = phase1Flag === NftVariant.Enabled ? t`Search tokens and NFT collections` : t`Search tokens`
 
   return (
     <>
       <Box
-        position={{ sm: isOpen ? 'absolute' : 'relative', md: 'relative' }}
-        top={{ sm: '0', md: 'unset' }}
-        left={{ sm: '0', md: 'unset' }}
-        width={{ sm: isOpen ? 'viewWidth' : 'auto', md: 'auto' }}
+        position={{ sm: isOpen ? 'absolute' : 'relative', lg: 'relative' }}
+        top={{ sm: '0', lg: 'unset' }}
+        left={{ sm: '0', lg: 'unset' }}
+        width={{ sm: isOpen ? 'viewWidth' : 'auto', lg: 'auto' }}
         ref={searchRef}
         style={{ zIndex: '1000' }}
       >
@@ -335,21 +337,21 @@ export const SearchBar = () => {
           borderRadius={isOpen ? undefined : '12'}
           borderTopRightRadius={isOpen && !isMobile ? '12' : undefined}
           borderTopLeftRadius={isOpen && !isMobile ? '12' : undefined}
-          display={{ sm: isOpen ? 'flex' : 'none', md: 'flex' }}
+          display={{ sm: isOpen ? 'flex' : 'none', lg: 'flex' }}
           justifyContent={isOpen || phase1Flag === NftVariant.Enabled ? 'flex-start' : 'center'}
           onFocus={() => !isOpen && toggleOpen()}
           onClick={() => !isOpen && toggleOpen()}
           gap="12"
         >
-          <Box display={{ sm: 'none', md: 'flex' }}>
+          <Box display={{ sm: 'none', lg: 'flex' }}>
             <MagnifyingGlassIcon />
           </Box>
-          <Box display={{ sm: 'flex', md: 'none' }} color="placeholder" onClick={toggleOpen}>
+          <Box display={{ sm: 'flex', lg: 'none' }} color="placeholder" onClick={toggleOpen}>
             <ChevronLeftIcon />
           </Box>
           <Box
             as="input"
-            placeholder={`Search tokens${phase1Flag === NftVariant.Enabled ? ' and NFT collections' : ''}`}
+            placeholder={placeholderText}
             width={isOpen || phase1Flag === NftVariant.Enabled ? 'full' : '120'}
             onChange={(event: ChangeEvent<HTMLInputElement>) => {
               !isOpen && toggleOpen()
@@ -359,7 +361,7 @@ export const SearchBar = () => {
             value={searchValue}
           />
         </Row>
-        <Box display={{ sm: isOpen ? 'none' : 'flex', md: 'none' }}>
+        <Box display={{ sm: isOpen ? 'none' : 'flex', lg: 'none' }}>
           <NavIcon onClick={toggleOpen}>
             <NavMagnifyingGlassIcon width={28} height={28} />
           </NavIcon>

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-24 19:05\n"
+"PO-Revision-Date: 2022-08-26 17:08\n"
 "Last-Translator: \n"
 "Language: sl_SI\n"
 "Language-Team: Slovenian\n"
@@ -540,6 +540,10 @@ msgid "Confirm transaction in wallet"
 msgstr "V denarnici potrdite transakcijo"
 
 #: src/components/Web3Status/index.tsx
+msgid "Connect"
+msgstr "Povežite se"
+
+#: src/components/Web3Status/index.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
@@ -745,6 +749,10 @@ msgstr "Opusti"
 msgid "Docs"
 msgstr "Dokumentacija"
 
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "Documentation"
+msgstr "Dokumentacija"
+
 #: src/pages/MigrateV2/index.tsx
 msgid "Don’t see one of your v2 positions? <0>Import it.</0>"
 msgstr "Ne vidite katerega od svojih pologov V2? <0>Uvozite ga.</0>"
@@ -894,6 +902,10 @@ msgstr "Raziščite Uniswap Analytics."
 msgid "Failed to switch networks from the Uniswap Interface. In order to use Uniswap on {0}, you must change the network in your wallet."
 msgstr "Zamenjava omrežij iz Uniswapovega vmesnika ni uspela. Če želite uporabiti Uniswap na {0}, morate zamenjati omrežje v svoji denarnici."
 
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "Feature Flags"
+msgstr "Zastavice funkcij"
+
 #: src/components/PositionPreview/index.tsx
 msgid "Fee Tier"
 msgstr "Stopnja provizije"
@@ -905,6 +917,10 @@ msgstr "Stopnja provizije"
 #: src/components/swap/SwapDetailsDropdown.tsx
 msgid "Fetching best price..."
 msgstr "Pridobivam najboljšo ceno ..."
+
+#: src/components/Tokens/TokenTable/SearchBar.tsx
+msgid "Filter tokens"
+msgstr "Filtrirajte žetone"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "For"
@@ -938,6 +954,10 @@ msgstr "Poiščite podporo na Discordu"
 #: src/components/Menu/index.tsx
 msgid "Help Center"
 msgstr "Center za pomoč"
+
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "Help center"
+msgstr "Center pomoči"
 
 #: src/components/FeeSelector/index.tsx
 #: src/components/Tokens/TokenDetails/TokenDetail.tsx
@@ -1069,6 +1089,7 @@ msgid "Learn more"
 msgstr "Več o tem"
 
 #: src/components/Menu/index.tsx
+#: src/components/NavBar/MenuDropdown.tsx
 #: src/components/PrivacyPolicy/index.tsx
 msgid "Legal & Privacy"
 msgstr "Pravna obvestila in zasebnost"
@@ -1221,6 +1242,14 @@ msgstr "Manjkajoče odvisnosti"
 msgid "More"
 msgstr "Več"
 
+#: src/components/NavBar/SearchBar.tsx
+msgid "NFT Collections"
+msgstr "Zbirke NFT"
+
+#: src/components/NavBar/Navbar.tsx
+msgid "NFTs"
+msgstr "NFT-ji"
+
 #: src/components/Tokens/TokenDetails/TokenDetail.tsx
 msgid "Name not found"
 msgstr "Ime ni bilo mogoče najti"
@@ -1277,6 +1306,10 @@ msgstr "Ni rezultatov."
 #: src/components/Tokens/TokenDetails/TokenDetail.tsx
 msgid "No token information available"
 msgstr "Informacije o žetonu niso na voljo"
+
+#: src/components/NavBar/SearchBar.tsx
+msgid "No tokens found."
+msgstr "Ni najdenih žetonov."
 
 #: src/constants/tokenSafety.tsx
 msgid "Not Available"
@@ -1366,6 +1399,7 @@ msgstr "Polygonscan"
 
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/Header/index.tsx
+#: src/components/NavBar/Navbar.tsx
 msgid "Pool"
 msgstr "Skladi"
 
@@ -1401,6 +1435,14 @@ msgstr "{0} v skladu:"
 #: src/pages/Pool/index.tsx
 msgid "Pools"
 msgstr "Bazeni"
+
+#: src/components/NavBar/SearchBar.tsx
+msgid "Popular NFT collections"
+msgstr "Priljubljene zbirke NFT"
+
+#: src/components/NavBar/SearchBar.tsx
+msgid "Popular tokens"
+msgstr "Priljubljeni žetoni"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Portal Bridge"
@@ -1527,6 +1569,10 @@ msgstr "Preberite več o nepodprtih sredstvih"
 msgid "Recent Transactions"
 msgstr "Zadnje transakcije"
 
+#: src/components/NavBar/SearchBar.tsx
+msgid "Recent searches"
+msgstr "Nedavna iskanja"
+
 #: src/components/AddressInputPanel/index.tsx
 msgid "Recipient"
 msgstr "Prejemnik"
@@ -1593,6 +1639,14 @@ msgstr "Nazaj"
 msgid "Search name or paste address"
 msgstr "Poiščite ime ali prilepite naslov"
 
+#: src/components/NavBar/SearchBar.tsx
+msgid "Search tokens"
+msgstr "Iskanje žetonov"
+
+#: src/components/NavBar/SearchBar.tsx
+msgid "Search tokens and NFT collections"
+msgstr "Iskanje žetonov in zbirk NFT"
+
 #: src/pages/AddLiquidity/index.tsx
 msgid "Select Pair"
 msgstr "Izberite par"
@@ -1632,6 +1686,10 @@ msgstr "Sebi"
 #: src/components/vote/DelegateModal.tsx
 msgid "Self Delegate"
 msgstr "Samozastopanje"
+
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "Sell NFTs"
+msgstr "Prodaja NFT-jev"
 
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
@@ -1711,6 +1769,7 @@ msgstr "Polog {0} {1} in {2} {3}"
 
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/Header/index.tsx
+#: src/components/NavBar/Navbar.tsx
 #: src/components/swap/SwapHeader.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
@@ -1933,6 +1992,8 @@ msgid "Token not supported"
 msgstr "Žeton ni podprt"
 
 #: src/components/Header/index.tsx
+#: src/components/NavBar/Navbar.tsx
+#: src/components/NavBar/SearchBar.tsx
 #: src/components/SearchModal/Manage.tsx
 msgid "Tokens"
 msgstr "Žetoni"
@@ -2172,6 +2233,10 @@ msgstr "Prikaži na Etherscanu"
 msgid "View on Explorer"
 msgstr "Prikaži v raziskovalcu"
 
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "View token analytics"
+msgstr "Oglejte si analitiko žetonov"
+
 #: src/components/ModalViews/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
@@ -2218,6 +2283,10 @@ msgstr "Glasuj za pobudo {proposalKey}"
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Vote for proposal {proposalKey} with reason \"{0}\""
 msgstr "Glasuj za pobudo {proposalKey} z razlogom \"{0}\""
+
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "Vote in governance"
+msgstr "Glasujte pri upravljanju"
 
 #: src/components/vote/VoteModal.tsx
 #: src/components/vote/VoteModal.tsx
