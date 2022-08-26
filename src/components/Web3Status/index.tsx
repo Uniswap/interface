@@ -285,11 +285,12 @@ export default function Web3Status() {
 
   const allTransactions = useAllTransactions()
   const ref = useRef<HTMLDivElement>(null)
+  const walletRef = useRef<HTMLDivElement>(null)
   const closeModal = useCloseModal(ApplicationModal.WALLET_DROPDOWN)
   const isOpen = useIsOpen()
   const isMobile = useIsMobile()
 
-  useOnClickOutside(ref, isOpen ? closeModal : undefined)
+  useOnClickOutside(ref, isOpen ? closeModal : undefined, [walletRef])
 
   const sortedRecentTransactions = useMemo(() => {
     const txs = Object.values(allTransactions)
@@ -303,13 +304,11 @@ export default function Web3Status() {
     <span ref={ref}>
       <Web3StatusInner />
       <WalletModal ENSName={ENSName ?? undefined} pendingTransactions={pending} confirmedTransactions={confirmed} />
-      {isMobile ? (
-        <Portal>
+      <Portal>
+        <span ref={walletRef}>
           <WalletDropdown />
-        </Portal>
-      ) : (
-        <WalletDropdown />
-      )}
+        </span>
+      </Portal>
     </span>
   )
 }

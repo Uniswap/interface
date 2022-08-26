@@ -36,13 +36,13 @@ const WalletDropdownWrapper = styled.div`
   position: absolute;
   top: 65px;
   right: 20px;
+  z-index: 2;
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
     top: unset;
     left: 0;
     right: 0;
     bottom: 56px;
-    z-index: 1;
   }
 `
 
