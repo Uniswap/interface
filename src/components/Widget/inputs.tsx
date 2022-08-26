@@ -2,7 +2,10 @@ import { Currency, Field, SwapController, SwapEventHandlers, TradeType } from '@
 import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
 import { useCallback, useMemo, useState } from 'react'
 
-// Integrates the Widget's controlled value, using the app's CurrencySearchModal for token selection.
+/**
+ * Integrates the Widget's inputs.
+ * Treats the Widget as a controlled component, using the app's own token selector for selection.
+ */
 export function useSyncWidgetInputs(defaultToken: Currency) {
   const [isExactInput, setIsExactInput] = useState(false)
   const [amount, setAmount] = useState<string>()
@@ -10,6 +13,7 @@ export function useSyncWidgetInputs(defaultToken: Currency) {
     setIsExactInput(field === Field.INPUT)
     setAmount(amount)
   }, [])
+
   const [tokens, setTokens] = useState<{ [Field.INPUT]?: Currency; [Field.OUTPUT]?: Currency }>({
     [Field.OUTPUT]: defaultToken,
   })
@@ -20,6 +24,7 @@ export function useSyncWidgetInputs(defaultToken: Currency) {
       [Field.OUTPUT]: tokens[Field.INPUT],
     }))
   }, [])
+
   const [selectingField, setSelectingField] = useState<Field>()
   const otherField = useMemo(() => (selectingField === Field.INPUT ? Field.OUTPUT : Field.INPUT), [selectingField])
   const [selectingToken, otherToken] = useMemo(() => {
@@ -43,15 +48,6 @@ export function useSyncWidgetInputs(defaultToken: Currency) {
     },
     [otherField, otherToken, selectingField, selectingToken]
   )
-  const value: SwapController = useMemo(
-    () => ({ type: isExactInput ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT, amount, ...tokens }),
-    [amount, isExactInput, tokens]
-  )
-  const valueHandlers: SwapEventHandlers = useMemo(
-    () => ({ onAmountChange, onSwitchTokens, onTokenSelectorClick }),
-    [onAmountChange, onSwitchTokens, onTokenSelectorClick]
-  )
-
   const tokenSelector = (
     <CurrencySearchModal
       isOpen={selectingField !== undefined}
@@ -60,6 +56,15 @@ export function useSyncWidgetInputs(defaultToken: Currency) {
       otherSelectedCurrency={otherToken}
       onCurrencySelect={onTokenSelect}
     />
+  )
+
+  const value: SwapController = useMemo(
+    () => ({ type: isExactInput ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT, amount, ...tokens }),
+    [amount, isExactInput, tokens]
+  )
+  const valueHandlers: SwapEventHandlers = useMemo(
+    () => ({ onAmountChange, onSwitchTokens, onTokenSelectorClick }),
+    [onAmountChange, onSwitchTokens, onTokenSelectorClick]
   )
 
   return { inputs: { value, ...valueHandlers }, tokenSelector }
