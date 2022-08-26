@@ -218,14 +218,11 @@ export function PriceChart({ width, height, token }: PriceChartProps) {
   const [delta, arrow] = getDelta(startingPrice.value, displayPrice.value)
   const crosshairEdgeMax = width * 0.85
   const crosshairAtEdge = !!crosshair && crosshair > crosshairEdgeMax
-  const priceNumDecimalPlaces = displayPrice.value < 1.05 ? 4 : 2
 
   return (
     <>
       <ChartHeader>
-        <TokenPrice>
-          {displayPrice.value < 0.0001 ? '$<0.0001' : displayPrice.value.toFixed(priceNumDecimalPlaces)}
-        </TokenPrice>
+        <TokenPrice>{displayPrice.value < 0.000001 ? '$<0.000001' : displayPrice.value.toFixed(6)}</TokenPrice>
         <DeltaContainer>
           {delta}
           <ArrowCell>{arrow}</ArrowCell>
