@@ -6,7 +6,7 @@ export const assetList = style([
   sprinkles({
     display: 'grid',
     marginTop: '24',
-    gap: { mobile: '8', tablet: '12', tabletXl: '20' },
+    gap: { sm: '8', md: '12', lg: '20' },
   }),
   {
     gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr) )',

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-23 20:04\n"
+"PO-Revision-Date: 2022-08-24 19:05\n"
 "Last-Translator: \n"
 "Language: zh_TW\n"
 "Language-Team: Chinese Traditional\n"
@@ -231,6 +231,7 @@ msgstr "數額"
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
 msgstr "嘗試執行此兌換時發生錯誤。您可能需要增加滑點限制。如果還是不行，則可能是您正在交易的代幣與Uniswap不兼容。注：Uniswap V3不兼容轉賬時帶扣除費用（fee-on-transfer）的代幣和彈性供應（rebase）代幣。"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/earn/StakingModal.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approve"
@@ -248,10 +249,12 @@ msgstr "批准代幣"
 msgid "Approve {0}"
 msgstr "批準 {0}"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approved"
 msgstr "已批準"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/pages/MigrateV2/MigrateV2Pair.tsx
 #: src/pages/RemoveLiquidity/index.tsx
 msgid "Approving"
@@ -305,6 +308,7 @@ msgstr "可存入的數額：{0}"
 msgid "Back to wallet selection"
 msgstr "返回錢包選擇"
 
+#: src/components/CurrencyInputPanel/SwapCurrencyInputPanel.tsx
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "Balance: {0}"
 msgstr "餘額： {0}"
@@ -382,6 +386,7 @@ msgstr "檢查網絡狀態"
 msgid "Check out our v3 LP walkthrough and migration guides."
 msgstr "查看我們的 v3 流動池介紹和遷移指南。"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/WalletDropdown/AuthenticatedHeader.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/components/earn/ClaimRewardModal.tsx
@@ -417,6 +422,7 @@ msgstr "領取手續費"
 msgid "Claim your UNI tokens"
 msgstr "領取您的 UNI 代幣"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/claim/AddressClaimModal.tsx
 msgid "Claimed"
 msgstr "已領取"
@@ -430,6 +436,7 @@ msgstr "已領取 UNI 代幣！"
 msgid "Claimed!"
 msgstr "已領取!"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
 msgid "Claiming"
@@ -464,6 +471,7 @@ msgstr "關閉"
 msgid "Closed"
 msgstr "已關閉"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collect"
 msgstr "收取"
@@ -481,10 +489,12 @@ msgstr "收取手續費"
 msgid "Collect {0}/{1} fees"
 msgstr "收取 {0}/{1} 手续费"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collected"
 msgstr "已收取"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/pages/Pool/PositionPage.tsx
 msgid "Collecting"
 msgstr "收取中"
@@ -872,6 +882,7 @@ msgid "Explore"
 msgstr "探索"
 
 #: src/pages/Tokens/index.tsx
+#: src/pages/Tokens/index.tsx
 msgid "Explore Tokens"
 msgstr "探索代幣"
 
@@ -1105,6 +1116,10 @@ msgstr "已加載"
 msgid "Loading"
 msgstr "載入中"
 
+#: src/components/CurrencyInputPanel/index.tsx
+msgid "MAX"
+msgstr "最大值"
+
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/V2.tsx
 #: src/components/PositionCard/index.tsx
@@ -1126,7 +1141,7 @@ msgstr "管理代幣列表"
 msgid "Manage this pool."
 msgstr "管理此流動池。"
 
-#: src/components/CurrencyInputPanel/index.tsx
+#: src/components/CurrencyInputPanel/SwapCurrencyInputPanel.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Max"
 msgstr "最大值"
@@ -1258,10 +1273,6 @@ msgstr "沒有提案。"
 #: src/components/SearchModal/CurrencySearch.tsx
 msgid "No results found."
 msgstr "未找到任何結果。"
-
-#: src/components/Tokens/TokenDetails/TokenDetail.tsx
-msgid "No stats available"
-msgstr "沒有可用的統計數據"
 
 #: src/components/Tokens/TokenDetails/TokenDetail.tsx
 msgid "No token information available"
@@ -1586,6 +1597,7 @@ msgstr "搜索名稱或粘貼地址"
 msgid "Select Pair"
 msgstr "選擇幣對"
 
+#: src/components/CurrencyInputPanel/index.tsx
 #: src/components/SearchModal/CurrencySearch.tsx
 #: src/pages/PoolFinder/index.tsx
 #: src/pages/PoolFinder/index.tsx
@@ -1605,7 +1617,7 @@ msgstr "選擇 {0}網絡"
 msgid "Select an action"
 msgstr "選擇操作"
 
-#: src/components/CurrencyInputPanel/index.tsx
+#: src/components/CurrencyInputPanel/SwapCurrencyInputPanel.tsx
 msgid "Select token"
 msgstr "選擇令牌"
 
@@ -1813,6 +1825,7 @@ msgstr "您的交易對該池的市場價格的影響。"
 msgid "The input token cannot be transferred. There may be an issue with the input token."
 msgstr "輸入代幣無法進行轉賬。輸入代幣可能有些問題。"
 
+#: src/components/CurrencyInputPanel/SwapCurrencyInputPanel.tsx
 #: src/components/CurrencyInputPanel/index.tsx
 msgid "The market price is outside your specified price range. Single-asset deposit only."
 msgstr "市場兌換率超出您指定的範圍。將只註入單項代幣。"
@@ -2094,6 +2107,7 @@ msgstr "不支持的資產"
 msgid "Untitled"
 msgstr "無標題"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/pages/Swap/index.tsx
 msgid "Unwrap"
 msgstr "展開"
@@ -2101,6 +2115,14 @@ msgstr "展開"
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Unwrap <0/> to {0}"
 msgstr "將 <0/> 換回為 {0}"
+
+#: src/components/AccountDetailsV2/TransactionBody.tsx
+msgid "Unwrapped"
+msgstr "展開"
+
+#: src/components/AccountDetailsV2/TransactionBody.tsx
+msgid "Unwrapping"
+msgstr "展開"
 
 #: src/pages/Vote/Landing.tsx
 msgid "Update Delegation"
@@ -2283,6 +2305,7 @@ msgstr "贖回 {0} UNI-V2 流動池代幣"
 msgid "Withdrew UNI-V2!"
 msgstr "已贖回 UNI-V2！"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/pages/Swap/index.tsx
 msgid "Wrap"
 msgstr "包裹"
@@ -2290,6 +2313,14 @@ msgstr "包裹"
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Wrap <0/> to {0}"
 msgstr "將 <0/> 換為 {0}"
+
+#: src/components/AccountDetailsV2/TransactionBody.tsx
+msgid "Wrapped"
+msgstr "包裹"
+
+#: src/components/AccountDetailsV2/TransactionBody.tsx
+msgid "Wrapping"
+msgstr "包裝"
 
 #: src/pages/CreateProposal/index.tsx
 msgid "You already have an active or pending proposal"
@@ -2461,6 +2492,7 @@ msgstr "滑點後"
 
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/AccountDetailsV2/TransactionBody.tsx
+#: src/components/AccountDetailsV2/TransactionBody.tsx
 msgid "and"
 msgstr "和"
 
@@ -2476,6 +2508,11 @@ msgstr "確認"
 msgid "failed"
 msgstr "失敗的"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
+msgid "fees"
+msgstr "費用"
+
+#: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 msgid "for"
 msgstr "為了"
@@ -2508,6 +2545,10 @@ msgstr "分鐘"
 msgid "reward"
 msgstr "報酬"
 
+#: src/components/AccountDetailsV2/TransactionBody.tsx
+msgid "to"
+msgstr "至"
+
 #: src/components/SearchModal/ImportRow.tsx
 msgid "via {0}"
 msgstr "通過 {0}"
@@ -2531,7 +2572,6 @@ msgstr "{0, plural, =1 {您不能使用 Uniswap 應用程序交易此代幣。} 
 #: src/components/RateToggle/index.tsx
 #: src/components/RateToggle/index.tsx
 #: src/components/Settings/index.tsx
-#: src/components/Tokens/TokenDetails/TokenDetail.tsx
 msgid "{0}"
 msgstr "{0}"
 

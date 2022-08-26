@@ -15,7 +15,9 @@ const BalancesCard = styled.div`
   font-size: 12px;
   line-height: 16px;
   padding: 20px;
+  box-shadow: ${({ theme }) => theme.shallowShadow};
   background-color: ${({ theme }) => theme.backgroundSurface};
+  border: ${({ theme }) => `1px solid ${theme.backgroundOutline}`};
   border-radius: 16px;
 `
 const ErrorState = styled.div`

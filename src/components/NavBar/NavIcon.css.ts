@@ -7,7 +7,6 @@ export const navIcon = style([
     position: 'relative',
     display: 'flex',
     flexDirection: 'column',
-    color: 'blackBlue',
     border: 'none',
     justifyContent: 'center',
     textAlign: 'center',

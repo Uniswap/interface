@@ -2,14 +2,12 @@ import clsx from 'clsx'
 import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
 import useDebounce from 'hooks/useDebounce'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
-import { useWindowSize } from 'hooks/useWindowSize'
 import { organizeSearchResults } from 'lib/utils/searchBar'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import { Overlay } from 'nft/components/modals/Overlay'
 import { magicalGradientOnHover, subheadSmall } from 'nft/css/common.css'
-import { breakpoints } from 'nft/css/sprinkles.css'
-import { useSearchHistory } from 'nft/hooks'
+import { useIsMobile, useSearchHistory } from 'nft/hooks'
 import { fetchSearchCollections, fetchTrendingCollections } from 'nft/queries'
 import { fetchSearchTokens } from 'nft/queries/genie/SearchTokensFetcher'
 import { fetchTrendingTokens } from 'nft/queries/genie/TrendingTokensFetcher'
@@ -267,8 +265,8 @@ export const SearchBar = () => {
   const debouncedSearchValue = useDebounce(searchValue, 300)
   const searchRef = useRef<HTMLDivElement>(null)
   const { pathname } = useLocation()
-  const { width: windowWidth } = useWindowSize()
   const phase1Flag = useNftFlag()
+  const isMobile = useIsMobile()
 
   useOnClickOutside(searchRef, () => {
     isOpen && toggleOpen()
@@ -318,15 +316,13 @@ export const SearchBar = () => {
     setSearchValue('')
   }, [pathname])
 
-  const isMobile = useMemo(() => windowWidth && windowWidth <= breakpoints.tabletSm, [windowWidth])
-
   return (
     <>
       <Box
-        position={{ mobile: isOpen ? 'absolute' : 'relative', tabletSm: 'relative' }}
-        top={{ mobile: '0', tabletSm: 'unset' }}
-        left={{ mobile: '0', tabletSm: 'unset' }}
-        width={{ mobile: isOpen ? 'viewWidth' : 'auto', tabletSm: 'auto' }}
+        position={{ sm: isOpen ? 'absolute' : 'relative', lg: 'relative' }}
+        top={{ sm: '0', lg: 'unset' }}
+        left={{ sm: '0', lg: 'unset' }}
+        width={{ sm: isOpen ? 'viewWidth' : 'auto', lg: 'auto' }}
         ref={searchRef}
         style={{ zIndex: '1000' }}
       >
@@ -335,16 +331,16 @@ export const SearchBar = () => {
           borderRadius={isOpen ? undefined : '12'}
           borderTopRightRadius={isOpen && !isMobile ? '12' : undefined}
           borderTopLeftRadius={isOpen && !isMobile ? '12' : undefined}
-          display={{ mobile: isOpen ? 'flex' : 'none', desktopXl: 'flex' }}
+          display={{ sm: isOpen ? 'flex' : 'none', lg: 'flex' }}
           justifyContent={isOpen || phase1Flag === NftVariant.Enabled ? 'flex-start' : 'center'}
           onFocus={() => !isOpen && toggleOpen()}
           onClick={() => !isOpen && toggleOpen()}
           gap="12"
         >
-          <Box display={{ mobile: 'none', tabletSm: 'flex' }}>
+          <Box display={{ sm: 'none', lg: 'flex' }}>
             <MagnifyingGlassIcon />
           </Box>
-          <Box display={{ mobile: 'flex', tabletSm: 'none' }} color="placeholder" onClick={toggleOpen}>
+          <Box display={{ sm: 'flex', lg: 'none' }} color="placeholder" onClick={toggleOpen}>
             <ChevronLeftIcon />
           </Box>
           <Box
@@ -359,7 +355,7 @@ export const SearchBar = () => {
             value={searchValue}
           />
         </Row>
-        <Box display={{ mobile: isOpen ? 'none' : 'flex', desktopXl: 'none' }}>
+        <Box display={{ sm: isOpen ? 'none' : 'flex', lg: 'none' }}>
           <NavIcon onClick={toggleOpen}>
             <NavMagnifyingGlassIcon width={28} height={28} />
           </NavIcon>

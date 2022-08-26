@@ -142,7 +142,19 @@ declare module 'styled-components/macro' {
       xxl: number
       xxxl: number
     }
-
+    transition: {
+      duration: {
+        slow: number
+        medium: number
+        fast: number
+      }
+      timing: {
+        ease: string
+        in: string
+        out: string
+        inOut: string
+      }
+    }
     // css snippets
     flexColumnNoWrap: FlattenSimpleInterpolation
     flexRowNoWrap: FlattenSimpleInterpolation
