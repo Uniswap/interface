@@ -6,6 +6,8 @@ import { TraceEvent } from 'components/AmplitudeAnalytics/TraceEvent'
 import WalletDropdown from 'components/WalletDropdown'
 import { getConnection } from 'connection/utils'
 import { NavBarVariant, useNavBarFlag } from 'featureFlags/flags/navBar'
+import { Portal } from 'nft/components/common/Portal'
+import { useIsMobile } from 'nft/hooks'
 import { getIsValidSwapQuote } from 'pages/Swap'
 import { darken } from 'polished'
 import { useMemo, useRef } from 'react'
@@ -285,6 +287,7 @@ export default function Web3Status() {
   const ref = useRef<HTMLDivElement>(null)
   const closeModal = useCloseModal(ApplicationModal.WALLET_DROPDOWN)
   const isOpen = useIsOpen()
+  const isMobile = useIsMobile()
 
   useOnClickOutside(ref, isOpen ? closeModal : undefined)
 
@@ -300,7 +303,13 @@ export default function Web3Status() {
     <span ref={ref}>
       <Web3StatusInner />
       <WalletModal ENSName={ENSName ?? undefined} pendingTransactions={pending} confirmedTransactions={confirmed} />
-      <WalletDropdown />
+      {isMobile ? (
+        <Portal>
+          <WalletDropdown />
+        </Portal>
+      ) : (
+        <WalletDropdown />
+      )}
     </span>
   )
 }

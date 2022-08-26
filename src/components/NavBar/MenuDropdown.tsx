@@ -129,7 +129,7 @@ export const MenuDropdown = () => {
         </NavIcon>
 
         {isOpen && (
-          <NavDropdown top={60}>
+          <NavDropdown top={{ sm: 'unset', xxl: '56' }} bottom={{ sm: '56', xxl: 'unset' }} right="0">
             <Column gap="16">
               <Column paddingX="8" gap="4">
                 {nftFlag === NftVariant.Enabled && (
@@ -154,7 +154,13 @@ export const MenuDropdown = () => {
                 </PrimaryMenuRow>
               </Column>
               <Separator />
-              <Column paddingX="8">
+              <Box
+                display="flex"
+                flexDirection={{ sm: 'row', md: 'column' }}
+                flexWrap="wrap"
+                alignItems={{ sm: 'center', md: 'flex-start' }}
+                paddingX="8"
+              >
                 <SecondaryLinkedText href="https://help.uniswap.org/en/">Help center ↗</SecondaryLinkedText>
                 <SecondaryLinkedText href="https://docs.uniswap.org/">Documentation ↗</SecondaryLinkedText>
                 <SecondaryLinkedText
@@ -166,7 +172,7 @@ export const MenuDropdown = () => {
                 {(isDevelopmentEnv() || isStagingEnv()) && (
                   <SecondaryLinkedText onClick={openFeatureFlagsModal}>{`Feature Flags`}</SecondaryLinkedText>
                 )}
-              </Column>
+              </Box>
               <IconRow>
                 <Icon href="https://discord.com/invite/FCfyBSbCU5">
                   <DiscordIconMenu className={styles.hover} width={24} height={24} color={themeVars.colors.darkGray} />
