@@ -1,5 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { ParentSize } from '@visx/responsive'
+import { useWeb3React } from '@web3-react/core'
 import CurrencyLogo from 'components/CurrencyLogo'
 import PriceChart from 'components/Tokens/TokenDetails/PriceChart'
 import { VerifiedIcon } from 'components/TokenSafety/TokenSafetyIcon'
@@ -68,6 +69,7 @@ const TokenActions = styled.div`
   color: ${({ theme }) => theme.textSecondary};
 `
 const TokenSymbol = styled.span`
+  text-transform: uppercase;
   color: ${({ theme }) => theme.textSecondary};
 `
 const NetworkBadge = styled.div<{ networkColor?: string; backgroundColor?: string }>`
@@ -175,13 +177,8 @@ export function AboutSection({ address, tokenDetailData }: { address: string; to
   )
 }
 
-export default function LoadedTokenDetail({
-  address,
-  connectedChainId,
-}: {
-  address: string
-  connectedChainId: number | undefined
-}) {
+export default function LoadedTokenDetail({ address }: { address: string }) {
+  const { chainId: connectedChainId } = useWeb3React()
   const token = useToken(address)
   let currency = useCurrency(address)
   const favoriteTokens = useAtomValue<string[]>(favoritesAtom)
@@ -211,17 +208,15 @@ export default function LoadedTokenDetail({
   }
 
   const wrappedNativeCurrency = WRAPPED_NATIVE_CURRENCY[connectedChainId]
-  const isWrappedNativeToken = wrappedNativeCurrency && wrappedNativeCurrency.address === token.address
+  const isWrappedNativeToken = wrappedNativeCurrency?.address === token.address
 
   if (isWrappedNativeToken) {
     currency = nativeOnChain(connectedChainId)
   }
 
   const tokenName = isWrappedNativeToken && currency ? currency.name : tokenDetailData.name
-  const tokenSymbol =
-    isWrappedNativeToken && currency
-      ? currency.symbol
-      : tokenDetailData.tokens?.[0]?.symbol?.toUpperCase() ?? token.symbol
+  const defaultTokenSymbol = tokenDetailData.tokens?.[0]?.symbol ?? token.symbol
+  const tokenSymbol = isWrappedNativeToken && currency ? currency.symbol : defaultTokenSymbol
 
   return (
     <Suspense fallback={<LoadingTokenDetail />}>
