@@ -487,6 +487,7 @@ export default function Swap({ history }: RouteComponentProps) {
 
   function findTokenPairFromUrl() {
     let { fromCurrency, toCurrency, network } = getUrlMatchParams()
+    if (!fromCurrency || !network) return
 
     const compareNetwork = getNetworkSlug(chainId)
 
@@ -544,13 +545,15 @@ export default function Swap({ history }: RouteComponentProps) {
 
     const findChainId = SUPPORTED_NETWORKS.find(chainId => NETWORKS_INFO[chainId].route === network) || ChainId.MAINNET
     if (findChainId !== chainId) {
-      changeNetwork(findChainId)
-        .then(() => {
+      changeNetwork(
+        findChainId,
+        () => {
           refIsCheckNetworkAutoSelect.current = true
-        })
-        .catch(() => {
+        },
+        () => {
           navigate('/swap')
-        })
+        },
+      )
     } else {
       refIsCheckNetworkAutoSelect.current = true
     }

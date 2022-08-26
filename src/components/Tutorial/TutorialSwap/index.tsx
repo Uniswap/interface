@@ -517,7 +517,9 @@ export default memo(function TutorialSwap() {
       <Walktour
         tooltipSeparation={25}
         disableMaskInteraction
-        customTooltipRenderer={CustomPopup}
+        customTooltipRenderer={(props: WalktourLogic | undefined) => (
+          <CustomPopup {...(props || ({} as WalktourLogic))} />
+        )}
         steps={steps as Step[]}
         isOpen={show}
         initialStepIndex={step}
