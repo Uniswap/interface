@@ -1,12 +1,12 @@
-import { useAtom } from 'jotai'
 import { X } from 'react-feather'
 import { Link } from 'react-router-dom'
+import { useAppSelector } from 'state/hooks'
+import { updateShowTokensPromoBanner } from 'state/user/reducer'
 import styled, { useTheme } from 'styled-components/macro'
 import { opacify } from 'theme/utils'
 
 import tokensPromoDark from '../../assets/images/tokensPromoDark.png'
 import tokensPromoLight from '../../assets/images/tokensPromoLight.png'
-import { tokensBannerDismissedAtom } from './state'
 
 const PopupContainer = styled.div<{ show: boolean }>`
   position: absolute;
@@ -49,25 +49,22 @@ const Description = styled.span`
 
 export default function TokensBanner() {
   const theme = useTheme()
-  const [tokensBannerDismissed, setTokensBannerDismissed] = useAtom(tokensBannerDismissedAtom)
+  const showTokensPromoBanner = useAppSelector((state) => state.user.showTokensPromoBanner)
 
   const closeBanner = () => {
-    setTokensBannerDismissed(true)
-  }
-  const clickBanner = () => {
-    setTokensBannerDismissed(true)
+    updateShowTokensPromoBanner(false)
   }
 
   return (
-    <PopupContainer show={!tokensBannerDismissed}>
+    <PopupContainer show={showTokensPromoBanner}>
       <Header>
-        <HeaderText to={'https://app.uniswap.org/#/tokens'} onClick={clickBanner}>
+        <HeaderText to={'https://app.uniswap.org/#/tokens'} onClick={closeBanner}>
           Explore Top Tokens
         </HeaderText>
         <X size={20} color={theme.textSecondary} onClick={closeBanner} style={{ cursor: 'pointer' }} />
       </Header>
 
-      <Description onClick={clickBanner}>Check out the new explore tab to discover and learn more</Description>
+      <Description onClick={closeBanner}>Check out the new explore tab to discover and learn more</Description>
     </PopupContainer>
   )
 }
