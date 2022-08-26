@@ -15,7 +15,6 @@ import {
 } from 'nft/components/icons'
 import { body, bodySmall } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
-import { useIsMobile } from 'nft/hooks'
 import { ReactNode, useReducer, useRef } from 'react'
 import { NavLink, NavLinkProps } from 'react-router-dom'
 import { isDevelopmentEnv, isStagingEnv } from 'utils/env'
