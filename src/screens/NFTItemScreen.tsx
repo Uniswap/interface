@@ -97,8 +97,8 @@ export function NFTItemScreen({
                       <NFTViewer uri={asset.collection.image_url} />
                     </Box>
                   ) : null}
-                  <Flex centered grow row flexBasis={0} gap="xs">
-                    <Text color="textPrimary" variant="subhead">
+                  <Flex grow row alignItems="center" flexBasis={0} gap="xs">
+                    <Text color="textPrimary" numberOfLines={1} variant="subhead">
                       {asset.collection.name}
                     </Text>
                     {asset.collection.safelist_request_status === 'verified' && (
