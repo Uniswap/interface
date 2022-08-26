@@ -13,9 +13,10 @@ export function useOnClickOutside<T extends HTMLElement>(
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
-      const additionalNodeClicked = additionalNodes.length
-        ? additionalNodes.reduce((reducer, val) => reducer || !!val.current?.contains(e.target as Node), false)
-        : false
+      const additionalNodeClicked = additionalNodes.reduce(
+        (reducer, val) => reducer || !!val.current?.contains(e.target as Node),
+        false
+      )
 
       if ((node.current?.contains(e.target as Node) || additionalNodeClicked) ?? false) {
         return
