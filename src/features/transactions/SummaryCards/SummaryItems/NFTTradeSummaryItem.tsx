@@ -8,7 +8,7 @@ import { useSpotPricesQuery } from 'src/features/dataApi/slice'
 import { createBalanceUpdate } from 'src/features/notifications/utils'
 import { useCurrency } from 'src/features/tokens/useCurrency'
 import TransactionSummaryLayout, {
-  TXN_HISTORY_SIZING,
+  TXN_HISTORY_ICON_SIZE,
 } from 'src/features/transactions/SummaryCards/TransactionSummaryLayout'
 import { BaseTransactionSummaryProps } from 'src/features/transactions/SummaryCards/TransactionSummaryRouter'
 import { formatTitleWithStatus } from 'src/features/transactions/SummaryCards/utils'
@@ -79,7 +79,7 @@ export default function NFTTradeSummaryItem({
           assetType={AssetType.ERC721}
           nftImageUrl={transaction.typeInfo.nftSummaryInfo.imageURL}
           nftTradeType={transaction.typeInfo.tradeType}
-          size={TXN_HISTORY_SIZING}
+          size={TXN_HISTORY_ICON_SIZE}
           txStatus={transaction.status}
           txType={transaction.typeInfo.type}
         />

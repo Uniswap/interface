@@ -17,11 +17,7 @@ import TransactionActionsModal from 'src/features/transactions/SummaryCards/Tran
 import { TransactionDetails, TransactionStatus } from 'src/features/transactions/types'
 import { openTransactionLink } from 'src/utils/linking'
 
-export const TXN_HISTORY_ICON_SIZE = 36
-export const TXN_HISTORY_SIZING = {
-  primaryImage: TXN_HISTORY_ICON_SIZE * (2 / 3),
-  secondaryImage: TXN_HISTORY_ICON_SIZE * (2 / 3) * (2 / 3),
-}
+export const TXN_HISTORY_ICON_SIZE = 24
 const LOADING_SPINNER_SIZE = 20
 
 function TransactionSummaryLayout({
@@ -95,7 +91,10 @@ function TransactionSummaryLayout({
           py="sm">
           <Flex row alignItems="center" gap="xs" height="100%" justifyContent="flex-start">
             {icon && (
-              <Flex centered height={TXN_HISTORY_ICON_SIZE} width={TXN_HISTORY_ICON_SIZE}>
+              <Flex
+                centered
+                height={TXN_HISTORY_ICON_SIZE * 1.5}
+                width={TXN_HISTORY_ICON_SIZE * 1.5}>
                 {icon}
               </Flex>
             )}

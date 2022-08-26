@@ -3,14 +3,14 @@ import { useTranslation } from 'react-i18next'
 import { useAppDispatch, useAppSelector, useAppTheme } from 'src/app/hooks'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { store } from 'src/app/store'
-import AlertTriangle from 'src/assets/icons/alert-triangle.svg'
-import Approve from 'src/assets/icons/approve.svg'
 import CheckCircle from 'src/assets/icons/check-circle.svg'
 import { CurrencyLogoOrPlaceholder } from 'src/components/CurrencyLogo/CurrencyLogoOrPlaceholder'
-import { LogoWithTxStatus } from 'src/components/CurrencyLogo/LogoWithTxStatus'
+import {
+  DappLogoWithTxStatus,
+  LogoWithTxStatus,
+  SwapLogoOrLogoWithTxStatus,
+} from 'src/components/CurrencyLogo/LogoWithTxStatus'
 import { NetworkLogo } from 'src/components/CurrencyLogo/NetworkLogo'
-import { RemoteImage } from 'src/components/images/RemoteImage'
-import { Box } from 'src/components/layout/Box'
 import { WalletConnectModalState } from 'src/components/WalletConnect/constants'
 import { CHAIN_INFO } from 'src/constants/chains'
 import { AssetType } from 'src/entities/assets'
@@ -18,10 +18,7 @@ import { useSpotPrices } from 'src/features/dataApi/prices'
 import { useENS } from 'src/features/ens/useENS'
 import { closeModal, openModal } from 'src/features/modals/modalSlice'
 import { useNFT } from 'src/features/nfts/hooks'
-import {
-  NotificationToast,
-  NOTIFICATION_SIZING,
-} from 'src/features/notifications/NotificationToast'
+import { NotificationToast } from 'src/features/notifications/NotificationToast'
 import {
   AppErrorNotification,
   AppNotificationDefault,
@@ -53,6 +50,8 @@ import { Tabs } from 'src/screens/Screens'
 import { toSupportedChainId } from 'src/utils/chainId'
 import { buildCurrencyId } from 'src/utils/currencyId'
 
+export const NOTIFICATION_ICON_SIZE = 24
+
 // TODO: once profile tab has screens for transaction details, navigate there instead
 const navigateToProfileTab = () => {
   store.dispatch(closeModal({ name: ModalName.Swap }))
@@ -60,7 +59,6 @@ const navigateToProfileTab = () => {
 }
 
 export function WCNotification({ notification }: { notification: WalletConnectNotification }) {
-  const theme = useAppTheme()
   const { imageUrl, chainId, address, event } = notification
   const dispatch = useAppDispatch()
   const validChainId = toSupportedChainId(chainId)
@@ -72,42 +70,14 @@ export function WCNotification({ notification }: { notification: WalletConnectNo
     WalletConnectEvent.NetworkChanged,
   ]
   const useSmallDisplay = useSmallDisplayEvents.includes(event)
+
   const icon = (
-    <Box>
-      {imageUrl ? (
-        <RemoteImage
-          borderRadius={theme.borderRadii.none}
-          height={NOTIFICATION_SIZING.primaryImage}
-          uri={imageUrl}
-          width={NOTIFICATION_SIZING.primaryImage}
-        />
-      ) : null}
-      {(validChainId ||
-        event === WalletConnectEvent.TransactionConfirmed ||
-        event === WalletConnectEvent.TransactionFailed) && (
-        <Box bottom={0} position="absolute" right={0}>
-          {event === WalletConnectEvent.TransactionConfirmed && (
-            <Approve
-              color={theme.colors.accentSuccess}
-              fill={theme.colors.backgroundBackdrop}
-              height={NOTIFICATION_SIZING.secondaryImage}
-              width={NOTIFICATION_SIZING.secondaryImage}
-            />
-          )}
-          {event === WalletConnectEvent.TransactionFailed && (
-            <AlertTriangle
-              color={theme.colors.accentSuccess}
-              fill={theme.colors.backgroundBackdrop}
-              height={NOTIFICATION_SIZING.secondaryImage}
-              width={NOTIFICATION_SIZING.secondaryImage}
-            />
-          )}
-          {event === WalletConnectEvent.NetworkChanged && (
-            <NetworkLogo chainId={validChainId!} size={NOTIFICATION_SIZING.secondaryImage} />
-          )}
-        </Box>
-      )}
-    </Box>
+    <DappLogoWithTxStatus
+      chainId={validChainId}
+      dappImageUrl={imageUrl}
+      event={event}
+      size={NOTIFICATION_ICON_SIZE}
+    />
   )
 
   const onPressNotification = () => {
@@ -141,7 +111,7 @@ export function ApproveNotification({
     <LogoWithTxStatus
       assetType={AssetType.Currency}
       currency={currency}
-      size={NOTIFICATION_SIZING}
+      size={NOTIFICATION_ICON_SIZE}
       txStatus={txStatus}
       txType={txType}
     />
@@ -204,31 +174,14 @@ export function SwapNotification({
     spotPrices
   )
 
-  const icon =
-    txStatus === TransactionStatus.Success ? (
-      <>
-        <Box left={0} position="absolute" testID="swap-success-toast" top={0}>
-          <CurrencyLogoOrPlaceholder
-            currency={inputCurrency}
-            size={NOTIFICATION_SIZING.primaryImage}
-          />
-        </Box>
-        <Box bottom={0} position="absolute" right={0}>
-          <CurrencyLogoOrPlaceholder
-            currency={outputCurrency}
-            size={NOTIFICATION_SIZING.primaryImage}
-          />
-        </Box>
-      </>
-    ) : (
-      <LogoWithTxStatus
-        assetType={AssetType.Currency}
-        currency={inputCurrency}
-        size={NOTIFICATION_SIZING}
-        txStatus={txStatus}
-        txType={txType}
-      />
-    )
+  const icon = (
+    <SwapLogoOrLogoWithTxStatus
+      inputCurrency={inputCurrency}
+      outputCurrency={outputCurrency}
+      size={NOTIFICATION_ICON_SIZE}
+      txStatus={txStatus}
+    />
+  )
 
   return (
     <NotificationToast
@@ -255,7 +208,7 @@ export function TransferCurrencyNotification({
   const currency = useCurrency(buildCurrencyId(chainId, tokenAddress))
   const { spotPrices } = useSpotPrices([currency])
   const balanceUpdate =
-    txType === TransactionType.Send && txStatus === TransactionStatus.Success // dont render balance change on succesful sends
+    txType === TransactionType.Send && txStatus === TransactionStatus.Success // don't render balance change on successful sends
       ? undefined
       : createBalanceUpdate(txType, txStatus, currency, currencyAmountRaw, spotPrices)
   const title = formTransferCurrencyNotificationTitle(
@@ -271,7 +224,7 @@ export function TransferCurrencyNotification({
     <LogoWithTxStatus
       assetType={assetType}
       currency={currency}
-      size={NOTIFICATION_SIZING}
+      size={NOTIFICATION_ICON_SIZE}
       txStatus={txStatus}
       txType={txType}
     />
@@ -313,7 +266,7 @@ export function TransferNFTNotification({
     <LogoWithTxStatus
       assetType={assetType}
       nftImageUrl={nft?.image_preview_url}
-      size={NOTIFICATION_SIZING}
+      size={NOTIFICATION_ICON_SIZE}
       txStatus={txStatus}
       txType={txType}
     />
@@ -336,7 +289,7 @@ export function UnknownTxNotification({
     <LogoWithTxStatus
       assetType={AssetType.Currency}
       currency={currency}
-      size={NOTIFICATION_SIZING}
+      size={NOTIFICATION_ICON_SIZE}
       txStatus={txStatus}
       txType={txType}
     />
@@ -371,9 +324,7 @@ export function FavoriteNotification({
   const { t } = useTranslation()
   const currency = useCurrency(currencyId)
   const title = isAddition ? t('Added to favorites') : t('Removed from favorites')
-  const icon = (
-    <CurrencyLogoOrPlaceholder currency={currency} size={NOTIFICATION_SIZING.primaryImage} />
-  )
+  const icon = <CurrencyLogoOrPlaceholder currency={currency} size={NOTIFICATION_ICON_SIZE} />
   return (
     <NotificationToast
       useSmallDisplay
@@ -409,7 +360,7 @@ export function SwapNetworkNotification({
   return (
     <NotificationToast
       useSmallDisplay
-      icon={<NetworkLogo chainId={chainId} size={24} />}
+      icon={<NetworkLogo chainId={chainId} size={NOTIFICATION_ICON_SIZE} />}
       title={t('Swapping on {{ network }}', { network })}
     />
   )

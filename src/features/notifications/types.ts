@@ -72,12 +72,12 @@ interface TransferCurrencyTxNotificationBase extends TransactionNotificationBase
   currencyAmountRaw: string
 }
 
-export interface SendCurrencyTxNotifcation extends TransferCurrencyTxNotificationBase {
+export interface SendCurrencyTxNotification extends TransferCurrencyTxNotificationBase {
   txType: TransactionType.Send
   recipient: Address
 }
 
-export interface ReceiveCurrencyTxNotifcation extends TransferCurrencyTxNotificationBase {
+export interface ReceiveCurrencyTxNotification extends TransferCurrencyTxNotificationBase {
   txType: TransactionType.Receive
   sender: Address
 }
@@ -104,8 +104,8 @@ export interface UnknownTxNotification extends TransactionNotificationBase {
 }
 
 export type TransferCurrencyTxNotification =
-  | SendCurrencyTxNotifcation
-  | ReceiveCurrencyTxNotifcation
+  | SendCurrencyTxNotification
+  | ReceiveCurrencyTxNotification
 
 export type TransferNFTTxNotification = SendNFTNotification | ReceiveNFTNotification
 

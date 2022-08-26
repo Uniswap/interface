@@ -160,6 +160,7 @@ export const finalizedTxAction: ReturnType<typeof finalizeTransaction> = {
 export const swapNotification = {
   type: AppNotificationType.Transaction,
   chainId: ChainId.Mainnet,
+  txId: 'uid-1234',
   txHash: '0x01',
   txType: TransactionType.Swap,
   txStatus: TransactionStatus.Success,
@@ -173,6 +174,7 @@ export const swapNotification = {
 export const transferCurrencyNotification = {
   type: AppNotificationType.Transaction,
   chainId: ChainId.Mainnet,
+  txId: 'uid-1234',
   txHash: '0x000',
   txType: TransactionType.Send,
   txStatus: TransactionStatus.Success,
@@ -186,6 +188,7 @@ export const transferCurrencyNotification = {
 export const transferNFTNotification = {
   type: AppNotificationType.Transaction,
   chainId: ChainId.Mainnet,
+  txId: 'uid-1234',
   txHash: '0x000',
   txType: TransactionType.Send,
   txStatus: TransactionStatus.Success,
@@ -207,6 +210,7 @@ export const wcNotification = {
 export const approveNotification = {
   type: AppNotificationType.Transaction,
   chainId: ChainId.Mainnet,
+  txId: 'uid-1234',
   txHash: '0x000',
   txType: TransactionType.Approve,
   txStatus: TransactionStatus.Success,
@@ -217,6 +221,7 @@ export const approveNotification = {
 export const unknownNotification = {
   type: AppNotificationType.Transaction,
   chainId: ChainId.Mainnet,
+  txId: 'uid-1234',
   txHash: '0x000',
   txType: TransactionType.Unknown,
   txStatus: TransactionStatus.Success,

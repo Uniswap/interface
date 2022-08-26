@@ -7,22 +7,39 @@ import IncomingArrow from 'src/assets/icons/arrow-down-in-circle.svg'
 import OutgoingArrow from 'src/assets/icons/arrow-up-in-circle.svg'
 import UnknownStatus from 'src/assets/icons/question-in-circle.svg'
 import SlashCircleIcon from 'src/assets/icons/slash-circle.svg'
-import { CurrencyLogoOrPlaceholder } from 'src/components/CurrencyLogo/CurrencyLogoOrPlaceholder'
-import { NFTViewer } from 'src/components/images/NFTViewer'
+import {
+  CurrencyLogoOrPlaceholder,
+  NFTLogoOrPlaceholder,
+} from 'src/components/CurrencyLogo/CurrencyLogoOrPlaceholder'
+import { NetworkLogo } from 'src/components/CurrencyLogo/NetworkLogo'
+import { RemoteImage } from 'src/components/images/RemoteImage'
 import { Box } from 'src/components/layout/Box'
+import { ChainId } from 'src/constants/chains'
 import { AssetType } from 'src/entities/assets'
-import { TXN_HISTORY_SIZING } from 'src/features/transactions/SummaryCards/TransactionSummaryLayout'
 import { NFTTradeType, TransactionStatus, TransactionType } from 'src/features/transactions/types'
+import { WalletConnectEvent } from 'src/features/walletConnect/saga'
 import { logger } from 'src/utils/logger'
 
 interface LogoWithTxStatusProps {
   assetType: AssetType
   txType: TransactionType
   txStatus: TransactionStatus
-  size: {
-    primaryImage: number
-    secondaryImage: number
-  }
+  size: number
+}
+
+interface DappLogoWithTxStatusProps {
+  event: WalletConnectEvent
+  size: number
+  chainId: ChainId | null
+  dappImageUrl: string | null
+}
+
+interface SwapLogoOrLogoWithTxStatusProps {
+  inputCurrency: NullUndefined<Currency>
+  outputCurrency: NullUndefined<Currency>
+  txStatus: TransactionStatus
+  size: number
+  showCancelIcon?: boolean
 }
 
 interface CurrencyStatusProps extends LogoWithTxStatusProps {
@@ -40,18 +57,21 @@ export function LogoWithTxStatus(props: CurrencyStatusProps | NFTStatusProps) {
   const { assetType, txType, txStatus, size } = props
   const theme = useAppTheme()
 
+  const currencySize = size
+  const statusSize = currencySize * (2 / 3)
+  const totalSize = currencySize + statusSize * (1 / 3)
+
   const logo =
     assetType === AssetType.Currency ? (
-      <CurrencyLogoOrPlaceholder currency={props.currency} size={size.primaryImage} />
+      <CurrencyLogoOrPlaceholder currency={props.currency} size={currencySize} />
     ) : (
-      <NFTLogoOrPlaceholder nftImageUrl={props.nftImageUrl} size={size.primaryImage} />
+      <NFTLogoOrPlaceholder nftImageUrl={props.nftImageUrl} size={currencySize} />
     )
 
   const fill = theme.colors.backgroundBackdrop
   const gray = theme.colors.textSecondary
   const green = theme.colors.accentSuccess
   const yellow = theme.colors.accentWarning
-  const statusSize = size.secondaryImage
 
   const getTxStatusIcon = () => {
     if (txStatus === TransactionStatus.Failed) {
@@ -95,70 +115,108 @@ export function LogoWithTxStatus(props: CurrencyStatusProps | NFTStatusProps) {
   }
   const statusIcon = getTxStatusIcon()
   return (
-    <>
-      {logo}
-      <Box bottom={1} position="absolute" right={1}>
+    <Box height={totalSize} width={totalSize}>
+      <Box left={0} position="absolute" top={0}>
+        {logo}
+      </Box>
+      <Box bottom={0} position="absolute" right={0}>
         {statusIcon}
       </Box>
-    </>
-  )
-}
-
-function NFTLogoOrPlaceholder(props: { nftImageUrl?: string; size: number }) {
-  const { nftImageUrl, size } = props
-  return (
-    <Box
-      alignItems="center"
-      backgroundColor="backgroundContainer"
-      borderRadius="xs"
-      height={size}
-      justifyContent="center"
-      overflow="hidden"
-      width={size}>
-      {nftImageUrl && <NFTViewer uri={nftImageUrl} />}
     </Box>
   )
 }
 
-/**
- * Swap icons lockup, fall back to single icon plus warning if in failed state.
- */
-export function DoubleCurrencyLogoWithTxStatus({
-  currency,
-  otherCurrency,
-  status,
+export function SwapLogoOrLogoWithTxStatus({
+  size,
+  inputCurrency,
+  outputCurrency,
+  txStatus,
   showCancelIcon,
-}: {
-  currency: NullUndefined<Currency>
-  otherCurrency: NullUndefined<Currency>
-  status: TransactionStatus
-  showCancelIcon: boolean
-}) {
+}: SwapLogoOrLogoWithTxStatusProps) {
   if (
-    status === TransactionStatus.Failed ||
-    (showCancelIcon && status === TransactionStatus.Cancelled)
+    txStatus === TransactionStatus.Failed ||
+    (showCancelIcon && txStatus === TransactionStatus.Cancelled)
   ) {
     return (
       <LogoWithTxStatus
         assetType={AssetType.Currency}
-        currency={currency}
-        size={TXN_HISTORY_SIZING}
-        txStatus={status}
+        currency={inputCurrency}
+        size={size}
+        txStatus={txStatus}
         txType={TransactionType.Swap}
       />
     )
   }
+
   return (
-    <>
-      <Box left={2} position="absolute" top={2}>
-        <CurrencyLogoOrPlaceholder
-          currency={otherCurrency}
-          size={TXN_HISTORY_SIZING.primaryImage}
-        />
+    <Box height={size * 1.5} width={size * 1.5}>
+      <Box left={0} position="absolute" testID="swap-success-toast" top={0}>
+        <CurrencyLogoOrPlaceholder currency={inputCurrency} size={size} />
       </Box>
       <Box bottom={0} position="absolute" right={0}>
-        <CurrencyLogoOrPlaceholder currency={currency} size={TXN_HISTORY_SIZING.primaryImage} />
+        <CurrencyLogoOrPlaceholder currency={outputCurrency} size={size} />
       </Box>
-    </>
+    </Box>
+  )
+}
+
+export function DappLogoWithTxStatus({
+  dappImageUrl,
+  event,
+  size,
+  chainId,
+}: DappLogoWithTxStatusProps) {
+  const theme = useAppTheme()
+  const green = theme.colors.accentSuccess
+  const yellow = theme.colors.accentWarning
+  const fill = theme.colors.backgroundBackdrop
+
+  const dappImageSize = size
+  const statusSize = dappImageSize * (2 / 3)
+  const totalSize = dappImageSize + statusSize * (1 / 3)
+
+  const getStatusIcon = () => {
+    switch (event) {
+      case WalletConnectEvent.NetworkChanged:
+        return chainId ? <NetworkLogo chainId={chainId!} size={statusSize} /> : undefined
+      case WalletConnectEvent.TransactionConfirmed:
+        return <Approve color={green} fill={fill} height={statusSize} width={statusSize} />
+      case WalletConnectEvent.TransactionFailed:
+        return <AlertTriangle color={yellow} fill={fill} height={statusSize} width={statusSize} />
+    }
+  }
+
+  const statusIcon = getStatusIcon()
+
+  const dappImage = dappImageUrl ? (
+    <RemoteImage
+      borderRadius={theme.borderRadii.none}
+      height={dappImageSize}
+      uri={dappImageUrl}
+      width={dappImageSize}
+    />
+  ) : statusIcon ? (
+    <Box
+      alignItems="center"
+      backgroundColor="backgroundContainer"
+      borderRadius="xs"
+      height={dappImageSize}
+      justifyContent="center"
+      overflow="hidden"
+      width={dappImageSize}
+    />
+  ) : null
+
+  return statusIcon ? (
+    <Box height={totalSize} width={totalSize}>
+      <Box left={0} position="absolute" top={0}>
+        {dappImage}
+      </Box>
+      <Box bottom={0} position="absolute" right={0}>
+        {statusIcon}
+      </Box>
+    </Box>
+  ) : (
+    dappImage
   )
 }

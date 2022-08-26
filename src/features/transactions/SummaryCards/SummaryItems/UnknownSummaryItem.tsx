@@ -2,7 +2,9 @@ import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppTheme } from 'src/app/hooks'
 import UnknownStatus from 'src/assets/icons/question-in-circle.svg'
-import TransactionSummaryLayout from 'src/features/transactions/SummaryCards/TransactionSummaryLayout'
+import TransactionSummaryLayout, {
+  TXN_HISTORY_ICON_SIZE,
+} from 'src/features/transactions/SummaryCards/TransactionSummaryLayout'
 import { BaseTransactionSummaryProps } from 'src/features/transactions/SummaryCards/TransactionSummaryRouter'
 import { formatTitleWithStatus } from 'src/features/transactions/SummaryCards/utils'
 import { UnknownTransactionInfo } from 'src/features/transactions/types'
@@ -37,8 +39,8 @@ export default function UnknownSummaryItem({
         <UnknownStatus
           color={theme.colors.textSecondary}
           fill={theme.colors.backgroundBackdrop}
-          height={theme.spacing.lg}
-          width={theme.spacing.lg}
+          height={TXN_HISTORY_ICON_SIZE * 1.25}
+          width={TXN_HISTORY_ICON_SIZE * 1.25}
         />
       }
       readonly={readonly}

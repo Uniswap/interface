@@ -4,7 +4,7 @@ import { LogoWithTxStatus } from 'src/components/CurrencyLogo/LogoWithTxStatus'
 import { AssetType } from 'src/entities/assets'
 import { useCurrency } from 'src/features/tokens/useCurrency'
 import TransactionSummaryLayout, {
-  TXN_HISTORY_SIZING,
+  TXN_HISTORY_ICON_SIZE,
 } from 'src/features/transactions/SummaryCards/TransactionSummaryLayout'
 import { BaseTransactionSummaryProps } from 'src/features/transactions/SummaryCards/TransactionSummaryRouter'
 import { formatTitleWithStatus } from 'src/features/transactions/SummaryCards/utils'
@@ -36,7 +36,7 @@ export default function ApproveSummaryItem({
         <LogoWithTxStatus
           assetType={AssetType.Currency}
           currency={currency}
-          size={TXN_HISTORY_SIZING}
+          size={TXN_HISTORY_ICON_SIZE}
           txStatus={transaction.status}
           txType={TransactionType.Approve}
         />

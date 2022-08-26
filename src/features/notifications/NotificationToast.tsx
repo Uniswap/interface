@@ -17,11 +17,6 @@ import { selectActiveAccountNotifications } from 'src/features/notifications/sel
 import { useTimeout } from 'src/utils/timing'
 
 const NOTIFICATION_HEIGHT = 64
-const NOTIFICATION_ICON_SIZE = 36
-export const NOTIFICATION_SIZING = {
-  primaryImage: NOTIFICATION_ICON_SIZE * (2 / 3),
-  secondaryImage: NOTIFICATION_ICON_SIZE * (2 / 3) * (2 / 3),
-}
 
 const DEFAULT_HIDE_DELAY = 5000 // 5 seconds
 const HIDE_OFFSET_Y = -150
@@ -165,11 +160,7 @@ export function NotificationContent({
           flexBasis={endAdornment ? '75%' : '100%'}
           gap="xs"
           justifyContent="flex-start">
-          {icon && (
-            <Flex centered height={NOTIFICATION_ICON_SIZE} width={NOTIFICATION_ICON_SIZE}>
-              {icon}
-            </Flex>
-          )}
+          {icon}
           <Flex row shrink alignItems="center">
             <Text adjustsFontSizeToFit fontWeight="500" numberOfLines={2} variant="bodySmall">
               {title}
@@ -219,8 +210,8 @@ export function NotificationContentSmall({ title, icon, onPress }: NotificationC
         borderWidth={1}
         p="sm"
         onPress={onPress}>
-        <Flex row alignItems="center" gap="xs" justifyContent="space-between">
-          {icon && icon}
+        <Flex row alignItems="center" gap="xxs" justifyContent="flex-start">
+          {icon}
           <Text adjustsFontSizeToFit fontWeight="500" numberOfLines={1} variant="bodySmall">
             {title}
           </Text>

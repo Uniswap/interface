@@ -2,12 +2,14 @@ import { skipToken } from '@reduxjs/toolkit/dist/query'
 import { TradeType } from '@uniswap/sdk-core'
 import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { DoubleCurrencyLogoWithTxStatus } from 'src/components/CurrencyLogo/LogoWithTxStatus'
+import { SwapLogoOrLogoWithTxStatus } from 'src/components/CurrencyLogo/LogoWithTxStatus'
 import { PollingInterval } from 'src/constants/misc'
 import { useSpotPricesQuery } from 'src/features/dataApi/slice'
 import { createBalanceUpdate, getFormattedCurrencyAmount } from 'src/features/notifications/utils'
 import { useCurrency } from 'src/features/tokens/useCurrency'
-import TransactionSummaryLayout from 'src/features/transactions/SummaryCards/TransactionSummaryLayout'
+import TransactionSummaryLayout, {
+  TXN_HISTORY_ICON_SIZE,
+} from 'src/features/transactions/SummaryCards/TransactionSummaryLayout'
 import { BaseTransactionSummaryProps } from 'src/features/transactions/SummaryCards/TransactionSummaryRouter'
 import { formatTitleWithStatus } from 'src/features/transactions/SummaryCards/utils'
 import {
@@ -96,11 +98,12 @@ export default function SwapSummaryItem({
       endCaption={balanceUpdate?.usdIncrease ?? ''}
       endTitle={balanceUpdate?.assetIncrease ?? ''}
       icon={
-        <DoubleCurrencyLogoWithTxStatus
-          currency={outputCurrency}
-          otherCurrency={inputCurrency}
+        <SwapLogoOrLogoWithTxStatus
+          inputCurrency={inputCurrency}
+          outputCurrency={outputCurrency}
           showCancelIcon={showCancelIcon}
-          status={transaction.status}
+          size={TXN_HISTORY_ICON_SIZE}
+          txStatus={transaction.status}
         />
       }
       readonly={readonly}

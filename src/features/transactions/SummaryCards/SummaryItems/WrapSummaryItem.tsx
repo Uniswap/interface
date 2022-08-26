@@ -1,11 +1,13 @@
 import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { DoubleCurrencyLogoWithTxStatus } from 'src/components/CurrencyLogo/LogoWithTxStatus'
+import { SwapLogoOrLogoWithTxStatus } from 'src/components/CurrencyLogo/LogoWithTxStatus'
 import { PollingInterval } from 'src/constants/misc'
 import { nativeOnChain } from 'src/constants/tokens'
 import { useSpotPricesQuery } from 'src/features/dataApi/slice'
 import { createBalanceUpdate } from 'src/features/notifications/utils'
-import TransactionSummaryLayout from 'src/features/transactions/SummaryCards/TransactionSummaryLayout'
+import TransactionSummaryLayout, {
+  TXN_HISTORY_ICON_SIZE,
+} from 'src/features/transactions/SummaryCards/TransactionSummaryLayout'
 import { BaseTransactionSummaryProps } from 'src/features/transactions/SummaryCards/TransactionSummaryRouter'
 import { formatTitleWithStatus } from 'src/features/transactions/SummaryCards/utils'
 import {
@@ -73,11 +75,12 @@ export default function WrapSummaryItem({
       endCaption={balanceUpdate?.usdIncrease ?? ''}
       endTitle={balanceUpdate?.assetIncrease ?? ''}
       icon={
-        <DoubleCurrencyLogoWithTxStatus
-          currency={transaction.typeInfo.unwrapped ? wrappedNativeCurrency : nativeCurrency}
-          otherCurrency={transaction.typeInfo.unwrapped ? wrappedNativeCurrency : nativeCurrency}
+        <SwapLogoOrLogoWithTxStatus
+          inputCurrency={transaction.typeInfo.unwrapped ? wrappedNativeCurrency : nativeCurrency}
+          outputCurrency={transaction.typeInfo.unwrapped ? nativeCurrency : wrappedNativeCurrency}
           showCancelIcon={showCancelIcon}
-          status={transaction.status}
+          size={TXN_HISTORY_ICON_SIZE}
+          txStatus={transaction.status}
         />
       }
       readonly={readonly}
