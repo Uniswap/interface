@@ -6,7 +6,7 @@ import { GlyphCircle } from '@visx/glyph'
 import { Line } from '@visx/shape'
 import { filterTimeAtom } from 'components/Tokens/state'
 import { bisect, curveBasis, NumberValue, scaleLinear } from 'd3'
-import { useTokenPriceQuery } from 'graphql/data/TokenPriceQuery'
+import { useTokenPriceQuery } from 'graphql/data/TokenPrice'
 import { TimePeriod } from 'graphql/data/TopTokenQuery'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import { useAtom } from 'jotai'
@@ -161,9 +161,10 @@ export function PriceChart({ width, height, token }: PriceChartProps) {
   const theme = useTheme()
 
   // TODO: Add network selector input, consider using backend type instead of current front end selector type
-  const pricePoints: PricePoint[] = useTokenPriceQuery(token.address, timePeriod, 'ETHEREUM').filter(
-    (p): p is PricePoint => Boolean(p && p.value)
-  )
+
+  const { error, isLoading, data } = useTokenPriceQuery(token.address, timePeriod, 'ETHEREUM')
+
+  const pricePoints: PricePoint[] = data.filter((p): p is PricePoint => Boolean(p && p.value))
 
   const hasData = pricePoints.length !== 0
 
@@ -214,8 +215,13 @@ export function PriceChart({ width, height, token }: PriceChartProps) {
     setDisplayPrice(endingPrice)
   }, [setCrosshair, setDisplayPrice, endingPrice])
 
-  // TODO: connect to loading state
-  if (!hasData) {
+  // TODO: Display missing data error
+  if (!!error) {
+    return null
+  }
+
+  // TODO: Display missing data error
+  if (!!error) {
     return null
   }
 
@@ -313,7 +319,13 @@ export function PriceChart({ width, height, token }: PriceChartProps) {
       <TimeOptionsWrapper>
         <TimeOptionsContainer>
           {ORDERED_TIMES.map((time) => (
-            <TimeButton key={DISPLAYS[time]} active={timePeriod === time} onClick={() => setTimePeriod(time)}>
+            <TimeButton
+              key={DISPLAYS[time]}
+              active={timePeriod === time}
+              onClick={() => {
+                if (!isLoading) setTimePeriod(time)
+              }}
+            >
               {DISPLAYS[time]}
             </TimeButton>
           ))}
