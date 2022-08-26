@@ -62,7 +62,7 @@ export default function TokensBanner() {
   }
 
   return (
-    <PopupContainer show={showTokensPromoBanner}>
+    <PopupContainer show={true}>
       <Header>
         <HeaderText to={'/#/tokens'} onClick={closeBanner}>
           Explore Top Tokens
