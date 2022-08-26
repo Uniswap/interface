@@ -63,7 +63,7 @@ export default function TokensBanner() {
   return (
     <PopupContainer show={showTokensPromoBanner}>
       <Header>
-        <HeaderText to={'https://app.uniswap.org/#/tokens'} onClick={closeBanner}>
+        <HeaderText to={'/#/tokens'} onClick={closeBanner}>
           Explore Top Tokens
         </HeaderText>
         <X size={20} color={theme.textSecondary} onClick={closeBanner} style={{ cursor: 'pointer' }} />
