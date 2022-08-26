@@ -156,7 +156,7 @@ const NoBalanceState = styled.div`
   color: ${({ theme }) => theme.textTertiary};
   font-weight: 400;
   justify-content: space-between;
-  padding: 0px 4px;
+  padding: 0px 4px 1px 4px;
 `
 const NoBalanceDash = styled.span`
   color: ${({ theme }) => theme.textTertiary};
