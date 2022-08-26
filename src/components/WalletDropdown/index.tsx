@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import styled from 'styled-components/macro'
+import { Z_INDEX } from 'theme'
 
 import { useModalIsOpen } from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/reducer'
@@ -36,13 +37,13 @@ const WalletDropdownWrapper = styled.div`
   position: absolute;
   top: 65px;
   right: 20px;
+  z-index: ${Z_INDEX.dropdown};
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
     top: unset;
     left: 0;
     right: 0;
     bottom: 56px;
-    z-index: 1;
   }
 `
 
