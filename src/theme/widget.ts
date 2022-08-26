@@ -17,6 +17,7 @@ export const LIGHT_THEME = {
   warning: colorsLight.accentWarning,
   error: colorsLight.accentCritical,
 }
+
 export const DARK_THEME = {
   // surface
   container: colorsDark.backgroundSurface,

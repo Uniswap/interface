@@ -119,7 +119,7 @@ export default function SwapModalFooter({
   swapQuoteReceivedDate: Date | undefined
 }) {
   const transactionDeadlineSecondsSinceEpoch = useTransactionDeadline()?.toNumber() // in seconds since epoch
-  const isAutoSlippage = useUserSlippageTolerance() === 'auto'
+  const isAutoSlippage = useUserSlippageTolerance()[0] === 'auto'
   const [clientSideRouter] = useClientSideRouter()
   const tokenInAmountUsd = useStablecoinValue(trade.inputAmount)?.toFixed(2)
   const tokenOutAmountUsd = useStablecoinValue(trade.outputAmount)?.toFixed(2)

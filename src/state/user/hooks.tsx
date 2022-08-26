@@ -144,10 +144,20 @@ export function useClientSideRouter(): [boolean, (userClientSideRouter: boolean)
   return [clientSideRouter, setClientSideRouter]
 }
 
-export function useSetUserSlippageTolerance(): (slippageTolerance: Percent | 'auto') => void {
-  const dispatch = useAppDispatch()
+/**
+ * Return the user's slippage tolerance, from the redux store, and a function to update the slippage tolerance
+ */
+export function useUserSlippageTolerance(): [Percent | 'auto', (slippageTolerance: Percent | 'auto') => void] {
+  const userSlippageToleranceRaw = useAppSelector((state) => {
+    return state.user.userSlippageTolerance
+  })
+  const userSlippageTolerance = useMemo(
+    () => (userSlippageToleranceRaw === 'auto' ? 'auto' : new Percent(userSlippageToleranceRaw, 10_000)),
+    [userSlippageToleranceRaw]
+  )
 
-  return useCallback(
+  const dispatch = useAppDispatch()
+  const setUserSlippageTolerance = useCallback(
     (userSlippageTolerance: Percent | 'auto') => {
       let value: 'auto' | number
       try {
@@ -164,19 +174,10 @@ export function useSetUserSlippageTolerance(): (slippageTolerance: Percent | 'au
     },
     [dispatch]
   )
-}
-
-/**
- * Return the user's slippage tolerance, from the redux store, and a function to update the slippage tolerance
- */
-export function useUserSlippageTolerance(): Percent | 'auto' {
-  const userSlippageTolerance = useAppSelector((state) => {
-    return state.user.userSlippageTolerance
-  })
 
   return useMemo(
-    () => (userSlippageTolerance === 'auto' ? 'auto' : new Percent(userSlippageTolerance, 10_000)),
-    [userSlippageTolerance]
+    () => [userSlippageTolerance, setUserSlippageTolerance],
+    [setUserSlippageTolerance, userSlippageTolerance]
   )
 }
 
@@ -200,7 +201,7 @@ export function useUserHideClosedPositions(): [boolean, (newHideClosedPositions:
  * @param defaultSlippageTolerance the default value to replace auto with
  */
 export function useUserSlippageToleranceWithDefault(defaultSlippageTolerance: Percent): Percent {
-  const allowedSlippage = useUserSlippageTolerance()
+  const allowedSlippage = useUserSlippageTolerance()[0]
   return useMemo(
     () => (allowedSlippage === 'auto' ? defaultSlippageTolerance : allowedSlippage),
     [allowedSlippage, defaultSlippageTolerance]
