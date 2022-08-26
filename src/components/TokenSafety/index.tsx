@@ -10,7 +10,7 @@ import { ExternalLink as LinkIconFeather } from 'react-feather'
 import { Text } from 'rebass'
 import { useAddUserToken } from 'state/user/hooks'
 import styled from 'styled-components/macro'
-import { ButtonText, CopyLinkIcon, ExternalLink } from 'theme'
+import { CopyLinkIcon, ExternalLink } from 'theme'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 const Wrapper = styled.div`
@@ -62,13 +62,6 @@ const StyledCloseButton = styled(StyledButton)`
   }
 `
 
-const StyledCancelButton = styled(ButtonText)`
-  margin-top: 16px;
-  color: ${({ theme }) => theme.textSecondary};
-  font-weight: 600;
-  font-size: 14px;
-`
-
 const Buttons = ({
   warning,
   onContinue,
@@ -83,7 +76,6 @@ const Buttons = ({
       <StyledButton onClick={onContinue}>
         <Trans>I understand</Trans>
       </StyledButton>
-      <StyledCancelButton onClick={onCancel}>Cancel</StyledCancelButton>
     </>
   ) : (
     <StyledCloseButton onClick={onCancel}>

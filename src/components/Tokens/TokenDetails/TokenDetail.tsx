@@ -5,7 +5,7 @@ import PriceChart from 'components/Tokens/TokenDetails/PriceChart'
 import { VerifiedIcon } from 'components/TokenSafety/TokenSafetyIcon'
 import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import { getChainInfo } from 'constants/chainInfo'
-import { checkWarning } from 'constants/tokenSafety'
+import { checkWarning, WARNING_LEVEL } from 'constants/tokenSafety'
 import { chainIdToChainName, useTokenDetailQuery } from 'graphql/data/TokenDetailQuery'
 import { useCurrency, useIsUserAddedToken, useToken } from 'hooks/Tokens'
 import { useAtomValue } from 'jotai/utils'
@@ -188,6 +188,10 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
   const handleDismissWarning = useCallback(() => {
     setWarningModalOpen(false)
   }, [setWarningModalOpen])
+  const handleCancel = useCallback(() => {
+    setWarningModalOpen(false)
+    warning && warning.level === WARNING_LEVEL.BLOCKED && navigate(-1)
+  }, [setWarningModalOpen, navigate, warning])
   const chainInfo = getChainInfo(token?.chainId)
   const networkLabel = chainInfo?.label
   const networkBadgebackgroundColor = chainInfo?.backgroundColor
@@ -280,7 +284,7 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
         <TokenSafetyModal
           isOpen={warningModalOpen}
           tokenAddress={address}
-          onCancel={() => navigate(-1)}
+          onCancel={handleCancel}
           onContinue={handleDismissWarning}
         />
       </TopArea>
