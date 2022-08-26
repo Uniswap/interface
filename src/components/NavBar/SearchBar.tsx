@@ -1,5 +1,5 @@
-// eslint-disable-next-line no-restricted-imports
-import { t, Trans } from '@lingui/macro'
+import { i18n } from '@lingui/core'
+import { Trans } from '@lingui/macro'
 import clsx from 'clsx'
 import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
 import useDebounce from 'hooks/useDebounce'
@@ -320,7 +320,8 @@ export const SearchBar = () => {
     setSearchValue('')
   }, [pathname])
 
-  const placeholderText = phase1Flag === NftVariant.Enabled ? t`Search tokens and NFT collections` : t`Search tokens`
+  const placeholderText =
+    phase1Flag === NftVariant.Enabled ? i18n._('Search tokens and NFT collections') : i18n._('Search tokens')
 
   return (
     <>
