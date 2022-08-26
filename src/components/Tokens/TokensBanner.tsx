@@ -1,7 +1,6 @@
 import { X } from 'react-feather'
 import { Link } from 'react-router-dom'
-import { useAppSelector } from 'state/hooks'
-import { updateShowTokensPromoBanner } from 'state/user/reducer'
+import { useShowTokensPromoBanner } from 'state/user/hooks'
 import styled, { useTheme } from 'styled-components/macro'
 import { opacify } from 'theme/utils'
 
@@ -49,10 +48,11 @@ const Description = styled.span`
 
 export default function TokensBanner() {
   const theme = useTheme()
-  const showTokensPromoBanner = useAppSelector((state) => state.user.showTokensPromoBanner)
+  const [showTokensPromoBanner, setShowTokensPromoBanner] = useShowTokensPromoBanner()
+  console.log(showTokensPromoBanner)
 
   const closeBanner = () => {
-    updateShowTokensPromoBanner(false)
+    setShowTokensPromoBanner(false)
   }
 
   return (

@@ -19,6 +19,7 @@ import {
   removeSerializedToken,
   updateHideClosedPositions,
   updateShowSurveyPopup,
+  updateShowTokensPromoBanner,
   updateUserClientSideRouter,
   updateUserDarkMode,
   updateUserDeadline,
@@ -114,6 +115,18 @@ export function useShowSurveyPopup(): [boolean | undefined, (showPopup: boolean)
     [dispatch]
   )
   return [showSurveyPopup, toggleShowSurveyPopup]
+}
+
+export function useShowTokensPromoBanner(): [boolean, (showTokensBanner: boolean) => void] {
+  const dispatch = useAppDispatch()
+  const showTokensPromoBanner = useAppSelector((state) => state.user.showTokensPromoBanner)
+  const toggleShowTokensPromoBanner = useCallback(
+    (showTokensBanner: boolean) => {
+      dispatch(updateShowTokensPromoBanner({ showTokensPromoBanner: showTokensBanner }))
+    },
+    [dispatch]
+  )
+  return [showTokensPromoBanner, toggleShowTokensPromoBanner]
 }
 
 export function useClientSideRouter(): [boolean, (userClientSideRouter: boolean) => void] {
