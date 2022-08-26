@@ -139,6 +139,7 @@ const StyledHeaderRow = styled(StyledTokenRow)`
   line-height: 16px;
   padding: 0px 12px;
   width: 100%;
+  justify-content: center;
 
   &:hover {
     background-color: transparent;
@@ -151,6 +152,7 @@ const StyledHeaderRow = styled(StyledTokenRow)`
 const ListNumberCell = styled(Cell)`
   color: ${({ theme }) => theme.textSecondary};
   min-width: 32px;
+  height: 48px;
 
   @media only screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
     display: none;
