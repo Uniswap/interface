@@ -1,3 +1,5 @@
+// eslint-disable-next-line no-restricted-imports
+import { t, Trans } from '@lingui/macro'
 import clsx from 'clsx'
 import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
 import useDebounce from 'hooks/useDebounce'
@@ -31,7 +33,7 @@ import { CollectionRow, SkeletonRow, TokenRow } from './SuggestionRow'
 interface SearchBarDropdownSectionProps {
   toggleOpen: () => void
   suggestions: (GenieCollection | FungibleToken)[]
-  header: string
+  header: JSX.Element
   headerIcon?: JSX.Element
   hoveredIndex: number | undefined
   startingIndex: number
@@ -105,10 +107,12 @@ export const SearchBarDropdown = ({ toggleOpen, tokens, collections, hasInput }:
         setHoveredIndex={setHoveredIndex}
         toggleOpen={toggleOpen}
         suggestions={tokens}
-        header={'Tokens'}
+        header={<Trans>Tokens</Trans>}
       />
     ) : (
-      <Box className={styles.notFoundContainer}>No tokens found.</Box>
+      <Box className={styles.notFoundContainer}>
+        <Trans>No tokens found.</Trans>
+      </Box>
     )
 
   const collectionSearchResults =
@@ -120,7 +124,7 @@ export const SearchBarDropdown = ({ toggleOpen, tokens, collections, hasInput }:
           setHoveredIndex={setHoveredIndex}
           toggleOpen={toggleOpen}
           suggestions={collections}
-          header={'NFT Collections'}
+          header={<Trans>NFT Collections</Trans>}
         />
       ) : (
         <Box className={styles.notFoundContainer}>No NFT collections found.</Box>
@@ -223,7 +227,7 @@ export const SearchBarDropdown = ({ toggleOpen, tokens, collections, hasInput }:
               setHoveredIndex={setHoveredIndex}
               toggleOpen={toggleOpen}
               suggestions={searchHistory}
-              header={'Recent searches'}
+              header={<Trans>Recent searches</Trans>}
               headerIcon={<ClockIcon />}
             />
           )}
@@ -234,7 +238,7 @@ export const SearchBarDropdown = ({ toggleOpen, tokens, collections, hasInput }:
               setHoveredIndex={setHoveredIndex}
               toggleOpen={toggleOpen}
               suggestions={trendingTokens ?? []}
-              header={'Popular tokens'}
+              header={<Trans>Popular tokens</Trans>}
               headerIcon={<TrendingArrow />}
             />
           )}
@@ -245,7 +249,7 @@ export const SearchBarDropdown = ({ toggleOpen, tokens, collections, hasInput }:
               setHoveredIndex={setHoveredIndex}
               toggleOpen={toggleOpen}
               suggestions={trendingCollections as unknown as GenieCollection[]}
-              header={'Popular NFT collections'}
+              header={<Trans>Popular NFT collections</Trans>}
               headerIcon={<TrendingArrow />}
             />
           )}
@@ -316,6 +320,8 @@ export const SearchBar = () => {
     setSearchValue('')
   }, [pathname])
 
+  const placeholderText = phase1Flag === NftVariant.Enabled ? t`Search tokens and NFT collections` : t`Search tokens`
+
   return (
     <>
       <Box
@@ -345,7 +351,7 @@ export const SearchBar = () => {
           </Box>
           <Box
             as="input"
-            placeholder={`Search tokens${phase1Flag === NftVariant.Enabled ? ' and NFT collections' : ''}`}
+            placeholder={placeholderText}
             width={isOpen || phase1Flag === NftVariant.Enabled ? 'full' : '120'}
             onChange={(event: ChangeEvent<HTMLInputElement>) => {
               !isOpen && toggleOpen()
