@@ -6,7 +6,7 @@ import { useCallback, useMemo, useState } from 'react'
  * Integrates the Widget's inputs.
  * Treats the Widget as a controlled component, using the app's own token selector for selection.
  */
-export function useSyncWidgetInputs(defaultToken: Currency) {
+export function useSyncWidgetInputs(defaultToken?: Currency) {
   const [isExactInput, setIsExactInput] = useState(false)
   const [amount, setAmount] = useState<string>()
   const onAmountChange = useCallback((field: Field, amount: string) => {

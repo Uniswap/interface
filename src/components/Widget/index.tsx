@@ -15,7 +15,7 @@ export const WIDGET_WIDTH = 320
 const WIDGET_ROUTER_URL = 'https://api.uniswap.org/v1/'
 
 export interface WidgetProps {
-  defaultToken: Currency
+  defaultToken?: Currency
 }
 
 export default function Widget({ defaultToken }: WidgetProps) {
@@ -37,6 +37,7 @@ export default function Widget({ defaultToken }: WidgetProps) {
         width={WIDGET_WIDTH}
         locale={locale}
         theme={theme}
+        // defaultChainId is excluded - it is always inferred from the passed provider
         provider={provider}
         {...inputs}
         {...settings}

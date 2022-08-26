@@ -119,7 +119,7 @@ export default function TokenDetails() {
         <>
           <TokenDetail address={tokenAddress} />
           <RightPanel>
-            {token && <Widget defaultToken={token} />}
+            <Widget defaultToken={token ?? undefined} />
             {tokenWarning && <TokenSafetyMessage tokenAddress={tokenAddress} warning={tokenWarning} />}
             <BalanceSummary address={tokenAddress} totalBalance={totalBalance} networkBalances={balancesByNetwork} />
           </RightPanel>
