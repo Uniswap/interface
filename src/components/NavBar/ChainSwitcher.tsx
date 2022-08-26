@@ -79,7 +79,7 @@ export const ChainSwitcher = ({ leftAlign }: ChainSwitcherProps) => {
   const isSupported = !!info
 
   const dropdown = (
-    <NavDropdown top="56" left="0">
+    <NavDropdown top="56" left={leftAlign ? '0' : 'auto'} right={leftAlign ? 'auto' : '0'}>
       <Column marginX="8">
         {NETWORK_SELECTOR_CHAINS.map((chainId: SupportedChainId) => (
           <ChainRow

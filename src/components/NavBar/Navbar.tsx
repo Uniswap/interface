@@ -1,3 +1,4 @@
+import { Trans } from '@lingui/macro'
 import Web3Status from 'components/Web3Status'
 import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
 import { ReactNode } from 'react'
@@ -45,18 +46,18 @@ const PageTabs = () => {
   return (
     <>
       <MenuItem href="/swap" isActive={pathname.startsWith('/swap')}>
-        Swap
+        <Trans>Swap</Trans>
       </MenuItem>
       <MenuItem href="/tokens" isActive={pathname.startsWith('/tokens')}>
-        Tokens
+        <Trans>Tokens</Trans>
       </MenuItem>
       {nftFlag === NftVariant.Enabled && (
         <MenuItem href="/nfts" isActive={pathname.startsWith('/nfts')}>
-          NFTs
+          <Trans>NFTs</Trans>
         </MenuItem>
       )}
       <MenuItem href="/pool" id={'pool-nav-link'} isActive={isPoolActive}>
-        Pool
+        <Trans>Pool</Trans>
       </MenuItem>
     </>
   )
