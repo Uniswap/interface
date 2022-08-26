@@ -46,6 +46,10 @@ const TokenDetailsLayout = styled.div`
     padding-top: 20px;
   }
 
+  @media only screen and (max-width: ${LARGE_MEDIA_BREAKPOINT}) {
+    gap: 0px;
+  }
+
   @media only screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
     padding-left: 16px;
     padding-right: 16px;
