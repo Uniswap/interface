@@ -51,6 +51,7 @@ const FixedContainer = styled.div<{ redesignFlag: boolean }>`
 `
 
 const Container = styled.div<{ hideInput: boolean; disabled: boolean; redesignFlag: boolean }>`
+  min-height: ${({ redesignFlag }) => redesignFlag && '69px'};
   border-radius: ${({ hideInput }) => (hideInput ? '16px' : '20px')};
   border: 1px solid ${({ theme, redesignFlag }) => (redesignFlag ? 'transparent' : theme.deprecated_bg0)};
   background-color: ${({ theme, redesignFlag }) => (redesignFlag ? 'transparent' : theme.deprecated_bg1)};
@@ -148,6 +149,7 @@ const LabelRow = styled.div`
 
 const FiatRow = styled(LabelRow)<{ redesignFlag: boolean }>`
   justify-content: flex-end;
+  min-height: ${({ redesignFlag }) => redesignFlag && '32px'};
   padding: ${({ redesignFlag }) => redesignFlag && '8px 0px'};
   height: ${({ redesignFlag }) => !redesignFlag && '24px'};
 `
