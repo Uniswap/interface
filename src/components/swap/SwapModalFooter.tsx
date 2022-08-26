@@ -25,7 +25,7 @@ import { getTokenPath, RoutingDiagramEntry } from './SwapRoute'
 
 interface AnalyticsEventProps {
   trade: InterfaceTrade<Currency, Currency, TradeType>
-  txHash: string | undefined
+  hash: string | undefined
   allowedSlippage: Percent
   transactionDeadlineSecondsSinceEpoch: number | undefined
   isAutoSlippage: boolean
@@ -65,7 +65,7 @@ const formatRoutesEventProperties = (routes: RoutingDiagramEntry[]) => {
 
 const formatAnalyticsEventProperties = ({
   trade,
-  txHash,
+  hash,
   allowedSlippage,
   transactionDeadlineSecondsSinceEpoch,
   isAutoSlippage,
@@ -76,7 +76,7 @@ const formatAnalyticsEventProperties = ({
   routes,
 }: AnalyticsEventProps) => ({
   estimated_network_fee_usd: trade.gasUseEstimateUSD ? formatToDecimal(trade.gasUseEstimateUSD, 2) : undefined,
-  transaction_hash: txHash,
+  transaction_hash: hash,
   transaction_deadline_seconds: getDurationUntilTimestampSeconds(transactionDeadlineSecondsSinceEpoch),
   token_in_amount_usd: tokenInAmountUsd ? parseFloat(tokenInAmountUsd) : undefined,
   token_out_amount_usd: tokenOutAmountUsd ? parseFloat(tokenOutAmountUsd) : undefined,
@@ -104,14 +104,14 @@ const formatAnalyticsEventProperties = ({
 export default function SwapModalFooter({
   trade,
   allowedSlippage,
-  txHash,
+  hash,
   onConfirm,
   swapErrorMessage,
   disabledConfirm,
   swapQuoteReceivedDate,
 }: {
   trade: InterfaceTrade<Currency, Currency, TradeType>
-  txHash: string | undefined
+  hash: string | undefined
   allowedSlippage: Percent
   onConfirm: () => void
   swapErrorMessage: ReactNode | undefined
@@ -134,7 +134,7 @@ export default function SwapModalFooter({
           name={EventName.SWAP_SUBMITTED}
           properties={formatAnalyticsEventProperties({
             trade,
-            txHash,
+            hash,
             allowedSlippage,
             transactionDeadlineSecondsSinceEpoch,
             isAutoSlippage,
