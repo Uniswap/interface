@@ -3,7 +3,7 @@ import { useAtom } from 'jotai'
 import { Heart } from 'react-feather'
 import styled, { useTheme } from 'styled-components/macro'
 
-import { SMALL_MEDIA_BREAKPOINT } from '../constants'
+import { SMALLEST_MOBILE_MEDIA_BREAKPOINT } from '../constants'
 import { showFavoritesAtom } from '../state'
 
 const FavoriteButtonContent = styled.div`
@@ -27,7 +27,7 @@ const StyledFavoriteButton = styled.button<{ active: boolean }>`
   }
 `
 const FavoriteText = styled.span`
-  @media only screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
+  @media only screen and (max-width: ${SMALLEST_MOBILE_MEDIA_BREAKPOINT}) {
     display: none;
   }
 `
