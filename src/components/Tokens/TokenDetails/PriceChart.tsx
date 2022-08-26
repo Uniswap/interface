@@ -222,7 +222,7 @@ export function PriceChart({ width, height, token }: PriceChartProps) {
   return (
     <>
       <ChartHeader>
-        <TokenPrice>{displayPrice.value < 0.000001 ? '$<0.000001' : displayPrice.value.toFixed(6)}</TokenPrice>
+        <TokenPrice>${displayPrice.value < 0.000001 ? '<0.000001' : displayPrice.value.toFixed(6)}</TokenPrice>
         <DeltaContainer>
           {delta}
           <ArrowCell>{arrow}</ArrowCell>
