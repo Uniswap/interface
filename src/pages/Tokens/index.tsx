@@ -19,7 +19,15 @@ import { ThemedText } from 'theme'
 const ExploreContainer = styled.div`
   width: 100%;
   min-width: 320px;
-  padding: 0px 12px;
+  padding: 68px 12px 0px;
+
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
+    padding-top: 48px;
+  }
+
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+    padding-top: 20px;
+  }
 `
 const TokenTableContainer = styled.div`
   padding: 16px 0px;
@@ -97,6 +105,8 @@ const Tokens = () => {
 }
 
 export const LoadingTokens = () => {
+  const tokensNetworkFilterFlag = useTokensNetworkFilterFlag()
+
   return (
     <ExploreContainer>
       <TitleContainer>
@@ -105,8 +115,14 @@ export const LoadingTokens = () => {
         </ThemedText.LargeHeader>
       </TitleContainer>
       <FiltersWrapper>
-        <FiltersContainer />
-        <SearchContainer />
+        <FiltersContainer>
+          {tokensNetworkFilterFlag === TokensNetworkFilterVariant.Enabled && <NetworkFilter />}
+          <FavoriteButton />
+          <TimeSelector />
+        </FiltersContainer>
+        <SearchContainer>
+          <SearchBar />
+        </SearchContainer>
       </FiltersWrapper>
       <TokenTableContainer>
         <LoadingTokenTable />

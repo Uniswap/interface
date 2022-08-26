@@ -120,16 +120,6 @@ export default function LoadingTokenDetail() {
         </LoadingChartContainer>
         <Space heightSize={32} />
       </ChartHeader>
-      <AboutContainer>
-        <AboutHeader>
-          <SquareLoadingBubble />
-        </AboutHeader>
-        <LongLoadingBubble />
-        <LongLoadingBubble />
-        <HalfLoadingBubble />
-
-        <ResourcesContainer>{null}</ResourcesContainer>
-      </AboutContainer>
       <StatsSection>
         <StatsLoadingContainer>
           <StatPair>
@@ -154,6 +144,16 @@ export default function LoadingTokenDetail() {
           </StatPair>
         </StatsLoadingContainer>
       </StatsSection>
+      <AboutContainer>
+        <AboutHeader>
+          <SquareLoadingBubble />
+        </AboutHeader>
+        <LongLoadingBubble />
+        <LongLoadingBubble />
+        <HalfLoadingBubble />
+
+        <ResourcesContainer>{null}</ResourcesContainer>
+      </AboutContainer>
       <ContractAddressSection>{null}</ContractAddressSection>
     </TopArea>
   )

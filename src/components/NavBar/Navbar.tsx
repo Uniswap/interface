@@ -43,11 +43,16 @@ const MobileNavbar = () => {
             <Box as="a" href="#/swap" className={styles.logoContainer}>
               <UniIconMobile width="44" height="44" className={styles.logo} />
             </Box>
-            <ChainSwitcher isMobile={true} />
+            <ChainSwitcher leftAlign={true} />
+          </Box>
+          <Box className={styles.middleContainer} display={{ sm: 'none', md: 'flex' }}>
+            <SearchBar />
           </Box>
           <Box className={styles.rightSideMobileContainer}>
             <Row gap="16">
-              <SearchBar />
+              <Box display={{ sm: 'flex', md: 'none' }}>
+                <SearchBar />
+              </Box>
               <MobileSideBar />
             </Row>
           </Box>
@@ -65,7 +70,7 @@ const Navbar = () => {
   const { pathname } = useLocation()
   const nftFlag = useNftFlag()
 
-  if (windowWidth && windowWidth < breakpoints.xl) {
+  if (windowWidth && windowWidth <= breakpoints.xl) {
     return <MobileNavbar />
   }
 
@@ -100,7 +105,7 @@ const Navbar = () => {
             </MenuItem>
           </Row>
         </Box>
-        <Box className={styles.middleContainer}>
+        <Box className={styles.middleContainer} display="flex">
           <SearchBar />
         </Box>
         <Box className={styles.rightSideContainer}>

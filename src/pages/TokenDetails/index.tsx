@@ -35,18 +35,30 @@ const Footer = styled.div`
 const TokenDetailsLayout = styled.div`
   display: flex;
   gap: 80px;
-  padding: 0px 20px;
+  padding: 68px 20px;
   width: 100%;
   justify-content: center;
 
   @media only screen and (max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT}) {
     gap: 40px;
   }
-  @media only screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
-    padding: 0px 16px;
+
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
+    padding-top: 48px;
   }
+
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+    padding-top: 20px;
+  }
+
+  @media only screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
   @media only screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
-    padding: 0px 8px;
+    padding-left: 8px;
+    padding-right: 8px;
   }
 `
 const RightPanel = styled.div`

@@ -29,15 +29,24 @@ export const Wrapper = styled.div`
 `};
 `
 
-export const ScrollablePage = styled.div`
+export const ScrollablePage = styled.div<{ navBarFlag: boolean }>`
+  padding: ${({ navBarFlag }) => (navBarFlag ? '68px 8px 0px' : '0px')};
   position: relative;
   display: flex;
   flex-direction: column;
+
   ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToMedium`
     max-width: 480px;
     margin: 0 auto;
-    padding: 0px 8px;
   `};
+
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
+    padding: ${({ navBarFlag }) => (navBarFlag ? '48px 8px 0px' : '0px 8px 0px')};
+  }
+
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+    padding-top: ${({ navBarFlag }) => (navBarFlag ? '20px' : '0px')};
+  }
 `
 
 export const DynamicSection = styled(AutoColumn)<{ disabled?: boolean }>`

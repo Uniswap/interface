@@ -131,7 +131,7 @@ const CopyIcon = styled(Copy)`
   ${IconStyle}
   ${ClickableStyle}
   ${LinkStyle}
-  stroke: ${({ theme }) => theme.accentActive};
+  stroke: ${({ theme }) => theme.accentAction};
 `
 
 export const TrashIcon = styled(Trash)`

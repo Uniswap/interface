@@ -20,6 +20,7 @@ import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter
 import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { isSupportedChain } from 'constants/chains'
+import { NavBarVariant, useNavBarFlag } from 'featureFlags/flags/navBar'
 import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
 import { useSwapCallback } from 'hooks/useSwapCallback'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
@@ -149,6 +150,8 @@ const TRADE_STRING = 'SwapRouter'
 
 export default function Swap() {
   const navigate = useNavigate()
+  const navBarFlag = useNavBarFlag()
+  const navBarFlagEnabled = navBarFlag === NavBarVariant.Enabled
   const redesignFlag = useRedesignFlag()
   const redesignFlagEnabled = redesignFlag === RedesignVariant.Enabled
   const { account, chainId } = useWeb3React()
@@ -518,7 +521,7 @@ export default function Swap() {
             onDismiss={handleDismissTokenWarning}
           />
         )}
-        <PageWrapper redesignFlag={redesignFlagEnabled}>
+        <PageWrapper redesignFlag={redesignFlagEnabled} navBarFlag={navBarFlagEnabled}>
           <SwapWrapper id="swap-page" redesignFlag={redesignFlagEnabled}>
             <SwapHeader allowedSlippage={allowedSlippage} />
             <ConfirmSwapModal

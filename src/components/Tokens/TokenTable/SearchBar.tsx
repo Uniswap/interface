@@ -1,3 +1,4 @@
+import { Trans } from '@lingui/macro'
 import searchIcon from 'assets/svg/search.svg'
 import xIcon from 'assets/svg/x.svg'
 import { useAtom } from 'jotai'
@@ -58,14 +59,20 @@ export default function SearchBar() {
   const [filterString, setFilterString] = useAtom(filterStringAtom)
   return (
     <SearchBarContainer>
-      <SearchInput
-        type="search"
-        placeholder="Search tokens"
-        id="searchBar"
-        autoComplete="off"
-        value={filterString}
-        onChange={({ target: { value } }) => setFilterString(value)}
-      />
+      <Trans
+        render={({ translation }) => (
+          <SearchInput
+            type="search"
+            placeholder={`${translation}`}
+            id="searchBar"
+            autoComplete="off"
+            value={filterString}
+            onChange={({ target: { value } }) => setFilterString(value)}
+          />
+        )}
+      >
+        Filter tokens
+      </Trans>
     </SearchBarContainer>
   )
 }

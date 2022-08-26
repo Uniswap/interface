@@ -58,6 +58,7 @@ export const Dots = styled.span`
 `
 
 export const LoadingRows = styled(BaseLoadingRows)`
+  padding-top: 48px;
   min-width: 75%;
   max-width: 960px;
   grid-column-gap: 0.5em;
