@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-24 19:05\n"
+"PO-Revision-Date: 2022-08-26 17:08\n"
 "Last-Translator: \n"
 "Language: cs_CZ\n"
 "Language-Team: Czech\n"
@@ -540,6 +540,10 @@ msgid "Confirm transaction in wallet"
 msgstr "Potvrďte transakci v peněžence"
 
 #: src/components/Web3Status/index.tsx
+msgid "Connect"
+msgstr "Připojit"
+
+#: src/components/Web3Status/index.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
@@ -745,6 +749,10 @@ msgstr "Zamítnout"
 msgid "Docs"
 msgstr "Dokumenty"
 
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "Documentation"
+msgstr "Dokumentace"
+
 #: src/pages/MigrateV2/index.tsx
 msgid "Don’t see one of your v2 positions? <0>Import it.</0>"
 msgstr "Nevidíte některou ze svých pozic v2? <0>Importujte ji.</0>"
@@ -894,6 +902,10 @@ msgstr "Prozkoumejte Uniswap Analytics."
 msgid "Failed to switch networks from the Uniswap Interface. In order to use Uniswap on {0}, you must change the network in your wallet."
 msgstr "Nepodařilo se přepnout sítě z rozhraní Uniswap. Abyste mohli používat Uniswap na {0}, musíte změnit síť ve své peněžence."
 
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "Feature Flags"
+msgstr "Příznaky funkcí"
+
 #: src/components/PositionPreview/index.tsx
 msgid "Fee Tier"
 msgstr "Úroveň poplatku"
@@ -905,6 +917,10 @@ msgstr "Úroveň poplatku"
 #: src/components/swap/SwapDetailsDropdown.tsx
 msgid "Fetching best price..."
 msgstr "Načítání nejlepší ceny..."
+
+#: src/components/Tokens/TokenTable/SearchBar.tsx
+msgid "Filter tokens"
+msgstr "Filtrovat tokeny"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "For"
@@ -937,6 +953,10 @@ msgstr "Získejte podporu o Discord"
 #: src/components/Header/NetworkSelector.tsx
 #: src/components/Menu/index.tsx
 msgid "Help Center"
+msgstr "Centrum nápovědy"
+
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "Help center"
 msgstr "Centrum nápovědy"
 
 #: src/components/FeeSelector/index.tsx
@@ -1069,6 +1089,7 @@ msgid "Learn more"
 msgstr "Zjistěte více"
 
 #: src/components/Menu/index.tsx
+#: src/components/NavBar/MenuDropdown.tsx
 #: src/components/PrivacyPolicy/index.tsx
 msgid "Legal & Privacy"
 msgstr "Právní otázky a soukromí"
@@ -1221,6 +1242,14 @@ msgstr "Chybějící závislosti"
 msgid "More"
 msgstr "Více"
 
+#: src/components/NavBar/SearchBar.tsx
+msgid "NFT Collections"
+msgstr "Sbírky NFT"
+
+#: src/components/NavBar/Navbar.tsx
+msgid "NFTs"
+msgstr "NFT"
+
 #: src/components/Tokens/TokenDetails/TokenDetail.tsx
 msgid "Name not found"
 msgstr "Jméno nenalezeno"
@@ -1277,6 +1306,10 @@ msgstr "Nebyly nalezeny žádné výsledky."
 #: src/components/Tokens/TokenDetails/TokenDetail.tsx
 msgid "No token information available"
 msgstr "Nejsou k dispozici žádné informace o tokenu"
+
+#: src/components/NavBar/SearchBar.tsx
+msgid "No tokens found."
+msgstr "Nebyly nalezeny žádné tokeny."
 
 #: src/constants/tokenSafety.tsx
 msgid "Not Available"
@@ -1366,6 +1399,7 @@ msgstr "Polygonscan"
 
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/Header/index.tsx
+#: src/components/NavBar/Navbar.tsx
 msgid "Pool"
 msgstr "Fond"
 
@@ -1401,6 +1435,14 @@ msgstr "Sestaveno do fondu {0}:"
 #: src/pages/Pool/index.tsx
 msgid "Pools"
 msgstr "Bazény"
+
+#: src/components/NavBar/SearchBar.tsx
+msgid "Popular NFT collections"
+msgstr "Populární kolekce NFT"
+
+#: src/components/NavBar/SearchBar.tsx
+msgid "Popular tokens"
+msgstr "Populární tokeny"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Portal Bridge"
@@ -1527,6 +1569,10 @@ msgstr "Přečtěte si více o nepodporovaných aktivech"
 msgid "Recent Transactions"
 msgstr "Nedávné transakce"
 
+#: src/components/NavBar/SearchBar.tsx
+msgid "Recent searches"
+msgstr "Nedávná vyhledávání"
+
 #: src/components/AddressInputPanel/index.tsx
 msgid "Recipient"
 msgstr "Příjemce"
@@ -1593,6 +1639,14 @@ msgstr "Návrat"
 msgid "Search name or paste address"
 msgstr "Vyhledejte název nebo vložte adresu"
 
+#: src/components/NavBar/SearchBar.tsx
+msgid "Search tokens"
+msgstr "Hledat tokeny"
+
+#: src/components/NavBar/SearchBar.tsx
+msgid "Search tokens and NFT collections"
+msgstr "Prohledejte tokeny a sbírky NFT"
+
 #: src/pages/AddLiquidity/index.tsx
 msgid "Select Pair"
 msgstr "Vyberte možnost Párovat"
@@ -1632,6 +1686,10 @@ msgstr "Sám"
 #: src/components/vote/DelegateModal.tsx
 msgid "Self Delegate"
 msgstr "Sobě delegovat"
+
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "Sell NFTs"
+msgstr "Prodám NFT"
 
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
@@ -1711,6 +1769,7 @@ msgstr "Dodávání {0} {1} a {2} {3}"
 
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/Header/index.tsx
+#: src/components/NavBar/Navbar.tsx
 #: src/components/swap/SwapHeader.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
@@ -1933,6 +1992,8 @@ msgid "Token not supported"
 msgstr "Token není podporován"
 
 #: src/components/Header/index.tsx
+#: src/components/NavBar/Navbar.tsx
+#: src/components/NavBar/SearchBar.tsx
 #: src/components/SearchModal/Manage.tsx
 msgid "Tokens"
 msgstr "Žetony"
@@ -2172,6 +2233,10 @@ msgstr "Pohled na Etherscan"
 msgid "View on Explorer"
 msgstr "Zobrazit v Průzkumníku"
 
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "View token analytics"
+msgstr "Zobrazit analýzu tokenů"
+
 #: src/components/ModalViews/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
@@ -2218,6 +2283,10 @@ msgstr "Hlasujte pro návrh {proposalKey}"
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Vote for proposal {proposalKey} with reason \"{0}\""
 msgstr "Hlasujte pro návrh {proposalKey} s důvodem „{0}“"
+
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "Vote in governance"
+msgstr "Hlasujte ve vládnutí"
 
 #: src/components/vote/VoteModal.tsx
 #: src/components/vote/VoteModal.tsx

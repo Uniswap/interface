@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-24 19:05\n"
+"PO-Revision-Date: 2022-08-26 17:08\n"
 "Last-Translator: \n"
 "Language: sw_TZ\n"
 "Language-Team: Swahili, Tanzania\n"
@@ -540,6 +540,10 @@ msgid "Confirm transaction in wallet"
 msgstr "Thibitisha shughuli kwenye mkoba"
 
 #: src/components/Web3Status/index.tsx
+msgid "Connect"
+msgstr "Unganisha"
+
+#: src/components/Web3Status/index.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
@@ -745,6 +749,10 @@ msgstr "Ondoa"
 msgid "Docs"
 msgstr "Hati"
 
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "Documentation"
+msgstr "Nyaraka"
+
 #: src/pages/MigrateV2/index.tsx
 msgid "Don’t see one of your v2 positions? <0>Import it.</0>"
 msgstr "Je! Huoni moja ya nafasi zako za v2? <0> Ingiza.</0>"
@@ -894,6 +902,10 @@ msgstr "Gundua Takwimu za Uniswap."
 msgid "Failed to switch networks from the Uniswap Interface. In order to use Uniswap on {0}, you must change the network in your wallet."
 msgstr "Imeshindwa kubadilisha mitandao kutoka kwa Kiolesura cha Uniswap. Ili kutumia Uniswap kwenye {0}, lazima ubadilishe mtandao kwenye pochi yako."
 
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "Feature Flags"
+msgstr "Bendera za Kipengele"
+
 #: src/components/PositionPreview/index.tsx
 msgid "Fee Tier"
 msgstr "Kiwango cha ada"
@@ -905,6 +917,10 @@ msgstr "Kiwango cha ada"
 #: src/components/swap/SwapDetailsDropdown.tsx
 msgid "Fetching best price..."
 msgstr "Inaleta bei nzuri..."
+
+#: src/components/Tokens/TokenTable/SearchBar.tsx
+msgid "Filter tokens"
+msgstr "Kichujio tokeni"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "For"
@@ -938,6 +954,10 @@ msgstr "Pata usaidizi juu ya Ugomvi"
 #: src/components/Menu/index.tsx
 msgid "Help Center"
 msgstr "Kituo cha Usaidizi"
+
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "Help center"
+msgstr "Kituo cha usaidizi"
 
 #: src/components/FeeSelector/index.tsx
 #: src/components/Tokens/TokenDetails/TokenDetail.tsx
@@ -1069,6 +1089,7 @@ msgid "Learn more"
 msgstr "Jifunze zaidi"
 
 #: src/components/Menu/index.tsx
+#: src/components/NavBar/MenuDropdown.tsx
 #: src/components/PrivacyPolicy/index.tsx
 msgid "Legal & Privacy"
 msgstr "Kisheria na Faragha"
@@ -1221,6 +1242,14 @@ msgstr "Kukosa utegemezi"
 msgid "More"
 msgstr "Zaidi"
 
+#: src/components/NavBar/SearchBar.tsx
+msgid "NFT Collections"
+msgstr "Mikusanyiko ya NFT"
+
+#: src/components/NavBar/Navbar.tsx
+msgid "NFTs"
+msgstr "NFTs"
+
 #: src/components/Tokens/TokenDetails/TokenDetail.tsx
 msgid "Name not found"
 msgstr "Jina halijapatikana"
@@ -1277,6 +1306,10 @@ msgstr "Hakuna matokeo yaliyopatikana."
 #: src/components/Tokens/TokenDetails/TokenDetail.tsx
 msgid "No token information available"
 msgstr "Hakuna maelezo ya tokeni yanayopatikana"
+
+#: src/components/NavBar/SearchBar.tsx
+msgid "No tokens found."
+msgstr "Hakuna tokeni zilizopatikana."
 
 #: src/constants/tokenSafety.tsx
 msgid "Not Available"
@@ -1366,6 +1399,7 @@ msgstr "Polygonscan"
 
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/Header/index.tsx
+#: src/components/NavBar/Navbar.tsx
 msgid "Pool"
 msgstr "Dimbwi"
 
@@ -1401,6 +1435,14 @@ msgstr "Iliyounganishwa {0}:"
 #: src/pages/Pool/index.tsx
 msgid "Pools"
 msgstr "Mabwawa"
+
+#: src/components/NavBar/SearchBar.tsx
+msgid "Popular NFT collections"
+msgstr "Mikusanyiko maarufu ya NFT"
+
+#: src/components/NavBar/SearchBar.tsx
+msgid "Popular tokens"
+msgstr "Ishara maarufu"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Portal Bridge"
@@ -1527,6 +1569,10 @@ msgstr "Soma zaidi kuhusu mali zisizoungwa mkono"
 msgid "Recent Transactions"
 msgstr "Shughuli za Hivi Karibuni"
 
+#: src/components/NavBar/SearchBar.tsx
+msgid "Recent searches"
+msgstr "Utafutaji wa hivi majuzi"
+
 #: src/components/AddressInputPanel/index.tsx
 msgid "Recipient"
 msgstr "Mpokeaji"
@@ -1593,6 +1639,14 @@ msgstr "Kurudi"
 msgid "Search name or paste address"
 msgstr "Tafuta jina au ubandike anwani"
 
+#: src/components/NavBar/SearchBar.tsx
+msgid "Search tokens"
+msgstr "Tafuta ishara"
+
+#: src/components/NavBar/SearchBar.tsx
+msgid "Search tokens and NFT collections"
+msgstr "Tafuta tokeni na mikusanyo ya NFT"
+
 #: src/pages/AddLiquidity/index.tsx
 msgid "Select Pair"
 msgstr "Chagua Jozi"
@@ -1632,6 +1686,10 @@ msgstr "Binafsi"
 #: src/components/vote/DelegateModal.tsx
 msgid "Self Delegate"
 msgstr "Ujumbe wa Kujitegemea"
+
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "Sell NFTs"
+msgstr "Uza NFTs"
 
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
@@ -1711,6 +1769,7 @@ msgstr "Kusambaza {0} {1} na {2} {3}"
 
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/Header/index.tsx
+#: src/components/NavBar/Navbar.tsx
 #: src/components/swap/SwapHeader.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
@@ -1933,6 +1992,8 @@ msgid "Token not supported"
 msgstr "Tokeni haitumiki"
 
 #: src/components/Header/index.tsx
+#: src/components/NavBar/Navbar.tsx
+#: src/components/NavBar/SearchBar.tsx
 #: src/components/SearchModal/Manage.tsx
 msgid "Tokens"
 msgstr "Ishara"
@@ -2172,6 +2233,10 @@ msgstr "Angalia kwenye Etherscan"
 msgid "View on Explorer"
 msgstr "Angalia kwenye Kichunguzi"
 
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "View token analytics"
+msgstr "Tazama uchanganuzi wa tokeni"
+
 #: src/components/ModalViews/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
@@ -2218,6 +2283,10 @@ msgstr "Piga kura ya pendekezo {proposalKey}"
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Vote for proposal {proposalKey} with reason \"{0}\""
 msgstr "Pigia kura pendekezo {proposalKey} kwa sababu \"{0}\""
+
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "Vote in governance"
+msgstr "Piga kura katika utawala"
 
 #: src/components/vote/VoteModal.tsx
 #: src/components/vote/VoteModal.tsx

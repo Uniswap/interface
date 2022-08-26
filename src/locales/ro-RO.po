@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-24 19:05\n"
+"PO-Revision-Date: 2022-08-26 17:08\n"
 "Last-Translator: \n"
 "Language: ro_RO\n"
 "Language-Team: Romanian\n"
@@ -540,6 +540,10 @@ msgid "Confirm transaction in wallet"
 msgstr "Confirmați tranzacția în portofel"
 
 #: src/components/Web3Status/index.tsx
+msgid "Connect"
+msgstr "Conectați"
+
+#: src/components/Web3Status/index.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
@@ -745,6 +749,10 @@ msgstr "Respinge"
 msgid "Docs"
 msgstr "Documente"
 
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "Documentation"
+msgstr "Documentație"
+
 #: src/pages/MigrateV2/index.tsx
 msgid "Don’t see one of your v2 positions? <0>Import it.</0>"
 msgstr "Nu vezi una dintre pozițiile tale v2? <0>Import-o.</0>"
@@ -894,6 +902,10 @@ msgstr "Explorați Uniswap Analytics."
 msgid "Failed to switch networks from the Uniswap Interface. In order to use Uniswap on {0}, you must change the network in your wallet."
 msgstr "Schimbarea rețelelor de la interfața Uniswap a eșuat. Pentru a utiliza Uniswap pe {0}, trebuie să schimbați rețeaua din portofel."
 
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "Feature Flags"
+msgstr "Caracteristici Steaguri"
+
 #: src/components/PositionPreview/index.tsx
 msgid "Fee Tier"
 msgstr "Nivelul Taxei"
@@ -905,6 +917,10 @@ msgstr "Nivelul taxei"
 #: src/components/swap/SwapDetailsDropdown.tsx
 msgid "Fetching best price..."
 msgstr "Se aduc cel mai bun preț..."
+
+#: src/components/Tokens/TokenTable/SearchBar.tsx
+msgid "Filter tokens"
+msgstr "Jetoane de filtrare"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "For"
@@ -937,6 +953,10 @@ msgstr "Obține asistență pentru Discord"
 #: src/components/Header/NetworkSelector.tsx
 #: src/components/Menu/index.tsx
 msgid "Help Center"
+msgstr "Centru de ajutor"
+
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "Help center"
 msgstr "Centru de ajutor"
 
 #: src/components/FeeSelector/index.tsx
@@ -1069,6 +1089,7 @@ msgid "Learn more"
 msgstr "Află mai multe"
 
 #: src/components/Menu/index.tsx
+#: src/components/NavBar/MenuDropdown.tsx
 #: src/components/PrivacyPolicy/index.tsx
 msgid "Legal & Privacy"
 msgstr "Legal și confidențialitate"
@@ -1221,6 +1242,14 @@ msgstr "Dependențe lipsă"
 msgid "More"
 msgstr "Mai mult"
 
+#: src/components/NavBar/SearchBar.tsx
+msgid "NFT Collections"
+msgstr "Colecții NFT"
+
+#: src/components/NavBar/Navbar.tsx
+msgid "NFTs"
+msgstr "NFT-uri"
+
 #: src/components/Tokens/TokenDetails/TokenDetail.tsx
 msgid "Name not found"
 msgstr "Numele nu a fost găsit"
@@ -1277,6 +1306,10 @@ msgstr "Nici un rezultat găsit."
 #: src/components/Tokens/TokenDetails/TokenDetail.tsx
 msgid "No token information available"
 msgstr "Nu există informații despre simboluri disponibile"
+
+#: src/components/NavBar/SearchBar.tsx
+msgid "No tokens found."
+msgstr "Nu s-au găsit jetoane."
 
 #: src/constants/tokenSafety.tsx
 msgid "Not Available"
@@ -1366,6 +1399,7 @@ msgstr "Polygonscan"
 
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/Header/index.tsx
+#: src/components/NavBar/Navbar.tsx
 msgid "Pool"
 msgstr "Grup"
 
@@ -1401,6 +1435,14 @@ msgstr "Grupat {0}:"
 #: src/pages/Pool/index.tsx
 msgid "Pools"
 msgstr "Piscine"
+
+#: src/components/NavBar/SearchBar.tsx
+msgid "Popular NFT collections"
+msgstr "Colecții populare NFT"
+
+#: src/components/NavBar/SearchBar.tsx
+msgid "Popular tokens"
+msgstr "Jetoane populare"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Portal Bridge"
@@ -1527,6 +1569,10 @@ msgstr "Citește mai multe despre activele neacceptate"
 msgid "Recent Transactions"
 msgstr "Tranzacții recente"
 
+#: src/components/NavBar/SearchBar.tsx
+msgid "Recent searches"
+msgstr "Căutări recente"
+
 #: src/components/AddressInputPanel/index.tsx
 msgid "Recipient"
 msgstr "Destinatar"
@@ -1593,6 +1639,14 @@ msgstr "Întoarcere"
 msgid "Search name or paste address"
 msgstr "Caută nume sau lipește adresa"
 
+#: src/components/NavBar/SearchBar.tsx
+msgid "Search tokens"
+msgstr "Jetoane de căutare"
+
+#: src/components/NavBar/SearchBar.tsx
+msgid "Search tokens and NFT collections"
+msgstr "Căutați jetoane și colecții NFT"
+
 #: src/pages/AddLiquidity/index.tsx
 msgid "Select Pair"
 msgstr "Selectați Pair"
@@ -1632,6 +1686,10 @@ msgstr "Sine"
 #: src/components/vote/DelegateModal.tsx
 msgid "Self Delegate"
 msgstr "Auto Delegare"
+
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "Sell NFTs"
+msgstr "Vinde NFT-uri"
 
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
@@ -1711,6 +1769,7 @@ msgstr "Se furnizează {0} {1} și {2} {3}"
 
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/Header/index.tsx
+#: src/components/NavBar/Navbar.tsx
 #: src/components/swap/SwapHeader.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
@@ -1933,6 +1992,8 @@ msgid "Token not supported"
 msgstr "Tokenul nu este acceptat"
 
 #: src/components/Header/index.tsx
+#: src/components/NavBar/Navbar.tsx
+#: src/components/NavBar/SearchBar.tsx
 #: src/components/SearchModal/Manage.tsx
 msgid "Tokens"
 msgstr "Jetoane"
@@ -2172,6 +2233,10 @@ msgstr "Vizualizare pe Etherscan"
 msgid "View on Explorer"
 msgstr "Vizualizează pe Explorer"
 
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "View token analytics"
+msgstr "Vizualizați analizele tokenului"
+
 #: src/components/ModalViews/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
@@ -2218,6 +2283,10 @@ msgstr "Vot pentru propunerea {proposalKey}"
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Vote for proposal {proposalKey} with reason \"{0}\""
 msgstr "Votează pentru propunerea {proposalKey} cu motivul „{0}”"
+
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "Vote in governance"
+msgstr "Votează în guvernare"
 
 #: src/components/vote/VoteModal.tsx
 #: src/components/vote/VoteModal.tsx

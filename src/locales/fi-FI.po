@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-24 19:05\n"
+"PO-Revision-Date: 2022-08-26 17:08\n"
 "Last-Translator: \n"
 "Language: fi_FI\n"
 "Language-Team: Finnish\n"
@@ -540,6 +540,10 @@ msgid "Confirm transaction in wallet"
 msgstr "Vahvista transaktio lompakossa"
 
 #: src/components/Web3Status/index.tsx
+msgid "Connect"
+msgstr "Kytkeä"
+
+#: src/components/Web3Status/index.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
@@ -745,6 +749,10 @@ msgstr "Sulje"
 msgid "Docs"
 msgstr "Asiakirjat"
 
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "Documentation"
+msgstr "Dokumentointi"
+
 #: src/pages/MigrateV2/index.tsx
 msgid "Don’t see one of your v2 positions? <0>Import it.</0>"
 msgstr "Etkö näe yhtä v2-positiostasi? <0>Tuo se.</0>"
@@ -894,6 +902,10 @@ msgstr "Tutustu Uniswap Analyticsiin."
 msgid "Failed to switch networks from the Uniswap Interface. In order to use Uniswap on {0}, you must change the network in your wallet."
 msgstr "Verkkojen vaihtaminen Uniswap-liittymästä epäonnistui. Jotta voit käyttää Uniswapia {0}, sinun on vaihdettava verkko lompakossasi."
 
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "Feature Flags"
+msgstr "Ominaisuusliput"
+
 #: src/components/PositionPreview/index.tsx
 msgid "Fee Tier"
 msgstr "Palkkiotaso"
@@ -905,6 +917,10 @@ msgstr "Palkkiotaso"
 #: src/components/swap/SwapDetailsDropdown.tsx
 msgid "Fetching best price..."
 msgstr "Haetaan parasta hintaa..."
+
+#: src/components/Tokens/TokenTable/SearchBar.tsx
+msgid "Filter tokens"
+msgstr "Suodata tokeneja"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "For"
@@ -937,6 +953,10 @@ msgstr "Hae apua Discordista"
 #: src/components/Header/NetworkSelector.tsx
 #: src/components/Menu/index.tsx
 msgid "Help Center"
+msgstr "Ohjekeskus"
+
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "Help center"
 msgstr "Ohjekeskus"
 
 #: src/components/FeeSelector/index.tsx
@@ -1069,6 +1089,7 @@ msgid "Learn more"
 msgstr "Lue lisää"
 
 #: src/components/Menu/index.tsx
+#: src/components/NavBar/MenuDropdown.tsx
 #: src/components/PrivacyPolicy/index.tsx
 msgid "Legal & Privacy"
 msgstr "Laki ja yksityisyys"
@@ -1221,6 +1242,14 @@ msgstr "Puuttuvat riippuvuudet"
 msgid "More"
 msgstr "Lisää"
 
+#: src/components/NavBar/SearchBar.tsx
+msgid "NFT Collections"
+msgstr "NFT-kokoelmat"
+
+#: src/components/NavBar/Navbar.tsx
+msgid "NFTs"
+msgstr "NFT:t"
+
 #: src/components/Tokens/TokenDetails/TokenDetail.tsx
 msgid "Name not found"
 msgstr "Nimeä ei löydy"
@@ -1277,6 +1306,10 @@ msgstr "Tuloksia ei löytynyt."
 #: src/components/Tokens/TokenDetails/TokenDetail.tsx
 msgid "No token information available"
 msgstr "Tunnustietoja ei ole saatavilla"
+
+#: src/components/NavBar/SearchBar.tsx
+msgid "No tokens found."
+msgstr "Tunnuksia ei löytynyt."
 
 #: src/constants/tokenSafety.tsx
 msgid "Not Available"
@@ -1366,6 +1399,7 @@ msgstr "Polygonscan"
 
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/Header/index.tsx
+#: src/components/NavBar/Navbar.tsx
 msgid "Pool"
 msgstr "Pooli"
 
@@ -1401,6 +1435,14 @@ msgstr "Poolattu {0}:"
 #: src/pages/Pool/index.tsx
 msgid "Pools"
 msgstr "Altaat"
+
+#: src/components/NavBar/SearchBar.tsx
+msgid "Popular NFT collections"
+msgstr "Suositut NFT-kokoelmat"
+
+#: src/components/NavBar/SearchBar.tsx
+msgid "Popular tokens"
+msgstr "Suosittuja tokeneja"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Portal Bridge"
@@ -1527,6 +1569,10 @@ msgstr "Lue lisää ei-tuetuista varoista"
 msgid "Recent Transactions"
 msgstr "Viimeisimmät tapahtumat"
 
+#: src/components/NavBar/SearchBar.tsx
+msgid "Recent searches"
+msgstr "Viimeaikaiset haut"
+
 #: src/components/AddressInputPanel/index.tsx
 msgid "Recipient"
 msgstr "Vastaanottaja"
@@ -1593,6 +1639,14 @@ msgstr "Palaa"
 msgid "Search name or paste address"
 msgstr "Etsi nimeä tai liitä osoite"
 
+#: src/components/NavBar/SearchBar.tsx
+msgid "Search tokens"
+msgstr "Etsi tokeneja"
+
+#: src/components/NavBar/SearchBar.tsx
+msgid "Search tokens and NFT collections"
+msgstr "Etsi tokeneita ja NFT-kokoelmia"
+
 #: src/pages/AddLiquidity/index.tsx
 msgid "Select Pair"
 msgstr "Valitse Pariliitos"
@@ -1632,6 +1686,10 @@ msgstr "Itse"
 #: src/components/vote/DelegateModal.tsx
 msgid "Self Delegate"
 msgstr "Delegoi itse"
+
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "Sell NFTs"
+msgstr "Myy NFT:t"
 
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
@@ -1711,6 +1769,7 @@ msgstr "Toimitetaan {0} {1} ja {2} {3}"
 
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/Header/index.tsx
+#: src/components/NavBar/Navbar.tsx
 #: src/components/swap/SwapHeader.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
@@ -1933,6 +1992,8 @@ msgid "Token not supported"
 msgstr "Tunnusta ei tueta"
 
 #: src/components/Header/index.tsx
+#: src/components/NavBar/Navbar.tsx
+#: src/components/NavBar/SearchBar.tsx
 #: src/components/SearchModal/Manage.tsx
 msgid "Tokens"
 msgstr "Rahakkeet"
@@ -2172,6 +2233,10 @@ msgstr "Näkymä Etherscanissa"
 msgid "View on Explorer"
 msgstr "Näytä Explorerissa"
 
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "View token analytics"
+msgstr "Näytä token-analytiikka"
+
 #: src/components/ModalViews/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
@@ -2218,6 +2283,10 @@ msgstr "Äänestä ehdotusta {proposalKey}"
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Vote for proposal {proposalKey} with reason \"{0}\""
 msgstr "Äänestä ehdotusta {proposalKey} syystä{0}"
+
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "Vote in governance"
+msgstr "Äänestä hallituksessa"
 
 #: src/components/vote/VoteModal.tsx
 #: src/components/vote/VoteModal.tsx
