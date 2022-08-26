@@ -1,3 +1,4 @@
+import { Trans } from '@lingui/macro'
 import { useAtom } from 'jotai'
 import { Heart } from 'react-feather'
 import styled, { useTheme } from 'styled-components/macro'
@@ -38,7 +39,9 @@ export default function FavoriteButton() {
     <StyledFavoriteButton onClick={() => setShowFavorites(!showFavorites)} active={showFavorites}>
       <FavoriteButtonContent>
         <Heart size={17} color={showFavorites ? theme.white : theme.textPrimary} fill="transparent" />
-        <FavoriteText>Favorites</FavoriteText>
+        <FavoriteText>
+          <Trans>Favorites</Trans>
+        </FavoriteText>
       </FavoriteButtonContent>
     </StyledFavoriteButton>
   )

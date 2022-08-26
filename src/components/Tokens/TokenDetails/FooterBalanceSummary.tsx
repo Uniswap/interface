@@ -1,3 +1,4 @@
+import { Trans } from '@lingui/macro'
 import { useToken } from 'hooks/Tokens'
 import { useNetworkTokenBalances } from 'hooks/useNetworkTokenBalances'
 import { useState } from 'react'
@@ -152,7 +153,9 @@ export default function FooterBalanceSummary({
         ) : error ? (
           <ErrorState>
             <AlertTriangle size={17} />
-            <ErrorText>There was an error fetching your balance</ErrorText>
+            <ErrorText>
+              <Trans>There was an error fetching your balance</Trans>
+            </ErrorText>
           </ErrorState>
         ) : (
           <BalanceInfo>
@@ -165,16 +168,21 @@ export default function FooterBalanceSummary({
             </BalanceTotal>
             {multipleBalances && (
               <ViewAll onClick={() => setShowMultipleBalances(!showMultipleBalances)}>
-                {showMultipleBalances ? 'Hide' : 'View'} all balances
+                <Trans>{showMultipleBalances ? 'Hide' : 'View'} all balances</Trans>
               </ViewAll>
             )}
           </BalanceInfo>
         )}
-        <SwapButton onClick={() => (window.location.href = 'https://app.uniswap.org/#/swap')}>Swap</SwapButton>
+        <SwapButton onClick={() => (window.location.href = 'https://app.uniswap.org/#/swap')}>
+          <Trans>Swap</Trans>
+        </SwapButton>
       </TotalBalancesSection>
       {showMultipleBalances && (
         <NetworkBalancesSection>
-          <NetworkBalancesLabel>Your balances by network</NetworkBalancesLabel> {networkBalances}
+          <NetworkBalancesLabel>
+            <Trans>Your balances by network</Trans>
+          </NetworkBalancesLabel>{' '}
+          {networkBalances}
         </NetworkBalancesSection>
       )}
       <FakeFooterNavBar>**leaving space for updated nav footer**</FakeFooterNavBar>
