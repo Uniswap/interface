@@ -34,6 +34,8 @@ export interface UseTopTokensResult {
   loading: boolean
 }
 
+const WRAPPED_ETH_ADDRESS = '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2'
+
 export function useTopTokenQuery(page: number) {
   const topTokenData = useLazyLoadQuery<TopTokenQueryType>(
     graphql`
@@ -115,11 +117,16 @@ export function useTopTokenQuery(page: number) {
     }
   )
 
-  const topTokens: TokenData[] | undefined = topTokenData.topTokenProjects?.map((token) =>
-    token?.tokens?.[0].address
+  const topTokens: TokenData[] | undefined = topTokenData.topTokenProjects?.map((token) => {
+    let address = token?.tokens?.[0].address
+    if (!address && token?.name === 'Ethereum') {
+      address = WRAPPED_ETH_ADDRESS
+    }
+
+    return token?.tokens?.[0] && address
       ? {
           name: token?.name,
-          address: token?.tokens?.[0].address,
+          address,
           chain: token?.tokens?.[0].chain,
           symbol: token?.tokens?.[0].symbol,
           price: token?.markets?.[0]?.price,
@@ -142,6 +149,6 @@ export function useTopTokenQuery(page: number) {
           },
         }
       : ({} as TokenData)
-  )
+  })
   return topTokens
 }
