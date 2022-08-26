@@ -20,6 +20,10 @@ const ConnectButton = styled(ButtonPrimary)`
   font-size: 16px;
   margin-left: auto;
   margin-right: auto;
+
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+    width: 100%;
+  }
 `
 
 const Divider = styled.div`

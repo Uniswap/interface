@@ -24,6 +24,9 @@ const WalletWrapper = styled.div`
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
     width: 100%;
+    border-bottom-right-radius: 0px;
+    border-bottom-left-radius: 0px;
+    box-shadow: unset;
   }
 `
 
