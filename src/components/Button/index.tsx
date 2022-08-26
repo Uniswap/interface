@@ -176,23 +176,28 @@ export const ButtonOutlined = styled(BaseButton)`
   }
 `
 
-export const ButtonYellow = styled(BaseButton)`
-  background-color: ${({ theme }) => theme.deprecated_yellow3};
-  color: white;
+export const ButtonYellow = styled(BaseButton)<{ redesignFlag?: boolean }>`
+  background-color: ${({ theme, redesignFlag }) => (redesignFlag ? theme.accentWarningSoft : theme.deprecated_yellow3)};
+  color: ${({ theme, redesignFlag }) => (redesignFlag ? theme.accentWarning : 'white')};
   &:focus {
-    box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.05, theme.deprecated_yellow3)};
-    background-color: ${({ theme }) => darken(0.05, theme.deprecated_yellow3)};
+    box-shadow: ${({ theme, redesignFlag }) => !redesignFlag && `0 0 0 1pt ${theme.deprecated_yellow3}`};
+    background-color: ${({ theme, redesignFlag }) =>
+      redesignFlag ? theme.accentWarningSoft : darken(0.05, theme.deprecated_yellow3)};
   }
   &:hover {
-    background-color: ${({ theme }) => darken(0.05, theme.deprecated_yellow3)};
+    background: ${({ theme, redesignFlag }) => redesignFlag && theme.stateOverlayHover};
+    mix-blend-mode: ${({ redesignFlag }) => redesignFlag && 'normal'};
+    background-color: ${({ theme, redesignFlag }) => !redesignFlag && darken(0.05, theme.deprecated_yellow3)};
   }
   &:active {
-    box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.1, theme.deprecated_yellow3)};
-    background-color: ${({ theme }) => darken(0.1, theme.deprecated_yellow3)};
+    box-shadow: ${({ theme, redesignFlag }) => !redesignFlag && `0 0 0 1pt ${darken(0.1, theme.deprecated_yellow3)}`};
+    background-color: ${({ theme, redesignFlag }) =>
+      redesignFlag ? theme.accentWarningSoft : darken(0.1, theme.deprecated_yellow3)};
   }
   &:disabled {
-    background-color: ${({ theme }) => theme.deprecated_yellow3};
-    opacity: 50%;
+    background-color: ${({ theme, redesignFlag }) =>
+      redesignFlag ? theme.accentWarningSoft : theme.deprecated_yellow3};
+    opacity: ${({ redesignFlag }) => (redesignFlag ? '60%' : '50%')};
     cursor: auto;
   }
 `
