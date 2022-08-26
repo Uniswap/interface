@@ -9,6 +9,7 @@ import { TraceEvent } from 'components/AmplitudeAnalytics/TraceEvent'
 import { sendEvent } from 'components/analytics'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 import { NavBarVariant, useNavBarFlag } from 'featureFlags/flags/navBar'
+import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
 import useParsedQueryString from 'hooks/useParsedQueryString'
 import { useCallback, useEffect, useState } from 'react'
 import { AlertTriangle } from 'react-feather'
@@ -90,6 +91,9 @@ export default function AddLiquidity() {
   } = useParams<{ currencyIdA?: string; currencyIdB?: string; feeAmount?: string; tokenId?: string }>()
   const { account, chainId, provider } = useWeb3React()
   const theme = useTheme()
+  const redesignFlag = useRedesignFlag()
+  const redesignFlagEnabled = redesignFlag === RedesignVariant.Enabled
+
   const toggleWalletModal = useToggleWalletModal() // toggle wallet when disconnected
   const expertMode = useIsExpertMode()
   const addTransaction = useTransactionAdder()
@@ -878,6 +882,7 @@ export default function AddLiquidity() {
                                     marginRight="8px"
                                     $borderRadius="8px"
                                     width="auto"
+                                    redesignFlag={redesignFlagEnabled}
                                     onClick={() => {
                                       setShowCapitalEfficiencyWarning(false)
                                       getSetFullRange()
