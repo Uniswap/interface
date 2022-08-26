@@ -22,7 +22,7 @@ export const DARK_THEME = {
   // surface
   container: colorsDark.backgroundSurface,
   interactive: colorsDark.backgroundInteractive,
-  module: colorsDark.backgroundModule,
+  module: colorsDark.backgroundInteractive,
   accent: colorsDark.accentAction,
   dialog: colorsDark.backgroundBackdrop,
   outline: colorsDark.backgroundOutline,
