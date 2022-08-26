@@ -1,9 +1,10 @@
+// eslint-disable-next-line no-restricted-imports
+import { t } from '@lingui/macro'
 import celoCircleLogoUrl from 'assets/images/celoCircle.png'
 import ethereumLogoUrl from 'assets/images/ethereum-logo.png'
 import optimismCircleLogoUrl from 'assets/images/optimismCircle.png'
 import polygonCircleLogoUrl from 'assets/images/polygonCircle.png'
-import arbitrumLogoUrl from 'assets/svg/arbitrum_logo.svg'
-import arbitrumCircleLogoUrl from 'assets/svg/arbitrum_logo.svg'
+import { default as arbitrumCircleLogoUrl, default as arbitrumLogoUrl } from 'assets/svg/arbitrum_logo.svg'
 import celoLogo from 'assets/svg/celo_logo.svg'
 import optimismLogoUrl from 'assets/svg/optimistic_ethereum.svg'
 import polygonMaticLogo from 'assets/svg/polygon-matic-logo.svg'
@@ -60,7 +61,7 @@ const CHAIN_INFO: ChainInfoMap = {
     docs: 'https://docs.uniswap.org/',
     explorer: 'https://etherscan.io/',
     infoLink: 'https://info.uniswap.org/#/',
-    label: 'Ethereum',
+    label: t`Ethereum`,
     logoUrl: ethereumLogoUrl,
     nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
     color: colorsDark.chain_1,
@@ -70,7 +71,7 @@ const CHAIN_INFO: ChainInfoMap = {
     docs: 'https://docs.uniswap.org/',
     explorer: 'https://rinkeby.etherscan.io/',
     infoLink: 'https://info.uniswap.org/#/',
-    label: 'Rinkeby',
+    label: t`Rinkeby`,
     logoUrl: ethereumLogoUrl,
     nativeCurrency: { name: 'Rinkeby Ether', symbol: 'rETH', decimals: 18 },
     color: colorsDark.chain_4,
@@ -80,7 +81,7 @@ const CHAIN_INFO: ChainInfoMap = {
     docs: 'https://docs.uniswap.org/',
     explorer: 'https://ropsten.etherscan.io/',
     infoLink: 'https://info.uniswap.org/#/',
-    label: 'Ropsten',
+    label: t`Ropsten`,
     logoUrl: ethereumLogoUrl,
     nativeCurrency: { name: 'Ropsten Ether', symbol: 'ropETH', decimals: 18 },
     color: colorsDark.chain_3,
@@ -90,7 +91,7 @@ const CHAIN_INFO: ChainInfoMap = {
     docs: 'https://docs.uniswap.org/',
     explorer: 'https://kovan.etherscan.io/',
     infoLink: 'https://info.uniswap.org/#/',
-    label: 'Kovan',
+    label: t`Kovan`,
     logoUrl: ethereumLogoUrl,
     nativeCurrency: { name: 'Kovan Ether', symbol: 'kovETH', decimals: 18 },
     color: colorsDark.chain_69,
@@ -100,7 +101,7 @@ const CHAIN_INFO: ChainInfoMap = {
     docs: 'https://docs.uniswap.org/',
     explorer: 'https://goerli.etherscan.io/',
     infoLink: 'https://info.uniswap.org/#/',
-    label: 'Görli',
+    label: t`Görli`,
     logoUrl: ethereumLogoUrl,
     nativeCurrency: { name: 'Görli Ether', symbol: 'görETH', decimals: 18 },
     color: colorsDark.chain_5,
@@ -113,7 +114,7 @@ const CHAIN_INFO: ChainInfoMap = {
     docs: 'https://optimism.io/',
     explorer: 'https://optimistic.etherscan.io/',
     infoLink: 'https://info.uniswap.org/#/optimism/',
-    label: 'Optimism',
+    label: t`Optimism`,
     logoUrl: optimismLogoUrl,
     circleLogoUrl: optimismCircleLogoUrl,
     statusPage: 'https://optimism.io/status',
@@ -130,7 +131,7 @@ const CHAIN_INFO: ChainInfoMap = {
     docs: 'https://optimism.io/',
     explorer: 'https://optimistic.etherscan.io/',
     infoLink: 'https://info.uniswap.org/#/optimism/',
-    label: 'Optimistic Kovan',
+    label: t`Optimistic Kovan`,
     logoUrl: optimismLogoUrl,
     statusPage: 'https://optimism.io/status',
     helpCenterUrl: 'https://help.uniswap.org/en/collections/3137778-uniswap-on-optimistic-ethereum-oξ',
@@ -144,7 +145,7 @@ const CHAIN_INFO: ChainInfoMap = {
     docs: 'https://offchainlabs.com/',
     explorer: 'https://arbiscan.io/',
     infoLink: 'https://info.uniswap.org/#/arbitrum',
-    label: 'Arbitrum',
+    label: t`Arbitrum`,
     logoUrl: arbitrumLogoUrl,
     circleLogoUrl: arbitrumCircleLogoUrl,
     defaultListUrl: ARBITRUM_LIST,
@@ -160,7 +161,7 @@ const CHAIN_INFO: ChainInfoMap = {
     docs: 'https://offchainlabs.com/',
     explorer: 'https://rinkeby-explorer.arbitrum.io/',
     infoLink: 'https://info.uniswap.org/#/arbitrum/',
-    label: 'Arbitrum Rinkeby',
+    label: t`Arbitrum Rinkeby`,
     logoUrl: arbitrumLogoUrl,
     defaultListUrl: ARBITRUM_LIST,
     helpCenterUrl: 'https://help.uniswap.org/en/collections/3137787-uniswap-on-arbitrum',
@@ -174,7 +175,7 @@ const CHAIN_INFO: ChainInfoMap = {
     docs: 'https://polygon.io/',
     explorer: 'https://polygonscan.com/',
     infoLink: 'https://info.uniswap.org/#/polygon/',
-    label: 'Polygon',
+    label: t`Polygon`,
     logoUrl: polygonMaticLogo,
     circleLogoUrl: polygonCircleLogoUrl,
     nativeCurrency: { name: 'Polygon Matic', symbol: 'MATIC', decimals: 18 },
@@ -188,7 +189,7 @@ const CHAIN_INFO: ChainInfoMap = {
     docs: 'https://polygon.io/',
     explorer: 'https://mumbai.polygonscan.com/',
     infoLink: 'https://info.uniswap.org/#/polygon/',
-    label: 'Polygon Mumbai',
+    label: t`Polygon Mumbai`,
     logoUrl: polygonMaticLogo,
     nativeCurrency: { name: 'Polygon Mumbai Matic', symbol: 'mMATIC', decimals: 18 },
   },
@@ -199,7 +200,7 @@ const CHAIN_INFO: ChainInfoMap = {
     docs: 'https://docs.celo.org/',
     explorer: 'https://celoscan.io/',
     infoLink: 'https://info.uniswap.org/#/celo',
-    label: 'Celo',
+    label: t`Celo`,
     logoUrl: celoLogo,
     circleLogoUrl: celoCircleLogoUrl,
     nativeCurrency: { name: 'Celo', symbol: 'CELO', decimals: 18 },
@@ -212,7 +213,7 @@ const CHAIN_INFO: ChainInfoMap = {
     docs: 'https://docs.celo.org/',
     explorer: 'https://alfajores-blockscout.celo-testnet.org/',
     infoLink: 'https://info.uniswap.org/#/celo',
-    label: 'Celo Alfajores',
+    label: t`Celo Alfajores`,
     logoUrl: celoLogo,
     nativeCurrency: { name: 'Celo', symbol: 'CELO', decimals: 18 },
     defaultListUrl: CELO_LIST,
