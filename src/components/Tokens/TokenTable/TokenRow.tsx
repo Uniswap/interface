@@ -65,7 +65,7 @@ const StyledTokenRow = styled.div<{ first?: boolean; last?: boolean; loading?: b
     ${({ loading, theme }) =>
       !loading &&
       css`
-        background-color: ${theme.accentActionSoft};
+        background-color: ${theme.hoverDefault};
       `}
     ${({ last }) =>
       last &&
@@ -160,16 +160,12 @@ const DataCell = styled(Cell)<{ sortable: boolean }>`
   justify-content: flex-end;
   min-width: 80px;
   user-select: ${({ sortable }) => (sortable ? 'none' : 'unset')};
+
   transition: ${({
     theme: {
       transition: { duration, timing },
     },
   }) => css`background-color ${duration.medium} ${timing.ease}`};
-
-  &:hover {
-    color: ${({ theme, sortable }) => sortable && theme.white};
-    background-color: ${({ theme, sortable }) => sortable && theme.accentActionSoft};
-  }
 `
 const MarketCapCell = styled(DataCell)`
   padding-right: 8px;
@@ -222,6 +218,10 @@ const HeaderCellWrapper = styled.span<{ onClick?: () => void }>`
   height: 100%;
   justify-content: flex-end;
   width: 100%;
+
+  &:hover {
+    opacity: 60%;
+  }
 `
 const SparkLineCell = styled(Cell)`
   padding: 0px 24px;
