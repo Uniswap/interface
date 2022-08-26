@@ -6,12 +6,14 @@ import { RowBetween } from '../Row'
 import { ChevronDown } from 'react-feather'
 import { Button as RebassButton, ButtonProps } from 'rebass/styled-components'
 
-const Base = styled(RebassButton)<{
-  padding?: string
-  width?: string
-  borderRadius?: string
-  altDisabledStyle?: boolean
-}>`
+const Base = styled(RebassButton)<
+  {
+    padding?: string
+    width?: string
+    borderRadius?: string
+    altDisabledStyle?: boolean
+  } & ButtonProps
+>`
   padding: ${({ padding }) => (padding ? padding : '18px')};
   width: ${({ width }) => (width ? width : '100%')};
   font-weight: 500;
@@ -39,21 +41,21 @@ const Base = styled(RebassButton)<{
 `
 
 export const ButtonPrimary = styled(Base)`
-  background-color: ${({ theme }) => theme.btnNormal};
-  color: white;
+  background-color: ${({ theme }) => darken(0.1, theme.btnNormal)};
+  color: black;
   &:focus {
-    box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.05, theme.btnHover)};
-    background-color: ${({ theme }) => darken(0.05, theme.btnHover)};
-    color: ${({theme }) => theme.textHover}
+    box-shadow: 0 0 0 1pt ${({ theme }) => theme.btnNormal};
+    background-color: ${({ theme }) => theme.btnNormal};
+    color: black; //${({ theme }) => theme.textHover};
   }
   &:hover {
-    background-color: ${({ theme }) => darken(0.05, theme.btnHover)};
-    color: ${({theme }) => theme.textHover}
+    background-color: ${({ theme }) => theme.btnNormal};
+    color: black; //${({ theme }) => theme.textHover};
   }
   &:active {
-    box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.1, theme.btnHover)};
-    background-color: ${({ theme }) => darken(0.1, theme.btnHover)};
-    color: ${({theme }) => theme.textHover}
+    box-shadow: 0 0 0 1pt ${({ theme }) => theme.btnNormal};
+    background-color: ${({ theme }) => theme.btnNormal};
+    color: black; //${({ theme }) => theme.textHover};
   }
   &:disabled {
     background-color: ${({ theme, altDisabledStyle, disabled }) =>

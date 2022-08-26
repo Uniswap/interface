@@ -15,7 +15,7 @@ import AddLiquidity from './AddLiquidity'
 import {
   RedirectDuplicateTokenIds,
   RedirectOldAddLiquidityPathStructure,
-  RedirectToAddLiquidity
+  RedirectToAddLiquidity,
 } from './AddLiquidity/redirects'
 import Earn from './Earn'
 import Manage from './Earn/Manage'
@@ -29,6 +29,7 @@ import Swap from './Swap'
 import { OpenClaimAddressModalAndRedirectToSwap, RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects'
 import Vote from './Vote'
 import VotePage from './Vote/VotePage'
+import LiquidityDetail from 'components/Liquidity'
 
 const AppWrapper = styled.div`
   display: flex;
@@ -106,6 +107,7 @@ export default function App() {
               {/* <Route exact strict path="/remove/v1/:address" component={RemoveV1Exchange} /> */}
               <Route exact strict path="/remove/:tokens" component={RedirectOldRemoveLiquidityPathStructure} />
               <Route exact strict path="/remove/:currencyIdA/:currencyIdB" component={RemoveLiquidity} />
+              <Route exact strict path="/liquidity/:currencyIdA/:currencyIdB" component={LiquidityDetail} />
               {/*    <Route exact strict path="/migrate/v1" component={MigrateV1} />
               <Route exact strict path="/migrate/v1/:address" component={MigrateV1Exchange} /> */}
               <Route exact strict path="/uni/:currencyIdA/:currencyIdB" component={Manage} />

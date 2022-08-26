@@ -77,7 +77,7 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
     JSBI.greaterThanOrEqual(totalPoolTokens.raw, userPoolBalance.raw)
       ? [
           pair.getLiquidityValue(pair.token0, totalPoolTokens, userPoolBalance, false),
-          pair.getLiquidityValue(pair.token1, totalPoolTokens, userPoolBalance, false)
+          pair.getLiquidityValue(pair.token1, totalPoolTokens, userPoolBalance, false),
         ]
       : [undefined, undefined]
 
@@ -168,7 +168,7 @@ export default function FullPositionCard({
   border,
   borderRadius,
   stakedBalance,
-  needBgColor = true
+  needBgColor = true,
 }: { needBgColor?: boolean } & ViewProps[0] & PositionCardProps) {
   const { account } = useActiveWeb3React()
   const currency0 = unwrappedToken(pair.token0)
@@ -195,7 +195,7 @@ export default function FullPositionCard({
     JSBI.greaterThanOrEqual(totalPoolTokens.raw, userPoolBalance.raw)
       ? [
           pair.getLiquidityValue(pair.token0, totalPoolTokens, userPoolBalance, false),
-          pair.getLiquidityValue(pair.token1, totalPoolTokens, userPoolBalance, false)
+          pair.getLiquidityValue(pair.token1, totalPoolTokens, userPoolBalance, false),
         ]
       : [undefined, undefined]
 

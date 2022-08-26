@@ -13,7 +13,7 @@ export function ConfirmAddModalBottom({
   currencies,
   parsedAmounts,
   poolTokenPercentage,
-  onAdd
+  onAdd,
 }: {
   noLiquidity?: boolean
   price?: Fraction

@@ -4,7 +4,7 @@ import styled, {
   ThemeProvider as StyledComponentsThemeProvider,
   createGlobalStyle,
   css,
-  DefaultTheme
+  DefaultTheme,
 } from 'styled-components'
 import { useIsDarkMode } from '../state/user/hooks'
 import { Text, TextProps } from 'rebass'
@@ -17,12 +17,12 @@ const MEDIA_WIDTHS = {
   upToExtraSmall: 500,
   upToSmall: 720,
   upToMedium: 960,
-  upToLarge: 1280
+  upToLarge: 1280,
 }
 
 const mediaWidthTemplates: { [width in keyof typeof MEDIA_WIDTHS]: typeof css } = Object.keys(MEDIA_WIDTHS).reduce(
   (accumulator, size) => {
-    ; (accumulator as any)[size] = (a: any, b: any, c: any) => css`
+    ;(accumulator as any)[size] = (a: any, b: any, c: any) => css`
       @media (max-width: ${(MEDIA_WIDTHS as any)[size]}px) {
         ${css(a, b, c)}
       }
@@ -72,7 +72,7 @@ export function colors(darkMode: boolean): Colors {
     primary3: darkMode ? '#4D8FEA' : '#FF99C9',
     primary4: darkMode ? '#376bad70' : '#F6DDE8',
     primary5: darkMode ? '#153d6f70' : '#FDEAF1',
-  
+
     // color text
     primaryText1: darkMode ? '#6da8ff' : '#ff007a',
 
@@ -93,16 +93,16 @@ export function colors(darkMode: boolean): Colors {
     // dont wanna forget these blue yet
     // blue4: darkMode ? '#153d6f70' : '#C4D9F8',
     // blue5: darkMode ? '#153d6f70' : '#EBF4FF',
-    
-    btnNormal: darkMode ? '#39E1BA' : '#ff007a',
+
+    btnNormal: darkMode ? '#39E1BA' : '#39E1BA',
     btnHover: darkMode ? '#74EACF' : '#ff007a',
     btnSelect: darkMode ? '#2FB598' : '#ff007a',
-    btnDisable : darkMode ? '#CCCCCC' : '#ff007a',
+    btnDisable: darkMode ? '#CCCCCC' : '#ff007a',
 
     textNormal: darkMode ? '#05050E' : '#ff007a',
     textHover: darkMode ? '#05050E' : '#ff007a',
     textSelect: darkMode ? '#05050E' : '#ff007a',
-    textDisable : darkMode ? '#05050E' : '#ff007a',
+    textDisable: darkMode ? '#05050E' : '#ff007a',
   }
 }
 
@@ -113,7 +113,7 @@ export function theme(darkMode: boolean): DefaultTheme {
     grids: {
       sm: 8,
       md: 12,
-      lg: 24
+      lg: 24,
     },
 
     //shadows
@@ -130,7 +130,7 @@ export function theme(darkMode: boolean): DefaultTheme {
     flexRowNoWrap: css`
       display: flex;
       flex-flow: row nowrap;
-    `
+    `,
   }
 }
 
@@ -142,7 +142,7 @@ export default function ThemeProvider({ children }: { children: React.ReactNode 
   return <StyledComponentsThemeProvider theme={themeObject}>{children}</StyledComponentsThemeProvider>
 }
 
-const TextWrapper = styled(Text) <{ color: keyof Colors }>`
+const TextWrapper = styled(Text)<{ color: keyof Colors }>`
   color: ${({ color, theme }) => (theme as any)[color]};
 `
 
@@ -191,7 +191,7 @@ export const TYPE = {
   },
   error({ error, ...props }: { error: boolean } & TextProps) {
     return <TextWrapper fontWeight={500} color={error ? 'red1' : 'text2'} {...props} />
-  }
+  },
 }
 
 export const FixedGlobalStyle = createGlobalStyle`
