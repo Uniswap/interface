@@ -45,11 +45,12 @@ const HeaderText = styled(Link)`
   line-height: 20px;
   text-decoration: none;
 `
-const Description = styled.span`
+const Description = styled(Link)`
   font-weight: 400;
   font-size: 12px;
   line-height: 16px;
   width: 75%;
+  text-decoration: none;
 `
 
 export default function TokensBanner() {
@@ -69,7 +70,9 @@ export default function TokensBanner() {
         <X size={20} color={theme.textSecondary} onClick={closeBanner} style={{ cursor: 'pointer' }} />
       </Header>
 
-      <Description onClick={closeBanner}>Check out the new explore tab to discover and learn more</Description>
+      <Description to={'/#/tokens'} onClick={closeBanner}>
+        Check out the new explore tab to discover and learn more
+      </Description>
     </PopupContainer>
   )
 }
