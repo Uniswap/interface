@@ -1,9 +1,8 @@
 import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { SwapLogoOrLogoWithTxStatus } from 'src/components/CurrencyLogo/LogoWithTxStatus'
-import { PollingInterval } from 'src/constants/misc'
 import { nativeOnChain } from 'src/constants/tokens'
-import { useSpotPricesQuery } from 'src/features/dataApi/slice'
+import { useSpotPrice } from 'src/features/dataApi/spotPricesQuery'
 import { createBalanceUpdate } from 'src/features/notifications/utils'
 import TransactionSummaryLayout, {
   TXN_HISTORY_ICON_SIZE,
@@ -43,14 +42,7 @@ export default function WrapSummaryItem({
     ? `${wrappedNativeCurrency.symbol} → ${nativeCurrency.symbol}`
     : `${nativeCurrency.symbol} → ${wrappedNativeCurrency.symbol}`
 
-  const { currentData } = useSpotPricesQuery(
-    {
-      chainId: transaction.chainId,
-      addresses: [nativeCurrency.wrapped.address],
-    },
-    // Covalent pricing endpoint only refreshes every 30 minutes
-    { pollingInterval: PollingInterval.Slow }
-  )
+  const spotPrice = useSpotPrice(nativeCurrency)
 
   const balanceUpdate = useMemo(() => {
     return createBalanceUpdate(
@@ -58,11 +50,11 @@ export default function WrapSummaryItem({
       transaction.status,
       transaction.typeInfo.unwrapped ? nativeCurrency : wrappedNativeCurrency,
       transaction.typeInfo.currencyAmountRaw,
-      currentData
+      spotPrice
     )
   }, [
-    currentData,
     nativeCurrency,
+    spotPrice,
     transaction.status,
     transaction.typeInfo.currencyAmountRaw,
     transaction.typeInfo.unwrapped,

@@ -14,7 +14,7 @@ import { NetworkLogo } from 'src/components/CurrencyLogo/NetworkLogo'
 import { WalletConnectModalState } from 'src/components/WalletConnect/constants'
 import { CHAIN_INFO } from 'src/constants/chains'
 import { AssetType } from 'src/entities/assets'
-import { useSpotPrices } from 'src/features/dataApi/prices'
+import { useSpotPrice } from 'src/features/dataApi/spotPricesQuery'
 import { useENS } from 'src/features/ens/useENS'
 import { closeModal, openModal } from 'src/features/modals/modalSlice'
 import { useNFT } from 'src/features/nfts/hooks'
@@ -165,13 +165,13 @@ export function SwapNotification({
         }
       : undefined
 
-  const { spotPrices } = useSpotPrices([outputCurrency])
+  const spotPrice = useSpotPrice(outputCurrency)
   const balanceUpdate = createBalanceUpdate(
     txType,
     txStatus,
     outputCurrency,
     outputCurrencyAmountRaw,
-    spotPrices
+    spotPrice
   )
 
   const icon = (
@@ -206,11 +206,11 @@ export function TransferCurrencyNotification({
     txType === TransactionType.Send ? notification.recipient : notification.sender
   const { name: ensName } = useENS(chainId, senderOrRecipient)
   const currency = useCurrency(buildCurrencyId(chainId, tokenAddress))
-  const { spotPrices } = useSpotPrices([currency])
+  const spotPrice = useSpotPrice(currency)
   const balanceUpdate =
     txType === TransactionType.Send && txStatus === TransactionStatus.Success // don't render balance change on successful sends
       ? undefined
-      : createBalanceUpdate(txType, txStatus, currency, currencyAmountRaw, spotPrices)
+      : createBalanceUpdate(txType, txStatus, currency, currencyAmountRaw, spotPrice)
   const title = formTransferCurrencyNotificationTitle(
     txType,
     txStatus,

@@ -10,6 +10,7 @@ import {
   v12Schema,
   v13Schema,
   v14Schema,
+  v15Schema,
   v1Schema,
   v2Schema,
   v3Schema,
@@ -523,5 +524,16 @@ describe('Redux state migrations', () => {
     const v15 = migrations[15](v14Stub)
     const accounts = Object.values(v15.wallet.accounts)
     expect((accounts[0] as Account)?.type).toEqual(AccountType.SignerMnemonic)
+  })
+
+  it('migrates from v15 to v16', () => {
+    const v15Stub = {
+      ...v15Schema,
+      dataApi: {},
+    }
+
+    const v16 = migrations[16](v15Stub)
+
+    expect(v16.dataApi).toBeUndefined()
   })
 })

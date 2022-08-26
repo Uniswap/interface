@@ -166,6 +166,8 @@ export const v14Schema = { ...v13Schema }
 
 export const v15Schema = { ...v14Schema }
 
+export const v16Schema = { ...v15Schema }
+
 // TODO: use function with typed output when API reducers are removed from rootReducer
 // export const getSchema = (): RootState => v0Schema
-export const getSchema = () => v15Schema
+export const getSchema = () => v16Schema

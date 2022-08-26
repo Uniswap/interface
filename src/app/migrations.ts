@@ -195,4 +195,10 @@ export const migrations = {
     }
     return newState
   },
+
+  16: (state: any) => {
+    const newState = { ...state }
+    delete newState.dataApi
+    return newState
+  },
 }

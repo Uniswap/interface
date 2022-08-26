@@ -1,10 +1,8 @@
-import { skipToken } from '@reduxjs/toolkit/dist/query'
 import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { LogoWithTxStatus } from 'src/components/CurrencyLogo/LogoWithTxStatus'
-import { PollingInterval } from 'src/constants/misc'
 import { AssetType } from 'src/entities/assets'
-import { useSpotPricesQuery } from 'src/features/dataApi/slice'
+import { useSpotPrice } from 'src/features/dataApi/spotPricesQuery'
 import { createBalanceUpdate } from 'src/features/notifications/utils'
 import { useCurrency } from 'src/features/tokens/useCurrency'
 import TransactionSummaryLayout, {
@@ -17,7 +15,6 @@ import {
   NFTTradeType,
   TransactionType,
 } from 'src/features/transactions/types'
-import { currencyAddress } from 'src/utils/currencyId'
 
 export default function NFTTradeSummaryItem({
   transaction,
@@ -29,16 +26,7 @@ export default function NFTTradeSummaryItem({
 
   const purchaseCurrency = useCurrency(transaction.typeInfo.purchaseCurrencyId)
   const purchaseAmountRaw = transaction.typeInfo.purchaseCurrencyAmountRaw
-  const { currentData } = useSpotPricesQuery(
-    purchaseCurrency
-      ? {
-          chainId: transaction.chainId,
-          addresses: [currencyAddress(purchaseCurrency)],
-        }
-      : skipToken,
-    // Covalent pricing endpoint only refreshes every 30 minutes
-    { pollingInterval: PollingInterval.Slow }
-  )
+  const spotPrice = useSpotPrice(purchaseCurrency)
 
   const balanceUpdate = useMemo(() => {
     return purchaseAmountRaw
@@ -50,11 +38,11 @@ export default function NFTTradeSummaryItem({
           transaction.status,
           purchaseCurrency,
           purchaseAmountRaw,
-          currentData
+          spotPrice
         )
       : undefined
   }, [
-    currentData,
+    spotPrice,
     purchaseAmountRaw,
     purchaseCurrency,
     transaction.status,

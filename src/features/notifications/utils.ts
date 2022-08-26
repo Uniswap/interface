@@ -2,13 +2,13 @@ import { BigintIsh, Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-cor
 import JSBI from 'jsbi'
 import { i18n } from 'src/app/i18n'
 import { CHAIN_INFO } from 'src/constants/chains'
-import { SpotPrices } from 'src/features/dataApi/types'
+import { SpotPrice } from 'src/features/dataApi/spotPricesQuery'
 import { NFTAsset } from 'src/features/nfts/types'
 import { WalletConnectNotification } from 'src/features/notifications/types'
 import { TransactionStatus, TransactionType } from 'src/features/transactions/types'
 import { WalletConnectEvent } from 'src/features/walletConnect/saga'
 import { isValidAddress, shortenAddress } from 'src/utils/addresses'
-import { buildCurrencyId, currencyIdToAddress } from 'src/utils/currencyId'
+import { currencyIdToAddress } from 'src/utils/currencyId'
 import { formatCurrencyAmount, formatUSDPrice } from 'src/utils/format'
 import { logger } from 'src/utils/logger'
 
@@ -180,7 +180,7 @@ export const createBalanceUpdate = (
   txStatus: TransactionStatus,
   currency: NullUndefined<Currency>,
   currencyAmountRaw: string,
-  spotPrices?: SpotPrices // despite what typescript says about `useSpotPrices`, `spotPrices` can be undefined while loading
+  spotPrice?: SpotPrice
 ): BalanceUpdate | undefined => {
   if (
     !currency ||
@@ -199,7 +199,7 @@ export const createBalanceUpdate = (
     assetIncrease: `${txType === TransactionType.Send ? '-' : '+'}${currencyAmount}${
       currency.symbol
     }`,
-    usdIncrease: getUSDValue(spotPrices, currencyAmountRaw, currency),
+    usdIncrease: getUSDValue(spotPrice, currencyAmountRaw, currency),
   }
 }
 
@@ -259,17 +259,14 @@ export const getFormattedCurrencyAmount = (
 }
 
 const getUSDValue = (
-  spotPrices: SpotPrices | undefined,
+  spotPrice: SpotPrice | undefined,
   currencyAmountRaw: string,
   currency: NullUndefined<Currency>
 ) => {
-  if (!currency || !spotPrices) return undefined
+  const price = spotPrice?.price?.value
+  if (!currency || !price) return undefined
 
-  const currencyId = buildCurrencyId(currency.chainId, currency.wrapped.address)
-  if (!spotPrices[currencyId]) return undefined
-
-  const usdValue =
-    (Number(currencyAmountRaw) / 10 ** currency.decimals) * spotPrices[currencyId].price
+  const usdValue = (Number(currencyAmountRaw) / 10 ** currency.decimals) * price
   return formatUSDPrice(usdValue)
 }
 

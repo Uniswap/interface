@@ -1,10 +1,8 @@
-import { skipToken } from '@reduxjs/toolkit/dist/query'
 import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { LogoWithTxStatus } from 'src/components/CurrencyLogo/LogoWithTxStatus'
-import { PollingInterval } from 'src/constants/misc'
 import { AssetType } from 'src/entities/assets'
-import { useSpotPricesQuery } from 'src/features/dataApi/slice'
+import { useSpotPrice } from 'src/features/dataApi/spotPricesQuery'
 import { createBalanceUpdate } from 'src/features/notifications/utils'
 import { useCurrency } from 'src/features/tokens/useCurrency'
 import TransactionSummaryLayout, {
@@ -14,7 +12,7 @@ import { BaseTransactionSummaryProps } from 'src/features/transactions/SummaryCa
 import { formatTitleWithStatus } from 'src/features/transactions/SummaryCards/utils'
 import { SendTokenTransactionInfo } from 'src/features/transactions/types'
 import { shortenAddress } from 'src/utils/addresses'
-import { buildCurrencyId, currencyAddress } from 'src/utils/currencyId'
+import { buildCurrencyId } from 'src/utils/currencyId'
 
 export default function SendSummaryItem({
   transaction,
@@ -29,16 +27,8 @@ export default function SendSummaryItem({
 
   // Transfer info for ERC20s
   const amountRaw = transaction.typeInfo.currencyAmountRaw
-  const { currentData } = useSpotPricesQuery(
-    currency
-      ? {
-          chainId: transaction.chainId,
-          addresses: [currencyAddress(currency)],
-        }
-      : skipToken,
-    // Covalent pricing endpoint only refreshes every 30 minutes
-    { pollingInterval: PollingInterval.Slow }
-  )
+  const spotPrice = useSpotPrice(currency)
+
   const balanceUpdate = useMemo(() => {
     return amountRaw
       ? createBalanceUpdate(
@@ -47,10 +37,10 @@ export default function SendSummaryItem({
           transaction.status,
           currency,
           amountRaw,
-          currentData
+          spotPrice
         )
       : undefined
-  }, [amountRaw, currency, currentData, transaction.status, transaction.typeInfo.type])
+  }, [amountRaw, currency, spotPrice, transaction.status, transaction.typeInfo.type])
 
   const endTitle =
     transaction.typeInfo.assetType === AssetType.Currency

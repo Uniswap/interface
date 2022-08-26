@@ -64,6 +64,19 @@ directive @aws_subscribe(
   mutations: [String]
 ) on FIELD_DEFINITION
 
+"""Tells the service which mutation triggers this subscription."""
+directive @aws_subscribe(
+  """
+  List of mutations which will trigger this subscription when they are called.
+  """
+  mutations: [String]
+) on FIELD_DEFINITION
+
+"""
+Tells the service this field/object has access authorized by an API key.
+"""
+directive @aws_api_key on OBJECT | FIELD_DEFINITION
+
 enum ActivityType {
   APPROVE
   CANCEL

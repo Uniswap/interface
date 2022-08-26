@@ -1,5 +1,5 @@
 import { Currency } from '@uniswap/sdk-core'
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { Suspense, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { AppStackScreenProp } from 'src/app/navigation/types'
@@ -12,6 +12,7 @@ import { Flex } from 'src/components/layout'
 import { BackHeader } from 'src/components/layout/BackHeader'
 import { Box } from 'src/components/layout/Box'
 import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollScreen'
+import { Loading } from 'src/components/loading'
 import { CurrencyPriceChart } from 'src/components/PriceChart'
 import { Text } from 'src/components/Text'
 import { TokenBalances } from 'src/components/TokenDetails/TokenBalances'
@@ -21,7 +22,7 @@ import TokenWarningCard from 'src/components/tokens/TokenWarningCard'
 import TokenWarningModal from 'src/components/tokens/TokenWarningModal'
 import { AssetType } from 'src/entities/assets'
 import { useSingleBalance } from 'src/features/dataApi/balances'
-import { useSpotPrices } from 'src/features/dataApi/prices'
+import { useSpotPrice } from 'src/features/dataApi/spotPricesQuery'
 import { useToggleFavoriteCallback } from 'src/features/favorites/hooks'
 import { selectFavoriteTokensSet } from 'src/features/favorites/selectors'
 import { openModal } from 'src/features/modals/modalSlice'
@@ -70,11 +71,19 @@ function TokenDetailsHeader({ currency }: TokenDetailsHeaderProps) {
   )
 }
 
+function HeaderPriceLabel({ currency }: Pick<TokenDetailsHeaderProps, 'currency'>) {
+  const { t } = useTranslation()
+  const spotPrice = useSpotPrice(currency)
+
+  return (
+    <Text color="textSecondary" variant="caption">
+      {formatUSDPrice(spotPrice?.price?.value) ?? t('Unknown token')}
+    </Text>
+  )
+}
+
 function HeaderTitleElement({ currency }: TokenDetailsHeaderProps) {
   const { t } = useTranslation()
-  const currencies = useMemo(() => [currency], [currency])
-
-  const { loading, spotPrices } = useSpotPrices(currencies)
 
   return (
     <Flex centered gap="none">
@@ -82,11 +91,9 @@ function HeaderTitleElement({ currency }: TokenDetailsHeaderProps) {
         <CurrencyLogo currency={currency} size={16} />
         <Text variant="subhead">{currency.name ?? t('Unknown token')}</Text>
       </Flex>
-      {loading ? null : (
-        <Text color="textSecondary" variant="caption">
-          {formatUSDPrice(spotPrices[currencyId(currency)]?.price) ?? t('Unknown token')}
-        </Text>
-      )}
+      <Suspense fallback={<Loading />}>
+        <HeaderPriceLabel currency={currency} />
+      </Suspense>
     </Flex>
   )
 }
