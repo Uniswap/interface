@@ -1,10 +1,12 @@
 import { Trans } from '@lingui/macro'
 import { ParentSize } from '@visx/responsive'
+import { useWeb3React } from '@web3-react/core'
 import CurrencyLogo from 'components/CurrencyLogo'
 import PriceChart from 'components/Tokens/TokenDetails/PriceChart'
 import { VerifiedIcon } from 'components/TokenSafety/TokenSafetyIcon'
 import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import { getChainInfo } from 'constants/chainInfo'
+import { nativeOnChain, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import { checkWarning, WARNING_LEVEL } from 'constants/tokenSafety'
 import { chainIdToChainName, useTokenDetailQuery } from 'graphql/data/TokenDetailQuery'
 import { useCurrency, useIsUserAddedToken, useToken } from 'hooks/Tokens'
@@ -67,6 +69,7 @@ const TokenActions = styled.div`
   color: ${({ theme }) => theme.textSecondary};
 `
 const TokenSymbol = styled.span`
+  text-transform: uppercase;
   color: ${({ theme }) => theme.textSecondary};
 `
 const NetworkBadge = styled.div<{ networkColor?: string; backgroundColor?: string }>`
@@ -175,8 +178,9 @@ export function AboutSection({ address, tokenDetailData }: { address: string; to
 }
 
 export default function LoadedTokenDetail({ address }: { address: string }) {
+  const { chainId: connectedChainId } = useWeb3React()
   const token = useToken(address)
-  const currency = useCurrency(address)
+  let currency = useCurrency(address)
   const favoriteTokens = useAtomValue<string[]>(favoritesAtom)
   const isFavorited = favoriteTokens.includes(address)
   const toggleFavorite = useToggleFavorite(address)
@@ -203,12 +207,20 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
     twitterName,
   }))(tokenDetailData)
 
-  if (!token || !token.name || !token.symbol) {
+  if (!token || !token.name || !token.symbol || !connectedChainId) {
     return <LoadingTokenDetail />
   }
 
-  const tokenName = tokenDetailData.name
-  const tokenSymbol = tokenDetailData.tokens?.[0]?.symbol?.toUpperCase() ?? token.symbol
+  const wrappedNativeCurrency = WRAPPED_NATIVE_CURRENCY[connectedChainId]
+  const isWrappedNativeToken = wrappedNativeCurrency?.address === token.address
+
+  if (isWrappedNativeToken) {
+    currency = nativeOnChain(connectedChainId)
+  }
+
+  const tokenName = isWrappedNativeToken && currency ? currency.name : tokenDetailData.name
+  const defaultTokenSymbol = tokenDetailData.tokens?.[0]?.symbol ?? token.symbol
+  const tokenSymbol = isWrappedNativeToken && currency ? currency.symbol : defaultTokenSymbol
 
   return (
     <Suspense fallback={<LoadingTokenDetail />}>
