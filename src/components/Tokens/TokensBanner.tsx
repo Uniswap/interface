@@ -49,7 +49,6 @@ const Description = styled.span`
 export default function TokensBanner() {
   const theme = useTheme()
   const [showTokensPromoBanner, setShowTokensPromoBanner] = useShowTokensPromoBanner()
-  console.log(showTokensPromoBanner)
 
   const closeBanner = () => {
     setShowTokensPromoBanner(false)

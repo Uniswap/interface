@@ -54,7 +54,7 @@ export interface UserState {
 
   showDonationLink: boolean
 
-  showTokensPromoBanner: boolean
+  showTokensPromoBanner: boolean // show tokens promo banner for token explore
 }
 
 function pairKey(token0Address: string, token1Address: string) {
