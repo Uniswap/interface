@@ -3,7 +3,7 @@ import { RefObject, useEffect, useRef } from 'react'
 export function useOnClickOutside<T extends HTMLElement>(
   node: RefObject<T | undefined>,
   handler: undefined | (() => void),
-  additionalNodes: Array<RefObject<T | undefined>> = []
+  ignoredNodes: Array<RefObject<T | undefined>> = []
 ) {
   const handlerRef = useRef<undefined | (() => void)>(handler)
 
@@ -13,12 +13,12 @@ export function useOnClickOutside<T extends HTMLElement>(
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
-      const additionalNodeClicked = additionalNodes.reduce(
+      const ignoredNodeClicked = ignoredNodes.reduce(
         (reducer, val) => reducer || !!val.current?.contains(e.target as Node),
         false
       )
 
-      if ((node.current?.contains(e.target as Node) || additionalNodeClicked) ?? false) {
+      if ((node.current?.contains(e.target as Node) || ignoredNodeClicked) ?? false) {
         return
       }
 
@@ -30,5 +30,5 @@ export function useOnClickOutside<T extends HTMLElement>(
     return () => {
       document.removeEventListener('mousedown', handleClickOutside)
     }
-  }, [node, additionalNodes])
+  }, [node, ignoredNodes])
 }
