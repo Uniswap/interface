@@ -185,8 +185,9 @@ export const ButtonYellow = styled(BaseButton)<{ redesignFlag?: boolean }>`
       redesignFlag ? theme.accentWarningSoft : darken(0.05, theme.deprecated_yellow3)};
   }
   &:hover {
-    background-color: ${({ theme, redesignFlag }) =>
-      redesignFlag ? darken(0.08, theme.accentWarningSoft) : darken(0.05, theme.deprecated_yellow3)};
+    background: ${({ theme, redesignFlag }) => redesignFlag && theme.stateOverlayHover};
+    mix-blend-mode: ${({ redesignFlag }) => redesignFlag && 'normal'};
+    background-color: ${({ theme, redesignFlag }) => !redesignFlag && darken(0.05, theme.deprecated_yellow3)};
   }
   &:active {
     box-shadow: ${({ theme, redesignFlag }) => !redesignFlag && `0 0 0 1pt ${darken(0.1, theme.deprecated_yellow3)}`};

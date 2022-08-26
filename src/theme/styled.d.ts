@@ -58,6 +58,7 @@ export interface ThemeColors {
   deepShadow: Color
   hoverState: Color
   hoverDefault: Color
+  stateOverlayHover: Color
 }
 
 export interface Colors {
