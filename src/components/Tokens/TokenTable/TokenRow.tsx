@@ -481,7 +481,7 @@ export default function LoadedRow({
   const startingPrice = hasData ? pricePoints[0] : DATA_EMPTY
   const endingPrice = hasData ? pricePoints[pricePoints.length - 1] : DATA_EMPTY
   const widthScale = scaleLinear().domain([startingPrice.timestamp, endingPrice.timestamp]).range([0, 100])
-  const rdScale = scaleLinear().domain(getPriceBounds(pricePoints)).range([60, 0])
+  const rdScale = scaleLinear().domain(getPriceBounds(pricePoints)).range([48, 0])
 
   const exploreTokenSelectedEventProperties = {
     chain_id: filterNetwork,
@@ -560,7 +560,7 @@ export default function LoadedRow({
               {({ width, height }) => (
                 <LineChart
                   data={pricePoints}
-                  getX={(p: PricePoint) => widthScale(p.value)}
+                  getX={(p: PricePoint) => widthScale(p.timestamp)}
                   getY={(p: PricePoint) => rdScale(p.value)}
                   /* Default curve doesn't look good for the ALL chart */
                   curve={undefined}
