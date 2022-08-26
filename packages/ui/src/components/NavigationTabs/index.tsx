@@ -22,7 +22,7 @@ const Tabs = styled.div`
 const activeClassName = 'ACTIVE'
 
 const StyledNavLink = styled(NavLink).attrs({
-  activeClassName
+  activeClassName,
 })`
   ${({ theme }) => theme.flexRowNoWrap}
   align-items: center;
@@ -84,21 +84,13 @@ export function FindPoolTabs() {
   )
 }
 
-export function AddRemoveTabs({
-  adding,
-  creating,
-  settings = true
-}: {
-  adding: boolean
-  creating: boolean
-  settings?: boolean
-}) {
+export function AddRemoveTabs({ adding, creating }: { adding: boolean; creating: boolean }) {
   // reset states on back
   const dispatch = useDispatch<AppDispatch>()
 
   return (
     <Tabs>
-      <RowBetween style={{ padding: '1rem 1rem 1rem 1rem' }}>
+      <RowBetween style={{ padding: '1rem 1rem 0 1rem' }}>
         <HistoryLink
           to="/pool"
           onClick={() => {
@@ -108,7 +100,7 @@ export function AddRemoveTabs({
           <StyledArrowLeft />
         </HistoryLink>
         <ActiveText>{creating ? 'Create a pair' : adding ? 'Add Liquidity' : 'Remove Liquidity'}</ActiveText>
-        {settings && <Settings />}
+        <Settings />
       </RowBetween>
     </Tabs>
   )

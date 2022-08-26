@@ -24,7 +24,7 @@ const Section = styled(AutoColumn)`
 `
 
 const BottomSection = styled(Section)`
-  background-color: ${({ theme }) => theme.bg2};
+  background-color: rgba(5, 5, 14, 0.8);
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
 `
@@ -72,7 +72,7 @@ function TransactionSubmittedContent({
   onDismiss,
   chainId,
   hash,
-  currencyToAdd
+  currencyToAdd,
 }: {
   onDismiss: () => void
   hash: string | undefined
@@ -140,7 +140,7 @@ function TransactionSubmittedContent({
 export function AddLiquidityConfirmationModalContent({
   bottomContent,
   onDismiss,
-  topContent
+  topContent,
 }: {
   onDismiss: () => void
   topContent: () => React.ReactNode
@@ -166,25 +166,32 @@ export function ConfirmationModalContent({
   title,
   bottomContent,
   onDismiss,
-  topContent
+  topContent,
 }: {
   title: string
   onDismiss: () => void
   topContent: () => React.ReactNode
-  bottomContent: () => React.ReactNode
+  bottomContent?: () => React.ReactNode
 }) {
   return (
     <Wrapper>
       <Section>
         <RowBetween>
-          <Text fontWeight={500} fontSize={20}>
+          <Text
+            color={'white'}
+            fontFamily="Dela Gothic One"
+            fontStyle="normal"
+            fontWeight={400}
+            fontSize="28px"
+            lineHeight="36px"
+          >
             {title}
           </Text>
-          <CloseIcon onClick={onDismiss} />
+          <CloseIcon color="white" onClick={onDismiss} />
         </RowBetween>
         {topContent()}
       </Section>
-      <BottomSection gap="12px">{bottomContent()}</BottomSection>
+      {bottomContent && <BottomSection gap="12px">{bottomContent()}</BottomSection>}
     </Wrapper>
   )
 }
@@ -231,7 +238,7 @@ export default function TransactionConfirmationModal({
   hash,
   pendingText,
   content,
-  currencyToAdd
+  currencyToAdd,
 }: ConfirmationModalProps) {
   const { chainId } = useActiveWeb3React()
 
