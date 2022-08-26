@@ -59,28 +59,30 @@ const Web3StatusError = styled(Web3StatusGeneric)`
 `
 
 const Web3StatusConnect = styled(Web3StatusGeneric)<{ faded?: boolean }>`
-  background-color: ${({ theme }) => theme.primary4};
+  background-color: ${({ theme }) => theme.btnNormal};
   border: none;
   color: ${({ theme }) => theme.primaryText1};
   font-weight: 500;
-
+  background: #39E1BA;
+  border-radius: .4rem;
+  width: 8rem;
   :hover,
   :focus {
-    border: 1px solid ${({ theme }) => darken(0.05, theme.primary4)};
-    color: ${({ theme }) => theme.primaryText1};
+    color: ${({ theme }) => theme.textHover};
+    background-color: ${({theme}) => theme.btnHover};
   }
 
   ${({ faded }) =>
     faded &&
     css`
-      background-color: ${({ theme }) => theme.primary5};
-      border: 1px solid ${({ theme }) => theme.primary5};
-      color: ${({ theme }) => theme.primaryText1};
+      background-color: ${({ theme }) => theme.btnNormal};
+      border: 1px solid ${({ theme }) => theme.btnNormal};
+      color: ${({ theme }) => theme.textHover};
 
       :hover,
       :focus {
-        border: 1px solid ${({ theme }) => darken(0.05, theme.primary4)};
-        color: ${({ theme }) => darken(0.05, theme.primaryText1)};
+        background-color: ${({theme}) => theme.btnHover};
+        color: ${({ theme }) => darken(0.05, theme.textHover)};
       }
     `}
 `
@@ -106,9 +108,12 @@ const Text = styled.p`
   text-overflow: ellipsis;
   white-space: nowrap;
   margin: 0 0.5rem 0 0.25rem;
-  font-size: 1rem;
   width: fit-content;
   font-weight: 500;
+
+  font-size: .8rem;
+  line-height: 1rem;
+  color: #000000;
 `
 
 const NetworkIcon = styled(Activity)`
@@ -206,7 +211,7 @@ function Web3StatusInner() {
   } else {
     return (
       <Web3StatusConnect id="connect-wallet" onClick={toggleWalletModal} faded={!account}>
-        <Text>{t('Connect to a wallet')}</Text>
+        <Text>{t('Connect Wallet')}</Text>
       </Web3StatusConnect>
     )
   }

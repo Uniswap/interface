@@ -46,11 +46,11 @@ const HeaderFrame = styled.div`
   top: 0;
   position: relative;
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-  padding: 1rem;
+  /* padding: 1rem; */
   z-index: 2;
   ${({ theme }) => theme.mediaWidth.upToMedium`
     // grid-template-columns: 1fr;
-    padding: 0 1rem;
+    // padding: 0 1rem;
     width: calc(100%);
     position: relative;
   `};
@@ -61,10 +61,12 @@ const HeaderFrame = styled.div`
 `
 
 const HeaderControls = styled.div`
+  padding-right: 2.8rem;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-self: flex-end;
+  height: 4rem;
   ${({ theme }) => theme.mediaWidth.upToMedium`
     flex-direction: row;
     justify-content: space-between;
@@ -106,7 +108,7 @@ const HeaderRow = styled(RowFixed)`
   width: 100%;
   background: #161823;
   justify-content: center;
-  height: 3rem;
+  height: 3.5rem;
   ${({ theme }) => theme.mediaWidth.upToMedium`
    width: 100%;
   `};
@@ -115,12 +117,12 @@ const HeaderRow = styled(RowFixed)`
 const HeaderLinks = styled(Row)`
   justify-content: center;
   border: 1px solid green;
-  height: 2rem;
+  height: 1.8rem;
   width: unset;
   border: 1px solid #FFFFFF;
   border-radius: .4rem;
   ${({ theme }) => theme.mediaWidth.upToMedium`
-    padding: 1rem 0 1rem 1rem;
+    // padding: 1rem 0 1rem 1rem;
     justify-content: flex-end;
 `};
 `
@@ -214,6 +216,14 @@ const activeClassName = 'ACTIVE'
 const StyledNavLink = styled(NavLink).attrs({
   activeClassName
 })`
+  &:first-child {
+    position: relative;
+    left: -1px;
+  }
+  &:last-child {
+    position: relative;
+    right: -1px;
+  }
   ${({ theme }) => theme.flexRowNoWrap}
   align-items: left;
   outline: none;
@@ -344,7 +354,7 @@ export default function Header() {
       </Modal>
       <HeaderControls>
         <HeaderElement>
-          <img style={{ width: '9rem', height: 'auto', position: 'absolute', left: '2rem'}} src={TeleLogo} alt="" />
+          <img style={{ width: '9rem', height: 'auto', position: 'absolute', left: '2.8rem'}} src={TeleLogo} alt="" />
           <HideSmall>
             {chainId && NETWORK_LABELS[chainId] && (
               <NetworkCard title={NETWORK_LABELS[chainId]}>{NETWORK_LABELS[chainId]}</NetworkCard>
@@ -425,9 +435,9 @@ export default function Header() {
           >
             {t('Liquidity')}
           </StyledNavLink>
-          {/* <StyledNavLink id={`swap-nav-link`} to={'/earn'}>
+          <StyledNavLink id={`earn-nav-link`} to={'/tele'}>
             {t('earn')}
-          </StyledNavLink> */}
+          </StyledNavLink>
           {/* <StyledNavLink id={`stake-nav-link`} to={'/uni'}>
             UNI
           </StyledNavLink> */}

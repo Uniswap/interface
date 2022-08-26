@@ -52,7 +52,7 @@ const HeaderRow = styled.div`
   ${({ theme }) => theme.mediaWidth.upToMedium`
     padding: 1rem;
   `};
-  font-weight: bolder;
+  font-weight: 400;
   font-size: 1rem;
   line-height: 1.3rem;
   text-transform: capitalize;
@@ -62,7 +62,7 @@ const HeaderRow = styled.div`
 
 const ContentWrapper = styled.div`
   background-color: ${({ theme }) => theme.bg2};
-  padding: 1rem 2rem;
+  padding: 1rem 1.6rem;
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
 
@@ -172,6 +172,7 @@ export default function WalletModal({
 
   const tryActivation = async (connector: AbstractConnector | undefined) => {
     let name = ''
+    debugger
     Object.keys(SUPPORTED_WALLETS).map(key => {
       if (connector === SUPPORTED_WALLETS[key].connector) {
         return (name = SUPPORTED_WALLETS[key].name)
@@ -225,6 +226,7 @@ export default function WalletModal({
           return (
             <Option
               onClick={() => {
+                debugger
                 option.connector !== connector && !option.href && tryActivation(option.connector)
               }}
               id={`connect-${key}`}
@@ -278,6 +280,7 @@ export default function WalletModal({
           <Option
             id={`connect-${key}`}
             onClick={() => {
+              debugger
               option.connector === connector
                 ? setWalletView(WALLET_VIEWS.ACCOUNT)
                 : !option.href && tryActivation(option.connector)
@@ -358,7 +361,7 @@ export default function WalletModal({
             )}
           {walletView !== WALLET_VIEWS.PENDING && (
             <Blurb>
-              <span>New to Ethereum? &nbsp;</span>{' '}
+              <span>New to Tele? &nbsp;</span>{' '}
               <ExternalLink href="https://ethereum.org/wallets/">Learn more about wallets</ExternalLink>
             </Blurb>
           )}
