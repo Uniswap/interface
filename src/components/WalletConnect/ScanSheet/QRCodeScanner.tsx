@@ -9,7 +9,9 @@ import {
   useCameraDevices,
   useFrameProcessor,
 } from 'react-native-vision-camera'
+import { useAppTheme } from 'src/app/hooks'
 import CameraScan from 'src/assets/icons/camera-scan.svg'
+import GlobalIcon from 'src/assets/icons/global.svg'
 import WalletConnectLogo from 'src/assets/icons/walletconnect.svg'
 import { Button } from 'src/components/buttons/Button'
 import PasteButton from 'src/components/buttons/PasteButton'
@@ -17,7 +19,6 @@ import { DevelopmentOnly } from 'src/components/DevelopmentOnly/DevelopmentOnly'
 import { AnimatedFlex, Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { dimensions } from 'src/styles/sizing'
-import { theme } from 'src/styles/theme'
 import { opacify } from 'src/utils/colors'
 import { openSettings } from 'src/utils/linking'
 import { Barcode, BarcodeFormat, scanBarcodes } from 'vision-camera-code-scanner'
@@ -39,6 +40,7 @@ export function QRCodeScanner({
   shouldFreezeCamera,
 }: QRCodeScannerProps) {
   const { t } = useTranslation()
+  const theme = useAppTheme()
 
   // restricted is an iOS-only permission status: https://mrousavy.com/react-native-vision-camera/docs/guides
   const [permission, setPermission] = useState<CameraPermissionRequestResult | null | 'restricted'>(
@@ -171,11 +173,12 @@ export function QRCodeScanner({
               <Flex
                 row
                 alignItems="center"
-                borderRadius="full"
-                px="lg"
+                borderRadius="md"
+                gap="xs"
+                px="md"
                 py="sm"
                 style={{ backgroundColor: opacify(40, theme.colors.black) }}>
-                <WalletConnectLogo height={30} width={30} />
+                <GlobalIcon color={theme.colors.white} height={20} strokeWidth={2} width={20} />
                 <Text color="white" variant="mediumLabel">
                   {numConnections === 1
                     ? t('1 site connected')
