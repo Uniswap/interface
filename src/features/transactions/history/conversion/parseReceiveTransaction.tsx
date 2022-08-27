@@ -1,8 +1,5 @@
-import { BigNumber } from 'ethers'
-import { parseUnits } from 'ethers/lib/utils'
-import { ChainId } from 'src/constants/chains'
-import { nativeOnChain } from 'src/constants/tokens'
 import { AssetType } from 'src/entities/assets'
+import { deriveCurrencyAmountFromAssetResponse } from 'src/features/transactions/history/conversion/utils'
 import { TransactionHistoryResponse } from 'src/features/transactions/history/transactionHistory'
 import { ReceiveTokenTransactionInfo, TransactionType } from 'src/features/transactions/types'
 
@@ -10,7 +7,6 @@ export default function parseReceiveTransaction(
   transaction: Nullable<TransactionHistoryResponse>
 ): ReceiveTokenTransactionInfo | undefined {
   const change = transaction?.assetChanges[0]
-  const nativeCurrency = nativeOnChain(ChainId.Mainnet)
 
   if (!change) return undefined
 
@@ -45,12 +41,11 @@ export default function parseReceiveTransaction(
   if (change.__typename === 'TokenTransfer') {
     const tokenAddress = change.asset?.address
     const sender = change.sender
-    const currencyAmountRaw = parseUnits(
-      change.quantity,
-      BigNumber.from(
-        change.tokenStandard === 'NATIVE' ? nativeCurrency.decimals : change.asset.decimals
-      )
-    ).toString()
+    const currencyAmountRaw = deriveCurrencyAmountFromAssetResponse(
+      change.tokenStandard,
+      change.asset,
+      change.quantity
+    )
     if (!(sender && tokenAddress)) return undefined
     return {
       type: TransactionType.Receive,

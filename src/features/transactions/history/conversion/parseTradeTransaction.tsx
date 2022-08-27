@@ -1,8 +1,7 @@
 import { TradeType } from '@uniswap/sdk-core'
-import { BigNumber } from 'ethers'
-import { parseUnits } from 'ethers/lib/utils'
 import { ChainId } from 'src/constants/chains'
-import { nativeOnChain, WRAPPED_NATIVE_CURRENCY } from 'src/constants/tokens'
+import { WRAPPED_NATIVE_CURRENCY } from 'src/constants/tokens'
+import { deriveCurrencyAmountFromAssetResponse } from 'src/features/transactions/history/conversion/utils'
 import { TransactionHistoryResponse } from 'src/features/transactions/history/transactionHistory'
 import {
   ExactInputSwapTransactionInfo,
@@ -16,8 +15,6 @@ import { buildCurrencyId, buildNativeCurrencyId } from 'src/utils/currencyId'
 export default function parseTradeTransaction(
   transaction: Nullable<TransactionHistoryResponse>
 ): ExactInputSwapTransactionInfo | NFTTradeTransactionInfo | WrapTransactionInfo | undefined {
-  const nativeCurrency = nativeOnChain(ChainId.Mainnet)
-
   // for detectign wraps
   const nativeCurrencyID = buildNativeCurrencyId(ChainId.Mainnet).toLocaleLowerCase()
   const wrappedCurrencyID = buildCurrencyId(
@@ -64,18 +61,16 @@ export default function parseTradeTransaction(
         : received.asset.address
         ? buildCurrencyId(ChainId.Mainnet, received.asset.address)
         : null
-    const inputCurrencyAmountRaw = parseUnits(
-      sent.quantity,
-      BigNumber.from(
-        sent.tokenStandard === 'NATIVE' ? nativeCurrency.decimals : sent.asset.decimals
-      )
-    ).toString()
-    const expectedOutputCurrencyAmountRaw = parseUnits(
-      received.quantity,
-      BigNumber.from(
-        received.tokenStandard === 'NATIVE' ? nativeCurrency.decimals : received.asset.decimals
-      )
-    ).toString()
+    const inputCurrencyAmountRaw = deriveCurrencyAmountFromAssetResponse(
+      sent.tokenStandard,
+      sent.asset,
+      sent.quantity
+    )
+    const expectedOutputCurrencyAmountRaw = deriveCurrencyAmountFromAssetResponse(
+      received.tokenStandard,
+      received.asset,
+      received.quantity
+    )
 
     // Data API marks wrap as a swap.
     if (
@@ -123,14 +118,11 @@ export default function parseTradeTransaction(
         : tokenChange.asset?.address
         ? buildCurrencyId(ChainId.Mainnet, tokenChange.asset.address)
         : undefined
-    const purchaseCurrencyAmountRaw = parseUnits(
-      tokenChange.quantity,
-      BigNumber.from(
-        tokenChange.tokenStandard === 'NATIVE'
-          ? nativeCurrency.decimals
-          : tokenChange.asset.decimals
-      )
-    ).toString()
+    const purchaseCurrencyAmountRaw = deriveCurrencyAmountFromAssetResponse(
+      tokenChange.tokenStandard,
+      tokenChange.asset,
+      tokenChange.quantity
+    )
     const tradeType = nftChange.direction === 'IN' ? NFTTradeType.BUY : NFTTradeType.SELL
     if (
       !name ||
