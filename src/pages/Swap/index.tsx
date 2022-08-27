@@ -12,7 +12,9 @@ import { Link, RouteComponentProps, useParams } from 'react-router-dom'
 import { MouseoverTooltip, MouseoverTooltipContent } from 'components/Tooltip'
 import Row, { AutoRow, RowFixed } from '../../components/Row'
 import { UseERC20PermitState, useERC20PermitFromTrade } from '../../hooks/useERC20Permit'
+import { getTokenData, useEthPrice, useTokenData } from 'state/logs/utils'
 import styled, { ThemeContext } from 'styled-components/macro'
+import { useAddUserToken, useExpertModeManager, useSetAutoSlippage, useSetUserSlippageTolerance, useUserDetectRenounced, useUserSingleHopOnly } from '../../state/user/hooks'
 import { useAllTokens, useCurrency } from '../../hooks/Tokens'
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import {
@@ -21,7 +23,6 @@ import {
   useSwapActionHandlers,
   useSwapState,
 } from '../../state/swap/hooks'
-import { useExpertModeManager, useSetAutoSlippage, useSetUserSlippageTolerance, useUserDetectRenounced, useUserSingleHopOnly } from '../../state/user/hooks'
 import useToggledVersion, { Version } from '../../hooks/useToggledVersion'
 import { useUSDCValue, useUSDCValueV2AndV3 } from '../../hooks/useUSDCPrice'
 import useWrapCallback, { WrapType } from '../../hooks/useWrapCallback'
@@ -63,6 +64,7 @@ import { computeFiatValuePriceImpact } from '../../utils/computeFiatValuePriceIm
 import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
 import { getTokenTaxes } from 'pages/HoneyUtils'
 import { getTradeVersion } from '../../utils/getTradeVersion'
+import { isAddress } from '@ethersproject/address'
 import { isTradeBetter } from '../../utils/isTradeBetter'
 import logo from '../../assets/images/download.png'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
@@ -74,7 +76,6 @@ import useIsArgentWallet from '../../hooks/useIsArgentWallet'
 import { useIsSwapUnsupported } from '../../hooks/useIsSwapUnsupported'
 import { useKiba } from 'pages/Vote/VotePage'
 import { useSwapCallback } from '../../hooks/useSwapCallback'
-import { useTokenData } from 'state/logs/utils'
 import { useWalletModalToggle } from '../../state/application/hooks'
 import { warningSeverity } from '../../utils/prices'
 
@@ -173,7 +174,12 @@ export default function Swap({ history }: RouteComponentProps) {
   const binanceSwapURL = React.useMemo(() => isBinance ? `https://kibaswapbsc.app/#/swap?outputCurrency=${tokenAddress}` : undefined, [tokenAddress, isBinance])
   const loadedUrlParams = useDefaultsFromURLSearch()
   const [clipboard, setClipboard] = useClippy()
-
+  // Determine if the asynchronous clipboard API is enabled.
+  const IS_CLIPBOARD_API_ENABLED: boolean = (
+    typeof navigator === 'object' &&
+    typeof (navigator as ClipboardNavigator).clipboard === 'object'
+   );
+ 
   // token warning stuff
   const [loadedInputCurrency, loadedOutputCurrency] = [
     useCurrency(loadedUrlParams?.inputCurrencyId),
@@ -188,19 +194,62 @@ export default function Swap({ history }: RouteComponentProps) {
     setDismissTokenWarning(true)
   }, [])
 
+  const readClipboardContents = ( async () => {
+    if (IS_CLIPBOARD_API_ENABLED) {
+    console.log(`reading clipboard contents`)
+    const result = await navigator.clipboard.readText()
+                      .catch(async (e) => {
+                          console.error(`couldnt read properly`)
+                        });
+    console.log(`result from content-read`, result)
+    return result;
+  } else {
+    console.error(`Clipboard not yet enabled.`)
+
+  }
+  return undefined
+})
+  
+  // const [ethPrice, ethPriceOld] = useEthPrice()
+
+ 
+
   // dismiss warning if all imported tokens are in active lists
   const defaultTokens = useAllTokens()
-  // Determine if the asynchronous clipboard API is enabled.
-const IS_CLIPBOARD_API_ENABLED: boolean = (
-  typeof navigator === 'object' &&
-  typeof (navigator as ClipboardNavigator).clipboard === 'object'
-);
+  // const addToken = useAddUserToken()
 
   const importTokensNotInDefault =
     urlLoadedTokens &&
     urlLoadedTokens.filter((token: Token) => {
       return !Boolean(token.address in defaultTokens)
     })
+    
+    // useEffect(() => {
+    //   readClipboardContents().then(async text => {
+    //     const address = text as string;
+    //     if (Boolean(address) && address as string)  {
+    //       if ( isAddress(address!) && !defaultTokens[address]) {
+    //         const tokenData = await getTokenData(address, ethPrice, ethPriceOld)
+    //         const token = {
+    //           address: text,
+    //           chainId: 1,
+    //           symbol: tokenData?.symbol,
+    //           name: tokenData?.name,
+    //           decimals: tokenData?.decimals || 18,
+    //           isNative: false,
+    //           isToken: true,
+    //           equals: (t: Token) => t.address.toLowerCase() === address.toLowerCase(),
+    //           sortsBefore: (t: Token) => Boolean(!!t?.name && t?.name > tokenData?.name),
+    //         } as Token
+    //         console.log(token)
+    //         addToken(token)
+    //         onCurrencySelection(Field.OUTPUT, token)
+    //     }
+    //   } else {
+    //     console.log('Already added token')
+    //   }
+    //   })
+    // }, [readClipboardContents])
 
   const theme = useContext(ThemeContext)
 

@@ -1,26 +1,27 @@
-import { t } from '@lingui/macro'
-import JSBI from 'jsbi'
-import { Trade as V3Trade } from '@uniswap/v3-sdk'
-import { useBestV3TradeExactIn, useBestV3TradeExactOut, V3TradeState } from '../../hooks/useBestV3Trade'
-import useENS from '../../hooks/useENS'
-import { parseUnits } from '@ethersproject/units'
 import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
-import { Trade as V2Trade } from '@uniswap/v2-sdk'
-import { ParsedQs } from 'qs'
+import { Field, replaceSwapState, selectCurrency, setRecipient, setUseOtherAddress, switchCurrencies, typeInput } from './actions'
+import { V3TradeState, useBestV3TradeExactIn, useBestV3TradeExactOut } from '../../hooks/useBestV3Trade'
+import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { useCallback, useEffect, useState } from 'react'
+import { useV2TradeExactIn, useV2TradeExactOut } from '../../hooks/useV2Trade'
+
+import { AppState } from '../index'
+import JSBI from 'jsbi'
+import { ParsedQs } from 'qs'
+import { SwapState } from './reducer'
+import { Trade as V2Trade } from '@uniswap/v2-sdk'
+import { Trade as V3Trade } from '@uniswap/v3-sdk'
+import { Version } from '../../hooks/useToggledVersion'
+import { isAddress } from '../../utils'
+import { parseUnits } from '@ethersproject/units'
+import { t } from '@lingui/macro'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { useCurrency } from '../../hooks/Tokens'
-import useSwapSlippageTolerance from '../../hooks/useSwapSlippageTolerance'
-import { Version } from '../../hooks/useToggledVersion'
-import { useV2TradeExactIn, useV2TradeExactOut } from '../../hooks/useV2Trade'
-import useParsedQueryString from '../../hooks/useParsedQueryString'
-import { isAddress } from '../../utils'
-import { AppState } from '../index'
 import { useCurrencyBalances } from '../wallet/hooks'
-import { Field, replaceSwapState, selectCurrency, setRecipient,setUseOtherAddress, switchCurrencies, typeInput } from './actions'
-import { SwapState } from './reducer'
+import useENS from '../../hooks/useENS'
+import useParsedQueryString from '../../hooks/useParsedQueryString'
+import useSwapSlippageTolerance from '../../hooks/useSwapSlippageTolerance'
 import { useUserSingleHopOnly } from 'state/user/hooks'
-import { useAppDispatch, useAppSelector } from 'state/hooks'
 
 export function useSwapState(): AppState['swap'] {
   return useAppSelector((state) => state.swap)
@@ -159,7 +160,6 @@ export function useDerivedSwapInfo(toggledVersion: Version): {
 
   const isExactIn: boolean = independentField === Field.INPUT
   const parsedAmount = tryParseAmount(typedValue, (isExactIn ? inputCurrency : outputCurrency) ?? undefined)
-  console.log(inputCurrency, parsedAmount)
 
   const bestV2TradeExactIn = useV2TradeExactIn(isExactIn ? parsedAmount : undefined, outputCurrency ?? undefined, {
     maxHops: singleHopOnly ? 1 : undefined,

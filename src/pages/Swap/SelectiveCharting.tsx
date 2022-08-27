@@ -5,7 +5,7 @@ import React, { useCallback } from 'react';
 import TradingViewWidget, { Themes } from 'react-tradingview-widget';
 import { fetchBscTokenData, useBnbPrices, useBscTokenTransactions } from 'state/logs/bscUtils';
 import { getTokenData, useEthPrice, usePairs, useTokenData, useTokenTransactions } from 'state/logs/utils';
-import { useAllTokens, useCurrency } from 'hooks/Tokens';
+import { useAllTokens, useCurrency, useToken } from 'hooks/Tokens';
 
 import Badge from 'components/Badge';
 import { CardSection } from 'components/earn/styled';
@@ -25,6 +25,8 @@ import { useHasAccess } from 'pages/Account/AccountPage';
 import { useHistory } from 'react-router-dom';
 import { useKiba } from 'pages/Vote/VotePage';
 import { useParams } from 'react-router';
+import { useTokenBalance } from 'state/wallet/hooks';
+import { useUSDCValue } from 'hooks/useUSDCPrice'
 import { useWeb3React } from '@web3-react/core';
 import useWebSocket from 'react-use-websocket'
 
@@ -138,6 +140,16 @@ export const SelectiveChart = () => {
     ])
     const [loadingNewData, setLoadingNewData] = React.useState(false)
     const bscTransactionData = useBscTokenTransactions(address?.toLowerCase(), 60000)
+    const token = useToken(address?.toLowerCase())
+    const tokenBalance = useTokenBalance(account ?? undefined, token as any)
+    const tokenValue = useUSDCValue(tokenBalance)
+
+    const holdings = {
+        token,
+        tokenBalance,
+        tokenValue
+    }
+
     const transactionData = useTokenTransactions(address?.toLowerCase(), 60000)
     const formattedTransactions = React.useMemo(() => {
         let retVal: any;
@@ -235,6 +247,7 @@ export const SelectiveChart = () => {
         <DarkCard style={{ maxWidth: '100%', display: "grid", background: '#252632', gridTemplateColumns: (window.innerWidth <= 768) ? '100%' : collapsed ? '10% 90%' : '25% 75%', borderRadius: 30 }}>
             <div>
                 <ChartSidebar
+                    holdings={holdings}
                     loading={loadingNewData}
                     collapsed={collapsed}
                     onCollapse={setCollapsed}

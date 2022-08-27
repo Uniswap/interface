@@ -1,7 +1,7 @@
 import 'react-pro-sidebar/dist/css/styles.css';
 
 import { ArrowLeftCircle, ArrowRightCircle, BarChart2, ChevronDown, ChevronUp, Globe, Heart, PieChart, Twitter } from 'react-feather'
-import { Currency, Token } from '@uniswap/sdk-core';
+import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core';
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink';
 import { ExternalLink, StyledInternalLink, TYPE, } from 'theme';
 import { Menu, MenuItem, ProSidebar, SidebarContent, SidebarFooter, SidebarHeader, SubMenu } from 'react-pro-sidebar';
@@ -74,6 +74,11 @@ type ChartSidebarProps = {
         address: string
         decimals: string
     }
+    holdings: {
+        token: Token | any;
+        tokenBalance: CurrencyAmount<Token> | undefined | any;
+        tokenValue: CurrencyAmount<Token> | undefined | any;
+    }
     tokenData: any
     chainId?: number
     onCollapse: (collapsed: boolean) => void
@@ -82,7 +87,7 @@ type ChartSidebarProps = {
 }
 const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
     const [componentLoading, setComponentLoading] = React.useState(false)
-    const { token, tokenData, chainId, collapsed, onCollapse, loading } = props
+    const { token, holdings, tokenData, chainId, collapsed, onCollapse, loading } = props
     const { account } = useWeb3React()
     const hasData = React.useMemo(() => !!tokenData && !!token && !!token.name && !!token.address && !!token.symbol, [tokenData, token])
     const tokenInfo = useTokenInfo(chainId ?? 1, token.address)
@@ -147,12 +152,13 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
     return (
         <Wrapper>
             <ProSidebar collapsed={collapsed}
+                
                 width={'100%'}
                 onLoadStart={() => setComponentLoading(true)}
                 onLoadCapture={() => setComponentLoading(false)}
-                style={{ marginRight: 15, background: 'linear-gradient(#181C27, #131722)', borderRadius: 10, border: '.25px solid transparent' }}
+                style={ {fontSize: 12,  marginRight: 15, background: 'linear-gradient(#181C27, #131722)', borderRadius: 10, border: '.25px solid transparent' }}
             >
-                <SidebarHeader style={{ background: 'linear-gradient(#181C27, #131722)' }}>
+                <SidebarHeader style={{ fontSize: 12,  background: 'linear-gradient(#181C27, #131722)' }}>
                     <Menu iconShape="round">
 
                         <MenuItem icon={<BarChart2 style={{ background: 'transparent' }} />}> Kiba Charts </MenuItem>
@@ -255,7 +261,7 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
                                             </MenuItem>
                                         </>
                                         }
-
+                           
                                         {token?.symbol?.toLowerCase().includes('kiba') && <MenuItem>
                                             <TYPE.subHeader>Total Burnt</TYPE.subHeader>
                                             <BurntKiba style={{ display: 'flex', justifyContent: 'start !important' }} />
@@ -288,6 +294,21 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
                                                 }
                                             </TYPE.main>
                                         </MenuItem>}
+                                                     
+                                        {Boolean(!!holdings) && Boolean(holdings.tokenBalance || holdings.tokenValue) && (
+                                            <Menu  iconShape={'circle'} >
+                                                <SidebarHeader>
+                                                   <MenuItem>Connected Wallet Holdings</MenuItem>
+                                               </SidebarHeader>
+                                               <SidebarContent>
+                                                <MenuItem>
+                                                    <TYPE.subHeader>Current {holdings.token.symbol} Balance</TYPE.subHeader>
+                                                    <TYPE.black>{Number(holdings?.tokenBalance?.toFixed(2)).toLocaleString()} (${Number(holdings?.tokenValue?.toFixed(2)).toLocaleString()} USD)</TYPE.black>
+                                                </MenuItem>
+                                                </SidebarContent>
+                                            </Menu>
+                                        )}
+
                                         {(tokenInfo && tokenInfo.price || tokenData && tokenData?.priceChangeUSD) && <Menu iconShape="round"   >
                                             <SidebarHeader>
                                                 <MenuItem>Price Change Stats</MenuItem>

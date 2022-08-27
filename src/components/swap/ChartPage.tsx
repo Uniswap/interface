@@ -20,6 +20,7 @@ import { system } from 'styled-system';
 import { useHasAccess } from 'pages/Account/AccountPage';
 import useInterval from 'hooks/useInterval';
 import { useKiba } from 'pages/Vote/VotePage';
+import { useUSDCValue } from 'hooks/useUSDCPrice';
 import { useUserLocale } from 'state/user/hooks';
 import { useWeb3React } from '@web3-react/core';
 
@@ -396,6 +397,7 @@ export const Chart = () => {
     const isMobile = React.useMemo(() => windowInnerWidth <= 768 , [windowInnerWidth])
     const { chainId, account } = useWeb3React();
     const kibaBalance = useKiba(account)
+    
     const [ethPrice, ethPriceOld] = useEthPrice()
     const transactionData = useTokenTransactions('0x005d1123878fc55fbd56b54c73963b234a64af3c'.toLowerCase(), 60000)
     const isBinance = React.useMemo(() => chainId && chainId === 56, [chainId])
@@ -421,7 +423,13 @@ export const Chart = () => {
     const tokenData = useTokenDataHook(tokenDataAddress, tokenDataPriceParam, tokenDataPriceParamTwo)
     const locale = useUserLocale()
     const [collapsed, setCollapsed] = React.useState(false)
+    const usdValue = useUSDCValue(kibaBalance as any)
     const gridTemplateStyle = React.useMemo(() => isMobile ? '100%' : (collapsed ? '5% 95%' : '25% 75%'), [isMobile, collapsed])
+    const holdings = {
+        token: tokenData,
+        tokenBalance: kibaBalance,
+        tokenValue: usdValue
+    }
     const gridColumnGap = 10
     const setChartView = () => setView('chart')
     const setMarketView = () => setView('market')
@@ -438,6 +446,7 @@ export const Chart = () => {
                 columnGap: gridColumnGap
             }}>
                 <ChartSidebar 
+                holdings={holdings}
                 loading={!tokenData}
                 token={{
                     address: tokenDataAddress,
