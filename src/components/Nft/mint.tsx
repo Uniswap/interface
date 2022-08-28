@@ -215,18 +215,20 @@ export const Mint: React.FC<any> = () => {
     // memos
     const isMintingDisabled = React.useMemo(() => {
         if (amountToMint == 0 || amountToMint > 5) return true;
+        if (currentSupply === 111) return true;
         if (isWhitelistMintingLive && accountWhitelisted && canMint) return false;
+        if (isMintingLive && canMint) return false;
         if (!isMintingLive) return true;
         if (!isWhitelistMintingLive || (isWhitelistMintingLive && !accountWhitelisted)) return true;
         return false;
-    }, [isMintingLive, canMint, isWhitelistMintingLive, accountWhitelisted, amountToMint])
+    }, [isMintingLive, currentSupply, canMint, isWhitelistMintingLive, accountWhitelisted, amountToMint])
 
     const referrerText = React.useMemo(() => {
         return !params.referrer ? null : <>Referral Address <Badge>{params.referrer}</Badge></>
     }, [params.referrer])
 
     const activeText = React.useMemo(() => {
-        let text = isMintingLive ? `Minting Active` : ``
+        let text = isMintingLive ? currentSupply == 111 ? 'Minting Completed' : `Minting Active` : ``
         
         if (isWhitelistMintingLive) 
             text = `Whitelist Minting Active`;
@@ -242,7 +244,7 @@ export const Mint: React.FC<any> = () => {
             </ExternalLink>
             </a>
           )}</div>
-    }, [isWhitelistMintingLive, isMintingLive])
+    }, [isWhitelistMintingLive, currentSupply, isMintingLive])
     //callbacks
     const mintAmount = React.useCallback(async (amount: number) => {
         if (account && amount && (isMintingLive || accountWhitelisted && isWhitelistMintingLive)) {

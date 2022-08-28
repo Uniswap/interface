@@ -145,55 +145,55 @@ export function KibaNftAlert() {
   const [arbitrumAlphaAcknowledged, setAlertAcknowledged] = useArbitrumAlphaAlert()
   const [mintingLive, setMintingLive] = React.useState(false)
   const [whitelstLive, setWhitelistLive] = React.useState(false)
-  const kibaNftContract = useKibaNFTContract()
-  //sideffects
-  React.useEffect(() => {
-    if (kibaNftContract) {
-        // determine if minting is live for everyone
-        kibaNftContract.isActive().then((response: any) => {
-            console.log(`$minting active?`, response)
-            const mintLiveResponse = Boolean(response)
-            if (mintLiveResponse) {
-              kibaNftContract.totalSupply().then((totalSupply:any) => {
-                  const tsNumber = ethers.BigNumber.from(totalSupply).toNumber()
-                  const mintingIsActive = Boolean(tsNumber < 112)
-                  setMintingLive(mintingIsActive)
-              })
-            } else {  
-              setMintingLive(false)
-            }
-        })
-        // determine if whitelist minting is available for the connected account
-        kibaNftContract.isWhitelistActive().then((response:any) => {
-            console.log(`Whitelist minting active?`, response)
-            setWhitelistLive(Boolean(response))
-        })
-    }
-}, [kibaNftContract])
+  //const kibaNftContract = useKibaNFTContract()
+//   //sideffects
+//   React.useEffect(() => {
+//     if (kibaNftContract) {
+//         // determine if minting is live for everyone
+//         kibaNftContract.isActive().then((response: any) => {
+//             console.log(`$minting active?`, response)
+//             const mintLiveResponse = Boolean(response)
+//             if (mintLiveResponse) {
+//               kibaNftContract.totalSupply().then((totalSupply:any) => {
+//                   const tsNumber = ethers.BigNumber.from(totalSupply).toNumber()
+//                   const mintingIsActive = Boolean(tsNumber < 111)
+//                   setMintingLive(mintingIsActive)
+//               })
+//             } else {  
+//               setMintingLive(false)
+//             }
+//         })
+//         // determine if whitelist minting is available for the connected account
+//         kibaNftContract.isWhitelistActive().then((response:any) => {
+//             console.log(`Whitelist minting active?`, response)
+//             setWhitelistLive(Boolean(response))
+//         })
+//     }
+// }, [kibaNftContract])
 
-  if (!chainId) return null;
-  const info = CHAIN_INFO[chainId as SupportedL2ChainId]
-  return Boolean(mintingLive || whitelstLive) ? (
-    <Wrapper style={{width: '90%', marginBottom: 10}} chainId={chainId} darkMode={darkMode} logoUrl={info.logoUrl}>
-      <L2Icon src={'https://openseauserdata.com/files/260d4d4d0ee4a561f25d2d61a4bc25c9.png'} />
-      <Body>
-        <Trans>This is an alpha release of Kiba Inu Genesis NFTs <CheckCircle size={'10px'} fontSize={10} /> </Trans>
-        <DesktopTextBreak /> <Trans> If you have minting access, you can mint yours now.</Trans>{' '}
-        <ReadMoreLink href="https://docs.kiba.app/nfts/kiba-inu-nfts/nft-minting">
-          <Trans>Read more</Trans>
-        </ReadMoreLink>
-      </Body>
-      <div style={{display:'flex', alignItems:'center'}}>
-      <LinkInToNfts to={'/nfts'}>
-        <Trans>Mint yours now</Trans>
-        <LinkOutCircle />
-      </LinkInToNfts>
-        <div style={{marginLeft:5}}>
-          <OpenSeaLink />
-        </div>
-      </div>
-    </Wrapper>
-  ) : null
+   return null;
+  // const info = CHAIN_INFO[chainId as SupportedL2ChainId]
+  // return Boolean(mintingLive || whitelstLive) ? (
+  //   <Wrapper style={{width: '90%', marginBottom: 10}} chainId={chainId} darkMode={darkMode} logoUrl={info.logoUrl}>
+  //     <L2Icon src={'https://openseauserdata.com/files/260d4d4d0ee4a561f25d2d61a4bc25c9.png'} />
+  //     <Body>
+  //       <Trans>This is an alpha release of Kiba Inu Genesis NFTs <CheckCircle size={'10px'} fontSize={10} /> </Trans>
+  //       <DesktopTextBreak /> <Trans> If you have minting access, you can mint yours now.</Trans>{' '}
+  //       <ReadMoreLink href="https://docs.kiba.app/nfts/kiba-inu-nfts/nft-minting">
+  //         <Trans>Read more</Trans>
+  //       </ReadMoreLink>
+  //     </Body>
+  //     <div style={{display:'flex', alignItems:'center'}}>
+  //     <LinkInToNfts to={'/nfts'}>
+  //       <Trans>Mint yours now</Trans>
+  //       <LinkOutCircle />
+  //     </LinkInToNfts>
+  //       <div style={{marginLeft:5}}>
+  //         <OpenSeaLink />
+  //       </div>
+  //     </div>
+  //   </Wrapper>
+  // ) : null
 }
 export function AddLiquidityNetworkAlert() {
   const { chainId } = useActiveWeb3React()
