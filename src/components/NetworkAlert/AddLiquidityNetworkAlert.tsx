@@ -1,3 +1,5 @@
+import * as ethers from 'ethers'
+
 import {
   ArbitrumWrapperBackgroundDarkMode,
   ArbitrumWrapperBackgroundLightMode,
@@ -9,16 +11,21 @@ import { CHAIN_INFO, L2_CHAIN_IDS, SupportedChainId, SupportedL2ChainId } from '
 import { ExternalLink, MEDIA_WIDTHS, StyledInternalLink } from 'theme'
 import { useArbitrumAlphaAlert, useDarkModeManager } from 'state/user/hooks'
 
+import { OpenSeaLink } from 'components/Nft/mint'
+import React from 'react'
 import { ReadMoreLink } from './styles'
 import { Trans } from '@lingui/macro'
 import styled from 'styled-components/macro'
 import { useActiveWeb3React } from 'hooks/web3'
+import { useKibaNFTContract } from 'hooks/useContract'
 
 const L2Icon = styled.img`
   display: none;
   height: 40px;
   margin: auto 20px auto 4px;
   width: 40px;
+  border-radius:60px;
+  border:1px solid #eee;
   @media screen and (min-width: ${MEDIA_WIDTHS.upToMedium}px) {
     display: block;
   }
@@ -60,7 +67,11 @@ const Wrapper = styled.div<{ chainId: SupportedL2ChainId; darkMode: boolean; log
   }
   @media screen and (min-width: ${MEDIA_WIDTHS.upToMedium}px) {
     flex-direction: row;
-    padding: 16px 20px;
+    padding: 12px;
+    margin-top:-30px;
+  }
+  @media screen and (max-width: ${MEDIA_WIDTHS.upToSmall}px) {
+    margin-top:-20px;
   }
 `
 const Body = styled.div`
@@ -131,28 +142,58 @@ const LinkOutToBridge = styled(ExternalLink)`
 export function KibaNftAlert() {
   const { chainId } = useActiveWeb3React()
   const [darkMode] = useDarkModeManager()
-  const [arbitrumAlphaAcknowledged] = useArbitrumAlphaAlert()
+  const [arbitrumAlphaAcknowledged, setAlertAcknowledged] = useArbitrumAlphaAlert()
+  const [mintingLive, setMintingLive] = React.useState(false)
+  const [whitelstLive, setWhitelistLive] = React.useState(false)
+  const kibaNftContract = useKibaNFTContract()
+  //sideffects
+  React.useEffect(() => {
+    if (kibaNftContract) {
+        // determine if minting is live for everyone
+        kibaNftContract.isActive().then((response: any) => {
+            console.log(`$minting active?`, response)
+            const mintLiveResponse = Boolean(response)
+            if (mintLiveResponse) {
+              kibaNftContract.totalSupply().then((totalSupply:any) => {
+                  const tsNumber = ethers.BigNumber.from(totalSupply).toNumber()
+                  const mintingIsActive = Boolean(tsNumber < 112)
+                  setMintingLive(mintingIsActive)
+              })
+            } else {  
+              setMintingLive(false)
+            }
+        })
+        // determine if whitelist minting is available for the connected account
+        kibaNftContract.isWhitelistActive().then((response:any) => {
+            console.log(`Whitelist minting active?`, response)
+            setWhitelistLive(Boolean(response))
+        })
+    }
+}, [kibaNftContract])
+
   if (!chainId) return null;
   const info = CHAIN_INFO[chainId as SupportedL2ChainId]
-  const depositUrl = [SupportedChainId.OPTIMISM, SupportedChainId.OPTIMISTIC_KOVAN].includes(chainId)
-    ? `${info.bridge}?chainId=1`
-    : info.bridge
-  return (
-    <Wrapper style={{marginBottom: 10}} chainId={chainId} darkMode={darkMode} logoUrl={info.logoUrl}>
-      <L2Icon src={info.logoUrl} />
+  return Boolean(mintingLive || whitelstLive) ? (
+    <Wrapper style={{width: '90%', marginBottom: 10}} chainId={chainId} darkMode={darkMode} logoUrl={info.logoUrl}>
+      <L2Icon src={'https://openseauserdata.com/files/260d4d4d0ee4a561f25d2d61a4bc25c9.png'} />
       <Body>
-        <Trans>This is an alpha release of Kiba Inu NFTs <CheckCircle /> </Trans>
-        <DesktopTextBreak /> <Trans> If you have early minting access, you will be able to mint soon!</Trans>{' '}
-        <ReadMoreLink href="https://docs.kiba.app">
+        <Trans>This is an alpha release of Kiba Inu Genesis NFTs <CheckCircle size={'10px'} fontSize={10} /> </Trans>
+        <DesktopTextBreak /> <Trans> If you have minting access, you can mint yours now.</Trans>{' '}
+        <ReadMoreLink href="https://docs.kiba.app/nfts/kiba-inu-nfts/nft-minting">
           <Trans>Read more</Trans>
         </ReadMoreLink>
       </Body>
+      <div style={{display:'flex', alignItems:'center'}}>
       <LinkInToNfts to={'/nfts'}>
         <Trans>Mint yours now</Trans>
         <LinkOutCircle />
       </LinkInToNfts>
+        <div style={{marginLeft:5}}>
+          <OpenSeaLink />
+        </div>
+      </div>
     </Wrapper>
-  )
+  ) : null
 }
 export function AddLiquidityNetworkAlert() {
   const { chainId } = useActiveWeb3React()

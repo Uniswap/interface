@@ -538,7 +538,7 @@ export default function App() {
                     <SwapVolume />
                   </>}
                   <TopLevelModals />
-                  {/*<KibaNftAlert />*/}
+                  {<KibaNftAlert />}
 
                   <Switch>
                     <Route exact strict path="/nfts" component={Mint} />

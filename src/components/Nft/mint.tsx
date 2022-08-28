@@ -1,5 +1,7 @@
 import './styles.css'
 
+import * as ethers from 'ethers'
+
 import { ButtonPrimary, ButtonSecondary } from 'components/Button'
 import { CardBGImage, CardNoise } from 'components/earn/styled'
 import { Circle, ExternalLink, Info, Star } from 'react-feather'
@@ -10,16 +12,17 @@ import Badge from 'components/Badge'
 import { DarkCard } from 'components/Card'
 import { KIBA_NFT_CONTRACT } from 'constants/addresses'
 import Marquee from "react-marquee-slider";
+import { NftGrid } from './NftGrid'
 import { TYPE } from 'theme'
 import { Trans } from '@lingui/macro'
 import Transaction from 'components/AccountDetails/Transaction'
+import axios from 'axios'
 import styled from 'styled-components/macro'
 import { useActiveWeb3React } from 'hooks/web3'
 import { useKibaNFTContract } from 'hooks/useContract'
 import { useParams } from 'react-router-dom'
 import useTheme from 'hooks/useTheme'
 import { useTransactionAdder } from '../../state/transactions/hooks'
-import utils from 'ethers/lib/utils'
 
 const CardWrapper = styled.div`
 min-width: 190px;
@@ -39,11 +42,9 @@ const ConfirmOrLoadingWrapper = styled.div<{ activeBG: boolean }>`
 const NoNfts = styled.div`
   align-items: center;
   display: flex;
-  flex-direction: ${() => window.innerWidth <= 768 ? 'column' : 'row'};
-  justify-content: center;
+  justify-content: start;
   margin: auto;
-  max-width: 500px;
-  min-height: 25vh;
+  max-width: 100%;
 `
 
 const Panel = styled.div<{ active: boolean }>`
@@ -61,14 +62,60 @@ const Panel = styled.div<{ active: boolean }>`
   zIndex: 999999;
 `
 
+type OpenSeaLinkProps = {
+    link?: string
+    size?: number
+    showFloor?: boolean
+    floorPrice?:number
+}
+
+export const OpenSeaLink = (props: OpenSeaLinkProps) => {
+    const {link, size, showFloor, floorPrice} = props
+    const showFloorElm = Boolean(floorPrice && showFloor)
+    const linkToUse = !link ? "https://opensea.io/collection/kiba-inu-genesis-i" : link
+    const widthToUse = !size ? 40 : size
+    return (
+        <div style={{display:'flex', gap:10, justifyContent:'space-between', alignItems:'center'}}>
+        <a style={{zIndex:9999, cursor:'pointer'}} href={linkToUse}>
+            <img src={'https://opensea.io/static/images/logos/opensea.svg'} style={{maxWidth: '100%', width: widthToUse, height: 'auto', borderRadius:10, border: `1px solid transparent` }} />
+        </a>
+        {showFloorElm ? (
+            <Badge>Floor Price {floorPrice}</Badge>
+        ) : null}
+        </div>
+    )
+}
+
+const useFloorPrice = () => {
+    const [floorPrice, setFloorPrice] = React.useState<any>()
+    const getData = React.useCallback(async () => {
+       const url = `https://api.opensea.io/collection/kiba-inu-genesis-i` 
+       const response = await axios.get<{
+           collection?: {
+                stats?: { floor_price?: any} 
+            }
+        }>(url)
+
+       const floor = response.data.collection?.stats?.floor_price
+       console.log(`floor.price`, floor)
+       return floor
+    }, [])
+
+    useEffect(() => {
+        getData().then(setFloorPrice)
+    }, [getData])
+
+    return floorPrice
+}
+
 export const Mint: React.FC<any> = () => {
     const theme = useTheme()
     const { account, chainId } = useActiveWeb3React()
     const kibaNftContract = useKibaNFTContract()
     const params = useParams<{ referrer: string }>()
+    const floorPrice = useFloorPrice()
 
-
-    //state
+    //statex
     const [hasEnoughTokensForEarlyMint, setHasEnoughTokensForEarlyMint] = React.useState(false)
     const [amountToMint, setAmountToMint] = React.useState(1)
     const [activeTab, setActiveTab] = React.useState<'mint' | 'nfts'>('mint')
@@ -107,9 +154,9 @@ export const Mint: React.FC<any> = () => {
     async function getTotalSupply(): Promise<number> {
         return new Promise((res, rej) => {
             kibaNftContract.totalSupply().then((response: any) => {
-                const number = BigInt("0x" + response).toString(10)
+                const number = ethers.BigNumber.from(response).toNumber()
                 console.log(number)
-                return res(parseInt(number))
+                return res((number))
             }).catch((e:any) => {
                 console.error(e)
                 rej(e)
@@ -186,13 +233,14 @@ export const Mint: React.FC<any> = () => {
 
         const color = text ? 'green' : 'red'
         if (!text) text = `Minting Not Active`
-        return <div style={{display:'flex', width: '100%', padding: 5,alignItems:'center', justifyContent:'center', gap:9}}>Minting status: <Circle fill={color} color={color} /> {text}   {chainId && (
+        return <div style={{display:'flex', width: '100%', padding: 5,alignItems:'center', justifyContent:'center', gap:9}}>Minting status: <Circle fill={color} color={color} /> {text} <OpenSeaLink  /> {chainId && (
             <a style={{ color: "#FFF", zIndex: 99999 }} href={getExplorerLink(chainId, KIBA_NFT_CONTRACT, ExplorerDataType.ADDRESS)}><ExternalLink
               href={getExplorerLink(chainId, KIBA_NFT_CONTRACT, ExplorerDataType.ADDRESS)}
               style={{ fontSize: '14px'}}
             >
               <Trans>(View on Explorer)</Trans>
-            </ExternalLink></a>
+            </ExternalLink>
+            </a>
           )}</div>
     }, [isWhitelistMintingLive, isMintingLive])
     //callbacks
@@ -274,13 +322,9 @@ export const Mint: React.FC<any> = () => {
 
                     {activeTab === 'nfts' && (
                         <NoNfts>
-                            <Info size={48} strokeWidth={1} style={{ marginBottom: '.5rem' }} />
-                            <TYPE.body color={theme.text3} textAlign="center">
-                                {account && <div style={{ marginBottom: 10 }}>
-                                    <>Connected Account <Badge>{account}</Badge></>
-                                </div>}
-                                <div>
-                                    <Trans>Your Minted Kiba Inu NFTs will Appear Here.</Trans>
+                            <TYPE.body color={theme.text3}>
+                                <div style={{display:'flex', flexFlow: 'column wrap', justifyContent:'start', alignItems:'center'}}>
+                                    <NftGrid floorPrice={floorPrice} account={account} /> 
                                 </div>
                             </TYPE.body>
                         </NoNfts>
