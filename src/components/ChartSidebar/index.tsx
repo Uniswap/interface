@@ -1,3 +1,4 @@
+/* eslint-disable */
 import 'react-pro-sidebar/dist/css/styles.css';
 
 import { ArrowLeftCircle, ArrowRightCircle, BarChart2, ChevronDown, ChevronUp, Globe, Heart, PieChart, Twitter } from 'react-feather'
@@ -13,6 +14,7 @@ import { useHolderCount, useTokenHolderCount, useTokenInfo } from 'components/sw
 import { BurntKiba } from 'components/BurntKiba';
 import Copy from '../AccountDetails/Copy'
 import CurrencyLogo from 'components/CurrencyLogo';
+import { FiatValue } from '../../components/CurrencyInputPanel/FiatValue'
 import React from 'react';
 import { StyledAnchorLink } from 'components/Header';
 import { Trans } from '@lingui/macro'
@@ -76,8 +78,9 @@ type ChartSidebarProps = {
     }
     holdings: {
         token: Token | any;
-        tokenBalance: CurrencyAmount<Token> | undefined | any;
+        tokenBalance: CurrencyAmount<Token> | undefined | number | any;
         tokenValue: CurrencyAmount<Token> | undefined | any;
+        formattedUsdString?: string | undefined
     }
     tokenData: any
     chainId?: number
@@ -98,6 +101,10 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
     }, [tokenData])
     const holderCount = useTokenHolderCount(token.address, chainId)
     const tokenCurrency = token && token.decimals && token.address ? new Token(chainId ?? 1, token.address, +token.decimals, token.symbol, token.name) : {} as Token
+    const hasSocials = React.useMemo(() => tokenInfo && (tokenInfo?.twitter || tokenInfo?.coingecko || tokenInfo?.website), [tokenInfo])
+    const currency = useCurrency(token.address ? token.address : tokenData?.id)
+
+    
     //create a custom function that will change menucollapse state from false to true and true to false
     const menuIconClick = () => {
         //condition checking to change state from true to false and vice versa
@@ -128,9 +135,8 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
         return `-`
     }, [tokenInfo?.price, token, tokenData])
     const deadKiba = useKiba('0x000000000000000000000000000000000000dead')
-    const _token = useToken(token.address)
     const _bscToken = useBscToken(chainId == 56 ? token.address : undefined)
-    const amountBurnt = useTokenBalance('0x000000000000000000000000000000000000dead', chainId == 56 ? _bscToken as Token : _token ?? undefined)
+    const amountBurnt = useTokenBalance('0x000000000000000000000000000000000000dead', chainId == 56 ? _bscToken as Token : token  as any ?? undefined)
     const marketCap = React.useMemo(() => {
         if (!totalSupplyInt || totalSupplyInt === 0) return ''
         const hasTokenData = !!tokenData?.priceUSD
@@ -145,8 +151,7 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
 
         return Number(parseFloat(price.toFixed(18)) * excludingBurntValue).toLocaleString()
     }, [totalSupplyInt, tokenInfo?.price, tokenData?.priceUSD, amountBurnt])
-    const hasSocials = React.useMemo(() => tokenInfo && (tokenInfo?.twitter || tokenInfo?.coingecko || tokenInfo?.website), [tokenInfo])
-    const currency = useCurrency(token.address ? token.address : tokenData?.id)
+
     console.log('chartSidebar -> tokenInfo', marketCap)
 
     return (
@@ -295,7 +300,7 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
                                             </TYPE.main>
                                         </MenuItem>}
                                                      
-                                        {Boolean(!!holdings) && Boolean(holdings.tokenBalance || holdings.tokenValue) && (
+                                        {Boolean(!!holdings) && Boolean(holdings.tokenBalance) && (
                                             <Menu  iconShape={'circle'} >
                                                 <SidebarHeader>
                                                    <MenuItem>Connected Wallet Holdings</MenuItem>
@@ -303,8 +308,13 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
                                                <SidebarContent>
                                                 <MenuItem>
                                                     <TYPE.subHeader>Current {holdings.token.symbol} Balance</TYPE.subHeader>
-                                                    <TYPE.black>{Number(holdings?.tokenBalance?.toFixed(2)).toLocaleString()} (${Number(holdings?.tokenValue?.toFixed(2)).toLocaleString()} USD)</TYPE.black>
-                                                </MenuItem>
+                                                    <TYPE.black> {Number(holdings.tokenBalance?.toFixed(2)).toLocaleString()} Tokens&nbsp;
+                                                    </TYPE.black>
+
+                                                    <TYPE.black> 
+                                                        {Boolean(!holdings?.tokenValue && holdings?.formattedUsdString) &&<> ~(${holdings?.formattedUsdString}) </>}
+                                                        {Boolean(holdings?.tokenValue ) && <span>(<FiatValue style={{display: 'inline-block'}} fiatValue={holdings?.tokenValue ?? undefined }/> USD)</span>}</TYPE.black>
+                                                    </MenuItem>
                                                 </SidebarContent>
                                             </Menu>
                                         )}
@@ -365,6 +375,6 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
             </ProSidebar>
         </Wrapper>
     )
-})
+}, _.isEqual)
 _ChartSidebar.displayName = 'chart.sidebar'
 export const ChartSidebar = _ChartSidebar

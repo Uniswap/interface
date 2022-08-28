@@ -1,12 +1,12 @@
-import styled from 'styled-components/macro'
 import { CheckCircle, Triangle } from 'react-feather'
-
-import { useActiveWeb3React } from '../../hooks/web3'
-import { ExternalLink } from '../../theme'
-import { useAllTransactions } from '../../state/transactions/hooks'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
-import { RowFixed } from '../Row'
+
+import { ExternalLink } from '../../theme'
 import Loader from '../Loader'
+import { RowFixed } from '../Row'
+import styled from 'styled-components/macro'
+import { useActiveWeb3React } from '../../hooks/web3'
+import { useAllTransactions } from '../../state/transactions/hooks'
 
 const TransactionWrapper = styled.div``
 
@@ -35,7 +35,7 @@ const IconWrapper = styled.div<{ pending: boolean; success?: boolean }>`
   color: ${({ pending, success, theme }) => (pending ? theme.primary1 : success ? theme.green1 : theme.red1)};
 `
 
-export default function Transaction({ hash }: { hash: string }) {
+export default function Transaction({ hash, style = {} }: { hash: string, style?: any }) {
   const { chainId } = useActiveWeb3React()
   const allTransactions = useAllTransactions()
 
@@ -47,7 +47,7 @@ export default function Transaction({ hash }: { hash: string }) {
   if (!chainId) return null
 
   return (
-    <TransactionWrapper>
+    <TransactionWrapper style={{...style}}>
       <TransactionState
         href={getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)}
         pending={pending}

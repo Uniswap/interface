@@ -2,19 +2,24 @@ import './styles.css'
 
 import { ButtonPrimary, ButtonSecondary } from 'components/Button'
 import { CardBGImage, CardNoise } from 'components/earn/styled'
-import { ExternalLink, Info, Star } from 'react-feather'
+import { Circle, ExternalLink, Info, Star } from 'react-feather'
+import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 import React, { useEffect } from 'react'
 
 import Badge from 'components/Badge'
 import { DarkCard } from 'components/Card'
+import { KIBA_NFT_CONTRACT } from 'constants/addresses'
 import Marquee from "react-marquee-slider";
 import { TYPE } from 'theme'
 import { Trans } from '@lingui/macro'
+import Transaction from 'components/AccountDetails/Transaction'
 import styled from 'styled-components/macro'
 import { useActiveWeb3React } from 'hooks/web3'
 import { useKibaNFTContract } from 'hooks/useContract'
 import { useParams } from 'react-router-dom'
 import useTheme from 'hooks/useTheme'
+import { useTransactionAdder } from '../../state/transactions/hooks'
+import utils from 'ethers/lib/utils'
 
 const CardWrapper = styled.div`
 min-width: 190px;
@@ -58,7 +63,7 @@ const Panel = styled.div<{ active: boolean }>`
 
 export const Mint: React.FC<any> = () => {
     const theme = useTheme()
-    const { account, library } = useActiveWeb3React()
+    const { account, chainId } = useActiveWeb3React()
     const kibaNftContract = useKibaNFTContract()
     const params = useParams<{ referrer: string }>()
 
@@ -68,9 +73,16 @@ export const Mint: React.FC<any> = () => {
     const [amountToMint, setAmountToMint] = React.useState(1)
     const [activeTab, setActiveTab] = React.useState<'mint' | 'nfts'>('mint')
     const [isMintingLive, setIsMintingLive] = React.useState(false)
+    const [mintedTx, setMintedTx] = React.useState<any>({})
+    const [isWhitelistMintingLive, setIsWhitelistMintingLive] = React.useState(false)
+    const [accountWhitelisted, setAccountWhitelisted] = React.useState(false)
     const [flex, setFlex] = React.useState({ flexFlow: 'row wrap' })
-    const [totalSupply, setTotalSupply] = React.useState(5000);
+    const [totalSupply, setTotalSupply] = React.useState(111);
+    const addTransaction = useTransactionAdder()
+    const [minting, setMinting] = React.useState(false)
     const [currentSupply, setCurrentSupply] = React.useState(0);
+    // if false they already minted.
+    const [canMint, setCanMint] = React.useState(true)
     const MAX = 5;
     const getBackgroundSize = () => {
         return {
@@ -79,27 +91,68 @@ export const Mint: React.FC<any> = () => {
             marginLeft: 30
         };
     };
+
+    async function getCanMint(account: string): Promise<boolean> {
+        return new Promise((res, rej) => {
+            kibaNftContract.canMint(account).then((response: any) => {
+                const canMint =Boolean(response)
+                return res(canMint)
+            }).catch((e:any) => {
+                console.error(e)
+                rej(e)
+            })
+        })
+    }
+
+    async function getTotalSupply(): Promise<number> {
+        return new Promise((res, rej) => {
+            kibaNftContract.totalSupply().then((response: any) => {
+                const number = BigInt("0x" + response).toString(10)
+                console.log(number)
+                return res(parseInt(number))
+            }).catch((e:any) => {
+                console.error(e)
+                rej(e)
+            })
+        })
+    }
+
     //sideffects
     useEffect(() => {
         if (kibaNftContract && account) {
-            // determine if early minting is available for the connected account
-            kibaNftContract.hasEnoughTokensForEarlyMint(account).then((response: any) => {
-                if (!response) setHasEnoughTokensForEarlyMint(false)
-                else setHasEnoughTokensForEarlyMint(true)
+            // determine if minting is live for everyone
+            kibaNftContract.isActive().then((response: any) => {
+                console.log(`$minting active?`, response)
+                setIsMintingLive(!!(response))
+            })
+            // determine if whitelist minting is available for the connected account
+            kibaNftContract.isWhitelistActive().then((response:any) => {
+                console.log(`Whitelist minting active?`, response)
+                setIsWhitelistMintingLive(Boolean(response))
+                // if whitelist active, check if account was whitelisted..
+                if (Boolean(response)) {
+                    kibaNftContract.isAccountWhitelisted(account).then((response:any) => {
+                        console.log(`${account} whitelisted?`, response)
+                        setAccountWhitelisted(Boolean(response))
+                    })
+                }
             })
 
-            // determine if minting is live for everyone
-            kibaNftContract.mintingLive().then((response: any) => setIsMintingLive(new Date(response) >= new Date()))
+            
         }
     }, [account, kibaNftContract])
 
     useEffect(() => {
-        if (kibaNftContract && currentSupply == 0) {
-            kibaNftContract.totalSupply().then((response: any) => {
-                setCurrentSupply(response)
-            })
+        if (kibaNftContract && account) {
+            getCanMint(account).then(setCanMint)
         }
-    }, [kibaNftContract, currentSupply])
+    }, [kibaNftContract, account, getCanMint])
+
+    useEffect(() => {
+        if (kibaNftContract) {
+            getTotalSupply().then(setCurrentSupply)
+        }
+    }, [kibaNftContract, getTotalSupply])
 
     useEffect(() => {
         // initially focus the mint textbox
@@ -115,33 +168,74 @@ export const Mint: React.FC<any> = () => {
     // memos
     const isMintingDisabled = React.useMemo(() => {
         if (amountToMint == 0 || amountToMint > 5) return true;
+        if (isWhitelistMintingLive && accountWhitelisted && canMint) return false;
         if (!isMintingLive) return true;
+        if (!isWhitelistMintingLive || (isWhitelistMintingLive && !accountWhitelisted)) return true;
         return false;
-    }, [isMintingLive, amountToMint])
+    }, [isMintingLive, canMint, isWhitelistMintingLive, accountWhitelisted, amountToMint])
 
     const referrerText = React.useMemo(() => {
         return !params.referrer ? null : <>Referral Address <Badge>{params.referrer}</Badge></>
     }, [params.referrer])
+
+    const activeText = React.useMemo(() => {
+        let text = isMintingLive ? `Minting Active` : ``
+        
+        if (isWhitelistMintingLive) 
+            text = `Whitelist Minting Active`;
+
+        const color = text ? 'green' : 'red'
+        if (!text) text = `Minting Not Active`
+        return <div style={{display:'flex', width: '100%', padding: 5,alignItems:'center', justifyContent:'center', gap:9}}>Minting status: <Circle fill={color} color={color} /> {text}   {chainId && (
+            <a style={{ color: "#FFF", zIndex: 99999 }} href={getExplorerLink(chainId, KIBA_NFT_CONTRACT, ExplorerDataType.ADDRESS)}><ExternalLink
+              href={getExplorerLink(chainId, KIBA_NFT_CONTRACT, ExplorerDataType.ADDRESS)}
+              style={{ fontSize: '14px'}}
+            >
+              <Trans>(View on Explorer)</Trans>
+            </ExternalLink></a>
+          )}</div>
+    }, [isWhitelistMintingLive, isMintingLive])
     //callbacks
     const mintAmount = React.useCallback(async (amount: number) => {
-        if (account && amount) {
-            const tx = {
-                from: account,
-                to: kibaNftContract.address,
-                amount,
-                data: amount.toString(),
-                referrer: params && params.referrer ? params.referrer : 0
-            }
-
-            console.log(`sample mint tx`, tx)
-
-            const response = await library?.getSigner()
-                ?.sendTransaction(tx);
-            if (response) {
-                alert("Minting successful")
+        if (account && amount && (isMintingLive || accountWhitelisted && isWhitelistMintingLive)) {
+            console.log(`They should mint one or the other`)
+            if (isWhitelistMintingLive && accountWhitelisted) {
+                console.log(`Try Whitelist Mint`)
+                try {
+                    setMinting(true)
+                    const tx = await kibaNftContract.whitelistMint()
+                    const txConfirmed = await tx.wait();
+                    tx.hash = txConfirmed.transactionHash
+                    addTransaction(tx, {
+                        summary: `Whitelist Mint Kiba Inu Genesis NFT `,
+                      })
+                    setMinting(false)
+                    setMintedTx(txConfirmed)
+                    } catch (ex) {
+                        console.error(ex)
+                        setMinting(false)
+                    }
+            } else  {
+                console.log(`Try Normal mint..`)
+                try {
+                    setMinting(true)
+                    
+                    const tx = await kibaNftContract.normalMint()
+                    const txConfirmed = await tx.wait();
+                    tx.hash = txConfirmed.transactionHash
+                    addTransaction(tx, {
+                        summary: `Mint Kiba Inu Genesis NFT Successfully`
+                    })
+                    console.log(txConfirmed)
+                    setMinting(false)
+                    setMintedTx(txConfirmed)
+                } catch (ex) {
+                    console.error(ex)
+                    setMinting(false)
+                }
             }
         }
-    }, [library])
+    }, [kibaNftContract, account, isMintingLive, isWhitelistMintingLive, accountWhitelisted])
 
     const onMintClick = React.useCallback(async () => {
         if (isMintingDisabled) return
@@ -154,7 +248,8 @@ export const Mint: React.FC<any> = () => {
         <DarkCard style={{
             overflow:
                 'hidden',
-            maxWidth: 1200
+            maxWidth: 1200,
+            
         }}>
             <TYPE.largeHeader>Kiba NFTs</TYPE.largeHeader>
             <div style={{ border: '1px solid #222', position: 'relative', zIndex: 10000000, marginTop: 15, background: "rgba(0,0,0,.25)", width: '100%', display: 'flex', flexFlow: flex.flexFlow, justifyContent: 'space-between', alignItems: 'center' }}>
@@ -194,8 +289,9 @@ export const Mint: React.FC<any> = () => {
                     {activeTab === 'mint' && (
                         <>
                             {referrerText}
+                            {activeText}
                             <div style={{ justifyContent: 'space-between', alignItems: 'center', display: 'flex', flexFlow: 'column wrap', gap: 5 }}>
-                                <p style={{ margin: 0 }}>Total Supply: {currentSupply}/5000</p>
+                                <p style={{ margin: 0 }}>Total Supply: {currentSupply}/{totalSupply}</p>
                                 <Marquee direction={'ltr'}
                                     resetAfterTries={200}
                                     scatterRandomly={false}
@@ -222,24 +318,35 @@ export const Mint: React.FC<any> = () => {
                                                 setAmountToMint(5)
                                         }} />
                                 </div>
-                                <div style={{ columnGap: 15, display: 'flex', flexFlow: 'column', marginTop: 25, zIndex: 123123 }}>
+                                {/* <div style={{ columnGap: 15, display: 'flex', flexFlow: 'column', marginTop: 25, zIndex: 123123 }}>
                                     <label className="input-range-label"><input type="range"
                                         style={getBackgroundSize()}
-                                        max={5}
+                                        max={1}
                                         min={1}
                                         onInput={value => setAmountToMint((parseInt(value.currentTarget.value.toString(), 10) as any as number))}
                                         value={amountToMint} />
                                         {amountToMint} Kiba NFT{amountToMint > 1 && 's'}</label>
                                 </div>
-
+ */}
                                 <div style={{ maxWidth: 400, marginTop: 15 }}>
                                     <ButtonPrimary
 
                                         onClick={onMintClick}
-                                        disabled={isMintingDisabled}>
-                                        MINT
+                                        disabled={minting || isMintingDisabled}>
+                                        {minting ? "Minting..." : "MINT"}
                                     </ButtonPrimary>
                                 </div>
+
+                                {!canMint && (
+                                    <Badge style={{marginTop: 15, marginBottom: 15}}>1 Mint Per Wallet is allowed. You&apos;ve already minted 1 NFT.</Badge>
+                                )}
+
+
+                                {Boolean(mintedTx && mintedTx?.transactionHash) && (
+                                    <div style={{marginTop: 10, zIndex: 100}}>
+                                        <Transaction style={{}} hash={mintedTx.transactionHash} /> 
+                                    </div>
+                                )}
                             </div>
                         </>)}
 

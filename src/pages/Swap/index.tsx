@@ -69,7 +69,6 @@ import { isTradeBetter } from '../../utils/isTradeBetter'
 import logo from '../../assets/images/download.png'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { useActiveWeb3React } from '../../hooks/web3'
-import useClippy  from 'use-clippy'
 import useENSAddress from '../../hooks/useENSAddress'
 import { useGelatoLimitOrders } from '@gelatonetwork/limit-orders-react'
 import useIsArgentWallet from '../../hooks/useIsArgentWallet'
@@ -173,7 +172,6 @@ export default function Swap({ history }: RouteComponentProps) {
   const tokenAddress = React.useMemo(() => isBinance && params.tokenAddress ? params.tokenAddress : undefined, [params.tokenAddress, isBinance])
   const binanceSwapURL = React.useMemo(() => isBinance ? `https://kibaswapbsc.app/#/swap?outputCurrency=${tokenAddress}` : undefined, [tokenAddress, isBinance])
   const loadedUrlParams = useDefaultsFromURLSearch()
-  const [clipboard, setClipboard] = useClippy()
   // Determine if the asynchronous clipboard API is enabled.
   const IS_CLIPBOARD_API_ENABLED: boolean = (
     typeof navigator === 'object' &&

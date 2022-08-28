@@ -19,8 +19,6 @@ import useInterval from 'hooks/useInterval'
 import { useMultipleContractSingleData } from 'state/multicall/hooks'
 import { useWeb3React } from '@web3-react/core'
 
-const BUSD_MAINNET = binanceTokens.busd
-const WBNB = binanceTokens.wbnb;
 export function wrappedCurrency(currency: Currency | undefined, chainId: number | undefined): Token | undefined {
   return chainId && currency === WETH9[chainId] ? WETH9[chainId] : currency instanceof Token ? currency : undefined
 }
@@ -112,10 +110,10 @@ export function usePairs(currencies: [Currency | undefined, Currency | undefined
 }
 
 
-const TokenBalanceContext = React.createContext({ balance: 0, fetchStatus: 'not-fetched', setBalance: (balance: any) => { return } })
+const TokenBalanceContext = React.createContext({ balance: 0, fetchStatus: 'not-fetched', setBalance: (b: any) => { return } })
 
 export const TokenBalanceContextProvider = ({ children }: { children: any }) => {
-  const { NOT_FETCHED, SUCCESS, FAILED } = FetchStatus
+  const { NOT_FETCHED } = FetchStatus
   const { chainId } = useWeb3React()
 
   const [balance, setBalance] = React.useState({ fetchStatus: NOT_FETCHED, balance: BigInt('0') as any })
@@ -133,7 +131,7 @@ export const useTokenBalanceContext = () => {
 }
 
 export const useBinanceTokenBalanceRefreshed = (tokenAddress: string, account?: string | null, chainId?: number) => {
-  const { NOT_FETCHED, SUCCESS, FAILED } = FetchStatus
+  const { SUCCESS, FAILED } = FetchStatus
   const { balance, fetchStatus, setBalance } = useTokenBalanceContext()
   React.useEffect(() => {
     const fetchBalance = async () => {

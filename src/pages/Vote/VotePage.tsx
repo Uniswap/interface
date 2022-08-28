@@ -25,6 +25,7 @@ import { Trans } from "@lingui/macro";
 import { Transactions } from "./TransactionsPage";
 import { USDC } from "../../constants/tokens";
 import Web3 from "web3";
+import _ from 'lodash'
 import { binanceTokens } from "utils/binance.tokens";
 import moment from "moment";
 import styled from "styled-components/macro";
@@ -154,20 +155,83 @@ export const useKiba = (account?: string | null) => {
 export const useRouterABI = () => {
   const { chainId } = useWeb3React()
   const isBinance = React.useMemo(() => chainId === SupportedChainId.BINANCE, [chainId]);
+  const router = useV2RouterContract(chainId)
   const { routerADD, routerABI } = React.useMemo(() => {
     return isBinance ? {
       routerADD: pancakeAddress,
       routerABI: pancakeAbi
     } : { routerADD: routerAddress, routerABI: routerAbi }
   }, [isBinance])
-  return {isBinance, routerABI, routerADD}
+  return {isBinance, routerABI, routerADD, router}
 }
+
+/** 
+ * @description converts the given token to subsequent usdc value
+ * @param token token to convert to usdc
+ * @param amt amount of token to convert to usdc
+ * @returns Formatted USD string
+ */
+export const useConvertTokenAmountToUsdString = (token?: Token, amt?: number, pair?: {token0?: {id: string}, token1?: {id:string}}) => {
+  const {chainId} = useWeb3React()
+  const [value, setValue] = React.useState('')
+  const router = useV2RouterContract(chainId)
+
+  const retrieveTokenValue = async (): Promise<string> => {
+   return new Promise((resolve, reject) => {
+    try {
+        if (amt && +amt < 0) {
+          setValue("-");
+          return;
+        }
+        if (token && amt && +amt.toFixed(0) > 0) {
+          const multiplier = 10 ** token.decimals;
+          const amount = +amt.toFixed(0) * multiplier;
+          const pairAddress = (pair?.token0?.id?.toLowerCase() == token?.address?.toLowerCase() ? pair?.token1?.id : pair?.token0?.id) || WETH9[1].address;
+          if (pairAddress && amount > 0 && router) {
+            const swapRoute = [
+              token.address,
+              pairAddress,
+            ]
+
+            // ensure we aren't adding USDC if the token they want's amount is already paired with USDC
+            if (pairAddress?.toLowerCase() !== USDC.address?.toLowerCase()) {
+              swapRoute.push(USDC.address)
+            }
+
+            router?.getAmountsOut(BigInt(amount), swapRoute).then((response: any) => {
+              const usdc = response[response.length - 1];
+              const ten6 = 10 ** 6; // usdc has 6 decimals
+              const usdcValue = usdc / ten6;
+              const number = Number(usdcValue.toFixed(2));
+              console.log(`get amounts out result formatted: ${number.toLocaleString()}`)
+              resolve(`${number.toLocaleString()} USD`);
+            });
+          }
+        }
+      } catch (ex) {
+        console.error(ex);
+        reject(ex)
+      }
+    })
+  }
+
+  React.useEffect(() => {
+    const finallyFn = () => console.log(`done with effect`, {value})
+    console.log(`calculate with router.`, amt, token, pair)
+    retrieveTokenValue()
+      .then(setValue)
+      .finally(finallyFn)
+  }, [retrieveTokenValue, router, token, amt, chainId]);
+  
+  return value
+}
+
 
 export const useKibaBalanceUSD = (account?: string, chainId?: number) => {
   const kibaBalance = useKiba(account)
   const { library } = useWeb3React()
   const [kibaBalanceUSD, setKibaBalanceUSD] = React.useState('')
-  const {routerADD, isBinance, routerABI } = useRouterABI();
+  const {routerADD, isBinance, routerABI, router } = useRouterABI();
   const kibaCoin = new Token(
     isBinance ? 56 : 1,
     isBinance ? '0xc3afde95b6eb9ba8553cdaea6645d45fb3a7faf5' : "0x005d1123878fc55fbd56b54c73963b234a64af3c",
@@ -182,19 +246,14 @@ export const useKibaBalanceUSD = (account?: string, chainId?: number) => {
         return;
       }
       if (kibaBalance && +kibaBalance.toFixed(0) > 0) {
-        const provider = window.ethereum ? window.ethereum : library?.provider
-        if (!provider) return;
-        const w3 = new Web3(provider as any).eth;
-        const routerContr = new w3.Contract(routerABI as any, routerADD);
         const ten9 = 10 ** 18;
         const amount = +kibaBalance.toFixed(0) * ten9;
-        if (amount > 0) {
-          const amountsOut = routerContr.methods.getAmountsOut(BigInt(amount), [
+        if (amount > 0 && router) {
+          router?.getAmountsOut(BigInt(amount), [
             kibaCoin.address,
             isBinance ? binanceTokens.wbnb.address : WETH9[1].address,
             isBinance ? binanceTokens.busd.address : USDC.address,
-          ]);
-          amountsOut.call().then((response: any) => {
+          ]).then((response: any) => {
             const usdc = response[response.length - 1];
             const ten6 = isBinance ? 10 ** 18 : 10 ** 6;
             const usdcValue = usdc / ten6;
@@ -206,7 +265,7 @@ export const useKibaBalanceUSD = (account?: string, chainId?: number) => {
     } catch (ex) {
       console.error(ex);
     }
-  }, [kibaBalance, account, library?.provider, routerABI, routerADD, kibaCoin.address, isBinance]);
+  }, [kibaBalance, account, routerABI, routerADD, kibaCoin.address, isBinance]);
   return kibaBalanceUSD
 }
 

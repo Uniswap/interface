@@ -24,6 +24,7 @@ import ERC20_BYTES32_ABI from 'abis/erc20_bytes32.json'
 import { abi as GOVERNANCE_ABI } from '@uniswap/governance/build/GovernorAlpha.json'
 import { abi as IKibaSwapRelayerABI } from '../IKibaSwapRelayerABI.json'
 import { abi as IUniswapV2PairABI } from '@uniswap/v2-core/build/IUniswapV2Pair.json'
+import { KibaNftABI } from 'constants/kiba-nft-abi'
 import { abi as MERKLE_DISTRIBUTOR_ABI } from '@uniswap/merkle-distributor/build/MerkleDistributor.json'
 import { abi as MulticallABI } from '@uniswap/v3-periphery/artifacts/contracts/lens/UniswapInterfaceMulticall.sol/UniswapInterfaceMulticall.json'
 import { abi as NFTPositionManagerABI } from '@uniswap/v3-periphery/artifacts/contracts/NonfungiblePositionManager.sol/NonfungiblePositionManager.json'
@@ -63,7 +64,7 @@ export function useContract<T extends Contract = Contract>(
 }
 
 export function useKibaNFTContract() {
-  return useContract<any>(KIBA_NFT_CONTRACT, kibaNftAbi, true);
+  return useContract<any>(KIBA_NFT_CONTRACT, KibaNftABI, true);
 }
 
 export function useV2MigratorContract() {

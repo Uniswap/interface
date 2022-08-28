@@ -89,7 +89,7 @@ export default function useUSDCPrice(currency?: Currency): Price<Currency, Token
 
 export function useUSDCValue(currencyAmount: CurrencyAmount<Currency> | undefined | null) {
   const price = useUSDCPrice(currencyAmount?.currency)
-
+  console.log(`useUSDCValue`, {price, currencyAmount})
   return useMemo(() => {
     if (!price || !currencyAmount) return null
     try {

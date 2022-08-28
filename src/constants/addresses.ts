@@ -2,11 +2,10 @@ import { SupportedChainId } from './chains'
 import { FACTORY_ADDRESS as V2_FACTORY_ADDRESS } from '@uniswap/v2-sdk'
 import { FACTORY_ADDRESS as V3_FACTORY_ADDRESS } from '@uniswap/v3-sdk'
 import { constructSameAddressMap } from '../utils/constructSameAddressMap'
-
 type AddressMap = { [chainId: number]: string }
 
 // add nft contract address here after deploying
-export const KIBA_NFT_CONTRACT = ''
+export const KIBA_NFT_CONTRACT = '0x89E9d2Fe0be7a5bbE979f092B769262BC8a9A725'
 export const kibaNftAbi = {} // add ABI here after deploying
 
 export const UNI_ADDRESS: AddressMap = constructSameAddressMap('0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984')
