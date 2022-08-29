@@ -18,6 +18,7 @@ import { RowBetween, RowFixed } from 'components/Row'
 import { Dots } from 'components/swap/styleds'
 import Toggle from 'components/Toggle'
 import TransactionConfirmationModal, { ConfirmationModalContent } from 'components/TransactionConfirmationModal'
+import { NavBarVariant, useNavBarFlag } from 'featureFlags/flags/navBar'
 import { useToken } from 'hooks/Tokens'
 import { useV3NFTPositionManagerContract } from 'hooks/useContract'
 import useIsTickAtLimit from 'hooks/useIsTickAtLimit'
@@ -31,7 +32,7 @@ import { useCallback, useMemo, useRef, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { Bound } from 'state/mint/v3/actions'
 import { useIsTransactionPending, useTransactionAdder } from 'state/transactions/hooks'
-import styled from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components/macro'
 import { ExternalLink, HideExtraSmall, ThemedText } from 'theme'
 import { currencyId } from 'utils/currencyId'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
@@ -43,22 +44,31 @@ import { getPriceOrderingFromPositionForUI } from '../../components/PositionList
 import RateToggle from '../../components/RateToggle'
 import { SwitchLocaleLink } from '../../components/SwitchLocaleLink'
 import { usePositionTokenURI } from '../../hooks/usePositionTokenURI'
-import useTheme from '../../hooks/useTheme'
 import { TransactionType } from '../../state/transactions/types'
 import { calculateGasMargin } from '../../utils/calculateGasMargin'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
 import { LoadingRows } from './styleds'
 
-const PageWrapper = styled.div`
+const PageWrapper = styled.div<{ navBarFlag: boolean }>`
+  padding: ${({ navBarFlag }) => (navBarFlag ? '68px 8px 0px' : '0px')};
+
   min-width: 800px;
   max-width: 960px;
 
-  ${({ theme }) => theme.mediaWidth.upToMedium`
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
+    padding: ${({ navBarFlag }) => (navBarFlag ? '48px 8px 0px' : '0px 8px 0px')};
+  }
+
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+    padding-top: ${({ navBarFlag }) => (navBarFlag ? '20px' : '0px')};
+  }
+
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToMedium`
     min-width: 680px;
     max-width: 680px;
   `};
 
-  ${({ theme }) => theme.mediaWidth.upToSmall`
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
     min-width: 600px;
     max-width: 600px;
   `};
@@ -68,7 +78,7 @@ const PageWrapper = styled.div`
     max-width: 500px;
   }
 
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToExtraSmall`
     min-width: 340px;
     max-width: 340px;
   `};
@@ -111,7 +121,7 @@ const DoubleArrow = styled.span`
   margin: 0 1rem;
 `
 const ResponsiveRow = styled(RowBetween)`
-  ${({ theme }) => theme.mediaWidth.upToSmall`
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
     flex-direction: column;
     align-items: flex-start;
     row-gap: 16px;
@@ -123,7 +133,7 @@ const ResponsiveButtonPrimary = styled(ButtonPrimary)`
   border-radius: 12px;
   padding: 6px 8px;
   width: fit-content;
-  ${({ theme }) => theme.mediaWidth.upToSmall`
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
     flex: 1 1 auto;
     width: 49%;
   `};
@@ -316,6 +326,8 @@ const useInverter = ({
 }
 
 export function PositionPage() {
+  const navBarFlag = useNavBarFlag()
+  const navBarFlagEnabled = navBarFlag === NavBarVariant.Enabled
   const { tokenId: tokenIdFromUrl } = useParams<{ tokenId?: string }>()
   const { chainId, account, provider } = useWeb3React()
   const theme = useTheme()
@@ -479,6 +491,8 @@ export function PositionPage() {
               type: TransactionType.COLLECT_FEES,
               currencyId0: currencyId(currency0ForFeeCollectionPurposes),
               currencyId1: currencyId(currency1ForFeeCollectionPurposes),
+              expectedCurrencyOwed0: CurrencyAmount.fromRawAmount(currency0ForFeeCollectionPurposes, 0).toExact(),
+              expectedCurrencyOwed1: CurrencyAmount.fromRawAmount(currency1ForFeeCollectionPurposes, 0).toExact(),
             })
           })
       })
@@ -572,7 +586,7 @@ export function PositionPage() {
   ) : (
     <Trace page={PageName.POOL_PAGE} shouldLogImpression>
       <>
-        <PageWrapper>
+        <PageWrapper navBarFlag={navBarFlagEnabled}>
           <TransactionConfirmationModal
             isOpen={showConfirm}
             onDismiss={() => setShowConfirm(false)}
@@ -595,7 +609,7 @@ export function PositionPage() {
                 to="/pool"
               >
                 <HoverText>
-                  <Trans>← Back to Pools Overview</Trans>
+                  <Trans>← Back to Pools</Trans>
                 </HoverText>
               </Link>
               <ResponsiveRow>

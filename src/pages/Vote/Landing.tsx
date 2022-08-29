@@ -13,7 +13,7 @@ import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import Toggle from 'components/Toggle'
 import DelegateModal from 'components/vote/DelegateModal'
 import ProposalEmptyState from 'components/vote/ProposalEmptyState'
-import useTheme from 'hooks/useTheme'
+import { NavBarVariant, useNavBarFlag } from 'featureFlags/flags/navBar'
 import JSBI from 'jsbi'
 import { darken } from 'polished'
 import { useState } from 'react'
@@ -24,7 +24,7 @@ import { ApplicationModal } from 'state/application/reducer'
 import { useTokenBalance } from 'state/connection/hooks'
 import { ProposalData, ProposalState } from 'state/governance/hooks'
 import { useAllProposalData, useUserDelegatee, useUserVotes } from 'state/governance/hooks'
-import styled from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components/macro'
 import { ExternalLink, ThemedText } from 'theme'
 import { shortenAddress } from 'utils'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
@@ -33,7 +33,17 @@ import { ZERO_ADDRESS } from '../../constants/misc'
 import { UNI } from '../../constants/tokens'
 import { ProposalStatus } from './styled'
 
-const PageWrapper = styled(AutoColumn)``
+const PageWrapper = styled(AutoColumn)<{ navBarFlag: boolean }>`
+  padding-top: ${({ navBarFlag }) => (navBarFlag ? '68px' : '0px')};
+
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
+    padding: ${({ navBarFlag }) => (navBarFlag ? '48px 8px 0px' : '0px 8px 0px')};
+  }
+
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+    padding-top: ${({ navBarFlag }) => (navBarFlag ? '20px' : '0px')};
+  }
+`
 
 const TopSection = styled(AutoColumn)`
   max-width: 640px;
@@ -58,7 +68,7 @@ const Proposal = styled(Button)`
     background-color: ${({ theme }) => darken(0.05, theme.deprecated_bg1)};
   }
   &:hover {
-    background-color: ${({ theme }) => darken(0.05, theme.deprecated_bg1)};
+    background-color: ${({ theme }) => theme.deprecated_bg2};
   }
 `
 
@@ -83,7 +93,7 @@ const VoteCard = styled(DataCard)`
 
 const WrapSmall = styled(RowBetween)`
   margin-bottom: 1rem;
-  ${({ theme }) => theme.mediaWidth.upToSmall`
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
     flex-wrap: wrap;
   `};
 `
@@ -110,6 +120,8 @@ const StyledExternalLink = styled(ExternalLink)`
 `
 
 export default function Landing() {
+  const navBarFlag = useNavBarFlag()
+  const navBarFlagEnabled = navBarFlag === NavBarVariant.Enabled
   const theme = useTheme()
   const { account, chainId } = useWeb3React()
 
@@ -137,7 +149,7 @@ export default function Landing() {
   return (
     <>
       <Trace page={PageName.VOTE_PAGE} shouldLogImpression>
-        <PageWrapper gap="lg" justify="center">
+        <PageWrapper gap="lg" justify="center" navBarFlag={navBarFlagEnabled}>
           <DelegateModal
             isOpen={showDelegateModal}
             onDismiss={toggleDelegateModal}

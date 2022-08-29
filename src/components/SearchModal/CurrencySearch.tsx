@@ -8,7 +8,6 @@ import { sendEvent } from 'components/analytics'
 import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
 import useDebounce from 'hooks/useDebounce'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
-import useTheme from 'hooks/useTheme'
 import useToggle from 'hooks/useToggle'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { getTokenFilter } from 'lib/hooks/useTokenList/filtering'
@@ -19,7 +18,7 @@ import AutoSizer from 'react-virtualized-auto-sizer'
 import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
 import { useAllTokenBalances } from 'state/connection/hooks'
-import styled from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components/macro'
 
 import { useAllTokens, useIsUserAddedToken, useSearchInactiveTokenLists, useToken } from '../../hooks/Tokens'
 import { ButtonText, CloseIcon, IconWrapper, ThemedText } from '../../theme'
@@ -52,7 +51,7 @@ interface CurrencySearchProps {
   isOpen: boolean
   onDismiss: () => void
   selectedCurrency?: Currency | null
-  onCurrencySelect: (currency: Currency) => void
+  onCurrencySelect: (currency: Currency, hasWarning?: boolean) => void
   otherSelectedCurrency?: Currency | null
   showCommonBases?: boolean
   showCurrencyAmount?: boolean
@@ -137,9 +136,9 @@ export function CurrencySearch({
   }, [debouncedQuery, native, filteredSortedTokens])
 
   const handleCurrencySelect = useCallback(
-    (currency: Currency) => {
-      onCurrencySelect(currency)
-      onDismiss()
+    (currency: Currency, hasWarning?: boolean) => {
+      onCurrencySelect(currency, hasWarning)
+      if (!hasWarning) onDismiss()
     },
     [onDismiss, onCurrencySelect]
   )

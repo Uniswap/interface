@@ -6,13 +6,12 @@ import { AutoColumn, ColumnCenter } from 'components/Column'
 import Loader from 'components/Loader'
 import { format } from 'd3'
 import { useColor } from 'hooks/useColor'
-import useTheme from 'hooks/useTheme'
 import { saturate } from 'polished'
 import React, { ReactNode, useCallback, useMemo } from 'react'
 import { BarChart2, CloudOff, Inbox } from 'react-feather'
 import { batch } from 'react-redux'
 import { Bound } from 'state/mint/v3/actions'
-import styled from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components/macro'
 
 import { ThemedText } from '../../theme'
 import { Chart } from './Chart'
@@ -96,7 +95,7 @@ export default function LiquidityChartRangeInput({
 
   const isSorted = currencyA && currencyB && currencyA?.wrapped.sortsBefore(currencyB?.wrapped)
 
-  const { isLoading, isUninitialized, isError, error, formattedData } = useDensityChartData({
+  const { isLoading, error, formattedData } = useDensityChartData({
     currencyA,
     currencyB,
     feeAmount,
@@ -157,9 +156,11 @@ export default function LiquidityChartRangeInput({
     [isSorted, price, ticksAtLimit]
   )
 
-  if (isError) {
+  if (error) {
     sendEvent('exception', { description: error.toString(), fatal: false })
   }
+
+  const isUninitialized = !currencyA || !currencyB || (formattedData === undefined && !isLoading)
 
   return (
     <AutoColumn gap="md" style={{ minHeight: '200px' }}>
@@ -170,7 +171,7 @@ export default function LiquidityChartRangeInput({
         />
       ) : isLoading ? (
         <InfoBox icon={<Loader size="40px" stroke={theme.deprecated_text4} />} />
-      ) : isError ? (
+      ) : error ? (
         <InfoBox
           message={<Trans>Liquidity data not available.</Trans>}
           icon={<CloudOff size={56} stroke={theme.deprecated_text4} />}

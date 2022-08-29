@@ -3,17 +3,27 @@ import { t, Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
 import { ElementName, Event, EventName } from 'components/AmplitudeAnalytics/constants'
 import { TraceEvent } from 'components/AmplitudeAnalytics/TraceEvent'
+import WalletDropdown from 'components/WalletDropdown'
 import { getConnection } from 'connection/utils'
+import { NavBarVariant, useNavBarFlag } from 'featureFlags/flags/navBar'
+import { Portal } from 'nft/components/common/Portal'
 import { getIsValidSwapQuote } from 'pages/Swap'
 import { darken } from 'polished'
-import { useMemo } from 'react'
-import { AlertTriangle } from 'react-feather'
+import { useMemo, useRef } from 'react'
+import { AlertTriangle, ChevronDown, ChevronUp } from 'react-feather'
 import { useAppSelector } from 'state/hooks'
 import { useDerivedSwapInfo } from 'state/swap/hooks'
 import styled, { css } from 'styled-components/macro'
 
+import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 import { useHasSocks } from '../../hooks/useSocksBalance'
-import { useToggleWalletModal } from '../../state/application/hooks'
+import {
+  useCloseModal,
+  useModalIsOpen,
+  useToggleWalletDropdown,
+  useToggleWalletModal,
+} from '../../state/application/hooks'
+import { ApplicationModal } from '../../state/application/reducer'
 import { isTransactionRecent, useAllTransactions } from '../../state/transactions/hooks'
 import { TransactionDetails } from '../../state/transactions/types'
 import { shortenAddress } from '../../utils'
@@ -49,10 +59,26 @@ const Web3StatusError = styled(Web3StatusGeneric)`
   }
 `
 
+const Web3StatusConnectNavbar = styled.button<{ faded?: boolean }>`
+  dispay: flex;
+  align-items: center;
+  ${({ theme }) => theme.flexRowNoWrap}
+  background-color: ${({ theme }) => theme.accentActionSoft};
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  padding: 10px 12px;
+
+  :hover,
+  :active,
+  :focus {
+    border: none;
+  }
+`
+
 const Web3StatusConnect = styled(Web3StatusGeneric)<{ faded?: boolean }>`
   background-color: ${({ theme }) => theme.deprecated_primary4};
   border: none;
-
   color: ${({ theme }) => theme.deprecated_primaryText1};
   font-weight: 500;
 
@@ -125,6 +151,43 @@ function Sock() {
   )
 }
 
+const VerticalDivider = styled.div`
+  height: 20px;
+  width: 1px;
+  background-color: ${({ theme }) => theme.accentAction};
+`
+
+const StyledConnect = styled.div`
+  color: ${({ theme }) => theme.accentAction};
+  font-weight: 600;
+  font-size: 16px;
+  margin-right: 8px;
+
+  &:hover {
+    color: ${({ theme }) => theme.accentActionSoft};
+    transition: ${({
+      theme: {
+        transition: { duration, timing },
+      },
+    }) => `${duration.fast}ms color ${timing.in}`};
+  }
+`
+
+const StyledChevron = styled.span`
+  color: ${({ theme }) => theme.accentAction};
+  height: 24px;
+  margin-left: 4px;
+
+  &:hover {
+    color: ${({ theme }) => theme.accentActionSoft};
+    transition: ${({
+      theme: {
+        transition: { duration, timing },
+      },
+    }) => `${duration.fast}ms color ${timing.in}`};
+  }
+`
+
 function Web3StatusInner() {
   const { account, connector, chainId, ENSName } = useWeb3React()
   const connectionType = getConnection(connector).type
@@ -133,6 +196,10 @@ function Web3StatusInner() {
     inputError: swapInputError,
   } = useDerivedSwapInfo()
   const validSwapQuote = getIsValidSwapQuote(trade, tradeState, swapInputError)
+  const navbarFlag = useNavBarFlag()
+  const toggleWalletDropdown = useToggleWalletDropdown()
+  const toggleWalletModal = useToggleWalletModal()
+  const walletIsOpen = useIsOpen()
 
   const error = useAppSelector((state) => state.connection.errorByConnectionType[getConnection(connector).type])
 
@@ -147,13 +214,13 @@ function Web3StatusInner() {
 
   const hasPendingTransactions = !!pending.length
   const hasSocks = useHasSocks()
-  const toggleWalletModal = useToggleWalletModal()
+  const toggleWallet = navbarFlag === NavBarVariant.Enabled ? toggleWalletDropdown : toggleWalletModal
 
   if (!chainId) {
     return null
   } else if (error) {
     return (
-      <Web3StatusError onClick={toggleWalletModal}>
+      <Web3StatusError onClick={toggleWallet}>
         <NetworkIcon />
         <Text>
           <Trans>Error</Trans>
@@ -162,11 +229,7 @@ function Web3StatusInner() {
     )
   } else if (account) {
     return (
-      <Web3StatusConnected
-        data-testid="web3-status-connected"
-        onClick={toggleWalletModal}
-        pending={hasPendingTransactions}
-      >
+      <Web3StatusConnected data-testid="web3-status-connected" onClick={toggleWallet} pending={hasPendingTransactions}>
         {hasPendingTransactions ? (
           <RowBetween>
             <Text>
@@ -191,20 +254,45 @@ function Web3StatusInner() {
         properties={{ received_swap_quote: validSwapQuote }}
         element={ElementName.CONNECT_WALLET_BUTTON}
       >
-        <Web3StatusConnect onClick={toggleWalletModal} faded={!account}>
-          <Text>
-            <Trans>Connect Wallet</Trans>
-          </Text>
-        </Web3StatusConnect>
+        {navbarFlag === NavBarVariant.Enabled ? (
+          <Web3StatusConnectNavbar faded={!account}>
+            <StyledConnect onClick={toggleWalletModal}>
+              <Trans>Connect</Trans>
+            </StyledConnect>
+            <VerticalDivider />
+            <StyledChevron onClick={toggleWalletDropdown}>
+              {walletIsOpen ? <ChevronUp /> : <ChevronDown />}
+            </StyledChevron>
+          </Web3StatusConnectNavbar>
+        ) : (
+          <Web3StatusConnect onClick={toggleWallet} faded={!account}>
+            <Text>
+              <Trans>Connect Wallet</Trans>
+            </Text>
+          </Web3StatusConnect>
+        )}
       </TraceEvent>
     )
   }
+}
+
+const useIsOpen = () => {
+  const walletDropdownOpen = useModalIsOpen(ApplicationModal.WALLET_DROPDOWN)
+  const navbarFlag = useNavBarFlag()
+
+  return useMemo(() => navbarFlag === NavBarVariant.Enabled && walletDropdownOpen, [navbarFlag, walletDropdownOpen])
 }
 
 export default function Web3Status() {
   const { ENSName } = useWeb3React()
 
   const allTransactions = useAllTransactions()
+  const ref = useRef<HTMLDivElement>(null)
+  const walletRef = useRef<HTMLDivElement>(null)
+  const closeModal = useCloseModal(ApplicationModal.WALLET_DROPDOWN)
+  const isOpen = useIsOpen()
+
+  useOnClickOutside(ref, isOpen ? closeModal : undefined, [walletRef])
 
   const sortedRecentTransactions = useMemo(() => {
     const txs = Object.values(allTransactions)
@@ -215,9 +303,14 @@ export default function Web3Status() {
   const confirmed = sortedRecentTransactions.filter((tx) => tx.receipt).map((tx) => tx.hash)
 
   return (
-    <>
+    <span ref={ref}>
       <Web3StatusInner />
       <WalletModal ENSName={ENSName ?? undefined} pendingTransactions={pending} confirmedTransactions={confirmed} />
-    </>
+      <Portal>
+        <span ref={walletRef}>
+          <WalletDropdown />
+        </span>
+      </Portal>
+    </span>
   )
 }

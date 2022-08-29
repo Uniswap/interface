@@ -1,8 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { Trade } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
-import { Trade as V2Trade } from '@uniswap/v2-sdk'
-import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { sendAnalyticsEvent } from 'components/AmplitudeAnalytics'
 import { ElementName, Event, EventName, PageName, SectionName } from 'components/AmplitudeAnalytics/constants'
@@ -19,14 +17,17 @@ import { NetworkAlert } from 'components/NetworkAlert/NetworkAlert'
 import PriceImpactWarning from 'components/swap/PriceImpactWarning'
 import SwapDetailsDropdown from 'components/swap/SwapDetailsDropdown'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
+import TokensBanner from 'components/Tokens/TokensBanner'
 import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { isSupportedChain } from 'constants/chains'
+import { NavBarVariant, useNavBarFlag } from 'featureFlags/flags/navBar'
 import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
+import { TokensVariant, useTokensFlag } from 'featureFlags/flags/tokens'
 import { useSwapCallback } from 'hooks/useSwapCallback'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import JSBI from 'jsbi'
-import { Context, useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { ReactNode } from 'react'
 import { ArrowDown, ArrowUp, CheckCircle, HelpCircle } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
@@ -34,25 +35,24 @@ import { Text } from 'rebass'
 import { useToggleWalletModal } from 'state/application/hooks'
 import { InterfaceTrade } from 'state/routing/types'
 import { TradeState } from 'state/routing/types'
-import styled, { css, DefaultTheme, ThemeContext } from 'styled-components/macro'
+import styled, { css, useTheme } from 'styled-components/macro'
 
 import AddressInputPanel from '../../components/AddressInputPanel'
 import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
 import { GreyCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
-import CurrencyInputPanel from '../../components/CurrencyInputPanel'
-import CurrencyLogo from '../../components/CurrencyLogo'
+import SwapCurrencyInputPanel from '../../components/CurrencyInputPanel/SwapCurrencyInputPanel'
 import Loader from '../../components/Loader'
 import { AutoRow } from '../../components/Row'
 import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
 import ConfirmSwapModal from '../../components/swap/ConfirmSwapModal'
-import { ArrowWrapper, SwapCallbackError, Wrapper } from '../../components/swap/styleds'
+import { ArrowWrapper, PageWrapper, SwapCallbackError, SwapWrapper } from '../../components/swap/styleds'
 import SwapHeader from '../../components/swap/SwapHeader'
 import { SwitchLocaleLink } from '../../components/SwitchLocaleLink'
 import TokenWarningModal from '../../components/TokenWarningModal'
 import { TOKEN_SHORTHANDS } from '../../constants/tokens'
 import { useAllTokens, useCurrency } from '../../hooks/Tokens'
-import { ApprovalState, useApprovalOptimizedTrade, useApproveCallbackFromTrade } from '../../hooks/useApproveCallback'
+import { ApprovalState, useApproveCallbackFromTrade } from '../../hooks/useApproveCallback'
 import useENSAddress from '../../hooks/useENSAddress'
 import { useERC20PermitFromTrade, UseERC20PermitState } from '../../hooks/useERC20Permit'
 import useIsArgentWallet from '../../hooks/useIsArgentWallet'
@@ -72,12 +72,7 @@ import { computeFiatValuePriceImpact } from '../../utils/computeFiatValuePriceIm
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { computeRealizedPriceImpact, warningSeverity } from '../../utils/prices'
 import { supportedChainId } from '../../utils/supportedChainId'
-import AppBody from '../AppBody'
 
-const AlertWrapper = styled.div`
-  max-width: 460px;
-  width: 100%;
-`
 const ArrowContainer = styled.div`
   display: inline-block;
   margin-left: 6%;
@@ -153,10 +148,15 @@ const formatSwapQuoteReceivedEventProperties = (
   }
 }
 
+const TRADE_STRING = 'SwapRouter'
+
 export default function Swap() {
   const navigate = useNavigate()
+  const navBarFlag = useNavBarFlag()
+  const navBarFlagEnabled = navBarFlag === NavBarVariant.Enabled
   const redesignFlag = useRedesignFlag()
   const redesignFlagEnabled = redesignFlag === RedesignVariant.Enabled
+  const tokensFlag = useTokensFlag()
   const { account, chainId } = useWeb3React()
   const loadedUrlParams = useDefaultsFromURLSearch()
   const [newSwapQuoteNeedsLogging, setNewSwapQuoteNeedsLogging] = useState(true)
@@ -197,7 +197,7 @@ export default function Swap() {
     [chainId, defaultTokens, urlLoadedTokens]
   )
 
-  const theme = useContext(ThemeContext as Context<DefaultTheme>)
+  const theme = useTheme()
 
   // toggle wallet when disconnected
   const toggleWalletModal = useToggleWalletModal()
@@ -305,22 +305,14 @@ export default function Swap() {
     currencies[Field.INPUT] && currencies[Field.OUTPUT] && parsedAmounts[independentField]?.greaterThan(JSBI.BigInt(0))
   )
 
-  const approvalOptimizedTrade = useApprovalOptimizedTrade(trade, allowedSlippage)
-  const approvalOptimizedTradeString =
-    approvalOptimizedTrade instanceof V2Trade
-      ? 'V2SwapRouter'
-      : approvalOptimizedTrade instanceof V3Trade
-      ? 'V3SwapRouter'
-      : 'SwapRouter'
-
   // check whether the user has approved the router on the input token
-  const [approvalState, approveCallback] = useApproveCallbackFromTrade(approvalOptimizedTrade, allowedSlippage)
+  const [approvalState, approveCallback] = useApproveCallbackFromTrade(trade, allowedSlippage)
   const transactionDeadline = useTransactionDeadline()
   const {
     state: signatureState,
     signatureData,
     gatherPermitSignature,
-  } = useERC20PermitFromTrade(approvalOptimizedTrade, allowedSlippage, transactionDeadline)
+  } = useERC20PermitFromTrade(trade, allowedSlippage, transactionDeadline)
 
   const handleApprove = useCallback(async () => {
     if (signatureState === UseERC20PermitState.NOT_SIGNED && gatherPermitSignature) {
@@ -338,16 +330,10 @@ export default function Swap() {
       sendEvent({
         category: 'Swap',
         action: 'Approve',
-        label: [approvalOptimizedTradeString, approvalOptimizedTrade?.inputAmount?.currency.symbol].join('/'),
+        label: [TRADE_STRING, trade?.inputAmount?.currency.symbol].join('/'),
       })
     }
-  }, [
-    signatureState,
-    gatherPermitSignature,
-    approveCallback,
-    approvalOptimizedTradeString,
-    approvalOptimizedTrade?.inputAmount?.currency.symbol,
-  ])
+  }, [signatureState, gatherPermitSignature, approveCallback, trade?.inputAmount?.currency.symbol])
 
   // check if user has gone through approval process, used to show two step buttons, reset on token change
   const [approvalSubmitted, setApprovalSubmitted] = useState<boolean>(false)
@@ -367,7 +353,7 @@ export default function Swap() {
 
   // the callback to execute the swap
   const { callback: swapCallback, error: swapCallbackError } = useSwapCallback(
-    approvalOptimizedTrade,
+    trade,
     allowedSlippage,
     recipient,
     signatureData
@@ -397,12 +383,9 @@ export default function Swap() {
               : (recipientAddress ?? recipient) === account
               ? 'Swap w/o Send + recipient'
               : 'Swap w/ Send',
-          label: [
-            approvalOptimizedTradeString,
-            approvalOptimizedTrade?.inputAmount?.currency?.symbol,
-            approvalOptimizedTrade?.outputAmount?.currency?.symbol,
-            'MH',
-          ].join('/'),
+          label: [TRADE_STRING, trade?.inputAmount?.currency?.symbol, trade?.outputAmount?.currency?.symbol, 'MH'].join(
+            '/'
+          ),
         })
       })
       .catch((error) => {
@@ -422,9 +405,8 @@ export default function Swap() {
     recipient,
     recipientAddress,
     account,
-    approvalOptimizedTradeString,
-    approvalOptimizedTrade?.inputAmount?.currency?.symbol,
-    approvalOptimizedTrade?.outputAmount?.currency?.symbol,
+    trade?.inputAmount?.currency?.symbol,
+    trade?.outputAmount?.currency?.symbol,
   ])
 
   // errors
@@ -526,7 +508,8 @@ export default function Swap() {
   return (
     <Trace page={PageName.SWAP_PAGE} shouldLogImpression>
       <>
-        {redesignFlag === RedesignVariant.Enabled ? (
+        {tokensFlag === TokensVariant.Enabled && <TokensBanner />}
+        {redesignFlagEnabled ? (
           <TokenSafetyModal
             isOpen={importTokensNotInDefault.length > 0 && !dismissTokenWarning}
             tokenAddress={importTokensNotInDefault[0]?.address}
@@ -542,9 +525,9 @@ export default function Swap() {
             onDismiss={handleDismissTokenWarning}
           />
         )}
-        <AppBody>
-          <SwapHeader allowedSlippage={allowedSlippage} />
-          <Wrapper id="swap-page">
+        <PageWrapper redesignFlag={redesignFlagEnabled} navBarFlag={navBarFlagEnabled}>
+          <SwapWrapper id="swap-page" redesignFlag={redesignFlagEnabled}>
+            <SwapHeader allowedSlippage={allowedSlippage} />
             <ConfirmSwapModal
               isOpen={showConfirm}
               trade={trade}
@@ -564,7 +547,7 @@ export default function Swap() {
               <div style={{ display: 'relative' }}>
                 <TopInputWrapper redesignFlag={redesignFlagEnabled}>
                   <Trace section={SectionName.CURRENCY_INPUT_PANEL}>
-                    <CurrencyInputPanel
+                    <SwapCurrencyInputPanel
                       label={
                         independentField === Field.OUTPUT && !showWrap ? (
                           <Trans>From (at most)</Trans>
@@ -629,7 +612,7 @@ export default function Swap() {
                 <AutoColumn gap={redesignFlagEnabled ? '0px' : '8px'}>
                   <BottomInputWrapper redesignFlag={redesignFlagEnabled}>
                     <Trace section={SectionName.CURRENCY_OUTPUT_PANEL}>
-                      <CurrencyInputPanel
+                      <SwapCurrencyInputPanel
                         value={formattedAmounts[Field.OUTPUT]}
                         onUserInput={handleTypeOutput}
                         label={
@@ -725,11 +708,6 @@ export default function Swap() {
                           >
                             <AutoRow justify="space-between" style={{ flexWrap: 'nowrap' }}>
                               <span style={{ display: 'flex', alignItems: 'center' }}>
-                                <CurrencyLogo
-                                  currency={currencies[Field.INPUT]}
-                                  size={'20px'}
-                                  style={{ marginRight: '8px', flexShrink: 0 }}
-                                />
                                 {/* we need to shorten this string on mobile */}
                                 {approvalState === ApprovalState.APPROVED ||
                                 signatureState === UseERC20PermitState.SIGNED ? (
@@ -838,11 +816,9 @@ export default function Swap() {
                 </AutoColumn>
               </BottomWrapper>
             </AutoColumn>
-          </Wrapper>
-        </AppBody>
-        <AlertWrapper>
+          </SwapWrapper>
           <NetworkAlert />
-        </AlertWrapper>
+        </PageWrapper>
         <SwitchLocaleLink />
         {!swapIsUnsupported ? null : (
           <UnsupportedCurrencyFooter

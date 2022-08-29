@@ -1,6 +1,8 @@
 import { FlattenSimpleInterpolation, ThemedCssFunction } from 'styled-components/macro'
 
 export type Color = string
+export type AllColors = ThemeColors | Colors
+
 export interface ThemeColors {
   userThemeColor: string
 
@@ -20,6 +22,7 @@ export interface ThemeColors {
   accentSuccess: Color
   accentWarning: Color
   accentFailure: Color
+  accentCritical: Color
 
   accentActionSoft: Color
   accentActiveSoft: Color
@@ -51,9 +54,11 @@ export interface ThemeColors {
   chain_80001: Color
 
   blue200: Color
-  flyoutDropShadow: Color
+  shallowShadow: Color
+  deepShadow: Color
   hoverState: Color
   hoverDefault: Color
+  stateOverlayHover: Color
 }
 
 export interface Colors {
@@ -123,13 +128,34 @@ declare module 'styled-components/macro' {
     shadow1: Color
 
     // media queries
-    mediaWidth: {
-      upToExtraSmall: ThemedCssFunction<DefaultTheme>
-      upToSmall: ThemedCssFunction<DefaultTheme>
-      upToMedium: ThemedCssFunction<DefaultTheme>
-      upToLarge: ThemedCssFunction<DefaultTheme>
+    deprecated_mediaWidth: {
+      deprecated_upToExtraSmall: ThemedCssFunction<DefaultTheme>
+      deprecated_upToSmall: ThemedCssFunction<DefaultTheme>
+      deprecated_upToMedium: ThemedCssFunction<DefaultTheme>
+      deprecated_upToLarge: ThemedCssFunction<DefaultTheme>
     }
 
+    breakpoint: {
+      sm: number
+      md: number
+      lg: number
+      xl: number
+      xxl: number
+      xxxl: number
+    }
+    transition: {
+      duration: {
+        slow: number
+        medium: number
+        fast: number
+      }
+      timing: {
+        ease: string
+        in: string
+        out: string
+        inOut: string
+      }
+    }
     // css snippets
     flexColumnNoWrap: FlattenSimpleInterpolation
     flexRowNoWrap: FlattenSimpleInterpolation

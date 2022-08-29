@@ -44,7 +44,7 @@ export const ALL_SUPPORTED_CHAIN_IDS: SupportedChainId[] = Object.values(Support
   (id) => typeof id === 'number'
 ) as SupportedChainId[]
 
-export function isSupportedChain(chainId: number | undefined): chainId is SupportedChainId {
+export function isSupportedChain(chainId: number | null | undefined): chainId is SupportedChainId {
   return !!chainId && !!SupportedChainId[chainId]
 }
 

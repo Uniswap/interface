@@ -4,12 +4,14 @@ import 'polyfills'
 import 'components/analytics'
 
 import { FeatureFlagsProvider } from 'featureFlags'
+import RelayEnvironment from 'graphql/data/RelayEnvironment'
 import { BlockNumberProvider } from 'lib/hooks/useBlockNumber'
 import { MulticallUpdater } from 'lib/state/multicall'
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { Provider } from 'react-redux'
+import { RelayEnvironmentProvider } from 'react-relay'
 import { HashRouter } from 'react-router-dom'
 
 import Blocklist from './components/Blocklist'
@@ -56,15 +58,17 @@ createRoot(container).render(
           <HashRouter>
             <LanguageProvider>
               <Web3Provider>
-                <Blocklist>
-                  <BlockNumberProvider>
-                    <Updaters />
-                    <ThemeProvider>
-                      <ThemedGlobalStyle />
-                      <App />
-                    </ThemeProvider>
-                  </BlockNumberProvider>
-                </Blocklist>
+                <RelayEnvironmentProvider environment={RelayEnvironment}>
+                  <Blocklist>
+                    <BlockNumberProvider>
+                      <Updaters />
+                      <ThemeProvider>
+                        <ThemedGlobalStyle />
+                        <App />
+                      </ThemeProvider>
+                    </BlockNumberProvider>
+                  </Blocklist>
+                </RelayEnvironmentProvider>
               </Web3Provider>
             </LanguageProvider>
           </HashRouter>

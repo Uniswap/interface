@@ -4,8 +4,6 @@ declare module '@metamask/jazzicon' {
   export default function (diameter: number, seed: number): HTMLElement
 }
 
-declare module 'fortmatic'
-
 interface Window {
   // walletLinkExtension is injected by the Coinbase Wallet extension
   walletLinkExtension?: any
@@ -30,4 +28,8 @@ declare module 'multihashes' {
 
 declare module 'd3-curve-circlecorners' {
   declare function radius(r: number): d3.CurveFactory
+}
+
+declare module 'babel-plugin-relay/macro' {
+  export { graphql as default } from 'react-relay'
 }

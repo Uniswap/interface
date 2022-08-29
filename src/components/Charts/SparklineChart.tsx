@@ -1,6 +1,6 @@
 import { scaleLinear } from 'd3'
-import useTheme from 'hooks/useTheme'
 import React from 'react'
+import { useTheme } from 'styled-components/macro'
 
 import data from './data.json'
 import LineChart from './LineChart'

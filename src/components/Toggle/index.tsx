@@ -6,13 +6,18 @@ import styled, { keyframes } from 'styled-components/macro'
 const Wrapper = styled.button<{ isActive?: boolean; activeElement?: boolean; redesignFlag: boolean }>`
   align-items: center;
   background: ${({ isActive, theme, redesignFlag }) =>
-    redesignFlag && isActive ? theme.accentActionSoft : theme.deprecated_bg1};
-  border: none;
+    redesignFlag && isActive
+      ? theme.accentActionSoft
+      : redesignFlag && !isActive
+      ? 'transparent'
+      : theme.deprecated_bg1};
+  border: ${({ redesignFlag, theme, isActive }) =>
+    redesignFlag && !isActive ? `1px solid ${theme.backgroundOutline}` : 'none'};
   border-radius: 20px;
   cursor: pointer;
   display: flex;
   outline: none;
-  padding: 0.4rem 0.4rem;
+  padding: ${({ redesignFlag }) => (redesignFlag ? '4px' : '0.4rem 0.4rem')};
   width: fit-content;
 `
 

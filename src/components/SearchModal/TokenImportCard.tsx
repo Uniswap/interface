@@ -23,7 +23,7 @@ const AddressText = styled(ThemedText.DeprecatedBlue)`
   font-size: 12px;
   word-break: break-all;
 
-  ${({ theme }) => theme.mediaWidth.upToSmall`
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
     font-size: 10px;
   `}
 `

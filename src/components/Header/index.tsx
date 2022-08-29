@@ -3,8 +3,7 @@ import useScrollPosition from '@react-hook/window-scroll'
 import { useWeb3React } from '@web3-react/core'
 import { getChainInfoOrDefault } from 'constants/chainInfo'
 import { SupportedChainId } from 'constants/chains'
-import { ExploreVariant, useExploreFlag } from 'featureFlags/flags/explore'
-import useTheme from 'hooks/useTheme'
+import { TokensVariant, useTokensFlag } from 'featureFlags/flags/tokens'
 import { darken } from 'polished'
 import { NavLink, useLocation } from 'react-router-dom'
 import { Text } from 'rebass'
@@ -13,7 +12,7 @@ import { useUserHasAvailableClaim } from 'state/claim/hooks'
 import { useNativeCurrencyBalances } from 'state/connection/hooks'
 import { useUserHasSubmittedClaim } from 'state/transactions/hooks'
 import { useDarkModeManager } from 'state/user/hooks'
-import styled from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components/macro'
 
 import { ReactComponent as Logo } from '../../assets/svg/logo.svg'
 import { ExternalLink, ThemedText } from '../../theme'
@@ -47,16 +46,16 @@ const HeaderFrame = styled.div<{ showBackground: boolean }>`
   transition: background-position 0.1s, box-shadow 0.1s;
   background-blend-mode: hard-light;
 
-  ${({ theme }) => theme.mediaWidth.upToLarge`
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToLarge`
     grid-template-columns: 48px 1fr 1fr;
   `};
 
-  ${({ theme }) => theme.mediaWidth.upToMedium`
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToMedium`
     padding:  1rem;
     grid-template-columns: 1fr 1fr;
   `};
 
-  ${({ theme }) => theme.mediaWidth.upToSmall`
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
     padding:  1rem;
     grid-template-columns: 36px 1fr;
   `};
@@ -82,7 +81,7 @@ const HeaderElement = styled.div`
     margin-left: 8px;
   }
 
-  ${({ theme }) => theme.mediaWidth.upToMedium`
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToMedium`
     align-items: center;
   `};
 `
@@ -98,13 +97,13 @@ const HeaderLinks = styled(Row)`
   grid-gap: 10px;
   overflow: auto;
   align-items: center;
-  ${({ theme }) => theme.mediaWidth.upToLarge`
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToLarge`
     justify-self: start;
     `};
-  ${({ theme }) => theme.mediaWidth.upToMedium`
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToMedium`
     justify-self: center;
   `};
-  ${({ theme }) => theme.mediaWidth.upToMedium`
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToMedium`
     flex-direction: row;
     justify-content: space-between;
     justify-self: center;
@@ -158,7 +157,7 @@ const UNIWrapper = styled.span`
 `
 
 const BalanceText = styled(Text)`
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToExtraSmall`
     display: none;
   `};
 `
@@ -169,7 +168,7 @@ const Title = styled.a`
   pointer-events: auto;
   justify-self: flex-start;
   margin-right: 12px;
-  ${({ theme }) => theme.mediaWidth.upToSmall`
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
     justify-self: center;
   `};
   :hover {
@@ -245,7 +244,7 @@ const StyledExternalLink = styled(ExternalLink)`
 `
 
 export default function Header() {
-  const exploreFlag = useExploreFlag()
+  const tokensFlag = useTokensFlag()
 
   const { account, chainId } = useWeb3React()
 
@@ -292,9 +291,9 @@ export default function Header() {
         <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
           <Trans>Swap</Trans>
         </StyledNavLink>
-        {exploreFlag === ExploreVariant.Enabled && (
-          <StyledNavLink id={`explore-nav-link`} to={'/explore'}>
-            <Trans>Explore</Trans>
+        {tokensFlag === TokensVariant.Enabled && (
+          <StyledNavLink id={`tokens-nav-link`} to={'/tokens'}>
+            <Trans>Tokens</Trans>
           </StyledNavLink>
         )}
         <StyledNavLink

@@ -1,8 +1,8 @@
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
-import { useContext, useState } from 'react'
+import { useState } from 'react'
 import { ArrowUpCircle, X } from 'react-feather'
-import styled, { ThemeContext } from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components/macro'
 
 import Circle from '../../assets/images/blue-loader.svg'
 import { useQueueCallback } from '../../state/governance/hooks'
@@ -49,7 +49,7 @@ export default function QueueModal({ isOpen, onDismiss, proposalId }: QueueModal
   const [attempting, setAttempting] = useState<boolean>(false)
 
   // get theme for colors
-  const theme = useContext(ThemeContext)
+  const theme = useTheme()
 
   // wrapper to reset state on modal close
   function wrappedOnDismiss() {

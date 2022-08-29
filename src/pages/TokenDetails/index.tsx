@@ -1,39 +1,27 @@
-import { Percent, TradeType } from '@uniswap/sdk-core'
-import { SwapWidget } from '@uniswap/widgets'
 import { useWeb3React } from '@web3-react/core'
 import {
   LARGE_MEDIA_BREAKPOINT,
   MAX_WIDTH_MEDIA_BREAKPOINT,
   MOBILE_MEDIA_BREAKPOINT,
   SMALL_MEDIA_BREAKPOINT,
-} from 'components/Explore/constants'
-import BalanceSummary from 'components/Explore/TokenDetails/BalanceSummary'
-import FooterBalanceSummary from 'components/Explore/TokenDetails/FooterBalanceSummary'
-import LoadingTokenDetail from 'components/Explore/TokenDetails/LoadingTokenDetail'
-import NetworkBalance from 'components/Explore/TokenDetails/NetworkBalance'
-import TokenDetail from 'components/Explore/TokenDetails/TokenDetail'
+} from 'components/Tokens/constants'
+import BalanceSummary from 'components/Tokens/TokenDetails/BalanceSummary'
+import FooterBalanceSummary from 'components/Tokens/TokenDetails/FooterBalanceSummary'
+import LoadingTokenDetail from 'components/Tokens/TokenDetails/LoadingTokenDetail'
+import NetworkBalance from 'components/Tokens/TokenDetails/NetworkBalance'
+import TokenDetail from 'components/Tokens/TokenDetails/TokenDetail'
 import TokenSafetyMessage from 'components/TokenSafety/TokenSafetyMessage'
+import Widget, { WIDGET_WIDTH } from 'components/Widget'
 import { getChainInfo } from 'constants/chainInfo'
 import { L1_CHAIN_IDS, L2_CHAIN_IDS, SupportedChainId, TESTNET_CHAIN_IDS } from 'constants/chains'
 import { checkWarning } from 'constants/tokenSafety'
 import { useToken } from 'hooks/Tokens'
-import { useActiveLocale } from 'hooks/useActiveLocale'
 import { useNetworkTokenBalances } from 'hooks/useNetworkTokenBalances'
-import useTokenDetailPageQuery from 'hooks/useTokenDetailPageQuery'
-import { useCallback, useMemo, useState } from 'react'
+
+import { useMemo } from 'react'
 import { useParams } from 'react-router-dom'
-import { useTransactionAdder } from 'state/transactions/hooks'
-import {
-  BaseSwapTransactionInfo,
-  ExactInputSwapTransactionInfo,
-  ExactOutputSwapTransactionInfo,
-  TransactionType,
-} from 'state/transactions/types'
-import { useIsDarkMode } from 'state/user/hooks'
 import styled from 'styled-components/macro'
-import { DARK_THEME, LIGHT_THEME } from 'theme/token-details-widget-theme'
-import { currencyId } from 'utils/currencyId'
-import { ROUTER_URL, RPC_URL_MAP } from 'utils/token-details-widget-config'
+
 const Footer = styled.div`
   display: none;
   @media only screen and (max-width: ${LARGE_MEDIA_BREAKPOINT}) {
@@ -43,24 +31,41 @@ const Footer = styled.div`
 const TokenDetailsLayout = styled.div`
   display: flex;
   gap: 80px;
-  padding: 0px 20px;
+  padding: 68px 20px;
   width: 100%;
   justify-content: center;
 
   @media only screen and (max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT}) {
     gap: 40px;
   }
-  @media only screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
-    padding: 0px 16px;
+
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
+    padding-top: 48px;
   }
+
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+    padding-top: 20px;
+  }
+
+  @media only screen and (max-width: ${LARGE_MEDIA_BREAKPOINT}) {
+    gap: 0px;
+  }
+
+  @media only screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
   @media only screen and (max-width: ${MOBILE_MEDIA_BREAKPOINT}) {
-    padding: 0px 8px;
+    padding-left: 8px;
+    padding-right: 8px;
   }
 `
 const RightPanel = styled.div`
   display: flex;
   flex-direction: column;
   gap: 20px;
+  width: ${WIDGET_WIDTH}px;
 
   @media only screen and (max-width: ${LARGE_MEDIA_BREAKPOINT}) {
     display: none;
@@ -73,60 +78,13 @@ function NetworkBalances(tokenAddress: string) {
 
 export default function TokenDetails() {
   const { tokenAddress } = useParams<{ tokenAddress?: string }>()
-  const { loading } = useTokenDetailPageQuery(tokenAddress)
-  const tokenSymbol = useToken(tokenAddress)?.symbol
-
-  const [maxSlippage, setMaxSlippage] = useState<Percent | null>(null)
-  const addTransaction = useTransactionAdder()
-  const darkMode = useIsDarkMode()
-  const widgetTheme = useMemo(() => (darkMode ? DARK_THEME : LIGHT_THEME), [darkMode])
-  const locale = useActiveLocale()
-  const onTxSubmit = useCallback(
-    (_txHash: string, data: any) => {
-      if (!data?.trade || !data.tradeType || !maxSlippage) {
-        return
-      }
-      const { trade, tradeType } = data
-      const baseTxInfo: BaseSwapTransactionInfo = {
-        type: TransactionType.SWAP,
-        tradeType,
-        inputCurrencyId: currencyId(trade.inputAmount.currency),
-        outputCurrencyId: currencyId(trade.outputAmount.currency),
-      }
-      if (tradeType === TradeType.EXACT_OUTPUT) {
-        addTransaction(data.txResponse, {
-          ...baseTxInfo,
-          maximumInputCurrencyAmountRaw: trade.maximumAmountIn(maxSlippage).quotient.toString(),
-          outputCurrencyAmountRaw: trade.outputAmount.quotient.toString(),
-          expectedInputCurrencyAmountRaw: trade.inputAmount.quotient.toString(),
-        } as ExactOutputSwapTransactionInfo)
-      } else {
-        addTransaction(data.txResponse, {
-          ...baseTxInfo,
-          inputCurrencyAmountRaw: trade.inputAmount.quotient.toString(),
-          expectedOutputCurrencyAmountRaw: trade.outputAmount.quotient.toString(),
-          minimumOutputCurrencyAmountRaw: trade.minimumAmountOut(maxSlippage).quotient.toString(),
-        } as ExactInputSwapTransactionInfo)
-      }
-    },
-    [addTransaction, maxSlippage]
-  )
-
-  let tokenDetail
-  if (!tokenAddress) {
-    // TODO: handle no address / invalid address cases
-    tokenDetail = 'invalid token'
-  } else if (loading) {
-    tokenDetail = <LoadingTokenDetail />
-  } else {
-    tokenDetail = <TokenDetail address={tokenAddress} />
-  }
+  const token = useToken(tokenAddress)
 
   const tokenWarning = tokenAddress ? checkWarning(tokenAddress) : null
   /* network balance handling */
 
   const { data: networkData } = tokenAddress ? NetworkBalances(tokenAddress) : { data: null }
-  const { chainId: connectedChainId, provider } = useWeb3React()
+  const { chainId: connectedChainId } = useWeb3React()
   const totalBalance = 4.3 // dummy data
 
   const chainsToList = useMemo(() => {
@@ -142,7 +100,7 @@ export default function TokenDetails() {
     ? chainsToList.map((chainId) => {
         const amount = networkData[chainId]
         const fiatValue = amount // for testing purposes
-        if (!fiatValue || !tokenSymbol) return null
+        if (!fiatValue || !token?.symbol) return null
         const chainInfo = getChainInfo(chainId)
         const networkColor = chainInfo.color
         if (!chainInfo) return null
@@ -151,7 +109,7 @@ export default function TokenDetails() {
             key={chainId}
             logoUrl={chainInfo.logoUrl}
             balance={'1'}
-            tokenSymbol={tokenSymbol}
+            tokenSymbol={token?.symbol}
             fiatValue={fiatValue.toSignificant(2)}
             label={chainInfo.label}
             networkColor={networkColor}
@@ -162,41 +120,33 @@ export default function TokenDetails() {
 
   return (
     <TokenDetailsLayout>
-      {tokenDetail}
       {tokenAddress && (
         <>
+          <TokenDetail address={tokenAddress} />
           <RightPanel>
-            <SwapWidget
-              defaultChainId={connectedChainId}
-              defaultInputTokenAddress={'NATIVE'}
-              defaultOutputTokenAddress={tokenAddress}
-              hideConnectionUI
-              jsonRpcUrlMap={RPC_URL_MAP}
-              locale={locale}
-              onTxSubmit={onTxSubmit}
-              provider={provider}
-              routerUrl={ROUTER_URL}
-              theme={widgetTheme}
-              maxSlippage={maxSlippage}
-              onAllowedSlippageChange={setMaxSlippage}
-              width={290}
-            />
+            <Widget defaultToken={token ?? undefined} />
             {tokenWarning && <TokenSafetyMessage tokenAddress={tokenAddress} warning={tokenWarning} />}
-            {!loading && (
-              <BalanceSummary address={tokenAddress} totalBalance={totalBalance} networkBalances={balancesByNetwork} />
-            )}
+            <BalanceSummary address={tokenAddress} totalBalance={totalBalance} networkBalances={balancesByNetwork} />
           </RightPanel>
           <Footer>
-            {!loading && (
-              <FooterBalanceSummary
-                address={tokenAddress}
-                totalBalance={totalBalance}
-                networkBalances={balancesByNetwork}
-              />
-            )}
+            <FooterBalanceSummary
+              address={tokenAddress}
+              totalBalance={totalBalance}
+              networkBalances={balancesByNetwork}
+            />
           </Footer>
         </>
       )}
+    </TokenDetailsLayout>
+  )
+}
+
+export function LoadingTokenDetails() {
+  return (
+    <TokenDetailsLayout>
+      <LoadingTokenDetail />
+      <RightPanel />
+      <Footer />
     </TokenDetailsLayout>
   )
 }

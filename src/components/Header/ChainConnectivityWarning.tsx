@@ -39,7 +39,7 @@ const Wrapper = styled.div`
   padding: 16px 20px;
   position: absolute;
   right: 16px;
-  @media screen and (min-width: ${MEDIA_WIDTHS.upToMedium}px) {
+  @media screen and (min-width: ${MEDIA_WIDTHS.deprecated_upToMedium}px) {
     display: block;
   }
 `

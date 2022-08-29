@@ -53,6 +53,8 @@ export interface UserState {
   showSurveyPopup: boolean | undefined
 
   showDonationLink: boolean
+
+  showTokensPromoBanner: boolean // show tokens promo banner for token explore
 }
 
 function pairKey(token0Address: string, token1Address: string) {
@@ -76,6 +78,7 @@ export const initialState: UserState = {
   URLWarningVisible: true,
   showSurveyPopup: undefined,
   showDonationLink: true,
+  showTokensPromoBanner: true,
 }
 
 const userSlice = createSlice({
@@ -120,6 +123,9 @@ const userSlice = createSlice({
     },
     updateShowDonationLink(state, action) {
       state.showDonationLink = action.payload.showDonationLink
+    },
+    updateShowTokensPromoBanner(state, action) {
+      state.showTokensPromoBanner = action.payload.showTokensPromoBanner
     },
     addSerializedToken(state, { payload: { serializedToken } }) {
       if (!state.tokens) {
@@ -210,5 +216,6 @@ export const {
   updateUserExpertMode,
   updateUserLocale,
   updateUserSlippageTolerance,
+  updateShowTokensPromoBanner,
 } = userSlice.actions
 export default userSlice.reducer

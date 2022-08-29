@@ -1,7 +1,6 @@
 import { useWeb3React } from '@web3-react/core'
-import { useContext } from 'react'
 import { AlertCircle, CheckCircle } from 'react-feather'
-import styled, { ThemeContext } from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components/macro'
 
 import { useTransaction } from '../../state/transactions/hooks'
 import { ThemedText } from '../../theme'
@@ -19,7 +18,7 @@ export default function TransactionPopup({ hash }: { hash: string }) {
   const { chainId } = useWeb3React()
 
   const tx = useTransaction(hash)
-  const theme = useContext(ThemeContext)
+  const theme = useTheme()
 
   if (!tx) return null
   const success = Boolean(tx.receipt && tx.receipt.status === 1)

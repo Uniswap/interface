@@ -30,6 +30,10 @@ export function useToggleWalletModal(): () => void {
   return useToggleModal(ApplicationModal.WALLET)
 }
 
+export function useToggleWalletDropdown(): () => void {
+  return useToggleModal(ApplicationModal.WALLET_DROPDOWN)
+}
+
 export function useToggleSettingsMenu(): () => void {
   return useToggleModal(ApplicationModal.SETTINGS)
 }
@@ -64,10 +68,6 @@ export function useToggleExecuteModal(): () => void {
 
 export function useTogglePrivacyPolicy(): () => void {
   return useToggleModal(ApplicationModal.PRIVACY_POLICY)
-}
-
-export function useToggleTimeSelector(): () => void {
-  return useToggleModal(ApplicationModal.TIME_SELECTOR)
 }
 
 export function useToggleFeatureFlags(): () => void {

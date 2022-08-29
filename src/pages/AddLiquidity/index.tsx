@@ -8,8 +8,10 @@ import { ElementName, Event, EventName } from 'components/AmplitudeAnalytics/con
 import { TraceEvent } from 'components/AmplitudeAnalytics/TraceEvent'
 import { sendEvent } from 'components/analytics'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
+import { NavBarVariant, useNavBarFlag } from 'featureFlags/flags/navBar'
+import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
 import useParsedQueryString from 'hooks/useParsedQueryString'
-import { useCallback, useContext, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { AlertTriangle } from 'react-feather'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Text } from 'rebass'
@@ -19,7 +21,7 @@ import {
   useV3MintActionHandlers,
   useV3MintState,
 } from 'state/mint/v3/hooks'
-import { ThemeContext } from 'styled-components/macro'
+import { useTheme } from 'styled-components/macro'
 
 import { ButtonError, ButtonLight, ButtonPrimary, ButtonText, ButtonYellow } from '../../components/Button'
 import { BlueCard, OutlineCard, YellowCard } from '../../components/Card'
@@ -78,6 +80,8 @@ import {
 const DEFAULT_ADD_IN_RANGE_SLIPPAGE_TOLERANCE = new Percent(50, 10_000)
 
 export default function AddLiquidity() {
+  const navBarFlag = useNavBarFlag()
+  const navBarFlagEnabled = navBarFlag === NavBarVariant.Enabled
   const navigate = useNavigate()
   const {
     currencyIdA,
@@ -86,7 +90,10 @@ export default function AddLiquidity() {
     tokenId,
   } = useParams<{ currencyIdA?: string; currencyIdB?: string; feeAmount?: string; tokenId?: string }>()
   const { account, chainId, provider } = useWeb3React()
-  const theme = useContext(ThemeContext)
+  const theme = useTheme()
+  const redesignFlag = useRedesignFlag()
+  const redesignFlagEnabled = redesignFlag === RedesignVariant.Enabled
+
   const toggleWalletModal = useToggleWalletModal() // toggle wallet when disconnected
   const expertMode = useIsExpertMode()
   const addTransaction = useTransactionAdder()
@@ -505,7 +512,7 @@ export default function AddLiquidity() {
 
   return (
     <>
-      <ScrollablePage>
+      <ScrollablePage navBarFlag={navBarFlagEnabled}>
         <TransactionConfirmationModal
           isOpen={showConfirm}
           onDismiss={handleDismissConfirmation}
@@ -875,6 +882,7 @@ export default function AddLiquidity() {
                                     marginRight="8px"
                                     $borderRadius="8px"
                                     width="auto"
+                                    redesignFlag={redesignFlagEnabled}
                                     onClick={() => {
                                       setShowCapitalEfficiencyWarning(false)
                                       getSetFullRange()

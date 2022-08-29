@@ -26,6 +26,7 @@ export enum ApplicationModal {
   SETTINGS,
   VOTE,
   WALLET,
+  WALLET_DROPDOWN,
   QUEUE,
   EXECUTE,
   TIME_SELECTOR,

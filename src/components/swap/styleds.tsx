@@ -1,18 +1,39 @@
-import { loadingOpacityMixin } from 'components/Loader/styled'
 import { TooltipContainer } from 'components/Tooltip'
 import { transparentize } from 'polished'
 import { ReactNode } from 'react'
 import { AlertTriangle } from 'react-feather'
 import { Text } from 'rebass'
 import styled, { css } from 'styled-components/macro'
+import { Z_INDEX } from 'theme'
 
-import { ThemedText } from '../../theme'
 import { AutoColumn } from '../Column'
-import TradePrice from './TradePrice'
 
-export const Wrapper = styled.div`
+export const PageWrapper = styled.div<{ redesignFlag: boolean; navBarFlag: boolean }>`
+  padding: ${({ navBarFlag }) => (navBarFlag ? '68px 8px 0px' : '0px 8px')};
+  max-width: ${({ redesignFlag }) => (redesignFlag ? '420px' : '480px')};
+  width: 100%;
+
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
+    padding-top: ${({ navBarFlag }) => (navBarFlag ? '48px' : '0px')};
+  }
+
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+    padding-top: ${({ navBarFlag }) => (navBarFlag ? '20px' : '0px')};
+  }
+`
+
+// Mostly copied from `AppBody` but it was getting too hard to maintain backwards compatibility.
+export const SwapWrapper = styled.main<{ margin?: string; maxWidth?: string; redesignFlag: boolean }>`
   position: relative;
+  background: ${({ theme, redesignFlag }) => (redesignFlag ? theme.backgroundSurface : theme.deprecated_bg0)};
+  border-radius: ${({ redesignFlag }) => (redesignFlag ? '16px' : '24px')};
+  border: 1px solid ${({ theme, redesignFlag }) => (redesignFlag ? theme.backgroundOutline : 'transparent')};
   padding: 8px;
+  z-index: ${Z_INDEX.deprecated_content};
+  font-feature-settings: ${({ redesignFlag }) => redesignFlag && "'ss02' off"};
+  box-shadow: ${({ redesignFlag }) =>
+    !redesignFlag &&
+    '0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04), 0px 24px 32px rgba(0, 0, 0, 0.01)'};
 `
 
 export const ArrowWrapper = styled.div<{ clickable: boolean; redesignFlag: boolean }>`
@@ -135,23 +156,14 @@ export const SwapShowAcceptChanges = styled(AutoColumn)`
   margin-top: 8px;
 `
 
-export const TransactionDetailsLabel = styled(ThemedText.DeprecatedBlack)`
-  border-bottom: 1px solid ${({ theme }) => theme.deprecated_bg2};
-  padding-bottom: 0.5rem;
-`
-
 export const ResponsiveTooltipContainer = styled(TooltipContainer)<{ origin?: string; width?: string }>`
   background-color: ${({ theme }) => theme.deprecated_bg0};
   border: 1px solid ${({ theme }) => theme.deprecated_bg2};
   padding: 1rem;
   width: ${({ width }) => width ?? 'auto'};
 
-  ${({ theme, origin }) => theme.mediaWidth.upToExtraSmall`
+  ${({ theme, origin }) => theme.deprecated_mediaWidth.deprecated_upToExtraSmall`
     transform: scale(0.8);
     transform-origin: ${origin ?? 'top left'};
   `}
-`
-
-export const StyledTradePrice = styled(TradePrice)<{ $loading: boolean }>`
-  ${loadingOpacityMixin}
 `

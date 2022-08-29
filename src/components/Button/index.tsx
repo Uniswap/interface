@@ -1,8 +1,7 @@
-import useTheme from 'hooks/useTheme'
 import { darken } from 'polished'
 import { Check, ChevronDown } from 'react-feather'
 import { Button as RebassButton, ButtonProps as ButtonPropsOriginal } from 'rebass/styled-components'
-import styled from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components/macro'
 
 import { RowBetween } from '../Row'
 
@@ -51,9 +50,12 @@ export const BaseButton = styled(RebassButton)<
   }
 `
 
-export const ButtonPrimary = styled(BaseButton)`
-  background-color: ${({ theme }) => theme.deprecated_primary1};
-  color: white;
+export const ButtonPrimary = styled(BaseButton)<{ redesignFlag?: boolean }>`
+  background-color: ${({ theme, redesignFlag }) => (redesignFlag ? theme.accentAction : theme.deprecated_primary1)};
+  font-size: ${({ redesignFlag }) => redesignFlag && '20px'};
+  font-weight: ${({ redesignFlag }) => redesignFlag && '600'};
+  padding: ${({ redesignFlag }) => redesignFlag && '16px'};
+  color: ${({ theme, redesignFlag }) => (redesignFlag ? theme.accentTextLightPrimary : 'white')};
   &:focus {
     box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.05, theme.deprecated_primary1)};
     background-color: ${({ theme }) => darken(0.05, theme.deprecated_primary1)};
@@ -174,23 +176,28 @@ export const ButtonOutlined = styled(BaseButton)`
   }
 `
 
-export const ButtonYellow = styled(BaseButton)`
-  background-color: ${({ theme }) => theme.deprecated_yellow3};
-  color: white;
+export const ButtonYellow = styled(BaseButton)<{ redesignFlag?: boolean }>`
+  background-color: ${({ theme, redesignFlag }) => (redesignFlag ? theme.accentWarningSoft : theme.deprecated_yellow3)};
+  color: ${({ theme, redesignFlag }) => (redesignFlag ? theme.accentWarning : 'white')};
   &:focus {
-    box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.05, theme.deprecated_yellow3)};
-    background-color: ${({ theme }) => darken(0.05, theme.deprecated_yellow3)};
+    box-shadow: ${({ theme, redesignFlag }) => !redesignFlag && `0 0 0 1pt ${theme.deprecated_yellow3}`};
+    background-color: ${({ theme, redesignFlag }) =>
+      redesignFlag ? theme.accentWarningSoft : darken(0.05, theme.deprecated_yellow3)};
   }
   &:hover {
-    background-color: ${({ theme }) => darken(0.05, theme.deprecated_yellow3)};
+    background: ${({ theme, redesignFlag }) => redesignFlag && theme.stateOverlayHover};
+    mix-blend-mode: ${({ redesignFlag }) => redesignFlag && 'normal'};
+    background-color: ${({ theme, redesignFlag }) => !redesignFlag && darken(0.05, theme.deprecated_yellow3)};
   }
   &:active {
-    box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.1, theme.deprecated_yellow3)};
-    background-color: ${({ theme }) => darken(0.1, theme.deprecated_yellow3)};
+    box-shadow: ${({ theme, redesignFlag }) => !redesignFlag && `0 0 0 1pt ${darken(0.1, theme.deprecated_yellow3)}`};
+    background-color: ${({ theme, redesignFlag }) =>
+      redesignFlag ? theme.accentWarningSoft : darken(0.1, theme.deprecated_yellow3)};
   }
   &:disabled {
-    background-color: ${({ theme }) => theme.deprecated_yellow3};
-    opacity: 50%;
+    background-color: ${({ theme, redesignFlag }) =>
+      redesignFlag ? theme.accentWarningSoft : theme.deprecated_yellow3};
+    opacity: ${({ redesignFlag }) => (redesignFlag ? '60%' : '50%')};
     cursor: auto;
   }
 `

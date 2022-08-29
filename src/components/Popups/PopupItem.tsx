@@ -1,8 +1,9 @@
-import { useCallback, useContext, useEffect } from 'react'
+import { NavBarVariant, useNavBarFlag } from 'featureFlags/flags/navBar'
+import { useCallback, useEffect } from 'react'
 import { X } from 'react-feather'
 import { animated } from 'react-spring'
 import { useSpring } from 'react-spring/web'
-import styled, { ThemeContext } from 'styled-components/macro'
+import styled, { useTheme } from 'styled-components/macro'
 
 import { useRemovePopup } from '../../state/application/hooks'
 import { PopupContent } from '../../state/application/reducer'
@@ -29,7 +30,7 @@ const Popup = styled.div`
   padding-right: 35px;
   overflow: hidden;
 
-  ${({ theme }) => theme.mediaWidth.upToSmall`
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
     min-width: 290px;
     &:not(:last-of-type) {
       margin-right: 20px;
@@ -57,6 +58,7 @@ export default function PopupItem({
   popKey: string
 }) {
   const removePopup = useRemovePopup()
+  const navbarFlag = useNavBarFlag()
   const removeThisPopup = useCallback(() => removePopup(popKey), [popKey, removePopup])
   useEffect(() => {
     if (removeAfterMs === null) return undefined
@@ -70,23 +72,24 @@ export default function PopupItem({
     }
   }, [removeAfterMs, removeThisPopup])
 
-  const theme = useContext(ThemeContext)
+  const theme = useTheme()
+  const faderStyle = useSpring({
+    from: { width: '100%' },
+    to: { width: '0%' },
+    config: { duration: removeAfterMs ?? undefined },
+  })
 
   let popupContent
   if ('txn' in content) {
     const {
       txn: { hash },
     } = content
+    if (navbarFlag === NavBarVariant.Enabled) return null
+
     popupContent = <TransactionPopup hash={hash} />
   } else if ('failedSwitchNetwork' in content) {
     popupContent = <FailedNetworkSwitchPopup chainId={content.failedSwitchNetwork} />
   }
-
-  const faderStyle = useSpring({
-    from: { width: '100%' },
-    to: { width: '0%' },
-    config: { duration: removeAfterMs ?? undefined },
-  })
 
   return (
     <Popup>

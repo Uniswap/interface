@@ -37,8 +37,8 @@ describe('Add Liquidity', () => {
   it('loads fee tier distribution', () => {
     cy.fixture('feeTierDistribution.json').then((feeTierDistribution) => {
       cy.intercept('POST', '/subgraphs/name/uniswap/uniswap-v3', (req: CyHttpMessages.IncomingHttpRequest) => {
-        if (hasQuery(req, 'feeTierDistribution')) {
-          req.alias = 'feeTierDistributionQuery'
+        if (hasQuery(req, 'FeeTierDistributionQuery')) {
+          req.alias = 'FeeTierDistributionQuery'
 
           req.reply({
             body: {
@@ -55,7 +55,7 @@ describe('Add Liquidity', () => {
 
       cy.visit('/add/0xF9bA5210F91D0474bd1e1DcDAeC4C58E359AaD85/0xc778417E063141139Fce010982780140Aa0cD5Ab')
 
-      cy.wait('@feeTierDistributionQuery')
+      cy.wait('@FeeTierDistributionQuery')
 
       cy.get('#add-liquidity-selected-fee .selected-fee-label').should('contain.text', '0.3% fee tier')
       cy.get('#add-liquidity-selected-fee .selected-fee-percentage').should('contain.text', '40%')

@@ -5,12 +5,11 @@ import { getChainInfo } from 'constants/chainInfo'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import useGasPrice from 'hooks/useGasPrice'
 import useMachineTimeMs from 'hooks/useMachineTime'
-import useTheme from 'hooks/useTheme'
 import JSBI from 'jsbi'
 import useBlockNumber from 'lib/hooks/useBlockNumber'
 import ms from 'ms.macro'
 import { useEffect, useState } from 'react'
-import styled, { keyframes } from 'styled-components/macro'
+import styled, { keyframes, useTheme } from 'styled-components/macro'
 import { ExternalLink, ThemedText } from 'theme'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
@@ -27,7 +26,7 @@ const StyledPolling = styled.div<{ warning: boolean }>`
   color: ${({ theme, warning }) => (warning ? theme.deprecated_yellow3 : theme.deprecated_green1)};
   transition: 250ms ease color;
 
-  ${({ theme }) => theme.mediaWidth.upToMedium`
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToMedium`
     display: none;
   `}
 `

@@ -6,6 +6,7 @@ import { PageName } from 'components/AmplitudeAnalytics/constants'
 import { Trace } from 'components/AmplitudeAnalytics/Trace'
 import ExecuteModal from 'components/vote/ExecuteModal'
 import QueueModal from 'components/vote/QueueModal'
+import { NavBarVariant, useNavBarFlag } from 'featureFlags/flags/navBar'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import JSBI from 'jsbi'
@@ -55,8 +56,17 @@ import { isAddress } from '../../utils'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
 import { ProposalStatus } from './styled'
 
-const PageWrapper = styled(AutoColumn)`
+const PageWrapper = styled(AutoColumn)<{ navBarFlag: boolean }>`
+  padding-top: ${({ navBarFlag }) => (navBarFlag ? '68px' : '0px')};
   width: 100%;
+
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
+    padding: ${({ navBarFlag }) => (navBarFlag ? '48px 8px 0px' : '0px 8px 0px')};
+  }
+
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+    padding-top: ${({ navBarFlag }) => (navBarFlag ? '20px' : '0px')};
+  }
 `
 
 const ProposalInfo = styled(AutoColumn)`
@@ -120,7 +130,7 @@ const MarkDownWrapper = styled.div`
 `
 
 const WrapSmall = styled(RowBetween)`
-  ${({ theme }) => theme.mediaWidth.upToSmall`
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
     align-items: flex-start;
     flex-direction: column;
   `};
@@ -153,6 +163,8 @@ function getDateFromBlock(
 }
 
 export default function VotePage() {
+  const navBarFlag = useNavBarFlag()
+  const navBarFlagEnabled = navBarFlag === NavBarVariant.Enabled
   // see https://github.com/remix-run/react-router/issues/8200#issuecomment-962520661
   const { governorIndex, id } = useParams() as { governorIndex: string; id: string }
   const parsedGovernorIndex = Number.parseInt(governorIndex)
@@ -257,10 +269,14 @@ export default function VotePage() {
     return <span>{content}</span>
   }
 
+  function MarkdownImage({ ...rest }) {
+    return <img {...rest} style={{ width: '100%', height: '100$', objectFit: 'cover' }} alt="" />
+  }
+
   return (
     <Trace page={PageName.VOTE_PAGE} shouldLogImpression>
       <>
-        <PageWrapper gap="lg" justify="center">
+        <PageWrapper gap="lg" justify="center" navBarFlag={navBarFlagEnabled}>
           <VoteModal
             isOpen={showVoteModal}
             onDismiss={toggleVoteModal}
@@ -465,7 +481,12 @@ export default function VotePage() {
                 <Trans>Description</Trans>
               </ThemedText.DeprecatedMediumHeader>
               <MarkDownWrapper>
-                <ReactMarkdown source={proposalData?.description} />
+                <ReactMarkdown
+                  source={proposalData?.description}
+                  renderers={{
+                    image: MarkdownImage,
+                  }}
+                />
               </MarkDownWrapper>
             </AutoColumn>
             <AutoColumn gap="md">

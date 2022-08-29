@@ -1,6 +1,7 @@
 import { style } from '@vanilla-extract/css'
 
-import { sprinkles } from '../../nft/css/sprinkles.css'
+import { subhead } from '../../nft/css/common.css'
+import { sprinkles, vars } from '../../nft/css/sprinkles.css'
 
 export const nav = style([
   sprinkles({
@@ -9,24 +10,113 @@ export const nav = style([
     width: 'full',
     height: '72',
     zIndex: '2',
-    borderStyle: 'solid',
+    background: 'white08',
   }),
   {
-    borderWidth: '0.5px',
     backdropFilter: 'blur(24px)',
   },
 ])
 
-export const mobileWalletContainer = style([
+export const logoContainer = style([
   sprinkles({
-    position: 'fixed',
     display: 'flex',
-    bottom: '0',
-    right: '1/2',
-    marginY: '0',
-    marginX: 'auto',
+    marginRight: { sm: '12', xxl: '20' },
+    alignItems: 'center',
+  }),
+])
+
+export const logo = style([
+  sprinkles({
+    display: 'block',
+    color: 'blackBlue',
+  }),
+])
+
+export const baseContainer = style([
+  sprinkles({
+    alignItems: 'center',
+  }),
+])
+
+export const baseSideContainer = style([
+  baseContainer,
+  sprinkles({
+    display: 'flex',
+    width: 'full',
+    flex: '1',
+    flexShrink: '2',
+  }),
+])
+
+export const leftSideContainer = style([
+  baseSideContainer,
+  sprinkles({
+    justifyContent: 'flex-start',
+  }),
+])
+
+export const middleContainer = style([
+  baseContainer,
+  sprinkles({
+    flex: '1',
+    flexShrink: '1',
+    justifyContent: 'center',
+    display: { sm: 'none', lg: 'flex' },
+  }),
+])
+
+export const rightSideContainer = style([
+  baseSideContainer,
+  sprinkles({
+    justifyContent: 'flex-end',
+  }),
+])
+
+const baseMenuItem = style([
+  subhead,
+  sprinkles({
+    paddingY: '8',
+    paddingX: '16',
+    marginY: '4',
+    borderRadius: '12',
+    transition: '250',
+    height: 'min',
   }),
   {
-    transform: 'translate(50%,-50%)',
+    lineHeight: '24px',
+    textDecoration: 'none',
+    ':hover': {
+      background: vars.color.lightGrayOverlay,
+    },
   },
+])
+
+export const menuItem = style([
+  baseMenuItem,
+  sprinkles({
+    color: 'darkGray',
+  }),
+])
+
+export const activeMenuItem = style([
+  baseMenuItem,
+  sprinkles({
+    color: 'blackBlue',
+    background: 'backgroundFloating',
+  }),
+])
+
+export const mobileBottomBar = style([
+  sprinkles({
+    position: 'fixed',
+    display: { sm: 'flex', xxl: 'none' },
+    bottom: '0',
+    right: '0',
+    left: '0',
+    justifyContent: 'space-between',
+    paddingY: '4',
+    paddingX: '8',
+    height: '56',
+    background: 'lightGray',
+  }),
 ])

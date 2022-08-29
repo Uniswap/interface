@@ -25,13 +25,13 @@ const themeContractValues = {
     magicGradient: '',
     placeholder: '',
     lightGrayButton: '',
-    lightGrayContainer: ',',
-    lightGrayOverlay: '',
 
-    // Opacities of black and whit
+    // Opacities of black and white
     white95: '',
     white90: '',
     white80: '',
+    white08: '',
+    backgroundFloating: '',
   },
 
   shadows: {
@@ -112,6 +112,7 @@ const spacing = {
   '48': '48px',
   '50': '50px',
   '52': '52px',
+  '56': '56px',
   '60': '60px',
   '64': '64px',
   '82': '82px',
@@ -134,7 +135,6 @@ export const vars = createGlobalTheme(':root', {
     dropShadow: '0px 4px 16px rgba(70, 115, 250, 0.4)',
     green: '#209853',
     orange: '#FA2C38',
-    // Pavel's colors, TODO probably remove them after Pavel continues Genie List
     black: 'black',
     whitesmoke: '#F5F5F5',
     blue: '#4C82FB',
@@ -143,9 +143,11 @@ export const vars = createGlobalTheme(':root', {
     transculent: '#7F7F7F',
     transparent: 'transparent',
     none: 'none',
+    loading: '#7C85A24D',
 
     // new uniswap colors:
     blue400: '#4C82FB',
+    blue200: '#ADBCFF30',
     pink400: '#FB118E',
     red700: '#530f10',
     red400: '#FA2C38',
@@ -159,6 +161,10 @@ export const vars = createGlobalTheme(':root', {
     grey200: '#B7BED4',
     grey100: '#DDE3F7',
     grey50: '#EDEFF7',
+    accentActionSoft: 'rgba(76, 130, 251, 0.24)',
+    accentTextLightTertiary: 'rgba(255, 255, 255, 0.12)',
+    lightGrayOverlay: '#99A1BD14',
+    accentActiveSoft: '#4c82fb3d',
   },
   border: {
     transculent: '1.5px solid rgba(0, 0, 0, 0.1)',
@@ -230,27 +236,24 @@ const borderWidth = ['1px', '1.5px', '2px', '4px']
 const borderStyle = ['none', 'solid'] as const
 
 export const breakpoints = {
-  tabletSm: 656,
-  tablet: 708,
-  tabletL: 784,
-  tabletXl: 830,
-  desktop: 948,
-  desktopL: 1030,
-  desktopXl: 1260,
+  sm: 640,
+  md: 768,
+  lg: 1024,
+  xl: 1280,
+  xxl: 1536,
+  xxxl: 1920,
 }
 
 const layoutStyles = defineProperties({
   conditions: {
-    mobile: {},
-    tabletSm: { '@media': `screen and (min-width: ${breakpoints.tabletSm}px)` },
-    tablet: { '@media': `screen and (min-width: ${breakpoints.tablet})` },
-    tabletL: { '@media': `screen and (min-width: ${breakpoints.tabletL}px)` },
-    tabletXl: { '@media': `screen and (min-width: ${breakpoints.tabletXl}px)` },
-    desktop: { '@media': `screen and (min-width: ${breakpoints.desktop}px)` },
-    desktopL: { '@media': `screen and (min-width: ${breakpoints.desktopL}px)` },
-    desktopXl: { '@media': `screen and (min-width: ${breakpoints.desktopXl}px)` },
+    sm: {},
+    md: { '@media': `screen and (min-width: ${breakpoints.sm}px)` },
+    lg: { '@media': `screen and (min-width: ${breakpoints.md}px)` },
+    xl: { '@media': `screen and (min-width: ${breakpoints.lg}px)` },
+    xxl: { '@media': `screen and (min-width: ${breakpoints.xl}px)` },
+    xxxl: { '@media': `screen and (min-width: ${breakpoints.xxl}px)` },
   },
-  defaultCondition: 'mobile',
+  defaultCondition: 'sm',
   properties: {
     alignItems: flexAlignment,
     alignSelf: flexAlignment,
