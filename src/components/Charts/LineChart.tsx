@@ -1,7 +1,6 @@
 import { Group } from '@visx/group'
 import { LinePath } from '@visx/shape'
 import { CurveFactory } from 'd3'
-import { radius } from 'd3-curve-circlecorners'
 import React from 'react'
 import { ReactNode } from 'react'
 import { useTheme } from 'styled-components/macro'
@@ -37,7 +36,7 @@ function LineChart<T>({
     <svg width={width} height={height}>
       <Group top={marginTop}>
         <LinePath
-          curve={curve ?? radius(0.25)}
+          curve={curve}
           stroke={color ?? theme.accentAction}
           strokeWidth={strokeWidth}
           data={data}
