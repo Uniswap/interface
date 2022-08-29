@@ -1,4 +1,3 @@
-import { TEST_ADDRESS_NEVER_USE_SHORTENED } from '../support/ethereum'
 import { getTestSelector, selectFeatureFlag } from '../utils'
 
 describe('Wallet Dropdown', () => {
