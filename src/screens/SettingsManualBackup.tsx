@@ -177,7 +177,7 @@ export function SettingsManualBackup({
           justifyContent="space-evenly">
           <Text variant="bodySmall">
             {t(
-              'Confirm that you correctly wrote down your seed phrase by selecting the missing words.'
+              'Confirm that you correctly wrote down your recovery phrase by selecting the missing words.'
             )}
           </Text>
           <Flex>

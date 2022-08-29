@@ -66,7 +66,7 @@ export function SettingsViewSeedPhraseScreen({
   return (
     <Screen mx="lg" my="lg">
       <BackHeader alignment="left">
-        <Text variant="subhead">{t('Seed phrase')}</Text>
+        <Text variant="subhead">{t('Recovery phrase')}</Text>
       </BackHeader>
 
       {showSeedPhrase ? (

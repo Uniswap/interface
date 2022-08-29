@@ -85,7 +85,7 @@ export function CloudBackupScreen({
         <PinInput length={PIN_LENGTH} setValue={setEnteredPin} value={enteredPin} />
         <WarningModal
           caption={t(
-            'Your seed phrase won’t be encrypted, meaning that anyone who gains access to your iCloud will be able to steal your assets.'
+            'Your recovery phrase won’t be encrypted, meaning that anyone who gains access to your iCloud will be able to steal your assets.'
           )}
           closeText={t('Back')}
           confirmText={t('I understand')}
