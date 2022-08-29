@@ -14,6 +14,7 @@ import { AnimatedBox, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { popNotification } from 'src/features/notifications/notificationSlice'
 import { selectActiveAccountNotifications } from 'src/features/notifications/selectors'
+import { BalanceUpdate } from 'src/features/notifications/utils'
 import { useTimeout } from 'src/utils/timing'
 
 const NOTIFICATION_HEIGHT = 64
@@ -25,10 +26,7 @@ const SPRING_ANIMATION = { damping: 30, stiffness: 150 }
 export interface NotificationContentProps {
   title: string
   icon?: ReactElement
-  balanceUpdate?: {
-    assetIncrease: string
-    usdIncrease: string | undefined
-  }
+  balanceUpdate?: BalanceUpdate
   actionButton?: {
     title: string
     onPress: () => void
@@ -177,7 +175,7 @@ export function NotificationContent({
                   fontWeight="600"
                   numberOfLines={1}
                   variant="smallLabel">
-                  {balanceUpdate.assetIncrease}
+                  {balanceUpdate.assetValueChange}
                 </Text>
                 <Text
                   adjustsFontSizeToFit
@@ -185,7 +183,7 @@ export function NotificationContent({
                   fontWeight="500"
                   numberOfLines={1}
                   variant="code">
-                  {balanceUpdate.usdIncrease}
+                  {balanceUpdate.usdValueChange}
                 </Text>
               </>
             ) : actionButton ? (

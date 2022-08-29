@@ -166,13 +166,13 @@ export function SwapNotification({
       : undefined
 
   const spotPrice = useSpotPrice(outputCurrency)
-  const balanceUpdate = createBalanceUpdate(
-    txType,
-    txStatus,
-    outputCurrency,
-    outputCurrencyAmountRaw,
-    spotPrice
-  )
+  const balanceUpdate = createBalanceUpdate({
+    transactionType: txType,
+    transactionStatus: txStatus,
+    currency: outputCurrency,
+    currencyAmountRaw: outputCurrencyAmountRaw,
+    spotPrice,
+  })
 
   const icon = (
     <SwapLogoOrLogoWithTxStatus
@@ -210,7 +210,13 @@ export function TransferCurrencyNotification({
   const balanceUpdate =
     txType === TransactionType.Send && txStatus === TransactionStatus.Success // don't render balance change on successful sends
       ? undefined
-      : createBalanceUpdate(txType, txStatus, currency, currencyAmountRaw, spotPrice)
+      : createBalanceUpdate({
+          transactionType: txType,
+          transactionStatus: txStatus,
+          currency,
+          currencyAmountRaw,
+          spotPrice,
+        })
   const title = formTransferCurrencyNotificationTitle(
     txType,
     txStatus,

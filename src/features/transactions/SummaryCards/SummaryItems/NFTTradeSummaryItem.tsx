@@ -38,6 +38,7 @@ export default function NFTTradeSummaryItem({
           <BalanceUpdate
             amountRaw={purchaseAmountRaw}
             currency={purchaseCurrency}
+            nftTradeType={transaction.typeInfo.tradeType}
             transactionStatus={transaction.status}
             transactionType={transaction.typeInfo.type}
           />

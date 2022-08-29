@@ -5,7 +5,7 @@ import { CHAIN_INFO } from 'src/constants/chains'
 import { SpotPrice } from 'src/features/dataApi/spotPricesQuery'
 import { NFTAsset } from 'src/features/nfts/types'
 import { WalletConnectNotification } from 'src/features/notifications/types'
-import { TransactionStatus, TransactionType } from 'src/features/transactions/types'
+import { NFTTradeType, TransactionStatus, TransactionType } from 'src/features/transactions/types'
 import { WalletConnectEvent } from 'src/features/walletConnect/saga'
 import { isValidAddress, shortenAddress } from 'src/utils/addresses'
 import { currencyIdToAddress } from 'src/utils/currencyId'
@@ -171,40 +171,50 @@ const formTransferTxTitle = (
 }
 
 export interface BalanceUpdate {
-  assetIncrease: string
-  usdIncrease: string | undefined
+  assetValueChange: string
+  usdValueChange: string | undefined
 }
 
-export const createBalanceUpdate = (
-  txType:
-    | TransactionType.Send
-    | TransactionType.Receive
-    | TransactionType.Swap
-    | TransactionType.NFTTrade
-    | TransactionType.NFTMint,
-  txStatus: TransactionStatus,
-  currency: NullUndefined<Currency>,
-  currencyAmountRaw: string,
+interface BalanceUpdateProps {
+  transactionType: TransactionType
+  transactionStatus: TransactionStatus
+  currency: NullUndefined<Currency>
+  currencyAmountRaw: string
   spotPrice?: SpotPrice
-): BalanceUpdate | undefined => {
+  nftTradeType?: NFTTradeType //
+}
+
+interface NFTTradeBalanceUpdateProps extends BalanceUpdateProps {
+  transactionType: TransactionType.NFTTrade
+  nftTradeType: NFTTradeType
+}
+
+export const createBalanceUpdate = ({
+  transactionType,
+  transactionStatus,
+  currency,
+  currencyAmountRaw,
+  spotPrice,
+  nftTradeType,
+}: BalanceUpdateProps | NFTTradeBalanceUpdateProps): BalanceUpdate | undefined => {
   if (
     !currency ||
     !(
-      txStatus === TransactionStatus.Success ||
-      txStatus === TransactionStatus.Pending ||
-      txStatus === TransactionStatus.FailedCancel
+      transactionStatus === TransactionStatus.Success ||
+      transactionStatus === TransactionStatus.Pending ||
+      transactionStatus === TransactionStatus.FailedCancel
     )
   ) {
     return undefined
   }
-
   const currencyAmount = getFormattedCurrencyAmount(currency, currencyAmountRaw)
-
+  const isDecrease =
+    transactionType === TransactionType.Send ||
+    transactionType === TransactionType.NFTMint ||
+    (transactionType === TransactionType.NFTTrade && nftTradeType === NFTTradeType.BUY)
   return {
-    assetIncrease: `${txType === TransactionType.Send ? '-' : '+'}${currencyAmount}${
-      currency.symbol
-    }`,
-    usdIncrease: getUSDValue(spotPrice, currencyAmountRaw, currency),
+    assetValueChange: `${isDecrease ? '-' : '+'}${currencyAmount}${currency.symbol}`,
+    usdValueChange: getUSDValue(spotPrice, currencyAmountRaw, currency),
   }
 }
 
