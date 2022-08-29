@@ -4,10 +4,10 @@ import { useActiveWeb3React } from "hooks"
 import { useMemo, useCallback } from "react"
 import { useSingleCallResult, NEVER_RELOAD, useSingleContractMultipleData } from "state/multicall/hooks"
 import { zip } from 'lodash'
-import { MASTERCHEF_ADDRESSBOOK } from "constants/index"
+import { MASTERCHEF_ADDRESSBOOK, MINICHEF_ADDRESS } from "constants/index"
 import { Zero } from '@ethersproject/constants'
 
-export function useChefPositions(contract?: Contract | null, rewarder?: Contract | null, chainId?: number) {
+export function useChefPositions(contract?: Contract | null, rewarder?: Contract | null, chainId = 420) {
     const { account } = useActiveWeb3React()
   
     const numberOfPools = useSingleCallResult(contract ? contract : null, 'poolLength', undefined, NEVER_RELOAD)
@@ -35,9 +35,12 @@ export function useChefPositions(contract?: Contract | null, rewarder?: Contract
     const getChef = useCallback(() => {
       if (MASTERCHEF_ADDRESSBOOK[chainId || 420] === contract!.address) {
         return Chef.MASTERCHEF
-      } else {
+      } else if (MASTERCHEF_ADDRESSBOOK[chainId] === contract!.address) {
         return Chef.MASTERCHEF_V2
+      } else if (MINICHEF_ADDRESS[chainId] === contract!.address) {
+        return Chef.MINICHEF
       }
+      return undefined
     }, [chainId, contract])
   
     return useMemo(() => {
