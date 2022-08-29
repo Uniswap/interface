@@ -132,7 +132,7 @@ const WalletDropdown = ({ setMenu }: { setMenu: (state: MenuState) => void }) =>
           </IconWrap>
         </ToggleMenuItem>
       )}
-      <ToggleMenuItem onClick={() => setMenu(MenuState.LANGUAGE)}>
+      <ToggleMenuItem data-testid="select-language" onClick={() => setMenu(MenuState.LANGUAGE)}>
         <DefaultText>
           <Trans>Language</Trans>
         </DefaultText>
@@ -145,7 +145,7 @@ const WalletDropdown = ({ setMenu }: { setMenu: (state: MenuState) => void }) =>
           </IconWrap>
         </FlexContainer>
       </ToggleMenuItem>
-      <ToggleMenuItem onClick={toggleDarkMode}>
+      <ToggleMenuItem data-testid="select-theme" onClick={toggleDarkMode}>
         <DefaultText>{darkMode ? <Trans> Light theme</Trans> : <Trans>Dark theme</Trans>}</DefaultText>
         <IconWrap>{darkMode ? <Sun size={16} /> : <Moon size={16} />}</IconWrap>
       </ToggleMenuItem>

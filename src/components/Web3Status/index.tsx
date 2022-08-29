@@ -256,11 +256,11 @@ function Web3StatusInner() {
       >
         {navbarFlag === NavBarVariant.Enabled ? (
           <Web3StatusConnectNavbar faded={!account}>
-            <StyledConnect onClick={toggleWalletModal}>
+            <StyledConnect data-testid="wallet-connect" onClick={toggleWalletModal}>
               <Trans>Connect</Trans>
             </StyledConnect>
             <VerticalDivider />
-            <StyledChevron onClick={toggleWalletDropdown}>
+            <StyledChevron data-testid="wallet-dropdown" onClick={toggleWalletDropdown}>
               {walletIsOpen ? <ChevronUp /> : <ChevronDown />}
             </StyledChevron>
           </Web3StatusConnectNavbar>
