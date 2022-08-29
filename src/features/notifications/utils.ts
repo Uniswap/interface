@@ -176,7 +176,11 @@ export interface BalanceUpdate {
 }
 
 export const createBalanceUpdate = (
-  txType: TransactionType.Send | TransactionType.Receive | TransactionType.Swap,
+  txType:
+    | TransactionType.Send
+    | TransactionType.Receive
+    | TransactionType.Swap
+    | TransactionType.NFTMint,
   txStatus: TransactionStatus,
   currency: NullUndefined<Currency>,
   currencyAmountRaw: string,

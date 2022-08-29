@@ -97,6 +97,8 @@ export function LogoWithTxStatus(props: CurrencyStatusProps | NFTStatusProps) {
         return <OutgoingArrow color={green} fill={fill} height={statusSize} width={statusSize} />
       case TransactionType.Receive:
         return <IncomingArrow color={green} fill={fill} height={statusSize} width={statusSize} />
+      case TransactionType.NFTMint:
+        return <IncomingArrow color={green} fill={fill} height={statusSize} width={statusSize} />
       case TransactionType.NFTTrade:
         if (assetType === AssetType.ERC721 && props.nftTradeType === NFTTradeType.SELL) {
           return <OutgoingArrow color={green} fill={fill} height={statusSize} width={statusSize} />

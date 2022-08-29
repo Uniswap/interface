@@ -2,6 +2,7 @@ import React from 'react'
 import { ButtonProps } from 'src/components/buttons/Button'
 import ApproveSummaryItem from 'src/features/transactions/SummaryCards/SummaryItems/ApproveSummaryItem'
 import NFTApproveSummaryItem from 'src/features/transactions/SummaryCards/SummaryItems/NFTApproveSummaryItem'
+import NFTMintSummaryItem from 'src/features/transactions/SummaryCards/SummaryItems/NFTMintSummaryItem'
 import NFTTradeSummaryItem from 'src/features/transactions/SummaryCards/SummaryItems/NFTTradeSummaryItem'
 import ReceiveSummaryItem from 'src/features/transactions/SummaryCards/SummaryItems/ReceiveSummaryItem'
 import SendSummaryItem from 'src/features/transactions/SummaryCards/SummaryItems/SendSumamryItem'
@@ -14,6 +15,7 @@ import {
   ExactInputSwapTransactionInfo,
   ExactOutputSwapTransactionInfo,
   NFTApproveTransactionInfo,
+  NFTMintTransactionInfo,
   NFTTradeTransactionInfo,
   ReceiveTokenTransactionInfo,
   SendTokenTransactionInfo,
@@ -94,6 +96,18 @@ export default function TransactionSummaryRouter({
           transaction={
             transaction as TransactionDetails & {
               typeInfo: ReceiveTokenTransactionInfo
+            }
+          }
+          {...rest}
+          showInlineWarning={showInlineWarning}
+        />
+      )
+    case TransactionType.NFTMint:
+      return (
+        <NFTMintSummaryItem
+          transaction={
+            transaction as TransactionDetails & {
+              typeInfo: NFTMintTransactionInfo
             }
           }
           {...rest}

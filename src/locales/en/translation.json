@@ -197,6 +197,7 @@
   "If you cancel this transaction before it’s processed by the network, you’ll pay a new network fee instead of the original one.": "If you cancel this transaction before it’s processed by the network, you’ll pay a new network fee instead of the original one.",
   "Network fee": "Network fee",
   "Approve": "Approve",
+  "Mint": "Mint",
   "Buy": "Buy",
   "Sell": "Sell",
   "Receive": "Receive",

@@ -1,7 +1,9 @@
 import { ChainId } from 'src/constants/chains'
 import parseAppoveTransaction from 'src/features/transactions/history/conversion/parseApproveTransaction'
+import parseNFTMintTransction from 'src/features/transactions/history/conversion/parseMintTransaction'
 import parseReceiveTransaction from 'src/features/transactions/history/conversion/parseReceiveTransaction'
 import parseSendTransaction from 'src/features/transactions/history/conversion/parseSendTransaction'
+
 import parseTradeTransaction from 'src/features/transactions/history/conversion/parseTradeTransaction'
 import { TransactionHistoryResponse } from 'src/features/transactions/history/transactionHistory'
 import {
@@ -36,6 +38,9 @@ export default function extractTransactionDetails(
       break
     case 'SWAP':
       typeInfo = parseTradeTransaction(transaction)
+      break
+    case 'MINT':
+      typeInfo = parseNFTMintTransction(transaction)
       break
   }
 

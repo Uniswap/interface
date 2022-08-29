@@ -162,8 +162,8 @@ export interface ReceiveTokenTransactionInfo extends BaseTransactionInfo {
 export interface NFTMintTransactionInfo extends BaseTransactionInfo {
   type: TransactionType.NFTMint
   nftSummaryInfo: NFTSummaryInfo
-  purchaseCurrencyId: string
-  purchaseCurrencyAmountRaw: string
+  purchaseCurrencyId?: string
+  purchaseCurrencyAmountRaw?: string
 }
 
 export interface NFTTradeTransactionInfo extends BaseTransactionInfo {
