@@ -7,7 +7,9 @@ import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import { getChainInfo } from 'constants/chainInfo'
 import { checkWarning } from 'constants/tokenSafety'
 import { chainIdToChainName, useTokenDetailQuery } from 'graphql/data/TokenDetailQuery'
+import { useTokenPriceQuery } from 'graphql/data/TokenPrice'
 import { useCurrency, useIsUserAddedToken, useToken } from 'hooks/Tokens'
+import { useAtom } from 'jotai'
 import { useAtomValue } from 'jotai/utils'
 import { darken } from 'polished'
 import { Suspense, useCallback } from 'react'
@@ -18,7 +20,7 @@ import styled from 'styled-components/macro'
 import { ClickableStyle, CopyContractAddress } from 'theme'
 import { formatDollarAmount } from 'utils/formatDollarAmt'
 
-import { favoritesAtom, filterNetworkAtom, useToggleFavorite } from '../state'
+import { favoritesAtom, filterNetworkAtom, filterTimeAtom, useToggleFavorite } from '../state'
 import { ClickFavorited } from '../TokenTable/TokenRow'
 import LoadingTokenDetail from './LoadingTokenDetail'
 import Resource from './Resource'
@@ -199,13 +201,18 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
     twitterName,
   }))(tokenDetailData)
 
-  if (!token || !token.name || !token.symbol) {
+  const [timePeriod, setTimePeriod] = useAtom(filterTimeAtom)
+  const { error, isLoading, data } = useTokenPriceQuery(token?.address ?? '', timePeriod, 'ETHEREUM')
+
+  /* Only exit Suspense when the chart is ready to be rendered, either with data or an error */
+  const chartReady = data.length > 0 || !!error
+
+  if (!chartReady || !token || !token.name || !token.symbol) {
     return <LoadingTokenDetail />
   }
 
   const tokenName = tokenDetailData.name
   const tokenSymbol = tokenDetailData.tokens?.[0]?.symbol?.toUpperCase() ?? token.symbol
-
   return (
     <Suspense fallback={<LoadingTokenDetail />}>
       <TopArea>

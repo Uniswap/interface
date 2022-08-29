@@ -6,11 +6,11 @@ import { GlyphCircle } from '@visx/glyph'
 import { Line } from '@visx/shape'
 import { filterTimeAtom } from 'components/Tokens/state'
 import { bisect, curveBasis, NumberValue, scaleLinear } from 'd3'
-import { useTokenPriceQuery } from 'graphql/data/TokenPrice'
+import { fillTokenPriceCache, useTokenPriceQuery } from 'graphql/data/TokenPrice'
 import { TimePeriod } from 'graphql/data/TopTokenQuery'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import { useAtom } from 'jotai'
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { ArrowDownRight, ArrowUpRight } from 'react-feather'
 import styled, { useTheme } from 'styled-components/macro'
 import { OPACITY_HOVER } from 'theme'
@@ -161,8 +161,10 @@ export function PriceChart({ width, height, token }: PriceChartProps) {
   const theme = useTheme()
 
   // TODO: Add network selector input, consider using backend type instead of current front end selector type
-
   const { error, isLoading, data } = useTokenPriceQuery(token.address, timePeriod, 'ETHEREUM')
+
+  /* Prefill other TimePeriods data without blocking load */
+  useEffect(() => fillTokenPriceCache(token.address, 'ETHEREUM'), [])
 
   const pricePoints: PricePoint[] = data.filter((p): p is PricePoint => Boolean(p && p.value))
 
@@ -216,7 +218,7 @@ export function PriceChart({ width, height, token }: PriceChartProps) {
   }, [setCrosshair, setDisplayPrice, endingPrice])
 
   // TODO: Display missing data error
-  if (!!error) {
+  if (!hasData) {
     return null
   }
 

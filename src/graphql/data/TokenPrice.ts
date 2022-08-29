@@ -1,16 +1,14 @@
 import graphql from 'babel-plugin-relay/macro'
 import { useCallback, useEffect, useState } from 'react'
+import { fetchQuery } from 'react-relay'
 
-// import useInterval from 'lib/hooks/useInterval'
-// import ms from 'ms.macro'
-// import { useLazyLoadQuery } from 'react-relay'
-import type { Chain } from './__generated__/TokenPriceAllQuery.graphql'
+import type { Chain, TokenPriceAllQuery } from './__generated__/TokenPriceAllQuery.graphql'
 import type { HistoryDuration, TokenPriceSingleQuery } from './__generated__/TokenPriceSingleQuery.graphql'
 import TokenAPICache from './cache'
+import environment from './RelayEnvironment'
 import { TimePeriod } from './TopTokenQuery'
-import { useDataQueryer } from './useIntervalDataQuery'
 import { PriceHistory } from './types'
-//import { PriceHistory } from './types'
+import { useRefreshableQuery } from './useRefreshableQuery'
 
 function toHistoryDuration(timePeriod: TimePeriod): HistoryDuration {
   switch (timePeriod) {
@@ -90,59 +88,91 @@ const query = graphql`
 `
 
 export function useTokenPriceQuery(address: string, timePeriod: TimePeriod, chain: Chain) {
-  const [prices, setPrices] = useState<PriceHistory>()
-  const { refreshData, error, isLoading, data } = useDataQueryer<TokenPriceSingleQuery>(query, {
-    contract: {
-      address,
-      chain,
-    },
-    duration: toHistoryDuration(timePeriod),
-  })
+  const [prices, setPrices] = useState<PriceHistory>(TokenAPICache.checkPriceHistory(address, timePeriod))
+  const [error, setError] = useState<any>()
+  const [isLoading, setIsLoading] = useState(!prices)
 
+  /* To be called every time the data is successfully queried */
+  const updatePrices = useCallback(
+    (data: TokenPriceSingleQuery['response']) => {
+      const newPrices = data?.tokenProjects?.[0]?.markets?.[0]?.priceHistory
+      if (newPrices) {
+        TokenAPICache.setPriceHistory(newPrices, address, timePeriod)
+        setPrices(newPrices)
+      }
+    },
+    [timePeriod, address]
+  )
+
+  const fetchPrices = useRefreshableQuery<TokenPriceSingleQuery>(
+    query,
+    {
+      contract: {
+        address,
+        chain,
+      },
+      duration: toHistoryDuration(timePeriod),
+    },
+    updatePrices,
+    setError,
+    setIsLoading
+  )
+
+  /* To be called on first load, or when time period changes */
   const getData = useCallback(() => {
     const cached = TokenAPICache.checkPriceHistory(address, timePeriod)
     if (cached) {
       setPrices(cached)
+      setIsLoading(false)
     } else {
-      refreshData()
+      setIsLoading(true)
+      fetchPrices()
     }
   }, [timePeriod])
 
-  useEffect(getData, [])
-  useEffect(getData, [timePeriod])
-
   useEffect(() => {
-    const newData = data?.tokenProjects?.[0]?.markets?.[0]?.priceHistory
-    if (newData) {
-      TokenAPICache.setPriceHistory(newData, address, timePeriod)
-      setPrices(newData)
+    if (!prices) {
+      getData()
     }
-  }, [data])
+  }, [])
+  useEffect(getData, [timePeriod])
 
   return { error, isLoading, data: prices ?? [] }
 }
 
-// export function useTokenPriceQuery(address: string, timePeriod: TimePeriod, chain: Chain) {
-//   const { refreshData, error, isLoading, data } = useDataQueryer<TokenPriceQueryType>(query, {
-//     contract: {
-//       address,
-//       chain,
-//     },
-//     duration: toHistoryDuration(timePeriod),
-//   })
+export function fillTokenPriceCache(address: string, chain: Chain) {
+  fetchQuery<TokenPriceAllQuery>(environment, allQuery, {
+    contract: {
+      address,
+      chain,
+    },
+  }).subscribe({
+    next: (data) => {
+      const prices1H = data?.tokenProjects?.[0]?.markets?.[0]?.priceHistory1H
+      const prices1D = data?.tokenProjects?.[0]?.markets?.[0]?.priceHistory1D
+      const prices1W = data?.tokenProjects?.[0]?.markets?.[0]?.priceHistory1W
+      const prices1M = data?.tokenProjects?.[0]?.markets?.[0]?.priceHistory1M
+      const prices1Y = data?.tokenProjects?.[0]?.markets?.[0]?.priceHistory1Y
+      const pricesMax = data?.tokenProjects?.[0]?.markets?.[0]?.priceHistoryMAX
 
-//   useEffect(() => {
-//     const prices = data?.tokenProjects?.[0]?.markets?.[0]?.priceHistory
-//     if (prices) {
-//       TokenAPICache.setPriceHistory(prices, address, timePeriod)
-//     }
-//   }, [data])
-
-//   const cachedResult = TokenAPICache.checkPriceHistory(address, timePeriod)
-//   if (cachedResult) {
-//     return { error: null, isLoading: false, data: cachedResult }
-//   } else {
-//     refreshData()
-//     return { error, isLoading: true, data: data?.tokenProjects?.[0]?.markets?.[0]?.priceHistory ?? [] }
-//   }
-// }
+      if (prices1H) {
+        TokenAPICache.setPriceHistory(prices1H, address, TimePeriod.HOUR)
+      }
+      if (prices1D) {
+        TokenAPICache.setPriceHistory(prices1D, address, TimePeriod.DAY)
+      }
+      if (prices1W) {
+        TokenAPICache.setPriceHistory(prices1W, address, TimePeriod.WEEK)
+      }
+      if (prices1M) {
+        TokenAPICache.setPriceHistory(prices1M, address, TimePeriod.MONTH)
+      }
+      if (prices1Y) {
+        TokenAPICache.setPriceHistory(prices1Y, address, TimePeriod.YEAR)
+      }
+      if (pricesMax) {
+        TokenAPICache.setPriceHistory(pricesMax, address, TimePeriod.ALL)
+      }
+    },
+  })
+}
