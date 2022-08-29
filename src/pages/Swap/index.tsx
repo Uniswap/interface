@@ -21,6 +21,7 @@ import {
   useEncryptionParamManager,
   useEncryptionProverKeyManager,
   useEncryptionVerifierDataManager,
+  useParametersManager,
   useVdfParamManager,
   useVdfSnarkParamManager,
 } from 'state/parameters/hooks'
@@ -118,6 +119,7 @@ export default function Swap({ history }: RouteComponentProps) {
   // for expert mode
   const [isExpertMode] = useExpertModeManager()
 
+  const [parameters, updateParameters] = useParametersManager()
   const [vdfParam, updateVdfParam] = useVdfParamManager()
   const [vdfSnarkParam, updateVdfSnarkParam] = useVdfSnarkParamManager()
   const [encryptionVerifierData, updateEncryptionVerifierData] = useEncryptionVerifierDataManager()
@@ -137,10 +139,13 @@ export default function Swap({ history }: RouteComponentProps) {
             console.log(res)
             updateVdfParam(res)
           })
+          .catch((error) => {
+            console.log(error)
+          })
       }
       fetchAndUpdateVdfParam()
     }
-  }, [updateVdfParam, vdfParam])
+  }, [vdfParam, updateVdfParam])
 
   useEffect(() => {
     if (!vdfSnarkParam) {
@@ -149,21 +154,25 @@ export default function Swap({ history }: RouteComponentProps) {
         console.log('fetch vdfsnarkparam!')
         await fetch('http://147.46.240.248:40002/zkp/getVdfSnarkParams', {
           method: 'GET',
-        }).then(async (res) => {
-          console.log(res)
-          if (res.body) {
-            console.log(res.body)
-            const bytes = await res.arrayBuffer()
-            const uint8bytes = new Uint8Array(bytes)
-            console.log(bytes)
-            console.log(uint8bytes)
-            const string = Buffer.from(uint8bytes).toString('hex')
-            console.log(string)
-            const rebyte = new Buffer(string, 'hex')
-            console.log(rebyte)
-            updateVdfSnarkParam(string)
-          }
         })
+          .then(async (res) => {
+            console.log(res)
+            if (res.body) {
+              console.log(res.body)
+              const bytes = await res.arrayBuffer()
+              const uint8bytes = new Uint8Array(bytes)
+              console.log(bytes)
+              console.log(uint8bytes)
+              const string = Buffer.from(uint8bytes).toString('hex')
+              console.log(string)
+              const rebyte = Buffer.from(string, 'hex')
+              console.log(rebyte)
+              updateVdfSnarkParam(string)
+            }
+          })
+          .catch((error) => {
+            console.log(error)
+          })
       }
       fetchAndUpdateVdfSnarkParam()
     }
@@ -176,14 +185,24 @@ export default function Swap({ history }: RouteComponentProps) {
         console.log('fetch EncryptionParam!')
         await fetch('http://147.46.240.248:40002/zkp/getEncryptionParams', {
           method: 'GET',
-        }).then(async (res) => {
-          console.log(res)
-          if (res.body) {
-            const text = await res.text()
-            console.log(text)
-            updateEncryptionParam(text)
-          }
         })
+          .then(async (res) => {
+            console.log(res)
+            if (res.body) {
+              const bytes = await res.arrayBuffer()
+              const uint8bytes = new Uint8Array(bytes)
+              console.log(bytes)
+              console.log(uint8bytes)
+              const string = Buffer.from(uint8bytes).toString('hex')
+              console.log(string)
+              const rebyte = Buffer.from(string, 'hex')
+              console.log(rebyte)
+              updateEncryptionParam(string)
+            }
+          })
+          .catch((error) => {
+            console.log(error)
+          })
       }
       fetchAndUpdateEncryptionParam()
     }
@@ -196,13 +215,24 @@ export default function Swap({ history }: RouteComponentProps) {
         console.log('fetch EncryptionProverKey!')
         await fetch('http://147.46.240.248:40002/zkp/getEncryptionProverKey', {
           method: 'GET',
-        }).then(async (res) => {
-          console.log(res)
-          if (res.body) {
-            const text = await res.text()
-            updateEncryptionProverKey(text)
-          }
         })
+          .then(async (res) => {
+            console.log(res)
+            if (res.body) {
+              const bytes = await res.arrayBuffer()
+              const uint8bytes = new Uint8Array(bytes)
+              console.log(bytes)
+              console.log(uint8bytes)
+              const string = Buffer.from(uint8bytes).toString('hex')
+              console.log(string)
+              const rebyte = Buffer.from(string, 'hex')
+              console.log(rebyte)
+              updateEncryptionProverKey(string)
+            }
+          })
+          .catch((error) => {
+            console.log(error)
+          })
       }
       fetchAndUpdateEncryptionProverKey()
     }
@@ -215,14 +245,24 @@ export default function Swap({ history }: RouteComponentProps) {
         console.log('fetch EncryptionVerifierData!')
         await fetch('http://147.46.240.248:40002/zkp/getEncryptionVerifierData', {
           method: 'GET',
-        }).then(async (res) => {
-          console.log(res)
-          if (res.body) {
-            const text = await res.text()
-            console.log(text)
-            updateEncryptionVerifierData(text)
-          }
         })
+          .then(async (res) => {
+            console.log(res)
+            if (res.body) {
+              const bytes = await res.arrayBuffer()
+              const uint8bytes = new Uint8Array(bytes)
+              console.log(bytes)
+              console.log(uint8bytes)
+              const string = Buffer.from(uint8bytes).toString('hex')
+              console.log(string)
+              const rebyte = Buffer.from(string, 'hex')
+              console.log(rebyte)
+              updateEncryptionVerifierData(string)
+            }
+          })
+          .catch((error) => {
+            console.log(error)
+          })
       }
       fetchAndUpdateEncryptionVerifierData()
     }
@@ -410,7 +450,8 @@ export default function Swap({ history }: RouteComponentProps) {
     allowedSlippage,
     recipient,
     signatureData,
-    sigHandler
+    sigHandler,
+    parameters
   )
 
   const handleSwap = useCallback(() => {

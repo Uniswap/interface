@@ -9,6 +9,7 @@ import useENS from 'hooks/useENS'
 import { SignatureData } from 'hooks/useERC20Permit'
 import { AnyTrade, useSwapCallArguments } from 'hooks/useSwapCallArguments'
 import { ReactNode, useMemo } from 'react'
+import { ParameterState } from 'state/parameters/reducer'
 
 import useSendSwapTransaction, { RadiusSwapResponse } from './useSendSwapTransaction'
 
@@ -31,6 +32,7 @@ interface UseSwapCallbackArgs {
   deadline: BigNumber | undefined
   feeOptions?: FeeOptions
   sigHandler: () => void
+  parameters: ParameterState
 }
 
 // returns a function that will execute a swap, if the parameters are all valid
@@ -43,6 +45,7 @@ export function useSwapCallback({
   deadline,
   feeOptions,
   sigHandler,
+  parameters,
 }: UseSwapCallbackArgs): UseSwapCallbackReturns {
   const { account, chainId, library } = useActiveWeb3React()
 
@@ -62,6 +65,7 @@ export function useSwapCallback({
     swapCalls,
     deadline,
     allowedSlippage,
+    parameters,
     sigHandler
   )
 
