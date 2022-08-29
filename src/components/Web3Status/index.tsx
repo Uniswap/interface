@@ -260,7 +260,7 @@ function Web3StatusInner() {
               <Trans>Connect</Trans>
             </StyledConnect>
             <VerticalDivider />
-            <StyledChevron data-cy="menu-wallet-dropdown" onClick={toggleWalletDropdown}>
+            <StyledChevron data-cy="navbar-wallet-dropdown" onClick={toggleWalletDropdown}>
               {walletIsOpen ? <ChevronUp /> : <ChevronDown />}
             </StyledChevron>
           </Web3StatusConnectNavbar>
