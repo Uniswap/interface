@@ -284,12 +284,14 @@ export function TransactionErrorContent({ message, onDismiss }: { message: React
 }
 
 function L2Content({
+  swapResponse,
   onDismiss,
   chainId,
   hash,
   pendingText,
   inline,
 }: {
+  swapResponse: RadiusSwapResponse
   onDismiss: () => void
   hash: string | undefined
   chainId: number
@@ -327,8 +329,9 @@ function L2Content({
         <ConfirmedIcon inline={inline}>
           {confirmed ? (
             transactionSuccess ? (
-              // <CheckCircle strokeWidth={1} size={inline ? '40px' : '90px'} color={theme.green1} />
-              <AnimatedConfirmation />
+              <>
+                <AnimatedConfirmation />
+              </>
             ) : (
               <AlertCircle strokeWidth={1} size={inline ? '40px' : '90px'} color={theme.red1} />
             )
@@ -349,7 +352,33 @@ function L2Content({
             )}
           </Text>
           <Text fontWeight={400} fontSize={16} textAlign="center">
-            {transaction ? <TransactionSummary info={transaction.info} /> : pendingText}
+            <>
+              {transaction ? <TransactionSummary info={transaction.info} /> : pendingText}
+              {!confirmed && (
+                <>
+                  <Text fontWeight={500} fontSize={14} marginTop={20}>
+                    <Trans>
+                      Round: {swapResponse.data.round}, Order: {swapResponse.data.order}
+                    </Trans>
+                  </Text>
+                  <Text fontWeight={400} fontSize={14} color={'#565A69'} marginTop={10}>
+                    <Trans>Your transaction would be executed on fixed order.</Trans>
+                  </Text>
+                </>
+              )}
+              {confirmed && transactionSuccess && (
+                <>
+                  <Text fontWeight={500} fontSize={14} marginTop={20}>
+                    <Trans>
+                      Round: {swapResponse.data.round}, Order: {swapResponse.data.order}
+                    </Trans>
+                  </Text>
+                  <Text fontWeight={400} fontSize={14} color={'#565A69'} marginTop={10}>
+                    <Trans>Your transaction was executed on fixed order.</Trans>
+                  </Text>
+                </>
+              )}
+            </>
           </Text>
           {chainId && hash ? (
             <ExternalLink href={getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)}>
@@ -415,10 +444,15 @@ export default function TransactionConfirmationModal({
   // confirmation screen
   return (
     <Modal isOpen={isOpen} onDismiss={onDismiss} maxHeight={90}>
-      {/* {isL2 && (hash || attemptingTxn) ? (
-        <L2Content chainId={chainId} hash={hash} onDismiss={onDismiss} pendingText={pendingText} />
-      ) :  */}
-      {attemptingTxn ? (
+      {isL2 && swapResponse && (hash || attemptingTxn) ? (
+        <L2Content
+          swapResponse={swapResponse}
+          chainId={chainId}
+          hash={hash}
+          onDismiss={onDismiss}
+          pendingText={pendingText}
+        />
+      ) : attemptingTxn ? (
         <ConfirmationPendingContent onDismiss={onDismiss} pendingText={pendingText} />
       ) : hash || showVdf ? (
         <TransactionSubmittedContent
