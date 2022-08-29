@@ -178,6 +178,7 @@ export interface Palette {
   backgroundModule: Color
   backgroundOutline: Color
   backgroundScrim: Color
+  backgroundScrolledSurface: Color
 
   textPrimary: Color
   textSecondary: Color
@@ -237,6 +238,7 @@ export const colorsLight: Palette = {
   backgroundFloating: opacify(8, colors.gray700),
   backgroundOutline: opacify(24, colors.gray500),
   backgroundScrim: opacify(60, colors.gray900),
+  backgroundScrolledSurface: opacify(72, colors.white),
 
   textPrimary: colors.gray900,
   textSecondary: colors.gray500,
@@ -293,11 +295,12 @@ export const colorsDark: Palette = {
 
   backgroundBackdrop: colors.black,
   backgroundSurface: colors.gray900,
-  backgroundModule: opacify(8, colors.gray300),
+  backgroundModule: colors.gray800,
   backgroundInteractive: colors.gray700,
   backgroundFloating: opacify(12, colors.black),
   backgroundOutline: opacify(24, colors.gray300),
   backgroundScrim: opacify(72, colors.gray900),
+  backgroundScrolledSurface: opacify(72, colors.gray900),
 
   textPrimary: colors.white,
   textSecondary: colors.gray300,
