@@ -172,19 +172,19 @@ describe('Router02', function () {
             ]
             let calcAmount = await router.getAmountsIn(...args)
             console.log("volatile calcAmount:", calcAmount.map(item => ethers.utils.formatEther(item)))
-            // // stable
-            // let argsStable = [
-            //     amountOut,
-            //     [
-            //         [
-            //             ans.weth.address,
-            //             ans.tt.address,
-            //             true
-            //         ]
-            //     ]
-            // ]
-            // calcAmount = await  router.getAmountsIn(...argsStable)
-            // console.log("stable calcAmount:",calcAmount.map(item=>ethers.utils.formatEther(item)))
+            // stable
+            let argsStable = [
+                amountOut,
+                [
+                    [
+                        ans.weth.address,
+                        ans.tt.address,
+                        true
+                    ]
+                ]
+            ]
+            calcAmount = await  router.getAmountsIn(...argsStable)
+            console.log("stable calcAmount:",calcAmount.map(item=>ethers.utils.formatEther(item)))
         });
 
     })

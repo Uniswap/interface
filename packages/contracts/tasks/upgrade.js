@@ -27,6 +27,13 @@ task("deploy", "deploy proxy")
         await proxy.deployed()
         ins.router = proxy
 
+        console.log({
+            weth:ins.weth.address,
+            tt:ins.tt.address,
+            router:ins.router.address,
+            factory:ins.factory.address
+
+        })
         return ins
     })
 
@@ -58,9 +65,12 @@ task("upgrade", "upgrade proxy & router")
 
 
 // deploy contract
-task("dc", "deploy test token").setAction(async (args) => {
+task("dc", "deploy test token")
+    .addParam("name", "contract name")
+    .setAction(async (args) => {
     const factory = await ethers.getContractFactory(args.name);
     const fa = await factory.deploy()
     await fa.deployed();
+    console.log(fa.address)
     return fa
 })

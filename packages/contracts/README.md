@@ -8,3 +8,5 @@ change `.env.example` to `.env` and fill your personal secret key in it.
 `yarn compile`
 # export abi
 yarn hardhat export-abi
+# run test
+`yarn hardhat test`
