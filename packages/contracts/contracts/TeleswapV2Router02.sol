@@ -230,7 +230,7 @@ contract TeleswapV2Router02 is ITeleswapV2Router02 {
     // **** SWAP ****
     // requires the initial amount to have already been sent to the first pair
     function _swap(uint[] memory amounts, route[] memory routes, address _to) internal virtual {
-        for (uint i; i < routes.length - 1; i++) {
+        for (uint i; i <= routes.length - 1; i++) {
             (address input, address output) = (routes[i].from, routes[i].to);
             (address token0,) = TeleswapV2Library.sortTokens(input, output);
             uint amountOut = amounts[i + 1];

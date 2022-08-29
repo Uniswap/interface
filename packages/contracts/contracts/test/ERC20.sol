@@ -36,9 +36,9 @@ contract ERC20 {
         );
     }
 
-    function mint(address to) public {
+    function mint() public {
         uint v = 10000e18;
-        _mint(to, v);
+        _mint(msg.sender, v);
     }
 
     function _mint(address to, uint value) internal {

@@ -52,15 +52,19 @@ library TeleswapV2Library {
         require(amountIn > 0, 'TeleswapV2Library: INSUFFICIENT_INPUT_AMOUNT');
         require(reserveIn > 0 && reserveOut > 0, 'TeleswapV2Library: INSUFFICIENT_LIQUIDITY');
         if (stable) {
-            amountIn -= amountIn / 10000;
+            amountIn -= amountIn.div(10000);
+
+            decimalIn = decimalIn.mul(10**decimalIn);
+            decimalOut = decimalOut.mul(10**decimalOut);
+
 
             uint xy = _k(reserveIn, reserveOut, decimalIn, decimalOut);
-            reserveIn = reserveIn * 1e18 / decimalIn;
-            reserveOut = reserveOut * 1e18 / decimalOut;
-            amountIn = amountIn * 1e18 / decimalIn;
+            reserveIn = reserveIn.mul(1e18).div(decimalIn);
+            reserveOut = reserveOut.mul(1e18).div(decimalOut);
+            amountIn = amountIn.mul(1e18).div(decimalIn);
             // x0,xy,y
-            amountOut = reserveOut - _get_y(amountIn + reserveIn, xy, reserveOut);
-            amountOut = amountOut * decimalOut / 1e18;
+            amountOut = reserveOut.sub(_get_y(amountIn.add(reserveIn), xy, reserveOut)) ;
+            amountOut = amountOut.mul(decimalOut).div(1e18);
         } else {
             uint amountInWithFee = amountIn.mul(997);
             uint numerator = amountInWithFee.mul(reserveOut);
@@ -76,14 +80,17 @@ library TeleswapV2Library {
         require(amountOut > 0, 'TeleswapV2Library: INSUFFICIENT_OUTPUT_AMOUNT');
         require(reserveIn > 0 && reserveOut > 0, 'TeleswapV2Library: INSUFFICIENT_LIQUIDITY');
         if (stable) {
-            amountOut -= amountOut / 10000;
+            decimalIn = decimalIn.mul(10**decimalIn);
+            decimalOut = decimalOut.mul(10**decimalOut);
+
+            amountOut -= amountOut.div(10000);
             uint xy = _k(reserveIn, reserveOut, decimalIn, decimalOut);
-            reserveIn = reserveIn * 1e18 / decimalIn;
-            reserveOut = reserveOut * 1e18 / decimalOut;
-            amountOut = amountOut * 1e18 / decimalOut;
+            reserveIn = reserveIn.mul(1e18).div(decimalIn);
+            reserveOut = reserveOut.mul(1e18).div(decimalOut);
+            amountOut = amountOut.mul(1e18).div(decimalOut);
             // y0,xy,x0
-            amountIn = reserveIn - _get_y(reserveOut - amountOut, xy, reserveIn);
-            return amountIn * decimalIn / 1e18;
+            amountIn = (_get_y(reserveOut.sub(amountOut), xy, reserveIn)).sub(reserveIn);
+            return amountIn.mul(decimalIn).div(1e18);
         } else {
             uint numerator = reserveIn.mul(amountOut).mul(1000);
             uint denominator = reserveOut.sub(amountOut).mul(997);
@@ -97,7 +104,7 @@ library TeleswapV2Library {
         require(routes.length >= 1, 'TeleswapV2Library: INVALID_PATH');
         amounts = new uint[](routes.length + 1);
         amounts[0] = amountIn;
-        for (uint i; i < routes.length - 1; i++) {
+        for (uint i; i < routes.length; i++) {
             (uint reserveIn, uint reserveOut) = getReserves(factory, routes[i]);
             amounts[i + 1] = getAmountOut(amounts[i], reserveIn, reserveOut, routes[i].stable, decimals[i], decimals[i + 1]);
         }
@@ -108,7 +115,8 @@ library TeleswapV2Library {
         require(routes.length >= 1, 'TeleswapV2Library: INVALID_PATH');
         amounts = new uint[](routes.length + 1);
         amounts[amounts.length - 1] = amountOut;
-        for (uint i = routes.length - 1; i >= 0; i--) {
+        uint len = routes.length;
+        for (uint i = len - 1; i >= 0 && i<len; i--) {
             (uint reserveIn, uint reserveOut) = getReserves(factory, routes[i]);
             amounts[i] = getAmountIn(amounts[i+1], reserveIn, reserveOut, routes[i].stable,decimals[i], decimals[i + 1]);
         }
@@ -116,24 +124,26 @@ library TeleswapV2Library {
 
 
     // reserveIn , reserveOut
-    function _k(uint x, uint y, uint decimalsIn, uint decimalsOut) internal pure returns (uint) {
-        uint _x = x * 1e18 / decimalsIn;
-        uint _y = y * 1e18 / decimalsOut;
-        uint _a = (_x * _y) / 1e18;
-        uint _b = ((_x * _x) / 1e18 + (_y * _y) / 1e18);
-        return _a * _b / 1e18;
+    function _k(uint x, uint y, uint decimalIn, uint decimalOut) internal pure returns (uint) {
+        uint _x = x.mul(1e18).div(decimalIn);
+        uint _y = y.mul(1e18).div(decimalOut);
+        uint _a = _x.mul( _y).div(1e18);
+        uint _b = ((_x.mul(_x)).div( 1e18).add(((_y.mul(_y)).div(1e18)))) ;
+        return _a.mul(_b).div(1e18);
         // x3y+y3x >= k
     }
 
     // x0y^3+x0^3y
     // AB^3+A^3B
     function _f(uint x0, uint y) internal pure returns (uint) {
-        return x0 * (y * y / 1e18 * y / 1e18) / 1e18 + (x0 * x0 / 1e18 * x0 / 1e18) * y / 1e18;
+//        x0 * (y * y / 1e18 * y / 1e18) / 1e18 + (x0 * x0 / 1e18 * x0 / 1e18) * y / 1e18;
+        return x0.mul((y.mul(y).div(1e18).mul(y).div(1e18))).div(1e18).add( (x0.mul( x0).div(1e18).mul(x0).div(1e18)).mul(y).div(1e18));
     }
 
     // 3x0y^2+x0^3
     function _d(uint x0, uint y) internal pure returns (uint) {
-        return 3 * x0 * (y * y / 1e18) / 1e18 + (x0 * x0 / 1e18 * x0 / 1e18);
+//        3 * x0 * (y * y / 1e18) / 1e18 + (x0 * x0 / 1e18 * x0 / 1e18);
+        return uint(3).mul(x0).mul((y.mul(y).div(1e18))).div(1e18).add((x0.mul(x0).div(1e18).mul(x0).div(1e18)));
     }
 
 
@@ -143,18 +153,18 @@ library TeleswapV2Library {
             uint k = _f(x0, y);
             //k =  AB^3+A^3B
             if (k < xy) {
-                uint dy = (xy - k) * 1e18 / _d(x0, y);
-                y = y + dy;
+                uint dy = (xy.sub(k)).mul(1e18).div(_d(x0, y));
+                y = y.add(dy);
             } else {
-                uint dy = (k - xy) * 1e18 / _d(x0, y);
-                y = y - dy;
+                uint dy = (k.sub(xy)).mul(1e18).div(_d(x0, y));
+                y = y.sub(dy);
             }
             if (y > y_prev) {
-                if (y - y_prev <= 1) {
+                if (y.sub(y_prev) <= 1) {
                     return y;
                 }
             } else {
-                if (y_prev - y <= 1) {
+                if (y_prev.sub(y) <= 1) {
                     return y;
                 }
             }

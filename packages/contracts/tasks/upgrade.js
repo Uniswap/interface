@@ -9,30 +9,25 @@
 
 task("deploy", "deploy proxy")
     .setAction(async (args, hre) => {
-        if (args.weth === "") {
-            console.error("weth address is required");
-            return;
-        }
         console.log("your blockchain network:", hre.network.name)
 
-        let ans = {};
+        let ins = {}
         // deploy weth
-        ans.weth = await hre.run("dc", {"name": "WETH9"})
+        ins.weth = await hre.run("dc", {"name": "WETH9"})
         // deploy test token
-        ans.tt = await hre.run("dc", {"name": "ERC20"})
+        ins.tt = await hre.run("dc", {"name": "ERC20"})
         // deploy factory
         let teleFactory = await ethers.getContractFactory("TeleswapV2Factory");
         let pFa = await upgrades.deployProxy(teleFactory, [process.env.PUB_KEY])
         await pFa.deployed()
-        ans.factory = pFa.address
+        ins.factory = pFa
         // deploy router
         const factory = await ethers.getContractFactory("TeleswapV2Router02");
-        const proxy = await upgrades.deployProxy(factory, [ans.factory, ans.weth]);
+        const proxy = await upgrades.deployProxy(factory, [ins.factory.address, ins.weth.address]);
         await proxy.deployed()
-        ans.router = proxy.address
+        ins.router = proxy
 
-
-        console.log("deployed:", ans)
+        return ins
     })
 
 // upgrade
@@ -67,5 +62,5 @@ task("dc", "deploy test token").setAction(async (args) => {
     const factory = await ethers.getContractFactory(args.name);
     const fa = await factory.deploy()
     await fa.deployed();
-    return fa.address
+    return fa
 })
