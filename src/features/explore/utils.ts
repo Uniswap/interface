@@ -30,8 +30,7 @@ export function getCompareFn(order: ClientSideOrderBy) {
 }
 
 export function getOrderByValues(orderBy: CoingeckoOrderBy | ClientSideOrderBy) {
-  const requiresRemoteOrderBy = Object.values<string>(orderBy).includes(orderBy)
-
+  const requiresRemoteOrderBy = Object.values<string>(CoingeckoOrderBy).includes(orderBy)
   return {
     localOrderBy: !requiresRemoteOrderBy ? (orderBy as ClientSideOrderBy) : undefined,
     remoteOrderBy: requiresRemoteOrderBy ? (orderBy as CoingeckoOrderBy) : undefined,
