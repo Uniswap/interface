@@ -172,7 +172,6 @@ export default function WalletModal({
 
   const tryActivation = async (connector: AbstractConnector | undefined) => {
     let name = ''
-    debugger
     Object.keys(SUPPORTED_WALLETS).map(key => {
       if (connector === SUPPORTED_WALLETS[key].connector) {
         return (name = SUPPORTED_WALLETS[key].name)
@@ -226,7 +225,6 @@ export default function WalletModal({
           return (
             <Option
               onClick={() => {
-                debugger
                 option.connector !== connector && !option.href && tryActivation(option.connector)
               }}
               id={`connect-${key}`}
@@ -280,7 +278,6 @@ export default function WalletModal({
           <Option
             id={`connect-${key}`}
             onClick={() => {
-              debugger
               option.connector === connector
                 ? setWalletView(WALLET_VIEWS.ACCOUNT)
                 : !option.href && tryActivation(option.connector)

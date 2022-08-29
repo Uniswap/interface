@@ -25,6 +25,9 @@ export interface Colors {
   bgSwapInput: Color
   bgTransparent: Color
   bgGreen: Color
+  bgGreenHover: Color
+  bgGreenSelect: Color
+  bgGreenDisable: Color
   bgDisable: Color
 
   modalBG: Color
@@ -54,11 +57,6 @@ export interface Colors {
   blue1: Color
 
   // tele
-  btnNormal: Color
-  btnHover: Color
-  btnSelect: Color
-  btnDisable: Color
-
   textNormal: Color
   textHover: Color
   textSelect: Color

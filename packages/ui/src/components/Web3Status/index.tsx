@@ -25,10 +25,15 @@ import Loader from '../Loader'
 import { RowBetween } from '../Row'
 import WalletModal from '../WalletModal'
 
+import userActiveIcon from '../../assets/images/tele/userActive.svg'
+
+
 const IconWrapper = styled.div<{ size?: number }>`
   ${({ theme }) => theme.flexColumnNoWrap};
   align-items: center;
   justify-content: center;
+  width: .4rem;
+  height: .4rem;
   & > * {
     height: ${({ size }) => (size ? size + 'px' : '32px')};
     width: ${({ size }) => (size ? size + 'px' : '32px')};
@@ -59,45 +64,47 @@ const Web3StatusError = styled(Web3StatusGeneric)`
 `
 
 const Web3StatusConnect = styled(Web3StatusGeneric)<{ faded?: boolean }>`
-  background-color: ${({ theme }) => theme.btnNormal};
+  background-color: ${({ theme }) => theme.bgGreen};
   border: none;
   color: ${({ theme }) => theme.primaryText1};
   font-weight: 500;
-  background: #39E1BA;
+  background: ${({theme }) => theme.bgGreen};
   border-radius: .4rem;
   width: 8rem;
   :hover,
   :focus {
     color: ${({ theme }) => theme.textHover};
-    background-color: ${({theme}) => theme.btnHover};
+    background-color: ${({theme}) => theme.bgGreenHover};
   }
 
   ${({ faded }) =>
     faded &&
     css`
-      background-color: ${({ theme }) => theme.btnNormal};
-      border: 1px solid ${({ theme }) => theme.btnNormal};
+      background-color: ${({ theme }) => theme.bgGreen};
+      border: 1px solid ${({ theme }) => theme.bgGreen};
       color: ${({ theme }) => theme.textHover};
 
       :hover,
       :focus {
-        background-color: ${({theme}) => theme.btnHover};
+        background-color: ${({theme}) => theme.bgGreenHover};
         color: ${({ theme }) => darken(0.05, theme.textHover)};
       }
     `}
 `
 
 const Web3StatusConnected = styled(Web3StatusGeneric)<{ pending?: boolean }>`
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: .4rem;
   background-color: ${({ pending, theme }) => (pending ? theme.primary1 : theme.bg2)};
   border: 1px solid ${({ pending, theme }) => (pending ? theme.primary1 : theme.bg3)};
   color: ${({ pending, theme }) => (pending ? theme.white : theme.text1)};
   font-weight: 500;
   :hover,
   :focus {
-    background-color: ${({ pending, theme }) => (pending ? darken(0.05, theme.primary1) : lighten(0.05, theme.bg2))};
-
+    background-color: ${({ pending, theme }) => (pending ? darken(0.05, theme.bgGreenHover) : lighten(0.05, theme.bg2))};
+    border: 1px solid ${({ pending, theme }) => (pending ? theme.bgGreenHover :  theme.bgGreenHover)};
     :focus {
-      border: 1px solid ${({ pending, theme }) => (pending ? darken(0.1, theme.primary1) : darken(0.1, theme.bg3))};
+      border: 1px solid ${({ pending, theme }) => (pending ? darken(0.1, theme.bgGreenHover) : darken(0.1, theme.bgGreenHover))};
     }
   }
 `
@@ -110,10 +117,10 @@ const Text = styled.p`
   margin: 0 0.5rem 0 0.25rem;
   width: fit-content;
   font-weight: 500;
-
   font-size: .8rem;
   line-height: 1rem;
-  color: #000000;
+  /* color: #000000; */
+  color: #FFFFFF;;
 `
 
 const NetworkIcon = styled(Activity)`
@@ -136,6 +143,11 @@ const SOCK = (
 
 // eslint-disable-next-line react/prop-types
 function StatusIcon({ connector }: { connector: AbstractConnector }) {
+  return (
+    <IconWrapper size={16}>
+      <img src={userActiveIcon} alt={''} />
+    </IconWrapper>
+  )
   if (connector === injected) {
     return <Identicon />
   } else if (connector === walletconnect) {
@@ -160,6 +172,12 @@ function StatusIcon({ connector }: { connector: AbstractConnector }) {
     return (
       <IconWrapper size={16}>
         <img src={PortisIcon} alt={''} />
+      </IconWrapper>
+    )
+  }else {
+    return (
+      <IconWrapper size={16}>
+        <img src={userActiveIcon} alt={''} />
       </IconWrapper>
     )
   }

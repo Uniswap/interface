@@ -60,6 +60,11 @@ export function colors(darkMode: boolean): Colors {
     bgHtml: darkMode ? '#05050e' : '#05050e',
     bgTransparent: darkMode ? 'transparent' : 'transparent',
     bgGreen: darkMode ? '#39E1BA' : '#39E1BA',
+    bgGreenHover: darkMode ? '#74EACF' : '#39E1BA',
+    bgGreenSelect: darkMode ? '#2FB598' : '#39E1BA',
+    bgGreenDisable: darkMode ? '#CCCCCC' : '#39E1BA',
+
+    
     bgDisable: darkMode ? '#CCCCCC' : '#CCCCCC',
 
     //specialty colors
@@ -93,11 +98,6 @@ export function colors(darkMode: boolean): Colors {
     // dont wanna forget these blue yet
     // blue4: darkMode ? '#153d6f70' : '#C4D9F8',
     // blue5: darkMode ? '#153d6f70' : '#EBF4FF',
-
-    btnNormal: darkMode ? '#39E1BA' : '#39E1BA',
-    btnHover: darkMode ? '#74EACF' : '#ff007a',
-    btnSelect: darkMode ? '#2FB598' : '#ff007a',
-    btnDisable: darkMode ? '#CCCCCC' : '#ff007a',
 
     textNormal: darkMode ? '#05050E' : '#ff007a',
     textHover: darkMode ? '#05050E' : '#ff007a',

@@ -245,7 +245,7 @@ const StyledNavLink = styled(NavLink).attrs({
   line-height: 1rem;
   color: #FFFFFF;
   &.${activeClassName},:focus {
-    background: #39E1BA;
+    background: ${({theme }) => theme.bgGreen};
     color: #000000;
   }
 

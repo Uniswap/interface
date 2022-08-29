@@ -14,7 +14,7 @@ import { AutoRow, RowBetween } from '../../components/Row'
 import AdvancedSwapDetailsDropdown from '../../components/swap/AdvancedSwapDetailsDropdown'
 import { DefaultVersionLink } from '../../components/swap/BetterTradeLink'
 import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
-import { ArrowWrapper, BottomGrouping, SwapCallbackError, Wrapper } from '../../components/swap/styleds'
+import { ArrowWrapper, BottomGrouping, SwapCallbackError, Wrapper,  StyledSwapArrow } from '../../components/swap/styleds'
 import TradePrice from '../../components/swap/TradePrice'
 import TokenWarningModal from '../../components/TokenWarningModal'
 import ProgressSteps from '../../components/ProgressSteps'
@@ -48,8 +48,8 @@ import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter
 import { getTradeVersion } from 'utils/tradeVersion'
 import { RouteComponentProps } from 'react-router-dom'
 import useThemedContext from 'hooks/useThemedContext'
-import swapArrowIcon from '../../assets/images/tele/swapArrow.png'
 import { isTradeBetter } from 'utils/trades'
+import { url } from 'inspector'
 
 export default function Swap({ history }: RouteComponentProps) {
   const loadedUrlParams = useDefaultsFromURLSearch()
@@ -341,11 +341,13 @@ export default function Swap({ history }: RouteComponentProps) {
                     }}
                     color={currencies[Field.INPUT] && currencies[Field.OUTPUT] ? theme.primary1 : theme.textNormal}
                   /> */}
-                  <img onClick={() => {
-                    setApprovalSubmitted(false) // reset 2 step UI for approvals
-                    onSwitchTokens()
-                  }}
-                    style={{ width: '2rem', height: 'auto' }} src={swapArrowIcon} alt="" />
+                  <StyledSwapArrow
+                    onClick={() => {
+                      setApprovalSubmitted(false) // reset 2 step UI for approvals
+                      onSwitchTokens()
+                    }}
+                  >
+                  </StyledSwapArrow>
                 </ArrowWrapper>
                 {recipient === null && !showWrap && isExpertMode ? (
                   <LinkStyledButton id="add-recipient-button" onClick={() => onChangeRecipient('')}>
@@ -510,11 +512,13 @@ export default function Swap({ history }: RouteComponentProps) {
           </BottomGrouping>
         </Wrapper>
       </AppBody>
-      {!swapIsUnsupported ? (
-        <AdvancedSwapDetailsDropdown trade={trade} />
-      ) : (
-          <UnsupportedCurrencyFooter show={swapIsUnsupported} currencies={[currencies.INPUT, currencies.OUTPUT]} />
-        )}
+      {
+        !swapIsUnsupported ? (
+          <AdvancedSwapDetailsDropdown trade={trade} />
+        ) : (
+            <UnsupportedCurrencyFooter show={swapIsUnsupported} currencies={[currencies.INPUT, currencies.OUTPUT]} />
+          )
+      }
     </>
   )
 }
