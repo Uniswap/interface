@@ -74,7 +74,7 @@ export function AccountCardItem({
           {onPressEdit && (
             <Button name={ElementName.Edit} onPress={() => onPressEdit(address)}>
               <TripleDots
-                color={theme.colors.textTertiary}
+                color={theme.colors.textSecondary}
                 height={12}
                 strokeLinecap="round"
                 strokeWidth="1"
