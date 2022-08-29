@@ -7,6 +7,7 @@ import { Text } from 'rebass'
 import styled from 'styled-components'
 
 import { RowBetween } from 'components/Row'
+import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import { CloseIcon } from 'theme'
 
 import { CurrencyModalView } from './CurrencySearchModal'
@@ -59,7 +60,7 @@ export default function Manage({
 }) {
   // toggle between tokens and lists
   const [showLists, setShowLists] = useState(true)
-
+  const { mixpanelHandler } = useMixpanel()
   return (
     <Wrapper>
       <PaddedColumn>
@@ -74,10 +75,22 @@ export default function Manage({
       <Separator />
       <PaddedColumn style={{ paddingBottom: 0 }}>
         <ToggleWrapper>
-          <ToggleOption onClick={() => setShowLists(!showLists)} active={showLists}>
+          <ToggleOption
+            onClick={() => {
+              mixpanelHandler(MIXPANEL_TYPE.MANAGE_TOKEN_LISTS_TAB_CLICK, { tab: 'List' })
+              setShowLists(true)
+            }}
+            active={showLists}
+          >
             <Trans>Lists</Trans>
           </ToggleOption>
-          <ToggleOption onClick={() => setShowLists(!showLists)} active={!showLists}>
+          <ToggleOption
+            onClick={() => {
+              mixpanelHandler(MIXPANEL_TYPE.MANAGE_TOKEN_LISTS_TAB_CLICK, { tab: 'Token' })
+              setShowLists(false)
+            }}
+            active={!showLists}
+          >
             <Trans>Tokens</Trans>
           </ToggleOption>
         </ToggleWrapper>

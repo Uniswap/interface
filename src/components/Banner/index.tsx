@@ -12,6 +12,7 @@ import KyberSwapTradingCampaignTablet from 'assets/banners/kyberswap-trading-cam
 import PolygonDesktop from 'assets/banners/polygon-desktop.png'
 import PolygonMobile from 'assets/banners/polygon-mobile.png'
 import PolygonTablet from 'assets/banners/polygon-tablet.png'
+import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import useTheme from 'hooks/useTheme'
 import { useWindowSize } from 'hooks/useWindowSize'
 import { ExternalLink } from 'theme'
@@ -100,11 +101,13 @@ function Banner({
   const size = useWindowSize()
   const w = size?.width || 0
   const theme = useTheme()
+  const { mixpanelHandler } = useMixpanel()
 
   const ALL_BANNERS = [
     {
       // KyberSwap Trading Campaign ATH
       id: 'kyberSwap-trading-campaign-polygon',
+      name: 'KyberSwap Trading Campaign ATH',
       start: new Date('2022-08-15T11:00:00.000Z'),
       end: new Date('2022-08-30T23:59:59.000Z'),
       img: isInModal
@@ -119,6 +122,7 @@ function Banner({
     {
       // Polygon LM
       id: 'polygon-lm',
+      name: 'Polygon LM',
       start: new Date('2022-08-17T00:00:00.000Z'),
       end: new Date('2022-09-17T00:00:00.000Z'),
       img: isInModal ? PolygonMobile : w > 768 ? PolygonDesktop : w > 500 ? PolygonTablet : PolygonMobile,
@@ -148,10 +152,28 @@ function Banner({
         {banners.map((banner, index) => (
           <SwiperSlide key={index}>
             <Wrapper>
-              <ExternalLink href={banner.link}>
+              <ExternalLink
+                href={banner.link}
+                onClick={() => {
+                  mixpanelHandler(MIXPANEL_TYPE.BANNER_CLICK, {
+                    banner_name: banner.name,
+                    banner_url: banner.link,
+                  })
+                }}
+              >
                 <img src={banner.img} alt="banner" width="100%" />
               </ExternalLink>
-              <Close color={theme.white} role="button" onClick={() => setShowBanner(false)} />
+              <Close
+                color={theme.white}
+                role="button"
+                onClick={() => {
+                  mixpanelHandler(MIXPANEL_TYPE.CLOSE_BANNER_CLICK, {
+                    banner_name: banner.name,
+                    banner_url: banner.link,
+                  })
+                  setShowBanner(false)
+                }}
+              />
             </Wrapper>
           </SwiperSlide>
         ))}

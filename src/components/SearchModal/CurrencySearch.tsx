@@ -1,6 +1,6 @@
 import { ChainId, Currency, Token } from '@kyberswap/ks-sdk-core'
 import { Trans, t } from '@lingui/macro'
-import React, { ChangeEvent, KeyboardEvent, RefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { ChangeEvent, KeyboardEvent, RefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Edit } from 'react-feather'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { FixedSizeList } from 'react-window'
@@ -17,6 +17,7 @@ import {
   useToken,
 } from 'hooks/Tokens'
 import useDebounce from 'hooks/useDebounce'
+import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import useTheme from 'hooks/useTheme'
 import useToggle from 'hooks/useToggle'
@@ -228,6 +229,13 @@ export function CurrencySearch({
     showETH,
   ])
 
+  const { mixpanelHandler } = useMixpanel()
+
+  const handleManageTokenListsClick = useCallback(() => {
+    mixpanelHandler(MIXPANEL_TYPE.MANAGE_TOKEN_LISTS_CLICK)
+    showManageView()
+  }, [mixpanelHandler, showManageView])
+
   return (
     <ContentWrapper>
       <PaddedColumn gap="14px">
@@ -323,7 +331,7 @@ export function CurrencySearch({
 
       <Footer>
         <Row justify="center">
-          <ButtonText onClick={showManageView} color={theme.blue1} className="list-token-manage-button">
+          <ButtonText onClick={handleManageTokenListsClick} color={theme.blue1} className="list-token-manage-button">
             <RowFixed>
               <IconWrapper size="16px" marginRight="6px">
                 <Edit />

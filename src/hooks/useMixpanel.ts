@@ -127,6 +127,13 @@ export enum MIXPANEL_TYPE {
   TAS_LIKE_PAIR,
   TAS_DISLIKE_PAIR,
   TAS_PRESS_CTRL_K,
+
+  MANAGE_TOKEN_LISTS_CLICK,
+  MANAGE_TOKEN_LISTS_TAB_CLICK,
+  MANAGE_TOKEN_LISTS_ON_OFF_TOGGLE,
+
+  BANNER_CLICK,
+  CLOSE_BANNER_CLICK,
 }
 
 export const NEED_CHECK_SUBGRAPH_TRANSACTION_TYPES = [
@@ -208,6 +215,9 @@ export default function useMixpanel(trade?: Aggregator | undefined, currencies?:
             trade_qty: arbitrary.inputAmount,
             slippage_setting: arbitrary.slippageSetting,
             price_impact: arbitrary.priceImpact,
+            gas_price: formatUnits(gas_price, 18),
+            eth_price: ethPrice?.currentPrice,
+            actual_gas_native: actual_gas?.toNumber(),
           })
           break
         }
@@ -666,6 +676,26 @@ export default function useMixpanel(trade?: Aggregator | undefined, currencies?:
           mixpanel.track('Type and Swap - User click Ctrl + K (or Cmd + K) or Clicked on the text box', {
             navigation: payload,
           })
+          break
+        }
+        case MIXPANEL_TYPE.MANAGE_TOKEN_LISTS_CLICK: {
+          mixpanel.track('Manage Token Lists - User click on "Manage Token Lists" button')
+          break
+        }
+        case MIXPANEL_TYPE.MANAGE_TOKEN_LISTS_TAB_CLICK: {
+          mixpanel.track('Manage Token Lists - User click on "List" or "Token" toggle', payload)
+          break
+        }
+        case MIXPANEL_TYPE.MANAGE_TOKEN_LISTS_ON_OFF_TOGGLE: {
+          mixpanel.track('Manage Token Lists - User clicked On/Off toggle from Token Lists', payload)
+          break
+        }
+        case MIXPANEL_TYPE.BANNER_CLICK: {
+          mixpanel.track('User click on "Banner" at swap page')
+          break
+        }
+        case MIXPANEL_TYPE.CLOSE_BANNER_CLICK: {
+          mixpanel.track('User click close "Banner" at swap page')
           break
         }
       }
