@@ -1,7 +1,7 @@
 import { Connector } from '@web3-react/types'
 import { networkConnection, walletConnectConnection } from 'connection'
 import { getChainInfo } from 'constants/chainInfo'
-import { ALL_SUPPORTED_CHAIN_IDS, SupportedChainId } from 'constants/chains'
+import { isSupportedChain, SupportedChainId } from 'constants/chains'
 import { RPC_URLS } from 'constants/networks'
 
 function getRpcUrls(chainId: SupportedChainId): [string] {
@@ -34,12 +34,8 @@ function getRpcUrls(chainId: SupportedChainId): [string] {
   throw new Error('RPC URLs must use public endpoints')
 }
 
-export function isChainAllowed(chainId: number) {
-  return ALL_SUPPORTED_CHAIN_IDS.includes(chainId)
-}
-
 export const switchChain = async (connector: Connector, chainId: SupportedChainId) => {
-  if (!isChainAllowed(chainId)) {
+  if (!isSupportedChain(chainId)) {
     throw new Error(`Chain ${chainId} not supported for connector (${typeof connector})`)
   } else if (connector === walletConnectConnection.connector || connector === networkConnection.connector) {
     await connector.activate(chainId)

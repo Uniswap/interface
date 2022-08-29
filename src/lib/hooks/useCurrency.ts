@@ -2,11 +2,11 @@ import { arrayify } from '@ethersproject/bytes'
 import { parseBytes32String } from '@ethersproject/strings'
 import { Currency, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import { isSupportedChain } from 'constants/chains'
 import { useBytes32TokenContract, useTokenContract } from 'hooks/useContract'
 import { NEVER_RELOAD, useSingleCallResult } from 'lib/hooks/multicall'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { useMemo } from 'react'
-import { isChainAllowed } from 'utils/switchChain'
 
 import { TOKEN_SHORTHANDS } from '../../constants/tokens'
 import { isAddress } from '../../utils'
@@ -31,7 +31,7 @@ function parseStringOrBytes32(str: string | undefined, bytes32: string | undefin
  */
 export function useTokenFromNetwork(tokenAddress: string | null | undefined): Token | null | undefined {
   const { chainId } = useWeb3React()
-  const chainAllowed = chainId && isChainAllowed(chainId)
+  const supportedChain = isSupportedChain(chainId)
 
   const formattedAddress = isAddress(tokenAddress)
 
@@ -45,7 +45,7 @@ export function useTokenFromNetwork(tokenAddress: string | null | undefined): To
   const decimals = useSingleCallResult(tokenContract, 'decimals', undefined, NEVER_RELOAD)
 
   return useMemo(() => {
-    if (typeof tokenAddress !== 'string' || !chainAllowed || !formattedAddress) return undefined
+    if (typeof tokenAddress !== 'string' || !supportedChain || !formattedAddress) return undefined
     if (decimals.loading || symbol.loading || tokenName.loading) return null
     if (decimals.result) {
       return new Token(
@@ -60,7 +60,7 @@ export function useTokenFromNetwork(tokenAddress: string | null | undefined): To
   }, [
     formattedAddress,
     chainId,
-    chainAllowed,
+    supportedChain,
     decimals.loading,
     decimals.result,
     symbol.loading,
@@ -105,8 +105,8 @@ export function useCurrencyFromMap(tokens: TokenMap, currencyId?: string | null)
 
   const token = useTokenFromMapOrNetwork(tokens, isNative ? undefined : shorthandMatchAddress ?? currencyId)
 
-  const chainAllowed = chainId && isChainAllowed(chainId)
-  if (currencyId === null || currencyId === undefined || !chainAllowed) return null
+  const supportedChain = isSupportedChain(chainId)
+  if (currencyId === null || currencyId === undefined || !supportedChain) return null
 
   // this case so we use our builtin wrapped token instead of wrapped tokens on token lists
   const wrappedNative = nativeCurrency?.wrapped
