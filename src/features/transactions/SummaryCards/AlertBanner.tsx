@@ -24,9 +24,9 @@ export default function AlertBanner({
 
   const copy =
     status === TransactionStatus.Cancelled
-      ? t('Swap Canceled')
+      ? t('Canceled')
       : status === TransactionStatus.Cancelling
-      ? t('Canceling swap')
+      ? t('Canceling')
       : t('Failed to Cancel')
 
   const failedCancelTooltipContent = t(
