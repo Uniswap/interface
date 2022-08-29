@@ -1,6 +1,7 @@
 const {expect} = require("chai");
 const hre = require("hardhat");
 const {loadFixture} = require("@nomicfoundation/hardhat-network-helpers");
+const {sign} = require("ethereumjs-util/dist/secp256k1v3-adapter");
 
 const ethers = hre.ethers
 const BigNumber = ethers.BigNumber
@@ -55,6 +56,7 @@ describe('Router02', function () {
 
         return ans
     }
+
     describe('calc logic', function () {
         it("getAmountOut", async function () {
             const ans = await loadFixture(deployContracts);
@@ -107,7 +109,7 @@ describe('Router02', function () {
                 ]
             ]
             let calcAmount = await router.getAmountsOut(...args)
-            console.log("volatile calcAmount:", calcAmount.map(item=>ethers.utils.formatEther(item)))
+            console.log("volatile calcAmount:", calcAmount.map(item => ethers.utils.formatEther(item)))
             // stable
             let argsStable = [
                 amountIn,
@@ -119,11 +121,11 @@ describe('Router02', function () {
                     ]
                 ]
             ]
-            calcAmount = await  router.getAmountsOut(...argsStable)
-            console.log("stable calcAmount:",calcAmount.map(item=>ethers.utils.formatEther(item)))
+            calcAmount = await router.getAmountsOut(...argsStable)
+            console.log("stable calcAmount:", calcAmount.map(item => ethers.utils.formatEther(item)))
         });
 
-        it("getAmountIn",async function () {
+        it("getAmountIn", async function () {
             const ans = await loadFixture(deployContracts);
 
             let router = ans.router
@@ -138,10 +140,10 @@ describe('Router02', function () {
             console.log("volatile calcAmount:", ethers.utils.formatEther(calcAmount))
             // // stable
             calcAmount = await router.getAmountIn(amountOut, reserveIn, reserveOut, true, decimals18, decimals18)
-            console.log("stable calcAmount:",  ethers.utils.formatEther(calcAmount))
+            console.log("stable calcAmount:", ethers.utils.formatEther(calcAmount))
         });
         //
-        it("getAmountsIn",async function () {
+        it("getAmountsIn", async function () {
             const ans = await loadFixture(deployContracts);
 
             const weth = ans.weth
@@ -169,7 +171,7 @@ describe('Router02', function () {
                 ]
             ]
             let calcAmount = await router.getAmountsIn(...args)
-            console.log("volatile calcAmount:", calcAmount.map(item=>ethers.utils.formatEther(item)))
+            console.log("volatile calcAmount:", calcAmount.map(item => ethers.utils.formatEther(item)))
             // // stable
             // let argsStable = [
             //     amountOut,
@@ -188,7 +190,73 @@ describe('Router02', function () {
     })
 
     describe('core func', function () {
-        it("swap",async function(){
+        it("swapExactTokensForTokens", async function () {
+            const ans = await loadFixture(deployContracts);
+            const signer = (await ethers.getSigners())[0]
+            // tt query
+            let ttBalanceBefore = await ans.tt.balanceOf(signer.address)
+            let wetBalanceBefore = await ans.weth.balanceOf(signer.address)
+
+
+            // swapExactTokensForTokens
+            let amountIn = expandTo18Decimals(1), amountOutMin = 1, to = signer.address
+            let deadline = (Math.floor(Date.now() / 1000) + 365 * 24 * 60 * 60 * 1000)
+            let route = [
+                ans.weth.address,
+                ans.tt.address,
+                false
+            ]
+            let args = [
+                amountIn,
+                amountOutMin,
+                [route],
+                to,
+                deadline * 2
+            ]
+            console.log()
+            await ans.router.swapExactTokensForTokens(...args)
+
+            // volatile swap
+            let ttBalanceAfter = await ans.tt.balanceOf(signer.address)
+            let wethBalanceAfter = await ans.weth.balanceOf(signer.address)
+            console.log('weth balance before', wetBalanceBefore)
+            console.log('weth balance after', wethBalanceAfter)
+            console.log('weth dBalance:', wetBalanceBefore.sub(wethBalanceAfter))
+            console.log('tt balance before', ttBalanceBefore)
+            console.log('tt balance after', ttBalanceAfter)
+            console.log('tt dBalance:', ttBalanceAfter.sub(ttBalanceBefore))
+
+
+            // stable swap
+            console.log("stable swap")
+            // tt query
+            let ttbefore = await ans.tt.balanceOf(signer.address)
+            let wetbefore = await ans.weth.balanceOf(signer.address)
+            route
+            let stableArgs =
+                [
+                    amountIn,
+                    amountOutMin,
+                    [
+                        [
+                            ans.weth.address,
+                            ans.tt.address,
+                            true
+                        ]
+                    ],
+                    to,
+                    deadline * 2
+                ]
+
+            await ans.router.swapExactTokensForTokens(...stableArgs)
+            let ttAfter = await ans.tt.balanceOf(signer.address)
+            let wethAfter = await ans.weth.balanceOf(signer.address)
+            console.log('weth balance before', wetbefore)
+            console.log('weth balance after', wethAfter)
+            console.log('weth dBalance:', wetbefore.sub(wethAfter))
+            console.log('tt balance before', ttbefore)
+            console.log('tt balance after', ttAfter)
+            console.log('tt dBalance:', ttAfter.sub(ttbefore))
 
         })
     })
