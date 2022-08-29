@@ -149,6 +149,5 @@ export const notFoundContainer = style([
   sprinkles({
     paddingY: '4',
     paddingLeft: '16',
-    marginTop: '20',
   }),
 ])
