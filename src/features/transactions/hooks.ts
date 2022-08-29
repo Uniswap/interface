@@ -136,9 +136,10 @@ export function useAllFormattedTransactions(address: Address): AllFormattedTrans
     yearTransactionList,
     beforeCurrentYear,
   ] = useMemo(() => {
-    const msTimestampCutoffDay = dayjs().startOf('day').unix() // timestamp in ms for start of day local time
-    const msTimestampCutoffMonth = dayjs().startOf('month').unix()
-    const msTimestampCutoffYear = dayjs().startOf('year').unix()
+    // timestamp in ms for start of time periods
+    const msTimestampCutoffDay = dayjs().startOf('day').unix() * 1000
+    const msTimestampCutoffMonth = dayjs().startOf('month').unix() * 1000
+    const msTimestampCutoffYear = dayjs().startOf('year').unix() * 1000
 
     const formatted = combinedTransactionList.reduce(
       (accum: TransactionDetails[][], item) => {
