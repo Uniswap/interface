@@ -36,6 +36,7 @@ export default function CurrencyLogo({
     alt: `${currency?.symbol ?? 'token'} logo`,
     size,
     srcs: useCurrencyLogoURIs(currency),
+    symbol: currency?.symbol,
     style,
     ...rest,
   }
