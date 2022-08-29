@@ -103,35 +103,29 @@ export function useTokenPriceQuery(address: string, timePeriod: TimePeriod, chai
     [timePeriod, address]
   )
 
-  /* To be called on first load, or when time period changes */
-  const getData = useCallback(() => {
+  const fetchData = useCallback(() => {
+    fetchQuery<TokenPriceSingleQuery>(environment, query, {
+      contract: {
+        address,
+        chain,
+      },
+      duration: toHistoryDuration(timePeriod),
+    }).subscribe({
+      start: () => setIsLoading(true),
+      next: updatePrices,
+      error: setError,
+      complete: () => setIsLoading(false),
+    })
+  }, [setIsLoading, address, chain, timePeriod, updatePrices, setError])
+
+  useEffect(() => {
     const cached = TokenAPICache.checkPriceHistory(address, timePeriod)
     if (cached) {
       setPrices(cached)
-      setIsLoading(false)
     } else {
-      setIsLoading(true)
-      fetchQuery<TokenPriceSingleQuery>(environment, query, {
-        contract: {
-          address,
-          chain,
-        },
-        duration: toHistoryDuration(timePeriod),
-      }).subscribe({
-        next: updatePrices,
-        error: setError,
-        complete: () => setIsLoading(false),
-      })
+      fetchData()
     }
-  }, [address, timePeriod, chain, updatePrices])
-
-  const onFirstRender = useCallback(() => {
-    if (!prices) {
-      getData()
-    }
-  }, [prices, getData])
-  useEffect(onFirstRender, [onFirstRender])
-  useEffect(getData, [getData, timePeriod])
+  }, [address, timePeriod, fetchData])
 
   return { error, isLoading, data: prices ?? [] }
 }

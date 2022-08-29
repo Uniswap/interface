@@ -211,17 +211,14 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
 
   const [timePeriod] = useAtom(filterTimeAtom)
   /* prefill token price data before rendering chart*/
-  const { error, data } = useTokenPriceQuery(token?.address ?? '', timePeriod, 'ETHEREUM')
+  const { isLoading } = useTokenPriceQuery(token?.address ?? '', timePeriod, 'ETHEREUM')
 
   /* Prefill other TimePeriod's data without blocking load */
   useEffect(() => {
     if (token?.address) fillTokenPriceCache(token.address, 'ETHEREUM')
   }, [token])
 
-  /* Only exit Suspense when the chart is ready to be rendered, either with data or an error */
-  const chartReady = data.length > 0 || !!error
-
-  if (!chartReady || !token || !token.name || !token.symbol || !connectedChainId) {
+  if (isLoading || !token || !token.name || !token.symbol || !connectedChainId) {
     return <LoadingTokenDetail />
   }
 

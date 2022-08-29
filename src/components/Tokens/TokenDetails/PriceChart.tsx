@@ -168,14 +168,12 @@ export function PriceChart({ width, height, token }: PriceChartProps) {
 
   const hasData = pricePoints.length !== 0
 
-  /* TODO: Implement API calls & cache to use here */
   const startingPrice = hasData ? pricePoints[0] : DATA_EMPTY
   const endingPrice = hasData ? pricePoints[pricePoints.length - 1] : DATA_EMPTY
   const [displayPrice, setDisplayPrice] = useState(startingPrice)
   const [crosshair, setCrosshair] = useState<number | null>(null)
 
   const graphWidth = width + crosshairDateOverhang
-  // TODO: remove this logic after suspense is properly added
   const graphHeight = height - timeOptionsHeight > 0 ? height - timeOptionsHeight : 0
   const graphInnerHeight = graphHeight - margin.top - margin.bottom > 0 ? graphHeight - margin.top - margin.bottom : 0
 
@@ -215,13 +213,13 @@ export function PriceChart({ width, height, token }: PriceChartProps) {
     setDisplayPrice(endingPrice)
   }, [setCrosshair, setDisplayPrice, endingPrice])
 
-  // TODO: Display missing data error
-  if (!hasData) {
+  // TODO: Display fetching data error
+  if (!!error) {
     return null
   }
 
-  // TODO: Display missing data error
-  if (!!error) {
+  // TODO: Display no data available error
+  if (!hasData) {
     return null
   }
 
