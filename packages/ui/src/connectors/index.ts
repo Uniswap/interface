@@ -1,3 +1,4 @@
+import { TeleportInjectedConnector } from './TeleportInjectedConnector';
 import { Web3Provider } from '@ethersproject/providers'
 import { InjectedConnector } from '@web3-react/injected-connector'
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
@@ -31,6 +32,10 @@ export function getNetworkLibrary(): Web3Provider {
 
 export const injected = new InjectedConnector({
   supportedChainIds: [1, 3, 4, 5, 42, 420]
+})
+
+export const teleInjected = new TeleportInjectedConnector({
+  // supportedChainIds: ALL_SUPPORTED_CHAIN_IDS,
 })
 
 // mainnet only

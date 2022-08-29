@@ -4,6 +4,9 @@ import { AlertTriangle } from 'react-feather'
 import styled, { css } from 'styled-components'
 import { Text } from 'rebass'
 import { AutoColumn } from '../Column'
+import swapArrowIcon from '../../assets/images/tele/swapArrow.png'
+import swapArrowChangeIcon from '../../assets/images/tele/swapArrowChange.png'
+
 
 export const Wrapper = styled.div`
   position: relative;
@@ -22,6 +25,18 @@ export const ArrowWrapper = styled.div<{ clickable: boolean }>`
           }
         `
       : null}
+`
+
+export const StyledSwapArrow = styled.span`
+  display: inline-block;
+  width: 2rem;
+  height: 2rem;
+  background: url(${swapArrowIcon}) no-repeat;
+  background-size: 2rem 2rem;
+  :hover {
+    background: url(${swapArrowChangeIcon}) no-repeat;
+    background-size: 2rem 2rem;
+  }
 `
 
 export const SectionBreak = styled.div`

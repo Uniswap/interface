@@ -113,12 +113,12 @@ const StyledBalanceMax = styled.button`
   color: black;
   :hover {
     /* border: 1px solid ${({ theme }) => theme.primary1}; */
-    // background-color: ${({ theme }) => theme.btnHover};
+    // background-color: ${({ theme }) => theme.bgGreenHover};
     opacity: 1;
   }
   :focus {
     /* border: 1px solid ${({ theme }) => theme.primary1}; */
-    // background-color: ${({ theme }) => theme.btnHover};
+    // background-color: ${({ theme }) => theme.bgGreenHover};
     outline: none;
     opacity: 1;
   }

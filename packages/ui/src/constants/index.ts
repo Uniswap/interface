@@ -1,7 +1,7 @@
 import { ChainId, JSBI, Percent, Token, WETH } from '@teleswap/sdk'
 import { AbstractConnector } from '@web3-react/abstract-connector'
 
-import { fortmatic, injected, portis, walletconnect, walletlink } from '../connectors'
+import { fortmatic, injected, portis, walletconnect, walletlink, teleInjected } from '../connectors'
 
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 
@@ -164,7 +164,7 @@ export const SUPPORTED_WALLETS: { [key: string]: WalletInfo } = {
     color: '#E8831D',
   },
   TELEPORT: {
-    connector: injected,
+    connector: teleInjected,
     name: 'Teleport',
     iconName: 'teleport.png',
     description: 'Easy-to-use browser extension.',
