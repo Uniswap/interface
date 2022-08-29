@@ -1,7 +1,7 @@
 require('dotenv').config()
 require("@nomicfoundation/hardhat-toolbox");
 require('@openzeppelin/hardhat-upgrades')
-// require('hardhat-abi-exporter');
+require('hardhat-abi-exporter');
 require('./tasks/upgrade')
 
 
@@ -35,7 +35,7 @@ module.exports = {
         }
     },
     abiExporter: {
-        path: './build',
+        path: './abi',
         runOnCompile: true,
         clear: true,
         flat: true,

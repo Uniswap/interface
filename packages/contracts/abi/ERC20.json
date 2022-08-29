@@ -1,12 +1,6 @@
 [
   {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_totalSupply",
-        "type": "uint256"
-      }
-    ],
+    "inputs": [],
     "stateMutability": "nonpayable",
     "type": "constructor"
   },
@@ -167,13 +161,7 @@
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "to",
-        "type": "address"
-      }
-    ],
+    "inputs": [],
     "name": "mint",
     "outputs": [],
     "stateMutability": "nonpayable",
