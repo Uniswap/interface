@@ -219,7 +219,7 @@ export function nativeOnChain(chainId: number): NativeCurrency {
   )
 }
 
-export const STABLE_COINS_ADDRESS: { [chainId: number]: string[] } = {
+const STABLE_COINS = {
   [ChainId.MAINNET]: [
     '0x6B175474E89094C44Da98b954EedeAC495271d0F', // DAI
     '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', // USDC
@@ -292,3 +292,11 @@ export const STABLE_COINS_ADDRESS: { [chainId: number]: string[] } = {
     '0x7F5c764cBc14f9669B88837ca1490cCa17c31607', //usdc
   ],
 }
+
+const handler = {
+  get: function (target: any, name: string) {
+    return target.hasOwnProperty(name) ? target[name] : []
+  },
+}
+
+export const STABLE_COINS_ADDRESS: { [chainId in ChainId]: string[] } = new Proxy(STABLE_COINS, handler)
