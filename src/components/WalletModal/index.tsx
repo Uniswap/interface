@@ -410,7 +410,7 @@ export default function WalletModal({
 
     return (
       <UpperSection>
-        <CloseIcon data-testid="wallet-modal-close" onClick={toggleWalletModal}>
+        <CloseIcon data-cy="wallet-modal-close" onClick={toggleWalletModal}>
           <CloseColor />
         </CloseIcon>
         {headerRow}
@@ -440,7 +440,7 @@ export default function WalletModal({
       maxHeight={90}
       redesignFlag={redesignFlagEnabled}
     >
-      <Wrapper data-testid="wallet-modal" redesignFlag={redesignFlagEnabled}>
+      <Wrapper data-cy="wallet-modal" redesignFlag={redesignFlagEnabled}>
         {getModalContent()}
       </Wrapper>
     </Modal>

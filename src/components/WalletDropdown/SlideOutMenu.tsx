@@ -101,8 +101,8 @@ export const SlideOutMenu = ({
   <Menu>
     <BackSection>
       <BackSectionContainer>
-        <StyledChevron data-testid="menu-back" onClick={onClose} size={24} />
-        <Header data-testid="menu-header">{title}</Header>
+        <StyledChevron data-cy="menu-back" onClick={onClose} size={24} />
+        <Header data-cy="menu-header">{title}</Header>
         {onClear && <ClearAll onClick={onClear}>Clear All</ClearAll>}
       </BackSectionContainer>
     </BackSection>
