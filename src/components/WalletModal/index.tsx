@@ -410,7 +410,7 @@ export default function WalletModal({
 
     return (
       <UpperSection>
-        <CloseIcon onClick={toggleWalletModal}>
+        <CloseIcon data-testid="wallet-modal-close" onClick={toggleWalletModal}>
           <CloseColor />
         </CloseIcon>
         {headerRow}

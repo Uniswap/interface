@@ -1,35 +1,35 @@
 import { TEST_ADDRESS_NEVER_USE_SHORTENED } from '../support/ethereum'
 import { testSelector, selectFeatureFlag } from '../utils'
 
-describe('Wallet', () => {
+describe('Wallet Dropdown', () => {
   before(() => {
     cy.visit('/')
+    selectFeatureFlag('navBar')
   })
 
-  it('Testing Basic Wallet Functionality', () => {
-    selectFeatureFlag('navBar')
-    cy.get(testSelector('wallet-dropdown')).click()
+  it('should change the theme', () => {
+    cy.get(testSelector('menu-wallet-dropdown')).click()
+    cy.get(testSelector('menu-select-theme')).click()
+    cy.get(testSelector('menu-select-theme')).contains('Light theme').should('exist')
+  })
 
-    cy.get(testSelector('select-language')).click()
-    // cy.get('a > div').contains('Afrikaans').click()
-    cy.get(testSelector('language-item')).contains('Afrikaans').click()
+  it('should select a language', () => {
+    cy.get(testSelector('menu-select-language')).click()
+    cy.get(testSelector('menu-language-item')).contains('Afrikaans').click({ force: true })
+    cy.get(testSelector('menu-header')).should('contain', 'Taal')
+    cy.get(testSelector('menu-language-item')).contains('English').click({ force: true })
+    cy.get(testSelector('menu-header')).should('contain', 'Language')
+    cy.get(testSelector('menu-back')).click()
+  })
 
-    // cy.get('a').contains('English').click();
-    // get theme
-    // cy.get(testSelector('select-theme')).click()
-    // cy.get(testSelector('select-theme')).contains('Light theme').should('exist')
+  it('should open the wallet connect modal from the drop down', () => {
+    cy.get(testSelector('menu-connect-wallet')).click()
+    cy.get(testSelector('wallet-modal')).should('exist')
+    cy.get(testSelector('wallet-modal-close')).click()
+  })
 
-    // cy.get('[data-testid="menu-dropdown"] > button').contains('Language').click()
-    // cy.get('[data-testid="language-item"]').contains('Afrikaans').click()
-    // cy.get('[data-testid="back-section-title"]').should('exist')
-    // cy.get('[data-testid="back-section-title"]').should('contain', 'Taal')
-    // cy.get('[data-testid="language-item"]').contains('English').click()
-    // cy.get('[data-testid="back-section-return"]').click()
-
-    cy.wait(12000)
-
-    // open wallet modal
-    // cy.get(testSelector('wallet-connect')).click()
-    // cy.get(testSelector('wallet-modal')).should('exist')
+  it('should open the wallet connect modal from the navbar', () => {
+    cy.get(testSelector('navbar-connect-wallet')).click()
+    cy.get(testSelector('wallet-modal')).should('exist')
   })
 })
