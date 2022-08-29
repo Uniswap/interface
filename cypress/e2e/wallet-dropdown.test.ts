@@ -1,4 +1,4 @@
-import { getTestSelector, selectFeatureFlag } from '../utils'
+import { getTestSelector } from '../utils'
 
 describe('Wallet Dropdown', () => {
   before(() => {
