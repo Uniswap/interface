@@ -78,7 +78,9 @@ export function NFTItemScreen({
 
         <Flex mx="md">
           <Flex gap="xs">
-            <Text variant="headlineSmall">{asset?.name}</Text>
+            <Text numberOfLines={2} variant="headlineSmall">
+              {asset?.name}
+            </Text>
 
             {/* Collection info */}
             <Button onPress={onPressCollection}>
@@ -138,7 +140,6 @@ export function NFTItemScreen({
                   color="textPrimary"
                   initialDisplayedLines={5}
                   text={asset.collection.description}
-                  variant="bodySmall"
                 />
               </Flex>
             </Flex>

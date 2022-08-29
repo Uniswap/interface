@@ -130,12 +130,7 @@ function TokenDetailsStatsInner({ currency }: { currency: Currency }) {
           {t('About {{ token }}', { token: tokenProject.name ?? currency.name })}
         </Text>
         {tokenProject.description && (
-          <LongText
-            gap="xxxs"
-            initialDisplayedLines={5}
-            text={tokenProject.description.trim()}
-            variant="bodySmall"
-          />
+          <LongText gap="xxxs" initialDisplayedLines={5} text={tokenProject.description.trim()} />
         )}
         <Flex row>
           {tokenProject.homepageUrl && (

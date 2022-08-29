@@ -89,12 +89,7 @@ function NFTCollectionHeader({ collection, collectionName }: Props) {
 
           {/* Collection description */}
           {collection?.description && (
-            <LongText
-              renderAsMarkdown
-              color="textPrimary"
-              text={collection?.description}
-              variant="bodySmall"
-            />
+            <LongText renderAsMarkdown color="textPrimary" text={collection?.description} />
           )}
 
           {/* Collection links */}

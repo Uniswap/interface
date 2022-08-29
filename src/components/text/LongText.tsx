@@ -1,5 +1,6 @@
+/* eslint-disable react-native/no-inline-styles */
 import React, { ComponentProps, useCallback, useReducer, useState } from 'react'
-import { NativeSyntheticEvent, TextLayoutEventData } from 'react-native'
+import { LayoutChangeEvent, NativeSyntheticEvent, TextLayoutEventData } from 'react-native'
 import Markdown from 'react-native-markdown-display'
 import { useAppTheme } from 'src/app/hooks'
 import { Flex } from 'src/components/layout'
@@ -13,7 +14,11 @@ type LongTextProps = {
   color?: keyof Theme['colors']
   linkColor?: keyof Theme['colors']
   renderAsMarkdown?: boolean
-} & Omit<ComponentProps<typeof Text>, 'children' | 'numberOfLines' | 'onTextLayout' | 'color'>
+  variant?: keyof Theme['textVariants']
+} & Omit<
+  ComponentProps<typeof Text>,
+  'children' | 'numberOfLines' | 'onTextLayout' | 'color' | 'variant'
+>
 
 export function LongText({
   initialDisplayedLines = 3,
@@ -22,17 +27,38 @@ export function LongText({
   color = 'textPrimary',
   linkColor = 'accentAction',
   renderAsMarkdown = false,
+  variant = 'bodySmall',
   ...rest
 }: LongTextProps) {
   const theme = useAppTheme()
-  const [maximized, toggleMaximized] = useReducer((isMaximized) => !isMaximized, false)
+  const [maximized, toggleMaximized] = useReducer(
+    (isMaximized) => !isMaximized,
+    renderAsMarkdown ? true : false
+  )
   const [textLengthExceedsLimit, setTextLengthExceedsLimit] = useState(false)
+  const [initialContentHeight, setInitialContentHeight] = useState<number | undefined>(undefined)
+
+  const textLineHeight = theme.textVariants[variant].lineHeight
+  const maxVisibleHeight = textLineHeight * initialDisplayedLines
+
+  const onLayout = useCallback(
+    (event: LayoutChangeEvent) => {
+      if (!renderAsMarkdown || initialContentHeight !== undefined) return
+      const textContentHeight = event.nativeEvent.layout.height
+      setTextLengthExceedsLimit(textContentHeight > maxVisibleHeight)
+      toggleMaximized()
+      setInitialContentHeight(textContentHeight)
+    },
+    [initialContentHeight, maxVisibleHeight, renderAsMarkdown]
+  )
 
   const onTextLayout = useCallback(
     (e: NativeSyntheticEvent<TextLayoutEventData>) => {
-      setTextLengthExceedsLimit(e.nativeEvent.lines.length >= initialDisplayedLines)
+      if (!renderAsMarkdown) {
+        setTextLengthExceedsLimit(e.nativeEvent.lines.length >= initialDisplayedLines)
+      }
     },
-    [initialDisplayedLines]
+    [renderAsMarkdown, initialDisplayedLines]
   )
 
   return (
@@ -40,6 +66,19 @@ export function LongText({
       <Text
         color={color}
         numberOfLines={maximized ? undefined : initialDisplayedLines}
+        style={
+          renderAsMarkdown
+            ? {
+                height:
+                  !textLengthExceedsLimit || maximized
+                    ? 'auto'
+                    : maxVisibleHeight - theme.spacing.xxxs,
+                overflow: 'hidden',
+              }
+            : null
+        }
+        variant={variant}
+        onLayout={onLayout}
         onTextLayout={onTextLayout}
         {...rest}>
         {renderAsMarkdown ? (
@@ -57,9 +96,9 @@ export function LongText({
 
       {textLengthExceedsLimit ? (
         <Text
-          color="textTertiary"
+          color="accentAction"
           testID="read-more-button"
-          variant={rest.variant}
+          variant={variant}
           onPress={toggleMaximized}>
           {maximized ? 'Read less' : 'Read more'}
         </Text>

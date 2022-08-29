@@ -15,12 +15,16 @@ exports[`renders a LongText 1`] = `
 >
   <Text
     numberOfLines={3}
+    onLayout={[Function]}
     onTextLayout={[Function]}
     style={
       Array [
         Object {
           "color": "#0E111A",
           "display": "flex",
+          "fontFamily": "Inter-Regular",
+          "fontSize": 14,
+          "lineHeight": 20,
         },
       ]
     }
