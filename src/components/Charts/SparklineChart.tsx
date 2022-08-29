@@ -1,4 +1,4 @@
-import { scaleLinear } from 'd3'
+import { curveCardinalOpen, scaleLinear } from 'd3'
 import React from 'react'
 import { useTheme } from 'styled-components/macro'
 
@@ -37,6 +37,7 @@ function SparklineChart({ width, height }: SparklineChartProps) {
       data={pricePoints}
       getX={(p: PricePoint) => timeScale(p.timestamp)}
       getY={(p: PricePoint) => rdScale(p.value)}
+      curve={curveCardinalOpen.tension(0.9)}
       marginTop={0}
       color={isPositive ? theme.accentSuccess : theme.accentFailure}
       strokeWidth={1.5}
