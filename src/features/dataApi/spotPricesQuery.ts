@@ -28,7 +28,11 @@ const query = graphql`
   }
 `
 
-/** Retrieves spot price of a single currency */
+/**
+ * Fetches spot price of a single currency. When used, wrap component
+ * with Suspense.
+ */
+
 export function useSpotPrice(currency: NullUndefined<Currency>) {
   const data = useLazyLoadQuery<spotPricesQuery>(
     query,

@@ -2,9 +2,9 @@ import { TradeType } from '@uniswap/sdk-core'
 import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { SwapLogoOrLogoWithTxStatus } from 'src/components/CurrencyLogo/LogoWithTxStatus'
-import { useSpotPrice } from 'src/features/dataApi/spotPricesQuery'
-import { createBalanceUpdate, getFormattedCurrencyAmount } from 'src/features/notifications/utils'
+import { getFormattedCurrencyAmount } from 'src/features/notifications/utils'
 import { useCurrency } from 'src/features/tokens/useCurrency'
+import BalanceUpdate from 'src/features/transactions/SummaryCards/BalanceUpdate'
 import TransactionSummaryLayout, {
   TXN_HISTORY_ICON_SIZE,
 } from 'src/features/transactions/SummaryCards/TransactionSummaryLayout'
@@ -14,7 +14,6 @@ import {
   ExactInputSwapTransactionInfo,
   ExactOutputSwapTransactionInfo,
   TransactionStatus,
-  TransactionType,
 } from 'src/features/transactions/types'
 
 export default function SwapSummaryItem({
@@ -59,20 +58,6 @@ export default function SwapSummaryItem({
     return inputCurrency.symbol + '→' + outputCurrency.symbol
   }, [inputAmountRaw, inputCurrency, outputAmountRaw, outputCurrency, status])
 
-  const spotPrice = useSpotPrice(outputCurrency)
-
-  const balanceUpdate = useMemo(() => {
-    return outputAmountRaw
-      ? createBalanceUpdate(
-          TransactionType.Swap,
-          status,
-          outputCurrency,
-          outputAmountRaw,
-          spotPrice
-        )
-      : undefined
-  }, [spotPrice, outputAmountRaw, outputCurrency, status])
-
   const title = formatTitleWithStatus({
     status: transaction.status,
     text: t('Swap'),
@@ -83,8 +68,16 @@ export default function SwapSummaryItem({
   return (
     <TransactionSummaryLayout
       caption={caption}
-      endCaption={balanceUpdate?.usdIncrease ?? ''}
-      endTitle={balanceUpdate?.assetIncrease ?? ''}
+      endAdornment={
+        outputCurrency ? (
+          <BalanceUpdate
+            amountRaw={outputAmountRaw}
+            currency={outputCurrency}
+            transactionStatus={transaction.status}
+            transactionType={transaction.typeInfo.type}
+          />
+        ) : undefined
+      }
       icon={
         <SwapLogoOrLogoWithTxStatus
           inputCurrency={inputCurrency}

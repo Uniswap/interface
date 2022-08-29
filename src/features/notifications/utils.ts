@@ -180,6 +180,7 @@ export const createBalanceUpdate = (
     | TransactionType.Send
     | TransactionType.Receive
     | TransactionType.Swap
+    | TransactionType.NFTTrade
     | TransactionType.NFTMint,
   txStatus: TransactionStatus,
   currency: NullUndefined<Currency>,

@@ -1,19 +1,14 @@
-import React, { useMemo } from 'react'
+import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { SwapLogoOrLogoWithTxStatus } from 'src/components/CurrencyLogo/LogoWithTxStatus'
 import { nativeOnChain } from 'src/constants/tokens'
-import { useSpotPrice } from 'src/features/dataApi/spotPricesQuery'
-import { createBalanceUpdate } from 'src/features/notifications/utils'
+import BalanceUpdate from 'src/features/transactions/SummaryCards/BalanceUpdate'
 import TransactionSummaryLayout, {
   TXN_HISTORY_ICON_SIZE,
 } from 'src/features/transactions/SummaryCards/TransactionSummaryLayout'
 import { BaseTransactionSummaryProps } from 'src/features/transactions/SummaryCards/TransactionSummaryRouter'
 import { formatTitleWithStatus } from 'src/features/transactions/SummaryCards/utils'
-import {
-  TransactionStatus,
-  TransactionType,
-  WrapTransactionInfo,
-} from 'src/features/transactions/types'
+import { TransactionStatus, WrapTransactionInfo } from 'src/features/transactions/types'
 
 export default function WrapSummaryItem({
   transaction,
@@ -25,6 +20,7 @@ export default function WrapSummaryItem({
 
   const nativeCurrency = nativeOnChain(transaction.chainId)
   const wrappedNativeCurrency = nativeCurrency?.wrapped
+  const outputCurrency = transaction.typeInfo.unwrapped ? nativeCurrency : wrappedNativeCurrency
 
   const showCancelIcon =
     (transaction.status === TransactionStatus.Cancelled ||
@@ -42,30 +38,19 @@ export default function WrapSummaryItem({
     ? `${wrappedNativeCurrency.symbol} → ${nativeCurrency.symbol}`
     : `${nativeCurrency.symbol} → ${wrappedNativeCurrency.symbol}`
 
-  const spotPrice = useSpotPrice(nativeCurrency)
-
-  const balanceUpdate = useMemo(() => {
-    return createBalanceUpdate(
-      TransactionType.Swap,
-      transaction.status,
-      transaction.typeInfo.unwrapped ? nativeCurrency : wrappedNativeCurrency,
-      transaction.typeInfo.currencyAmountRaw,
-      spotPrice
-    )
-  }, [
-    nativeCurrency,
-    spotPrice,
-    transaction.status,
-    transaction.typeInfo.currencyAmountRaw,
-    transaction.typeInfo.unwrapped,
-    wrappedNativeCurrency,
-  ])
-
   return (
     <TransactionSummaryLayout
       caption={caption}
-      endCaption={balanceUpdate?.usdIncrease ?? ''}
-      endTitle={balanceUpdate?.assetIncrease ?? ''}
+      endAdornment={
+        outputCurrency && transaction.typeInfo.currencyAmountRaw ? (
+          <BalanceUpdate
+            amountRaw={transaction.typeInfo.currencyAmountRaw}
+            currency={outputCurrency}
+            transactionStatus={transaction.status}
+            transactionType={transaction.typeInfo.type}
+          />
+        ) : undefined
+      }
       icon={
         <SwapLogoOrLogoWithTxStatus
           inputCurrency={transaction.typeInfo.unwrapped ? wrappedNativeCurrency : nativeCurrency}

@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { LogoWithTxStatus } from 'src/components/CurrencyLogo/LogoWithTxStatus'
 import { AssetType } from 'src/entities/assets'
 import TransactionSummaryLayout, {
+  AssetUpdateLayout,
   TXN_HISTORY_ICON_SIZE,
 } from 'src/features/transactions/SummaryCards/TransactionSummaryLayout'
 import { BaseTransactionSummaryProps } from 'src/features/transactions/SummaryCards/TransactionSummaryRouter'
@@ -26,7 +27,7 @@ export default function NFTApproveSummaryItem({
   return (
     <TransactionSummaryLayout
       caption={shortenAddress(transaction.typeInfo.spender)}
-      endTitle={transaction.typeInfo.nftSummaryInfo.name}
+      endAdornment={<AssetUpdateLayout title={transaction.typeInfo.nftSummaryInfo.name} />}
       icon={
         <LogoWithTxStatus
           assetType={AssetType.ERC721}

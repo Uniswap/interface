@@ -24,8 +24,7 @@ function TransactionSummaryLayout({
   transaction,
   title,
   caption,
-  endTitle,
-  endCaption,
+  endAdornment,
   icon,
   readonly,
   showInlineWarning,
@@ -36,8 +35,7 @@ function TransactionSummaryLayout({
   title: string
   caption: string | undefined
   readonly: boolean
-  endTitle?: string
-  endCaption?: string
+  endAdornment?: ReactElement
   icon?: ReactElement
   showInlineWarning?: boolean // Show warning inline and not as header banner.
 } & ButtonProps) {
@@ -125,16 +123,7 @@ function TransactionSummaryLayout({
               )}
             </Flex>
           ) : (
-            <Flex shrink alignItems="flex-end" gap="xxxs">
-              <Text numberOfLines={1} variant="body">
-                {endTitle}
-              </Text>
-              {endCaption && (
-                <Text color="textSecondary" numberOfLines={1} variant="caption">
-                  {endCaption}
-                </Text>
-              )}
-            </Flex>
+            endAdornment
           )}
         </Flex>
       </Button>
@@ -172,3 +161,24 @@ function TransactionSummaryLayout({
 }
 
 export default TransactionSummaryLayout
+
+export function AssetUpdateLayout({
+  title,
+  caption,
+}: {
+  title: string | undefined
+  caption?: string | undefined
+}) {
+  return (
+    <Flex shrink alignItems="flex-end" gap="xxxs">
+      <Text numberOfLines={1} variant="body">
+        {title}
+      </Text>
+      {caption && (
+        <Text color="textSecondary" numberOfLines={1} variant="caption">
+          {caption}
+        </Text>
+      )}
+    </Flex>
+  )
+}

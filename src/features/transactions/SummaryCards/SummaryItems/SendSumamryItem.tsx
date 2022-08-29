@@ -2,10 +2,10 @@ import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { LogoWithTxStatus } from 'src/components/CurrencyLogo/LogoWithTxStatus'
 import { AssetType } from 'src/entities/assets'
-import { useSpotPrice } from 'src/features/dataApi/spotPricesQuery'
-import { createBalanceUpdate } from 'src/features/notifications/utils'
 import { useCurrency } from 'src/features/tokens/useCurrency'
+import BalanceUpdate from 'src/features/transactions/SummaryCards/BalanceUpdate'
 import TransactionSummaryLayout, {
+  AssetUpdateLayout,
   TXN_HISTORY_ICON_SIZE,
 } from 'src/features/transactions/SummaryCards/TransactionSummaryLayout'
 import { BaseTransactionSummaryProps } from 'src/features/transactions/SummaryCards/TransactionSummaryRouter'
@@ -24,33 +24,6 @@ export default function SendSummaryItem({
   const currency = useCurrency(
     buildCurrencyId(transaction.chainId, transaction.typeInfo.tokenAddress)
   )
-
-  // Transfer info for ERC20s
-  const amountRaw = transaction.typeInfo.currencyAmountRaw
-  const spotPrice = useSpotPrice(currency)
-
-  const balanceUpdate = useMemo(() => {
-    return amountRaw
-      ? createBalanceUpdate(
-          // mimic buy or sell
-          transaction.typeInfo.type,
-          transaction.status,
-          currency,
-          amountRaw,
-          spotPrice
-        )
-      : undefined
-  }, [amountRaw, currency, spotPrice, transaction.status, transaction.typeInfo.type])
-
-  const endTitle =
-    transaction.typeInfo.assetType === AssetType.Currency
-      ? balanceUpdate?.assetIncrease
-      : transaction.typeInfo.nftSummaryInfo?.name
-
-  const endCaption =
-    transaction.typeInfo.assetType === AssetType.Currency
-      ? balanceUpdate?.usdIncrease
-      : transaction.typeInfo.nftSummaryInfo?.collectionName
 
   const icon = useMemo(() => {
     if (transaction.typeInfo.assetType === AssetType.Currency) {
@@ -88,11 +61,34 @@ export default function SendSummaryItem({
     t,
   })
 
+  const getEndAdornment = () => {
+    if (transaction.typeInfo.assetType === AssetType.Currency) {
+      return currency && transaction.typeInfo.currencyAmountRaw ? (
+        <BalanceUpdate
+          amountRaw={transaction.typeInfo.currencyAmountRaw}
+          currency={currency}
+          transactionStatus={transaction.status}
+          transactionType={transaction.typeInfo.type}
+        />
+      ) : undefined
+    }
+    if (
+      transaction.typeInfo.assetType === AssetType.ERC1155 ||
+      transaction.typeInfo.assetType === AssetType.ERC721
+    ) {
+      return (
+        <AssetUpdateLayout
+          caption={transaction.typeInfo.nftSummaryInfo?.collectionName}
+          title={transaction.typeInfo.nftSummaryInfo?.name}
+        />
+      )
+    }
+  }
+
   return (
     <TransactionSummaryLayout
       caption={shortenAddress(transaction.typeInfo.recipient)}
-      endCaption={endCaption ?? ''}
-      endTitle={endTitle ?? ''}
+      endAdornment={getEndAdornment()}
       icon={icon}
       readonly={readonly}
       showInlineWarning={showInlineWarning}
