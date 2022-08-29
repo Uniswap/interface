@@ -15,13 +15,11 @@ interface FarmConfig {
         isHidden?: boolean
 
         stakingAsset: {
-            address: string
             name: string
             /**
-             * `isLpToken` - this affect the way for our evaluation of the staked asset
+             * `isLpToken` - this affect the way for our evaluation of the staked asset and its logo
              */
             isLpToken: boolean,
-            backedAsset?: [string, string]
         }
     }[]
 
@@ -34,14 +32,8 @@ export const CHAINID_TO_FARMING_CONFIG: { [chainId in ChainId]?: FarmConfig } = 
         pools: [{
             // pid 0
             stakingAsset: {
-                address: '0x0093d164e9C57dc0EbC00d58E429AdCf383B65d1',
                 name: 'USDC-USDT LP',
                 isLpToken: true,
-                /**
-                 * I will fake it with USDT and USDC image
-                 * @todo will need to checksum on these address
-                 */
-                backedAsset: ['0xdAC17F958D2ee523a2206206994597C13D831ec7', '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48']
             }
         }]
     }
