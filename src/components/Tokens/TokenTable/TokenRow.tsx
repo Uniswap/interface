@@ -12,7 +12,7 @@ import { useAtomValue } from 'jotai/utils'
 import { ReactNode } from 'react'
 import { ArrowDown, ArrowUp, Heart } from 'react-feather'
 import { Link } from 'react-router-dom'
-import styled, { useTheme } from 'styled-components/macro'
+import styled, { css, useTheme } from 'styled-components/macro'
 import { formatDollarAmount } from 'utils/formatDollarAmt'
 
 import {
@@ -41,24 +41,37 @@ const Cell = styled.div`
   align-items: center;
   justify-content: center;
 `
-const StyledTokenRow = styled.div<{ first?: boolean; last?: boolean }>`
-  width: 100%;
-  height: 60px;
+const StyledTokenRow = styled.div<{ first?: boolean; last?: boolean; loading?: boolean }>`
+  background-color: transparent;
   display: grid;
-  grid-template-columns: 1fr 7fr 4fr 4fr 4fr 4fr 5fr 1.2fr;
   font-size: 15px;
+  grid-template-columns: 1fr 7fr 4fr 4fr 4fr 4fr 5fr 1.2fr;
+  height: 60px;
   line-height: 24px;
-
   max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT};
   min-width: 390px;
   padding-top: ${({ first }) => (first ? '4px' : '0px')};
   padding-bottom: ${({ last }) => (last ? '4px' : '0px')};
   padding-left: 12px;
   padding-right: 12px;
+  transition: ${({
+    theme: {
+      transition: { duration, timing },
+    },
+  }) => css`background-color ${duration.medium} ${timing.ease}`};
+  width: 100%;
 
   &:hover {
-    background-color: ${({ theme }) => theme.accentActionSoft};
-    ${({ last }) => last && 'border-radius: 0px 0px 8px 8px;'}
+    ${({ loading, theme }) =>
+      !loading &&
+      css`
+        background-color: ${theme.hoverDefault};
+      `}
+    ${({ last }) =>
+      last &&
+      css`
+        border-radius: 0px 0px 8px 8px;
+      `}
   }
 
   @media only screen and (max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT}) {
@@ -126,6 +139,7 @@ const StyledHeaderRow = styled(StyledTokenRow)`
   line-height: 16px;
   padding: 0px 12px;
   width: 100%;
+  justify-content: center;
 
   &:hover {
     background-color: transparent;
@@ -138,6 +152,7 @@ const StyledHeaderRow = styled(StyledTokenRow)`
 const ListNumberCell = styled(Cell)`
   color: ${({ theme }) => theme.textSecondary};
   min-width: 32px;
+  height: 48px;
 
   @media only screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
     display: none;
@@ -148,10 +163,11 @@ const DataCell = styled(Cell)<{ sortable: boolean }>`
   min-width: 80px;
   user-select: ${({ sortable }) => (sortable ? 'none' : 'unset')};
 
-  &:hover {
-    color: ${({ theme, sortable }) => sortable && theme.white};
-    background-color: ${({ theme, sortable }) => sortable && theme.accentActionSoft};
-  }
+  transition: ${({
+    theme: {
+      transition: { duration, timing },
+    },
+  }) => css`background-color ${duration.medium} ${timing.ease}`};
 `
 const MarketCapCell = styled(DataCell)`
   padding-right: 8px;
@@ -204,6 +220,10 @@ const HeaderCellWrapper = styled.span<{ onClick?: () => void }>`
   height: 100%;
   justify-content: flex-end;
   width: 100%;
+
+  &:hover {
+    opacity: 60%;
+  }
 `
 const SparkLineCell = styled(Cell)`
   padding: 0px 24px;
@@ -296,7 +316,7 @@ const LogoContainer = styled.div`
 
 /* formatting for volume with timeframe header display */
 function getHeaderDisplay(category: string, timeframe: TimePeriod): string {
-  if (category === Category.volume) return `${DISPLAYS[timeframe]} ${category}`
+  if (category === Category.volume || category === Category.percentChange) return `${DISPLAYS[timeframe]} ${category}`
   return category
 }
 
@@ -343,9 +363,8 @@ function HeaderCell({
 
 /* Token Row: skeleton row component */
 export function TokenRow({
-  address,
-  header,
   favorited,
+  header,
   listNumber,
   tokenInfo,
   price,
@@ -353,20 +372,19 @@ export function TokenRow({
   marketCap,
   volume,
   sparkLine,
-  first,
-  last,
+  ...rest
 }: {
-  address: ReactNode
-  header: boolean
   favorited: ReactNode
+  first?: boolean
+  header: boolean
   listNumber: ReactNode
-  tokenInfo: ReactNode
+  loading?: boolean
+  marketCap: ReactNode
   price: ReactNode
   percentChange: ReactNode
-  marketCap: ReactNode
-  volume: ReactNode
   sparkLine: ReactNode
-  first?: boolean
+  tokenInfo: ReactNode
+  volume: ReactNode
   last?: boolean
 }) {
   const rowCells = (
@@ -382,18 +400,13 @@ export function TokenRow({
     </>
   )
   if (header) return <StyledHeaderRow>{rowCells}</StyledHeaderRow>
-  return (
-    <StyledTokenRow first={first} last={last}>
-      {rowCells}
-    </StyledTokenRow>
-  )
+  return <StyledTokenRow {...rest}>{rowCells}</StyledTokenRow>
 }
 
 /* Header Row: top header row component for table */
 export function HeaderRow() {
   return (
     <TokenRow
-      address={null}
       header={true}
       favorited={null}
       listNumber="#"
@@ -411,10 +424,10 @@ export function HeaderRow() {
 export function LoadingRow() {
   return (
     <TokenRow
-      address={null}
-      header={false}
       favorited={null}
+      header={false}
       listNumber={<SmallLoadingBubble />}
+      loading
       tokenInfo={
         <>
           <IconLoadingBubble />
@@ -476,7 +489,6 @@ export default function LoadedRow({
       onClick={() => sendAnalyticsEvent(EventName.EXPLORE_TOKEN_ROW_CLICKED, exploreTokenSelectedEventProperties)}
     >
       <TokenRow
-        address={tokenAddress}
         header={false}
         favorited={
           <ClickFavorited
@@ -506,7 +518,7 @@ export default function LoadedRow({
             <PriceInfoCell>
               {tokenData.price?.value ? formatDollarAmount(tokenData.price?.value) : '-'}
               <PercentChangeInfoCell>
-                {delta}
+                {formattedDelta}
                 {arrow}
               </PercentChangeInfoCell>
             </PriceInfoCell>

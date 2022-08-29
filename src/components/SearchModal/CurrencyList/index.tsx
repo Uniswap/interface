@@ -128,7 +128,7 @@ function CurrencyRow({
   eventProperties,
 }: {
   currency: Currency
-  onSelect: () => void
+  onSelect: (hasWarning: boolean) => void
   isSelected: boolean
   otherSelected: boolean
   style: CSSProperties
@@ -159,8 +159,8 @@ function CurrencyRow({
         redesignFlag={redesignFlagEnabled}
         style={style}
         className={`token-item-${key}`}
-        onKeyPress={(e) => (!isSelected && e.key === 'Enter' ? onSelect() : null)}
-        onClick={() => (isSelected ? null : onSelect())}
+        onKeyPress={(e) => (!isSelected && e.key === 'Enter' ? onSelect(!!warning) : null)}
+        onClick={() => (isSelected ? null : onSelect(!!warning))}
         disabled={isSelected}
         selected={otherSelected}
       >
@@ -279,7 +279,7 @@ export default function CurrencyList({
   currencies: Currency[]
   otherListTokens?: WrappedTokenInfo[]
   selectedCurrency?: Currency | null
-  onCurrencySelect: (currency: Currency) => void
+  onCurrencySelect: (currency: Currency, hasWarning?: boolean) => void
   otherCurrency?: Currency | null
   fixedListRef?: MutableRefObject<FixedSizeList | undefined>
   showImportView: () => void
@@ -308,7 +308,7 @@ export default function CurrencyList({
 
       const isSelected = Boolean(currency && selectedCurrency && selectedCurrency.equals(currency))
       const otherSelected = Boolean(currency && otherCurrency && otherCurrency.equals(currency))
-      const handleSelect = () => currency && onCurrencySelect(currency)
+      const handleSelect = (hasWarning: boolean) => currency && onCurrencySelect(currency, hasWarning)
 
       const token = currency?.wrapped
 

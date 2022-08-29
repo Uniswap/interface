@@ -62,6 +62,6 @@ export const Separator = style([
 export const IconRow = style([
   sprinkles({
     paddingX: '16',
-    marginTop: '4',
+    justifyContent: { sm: 'center', md: 'flex-start' },
   }),
 ])

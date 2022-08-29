@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-24 19:05\n"
+"PO-Revision-Date: 2022-08-26 17:08\n"
 "Last-Translator: \n"
 "Language: vi_VN\n"
 "Language-Team: Vietnamese\n"
@@ -540,6 +540,10 @@ msgid "Confirm transaction in wallet"
 msgstr "Xác nhận giao dịch trong ví"
 
 #: src/components/Web3Status/index.tsx
+msgid "Connect"
+msgstr "Liên kết"
+
+#: src/components/Web3Status/index.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
@@ -745,6 +749,10 @@ msgstr "Bỏ qua"
 msgid "Docs"
 msgstr "Docs"
 
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "Documentation"
+msgstr "Tài liệu"
+
 #: src/pages/MigrateV2/index.tsx
 msgid "Don’t see one of your v2 positions? <0>Import it.</0>"
 msgstr "Bạn không thấy một trong các vị trí v2 của mình? <0> Nhập nó ngay.</0>"
@@ -894,6 +902,10 @@ msgstr "Khám phá Uniswap Analytics."
 msgid "Failed to switch networks from the Uniswap Interface. In order to use Uniswap on {0}, you must change the network in your wallet."
 msgstr "Không chuyển được mạng từ Giao diện Hoán đổi Uniswap. Để sử dụng Uniswap trên {0}, bạn phải thay đổi mạng trong ví của mình."
 
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "Feature Flags"
+msgstr "Cờ tính năng"
+
 #: src/components/PositionPreview/index.tsx
 msgid "Fee Tier"
 msgstr "Bậc phí"
@@ -905,6 +917,10 @@ msgstr "Bậc phí"
 #: src/components/swap/SwapDetailsDropdown.tsx
 msgid "Fetching best price..."
 msgstr "Đang tìm nạp giá tốt nhất ..."
+
+#: src/components/Tokens/TokenTable/SearchBar.tsx
+msgid "Filter tokens"
+msgstr "Lọc mã thông báo"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "For"
@@ -937,6 +953,10 @@ msgstr "Nhận hỗ trợ về Discord"
 #: src/components/Header/NetworkSelector.tsx
 #: src/components/Menu/index.tsx
 msgid "Help Center"
+msgstr "Trung tâm trợ giúp"
+
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "Help center"
 msgstr "Trung tâm trợ giúp"
 
 #: src/components/FeeSelector/index.tsx
@@ -1069,6 +1089,7 @@ msgid "Learn more"
 msgstr "Tìm hiểu thêm"
 
 #: src/components/Menu/index.tsx
+#: src/components/NavBar/MenuDropdown.tsx
 #: src/components/PrivacyPolicy/index.tsx
 msgid "Legal & Privacy"
 msgstr "Pháp lý & Quyền riêng tư"
@@ -1221,6 +1242,14 @@ msgstr "Thiếu phụ thuộc"
 msgid "More"
 msgstr "Thêm nữa"
 
+#: src/components/NavBar/SearchBar.tsx
+msgid "NFT Collections"
+msgstr "Bộ sưu tập NFT"
+
+#: src/components/NavBar/Navbar.tsx
+msgid "NFTs"
+msgstr "NFT"
+
 #: src/components/Tokens/TokenDetails/TokenDetail.tsx
 msgid "Name not found"
 msgstr "Không tìm thấy tên"
@@ -1277,6 +1306,10 @@ msgstr "Không có kết quả nào được tìm thấy."
 #: src/components/Tokens/TokenDetails/TokenDetail.tsx
 msgid "No token information available"
 msgstr "Không có thông tin mã thông báo có sẵn"
+
+#: src/components/NavBar/SearchBar.tsx
+msgid "No tokens found."
+msgstr "Không tìm thấy mã thông báo nào."
 
 #: src/constants/tokenSafety.tsx
 msgid "Not Available"
@@ -1366,6 +1399,7 @@ msgstr "Polygonscan"
 
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/Header/index.tsx
+#: src/components/NavBar/Navbar.tsx
 msgid "Pool"
 msgstr "Pool"
 
@@ -1401,6 +1435,14 @@ msgstr "Pool {0}:"
 #: src/pages/Pool/index.tsx
 msgid "Pools"
 msgstr "Hồ bơi"
+
+#: src/components/NavBar/SearchBar.tsx
+msgid "Popular NFT collections"
+msgstr "Bộ sưu tập NFT phổ biến"
+
+#: src/components/NavBar/SearchBar.tsx
+msgid "Popular tokens"
+msgstr "Các mã thông báo phổ biến"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Portal Bridge"
@@ -1527,6 +1569,10 @@ msgstr "Đọc thêm về nội dung không được hỗ trợ"
 msgid "Recent Transactions"
 msgstr "Giao dịch gần đây"
 
+#: src/components/NavBar/SearchBar.tsx
+msgid "Recent searches"
+msgstr "Tìm kiếm gần đây"
+
 #: src/components/AddressInputPanel/index.tsx
 msgid "Recipient"
 msgstr "Người nhận"
@@ -1593,6 +1639,14 @@ msgstr "Trở về"
 msgid "Search name or paste address"
 msgstr "Tìm kiếm tên hoặc dán địa chỉ"
 
+#: src/components/NavBar/SearchBar.tsx
+msgid "Search tokens"
+msgstr "Tìm kiếm mã thông báo"
+
+#: src/components/NavBar/SearchBar.tsx
+msgid "Search tokens and NFT collections"
+msgstr "Tìm kiếm mã thông báo và bộ sưu tập NFT"
+
 #: src/pages/AddLiquidity/index.tsx
 msgid "Select Pair"
 msgstr "Chọn cặp"
@@ -1632,6 +1686,10 @@ msgstr "Bản thân"
 #: src/components/vote/DelegateModal.tsx
 msgid "Self Delegate"
 msgstr "Tự ủy quyền"
+
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "Sell NFTs"
+msgstr "Bán NFT"
 
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
@@ -1711,6 +1769,7 @@ msgstr "Cung cấp {0} {1} và {2} {3}"
 
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/Header/index.tsx
+#: src/components/NavBar/Navbar.tsx
 #: src/components/swap/SwapHeader.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
@@ -1933,6 +1992,8 @@ msgid "Token not supported"
 msgstr "Mã thông báo không được hỗ trợ"
 
 #: src/components/Header/index.tsx
+#: src/components/NavBar/Navbar.tsx
+#: src/components/NavBar/SearchBar.tsx
 #: src/components/SearchModal/Manage.tsx
 msgid "Tokens"
 msgstr "Token"
@@ -2172,6 +2233,10 @@ msgstr "Xem trên Etherscan"
 msgid "View on Explorer"
 msgstr "Xem trên Explorer"
 
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "View token analytics"
+msgstr "Xem phân tích mã thông báo"
+
 #: src/components/ModalViews/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
@@ -2218,6 +2283,10 @@ msgstr "Bỏ phiếu cho đề xuất {proposalKey}"
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Vote for proposal {proposalKey} with reason \"{0}\""
 msgstr "Bỏ phiếu cho đề xuất {proposalKey} với lý do \"{0}\""
+
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "Vote in governance"
+msgstr "Bỏ phiếu trong quản trị"
 
 #: src/components/vote/VoteModal.tsx
 #: src/components/vote/VoteModal.tsx

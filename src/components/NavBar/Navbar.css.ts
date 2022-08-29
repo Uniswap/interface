@@ -38,15 +38,6 @@ export const baseContainer = style([
   }),
 ])
 
-export const baseMobileContainer = style([
-  sprinkles({
-    display: 'flex',
-    width: 'full',
-    alignItems: 'center',
-    marginY: '2',
-  }),
-])
-
 export const baseSideContainer = style([
   baseContainer,
   sprinkles({
@@ -64,19 +55,13 @@ export const leftSideContainer = style([
   }),
 ])
 
-export const leftSideMobileContainer = style([
-  baseMobileContainer,
-  sprinkles({
-    justifyContent: 'flex-start',
-  }),
-])
-
 export const middleContainer = style([
   baseContainer,
   sprinkles({
     flex: '1',
     flexShrink: '1',
     justifyContent: 'center',
+    display: { sm: 'none', lg: 'flex' },
   }),
 ])
 
@@ -95,6 +80,7 @@ const baseMenuItem = style([
     marginY: '4',
     borderRadius: '12',
     transition: '250',
+    height: 'min',
   }),
   {
     lineHeight: '24px',
@@ -112,13 +98,6 @@ export const menuItem = style([
   }),
 ])
 
-export const rightSideMobileContainer = style([
-  baseMobileContainer,
-  sprinkles({
-    justifyContent: 'flex-end',
-  }),
-])
-
 export const activeMenuItem = style([
   baseMenuItem,
   sprinkles({
@@ -127,16 +106,17 @@ export const activeMenuItem = style([
   }),
 ])
 
-export const mobileWalletContainer = style([
+export const mobileBottomBar = style([
   sprinkles({
     position: 'fixed',
-    display: 'flex',
+    display: { sm: 'flex', xxl: 'none' },
     bottom: '0',
-    right: '1/2',
-    marginY: '0',
-    marginX: 'auto',
+    right: '0',
+    left: '0',
+    justifyContent: 'space-between',
+    paddingY: '4',
+    paddingX: '8',
+    height: '56',
+    background: 'lightGray',
   }),
-  {
-    transform: 'translate(50%,-50%)',
-  },
 ])

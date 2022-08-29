@@ -6,11 +6,11 @@ import { GlyphCircle } from '@visx/glyph'
 import { Line } from '@visx/shape'
 import { filterTimeAtom } from 'components/Tokens/state'
 import { bisect, curveBasis, NumberValue, scaleLinear } from 'd3'
-import { fillTokenPriceCache, useTokenPriceQuery } from 'graphql/data/TokenPrice'
+import { useTokenPriceQuery } from 'graphql/data/TokenPrice'
 import { TimePeriod } from 'graphql/data/TopTokenQuery'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import { useAtom } from 'jotai'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useState } from 'react'
 import { ArrowDownRight, ArrowUpRight } from 'react-feather'
 import styled, { useTheme } from 'styled-components/macro'
 import { OPACITY_HOVER } from 'theme'
@@ -81,6 +81,7 @@ export const DeltaContainer = styled.div`
   height: 16px;
   display: flex;
   align-items: center;
+  margin-top: 4px;
 `
 const ArrowCell = styled.div`
   padding-left: 2px;
@@ -163,9 +164,6 @@ export function PriceChart({ width, height, token }: PriceChartProps) {
   // TODO: Add network selector input, consider using backend type instead of current front end selector type
   const { error, isLoading, data } = useTokenPriceQuery(token.address, timePeriod, 'ETHEREUM')
 
-  /* Prefill other TimePeriods data without blocking load */
-  useEffect(() => fillTokenPriceCache(token.address, 'ETHEREUM'), [])
-
   const pricePoints: PricePoint[] = data.filter((p): p is PricePoint => Boolean(p && p.value))
 
   const hasData = pricePoints.length !== 0
@@ -242,7 +240,7 @@ export function PriceChart({ width, height, token }: PriceChartProps) {
   return (
     <>
       <ChartHeader>
-        <TokenPrice>${displayPrice.value.toFixed(2)}</TokenPrice>
+        <TokenPrice>${displayPrice.value < 0.000001 ? '<0.000001' : displayPrice.value.toFixed(6)}</TokenPrice>
         <DeltaContainer>
           {formattedDelta}
           <ArrowCell>{arrow}</ArrowCell>

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-24 19:05\n"
+"PO-Revision-Date: 2022-08-26 17:08\n"
 "Last-Translator: \n"
 "Language: it_IT\n"
 "Language-Team: Italian\n"
@@ -540,6 +540,10 @@ msgid "Confirm transaction in wallet"
 msgstr "Conferma transazione nel portafoglio"
 
 #: src/components/Web3Status/index.tsx
+msgid "Connect"
+msgstr "Collegare"
+
+#: src/components/Web3Status/index.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
@@ -745,6 +749,10 @@ msgstr "Ignora"
 msgid "Docs"
 msgstr "Documenti"
 
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "Documentation"
+msgstr "Documentazione"
+
 #: src/pages/MigrateV2/index.tsx
 msgid "Don’t see one of your v2 positions? <0>Import it.</0>"
 msgstr "Non vedi una delle tue posizioni v2? <0>Importala.</0>"
@@ -894,6 +902,10 @@ msgstr "Esplora Uniswap Analytics."
 msgid "Failed to switch networks from the Uniswap Interface. In order to use Uniswap on {0}, you must change the network in your wallet."
 msgstr "Impossibile cambiare rete dall'interfaccia Uniswap. Per utilizzare Uniswap su {0}, devi cambiare la rete nel tuo portafoglio."
 
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "Feature Flags"
+msgstr "Bandiere di funzionalità"
+
 #: src/components/PositionPreview/index.tsx
 msgid "Fee Tier"
 msgstr "Livello Di Tariffa"
@@ -905,6 +917,10 @@ msgstr "Livello tariffario"
 #: src/components/swap/SwapDetailsDropdown.tsx
 msgid "Fetching best price..."
 msgstr "Recupero del miglior prezzo..."
+
+#: src/components/Tokens/TokenTable/SearchBar.tsx
+msgid "Filter tokens"
+msgstr "Filtra i token"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "For"
@@ -937,6 +953,10 @@ msgstr "Ottieni supporto su Discord"
 #: src/components/Header/NetworkSelector.tsx
 #: src/components/Menu/index.tsx
 msgid "Help Center"
+msgstr "Centro assistenza"
+
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "Help center"
 msgstr "Centro assistenza"
 
 #: src/components/FeeSelector/index.tsx
@@ -1069,6 +1089,7 @@ msgid "Learn more"
 msgstr "Scopri di più"
 
 #: src/components/Menu/index.tsx
+#: src/components/NavBar/MenuDropdown.tsx
 #: src/components/PrivacyPolicy/index.tsx
 msgid "Legal & Privacy"
 msgstr "Legale e Privacy"
@@ -1221,6 +1242,14 @@ msgstr "Dipendenze mancanti"
 msgid "More"
 msgstr "Altro"
 
+#: src/components/NavBar/SearchBar.tsx
+msgid "NFT Collections"
+msgstr "Collezioni NFT"
+
+#: src/components/NavBar/Navbar.tsx
+msgid "NFTs"
+msgstr "NFT"
+
 #: src/components/Tokens/TokenDetails/TokenDetail.tsx
 msgid "Name not found"
 msgstr "Nome non trovato"
@@ -1277,6 +1306,10 @@ msgstr "Nessun risultato trovato."
 #: src/components/Tokens/TokenDetails/TokenDetail.tsx
 msgid "No token information available"
 msgstr "Nessuna informazione sul token disponibile"
+
+#: src/components/NavBar/SearchBar.tsx
+msgid "No tokens found."
+msgstr "Nessun token trovato."
 
 #: src/constants/tokenSafety.tsx
 msgid "Not Available"
@@ -1366,6 +1399,7 @@ msgstr "Polygonscan"
 
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/Header/index.tsx
+#: src/components/NavBar/Navbar.tsx
 msgid "Pool"
 msgstr "Pool"
 
@@ -1401,6 +1435,14 @@ msgstr "Raggruppato {0}:"
 #: src/pages/Pool/index.tsx
 msgid "Pools"
 msgstr "Piscine"
+
+#: src/components/NavBar/SearchBar.tsx
+msgid "Popular NFT collections"
+msgstr "Collezioni NFT popolari"
+
+#: src/components/NavBar/SearchBar.tsx
+msgid "Popular tokens"
+msgstr "Token popolari"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Portal Bridge"
@@ -1527,6 +1569,10 @@ msgstr "Per saperne di più sugli asset non supportati"
 msgid "Recent Transactions"
 msgstr "Transazioni Recenti"
 
+#: src/components/NavBar/SearchBar.tsx
+msgid "Recent searches"
+msgstr "Ricerche recenti"
+
 #: src/components/AddressInputPanel/index.tsx
 msgid "Recipient"
 msgstr "Destinatario"
@@ -1593,6 +1639,14 @@ msgstr "Ritorno"
 msgid "Search name or paste address"
 msgstr "Cerca nome o incolla indirizzo"
 
+#: src/components/NavBar/SearchBar.tsx
+msgid "Search tokens"
+msgstr "Token di ricerca"
+
+#: src/components/NavBar/SearchBar.tsx
+msgid "Search tokens and NFT collections"
+msgstr "Cerca token e raccolte NFT"
+
 #: src/pages/AddLiquidity/index.tsx
 msgid "Select Pair"
 msgstr "Seleziona Coppia"
@@ -1632,6 +1686,10 @@ msgstr "Se stesso"
 #: src/components/vote/DelegateModal.tsx
 msgid "Self Delegate"
 msgstr "Auto-Delegato"
+
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "Sell NFTs"
+msgstr "Vendi NFT"
 
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
@@ -1711,6 +1769,7 @@ msgstr "Fornitura di {0} {1} e {2} {3}"
 
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/Header/index.tsx
+#: src/components/NavBar/Navbar.tsx
 #: src/components/swap/SwapHeader.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
@@ -1933,6 +1992,8 @@ msgid "Token not supported"
 msgstr "Token non supportato"
 
 #: src/components/Header/index.tsx
+#: src/components/NavBar/Navbar.tsx
+#: src/components/NavBar/SearchBar.tsx
 #: src/components/SearchModal/Manage.tsx
 msgid "Tokens"
 msgstr "Token"
@@ -2172,6 +2233,10 @@ msgstr "Visualizza su Etherscan"
 msgid "View on Explorer"
 msgstr "Visualizza su Explorer"
 
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "View token analytics"
+msgstr "Visualizza l'analisi dei token"
+
 #: src/components/ModalViews/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
@@ -2218,6 +2283,10 @@ msgstr "Vota la proposta {proposalKey}"
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Vote for proposal {proposalKey} with reason \"{0}\""
 msgstr "Vota la proposta {proposalKey} con motivazione \"{0}\""
+
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "Vote in governance"
+msgstr "Vota in governance"
 
 #: src/components/vote/VoteModal.tsx
 #: src/components/vote/VoteModal.tsx

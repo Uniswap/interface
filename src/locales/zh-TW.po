@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-24 19:05\n"
+"PO-Revision-Date: 2022-08-26 17:08\n"
 "Last-Translator: \n"
 "Language: zh_TW\n"
 "Language-Team: Chinese Traditional\n"
@@ -540,6 +540,10 @@ msgid "Confirm transaction in wallet"
 msgstr "在錢包中確認交易"
 
 #: src/components/Web3Status/index.tsx
+msgid "Connect"
+msgstr "連接"
+
+#: src/components/Web3Status/index.tsx
 #: src/components/earn/ClaimRewardModal.tsx
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidityV2/index.tsx
@@ -745,6 +749,10 @@ msgstr "關閉"
 msgid "Docs"
 msgstr "文檔"
 
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "Documentation"
+msgstr "文檔"
+
 #: src/pages/MigrateV2/index.tsx
 msgid "Don’t see one of your v2 positions? <0>Import it.</0>"
 msgstr "看不到您的一些 v2 流動資金嗎？<0>將它手動導入。</0>"
@@ -894,6 +902,10 @@ msgstr "探索 Uniswap 分析。"
 msgid "Failed to switch networks from the Uniswap Interface. In order to use Uniswap on {0}, you must change the network in your wallet."
 msgstr "無法從 Uniswap 界面切換網絡。為了在 {0} 上使用 Uniswap，您必須更改錢包中的網絡。"
 
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "Feature Flags"
+msgstr "功能標誌"
+
 #: src/components/PositionPreview/index.tsx
 msgid "Fee Tier"
 msgstr "手續費級別"
@@ -905,6 +917,10 @@ msgstr "手續費級別"
 #: src/components/swap/SwapDetailsDropdown.tsx
 msgid "Fetching best price..."
 msgstr "正在獲取最優兌換率..."
+
+#: src/components/Tokens/TokenTable/SearchBar.tsx
+msgid "Filter tokens"
+msgstr "過濾令牌"
 
 #: src/pages/Vote/VotePage.tsx
 msgid "For"
@@ -937,6 +953,10 @@ msgstr "在 Discord 上尋求技術支持"
 #: src/components/Header/NetworkSelector.tsx
 #: src/components/Menu/index.tsx
 msgid "Help Center"
+msgstr "幫助中心"
+
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "Help center"
 msgstr "幫助中心"
 
 #: src/components/FeeSelector/index.tsx
@@ -1069,6 +1089,7 @@ msgid "Learn more"
 msgstr "瞭解更多"
 
 #: src/components/Menu/index.tsx
+#: src/components/NavBar/MenuDropdown.tsx
 #: src/components/PrivacyPolicy/index.tsx
 msgid "Legal & Privacy"
 msgstr "法律與隱私"
@@ -1221,6 +1242,14 @@ msgstr "缺少依賴套件"
 msgid "More"
 msgstr "更多"
 
+#: src/components/NavBar/SearchBar.tsx
+msgid "NFT Collections"
+msgstr "NFT 集合"
+
+#: src/components/NavBar/Navbar.tsx
+msgid "NFTs"
+msgstr "NFT"
+
 #: src/components/Tokens/TokenDetails/TokenDetail.tsx
 msgid "Name not found"
 msgstr "未找到名稱"
@@ -1277,6 +1306,10 @@ msgstr "未找到任何結果。"
 #: src/components/Tokens/TokenDetails/TokenDetail.tsx
 msgid "No token information available"
 msgstr "沒有可用的令牌信息"
+
+#: src/components/NavBar/SearchBar.tsx
+msgid "No tokens found."
+msgstr "未找到令牌。"
 
 #: src/constants/tokenSafety.tsx
 msgid "Not Available"
@@ -1366,6 +1399,7 @@ msgstr "Polygonscan"
 
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/Header/index.tsx
+#: src/components/NavBar/Navbar.tsx
 msgid "Pool"
 msgstr "流動池"
 
@@ -1401,6 +1435,14 @@ msgstr "流動池匯集 {0}:"
 #: src/pages/Pool/index.tsx
 msgid "Pools"
 msgstr "游泳池"
+
+#: src/components/NavBar/SearchBar.tsx
+msgid "Popular NFT collections"
+msgstr "流行的 NFT 合集"
+
+#: src/components/NavBar/SearchBar.tsx
+msgid "Popular tokens"
+msgstr "熱門代幣"
 
 #: src/components/Header/NetworkSelector.tsx
 msgid "Portal Bridge"
@@ -1527,6 +1569,10 @@ msgstr "閱讀有關不受支持的代幣的更多資訊"
 msgid "Recent Transactions"
 msgstr "最近交易"
 
+#: src/components/NavBar/SearchBar.tsx
+msgid "Recent searches"
+msgstr "最近的搜索"
+
 #: src/components/AddressInputPanel/index.tsx
 msgid "Recipient"
 msgstr "接收方"
@@ -1593,6 +1639,14 @@ msgstr "返回"
 msgid "Search name or paste address"
 msgstr "搜索名稱或粘貼地址"
 
+#: src/components/NavBar/SearchBar.tsx
+msgid "Search tokens"
+msgstr "搜索令牌"
+
+#: src/components/NavBar/SearchBar.tsx
+msgid "Search tokens and NFT collections"
+msgstr "搜索代幣和 NFT 集合"
+
 #: src/pages/AddLiquidity/index.tsx
 msgid "Select Pair"
 msgstr "選擇幣對"
@@ -1632,6 +1686,10 @@ msgstr "自身"
 #: src/components/vote/DelegateModal.tsx
 msgid "Self Delegate"
 msgstr "自我代表"
+
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "Sell NFTs"
+msgstr "出售 NFT"
 
 #: src/pages/AddLiquidity/index.tsx
 #: src/pages/AddLiquidity/index.tsx
@@ -1711,6 +1769,7 @@ msgstr "供應 {0} {1} 和 {2} {3}"
 
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/Header/index.tsx
+#: src/components/NavBar/Navbar.tsx
 #: src/components/swap/SwapHeader.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
@@ -1933,6 +1992,8 @@ msgid "Token not supported"
 msgstr "不支持此代幣"
 
 #: src/components/Header/index.tsx
+#: src/components/NavBar/Navbar.tsx
+#: src/components/NavBar/SearchBar.tsx
 #: src/components/SearchModal/Manage.tsx
 msgid "Tokens"
 msgstr "代幣"
@@ -2172,6 +2233,10 @@ msgstr "在Etherscan上查看"
 msgid "View on Explorer"
 msgstr "在以太坊資源瀏覽器上查看"
 
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "View token analytics"
+msgstr "查看令牌分析"
+
 #: src/components/ModalViews/index.tsx
 #: src/components/claim/AddressClaimModal.tsx
 #: src/components/claim/ClaimModal.tsx
@@ -2218,6 +2283,10 @@ msgstr "投票贊成提案 {proposalKey}"
 #: src/components/AccountDetails/TransactionSummary.tsx
 msgid "Vote for proposal {proposalKey} with reason \"{0}\""
 msgstr "以“{0}”為理由贊成提案 {proposalKey}"
+
+#: src/components/NavBar/MenuDropdown.tsx
+msgid "Vote in governance"
+msgstr "治理投票"
 
 #: src/components/vote/VoteModal.tsx
 #: src/components/vote/VoteModal.tsx

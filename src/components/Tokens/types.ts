@@ -1,5 +1,5 @@
 export enum Category {
-  percentChange = '% Change',
+  percentChange = 'Change',
   marketCap = 'Market Cap',
   price = 'Price',
   volume = 'Volume',

@@ -8,7 +8,6 @@ import TokenAPICache from './cache'
 import environment from './RelayEnvironment'
 import { TimePeriod } from './TopTokenQuery'
 import { PriceHistory } from './types'
-import { useRefreshableQuery } from './useRefreshableQuery'
 
 function toHistoryDuration(timePeriod: TimePeriod): HistoryDuration {
   switch (timePeriod) {
@@ -104,20 +103,6 @@ export function useTokenPriceQuery(address: string, timePeriod: TimePeriod, chai
     [timePeriod, address]
   )
 
-  const fetchPrices = useRefreshableQuery<TokenPriceSingleQuery>(
-    query,
-    {
-      contract: {
-        address,
-        chain,
-      },
-      duration: toHistoryDuration(timePeriod),
-    },
-    updatePrices,
-    setError,
-    setIsLoading
-  )
-
   /* To be called on first load, or when time period changes */
   const getData = useCallback(() => {
     const cached = TokenAPICache.checkPriceHistory(address, timePeriod)
@@ -126,16 +111,27 @@ export function useTokenPriceQuery(address: string, timePeriod: TimePeriod, chai
       setIsLoading(false)
     } else {
       setIsLoading(true)
-      fetchPrices()
+      fetchQuery<TokenPriceSingleQuery>(environment, query, {
+        contract: {
+          address,
+          chain,
+        },
+        duration: toHistoryDuration(timePeriod),
+      }).subscribe({
+        next: updatePrices,
+        error: setError,
+        complete: () => setIsLoading(false),
+      })
     }
-  }, [timePeriod])
+  }, [address, timePeriod, chain, updatePrices])
 
-  useEffect(() => {
+  const onFirstRender = useCallback(() => {
     if (!prices) {
       getData()
     }
-  }, [])
-  useEffect(getData, [timePeriod])
+  }, [prices, getData])
+  useEffect(onFirstRender, [onFirstRender])
+  useEffect(getData, [getData, timePeriod])
 
   return { error, isLoading, data: prices ?? [] }
 }

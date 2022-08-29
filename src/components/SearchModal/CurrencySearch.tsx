@@ -51,7 +51,7 @@ interface CurrencySearchProps {
   isOpen: boolean
   onDismiss: () => void
   selectedCurrency?: Currency | null
-  onCurrencySelect: (currency: Currency) => void
+  onCurrencySelect: (currency: Currency, hasWarning?: boolean) => void
   otherSelectedCurrency?: Currency | null
   showCommonBases?: boolean
   showCurrencyAmount?: boolean
@@ -136,9 +136,9 @@ export function CurrencySearch({
   }, [debouncedQuery, native, filteredSortedTokens])
 
   const handleCurrencySelect = useCallback(
-    (currency: Currency) => {
-      onCurrencySelect(currency)
-      onDismiss()
+    (currency: Currency, hasWarning?: boolean) => {
+      onCurrencySelect(currency, hasWarning)
+      if (!hasWarning) onDismiss()
     },
     [onDismiss, onCurrencySelect]
   )

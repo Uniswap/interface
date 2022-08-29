@@ -20,6 +20,10 @@ const ConnectButton = styled(ButtonPrimary)`
   font-size: 16px;
   margin-left: auto;
   margin-right: auto;
+
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+    width: 100%;
+  }
 `
 
 const Divider = styled.div`
@@ -35,18 +39,23 @@ const ToggleMenuItem = styled.button`
   cursor: pointer;
   display: flex;
   flex: 1;
+  border-radius: 12px;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
   font-size: 14px;
   font-weight: 400;
   width: 100%;
-  padding: 12px 16px;
+  padding: 12px 8px;
   color: ${({ theme }) => theme.textSecondary};
   :hover {
     color: ${({ theme }) => theme.textPrimary};
     background-color: ${({ theme }) => theme.backgroundModule};
-    transition: 250ms all ease;
+    transition: ${({
+      theme: {
+        transition: { duration, timing },
+      },
+    }) => `${duration.fast}ms all ${timing.in}`};
   }
 `
 
@@ -73,6 +82,7 @@ const IconWrap = styled.span`
 const DefaultMenuWrap = styled.div`
   width: 100%;
   height: 100%;
+  padding: 0 8px;
 `
 
 const DefaultText = styled.span`

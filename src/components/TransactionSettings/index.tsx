@@ -7,7 +7,7 @@ import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
 import ms from 'ms.macro'
 import { darken } from 'polished'
 import { useState } from 'react'
-import { useSetUserSlippageTolerance, useUserSlippageTolerance, useUserTransactionTTL } from 'state/user/hooks'
+import { useUserSlippageTolerance, useUserTransactionTTL } from 'state/user/hooks'
 import styled, { useTheme } from 'styled-components/macro'
 
 import { ThemedText } from '../../theme'
@@ -112,8 +112,7 @@ export default function TransactionSettings({ placeholderSlippage }: Transaction
   const redesignFlag = useRedesignFlag()
   const redesignFlagEnabled = redesignFlag === RedesignVariant.Enabled
 
-  const userSlippageTolerance = useUserSlippageTolerance()
-  const setUserSlippageTolerance = useSetUserSlippageTolerance()
+  const [userSlippageTolerance, setUserSlippageTolerance] = useUserSlippageTolerance()
 
   const [deadline, setDeadline] = useUserTransactionTTL()
 

@@ -58,6 +58,7 @@ export interface ThemeColors {
   deepShadow: Color
   hoverState: Color
   hoverDefault: Color
+  stateOverlayHover: Color
 }
 
 export interface Colors {
@@ -149,6 +150,7 @@ declare module 'styled-components/macro' {
         fast: number
       }
       timing: {
+        ease: string
         in: string
         out: string
         inOut: string

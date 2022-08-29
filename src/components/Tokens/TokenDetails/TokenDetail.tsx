@@ -1,18 +1,20 @@
 import { Trans } from '@lingui/macro'
 import { ParentSize } from '@visx/responsive'
+import { useWeb3React } from '@web3-react/core'
 import CurrencyLogo from 'components/CurrencyLogo'
 import PriceChart from 'components/Tokens/TokenDetails/PriceChart'
 import { VerifiedIcon } from 'components/TokenSafety/TokenSafetyIcon'
 import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import { getChainInfo } from 'constants/chainInfo'
-import { checkWarning } from 'constants/tokenSafety'
+import { nativeOnChain, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
+import { checkWarning, WARNING_LEVEL } from 'constants/tokenSafety'
 import { chainIdToChainName, useTokenDetailQuery } from 'graphql/data/TokenDetailQuery'
-import { useTokenPriceQuery } from 'graphql/data/TokenPrice'
+import { fillTokenPriceCache, useTokenPriceQuery } from 'graphql/data/TokenPrice'
 import { useCurrency, useIsUserAddedToken, useToken } from 'hooks/Tokens'
 import { useAtom } from 'jotai'
 import { useAtomValue } from 'jotai/utils'
 import { darken } from 'polished'
-import { Suspense, useCallback } from 'react'
+import { Suspense, useCallback, useEffect } from 'react'
 import { useState } from 'react'
 import { ArrowLeft, Heart } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
@@ -69,6 +71,7 @@ const TokenActions = styled.div`
   color: ${({ theme }) => theme.textSecondary};
 `
 const TokenSymbol = styled.span`
+  text-transform: uppercase;
   color: ${({ theme }) => theme.textSecondary};
 `
 const NetworkBadge = styled.div<{ networkColor?: string; backgroundColor?: string }>`
@@ -177,8 +180,9 @@ export function AboutSection({ address, tokenDetailData }: { address: string; to
 }
 
 export default function LoadedTokenDetail({ address }: { address: string }) {
+  const { chainId: connectedChainId } = useWeb3React()
   const token = useToken(address)
-  const currency = useCurrency(address)
+  let currency = useCurrency(address)
   const favoriteTokens = useAtomValue<string[]>(favoritesAtom)
   const isFavorited = favoriteTokens.includes(address)
   const toggleFavorite = useToggleFavorite(address)
@@ -190,6 +194,10 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
   const handleDismissWarning = useCallback(() => {
     setWarningModalOpen(false)
   }, [setWarningModalOpen])
+  const handleCancel = useCallback(() => {
+    setWarningModalOpen(false)
+    warning && warning.level === WARNING_LEVEL.BLOCKED && navigate(-1)
+  }, [setWarningModalOpen, navigate, warning])
   const chainInfo = getChainInfo(token?.chainId)
   const networkLabel = chainInfo?.label
   const networkBadgebackgroundColor = chainInfo?.backgroundColor
@@ -201,14 +209,27 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
     twitterName,
   }))(tokenDetailData)
 
-  const [timePeriod, setTimePeriod] = useAtom(filterTimeAtom)
-  const { error, isLoading, data } = useTokenPriceQuery(token?.address ?? '', timePeriod, 'ETHEREUM')
+  const [timePeriod] = useAtom(filterTimeAtom)
+  /* prefill token price data before rendering chart*/
+  const { error, data } = useTokenPriceQuery(token?.address ?? '', timePeriod, 'ETHEREUM')
+
+  /* Prefill other TimePeriod's data without blocking load */
+  useEffect(() => {
+    if (token?.address) fillTokenPriceCache(token.address, 'ETHEREUM')
+  }, [token])
 
   /* Only exit Suspense when the chart is ready to be rendered, either with data or an error */
   const chartReady = data.length > 0 || !!error
 
-  if (!chartReady || !token || !token.name || !token.symbol) {
+  if (!chartReady || !token || !token.name || !token.symbol || !connectedChainId) {
     return <LoadingTokenDetail />
+  }
+
+  const wrappedNativeCurrency = WRAPPED_NATIVE_CURRENCY[connectedChainId]
+  const isWrappedNativeToken = wrappedNativeCurrency?.address === token.address
+
+  if (isWrappedNativeToken) {
+    currency = nativeOnChain(connectedChainId)
   }
 
   const tokenName = tokenDetailData.name
@@ -245,11 +266,10 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
             <ParentSize>{({ width, height }) => <PriceChart token={token} width={width} height={height} />}</ParentSize>
           </ChartContainer>
         </ChartHeader>
-        <AboutSection address={address} tokenDetailData={relevantTokenDetailData} />
         <StatsSection>
           <StatPair>
             <Stat>
-              Market cap
+              <Trans>Market cap</Trans>
               <StatPrice>
                 {tokenDetailData.marketCap?.value ? formatDollarAmount(tokenDetailData.marketCap?.value) : '-'}
               </StatPrice>
@@ -276,9 +296,10 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
             </Stat>
           </StatPair>
         </StatsSection>
+        <AboutSection address={address} tokenDetailData={relevantTokenDetailData} />
         <ContractAddressSection>
           <Contract>
-            Contract address
+            <Trans>Contract address</Trans>
             <ContractAddress>
               <CopyContractAddress address={address} />
             </ContractAddress>
@@ -287,7 +308,7 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
         <TokenSafetyModal
           isOpen={warningModalOpen}
           tokenAddress={address}
-          onCancel={() => navigate(-1)}
+          onCancel={handleCancel}
           onContinue={handleDismissWarning}
         />
       </TopArea>

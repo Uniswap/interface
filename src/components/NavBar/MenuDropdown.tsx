@@ -1,3 +1,4 @@
+import { Trans } from '@lingui/macro'
 import FeatureFlagModal from 'components/FeatureFlagModal/FeatureFlagModal'
 import { PrivacyPolicyModal } from 'components/PrivacyPolicy'
 import { NftVariant, useNftFlag } from 'featureFlags/flags/nft'
@@ -129,7 +130,7 @@ export const MenuDropdown = () => {
         </NavIcon>
 
         {isOpen && (
-          <NavDropdown top={60}>
+          <NavDropdown top={{ sm: 'unset', xxl: '56' }} bottom={{ sm: '56', xxl: 'unset' }} right="0">
             <Column gap="16">
               <Column paddingX="8" gap="4">
                 {nftFlag === NftVariant.Enabled && (
@@ -137,36 +138,56 @@ export const MenuDropdown = () => {
                     <Icon>
                       <ThinTagIcon width={24} height={24} />
                     </Icon>
-                    <PrimaryMenuRow.Text>Sell NFTs</PrimaryMenuRow.Text>
+                    <PrimaryMenuRow.Text>
+                      <Trans>Sell NFTs</Trans>
+                    </PrimaryMenuRow.Text>
                   </PrimaryMenuRow>
                 )}
                 <PrimaryMenuRow to="/vote" close={toggleOpen}>
                   <Icon>
                     <GovernanceIcon width={24} height={24} />
                   </Icon>
-                  <PrimaryMenuRow.Text>Vote in governance</PrimaryMenuRow.Text>
+                  <PrimaryMenuRow.Text>
+                    <Trans>Vote in governance</Trans>
+                  </PrimaryMenuRow.Text>
                 </PrimaryMenuRow>
                 <PrimaryMenuRow href="https://info.uniswap.org/#/">
                   <Icon>
                     <BarChartIcon width={24} height={24} />
                   </Icon>
-                  <PrimaryMenuRow.Text>View token analytics</PrimaryMenuRow.Text>
+                  <PrimaryMenuRow.Text>
+                    <Trans>View token analytics</Trans>
+                  </PrimaryMenuRow.Text>
                 </PrimaryMenuRow>
               </Column>
               <Separator />
-              <Column paddingX="8">
-                <SecondaryLinkedText href="https://help.uniswap.org/en/">Help center ↗</SecondaryLinkedText>
-                <SecondaryLinkedText href="https://docs.uniswap.org/">Documentation ↗</SecondaryLinkedText>
+              <Box
+                display="flex"
+                flexDirection={{ sm: 'row', md: 'column' }}
+                flexWrap="wrap"
+                alignItems={{ sm: 'center', md: 'flex-start' }}
+                paddingX="8"
+              >
+                <SecondaryLinkedText href="https://help.uniswap.org/en/">
+                  <Trans>Help center</Trans> ↗
+                </SecondaryLinkedText>
+                <SecondaryLinkedText href="https://docs.uniswap.org/">
+                  <Trans>Documentation</Trans> ↗
+                </SecondaryLinkedText>
                 <SecondaryLinkedText
                   onClick={() => {
                     toggleOpen()
                     togglePrivacyPolicy()
                   }}
-                >{`Legal & Privacy ↗`}</SecondaryLinkedText>
+                >
+                  <Trans>Legal & Privacy</Trans> ↗
+                </SecondaryLinkedText>
                 {(isDevelopmentEnv() || isStagingEnv()) && (
-                  <SecondaryLinkedText onClick={openFeatureFlagsModal}>{`Feature Flags`}</SecondaryLinkedText>
+                  <SecondaryLinkedText onClick={openFeatureFlagsModal}>
+                    <Trans>Feature Flags</Trans>
+                  </SecondaryLinkedText>
                 )}
-              </Column>
+              </Box>
               <IconRow>
                 <Icon href="https://discord.com/invite/FCfyBSbCU5">
                   <DiscordIconMenu className={styles.hover} width={24} height={24} color={themeVars.colors.darkGray} />

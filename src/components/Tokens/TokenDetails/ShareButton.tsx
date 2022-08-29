@@ -1,3 +1,4 @@
+import { Trans } from '@lingui/macro'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { useRef } from 'react'
 import { Twitter } from 'react-feather'
@@ -98,13 +99,13 @@ export default function ShareButton(tokenInfo: TokenInfo) {
               toCopy={window.location.href}
               ref={copyHelperRef}
             >
-              Copy Link
+              <Trans>Copy Link</Trans>
             </CopyHelper>
           </ShareAction>
 
           <ShareAction onClick={shareTweet}>
             <Twitter color={theme.textPrimary} size={20} strokeWidth={1.5} />
-            Share to Twitter
+            <Trans>Share to Twitter</Trans>
           </ShareAction>
         </ShareActions>
       )}

@@ -12,7 +12,6 @@ import { subhead } from 'nft/css/common.css'
 import { themeVars, vars } from 'nft/css/sprinkles.css'
 import { useIsMobile } from 'nft/hooks'
 import { ReactNode, useReducer, useRef } from 'react'
-import { isChainAllowed } from 'utils/switchChain'
 
 import * as styles from './ChainSwitcher.css'
 import { NavDropdown } from './NavDropdown'
@@ -66,34 +65,33 @@ export const ChainSwitcher = ({ leftAlign }: ChainSwitcherProps) => {
   const isMobile = useIsMobile()
 
   const ref = useRef<HTMLDivElement>(null)
-  useOnClickOutside(ref, isOpen ? toggleOpen : undefined)
+  const modalRef = useRef<HTMLDivElement>(null)
+  useOnClickOutside(ref, isOpen ? toggleOpen : undefined, [modalRef])
 
   const info = chainId ? getChainInfo(chainId) : undefined
 
   const selectChain = useSelectChain()
   useSyncChainQuery()
 
-  if (!chainId || !info) {
+  if (!chainId) {
     return null
   }
 
-  const isSupported = isChainAllowed(chainId)
+  const isSupported = !!info
 
   const dropdown = (
-    <NavDropdown top={54} leftAligned={leftAlign} paddingBottom={8} paddingTop={8}>
+    <NavDropdown top="56" left={leftAlign ? '0' : 'auto'} right={leftAlign ? 'auto' : '0'} ref={modalRef}>
       <Column marginX="8">
-        {NETWORK_SELECTOR_CHAINS.map((chainId: SupportedChainId) =>
-          isSupported ? (
-            <ChainRow
-              onSelectChain={async (targetChainId: SupportedChainId) => {
-                await selectChain(targetChainId)
-                toggleOpen()
-              }}
-              targetChain={chainId}
-              key={chainId}
-            />
-          ) : null
-        )}
+        {NETWORK_SELECTOR_CHAINS.map((chainId: SupportedChainId) => (
+          <ChainRow
+            onSelectChain={async (targetChainId: SupportedChainId) => {
+              await selectChain(targetChainId)
+              toggleOpen()
+            }}
+            targetChain={chainId}
+            key={chainId}
+          />
+        ))}
       </Column>
     </NavDropdown>
   )
@@ -111,7 +109,7 @@ export const ChainSwitcher = ({ leftAlign }: ChainSwitcherProps) => {
           <>
             <TokenWarningRedIcon fill={themeVars.colors.darkGray} width={24} height={24} />
             <Box as="span" className={subhead} display={{ sm: 'none', xl: 'flex' }} style={{ lineHeight: '20px' }}>
-              {info?.label ?? 'Unsupported'}
+              Unsupported
             </Box>
           </>
         ) : (
