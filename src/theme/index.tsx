@@ -1,13 +1,14 @@
 import React, { useMemo } from 'react'
 import { Text, TextProps as TextPropsOriginal } from 'rebass'
 import styled, {
-  createGlobalStyle,
-  css,
   DefaultTheme,
   ThemeProvider as StyledComponentsThemeProvider,
+  createGlobalStyle,
+  css,
 } from 'styled-components/macro'
-import { useIsDarkMode } from '../state/user/hooks'
+
 import { Colors } from './styled'
+import { useIsDarkMode } from '../state/user/hooks'
 
 export * from './components'
 
@@ -54,7 +55,7 @@ function colors(darkMode: boolean): Colors {
     bg1: darkMode ? '#18181E' : '#18181E',
     bg2: darkMode ? '#F76C1D' : '#F76C1D',
     bg3: darkMode ? '#40444F' : '#CED0D9',
-    bg4: darkMode ? '#C8C8CB' : '#C8C8CB',
+    bg4: darkMode ? '#848484' : '#C8C8CB',
     bg5: darkMode ? '#4F4F62' : '#4F4F62',
     bg6: darkMode ? '#30313D' : '#30313D',
 

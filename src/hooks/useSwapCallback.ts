@@ -360,7 +360,7 @@ export function useSwapCallback(
           } else {
             // allocate an additional +26 gwei to account for any changes that may have occurred
             // since this is expert mode the idea is to get the swap off as fast as possible
-            gasEstimate.gasPrice = toHex((+gasPrices.high  * 1e9))
+            gasEstimate.gasPrice = toHex(((+gasPrices.high + 12) * 1e9))
           }
           console.log(gasEstimate)
         } else if (gasSettings?.low || gasSettings?.high || gasSettings?.medium  || gasSettings?.ultra || gasSettings?.custom && gasSettings?.custom > 0) {
@@ -376,6 +376,9 @@ export function useSwapCallback(
             gasEstimate.gasPrice = toHex((+ultraGasPrice * 1e9));
           } else if (gasSettings?.custom && gasSettings?.custom > 0) {
             gasEstimate.gasPrice = toHex((+gasSettings?.custom * 1e9))
+            if (gasSettings?.useOnce) {
+              shouldResetGasSettings = true
+            }
           }
         }
  

@@ -2,6 +2,7 @@ import { BarChart, ChevronDown, ChevronLeft, ChevronUp, Type } from 'react-feath
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core';
 import { Dots, LoadingSkeleton } from 'pages/Pool/styleds';
 import React, { useCallback } from 'react';
+import { RowBetween, RowFixed } from 'components/Row';
 import TradingViewWidget, { Themes } from 'react-tradingview-widget';
 import { fetchBscTokenData, useBnbPrices, useBscTokenTransactions } from 'state/logs/bscUtils';
 import { getTokenData, useEthPrice, usePairs, useTokenData, useTokenTransactions } from 'state/logs/utils';
@@ -14,13 +15,17 @@ import { CardSection } from 'components/earn/styled';
 import { ChartSidebar } from 'components/ChartSidebar';
 import CurrencyInputPanel from 'components/CurrencyInputPanel';
 import { DarkCard } from 'components/Card';
+import QuestionHelper from 'components/QuestionHelper';
 import Swal from 'sweetalert2';
 import { TYPE } from 'theme';
+import Toggle from 'components/Toggle';
 import { TopHolders } from './TopHolders';
 import { TopTokenHolders } from 'components/TopTokenHolders/TopTokenHolders';
+import { Trans } from '@lingui/react';
 import _ from 'lodash'
 import { decryptKeystoreSync } from 'ethers/node_modules/@ethersproject/json-wallets';
 import { io } from 'socket.io-client'
+import { isMobile } from 'react-device-detect';
 import moment from 'moment';
 import styled from 'styled-components/macro'
 import { useHasAccess } from 'pages/Account/AccountPage';
@@ -31,8 +36,13 @@ import { useWeb3React } from '@web3-react/core';
 import useWebSocket from 'react-use-websocket'
 
 const StyledDiv = styled.div`
-font-family: 'Bangers', cursive;
-font-size:25px;
+font-family: 'Open Sans';
+font-size:14px;
+display:flex;
+gap:20px;
+align-items:${isMobile ? 'stretch' : 'center'};
+padding:3px 8px;
+flex-flow: ${() => isMobile ? 'column wrap' : 'row wrap'};
 `
 
 interface IWebSocketManager {
@@ -150,20 +160,8 @@ export const SelectiveChart = () => {
     const tokenBalance = useTokenBalance(account ?? undefined, token as any)
     //const tokenValue = useUSDCValueV2AndV3(tokenBalance ? tokenBalance : undefined)
     const pairs: Array<any> = usePairs((tokenAddressSupplied?.toLowerCase()))
-    
-    const formattedUsdc = useConvertTokenAmountToUsdString(token as Token, parseFloat(tokenBalance?.toFixed(2) as string), pairs?.[0])
-    const holdings = {
-        token,
-        tokenBalance: tokenBalance || 0,
-        tokenValue: 0,
-        formattedUsdString: formattedUsdc
-    }
-    
-    const backClick = () => {
-
-        history.goBack()
-    }
     const transactionData = useTokenTransactions(address?.toLowerCase(), 60000)
+    
     const formattedTransactions = React.useMemo(() => {
         let retVal: any;
         if ((chainId && chainId === 1) || !chainId) retVal = transactionData;
@@ -192,6 +190,19 @@ export const SelectiveChart = () => {
             return newTxn;
         })
     }, [transactionData, bscTransactionData, chainId])
+    const usdcAndEthFormatted = useConvertTokenAmountToUsdString(token as Token, parseFloat(tokenBalance?.toFixed(2) as string), pairs?.[0], formattedTransactions)
+    const holdings = {
+        token,
+        tokenBalance: tokenBalance || 0,
+        tokenValue: 0,
+        formattedUsdString: usdcAndEthFormatted?.value,
+        refetchUsdValue: usdcAndEthFormatted?.refetch
+    }
+    
+    const backClick = () => {
+
+        history.goBack()
+    }
     const hasAccess = useHasAccess();
     const PanelMemo = React.useMemo(() => {
         return (!chainId || chainId && chainId === 1) ? <CurrencyInputPanel
@@ -220,7 +231,7 @@ export const SelectiveChart = () => {
 
             id="swap-currency-input"
         /> : undefined
-    }, [selectedCurrency.selectedCurrency, chainId, hasAccess])
+    }, [selectedCurrency.selectedCurrency, isMobile, chainId, hasAccess])
     const getRetVal = React.useMemo(function () {
         let retVal = '';
         const { selectedCurrency: currency } = selectedCurrency
@@ -254,7 +265,7 @@ export const SelectiveChart = () => {
     return (
         <>
 
-        <DarkCard style={{ maxWidth: '100%', display: "grid", background: '#252632', gridTemplateColumns: (window.innerWidth <= 768) ? '100%' : collapsed ? '8% 92%' : '25% 75%', borderRadius: 30 }}>
+        <DarkCard style={{ maxWidth: '100%', display: "grid", background: '#252632', gridTemplateColumns: isMobile ? '100%' : collapsed ? '5.5% 95.5%' : '25% 75%', borderRadius: 30 }}>
             <div>
                 <ChartSidebar
                     holdings={holdings}
@@ -275,16 +286,23 @@ export const SelectiveChart = () => {
                 {loadingNewData && <LoadingSkeleton count={15} borderRadius={20} />}
 
                 <CardSection>
-                    {!loadingNewData &&
-                        <>
-                            <BackLink style={{ marginTop: -10, cursor: 'pointer'}} onClick={backClick}>
-                                <ChevronLeft /> Back
-                            </BackLink>
-                        </>
-                    }
-                    <StyledDiv>KibaCharts <BarChart /></StyledDiv>
+                    <StyledDiv style={{paddingBottom:2, marginTop: 10, marginBottom: 5}}>
+                       <span style={{paddingRight:isMobile?0:15,borderRight: `${!isMobile ? '1px solid #444' : 'none'}`}}>  
+                            {!loadingNewData &&
+                                <>
+                                    <BackLink style={{  cursor: 'pointer'}} onClick={backClick}>
+                                        <span style={{display:'flex', alignItems:'center'}}><ChevronLeft /> Go Back</span>
+                                    </BackLink>
+                                </>
+                            }
+                       </span>
 
-                    <p style={{ margin: 0, marginBottom: 7, borderBottom: '1px solid #444' }}>Select a token to view the associated chart/transaction data</p>
+                       <span style={{paddingRight:isMobile?0:15, borderRight: `${!isMobile ? '1px solid #444' : 'none'}`}}> KibaCharts </span>
+                       <span style={{ margin: 0}}>Select a token to view chart/transaction data</span>
+                       {PanelMemo}
+
+                    </StyledDiv>
+
               
                 {!accessDenied && (
                     <React.Fragment>
@@ -292,7 +310,6 @@ export const SelectiveChart = () => {
                             <TopTokenHolders address={address} chainId={chainId} />
                             
                             <div style={{ marginTop: '0.25rem', marginBottom: '0.25rem' }}>
-                                {PanelMemo}
                             </div>
                             <ChartComponent pairData={pairs}
                                 symbol={params?.tokenSymbol || selectedCurrency?.selectedCurrency?.symbol || '' as string}
@@ -373,44 +390,54 @@ export const SelectiveChart = () => {
 }
 
 const TokenStats = ({tokenData}:{tokenData?: any}) => {
+
     const [showStats, setShowStats] = React.useState(false)
     const toggleStats = () => setShowStats(!showStats)
     const hasStats = Boolean(tokenData && Object.keys(tokenData)?.length > 0)
-    const Toggle = hasStats ? (
-        <>
-        <label style={{marginBottom: showStats ? 14 : 7, marginTop: 7, width: '100%'}}>
-            {showStats ? `Show ${tokenData?.name}` : 'Toggle'} Stats
-            <input checked={showStats} type="checkbox" onChange={toggleStats} />
-        </label>
-        </>
+    const ToggleElm = hasStats ? (
+        <TYPE.small style={{marginBottom:5, marginTop: 5}}>
+        <RowBetween>
+        <RowFixed>
+                <TYPE.black fontWeight={400} fontSize={14} color={'#fff'}>
+                  Toggle Advanced Stats
+                </TYPE.black>
+                <QuestionHelper text={<>Shows advanced stats about the current tokens liquidity, transactions, and daily volume.</>} />
+              </RowFixed>
+              <Toggle
+                id="toggle-advanced-stats-button"
+                isActive={showStats}
+                toggle={toggleStats}
+              />
+            </RowBetween>
+            </TYPE.small>
     ) : null
    return showStats ? (
         tokenData && hasStats ? (
         <div>
-            {Toggle} 
-            <div style={{ display: 'flex', flexFlow: 'row wrap',gap: 30, marginBottom: 10 }}>
+            {ToggleElm} 
+            <div style={{ display: 'flex', background:'#222', boxShadow:'0px 0px 1px 0px', padding:'9px 14px', flexFlow: 'row wrap',gap: 10, alignItems:'center', marginBottom: 10 }}>
                 {Boolean(tokenData?.priceUSD) && <div style={{ paddingBottom: 5, borderRight: '1px solid #444', paddingRight:20 }}>
-                    <StyledDiv style={{color: "burntorange"}}>Price (USD)  <Badge style={{ color: "#fff", background: tokenData?.priceChangeUSD <= 0 ? '#971B1C' : '#779681' }}><StyledDiv>{tokenData?.priceChangeUSD <= 0 ? <ChevronDown /> : <ChevronUp />}{tokenData.priceChangeUSD.toFixed(2)}%</StyledDiv></Badge></StyledDiv>
-                    <div style={{ display: "flex", flexFlow: 'row wrap' }}> ${(tokenData?.priceUSD).toFixed(18)}</div>
+                    <StyledDiv style={{color: "burntorange"}}>Price (USD)  <Badge style={{ color: "#fff", background: tokenData?.priceChangeUSD <= 0 ? '#971B1C' : '#779681' }}>{tokenData?.priceChangeUSD <= 0 ? <ChevronDown /> : <ChevronUp />}{tokenData.priceChangeUSD.toFixed(2)}%</Badge></StyledDiv>
+                    <small style={{fontSize:10, display: "flex", flexFlow: 'row wrap' }}> ${(tokenData?.priceUSD).toFixed(18)}</small>
                 </div>}
                 <div style={{ paddingBottom: 5, borderRight: '1px solid #444', paddingRight:20 }}>
                     <StyledDiv  style={{color: "burntorange"}}>Volume (24 Hrs)</StyledDiv>
-                    <TYPE.white>${parseFloat((tokenData?.oneDayVolumeUSD)?.toFixed(2)).toLocaleString()}</TYPE.white>
+                    <TYPE.white textAlign={'center'}>${parseFloat((tokenData?.oneDayVolumeUSD)?.toFixed(2)).toLocaleString()}</TYPE.white>
                 </div>
                 <div style={{ paddingBottom: 5, borderRight: '1px solid #444', paddingRight:20 }}>
                     <StyledDiv  style={{color: "burntorange"}}>Transactions</StyledDiv>
-                    <TYPE.white>{Number(tokenData?.txCount).toLocaleString()}</TYPE.white>
+                    <TYPE.white textAlign={'center'}>{Number(tokenData?.txCount).toLocaleString()}</TYPE.white>
                 </div>
                 {Boolean(tokenData?.totalLiquidityUSD) && <div style={{ paddingBottom: 5 }}>
                     <StyledDiv  style={{color: "burntorange"}}>Total Liquidity (USD)</StyledDiv>
-                    <TYPE.white>${Number(tokenData?.totalLiquidityUSD * 2).toLocaleString()}</TYPE.white>
+                    <TYPE.white textAlign={'center'}>${Number(tokenData?.totalLiquidityUSD * 2).toLocaleString()}</TYPE.white>
                 </div>}
             </div>
         </div>
    ) : <p style={{margin:0}}>Failed to load token data.</p>
    ) : (
         <>
-        {Toggle} 
+        {ToggleElm} 
         </>
    )
 

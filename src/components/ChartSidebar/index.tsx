@@ -1,7 +1,8 @@
 /* eslint-disable */
 import 'react-pro-sidebar/dist/css/styles.css';
 
-import { ArrowLeftCircle, ArrowRightCircle, BarChart2, ChevronDown, ChevronUp, Globe, Heart, PieChart, Twitter } from 'react-feather'
+import { ArrowLeftCircle, ArrowRightCircle, BarChart2, ChevronDown, ChevronUp, Globe, Heart, PieChart, RefreshCcw, ToggleLeft, ToggleRight, Twitter } from 'react-feather'
+import Badge, { BadgeVariant } from 'components/Badge';
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core';
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink';
 import { ExternalLink, StyledInternalLink, TYPE, } from 'theme';
@@ -16,7 +17,6 @@ import Copy from '../AccountDetails/Copy'
 import CurrencyLogo from 'components/CurrencyLogo';
 import { FiatValue } from '../../components/CurrencyInputPanel/FiatValue'
 import React from 'react';
-import { StyledAnchorLink } from 'components/Header';
 import { Trans } from '@lingui/macro'
 import _ from 'lodash'
 import { useKiba } from 'pages/Vote/VotePage';
@@ -80,7 +80,8 @@ type ChartSidebarProps = {
         token: Token | any;
         tokenBalance: CurrencyAmount<Token> | undefined | number | any;
         tokenValue: CurrencyAmount<Token> | undefined | any;
-        formattedUsdString?: string | undefined
+        formattedUsdString?: (string | undefined)[]
+        refetchUsdValue?: () => void
     }
     tokenData: any
     chainId?: number
@@ -89,28 +90,31 @@ type ChartSidebarProps = {
     loading: boolean;
 }
 const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
-    const [componentLoading, setComponentLoading] = React.useState(false)
     const { token, holdings, tokenData, chainId, collapsed, onCollapse, loading } = props
-    const { account } = useWeb3React()
-    const hasData = React.useMemo(() => !!tokenData && !!token && !!token.name && !!token.address && !!token.symbol, [tokenData, token])
-    const tokenInfo = useTokenInfo(chainId ?? 1, token.address)
+
+    //state
+    const [componentLoading, setComponentLoading] = React.useState(false)
     const [statsOpen, setStatsOpen] = React.useState(true)
     const [quickNavOpen, setQuickNavOpen] = React.useState(false)
-    const transactionCount = React.useMemo(() => {
-        return tokenData && tokenData?.txCount ? tokenData?.txCount : undefined
-    }, [tokenData])
-    const holderCount = useTokenHolderCount(token.address, chainId)
     const tokenCurrency = token && token.decimals && token.address ? new Token(chainId ?? 1, token.address, +token.decimals, token.symbol, token.name) : {} as Token
-    const hasSocials = React.useMemo(() => tokenInfo && (tokenInfo?.twitter || tokenInfo?.coingecko || tokenInfo?.website), [tokenInfo])
-    const currency = useCurrency(token.address ? token.address : tokenData?.id)
 
-    
+    // hooks
+    const { account } = useWeb3React()
+    const currency = useCurrency(token.address ? token.address : tokenData?.id)
+    const totalSupply = useTotalSupply(tokenCurrency)
+    const deadKiba = useKiba('0x000000000000000000000000000000000000dead')
+    const _bscToken = useBscToken(chainId == 56 ? token.address : undefined)
+    const amountBurnt = useTokenBalance('0x000000000000000000000000000000000000dead', chainId == 56 ? _bscToken as Token : token as any ?? undefined)
+    const holderCount = useTokenHolderCount(token.address, chainId)
+    const tokenInfo = useTokenInfo(chainId ?? 1, token.address)
+
     //create a custom function that will change menucollapse state from false to true and true to false
     const menuIconClick = () => {
         //condition checking to change state from true to false and vice versa
         collapsed ? onCollapse(false) : onCollapse(true);
     };
-    const totalSupply = useTotalSupply(tokenCurrency)
+
+    // Memos
     const totalSupplyInt = React.useMemo(() => {
         if (tokenInfo && tokenInfo?.totalSupply && tokenInfo.totalSupply.valueOf() && _.isNumber(tokenInfo?.totalSupply))
             return parseFloat(tokenInfo?.totalSupply?.toFixed(0));
@@ -119,24 +123,29 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
         }
         return 0
     }, [tokenInfo?.totalSupply, totalSupply])
-    const formattedPrice = React.useMemo(() => {
-        console.log(`trying to get price--`, tokenInfo?.price, tokenData?.priceUSD)
 
+    const hasSocials = React.useMemo(() => tokenInfo && (tokenInfo?.twitter || tokenInfo?.coingecko || tokenInfo?.website), [tokenInfo])
+
+    const formattedPrice = React.useMemo(() => {
+        //console.log(`trying to get price--`, tokenInfo?.price, tokenData?.priceUSD)
         if (tokenData && tokenData.priceUSD) {
-            console.info(`Using uniswap v2 price -- its always much more up - to - date`, tokenData)
+            //console.info(`Using uniswap v2 price -- its always much more up - to - date`, tokenData)
             return `$${parseFloat(parseFloat(tokenData.priceUSD).toFixed(18)).toFixed(18)}`
         }
         if (tokenInfo && tokenInfo.price && tokenInfo.price.rate) {
-            console.info(`Fallback to etherapi price -- not as  up - to - date, but better than nothing`, tokenData)
+            //console.info(`Fallback to etherapi price -- not as  up - to - date, but better than nothing`, tokenData)
             return `$${tokenInfo.price.rate.toFixed(18)}`
         }
 
-
         return `-`
     }, [tokenInfo?.price, token, tokenData])
-    const deadKiba = useKiba('0x000000000000000000000000000000000000dead')
-    const _bscToken = useBscToken(chainId == 56 ? token.address : undefined)
-    const amountBurnt = useTokenBalance('0x000000000000000000000000000000000000dead', chainId == 56 ? _bscToken as Token : token  as any ?? undefined)
+
+    const transactionCount = React.useMemo(() => {
+        return tokenData && tokenData?.txCount ? tokenData?.txCount : undefined
+    }, [tokenData])
+
+    const hasData = React.useMemo(() => !!tokenData && !!token && !!token.name && !!token.address && !!token.symbol, [tokenData, token])
+
     const marketCap = React.useMemo(() => {
         if (!totalSupplyInt || totalSupplyInt === 0) return ''
         const hasTokenData = !!tokenData?.priceUSD
@@ -152,23 +161,21 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
         return Number(parseFloat(price.toFixed(18)) * excludingBurntValue).toLocaleString()
     }, [totalSupplyInt, tokenInfo?.price, tokenData?.priceUSD, amountBurnt])
 
-    console.log('chartSidebar -> tokenInfo', marketCap)
-
     return (
         <Wrapper>
             <ProSidebar collapsed={collapsed}
-                
+
                 width={'100%'}
                 onLoadStart={() => setComponentLoading(true)}
                 onLoadCapture={() => setComponentLoading(false)}
-                style={ {fontSize: 12,  marginRight: 15, background: 'linear-gradient(#181C27, #131722)', borderRadius: 10, border: '.25px solid transparent' }}
+                style={{ fontSize: 12, marginRight: 15, background: 'linear-gradient(#181C27, #131722)', borderRadius: 10, border: '.25px solid transparent' }}
             >
-                <SidebarHeader style={{ fontSize: 12,  background: 'linear-gradient(#181C27, #131722)' }}>
+                <SidebarHeader style={{ fontSize: 12, background: 'linear-gradient(#181C27, #131722)' }}>
                     <Menu iconShape="round">
 
                         <MenuItem icon={<BarChart2 style={{ background: 'transparent' }} />}> Kiba Charts </MenuItem>
                         {/* changing menu collapse icon on click */}
-                        <div style={{ marginBottom: 5, cursor: 'pointer', display: 'flex', justifyContent: "end", position: 'relative', right: '5' }} >
+                        <div style={{ height: 0, marginBottom: 5, cursor: 'pointer', display: 'flex', justifyContent: "end", position: 'relative', right: '5' }} >
                             {collapsed && (
                                 <ArrowRightCircle onClick={menuIconClick} />
                             )}
@@ -266,7 +273,7 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
                                             </MenuItem>
                                         </>
                                         }
-                           
+
                                         {token?.symbol?.toLowerCase().includes('kiba') && <MenuItem>
                                             <TYPE.subHeader>Total Burnt</TYPE.subHeader>
                                             <BurntKiba style={{ display: 'flex', justifyContent: 'start !important' }} />
@@ -299,22 +306,26 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
                                                 }
                                             </TYPE.main>
                                         </MenuItem>}
-                                                     
-                                        {Boolean(!!holdings) && Boolean(holdings.tokenBalance) && (
-                                            <Menu  iconShape={'circle'} >
-                                                <SidebarHeader>
-                                                   <MenuItem>Connected Wallet Holdings</MenuItem>
-                                               </SidebarHeader>
-                                               <SidebarContent>
-                                                <MenuItem>
-                                                    <TYPE.subHeader>Current {holdings.token.symbol} Balance</TYPE.subHeader>
-                                                    <TYPE.black> {Number(holdings.tokenBalance?.toFixed(2)).toLocaleString()} Tokens&nbsp;
-                                                    </TYPE.black>
 
-                                                    <TYPE.black> 
-                                                        {Boolean(!holdings?.tokenValue && holdings?.formattedUsdString) &&<> ~(${holdings?.formattedUsdString}) </>}
-                                                        {Boolean(holdings?.tokenValue ) && <span>(<FiatValue style={{display: 'inline-block'}} fiatValue={holdings?.tokenValue ?? undefined }/> USD)</span>}</TYPE.black>
+                                        {Boolean(!!holdings) && Boolean(holdings.tokenBalance) && (
+                                            <Menu iconShape={'circle'} >
+                                                <SidebarHeader>
+                                                    <MenuItem>Connected Wallet Holdings</MenuItem>
+                                                </SidebarHeader>
+                                                <SidebarContent>
+                                                    <MenuItem>
+                                                        <TYPE.subHeader>Current {holdings.token.symbol} Balance</TYPE.subHeader>
+                                                        <TYPE.black> {Number(holdings.tokenBalance?.toFixed(2)).toLocaleString()} Tokens&nbsp;
+                                                            {Boolean(holdings?.tokenValue) && <span>(<FiatValue style={{ display: 'inline-block' }} fiatValue={holdings?.tokenValue ?? undefined} /> USD)</span>}</TYPE.black>
                                                     </MenuItem>
+                                                    {Boolean(holdings?.formattedUsdString?.length) && (
+                                                        <MenuItem>
+                                                            <TYPE.subHeader>Current {holdings.token.symbol} Value</TYPE.subHeader>
+                                                            <TYPE.black>
+                                                                <CurrentHoldingsComponent symbol={holdings.token.symbol} refetch={holdings?.refetchUsdValue} priceArray={holdings?.formattedUsdString} />
+                                                            </TYPE.black>
+                                                        </MenuItem>
+                                                    )}
                                                 </SidebarContent>
                                             </Menu>
                                         )}
@@ -359,8 +370,8 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
                 </SidebarContent>
 
                 <SidebarFooter style={{ background: 'linear-gradient(#181C27, #131722)' }} >
-                    <Menu iconShape="square" style={{background:'linear-gradient(#181C27, #131722)'}}>
-                        <SubMenu style={{background: 'linear-gradient(#181C27, #131722)'}} title="Quick Nav" icon={<Heart style={{ background: 'transparent' }} />} open={quickNavOpen} onOpenChange={(isOpen) => {
+                    <Menu iconShape="square" style={{ background: 'linear-gradient(#181C27, #131722)' }}>
+                        <SubMenu style={{ background: 'linear-gradient(#181C27, #131722)' }} title="Quick Nav" icon={<Heart style={{ background: 'transparent' }} />} open={quickNavOpen} onOpenChange={(isOpen) => {
                             setQuickNavOpen(isOpen)
                             if (isOpen) setStatsOpen(false)
                         }}>
@@ -378,3 +389,77 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
 }, _.isEqual)
 _ChartSidebar.displayName = 'chart.sidebar'
 export const ChartSidebar = _ChartSidebar
+
+type HoldingsProps = {
+    priceArray?: (string | undefined)[]
+    refetch?: () => void
+    symbol: string
+}
+
+const hoverStyle = ` 
+display:flex;justify-content:space-between; gap: 10px; align-items:center;
+&:hover {
+    color: #fff;
+    transition: ease all 0.12s;
+}
+>*:hover {
+    color: #fff;
+    transition: ease all 0.12s;
+}`
+
+const SmallTypeHover = styled.div`
+   ${hoverStyle}
+`
+
+const BadgeHover = styled(Badge)`
+
+&:hover {
+    color:#fff;
+}`
+
+const RefreshCcwHover = styled(RefreshCcw)`
+color: #779681;
+cursor:pointer;
+    &:hover{
+        color:#fff;
+        transition: all ease 0.01s;
+    }
+`
+
+const CurrentHoldingsComponent = (props: HoldingsProps) => {
+    const { priceArray, refetch, symbol } = props
+    const [showUsd, setShowUsd] = React.useState(true)
+
+    const toggleShowUsd = () => setShowUsd(!showUsd)
+
+    const hasPriceArray = Boolean(priceArray && priceArray?.length)
+
+    if (!hasPriceArray) return null
+    const Toggle = showUsd ? ToggleLeft : ToggleRight
+    const priceToRender = hasPriceArray ? (showUsd ? priceArray?.[0] : priceArray?.[1]) : null
+
+    const refetchClick = React.useCallback(() => {
+        refetch && refetch()
+    }, [refetch])
+    return (
+        <div style={{ display: 'grid', gap: 10, gridTemplateColumns: 'auto auto', alignItems: 'center', marginTop: 5 }}>
+            <BadgeHover style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                cursor: 'pointer'
+            }}
+                onClick={toggleShowUsd}
+                variant={BadgeVariant.POSITIVE_OUTLINE}>
+                {showUsd ? <span>${priceToRender}</span> : <span>{priceToRender}</span>}
+                <SmallTypeHover>
+                    <TYPE.small style={{ fontSize: 9 }}>
+                         {showUsd ? 'USD' : 'ETH'}
+                    </TYPE.small>
+                    <Toggle size={'11px'} />
+                </SmallTypeHover>
+            </BadgeHover>
+            <span title={`Refresh ${symbol} holdings`}><RefreshCcwHover onClick={refetchClick} /></span>
+        </div>
+    )
+}

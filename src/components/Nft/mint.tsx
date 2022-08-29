@@ -214,11 +214,17 @@ export const Mint: React.FC<any> = () => {
 
     // memos
     const isMintingDisabled = React.useMemo(() => {
+        // check amt to mint
         if (amountToMint == 0 || amountToMint > 5) return true;
+        // if minting is completed
         if (currentSupply === 111) return true;
+        // if they are whitelisted, whitelst minting is active, and they havent minted
         if (isWhitelistMintingLive && accountWhitelisted && canMint) return false;
+        // if minting is live, and they havent minted
         if (isMintingLive && canMint) return false;
+        // if minting is not live
         if (!isMintingLive) return true;
+        // if whitelist minting is not live, or is live but account not whitelisted
         if (!isWhitelistMintingLive || (isWhitelistMintingLive && !accountWhitelisted)) return true;
         return false;
     }, [isMintingLive, currentSupply, canMint, isWhitelistMintingLive, accountWhitelisted, amountToMint])

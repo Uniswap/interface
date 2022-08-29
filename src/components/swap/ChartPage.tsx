@@ -2,7 +2,8 @@ import Badge, { BadgeVariant } from 'components/Badge';
 import { BarChart, ChevronDown, ChevronRight, ChevronUp, Filter, Percent, X } from 'react-feather';
 import TradingViewWidget, { Themes } from 'react-tradingview-widget';
 import { fetchBscHolders, fetchBscTokenData, useBnbPrices, useBscPoocoinTransactions, useBscTokenData, useBscTokenTransactions } from 'state/logs/bscUtils';
-import { getTokenData, useEthPrice, useTokenData, useTokenDataHook, useTokenTransactions } from 'state/logs/utils';
+import { getTokenData, useEthPrice, usePairs, useTokenData, useTokenDataHook, useTokenTransactions } from 'state/logs/utils';
+import { useConvertTokenAmountToUsdString, useKiba } from 'pages/Vote/VotePage';
 
 import BarChartLoaderSVG from './BarChartLoader';
 import { ChartSidebar } from 'components/ChartSidebar';
@@ -19,7 +20,7 @@ import styled from 'styled-components/macro';
 import { system } from 'styled-system';
 import { useHasAccess } from 'pages/Account/AccountPage';
 import useInterval from 'hooks/useInterval';
-import { useKiba } from 'pages/Vote/VotePage';
+import { useToken } from 'hooks/Tokens';
 import { useUSDCValue } from 'hooks/useUSDCPrice';
 import { useUserLocale } from 'state/user/hooks';
 import { useWeb3React } from '@web3-react/core';
@@ -423,12 +424,16 @@ export const Chart = () => {
     const tokenData = useTokenDataHook(tokenDataAddress, tokenDataPriceParam, tokenDataPriceParamTwo)
     const locale = useUserLocale()
     const [collapsed, setCollapsed] = React.useState(false)
-    const usdValue = useUSDCValue(kibaBalance as any)
+    const pairs = usePairs(tokenDataAddress)
+    const token = useToken(tokenDataAddress)
+    const params = useConvertTokenAmountToUsdString(token as any | undefined, kibaBalance as any, pairs?.[0], transactionData?.data)
     const gridTemplateStyle = React.useMemo(() => isMobile ? '100%' : (collapsed ? '5% 95%' : '25% 75%'), [isMobile, collapsed])
     const holdings = {
         token: tokenData,
         tokenBalance: kibaBalance,
-        tokenValue: usdValue
+        tokenValue: undefined,
+        formattedUsdString: params?.value,
+        refetchUsdValue: params?.refetch
     }
     const gridColumnGap = 10
     const setChartView = () => setView('chart')

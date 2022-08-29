@@ -1,3 +1,5 @@
+import * as ethers from 'ethers'
+
 import Badge, { BadgeVariant } from "components/Badge";
 import { BurntKiba, useTotalSwapVolume } from "components/BurntKiba";
 import {
@@ -32,6 +34,7 @@ import styled from "styled-components/macro";
 import { useActiveWeb3React } from "../../hooks/web3";
 import { useBinanceTokenBalance } from "utils/binance.utils";
 import { useDarkModeManager } from "state/user/hooks";
+import useLast from 'hooks/useLast'
 import { useTokenBalance } from "../../state/wallet/hooks";
 import { useTotalKibaGains } from '../../state/logs/utils'
 import { useUserTransactions } from "state/logs/utils";
@@ -171,18 +174,46 @@ export const useRouterABI = () => {
  * @param amt amount of token to convert to usdc
  * @returns Formatted USD string
  */
-export const useConvertTokenAmountToUsdString = (token?: Token, amt?: number, pair?: {token0?: {id: string}, token1?: {id:string}}) => {
+export const useConvertTokenAmountToUsdString = (token?: Token, amt?: number, pair?: {token0?: {id: string}, token1?: {id:string}}, txData?: any) => {
   const {chainId} = useWeb3React()
-  const [value, setValue] = React.useState('')
+  const [retrieving, setRetrieving] = React.useState(false)
+  const length = useLast(txData?.[0]?.timestamp)
+  const [value, setValue] = React.useReducer(function( state: { value: string[], history:any[] }, action: {type: string, payload: string[]}) {
+    switch(action.type) {
+      case 'update': return {
+        ...state,
+        value: action.payload,
+        //create a new history entry.
+        history:[...state.history, {
+          time: new Date().getTime(),
+          summary: `Updating ${token?.symbol} ${amt} holdings conversion to USD`,
+          data: action.payload
+        }]
+      }
+      default: 
+      return state
+    }
+    }, {
+    value: [],
+    history: []
+  })
   const router = useV2RouterContract(chainId)
-
-  const retrieveTokenValue = async (): Promise<string> => {
-   return new Promise((resolve, reject) => {
+  const params = {
+    router,
+    amt,
+    token
+  }
+  const retrieveTokenValue = React.useCallback( async (): Promise<any | undefined> => {
+    console.log(`retrieve token value callback`)
+    setRetrieving(true)
+    return new Promise((resolve) => {
     try {
-        if (amt && +amt < 0) {
-          setValue("-");
-          return;
-        }
+      const returnCondition = amt && +amt <= 0
+      if (!token || !amt || amt == 0 || !router || returnCondition) {
+        setValue({type:'update', payload: []});
+
+        return resolve([])
+      }
         if (token && amt && +amt.toFixed(0) > 0) {
           const multiplier = 10 ** token.decimals;
           const amount = +amt.toFixed(0) * multiplier;
@@ -198,32 +229,52 @@ export const useConvertTokenAmountToUsdString = (token?: Token, amt?: number, pa
               swapRoute.push(USDC.address)
             }
 
-            router?.getAmountsOut(BigInt(amount), swapRoute).then((response: any) => {
-              const usdc = response[response.length - 1];
-              const ten6 = 10 ** 6; // usdc has 6 decimals
-              const usdcValue = usdc / ten6;
-              const number = Number(usdcValue.toFixed(2));
-              console.log(`get amounts out result formatted: ${number.toLocaleString()}`)
-              resolve(`${number.toLocaleString()} USD`);
-            });
+               router?.getAmountsOut(BigInt(amount), swapRoute).then((response: any) => {
+                  const eth = response[1] 
+                  const formattedEth = parseFloat(ethers.utils.formatEther(eth)).toFixed(6) + 'Ξ'
+                  const usdc = response[response.length - 1]
+                  const ten6 = 10 ** 6 // usdc has 6 decimals
+                  const usdcValue = usdc / ten6;
+                  const number = Number(usdcValue.toFixed(2))
+                  console.log(`get amounts out result formatted: ${number.toLocaleString()}`)
+                  const formatted = `${number.toLocaleString()}`
+                  const value = [formatted,formattedEth]
+                  setValue({type:'update', payload: value});
+                  setRetrieving(false)
+
+                  return resolve(value)
+               }).catch(console.error)
+           }
+          } else {
+            setRetrieving(false)
+
+            setValue({type:'update', payload: []});
+            return resolve([])
           }
-        }
+     
       } catch (ex) {
         console.error(ex);
-        reject(ex)
+        setRetrieving(false)
+
+        return resolve([])
       }
     })
-  }
+    }, [token, router, amt])
 
+  const changed = Boolean(txData?.length) && Boolean((txData?.[0]?.timestamp != length))
   React.useEffect(() => {
-    const finallyFn = () => console.log(`done with effect`, {value})
-    console.log(`calculate with router.`, amt, token, pair)
-    retrieveTokenValue()
-      .then(setValue)
-      .finally(finallyFn)
-  }, [retrieveTokenValue, router, token, amt, chainId]);
+    if (retrieving) return
+    if (!txData || ((length == txData?.[0]?.timestamp) && value.value.length)) return
+
+    if ((!value.value.length || changed) && router && token && (Boolean(amt) || amt == 0) && !Boolean(retrieving) && Boolean(!!txData)) {
+      console.log(`we running this effect now.`)
+      retrieveTokenValue()
+    }
+  }, [txData]);
   
-  return value
+
+  console.log(`useConvertTokenAmountToUsdString.history`, value.history)
+  return { value: value.value, refetch: retrieveTokenValue, history: value.history }
 }
 
 

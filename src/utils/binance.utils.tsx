@@ -170,8 +170,8 @@ export const useBinanceTokenBalance = (tokenAddress: string, account?: string | 
     balance: previousBalance ? +previousBalance : BigInt('0') as any,
     fetchStatus: NOT_FETCHED,
   })
+  const contract = getBep20Contract(tokenAddress)
   const fetchBalance = React.useCallback(async () => {
-      const contract = getBep20Contract(tokenAddress)
       try {
         const res = await contract.balanceOf(account)
         const decimals = await contract.decimals();
@@ -188,7 +188,7 @@ export const useBinanceTokenBalance = (tokenAddress: string, account?: string | 
           fetchStatus: FAILED,
         }))
       }
-    }, [tokenAddress, chainId, account, balanceState, getBep20Contract(tokenAddress)])
+    }, [tokenAddress, chainId, account, balanceState, contract])
 
   const [lastRefresh, setLastRefresh ] = React.useState<Date>(new Date())
   useInterval(() => {
