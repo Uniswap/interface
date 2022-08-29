@@ -17,6 +17,7 @@ import Copy from '../AccountDetails/Copy'
 import CurrencyLogo from 'components/CurrencyLogo';
 import { FiatValue } from '../../components/CurrencyInputPanel/FiatValue'
 import { Link } from 'react-router-dom';
+import { LoadingSkeleton } from 'pages/Pool/styleds';
 import React from 'react';
 import { Trans } from '@lingui/macro'
 import _ from 'lodash'
@@ -95,7 +96,7 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
     const { token, holdings, tokenData, chainId, collapsed, onCollapse, loading } = props
 
     //state
-    const [componentLoading, setComponentLoading] = React.useState(false)
+    const [componentLoading, setComponentLoading] = React.useState(loading)
     const [statsOpen, setStatsOpen] = React.useState(true)
     const [quickNavOpen, setQuickNavOpen] = React.useState(false)
     const tokenCurrency = token && token.decimals && token.address ? new Token(chainId ?? 1, token.address, +token.decimals, token.symbol, token.name) : {} as Token
@@ -218,7 +219,7 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
                             placeholder={'loader'}
                             icon={<PieChart style={{ background: 'transparent' }} />}
                             title={`${tokenData?.name ? tokenData?.name : ''} Stats`}>
-                            {hasData &&
+                            {Boolean(hasData && !loading) &&
                                 <>
                                     <Menu style={{ background: color, paddingLeft: 0 }} iconShape="round"   >
                                         <SidebarHeader>
@@ -385,8 +386,12 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
 
                                 </>
                             }
-                            {!hasData || loading || componentLoading && (
-                                <Spinner />
+                            {Boolean(loading) && (
+                             <Menu style={{ background: color, paddingLeft: 0 }} iconShape="round"   >
+                                 <SidebarContent>
+                                    <LoadingSkeleton borderRadius={50} count={7} />
+                                </SidebarContent>
+                            </Menu>
                             )}
 
                         </SubMenu>

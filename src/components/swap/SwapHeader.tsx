@@ -17,45 +17,50 @@ const StyledSwapHeader = styled.div`
   padding: 1rem 1.25rem 0.5rem 1.25rem;
   width: 100%;
   color: ${({ theme }) => theme.text2};
+  border-bottom: 1px solid #444;
 `
 
 const HeaderType = styled(TYPE.black)`
-
-font-family:'Bangers', cursive !important;
+font-family:'Open Sans';
 &:hover {
   transition: all ease 0.2s;
   color:#F76C1D;
+}
+&:nth-of-type(2n+0) {
+  padding-right:10px;
+  border-right: 1px solid #444;
+  &:hover{
+    transition: all ease 0.1s;
+  }
+}
+&:first-of-type{
+  padding-right:10px;
+  border-right:1px solid #444;
+  &:hover{
+    transition: all ease 0.1s;
+  }
 }`
 
 export default function SwapHeader({ allowedSlippage, view, onViewChange }: { allowedSlippage: Percent, view: 'bridge' | 'swap' | 'limit' | 'flooz', onViewChange: (view: "bridge"  | "swap" | 'limit' | 'flooz') => void }) {
-   const [showBridgeTip, setShowBridgeTip] = React.useState(false)
-   const {chainId} = useWeb3React()
-  const tipMessage = `Contract interaction fees will still occur when using the bridge, just like any other transactions (buys, transfers, sells). Redistribution fees will still occur.`
+  const {chainId} = useWeb3React()
   const onBridgeClick = ( ) => onViewChange('bridge');
   const onLimitClick = ( ) => onViewChange('limit');
   const onSwapClick = ( ) => onViewChange('swap') 
   return (
     <StyledSwapHeader>
       <RowBetween>
-        <RowFixed style={{display:'flex', alignItems:'center'}}>
-          <HeaderType  onClick={onSwapClick} fontWeight={500} fontSize={22} style={{ textDecoration: view === 'swap' ? 'underline' : 'none', cursor: 'pointer', marginRight: '8px' }}>
+        <RowFixed style={{gap: 10, display:'flex', alignItems:'center'}}>
+          <HeaderType  onClick={onSwapClick} fontWeight={500} fontSize={22} style={{ color: view ==='swap' ? '#F76C1D' : '', textDecoration: view === 'swap' ? 'underline' : 'none', cursor: 'pointer'}}>
             <Trans>Swap</Trans>
           </HeaderType>
-
-
-        
           
-          {<HeaderType  onClick={onLimitClick} fontWeight={500} fontSize={22} style={{ textDecoration: view === 'limit' ? 'underline' : 'none', cursor: 'pointer', marginLeft:'8px', marginRight: '8px' }}>
+          {<HeaderType  onClick={onLimitClick} fontWeight={500} fontSize={22} style={{  color: view ==='limit' ? '#F76C1D' : '',textDecoration: view === 'limit' ? 'underline' : 'none', cursor: 'pointer'}}>
             <Trans>Limit</Trans>
           </HeaderType>}
-          
-               
                     
-          {<HeaderType  onClick={onBridgeClick} fontWeight={500} fontSize={22} style={{ textDecoration: view === 'bridge' ? 'underline' : 'none', cursor: 'pointer', marginLeft:'8px', marginRight: '8px' }}>
+          {<HeaderType  onClick={onBridgeClick} fontWeight={500} fontSize={22} style={{ color: view ==='bridge' ? '#F76C1D' : '', textDecoration: view === 'bridge' ? 'underline' : 'none', cursor: 'pointer' }}>
             <Trans>Bridge</Trans>
           </HeaderType>}
-          
-          
     
         </RowFixed>
         {chainId === 1 && (

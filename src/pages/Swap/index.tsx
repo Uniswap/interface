@@ -131,6 +131,7 @@ export const CardWrapper = styled(ExternalLink)`
   width:100%;
   margin-right: 16px;
   padding:3px;
+  align-items:center;
   :hover {
     cursor: pointer;
     opacity: 0.6;
@@ -150,13 +151,14 @@ const StyledInfo = styled(Info)`
 
 export const FixedContainer = styled(AutoColumn)``
 
-export const ScrollableRow = styled.div`
+export const ScrollableRow = styled.div<{background?:string}>`
   display: flex;
   flex-direction: row;
+  align-items:center;
   width: 100%;
   overflow-x: auto;
   white-space: nowrap;
-
+  background: ${({background}) => background ? background : 'initial'};
   ::-webkit-scrollbar {
     display: none;
   }

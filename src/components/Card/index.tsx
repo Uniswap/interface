@@ -6,6 +6,10 @@ const Card = styled(Box)<{ width?: string; padding?: string; border?: string; $b
   padding: ${({ padding }) => padding ?? '1rem'};
   border-radius: ${({ $borderRadius }) => $borderRadius ?? '10px'};
   border: ${({ border }) => border};
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 25px 50px -12px;
+  &:hover{
+    transition: ease all 0.1s;
+  }
 `
 export default Card
 
@@ -24,6 +28,7 @@ export const GreyCard = styled(Card)`
 
 export const DarkGreyCard = styled(Card)`
   background-color: ${({ theme }) => theme.bg0};
+ 
 `
 
 export const DarkCard = styled(Card)`

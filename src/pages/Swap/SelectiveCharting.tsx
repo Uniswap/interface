@@ -76,7 +76,7 @@ export const SelectiveChart = () => {
     const token = useToken(address?.toLowerCase())
     const tokenBalance = useTokenBalance(account ?? undefined, token as any)
     //const tokenValue = useUSDCValueV2AndV3(tokenBalance ? tokenBalance : undefined)
-    const pairs: Array<any> = usePairs((tokenAddressSupplied?.toLowerCase()))
+    const pairs: Array<any> = usePairs((address?.toLowerCase()))
     const transactionData = useTokenTransactions(address?.toLowerCase(), 60000)
     
     const [selectedCurrency, setSelectedCurrency] = React.useReducer(function (state: { selectedCurrency: Currency | null | undefined }, action: { type: 'update', payload: Currency | null | undefined }) {
@@ -99,19 +99,14 @@ export const SelectiveChart = () => {
 
     React.useEffect(() => {
         return history.listen((location) => {
-            
             const newAddress = location.pathname.split('/')[2]
             const newSymbol = location.pathname.split('/')[3]
             const newName = location.pathname.split('/')[4]
             const newDecimals = location.pathname.split('/')[5]
-
             if (newAddress && newSymbol) {
                 setLoadingNewData(true)
                 setAddressCallback(newAddress)
                 getTokenCallback(newAddress)
-                setTimeout(() => {
-                    setLoadingNewData(false)
-                }, 1000)
                 const newToken = new Token(chainId ?? 1, newAddress, parseInt(newDecimals) ?? 18, newSymbol, newName ?? '');
                 if (ref.current) {
                     ref.current = newToken;
@@ -129,6 +124,10 @@ export const SelectiveChart = () => {
                 if (tokenData?.id !== newAddress) {
                     setAddressCallback(newAddress)
                 }
+                setTimeout(() => {
+                    setLoadingNewData(false)
+                    window.scrollTo({top:0})
+                }, 2200)
             }
         })
     }, [history, mainnetCurrency])
@@ -224,10 +223,11 @@ export const SelectiveChart = () => {
   
 
     const PanelMemo = React.useMemo(() => {
-        return (!chainId || chainId && chainId === 1) ? <CurrencyInputPanel
+        return (!Boolean(chainId) || Boolean(chainId && chainId === 1)) ? 
+        <CurrencyInputPanel
             label={'GAINS'}
             showMaxButton={false}
-            value={''}
+            value={``}
             showCurrencyAmount={false}
             hideBalance={true}
             hideInput={true}
@@ -249,8 +249,9 @@ export const SelectiveChart = () => {
             showCommonBases={false}
 
             id="swap-currency-input"
-        /> : undefined
-    }, [selectedCurrency.selectedCurrency, isMobile, chainId, hasAccess])
+        /> : 
+       Boolean(chainId) ? <TYPE.small>{chainId && chainId == 56 ? 'BSC' : `${chainId}`} support coming soon</TYPE.small> : null
+    }, [(selectedCurrency.selectedCurrency as any)?.address, isMobile, chainId, hasAccess])
     
     const getRetVal = React.useMemo(function () {
         let retVal = '';
@@ -310,8 +311,7 @@ export const SelectiveChart = () => {
                     chainId={chainId}
                 />
             </div>}
-            <div style={{marginLeft:10, borderLeft:Boolean(params?.tokenAddress && (selectedCurrency || !!prebuilt?.symbol)) ? '1px solid #444' : 'none'}}>
-                {loadingNewData && <LoadingSkeleton count={15} borderRadius={20} />}
+            <div style={{marginLeft: isMobile ? 0 : 10, borderLeft: isMobile ? 'none' : Boolean(params?.tokenAddress && (selectedCurrency || !!prebuilt?.symbol)) ? '1px solid #444' : 'none'}}>
                 
                 <CardSection>
                     <StyledDiv style={{paddingBottom:2, marginTop: 10, marginBottom: 5}}>
@@ -331,7 +331,9 @@ export const SelectiveChart = () => {
 
                     </StyledDiv>
 
-                {!accessDenied && (
+                {!accessDenied && (loadingNewData ? 
+                 <LoadingSkeleton count={15} borderRadius={20} /> :
+                (
                     <React.Fragment>
                             {hasSelectedData && <TokenStats tokenData={tokenData} />}
                             {hasSelectedData? <TopTokenHolders address={address} chainId={chainId} /> : null}
@@ -406,7 +408,7 @@ export const SelectiveChart = () => {
                                 </div>
                                 </> : null
                                 )}
-                    </React.Fragment>)}
+                    </React.Fragment>)) }
                     </CardSection>
 
                 {!!accessDenied &&
