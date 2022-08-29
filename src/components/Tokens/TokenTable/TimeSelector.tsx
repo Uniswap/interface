@@ -81,7 +81,7 @@ const StyledMenuButton = styled.button<{ open: boolean }>`
   width: 100%;
   height: 100%;
   border: none;
-  color: ${({ theme, open }) => (open ? theme.blue200 : theme.textPrimary)};
+  color: ${({ theme, open }) => (open ? theme.accentActive : theme.textPrimary)};
   margin: 0;
   background-color: ${({ theme, open }) => (open ? theme.accentActiveSoft : theme.backgroundInteractive)};
   padding: 6px 12px 6px 12px;
@@ -131,7 +131,7 @@ const StyledMenuContent = styled.div`
 
 const Chevron = styled.span<{ open: boolean }>`
   padding-top: 1px;
-  color: ${({ open, theme }) => (open ? theme.blue200 : theme.textSecondary)};
+  color: ${({ open, theme }) => (open ? theme.accentActive : theme.textSecondary)};
 `
 
 // TODO: change this to reflect data pipeline
