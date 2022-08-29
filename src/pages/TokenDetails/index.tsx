@@ -11,13 +11,14 @@ import LoadingTokenDetail from 'components/Tokens/TokenDetails/LoadingTokenDetai
 import NetworkBalance from 'components/Tokens/TokenDetails/NetworkBalance'
 import TokenDetail from 'components/Tokens/TokenDetails/TokenDetail'
 import TokenSafetyMessage from 'components/TokenSafety/TokenSafetyMessage'
+import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import Widget, { WIDGET_WIDTH } from 'components/Widget'
 import { getChainInfo } from 'constants/chainInfo'
 import { L1_CHAIN_IDS, L2_CHAIN_IDS, SupportedChainId, TESTNET_CHAIN_IDS } from 'constants/chains'
 import { checkWarning } from 'constants/tokenSafety'
 import { useToken } from 'hooks/Tokens'
 import { useNetworkTokenBalances } from 'hooks/useNetworkTokenBalances'
-import { useMemo } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
@@ -80,6 +81,36 @@ export default function TokenDetails() {
   const token = useToken(tokenAddress)
 
   const tokenWarning = tokenAddress ? checkWarning(tokenAddress) : null
+  const [reviewPromise, setReviewPromise] = useState<(b: boolean) => void>()
+
+  const onSwapReview = useCallback(() => {
+    let promiseResolve, promiseReject
+    alert('What')
+
+    const promise = new Promise<boolean>(function (resolve, reject) {
+      promiseResolve = resolve
+      promiseReject = reject
+    })
+
+    setReviewPromise(promiseResolve)
+    return promise
+  }, [])
+
+  const onSwapContinue = useCallback(() => {
+    if (reviewPromise) {
+      alert('HOw')
+      reviewPromise(true)
+      setReviewPromise(undefined)
+    }
+  }, [])
+
+  const onSwapCancel = useCallback(() => {
+    if (reviewPromise) {
+      reviewPromise(false)
+      setReviewPromise(undefined)
+    }
+  }, [])
+
   /* network balance handling */
 
   const { data: networkData } = tokenAddress ? NetworkBalances(tokenAddress) : { data: null }
@@ -123,7 +154,7 @@ export default function TokenDetails() {
         <>
           <TokenDetail address={tokenAddress} />
           <RightPanel>
-            <Widget defaultToken={token ?? undefined} />
+            <Widget defaultToken={token ?? undefined} onReviewSwapClick={onSwapReview} />
             {tokenWarning && <TokenSafetyMessage tokenAddress={tokenAddress} warning={tokenWarning} />}
             <BalanceSummary address={tokenAddress} totalBalance={totalBalance} networkBalances={balancesByNetwork} />
           </RightPanel>
@@ -134,6 +165,12 @@ export default function TokenDetails() {
               networkBalances={balancesByNetwork}
             />
           </Footer>
+          <TokenSafetyModal
+            isOpen={!!reviewPromise}
+            tokenAddress={tokenAddress}
+            onCancel={onSwapCancel}
+            onContinue={onSwapContinue}
+          />
         </>
       )}
     </TokenDetailsLayout>
