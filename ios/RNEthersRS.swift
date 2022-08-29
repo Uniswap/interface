@@ -106,7 +106,7 @@ class RNEthersRS: NSObject {
     let checkStored = retrieveMnemonic(mnemonicId: newMnemonicKey)
     
     if checkStored == nil {
-      keychain.set(mnemonic, forKey: newMnemonicKey)
+      keychain.set(mnemonic, forKey: newMnemonicKey, withAccess: .accessibleWhenUnlockedThisDeviceOnly)
       return address
     }
     
@@ -140,7 +140,7 @@ class RNEthersRS: NSObject {
   
   func storeNewPrivateKey(address: String, privateKey: String) {
     let newKey = keychainKeyForPrivateKey(address: address);
-    keychain.set(privateKey, forKey: newKey)
+    keychain.set(privateKey, forKey: newKey, withAccess: .accessibleWhenUnlockedThisDeviceOnly)
   }
   
   /**
