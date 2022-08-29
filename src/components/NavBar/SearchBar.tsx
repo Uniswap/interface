@@ -141,7 +141,7 @@ export const SearchBarDropdown = ({ toggleOpen, tokens, collections, hasInput }:
         return {
           ...collection,
           collectionAddress: collection.address,
-          floorPrice: formatEthPrice(collection.floor.toString()),
+          floorPrice: formatEthPrice(collection.floor?.toString()),
           stats: {
             total_supply: collection.totalSupply,
             one_day_change: collection.floorChange,
