@@ -367,14 +367,14 @@ export const SearchBar = () => {
           </NavIcon>
         </Box>
         {isOpen &&
-          (searchValue.length > 0 && (tokensAreLoading || collectionsAreLoading) ? (
+          (debouncedSearchValue.length > 0 && (tokensAreLoading || collectionsAreLoading) ? (
             <SkeletonRow />
           ) : (
             <SearchBarDropdown
               toggleOpen={toggleOpen}
               tokens={reducedTokens}
               collections={reducedCollections}
-              hasInput={searchValue.length > 0}
+              hasInput={debouncedSearchValue.length > 0}
             />
           ))}
       </Box>
