@@ -11,7 +11,7 @@ interface LineChartProps<T> {
   getX: (t: T) => number
   getY: (t: T) => number
   marginTop?: number
-  curve?: CurveFactory
+  curve: CurveFactory
   color?: Color
   strokeWidth: number
   children?: ReactNode
