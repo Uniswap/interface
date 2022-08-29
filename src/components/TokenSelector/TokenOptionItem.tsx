@@ -4,7 +4,6 @@ import React, { useCallback, useState } from 'react'
 import { Keyboard } from 'react-native'
 import { Box } from 'src/components/layout'
 import TokenWarningModal from 'src/components/tokens/TokenWarningModal'
-import WarningIcon from 'src/components/tokens/WarningIcon'
 import { Option } from 'src/components/TokenSelector/Option'
 import { TokenOption } from 'src/components/TokenSelector/types'
 import {
@@ -63,10 +62,9 @@ export function TokenOptionItem({ option, onPress, tokenWarningLevelMap, matches
         />
       ) : null}
       <Option
-        icon={dismissed ? null : <WarningIcon tokenWarningLevel={tokenWarningLevel} />}
         matches={matches}
-        metadataType={tokenWarningLevel === TokenWarningLevel.BLOCKED ? 'disabled' : 'balance'}
         option={option}
+        tokenWarningLevel={tokenWarningLevel}
         onPress={handleSelectCurrency}
       />
     </Box>
