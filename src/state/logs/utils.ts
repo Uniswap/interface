@@ -470,11 +470,8 @@ export const usePairs = (tokenAddress?: string) => {
   const { data, loading, error } = useQuery(TOKEN_DATA(tokenAddress || '', null, false), 
   {
     onCompleted: (params) => {
-    console.log(`query params completed`, params)
     if (params && params.pairs1 && params.pairs0 && Boolean(params.pairs1.length || params.pairs0.length)) {
-      console.log(`got pairs data`)
       const pairs = [...params.pairs0, ...params.pairs1];
-      console.log(`Formatted pairs array`, pairs)
       setPairData({type: "UPDATE", payload:  pairs})
     }
   }, pollInterval:1000000, })
@@ -483,7 +480,6 @@ return React.useMemo(() => {
 
   if (data && (data?.pairs0?.length || data?.pairs1.length) && !_.isEqual([...data.pairs0, ...data.pairs1], pairData)) {
     const pairs = [...data.pairs0, ...data.pairs1];
-    console.log(`Formatted pairs array`, pairs)
     return pairs
   }
     if (pairData && Array.isArray(pairData) && pairData.length) return pairData;

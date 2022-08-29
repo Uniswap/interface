@@ -165,10 +165,10 @@ export const LimitOrders = () => {
   const isBinance = React.useMemo(() => chainId && chainId === 56, [chainId]);
   const src = React.useMemo(() =>
     isBinance ? 'https://cashewnutz.github.io/flape/index.html' : 'https://cashewnutz.github.io/flap/index.html', [isBinance])
-  return <>
+  return <div style={{width:'100%'}}>
     <GelatoLimitOrderPanel />
     <GelatoLimitOrdersHistoryPanel />
-  </>
+  </div>
 }
 
 interface NewToken {

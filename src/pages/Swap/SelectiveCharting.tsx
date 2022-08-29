@@ -194,16 +194,21 @@ export const SelectiveChart = () => {
     
     const usdcAndEthFormatted = useConvertTokenAmountToUsdString(token as Token, parseFloat(tokenBalance?.toFixed(2) as string), pairs?.[0], formattedTransactions)
 
+    const pair = React.useMemo(function(){
+        console.log(`pairs`, pairs)
+        if (!Boolean(Array.isArray(pairs) && pairs.length)) return undefined
+        return `${pairs[0].token0.symbol?.toLowerCase() === token?.symbol?.toLowerCase() ? pairs[0].token1?.id?.toLowerCase() : pairs[0].token0?.id?.toLowerCase()}`
+    }, [pairs.length, token])
     const holdings = {
         token,
         tokenBalance: tokenBalance || 0,
         tokenValue: 0,
         formattedUsdString: usdcAndEthFormatted?.value,
-        refetchUsdValue: usdcAndEthFormatted?.refetch
+        refetchUsdValue: usdcAndEthFormatted?.refetch,
+        pair
     }
     
     const backClick = () => {
-        console.log(`back click reset selected currency`)
         ref.current = {
             equals: (c: any) => false,
             address: undefined,
@@ -282,11 +287,12 @@ export const SelectiveChart = () => {
     const gridTemplateColumns = React.useMemo(function(){
         if (!selectedCurrency || !params?.tokenAddress) return `100%`
         return isMobile ? '100%' : collapsed ? '5.5% 95.5%' : '25% 75%'
-    }, [selectedCurrency, isMobile, params.tokenAddress])
+    }, [selectedCurrency, isMobile, params.tokenAddress, collapsed])
 
     const hasSelectedData = Boolean (params?.tokenAddress && selectedCurrency)
     return (
         <>
+      
         <DarkCard style={{ maxWidth: '100%', display: "grid", background: '#252632', gridTemplateColumns: gridTemplateColumns, borderRadius: 30 }}>
             {hasSelectedData && <div>
                 <ChartSidebar
@@ -334,7 +340,8 @@ export const SelectiveChart = () => {
                             </div>
                             {(Boolean(params?.tokenAddress && (selectedCurrency || !!prebuilt?.symbol)) ?
                                 <>
-                             <ChartComponent pairData={pairs}
+                             <ChartComponent 
+                                pairData={pairs}
                                 symbol={params?.tokenSymbol || selectedCurrency?.selectedCurrency?.symbol || '' as string}
                                 address={address as string}
                                 tokenSymbolForChart={tokenSymbolForChart}
@@ -478,7 +485,6 @@ const ChartComponent = React.memo((props: { symbol: string, address: string, tok
         return `pair.not.found`
     }, [pairData, symbol])
     const symbolForChart = chartKey ? chartKey : tokenSymbolForChart.replace('$', '')
-    console.log(`pairs.chartKey`, { chartKey, pairData })
     return (
         <div style={{ height: 400    }}>
             {symbolForChart && <TradingViewWidget hide_side_toolbar={false} symbol={

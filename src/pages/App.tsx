@@ -95,7 +95,7 @@ const AppWrapper = styled.div`
   background: url(${bg4}) ;
   align-items: flex-start;
   > * {
-    font-family: 'Bangers', cursive !important;
+    font-family: 'Open Sans' !important;
   }
 `
 
@@ -256,7 +256,6 @@ const HoneyPotDetector = () => {
   const [showTip, setShowTip] = React.useState(false)
   const contractOwner = useContractOwner(msg)
   const [priceDetailsOpen, setPriceDetailsOpen] = React.useState(!!tokenInfo?.price)
-  console.log(tokenInfo)
   const runCheck = (value: string) => {
     if (!value) {
       setHoneyData({})

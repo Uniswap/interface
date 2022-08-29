@@ -1,9 +1,9 @@
 /* eslint-disable */
 import 'react-pro-sidebar/dist/css/styles.css';
 
-import { ArrowLeftCircle, ArrowRightCircle, BarChart2, ChevronDown, ChevronUp, Globe, Heart, PieChart, RefreshCcw, ToggleLeft, ToggleRight, Twitter } from 'react-feather'
+import { ArrowLeftCircle, ArrowRightCircle, BarChart2, ChevronDown, ChevronUp, Globe, Heart, PieChart, RefreshCcw, Repeat, ToggleLeft, ToggleRight, Twitter } from 'react-feather'
 import Badge, { BadgeVariant } from 'components/Badge';
-import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core';
+import { Currency, CurrencyAmount, Token, WETH9 } from '@uniswap/sdk-core';
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink';
 import { ExternalLink, StyledInternalLink, TYPE, } from 'theme';
 import { Menu, MenuItem, ProSidebar, SidebarContent, SidebarFooter, SidebarHeader, SubMenu } from 'react-pro-sidebar';
@@ -16,6 +16,7 @@ import { BurntKiba } from 'components/BurntKiba';
 import Copy from '../AccountDetails/Copy'
 import CurrencyLogo from 'components/CurrencyLogo';
 import { FiatValue } from '../../components/CurrencyInputPanel/FiatValue'
+import { Link } from 'react-router-dom';
 import React from 'react';
 import { Trans } from '@lingui/macro'
 import _ from 'lodash'
@@ -82,6 +83,7 @@ type ChartSidebarProps = {
         tokenValue: CurrencyAmount<Token> | undefined | any;
         formattedUsdString?: (string | undefined)[]
         refetchUsdValue?: () => void
+        pair?:string
     }
     tokenData: any
     chainId?: number
@@ -161,9 +163,22 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
         return Number(parseFloat(price.toFixed(18)) * excludingBurntValue).toLocaleString()
     }, [totalSupplyInt, tokenInfo?.price, tokenData?.priceUSD, amountBurnt])
 
-    const theme = useTheme()
-    const color = `linear-gradient(${theme.bg0},#131722)`
+    const color = `linear-gradient(rgb(21 25 36), rgb(36 38 50))`
 
+    const inputCurrency = React.useMemo(function() {
+        return Boolean(holdings?.pair) ? (holdings?.pair?.toLowerCase() !== WETH9[1].address?.toLowerCase() ? holdings?.pair : 'ETH') : 'ETH' 
+    }, [holdings])
+
+    console.log(`inputCurrency.value`, inputCurrency)
+    const SwapLink = React.useMemo(function() {
+       return Boolean(token) ? (
+      
+            <Link title={`Swap ${token?.symbol} tokens`} style={{fontFamily: 'Open Sans !important'}} to={`/swap?outputCurrency=${token.address}&inputCurrency=${inputCurrency}`}>
+                Trade <ArrowRightCircle size={'14px'} />
+            </Link>
+       
+    ) : null
+    },[token, inputCurrency])
     return (
         <Wrapper>
             <ProSidebar collapsed={collapsed}
@@ -193,7 +208,7 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
                 <SidebarContent style={{ background: 'linear-gradient(#181C27, #131722)' }}>
                     <Menu>
                         <SubMenu
-                            style={{ background: color, paddingLeft: 0 }}
+                            style={{  }}
                             open={statsOpen}
                             onOpenChange={(isOpen) => {
                                 setStatsOpen(isOpen)
@@ -223,12 +238,14 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
                                                         <RowFixed>
                                                             <Copy toCopy={token.address}>
                                                                 <span style={{ marginLeft: '4px' }}>
-                                                                    <Trans>Copy Address</Trans>
+                                                                    <TYPE.small>Copy Address</TYPE.small>
                                                                 </span>
                                                             </Copy>
                                                         </RowFixed>
                                                     )}
+                                                    
                                                 </RowBetween>
+                                                
                                             </MenuItem>)}
                                             {hasSocials &&
                                                 <MenuItem >
@@ -312,9 +329,13 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
 
                                         {Boolean(!!holdings) && Boolean(holdings.tokenBalance) && (
                                             <Menu iconShape={'circle'} >
-                                                <SidebarHeader>
-                                                    <MenuItem>Connected Wallet Holdings</MenuItem>
+                                                <SidebarHeader style={{display:'flex', flexFlow: 'row wrap', alignItems:'center', justifyContent:'space-between'}}>
+                                                    <MenuItem  ><span>Connected Wallet Holdings</span>  </MenuItem>
+                                                    {Boolean(SwapLink) && <MenuItem style={{display:'flex', alignItems:'center', gap: 5}}>
+                                                    {SwapLink}
+                                                    </MenuItem>}
                                                 </SidebarHeader>
+                                             
                                                 <SidebarContent>
                                                     <MenuItem>
                                                         <TYPE.subHeader>Current {holdings.token.symbol} Balance</TYPE.subHeader>
@@ -329,6 +350,7 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
                                                             </TYPE.black>
                                                         </MenuItem>
                                                     )}
+                                                  
                                                 </SidebarContent>
                                             </Menu>
                                         )}

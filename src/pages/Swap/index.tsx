@@ -322,7 +322,6 @@ export default function Swap({ history }: RouteComponentProps) {
           taxes.sell : 0;
           if (value) value += 3
         const parsed = Math.floor(Number.parseFloat((value ?? '0').toString()) * 100)
-        console.log('auto calculated and parsed', parsed)
         if (automaticCalculatedSlippage !== parsed) {
           setSlippage(new Percent(parsed, 10_000))
           setAutomaticCalculatedSlippage(value as number)
@@ -948,7 +947,7 @@ const toggleShowChart = () => setShowChart(!showChart)
             
           </Wrapper>}
         {view === 'limit' &&
-          <Wrapper>
+          <Wrapper style={{width: '100%'}}>
             <LimitOrders />
           </Wrapper>}
         {!!isBinance && view === 'swap' && binanceSwapURL && <iframe style={{ display: 'flex', justifyContent: 'center', border: '1px solid transparent', borderRadius: 30, height: 800, width: '100%' }} src={binanceSwapURL} />}

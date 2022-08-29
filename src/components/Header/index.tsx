@@ -426,7 +426,7 @@ export default function Header() {
             </StyledNavLink>
           )}
 
-          <StyledNavLink id={`chart-nav-link`} to={'/charts'}>
+          <StyledNavLink id={`chart-nav-link`} to={'/selective-charting'}>
             <Trans>Charts</Trans>
             <sup>↗</sup>
           </StyledNavLink>

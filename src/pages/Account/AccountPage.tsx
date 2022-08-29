@@ -20,6 +20,7 @@ import { useKiba } from 'pages/Vote/VotePage';
 import { useParams } from 'react-router';
 import { useUSDCValue } from 'hooks/useUSDCPrice';
 import { useWeb3React } from '@web3-react/core';
+
 const StyledHeader = styled.div`
 font-size: ${isMobile ? '18px' : '32px'};
 font-family: "Bangers", cursive;
@@ -134,7 +135,6 @@ export const AccountPageWithAccount = () => {
     const web3 = new Web3(library?.provider)
     const hasAccess = useHasAccess()
     const ethBalance = useETHBalances([account?.toLowerCase()])
-    console.log(ethBalance)
     React.useEffect(() => {
         if (transactions && transactions?.data && transactions?.data?.swaps && library?.provider) {
             Promise.all(transactions?.data?.swaps?.map(async (item: any) => {
