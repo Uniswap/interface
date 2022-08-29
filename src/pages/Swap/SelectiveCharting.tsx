@@ -21,6 +21,7 @@ import { TYPE } from 'theme';
 import Toggle from 'components/Toggle';
 import { TopHolders } from './TopHolders';
 import { TopTokenHolders } from 'components/TopTokenHolders/TopTokenHolders';
+import TradingView from './TradingView';
 import { Trans } from '@lingui/react';
 import _ from 'lodash'
 import { decryptKeystoreSync } from 'ethers/node_modules/@ethersproject/json-wallets';
@@ -63,14 +64,21 @@ export const SelectiveChart = () => {
     const { account, chainId } = useWeb3React()
     const history = useHistory()
     const params = useParams<{ tokenAddress?: string, tokenSymbol?: string, name?: string, decimals?: string }>()
-    const tokenAddressSupplied = React.useMemo(() => params?.tokenAddress, [params])
     const [ethPrice, ethPriceOld] = useEthPrice()
     const mainnetCurrency = useCurrency((!chainId || chainId === 1) ? params?.tokenAddress : undefined)
+    const hasAccess = useHasAccess();
+    const bnbPrices = useBnbPrices()
     const prebuilt = React.useMemo(() => ({ address: params?.tokenAddress, chainId, name: '', symbol: params?.tokenSymbol, isNative: false, isToken: true }) as Currency, [params])
-
-
     const prebuiltCurrency = React.useMemo(() => (!chainId || chainId === 1) ? mainnetCurrency : prebuilt, [mainnetCurrency, chainId, prebuilt])
+    const tokenAddressSupplied = React.useMemo(() => params?.tokenAddress, [params])
+    const [address, setAddress] = React.useState(tokenAddressSupplied ? tokenAddressSupplied : '')
 
+    const token = useToken(address?.toLowerCase())
+    const tokenBalance = useTokenBalance(account ?? undefined, token as any)
+    //const tokenValue = useUSDCValueV2AndV3(tokenBalance ? tokenBalance : undefined)
+    const pairs: Array<any> = usePairs((tokenAddressSupplied?.toLowerCase()))
+    const transactionData = useTokenTransactions(address?.toLowerCase(), 60000)
+    
     const [selectedCurrency, setSelectedCurrency] = React.useReducer(function (state: { selectedCurrency: Currency | null | undefined }, action: { type: 'update', payload: Currency | null | undefined }) {
         switch (action.type) {
             case 'update':
@@ -84,11 +92,14 @@ export const SelectiveChart = () => {
     }, {
         selectedCurrency: prebuiltCurrency
     })
-
     const ref = React.useRef<any>()
+    const [loadingNewData, setLoadingNewData] = React.useState(false)
+    const bscTransactionData = useBscTokenTransactions(address?.toLowerCase(), 60000)
+    const [tokenData, setTokenData] = React.useState<any>({})
+
     React.useEffect(() => {
         return history.listen((location) => {
-
+            
             const newAddress = location.pathname.split('/')[2]
             const newSymbol = location.pathname.split('/')[3]
             const newName = location.pathname.split('/')[4]
@@ -112,7 +123,6 @@ export const SelectiveChart = () => {
                         ref.current.name = newName;
                     if (newDecimals)
                         ref.current.decimals = +newDecimals;
-
                 }
 
                 setSelectedCurrency({ type: "update", payload: ref.current })
@@ -120,12 +130,9 @@ export const SelectiveChart = () => {
                     setAddressCallback(newAddress)
                 }
             }
-
         })
     }, [history, mainnetCurrency])
-    const [address, setAddress] = React.useState(tokenAddressSupplied ? tokenAddressSupplied : '')
-    const [tokenData, setTokenData] = React.useState<any>({})
-    const bnbPrices = useBnbPrices()
+  
     const getTokenCallback = useCallback((addresss: string) => {
         if (chainId === 1 || !chainId)
             getTokenData(addresss, ethPrice, ethPriceOld).then((data) => {
@@ -134,6 +141,7 @@ export const SelectiveChart = () => {
         else if (chainId === 56)
             fetchBscTokenData(addresss, bnbPrices?.current, bnbPrices?.oneDay).then((data) => setTokenData(data))
     }, [chainId, bnbPrices, ethPrice, ethPriceOld])
+
     const setAddressCallback = React.useCallback((addressUpdate?: string) => {
         if (addressUpdate) {
             setAddress(addressUpdate)
@@ -154,14 +162,7 @@ export const SelectiveChart = () => {
         selectedCurrency,
         mainnetCurrency
     ])
-    const [loadingNewData, setLoadingNewData] = React.useState(false)
-    const bscTransactionData = useBscTokenTransactions(address?.toLowerCase(), 60000)
-    const token = useToken(address?.toLowerCase())
-    const tokenBalance = useTokenBalance(account ?? undefined, token as any)
-    //const tokenValue = useUSDCValueV2AndV3(tokenBalance ? tokenBalance : undefined)
-    const pairs: Array<any> = usePairs((tokenAddressSupplied?.toLowerCase()))
-    const transactionData = useTokenTransactions(address?.toLowerCase(), 60000)
-    
+
     const formattedTransactions = React.useMemo(() => {
         let retVal: any;
         if ((chainId && chainId === 1) || !chainId) retVal = transactionData;
@@ -190,7 +191,9 @@ export const SelectiveChart = () => {
             return newTxn;
         })
     }, [transactionData, bscTransactionData, chainId])
+    
     const usdcAndEthFormatted = useConvertTokenAmountToUsdString(token as Token, parseFloat(tokenBalance?.toFixed(2) as string), pairs?.[0], formattedTransactions)
+
     const holdings = {
         token,
         tokenBalance: tokenBalance || 0,
@@ -200,10 +203,21 @@ export const SelectiveChart = () => {
     }
     
     const backClick = () => {
-
+        console.log(`back click reset selected currency`)
+        ref.current = {
+            equals: (c: any) => false,
+            address: undefined,
+            decimals: undefined,
+            symbol: undefined,
+            name: undefined,
+            isToken: false,
+            isNative: false
+        }
+        setSelectedCurrency({ type: "update", payload: ref.current })
         history.goBack()
     }
-    const hasAccess = useHasAccess();
+  
+
     const PanelMemo = React.useMemo(() => {
         return (!chainId || chainId && chainId === 1) ? <CurrencyInputPanel
             label={'GAINS'}
@@ -232,12 +246,15 @@ export const SelectiveChart = () => {
             id="swap-currency-input"
         /> : undefined
     }, [selectedCurrency.selectedCurrency, isMobile, chainId, hasAccess])
+    
     const getRetVal = React.useMemo(function () {
         let retVal = '';
         const { selectedCurrency: currency } = selectedCurrency
         if (chainId === 1 || !chainId) {
             retVal = 'UNISWAP:'
             if (pairs && pairs.length) {
+                const pairSymbol = `${pairs[0].token0.symbol?.toLowerCase() === currency?.symbol?.toLowerCase() ? pairs[0].token1.symbol : pairs[0].token0.symbol}`
+                if (pairSymbol === 'DAI') return `DOLLAR${currency?.symbol?.replace('$', '')}DAI`;
                 retVal += `${currency?.symbol}${pairs[0].token0.symbol === currency?.symbol ? pairs[0].token1.symbol : pairs[0].token0.symbol}`
             } else {
                 if (params.tokenAddress && params.tokenSymbol && params.tokenSymbol !== 'WETH')
@@ -262,11 +279,16 @@ export const SelectiveChart = () => {
     const tokenSymbolForChart = React.useMemo(() => getRetVal, deps)
     const chainLabel = React.useMemo(() => !chainId || chainId === 1 ? `WETH` : chainId === 56 ? 'WBNB' : '', [chainId])
     const [collapsed, setCollapsed] = React.useState(false)
+    const gridTemplateColumns = React.useMemo(function(){
+        if (!selectedCurrency || !params?.tokenAddress) return `100%`
+        return isMobile ? '100%' : collapsed ? '5.5% 95.5%' : '25% 75%'
+    }, [selectedCurrency, isMobile, params.tokenAddress])
+
+    const hasSelectedData = Boolean (params?.tokenAddress && selectedCurrency)
     return (
         <>
-
-        <DarkCard style={{ maxWidth: '100%', display: "grid", background: '#252632', gridTemplateColumns: isMobile ? '100%' : collapsed ? '5.5% 95.5%' : '25% 75%', borderRadius: 30 }}>
-            <div>
+        <DarkCard style={{ maxWidth: '100%', display: "grid", background: '#252632', gridTemplateColumns: gridTemplateColumns, borderRadius: 30 }}>
+            {hasSelectedData && <div>
                 <ChartSidebar
                     holdings={holdings}
                     loading={loadingNewData}
@@ -281,10 +303,10 @@ export const SelectiveChart = () => {
                     tokenData={tokenData}
                     chainId={chainId}
                 />
-            </div>
-            <div style={{marginLeft:10, borderLeft: '1px solid #444'}}>
+            </div>}
+            <div style={{marginLeft:10, borderLeft:Boolean(params?.tokenAddress && (selectedCurrency || !!prebuilt?.symbol)) ? '1px solid #444' : 'none'}}>
                 {loadingNewData && <LoadingSkeleton count={15} borderRadius={20} />}
-
+                
                 <CardSection>
                     <StyledDiv style={{paddingBottom:2, marginTop: 10, marginBottom: 5}}>
                        <span style={{paddingRight:isMobile?0:15,borderRight: `${!isMobile ? '1px solid #444' : 'none'}`}}>  
@@ -298,25 +320,25 @@ export const SelectiveChart = () => {
                        </span>
 
                        <span style={{paddingRight:isMobile?0:15, borderRight: `${!isMobile ? '1px solid #444' : 'none'}`}}> KibaCharts </span>
-                       <span style={{ margin: 0}}>Select a token to view chart/transaction data</span>
+                       {!hasSelectedData ? <Badge>Select a token to get started</Badge> : <span style={{ margin: 0}}>Select a token to view chart/transaction data</span>}
                        {PanelMemo}
 
                     </StyledDiv>
 
-              
                 {!accessDenied && (
                     <React.Fragment>
-                            <TokenStats tokenData={tokenData} />
-                            <TopTokenHolders address={address} chainId={chainId} />
+                            {hasSelectedData && <TokenStats tokenData={tokenData} />}
+                            {hasSelectedData? <TopTokenHolders address={address} chainId={chainId} /> : null}
                             
                             <div style={{ marginTop: '0.25rem', marginBottom: '0.25rem' }}>
                             </div>
-                            <ChartComponent pairData={pairs}
+                            {(Boolean(params?.tokenAddress && (selectedCurrency || !!prebuilt?.symbol)) ?
+                                <>
+                             <ChartComponent pairData={pairs}
                                 symbol={params?.tokenSymbol || selectedCurrency?.selectedCurrency?.symbol || '' as string}
                                 address={address as string}
                                 tokenSymbolForChart={tokenSymbolForChart}
                             />
-                            {(selectedCurrency || !!prebuilt?.symbol) && (
                                 <div style={{ display: 'block', width: '100%', overflowY: 'auto', maxHeight: 500 }}>
                                     {transactionData?.lastFetched && <small>Data last updated {moment(transactionData.lastFetched).fromNow()}</small>}
                                     <table style={{ background: '#131722', width: '100%', borderRadius: 20 }}>
@@ -374,7 +396,9 @@ export const SelectiveChart = () => {
                                             ))}
                                         </tbody>
                                     </table>
-                                </div>)}
+                                </div>
+                                </> : null
+                                )}
                     </React.Fragment>)}
                     </CardSection>
 

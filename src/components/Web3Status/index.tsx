@@ -1,34 +1,28 @@
-import { AbstractConnector } from '@web3-react/abstract-connector'
+import { Trans, t } from '@lingui/macro'
 import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
-import { darken } from 'polished'
-import { useMemo } from 'react'
-import { Activity, ToggleLeft, ToggleRight } from 'react-feather'
-import { t, Trans } from '@lingui/macro'
+import { fortmatic, injected, portis, walletconnect, walletlink } from '../../connectors'
+import { isTransactionRecent, useAllTransactions } from '../../state/transactions/hooks'
 import styled, { css } from 'styled-components/macro'
+
+import { AbstractConnector } from '@web3-react/abstract-connector'
+import { Activity } from 'react-feather'
+import { ButtonOutlined } from '../Button'
 import CoinbaseWalletIcon from '../../assets/images/coinbaseWalletIcon.svg'
 import FortmaticIcon from '../../assets/images/fortmaticIcon.png'
-import PortisIcon from '../../assets/images/portisIcon.png'
-import WalletConnectIcon from '../../assets/images/walletConnectIcon.svg'
-import { fortmatic, injected, portis, walletconnect, walletlink } from '../../connectors'
-import { NetworkContextName } from '../../constants/misc'
-import useENSName from '../../hooks/useENSName'
-import { useHasSocks } from '../../hooks/useSocksBalance'
-import { useWalletModalToggle } from '../../state/application/hooks'
-import { isTransactionRecent, useAllTransactions } from '../../state/transactions/hooks'
-import { TransactionDetails } from '../../state/transactions/reducer'
-import { shortenAddress } from '../../utils'
-import { ButtonOutlined } from '../Button'
-import React from 'react' 
 import Identicon from '../Identicon'
 import Loader from '../Loader'
-
+import { NetworkContextName } from '../../constants/misc'
+import PortisIcon from '../../assets/images/portisIcon.png'
 import { RowBetween } from '../Row'
+import { TransactionDetails } from '../../state/transactions/reducer'
+import WalletConnectIcon from '../../assets/images/walletConnectIcon.svg'
 import WalletModal from '../WalletModal'
-import Badge, { BadgeVariant } from 'components/Badge'
-import { switchToNetwork } from 'utils/switchToNetwork'
-import { SupportedChainId } from 'constants/chains'
-import Swal from 'sweetalert2'
-import { useActiveWeb3React } from 'hooks/web3'
+import { darken } from 'polished'
+import { shortenAddress } from '../../utils'
+import useENSName from '../../hooks/useENSName'
+import { useHasSocks } from '../../hooks/useSocksBalance'
+import { useMemo } from 'react'
+import { useWalletModalToggle } from '../../state/application/hooks'
 
 const IconWrapper = styled.div<{ size?: number }>`
   ${({ theme }) => theme.flexColumnNoWrap};
@@ -204,7 +198,7 @@ function Web3StatusInner() {
       <Web3StatusConnected id="web3-status-connected" onClick={toggleWalletModal} pending={hasPendingTransactions}>
         {hasPendingTransactions ? (
           <RowBetween>
-            <Text>
+            <Text color={'fff'  }>
               <Trans>{pending?.length} Pending</Trans>
             </Text>{' '}
             <Loader stroke="white" />

@@ -107,7 +107,7 @@ const BodyWrapper = styled.div`
   align-items: center;
   flex: 1;
   z-index: 1;
-  margin-top:3rem;
+  margin-top:${() => window.location.href.includes('charts') ? '1rem' : '3rem'};
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
     padding: 6rem 16px 16px 16px;

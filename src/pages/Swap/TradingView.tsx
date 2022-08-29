@@ -1,9 +1,10 @@
-import { DarkGreyCard } from 'components/Card'
+import { DefaultTheme, useTheme } from 'styled-components/macro'
 import React, { useEffect, useRef } from 'react'
+
+import { DarkGreyCard } from 'components/Card'
 import { isMobile } from 'react-device-detect'
 import useScript from 'state/logs/useScript'
 import { useUserLocale } from 'state/user/hooks'
-import { DefaultTheme, useTheme } from 'styled-components/macro'
 
 /**
  * When the script tag is injected the TradingView object is not immediately
@@ -36,14 +37,14 @@ const initializeTradingView = (TradingViewObj: any, theme: DefaultTheme, localeC
     id: opts.container_id,
     autosize: true,
     height: '100%',
-    symbol: 'BINANCE:BNBUSDT',
+    symbol: opts.symbol,
     interval: '5',
     timezone,
     theme: 'dark',
     style: '1',
     locale: localeCode,
     toolbar_bg: '#f1f3f6',
-    enable_publishing: false,
+    enable_publishing: true,
     allow_symbol_change: true,
     hide_side_toolbar: false,
     enabled_features: ['header_fullscreen_button'],

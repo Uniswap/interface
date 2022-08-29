@@ -8,7 +8,7 @@ import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink';
 import { ExternalLink, StyledInternalLink, TYPE, } from 'theme';
 import { Menu, MenuItem, ProSidebar, SidebarContent, SidebarFooter, SidebarHeader, SubMenu } from 'react-pro-sidebar';
 import { RowBetween, RowFixed } from 'components/Row';
-import styled, { keyframes } from 'styled-components/macro'
+import styled, { keyframes, useTheme } from 'styled-components/macro'
 import { useBscToken, useCurrency, useToken } from 'hooks/Tokens';
 import { useHolderCount, useTokenHolderCount, useTokenInfo } from 'components/swap/ChartPage'
 
@@ -161,6 +161,9 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
         return Number(parseFloat(price.toFixed(18)) * excludingBurntValue).toLocaleString()
     }, [totalSupplyInt, tokenInfo?.price, tokenData?.priceUSD, amountBurnt])
 
+    const theme = useTheme()
+    const color = `linear-gradient(${theme.bg0},#131722)`
+
     return (
         <Wrapper>
             <ProSidebar collapsed={collapsed}
@@ -168,7 +171,7 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
                 width={'100%'}
                 onLoadStart={() => setComponentLoading(true)}
                 onLoadCapture={() => setComponentLoading(false)}
-                style={{ fontSize: 12, marginRight: 15, background: 'linear-gradient(#181C27, #131722)', borderRadius: 10, border: '.25px solid transparent' }}
+                style={{ fontSize: 12, marginRight: 15, background: color, borderRadius: 10, border: '.25px solid transparent' }}
             >
                 <SidebarHeader style={{ fontSize: 12, background: 'linear-gradient(#181C27, #131722)' }}>
                     <Menu iconShape="round">
@@ -190,7 +193,7 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
                 <SidebarContent style={{ background: 'linear-gradient(#181C27, #131722)' }}>
                     <Menu>
                         <SubMenu
-                            style={{ background: 'linear-gradient(#181C27, #131722)', paddingLeft: 0 }}
+                            style={{ background: color, paddingLeft: 0 }}
                             open={statsOpen}
                             onOpenChange={(isOpen) => {
                                 setStatsOpen(isOpen)
@@ -202,7 +205,7 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
                             title={`${tokenData?.name ? tokenData?.name : ''} Stats`}>
                             {hasData &&
                                 <>
-                                    <Menu style={{ background: 'linear-gradient(#181C27, #131722)', paddingLeft: 0 }} iconShape="round"   >
+                                    <Menu style={{ background: color, paddingLeft: 0 }} iconShape="round"   >
                                         <SidebarHeader>
                                             <MenuItem>{tokenData?.name} Info</MenuItem>
                                             {token && token.address && currency && (<MenuItem>
