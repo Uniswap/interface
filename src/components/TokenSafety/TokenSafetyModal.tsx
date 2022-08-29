@@ -7,6 +7,7 @@ interface TokenSafetyModalProps {
   secondTokenAddress?: string
   onContinue: () => void
   onCancel: () => void
+  showCancel?: boolean
 }
 
 export default function TokenSafetyModal({
@@ -15,6 +16,7 @@ export default function TokenSafetyModal({
   secondTokenAddress,
   onContinue,
   onCancel,
+  showCancel,
 }: TokenSafetyModalProps) {
   return (
     <Modal isOpen={isOpen} onDismiss={onCancel}>
@@ -23,6 +25,7 @@ export default function TokenSafetyModal({
         secondTokenAddress={secondTokenAddress}
         onCancel={onCancel}
         onContinue={onContinue}
+        showCancel={showCancel}
       />
     </Modal>
   )
