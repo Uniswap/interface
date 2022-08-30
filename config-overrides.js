@@ -1,5 +1,7 @@
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const path = require('path')
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 module.exports = function override(config, env) {
   const wasmExtensionRegExp = /\.wasm$/
   config.resolve.extensions.push('.wasm')
