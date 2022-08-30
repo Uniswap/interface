@@ -21,3 +21,6 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - run: yarn install
     - run: yarn build
+      env:
+          CI: false
+          REACT_APP_SERVICE_WORKER: false
