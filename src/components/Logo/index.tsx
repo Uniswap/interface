@@ -16,6 +16,8 @@ const getFontSize = (size?: string) => {
       return '16px'
     case '36px':
       return '12px'
+    case '32px':
+      return '10px'
     case '24px':
       return '8px'
     default:
@@ -28,6 +30,7 @@ const MissingImageLogo = styled.div<{ size?: string; getFontSize: (size?: string
   color: ${({ theme }) => theme.textPrimary};
   background-color: ${({ theme }) => theme.backgroundInteractive};
   font-size: ${({ getFontSize, size }) => getFontSize(size)};
+  font-weight: 500;
   height: ${({ size }) => size ?? '24px'};
   line-height: ${({ size }) => size ?? '24px'};
   text-align: center;
