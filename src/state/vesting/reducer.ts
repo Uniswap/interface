@@ -1,7 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Token } from '@kyberswap/ks-sdk-core'
 import { createReducer } from '@reduxjs/toolkit'
-import { Severity, captureException } from '@sentry/react'
+import { captureException } from '@sentry/react'
 
 import { RewardLockerVersion } from 'state/farms/types'
 
@@ -57,7 +57,7 @@ export default createReducer<VestingState>(initialState, builder =>
           cause: error,
         })
         e.name = 'VestingError'
-        captureException(e, { level: Severity.Error })
+        captureException(e, { level: 'error' })
       }
       state.error = error ? error?.message : ''
     }),

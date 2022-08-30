@@ -8,7 +8,7 @@ import {
   TokenAmount,
   TradeType,
 } from '@kyberswap/ks-sdk-core'
-import { Severity, captureException } from '@sentry/react'
+import { captureException } from '@sentry/react'
 import JSBI from 'jsbi'
 import invariant from 'tiny-invariant'
 
@@ -252,7 +252,7 @@ export class Aggregator {
         if (!e?.message?.includes('Fetch is aborted') && !e?.message?.includes('The user aborted a request')) {
           const e = new Error('Aggregator API call failed')
           e.name = 'AggregatorAPIError'
-          captureException(e, { level: Severity.Error })
+          captureException(e, { level: 'error' })
         }
       }
     }
@@ -367,7 +367,7 @@ export class Aggregator {
         if (!e?.message?.includes('Fetch is aborted') && !e?.message?.includes('The user aborted a request')) {
           const e = new Error('Aggregator API (comparedDex) call failed')
           e.name = 'AggregatorAPIError'
-          captureException(e, { level: Severity.Error })
+          captureException(e, { level: 'error' })
         }
       }
     }

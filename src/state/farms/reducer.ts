@@ -1,5 +1,5 @@
 import { createReducer } from '@reduxjs/toolkit'
-import { Severity, captureException } from '@sentry/react'
+import { captureException } from '@sentry/react'
 
 import { Farm } from 'state/farms/types'
 
@@ -52,7 +52,7 @@ export default createReducer<FarmsState>(initialState, builder =>
           cause: error,
         })
         e.name = 'FarmError'
-        captureException(e, { level: Severity.Error })
+        captureException(e, { level: 'error' })
       }
       return {
         ...state,
