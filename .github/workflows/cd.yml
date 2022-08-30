@@ -19,7 +19,7 @@ jobs:
           CI: false
           REACT_APP_SERVICE_WORKER: false
       - name: zip create 
-        run: zip -qq -r ./**build-fe.zip .**
+        run: zip -qq -r ./build-fe.zip .
         shell: bash
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
