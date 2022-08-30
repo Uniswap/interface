@@ -40,12 +40,12 @@ export const getFirestorePushTokenRef = (
 export const getFirestoreMetadataRef = (
   firebaseApp: ReactNativeFirebase.FirebaseApp,
   address: Address,
-  uid: string
+  pushId: string
 ) =>
   firestore(firebaseApp)
     .collection(ADDRESS_DATA_COLLECTION)
     .doc('metadata')
     .collection(address.toLowerCase())
-    .doc('firebase_uids')
-    .collection(uid)
+    .doc('onesignal_uids')
+    .collection(pushId)
     .doc('data')

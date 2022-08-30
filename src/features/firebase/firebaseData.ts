@@ -180,14 +180,14 @@ export const disassociatePushTokenFromAddresses = async (addresses: Address[]) =
 
 export const updateAccountMetadata = async (address: Address, metadata: AccountMetadata) => {
   const firebaseApp = firebase.app()
-  const uid = getFirebaseUidOrError(firebaseApp)
-  const metadataRef = getFirestoreMetadataRef(firebaseApp, address, uid)
+  const pushId = await getOneSignalUserIdOrError()
+  const metadataRef = getFirestoreMetadataRef(firebaseApp, address, pushId)
   await metadataRef.set(metadata, { merge: true })
 }
 
 export const deleteAccountMetadata = async (address: Address) => {
   const firebaseApp = firebase.app()
-  const uid = getFirebaseUidOrError(firebaseApp)
-  const metadataRef = getFirestoreMetadataRef(firebaseApp, address, uid)
+  const pushId = await getOneSignalUserIdOrError()
+  const metadataRef = getFirestoreMetadataRef(firebaseApp, address, pushId)
   await metadataRef.delete()
 }

@@ -11,7 +11,7 @@ service cloud.firestore {
     match /address_data/address_push_token_mapping/{address}/{document=**} {
       allow write, update, delete: if request.auth != null && get(/databases/$(database)/documents/address_data/address_uid_mapping/$(address)/firebase).data[request.auth.uid] == true;
     }
-    match /address_data/metadata/{address}/firebase_uids/{uid}/{document=**} {
+    match /address_data/metadata/{address}/onesignal_uids/{uid}/{document=**} {
       allow write, update, delete: if request.auth != null && get(/databases/$(database)/documents/address_data/address_uid_mapping/$(address)/firebase).data[request.auth.uid] == true;
     }
   }
