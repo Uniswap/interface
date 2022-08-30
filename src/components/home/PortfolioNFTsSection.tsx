@@ -6,6 +6,7 @@ import { Button } from 'src/components/buttons/Button'
 import { NFTViewer } from 'src/components/images/NFTViewer'
 import { BaseCard } from 'src/components/layout/BaseCard'
 import { Masonry } from 'src/components/layout/Masonry'
+import { Loading } from 'src/components/loading'
 import { PollingInterval } from 'src/constants/misc'
 import { useNftBalancesQuery } from 'src/features/nfts/api'
 import { NFTAsset } from 'src/features/nfts/types'
@@ -55,7 +56,13 @@ export function PortfolioNFTsSection({ count, owner }: { count?: number; owner?:
 
   return (
     <BaseCard.Container>
-      {nftItems.length === 0 ? (
+      {loading ? (
+        <>
+          <BaseCard.Header title={t('NFTs')} />
+          {/* TODO(daniel): replace this with an NFT loader type once it's implemented */}
+          <Loading />
+        </>
+      ) : nftItems.length === 0 ? (
         <BaseCard.EmptyState
           description={t('Any NFTs that you receive, mint, or buy will appear here.')}
           title={t('No NFTs yet')}

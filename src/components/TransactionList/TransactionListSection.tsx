@@ -17,10 +17,21 @@ const renderItem = (item: ListRenderItemInfo<TransactionDetails>) => {
 const key = (info: TransactionDetails) => info.hash
 
 export function TransactionListSection({ owner, count = 3 }: { owner: Address; count?: number }) {
+  const { t } = useTranslation()
+
   return (
-    <Suspense fallback={<Loading repeat={3} type="box" />}>
-      <TransactionListSectionInner count={count} owner={owner} />
-    </Suspense>
+    <BaseCard.Container>
+      <Suspense
+        fallback={
+          <>
+            <BaseCard.Header title={t('Transactions')} />
+            {/* TODO(daniel): replace this with a transaction loader type once it's implemented */}
+            <Loading showSeparator repeat={3} type="token" />
+          </>
+        }>
+        <TransactionListSectionInner count={count} owner={owner} />
+      </Suspense>
+    </BaseCard.Container>
   )
 }
 
@@ -41,30 +52,26 @@ function TransactionListSectionInner({ owner, count = 3 }: { owner: Address; cou
     [t, totalTransactionCount]
   )
 
-  return (
-    <BaseCard.Container>
-      {totalTransactionCount === 0 ? (
-        <BaseCard.EmptyState
-          description={t('Any transactions made by this wallet will appear here.')}
-          title={t('No transactions yet')}
-        />
-      ) : (
-        <>
-          <BaseCard.Header
-            title={title}
-            onPress={() => {
-              navigation.navigate(Screens.UserTransactions, { owner })
-            }}
-          />
-          <FlatList
-            ItemSeparatorComponent={() => <Separator px="md" />}
-            data={transactionsToDisplay}
-            keyExtractor={key}
-            listKey="transactions"
-            renderItem={renderItem}
-          />
-        </>
-      )}
-    </BaseCard.Container>
+  return totalTransactionCount === 0 ? (
+    <BaseCard.EmptyState
+      description={t('Any transactions made by this wallet will appear here.')}
+      title={t('No transactions yet')}
+    />
+  ) : (
+    <>
+      <BaseCard.Header
+        title={title}
+        onPress={() => {
+          navigation.navigate(Screens.UserTransactions, { owner })
+        }}
+      />
+      <FlatList
+        ItemSeparatorComponent={() => <Separator px="md" />}
+        data={transactionsToDisplay}
+        keyExtractor={key}
+        listKey="transactions"
+        renderItem={renderItem}
+      />
+    </>
   )
 }
