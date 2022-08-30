@@ -111,7 +111,7 @@ jobs:
 
       - name: Generate iOS bundle and sourcemaps
         run: |
-          yarn react-native bundle --platform ios --dev false --entry-file index.js --bundle-output main.jsbundle --sourcemap-output main.jsbundle.map
+          yarn react-native bundle --platform ios --dev false --entry-file index.js --reset-cache --bundle-output main.jsbundle --sourcemap-output main.jsbundle.map --minify false
 
       - name: Create Sentry release with sourcemaps
         env:
