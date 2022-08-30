@@ -133,7 +133,6 @@ export function useTokenPriceQuery(address: string, chain: Chain, timePeriod: Ti
 export function fillTokenPriceCache(address: string, chain: Chain, timePeriod: TimePeriod) {
   // Load current time period by itself for faster availability
   if (!TokenAPICache.checkPriceHistory(address, timePeriod)) {
-    console.log('HERE')
     fetchQuery<TokenPriceSingleQuery>(environment, query, {
       contract: {
         address,
@@ -148,7 +147,7 @@ export function fillTokenPriceCache(address: string, chain: Chain, timePeriod: T
     })
   }
 
-  // Load all time periods in the background, if hour data is expired rest will be too
+  // Load all time periods in the background
   fetchQuery<TokenPriceAllQuery>(environment, allQuery, {
     contract: {
       address,
