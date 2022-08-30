@@ -56,7 +56,6 @@ export default function Logo({ srcs, alt, style, size, symbol, ...rest }: LogoPr
       />
     )
   }
-  console.log('missing symbol', symbol)
 
   return (
     <MissingImageLogo size={size} getFontSize={getFontSize}>
