@@ -22,8 +22,8 @@ import { EditAccountAction, editAccountActions } from 'src/features/wallet/editA
 import { useAccounts } from 'src/features/wallet/hooks'
 import { shortenAddress } from 'src/utils/addresses'
 import { Screens } from './Screens'
-const EDIT_BUTTON_SIZE = 30
-const EDIT_BUTTON_ICON_SIZE = 10
+
+const EDIT_BUTTON_ICON_SIZE = 16
 
 type Props = NativeStackScreenProps<SettingsStackParamList, Screens.SettingsWalletEdit>
 
@@ -40,7 +40,7 @@ export function SettingsWalletEdit({
   const [nickname, setNickname] = useState(ensName || activeAccount?.name)
   const [showEditInput, setShowEditInput] = useState(false)
   const [selectedColor, setSelectedColor] = useState<string | undefined>(
-    activeAccount?.customizations?.palette?.userThemeColor
+    activeAccount?.customizations?.palette?.userThemeColor || theme.colors.userThemeColor
   )
   const updateThemeColor = useUpdateColorCallback()
 
@@ -66,12 +66,12 @@ export function SettingsWalletEdit({
   }
 
   return (
-    <Screen px="lg" py="lg">
+    <Screen>
       <AppBackground topOnly color={selectedColor} />
-      <BackHeader alignment="left" mb="lg">
+      <BackHeader alignment="left" mx="md" pt="md">
         <Text variant="subhead">{t('Nickname and theme')}</Text>
       </BackHeader>
-      <Flex gap="xl">
+      <Flex gap="xl" px="lg" py="lg">
         <Flex gap="none">
           <Box bg="backgroundBackdrop" pb="md">
             <Text color="textSecondary" fontWeight="500" variant="body">
@@ -83,12 +83,12 @@ export function SettingsWalletEdit({
               <TextInput
                 autoFocus
                 autoCapitalize="none"
-                fontFamily={theme.textVariants.largeLabel.fontFamily}
-                fontSize={theme.textVariants.largeLabel.fontSize}
+                fontFamily={theme.textVariants.headlineMedium.fontFamily}
+                fontSize={theme.textVariants.headlineMedium.fontSize}
                 margin="none"
                 numberOfLines={1}
                 placeholder={shortenAddress(address)}
-                placeholderTextColor={theme.colors.textTertiary}
+                placeholderTextColor={theme.colors.textPrimary}
                 px="none"
                 py="none"
                 returnKeyType="done"
@@ -99,7 +99,7 @@ export function SettingsWalletEdit({
               />
             ) : (
               <>
-                <Text color={nickname ? 'textPrimary' : 'textTertiary'} variant="largeLabel">
+                <Text color="textPrimary" variant="headlineMedium">
                   {nickname || shortenAddress(address)}
                 </Text>
                 {!ensName && (
@@ -107,10 +107,9 @@ export function SettingsWalletEdit({
                     alignItems="center"
                     bg="backgroundAction"
                     borderRadius="md"
-                    height={EDIT_BUTTON_SIZE}
                     justifyContent="center"
                     marginLeft="sm"
-                    width={EDIT_BUTTON_SIZE}
+                    p="xs"
                     onPress={onPressShowEditInput}>
                     <PencilIcon
                       color={theme.colors.textPrimary}

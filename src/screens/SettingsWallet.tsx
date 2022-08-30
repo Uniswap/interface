@@ -222,50 +222,53 @@ export function SettingsWallet({
   }
 
   return (
-    <Screen px="lg" py="lg">
-      <Box flex={1}>
-        <BackHeader alignment="left" mb="lg">
-          <AddressDisplay
-            address={address}
-            showViewOnly={readonly}
-            variant="subhead"
-            verticalGap="none"
+    <Screen>
+      <BackHeader alignment="left" mx="md" pt="md">
+        <AddressDisplay
+          address={address}
+          showViewOnly={readonly}
+          variant="subhead"
+          verticalGap="none"
+        />
+      </BackHeader>
+
+      <Flex flex={1} px="lg" py="lg">
+        <Box flex={1}>
+          <SectionList
+            ItemSeparatorComponent={() => <Flex pt="xs" />}
+            keyExtractor={(_item, index) => 'wallet_settings' + index}
+            renderItem={renderItem}
+            renderSectionFooter={() => <Flex pt="lg" />}
+            renderSectionHeader={({ section: { subTitle } }) => (
+              <Box bg="backgroundBackdrop" pb="sm">
+                <Text color="textSecondary" fontWeight="500" variant="body">
+                  {subTitle}
+                </Text>
+              </Box>
+            )}
+            sections={sections.filter((p) => !p.isHidden)}
+            showsVerticalScrollIndicator={false}
+            stickySectionHeadersEnabled={false}
           />
-        </BackHeader>
-        <SectionList
-          ItemSeparatorComponent={() => <Flex pt="xs" />}
-          keyExtractor={(_item, index) => 'wallet_settings' + index}
-          renderItem={renderItem}
-          renderSectionFooter={() => <Flex pt="lg" />}
-          renderSectionHeader={({ section: { subTitle } }) => (
-            <Box bg="backgroundBackdrop" pb="sm">
-              <Text color="textSecondary" fontWeight="500" variant="body">
-                {subTitle}
-              </Text>
-            </Box>
-          )}
-          sections={sections.filter((p) => !p.isHidden)}
-          showsVerticalScrollIndicator={false}
-          stickySectionHeadersEnabled={false}
+        </Box>
+        <PrimaryButton
+          label={t('Remove wallet')}
+          name={ElementName.Remove}
+          style={{ backgroundColor: opacify(15, theme.colors.accentFailure) }}
+          testID={ElementName.Remove}
+          textColor="accentFailure"
+          visible={!shouldHideRemoveOption}
+          width="100%"
+          onPress={() => setShowRemoveWalletModal(true)}
         />
-      </Box>
-      <PrimaryButton
-        label={t('Remove wallet')}
-        name={ElementName.Remove}
-        style={{ backgroundColor: opacify(15, theme.colors.accentFailure) }}
-        testID={ElementName.Remove}
-        textColor="accentFailure"
-        visible={!shouldHideRemoveOption}
-        width="100%"
-        onPress={() => setShowRemoveWalletModal(true)}
-      />
-      {!!showRemoveWalletModal && !!currentAccount && (
-        <RemoveAccountModal
-          accountType={currentAccount.type}
-          onCancel={cancelWalletRemove}
-          onConfirm={removeWallet}
-        />
-      )}
+        {!!showRemoveWalletModal && !!currentAccount && (
+          <RemoveAccountModal
+            accountType={currentAccount.type}
+            onCancel={cancelWalletRemove}
+            onConfirm={removeWallet}
+          />
+        )}
+      </Flex>
     </Screen>
   )
 }

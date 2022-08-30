@@ -72,11 +72,13 @@ export function SettingsManualBackup({
   }, [currentStep])
 
   return (
-    <Screen mx="lg" my="lg">
-      <BackHeader alignment="left" mb="lg">
+    <Screen>
+      <BackHeader alignment="left" mx="md" pt="md">
         <Text variant="subhead">{t('Manual backup')}</Text>
       </BackHeader>
-      {view()}
+      <Flex mx="lg" my="lg">
+        {view()}
+      </Flex>
     </Screen>
   )
 
