@@ -82,8 +82,8 @@ export default function PoolCard({ pid }: { pid: number }) {
   // const token0 = stakingInfo.tokens[0]
   // const token1 = stakingInfo.tokens[1]
 
-  const currency0 = unwrappedToken(new Token(chainId || 420, farmingConfig?.pools[pid].stakingAsset.backedAsset?.[0] || '', 18))
-  const currency1 = unwrappedToken(new Token(chainId || 420, farmingConfig?.pools[pid].stakingAsset.backedAsset?.[1] || '', 18))
+  // const currency0 = unwrappedToken(new Token(chainId || 420, farmingConfig?.pools[pid].stakingAsset.backedAsset?.[0] || '', 18))
+  // const currency1 = unwrappedToken(new Token(chainId || 420, farmingConfig?.pools[pid].stakingAsset.backedAsset?.[1] || '', 18))
 
   // const isStaking = Boolean(stakingInfo.stakedAmount.greaterThan('0'))
 
@@ -124,7 +124,7 @@ export default function PoolCard({ pid }: { pid: number }) {
       <CardNoise />
 
       <TopSection>
-        <DoubleCurrencyLogo currency0={currency0} currency1={currency1} size={24} />
+        {/* <DoubleCurrencyLogo currency0={currency0} currency1={currency1} size={24} /> */}
         <TYPE.white fontWeight={600} fontSize={24} style={{ marginLeft: '8px' }}>
           {farmingConfig?.pools[pid].stakingAsset.name}
         </TYPE.white>
