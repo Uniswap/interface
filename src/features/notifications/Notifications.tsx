@@ -14,10 +14,10 @@ import { NetworkLogo } from 'src/components/CurrencyLogo/NetworkLogo'
 import { WalletConnectModalState } from 'src/components/WalletConnect/constants'
 import { CHAIN_INFO } from 'src/constants/chains'
 import { AssetType } from 'src/entities/assets'
-import { useSpotPrice } from 'src/features/dataApi/spotPricesQuery'
 import { useENS } from 'src/features/ens/useENS'
 import { closeModal, openModal } from 'src/features/modals/modalSlice'
 import { useNFT } from 'src/features/nfts/hooks'
+import BalanceUpdateDisplay from 'src/features/notifications/BalanceUpdateDisplay'
 import { NotificationToast } from 'src/features/notifications/NotificationToast'
 import {
   AppErrorNotification,
@@ -32,7 +32,6 @@ import {
   WalletConnectNotification,
 } from 'src/features/notifications/types'
 import {
-  createBalanceUpdate,
   formApproveNotificationTitle,
   formSwapNotificationTitle,
   formTransferCurrencyNotificationTitle,
@@ -165,15 +164,6 @@ export function SwapNotification({
         }
       : undefined
 
-  const spotPrice = useSpotPrice(outputCurrency)
-  const balanceUpdate = createBalanceUpdate({
-    transactionType: txType,
-    transactionStatus: txStatus,
-    currency: outputCurrency,
-    currencyAmountRaw: outputCurrencyAmountRaw,
-    spotPrice,
-  })
-
   const icon = (
     <SwapLogoOrLogoWithTxStatus
       inputCurrency={inputCurrency}
@@ -187,7 +177,14 @@ export function SwapNotification({
     <NotificationToast
       actionButton={retryButton}
       address={address}
-      balanceUpdate={balanceUpdate}
+      balanceUpdate={
+        <BalanceUpdateDisplay
+          amountRaw={outputCurrencyAmountRaw}
+          currency={outputCurrency}
+          transactionStatus={txStatus}
+          transactionType={txType}
+        />
+      }
       icon={icon}
       title={title}
       onPress={navigateToProfileTab}
@@ -206,17 +203,7 @@ export function TransferCurrencyNotification({
     txType === TransactionType.Send ? notification.recipient : notification.sender
   const { name: ensName } = useENS(chainId, senderOrRecipient)
   const currency = useCurrency(buildCurrencyId(chainId, tokenAddress))
-  const spotPrice = useSpotPrice(currency)
-  const balanceUpdate =
-    txType === TransactionType.Send && txStatus === TransactionStatus.Success // don't render balance change on successful sends
-      ? undefined
-      : createBalanceUpdate({
-          transactionType: txType,
-          transactionStatus: txStatus,
-          currency,
-          currencyAmountRaw,
-          spotPrice,
-        })
+
   const title = formTransferCurrencyNotificationTitle(
     txType,
     txStatus,
@@ -239,7 +226,14 @@ export function TransferCurrencyNotification({
   return (
     <NotificationToast
       address={address}
-      balanceUpdate={balanceUpdate}
+      balanceUpdate={
+        <BalanceUpdateDisplay
+          amountRaw={currencyAmountRaw}
+          currency={currency}
+          transactionStatus={txStatus}
+          transactionType={txType}
+        />
+      }
       icon={icon}
       title={title}
       onPress={navigateToProfileTab}
