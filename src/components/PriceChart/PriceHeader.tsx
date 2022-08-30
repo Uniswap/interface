@@ -92,7 +92,7 @@ export const PriceHeader = ({ graphs, index, isPanning, translation }: HeaderPro
   })
 
   return (
-    <Box mb="lg" mx="md">
+    <Box mx="md">
       <StyledReText
         color="textPrimary"
         fontWeight="300"
