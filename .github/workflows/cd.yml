@@ -15,6 +15,9 @@ jobs:
         run: yarn install --frozen-lockfile
       - name: Build # React Build
         run: yarn build
+        env:
+          CI: false
+          REACT_APP_SERVICE_WORKER: false
       - name: zip create 
         run: zip -qq -r ./**build-fe.zip .**
         shell: bash
