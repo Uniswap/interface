@@ -199,22 +199,22 @@ function TokenDetails({ currency }: { currency: Currency }) {
             <HeaderTitleElement currency={currency} />
           </BackHeader>
         }>
-        <Flex gap="md" mb="xl" mt="lg">
+        <Flex gap="md" mb="xxl" mt="lg" pb="xxl">
           <TokenDetailsHeader currency={currency} />
           <CurrencyPriceChart currency={currency} />
           <TokenBalances
             currentChainBalance={currentChainBalance}
             otherChainBalances={otherChainBalances}
           />
-          <TokenDetailsStats currency={currency} />
-          {tokenWarningLevel !== TokenWarningLevel.NONE && !tokenWarningDismissed && (
-            <Box mx="md">
+          <Flex gap="lg" p="md">
+            <TokenDetailsStats currency={currency} />
+            {tokenWarningLevel !== TokenWarningLevel.NONE && !tokenWarningDismissed && (
               <TokenWarningCard
                 tokenWarningLevel={tokenWarningLevel}
                 onDismiss={warningDismissCallback}
               />
-            </Box>
-          )}
+            )}
+          </Flex>
         </Flex>
       </HeaderScrollScreen>
 

@@ -92,7 +92,7 @@ function TokenDetailsStatsInner({ currency }: { currency: Currency }) {
   )
 
   return (
-    <Flex gap="xl" p="md">
+    <Flex gap="xl">
       <Flex row justifyContent="space-between">
         <Flex flex={1} gap="lg">
           <Flex gap="xs">
@@ -125,7 +125,7 @@ function TokenDetailsStatsInner({ currency }: { currency: Currency }) {
           </Flex>
         </Flex>
       </Flex>
-      <Flex gap="xs" pb="xxxl">
+      <Flex gap="xs">
         <Text color="textSecondary" variant="subheadSmall">
           {t('About {{ token }}', { token: tokenProject.name ?? currency.name })}
         </Text>
