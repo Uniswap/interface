@@ -11,34 +11,36 @@ jobs:
       matrix:
         node-version: [16.x]
     steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
-    - run: yarn install
-    - run: yarn build
-      env:
-          CI: false
-          REACT_APP_SERVICE_WORKER: false
-    - name: zip create 
-      run: zip -qq -r ./build-fe.zip
-      shell: bash
-    - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        aws-access-key-id: ${{ secrets.ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.SECRET_ACCESS_KEY }}
-        aws-region: ${{ secrets.AWS_REGION }}
-      - name: Upload to S3 # Upload build file to S3
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: yarn install
+      - run: yarn build
         env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.SECRET_ACCESS_KEY }}
-        run: |
-          aws s3 cp --region ap-northeast-2 ./build-fe.zip s3://texdemobucket/build/build-fe.zip
-      - name: Deploy # Deploy to EC2
-        run: aws deploy create-deployment
-          --application-name texDemo
-          --deployment-config-name CodeDeployDefault.AllAtOnce
-          --deployment-group-name texDeployGroup
-          --s3-location bucket=texdemobucket,key=build/build-fe.zip,bundleType=zip
+            CI: false
+            REACT_APP_SERVICE_WORKER: false
+            
+      - name: zip create 
+        run: zip -qq -r ./build-fe.zip .
+        shell: bash
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+        - name: Upload to S3 # Upload build file to S3
+          env:
+            AWS_ACCESS_KEY_ID: ${{ secrets.ACCESS_KEY_ID }}
+            AWS_SECRET_ACCESS_KEY: ${{ secrets.SECRET_ACCESS_KEY }}
+          run: |
+            aws s3 cp --region ap-northeast-2 ./build-fe.zip s3://texdemobucket/build/build-fe.zip
+        - name: Deploy # Deploy to EC2
+          run: aws deploy create-deployment
+            --application-name texDemo
+            --deployment-config-name CodeDeployDefault.AllAtOnce
+            --deployment-group-name texDeployGroup
+            --s3-location bucket=texdemobucket,key=build/build-fe.zip,bundleType=zip
