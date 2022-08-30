@@ -12,7 +12,7 @@ interface useNetworkTokenBalancesResult {
 }
 
 interface useNetworkTokenBalancesArgs {
-  address: string
+  address: string | undefined
 }
 
 export function useNetworkTokenBalances({ address }: useNetworkTokenBalancesArgs): useNetworkTokenBalancesResult {
@@ -23,42 +23,52 @@ export function useNetworkTokenBalances({ address }: useNetworkTokenBalancesArgs
   const query = gql``
 
   useEffect(() => {
-    const FAKE_TOKEN_NETWORK_BALANCES = {
-      [SupportedChainId.ARBITRUM_ONE]: CurrencyAmount.fromRawAmount(
-        new Token(SupportedChainId.ARBITRUM_ONE, address, 18),
-        10e18
-      ),
-      [SupportedChainId.MAINNET]: CurrencyAmount.fromRawAmount(new Token(SupportedChainId.MAINNET, address, 18), 1e18),
-      [SupportedChainId.RINKEBY]: CurrencyAmount.fromRawAmount(new Token(SupportedChainId.RINKEBY, address, 9), 10e18),
-    }
-
-    const fetchNetworkTokenBalances = async (address: string): Promise<NetworkTokenBalancesMap | void> => {
-      const waitRandom = (min: number, max: number): Promise<void> =>
-        new Promise((resolve) => setTimeout(resolve, min + Math.round(Math.random() * Math.max(0, max - min))))
-      try {
-        console.log('useNetworkTokenBalances.fetchNetworkTokenBalances', query)
-        setLoading(true)
-        setError(null)
-        console.log('useNetworkTokenBalances.fetchNetworkTokenBalances', address)
-        await waitRandom(250, 2000)
-        if (Math.random() < 0.05) {
-          throw new Error('fake error')
-        }
-        return FAKE_TOKEN_NETWORK_BALANCES
-      } catch (e) {
-        setError('something went wrong')
-      } finally {
-        setLoading(false)
+    if (address) {
+      const FAKE_TOKEN_NETWORK_BALANCES = {
+        [SupportedChainId.ARBITRUM_ONE]: CurrencyAmount.fromRawAmount(
+          new Token(SupportedChainId.ARBITRUM_ONE, address, 18),
+          10e18
+        ),
+        [SupportedChainId.MAINNET]: CurrencyAmount.fromRawAmount(
+          new Token(SupportedChainId.MAINNET, address, 18),
+          1e18
+        ),
+        [SupportedChainId.RINKEBY]: CurrencyAmount.fromRawAmount(
+          new Token(SupportedChainId.RINKEBY, address, 9),
+          10e18
+        ),
       }
+
+      const fetchNetworkTokenBalances = async (address: string): Promise<NetworkTokenBalancesMap | void> => {
+        const waitRandom = (min: number, max: number): Promise<void> =>
+          new Promise((resolve) => setTimeout(resolve, min + Math.round(Math.random() * Math.max(0, max - min))))
+        try {
+          console.log('useNetworkTokenBalances.fetchNetworkTokenBalances', query)
+          setLoading(true)
+          setError(null)
+          console.log('useNetworkTokenBalances.fetchNetworkTokenBalances', address)
+          await waitRandom(250, 2000)
+          if (Math.random() < 0.05) {
+            throw new Error('fake error')
+          }
+          return FAKE_TOKEN_NETWORK_BALANCES
+        } catch (e) {
+          setError('something went wrong')
+        } finally {
+          setLoading(false)
+        }
+      }
+      setLoading(true)
+      setError(null)
+      fetchNetworkTokenBalances(address)
+        .then((data) => {
+          if (data) setData(data)
+        })
+        .catch((e) => setError(e))
+        .finally(() => setLoading(false))
+    } else {
+      setData(null)
     }
-    setLoading(true)
-    setError(null)
-    fetchNetworkTokenBalances(address)
-      .then((data) => {
-        if (data) setData(data)
-      })
-      .catch((e) => setError(e))
-      .finally(() => setLoading(false))
   }, [address, query])
 
   return {
