@@ -1,5 +1,4 @@
 import { rgba } from 'polished'
-import React from 'react'
 import { AlertTriangle } from 'react-feather'
 import styled from 'styled-components'
 
@@ -11,7 +10,7 @@ export const ZapErrorWrapper = styled.div<{ warning?: boolean }>`
   gap: 8px;
   background: ${({ theme, warning }) => rgba(warning ? theme.warning : theme.red, 0.35)};
   padding: 1rem;
-  border-radius: 4px;
+  border-radius: 999px;
   margin-bottom: 28px;
   color: ${({ theme }) => theme.text};
   font-size: 12px;

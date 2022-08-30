@@ -59,7 +59,6 @@ export default class ErrorBoundary extends React.Component<PropsWithChildren<unk
     })
     e.name = 'AppCrash'
     captureException(e, { level: 'fatal' })
-    localStorage.clear()
   }
 
   render() {
@@ -101,6 +100,7 @@ export default class ErrorBoundary extends React.Component<PropsWithChildren<unk
                 margin="auto"
                 width="fit-content"
                 onClick={() => {
+                  localStorage.clear()
                   window.location.reload()
                 }}
               >

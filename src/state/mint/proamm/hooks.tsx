@@ -363,7 +363,7 @@ export function useProAmmDerivedMintInfo(
     typeof tickUpper === 'number' && poolForPosition && poolForPosition.tickCurrent >= tickUpper,
   )
   const deposit1Disabled = Boolean(
-    typeof tickLower === 'number' && poolForPosition && poolForPosition.tickCurrent <= tickLower,
+    typeof tickLower === 'number' && poolForPosition && poolForPosition.tickCurrent < tickLower,
   )
   // sorted for token order
   const depositADisabled =

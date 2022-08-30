@@ -452,13 +452,14 @@ export function useDerivedZapOutInfo(
 
   if (
     zapOutAmount.error &&
-    (zapOutAmount.error.message.includes('INSUFFICIENT_LIQUIDITY') ||
-      zapOutAmount.error.data?.message.includes('INSUFFICIENT_LIQUIDITY'))
+    (zapOutAmount.error.message?.includes('INSUFFICIENT_LIQUIDITY') ||
+      zapOutAmount.error.data?.message?.includes('INSUFFICIENT_LIQUIDITY'))
   ) {
     insufficientLiquidity = true
   }
 
   if (zapOutAmount.error && !insufficientLiquidity) {
+    console.error(zapOutAmount.error)
     error = t`Something went wrong`
   }
 
