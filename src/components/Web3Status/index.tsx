@@ -214,7 +214,8 @@ function Web3StatusInner() {
 
   const hasPendingTransactions = !!pending.length
   const hasSocks = useHasSocks()
-  const toggleWallet = navbarFlag === NavBarVariant.Enabled ? toggleWalletDropdown : toggleWalletModal
+  const isNavbarEnabled = navbarFlag === NavBarVariant.Enabled
+  const toggleWallet = isNavbarEnabled ? toggleWalletDropdown : toggleWalletModal
 
   if (!chainId) {
     return null
@@ -230,6 +231,7 @@ function Web3StatusInner() {
   } else if (account) {
     return (
       <Web3StatusConnected data-testid="web3-status-connected" onClick={toggleWallet} pending={hasPendingTransactions}>
+        {isNavbarEnabled && !hasPendingTransactions && <StatusIcon connectionType={connectionType} />}
         {hasPendingTransactions ? (
           <RowBetween>
             <Text>
@@ -239,11 +241,12 @@ function Web3StatusInner() {
           </RowBetween>
         ) : (
           <>
-            {hasSocks ? <Sock /> : null}
+            {hasSocks && !isNavbarEnabled ? <Sock /> : null}
             <Text>{ENSName || shortenAddress(account)}</Text>
           </>
         )}
-        {!hasPendingTransactions && <StatusIcon connectionType={connectionType} />}
+        {!isNavbarEnabled && !hasPendingTransactions && <StatusIcon connectionType={connectionType} />}
+        {isNavbarEnabled && (walletIsOpen ? <ChevronUp /> : <ChevronDown />)}
       </Web3StatusConnected>
     )
   } else {
@@ -254,7 +257,7 @@ function Web3StatusInner() {
         properties={{ received_swap_quote: validSwapQuote }}
         element={ElementName.CONNECT_WALLET_BUTTON}
       >
-        {navbarFlag === NavBarVariant.Enabled ? (
+        {isNavbarEnabled ? (
           <Web3StatusConnectNavbar faded={!account}>
             <StyledConnect onClick={toggleWalletModal}>
               <Trans>Connect</Trans>

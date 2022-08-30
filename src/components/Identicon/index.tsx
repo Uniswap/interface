@@ -1,12 +1,13 @@
 import jazzicon from '@metamask/jazzicon'
 import { useWeb3React } from '@web3-react/core'
+import { NavBarVariant, useNavBarFlag } from 'featureFlags/flags/navBar'
 import useENSAvatar from 'hooks/useENSAvatar'
 import { useLayoutEffect, useMemo, useRef, useState } from 'react'
 import styled from 'styled-components/macro'
 
-const StyledIdenticon = styled.div`
-  height: 1rem;
-  width: 1rem;
+const StyledIdenticon = styled.div<{ isNavbarEnabled: boolean }>`
+  height: ${({ isNavbarEnabled }) => (isNavbarEnabled ? '24px' : '1rem')};
+  width: ${({ isNavbarEnabled }) => (isNavbarEnabled ? '24px' : '1rem')};
   border-radius: 1.125rem;
   background-color: ${({ theme }) => theme.deprecated_bg4};
   font-size: initial;
@@ -22,8 +23,11 @@ export default function Identicon() {
   const { account } = useWeb3React()
   const { avatar } = useENSAvatar(account ?? undefined)
   const [fetchable, setFetchable] = useState(true)
+  const navbarFlag = useNavBarFlag()
+  const isNavbarEnabled = navbarFlag === NavBarVariant.Enabled
+  const iconSize = navbarFlag === NavBarVariant.Enabled ? 24 : 16
 
-  const icon = useMemo(() => account && jazzicon(16, parseInt(account.slice(2, 10), 16)), [account])
+  const icon = useMemo(() => account && jazzicon(iconSize, parseInt(account.slice(2, 10), 16)), [account, iconSize])
   const iconRef = useRef<HTMLDivElement>(null)
   useLayoutEffect(() => {
     const current = iconRef.current
@@ -41,7 +45,7 @@ export default function Identicon() {
   }, [icon, iconRef])
 
   return (
-    <StyledIdenticon>
+    <StyledIdenticon isNavbarEnabled={isNavbarEnabled}>
       {avatar && fetchable ? (
         <StyledAvatar alt="avatar" src={avatar} onError={() => setFetchable(false)}></StyledAvatar>
       ) : (
