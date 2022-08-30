@@ -86,7 +86,7 @@ const query = graphql`
   }
 `
 
-export function useTokenPriceQuery(address: string, timePeriod: TimePeriod, chain: Chain) {
+export function useTokenPriceQuery(address: string, chain: Chain, timePeriod: TimePeriod) {
   const [prices, setPrices] = useState<PriceHistory>(TokenAPICache.checkPriceHistory(address, timePeriod))
   const [error, setError] = useState<any>()
   const [isLoading, setIsLoading] = useState(!prices)
@@ -130,39 +130,46 @@ export function useTokenPriceQuery(address: string, timePeriod: TimePeriod, chai
   return { error, isLoading, data: prices ?? [] }
 }
 
-export function fillTokenPriceCache(address: string, chain: Chain) {
-  fetchQuery<TokenPriceAllQuery>(environment, allQuery, {
-    contract: {
-      address,
-      chain,
-    },
-  }).subscribe({
-    next: (data) => {
-      const prices1H = data?.tokenProjects?.[0]?.markets?.[0]?.priceHistory1H
-      const prices1D = data?.tokenProjects?.[0]?.markets?.[0]?.priceHistory1D
-      const prices1W = data?.tokenProjects?.[0]?.markets?.[0]?.priceHistory1W
-      const prices1M = data?.tokenProjects?.[0]?.markets?.[0]?.priceHistory1M
-      const prices1Y = data?.tokenProjects?.[0]?.markets?.[0]?.priceHistory1Y
-      const pricesMax = data?.tokenProjects?.[0]?.markets?.[0]?.priceHistoryMAX
+export function fillTokenPriceCache(address: string, chain: Chain, timePeriod: TimePeriod) {
+  // Load current time period by itself for faster availability
+  if (!TokenAPICache.checkPriceHistory(address, timePeriod)) {
+    fetchQuery<TokenPriceSingleQuery>(environment, allQuery, {
+      contract: {
+        address,
+        chain,
+      },
+      duration: toHistoryDuration(timePeriod),
+    }).subscribe({
+      next: (data) => {
+        const prices = data?.tokenProjects?.[0]?.markets?.[0]?.priceHistory
+        prices && TokenAPICache.setPriceHistory(prices, address, timePeriod)
+      },
+    })
+  }
 
-      if (prices1H) {
-        TokenAPICache.setPriceHistory(prices1H, address, TimePeriod.HOUR)
-      }
-      if (prices1D) {
-        TokenAPICache.setPriceHistory(prices1D, address, TimePeriod.DAY)
-      }
-      if (prices1W) {
-        TokenAPICache.setPriceHistory(prices1W, address, TimePeriod.WEEK)
-      }
-      if (prices1M) {
-        TokenAPICache.setPriceHistory(prices1M, address, TimePeriod.MONTH)
-      }
-      if (prices1Y) {
-        TokenAPICache.setPriceHistory(prices1Y, address, TimePeriod.YEAR)
-      }
-      if (pricesMax) {
-        TokenAPICache.setPriceHistory(pricesMax, address, TimePeriod.ALL)
-      }
-    },
-  })
+  // Load all time periods in the background
+  if (!TokenAPICache.checkPriceHistory(address, TimePeriod.HOUR)) {
+    fetchQuery<TokenPriceAllQuery>(environment, allQuery, {
+      contract: {
+        address,
+        chain,
+      },
+    }).subscribe({
+      next: (data) => {
+        const prices1H = data?.tokenProjects?.[0]?.markets?.[0]?.priceHistory1H
+        const prices1D = data?.tokenProjects?.[0]?.markets?.[0]?.priceHistory1D
+        const prices1W = data?.tokenProjects?.[0]?.markets?.[0]?.priceHistory1W
+        const prices1M = data?.tokenProjects?.[0]?.markets?.[0]?.priceHistory1M
+        const prices1Y = data?.tokenProjects?.[0]?.markets?.[0]?.priceHistory1Y
+        const pricesMax = data?.tokenProjects?.[0]?.markets?.[0]?.priceHistoryMAX
+
+        prices1H && TokenAPICache.setPriceHistory(prices1H, address, TimePeriod.HOUR)
+        prices1D && TokenAPICache.setPriceHistory(prices1D, address, TimePeriod.DAY)
+        prices1W && TokenAPICache.setPriceHistory(prices1W, address, TimePeriod.WEEK)
+        prices1M && TokenAPICache.setPriceHistory(prices1M, address, TimePeriod.MONTH)
+        prices1Y && TokenAPICache.setPriceHistory(prices1Y, address, TimePeriod.YEAR)
+        pricesMax && TokenAPICache.setPriceHistory(pricesMax, address, TimePeriod.ALL)
+      },
+    })
+  }
 }

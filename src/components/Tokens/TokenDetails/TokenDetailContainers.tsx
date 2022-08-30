@@ -39,6 +39,16 @@ export const ChartContainer = styled.div`
   height: 436px;
   align-items: center;
 `
+export const TokenPrice = styled.span`
+  font-size: 36px;
+  line-height: 44px;
+`
+export const DeltaContainer = styled.div`
+  height: 16px;
+  display: flex;
+  align-items: center;
+  margin-top: 4px;
+`
 export const Stat = styled.div`
   display: flex;
   flex-direction: column;

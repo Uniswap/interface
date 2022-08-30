@@ -5,7 +5,7 @@ import { EventType } from '@visx/event/lib/types'
 import { GlyphCircle } from '@visx/glyph'
 import { Line } from '@visx/shape'
 import { filterTimeAtom } from 'components/Tokens/state'
-import { bisect, curveCardinalOpen, NumberValue, scaleLinear } from 'd3'
+import { bisect, curveCardinal, NumberValue, scaleLinear } from 'd3'
 import { useTokenPriceQuery } from 'graphql/data/TokenPrice'
 import { TimePeriod } from 'graphql/data/TopTokenQuery'
 import { useActiveLocale } from 'hooks/useActiveLocale'
@@ -26,6 +26,7 @@ import {
 
 import LineChart from '../../Charts/LineChart'
 import { DISPLAYS, ORDERED_TIMES } from '../TokenTable/TimeSelector'
+import { DeltaContainer, TokenPrice } from './TokenDetailContainers'
 
 // TODO: This should be combined with the logic in TimeSelector.
 
@@ -71,17 +72,6 @@ export function formatDelta(delta: number) {
 
 export const ChartHeader = styled.div`
   position: absolute;
-`
-
-export const TokenPrice = styled.span`
-  font-size: 36px;
-  line-height: 44px;
-`
-export const DeltaContainer = styled.div`
-  height: 16px;
-  display: flex;
-  align-items: center;
-  margin-top: 4px;
 `
 const ArrowCell = styled.div`
   padding-left: 2px;
@@ -162,7 +152,7 @@ export function PriceChart({ width, height, token }: PriceChartProps) {
   const theme = useTheme()
 
   // TODO: Add network selector input, consider using backend type instead of current front end selector type
-  const { error, isLoading, data } = useTokenPriceQuery(token.address, timePeriod, 'ETHEREUM')
+  const { error, isLoading, data } = useTokenPriceQuery(token.address, 'ETHEREUM', timePeriod)
 
   const pricePoints: PricePoint[] = data.filter((p): p is PricePoint => Boolean(p && p.value))
 
@@ -252,7 +242,7 @@ export function PriceChart({ width, height, token }: PriceChartProps) {
         getX={(p: PricePoint) => timeScale(p.timestamp)}
         getY={(p: PricePoint) => rdScale(p.value)}
         marginTop={margin.top}
-        curve={curveCardinalOpen.tension(curveTension)}
+        curve={curveCardinal.tension(curveTension)}
         strokeWidth={2}
         width={graphWidth}
         height={graphHeight}
@@ -323,7 +313,7 @@ export function PriceChart({ width, height, token }: PriceChartProps) {
               key={DISPLAYS[time]}
               active={timePeriod === time}
               onClick={() => {
-                if (!isLoading) setTimePeriod(time)
+                !isLoading && setTimePeriod(time)
               }}
             >
               {DISPLAYS[time]}

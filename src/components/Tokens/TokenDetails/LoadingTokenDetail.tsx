@@ -1,7 +1,6 @@
 import styled, { useTheme } from 'styled-components/macro'
 
 import { LoadingBubble } from '../loading'
-import { DeltaContainer, TokenPrice } from './PriceChart'
 import {
   AboutContainer,
   AboutHeader,
@@ -9,12 +8,14 @@ import {
   ChartContainer,
   ChartHeader,
   ContractAddressSection,
+  DeltaContainer,
   ResourcesContainer,
   Stat,
   StatPair,
   StatsSection,
   TokenInfoContainer,
   TokenNameCell,
+  TokenPrice,
   TopArea,
 } from './TokenDetailContainers'
 
@@ -84,6 +85,22 @@ export function Wave() {
     <svg width="416" height="160" xmlns="http://www.w3.org/2000/svg">
       <path d="M 0 80 Q 104 10, 208 80 T 416 80" stroke={theme.backgroundOutline} fill="transparent" strokeWidth="2" />
     </svg>
+  )
+}
+
+export function LoadingChart() {
+  return (
+    <LoadingChartContainer>
+      <div>
+        <ChartAnimation>
+          <Wave />
+          <Wave />
+          <Wave />
+          <Wave />
+          <Wave />
+        </ChartAnimation>
+      </div>
+    </LoadingChartContainer>
   )
 }
 

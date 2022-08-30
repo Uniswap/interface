@@ -5,6 +5,7 @@ import {
   MOBILE_MEDIA_BREAKPOINT,
   SMALL_MEDIA_BREAKPOINT,
 } from 'components/Tokens/constants'
+import { filterTimeAtom } from 'components/Tokens/state'
 import BalanceSummary from 'components/Tokens/TokenDetails/BalanceSummary'
 import FooterBalanceSummary from 'components/Tokens/TokenDetails/FooterBalanceSummary'
 import LoadingTokenDetail from 'components/Tokens/TokenDetails/LoadingTokenDetail'
@@ -15,9 +16,11 @@ import Widget, { WIDGET_WIDTH } from 'components/Widget'
 import { getChainInfo } from 'constants/chainInfo'
 import { L1_CHAIN_IDS, L2_CHAIN_IDS, SupportedChainId, TESTNET_CHAIN_IDS } from 'constants/chains'
 import { checkWarning } from 'constants/tokenSafety'
+import { fillTokenPriceCache } from 'graphql/data/TokenPrice'
 import { useToken } from 'hooks/Tokens'
 import { useNetworkTokenBalances } from 'hooks/useNetworkTokenBalances'
-import { useMemo } from 'react'
+import { useAtom } from 'jotai'
+import { useEffect, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
@@ -94,6 +97,12 @@ export default function TokenDetails() {
     }
     return chainIds
   }, [connectedChainId])
+
+  const [timePeriod] = useAtom(filterTimeAtom)
+  // Preload token price data
+  useEffect(() => {
+    if (token?.address) fillTokenPriceCache(token.address, 'ETHEREUM', timePeriod)
+  }, [token, timePeriod])
 
   const balancesByNetwork = networkData
     ? chainsToList.map((chainId) => {

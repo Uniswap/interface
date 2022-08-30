@@ -9,12 +9,10 @@ import { getChainInfo } from 'constants/chainInfo'
 import { nativeOnChain, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import { checkWarning, WARNING_LEVEL } from 'constants/tokenSafety'
 import { chainIdToChainName, useTokenDetailQuery } from 'graphql/data/TokenDetailQuery'
-import { fillTokenPriceCache, useTokenPriceQuery } from 'graphql/data/TokenPrice'
 import { useCurrency, useIsUserAddedToken, useToken } from 'hooks/Tokens'
-import { useAtom } from 'jotai'
 import { useAtomValue } from 'jotai/utils'
 import { darken } from 'polished'
-import { Suspense, useCallback, useEffect } from 'react'
+import { Suspense, useCallback } from 'react'
 import { useState } from 'react'
 import { ArrowLeft, Heart } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
@@ -22,7 +20,7 @@ import styled from 'styled-components/macro'
 import { ClickableStyle, CopyContractAddress } from 'theme'
 import { formatDollarAmount } from 'utils/formatDollarAmt'
 
-import { favoritesAtom, filterNetworkAtom, filterTimeAtom, useToggleFavorite } from '../state'
+import { favoritesAtom, filterNetworkAtom, useToggleFavorite } from '../state'
 import { ClickFavorited } from '../TokenTable/TokenRow'
 import LoadingTokenDetail from './LoadingTokenDetail'
 import Resource from './Resource'
@@ -209,16 +207,7 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
     twitterName,
   }))(tokenDetailData)
 
-  const [timePeriod] = useAtom(filterTimeAtom)
-  /* prefill token price data before rendering chart*/
-  const { isLoading } = useTokenPriceQuery(token?.address ?? '', timePeriod, 'ETHEREUM')
-
-  /* Prefill other TimePeriod's data without blocking load */
-  useEffect(() => {
-    if (token?.address) fillTokenPriceCache(token.address, 'ETHEREUM')
-  }, [token])
-
-  if (isLoading || !token || !token.name || !token.symbol || !connectedChainId) {
+  if (!token || !token.name || !token.symbol || !connectedChainId) {
     return <LoadingTokenDetail />
   }
 
