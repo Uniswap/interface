@@ -1,7 +1,9 @@
 import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { LogoWithTxStatus } from 'src/components/CurrencyLogo/LogoWithTxStatus'
+import { ChainId } from 'src/constants/chains'
 import { AssetType } from 'src/entities/assets'
+import { useENS } from 'src/features/ens/useENS'
 import { useCurrency } from 'src/features/tokens/useCurrency'
 import BalanceUpdate from 'src/features/transactions/SummaryCards/BalanceUpdate'
 import TransactionSummaryLayout, {
@@ -61,6 +63,10 @@ export default function ReceiveSummaryItem({
     t,
   })
 
+  // Search for matching ENS
+  const { name: ensName } = useENS(ChainId.Mainnet, transaction.typeInfo.sender, true)
+  const senderName = ensName ?? shortenAddress(transaction.typeInfo.sender)
+
   const getEndAdornment = () => {
     if (transaction.typeInfo.assetType === AssetType.Currency) {
       return currency && transaction.typeInfo.currencyAmountRaw ? (
@@ -87,7 +93,7 @@ export default function ReceiveSummaryItem({
 
   return (
     <TransactionSummaryLayout
-      caption={shortenAddress(transaction.typeInfo.sender)}
+      caption={senderName}
       endAdornment={getEndAdornment()}
       icon={icon}
       readonly={readonly}
