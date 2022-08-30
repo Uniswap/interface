@@ -2,8 +2,9 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { Zero } from '@ethersproject/constants'
 import { Chef } from 'constants/farm/chef.enum'
 import { useActiveWeb3React } from 'hooks'
-import { useMasterChefContract, useSushiContract } from 'hooks/useContract'
+import { useSushiContract } from 'hooks/useContract'
 import { useCallback } from 'react'
+import { useChefContract } from './useChefContract'
 
 // import { Chef } from './enum'
 // import { useChefContract } from './hooks'
@@ -13,8 +14,7 @@ export default function useMasterChef(chef: Chef) {
 
   const sushi = useSushiContract()
 
-  // const contract = useChefContract(chef)
-  const contract = useMasterChefContract()
+  const contract = useChefContract(chef)
 
   // Deposit
   const deposit = useCallback(
@@ -40,12 +40,13 @@ export default function useMasterChef(chef: Chef) {
   // Withdraw
   const withdraw = useCallback(
     async (pid: number, amount: BigNumber) => {
-      console.debug('useMasterChef::withdraw')
       try {
         let tx
 
         if (chef === Chef.MASTERCHEF) {
           tx = await contract?.withdraw(pid, amount)
+        } else if (chef === Chef.MINICHEF) {
+          tx = await contract?.withdrawAndHarvest(pid, amount, account)
         } else {
           tx = await contract?.withdraw(pid, amount, account)
         }
@@ -76,13 +77,15 @@ export default function useMasterChef(chef: Chef) {
             tx = await contract?.batch(
               [
                 contract?.interface?.encodeFunctionData('harvestFromMasterChef'),
-                contract?.interface?.encodeFunctionData('harvest', [pid, account])
+                contract?.interface?.encodeFunctionData('harvest', [pid, account]),
               ],
               true
             )
           } else {
             tx = await contract?.harvest(pid, account)
           }
+        } else if (chef === Chef.MINICHEF) {
+          tx = await contract?.harvest(pid, account)
         }
 
         return tx

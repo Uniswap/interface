@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { AutoColumn } from '../../components/Column'
 import styled from 'styled-components'
 import { TYPE, ExternalLink } from '../../theme'
@@ -7,6 +7,11 @@ import { CardSection, DataCard, CardNoise, CardBGImage } from '../../components/
 // import { Countdown } from './Countdown'
 import { useActiveWeb3React } from '../../hooks'
 import PoolCard from './PoolCard'
+import { useChefPositions } from 'hooks/farm/useChefPositions'
+import { useMasterChefPoolInfo } from 'hooks/farm/useMasterChefPoolInfo'
+import { Chef } from 'constants/farm/chef.enum'
+import { useChefContract } from 'hooks/farm/useChefContract'
+import { CHAINID_TO_FARMING_CONFIG } from 'constants/farming.config'
 // import { JSBI } from '@teleswap/sdk'
 // import { BIG_INT_ZERO } from '../../constants'
 // import { OutlineCard } from '../../components/Card'
@@ -39,6 +44,14 @@ flex-direction: column;
 export default function FarmList() {
   const { chainId } = useActiveWeb3React()
   console.debug('chainId', chainId)
+  const farmingConfig = CHAINID_TO_FARMING_CONFIG[chainId || 420]
+  // const mchefContract = useChefContract(farmingConfig?.chefType || Chef.MINICHEF)
+  // const positions = useChefPositions(mchefContract, undefined, chainId)
+  const poolInfos = useMasterChefPoolInfo(farmingConfig?.chefType || Chef.MINICHEF)
+
+  useEffect(() => {
+    console.info('useMasterChefPoolInfo', poolInfos)
+  }, [poolInfos])
   // // staking info for connected account
   // const stakingInfos = useStakingInfo()
 
@@ -79,9 +92,11 @@ export default function FarmList() {
         </DataRow>
 
         <PoolSection>
-          {[0].map((pid) => (
-            <PoolCard key={pid} pid={pid} />
-          ))}
+          {poolInfos.length === 0
+            ? 'Loading...'
+            : poolInfos.map((_poolInfo, pid) => {
+                return <PoolCard key={pid} pid={pid} />
+              })}
         </PoolSection>
       </AutoColumn>
     </PageWrapper>

@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useMemo } from 'react'
 import useTransactionDeadline from '../../hooks/useTransactionDeadline'
 import Modal from '../Modal'
 import { AutoColumn } from '../Column'
@@ -17,6 +17,7 @@ import useMasterChef from 'hooks/farm/useMasterChef'
 import { Chef } from 'constants/farm/chef.enum'
 import { utils } from 'ethers'
 import { ChainId, Token, TokenAmount } from '@teleswap/sdk'
+import { LoadingView, SubmittedView } from 'components/ModalViews'
 // const HypotheticalRewardRate = styled.div<{ dim: boolean }>`
 //   display: flex;
 //   justify-content: space-between;
@@ -60,18 +61,21 @@ export default function StakingModal({ isOpen, onDismiss, pid }: StakingModalPro
   // disabled
   // const [signatureData, setSignatureData] = useState<{ v: number; r: string; s: string; deadline: number } | null>(null)
   const signatureData = null
-  const stakingCurrency = new Token(ChainId.RINKEBY, '0x9F9757b641c37e2Ae61b65e10e1A09FFc4946409', 18)
+  // @todo: we need the token profile of this pool
+  // @todo: we need the symbol of staking token
+  const stakingCurrency = new Token(chainId || 420, '0x0093d164e9C57dc0EbC00d58E429AdCf383B65d1', 6, 'TODO')
+
   const tokenAmount = new TokenAmount(stakingCurrency, typedValue)
-  const [approval, approve] = useApproveCallback(tokenAmount, MASTERCHEF_ADDRESSBOOK[chainId ?? 4])
+  console.info('tokenAmount', tokenAmount)
+  const [approval, approve] = useApproveCallback(tokenAmount, MASTERCHEF_ADDRESSBOOK[chainId ?? 420])
   // const [parsedAmount, setParsedAmount] = useState('0')
   // const stakingContract = useStakingContract(stakingInfo.stakingRewardAddress)
-  const stakingContract = useMasterChef(Chef.MASTERCHEF)
+  const stakingContract = useMasterChef(Chef.MINICHEF)
   async function onStake() {
     setAttempting(true)
     if (stakingContract && deadline) {
       if (approval === ApprovalState.APPROVED) {
-        // @todo: fix decimals here
-        stakingContract.deposit(pid, utils.parseUnits(typedValue, 18)).then((response: TransactionResponse) => {
+        stakingContract.deposit(pid, utils.parseUnits(typedValue, stakingCurrency.decimals)).then((response: TransactionResponse) => {
           addTransaction(response, {
             summary: `Deposit liquidity`
           })
@@ -154,11 +158,11 @@ export default function StakingModal({ isOpen, onDismiss, pid }: StakingModalPro
           <ProgressCircles steps={[approval === ApprovalState.APPROVED || signatureData !== null]} disabled={true} />
         </ContentWrapper>
       )}
-      {/* {attempting && !hash && (
+      {attempting && !hash && (
         <LoadingView onDismiss={wrappedOnDismiss}>
           <AutoColumn gap="12px" justify={'center'}>
-            <TYPE.largeHeader>Depositing Liquidity</TYPE.largeHeader>
-            <TYPE.body fontSize={20}>{parsedAmount?.toSignificant(4)} UNI-V2</TYPE.body>
+            <TYPE.largeHeader>Depositing</TYPE.largeHeader>
+            <TYPE.body fontSize={20}>{tokenAmount?.toSignificant(4)} {stakingCurrency.symbol}</TYPE.body>
           </AutoColumn>
         </LoadingView>
       )}
@@ -166,10 +170,10 @@ export default function StakingModal({ isOpen, onDismiss, pid }: StakingModalPro
         <SubmittedView onDismiss={wrappedOnDismiss} hash={hash}>
           <AutoColumn gap="12px" justify={'center'}>
             <TYPE.largeHeader>Transaction Submitted</TYPE.largeHeader>
-            <TYPE.body fontSize={20}>Deposited {parsedAmount?.toSignificant(4)} UNI-V2</TYPE.body>
+            <TYPE.body fontSize={20}>Deposited {tokenAmount?.toSignificant(4)} {stakingCurrency.symbol}</TYPE.body>
           </AutoColumn>
         </SubmittedView>
-      )} */}
+      )}
     </Modal>
   )
 }

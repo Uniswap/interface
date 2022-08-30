@@ -11,6 +11,8 @@ import { Fraction } from './fraction'
 
 const Big = toFormat(_Big)
 
+Big.strict = true
+
 export class CurrencyAmount extends Fraction {
   public readonly currency: Currency
 
@@ -20,6 +22,15 @@ export class CurrencyAmount extends Fraction {
    */
   public static ether(amount: BigintIsh): CurrencyAmount {
     return new CurrencyAmount(ETHER, amount)
+  }
+
+  /**
+   * Returns a new currency amount instance from the unitless amount of token, i.e. the raw amount
+   * @param currency the currency in the amount
+   * @param rawAmount the raw token or ether amount
+   */
+  public static fromRawAmount<T extends Currency>(currency: T, rawAmount: BigintIsh): CurrencyAmount {
+      return new CurrencyAmount(currency, rawAmount)
   }
 
   // amount _must_ be raw, i.e. in the native representation

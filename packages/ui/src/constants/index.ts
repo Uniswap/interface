@@ -56,6 +56,10 @@ export const MASTERCHEFV2_ADDRESSBOOK: { [chainId in ChainId]?: string } = {
   // [ChainId.RINKEBY]: ''
 }
 
+export const MINICHEF_ADDRESS: { [chainId in ChainId]?: string } = {
+  [ChainId.OP_GOERLI]: '0x32aB42f082D0522Ac445010D6DB48b3c69A8044b',
+}
+
 export const SUSHI_ADDRESS: { [chainId in ChainId]?: string } = {
   [ChainId.RINKEBY]: '0xdaa8093513e9698f37e36332d43cc27e196d9ada',
   [ChainId.OP_GOERLI]: '0xED59D07e00118b7ab76EE6fB29D738e266aAca02',

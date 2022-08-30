@@ -12,9 +12,14 @@ import { useColor } from '../../hooks/useColor'
 // import { BIG_INT_SECONDS_IN_WEEK } from '../../constants'
 import { AutoColumn } from 'components/Column'
 import { ButtonPrimary } from 'components/Button'
-import DoubleCurrencyLogo from 'components/DoubleLogo'
+// import DoubleCurrencyLogo from 'components/DoubleLogo'
 import { CardBGImage, CardNoise, Break } from 'components/earn/styled'
 import { RowBetween } from 'components/Row'
+// import { Chef } from 'constants/farm/chef.enum'
+import { CHAINID_TO_FARMING_CONFIG } from 'constants/farming.config'
+import { useActiveWeb3React } from 'hooks'
+// import { Token } from '@teleswap/sdk'
+// import { useMasterChefPoolInfo } from 'hooks/farm/useMasterChefPoolInfo'
 
 const StatContainer = styled.div`
   display: flex;
@@ -69,13 +74,16 @@ const BottomSection = styled.div<{ showBackground: boolean }>`
 `
 
 export default function PoolCard({ pid }: { pid: number }) {
+  const { chainId } = useActiveWeb3React()
+  const farmingConfig = CHAINID_TO_FARMING_CONFIG[chainId || 420]
+  // const mchefContract = useChefContract(farmingConfig?.chefType || Chef.MINICHEF)
+  // const positions = useChefPositions(mchefContract, undefined, chainId)
+  // const poolInfos = useMasterChefPoolInfo(farmingConfig?.chefType || Chef.MINICHEF)
   // const token0 = stakingInfo.tokens[0]
   // const token1 = stakingInfo.tokens[1]
 
-  // const currency0 = unwrappedToken(token0)
-  // const currency1 = unwrappedToken(token1)
-  const currency0 = undefined
-  const currency1 = undefined
+  // const currency0 = unwrappedToken(new Token(chainId || 420, farmingConfig?.pools[pid].stakingAsset.backedAsset?.[0] || '', 18))
+  // const currency1 = unwrappedToken(new Token(chainId || 420, farmingConfig?.pools[pid].stakingAsset.backedAsset?.[1] || '', 18))
 
   // const isStaking = Boolean(stakingInfo.stakedAmount.greaterThan('0'))
 
@@ -116,10 +124,9 @@ export default function PoolCard({ pid }: { pid: number }) {
       <CardNoise />
 
       <TopSection>
-        <DoubleCurrencyLogo currency0={currency0} currency1={currency1} size={24} />
+        {/* <DoubleCurrencyLogo currency0={currency0} currency1={currency1} size={24} /> */}
         <TYPE.white fontWeight={600} fontSize={24} style={{ marginLeft: '8px' }}>
-          {/* {currency0?.symbol}-{currency1?.symbol} */}
-          USDT-DAI
+          {farmingConfig?.pools[pid].stakingAsset.name}
         </TYPE.white>
 
         <StyledInternalLink to={`/farm/${pid}`} style={{ width: '100%' }}>
