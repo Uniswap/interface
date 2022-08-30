@@ -82,7 +82,7 @@ export function SettingsCloudBackupStatus({
 
       <Flex grow alignItems="stretch" justifyContent="space-evenly" mt="md">
         <Flex grow gap="lg" justifyContent="flex-start">
-          <Text variant="bodySmall">
+          <Text color="textSecondary" variant="bodySmall">
             {t(
               'By having your recovery phrase backed up to iCloud, you can recover your wallet just by being logged into your iCloud on any device.'
             )}
@@ -102,7 +102,8 @@ export function SettingsCloudBackupStatus({
         <Flex justifyContent="center">
           <PrimaryButton
             alignSelf="stretch"
-            borderRadius="md"
+            borderRadius="lg"
+            height={56}
             label={t('Delete iCloud backup')}
             name={ElementName.Remove}
             textVariant="largeLabel"

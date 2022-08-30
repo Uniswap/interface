@@ -34,7 +34,8 @@ const HandleBar = () => {
       backgroundColor="backgroundAction"
       borderRadius="xs"
       height={4}
-      mt="sm"
+      mb="sm"
+      mt="md"
       width={32}
     />
   )

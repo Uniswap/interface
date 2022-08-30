@@ -87,14 +87,14 @@ export function SettingsCloudBackupScreen({
   switch (currentStep) {
     case ViewStep.EnterPin: {
       return (
-        <Screen mt="lg" mx="lg">
+        <Screen mx="lg" pt="md">
           <EnterPinView />
         </Screen>
       )
     }
     case ViewStep.ConfirmPin:
       return (
-        <Screen mt="lg" mx="lg">
+        <Screen mx="lg" pt="md">
           <ConfirmPinView />
         </Screen>
       )
@@ -153,15 +153,10 @@ export function SettingsCloudBackupScreen({
           isVisible={showCloudBackupInfoModal}
           name={ModalName.ICloudBackupInfo}
           onClose={() => setShowCloudBackupInfoModal(false)}>
-          <Flex gap="none" mb="xl" padding="md">
+          <Flex gap="none" mb="xl" px="md" py="sm">
             <Flex centered gap="md">
-              <Box
-                borderColor="accentAction"
-                borderRadius="md"
-                borderWidth={2}
-                mb="sm"
-                padding="sm">
-                <CloudIcon color={theme.colors.accentAction} height={24} width={24} />
+              <Box borderColor="accentAction" borderRadius="md" borderWidth={1} padding="sm">
+                <CloudIcon color={theme.colors.accentAction} />
               </Box>
               <Text textAlign="center" variant="mediumLabel">
                 {t('Back up recovery phrase to iCloud?')}
@@ -182,7 +177,6 @@ export function SettingsCloudBackupScreen({
               />
               <PrimaryButton
                 borderRadius="md"
-                icon={<CloudIcon color={theme.colors.white} height={20} width={20} />}
                 label={t('Back up to iCloud')}
                 name={ElementName.Confirm}
                 testID={ElementName.Confirm}
