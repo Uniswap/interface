@@ -9,6 +9,16 @@ import { domain, DOMAIN_TYPE, SWAP_TYPE } from 'constants/eip712'
 import { solidityKeccak256 } from 'ethers/lib/utils'
 import { SwapCall } from 'hooks/useSwapCallArguments'
 import { useMemo } from 'react'
+import { useAppDispatch } from 'state/hooks'
+import {
+  ParameterState,
+  setEncryptionParam,
+  setEncryptionProverKey,
+  setEncryptionVerifierData,
+  setVdfParam,
+  setVdfSnarkParam,
+  VdfParam,
+} from 'state/parameters/reducer'
 import { swapErrorToUserReadableMessage } from 'utils/swapErrorToUserReadableMessage'
 
 type AnyTrade =
@@ -86,19 +96,58 @@ export default function useSendSwapTransaction(
   swapCalls: Promise<SwapCall[]>,
   deadline: BigNumber | undefined,
   allowedSlippage: Percent,
+  parameters: ParameterState,
   sigHandler: () => void
 ): { callback: null | (() => Promise<RadiusSwapResponse>) } {
+  console.log(parameters)
+  const dispatch = useAppDispatch()
+
   return useMemo(() => {
     if (!trade || !library || !account || !chainId) {
       return { callback: null }
     }
     return {
       callback: async function onSwap(): Promise<RadiusSwapResponse> {
+        let vdfParam = {} as VdfParam
+        let vdfSnarkParam = ''
+        let encryptionParam = ''
+        let encryptionProverKey = ''
+        let encryptionVerifierData = ''
+
+        if (!parameters.vdfParam) {
+          vdfParam = await fetchVdfParam((newParam: VdfParam) => {
+            dispatch(setVdfParam({ newParam }))
+          })
+        }
+
+        if (!parameters.vdfSnarkParam) {
+          vdfSnarkParam = await fetchVdfSnarkParam((newParam: string) => {
+            dispatch(setVdfSnarkParam({ newParam }))
+          })
+        }
+
+        if (!parameters.encryptionParam) {
+          encryptionParam = await fetchEncryptionParam((newParam: string) => {
+            dispatch(setEncryptionParam({ newParam }))
+          })
+        }
+
+        if (!parameters.encryptionProverKey) {
+          encryptionProverKey = await fetchEncryptionProverKey((newParam: string) => {
+            dispatch(setEncryptionProverKey({ newParam }))
+          })
+        }
+
+        if (!parameters.encryptionVerifierData) {
+          encryptionVerifierData = await fetchEncryptionVerifierData((newParam: string) => {
+            dispatch(setEncryptionVerifierData({ newParam }))
+          })
+        }
+
         const resolvedCalls = await swapCalls
         const { deadline, amountIn, amountoutMin, path } = resolvedCalls[0]
 
         const signer = library.getSigner()
-
         const signAddress = await signer.getAddress()
 
         const signMessage = {
@@ -126,18 +175,19 @@ export default function useSendSwapTransaction(
 
         sigHandler()
 
-        const vdfData = await getVdfProof()
+        const vdfData = await getVdfProof(parameters.vdfParam || vdfParam, parameters.vdfSnarkParam || vdfSnarkParam)
 
         console.log(vdfData)
 
         const encryptData = await poseidonEncrypt(
+          parameters.encryptionParam || encryptionParam,
+          parameters.encryptionProverKey || encryptionProverKey,
+          parameters.encryptionVerifierData || encryptionVerifierData,
           vdfData.s2_string,
           vdfData.s2_field_hex,
           vdfData.commitment_hex,
           `${path[0]},${path[1]}`
         )
-
-        // const encryptData = await poseidonEncryptWithoutProof(vdfData.sym_key, `${path[0]},${path[1]}`)
 
         console.log(encryptData)
 
@@ -178,7 +228,67 @@ export default function useSendSwapTransaction(
         return finalResponse
       },
     }
-  }, [account, chainId, library, swapCalls, trade, sigHandler])
+  }, [trade, library, account, chainId, parameters, swapCalls, sigHandler, dispatch])
+}
+
+async function fetchVdfParam(callback: (res: VdfParam) => void) {
+  return await fetch('http://147.46.240.248:40002/zkp/getVdfParams', {
+    method: 'GET',
+  })
+    .then((res) => res.json())
+    .then((res) => {
+      console.log(res)
+      callback(res)
+      return res
+    })
+}
+
+async function fetchVdfSnarkParam(callback: (res: string) => void) {
+  return await fetch('http://147.46.240.248:40002/zkp/getVdfSnarkParams', {
+    method: 'GET',
+  }).then(async (res) => {
+    const bytes = await res.arrayBuffer()
+    const uint8bytes = new Uint8Array(bytes)
+    const string = Buffer.from(uint8bytes).toString('hex')
+    callback(string)
+    return string
+  })
+}
+
+async function fetchEncryptionParam(callback: (res: string) => void) {
+  return await fetch('http://147.46.240.248:40002/zkp/getEncryptionParams', {
+    method: 'GET',
+  }).then(async (res) => {
+    const bytes = await res.arrayBuffer()
+    const uint8bytes = new Uint8Array(bytes)
+    const string = Buffer.from(uint8bytes).toString('hex')
+    callback(string)
+    return string
+  })
+}
+
+async function fetchEncryptionProverKey(callback: (res: string) => void) {
+  return await fetch('http://147.46.240.248:40002/zkp/getEncryptionProverKey', {
+    method: 'GET',
+  }).then(async (res) => {
+    const bytes = await res.arrayBuffer()
+    const uint8bytes = new Uint8Array(bytes)
+    const string = Buffer.from(uint8bytes).toString('hex')
+    callback(string)
+    return string
+  })
+}
+
+async function fetchEncryptionVerifierData(callback: (res: string) => void) {
+  return await fetch('http://147.46.240.248:40002/zkp/getEncryptionVerifierData', {
+    method: 'GET',
+  }).then(async (res) => {
+    const bytes = await res.arrayBuffer()
+    const uint8bytes = new Uint8Array(bytes)
+    const string = Buffer.from(uint8bytes).toString('hex')
+    callback(string)
+    return string
+  })
 }
 
 async function signWithEIP712(library: JsonRpcProvider, signAddress: string, typedData: string): Promise<Signature> {
@@ -206,10 +316,11 @@ async function signWithEIP712(library: JsonRpcProvider, signAddress: string, typ
   return sig
 }
 
-async function getVdfProof(): Promise<VdfResponse> {
+async function getVdfProof(vdfParam: VdfParam, vdfSnarkParam: string): Promise<VdfResponse> {
+  console.log('CALL WASM!', vdfParam, vdfSnarkParam)
   const vdf = await import('wasm-vdf-zkp')
   const data = await vdf
-    .get_vdf_proof()
+    .get_vdf_proof(vdfParam, vdfSnarkParam)
     .then((res) => {
       console.log(res)
       return res
@@ -223,6 +334,9 @@ async function getVdfProof(): Promise<VdfResponse> {
 }
 
 async function poseidonEncrypt(
+  param: string,
+  proverKey: string,
+  verifierData: string,
   s2_string: string,
   s2_field_hex: string,
   commitment: string,
@@ -231,24 +345,7 @@ async function poseidonEncrypt(
   console.log(s2_string, commitment, plainText)
   const poseidon = await import('wasm-encryptor-zkp')
   const data = await poseidon
-    .encrypt(s2_string, s2_field_hex, commitment, plainText)
-    .then((res) => {
-      console.log(res)
-      return res
-    })
-    .catch((error) => {
-      console.error(error)
-      return error
-    })
-
-  return data
-}
-
-async function poseidonEncryptWithoutProof(s2_string: string, plainText: string): Promise<EncryptResponse> {
-  console.log(s2_string, plainText)
-  const poseidon = await import('wasm-encryptor-zkp')
-  const data = await poseidon
-    .encrypt_without_proof(s2_string, plainText)
+    .encrypt(param, proverKey, verifierData, s2_string, s2_field_hex, commitment, plainText)
     .then((res) => {
       console.log(res)
       return res
@@ -281,7 +378,7 @@ async function sendEIP712Tx(encryptedTx: EncryptedTx, signature: Signature): Pro
     })
     .catch((error) => {
       console.error(error)
-      return error
+      throw new Error(`Send failed: ${swapErrorToUserReadableMessage(error)}`)
     })
 
   return sendResponse

@@ -12,7 +12,7 @@ export interface VdfParam {
 }
 
 export interface ParameterState {
-  readonly vdfParam: VdfParam | undefined
+  readonly vdfParam: VdfParam | null
   readonly vdfSnarkParam: string
   readonly encryptionParam: string
   readonly encryptionProverKey: string
@@ -20,7 +20,7 @@ export interface ParameterState {
 }
 
 const initialState: ParameterState = {
-  vdfParam: undefined,
+  vdfParam: null,
   vdfSnarkParam: '',
   encryptionParam: '',
   encryptionProverKey: '',

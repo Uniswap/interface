@@ -12,7 +12,7 @@ import {
   VdfParam,
 } from './reducer'
 
-export function useVdfParam(): VdfParam | undefined {
+export function useVdfParam(): VdfParam | null {
   return useAppSelector((state) => state.parameters.vdfParam)
 }
 
@@ -36,7 +36,7 @@ export function useParameters(): ParameterState {
   return useAppSelector((state) => state.parameters)
 }
 
-export function useVdfParamManager(): [VdfParam | undefined, (newParam: VdfParam) => void] {
+export function useVdfParamManager(): [VdfParam | null, (newParam: VdfParam) => void] {
   const dispatch = useAppDispatch()
   const vdfParam = useVdfParam()
 

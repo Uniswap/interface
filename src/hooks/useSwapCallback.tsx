@@ -5,6 +5,7 @@ import useActiveWeb3React from 'hooks/useActiveWeb3React'
 import { RadiusSwapResponse } from 'lib/hooks/swap/useSendSwapTransaction'
 import { SwapCallbackState, useSwapCallback as useLibSwapCallBack } from 'lib/hooks/swap/useSwapCallback'
 import { ReactNode, useMemo } from 'react'
+import { ParameterState } from 'state/parameters/reducer'
 
 import useENS from './useENS'
 import { SignatureData } from './useERC20Permit'
@@ -18,7 +19,8 @@ export function useSwapCallback(
   allowedSlippage: Percent, // in bips
   recipientAddressOrName: string | null, // the ENS name or address of the recipient of the trade, or null if swap should be returned to sender
   signatureData: SignatureData | undefined | null,
-  sigHandler: () => void
+  sigHandler: () => void,
+  parameters: ParameterState
 ): {
   state: SwapCallbackState
   callback: null | (() => Promise<RadiusSwapResponse>)
@@ -42,6 +44,7 @@ export function useSwapCallback(
     signatureData,
     deadline,
     sigHandler,
+    parameters,
   })
 
   const callback = useMemo(() => {
