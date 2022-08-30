@@ -15,13 +15,13 @@ import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollSc
 import { Loading } from 'src/components/loading'
 import { CurrencyPriceChart } from 'src/components/PriceChart'
 import { Text } from 'src/components/Text'
+import { useCrossChainBalances } from 'src/components/TokenDetails/hooks'
 import { TokenBalances } from 'src/components/TokenDetails/TokenBalances'
 import { TokenDetailsBackButtonRow } from 'src/components/TokenDetails/TokenDetailsBackButtonRow'
 import { TokenDetailsStats } from 'src/components/TokenDetails/TokenDetailsStats'
 import TokenWarningCard from 'src/components/tokens/TokenWarningCard'
 import TokenWarningModal from 'src/components/tokens/TokenWarningModal'
 import { AssetType } from 'src/entities/assets'
-import { useSingleBalance } from 'src/features/dataApi/balances'
 import { useSpotPrice } from 'src/features/dataApi/spotPricesQuery'
 import { useToggleFavoriteCallback } from 'src/features/favorites/hooks'
 import { selectFavoriteTokensSet } from 'src/features/favorites/selectors'
@@ -113,7 +113,7 @@ export function TokenDetailsScreen({ route }: AppStackScreenProp<Screens.TokenDe
 }
 
 function TokenDetails({ currency }: { currency: Currency }) {
-  const balance = useSingleBalance(currency)
+  const { currentChainBalance, otherChainBalances } = useCrossChainBalances(currency)
 
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
@@ -191,7 +191,9 @@ function TokenDetails({ currency }: { currency: Currency }) {
   return (
     <>
       <HeaderScrollScreen
-        contentHeader={<TokenDetailsBackButtonRow currency={currency} />}
+        contentHeader={
+          <TokenDetailsBackButtonRow currency={currency} otherChainBalances={otherChainBalances} />
+        }
         fixedHeader={
           <BackHeader>
             <HeaderTitleElement currency={currency} />
@@ -200,7 +202,10 @@ function TokenDetails({ currency }: { currency: Currency }) {
         <Flex gap="md" mb="xl" mt="lg">
           <TokenDetailsHeader currency={currency} />
           <CurrencyPriceChart currency={currency} />
-          {balance && <TokenBalances balance={balance} />}
+          <TokenBalances
+            currentChainBalance={currentChainBalance}
+            otherChainBalances={otherChainBalances}
+          />
           <TokenDetailsStats currency={currency} />
           {tokenWarningLevel !== TokenWarningLevel.NONE && !tokenWarningDismissed && (
             <Box mx="md">
@@ -232,15 +237,10 @@ function TokenDetails({ currency }: { currency: Currency }) {
               ? ButtonState.Disabled
               : ButtonState.Enabled
           }
-          onPress={() => onPressSwap(balance ? SwapType.SELL : SwapType.BUY)}
+          onPress={() => onPressSwap(currentChainBalance ? SwapType.SELL : SwapType.BUY)}
         />
-        {balance && (
-          <SendButton
-            iconOnly
-            disabled={!balance}
-            iconStrokeWidth={1.5}
-            initialState={initialSendState}
-          />
+        {currentChainBalance && (
+          <SendButton iconOnly iconStrokeWidth={1.5} initialState={initialSendState} />
         )}
       </Flex>
 

@@ -36,7 +36,11 @@ const query = graphql`
     }
   }
 `
-export function usePortfolioBalances(address: Address, onlyKnownCurrencies?: boolean) {
+/** Returns all balances indexed by currencyId for a given address */
+export function usePortfolioBalances(
+  address: Address,
+  onlyKnownCurrencies?: boolean
+): Record<CurrencyId, PortfolioBalance> | undefined {
   const balancesData = useLazyLoadQuery<balancesQuery>(query, { ownerAddress: address })
   const balancesForAddress = balancesData?.portfolios?.[0]?.tokenBalances
   const tokensByChainId = useAllCurrencies()
@@ -81,6 +85,7 @@ export function usePortfolioBalances(address: Address, onlyKnownCurrencies?: boo
   }, [balancesForAddress, onlyKnownCurrencies, tokensByChainId])
 }
 
+/** Returns portfolio balances for a given address sorted by USD value. */
 export function useSortedPortfolioBalancesList(
   address: Address,
   onlyKnownCurrencies?: boolean
@@ -96,10 +101,7 @@ export function useSortedPortfolioBalancesList(
   )
 }
 
-/**
- * Retrieves balance for a single currency from the API cache.
- * Assumes the input currency is a known token.
- */
+/** Helper hook to retrieve balance for a single currency for the active account. */
 export function useSingleBalance(currency: NullUndefined<Currency>): PortfolioBalance | null {
   const address = useActiveAccountAddressWithThrow()
   const portfolioBalances = usePortfolioBalances(address)
@@ -110,4 +112,16 @@ export function useSingleBalance(currency: NullUndefined<Currency>): PortfolioBa
     const id = currencyId(currency)
     return portfolioBalances[id] ?? null
   }, [portfolioBalances, currency])
+}
+
+/** Helper hook to retrieve balances for a set of currencies for the active account. */
+export function useMultipleBalances(currencies: CurrencyId[]): PortfolioBalance[] | null {
+  const address = useActiveAccountAddressWithThrow()
+  const balances = usePortfolioBalances(address)
+
+  return useMemo(() => {
+    if (!currencies || !currencies.length || !balances) return null
+
+    return currencies.map((id: CurrencyId) => balances[id] ?? null).filter(Boolean)
+  }, [balances, currencies])
 }

@@ -3,45 +3,42 @@ import { useTranslation } from 'react-i18next'
 import { CurrencyLogo } from 'src/components/CurrencyLogo'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
-import { useBridgeInfo } from 'src/components/TokenDetails/hooks'
-import { useSingleBalance } from 'src/features/dataApi/balances'
 import { PortfolioBalance } from 'src/features/dataApi/types'
-import { useCurrency } from 'src/features/tokens/useCurrency'
-import { toSupportedChainId } from 'src/utils/chainId'
-import { buildCurrencyId, CurrencyId } from 'src/utils/currencyId'
 import { formatNumberBalance, formatPrice, formatUSDPrice } from 'src/utils/format'
-import { getKeys } from 'src/utils/objects'
 
-export function TokenBalances({ balance }: { balance: PortfolioBalance }) {
+/**
+ * Renders token balances for current chain (if any) and other chains (if any).
+ * If user has no balance at all, it renders nothing.
+ */
+export function TokenBalances({
+  currentChainBalance,
+  otherChainBalances,
+}: {
+  currentChainBalance: PortfolioBalance | null
+  otherChainBalances: PortfolioBalance[] | null
+}) {
   const { t } = useTranslation()
-  const { currency } = balance
-  const bridgeInfo = useBridgeInfo(currency)
+
+  if (!currentChainBalance && !otherChainBalances) return null
 
   return (
     <Flex bg="backgroundContainer" borderRadius="sm" gap="lg" mx="md" p="md">
-      <TokenL1Balance balance={balance} />
-      <Flex>
-        <Text color="textSecondary" variant="subheadSmall">
-          {t('Your balance on other chains')}
-        </Text>
-        {bridgeInfo &&
-          getKeys(bridgeInfo).map((chainId) => {
-            const bridgedTokenAddress = bridgeInfo[chainId]?.tokenAddress
-            const supportedChainId = toSupportedChainId(String(chainId))
-            if (!bridgedTokenAddress || !supportedChainId) return null
-            return (
-              <OtherChainBalance
-                key={chainId}
-                currencyId={buildCurrencyId(supportedChainId, bridgedTokenAddress)}
-              />
-            )
+      {currentChainBalance && <CurrentChainBalance balance={currentChainBalance} />}
+      {otherChainBalances && (
+        <Flex>
+          <Text color="textSecondary" variant="subheadSmall">
+            {t('Your balance on other chains')}
+          </Text>
+          {otherChainBalances.map((balance) => {
+            return <OtherChainBalance key={balance.currency.chainId} balance={balance} />
           })}
-      </Flex>
+        </Flex>
+      )}
     </Flex>
   )
 }
 
-export function TokenL1Balance({ balance }: { balance: PortfolioBalance }) {
+export function CurrentChainBalance({ balance }: { balance: PortfolioBalance }) {
   const { t } = useTranslation()
   const { currency } = balance
 
@@ -60,19 +57,14 @@ export function TokenL1Balance({ balance }: { balance: PortfolioBalance }) {
   )
 }
 
-function OtherChainBalance({ currencyId: _currencyId }: { currencyId: CurrencyId }) {
-  const currency = useCurrency(_currencyId)
-  const balance = useSingleBalance(currency)
-
-  if (!currency || !balance) return null
-
+function OtherChainBalance({ balance }: { balance: PortfolioBalance }) {
   return (
     <Flex row alignItems="center" justifyContent="space-between">
       <Flex row alignItems="center">
-        <CurrencyLogo currency={currency} />
+        <CurrencyLogo currency={balance.currency} />
         <Flex alignItems="center">
           <Text variant="body">
-            {formatNumberBalance(balance.quantity)} {currency.symbol}
+            {formatNumberBalance(balance.quantity)} {balance.currency.symbol}
           </Text>
         </Flex>
       </Flex>
