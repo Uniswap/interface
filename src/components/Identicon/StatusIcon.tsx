@@ -35,7 +35,6 @@ const SockContainer = styled.div`
   height: 16px;
   bottom: -5px;
   right: -5px;
-  vertical-align: middle;
 `
 
 const SockImg = styled.img`
