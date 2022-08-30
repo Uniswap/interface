@@ -1,6 +1,8 @@
-import { BarChart, ChevronDown, ChevronLeft, ChevronUp, Type } from 'react-feather';
+import { ArrowDownRight, ArrowUpRight, BarChart, ChevronDown, ChevronLeft, ChevronUp, Type } from 'react-feather';
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core';
+import { DarkCard, LightCard } from 'components/Card';
 import { Dots, LoadingSkeleton } from 'pages/Pool/styleds';
+import { ExternalLink, StyledInternalLink, TYPE } from 'theme';
 import React, { useCallback } from 'react';
 import { RowBetween, RowFixed } from 'components/Row';
 import TradingViewWidget, { Themes } from 'react-tradingview-widget';
@@ -14,10 +16,9 @@ import Badge from 'components/Badge';
 import { CardSection } from 'components/earn/styled';
 import { ChartSidebar } from 'components/ChartSidebar';
 import CurrencyInputPanel from 'components/CurrencyInputPanel';
-import { DarkCard } from 'components/Card';
+import CurrencyLogo from 'components/CurrencyLogo';
 import QuestionHelper from 'components/QuestionHelper';
 import Swal from 'sweetalert2';
-import { TYPE } from 'theme';
 import Toggle from 'components/Toggle';
 import { TopHolders } from './TopHolders';
 import { TopTokenHolders } from 'components/TopTokenHolders/TopTokenHolders';
@@ -33,6 +34,7 @@ import { useHasAccess } from 'pages/Account/AccountPage';
 import { useHistory } from 'react-router-dom';
 import { useParams } from 'react-router';
 import { useTokenBalance } from 'state/wallet/hooks';
+import { useUserChartHistoryManager } from 'state/user/hooks';
 import { useWeb3React } from '@web3-react/core';
 import useWebSocket from 'react-use-websocket'
 
@@ -61,6 +63,7 @@ const BackLink = styled(StyledDiv)`
 `
 
 export const SelectiveChart = () => {
+    const ref = React.useRef<any>()
     const { account, chainId } = useWeb3React()
     const history = useHistory()
     const params = useParams<{ tokenAddress?: string, tokenSymbol?: string, name?: string, decimals?: string }>()
@@ -73,7 +76,7 @@ export const SelectiveChart = () => {
     const tokenAddressSupplied = React.useMemo(() => params?.tokenAddress, [params])
     const [address, setAddress] = React.useState(tokenAddressSupplied ? tokenAddressSupplied : '')
 
-    const token = useToken(address?.toLowerCase())
+    const token = useToken(address?.toLowerCase().toLowerCase())
     const tokenBalance = useTokenBalance(account ?? undefined, token as any)
     //const tokenValue = useUSDCValueV2AndV3(tokenBalance ? tokenBalance : undefined)
     const pairs: Array<any> = usePairs((address?.toLowerCase()))
@@ -92,14 +95,13 @@ export const SelectiveChart = () => {
     }, {
         selectedCurrency: prebuiltCurrency
     })
-    const ref = React.useRef<any>()
     const [loadingNewData, setLoadingNewData] = React.useState(false)
     const bscTransactionData = useBscTokenTransactions(address?.toLowerCase(), 60000)
     const [tokenData, setTokenData] = React.useState<any>({})
 
     React.useEffect(() => {
         return history.listen((location) => {
-            const newAddress = location.pathname.split('/')[2]
+            const newAddress = location.pathname.split('/')[2]?.toLowerCase()
             const newSymbol = location.pathname.split('/')[3]
             const newName = location.pathname.split('/')[4]
             const newDecimals = location.pathname.split('/')[5]
@@ -121,6 +123,14 @@ export const SelectiveChart = () => {
                 }
 
                 setSelectedCurrency({ type: "update", payload: ref.current })
+                updateUserChartHistory([
+                    {
+                        time: new Date().getTime(),
+                        data: [],
+                        token: { ...ref.current, wrapped: undefined },
+                        summary: `Viewing ${ref.current.name} token chart`
+                    }
+                ])
                 if (tokenData?.id !== newAddress) {
                     setAddressCallback(newAddress)
                 }
@@ -131,6 +141,24 @@ export const SelectiveChart = () => {
             }
         })
     }, [history, mainnetCurrency])
+    const [userChartHistory,updateUserChartHistory] = useUserChartHistoryManager()
+
+    React.useEffect(() => {
+        if (Object.keys(params).every(key => !Boolean((params as any)[key]))) {
+            setSelectedCurrency({payload: undefined, type: 'update'})
+            ref.current = undefined
+        } else {
+            console.log(`Add to chart history`)
+            updateUserChartHistory([
+                {
+                    time: new Date().getTime(),
+                    data: [],
+                    token: { ...prebuilt, wrapped: undefined },
+                    summary: `Viewing ${prebuilt.name} token chart`
+                }
+            ])
+        }
+    }, [])
   
     const getTokenCallback = useCallback((addresss: string) => {
         if (chainId === 1 || !chainId)
@@ -191,7 +219,7 @@ export const SelectiveChart = () => {
         })
     }, [transactionData, bscTransactionData, chainId])
     
-    const usdcAndEthFormatted = useConvertTokenAmountToUsdString(token as Token, parseFloat(tokenBalance?.toFixed(2) as string), pairs?.[0], formattedTransactions)
+    const usdcAndEthFormatted = useConvertTokenAmountToUsdString(token as Token, parseFloat(tokenBalance?.toFixed(2) as string), pairs?.[0], transactionData?.data?.swaps?.map((swap:any) => ({...swap, timestamp: swap.transaction.timestamp})))
 
     const pair = React.useMemo(function(){
         console.log(`pairs`, pairs)
@@ -290,6 +318,7 @@ export const SelectiveChart = () => {
         return isMobile ? '100%' : collapsed ? '5.5% 95.5%' : '25% 75%'
     }, [selectedCurrency, isMobile, params.tokenAddress, collapsed])
 
+
     const hasSelectedData = Boolean (params?.tokenAddress && selectedCurrency)
     return (
         <>
@@ -313,10 +342,11 @@ export const SelectiveChart = () => {
             </div>}
             <div style={{marginLeft: isMobile ? 0 : 10, borderLeft: isMobile ? 'none' : Boolean(params?.tokenAddress && (selectedCurrency || !!prebuilt?.symbol)) ? '1px solid #444' : 'none'}}>
                 
-                <CardSection>
+                <CardSection style={{padding: isMobile ? 0 : '' }}>
                     <StyledDiv style={{paddingBottom:2, marginTop: 10, marginBottom: 5}}>
                        <span style={{paddingRight:isMobile?0:15,borderRight: `${!isMobile ? '1px solid #444' : 'none'}`}}>  
                             {!loadingNewData &&
+
                                 <>
                                     <BackLink style={{  cursor: 'pointer'}} onClick={backClick}>
                                         <span style={{display:'flex', alignItems:'center'}}><ChevronLeft /> Go Back</span>
@@ -327,8 +357,35 @@ export const SelectiveChart = () => {
 
                        <span style={{paddingRight:isMobile?0:15, borderRight: `${!isMobile ? '1px solid #444' : 'none'}`}}> KibaCharts </span>
                        {!hasSelectedData ? <Badge>Select a token to get started</Badge> : <span style={{ margin: 0}}>Select a token to view chart/transaction data</span>}
+                       
                        {PanelMemo}
-
+                       {Boolean(!hasSelectedData && userChartHistory.length) && (
+                           <div style={{width:'100%', padding: 10}}>
+                               <div style={{display:'flex', width:'100%', alignItems:'center', marginBottom:5}}>
+                               <TYPE.black>Recently Viewed Charts <ArrowDownRight /></TYPE.black>
+                               </div>
+                                <div style={{width:'100%', padding: 20, display:'grid', alignItems:'center', gridTemplateColumns:isMobile ?'100%': "auto auto auto auto", gap:20}}>
+                                    {_.orderBy(userChartHistory, a => a.time).reverse().map((item: any) => (
+                                        <LightCard key={item?.token?.address}>
+                                            <div style={{color:'#fff', display:'flex', justifyContent:'space-between', alignItems:'center'}}>
+                                            <div style={{display:'flex', flexFlow:'row wrap', gap: 5, alignItems:'center'}}>
+                                                <CurrencyLogo currency={item?.token} />
+                                                <TYPE.small>{item?.token?.name}
+                                                <br/>
+                                                <span>{item?.token?.symbol} </span>
+                                                </TYPE.small> 
+                                            </div>
+                                            <TYPE.link alignItems="center">
+                                                <div style={{cursor:'pointer',display:'flex', flexFlow:'column wrap', alignItems:'center'}}>
+                                                <StyledInternalLink color={'#fff'} to={`/selective-charts/${item?.token?.address}/${item?.token?.symbol}/${item?.token?.name}/${item?.token?.decimals}`}>View Chart <ArrowUpRight /></StyledInternalLink>
+                                                </div>
+                                            </TYPE.link>
+                                            </div>
+                                        </LightCard>
+                                    ))}
+                                </div>
+                           </div>
+                       )}
                     </StyledDiv>
 
                 {!accessDenied && (loadingNewData ? 
@@ -370,7 +427,7 @@ export const SelectiveChart = () => {
                                                 <tr style={{ paddingBottom: 5 }} key={`${item.token0Symbol}_${item.timestamp * 1000}_${item.hash}_${index}`}>
                                                     <td style={{ fontSize: 12 }}>{new Date(item.timestamp * 1000).toLocaleString()}</td>
                                                     {[item.token0Symbol, item.token1Symbol].includes(chainLabel) && <td style={{ color: item.token0Symbol !== params?.tokenSymbol ? '#971B1C' : '#779681' }}>{item.token0Symbol !== params?.tokenSymbol ? 'SELL' : 'BUY'}</td>}
-                                                    {![item.token0Symbol, item.token1Symbol].includes(chainLabel) && <td style={{ color: item.token1Symbol !== params?.tokenSymbol ? '#971B1C' : '#779681' }}>{item.token1Symbol === params?.tokenSymbol ? 'BUY' : 'SELL'}</td>}
+                                                    {![item.token0Symbol, item.token1Symbol].includes(chainLabel) && <td style={{ color: item.token1Symbol === params?.tokenSymbol ? '#971B1C' : '#779681' }}>{item.token1Symbol !== params?.tokenSymbol ? 'BUY' : 'SELL'}</td>}
                                                     {[item.token0Symbol, item.token1Symbol].includes(chainLabel) &&
                                                         <>
                                                             <td>{item.token0Symbol === chainLabel && <>{Number(+item.token0Amount?.toFixed(2))?.toLocaleString()} {item.token0Symbol}</>}

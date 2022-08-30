@@ -10,6 +10,7 @@ import {
   updateArbitrumAlphaAcknowledged,
   updateHideClosedPositions,
   updateUseAutoSlippage,
+  updateUserChartHistory,
   updateUserDarkMode,
   updateUserDeadline,
   updateUserDetectRenouncedOwnership,
@@ -73,6 +74,19 @@ export function useDarkModeManager(): [boolean, () => void] {
 export function useUserLocale(): SupportedLocale | null {
   return useAppSelector((state) => state.user.userLocale)
 }
+
+
+export function useUserChartHistoryManager(): [any[], (payload: any[]) => void] {
+  const dispatch = useAppDispatch()
+  const history = useAppSelector((state ) => state.user.chartHistory || [])
+
+  const updateHistory = useCallback((updatedHistory: any[]) => {
+    dispatch(updateUserChartHistory({ chartHistory: updatedHistory }))
+  }, [history, dispatch])
+
+  return [history, updateHistory]
+}
+
 
 export function useUserLocaleManager(): [SupportedLocale | null, (newLocale: SupportedLocale) => void] {
   const dispatch = useAppDispatch()

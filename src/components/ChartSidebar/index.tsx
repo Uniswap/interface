@@ -343,14 +343,15 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
                                                         <TYPE.black> {Number(holdings.tokenBalance?.toFixed(2)).toLocaleString()} Tokens&nbsp;
                                                             {Boolean(holdings?.tokenValue) && <span>(<FiatValue style={{ display: 'inline-block' }} fiatValue={holdings?.tokenValue ?? undefined} /> USD)</span>}</TYPE.black>
                                                     </MenuItem>
-                                                    {Boolean(holdings?.formattedUsdString?.length) && (
-                                                        <MenuItem>
+                                                    {Boolean(parseFloat(holdings?.tokenBalance?.toFixed(2)) > 0) && 
+                                                     Boolean(holdings?.formattedUsdString?.length) && 
+                                                     (<MenuItem>
                                                             <TYPE.subHeader>Current {holdings.token.symbol} Value</TYPE.subHeader>
                                                             <TYPE.black>
                                                                 <CurrentHoldingsComponent symbol={holdings.token.symbol} refetch={holdings?.refetchUsdValue} priceArray={holdings?.formattedUsdString} />
                                                             </TYPE.black>
-                                                        </MenuItem>
-                                                    )}
+                                                        </MenuItem>)
+                                                    }
                                                   
                                                 </SidebarContent>
                                             </Menu>

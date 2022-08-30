@@ -52,7 +52,7 @@ export default function CommonBases({
       </AutoRow>
       <AutoRow gap="4px">
         {bases.map((currency: Currency) => {
-          const isSelected = selectedCurrency?.equals(currency)
+          const isSelected = (selectedCurrency as any)?.address?.toLowerCase() === (currency as any)?.address?.toLowerCase()
           const currencyClick = () => !isSelected && onSelect(currency)
 
           return (

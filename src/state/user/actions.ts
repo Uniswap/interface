@@ -18,6 +18,8 @@ export const updateMatchesDarkMode = createAction<{ matchesDarkMode: boolean }>(
 export const updateArbitrumAlphaAcknowledged = createAction<{ arbitrumAlphaAcknowledged: boolean }>(
   'user/updateArbitrumAlphaAcknowledged'
 )
+export const updateUserChartHistory = createAction<{ chartHistory:any[] }>('user/addHistory')
+
 export const updateUserFrontRunProtection = createAction<{ useFrontrunProtection: boolean }>('user/updateUserFrontrunProtection')
 export const updateUserGasPreferences = createAction<{high?: boolean; low?:boolean; medium?:boolean; custom?: number;}>('user/updateCustomGasSettings')
 export const updateUserDarkMode = createAction<{ userDarkMode: boolean }>('user/updateUserDarkMode')

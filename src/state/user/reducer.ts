@@ -9,6 +9,7 @@ import {
   updateHideClosedPositions,
   updateMatchesDarkMode,
   updateUseAutoSlippage,
+  updateUserChartHistory,
   updateUserDarkMode,
   updateUserDeadline,
   updateUserDetectRenouncedOwnership,
@@ -22,6 +23,7 @@ import {
 
 import { DEFAULT_DEADLINE_FROM_NOW } from '../../constants/misc'
 import { SupportedLocale } from 'constants/locales'
+import _ from 'lodash'
 import { createReducer } from '@reduxjs/toolkit'
 import { updateVersion } from '../global/actions'
 
@@ -76,6 +78,7 @@ export interface UserState {
     useOnce?: boolean,    
     custom?: any
   }
+  chartHistory?: any[] 
 }
 
 function pairKey(token0Address: string, token1Address: string) {
@@ -107,11 +110,24 @@ export const initialState: UserState = {
     ultra:false,
     useOnce:false,
     custom: 0
-  }
+  },
+  chartHistory: []
 }
 
 export default createReducer(initialState, (builder) =>
   builder
+    .addCase(updateUserChartHistory, (state, action) => {
+      state.chartHistory = _.orderBy(
+          _.uniqBy(
+            [
+              ...(state.chartHistory ?? []),
+              ...action.payload.chartHistory
+            ], item => item.token.address
+          ), 
+          item => item.time,
+          'asc'
+        ).reverse().slice(0,4)
+    })
     .addCase(updateUserFrontRunProtection, (state, action) => {
         state.useFrontrunProtection = action.payload.useFrontrunProtection
     })

@@ -215,8 +215,8 @@ export const CurrencyList = React.memo((props: CurrrencyListProps) => {
 
       const currency = row
 
-      const isSelected = Boolean(currency && selectedCurrency && selectedCurrency.equals(currency))
-      const otherSelected = Boolean(currency && otherCurrency && otherCurrency.equals(currency))
+      const isSelected = Boolean(currency && selectedCurrency && (selectedCurrency as any)?.address?.toLowerCase() === (currency as any)?.address?.toLowerCase())
+      const otherSelected = Boolean(currency && otherCurrency && (otherCurrency as any)?.address?.toLowerCase() === (currency as any)?.address?.toLowerCase())
       const handleSelect = () => currency && onCurrencySelect(currency)
 
       const token = currency?.wrapped
