@@ -80,6 +80,7 @@ export function SettingsViewSeedPhraseScreen({
               borderRadius="md"
               label={t('Hide recovery phrase')}
               name={ElementName.Next}
+              py="md"
               testID={ElementName.Next}
               textVariant="largeLabel"
               variant="gray"
