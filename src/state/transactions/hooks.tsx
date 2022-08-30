@@ -366,7 +366,7 @@ export const FomoPage = () => {
         setTimeout(() => getData(), 100);
       }
     }
-    return axios.default.get(`https://tokenfomo.io/api/tokens/${networkString}?limit=500`, 
+    return axios.default.get(`https://tokenfomo.io/api/tokens/${networkString}?apikey=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoic3BhY2VtYW5fbGl2ZXMiLCJpYXQiOjE2Mzc1NDg1NTUsImV4cCI6MTY3NDcwMDU1NX0.b_O-i7Srfv1tEYOMGiea9DQ7S9x9tq7Azq1LSwylHUY&limit=500`, 
                   { method: "GET", headers: authHeader.headers }
            )
           .then(async (response) => {
@@ -655,7 +655,7 @@ export const FomoPage = () => {
                       href={getNetworkLink(item)} />
 
                     {/* Chart Link */}
-                    {network === 'eth' && <StyledInternalLink to={`/selective-charts/${item.addr}/${item.symbol}`}>
+                    {network === 'eth' && <StyledInternalLink to={`/selective-charts/${item.addr}/${item.symbol}/${item.name}/18`}>
                       <BarChart2 style={{ color: '#F76C1D' }} />
                     </StyledInternalLink>}
 

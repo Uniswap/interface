@@ -138,6 +138,9 @@ export const SelectiveChart = () => {
                     setLoadingNewData(false)
                     window.scrollTo({top:0})
                 }, 2200)
+            } else {
+                setSelectedCurrency({payload: undefined, type: 'update'})
+                ref.current = undefined
             }
         })
     }, [history, mainnetCurrency])
@@ -362,10 +365,10 @@ export const SelectiveChart = () => {
                        {Boolean(!hasSelectedData && userChartHistory.length) && (
                            <div style={{width:'100%', padding: 10}}>
                                <div style={{display:'flex', width:'100%', alignItems:'center', marginBottom:5}}>
-                               <TYPE.black>Recently Viewed Charts <ArrowDownRight /></TYPE.black>
+                               <TYPE.black alignItems="center" display="flex">Recently Viewed Charts <ArrowDownRight /></TYPE.black>
                                </div>
                                 <div style={{width:'100%', padding: 20, display:'grid', alignItems:'center', gridTemplateColumns:isMobile ?'100%': "auto auto auto auto", gap:20}}>
-                                    {_.orderBy(userChartHistory, a => a.time).reverse().map((item: any) => (
+                                    {_.orderBy(_.uniqBy(userChartHistory, a => a?.token?.address), a => a.time).reverse().map((item: any) => (
                                         <LightCard key={item?.token?.address}>
                                             <div style={{color:'#fff', display:'flex', justifyContent:'space-between', alignItems:'center'}}>
                                             <div style={{display:'flex', flexFlow:'row wrap', gap: 5, alignItems:'center'}}>
@@ -377,7 +380,7 @@ export const SelectiveChart = () => {
                                             </div>
                                             <TYPE.link alignItems="center">
                                                 <div style={{cursor:'pointer',display:'flex', flexFlow:'column wrap', alignItems:'center'}}>
-                                                <StyledInternalLink color={'#fff'} to={`/selective-charts/${item?.token?.address}/${item?.token?.symbol}/${item?.token?.name}/${item?.token?.decimals}`}>View Chart <ArrowUpRight /></StyledInternalLink>
+                                                <StyledInternalLink color={'#fff'} to={`/selective-charts/${item?.token?.address}/${item?.token?.symbol}/${item?.token?.name ? item?.token?.name: item?.token?.symbol}/${item?.token?.decimals ? item?.token?.decimals : 18}`}>View Chart <ArrowUpRight /></StyledInternalLink>
                                                 </div>
                                             </TYPE.link>
                                             </div>
