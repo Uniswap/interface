@@ -14,8 +14,6 @@ import useTopTrendingSoonTokensInCurrentNetwork from 'components/TopTrendingSoon
 import { TutorialIds } from 'components/Tutorial/TutorialSwap/constant'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import useTheme from 'hooks/useTheme'
-import { ApplicationModal } from 'state/application/actions'
-import { useModalOpen, useToggleModal } from 'state/application/hooks'
 import {
   useShowLiveChart,
   useShowTokenInfo,
@@ -66,12 +64,7 @@ const SettingsPanel: React.FC<Props> = ({ className, onBack, onClickLiquiditySou
   const isShowTokenInfo = useShowTokenInfo()
 
   const isShowLiveChart = useShowLiveChart()
-  const isShowMobileLiveChart = useModalOpen(ApplicationModal.MOBILE_LIVE_CHART)
-
-  const isShowMobileTradeRoutes = useModalOpen(ApplicationModal.MOBILE_TRADE_ROUTES)
   const toggleLiveChart = useToggleLiveChart()
-  const toggleMobileLiveChart = useToggleModal(ApplicationModal.MOBILE_LIVE_CHART)
-  const toggleMobileTradeRoutes = useToggleModal(ApplicationModal.MOBILE_TRADE_ROUTES)
   const toggleTradeRoutes = useToggleTradeRoutes()
   const toggleTokenInfo = useToggleTokenInfo()
 
@@ -79,30 +72,15 @@ const SettingsPanel: React.FC<Props> = ({ className, onBack, onClickLiquiditySou
   const toggleTopTrendingTokens = useToggleTopTrendingTokens()
 
   const handleToggleLiveChart = () => {
-    if (isMobile) {
-      if (!isShowMobileLiveChart) {
-        mixpanelHandler(MIXPANEL_TYPE.LIVE_CHART_ON_MOBILE)
-      }
-      toggleMobileLiveChart()
-      return
-    }
-
     mixpanelHandler(MIXPANEL_TYPE.LIVE_CHART_ON_OFF, { live_chart_on_or_off: !isShowLiveChart })
     toggleLiveChart()
   }
 
   const handleToggleTradeRoute = () => {
-    if (isMobile) {
-      if (!isShowMobileTradeRoutes) {
-        mixpanelHandler(MIXPANEL_TYPE.TRADING_ROUTE_ON_MOBILE)
-      }
-      toggleMobileTradeRoutes()
-    } else {
-      mixpanelHandler(MIXPANEL_TYPE.TRADING_ROUTE_ON_OFF, {
-        trading_route_on_or_off: !isShowTradeRoutes,
-      })
-      toggleTradeRoutes()
-    }
+    mixpanelHandler(MIXPANEL_TYPE.TRADING_ROUTE_ON_OFF, {
+      trading_route_on_or_off: !isShowTradeRoutes,
+    })
+    toggleTradeRoutes()
   }
 
   return (
@@ -165,7 +143,7 @@ const SettingsPanel: React.FC<Props> = ({ className, onBack, onClickLiquiditySou
                   <span className="settingLabel">Live Chart</span>
                   <QuestionHelper text={t`Turn on to display live chart`} />
                 </RowFixed>
-                <Toggle isActive={isMobile ? isShowMobileLiveChart : isShowLiveChart} toggle={handleToggleLiveChart} />
+                <Toggle isActive={isShowLiveChart} toggle={handleToggleLiveChart} />
               </RowBetween>
               <RowBetween>
                 <RowFixed>
@@ -174,10 +152,7 @@ const SettingsPanel: React.FC<Props> = ({ className, onBack, onClickLiquiditySou
                   </span>
                   <QuestionHelper text={t`Turn on to display trade route`} />
                 </RowFixed>
-                <Toggle
-                  isActive={isMobile ? isShowMobileTradeRoutes : isShowTradeRoutes}
-                  toggle={handleToggleTradeRoute}
-                />
+                <Toggle isActive={isShowTradeRoutes} toggle={handleToggleTradeRoute} />
               </RowBetween>
 
               <RowBetween>

@@ -84,18 +84,18 @@ function pairKey(token0Address: string, token1Address: string) {
 }
 
 export const defaultShowLiveCharts: { [chainId in ChainId]: boolean } = {
-  [ChainId.MAINNET]: isMobile ? false : true,
-  [ChainId.MATIC]: isMobile ? false : true,
-  [ChainId.BSCMAINNET]: isMobile ? false : true,
-  [ChainId.CRONOS]: isMobile ? false : true,
-  [ChainId.AVAXMAINNET]: isMobile ? false : true,
-  [ChainId.FANTOM]: isMobile ? false : true,
-  [ChainId.ARBITRUM]: isMobile ? false : true,
-  [ChainId.AURORA]: isMobile ? false : true,
+  [ChainId.MAINNET]: true,
+  [ChainId.MATIC]: true,
+  [ChainId.BSCMAINNET]: true,
+  [ChainId.CRONOS]: true,
+  [ChainId.AVAXMAINNET]: true,
+  [ChainId.FANTOM]: true,
+  [ChainId.ARBITRUM]: true,
+  [ChainId.AURORA]: true,
   [ChainId.BTTC]: false,
-  [ChainId.VELAS]: isMobile ? false : true,
-  [ChainId.OASIS]: isMobile ? false : true,
-  [ChainId.OPTIMISM]: isMobile ? false : true,
+  [ChainId.VELAS]: true,
+  [ChainId.OASIS]: true,
+  [ChainId.OPTIMISM]: true,
 
   [ChainId.ROPSTEN]: false,
   [ChainId.RINKEBY]: false,
@@ -118,9 +118,9 @@ export const initialState: UserState = {
   tokens: {},
   pairs: {},
   timestamp: currentTimestamp(),
-  showLiveCharts: defaultShowLiveCharts,
-  showProLiveChart: true,
-  showTradeRoutes: !isMobile,
+  showLiveCharts: { ...defaultShowLiveCharts },
+  showProLiveChart: !isMobile,
+  showTradeRoutes: true,
   showTokenInfo: true,
   showTopTrendingSoonTokens: true,
   favoriteTokensByChainId: {},
@@ -198,7 +198,7 @@ export default createReducer(initialState, builder =>
     })
     .addCase(toggleLiveChart, (state, { payload: { chainId } }) => {
       if (typeof state.showLiveCharts?.[chainId] !== 'boolean') {
-        state.showLiveCharts = defaultShowLiveCharts
+        state.showLiveCharts = { ...defaultShowLiveCharts }
       }
       state.showLiveCharts[chainId] = !state.showLiveCharts[chainId]
     })

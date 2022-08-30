@@ -15,7 +15,7 @@ import { MAX_SLIPPAGE_IN_BIPS } from 'constants/index'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import useTheme from 'hooks/useTheme'
 import { ApplicationModal } from 'state/application/actions'
-import { useModalOpen, useToggleModal, useToggleTransactionSettingsMenu } from 'state/application/hooks'
+import { useModalOpen, useToggleTransactionSettingsMenu } from 'state/application/hooks'
 import {
   useExpertModeManager,
   useShowLiveChart,
@@ -351,18 +351,14 @@ export default function TransactionSettings({
   const hideTooltip = useCallback(() => setIsShowTooltip(false), [setIsShowTooltip])
 
   const isShowLiveChart = useShowLiveChart()
-  const isShowMobileLiveChart = useModalOpen(ApplicationModal.MOBILE_LIVE_CHART)
 
   const isShowTradeRoutes = useShowTradeRoutes()
   const isShowTokenInfo = useShowTokenInfo()
 
-  const isShowMobileTradeRoutes = useModalOpen(ApplicationModal.MOBILE_TRADE_ROUTES)
   const toggleLiveChart = useToggleLiveChart()
-  const toggleMobileLiveChart = useToggleModal(ApplicationModal.MOBILE_LIVE_CHART)
 
   const toggleTradeRoutes = useToggleTradeRoutes()
   const toggleTokenInfo = useToggleTokenInfo()
-  const toggleMobileTradeRoutes = useToggleModal(ApplicationModal.MOBILE_TRADE_ROUTES)
 
   const isShowTrendingSoonTokens = useShowTopTrendingSoonTokens()
   const toggleTopTrendingTokens = useToggleTopTrendingTokens()
@@ -458,17 +454,10 @@ export default function TransactionSettings({
                       <QuestionHelper text={t`Turn on to display live chart`} />
                     </RowFixed>
                     <LegacyToggle
-                      isActive={isMobile ? isShowMobileLiveChart : isShowLiveChart}
+                      isActive={isShowLiveChart}
                       toggle={() => {
-                        if (isMobile) {
-                          if (!isShowMobileLiveChart) {
-                            mixpanelHandler(MIXPANEL_TYPE.LIVE_CHART_ON_MOBILE)
-                          }
-                          toggleMobileLiveChart()
-                        } else {
-                          mixpanelHandler(MIXPANEL_TYPE.LIVE_CHART_ON_OFF, { live_chart_on_or_off: !isShowLiveChart })
-                          toggleLiveChart()
-                        }
+                        mixpanelHandler(MIXPANEL_TYPE.LIVE_CHART_ON_OFF, { live_chart_on_or_off: !isShowLiveChart })
+                        toggleLiveChart()
                       }}
                       size={isMobile ? 'md' : 'sm'}
                     />
@@ -481,19 +470,12 @@ export default function TransactionSettings({
                       <QuestionHelper text={t`Turn on to display trade route`} />
                     </RowFixed>
                     <LegacyToggle
-                      isActive={isMobile ? isShowMobileTradeRoutes : isShowTradeRoutes}
+                      isActive={isShowTradeRoutes}
                       toggle={() => {
-                        if (isMobile) {
-                          if (!isShowMobileTradeRoutes) {
-                            mixpanelHandler(MIXPANEL_TYPE.TRADING_ROUTE_ON_MOBILE)
-                          }
-                          toggleMobileTradeRoutes()
-                        } else {
-                          mixpanelHandler(MIXPANEL_TYPE.TRADING_ROUTE_ON_OFF, {
-                            trading_route_on_or_off: !isShowTradeRoutes,
-                          })
-                          toggleTradeRoutes()
-                        }
+                        mixpanelHandler(MIXPANEL_TYPE.TRADING_ROUTE_ON_OFF, {
+                          trading_route_on_or_off: !isShowTradeRoutes,
+                        })
+                        toggleTradeRoutes()
                       }}
                       size={isMobile ? 'md' : 'sm'}
                     />

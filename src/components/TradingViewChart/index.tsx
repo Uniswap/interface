@@ -78,9 +78,14 @@ const LOCALSTORAGE_STATE_NAME = 'proChartSavedState'
 function openFullscreen(elem: any) {
   if (elem.requestFullscreen) {
     elem.requestFullscreen()
+  } else if (elem.webkitRequestFullScreen) {
+    /* Old webkit */
+    elem.webkitRequestFullScreen()
   } else if (elem.webkitRequestFullscreen) {
-    /* Safari */
+    /* New webkit */
     elem.webkitRequestFullscreen()
+  } else if (elem.mozRequestFullScreen) {
+    elem.mozRequestFullScreen()
   } else if (elem.msRequestFullscreen) {
     /* IE11 */
     elem.msRequestFullscreen()
@@ -91,15 +96,21 @@ interface FullScreenDocument extends Document {
   msExitFullscreen?: () => void
   mozCancelFullScreen?: () => void
   webkitExitFullscreen?: () => void
+  webkitCancelFullScreen?: () => void
 }
 
 function closeFullscreen() {
   const doc = document as FullScreenDocument
   if (doc.exitFullscreen) {
     doc.exitFullscreen()
+  } else if (doc.webkitCancelFullScreen) {
+    /* Old webkit */
+    doc.webkitCancelFullScreen()
   } else if (doc.webkitExitFullscreen) {
-    /* Safari */
+    /* New webkit */
     doc.webkitExitFullscreen()
+  } else if (doc.mozCancelFullScreen) {
+    doc.mozCancelFullScreen()
   } else if (doc.msExitFullscreen) {
     /* IE11 */
     doc.msExitFullscreen()

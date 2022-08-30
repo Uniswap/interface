@@ -1,6 +1,6 @@
 import { transparentize } from 'polished'
 import { useState } from 'react'
-import { Flex, Text } from 'rebass'
+import { Text } from 'rebass'
 import styled, { css } from 'styled-components'
 
 import { ButtonEmpty } from 'components/Button'
@@ -15,18 +15,19 @@ import { AutoColumn } from '../Column'
 export const PageWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 24px 0px 0px 0px;
+  align-items: stretch;
+  padding: 24px 36px;
   gap: 24px;
   width: 100%;
+  max-width: 1464px;
 
   ${({ theme }) => theme.mediaWidth.upToLarge`
-    padding: 24px 0px 24px 0px;
     height: unset;
 `}
   ${({ theme }) => theme.mediaWidth.upToSmall`
     gap: 16px;
     padding: 20px 16px;
-`}
+`};
 `
 
 export const TabContainer = styled.div`
@@ -79,23 +80,19 @@ export const Tab = styled(ButtonEmpty)<{ isActive: boolean }>`
 
 export const Container = styled.div`
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
-  flex-wrap: wrap;
   width: 100%;
-  gap: 28px;
-  flex: 1;
-
-  @media only screen and (min-width: 1000px) {
-    flex-direction: row;
-    align-items: flex-start;
+  max-width: 1392px;
+  gap: 48px;
+  ${({ theme }) => theme.mediaWidth.upToMedium`
     gap: 24px;
-  }
-
-  & > div:first-child {
-    width: 100%;
-  }
+    flex-direction: column;
+    align-items: center;
+  `}
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    gap: 16px;
+  `}
 `
 
 export const Wrapper = styled.div`
@@ -305,23 +302,42 @@ export const PriceImpactHigh = styled.div<{ veryHigh?: boolean }>`
   font-size: 12px;
 `
 
+export const SwapFormWrapper = styled.div<{ isShowTutorial: boolean }>`
+  width: 425px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  @media only screen and (min-width: 1100px) {
+    position: ${({ isShowTutorial }) => (isShowTutorial ? 'unset' : 'sticky')};
+    /**
+      When tutorial appear, there is no need sticky form. 
+      Besides, it is also easy for us control position of tutorial popup when scroll page. 
+    */
+    top: 16px;
+  }
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    width: 100%;
+  `}
+`
+
+export const InfoComponentsWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  width: calc(100% - 472px);
+
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    width: 100%;
+  `};
+`
+
 export const LiveChartWrapper = styled.div`
-  width: 600px;
+  width: 100%;
   height: 510px;
-  display: none;
   margin-bottom: 30px;
-  @media screen and (min-width: 1100px) {
-    display: block;
-  }
-  @media screen and (min-width: 1240px) {
-    width: 700px;
-  }
-  @media screen and (min-width: 1320px) {
-    width: 772px;
-  }
-  @media screen and (min-width: 1500px) {
-    width: 940px;
-  }
 `
 
 export const RoutesWrapper = styled(LiveChartWrapper)<{ isOpenChart: boolean }>`
@@ -354,16 +370,6 @@ export const MobileModalWrapper = styled((props: ModalProps) => <Modal {...props
     ${({ height }) => height && `height: ${height};`}
     min-height: 70vh;
   }
-`
-
-export const StyledFlex = styled(Flex)`
-  gap: 48px;
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    gap: 24px;
-  `}
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    gap: 16px;
-`}
 `
 
 export const StyledActionButtonSwapForm = styled.button<{ active?: boolean; hoverBg?: string }>`
