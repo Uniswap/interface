@@ -9,4 +9,9 @@ change `.env.example` to `.env` and fill your personal secret key in it.
 # export abi
 yarn hardhat export-abi
 # run test
-`yarn hardhat test`
+```shell
+# test all
+yarn hardhat test
+# single test
+yarn hardhat test --grep <case regex>
+```
