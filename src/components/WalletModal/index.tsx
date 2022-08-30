@@ -1,23 +1,13 @@
 import { Trans } from '@lingui/macro'
-import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { Connector } from '@web3-react/types'
 import { sendAnalyticsEvent, user } from 'components/AmplitudeAnalytics'
-import {
-  CUSTOM_USER_PROPERTIES,
-  EventName,
-  TOKENS_TO_TRACK,
-  WALLET_CONNECTION_RESULT,
-} from 'components/AmplitudeAnalytics/constants'
-import { formatToDecimal } from 'components/AmplitudeAnalytics/utils'
+import { CUSTOM_USER_PROPERTIES, EventName, WALLET_CONNECTION_RESULT } from 'components/AmplitudeAnalytics/constants'
 import { sendEvent } from 'components/analytics'
 import { AutoColumn } from 'components/Column'
 import { AutoRow } from 'components/Row'
 import { getConnection, getConnectionName, getIsCoinbaseWallet, getIsInjected, getIsMetaMask } from 'connection/utils'
 import { RedesignVariant, useRedesignFlag } from 'featureFlags/flags/redesign'
-import { useStablecoinValue } from 'hooks/useStablecoinPrice'
-import useCurrencyBalance, { useTokenBalance } from 'lib/hooks/useCurrencyBalance'
-import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { useCallback, useEffect, useState } from 'react'
 import { ArrowLeft } from 'react-feather'
 import { updateConnectionError } from 'state/connection/reducer'
@@ -148,32 +138,6 @@ const sendAnalyticsEventAndUserInfo = (
   user.postInsert(CUSTOM_USER_PROPERTIES.ALL_WALLET_ADDRESSES_CONNECTED, account)
 }
 
-function useLogToken(
-  tokenBalanceUsdValue: string | undefined,
-  tokenBalance: CurrencyAmount<Token | Currency> | undefined,
-  shouldLogTokenBalance: boolean,
-  setShouldLogTokenBalance: (shouldLog: boolean) => void,
-  tokenAmountProperty: string,
-  tokenUsdBalanceProperty: string
-) {
-  useEffect(() => {
-    if (shouldLogTokenBalance && tokenBalance && tokenBalanceUsdValue) {
-      const tokenBalanceUsd = tokenBalanceUsdValue ? parseFloat(tokenBalanceUsdValue) : 0
-      const tokenBalanceAmount = formatToDecimal(tokenBalance, tokenBalance.currency.decimals)
-      user.set(tokenAmountProperty, tokenBalanceAmount)
-      user.set(tokenUsdBalanceProperty, tokenBalanceUsd)
-      setShouldLogTokenBalance(false)
-    }
-  }, [
-    tokenBalanceUsdValue,
-    tokenBalance,
-    shouldLogTokenBalance,
-    setShouldLogTokenBalance,
-    tokenAmountProperty,
-    tokenUsdBalanceProperty,
-  ])
-}
-
 export default function WalletModal({
   pendingTransactions,
   confirmedTransactions,
@@ -191,9 +155,6 @@ export default function WalletModal({
   const redesignFlagEnabled = redesignFlag === RedesignVariant.Enabled
   const [walletView, setWalletView] = useState(WALLET_VIEWS.ACCOUNT)
   const [lastActiveWalletAddress, setLastActiveWalletAddress] = useState<string | undefined>(account)
-  const [shouldLogUsdcBalance, setShouldLogUsdcBalance] = useState(false)
-  const [shouldLogWethBalance, setShouldLogWethBalance] = useState(false)
-  const [shouldLogNativeBalance, setShouldLogNativeBalance] = useState(false)
 
   const [pendingConnector, setPendingConnector] = useState<Connector | undefined>()
   const pendingError = useAppSelector((state) =>
@@ -202,15 +163,6 @@ export default function WalletModal({
 
   const walletModalOpen = useModalIsOpen(ApplicationModal.WALLET)
   const toggleWalletModal = useToggleWalletModal()
-
-  const native = useNativeCurrency()
-  const usdcBalance = useTokenBalance(account, TOKENS_TO_TRACK.USDC)
-  const wethBalance = useTokenBalance(account, TOKENS_TO_TRACK.WETH)
-  const nativeCurrencyBalance = useCurrencyBalance(account, native)
-
-  const usdcBalanceUsdValue = useStablecoinValue(usdcBalance)?.toFixed(2)
-  const wethBalanceUsdValue = useStablecoinValue(wethBalance)?.toFixed(2)
-  const nativeCurrencyBalanceUsdValue = useStablecoinValue(nativeCurrencyBalance)?.toFixed(2)
 
   const openOptions = useCallback(() => {
     setWalletView(WALLET_VIEWS.OPTIONS)
@@ -236,39 +188,10 @@ export default function WalletModal({
       const isReconnect =
         connectedWallets.filter((wallet) => wallet.account === account && wallet.walletType === walletType).length > 0
       sendAnalyticsEventAndUserInfo(account, walletType, chainId, isReconnect)
-      setShouldLogNativeBalance(true)
-      setShouldLogUsdcBalance(true)
-      setShouldLogWethBalance(true)
       if (!isReconnect) addWalletToConnectedWallets({ account, walletType })
     }
     setLastActiveWalletAddress(account)
   }, [connectedWallets, addWalletToConnectedWallets, lastActiveWalletAddress, account, connector, chainId])
-
-  // Send wallet balances info once it becomes available.
-  useLogToken(
-    nativeCurrencyBalanceUsdValue,
-    nativeCurrencyBalance,
-    shouldLogNativeBalance,
-    setShouldLogNativeBalance,
-    CUSTOM_USER_PROPERTIES.WALLET_NATIVE_CURRENCY_AMOUNT,
-    CUSTOM_USER_PROPERTIES.WALLET_NATIVE_CURRENCY_BALANCE_USD
-  )
-  useLogToken(
-    usdcBalanceUsdValue,
-    usdcBalance,
-    shouldLogUsdcBalance,
-    setShouldLogUsdcBalance,
-    CUSTOM_USER_PROPERTIES.WALLET_USDC_AMOUNT,
-    CUSTOM_USER_PROPERTIES.WALLET_USDC_BALANCE_USD
-  )
-  useLogToken(
-    wethBalanceUsdValue,
-    wethBalance,
-    shouldLogWethBalance,
-    setShouldLogWethBalance,
-    CUSTOM_USER_PROPERTIES.WALLET_WETH_AMOUNT,
-    CUSTOM_USER_PROPERTIES.WALLET_WETH_BALANCE_USD
-  )
 
   const tryActivation = useCallback(
     async (connector: Connector) => {

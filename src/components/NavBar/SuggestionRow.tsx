@@ -78,14 +78,14 @@ export const CollectionRow = ({ collection, isHovered, setHoveredIndex, toggleOp
           <Box className={styles.secondaryText}>{putCommas(collection.stats.total_supply)} items</Box>
         </Column>
       </Row>
-      {collection.floorPrice && (
+      {collection.floorPrice ? (
         <Column className={styles.suggestionSecondaryContainer}>
           <Row gap="4">
             <Box className={styles.primaryText}>{ethNumberStandardFormatter(collection.floorPrice)} ETH</Box>
           </Row>
           <Box className={styles.secondaryText}>Floor</Box>
         </Column>
-      )}
+      ) : null}
     </Link>
   )
 }
