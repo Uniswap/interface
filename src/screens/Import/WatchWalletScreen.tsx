@@ -14,6 +14,7 @@ import { importAccountActions } from 'src/features/import/importAccountSaga'
 import { ImportAccountType } from 'src/features/import/types'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { ElementName } from 'src/features/telemetry/constants'
+import { useAccounts } from 'src/features/wallet/hooks'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { isValidAddress } from 'src/utils/addresses'
 import { normalizeTextInput } from 'src/utils/string'
@@ -26,6 +27,8 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props) {
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
   const theme = useAppTheme()
+  const accounts = useAccounts()
+  const importedAddresses = Object.keys(accounts)
 
   useEffect(() => {
     const shouldRenderBackButton = navigation.getState().index === 0
@@ -46,8 +49,17 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props) {
   const isAddress = isValidAddress(normalizedValue)
 
   // Form validation.
-  const isValid = isAddress || name
-  const errorText = !isValid ? t('Address does not exist') : undefined
+  const walletExists =
+    (resolvedAddress && importedAddresses.includes(resolvedAddress)) ||
+    importedAddresses.includes(normalizedValue)
+  const isValid = (isAddress || name) && !walletExists
+
+  let errorText
+  if (!isValid && walletExists) {
+    errorText = t('This address is already imported')
+  } else if (!isValid) {
+    errorText = t('Address does not exist')
+  }
 
   const onSubmit = useCallback(() => {
     if (isValid && value) {

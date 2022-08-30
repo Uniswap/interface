@@ -274,6 +274,7 @@
   "recovery phrase": "recovery phrase",
   "There are several wallet addresses associated with your recovery phrase.": "There are several wallet addresses associated with your recovery phrase.",
   "Select addresses to import": "Select addresses to import",
+  "This address is already imported": "This address is already imported",
   "Address does not exist": "Address does not exist",
   "Enter an Ethereum wallet address or ENS name.": "Enter an Ethereum wallet address or ENS name.",
   "Enter a wallet address": "Enter a wallet address",
