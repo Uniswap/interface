@@ -48,6 +48,7 @@ module.exports = {
     abiExporter: {
         path: './build',
         runOnCompile: true,
+        except: ['@openzeppelin/contracts'],
         clear: true,
         flat: true,
         spacing: 2
