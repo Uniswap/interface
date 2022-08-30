@@ -28,56 +28,6 @@ export default function Widget({ defaultToken }: WidgetProps) {
   const { settings } = useSyncWidgetSettings()
   const { transactions } = useSyncWidgetTransactions()
 
-  // todo: jordan - integrate widget tx states via useSyncWidgetTransactions
-  // const { loading } = useTokenDetailPageQuery(tokenAddress)
-  // const tokenSymbol = useToken(tokenAddress)?.symbol
-
-  // const [maxSlippage, setMaxSlippage] = useState<Percent | null>(null)
-  // const addTransaction = useTransactionAdder()
-  // const darkMode = useIsDarkMode()
-  // const widgetTheme = useMemo(() => (darkMode ? DARK_THEME : LIGHT_THEME), [darkMode])
-  // const locale = useActiveLocale()
-  // const onTxSubmit = useCallback(
-  //   (_txHash: string, data: any) => {
-  //     if (!data?.trade || !data.tradeType || !maxSlippage) {
-  //       return
-  //     }
-  //     const { trade, tradeType } = data
-  //     const baseTxInfo: BaseSwapTransactionInfo = {
-  //       type: TransactionType.SWAP,
-  //       tradeType,
-  //       inputCurrencyId: currencyId(trade.inputAmount.currency),
-  //       outputCurrencyId: currencyId(trade.outputAmount.currency),
-  //     }
-  //     if (tradeType === TradeType.EXACT_OUTPUT) {
-  //       addTransaction(data.txResponse, {
-  //         ...baseTxInfo,
-  //         maximumInputCurrencyAmountRaw: trade.maximumAmountIn(maxSlippage).quotient.toString(),
-  //         outputCurrencyAmountRaw: trade.outputAmount.quotient.toString(),
-  //         expectedInputCurrencyAmountRaw: trade.inputAmount.quotient.toString(),
-  //       } as ExactOutputSwapTransactionInfo)
-  //     } else {
-  //       addTransaction(data.txResponse, {
-  //         ...baseTxInfo,
-  //         inputCurrencyAmountRaw: trade.inputAmount.quotient.toString(),
-  //         expectedOutputCurrencyAmountRaw: trade.outputAmount.quotient.toString(),
-  //         minimumOutputCurrencyAmountRaw: trade.minimumAmountOut(maxSlippage).quotient.toString(),
-  //       } as ExactInputSwapTransactionInfo)
-  //     }
-  //   },
-  //   [addTransaction, maxSlippage]
-  // )
-
-  // let tokenDetail
-  // if (!tokenAddress) {
-  //   // TODO: handle no address / invalid address cases
-  //   tokenDetail = 'invalid token'
-  // } else if (loading) {
-  //   tokenDetail = <LoadingTokenDetail />
-  // } else {
-  //   tokenDetail = <TokenDetail address={tokenAddress} />
-  // }
-
   return (
     <>
       <SwapWidget
