@@ -1,22 +1,11 @@
-"""
-This directive allows results to be deferred during execution
-"""
+"""This directive allows results to be deferred during execution"""
 directive @defer on FIELD
 
-"""
-Directs the schema to enforce authorization on a field
-"""
+"""Directs the schema to enforce authorization on a field"""
 directive @aws_auth(
-  """
-  List of cognito user pool groups which have access on this field
-  """
+  """List of cognito user pool groups which have access on this field"""
   cognito_groups: [String]
 ) on FIELD_DEFINITION
-
-"""
-Tells the service this field/object has access authorized by an OIDC token.
-"""
-directive @aws_oidc on OBJECT | FIELD_DEFINITION
 
 """
 Tells the service which subscriptions will be published to when this mutation is
@@ -30,39 +19,14 @@ directive @aws_publish(
 ) on FIELD_DEFINITION
 
 """
-Tells the service this field/object has access authorized by a Cognito User Pools token.
-"""
-directive @aws_cognito_user_pools(
-  """
-  List of cognito user pool groups which have access on this field
-  """
-  cognito_groups: [String]
-) on OBJECT | FIELD_DEFINITION
-
-"""
-Tells the service this field/object has access authorized by a Lambda Authorizer.
-"""
-directive @aws_lambda on OBJECT | FIELD_DEFINITION
-
-"""
 Tells the service this field/object has access authorized by an API key.
 """
 directive @aws_api_key on OBJECT | FIELD_DEFINITION
 
 """
-Tells the service this field/object has access authorized by sigv4 signing.
+Tells the service this field/object has access authorized by an OIDC token.
 """
-directive @aws_iam on OBJECT | FIELD_DEFINITION
-
-"""
-Tells the service which mutation triggers this subscription.
-"""
-directive @aws_subscribe(
-  """
-  List of mutations which will trigger this subscription when they are called.
-  """
-  mutations: [String]
-) on FIELD_DEFINITION
+directive @aws_oidc on OBJECT | FIELD_DEFINITION
 
 """Tells the service which mutation triggers this subscription."""
 directive @aws_subscribe(
@@ -73,9 +37,22 @@ directive @aws_subscribe(
 ) on FIELD_DEFINITION
 
 """
-Tells the service this field/object has access authorized by an API key.
+Tells the service this field/object has access authorized by a Lambda Authorizer.
 """
-directive @aws_api_key on OBJECT | FIELD_DEFINITION
+directive @aws_lambda on OBJECT | FIELD_DEFINITION
+
+"""
+Tells the service this field/object has access authorized by a Cognito User Pools token.
+"""
+directive @aws_cognito_user_pools(
+  """List of cognito user pool groups which have access on this field"""
+  cognito_groups: [String]
+) on OBJECT | FIELD_DEFINITION
+
+"""
+Tells the service this field/object has access authorized by sigv4 signing.
+"""
+directive @aws_iam on OBJECT | FIELD_DEFINITION
 
 enum ActivityType {
   APPROVE
@@ -168,9 +145,7 @@ type NftApproval {
   id: ID!
   nftStandard: NftStandard!
 
-  """
-    can be erc20 or erc1155
-  """
+  """  can be erc20 or erc1155"""
   asset: NftAsset!
   approvedAddress: String!
 }
@@ -179,9 +154,7 @@ type NftApproveForAll {
   id: ID!
   nftStandard: NftStandard!
 
-  """
-    can be erc721 or erc1155
-  """
+  """  can be erc721 or erc1155"""
   asset: NftAsset!
   operatorAddress: String!
   approved: Boolean!
@@ -199,8 +172,8 @@ type NftAsset {
   nftContract: NftContract
 
   """
-   TODO: may need to be array to support erc1155 cases. not needed at the moment so will revisit.
-  ownerAddress: String
+    TODO: may need to be array to support erc1155 cases. not needed at the moment so will revisit.
+   ownerAddress: String
   """
   tokenId: String
   traits: [NftAssetTrait]
@@ -227,8 +200,8 @@ type NftCollection {
   collectionId: String
 
   """
-   TODO: support querying for collection assets here
-  assets(page: Int, pageSize: Int, orderBy: NftAssetSortableField): [NftAsset]
+    TODO: support querying for collection assets here
+   assets(page: Int, pageSize: Int, orderBy: NftAssetSortableField): [NftAsset]
   """
   bannerImageUrl: String
   description: String
@@ -242,8 +215,8 @@ type NftCollection {
   openseaUrl: String
 
   """
-   TODO: support collection-level traits.
-  traits: [NftCollectionTraits] (not needed yet)
+    TODO: support collection-level traits.
+   traits: [NftCollectionTraits] (not needed yet)
   """
   twitterName: String
   isVerified: Boolean
@@ -312,13 +285,9 @@ type Portfolio {
 type Query {
   tokens(contracts: [ContractInput!]!): [Token]
   tokenProjects(contracts: [ContractInput!]!): [TokenProject]
-  topTokenProjects(
-    orderBy: MarketSortableField
-    page: Int
-    pageSize: Int
-    currency: Currency
-  ): [TokenProject]
+  topTokenProjects(orderBy: MarketSortableField!, page: Int!, pageSize: Int!, currency: Currency): [TokenProject]
   searchTokens(searchQuery: String!): [Token]
+  searchTokenProjects(searchQuery: String!): [TokenProject]
   assetActivities(address: String!, page: Int, pageSize: Int): [AssetActivity]
   portfolio(ownerAddress: String!): Portfolio
   portfolios(ownerAddresses: [String!]!): [Portfolio]
@@ -346,9 +315,7 @@ type TokenApproval {
   id: ID!
   tokenStandard: TokenStandard!
 
-  """
-    can be erc20 or erc1155
-  """
+  """  can be erc20 or erc1155"""
   asset: Token!
   approvedAddress: String!
   quantity: String!
@@ -429,3 +396,4 @@ enum TransactionStatus {
   CONFIRMED
   PENDING
 }
+
