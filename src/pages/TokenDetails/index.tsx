@@ -20,7 +20,7 @@ import { fillTokenPriceCache } from 'graphql/data/TokenPrice'
 import { useToken } from 'hooks/Tokens'
 import { useNetworkTokenBalances } from 'hooks/useNetworkTokenBalances'
 import { useAtom } from 'jotai'
-import { useEffect, useMemo } from 'react'
+import { useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
@@ -99,10 +99,12 @@ export default function TokenDetails() {
   }, [connectedChainId])
 
   const [timePeriod] = useAtom(filterTimeAtom)
-  // Preload token price data
-  useEffect(() => {
+
+  // Preload token price data on first render
+  useMemo(() => {
     if (token?.address) fillTokenPriceCache(token.address, 'ETHEREUM', timePeriod)
-  }, [token, timePeriod])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const balancesByNetwork = networkData
     ? chainsToList.map((chainId) => {

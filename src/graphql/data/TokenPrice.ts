@@ -133,7 +133,8 @@ export function useTokenPriceQuery(address: string, chain: Chain, timePeriod: Ti
 export function fillTokenPriceCache(address: string, chain: Chain, timePeriod: TimePeriod) {
   // Load current time period by itself for faster availability
   if (!TokenAPICache.checkPriceHistory(address, timePeriod)) {
-    fetchQuery<TokenPriceSingleQuery>(environment, allQuery, {
+    console.log('HERE')
+    fetchQuery<TokenPriceSingleQuery>(environment, query, {
       contract: {
         address,
         chain,
@@ -147,29 +148,27 @@ export function fillTokenPriceCache(address: string, chain: Chain, timePeriod: T
     })
   }
 
-  // Load all time periods in the background
-  if (!TokenAPICache.checkPriceHistory(address, TimePeriod.HOUR)) {
-    fetchQuery<TokenPriceAllQuery>(environment, allQuery, {
-      contract: {
-        address,
-        chain,
-      },
-    }).subscribe({
-      next: (data) => {
-        const prices1H = data?.tokenProjects?.[0]?.markets?.[0]?.priceHistory1H
-        const prices1D = data?.tokenProjects?.[0]?.markets?.[0]?.priceHistory1D
-        const prices1W = data?.tokenProjects?.[0]?.markets?.[0]?.priceHistory1W
-        const prices1M = data?.tokenProjects?.[0]?.markets?.[0]?.priceHistory1M
-        const prices1Y = data?.tokenProjects?.[0]?.markets?.[0]?.priceHistory1Y
-        const pricesMax = data?.tokenProjects?.[0]?.markets?.[0]?.priceHistoryMAX
+  // Load all time periods in the background, if hour data is expired rest will be too
+  fetchQuery<TokenPriceAllQuery>(environment, allQuery, {
+    contract: {
+      address,
+      chain,
+    },
+  }).subscribe({
+    next: (data) => {
+      const prices1H = data?.tokenProjects?.[0]?.markets?.[0]?.priceHistory1H
+      const prices1D = data?.tokenProjects?.[0]?.markets?.[0]?.priceHistory1D
+      const prices1W = data?.tokenProjects?.[0]?.markets?.[0]?.priceHistory1W
+      const prices1M = data?.tokenProjects?.[0]?.markets?.[0]?.priceHistory1M
+      const prices1Y = data?.tokenProjects?.[0]?.markets?.[0]?.priceHistory1Y
+      const pricesMax = data?.tokenProjects?.[0]?.markets?.[0]?.priceHistoryMAX
 
-        prices1H && TokenAPICache.setPriceHistory(prices1H, address, TimePeriod.HOUR)
-        prices1D && TokenAPICache.setPriceHistory(prices1D, address, TimePeriod.DAY)
-        prices1W && TokenAPICache.setPriceHistory(prices1W, address, TimePeriod.WEEK)
-        prices1M && TokenAPICache.setPriceHistory(prices1M, address, TimePeriod.MONTH)
-        prices1Y && TokenAPICache.setPriceHistory(prices1Y, address, TimePeriod.YEAR)
-        pricesMax && TokenAPICache.setPriceHistory(pricesMax, address, TimePeriod.ALL)
-      },
-    })
-  }
+      prices1H && TokenAPICache.setPriceHistory(prices1H, address, TimePeriod.HOUR)
+      prices1D && TokenAPICache.setPriceHistory(prices1D, address, TimePeriod.DAY)
+      prices1W && TokenAPICache.setPriceHistory(prices1W, address, TimePeriod.WEEK)
+      prices1M && TokenAPICache.setPriceHistory(prices1M, address, TimePeriod.MONTH)
+      prices1Y && TokenAPICache.setPriceHistory(prices1Y, address, TimePeriod.YEAR)
+      pricesMax && TokenAPICache.setPriceHistory(pricesMax, address, TimePeriod.ALL)
+    },
+  })
 }

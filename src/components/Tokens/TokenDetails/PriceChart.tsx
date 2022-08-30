@@ -5,7 +5,7 @@ import { EventType } from '@visx/event/lib/types'
 import { GlyphCircle } from '@visx/glyph'
 import { Line } from '@visx/shape'
 import { filterTimeAtom } from 'components/Tokens/state'
-import { bisect, curveCardinal, NumberValue, scaleLinear } from 'd3'
+import { bisect, curveCardinalOpen, NumberValue, scaleLinear } from 'd3'
 import { useTokenPriceQuery } from 'graphql/data/TokenPrice'
 import { TimePeriod } from 'graphql/data/TopTokenQuery'
 import { useActiveLocale } from 'hooks/useActiveLocale'
@@ -26,7 +26,6 @@ import {
 
 import LineChart from '../../Charts/LineChart'
 import { DISPLAYS, ORDERED_TIMES } from '../TokenTable/TimeSelector'
-import { DeltaContainer, TokenPrice } from './TokenDetailContainers'
 
 // TODO: This should be combined with the logic in TimeSelector.
 
@@ -72,6 +71,16 @@ export function formatDelta(delta: number) {
 
 export const ChartHeader = styled.div`
   position: absolute;
+`
+export const TokenPrice = styled.span`
+  font-size: 36px;
+  line-height: 44px;
+`
+export const DeltaContainer = styled.div`
+  height: 16px;
+  display: flex;
+  align-items: center;
+  margin-top: 4px;
 `
 const ArrowCell = styled.div`
   padding-left: 2px;
@@ -242,7 +251,7 @@ export function PriceChart({ width, height, token }: PriceChartProps) {
         getX={(p: PricePoint) => timeScale(p.timestamp)}
         getY={(p: PricePoint) => rdScale(p.value)}
         marginTop={margin.top}
-        curve={curveCardinal.tension(curveTension)}
+        curve={curveCardinalOpen.tension(curveTension)}
         strokeWidth={2}
         width={graphWidth}
         height={graphHeight}
