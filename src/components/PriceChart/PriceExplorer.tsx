@@ -82,7 +82,7 @@ export const PriceExplorer = ({ graphs }: GraphProps) => {
         isPanning={isPanning}
         translation={translation}
       />
-      <Box my="sm">
+      <Box my="xs">
         <Svg height={HEIGHT} width={WIDTH}>
           <AnimatedPath
             animatedProps={graphTransitionAnimatedProps}
