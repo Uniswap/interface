@@ -3,7 +3,7 @@ import { buttonTextSmall, subhead, subheadSmall } from 'nft/css/common.css'
 
 import { breakpoints, sprinkles, vars } from '../../nft/css/sprinkles.css'
 
-const DESKTOP_NAVBAR_WIDTH = '360px'
+const DESKTOP_NAVBAR_WIDTH = 360
 
 const baseSearchStyle = style([
   sprinkles({
@@ -15,8 +15,26 @@ const baseSearchStyle = style([
   }),
   {
     '@media': {
-      [`screen and (min-width: ${breakpoints.md}px)`]: {
-        width: DESKTOP_NAVBAR_WIDTH,
+      [`screen and (min-width: ${breakpoints.sm}px)`]: {
+        width: `${DESKTOP_NAVBAR_WIDTH}px`,
+      },
+    },
+  },
+])
+
+export const searchBarContainer = style([
+  sprinkles({
+    right: '0',
+    top: '0',
+    zIndex: '3',
+  }),
+  {
+    '@media': {
+      [`screen and (min-width: ${breakpoints.sm}px)`]: {
+        top: '-24px',
+      },
+      [`screen and (min-width: ${breakpoints.lg}px)`]: {
+        right: `-${DESKTOP_NAVBAR_WIDTH / 2}px`,
       },
     },
   },
@@ -48,9 +66,6 @@ export const searchBarInput = style([
 export const searchBarDropdown = style([
   baseSearchStyle,
   sprinkles({
-    position: 'absolute',
-    left: '0',
-    top: '48',
     borderBottomLeftRadius: '12',
     borderBottomRightRadius: '12',
     background: 'lightGray',

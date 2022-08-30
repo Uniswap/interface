@@ -1,5 +1,4 @@
-import { createGlobalTheme } from '@vanilla-extract/css'
-import { createGlobalThemeContract } from '@vanilla-extract/css'
+import { createGlobalTheme, createGlobalThemeContract } from '@vanilla-extract/css'
 import { createSprinkles, defineProperties } from '@vanilla-extract/sprinkles'
 
 const themeContractValues = {
@@ -231,7 +230,7 @@ const flexAlignment = [
 
 const overflow = ['hidden', 'inherit', 'scroll', 'visible', 'auto'] as const
 
-const borderWidth = ['1px', '1.5px', '2px', '4px']
+const borderWidth = ['0px', '1px', '1.5px', '2px', '4px']
 
 const borderStyle = ['none', 'solid'] as const
 
