@@ -1,0 +1,17 @@
+version: 0.0
+os: linux
+
+files:
+  - source: /
+    destination: /usr/share/nginx/html/tex
+    overwrite: yes
+permissions:
+  - object: /usr/share/nginx/html/tex
+    owner: root
+    group: root
+    mode: 755
+hooks:
+  AfterInstall:
+    - location: script/deploy.sh
+      timeout: 60
+      runas: root
