@@ -12,7 +12,8 @@ import {
   MASTERCHEFV2_ADDRESSBOOK,
   MERKLE_DISTRIBUTOR_ADDRESS,
   SUSHI_ADDRESS,
-  UNI
+  UNI,
+  MINICHEF_ADDRESS
 } from '../constants'
 import {
   ARGENT_WALLET_DETECTOR_ABI,
@@ -24,6 +25,7 @@ import { ERC20_BYTES32_ABI } from '../constants/abis/erc20'
 import ERC20_ABI from '../constants/abis/erc20.json'
 import MASTERCHEF_ABI from '../constants/abis/masterchef.json'
 import MASTERCHEF_V2_ABI from '../constants/abis/masterchef-v2.json'
+import MINICHEF_ABI from '../constants/abis/minichef-v2.json'
 import SUSHI_ABI from '../constants/abis/sushi.json'
 import { MIGRATOR_ABI, MIGRATOR_ADDRESS } from '../constants/abis/migrator'
 import UNISOCKS_ABI from '../constants/abis/unisocks.json'
@@ -144,7 +146,7 @@ export function useMasterChefV2Contract(withSignerIfPossible?: boolean): Contrac
   return useContract(chainId ? MASTERCHEFV2_ADDRESSBOOK[chainId] : undefined, MASTERCHEF_V2_ABI, withSignerIfPossible)
 }
 
-// export function useMiniChefContract(withSignerIfPossible?: boolean): Contract | null {
-//   const { chainId } = useActiveWeb3React()
-//   return useContract(chainId ? MINICHEF_ADDRESS[chainId] : undefined, MINICHEF_ABI, withSignerIfPossible)
-// }
+export function useMiniChefContract(withSignerIfPossible?: boolean): Contract | null {
+  const { chainId } = useActiveWeb3React()
+  return useContract(chainId ? MINICHEF_ADDRESS[chainId] : undefined, MINICHEF_ABI, withSignerIfPossible)
+}

@@ -161,7 +161,7 @@ function toCallState(
 export function useSingleContractMultipleData(
   contract: Contract | null | undefined,
   methodName: string,
-  callInputs: OptionalMethodInputs[],
+  callInputs?: OptionalMethodInputs[],
   options?: ListenerOptions
 ): CallState[] {
   const fragment = useMemo(() => contract?.interface?.getFunction(methodName), [contract, methodName])
