@@ -1,8 +1,8 @@
 import React from 'react'
 import { Image } from 'react-native'
-import { UNISWAP_LOGO } from 'src/assets'
+import { UNISWAP_SPLASH_LOGO } from 'src/assets'
 import { Button } from 'src/components/buttons/Button'
-import { Flex } from 'src/components/layout'
+import { Box } from 'src/components/layout/Box'
 import { Modal } from 'src/components/modals/Modal'
 import { useLockScreenContext } from 'src/features/authentication/lockScreenContext'
 import { useBiometricPrompt } from 'src/features/biometrics/hooks'
@@ -24,17 +24,17 @@ export function LockScreenModal() {
       transparent={false}
       visible={isLockScreenVisible}>
       <Button onPress={trigger}>
-        <Flex
-          centered
+        <Box
           alignItems="center"
           backgroundColor="backgroundBackdrop"
           pointerEvents="none"
           style={{
             width: dimensions.fullWidth,
             height: dimensions.fullHeight,
+            paddingTop: dimensions.fullHeight / 7, // just a placeholder, the faceid thing blocks the logo in the middle
           }}>
-          <Image source={UNISWAP_LOGO} />
-        </Flex>
+          <Image source={UNISWAP_SPLASH_LOGO} />
+        </Box>
       </Button>
     </Modal>
   )
