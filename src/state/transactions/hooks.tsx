@@ -33,18 +33,18 @@ import { useKiba } from 'pages/Vote/VotePage'
 import { useWeb3React } from '@web3-react/core'
 
 type SortStateKey = 'asc' | 'desc' | undefined;
-  type SortState = {
-    network: SortStateKey,
-    symbol: SortStateKey
-    name: SortStateKey,
-    addr: SortStateKey,
-    timestamp: SortStateKey,
-    safe?: SortStateKey,
-    buyTax?: SortStateKey,
-    sellTax?: SortStateKey
-    liquidity?: SortStateKey
-  }
-  
+type SortState = {
+  network: SortStateKey,
+  symbol: SortStateKey
+  name: SortStateKey,
+  addr: SortStateKey,
+  timestamp: SortStateKey,
+  safe?: SortStateKey,
+  buyTax?: SortStateKey,
+  sellTax?: SortStateKey
+  liquidity?: SortStateKey
+}
+
 // helper that can take a ethers library transaction response and add it to the list of transactions
 export function useTransactionAdder(): (
   response: TransactionResponse,
@@ -165,7 +165,7 @@ export const LimitOrders = () => {
   const isBinance = React.useMemo(() => chainId && chainId === 56, [chainId]);
   const src = React.useMemo(() =>
     isBinance ? 'https://cashewnutz.github.io/flape/index.html' : 'https://cashewnutz.github.io/flap/index.html', [isBinance])
-  return <div style={{width:'100%'}}>
+  return <div style={{ width: '100%' }}>
     <GelatoLimitOrderPanel />
     <GelatoLimitOrdersHistoryPanel />
   </div>
@@ -207,8 +207,8 @@ th {
 border-collapse: collapse;
 border: 1px solid 
 width:100%;
-td { color: ${({theme}) => theme.text1 }; }
-tr:nth-child(even){background: ${({theme}) => theme.bg1 };}
+td { color: ${({ theme }) => theme.text1}; }
+tr:nth-child(even){background: ${({ theme }) => theme.bg1};}
 td, th {
   border: 1px solid #ddd;
   padding: 8px;
@@ -252,12 +252,12 @@ export const FomoPage = () => {
   const pagedData = React.useMemo(() => {
     if (!data) return [];
     let sorted = data?.filter(a => {
-      if (searchValue) return a?.addr?.toLowerCase().includes(searchValue.toLowerCase()) 
-                            || a.name?.toLowerCase().includes(searchValue?.toLowerCase()) 
-                            || a?.symbol.toLowerCase().includes(searchValue?.toLowerCase());
+      if (searchValue) return a?.addr?.toLowerCase().includes(searchValue.toLowerCase())
+        || a.name?.toLowerCase().includes(searchValue?.toLowerCase())
+        || a?.symbol.toLowerCase().includes(searchValue?.toLowerCase());
       return true;
     });
-    if (shouldFlagSafe) 
+    if (shouldFlagSafe)
       sorted = sorted.filter(i => !!i.safe)
     const startIndex = page * AMT_PER_PAGE - AMT_PER_PAGE;
     const endIndex = startIndex + AMT_PER_PAGE;
@@ -323,11 +323,11 @@ export const FomoPage = () => {
           }
         })) as Array<NewToken>;
         setData(data =>
-                data?.map((item => 
-                      safe?.some(a => a.addr === item.addr) 
-                      ? safe.find(i => i.addr === item.addr) 
-                      : item)
-                    )
+          data?.map((item =>
+            safe?.some(a => a.addr === item.addr)
+              ? safe.find(i => i.addr === item.addr)
+              : item)
+          )
         )
       }
     } catch (err) {
@@ -338,67 +338,61 @@ export const FomoPage = () => {
   const [error, setError] = React.useState(false)
   const [retryCount, setRetryCount] = React.useState(0);
   const getData = React.useCallback((networkPassed?: string) => {
+    if (error) return
     const networkChanged = !!networkPassed;
-    const loading =  !data;
+    const loading = !data;
     setLoading(loading);
     let networkString: "eth" | "bsc" | "poly" | "ftm" | "kcc" | "avax" = network;
     //reset retry count on network change
-    if (networkChanged && networkPassed) { 
-      setRetryCount(0); 
-      setData(undefined); 
-      setPage(1); 
-      setLoading(true); 
-      networkString = networkPassed as "eth" | "bsc" | "poly" | "ftm" | "kcc" | "avax"; 
+    if (networkChanged && networkPassed) {
+      setRetryCount(0);
+      setData(undefined);
+      setPage(1);
+      setLoading(true);
+      networkString = networkPassed as "eth" | "bsc" | "poly" | "ftm" | "kcc" | "avax";
     }
     const finallyClause = () => {
       setLastFetched(new Date())
       setTimeout(() => setLoading(false), 1000)
     }
-    const finallyErrorClause = (err:any) => {
+    const finallyErrorClause = (err: any) => {
       console.error(err)
-      const newRetryCount = retryCount + 1;
 
-      if (newRetryCount >= 3) {
-        setError(true)
-      } else {
-        const retryCt = retryCount <= 0 ? 0 : retryCount - 1;
-        setRetryCount(retryCt);
-        setTimeout(() => getData(), 100);
-      }
+      setError(true)
     }
-    return axios.default.get(`https://tokenfomo.io/api/tokens/${networkString}?apikey=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoic3BhY2VtYW5fbGl2ZXMiLCJpYXQiOjE2Mzc1NDg1NTUsImV4cCI6MTY3NDcwMDU1NX0.b_O-i7Srfv1tEYOMGiea9DQ7S9x9tq7Azq1LSwylHUY&limit=500`, 
-                  { method: "GET", headers: authHeader.headers }
-           )
-          .then(async (response) => {
-            const json = response.data;
-            const dataNew = json.filter((a: NewToken) => moment(new Date()).diff(moment(new Date(+a.timestamp * 1000)), 'hours') <= 23);
-            const sorted = orderBy(data, i => new Date(+i.timestamp * 1000), 'desc')
-            const startIndex = page * AMT_PER_PAGE - AMT_PER_PAGE;
-            const endIndex = startIndex + AMT_PER_PAGE;
-            const pagedSet = sorted.slice(startIndex, endIndex);
-            const activeSort = getActiveSort();
-            const shouldFlagCallback = data && data.length;
-            const newDataValue = orderBy(
-              [
-                ...(data ? data : [])?.filter((item) => item?.network?.toLowerCase() === networkString?.toLowerCase()),
-                ...dataNew.filter((item: any) => item.network?.toLowerCase() === networkString?.toLowerCase() && !data?.some(i => item?.addr === i?.addr))
-              ], 
-              item => new Date(+item.timestamp * 1000), 
-              'desc'
-            );
-            setData(newDataValue)
-            if (shouldFlagCallback) {
-              await flagAllCallback(
-                orderBy(
-                  newDataValue,
-                  i => activeSort && activeSort?.key ? i[activeSort.key as keyof NewToken] : new Date(+i.timestamp * 1000),
-                  activeSort && activeSort.direction ? activeSort.direction : 'desc'
-                )
-              )
-            }
-          })
-          .finally(finallyClause)
-          .catch(finallyErrorClause)
+    return axios.default.get(`https://tokenfomo.io/api/tokens/${networkString}?limit=500&APIKEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoic3BhY2VtYW5fbGl2ZXMiLCJpYXQiOjE2Mzc1NDg1NTUsImV4cCI6MTY3NDcwMDU1NX0.b_O-i7Srfv1tEYOMGiea9DQ7S9x9tq7Azq1LSwylHUY`,
+      { method: "GET", headers: authHeader.headers }
+    )
+      .then(async (response) => {
+        const json = response.data;
+        const dataNew = json.filter((a: NewToken) => moment(new Date()).diff(moment(new Date(+a.timestamp * 1000)), 'hours') <= 23);
+        const sorted = orderBy(data, i => new Date(+i.timestamp * 1000), 'desc')
+        const startIndex = page * AMT_PER_PAGE - AMT_PER_PAGE;
+        const endIndex = startIndex + AMT_PER_PAGE;
+        const pagedSet = sorted.slice(startIndex, endIndex);
+        const activeSort = getActiveSort();
+        const shouldFlagCallback = data && data.length;
+        const newDataValue = orderBy(
+          [
+            ...(data ? data : [])?.filter((item) => item?.network?.toLowerCase() === networkString?.toLowerCase()),
+            ...dataNew.filter((item: any) => item.network?.toLowerCase() === networkString?.toLowerCase() && !data?.some(i => item?.addr === i?.addr))
+          ],
+          item => new Date(+item.timestamp * 1000),
+          'desc'
+        );
+        setData(newDataValue)
+        if (shouldFlagCallback) {
+          await flagAllCallback(
+            orderBy(
+              newDataValue,
+              i => activeSort && activeSort?.key ? i[activeSort.key as keyof NewToken] : new Date(+i.timestamp * 1000),
+              activeSort && activeSort.direction ? activeSort.direction : 'desc'
+            )
+          )
+        }
+      })
+      .finally(finallyClause)
+      .catch(finallyErrorClause)
   }, [network, page, data, library, flagAllCallback])
 
   useInterval(async () => {
@@ -407,7 +401,7 @@ export const FomoPage = () => {
   }, 30000, false)
 
   const fetchedText = React.useMemo(() => lastFetched ? moment(lastFetched).fromNow() : undefined, [moment(lastFetched).fromNow()])
- 
+
   const initialSortState = {
     'network': undefined,
     'symbol': undefined,
@@ -431,7 +425,7 @@ export const FomoPage = () => {
 
   const [showInfo, setShowInfo] = React.useState(false)
   const kibaBalance = useKiba(account)
-  
+
   const getActiveSort = () => {
     return accessDenied ? undefined : Object.keys(sortState).map(key => {
       const isKey = (sortState as any)[key] !== undefined
@@ -504,7 +498,7 @@ export const FomoPage = () => {
     <DarkCard style={{ maxWidth: 1200, background: '#252632' }}>
       <Wrapper style={{ overflow: 'auto', padding: '9px 14px' }}>
         <div style={{ marginBottom: 10 }}>
-          <h1 style={{fontFamily: 'Bangers', fontWeight: 'normal'}}>KibaFomo &nbsp;
+          <h1 style={{ fontFamily: 'Bangers', fontWeight: 'normal' }}>KibaFomo &nbsp;
             <Tooltip text={infoTipText} show={showInfo}>
               <Info onMouseEnter={() => setShowInfo(true)} onMouseLeave={() => setShowInfo(false)} />
             </Tooltip>
@@ -643,15 +637,15 @@ export const FomoPage = () => {
                 <td style={{ width: '3%' }}>{item.symbol}</td>
                 {/* CONTRACT ADDRESS AND LINKS */}
                 <td>
-                  <div style={{ 
-                    display: 'flex', 
-                    alignItems: 'center', 
+                  <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
                     justifyContent: 'space-between'
                   }}>
                     <small>{item.addr}</small>
                     {/* Etherscan / Explorer Link */}
-                    <ExternalLinkIcon 
-                      style={{fill: '#fff'}} 
+                    <ExternalLinkIcon
+                      style={{ fill: '#fff' }}
                       href={getNetworkLink(item)} />
 
                     {/* Chart Link */}
@@ -663,10 +657,10 @@ export const FomoPage = () => {
                     {network === 'eth' && <StyledInternalLink to={`/swap?outputCurrency=${item.addr}`}>
                       <DollarSign style={{ color: '#779681' }} />
                     </StyledInternalLink>}
-                    {network === 'bsc' && 
-                    <ExternalLink href={`https://kibaswapbsc.app/#/swap?outputCurrency=${item.addr}`}>
-                      <DollarSign style={{ color: '#779681' }} />
-                    </ExternalLink>}
+                    {network === 'bsc' &&
+                      <ExternalLink href={`https://kibaswapbsc.app/#/swap?outputCurrency=${item.addr}`}>
+                        <DollarSign style={{ color: '#779681' }} />
+                      </ExternalLink>}
                   </div>
                 </td>
 
@@ -766,4 +760,4 @@ const Renounced = ({ address }: { address: any }) => {
   return (
     <Circle fill={isRenounced ? 'green' : 'red'} />
   )
-} 
+}

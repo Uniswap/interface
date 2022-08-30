@@ -7,6 +7,7 @@ import {
   Token,
   WETH9,
 } from "@uniswap/sdk-core";
+import { DAI, USDC, USDT } from "../../constants/tokens";
 import { ExternalLink, StyledInternalLink, TYPE } from "../../theme";
 import React, { useEffect, useMemo, useState } from "react";
 import { pancakeAbi, pancakeAddress, routerAbi, routerAddress } from "./routerAbi";
@@ -26,7 +27,6 @@ import { SupportedChainId } from "constants/chains";
 import { SwitchLocaleLink } from "../../components/SwitchLocaleLink";
 import { Trans } from "@lingui/macro";
 import { Transactions } from "./TransactionsPage";
-import { USDC } from "../../constants/tokens";
 import Web3 from "web3";
 import _ from 'lodash'
 import { binanceTokens } from "utils/binance.tokens";
@@ -177,7 +177,6 @@ export const useRouterABI = () => {
 export const useConvertTokenAmountToUsdString = (token?: Token, amt?: number, pair?: { token0?: { id: string }, token1?: { id: string } }, txData?: any) => {
   const { chainId } = useWeb3React()
   const [retrieving, setRetrieving] = React.useState(false)
-  const [history,updateUserChartHistory] = useUserChartHistoryManager()
   const length = useLast(txData?.[0]?.timestamp)
   const [value, setValue] = React.useReducer(function (state: { value: string[], history: any[] }, action: { type: string, payload: { data: string[], token?: Token } }) {
     switch (action.type) {
@@ -240,29 +239,32 @@ export const useConvertTokenAmountToUsdString = (token?: Token, amt?: number, pa
               pairAddress,
             ]
 
+            const stables = [USDC, DAI, USDT]
+
             // position of ETH in the return array
-            let ethPosition = 1
+            let ethPosition = 1, usdcPosition = 2, decimalsToMultiply = 0
             // ensure we aren't adding USDC if the token they want's amount is already paired with USDC
-            if (pairAddress?.toLowerCase() !== USDC.address?.toLowerCase()) {
+            if (!stables.some((stable => pairAddress?.toLowerCase() === stable.address.toLowerCase()))) {
+              ethPosition = 1
               swapRoute.push(USDC.address)
+              decimalsToMultiply = 6
+              usdcPosition = 2
             } else {
+              usdcPosition = 1
               swapRoute.push(WETH9[1].address)
               ethPosition = 2
+              decimalsToMultiply = stables.find(stable => stable.address?.toLowerCase() == pairAddress?.toLowerCase())?.decimals || 6
             }
 
             router?.getAmountsOut(BigInt(amount), swapRoute).then((response: any) => {
-              let usdc: any, eth: any;
-              if (ethPosition == 1) {
-                eth = response[1]
-                usdc = response[response.length - 1]
-              } else if (ethPosition == 2) {
-                eth = response[response.length - 1]
-                usdc = response[1]
-              }
-
+              const usdc: any = response[usdcPosition], eth: any = response[ethPosition];
+              
               const formattedEth = parseFloat(ethers.utils.formatEther(eth)).toFixed(6) + 'Ξ'
-              const ten6 = 10 ** 6 // usdc has 6 decimals
-              const usdcValue = usdc / ten6;
+              const ten6 = 10 ** decimalsToMultiply // usdc has 6 decimals
+              let usdcValue = usdc
+              if (decimalsToMultiply > 0) {
+                usdcValue = usdc / ten6
+              }
               const number = Number(usdcValue.toFixed(2))
               console.log(`get amounts out result formatted: ${number.toLocaleString()}`)
               const formatted = `${number.toLocaleString()}`
@@ -271,8 +273,9 @@ export const useConvertTokenAmountToUsdString = (token?: Token, amt?: number, pa
               setRetrieving(false)
 
               return resolve(value)
-            }).catch(() => {
+            }).catch((e:any) => {
               setRetrieving(false)
+              console.error(e)
               console.error(`Ran Into Issue when fetching router anmounts`)
             })
           }
@@ -294,8 +297,10 @@ export const useConvertTokenAmountToUsdString = (token?: Token, amt?: number, pa
 
   const lastTx = txData?.[0]?.timestamp
   const tokenAddress = token?.address
-  const changed = Boolean(token && lastToken && lastToken.address.toLowerCase() != token.address.toLowerCase()) || Boolean(txData?.length) && Boolean((txData?.[0]?.timestamp != length))
-  const hasTokenHistory = value?.history?.some((item) => Boolean(item?.token?.address?.toLowerCase() == (token?.address?.toLowerCase())) && Boolean(item.time))
+  const tokenChanged = Boolean(lastToken) && Boolean(token) && Boolean(lastToken?.address?.toLowerCase() !== token?.address?.toLowerCase())
+  const txsUpdated = Boolean(lastTx) && Boolean(length) && Boolean(lastTx?.toString()?.toLowerCase() !== length?.toString()?.toLowerCase())
+  const hasTokenHistory = Boolean(token) && value?.history?.some((item) => Boolean(item?.token?.address?.toLowerCase() == (token?.address?.toLowerCase())) && Boolean(item.time))
+  console.log(`params.converter`, {tokenChanged, txsUpdated, hasTokenHistory})
   if (hasTokenHistory) console.log(`latest history`, value.history.filter(a => a?.token?.address == token?.address && a?.time > 0))
   React.useEffect(() => {
     if (!amt || amt <= 0) {
@@ -307,14 +312,14 @@ export const useConvertTokenAmountToUsdString = (token?: Token, amt?: number, pa
       return
     }
 
-    if ((hasTokenHistory && !changed && Boolean(lastTx) && Boolean(length) && _.isEqual(lastTx, length))) {
+    if ((hasTokenHistory && !tokenChanged && !txsUpdated)) {
       console.log(`._LOGGER_. | has history and has not changed returning`)
       return
     }
 
     console.log(`._LOGGER_. | we running this effect now.`)
     retrieveTokenValue()
-  }, [txData, amt, changed, token, lastTx, tokenAddress, hasTokenHistory]);
+  }, [txData, amt, tokenChanged, txsUpdated, token, lastTx, tokenAddress, hasTokenHistory]);
 
   return { value: value.value, refetch: retrieveTokenValue, history: value.history }
 }

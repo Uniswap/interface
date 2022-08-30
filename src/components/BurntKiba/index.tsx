@@ -10,6 +10,7 @@ import { AutoColumn } from 'components/Column'
 import Confetti from 'components/Confetti'
 import { DarkCard } from 'components/Card'
 import Lottie from 'react-lottie';
+import { NetworkInfo } from 'components/Header/NetworkCard';
 import React from 'react'
 import { Style } from 'util';
 import { SupportedChainId } from 'constants/chains'
@@ -72,7 +73,8 @@ export const BurntKiba = ({showDetails, style}:{showDetails?:boolean, style?: Re
     const {
 volumeInEth, 
 volumeInEthBn,
-volumeInUsd
+volumeInUsd,
+volumeInUsdFormatted
     } = useTotalSwapVolume()
     const [volume, setVolume] = useTotalSwapVolumeBnbToUsd()
     return (
@@ -97,7 +99,7 @@ volumeInUsd
             <div>
               <h1>Total Swap Volume (in {isBinance ? "BNB" : "ETH"})</h1>
               <p><Badge>{volumeInEth} {isBinance ? "BNB" :"ETH"} 
-              {!isBinance && <>{volumeInUsd && volumeInUsd !== 0 && <> (${volumeInUsd} USD)</>}</>}
+              {!isBinance && <>{volumeInUsd && volumeInUsd !== 0 &&volumeInUsdFormatted && <> (${volumeInUsdFormatted} USD)</>}</>}
               {isBinance && <>{volume && volume !== '0' && <> (${volume} USD)</>}</>}
 
               </Badge>
@@ -105,14 +107,20 @@ volumeInUsd
             </div>
             )}
             </DarkCard> 
-              </ContentWrapper>   :
-            <StyledInternalLink style={{...style}} to="/dashboard">
-            <Badge   style={{display: 'flex', justifyContent: style && style.justifyContent ? style.justifyContent : 'center', color: '#fff', border:'transparent', fontFamily: 'Bangers'}} variant={BadgeVariant.HOLLOW}> <div style = {{marginBottom: 10 }}><Lottie 
-  options={defaultOptions}
-    height={28}
-    width={28}></Lottie></div>
-    {abbreviateNumber(+deadWalletKibaBalance.toFixed(2))}</Badge>
-        </StyledInternalLink> : null
+          </ContentWrapper>   :
+            <StyledInternalLink style={{ ...style}} to="/dashboard">
+
+          <NetworkInfo style={{alignItems:'center', justifyContent:'center'}} chainId={chainId as any}>
+                <div style = {{marginBottom: 10 }}>
+                  <Lottie 
+                  options={defaultOptions}
+                  height={28}
+                  width={28} />
+                </div>
+                {abbreviateNumber(+deadWalletKibaBalance.toFixed(2))}
+            </NetworkInfo> 
+            </StyledInternalLink>
+            : null
          
     )
 }

@@ -88,7 +88,7 @@ const HeaderControls = styled.div`
 const HeaderElement = styled.div`
   display: flex;
   align-items: center;
-
+  gap:3px;
   /* addresses safari's lack of support for "gap" */
   & > *:not(:first-child) {
     margin-left: 8px;
@@ -108,7 +108,7 @@ const HeaderLinks = styled(Row)`
   border-radius: 16px;
   display: grid;
   grid-auto-flow: column;
-  grid-gap: 10px;
+  grid-gap: 5px;
   overflow: auto;
   align-items: center;
   ${({ theme }) => theme.mediaWidth.upToLarge`
@@ -426,7 +426,12 @@ export default function Header() {
             </StyledNavLink>
           )}
 
-          <StyledNavLink id={`chart-nav-link`} to={'/selective-charting'}>
+          <StyledNavLink   isActive={(match, { pathname }) =>
+              Boolean(match) ||
+              pathname.startsWith('/selective') ||
+              pathname.startsWith('/selective-charts') ||
+              pathname.startsWith('/selective-charting')
+            } id={`chart-nav-link`} to={'/selective-charting'}>
             <Trans>Charts</Trans>
             <sup>↗</sup>
           </StyledNavLink>
@@ -473,10 +478,9 @@ export default function Header() {
           </div>
         </HeaderLinks>
         <HeaderControls>
-          {!!account ? <NetworkCard /> : ''}
-
           <HeaderElement>
-            <BurntKiba />
+          {!!account ? <NetworkCard /> : ''}
+            <BurntKiba style={{margin:'0px'}} />
             <AccountElement active={!!account} style={{ pointerEvents: 'auto' }}>
               {!isMobile && (account && userEthBalance ? <small style={{ position: 'relative', left: 5, cursor: 'pointer' }}>
                 {showETHValue && <Eye style={{ width: 19, height: 19 }} onClick={setEThVisible} />}

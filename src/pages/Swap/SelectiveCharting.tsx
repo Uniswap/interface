@@ -1,3 +1,5 @@
+// Installation: npm install alchemy-sdk
+import { Alchemy, Network } from "alchemy-sdk";
 import { ArrowDownRight, ArrowUpRight, BarChart, ChevronDown, ChevronLeft, ChevronUp, Type } from 'react-feather';
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core';
 import { DarkCard, LightCard } from 'components/Card';
@@ -151,7 +153,9 @@ export const SelectiveChart = () => {
             setSelectedCurrency({payload: undefined, type: 'update'})
             ref.current = undefined
         } else {
-            console.log(`Add to chart history`)
+            console.log(`Add to chart history. Initialize websocket.`)
+        
+      
             updateUserChartHistory([
                 {
                     time: new Date().getTime(),

@@ -9,7 +9,7 @@ import { useUSDCValue } from 'hooks/useUSDCPrice'
 import { useV2RouterContract } from 'hooks/useContract'
 import { utils } from 'ethers'
 
-const SwapVolumeContext = React.createContext<{volumeInEth?: string, volumeInEthBn?: number, volumeInUsd?: number}>({volumeInEth: '', volumeInEthBn: 0, volumeInUsd: 0}) 
+const SwapVolumeContext = React.createContext<{volumeInEth?: string, volumeInEthBn?: number, volumeInUsd?: number, volumeInUsdFormatted?: string}>({volumeInEth: '', volumeInEthBn: 0, volumeInUsd: 0}) 
 
 export const SwapVolumeContextProvider = ({children, chainId}: {children:any, chainId: number | undefined}) => {
     const relayer = useV2RouterContract(chainId)
@@ -77,7 +77,8 @@ export const SwapVolumeContextProvider = ({children, chainId}: {children:any, ch
       const value =  { 
         volumeInEth: ethRelayed.formatted,
         volumeInEthBn: ethRelayed.value,
-        volumeInUsd: parseFloat(formattedUsdcValue)
+        volumeInUsd: parseFloat(formattedUsdcValue),
+        volumeInUsdFormatted: parseFloat(formattedUsdcValue).toLocaleString()
       }
 return (<SwapVolumeContext.Provider value={value}>
             {children}

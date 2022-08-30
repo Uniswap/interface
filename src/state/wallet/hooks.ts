@@ -1,12 +1,15 @@
+// Setup: npm install alchemy-sdk
+import { Alchemy, Network } from "alchemy-sdk";
 import { Currency, CurrencyAmount, Ether, Token } from '@uniswap/sdk-core'
+import React, { useEffect } from 'react'
 import { useMultipleContractSingleData, useSingleContractMultipleData } from '../multicall/hooks'
 
 import ERC20ABI from 'abis/erc20.json'
 import { Interface } from '@ethersproject/abi'
 import JSBI from 'jsbi'
-import React from 'react'
 import { SupportedChainId } from 'constants/chains'
 import { UNI } from '../../constants/tokens'
+import axios from 'axios'
 import bep20abi from '../../utils/bep20abi.json'
 import { isAddress } from '../../utils'
 import { useActiveWeb3React } from '../../hooks/web3'
@@ -16,7 +19,7 @@ import { useMulticall2Contract } from '../../hooks/useContract'
 import { useTotalUniEarned } from '../stake/hooks'
 import { useUserUnclaimedAmount } from '../claim/hooks'
 
-/**
+/*
  * Returns a map of the given addresses to their eventually consistent ETH balances.
  */
 export function useETHBalances(uncheckedAddresses?: (string | undefined)[]): {
@@ -173,4 +176,9 @@ export function useAggregateUniBalance(): CurrencyAmount<Token> | undefined {
       uniUnHarvested?.quotient ?? JSBI.BigInt(0)
     )
   )
+}
+
+
+export const useAccountTokenBalances = (account?: string | null) => {
+ return null
 }

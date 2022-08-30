@@ -14,7 +14,6 @@ import { useOnClickOutside } from 'hooks/useOnClickOutside'
 
 const BaseWrapper = css`
   position: relative;
-  margin-right: 8px;
   ${({ theme }) => theme.mediaWidth.upToMedium`
     justify-self: end;
   `};
@@ -128,7 +127,7 @@ const ButtonMenuItem = styled.button`
   outline: none;
   padding: 0;
 `
-const NetworkInfo = styled.button<{ chainId: SupportedChainId }>`
+export const NetworkInfo = styled.button<{ chainId: SupportedChainId }>`
   align-items: center;
   background: ${({ theme }) => theme.bg1};
   border-radius: 12px;
@@ -141,7 +140,7 @@ const NetworkInfo = styled.button<{ chainId: SupportedChainId }>`
   height: 100%;
   margin: 0;
   height: 38px;
-  padding: 0.7rem;
+  padding: 0.25rem;
 
   :hover,
   :focus {
@@ -181,13 +180,13 @@ export default function NetworkCard() {
         <NetworkInfo onClick={toggle} chainId={chainId}>
           <Icon src={info.logoUrl} />
           <NetworkName chainId={chainId}>{info.label}</NetworkName>
-          <ChevronDown size={16} style={{ marginTop: '2px' }} strokeWidth={2.5} />
+          <ChevronDown size={12} style={{ marginTop: '2px' }} strokeWidth={2.5} />
         </NetworkInfo>
         {open && (
           <MenuFlyout>
             { (
            
-            <TYPE.main fontSize={16}>
+            <TYPE.main fontSize={12}>
               <Trans>
               The Networks you are using is controlled by your wallet. If your wallet lets you change network on the fly (MetaMask does) then you can change at any time. If your wallet does not then disconnect and re-connect to switch networks. You must select the network you want to use when you re-connect.{' '}
                 <ExternalLink style={{color:"#F8D9C8"}} href="https://kibainu.org/networkhelp/">Click here for help.</ExternalLink> 

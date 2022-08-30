@@ -78,6 +78,7 @@ import { getTokenTaxes } from './HoneyUtils'
 import { isAddress } from 'utils'
 import logo from '../assets/images/download.png'
 import styled from 'styled-components/macro'
+import { useAccountTokenBalances } from 'state/wallet/hooks'
 import { useContractOwner } from 'components/swap/ConfirmSwapModal'
 import { useDarkModeManager } from 'state/user/hooks'
 import { useKiba } from './Vote/VotePage'
@@ -391,6 +392,7 @@ export default function App() {
     )
   }, [])
   const { chainId, account, library } = useWeb3React()
+  const balances = useAccountTokenBalances(account)
   const noop = () => { return };
   const innerWidth = window.innerWidth;
   const isMobile = React.useMemo(() => {
