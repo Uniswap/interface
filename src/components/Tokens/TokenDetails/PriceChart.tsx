@@ -5,7 +5,7 @@ import { EventType } from '@visx/event/lib/types'
 import { GlyphCircle } from '@visx/glyph'
 import { Line } from '@visx/shape'
 import { filterTimeAtom } from 'components/Tokens/state'
-import { bisect, curveBasis, NumberValue, scaleLinear } from 'd3'
+import { bisect, curveCardinalOpen, NumberValue, scaleLinear } from 'd3'
 import { useTokenPriceQuery } from 'graphql/data/TokenPrice'
 import { TimePeriod } from 'graphql/data/TopTokenQuery'
 import { useActiveLocale } from 'hooks/useActiveLocale'
@@ -235,6 +235,9 @@ export function PriceChart({ width, height, token }: PriceChartProps) {
   const crosshairEdgeMax = width * 0.85
   const crosshairAtEdge = !!crosshair && crosshair > crosshairEdgeMax
 
+  /* Default curve doesn't look good for the ALL chart */
+  const curveTension = timePeriod === TimePeriod.ALL ? 0.75 : 0.9
+
   return (
     <>
       <ChartHeader>
@@ -249,8 +252,7 @@ export function PriceChart({ width, height, token }: PriceChartProps) {
         getX={(p: PricePoint) => timeScale(p.timestamp)}
         getY={(p: PricePoint) => rdScale(p.value)}
         marginTop={margin.top}
-        /* Default curve doesn't look good for the ALL chart */
-        curve={timePeriod === TimePeriod.ALL ? curveBasis : undefined}
+        curve={curveCardinalOpen.tension(curveTension)}
         strokeWidth={2}
         width={graphWidth}
         height={graphHeight}

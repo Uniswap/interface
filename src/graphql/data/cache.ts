@@ -3,7 +3,7 @@ import ms from 'ms.macro'
 import { TimePeriod } from './TopTokenQuery'
 import { PriceHistory } from './types'
 
-/* TODO: Replace these times with non-arbitrary values */
+/* TODO: Replace these times with non-arbitrarily picked values */
 export const PRICEHISTORY_REFRESH_ALLOWANCE = {
   [TimePeriod.ALL]: ms`1 hour`,
   [TimePeriod.YEAR]: ms`1 hour`,

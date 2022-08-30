@@ -10,7 +10,7 @@ import { ExternalLink as LinkIconFeather } from 'react-feather'
 import { Text } from 'rebass'
 import { useAddUserToken } from 'state/user/hooks'
 import styled from 'styled-components/macro'
-import { CopyLinkIcon, ExternalLink } from 'theme'
+import { ButtonText, CopyLinkIcon, ExternalLink } from 'theme'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 const Wrapper = styled.div`
@@ -51,6 +51,13 @@ const StyledButton = styled(ButtonPrimary)`
   font-weight: 600;
 `
 
+const StyledCancelButton = styled(ButtonText)`
+  margin-top: 16px;
+  color: ${({ theme }) => theme.textSecondary};
+  font-weight: 600;
+  font-size: 14px;
+`
+
 const StyledCloseButton = styled(StyledButton)`
   background-color: ${({ theme }) => theme.backgroundInteractive};
   color: ${({ theme }) => theme.textPrimary};
@@ -66,16 +73,19 @@ const Buttons = ({
   warning,
   onContinue,
   onCancel,
+  showCancel,
 }: {
   warning: Warning
   onContinue: () => void
   onCancel: () => void
+  showCancel?: boolean
 }) => {
   return warning.canProceed ? (
     <>
       <StyledButton onClick={onContinue}>
         <Trans>I understand</Trans>
       </StyledButton>
+      {showCancel && <StyledCancelButton onClick={onCancel}>Cancel</StyledCancelButton>}
     </>
   ) : (
     <StyledCloseButton onClick={onCancel}>
@@ -179,9 +189,16 @@ interface TokenSafetyProps {
   secondTokenAddress?: string
   onContinue: () => void
   onCancel: () => void
+  showCancel?: boolean
 }
 
-export default function TokenSafety({ tokenAddress, secondTokenAddress, onContinue, onCancel }: TokenSafetyProps) {
+export default function TokenSafety({
+  tokenAddress,
+  secondTokenAddress,
+  onContinue,
+  onCancel,
+  showCancel,
+}: TokenSafetyProps) {
   const logos = []
   const urls = []
 
@@ -244,7 +261,7 @@ export default function TokenSafety({ tokenAddress, secondTokenAddress, onContin
             </InfoText>
           </ShortColumn>
           <LinkColumn>{urls}</LinkColumn>
-          <Buttons warning={displayWarning} onContinue={acknowledge} onCancel={onCancel} />
+          <Buttons warning={displayWarning} onContinue={acknowledge} onCancel={onCancel} showCancel={showCancel} />
         </Container>
       </Wrapper>
     )
