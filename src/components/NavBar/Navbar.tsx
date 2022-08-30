@@ -72,10 +72,10 @@ const Navbar = () => {
             <Box as="a" href="#/swap" className={styles.logoContainer}>
               <UniIcon width="48" height="48" className={styles.logo} />
             </Box>
-            <Box display={{ sm: 'flex', xxl: 'none' }}>
+            <Box display={{ sm: 'flex', lg: 'none' }}>
               <ChainSwitcher leftAlign={true} />
             </Box>
-            <Row gap="8" display={{ sm: 'none', xxl: 'flex' }}>
+            <Row gap="8" display={{ sm: 'none', lg: 'flex' }}>
               <PageTabs />
             </Row>
           </Box>
@@ -84,13 +84,13 @@ const Navbar = () => {
           </Box>
           <Box className={styles.rightSideContainer}>
             <Row gap="12">
-              <Box display={{ sm: 'flex', lg: 'none' }}>
+              <Box display={{ sm: 'flex', xl: 'none' }}>
                 <SearchBar />
               </Box>
-              <Box display={{ sm: 'none', xxl: 'flex' }}>
+              <Box display={{ sm: 'none', lg: 'flex' }}>
                 <MenuDropdown />
               </Box>
-              <Box display={{ sm: 'none', xxl: 'flex' }}>
+              <Box display={{ sm: 'none', lg: 'flex' }}>
                 <ChainSwitcher />
               </Box>
 
