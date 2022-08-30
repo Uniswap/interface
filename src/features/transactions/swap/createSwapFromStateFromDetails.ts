@@ -4,17 +4,13 @@ import {
   CurrencyField,
   TransactionState,
 } from 'src/features/transactions/transactionState/transactionState'
-import {
-  TransactionDetails,
-  TransactionStatus,
-  TransactionType,
-} from 'src/features/transactions/types'
+import { TransactionDetails, TransactionType } from 'src/features/transactions/types'
 import { currencyIdToAddress } from 'src/utils/currencyId'
 import { logger } from 'src/utils/logger'
 import { tryParseRawAmount } from 'src/utils/tryParseAmount'
 
 interface props {
-  transactionDetails: TransactionDetails | undefined
+  transactionDetails: TransactionDetails
   inputCurrency: NullUndefined<Currency>
   outputCurrency: NullUndefined<Currency>
 }
@@ -28,21 +24,12 @@ export default function createSwapFromStateFromDetails({
   outputCurrency,
 }: props) {
   const txHash = transactionDetails?.hash
-  const address = transactionDetails?.from
   const chainId = transactionDetails?.chainId
 
   if (!chainId || !txHash) return undefined
 
   try {
-    if (!transactionDetails) {
-      throw new Error(
-        `No transaction found for address: ${address}, chainId: ${chainId}, and tx hash ${txHash}`
-      )
-    }
-
-    const { status: txStatus, typeInfo } = transactionDetails
-
-    if (txStatus !== TransactionStatus.Cancelled) return undefined
+    const { typeInfo } = transactionDetails
 
     if (typeInfo.type !== TransactionType.Swap) {
       throw new Error(

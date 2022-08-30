@@ -1,9 +1,14 @@
 import { TradeType } from '@uniswap/sdk-core'
-import React, { useMemo } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useAppDispatch } from 'src/app/hooks'
 import { SwapLogoOrLogoWithTxStatus } from 'src/components/CurrencyLogo/LogoWithTxStatus'
+import { Text } from 'src/components/Text'
+import { openModal } from 'src/features/modals/modalSlice'
 import { getFormattedCurrencyAmount } from 'src/features/notifications/utils'
+import { ModalName } from 'src/features/telemetry/constants'
 import { useCurrency } from 'src/features/tokens/useCurrency'
+import { useCreateSwapFormState } from 'src/features/transactions/hooks'
 import BalanceUpdate from 'src/features/transactions/SummaryCards/BalanceUpdate'
 import TransactionSummaryLayout, {
   TXN_HISTORY_ICON_SIZE,
@@ -25,13 +30,15 @@ export default function SwapSummaryItem({
   transaction: { typeInfo: ExactOutputSwapTransactionInfo | ExactInputSwapTransactionInfo }
 }) {
   const { t } = useTranslation()
-  const { status } = transaction
+  const dispatch = useAppDispatch()
+  let { status } = transaction
+
+  const inputCurrency = useCurrency(transaction.typeInfo.inputCurrencyId)
+  const outputCurrency = useCurrency(transaction.typeInfo.outputCurrencyId)
 
   const showCancelIcon =
     (status === TransactionStatus.Cancelled || status === TransactionStatus.Cancelling) &&
     showInlineWarning
-  const inputCurrency = useCurrency(transaction.typeInfo.inputCurrencyId)
-  const outputCurrency = useCurrency(transaction.typeInfo.outputCurrencyId)
 
   const [inputAmountRaw, outputAmountRaw] = useMemo(() => {
     if (transaction.typeInfo.tradeType === TradeType.EXACT_INPUT) {
@@ -59,32 +66,60 @@ export default function SwapSummaryItem({
   }, [inputAmountRaw, inputCurrency, outputAmountRaw, outputCurrency, status])
 
   const title = formatTitleWithStatus({
-    status: transaction.status,
+    status,
     text: t('Swap'),
     showInlineWarning,
     t,
   })
 
+  // For retrying failed, locally submitted swaps
+  const swapFormState = useCreateSwapFormState(
+    transaction.from,
+    transaction.chainId,
+    transaction.id
+  )
+
+  const onRetry = useCallback(() => {
+    dispatch(openModal({ name: ModalName.Swap, initialState: swapFormState }))
+  }, [dispatch, swapFormState])
+
+  const endAdornment = useMemo(() => {
+    return status === TransactionStatus.Failed ? (
+      swapFormState ? (
+        <Text color="accentAction" variant="mediumLabel" onPress={onRetry}>
+          {t('Retry')}
+        </Text>
+      ) : undefined
+    ) : outputCurrency ? (
+      <BalanceUpdate
+        amountRaw={outputAmountRaw}
+        currency={outputCurrency}
+        transactionStatus={transaction.status}
+        transactionType={transaction.typeInfo.type}
+      />
+    ) : undefined
+  }, [
+    onRetry,
+    outputAmountRaw,
+    outputCurrency,
+    status,
+    swapFormState,
+    t,
+    transaction.status,
+    transaction.typeInfo.type,
+  ])
+
   return (
     <TransactionSummaryLayout
       caption={caption}
-      endAdornment={
-        outputCurrency ? (
-          <BalanceUpdate
-            amountRaw={outputAmountRaw}
-            currency={outputCurrency}
-            transactionStatus={transaction.status}
-            transactionType={transaction.typeInfo.type}
-          />
-        ) : undefined
-      }
+      endAdornment={endAdornment}
       icon={
         <SwapLogoOrLogoWithTxStatus
           inputCurrency={inputCurrency}
           outputCurrency={outputCurrency}
           showCancelIcon={showCancelIcon}
           size={TXN_HISTORY_ICON_SIZE}
-          txStatus={transaction.status}
+          txStatus={status}
         />
       }
       readonly={readonly}
