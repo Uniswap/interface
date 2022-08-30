@@ -114,7 +114,7 @@ export default function SimpleSushiMCManage() {
   const parsedPendingSushiAmount = useMemo(() => {
     try {
       if (positions && positions[pid] && positions[pid].pendingSushi) {
-        const bi = (positions[pid].pendingSushi as BigNumber).toBigInt();
+        const bi = (positions[pid].pendingSushi as BigNumber).toBigInt()
         console.debug('parsedPendingSushiAmount::bi', bi)
         return CurrencyAmount.fromRawAmount(rewardToken, bi).toFixed(6)
       }
@@ -127,7 +127,7 @@ export default function SimpleSushiMCManage() {
   const parsedStakedAmount = useMemo(() => {
     try {
       if (positions && positions[pid] && positions[pid].amount) {
-        const bi = (positions[pid].amount as BigNumber).toBigInt();
+        const bi = (positions[pid].amount as BigNumber).toBigInt()
         return CurrencyAmount.fromRawAmount(new Token(chainId || 420, ZERO_ADDRESS, 18), bi)?.toSignificant(6)
       }
     } catch (error) {
@@ -139,7 +139,7 @@ export default function SimpleSushiMCManage() {
   const parsedEarnedToken = useMemo(() => {
     try {
       if (positions && positions[pid] && positions[pid].rewardDebt) {
-        const bi = (positions[pid].rewardDebt as BigNumber).toBigInt();
+        const bi = (positions[pid].rewardDebt as BigNumber).toBigInt()
         return CurrencyAmount.fromRawAmount(rewardToken, bi)?.toSignificant(6)
       }
     } catch (error) {
@@ -147,12 +147,11 @@ export default function SimpleSushiMCManage() {
     }
     return '--.--'
   }, [rewardToken, positions, pid])
-  
 
   return (
     <PageWrapper gap="lg" justify="center">
       <RowBetween style={{ gap: '24px' }}>
-        <TYPE.mediumHeader style={{ margin: 0 }}>{poolName} Liquidity Mining</TYPE.mediumHeader>
+        <TYPE.mediumHeader style={{ margin: 0 }}>{poolName} Liquidity Farming</TYPE.mediumHeader>
         {/* <DoubleCurrencyLogo currency0={currencyA ?? undefined} currency1={currencyB ?? undefined} size={24} /> */}
       </RowBetween>
 
@@ -161,7 +160,7 @@ export default function SimpleSushiMCManage() {
           <AutoColumn gap="sm">
             <TYPE.body style={{ margin: 0 }}>Earned SUSHIs</TYPE.body>
             <TYPE.body fontSize={24} fontWeight={500}>
-              { parsedEarnedToken }
+              {parsedEarnedToken}
             </TYPE.body>
           </AutoColumn>
         </PoolData>
@@ -276,8 +275,7 @@ export default function SimpleSushiMCManage() {
                   <span role="img" aria-label="wizard-icon" style={{ marginRight: '8px ' }}>
                     ⚡
                   </span>
-                  { parsedPendingSushiAmount } {" "}
-                  {rewardToken.symbol}
+                  {parsedPendingSushiAmount} {rewardToken.symbol}
                 </TYPE.black>
               </RowBetween>
             </AutoColumn>

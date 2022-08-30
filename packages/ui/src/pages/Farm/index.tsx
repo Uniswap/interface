@@ -49,9 +49,8 @@ export default function FarmList() {
   // const positions = useChefPositions(mchefContract, undefined, chainId)
   const poolInfos = useMasterChefPoolInfo(farmingConfig?.chefType || Chef.MINICHEF)
 
-
   useEffect(() => {
-    console.info('useMasterChefPoolInfo', poolInfos);
+    console.info('useMasterChefPoolInfo', poolInfos)
   }, [poolInfos])
   // // staking info for connected account
   // const stakingInfos = useStakingInfo()
@@ -93,11 +92,11 @@ export default function FarmList() {
         </DataRow>
 
         <PoolSection>
-          {
-            poolInfos.length === 0 ? 'Loading...' : poolInfos.map((_poolInfo, pid) => {
-              return <PoolCard key={pid} pid={pid} />
-            })
-          }
+          {poolInfos.length === 0
+            ? 'Loading...'
+            : poolInfos.map((_poolInfo, pid) => {
+                return <PoolCard key={pid} pid={pid} />
+              })}
         </PoolSection>
       </AutoColumn>
     </PageWrapper>
