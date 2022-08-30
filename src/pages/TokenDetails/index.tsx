@@ -16,10 +16,10 @@ import Widget, { WIDGET_WIDTH } from 'components/Widget'
 import { getChainInfo } from 'constants/chainInfo'
 import { L1_CHAIN_IDS, L2_CHAIN_IDS, SupportedChainId, TESTNET_CHAIN_IDS } from 'constants/chains'
 import { checkWarning } from 'constants/tokenSafety'
-import { useToken } from 'hooks/Tokens'
+import { useIsUserAddedToken, useToken } from 'hooks/Tokens'
 import { useNetworkTokenBalances } from 'hooks/useNetworkTokenBalances'
 import { useCallback, useMemo, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
 const Footer = styled.div`
@@ -81,38 +81,29 @@ export default function TokenDetails() {
   const token = useToken(tokenAddress)
 
   const tokenWarning = tokenAddress ? checkWarning(tokenAddress) : null
-  const [reviewPromise, setReviewPromise] = useState<(b: boolean) => void>()
+  const [continueSwap, setContinueSwap] = useState<{ resolve: (value: boolean | PromiseLike<boolean>) => void }>()
+
+  const navigate = useNavigate()
 
   const onSwapReview = useCallback(() => {
-    let promiseResolve, promiseReject
-    alert('What')
-
-    const promise = new Promise<boolean>(function (resolve, reject) {
-      promiseResolve = resolve
-      promiseReject = reject
+    return new Promise<boolean>(function (resolve, reject) {
+      setContinueSwap({ resolve })
     })
-
-    setReviewPromise(promiseResolve)
-    return promise
   }, [])
 
-  const onSwapContinue = useCallback(() => {
-    if (reviewPromise) {
-      alert('HOw')
-      reviewPromise(true)
-      setReviewPromise(undefined)
-    }
-  }, [])
+  const resolveSwap = useCallback(
+    (value: boolean) => {
+      if (continueSwap) {
+        continueSwap.resolve(value)
+        setContinueSwap(undefined)
+      }
+    },
+    [continueSwap, setContinueSwap]
+  )
 
-  const onSwapCancel = useCallback(() => {
-    if (reviewPromise) {
-      reviewPromise(false)
-      setReviewPromise(undefined)
-    }
-  }, [])
+  const shouldShowSpeedbump = !useIsUserAddedToken(token) && !!tokenWarning
 
   /* network balance handling */
-
   const { data: networkData } = tokenAddress ? NetworkBalances(tokenAddress) : { data: null }
   const { chainId: connectedChainId } = useWeb3React()
   const totalBalance = 4.3 // dummy data
@@ -154,7 +145,10 @@ export default function TokenDetails() {
         <>
           <TokenDetail address={tokenAddress} />
           <RightPanel>
-            <Widget defaultToken={token ?? undefined} onReviewSwapClick={onSwapReview} />
+            <Widget
+              defaultToken={token ?? undefined}
+              onReviewSwapClick={shouldShowSpeedbump ? onSwapReview : undefined}
+            />
             {tokenWarning && <TokenSafetyMessage tokenAddress={tokenAddress} warning={tokenWarning} />}
             <BalanceSummary address={tokenAddress} totalBalance={totalBalance} networkBalances={balancesByNetwork} />
           </RightPanel>
@@ -165,12 +159,15 @@ export default function TokenDetails() {
               networkBalances={balancesByNetwork}
             />
           </Footer>
-          <TokenSafetyModal
-            isOpen={!!reviewPromise}
-            tokenAddress={tokenAddress}
-            onCancel={onSwapCancel}
-            onContinue={onSwapContinue}
-          />
+          {tokenWarning && (
+            <TokenSafetyModal
+              isOpen={!!continueSwap || !tokenWarning.canProceed}
+              tokenAddress={tokenAddress}
+              onCancel={tokenWarning.canProceed ? () => resolveSwap(false) : () => navigate(-1)}
+              onContinue={() => resolveSwap(true)}
+              showCancel={true}
+            />
+          )}
         </>
       )}
     </TokenDetailsLayout>
