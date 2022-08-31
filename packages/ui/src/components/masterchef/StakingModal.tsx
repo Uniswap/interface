@@ -64,8 +64,6 @@ export default function StakingModal({ isOpen, onDismiss, pid }: StakingModalPro
   // const [signatureData, setSignatureData] = useState<{ v: number; r: string; s: string; deadline: number } | null>(null)
   const signatureData = null
   const stakingInfos = useChefStakingInfo()
-  // @todo: we need the token profile of this pool
-  // @todo: we need the symbol of staking token
   const thisPool = stakingInfos[pid]
   const stakingCurrency = thisPool.stakingToken
 
@@ -129,7 +127,7 @@ export default function StakingModal({ isOpen, onDismiss, pid }: StakingModalPro
           <CurrencyInputPanel
             value={typedValue}
             onUserInput={onUserInput}
-            onMax={() => console.warn('max disabled')}
+            onMax={() => console.error('@todo: max disabled')}
             showMaxButton={false}
             currency={stakingCurrency}
             // pair={dummyPair}
