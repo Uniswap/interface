@@ -110,6 +110,7 @@ export interface ApproveTransactionInfo extends BaseTransactionInfo {
   type: TransactionType.Approve
   tokenAddress: string
   spender: string
+  approvalAmount?: string
 }
 
 interface BaseSwapTransactionInfo extends BaseTransactionInfo {

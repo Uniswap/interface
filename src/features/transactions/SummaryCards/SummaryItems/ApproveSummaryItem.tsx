@@ -29,10 +29,22 @@ export default function ApproveSummaryItem({
     showInlineWarning,
     t,
   })
+
+  const approvalAmountString =
+    transaction.typeInfo.approvalAmount === 'INF'
+      ? t('Max Amount')
+      : transaction.typeInfo.approvalAmount
+
+  // Use amount if known, otherwise revert to only token symbol
+  const approvalString =
+    approvalAmountString && currency?.symbol
+      ? `${approvalAmountString} ${currency.symbol}`
+      : currency?.symbol
+
   return (
     <TransactionSummaryLayout
       caption={shortenAddress(transaction.typeInfo.spender)}
-      endAdornment={<AssetUpdateLayout title={currency?.symbol} />}
+      endAdornment={<AssetUpdateLayout title={approvalString} />}
       icon={
         <LogoWithTxStatus
           assetType={AssetType.Currency}

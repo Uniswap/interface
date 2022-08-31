@@ -13,11 +13,13 @@ export default function parseAppoveTransaction(
   if (change.__typename === 'TokenApproval' && change.tokenStandard === 'ERC20') {
     const tokenAddress = change.asset?.address
     const spender = change.approvedAddress
+    const approvalAmount = change.quantity
     if (!(tokenAddress && spender)) return undefined
     return {
       type: TransactionType.Approve,
       tokenAddress,
       spender,
+      approvalAmount,
     }
   }
   return undefined
