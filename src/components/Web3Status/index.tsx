@@ -213,8 +213,8 @@ function Web3StatusInner() {
 
   const hasPendingTransactions = !!pending.length
   const hasSocks = useHasSocks()
-  const isNavbarEnabled = useNavBarFlag()
-  const toggleWallet = isNavbarEnabled ? toggleWalletDropdown : toggleWalletModal
+  const isNavbarEnabled = useNavBarFlag() === NavBarVariant.Enabled
+  const toggleWallet = useNavBarFlag() ? toggleWalletDropdown : toggleWalletModal
 
   if (!chainId) {
     return null
@@ -244,7 +244,6 @@ function Web3StatusInner() {
             <Text>{ENSName || shortenAddress(account)}</Text>
           </>
         )}
-
         {isNavbarEnabled ? (
           walletIsOpen ? (
             <ChevronUp />
