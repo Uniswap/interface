@@ -1,4 +1,9 @@
-import { createRestyleComponent, createVariant, VariantProps } from '@shopify/restyle'
+import {
+  createRestyleComponent,
+  createVariant,
+  SpacingShorthandProps,
+  VariantProps,
+} from '@shopify/restyle'
 import React, { ComponentProps, ReactElement, useMemo } from 'react'
 import { useAppTheme } from 'src/app/hooks'
 import { Button, ButtonProps } from 'src/components/buttons/Button'
@@ -12,7 +17,7 @@ type Props = ButtonProps & {
   icon?: ReactElement
   textVariant?: keyof Theme['textVariants']
   textColor?: keyof Theme['colors']
-}
+} & SpacingShorthandProps<Theme>
 
 // A rounded, borderless, solid color button with optional icon left of text
 function _PrimaryButton({ label, icon, textVariant, disabled, style, ...rest }: Props) {

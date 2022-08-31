@@ -1,13 +1,13 @@
 import React, { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppTheme } from 'src/app/hooks'
-import EyeIcon from 'src/assets/icons/eye.svg'
 import EditIcon from 'src/assets/icons/edit.svg'
+import EyeIcon from 'src/assets/icons/eye.svg'
 import LockIcon from 'src/assets/icons/lock.svg'
 import { Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 
-const ICON_SIZE = 18
+const ICON_SIZE = 16
 
 export function ManualBackupEducationSection() {
   const { t } = useTranslation()
@@ -69,7 +69,6 @@ function EducationRow({ icon, label, sublabel }: EducationRowProps) {
         borderRadius="md"
         borderWidth={1}
         height={32}
-        padding="md"
         width={32}>
         {icon}
       </Flex>

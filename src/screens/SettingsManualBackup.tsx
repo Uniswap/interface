@@ -110,10 +110,11 @@ export function SettingsManualBackup({
         <Flex justifyContent="flex-end">
           <PrimaryButton
             alignSelf="stretch"
-            borderRadius="md"
-            icon={<PencilIcon color={theme.colors.white} height={20} width={20} />}
+            borderRadius="lg"
+            icon={<PencilIcon color={theme.colors.white} height={24} width={24} />}
             label={t('Back up manually')}
             name={ElementName.AddManualBackup}
+            py="md"
             textVariant="largeLabel"
             variant="blue"
             onPress={nextStep}
