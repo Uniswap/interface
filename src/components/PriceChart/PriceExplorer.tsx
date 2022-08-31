@@ -28,13 +28,21 @@ const LABEL_WIDTH = BUTTON_WIDTH - BUTTON_PADDING * 2
 
 interface GraphProps {
   graphs: GraphMetadatas
+  headerCustomPrice?: number
+  headerCustomPercentChange?: number
 }
 
 /**
  * Displays a set of graphs with header, scrubbable chart and navigation row.
  * Inspired by https://github.com/wcandillon/can-it-be-done-in-react-native/tree/master/season4/src/Rainbow
+ *
+ * Will render the props headerCustomPrice and headerPercentChange except when scrubbing
  */
-export const PriceExplorer = ({ graphs }: GraphProps) => {
+export const PriceExplorer = ({
+  graphs,
+  headerCustomPrice,
+  headerCustomPercentChange,
+}: GraphProps) => {
   const theme = useAppTheme()
 
   // whether the graph pan gesture is active
@@ -79,25 +87,34 @@ export const PriceExplorer = ({ graphs }: GraphProps) => {
   }))
 
   // retrieves price and formats it
-  const price = useDerivedValue(() =>
-    isPanning.value
-      ? interpolate(
-          translation.y.value,
-          [0, HEIGHT],
-          [currentIndexData.value.highPrice, currentIndexData.value.lowPrice]
-        )
-      : currentIndexData.value.closePrice
-  )
+  const price = useDerivedValue(() => {
+    if (isPanning.value) {
+      return interpolate(
+        translation.y.value,
+        [0, HEIGHT],
+        [currentIndexData.value.highPrice, currentIndexData.value.lowPrice]
+      )
+    }
+
+    return headerCustomPrice ?? currentIndexData.value.closePrice
+  })
 
   // retrieves percent change and formats it
-  const percentChange = useDerivedValue(
-    () =>
-      ((price.value - currentIndexData.value.openPrice) / currentIndexData.value.openPrice) * 100
-  )
+  const percentChange = useDerivedValue(() => {
+    if (isPanning.value || headerCustomPercentChange === undefined) {
+      return (
+        ((price.value - currentIndexData.value.openPrice) / currentIndexData.value.openPrice) * 100
+      )
+    }
+
+    return headerCustomPercentChange
+  })
 
   // retrieves date and formats it
   const date = useDerivedValue(() => {
-    if (!isPanning.value) return ''
+    if (!isPanning.value) {
+      return ''
+    }
 
     const unix = interpolate(
       translation.x.value,
@@ -105,13 +122,7 @@ export const PriceExplorer = ({ graphs }: GraphProps) => {
       [currentIndexData.value.openDate, currentIndexData.value.closeDate]
     )
 
-    return new Date(unix * 1000).toLocaleString('en-US', {
-      day: 'numeric', // numeric, 2-digit
-      year: 'numeric', // numeric, 2-digit
-      month: 'short', // numeric, 2-digit, long, short, narrow
-      hour: 'numeric', // numeric, 2-digit
-      minute: 'numeric', // numeric, 2-digit
-    })
+    return new Date(unix * 1000).toLocaleString()
   })
 
   return (

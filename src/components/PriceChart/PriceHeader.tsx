@@ -34,7 +34,7 @@ export const PriceHeader = ({ price, percentChange, date }: HeaderProps) => {
 
   const priceFormatted = useDerivedValue(() => {
     // note. block runs inside a worklet, cannot re-use the existing price formatters as-is
-    return `$${round(price.value, 2).toLocaleString('en-US', { currency: 'USD' })}`
+    return `$${round(price.value, 2).toLocaleString()}`
   })
 
   const percentChangeFormatted = useDerivedValue(() =>
