@@ -1,3 +1,4 @@
+import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs'
 import { skipToken } from '@reduxjs/toolkit/dist/query'
 import React, { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -12,7 +13,7 @@ import { IconButton } from 'src/components/buttons/IconButton'
 import { NFTViewer } from 'src/components/images/NFTViewer'
 import { Flex } from 'src/components/layout'
 import { BackHeader } from 'src/components/layout/BackHeader'
-import { Masonry } from 'src/components/layout/Masonry'
+import { GridRecyclerList } from 'src/components/layout/GridRecyclerList'
 import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollScreen'
 import { NFTGroupByCollection } from 'src/components/NFT/NFTGroupByCollection'
 import { Text } from 'src/components/Text'
@@ -26,9 +27,11 @@ import { selectNFTViewType } from 'src/features/wallet/selectors'
 import { NFTViewType } from 'src/features/wallet/types'
 import { setNFTViewType } from 'src/features/wallet/walletSlice'
 import { Screens } from 'src/screens/Screens'
+import { dimensions } from 'src/styles/sizing'
 import { theme } from 'src/styles/theme'
 
 const MAX_NFT_IMAGE_SIZE = 375
+const HEADER_HEIGHT = 96 // TODO: Find way to dynamically compute
 
 export function PortfolioNFTsScreen({
   route: {
@@ -45,8 +48,10 @@ export function PortfolioNFTsScreen({
   const dispatch = useAppDispatch()
 
   const { t } = useTranslation()
+  const tabBarHeight = useBottomTabBarHeight()
+  const listHeight = dimensions.fullHeight - tabBarHeight - HEADER_HEIGHT
 
-  const { currentData: nftsByCollection, isLoading: loading } = useNftBalancesQuery(
+  const { currentData: nftsByCollection } = useNftBalancesQuery(
     activeAddress ? { owner: activeAddress } : skipToken,
     { pollingInterval: PollingInterval.Normal }
   )
@@ -66,10 +71,11 @@ export function PortfolioNFTsScreen({
   const renderItem = useCallback(
     (asset: NFTAsset.Asset) => {
       return (
-        <Button activeOpacity={1} alignItems="center" onPress={() => onPressItem(asset)}>
+        <Button activeOpacity={1} alignItems="center" flex={1} onPress={() => onPressItem(asset)}>
           <NFTViewer
             maxHeight={MAX_NFT_IMAGE_SIZE}
             placeholderContent={asset.name}
+            squareGridView={true}
             uri={asset.image_url}
           />
         </Button>
@@ -135,12 +141,12 @@ export function PortfolioNFTsScreen({
         </BackHeader>
       }>
       {nftViewType === NFTViewType.Grid ? (
-        <Masonry
+        <GridRecyclerList
           data={nftItems}
           getKey={({ asset_contract, token_id }) =>
             getNFTAssetKey(asset_contract.address, token_id)
           }
-          loading={loading}
+          height={listHeight}
           renderItem={renderItem}
         />
       ) : (

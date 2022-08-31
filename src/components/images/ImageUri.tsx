@@ -1,15 +1,19 @@
 import React, { ReactElement, useEffect, useState } from 'react'
-import { Image, StyleSheet } from 'react-native'
+import { Image, ImageResizeMode, ImageStyle, StyleSheet } from 'react-native'
 import { Loading } from 'src/components/loading'
 
 export function ImageUri({
   maxHeight,
   uri,
   fallback,
+  imageStyle,
+  resizeMode,
 }: {
   maxHeight?: number
   uri?: string
   fallback?: ReactElement
+  imageStyle?: ImageStyle
+  resizeMode?: ImageResizeMode
 }) {
   const [height, setHeight] = useState<number | null>(null)
   const [width, setWidth] = useState<number | null>(null)
@@ -41,15 +45,17 @@ export function ImageUri({
 
   return (
     <Image
-      resizeMode="contain"
+      resizeMode={resizeMode ?? 'contain'}
       source={{ uri }}
-      style={[
-        {
-          aspectRatio: width / height,
-          maxHeight: maxHeight ?? '100%',
-        },
-        styles.fullWidth,
-      ]}
+      style={
+        imageStyle ?? [
+          {
+            aspectRatio: width / height,
+            maxHeight: maxHeight ?? '100%',
+          },
+          styles.fullWidth,
+        ]
+      }
     />
   )
 }
