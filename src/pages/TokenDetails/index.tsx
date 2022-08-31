@@ -19,7 +19,7 @@ import { checkWarning } from 'constants/tokenSafety'
 import { useIsUserAddedToken, useToken } from 'hooks/Tokens'
 import { useNetworkTokenBalances } from 'hooks/useNetworkTokenBalances'
 import { useCallback, useMemo, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { Navigate, useLocation, useNavigate, useParams } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
 const Footer = styled.div`
@@ -72,11 +72,12 @@ const RightPanel = styled.div`
   }
 `
 
-function NetworkBalances(tokenAddress: string) {
+function NetworkBalances(tokenAddress: string | undefined) {
   return useNetworkTokenBalances({ address: tokenAddress })
 }
 
 export default function TokenDetails() {
+  const location = useLocation()
   const { tokenAddress } = useParams<{ tokenAddress?: string }>()
   const token = useToken(tokenAddress)
   const tokenWarning = tokenAddress ? checkWarning(tokenAddress) : null
@@ -99,7 +100,7 @@ export default function TokenDetails() {
   )
 
   /* network balance handling */
-  const { data: networkData } = tokenAddress ? NetworkBalances(tokenAddress) : { data: null }
+  const { data: networkData } = NetworkBalances(token?.address)
   const { chainId: connectedChainId } = useWeb3React()
   const totalBalance = 4.3 // dummy data
 
@@ -134,26 +135,30 @@ export default function TokenDetails() {
       })
     : null
 
+  if (token === undefined) {
+    return <Navigate to={{ ...location, pathname: '/tokens' }} replace />
+  }
+
   return (
     <TokenDetailsLayout>
-      {tokenAddress && (
+      {token && (
         <>
-          <TokenDetail address={tokenAddress} />
+          <TokenDetail address={token.address} />
           <RightPanel>
             <Widget defaultToken={token ?? undefined} onReviewSwapClick={createSpeedbumpPromise} />
-            {tokenWarning && <TokenSafetyMessage tokenAddress={tokenAddress} warning={tokenWarning} />}
-            <BalanceSummary address={tokenAddress} totalBalance={totalBalance} networkBalances={balancesByNetwork} />
+            {tokenWarning && <TokenSafetyMessage tokenAddress={token.address} warning={tokenWarning} />}
+            <BalanceSummary address={token.address} totalBalance={totalBalance} networkBalances={balancesByNetwork} />
           </RightPanel>
           <Footer>
             <FooterBalanceSummary
-              address={tokenAddress}
+              address={token.address}
               totalBalance={totalBalance}
               networkBalances={balancesByNetwork}
             />
           </Footer>
           <TokenSafetyModal
             isOpen={!!continueSwap || (!!tokenWarning && !tokenWarning?.canProceed)}
-            tokenAddress={tokenAddress}
+            tokenAddress={token.address}
             onCancel={tokenWarning?.canProceed ? () => onResolveSwap(false) : () => navigate(-1)}
             onContinue={() => onResolveSwap(true)}
             showCancel={true}

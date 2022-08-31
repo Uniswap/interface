@@ -323,30 +323,29 @@ export const SearchBar = () => {
   const placeholderText = phase1Flag === NftVariant.Enabled ? t`Search tokens and NFT collections` : t`Search tokens`
 
   return (
-    <>
+    <Box position="relative">
       <Box
-        position={{ sm: isOpen ? 'absolute' : 'relative', lg: 'relative' }}
-        top={{ sm: '0', lg: 'unset' }}
-        left={{ sm: '0', lg: 'unset' }}
-        width={{ sm: isOpen ? 'viewWidth' : 'auto', lg: 'auto' }}
+        position={isOpen ? { sm: 'fixed', md: 'absolute' } : 'static'}
+        width={{ sm: isOpen ? 'viewWidth' : 'auto', md: 'auto' }}
         ref={searchRef}
-        style={{ zIndex: '1000' }}
+        className={styles.searchBarContainer}
       >
         <Row
           className={clsx(`${styles.searchBar} ${!isOpen && magicalGradientOnHover}`)}
           borderRadius={isOpen ? undefined : '12'}
           borderTopRightRadius={isOpen && !isMobile ? '12' : undefined}
           borderTopLeftRadius={isOpen && !isMobile ? '12' : undefined}
-          display={{ sm: isOpen ? 'flex' : 'none', lg: 'flex' }}
+          borderBottomWidth={isOpen ? '0px' : '1px'}
+          display={{ sm: isOpen ? 'flex' : 'none', xl: 'flex' }}
           justifyContent={isOpen || phase1Flag === NftVariant.Enabled ? 'flex-start' : 'center'}
           onFocus={() => !isOpen && toggleOpen()}
           onClick={() => !isOpen && toggleOpen()}
           gap="12"
         >
-          <Box display={{ sm: 'none', lg: 'flex' }}>
+          <Box display={{ sm: 'none', md: 'flex' }}>
             <MagnifyingGlassIcon />
           </Box>
-          <Box display={{ sm: 'flex', lg: 'none' }} color="placeholder" onClick={toggleOpen}>
+          <Box display={{ sm: 'flex', md: 'none' }} color="placeholder" onClick={toggleOpen}>
             <ChevronLeftIcon />
           </Box>
           <Box
@@ -361,7 +360,7 @@ export const SearchBar = () => {
             value={searchValue}
           />
         </Row>
-        <Box display={{ sm: isOpen ? 'none' : 'flex', lg: 'none' }}>
+        <Box display={{ sm: isOpen ? 'none' : 'flex', xl: 'none' }}>
           <NavIcon onClick={toggleOpen}>
             <NavMagnifyingGlassIcon width={28} height={28} />
           </NavIcon>
@@ -379,6 +378,6 @@ export const SearchBar = () => {
           ))}
       </Box>
       {isOpen && <Overlay />}
-    </>
+    </Box>
   )
 }
