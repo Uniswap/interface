@@ -3,8 +3,7 @@ import React, { ComponentProps, PropsWithChildren, useMemo, useRef } from 'react
 import { Trans, useTranslation } from 'react-i18next'
 import { StyleProp, ViewStyle } from 'react-native'
 import { useAppDispatch } from 'src/app/hooks'
-import ActionButton from 'src/components/buttons/ActionButton'
-import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
+import { Button, ButtonEmphasis, ButtonSize, ButtonState } from 'src/components-uds/Button/Button'
 import { Box, Flex } from 'src/components/layout'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { Text } from 'src/components/Text'
@@ -211,81 +210,85 @@ export function WalletConnectRequestModal({ isVisible, onClose, request }: Props
       <Flex gap="lg" paddingBottom="xxl" paddingHorizontal="md" paddingTop="xl">
         <ClientDetails permitInfo={permitInfo} request={request} />
 
-        <Flex
-          backgroundColor="backgroundContainer"
-          borderRadius="lg"
-          gap="none"
-          spacerProps={spacerProps}>
-          {hasCurrencyAmount && (
-            <SectionContainer>
-              <SpendingDetails currencyAmount={currencyAmount} />
-            </SectionContainer>
-          )}
+        <Flex gap="sm">
+          <Flex
+            backgroundColor="backgroundContainer"
+            borderRadius="lg"
+            gap="none"
+            spacerProps={spacerProps}>
+            {hasCurrencyAmount && (
+              <SectionContainer>
+                <SpendingDetails currencyAmount={currencyAmount} />
+              </SectionContainer>
+            )}
 
-          {!permitInfo && (
-            <SectionContainer style={requestMessageStyle}>
-              <RequestMessage request={request} />
-            </SectionContainer>
-          )}
+            {!permitInfo && (
+              <SectionContainer style={requestMessageStyle}>
+                <RequestMessage request={request} />
+              </SectionContainer>
+            )}
 
-          {isPotentiallyUnsafe(request) && (
-            <SectionContainer>
-              <Text color="accentWarning" variant="bodySmall">
-                <Trans t={t}>
-                  <Text fontWeight="bold">Be careful:</Text>{' '}
-                  {isTransactionRequest(request)
-                    ? 'Accepting this request'
-                    : 'Signing this message'}{' '}
-                  could allow the requesting app to perform any action with your wallet and its
-                  contents.
-                </Trans>
-              </Text>
-            </SectionContainer>
-          )}
-
-          {methodCostsGas(request) && chainId && (
-            <SectionContainer>
-              <NetworkFee
-                chainId={chainId}
-                gasFeeInfo={gasFeeInfo}
-                transaction={request.transaction}
-              />
-            </SectionContainer>
-          )}
-
-          {hasMultipleAccounts && (
-            <SectionContainer>
-              <AccountDetails address={request.account} />
-              {!hasSufficientFunds && (
-                <Text color="accentWarning" paddingTop="xs" variant="caption">
-                  {t("You don't have enough {{symbol}} to complete this transaction.", {
-                    symbol: nativeCurrency?.symbol,
-                  })}
+            {isPotentiallyUnsafe(request) && (
+              <SectionContainer>
+                <Text color="accentWarning" variant="bodySmall">
+                  <Trans t={t}>
+                    <Text fontWeight="bold">Be careful:</Text>{' '}
+                    {isTransactionRequest(request)
+                      ? 'Accepting this request'
+                      : 'Signing this message'}{' '}
+                    could allow the requesting app to perform any action with your wallet and its
+                    contents.
+                  </Trans>
                 </Text>
-              )}
-            </SectionContainer>
-          )}
-        </Flex>
+              </SectionContainer>
+            )}
 
-        <Flex row gap="sm">
-          <PrimaryButton
-            borderColor="backgroundOutline"
-            borderWidth={1}
-            flex={1}
-            label={t('Cancel')}
-            name={ElementName.Cancel}
-            variant="black"
-            onPress={onReject}
-          />
-          <ActionButton
-            borderRadius="md"
-            disabled={!activeAccount || !hasSufficientFunds}
-            flex={1}
-            label={isTransactionRequest(request) ? t('Accept') : t('Sign')}
-            name={ElementName.Confirm}
-            variant="blue"
-            onPress={onConfirm}
-          />
+            {methodCostsGas(request) && chainId && (
+              <SectionContainer>
+                <NetworkFee
+                  chainId={chainId}
+                  gasFeeInfo={gasFeeInfo}
+                  transaction={request.transaction}
+                />
+              </SectionContainer>
+            )}
+
+            {hasMultipleAccounts && (
+              <SectionContainer>
+                <AccountDetails address={request.account} />
+                {!hasSufficientFunds && (
+                  <Text color="accentWarning" paddingTop="xs" variant="caption">
+                    {t("You don't have enough {{symbol}} to complete this transaction.", {
+                      symbol: nativeCurrency?.symbol,
+                    })}
+                  </Text>
+                )}
+              </SectionContainer>
+            )}
+          </Flex>
+
+          <Flex row gap="sm">
+            <Button
+              emphasis={ButtonEmphasis.Low}
+              flex={1}
+              label={t('Cancel')}
+              name={ElementName.Cancel}
+              size={ButtonSize.Medium}
+              state={ButtonState.Enabled}
+              onPress={onReject}
+            />
+            <Button
+              emphasis={ButtonEmphasis.High}
+              flex={1}
+              label={isTransactionRequest(request) ? t('Accept') : t('Sign')}
+              name={ElementName.Confirm}
+              size={ButtonSize.Medium}
+              state={
+                !activeAccount || !hasSufficientFunds ? ButtonState.Disabled : ButtonState.Enabled
+              }
+              onPress={onConfirm}
+            />
+          </Flex>
         </Flex>
       </Flex>
     </BottomSheetModal>
