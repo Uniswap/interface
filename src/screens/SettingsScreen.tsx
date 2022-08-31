@@ -289,7 +289,7 @@ function WalletSettings() {
                 address={account.address}
                 showViewOnly={account.type === AccountType.Readonly}
                 size={36}
-                variant="body"
+                variant="subhead"
                 verticalGap="none"
               />
               <Chevron color={theme.colors.textSecondary} direction="e" height={24} width={24} />
