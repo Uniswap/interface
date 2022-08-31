@@ -46,7 +46,7 @@ const SockImg = styled.img`
 const Socks = () => {
   return (
     <SockContainer>
-      <SockImg color="black" src={sockImg} />
+      <SockImg src={sockImg} />
     </SockContainer>
   )
 }
