@@ -10,6 +10,8 @@ import {
   POLYGON_LOGO,
   RINKEBY_LOGO,
   ROPSTEN_LOGO,
+  MUMBAI_LOGO,
+  ARBITRUM_RINKEBY_LOGO,
 } from 'src/assets'
 
 export type ChainIdTo<T> = Partial<Record<ChainId, T>>
@@ -143,6 +145,7 @@ export const CHAIN_INFO: ChainInfo = {
     explorer: 'https://rinkeby-explorer.arbitrum.io/',
     infoLink: 'https://info.uniswap.org/#/arbitrum/',
     label: 'Arbitrum Rinkeby',
+    logo: ARBITRUM_RINKEBY_LOGO,
     nativeCurrency: { name: 'Rinkeby ArbETH', symbol: 'rinkArbETH', decimals: 18 },
     rpcUrls: ['https://rinkeby.arbitrum.io/rpc'],
   },
@@ -230,6 +233,7 @@ export const CHAIN_INFO: ChainInfo = {
     explorer: 'https://mumbai.polygonscan.com/',
     infoLink: 'https://info.uniswap.org/#/polygon/',
     label: 'Polygon Mumbai',
+    logo: MUMBAI_LOGO,
     nativeCurrency: { name: 'Polygon Mumbai Matic', symbol: 'mMATIC', decimals: 18 },
     rpcUrls: ['https://rpc-endpoints.superfluid.dev/mumbai'],
   },
