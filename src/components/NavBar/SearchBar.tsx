@@ -321,7 +321,7 @@ export const SearchBar = () => {
     setSearchValue('')
   }, [pathname])
 
-  // auto set cursor when searchbar is open
+  // auto set cursor when searchbar is opened
   useEffect(() => {
     if (isOpen) {
       inputRef.current?.focus()
