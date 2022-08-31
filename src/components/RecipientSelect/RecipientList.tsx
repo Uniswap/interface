@@ -26,6 +26,7 @@ export function RecipientList({ onPress, sections }: RecipientListProps) {
       ItemSeparatorComponent={ItemSeparator}
       SectionSeparatorComponent={SectionSeparator}
       keyExtractor={key}
+      keyboardShouldPersistTaps="always"
       renderItem={renderItem}
       renderSectionHeader={SectionHeader}
       sections={sections}
