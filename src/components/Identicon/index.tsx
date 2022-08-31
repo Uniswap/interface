@@ -1,13 +1,9 @@
 import jazzicon from '@metamask/jazzicon'
 import { useWeb3React } from '@web3-react/core'
-import { ConnectionType } from 'connection'
 import { NavBarVariant, useNavBarFlag } from 'featureFlags/flags/navBar'
 import useENSAvatar from 'hooks/useENSAvatar'
 import { useLayoutEffect, useMemo, useRef, useState } from 'react'
 import styled from 'styled-components/macro'
-
-import CoinbaseWalletIcon from '../../assets/images/coinbaseWalletIcon.svg'
-import WalletConnectIcon from '../../assets/images/walletConnectIcon.svg'
 
 const StyledIdenticon = styled.div<{ isNavbarEnabled: boolean }>`
   height: ${({ isNavbarEnabled }) => (isNavbarEnabled ? '24px' : '1rem')};
