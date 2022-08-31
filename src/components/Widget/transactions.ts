@@ -31,8 +31,7 @@ export function useSyncWidgetTransactions() {
 
       if (!type || !response) {
         return
-      }
-      if (type === WidgetTransactionType.WRAP || type === WidgetTransactionType.UNWRAP) {
+      } else if (type === WidgetTransactionType.WRAP || type === WidgetTransactionType.UNWRAP) {
         const { amount } = transaction.info
 
         addTransaction(response, {
@@ -41,8 +40,7 @@ export function useSyncWidgetTransactions() {
           currencyAmountRaw: amount.quotient.toString(),
           chainId,
         } as WrapTransactionInfo)
-      }
-      if (type === WidgetTransactionType.SWAP) {
+      } else if (type === WidgetTransactionType.SWAP) {
         const { trade, tradeType } = transaction.info
         const baseTxInfo = {
           type: AppTransactionType.SWAP,
