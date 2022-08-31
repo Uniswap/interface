@@ -4,9 +4,9 @@ import { FlexAlignType } from 'react-native'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import CopyIcon from 'src/assets/icons/copy-sheets.svg'
 import { Button } from 'src/components/buttons/Button'
-import { RemoteImage } from 'src/components/images/RemoteImage'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
+import { AvatarWithVisibilityBadge } from 'src/components/unicons/AvatarWithVisibilityBadge'
 import { UniconWithVisibilityBadge } from 'src/components/unicons/UniconWithVisibilityBadge'
 import useENSAvatar from 'src/features/ens/useENSAvatar'
 import { pushNotification } from 'src/features/notifications/notificationSlice'
@@ -91,7 +91,13 @@ export function AddressDisplay({
   // Use ENS avatar if found, if not revert to Unicon
   const icon = useMemo(() => {
     if (avatar) {
-      return <RemoteImage borderRadius={size} height={size} uri={avatar} width={size} />
+      return (
+        <AvatarWithVisibilityBadge
+          avatarUri={avatar}
+          showViewOnlyBadge={showViewOnly}
+          size={size}
+        />
+      )
     } else {
       return (
         <UniconWithVisibilityBadge address={address} showViewOnlyBadge={showViewOnly} size={size} />
