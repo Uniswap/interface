@@ -123,11 +123,12 @@ export function TransactionSectionList({
       // Logic to render border radius and margins on groups of items.
       const aboveItem = index > 0 ? section.data[index - 1] : undefined
       const currentIsIsolated =
-        (item.status === TransactionStatus.Cancelled ||
+        (section.data.length === 1 && item.status === TransactionStatus.Pending) ||
+        ((item.status === TransactionStatus.Cancelled ||
           item?.status === TransactionStatus.Cancelling ||
           item?.status === TransactionStatus.FailedCancel) &&
-        index === 0 &&
-        section.title === TODAY_TITLE(t)
+          index === 0 &&
+          section.title === TODAY_TITLE(t))
       const aboveIsIsolated =
         (aboveItem?.status === TransactionStatus.Cancelled ||
           aboveItem?.status === TransactionStatus.Cancelling ||
@@ -135,8 +136,10 @@ export function TransactionSectionList({
         index === 1 &&
         section.title === TODAY_TITLE(t)
 
-      const borderTop = aboveIsIsolated || index === 0
-      const borderBottom = currentIsIsolated || index === section.data.length - 1
+      const radiusTop = aboveIsIsolated || index === 0
+      const radiusBottom = currentIsIsolated || index === section.data.length - 1
+      const borderTop = currentIsIsolated
+      const borderBottom = currentIsIsolated || index !== section.data.length - 1
 
       // Only show banner if first element in pending or daily section.
       const showInlineWarning =
@@ -144,16 +147,15 @@ export function TransactionSectionList({
 
       return (
         <TransactionSummaryRouter
-          borderBottomColor={borderBottom ? 'none' : 'backgroundOutline'}
-          borderBottomLeftRadius={borderBottom ? 'lg' : 'none'}
-          borderBottomRightRadius={borderBottom ? 'lg' : 'none'}
-          borderBottomWidth={0.25}
-          borderColor="backgroundOutline"
-          borderLeftWidth={borderBottom ? (borderTop ? 0 : 0.25) : 0.25}
-          borderRightWidth={borderBottom ? (borderTop ? 0 : 0.25) : 0.25}
-          borderTopLeftRadius={borderTop ? 'lg' : 'none'}
-          borderTopRightRadius={borderTop ? 'lg' : 'none'}
-          borderTopWidth={borderTop ? 0.25 : 0}
+          borderBottomColor={borderBottom ? 'backgroundOutline' : 'none'}
+          borderBottomLeftRadius={radiusBottom ? 'lg' : 'none'}
+          borderBottomRightRadius={radiusBottom ? 'lg' : 'none'}
+          borderLeftColor={currentIsIsolated ? 'backgroundOutline' : 'none'}
+          borderRightColor={currentIsIsolated ? 'backgroundOutline' : 'none'}
+          borderTopColor={borderTop ? 'backgroundOutline' : 'none'}
+          borderTopLeftRadius={radiusTop ? 'lg' : 'none'}
+          borderTopRightRadius={radiusTop ? 'lg' : 'none'}
+          borderWidth={0.5}
           mb={currentIsIsolated ? 'md' : 'none'}
           readonly={readonly}
           showInlineWarning={showInlineWarning}
