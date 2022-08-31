@@ -86,10 +86,10 @@ export const OpenSeaLink = (props: OpenSeaLinkProps) => {
     )
 }
 
-const useFloorPrice = () => {
+export const useFloorPrice = () => {
     const [floorPrice, setFloorPrice] = React.useState<any>()
     const getData = React.useCallback(async () => {
-       const url = `https://api.opensea.io/collection/kiba-inu-genesis-i` 
+       const url = `https://api.opensea.io/api/v1/collection/kiba-inu-genesis-i` 
        const response = await axios.get<{
            collection?: {
                 stats?: { floor_price?: any} 

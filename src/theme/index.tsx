@@ -137,7 +137,7 @@ export default function ThemeProvider({ children }: { children: React.ReactNode 
 
 
 const TextWrapper = styled(Text)<{ link?:boolean, font?: string, color: keyof Colors }>`
-  color: ${({ color, theme }) => (theme as any)[color]};
+  color: ${props => ((props as any).theme[props?.color])};
   font-family: ${props => props.font ? props.font : 'inherit'};
   ${props => Boolean(props.link) && `&:hover {
     color: ${props.theme.blue2};
@@ -171,7 +171,7 @@ export const TYPE = {
     return <TextWrapper font={'"Open Sans";'} fontWeight={500} fontSize={20} {...props} />
   },
   subHeader(props: TextProps) {
-    return <TextWrapper fontWeight={400} color={'text1'} fontSize={14} {...props} />
+    return <TextWrapper fontWeight={400} color={'text1'} fontSize={18} {...props} />
   },
   small(props: TextProps) {
     return <TextWrapper fontWeight={500} fontSize={11} {...props} />

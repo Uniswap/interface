@@ -1,11 +1,12 @@
-import { useCallback, useContext, useEffect } from 'react'
-import { X } from 'react-feather'
-import { useSpring } from 'react-spring/web'
 import styled, { ThemeContext } from 'styled-components/macro'
-import { animated } from 'react-spring'
+import { useCallback, useContext, useEffect } from 'react'
+
 import { PopupContent } from '../../state/application/actions'
-import { useRemovePopup } from '../../state/application/hooks'
 import TransactionPopup from './TransactionPopup'
+import { X } from 'react-feather'
+import { animated } from 'react-spring'
+import { useRemovePopup } from '../../state/application/hooks'
+import { useSpring } from 'react-spring/web'
 
 const StyledClose = styled(X)`
   position: absolute;
@@ -29,7 +30,7 @@ const Popup = styled.div`
   color:#fff;
   position:relative;
   top:50px;
-  
+  z-index:1000;
   :before {
     content: '';
     position: absolute;
