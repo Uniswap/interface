@@ -1,5 +1,6 @@
 import { Currency } from '@uniswap/sdk-core'
 import React, { ReactNode } from 'react'
+import { useTranslation } from 'react-i18next'
 import { FadeInUp, FadeOut } from 'react-native-reanimated'
 import { useAppTheme } from 'src/app/hooks'
 import { AddressDisplay } from 'src/components/AddressDisplay'
@@ -55,12 +56,16 @@ export function TransactionReview({
   onPrev,
 }: TransactionReviewProps) {
   const theme = useAppTheme()
+  const { t } = useTranslation()
 
   return (
     <>
-      <AnimatedFlex alignItems="center" entering={FadeInUp} exiting={FadeOut} flexGrow={1}>
+      <AnimatedFlex centered grow entering={FadeInUp} exiting={FadeOut} gap="sm">
         {currencyIn ? (
-          <Flex gap="sm" mt="xxl">
+          <Flex centered gap="sm">
+            <Text color="textTertiary" variant="caption">
+              {t('Send')}
+            </Text>
             <AmountInput
               alignSelf="stretch"
               backgroundColor="none"
@@ -108,20 +113,24 @@ export function TransactionReview({
             </Flex>
           </Flex>
         ) : recipient ? (
-          <Flex centered gap="xs">
-            <AddressDisplay address={recipient} size={24} variant="headlineMedium" />
-            <RecipientPrevTransfers recipient={recipient} />
+          <Flex centered gap="sm">
+            <Text color="textTertiary" variant="caption">
+              {t('To')}
+            </Text>
+            <Flex centered gap="xs">
+              <AddressDisplay address={recipient} size={24} variant="headlineMedium" />
+              <RecipientPrevTransfers recipient={recipient} />
+            </Flex>
           </Flex>
         ) : null}
       </AnimatedFlex>
       <AnimatedFlex
         entering={FadeInUp}
         exiting={FadeOut}
-        flexGrow={1}
+        flexGrow={0}
         gap="sm"
         justifyContent="flex-end"
         mb="xl"
-        mt="xs"
         px="md">
         {transactionDetails}
         <Flex row gap="xs">
