@@ -418,9 +418,11 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
         isVisible={showQRModal}
         name={ModalName.WalletQRCode}
         onClose={onCloseQrCode}>
-        <WalletQRCode address={qrCodeAddress} />
-        <Flex centered mt="md" position="absolute" width="100%">
-          <Box bg="backgroundOutline" borderRadius="sm" height={4} width={40} />
+        <Flex py="xxxl">
+          <WalletQRCode address={qrCodeAddress} />
+          <Flex centered mt="md" position="absolute" width="100%">
+            <Box bg="backgroundOutline" borderRadius="sm" height={4} width={40} />
+          </Flex>
         </Flex>
       </BottomSheetModal>
     </Screen>
