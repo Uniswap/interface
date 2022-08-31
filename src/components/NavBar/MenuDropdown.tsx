@@ -130,7 +130,7 @@ export const MenuDropdown = () => {
         </NavIcon>
 
         {isOpen && (
-          <NavDropdown top={{ sm: 'unset', xxl: '56' }} bottom={{ sm: '56', xxl: 'unset' }} right="0">
+          <NavDropdown top={{ sm: 'unset', lg: '56' }} bottom={{ sm: '56', lg: 'unset' }} right="0">
             <Column gap="16">
               <Column paddingX="8" gap="4">
                 {nftFlag === NftVariant.Enabled && (

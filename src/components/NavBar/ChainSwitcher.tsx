@@ -108,14 +108,14 @@ export const ChainSwitcher = ({ leftAlign }: ChainSwitcherProps) => {
         {!isSupported ? (
           <>
             <TokenWarningRedIcon fill={themeVars.colors.darkGray} width={24} height={24} />
-            <Box as="span" className={subhead} display={{ sm: 'none', xl: 'flex' }} style={{ lineHeight: '20px' }}>
+            <Box as="span" className={subhead} display={{ sm: 'none', xxl: 'flex' }} style={{ lineHeight: '20px' }}>
               Unsupported
             </Box>
           </>
         ) : (
           <>
             <img src={info.logoUrl} alt={info.label} className={styles.Image} />
-            <Box as="span" className={subhead} display={{ sm: 'none', xl: 'flex' }} style={{ lineHeight: '20px' }}>
+            <Box as="span" className={subhead} display={{ sm: 'none', xxl: 'flex' }} style={{ lineHeight: '20px' }}>
               {info.label}
             </Box>
           </>
