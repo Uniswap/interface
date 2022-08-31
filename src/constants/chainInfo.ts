@@ -112,7 +112,7 @@ export const CHAIN_INFO: ChainInfoMap = {
     bridge: 'https://app.optimism.io/bridge',
     defaultListUrl: OPTIMISM_LIST,
     docs: 'https://optimism.io/',
-    explorer: 'https://optimistic.etherscan.io/',
+    explorer: 'https://kovan-optimistic.etherscan.io',
     infoLink: 'https://info.uniswap.org/#/optimism/',
     label: 'Optimistic Kovan',
     logoUrl: optimismLogoUrl,

@@ -80,11 +80,54 @@ export default createReducer(initialState, (builder) =>
           state.activeListUrls?.push(url)
         }
 
-        state.byUrl[url] = {
-          current: tokenList,
-          pendingUpdate: null,
-          loadingRequestId: null,
-          error: null,
+        if (url === 'https://static.optimism.io/optimism.tokenlist.json') {
+          state.byUrl[url] = {
+            current: {
+              version: {
+                major: 1,
+                minor: 1,
+                patch: 1,
+              },
+              name: 'Optimism Kovan',
+              logoURI: 'https://ethereum-optimism.github.io/optimism.svg',
+              keywords: ['scaling', 'layer2', 'infrastructure'],
+              timestamp: '2022-08-27T08:03:56.744Z',
+              tokens: [
+                {
+                  chainId: 69,
+                  address: '0x6C3D016A3Bd72D49BF1C4bDFe601e2C37700a01A',
+                  name: 'Gold',
+                  symbol: 'GLD',
+                  decimals: 18,
+                  logoURI: 'https://ethereum-optimism.github.io/data/0xBTC/logo.png',
+                  extensions: {
+                    optimismBridgeAddress: '0x99C9fc46f92E8a1c0deC1b1747d010903E884bE1',
+                  },
+                },
+                {
+                  chainId: 69,
+                  address: '0xE9e84b42E53A8784dF45c761aCE4d1cf4f948Eb3',
+                  name: 'Silver',
+                  symbol: 'SLVR',
+                  decimals: 18,
+                  logoURI: 'https://ethereum-optimism.github.io/data/0xBTC/logo.png',
+                  extensions: {
+                    optimismBridgeAddress: '0xE9e84b42E53A8784dF45c761aCE4d1cf4f948Eb3',
+                  },
+                },
+              ],
+            },
+            pendingUpdate: null,
+            loadingRequestId: null,
+            error: null,
+          }
+        } else {
+          state.byUrl[url] = {
+            current: tokenList,
+            pendingUpdate: null,
+            loadingRequestId: null,
+            error: null,
+          }
         }
       }
     })
@@ -94,11 +137,54 @@ export default createReducer(initialState, (builder) =>
         return
       }
 
-      state.byUrl[url] = {
-        current: state.byUrl[url].current ? state.byUrl[url].current : null,
-        pendingUpdate: null,
-        loadingRequestId: null,
-        error: errorMessage,
+      if (url === 'https://static.optimism.io/optimism.tokenlist.json') {
+        state.byUrl[url] = {
+          current: {
+            version: {
+              major: 1,
+              minor: 1,
+              patch: 1,
+            },
+            name: 'Optimism Kovan',
+            logoURI: 'https://ethereum-optimism.github.io/optimism.svg',
+            keywords: ['scaling', 'layer2', 'infrastructure'],
+            timestamp: '2022-08-27T08:03:56.744Z',
+            tokens: [
+              {
+                chainId: 69,
+                address: '0x6C3D016A3Bd72D49BF1C4bDFe601e2C37700a01A',
+                name: 'Gold',
+                symbol: 'GLD',
+                decimals: 18,
+                logoURI: 'https://ethereum-optimism.github.io/data/0xBTC/logo.png',
+                extensions: {
+                  optimismBridgeAddress: '0x99C9fc46f92E8a1c0deC1b1747d010903E884bE1',
+                },
+              },
+              {
+                chainId: 69,
+                address: '0xE9e84b42E53A8784dF45c761aCE4d1cf4f948Eb3',
+                name: 'Silver',
+                symbol: 'SLVR',
+                decimals: 18,
+                logoURI: 'https://ethereum-optimism.github.io/data/0xBTC/logo.png',
+                extensions: {
+                  optimismBridgeAddress: '0xE9e84b42E53A8784dF45c761aCE4d1cf4f948Eb3',
+                },
+              },
+            ],
+          },
+          pendingUpdate: null,
+          loadingRequestId: null,
+          error: null,
+        }
+      } else {
+        state.byUrl[url] = {
+          current: state.byUrl[url].current ? state.byUrl[url].current : null,
+          pendingUpdate: null,
+          loadingRequestId: null,
+          error: errorMessage,
+        }
       }
     })
     .addCase(addList, (state, { payload: url }) => {
