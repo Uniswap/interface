@@ -269,6 +269,7 @@ export const SearchBar = () => {
   const [searchValue, setSearchValue] = useState('')
   const debouncedSearchValue = useDebounce(searchValue, 300)
   const searchRef = useRef<HTMLDivElement>(null)
+  const inputRef = useRef<HTMLInputElement>(null)
   const { pathname } = useLocation()
   const phase1Flag = useNftFlag()
   const isMobile = useIsMobile()
@@ -321,6 +322,13 @@ export const SearchBar = () => {
     setSearchValue('')
   }, [pathname])
 
+  // auto set cursor when searchbar is opened
+  useEffect(() => {
+    if (isOpen) {
+      inputRef.current?.focus()
+    }
+  }, [isOpen])
+
   const placeholderText = phase1Flag === NftVariant.Enabled ? t`Search tokens and NFT collections` : t`Search tokens`
 
   return (
@@ -359,6 +367,7 @@ export const SearchBar = () => {
             }}
             className={styles.searchBarInput}
             value={searchValue}
+            ref={inputRef}
           />
         </Row>
         <Box display={{ sm: isOpen ? 'none' : 'flex', xl: 'none' }}>
