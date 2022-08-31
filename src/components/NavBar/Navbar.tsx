@@ -83,7 +83,7 @@ const Navbar = () => {
             <SearchBar />
           </Box>
           <Box className={styles.rightSideContainer}>
-            <Row gap="12">
+            <Row gap="12" style={{ minWidth: 200 }}>
               <Box display={{ sm: 'flex', xl: 'none' }}>
                 <SearchBar />
               </Box>

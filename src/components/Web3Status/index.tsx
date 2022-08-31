@@ -303,7 +303,7 @@ export default function Web3Status() {
   const confirmed = sortedRecentTransactions.filter((tx) => tx.receipt).map((tx) => tx.hash)
 
   return (
-    <span ref={ref}>
+    <span ref={ref} style={{ marginLeft: 'auto' }}>
       <Web3StatusInner />
       <WalletModal ENSName={ENSName ?? undefined} pendingTransactions={pending} confirmedTransactions={confirmed} />
       <Portal>
