@@ -129,11 +129,9 @@ function getTicks(startTimestamp: number, endTimestamp: number, forceStartOfMont
   return ticks.map((tick) => {
     const date = new Date(tick.valueOf() * 1000)
     if (date.getDate() !== 1) {
-      if (date.getDate() >= 15) {
-        return new Date(date.getFullYear(), date.getMonth() + 1, 1).getTime() / 1000
-      } else {
-        return new Date(date.getFullYear(), date.getMonth(), 1).getTime() / 1000
-      }
+      return date.getDate() >= 15
+        ? new Date(date.getFullYear(), date.getMonth() + 1, 1).getTime() / 1000
+        : new Date(date.getFullYear(), date.getMonth(), 1).getTime() / 1000
     }
     return tick
   })
