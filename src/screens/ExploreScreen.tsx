@@ -1,6 +1,7 @@
 import { useScrollToTop } from '@react-navigation/native'
+import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { BlurView } from 'expo-blur'
-import React, { useMemo, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { KeyboardAvoidingView, TextInput, useColorScheme, ViewStyle } from 'react-native'
 import Animated, {
@@ -16,6 +17,7 @@ import Animated, {
 } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useAppSelector } from 'src/app/hooks'
+import { AppStackParamList, TabNavigationProp } from 'src/app/navigation/types'
 import { FavoriteTokensCard } from 'src/components/explore/FavoriteTokensCard'
 import { SearchResultsSection } from 'src/components/explore/search/SearchResultsSection'
 import { TopTokensCard } from 'src/components/explore/TopTokensCard'
@@ -28,6 +30,7 @@ import { VirtualizedList } from 'src/components/layout/VirtualizedList'
 import { AnimatedText } from 'src/components/Text'
 import { ClientSideOrderBy } from 'src/features/dataApi/coingecko/types'
 import { selectHasFavoriteTokens, selectHasWatchedWallets } from 'src/features/favorites/selectors'
+import { Screens, Tabs } from 'src/screens/Screens'
 import { flex } from 'src/styles/flex'
 import { theme } from 'src/styles/theme'
 
@@ -42,7 +45,9 @@ const HEADER_HEIGHT =
   theme.spacing.xl
 const CONTENT_MAX_SCROLL_Y = SEARCH_BAR_HEIGHT + theme.spacing.md // Scroll distance for pinned search bar state
 
-export function ExploreScreen() {
+type Props = NativeStackScreenProps<AppStackParamList, Screens.TabNavigator>
+
+export function ExploreScreen({ navigation }: Props) {
   const { t } = useTranslation()
 
   const listRef = useRef(null)
@@ -55,6 +60,18 @@ export function ExploreScreen() {
   const [isSearchMode, setIsSearchMode] = useState<boolean>(false)
   const scrollY = useSharedValue(0)
   const textInputRef = useRef<TextInput>(null)
+
+  // Reset search mode on tab press
+  useEffect(() => {
+    const unsubscribe = (navigation.getParent() as TabNavigationProp<Tabs.Explore>).addListener(
+      'tabPress',
+      () => {
+        textInputRef?.current?.blur()
+      }
+    )
+
+    return unsubscribe
+  }, [navigation])
 
   const onChangeSearchFilter = (newSearchFilter: string) => {
     setSearchQuery(newSearchFilter)

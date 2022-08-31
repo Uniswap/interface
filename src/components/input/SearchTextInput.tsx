@@ -55,7 +55,7 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
   const showClearButton = useSharedValue(value.length > 0 && !disableClearable)
   const cancelButtonWidth = useSharedValue(showCancelButton ? 40 : 0)
 
-  const onPressCancel = () => {
+  const onBlur = () => {
     isFocus.value = false
     Keyboard.dismiss()
     onChangeText?.('')
@@ -157,6 +157,7 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
           returnKeyType="done"
           textContentType="none"
           value={value}
+          onBlur={onBlur}
           onChangeText={onChangeTextInput}
           onFocus={onTextInputFocus}
           onSubmitEditing={onTextInputSubmitEditing}
@@ -175,7 +176,7 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
         <AnimatedButton
           style={[cancelButtonStyle, CancelButtonDefaultStyle]}
           onLayout={onCancelLayout}
-          onPress={onPressCancel}>
+          onPress={onBlur}>
           <Text variant="subhead">{t('Cancel')}</Text>
         </AnimatedButton>
       )}
