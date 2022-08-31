@@ -436,7 +436,7 @@ export default function Header() {
             {t('Liquidity')}
           </StyledNavLink>
           <StyledNavLink id={`earn-nav-link`} to={'/tele'}>
-            {t('earn')}
+            {t('Earn')}
           </StyledNavLink>
           {/* <StyledNavLink id={`stake-nav-link`} to={'/uni'}>
             UNI
