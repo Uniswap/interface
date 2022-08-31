@@ -214,7 +214,7 @@ function Web3StatusInner() {
   const hasPendingTransactions = !!pending.length
   const hasSocks = useHasSocks()
   const isNavbarEnabled = useNavBarFlag() === NavBarVariant.Enabled
-  const toggleWallet = useNavBarFlag() ? toggleWalletDropdown : toggleWalletModal
+  const toggleWallet = isNavbarEnabled ? toggleWalletDropdown : toggleWalletModal
 
   if (!chainId) {
     return null
