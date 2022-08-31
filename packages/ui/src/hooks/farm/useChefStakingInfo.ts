@@ -6,6 +6,7 @@ import ITeleswapV2PairABI from '@teleswap/contracts/build/ITeleswapV2Pair.json'
 import { useMultipleContractSingleData } from 'state/multicall/hooks'
 import { Interface } from '@ethersproject/abi'
 import { MasterChefRawPoolInfo, useMasterChefPoolInfo } from './useMasterChefPoolInfo'
+import { Token } from '@teleswap/sdk'
 
 const PAIR_INTERFACE = new Interface(ITeleswapV2PairABI)
 
@@ -26,14 +27,17 @@ interface AdditionalStakingInfo {
      */
     token1?: string
   }
+  /**
+   * the `Token` object that generated from `lpToken` address
+   */
+  stakingToken: Token
 }
 export type ChefStakingInfo = MasterChefRawPoolInfo & AdditionalStakingInfo
 
-export function useChefStakingInfo(chef: Chef): ChefStakingInfo[] {
-  const poolInfos = useMasterChefPoolInfo(chef)
-
+export function useChefStakingInfo(): ChefStakingInfo[] {
   const { chainId } = useActiveWeb3React()
   const farmingConfig = CHAINID_TO_FARMING_CONFIG[chainId || 420]
+  const poolInfos = useMasterChefPoolInfo(farmingConfig?.chefType || Chef.MINICHEF)
 
   // const pairContract = usePairContract()
   const pairAddresses = useMemo(
@@ -43,6 +47,17 @@ export function useChefStakingInfo(chef: Chef): ChefStakingInfo[] {
       }),
     [farmingConfig, poolInfos]
   )
+  const stakingTokens = useMemo(() => {
+    return poolInfos.map((poolInfo, idx) => {
+      return new Token(
+        chainId || 420,
+        poolInfo.lpToken,
+        farmingConfig?.pools[idx].stakingAsset.decimal || 18,
+        farmingConfig?.pools[idx].stakingAsset.symbol,
+        farmingConfig?.pools[idx].stakingAsset.name
+      )
+    })
+  }, [chainId, poolInfos, farmingConfig])
   const listOfToken0 = useMultipleContractSingleData(pairAddresses, PAIR_INTERFACE, 'token0')
   const listOfToken1 = useMultipleContractSingleData(pairAddresses, PAIR_INTERFACE, 'token1')
 
@@ -53,9 +68,9 @@ export function useChefStakingInfo(chef: Chef): ChefStakingInfo[] {
       ? {
           ...pool.stakingAsset,
           token0: listOfToken0[idx].result?.at(0),
-          token1: listOfToken1[idx].result?.at(0)
+          token1: listOfToken1[idx].result?.at(0),
         }
       : undefined
-    return { ...info, isHidden: pool?.isHidden, stakingAsset }
+    return { ...info, isHidden: pool?.isHidden, stakingAsset, stakingToken: stakingTokens[idx] }
   })
 }
