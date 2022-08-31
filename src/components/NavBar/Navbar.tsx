@@ -101,7 +101,9 @@ const Navbar = () => {
       </nav>
       <Box className={styles.mobileBottomBar}>
         <PageTabs />
-        <MenuDropdown />
+        <Box marginY="4">
+          <MenuDropdown />
+        </Box>
       </Box>
     </>
   )
