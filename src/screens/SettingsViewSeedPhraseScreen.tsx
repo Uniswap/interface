@@ -43,7 +43,7 @@ export function SettingsViewSeedPhraseScreen({
   }, [showSeedPhrase, showSeedPhraseViewWarningModal, navigation])
 
   const onConfirmWarning = () => {
-    if (isBiometricAuthEnabled) {
+    if (biometricAuthRequiredForAppAccess || biometricAuthRequiredForTransactions) {
       biometricTrigger()
     } else {
       onShowSeedPhraseConfirmed()
@@ -55,7 +55,10 @@ export function SettingsViewSeedPhraseScreen({
     setShowSeedPhraseViewWarningModal(false)
   }
 
-  const { requiredForAppAccess: isBiometricAuthEnabled } = useBiometricAppSettings()
+  const {
+    requiredForAppAccess: biometricAuthRequiredForAppAccess,
+    requiredForTransactions: biometricAuthRequiredForTransactions,
+  } = useBiometricAppSettings()
   const { trigger: biometricTrigger } = useBiometricPrompt(onShowSeedPhraseConfirmed)
 
   useEffect(() => {
