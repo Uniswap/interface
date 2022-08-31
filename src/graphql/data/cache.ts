@@ -1,7 +1,7 @@
 import ms from 'ms.macro'
 
+import { PricePoint } from './TokenPrice'
 import { TimePeriod } from './TopTokenQuery'
-import { PriceHistory } from './types'
 
 /* TODO: Replace these times with non-arbitrarily picked values */
 export const PRICEHISTORY_REFRESH_ALLOWANCE = {
@@ -13,7 +13,7 @@ export const PRICEHISTORY_REFRESH_ALLOWANCE = {
   [TimePeriod.HOUR]: ms`60s`,
 }
 
-type PriceData = Record<TimePeriod, { timestamp: number; data: PriceHistory }>
+type PriceData = Record<TimePeriod, { timestamp: number; data: PricePoint[] }>
 type TokenData = { prices: PriceData }
 
 class TokenAPICache {
@@ -25,9 +25,9 @@ class TokenAPICache {
     if (entry && Date.now() - entry.timestamp < PRICEHISTORY_REFRESH_ALLOWANCE[time]) {
       return entry.data
     }
-    return null
+    return undefined
   }
-  setPriceHistory(data: PriceHistory, address: string, time: TimePeriod) {
+  setPriceHistory(data: PricePoint[], address: string, time: TimePeriod) {
     const item = { timestamp: Date.now(), data }
     const entry = this.cache[address]
     if (entry) {

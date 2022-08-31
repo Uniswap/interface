@@ -6,11 +6,11 @@ import { GlyphCircle } from '@visx/glyph'
 import { Line } from '@visx/shape'
 import { filterTimeAtom } from 'components/Tokens/state'
 import { bisect, curveCardinalOpen, NumberValue, scaleLinear } from 'd3'
-import { useTokenPriceQuery } from 'graphql/data/TokenPrice'
+import { PricePoint, useTokenPriceQuery } from 'graphql/data/TokenPrice'
 import { TimePeriod } from 'graphql/data/TopTokenQuery'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import { useAtom } from 'jotai'
-import { useCallback, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { ArrowDownRight, ArrowUpRight } from 'react-feather'
 import styled, { useTheme } from 'styled-components/macro'
 import { OPACITY_HOVER } from 'theme'
@@ -28,8 +28,6 @@ import LineChart from '../../Charts/LineChart'
 import { DISPLAYS, ORDERED_TIMES } from '../TokenTable/TimeSelector'
 
 // TODO: This should be combined with the logic in TimeSelector.
-
-export type PricePoint = { value: number; timestamp: number }
 
 export const DATA_EMPTY = { value: 0, timestamp: 0 }
 
@@ -161,14 +159,10 @@ export function PriceChart({ width, height, token }: PriceChartProps) {
   const theme = useTheme()
 
   // TODO: Add network selector input, consider using backend type instead of current front end selector type
-  const { error, isLoading, data } = useTokenPriceQuery(token.address, 'ETHEREUM', timePeriod)
+  const { error, isLoading, prices } = useTokenPriceQuery(token.address, 'ETHEREUM', timePeriod)
 
-  const pricePoints: PricePoint[] = data.filter((p): p is PricePoint => Boolean(p && p.value))
-
-  const hasData = pricePoints.length !== 0
-
-  const startingPrice = hasData ? pricePoints[0] : DATA_EMPTY
-  const endingPrice = hasData ? pricePoints[pricePoints.length - 1] : DATA_EMPTY
+  const startingPrice = prices?.[0] ?? DATA_EMPTY
+  const endingPrice = prices?.[prices.length - 1] ?? DATA_EMPTY
   const [displayPrice, setDisplayPrice] = useState(startingPrice)
   const [crosshair, setCrosshair] = useState<number | null>(null)
 
@@ -178,22 +172,33 @@ export function PriceChart({ width, height, token }: PriceChartProps) {
 
   // Defining scales
   // x scale
-  const timeScale = scaleLinear().domain([startingPrice.timestamp, endingPrice.timestamp]).range([0, width])
+  const timeScale = useMemo(
+    () => scaleLinear().domain([startingPrice.timestamp, endingPrice.timestamp]).range([0, width]),
+    [startingPrice, endingPrice, width]
+  )
   // y scale
-  const rdScale = scaleLinear().domain(getPriceBounds(pricePoints)).range([graphInnerHeight, 0])
+  const rdScale = useMemo(
+    () =>
+      scaleLinear()
+        .domain(getPriceBounds(prices ?? []))
+        .range([graphInnerHeight, 0]),
+    [prices, graphInnerHeight]
+  )
 
   const handleHover = useCallback(
     (event: Element | EventType) => {
+      if (!prices) return
+
       const { x } = localPoint(event) || { x: 0 }
       const x0 = timeScale.invert(x) // get timestamp from the scalexw
       const index = bisect(
-        pricePoints.map((x) => x.timestamp),
+        prices.map((x) => x.timestamp),
         x0,
         1
       )
 
-      const d0 = pricePoints[index - 1]
-      const d1 = pricePoints[index]
+      const d0 = prices[index - 1]
+      const d1 = prices[index]
       let pricePoint = d0
 
       const hasPreviousData = d1 && d1.timestamp
@@ -204,7 +209,7 @@ export function PriceChart({ width, height, token }: PriceChartProps) {
       setCrosshair(timeScale(pricePoint.timestamp))
       setDisplayPrice(pricePoint)
     },
-    [timeScale, pricePoints]
+    [timeScale, prices]
   )
 
   const resetDisplay = useCallback(() => {
@@ -218,7 +223,7 @@ export function PriceChart({ width, height, token }: PriceChartProps) {
   }
 
   // TODO: Display no data available error
-  if (!hasData) {
+  if (!prices) {
     return null
   }
 
@@ -247,7 +252,7 @@ export function PriceChart({ width, height, token }: PriceChartProps) {
         </DeltaContainer>
       </ChartHeader>
       <LineChart
-        data={pricePoints}
+        data={prices}
         getX={(p: PricePoint) => timeScale(p.timestamp)}
         getY={(p: PricePoint) => rdScale(p.value)}
         marginTop={margin.top}

@@ -86,18 +86,28 @@ const query = graphql`
   }
 `
 
+export type PricePoint = { value: number; timestamp: number }
+
+function formatPrices(priceHistory: PriceHistory | undefined) {
+  return priceHistory?.filter((p): p is PricePoint => Boolean(p && p.value))
+}
+
+function extractPrices(data: TokenPriceSingleQuery['response']) {
+  return formatPrices(data?.tokenProjects?.[0]?.markets?.[0]?.priceHistory)
+}
+
 export function useTokenPriceQuery(address: string, chain: Chain, timePeriod: TimePeriod) {
-  const [prices, setPrices] = useState<PriceHistory>(TokenAPICache.checkPriceHistory(address, timePeriod))
+  const [prices, setPrices] = useState<PricePoint[] | undefined>(TokenAPICache.checkPriceHistory(address, timePeriod))
   const [error, setError] = useState<any>()
   const [isLoading, setIsLoading] = useState(!prices)
 
   /* To be called every time the data is successfully queried */
   const updatePrices = useCallback(
     (data: TokenPriceSingleQuery['response']) => {
-      const newPrices = data?.tokenProjects?.[0]?.markets?.[0]?.priceHistory
-      if (newPrices) {
-        TokenAPICache.setPriceHistory(newPrices, address, timePeriod)
-        setPrices(newPrices)
+      const priceData = extractPrices(data)
+      if (priceData) {
+        TokenAPICache.setPriceHistory(priceData, address, timePeriod)
+        setPrices(priceData)
       }
     },
     [timePeriod, address]
@@ -127,7 +137,7 @@ export function useTokenPriceQuery(address: string, chain: Chain, timePeriod: Ti
     }
   }, [address, timePeriod, fetchData])
 
-  return { error, isLoading, data: prices ?? [] }
+  return { error, isLoading, prices }
 }
 
 export function fillTokenPriceCache(address: string, chain: Chain, timePeriod: TimePeriod) {
@@ -141,7 +151,7 @@ export function fillTokenPriceCache(address: string, chain: Chain, timePeriod: T
       duration: toHistoryDuration(timePeriod),
     }).subscribe({
       next: (data) => {
-        const prices = data?.tokenProjects?.[0]?.markets?.[0]?.priceHistory
+        const prices = formatPrices(data?.tokenProjects?.[0]?.markets?.[0]?.priceHistory)
         prices && TokenAPICache.setPriceHistory(prices, address, timePeriod)
       },
     })
@@ -155,12 +165,12 @@ export function fillTokenPriceCache(address: string, chain: Chain, timePeriod: T
     },
   }).subscribe({
     next: (data) => {
-      const prices1H = data?.tokenProjects?.[0]?.markets?.[0]?.priceHistory1H
-      const prices1D = data?.tokenProjects?.[0]?.markets?.[0]?.priceHistory1D
-      const prices1W = data?.tokenProjects?.[0]?.markets?.[0]?.priceHistory1W
-      const prices1M = data?.tokenProjects?.[0]?.markets?.[0]?.priceHistory1M
-      const prices1Y = data?.tokenProjects?.[0]?.markets?.[0]?.priceHistory1Y
-      const pricesMax = data?.tokenProjects?.[0]?.markets?.[0]?.priceHistoryMAX
+      const prices1H = formatPrices(data?.tokenProjects?.[0]?.markets?.[0]?.priceHistory1H)
+      const prices1D = formatPrices(data?.tokenProjects?.[0]?.markets?.[0]?.priceHistory1D)
+      const prices1W = formatPrices(data?.tokenProjects?.[0]?.markets?.[0]?.priceHistory1W)
+      const prices1M = formatPrices(data?.tokenProjects?.[0]?.markets?.[0]?.priceHistory1M)
+      const prices1Y = formatPrices(data?.tokenProjects?.[0]?.markets?.[0]?.priceHistory1Y)
+      const pricesMax = formatPrices(data?.tokenProjects?.[0]?.markets?.[0]?.priceHistoryMAX)
 
       prices1H && TokenAPICache.setPriceHistory(prices1H, address, TimePeriod.HOUR)
       prices1D && TokenAPICache.setPriceHistory(prices1D, address, TimePeriod.DAY)
