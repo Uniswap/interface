@@ -1,13 +1,14 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { Alert, StyleSheet } from 'react-native'
+import { Alert, Image } from 'react-native'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { i18n } from 'src/app/i18n'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
+import { ONBOARDING_NOTIFICATIONS_BGICON } from 'src/assets'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { TextButton } from 'src/components/buttons/TextButton'
-import { Box, Flex } from 'src/components/layout'
+import { Flex } from 'src/components/layout'
 import { useBiometricAppSettings } from 'src/features/biometrics/hooks'
 import { promptPushPermission } from 'src/features/notifications/Onesignal'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
@@ -74,8 +75,10 @@ export function NotificationsSetupScreen({ navigation, route: { params } }: Prop
     <OnboardingScreen
       subtitle={t('Get notified when your transfers, swaps, and approvals complete.')}
       title={t('Turn on push notifications')}>
-      <Flex grow justifyContent="space-between">
-        <NotificationLinesWrapper />
+      <Flex grow alignItems="center" justifyContent="space-between">
+        <Flex centered grow>
+          <Image source={ONBOARDING_NOTIFICATIONS_BGICON} />
+        </Flex>
         <Flex alignItems="center" gap="sm" justifyContent="flex-end" width="100%">
           <TextButton
             alignSelf="stretch"
@@ -107,56 +110,3 @@ export function NotificationsSetupScreen({ navigation, route: { params } }: Prop
     </OnboardingScreen>
   )
 }
-
-interface NotificationLineProps {
-  active?: boolean
-}
-
-function NotificationLine({ active = true }: NotificationLineProps) {
-  return (
-    <Flex
-      row
-      alignItems="center"
-      backgroundColor={active ? 'textTertiary' : 'textPrimary'}
-      gap="xxs"
-      px="xs"
-      style={styles.lineWrapper}>
-      <Box backgroundColor="backgroundBackdrop" height={10} style={styles.rectangle} width={10} />
-      <Box backgroundColor="backgroundBackdrop" borderRadius="xs" flex={1} height={5} />
-    </Flex>
-  )
-}
-
-function NotificationLinesWrapper() {
-  return (
-    <Flex centered grow>
-      <Flex
-        borderColor="textTertiary"
-        borderWidth={4}
-        gap="xs"
-        px="sm"
-        style={styles.notifLinesWrapper}
-        width={123}>
-        <NotificationLine active={false} />
-        <NotificationLine />
-        <NotificationLine />
-      </Flex>
-    </Flex>
-  )
-}
-
-const styles = StyleSheet.create({
-  lineWrapper: {
-    borderRadius: 6,
-    paddingBottom: 5,
-    paddingTop: 6,
-  },
-  notifLinesWrapper: {
-    borderRadius: 24,
-    paddingBottom: 53,
-    paddingTop: 90,
-  },
-  rectangle: {
-    borderRadius: 3,
-  },
-})
