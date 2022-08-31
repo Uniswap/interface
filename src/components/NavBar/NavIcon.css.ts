@@ -14,11 +14,11 @@ export const navIcon = style([
     padding: '8',
     borderRadius: '8',
     transition: '250',
+    zIndex: '1',
   }),
   {
     ':hover': {
       background: vars.color.lightGrayOverlay,
     },
-    zIndex: 1,
   },
 ])

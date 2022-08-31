@@ -335,7 +335,6 @@ export const SearchBar = () => {
     <Box position="relative">
       <Box
         position={isOpen ? { sm: 'fixed', md: 'absolute' } : 'static'}
-        width={{ sm: isOpen ? 'viewWidth' : 'auto', md: 'auto' }}
         ref={searchRef}
         className={styles.searchBarContainer}
       >
