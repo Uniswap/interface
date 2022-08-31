@@ -1,5 +1,7 @@
+import { useWeb3React } from '@web3-react/core'
 import { ConnectionType } from 'connection'
 import { NavBarVariant, useNavBarFlag } from 'featureFlags/flags/navBar'
+import useENSAvatar from 'hooks/useENSAvatar'
 import styled from 'styled-components/macro'
 import { colors } from 'theme/colors'
 
@@ -51,32 +53,31 @@ const Socks = () => {
   )
 }
 
+const useIcon = (connectionType: ConnectionType) => {
+  const { account } = useWeb3React()
+  const { avatar } = useENSAvatar(account ?? undefined)
+  const isNavbarEnabled = useNavBarFlag() === NavBarVariant.Enabled
+
+  if ((isNavbarEnabled && avatar) || connectionType === ConnectionType.INJECTED) {
+    return <Identicon connectionType={connectionType} />
+  } else if (connectionType === ConnectionType.WALLET_CONNECT) {
+    return <img src={WalletConnectIcon} alt="WalletConnect" />
+  } else if (connectionType === ConnectionType.COINBASE_WALLET) {
+    return <img src={CoinbaseWalletIcon} alt="Coinbase Wallet" />
+  }
+
+  return undefined
+}
+
 export default function StatusIcon({ connectionType, size }: { connectionType: ConnectionType; size?: number }) {
   const hasSocks = useHasSocks()
-  const navbarFlag = useNavBarFlag()
-  const isNavbarEnabled = navbarFlag === NavBarVariant.Enabled
-
-  let image
-  switch (connectionType) {
-    case ConnectionType.INJECTED:
-      image = <Identicon />
-      break
-    case ConnectionType.WALLET_CONNECT:
-      image = <img src={WalletConnectIcon} alt="WalletConnect" />
-      break
-    case ConnectionType.COINBASE_WALLET:
-      image = <img src={CoinbaseWalletIcon} alt="Coinbase Wallet" />
-      break
-  }
+  const isNavbarEnabled = useNavBarFlag() === NavBarVariant.Enabled
+  const icon = useIcon(connectionType)
 
   return (
     <IconWrapper size={size ?? 16}>
-      {isNavbarEnabled ? (
-        <span>
-          {hasSocks && <Socks />}
-          {isNavbarEnabled ? <Identicon /> : image}
-        </span>
-      ) : null}
+      {isNavbarEnabled && hasSocks && <Socks />}
+      {icon}
     </IconWrapper>
   )
 }

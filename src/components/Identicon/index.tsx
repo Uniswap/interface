@@ -1,5 +1,6 @@
 import jazzicon from '@metamask/jazzicon'
 import { useWeb3React } from '@web3-react/core'
+import { ConnectionType } from 'connection'
 import { NavBarVariant, useNavBarFlag } from 'featureFlags/flags/navBar'
 import useENSAvatar from 'hooks/useENSAvatar'
 import { useLayoutEffect, useMemo, useRef, useState } from 'react'
@@ -19,7 +20,7 @@ const StyledAvatar = styled.img`
   border-radius: inherit;
 `
 
-export default function Identicon() {
+export default function Identicon({ connectionType }: { connectionType: ConnectionType }) {
   const { account } = useWeb3React()
   const { avatar } = useENSAvatar(account ?? undefined)
   const [fetchable, setFetchable] = useState(true)
