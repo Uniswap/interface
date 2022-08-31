@@ -90,7 +90,7 @@ interface SearchBarDropdownProps {
 }
 
 export const SearchBarDropdown = ({ toggleOpen, tokens, collections, hasInput }: SearchBarDropdownProps) => {
-  const [hoveredIndex, setHoveredIndex] = useState<number | undefined>(undefined)
+  const [hoveredIndex, setHoveredIndex] = useState<number | undefined>(0)
   const searchHistory = useSearchHistory(
     (state: { history: (FungibleToken | GenieCollection)[] }) => state.history
   ).slice(0, 2)
@@ -185,6 +185,7 @@ export const SearchBarDropdown = ({ toggleOpen, tokens, collections, hasInput }:
           setHoveredIndex(hoveredIndex - 1)
         }
       } else if (event.key === 'ArrowDown') {
+        event.preventDefault()
         if (hoveredIndex && hoveredIndex === totalSuggestions - 1) {
           setHoveredIndex(0)
         } else {
