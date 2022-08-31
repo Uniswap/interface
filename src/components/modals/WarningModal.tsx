@@ -6,6 +6,7 @@ import { Flex } from 'src/components/layout'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { Text } from 'src/components/Text'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
+import { WarningSeverity } from 'src/components/warnings/types'
 
 type WarningModalProps = {
   isVisible: boolean
@@ -16,6 +17,7 @@ type WarningModalProps = {
   caption?: string
   closeText?: string
   confirmText?: string
+  severity?: WarningSeverity
 }
 
 export default function WarningModal({
@@ -27,6 +29,7 @@ export default function WarningModal({
   caption,
   closeText,
   confirmText,
+  severity = WarningSeverity.Medium,
   children,
 }: PropsWithChildren<WarningModalProps>) {
   const theme = useAppTheme()
@@ -37,8 +40,21 @@ export default function WarningModal({
       name={modalName}
       onClose={onClose}>
       <Flex centered gap="md" mb="lg" p="lg">
-        <Flex centered borderColor="accentWarning" borderRadius="md" borderWidth={1} p="sm">
-          <AlertTriangleIcon color={theme.colors.accentWarning} height={24} width={24} />
+        <Flex
+          centered
+          borderColor={severity === WarningSeverity.High ? 'accentFailure' : 'accentWarning'}
+          borderRadius="md"
+          borderWidth={1}
+          p="sm">
+          <AlertTriangleIcon
+            color={
+              severity === WarningSeverity.High
+                ? theme.colors.accentFailure
+                : theme.colors.accentWarning
+            }
+            height={24}
+            width={24}
+          />
         </Flex>
         <Text textAlign="center" variant="mediumLabel">
           {title}
@@ -66,7 +82,7 @@ export default function WarningModal({
               label={confirmText}
               name={ElementName.Confirm}
               testID={ElementName.Confirm}
-              variant="blue"
+              variant={severity === WarningSeverity.High ? 'warningDark' : 'blue'}
               onPress={onConfirm}
             />
           )}

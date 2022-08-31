@@ -10,6 +10,7 @@ import { ManualBackupEducationSection } from 'src/components/mnemonic/ManualBack
 import { MnemonicDisplay } from 'src/components/mnemonic/MnemonicDisplay'
 import { MnemonicTest } from 'src/components/mnemonic/MnemonicTest'
 import WarningModal from 'src/components/modals/WarningModal'
+import { WarningSeverity } from 'src/components/warnings/types'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { BackupType, SignerMnemonicAccount } from 'src/features/wallet/accounts/types'
@@ -74,13 +75,14 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props) {
           title={t('Back up manually')}>
           <WarningModal
             caption={t(
-              'It’s up to you to backup your recovery phrase by storing it in a safe and memorable place.'
+              'Uniswap Labs can’t restore lost recovery phrases. This is why it’s important to back up your recovery phrase.'
             )}
             closeText={t('Cancel')}
             confirmText={t('I understand')}
             isVisible={showTermsModal}
             modalName={ModalName.RecoveryWarning}
-            title={t('If you lose your recovery phrase, Uniswap Labs can’t restore your wallet')}
+            severity={WarningSeverity.High}
+            title={t('If you lose your recovery phrase, you’ll lose access to your assets')}
             onClose={() => setShowTermsModal(false)}
             onConfirm={nextView}
           />

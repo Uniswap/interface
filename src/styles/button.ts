@@ -57,6 +57,10 @@ export const primaryButtonVariants = {
     backgroundColor: 'accentFailureSoft',
     color: 'accentFailure',
   },
+  warningDark: {
+    backgroundColor: 'accentFailure',
+    color: 'accentTextDarkPrimary',
+  },
 }
 
 export const iconButtonVariants = {
