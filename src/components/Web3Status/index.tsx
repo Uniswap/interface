@@ -196,7 +196,6 @@ function Web3StatusInner() {
     inputError: swapInputError,
   } = useDerivedSwapInfo()
   const validSwapQuote = getIsValidSwapQuote(trade, tradeState, swapInputError)
-  const navbarFlag = useNavBarFlag()
   const toggleWalletDropdown = useToggleWalletDropdown()
   const toggleWalletModal = useToggleWalletModal()
   const walletIsOpen = useIsOpen()
@@ -214,7 +213,7 @@ function Web3StatusInner() {
 
   const hasPendingTransactions = !!pending.length
   const hasSocks = useHasSocks()
-  const isNavbarEnabled = navbarFlag === NavBarVariant.Enabled
+  const isNavbarEnabled = useNavBarFlag()
   const toggleWallet = isNavbarEnabled ? toggleWalletDropdown : toggleWalletModal
 
   if (!chainId) {
@@ -245,8 +244,16 @@ function Web3StatusInner() {
             <Text>{ENSName || shortenAddress(account)}</Text>
           </>
         )}
-        {!isNavbarEnabled && !hasPendingTransactions && <StatusIcon connectionType={connectionType} />}
-        {isNavbarEnabled && (walletIsOpen ? <ChevronUp /> : <ChevronDown />)}
+
+        {isNavbarEnabled ? (
+          walletIsOpen ? (
+            <ChevronUp />
+          ) : (
+            <ChevronDown />
+          )
+        ) : (
+          !hasPendingTransactions && <StatusIcon connectionType={connectionType} />
+        )}
       </Web3StatusConnected>
     )
   } else {

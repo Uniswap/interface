@@ -71,8 +71,12 @@ export default function StatusIcon({ connectionType, size }: { connectionType: C
 
   return (
     <IconWrapper size={size ?? 16}>
-      {hasSocks && isNavbarEnabled && <Socks />}
-      {isNavbarEnabled ? <Identicon /> : image}
+      {isNavbarEnabled ? (
+        <span>
+          {hasSocks && <Socks />}
+          {isNavbarEnabled ? <Identicon /> : image}
+        </span>
+      ) : null}
     </IconWrapper>
   )
 }
