@@ -59,7 +59,7 @@ const useIcon = (connectionType: ConnectionType) => {
   const isNavbarEnabled = useNavBarFlag() === NavBarVariant.Enabled
 
   if ((isNavbarEnabled && avatar) || connectionType === ConnectionType.INJECTED) {
-    return <Identicon connectionType={connectionType} />
+    return <Identicon />
   } else if (connectionType === ConnectionType.WALLET_CONNECT) {
     return <img src={WalletConnectIcon} alt="WalletConnect" />
   } else if (connectionType === ConnectionType.COINBASE_WALLET) {

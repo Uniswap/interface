@@ -6,6 +6,9 @@ import useENSAvatar from 'hooks/useENSAvatar'
 import { useLayoutEffect, useMemo, useRef, useState } from 'react'
 import styled from 'styled-components/macro'
 
+import CoinbaseWalletIcon from '../../assets/images/coinbaseWalletIcon.svg'
+import WalletConnectIcon from '../../assets/images/walletConnectIcon.svg'
+
 const StyledIdenticon = styled.div<{ isNavbarEnabled: boolean }>`
   height: ${({ isNavbarEnabled }) => (isNavbarEnabled ? '24px' : '1rem')};
   width: ${({ isNavbarEnabled }) => (isNavbarEnabled ? '24px' : '1rem')};
@@ -20,13 +23,12 @@ const StyledAvatar = styled.img`
   border-radius: inherit;
 `
 
-export default function Identicon({ connectionType }: { connectionType: ConnectionType }) {
+export default function Identicon() {
   const { account } = useWeb3React()
   const { avatar } = useENSAvatar(account ?? undefined)
   const [fetchable, setFetchable] = useState(true)
-  const navbarFlag = useNavBarFlag()
-  const isNavbarEnabled = navbarFlag === NavBarVariant.Enabled
-  const iconSize = navbarFlag === NavBarVariant.Enabled ? 24 : 16
+  const isNavbarEnabled = useNavBarFlag() === NavBarVariant.Enabled
+  const iconSize = isNavbarEnabled ? 24 : 16
 
   const icon = useMemo(() => account && jazzicon(iconSize, parseInt(account.slice(2, 10), 16)), [account, iconSize])
   const iconRef = useRef<HTMLDivElement>(null)
