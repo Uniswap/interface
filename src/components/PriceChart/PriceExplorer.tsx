@@ -1,8 +1,10 @@
 import React from 'react'
 import { StyleSheet, View } from 'react-native'
 import Animated, {
+  interpolate,
   useAnimatedProps,
   useAnimatedStyle,
+  useDerivedValue,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated'
@@ -46,10 +48,12 @@ export const PriceExplorer = ({ graphs }: GraphProps) => {
   // graph index used to display the current graph
   const currentGraphIndex = useSharedValue<number>(1)
 
+  const currentIndexData = useDerivedValue(() => graphs[currentGraphIndex.value].data)
+
   // mixes graph paths on index change
   const graphTransitionAnimatedProps = useAnimatedProps(() => {
     const previousPath = graphs[previousGraphIndex.value].data.path
-    const currentPath = graphs[currentGraphIndex.value].data.path
+    const currentPath = currentIndexData.value.path
     const d = {
       d: mixPath(transition.value, previousPath, currentPath),
     }
@@ -57,7 +61,7 @@ export const PriceExplorer = ({ graphs }: GraphProps) => {
   })
   const graphTransitionClosedAnimatedProps = useAnimatedProps(() => {
     const previousPath = graphs[previousGraphIndex.value].data.path
-    const currentPath = graphs[currentGraphIndex.value].data.path
+    const currentPath = currentIndexData.value.path
     return {
       d: `${mixPath(
         transition.value,
@@ -74,14 +78,45 @@ export const PriceExplorer = ({ graphs }: GraphProps) => {
     ],
   }))
 
+  // retrieves price and formats it
+  const price = useDerivedValue(() =>
+    isPanning.value
+      ? interpolate(
+          translation.y.value,
+          [0, HEIGHT],
+          [currentIndexData.value.highPrice, currentIndexData.value.lowPrice]
+        )
+      : currentIndexData.value.closePrice
+  )
+
+  // retrieves percent change and formats it
+  const percentChange = useDerivedValue(
+    () =>
+      ((price.value - currentIndexData.value.openPrice) / currentIndexData.value.openPrice) * 100
+  )
+
+  // retrieves date and formats it
+  const date = useDerivedValue(() => {
+    if (!isPanning.value) return ''
+
+    const unix = interpolate(
+      translation.x.value,
+      [0, WIDTH],
+      [currentIndexData.value.openDate, currentIndexData.value.closeDate]
+    )
+
+    return new Date(unix * 1000).toLocaleString('en-US', {
+      day: 'numeric', // numeric, 2-digit
+      year: 'numeric', // numeric, 2-digit
+      month: 'short', // numeric, 2-digit, long, short, narrow
+      hour: 'numeric', // numeric, 2-digit
+      minute: 'numeric', // numeric, 2-digit
+    })
+  })
+
   return (
     <Box>
-      <PriceHeader
-        graphs={graphs}
-        index={currentGraphIndex}
-        isPanning={isPanning}
-        translation={translation}
-      />
+      <PriceHeader date={date} percentChange={percentChange} price={price} />
       <Box my="sm">
         <Svg height={HEIGHT} width={WIDTH}>
           <AnimatedPath
