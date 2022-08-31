@@ -12,13 +12,14 @@ import { useActiveWeb3React } from '../../hooks'
 import { useApproveCallback, ApprovalState } from '../../hooks/useApproveCallback'
 import { TransactionResponse } from '@ethersproject/providers'
 import { useTransactionAdder } from '../../state/transactions/hooks'
-import { MASTERCHEF_ADDRESSBOOK } from 'constants/index'
 import useMasterChef from 'hooks/farm/useMasterChef'
 import { Chef } from 'constants/farm/chef.enum'
 import { utils } from 'ethers'
 import { Token, TokenAmount } from '@teleswap/sdk'
 import { LoadingView, SubmittedView } from 'components/ModalViews'
 import { useChefStakingInfo } from 'hooks/farm/useChefStakingInfo'
+import { useChefContractForCurrentChain } from 'hooks/farm/useChefContract'
+import { CHAINID_TO_FARMING_CONFIG } from 'constants/farming.config'
 // const HypotheticalRewardRate = styled.div<{ dim: boolean }>`
 //   display: flex;
 //   justify-content: space-between;
@@ -44,7 +45,7 @@ export default function StakingModal({ isOpen, onDismiss, pid }: StakingModalPro
   const { chainId } = useActiveWeb3React()
 
   // track and parse user input
-  const [typedValue, setTypedValue] = useState('')
+  const [typedValue, setTypedValue] = useState('0')
   // const parsedAmountWrapped = wrappedCurrencyAmount(parsedAmount, chainId)
 
   // state for pending and submitted txn views
@@ -68,17 +69,23 @@ export default function StakingModal({ isOpen, onDismiss, pid }: StakingModalPro
   const thisPool = stakingInfos[pid]
   const stakingCurrency = thisPool.stakingToken
 
-  const tokenAmount = new TokenAmount(stakingCurrency, typedValue)
+  const tokenAmount = new TokenAmount(
+    stakingCurrency,
+    utils.parseUnits(typedValue, stakingCurrency.decimals).toString()
+  )
   console.info('tokenAmount', tokenAmount)
-  const [approval, approve] = useApproveCallback(tokenAmount, MASTERCHEF_ADDRESSBOOK[chainId ?? 420])
+  const stakingContract = useChefContractForCurrentChain()
+  const farmingConfig = CHAINID_TO_FARMING_CONFIG[chainId || 420]
+  const [approval, approve] = useApproveCallback(tokenAmount, stakingContract?.address)
+  const mchef = useMasterChef(farmingConfig?.chefType || Chef.MINICHEF)
+  console.debug('approval', approval)
   // const [parsedAmount, setParsedAmount] = useState('0')
   // const stakingContract = useStakingContract(stakingInfo.stakingRewardAddress)
-  const stakingContract = useMasterChef(Chef.MINICHEF)
   async function onStake() {
     setAttempting(true)
     if (stakingContract && deadline) {
       if (approval === ApprovalState.APPROVED) {
-        stakingContract
+        mchef
           .deposit(pid, utils.parseUnits(typedValue, stakingCurrency.decimals))
           .then((response: TransactionResponse) => {
             addTransaction(response, {
