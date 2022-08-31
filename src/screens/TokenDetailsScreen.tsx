@@ -3,8 +3,8 @@ import React, { Suspense, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { AppStackScreenProp } from 'src/app/navigation/types'
-import { Button, ButtonEmphasis, ButtonSize, ButtonState } from 'src/components-uds/Button/Button'
 import { IconButton } from 'src/components/buttons/IconButton'
+import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { SendButton } from 'src/components/buttons/SendButton'
 import { CurrencyLogo } from 'src/components/CurrencyLogo'
 import { Heart } from 'src/components/icons/Heart'
@@ -227,16 +227,12 @@ function TokenDetails({ currency }: { currency: Currency }) {
         position="absolute"
         pt="sm"
         px="sm">
-        <Button
-          emphasis={ButtonEmphasis.High}
+        <PrimaryButton
+          disabled={tokenWarningLevel === TokenWarningLevel.BLOCKED}
           flex={1}
           label={t('Swap')}
-          size={ButtonSize.Medium}
-          state={
-            tokenWarningLevel === TokenWarningLevel.BLOCKED
-              ? ButtonState.Disabled
-              : ButtonState.Enabled
-          }
+          py="md"
+          textVariant="mediumLabel"
           onPress={() => onPressSwap(currentChainBalance ? SwapType.SELL : SwapType.BUY)}
         />
         {currentChainBalance && (
