@@ -1,13 +1,14 @@
 import { useAtom } from 'jotai'
 import { atomWithStorage, useAtomValue } from 'jotai/utils'
 import { createContext, ReactNode, useCallback, useContext } from 'react'
+export { FeatureFlag } from './flags/featureFlags'
 
 interface FeatureFlagsContextType {
   isLoaded: boolean
   flags: Record<string, string>
 }
 
-const FeatureFlagContext = createContext<FeatureFlagsContextType>({ isLoaded: false, flags: {} })
+export const FeatureFlagContext = createContext<FeatureFlagsContextType>({ isLoaded: false, flags: {} })
 
 export function useFeatureFlagsContext(): FeatureFlagsContextType {
   const context = useContext(FeatureFlagContext)
@@ -51,16 +52,6 @@ export function useFeatureFlagsIsLoaded(): boolean {
 export enum BaseVariant {
   Control = 'control',
   Enabled = 'enabled',
-}
-
-export enum FeatureFlag {
-  navBar = 'navBar',
-  wallet = 'wallet',
-  nft = 'nfts',
-  redesign = 'redesign',
-  tokens = 'tokens',
-  tokensNetworkFilter = 'tokensNetworkFilter',
-  tokenSafety = 'tokenSafety',
 }
 
 export function useBaseFlag(flag: string): BaseVariant {
