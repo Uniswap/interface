@@ -1,5 +1,4 @@
 import { Trans } from '@lingui/macro'
-import ProgressBar from '@ramonak/react-progress-bar'
 import { Currency } from '@uniswap/sdk-core'
 import Badge from 'components/Badge'
 import { CHAIN_INFO } from 'constants/chainInfo'
@@ -116,7 +115,7 @@ function TransactionSubmittedContent({
 
   const [progressBarValue, setProgressBarValue] = useState<number>(0)
 
-  const showConfirmMessage = progressBarValue >= 100 && swapResponse
+  const showConfirmMessage = progressBarValue >= 6000 && swapResponse
 
   const txHash = 'test'
 
@@ -156,17 +155,18 @@ function TransactionSubmittedContent({
           </RowFixed>
         </RowBetween>
         <div style={{ padding: 5 }} />
-
-        <ProgressBar
-          completed={progressBarValue}
-          labelSize={'12px'}
-          transitionDuration={'0.2s'}
-          transitionTimingFunction={'ease-in-out'}
-          labelAlignment={'outside'}
-          labelColor={'#ef9231'}
-          bgColor={'#ef9231'}
-        />
-
+        {/* <ProgressBar
+            completed={progressBarValue}
+            labelSize={'12px'}
+            transitionDuration={'0.2s'}
+            transitionTimingFunction={'ease-in-out'}
+            labelAlignment={'outside'}
+            labelColor={'#ef9231'}
+            bgColor={'#ef9231'}
+          /> */}
+        <ConfirmedIcon inline={inline}>
+          <CustomLightSpinner src={Circle} alt="loader" size={inline ? '40px' : '90px'} />
+        </ConfirmedIcon>
         <div style={{ marginBottom: 30 }} />
 
         {showConfirmMessage && (
@@ -336,7 +336,8 @@ function L2Content({
               <AlertCircle strokeWidth={1} size={inline ? '40px' : '90px'} color={theme.red1} />
             )
           ) : (
-            <CustomLightSpinner src={Circle} alt="loader" size={inline ? '40px' : '90px'} />
+            // <CustomLightSpinner src={Circle} alt="loader" size={inline ? '40px' : '90px'} />
+            <AnimatedConfirmation />
           )}
         </ConfirmedIcon>
         <AutoColumn gap="12px" justify={'center'}>
