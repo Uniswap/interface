@@ -152,42 +152,44 @@ export default function AddLiquidity({
 
     let estimate,
       method: (...args: any) => Promise<TransactionResponse>,
-      args: Array<string | string[] | number | { from: string | undefined; to: string | undefined; stable: boolean }>,
+      args: Array<string | string[] | number | { from: string | undefined; to: string | undefined; stable: boolean } | Array<any>>,
       value: BigNumber | null
-    if (currencyA === ETHER || currencyB === ETHER) {
-      const tokenBIsETH = currencyB === ETHER
-      estimate = router.estimateGas.addLiquidityETH
-      method = router.addLiquidityETH
-      args = [
-        // wrappedCurrency(tokenBIsETH ? currencyA : currencyB, chainId)?.address ?? '', // token
-        {
-          from: wrappedCurrency(currencyA, chainId)?.address,
-          to: wrappedCurrency(currencyB, chainId)?.address,
-          stable: true,
-        },
-        (tokenBIsETH ? parsedAmountA : parsedAmountB).raw.toString(), // token desired
-        amountsMin[tokenBIsETH ? Field.CURRENCY_A : Field.CURRENCY_B].toString(), // token min
-        amountsMin[tokenBIsETH ? Field.CURRENCY_B : Field.CURRENCY_A].toString(), // eth min
-        account,
-        deadline.toHexString(),
-      ]
-      value = BigNumber.from((tokenBIsETH ? parsedAmountB : parsedAmountA).raw.toString())
+    // if (currencyA === ETHER || currencyB === ETHER) {
+    if (false) {
+      // const tokenBIsETH = currencyB === ETHER
+      // estimate = router.estimateGas.addLiquidityETH
+      // method = router.addLiquidityETH
+      // args = [
+      //   // wrappedCurrency(tokenBIsETH ? currencyA : currencyB, chainId)?.address ?? '', // token
+      //   {
+      //     from: wrappedCurrency(currencyA, chainId)?.address,
+      //     to: wrappedCurrency(currencyB, chainId)?.address,
+      //     stable: true,
+      //   },
+      //   (tokenBIsETH ? parsedAmountA : parsedAmountB).raw.toString(), // token desired
+      //   amountsMin[tokenBIsETH ? Field.CURRENCY_A : Field.CURRENCY_B].toString(), // token min
+      //   amountsMin[tokenBIsETH ? Field.CURRENCY_B : Field.CURRENCY_A].toString(), // eth min
+      //   account,
+      //   deadline.toHexString(),
+      // ]
+      // value = BigNumber.from((tokenBIsETH ? parsedAmountB : parsedAmountA).raw.toString())
     } else {
       estimate = router.estimateGas.addLiquidity
       method = router.addLiquidity
       args = [
         [wrappedCurrency(currencyA, chainId)?.address ?? '',
-         wrappedCurrency(currencyB, chainId)?.address ?? ''],
+        wrappedCurrency(currencyB, chainId)?.address ?? '', false],
         parsedAmountA.raw.toString(),
         parsedAmountB.raw.toString(),
-        amountsMin[Field.CURRENCY_A].toString(),
-        amountsMin[Field.CURRENCY_B].toString(),
+        // amountsMin[Field.CURRENCY_A].toString(),
+        // amountsMin[Field.CURRENCY_B].toString(),
+        "1",
+        "1",
         account,
         deadline.toHexString(),
       ]
       value = null
     }
-
     setAttemptingTxn(true)
     await estimate(...args, value ? { value } : {})
       .then((estimatedGasLimit) =>
