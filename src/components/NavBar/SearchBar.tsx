@@ -330,6 +330,7 @@ export const SearchBar = () => {
   }, [isOpen])
 
   const placeholderText = phase1Flag === NftVariant.Enabled ? t`Search tokens and NFT collections` : t`Search tokens`
+  const showLoadingState = debouncedSearchValue.length > 0 && (tokensAreLoading || collectionsAreLoading)
 
   return (
     <Box position="relative">
@@ -374,17 +375,19 @@ export const SearchBar = () => {
             <NavMagnifyingGlassIcon width={28} height={28} />
           </NavIcon>
         </Box>
-        {isOpen &&
-          (debouncedSearchValue.length > 0 && (tokensAreLoading || collectionsAreLoading) ? (
+        <Box display={isOpen ? 'flex' : 'none'}>
+          <Box display={showLoadingState ? 'flex' : 'none'}>
             <SkeletonRow />
-          ) : (
+          </Box>
+          <Box display={showLoadingState ? 'none' : 'flex'}>
             <SearchBarDropdown
               toggleOpen={toggleOpen}
               tokens={reducedTokens}
               collections={reducedCollections}
               hasInput={debouncedSearchValue.length > 0}
             />
-          ))}
+          </Box>
+        </Box>
       </Box>
       {isOpen && <Overlay />}
     </Box>
