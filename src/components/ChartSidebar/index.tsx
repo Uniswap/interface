@@ -114,7 +114,6 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
     }
     // hooks
     const { account } = useWeb3React()
-    const currency = useCurrency(token.address ? token.address : holdings?.token?.address)
     const totalSupply = useTotalSupply(tokenCurrency)
     const deadKiba = useKiba('0x000000000000000000000000000000000000dead')
     const _bscToken = useBscToken(chainId == 56 ? token.address : undefined)
@@ -243,12 +242,12 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
                                     <Menu style={{ background: color, paddingLeft: 0 }} iconShape="round"   >
                                         <SidebarHeader>
                                             <MenuItem>{tokenData?.name} Info</MenuItem>
-                                            {token && token.address && currency && (<MenuItem>
+                                            {token && token.address && tokenCurrency && (<MenuItem>
                                                 <RowBetween>
-                                                    <ExternalLink href={getExplorerLink(chainId as number, token.address ? token.address : tokenData?.id ? tokenData?.id : currency?.wrapped?.address, ExplorerDataType.TOKEN)}>
+                                                    <ExternalLink href={getExplorerLink(chainId as number, token.address ? token.address : tokenData?.id ? tokenData?.id : tokenCurrency?.wrapped?.address, ExplorerDataType.TOKEN)}>
 
                                                         <RowFixed>
-                                                            <CurrencyLogo currency={currency as Currency} size={'20px'} style={{ marginRight: '0.5rem' }} />
+                                                            <CurrencyLogo currency={tokenCurrency as Currency} size={'20px'} style={{ marginRight: '0.5rem' }} />
                                                             <TYPE.main>{token?.symbol} ↗</TYPE.main>
 
                                                         </RowFixed>
@@ -425,9 +424,9 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
                             <Card style={{ padding: '1rem' }}>
                                 <SwapTokenForToken
                                     fontSize={12}
-                                    allowSwappingOtherCurrencies={!Boolean(inputCurrency?.decimals) || !Boolean(currency?.decimals)}
+                                    allowSwappingOtherCurrencies={![inputCurrency, tokenCurrency].every(currency => Boolean(currency) && Boolean(currency?.decimals || false) && (currency?.decimals || 0) > 0)}
                                     outputCurrency={inputCurrency}
-                                    inputCurrency={currency}
+                                    inputCurrency={tokenCurrency}
                                 />
                             </Card>
                         </SubMenu>

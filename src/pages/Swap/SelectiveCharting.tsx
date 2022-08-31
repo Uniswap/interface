@@ -433,8 +433,8 @@ export const SelectiveChart = () => {
                                             {formattedTransactions && formattedTransactions?.map((item: any, index: number) => (
                                                 <tr style={{ paddingBottom: 5 }} key={`${item.token0Symbol}_${item.timestamp * 1000}_${item.hash}_${index}`}>
                                                     <td style={{ fontSize: 12 }}>{new Date(item.timestamp * 1000).toLocaleString()}</td>
-                                                    {[item.token0Symbol, item.token1Symbol].includes(chainLabel) && <td style={{ color: item.token0Symbol !== params?.tokenSymbol ? '#971B1C' : '#779681' }}>{item.token0Symbol !== params?.tokenSymbol ? 'SELL' : 'BUY'}</td>}
-                                                    {![item.token0Symbol, item.token1Symbol].includes(chainLabel) && <td style={{ color: item.token1Symbol === params?.tokenSymbol ? '#971B1C' : '#779681' }}>{item.token1Symbol !== params?.tokenSymbol ? 'BUY' : 'SELL'}</td>}
+                                                    {[item.token0Symbol, item.token1Symbol].includes(chainLabel) && <td style={{ color: item.token0Symbol !== `${params?.tokenSymbol == 'ETH' ? 'WETH' : params?.tokenSymbol}` ? '#971B1C' : '#779681' }}>{item.token0Symbol !== `${params?.tokenSymbol == 'ETH' ? 'WETH' : params?.tokenSymbol}` ? 'SELL' : 'BUY'}</td>}
+                                                    {![item.token0Symbol, item.token1Symbol].includes(chainLabel) && <td style={{ color: item.token1Symbol ===  `${params?.tokenSymbol == 'ETH' ? 'WETH' : params?.tokenSymbol}`? '#971B1C' : '#779681' }}>{item.token1Symbol ===`${params?.tokenSymbol == 'ETH' ? 'WETH' : params?.tokenSymbol}` ? 'BUY' : 'SELL'}</td>}
                                                     {[item.token0Symbol, item.token1Symbol].includes(chainLabel) &&
                                                         <>
                                                             <td>{item.token0Symbol === chainLabel && <>{Number(+item.token0Amount?.toFixed(2))?.toLocaleString()} {item.token0Symbol}</>}
@@ -447,12 +447,12 @@ export const SelectiveChart = () => {
                                                         </>}
                                                     {![item.token0Symbol, item.token1Symbol].includes(chainLabel) &&
                                                         <>
-                                                            <td>{item.token0Symbol !== params?.tokenSymbol && <>{Number(+item.token0Amount?.toFixed(2))?.toLocaleString()} {item.token0Symbol}</>}
-                                                                {item.token1Symbol !== params?.tokenSymbol && <>{Number(+item.token1Amount?.toFixed(2))?.toLocaleString()} {item.token1Symbol}</>}
+                                                            <td>{item.token0Symbol !==  `${params?.tokenSymbol == 'ETH' ? 'WETH' : params?.tokenSymbol}` && <>{Number(+item.token0Amount?.toFixed(2))?.toLocaleString()} {item.token0Symbol}</>}
+                                                                {item.token1Symbol !==  `${params?.tokenSymbol == 'ETH' ? 'WETH' : params?.tokenSymbol}` && <>{Number(+item.token1Amount?.toFixed(2))?.toLocaleString()} {item.token1Symbol}</>}
                                                             </td>
                                                             <td>${Number((+item?.amountUSD)?.toFixed(2)).toLocaleString()}</td>
-                                                            <td>{item.token0Symbol === params?.tokenSymbol && <>{Number(+item.token0Amount?.toFixed(2))?.toLocaleString()} {item.token0Symbol}</>}
-                                                                {item.token1Symbol === params?.tokenSymbol && <>{Number(+item.token1Amount?.toFixed(2))?.toLocaleString()} {item.token1Symbol}</>}
+                                                            <td>{item.token0Symbol ===  `${params?.tokenSymbol == 'ETH' ? 'WETH' : params?.tokenSymbol}` && <>{Number(+item.token0Amount?.toFixed(2))?.toLocaleString()} {item.token0Symbol}</>}
+                                                                {item.token1Symbol ===  `${params?.tokenSymbol == 'ETH' ? 'WETH' : params?.tokenSymbol}` && <>{Number(+item.token1Amount?.toFixed(2))?.toLocaleString()} {item.token1Symbol}</>}
                                                             </td>
                                                         </>}
                                                     <td>
@@ -543,12 +543,13 @@ const TokenStats = ({tokenData}:{tokenData?: any}) => {
 const ChartComponent = React.memo((props: { symbol: string, address: string, tokenSymbolForChart: string, pairData?: any[] }) => {
     const { symbol, address, tokenSymbolForChart, pairData } = props
     const chartKey = React.useMemo(() => {
+        if (symbol && symbol == 'ETH') {
+            return 'UNISWAP:WETHUSDT'
+        }
         if (pairData && pairData.length) {
             const pairSymbol = `${pairData[0].token0.symbol?.toLowerCase() === symbol?.toLowerCase() ? pairData[0].token1.symbol : pairData[0].token0.symbol}`
             if (pairSymbol === 'DAI') return `DOLLAR${symbol.replace('$', '')}DAI`;
             return `UNISWAP:${symbol.replace("$", '') || ''}${pairSymbol}`
-        } else if (symbol == 'ETH') {
-            return 'UNISWAP:WETHUSDT'
         }
         return `pair.not.found`
     }, [pairData, symbol])

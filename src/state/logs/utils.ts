@@ -435,7 +435,7 @@ const getTokenTransactions = async (allPairsFormatted: any) => {
 
 export function useTokenTransactions(tokenAddress: string, interval: null | number = null) {
   const { chainId } = useWeb3React()
-  const allPairsFormatted = usePairs(tokenAddress)
+  const allPairsFormatted = usePairs(tokenAddress?.toLowerCase())
   const tokenTxns = useQuery(FILTERED_TRANSACTIONS, {
     variables: {
       allPairs: allPairsFormatted && Array.isArray(allPairsFormatted) && allPairsFormatted.length ? [allPairsFormatted[0].id] : []
