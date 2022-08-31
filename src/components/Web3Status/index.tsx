@@ -183,8 +183,7 @@ function Web3StatusInner() {
     inputError: swapInputError,
   } = useDerivedSwapInfo()
   const validSwapQuote = getIsValidSwapQuote(trade, tradeState, swapInputError)
-  const navbarFlag = useNavBarFlag()
-  const navbarFlagEnabled = navbarFlag === NavBarVariant.Enabled
+  const navbarFlagEnabled = useNavBarFlag() === NavBarVariant.Enabled
   const theme = useTheme()
   const toggleWalletDropdown = useToggleWalletDropdown()
   const toggleWalletModal = useToggleWalletModal()
@@ -203,7 +202,7 @@ function Web3StatusInner() {
 
   const hasPendingTransactions = !!pending.length
   const hasSocks = useHasSocks()
-  const toggleWallet = navbarFlag === NavBarVariant.Enabled ? toggleWalletDropdown : toggleWalletModal
+  const toggleWallet = navbarFlagEnabled ? toggleWalletDropdown : toggleWalletModal
 
   if (!chainId) {
     return null
