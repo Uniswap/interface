@@ -64,7 +64,7 @@ const StyledMenuButton = styled.button`
 `
 const EmojiWrapper = styled.div`
   position: absolute;
-  bottom: -6px;
+  bottom: -8px;
   right: 0px;
   font-size: 14px;
 `

@@ -22,7 +22,7 @@ import { useUSDCValue } from 'hooks/useUSDCPrice';
 import { useWeb3React } from '@web3-react/core';
 
 const StyledHeader = styled.div`
-font-size: ${isMobile ? '16px' : '14px'};
+font-size: ${isMobile ? '12px' : '14px'};
 font-family: "Open Sans";
 margin:0; `
 

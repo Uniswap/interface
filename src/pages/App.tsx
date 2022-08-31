@@ -48,7 +48,6 @@ import PoolFinder from './PoolFinder'
 import PoolV2 from './Pool/v2'
 import Popups from '../components/Popups'
 import { PositionPage } from './Pool/PositionPage'
-import { ProposalDetails } from './Vote/ProposalDetails'
 import { RedirectDuplicateTokenIds } from './AddLiquidity/redirects'
 import { RedirectDuplicateTokenIdsV2 } from './AddLiquidityV2/redirects'
 import RemoveLiquidity from './RemoveLiquidity'
@@ -460,8 +459,6 @@ export default function App() {
 
                     <Route exact strict path="/fomo" component={FomoPage} />
                     <Route exact strict path="/donation-tracker" component={DonationTracker} />
-                    <Route exact strict path="/proposal/create" component={AddProposal} />
-                    <Route exact strict path="/proposal/details/:id" component={ProposalDetails} />
                     <Route exact strict path="/tracker" component={GainsTracker} />
                     <Route exact strict path="/suite" component={Suite} />
                     <Route exact strict path="/transactions" component={Transactions} />
@@ -574,7 +571,6 @@ export default function App() {
                       </FixedContainer>
                     </Marquee>
                   </AppBody>
-                  <Marginer />
 
 
                 </BodyWrapper>

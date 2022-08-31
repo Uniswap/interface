@@ -436,29 +436,11 @@ export const useKibaRefreshedBinance = (account?: string | null, chainId?: numbe
     return isBinance && bKiba?.balance ? +bKiba.balance.toFixed(0) : kiba;
   }, [kiba, isBinance, bKiba.balance]);
 };
-export const useStimulusBalance = (account?: string | null) => {
-  const stimulusCoin = new Token(
-    1,
-    "0x4d7beb770bb1c0ac31c2b3a3d0be447e2bf61013",
-    9,
-    "StimulusCheck",
-    "StimulusCheck Token"
-  );
-
-  const stimulusBalance: CurrencyAmount<Token> | undefined = useTokenBalance(
-    account ?? undefined,
-    stimulusCoin
-  );
-
-  return React.useMemo(() => {
-    return stimulusBalance ? stimulusBalance : undefined;
-  }, [stimulusCoin, stimulusBalance]);
-};
 
 
 const GainsText = styled(TYPE.white)`
-font-size:22px;
-font-family:'Bangers', cursive;`
+font-size:14px;
+font-family:'Open Sans';`
 
 export default function VotePage() {
   const { account, chainId } = useActiveWeb3React();

@@ -382,32 +382,32 @@ export const getTokenData = async (addy: string, ethPrice: any, ethPriceOld: any
     const currentLiquidityUSD = +data?.totalLiquidity * +ethPrice * +data?.derivedETH
     const oldLiquidityUSD = +oneDayData?.totalLiquidity * +ethPriceOld * +oneDayData?.derivedETH
     if (data) {
-    // set data
-    data.priceUSD = (((parseFloat(data?.derivedETH)) * (parseFloat(ethPrice))))
-    data.totalLiquidityUSD = currentLiquidityUSD
-    data.oneDayVolumeUSD = oneDayVolumeUSD
-    data.volumeChangeUSD = volumeChangeUSD
-    data.priceChangeUSD = priceChangeUSD
-    data.oneDayVolumeUT = oneDayVolumeUT
-    data.volumeChangeUT = volumeChangeUT
-    const liquidityChangeUSD = getPercentChange(
-      parseFloat(currentLiquidityUSD.toString() ?? '0'),
-      parseFloat(oldLiquidityUSD.toString() ?? '0')
-    );
-    data.liquidityChangeUSD = liquidityChangeUSD
-    data.oneDayTxns = oneDayTxns
-    data.txnChange = txnChange
+      // set data
+      data.priceUSD = (((parseFloat(data?.derivedETH)) * (parseFloat(ethPrice))))
+      data.totalLiquidityUSD = currentLiquidityUSD
+      data.oneDayVolumeUSD = oneDayVolumeUSD
+      data.volumeChangeUSD = volumeChangeUSD
+      data.priceChangeUSD = priceChangeUSD
+      data.oneDayVolumeUT = oneDayVolumeUT
+      data.volumeChangeUT = volumeChangeUT
+      const liquidityChangeUSD = getPercentChange(
+        parseFloat(currentLiquidityUSD.toString() ?? '0'),
+        parseFloat(oldLiquidityUSD.toString() ?? '0')
+      );
+      data.liquidityChangeUSD = liquidityChangeUSD
+      data.oneDayTxns = oneDayTxns
+      data.txnChange = txnChange
 
-    data.oneDayData = oneDayData
-    data.twoDayData = twoDayData
+      data.oneDayData = oneDayData
+      data.twoDayData = twoDayData
 
-    // new tokens
-    if (!oneDayData && data) {
-      data.oneDayVolumeUSD = parseFloat(data.tradeVolumeUSD)
-      data.oneDayVolumeETH = parseFloat(data.tradeVolume) * parseFloat(data.derivedETH)
-      data.oneDayTxns = data.txCount
+      // new tokens
+      if (!oneDayData && data) {
+        data.oneDayVolumeUSD = parseFloat(data.tradeVolumeUSD)
+        data.oneDayVolumeETH = parseFloat(data.tradeVolume) * parseFloat(data.derivedETH)
+        data.oneDayTxns = data.txCount
+      }
     }
-  }
   } catch (e) {
     console.error(e)
   }
@@ -455,36 +455,37 @@ export function useTokenTransactions(tokenAddress: string, interval: null | numb
 
 export const usePairs = (tokenAddress?: string) => {
   console.log(tokenAddress)
-  const defaultState:any[] = []
-  const [pairData, setPairData] = React.useReducer(function(state: any[], action: {type: any,payload: any}) {
-    switch(action.type) {
-        case "UPDATE":
-            return {
-                ...state,
-                ...action.payload
-            };
-        default:
-            return state;
+  const defaultState: any[] = []
+  const [pairData, setPairData] = React.useReducer(function (state: any[], action: { type: any, payload: any }) {
+    switch (action.type) {
+      case "UPDATE":
+        return {
+          ...state,
+          ...action.payload
+        };
+      default:
+        return state;
     }
   }, defaultState)
-  const { data, loading, error } = useQuery(TOKEN_DATA(tokenAddress || '', null, false), 
-  {
-    onCompleted: (params) => {
-    if (params && params.pairs1 && params.pairs0 && Boolean(params.pairs1.length || params.pairs0.length)) {
-      const pairs = [...params.pairs0, ...params.pairs1];
-      setPairData({type: "UPDATE", payload:  pairs})
+  const { data, loading, error } = useQuery(TOKEN_DATA(tokenAddress || '', null, false),
+    {
+      onCompleted: (params) => {
+        if (params && params.pairs1 && params.pairs0 && Boolean(params.pairs1.length || params.pairs0.length)) {
+          const pairs = [...params.pairs0, ...params.pairs1];
+          setPairData({ type: "UPDATE", payload: pairs })
+        }
+      }, pollInterval: 1000000,
+    })
+  return React.useMemo(() => {
+
+
+    if (data && (data?.pairs0?.length || data?.pairs1.length) && !_.isEqual([...data.pairs0, ...data.pairs1], pairData)) {
+      const pairs = [...data.pairs0, ...data.pairs1];
+      return pairs
     }
-  }, pollInterval:1000000, })
-return React.useMemo(() => {
-
-
-  if (data && (data?.pairs0?.length || data?.pairs1.length) && !_.isEqual([...data.pairs0, ...data.pairs1], pairData)) {
-    const pairs = [...data.pairs0, ...data.pairs1];
-    return pairs
-  }
     if (pairData && Array.isArray(pairData) && pairData.length) return pairData;
     if (!tokenAddress || loading || error) return []
-    return  data?.['pairs0'].concat(data?.['pairs1'])
+    return data?.['pairs0'].concat(data?.['pairs1'])
   }, [data, pairData, tokenAddress])
 }
 
@@ -829,13 +830,13 @@ query trackerdata {
     ...TokenFields
   }`
 
-  const makeCultureString =() => {
-    let string = '';
-    cultureTokens.forEach((token) => {
-      string += cultureTokens[cultureTokens.length - 1].address === token.address ? `"${token.address.toLowerCase()}"` : `"${token.address.toLowerCase()}",`;
-    })
-    return string.replace('""', '"');
-  }
+const makeCultureString = () => {
+  let string = '';
+  cultureTokens.forEach((token) => {
+    string += cultureTokens[cultureTokens.length - 1].address === token.address ? `"${token.address.toLowerCase()}"` : `"${token.address.toLowerCase()}",`;
+  })
+  return string.replace('""', '"');
+}
 
 const CULTURE_TOKENS = gql`
 query culturetokens {
@@ -1032,7 +1033,7 @@ export const useCulturePairData = function () {
   }, [chainId])
 
   console.log(tokenQuery)
-  
+
   const { data, loading, error } = useQuery(tokenQuery,
     {
       fetchPolicy: 'cache-first'
@@ -1086,13 +1087,11 @@ const USER_SELLS = gql`query sellTransactions ($user: Bytes!) { swaps(orderBy: t
 
 export const useUserSells = (account?: string | null) => {
   const { chainId } = useWeb3React()
-  const poller = useQuery(USER_SELLS, { variables: { user: account }, pollInterval: 60000 })
+  const poller = useQuery(USER_SELLS, { variables: { user: account?.toLowerCase() }, pollInterval: 60000 })
   const secondPoller = useQuery(USER_BNB_SELLS, { variables: { user: account?.toLowerCase() }, pollInterval: 60000 })
   if (chainId !== 1) poller.stopPolling();
   if (chainId !== 56) secondPoller.stopPolling()
-  let data = null,
-    loading = false,
-    error = null;
+  let { data, error, loading } = poller ?? secondPoller
   if (chainId === 1) {
     loading = poller.loading
     error = poller.error
@@ -1210,7 +1209,7 @@ type BscTransaction = {
 }
 
 
-export const useTotalKibaGains = (account ?: string | null) => {
+export const useTotalKibaGains = (account?: string | null) => {
   const { chainId } = useWeb3React()
   const [totalBought, setTotalBought] = React.useState<number | undefined>()
   const [totalSold, setTotalSold] = React.useState<number | undefined>()
@@ -1230,8 +1229,8 @@ export const useTotalKibaGains = (account ?: string | null) => {
   }, [chainId])
 
   const pair = React.useMemo(() => {
-    if (chainId === 1 ) return '0xac6776d1c8d455ad282c76eb4c2ade2b07170104';
-    if (chainId === 56) return  '0x89e8c0ead11b783055282c9acebbaf2fe95d1180'
+    if (chainId === 1) return '0xac6776d1c8d455ad282c76eb4c2ade2b07170104';
+    if (chainId === 56) return '0x89e8c0ead11b783055282c9acebbaf2fe95d1180'
     return ''
   }, [chainId])
 
@@ -1243,12 +1242,12 @@ export const useTotalKibaGains = (account ?: string | null) => {
     return ''
   }, [chainId, account])
 
-  React.useEffect(( ) => setAllTransfers(undefined), [chainId, account])
+  React.useEffect(() => setAllTransfers(undefined), [chainId, account])
   const [allTransfers, setAllTransfers] = React.useState<BscTransaction[]>()
   const [isLoading, setIsLoading] = React.useState(false)
   React.useEffect(() => {
     if (account && chainId && !allTransfers &&
-        !isLoading) {
+      !isLoading) {
       setIsLoading(true)
       fetch(`${transferAPIurl}`, { method: "GET" })
         .then((response) => response.json())
@@ -1256,22 +1255,22 @@ export const useTotalKibaGains = (account ?: string | null) => {
 
           const incomingTransfers = (data.result.filter((transaction: BscTransaction) =>
             transaction.to?.toLowerCase() == account?.toLowerCase() && transaction?.from?.toLowerCase() !== pair?.toLowerCase()
-          )).map((a:BscTransaction) => ({...a, type: 'incoming'}));
+          )).map((a: BscTransaction) => ({ ...a, type: 'incoming' }));
 
           const outgoingTransfers = (data.result.filter((transaction: BscTransaction) =>
             transaction.from?.toLowerCase() == account?.toLowerCase() && transaction?.to?.toLowerCase() !== pair.toLowerCase()
-          )).map((a:BscTransaction) => ({...a, type: 'outgoing'}))
+          )).map((a: BscTransaction) => ({ ...a, type: 'outgoing' }))
 
           setAllTransfers(outgoingTransfers.concat(incomingTransfers))
           const isNotRouterTx = (item: any) => {
             return item.to.toLowerCase() !== V2_ROUTER_ADDRESS[chainId].toLowerCase() &&
-            item.to.toLowerCase() !== pair?.toLowerCase()
+              item.to.toLowerCase() !== pair?.toLowerCase()
           }
 
           let airdroppedAmount = 0,
-              incoming = 0 , 
-              outgoing = 0 ;
-          
+            incoming = 0,
+            outgoing = 0;
+
           incomingTransfers.forEach((airdrop: BscTransaction) => incoming += parseFloat(airdrop.value) / 10 ** 18);
           outgoingTransfers.filter(isNotRouterTx).forEach((airdrop: BscTransaction) => outgoing += parseFloat(airdrop.value) / 10 ** 18);
           (airdroppedAmount = incoming);
@@ -1284,12 +1283,12 @@ export const useTotalKibaGains = (account ?: string | null) => {
 
   React.useEffect(() => {
     if (chainId && userTransactions &&
-      userTransactions.data && kibaBalance && +kibaBalance.toFixed(0) > 0 && 
+      userTransactions.data && kibaBalance && +kibaBalance.toFixed(0) > 0 &&
       allTransfers) {
       const userTxs = userTransactions.data?.swaps?.filter((swap: any) => {
         const { token0, token1 } = swap.pair;
         return [currencyBought.address, currencySold.address].includes(token0.id?.toLowerCase()) && [currencyBought.address, currencySold.address].includes(token1?.id?.toLowerCase()) &&
-                !allTransfers.some(item => item.hash == swap.transaction.id)
+          !allTransfers.some(item => item.hash == swap.transaction.id)
       })
       const userBuys = userTxs.filter((swap: any) => parseFloat(swap?.amount1Out) > 0)
       const userSells = userTxs.filter((swap: any) => parseFloat(swap?.amount1In) > 0)
@@ -1300,20 +1299,20 @@ export const useTotalKibaGains = (account ?: string | null) => {
       const currentBalance = +kibaBalance?.toFixed(0);
       // from their current balance, how much was transferred in to them?
       let tG = (currentBalance - (airdroppedAmount));
-          // then, how much was bought?
-          tG = tG - sumBought;
+      // then, how much was bought?
+      tG = tG - sumBought;
 
       // that gives us the remainder to finish the calculation
       setTotalGained(tG)
     }
   }, [
-    userTransactions.data, 
-    account, 
+    userTransactions.data,
+    account,
     allTransfers,
-    currencyBought, 
-    airdroppedAmount, 
-    chainId, 
-    kibaBalance, 
+    currencyBought,
+    airdroppedAmount,
+    chainId,
+    kibaBalance,
     currencySold])
 
   return React.useMemo(() => ({ totalGained, totalSold, totalBought }), [totalGained, totalSold, totalBought])
@@ -1324,7 +1323,7 @@ export const useUserTransactions = (account?: string | null) => {
   const sells = useUserSells(account)
   const query = useQuery(USER_TRANSACTIONS, {
     variables: {
-      user: account ? account : ''
+      user: account ? account?.toLowerCase() : ''
     },
     pollInterval: 15000
   })
@@ -1335,33 +1334,50 @@ export const useUserTransactions = (account?: string | null) => {
     },
     pollInterval: 60000
   })
-  if (chainId !== 1) query.stopPolling()
-  if (chainId !== 56) bscQuery.stopPolling();
+  if (chainId !== 1)
+
+    query.stopPolling()
+  if (chainId !== 56)
+    bscQuery.stopPolling();
+
   const { data, loading, error } = query;
   const { data: bscData, loading: bscLoading, error: bscError } = bscQuery;
   const mergedData = React.useMemo(() => {
     if (chainId === 1) {
-      if (sells?.data?.swaps && data?.swaps) {
-        const uniqueSwaps = _.uniqBy([
-          ...data.swaps,
-          ...sells.data.swaps
-        ], swap => swap?.transaction?.id);
-        data.swaps = _.orderBy(uniqueSwaps, swap => new Date(+swap.transaction.timestamp * 1000), 'desc');
+      const retval = [],
+            dataval = data || {},
+            sellsdataval = sells.data || {}
+      
+      if (sells?.data?.swaps) {
+        retval.push(...sells?.data?.swaps)
       }
-      return data;
+      if (data?.swaps) {
+        retval.push(...data.swaps)
+      }
+      const uniqueSwaps = _.uniqBy(retval, swap => swap?.transaction?.id);
+      const orderedSwaps = _.orderBy(uniqueSwaps, swap => new Date(+swap.transaction.timestamp * 1000), 'desc');
+      
+      return {
+        ...dataval,
+        ...sellsdataval,
+        swaps: orderedSwaps
+      };
     } else if (chainId === 56) {
-      if (sells?.data?.swaps && bscData?.swaps) {
-        const uniqueSwaps = _.uniqBy([
-          ...bscData.swaps,
-          ...sells.data.swaps
-        ], swap => swap?.transaction?.id);
-        bscData.swaps = _.orderBy(uniqueSwaps, swap => new Date(+swap.transaction.timestamp * 1000), 'desc');
+     
+      const retval = []
+      if (sells?.data?.swaps) {
+        retval.push(...sells?.data?.swaps)
       }
+      if (bscData?.swaps) {
+        retval.push(...bscData.swaps)
+      }
+      const uniqueSwaps = _.uniqBy(retval, swap => swap?.transaction?.id);
+      bscData.swaps = _.orderBy(uniqueSwaps, swap => new Date(+swap.transaction.timestamp * 1000), 'desc');
       return bscData;
     }
   }, [sells?.data, data, bscData, chainId])
 
-  return { data: mergedData, loading: sells.loading || loading, error }
+x  return { data: mergedData, loading: sells.loading || loading, error }
 }
 
 export const FILTERED_TRANSACTIONS = gql`
