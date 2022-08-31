@@ -35,7 +35,7 @@ export function RecipientList({ onPress, sections }: RecipientListProps) {
 
 function SectionHeader(info: { section: SectionListData<SearchableRecipient> }) {
   return (
-    <AnimatedFlex entering={FadeIn} exiting={FadeOut}>
+    <AnimatedFlex backgroundColor="backgroundBackdrop" entering={FadeIn} exiting={FadeOut}>
       <Text color="textTertiary" variant="bodySmall">
         {info.section.title}
       </Text>
@@ -74,10 +74,10 @@ export function RecipientLoadingRow() {
   )
 }
 
-export function ItemSeparator() {
+function ItemSeparator() {
   return <Inset all="sm" />
 }
 
-export function SectionSeparator() {
+function SectionSeparator() {
   return <Inset all="sm" />
 }
