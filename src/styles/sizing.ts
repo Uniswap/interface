@@ -18,6 +18,22 @@ export const spacing = {
   xxxl: 60,
 }
 
+export const iconSizes = {
+  sm: 16,
+  md: 20,
+  lg: 24,
+}
+
+export const imageSizes = {
+  xxs: 12,
+  xs: 16,
+  sm: 20,
+  md: 24,
+  lg: 32,
+  xl: 36,
+  xxl: 48,
+}
+
 export const borderRadii = {
   none: 0,
   xs: 4,
