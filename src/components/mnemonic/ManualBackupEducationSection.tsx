@@ -16,7 +16,14 @@ export function ManualBackupEducationSection() {
   return (
     <Flex gap="md">
       <EducationRow
-        icon={<EyeIcon color={theme.colors.textPrimary} height={ICON_SIZE} width={ICON_SIZE} />}
+        icon={
+          <EyeIcon
+            color={theme.colors.textPrimary}
+            height={ICON_SIZE}
+            strokeWidth={1.5}
+            width={ICON_SIZE}
+          />
+        }
         label={t('Write it down in private')}
         sublabel={t(
           "Ensure that you're in a private location and write down your recovery phrase's words in order."
@@ -24,7 +31,7 @@ export function ManualBackupEducationSection() {
       />
       {spacer}
       <EducationRow
-        icon={<EditIcon fill={theme.colors.textPrimary} height={ICON_SIZE} width={ICON_SIZE} />}
+        icon={<EditIcon color={theme.colors.textPrimary} height={ICON_SIZE} width={ICON_SIZE} />}
         label={t('Keep it somewhere safe')}
         sublabel={t('Remember that anyone who has your recovery phrase can access your wallet.')}
       />
