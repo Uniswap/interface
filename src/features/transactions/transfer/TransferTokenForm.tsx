@@ -5,11 +5,11 @@ import { StyleSheet } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { TransferArrowButton } from 'src/components/buttons/TransferArrowButton'
-import { NFTViewer } from 'src/components/images/NFTViewer'
 import { CurrencyInputPanel } from 'src/components/input/CurrencyInputPanel'
 import { DecimalPad } from 'src/components/input/DecimalPad'
 import { RecipientInputPanel } from 'src/components/input/RecipientInputPanel'
 import { AnimatedFlex, Box, Flex } from 'src/components/layout'
+import { NFTTransfer } from 'src/components/NFT/NFTTransfer'
 import { WarningAction, WarningLabel, WarningSeverity } from 'src/components/warnings/types'
 import { WarningModal } from 'src/components/warnings/WarningModal'
 import { ChainId } from 'src/constants/chains'
@@ -30,6 +30,7 @@ import {
 } from 'src/features/transactions/transfer/hooks'
 import { createOnToggleShowRecipientSelector } from 'src/features/transactions/transfer/utils'
 import { createTransactionId } from 'src/features/transactions/utils'
+import { dimensions } from 'src/styles/sizing'
 
 interface TransferTokenProps {
   state: TransactionState
@@ -146,11 +147,9 @@ export function TransferTokenForm({
       <AnimatedFlex grow entering={FadeIn} exiting={FadeOut} justifyContent="space-between" p="md">
         <Flex gap="sm">
           {nftIn ? (
-            <Flex centered maxHeight="50%" mx="xl">
-              <Box>
-                <NFTViewer uri={nftIn.image_url} />
-              </Box>
-            </Flex>
+            <Box mx="xl">
+              <NFTTransfer asset={nftIn} nftSize={dimensions.fullHeight / 4} />
+            </Box>
           ) : (
             <CurrencyInputPanel
               autoFocus

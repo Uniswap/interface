@@ -8,10 +8,10 @@ import { Button } from 'src/components/buttons/Button'
 import { TransferArrowButton } from 'src/components/buttons/TransferArrowButton'
 import { CurrencyLogo } from 'src/components/CurrencyLogo'
 import { Arrow } from 'src/components/icons/Arrow'
-import { NFTViewer } from 'src/components/images/NFTViewer'
 import { AmountInput } from 'src/components/input/AmountInput'
 import { RecipientPrevTransfers } from 'src/components/input/RecipientInputPanel'
 import { AnimatedFlex, Flex } from 'src/components/layout'
+import { NFTTransfer } from 'src/components/NFT/NFTTransfer'
 import { Text } from 'src/components/Text'
 import { NFTAsset } from 'src/features/nfts/types'
 import { dimensions } from 'src/styles/sizing'
@@ -80,12 +80,8 @@ export function TransactionReview({
             <CurrencyLogoWithLabel currency={currencyIn} />
           </Flex>
         ) : nftIn ? (
-          <Flex
-            centered
-            maxHeight={dimensions.fullHeight * 0.35}
-            maxWidth={dimensions.fullWidth}
-            mx="xl">
-            <NFTViewer uri={nftIn.image_url} />
+          <Flex mt="xxxl">
+            <NFTTransfer asset={nftIn} nftSize={dimensions.fullHeight / 5} />
           </Flex>
         ) : null}
         <TransferArrowButton disabled bg="none" borderColor="none" />
