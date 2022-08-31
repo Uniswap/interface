@@ -21,6 +21,9 @@ contract TeleswapV2Pair is TeleswapV2ERC20 {
     address public factory;
     address public token0;
     address public token1;
+    uint internal  decimals0;
+    uint internal  decimals1;
+
 
     uint112 private reserve0;           // uses single storage slot, accessible via getReserves
     uint112 private reserve1;           // uses single storage slot, accessible via getReserves
@@ -66,7 +69,7 @@ contract TeleswapV2Pair is TeleswapV2ERC20 {
     }
 
     // called once by the factory at time of deployment
-    function initialize(address _token0, address _token1, bool _stable)  external {
+    function initialize(address _token0, address _token1, bool _stable) external {
         require(msg.sender == factory, 'TeleswapV2: FORBIDDEN');
         // sufficient check
         token0 = _token0;
@@ -75,6 +78,10 @@ contract TeleswapV2Pair is TeleswapV2ERC20 {
         if (_stable) {
             name = string(abi.encodePacked("StableV1 AMM - ", ITeleswapV2ERC20(_token0).symbol(), "/", ITeleswapV2ERC20(_token1).symbol()));
             symbol = string(abi.encodePacked("sAMM-", ITeleswapV2ERC20(_token0).symbol(), "/", ITeleswapV2ERC20(_token1).symbol()));
+            uint tmp0 = IERC20(_token0).decimals();
+            uint tmp1 = IERC20(_token1).decimals();
+            decimals0 = 10 ** tmp0;
+            decimals1 = 10 ** tmp1;
         } else {
             name = string(abi.encodePacked("VolatileV1 AMM - ", ITeleswapV2ERC20(_token0).symbol(), "/", ITeleswapV2ERC20(_token1).symbol()));
             symbol = string(abi.encodePacked("vAMM-", ITeleswapV2ERC20(_token0).symbol(), "/", ITeleswapV2ERC20(_token1).symbol()));
@@ -85,7 +92,7 @@ contract TeleswapV2Pair is TeleswapV2ERC20 {
     function _update(uint balance0, uint balance1, uint112 _reserve0, uint112 _reserve1) private {
         require(balance0 <= uint112(- 1) && balance1 <= uint112(- 1), 'TeleswapV2: OVERFLOW');
         uint32 blockTimestamp = uint32(block.timestamp % 2 ** 32);
-            uint32 timeElapsed = blockTimestamp - blockTimestampLast;
+        uint32 timeElapsed = blockTimestamp - blockTimestampLast;
         // overflow is desired
         if (timeElapsed > 0 && _reserve0 != 0 && _reserve1 != 0) {
             // * never overflows, and + overflow is desired
@@ -163,9 +170,9 @@ contract TeleswapV2Pair is TeleswapV2ERC20 {
         bool feeOn = _mintFee(_reserve0, _reserve1);
         uint _totalSupply = totalSupply;
         // gas savings, must be defined here since totalSupply can update in _mintFee
-        amount0 = liquidity.mul(balance0) / _totalSupply;
+        amount0 = liquidity.mul(balance0).div(_totalSupply);
         // using balances ensures pro-rata distribution
-        amount1 = liquidity.mul(balance1) / _totalSupply;
+        amount1 = liquidity.mul(balance1).div(_totalSupply);
         // using balances ensures pro-rata distribution
         require(amount0 > 0 && amount1 > 0, 'TeleswapV2: INSUFFICIENT_LIQUIDITY_BURNED');
         _burn(address(this), liquidity);
@@ -207,23 +214,24 @@ contract TeleswapV2Pair is TeleswapV2ERC20 {
         {// scope for reserve{0,1}Adjusted, avoids stack too deep errors
             uint balance0Adjusted = balance0.mul(1000).sub(amount0In.mul(3));
             uint balance1Adjusted = balance1.mul(1000).sub(amount1In.mul(3));
-            require(_k(balance0Adjusted,balance1Adjusted) >= _k(_reserve0,_reserve1), 'TeleswapV2: K');
+            require(_k(balance0Adjusted, balance1Adjusted) >= _k(_reserve0, _reserve1), 'TeleswapV2: K');
         }
 
         _update(balance0, balance1, _reserve0, _reserve1);
         emit Swap(msg.sender, amount0In, amount1In, amount0Out, amount1Out, to);
     }
 
-    // why mul 1e18
     function _k(uint x, uint y) internal view returns (uint) {
         if (stable) {
-            uint _x = x * 1e18 ;
-            uint _y = y * 1e18 ;
-            uint _a = (_x * _y) / 1e18;
-            uint _b = ((_x * _x) / 1e18 + (_y * _y) / 1e18);
-            return _a * _b / 1e18;  // x3y+y3x >= k
+            uint _x = x.mul(1e18).div(decimals0);
+            uint _y = y.mul(1e18).div(decimals1);
+            uint _a = _x.mul(_y).div(1e18);
+            uint _b = (((_x.mul(_x)).div(1e18)).add((_y.mul(_y).div(1e18))));
+            return _a.mul(_b).div(1e18);
+            // x3y+y3x >= k
         } else {
-            return x * y; // xy >= k
+            return x.mul(y);
+            // xy >= k
         }
     }
 

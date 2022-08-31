@@ -7,7 +7,7 @@ contract TeleswapV2ERC20 is ITeleswapV2ERC20 {
     using SafeMath for uint;
 
     string public  override name = 'Teleswap V2';
-    string public  override symbol = 'UNI-V2';
+    string public  override symbol = 'TELE-V2';
     uint8 public constant override decimals = 18;
     uint  public override totalSupply;
     mapping(address => uint) public override balanceOf;
