@@ -122,15 +122,17 @@ export default createReducer(initialState, (builder) =>
             [
               ...(state.chartHistory ?? []),
               ...action.payload.chartHistory
-            ], item => item.token.address
+            ], item => item.token.address?.toLowerCase()
           ), 
           item => item.time,
           'asc'
         ).reverse().slice(0,4)
+        state.timestamp = currentTimestamp()
     })
     .addCase(updateUserFrontRunProtection, (state, action) => {
         state.useFrontrunProtection = action.payload.useFrontrunProtection
-    })
+        state.timestamp = currentTimestamp()
+      })
     .addCase(updateVersion, (state) => {
       // slippage isnt being tracked in local storage, reset to default
       // noinspection SuspiciousTypeOfGuard
@@ -174,6 +176,7 @@ export default createReducer(initialState, (builder) =>
     })
     .addCase(updateArbitrumAlphaAcknowledged, (state, action) => {
       state.arbitrumAlphaAcknowledged = action.payload.arbitrumAlphaAcknowledged
+      state.timestamp = currentTimestamp()
     })
     .addCase(updateUserExpertMode, (state, action) => {
       state.userExpertMode = action.payload.userExpertMode
@@ -196,12 +199,15 @@ export default createReducer(initialState, (builder) =>
     })
     .addCase(updateUserDetectRenouncedOwnership, (state, action) => {
       state.detectRenouncedOwnership = action.payload.detectRenouncedOwnership
+      state.timestamp = currentTimestamp()
     })
     .addCase(updateUserGasPreferences, (state,action) => {
         state.preferredGas = action.payload
+        state.timestamp = currentTimestamp()
     })
     .addCase(updateHideClosedPositions, (state, action) => {
       state.userHideClosedPositions = action.payload.userHideClosedPositions
+      state.timestamp = currentTimestamp()
     })
     .addCase(addSerializedToken, (state, { payload: { serializedToken } }) => {
       if (!state.tokens) {
@@ -213,6 +219,7 @@ export default createReducer(initialState, (builder) =>
     })
     .addCase(updateUseAutoSlippage, (state, action ) => {
       state.useAutoSlippage = action.payload.useAutoSlippage;
+      state.timestamp = currentTimestamp()
     })
     .addCase(removeSerializedToken, (state, { payload: { address, chainId } }) => {
       if (!state.tokens) {

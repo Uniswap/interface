@@ -1,3 +1,6 @@
+/*tslint-disable*/
+/*eslint-disable*/
+
 import { DefaultTheme, useTheme } from 'styled-components/macro'
 import React, { useEffect, useRef } from 'react'
 
@@ -5,6 +8,53 @@ import { DarkGreyCard } from 'components/Card'
 import { isMobile } from 'react-device-detect'
 import useScript from 'state/logs/useScript'
 import { useUserLocale } from 'state/user/hooks'
+
+const customDataFeed = {
+  onReady: (callback: (arg0: {}) => void) => {
+    console.log("[onReady]: Method call");
+    callback({});
+  },
+  searchSymbols: (userInput: any, exchange: any, symbolType: any, onResultReadyCallback: any) => {
+    console.log("[searchSymbols]: Method call");
+  },
+  resolveSymbol: (
+    symbolName: any,
+    onSymbolResolvedCallback: any,
+    onResolveErrorCallback: any
+  ) => {
+    console.log("[resolveSymbol]: Method call", symbolName);
+  },
+  getBars: async (
+    symbolInfo: any,
+    resolution: any,
+    from: any,
+    to: any,
+    onHistoryCallback: any,
+    onErrorCallback: any,
+    firstDataRequest: any
+  ) => {
+   
+  },
+  subscribeBars: (
+    symbolInfo: any,
+    resolution: any,
+    onRealtimeCallback: any,
+    subscribeUID: any,
+    onResetCacheNeededCallback: any
+  ) => {
+    console.log(
+      "[subscribeBars]: Method call with subscribeUID:",
+      subscribeUID
+    );
+  },
+  unsubscribeBars: (subscriberUID: any) => {
+    console.log(
+      "[unsubscribeBars]: Method call with subscriberUID:",
+      subscriberUID
+    );
+  },
+};
+
 
 /**
  * When the script tag is injected the TradingView object is not immediately
@@ -49,12 +99,14 @@ const initializeTradingView = (TradingViewObj: any, theme: DefaultTheme, localeC
     hide_side_toolbar: false,
     enabled_features: ['header_fullscreen_button'],
     ...opts,
+    datafeed: customDataFeed,
+
   })
 }
 
 interface TradingViewProps {
   id: string
-  symbol: string
+  symbol?: string
 }
 
 const TradingView = ({ id, symbol }: TradingViewProps) => {

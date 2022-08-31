@@ -21,6 +21,7 @@ import CurrencyInputPanel from 'components/CurrencyInputPanel';
 import CurrencyLogo from 'components/CurrencyLogo';
 import QuestionHelper from 'components/QuestionHelper';
 import Swal from 'sweetalert2';
+import { TVChartContainer } from "./TradingViewChartComponent";
 import Toggle from 'components/Toggle';
 import { TopHolders } from './TopHolders';
 import { TopTokenHolders } from 'components/TopTokenHolders/TopTokenHolders';
@@ -276,7 +277,7 @@ export const SelectiveChart = () => {
                 if (!currency) return
                 ref.current = currency;
                 setSelectedCurrency({ type: 'update', payload: currency })
-                history.push(`/selective-charts/${currency?.address}/${currency?.symbol}/${currency.name}/${currency.decimals}`);
+                history.push(`/selective-charts/${currency?.wrapped?.address}/${currency?.symbol}/${currency.name}/${currency.decimals}`);
                 setAddressCallback(currency?.address)
             }}
 
@@ -364,7 +365,6 @@ export const SelectiveChart = () => {
 
                        <span style={{paddingRight:isMobile?0:15, borderRight: `${!isMobile ? '1px solid #444' : 'none'}`}}> KibaCharts </span>
                        {!hasSelectedData ? <Badge>Select a token to get started</Badge> : <span style={{ margin: 0}}>Select a token to view chart/transaction data</span>}
-                       
                        {PanelMemo}
                        {Boolean(!hasSelectedData && userChartHistory.length) && (
                            <div style={{width:'100%', padding: 10}}>
@@ -372,7 +372,7 @@ export const SelectiveChart = () => {
                                <TYPE.black alignItems="center" display="flex">Recently Viewed Charts <ArrowDownRight /></TYPE.black>
                                </div>
                                 <div style={{width:'100%', padding: 20, display:'grid', alignItems:'center', gridTemplateColumns:isMobile ?'100%': "auto auto auto auto", gap:20}}>
-                                    {_.orderBy(_.uniqBy(userChartHistory, a => a?.token?.address), a => a.time).reverse().map((item: any) => (
+                                    {_.orderBy(_.uniqBy(userChartHistory, a => a?.token?.address?.toLowerCase()), a => a.time).reverse().map((item: any) => (
                                         <LightCard key={item?.token?.address}>
                                             <div style={{color:'#fff', display:'flex', justifyContent:'space-between', alignItems:'center'}}>
                                             <div style={{display:'flex', flexFlow:'row wrap', gap: 5, alignItems:'center'}}>
@@ -547,6 +547,8 @@ const ChartComponent = React.memo((props: { symbol: string, address: string, tok
             const pairSymbol = `${pairData[0].token0.symbol?.toLowerCase() === symbol?.toLowerCase() ? pairData[0].token1.symbol : pairData[0].token0.symbol}`
             if (pairSymbol === 'DAI') return `DOLLAR${symbol.replace('$', '')}DAI`;
             return `UNISWAP:${symbol.replace("$", '') || ''}${pairSymbol}`
+        } else if (symbol == 'ETH') {
+            return 'UNISWAP:WETHUSDT'
         }
         return `pair.not.found`
     }, [pairData, symbol])

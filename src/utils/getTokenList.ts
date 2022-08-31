@@ -1,8 +1,9 @@
-import { TokenList } from '@uniswap/token-lists'
-import schema from '@uniswap/token-lists/src/tokenlist.schema.json'
 import Ajv from 'ajv'
+import { TokenList } from '@uniswap/token-lists'
+import axios from 'axios'
 import contenthashToUri from './contenthashToUri'
 import { parseENSAddress } from './parseENSAddress'
+import schema from '@uniswap/token-lists/src/tokenlist.schema.json'
 import uriToHttp from './uriToHttp'
 
 const tokenListValidator = new Ajv({ allErrors: true }).compile(schema)
@@ -16,6 +17,7 @@ export default async function getTokenList(
   listUrl: string,
   resolveENSContentHash: (ensName: string) => Promise<string>
 ): Promise<TokenList> {
+  console.log(listUrl)
   const parsedENS = parseENSAddress(listUrl)
   let urls: string[]
   if (parsedENS) {
@@ -42,19 +44,19 @@ export default async function getTokenList(
     const isLast = i === urls.length - 1
     let response
     try {
-      response = await fetch(url, { credentials: 'omit' })
+      response = await axios.get(url)
     } catch (error) {
       console.debug('Failed to fetch list', listUrl, error)
       if (isLast) throw new Error(`Failed to download list ${listUrl}`)
       continue
     }
 
-    if (!response.ok) {
+    if (response.status !== 200) {
       if (isLast) throw new Error(`Failed to download list ${listUrl}`)
       continue
     }
 
-    const json = await response.json()
+    const json = response.data
     if (!tokenListValidator(json)) {
       const validationErrors: string =
         tokenListValidator.errors?.reduce<string>((memo, error) => {

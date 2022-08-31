@@ -1377,7 +1377,7 @@ export const useUserTransactions = (account?: string | null) => {
     }
   }, [sells?.data, data, bscData, chainId])
 
-x  return { data: mergedData, loading: sells.loading || loading, error }
+  return { data: mergedData, loading: sells.loading || loading, error }
 }
 
 export const FILTERED_TRANSACTIONS = gql`
