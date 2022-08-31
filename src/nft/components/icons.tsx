@@ -1019,18 +1019,6 @@ export const HundredsOverflowIcon = () => (
   </svg>
 )
 
-export const NewChevronUpIcon = (props: SVGProps) => (
-  <svg {...props} fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M12 10L8 6L4 10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-  </svg>
-)
-
-export const NewChevronDownIcon = (props: SVGProps) => (
-  <svg {...props} fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M4 6L8 10L12 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-  </svg>
-)
-
 export const TagIcon = (props: SVGProps) => (
   <svg fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
     <path
