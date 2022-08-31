@@ -201,7 +201,7 @@ exports[`renders an InlineNetworkPill 1`] = `
         "height": 16,
         "justifyContent": "center",
         "paddingHorizontal": 4,
-        "paddingVertical": 0,
+        "paddingVertical": 2,
       },
       Object {
         "backgroundColor": "#FB118E1a",

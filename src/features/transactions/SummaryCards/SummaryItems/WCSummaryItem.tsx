@@ -29,9 +29,9 @@ export default function WCSummaryItem({
       icon={
         <RemoteImage
           borderRadius={theme.borderRadii.full}
-          height={TXN_HISTORY_ICON_SIZE * 1.5}
-          uri={transaction.typeInfo.dapp.url ?? ''}
-          width={TXN_HISTORY_ICON_SIZE * 1.5}
+          height={TXN_HISTORY_ICON_SIZE}
+          uri={transaction.typeInfo.dapp.icon ?? ''}
+          width={TXN_HISTORY_ICON_SIZE}
         />
       }
       readonly={readonly}

@@ -39,8 +39,8 @@ export default function UnknownSummaryItem({
         <UnknownStatus
           color={theme.colors.textSecondary}
           fill={theme.colors.backgroundBackdrop}
-          height={TXN_HISTORY_ICON_SIZE * 1.25}
-          width={TXN_HISTORY_ICON_SIZE * 1.25}
+          height={TXN_HISTORY_ICON_SIZE}
+          width={TXN_HISTORY_ICON_SIZE}
         />
       }
       readonly={readonly}

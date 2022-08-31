@@ -40,7 +40,7 @@ export function InlineNetworkPill(props: NetworkPillProps) {
       borderRadius="xs"
       height={16}
       px="xxs"
-      py="none"
+      py="xxxs"
       showIcon={false}
       textVariant="badge"
       {...props}
