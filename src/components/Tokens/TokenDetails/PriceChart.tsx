@@ -18,7 +18,7 @@ import {
   dayHourFormatter,
   hourFormatter,
   monthDayFormatter,
-  monthFormatter,
+  monthTickFormatter,
   monthYearDayFormatter,
   monthYearFormatter,
   weekFormatter,
@@ -124,22 +124,6 @@ function getTicks(startTimestamp: number, endTimestamp: number, numTicks = 5) {
   )
 }
 
-function getStartOfMonthTicks(startTimestamp: number, endTimestamp: number, numTicks = 5) {
-  const ticks = getTicks(startTimestamp, endTimestamp, numTicks)
-
-  // when a tick maps to a date not on the first of the month, modify the tick to the closest
-  // first of month date. For example, Dec 31 becomes Jan 1, and Dec 5 becomes Dec 1.
-  return ticks.map((tick) => {
-    const date = new Date(tick.valueOf() * 1000)
-    if (date.getDate() !== 1) {
-      return date.getDate() >= 15
-        ? new Date(date.getFullYear(), date.getMonth() + 1, 1).getTime() / 1000
-        : new Date(date.getFullYear(), date.getMonth(), 1).getTime() / 1000
-    }
-    return tick
-  })
-}
-
 function tickFormat(
   startTimestamp: number,
   endTimestamp: number,
@@ -156,7 +140,7 @@ function tickFormat(
     case TimePeriod.MONTH:
       return [monthDayFormatter(locale), dayHourFormatter(locale), getTicks(startTimestamp, endTimestamp)]
     case TimePeriod.YEAR:
-      return [monthFormatter(locale), monthYearDayFormatter(locale), getStartOfMonthTicks(startTimestamp, endTimestamp)]
+      return [monthTickFormatter(locale), monthYearDayFormatter(locale), getTicks(startTimestamp, endTimestamp)]
     case TimePeriod.ALL:
       return [monthYearFormatter(locale), monthYearDayFormatter(locale), getTicks(startTimestamp, endTimestamp)]
   }
