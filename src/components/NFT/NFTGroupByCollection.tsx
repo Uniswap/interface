@@ -12,11 +12,11 @@ import { Text } from 'src/components/Text'
 import { NFTAsset } from 'src/features/nfts/types'
 import { ElementName } from 'src/features/telemetry/constants'
 import { Screens } from 'src/screens/Screens'
-import { flex } from 'src/styles/flex'
 import { dimensions } from 'src/styles/sizing'
 import { theme } from 'src/styles/theme'
 import { getChecksumAddress } from 'src/utils/addresses'
 
+const NFT_COLLECTION_IMAGE_SIZE = dimensions.fullWidth / 3
 interface Props {
   nftAssets: NFTAsset.Asset[]
   owner: string | undefined
@@ -58,8 +58,9 @@ function NFTCollectionItem({ nftAssets, owner }: Props) {
 
   const renderItem = ({ item }: ListRenderItemInfo<NFTAsset.Asset>) => (
     <Button
+      height={NFT_COLLECTION_IMAGE_SIZE}
       marginRight="xxxs"
-      width={dimensions.fullWidth / 3}
+      width={NFT_COLLECTION_IMAGE_SIZE}
       onPress={() =>
         navigation.navigate(Screens.NFTItem, {
           owner: owner || '',
@@ -67,7 +68,7 @@ function NFTCollectionItem({ nftAssets, owner }: Props) {
           token_id: item.token_id,
         })
       }>
-      <NFTViewer uri={item.image_url} />
+      <NFTViewer squareGridView uri={item.image_url} />
     </Button>
   )
 
@@ -77,8 +78,14 @@ function NFTCollectionItem({ nftAssets, owner }: Props) {
   // address is the same for all assets in a collection so just take the address from the first one.
   const collectionAddress = nftAssets[0].asset_contract.address
 
+  const isVerified = safelist_request_status === 'verified'
+
   return (
-    <Flex gap="none">
+    <Flex
+      backgroundColor="backgroundContainer"
+      borderTopLeftRadius="lg"
+      borderTopRightRadius="lg"
+      gap="none">
       <Button
         name={ElementName.NFTCollectionItem}
         onPress={() =>
@@ -88,23 +95,17 @@ function NFTCollectionItem({ nftAssets, owner }: Props) {
             owner,
           })
         }>
-        <Box borderColor="backgroundOutline" borderRadius="md" flexDirection="column">
-          <Flex borderRadius="md" gap="md" py="md">
-            <Flex row gap="sm" mx="md">
-              <Flex fill row alignItems="center" gap="xs">
-                <Text
-                  color="textSecondary"
-                  numberOfLines={1}
-                  style={flex.shrink}
-                  variant="bodySmall">
-                  {name}
-                </Text>
-                {safelist_request_status === 'verified' && (
-                  <VerifiedIcon fill={theme.colors.accentActive} height={16} width={16} />
-                )}
-              </Flex>
-              <Chevron color={theme.colors.textSecondary} direction="e" height={20} width={20} />
+        <Box borderBottomColor="backgroundContainer" borderWidth={0.5} flexDirection="column">
+          <Flex row gap="sm" m="md">
+            <Flex fill row alignItems="center" gap="xs">
+              <Text color="textSecondary" numberOfLines={1} variant="bodySmall">
+                {name}
+              </Text>
+              {isVerified && (
+                <VerifiedIcon fill={theme.colors.accentActive} height={16} width={16} />
+              )}
             </Flex>
+            <Chevron color={theme.colors.textSecondary} direction="e" height={20} width={20} />
           </Flex>
         </Box>
       </Button>
