@@ -1,9 +1,7 @@
-import { Currency } from '@uniswap/sdk-core'
 import { TFunction } from 'i18next'
 import React, { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { goBack } from 'src/app/navigation/rootNavigation'
-import { NFTAsset } from 'src/features/nfts/types'
 import { useSelectTransaction } from 'src/features/transactions/hooks'
 import { TransactionPending } from 'src/features/transactions/TransactionPending/TransactionPending'
 import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
@@ -14,6 +12,7 @@ import {
   TransactionType,
 } from 'src/features/transactions/types'
 import { useActiveAccountAddressWithThrow, useDisplayName } from 'src/features/wallet/hooks'
+import { formatCurrencyAmount } from 'src/utils/format'
 
 type TransferStatusProps = {
   derivedTransferInfo: DerivedTransferInfo
@@ -24,12 +23,11 @@ type TransferStatusProps = {
 
 const getTextFromTransferStatus = (
   t: TFunction,
-  inputAmount: string,
+  derivedTransferInfo: DerivedTransferInfo,
   recipient: string | undefined,
-  transactionDetails?: TransactionDetails,
-  currencyIn?: Currency,
-  nftIn?: NFTAsset.Asset
+  transactionDetails?: TransactionDetails
 ) => {
+  const { currencyIn, nftIn, currencyAmounts, isUSDInput, formattedAmounts } = derivedTransferInfo
   if (
     !transactionDetails ||
     transactionDetails.typeInfo.type !== TransactionType.Send ||
@@ -50,11 +48,15 @@ const getTextFromTransferStatus = (
   if (status === TransactionStatus.Success) {
     return {
       title: t('Send successful!'),
-      description: t('You sent {{ inputAmount }}{{ tokenName }} to {{ recipient }}.', {
-        inputAmount,
-        tokenName: nftIn?.name ?? ` ${currencyIn?.symbol}` ?? ' tokens',
-        recipient,
-      }),
+      description: t(
+        'You sent {{ currencyAmount }}{{ tokenName }}{{ usdValue }} to {{ recipient }}.',
+        {
+          currencyAmount: nftIn ? '' : formatCurrencyAmount(currencyAmounts[CurrencyField.INPUT]),
+          usdValue: isUSDInput ? ` ($${formattedAmounts[CurrencyField.INPUT]})` : '',
+          tokenName: nftIn?.name ?? ` ${currencyIn?.symbol}` ?? ' tokens',
+          recipient,
+        }
+      ),
     }
   }
 
@@ -83,21 +85,14 @@ export function TransferStatus({
   const { t } = useTranslation()
   const activeAddress = useActiveAccountAddressWithThrow()
 
-  const { formattedAmounts, recipient, currencyIn, nftIn, chainId } = derivedTransferInfo
+  const { recipient, chainId } = derivedTransferInfo
 
   const transaction = useSelectTransaction(activeAddress, chainId, txId)
 
   const recipientName = useDisplayName(recipient)?.name ?? recipient
   const { title, description } = useMemo(() => {
-    return getTextFromTransferStatus(
-      t,
-      formattedAmounts[CurrencyField.INPUT],
-      recipientName,
-      transaction,
-      currencyIn,
-      nftIn
-    )
-  }, [t, currencyIn, formattedAmounts, nftIn, recipientName, transaction])
+    return getTextFromTransferStatus(t, derivedTransferInfo, recipientName, transaction)
+  }, [t, derivedTransferInfo, recipientName, transaction])
 
   const onClose = useCallback(() => {
     onNext()
