@@ -19,7 +19,8 @@ interface FarmConfig {
             /**
              * `isLpToken` - this affect the way for our evaluation of the staked asset and its logo
              */
-            isLpToken: boolean,
+            isLpToken: boolean
+            symbol?: string
         }
     }[]
 
@@ -33,6 +34,7 @@ export const CHAINID_TO_FARMING_CONFIG: { [chainId in ChainId]?: FarmConfig } = 
             // pid 0
             stakingAsset: {
                 name: 'USDC-USDT LP',
+                symbol: 'SLP',
                 isLpToken: true,
             }
         }]

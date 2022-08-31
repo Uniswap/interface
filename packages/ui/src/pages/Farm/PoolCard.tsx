@@ -165,8 +165,12 @@ export default function PoolCard({ pid }: { pid: number }) {
 
       <StatContainer>
         <StakingColumn>
-          <TYPE.gray fontSize={12}>Staked LP</TYPE.gray>
-          <TYPE.white fontSize={16}>{parsedStakedAmount}</TYPE.white>
+          <TYPE.gray fontSize={12}>
+            Staked {farmingConfig?.pools[pid].stakingAsset.isLpToken ? 'LP' : 'Token'}
+          </TYPE.gray>
+          <TYPE.white fontSize={16}>
+            {parsedStakedAmount} {farmingConfig?.pools[pid].stakingAsset.symbol}
+          </TYPE.white>
           <ButtonPrimary
             height={28}
             width="auto"
