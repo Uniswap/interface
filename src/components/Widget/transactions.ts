@@ -1,5 +1,10 @@
-import { TransactionReceipt } from '@ethersproject/abstract-provider'
-import { TradeType, Transaction, TransactionEventHandlers, TransactionInfo, TransactionType } from '@uniswap/widgets'
+import {
+  TradeType,
+  Transaction,
+  TransactionEventHandlers,
+  TransactionInfo,
+  TransactionType as WidgetTransactionType,
+} from '@uniswap/widgets'
 import { useWeb3React } from '@web3-react/core'
 import { V3_SWAP_DEFAULT_SLIPPAGE } from 'hooks/useAutoSlippageTolerance'
 import { useCallback, useMemo } from 'react'
@@ -7,6 +12,7 @@ import { useTransactionAdder } from 'state/transactions/hooks'
 import {
   ExactInputSwapTransactionInfo,
   ExactOutputSwapTransactionInfo,
+  TransactionType as AppTransactionType,
   WrapTransactionInfo,
 } from 'state/transactions/types'
 import { useUserSlippageTolerance } from 'state/user/hooks'
@@ -26,20 +32,20 @@ export function useSyncWidgetTransactions() {
       if (!type || !response) {
         return
       }
-      if (type === TransactionType.WRAP || type === TransactionType.UNWRAP) {
+      if (type === WidgetTransactionType.WRAP || type === WidgetTransactionType.UNWRAP) {
         const { amount } = transaction.info
 
         addTransaction(response, {
-          type: TransactionType.WRAP,
-          unwrapped: false,
+          type: AppTransactionType.WRAP,
+          unwrapped: type === WidgetTransactionType.UNWRAP,
           currencyAmountRaw: amount.quotient.toString(),
           chainId,
-        } as unknown as WrapTransactionInfo)
+        } as WrapTransactionInfo)
       }
-      if (type === TransactionType.SWAP) {
+      if (type === WidgetTransactionType.SWAP) {
         const { trade, tradeType } = transaction.info
         const baseTxInfo = {
-          type: TransactionType.SWAP,
+          type: AppTransactionType.SWAP,
           tradeType,
           inputCurrencyId: currencyId(trade.inputAmount.currency),
           outputCurrencyId: currencyId(trade.outputAmount.currency),
@@ -50,28 +56,21 @@ export function useSyncWidgetTransactions() {
             maximumInputCurrencyAmountRaw: trade.maximumAmountIn(allowedSlippage).quotient.toString(),
             outputCurrencyAmountRaw: trade.outputAmount.quotient.toString(),
             expectedInputCurrencyAmountRaw: trade.inputAmount.quotient.toString(),
-          } as unknown as ExactOutputSwapTransactionInfo)
+          } as ExactOutputSwapTransactionInfo)
         } else {
           addTransaction(response, {
             ...baseTxInfo,
             inputCurrencyAmountRaw: trade.inputAmount.quotient.toString(),
             expectedOutputCurrencyAmountRaw: trade.outputAmount.quotient.toString(),
             minimumOutputCurrencyAmountRaw: trade.minimumAmountOut(allowedSlippage).quotient.toString(),
-          } as unknown as ExactInputSwapTransactionInfo)
+          } as ExactInputSwapTransactionInfo)
         }
       }
     },
     [addTransaction, allowedSlippage, chainId]
   )
 
-  const txHandlers: TransactionEventHandlers = useMemo(
-    () => ({
-      onTxSubmit,
-      onTxSuccess: (hash: string, receipt: TransactionReceipt) => console.log('onTxSuccess', hash, receipt),
-      onTxFail: (hash: string, receipt: TransactionReceipt) => console.log('onTxFail', hash, receipt),
-    }),
-    [onTxSubmit]
-  )
+  const txHandlers: TransactionEventHandlers = useMemo(() => ({ onTxSubmit }), [onTxSubmit])
 
   return { transactions: { ...txHandlers } }
 }
