@@ -41,7 +41,7 @@ font-family:'Open Sans';
   }
 }`
 
-export default function SwapHeader({ allowedSlippage, view, onViewChange }: { allowedSlippage: Percent, view: 'bridge' | 'swap' | 'limit' | 'flooz', onViewChange: (view: "bridge"  | "swap" | 'limit' | 'flooz') => void }) {
+export default function SwapHeader({ allowedSlippage, view, onViewChange,  }: { allowedSlippage: Percent, view: 'bridge' | 'swap' | 'limit' | 'flooz', onViewChange: (view: "bridge"  | "swap" | 'limit' | 'flooz') => void }) {
   const {chainId} = useWeb3React()
   const onBridgeClick = ( ) => onViewChange('bridge');
   const onLimitClick = ( ) => onViewChange('limit');

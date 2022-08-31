@@ -112,8 +112,8 @@ const HeaderWrapper = styled.div`
 
 
 const StyledHeader = styled.div`
-  font-family:"Bangers", cursive;
-  font-size:24px;
+  font-family:"Open Sans";
+  font-size:15px;
 `
 const Marginer = styled.div`
   margin-top: 5rem;
@@ -451,7 +451,7 @@ const Fomo = () => {
 }
 
 const StyledDiv = styled.div`
-  font-family: "Bangers", cursive;
+  font-family: "Open Sans";
   font-size:25px;
 `
 

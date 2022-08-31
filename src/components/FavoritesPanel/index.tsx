@@ -1,23 +1,25 @@
-import { Currency } from '@uniswap/sdk-core';
 import Badge, { BadgeVariant } from 'components/Badge';
-import { DarkCard ,DarkGreyCard,GreyCard} from 'components/Card';
+import { ChevronDown, ChevronUp, Percent, PlusCircle } from 'react-feather'
+import { DarkCard, DarkGreyCard, GreyCard } from 'components/Card';
+import React, {useState} from 'react';
+import { getTokenData, useEthPrice } from 'state/logs/utils';
+
 import { AutoColumn } from 'components/Column';
-import CurrencyInputPanel from 'components/CurrencyInputPanel';
+import { Button } from 'rebass/styled-components';
 import { CardSection } from 'components/earn/styled';
+import { Currency } from '@uniswap/sdk-core';
+import CurrencyInputPanel from 'components/CurrencyInputPanel';
 import Modal from 'components/Modal';
 import Row from 'components/Row';
 import { Wrapper } from 'components/swap/styleds';
 import { cpuUsage } from 'process';
-import React, {useState} from 'react';
-import { ChevronDown, ChevronUp, Percent, PlusCircle} from 'react-feather'
-import { Button } from 'rebass/styled-components';
-import { getTokenData, useEthPrice } from 'state/logs/utils';
 import styled from 'styled-components/macro'
+
 const FAVORITES_STORAGE_KEY = 'favorites';
 const Styledheader = styled.div`
 
-font-size:18px;
-font-family:"Bangers", cursive; `
+font-size:14px;
+font-family:"Open Sans"; `
 type Favorite = {
     name: string;
     symbol: string;

@@ -1,19 +1,20 @@
+import Badge, { BadgeVariant } from 'components/Badge'
+import { ButtonConfirmed, ButtonDropdown, ButtonOutlined } from 'components/Button'
+import { MenuItem, PaddedColumn, Separator } from 'components/SearchModal/styleds'
 import React, { useCallback } from 'react'
-import styled from 'styled-components/macro'
-import { Text } from 'rebass'
+
+import { BlueCard } from 'components/Card'
+import { CardSection } from 'components/earn/styled'
 import { CloseIcon } from 'theme'
-import { Trans } from '@lingui/macro'
 import Column from 'components/Column'
 import Modal from 'components/Modal'
 import { RowBetween } from 'components/Row'
-import { MenuItem, PaddedColumn, Separator } from 'components/SearchModal/styleds'
-import { ButtonConfirmed, ButtonDropdown, ButtonOutlined } from 'components/Button'
-import Badge, { BadgeVariant } from 'components/Badge'
-import { X } from 'react-feather'
-import { CardSection } from 'components/earn/styled'
-import { BlueCard } from 'components/Card'
 import { StyledInput } from 'pages/AddLiquidity/styled'
+import { Text } from 'rebass'
 import { TextInput } from 'components/TextInput'
+import { Trans } from '@lingui/macro'
+import { X } from 'react-feather'
+import styled from 'styled-components/macro'
 import useTheme from 'hooks/useTheme'
 
 export enum ProposalAction {
@@ -97,7 +98,7 @@ export const ProposalChoice = (choice: ProposalChoice) => {
 
 const StyledHeader = styled.div`
 font-size:24px;
-font-family:"Bangers", cursive;
+font-family:"Open Sans";
 width:100%;
 display:block;
 small {

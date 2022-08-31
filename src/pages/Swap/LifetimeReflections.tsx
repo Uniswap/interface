@@ -13,13 +13,14 @@ import styled from 'styled-components/macro'
 import { useKiba } from 'pages/Vote/VotePage';
 import { useTotalReflections } from 'state/logs/utils';
 import { useWeb3React } from '@web3-react/core';
+
 const PanelHeader = styled.div`
     display:flex;
     justify-content:space-between;
     align-items:center;
     margin-bottom:15px;
     h1 {
-        font-family: "Bangers", cursive;
+        font-family: "Open Sans";
         font-weight:500;
     }
 `
@@ -30,7 +31,7 @@ const PanelBody = styled.div`
     align-items:center;
     justify-content:start;
     h1 {
-        font-family:"Bangers", cursive; 
+        font-family:"Open Sans"; 
         font-weight:500;
     }
 `

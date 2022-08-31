@@ -128,8 +128,8 @@ const HeaderWrapper = styled.div`
 
 
 const StyledHeader = styled.div`
-  font-family:"Bangers", cursive;
-  font-size:24px;
+  font-family:"Open Sans";
+  font-size:14px;
 `
 const Marginer = styled.div`
   margin-top: 5rem;
@@ -259,7 +259,7 @@ const HoneyPotDetector = () => {
 
   return (<DarkCard style={{ background: '#252632', opacity: '.96', maxWidth: '45%', minWidth: 480, padding: 20 }} id="honeypage">
     <div style={{ maxWidth: 600, display: 'flex', flexFlow: 'column wrap', margin: 'auto', paddingBottom: '1rem' }}>
-      <StyledHeader style={{ fontSize: 30, paddingBottom: 20, paddingTop: 20 }}>Honeypot Checker (ETH)</StyledHeader>
+      <StyledHeader style={{ fontSize: 15, paddingBottom: 20, paddingTop: 20 }}>Honeypot Checker (ETH)</StyledHeader>
       <small style={{ marginTop: 3, paddingLeft: 3, justifyContent: 'center', fontSize: 20, fontFamily: 'Archivo Narrow' }}>Disclaimer: This is an experimental service, use at your own risk and make sure to double check all contract interactions.</small>
     </div>
     <RowFixed style={{ maxWidth: 600, width: "100%", padding: 20 }} >
@@ -503,7 +503,17 @@ export default function App() {
 
                     <Route component={RedirectPathToSwapOnly} />
                   </Switch>
-                  <AppBody style={{boxShadow: 'rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;', position: 'relative', padding: '9px 14px', justifyContent: 'end', backgroundColor: 'theme.bg0', height: 'flex', width: 'flex', minWidth: '45%' }}>
+                  <AppBody style={{
+                    boxShadow:
+                      'rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px',
+                    position: 'relative',
+                    padding: '9px 14px',
+                    justifyContent: 'end',
+                    backgroundColor: 'theme.bg0',
+                    height: 'flex',
+                    width: 'flex',
+                    minWidth: '45%'
+                  }}>
                     <StyledDiv style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', paddingBottom: '10px', paddingTop: '10px' }}>Kibaswap Featured Sponsors
                     </StyledDiv>
                     <Marquee direction={'ltr'}
@@ -514,7 +524,7 @@ export default function App() {
                       velocity={10}>
                       <></>
                       <FixedContainer style={{ paddingTop: 10, paddingBottom: 10, backgroundColor: 'transparent', width: '100%' }} gap="xs">
-                        <ScrollableRow style={{paddingTop:10, paddingBottom:10}} background={"linear-gradient(rgb(21 25 36), rgb(36 38 50))"}>
+                        <ScrollableRow style={{ paddingTop: 10, paddingBottom: 10 }} background={"linear-gradient(rgb(21 25 36), rgb(36 38 50))"}>
                           {[
                             {
                               title: "Kiba Inu",
@@ -535,7 +545,7 @@ export default function App() {
                               img: `https://openseauserdata.com/files/260d4d4d0ee4a561f25d2d61a4bc25c9.png`,
                               text: "View the Genesis NFT page",
                               link: '/#/nfts',
-                              style: { borderRadius: '60px'}
+                              style: { borderRadius: '60px' }
                             },
                             {
                               title: "Btok",

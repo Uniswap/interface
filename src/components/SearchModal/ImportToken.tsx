@@ -1,23 +1,24 @@
-import { TokenList } from '@uniswap/token-lists/dist/types'
-import { Token, Currency } from '@uniswap/sdk-core'
-import styled from 'styled-components/macro'
-import { TYPE, CloseIcon } from 'theme'
-import Card from 'components/Card'
-import { AutoColumn } from 'components/Column'
+import { AlertCircle, ArrowLeft } from 'react-feather'
+import { CloseIcon, TYPE } from 'theme'
+import { Currency, Token } from '@uniswap/sdk-core'
+import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
+import { Plural, Trans } from '@lingui/macro'
 import { RowBetween, RowFixed } from 'components/Row'
-import CurrencyLogo from 'components/CurrencyLogo'
-import { ArrowLeft, AlertCircle } from 'react-feather'
-import { transparentize } from 'polished'
-import useTheme from 'hooks/useTheme'
+
+import { AutoColumn } from 'components/Column'
 import { ButtonPrimary } from 'components/Button'
-import { SectionBreak } from 'components/swap/styleds'
-import { useAddUserToken } from 'state/user/hooks'
-import { useActiveWeb3React } from 'hooks/web3'
+import Card from 'components/Card'
+import CurrencyLogo from 'components/CurrencyLogo'
 import { ExternalLink } from '../../theme/components'
 import ListLogo from 'components/ListLogo'
-import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
 import { PaddedColumn } from './styleds'
-import { Plural, Trans } from '@lingui/macro'
+import { SectionBreak } from 'components/swap/styleds'
+import { TokenList } from '@uniswap/token-lists/dist/types'
+import styled from 'styled-components/macro'
+import { transparentize } from 'polished'
+import { useActiveWeb3React } from 'hooks/web3'
+import { useAddUserToken } from 'state/user/hooks'
+import useTheme from 'hooks/useTheme'
 
 const Wrapper = styled.div`
   position: relative;
@@ -67,7 +68,7 @@ export function ImportToken({ tokens, list, onBack, onDismiss, handleCurrencySel
         </RowBetween>
       </PaddedColumn>
       <SectionBreak />
-      <AutoColumn gap="md" style={{ marginBottom: '32px', padding: '1rem' }}>
+      <AutoColumn gap="md" style={{ marginBottom: '32px', padding: '0.7rem' }}>
         <AutoColumn justify="center" style={{ textAlign: 'center', gap: '16px', padding: '1rem' }}>
           <AlertCircle size={48} stroke={theme.text2} strokeWidth={1} />
           <TYPE.body fontWeight={400} fontSize={16}>
@@ -80,7 +81,8 @@ export function ImportToken({ tokens, list, onBack, onDismiss, handleCurrencySel
         {tokens.map((token) => {
           return (
             <Card
-              backgroundColor={theme.bg2}
+              backgroundColor={theme.bg3}
+              color={theme.text2}
               key={'import' + token.address}
               className=".token-warning-container"
               padding="2rem"
@@ -98,7 +100,7 @@ export function ImportToken({ tokens, list, onBack, onDismiss, handleCurrencySel
                 </AutoColumn>
                 {chainId && (
                   <ExternalLink href={getExplorerLink(chainId, token.address, ExplorerDataType.ADDRESS)}>
-                    <AddressText fontSize={12}>{token.address}</AddressText>
+                    <AddressText color={theme.text1} fontWeight={600} fontSize={18}>{token.address}</AddressText>
                   </ExternalLink>
                 )}
                 {list !== undefined ? (

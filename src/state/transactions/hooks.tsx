@@ -184,8 +184,8 @@ interface NewToken {
 }
 
 const StyledDiv = styled.div`
-  font-family:"Bangers",cursive;
-  font-size:18px;
+  font-family:"Open Sans";
+  font-size:14px;
 `
 
 const Table = styled.table`

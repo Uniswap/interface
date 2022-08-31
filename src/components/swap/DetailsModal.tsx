@@ -16,7 +16,7 @@ import { useContractOwner } from './ConfirmSwapModal';
 import { useWeb3React } from '@web3-react/core';
 
 const StyledHeader = styled.div<{ size?: 'lg' }>`
-    font-family: "Bangers", cursive;
+    font-family: "Open Sans";
     font-size:${(props) => props?.size ? '28px' : '20px'};
 `
 

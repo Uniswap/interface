@@ -1,8 +1,9 @@
-import { useCallback } from 'react'
-import { Price, Currency } from '@uniswap/sdk-core'
-import { useContext } from 'react'
-import { Text } from 'rebass'
+import { Currency, Price } from '@uniswap/sdk-core'
 import styled, { ThemeContext } from 'styled-components/macro'
+
+import { Text } from 'rebass'
+import { useCallback } from 'react'
+import { useContext } from 'react'
 
 interface TradePriceProps {
   price: Price<Currency, Currency>
@@ -42,7 +43,7 @@ export default function TradePrice({ price, showInverted, setShowInverted }: Tra
   return (
     <StyledPriceContainer onClick={flipPrice} title={text}>
       <div style={{ alignItems: 'center', display: 'flex', width: 'fit-content' }}>
-        <Text fontWeight={500} fontSize={14} color={theme.text1}>
+        <Text fontWeight={500} fontSize={11} color={theme.text1}>
           {text}
         </Text>
       </div>

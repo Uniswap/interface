@@ -134,9 +134,15 @@ export default function ThemeProvider({ children }: { children: React.ReactNode 
   return <StyledComponentsThemeProvider theme={themeObject}>{children}</StyledComponentsThemeProvider>
 }
 
-const TextWrapper = styled(Text)<{ font?: string, color: keyof Colors }>`
+
+
+const TextWrapper = styled(Text)<{ link?:boolean, font?: string, color: keyof Colors }>`
   color: ${({ color, theme }) => (theme as any)[color]};
   font-family: ${props => props.font ? props.font : 'inherit'};
+  ${props => Boolean(props.link) && `&:hover {
+    color: ${props.theme.blue2};
+    transition: all ease in 0.1s;
+  }`}
   `
 
 export const TYPE = {
@@ -144,7 +150,7 @@ export const TYPE = {
     return <TextWrapper  fontWeight={500} color={'text2'} {...props} />
   },
   link(props: TextProps) {
-    return <TextWrapper fontWeight={500} color={'primary1'} {...props} />
+    return <TextWrapper link={true}  fontWeight={500} color={'primary1'} {...props} />
   },
   label(props: TextProps) {
     return <TextWrapper fontWeight={600} color={'text1'} {...props} />
@@ -162,7 +168,7 @@ export const TYPE = {
     return <TextWrapper fontWeight={600} fontSize={24} {...props} />
   },
   mediumHeader(props: TextProps) {
-    return <TextWrapper font={'"Bangers", cursive;'} fontWeight={500} fontSize={20} {...props} />
+    return <TextWrapper font={'"Open Sans";'} fontWeight={500} fontSize={20} {...props} />
   },
   subHeader(props: TextProps) {
     return <TextWrapper fontWeight={400} color={'text1'} fontSize={14} {...props} />

@@ -17,8 +17,8 @@ import { useWeb3React } from '@web3-react/core';
 import { walletconnect } from 'connectors';
 
 const StyledHeader = styled.div`
-  font-family:"Bangers", cursive;
-  font-size:24px;
+  font-family:"Open Sans";
+  font-size:14px;
 `
 // eslint-disable-next-line
 export const isHoneyPotBsc = async (address: string, provider: any): Promise<boolean> => {

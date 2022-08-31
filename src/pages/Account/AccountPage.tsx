@@ -23,7 +23,7 @@ import { useWeb3React } from '@web3-react/core';
 
 const StyledHeader = styled.div`
 font-size: ${isMobile ? '18px' : '32px'};
-font-family: "Bangers", cursive;
+font-family: "Open Sans";
 margin:0; `
 
 const TotalRow = ({ totalGasUSD, totalGasETH, account, transactions, txCount }: { totalGasUSD?: any, totalGasETH?: any, totalGasPaid?: CurrencyAmount<Token> | null, account: string, transactions: any[], txCount: number }) => {
