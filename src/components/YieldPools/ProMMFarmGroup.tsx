@@ -57,9 +57,11 @@ const BtnPrimary = styled(ButtonPrimary)`
 
 const FarmContent = styled.div`
   background: ${({ theme }) => theme.background};
-  border-bottom-right-radius: 20px;
-  border-bottom-left-radius: 20px;
   overflow: hidden;
+  :last-child {
+    border-bottom-right-radius: 20px;
+    border-bottom-left-radius: 20px;
+  }
 `
 
 const FarmRow = styled.div`
