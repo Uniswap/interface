@@ -1,6 +1,7 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React from 'react'
 import { SettingsStackParamList } from 'src/app/navigation/types'
+import { AppBackground } from 'src/components/gradients/AppBackground'
 import { Screen } from 'src/components/layout/Screen'
 import { ConnectedDappsList } from 'src/components/WalletConnect/ConnectedDapps/ConnectedDappsList'
 import { useWalletConnect } from 'src/features/walletConnect/useWalletConnect'
@@ -17,6 +18,7 @@ export function SettingsWalletManageConnection({
 
   return (
     <Screen>
+      <AppBackground />
       <ConnectedDappsList sessions={sessions} />
     </Screen>
   )

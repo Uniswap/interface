@@ -1,6 +1,6 @@
 import React, { ReactElement, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { FlatList, StyleSheet } from 'react-native'
+import { FlatList, StyleSheet, ViewStyle } from 'react-native'
 import 'react-native-reanimated'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { AnimatedFlex, Flex } from 'src/components/layout'
@@ -9,6 +9,7 @@ import { Text } from 'src/components/Text'
 import { DappConnectionItem } from 'src/components/WalletConnect/ConnectedDapps/DappConnectionItem'
 import { DappSwitchNetworkModal } from 'src/components/WalletConnect/ConnectedDapps/DappSwitchNetworkModal'
 import { WalletConnectSession } from 'src/features/walletConnect/walletConnectSlice'
+import { dimensions } from 'src/styles/sizing'
 
 type ConnectedDappsProps = {
   sessions: WalletConnectSession[]
@@ -55,8 +56,8 @@ export function ConnectedDappsList({ backButton, sessions }: ConnectedDappsProps
             )}
           />
         ) : (
-          <Flex centered fill gap="xs" mx="xl">
-            <Text color="textPrimary" variant="body">
+          <Flex fill alignItems="center" gap="xs" style={emptyCardStyle}>
+            <Text color="textPrimary" variant="subhead">
               {t('No sites connected')}
             </Text>
             <Text color="textSecondary" textAlign="center" variant="bodySmall">
@@ -80,3 +81,6 @@ const ColumnStyle = StyleSheet.create({
     justifyContent: 'space-between',
   },
 })
+const emptyCardStyle: ViewStyle = {
+  paddingTop: dimensions.fullHeight / 5,
+}
