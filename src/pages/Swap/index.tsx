@@ -516,6 +516,7 @@ export default function Swap() {
             secondTokenAddress={importTokensNotInDefault[1]?.address}
             onContinue={handleConfirmTokenWarning}
             onCancel={handleDismissTokenWarning}
+            showCancel={true}
           />
         ) : (
           <TokenWarningModal

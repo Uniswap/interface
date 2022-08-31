@@ -16,7 +16,7 @@ export const formatUSDPriceWithCommas = (price: number) => {
     .replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`
 }
 
-export const formatEthPrice = (price: string) => {
+export const formatEthPrice = (price: string | undefined) => {
   if (!price) return 0
 
   const formattedPrice = parseFloat(formatEther(String(price)))

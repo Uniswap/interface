@@ -2,8 +2,7 @@ import { Plural, Trans } from '@lingui/macro'
 
 import WarningCache, { TOKEN_LIST_TYPES } from './TokenSafetyLookupTable'
 
-// TODO: Replace this with Steph's article when it is available.
-export const TOKEN_SAFETY_ARTICLE = 'https://help.uniswap.org/en/'
+export const TOKEN_SAFETY_ARTICLE = 'https://support.uniswap.org/hc/en-us/articles/8723118437133'
 
 export enum WARNING_LEVEL {
   MEDIUM,

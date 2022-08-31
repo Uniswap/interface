@@ -27,7 +27,7 @@ const ConnectButton = styled(ButtonPrimary)`
 `
 
 const Divider = styled.div`
-  border: 1px solid ${({ theme }) => theme.backgroundOutline};
+  border-bottom: 1px solid ${({ theme }) => theme.backgroundOutline};
   margin-top: 16px;
   margin-bottom: 16px;
 `
