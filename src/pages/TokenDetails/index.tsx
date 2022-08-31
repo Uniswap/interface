@@ -79,29 +79,24 @@ function NetworkBalances(tokenAddress: string) {
 export default function TokenDetails() {
   const { tokenAddress } = useParams<{ tokenAddress?: string }>()
   const token = useToken(tokenAddress)
-
   const tokenWarning = tokenAddress ? checkWarning(tokenAddress) : null
-  const [continueSwap, setContinueSwap] = useState<{ resolve: (value: boolean | PromiseLike<boolean>) => void }>()
-
   const navigate = useNavigate()
 
-  const onSwapReview = useCallback(() => {
-    return new Promise<boolean>(function (resolve, reject) {
-      setContinueSwap({ resolve })
+  const [continueSwap, setContinueSwap] = useState<{ resolve: (value: boolean | PromiseLike<boolean>) => void }>()
+  const shouldShowSpeedbump = !useIsUserAddedToken(token) && !!tokenWarning
+  const createSpeedbumpPromise = useCallback(() => {
+    return new Promise<boolean>((resolve) => {
+      shouldShowSpeedbump ? setContinueSwap({ resolve }) : resolve(true)
     })
-  }, [])
+  }, [shouldShowSpeedbump])
 
-  const resolveSwap = useCallback(
+  const onResolveSwap = useCallback(
     (value: boolean) => {
-      if (continueSwap) {
-        continueSwap.resolve(value)
-        setContinueSwap(undefined)
-      }
+      continueSwap?.resolve(value)
+      setContinueSwap(undefined)
     },
     [continueSwap, setContinueSwap]
   )
-
-  const shouldShowSpeedbump = !useIsUserAddedToken(token) && !!tokenWarning
 
   /* network balance handling */
   const { data: networkData } = tokenAddress ? NetworkBalances(tokenAddress) : { data: null }
@@ -145,10 +140,7 @@ export default function TokenDetails() {
         <>
           <TokenDetail address={tokenAddress} />
           <RightPanel>
-            <Widget
-              defaultToken={token ?? undefined}
-              onReviewSwapClick={shouldShowSpeedbump ? onSwapReview : undefined}
-            />
+            <Widget defaultToken={token ?? undefined} onReviewSwapClick={createSpeedbumpPromise} />
             {tokenWarning && <TokenSafetyMessage tokenAddress={tokenAddress} warning={tokenWarning} />}
             <BalanceSummary address={tokenAddress} totalBalance={totalBalance} networkBalances={balancesByNetwork} />
           </RightPanel>
@@ -159,15 +151,13 @@ export default function TokenDetails() {
               networkBalances={balancesByNetwork}
             />
           </Footer>
-          {tokenWarning && (
-            <TokenSafetyModal
-              isOpen={!!continueSwap || !tokenWarning.canProceed}
-              tokenAddress={tokenAddress}
-              onCancel={tokenWarning.canProceed ? () => resolveSwap(false) : () => navigate(-1)}
-              onContinue={() => resolveSwap(true)}
-              showCancel={true}
-            />
-          )}
+          <TokenSafetyModal
+            isOpen={!!continueSwap || (!!tokenWarning && !tokenWarning?.canProceed)}
+            tokenAddress={tokenAddress}
+            onCancel={tokenWarning?.canProceed ? () => onResolveSwap(false) : () => navigate(-1)}
+            onContinue={() => onResolveSwap(true)}
+            showCancel={true}
+          />
         </>
       )}
     </TokenDetailsLayout>

@@ -1,4 +1,4 @@
-import { Currency, SwapWidget } from '@uniswap/widgets'
+import { Currency, OnReviewSwapClick, SwapWidget } from '@uniswap/widgets'
 import { useWeb3React } from '@web3-react/core'
 import { RPC_URLS } from 'constants/networks'
 import { useActiveLocale } from 'hooks/useActiveLocale'
@@ -16,7 +16,7 @@ const WIDGET_ROUTER_URL = 'https://api.uniswap.org/v1/'
 
 export interface WidgetProps {
   defaultToken?: Currency
-  onReviewSwapClick?: () => Promise<boolean>
+  onReviewSwapClick?: OnReviewSwapClick
 }
 
 export default function Widget({ defaultToken, onReviewSwapClick }: WidgetProps) {

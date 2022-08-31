@@ -183,17 +183,6 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
   const isFavorited = favoriteTokens.includes(address)
   const toggleFavorite = useToggleFavorite(address)
   const warning = checkWarning(address)
-  //const navigate = useNavigate()
-  //const isUserAddedToken = useIsUserAddedToken(token)
-  //const [warningModalOpen, setWarningModalOpen] = useState(!!warning && !isUserAddedToken)
-
-  // const handleDismissWarning = useCallback(() => {
-  //   setWarningModalOpen(false)
-  // }, [setWarningModalOpen])
-  // const handleCancel = useCallback(() => {
-  //   setWarningModalOpen(false)
-  //   warning && warning.level === WARNING_LEVEL.BLOCKED && navigate(-1)
-  // }, [setWarningModalOpen, navigate, warning])
   const chainInfo = getChainInfo(token?.chainId)
   const networkLabel = chainInfo?.label
   const networkBadgebackgroundColor = chainInfo?.backgroundColor
@@ -291,12 +280,6 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
             </ContractAddress>
           </Contract>
         </ContractAddressSection>
-        {/* <TokenSafetyModal
-          isOpen={warningModalOpen}
-          tokenAddress={address}
-          onCancel={handleCancel}
-          onContinue={handleDismissWarning}
-        /> */}
       </TopArea>
     </Suspense>
   )
