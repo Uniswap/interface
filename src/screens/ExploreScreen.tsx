@@ -1,7 +1,7 @@
 import { useScrollToTop } from '@react-navigation/native'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { BlurView } from 'expo-blur'
-import React, { useEffect, useMemo, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { KeyboardAvoidingView, TextInput, useColorScheme, ViewStyle } from 'react-native'
 import Animated, {
@@ -61,18 +61,6 @@ export function ExploreScreen({ navigation }: Props) {
   const scrollY = useSharedValue(0)
   const textInputRef = useRef<TextInput>(null)
 
-  // Reset search mode on tab press
-  useEffect(() => {
-    const unsubscribe = (navigation.getParent() as TabNavigationProp<Tabs.Explore>).addListener(
-      'tabPress',
-      () => {
-        textInputRef?.current?.blur()
-      }
-    )
-
-    return unsubscribe
-  }, [navigation])
-
   const onChangeSearchFilter = (newSearchFilter: string) => {
     setSearchQuery(newSearchFilter)
   }
@@ -84,10 +72,23 @@ export function ExploreScreen({ navigation }: Props) {
     setIsSearchMode(true)
   }
 
-  const onSearchCancel = () => {
+  const onSearchCancel = useCallback(() => {
     scrollY.value = withTiming(0, { duration: 100 })
     setIsSearchMode(false)
-  }
+  }, [scrollY])
+
+  // Reset search mode on tab press
+  useEffect(() => {
+    const unsubscribe = (navigation.getParent() as TabNavigationProp<Tabs.Explore>).addListener(
+      'tabPress',
+      () => {
+        textInputRef?.current?.clear()
+        onSearchCancel()
+      }
+    )
+
+    return unsubscribe
+  }, [navigation, onSearchCancel])
 
   const scrollHandler = useAnimatedScrollHandler((event) => {
     scrollY.value = event.contentOffset.y
