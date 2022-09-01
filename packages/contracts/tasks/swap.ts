@@ -2,7 +2,7 @@ import "@nomiclabs/hardhat-web3"
 import {subtask, task, types} from "hardhat/config"
 import {BigNumber, ethers, utils} from "ethers";
 // @ts-ignore
-import TeleswapV2Pair from '../abi/TeleswapV2Pair.json'
+import TeleswapV2Pair from '../build/TeleswapV2Pair.json'
 import {asArray, getMessage, TypedData} from "eip-712";
 require('dotenv').config()
 

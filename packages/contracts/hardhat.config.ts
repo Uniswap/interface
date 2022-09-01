@@ -112,7 +112,7 @@ module.exports = {
         disambiguatePaths: false,
     },
     abiExporter: {
-        path: './abi',
+        path: './build',
         runOnCompile: true,
         clear: true,
         flat: true,
