@@ -1,5 +1,5 @@
 import "@nomiclabs/hardhat-web3"
-import {subtask, task} from "hardhat/config"
+import {subtask, task, types} from "hardhat/config"
 import {BigNumber, ethers, utils} from "ethers";
 // @ts-ignore
 import TeleswapV2Pair from '../abi/TeleswapV2Pair.json'
@@ -125,6 +125,7 @@ task("getAmountsOut", "getAmountsOut")
     .addParam("token2", "token2")
     .addParam("router02address", "TeleswapV2Router02.sol合约地址")
     .addParam("amountin", "输入金额")
+    .addParam("stable", "# 兑换方式 false->volatile true->stableswap",false,types.boolean)
     .setAction(async (taskArgs, hre) => {
         const teleswapV2Router02 = await hre.ethers.getContractFactory('TeleswapV2Router02')
         const router02address = await teleswapV2Router02.attach(taskArgs.router02address)
@@ -132,7 +133,7 @@ task("getAmountsOut", "getAmountsOut")
         let routes = [{
             from   :   taskArgs.token1,
             to:       taskArgs.token2,
-            stable:       new Boolean(process.env.stable).valueOf()
+            stable:   taskArgs.stable
         }]
         console.log("export route=%s", JSON.stringify(routes))
         let getAmountsOutRes= await router02address.getAmountsOut(amountIn,routes)
@@ -271,6 +272,7 @@ task("addLiquidity", "增加流通性")
     .addParam("amount2min", "amount2min")
     .addParam("to", "to，一般为调用者钱包地址")
     .addParam("router02address", "TeleswapV2Router02合约地址")
+    .addParam("stable", "# 兑换方式 false->volatile true->stableswap",false,types.boolean)
     .setAction(async (taskArgs, hre) => {
             const teleswapV2Router02 = await hre.ethers.getContractFactory('TeleswapV2Router02')
             const router02address = await teleswapV2Router02.attach(taskArgs.router02address)
@@ -278,7 +280,7 @@ task("addLiquidity", "增加流通性")
             let route= {
                     from:  taskArgs.token1,
                     to: taskArgs.token2,
-                    stable:new Boolean(process.env.stable).valueOf()
+                    stable:taskArgs.stable
                 }
             let addLiquidityRes= await router02address.addLiquidity(route,
                 taskArgs.amount1desired,
@@ -305,6 +307,7 @@ task("addLiquidityEth", "增加流通性")
     .addParam("amountethmin", "amountETHMin")
     .addParam("to", "to，一般为调用者钱包地址")
     .addParam("router02address", "TeleswapV2Router02合约地址")
+    .addParam("stable", "# 兑换方式 false->volatile true->stableswap",false,types.boolean)
     .setAction(async (taskArgs, hre) => {
         const teleswapV2Router02 = await hre.ethers.getContractFactory('TeleswapV2Router02')
         const router02address = await teleswapV2Router02.attach(taskArgs.router02address)
@@ -312,7 +315,7 @@ task("addLiquidityEth", "增加流通性")
         let route= {
             from:  taskArgs.token1,
             to: taskArgs.token2,
-            stable:new Boolean(process.env.stable).valueOf()
+            stable:taskArgs.stable
         }
         let addLiquidityRes= await router02address.addLiquidityETH(route,
             taskArgs.amounttokendesired,
@@ -337,6 +340,7 @@ task("swapExactTokensForTokens", "swapExactTokensForTokens")
     .addParam("token2", "token2")
     .addParam("to", "to，钱包地址")
     .addParam("router02address", "uniswapV2Router02Address合约地址")
+    .addParam("stable", "# 兑换方式 false->volatile true->stableswap",false,types.boolean)
     .setAction(async (taskArgs, hre) => {
         let date1 =Math.round((new Date().getTime()+3600000)/1000)
         const teleswapV2Router02 = await hre.ethers.getContractFactory('TeleswapV2Router02')
@@ -344,7 +348,7 @@ task("swapExactTokensForTokens", "swapExactTokensForTokens")
         let route= [
             taskArgs.token1,
             taskArgs.token2,
-            new Boolean(process.env.stable).valueOf()
+            taskArgs.stable
         ]
         let amountIn = expandTo18Decimals(taskArgs.amountin)
         const swapExactTokensForTokensData: [BigNumber,bigint,any[],string,number] = [
@@ -490,13 +494,14 @@ task("getPair", "getPair")
     .addParam("token1", "token1")
     .addParam("token2", "token2")
     .addParam("factoryaddress", "uniswapV2Factory合约地址")
+    .addParam("stable", "# 兑换方式 false->volatile true->stableswap",false,types.boolean)
     .setAction(async (taskArgs, hre) => {
         const teleswapV2Factory = await hre.ethers.getContractFactory('TeleswapV2Factory')
         const uniswapV2 = await teleswapV2Factory.attach(taskArgs.factoryaddress)
         const getPairData: [string,string,boolean] = [
             taskArgs.token1,
             taskArgs.token2,
-            new Boolean(process.env.stable).valueOf()
+            taskArgs.stable
         ]
         console.log("export getPair=%s",await uniswapV2.getPair(...getPairData))
     });
