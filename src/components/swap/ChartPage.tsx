@@ -103,6 +103,24 @@ export const fetchTokenInfo = async (chainId: number | undefined, tokenAddress: 
     }
 }
 
+export const useDexscreenerToken = (address?:string) => {
+    const [data,setData] = React.useState<any>()
+
+    React.useEffect(() => {
+        if (address) {
+            console.log(`useDexscreenerToken hook fetch it`)
+            axios.get(`https://api.dexscreener.com/latest/dex/tokens/${address}`)
+                .then((response) => {
+                    console.log(`useDexscreenerToken hook set it`, response.data)
+                    setData(response.data?.pairs?.[0])
+                })
+        }
+    }, [address])
+
+    if (!address) return 
+    return data
+}
+
 export const useTokenInfo = (chainId: number | undefined, tokenAddress: string | undefined) => {
     const [tokenInfo, setTokenInfo] = React.useState<TokenInfo>()
     const [etherscanTokeninfo, setEtherscanTokeninfo] = React.useState<any>({})

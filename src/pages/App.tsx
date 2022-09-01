@@ -6,13 +6,13 @@ import {
   InMemoryCache
 } from "@apollo/client";
 import Badge, { BadgeVariant } from 'components/Badge'
+import { BrowserRouter, HashRouter, Route, Switch } from 'react-router-dom'
 import { ChartPage, useTokenInfo } from 'components/swap/ChartPage'
 import { DarkCard, DarkGreyCard } from 'components/Card'
 import { FomoPage, LimitOrders } from 'state/transactions/hooks'
 import { GelatoProvider, useGelatoLimitOrders, useGelatoLimitOrdersHandlers } from "@gelatonetwork/limit-orders-react";
 import React, { useState } from 'react'
 import { RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects';
-import { Route, Switch } from 'react-router-dom'
 import Swap, { CardWrapper, FixedContainer, ScrollableRow } from './Swap'
 import { bscClient, client, useTokenData } from 'state/logs/utils'
 import { useModalOpen, useToggleModal } from '../state/application/hooks'
@@ -52,6 +52,7 @@ import { RedirectDuplicateTokenIds } from './AddLiquidity/redirects'
 import { RedirectDuplicateTokenIdsV2 } from './AddLiquidityV2/redirects'
 import RemoveLiquidity from './RemoveLiquidity'
 import RemoveLiquidityV3 from './RemoveLiquidity/V3'
+import { Routes } from 'react-router'
 import { RowFixed } from 'components/Row'
 import { SelectiveChart } from './Swap/SelectiveCharting';
 import { Suite } from './Suite/Suite';
@@ -401,7 +402,9 @@ export default function App() {
   const GainsPage = (props: any) => <TokenBalanceContextProvider><VotePage {...props} /></TokenBalanceContextProvider>
   return (
     <ErrorBoundary>
+      <HashRouter>
       <SwapVolumeContextProvider chainId={chainId}>
+        
         <Route component={DarkModeQueryParamReader} />
         <Route component={ApeModeQueryParamReader} />
         <Web3ReactManager>
@@ -582,6 +585,7 @@ export default function App() {
 
         </Web3ReactManager>
       </SwapVolumeContextProvider>
+      </HashRouter>
     </ErrorBoundary>
   )
 }

@@ -126,6 +126,20 @@ type ClipboardEventListener =
   | EventListenerObject
   | null
   | ((event: ClipboardEvent) => void);
+
+  export const InternalCardWrapper = styled(StyledInternalLink)`
+  min-width: 190px;
+  width:100%;
+  margin-right: 16px;
+  padding:3px;
+  align-items:center;
+  :hover {
+    cursor: pointer;
+    opacity: 0.6;
+  }
+`
+
+
 export const CardWrapper = styled(ExternalLink)`
   min-width: 190px;
   width:100%;

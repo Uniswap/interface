@@ -157,9 +157,9 @@ export const TopTokenHolders: FC<Props> = (props: Props) => {
                             setSliceCount({ ...sliceCount, end })
                         }}>
                             <small style={{ fontSize: 12 }}>{
-                                holders?.length === sliceCount?.end ? 'Hide' : 'Show'}
+                                holders?.length === sliceCount?.end ? 'Hide' : 'Show'} All
                                 {holders?.length !== sliceCount?.end ? <ArrowDown /> : <ArrowUp />}
-                                All Top 50</small>
+                                 Top 50</small>
                         </StyledSpan> : null}
                     </div>
                 ))}

@@ -2,7 +2,7 @@
 import 'react-pro-sidebar/dist/css/styles.css';
 import '@coreui/coreui/dist/css/coreui.css'
 
-import { ArrowLeftCircle, ArrowRightCircle, BarChart2, ChevronDown, ChevronUp, Globe, Heart, PieChart, RefreshCcw, RefreshCw, Repeat, ToggleLeft, ToggleRight, Twitter } from 'react-feather'
+import { ArrowLeftCircle, ArrowRightCircle, BarChart2, ChevronDown, ChevronUp, Globe, Heart, PieChart, RefreshCcw, RefreshCw, Repeat, Search, ToggleLeft, ToggleRight, TrendingDown, TrendingUp, Twitter } from 'react-feather'
 import Badge, { BadgeVariant } from 'components/Badge';
 import { BurntKiba, abbreviateNumber } from 'components/BurntKiba';
 import { Currency, CurrencyAmount, Token, WETH9 } from '@uniswap/sdk-core';
@@ -21,6 +21,7 @@ import CurrencyLogo from 'components/CurrencyLogo';
 import { FiatValue } from '../../components/CurrencyInputPanel/FiatValue'
 import { Link } from 'react-router-dom';
 import { LoadingSkeleton } from 'pages/Pool/styleds';
+import { PairSearch } from 'pages/Charts/PairSearch';
 import React from 'react';
 import { SwapTokenForToken } from 'pages/Swap/SwapTokenForToken';
 import { Trans } from '@lingui/macro'
@@ -100,9 +101,10 @@ type ChartSidebarProps = {
     onCollapse: (collapsed: boolean) => void
     collapsed: boolean;
     loading: boolean;
+    screenerToken?: any
 }
 const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
-    const { token, holdings, tokenData, chainId, collapsed, onCollapse, loading } = props
+    const { token, holdings, screenerToken, tokenData, chainId, collapsed, onCollapse, loading } = props
 
     //state
     const [componentLoading, setComponentLoading] = React.useState(loading)
@@ -189,10 +191,10 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
 
 
     const inputCurrencyAddress = React.useMemo(function () {
-        return Boolean(!!holdings?.pair) ? 
-                holdings?.pair?.toLowerCase() === WETH9[1].address.toLowerCase() 
-                    ? 'ETH' : toChecksum(holdings?.pair) 
-                        : `ETH`
+        return Boolean(!!holdings?.pair) ?
+            holdings?.pair?.toLowerCase() === WETH9[1].address.toLowerCase()
+                ? 'ETH' : toChecksum(holdings?.pair)
+            : `ETH`
     }, [holdings.pair])
 
     const inputCurrency = useCurrency(inputCurrencyAddress ?? undefined)
@@ -212,7 +214,7 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
         ) : null
     }, [token, inputCurrency])
 
-    const onQuickNavOpenChange = (isOpen:boolean) => {
+    const onQuickNavOpenChange = (isOpen: boolean) => {
         setQuickNavOpen(isOpen)
         if (isOpen) {
             setStatsOpen(false)
@@ -220,13 +222,30 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
         }
     }
 
-    const onStatsOpenChange = (isOpen:boolean) => {
+    const onStatsOpenChange = (isOpen: boolean) => {
         setStatsOpen(isOpen)
         if (isOpen) {
             setQuickNavOpen(false)
             setSwapOpen(false)
         }
     }
+
+    const formatPriceLabel = (key: string) => {
+        switch (key) {
+            case 'h24':
+                return 'Price 24hr';
+            case 'h6':
+                return 'Price 6hr';
+            case 'h1':
+                return 'Price 1hr';
+            case 'm5':
+                return 'Price 5min';
+            default:
+                return key
+        }
+    }
+
+    const [search, setSearch] = React.useState(false)
     return (
         <Wrapper>
             <ProSidebar collapsed={collapsed}
@@ -237,9 +256,13 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
                 style={{ fontSize: 12, marginRight: 15, background: color, borderRadius: 10, border: '.25px solid transparent' }}
             >
                 <SidebarHeader style={{ fontSize: 12, background: 'linear-gradient(#181C27, #131722)' }}>
-                    <Menu iconShape="round">
 
+                    <Menu iconShape="round">
+                        <SubMenu style={{height:'fit-content'}} open={search} onOpenChange={setSearch} icon={<Search />} title="Search tokens">
+                            {search && <PairSearch />}
+                        </SubMenu>
                         <MenuItem icon={<BarChart2 style={{ background: 'transparent' }} />}> Kiba Charts </MenuItem>
+
                         {/* changing menu collapse icon on click */}
                         <div style={{ height: 0, marginBottom: 5, cursor: 'pointer', display: 'flex', justifyContent: "end", position: 'relative', right: '5' }} >
                             {collapsed && (
@@ -419,35 +442,7 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
                                                 </SidebarContent>
                                             </Menu>
                                         )}
-
-                                        {(tokenInfo && tokenInfo.price || tokenData && tokenData?.priceChangeUSD) && <Menu iconShape="round"   >
-                                            <SidebarHeader>
-                                                <MenuItem>Price Change Stats</MenuItem>
-                                            </SidebarHeader>
-                                            <SidebarContent>
-                                                {!tokenInfo?.price && tokenData?.priceChangeUSD && <MenuItem>
-                                                    <TYPE.subHeader>Price 24Hr (%) </TYPE.subHeader>
-                                                    <TYPE.black style={{ display: 'flex', alignItems: 'center' }}>{tokenData?.priceChangeUSD < 0 ? <ChevronDown color={'red'} /> : <ChevronUp color={'green'} />}&nbsp; {tokenData?.priceChangeUSD?.toFixed(2)}%</TYPE.black>
-                                                </MenuItem>}
-
-                                                {tokenInfo && tokenInfo.price && tokenInfo?.price?.diff && <MenuItem>
-                                                    <TYPE.subHeader>Price 24Hr (%) </TYPE.subHeader>
-                                                    <TYPE.black style={{ display: 'flex', alignItems: 'center' }}>{tokenInfo?.price.diff < 0 ? <ChevronDown color={'red'} /> : <ChevronUp color={'green'} />}&nbsp; {parseFloat(tokenInfo.price.diff.toString()).toFixed(2)}%</TYPE.black>
-                                                </MenuItem>}
-
-                                                {tokenInfo && tokenInfo.price && tokenInfo?.price?.diff7d && <MenuItem>
-                                                    <TYPE.subHeader>Price 1 Week (%) </TYPE.subHeader>
-                                                    <TYPE.black style={{ display: 'flex', alignItems: 'center' }}>{tokenInfo.price.diff7d < 0 ? <ChevronDown color={'red'} /> : <ChevronUp color={'green'} />}&nbsp; {parseFloat(tokenInfo.price.diff7d.toString()).toFixed(2)}%</TYPE.black>
-                                                </MenuItem>}
-
-                                                {tokenInfo && tokenInfo.price && tokenInfo?.price?.diff30d && <MenuItem>
-                                                    <TYPE.subHeader>Price 30 Days (%) </TYPE.subHeader>
-                                                    <TYPE.black style={{ display: 'flex', alignItems: 'center' }}>{tokenInfo.price.diff30d < 0 ? <ChevronDown color={'red'} /> : <ChevronUp color={'green'} />}&nbsp; {parseFloat(tokenInfo.price.diff30d.toString()).toFixed(2)}%</TYPE.black>
-                                                </MenuItem>}
-                                            </SidebarContent>
-                                        </Menu>}
                                     </Menu>
-
                                 </>
                             }
                             {Boolean(loading) && (
@@ -465,7 +460,7 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
                 </SidebarContent>
                 <SidebarContent>
                     <Menu style={{ background: 'linear-gradient( rgb(21, 25, 36), rgb(36, 38, 50))' }} >
-                        <SubMenu style={{ background: 'linear-gradient( rgb(21, 25, 36), rgb(36, 38, 50))' }} onOpenChange={toggleSwapOpen} open={swapOpen} icon={<Repeat />} title={<span onClick={toggleSwapOpen}>Swap</span>}>
+                        <SubMenu style={{ background: 'linear-gradient( rgb(21, 25, 36), rgb(36, 38, 50))' }} onOpenChange={toggleSwapOpen} open={swapOpen} icon={<Repeat />} title={"Swap " + token?.name}>
                             <Card style={{ padding: '1rem' }}>
                                 <SwapTokenForToken
                                     fontSize={12}
