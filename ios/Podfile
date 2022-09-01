@@ -37,7 +37,7 @@ target 'Uniswap' do
   # Pinning fix for command line build
   # https://github.com/facebook/react-native/issues/31480#issuecomment-915583038
   if ENV['USE_FLIPPER']
-    use_flipper!({'Flipper' => '0.131.0', 'Flipper-Folly' => '2.6.9'})
+    use_flipper!({'Flipper' => '0.162.0', 'Flipper-Folly' => '2.6.9'})
     pod 'react-native-flipper', :path =>  '../node_modules/react-native-flipper'
   end
 
