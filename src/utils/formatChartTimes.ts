@@ -41,8 +41,19 @@ export const monthYearDayFormatter = (locale: string) => (timestamp: NumberValue
     day: 'numeric',
   })
 
-export const monthFormatter = (locale: string) => (timestamp: NumberValue) =>
-  createDateFormatter(timestamp, locale, { month: 'long' })
+export const monthTickFormatter = (locale: string) => (timestamp: NumberValue) => {
+  let date = new Date(timestamp.valueOf() * 1000)
+
+  // when a tick maps to a date not on the first of the month, modify the tick to the closest
+  // first of month date. For example, Dec 31 becomes Jan 1, and Dec 5 becomes Dec 1.
+  if (date.getDate() !== 1) {
+    date =
+      date.getDate() >= 15
+        ? new Date(date.getFullYear(), date.getMonth() + 1, 1)
+        : new Date(date.getFullYear(), date.getMonth(), 1)
+  }
+  return date.toLocaleDateString(locale, { month: 'long' })
+}
 
 export const weekFormatter = (locale: string) => (timestamp: NumberValue) =>
   createDateFormatter(timestamp, locale, { weekday: 'long' })

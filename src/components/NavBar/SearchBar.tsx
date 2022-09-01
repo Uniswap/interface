@@ -90,7 +90,7 @@ interface SearchBarDropdownProps {
 }
 
 export const SearchBarDropdown = ({ toggleOpen, tokens, collections, hasInput }: SearchBarDropdownProps) => {
-  const [hoveredIndex, setHoveredIndex] = useState<number | undefined>(undefined)
+  const [hoveredIndex, setHoveredIndex] = useState<number | undefined>(0)
   const searchHistory = useSearchHistory(
     (state: { history: (FungibleToken | GenieCollection)[] }) => state.history
   ).slice(0, 2)
@@ -185,6 +185,7 @@ export const SearchBarDropdown = ({ toggleOpen, tokens, collections, hasInput }:
           setHoveredIndex(hoveredIndex - 1)
         }
       } else if (event.key === 'ArrowDown') {
+        event.preventDefault()
         if (hoveredIndex && hoveredIndex === totalSuggestions - 1) {
           setHoveredIndex(0)
         } else {
@@ -268,6 +269,7 @@ export const SearchBar = () => {
   const [searchValue, setSearchValue] = useState('')
   const debouncedSearchValue = useDebounce(searchValue, 300)
   const searchRef = useRef<HTMLDivElement>(null)
+  const inputRef = useRef<HTMLInputElement>(null)
   const { pathname } = useLocation()
   const phase1Flag = useNftFlag()
   const isMobile = useIsMobile()
@@ -320,63 +322,72 @@ export const SearchBar = () => {
     setSearchValue('')
   }, [pathname])
 
+  // auto set cursor when searchbar is opened
+  useEffect(() => {
+    if (isOpen) {
+      inputRef.current?.focus()
+    }
+  }, [isOpen])
+
   const placeholderText = phase1Flag === NftVariant.Enabled ? t`Search tokens and NFT collections` : t`Search tokens`
 
   return (
     <>
-      <Box
-        position={{ sm: isOpen ? 'absolute' : 'relative', lg: 'relative' }}
-        top={{ sm: '0', lg: 'unset' }}
-        left={{ sm: '0', lg: 'unset' }}
-        width={{ sm: isOpen ? 'viewWidth' : 'auto', lg: 'auto' }}
-        ref={searchRef}
-        style={{ zIndex: '1000' }}
-      >
-        <Row
-          className={clsx(`${styles.searchBar} ${!isOpen && magicalGradientOnHover}`)}
-          borderRadius={isOpen ? undefined : '12'}
-          borderTopRightRadius={isOpen && !isMobile ? '12' : undefined}
-          borderTopLeftRadius={isOpen && !isMobile ? '12' : undefined}
-          display={{ sm: isOpen ? 'flex' : 'none', lg: 'flex' }}
-          justifyContent={isOpen || phase1Flag === NftVariant.Enabled ? 'flex-start' : 'center'}
-          onFocus={() => !isOpen && toggleOpen()}
-          onClick={() => !isOpen && toggleOpen()}
-          gap="12"
+      <Box position="relative">
+        <Box
+          position={isOpen ? { sm: 'fixed', md: 'absolute' } : 'static'}
+          width={{ sm: isOpen ? 'viewWidth' : 'auto', md: 'auto' }}
+          ref={searchRef}
+          className={styles.searchBarContainer}
         >
-          <Box display={{ sm: 'none', lg: 'flex' }}>
-            <MagnifyingGlassIcon />
-          </Box>
-          <Box display={{ sm: 'flex', lg: 'none' }} color="placeholder" onClick={toggleOpen}>
-            <ChevronLeftIcon />
-          </Box>
-          <Box
-            as="input"
-            placeholder={placeholderText}
-            width={isOpen || phase1Flag === NftVariant.Enabled ? 'full' : '120'}
-            onChange={(event: ChangeEvent<HTMLInputElement>) => {
-              !isOpen && toggleOpen()
-              setSearchValue(event.target.value)
-            }}
-            className={styles.searchBarInput}
-            value={searchValue}
-          />
-        </Row>
-        <Box display={{ sm: isOpen ? 'none' : 'flex', lg: 'none' }}>
-          <NavIcon onClick={toggleOpen}>
-            <NavMagnifyingGlassIcon width={28} height={28} />
-          </NavIcon>
-        </Box>
-        {isOpen &&
-          (debouncedSearchValue.length > 0 && (tokensAreLoading || collectionsAreLoading) ? (
-            <SkeletonRow />
-          ) : (
-            <SearchBarDropdown
-              toggleOpen={toggleOpen}
-              tokens={reducedTokens}
-              collections={reducedCollections}
-              hasInput={debouncedSearchValue.length > 0}
+          <Row
+            className={clsx(`${styles.searchBar} ${!isOpen && magicalGradientOnHover}`)}
+            borderRadius={isOpen ? undefined : '12'}
+            borderTopRightRadius={isOpen && !isMobile ? '12' : undefined}
+            borderTopLeftRadius={isOpen && !isMobile ? '12' : undefined}
+            borderBottomWidth={isOpen ? '0px' : '1px'}
+            display={{ sm: isOpen ? 'flex' : 'none', xl: 'flex' }}
+            justifyContent={isOpen || phase1Flag === NftVariant.Enabled ? 'flex-start' : 'center'}
+            onFocus={() => !isOpen && toggleOpen()}
+            onClick={() => !isOpen && toggleOpen()}
+            gap="12"
+          >
+            <Box display={{ sm: 'none', md: 'flex' }}>
+              <MagnifyingGlassIcon />
+            </Box>
+            <Box display={{ sm: 'flex', md: 'none' }} color="placeholder" onClick={toggleOpen}>
+              <ChevronLeftIcon />
+            </Box>
+            <Box
+              as="input"
+              placeholder={placeholderText}
+              width={isOpen || phase1Flag === NftVariant.Enabled ? 'full' : '120'}
+              onChange={(event: ChangeEvent<HTMLInputElement>) => {
+                !isOpen && toggleOpen()
+                setSearchValue(event.target.value)
+              }}
+              className={styles.searchBarInput}
+              value={searchValue}
+              ref={inputRef}
             />
-          ))}
+          </Row>
+          <Box display={{ sm: isOpen ? 'none' : 'flex', xl: 'none' }}>
+            <NavIcon onClick={toggleOpen}>
+              <NavMagnifyingGlassIcon width={28} height={28} />
+            </NavIcon>
+          </Box>
+          {isOpen &&
+            (debouncedSearchValue.length > 0 && (tokensAreLoading || collectionsAreLoading) ? (
+              <SkeletonRow />
+            ) : (
+              <SearchBarDropdown
+                toggleOpen={toggleOpen}
+                tokens={reducedTokens}
+                collections={reducedCollections}
+                hasInput={debouncedSearchValue.length > 0}
+              />
+            ))}
+        </Box>
       </Box>
       {isOpen && <Overlay />}
     </>

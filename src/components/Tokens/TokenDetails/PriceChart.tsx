@@ -5,7 +5,7 @@ import { EventType } from '@visx/event/lib/types'
 import { GlyphCircle } from '@visx/glyph'
 import { Line } from '@visx/shape'
 import { filterTimeAtom } from 'components/Tokens/state'
-import { bisect, curveCardinalOpen, NumberValue, scaleLinear } from 'd3'
+import { bisect, curveCardinal, NumberValue, scaleLinear } from 'd3'
 import { useTokenPriceQuery } from 'graphql/data/TokenPriceQuery'
 import { TimePeriod } from 'graphql/data/TopTokenQuery'
 import { useActiveLocale } from 'hooks/useActiveLocale'
@@ -18,7 +18,7 @@ import {
   dayHourFormatter,
   hourFormatter,
   monthDayFormatter,
-  monthFormatter,
+  monthTickFormatter,
   monthYearDayFormatter,
   monthYearFormatter,
   weekFormatter,
@@ -140,7 +140,7 @@ function tickFormat(
     case TimePeriod.MONTH:
       return [monthDayFormatter(locale), dayHourFormatter(locale), getTicks(startTimestamp, endTimestamp)]
     case TimePeriod.YEAR:
-      return [monthFormatter(locale), monthYearDayFormatter(locale), getTicks(startTimestamp, endTimestamp)]
+      return [monthTickFormatter(locale), monthYearDayFormatter(locale), getTicks(startTimestamp, endTimestamp)]
     case TimePeriod.ALL:
       return [monthYearFormatter(locale), monthYearDayFormatter(locale), getTicks(startTimestamp, endTimestamp)]
   }
@@ -249,7 +249,7 @@ export function PriceChart({ width, height, token }: PriceChartProps) {
         getX={(p: PricePoint) => timeScale(p.timestamp)}
         getY={(p: PricePoint) => rdScale(p.value)}
         marginTop={margin.top}
-        curve={curveCardinalOpen.tension(curveTension)}
+        curve={curveCardinal.tension(curveTension)}
         strokeWidth={2}
         width={graphWidth}
         height={graphHeight}

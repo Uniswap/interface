@@ -4212,10 +4212,10 @@
     "@uniswap/v3-core" "1.0.0"
     "@uniswap/v3-periphery" "^1.0.1"
 
-"@uniswap/widgets@^2.3.1":
-  version "2.3.1"
-  resolved "https://registry.yarnpkg.com/@uniswap/widgets/-/widgets-2.3.1.tgz#e9973cb34d19534ccf7a7dbe79de63bc5fe7e1e9"
-  integrity sha512-b6eL/fIjAkj52dj0TVcVF5FeQ1r3dAtPNoO4Go4zABVHlj6c4m6dariY3VQBkNnd2vwt40XBELtiuYXZn3DGjA==
+"@uniswap/widgets@^2.5.0":
+  version "2.5.0"
+  resolved "https://registry.yarnpkg.com/@uniswap/widgets/-/widgets-2.5.0.tgz#61d72da0ca7bf2091b339df6e3546c9066b34245"
+  integrity sha512-uGFOTf5mzJPhccBf99RRQ4ExQqmgAKn5WbNr3ZrXm1yfjT8Qf4xI3TTa5BrpMlGYr5If4v0vDA3q4WpcQ3isyg==
   dependencies:
     "@babel/runtime" "^7.17.0"
     "@fontsource/ibm-plex-mono" "^4.5.1"
@@ -7490,11 +7490,6 @@ d3-contour@4:
   integrity sha512-7aQo0QHUTu/Ko3cP9YK9yUTxtoDEiDGwnBHyLxG5M4vqlBkO/uixMRele3nfsfj6UXOcuReVpVXzAboGraYIJw==
   dependencies:
     d3-array "^3.2.0"
-
-d3-curve-circlecorners@^0.1.6:
-  version "0.1.6"
-  resolved "https://registry.yarnpkg.com/d3-curve-circlecorners/-/d3-curve-circlecorners-0.1.6.tgz#da786c38b4a50024c6ae07e203a98c16e9f85202"
-  integrity sha512-FPOhAYPuEMcIuj3GZ/lp+GzJ82EpcuMjnwBXJZjCRk1NNuQail6DgCz+VjEhdMeef/VBoh1k8A8fn6XJWUlEjw==
 
 d3-delaunay@6:
   version "6.0.2"
