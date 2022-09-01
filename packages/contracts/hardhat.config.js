@@ -50,6 +50,7 @@ module.exports = {
         runOnCompile: true,
         clear: true,
         flat: true,
+        except: ['@openzeppelin/contracts'],
         spacing: 2
         // pretty: true,
     }
