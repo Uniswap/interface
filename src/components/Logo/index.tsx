@@ -10,20 +10,8 @@ interface LogoProps extends Pick<ImageProps, 'style' | 'alt' | 'className'> {
   size?: string
 }
 
-const getFontSize = (size?: string) => {
-  switch (size) {
-    case '48px':
-      return '16px'
-    case '36px':
-      return '12px'
-    case '32px':
-      return '10px'
-    case '24px':
-      return '8px'
-    default:
-      return '12px'
-  }
-}
+const getFontSize = (size?: string) =>
+  size ? Math.floor(parseInt(size.replace('px', '')) / 3).toString() + 'px' : '12px'
 
 const MissingImageLogo = styled.div<{ size?: string; getFontSize: (size?: string) => string }>`
   border-radius: 100px;
