@@ -15,9 +15,9 @@ const MissingImageLogo = styled.div<{ size?: string }>`
   border-radius: 100px;
   color: ${({ theme }) => theme.textPrimary};
   background-color: ${({ theme }) => theme.backgroundInteractive};
+  font-size: calc(var(--size) / 3);
   font-weight: 500;
   height: ${({ size }) => size ?? '24px'};
-  font-size: calc(var(--size) / 3);
   line-height: ${({ size }) => size ?? '24px'};
   text-align: center;
   width: ${({ size }) => size ?? '24px'};
@@ -48,6 +48,7 @@ export default function Logo({ srcs, alt, style, size, symbol, ...rest }: LogoPr
 
   return (
     <MissingImageLogo size={size}>
+      {/* use only first 3 characters of Symbol for design reasons */}
       {symbol?.toUpperCase().replace('$', '').replace(/\s+/g, '').slice(0, 3)}
     </MissingImageLogo>
   )
