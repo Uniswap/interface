@@ -246,31 +246,33 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
     }
 
     const [search, setSearch] = React.useState(false)
+    const toggleSearchOff = () => setSearch(false)
+    const loadStart = () => setComponentLoading(true)
+    const loadEnd = () => setComponentLoading(false)
     return (
         <Wrapper>
             <ProSidebar collapsed={collapsed}
-
                 width={'100%'}
-                onLoadStart={() => setComponentLoading(true)}
-                onLoadCapture={() => setComponentLoading(false)}
+                onLoadStart={loadStart}
+                onLoadCapture={loadEnd}
                 style={{ fontSize: 12, marginRight: 15, background: color, borderRadius: 10, border: '.25px solid transparent' }}
             >
                 <SidebarHeader style={{ fontSize: 12, background: 'linear-gradient(#181C27, #131722)' }}>
-                <div style={{ height: 0, marginBottom: 5, cursor: 'pointer', display: 'flex', justifyContent: "end", position: 'relative', right: '5' }} >
-                            {collapsed && (
-                                <ArrowRightCircle onClick={menuIconClick} />
-                            )}
+                    <div style={{ height: 0, marginBottom: 5, cursor: 'pointer', display: 'flex', justifyContent: "end", position: 'relative', right: '5' }} >
+                        {collapsed && (
+                            <ArrowRightCircle onClick={menuIconClick} />
+                        )}
 
-                            {!collapsed && (
-                                <ArrowLeftCircle onClick={menuIconClick} />
-                            )}
-                        </div>  
+                        {!collapsed && (
+                            <ArrowLeftCircle onClick={menuIconClick} />
+                        )}
+                    </div>
                     <Menu iconShape="round">
-                  
-                        <SubMenu style={{height:'fit-content'}} open={search} onOpenChange={setSearch} icon={<Search />} title="Search tokens">
-                            {search && <PairSearch />}
+
+                        <SubMenu style={{ height: 'fit-content' }} open={search} onOpenChange={setSearch} icon={<Search />} title="Search tokens">
+                            {search && <PairSearch onPairSelect={toggleSearchOff} />}
                         </SubMenu>
-                       
+
                     </Menu>
 
                 </SidebarHeader>

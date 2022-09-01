@@ -1,4 +1,5 @@
 import { ArrowDownRight, ArrowUpRight, ChevronDown, ChevronLeft, ChevronUp, TrendingDown, TrendingUp } from 'react-feather';
+import { ButtonPrimary, ButtonSecondary } from 'components/Button';
 import { Currency, Token } from '@uniswap/sdk-core';
 import { DarkCard, LightCard } from 'components/Card';
 import { Dots, LoadingSkeleton } from 'pages/Pool/styleds';
@@ -11,6 +12,7 @@ import { useCurrency, useToken } from 'hooks/Tokens';
 
 import Badge from 'components/Badge';
 import { CardSection } from 'components/earn/styled';
+import { ChartSearchModal } from 'pages/Charts/ChartSearchModal';
 import { ChartSidebar } from 'components/ChartSidebar';
 import CurrencyInputPanel from 'components/CurrencyInputPanel';
 import CurrencyLogo from 'components/CurrencyLogo';
@@ -90,7 +92,7 @@ export const SelectiveChart = () => {
     //const [tokenData, setTokenData] = React.useState<any>({})
     const tokenData = useTokenData(address?.toLowerCase(), 60000)
     React.useEffect(() => {
-        return history.listen((location:any) => {
+        return history.listen((location: any) => {
             const newAddress = location.pathname.split('/')[2]?.toLowerCase()
             const newSymbol = location.pathname.split('/')[3]
             const newName = location.pathname.split('/')[4]
@@ -227,41 +229,52 @@ export const SelectiveChart = () => {
         }
     }
 
+    const [showSearch, setShowSearch] = React.useState(false)
+    const toggleShowSearchOn = () => setShowSearch(true)
+    const toggleShowSearchOff = () => setShowSearch(false)
+
     const PanelMemo = React.useMemo(() => {
         return (!Boolean(chainId) || Boolean(chainId && chainId === 1)) ?
 
-    <>        <CurrencyInputPanel
-                label={'gains'}
-                showMaxButton={false}
-                value={``}
-                showCurrencyAmount={false}
-                hideBalance={true}
-                hideInput={true}
-                currency={selectedCurrency.selectedCurrency}
-                onUserInput={(value) => {
-                    console.log(value)
-                }}
-                onMax={undefined}
-                fiatValue={undefined}
-                onCurrencySelect={(currency: any) => {
-                    if (!currency) return
-                    ref.current = currency;
-                    setSelectedCurrency({ type: 'update', payload: currency })
-                    const currencyAddress = currency?.address || currency?.wrapped?.address
-                    history.push(`/selective-charts/${currencyAddress}/${currency?.symbol}/${currency.name}/${currency.decimals}`);
-                    setAddress(currencyAddress)
-                }}
+            <>
+                <div style={{ paddingTop: hasSelectedData? '' : 20, width: '100%', gap: 20, display:'flex', flexFlow: isMobile ?'column wrap' : 'row nowrap', alignItems: 'center' }}>  
+                    {!hasSelectedData ? <>
+                        <ButtonSecondary onClick={toggleShowSearchOn}>
+                            <TYPE.black style={{ cursor: 'pointer' }}>Search for a token to view <ArrowUpRight /></TYPE.black>
+                        </ButtonSecondary>
+                    </> : null}
+                    <CurrencyInputPanel
+                        label={'gains'}
+                        showMaxButton={false}
+                        value={``}
+                        showCurrencyAmount={false}
+                        hideBalance={true}
+                        hideInput={true}
+                        currency={selectedCurrency.selectedCurrency}
+                        onUserInput={(value) => {
+                            console.log(value)
+                        }}
+                        onMax={undefined}
+                        fiatValue={undefined}
+                        onCurrencySelect={(currency: any) => {
+                            if (!currency) return
+                            ref.current = currency;
+                            setSelectedCurrency({ type: 'update', payload: currency })
+                            const currencyAddress = currency?.address || currency?.wrapped?.address
+                            history.push(`/selective-charts/${currencyAddress}/${currency?.symbol}/${currency.name}/${currency.decimals}`);
+                            setAddress(currencyAddress)
+                        }}
 
-                otherCurrency={undefined}
-                showCommonBases={false}
+                        otherCurrency={undefined}
+                        showCommonBases={false}
 
-                id="swap-currency-input"
-            />
-
+                        id="swap-currency-input"
+                    />
+                </div>
             </> :
             Boolean(chainId) ? <TYPE.small>{chainId && chainId == 56 ? 'BSC' : `${chainId}`} support coming soon</TYPE.small> : null
 
-    }, [(selectedCurrency.selectedCurrency as any)?.address, isMobile, chainId])
+    }, [(selectedCurrency.selectedCurrency as any)?.address, hasSelectedData, isMobile, chainId])
 
     const getRetVal = React.useMemo(function () {
         let retVal = '';
@@ -303,7 +316,7 @@ export const SelectiveChart = () => {
 
     return (
         <>
-
+            <ChartSearchModal isOpen={showSearch} onDismiss={toggleShowSearchOff} />
             <DarkCard style={{ maxWidth: '100%', display: "grid", background: '#252632', gridTemplateColumns: gridTemplateColumns, borderRadius: 30 }}>
                 {hasSelectedData && <div>
                     <ChartSidebar
@@ -325,7 +338,7 @@ export const SelectiveChart = () => {
                 <div style={{ marginLeft: isMobile ? 0 : 10, borderLeft: isMobile ? 'none' : Boolean(params?.tokenAddress && (selectedCurrency || !!prebuilt?.symbol)) ? '1px solid #444' : 'none' }}>
 
                     <CardSection style={{ padding: isMobile ? 0 : '' }}>
-                        <StyledDiv style={{ justifyContent: !hasSelectedData ? '' : !isMobile ?'space-between' :'', paddingBottom: 2, marginTop: 10, marginBottom: 5 }}>
+                        <StyledDiv style={{ justifyContent: !hasSelectedData ? '' : !isMobile ? 'space-between' : '', paddingBottom: 2, marginTop: 10, marginBottom: 5 }}>
                             <span style={{ paddingRight: isMobile ? 0 : 15, borderRight: `${!isMobile ? '1px solid #444' : 'none'}` }}>
                                 {!loadingNewData &&
 
@@ -339,8 +352,9 @@ export const SelectiveChart = () => {
 
                             <span style={{ paddingRight: isMobile ? 0 : 15, borderRight: `${!isMobile ? '1px solid #444' : 'none'}` }}> KibaCharts </span>
                             {!hasSelectedData ? <Badge>Select a token to get started</Badge> : isMobile ? null : <span style={{ margin: 0 }}>Select a token to view chart/transaction data</span>}
-                            {!hasSelectedData ? null : (Boolean(screenerToken && screenerToken?.priceChange)) && <div style={{paddingLeft:0}}    >
-                                {screenerToken && screenerToken?.priceChange && <div style={{ paddingLeft:0, justifyContent: 'space-between', display: 'flex', flexFlow: isMobile ?'row' : 'row wrap', alignItems: 'center', gap: 10 }}>
+                            {loadingNewData && <LoadingSkeleton count={1} />}
+                            {!hasSelectedData || loadingNewData ? null : (Boolean(screenerToken && screenerToken?.priceChange)) && <div style={{ paddingLeft: 0 }}    >
+                                {screenerToken && screenerToken?.priceChange && <div style={{ paddingLeft: 0, justifyContent: 'space-between', display: 'flex', flexFlow: isMobile ? 'row' : 'row wrap', alignItems: 'center', gap: 10 }}>
                                     {Object.keys(screenerToken.priceChange).map((key) => (
                                         <div key={key}>
                                             <TYPE.small textAlign="center">{formatPriceLabel(key)}</TYPE.small>
@@ -471,10 +485,10 @@ export const SelectiveChart = () => {
 }
 
 const TokenStats = ({ tokenData }: { tokenData?: any }) => {
-    const getLabel = (key: string ) => {
-        switch(key) {
+    const getLabel = (key: string) => {
+        switch (key) {
             case 'h24':
-              return  '24 Hour Txns'
+                return '24 Hour Txns'
             case 'h6':
                 return '6 Hour Txns'
             case 'h1':
@@ -494,7 +508,7 @@ const TokenStats = ({ tokenData }: { tokenData?: any }) => {
                     <TYPE.black fontWeight={400} fontSize={14} color={'#fff'}>
                         Toggle Advanced Stats
                     </TYPE.black>
-                    <QuestionHelper text={<>Shows advanced stats about the current tokens liquidity, transactions, and daily volume.</>} />
+                    <QuestionHelper text={<>Shows advanced stats regarding transactions including detailed buy / sell counts for different ranges over the past 24hrs.</>} />
                 </RowFixed>
                 <Toggle
                     id="toggle-advanced-stats-button"
@@ -509,14 +523,14 @@ const TokenStats = ({ tokenData }: { tokenData?: any }) => {
             <div>
                 {ToggleElm}
                 <div style={{ display: 'flex', background: '#111', boxShadow: '0px 0px 1px 0px', padding: '9px 14px', flexFlow: 'row wrap', gap: 10, alignItems: 'center', marginBottom: 10 }}>
-                    {Object.keys(tokenData?.txns).map((key) => ( 
-                         <div  key={key} style={{paddingRight: key == _.last(Object.keys(tokenData?.txns)) ? 0 : 5, paddingBottom: 5,borderRight: key == _.last(Object.keys(tokenData?.txns)) ? 'none' : '1px solid #444' }}>
-                        <StyledDiv style={{ color: "burntorange" }}>{getLabel(key)}</StyledDiv>
-                        <div style={{display:'flex', justifyContent:'space-between'}}>{Object.keys(tokenData.txns[key]).map((subKey) => (
-                        <TYPE.white key={subKey} textAlign={'center'}><StyledDiv>{subKey}</StyledDiv>
-                        <span style={{color: subKey == 'sells' ? 'red' : 'green'}}>{tokenData.txns[key][subKey]}</span></TYPE.white>
-                        ))}</div>
-                    </div>))}
+                    {Object.keys(tokenData?.txns).map((key) => (
+                        <div key={key} style={{ paddingRight: key == _.last(Object.keys(tokenData?.txns)) ? 0 : 5, paddingBottom: 5, borderRight: key == _.last(Object.keys(tokenData?.txns)) ? 'none' : '1px solid #444' }}>
+                            <StyledDiv style={{ color: "burntorange" }}>{getLabel(key)}</StyledDiv>
+                            <div style={{ display: 'flex', justifyContent: 'space-between' }}>{Object.keys(tokenData.txns[key]).map((subKey) => (
+                                <TYPE.white key={subKey} textAlign={'center'}><StyledDiv>{subKey}</StyledDiv>
+                                    <span style={{ color: subKey == 'sells' ? 'red' : 'green' }}>{tokenData.txns[key][subKey]}</span></TYPE.white>
+                            ))}</div>
+                        </div>))}
                 </div>
             </div>
         ) : <p style={{ margin: 0 }}>Failed to load token data.</p>

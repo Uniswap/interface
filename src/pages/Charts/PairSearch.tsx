@@ -1,6 +1,7 @@
 import * as ethers from 'ethers'
 
-import {ArrowUpRight} from 'react-feather'
+import {ArrowUpRight, CheckCircle} from 'react-feather'
+
 import { CFormInput } from '@coreui/react'
 import { Dots } from 'components/swap/styleds'
 import { LoadingSkeleton } from 'pages/Pool/styleds'
@@ -11,6 +12,7 @@ import Web3 from 'web3'
 import axios from 'axios'
 import styled from 'styled-components/macro'
 import { useActiveWeb3React } from 'hooks/web3'
+import useDebounce from 'hooks/useDebounce'
 import {useHistory} from 'react-router'
 
 const WEB3_ENDPOINT = 'https://cloudflare-eth.com'
@@ -96,7 +98,6 @@ border-radius: 12px;
 display: flex;
 flex-direction: column;
 font-size: 12px;
-position: absolute;
 top: 4rem;
 left: 0.5rem;
 z-index: 100;
@@ -121,10 +122,17 @@ const MenuItemStyled = styled(MenuItem)`
     }
 `
 
- export const PairSearch = ({}) => {
-     
-     const {library} = useActiveWeb3React()
+type Props = {
+  onPairSelect?: (selectedPair: Pair) => void;
+  label?:string
+}
+
+ export const PairSearch = (props: Props) => {
+    const {onPairSelect, label} = props
+    const labelToDisplay = label || "Search by Token Name, Symbol, or Address"
+    const {library} = useActiveWeb3React()
     const [searchTerm, setSearchTerm] = React.useState('')
+    const searchTermDebounced = useDebounce(searchTerm, 500)
     const [fetching, setFetching] = React.useState(false)
     const [results,setResults] = React.useState<Pair[]>()
     const onTermChanged = (event: any) => setSearchTerm(event.target.value)
@@ -150,31 +158,33 @@ const MenuItemStyled = styled(MenuItem)`
             contract.decimals().catch(handleError),
           ]);
         const humanReadable = ethers.BigNumber.from(decimals).toNumber()
+        onPairSelect && onPairSelect(pair)
         history.push(`/selective-charts/${pair.baseToken.address}/${pair.baseToken.symbol}/${pair.baseToken.name}/${humanReadable}`)
         setSearchTerm('')
         setRouting(false)
-    }, [])
+    }, [onPairSelect])
 
     const fetchSearchTerm = async () => {
         setFetching(true)
-        const query = `https://api.dexscreener.com/latest/dex/search/?q=${searchTerm}`
+        const term = searchTermDebounced || searchTerm
+        const query = `https://api.dexscreener.com/latest/dex/search/?q=${term}`
         axios.get(query)
              .then((response) => setResults(response.data?.pairs?.filter((pair:any) => pair.chainId == 'ethereum')))
              .finally(() => setFetching(false))
     }
 
     React.useEffect(() => {
-        if (searchTerm) {
+        if (searchTermDebounced || searchTerm) {
             fetchSearchTerm()
         } else {
             setResults([])
         }
-    }, [searchTerm])
+    }, [searchTermDebounced])
 
     return (
         <div style={{display:'flex', flexFlow:'column wrap', alignItems:'center'}}>
         <div style={{position: 'relative', width:'100%', padding:'1rem'}}>
-        <TYPE.small>Search for Token</TYPE.small>
+        <TYPE.small>{labelToDisplay}</TYPE.small>
         <CFormInput placeholder={"Search by name or address"} type="search" value={searchTerm} onChange={onTermChanged} />
             {Boolean(results?.length) && (<MenuFlyout>
             {Boolean(fetching) && (
@@ -183,7 +193,7 @@ const MenuItemStyled = styled(MenuItem)`
 
             {Boolean(routing) && (
                 <div style={{padding:12}}>
-                    <Dots>Loading chart and data..</Dots>
+                    <Dots><CheckCircle fill={'green'} /> Loading chart and data..</Dots>
                 </div>
             )}
            {!routing && results?.map((result) => (
