@@ -11,6 +11,7 @@ import { MenuItem } from 'components/SearchModal/styleds'
 import React from 'react'
 import { TYPE } from 'theme'
 import axios from 'axios'
+import {darken} from 'polished'
 import styled from 'styled-components/macro'
 import { useActiveWeb3React } from 'hooks/web3'
 import useDebounce from 'hooks/useDebounce'
@@ -100,7 +101,7 @@ display: flex;
 flex-direction: column;
 font-size: 12px;
 top: 4rem;
-left: 0.5rem;
+left: 0rem;
 z-index: 100;
 max-height: 350px;
 overflow: auto;
@@ -115,11 +116,10 @@ user-select: none;
 `
 
 const MenuItemStyled = styled(MenuItem)`
+    padding:9px 14px;
     &:hover {
-        color: #222 !important;
-        background: #fff !important;
-        border-radius: 12px;
-        transition: 0.1s ease all;
+        background: ${props => darken(0.05, props.theme.bg3)};
+        transition: ease all 0.1s ;
     }
 `
 

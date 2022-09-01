@@ -1,19 +1,24 @@
-import { ArrowDownRight, ArrowUpRight, ChevronLeft, TrendingDown, TrendingUp } from 'react-feather';
+import { ArrowDownRight, ArrowUpRight, ChevronLeft, Globe, TrendingDown, TrendingUp, Twitter } from 'react-feather';
 import { Currency, Token } from '@uniswap/sdk-core';
 import { DarkCard, LightCard } from 'components/Card';
 import { Dots, LoadingSkeleton } from 'pages/Pool/styleds';
+import { MenuItem, SidebarHeader } from 'react-pro-sidebar';
 import { RowBetween, RowFixed } from 'components/Row';
 import { StyledInternalLink, TYPE } from 'theme';
+import styled, { AnyStyledComponent } from 'styled-components/macro'
 import { toChecksum, usePairs, useTokenData, useTokenTransactions } from 'state/logs/utils';
 import { useCurrency, useToken } from 'hooks/Tokens';
+import { useDexscreenerToken, useTokenInfo } from 'components/swap/ChartPage';
 
 import Badge from 'components/Badge';
 import { ButtonSecondary } from 'components/Button';
+import { CTooltip } from '@coreui/react';
 import { CardSection } from 'components/earn/styled';
 import { ChartSearchModal } from 'pages/Charts/ChartSearchModal';
 import { ChartSidebar } from 'components/ChartSidebar';
 import CurrencyInputPanel from 'components/CurrencyInputPanel';
 import CurrencyLogo from 'components/CurrencyLogo';
+import DoubleCurrencyLogo from 'components/DoubleLogo';
 import Moment from './Moment';
 import QuestionHelper from 'components/QuestionHelper';
 import React from 'react';
@@ -23,10 +28,8 @@ import TradingViewWidget from 'react-tradingview-widget';
 import _ from 'lodash'
 import { darken } from 'polished'
 import { isMobile } from 'react-device-detect';
-import styled from 'styled-components/macro'
 import { useBscTokenTransactions } from 'state/logs/bscUtils';
 import { useConvertTokenAmountToUsdString } from 'pages/Vote/VotePage';
-import { useDexscreenerToken } from 'components/swap/ChartPage';
 import { useHistory } from 'react-router-dom';
 import { useParams } from 'react-router';
 import { useTokenBalance } from 'state/wallet/hooks';
@@ -62,6 +65,44 @@ const RecentCard = styled(LightCard)`
     }
 `
 
+const StyledSocialLink = (Element: AnyStyledComponent, passedProps: { disabled: boolean }) => styled(Element) <{ disabled?: boolean }> `
+    font-size:12px;
+    color: #fff;
+    margin-top:2px;
+    opacity:${props => passedProps.disabled ? 0.5 : 1};
+    &:hover {
+        color:#eee;
+        transition:ease all 0.1s;
+        opacity:${props => passedProps.disabled ? 0.5 : 1};
+    }
+`
+
+const StyledGlobe = styled(Globe) <{ disabled?: boolean }>`
+font-size:12px;
+color: #fff;
+margin-top:2px;
+cursor: ${props => props.disabled ? 'not-allowed' : 'pointer'};
+opacity:${props => props.disabled ? 0.5 : 1};
+&:hover {
+    color:#eee;
+    transition:ease all 0.1s;
+    cursor: ${props => props.disabled ? 'not-allowed' : 'pointer'};
+}
+`
+
+const StyledTwitter = styled(Twitter) <{ disabled?: boolean }>`
+font-size:12px;
+color: #fff;
+margin-top:2px;
+cursor: ${props => props.disabled ? 'not-allowed' : 'pointer'};
+opacity:${props => props.disabled ? 0.5 : 1};
+&:hover {
+    color:#eee;
+    transition:ease all 0.1s;
+    cursor: ${props => props.disabled ? 'not-allowed' : 'pointer'};
+}
+`
+
 export const SelectiveChart = () => {
     const ref = React.useRef<any>()
     const { account, chainId } = useWeb3React()
@@ -72,6 +113,10 @@ export const SelectiveChart = () => {
     const prebuiltCurrency = React.useMemo(() => (!chainId || chainId === 1) ? mainnetCurrency : prebuilt, [mainnetCurrency, chainId, prebuilt])
     const tokenAddressSupplied = React.useMemo(() => toChecksum(params?.tokenAddress), [params])
     const [address, setAddress] = React.useState(tokenAddressSupplied ? tokenAddressSupplied : '')
+    const tokenInfo = useTokenInfo(chainId ?? 1, address)
+
+    const hasSocials = React.useMemo(() => tokenInfo && (tokenInfo?.twitter || tokenInfo?.coingecko || tokenInfo?.website), [tokenInfo])
+
     const token = useToken((address))
     const tokenBalance = useTokenBalance(account ?? undefined, token as any)
     const pairs: Array<any> = usePairs((address?.toLowerCase()))
@@ -205,6 +250,8 @@ export const SelectiveChart = () => {
         return `${pairs[0].token0.symbol?.toLowerCase() === token?.symbol?.toLowerCase() ? pairs[0].token1?.id : pairs[0].token0?.id}`
     }, [pairs.length, token])
 
+    const pairCurrency = useCurrency(pair ?? undefined)
+
     const holdings = {
         token,
         tokenBalance: tokenBalance || 0,
@@ -327,6 +374,52 @@ export const SelectiveChart = () => {
     }, [selectedCurrency, isMobile, params.tokenAddress, collapsed])
 
 
+    const SocialsMemo = React.useMemo(function () {
+        return (
+            <React.Fragment>
+                <>
+                    <SidebarHeader>
+                        <TYPE.small> {tokenInfo?.symbol} Socials </TYPE.small>
+                    </SidebarHeader>
+                    <MenuItem style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', columnGap: 10 }}>
+                            {tokenInfo?.twitter ? (
+                                <CTooltip placement="bottom" content={`${tokenInfo?.name} Twitter`}>
+                                    <a style={{ display: "inline-block" }} href={`https: /twitter.com/${tokenInfo?.twitter}`}>
+                                    <StyledTwitter />
+                                    </a>
+                                </CTooltip>
+                            ) : <CTooltip placement="bottom" content={`Unable to find ${tokenInfo?.name} twitter`}>
+                                <span style={{ display: "inline-block" }} >
+                                    <StyledTwitter disabled />
+                                </span>
+                            </CTooltip>}
+                            {tokenInfo?.website ? (
+                                <CTooltip placement="bottom" content={`${tokenInfo?.name} Website`}>
+                                    <a style={{ display: "inline-block" }} href={tokenInfo?.website}>
+                                    <StyledGlobe />
+                                    </a>
+                                </CTooltip>
+                            ) : <CTooltip placement="bottom" content={`Unable to find ${tokenInfo?.name} website`}>
+                                <span style={{ display: "inline-block" }} >
+                                    <StyledGlobe disabled />
+                                </span>
+                            </CTooltip>
+                            }
+                            {tokenInfo?.coingecko && (
+                                <CTooltip placement="bottom" content={`${tokenInfo?.name} Coin Gecko Listing`}>
+                                    <a style={{ display: "inline-block" }} href={`https://coingecko.com/en/coins/${tokenInfo.coingecko}`}>
+                                        <img src='https://cdn.filestackcontent.com/MKnOxRS8QjaB2bNYyfou' style={{ height: 25, width: 25 }} />
+                                    </a>
+                                </CTooltip>
+                            )}
+                        </div>
+                    </MenuItem>
+                </>
+            </React.Fragment>
+        )
+    }, [hasSocials, tokenInfo])
+
     return (
         <>
             <ChartSearchModal isOpen={showSearch} onDismiss={toggleShowSearchOff} />
@@ -336,6 +429,7 @@ export const SelectiveChart = () => {
                         holdings={holdings}
                         loading={loadingNewData}
                         collapsed={collapsed}
+                        tokenInfo={tokenInfo}
                         onCollapse={setCollapsed}
                         token={{
                             name: params?.name ?? (selectedCurrency.selectedCurrency as Currency ? selectedCurrency.selectedCurrency as Currency : ref.current as Currency)?.name as string,
@@ -363,13 +457,20 @@ export const SelectiveChart = () => {
                                 }
                             </span>
 
-                            <span style={{ paddingRight: isMobile ? 0 : 15, borderRight: `${!isMobile ? '1px solid #444' : 'none'}` }}> KibaCharts </span>
-                            {!hasSelectedData ? <Badge>Select a token to get started</Badge> : isMobile ? null : <span style={{ margin: 0 }}>Select a token to view chart/transaction data</span>}
+                            <span style={{ display: 'flex', alignItems: 'center', paddingRight: isMobile ? 0 : 15, borderRight: `${!isMobile ? '1px solid #444' : 'none'}` }}>
+                                Viewing
+                                <DoubleCurrencyLogo size={30} margin currency0={mainnetCurrency as any} currency1={pairCurrency as any} /> &nbsp;
+                                on KibaCharts
+                            </span>
+                            {!hasSelectedData ? <Badge>Select a token to get started</Badge> : isMobile ? null :
+                                <span style={{ margin: 0 }}>
+                                    {SocialsMemo}
+                                </span>}
                             {loadingNewData && <LoadingSkeleton count={1} />}
                             {!hasSelectedData || loadingNewData ? null : (Boolean(screenerToken && screenerToken?.priceChange)) && <div style={{ paddingLeft: 0 }}    >
                                 {screenerToken && screenerToken?.priceChange && <div style={{ paddingLeft: 0, justifyContent: 'space-between', display: 'flex', flexFlow: isMobile ? 'row' : 'row wrap', alignItems: 'center', gap: 15 }}>
                                     {Object.keys(screenerToken.priceChange).map((key) => (
-                                        <div key={key} style={{paddingRight: _.last(Object.keys(screenerToken.priceChange)) == key ? 0 : 10, borderRight: _.last(Object.keys(screenerToken.priceChange)) == key ? 'none' : '1px solid #444'}}>
+                                        <div key={key} style={{ paddingRight: _.last(Object.keys(screenerToken.priceChange)) == key ? 0 : 10, borderRight: _.last(Object.keys(screenerToken.priceChange)) == key ? 'none' : '1px solid #444' }}>
                                             <TYPE.small textAlign="center">{formatPriceLabel(key)}</TYPE.small>
                                             <TYPE.black>{screenerToken?.priceChange?.[key] < 0 ? <TrendingDown style={{ color: "red" }} /> : <TrendingUp style={{ color: "green" }} />} {screenerToken?.priceChange?.[key]}%</TYPE.black>
                                         </div>
@@ -390,9 +491,9 @@ export const SelectiveChart = () => {
                                                         <div style={{ display: 'flex', flexFlow: 'row wrap', gap: 5, alignItems: 'center' }}>
                                                             <CurrencyLogo currency={item?.token} />
                                                             <TYPE.small>
-                                                            <span>{item?.token?.symbol} </span>
-                                                                <br/>
-                                                              <span>  {item?.token?.name}</span>
+                                                                <span>{item?.token?.symbol} </span>
+                                                                <br />
+                                                                <span>  {item?.token?.name}</span>
                                                             </TYPE.small>
                                                         </div>
                                                         <TYPE.black alignItems="center">

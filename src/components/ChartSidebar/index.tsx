@@ -102,9 +102,10 @@ type ChartSidebarProps = {
     collapsed: boolean;
     loading: boolean;
     screenerToken?: any
+    tokenInfo?:any
 }
 const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
-    const { token, holdings, screenerToken, tokenData, chainId, collapsed, onCollapse, loading } = props
+    const { token, holdings, screenerToken, tokenData, chainId, collapsed, onCollapse, loading, tokenInfo } = props
 
     //state
     const [componentLoading, setComponentLoading] = React.useState(loading)
@@ -128,7 +129,6 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
     const _bscToken = useBscToken(chainId == 56 ? token.address : undefined)
     const amountBurnt = useTokenBalance('0x000000000000000000000000000000000000dead', chainId == 56 ? _bscToken as Token : token as any ?? undefined)
     const holderCount = useTokenHolderCount(token.address, chainId)
-    const tokenInfo = useTokenInfo(chainId ?? 1, token.address)
 
     //create a custom function that will change menucollapse state from false to true and true to false
     const menuIconClick = () => {
@@ -145,8 +145,6 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
         }
         return 0
     }, [tokenInfo?.totalSupply, totalSupply])
-
-    const hasSocials = React.useMemo(() => tokenInfo && (tokenInfo?.twitter || tokenInfo?.coingecko || tokenInfo?.website), [tokenInfo])
 
     const formattedPrice = React.useMemo(() => {
         //console.log(`trying to get price--`, tokenInfo?.price, tokenData?.priceUSD)
@@ -315,36 +313,6 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
                                                 </RowBetween>
 
                                             </MenuItem>)}
-                                            {hasSocials &&
-                                                <>
-                                                    <SidebarHeader><TYPE.small marginLeft="10px">Socials</TYPE.small></SidebarHeader>
-
-                                                    <MenuItem style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                                        <div style={{ display: 'flex', alignItems: 'center', columnGap: 10 }}>
-                                                            {tokenInfo?.twitter && (
-                                                                <CTooltip placement="bottom" content={`${tokenInfo?.name} Twitter`}>
-                                                                    <a style={{ display: "inline-block" }} href={`https: /twitter.com/${tokenInfo?.twitter}`}>
-                                                                        <Twitter />
-                                                                    </a>
-                                                                </CTooltip>
-                                                            )}
-                                                            {tokenInfo?.website && (
-                                                                <CTooltip placement="bottom" content={`${tokenInfo?.name} Website`}>
-                                                                    <a style={{ display: "inline-block" }} href={tokenInfo?.website}>
-                                                                        <Globe />
-                                                                    </a>
-                                                                </CTooltip>
-                                                            )}
-                                                            {tokenInfo?.coingecko && (
-                                                                <CTooltip placement="bottom" content={`${tokenInfo?.name} Coin Gecko Listing`}>
-                                                                    <a style={{ display: "inline-block" }} href={`https://coingecko.com/en/coins/${tokenInfo.coingecko}`}>
-                                                                        <img src='https://cdn.filestackcontent.com/MKnOxRS8QjaB2bNYyfou' style={{ height: 25, width: 25 }} />
-                                                                    </a>
-                                                                </CTooltip>
-                                                            )}
-                                                        </div>
-                                                    </MenuItem>
-                                                </>}
                                         </SidebarHeader>
 
                                         {!!tokenData && !!tokenData?.priceUSD && _.isNumber(tokenData?.priceUSD) && <> <MenuItem>
