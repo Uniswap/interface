@@ -38,8 +38,8 @@ export default function useENSAvatar(address?: string): {
   const nameAvatar = useAvatarFromNode(ENSName === null ? undefined : safeNamehash(ENSName))
   let avatarUri = addressAvatar.avatar || nameAvatar.avatar
 
-  const nftAvatar = useAvatarFromNFT(address, avatarUri)
-  avatarUri = nftAvatar.avatar || avatarUri
+  const { avatar: nftAvatar, loading: nftAvatarLoading } = useAvatarFromNFT(address, avatarUri)
+  avatarUri = nftAvatar || avatarUri
 
   const http = avatarUri && uriToHttp(avatarUri)[0]
 
@@ -54,9 +54,9 @@ export default function useENSAvatar(address?: string): {
   return useMemo(
     () => ({
       avatar: http ?? cachedUri ?? null,
-      loading: addressAvatar.loading || nameAvatar.loading || nftAvatar.loading,
+      loading: addressAvatar.loading || nameAvatar.loading || nftAvatarLoading,
     }),
-    [addressAvatar.loading, cachedUri, http, nameAvatar.loading, nftAvatar.loading]
+    [addressAvatar.loading, cachedUri, http, nameAvatar.loading, nftAvatarLoading]
   )
 }
 
@@ -114,22 +114,38 @@ function useAvatarFromNFT(
   const http = uri && uriToHttp(uri)[0]
 
   const [loading, setLoading] = useState(false)
-  const [avatar, setAvatar] = useState(undefined)
+  const [avatarAddressMap, setAvatarAddressMap] = useState<
+    { [address: string]: string | undefined } | undefined
+  >(undefined)
+
   useEffect(() => {
-    setAvatar(undefined)
+    if (!address) {
+      return
+    }
     if (http) {
       setLoading(true)
       fetch(http)
         .then((res) => res.json())
         .then(({ image }) => {
-          setAvatar(image)
+          const updatedWithImage = {
+            ...avatarAddressMap,
+            [address]: image,
+          }
+          setAvatarAddressMap(updatedWithImage)
         })
         .catch()
         .finally(() => {
           setLoading(false)
         })
     }
-  }, [http])
+  }, [address, avatarAddressMap, http])
+
+  const avatar = useMemo(() => {
+    if (!address) {
+      return undefined
+    }
+    return avatarAddressMap?.[address]
+  }, [address, avatarAddressMap])
 
   return useMemo(
     () => ({ avatar, loading: erc721.loading || erc1155.loading || loading }),
