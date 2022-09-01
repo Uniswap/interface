@@ -1,39 +1,4 @@
-import { ArrowDownRight, ArrowUpRight, ChevronDown, ChevronLeft, ChevronUp, TrendingDown, TrendingUp } from 'react-feather';
-import { ButtonPrimary, ButtonSecondary } from 'components/Button';
-import { Currency, Token } from '@uniswap/sdk-core';
-import { DarkCard, LightCard } from 'components/Card';
-import { Dots, LoadingSkeleton } from 'pages/Pool/styleds';
-import { Menu, MenuItem, SidebarContent, SidebarHeader } from 'react-pro-sidebar';
-import { RowBetween, RowFixed } from 'components/Row';
-import { StyledInternalLink, TYPE } from 'theme';
-import { toChecksum, useEthPrice, usePairs, useTokenData, useTokenTransactions } from 'state/logs/utils';
-import { useBnbPrices, useBscTokenTransactions } from 'state/logs/bscUtils';
-import { useCurrency, useToken } from 'hooks/Tokens';
 
-import Badge from 'components/Badge';
-import { CardSection } from 'components/earn/styled';
-import { ChartSearchModal } from 'pages/Charts/ChartSearchModal';
-import { ChartSidebar } from 'components/ChartSidebar';
-import CurrencyInputPanel from 'components/CurrencyInputPanel';
-import CurrencyLogo from 'components/CurrencyLogo';
-import Moment from './Moment';
-import { PairSearch } from 'pages/Charts/PairSearch';
-import QuestionHelper from 'components/QuestionHelper';
-import React from 'react';
-import Toggle from 'components/Toggle';
-import { TopTokenHolders } from 'components/TopTokenHolders/TopTokenHolders';
-import TradingViewWidget from 'react-tradingview-widget';
-import _ from 'lodash'
-import { isMobile } from 'react-device-detect';
-import moment from 'moment';
-import styled from 'styled-components/macro'
-import { useConvertTokenAmountToUsdString } from 'pages/Vote/VotePage';
-import { useDexscreenerToken } from 'components/swap/ChartPage';
-import { useHistory } from 'react-router-dom';
-import { useParams } from 'react-router';
-import { useTokenBalance } from 'state/wallet/hooks';
-import { useUserChartHistoryManager } from 'state/user/hooks';
-import { useWeb3React } from '@web3-react/core';
 
 const StyledDiv = styled.div`
 font-family: 'Open Sans';
@@ -48,6 +13,19 @@ flex-flow: ${() => isMobile ? 'column wrap' : 'row wrap'};
 const BackLink = styled(StyledDiv)`
     &:hover{
         color: lightgreen !important;
+    }
+`
+
+const RecentCard = styled(LightCard)`
+    background:${props => props.theme.bg5};
+    border:1px solid #eee;
+    border:none;
+    &:hover {
+        background: ${props => darken(0.1, props.theme.bg5)};
+        > * {
+            text-decoration: none;
+        }
+        transition: all ease 0.1s;
     }
 `
 
@@ -237,7 +215,7 @@ export const SelectiveChart = () => {
         return (!Boolean(chainId) || Boolean(chainId && chainId === 1)) ?
 
             <>
-                <div style={{ paddingTop: hasSelectedData? '' : 20, width: '100%', gap: 20, display:'flex', flexFlow: isMobile ?'column wrap' : 'row nowrap', alignItems: 'center' }}>  
+                <div style={{ paddingTop: hasSelectedData ? '' : 20, width: '100%', gap: 20, display: 'flex', flexFlow: isMobile ? 'column wrap' : 'row nowrap', alignItems: 'center' }}>
                     {!hasSelectedData ? <>
                         <ButtonSecondary onClick={toggleShowSearchOn}>
                             <TYPE.black style={{ cursor: 'pointer' }}>Search for a token to view <ArrowUpRight /></TYPE.black>
@@ -371,22 +349,25 @@ export const SelectiveChart = () => {
                                     </div>
                                     <div style={{ width: '100%', padding: 20, display: 'grid', alignItems: 'center', gridTemplateColumns: isMobile ? '100%' : "auto auto auto auto", gap: 20 }}>
                                         {_.orderBy(_.uniqBy(userChartHistory, a => a?.token?.address?.toLowerCase()), a => a.time).reverse().map((item: any) => (
-                                            <LightCard key={item?.token?.address}>
-                                                <div style={{ color: '#fff', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                                    <div style={{ display: 'flex', flexFlow: 'row wrap', gap: 5, alignItems: 'center' }}>
-                                                        <CurrencyLogo currency={item?.token} />
-                                                        <TYPE.small>{item?.token?.name}
-                                                            <br />
+                                            <StyledInternalLink key={item?.token?.address} color={'#fff'} to={`/selective-charts/${item?.token?.address}/${item?.token?.symbol}/${item?.token?.name ? item?.token?.name : item?.token?.symbol}/${item?.token?.decimals ? item?.token?.decimals : 18}`}>
+                                                <RecentCard>
+                                                    <div style={{ color: '#fff', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                                        <div style={{ display: 'flex', flexFlow: 'row wrap', gap: 5, alignItems: 'center' }}>
+                                                            <CurrencyLogo currency={item?.token} />
+                                                            <TYPE.small>
                                                             <span>{item?.token?.symbol} </span>
-                                                        </TYPE.small>
-                                                    </div>
-                                                    <TYPE.link alignItems="center">
-                                                        <div style={{ cursor: 'pointer', display: 'flex', flexFlow: 'column wrap', alignItems: 'center' }}>
-                                                            <StyledInternalLink color={'#fff'} to={`/selective-charts/${item?.token?.address}/${item?.token?.symbol}/${item?.token?.name ? item?.token?.name : item?.token?.symbol}/${item?.token?.decimals ? item?.token?.decimals : 18}`}>View Chart <ArrowUpRight /></StyledInternalLink>
+                                                                <br/>
+                                                              <span>  {item?.token?.name}</span>
+                                                            </TYPE.small>
                                                         </div>
-                                                    </TYPE.link>
-                                                </div>
-                                            </LightCard>
+                                                        <TYPE.black alignItems="center">
+                                                            <div style={{ cursor: 'pointer', display: 'flex', flexFlow: 'column wrap', alignItems: 'center' }}>
+                                                                <span>View Chart  <ArrowUpRight /></span>
+                                                            </div>
+                                                        </TYPE.black>
+                                                    </div>
+                                                </RecentCard>
+                                            </StyledInternalLink>
                                         ))}
                                     </div>
                                 </div>
