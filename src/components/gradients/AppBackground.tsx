@@ -1,89 +1,55 @@
-import { Blur, Canvas, Group, Oval, RadialGradient, Rect, vec } from '@shopify/react-native-skia'
-import React, { ComponentProps, memo } from 'react'
-import { useColorScheme } from 'react-native'
+import React, { memo } from 'react'
+import { Image, StyleSheet } from 'react-native'
 import { useAppTheme } from 'src/app/hooks'
+import {
+  MAIN_BLUR_BG_CYAN,
+  MAIN_BLUR_BG_LIME,
+  MAIN_BLUR_BG_MAGENTA,
+  MAIN_BLUR_BG_ORANGE,
+  MAIN_BLUR_BG_SLATE,
+  MAIN_BLUR_BG_VIOLET,
+} from 'src/assets'
 import { GradientBackground } from 'src/components/gradients/GradientBackground'
-import { Box } from 'src/components/layout/Box'
-import { flex } from 'src/styles/flex'
-import { dimensions } from 'src/styles/sizing'
-import { opacify } from 'src/utils/colors'
+import { logMessage } from 'src/features/telemetry'
+import { LogContext } from 'src/features/telemetry/constants'
+import { Theme } from 'src/styles/theme'
 
-const { fullWidth, fullHeight } = dimensions
-const ACCENT_BLUR_WIDTH = fullWidth
-const ACCENT_BLUR_HEIGHT = fullWidth * 0.5
+export const AppBackground = memo(() => {
+  const theme = useAppTheme()
+  return (
+    <GradientBackground>
+      <Image
+        resizeMode="stretch"
+        source={getThemeColorBackgroundAsset(theme.colors.userThemeColor, theme)}
+        style={style.imageBackground}
+      />
+    </GradientBackground>
+  )
+})
 
-const BG_BLUR_VALUES: {
-  opacity: number
-  startColor: string
-  endColor: string
-  radius: number
-  startXPos: number
-  startYPos: number
-} = {
-  opacity: 0.32,
-  startColor: '#7095DF',
-  endColor: '#00000000',
-  radius: 400,
-  startXPos: -124,
-  startYPos: -163,
-}
-
-const bgBlurContainerProps: ComponentProps<typeof Rect> = {
-  opacity: BG_BLUR_VALUES.opacity,
-  height: BG_BLUR_VALUES.radius,
-  width: BG_BLUR_VALUES.radius,
-  x: BG_BLUR_VALUES.startXPos,
-  y: BG_BLUR_VALUES.startYPos,
-}
-
-const bgBlurGradientProps: ComponentProps<typeof RadialGradient> = {
-  colors: [BG_BLUR_VALUES.startColor, BG_BLUR_VALUES.endColor],
-  r: BG_BLUR_VALUES.radius,
-  c: vec(0, 0),
-}
-
-export const AppBackground = memo(
-  ({
-    isStrongAccent = false,
-    topOnly = false,
-    color,
-  }: {
-    isStrongAccent?: boolean
-    topOnly?: boolean
-    color?: string
-  }) => {
-    const theme = useAppTheme()
-    const isDarkMode = useColorScheme() === 'dark'
-
-    return (
-      <GradientBackground>
-        <Box flex={1}>
-          <Canvas style={flex.fill}>
-            <Group>
-              <Rect
-                color={theme.colors.backgroundBackdrop}
-                height={fullHeight}
-                width={fullWidth}
-                x={0}
-                y={0}
-              />
-              {isDarkMode && !topOnly && (
-                <Rect {...bgBlurContainerProps}>
-                  <RadialGradient {...bgBlurGradientProps} />
-                </Rect>
-              )}
-              <Oval
-                color={opacify(100, color || theme.colors.userThemeColor)}
-                height={ACCENT_BLUR_HEIGHT}
-                width={ACCENT_BLUR_WIDTH}
-                x={0}
-                y={isStrongAccent ? -ACCENT_BLUR_HEIGHT * 0.9 : -ACCENT_BLUR_HEIGHT}
-              />
-              <Blur blur={40} />
-            </Group>
-          </Canvas>
-        </Box>
-      </GradientBackground>
-    )
+function getThemeColorBackgroundAsset(color: string, theme: Theme) {
+  switch (color) {
+    case theme.colors.userThemeMagenta:
+      return MAIN_BLUR_BG_MAGENTA
+    case theme.colors.userThemeViolet:
+      return MAIN_BLUR_BG_VIOLET
+    case theme.colors.userThemeOrange:
+      return MAIN_BLUR_BG_ORANGE
+    case theme.colors.userThemeLime:
+      return MAIN_BLUR_BG_LIME
+    case theme.colors.userThemeCyan:
+      return MAIN_BLUR_BG_CYAN
+    case theme.colors.userThemeSlate:
+      return MAIN_BLUR_BG_SLATE
+    default:
+      logMessage(
+        LogContext.AppBackground,
+        `Failed to find matching background asset AppBackground for color ${color}`
+      )
+      return MAIN_BLUR_BG_MAGENTA
   }
-)
+}
+
+const style = StyleSheet.create({
+  imageBackground: { width: '100%' },
+})

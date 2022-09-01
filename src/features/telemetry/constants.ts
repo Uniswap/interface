@@ -155,6 +155,7 @@ export const enum LogContext {
   ImageUtils = 'ImageUtils',
   ProviderManager = 'ProviderManager',
   SecurityConcern = 'SecurityConcern',
+  AppBackground = 'AppBackground',
 }
 
 /**

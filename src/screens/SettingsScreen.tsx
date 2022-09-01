@@ -17,7 +17,7 @@ import TwitterIcon from 'src/assets/logos/twitter.svg'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { Button } from 'src/components/buttons/Button'
 import { Switch } from 'src/components/buttons/Switch'
-import { AppBackground } from 'src/components/gradients/AppBackground'
+import { DynamicAppBackground } from 'src/components/gradients/DynamicAppBackground'
 import { Chevron } from 'src/components/icons/Chevron'
 import { Box, Flex } from 'src/components/layout'
 import { BackHeader } from 'src/components/layout/BackHeader'
@@ -166,7 +166,7 @@ export function SettingsScreen() {
 
   return (
     <HeaderScrollScreen
-      background={<AppBackground isStrongAccent />}
+      background={<DynamicAppBackground isStrongAccent />}
       contentHeader={
         <BackHeader alignment="left" mx="md" pt="md">
           <Text variant="subhead">{t('Settings')}</Text>

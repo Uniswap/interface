@@ -41,7 +41,7 @@ export function HomeScreen() {
   return (
     <>
       <HeaderScrollScreen
-        background={<AppBackground isStrongAccent />}
+        background={<AppBackground />}
         contentHeader={<ContentHeader />}
         fixedHeader={<FixedHeader />}>
         <Flex gap="lg" px="sm">

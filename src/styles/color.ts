@@ -314,6 +314,12 @@ export const colors: GlobalPalette = {
 
 export interface Palette {
   userThemeColor: string
+  userThemeMagenta: string
+  userThemeViolet: string
+  userThemeOrange: string
+  userThemeLime: string
+  userThemeCyan: string
+  userThemeSlate: string
 
   backgroundBackdrop: string
   backgroundSurface: string
@@ -368,6 +374,12 @@ export interface Palette {
 
 export const colorsLight: Palette = {
   userThemeColor: colors.magentaVibrant,
+  userThemeMagenta: colors.magentaVibrant,
+  userThemeViolet: colors.violetVibrant,
+  userThemeOrange: colors.orangeVibrant,
+  userThemeLime: colors.limeVibrant,
+  userThemeCyan: colors.cyanVibrant,
+  userThemeSlate: colors.slateVibrant,
 
   none: 'transparent',
 
@@ -422,6 +434,12 @@ export const colorsLight: Palette = {
 
 export const colorsDark: Palette = {
   userThemeColor: colors.magentaVibrant,
+  userThemeMagenta: colors.magentaVibrant,
+  userThemeViolet: colors.violetVibrant,
+  userThemeOrange: colors.orangeVibrant,
+  userThemeLime: colors.limeVibrant,
+  userThemeCyan: colors.cyanVibrant,
+  userThemeSlate: colors.slateVibrant,
 
   backgroundBackdrop: colors.black,
   backgroundSurface: colors.gray900,

@@ -10,12 +10,17 @@ interface ColorSelectorProps {
   updateColor: (color: string) => void
 }
 
-// TODO: add these colors to theme and reference them as theme.colors.userThemeColor1, userThemeColor2, etc.
-const COLORS = ['#FC72FF', '#5065FD', '#FF6F1E', '#B1F13C', '#36DBFF', '#7E887D']
-
 /** Renders color selector for theme update */
 export function ColorSelector({ selectedColor, updateColor }: ColorSelectorProps) {
   const theme = useTheme()
+  const colors = [
+    theme.colors.userThemeMagenta,
+    theme.colors.userThemeViolet,
+    theme.colors.userThemeOrange,
+    theme.colors.userThemeLime,
+    theme.colors.userThemeCyan,
+    theme.colors.userThemeSlate,
+  ]
 
   const renderItem = ({ item: color }: ListRenderItemInfo<string>) => (
     <Button
@@ -36,7 +41,7 @@ export function ColorSelector({ selectedColor, updateColor }: ColorSelectorProps
   return (
     <FlatList
       columnWrapperStyle={ColumnStyle.base}
-      data={COLORS}
+      data={colors}
       keyExtractor={(color) => color}
       numColumns={6}
       renderItem={renderItem}

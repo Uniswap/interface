@@ -20,3 +20,10 @@ export const LANDING_BLUR_BACKGROUND_LIGHT = require('./backgrounds/landingBlurB
 export const LANDING_BLUR_BACKGROUND_DARK = require('./backgrounds/landingBlurBackgroundDark.png')
 export const UNISWAP_LOGO = require('./logos/uniswap-logo.png')
 export const ONBOARDING_NOTIFICATIONS_BGICON = require('./backgrounds/onboarding-notifications-bgicon.png')
+
+export const MAIN_BLUR_BG_VIOLET = require('./backgrounds/blurBackgroundViolet.png')
+export const MAIN_BLUR_BG_CYAN = require('./backgrounds/blurBackgroundCyan.png')
+export const MAIN_BLUR_BG_LIME = require('./backgrounds/blurBackgroundLime.png')
+export const MAIN_BLUR_BG_MAGENTA = require('./backgrounds/blurBackgroundMagenta.png')
+export const MAIN_BLUR_BG_ORANGE = require('./backgrounds/blurBackgroundOrange.png')
+export const MAIN_BLUR_BG_SLATE = require('./backgrounds/blurBackgroundSlate.png')
