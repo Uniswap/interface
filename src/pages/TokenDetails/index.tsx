@@ -149,7 +149,7 @@ export function LoadingTokenDetails() {
   return (
     <TokenDetailsLayout>
       <LoadingTokenDetail />
-      <RightPanel></RightPanel>
+      <RightPanel />
       <Footer />
     </TokenDetailsLayout>
   )
