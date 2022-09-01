@@ -10,16 +10,14 @@ interface LogoProps extends Pick<ImageProps, 'style' | 'alt' | 'className'> {
   size?: string
 }
 
-const getFontSize = (size?: string) =>
-  size ? Math.floor(parseInt(size.replace('px', '')) / 3).toString() + 'px' : '12px'
-
-const MissingImageLogo = styled.div<{ size?: string; getFontSize: (size?: string) => string }>`
+const MissingImageLogo = styled.div<{ size?: string }>`
+  --size: ${({ size }) => size};
   border-radius: 100px;
   color: ${({ theme }) => theme.textPrimary};
   background-color: ${({ theme }) => theme.backgroundInteractive};
-  font-size: ${({ getFontSize, size }) => getFontSize(size)};
   font-weight: 500;
   height: ${({ size }) => size ?? '24px'};
+  font-size: calc(var(--size) / 3);
   line-height: ${({ size }) => size ?? '24px'};
   text-align: center;
   width: ${({ size }) => size ?? '24px'};
@@ -49,7 +47,7 @@ export default function Logo({ srcs, alt, style, size, symbol, ...rest }: LogoPr
   }
 
   return (
-    <MissingImageLogo size={size} getFontSize={getFontSize}>
+    <MissingImageLogo size={size}>
       {symbol?.toUpperCase().replace('$', '').replace(/\s+/g, '').slice(0, 3)}
     </MissingImageLogo>
   )
