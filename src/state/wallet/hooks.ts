@@ -1,5 +1,3 @@
-// Setup: npm install alchemy-sdk
-import { Alchemy, Network } from "alchemy-sdk";
 import { Currency, CurrencyAmount, Ether, Token } from '@uniswap/sdk-core'
 import React, { useEffect } from 'react'
 import { useMultipleContractSingleData, useSingleContractMultipleData } from '../multicall/hooks'

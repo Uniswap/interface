@@ -4,6 +4,7 @@ import '@coreui/coreui/dist/css/coreui.css'
 
 import { ArrowLeftCircle, ArrowRightCircle, BarChart2, ChevronDown, ChevronUp, Globe, Heart, PieChart, RefreshCcw, RefreshCw, Repeat, ToggleLeft, ToggleRight, Twitter } from 'react-feather'
 import Badge, { BadgeVariant } from 'components/Badge';
+import { BurntKiba, abbreviateNumber } from 'components/BurntKiba';
 import { Currency, CurrencyAmount, Token, WETH9 } from '@uniswap/sdk-core';
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink';
 import { ExternalLink, StyledInternalLink, TYPE, } from 'theme';
@@ -13,7 +14,6 @@ import styled, { keyframes, useTheme } from 'styled-components/macro'
 import { useBscToken, useCurrency, useToken } from 'hooks/Tokens';
 import { useHolderCount, useTokenHolderCount, useTokenInfo } from 'components/swap/ChartPage'
 
-import { BurntKiba } from 'components/BurntKiba';
 import { CTooltip } from '@coreui/react'
 import Card from 'components/Card';
 import Copy from '../AccountDetails/Copy'
@@ -64,6 +64,10 @@ const Wrapper = styled.div`
 .pro-sidebar .pro-menu a:before {
     content: inherit;
 }
+.pro-sidebar .pro-menu .prop-menu-item {
+    line-height: 1.25rem;
+    font-size: 13.25px;
+}
 .pro-sidebar .pro-menu .pro-menu-item.pro-sub-menu .pro-inner-list-item {
     padding-left: 0;
     padding-top:0;
@@ -108,12 +112,12 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
     const [swapOpen, setSwapOpen] = React.useState(false)
 
     const toggleSwapOpen = (swapOpen: boolean) => {
-        const open = swapOpen
-        if (open) {
+        setSwapOpen(swapOpen)
+
+        if (swapOpen) {
             setStatsOpen(false)
             setQuickNavOpen(false)
         }
-        setSwapOpen(open)
     }
     // hooks
     const { account } = useWeb3React()
@@ -156,6 +160,10 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
         return `-`
     }, [tokenInfo?.price, token, tokenData])
 
+    const totalLiquidity = React.useMemo(() => {
+        return tokenData && tokenData?.totalLiquidityUSD ? Number(tokenData?.totalLiquidityUSD * 2) : undefined
+    }, [tokenData])
+
     const transactionCount = React.useMemo(() => {
         return tokenData && tokenData?.txCount ? tokenData?.txCount : undefined
     }, [tokenData])
@@ -174,7 +182,7 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
         else if (!amountBurnt && token.name.toLowerCase().includes('kiba') && deadKiba)
             excludingBurntValue -= parseFloat(deadKiba.toFixed(0))
 
-        return Number(parseFloat(price.toFixed(18)) * excludingBurntValue).toLocaleString()
+        return Number(parseFloat(price.toFixed(18)) * excludingBurntValue)
     }, [totalSupplyInt, tokenInfo?.price, tokenData?.priceUSD, amountBurnt])
 
     const color = `linear-gradient(rgb(21 25 36), rgb(36 38 50))`
@@ -204,6 +212,21 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
         ) : null
     }, [token, inputCurrency])
 
+    const onQuickNavOpenChange = (isOpen:boolean) => {
+        setQuickNavOpen(isOpen)
+        if (isOpen) {
+            setStatsOpen(false)
+            setSwapOpen(false)
+        }
+    }
+
+    const onStatsOpenChange = (isOpen:boolean) => {
+        setStatsOpen(isOpen)
+        if (isOpen) {
+            setQuickNavOpen(false)
+            setSwapOpen(false)
+        }
+    }
     return (
         <Wrapper>
             <ProSidebar collapsed={collapsed}
@@ -235,13 +258,7 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
                         <SubMenu
                             style={{}}
                             open={statsOpen}
-                            onOpenChange={(isOpen) => {
-                                setStatsOpen(isOpen)
-                                if (isOpen) {
-                                    setQuickNavOpen(false)
-                                    setSwapOpen(false)
-                                }
-                            }}
+                            onOpenChange={onStatsOpenChange}
                             popperarrow
                             placeholder={'loader'}
                             icon={<PieChart style={{ background: 'transparent' }} />}
@@ -314,11 +331,11 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
                                             {!!marketCap &&
                                                 <MenuItem>
                                                     <TYPE.subHeader>Market Cap (includes burnt)</TYPE.subHeader>
-                                                    <TYPE.black>${marketCap}</TYPE.black>
+                                                    <TYPE.black>${abbreviateNumber(marketCap)}</TYPE.black>
                                                 </MenuItem>}
                                             <MenuItem>
                                                 <TYPE.subHeader>Diluted Market Cap</TYPE.subHeader>
-                                                <TYPE.black>${Number(parseFloat(tokenData?.priceUSD?.toFixed(18)) * (totalSupplyInt)).toLocaleString()}</TYPE.black>
+                                                <TYPE.black>${abbreviateNumber(Number(parseFloat(tokenData?.priceUSD?.toFixed(18)) * totalSupplyInt))}</TYPE.black>
                                             </MenuItem></>}
 
                                         {!tokenData?.priceUSD && !!tokenInfo && !!tokenInfo.price && !!tokenInfo?.price?.rate && _.isNumber(tokenInfo.price.rate) && <>
@@ -329,15 +346,18 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
                                             {!!marketCap &&
                                                 <MenuItem>
                                                     <TYPE.subHeader>Market Cap (includes burnt)</TYPE.subHeader>
-                                                    <TYPE.black>${marketCap}</TYPE.black>
+                                                    <TYPE.black>${abbreviateNumber(marketCap)}</TYPE.black>
                                                 </MenuItem>}
                                             <MenuItem>
                                                 <TYPE.subHeader>Diluted Market Cap</TYPE.subHeader>
-                                                <TYPE.black>${Number(parseFloat(tokenInfo?.price?.rate?.toFixed(18)) * totalSupplyInt).toLocaleString()}</TYPE.black>
+                                                <TYPE.black>${abbreviateNumber(Number(parseFloat(tokenInfo?.price?.rate?.toFixed(18)) * totalSupplyInt))}</TYPE.black>
                                             </MenuItem>
                                         </>
                                         }
-
+                                        {totalLiquidity && <MenuItem>
+                                            <TYPE.subHeader>Total Liquidity</TYPE.subHeader>
+                                            <TYPE.black>${abbreviateNumber(totalLiquidity)}</TYPE.black>
+                                        </MenuItem>}
                                         {token?.symbol?.toLowerCase().includes('kiba') && <MenuItem>
                                             <TYPE.subHeader>Total Burnt</TYPE.subHeader>
                                             <BurntKiba style={{ display: 'flex', justifyContent: 'start !important' }} />
@@ -445,7 +465,7 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
                 </SidebarContent>
                 <SidebarContent>
                     <Menu style={{ background: 'linear-gradient( rgb(21, 25, 36), rgb(36, 38, 50))' }} >
-                        <SubMenu style={{ background: 'linear-gradient( rgb(21, 25, 36), rgb(36, 38, 50))' }} onOpenChange={toggleSwapOpen} open={swapOpen} icon={<Repeat />} title="Swap">
+                        <SubMenu style={{ background: 'linear-gradient( rgb(21, 25, 36), rgb(36, 38, 50))' }} onOpenChange={toggleSwapOpen} open={swapOpen} icon={<Repeat />} title={<span onClick={toggleSwapOpen}>Swap</span>}>
                             <Card style={{ padding: '1rem' }}>
                                 <SwapTokenForToken
                                     fontSize={12}
@@ -459,13 +479,7 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
                 </SidebarContent>
                 <SidebarFooter style={{ background: 'linear-gradient(#181C27, #131722)' }} >
                     <Menu iconShape="circle">
-                        <SubMenu style={{ background: 'linear-gradient(#181C27, #131722)' }} title="Quick Nav" icon={<Heart style={{ background: 'transparent' }} />} open={quickNavOpen} onOpenChange={(isOpen) => {
-                            setQuickNavOpen(isOpen)
-                            if (isOpen) {
-                                setStatsOpen(false)
-                                setSwapOpen(false)
-                            }
-                        }}>
+                        <SubMenu style={{ background: 'linear-gradient(#181C27, #131722)' }} title="Quick Nav" icon={<Heart style={{ background: 'transparent' }} />} open={quickNavOpen} onOpenChange={onQuickNavOpenChange}>
                             {quickNavOpen && <>
                                 <MenuItem><StyledInternalLink to="/dashboard">Dashboard</StyledInternalLink></MenuItem>
                                 <MenuItem><StyledInternalLink to="/swap">Swap</StyledInternalLink></MenuItem>

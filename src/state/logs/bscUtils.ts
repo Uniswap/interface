@@ -696,9 +696,11 @@ export function useBscTokenTransactions(tokenAddress: string, interval: null | n
     variables: {
       address: tokenAddress
     },
-    pollInterval: 5000
+    pollInterval: chainId && chainId == 56 ? 5000 : undefined
   })
-  if (chainId && chainId !== 56) query.stopPolling();
+  if (chainId && chainId !== 56) {
+    query.stopPolling();
+  }
   return React.useMemo(() => ({ data: query.data, lastFetched: new Date(), loading: query.loading }), [query]);
 }
 

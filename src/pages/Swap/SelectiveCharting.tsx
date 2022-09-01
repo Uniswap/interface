@@ -13,6 +13,7 @@ import { CardSection } from 'components/earn/styled';
 import { ChartSidebar } from 'components/ChartSidebar';
 import CurrencyInputPanel from 'components/CurrencyInputPanel';
 import CurrencyLogo from 'components/CurrencyLogo';
+import Moment from './Moment';
 import QuestionHelper from 'components/QuestionHelper';
 import React from 'react';
 import Toggle from 'components/Toggle';
@@ -55,13 +56,16 @@ export const SelectiveChart = () => {
     const prebuiltCurrency = React.useMemo(() => (!chainId || chainId === 1) ? mainnetCurrency : prebuilt, [mainnetCurrency, chainId, prebuilt])
     const tokenAddressSupplied = React.useMemo(() => toChecksum(params?.tokenAddress), [params])
     const [address, setAddress] = React.useState(tokenAddressSupplied ? tokenAddressSupplied : '')
-
     const token = useToken(toChecksum(address))
     const tokenBalance = useTokenBalance(account ?? undefined, token as any)
-    //const tokenValue = useUSDCValueV2AndV3(tokenBalance ? tokenBalance : undefined)
     const pairs: Array<any> = usePairs((address?.toLowerCase()))
-    const transactionData = useTokenTransactions(address?.toLowerCase(), 60000)
-    
+    const transactionData = useTokenTransactions(address?.toLowerCase(), 30000)
+    const LastFetchedNode = React.useMemo(() => (
+        transactionData?.lastFetched ?  <Moment date={transactionData.lastFetched} liveUpdate>
+        {(moment) => <span style={{fontSize:12}}>Last updated {moment.fromNow()}</span>}
+      </Moment>
+        : null
+    ), [transactionData.lastFetched])
     const [selectedCurrency, setSelectedCurrency] = React.useReducer(function (state: { selectedCurrency: Currency | null | undefined }, action: { type: 'update', payload: Currency | null | undefined }) {
         switch (action.type) {
             case 'update':
@@ -76,9 +80,9 @@ export const SelectiveChart = () => {
         selectedCurrency: prebuiltCurrency
     })
     const [loadingNewData, setLoadingNewData] = React.useState(false)
-    const bscTransactionData = useBscTokenTransactions(address?.toLowerCase(), 60000)
+    const bscTransactionData = useBscTokenTransactions(chainId && chainId == 56 ? address?.toLowerCase() : '', 60000)
     //const [tokenData, setTokenData] = React.useState<any>({})
-    const tokenData = useTokenData(address?.toLowerCase(), 120000)
+    const tokenData = useTokenData(address?.toLowerCase(), 60000)
     React.useEffect(() => {
         return history.listen((location) => {
             const newAddress = location.pathname.split('/')[2]?.toLowerCase()
@@ -360,8 +364,8 @@ export const SelectiveChart = () => {
                                 tokenSymbolForChart={tokenSymbolForChart}
                             />
                                 <div style={{ display: 'block', width: '100%', overflowY: 'auto', maxHeight: 500 }}>
-                                    {transactionData?.lastFetched && <small>Data last updated {moment(transactionData.lastFetched).fromNow()}</small>}
-                                    <table style={{ background: '#131722', width: '100%', borderRadius: 20 }}>
+                                    {LastFetchedNode}
+                                    <table style={{ background: 'linear-gradient(rgb(21, 25, 36), rgb(17 19 32))', width: '100%', borderRadius: 20 }}>
                                         <thead style={{ textAlign: 'left', position: 'sticky', top: 0, background: '#131722', width: '100%' }}>
                                             <tr style={{ borderBottom: '1px solid #444' }}>
                                                 <th>
@@ -378,7 +382,7 @@ export const SelectiveChart = () => {
                                         <tbody>
                                             {(!formattedTransactions?.length || !formattedTransactions) && <tr><td colSpan={5}><Dots> Loading transaction data</Dots></td></tr>}
                                             {formattedTransactions && formattedTransactions?.map((item: any, index: number) => (
-                                                <tr style={{ paddingBottom: 5 }} key={`${item.token0Symbol}_${item.timestamp * 1000}_${item.hash}_${index}`}>
+                                                <tr style={{background: item.account?.toLowerCase() == account?.toLowerCase() ? '#444' : '', paddingBottom: 5 }} key={`${item.token0Symbol}_${item.timestamp * 1000}_${item.hash}_${index}`}>
                                                     <td style={{ fontSize: 12 }}>{new Date(item.timestamp * 1000).toLocaleString()}</td>
                                                     {[item.token0Symbol, item.token1Symbol].includes(chainLabel) && <td style={{ color: item.token0Symbol !== `${params?.tokenSymbol == 'ETH' ? 'WETH' : params?.tokenSymbol}` ? '#971B1C' : '#779681' }}>{item.token0Symbol !== `${params?.tokenSymbol == 'ETH' ? 'WETH' : params?.tokenSymbol}` ? 'SELL' : 'BUY'}</td>}
                                                     {![item.token0Symbol, item.token1Symbol].includes(chainLabel) && <td style={{ color: item.token1Symbol ===  `${params?.tokenSymbol == 'ETH' ? 'WETH' : params?.tokenSymbol}`? '#971B1C' : '#779681' }}>{item.token1Symbol ===`${params?.tokenSymbol == 'ETH' ? 'WETH' : params?.tokenSymbol}` ? 'SELL' : 'BUY'}</td>}

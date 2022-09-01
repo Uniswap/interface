@@ -125,21 +125,16 @@ export const SwapTokenForToken = (props: TokenForTokenProps) => {
 
   const allowSwappingForOutput = React.useMemo(() => {
     if (!props.outputCurrency) return true;
-    const allowSwap = currencies[Field.INPUT] && currencies[Field.INPUT]?.equals(props.inputCurrency)
+    const allowSwap = props.inputCurrency && currencies[Field.INPUT] && currencies[Field.INPUT]?.equals(props.inputCurrency)
     return allowSwap
-    const swapping = props.inputCurrency && props.outputCurrency && currencies[Field.OUTPUT] && (!currencies[Field.OUTPUT]?.equals(props.outputCurrency) || currencies[Field.INPUT]?.equals(props?.inputCurrency))
-    console.log(`Swap for output?`, { swapping, outputCurr: props.outputCurrency, currencC: currencies })
-
-    return !!swapping
+    
   }, [currencies[Field.OUTPUT], props])
 
   const allowSwappingForInput = React.useMemo(() => {
     if (!props.outputCurrency) return true;
-    const allowSwap = currencies[Field.OUTPUT] && currencies[Field.OUTPUT]?.equals(props.inputCurrency)
+    const allowSwap = props.inputCurrency && currencies[Field.OUTPUT] && currencies[Field.OUTPUT]?.equals(props.inputCurrency)
     return allowSwap
-    const swapping = props.inputCurrency && props.outputCurrency && currencies[Field.INPUT] && ((!currencies[Field.INPUT]?.equals(props.outputCurrency) || currencies[Field.OUTPUT]?.equals(props?.inputCurrency)))
-    console.log(`Swap for input?`, { swapping, inputCur: props.inputCurrency, currencC: currencies })
-    return !!swapping
+    
   }, [currencies[Field.INPUT], props])
 
   const [automaticCalculatedSlippage, setAutomaticCalculatedSlippage] = React.useState(-1)
