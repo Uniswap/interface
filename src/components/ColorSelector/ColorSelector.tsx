@@ -45,6 +45,7 @@ export function ColorSelector({ selectedColor, updateColor }: ColorSelectorProps
       keyExtractor={(color) => color}
       numColumns={6}
       renderItem={renderItem}
+      scrollEnabled={false}
     />
   )
 }
