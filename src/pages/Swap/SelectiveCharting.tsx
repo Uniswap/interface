@@ -1,4 +1,37 @@
+import { ArrowDownRight, ArrowUpRight, ChevronLeft, TrendingDown, TrendingUp } from 'react-feather';
+import { Currency, Token } from '@uniswap/sdk-core';
+import { DarkCard, LightCard } from 'components/Card';
+import { Dots, LoadingSkeleton } from 'pages/Pool/styleds';
+import { RowBetween, RowFixed } from 'components/Row';
+import { StyledInternalLink, TYPE } from 'theme';
+import { toChecksum, usePairs, useTokenData, useTokenTransactions } from 'state/logs/utils';
+import { useCurrency, useToken } from 'hooks/Tokens';
 
+import Badge from 'components/Badge';
+import { ButtonSecondary } from 'components/Button';
+import { CardSection } from 'components/earn/styled';
+import { ChartSearchModal } from 'pages/Charts/ChartSearchModal';
+import { ChartSidebar } from 'components/ChartSidebar';
+import CurrencyInputPanel from 'components/CurrencyInputPanel';
+import CurrencyLogo from 'components/CurrencyLogo';
+import Moment from './Moment';
+import QuestionHelper from 'components/QuestionHelper';
+import React from 'react';
+import Toggle from 'components/Toggle';
+import { TopTokenHolders } from 'components/TopTokenHolders/TopTokenHolders';
+import TradingViewWidget from 'react-tradingview-widget';
+import _ from 'lodash'
+import { darken } from 'polished'
+import { isMobile } from 'react-device-detect';
+import styled from 'styled-components/macro'
+import { useBscTokenTransactions } from 'state/logs/bscUtils';
+import { useConvertTokenAmountToUsdString } from 'pages/Vote/VotePage';
+import { useDexscreenerToken } from 'components/swap/ChartPage';
+import { useHistory } from 'react-router-dom';
+import { useParams } from 'react-router';
+import { useTokenBalance } from 'state/wallet/hooks';
+import { useUserChartHistoryManager } from 'state/user/hooks';
+import { useWeb3React } from '@web3-react/core';
 
 const StyledDiv = styled.div`
 font-family: 'Open Sans';
