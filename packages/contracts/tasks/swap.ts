@@ -4,7 +4,7 @@ import {BigNumber, ethers, utils} from "ethers";
 // @ts-ignore
 import TeleswapV2Pair from '../abi/TeleswapV2Pair.json'
 import {asArray, getMessage, TypedData} from "eip-712";
-
+require('dotenv').config()
 
 /**
  *
@@ -132,7 +132,7 @@ task("getAmountsOut", "getAmountsOut")
         let routes = [{
             from   :   taskArgs.token1,
             to:       taskArgs.token2,
-            stable:       false
+            stable:       new Boolean(process.env.stable).valueOf()
         }]
         console.log("export route=%s", JSON.stringify(routes))
         let getAmountsOutRes= await router02address.getAmountsOut(amountIn,routes)
@@ -278,7 +278,7 @@ task("addLiquidity", "增加流通性")
             let route= {
                     from:  taskArgs.token1,
                     to: taskArgs.token2,
-                    stable:true
+                    stable:new Boolean(process.env.stable).valueOf()
                 }
             let addLiquidityRes= await router02address.addLiquidity(route,
                 taskArgs.amount1desired,
@@ -312,7 +312,7 @@ task("addLiquidityEth", "增加流通性")
         let route= {
             from:  taskArgs.token1,
             to: taskArgs.token2,
-            stable:true
+            stable:new Boolean(process.env.stable).valueOf()
         }
         let addLiquidityRes= await router02address.addLiquidityETH(route,
             taskArgs.amounttokendesired,
@@ -344,7 +344,7 @@ task("swapExactTokensForTokens", "swapExactTokensForTokens")
         let route= [
             taskArgs.token1,
             taskArgs.token2,
-            false
+            new Boolean(process.env.stable).valueOf()
         ]
         let amountIn = expandTo18Decimals(taskArgs.amountin)
         const swapExactTokensForTokensData: [BigNumber,bigint,any[],string,number] = [
@@ -496,7 +496,7 @@ task("getPair", "getPair")
         const getPairData: [string,string,boolean] = [
             taskArgs.token1,
             taskArgs.token2,
-            true
+            new Boolean(process.env.stable).valueOf()
         ]
         console.log("export getPair=%s",await uniswapV2.getPair(...getPairData))
     });
