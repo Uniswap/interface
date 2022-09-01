@@ -81,11 +81,14 @@ export default function TokenDetails() {
   const { tokenAddress } = useParams<{ tokenAddress?: string }>()
   const token = useToken(tokenAddress)
   const tokenWarning = tokenAddress ? checkWarning(tokenAddress) : null
+  const isBlockedToken = !!tokenWarning && !tokenWarning?.canProceed
   const navigate = useNavigate()
 
   const [continueSwap, setContinueSwap] = useState<{ resolve: (value: boolean | PromiseLike<boolean>) => void }>()
   const shouldShowSpeedbump = !useIsUserAddedToken(token) && !!tokenWarning
-  const createSpeedbumpPromise = useCallback(() => {
+  // Show token safety modal if Swap-reviewing a warning token, at all times if the current token is blocked
+
+  const onSpeedbump = useCallback(() => {
     return new Promise<boolean>((resolve) => {
       shouldShowSpeedbump ? setContinueSwap({ resolve }) : resolve(true)
     })
@@ -145,7 +148,7 @@ export default function TokenDetails() {
         <>
           <TokenDetail address={token.address} />
           <RightPanel>
-            <Widget defaultToken={token ?? undefined} onReviewSwapClick={createSpeedbumpPromise} />
+            <Widget defaultToken={token ?? undefined} onReviewSwapClick={onSpeedbump} />
             {tokenWarning && <TokenSafetyMessage tokenAddress={token.address} warning={tokenWarning} />}
             <BalanceSummary address={token.address} totalBalance={totalBalance} networkBalances={balancesByNetwork} />
           </RightPanel>
@@ -157,10 +160,11 @@ export default function TokenDetails() {
             />
           </Footer>
           <TokenSafetyModal
-            isOpen={!!continueSwap || (!!tokenWarning && !tokenWarning?.canProceed)}
+            isOpen={isBlockedToken || !!continueSwap}
             tokenAddress={token.address}
-            onCancel={tokenWarning?.canProceed ? () => onResolveSwap(false) : () => navigate(-1)}
             onContinue={() => onResolveSwap(true)}
+            onBlocked={() => navigate(-1)}
+            onCancel={() => onResolveSwap(false)}
             showCancel={true}
           />
         </>
