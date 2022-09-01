@@ -228,7 +228,7 @@ function Web3StatusInner() {
           </RowBetween>
         ) : (
           <>
-            {hasSocks ? <Sock /> : null}
+            {hasSocks && !navbarFlagEnabled ? <Sock /> : null}
             <Text>{ENSName || shortenAddress(account)}</Text>
             {navbarFlagEnabled ? (
               walletIsOpen ? (
