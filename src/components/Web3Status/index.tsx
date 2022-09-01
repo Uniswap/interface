@@ -230,11 +230,13 @@ function Web3StatusInner() {
           <>
             {hasSocks ? <Sock /> : null}
             <Text>{ENSName || shortenAddress(account)}</Text>
-            {navbarFlagEnabled && walletIsOpen ? (
-              <StyledChevronUp onClick={toggleWalletDropdown} />
-            ) : (
-              <StyledChevronDown onClick={toggleWalletDropdown} />
-            )}
+            {navbarFlagEnabled ? (
+              walletIsOpen ? (
+                <StyledChevronUp onClick={toggleWalletDropdown} />
+              ) : (
+                <StyledChevronDown onClick={toggleWalletDropdown} />
+              )
+            ) : null}
           </>
         )}
         {!navbarFlagEnabled && !hasPendingTransactions && <StatusIcon connectionType={connectionType} />}
