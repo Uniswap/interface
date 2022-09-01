@@ -20,6 +20,7 @@ import { LoadingView, SubmittedView } from 'components/ModalViews'
 import { useChefStakingInfo } from 'hooks/farm/useChefStakingInfo'
 import { useChefContractForCurrentChain } from 'hooks/farm/useChefContract'
 import { CHAINID_TO_FARMING_CONFIG } from 'constants/farming.config'
+import { useTranslation } from 'react-i18next'
 // const HypotheticalRewardRate = styled.div<{ dim: boolean }>`
 //   display: flex;
 //   justify-content: space-between;
@@ -43,7 +44,7 @@ interface StakingModalProps {
 
 export default function StakingModal({ isOpen, onDismiss, pid }: StakingModalProps) {
   const { chainId } = useActiveWeb3React()
-
+  const { t } = useTranslation()
   // track and parse user input
   const [typedValue, setTypedValue] = useState('0')
   // const parsedAmountWrapped = wrappedCurrencyAmount(parsedAmount, chainId)
@@ -121,8 +122,8 @@ export default function StakingModal({ isOpen, onDismiss, pid }: StakingModalPro
       {!attempting && !hash && (
         <ContentWrapper gap="lg">
           <RowBetween>
-            <TYPE.mediumHeader>Deposit</TYPE.mediumHeader>
-            <CloseIcon onClick={wrappedOnDismiss} />
+            <TYPE.mediumHeader color="#FFFFFF">{t('stakeLpToken')}</TYPE.mediumHeader>
+            <CloseIcon onClick={wrappedOnDismiss} color="#FFFFFF" />
           </RowBetween>
           <CurrencyInputPanel
             value={typedValue}
@@ -155,14 +156,14 @@ export default function StakingModal({ isOpen, onDismiss, pid }: StakingModalPro
               confirmed={approval === ApprovalState.APPROVED || signatureData !== null}
               disabled={approval !== ApprovalState.NOT_APPROVED || signatureData !== null}
             >
-              Approve
+              {t('approve')}
             </ButtonConfirmed>
             <ButtonError
               disabled={signatureData === null && approval !== ApprovalState.APPROVED}
               // error={!!&& !!parsedAmount}
               onClick={onStake}
             >
-              Deposit
+              {t('stakeLpToken')}
             </ButtonError>
           </RowBetween>
           <ProgressCircles steps={[approval === ApprovalState.APPROVED || signatureData !== null]} disabled={true} />

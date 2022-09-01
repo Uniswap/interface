@@ -108,8 +108,8 @@ export default function UnstakingModal({ isOpen, onDismiss, pid }: StakingModalP
       {!attempting && !hash && (
         <ContentWrapper gap="lg">
           <RowBetween>
-            <TYPE.mediumHeader>Withdraw</TYPE.mediumHeader>
-            <CloseIcon onClick={wrappedOndismiss} />
+            <TYPE.mediumHeader color="#FFFFFF">Withdraw</TYPE.mediumHeader>
+            <CloseIcon onClick={wrappedOndismiss} color="#FFFFFF" />
           </RowBetween>
           {parsedStakedAmount && (
             <AutoColumn justify="center" gap="md">
