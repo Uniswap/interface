@@ -27,6 +27,7 @@ import { BigNumber } from 'ethers'
 import { UNI, ZERO_ADDRESS } from 'constants/index'
 import { Chef } from 'constants/farm/chef.enum'
 import useMasterChef from 'hooks/farm/useMasterChef'
+import ClaimRewardModal from 'components/masterchef/ClaimRewardModal'
 // import { Token } from '@teleswap/sdk'
 // import { useMasterChefPoolInfo } from 'hooks/farm/useMasterChefPoolInfo'
 
@@ -94,6 +95,7 @@ export default function PoolCard({ pid }: { pid: number }) {
   // const WETH = currency0 === ETHER ? token0 : token1
   const [showStakingModal, setShowStakingModal] = useState(false)
   const [showUnstakingModal, setShowUnstakingModal] = useState(false)
+  const [showClaimRewardModal, setShowClaimRewardModal] = useState(false)
   const backgroundColor = useColor()
 
   // const totalSupplyOfStakingToken = useTotalSupply(stakingInfo.stakedAmount.token)
@@ -200,7 +202,7 @@ export default function PoolCard({ pid }: { pid: number }) {
             width="auto"
             fontSize={12}
             padding="5px 12px"
-            onClick={() => masterChef.harvest(pid)}
+            onClick={() => setShowClaimRewardModal(true)}
           >
             Claim
           </ButtonPrimary>
@@ -238,11 +240,7 @@ export default function PoolCard({ pid }: { pid: number }) {
       <>
         <StakingModal isOpen={showStakingModal} pid={pid} onDismiss={() => setShowStakingModal(false)} />
         <UnstakingModal isOpen={showUnstakingModal} pid={pid} onDismiss={() => setShowUnstakingModal(false)} />
-        {/* <ClaimRewardModal
-          isOpen={showClaimRewardModal}
-          pid={pid}
-          onDismiss={() => setShowClaimRewardModal(false)}
-        /> */}
+        <ClaimRewardModal isOpen={showClaimRewardModal} pid={pid} onDismiss={() => setShowClaimRewardModal(false)} />
       </>
     </Wrapper>
   )
