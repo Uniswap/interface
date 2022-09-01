@@ -2,13 +2,14 @@ import * as ethers from 'ethers'
 
 import {ArrowUpRight, CheckCircle} from 'react-feather'
 
+import { AutoColumn } from 'components/Column'
+import { BlueCard } from 'components/Card'
 import { CFormInput } from '@coreui/react'
 import { Dots } from 'components/swap/styleds'
 import { LoadingSkeleton } from 'pages/Pool/styleds'
 import { MenuItem } from 'components/SearchModal/styleds'
 import React from 'react'
 import { TYPE } from 'theme'
-import Web3 from 'web3'
 import axios from 'axios'
 import styled from 'styled-components/macro'
 import { useActiveWeb3React } from 'hooks/web3'
@@ -181,11 +182,32 @@ type Props = {
         }
     }, [searchTermDebounced])
 
+    const setWbtc = () => setSearchTerm(`WBTC`)
+    const setWeth = () => setSearchTerm(`WETH`)
+    const setETHusd = () =>setSearchTerm(`ETH USD`)
+
+    const TipMemo = (
+      <BlueCard style={{  display:'flex', flexFlow: 'row nowrap', alignItems:'center'}}>
+      <AutoColumn style={{display:"flex", justifyContent:"center", flexFlow:"row nowrap", alignItems:"center"}} gap="10px">
+        <TYPE.subHeader style={{display:'flex', alignItems:'center'}} fontWeight={400} color={'white'}>
+            <b>Tip: </b> &nbsp;Try <TYPE.link style={{cursor:'pointer', paddingLeft: 5}} onClick={setWbtc}>WBTC</TYPE.link>,&nbsp;
+             <TYPE.link style={{cursor:'pointer',paddingLeft: 5}} onClick={setWeth}>WETH</TYPE.link>,&nbsp;
+              or <TYPE.link style={{cursor:'pointer', paddingLeft: 5 }} onClick={setETHusd}>ETH USD</TYPE.link>
+        </TYPE.subHeader>
+      </AutoColumn>
+    </BlueCard>
+    )
+
     return (
         <div style={{display:'flex', flexFlow:'column wrap', alignItems:'center'}}>
         <div style={{position: 'relative', width:'100%', padding:'1rem'}}>
         <TYPE.small>{labelToDisplay}</TYPE.small>
         <CFormInput placeholder={"Search by name or address"} type="search" value={searchTerm} onChange={onTermChanged} />
+        {!Boolean(searchTermDebounced) && (
+       
+            <AutoColumn gap="1rem">{TipMemo}</AutoColumn>
+  
+        )}
             {Boolean(results?.length) && (<MenuFlyout>
             {Boolean(fetching) && (
                 <LoadingSkeleton count={1} />

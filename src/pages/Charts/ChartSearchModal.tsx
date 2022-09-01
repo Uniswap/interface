@@ -4,6 +4,7 @@ import Modal from "components/Modal"
 import { PairSearch } from "./PairSearch"
 import { TYPE } from "theme"
 import { X } from "react-feather"
+import {darken} from 'polished'
 import styled from "styled-components/macro"
 type ChartSearchModalProps = {
     isOpen: boolean;
@@ -19,16 +20,24 @@ const Header = styled.div`
     font-size:18px;
 `
 
+const Close = styled(X)`
+    color: #fff;
+    cursor:pointer;
+    &:hover {
+        color: ${darken(0.2, '#fff')};
+        transition: ease all 0.1s;
+    }
+`
+
 export const ChartSearchModal = (props: ChartSearchModalProps) => {
     const { isOpen, onDismiss } = props
     const onPairSelect = (pair: any) => onDismiss()
-    return ( 
+    return (
         <Modal isOpen={isOpen} onDismiss={onDismiss}>
             <DarkCard>
-                <Header>
-                    <TYPE.black>Search by Name, Symbol, or Address</TYPE.black>
-                    <X size={25} onClick={onDismiss} style={{cursor:'pointer', color:'#fff'}} />
-                </Header>
+                <div style={{ display: 'flex', justifyContent: "flex-end", alignItems: 'center' }}>
+                    <Close size={25} onClick={onDismiss} />
+                </div>
                 <PairSearch onPairSelect={onPairSelect} />
             </DarkCard>
         </Modal>

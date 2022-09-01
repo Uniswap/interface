@@ -72,10 +72,10 @@ export const SelectiveChart = () => {
     const prebuiltCurrency = React.useMemo(() => (!chainId || chainId === 1) ? mainnetCurrency : prebuilt, [mainnetCurrency, chainId, prebuilt])
     const tokenAddressSupplied = React.useMemo(() => toChecksum(params?.tokenAddress), [params])
     const [address, setAddress] = React.useState(tokenAddressSupplied ? tokenAddressSupplied : '')
-    const token = useToken(toChecksum(address))
+    const token = useToken((address))
     const tokenBalance = useTokenBalance(account ?? undefined, token as any)
     const pairs: Array<any> = usePairs((address?.toLowerCase()))
-    const screenerToken = useDexscreenerToken(toChecksum(address))
+    const screenerToken = useDexscreenerToken((address))
     const transactionData = useTokenTransactions(address?.toLowerCase(), 30000)
     const LastFetchedNode = React.useMemo(() => (
         transactionData?.lastFetched ? <Moment date={transactionData.lastFetched} liveUpdate>
@@ -110,14 +110,15 @@ export const SelectiveChart = () => {
             const newDecimals = location.pathname.split('/')[5]
             if (newAddress && newSymbol) {
                 setLoadingNewData(true)
-                setAddress(toChecksum(newAddress))
+                const checksummed = toChecksum(newAddress)
+                setAddress(checksummed)
                 const newToken = new Token(chainId ?? 1, newAddress, parseInt(newDecimals) ?? 18, newSymbol, newName ?? '');
                 if (ref.current) {
                     ref.current = newToken;
                 } else {
                     ref.current = {
                         ...mainnetCurrency,
-                        address: newAddress,
+                        address: checksummed,
                         symbol: newSymbol
                     };
                     if (newName) {
@@ -141,20 +142,21 @@ export const SelectiveChart = () => {
                 setTimeout(() => {
                     setLoadingNewData(false)
                     window.scrollTo({ top: 0 })
-                }, 2200)
+                }, 1200)
             } else {
                 setSelectedCurrency({ payload: undefined, type: 'update' })
                 ref.current = undefined
             }
         })
     }, [history, mainnetCurrency])
+
     const [userChartHistory, updateUserChartHistory] = useUserChartHistoryManager()
 
     React.useEffect(() => {
         if (Object.keys(params).every(key => !Boolean((params as any)[key]))) {
             setSelectedCurrency({ payload: undefined, type: 'update' })
             ref.current = undefined
-        } else {
+        } else if (params.tokenAddress && params.name && params.tokenSymbol && params.decimals) {
             console.log(`Add to chart history. Initialize websocket.`)
             updateUserChartHistory([
                 {
@@ -365,9 +367,9 @@ export const SelectiveChart = () => {
                             {!hasSelectedData ? <Badge>Select a token to get started</Badge> : isMobile ? null : <span style={{ margin: 0 }}>Select a token to view chart/transaction data</span>}
                             {loadingNewData && <LoadingSkeleton count={1} />}
                             {!hasSelectedData || loadingNewData ? null : (Boolean(screenerToken && screenerToken?.priceChange)) && <div style={{ paddingLeft: 0 }}    >
-                                {screenerToken && screenerToken?.priceChange && <div style={{ paddingLeft: 0, justifyContent: 'space-between', display: 'flex', flexFlow: isMobile ? 'row' : 'row wrap', alignItems: 'center', gap: 10 }}>
+                                {screenerToken && screenerToken?.priceChange && <div style={{ paddingLeft: 0, justifyContent: 'space-between', display: 'flex', flexFlow: isMobile ? 'row' : 'row wrap', alignItems: 'center', gap: 15 }}>
                                     {Object.keys(screenerToken.priceChange).map((key) => (
-                                        <div key={key}>
+                                        <div key={key} style={{paddingRight: _.last(Object.keys(screenerToken.priceChange)) == key ? 0 : 10, borderRight: _.last(Object.keys(screenerToken.priceChange)) == key ? 'none' : '1px solid #444'}}>
                                             <TYPE.small textAlign="center">{formatPriceLabel(key)}</TYPE.small>
                                             <TYPE.black>{screenerToken?.priceChange?.[key] < 0 ? <TrendingDown style={{ color: "red" }} /> : <TrendingUp style={{ color: "green" }} />} {screenerToken?.priceChange?.[key]}%</TYPE.black>
                                         </div>
