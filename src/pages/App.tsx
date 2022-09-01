@@ -1,43 +1,34 @@
 import { AccountPage, AccountPageWithAccount } from './Account/AccountPage'
 import { AlertCircle, AlertOctagon, CheckCircle, ChevronDown, ChevronUp, Globe, Info } from 'react-feather'
-import {
-  ApolloClient,
-  ApolloProvider,
-  InMemoryCache
-} from "@apollo/client";
 import Badge, { BadgeVariant } from 'components/Badge'
-import { BrowserRouter, HashRouter, Route, Switch } from 'react-router-dom'
 import { ChartPage, useTokenInfo } from 'components/swap/ChartPage'
 import { DarkCard, DarkGreyCard } from 'components/Card'
 import { FomoPage, LimitOrders } from 'state/transactions/hooks'
-import { GelatoProvider, useGelatoLimitOrders, useGelatoLimitOrdersHandlers } from "@gelatonetwork/limit-orders-react";
+import { HashRouter, Route, Switch } from 'react-router-dom'
 import React, { useState } from 'react'
 import { RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects';
 import Swap, { CardWrapper, FixedContainer, ScrollableRow } from './Swap'
 import { bscClient, client, useTokenData } from 'state/logs/utils'
-import { useModalOpen, useToggleModal } from '../state/application/hooks'
 
 import AddLiquidity from './AddLiquidity'
-import { AddProposal } from './Vote/AddProposal'
-import AddressClaimModal from '../components/claim/AddressClaimModal'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
+import {
+  ApolloProvider
+} from "@apollo/client";
 import AppBody from './AppBody'
-import { ApplicationModal } from '../state/application/actions'
 import { AutoColumn } from 'components/Column'
 import { CardSection } from 'components/earn/styled';
 import CreateProposal from './CreateProposal'
 import DarkModeQueryParamReader from '../theme/DarkModeQueryParamReader'
 import { DonationTracker } from 'components/LiquidityChartRangeInput/DonationTracker'
-import Earn from './Earn'
 import ErrorBoundary from '../components/ErrorBoundary'
-import { ExternalLinkIcon } from 'theme'
 import { Flex } from 'rebass'
 import { GainsTracker } from './GainsTracker/GainsTracker'
+import { GelatoProvider } from "@gelatonetwork/limit-orders-react";
 import Header from 'components/Header';
 import { HoneyPotBsc } from 'components/HoneyPotBSC';
 import { KibaNftAlert } from 'components/NetworkAlert/AddLiquidityNetworkAlert';
 import { LifetimeReflections } from './Swap/LifetimeReflections'
-import Manage from './Earn/Manage'
 import Marquee from 'react-marquee-slider'
 import MigrateV2 from './MigrateV2'
 import MigrateV2Pair from './MigrateV2/MigrateV2Pair'
@@ -52,7 +43,6 @@ import { RedirectDuplicateTokenIds } from './AddLiquidity/redirects'
 import { RedirectDuplicateTokenIdsV2 } from './AddLiquidityV2/redirects'
 import RemoveLiquidity from './RemoveLiquidity'
 import RemoveLiquidityV3 from './RemoveLiquidity/V3'
-import { Routes } from 'react-router'
 import { RowFixed } from 'components/Row'
 import { SelectiveChart } from './Swap/SelectiveCharting';
 import { Suite } from './Suite/Suite';
@@ -68,7 +58,6 @@ import { Transactions } from './Vote/TransactionsPage'
 import Vote from './Vote'
 import VotePage from './Vote/VotePage'
 import VotePageV2 from './Vote/VotePageV2'
-import { WETH9 } from '@uniswap/sdk-core';
 import Web3 from 'web3'
 import Web3ReactManager from '../components/Web3ReactManager'
 import bg4 from '../assets/images/bg4.jpg'
@@ -84,7 +73,6 @@ import { useDarkModeManager } from 'state/user/hooks'
 import { useKiba } from './Vote/VotePage'
 import { useWeb3React } from '@web3-react/core'
 
-const THEME_BG_KEY = 'themedBG';
 const AppWrapper = styled.div`
   display: flex;
   flex-flow: column;
@@ -109,7 +97,7 @@ const BodyWrapper = styled.div`
   align-items: center;
   flex: 1;
   z-index: 1;
-  margin-top:${() => window.location.href.includes('charts') ? '1rem' : '3rem'};
+  margin-top:${() => window.location.href.includes('charts') || window.location.href.includes('charting') ? '0.5rem' : '3rem'};
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
     padding: 6rem 16px 16px 16px;
@@ -131,9 +119,6 @@ const HeaderWrapper = styled.div`
 const StyledHeader = styled.div`
   font-family:"Open Sans";
   font-size:14px;
-`
-const Marginer = styled.div`
-  margin-top: 5rem;
 `
 
 function TopLevelModals() {
@@ -210,8 +195,6 @@ const HoneyPotDetector = () => {
           const buyActualOut = web3.utils.toBN(decoded[1]) as any as number;
           const sellExpectedOut = web3.utils.toBN(decoded[2]) as any as number;
           const sellActualOut = web3.utils.toBN(decoded[3]) as any as number;
-          const buy_tax = Math.round((buyExpectedOut - buyActualOut) / buyExpectedOut * 100 * 10) / 10;
-          const sell_tax = Math.round((sellExpectedOut - sellActualOut) / sellExpectedOut * 100 * 10) / 10;
 
           honey_data['buyExpected'] = buyExpectedOut;
           honey_data['buyActual'] = buyActualOut;
@@ -358,14 +341,6 @@ const HoneyPotDetector = () => {
   )
 }
 
-const Fomo = () => {
-  return (<DarkCard style={{ maxWidth: 800, background: '#252632' }}>
-    <div style={{ padding: '9px 14px' }}>
-      <StyledHeader>KibaFOMO <br /><small style={{ fontSize: 12 }}>Powered by tokenfomo.io</small></StyledHeader>
-      <iframe src={'https://tokenfomo.io/?f=ethereum'} style={{ width: '100%', maxWidth: '800px', height: '65vh', borderRadius: 6 }} />
-    </div>
-  </DarkCard>)
-}
 
 const StyledDiv = styled.div`
   font-family: 'Open Sans';
@@ -374,9 +349,6 @@ const StyledDiv = styled.div`
 
 export default function App() {
   const [theme, setTheme] = React.useState('./squeeze2.mp4')
-  const themeSource = React.useMemo(() => {
-    return theme;
-  }, [theme, localStorage.getItem('themedBG')])
   const [darkMode, toggleDarkMode] = useDarkModeManager()
   const value = localStorage.getItem("hasOverride");
   React.useEffect(() => {
@@ -393,7 +365,6 @@ export default function App() {
     )
   }, [])
   const { chainId, account, library } = useWeb3React()
-  const balances = useAccountTokenBalances(account)
   const noop = () => { return };
   const innerWidth = window.innerWidth;
   const isMobile = React.useMemo(() => {
@@ -402,11 +373,12 @@ export default function App() {
   const GainsPage = (props: any) => <TokenBalanceContextProvider><VotePage {...props} /></TokenBalanceContextProvider>
   return (
     <ErrorBoundary>
+            
+            <Route component={DarkModeQueryParamReader} />
+        <Route component={ApeModeQueryParamReader} />
       <HashRouter>
       <SwapVolumeContextProvider chainId={chainId}>
-        
-        <Route component={DarkModeQueryParamReader} />
-        <Route component={ApeModeQueryParamReader} />
+  
         <Web3ReactManager>
           <GelatoProvider
             library={library}

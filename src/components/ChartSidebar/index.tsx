@@ -256,15 +256,7 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
                 style={{ fontSize: 12, marginRight: 15, background: color, borderRadius: 10, border: '.25px solid transparent' }}
             >
                 <SidebarHeader style={{ fontSize: 12, background: 'linear-gradient(#181C27, #131722)' }}>
-
-                    <Menu iconShape="round">
-                        <SubMenu style={{height:'fit-content'}} open={search} onOpenChange={setSearch} icon={<Search />} title="Search tokens">
-                            {search && <PairSearch />}
-                        </SubMenu>
-                        <MenuItem icon={<BarChart2 style={{ background: 'transparent' }} />}> Kiba Charts </MenuItem>
-
-                        {/* changing menu collapse icon on click */}
-                        <div style={{ height: 0, marginBottom: 5, cursor: 'pointer', display: 'flex', justifyContent: "end", position: 'relative', right: '5' }} >
+                <div style={{ height: 0, marginBottom: 5, cursor: 'pointer', display: 'flex', justifyContent: "end", position: 'relative', right: '5' }} >
                             {collapsed && (
                                 <ArrowRightCircle onClick={menuIconClick} />
                             )}
@@ -272,7 +264,13 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
                             {!collapsed && (
                                 <ArrowLeftCircle onClick={menuIconClick} />
                             )}
-                        </div>
+                        </div>  
+                    <Menu iconShape="round">
+                  
+                        <SubMenu style={{height:'fit-content'}} open={search} onOpenChange={setSearch} icon={<Search />} title="Search tokens">
+                            {search && <PairSearch />}
+                        </SubMenu>
+                       
                     </Menu>
 
                 </SidebarHeader>

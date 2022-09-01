@@ -1,9 +1,8 @@
 import * as ethers from 'ethers'
 
+import {ArrowUpRight} from 'react-feather'
 import { CFormInput } from '@coreui/react'
 import { Dots } from 'components/swap/styleds'
-import ERC20ABI from 'abis/erc20.json'
-import { InternalCardWrapper } from 'pages/Swap'
 import { LoadingSkeleton } from 'pages/Pool/styleds'
 import { MenuItem } from 'components/SearchModal/styleds'
 import React from 'react'
@@ -12,7 +11,7 @@ import Web3 from 'web3'
 import axios from 'axios'
 import styled from 'styled-components/macro'
 import { useActiveWeb3React } from 'hooks/web3'
-import {useHistory} from 'react-router-dom'
+import {useHistory} from 'react-router'
 
 const WEB3_ENDPOINT = 'https://cloudflare-eth.com'
 ;
@@ -70,6 +69,10 @@ export interface Pair {
     pairCreatedAt?: number;
   }
 
+  const Wrapped = styled.div`
+  position:relative;
+  `
+
   const Input = styled.input`
   height:35px;
   border: 1px solid #222;
@@ -94,9 +97,12 @@ display: flex;
 flex-direction: column;
 font-size: 12px;
 position: absolute;
-top: 6rem;
+top: 4rem;
 left: 0.5rem;
 z-index: 100;
+max-height: 350px;
+overflow: auto;
+
 
 ${({ theme }) => theme.mediaWidth.upToMedium`
   min-width: 18.125rem;
@@ -167,7 +173,7 @@ const MenuItemStyled = styled(MenuItem)`
 
     return (
         <div style={{display:'flex', flexFlow:'column wrap', alignItems:'center'}}>
-        <div style={{width:'100%', padding:'1rem'}}>
+        <div style={{position: 'relative', width:'100%', padding:'1rem'}}>
         <TYPE.small>Search for Token</TYPE.small>
         <CFormInput placeholder={"Search by name or address"} type="search" value={searchTerm} onChange={onTermChanged} />
             {Boolean(results?.length) && (<MenuFlyout>
@@ -187,7 +193,9 @@ const MenuItemStyled = styled(MenuItem)`
                            <img src={(chainImageMap as any)[result.chainId] as string} style={{marginRight: 10, width:20, background:'transparent', borderRadius:25, border:"1px solid #444"}} />
                            {result?.baseToken?.name}
                       </div>
-                      <div>({result?.baseToken?.symbol})
+                      <div style={{display:'flex', alignItems:'center', justifyContent:'space-between'}}>
+                        <span>({result?.baseToken?.symbol})</span>
+                        <span><ArrowUpRight /></span>
                       </div>
                     </MenuItemStyled>
                 </div>

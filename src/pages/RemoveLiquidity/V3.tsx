@@ -1,41 +1,42 @@
+import { AutoRow, RowBetween, RowFixed } from 'components/Row'
+import { ButtonConfirmed, ButtonPrimary } from 'components/Button'
+import { ResponsiveHeaderText, SmallMaxButton, Wrapper } from './styled'
+import { Trans, t } from '@lingui/macro'
+import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'
+import { useBurnV3ActionHandlers, useBurnV3State, useDerivedV3BurnInfo } from 'state/burn/v3/hooks'
 import { useCallback, useMemo, useState } from 'react'
-import { useV3PositionFromTokenId } from 'hooks/useV3Positions'
-import { Redirect, RouteComponentProps } from 'react-router-dom'
+
+import { AddRemoveTabs } from 'components/NavigationTabs'
+import AppBody from '../AppBody'
+import { AutoColumn } from 'components/Column'
+import { BigNumber } from '@ethersproject/bignumber'
+import { Break } from 'components/earn/styled'
+import CurrencyLogo from 'components/CurrencyLogo'
+import DoubleCurrencyLogo from 'components/DoubleLogo'
+import FormattedCurrencyAmount from 'components/FormattedCurrencyAmount'
+import { LightCard } from 'components/Card'
+import Loader from 'components/Loader'
+import { NonfungiblePositionManager } from '@uniswap/v3-sdk'
+import { Percent } from '@uniswap/sdk-core'
+import RangeBadge from 'components/Badge/RangeBadge'
+import ReactGA from 'react-ga'
+import { Redirect } from 'pages/Swap/redirects'
+import Slider from 'components/Slider'
+import { SupportedChainId } from 'constants/chains'
+import { TYPE } from 'theme'
+import { Text } from 'rebass'
+import Toggle from 'components/Toggle'
+import { TransactionResponse } from '@ethersproject/providers'
 import { WETH9_EXTENDED } from '../../constants/tokens'
 import { calculateGasMargin } from '../../utils/calculateGasMargin'
-import AppBody from '../AppBody'
-import { BigNumber } from '@ethersproject/bignumber'
-import useDebouncedChangeHandler from 'hooks/useDebouncedChangeHandler'
-import { useBurnV3ActionHandlers, useBurnV3State, useDerivedV3BurnInfo } from 'state/burn/v3/hooks'
-import Slider from 'components/Slider'
-import { AutoRow, RowBetween, RowFixed } from 'components/Row'
-import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'
-import { AutoColumn } from 'components/Column'
-import { ButtonConfirmed, ButtonPrimary } from 'components/Button'
-import { LightCard } from 'components/Card'
-import { Text } from 'rebass'
-import CurrencyLogo from 'components/CurrencyLogo'
-import FormattedCurrencyAmount from 'components/FormattedCurrencyAmount'
-import { useV3NFTPositionManagerContract } from 'hooks/useContract'
-import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
-import useTransactionDeadline from 'hooks/useTransactionDeadline'
-import ReactGA from 'react-ga'
 import { useActiveWeb3React } from 'hooks/web3'
-import { TransactionResponse } from '@ethersproject/providers'
-import { useTransactionAdder } from 'state/transactions/hooks'
-import { Percent } from '@uniswap/sdk-core'
-import { TYPE } from 'theme'
-import { Wrapper, SmallMaxButton, ResponsiveHeaderText } from './styled'
-import Loader from 'components/Loader'
-import DoubleCurrencyLogo from 'components/DoubleLogo'
-import { Break } from 'components/earn/styled'
-import { NonfungiblePositionManager } from '@uniswap/v3-sdk'
+import useDebouncedChangeHandler from 'hooks/useDebouncedChangeHandler'
 import useTheme from 'hooks/useTheme'
-import { AddRemoveTabs } from 'components/NavigationTabs'
-import RangeBadge from 'components/Badge/RangeBadge'
-import Toggle from 'components/Toggle'
-import { t, Trans } from '@lingui/macro'
-import { SupportedChainId } from 'constants/chains'
+import { useTransactionAdder } from 'state/transactions/hooks'
+import useTransactionDeadline from 'hooks/useTransactionDeadline'
+import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
+import { useV3NFTPositionManagerContract } from 'hooks/useContract'
+import { useV3PositionFromTokenId } from 'hooks/useV3Positions'
 
 const DEFAULT_REMOVE_V3_LIQUIDITY_SLIPPAGE_TOLERANCE = new Percent(5, 100)
 
@@ -45,7 +46,7 @@ export default function RemoveLiquidityV3({
   match: {
     params: { tokenId },
   },
-}: RouteComponentProps<{ tokenId: string }>) {
+}: any) {
   const parsedTokenId = useMemo(() => {
     try {
       return BigNumber.from(tokenId)
@@ -251,7 +252,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
       </AutoColumn>
     )
   }
-
+  
   const onOptimisticChain = chainId && [SupportedChainId.OPTIMISM, SupportedChainId.OPTIMISTIC_KOVAN].includes(chainId)
   const showCollectAsWeth = Boolean(
     !onOptimisticChain &&

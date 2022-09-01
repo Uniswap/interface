@@ -1,10 +1,10 @@
-import { useActiveWeb3React } from 'hooks/web3'
-import { Redirect, RouteComponentProps } from 'react-router-dom'
-import { WETH9_EXTENDED } from '../../constants/tokens'
 import AddLiquidity from './index'
+import { Redirect } from 'pages/Swap/redirects'
+import { WETH9_EXTENDED } from '../../constants/tokens'
+import { useActiveWeb3React } from 'hooks/web3'
 
 export function RedirectDuplicateTokenIds(
-  props: RouteComponentProps<{ currencyIdA: string; currencyIdB: string; feeAmount?: string }>
+  props: any
 ) {
   const {
     match: {

@@ -15,6 +15,7 @@ import { ChartSidebar } from 'components/ChartSidebar';
 import CurrencyInputPanel from 'components/CurrencyInputPanel';
 import CurrencyLogo from 'components/CurrencyLogo';
 import Moment from './Moment';
+import { PairSearch } from 'pages/Charts/PairSearch';
 import QuestionHelper from 'components/QuestionHelper';
 import React from 'react';
 import Toggle from 'components/Toggle';
@@ -82,12 +83,14 @@ export const SelectiveChart = () => {
     }, {
         selectedCurrency: prebuiltCurrency
     })
+    const hasSelectedData = Boolean(params?.tokenAddress && selectedCurrency)
+
     const [loadingNewData, setLoadingNewData] = React.useState(false)
     const bscTransactionData = useBscTokenTransactions(chainId && chainId == 56 ? address?.toLowerCase() : '', 60000)
     //const [tokenData, setTokenData] = React.useState<any>({})
     const tokenData = useTokenData(address?.toLowerCase(), 60000)
     React.useEffect(() => {
-        return history.listen((location) => {
+        return history.listen((location:any) => {
             const newAddress = location.pathname.split('/')[2]?.toLowerCase()
             const newSymbol = location.pathname.split('/')[3]
             const newName = location.pathname.split('/')[4]
@@ -226,8 +229,9 @@ export const SelectiveChart = () => {
 
     const PanelMemo = React.useMemo(() => {
         return (!Boolean(chainId) || Boolean(chainId && chainId === 1)) ?
-            <><CurrencyInputPanel
-                label={'GAINS'}
+
+    <>        <CurrencyInputPanel
+                label={'gains'}
                 showMaxButton={false}
                 value={``}
                 showCurrencyAmount={false}
@@ -253,7 +257,6 @@ export const SelectiveChart = () => {
 
                 id="swap-currency-input"
             />
-
 
             </> :
             Boolean(chainId) ? <TYPE.small>{chainId && chainId == 56 ? 'BSC' : `${chainId}`} support coming soon</TYPE.small> : null
@@ -298,7 +301,6 @@ export const SelectiveChart = () => {
     }, [selectedCurrency, isMobile, params.tokenAddress, collapsed])
 
 
-    const hasSelectedData = Boolean(params?.tokenAddress && selectedCurrency)
     return (
         <>
 
@@ -381,7 +383,7 @@ export const SelectiveChart = () => {
                             <LoadingSkeleton count={15} borderRadius={20} /> :
                             (
                                 <React.Fragment>
-                                    {hasSelectedData && <TokenStats tokenData={tokenData} />}
+                                    {hasSelectedData && <TokenStats tokenData={screenerToken} />}
                                     {hasSelectedData ? <TopTokenHolders address={address} chainId={chainId} /> : null}
 
                                     <div style={{ marginTop: '0.25rem', marginBottom: '0.25rem' }}>
@@ -469,7 +471,19 @@ export const SelectiveChart = () => {
 }
 
 const TokenStats = ({ tokenData }: { tokenData?: any }) => {
-
+    const getLabel = (key: string ) => {
+        switch(key) {
+            case 'h24':
+              return  '24 Hour Txns'
+            case 'h6':
+                return '6 Hour Txns'
+            case 'h1':
+                return '1 Hour Txns'
+            case 'm5':
+                return '5 Min Txns'
+            default: return key
+        }
+    }
     const [showStats, setShowStats] = React.useState(false)
     const toggleStats = () => setShowStats(!showStats)
     const hasStats = Boolean(tokenData && Object.keys(tokenData)?.length > 0)
@@ -491,26 +505,18 @@ const TokenStats = ({ tokenData }: { tokenData?: any }) => {
         </TYPE.small>
     ) : null
     return showStats ? (
-        tokenData && hasStats ? (
+        tokenData && tokenData?.txns ? (
             <div>
                 {ToggleElm}
-                <div style={{ display: 'flex', background: '#222', boxShadow: '0px 0px 1px 0px', padding: '9px 14px', flexFlow: 'row wrap', gap: 10, alignItems: 'center', marginBottom: 10 }}>
-                    {Boolean(tokenData?.priceUSD) && <div style={{ paddingBottom: 5, borderRight: '1px solid #444', paddingRight: 20 }}>
-                        <StyledDiv style={{ color: "burntorange" }}>Price (USD)  <Badge style={{ color: "#fff", background: tokenData?.priceChangeUSD <= 0 ? '#971B1C' : '#779681' }}>{tokenData?.priceChangeUSD <= 0 ? <ChevronDown /> : <ChevronUp />}{tokenData.priceChangeUSD.toFixed(2)}%</Badge></StyledDiv>
-                        <small style={{ fontSize: 10, display: "flex", flexFlow: 'row wrap' }}> ${(tokenData?.priceUSD).toFixed(18)}</small>
-                    </div>}
-                    <div style={{ paddingBottom: 5, borderRight: '1px solid #444', paddingRight: 20 }}>
-                        <StyledDiv style={{ color: "burntorange" }}>Volume (24 Hrs)</StyledDiv>
-                        <TYPE.white textAlign={'center'}>${parseFloat((tokenData?.oneDayVolumeUSD)?.toFixed(2)).toLocaleString()}</TYPE.white>
-                    </div>
-                    <div style={{ paddingBottom: 5, borderRight: '1px solid #444', paddingRight: 20 }}>
-                        <StyledDiv style={{ color: "burntorange" }}>Transactions</StyledDiv>
-                        <TYPE.white textAlign={'center'}>{Number(tokenData?.txCount).toLocaleString()}</TYPE.white>
-                    </div>
-                    {Boolean(tokenData?.totalLiquidityUSD) && <div style={{ paddingBottom: 5 }}>
-                        <StyledDiv style={{ color: "burntorange" }}>Total Liquidity (USD)</StyledDiv>
-                        <TYPE.white textAlign={'center'}>${Number(tokenData?.totalLiquidityUSD * 2).toLocaleString()}</TYPE.white>
-                    </div>}
+                <div style={{ display: 'flex', background: '#111', boxShadow: '0px 0px 1px 0px', padding: '9px 14px', flexFlow: 'row wrap', gap: 10, alignItems: 'center', marginBottom: 10 }}>
+                    {Object.keys(tokenData?.txns).map((key) => ( 
+                         <div  key={key} style={{paddingRight: key == _.last(Object.keys(tokenData?.txns)) ? 0 : 5, paddingBottom: 5,borderRight: key == _.last(Object.keys(tokenData?.txns)) ? 'none' : '1px solid #444' }}>
+                        <StyledDiv style={{ color: "burntorange" }}>{getLabel(key)}</StyledDiv>
+                        <div style={{display:'flex', justifyContent:'space-between'}}>{Object.keys(tokenData.txns[key]).map((subKey) => (
+                        <TYPE.white key={subKey} textAlign={'center'}><StyledDiv>{subKey}</StyledDiv>
+                        <span style={{color: subKey == 'sells' ? 'red' : 'green'}}>{tokenData.txns[key][subKey]}</span></TYPE.white>
+                        ))}</div>
+                    </div>))}
                 </div>
             </div>
         ) : <p style={{ margin: 0 }}>Failed to load token data.</p>
