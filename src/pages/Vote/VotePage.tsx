@@ -300,24 +300,26 @@ export const useConvertTokenAmountToUsdString = (token?: Token, amt?: number, pa
   const tokenChanged = Boolean(lastToken) && Boolean(token) && Boolean(lastToken?.address?.toLowerCase() !== token?.address?.toLowerCase())
   const txsUpdated = Boolean(lastTx) && Boolean(length) && Boolean(lastTx?.toString()?.toLowerCase() !== length?.toString()?.toLowerCase())
   const hasTokenHistory = Boolean(token) && value?.history?.some((item) => Boolean(item?.token?.address?.toLowerCase() == (token?.address?.toLowerCase())) && Boolean(item.time))
-  console.log(`params.converter`, {tokenChanged, txsUpdated, hasTokenHistory})
-  if (hasTokenHistory) console.log(`latest history`, value.history.filter(a => a?.token?.address == token?.address && a?.time > 0))
+  if (hasTokenHistory) {
+    console.log(`latest history`, value.history.filter(a => a?.token?.address == token?.address && a?.time > 0))
+  }
+  
   React.useEffect(() => {
     if (!amt || amt <= 0) {
-      console.log(`._LOGGER_. | token amount is 0. No point in checking value. returning`)
+      console.log(`token amount is 0. No point in checking value. returning`)
       return
     }
     if (retrieving) {
-      console.log(`._LOGGER_. | still retrieving`)
+      console.log(`still retrieving`)
       return
     }
 
     if ((hasTokenHistory && !tokenChanged && !txsUpdated)) {
-      console.log(`._LOGGER_. | has history and has not changed returning`)
+      console.log(`has history and has not changed returning`)
       return
     }
 
-    console.log(`._LOGGER_. | we running this effect now.`)
+    console.log(`we running this effect now.`)
     retrieveTokenValue()
   }, [txData, amt, tokenChanged, txsUpdated, token, lastTx, tokenAddress, hasTokenHistory]);
 

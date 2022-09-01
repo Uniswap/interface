@@ -1,32 +1,33 @@
-import { t, Trans } from '@lingui/macro'
-import { TokenList } from '@uniswap/token-lists'
-import Card from 'components/Card'
-import { UNSUPPORTED_LIST_URLS } from 'constants/lists'
-import { useListColor } from 'hooks/useColor'
-import { useActiveWeb3React } from 'hooks/web3'
-import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { ButtonEmpty, ButtonPrimary } from '../Button'
 import { CheckCircle, Settings } from 'react-feather'
-import ReactGA from 'react-ga'
-import { usePopper } from 'react-popper'
-import { useAppDispatch, useAppSelector } from 'state/hooks'
-import styled from 'styled-components/macro'
-import { useFetchListCallback } from '../../hooks/useFetchListCallback'
-import { useOnClickOutside } from '../../hooks/useOnClickOutside'
-import useTheme from '../../hooks/useTheme'
-import useToggle from '../../hooks/useToggle'
-import { acceptListUpdate, disableList, enableList, removeList } from '../../state/lists/actions'
-import { useActiveListUrls, useAllLists, useIsListActive } from '../../state/lists/hooks'
+import Column, { AutoColumn } from '../Column'
 import { ExternalLink, IconWrapper, LinkStyledButton, TYPE } from '../../theme'
+import { PaddedColumn, SearchInput, Separator, SeparatorDark } from './styleds'
+import Row, { RowBetween, RowFixed } from '../Row'
+import { Trans, t } from '@lingui/macro'
+import { acceptListUpdate, disableList, enableList, removeList } from '../../state/lists/actions'
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useActiveListUrls, useAllLists, useIsListActive } from '../../state/lists/hooks'
+import { useAppDispatch, useAppSelector } from 'state/hooks'
+
+import Card from 'components/Card'
+import { CurrencyModalView } from './CurrencySearchModal'
+import ListLogo from '../ListLogo'
+import ListToggle from '../Toggle/ListToggle'
+import ReactGA from 'react-ga'
+import { TokenList } from '@uniswap/token-lists'
+import { UNSUPPORTED_LIST_URLS } from 'constants/lists'
 import listVersionLabel from '../../utils/listVersionLabel'
 import { parseENSAddress } from '../../utils/parseENSAddress'
+import styled from 'styled-components/macro'
 import uriToHttp from '../../utils/uriToHttp'
-import { ButtonEmpty, ButtonPrimary } from '../Button'
-import Column, { AutoColumn } from '../Column'
-import ListLogo from '../ListLogo'
-import Row, { RowBetween, RowFixed } from '../Row'
-import ListToggle from '../Toggle/ListToggle'
-import { CurrencyModalView } from './CurrencySearchModal'
-import { PaddedColumn, SearchInput, Separator, SeparatorDark } from './styleds'
+import { useActiveWeb3React } from 'hooks/web3'
+import { useFetchListCallback } from '../../hooks/useFetchListCallback'
+import { useListColor } from 'hooks/useColor'
+import { useOnClickOutside } from '../../hooks/useOnClickOutside'
+import { usePopper } from 'react-popper'
+import useTheme from '../../hooks/useTheme'
+import useToggle from '../../hooks/useToggle'
 
 const Wrapper = styled(Column)`
   height: 100%;
@@ -196,14 +197,14 @@ const ListRow = memo(function ListRow({ listUrl }: { listUrl: string }) {
               <PopoverContainer show={true} ref={setPopperElement as any} style={styles.popper} {...attributes.popper}>
                 <div>{list && listVersionLabel(list.version)}</div>
                 <SeparatorDark />
-                <ExternalLink href={`https://tokenlists.org/token-list?url=${listUrl}`}>
+                <ExternalLink size={10} href={`https://tokenlists.org/token-list?url=${listUrl}`}>
                   <Trans>View list</Trans>
                 </ExternalLink>
-                <UnpaddedLinkStyledButton onClick={handleRemoveList} disabled={Object.keys(listsByUrl).length === 1}>
+                <UnpaddedLinkStyledButton style={{fontSize:10}}  onClick={handleRemoveList} disabled={Object.keys(listsByUrl).length === 1}>
                   <Trans>Remove list</Trans>
                 </UnpaddedLinkStyledButton>
                 {pending && (
-                  <UnpaddedLinkStyledButton onClick={handleAcceptListUpdate}>
+                  <UnpaddedLinkStyledButton style={{fontSize:10}} onClick={handleAcceptListUpdate}>
                     <Trans>Update list</Trans>
                   </UnpaddedLinkStyledButton>
                 )}

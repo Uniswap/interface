@@ -1,3 +1,5 @@
+import * as ethers from 'ethers'
+
 import React, { useMemo } from 'react'
 
 import { Currency } from '@uniswap/sdk-core'
@@ -44,17 +46,23 @@ const StyledLogo = styled(Logo)<{ size: string }>`
   const srcs: string[] = useMemo(() => {
     if (!currency || currency.isNative) return []
     const currencyObject = (currency as any);
-    if (currency.isToken || currencyObject?.id) {
-      let tokenAddress = (currency?.address);
+    if (currency.isToken || currencyObject?.id || currencyObject?.address) {
+      let tokenAddress = (currency?.address?.toLowerCase());
       if (currencyObject?.id && !tokenAddress) {
-        tokenAddress = currencyObject?.id
+        tokenAddress = currencyObject?.id?.toLowerCase()
+      } 
+      if (currencyObject?.address && !tokenAddress) {
+        tokenAddress = currencyObject?.address?.toLowerCase()
       }
-      const defaultURLs = [getTokenLogoURL(tokenAddress)];
+
+      const tokenAddressChecksummed = ethers.utils.getAddress(tokenAddress)
+
+      const defaultURLs = [getTokenLogoURL(tokenAddressChecksummed)];
       const defaultUrls = chainId === 56 ? 
         [ 
           currency?.symbol?.toLowerCase()?.includes('safemoon') ?
           `https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRLbVfJ-h_05UBkdvKyegU_KhVSmXiE9fzWpZLreSXBTmGHL4O7JmXqY0yw9rTweJDjGl8&usqp=CAU` : 
-          `https://pancakeswap.finance/images/tokens/${tokenAddress}.png`
+          `https://pancakeswap.finance/images/tokens/${tokenAddressChecksummed}.png`
         ] : 
         defaultURLs;
 
@@ -78,23 +86,23 @@ const StyledLogo = styled(Logo)<{ size: string }>`
     if (trender) return <StyledLogo size={size} srcs={[trender?.image]} alt ={`${trender.name} Logo`} style={style} {...rest} />
   }
 
-  if (currency?.symbol?.toLowerCase() === 'kiba'.toLowerCase() || currency?.name?.toLowerCase() === 'kiba inu')
-  return <StyledLogo size={size} srcs={['https://kibainu.space/wp-content/uploads/2021/11/photo_2021-11-05-08.31.13-copy-150x150.jpeg']} alt={`Kiba Inu logo`} style={style} {...rest} />
+  // if (currency?.symbol?.toLowerCase() === 'kiba'.toLowerCase() || currency?.name?.toLowerCase() === 'kiba inu')
+  // return <StyledLogo size={size} srcs={['https://kibainu.space/wp-content/uploads/2021/11/photo_2021-11-05-08.31.13-copy-150x150.jpeg']} alt={`Kiba Inu logo`} style={style} {...rest} />
   
-  if (currency?.symbol?.toLowerCase() === 'ccv2'.toLowerCase() && currency?.name?.toLowerCase() === 'cryptocart v2') 
-  return <StyledLogo size={size} srcs={['https://s2.coinmarketcap.com/static/img/coins/64x64/9564.png']} alt={`CrytpoCart logo`} style={style} {...rest} />
+  // if (currency?.symbol?.toLowerCase() === 'ccv2'.toLowerCase() && currency?.name?.toLowerCase() === 'cryptocart v2') 
+  // return <StyledLogo size={size} srcs={['https://s2.coinmarketcap.com/static/img/coins/64x64/9564.png']} alt={`CrytpoCart logo`} style={style} {...rest} />
 
-  if (currency?.symbol?.toLowerCase() === 'stilton' || currency?.name?.toLowerCase() === 'stilton musk')
-  return <StyledLogo size={size} srcs={['https://assets.coingecko.com/coins/images/23572/large/2022-02-09_11.32.27-removebg-preview.png?1644475684']} alt={`Stilton logo`} style={style} {...rest} />
+  // if (currency?.symbol?.toLowerCase() === 'stilton' || currency?.name?.toLowerCase() === 'stilton musk')
+  // return <StyledLogo size={size} srcs={['https://assets.coingecko.com/coins/images/23572/large/2022-02-09_11.32.27-removebg-preview.png?1644475684']} alt={`Stilton logo`} style={style} {...rest} />
 
-  if (currency?.symbol?.toLowerCase() === 'vulture' || currency?.name?.toLowerCase() === 'vulture')
-  return <StyledLogo size={size} srcs={['https://pbs.twimg.com/profile_banners/1504955501230051328/1648078134/1500x500']} alt={`Vulture logo`} style={style} {...rest} />
+  // if (currency?.symbol?.toLowerCase() === 'vulture' || currency?.name?.toLowerCase() === 'vulture')
+  // return <StyledLogo size={size} srcs={['https://pbs.twimg.com/profile_banners/1504955501230051328/1648078134/1500x500']} alt={`Vulture logo`} style={style} {...rest} />
 
-  if (currency?.symbol?.toLowerCase() === 'ck' || currency?.name?.toLowerCase() === 'crypto king') 
-  return <StyledLogo size={size} srcs={['https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSt7jQS8Jx_R171pHWK3ffTtXnXKod0bZFoUg&usqp=CAU']} alt={`Vulture logo`} style={style} {...rest} />
+  // if (currency?.symbol?.toLowerCase() === 'ck' || currency?.name?.toLowerCase() === 'crypto king') 
+  // return <StyledLogo size={size} srcs={['https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSt7jQS8Jx_R171pHWK3ffTtXnXKod0bZFoUg&usqp=CAU']} alt={`Vulture logo`} style={style} {...rest} />
 
   return <StyledLogo size={size} srcs={srcs} alt={`${currency?.symbol ?? 'token'} logo`} style={style} {...rest} />
-});
+}, _.isEqual);
 
 CurrencyLogo.displayName = 'CurrencyLogo';
 

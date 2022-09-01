@@ -89,7 +89,7 @@ export function CurrencySearch({
   // if they input an address, use it
   const isAddressSearch = isAddress(searchQuery)
 
-  const searchToken = useToken(searchQuery)
+  const searchToken = useToken(typeof isAddressSearch == 'string' ? isAddressSearch : searchQuery)
 
   const searchTokenIsAdded = useIsUserAddedToken(searchToken)
 

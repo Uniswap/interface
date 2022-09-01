@@ -1,5 +1,6 @@
 /* eslint-disable */
 import 'react-pro-sidebar/dist/css/styles.css';
+import '@coreui/coreui/dist/css/coreui.css'
 
 import { ArrowLeftCircle, ArrowRightCircle, BarChart2, ChevronDown, ChevronUp, Globe, Heart, PieChart, RefreshCcw, RefreshCw, Repeat, ToggleLeft, ToggleRight, Twitter } from 'react-feather'
 import Badge, { BadgeVariant } from 'components/Badge';
@@ -13,6 +14,7 @@ import { useBscToken, useCurrency, useToken } from 'hooks/Tokens';
 import { useHolderCount, useTokenHolderCount, useTokenInfo } from 'components/swap/ChartPage'
 
 import { BurntKiba } from 'components/BurntKiba';
+import { CTooltip } from '@coreui/react'
 import Card from 'components/Card';
 import Copy from '../AccountDetails/Copy'
 import CurrencyLogo from 'components/CurrencyLogo';
@@ -23,6 +25,7 @@ import React from 'react';
 import { SwapTokenForToken } from 'pages/Swap/SwapTokenForToken';
 import { Trans } from '@lingui/macro'
 import _ from 'lodash'
+import { toChecksum } from 'state/logs/utils';
 import { useKiba } from 'pages/Vote/VotePage';
 import { useTokenBalance } from 'state/wallet/hooks';
 import { useTotalSupply } from 'hooks/useTotalSupply';
@@ -176,25 +179,31 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
 
     const color = `linear-gradient(rgb(21 25 36), rgb(36 38 50))`
 
+
     const inputCurrencyAddress = React.useMemo(function () {
-        return Boolean(holdings?.pair) ? holdings?.pair?.toLowerCase() === WETH9[1].address.toLowerCase() ? 'ETH' : holdings?.pair?.toLowerCase()  : `ETH`
+        return Boolean(!!holdings?.pair) ? 
+                holdings?.pair?.toLowerCase() === WETH9[1].address.toLowerCase() 
+                    ? 'ETH' : toChecksum(holdings?.pair) 
+                        : `ETH`
     }, [holdings.pair])
 
     const inputCurrency = useCurrency(inputCurrencyAddress ?? undefined)
+
     const onTradeClick = () => {
         setStatsOpen(false)
         setSwapOpen(true)
     }
-    console.log(`inputCurrency.value`, inputCurrency)
+
+
     const SwapLink = React.useMemo(function () {
         return Boolean(token) ? (
-
             <TYPE.link title={`Swap ${token?.symbol} tokens`} style={{ fontFamily: 'Open Sans !important' }} onClick={onTradeClick}>
                 Trade <ArrowRightCircle size={'14px'} />
             </TYPE.link>
 
         ) : null
     }, [token, inputCurrency])
+
     return (
         <Wrapper>
             <ProSidebar collapsed={collapsed}
@@ -267,19 +276,35 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
 
                                             </MenuItem>)}
                                             {hasSocials &&
-                                                <MenuItem >
-                                                    <div style={{ display: 'flex', alignItems: 'center', columnGap: 10 }}>
-                                                        {tokenInfo?.twitter && <a style={{ display: "inline-block" }} href={`https: /twitter.com/${tokenInfo?.twitter}`}>
-                                                            <Twitter />
-                                                        </a>}
-                                                        {tokenInfo?.website && <a style={{ display: "inline-block" }} href={tokenInfo?.website}>
-                                                            <Globe />
-                                                        </a>}
-                                                        {tokenInfo?.coingecko && <a style={{ display: "inline-block" }} href={`https://coingecko.com/en/coins/${tokenInfo.coingecko}`}>
-                                                            <img src='https://cdn.filestackcontent.com/MKnOxRS8QjaB2bNYyfou' style={{ height: 25, width: 25 }} />
-                                                        </a>}
-                                                    </div>
-                                                </MenuItem>}
+                                                <>
+                                                    <SidebarHeader><TYPE.small marginLeft="10px">Socials</TYPE.small></SidebarHeader>
+
+                                                    <MenuItem style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                                        <div style={{ display: 'flex', alignItems: 'center', columnGap: 10 }}>
+                                                            {tokenInfo?.twitter && (
+                                                                <CTooltip placement="bottom" content={`${tokenInfo?.name} Twitter`}>
+                                                                    <a style={{ display: "inline-block" }} href={`https: /twitter.com/${tokenInfo?.twitter}`}>
+                                                                        <Twitter />
+                                                                    </a>
+                                                                </CTooltip>
+                                                            )}
+                                                            {tokenInfo?.website && (
+                                                                <CTooltip placement="bottom" content={`${tokenInfo?.name} Website`}>
+                                                                    <a style={{ display: "inline-block" }} href={tokenInfo?.website}>
+                                                                        <Globe />
+                                                                    </a>
+                                                                </CTooltip>
+                                                            )}
+                                                            {tokenInfo?.coingecko && (
+                                                                <CTooltip placement="bottom" content={`${tokenInfo?.name} Coin Gecko Listing`}>
+                                                                    <a style={{ display: "inline-block" }} href={`https://coingecko.com/en/coins/${tokenInfo.coingecko}`}>
+                                                                        <img src='https://cdn.filestackcontent.com/MKnOxRS8QjaB2bNYyfou' style={{ height: 25, width: 25 }} />
+                                                                    </a>
+                                                                </CTooltip>
+                                                            )}
+                                                        </div>
+                                                    </MenuItem>
+                                                </>}
                                         </SidebarHeader>
 
                                         {!!tokenData && !!tokenData?.priceUSD && _.isNumber(tokenData?.priceUSD) && <> <MenuItem>
@@ -442,11 +467,11 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
                             }
                         }}>
                             {quickNavOpen && <>
-                            <MenuItem><StyledInternalLink to="/dashboard">Dashboard</StyledInternalLink></MenuItem>
-                            <MenuItem><StyledInternalLink to="/swap">Swap</StyledInternalLink></MenuItem>
-                            {!!account && <MenuItem><StyledInternalLink to={`/details/${account}`}>View Your Transactions</StyledInternalLink></MenuItem>}
-                            <MenuItem><StyledInternalLink to="/fomo">Kiba Fomo</StyledInternalLink></MenuItem>
-                            <MenuItem><StyledInternalLink to="/honeypot-checker">Honeypot Checker</StyledInternalLink></MenuItem>
+                                <MenuItem><StyledInternalLink to="/dashboard">Dashboard</StyledInternalLink></MenuItem>
+                                <MenuItem><StyledInternalLink to="/swap">Swap</StyledInternalLink></MenuItem>
+                                {!!account && <MenuItem><StyledInternalLink to={`/details/${account}`}>View Your Transactions</StyledInternalLink></MenuItem>}
+                                <MenuItem><StyledInternalLink to="/fomo">Kiba Fomo</StyledInternalLink></MenuItem>
+                                <MenuItem><StyledInternalLink to="/honeypot-checker">Honeypot Checker</StyledInternalLink></MenuItem>
                             </>}
 
                             {!quickNavOpen && <MenuItem><TYPE.small>Expand the sidebar to use this feature</TYPE.small></MenuItem>}

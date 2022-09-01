@@ -1354,6 +1354,18 @@
     exec-sh "^0.3.2"
     minimist "^1.2.0"
 
+"@coreui/coreui@^4.2.1":
+  version "4.2.1"
+  resolved "https://registry.yarnpkg.com/@coreui/coreui/-/coreui-4.2.1.tgz#50e395c258a888f4ae76d4ddf82cd5656f4e554b"
+  integrity sha512-gcdinzX37nTOfMYMNkxnkeirGPB6H2NexBuekU7PZHQq1hEqor329SKRKB0g2ApcgtMlk76LkWtkwtb1H3G6Aw==
+  dependencies:
+    postcss-combine-duplicated-selectors "^10.0.3"
+
+"@coreui/react@^4.3.1":
+  version "4.3.1"
+  resolved "https://registry.yarnpkg.com/@coreui/react/-/react-4.3.1.tgz#f0d6f354c6bb28273a54d8d0ebf3f53cd20a2744"
+  integrity sha512-vCkxayuqfr1kFnkc+Jg/BMwJXG+MgBJ4pMbWdBuE06e6fr0WQZkWBC9dLL+e9qFWFZkJmNoYut3gZ2tUjd3mtw==
+
 "@csstools/convert-colors@^1.4.0":
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/@csstools/convert-colors/-/convert-colors-1.4.0.tgz#ad495dc41b12e75d588c6db8b9834f08fa131eb7"
@@ -16061,6 +16073,13 @@ postcss-colormin@^4.0.3:
     postcss "^7.0.0"
     postcss-value-parser "^3.0.0"
 
+postcss-combine-duplicated-selectors@^10.0.3:
+  version "10.0.3"
+  resolved "https://registry.yarnpkg.com/postcss-combine-duplicated-selectors/-/postcss-combine-duplicated-selectors-10.0.3.tgz#71e8b6783e99cd560cf08ba7b896ad0db318c11c"
+  integrity sha512-IP0BmwFloCskv7DV7xqvzDXqMHpwdczJa6ZvIW8abgHdcIHs9mCJX2ltFhu3EwA51ozp13DByng30+Ke+eIExA==
+  dependencies:
+    postcss-selector-parser "^6.0.4"
+
 postcss-convert-values@^4.0.1:
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/postcss-convert-values/-/postcss-convert-values-4.0.1.tgz#ca3813ed4da0f812f9d43703584e449ebe189a7f"
@@ -16583,6 +16602,14 @@ postcss-selector-parser@^6.0.0, postcss-selector-parser@^6.0.2:
   version "6.0.6"
   resolved "https://registry.yarnpkg.com/postcss-selector-parser/-/postcss-selector-parser-6.0.6.tgz#2c5bba8174ac2f6981ab631a42ab0ee54af332ea"
   integrity sha512-9LXrvaaX3+mcv5xkg5kFwqSzSH1JIObIx51PrndZwlmznwXRfxMddDvo9gve3gVR8ZTKgoFDdWkbRFmEhT4PMg==
+  dependencies:
+    cssesc "^3.0.0"
+    util-deprecate "^1.0.2"
+
+postcss-selector-parser@^6.0.4:
+  version "6.0.10"
+  resolved "https://registry.yarnpkg.com/postcss-selector-parser/-/postcss-selector-parser-6.0.10.tgz#79b61e2c0d1bfc2602d549e11d0876256f8df88d"
+  integrity sha512-IQ7TZdoaqbT+LCpShg46jnZVlhWD2w6iQYAcYXfHARZ7X1t/UGhhceQDs5X0cGqKvYlHNOuv7Oa1xmb0oQuA3w==
   dependencies:
     cssesc "^3.0.0"
     util-deprecate "^1.0.2"

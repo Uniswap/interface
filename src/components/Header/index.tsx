@@ -432,8 +432,7 @@ export default function Header() {
               pathname.startsWith('/selective-charts') ||
               pathname.startsWith('/selective-charting')
             } id={`chart-nav-link`} to={'/selective-charting'}>
-            <Trans>Charts</Trans>
-            <sup>↗</sup>
+            <Trans>Charts <sub>↗</sub></Trans>
           </StyledNavLink>
 
           <div

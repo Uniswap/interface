@@ -117,7 +117,7 @@ export const Transactions = ({transactions, loading, error, accountValue}:{trans
         )
     }, [formattedTransactions])
     return (
-        <Wrapper style={{ maxHeight: 450, overflow: 'auto' }}>
+        <Wrapper style={{ padding:3, maxHeight: 450, overflow: 'auto' }}>
             <div style={{display:'flex',justifyContent:'end', marginBottom:5}}>
                 <ButtonOutlined onClick={exportToCsv}>
                     Export to CSV    <FilePlus style={{cursor:'pointer', fontSize:20}}   />

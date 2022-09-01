@@ -1,3 +1,5 @@
+import * as ethers from 'ethers'
+
 import { ApolloClient, useQuery } from '@apollo/client'
 import { INFO_CLIENT, fetchBscTokenData, getDeltaTimestamps, useBlocksFromTimestamps, useBnbPrices, useBscTokenDataHook } from './bscUtils'
 import React, { useCallback } from 'react'
@@ -16,6 +18,7 @@ import { useKiba } from 'pages/Vote/VotePage'
 import { useTokenBalance } from 'state/wallet/hooks'
 import { useWeb3React } from '@web3-react/core'
 
+export const toChecksum = (address?: string | null) => Boolean(address) ? ethers.utils.getAddress(address as string) : ''
 export interface EventFilter {
   address?: string
   topics?: Array<string | Array<string> | null>
@@ -134,6 +137,7 @@ const TokenFields = `
   } 
 `
 export const TOKEN_DATA = (tokenAddress: string, block: any, isBnb?: boolean) => {
+  tokenAddress = tokenAddress.toLowerCase()
   const queryString = `
     ${isBnb ? BscTokenFields : TokenFields}
     query tokens {
@@ -168,6 +172,7 @@ export const TOKEN_DATA = (tokenAddress: string, block: any, isBnb?: boolean) =>
 }
 
 export const BSC_TOKEN_DATA = (tokenAddress: string, block?: string) => {
+  tokenAddress = tokenAddress.toLowerCase()
   const queryString = `
     ${TokenFields.replace('derivedETH', '').replace('txCount', '')}
     query tokens {
@@ -286,6 +291,7 @@ export async function getBlockFromTimestamp(timestamp: number) {
 
 
 export const useTokenDataHook = function (address: any, ethPrice: any, ethPriceOld: any) {
+  address = address.toLowerCase()
   const { chainId } = useActiveWeb3React()
   const [tokenData, setTokenData] = React.useState<any>()
   const prices = useBnbPrices()
@@ -312,11 +318,73 @@ export const useTokenDataHook = function (address: any, ethPrice: any, ethPriceO
   return tokenData
 }
 
+const mapTokenData = (result: { tokens: any[] }, oneDayResult: { tokens: any[] }, twoDayResult: { tokens: any[] }, ethPrice: string, ethPriceOld: string | number) => {
+  const data: any = result?.tokens?.[0], oneDayData: any = oneDayResult?.tokens?.[0], twoDayData: any = twoDayResult?.tokens?.[0]
+
+  // calculate percentage changes and daily changes
+  const [oneDayVolumeUSD, volumeChangeUSD] = get2DayPercentChange(
+    +data?.tradeVolumeUSD ?? 0,
+    +oneDayData?.tradeVolumeUSD ?? 0,
+    +twoDayData?.tradeVolumeUSD ?? 0
+  )
+
+  // calculate percentage changes and daily changes
+  const [oneDayVolumeUT, volumeChangeUT] = get2DayPercentChange(
+    +data?.untrackedVolumeUSD,
+    +oneDayData?.untrackedVolumeUSD ?? 0,
+    +twoDayData?.untrackedVolumeUSD ?? 0
+  )
+
+  // calculate percentage changes and daily changes
+  const [oneDayTxns, txnChange] = get2DayPercentChange(
+    +data?.txCount,
+    +oneDayData?.txCount ?? 0,
+    +twoDayData?.txCount ?? 0
+  )
+
+  const priceChangeUSD = getPercentChange(
+    +data?.derivedETH * (+ethPrice),
+    oneDayData?.derivedETH ? +oneDayData?.derivedETH * +ethPriceOld : 0
+  )
+
+  const currentLiquidityUSD = +data?.totalLiquidity * +ethPrice * +data?.derivedETH
+  const oldLiquidityUSD = +oneDayData?.totalLiquidity * +ethPriceOld * +oneDayData?.derivedETH
+  if (data) {
+    // set data
+    data.priceUSD = (((parseFloat(data?.derivedETH)) * (parseFloat(ethPrice))))
+    data.totalLiquidityUSD = currentLiquidityUSD
+    data.oneDayVolumeUSD = oneDayVolumeUSD
+    data.volumeChangeUSD = volumeChangeUSD
+    data.priceChangeUSD = priceChangeUSD
+    data.oneDayVolumeUT = oneDayVolumeUT
+    data.volumeChangeUT = volumeChangeUT
+    const liquidityChangeUSD = getPercentChange(
+      parseFloat(currentLiquidityUSD.toString() ?? '0'),
+      parseFloat(oldLiquidityUSD.toString() ?? '0')
+    );
+    data.liquidityChangeUSD = liquidityChangeUSD
+    data.oneDayTxns = oneDayTxns
+    data.txnChange = txnChange
+
+    data.oneDayData = oneDayData
+    data.twoDayData = twoDayData
+
+    // new tokens
+    if (!oneDayData && data) {
+      data.oneDayVolumeUSD = parseFloat(data.tradeVolumeUSD)
+      data.oneDayVolumeETH = parseFloat(data.tradeVolume) * parseFloat(data.derivedETH)
+      data.oneDayTxns = data.txCount
+    }
+  }
+
+  return data
+}
+
 export const getTokenData = async (addy: string, ethPrice: any, ethPriceOld: any, blockOne?: number, blockTwo?: number) => {
   const utcCurrentTime = moment().utc()
   const utcOneDayBack = utcCurrentTime.subtract(24, 'hours').unix()
   const utcTwoDaysBack = utcCurrentTime.subtract(48, 'hours').unix()
-  const address = addy?.toLowerCase()
+  const address = toChecksum(addy)?.toLowerCase()
   // initialize data arrays
   let data: Record<string, any> = {}
   let oneDayData: Record<string, any> = {}
@@ -435,7 +503,7 @@ const getTokenTransactions = async (allPairsFormatted: any) => {
 
 export function useTokenTransactions(tokenAddress: string, interval: null | number = null) {
   const { chainId } = useWeb3React()
-  const allPairsFormatted = usePairs(tokenAddress?.toLowerCase())
+  const allPairsFormatted = usePairs((tokenAddress))
   const tokenTxns = useQuery(FILTERED_TRANSACTIONS, {
     variables: {
       allPairs: allPairsFormatted && Array.isArray(allPairsFormatted) && allPairsFormatted.length ? [allPairsFormatted[0].id] : []
@@ -454,8 +522,8 @@ export function useTokenTransactions(tokenAddress: string, interval: null | numb
 }
 
 export const usePairs = (tokenAddress?: string) => {
-  console.log(tokenAddress)
   const defaultState: any[] = []
+  const tokenAddressChecked = toChecksum(tokenAddress)
   const [pairData, setPairData] = React.useReducer(function (state: any[], action: { type: any, payload: any }) {
     switch (action.type) {
       case "UPDATE":
@@ -467,7 +535,12 @@ export const usePairs = (tokenAddress?: string) => {
         return state;
     }
   }, defaultState)
-  const { data, loading, error } = useQuery(TOKEN_DATA(tokenAddress || '', null, false),
+  const { data, loading, error } = useQuery(
+    TOKEN_DATA(
+      tokenAddressChecked,
+      null,
+      false
+    ),
     {
       onCompleted: (params) => {
         if (params && params.pairs1 && params.pairs0 && Boolean(params.pairs1.length || params.pairs0.length)) {
@@ -476,17 +549,20 @@ export const usePairs = (tokenAddress?: string) => {
         }
       }, pollInterval: 1000000,
     })
+
   return React.useMemo(() => {
-
-
     if (data && (data?.pairs0?.length || data?.pairs1.length) && !_.isEqual([...data.pairs0, ...data.pairs1], pairData)) {
       const pairs = [...data.pairs0, ...data.pairs1];
       return pairs
     }
-    if (pairData && Array.isArray(pairData) && pairData.length) return pairData;
-    if (!tokenAddress || loading || error) return []
+    if (pairData && Array.isArray(pairData) && pairData.length) {
+      return pairData;
+    }
+    if (!tokenAddressChecked || loading || error) {
+      return []
+    }
     return data?.['pairs0'].concat(data?.['pairs1'])
-  }, [data, pairData, tokenAddress])
+  }, [data, pairData, tokenAddressChecked])
 }
 
 export const ETH_PRICE = (block?: any) => {
@@ -562,20 +638,49 @@ const getEthPrice = async () => {
 export function useTokenData(tokenAddress: string, interval: null | number = null) {
   const [tokenData, setTokenData] = React.useState<{ [address: string]: any }>({})
   const [ethPrice, ethPriceOld, ethPricePercent] = useEthPrice()
-  const intervalCallback = () => {
-    console.log(`Running interval driven data fetch..`)
-    if (tokenAddress && ethPrice && ethPriceOld) {
-      console.log(`Have necessary parameters, checking for updates..`)
-      getTokenData(tokenAddress, ethPrice, ethPriceOld).then((data) => {
-        if (!isEqual(tokenData?.[tokenAddress]?.priceUSD, data?.priceUSD)) {
-          console.log("updating token data, price changed.")
-          setTokenData({ ...tokenData, [tokenAddress]: data })
-        }
-      })
-    }
-  }
-  useInterval(intervalCallback, interval, false)
-  return tokenData?.[tokenAddress] || {}
+  const [intervalChanged, setIntervalChanged] = React.useState(false)
+  const [fetchedOnce, setFetchedOnce] = React.useState(false)
+  const [t24h, t48h] = getDeltaTimestamps()
+  const blocks = useBlocksFromTimestamps([t24h, t48h])
+  const tokenDataQ = useQuery(TOKEN_DATA(tokenAddress?.toLowerCase(), null), {
+    fetchPolicy: 'cache-and-network'
+  })
+  // const intervalCallback = () => {
+  //   console.log(`Running interval driven data fetch..`)
+  //   if (tokenAddress && ethPrice && ethPriceOld) {
+  //     console.log(`Have necessary parameters, checking for updates..`)
+  //     getTokenData(tokenAddress, ethPrice, ethPriceOld).then((data) => {
+  //       if (!isEqual(tokenData?.[tokenAddress]?.priceUSD, data?.priceUSD)) {
+  //         console.log("updating token data, price changed.")
+  //         setTokenData({ ...tokenData, [tokenAddress]: data })
+  //       }
+  //     })
+  //   }
+  // }
+  const token1DayQ = useQuery(TOKEN_DATA(tokenAddress?.toLowerCase(), blocks?.blocks?.[0]), { fetchPolicy: 'cache-and-network' })
+  const token2DayQ = useQuery(TOKEN_DATA(tokenAddress?.toLowerCase(), blocks?.blocks?.[1]), { fetchPolicy: 'cache-and-network' })
+
+  const data = React.useMemo(() => {
+    return mapTokenData(tokenDataQ.data, token1DayQ.data, token2DayQ.data, ethPrice as any, ethPriceOld as any)
+  }, [ethPrice, ethPriceOld, token1DayQ, token2DayQ, tokenDataQ])
+
+  // React.useEffect(() => {
+  //   if (!Boolean(ethPrice && ethPriceOld && tokenAddress)) {
+  //     console.info('exiting `useTokenData` effect due to missing required params.')
+  //     return
+  //   } else {
+  //     if (intervalChanged) {
+  //       console.info('Refetching tokendata in `useTokenData` at ' + interval + ' ms.')
+  //       intervalCallback()
+  //     } else if (!fetchedOnce) {
+  //       console.info('Fetching tokendata in `useTokenData` at ' + interval + ' ms.')
+  //       intervalCallback()
+  //     }
+  //   }
+
+  // }, [intervalChanged, ethPrice, ethPriceOld, fetchedOnce])
+
+  return data
 }
 /**
  * Convert a filter key to the corresponding filter
@@ -833,7 +938,7 @@ query trackerdata {
 const makeCultureString = () => {
   let string = '';
   cultureTokens.forEach((token) => {
-    string += cultureTokens[cultureTokens.length - 1].address === token.address ? `"${token.address.toLowerCase()}"` : `"${token.address.toLowerCase()}",`;
+    string += cultureTokens[cultureTokens.length - 1].address === token.address ? `"${toChecksum(token.address)}"` : `"${toChecksum(token.address)}",`;
   })
   return string.replace('""', '"');
 }
@@ -1087,8 +1192,8 @@ const USER_SELLS = gql`query sellTransactions ($user: Bytes!) { swaps(orderBy: t
 
 export const useUserSells = (account?: string | null) => {
   const { chainId } = useWeb3React()
-  const poller = useQuery(USER_SELLS, { variables: { user: account?.toLowerCase() }, pollInterval: 60000 })
-  const secondPoller = useQuery(USER_BNB_SELLS, { variables: { user: account?.toLowerCase() }, pollInterval: 60000 })
+  const poller = useQuery(USER_SELLS, { variables: { user: toChecksum(account) }, pollInterval: 60000 })
+  const secondPoller = useQuery(USER_BNB_SELLS, { variables: { user: toChecksum(account) }, pollInterval: 60000 })
   if (chainId !== 1) poller.stopPolling();
   if (chainId !== 56) secondPoller.stopPolling()
   let { data, error, loading } = poller ?? secondPoller
@@ -1117,21 +1222,21 @@ export const useTotalReflections = (account?: string | null, tokenAddress?: stri
   const token = React.useMemo(() => !tokenData || !tokenAddress ? null : new Token(1, tokenAddress as string, 9, tokenData.symbol, tokenData.name), [tokenData, tokenAddress])
   const balance = useTokenBalance(account as string, token as Token)
   const currencySold = React.useMemo(() => {
-    if (chainId === 1 || !chainId) return WETH9[1].address?.toLowerCase()
-    if (chainId === 56) return binanceTokens.wbnb.address.toLowerCase()
+    if (chainId === 1 || !chainId) return toChecksum(WETH9[1].address)
+    if (chainId === 56) return toChecksum(binanceTokens.wbnb.address)
     return ''
   }, [chainId])
   const userTxs = React.useMemo(() => !userTransactions?.data ?
     [] :
     userTransactions.data?.swaps?.filter((swap: any) => {
       return [
-        tokenAddress?.toLowerCase(),
+        toChecksum(tokenAddress),
         currencySold
       ].includes(swap?.pair?.token0?.id) &&
         [
-          tokenAddress?.toLowerCase(),
+          toChecksum(tokenAddress),
           currencySold
-        ].includes(swap?.pair?.token1?.id?.toLowerCase())
+        ].includes(toChecksum(swap?.pair?.token1?.id))
     }), [userTransactions, currencySold])
 
   const userBuys = React.useMemo(() => userTxs?.filter((swap: any) => {
@@ -1320,17 +1425,17 @@ export const useTotalKibaGains = (account?: string | null) => {
 
 export const useUserTransactions = (account?: string | null) => {
   const { chainId } = useWeb3React()
-  const sells = useUserSells(account)
+  const sells = useUserSells(toChecksum(account))
   const query = useQuery(USER_TRANSACTIONS, {
     variables: {
-      user: account ? account?.toLowerCase() : ''
+      user: account ? toChecksum(account) : ''
     },
     pollInterval: 15000
   })
 
   const bscQuery = useQuery(BNB_USER_TRANSACTIONS, {
     variables: {
-      user: account ? account.toLowerCase() : ''
+      user: account ? toChecksum(account) : ''
     },
     pollInterval: 60000
   })
@@ -1345,9 +1450,9 @@ export const useUserTransactions = (account?: string | null) => {
   const mergedData = React.useMemo(() => {
     if (chainId === 1) {
       const retval = [],
-            dataval = data || {},
-            sellsdataval = sells.data || {}
-      
+        dataval = data || {},
+        sellsdataval = sells.data || {}
+
       if (sells?.data?.swaps) {
         retval.push(...sells?.data?.swaps)
       }
@@ -1356,14 +1461,14 @@ export const useUserTransactions = (account?: string | null) => {
       }
       const uniqueSwaps = _.uniqBy(retval, swap => swap?.transaction?.id);
       const orderedSwaps = _.orderBy(uniqueSwaps, swap => new Date(+swap.transaction.timestamp * 1000), 'desc');
-      
+
       return {
         ...dataval,
         ...sellsdataval,
         swaps: orderedSwaps
       };
     } else if (chainId === 56) {
-     
+
       const retval = []
       if (sells?.data?.swaps) {
         retval.push(...sells?.data?.swaps)

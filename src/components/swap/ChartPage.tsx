@@ -8,12 +8,14 @@ import { useConvertTokenAmountToUsdString, useKiba } from 'pages/Vote/VotePage';
 import BarChartLoaderSVG from './BarChartLoader';
 import { ChartSidebar } from 'components/ChartSidebar';
 import { Dots } from './styleds';
+import { Flash_OrderBy } from 'state/data/generated';
 import { LoadingRows } from 'pages/Pool/styleds';
 import React from 'react';
 import ReactGA from 'react-ga'
 import { StyledInternalLink } from 'theme';
 import Tooltip from 'components/Tooltip';
 import _ from 'lodash';
+import axios from 'axios'
 import moment from 'moment';
 import { number } from '@lingui/core/cjs/formats';
 import styled from 'styled-components/macro';
@@ -102,18 +104,26 @@ export const fetchTokenInfo = async (chainId: number | undefined, tokenAddress: 
 }
 
 export const useTokenInfo = (chainId: number | undefined, tokenAddress: string | undefined) => {
-
     const [tokenInfo, setTokenInfo] = React.useState<TokenInfo>()
     const [etherscanTokeninfo, setEtherscanTokeninfo] = React.useState<any>({})
+    const [loading, updateLoading] = React.useState(false)
     function intervalCallback() {
+        if (loading) return;
+        updateLoading(true)
         if ((chainId === 1 || !chainId )&& tokenAddress) {
-            fetch(`https://api.ethplorer.io/getTokenInfo/${tokenAddress}?apiKey=EK-htz4u-dfTvjqu-7YmJq`)
-                .then((response) => response.json())
-                .then(setTokenInfo)
+            axios.get(`https://api.ethplorer.io/getTokenInfo/${tokenAddress}?apiKey=EK-htz4u-dfTvjqu-7YmJq`)
+            .then(response => {
+                console.log(`token_info_logs: token info response`, response.data);
+                setTokenInfo(response.data)
+            }).finally(() => {
+                updateLoading(false)
+            })
         }
     }
     React.useEffect(() => {
-        intervalCallback();
+        if (Boolean(!chainId || (chainId && chainId == 1)) && tokenAddress) {
+            intervalCallback()
+        }
     }, [chainId, tokenAddress])
     
     if (!tokenAddress) return

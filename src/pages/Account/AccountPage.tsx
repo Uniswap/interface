@@ -61,7 +61,7 @@ export const useHasAccess = (minimumTokensRequired = 1) => {
 
 export const AccountPage = () => {
     const { account, library, chainId } = useWeb3React()
-    const transactions = useUserTransactions(account)
+    const transactions = useUserTransactions(account?.toLowerCase())
     const [formattedTxns, setFormattedTxns] = React.useState<any[]>()
     const web3 = new Web3(library?.provider)
     const hasAccess = useHasAccess()
@@ -102,7 +102,7 @@ export const AccountPage = () => {
     if (!account) return null;
 
     return (
-        <DarkCard style={{ maxWidth: 850, background: '#252632', padding: 20 }}>
+        <DarkCard style={{ maxWidth: 850, background: '#252632' }}>
             <div style={{ display: 'flex', flexFlow: 'row wrap', marginBottom: 10, justifyContent: 'space-between' }}>
                 <StyledHeader style= {{fontSize:30, paddingTop: 20, paddingBottom: 20 }}>Transaction History</StyledHeader>
                 {hasAccess && <ExternalLink href={`https://etherscan.io/address/${account}`}>
@@ -130,7 +130,7 @@ export const AccountPageWithAccount = () => {
     const params = useParams<{account: string}>()
     const {account} = params;
     const {  library, chainId } = useWeb3React()
-    const transactions = useUserTransactions(account)
+    const transactions = useUserTransactions(account?.toLowerCase())
     const [formattedTxns, setFormattedTxns] = React.useState<any[]>()
     const web3 = new Web3(library?.provider)
     const hasAccess = useHasAccess()
@@ -197,3 +197,4 @@ export const AccountPageWithAccount = () => {
         </DarkCard>
     )
 }
+

@@ -86,6 +86,16 @@ const Spinner = styled.div`
 `
 
 
+const PollContainer = styled.div<{display:string}>`
+position: fixed;
+display: ${props => props.display};
+align-items: center;
+left: 0;
+bottom: 0;
+z-index:1111;  
+background: rgba(37, 38, 50,0.7);
+border-right-radius:50px;
+`
 
 
 const StyledLoader = styled(Loader)`
@@ -110,19 +120,9 @@ export default function SwapVolume() {
   prices && Array.isArray(prices) ? prices[0] as any : undefined , [prices, bnbPrices, ethPrices, chainId])
   const isChartsPage = window.location.href.indexOf('charts') > -1;
   const display = isChartsPage ? 'none' : 'block'
-  const PollContainer = styled.div`
-position: fixed;
-display: ${display};
-align-items: center;
-left: 0;
-bottom: 0;
-z-index:1111;  
-background: rgba(37, 38, 50,0.7);
-border-right-radius:50px;
-`
 
   return (
-    <PollContainer>
+    <PollContainer display={display}>
     <StyledEthPolling>
     {!prices || isNaN(+ethPrice) ? (
         <>

@@ -113,7 +113,7 @@ export const BurntKiba = ({ showDetails, style }: { showDetails?: boolean, style
             {true && (
               <div style={{width: 225, padding:'1rem', gap:5, display:'flex', alignItems:'center', flexFlow:'column wrap'}}>
                 <div style={{height:50, padding:15}}><TYPE.subHeader style={{whiteSpace:'nowrap'}}>Total Swap Volume (in {isBinance ? "BNB" : "ETH"})</TYPE.subHeader></div>
-                <p style={{ color: '#F76C1D' }}><h1 style={{ display: 'block', margin: 0, color: '#F76C1D', fontWeight: 'bold' }}>{abbreviateNumber(parseFloat(volumeInEth as string)?.toFixed(2))} Ξ </h1>   <small>({(Number(parseFloat(volumeInEth as string)?.toFixed(18)).toLocaleString())}) ETH</small></p>
+                <p style={{ color: '#F76C1D' }}><h1 style={{ display: 'block', margin: 0, color: '#F76C1D', fontWeight: 'bold' }}>{abbreviateNumber(parseFloat(volumeInEth as string)?.toFixed(2))} {!isBinance ? <>Ξ</> : <>BNB</>} </h1>   <small style={{}}>({(Number(parseFloat(volumeInEth as string)?.toFixed(18)).toLocaleString())}) {isBinance ? 'BNB': 'ETH'}</small></p>
 
                 <p><Badge> Total Volume Value
                   {!isBinance && <>{volumeInUsd && volumeInUsd !== 0 && volumeInUsdFormatted && <> (${volumeInUsdFormatted} USD)</>}</>}

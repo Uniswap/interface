@@ -93,6 +93,7 @@ const AppWrapper = styled.div`
   height: 150vh; 
   width: 100%;
   background: url(${bg4}) ;
+
   align-items: flex-start;
   > * {
     font-family: 'Open Sans' !important;
