@@ -84,8 +84,7 @@ const enhancedApi = generatedApi.enhanceEndpoints({
               const currencyId = buildCurrencyId(_chainId, _address)
               if (coinId && currencyId) {
                 formattedData.currencyIdToCoinId[currencyId.toLocaleLowerCase()] = coinId // mimic CG lowercase address
-                formattedData.coinIdToCurrencyIds[coinId] = {}
-                formattedData.coinIdToCurrencyIds[coinId][_chainId] = currencyId
+                formattedData.coinIdToCurrencyIds[coinId] = { [_chainId]: currencyId }
               }
             }
           }

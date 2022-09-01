@@ -41,11 +41,10 @@ export function useCurrencyIdFromCoingeckoId(coingeckoId?: string): NullUndefine
   return useMemo(() => {
     if (isLoading || !coingeckoId) return undefined
 
-    // always default to mainnet
-    if (coinIdToCurrencyIds[coingeckoId][ChainId.Mainnet])
-      return coinIdToCurrencyIds[coingeckoId][ChainId.Mainnet]
+    const currencyIds = coinIdToCurrencyIds[coingeckoId]
+    if (!currencyIds) return undefined
 
-    // if mainnet address not provided, then return any
-    return Object.values(coinIdToCurrencyIds[coingeckoId])[0]
+    // always default to mainnet. if mainnet address not provided, then return any
+    return currencyIds[ChainId.Mainnet] ?? Object.values(currencyIds)[0]
   }, [coinIdToCurrencyIds, coingeckoId, isLoading])
 }

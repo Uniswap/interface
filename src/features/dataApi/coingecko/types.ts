@@ -61,8 +61,8 @@ export interface CoingeckoListCoin {
   platforms: { [name: string]: NullUndefined<Address> }
 }
 export type CoinIdAndCurrencyIdMappings = {
-  coinIdToCurrencyIds: { [coinId: string]: ChainIdTo<CurrencyId> }
-  currencyIdToCoinId: { [currencyId: CurrencyId]: string }
+  coinIdToCurrencyIds: { [coinId: string]: ChainIdTo<CurrencyId> | undefined }
+  currencyIdToCoinId: { [currencyId: CurrencyId]: string | undefined }
 }
 
 /**  Coin info representation in Coingecko Search lists */
