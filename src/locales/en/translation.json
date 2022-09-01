@@ -78,6 +78,8 @@
   "Tokens ({{totalCount}})": "Tokens ({{totalCount}})",
   "Your balance on other chains": "Your balance on other chains",
   "Your balance": "Your balance",
+  "{{owner}}'s balance on other chains": "{{owner}}'s balance on other chains",
+  "{{owner}}'s balance": "{{owner}}'s balance",
   "Switch Network": "Switch Network",
   "Market cap": "Market cap",
   "52W low": "52W low",

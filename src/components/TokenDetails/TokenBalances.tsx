@@ -4,6 +4,8 @@ import { CurrencyLogo } from 'src/components/CurrencyLogo'
 import { Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { PortfolioBalance } from 'src/features/dataApi/types'
+import { AccountType } from 'src/features/wallet/accounts/types'
+import { useActiveAccount, useDisplayName } from 'src/features/wallet/hooks'
 import { formatNumberBalance, formatPrice, formatUSDPrice } from 'src/utils/format'
 
 /**
@@ -19,15 +21,28 @@ export function TokenBalances({
 }) {
   const { t } = useTranslation()
 
+  const activeAccount = useActiveAccount()
+  const accountType = activeAccount?.type
+  const displayName = useDisplayName(activeAccount?.address)?.name
+  const isReadonly = accountType === AccountType.Readonly
+
   if (!currentChainBalance && !otherChainBalances) return null
 
   return (
     <Flex bg="backgroundContainer" borderRadius="sm" gap="lg" mx="md" p="md">
-      {currentChainBalance && <CurrentChainBalance balance={currentChainBalance} />}
+      {currentChainBalance && (
+        <CurrentChainBalance
+          balance={currentChainBalance}
+          displayName={displayName}
+          isReadonly={isReadonly}
+        />
+      )}
       {otherChainBalances && (
         <Flex>
           <Text color="textSecondary" variant="subheadSmall">
-            {t('Your balance on other chains')}
+            {isReadonly
+              ? t("{{owner}}'s balance on other chains", { owner: displayName })
+              : t('Your balance on other chains')}
           </Text>
           {otherChainBalances.map((balance) => {
             return <OtherChainBalance key={balance.currency.chainId} balance={balance} />
@@ -38,14 +53,22 @@ export function TokenBalances({
   )
 }
 
-export function CurrentChainBalance({ balance }: { balance: PortfolioBalance }) {
+export function CurrentChainBalance({
+  balance,
+  isReadonly,
+  displayName,
+}: {
+  balance: PortfolioBalance
+  isReadonly: boolean
+  displayName?: string
+}) {
   const { t } = useTranslation()
   const { currency } = balance
 
   return (
     <Flex gap="xs">
       <Text color="textSecondary" variant="subheadSmall">
-        {t('Your balance')}
+        {isReadonly ? t("{{owner}}'s balance", { owner: displayName }) : t('Your balance')}
       </Text>
       <Flex row alignItems="center" justifyContent="space-between">
         <Text variant="headlineMedium">
