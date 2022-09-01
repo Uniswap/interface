@@ -33,6 +33,7 @@ export default function Widget({ defaultToken }: WidgetProps) {
       <SwapWidget
         hideConnectionUI
         jsonRpcUrlMap={RPC_URLS}
+        disableBranding
         routerUrl={WIDGET_ROUTER_URL}
         width={WIDGET_WIDTH}
         locale={locale}
