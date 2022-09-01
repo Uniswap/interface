@@ -8,6 +8,7 @@ import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 import { useUserAddedTokens } from 'state/user/hooks'
 
 import useLast from '../../hooks/useLast'
+import { useWindowSize } from '../../hooks/useWindowSize'
 import Modal from '../Modal'
 import { CurrencySearch } from './CurrencySearch'
 import { ImportList } from './ImportList'
@@ -97,11 +98,17 @@ export default memo(function CurrencySearchModal({
     [setModalView, prevView]
   )
 
+  const { height } = useWindowSize()
   // change min height if not searching
   let minHeight: number | undefined = 80
+  let maxHeight: number | undefined = 80
   let content = null
   switch (modalView) {
     case CurrencyModalView.search:
+      if (height) {
+        minHeight = Math.min(Math.round((680 / height) * 100), 80)
+        maxHeight = minHeight
+      }
       content = (
         <CurrencySearch
           isOpen={isOpen}
@@ -167,7 +174,7 @@ export default memo(function CurrencySearchModal({
       break
   }
   return (
-    <Modal isOpen={isOpen} onDismiss={onDismiss} maxHeight={80} minHeight={minHeight}>
+    <Modal isOpen={isOpen} onDismiss={onDismiss} maxHeight={maxHeight} minHeight={minHeight}>
       {content}
     </Modal>
   )
