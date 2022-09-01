@@ -505,7 +505,7 @@ export default function LoadedRow({
         tokenInfo={
           <ClickableName>
             <LogoContainer>
-              <CurrencyLogo currency={currency} />
+              <CurrencyLogo currency={currency} symbol={tokenSymbol} />
               <L2NetworkLogo networkUrl={L2Icon} />
             </LogoContainer>
             <TokenInfoCell>
