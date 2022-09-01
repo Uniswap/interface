@@ -27,13 +27,13 @@ export enum Rounding {
 
 const initCodeHash = Web3.utils.keccak256(artifact.bytecode)
 
-export const FACTORY_ADDRESS = '0xA79247252904A8b81C43274F6C8CdDa998454e96'
+export const FACTORY_ADDRESS = '0x51698f3f51BA023c2E3064852E9db6523a1782Ad'
 
 export const INIT_CODE_HASH = initCodeHash
 
-export const ROUTER_ADDRESS = '0x9A3beC01c52840985951c05e2e2b2D3CbC2B39E9'
+export const ROUTER_ADDRESS = '0x548001f9a76aCC1e8ba5aAf86f9777d414b02bbf'
 
-export const WETH_ADDRESS = '0x011449F8DB24D2E54E39Eb5Fd6a18a043fbFd54a'
+export const WETH_ADDRESS = '0x3D810bB0feDdCE224E3E1903B4629AB113EF9523'
 
 export const MINIMUM_LIQUIDITY = JSBI.BigInt(1000)
 

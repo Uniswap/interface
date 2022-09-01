@@ -45,7 +45,8 @@ const StyledDialogContent = styled(({ minHeight, maxHeight, mobile, isOpen, ...r
     border: 1px solid rgba(255, 255, 255, 0.6);
     backdrop-filter: blur(8px);
     border-radius: 1.6rem;
-    max-width: 420px;
+    // max-width: 420px;
+    max-width: 22rem;
     ${({ maxHeight }) =>
       maxHeight &&
       css`

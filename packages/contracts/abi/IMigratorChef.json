@@ -1,0 +1,21 @@
+[
+  {
+    "inputs": [
+      {
+        "internalType": "contract ForBoringUseIERC20",
+        "name": "token",
+        "type": "address"
+      }
+    ],
+    "name": "migrate",
+    "outputs": [
+      {
+        "internalType": "contract ForBoringUseIERC20",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]
