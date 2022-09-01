@@ -199,6 +199,23 @@ describe('Router02', function () {
     })
 
     describe('core func', function () {
+
+        it("addLiquidity",async function(){
+            let ans = await loadFixture(deployContracts)
+            let args = [
+                [ans.weth.address, ans.tt.address],
+                expandTo18Decimals(1),
+                expandTo18Decimals(1),
+                1,
+                1,
+                ans.signer.address,
+                (Math.floor(Date.now() / 1000) + 365 * 24 * 60 * 60 * 1000)
+            ]
+            console.log("reserve before",await ans.pair.getReserves())
+            await ans.router.addLiquidity(...args)
+            // check liquidity
+             console.log("reserve after",await ans.pair.getReserves())
+        })
         it("swapExactTokensForTokens", async function () {
             const ans = await loadFixture(deployContracts);
             const signer = (await ethers.getSigners())[0]
@@ -524,9 +541,63 @@ describe('Router02', function () {
 
         })
 
-        // it("removeLiquidityWithPermit",async function(){
-        //
-        // })
+        it("removeLiquidityWithPermit",async function(){
+            let ans = await loadFixture(deployContracts)
+            const { chainId } = await ethers.provider.getNetwork();
+            // cancle approve
+            await ans.pair.approve(ans.router.address,0)
+            console.log("approve 0 to router",await ans.pair.allowance(ans.signer.address,ans.router.address))
+            const domain = {
+                name: 'Teleswap V2',
+                version: '1',
+                chainId: chainId,
+                verifyingContract:ans.pair.address ,
+            };
+            //Permit(address owner,address spender,uint256 value,uint256 nonce,uint256 deadline)
+            const types = {
+                Permit: [
+                    {name: 'owner', type: 'address'},
+                    {name: 'spender', type: 'address'},
+                    {name: 'value', type: 'uint256'},
+                    {name: 'nonce', type: 'uint256'},
+                    {name: 'deadline', type: 'uint256'},
+                ]
+            };
+            // The data to sign
+            let dl = getDeadline()
+            let burnAmt =(await ans.pair.balanceOf(ans.signer.address)).div(2)
+            const value = {
+                owner: ans.signer.address,
+                spender: ans.router.address,
+                value: burnAmt,
+                nonce: await ans.pair.nonces(ans.signer.address),
+                deadline: dl,
+            };
+            let signature = await ans.signer._signTypedData(domain, types, value);
+            let {v,r,s} = await ethers.utils.splitSignature(signature)
+
+
+            let args = [
+                getRoute(ans,false),
+                burnAmt,
+                0,0,
+                ans.signer.address,
+                dl,
+                false,
+                [v,r,s]
+            ]
+            console.log("before remove",await ans.pair.balanceOf(ans.signer.address))
+            // Transfer(from, address(0), value);
+            let tx = await ans.router.removeLiquidityWithPermit(...args)
+
+             expect(tx)
+                .to
+                .emit(ans.pair.address,"Transfer")
+                .withArgs(ans.pair.address,ethers.constants.AddressZero,burnAmt)
+
+
+
+        })
     })
 
 
@@ -565,4 +636,9 @@ async function getApprovalDigest(
             ]
         )
     )
+}
+
+
+function getRoute(ans, stable){
+  return [ans.weth.address,ans.tt.address,stable]
 }

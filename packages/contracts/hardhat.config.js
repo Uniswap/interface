@@ -3,6 +3,7 @@ require("@nomicfoundation/hardhat-toolbox");
 require('@openzeppelin/hardhat-upgrades')
 require('hardhat-abi-exporter');
 require('./tasks/upgrade')
+require('./tasks/call')
 
 
 module.exports = {
