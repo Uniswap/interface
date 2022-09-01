@@ -15,13 +15,9 @@
     "contracts"
   ],
   "dependencies": {
-    "@openzeppelin/contracts": "3.4.0",
     "@uniswap/lib": "4.0.1-alpha"
   },
   "devDependencies": {
-    "eip-712": "^1.0.0",
-    "@nomiclabs/hardhat-waffle": "^2.0.1",
-    "@nomiclabs/hardhat-web3": "^2.0.0",
     "@ethersproject/providers": "^5.6.8",
     "@nomicfoundation/hardhat-chai-matchers": "^1.0.3",
     "@nomicfoundation/hardhat-network-helpers": "^1.0.4",
@@ -47,11 +43,7 @@
     "solidity-coverage": "^0.7.21",
     "ts-node": "^8.5.4",
     "typechain": "^8.1.0",
-    "typescript": "^4.3",
-    "@openzeppelin/hardhat-defender": "^1.5.0",
-    "@typechain/ethers-v5": "^10.1.0",
-    "hardhat-contract-sizer": "^2.0.3",
-    "web3": "^1.5.2"
+    "typescript": "^3.7.3"
   },
   "scripts": {
     "lint": "yarn prettier test.old/*.ts --check",
