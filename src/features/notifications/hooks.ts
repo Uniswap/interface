@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react'
+import { useFocusEffect } from '@react-navigation/core'
+import { useState } from 'react'
 import { checkNotifications } from 'react-native-permissions'
 import { useAppSelector } from 'src/app/hooks'
 import { makeSelectAddressNotificationCount } from 'src/features/notifications/selectors'
@@ -17,7 +18,7 @@ export function useSelectAddressNotificationCount(address: Address | null) {
 export function useNotificationOSPermissionsEnabled() {
   const [notificationPermissionsEnabled, setNotificationPermissionsEnabled] =
     useState<NotificationPermission>(NotificationPermission.Loading)
-  useEffect(() => {
+  useFocusEffect(() => {
     const checkNotificationPermissions = async () => {
       const { status } = await checkNotifications()
       const permission =
@@ -25,7 +26,7 @@ export function useNotificationOSPermissionsEnabled() {
       setNotificationPermissionsEnabled(permission)
     }
     checkNotificationPermissions()
-  }, [])
+  })
 
   useAppStateTrigger('background', 'active', () => {
     const checkNotificationPermissions = async () => {

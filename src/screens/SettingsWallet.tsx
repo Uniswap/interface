@@ -1,6 +1,7 @@
+import { useFocusEffect } from '@react-navigation/core'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { useTheme } from '@shopify/restyle'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ListRenderItemInfo, SectionList } from 'react-native'
 import { SvgProps } from 'react-native-svg'
@@ -44,7 +45,6 @@ import {
 import { setShowSmallBalances } from 'src/features/wallet/walletSlice'
 import { showNotificationSettingsAlert } from 'src/screens/Onboarding/NotificationsSetupScreen'
 import { opacify } from 'src/utils/colors'
-import { useAppStateTrigger } from 'src/utils/useAppStateTrigger'
 import { Screens } from './Screens'
 
 type Props = NativeStackScreenProps<SettingsStackParamList, Screens.SettingsWallet>
@@ -72,17 +72,22 @@ export function SettingsWallet({
 
   const notificationOSPermission = useNotificationOSPermissionsEnabled()
   const notificationsEnabledOnFirebase = useSelectAccountNotificationSetting(address)
-  // Can't control switch logic directly from hook outputs because it makes the switch UI choppy
+
   const [notificationSwitchEnabled, setNotificationSwitchEnabled] = useState<boolean>(
-    notificationsEnabledOnFirebase && notificationOSPermission === NotificationPermission.Enabled
+    notificationsEnabledOnFirebase
   )
 
   // Need to trigger a state update when the user backgrounds the app to enable notifications and then returns to this screen
-  useAppStateTrigger('background', 'active', () => {
-    setNotificationSwitchEnabled(
-      notificationOSPermission === NotificationPermission.Enabled && notificationsEnabledOnFirebase
+  useFocusEffect(
+    useCallback(
+      () =>
+        setNotificationSwitchEnabled(
+          notificationsEnabledOnFirebase &&
+            notificationOSPermission === NotificationPermission.Enabled
+        ),
+      [notificationOSPermission, notificationsEnabledOnFirebase]
     )
-  })
+  )
 
   const [showRemoveWalletModal, setShowRemoveWalletModal] = useState(false)
   // cleanup modal on exit
