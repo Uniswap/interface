@@ -57,7 +57,7 @@ export const MASTERCHEFV2_ADDRESSBOOK: { [chainId in ChainId]?: string } = {
 }
 
 export const MINICHEF_ADDRESS: { [chainId in ChainId]?: string } = {
-  [ChainId.OP_GOERLI]: '0x32aB42f082D0522Ac445010D6DB48b3c69A8044b',
+  [ChainId.OP_GOERLI]: '0x1cBc94a262e2a578B97aF4Fd47f6851cC76349d0',
 }
 
 export const SUSHI_ADDRESS: { [chainId in ChainId]?: string } = {
