@@ -17,12 +17,7 @@ import { CHAINID_TO_FARMING_CONFIG } from 'constants/farming.config'
 // import { OutlineCard } from '../../components/Card'
 
 const PageWrapper = styled(AutoColumn)`
-  max-width: 640px;
-  width: 100%;
-`
-
-const TopSection = styled(AutoColumn)`
-  max-width: 720px;
+  max-width: 1132px;
   width: 100%;
 `
 
@@ -33,6 +28,9 @@ const PoolSection = styled.div`
   row-gap: 15px;
   width: 100%;
   justify-self: center;
+  background: #000;
+  padding: 48px;
+  color: #39E1BA;
 `
 
 const DataRow = styled(RowBetween)`
@@ -57,7 +55,7 @@ export default function FarmList() {
 
   return (
     <PageWrapper gap="lg" justify="center">
-      <TopSection gap="md">
+      {/* <TopSection gap="md">
         <DataCard>
           <CardBGImage />
           <CardNoise />
@@ -83,11 +81,16 @@ export default function FarmList() {
           <CardBGImage />
           <CardNoise />
         </DataCard>
-      </TopSection>
+      </TopSection> */}
 
-      <AutoColumn gap="lg" style={{ width: '100%', maxWidth: '720px' }}>
-        <DataRow style={{ alignItems: 'baseline' }}>
-          <TYPE.mediumHeader style={{ marginTop: '0.5rem' }}>Participating pools</TYPE.mediumHeader>
+      <AutoColumn gap="lg" style={{ width: '100%' }}>
+        <DataRow style={{ alignItems: 'baseline', flexWrap: 'wrap' }}>
+          <TYPE.largeHeader color="#FFF" style={{ marginTop: '0.5rem' }}>
+            Farming Pools
+          </TYPE.largeHeader>
+          <TYPE.mediumHeader color="#FFF" style={{ marginTop: '12px', width: '100%' }}>
+            Stake LP tokens to earn rewards
+          </TYPE.mediumHeader>
           {/* <Countdown exactEnd={stakingInfos?.[0]?.periodFinish} /> */}
         </DataRow>
 
