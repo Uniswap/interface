@@ -6,7 +6,6 @@ import {
   TransactionType as WidgetTransactionType,
 } from '@uniswap/widgets'
 import { useWeb3React } from '@web3-react/core'
-import { V3_SWAP_DEFAULT_SLIPPAGE } from 'hooks/useAutoSlippageTolerance'
 import { useCallback, useMemo } from 'react'
 import { useTransactionAdder } from 'state/transactions/hooks'
 import {
@@ -15,15 +14,12 @@ import {
   TransactionType as AppTransactionType,
   WrapTransactionInfo,
 } from 'state/transactions/types'
-import { useUserSlippageTolerance } from 'state/user/hooks'
 import { currencyId } from 'utils/currencyId'
 
 /** Integrates the Widget's transactions, showing the widget's transactions in the app. */
 export function useSyncWidgetTransactions() {
   const { chainId } = useWeb3React()
   const addTransaction = useTransactionAdder()
-  const [appSlippage] = useUserSlippageTolerance()
-  const allowedSlippage = appSlippage === 'auto' ? V3_SWAP_DEFAULT_SLIPPAGE : appSlippage
 
   const onTxSubmit = useCallback(
     (_hash: string, transaction: Transaction<TransactionInfo>) => {
@@ -41,7 +37,7 @@ export function useSyncWidgetTransactions() {
           chainId,
         } as WrapTransactionInfo)
       } else if (type === WidgetTransactionType.SWAP) {
-        const { trade, tradeType } = transaction.info
+        const { slippageTolerance, trade, tradeType } = transaction.info
         const baseTxInfo = {
           type: AppTransactionType.SWAP,
           tradeType,
@@ -51,7 +47,7 @@ export function useSyncWidgetTransactions() {
         if (tradeType === TradeType.EXACT_OUTPUT) {
           addTransaction(response, {
             ...baseTxInfo,
-            maximumInputCurrencyAmountRaw: trade.maximumAmountIn(allowedSlippage).quotient.toString(),
+            maximumInputCurrencyAmountRaw: trade.maximumAmountIn(slippageTolerance).quotient.toString(),
             outputCurrencyAmountRaw: trade.outputAmount.quotient.toString(),
             expectedInputCurrencyAmountRaw: trade.inputAmount.quotient.toString(),
           } as ExactOutputSwapTransactionInfo)
@@ -60,12 +56,12 @@ export function useSyncWidgetTransactions() {
             ...baseTxInfo,
             inputCurrencyAmountRaw: trade.inputAmount.quotient.toString(),
             expectedOutputCurrencyAmountRaw: trade.outputAmount.quotient.toString(),
-            minimumOutputCurrencyAmountRaw: trade.minimumAmountOut(allowedSlippage).quotient.toString(),
+            minimumOutputCurrencyAmountRaw: trade.minimumAmountOut(slippageTolerance).quotient.toString(),
           } as ExactInputSwapTransactionInfo)
         }
       }
     },
-    [addTransaction, allowedSlippage, chainId]
+    [addTransaction, chainId]
   )
 
   const txHandlers: TransactionEventHandlers = useMemo(() => ({ onTxSubmit }), [onTxSubmit])
