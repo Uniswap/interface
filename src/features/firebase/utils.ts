@@ -27,16 +27,6 @@ export const getFirestoreUidRef = (
     .collection(address.toLowerCase())
     .doc('firebase')
 
-export const getFirestorePushTokenRef = (
-  firebaseApp: ReactNativeFirebase.FirebaseApp,
-  address: Address
-) =>
-  firestore(firebaseApp)
-    .collection(ADDRESS_DATA_COLLECTION)
-    .doc('address_push_token_mapping')
-    .collection(address.toLowerCase())
-    .doc('onesignal')
-
 export const getFirestoreMetadataRef = (
   firebaseApp: ReactNativeFirebase.FirebaseApp,
   address: Address,
