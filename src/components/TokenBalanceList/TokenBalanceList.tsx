@@ -2,6 +2,7 @@ import { Currency } from '@uniswap/sdk-core'
 import React, { ReactElement, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FlatList, ListRenderItemInfo, SectionList } from 'react-native'
+import { useAppSelector } from 'src/app/hooks'
 import { useHomeStackNavigation } from 'src/app/navigation/types'
 import { Inset } from 'src/components/layout'
 import { BaseCard } from 'src/components/layout/BaseCard'
@@ -13,6 +14,7 @@ import { useSortedPortfolioBalancesList } from 'src/features/dataApi/balances'
 import { PortfolioBalance } from 'src/features/dataApi/types'
 import { SectionName } from 'src/features/telemetry/constants'
 import { Trace } from 'src/features/telemetry/Trace'
+import { selectHideSmallBalances } from 'src/features/wallet/selectors'
 import { Screens } from 'src/screens/Screens'
 import { toSupportedChainId } from 'src/utils/chainId'
 import { currencyId } from 'src/utils/currencyId'
@@ -49,7 +51,8 @@ export function TokenBalanceList({
   view,
   count,
 }: TokenBalanceListProps) {
-  const balances = useSortedPortfolioBalancesList(owner, true)
+  const hideSmallBalances = useAppSelector(selectHideSmallBalances)
+  const balances = useSortedPortfolioBalancesList(owner, true, hideSmallBalances)
   const { t } = useTranslation()
   const navigation = useHomeStackNavigation()
 

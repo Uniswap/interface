@@ -1,6 +1,7 @@
 import { Currency } from '@uniswap/sdk-core'
 import React, { Suspense, useCallback } from 'react'
 import { ListRenderItemInfo } from 'react-native'
+import { useAppSelector } from 'src/app/hooks'
 import { HomeStackScreenProp, useHomeStackNavigation } from 'src/app/navigation/types'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { BackButton } from 'src/components/buttons/BackButton'
@@ -16,6 +17,7 @@ import { TotalBalance } from 'src/features/balances/TotalBalance'
 import { useSortedPortfolioBalancesList } from 'src/features/dataApi/balances'
 import { PortfolioBalance } from 'src/features/dataApi/types'
 import { useActiveAccountAddressWithThrow } from 'src/features/wallet/hooks'
+import { selectHideSmallBalances } from 'src/features/wallet/selectors'
 import { Screens } from 'src/screens/Screens'
 import { currencyId } from 'src/utils/currencyId'
 
@@ -39,10 +41,10 @@ export function PortfolioTokensScreen({
 function PortfolioTokensContent({ owner }: { owner?: string }) {
   // TODO: Figure out how to make nav available across stacks
   const navigation = useHomeStackNavigation()
+  const hideSmallBalances = useAppSelector(selectHideSmallBalances)
   const accountAddress = useActiveAccountAddressWithThrow()
   const activeAddress = owner ?? accountAddress
-
-  const balances = useSortedPortfolioBalancesList(activeAddress, true)
+  const balances = useSortedPortfolioBalancesList(activeAddress, true, hideSmallBalances)
 
   const renderItem = useCallback(
     ({ item }: ListRenderItemInfo<PortfolioBalance>) => (

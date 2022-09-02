@@ -8,6 +8,7 @@ import { PortfolioBalance } from 'src/features/dataApi/types'
 import { balancesQuery } from 'src/features/dataApi/__generated__/balancesQuery.graphql'
 import { useAllCurrencies } from 'src/features/tokens/useTokens'
 import { useActiveAccountAddressWithThrow } from 'src/features/wallet/hooks'
+import { HIDE_SMALL_USD_BALANCES_THRESHOLD } from 'src/features/wallet/walletSlice'
 import { fromGraphQLChain } from 'src/utils/chainId'
 import { currencyId, CurrencyId } from 'src/utils/currencyId'
 
@@ -88,17 +89,21 @@ export function usePortfolioBalances(
 /** Returns portfolio balances for a given address sorted by USD value. */
 export function useSortedPortfolioBalancesList(
   address: Address,
-  onlyKnownCurrencies?: boolean
+  onlyKnownCurrencies?: boolean,
+  hideSmallBalances?: boolean
 ): PortfolioBalance[] {
   const balancesById = usePortfolioBalances(address, onlyKnownCurrencies)
 
-  return useMemo(
-    () =>
-      !balancesById
-        ? EMPTY_ARRAY
-        : Object.values(balancesById).sort((a, b) => b.balanceUSD - a.balanceUSD),
-    [balancesById]
-  )
+  return useMemo(() => {
+    if (!balancesById) return EMPTY_ARRAY
+
+    const balances = hideSmallBalances
+      ? Object.values(balancesById).filter(
+          (balance) => balance.balanceUSD > HIDE_SMALL_USD_BALANCES_THRESHOLD
+        )
+      : Object.values(balancesById)
+    return balances.sort((a, b) => b.balanceUSD - a.balanceUSD)
+  }, [balancesById, hideSmallBalances])
 }
 
 /** Helper hook to retrieve balance for a single currency for the active account. */
