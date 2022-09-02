@@ -23,10 +23,11 @@ const Section = styled(AutoColumn)`
   padding: 24px;
 `
 
-const BottomSection = styled(Section)`
+const BottomSection = styled(Section)`  
   background-color: rgba(5, 5, 14, 0.8);
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
+  padding-top: 0;
 `
 
 const ConfirmedIcon = styled(ColumnCenter)`
@@ -178,12 +179,12 @@ export function ConfirmationModalContent({
       <Section>
         <RowBetween>
           <Text
-            color={'white'}
+            color={'#FFFFFF'}
             fontFamily="Dela Gothic One"
             fontStyle="normal"
             fontWeight={400}
-            fontSize="28px"
-            lineHeight="36px"
+            fontSize=".9rem"
+            lineHeight="1.2rem"
           >
             {title}
           </Text>

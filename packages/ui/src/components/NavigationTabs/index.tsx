@@ -48,8 +48,10 @@ const StyledNavLink = styled(NavLink).attrs({
 `
 
 const ActiveText = styled.div`
-  font-weight: 500;
-  font-size: 20px;
+  font-family: 'Dela Gothic One';
+  font-weight: 400;
+  font-size: .8rem;
+  color: #FFFFFF;
 `
 
 const StyledArrowLeft = styled(ArrowLeft)`

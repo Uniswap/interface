@@ -6,7 +6,7 @@ import namor from 'namor'
 import { useTable, usePagination } from 'react-table'
 
 import { SwapPoolTabs } from '../../components/NavigationTabs'
-import FullPositionCard from '../../components/PositionCard'
+import FullPositionCard, { LiquidityCard } from '../../components/PositionCard'
 import { useTokenBalancesWithLoadingIndicator } from '../../state/wallet/hooks'
 import { StyledInternalLink, ExternalLink, TYPE, HideSmall } from '../../theme'
 import { Text, Flex, Box } from 'rebass'
@@ -23,6 +23,8 @@ import { CardSection, DataCard, CardNoise, CardBGImage } from '../../components/
 import { useStakingInfo } from '../../state/stake/hooks'
 import { BIG_INT_ZERO } from '../../constants'
 import useThemedContext from 'hooks/useThemedContext'
+import DoubleCurrencyLogoHorizontal from 'components/DoubleLogo'
+import { unwrappedToken } from 'utils/wrappedCurrency'
 
 const PageWrapper = styled(AutoColumn)`
   max-width: 640px;
@@ -116,10 +118,82 @@ const HeaderItem = styled(Box)`
   white-space: nowrap;
 `
 
+const StyledTableView = styled(Box)`
+  width: 39rem;
+  height: 12rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: .8rem;
+  box-sizing: border-box;
+  padding: 1.6rem;
+  >thead {
+    display: inline-block;
+    width: 100%;
+    margin-bottom: .6rem;
+    >tr {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      
+      >th {
+        overflow: hidden;
+        font-weight: 600;
+        font-size: .4rem;
+        color: rgba(255, 255, 255, 0.6);
+        flex: 1;
+        text-align: left;
+        &:nth-of-type(2) {
+          flex: 2;
+        }
+        &:nth-of-type(3) {
+          flex: 3;
+        }
+        &:nth-of-type(5) {
+          flex: 3;
+        }
+        &:nth-of-type(6) {
+          flex: 2;
+        }
+      }
+      
+    }
+  }
+  >tbody {
+    display: inline-block;
+    width: 100%;
+    max-height: 9rem;
+    overflow: scroll;
+    >tr {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: .6rem;
+      >td {
+        overflow: hidden;
+        font-weight: 500;
+        font-size: .5rem;
+        color: #FFFFFF;
+        flex: 1;
+        text-align: left;
+        &:nth-of-type(2) {
+          flex: 2;
+        }
+        &:nth-of-type(3) {
+          flex: 3;
+        }
+        &:nth-of-type(5) {
+          flex: 3;
+        }
+        &:nth-of-type(6) {
+          flex: 2;
+        }
+      }
+    }
+  }
+`
+
 export default function Pool() {
   const theme = useThemedContext()
   const { account } = useActiveWeb3React()
-
   // fetch the user's balances of all tracked V2 LP tokens
   const trackedTokenPairs = useTrackedTokenPairs()
   const tokenPairsWithLiquidityTokens = useMemo(
@@ -245,24 +319,49 @@ export default function Pool() {
               </EmptyProposals>
             ) : allV2PairsWithLiquidity?.length > 0 || stakingPairs?.length > 0 ? (
               <>
-                <ButtonSecondary>
+                <StyledTableView>
+                  <thead>
+                    <tr>
+                      <th>Pool</th>
+                      <th>Token</th>
+                      <th>Amount</th>
+                      <th>Value</th>
+                      <th>Unclaimed Earnings</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {
+                      v2PairsWithoutStakedAmount.map((v2Pair, index) =>
+                        <LiquidityCard key={index}
+                          pair={v2Pair}
+                          needBgColor={false}
+                          border={`1px solid rgba(255, 255, 255, 0.2)!important`}
+                          borderRadius={`24px`}>
+                        </LiquidityCard>
+                      )
+                    }
+                  </tbody>
+                </StyledTableView>
+
+                {/* <ButtonSecondary>
                   <RowBetween>
                     <ExternalLink href={'https://uniswap.info/account/' + account}>
                       Account analytics and accrued fees
                     </ExternalLink>
                     <span> ↗</span>
                   </RowBetween>
-                </ButtonSecondary>
-                {v2PairsWithoutStakedAmount.map((v2Pair) => (
+                </ButtonSecondary> */}
+                {/* {v2PairsWithoutStakedAmount.map((v2Pair) => (
                   <YourLiquidityGrid key={v2Pair.liquidityToken.address}>
                     <FullPositionCard
                       pair={v2Pair}
                       needBgColor={false}
-                      // border={`1px solid rgba(255, 255, 255, 0.2)!important`}
-                      // borderRadius={`24px`}
+                      border={`1px solid rgba(255, 255, 255, 0.2)!important`}
+                      borderRadius={`24px`}
                     />
                   </YourLiquidityGrid>
-                ))}
+                ))} */}
                 {stakingPairs.map(
                   (stakingPair, i) =>
                     stakingPair[1] && ( // skip pairs that arent loaded
@@ -278,22 +377,12 @@ export default function Pool() {
                 )}
               </>
             ) : (
-              <EmptyProposals>
-                <TYPE.body color={theme.text3} textAlign="center">
-                  No liquidity found.
+                    <EmptyProposals>
+                      <TYPE.body color={theme.text3} textAlign="center">
+                        No liquidity found.
                 </TYPE.body>
-              </EmptyProposals>
-            )}
-            <YourLiquidityGrid>
-              {/*   <Table /> */}
-              <HeaderItem>Pool</HeaderItem>
-              <HeaderItem>Token</HeaderItem>
-              <HeaderItem>Amount</HeaderItem>
-              <HeaderItem>Value</HeaderItem>
-              <HeaderItem>Unclaimed Earnings</HeaderItem>
-              <HeaderItem></HeaderItem>
-              {}
-            </YourLiquidityGrid>
+                    </EmptyProposals>
+                  )}
             <TitleRow style={{ marginTop: '1rem' }} padding={'0'}>
               <HideSmall>
                 <TYPE.mediumHeader
@@ -318,16 +407,16 @@ export default function Pool() {
               <HeaderItem>Pools</HeaderItem>
               <HeaderItem>TVL</HeaderItem>
               <HeaderItem></HeaderItem>
-              {}
+              { }
             </TopPoolsGrid>
-            {/*  <AutoColumn justify={'center'} gap="md">
+            <AutoColumn justify={'center'} gap="md">
               <Text textAlign="center" fontSize={14} style={{ padding: '.5rem 0 .5rem 0' }}>
                 Don't see a pool you joined?{' '}
                 <StyledInternalLink id="import-pool-link" to="/find">
                   Import it.
                 </StyledInternalLink>
               </Text>
-            </AutoColumn> */}
+            </AutoColumn>
           </AutoColumn>
         </AutoColumn>
       </PageWrapper>
