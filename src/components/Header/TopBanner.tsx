@@ -1,4 +1,4 @@
-import { rgba } from 'polished'
+// import { rgba } from 'polished'
 import { useEffect, useState } from 'react'
 import { X } from 'react-feather'
 import { useLocalStorage, useMedia } from 'react-use'
@@ -11,7 +11,7 @@ import { ExternalLink } from 'theme'
 const BannerWrapper = styled.div`
   width: 100%;
   padding: 10px 12px 10px 20px;
-  background: ${({ theme }) => rgba(theme.warning, 0.7)};
+  background: ${({ theme }) => theme.red};
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -41,19 +41,38 @@ const Content = styled.div`
   `}
 `
 
+// const farmBanner = {
+//   localStorageKey: 'farm-issue',
+//   start: 'Thu, 17 Mar 2022 00:00:00 GMT',
+//   end: 'Thu, 20 Mar 2024 00:00:00 GMT',
+//   text: (
+//     <Text marginLeft="4px" marginRight="1rem" lineHeight="20px" color="#fff" fontSize="14px" flex={1}>
+//       Important Announcement: If you’re currently participating in our Elastic Farms on Polygon & Avalanche, please read
+//       this{' '}
+//       <ExternalLink
+//         href="https://blog.kyber.network/important-community-update-about-kyberswap-elastic-farms-4f69d7ada1e8"
+//         style={{ color: '#fff', fontWeight: 500, textDecoration: 'underline' }}
+//       >
+//         announcement!
+//       </ExternalLink>
+//     </Text>
+//   ),
+// }
+
 const banner = {
-  localStorageKey: 'farm-issue',
+  localStorageKey: 'xss-issue',
   start: 'Thu, 17 Mar 2022 00:00:00 GMT',
   end: 'Thu, 20 Mar 2024 00:00:00 GMT',
   text: (
     <Text marginLeft="4px" marginRight="1rem" lineHeight="20px" color="#fff" fontSize="14px" flex={1}>
-      Important Announcement: If you’re currently participating in our Elastic Farms on Polygon & Avalanche, please read
-      this{' '}
+      Urgent Announcement: We identified a front-end issue with KyberSwap that asked a few users to approve a malicious
+      contract on Ethereum and Polygon networks. The source of the issue was identified & fixed immediately. A detailed
+      analysis of the incident together with the next steps can be found{' '}
       <ExternalLink
-        href="https://blog.kyber.network/important-community-update-about-kyberswap-elastic-farms-4f69d7ada1e8"
+        href="https://blog.kyber.network/notice-of-exploit-of-kyberswap-frontend-963aa8febd6a"
         style={{ color: '#fff', fontWeight: 500, textDecoration: 'underline' }}
       >
-        announcement!
+        here.
       </ExternalLink>
     </Text>
   ),
