@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { getConnection } from 'connection/utils'
+import { getConnection, getConnectionName, getIsMetaMask } from 'connection/utils'
 import { getChainInfoOrDefault } from 'constants/chainInfo'
 import { SupportedChainId } from 'constants/chains'
 import useCopyClipboard from 'hooks/useCopyClipboard'
@@ -14,6 +14,7 @@ import { useCurrencyBalanceString } from 'state/connection/hooks'
 import { useAppDispatch } from 'state/hooks'
 import { updateSelectedWallet } from 'state/user/reducer'
 import styled from 'styled-components/macro'
+import { removeConnectedWallet } from 'state/wallets/reducer'
 
 import { shortenAddress } from '../../nft/utils/address'
 import { useToggleModal } from '../../state/application/hooks'
@@ -99,18 +100,20 @@ const AuthenticatedHeader = () => {
   } = getChainInfoOrDefault(chainId ? chainId : SupportedChainId.MAINNET)
 
   const unclaimedAmount: CurrencyAmount<Token> | undefined = useUserUnclaimedAmount(account)
+  const walletType = getConnectionName(getConnection(connector).type, getIsMetaMask())
   const isUnclaimed = useUserHasAvailableClaim(account)
   const connectionType = getConnection(connector).type
   const nativeCurrency = useNativeCurrency()
   const nativeCurrencyPrice = useStablecoinPrice(nativeCurrency ?? undefined) || 0
   const openClaimModal = useToggleModal(ApplicationModal.ADDRESS_CLAIM)
-  const disconnect = useCallback(() => {
+  const disconnect = () => {
     if (connector && connector.deactivate) {
       connector.deactivate()
     }
     connector.resetState()
     dispatch(updateSelectedWallet({ wallet: undefined }))
-  }, [connector, dispatch])
+    dispatch(removeConnectedWallet({ account, walletType }))
+  }
 
   const amountUSD = useMemo(() => {
     const price = parseFloat(nativeCurrencyPrice.toFixed(5))
