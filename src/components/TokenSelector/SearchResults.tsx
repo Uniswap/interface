@@ -3,6 +3,7 @@ import Fuse from 'fuse.js'
 import React, { useCallback, useEffect, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ListRenderItemInfo, SectionList, StyleSheet } from 'react-native'
+import { useAppSelector } from 'src/app/hooks'
 import { Separator } from 'src/components/layout/Separator'
 import { filter } from 'src/components/TokenSelector/filter'
 import { useCommonBases, useFavoriteCurrencies } from 'src/components/TokenSelector/hooks'
@@ -13,9 +14,12 @@ import { ChainId } from 'src/constants/chains'
 import { EMPTY_ARRAY } from 'src/constants/misc'
 import { usePortfolioBalances } from 'src/features/dataApi/balances'
 import { usePopularTokens } from 'src/features/dataApi/topTokens'
+import { PortfolioBalance } from 'src/features/dataApi/types'
 import { ElementName } from 'src/features/telemetry/constants'
 import { useCombinedTokenWarningLevelMap } from 'src/features/tokens/useTokenWarningLevel'
 import { useActiveAccountWithThrow } from 'src/features/wallet/hooks'
+import { selectHideSmallBalances } from 'src/features/wallet/selectors'
+import { HIDE_SMALL_USD_BALANCES_THRESHOLD } from 'src/features/wallet/walletSlice'
 import { differenceWith } from 'src/utils/array'
 import { currencyId } from 'src/utils/currencyId'
 import { useDebounce } from 'src/utils/timing'
@@ -70,15 +74,24 @@ export function useTokenSectionsByVariation(
 ): TokenSection[] {
   const { t } = useTranslation()
   const activeAccount = useActiveAccountWithThrow()
+  const hideSmallBalances = useAppSelector(selectHideSmallBalances)
+
   const popularTokens = usePopularTokens()
   const portfolioBalancesById = usePortfolioBalances(activeAccount.address, false)
-  const portfolioBalances = useMemo(
-    () =>
-      !portfolioBalancesById
-        ? EMPTY_ARRAY
-        : Object.values(portfolioBalancesById).sort((a, b) => b.balanceUSD - a.balanceUSD),
-    [portfolioBalancesById]
-  )
+  const portfolioBalances: PortfolioBalance[] = useMemo(() => {
+    if (!portfolioBalancesById) return EMPTY_ARRAY
+
+    const allPortfolioBalances: PortfolioBalance[] = Object.values(portfolioBalancesById).sort(
+      (a, b) => b.balanceUSD - a.balanceUSD
+    )
+
+    return hideSmallBalances
+      ? allPortfolioBalances.filter(
+          (portfolioBalance) => portfolioBalance.balanceUSD > HIDE_SMALL_USD_BALANCES_THRESHOLD
+        )
+      : allPortfolioBalances
+  }, [portfolioBalancesById, hideSmallBalances])
+
   const favoriteCurrencies = useFavoriteCurrencies()
   const commonBaseCurrencies = useCommonBases(chainFilter)
 
@@ -90,12 +103,18 @@ export function useTokenSectionsByVariation(
         }
         return 0
       })
-      .map(createEmptyBalanceOption)
-  }, [popularTokens])
+      .map((currency) => {
+        const id = currencyId(currency)
+        return portfolioBalancesById?.[id] ?? createEmptyBalanceOption(currency)
+      })
+  }, [popularTokens, portfolioBalancesById])
 
   const favoritesWithoutBalances = useMemo(() => {
-    return favoriteCurrencies.map(createEmptyBalanceOption)
-  }, [favoriteCurrencies])
+    return favoriteCurrencies.map((currency) => {
+      const id = currencyId(currency)
+      return portfolioBalancesById?.[id] ?? createEmptyBalanceOption(currency)
+    })
+  }, [favoriteCurrencies, portfolioBalancesById])
 
   const commonBases = useMemo(() => {
     return commonBaseCurrencies.map((currency) => {
@@ -106,7 +125,12 @@ export function useTokenSectionsByVariation(
 
   return useMemo(() => {
     if (variation === TokenSelectorVariation.BalancesOnly) {
-      return [{ title: t('Your tokens'), data: portfolioBalances }]
+      return [
+        {
+          title: t('Your tokens'),
+          data: portfolioBalances,
+        },
+      ]
     }
 
     if (variation === TokenSelectorVariation.BalancesAndPopular) {
