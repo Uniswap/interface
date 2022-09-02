@@ -92,7 +92,6 @@ const Navbar = () => {
               </Box>
               <Box display={{ sm: 'none', lg: 'flex' }}>
                 <ChainSwitcher />
-                <div>yo</div>
               </Box>
 
               <Web3Status />
