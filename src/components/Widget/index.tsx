@@ -28,10 +28,6 @@ export default function Widget({ defaultToken }: WidgetProps) {
   const { settings } = useSyncWidgetSettings()
   const { transactions } = useSyncWidgetTransactions()
 
-  // console.log('provider')
-  // console.log(provider)
-  // console.log('---')
-
   return (
     <>
       <SwapWidget
