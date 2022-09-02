@@ -1,5 +1,5 @@
 import graphql from 'babel-plugin-relay/macro'
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { fetchQuery } from 'react-relay'
 
 import type { Chain, TokenPriceAllQuery } from './__generated__/TokenPriceAllQuery.graphql'
@@ -102,18 +102,15 @@ export function useTokenPriceQuery(address: string, chain: Chain, timePeriod: Ti
   const [isLoading, setIsLoading] = useState(!prices)
 
   /* To be called every time the data is successfully queried */
-  const updatePrices = useCallback(
-    (data: TokenPriceSingleQuery['response']) => {
-      const priceData = extractPrices(data)
-      if (priceData) {
-        TokenAPICache.setPriceHistory(priceData, address, timePeriod)
-        setPrices(priceData)
-      }
-    },
-    [timePeriod, address]
-  )
+  const updatePrices = (data: TokenPriceSingleQuery['response']) => {
+    const priceData = extractPrices(data)
+    if (priceData) {
+      TokenAPICache.setPriceHistory(priceData, address, timePeriod)
+      setPrices(priceData)
+    }
+  }
 
-  const fetchData = useCallback(() => {
+  const fetchData = () => {
     fetchQuery<TokenPriceSingleQuery>(environment, query, {
       contract: {
         address,
@@ -126,8 +123,7 @@ export function useTokenPriceQuery(address: string, chain: Chain, timePeriod: Ti
       error: setError,
       complete: () => setIsLoading(false),
     })
-  }, [setIsLoading, address, chain, timePeriod, updatePrices, setError])
-
+  }
   useEffect(() => {
     const cached = TokenAPICache.checkPriceHistory(address, timePeriod)
     if (cached) {
