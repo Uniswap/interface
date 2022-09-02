@@ -54,8 +54,6 @@ const Wrapper = styled(AutoColumn)<{ showBackground: boolean; bgColor: any }>`
 const TopSection = styled.div`
   display: flex;
   align-items: center;
-  padding: 1rem;
-  z-index: 1;
   ${({ theme }) => theme.mediaWidth.upToSmall`
     grid-template-columns: 48px 1fr 96px;
   `};
