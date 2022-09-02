@@ -100,14 +100,13 @@ export default memo(function CurrencySearchModal({
 
   const { height } = useWindowSize()
   // change min height if not searching
-  let minHeight: number | undefined = 80
-  let maxHeight: number | undefined = 80
+  let modalHeight: number | undefined = 80
   let content = null
   switch (modalView) {
     case CurrencyModalView.search:
       if (height) {
-        minHeight = Math.min(Math.round((680 / height) * 100), 80)
-        maxHeight = minHeight
+        // Converts pixel units to vh for Modal component
+        modalHeight = Math.min(Math.round((680 / height) * 100), 80)
       }
       content = (
         <CurrencySearch
@@ -126,7 +125,7 @@ export default memo(function CurrencySearchModal({
       )
       break
     case CurrencyModalView.tokenSafety:
-      minHeight = undefined
+      modalHeight = undefined
       if (tokenSafetyFlag === TokenSafetyVariant.Enabled && warningToken) {
         content = (
           <TokenSafety
@@ -140,7 +139,7 @@ export default memo(function CurrencySearchModal({
       break
     case CurrencyModalView.importToken:
       if (importToken) {
-        minHeight = undefined
+        modalHeight = undefined
         if (tokenSafetyFlag === TokenSafetyVariant.Enabled) {
           showTokenSafetySpeedbump(importToken)
         }
@@ -156,7 +155,7 @@ export default memo(function CurrencySearchModal({
       }
       break
     case CurrencyModalView.importList:
-      minHeight = 40
+      modalHeight = 40
       if (importList && listURL) {
         content = <ImportList list={importList} listURL={listURL} onDismiss={onDismiss} setModalView={setModalView} />
       }
@@ -174,7 +173,7 @@ export default memo(function CurrencySearchModal({
       break
   }
   return (
-    <Modal isOpen={isOpen} onDismiss={onDismiss} maxHeight={maxHeight} minHeight={minHeight}>
+    <Modal isOpen={isOpen} onDismiss={onDismiss} maxHeight={modalHeight} minHeight={modalHeight}>
       {content}
     </Modal>
   )
