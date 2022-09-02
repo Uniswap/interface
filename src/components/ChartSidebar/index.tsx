@@ -82,6 +82,7 @@ const Wrapper = styled.div`
 
 
 type ChartSidebarProps = {
+    tokenCurrency?:Currency | null;
     token: {
         name: string
         symbol: string
@@ -105,13 +106,13 @@ type ChartSidebarProps = {
     tokenInfo?:any
 }
 const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
-    const { token, holdings, screenerToken, tokenData, chainId, collapsed, onCollapse, loading, tokenInfo } = props
+    const { token, holdings, tokenCurrency: _tokenCurrency, screenerToken, tokenData, chainId, collapsed, onCollapse, loading, tokenInfo } = props
 
     //state
     const [componentLoading, setComponentLoading] = React.useState(loading)
     const [statsOpen, setStatsOpen] = React.useState(true)
     const [quickNavOpen, setQuickNavOpen] = React.useState(false)
-    const tokenCurrency = token && token.decimals && token.address ? new Token(chainId ?? 1, token.address, +token.decimals, token.symbol, token.name) : {} as Token
+    const tokenCurrency =  _tokenCurrency ? _tokenCurrency :  token && token.decimals && token.address ? new Token(chainId ?? 1, token.address, +token.decimals, token.symbol, token.name) : {} as Token
     const [swapOpen, setSwapOpen] = React.useState(false)
 
     const toggleSwapOpen = (swapOpen: boolean) => {

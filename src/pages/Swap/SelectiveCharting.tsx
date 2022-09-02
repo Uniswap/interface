@@ -35,6 +35,7 @@ import DoubleCurrencyLogo from "components/DoubleLogo";
 import Moment from "./Moment";
 import QuestionHelper from "components/QuestionHelper";
 import React from "react";
+import ReactGA from 'react-ga'
 import Toggle from "components/Toggle";
 import { TopTokenHolders } from "components/TopTokenHolders/TopTokenHolders";
 import TradingViewWidget from "react-tradingview-widget";
@@ -99,7 +100,8 @@ const StyledDiv = styled.div`
     cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
     opacity: ${(props) => (props.disabled ? 0.5 : 1)};
     &:hover {
-      color: #eee;
+      color: #eee !important;
+  
       transition: ease all 0.1s;
       cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
     }
@@ -238,7 +240,13 @@ const StyledDiv = styled.div`
               summary: `Viewing ${ref.current.name} token chart`,
             },
           ]);
-  
+          
+          ReactGA.event({
+              category: "Charts",
+              action: `View`,
+              label: `${ref.current.name}:${ref.current.symbol}`
+          })
+
           setTimeout(() => {
             setLoadingNewData(false);
             window.scrollTo({ top: 0 });
@@ -518,96 +526,99 @@ const StyledDiv = styled.div`
   
     const SocialsMemo = React.useMemo(
       function () {
-        let { twitter, website, coingecko } = tokenInfo;
-        if (params?.tokenSymbol?.toLowerCase() == "kiba") {
-          twitter = "KibaInuWorld";
-          website = "https://kibainu.org";
-          coingecko = "kiba-inu";
-        }
-        return (
-          <React.Fragment>
-            <SidebarHeader>
-              <TYPE.small
+        if (tokenInfo) {
+          let { twitter, website, coingecko } = tokenInfo;
+          if (params?.tokenSymbol?.toLowerCase() == "kiba") {
+            twitter = "KibaInuWorld";
+            website = "https://kibainu.org";
+            coingecko = "kiba-inu";
+          }
+          return (
+            <React.Fragment>
+              <SidebarHeader>
+                <TYPE.small
+                  style={{
+                    marginBottom: 3,
+                    borderBottom: `1px solid #444`,
+                  }}
+                >
+                  {" "}
+                  {tokenInfo?.symbol} Socials
+                </TYPE.small>
+              </SidebarHeader>
+              <MenuItem
                 style={{
-                  marginBottom: 3,
-                  borderBottom: `1px solid #444`,
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
                 }}
               >
-                {" "}
-                {tokenInfo?.symbol} Socials
-              </TYPE.small>
-            </SidebarHeader>
-            <MenuItem
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-              }}
-            >
-              <div
-                style={{ display: "flex", alignItems: "center", columnGap: 10 }}
-              >
-                {twitter ? (
-                  <CTooltip
-                    placement="bottom"
-                    content={`${tokenInfo?.name} Twitter`}
-                  >
-                    <a
-                      style={{ display: "inline-block" }}
-                      href={`https://twitter.com/${twitter}`}
+                <div
+                  style={{ display: "flex", alignItems: "center", columnGap: 10 }}
+                >
+                  {twitter ? (
+                    <CTooltip
+                      placement="bottom"
+                      content={`${tokenInfo?.name} Twitter`}
                     >
-                      <StyledTwitter />
-                    </a>
-                  </CTooltip>
-                ) : (
-                  <CTooltip
-                    placement="bottom"
-                    content={`Unable to find ${tokenInfo?.name} twitter`}
-                  >
-                    <span style={{ display: "inline-block" }}>
-                      <StyledTwitter disabled />
-                    </span>
-                  </CTooltip>
-                )}
-                {website ? (
-                  <CTooltip
-                    placement="bottom"
-                    content={`${tokenInfo?.name} Website`}
-                  >
-                    <a style={{ display: "inline-block" }} href={website}>
-                      <StyledGlobe />
-                    </a>
-                  </CTooltip>
-                ) : (
-                  <CTooltip
-                    placement="bottom"
-                    content={`Unable to find ${tokenInfo?.name} website`}
-                  >
-                    <span style={{ display: "inline-block" }}>
-                      <StyledGlobe disabled />
-                    </span>
-                  </CTooltip>
-                )}
-                {coingecko && (
-                  <CTooltip
-                    placement="bottom"
-                    content={`${tokenInfo?.name} Coin Gecko Listing`}
-                  >
-                    <a
-                      style={{ display: "inline-block" }}
-                      href={`https://coingecko.com/en/coins/${coingecko}`}
+                      <a
+                        style={{ display: "inline-block" }}
+                        href={`https://twitter.com/${twitter}`}
+                      >
+                        <StyledTwitter />
+                      </a>
+                    </CTooltip>
+                  ) : (
+                    <CTooltip
+                      placement="bottom"
+                      content={`Unable to find ${tokenInfo?.name} twitter`}
                     >
-                      <img
-                        src="https://cdn.filestackcontent.com/MKnOxRS8QjaB2bNYyfou"
-                        style={{ height: 25, width: 25 }}
-                      />
-                    </a>
-                  </CTooltip>
-                )}
-              </div>
-            </MenuItem>
-          </React.Fragment>
-        );
+                      <span style={{ display: "inline-block" }}>
+                        <StyledTwitter disabled />
+                      </span>
+                    </CTooltip>
+                  )}
+                  {website ? (
+                    <CTooltip
+                      placement="bottom"
+                      content={`${tokenInfo?.name} Website`}
+                    >
+                      <a style={{ display: "inline-block" }} href={website}>
+                        <StyledGlobe />
+                      </a>
+                    </CTooltip>
+                  ) : (
+                    <CTooltip
+                      placement="bottom"
+                      content={`Unable to find ${tokenInfo?.name} website`}
+                    >
+                      <span style={{ display: "inline-block" }}>
+                        <StyledGlobe disabled />
+                      </span>
+                    </CTooltip>
+                  )}
+                  {coingecko && (
+                    <CTooltip
+                      placement="bottom"
+                      content={`${tokenInfo?.name} Coin Gecko Listing`}
+                    >
+                      <a
+                        style={{ display: "inline-block" }}
+                        href={`https://coingecko.com/en/coins/${coingecko}`}
+                      >
+                        <img
+                          src="https://cdn.filestackcontent.com/MKnOxRS8QjaB2bNYyfou"
+                          style={{ height: 25, width: 25 }}
+                        />
+                      </a>
+                    </CTooltip>
+                  )}
+                </div>
+              </MenuItem>
+            </React.Fragment>
+          );
+        }
+        return null
       },
       [hasSocials, tokenInfo, params.tokenSymbol]
     );
@@ -627,6 +638,7 @@ const StyledDiv = styled.div`
           {hasSelectedData && (
             <div>
               <ChartSidebar
+                tokenCurrency={mainnetCurrency}
                 holdings={holdings}
                 loading={loadingNewData}
                 collapsed={collapsed}
@@ -1278,7 +1290,8 @@ const StyledDiv = styled.div`
               text={
                 <>
                   Shows advanced stats regarding transactions including detailed
-                  buy / sell counts and volume for different time ranges over the past 24hrs.
+                  buy / sell counts and volume for different time ranges over the
+                  past 24hrs.
                 </>
               }
             />
@@ -1324,7 +1337,7 @@ const StyledDiv = styled.div`
                         : "1px solid #444",
                   }}
                 >
-                  <StyledDiv style={{ fontSize:12, color: "burntorange" }}>
+                  <StyledDiv style={{ fontSize: 12, color: "burntorange" }}>
                     {getLabel(key)}
                   </StyledDiv>
                   <div
@@ -1333,12 +1346,16 @@ const StyledDiv = styled.div`
                     {Object.keys(tokenData.txns[key]).map((subKey) => (
                       <TYPE.white key={subKey} textAlign={"center"}>
                         <StyledDiv
-                          style={{ color: subKey == "sells" ? "#f33645" : "#079a81" }}
+                          style={{
+                            color: subKey == "sells" ? "#f33645" : "#079a81",
+                          }}
                         >
                           {subKey}
                         </StyledDiv>
                         <span
-                          style={{ color: subKey == "sells" ? "#f33645" : "#079a81" }}
+                          style={{
+                            color: subKey == "sells" ? "#f33645" : "#079a81",
+                          }}
                         >
                           {tokenData.txns[key][subKey]}
                         </span>
@@ -1395,7 +1412,7 @@ const StyledDiv = styled.div`
     }) => {
       const { symbol, tokenSymbolForChart, pairData } = props;
       const chartKey = React.useMemo(() => {
-        if (symbol && symbol == "ETH") {
+    if (symbol && (symbol == "ETH" || symbol == "WETH")) {
           return "UNISWAP:WETHUSDT";
         }
   
