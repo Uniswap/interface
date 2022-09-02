@@ -14,13 +14,15 @@ export default function ListLogo({
   style,
   size = '24px',
   alt,
+  symbol,
 }: {
   logoURI: string
   size?: string
   style?: React.CSSProperties
   alt?: string
+  symbol?: string
 }) {
   const srcs: string[] = useHttpLocations(logoURI)
 
-  return <StyledListLogo alt={alt} size={size} srcs={srcs} style={style} />
+  return <StyledListLogo alt={alt} size={size} symbol={symbol} srcs={srcs} style={style} />
 }
