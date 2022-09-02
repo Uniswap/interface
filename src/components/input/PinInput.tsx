@@ -6,9 +6,10 @@ interface PinInputProps {
   length: number
   setValue: (newPin: string) => void
   value: string
+  disabled?: boolean
 }
 
-export default function PinInput({ length, setValue, value }: PinInputProps) {
+export default function PinInput({ length, setValue, value, disabled }: PinInputProps) {
   return (
     <Flex flex={1} justifyContent="space-between">
       <Flex centered flex={1}>
@@ -26,7 +27,7 @@ export default function PinInput({ length, setValue, value }: PinInputProps) {
           ))}
         </Flex>
       </Flex>
-      <DecimalPad hideDecimal setValue={setValue} value={value} />
+      <DecimalPad hideDecimal disabled={disabled} setValue={setValue} value={value} />
     </Flex>
   )
 }

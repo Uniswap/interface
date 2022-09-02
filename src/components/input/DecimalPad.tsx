@@ -15,36 +15,54 @@ interface DecimalPadProps {
   hideDecimal?: boolean
   setValue: (newValue: string) => void
   value?: string
+  disabled?: boolean
 }
 
-export function DecimalPad({ setValue, value = '', hideDecimal = false }: DecimalPadProps) {
+export function DecimalPad({
+  setValue,
+  value = '',
+  hideDecimal = false,
+  disabled = false,
+}: DecimalPadProps) {
   const keys: KeyProps[] = useMemo(() => {
     return [
-      { label: '1', action: 'insert', align: 'flex-start', paddingTop: 'sm' },
-      { label: '2', action: 'insert', align: 'center', paddingTop: 'sm' },
-      { label: '3', action: 'insert', align: 'flex-end', paddingTop: 'sm' },
-      { label: '4', action: 'insert', align: 'flex-start' },
-      { label: '5', action: 'insert', align: 'center' },
-      { label: '6', action: 'insert', align: 'flex-end' },
-      { label: '7', action: 'insert', align: 'flex-start' },
-      { label: '8', action: 'insert', align: 'center' },
-      { label: '9', action: 'insert', align: 'flex-end' },
+      {
+        label: '1',
+        action: 'insert',
+        align: 'flex-start',
+        paddingTop: 'sm',
+        disabled: () => disabled,
+      },
+      { label: '2', action: 'insert', align: 'center', paddingTop: 'sm', disabled: () => disabled },
+      {
+        label: '3',
+        action: 'insert',
+        align: 'flex-end',
+        paddingTop: 'sm',
+        disabled: () => disabled,
+      },
+      { label: '4', action: 'insert', align: 'flex-start', disabled: () => disabled },
+      { label: '5', action: 'insert', align: 'center', disabled: () => disabled },
+      { label: '6', action: 'insert', align: 'flex-end', disabled: () => disabled },
+      { label: '7', action: 'insert', align: 'flex-start', disabled: () => disabled },
+      { label: '8', action: 'insert', align: 'center', disabled: () => disabled },
+      { label: '9', action: 'insert', align: 'flex-end', disabled: () => disabled },
       {
         label: '.',
         action: 'insert',
-        disabled: (v: string) => v.includes('.'),
+        disabled: (v: string) => v.includes('.') || disabled,
         hidden: hideDecimal,
         align: 'flex-start',
       },
-      { label: '0', action: 'insert', align: 'center' },
+      { label: '0', action: 'insert', align: 'center', disabled: () => disabled },
       {
         label: '←',
         action: 'deleteLast',
-        disabled: (v: string) => v.length === 0,
+        disabled: (v: string) => v.length === 0 || disabled,
         align: 'flex-end',
       },
     ]
-  }, [hideDecimal])
+  }, [disabled, hideDecimal])
   return (
     <AnimatedBox flexDirection="row" flexWrap="wrap" px="md">
       {keys.map((key, i) =>

@@ -18,12 +18,17 @@ type Props = NativeStackScreenProps<
   OnboardingScreens.RestoreCloudBackupPin
 >
 
+const MAX_WRONG_ATTEMPTS = 3
+const RETRY_DELAY = 120 * 1000
+
 export function RestoreCloudBackupPinScreen({ navigation, route: { params } }: Props) {
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
 
   const [enteredPin, setEnteredPin] = useState('')
   const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined)
+
+  const [wrongAttemptCount, setWrongAttemptCount] = useState(0)
 
   useEffect(() => {
     if (enteredPin.length !== PIN_LENGTH) return
@@ -43,6 +48,7 @@ export function RestoreCloudBackupPinScreen({ navigation, route: { params } }: P
       } catch (error) {
         const err = error as Error
         setErrorMessage(err.message)
+        setWrongAttemptCount((prev) => prev + 1)
       }
     }
 
@@ -50,10 +56,28 @@ export function RestoreCloudBackupPinScreen({ navigation, route: { params } }: P
     setEnteredPin('')
   }, [dispatch, enteredPin, navigation, params])
 
+  const isTemporaryDisabled = wrongAttemptCount === MAX_WRONG_ATTEMPTS
+
+  useEffect(() => {
+    if (isTemporaryDisabled) {
+      setErrorMessage(
+        t('You’ve entered the incorrect PIN too many times. Please try again in 2 minutes')
+      )
+      setTimeout(() => {
+        setWrongAttemptCount(0)
+        setErrorMessage(undefined)
+      }, RETRY_DELAY)
+    }
+  }, [isTemporaryDisabled, t])
+
   return (
     <OnboardingScreen
-      subtitle={t('This PIN is required to recover your backed up recovery phrase from iCloud.')}
-      title={t('Enter your iCloud backup PIN')}>
+      subtitle={
+        !isTemporaryDisabled
+          ? t('This PIN is required to recover your backed up recovery phrase from iCloud.')
+          : undefined
+      }
+      title={t(isTemporaryDisabled ? 'Attempts disabled' : 'Enter your iCloud backup PIN')}>
       <Box minHeight={30}>
         {errorMessage && (
           <Text color="accentFailure" textAlign="center" variant="body">
@@ -62,6 +86,7 @@ export function RestoreCloudBackupPinScreen({ navigation, route: { params } }: P
         )}
       </Box>
       <PinInput
+        disabled={isTemporaryDisabled}
         length={PIN_LENGTH}
         setValue={(newValue: string) => {
           setErrorMessage(undefined)
