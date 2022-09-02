@@ -127,18 +127,17 @@ function useAvatarFromNFT(
       fetch(http)
         .then((res) => res.json())
         .then(({ image }) => {
-          const updatedWithImage = {
-            ...avatarAddressMap,
+          setAvatarAddressMap((prevState) => ({
+            ...prevState,
             [address]: image,
-          }
-          setAvatarAddressMap(updatedWithImage)
+          }))
         })
         .catch()
         .finally(() => {
           setLoading(false)
         })
     }
-  }, [address, avatarAddressMap, http])
+  }, [address, http])
 
   const avatar = useMemo(() => {
     if (!address) {
