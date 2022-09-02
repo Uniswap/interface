@@ -55,6 +55,29 @@ export const useTokenHolderCount = (address: string, chainId?:number) => {
     return data;
 }
 
+type EtherscanTokenInfo = {
+    contractAddress:string
+    tokenName:string
+    symbol: string
+    divisor: string
+    tokenType: string
+    totalSupply: string
+    blueCheckmark: string
+    description?: string
+    website?:string
+    email?:string
+    blog?:string
+    reddit?:string
+    facebook?:string
+    twitter?:string
+    github?:string
+    telegram?:string
+    wechat?:string
+    linkedin?:string
+    discord?:string
+    tokenPriceUSD?:string
+}
+
 type TokenInfo =
     {
         address: string,
@@ -89,6 +112,14 @@ type TokenInfo =
         twitter?: string;
         lastUpdated: string | number
     }
+
+export const getEtherscanTokenInfo = async (tokenAddress: string) => {
+    const result = await axios.get(`https://api.etherscan.io/api?module=token&action=tokeninfo&contractaddress=${tokenAddress}&apikey=2SIRTH18CHU6HM22AGRF1XE9M7AKDR9PM7 `)
+    console.log(`etherscan token info response:`, result.data)
+    return result.data
+}
+
+
 
 export const fetchTokenInfo = async (chainId: number | undefined, tokenAddress: string | undefined) => {
     if (!chainId || !tokenAddress) return
@@ -125,10 +156,10 @@ export const useTokenInfo = (chainId: number | undefined, tokenAddress: string |
     const [tokenInfo, setTokenInfo] = React.useState<TokenInfo>()
     const [etherscanTokeninfo, setEtherscanTokeninfo] = React.useState<any>({})
     const [loading, updateLoading] = React.useState(false)
-    function intervalCallback() {
+    const handleE = (e:any) => console.error(e) 
+    const intervalCallback = React.useCallback(function () {
         if (loading) return;
         updateLoading(true)
-        if ((chainId === 1 || !chainId )&& tokenAddress) {
             axios.get(`https://api.ethplorer.io/getTokenInfo/${tokenAddress}?apiKey=EK-htz4u-dfTvjqu-7YmJq`)
             .then(response => {
                 console.log(`token_info_logs: token info response`, response.data);
@@ -136,8 +167,8 @@ export const useTokenInfo = (chainId: number | undefined, tokenAddress: string |
             }).finally(() => {
                 updateLoading(false)
             })
-        }
-    }
+    }, [tokenAddress, loading])
+
     React.useEffect(() => {
         if (Boolean(!chainId || (chainId && chainId == 1)) && tokenAddress) {
             intervalCallback()

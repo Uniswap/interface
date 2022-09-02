@@ -5,7 +5,7 @@ import {
     Globe,
     TrendingDown,
     TrendingUp,
-    Twitter,
+    Twitter
 } from "react-feather";
 import { Currency, Token } from "@uniswap/sdk-core";
 import { DarkCard, LightCard } from "components/Card";
@@ -42,6 +42,7 @@ import TradingViewWidget from "react-tradingview-widget";
 import _ from "lodash";
 import { abbreviateNumber } from "components/BurntKiba";
 import { darken } from "polished";
+import { isAddress } from "utils";
 import { isMobile } from "react-device-detect";
 import { useBscTokenTransactions } from "state/logs/bscUtils";
 import { useConvertTokenAmountToUsdString } from "pages/Vote/VotePage";
@@ -137,8 +138,11 @@ const StyledDiv = styled.div`
       [mainnetCurrency, chainId, prebuilt]
     );
     const tokenAddressSupplied = React.useMemo(
-      () => toChecksum(params?.tokenAddress),
-      [params]
+      () => ref?.current?.address && isAddress(ref?.current?.address) &&
+            ref.current?.address != params?.tokenAddress ? 
+            toChecksum(ref.current?.address) :
+            toChecksum(params?.tokenAddress),
+      [params, ref.current]
     );
     const [address, setAddress] = React.useState(
       tokenAddressSupplied ? tokenAddressSupplied : ""
@@ -409,7 +413,7 @@ const StyledDiv = styled.div`
               showCurrencyAmount={false}
               hideBalance={true}
               hideInput={true}
-              currency={selectedCurrency.selectedCurrency}
+              currency={!hasSelectedData ? undefined : selectedCurrency.selectedCurrency}
               onUserInput={(value) => {
                 console.log(value);
               }}
@@ -527,7 +531,9 @@ const StyledDiv = styled.div`
     const SocialsMemo = React.useMemo(
       function () {
         if (tokenInfo) {
-          let { twitter, website, coingecko } = tokenInfo;
+          let twitter = tokenInfo?.twitter
+          let coingecko = tokenInfo?.coingecko
+          let website = tokenInfo?.website
           if (params?.tokenSymbol?.toLowerCase() == "kiba") {
             twitter = "KibaInuWorld";
             website = "https://kibainu.org";
@@ -1260,6 +1266,18 @@ const StyledDiv = styled.div`
     border-left: ${() => (isMobile ? 0 : 1)}px solid #444;
     padding-left: ${() => (isMobile ? 0 : 25)}px;
   `;
+
+  const StatsWrapper = styled.div`
+  display: flex;
+  background: #161a26;
+  box-shadow: 0px 0px 1px 0px;
+  padding: 9px 14px;
+  flex-flow: row wrap;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 10px;
+  border-radius:14px;
+  `
   
   const TokenStats = ({ tokenData }: { tokenData?: any }) => {
     const getLabel = (key: string, label = "txns") => {
@@ -1308,18 +1326,7 @@ const StyledDiv = styled.div`
       tokenData && tokenData?.txns ? (
         <div>
           {ToggleElm}
-          <div
-            style={{
-              display: "flex",
-              background: "#111",
-              boxShadow: "0px 0px 1px 0px",
-              padding: "9px 14px",
-              flexFlow: "row wrap",
-              gap: 10,
-              alignItems: "center",
-              marginBottom: 10,
-            }}
-          >
+          <StatsWrapper>
             {Object.keys(tokenData?.txns)
               .reverse()
               .map((key) => (
@@ -1393,8 +1400,8 @@ const StyledDiv = styled.div`
                   ))}
               </VolumeContainer>
             </VolumePanelWrapper>
+           </StatsWrapper>
           </div>
-        </div>
       ) : (
         <p style={{ margin: 0 }}>Failed to load token data.</p>
       )

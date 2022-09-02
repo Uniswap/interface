@@ -284,12 +284,12 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
                             popperarrow
                             placeholder={'loader'}
                             icon={<PieChart style={{ background: 'transparent' }} />}
-                            title={`${tokenData?.name ? tokenData?.name : ''} Stats`}>
+                            title={`${token?.name ? token?.name : ''} Stats`}>
                             {Boolean(hasData && !loading) &&
                                 <>
                                     <Menu style={{ background: color, paddingLeft: 0 }} iconShape="round"   >
                                         <SidebarHeader>
-                                            <MenuItem>{tokenData?.name} Info</MenuItem>
+                                            <MenuItem>{token?.name} Info</MenuItem>
                                             {token && token.address && tokenCurrency && (<MenuItem>
                                                 <RowBetween>
                                                     <ExternalLink href={getExplorerLink(chainId as number, token.address ? token.address : tokenData?.id ? tokenData?.id : tokenCurrency?.wrapped?.address, ExplorerDataType.TOKEN)}>
