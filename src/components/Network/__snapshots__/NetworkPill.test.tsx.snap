@@ -198,7 +198,7 @@ exports[`renders an InlineNetworkPill 1`] = `
         "borderWidth": 1,
         "display": "flex",
         "flexDirection": "row",
-        "height": 16,
+        "height": 36,
         "justifyContent": "center",
         "paddingHorizontal": 4,
         "paddingVertical": 2,

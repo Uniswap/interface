@@ -107,9 +107,7 @@ export function SwapDetails({
         gap="xs"
         justifyContent="space-between"
         p="md">
-        <Text fontWeight="500" variant="subheadSmall">
-          {t('Rate')}
-        </Text>
+        <Text variant="subheadSmall">{t('Rate')}</Text>
         <TouchableOpacity onPress={() => setShowInverseRate(!showInverseRate)}>
           <Flex row gap="none">
             <Text variant="subheadSmall">{acceptedRate}</Text>

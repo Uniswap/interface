@@ -6,11 +6,11 @@ import { useAppDispatch } from 'src/app/hooks'
 import { Button, ButtonEmphasis, ButtonSize, ButtonState } from 'src/components-uds/Button/Button'
 import { Box, Flex } from 'src/components/layout'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
+import { NetworkFee } from 'src/components/Network/NetworkFee'
 import { Text } from 'src/components/Text'
 import { AccountDetails } from 'src/components/WalletConnect/RequestModal/AccountDetails'
 import { ClientDetails, PermitInfo } from 'src/components/WalletConnect/RequestModal/ClientDetails'
 import { useHasSufficientFunds } from 'src/components/WalletConnect/RequestModal/hooks'
-import { NetworkFee } from 'src/components/WalletConnect/RequestModal/NetworkFee'
 import { RequestMessage } from 'src/components/WalletConnect/RequestModal/RequestMessage'
 import { SpendingDetails } from 'src/components/WalletConnect/RequestModal/SpendingDetails'
 import { ChainId } from 'src/constants/chains'
@@ -244,13 +244,7 @@ export function WalletConnectRequestModal({ isVisible, onClose, request }: Props
             )}
 
             {methodCostsGas(request) && chainId && (
-              <SectionContainer>
-                <NetworkFee
-                  chainId={chainId}
-                  gasFeeInfo={gasFeeInfo}
-                  transaction={request.transaction}
-                />
-              </SectionContainer>
+              <NetworkFee chainId={chainId} gasFee={gasFeeInfo?.fee.urgent} />
             )}
 
             {hasMultipleAccounts && (

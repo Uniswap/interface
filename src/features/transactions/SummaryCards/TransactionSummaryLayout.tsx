@@ -101,7 +101,7 @@ function TransactionSummaryLayout({
                 <Text fontWeight="500" numberOfLines={1} variant="mediumLabel">
                   {title}
                 </Text>
-                {chainId !== ChainId.Mainnet && <InlineNetworkPill chainId={chainId} />}
+                {chainId !== ChainId.Mainnet && <InlineNetworkPill chainId={chainId} height={16} />}
                 {status === TransactionStatus.FailedCancel && showInlineWarning && (
                   <FailedCancelBadge />
                 )}

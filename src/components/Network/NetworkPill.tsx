@@ -38,7 +38,6 @@ export function InlineNetworkPill(props: NetworkPillProps) {
   return (
     <NetworkPill
       borderRadius="xs"
-      height={16}
       px="xxs"
       py="xxxs"
       showIcon={false}

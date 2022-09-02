@@ -12,9 +12,7 @@ export function AccountDetails({ address, iconSize = 20 }: { address: string; ic
     <Flex centered row>
       <Flex grow row alignItems="center" gap="xs">
         <Unicon address={address} size={iconSize} />
-        <Text fontWeight="500" variant="subheadSmall">
-          {displayName?.name}
-        </Text>
+        <Text variant="subheadSmall">{displayName?.name}</Text>
       </Flex>
       {displayName?.type !== 'address' && (
         <Text color="textSecondary" variant="bodySmall">
