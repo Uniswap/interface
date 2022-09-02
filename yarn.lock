@@ -18977,7 +18977,7 @@ relay-compiler@^14.0.0:
   resolved "https://registry.yarnpkg.com/relay-compiler/-/relay-compiler-14.0.0.tgz#03ab000c246c7c46a26b77584b345621155a770e"
   integrity sha512-1h4lwvHg5efhivqpMfG6SS4cGoCJH3BsRelihwD+GNiylBnLKArSE6zyW7LfEwSpuDfJ+l6rrRfSL8IVZwOZ0g==
 
-"relay-devtools-core@github:janicduplessis/relay-devtools#relay-devtools-core-v1.2.1-gitpkg":
+relay-devtools-core@janicduplessis/relay-devtools#relay-devtools-core-v1.2.1-gitpkg:
   version "1.2.1"
   resolved "https://codeload.github.com/janicduplessis/relay-devtools/tar.gz/3175e77be3027d0a4ca8ae1d9f5a1ab278afa8dc"
   dependencies:
