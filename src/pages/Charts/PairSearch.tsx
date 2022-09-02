@@ -221,12 +221,12 @@ type Props = {
            {!routing && results?.map((result) => (
                 <div style={{cursor:'pointer'}} key={result.pairAddress} onClick={() => onPairClick(result)}>
                     <MenuItemStyled style={{display:'flex', justifyContent:'space-between', alignItems:'center'}} >
-                      <div>
+                      <div style={{display:'flex', alignItems:'center'}}>
                            <img src={(chainImageMap as any)[result.chainId] as string} style={{marginRight: 10, width:20, background:'transparent', borderRadius:25, border:"1px solid #444"}} />
-                           {result?.baseToken?.name}
+                           <span>    {result?.baseToken?.name} <br/>({result?.baseToken?.symbol})</span>
                       </div>
                       <div style={{display:'flex', alignItems:'center', justifyContent:'space-between'}}>
-                        <span>({result?.baseToken?.symbol})</span>
+                   
                         <span><ArrowUpRight /></span>
                       </div>
                     </MenuItemStyled>

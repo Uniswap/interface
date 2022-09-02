@@ -1,14 +1,11 @@
-import { BSC_TOKEN_DATA, BSC_TOKEN_DATA_BY_BLOCK_ONE, BSC_TOKEN_DATA_BY_BLOCK_TWO, TOKEN_DATA, bscClient, get2DayPercentChange, getBlockFromTimestamp, getPercentChange } from './utils'
-import React, { useCallback, useDebugValue } from 'react'
-import { rawRequest, request } from 'graphql-request'
+import { BSC_TOKEN_DATA, BSC_TOKEN_DATA_BY_BLOCK_ONE, BSC_TOKEN_DATA_BY_BLOCK_TWO, get2DayPercentChange, getBlockFromTimestamp, getPercentChange } from './utils'
 import { startOfMinute, subDays, subWeeks } from 'date-fns'
 
-import axios from 'axios'
+import React, {  } from 'react'
 import gql from 'graphql-tag'
-import { isEqual } from 'lodash'
 import moment from 'moment'
+import { request } from 'graphql-request'
 import { useActiveWeb3React } from 'hooks/web3'
-import { useBlockNumber } from 'state/application/hooks'
 import useInterval from 'hooks/useInterval'
 import { useQuery } from '@apollo/client'
 import { useWeb3React } from '@web3-react/core';
@@ -23,55 +20,6 @@ export interface BnbPrices {
   week: number
 }
 
-const BINANCE_TRADES = gql`
-  query trades {  ethereum(network: bsc) {
-      dexTrades(options: {limit: 100, desc: "block.timestamp.unixtime"},
-        exchangeName: {in: ["Pancake","Pancake v2"]},
-      baseCurrency: {is: "0xc3afde95b6eb9ba8553cdaea6645d45fb3a7faf5"}) {
-        transaction {
-          hash
-          __typename
-        }
-        smartContract{
-          address{
-            address
-          }
-          contractType
-          currency{
-            name
-          }
-        }
-        tradeIndex
-        date {
-          date
-        }
-        block {
-          height
-          timestamp {unixtime}
-        }
-        buyAmount
-        buyAmountInUsd: buyAmount(in: USD)
-        buyCurrency {
-          symbol
-          address
-        }
-        sellAmount
-        sellAmountInUsd: sellAmount(in: USD)
-        sellCurrency {
-          symbol
-          address
-        }
-        sellAmountInUsd: sellAmount(in: USD)
-        tradeAmount(in: USD)
-        transaction{
-          gasValue
-          gasPrice
-          gas
-        }
-      }
-    }
-  }
-`
 
 const BNB_PRICES = gql`
     query prices($block24: Int!, $block48: Int!, $blockWeek: Int!) {
@@ -164,52 +112,7 @@ export const fetchBscHolders = async (address: string) => {
   console.dir(response)
   return response?.data?.ethereum?.transfers?.find((x: any) => x.count)?.count;
 }
-const fetchPoolTransactions = async (address: string): Promise<{ data?: any[]; error: boolean }> => {
-  try {
-    const data = await request<TransactionResults>(INFO_CLIENT, POOL_TRANSACTIONS, {
-      address: '0x89e8c0ead11b783055282c9acebbaf2fe95d1180',
-    })
-    const mints = data.mints.map(mapMints)
-    const burns = data.burns.map(mapBurns)
-    const swaps = data.swaps.map(mapSwaps)
-    return { data: [...mints, ...burns, ...swaps], error: false }
-  } catch (error) {
-    console.error(`Failed to fetch transactions for pool ${address}`, error)
-    return {
-      error: true,
-    }
-  }
-}
 
-const fetchBnbPrices = async (
-  block24: { number: number, timestamp: string },
-  block48: { number: number, timestamp: string },
-  blockWeek: { number: number, timestamp: string },
-): Promise<{ bnbPrices: BnbPrices | undefined; error: boolean }> => {
-  try {
-    const data = await request<PricesResponse>(INFO_CLIENT, BNB_PRICES, {
-      "block24": block24.number,
-      "block48": block48.number,
-      "blockWeek": blockWeek.number,
-    }).catch(err => console.error("ERROR", err))
-
-    return {
-      error: false,
-      bnbPrices: data && data ? {
-        current: parseFloat(data.current?.bnbPrice ?? '0'),
-        oneDay: parseFloat(data.oneDay?.bnbPrice ?? '0'),
-        twoDay: parseFloat(data.twoDay?.bnbPrice ?? '0'),
-        week: parseFloat(data.oneWeek?.bnbPrice ?? '0'),
-      } : undefined,
-    }
-  } catch (error) {
-    console.error('Failed to fetch BNB prices', error)
-    return {
-      error: true,
-      bnbPrices: undefined,
-    }
-  }
-}
 
 const getUnixTime = (date: Date) => moment(date).unix()
 export const getDeltaTimestamps = (): [number, number, number, number] => {
@@ -673,21 +576,6 @@ interface TransactionResults {
   burnsAs1: any[]
 }
 
-const fetchTokenTransactions = async (address: string): Promise<{ data?: any; error: boolean }> => {
-  try {
-
-    const data = await request<TransactionResults>(INFO_CLIENT, TOKEN_TRANSACTIONS, {
-      address
-    }).catch(console.error)
-
-    return { data, error: false }
-  } catch (error) {
-    console.error(`Failed to fetch transactions for token ${address}`, error)
-    return {
-      error: true,
-    }
-  }
-}
 
 
 export function useBscTokenTransactions(tokenAddress: string, interval: null | number = null) {

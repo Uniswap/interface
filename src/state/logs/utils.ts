@@ -1,13 +1,13 @@
 import * as ethers from 'ethers'
 
 import { ApolloClient, useQuery } from '@apollo/client'
-import { INFO_CLIENT, fetchBscTokenData, getDeltaTimestamps, useBlocksFromTimestamps, useBnbPrices, useBscTokenDataHook } from './bscUtils'
 import React, { useCallback } from 'react'
 import { Token, WETH9 } from '@uniswap/sdk-core'
-import _, { isEqual } from 'lodash'
+import { fetchBscTokenData, getDeltaTimestamps, useBlocksFromTimestamps, useBnbPrices } from './bscUtils'
 
 import { InMemoryCache } from 'apollo-cache-inmemory'
 import { V2_ROUTER_ADDRESS } from 'constants/addresses'
+import _ from 'lodash'
 import { binanceTokens } from 'utils/binance.tokens'
 import cultureTokens from '../../../src/trending.json'
 import gql from 'graphql-tag'
@@ -171,7 +171,7 @@ export const TOKEN_DATA = (tokenAddress: string, block: any, isBnb?: boolean) =>
   return gql(queryString)
 }
 
-export const BSC_TOKEN_DATA = (tokenAddress: string, block?: string) => {
+export const BSC_TOKEN_DATA = (tokenAddress: string) => {
   tokenAddress = tokenAddress.toLowerCase()
   const queryString = `
     ${TokenFields.replace('derivedETH', '').replace('txCount', '')}
@@ -482,24 +482,6 @@ export const getTokenData = async (addy: string, ethPrice: any, ethPriceOld: any
   return data
 }
 
-const getTokenTransactions = async (allPairsFormatted: any) => {
-  const transactions: { mints?: any[]; burns?: any[]; swaps?: any[]; } = {}
-  try {
-    const result = await client.query({
-      query: FILTERED_TRANSACTIONS,
-      variables: {
-        allPairs: allPairsFormatted,
-      },
-      fetchPolicy: 'cache-first',
-    })
-    transactions.mints = result.data.mints
-    transactions.burns = result.data.burns
-    transactions.swaps = result.data.swaps
-  } catch (e) {
-    console.log(e)
-  }
-  return transactions
-}
 
 export function useTokenTransactions(tokenAddress: string, interval: null | number = null) {
   const { chainId } = useWeb3React()
@@ -645,18 +627,7 @@ export function useTokenData(tokenAddress: string, interval: null | number = nul
   const tokenDataQ = useQuery(TOKEN_DATA(tokenAddress?.toLowerCase(), null), {
     fetchPolicy: 'cache-and-network'
   })
-  // const intervalCallback = () => {
-  //   console.log(`Running interval driven data fetch..`)
-  //   if (tokenAddress && ethPrice && ethPriceOld) {
-  //     console.log(`Have necessary parameters, checking for updates..`)
-  //     getTokenData(tokenAddress, ethPrice, ethPriceOld).then((data) => {
-  //       if (!isEqual(tokenData?.[tokenAddress]?.priceUSD, data?.priceUSD)) {
-  //         console.log("updating token data, price changed.")
-  //         setTokenData({ ...tokenData, [tokenAddress]: data })
-  //       }
-  //     })
-  //   }
-  // }
+ 
   const token1DayQ = useQuery(TOKEN_DATA(tokenAddress?.toLowerCase(), blocks?.blocks?.[0]), { fetchPolicy: 'cache-and-network' })
   const token2DayQ = useQuery(TOKEN_DATA(tokenAddress?.toLowerCase(), blocks?.blocks?.[1]), { fetchPolicy: 'cache-and-network' })
 
@@ -664,22 +635,7 @@ export function useTokenData(tokenAddress: string, interval: null | number = nul
     return mapTokenData(tokenDataQ.data, token1DayQ.data, token2DayQ.data, ethPrice as any, ethPriceOld as any)
   }, [ethPrice, ethPriceOld, token1DayQ, token2DayQ, tokenDataQ])
 
-  // React.useEffect(() => {
-  //   if (!Boolean(ethPrice && ethPriceOld && tokenAddress)) {
-  //     console.info('exiting `useTokenData` effect due to missing required params.')
-  //     return
-  //   } else {
-  //     if (intervalChanged) {
-  //       console.info('Refetching tokendata in `useTokenData` at ' + interval + ' ms.')
-  //       intervalCallback()
-  //     } else if (!fetchedOnce) {
-  //       console.info('Fetching tokendata in `useTokenData` at ' + interval + ' ms.')
-  //       intervalCallback()
-  //     }
-  //   }
-
-  // }, [intervalChanged, ethPrice, ethPriceOld, fetchedOnce])
-
+ 
   return data
 }
 /**
@@ -929,11 +885,6 @@ query trackerdata {
 }
 `
 
-const TOP_TOKENS_QUERY = (tokenIds: string[]) => gql`
-query trackerdata {
-  tokens(orderBy: volumeUSD, orderDirection:desc,  where: {id_in:${tokenIds}}) {
-    ...TokenFields
-  }`
 
 const makeCultureString = () => {
   let string = '';
@@ -1446,7 +1397,7 @@ export const useUserTransactions = (account?: string | null) => {
     bscQuery.stopPolling();
 
   const { data, loading, error } = query;
-  const { data: bscData, loading: bscLoading, error: bscError } = bscQuery;
+  const { data: bscData } = bscQuery;
   const mergedData = React.useMemo(() => {
     if (chainId === 1) {
       const retval = [],
