@@ -1,7 +1,9 @@
 import { isAddress } from 'ethers/lib/utils'
+import { useAppTheme } from 'src/app/hooks'
 import { svgPaths as containerPaths } from 'src/components/unicons/Container'
 import { svgPaths as emblemPaths } from 'src/components/unicons/Emblem'
 import {
+  blurs,
   gradientEnds,
   gradientStarts,
   UniconAttributeData,
@@ -52,4 +54,28 @@ export const getUniconAttributeData = (
     [UniconAttributes.Container]: containerPaths[attributeIndices[UniconAttributes.Container]],
     [UniconAttributes.Shape]: emblemPaths[attributeIndices[UniconAttributes.Shape]],
   } as UniconAttributeData
+}
+
+export const useUniconColors = (
+  activeAddress: string | undefined
+): {
+  glow: string
+  gradientStart: string
+  gradientEnd: string
+} => {
+  const theme = useAppTheme()
+  const attributeIndices = deriveUniconAttributeIndices(activeAddress || '')
+  if (!attributeIndices)
+    return {
+      gradientStart: theme.colors.accentAction,
+      gradientEnd: theme.colors.accentActionSoft,
+      glow: theme.colors.accentAction,
+    }
+
+  const attributeData = getUniconAttributeData(attributeIndices)
+  return {
+    gradientStart: attributeData[UniconAttributes.GradientStart].toString(),
+    gradientEnd: attributeData[UniconAttributes.GradientEnd].toString(),
+    glow: blurs[attributeIndices[UniconAttributes.GradientStart]].toString(),
+  }
 }

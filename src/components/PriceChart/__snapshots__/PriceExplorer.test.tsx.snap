@@ -22,23 +22,28 @@ exports[`renders correctly 1`] = `
     }
   >
     <TextInput
-      animatedStyle={
+      animatedProps={
         Object {
-          "value": Object {},
+          "text": "$100",
         }
       }
-      collapsable={false}
       editable={false}
       style={
-        Object {
-          "color": "#0E111A",
-          "fontFamily": "Inter-Regular",
-          "fontSize": 36,
-          "fontWeight": "300",
-          "lineHeight": 44,
-        }
+        Array [
+          Object {
+            "color": "black",
+          },
+          Array [
+            Object {
+              "color": "#0E111A",
+              "fontFamily": "Inter-Regular",
+              "fontSize": 36,
+              "fontWeight": "300",
+              "lineHeight": 44,
+            },
+          ],
+        ]
       }
-      text="$100"
       underlineColorAndroid="transparent"
       value="$100"
     />
@@ -67,22 +72,27 @@ exports[`renders correctly 1`] = `
         }
       >
         <TextInput
-          animatedStyle={
+          animatedProps={
             Object {
-              "value": Object {},
+              "text": "-50%",
             }
           }
-          collapsable={false}
           editable={false}
           style={
-            Object {
-              "color": "#5E6887",
-              "fontFamily": "Inter-Regular",
-              "fontSize": 12,
-              "lineHeight": 16,
-            }
+            Array [
+              Object {
+                "color": "black",
+              },
+              Array [
+                Object {
+                  "color": "#5E6887",
+                  "fontFamily": "Inter-Regular",
+                  "fontSize": 12,
+                  "lineHeight": 16,
+                },
+              ],
+            ]
           }
-          text="-50%"
           underlineColorAndroid="transparent"
           value="-50%"
         />
@@ -100,24 +110,30 @@ exports[`renders correctly 1`] = `
           }
         />
         <TextInput
-          animatedStyle={
+          animatedProps={
             Object {
-              "value": Object {
-                "color": "#FA2B39",
-              },
+              "text": "↘",
             }
           }
-          collapsable={false}
           editable={false}
           style={
-            Object {
-              "color": "#FA2B39",
-              "fontFamily": "Inter-Regular",
-              "fontSize": 12,
-              "lineHeight": 16,
-            }
+            Array [
+              Object {
+                "color": "black",
+              },
+              Array [
+                Object {
+                  "color": "#0E111A",
+                  "fontFamily": "Inter-Regular",
+                  "fontSize": 12,
+                  "lineHeight": 16,
+                },
+                Object {
+                  "color": "#FA2B39",
+                },
+              ],
+            ]
           }
-          text="↘"
           underlineColorAndroid="transparent"
           value="↘"
         />
@@ -136,22 +152,27 @@ exports[`renders correctly 1`] = `
         }
       />
       <TextInput
-        animatedStyle={
+        animatedProps={
           Object {
-            "value": Object {},
+            "text": "",
           }
         }
-        collapsable={false}
         editable={false}
         style={
-          Object {
-            "color": "#5E6887",
-            "fontFamily": "Inter-Regular",
-            "fontSize": 12,
-            "lineHeight": 16,
-          }
+          Array [
+            Object {
+              "color": "black",
+            },
+            Array [
+              Object {
+                "color": "#5E6887",
+                "fontFamily": "Inter-Regular",
+                "fontSize": 12,
+                "lineHeight": 16,
+              },
+            ],
+          ]
         }
-        text=""
         underlineColorAndroid="transparent"
         value=""
       />
@@ -189,7 +210,6 @@ exports[`renders correctly 1`] = `
     >
       <RNSVGGroup>
         <RNSVGPath
-          d="M0,0 C0,0 62.5,15 62.5,15 C125,30 250,60 375,90 C500,120 625,150 687.5,165 C687.5,165 750,180 750,180"
           fill={0}
           propList={
             Array [
@@ -221,7 +241,6 @@ exports[`renders correctly 1`] = `
           />
         </RNSVGDefs>
         <RNSVGPath
-          d="M0,0 C0,0 62.5,15 62.5,15 C125,30 250,60 375,90 C500,120 625,150 687.5,165 C687.5,165 750,180 750,180 L 750 180 L 0 180"
           fill={
             Array [
               1,
@@ -258,46 +277,28 @@ exports[`renders correctly 1`] = `
       }
     >
       <View
-        animatedStyle={
-          Object {
-            "value": Object {
-              "opacity": 0,
-            },
-          }
-        }
         collapsable={false}
         style={
           Array [
             Object {
               "display": "flex",
             },
-            Object {
-              "bottom": 0,
-              "left": 0,
-              "opacity": 0,
-              "position": "absolute",
-              "right": 0,
-              "top": 0,
-            },
+            Array [
+              Object {
+                "bottom": 0,
+                "left": 0,
+                "position": "absolute",
+                "right": 0,
+                "top": 0,
+              },
+              Object {
+                "opacity": 0,
+              },
+            ],
           ]
         }
       >
         <View
-          animatedStyle={
-            Object {
-              "value": Object {
-                "transform": Array [
-                  Object {
-                    "translateX": -1,
-                  },
-                  Object {
-                    "scale": 0,
-                  },
-                ],
-              },
-            }
-          }
-          collapsable={false}
           style={
             Array [
               Object {
@@ -309,43 +310,29 @@ exports[`renders correctly 1`] = `
                 "height": 180,
                 "width": 1,
               },
-              Object {
-                "bottom": 0,
-                "left": 0,
-                "position": "absolute",
-                "right": 0,
-                "top": 0,
-                "transform": Array [
-                  Object {
-                    "translateX": -1,
-                  },
-                  Object {
-                    "scale": 0,
-                  },
-                ],
-              },
+              Array [
+                Object {
+                  "transform": Array [
+                    Object {
+                      "translateX": -1,
+                    },
+                    Object {
+                      "scale": 0,
+                    },
+                  ],
+                },
+                Object {
+                  "bottom": 0,
+                  "left": 0,
+                  "position": "absolute",
+                  "right": 0,
+                  "top": 0,
+                },
+              ],
             ]
           }
         />
         <View
-          animatedStyle={
-            Object {
-              "value": Object {
-                "transform": Array [
-                  Object {
-                    "translateX": -9,
-                  },
-                  Object {
-                    "translateY": -9,
-                  },
-                  Object {
-                    "scale": 0,
-                  },
-                ],
-              },
-            }
-          }
-          collapsable={false}
           style={
             Array [
               Object {
@@ -433,18 +420,6 @@ exports[`renders correctly 1`] = `
       }
     >
       <View
-        animatedStyle={
-          Object {
-            "value": Object {
-              "transform": Array [
-                Object {
-                  "translateX": 174,
-                },
-              ],
-            },
-          }
-        }
-        collapsable={false}
         style={
           Array [
             Object {
@@ -453,18 +428,22 @@ exports[`renders correctly 1`] = `
               "display": "flex",
               "width": 102,
             },
-            Object {
-              "bottom": 0,
-              "left": 0,
-              "position": "absolute",
-              "right": 0,
-              "top": 0,
-              "transform": Array [
-                Object {
-                  "translateX": 174,
-                },
-              ],
-            },
+            Array [
+              Object {
+                "bottom": 0,
+                "left": 0,
+                "position": "absolute",
+                "right": 0,
+                "top": 0,
+              },
+              Object {
+                "transform": Array [
+                  Object {
+                    "translateX": 174,
+                  },
+                ],
+              },
+            ],
           ]
         }
       />
@@ -498,23 +477,20 @@ exports[`renders correctly 1`] = `
       }
     >
       <Text
-        animatedStyle={
-          Object {
-            "value": Object {
+        style={
+          Array [
+            Object {
+              "color": "#0E111A",
+              "display": "flex",
+              "fontFamily": "Inter-SemiBold",
+              "fontSize": 14,
+              "lineHeight": 20,
+              "textAlign": "center",
+            },
+            Object {
               "color": "#5E6887",
             },
-          }
-        }
-        collapsable={false}
-        style={
-          Object {
-            "color": "#5E6887",
-            "display": "flex",
-            "fontFamily": "Inter-SemiBold",
-            "fontSize": 14,
-            "lineHeight": 20,
-            "textAlign": "center",
-          }
+          ]
         }
       >
         Graph 0
@@ -549,23 +525,20 @@ exports[`renders correctly 1`] = `
       }
     >
       <Text
-        animatedStyle={
-          Object {
-            "value": Object {
-              "color": "rgba(14, 17, 26, 1)",
-            },
-          }
-        }
-        collapsable={false}
         style={
-          Object {
-            "color": "rgba(14, 17, 26, 1)",
-            "display": "flex",
-            "fontFamily": "Inter-SemiBold",
-            "fontSize": 14,
-            "lineHeight": 20,
-            "textAlign": "center",
-          }
+          Array [
+            Object {
+              "color": "#0E111A",
+              "display": "flex",
+              "fontFamily": "Inter-SemiBold",
+              "fontSize": 14,
+              "lineHeight": 20,
+              "textAlign": "center",
+            },
+            Object {
+              "color": undefined,
+            },
+          ]
         }
       >
         Graph 1
@@ -600,23 +573,20 @@ exports[`renders correctly 1`] = `
       }
     >
       <Text
-        animatedStyle={
-          Object {
-            "value": Object {
+        style={
+          Array [
+            Object {
+              "color": "#0E111A",
+              "display": "flex",
+              "fontFamily": "Inter-SemiBold",
+              "fontSize": 14,
+              "lineHeight": 20,
+              "textAlign": "center",
+            },
+            Object {
               "color": "#5E6887",
             },
-          }
-        }
-        collapsable={false}
-        style={
-          Object {
-            "color": "#5E6887",
-            "display": "flex",
-            "fontFamily": "Inter-SemiBold",
-            "fontSize": 14,
-            "lineHeight": 20,
-            "textAlign": "center",
-          }
+          ]
         }
       >
         Graph 2
@@ -651,23 +621,20 @@ exports[`renders correctly 1`] = `
       }
     >
       <Text
-        animatedStyle={
-          Object {
-            "value": Object {
+        style={
+          Array [
+            Object {
+              "color": "#0E111A",
+              "display": "flex",
+              "fontFamily": "Inter-SemiBold",
+              "fontSize": 14,
+              "lineHeight": 20,
+              "textAlign": "center",
+            },
+            Object {
               "color": "#5E6887",
             },
-          }
-        }
-        collapsable={false}
-        style={
-          Object {
-            "color": "#5E6887",
-            "display": "flex",
-            "fontFamily": "Inter-SemiBold",
-            "fontSize": 14,
-            "lineHeight": 20,
-            "textAlign": "center",
-          }
+          ]
         }
       >
         Graph 3
@@ -702,23 +669,20 @@ exports[`renders correctly 1`] = `
       }
     >
       <Text
-        animatedStyle={
-          Object {
-            "value": Object {
+        style={
+          Array [
+            Object {
+              "color": "#0E111A",
+              "display": "flex",
+              "fontFamily": "Inter-SemiBold",
+              "fontSize": 14,
+              "lineHeight": 20,
+              "textAlign": "center",
+            },
+            Object {
               "color": "#5E6887",
             },
-          }
-        }
-        collapsable={false}
-        style={
-          Object {
-            "color": "#5E6887",
-            "display": "flex",
-            "fontFamily": "Inter-SemiBold",
-            "fontSize": 14,
-            "lineHeight": 20,
-            "textAlign": "center",
-          }
+          ]
         }
       >
         Graph 4

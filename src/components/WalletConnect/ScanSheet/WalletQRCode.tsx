@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { Share } from 'react-native'
 import QRCode from 'react-native-qrcode-svg'
@@ -12,9 +12,8 @@ import { GradientBackground } from 'src/components/gradients/GradientBackground'
 import { UniconThemedRadial } from 'src/components/gradients/UniconThemedRadial'
 import { AnimatedFlex, Flex } from 'src/components/layout'
 import { Box } from 'src/components/layout/Box'
-import { UniconAttributes } from 'src/components/unicons/types'
 import { Unicon } from 'src/components/unicons/Unicon'
-import { deriveUniconAttributeIndices, getUniconAttributeData } from 'src/components/unicons/utils'
+import { useUniconColors } from 'src/components/unicons/utils'
 import { logger } from 'src/utils/logger'
 
 const QR_CODE_SIZE = 220
@@ -27,17 +26,7 @@ export function WalletQRCode({ address }: Props) {
   const { t } = useTranslation()
   const theme = useAppTheme()
 
-  const gradientData = useMemo(() => {
-    const attributeIndices = deriveUniconAttributeIndices(address || '')
-    if (!attributeIndices)
-      return { start: theme.colors.accentAction, end: theme.colors.accentActionSoft }
-
-    const attributeData = getUniconAttributeData(attributeIndices)
-    return {
-      start: attributeData[UniconAttributes.GradientStart].toString(),
-      end: attributeData[UniconAttributes.GradientEnd].toString(),
-    }
-  }, [address, theme.colors.accentAction, theme.colors.accentActionSoft])
+  const gradientData = useUniconColors(address)
 
   const onShare = async () => {
     if (!address) return
@@ -57,8 +46,8 @@ export function WalletQRCode({ address }: Props) {
       <GradientBackground>
         <UniconThemedRadial
           borderRadius="lg"
-          gradientEndColor={gradientData.end}
-          gradientStartColor={gradientData.start}
+          gradientEndColor={gradientData.gradientEnd}
+          gradientStartColor={gradientData.gradientStart}
         />
       </GradientBackground>
       <AnimatedFlex centered grow entering={FadeIn} exiting={FadeOut} py="lg">
@@ -80,7 +69,7 @@ export function WalletQRCode({ address }: Props) {
             backgroundColor={theme.colors.backgroundContainer}
             color={theme.colors.accentTextDarkSecondary}
             enableLinearGradient={true}
-            linearGradient={[gradientData.start, gradientData.end]}
+            linearGradient={[gradientData.gradientStart, gradientData.gradientEnd]}
             size={QR_CODE_SIZE}
             value={address}
           />

@@ -2,7 +2,6 @@ import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 import * as Sentry from '@sentry/react-native'
 import React, { StrictMode } from 'react'
 import { StatusBar, useColorScheme } from 'react-native'
-import { enableLayoutAnimations } from 'react-native-reanimated'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { Provider } from 'react-redux'
 import { RelayEnvironmentProvider } from 'react-relay'
@@ -48,8 +47,6 @@ if (!__DEV__) {
 initializeRemoteConfig()
 initOneSignal()
 enableAnalytics()
-// https://github.com/software-mansion/react-native-reanimated/issues/2758
-enableLayoutAnimations(true)
 
 function App() {
   const isDarkMode = useColorScheme() === 'dark'

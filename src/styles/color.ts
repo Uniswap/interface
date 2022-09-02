@@ -325,6 +325,7 @@ export interface Palette {
   backgroundSurface: string
   backgroundContainer: string
   backgroundAction: string
+  backgroundInteractive: string
   backgroundOutline: string
   backgroundScrim: string
 
@@ -387,6 +388,7 @@ export const colorsLight: Palette = {
   backgroundSurface: colors.white,
   backgroundContainer: colors.gray50,
   backgroundAction: colors.gray100,
+  backgroundInteractive: colors.gray100,
   backgroundOutline: opacify(24, colors.gray500),
   backgroundScrim: opacify(72, colors.white),
 
@@ -445,6 +447,7 @@ export const colorsDark: Palette = {
   backgroundSurface: colors.gray900,
   backgroundContainer: opacify(8, colors.gray300),
   backgroundAction: colors.gray700,
+  backgroundInteractive: colors.gray700,
   backgroundOutline: opacify(24, colors.gray300),
   backgroundScrim: opacify(72, colors.black),
 
