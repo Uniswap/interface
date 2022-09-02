@@ -36,7 +36,7 @@ export function NFTGroupByCollection({ nftAssets, owner }: Props) {
           return acc
         }, new Map<string, NFTAsset.Asset[]>())
         .values()
-    )
+    ).sort((a, b) => a[0]?.collection?.name?.localeCompare(b[0]?.collection?.name ?? ''))
   }, [nftAssets])
 
   return (
