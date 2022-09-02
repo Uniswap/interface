@@ -53,7 +53,7 @@ export function NotificationsSetupScreen({ navigation, route: { params } }: Prop
       addresses.forEach((address) =>
         dispatch(
           editAccountActions.trigger({
-            type: EditAccountAction.TogglePushNotificationParams,
+            type: EditAccountAction.TogglePushNotification,
             enabled: true,
             address,
           })

@@ -99,7 +99,7 @@ export function SettingsWallet({
     if (notificationOSPermission === NotificationPermission.Enabled) {
       dispatch(
         editAccountActions.trigger({
-          type: EditAccountAction.TogglePushNotificationParams,
+          type: EditAccountAction.TogglePushNotification,
           enabled,
           address,
         })
@@ -109,7 +109,7 @@ export function SettingsWallet({
       promptPushPermission(() => {
         dispatch(
           editAccountActions.trigger({
-            type: EditAccountAction.TogglePushNotificationParams,
+            type: EditAccountAction.TogglePushNotification,
             enabled: true,
             address,
           })

@@ -1,5 +1,10 @@
 import { appSelect } from 'src/app/hooks'
 import {
+  removeAccountFromFirebase,
+  renameAccountInFirebase,
+  toggleFirebaseNotificationSettings,
+} from 'src/features/firebase/firebaseData'
+import {
   Account,
   AccountType,
   BackupType,
@@ -21,7 +26,7 @@ export enum EditAccountAction {
   RemoveBackupMethod = 'deletebackupmethod',
   Rename = 'rename',
   Remove = 'remove',
-  TogglePushNotificationParams = 'togglepushnotification',
+  TogglePushNotification = 'togglepushnotification',
   // May need a reorder action here eventually
 }
 interface EditParamsBase {
@@ -47,7 +52,7 @@ interface RemoveBackupMethodParams extends EditParamsBase {
 }
 
 export interface TogglePushNotificationParams extends EditParamsBase {
-  type: EditAccountAction.TogglePushNotificationParams
+  type: EditAccountAction.TogglePushNotification
   enabled: boolean
 }
 
@@ -69,9 +74,11 @@ function* editAccount(params: EditAccountParams) {
   switch (type) {
     case EditAccountAction.Rename:
       yield* call(renameAccount, params, account)
+      yield* call(renameAccountInFirebase, address, params.newName)
       break
     case EditAccountAction.Remove:
       yield* call(removeAccount, params)
+      yield* call(removeAccountFromFirebase, address)
       break
     case EditAccountAction.AddBackupMethod:
       yield* call(addBackupMethod, params, account)
@@ -79,7 +86,8 @@ function* editAccount(params: EditAccountParams) {
     case EditAccountAction.RemoveBackupMethod:
       yield* call(removeBackupMethod, params, account)
       break
-    case EditAccountAction.TogglePushNotificationParams:
+    case EditAccountAction.TogglePushNotification:
+      yield* call(toggleFirebaseNotificationSettings, { ...params, account })
       break
     default:
       throw new Error(`Invalid edit action type: ${type}`)

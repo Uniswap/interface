@@ -8,49 +8,16 @@ import {
   getOneSignalUserIdOrError,
 } from 'src/features/firebase/utils'
 import { Account, AccountType } from 'src/features/wallet/accounts/types'
-import {
-  EditAccountAction,
-  editAccountActions,
-  TogglePushNotificationParams,
-} from 'src/features/wallet/editAccountSaga'
-import { makeSelectAccountNotificationSetting, selectAccounts } from 'src/features/wallet/selectors'
+import { TogglePushNotificationParams } from 'src/features/wallet/editAccountSaga'
+import { makeSelectAccountNotificationSetting } from 'src/features/wallet/selectors'
 import { editAccount } from 'src/features/wallet/walletSlice'
 import { logger } from 'src/utils/logger'
-import { call, put, takeEvery } from 'typed-redux-saga'
+import { call, put } from 'typed-redux-saga'
 
 interface AccountMetadata {
   name?: string
   type?: AccountType
   avatar?: string
-}
-
-export function* firebaseDataWatcher() {
-  yield* takeEvery(editAccountActions.trigger, editAccountDataInFirebase)
-}
-
-function* editAccountDataInFirebase(actionData: ReturnType<typeof editAccountActions.trigger>) {
-  const { payload } = actionData
-  const { type, address } = payload
-
-  switch (type) {
-    case EditAccountAction.Remove:
-      yield* call(removeAccountFromFirebase, address)
-      break
-    case EditAccountAction.Rename:
-      yield* call(renameAccountInFirebase, address, payload.newName)
-      break
-    case EditAccountAction.AddBackupMethod:
-      // no-op
-      break
-    case EditAccountAction.RemoveBackupMethod:
-      // no-op
-      break
-    case EditAccountAction.TogglePushNotificationParams:
-      yield* call(toggleFirebaseNotificationsSettings, payload)
-      break
-    default:
-      throw new Error(`Invalid EditAccountAction ${type}`)
-  }
 }
 
 function* addAccountToFirebase(account: Account) {
@@ -64,7 +31,7 @@ function* addAccountToFirebase(account: Account) {
   }
 }
 
-function* removeAccountFromFirebase(address: Address) {
+export function* removeAccountFromFirebase(address: Address) {
   try {
     yield* call(deleteAccountData, address)
     yield* call(disassociateFirebaseUidFromAddresses, [address])
@@ -73,7 +40,7 @@ function* removeAccountFromFirebase(address: Address) {
   }
 }
 
-function* renameAccountInFirebase(address: Address, newName: string) {
+export function* renameAccountInFirebase(address: Address, newName: string) {
   try {
     const notificationsEnabled = yield* appSelect(makeSelectAccountNotificationSetting(address))
     if (!notificationsEnabled) return
@@ -83,10 +50,11 @@ function* renameAccountInFirebase(address: Address, newName: string) {
   }
 }
 
-function* toggleFirebaseNotificationsSettings({ address, enabled }: TogglePushNotificationParams) {
-  const accounts = yield* appSelect(selectAccounts)
-  const account = accounts[address]
-
+export function* toggleFirebaseNotificationSettings({
+  address,
+  enabled,
+  account,
+}: TogglePushNotificationParams & { account: Account }) {
   try {
     if (enabled) {
       yield* call(addAccountToFirebase, account)
@@ -104,7 +72,7 @@ function* toggleFirebaseNotificationsSettings({ address, enabled }: TogglePushNo
       })
     )
   } catch (error) {
-    logger.error('firebaseData', 'toggleFirebaseNotificationsSettings', 'Error:', error)
+    logger.error('firebaseData', 'toggleFirebaseNotificationSettings', 'Error:', error)
   }
 }
 
