@@ -31,6 +31,7 @@ export default function Widget({ defaultToken }: WidgetProps) {
   return (
     <>
       <SwapWidget
+        disableBranding
         hideConnectionUI
         jsonRpcUrlMap={RPC_URLS}
         routerUrl={WIDGET_ROUTER_URL}
