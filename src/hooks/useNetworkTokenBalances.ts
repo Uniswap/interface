@@ -47,7 +47,6 @@ export function useNetworkTokenBalances({ address }: useNetworkTokenBalancesArgs
           setLoading(true)
           setError(null)
           console.log('useNetworkTokenBalances.fetchNetworkTokenBalances', address)
-
           await waitRandom(250, 2000)
           if (Math.random() < 0.05) {
             throw new Error('fake error')
