@@ -8,7 +8,7 @@ import { useCallback, useMemo, useState } from 'react'
  */
 export function useSyncWidgetInputs(defaultToken?: Currency) {
   const [type, setType] = useState(TradeType.EXACT_INPUT)
-  const [amount, setAmount] = useState<string>()
+  const [amount, setAmount] = useState('')
   const onAmountChange = useCallback((field: Field, amount: string) => {
     setType(toTradeType(field))
     setAmount(amount)

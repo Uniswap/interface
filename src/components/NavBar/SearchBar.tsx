@@ -90,7 +90,7 @@ interface SearchBarDropdownProps {
 }
 
 export const SearchBarDropdown = ({ toggleOpen, tokens, collections, hasInput }: SearchBarDropdownProps) => {
-  const [hoveredIndex, setHoveredIndex] = useState<number | undefined>(undefined)
+  const [hoveredIndex, setHoveredIndex] = useState<number | undefined>(0)
   const searchHistory = useSearchHistory(
     (state: { history: (FungibleToken | GenieCollection)[] }) => state.history
   ).slice(0, 2)
@@ -185,6 +185,7 @@ export const SearchBarDropdown = ({ toggleOpen, tokens, collections, hasInput }:
           setHoveredIndex(hoveredIndex - 1)
         }
       } else if (event.key === 'ArrowDown') {
+        event.preventDefault()
         if (hoveredIndex && hoveredIndex === totalSuggestions - 1) {
           setHoveredIndex(0)
         } else {
@@ -268,6 +269,7 @@ export const SearchBar = () => {
   const [searchValue, setSearchValue] = useState('')
   const debouncedSearchValue = useDebounce(searchValue, 300)
   const searchRef = useRef<HTMLDivElement>(null)
+  const inputRef = useRef<HTMLInputElement>(null)
   const { pathname } = useLocation()
   const phase1Flag = useNftFlag()
   const isMobile = useIsMobile()
@@ -320,6 +322,13 @@ export const SearchBar = () => {
     setSearchValue('')
   }, [pathname])
 
+  // auto set cursor when searchbar is opened
+  useEffect(() => {
+    if (isOpen) {
+      inputRef.current?.focus()
+    }
+  }, [isOpen])
+
   const placeholderText = phase1Flag === NftVariant.Enabled ? t`Search tokens and NFT collections` : t`Search tokens`
 
   return (
@@ -358,6 +367,7 @@ export const SearchBar = () => {
             }}
             className={styles.searchBarInput}
             value={searchValue}
+            ref={inputRef}
           />
         </Row>
         <Box display={{ sm: isOpen ? 'none' : 'flex', xl: 'none' }}>

@@ -131,7 +131,6 @@ function uniswapThemeColors(darkMode: boolean): ThemeColors {
     chain_421611: colorsDark.chain_421611,
     chain_80001: colorsDark.chain_80001,
 
-    blue200: ColorsPalette.blue200,
     shallowShadow: darkMode ? colorsDark.shallowShadow : colorsLight.shallowShadow,
     deepShadow: darkMode ? colorsDark.deepShadow : colorsLight.deepShadow,
     hoverState: opacify(24, ColorsPalette.blue200),

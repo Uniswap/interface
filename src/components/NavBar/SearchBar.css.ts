@@ -27,6 +27,7 @@ export const searchBarContainer = style([
     right: '0',
     top: '0',
     zIndex: '3',
+    display: 'inline-block',
   }),
   {
     '@media': {
