@@ -36,6 +36,7 @@ import { useActiveChainIds } from 'src/features/chains/utils'
 import { isEnabled } from 'src/features/remoteConfig'
 import { TestConfig } from 'src/features/remoteConfig/testConfigs'
 import { AccountType, SignerMnemonicAccount } from 'src/features/wallet/accounts/types'
+import { EditAccountAction, editAccountActions } from 'src/features/wallet/editAccountSaga'
 import { useAccounts } from 'src/features/wallet/hooks'
 import { resetWallet, setFinishedOnboarding } from 'src/features/wallet/walletSlice'
 import { Screens } from 'src/screens/Screens'
@@ -46,14 +47,25 @@ export function SettingsScreen() {
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
 
+  const accounts = useAccounts()
   const activeChains = useActiveChainIds()
-  const isRinkebyActive = activeChains.includes(ChainId.Rinkeby)
+  const isGoerliActive = activeChains.includes(ChainId.Goerli)
   const onToggleTestnets = useCallback(() => {
-    // always rely on the state of rinkeby
+    // always rely on the state of goerli
     TESTNET_CHAIN_IDS.forEach((chainId) =>
-      dispatch(setChainActiveStatus({ chainId, isActive: !isRinkebyActive }))
+      dispatch(setChainActiveStatus({ chainId, isActive: !isGoerliActive }))
     )
-  }, [dispatch, isRinkebyActive])
+
+    Object.keys(accounts).forEach((address) => {
+      dispatch(
+        editAccountActions.trigger({
+          type: EditAccountAction.ToggleTestnetSettings,
+          enabled: !isGoerliActive,
+          address,
+        })
+      )
+    })
+  }, [dispatch, isGoerliActive, accounts])
 
   // check if device supports faceId authentication, if not, hide faceId option
   const deviceSupportsFaceId = useDeviceSupportsFaceId()
@@ -80,7 +92,7 @@ export function SettingsScreen() {
             icon: <FaceIdIcon {...iconProps} />,
           },
           {
-            action: <Switch value={isRinkebyActive} onValueChange={onToggleTestnets} />,
+            action: <Switch value={isGoerliActive} onValueChange={onToggleTestnets} />,
             text: t('Testnets'),
             subText: t('Allow connections to test networks'),
             icon: <TestnetsIcon {...iconProps} />,
@@ -154,7 +166,7 @@ export function SettingsScreen() {
         ],
       },
     ]
-  }, [isRinkebyActive, onToggleTestnets, t, theme, showDevSettings, deviceSupportsFaceId])
+  }, [isGoerliActive, onToggleTestnets, t, theme, showDevSettings, deviceSupportsFaceId])
 
   const renderItem = ({
     item,

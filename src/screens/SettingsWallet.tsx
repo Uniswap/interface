@@ -124,6 +124,7 @@ export function SettingsWallet({
       editAccountActions.trigger({
         type: EditAccountAction.Remove,
         address,
+        notificationsEnabled: !!addressToAccount[address].pushNotificationsEnabled,
       })
     )
     navigation.goBack()

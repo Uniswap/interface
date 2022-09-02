@@ -1,10 +1,5 @@
 import { appSelect } from 'src/app/hooks'
 import {
-  removeAccountFromFirebase,
-  renameAccountInFirebase,
-  toggleFirebaseNotificationSettings,
-} from 'src/features/firebase/firebaseData'
-import {
   Account,
   AccountType,
   BackupType,
@@ -27,6 +22,7 @@ export enum EditAccountAction {
   Rename = 'rename',
   Remove = 'remove',
   TogglePushNotification = 'togglepushnotification',
+  ToggleTestnetSettings = 'toggletestnetsettings',
   // May need a reorder action here eventually
 }
 interface EditParamsBase {
@@ -39,6 +35,7 @@ interface RenameParams extends EditParamsBase {
 }
 interface RemoveParams extends EditParamsBase {
   type: EditAccountAction.Remove
+  notificationsEnabled: boolean
 }
 
 interface AddBackupMethodParams extends EditParamsBase {
@@ -56,12 +53,18 @@ export interface TogglePushNotificationParams extends EditParamsBase {
   enabled: boolean
 }
 
+export interface ToggleTestnetSettingsParams extends EditParamsBase {
+  type: EditAccountAction.ToggleTestnetSettings
+  enabled: boolean
+}
+
 export type EditAccountParams =
   | AddBackupMethodParams
   | RemoveBackupMethodParams
   | RenameParams
   | RemoveParams
   | TogglePushNotificationParams
+  | ToggleTestnetSettingsParams
 
 function* editAccount(params: EditAccountParams) {
   const { type, address } = params
@@ -74,11 +77,9 @@ function* editAccount(params: EditAccountParams) {
   switch (type) {
     case EditAccountAction.Rename:
       yield* call(renameAccount, params, account)
-      yield* call(renameAccountInFirebase, address, params.newName)
       break
     case EditAccountAction.Remove:
       yield* call(removeAccount, params)
-      yield* call(removeAccountFromFirebase, address)
       break
     case EditAccountAction.AddBackupMethod:
       yield* call(addBackupMethod, params, account)
@@ -86,11 +87,8 @@ function* editAccount(params: EditAccountParams) {
     case EditAccountAction.RemoveBackupMethod:
       yield* call(removeBackupMethod, params, account)
       break
-    case EditAccountAction.TogglePushNotification:
-      yield* call(toggleFirebaseNotificationSettings, { ...params, account })
-      break
     default:
-      throw new Error(`Invalid edit action type: ${type}`)
+      break
   }
 
   logger.info('editAccountSaga', 'editAccount', 'Account updated:', address)

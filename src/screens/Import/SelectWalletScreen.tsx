@@ -70,6 +70,8 @@ function WalletPreviewList({
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
 
+  const accounts = usePendingAccounts()
+
   const { status } = useSagaStatus(importAccountSagaName)
   const loadingAccounts = status === SagaStatus.Started
 
@@ -124,6 +126,7 @@ function WalletPreviewList({
           editAccountActions.trigger({
             type: EditAccountAction.Remove,
             address,
+            notificationsEnabled: !!accounts[address].pushNotificationsEnabled,
           })
         )
       } else {
@@ -134,7 +137,7 @@ function WalletPreviewList({
       }
     })
     navigation.navigate({ name: OnboardingScreens.Notifications, params, merge: true })
-  }, [dispatch, addresses, navigation, selectedAddresses, isFirstAccountActive, params])
+  }, [dispatch, addresses, accounts, navigation, selectedAddresses, isFirstAccountActive, params])
 
   return (
     <>

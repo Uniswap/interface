@@ -1,6 +1,7 @@
 import firebase from '@react-native-firebase/app'
 import firestore from '@react-native-firebase/firestore'
 import { appSelect } from 'src/app/hooks'
+import { selectTestnetsAreEnabled } from 'src/features/chains/chainsSlice'
 import {
   getFirebaseUidOrError,
   getFirestoreMetadataRef,
@@ -8,32 +9,67 @@ import {
   getOneSignalUserIdOrError,
 } from 'src/features/firebase/utils'
 import { Account, AccountType } from 'src/features/wallet/accounts/types'
-import { TogglePushNotificationParams } from 'src/features/wallet/editAccountSaga'
-import { makeSelectAccountNotificationSetting } from 'src/features/wallet/selectors'
+import {
+  EditAccountAction,
+  editAccountActions,
+  TogglePushNotificationParams,
+} from 'src/features/wallet/editAccountSaga'
+import { makeSelectAccountNotificationSetting, selectAccounts } from 'src/features/wallet/selectors'
 import { editAccount } from 'src/features/wallet/walletSlice'
 import { logger } from 'src/utils/logger'
-import { call, put } from 'typed-redux-saga'
+import { getKeys } from 'src/utils/objects'
+import { call, put, select, takeEvery } from 'typed-redux-saga'
 
 interface AccountMetadata {
   name?: string
   type?: AccountType
   avatar?: string
+  testnetsEnabled?: boolean
+}
+
+// Can't merge with `editAccountSaga` because it can't handle simultaneous actions
+export function* firebaseDataWatcher() {
+  yield* takeEvery(editAccountActions.trigger, editAccountDataInFirebase)
+}
+
+function* editAccountDataInFirebase(actionData: ReturnType<typeof editAccountActions.trigger>) {
+  const { payload } = actionData
+  const { type, address } = payload
+
+  switch (type) {
+    case EditAccountAction.Remove:
+      yield* call(removeAccountFromFirebase, address, payload.notificationsEnabled)
+      break
+    case EditAccountAction.Rename:
+      yield* call(renameAccountInFirebase, address, payload.newName)
+      break
+    case EditAccountAction.TogglePushNotification:
+      yield* call(toggleFirebaseNotificationSettings, payload)
+      break
+    case EditAccountAction.ToggleTestnetSettings:
+      yield* call(updateFirebaseMetadata, address, { testnetsEnabled: payload.enabled })
+      break
+    default:
+      break
+  }
 }
 
 function* addAccountToFirebase(account: Account) {
   const { name, type, address } = account
+  const testnetsEnabled = yield* select(selectTestnetsAreEnabled)
 
   try {
     yield* call(mapFirebaseUidToAddresses, [address])
-    yield* call(updateAccountMetadata, address, { type, ...(name ? { name } : {}) })
+    yield* call(updateFirebaseMetadata, address, { type, name, testnetsEnabled })
   } catch (error) {
     logger.error('firebaseData', 'addAccountToFirebase', 'Error:', error)
   }
 }
 
-export function* removeAccountFromFirebase(address: Address) {
+export function* removeAccountFromFirebase(address: Address, notificationsEnabled: boolean) {
   try {
-    yield* call(deleteAccountData, address)
+    if (!notificationsEnabled) return
+    yield* call(deleteFirebaseMetadata, address)
     yield* call(disassociateFirebaseUidFromAddresses, [address])
   } catch (error) {
     logger.error('firebaseData', 'removeAccountFromFirebase', 'Error:', error)
@@ -44,7 +80,7 @@ export function* renameAccountInFirebase(address: Address, newName: string) {
   try {
     const notificationsEnabled = yield* appSelect(makeSelectAccountNotificationSetting(address))
     if (!notificationsEnabled) return
-    yield* call(updateAccountMetadata, address, { name: newName })
+    yield* call(updateFirebaseMetadata, address, { name: newName })
   } catch (error) {
     logger.error('firebaseData', 'renameAccountInFirebase', 'Error:', error)
   }
@@ -53,13 +89,14 @@ export function* renameAccountInFirebase(address: Address, newName: string) {
 export function* toggleFirebaseNotificationSettings({
   address,
   enabled,
-  account,
-}: TogglePushNotificationParams & { account: Account }) {
+}: TogglePushNotificationParams) {
   try {
+    const accounts = yield* appSelect(selectAccounts)
+    const account = accounts[address]
     if (enabled) {
       yield* call(addAccountToFirebase, account)
     } else {
-      yield* call(removeAccountFromFirebase, address)
+      yield* call(removeAccountFromFirebase, address, true)
     }
 
     yield* put(
@@ -76,7 +113,7 @@ export function* toggleFirebaseNotificationSettings({
   }
 }
 
-function* mapFirebaseUidToAddresses(addresses: Address[]) {
+async function mapFirebaseUidToAddresses(addresses: Address[]) {
   const firebaseApp = firebase.app()
   const uid = getFirebaseUidOrError(firebaseApp)
   const batch = firestore(firebaseApp).batch()
@@ -85,10 +122,10 @@ function* mapFirebaseUidToAddresses(addresses: Address[]) {
     batch.set(uidRef, { [uid]: true }, { merge: true })
   })
 
-  yield* call([batch, 'commit'])
+  await batch.commit()
 }
 
-function* disassociateFirebaseUidFromAddresses(addresses: Address[]) {
+async function disassociateFirebaseUidFromAddresses(addresses: Address[]) {
   const firebaseApp = firebase.app()
   const uid = getFirebaseUidOrError(firebaseApp)
   const batch = firestore(firebaseApp).batch()
@@ -97,17 +134,29 @@ function* disassociateFirebaseUidFromAddresses(addresses: Address[]) {
     batch.update(uidRef, { [uid]: firebase.firestore.FieldValue.delete() })
   })
 
-  yield* call([batch, 'commit'])
+  await batch.commit()
 }
 
-const updateAccountMetadata = async (address: Address, metadata: AccountMetadata) => {
-  const firebaseApp = firebase.app()
-  const pushId = await getOneSignalUserIdOrError()
-  const metadataRef = getFirestoreMetadataRef(firebaseApp, address, pushId)
-  await metadataRef.set(metadata, { merge: true })
+async function updateFirebaseMetadata(address: Address, metadata: AccountMetadata) {
+  try {
+    const firebaseApp = firebase.app()
+    const pushId = await getOneSignalUserIdOrError()
+    const metadataRef = getFirestoreMetadataRef(firebaseApp, address, pushId)
+
+    // Firestore does not support updating properties with an `undefined` value so must strip them out
+    const metadataWithDefinedPropsOnly = getKeys(metadata).reduce((obj: any, prop) => {
+      const value = metadata[prop]
+      if (value !== undefined) obj[prop] = value
+      return obj
+    }, {})
+
+    await metadataRef.set(metadataWithDefinedPropsOnly, { merge: true })
+  } catch (error) {
+    logger.error('firebaseData', 'updateFirebaseMetadata', 'Error:', error)
+  }
 }
 
-const deleteAccountData = async (address: Address) => {
+async function deleteFirebaseMetadata(address: Address) {
   const firebaseApp = firebase.app()
   const pushId = await getOneSignalUserIdOrError()
   const metadataRef = getFirestoreMetadataRef(firebaseApp, address, pushId)

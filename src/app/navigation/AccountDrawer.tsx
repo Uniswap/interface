@@ -102,6 +102,8 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
       editAccountActions.trigger({
         type: EditAccountAction.Remove,
         address: pendingRemoveAccount.address,
+        notificationsEnabled:
+          !!addressToAccount[pendingRemoveAccount.address].pushNotificationsEnabled,
       })
     )
     setPendingRemoveAccount(null)

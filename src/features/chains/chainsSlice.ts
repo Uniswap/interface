@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { RootState } from 'src/app/rootReducer'
 import { config } from 'src/config'
 import { ChainId, ChainIdTo } from 'src/constants/chains'
 import { ChainState } from 'src/features/chains/types'
@@ -30,3 +31,7 @@ const slice = createSlice({
 export const { setChainActiveStatus, resetNetwork } = slice.actions
 
 export const chainsReducer = slice.reducer
+
+// always rely on the state of Goerli
+export const selectTestnetsAreEnabled = (state: RootState) =>
+  !!state.chains.byChainId[ChainId.Goerli]?.isActive

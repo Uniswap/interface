@@ -2,6 +2,7 @@ import { combineReducers, Reducer } from '@reduxjs/toolkit'
 import { spawn } from 'redux-saga/effects'
 import { cloudBackupsManagerSaga } from 'src/features/CloudBackup/saga'
 import { deepLinkWatcher } from 'src/features/deepLinking/handleDeepLink'
+import { firebaseDataWatcher } from 'src/features/firebase/firebaseData'
 import { initFirebase } from 'src/features/firebase/initFirebaseSaga'
 import { estimateGasWatcher } from 'src/features/gas/estimateGasSaga'
 import {
@@ -58,6 +59,7 @@ const sagas: any[] = [
   initFirebase,
   deepLinkWatcher,
   transactionWatcher,
+  firebaseDataWatcher,
   notificationWatcher,
   walletConnectSaga,
   signWcRequestSaga,
