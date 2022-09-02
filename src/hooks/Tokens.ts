@@ -14,7 +14,7 @@ import { TokenAddressMap, useUnsupportedTokenList } from './../state/lists/hooks
 
 // reduce token map into standard address <-> Token mapping, optionally include user added tokens
 function useTokensFromMap(tokenMap: TokenAddressMap, includeUserAdded: boolean): { [address: string]: Token } {
-  const { chainId } = useWeb3React()
+  const { chainId = 1 } = useWeb3React()
   const userAddedTokens = useUserAddedTokens()
 
   return useMemo(() => {
@@ -165,6 +165,7 @@ export function useIsUserAddedToken(currency: Currency | undefined | null): bool
 // otherwise returns the token
 export function useToken(tokenAddress?: string | null): Token | null | undefined {
   const tokens = useAllTokens()
+
   return useTokenFromMapOrNetwork(tokens, tokenAddress)
 }
 
