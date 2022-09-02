@@ -106,14 +106,14 @@ const AuthenticatedHeader = () => {
   const nativeCurrency = useNativeCurrency()
   const nativeCurrencyPrice = useStablecoinPrice(nativeCurrency ?? undefined) || 0
   const openClaimModal = useToggleModal(ApplicationModal.ADDRESS_CLAIM)
-  const disconnect = () => {
+  const disconnect = useCallback(() => {
     if (connector && connector.deactivate) {
       connector.deactivate()
     }
     connector.resetState()
     dispatch(updateSelectedWallet({ wallet: undefined }))
     dispatch(removeConnectedWallet({ account, walletType }))
-  }
+  }, [connector, dispatch, account, walletType])
 
   const amountUSD = useMemo(() => {
     const price = parseFloat(nativeCurrencyPrice.toFixed(5))
