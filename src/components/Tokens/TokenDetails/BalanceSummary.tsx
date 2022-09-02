@@ -68,15 +68,15 @@ export default function BalanceSummary({
 
   const { account } = useWeb3React()
   const balance = useTokenBalance(account, token ?? undefined)
-  const balanceNumber = balance ? formatToDecimal(balance, Math.min(balance.currency.decimals, 6)) : 0
+  const balanceNumber = balance ? formatToDecimal(balance, Math.min(balance.currency.decimals, 6)) : undefined
   const balanceUsd = useStablecoinValue(balance)?.toFixed(2)
-  const balanceUsdNumber = balanceUsd ? parseFloat(balanceUsd) : 0
+  const balanceUsdNumber = balanceUsd ? parseFloat(balanceUsd) : undefined
 
   // const { label: connectedLabel, logoUrl: connectedLogoUrl } = getChainInfoOrDefault(connectedChainId)
   // const connectedFiatValue = 1
   // const multipleBalances = true // for testing purposes
 
-  if (loading) return null
+  if (loading || (!error && !balanceNumber && !balanceUsdNumber)) return null
   return (
     <BalancesCard>
       {
