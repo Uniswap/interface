@@ -26,8 +26,10 @@ import { CurrencyAmount, Token } from '@teleswap/sdk'
 import { BigNumber } from 'ethers'
 import { UNI, ZERO_ADDRESS } from 'constants/index'
 import { Chef } from 'constants/farm/chef.enum'
-import useMasterChef from 'hooks/farm/useMasterChef'
+// import useMasterChef from 'hooks/farm/useMasterChef'
 import ClaimRewardModal from 'components/masterchef/ClaimRewardModal'
+import { ReactComponent as AddIcon } from 'assets/svg/add.svg'
+import { ReactComponent as RemoveIcon } from 'assets/svg/minus.svg'
 // import { Token } from '@teleswap/sdk'
 // import { useMasterChefPoolInfo } from 'hooks/farm/useMasterChefPoolInfo'
 
@@ -73,13 +75,29 @@ const TopSection = styled.div`
 const StakingColumn = styled.div`
   max-width: 288px;
   width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  .actions {
+    margin-left: 24px;
+
+    svg.button {
+      cursor: pointer;
+    }
+  }
 `
+
+const StakingColumnTitle = ({ children }: { children: React.ReactNode }) => (
+  <TYPE.gray fontSize={12} width="100%">
+    {children}
+  </TYPE.gray>
+)
 
 export default function PoolCard({ pid }: { pid: number }) {
   const { chainId } = useActiveWeb3React()
   const farmingConfig = CHAINID_TO_FARMING_CONFIG[chainId || 420]
   const mchefContract = useChefContract(farmingConfig?.chefType || Chef.MINICHEF)
-  const masterChef = useMasterChef(Chef.MINICHEF)
+  // const masterChef = useMasterChef(Chef.MINICHEF)
   const positions = useChefPositions(mchefContract, undefined, chainId)
   // const poolInfos = useMasterChefPoolInfo(farmingConfig?.chefType || Chef.MINICHEF)
   // const token0 = stakingInfo.tokens[0]
@@ -142,7 +160,7 @@ export default function PoolCard({ pid }: { pid: number }) {
       if (positions && positions[pid] && positions[pid].pendingSushi) {
         const bi = (positions[pid].pendingSushi as BigNumber).toBigInt()
         console.debug('parsedPendingSushiAmount::bi', bi)
-        return CurrencyAmount.fromRawAmount(rewardToken, bi).toFixed(4)
+        return CurrencyAmount.fromRawAmount(rewardToken, bi).toSignificant(4)
       }
     } catch (error) {
       console.error('parsedPendingSushiAmount::error', error)
@@ -167,52 +185,41 @@ export default function PoolCard({ pid }: { pid: number }) {
 
       <StatContainer>
         <StakingColumn>
-          <TYPE.gray fontSize={12}>
+          <StakingColumnTitle>
             Staked {farmingConfig?.pools[pid].stakingAsset.isLpToken ? 'LP' : 'Token'}
-          </TYPE.gray>
+          </StakingColumnTitle>
           <TYPE.white fontSize={16}>
             {parsedStakedAmount} {farmingConfig?.pools[pid].stakingAsset.symbol}
           </TYPE.white>
-          <ButtonPrimary
-            height={28}
-            width="auto"
-            fontSize={12}
-            padding="5px 12px"
-            onClick={() => setShowStakingModal(true)}
-          >
-            Stake
-          </ButtonPrimary>
-          <ButtonPrimary
-            height={28}
-            width="auto"
-            fontSize={12}
-            padding="5px 12px"
-            onClick={() => setShowUnstakingModal(true)}
-          >
-            Withdraw
-          </ButtonPrimary>
+          <div className="actions">
+            <AddIcon className="button" onClick={() => setShowStakingModal(true)} style={{ marginRight: 8 }} />
+            <RemoveIcon className="button" onClick={() => setShowUnstakingModal(true)} />
+          </div>
         </StakingColumn>
         <StakingColumn>
-          <TYPE.gray fontSize={12}>Earned Rewards</TYPE.gray>
+          <StakingColumnTitle>Earned Rewards</StakingColumnTitle>
           <TYPE.white fontSize={16}>
             {parsedPendingSushiAmount} {rewardToken.symbol}
           </TYPE.white>
-          <ButtonPrimary
-            height={28}
-            width="auto"
-            fontSize={12}
-            padding="5px 12px"
-            onClick={() => setShowClaimRewardModal(true)}
-          >
-            Claim
-          </ButtonPrimary>
+          <div className="actions">
+            <ButtonPrimary
+              height={28}
+              width="auto"
+              fontSize={12}
+              padding="5px 12px"
+              borderRadius="4px"
+              onClick={() => setShowClaimRewardModal(true)}
+            >
+              Claim
+            </ButtonPrimary>
+          </div>
         </StakingColumn>
         <StakingColumn>
-          <TYPE.gray fontSize={12}>APR</TYPE.gray>
+          <StakingColumnTitle>APR</StakingColumnTitle>
           <TYPE.white fontSize={16}>19.810%</TYPE.white>
         </StakingColumn>
         <StakingColumn>
-          <TYPE.gray fontSize={12}>Liquidity</TYPE.gray>
+          <StakingColumnTitle>Liquidity</StakingColumnTitle>
           <TYPE.white fontSize={16}>$1145141919.810</TYPE.white>
         </StakingColumn>
       </StatContainer>
