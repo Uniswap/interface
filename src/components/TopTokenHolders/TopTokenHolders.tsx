@@ -38,10 +38,11 @@ export const TopTokenHolders: FC<Props> = (props: Props) => {
     const [holders, setHolders] = useState<TopHolder[]>()
     const pairs = usePairs(address)
     const URL = useMemo(() => {
+        if (!address) return ``
         if (!chainId || chainId === 1) return `https://api.ethplorer.io/getTopTokenHolders/${address}?apiKey=EK-htz4u-dfTvjqu-7YmJq&limit=50`;
         if (chainId === 56) return `https://api.covalenthq.com/v1/56/tokens/${address}/token_holders/?&key=ckey_3e8b37ddebbf418d9f829e4dddb&page-size=2199&page-number=1`;
         return ``
-    }, [props])
+    }, [address, chainId])
     const tokenInfo = useTokenInfo(chainId, address)
     const deadAddresses = ['0xdEAD000000000000000042069420694206942069'?.toLowerCase(), '0x000000000000000000000000000000000000dead'?.toLowerCase()]
 
@@ -74,9 +75,9 @@ export const TopTokenHolders: FC<Props> = (props: Props) => {
                     ];
                     setHolders(_.orderBy(mappedData, m => m.balance, 'desc').slice(0, 50))
                 });
-            });
+            }).catch(console.error)
         }
-    }, [props])
+    }, [URL, chainId, address])
 
     const burntHolderOwnedPercentComputed = useMemo(() => {
         if (!holders) return 0;

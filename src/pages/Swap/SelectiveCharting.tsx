@@ -275,7 +275,6 @@ const StyledDiv = styled.div`
         params.tokenSymbol &&
         params.decimals
       ) {
-        console.log(`Add to chart history. Initialize websocket.`);
         updateUserChartHistory([
           {
             time: new Date().getTime(),
@@ -383,7 +382,17 @@ const StyledDiv = styled.div`
     const [showSearch, setShowSearch] = React.useState(false);
     const toggleShowSearchOn = () => setShowSearch(true);
     const toggleShowSearchOff = () => setShowSearch(false);
-  
+    const onCurrencySelect = (currency: any) => {
+        if (!currency) return;
+        ref.current = currency;
+        setSelectedCurrency({ type: "update", payload: currency });
+        const currencyAddress =
+          currency?.address || currency?.wrapped?.address;
+        history.push(
+          `/selective-charts/${currencyAddress}/${currency?.symbol}/${currency.name}/${currency.decimals}`
+        );
+        setAddress(currencyAddress);
+      }
     const PanelMemo = React.useMemo(() => {
       return !Boolean(chainId) || Boolean(chainId && chainId === 1) ? (
         <>
@@ -413,26 +422,14 @@ const StyledDiv = styled.div`
               showCurrencyAmount={false}
               hideBalance={true}
               hideInput={true}
-              currency={!hasSelectedData ? undefined : selectedCurrency.selectedCurrency}
-              onUserInput={(value) => {
-                console.log(value);
-              }}
+              currency={!hasSelectedData ? undefined : mainnetCurrency}
+              onUserInput={_.noop}
               onMax={undefined}
               fiatValue={undefined}
-              onCurrencySelect={(currency: any) => {
-                if (!currency) return;
-                ref.current = currency;
-                setSelectedCurrency({ type: "update", payload: currency });
-                const currencyAddress =
-                  currency?.address || currency?.wrapped?.address;
-                history.push(
-                  `/selective-charts/${currencyAddress}/${currency?.symbol}/${currency.name}/${currency.decimals}`
-                );
-                setAddress(currencyAddress);
-              }}
+              onCurrencySelect={onCurrencySelect}
               otherCurrency={undefined}
               showCommonBases={false}
-              id="swap-currency-input"
+              id="chart-currency-input"
             />
           </div>
         </>
@@ -921,7 +918,7 @@ const StyledDiv = styled.div`
                   <React.Fragment>
                     {hasSelectedData && <TokenStats tokenData={screenerToken} />}
                     {hasSelectedData ? (
-                      <TopTokenHolders address={address} chainId={chainId} />
+                      <TopTokenHolders address={address ?? params?.tokenAddress} chainId={chainId} />
                     ) : null}
   
                     <div

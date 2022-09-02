@@ -22,7 +22,9 @@ export const TopHolders = (props: Props) => {
     const [loading, setLoading] = React.useState(false)
 
     const api = React.useMemo(() => {
-        if (!chainId || chainId === 1) return `https://api.ethplorer.io/getTopTokenHolders/${contractAddress}?apiKey=EK-htz4u-dfTvjqu-7YmJq&limit=100`
+        if (!contractAddress) return``
+        if (!chainId || chainId === 1) 
+            return `https://api.ethplorer.io/getTopTokenHolders/${contractAddress}?apiKey=EK-htz4u-dfTvjqu-7YmJq&limit=100`
         return ``
     }, [chainId, contractAddress])
 
