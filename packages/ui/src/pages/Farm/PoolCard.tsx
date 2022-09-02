@@ -129,7 +129,7 @@ export default function PoolCard({ pid }: { pid: number }) {
     try {
       if (positions && positions[pid] && positions[pid].amount) {
         const bi = (positions[pid].amount as BigNumber).toBigInt()
-        return CurrencyAmount.fromRawAmount(new Token(chainId || 420, ZERO_ADDRESS, 18), bi)?.toSignificant(6)
+        return CurrencyAmount.fromRawAmount(new Token(chainId || 420, ZERO_ADDRESS, 18), bi)?.toSignificant(4)
       }
     } catch (error) {
       console.error('parsedStakedAmount::error', error)
@@ -142,7 +142,7 @@ export default function PoolCard({ pid }: { pid: number }) {
       if (positions && positions[pid] && positions[pid].pendingSushi) {
         const bi = (positions[pid].pendingSushi as BigNumber).toBigInt()
         console.debug('parsedPendingSushiAmount::bi', bi)
-        return CurrencyAmount.fromRawAmount(rewardToken, bi).toFixed(6)
+        return CurrencyAmount.fromRawAmount(rewardToken, bi).toFixed(4)
       }
     } catch (error) {
       console.error('parsedPendingSushiAmount::error', error)
