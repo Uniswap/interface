@@ -98,15 +98,15 @@ export default memo(function CurrencySearchModal({
     [setModalView, prevView]
   )
 
-  const { height } = useWindowSize()
+  const { height: windowHeight } = useWindowSize()
   // change min height if not searching
   let modalHeight: number | undefined = 80
   let content = null
   switch (modalView) {
     case CurrencyModalView.search:
-      if (height) {
+      if (windowHeight) {
         // Converts pixel units to vh for Modal component
-        modalHeight = Math.min(Math.round((680 / height) * 100), 80)
+        modalHeight = Math.min(Math.round((680 / windowHeight) * 100), 80)
       }
       content = (
         <CurrencySearch
