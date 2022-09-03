@@ -29,7 +29,7 @@ type TopHolder = {
 const StyledSpan = styled.span`
     color: lightgreen;
     &:hover {
-        color: #fff !important;
+        color: ${props => props.theme.primary1};
         transition: ease all 0.1s;
     }
 `
@@ -127,7 +127,7 @@ export const TopTokenHolders: FC<Props> = (props: Props) => {
             {isOpen && <div style={{ width: '100%', maxHeight: 345, overflow: 'auto' }}>
                 {holders && holders.slice(sliceCount.start, sliceCount.end).map((holder, i) => (
                     <div key={holder.address} style={{ rowGap: 1, alignItems: 'center', padding: '1px 0px', marginBottom: 1, display: 'flex', gap: 10, justifyContent: isMobile ? 'stretch' : 'space-between', flexFlow: 'row wrap' }}>
-                        <ExternalLink style={{ color: "#fff", fontSize: 12 }} href={getHolderLink(holder)}>
+                        <ExternalLink style={{ color: theme.blue1, fontSize: 12 }} href={getHolderLink(holder)}>
                             <span style={{ marginRight: 3, color: '#FFF', background: "#444", borderRadius: 15, padding: 3 }}>{i + 1}</span> {holder?.address}
                             {isUniswapPair(holder.address) &&
                                 <Tooltip text={PairTooltipText(holder.address)} show={showUniTooltip} >

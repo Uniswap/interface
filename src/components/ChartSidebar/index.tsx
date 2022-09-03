@@ -534,10 +534,10 @@ const BadgeHover = styled(Badge)`
 }`
 
 const RefreshCcwHover = styled(RefreshCcw)`
-color: #779681;
+color: ${props => props.theme.text1};
 cursor:pointer;
     &:hover{
-        color:#fff;
+        color:${props => darken(0.1, props.theme.text1)};
         transition: all ease 0.01s;
     }
 `
