@@ -1,30 +1,32 @@
-import { Trans } from '@lingui/macro'
-import { ButtonGray, ButtonOutlined, ButtonLight, ButtonPrimary } from 'components/Button'
-import { AutoColumn } from 'components/Column'
+import { BookOpen, ChevronDown, ChevronsRight, Inbox, Layers, PlusCircle } from 'react-feather'
+import { ButtonGray, ButtonLight, ButtonOutlined, ButtonPrimary } from 'components/Button'
+import { HideSmall, TYPE } from 'theme'
+import { LoadingRows, LoadingSkeleton } from './styleds'
 import Menu, { FlyoutAlignment, NewMenu } from 'components/Menu'
-import { SwapPoolTabs } from 'components/NavigationTabs'
-import PositionList from 'components/PositionList'
 import { RowBetween, RowFixed } from 'components/Row'
-import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
+import styled, { ThemeContext } from 'styled-components/macro'
+
+import { AutoColumn } from 'components/Column'
+import CTACards from './CTACards'
 import { L2_CHAIN_IDS } from 'constants/chains'
-import { useV3Positions } from 'hooks/useV3Positions'
+import { Link } from 'react-router-dom'
+import { PositionDetails } from 'types/position'
+import PositionList from 'components/PositionList'
+import { SwapPoolTabs } from 'components/NavigationTabs'
+import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
+import { Trans } from '@lingui/macro'
 import { useActiveWeb3React } from 'hooks/web3'
 import { useContext } from 'react'
-import { BookOpen, ChevronDown, ChevronsRight, Inbox, Layers, PlusCircle } from 'react-feather'
-import { Link } from 'react-router-dom'
-import { useWalletModalToggle } from 'state/application/hooks'
 import { useUserHideClosedPositions } from 'state/user/hooks'
-import styled, { ThemeContext } from 'styled-components/macro'
-import { HideSmall, TYPE } from 'theme'
-import { PositionDetails } from 'types/position'
-import CTACards from './CTACards'
-import { LoadingRows } from './styleds'
+import { useV3Positions } from 'hooks/useV3Positions'
+import { useWalletModalToggle } from 'state/application/hooks'
 
 const PageWrapper = styled(AutoColumn)`
   width: 100%;
   min-width: 45%;
   max-width: 480px; 
-  background: #252632;
+  background: ${props => props.theme.bg2};
+  color:${props => props.theme.text1};
   padding: 30px;
   border-radius:30px;
 
@@ -92,6 +94,7 @@ const NoLiquidity = styled.div`
 const ResponsiveButtonPrimary = styled(ButtonPrimary)`
   border-radius: 12px;
   background-color: ${({ theme }) => theme.bg2};
+  color:${theme => theme.theme.text1};
   padding: 6px 8px;
   width: fit-content;
   z-index:9;
@@ -199,9 +202,9 @@ export default function Pool() {
         <AutoColumn gap="lg" justify="center">
           <AutoColumn gap="lg" style={{ width: '100%' }}>
             <TitleRow style={{ marginTop: '1rem' }} padding={'0'}>
-              <TYPE.white fontSize={'20px'}>
+              <TYPE.main fontSize={'20px'}>
                 <Trans>Pools Overview</Trans>
-              </TYPE.white>
+              </TYPE.main>
               <ButtonRow>
                 {showV2Features && (
                   <MenuX
@@ -229,20 +232,7 @@ export default function Pool() {
 
             <MainContentWrapper>
               {positionsLoading ? (
-                <LoadingRows>
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                </LoadingRows>
+                <LoadingSkeleton count={6}/>
               ) : filteredPositions && filteredPositions.length > 0 ? (
                 <PositionList positions={filteredPositions} />
               ) : (
@@ -275,7 +265,6 @@ export default function Pool() {
                       borderRadius: '12px',
                       width: 'fit-content',
                       fontSize: '14px',
-                      background: "#222"
                     }}
                   >
                     <Layers size={14} style={{ marginRight: '8px' }} />

@@ -69,7 +69,7 @@ const CurrencySelect = styled(ButtonGray)<{ selected: boolean; hideInput?: boole
   font-size: 24px;
   font-weight: 500;
   background-color: '${({ selected, theme }) => (selected ? theme.bg6 : theme.bg6)}';
-  color: ${({ selected, theme }) => (selected ? theme.text1 : theme.white)};
+  color: ${({ selected, theme }) => (selected ? theme.text1 : theme.text4)};
   border-radius: 16px;
   outline: none;
   cursor: pointer;
@@ -120,7 +120,7 @@ const StyledDropDown = styled(DropDown)<{ selected: boolean }>`
   height: 35%;
 
   path {
-    stroke: ${({ selected, theme }) => (selected ? theme.text1 : theme.white)};
+    stroke: ${({ selected, theme }) => (selected ? theme.primaryText1 : theme.text1)};
     stroke-width: 1.5px;
   }
 `

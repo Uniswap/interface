@@ -177,9 +177,6 @@ export const ScrollableRow = styled.div<{background?:string}>`
     display: none;
   }
 `
-interface ClipboardDataWindow extends Window {
-  clipboardData: DataTransfer | null;
-}
 
 export default function Swap({ history }: RouteComponentProps) {
   const params = useParams<{ tokenAddress?: string }>()
@@ -188,12 +185,6 @@ export default function Swap({ history }: RouteComponentProps) {
   const tokenAddress = React.useMemo(() => isBinance && params.tokenAddress ? params.tokenAddress : undefined, [params.tokenAddress, isBinance])
   const binanceSwapURL = React.useMemo(() => isBinance ? `https://kibaswapbsc.app/#/swap?outputCurrency=${tokenAddress}` : undefined, [tokenAddress, isBinance])
   const loadedUrlParams = useDefaultsFromURLSearch()
-  // Determine if the asynchronous clipboard API is enabled.
-  const IS_CLIPBOARD_API_ENABLED: boolean = (
-    typeof navigator === 'object' &&
-    typeof (navigator as ClipboardNavigator).clipboard === 'object'
-   );
- 
   // token warning stuff
   const [loadedInputCurrency, loadedOutputCurrency] = [
     useCurrency(loadedUrlParams?.inputCurrencyId),
@@ -208,26 +199,6 @@ export default function Swap({ history }: RouteComponentProps) {
     setDismissTokenWarning(true)
   }, [])
 
-  const readClipboardContents = ( async () => {
-    if (IS_CLIPBOARD_API_ENABLED) {
-    console.log(`reading clipboard contents`)
-    const result = await navigator.clipboard.readText()
-                      .catch(async (e) => {
-                          console.error(`couldnt read properly`)
-                        });
-    console.log(`result from content-read`, result)
-    return result;
-  } else {
-    console.error(`Clipboard not yet enabled.`)
-
-  }
-  return undefined
-})
-  
-  // const [ethPrice, ethPriceOld] = useEthPrice()
-
- 
-
   // dismiss warning if all imported tokens are in active lists
   const defaultTokens = useAllTokens()
   // const addToken = useAddUserToken()
@@ -237,33 +208,6 @@ export default function Swap({ history }: RouteComponentProps) {
     urlLoadedTokens.filter((token: Token) => {
       return !Boolean(token.address in defaultTokens)
     })
-    
-    // useEffect(() => {
-    //   readClipboardContents().then(async text => {
-    //     const address = text as string;
-    //     if (Boolean(address) && address as string)  {
-    //       if ( isAddress(address!) && !defaultTokens[address]) {
-    //         const tokenData = await getTokenData(address, ethPrice, ethPriceOld)
-    //         const token = {
-    //           address: text,
-    //           chainId: 1,
-    //           symbol: tokenData?.symbol,
-    //           name: tokenData?.name,
-    //           decimals: tokenData?.decimals || 18,
-    //           isNative: false,
-    //           isToken: true,
-    //           equals: (t: Token) => t.address.toLowerCase() === address.toLowerCase(),
-    //           sortsBefore: (t: Token) => Boolean(!!t?.name && t?.name > tokenData?.name),
-    //         } as Token
-    //         console.log(token)
-    //         addToken(token)
-    //         onCurrencySelection(Field.OUTPUT, token)
-    //     }
-    //   } else {
-    //     console.log('Already added token')
-    //   }
-    //   })
-    // }, [readClipboardContents])
 
   const theme = useContext(ThemeContext)
 
@@ -480,10 +424,10 @@ export default function Swap({ history }: RouteComponentProps) {
           category: 'Swap',
           action:
             recipient === null
-              ? 'Swap w/o Send'
+              ? 'Swap Token for Token on Chart page w/o Send'
               : (recipientAddress ?? recipient) === account
-                ? 'Swap w/o Send + recipient'
-                : 'Swap w/ Send',
+                ? 'Swap Token for Token on Chart page w/o Send + recipient'
+                : 'Swap Token for Token on Chart page w/ Send',
           label: [
             trade?.inputAmount?.currency?.symbol,
             trade?.outputAmount?.currency?.symbol,
@@ -561,7 +505,6 @@ export default function Swap({ history }: RouteComponentProps) {
     [onCurrencySelection]
   )
   const [showChart, setShowChart] = React.useState(false)
-  const tokenData = useTokenData((currencies[Field.OUTPUT] as any)?.address ?? '')
 
   const handleMaxInput = useCallback(() => {
     maxInputAmount && onUserInput(Field.INPUT, maxInputAmount.toExact())
@@ -571,7 +514,7 @@ export default function Swap({ history }: RouteComponentProps) {
     (outputCurrency) => {
       onCurrencySelection(Field.OUTPUT, outputCurrency)
     },
-    [onCurrencySelection, tokenData]
+    [onCurrencySelection]
   )
 
   const [gasSettingsOpen, setGasSettingsOpen] = React.useState(false);
@@ -595,12 +538,7 @@ export default function Swap({ history }: RouteComponentProps) {
   const [view, setView] = React.useState<'bridge' | 'swap' | 'flooz' |
     'limit'
   >('swap')
-  const StyledDiv = styled.div`
-  font-family: 'Bangers', cursive;
-  font-size:32px;
-  `
   const cannotUseFeature = !account || (!kibaBalance) || (+kibaBalance?.toFixed(0) <= 0)
-  const increaseRef = React.useRef<HTMLDivElement>(null)
   // const [pauseAnimation, setPauseAnimation] = useState(false)
   // const [resetInterval, setClearInterval] = useState<() => void | undefined>()
   const resetToStepTwo = () => {
@@ -628,7 +566,6 @@ export default function Swap({ history }: RouteComponentProps) {
   }
 const toggleShowChart = () => setShowChart(!showChart)
   const onViewChangeFn = (view:any) => setView(view)
-  const items = [{ title: "Kiba Inu", img: "https://kiba.app/static/media/download.cfc6b4d1.png", text: "Kiba Inu is a token infused with Kiba Swap" }, { title: "Swally Inu", img: "https://kiba.app/static/media/download.cfc6b4d1.png", text: "Learn more" }, { title: "KIBA INU", img: "https://kiba.app/static/media/download.cfc6b4d1.png", text: "Learn more" }, { title: "Jabba Inu", img: "https://kiba.app/static/media/download.cfc6b4d1.png", text: "Jabba Inu is a meme coin offering culture to its holders." }];
   return (
     <>
       <TokenWarningModal

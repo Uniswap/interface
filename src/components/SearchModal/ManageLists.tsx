@@ -31,6 +31,8 @@ import useToggle from '../../hooks/useToggle'
 
 const Wrapper = styled(Column)`
   height: 100%;
+  background:${props=>props.theme.bg0};
+  color:${props => props.theme.text1};
 `
 
 const UnpaddedLinkStyledButton = styled(LinkStyledButton)`

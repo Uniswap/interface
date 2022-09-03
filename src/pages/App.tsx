@@ -71,6 +71,7 @@ import { useAccountTokenBalances } from 'state/wallet/hooks'
 import { useContractOwner } from 'components/swap/ConfirmSwapModal'
 import { useDarkModeManager } from 'state/user/hooks'
 import { useKiba } from './Vote/VotePage'
+import useTheme from 'hooks/useTheme'
 import { useWeb3React } from '@web3-react/core'
 
 const AppWrapper = styled.div`
@@ -348,7 +349,7 @@ const StyledDiv = styled.div`
 `
 
 export default function App() {
-  const [theme, setTheme] = React.useState('./squeeze2.mp4')
+  const theme =useTheme()
   const [darkMode, toggleDarkMode] = useDarkModeManager()
   const value = localStorage.getItem("hasOverride");
   React.useEffect(() => {
@@ -482,7 +483,8 @@ export default function App() {
                     position: 'relative',
                     padding: '9px 14px',
                     justifyContent: 'end',
-                    backgroundColor: 'theme.bg0',
+                    backgroundColor: theme.bg0,
+                    color: theme.text1,
                     height: 'flex',
                     width: 'flex',
                     minWidth: '45%'
@@ -497,7 +499,7 @@ export default function App() {
                       velocity={10}>
                       <></>
                       <FixedContainer style={{ paddingTop: 10, paddingBottom: 10, backgroundColor: 'transparent', width: '100%' }} gap="xs">
-                        <ScrollableRow style={{ paddingTop: 10, paddingBottom: 10 }} background={"linear-gradient(rgb(21 25 36), rgb(36 38 50))"}>
+                        <ScrollableRow style={{ paddingTop: 10, paddingBottom: 10 }} background={theme.chartSidebar}>
                           {[
                             {
                               title: "Kiba Inu",

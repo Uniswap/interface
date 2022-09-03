@@ -28,13 +28,14 @@ import { useV2Pairs } from '../../hooks/useV2Pairs'
 const PageWrapper = styled(AutoColumn)`
   max-width: 640px;
   width: 100%;
-  background: #18181E;
+  background: ${props => props.theme.bg0};
+  color:${props => props.theme.text1};
   padding:9px 14px;
   border-radius:30px;
 `
 
 const VoteCard = styled(DataCard)`
-  background: #18181E;
+  background: ${props => props.theme.bg1};
   overflow: hidden;
 `
 

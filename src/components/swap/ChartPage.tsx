@@ -457,9 +457,9 @@ export const Chart = () => {
     const isMobile = React.useMemo(() => windowInnerWidth <= 768 , [windowInnerWidth])
     const { chainId, account } = useWeb3React();
     const kibaBalance = useKiba(account)
-    
     const [ethPrice, ethPriceOld] = useEthPrice()
-    const transactionData = useTokenTransactions('0x005d1123878fc55fbd56b54c73963b234a64af3c'.toLowerCase(), 60000)
+    const pairs = usePairs('0x005d1123878fc55fbd56b54c73963b234a64af3c')
+    const transactionData = useTokenTransactions('0x005d1123878fc55fbd56b54c73963b234a64af3c'.toLowerCase(), pairs, 60000)
     const isBinance = React.useMemo(() => chainId && chainId === 56, [chainId])
     const binanceTransactionData = useBscTokenTransactions('0xc3afde95b6eb9ba8553cdaea6645d45fb3a7faf5'.toLowerCase(), 60000)
     const prices = useBnbPrices()
@@ -483,7 +483,6 @@ export const Chart = () => {
     const tokenData = useTokenDataHook(tokenDataAddress, tokenDataPriceParam, tokenDataPriceParamTwo)
     const locale = useUserLocale()
     const [collapsed, setCollapsed] = React.useState(false)
-    const pairs = usePairs(tokenDataAddress)
     const token = useToken(tokenDataAddress)
     const params = useConvertTokenAmountToUsdString(token as any | undefined, kibaBalance as any, pairs?.[0], transactionData?.data)
     const gridTemplateStyle = React.useMemo(() => isMobile ? '100%' : (collapsed ? '5% 95%' : '25% 75%'), [isMobile, collapsed])

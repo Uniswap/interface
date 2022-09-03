@@ -12,10 +12,12 @@ import React from 'react'
 import { TYPE } from 'theme'
 import axios from 'axios'
 import {darken} from 'polished'
+import {lighten} from 'polished'
 import styled from 'styled-components/macro'
 import { useActiveWeb3React } from 'hooks/web3'
 import useDebounce from 'hooks/useDebounce'
 import {useHistory} from 'react-router'
+import useTheme from 'hooks/useTheme'
 
 const WEB3_ENDPOINT = 'https://cloudflare-eth.com'
 ;
@@ -117,6 +119,8 @@ user-select: none;
 
 const MenuItemStyled = styled(MenuItem)`
     padding:9px 14px;
+    background:${props => props.theme.bg1};
+    color:${props => props.theme.text1};
     &:hover {
         background: ${props => darken(0.05, props.theme.bg3)};
         transition: ease all 0.1s ;
@@ -127,6 +131,20 @@ type Props = {
   onPairSelect?: (selectedPair: Pair) => void;
   label?:string
 }
+
+const TipCard = styled(BlueCard)`
+  color: ${props => props.theme.text1};
+  &:hover {
+    color:${props => lighten(0.1, props.theme.text1)};
+    transition:0.2s ease all;
+  }
+`
+
+const SearchInput = styled(CFormInput)`
+  &:focus, &:active, &:hover {
+    border-color: ${props => props.theme.primaryText1} !important;
+  }
+`
 
  export const PairSearch = (props: Props) => {
     const {onPairSelect, label} = props
@@ -185,24 +203,24 @@ type Props = {
     const setWbtc = () => setSearchTerm(`WBTC`)
     const setWeth = () => setSearchTerm(`WETH`)
     const setETHusd = () =>setSearchTerm(`ETH USD`)
-
+    const theme = useTheme()
     const TipMemo = (
-      <BlueCard style={{  display:'flex', flexFlow: 'row nowrap', alignItems:'center'}}>
-      <AutoColumn style={{display:"flex", justifyContent:"center", flexFlow:"row nowrap", alignItems:"center"}} gap="10px">
-        <TYPE.subHeader style={{display:'flex', alignItems:'center'}} fontWeight={400} color={'white'}>
+      <TipCard style={{  display:'flex', flexFlow: 'row', alignItems:'center'}}>
+      <AutoColumn style={{display:"flex", justifyContent:"center", flexFlow:"row  wrap", alignItems:"center"}} gap="10px">
+        <TYPE.subHeader style={{display:'flex', flexFlow:"row  wrap", alignItems:'center'}} fontWeight={400}>
             <b>Tip: </b> &nbsp;Try <TYPE.link style={{cursor:'pointer', paddingLeft: 5}} onClick={setWbtc}>WBTC</TYPE.link>,&nbsp;
              <TYPE.link style={{cursor:'pointer',paddingLeft: 5}} onClick={setWeth}>WETH</TYPE.link>,&nbsp;
-              or <TYPE.link style={{cursor:'pointer', paddingLeft: 5 }} onClick={setETHusd}>ETH USD</TYPE.link>
+              or &nbsp; <TYPE.link style={{cursor:'pointer'}} onClick={setETHusd}>ETH USD</TYPE.link>
         </TYPE.subHeader>
       </AutoColumn>
-    </BlueCard>
+    </TipCard>
     )
 
     return (
         <div style={{display:'flex', flexFlow:'column wrap', alignItems:'center'}}>
         <div style={{position: 'relative', width:'100%', padding:'1rem'}}>
-        <TYPE.small>{labelToDisplay}</TYPE.small>
-        <CFormInput placeholder={"Search by name or address"} type="search" value={searchTerm} onChange={onTermChanged} />
+        <TYPE.small marginBottom="5px" color={theme.text1}>{labelToDisplay}</TYPE.small>
+        <SearchInput autoFocus placeholder={"Search by name or address"} type="search" value={searchTerm} onChange={onTermChanged} />
         {!Boolean(searchTermDebounced) && (
        
             <AutoColumn gap="1rem">{TipMemo}</AutoColumn>

@@ -1,11 +1,13 @@
+import {darken, lighten} from 'polished'
+
 import { Button } from "rebass"
 import { DarkCard } from "components/Card"
 import Modal from "components/Modal"
 import { PairSearch } from "./PairSearch"
 import { TYPE } from "theme"
 import { X } from "react-feather"
-import {darken} from 'polished'
 import styled from "styled-components/macro"
+
 type ChartSearchModalProps = {
     isOpen: boolean;
     onDismiss: () => void
@@ -21,10 +23,10 @@ const Header = styled.div`
 `
 
 const Close = styled(X)`
-    color: #fff;
+    color: ${props => props.theme.text1};
     cursor:pointer;
     &:hover {
-        color: ${darken(0.2, '#fff')};
+        color: ${props => lighten(0.2, props.theme.text1)};
         transition: ease all 0.1s;
     }
 `

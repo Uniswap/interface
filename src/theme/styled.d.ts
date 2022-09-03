@@ -63,7 +63,9 @@ declare module 'styled-components/macro' {
 
     // shadows
     shadow1: string
-
+    //chart page
+    chartTableBg:string
+    chartSidebar: string
     // media queries
     mediaWidth: {
       upToExtraSmall: ThemedCssFunction<DefaultTheme>

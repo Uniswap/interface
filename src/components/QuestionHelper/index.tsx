@@ -1,6 +1,7 @@
 import { ReactNode, useCallback, useState } from 'react'
-import styled from 'styled-components/macro'
+
 import Tooltip from '../Tooltip'
+import styled from 'styled-components/macro'
 
 const QuestionWrapper = styled.div`
   display: flex;
@@ -15,7 +16,7 @@ const QuestionWrapper = styled.div`
   cursor: default;
   border-radius: 36px;
   font-size: 12px;
-  background-color: ${({ theme }) => theme.bg2};
+  background-color: ${({ theme }) => theme.bg6};
   color: ${({ theme }) => theme.text2};
 
   :hover,

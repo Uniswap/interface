@@ -1,12 +1,13 @@
-import { Trans } from '@lingui/macro'
-import { AutoColumn } from 'components/Column'
-import { MinimalNetworkAlert } from 'components/NetworkAlert/MinimalNetworkAlert'
 import { CHAIN_INFO, SupportedChainId } from 'constants/chains'
-import { useActiveWeb3React } from 'hooks/web3'
-import styled from 'styled-components/macro'
+
+import { AutoColumn } from 'components/Column'
+import { ExternalLink } from '../../theme'
+import { MinimalNetworkAlert } from 'components/NetworkAlert/MinimalNetworkAlert'
 import { TYPE } from 'theme'
 import Texture from '../../assets/images/sandtexture.webp'
-import { ExternalLink } from '../../theme'
+import { Trans } from '@lingui/macro'
+import styled from 'styled-components/macro'
+import { useActiveWeb3React } from 'hooks/web3'
 
 const CTASection = styled.section`
   display: grid;
@@ -22,7 +23,8 @@ const CTASection = styled.section`
 
 const CTA1 = styled(ExternalLink)`
   background-color: ${({ theme }) => theme.bg2};
-  background: #18181E;
+  background: ${props => props.theme.bg0};
+  color:${props => props.theme.text1};
   padding: 2rem;
   border-radius: 20px;
   display: flex;
@@ -103,6 +105,7 @@ const HeaderText = styled(TYPE.label)`
   margin-bottom: 24px;
   font-weight: 400;
   font-size: 20px;
+  color: ${theme => theme.theme.text1};
   ${({ theme }) => theme.mediaWidth.upToMedium`
     font-size: 20px;
   `};
@@ -126,22 +129,22 @@ export default function CTACards() {
       <CTASection>
         <CTA1 href={'https://help.uniswap.org/en/articles/5391541-providing-liquidity-on-uniswap-v3'}>
           <ResponsiveColumn>
-            <HeaderText style={{color: "#FFF"}}>
+            <HeaderText >
               <Trans>Learn about providing liquidity</Trans> ↗
             </HeaderText>
-            <TYPE.white fontWeight={300} style={{ alignItems: 'center', display: 'flex', maxWidth: '80%' }}>
+            <TYPE.main fontWeight={300} style={{ alignItems: 'center', display: 'flex', maxWidth: '80%' }}>
               <Trans>Check out our v3 LP walkthrough and migration guides.</Trans>
-            </TYPE.white>
+            </TYPE.main>
           </ResponsiveColumn>
         </CTA1>
         <CTA2 href={infoLink + 'pools'}>
           <ResponsiveColumn>
-            <HeaderText style={{ color: "#FFF", alignSelf: 'flex-start' }}>
+            <HeaderText style={{ alignSelf: 'flex-start' }}>
               <Trans>Top pools</Trans> ↗
             </HeaderText>
-            <TYPE.white fontWeight={300} style={{ alignSelf: 'flex-start' }}>
+            <TYPE.main fontWeight={300} style={{ alignSelf: 'flex-start' }}>
               <Trans>Explore popular pools on Uniswap Analytics.</Trans>
-            </TYPE.white>
+            </TYPE.main>
           </ResponsiveColumn>
         </CTA2>
       </CTASection>

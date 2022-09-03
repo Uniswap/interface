@@ -1,40 +1,41 @@
-import React, { useEffect, useRef, useState } from 'react'
 import {
-  BookOpen,
-  Code,
-  Info,
-  MessageCircle,
-  PieChart,
-  Moon,
-  Sun,
-  ChevronRight,
-  ChevronLeft,
-  Check,
   BarChart2,
-  Twitter,
-  Lock,
-  Star,
-  Tool,
+  BookOpen,
+  Check,
+  ChevronLeft,
+  ChevronRight,
+  Code,
   DollarSign,
+  Info,
   List,
+  Lock,
+  MessageCircle,
+  Moon,
+  PieChart,
+  Star,
+  Sun,
+  Tool,
+  Twitter,
 } from 'react-feather'
-import { Link } from 'react-router-dom'
+import { CHAIN_INFO, L2_CHAIN_IDS, SupportedChainId } from 'constants/chains'
+import { LOCALE_LABEL, SUPPORTED_LOCALES, SupportedLocale } from 'constants/locales'
+import React, { useEffect, useRef, useState } from 'react'
 import styled, { css } from 'styled-components/macro'
-import { ReactComponent as MenuIcon } from '../../assets/images/menu.svg'
-import { useActiveWeb3React } from '../../hooks/web3'
-import { useOnClickOutside } from '../../hooks/useOnClickOutside'
-import { ApplicationModal } from '../../state/application/actions'
 import { useModalOpen, useToggleModal } from '../../state/application/hooks'
-import { Trans } from '@lingui/macro'
-import { ExternalLink } from '../../theme'
-import { ButtonPrimary } from '../Button'
-import { useDarkModeManager } from 'state/user/hooks'
 
-import { L2_CHAIN_IDS, CHAIN_INFO, SupportedChainId } from 'constants/chains'
-import { LOCALE_LABEL, SupportedLocale, SUPPORTED_LOCALES } from 'constants/locales'
-import { useLocationLinkProps } from 'hooks/useLocationLinkProps'
-import { useActiveLocale } from 'hooks/useActiveLocale'
+import { ApplicationModal } from '../../state/application/actions'
+import { ButtonPrimary } from '../Button'
+import { ExternalLink } from '../../theme'
+import { Link } from 'react-router-dom'
 import { LockModal } from 'components/swap/LockModal'
+import { ReactComponent as MenuIcon } from '../../assets/images/menu.svg'
+import { Trans } from '@lingui/macro'
+import { useActiveLocale } from 'hooks/useActiveLocale'
+import { useActiveWeb3React } from '../../hooks/web3'
+import { useDarkModeManager } from 'state/user/hooks'
+import { useLocationLinkProps } from 'hooks/useLocationLinkProps'
+import { useOnClickOutside } from '../../hooks/useOnClickOutside'
+import useTheme from 'hooks/useTheme'
 
 export enum FlyoutAlignment {
   LEFT = 'LEFT',
@@ -227,7 +228,7 @@ export default function Menu() {
   const openClaimModal = useToggleModal(ApplicationModal.ADDRESS_CLAIM)
   const [darkMode, toggleDarkMode] = useDarkModeManager()
   const [menu, setMenu] = useState<'main' | 'lang'>('main')
-
+  const theme =useTheme()
   useEffect(() => {
     setMenu('main')
   }, [open])
@@ -235,7 +236,7 @@ export default function Menu() {
   return (
     // https://github.com/DefinitelyTyped/DefinitelyTyped/issues/30451
     <StyledMenu ref={node as any}>
-      <StyledMenuButton style={{ background: "#222" }} onClick={toggle}>
+      <StyledMenuButton style={{ background: theme.bg0 }} onClick={toggle}>
         <StyledMenuIcon />
       </StyledMenuButton>
 
@@ -303,6 +304,10 @@ export default function Menu() {
                       </div>
                       <ChevronRight size={16} opacity={0.6} />
                     </ToggleMenuItem>
+                    <ToggleMenuItem onClick={() => toggleDarkMode()}>
+                    <div>{darkMode ? <Trans>Light Theme</Trans> : <Trans>Dark Theme</Trans>}</div>
+                    {darkMode ? <Moon opacity={0.6} size={16} /> : <Sun opacity={0.6} size={16} />}
+                  </ToggleMenuItem>
                   </MenuFlyout>
                 </>
               )

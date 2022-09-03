@@ -42,7 +42,7 @@ export default class Moment extends Component {
     const { date, children, format, ...rest } = this.props as any;
 
     return (
-      <div {...rest}>
+      <div style={{fontSize: 12}} {...rest}>
         {children ?
             children(moment(date))
           :

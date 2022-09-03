@@ -51,14 +51,13 @@ function colors(darkMode: boolean): Colors {
     text5: darkMode ? '#2C2F36' : '#EDEEF2',
 
     // backgrounds / greys
-    bg0: darkMode ? '#252632' : '#252632',
-    bg1: darkMode ? '#18181E' : '#18181E',
-    bg2: darkMode ? '#F76C1D' : '#F76C1D',
-    bg3: darkMode ? '#40444F' : '#CED0D9',
-    bg4: darkMode ? '#848484' : '#C8C8CB',
-    bg5: darkMode ? '#4F4F62' : '#4F4F62',
-    bg6: darkMode ? '#30313D' : '#30313D',
-
+    bg0: darkMode ? '#252632' : '#fff',
+    bg1: darkMode ? '#18181E' : '#fff',
+    bg2: darkMode ? '#F76C1D' : '#eee',
+    bg3: darkMode ? '#40444F' : '#fff',
+    bg4: darkMode ? '#848484' : '#fff',
+    bg5: darkMode ? '#4F4F62' : '#fff',
+    bg6: darkMode ? '#30313D' : '#FFF',
     //specialty colors
     modalBG: darkMode ? 'rgba(0,0,0,.425)' : 'rgba(0,0,0,0.3)',
     advancedBG: darkMode ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.6)',
@@ -110,7 +109,8 @@ function theme(darkMode: boolean): DefaultTheme {
 
     //shadows
     shadow1: darkMode ? '#000' : '#2F80ED',
-
+    chartTableBg: darkMode ? 'linear-gradient(rgb(27 31 42),rgb(17 19 32))': 'linear-gradient(rgb(219, 219, 219), rgb(255 255 255))', 
+    chartSidebar: darkMode ? 'linear-gradient(rgb(27 31 42),rgb(17 19 32))': 'linear-gradient(rgb(244 244 244),rgb(255 255 255))',
     // media queries
     mediaWidth: mediaWidthTemplates,
 

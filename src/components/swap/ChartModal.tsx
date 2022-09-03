@@ -1,4 +1,4 @@
-import { useTokenData, useTokenTransactions } from 'state/logs/utils';
+import { usePairs, useTokenData, useTokenTransactions } from 'state/logs/utils';
 
 import { Dots } from 'pages/Pool/styleds';
 import Modal from 'components/Modal';
@@ -22,11 +22,11 @@ const StyledDiv = styled.div`
 `
 export const ChartModal = React.memo(({ isOpen, onDismiss }: { isOpen: boolean, onDismiss: () => void }) => {
     const web3Data = useWeb3React();
-    const kibaBalance = useKiba(web3Data.account)
     const isBinance = web3Data.chainId && web3Data.chainId === 56
     const hasAccess = useHasAccess()
     const accessDenied = !hasAccess
-    const transactionData = useTokenTransactions('0x005d1123878fc55fbd56b54c73963b234a64af3c', 60000)
+    const pairs = usePairs('0x005d1123878fc55fbd56b54c73963b234a64af3c')
+    const transactionData = useTokenTransactions('0x005d1123878fc55fbd56b54c73963b234a64af3c', pairs, 60000)
     const Frame = accessDenied ? null : (
         <iframe id={'tradingview_5aace'} src={`https://www.tradingview.com/widgetembed/?frameElementId=tradingview_5aace&symbol=UNISWAP:KIBAWETH&interval=4H&hidesidetoolbar=0&saveimage=1&toolbarbg=f1f3f6&studies=%5B%5D&theme=dark&style=1&timezone=Etc%2FUTC&withdateranges=1&studies_overrides=%7B%7D&overrides=%7B%7D&enabled_features=%5B%5D&disabled_features=%5B%5D&locale=en`}
             style={{
@@ -38,7 +38,6 @@ export const ChartModal = React.memo(({ isOpen, onDismiss }: { isOpen: boolean, 
     const tokenData = useTokenData(`0x005d1123878fc55fbd56b54c73963b234a64af3c`)
 
     const [view, setView] = React.useState<'chart' | 'stats'>('chart')
-    const transactions = useTokenTransactions('0x005d1123878fc55fbd56b54c73963b234a64af3c', 60000)
     const formattedTransactions = React.useMemo(() => transactionData?.data?.swaps?.map((swap: any) => {
         const netToken0 = swap.amount0In - swap.amount0Out
         const netToken1 = swap.amount1In - swap.amount1Out

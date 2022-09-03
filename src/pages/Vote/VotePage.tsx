@@ -9,38 +9,28 @@ import {
 } from "@uniswap/sdk-core";
 import { DAI, USDC, USDT } from "../../constants/tokens";
 import { ExternalLink, StyledInternalLink, TYPE } from "../../theme";
-import React, { useEffect, useMemo, useState } from "react";
 import { pancakeAbi, pancakeAddress, routerAbi, routerAddress } from "./routerAbi";
-import { useDarkModeManager, useUserChartHistoryManager } from "state/user/hooks";
 
 import { AutoColumn } from "../../components/Column";
-import { ButtonLight } from "../../components/Button";
-import {
-  Clock,
-} from "react-feather";
 import {
   DataCard,
 } from "../../components/earn/styled";
-import { GreyCard } from "../../components/Card";
+import React, {  } from "react";
 import { RowBetween } from "../../components/Row";
 import { SupportedChainId } from "constants/chains";
 import { SwitchLocaleLink } from "../../components/SwitchLocaleLink";
 import { Trans } from "@lingui/macro";
-import { Transactions } from "./TransactionsPage";
 import Web3 from "web3";
 import _ from 'lodash'
 import { binanceTokens } from "utils/binance.tokens";
-import moment from "moment";
 import styled from "styled-components/macro";
 import { useActiveWeb3React } from "../../hooks/web3";
 import { useBinanceTokenBalance } from "utils/binance.utils";
 import useLast from 'hooks/useLast'
+import useTheme from 'hooks/useTheme'
 import { useTokenBalance } from "../../state/wallet/hooks";
-import { useTotalKibaGains } from '../../state/logs/utils'
-import { useUserTransactions } from "state/logs/utils";
 import { useV2RouterContract } from "hooks/useContract";
 import { useWeb3React } from "@web3-react/core";
-import { walletconnect } from "connectors";
 
 const PageWrapper = styled(AutoColumn)`
   width: 100%;
@@ -175,7 +165,7 @@ export const useRouterABI = () => {
  * @returns Formatted USD string
  */
 export const useConvertTokenAmountToUsdString = (token?: Token, amt?: number, pair?: { token0?: { id: string }, token1?: { id: string } }, txData?: any) => {
-  const { chainId } = useWeb3React()
+  const { chainId, account } = useWeb3React()
   const [retrieving, setRetrieving] = React.useState(false)
   const length = useLast(txData?.[0]?.timestamp)
   const [value, setValue] = React.useReducer(function (state: { value: string[], history: any[] }, action: { type: string, payload: { data: string[], token?: Token } }) {
@@ -271,7 +261,6 @@ export const useConvertTokenAmountToUsdString = (token?: Token, amt?: number, pa
               const value = [formatted, formattedEth]
               setValue({ type: 'update', payload: { data: value, token } });
               setRetrieving(false)
-
               return resolve(value)
             }).catch((e:any) => {
               setRetrieving(false)
@@ -281,7 +270,6 @@ export const useConvertTokenAmountToUsdString = (token?: Token, amt?: number, pa
           }
         } else {
           setRetrieving(false)
-
           setValue({ type: 'update', payload: { data: [], token: token } });
           return resolve([])
         }
@@ -289,17 +277,16 @@ export const useConvertTokenAmountToUsdString = (token?: Token, amt?: number, pa
       } catch (ex) {
         console.error(ex);
         setRetrieving(false)
-
         return resolve([])
       }
     })
-  }, [token, pair, router, amt])
+  }, [token, pair, router, amt, account])
 
   const lastTx = txData?.[0]?.timestamp
   const tokenAddress = token?.address
   const tokenChanged = Boolean(lastToken) && Boolean(token) && Boolean(lastToken?.address?.toLowerCase() !== token?.address?.toLowerCase())
   const txsUpdated = Boolean(lastTx) && Boolean(length) && Boolean(lastTx?.toString()?.toLowerCase() !== length?.toString()?.toLowerCase())
-  const hasTokenHistory = Boolean(token) && value?.history?.some((item) => Boolean(item?.token?.address?.toLowerCase() == (token?.address?.toLowerCase())) && Boolean(item.time))
+  const hasTokenHistory = Boolean(token) && Boolean(value?.history?.length > 0) && value?.history?.some((item) => Boolean(item?.token?.address?.toLowerCase() == (token?.address?.toLowerCase())) && Boolean(item.time > 0))
   if (hasTokenHistory) {
     console.log(`latest history`, value.history.filter(a => a?.token?.address == token?.address && a?.time > 0))
   }
@@ -440,21 +427,23 @@ export const useKibaRefreshedBinance = (account?: string | null, chainId?: numbe
 };
 
 
-const GainsText = styled(TYPE.white)`
+const GainsText = styled(TYPE.main)`
 font-size:14px;
-font-family:'Open Sans';`
+font-family:'Open Sans';
+`
 
 export default function VotePage() {
   const { account, chainId } = useActiveWeb3React();
   const kibaBalance = useKibaRefreshedBinance(account, chainId)
   const kibaBalanceUSD = useKibaBalanceUSD(account ?? undefined, chainId)
-
+  const theme =useTheme()
   return (
     <>
       <PageWrapper gap="lg" justify="center">
         <ProposalInfo>
           <div style={{ display: 'flex', alignItems: 'center', width: '100%', marginBottom: '2rem' }}>
-            <GainsText style={{ display: 'flex', alignItems: 'center', fontSize: 32 }}>KibaStats
+            <GainsText style={{ color: theme.text1, display: 'flex', alignItems: 'center', fontSize: 32 }}>
+             <TYPE.main>KibaStats</TYPE.main>
               <Badge style={{ marginLeft: 10, marginTop: -2 }} variant={BadgeVariant.DEFAULT}>
                 <GainsText>Beta</GainsText>
               </Badge>

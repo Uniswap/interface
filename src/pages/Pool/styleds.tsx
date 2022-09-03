@@ -6,6 +6,7 @@ import { CardWrapper } from 'pages/Swap'
 import Skeleton from 'react-loading-skeleton'
 import { Text } from 'rebass'
 import done from './done.json'
+import useTheme from 'hooks/useTheme'
 
 export const Wrapper = styled.div`
   position: relative;
@@ -44,8 +45,9 @@ export const MaxButton = styled.button<{ width: string }>`
 
 
 const Loading = ({count}:any) => {
+  const theme = useTheme()
   return (
-    <Skeleton wrapper={({children}: any) => <Wrapper style={{padding:15}}>{children}</Wrapper>} height={30}  enableAnimation baseColor="#202020" highlightColor="#444" count={count} />
+    <Skeleton wrapper={({children}: any) => <Wrapper style={{padding:15}}>{children}</Wrapper>} height={30}  enableAnimation baseColor={theme.bg1} highlightColor="#444" count={count} />
   )
 }
 

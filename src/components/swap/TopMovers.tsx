@@ -18,6 +18,8 @@ import _ from 'lodash'
 import cultureTokens from '../../../src/trending.json'
 import styled from 'styled-components/macro'
 import useInterval from 'hooks/useInterval'
+import { useIsDarkMode } from 'state/user/hooks'
+import useTheme from 'hooks/useTheme'
 import { useWeb3React } from '@web3-react/core'
 
 const CardWrapper = styled(StyledInternalLink)`
@@ -90,13 +92,15 @@ export const ScrollableRow = styled.div`
 const DataCard = React.memo(({ tokenData, index }: { tokenData: any, index: number }) => {
   const token = useToken(tokenData?.id?.toLowerCase());
   const { chainId } = useWeb3React()
+  const theme =useTheme()
+  const darkMode = useIsDarkMode()
   const route = '/selective-charts/' + tokenData.id + '/' + tokenData.symbol + '/' + tokenData.name + '/' + tokenData?.decimals
   return !tokenData?.id ? null : (
     <CardWrapper to={route}>
       <GreyCard padding="3px">
         <RowFixed>
           <AutoColumn gap="3px" style={{ marginLeft: '3px' }}>
-            <TYPE.label fontSize="13px">
+            <TYPE.small color={darkMode ? 'white' :'text1'} fontSize="12.5px">
               <div style={{ display: 'flex', flexFlow: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
                 <small><Badge style={{ marginRight: "2px" }} variant={BadgeVariant.POSITIVE_OUTLINE}>{index + 1}</Badge></small>
                 <CurrencyLogo style={{ marginRight: "2px" }} currency={(chainId === 1 || !chainId) ? token : tokenData} size="20px" />
@@ -111,7 +115,7 @@ const DataCard = React.memo(({ tokenData, index }: { tokenData: any, index: numb
                   </>
                 )}
               </div>
-            </TYPE.label>
+            </TYPE.small>
           </AutoColumn>
         </RowFixed>
       </GreyCard>

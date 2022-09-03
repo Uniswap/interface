@@ -31,7 +31,8 @@ const ContentWrapper = styled(Column)`
   width: 100%;
   flex: 1 1;
   position: relative;
-  color: #eee;
+  background:${props => props.theme.bg0};
+  color: ${props => props.theme.text1};
 `
 
 const Footer = styled.div`
@@ -40,7 +41,8 @@ const Footer = styled.div`
   padding: 20px;
   border-top-left-radius: 0;
   border-top-right-radius: 0;
-  background-color: ${({ theme }) => theme.bg1};
+  color:${props => props.theme.text1};
+  background-color: ${({ theme }) => theme.bg0};
   border-top: 1px solid ${({ theme }) => theme.bg2};
 `
 
@@ -258,9 +260,9 @@ export function CurrencySearch({
           <ButtonText onClick={showManageView} color={'#fff'} className="list-token-manage-button">
             <RowFixed>
               <IconWrapper size="16px" marginRight="6px" stroke={theme.primaryText1}>
-                <Edit style={{color: "#fff"}} />
+                <Edit style={{color: theme.text1, stroke: theme.text1 }} />
               </IconWrapper>
-              <TYPE.main color={'#fff'}>
+              <TYPE.main color={theme.text1}>
                 <Trans>Manage Token Lists</Trans>
               </TYPE.main>
             </RowFixed>

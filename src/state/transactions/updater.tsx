@@ -1,11 +1,12 @@
-import { useCallback, useEffect, useMemo } from 'react'
-import { useAppDispatch, useAppSelector } from 'state/hooks'
-import { SupportedChainId } from '../../constants/chains'
-import { useActiveWeb3React } from '../../hooks/web3'
-import { retry, RetryableError, RetryOptions } from '../../utils/retry'
-import { updateBlockNumber } from '../application/actions'
-import { useAddPopup, useBlockNumber } from '../application/hooks'
+import { RetryOptions, RetryableError, retry } from '../../utils/retry'
 import { checkedTransaction, finalizeTransaction } from './actions'
+import { useAddPopup, useBlockNumber } from '../application/hooks'
+import { useAppDispatch, useAppSelector } from 'state/hooks'
+import { useCallback, useEffect, useMemo } from 'react'
+
+import { SupportedChainId } from '../../constants/chains'
+import { updateBlockNumber } from '../application/actions'
+import { useActiveWeb3React } from '../../hooks/web3'
 
 interface TxInterface {
   addedTime: number
@@ -61,7 +62,7 @@ export default function Updater(): null {
           library.getTransactionReceipt(hash).then((receipt) => {
             if (receipt === null) {
               console.debug('Retrying for hash', hash)
-              throw new RetryableError()
+              throw new Error(`no more retrying`)
             }
             return receipt
           }),

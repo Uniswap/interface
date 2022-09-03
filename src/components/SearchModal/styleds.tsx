@@ -1,6 +1,6 @@
-import styled from 'styled-components/macro'
 import { AutoColumn } from '../Column'
 import { RowBetween } from '../Row'
+import styled from 'styled-components/macro'
 
 export const TextDot = styled.div`
   height: 3px;
@@ -46,7 +46,7 @@ export const SearchInput = styled.input`
   border-radius: 20px;
   color: ${({ theme }) => theme.text1};
   border-style: solid;
-  border: 1px solid ${({ theme }) => theme.bg3};
+  border: 1px solid ${({ theme }) => theme.bg2};
   -webkit-appearance: none;
 
   font-size: 18px;
@@ -63,7 +63,8 @@ export const SearchInput = styled.input`
 export const Separator = styled.div`
   width: 100%;
   height: 1px;
-  background-color: ${({ theme }) => theme.bg2};
+  color: ${props => props.theme.text1};
+  background-color: ${({ theme }) => theme.secondary2};
 `
 
 export const SeparatorDark = styled.div`

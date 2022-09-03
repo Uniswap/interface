@@ -1,10 +1,10 @@
-import { transparentize } from 'polished'
-import { ReactNode } from 'react'
+import styled, { css } from 'styled-components/macro'
 
 import { AlertTriangle } from 'react-feather'
-import styled, { css } from 'styled-components/macro'
-import { Text } from 'rebass'
 import { AutoColumn } from '../Column'
+import { ReactNode } from 'react'
+import { Text } from 'rebass'
+import { transparentize } from 'polished'
 
 export const Wrapper = styled.div`
   position: relative;
@@ -32,6 +32,7 @@ export const ArrowWrapper = styled.div<{ clickable: boolean }>`
   align-items:center;
   /* transform: rotate(90deg); */
   background: 'transparent';
+  svg g g path { fill: ${props => props.theme.text1}; }
   border: 4px solid ${({ theme }) => theme.bg0};
   z-index: 2;
   ${({ clickable }) =>

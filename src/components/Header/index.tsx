@@ -1,47 +1,25 @@
-import { AlertOctagon, CheckCircle, ChevronDown, ChevronUp, Circle, Clipboard, Eye, EyeOff, Info, Link, Settings } from 'react-feather'
-import { CHAIN_INFO, SupportedChainId } from 'constants/chains'
-import { ExternalLink, TYPE } from '../../theme'
+import { AlertOctagon, CheckCircle, Eye, EyeOff } from 'react-feather'
 import React, { useState } from 'react'
-import { useShowClaimPopup, useToggleSelfClaimModal } from 'state/application/hooks'
 
-import { AutoColumn } from 'components/Column'
-import Badge from 'components/Badge'
 import { BurntKiba } from 'components/BurntKiba'
-import Card from 'components/Card'
-import { CardNoise } from '../earn/styled'
-import { ChartModal } from 'components/swap/ChartModal'
-import ClaimModal from '../claim/ClaimModal'
-import { CloseIcon } from 'theme/components'
-import { Dots } from '../swap/styleds'
-import { GreyCard } from 'components/Card'
-import { IconWrapper } from 'theme/components'
-import Logo from '../../assets/svg/logo.svg'
-import LogoDark from '../../assets/svg/logo_white.svg'
+import { ExternalLink } from '../../theme'
 import Menu from '../Menu'
-import Modal from '../Modal'
 import { NavLink } from 'react-router-dom'
 import NetworkCard from './NetworkCard'
 import Row from '../Row'
-import { StyledInternalLink } from 'theme/components'
+import { SupportedChainId } from 'constants/chains'
 import Swal from 'sweetalert2'
 import { Text } from 'rebass'
-import Tooltip from 'components/Tooltip'
 import { Trans } from '@lingui/macro'
-import UniBalanceContent from './UniBalanceContent'
 import Web3Status from '../Web3Status'
-import { constantToCode } from 'multicodec/src/maps'
 import { darken } from 'polished'
 import logo from '../../assets/svg/logo.svg'
 import styled from 'styled-components/macro'
 import { useActiveWeb3React } from '../../hooks/web3'
-import useCopyClipboard from 'hooks/useCopyClipboard'
 import { useDarkModeManager } from 'state/user/hooks'
 import { useETHBalances } from 'state/wallet/hooks'
-import { useEthPrice } from 'state/logs/utils'
 import useInterval from 'hooks/useInterval'
-import useScrollPosition from '@react-hook/window-scroll'
-import { useUserHasAvailableClaim } from 'state/claim/hooks'
-import { useUserHasSubmittedClaim } from 'state/transactions/hooks'
+import useTheme from 'hooks/useTheme'
 
 const HeaderFrame = styled.div<{ showBackground: boolean }>`
   display: grid;
@@ -102,9 +80,9 @@ const HeaderElement = styled.div`
 const HeaderLinks = styled(Row)`
   justify-self: center;
   background-color: ${({ theme }) => theme.bg0};
-  border: 1px solid ${({ theme }) => theme.bg1};
+  border: 0.01px solid ${({ theme }) => theme.bg1};
   width: fit-content;
-  padding: 4px;
+  padding: 3px;
   border-radius: 16px;
   display: grid;
   grid-auto-flow: column;
@@ -136,6 +114,7 @@ const AccountElement = styled.div<{ active: boolean }>`
   display: flex;
   flex-direction: row;
   align-items: center;
+  color:${props => props.theme.text1};
   background-color: ${({ theme, active }) => (!active ? theme.bg0 : theme.bg0)};
   border-radius: 12px;
   white-space: nowrap;
@@ -389,7 +368,7 @@ export default function Header() {
   const { account, chainId } = useActiveWeb3React()
   const userEthBalance = useETHBalances(account ? [account] : [])?.[account?.toLowerCase() ?? '']
   const [darkMode] = useDarkModeManager()
-  
+  const theme =useTheme()
   return (
     <>
       <HeaderFrame showBackground={scrollY > 45}>
@@ -450,7 +429,7 @@ export default function Header() {
               <img style={{ filter: 'sepia(1)', maxWidth: 15 }} src={'https://www.freeiconspng.com/uploads/gas-icon-21.png'}
               />
               {gas && (
-                <span style={{ color: '#fff', marginLeft: 5, fontSize: 14, fontWeight: 'bold' }}>
+                <span style={{ color: theme.text1, marginLeft: 5, fontSize: 14, fontWeight: 'bold' }}>
                   {gas?.FastGasPrice}
                 </span>
               )}

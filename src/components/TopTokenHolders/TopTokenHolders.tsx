@@ -11,6 +11,7 @@ import _ from 'lodash'
 import { isMobile } from 'react-device-detect';
 import styled from 'styled-components/macro'
 import { usePairs } from 'state/logs/utils';
+import useTheme from 'hooks/useTheme'
 import { useTokenInfo } from 'components/swap/ChartPage';
 
 type Props = {
@@ -110,10 +111,11 @@ export const TopTokenHolders: FC<Props> = (props: Props) => {
         if (chainId === 56) return `https://bscscan.com/address/${holder.address}`;
         return ``
     }
+    const theme= useTheme()
     const node = useMemo(() => isOpen ? <ChevronUp style={{ cursor: "pointer" }} /> : <ChevronDown style={{ cursor: "pointer" }} />, [isOpen]);
     if (chainId !== 1) return null
     return (
-        <DarkCard style={{ padding: '.85rem', background: 'rgba(0,0,0,.4)' }}>
+        <DarkCard style={{ padding: '.85rem', border: `1px solid ${theme.bg6}`, background: theme.chartSidebar}}>
             <p style={{ margin: 0 }} onClick={() => setIsOpen(!isOpen)}>The top 50 holders own <Badge>{topHoldersOwnedPercentComputed}%</Badge> of the total supply. <Badge>{burntHolderOwnedPercentComputed}%</Badge> is burnt. {node}</p>
             {isOpen && <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 {!isMobile && <>

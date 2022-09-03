@@ -10,6 +10,7 @@ import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink';
 import { ExternalLink, StyledInternalLink, TYPE, } from 'theme';
 import { Menu, MenuItem, ProSidebar, SidebarContent, SidebarFooter, SidebarHeader, SubMenu } from 'react-pro-sidebar';
 import { RowBetween, RowFixed } from 'components/Row';
+import {darken, lighten} from 'polished'
 import styled, { keyframes, useTheme } from 'styled-components/macro'
 import { useBscToken, useCurrency, useToken } from 'hooks/Tokens';
 import { useHolderCount, useTokenHolderCount, useTokenInfo } from 'components/swap/ChartPage'
@@ -62,12 +63,34 @@ const Spinner = styled.div`
 `
 
 const Wrapper = styled.div`
+background: ${props => props.theme.chartSidebar};
+color: ${props => props.theme.text1};
+
+.pro-sidebar.collapsed .pro-menu > ul > .pro-menu-item.pro-sub-menu > .pro-inner-list-item {
+    max-width:300px;
+}
+.pro-sidebar {
+    color ${props => props.theme.text1};
+}
+.pro-sidebar .pro-menu .pro-menu-item.pro-sub-menu > .pro-inner-item > .pro-arrow-wrapper .pro-arrow {
+    border-color ${props => props.theme.text1};
+}
+.pro-icon {
+    color: ${props => props.theme.text1};
+}
 .pro-sidebar .pro-menu a:before {
     content: inherit;
+}
+.pro-sidebar .pro-menu .pro-menu-item > .pro-inner-item:focus {
+    outline: none;
+    color: ${props => props.theme.text2};
 }
 .pro-sidebar .pro-menu .prop-menu-item {
     line-height: 1.25rem;
     font-size: 13.25px;
+}
+.pro-sidebar > .pro-sidebar-inner > .pro-sidebar-layout .pro-sidebar-header {
+    border-bottom:${props => props.theme.text1};
 }
 .pro-sidebar .pro-menu .pro-menu-item.pro-sub-menu .pro-inner-list-item {
     padding-left: 0;
@@ -76,7 +99,18 @@ const Wrapper = styled.div`
 .pro-sidebar .pro-menu > ul > .pro-sub-menu > .pro-inner-list-item > div > ul {
     padding-top:15px;
     padding-bottom:15px;
-    background: linear-gradient(rgb(21, 25, 36), rgb(36, 38, 50));
+    background: ${props => props.theme.chartSidebar};
+    color: ${props => props.theme.text1};
+}
+
+.pro-sidebar .pro-menu .pro-menu-item > .pro-inner-item:hover {
+    color: ${props => lighten(0.1, props.theme.text1)};
+    transition: ease in 0.1s;
+}
+
+.pro-sidebar .pro-menu.shaped .pro-menu-item > .pro-inner-item > .pro-icon-wrapper {
+    background:transparent !important;
+    background-color:transparent !important;
 }
 `
 
@@ -186,8 +220,8 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
         return Number(parseFloat(price.toFixed(18)) * excludingBurntValue)
     }, [totalSupplyInt, tokenInfo?.price, tokenData?.priceUSD, amountBurnt])
 
-    const color = `linear-gradient(rgb(21 25 36), rgb(36 38 50))`
-
+    const theme = useTheme()
+    const color = theme.chartSidebar
 
     const inputCurrencyAddress = React.useMemo(function () {
         return Boolean(!!holdings?.pair) ?
@@ -203,7 +237,6 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
         setSwapOpen(true)
     }
 
-
     const SwapLink = React.useMemo(function () {
         return Boolean(token) ? (
             <TYPE.link title={`Swap ${token?.symbol} tokens`} style={{ fontFamily: 'Open Sans !important' }} onClick={onTradeClick}>
@@ -216,16 +249,16 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
     const onQuickNavOpenChange = (isOpen: boolean) => {
         setQuickNavOpen(isOpen)
         if (isOpen) {
-            setStatsOpen(false)
-            setSwapOpen(false)
+            if (statsOpen) setStatsOpen(false)
+            if (swapOpen) setSwapOpen(false)
         }
     }
 
     const onStatsOpenChange = (isOpen: boolean) => {
         setStatsOpen(isOpen)
         if (isOpen) {
-            setQuickNavOpen(false)
-            setSwapOpen(false)
+            if (quickNavOpen) setQuickNavOpen(false)
+            if (swapOpen) setSwapOpen(false)
         }
     }
 
@@ -245,7 +278,12 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
     }
 
     const [search, setSearch] = React.useState(false)
-    const toggleSearchOff = () => setSearch(false)
+    const toggleSearchOff = () => {
+        setSearch(false)
+        if (!statsOpen) {
+            onStatsOpenChange(true)
+        }
+    }
     const loadStart = () => setComponentLoading(true)
     const loadEnd = () => setComponentLoading(false)
     return (
@@ -254,9 +292,13 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
                 width={'100%'}
                 onLoadStart={loadStart}
                 onLoadCapture={loadEnd}
-                style={{ fontSize: 12, marginRight: 15, background: color, borderRadius: 10, border: '.25px solid transparent' }}
+                style={{ 
+                    fontSize: 12, 
+                    marginRight: 15, 
+                    borderRadius: 10, 
+                    border: '.25px solid transparent' }}
             >
-                <SidebarHeader style={{ fontSize: 12, background: 'linear-gradient(#181C27, #131722)' }}>
+                <SidebarHeader style={{ fontSize: 12, background: color }}>
                     <div style={{ height: 0, marginBottom: 5, cursor: 'pointer', display: 'flex', justifyContent: "end", position: 'relative', right: '5' }} >
                         {collapsed && (
                             <ArrowRightCircle onClick={menuIconClick} />
@@ -268,14 +310,14 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
                     </div>
                     <Menu iconShape="round">
 
-                        <SubMenu style={{ height: 'fit-content' }} open={search} onOpenChange={setSearch} icon={<Search />} title="Search tokens">
-                            {search && <PairSearch onPairSelect={toggleSearchOff} />}
+                        <SubMenu style={{ height: 'fit-content' }} open={search} onOpenChange={setSearch} icon={<Search style={{background:'transparent'}} />} title="Search tokens">
+                             <PairSearch onPairSelect={toggleSearchOff} />
                         </SubMenu>
 
                     </Menu>
 
                 </SidebarHeader>
-                <SidebarContent style={{ background: 'linear-gradient(#181C27, #131722)' }}>
+                <SidebarContent style={{ background: color }}>
                     <Menu>
                         <SubMenu
                             style={{}}
@@ -428,8 +470,8 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
 
                 </SidebarContent>
                 <SidebarContent>
-                    <Menu style={{ background: 'linear-gradient( rgb(21, 25, 36), rgb(36, 38, 50))' }} >
-                        <SubMenu style={{ background: 'linear-gradient( rgb(21, 25, 36), rgb(36, 38, 50))' }} onOpenChange={toggleSwapOpen} open={swapOpen} icon={<Repeat />} title={"Swap " + token?.name}>
+                    <Menu style={{ background: color }} >
+                        <SubMenu style={{ background: color }} onOpenChange={toggleSwapOpen} open={swapOpen} icon={<Repeat style={{background:'transparent'}} />} title={"Swap " + token?.name}>
                             <Card style={{ padding: '1rem' }}>
                                 <SwapTokenForToken
                                     fontSize={12}
@@ -441,9 +483,9 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
                         </SubMenu>
                     </Menu>
                 </SidebarContent>
-                <SidebarFooter style={{ background: 'linear-gradient(#181C27, #131722)' }} >
+                <SidebarFooter style={{ background:color }} >
                     <Menu iconShape="circle">
-                        <SubMenu style={{ background: 'linear-gradient(#181C27, #131722)' }} title="Quick Nav" icon={<Heart style={{ background: 'transparent' }} />} open={quickNavOpen} onOpenChange={onQuickNavOpenChange}>
+                        <SubMenu style={{ background: color }} title="Quick Nav" icon={<Heart style={{ background: 'transparent' }} />} open={quickNavOpen} onOpenChange={onQuickNavOpenChange}>
                             {quickNavOpen && <>
                                 <MenuItem><StyledInternalLink to="/dashboard">Dashboard</StyledInternalLink></MenuItem>
                                 <MenuItem><StyledInternalLink to="/swap">Swap</StyledInternalLink></MenuItem>
