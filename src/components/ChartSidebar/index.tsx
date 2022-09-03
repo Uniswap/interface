@@ -530,7 +530,7 @@ const SmallTypeHover = styled.div`
 const BadgeHover = styled(Badge)`
 
 &:hover {
-    color:#fff;
+    color:${props => darken(0.08, props.theme.text1)};
 }`
 
 const RefreshCcwHover = styled(RefreshCcw)`

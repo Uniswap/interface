@@ -27,10 +27,11 @@ const Popup = styled.div`
   padding-right: 35px;
   overflow: hidden;
   border: 3px solid transparent;
-  color:#fff;
+  color:${props => props.theme.text1};
   position:relative;
   top:50px;
   z-index:1000;
+
   :before {
     content: '';
     position: absolute;
@@ -41,7 +42,7 @@ const Popup = styled.div`
     z-index: -1;
     margin: -$border;
     border-radius: inherit;
-    background: linear-gradient(to right,red,orange);
+    background: ${props => props.theme.bg0};
 }
   ${({ theme }) => theme.mediaWidth.upToSmall`
     min-width: 290px;

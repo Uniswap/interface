@@ -79,7 +79,7 @@ const StyledDiv = styled.div`
 
 const BackLink = styled(StyledDiv)`
   &:hover {
-    color: lightgreen !important;
+    color: ${props => lighten(0.2, props.theme.text1)};
   }
 `;
 

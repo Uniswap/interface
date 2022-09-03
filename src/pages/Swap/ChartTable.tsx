@@ -9,6 +9,7 @@ import React from "react";
 import _ from "lodash";
 import { darken } from 'polished'
 import styled from 'styled-components/macro'
+import { useIsDarkMode } from 'state/user/hooks';
 import useLast from "hooks/useLast";
 
 const Table = styled.table`
@@ -17,10 +18,10 @@ const Table = styled.table`
     background:
     ${props => `${props.theme.chartTableBg as string}`};
 `
-const Tr = styled.tr<{ item?: any, account?: any }>`
+const Tr = styled.tr<{ highlight:string, item?: any, account?: any }>`
 background:
 ${props => props.item?.account?.toLowerCase() == props.account?.toLowerCase()
-        ? `${props.theme.success}`
+        ? `${props.highlight}`
         : `inherit`};
     padding-bottom: 5px;
     &:hover {
@@ -55,6 +56,8 @@ type RowProps = {
 /* eslint-disable */
 const ChartTableRow = React.memo(
     (props: RowProps) => {
+        const darkMode = useIsDarkMode()
+        const highlightedColor = darkMode ? '#15223a' : '#afd9bd'
         const { item, first, account, tokenSymbol, index, chainLabel } = props;
         /* eslint-disable */
         return React.useMemo(() => (
@@ -63,7 +66,7 @@ const ChartTableRow = React.memo(
                 classNames={'example'}
                 timeout={1000}
                 onEnter={console.log}>
-                    <Tr account={account} item={item}>
+                    <Tr highlight={highlightedColor} account={account} item={item}>
                     <td style={{ fontSize: 12 }}>
                         {new Date(item.timestamp * 1000).toLocaleString()}
                     </td>

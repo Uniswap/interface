@@ -51,7 +51,7 @@ const ToolbarItem = styled(AutoColumn)`
 `;
 
 const StyledBadge = styled(Badge)<{active?:boolean}>`
-color: ${({theme}) => theme.text1};
+color: ${({theme, active}) => active ? theme.blue4 : theme.text1};
  &:hover {
    color: ${({active, theme}) => active ? theme.text1 : `${theme.text1}`} !important;
    transition: ease all 0.1s;

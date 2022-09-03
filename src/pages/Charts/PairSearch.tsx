@@ -232,7 +232,7 @@ const SearchInput = styled(CFormInput)`
             )}
 
             {Boolean(routing) && (
-                <div style={{padding:12}}>
+                <div style={{ color: theme.text1, padding:12}}>
                     <Dots><CheckCircle fill={'green'} /> Loading chart and data..</Dots>
                 </div>
             )}
