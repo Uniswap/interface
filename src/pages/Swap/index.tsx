@@ -598,7 +598,7 @@ const toggleShowChart = () => setShowChart(!showChart)
 
               <GasSelectorModal isOpen={gasSettingsOpen} onDismiss={closeGasSettings} />
 
-              <small style={{cursor:'pointer', display:'flex', marginBottom:5, alignItems:'center', justifyContent: 'flex-end'}} onClick={openGasSettings}>Customize Gas <ArrowUpRight /></small>
+              <small style={{color: theme.text1, cursor:'pointer', display:'flex', marginBottom:5, alignItems:'center', justifyContent: 'flex-end'}} onClick={openGasSettings}>Customize Gas <ArrowUpRight /></small>
               <AutoColumn gap={'xs'}>
               {useAutoSlippage && automaticCalculatedSlippage >= 0 && <Badge  variant={BadgeVariant.DEFAULT}>
           Using {automaticCalculatedSlippage}% Auto Slippage</Badge>}

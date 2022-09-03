@@ -21,6 +21,8 @@ const ContentWrapper = styled(AutoColumn)`
   width: 100%;
   padding: 1rem;
   overflow:hidden;
+  background: ${props => props.theme.bg0};
+  color: ${props => props.theme.text1};
 `
 
 type GasSelectorProps = {
@@ -40,7 +42,6 @@ padding:1px;
 const ToolbarItem = styled(AutoColumn)`
  cursor: pointer;
  padding:9px;
- background:#222;
  transition: ease all 0.2s;
  &:hover{
      > * { 
@@ -50,8 +51,9 @@ const ToolbarItem = styled(AutoColumn)`
 `;
 
 const StyledBadge = styled(Badge)<{active?:boolean}>`
+color: ${({theme}) => theme.text1};
  &:hover {
-   color: ${({active}) => active ? 'lightgreen' : '#fff'} !important;
+   color: ${({active, theme}) => active ? theme.text1 : `${theme.text1}`} !important;
    transition: ease all 0.1s;
    cursor: pointer;
  }
@@ -60,16 +62,16 @@ const StyledBadge = styled(Badge)<{active?:boolean}>`
 const StyledInput = styled.input`
 padding: 9px 14px;
  &:hover {
-   border: 1px solid lightgreen !important;
+   border: 1px solid ${props => props.theme.text1} !important;
  }
 
  &:focus {
-   border: 1px solid lightgreen !important;
-   outline:lightgreen 1px;
+   border: 1px solid ${props => props.theme.text1} !important;
+   outline:${props => props.theme.text1} 1px;
  }
  &:focus-visible{
-  border: 1px solid lightgreen !important;
-  outline: lightgreen 1px;
+  border: 1px solid ${props => props.theme.text1} !important;
+  outline: ${props => props.theme.text1} 1px;
  }
 `
 
@@ -150,7 +152,7 @@ export const GasSelectorModal = (props: GasSelectorProps) => {
 
     const showClearCustomGwei = Boolean(gasSettings && gasSettings?.custom && gasSettings?.custom > 0)
     return (
-        <Modal size={view == 'advanced' ? 500 : 600} maxHeight={600}  isOpen={isOpen} onDismiss={onDismiss}>
+        <Modal size={600} maxHeight={600}  isOpen={isOpen} onDismiss={onDismiss}>
              <ContentWrapper gap="sm">
           <RowBetween>
             <TYPE.mediumHeader>
@@ -160,8 +162,8 @@ export const GasSelectorModal = (props: GasSelectorProps) => {
             <CloseIcon onClick={onDismiss} />
           </RowBetween>
           <RowFixed style={{borderBottom: `1px solid #444`, width:'100%', paddingBottom:10, marginBottom:15, columnGap: 15}}>
-              <StyledBadge active={view === 'basic'} style={{cursor: 'pointer', color: view === 'basic' ? '#fff' : '#222'}} onClick={updateToBasicView}>Basic{view === 'basic' && <><CheckCircle fontSize={14} style={{marginLeft:5}}/> </>}</StyledBadge>
-              <StyledBadge  active={view === 'advanced'}  style={{cursor: 'pointer', color: view === 'advanced' ? '#fff' : '#222'}} onClick={updateToAdvancedView}>Advanced{view === 'advanced' && <><CheckCircle fontSize={14} style={{marginLeft:5}}  /></> }</StyledBadge>
+              <StyledBadge active={view === 'basic'} style={{cursor: 'pointer'}} onClick={updateToBasicView}>Basic{view === 'basic' && <><CheckCircle fontSize={14} style={{marginLeft:5}}/> </>}</StyledBadge>
+              <StyledBadge  active={view === 'advanced'}  style={{cursor: 'pointer'}} onClick={updateToAdvancedView}>Advanced{view === 'advanced' && <><CheckCircle fontSize={14} style={{marginLeft:5}}  /></> }</StyledBadge>
           </RowFixed>
           {view === 'basic' && <div style={{display:'flex', justifyContent:'center', alignItems: 'center', columnGap:10}}>
               <ToolbarItem onClick={refreshGasPrices}><Badge>Refresh Gas &nbsp;<RefreshCw /></Badge></ToolbarItem>
@@ -215,9 +217,9 @@ export const GasSelectorModal = (props: GasSelectorProps) => {
                   </AutoColumn>
                </RowFixed>
               <TYPE.mediumHeader>Custom GWEI Settings</TYPE.mediumHeader>
-              <RowBetween style={{background:!Boolean(gasSettings?.custom) ? '#222' : 'inherit', opacity: !Boolean(gasSettings?.custom) ? 0.5 : 1}}>
+              <RowBetween style={{ opacity: !Boolean(gasSettings?.custom) ? 0.5 : 1}}>
                 <RowFixed>
-                  <TYPE.black fontWeight={400} fontSize={14} color={'lightgreen'}>
+                  <TYPE.black fontWeight={400} fontSize={14} color={'text1'}>
                     <>Use Custom GWEI One Time Only</>
                   </TYPE.black>
                   <QuestionHelper text={<>Uses the custom gwei specified on the next executed transaction only.</>} />

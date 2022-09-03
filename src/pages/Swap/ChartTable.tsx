@@ -20,7 +20,7 @@ const Table = styled.table`
 const Tr = styled.tr<{ item?: any, account?: any }>`
 background:
 ${props => props.item?.account?.toLowerCase() == props.account?.toLowerCase()
-        ? `#444`
+        ? `${props.theme.success}`
         : `inherit`};
     padding-bottom: 5px;
     &:hover {
