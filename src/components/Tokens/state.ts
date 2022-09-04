@@ -1,4 +1,4 @@
-import { SupportedChainId } from 'constants/chains'
+import { SupportedChainId } from '@uniswap/sdk-core'
 import { TimePeriod } from 'graphql/data/TopTokenQuery'
 import { atom, useAtom } from 'jotai'
 import { atomWithReset, atomWithStorage } from 'jotai/utils'

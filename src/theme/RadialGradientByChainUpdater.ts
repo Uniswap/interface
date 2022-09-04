@@ -1,10 +1,9 @@
+import { SupportedChainId } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { BaseVariant } from 'featureFlags'
 import { useRedesignFlag } from 'featureFlags/flags/redesign'
 import { useEffect } from 'react'
 import { useDarkModeManager } from 'state/user/hooks'
-
-import { SupportedChainId } from '../constants/chains'
 
 const initialStyles = {
   width: '200vw',

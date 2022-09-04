@@ -1,5 +1,5 @@
 import { Currency } from '@uniswap/sdk-core'
-import { SupportedChainId } from 'constants/chains'
+import { SupportedChainId } from '@uniswap/sdk-core'
 import useHttpLocations from 'hooks/useHttpLocations'
 import { useMemo } from 'react'
 import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'

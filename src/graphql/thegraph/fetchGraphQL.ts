@@ -4,7 +4,7 @@
  * https://github.com/relay-tools/relay-compiler-language-typescript/blob/master/example/ts/app.tsx
  */
 
-import { SupportedChainId } from 'constants/chains'
+import { SupportedChainId } from '@uniswap/sdk-core'
 import { Variables } from 'react-relay'
 import { GraphQLResponse, ObservableFromValue, RequestParameters } from 'relay-runtime'
 

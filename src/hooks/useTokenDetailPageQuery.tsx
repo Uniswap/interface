@@ -1,4 +1,4 @@
-import { SupportedChainId } from 'constants/chains'
+import { SupportedChainId } from '@uniswap/sdk-core'
 import { isAddress } from 'ethers/lib/utils'
 import { useEffect, useState } from 'react'
 

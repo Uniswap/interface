@@ -1,5 +1,5 @@
+import { SupportedChainId } from '@uniswap/sdk-core'
 import graphql from 'babel-plugin-relay/macro'
-import { SupportedChainId } from 'constants/chains'
 import { useLazyLoadQuery } from 'react-relay'
 
 import type { Chain, TokenDetailQuery as TokenDetailQueryType } from './__generated__/TokenDetailQuery.graphql'

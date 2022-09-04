@@ -1,5 +1,6 @@
+import { SupportedChainId } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { CHAIN_IDS_TO_NAMES, SupportedChainId } from 'constants/chains'
+import { CHAIN_IDS_TO_NAMES } from 'constants/chains'
 import { ParsedQs } from 'qs'
 import { useCallback, useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'

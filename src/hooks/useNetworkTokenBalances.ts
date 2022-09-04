@@ -1,5 +1,5 @@
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
-import { SupportedChainId } from 'constants/chains'
+import { SupportedChainId } from '@uniswap/sdk-core'
 import { gql } from 'graphql-request'
 import { useEffect, useState } from 'react'
 

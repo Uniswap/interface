@@ -1,5 +1,5 @@
+import { SupportedChainId } from '@uniswap/sdk-core'
 import { getChainInfo } from 'constants/chainInfo'
-import { SupportedChainId } from 'constants/chains'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { useAtom } from 'jotai'
 import { useRef } from 'react'
