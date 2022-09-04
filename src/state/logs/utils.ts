@@ -502,8 +502,8 @@ export function useTokenTransactions(tokenAddress: string, allPairsFormatted?:an
     variables: {
       allPairs: allPairsFormatted && Array.isArray(allPairsFormatted) && allPairsFormatted.length ? [allPairsFormatted?.[0]?.id] : []
     },
-    pollInterval: 10000
-  })
+    pollInterval: interval || 10000
+  });
   const data = React.useMemo(() => tokenTxns, [tokenTxns.data, tokenTxns.previousData])
   return { data: data.data, lastFetched: new Date(), loading: tokenTxns.loading };
 }

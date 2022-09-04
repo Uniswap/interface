@@ -162,7 +162,7 @@ const SearchInput = styled(CFormInput)`
     const history = useHistory()
     const handleError = (e:any) => console.error(e)
     const [routing, setRouting] = React.useState(false)
-    const WEB3_ENDPOINT = useWeb3Endpoint()x
+    const WEB3_ENDPOINT = useWeb3Endpoint()
     const chainMap: Record<number , string > = {
       1: 'ethereum',
       56: 'bsc'

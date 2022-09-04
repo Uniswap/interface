@@ -38,11 +38,12 @@ import { ChartTable } from "./ChartTable";
 import CurrencyInputPanel from "components/CurrencyInputPanel";
 import CurrencyLogo from "components/CurrencyLogo";
 import { FixedSizeList } from "react-window";
-import Loader  from "components/Loader"
-import Moment  from"./Moment"
-import QuestionHelper  from "components/QuestionHelper"
+import Loader from "components/Loader"
+import Moment from "./Moment"
+import QuestionHelper from "components/QuestionHelper"
 import React from "react";
 import ReactGA from "react-ga";
+import { TableQuery } from "./TableQuery";
 import Toggle from "components/Toggle";
 import TokenSocials from "./TokenSocials";
 import { TokenStats } from "./TokenStats";
@@ -52,14 +53,14 @@ import { abbreviateNumber } from "components/BurntKiba";
 import { isAddress } from "utils";
 import { isMobile } from "react-device-detect";
 import { useBscTokenTransactions } from "state/logs/bscUtils";
-import { useConvertTokenAmountToUsdString }from "pages/Vote/VotePage";
+import { useConvertTokenAmountToUsdString } from "pages/Vote/VotePage";
 import { useHistory } from "react-router-dom";
 import useLast from "hooks/useLast";
 import { useTokenBalance } from "state/wallet/hooks";
 import { useUserChartHistoryManager } from "state/user/hooks";
 import { useWeb3React } from "@web3-react/core";
 
-const Badge = React.lazy(() => import( "components/Badge"));
+const Badge = React.lazy(() => import("components/Badge"));
 
 const DoubleCurrencyLogo = React.lazy(() => import("components/DoubleLogo"));
 
@@ -86,12 +87,12 @@ const BackLink = styled(StyledDiv)`
   }
 `;
 
-const WrapperCard = styled(DarkCard)<{gridTemplateColumns: string}>`
+const WrapperCard = styled(DarkCard) <{ gridTemplateColumns: string }>`
   background: ${props => props.theme.chartTableBg};
   max-width: 100%;
   display: grid;
-  color ${props=>props.theme.text1};
-  grid-template-columns: ${props=>props.gridTemplateColumns};
+  color ${props => props.theme.text1};
+  grid-template-columns: ${props => props.gridTemplateColumns};
   border-radius: 30px;
 `
 
@@ -124,14 +125,14 @@ export const SelectiveChart = () => {
   );
   const prebuilt = React.useMemo(
     () =>
-      ({
-        address: params?.tokenAddress,
-        chainId,
-        name: params?.name,
-        symbol: params?.tokenSymbol,
-        isNative: false,
-        isToken: true,
-      } as Currency),
+    ({
+      address: params?.tokenAddress,
+      chainId,
+      name: params?.name,
+      symbol: params?.tokenSymbol,
+      isNative: false,
+      isToken: true,
+    } as Currency),
     [params]
   );
   const prebuiltCurrency = React.useMemo(
@@ -141,8 +142,8 @@ export const SelectiveChart = () => {
   const tokenAddressSupplied = React.useMemo(
     () =>
       ref?.current?.address &&
-      isAddress(ref?.current?.address) &&
-      ref.current?.address != params?.tokenAddress
+        isAddress(ref?.current?.address) &&
+        ref.current?.address != params?.tokenAddress
         ? toChecksum(ref.current?.address)
         : toChecksum(params?.tokenAddress),
     [params?.tokenAddress, ref.current]
@@ -157,20 +158,7 @@ export const SelectiveChart = () => {
   const tokenBalance = useTokenBalance(account ?? undefined, token as any);
 
   const screenerToken = useDexscreenerToken(address);
-  const transactionData = useTokenTransactions(address, pairs, 15000);
-  const LastFetchedNode = React.useMemo(
-    () =>
-      transactionData?.lastFetched ? (
-        <Moment date={transactionData.lastFetched} liveUpdate={false}>
-          {(moment:any) => (
-            <span style={{ fontSize: 12 }}>
-              Last Updated {moment.toDate().toLocaleString()}
-            </span>
-          )}
-        </Moment>
-      ) : null,
-    [transactionData.lastFetched]
-  );
+  const transactionData = useTokenTransactions(address, pairs, 20000);
   const [selectedCurrency, setSelectedCurrency] = React.useReducer(
     function (
       state: { selectedCurrency: Currency | null | undefined },
@@ -191,12 +179,9 @@ export const SelectiveChart = () => {
     }
   );
   const hasSelectedData = Boolean(params?.tokenAddress && selectedCurrency?.selectedCurrency?.name);
-  const theme=useTheme()
+  const theme = useTheme()
   const [loadingNewData, setLoadingNewData] = React.useState(false);
-  const bscTransactionData = useBscTokenTransactions(
-    chainId && chainId == 56 ? address?.toLowerCase() : "",
-    60000
-  );
+
   //const [tokenData, setTokenData] = React.useState<any>({})
   const locationCallback = React.useCallback((location: any) => {
     console.log(`location listener`, location);
@@ -247,14 +232,12 @@ export const SelectiveChart = () => {
         action: `View`,
         label: `${ref.current.name}:${ref.current.symbol}`,
       });
-
-      setTimeout(() => {
-        setLoadingNewData(false);
-      }, 1200);
     } else {
       setSelectedCurrency({ payload: undefined, type: "update" });
       ref.current = undefined;
     }
+    
+    setLoadingNewData(false);
   }, []);
 
   useLocationEffect(locationCallback);
@@ -284,44 +267,6 @@ export const SelectiveChart = () => {
     }
   }, []);
 
-  const formattedTransactions = React.useMemo(() => {
-    let retVal: any;
-    if ((chainId && chainId === 1) || !chainId) {
-      retVal = transactionData;
-    } else if (chainId && chainId === 56) {
-      retVal = bscTransactionData;
-    }
-    return _.uniqBy(
-      retVal?.data?.swaps?.map((swap: any) => {
-        const netToken0 = swap.amount0In - swap.amount0Out;
-        const netToken1 = swap.amount1In - swap.amount1Out;
-        const newTxn: Record<string, any> = {};
-        if (netToken0 < 0) {
-          newTxn.token0Symbol = swap.pair.token0.symbol;
-          newTxn.token1Symbol = swap.pair.token1.symbol;
-          newTxn.token0Amount = Math.abs(netToken0);
-          newTxn.token1Amount = Math.abs(netToken1);
-        } else if (netToken1 < 0) {
-          newTxn.token0Symbol = swap.pair.token1.symbol;
-          newTxn.token1Symbol = swap.pair.token0.symbol;
-          newTxn.token0Amount = Math.abs(netToken1);
-          newTxn.token1Amount = Math.abs(netToken0);
-        }
-        newTxn.transaction = swap.transaction;
-        newTxn.hash = swap.transaction.id;
-        newTxn.timestamp = swap.transaction.timestamp;
-        newTxn.type = "swap";
-        newTxn.amountUSD = swap.amountUSD;
-        newTxn.account =
-          swap.to === "0x7a250d5630b4cf539739df2c5dacb4c659f2488d"
-            ? swap.from
-            : swap.to;
-        return newTxn;
-      }),
-      (item: { hash?: string }) => item.hash
-    );
-  }, [transactionData, bscTransactionData, chainId]);
-
   const usdcAndEthFormatted = useConvertTokenAmountToUsdString(
     token as Token,
     parseFloat(tokenBalance?.toFixed(2) as string),
@@ -336,12 +281,11 @@ export const SelectiveChart = () => {
     function () {
       if (!Boolean(Array.isArray(pairs) && pairs.length)) return undefined;
 
-      return `${
-        pairs?.[0]?.token0?.symbol?.toLowerCase() ===
-        token?.symbol?.toLowerCase()
+      return `${pairs?.[0]?.token0?.symbol?.toLowerCase() ===
+          token?.symbol?.toLowerCase()
           ? pairs?.[0]?.token1?.id
           : pairs?.[0]?.token0?.id
-      }`;
+        }`;
     },
     [tokenData, pairs, token]
   );
@@ -482,19 +426,17 @@ export const SelectiveChart = () => {
       if (chainId === 1 || !chainId) {
         retVal = "UNISWAP:";
         if (pairs && pairs.length) {
-          pairSymbol = `${
-            pairs?.[0]?.token0?.symbol?.toLowerCase() ===
-            currency?.symbol?.toLowerCase()
+          pairSymbol = `${pairs?.[0]?.token0?.symbol?.toLowerCase() ===
+              currency?.symbol?.toLowerCase()
               ? pairs?.[0]?.token1?.symbol
               : pairs?.[0]?.token0?.symbol
-          }`;
+            }`;
           if (pairSymbol === "DAI")
             return `DOLLAR${currency?.symbol?.replace("$", "")}DAI`;
-          retVal += `${currency?.symbol}${
-            pairs?.[0]?.token0?.symbol === currency?.symbol
+          retVal += `${currency?.symbol}${pairs?.[0]?.token0?.symbol === currency?.symbol
               ? pairs?.[0]?.token1?.symbol
               : pairs?.[0]?.token0?.symbol
-          }`;
+            }`;
         } else {
           if (
             params.tokenAddress &&
@@ -505,22 +447,21 @@ export const SelectiveChart = () => {
           else if (currency && currency.symbol && currency.symbol !== "WETH")
             retVal = `UNISWAP:${currency.symbol}WETH`;
           else if (currency && currency.symbol && currency.symbol === "WETH")
-            retVal =  chainId == 1 ? "UNISWAP:WETHUSDT" : chainId == 56 ? "WETHWBNB" : `UNISWAP:WETHUSDT`;
- 
+            retVal = chainId == 1 ? "UNISWAP:WETHUSDT" : chainId == 56 ? "WETHWBNB" : `UNISWAP:WETHUSDT`;
+
           if (
             (retVal == "UNISWAP:" && params?.tokenSymbol) ||
             prebuilt?.symbol
           ) {
-            retVal = `UNISWAP:${
-              params?.tokenSymbol ? params?.tokenSymbol : prebuilt?.symbol
-            }WETH`;
+            retVal = `UNISWAP:${params?.tokenSymbol ? params?.tokenSymbol : prebuilt?.symbol
+              }WETH`;
           }
         }
       } else if (chainId && chainId === 56) {
         if (params?.tokenSymbol == "BNB" || params?.tokenSymbol == "WBNB") {
           return "WBNBBUSD"
         }
-        retVal = "PANCAKESWAP:" + pairSymbol +  params?.tokenSymbol ;
+        retVal = "PANCAKESWAP:" + pairSymbol + params?.tokenSymbol;
       }
       return retVal;
     },
@@ -606,11 +547,11 @@ export const SelectiveChart = () => {
             borderLeft: isMobile
               ? "none"
               : Boolean(
-                  params?.tokenAddress &&
-                    (selectedCurrency || !!prebuilt?.symbol)
-                )
-              ? "1px solid #444"
-              : "none",
+                params?.tokenAddress &&
+                (selectedCurrency || !!prebuilt?.symbol)
+              )
+                ? "1px solid #444"
+                : "none",
           }}
         >
           <CardSection style={{ padding: isMobile ? 0 : "" }}>
@@ -619,8 +560,8 @@ export const SelectiveChart = () => {
                 justifyContent: !hasSelectedData
                   ? ""
                   : !isMobile
-                  ? "space-between"
-                  : "",
+                    ? "space-between"
+                    : "",
                 paddingBottom: 2,
                 marginTop: 10,
                 marginBottom: 5,
@@ -654,67 +595,67 @@ export const SelectiveChart = () => {
                 <Badge>Select a token to get started</Badge>
               ) : isMobile ? null : (
                 <span style={{ margin: 0 }}>
-                  <TokenSocials 
-                             theme={theme}   
-                             tokenSymbol={params?.tokenSymbol || ''} 
-                             tokenInfo={tokenInfo} />
+                  <TokenSocials
+                    theme={theme}
+                    tokenSymbol={params?.tokenSymbol || ''}
+                    tokenInfo={tokenInfo} />
                 </span>
               )}
 
               {loadingNewData &&
-               <LoadingSkeleton count={1} />}
+                <LoadingSkeleton count={1} />}
 
               {!hasSelectedData || loadingNewData
                 ? null
                 : Boolean(
-                    screenerToken &&
-                      (screenerToken?.priceChange || screenerToken.volume)
-                  ) && (
-                    <div style={{ paddingLeft: 0 }}>
-                      <div
-                        style={{
-                          paddingLeft: 0,
-                          justifyContent: "space-between",
-                          display: "flex",
-                          flexFlow: isMobile ? "row" : "row wrap",
-                          alignItems: "center",
-                          gap: 15,
-                        }}
-                      >
-                        {Object.keys(screenerToken.priceChange).map((key) => (
-                          <div
-                            key={key}
-                            style={{
-                              paddingRight:
-                                _.last(
-                                  Object.keys(screenerToken.priceChange)
-                                ) == key
-                                  ? 0
-                                  : 10,
-                              borderRight:
-                                _.last(
-                                  Object.keys(screenerToken.priceChange)
-                                ) == key
-                                  ? "none"
-                                  : "1px solid #444",
-                            }}
-                          >
-                            <TYPE.small textAlign="center">
-                              {formatPriceLabel(key)}
-                            </TYPE.small>
-                            <TYPE.black>
-                              {screenerToken?.priceChange?.[key] < 0 ? (
-                                <TrendingDown style={{ color: "red" }} />
-                              ) : (
-                                <TrendingUp style={{ color: "green" }} />
-                              )}
-                              {screenerToken?.priceChange?.[key]}%
-                            </TYPE.black>
-                          </div>
-                        ))}
-                      </div>
+                  screenerToken &&
+                  (screenerToken?.priceChange || screenerToken.volume)
+                ) && (
+                  <div style={{ paddingLeft: 0 }}>
+                    <div
+                      style={{
+                        paddingLeft: 0,
+                        justifyContent: "space-between",
+                        display: "flex",
+                        flexFlow: isMobile ? "row" : "row wrap",
+                        alignItems: "center",
+                        gap: 15,
+                      }}
+                    >
+                      {Object.keys(screenerToken.priceChange).map((key) => (
+                        <div
+                          key={key}
+                          style={{
+                            paddingRight:
+                              _.last(
+                                Object.keys(screenerToken.priceChange)
+                              ) == key
+                                ? 0
+                                : 10,
+                            borderRight:
+                              _.last(
+                                Object.keys(screenerToken.priceChange)
+                              ) == key
+                                ? "none"
+                                : "1px solid #444",
+                          }}
+                        >
+                          <TYPE.small textAlign="center">
+                            {formatPriceLabel(key)}
+                          </TYPE.small>
+                          <TYPE.black>
+                            {screenerToken?.priceChange?.[key] < 0 ? (
+                              <TrendingDown style={{ color: "red" }} />
+                            ) : (
+                              <TrendingUp style={{ color: "green" }} />
+                            )}
+                            {screenerToken?.priceChange?.[key]}%
+                          </TYPE.black>
+                        </div>
+                      ))}
                     </div>
-                  )}
+                  </div>
+                )}
 
               {PanelMemo}
 
@@ -761,15 +702,12 @@ export const SelectiveChart = () => {
                         <StyledInternalLink
                           key={item?.token?.address}
                           color={"#fff"}
-                          to={`/selective-charts/${item?.token?.address}/${
-                            item?.token?.symbol
-                          }/${
-                            item?.token?.name
+                          to={`/selective-charts/${item?.token?.address}/${item?.token?.symbol
+                            }/${item?.token?.name
                               ? item?.token?.name
                               : item?.token?.symbol
-                          }/${
-                            item?.token?.decimals ? item?.token?.decimals : 18
-                          }`}
+                            }/${item?.token?.decimals ? item?.token?.decimals : 18
+                            }`}
                         >
                           <RecentCard>
                             <div
@@ -836,8 +774,8 @@ export const SelectiveChart = () => {
                 />
                 {Boolean(
                   params?.tokenAddress &&
-                    (selectedCurrency?.selectedCurrency?.symbol ||
-                      !!prebuilt?.symbol)
+                  (selectedCurrency?.selectedCurrency?.symbol ||
+                    !!prebuilt?.symbol)
                 ) ? (
                   <>
                     <ChartComponent
@@ -850,17 +788,12 @@ export const SelectiveChart = () => {
                       address={address as string}
                       tokenSymbolForChart={tokenSymbolForChart}
                     />
-                    <ChartTable
-                      LastFetchedNode={LastFetchedNode}
-                      account={account}
-                      tokenSymbol={
-                        params?.tokenSymbol ?? mainnetCurrency?.symbol
+                    <TableQuery tokenSymbol={
+                      (params?.tokenSymbol ?? mainnetCurrency?.symbol) as string
                       }
-                      chainId={chainId}
-                      chainLabel={chainLabel}
-                      formattedTransactions={formattedTransactions}
-                      pairs={pairs}
-                    />
+                      address={address as string}
+                      pairs={pairs} />
+                
                   </>
                 ) : null}
               </React.Fragment>

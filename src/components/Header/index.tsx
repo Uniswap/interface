@@ -23,7 +23,7 @@ import useTheme from 'hooks/useTheme'
 
 const HeaderFrame = styled.div<{ showBackground: boolean }>`
   display: grid;
-  background: radial-gradient( #0000004a,transparent);
+  //background: radial-gradient( #0000004a,transparent);
   grid-template-columns: 150px 1fr 120px;
   align-items: center;
   justify-content: space-between;

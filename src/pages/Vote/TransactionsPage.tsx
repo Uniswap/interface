@@ -147,8 +147,8 @@ export const Transactions = ({transactions, loading, error, accountValue}:{trans
                         <tr>
                             <th>Date</th>
                             <th>Type</th>
-                            <th>Amt <small>{chainLabel}</small></th>
-                            <th>Amt <small>Tokens</small></th>
+                            <th>Amt <small>Swapped</small></th>
+                            <th>Amt <small>Recieved</small></th>
                             <th>Amt <small>USD</small></th>
                             <th>Hash</th>
                         </tr>
@@ -160,14 +160,14 @@ export const Transactions = ({transactions, loading, error, accountValue}:{trans
                                 <td style={{color: item.token0Symbol === `W${chainLabel}` ? 'red' : item.isTransfer ? 'yellow' : 'green' }}>
                                     { item.token0Symbol === `W${chainLabel}` ? 'Sell' : 'Buy'} {item.isTransfer && 'Transfer'}
                                 </td>
-                                <td>{item.token0Symbol === `W${chainLabel}` && <>{Number(+item.token0Amount?.toFixed(2))?.toLocaleString()} {item.token0Symbol}</>}
+                                {[item.token0Symbol, item.token1Symbol].includes(`W${chainLabel}`) && <td>{item.token0Symbol === `W${chainLabel}` && <>{Number(+item.token0Amount?.toFixed(2))?.toLocaleString()} {item.token0Symbol}</>}
                                     {item.token1Symbol === `W${chainLabel}` && <>{Number(+item.token1Amount?.toFixed(2))?.toLocaleString()} {item.token1Symbol}</>}
-                                </td>
+                                </td>}
+                                {![item.token0Symbol, item.token1Symbol].includes(`W${chainLabel}`) && item.token1Symbol !== `W${chainLabel}` && <td>{Number(+item.token1Amount?.toFixed(2))?.toLocaleString()} {item.token1Symbol}</td>}
                                 <td>{item.token0Symbol !== `W${chainLabel}` && <>{Number(+item.token0Amount?.toFixed(2))?.toLocaleString()} {item.token0Symbol}</>}
-                                    {item.token1Symbol !== `W${chainLabel}` && <>{Number(+item.token1Amount?.toFixed(2))?.toLocaleString()} {item.token1Symbol}</>}
+                                {[item.token0Symbol, item.token1Symbol].includes(`W${chainLabel}`) &&   item.token1Symbol !== `W${chainLabel}` && <>{Number(+item.token1Amount?.toFixed(2))?.toLocaleString()} {item.token1Symbol}</>}
                                 </td>
                                 <td>${Number(item.amountUSD).toFixed(2).toLocaleString()}</td>
-                            
                                 <td>
                                     <StyledA href={`https://${!chainId || chainId === 1 ? 'etherscan.io' : 'bscscan.com'}/tx/${item?.hash}`}>
                                         {item?.hash && item?.transaction?.id.slice(0, 6) + '...' + item?.transaction?.id.slice(38, 42)}
