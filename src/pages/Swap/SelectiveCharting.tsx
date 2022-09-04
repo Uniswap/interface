@@ -153,25 +153,18 @@ export const SelectiveChart = () => {
   const tokenInfo = useTokenInfo(chainId ?? 1, address);
   const tokenData = useTokenData(address?.toLowerCase(), 30000);
   const { pairs } = tokenData;
-  const hasSocials = React.useMemo(
-    () =>
-      tokenInfo &&
-      (tokenInfo?.twitter || tokenInfo?.coingecko || tokenInfo?.website),
-    [tokenInfo]
-  );
-
   const token = useToken(address);
   const tokenBalance = useTokenBalance(account ?? undefined, token as any);
 
   const screenerToken = useDexscreenerToken(address);
-  const transactionData = useTokenTransactions(address, pairs, 30000);
+  const transactionData = useTokenTransactions(address, pairs, 15000);
   const LastFetchedNode = React.useMemo(
     () =>
       transactionData?.lastFetched ? (
         <Moment date={transactionData.lastFetched} liveUpdate={false}>
-          {(moment: any) => (
+          {(moment:any) => (
             <span style={{ fontSize: 12 }}>
-              Last Updated {moment.fromNow()}
+              Last Updated {moment.toDate().toLocaleString()}
             </span>
           )}
         </Moment>
@@ -245,6 +238,7 @@ export const SelectiveChart = () => {
           data: [],
           token: { ...ref.current, wrapped: undefined },
           summary: `Viewing ${ref.current.name} token chart`,
+          chainId
         },
       ]);
 
@@ -284,6 +278,7 @@ export const SelectiveChart = () => {
           data: [],
           token: { ...prebuilt, wrapped: undefined },
           summary: `Viewing ${prebuilt.name} token chart`,
+          chainId
         },
       ]);
     }
@@ -433,7 +428,7 @@ export const SelectiveChart = () => {
     ) : null;
   }, [mainnetCurrency, pairCurrency, hasSelectedData]);
   const PanelMemo = React.useMemo(() => {
-    return !Boolean(chainId) || Boolean(chainId && chainId === 1) ? (
+    return !Boolean(chainId) || Boolean(chainId) ? (
       <>
         <div
           style={{
@@ -481,12 +476,13 @@ export const SelectiveChart = () => {
 
   const getRetVal = React.useMemo(
     function () {
-      let retVal = "";
+      let retVal = "", pairSymbol = "";
+
       const { selectedCurrency: currency } = selectedCurrency;
       if (chainId === 1 || !chainId) {
         retVal = "UNISWAP:";
         if (pairs && pairs.length) {
-          const pairSymbol = `${
+          pairSymbol = `${
             pairs?.[0]?.token0?.symbol?.toLowerCase() ===
             currency?.symbol?.toLowerCase()
               ? pairs?.[0]?.token1?.symbol
@@ -509,8 +505,8 @@ export const SelectiveChart = () => {
           else if (currency && currency.symbol && currency.symbol !== "WETH")
             retVal = `UNISWAP:${currency.symbol}WETH`;
           else if (currency && currency.symbol && currency.symbol === "WETH")
-            retVal = "UNISWAP:WETHUSDT";
-
+            retVal =  chainId == 1 ? "UNISWAP:WETHUSDT" : chainId == 56 ? "WETHWBNB" : `UNISWAP:WETHUSDT`;
+ 
           if (
             (retVal == "UNISWAP:" && params?.tokenSymbol) ||
             prebuilt?.symbol
@@ -521,7 +517,10 @@ export const SelectiveChart = () => {
           }
         }
       } else if (chainId && chainId === 56) {
-        retVal = "PANCAKESWAP:" + params?.tokenSymbol + "WBNB";
+        if (params?.tokenSymbol == "BNB" || params?.tokenSymbol == "WBNB") {
+          return "WBNBBUSD"
+        }
+        retVal = "PANCAKESWAP:" + pairSymbol +  params?.tokenSymbol ;
       }
       return retVal;
     },
@@ -751,9 +750,10 @@ export const SelectiveChart = () => {
                     }}
                   >
                     {_.orderBy(
-                      _.uniqBy(userChartHistory, (a) =>
+                      _.uniqBy(
+                        userChartHistory, (a) =>
                         a?.token?.address?.toLowerCase()
-                      ),
+                      ).filter((item) => item?.chainId === chainId),
                       (a) => a.time
                     )
                       .reverse()

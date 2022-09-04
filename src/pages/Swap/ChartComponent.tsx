@@ -46,7 +46,7 @@ export const ChartComponent = React.memo(
               hide_side_toolbar={false}
               symbol={symbolForChart}
               theme={theme}
-              
+              interval={60}
               locale={locale || 'en-US'}
               autosize={true}
             />

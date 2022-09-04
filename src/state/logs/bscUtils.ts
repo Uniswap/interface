@@ -1,7 +1,8 @@
-import { BSC_TOKEN_DATA, BSC_TOKEN_DATA_BY_BLOCK_ONE, BSC_TOKEN_DATA_BY_BLOCK_TWO, get2DayPercentChange, getBlockFromTimestamp, getPercentChange } from './utils'
+import { BSC_TOKEN_DATA, BSC_TOKEN_DATA_BY_BLOCK_ONE, BSC_TOKEN_DATA_BY_BLOCK_TWO, TOKEN_DATA, get2DayPercentChange, getBlockFromTimestamp, getPercentChange, toChecksum } from './utils'
 import { startOfMinute, subDays, subWeeks } from 'date-fns'
 
 import React, {  } from 'react'
+import _ from 'lodash'
 import gql from 'graphql-tag'
 import moment from 'moment'
 import { request } from 'graphql-request'
@@ -92,25 +93,12 @@ interface TransactionResults {
 const BIT_QUERY_CLIENT = 'https://graphql.bitquery.io';
 
 const QUERY_HOLDERS_BSC = (address: string) => gql`
-query MyQuery {
-  ethereum(network: bsc) {
-    transfers(
-      currency: {in: ["${address}"]}
-      options: { limitBy: { each: "currency.address", limit: 10 } }
-    ) {
-      currency {
-        address
-      }
-      count(uniq: receivers, amount: { gt: 10 })
-    }
-  }
-}
+
 `
 
 export const fetchBscHolders = async (address: string) => {
-  const response = await request(BIT_QUERY_CLIENT, QUERY_HOLDERS_BSC(address));
-  console.dir(response)
-  return response?.data?.ethereum?.transfers?.find((x: any) => x.count)?.count;
+  const holders = 0
+  return holders
 }
 
 
@@ -531,7 +519,126 @@ export const fetchBscTokenData = async (addy: string, ethPrice: any, ethPriceOld
   return data;
 }
 
+export const useBscPairs =  (tokenAddress?: string) => {
+  const defaultState: any[] = []
+  const tokenAddressChecked = toChecksum(tokenAddress)
+  const [pairData, setPairData] = React.useReducer(function (state: any[], action: { type: any, payload: any }) {
+    switch (action.type) {
+      case "UPDATE":
+        return {
+          ...state,
+          ...action.payload
+        };
+      default:
+        return state;
+    }
+  }, defaultState)
+  const { data, loading, error } = useQuery(
+    TOKEN_DATA(
+      tokenAddressChecked,
+      null,
+      true
+    ),
+    {
+      onCompleted: (params) => {
+        if (params && params.pairs1 && params.pairs0 && Boolean(params.pairs1.length || params.pairs0.length)) {
+          const pairs = [...params.pairs0, ...params.pairs1];
+          setPairData({ type: "UPDATE", payload: pairs })
+        }
+      }, pollInterval: 1000000,
+    })
 
+  return React.useMemo(() => {
+    if (data && (data?.pairs0?.length || data?.pairs1.length) && !_.isEqual([...data.pairs0, ...data.pairs1], pairData)) {
+      const pairs = [...data.pairs0, ...data.pairs1];
+      return pairs
+    }
+    if (pairData && Array.isArray(pairData) && pairData.length) {
+      return pairData;
+    }
+    if (!tokenAddressChecked || loading || error) {
+      return []
+    }
+    return data?.['pairs0'].concat(data?.['pairs1'])
+  }, [data, pairData, tokenAddressChecked])
+}
+
+const TokenTxns = gql`
+  query ($allPairs: [Bytes]!) {
+  mints(first: 5, where: { pair_in: $allPairs }, orderBy: timestamp, orderDirection: desc) {
+    transaction {
+      id
+      timestamp
+    }
+    pair {
+      token0 {
+        id
+        name
+        symbol
+      }
+      token1 {
+        id
+        symbol
+        name
+      }
+    }
+    to
+    liquidity
+    amount0
+    amount1
+    amountUSD
+  }
+  burns(first: 5, where: { pair_in: $allPairs }, orderBy: timestamp, orderDirection: desc) {
+    transaction {
+      id
+      timestamp
+    }
+    pair {
+      token0 {
+        id
+        symbol
+        name
+      }
+      token1 {
+        id
+        symbol
+        name
+      }
+    }
+    sender
+    liquidity
+    amount0
+    amount1
+    amountUSD
+  }
+  swaps(first: 280, orderBy: timestamp, orderDirection: desc, where: { pair_in: $allPairs }) {
+    id
+    transaction {
+      id
+      timestamp
+    }
+    pair {
+      token0 {
+        symbol
+        name
+        id
+      }
+      token1 {
+        symbol
+        name
+        id
+      }
+    }
+    amount0In
+    amount0Out
+    amount1In
+    amount1Out
+    amountUSD
+    to
+    sender
+    from
+  }
+}`
 
 /**
  * Data to display transaction table on Token page
@@ -580,16 +687,20 @@ interface TransactionResults {
 
 export function useBscTokenTransactions(tokenAddress: string, interval: null | number = null) {
   const { chainId } = useWeb3React()
-  const query = useQuery(TOKEN_TRANSACTIONS, {
-    variables: {
-      address: tokenAddress
-    },
-    pollInterval: chainId && chainId == 56 ? 5000 : undefined
+  const pairs = useBscPairs(toChecksum(tokenAddress))
+  const queryVars = React.useMemo(() => ({
+      variables: {
+      allPairs: pairs && pairs.length ? pairs.map((pair: { id: any }) => pair.id) : []
+    }
+  }), [pairs])
+  const query = useQuery(TokenTxns, {
+    ...queryVars,
+    pollInterval: chainId && chainId == 56 ? 10000 : undefined
   })
-  if (chainId && chainId !== 56) {
-    query.stopPolling();
-  }
-  return React.useMemo(() => ({ data: query.data, lastFetched: new Date(), loading: query.loading }), [query]);
+  if (!tokenAddress) 
+    return {data:[], lastFetched: new Date(), loading: false};
+  if (chainId !== 56) query.stopPolling();
+  return { data: query.data, lastFetched: new Date(), loading: query.loading };
 }
 
 export function useBscPoocoinTransactions() {
@@ -597,7 +708,7 @@ export function useBscPoocoinTransactions() {
   const { chainId } = useActiveWeb3React()
   const fn = React.useCallback(async () => {
     if (chainId && chainId === 56) {
-      fetch('https://stg-api.unmarshal.io/v2/bsc/address/0xc3afde95b6eb9ba8553cdaea6645d45fb3a7faf5/transactions?auth_key=VGVtcEtleQ%3D%3D&pageSize=100', { method: "GET" })
+      fetch('', { method: "GET" })
         .then(response => response.json())
         .then(setData)
     }

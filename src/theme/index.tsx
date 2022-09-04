@@ -109,8 +109,8 @@ function theme(darkMode: boolean): DefaultTheme {
 
     //shadows
     shadow1: darkMode ? '#000' : '#2F80ED',
-    chartTableBg: darkMode ? 'linear-gradient(rgb(35 40 55),rgb(17 19 32))': 'linear-gradient(rgb(219, 219, 219), rgb(255 255 255))', 
-    chartSidebar: darkMode ? 'linear-gradient(rgb(27 31 42),rgb(17 19 32))': 'linear-gradient(rgb(244 244 244),rgb(255 255 255))',
+    chartTableBg: darkMode ? 'linear-gradient(rgb(35 40 55),rgb(17 19 32))': 'linear-gradient(white, rgb(255 255 255))', 
+    chartSidebar: darkMode ? 'linear-gradient(rgb(27 31 42),rgb(17 19 32))': 'linear-gradient(#f5f5f5,rgb(255 255 255))',
     // media queries
     mediaWidth: mediaWidthTemplates,
 

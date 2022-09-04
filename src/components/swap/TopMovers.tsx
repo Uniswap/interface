@@ -125,7 +125,7 @@ const DataCard = React.memo(({ tokenData, index }: { tokenData: any, index: numb
 DataCard.displayName = 'DataCard';
 
 
- const  _TopTokenMovers = React.memo(({children}:any) => {
+ const  _TopTokenMovers = React.memo(() => {
   const allTokenData = useTopPairData()
   const { chainId } = useWeb3React()
   const [allTokens, setAllTokens] = React.useState<any>([])
@@ -249,11 +249,16 @@ DataCard.displayName = 'DataCard';
 
   const mappedTokens = topPriceIncrease.filter((a: any) => !a?.symbol?.includes('SCAM') && !a?.symbol?.includes('rebass'));
   return (
-    <DarkGreyCard style={{ marginBottom:10, zIndex: 3, padding: "0px", background: 'transparent',top: 0, margin: 0 }}>
+    <DarkGreyCard style={{ 
+      marginBottom:10, 
+      zIndex: 3, 
+      padding: "0px", 
+      top: 0,
+      margin: 0 
+      }}>
       {(allTokens.length > 0) &&
         (
           <Marquee gradient={false} pauseOnHover
-            
           >
             <React.Fragment />
             <FixedContainer style={{ background: 'rgb(0 0 0 / 0%)' }} gap="xs">
@@ -268,6 +273,6 @@ DataCard.displayName = 'DataCard';
       }
     </DarkGreyCard>
   )
-})
+}, () => true)
 _TopTokenMovers.displayName = 'topMovers'
 export const TopTokenMovers = _TopTokenMovers

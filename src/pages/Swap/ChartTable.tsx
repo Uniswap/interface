@@ -1,10 +1,11 @@
 import {
-  CSSTransition,
-  TransitionGroup as ReactCSSTransitionGroup,
+    CSSTransition,
+    TransitionGroup as ReactCSSTransitionGroup,
 } from "react-transition-group";
 
 import { ChartComponent } from "./ChartComponent";
 import { Dots } from "components/swap/styleds";
+import { FixedSizeList } from "react-window";
 import Loader from "components/Loader";
 import React from "react";
 import _ from "lodash";
@@ -13,6 +14,7 @@ import { useIsDarkMode } from "state/user/hooks";
 import useLast from "hooks/useLast";
 
 const Table = styled.table`
+  overflow:auto;
   width: 100%;
   border-radius: 20px;
   background: ${(props) => `${props.theme.chartTableBg as string}`};
@@ -20,9 +22,9 @@ const Table = styled.table`
 const Tr = styled.tr<{ highlight: string; item?: any; account?: any }>`
 background:
 ${(props) =>
-  props.item?.account?.toLowerCase() == props.account?.toLowerCase()
-    ? `${props.highlight}`
-    : `inherit`};
+        props.item?.account?.toLowerCase() == props.account?.toLowerCase()
+            ? `${props.highlight}`
+            : `inherit`};
     padding-bottom: 5px;
     &:hover {
         opacity:0.8;
@@ -36,162 +38,163 @@ ${(props) =>
     
 `;
 type TableProps = {
-  LastFetchedNode?: JSX.Element | null;
-  pairs?: any[];
-  formattedTransactions?: any[];
-  chainId?: number;
-  chainLabel?: string;
-  tokenSymbol?: string;
-  account?: string | null;
+    LastFetchedNode?: JSX.Element | null;
+    pairs?: any[];
+    formattedTransactions?: any[];
+    chainId?: number;
+    chainLabel?: string;
+    tokenSymbol?: string;
+    account?: string | null;
 };
 
 type RowProps = {
-  item: any;
-  account?: any;
-  tokenSymbol?: any;
-  index?: number;
-  chainLabel?: any;
-  first: boolean;
+    item: any;
+    account?: any;
+    tokenSymbol?: any;
+    index?: number;
+    chainLabel?: any;
+    first: boolean;
 };
 /* eslint-disable */
 const ChartTableRow = (props: RowProps) => {
-  const darkMode = useIsDarkMode();
-  const { item, first, account, tokenSymbol, index, chainLabel } = props;
-  /* eslint-disable */
-  return (
-      <tr>
-      <td style={{ fontSize: 12 }}>
-        {new Date(item.timestamp * 1000).toLocaleString()}
-      </td>
-      {[item.token0Symbol, item.token1Symbol].includes(chainLabel) && (
-        <td
-          style={{
-            color:
-              item.token0Symbol !==
-              `${tokenSymbol == "ETH" ? "WETH" : tokenSymbol}`
-                ? "#971B1C"
-                : "#779681",
-          }}
-        >
-          {item.token0Symbol !==
-          `${tokenSymbol == "ETH" ? "WETH" : tokenSymbol}`
-            ? "SELL"
-            : "BUY"}
-        </td>
-      )}
-      {![item.token0Symbol, item.token1Symbol].includes(chainLabel) && (
-        <td
-          style={{
-            color:
-              item.token1Symbol ===
-              `${tokenSymbol == "ETH" ? "WETH" : tokenSymbol}`
-                ? "#971B1C"
-                : "#779681",
-          }}
-        >
-          {item.token1Symbol ===
-          `${tokenSymbol == "ETH" ? "WETH" : tokenSymbol}`
-            ? "SELL"
-            : "BUY"}
-        </td>
-      )}
-      {[item.token0Symbol, item.token1Symbol].includes(chainLabel) && (
-        <>
-          <td>
-            {item.token0Symbol === chainLabel && (
-              <>
-                {Number(+item.token0Amount?.toFixed(2))?.toLocaleString()}{" "}
-                {item.token0Symbol}
-              </>
+    const darkMode = useIsDarkMode();
+    const { item, first, account, tokenSymbol, index, chainLabel } = props;
+    /* eslint-disable */
+    return (
+        <tr>
+            <td style={{ fontSize: 12 }}>
+                {new Date(item.timestamp * 1000).toLocaleString()}
+            </td>
+            {[item.token0Symbol, item.token1Symbol].includes(chainLabel) && (
+                <td
+                    style={{
+                        color:
+                            item.token0Symbol !==
+                                `${tokenSymbol == "ETH" ? "WETH" : tokenSymbol}`
+                                ? "#971B1C"
+                                : "#779681",
+                    }}
+                >
+                    {item.token0Symbol !==
+                        `${tokenSymbol == "ETH" ? "WETH" : tokenSymbol}`
+                        ? "SELL"
+                        : "BUY"}
+                </td>
             )}
-            {item.token1Symbol === chainLabel && (
-              <>
-                {Number(+item.token1Amount?.toFixed(2))?.toLocaleString()}{" "}
-                {item.token1Symbol}
-              </>
+            {![item.token0Symbol, item.token1Symbol].includes(chainLabel) && (
+                <td
+                    style={{
+                        color:
+                            item.token1Symbol ===
+                                `${tokenSymbol == "ETH" ? "WETH" : tokenSymbol}`
+                                ? "#971B1C"
+                                : "#779681",
+                    }}
+                >
+                    {item.token1Symbol ===
+                        `${tokenSymbol == "ETH" ? "WETH" : tokenSymbol}`
+                        ? "SELL"
+                        : "BUY"}
+                </td>
             )}
-          </td>
-          <td>${Number((+item?.amountUSD)?.toFixed(2)).toLocaleString()}</td>
-          <td>
-            {item.token0Symbol !== chainLabel && (
-              <>
-                {Number(+item.token0Amount?.toFixed(2))?.toLocaleString()}{" "}
-                {item.token0Symbol}
-              </>
+            {[item.token0Symbol, item.token1Symbol].includes(chainLabel) && (
+                <>
+                    <td>
+                        {item.token0Symbol === chainLabel && (
+                            <>
+                                {Number(+item.token0Amount?.toFixed(2))?.toLocaleString()}{" "}
+                                {item.token0Symbol}
+                            </>
+                        )}
+                        {item.token1Symbol === chainLabel && (
+                            <>
+                                {Number(+item.token1Amount?.toFixed(2))?.toLocaleString()}{" "}
+                                {item.token1Symbol}
+                            </>
+                        )}
+                    </td>
+                    <td>${Number((+item?.amountUSD)?.toFixed(2)).toLocaleString()}</td>
+                    <td>
+                        {item.token0Symbol !== chainLabel && (
+                            <>
+                                {Number(+item.token0Amount?.toFixed(2))?.toLocaleString()}{" "}
+                                {item.token0Symbol}
+                            </>
+                        )}
+                        {item.token1Symbol !== chainLabel && (
+                            <>
+                                {Number(+item.token1Amount?.toFixed(2))?.toLocaleString()}{" "}
+                                {item.token1Symbol}
+                            </>
+                        )}
+                    </td>
+                </>
             )}
-            {item.token1Symbol !== chainLabel && (
-              <>
-                {Number(+item.token1Amount?.toFixed(2))?.toLocaleString()}{" "}
-                {item.token1Symbol}
-              </>
+            {![item.token0Symbol, item.token1Symbol].includes(chainLabel) && (
+                <>
+                    <td>
+                        {item.token0Symbol !==
+                            `${tokenSymbol == "ETH" ? "WETH" : tokenSymbol}` && (
+                                <>
+                                    {Number(+item.token0Amount?.toFixed(2))?.toLocaleString()}{" "}
+                                    {item.token0Symbol}
+                                </>
+                            )}
+                        {item.token1Symbol !==
+                            `${tokenSymbol == "ETH" ? "WETH" : tokenSymbol}` && (
+                                <>
+                                    {Number(+item.token1Amount?.toFixed(2))?.toLocaleString()}{" "}
+                                    {item.token1Symbol}
+                                </>
+                            )}
+                    </td>
+                    <td>${Number((+item?.amountUSD)?.toFixed(2)).toLocaleString()}</td>
+                    <td>
+                        {item.token0Symbol ===
+                            `${tokenSymbol == "ETH" ? "WETH" : tokenSymbol}` && (
+                                <>
+                                    {Number(+item.token0Amount?.toFixed(2))?.toLocaleString()}{" "}
+                                    {item.token0Symbol}
+                                </>
+                            )}
+                        {item.token1Symbol ===
+                            `${tokenSymbol == "ETH" ? "WETH" : tokenSymbol}` && (
+                                <>
+                                    {Number(+item.token1Amount?.toFixed(2))?.toLocaleString()}{" "}
+                                    {item.token1Symbol}
+                                </>
+                            )}
+                    </td>
+                </>
             )}
-          </td>
-        </>
-      )}
-      {![item.token0Symbol, item.token1Symbol].includes(chainLabel) && (
-        <>
-          <td>
-            {item.token0Symbol !==
-              `${tokenSymbol == "ETH" ? "WETH" : tokenSymbol}` && (
-              <>
-                {Number(+item.token0Amount?.toFixed(2))?.toLocaleString()}{" "}
-                {item.token0Symbol}
-              </>
-            )}
-            {item.token1Symbol !==
-              `${tokenSymbol == "ETH" ? "WETH" : tokenSymbol}` && (
-              <>
-                {Number(+item.token1Amount?.toFixed(2))?.toLocaleString()}{" "}
-                {item.token1Symbol}
-              </>
-            )}
-          </td>
-          <td>${Number((+item?.amountUSD)?.toFixed(2)).toLocaleString()}</td>
-          <td>
-            {item.token0Symbol ===
-              `${tokenSymbol == "ETH" ? "WETH" : tokenSymbol}` && (
-              <>
-                {Number(+item.token0Amount?.toFixed(2))?.toLocaleString()}{" "}
-                {item.token0Symbol}
-              </>
-            )}
-            {item.token1Symbol ===
-              `${tokenSymbol == "ETH" ? "WETH" : tokenSymbol}` && (
-              <>
-                {Number(+item.token1Amount?.toFixed(2))?.toLocaleString()}{" "}
-                {item.token1Symbol}
-              </>
-            )}
-          </td>
-        </>
-      )}
-      <td>
-        <a
-          style={{ color: "#D57A47" }}
-          href={"https://etherscan.io/address/" + item.account}
-        >
-          {item.account &&
-            item.account.slice(0, 6) + "..." + item.account.slice(38, 42)}
-        </a>
-      </td>
-      <td>
-        <a
-          style={{ color: "#D57A47" }}
-          href={"https://etherscan.io/tx/" + item?.hash}
-        >
-          {item?.hash &&
-            item?.transaction?.id.slice(0, 6) +
-              "..." +
-              item?.transaction?.id.slice(38, 42)}
-        </a>
-      </td>
-    </tr>
-  );
+            <td>
+                <a
+                    style={{ color: "#D57A47" }}
+                    href={"https://etherscan.io/address/" + item.account}
+                >
+                    {item.account &&
+                        item.account.slice(0, 6) + "..." + item.account.slice(38, 42)}
+                </a>
+            </td>
+            <td>
+                <a
+                    style={{ color: "#D57A47" }}
+                    href={"https://etherscan.io/tx/" + item?.hash}
+                >
+                    {item?.hash &&
+                        item?.transaction?.id.slice(0, 6) +
+                        "..." +
+                        item?.transaction?.id.slice(38, 42)}
+                </a>
+            </td>
+        </tr>
+    );
 };
 
 ChartComponent.displayName = "CComponent";
 
 const Thead = styled.thead`
+  font-size:12px;
   text-align: left;
   position: sticky;
   top: 0;
@@ -202,248 +205,469 @@ const Thead = styled.thead`
 
 /* eslint-disable */
 export const ChartTable = React.memo((props: TableProps) => {
-  const {
-    account,
-    tokenSymbol,
-    formattedTransactions,
-    pairs,
-    chainId,
-    chainLabel,
-    LastFetchedNode,
-  } = props;
-  const darkMode = useIsDarkMode()
-  const highlightedColor = darkMode ? "#15223a" : "#afd9bd";
+    const {
+        account,
+        tokenSymbol,
+        formattedTransactions,
+        pairs,
+        chainId,
+        chainLabel,
+        LastFetchedNode,
+    } = props;
 
-  const hasData = Boolean(formattedTransactions?.length);
-  const firstTx = useLast(formattedTransactions?.[0]?.hash);
-  return (
-    <div
-      style={{
-        display: "block",
-        width: "100%",
-        overflowY: "auto",
-        maxHeight: 500,
-      }}
-    >
-      {LastFetchedNode}
-      <Table>
-        <Thead>
-          <tr style={{ borderBottom: "1px solid #444" }}>
-            <th>Date</th>
-            <th>Type</th>
-            <th>
-              Amt{" "}
-              {!chainId || chainId === 1
-                ? pairs && pairs?.length
-                  ? pairs[0]?.token0?.symbol === tokenSymbol
-                    ? pairs[0]?.token1?.symbol
-                    : pairs[0]?.token0?.symbol
-                  : "WETH"
-                : "BNB"}
-            </th>
-            <th>Amt USD</th>
-            <th>Amt Tokens</th>
-            <th>Maker</th>
-            <th>Tx</th>
-          </tr>
-        </Thead>
+    const listRef = React.useRef<any>()
 
-        <ReactCSSTransitionGroup
-          component="tbody"
-          transitionAppear={true}
-          transitionAppearTimeout={1000}
-          transitionName="example"
-        >
-          {(!formattedTransactions?.length || !formattedTransactions) && (
-            <CSSTransition in={true} classNames={"example"} timeout={1000}>
-            <tr>
-              <td colSpan={7}>
-                <Dots>
-                  <Loader /> Loading transaction data
-                </Dots>
-              </td>
-            </tr>
-            </CSSTransition>
-          )}
-          {formattedTransactions &&
-            formattedTransactions?.map((item: any, index: number) => (
-              <CSSTransition
-                in={index < 2}
-                classNames={"example"}
-                key={`${item.token0Symbol}_${item.timestamp * 1000}_${
-                    item.hash
-                  }_${index}`}
-              >
-                 <Tr highlight={highlightedColor} account={account} item={item}>
+    const darkMode = useIsDarkMode()
+    const highlightedColor = darkMode ? "#15223a" : "#afd9bd";
+    const hasData = Boolean(formattedTransactions?.length);
+    const firstTx = useLast(formattedTransactions?.[0]?.hash);
 
-                  <td style={{ fontSize: 12 }}>
-                    {new Date(item.timestamp * 1000).toLocaleString()}
-                  </td>
-                  {[item.token0Symbol, item.token1Symbol].includes(
-                    chainLabel
-                  ) && (
-                    <td
-                      style={{
-                        color:
-                          item.token0Symbol !==
-                          `${tokenSymbol == "ETH" ? "WETH" : tokenSymbol}`
-                            ? "#971B1C"
-                            : "#779681",
-                      }}
-                    >
-                      {item.token0Symbol !==
-                      `${tokenSymbol == "ETH" ? "WETH" : tokenSymbol}`
-                        ? "SELL"
-                        : "BUY"}
+    const renderRow = React.useCallback((item: any, index: number) => {
+        if (index <= 2) {
+            return (
+                <CSSTransition
+                    in={true}
+                    classNames={"alert"}
+                    timeout={1000}
+                    key={index}
+                >
+                    <Tr highlight={highlightedColor} account={account} item={item}>
+                        <td style={{ fontSize: 12 }}>
+                            {new Date(item.timestamp * 1000).toLocaleString()}
+                        </td>
+                        {[item.token0Symbol, item.token1Symbol].includes(
+                            chainLabel
+                        ) && (
+                                <td
+                                    style={{
+                                        color:
+                                            item.token0Symbol !==
+                                                `${tokenSymbol == "ETH" ? "WETH" : tokenSymbol}`
+                                                ? "#971B1C"
+                                                : "#779681",
+                                    }}
+                                >
+                                    {item.token0Symbol !==
+                                        `${tokenSymbol == "ETH" ? "WETH" : tokenSymbol}`
+                                        ? "SELL"
+                                        : "BUY"}
+                                </td>
+                            )}
+                        {![item.token0Symbol, item.token1Symbol].includes(
+                            chainLabel
+                        ) && (
+                                <td
+                                    style={{
+                                        color:
+                                            item.token1Symbol ===
+                                                `${tokenSymbol == "ETH" ? "WETH" : tokenSymbol}`
+                                                ? "#971B1C"
+                                                : "#779681",
+                                    }}
+                                >
+                                    {item.token1Symbol ===
+                                        `${tokenSymbol == "ETH" ? "WETH" : tokenSymbol}`
+                                        ? "SELL"
+                                        : "BUY"}
+                                </td>
+                            )}
+                        {[item.token0Symbol, item.token1Symbol].includes(
+                            chainLabel
+                        ) && (
+                                <>
+                                    <td>
+                                        {item.token0Symbol === chainLabel && (
+                                            <>
+                                                {Number(
+                                                    +item.token0Amount?.toFixed(2)
+                                                )?.toLocaleString()}{" "}
+                                                {item.token0Symbol}
+                                            </>
+                                        )}
+                                        {item.token1Symbol === chainLabel && (
+                                            <>
+                                                {Number(
+                                                    +item.token1Amount?.toFixed(2)
+                                                )?.toLocaleString()}{" "}
+                                                {item.token1Symbol}
+                                            </>
+                                        )}
+                                    </td>
+                                    <td>
+                                        $
+                                        {Number(
+                                            (+item?.amountUSD)?.toFixed(2)
+                                        ).toLocaleString()}
+                                    </td>
+                                    <td>
+                                        {item.token0Symbol !== chainLabel && (
+                                            <>
+                                                {Number(
+                                                    +item.token0Amount?.toFixed(2)
+                                                )?.toLocaleString()}{" "}
+                                                {item.token0Symbol}
+                                            </>
+                                        )}
+                                        {item.token1Symbol !== chainLabel && (
+                                            <>
+                                                {Number(
+                                                    +item.token1Amount?.toFixed(2)
+                                                )?.toLocaleString()}{" "}
+                                                {item.token1Symbol}
+                                            </>
+                                        )}
+                                    </td>
+                                </>
+                            )}
+                        {![item.token0Symbol, item.token1Symbol].includes(
+                            chainLabel
+                        ) && (
+                                <>
+                                    <td>
+                                        {item.token0Symbol !==
+                                            `${tokenSymbol == "ETH" ? "WETH" : tokenSymbol}` && (
+                                                <>
+                                                    {Number(
+                                                        +item.token0Amount?.toFixed(2)
+                                                    )?.toLocaleString()}{" "}
+                                                    {item.token0Symbol}
+                                                </>
+                                            )}
+                                        {item.token1Symbol !==
+                                            `${tokenSymbol == "ETH" ? "WETH" : tokenSymbol}` && (
+                                                <>
+                                                    {Number(
+                                                        +item.token1Amount?.toFixed(2)
+                                                    )?.toLocaleString()}{" "}
+                                                    {item.token1Symbol}
+                                                </>
+                                            )}
+                                    </td>
+                                    <td>
+                                        $
+                                        {Number(
+                                            (+item?.amountUSD)?.toFixed(2)
+                                        ).toLocaleString()}
+                                    </td>
+                                    <td>
+                                        {item.token0Symbol ===
+                                            `${tokenSymbol == "ETH" ? "WETH" : tokenSymbol}` && (
+                                                <>
+                                                    {Number(
+                                                        +item.token0Amount?.toFixed(2)
+                                                    )?.toLocaleString()}{" "}
+                                                    {item.token0Symbol}
+                                                </>
+                                            )}
+                                        {item.token1Symbol ===
+                                            `${tokenSymbol == "ETH" ? "WETH" : tokenSymbol}` && (
+                                                <>
+                                                    {Number(
+                                                        +item.token1Amount?.toFixed(2)
+                                                    )?.toLocaleString()}{" "}
+                                                    {item.token1Symbol}
+                                                </>
+                                            )}
+                                    </td>
+                                </>
+                            )}
+                        <td>
+                            <a
+                                style={{ color: "#D57A47" }}
+                                href={"https://etherscan.io/address/" + item.account}
+                            >
+                                {item.account &&
+                                    item.account.slice(0, 6) +
+                                    "..." +
+                                    item.account.slice(38, 42)}
+                            </a>
+                        </td>
+                        <td>
+                            <a
+                                style={{ color: "#D57A47" }}
+                                href={"https://etherscan.io/tx/" + item?.hash}
+                            >
+                                {item?.hash &&
+                                    item?.transaction?.id.slice(0, 6) +
+                                    "..." +
+                                    item?.transaction?.id.slice(38, 42)}
+                            </a>
+                        </td>
+                    </Tr>
+                </CSSTransition>
+            )
+        } else {
+            return (
+                //
+                <Tr highlight={highlightedColor} account={account} item={item} key={`${account}-${item.hash}-${index}`} >
+                    <td style={{ fontSize: 12 }}>
+                        {new Date(item.timestamp * 1000).toLocaleString()}
                     </td>
-                  )}
-                  {![item.token0Symbol, item.token1Symbol].includes(
-                    chainLabel
-                  ) && (
-                    <td
-                      style={{
-                        color:
-                          item.token1Symbol ===
-                          `${tokenSymbol == "ETH" ? "WETH" : tokenSymbol}`
-                            ? "#971B1C"
-                            : "#779681",
-                      }}
-                    >
-                      {item.token1Symbol ===
-                      `${tokenSymbol == "ETH" ? "WETH" : tokenSymbol}`
-                        ? "SELL"
-                        : "BUY"}
+                    {[item.token0Symbol, item.token1Symbol].includes(
+                        chainLabel
+                    ) && (
+                            <td
+                                style={{
+                                    color:
+                                        item.token0Symbol !==
+                                            `${tokenSymbol == "ETH" ? "WETH" : tokenSymbol}`
+                                            ? "#971B1C"
+                                            : "#779681",
+                                }}
+                            >
+                                {item.token0Symbol !==
+                                    `${tokenSymbol == "ETH" ? "WETH" : tokenSymbol}`
+                                    ? "SELL"
+                                    : "BUY"}
+                            </td>
+                        )}
+                    {![item.token0Symbol, item.token1Symbol].includes(
+                        chainLabel
+                    ) && (
+                            <td
+                                style={{
+                                    color:
+                                        item.token1Symbol ===
+                                            `${tokenSymbol == "ETH" ? "WETH" : tokenSymbol}`
+                                            ? "#971B1C"
+                                            : "#779681",
+                                }}
+                            >
+                                {item.token1Symbol ===
+                                    `${tokenSymbol == "ETH" ? "WETH" : tokenSymbol}`
+                                    ? "SELL"
+                                    : "BUY"}
+                            </td>
+                        )}
+                    {[item.token0Symbol, item.token1Symbol].includes(
+                        chainLabel
+                    ) && (
+                            <>
+                                <td>
+                                    {item.token0Symbol === chainLabel && (
+                                        <>
+                                            {Number(
+                                                +item.token0Amount?.toFixed(2)
+                                            )?.toLocaleString()}{" "}
+                                            {item.token0Symbol}
+                                        </>
+                                    )}
+                                    {item.token1Symbol === chainLabel && (
+                                        <>
+                                            {Number(
+                                                +item.token1Amount?.toFixed(2)
+                                            )?.toLocaleString()}{" "}
+                                            {item.token1Symbol}
+                                        </>
+                                    )}
+                                </td>
+                                <td>
+                                    $
+                                    {Number(
+                                        (+item?.amountUSD)?.toFixed(2)
+                                    ).toLocaleString()}
+                                </td>
+                                <td>
+                                    {item.token0Symbol !== chainLabel && (
+                                        <>
+                                            {Number(
+                                                +item.token0Amount?.toFixed(2)
+                                            )?.toLocaleString()}{" "}
+                                            {item.token0Symbol}
+                                        </>
+                                    )}
+                                    {item.token1Symbol !== chainLabel && (
+                                        <>
+                                            {Number(
+                                                +item.token1Amount?.toFixed(2)
+                                            )?.toLocaleString()}{" "}
+                                            {item.token1Symbol}
+                                        </>
+                                    )}
+                                </td>
+                            </>
+                        )}
+                    {![item.token0Symbol, item.token1Symbol].includes(
+                        chainLabel
+                    ) && (
+                            <>
+                                <td>
+                                    {item.token0Symbol !==
+                                        `${tokenSymbol == "ETH" ? "WETH" : tokenSymbol}` && (
+                                            <>
+                                                {Number(
+                                                    +item.token0Amount?.toFixed(2)
+                                                )?.toLocaleString()}{" "}
+                                                {item.token0Symbol}
+                                            </>
+                                        )}
+                                    {item.token1Symbol !==
+                                        `${tokenSymbol == "ETH" ? "WETH" : tokenSymbol}` && (
+                                            <>
+                                                {Number(
+                                                    +item.token1Amount?.toFixed(2)
+                                                )?.toLocaleString()}{" "}
+                                                {item.token1Symbol}
+                                            </>
+                                        )}
+                                </td>
+                                <td>
+                                    $
+                                    {Number(
+                                        (+item?.amountUSD)?.toFixed(2)
+                                    ).toLocaleString()}
+                                </td>
+                                <td>
+                                    {item.token0Symbol ===
+                                        `${tokenSymbol == "ETH" ? "WETH" : tokenSymbol}` && (
+                                            <>
+                                                {Number(
+                                                    +item.token0Amount?.toFixed(2)
+                                                )?.toLocaleString()}{" "}
+                                                {item.token0Symbol}
+                                            </>
+                                        )}
+                                    {item.token1Symbol ===
+                                        `${tokenSymbol == "ETH" ? "WETH" : tokenSymbol}` && (
+                                            <>
+                                                {Number(
+                                                    +item.token1Amount?.toFixed(2)
+                                                )?.toLocaleString()}{" "}
+                                                {item.token1Symbol}
+                                            </>
+                                        )}
+                                </td>
+                            </>
+                        )}
+                    <td>
+                        <a
+                            style={{ color: "#D57A47" }}
+                            href={"https://etherscan.io/address/" + item.account}
+                        >
+                            {item.account &&
+                                item.account.slice(0, 6) +
+                                "..." +
+                                item.account.slice(38, 42)}
+                        </a>
                     </td>
-                  )}
-                  {[item.token0Symbol, item.token1Symbol].includes(
-                    chainLabel
-                  ) && (
-                    <>
-                      <td>
-                        {item.token0Symbol === chainLabel && (
-                          <>
-                            {Number(
-                              +item.token0Amount?.toFixed(2)
-                            )?.toLocaleString()}{" "}
-                            {item.token0Symbol}
-                          </>
-                        )}
-                        {item.token1Symbol === chainLabel && (
-                          <>
-                            {Number(
-                              +item.token1Amount?.toFixed(2)
-                            )?.toLocaleString()}{" "}
-                            {item.token1Symbol}
-                          </>
-                        )}
-                      </td>
-                      <td>
-                        $
-                        {Number(
-                          (+item?.amountUSD)?.toFixed(2)
-                        ).toLocaleString()}
-                      </td>
-                      <td>
-                        {item.token0Symbol !== chainLabel && (
-                          <>
-                            {Number(
-                              +item.token0Amount?.toFixed(2)
-                            )?.toLocaleString()}{" "}
-                            {item.token0Symbol}
-                          </>
-                        )}
-                        {item.token1Symbol !== chainLabel && (
-                          <>
-                            {Number(
-                              +item.token1Amount?.toFixed(2)
-                            )?.toLocaleString()}{" "}
-                            {item.token1Symbol}
-                          </>
-                        )}
-                      </td>
-                    </>
-                  )}
-                  {![item.token0Symbol, item.token1Symbol].includes(
-                    chainLabel
-                  ) && (
-                    <>
-                      <td>
-                        {item.token0Symbol !==
-                          `${tokenSymbol == "ETH" ? "WETH" : tokenSymbol}` && (
-                          <>
-                            {Number(
-                              +item.token0Amount?.toFixed(2)
-                            )?.toLocaleString()}{" "}
-                            {item.token0Symbol}
-                          </>
-                        )}
-                        {item.token1Symbol !==
-                          `${tokenSymbol == "ETH" ? "WETH" : tokenSymbol}` && (
-                          <>
-                            {Number(
-                              +item.token1Amount?.toFixed(2)
-                            )?.toLocaleString()}{" "}
-                            {item.token1Symbol}
-                          </>
-                        )}
-                      </td>
-                      <td>
-                        $
-                        {Number(
-                          (+item?.amountUSD)?.toFixed(2)
-                        ).toLocaleString()}
-                      </td>
-                      <td>
-                        {item.token0Symbol ===
-                          `${tokenSymbol == "ETH" ? "WETH" : tokenSymbol}` && (
-                          <>
-                            {Number(
-                              +item.token0Amount?.toFixed(2)
-                            )?.toLocaleString()}{" "}
-                            {item.token0Symbol}
-                          </>
-                        )}
-                        {item.token1Symbol ===
-                          `${tokenSymbol == "ETH" ? "WETH" : tokenSymbol}` && (
-                          <>
-                            {Number(
-                              +item.token1Amount?.toFixed(2)
-                            )?.toLocaleString()}{" "}
-                            {item.token1Symbol}
-                          </>
-                        )}
-                      </td>
-                    </>
-                  )}
-                  <td>
-                    <a
-                      style={{ color: "#D57A47" }}
-                      href={"https://etherscan.io/address/" + item.account}
-                    >
-                      {item.account &&
-                        item.account.slice(0, 6) +
-                          "..." +
-                          item.account.slice(38, 42)}
-                    </a>
-                  </td>
-                  <td>
-                    <a
-                      style={{ color: "#D57A47" }}
-                      href={"https://etherscan.io/tx/" + item?.hash}
-                    >
-                      {item?.hash &&
-                        item?.transaction?.id.slice(0, 6) +
-                          "..." +
-                          item?.transaction?.id.slice(38, 42)}
-                    </a>
-                  </td>
+                    <td>
+                        <a
+                            style={{ color: "#D57A47" }}
+                            href={"https://etherscan.io/tx/" + item?.hash}
+                        >
+                            {item?.hash &&
+                                item?.transaction?.id.slice(0, 6) +
+                                "..." +
+                                item?.transaction?.id.slice(38, 42)}
+                        </a>
+                    </td>
                 </Tr>
-              </CSSTransition>
-            ))}
-        </ReactCSSTransitionGroup>
-      </Table>
-    </div>
-  );
-});
+            )
+        }
+
+    }, [])
+
+    const Row = React.useMemo(
+        () => function TransactionRow(rowProps: any) {
+            const { item, index } = rowProps
+            return renderRow(item, index)
+        }
+        , [
+            formattedTransactions,
+            account,
+            pairs
+        ]
+    )
+
+
+    const itemKey = (index: number, data: any) => {
+        const tx = data[index]
+        return tx.hash
+    }
+
+    const headerSymbol = !chainId || chainId === 1
+        ? pairs && pairs?.length
+            ? pairs[0]?.token0?.symbol === tokenSymbol
+                ? pairs[0]?.token1?.symbol
+                : pairs[0]?.token0?.symbol
+            : "WETH"
+        : "BNB";
+    return (
+        <div style={{
+            maxHeight: 500,
+            overflow: `auto`,
+            marginTop:5
+        }}>
+            <Table>
+                <Thead>
+                    <tr style={{ borderBottom: "1px solid #444" }}>
+                        <th>Date</th>
+                        <th>Type</th>
+                        <th>
+                            Amt{" "} {headerSymbol}
+                        </th>
+                        <th>Amt USD</th>
+                        <th>Amt Tokens</th>
+                        <th>Maker</th>
+                        <th>Tx</th>
+                    </tr>
+                </Thead>
+
+                <ReactCSSTransitionGroup
+                    component="tbody"
+                >
+                    {(!formattedTransactions?.length || !formattedTransactions) ? (
+                        <CSSTransition in={true} classNames={"alert"} timeout={1000}>
+                            <tr>
+                                <td colSpan={7}>
+                                    <Dots>
+                                        <Loader /> Loading transaction data
+                                    </Dots>
+                                </td>
+                            </tr>
+                        </CSSTransition>
+                    ) : formattedTransactions.map((item, index) => Row({item,index}))
+                    }
+                </ReactCSSTransitionGroup>
+            </Table>
+
+            {/* {LastFetchedNode}
+            <Table>
+                <Thead>
+                    <tr style={{ borderBottom: "1px solid #444" }}>
+                        <th>Date</th>
+                        <th>Type</th>
+                        <th>
+                            Amt{" "} {headerSymbol}
+                        </th>
+                        <th>Amt USD</th>
+                        <th>Amt Tokens</th>
+                        <th>Maker</th>
+                        <th>Tx</th>
+                    </tr>
+                </Thead>
+
+                <ReactCSSTransitionGroup
+
+                    component="tbody"
+                >
+                    {(!formattedTransactions?.length || !formattedTransactions) ? (
+                        <CSSTransition in={true} classNames={"alert"} timeout={1000}>
+                            <tr>
+                                <td colSpan={7}>
+                                    <Dots>
+                                        <Loader /> Loading transaction data
+                                    </Dots>
+                                </td>
+                            </tr>
+                        </CSSTransition>
+                    ) : formattedTransactions?.map((item: any, index: number) => (
+                        renderRow(item, index)
+                    ))}
+                </ReactCSSTransitionGroup>
+                    */}
+        </div>
+    )
+})
 
 ChartTable.displayName = "CHARTTABLE";

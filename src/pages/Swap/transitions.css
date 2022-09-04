@@ -1,35 +1,18 @@
-
-@keyframes opacity {
-  0% {
-    opacity: 0;
-  }
-  25% {
-    opacity: 0.25;
-  }
-  50% {
-    opacity: 0.5;
-  }
-  75% {
-    opacity: 0.75;
-  }
-  100% {
-    opacity: 1;
-  }
+.alert-enter {
+  opacity: 0;
+  transform:translateX(-100%);
 }
-
-.example-enter {
-  animation: opacity 2.5s both;
-}
-
-.example-enter.example-enter-active {
-  animation: opacity 2.5s both;
-}
-
-.example-leave {
+.alert-enter-active {
   opacity: 1;
+  transform:translateX(0);
+  transition: opacity 300ms, transform 300ms;
 }
-
-.example-leave.example-leave-active {
-  animation: opacity 2.5s both;
-
+.alert-exit {
+  opacity: 1;
+  transform:translateX(0);
+}
+.alert-exit-active {
+  opacity: 0;
+  transform:translateX(-100%);
+  transition: opacity 300ms, transform 300ms;
 }
