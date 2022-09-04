@@ -13,6 +13,7 @@ import QuestionHelper from "components/QuestionHelper";
 import Toggle from "components/Toggle";
 import { Trans } from "@lingui/react";
 import axios from "axios";
+import {darken}from'polished'
 import { error } from "console";
 import { isMobile } from "react-device-detect";
 import styled from "styled-components/macro";
@@ -51,9 +52,10 @@ const ToolbarItem = styled(AutoColumn)`
 `;
 
 const StyledBadge = styled(Badge)<{active?:boolean}>`
-color: ${({theme, active}) => active ? theme.blue4 : theme.text1};
+color: ${({theme, active}) => active ? theme.primary2 : theme.text1};
  &:hover {
    color: ${({active, theme}) => active ? theme.text1 : `${theme.text1}`} !important;
+   background: ${props => darken(0.1, props?.color || props.theme.bg0)};
    transition: ease all 0.1s;
    cursor: pointer;
  }

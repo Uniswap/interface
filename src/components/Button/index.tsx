@@ -55,7 +55,7 @@ export const ButtonPrimary = styled(Base)`
   font-family: 'Inter Var';
   font-size: 18px;
   font-weight: 600;
-  color: white;
+  color: ${props => props.theme.text2};
   &:focus {
     box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.05, theme.bg3)};
     background-color: ${({ theme }) => darken(0.05, theme.bg2)};

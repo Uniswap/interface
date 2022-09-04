@@ -36,6 +36,7 @@ const PageWrapper = styled(AutoColumn)`
 
 const VoteCard = styled(DataCard)`
   background: ${props => props.theme.bg1};
+  color:${props => props.theme.text1};
   overflow: hidden;
 `
 
@@ -45,6 +46,7 @@ const TitleRow = styled(RowBetween)`
     gap: 12px;
     width: 100%;
     flex-direction: column-reverse;
+    color:${props => props.theme.text1};
   `};
 `
 
@@ -80,7 +82,8 @@ const EmptyProposals = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background:radial-gradient(rgba(235,91,44,.91), rgba(129,3,3,.95));
+  background:${props => props.theme.bg0};
+  color:${props => props.theme.primary2};
 `
 
 export const Layer2Prompt = styled(EmptyProposals)`
@@ -149,26 +152,26 @@ export default function Pool() {
           <CardSection>
             <AutoColumn gap="md">
               <RowBetween>
-                <TYPE.white fontWeight={600}>
+                <TYPE.main fontWeight={600}>
                   <Trans>Liquidity provider rewards</Trans>
-                </TYPE.white>
+                </TYPE.main>
               </RowBetween>
               <RowBetween>
-                <TYPE.white fontSize={14}>
+                <TYPE.main fontSize={14}>
                   <Trans>
                     Liquidity providers earn a 0.3% fee on all trades proportional to their share of the pool. Fees are
                     added to the pool, accrue in real time and can be claimed by withdrawing your liquidity.
                   </Trans>
-                </TYPE.white>
+                </TYPE.main>
               </RowBetween>
               <ExternalLink
                 style={{ color: 'white', textDecoration: 'underline' }}
                 target="_blank"
                 href="https://uniswap.org/docs/v2/core-concepts/pools/"
               >
-                <TYPE.white fontSize={14}>
+                <TYPE.main fontSize={14}>
                   <Trans>Read more about providing liquidity</Trans>
-                </TYPE.white>
+                </TYPE.main>
               </ExternalLink>
             </AutoColumn>
           </CardSection>
@@ -189,14 +192,14 @@ export default function Pool() {
         ) : (
           <AutoColumn gap="lg" justify="center">
             <AutoColumn gap="md" style={{ width: '100%' }}>
-              <TitleRow style={{ marginTop: '1rem' }} padding={'0'}>
+              <TitleRow style={{  marginTop: '1rem' }} padding={'0'}>
                 <HideSmall>
-                  <TYPE.mediumHeader  style={{ color: "#FFF", marginTop: '0.5rem', justifySelf: 'flex-start' }}>
+                  <TYPE.mediumHeader  style={{ marginTop: '0.5rem', justifySelf: 'flex-start' }}>
                     <Trans>Your V2 liquidity</Trans>
                   </TYPE.mediumHeader>
                 </HideSmall>
                 <ButtonRow>
-                  <ResponsiveButtonSecondary style={{background: "#FFF"}} as={Link} padding="6px 8px" to="/add/v2/ETH">
+                  <ResponsiveButtonSecondary style={{}} as={Link} padding="6px 8px" to="/add/v2/ETH">
                     <Trans>Create a pair</Trans>
                   </ResponsiveButtonSecondary>
                   <ResponsiveButtonPrimary id="find-pool-button" as={Link} to="/pool/v2/find" padding="6px 8px">

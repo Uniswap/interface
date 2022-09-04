@@ -18,12 +18,14 @@ import styled from 'styled-components/macro';
 import { useETHBalances } from 'state/wallet/hooks';
 import { useKiba } from 'pages/Vote/VotePage';
 import { useParams } from 'react-router';
+import useTheme from 'hooks/useTheme'
 import { useUSDCValue } from 'hooks/useUSDCPrice';
 import { useWeb3React } from '@web3-react/core';
 
 const StyledHeader = styled.div`
 font-size: ${isMobile ? '12px' : '14px'};
 font-family: "Open Sans";
+color:${props => props.theme.text1};
 margin:0; `
 
 const TotalRow = ({ totalGasUSD, totalGasETH, account, transactions, txCount }: { totalGasUSD?: any, totalGasETH?: any, totalGasPaid?: CurrencyAmount<Token> | null, account: string, transactions: any[], txCount: number }) => {
@@ -65,6 +67,7 @@ export const AccountPage = () => {
     const [formattedTxns, setFormattedTxns] = React.useState<any[]>()
     const web3 = new Web3(library?.provider)
     const hasAccess = useHasAccess()
+    const theme=useTheme()
     React.useEffect(() => {
         if (transactions && transactions?.data && transactions?.data?.swaps && library?.provider) {
             Promise.all(transactions?.data?.swaps?.map(async (item: any) => {
@@ -102,16 +105,16 @@ export const AccountPage = () => {
     if (!account) return null;
 
     return (
-        <DarkCard style={{ maxWidth: 850, background: '#252632', padding: 20 }}>
+        <DarkCard style={{ maxWidth: 850,color: theme.text1,  padding: 20 }}>
             <div style={{ display: 'flex', flexFlow: 'row wrap', marginBottom: 10, justifyContent: 'space-between' }}>
-                <StyledHeader style= {{fontSize:30, paddingTop: 20, paddingBottom: 20 }}>Transaction History</StyledHeader>
+                <StyledHeader style= {{color: theme.text1, fontSize:14, paddingTop: 20, paddingBottom: 20 }}>Transaction History</StyledHeader>
                 {hasAccess && <ExternalLink href={`https://etherscan.io/address/${account}`}>
                     <ButtonGray> View on explorer
                         <ExternalLinkIcon href={`https://etherscan.io/address/${account}`} />
                     </ButtonGray>
                 </ExternalLink>}
             </div>
-            <Wrapper style={{ background: '#222', padding: '9px 14px' }}>
+            <Wrapper style={{ padding: '9px 14px' }}>
                 {hasAccess && (
                     <>
                         <Transactions loading={transactions.loading} error={transactions.error} transactions={formattedTxns} />
@@ -134,6 +137,7 @@ export const AccountPageWithAccount = () => {
     const [formattedTxns, setFormattedTxns] = React.useState<any[]>()
     const web3 = new Web3(library?.provider)
     const hasAccess = useHasAccess()
+    const theme =useTheme()
     const ethBalance = useETHBalances([account?.toLowerCase()])
     console.log(ethBalance)
     React.useEffect(() => {
@@ -175,14 +179,14 @@ export const AccountPageWithAccount = () => {
     return (
         <DarkCard style={{ maxWidth: 850, background: '#252632' }}>
             <div style={{ display: 'flex', flexFlow: 'row wrap', marginBottom: 10, justifyContent: 'space-between',rowGap: 10, columnGap: 15 }}>
-                <Badge><StyledHeader>Transaction History </StyledHeader></Badge>
+                <Badge><StyledHeader style={{color: theme.text1}}>Transaction History </StyledHeader></Badge>
                 {hasAccess && <ExternalLink href={`https://etherscan.io/address/${account}`}>
                     <ButtonPrimary> View on explorer
                         <ExternalLinkIcon href={`https://etherscan.io/address/${account}`} />
                     </ButtonPrimary>
                 </ExternalLink>}
 
-                <Badge variant={BadgeVariant.POSITIVE} color={"#FFF"}>{account}</Badge>
+                <Badge variant={BadgeVariant.POSITIVE}>{account}</Badge>
                 {ethBalance && ethBalance[account?.toLowerCase()] && <Badge variant={BadgeVariant.DEFAULT}>{ethBalance[account?.toLowerCase()]?.toSignificant(4)} ETH</Badge>}
 
             </div>

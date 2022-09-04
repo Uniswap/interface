@@ -22,6 +22,7 @@ import { useUSDCValue } from 'hooks/useUSDCPrice';
 import { useWeb3React } from '@web3-react/core';
 
 const StyledHeader = styled.div`
+color:${props => props.theme.text1};
 font-size: ${isMobile ? '14px' : '12px'};
 font-family: "Open Sans";
 margin:0; `
@@ -102,16 +103,16 @@ export const AccountPage = () => {
     if (!account) return null;
 
     return (
-        <DarkCard style={{ maxWidth: 850, background: '#252632' }}>
+        <DarkCard style={{ maxWidth: 850 }}>
             <div style={{ display: 'flex', flexFlow: 'row wrap', marginBottom: 10, justifyContent: 'space-between' }}>
-                <StyledHeader style= {{fontSize:30, paddingTop: 20, paddingBottom: 20 }}>Transaction History</StyledHeader>
+                <StyledHeader style= {{fontSize:14, paddingTop: 20, paddingBottom: 20 }}>Transaction History</StyledHeader>
                 {hasAccess && <ExternalLink href={`https://etherscan.io/address/${account}`}>
                     <ButtonGray> View on explorer
                         <ExternalLinkIcon href={`https://etherscan.io/address/${account}`} />
                     </ButtonGray>
                 </ExternalLink>}
             </div>
-            <Wrapper style={{ background: '#222', padding: '9px 14px' }}>
+            <Wrapper style={{  padding: '9px 14px' }}>
                 {hasAccess && (
                     <>
                         <Transactions loading={transactions.loading} error={transactions.error} transactions={formattedTxns} />
@@ -181,11 +182,11 @@ export const AccountPageWithAccount = () => {
                     </ButtonPrimary>
                 </ExternalLink>}
 
-                <Badge variant={BadgeVariant.POSITIVE} color={"#FFF"}>{account}</Badge>
+                <Badge variant={BadgeVariant.POSITIVE}>{account}</Badge>
                 {ethBalance && ethBalance[account?.toLowerCase()] && <Badge variant={BadgeVariant.DEFAULT}>{ethBalance[account?.toLowerCase()]?.toSignificant(4)} ETH</Badge>}
 
             </div>
-            <Wrapper style={{ background: '#222', padding: '9px 14px' }}>
+            <Wrapper style={{padding: '9px 14px' }}>
                 {hasAccess && (
                     <>
                         <Transactions accountValue={account?.toLowerCase()} loading={transactions.loading} error={transactions.error} transactions={formattedTxns} />

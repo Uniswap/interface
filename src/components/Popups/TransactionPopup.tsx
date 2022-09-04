@@ -1,12 +1,13 @@
-import { useContext } from 'react'
 import { AlertCircle, CheckCircle } from 'react-feather'
-import styled, { ThemeContext } from 'styled-components/macro'
-import { useActiveWeb3React } from '../../hooks/web3'
-import { TYPE } from '../../theme'
-import { ExternalLink } from '../../theme/components'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
+import styled, { ThemeContext } from 'styled-components/macro'
+
 import { AutoColumn } from '../Column'
 import { AutoRow } from '../Row'
+import { ExternalLink } from '../../theme/components'
+import { TYPE } from '../../theme'
+import { useActiveWeb3React } from '../../hooks/web3'
+import { useContext } from 'react'
 
 const RowNoFlex = styled(AutoRow)`
   flex-wrap: nowrap;
@@ -33,7 +34,7 @@ export default function TransactionPopup({
       <AutoColumn gap="8px">
         <TYPE.body fontWeight={500}>{summary ?? 'Hash: ' + hash.slice(0, 8) + '...' + hash.slice(58, 65)}</TYPE.body>
         {chainId && (
-          <ExternalLink style={{color:"#FFF"}} href={getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)}>
+          <ExternalLink style={{color:theme.text1}} href={getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)}>
             View on Explorer
           </ExternalLink>
         )}

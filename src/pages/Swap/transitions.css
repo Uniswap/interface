@@ -1,10 +1,28 @@
+
+@keyframes opacity {
+  0% {
+    opacity: 0;
+  }
+  25% {
+    opacity: 0.25;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  75% {
+    opacity: 0.75;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
 .example-enter {
-  opacity: 0.01;
+  animation: opacity 2.5s both;
 }
 
 .example-enter.example-enter-active {
-  opacity: 1;
-  transition: opacity 500ms ease-in;
+  animation: opacity 2.5s both;
 }
 
 .example-leave {
@@ -12,14 +30,6 @@
 }
 
 .example-leave.example-leave-active {
-  opacity: 0.01;
-  transition: opacity 300ms ease-in;
-}
+  animation: opacity 2.5s both;
 
-.transition-width {
-  -webkit-transition: width 3s;
-  -moz-transition: width 3s;
-  -o-transition: width 3s;
-  -ms-transition: width 3s;
-  transition: width 3s;
 }

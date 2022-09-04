@@ -1,28 +1,28 @@
-import { AbstractConnector } from '@web3-react/abstract-connector'
-import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
-import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
-import { AutoRow } from 'components/Row'
-import { useEffect, useState } from 'react'
-import { isMobile } from 'react-device-detect'
-import ReactGA from 'react-ga'
-import styled from 'styled-components/macro'
-import MetamaskIcon from '../../assets/images/metamask.png'
-import { ReactComponent as Close } from '../../assets/images/x.svg'
-import { fortmatic, injected, portis } from '../../connectors'
-import { OVERLAY_READY } from '../../connectors/Fortmatic'
-import { SUPPORTED_WALLETS } from '../../constants/wallet'
-import usePrevious from '../../hooks/usePrevious'
-import { ApplicationModal } from '../../state/application/actions'
-import { useModalOpen, useWalletModalToggle } from '../../state/application/hooks'
 import { ExternalLink, TYPE } from '../../theme'
-import AccountDetails from '../AccountDetails'
-import { Trans } from '@lingui/macro'
+import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
+import { fortmatic, injected, portis } from '../../connectors'
+import { useEffect, useState } from 'react'
+import { useModalOpen, useWalletModalToggle } from '../../state/application/hooks'
 
+import { AbstractConnector } from '@web3-react/abstract-connector'
+import AccountDetails from '../AccountDetails'
+import { ApplicationModal } from '../../state/application/actions'
+import { AutoRow } from 'components/Row'
+import { ReactComponent as Close } from '../../assets/images/x.svg'
+import { LightCard } from '../Card'
+import MetamaskIcon from '../../assets/images/metamask.png'
 import Modal from '../Modal'
+import { OVERLAY_READY } from '../../connectors/Fortmatic'
 import Option from './Option'
 import PendingView from './PendingView'
-import { LightCard } from '../Card'
+import ReactGA from 'react-ga'
+import { SUPPORTED_WALLETS } from '../../constants/wallet'
+import { Trans } from '@lingui/macro'
+import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
 import { flex } from 'styled-system'
+import { isMobile } from 'react-device-detect'
+import styled from 'styled-components/macro'
+import usePrevious from '../../hooks/usePrevious'
 
 const CloseIcon = styled.div`
   position: absolute;
@@ -63,7 +63,7 @@ const InternalHeaderRow = styled.div`
   ${({ theme }) => theme.flexRowNoWrap};
   padding: 20px;
   font-weight: 600;
-  font-family: Open Sans;
+  font-family: 'Open Sans';
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
     padding: 1rem;
@@ -76,7 +76,6 @@ const ContentWrapper = styled.div`
   padding: 30px;
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
-
   ${({ theme }) => theme.mediaWidth.upToMedium`padding: 0 1rem 1rem 1rem`};
 `
 
@@ -363,8 +362,8 @@ export default function WalletModal({
         )}
 
         <ContentWrapper>
-          <LightCard style={{ marginBottom: '16px', fontFamily: 'Open Sans', lineHeight: '22px', background: '#4F4F62' }}>
-          <InternalHeaderRow style={{ justifyContent: 'center', fontFamily: 'Bangers', fontSize: 30, letterSpacing: 1, color:"#F76C1D" }}>
+          <LightCard style={{ marginBottom: '16px', fontFamily: 'Open Sans', lineHeight: '22px' }}>
+          <InternalHeaderRow style={{ justifyContent: 'center', fontFamily: 'Open Sans', fontSize: 14, letterSpacing: 1}}>
             
             <Trans>Switching networks</Trans>
           
@@ -378,7 +377,7 @@ export default function WalletModal({
               </TYPE.main>
             </AutoRow>
           </LightCard>
-          <LightCard style={{ marginBottom: '16px', fontFamily: 'Open Sans', lineHeight: '22px', background: '#4F4F62', borderColor: '#18181E'  }}>
+          <LightCard style={{ marginBottom: '16px', fontFamily: 'Open Sans', lineHeight: '22px', borderColor: '#18181E'  }}>
             <AutoRow style={{ flexWrap: 'nowrap' }}>
               <TYPE.main fontSize={16}>
                 <Trans>

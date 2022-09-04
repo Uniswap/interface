@@ -8,6 +8,7 @@ import { Wrapper } from 'components/swap/styleds';
 import moment from 'moment';
 import {saveAs} from 'file-saver';
 import styled from 'styled-components/macro'
+import useTheme from 'hooks/useTheme';
 import { useUserTransactions } from 'state/logs/utils';
 import { useWeb3React } from '@web3-react/core';
 import useWebSocket from 'react-use-websocket'
@@ -116,11 +117,13 @@ export const Transactions = ({transactions, loading, error, accountValue}:{trans
             'text/csv;encoding:utf-8'
         )
     }, [formattedTransactions])
+
+    const theme = useTheme()
     return (
-        <Wrapper style={{ padding:3, maxHeight: 450, overflow: 'auto' }}>
+        <Wrapper style={{ background: theme.bg0, color:theme.text1, padding:3, maxHeight: 450, overflow: 'auto' }}>
             <div style={{display:'flex',justifyContent:'end', marginBottom:5}}>
                 <ButtonOutlined onClick={exportToCsv}>
-                    Export to CSV    <FilePlus style={{cursor:'pointer', fontSize:20}}   />
+                    Export to CSV  &nbsp;  <FilePlus style={{cursor:'pointer', fontSize:20}}   />
                 </ButtonOutlined>
             </div>
             {!account && <p style={{ height: 400, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>Please connect your wallet.</p>}
@@ -139,7 +142,7 @@ export const Transactions = ({transactions, loading, error, accountValue}:{trans
                         textAlign: 'left',
                         position: 'sticky',
                         top: 0,
-                        background: 'linear-gradient(#181C27, #131722)'
+                        background: theme.bg0
                     }}>
                         <tr>
                             <th>Date</th>

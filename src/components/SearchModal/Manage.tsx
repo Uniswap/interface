@@ -1,21 +1,24 @@
-import { Trans } from '@lingui/macro'
-import { useState } from 'react'
 import { PaddedColumn, Separator } from './styleds'
-import { RowBetween } from 'components/Row'
+
 import { ArrowLeft } from 'react-feather'
-import { Text } from 'rebass'
 import { CloseIcon } from 'theme'
-import styled from 'styled-components/macro'
-import { Token } from '@uniswap/sdk-core'
+import { CurrencyModalView } from './CurrencySearchModal'
 import { ManageLists } from './ManageLists'
 import ManageTokens from './ManageTokens'
+import { RowBetween } from 'components/Row'
+import { Text } from 'rebass'
+import { Token } from '@uniswap/sdk-core'
 import { TokenList } from '@uniswap/token-lists'
-import { CurrencyModalView } from './CurrencySearchModal'
+import { Trans } from '@lingui/macro'
+import styled from 'styled-components/macro'
+import { useState } from 'react'
 
 const Wrapper = styled.div`
   width: 100%;
   position: relative;
   padding-bottom: 80px;
+  background:${props => props.theme.bg0};
+  color:${props => props.theme.text1};
 `
 
 const ToggleWrapper = styled(RowBetween)`

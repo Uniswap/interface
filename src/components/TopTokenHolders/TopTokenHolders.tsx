@@ -116,7 +116,7 @@ export const TopTokenHolders: FC<Props> = (props: Props) => {
     if (chainId !== 1) return null
     return (
         <DarkCard style={{ padding: '.85rem', border: `1px solid ${theme.bg6}`, background: theme.chartSidebar}}>
-            <p style={{ margin: 0 }} onClick={() => setIsOpen(!isOpen)}>The top 50 holders own <Badge>{topHoldersOwnedPercentComputed}%</Badge> of the total supply. <Badge>{burntHolderOwnedPercentComputed}%</Badge> is burnt. {node}</p>
+            <p style={{ margin: 0, fontSize:14 }} onClick={() => setIsOpen(!isOpen)}>The top 50 holders own <Badge>{topHoldersOwnedPercentComputed}%</Badge> of the total supply. <Badge>{burntHolderOwnedPercentComputed}%</Badge> is burnt. {node}</p>
             {isOpen && <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 {!isMobile && <>
                     <p style={{ fontSize: 12, margin: 0 }}>Address</p>
@@ -124,10 +124,10 @@ export const TopTokenHolders: FC<Props> = (props: Props) => {
                 </>}
                 {isMobile && <p style={{ margin: 0 }}>Top {tokenInfo?.symbol} token holders</p>}
             </div>}
-            {isOpen && <div style={{ width: '100%', maxHeight: 345, overflow: 'auto' }}>
+            {isOpen && <div style={{ width: '100%', maxHeight: 370, overflow: 'auto' }}>
                 {holders && holders.slice(sliceCount.start, sliceCount.end).map((holder, i) => (
                     <div key={holder.address} style={{ rowGap: 1, alignItems: 'center', padding: '1px 0px', marginBottom: 1, display: 'flex', gap: 10, justifyContent: isMobile ? 'stretch' : 'space-between', flexFlow: 'row wrap' }}>
-                        <ExternalLink style={{ color: theme.blue1, fontSize: 12 }} href={getHolderLink(holder)}>
+                        <ExternalLink style={{ color: theme.text1, fontSize: 12 }} href={getHolderLink(holder)}>
                             <span style={{ marginRight: 3, color: '#FFF', background: "#444", borderRadius: 15, padding: 3 }}>{i + 1}</span> {holder?.address}
                             {isUniswapPair(holder.address) &&
                                 <Tooltip text={PairTooltipText(holder.address)} show={showUniTooltip} >
@@ -155,19 +155,20 @@ export const TopTokenHolders: FC<Props> = (props: Props) => {
                             &nbsp;
                             <span style={{ paddingLeft: 10, fontSize: 12.5, color: 'lightgreen' }}>{holder.share}%</span>
                         </Badge>
-                        {holder == holders[holders.slice(sliceCount.start, sliceCount.end).length - 1] ? <StyledSpan style={{ cursor: 'pointer', alignItems: 'center', color: 'lightgreen', position: 'relative', width: '100%', bottom: !isMobile ? 30 : 0, display: 'flex', justifyContent: 'center', height: !isMobile ? 1 : 15 }} onClick={() => {
-                            const end = sliceCount.end == holders?.length ? 10 : holders?.length;
-                            setSliceCount({ ...sliceCount, end })
-                        }}>
-                            <small style={{ fontSize: 12 }}>{
-                                holders?.length === sliceCount?.end ? 'Hide' : 'Show'} All
-                                {holders?.length !== sliceCount?.end ? <ArrowDown /> : <ArrowUp />}
-                                 Top 50</small>
-                        </StyledSpan> : null}
+                   
                     </div>
                 ))}
-
+          
             </div>}
+            {!!isOpen &&  <Badge style={{ cursor: 'pointer', alignItems: 'center', color: theme.text1, position: 'relative', width: '100%', bottom: 0, display: 'flex', justifyContent: 'center' }} onClick={() => {
+                        const end = sliceCount.end == holders?.length ? 10 : holders?.length || 0;
+                        setSliceCount({ ...sliceCount, end })
+                    }}>
+                        <small style={{ fontSize: 12 }}>{
+                            holders?.length === sliceCount?.end ? 'Hide' : 'Show'} All
+                            {holders?.length !== sliceCount?.end ? <ArrowDown /> : <ArrowUp />}
+                                Top 50</small>
+                    </Badge> }
         </DarkCard>
     )
 }

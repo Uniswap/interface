@@ -1,30 +1,32 @@
-import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
-import JSBI from 'jsbi'
-import { useCallback, useEffect, useState } from 'react'
-import { Plus } from 'react-feather'
-import { Text } from 'rebass'
-import { ButtonDropdownLight } from '../../components/Button'
-import { LightCard } from '../../components/Card'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
-import CurrencyLogo from '../../components/CurrencyLogo'
-import { FindPoolTabs } from '../../components/NavigationTabs'
-import { MinimalPositionCard } from '../../components/PositionCard'
-import Row from '../../components/Row'
-import CurrencySearchModal from '../../components/SearchModal/CurrencySearchModal'
-import { SwitchLocaleLink } from '../../components/SwitchLocaleLink'
-import { ExtendedEther } from '../../constants/tokens'
+import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { PairState, useV2Pair } from '../../hooks/useV2Pairs'
-import { useActiveWeb3React } from '../../hooks/web3'
-import { usePairAdder } from '../../state/user/hooks'
-import { useTokenBalance } from '../../state/wallet/hooks'
-import { StyledInternalLink } from '../../theme'
-import { currencyId } from '../../utils/currencyId'
+import { useCallback, useEffect, useState } from 'react'
+
 import AppBody from '../AppBody'
-import { Dots } from '../Pool/styleds'
 import { BlueCard } from '../../components/Card'
+import { ButtonDropdownLight } from '../../components/Button'
+import CurrencyLogo from '../../components/CurrencyLogo'
+import CurrencySearchModal from '../../components/SearchModal/CurrencySearchModal'
+import { Dots } from '../Pool/styleds'
+import { ExtendedEther } from '../../constants/tokens'
+import { FindPoolTabs } from '../../components/NavigationTabs'
+import JSBI from 'jsbi'
+import { LightCard } from '../../components/Card'
+import { MinimalPositionCard } from '../../components/PositionCard'
+import { Plus } from 'react-feather'
+import Row from '../../components/Row'
+import { StyledInternalLink } from '../../theme'
+import { SwitchLocaleLink } from '../../components/SwitchLocaleLink'
 import { TYPE } from '../../theme'
-import { useLocation } from 'react-router'
+import { Text } from 'rebass'
 import { Trans } from '@lingui/macro'
+import { currencyId } from '../../utils/currencyId'
+import { useActiveWeb3React } from '../../hooks/web3'
+import { useLocation } from 'react-router'
+import { usePairAdder } from '../../state/user/hooks'
+import useTheme from 'hooks/useTheme'
+import { useTokenBalance } from '../../state/wallet/hooks'
 
 enum Fields {
   TOKEN0 = 0,
@@ -76,7 +78,7 @@ export default function PoolFinder() {
     },
     [activeField]
   )
-
+  const theme = useTheme()
   const handleSearchDismiss = useCallback(() => {
     setShowSearch(false)
   }, [setShowSearch])
@@ -98,9 +100,9 @@ export default function PoolFinder() {
       <AppBody>
         <FindPoolTabs origin={query.get('origin') ?? '/pool/v2'} />
         <AutoColumn style={{ padding: '1rem' }} gap="md">
-          <BlueCard>
+          <BlueCard style={{marginBottom:'0.5rem'}}>
             <AutoColumn gap="10px">
-              <TYPE.link fontWeight={400} color={'primaryText1'}>
+              <TYPE.link fontWeight={400} color={'text1'}>
                 <Trans>
                   <b>Tip:</b> Use this tool to find v2 pools that don&apos;t automatically appear in the interface.
                 </Trans>
@@ -108,6 +110,7 @@ export default function PoolFinder() {
             </AutoColumn>
           </BlueCard>
           <ButtonDropdownLight
+            style={{border:`1px solid ${theme.text1}`}}
             onClick={() => {
               setShowSearch(true)
               setActiveField(Fields.TOKEN0)
@@ -132,6 +135,7 @@ export default function PoolFinder() {
           </ColumnCenter>
 
           <ButtonDropdownLight
+            style={{border:`1px solid ${theme.text1}`}}
             onClick={() => {
               setShowSearch(true)
               setActiveField(Fields.TOKEN1)

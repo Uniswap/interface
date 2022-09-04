@@ -1,23 +1,23 @@
-import styled from 'styled-components/macro'
-import { darken } from 'polished'
-import { Trans } from '@lingui/macro'
-import { NavLink, Link as HistoryLink, useLocation } from 'react-router-dom'
-import { Percent } from '@uniswap/sdk-core'
+import { Link as HistoryLink, NavLink, useLocation } from 'react-router-dom'
+import Row, { RowBetween } from '../Row'
 
 import { ArrowLeft } from 'react-feather'
-import Row, { RowBetween } from '../Row'
+import { Box } from 'rebass'
+import { Percent } from '@uniswap/sdk-core'
+import { ReactNode } from 'react'
 import SettingsTab from '../Settings'
-
-import { useAppDispatch } from 'state/hooks'
+import { TYPE } from 'theme'
+import { Trans } from '@lingui/macro'
+import { darken } from 'polished'
 import { resetMintState } from 'state/mint/actions'
 import { resetMintState as resetMintV3State } from 'state/mint/v3/actions'
-import { TYPE } from 'theme'
+import styled from 'styled-components/macro'
+import { useAppDispatch } from 'state/hooks'
 import useTheme from 'hooks/useTheme'
-import { ReactNode } from 'react'
-import { Box } from 'rebass'
 
 const Tabs = styled.div`
   ${({ theme }) => theme.flexRowNoWrap}
+  color:${props => props.theme.text1};
   align-items: center;
   border-radius: 3rem;
   justify-content: space-evenly;

@@ -25,7 +25,7 @@ const PageWrapper = styled(AutoColumn)`
   width: 100%;
   min-width: 45%;
   max-width: 480px; 
-  background: ${props => props.theme.bg2};
+  background: ${props => props.theme.bg6};
   color:${props => props.theme.text1};
   padding: 30px;
   border-radius:30px;

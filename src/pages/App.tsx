@@ -240,9 +240,10 @@ const HoneyPotDetector = () => {
   }
   const setPriceDetailsOpenFn = () => setPriceDetailsOpen(!priceDetailsOpen);
   const hasInvalidPermissions = !account || (!!kibaBalance && +kibaBalance?.toFixed(0) <= 0)
-  if (chainId === 56) return <HoneyPotBsc />
+  const theme = useTheme()
 
-  return (<DarkCard style={{ background: '#252632', opacity: '.96', maxWidth: '45%', minWidth: 480, padding: 20 }} id="honeypage">
+  if (chainId === 56) return <HoneyPotBsc />
+  return (<DarkCard style={{ background: theme.bg0,color: theme.text1, opacity: '.96', maxWidth: '45%', minWidth: 480, padding: 20 }} id="honeypage">
     <div style={{ maxWidth: 600, display: 'flex', flexFlow: 'column wrap', margin: 'auto', paddingBottom: '1rem' }}>
       <StyledHeader style={{ fontSize: 15, paddingBottom: 20, paddingTop: 20 }}>Honeypot Checker (ETH)</StyledHeader>
       <small style={{ marginTop: 3, paddingLeft: 3, justifyContent: 'center', fontSize: 20, fontFamily: 'Archivo Narrow' }}>Disclaimer: This is an experimental service, use at your own risk and make sure to double check all contract interactions.</small>
@@ -305,8 +306,8 @@ const HoneyPotDetector = () => {
         <TopTokenHolders address={msg} chainId={chainId} />
       </CardSection>}
       {!!tokenInfo && typeof (tokenInfo.price) === 'object' && (
-        <div style={{ background: 'rgb(0 0 0 / 58%)', padding: 10 }}>
-          <StyledHeader onClick={setPriceDetailsOpenFn} style={{ filter: priceDetailsOpen ? 'drop-shadow(2px 4px 6px black)' : 'none', cursor: 'pointer', width: '100%', display: 'flex', justifyContent: 'center' }}>Price Details {priceDetailsOpen ? <ChevronUp /> : <ChevronDown />} </StyledHeader>
+        <div style={{ background: theme.bg0, color:theme.text1, padding: 10 }}>
+          <StyledHeader onClick={setPriceDetailsOpenFn} style={{ filter: priceDetailsOpen ? 'drop-shadow(2px 4px 6px #eee)' : 'none', cursor: 'pointer', width: '100%', display: 'flex', justifyContent: 'center' }}>Price Details {priceDetailsOpen ? <ChevronUp /> : <ChevronDown />} </StyledHeader>
           {priceDetailsOpen && <RowFixed style={{ paddingRight: '0.5rem', paddingLeft: '0.5rem', maxWidth: 600, width: "100%" }}>
             <AutoColumn style={{
               display: 'flex',

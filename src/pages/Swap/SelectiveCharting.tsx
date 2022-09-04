@@ -28,8 +28,7 @@ import { useCurrency, useToken } from "hooks/Tokens";
 import { useDexscreenerToken, useTokenInfo } from "components/swap/ChartPage";
 import { useLocation, useParams } from "react-router";
 
-import Badge from "components/Badge";
-import { ButtonSecondary } from "components/Button";
+import { ButtonSecondary } from "components/Button"
 import { CTooltip } from "@coreui/react";
 import { CardSection } from "components/earn/styled";
 import { ChartComponent } from "./ChartComponent";
@@ -38,14 +37,14 @@ import { ChartSidebar } from "components/ChartSidebar";
 import { ChartTable } from "./ChartTable";
 import CurrencyInputPanel from "components/CurrencyInputPanel";
 import CurrencyLogo from "components/CurrencyLogo";
-import DoubleCurrencyLogo from "components/DoubleLogo";
 import { FixedSizeList } from "react-window";
-import Loader from "components/Loader";
-import Moment from "./Moment";
-import QuestionHelper from "components/QuestionHelper";
+import Loader  from "components/Loader"
+import Moment  from"./Moment"
+import QuestionHelper  from "components/QuestionHelper"
 import React from "react";
 import ReactGA from "react-ga";
 import Toggle from "components/Toggle";
+import TokenSocials from "./TokenSocials";
 import { TokenStats } from "./TokenStats";
 import { TopTokenHolders } from "components/TopTokenHolders/TopTokenHolders";
 import _ from "lodash";
@@ -53,12 +52,16 @@ import { abbreviateNumber } from "components/BurntKiba";
 import { isAddress } from "utils";
 import { isMobile } from "react-device-detect";
 import { useBscTokenTransactions } from "state/logs/bscUtils";
-import { useConvertTokenAmountToUsdString } from "pages/Vote/VotePage";
+import { useConvertTokenAmountToUsdString }from "pages/Vote/VotePage";
 import { useHistory } from "react-router-dom";
 import useLast from "hooks/useLast";
 import { useTokenBalance } from "state/wallet/hooks";
 import { useUserChartHistoryManager } from "state/user/hooks";
 import { useWeb3React } from "@web3-react/core";
+
+const Badge = React.lazy(() => import( "components/Badge"));
+
+const DoubleCurrencyLogo = React.lazy(() => import("components/DoubleLogo"));
 
 export function useLocationEffect(callback: (location?: any) => any) {
   const location = useLocation();
@@ -106,34 +109,6 @@ const RecentCard = styled(LightCard)`
     transition: all ease 0.1s;
   }
 `;
-
-const StyledGlobe = styled(Globe)<{ disabled?: boolean, color: string }>`
-  font-size: 12px;
-  color: ${props=>props.color};
-  margin-top: 2px;
-  cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
-  opacity: ${(props) => (props.disabled ? 0.5 : 1)};
-  &:hover {
-    color: ${props => lighten(0.1, props.color)};
-    transition: ease all 0.1s;
-    cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
-  }
-`;
-
-const StyledTwitter = styled(Twitter)<{ disabled?: boolean, color: string }>`
-  font-size: 12px;
-  color: #fff;
-  margin-top: 2px;
-  cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
-  opacity: ${(props) => (props.disabled ? 0.5 : 1)};
-  &:hover {
-    color: ${props => lighten(0.1, props.color)};
-
-    transition: ease all 0.1s;
-    cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
-  }
-`;
-
 export const SelectiveChart = () => {
   const ref = React.useRef<any>();
   const { account, chainId } = useWeb3React();
@@ -222,7 +197,7 @@ export const SelectiveChart = () => {
       selectedCurrency: prebuiltCurrency,
     }
   );
-  const hasSelectedData = Boolean(params?.tokenAddress && selectedCurrency);
+  const hasSelectedData = Boolean(params?.tokenAddress && selectedCurrency?.selectedCurrency?.name);
   const theme=useTheme()
   const [loadingNewData, setLoadingNewData] = React.useState(false);
   const bscTransactionData = useBscTokenTransactions(
@@ -281,13 +256,13 @@ export const SelectiveChart = () => {
 
       setTimeout(() => {
         setLoadingNewData(false);
-        window.scrollTo({ top: 0 });
       }, 1200);
     } else {
       setSelectedCurrency({ payload: undefined, type: "update" });
       ref.current = undefined;
     }
   }, []);
+
   useLocationEffect(locationCallback);
 
   const [userChartHistory, updateUserChartHistory] =
@@ -418,16 +393,16 @@ export const SelectiveChart = () => {
   const [showSearch, setShowSearch] = React.useState(false);
   const toggleShowSearchOn = () => setShowSearch(true);
   const toggleShowSearchOff = () => setShowSearch(false);
-  const onCurrencySelect = (currency: any) => {
+  const onCurrencySelect = React.useCallback((currency: any) => {
     if (!currency) return;
     ref.current = currency;
     setSelectedCurrency({ type: "update", payload: currency });
     const currencyAddress = currency?.address || currency?.wrapped?.address;
     history.push(
-      `/selective-charts/${currencyAddress}/${currency?.symbol}/${currency.name}/${currency.decimals}`
+      `/selective-charts/${toChecksum(currencyAddress)}/${currency?.symbol}/${currency.name}/${currency.decimals}`
     );
     setAddress(currencyAddress);
-  };
+  }, [])
   const chainLabel = React.useMemo(
     () => (!chainId || chainId === 1 ? `WETH` : chainId === 56 ? "WBNB" : ""),
     [chainId]
@@ -456,7 +431,7 @@ export const SelectiveChart = () => {
         on KibaCharts
       </span>
     ) : null;
-  }, [mainnetCurrency, pairs, pairCurrency, hasSelectedData]);
+  }, [mainnetCurrency, pairCurrency, hasSelectedData]);
   const PanelMemo = React.useMemo(() => {
     return !Boolean(chainId) || Boolean(chainId && chainId === 1) ? (
       <>
@@ -560,7 +535,6 @@ export const SelectiveChart = () => {
     ]
   );
   // this page will not use access denied, all users can view top token charts
-  const accessDenied = false;
   const deps = [
     selectedCurrency,
     pairs,
@@ -580,109 +554,8 @@ export const SelectiveChart = () => {
     [selectedCurrency, isMobile, params.tokenAddress, collapsed]
   );
 
-  const SocialsMemo = React.useMemo(
-    function () {
-      if (tokenInfo) {
-        let twitter = tokenInfo?.twitter;
-        let coingecko = tokenInfo?.coingecko;
-        let website = tokenInfo?.website;
-        if (params?.tokenSymbol?.toLowerCase() == "kiba") {
-          twitter = "KibaInuWorld";
-          website = "https://kibainu.org";
-          coingecko = "kiba-inu";
-        }
-        return (
-          <React.Fragment>
-            <SidebarHeader>
-              <TYPE.small
-                style={{
-                  marginBottom: 3,
-                  borderBottom: `1px solid #444`,
-                }}
-              >
-                {" "}
-                {tokenInfo?.symbol} Socials
-              </TYPE.small>
-            </SidebarHeader>
-            <MenuItem
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-              }}
-            >
-              <div
-                style={{ display: "flex", alignItems: "center", columnGap: 10 }}
-              >
-                {twitter ? (
-                  <CTooltip
-                    placement="bottom"
-                    content={`${tokenInfo?.name} Twitter`}
-                  >
-                    <a
-                      style={{ display: "inline-block" }}
-                      href={`https://twitter.com/${twitter}`}
-                    >
-                      <StyledTwitter color={theme.text1} />
-                    </a>
-                  </CTooltip>
-                ) : (
-                  <CTooltip
-                    placement="bottom"
-                    content={`Unable to find ${tokenInfo?.name} twitter`}
-                  >
-                    <span style={{ display: "inline-block" }}>
-                      <StyledTwitter color={theme.text1} disabled />
-                    </span>
-                  </CTooltip>
-                )}
-                {website ? (
-                  <CTooltip
-                    placement="bottom"
-                    content={`${tokenInfo?.name} Website`}
-                  >
-                    <a style={{ display: "inline-block" }} href={website}>
-                      <StyledGlobe color={theme.text1} />
-                    </a>
-                  </CTooltip>
-                ) : (
-                  <CTooltip
-                    placement="bottom"
-                    content={`Unable to find ${tokenInfo?.name} website`}
-                  >
-                    <span style={{ display: "inline-block" }}>
-                      <StyledGlobe color={theme.text1} disabled />
-                    </span>
-                  </CTooltip>
-                )}
-                {coingecko && (
-                  <CTooltip
-                    placement="bottom"
-                    content={`${tokenInfo?.name} Coin Gecko Listing`}
-                  >
-                    <a
-                      style={{ display: "inline-block" }}
-                      href={`https://coingecko.com/en/coins/${coingecko}`}
-                    >
-                      <img
-                        src="https://cdn.filestackcontent.com/MKnOxRS8QjaB2bNYyfou"
-                        style={{ height: 25, width: 25 }}
-                      />
-                    </a>
-                  </CTooltip>
-                )}
-              </div>
-            </MenuItem>
-          </React.Fragment>
-        );
-      }
-      return null;
-    },
-    [hasSocials, tokenInfo, params.tokenSymbol]
-  );
-
   return (
-    <>
+    <React.Suspense fallback={<Loader />}>
       <ChartSearchModal isOpen={showSearch} onDismiss={toggleShowSearchOff} />
       <WrapperCard
         gridTemplateColumns={gridTemplateColumns}
@@ -781,10 +654,16 @@ export const SelectiveChart = () => {
               {!hasSelectedData ? (
                 <Badge>Select a token to get started</Badge>
               ) : isMobile ? null : (
-                <span style={{ margin: 0 }}>{SocialsMemo}</span>
+                <span style={{ margin: 0 }}>
+                  <TokenSocials 
+                             theme={theme}   
+                             tokenSymbol={params?.tokenSymbol || ''} 
+                             tokenInfo={tokenInfo} />
+                </span>
               )}
 
-              {loadingNewData && <LoadingSkeleton count={1} />}
+              {loadingNewData &&
+               <LoadingSkeleton count={1} />}
 
               {!hasSelectedData || loadingNewData
                 ? null
@@ -989,6 +868,6 @@ export const SelectiveChart = () => {
           </CardSection>
         </div>
       </WrapperCard>
-    </>
+    </React.Suspense>
   );
 };
