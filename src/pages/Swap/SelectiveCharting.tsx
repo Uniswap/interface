@@ -602,7 +602,7 @@ export const SelectiveChart = () => {
               {loadingNewData &&
                 <LoadingSkeleton count={1} />}
 
-              {!hasSelectedData || loadingNewData
+              {!hasSelectedData || loadingNewData || isMobile
                 ? null
                 : Boolean(
                   screenerToken &&
@@ -667,7 +667,7 @@ export const SelectiveChart = () => {
             ) : 
             (
               <React.Fragment>
-                {hasSelectedData && (
+                {isMobile == false && hasSelectedData && (
                   <React.Fragment>
                     <TokenStats tokenData={screenerToken} />
                     <TopTokenHolders
