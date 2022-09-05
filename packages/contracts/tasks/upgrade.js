@@ -15,7 +15,7 @@ task("deploy", "deploy proxy")
         // deploy weth
         ins.weth = await hre.run("dc", {"name": "WETH9"})
         // deploy test token
-        ins.tt = await hre.run("dc", {"name": "ERC20"})
+        ins.tt = await hre.run("dc", {"name": "TT"})
         // deploy factory
         let teleFactory = await ethers.getContractFactory("TeleswapV2Factory");
         let pFa = await upgrades.deployProxy(teleFactory, [process.env.PUB_KEY])
