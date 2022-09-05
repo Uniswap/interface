@@ -257,8 +257,8 @@ export const ThemedGlobalStyle = createGlobalStyle`
 html {
   color: ${({ theme }) => theme.text1};
   background-color: ${({ theme }) => theme.colorBlack05};
-  background: url(${swapBottomBg}) center top 7rem no-repeat rgba(0,0,0,1);
-  background-size: 61%;
+  /* background: url(${swapBottomBg}) center top 7rem no-repeat rgba(0,0,0,1);
+  background-size: 61%; */
 }
 
 body {

@@ -34,6 +34,10 @@ const AppWrapper = styled.div`
   flex-flow: column;
   align-items: flex-start;
   overflow-x: hidden;
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 400;
+  font-size: .6rem;
 `
 
 const HeaderWrapper = styled.div`

@@ -27,8 +27,8 @@ import DoubleCurrencyLogoHorizontal from 'components/DoubleLogo'
 import { unwrappedToken } from 'utils/wrappedCurrency'
 
 const PageWrapper = styled(AutoColumn)`
-  max-width: 640px;
-  width: 100%;
+  max-width: 1132px;
+  width: 37.3rem;
 `
 
 const VoteCard = styled(DataCard)`
@@ -55,10 +55,13 @@ const ButtonRow = styled(RowFixed)`
 `
 
 const ResponsiveButtonPrimary = styled(ButtonPrimary)`
-  width: fit-content;
-  ${({ theme }) => theme.mediaWidth.upToSmall`
+  line-height: 1.33rem;
+  border-radius: .3rem;
+  padding: .3rem 1.3rem;
+  text-align: center;
+  /* ${({ theme }) => theme.mediaWidth.upToSmall`
     width: 48%;
-  `};
+  `}; */
 `
 
 const ResponsiveButtonSecondary = styled(ButtonSecondary)`
@@ -119,7 +122,6 @@ const HeaderItem = styled(Box)`
 `
 
 const StyledTableView = styled(Box)`
-  width: 39rem;
   height: 12rem;
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: .8rem;
@@ -274,14 +276,11 @@ export default function Pool() {
               <HideSmall>
                 <TYPE.mediumHeader
                   style={{
-                    marginTop: '0.5rem',
                     justifySelf: 'flex-start',
                     fontFamily: 'Dela Gothic One',
-                    fontStyle: 'normal',
                     fontWeight: '400',
-                    fontSize: '24px',
+                    fontSize: '.8rem',
                     color: '#FFFFFF',
-                    lineHeight: '32px',
                   }}
                 >
                   Your liquidity
@@ -294,11 +293,9 @@ export default function Pool() {
                 <ResponsiveButtonPrimary
                   id="join-pool-button"
                   as={Link}
-                  padding="6px 8px"
-                  borderRadius="12px"
                   to="/add/ETH"
                 >
-                  <Text fontWeight={500} fontSize={16}>
+                  <Text sx={{ fontWeight: 500, fontSize: ".5rem", color: "#000000" }}>
                     Add Liquidity
                   </Text>
                 </ResponsiveButtonPrimary>
@@ -387,13 +384,9 @@ export default function Pool() {
               <HideSmall>
                 <TYPE.mediumHeader
                   style={{
-                    marginTop: '0.5rem',
                     justifySelf: 'flex-start',
                     fontFamily: 'Dela Gothic One',
-                    fontStyle: 'normal',
-                    fontWeight: '400',
-                    fontSize: '24px',
-                    lineHeight: '32px',
+                    fontSize: '.8rem',
                     color: '#FFFFFF',
                   }}
                 >
