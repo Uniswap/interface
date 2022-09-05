@@ -24,6 +24,7 @@ const Wrapper = styled.div`
   position: relative;
   width: 100%;
   overflow: auto;
+  background:${props=>props.theme.bg0};
 `
 
 const WarningWrapper = styled(Card)<{ highWarning: boolean }>`
@@ -57,18 +58,18 @@ export function ImportToken({ tokens, list, onBack, onDismiss, handleCurrencySel
   const addToken = useAddUserToken()
 
   return (
-    <Wrapper>
+    <Wrapper> 
       <PaddedColumn gap="14px" style={{ width: '100%', flex: '1 1' }}>
-        <RowBetween>
+        <RowBetween style={{color:theme.text1}}>
           {onBack ? <ArrowLeft style={{ cursor: 'pointer' }} onClick={onBack} /> : <div />}
-          <TYPE.mediumHeader>
+          <TYPE.mediumHeader color={theme.text1}>
             <Plural value={tokens.length} one="Import token" other="Import tokens" />
           </TYPE.mediumHeader>
           {onDismiss ? <CloseIcon onClick={onDismiss} /> : <div />}
         </RowBetween>
       </PaddedColumn>
       <SectionBreak />
-      <AutoColumn gap="md" style={{ marginBottom: '32px', padding: '0.7rem' }}>
+      <AutoColumn gap="md" style={{ marginBottom: '12px', padding: '0.7rem' }}>
         <AutoColumn justify="center" style={{ textAlign: 'center', gap: '16px', padding: '1rem' }}>
           <AlertCircle size={48} stroke={theme.text2} strokeWidth={1} />
           <TYPE.body fontWeight={400} fontSize={16}>
@@ -133,7 +134,7 @@ export function ImportToken({ tokens, list, onBack, onDismiss, handleCurrencySel
             tokens.map((token) => addToken(token))
             handleCurrencySelect && handleCurrencySelect(tokens[0])
           }}
-          className=".token-dismiss-button"
+          className="token-dismiss-button"
         >
           <Trans>Import</Trans>
         </ButtonPrimary>
