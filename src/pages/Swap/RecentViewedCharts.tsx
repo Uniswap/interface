@@ -5,9 +5,9 @@ import CurrencyLogo from "components/CurrencyLogo"
 import { LightCard } from "components/Card"
 import _ from "lodash"
 import { darken } from 'polished'
-import { isMobile } from "react-device-detect"
 import styled from 'styled-components/macro'
 import { useActiveWeb3React } from "hooks/web3"
+import { useIsMobile } from "./SelectiveCharting"
 import useTheme from 'hooks/useTheme'
 import { useUserChartHistoryManager } from "state/user/hooks"
 
@@ -27,6 +27,7 @@ const RecentCard = styled(LightCard)`
 
 export const RecentlyViewedCharts = () => {
     const {chainId} = useActiveWeb3React()
+    const isMobile = useIsMobile()
     const [userChartHistory] = useUserChartHistoryManager()
     const theme = useTheme()
     return (<div

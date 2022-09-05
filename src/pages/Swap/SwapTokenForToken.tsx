@@ -25,6 +25,7 @@ import { AutoColumn } from '../../components/Column'
 import BetterTradeLink from '../../components/swap/BetterTradeLink'
 import ConfirmSwapModal from '../../components/swap/ConfirmSwapModal'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
+import CurrencyInputPanelSmall from 'components/CurrencyInputSmall'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { Field } from '../../state/swap/actions'
 import GasSelectorModal from 'components/GasSelectorModal'
@@ -465,7 +466,7 @@ export const SwapTokenForToken = (props: TokenForTokenProps) => {
       </div>
       <AutoColumn gap={'xs'}>
         <div style={{ display: 'relative' }}>
-          <CurrencyInputPanel
+          <CurrencyInputPanelSmall
             label={
               independentField === Field.OUTPUT && !showWrap ? <Trans>From (at most)</Trans> : <Trans>From</Trans>
             }
@@ -489,7 +490,7 @@ export const SwapTokenForToken = (props: TokenForTokenProps) => {
               onClick={resetToStepTwo}
             />
           </ArrowWrapper>
-          <CurrencyInputPanel
+          <CurrencyInputPanelSmall
             onCurrencySelect={onCurrencyOutputSelect}
             value={formattedAmounts[Field.OUTPUT]}
             onUserInput={handleTypeOutput}

@@ -10,11 +10,13 @@ import {
 } from "react-feather";
 import { Currency, Token } from "@uniswap/sdk-core";
 import { DarkCard, LightCard } from "components/Card";
+import React, {useEffect, useState} from "react";
 import { StyledInternalLink, TYPE } from "theme";
 import { darken, lighten } from "polished";
 import styled, { useTheme } from "styled-components/macro";
 import {
   toChecksum,
+  useEthPrice,
   useTokenData,
   useTokenTransactions,
 } from "state/logs/utils";
@@ -29,7 +31,6 @@ import { ChartComponent } from "./ChartComponent";
 import { ChartSearchModal } from "pages/Charts/ChartSearchModal";
 import { ChartSidebar } from "components/ChartSidebar";
 import { LoadingSkeleton } from "pages/Pool/styleds";
-import React from "react";
 import ReactGA from "react-ga";
 import { RecentlyViewedCharts } from "./RecentViewedCharts";
 import { TableQuery } from "./TableQuery";
@@ -38,12 +39,27 @@ import { TokenStats } from "./TokenStats";
 import { TopTokenHolders } from "components/TopTokenHolders/TopTokenHolders";
 import _ from "lodash";
 import { isAddress } from "utils";
-import { isMobile } from "react-device-detect";
 import { useConvertTokenAmountToUsdString } from "pages/Vote/VotePage";
 import { useHistory } from "react-router-dom";
 import { useTokenBalance } from "state/wallet/hooks";
 import { useUserChartHistoryManager } from "state/user/hooks";
 import { useWeb3React } from "@web3-react/core";
+
+export const useIsMobile = () => {
+    const [width, setWidth] = useState(window.innerWidth);
+    const handleWindowSizeChange = () => {
+            setWidth(window.innerWidth);
+    }
+
+    useEffect(() => {
+        window.addEventListener('resize', handleWindowSizeChange);
+        return () => {
+            window.removeEventListener('resize', handleWindowSizeChange);
+        }
+    }, []);
+
+    return (width <= 768);
+}
 
 const CurrencyInputPanel = React.lazy(() =>  import("components/CurrencyInputPanel"));
 const CurrencyLogo = React.lazy(() => import( "components/CurrencyLogo"));
@@ -59,14 +75,14 @@ export function useLocationEffect(callback: (location?: any) => any) {
     callback(location);
   }, [location, callback]);
 }
-const StyledDiv = styled.div`
+const StyledDiv = styled.div<{isMobile?:boolean}>`
   font-family: "Open Sans";
   font-size: 14px;
   display: flex;
   gap: 20px;
-  align-items: ${isMobile ? "stretch" : "center"};
+  align-items: ${props => props.isMobile ? "stretch" : "center"};
   padding: 3px 8px;
-  flex-flow: ${() => (isMobile ? "column wrap" : "row wrap")};
+  flex-flow: ${(props) => (props.isMobile ? "column wrap" : "row wrap")};
 `;
 
 const BackLink = styled(StyledDiv)`
@@ -94,6 +110,7 @@ export const SelectiveChart = () => {
     name?: string;
     decimals?: string;
   }>();
+  const isMobile = useIsMobile()
   const mainnetCurrency = useCurrency(
     !chainId || chainId === 1 ? params?.tokenAddress : undefined
   );
@@ -130,7 +147,7 @@ export const SelectiveChart = () => {
   const { pairs } = tokenData;
   const token = useToken(address);
   const tokenBalance = useTokenBalance(account ?? undefined, token as any);
-
+  const [ethPrice] = useEthPrice()
   const screenerToken = useDexscreenerToken(address);
   const transactionData = useTokenTransactions(address, pairs, 20000);
   const [selectedCurrency, setSelectedCurrency] = React.useReducer(
@@ -326,6 +343,8 @@ export const SelectiveChart = () => {
   /* Memoized function to render the Double Currency Logo for the current chart */
   const LogoMemo = React.useMemo(() => {
     return Boolean(!!hasSelectedData) ? (
+      <div style={{display:'flex', alignItems:'center', gap: 20, justifyContent:'space-between'}}>
+      {Boolean(!chainId || chainId == 1) && ethPrice &&<TYPE.small fontSize={12}>ETH <Badge>${parseFloat(parseFloat(ethPrice.toString()).toFixed(2)).toLocaleString()}</Badge> </TYPE.small>}
       <span
         style={{
           display: "flex",
@@ -346,8 +365,9 @@ export const SelectiveChart = () => {
         />
         on KibaCharts
       </span>
+      </div>
     ) : null;
-  }, [mainnetCurrency, pairCurrency, hasSelectedData]);
+  }, [mainnetCurrency, chainId, ethPrice, pairCurrency, hasSelectedData]);
   /* memoized function to render the currency input select that represents the current viewed chart's token */
   const PanelMemo = React.useMemo(() => {
     return !Boolean(chainId) || Boolean(chainId) ? (
@@ -532,6 +552,7 @@ export const SelectiveChart = () => {
         >
           <CardSection style={{ padding: isMobile ? 0 : "" }}>
             <StyledDiv
+              isMobile={isMobile}
               style={{
                 justifyContent: !hasSelectedData
                   ? ""

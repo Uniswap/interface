@@ -49,6 +49,7 @@ export const ChartComponent = React.memo(
               interval={60}
               locale={locale || 'en-US'}
               autosize={true}
+              style={'3C'}
             />
           )}
         </div>

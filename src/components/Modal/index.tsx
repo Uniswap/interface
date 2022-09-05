@@ -3,9 +3,9 @@ import { animated, useSpring, useTransition } from 'react-spring'
 import styled, { css } from 'styled-components/macro'
 
 import React from 'react'
-import { isMobile } from 'react-device-detect'
 import { transparentize } from 'polished'
 import { useGesture } from 'react-use-gesture'
+import { useIsMobile } from 'pages/Swap/SelectiveCharting'
 
 const AnimatedDialogOverlay = animated(DialogOverlay)
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -97,6 +97,7 @@ export default function Modal({
   size = 850,
   children,
 }: ModalProps) {
+  const isMobile = useIsMobile()
   const fadeTransition = useTransition(isOpen, null, {
     config: { duration: 200 },
     from: { opacity: 0 },

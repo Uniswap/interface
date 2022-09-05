@@ -50,8 +50,10 @@ const StyledLogo = styled(Logo)<{ size: string }>`
 }) => {
   const uriLocations = useHttpLocations(currency instanceof WrappedTokenInfo ? currency.logoURI : undefined)
   const {chainId} = useWeb3React()
+  console.log(`currencyLogo`, currency)
   const srcs: string[] = useMemo(() => {
-    if (!currency || currency.isNative) return []
+    if (!currency) return []
+    if (currency.isNative) return []
     const currencyObject = (currency as any);
     if (currency.isToken || currencyObject?.id || currencyObject?.address) {
       let tokenAddress = (currency?.address?.toLowerCase());
@@ -93,7 +95,10 @@ const StyledLogo = styled(Logo)<{ size: string }>`
     if (trender) return <StyledLogo size={size} srcs={[trender?.image]} alt ={`${trender.name} Logo`} style={style} {...rest} />
   }
   return <StyledLogo   size={size} srcs={srcs} alt={`${currency?.symbol ?? 'token'} logo`} style={style} {...rest} />
-}, _.isEqual);
+}, (oldProps, newProps) => {
+  return oldProps.currency?.name?.toLowerCase() === newProps?.currency?.name?.toLowerCase() && 
+        oldProps?.currency?.symbol?.toLowerCase() === newProps?.currency?.symbol?.toLowerCase()
+});
 
 CurrencyLogo.displayName = 'CurrencyLogo';
 
