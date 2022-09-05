@@ -289,10 +289,10 @@ export const SwapTokenForToken = (props: TokenForTokenProps) => {
           category: 'Swap',
           action:
             recipient === null
-              ? 'Swap w/o Send'
+              ? 'Swap Token for Token on Charts Page w/o Send'
               : (recipientAddress ?? recipient) === account
-                ? 'Swap w/o Send + recipient'
-                : 'Swap w/ Send',
+                ? 'Swap Token for Token on Charts Page w/o Send + recipient'
+                : 'Swap Token for Token on Charts Page w/ Send',
           label: [
             trade?.inputAmount?.currency?.symbol,
             trade?.outputAmount?.currency?.symbol,

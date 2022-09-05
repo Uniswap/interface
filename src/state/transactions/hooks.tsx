@@ -30,6 +30,7 @@ import { useContractOwner } from 'components/swap/ConfirmSwapModal'
 import { useHasAccess } from 'pages/Account/AccountPage'
 import useInterval from 'hooks/useInterval'
 import { useKiba } from 'pages/Vote/VotePage'
+import useTheme from 'hooks/useTheme'
 import { useWeb3React } from '@web3-react/core'
 
 type SortStateKey = 'asc' | 'desc' | undefined;
@@ -227,6 +228,8 @@ export const LockedLiquidity = ({ symbol, ...rest }: NewToken) => {
 export const FomoPage = () => {
   const { chainId, account, library } = useWeb3React();
   const [data, setData] = React.useState<NewToken[]>()
+  const theme = useTheme()
+
   const networkDefaultValue = React.useMemo(() =>
     chainId === 1 ? 'eth' : chainId === 56 ? 'bsc' : 'eth'
     , [chainId]);
@@ -494,8 +497,8 @@ export const FomoPage = () => {
   const [modalShowing, setModalShowing] = React.useState<any>()
   return (
     <DarkCard style={{ maxWidth: 1200 }}>
-      <Wrapper style={{ overflow: 'auto', padding: '9px 14px' }}>
-        <div style={{ marginBottom: 10 }}>
+      <Wrapper style={{color:theme.text1, overflow: 'auto', padding: '9px 14px' }}>
+        <div style={{  marginBottom: 10 }}>
           <h1 style={{ fontFamily: 'Open Sans', fontWeight: 'normal' }}>KibaFomo &nbsp;
             <Tooltip text={infoTipText} show={showInfo}>
               <Info onMouseEnter={() => setShowInfo(true)} onMouseLeave={() => setShowInfo(false)} />
@@ -504,12 +507,12 @@ export const FomoPage = () => {
         </div>
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
           <div style={{ display: 'flex', marginBottom: 15, justifyContent: 'start', alignItems: 'center' }}>
-            <Badge style={{ marginRight: 5, cursor: 'pointer' }} onClick={() => setNetwork('eth')} variant={network === 'eth' ? BadgeVariant.BLUE : BadgeVariant.HOLLOW}>ETH</Badge>
-            <Badge style={{ marginRight: 5, cursor: 'pointer' }} onClick={() => setNetwork('bsc')} variant={network === 'bsc' ? BadgeVariant.BLUE : BadgeVariant.HOLLOW}>BSC</Badge>
-            <Badge style={{ marginRight: 5, cursor: 'pointer' }} onClick={() => setNetwork('avax')} variant={network === 'avax' ? BadgeVariant.BLUE : BadgeVariant.HOLLOW}>AVAX</Badge>
-            <Badge style={{ marginRight: 5, cursor: 'pointer' }} onClick={() => setNetwork('ftm')} variant={network === 'ftm' ? BadgeVariant.BLUE : BadgeVariant.HOLLOW}>FTM</Badge>
-            <Badge style={{ marginRight: 5, cursor: 'pointer' }} onClick={() => setNetwork('poly')} variant={network === 'poly' ? BadgeVariant.BLUE : BadgeVariant.HOLLOW}>POLY</Badge>
-            <Badge style={{ marginRight: 5, cursor: 'pointer' }} onClick={() => setNetwork('kcc')} variant={network === 'kcc' ? BadgeVariant.BLUE : BadgeVariant.HOLLOW}>KCC</Badge>
+            <Badge style={{ marginRight: 5, cursor: 'pointer' }} onClick={() => setNetwork('eth')} variant={network === 'eth' ? BadgeVariant.BLUE : BadgeVariant.PRIMARY}>ETH</Badge>
+            <Badge style={{ marginRight: 5, cursor: 'pointer' }} onClick={() => setNetwork('bsc')} variant={network === 'bsc' ? BadgeVariant.BLUE : BadgeVariant.PRIMARY}>BSC</Badge>
+            <Badge style={{ marginRight: 5, cursor: 'pointer' }} onClick={() => setNetwork('avax')} variant={network === 'avax' ? BadgeVariant.BLUE : BadgeVariant.PRIMARY}>AVAX</Badge>
+            <Badge style={{ marginRight: 5, cursor: 'pointer' }} onClick={() => setNetwork('ftm')} variant={network === 'ftm' ? BadgeVariant.BLUE : BadgeVariant.PRIMARY}>FTM</Badge>
+            <Badge style={{ marginRight: 5, cursor: 'pointer' }} onClick={() => setNetwork('poly')} variant={network === 'poly' ? BadgeVariant.BLUE : BadgeVariant.PRIMARY}>POLY</Badge>
+            <Badge style={{ marginRight: 5, cursor: 'pointer' }} onClick={() => setNetwork('kcc')} variant={network === 'kcc' ? BadgeVariant.BLUE : BadgeVariant.PRIMARY}>KCC</Badge>
           </div>
           {accessDenied === false && ['bsc', 'eth'].includes(network) && <div>
             <label>Only Show Safe Listings</label>
@@ -557,7 +560,7 @@ export const FomoPage = () => {
           <div />
         </LoadingRows>}
 
-        {!loading && accessDenied === false && <Table style={{ fontSize: 12, background: 'transparent', color: "#FFF", width: "100%" }}>
+        {!loading && accessDenied === false && <Table style={{ fontSize: 12, background: 'transparent', color: theme.text1, width: "100%" }}>
           <tr style={{ textAlign: 'left' }}>
             <th onClick={() => onSortClick('name')} style={{ width: '5%', justifyContent: 'space-between', cursor: 'pointer', textAlign: 'left' }}>
               <div >
@@ -643,7 +646,7 @@ export const FomoPage = () => {
                     <small>{item.addr}</small>
                     {/* Etherscan / Explorer Link */}
                     <ExternalLinkIcon
-                      style={{ fill: '#fff' }}
+                      style={{ fill: theme.text1 }}
                       href={getNetworkLink(item)} />
 
                     {/* Chart Link */}
@@ -692,7 +695,7 @@ export const FomoPage = () => {
                 )}
                 {['bsc', 'eth'].includes(network) && (
                   <td>
-                    {(item?.sellTax || item?.sellTax === 0) && <Badge style={{ fontSize: 14, color: '#fff' }} color={'white'} variant={BadgeVariant.NEGATIVE}>
+                    {(item?.sellTax || item?.sellTax === 0) && <Badge style={{ fontSize: 14, color: theme.text1 }} color={theme.text1} variant={BadgeVariant.NEGATIVE}>
 
                       {<small>{item.sellTax}% sell</small>}
 

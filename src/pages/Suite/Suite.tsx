@@ -15,6 +15,7 @@ import _ from 'lodash'
 import styled from 'styled-components/macro'
 import { useKiba } from 'pages/Vote/VotePage'
 import { useWeb3React } from '@web3-react/core'
+
 export const Suite = React.memo(() => {
   const { account } = useWeb3React()
   const kibaBalance = useKiba(account)
@@ -23,16 +24,16 @@ export const Suite = React.memo(() => {
   }, [kibaBalance])
 
   const url = `https://app.unicrypt.network/services`;
-  const FrameText =  <p style={{fontFamily: 'Open Sans', height:'400px', display:'flex', width:'100%', color:"#FFF", justifyContent: 'center', alignItems:'center'}}>You must own Kiba Inu tokens to use this feature</p>
+  const FrameText =  <p style={{fontFamily: 'Open Sans', height:'400px', display:'flex', width:'100%', justifyContent: 'center', alignItems:'center'}}>You must own Kiba Inu tokens to use this feature</p>
   const Header = styled.h1`
   font-family:"Open Sans"; 
   box-shadow:1px 1px .5px .5px #222;
   padding: 20px;
   `
   return (
-    <BlueCard style={{background:'#252632',opacity:'.99', marginTop:-40, maxWidth:900, borderRadius: 30 }}>
+    <BlueCard style={{opacity:'.99', marginTop:-40, maxWidth:900, borderRadius: 30 }}>
       <div style={{display:'flex', justifyContent:'space-between', position:'sticky',  top:0, width:'100%'}}>
-        <Header style={{color:'#FFF', fontWeight: 'normal'}}>
+        <Header style={{ fontWeight: 'normal'}}>
           KibaTools&trade;
         </Header>
       </div>

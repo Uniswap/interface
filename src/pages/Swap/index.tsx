@@ -424,10 +424,10 @@ export default function Swap({ history }: RouteComponentProps) {
           category: 'Swap',
           action:
             recipient === null
-              ? 'Swap Token for Token on Chart page w/o Send'
+              ? 'Swap Token for Token w/o Send'
               : (recipientAddress ?? recipient) === account
-                ? 'Swap Token for Token on Chart page w/o Send + recipient'
-                : 'Swap Token for Token on Chart page w/ Send',
+                ? 'Swap Token for Token w/o Send + recipient'
+                : 'Swap Token for Token w/ Send',
           label: [
             trade?.inputAmount?.currency?.symbol,
             trade?.outputAmount?.currency?.symbol,

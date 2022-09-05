@@ -18,6 +18,7 @@ import styled from 'styled-components/macro';
 import { useETHBalances } from 'state/wallet/hooks';
 import { useKiba } from 'pages/Vote/VotePage';
 import { useParams } from 'react-router';
+import useTheme from 'hooks/useTheme'
 import { useUSDCValue } from 'hooks/useUSDCPrice';
 import { useWeb3React } from '@web3-react/core';
 
@@ -65,6 +66,7 @@ export const AccountPage = () => {
     const transactions = useUserTransactions(account?.toLowerCase())
     const [formattedTxns, setFormattedTxns] = React.useState<any[]>()
     const web3 = new Web3(library?.provider)
+    const theme = useTheme()
     const hasAccess = useHasAccess()
     React.useEffect(() => {
         if (transactions && transactions?.data && transactions?.data?.swaps && library?.provider) {
@@ -119,7 +121,7 @@ export const AccountPage = () => {
                         <TotalRow totalGasETH={totalGasUsed} totalGasUSD={totalGasUSD} account={account} txCount={txCount} transactions={transactions?.data?.swaps} />
                     </>
                 )}
-                {!hasAccess && <p style={{ height: 400, display: 'flex', width: '100%', alignItems: 'center', justifyContent: 'center' }}>You must own Kiba Inu tokens to use this feature.</p>}
+                {!hasAccess && <p style={{ color:theme.text1, height: 400, display: 'flex', width: '100%', alignItems: 'center', justifyContent: 'center' }}>You must own Kiba Inu tokens to use this feature.</p>}
             </Wrapper>
         </DarkCard>
     )
@@ -135,6 +137,7 @@ export const AccountPageWithAccount = () => {
     const [formattedTxns, setFormattedTxns] = React.useState<any[]>()
     const web3 = new Web3(library?.provider)
     const hasAccess = useHasAccess()
+    const theme = useTheme()
     const ethBalance = useETHBalances([account?.toLowerCase()])
     React.useEffect(() => {
         if (transactions && transactions?.data && transactions?.data?.swaps && library?.provider) {
@@ -173,7 +176,7 @@ export const AccountPageWithAccount = () => {
     if (!account) return null;
 
     return (
-        <DarkCard style={{ maxWidth: 850, background: '#252632' }}>
+        <DarkCard style={{ maxWidth: 850 }}>
             <div style={{ display: 'flex', flexFlow: 'row wrap', marginBottom: 10, justifyContent: 'space-between',rowGap: 10, columnGap: 15 }}>
                 <Badge><StyledHeader>Transaction History </StyledHeader></Badge>
                 {hasAccess && <ExternalLink href={`https://etherscan.io/address/${account}`}>
@@ -193,7 +196,7 @@ export const AccountPageWithAccount = () => {
                         <TotalRow totalGasETH={totalGasUsed} totalGasUSD={totalGasUSD} account={account} txCount={txCount} transactions={transactions?.data?.swaps} />
                     </>
                 )}
-                {!hasAccess && <p style={{ height: 400, display: 'flex', width: '100%', alignItems: 'center', justifyContent: 'center' }}>You must own Kiba Inu tokens to use this feature.</p>}
+                {!hasAccess && <p style={{ color:theme.text1, height: 400, display: 'flex', width: '100%', alignItems: 'center', justifyContent: 'center' }}>You must own Kiba Inu tokens to use this feature.</p>}
             </Wrapper>
         </DarkCard>
     )
