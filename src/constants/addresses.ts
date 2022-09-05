@@ -65,6 +65,7 @@ export const MULTICALL_ADDRESS: AddressMap = {
   [SupportedChainId.ARBITRUM_RINKEBY]: '0xa501c031958F579dB7676fF1CE78AD305794d579',
   [SupportedChainId.CELO]: CELO_MULTICALL_ADDRESS,
   [SupportedChainId.CELO_ALFAJORES]: CELO_MULTICALL_ADDRESS,
+  [SupportedChainId.CLV_P_CHAIN]: '0xb6903e5f6e5e4fdde37bd51ff5ec6efe7f859f36',
 }
 
 export const SWAP_ROUTER_ADDRESSES: AddressMap = {

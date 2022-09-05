@@ -97,7 +97,7 @@ export const USDC_CELO_ALFAJORES = new Token(
 )
 
 export const USDC_CLV = new Token(
-  SupportedChainId.ROPSTEN,
+  SupportedChainId.CLV_P_CHAIN,
   '0x07865c6e87b9f70255377e024ace6630c1eaa37f',
   6,
   'USDC',
@@ -487,6 +487,6 @@ export const TOKEN_SHORTHANDS: { [shorthand: string]: { [chainId in SupportedCha
     [SupportedChainId.RINKEBY]: USDC_RINKEBY.address,
     [SupportedChainId.KOVAN]: USDC_KOVAN.address,
     [SupportedChainId.ROPSTEN]: USDC_ROPSTEN.address,
-    [SupportedChainId.CLV_P_CHAIN]: USDC_CLV.address,
+    // [SupportedChainId.CLV_P_CHAIN]: USDC_CLV.address,
   },
 }
