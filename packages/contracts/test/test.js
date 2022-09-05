@@ -193,6 +193,16 @@ describe('Router02', function () {
             console.log("stable calcAmount:", calcAmount.map(item => ethers.utils.formatEther(item)))
         });
 
+        it("getPair",async function(){
+            let ans = await loadFixture(deployContracts)
+            let {address0,address1} = ans.weth.address<ans.tt.address?{address0:ans.weth.address,address1:ans.tt.address}:{address0:ans.tt.address,address1:ans.weth.address}
+            let initCodeHash = ethers.utils.keccak256((await ethers.getContractFactory("TeleswapV2Pair")).bytecode)
+            let salt = await ethers.utils.solidityKeccak256(['address','address','bool'],[address0,address1,false])
+            let calcedAddress = await ethers.utils.getCreate2Address(ans.factory.address , salt ,initCodeHash )
+            console.log("calced address",calcedAddress)
+            console.log("volatile pair addr",ans.pair.address)
+        })
+
     })
 
     describe('core func', function () {
