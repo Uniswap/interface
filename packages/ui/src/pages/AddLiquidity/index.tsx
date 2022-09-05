@@ -652,7 +652,7 @@ export default function AddLiquidity({
           </Box>
           <Box sx={{ display: 'flex',fontWeight: 400,fontSize: ".5rem", alignItems: "center" }}>
             <Box sx={{flex: 1}}>
-              <input type="radio" name="pairMode" id="Stable" style={{position: "relative", top:".2rem"}} checked={}/>
+              <input type="radio" name="pairMode" id="Stable" style={{position: "relative", top:".2rem"}}/>
               <label htmlFor="Stable" style={{margin: "0 0 0 .7rem"}}>Stable</label>
             </Box>
             <Box sx={{flex: 1}}>
