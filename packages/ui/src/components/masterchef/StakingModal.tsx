@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo } from 'react'
+import React, { useState, useCallback } from 'react'
 import useTransactionDeadline from '../../hooks/useTransactionDeadline'
 import Modal from '../Modal'
 import { AutoColumn } from '../Column'
@@ -12,12 +12,15 @@ import { useActiveWeb3React } from '../../hooks'
 import { useApproveCallback, ApprovalState } from '../../hooks/useApproveCallback'
 import { TransactionResponse } from '@ethersproject/providers'
 import { useTransactionAdder } from '../../state/transactions/hooks'
-import { MASTERCHEF_ADDRESSBOOK } from 'constants/index'
 import useMasterChef from 'hooks/farm/useMasterChef'
 import { Chef } from 'constants/farm/chef.enum'
 import { utils } from 'ethers'
-import { ChainId, Token, TokenAmount } from '@teleswap/sdk'
+import { Token, TokenAmount } from '@teleswap/sdk'
 import { LoadingView, SubmittedView } from 'components/ModalViews'
+import { useChefStakingInfo } from 'hooks/farm/useChefStakingInfo'
+import { useChefContractForCurrentChain } from 'hooks/farm/useChefContract'
+import { CHAINID_TO_FARMING_CONFIG } from 'constants/farming.config'
+import { useTranslation } from 'react-i18next'
 // const HypotheticalRewardRate = styled.div<{ dim: boolean }>`
 //   display: flex;
 //   justify-content: space-between;
@@ -41,9 +44,9 @@ interface StakingModalProps {
 
 export default function StakingModal({ isOpen, onDismiss, pid }: StakingModalProps) {
   const { chainId } = useActiveWeb3React()
-
+  const { t } = useTranslation()
   // track and parse user input
-  const [typedValue, setTypedValue] = useState('')
+  const [typedValue, setTypedValue] = useState('0')
   // const parsedAmountWrapped = wrappedCurrencyAmount(parsedAmount, chainId)
 
   // state for pending and submitted txn views
@@ -61,26 +64,34 @@ export default function StakingModal({ isOpen, onDismiss, pid }: StakingModalPro
   // disabled
   // const [signatureData, setSignatureData] = useState<{ v: number; r: string; s: string; deadline: number } | null>(null)
   const signatureData = null
-  // @todo: we need the token profile of this pool
-  // @todo: we need the symbol of staking token
-  const stakingCurrency = new Token(chainId || 420, '0x0093d164e9C57dc0EbC00d58E429AdCf383B65d1', 6, 'TODO')
+  const stakingInfos = useChefStakingInfo()
+  const thisPool = stakingInfos[pid]
+  const stakingCurrency = thisPool.stakingToken
 
-  const tokenAmount = new TokenAmount(stakingCurrency, typedValue)
+  const tokenAmount = new TokenAmount(
+    stakingCurrency,
+    utils.parseUnits(typedValue, stakingCurrency.decimals).toString()
+  )
   console.info('tokenAmount', tokenAmount)
-  const [approval, approve] = useApproveCallback(tokenAmount, MASTERCHEF_ADDRESSBOOK[chainId ?? 420])
+  const stakingContract = useChefContractForCurrentChain()
+  const farmingConfig = CHAINID_TO_FARMING_CONFIG[chainId || 420]
+  const [approval, approve] = useApproveCallback(tokenAmount, stakingContract?.address)
+  const mchef = useMasterChef(farmingConfig?.chefType || Chef.MINICHEF)
+  console.debug('approval', approval)
   // const [parsedAmount, setParsedAmount] = useState('0')
   // const stakingContract = useStakingContract(stakingInfo.stakingRewardAddress)
-  const stakingContract = useMasterChef(Chef.MINICHEF)
   async function onStake() {
     setAttempting(true)
     if (stakingContract && deadline) {
       if (approval === ApprovalState.APPROVED) {
-        stakingContract.deposit(pid, utils.parseUnits(typedValue, stakingCurrency.decimals)).then((response: TransactionResponse) => {
-          addTransaction(response, {
-            summary: `Deposit liquidity`
+        mchef
+          .deposit(pid, utils.parseUnits(typedValue, stakingCurrency.decimals))
+          .then((response: TransactionResponse) => {
+            addTransaction(response, {
+              summary: `Deposit liquidity`,
+            })
+            setHash(response.hash)
           })
-          setHash(response.hash)
-        })
       } else {
         setAttempting(false)
         throw new Error('Attempting to stake without approval or a signature. Please contact support.')
@@ -111,13 +122,13 @@ export default function StakingModal({ isOpen, onDismiss, pid }: StakingModalPro
       {!attempting && !hash && (
         <ContentWrapper gap="lg">
           <RowBetween>
-            <TYPE.mediumHeader>Deposit</TYPE.mediumHeader>
-            <CloseIcon onClick={wrappedOnDismiss} />
+            <TYPE.mediumHeader color="#FFFFFF">{t('stakeLpToken')}</TYPE.mediumHeader>
+            <CloseIcon onClick={wrappedOnDismiss} color="#FFFFFF" />
           </RowBetween>
           <CurrencyInputPanel
             value={typedValue}
             onUserInput={onUserInput}
-            onMax={() => console.warn('max disabled')}
+            onMax={() => console.error('@todo: max disabled')}
             showMaxButton={false}
             currency={stakingCurrency}
             // pair={dummyPair}
@@ -145,14 +156,14 @@ export default function StakingModal({ isOpen, onDismiss, pid }: StakingModalPro
               confirmed={approval === ApprovalState.APPROVED || signatureData !== null}
               disabled={approval !== ApprovalState.NOT_APPROVED || signatureData !== null}
             >
-              Approve
+              {t('approve')}
             </ButtonConfirmed>
             <ButtonError
               disabled={signatureData === null && approval !== ApprovalState.APPROVED}
               // error={!!&& !!parsedAmount}
               onClick={onStake}
             >
-              Deposit
+              {t('stakeLpToken')}
             </ButtonError>
           </RowBetween>
           <ProgressCircles steps={[approval === ApprovalState.APPROVED || signatureData !== null]} disabled={true} />
@@ -162,7 +173,9 @@ export default function StakingModal({ isOpen, onDismiss, pid }: StakingModalPro
         <LoadingView onDismiss={wrappedOnDismiss}>
           <AutoColumn gap="12px" justify={'center'}>
             <TYPE.largeHeader>Depositing</TYPE.largeHeader>
-            <TYPE.body fontSize={20}>{tokenAmount?.toSignificant(4)} {stakingCurrency.symbol}</TYPE.body>
+            <TYPE.body fontSize={20}>
+              {tokenAmount?.toSignificant(4)} {stakingCurrency.symbol}
+            </TYPE.body>
           </AutoColumn>
         </LoadingView>
       )}
@@ -170,7 +183,9 @@ export default function StakingModal({ isOpen, onDismiss, pid }: StakingModalPro
         <SubmittedView onDismiss={wrappedOnDismiss} hash={hash}>
           <AutoColumn gap="12px" justify={'center'}>
             <TYPE.largeHeader>Transaction Submitted</TYPE.largeHeader>
-            <TYPE.body fontSize={20}>Deposited {tokenAmount?.toSignificant(4)} {stakingCurrency.symbol}</TYPE.body>
+            <TYPE.body fontSize={20}>
+              Deposited {tokenAmount?.toSignificant(4)} {stakingCurrency.symbol}
+            </TYPE.body>
           </AutoColumn>
         </SubmittedView>
       )}

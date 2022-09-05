@@ -3481,6 +3481,11 @@
   dependencies:
     "@octokit/openapi-types" "^13.4.0"
 
+"@openzeppelin/contracts@3.4.0":
+  version "3.4.0"
+  resolved "https://registry.npmjs.org/@openzeppelin/contracts/-/contracts-3.4.0.tgz#9a1669ad5f9fdfb6e273bb5a4fed10cb4cc35eb0"
+  integrity sha512-qh+EiHWzfY/9CORr+eRUkeEUP1WiFUcq3974bLHwyYzLBUtK6HPaMkIUHi74S1rDTZ0sNz42DwPc5A4IJvN3rg==
+
 "@openzeppelin/hardhat-upgrades@^1.20.0":
   version "1.20.0"
   resolved "https://registry.yarnpkg.com/@openzeppelin/hardhat-upgrades/-/hardhat-upgrades-1.20.0.tgz#fe1bddc4ab591ccf185caf4cfa269a4851b73599"

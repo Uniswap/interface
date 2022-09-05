@@ -3,6 +3,7 @@ require("@nomicfoundation/hardhat-toolbox");
 require('@openzeppelin/hardhat-upgrades')
 require('hardhat-abi-exporter');
 require('./tasks/upgrade')
+require('./tasks/call')
 
 
 module.exports = {
@@ -50,6 +51,7 @@ module.exports = {
         runOnCompile: true,
         clear: true,
         flat: true,
+        except: ['@openzeppelin/contracts'],
         spacing: 2
         // pretty: true,
     }

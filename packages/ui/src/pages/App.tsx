@@ -17,8 +17,6 @@ import {
   RedirectOldAddLiquidityPathStructure,
   RedirectToAddLiquidity,
 } from './AddLiquidity/redirects'
-import Earn from './Earn'
-import Manage from './Earn/Manage'
 import SimpleSushiMCManage from './Farm/FarmDetail'
 import FarmList from './Farm'
 import Pool from './Pool'
@@ -96,7 +94,7 @@ export default function App() {
               <Route exact strict path="/find" component={PoolFinder} />
               <Route exact strict path="/pool" component={Pool} />
               <Route exact strict path="/manager" component={Pool} />
-              <Route exact strict path="/tele" component={Earn} />
+              {/* <Route exact strict path="/tele" component={Earn} /> */}
               <Route exact strict path="/vote" component={Vote} />
               <Route exact strict path="/create" component={RedirectToAddLiquidity} />
               <Route exact path="/add" component={AddLiquidity} />
@@ -111,7 +109,6 @@ export default function App() {
               <Route exact strict path="/liquidity/:currencyIdA/:currencyIdB" component={LiquidityDetail} />
               {/*    <Route exact strict path="/migrate/v1" component={MigrateV1} />
               <Route exact strict path="/migrate/v1/:address" component={MigrateV1Exchange} /> */}
-              <Route exact strict path="/uni/:currencyIdA/:currencyIdB" component={Manage} />
               <Route exact strict path="/vote/:id" component={VotePage} />
               <Route exact strict path="/farm" component={FarmList} />
               <Route exact strict path="/farm/:pid" component={SimpleSushiMCManage} />

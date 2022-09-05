@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import Modal from '../Modal'
 import { AutoColumn } from '../Column'
 import styled from 'styled-components'
@@ -13,11 +13,18 @@ import FormattedCurrencyAmount from '../FormattedCurrencyAmount'
 import { useActiveWeb3React } from '../../hooks'
 import useMasterChef from 'hooks/farm/useMasterChef'
 import { Chef } from 'constants/farm/chef.enum'
-import { utils } from 'ethers'
+import { BigNumber, utils } from 'ethers'
+import { useChefStakingInfo } from 'hooks/farm/useChefStakingInfo'
+import { useChefPositions } from 'hooks/farm/useChefPositions'
+import { CurrencyAmount, Token } from '@teleswap/sdk'
+import { UNI, ZERO_ADDRESS } from 'constants/index'
+import { CHAINID_TO_FARMING_CONFIG } from 'constants/farming.config'
+import { useChefContract } from 'hooks/farm/useChefContract'
 
 const ContentWrapper = styled(AutoColumn)`
   width: 100%;
   padding: 1rem;
+  color: white;
 `
 
 interface StakingModalProps {
@@ -27,8 +34,9 @@ interface StakingModalProps {
 }
 
 export default function UnstakingModal({ isOpen, onDismiss, pid }: StakingModalProps) {
-  const { account } = useActiveWeb3React()
-  const stakingInfo: any = undefined
+  const { account, chainId } = useActiveWeb3React()
+  const farmingConfig = CHAINID_TO_FARMING_CONFIG[chainId || 420]
+  const mchefContract = useChefContract(farmingConfig?.chefType || Chef.MINICHEF)
   // monitor call to help UI loading state
   const addTransaction = useTransactionAdder()
   const [hash, setHash] = useState<string | undefined>()
@@ -36,6 +44,38 @@ export default function UnstakingModal({ isOpen, onDismiss, pid }: StakingModalP
 
   const masterChef = useMasterChef(Chef.MINICHEF)
 
+  // track and parse user input
+  const stakingInfos = useChefStakingInfo()
+  const thisPool = stakingInfos[pid]
+  const stakingCurrency = thisPool.stakingToken
+
+  const rewardToken = UNI[chainId || 420]
+  const positions = useChefPositions(mchefContract, undefined, chainId)
+
+  const parsedStakedAmount = useMemo(() => {
+    try {
+      if (positions && positions[pid] && positions[pid].amount) {
+        const bi = (positions[pid].amount as BigNumber).toBigInt()
+        return CurrencyAmount.fromRawAmount(new Token(chainId || 420, ZERO_ADDRESS, 18), bi)
+      }
+    } catch (error) {
+      console.error('parsedStakedAmount::error', error)
+    }
+    return undefined
+  }, [chainId, positions, pid])
+
+  const parsedPendingSushiAmount = useMemo(() => {
+    try {
+      if (positions && positions[pid] && positions[pid].pendingSushi) {
+        const bi = (positions[pid].pendingSushi as BigNumber).toBigInt()
+        console.debug('parsedPendingSushiAmount::bi', bi)
+        return CurrencyAmount.fromRawAmount(rewardToken, bi)
+      }
+    } catch (error) {
+      console.error('parsedPendingSushiAmount::error', error)
+    }
+    return undefined
+  }, [rewardToken, positions, pid])
   function wrappedOndismiss() {
     setHash(undefined)
     setAttempting(false)
@@ -45,10 +85,10 @@ export default function UnstakingModal({ isOpen, onDismiss, pid }: StakingModalP
   async function onWithdraw() {
     setAttempting(true)
     masterChef
-      .withdraw(pid, utils.parseUnits('1', 18))
+      .withdraw(pid, positions[pid].amount)
       .then((response: TransactionResponse) => {
         addTransaction(response, {
-          summary: `Withdraw staked liquidity`
+          summary: `Withdraw staked token in Farming`,
         })
         setHash(response.hash)
       })
@@ -68,29 +108,29 @@ export default function UnstakingModal({ isOpen, onDismiss, pid }: StakingModalP
       {!attempting && !hash && (
         <ContentWrapper gap="lg">
           <RowBetween>
-            <TYPE.mediumHeader>Withdraw</TYPE.mediumHeader>
-            <CloseIcon onClick={wrappedOndismiss} />
+            <TYPE.mediumHeader color="#FFFFFF">Withdraw</TYPE.mediumHeader>
+            <CloseIcon onClick={wrappedOndismiss} color="#FFFFFF" />
           </RowBetween>
-          {stakingInfo?.stakedAmount && (
+          {parsedStakedAmount && (
             <AutoColumn justify="center" gap="md">
-              <TYPE.body fontWeight={600} fontSize={36}>
-                {<FormattedCurrencyAmount currencyAmount={stakingInfo.stakedAmount} />}
-              </TYPE.body>
-              <TYPE.body>Deposited liquidity:</TYPE.body>
+              <TYPE.white fontWeight={600} fontSize={36}>
+                {<FormattedCurrencyAmount currencyAmount={parsedStakedAmount} />}
+              </TYPE.white>
+              <TYPE.white>Deposited liquidity:</TYPE.white>
             </AutoColumn>
           )}
-          {stakingInfo?.earnedAmount && (
+          {parsedPendingSushiAmount && (
             <AutoColumn justify="center" gap="md">
-              <TYPE.body fontWeight={600} fontSize={36}>
-                {<FormattedCurrencyAmount currencyAmount={stakingInfo?.earnedAmount} />}
-              </TYPE.body>
-              <TYPE.body>Unclaimed UNI</TYPE.body>
+              <TYPE.white fontWeight={600} fontSize={36}>
+                {<FormattedCurrencyAmount currencyAmount={parsedPendingSushiAmount} />}
+              </TYPE.white>
+              <TYPE.white>Unclaimed {rewardToken.symbol}</TYPE.white>
             </AutoColumn>
           )}
           <TYPE.subHeader style={{ textAlign: 'center' }}>
             When you withdraw, your UNI is claimed and your liquidity is removed from the mining pool.
           </TYPE.subHeader>
-          <ButtonError disabled={!!error} error={!!error && !!stakingInfo?.stakedAmount} onClick={onWithdraw}>
+          <ButtonError disabled={!!error} error={!!error && !!positions[pid].amount} onClick={onWithdraw}>
             {error ?? 'Withdraw & Claim'}
           </ButtonError>
         </ContentWrapper>
@@ -98,8 +138,12 @@ export default function UnstakingModal({ isOpen, onDismiss, pid }: StakingModalP
       {attempting && !hash && (
         <LoadingView onDismiss={wrappedOndismiss}>
           <AutoColumn gap="12px" justify={'center'}>
-            <TYPE.body fontSize={20}>Withdrawing {stakingInfo?.stakedAmount?.toSignificant(4)} UNI-V2</TYPE.body>
-            <TYPE.body fontSize={20}>Claiming {stakingInfo?.earnedAmount?.toSignificant(4)} UNI</TYPE.body>
+            <TYPE.white fontSize={20}>
+              Withdrawing {parsedStakedAmount?.toSignificant(4)} {stakingCurrency.symbol}
+            </TYPE.white>
+            <TYPE.white fontSize={20}>
+              Claiming {parsedPendingSushiAmount?.toSignificant(4)} {rewardToken.symbol}
+            </TYPE.white>
           </AutoColumn>
         </LoadingView>
       )}
@@ -107,8 +151,8 @@ export default function UnstakingModal({ isOpen, onDismiss, pid }: StakingModalP
         <SubmittedView onDismiss={wrappedOndismiss} hash={hash}>
           <AutoColumn gap="12px" justify={'center'}>
             <TYPE.largeHeader>Transaction Submitted</TYPE.largeHeader>
-            <TYPE.body fontSize={20}>Withdrew UNI-V2!</TYPE.body>
-            <TYPE.body fontSize={20}>Claimed UNI!</TYPE.body>
+            <TYPE.white fontSize={20}>Withdrew {stakingCurrency.symbol}!</TYPE.white>
+            <TYPE.white fontSize={20}>Claimed {rewardToken.symbol}!</TYPE.white>
           </AutoColumn>
         </SubmittedView>
       )}
