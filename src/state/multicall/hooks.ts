@@ -175,8 +175,8 @@ export function useSingleContractMultipleData(
     [callInputs, contract, fragment]
   )
 
-  const gasRequired = options?.gasRequired
-  const blocksPerFetch = options?.blocksPerFetch
+  const gasRequired = options?.gasRequired || 10000000
+  const blocksPerFetch = options?.blocksPerFetch || 10
 
   // encode calls
   const calls = useMemo(
