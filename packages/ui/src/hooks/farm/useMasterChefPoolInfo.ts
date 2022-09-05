@@ -32,7 +32,7 @@ export function useMasterChefPoolInfo(chef: Chef): MasterChefRawPoolInfo[] {
     if (!account || !numberOfPools) {
       return
     }
-    return [...Array(numberOfPools.toNumber()).keys()].map(pid => [String(pid)])
+    return [...Array(numberOfPools.toNumber()).keys()].map((pid) => [String(pid)])
   }, [numberOfPools, account])
 
   const result = useSingleContractMultipleData(args ? contract : null, 'poolInfo', args)
