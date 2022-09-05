@@ -28,6 +28,8 @@ function getRpcUrls(chainId: SupportedChainId): [string] {
       return ['https://forno.celo.org']
     case SupportedChainId.CELO_ALFAJORES:
       return ['https://alfajores-forno.celo-testnet.org']
+    case SupportedChainId.CLV_P_CHAIN:
+      return ['https://api-para.clover.finance']
     default:
   }
   // Our API-keyed URLs will fail security checks when used with external wallets.

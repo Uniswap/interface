@@ -216,6 +216,18 @@ const CHAIN_INFO: ChainInfoMap = {
     nativeCurrency: { name: 'Celo', symbol: 'CELO', decimals: 18 },
     defaultListUrl: CELO_LIST,
   },
+  [SupportedChainId.CLV_P_CHAIN]: {
+    networkType: NetworkType.L1,
+    blockWaitMsBeforeWarning: ms`10m`,
+    // bridge: 'https://www.portalbridge.com/#/transfer',
+    docs: 'https://docs.clv.org/',
+    explorer: 'https://clvscan.com',
+    infoLink: 'https://info.uniswap.org/#/clv',
+    label: 'CLV',
+    logoUrl: celoLogo,
+    nativeCurrency: { name: 'CLV', symbol: 'CLV', decimals: 18 },
+    defaultListUrl: CELO_LIST,
+  },
 }
 
 export function getChainInfo(chainId: SupportedL1ChainId): L1ChainInfo

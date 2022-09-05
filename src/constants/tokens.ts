@@ -95,6 +95,15 @@ export const USDC_CELO_ALFAJORES = new Token(
   'USDC',
   'USD//C'
 )
+
+export const USDC_CLV = new Token(
+  SupportedChainId.ROPSTEN,
+  '0x07865c6e87b9f70255377e024ace6630c1eaa37f',
+  6,
+  'USDC',
+  'USD//C'
+)
+
 export const AMPL = new Token(
   SupportedChainId.MAINNET,
   '0xD46bA6D942050d489DBd938a2C909A5d5039A161',
@@ -137,6 +146,7 @@ export const USDC: { [chainId in SupportedChainId]: Token } = {
   [SupportedChainId.RINKEBY]: USDC_RINKEBY,
   [SupportedChainId.KOVAN]: USDC_KOVAN,
   [SupportedChainId.ROPSTEN]: USDC_ROPSTEN,
+  [SupportedChainId.CLV_P_CHAIN]: USDC_CLV,
 }
 export const DAI_POLYGON = new Token(
   SupportedChainId.POLYGON,
@@ -388,6 +398,13 @@ export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token | undefined } =
     'WMATIC',
     'Wrapped MATIC'
   ),
+  [SupportedChainId.CLV_P_CHAIN]: new Token(
+    SupportedChainId.CLV_P_CHAIN,
+    '0x1376C97C5c512d2d6F9173A9A3A016B6140b4536',
+    18,
+    'WCLV',
+    'Wrapped CLV'
+  ),
 }
 
 export function isCelo(chainId: number): chainId is SupportedChainId.CELO | SupportedChainId.CELO_ALFAJORES {
@@ -470,5 +487,6 @@ export const TOKEN_SHORTHANDS: { [shorthand: string]: { [chainId in SupportedCha
     [SupportedChainId.RINKEBY]: USDC_RINKEBY.address,
     [SupportedChainId.KOVAN]: USDC_KOVAN.address,
     [SupportedChainId.ROPSTEN]: USDC_ROPSTEN.address,
+    [SupportedChainId.CLV_P_CHAIN]: USDC_CLV.address,
   },
 }

@@ -15,6 +15,7 @@ export enum SupportedChainId {
   OPTIMISTIC_KOVAN = 69,
 
   POLYGON = 137,
+  CLV_P_CHAIN = 1024,
   POLYGON_MUMBAI = 80001,
 
   CELO = 42220,
@@ -34,6 +35,7 @@ export const CHAIN_IDS_TO_NAMES = {
   [SupportedChainId.ARBITRUM_ONE]: 'arbitrum',
   [SupportedChainId.ARBITRUM_RINKEBY]: 'arbitrum_rinkeby',
   [SupportedChainId.OPTIMISM]: 'optimism',
+  [SupportedChainId.CLV_P_CHAIN]: 'CLV P-Chain',
   [SupportedChainId.OPTIMISTIC_KOVAN]: 'optimistic_kovan',
 }
 
@@ -54,6 +56,7 @@ export const SUPPORTED_GAS_ESTIMATE_CHAIN_IDS = [
   SupportedChainId.CELO,
   SupportedChainId.OPTIMISM,
   SupportedChainId.ARBITRUM_ONE,
+  SupportedChainId.CLV_P_CHAIN,
 ]
 
 /**
@@ -90,6 +93,7 @@ export const L1_CHAIN_IDS = [
   SupportedChainId.POLYGON_MUMBAI,
   SupportedChainId.CELO,
   SupportedChainId.CELO_ALFAJORES,
+  SupportedChainId.CLV_P_CHAIN,
 ] as const
 
 export type SupportedL1ChainId = typeof L1_CHAIN_IDS[number]
