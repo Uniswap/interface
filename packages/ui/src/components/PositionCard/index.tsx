@@ -394,7 +394,6 @@ export function LiquidityCard({
       : [undefined, undefined]
 
   const backgroundColor = useColor(pair?.token0)
-  debugger
   return (
     <tr>
       <td><DoubleCurrencyLogoHorizontal currency0={currency0} currency1={currency1} size={20} /></td>
