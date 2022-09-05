@@ -29,14 +29,14 @@ export class Pair {
 
   public static getAddress(tokenA: Token, tokenB: Token, stable: boolean): string {
     const tokens = tokenA.sortsBefore(tokenB) ? [tokenA, tokenB] : [tokenB, tokenA] // does safety checks
-
+    
     if (PAIR_ADDRESS_CACHE?.[tokens[0].address]?.[tokens[1].address]?.[String(stable)] === undefined) {
       PAIR_ADDRESS_CACHE = {
         ...PAIR_ADDRESS_CACHE,
         [tokens[0].address]: {
           ...PAIR_ADDRESS_CACHE?.[tokens[0].address],
           [tokens[1].address]: {
-            ...PAIR_ADDRESS_CACHE?.[tokens[0].address][String(stable)],
+            ...PAIR_ADDRESS_CACHE?.[tokens[0].address]?.[tokens[1].address],
             [String(stable)]: getCreate2Address(
               FACTORY_ADDRESS,
               keccak256(['bytes'], [pack(['address', 'address','bool'], [tokens[0].address, tokens[1].address, stable])]),
