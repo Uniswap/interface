@@ -49,6 +49,20 @@ task("addLiquidity", "only for weth-tt pair")
         console.log("reserve after", await ans.pair.getReserves())
     })
 
+task("calcpair", "")
+    .setAction(async (args) => {
+        let ans  = await getFactorys()
+        let pairAddr = await ans.factory.getPair(ans.weth.address,ans.tt.address,false)
+
+        let {address0,address1} = ans.weth.address<ans.tt.address?{address0:ans.weth.address,address1:ans.tt.address}:{address0:ans.tt.address,address1:ans.weth.address}
+        let initCodeHash = ethers.utils.keccak256((await ethers.getContractFactory("TeleswapV2Pair")).bytecode)
+        let salt = await ethers.utils.solidityKeccak256(['address','address','bool'],[address0,address1,false])
+        let calcedAddress = await ethers.utils.getCreate2Address(ans.factory.address , salt ,initCodeHash)
+        console.log("calced address",calcedAddress)
+        console.log("volatile pair addr",pairAddr)
+    })
+
+
 
 // test case run on testnet
 async function getFactorys() {
