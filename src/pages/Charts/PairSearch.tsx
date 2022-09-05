@@ -228,27 +228,42 @@ export const PairSearch = (props: Props) => {
   return (
     <div style={{ display: 'flex', flexFlow: 'column wrap', alignItems: 'center' }}>
       <div style={{ position: 'relative', width: '100%', padding: '1rem' }}>
+        {/* Label and search input */}
         <TYPE.small marginBottom="5px" color={theme.text1}>{labelToDisplay}</TYPE.small>
         <SearchInput autoFocus placeholder={"Search by name or address"} type="search" value={searchTerm} onChange={onTermChanged} />
+
+        {/* Tip: Try Searching message */}
         {!Boolean(searchTermDebounced) && (
           <AutoColumn gap="1rem">{TipMemo}</AutoColumn>
         )}
+        
         <MenuFlyout>
+          {/* Loading */}
           {Boolean(fetching) && (
             <LoadingSkeleton borderRadius={12} count={3} />
           )}
-          {Boolean(searchTermDebounced) && !Boolean(fetching) && !Boolean(routing) && Boolean(results?.length == 0) && (
+
+          {/* No Result */}
+          {Boolean(searchTermDebounced) && 
+          !Boolean(fetching) && 
+          !Boolean(routing) && 
+          Boolean(results?.length == 0) && (
               <MenuItemStyled style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }} >
                 No Results Found
               </MenuItemStyled>
           )}
+
+          {/* Render Rows */}
           {!Boolean(fetching) && Boolean(results?.length) && (
             <React.Fragment>
+              {/* Routing to charts after selection */}
               {Boolean(routing) && (
                 <div style={{ borderTop: `1px solid ${theme.text1}`, color: theme.text1, padding: 12 }}>
                   <Dots><CheckCircle color={theme.white} fill={'green'} /> Loading chart and data..</Dots>
                 </div>
               )}
+
+              {/* Render results */}
               {!routing && results?.map((result) => (
                 <div style={{ cursor: 'pointer' }} key={result.pairAddress} onClick={() => onPairClick(result)}>
                   <MenuItemStyled style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }} >

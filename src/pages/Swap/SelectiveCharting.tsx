@@ -156,7 +156,6 @@ export const SelectiveChart = () => {
   const theme = useTheme()
   const [loadingNewData, setLoadingNewData] = React.useState(false);
 
-  //const [tokenData, setTokenData] = React.useState<any>({})
   const locationCallback = React.useCallback((location: any) => {
     console.log(`location listener`, location);
     const newAddress = location.pathname.split("/")[2]?.toLowerCase();
@@ -189,7 +188,7 @@ export const SelectiveChart = () => {
           ref.current.decimals = +newDecimals;
         }
       }
-
+      
       setSelectedCurrency({ type: "update", payload: ref.current });
       updateUserChartHistory([
         {
@@ -201,17 +200,19 @@ export const SelectiveChart = () => {
         },
       ]);
 
+      // send event to analytics
       ReactGA.event({
         category: "Charts",
         action: `View`,
         label: `${ref.current.name}:${ref.current.symbol}`,
       });
+      // reset ze load
+      setLoadingNewData(false);
     } else {
       setSelectedCurrency({ payload: undefined, type: "update" });
       ref.current = undefined;
     }
     
-    setLoadingNewData(false);
   }, []);
 
   useLocationEffect(locationCallback);
@@ -642,7 +643,8 @@ export const SelectiveChart = () => {
 
             {loadingNewData ? (
               <LoadingSkeleton count={9} borderRadius={40 } />
-            ) : (
+            ) : 
+            (
               <React.Fragment>
                 {hasSelectedData && (
                   <React.Fragment>

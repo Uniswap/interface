@@ -86,7 +86,7 @@ const UpperSection = styled.div`
 
   h5 {
     margin: 0;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.25rem;
     font-size: 1rem;
     font-weight: 400;
   }
@@ -365,12 +365,10 @@ export default function WalletModal({
 
         <ContentWrapper>
           <LightCard style={{ marginBottom: '12px', fontFamily: 'Open Sans'}}>
-          <InternalHeaderRow style={{ justifyContent: 'center', fontFamily: 'Open Sans', fontSize: 14, letterSpacing: 1}}>
-            
-            <Trans>Switching networks &nbsp; <QuestionHelper size={16} text={" To use BSC select Smart Chain prior to connecting. If your wallet lets you change network on the fly (MetaMask does) then you can change at any time. If your wallet does not then disconnect and reconnect to switch networks."} /></Trans>
-          
-        </InternalHeaderRow>
-            <AutoRow style={{ flexWrap: 'nowrap' }}>
+            <InternalHeaderRow style={{ justifyContent: 'center', fontFamily: 'Open Sans', fontSize: 14, letterSpacing: 1}}>
+              <Trans>Switching networks &nbsp; <QuestionHelper size={18} text={" To use BSC select Smart Chain prior to connecting. If your wallet lets you change network on the fly (MetaMask does) then you can change at any time. If your wallet does not then disconnect and reconnect to switch networks."} /></Trans>
+            </InternalHeaderRow>
+            <AutoRow style={{justifyContent:'center', alignItems:'center', flexWrap: 'nowrap' }}>
               <TYPE.main textAlign="center" style={{display:'flex'}} fontSize={14}>
                 <Trans>
                   <div style={{ width:'100%',justifyContent:'center', flexFlow: 'row',display:'flex',alignItems:'center', gap: 10}}>
@@ -386,7 +384,7 @@ export default function WalletModal({
               </TYPE.main>
             </AutoRow>
           </LightCard>
-          <LightCard style={{ marginBottom: '16px', fontFamily: 'Open Sans', lineHeight: '22px', borderColor: '#18181E'  }}>
+          <LightCard style={{ marginBottom: '12px', fontFamily: 'Open Sans', lineHeight: '22px', borderColor: '#18181E'  }}>
             <AutoRow style={{ flexWrap: 'nowrap' }}>
               <TYPE.main fontSize={14}>
                 <Trans>
@@ -394,8 +392,7 @@ export default function WalletModal({
                   <ExternalLink href="https://uniswap.org/terms-of-service/">Terms of Service</ExternalLink> and
                   acknowledge that you have read and understand the {' '}
                   <ExternalLink href="https://uniswap.org/disclaimer/">Uniswap protocol disclaimer.</ExternalLink>
-
-                  <small style={{fontSize:14}}>&nbsp;In addition, you are agreeing to using any Custom Contract implementations that have been put in place to enhance the performance of KibaSwap.</small>
+                  <small style={{fontSize:14}}>&nbsp;In addition, you are agreeing to using any Custom Contract implementations that may have been or will be put in place to enhance the performance of KibaSwap.</small>
                 </Trans>
               </TYPE.main>
             </AutoRow>
