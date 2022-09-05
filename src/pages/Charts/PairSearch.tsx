@@ -269,7 +269,11 @@ export const PairSearch = (props: Props) => {
                   <MenuItemStyled style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }} >
                     <div style={{ display: 'flex', alignItems: 'center' }}>
                       <img src={(chainImageMap as any)[result.chainId] as string} style={{ marginRight: 10, width: 20, background: 'transparent', borderRadius: 25, border: "1px solid #444" }} />
-                      <span>    {result?.baseToken?.name} <br />({result?.baseToken?.symbol})</span>
+                      <span>    
+                        {result?.baseToken?.name} 
+                          <br />
+                         ({result?.baseToken?.symbol}/{result?.quoteToken?.symbol})
+                        </span>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
 
