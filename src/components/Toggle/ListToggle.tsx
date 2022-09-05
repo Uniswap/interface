@@ -37,11 +37,12 @@ export interface ToggleProps {
   isActive: boolean
   bgColor: string
   toggle: () => void
+  disabled?: boolean
 }
 
-export default function ListToggle({ id, isActive, bgColor, toggle }: ToggleProps) {
+export default function ListToggle({ id, isActive, bgColor, toggle, disabled = false }: ToggleProps) {
   return (
-    <Wrapper id={id} isActive={isActive} onClick={toggle}>
+    <Wrapper id={id} isActive={isActive} onClick={disabled ? undefined : toggle}>
       {isActive && (
         <StatusText fontWeight="600" margin="0 6px" isActive={true}>
           <Trans>ON</Trans>

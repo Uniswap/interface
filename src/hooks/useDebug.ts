@@ -1,5 +1,7 @@
 import { useEffect, useRef } from 'react'
 
+const instancesSet: { [title: string]: Set<Error> } = {}
+
 /**
  * Help detect reason of rerendering in React's components and hooks
  *
@@ -11,10 +13,22 @@ export default function useDebug(
   },
 ) {
   const prevProps = useRef(props)
-  const trace = Error('Trace').stack
+  const instanceRef = useRef(new Error('Trace'))
+  const trace = instanceRef.current.stack || ''
   // const skipRealChanged = true // recommend: true
 
   useEffect(() => {
+    const instance = instanceRef.current
+    if (!instancesSet[props.title]) instancesSet[props.title] = new Set()
+    instancesSet[props.title].add(instance)
+    return () => {
+      instancesSet[props.title].delete(instance)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  useEffect(() => {
+    const instances = [...instancesSet[props.title]]
     const propKeys = new Set<string>()
     Object.keys(prevProps.current).forEach(key => propKeys.add(key))
     Object.keys(props).forEach(key => propKeys.add(key))
@@ -33,9 +47,9 @@ export default function useDebug(
       // if (hasRealChanged && skipRealChanged) return
 
       console.groupCollapsed(
-        `%c[${new Date().toISOString().slice(11, 19)}] %cDebug found changed %c${props.title} ${
-          hasRealChanged ? '' : '🆘 🆘 🆘'
-        }`,
+        `%c[${new Date().toISOString().slice(11, 19)}] %cDebug found changed %c${props.title} (${
+          instances.indexOf(instanceRef.current) + 1
+        }/${instances.length}) ${hasRealChanged ? '' : '🆘 🆘 🆘'}`,
         'color: #31CB9E',
         'color: unset',
         'color: #b5a400',

@@ -96,13 +96,18 @@ function listUrlRowHTMLId(listUrl: string) {
 }
 
 const ListRow = memo(function ListRow({ listUrl }: { listUrl: string }) {
+  let isKyberList = false
+  try {
+    isKyberList = new URL(listUrl).hostname.endsWith('kyberswap.com')
+    isKyberList ||= new URL(listUrl).hostname.endsWith('kyberengineering.io')
+  } catch (e) {}
   const listsByUrl = useSelector<AppState, AppState['lists']['byUrl']>(state => state.lists.byUrl)
   const dispatch = useDispatch<AppDispatch>()
   const { current: list, pendingUpdate: pending } = listsByUrl[listUrl]
 
   const theme = useTheme()
   const listColor = useListColor(list?.logoURI)
-  const isActive = useIsListActive(listUrl)
+  const isActive = useIsListActive(listUrl) || isKyberList
 
   const [open, toggle] = useToggle(false)
   const node = useRef<HTMLDivElement>()
@@ -140,7 +145,6 @@ const ListRow = memo(function ListRow({ listUrl }: { listUrl: string }) {
   const { mixpanelHandler } = useMixpanel()
 
   if (!list || HIDE_LIST.includes(listUrl)) return null
-
   return (
     <RowWrapper active={isActive} bgColor={listColor} key={listUrl} id={listUrlRowHTMLId(listUrl)}>
       {list.logoURI ? (
@@ -156,31 +160,39 @@ const ListRow = memo(function ListRow({ listUrl }: { listUrl: string }) {
           <StyledListUrlText active={isActive} mr="6px">
             {list.tokens.length} tokens
           </StyledListUrlText>
-          <StyledMenu ref={node as any}>
-            <ButtonEmpty onClick={toggle} ref={setReferenceElement} padding="0">
-              <Settings stroke={isActive ? theme.bg1 : theme.text} size={12} />
-            </ButtonEmpty>
-            {open && (
-              <PopoverContainer show={true} ref={setPopperElement as any} style={styles.popper} {...attributes.popper}>
-                <div>{list && listVersionLabel(list.version)}</div>
-                <SeparatorDark />
-                <ExternalLink href={`https://tokenlists.org/token-list?url=${listUrl}`}>
-                  <Trans>View list</Trans>
-                </ExternalLink>
-                <UnpaddedLinkStyledButton onClick={handleRemoveList} disabled={Object.keys(listsByUrl).length === 1}>
-                  <Trans>Remove list</Trans>
-                </UnpaddedLinkStyledButton>
-                {pending && (
-                  <UnpaddedLinkStyledButton onClick={handleAcceptListUpdate}>
-                    <Trans>Update list</Trans>
+          {isKyberList || (
+            <StyledMenu ref={node as any}>
+              <ButtonEmpty onClick={toggle} ref={setReferenceElement} padding="0">
+                <Settings stroke={isActive ? theme.bg1 : theme.text} size={12} />
+              </ButtonEmpty>
+              {open && (
+                <PopoverContainer
+                  show={true}
+                  ref={setPopperElement as any}
+                  style={styles.popper}
+                  {...attributes.popper}
+                >
+                  <div>{list && listVersionLabel(list.version)}</div>
+                  <SeparatorDark />
+                  <ExternalLink href={`https://tokenlists.org/token-list?url=${listUrl}`}>
+                    <Trans>View list</Trans>
+                  </ExternalLink>
+                  <UnpaddedLinkStyledButton onClick={handleRemoveList} disabled={Object.keys(listsByUrl).length === 1}>
+                    <Trans>Remove list</Trans>
                   </UnpaddedLinkStyledButton>
-                )}
-              </PopoverContainer>
-            )}
-          </StyledMenu>
+                  {pending && (
+                    <UnpaddedLinkStyledButton onClick={handleAcceptListUpdate}>
+                      <Trans>Update list</Trans>
+                    </UnpaddedLinkStyledButton>
+                  )}
+                </PopoverContainer>
+              )}
+            </StyledMenu>
+          )}
         </RowFixed>
       </Column>
       <ListToggle
+        disabled={isKyberList}
         isActive={isActive}
         bgColor={listColor}
         toggle={() => {
