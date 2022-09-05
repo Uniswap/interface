@@ -5,6 +5,7 @@
   "engines": {
     "node": ">=10"
   },
+  "private": "true",
   "homepage": "https://uniswap.org",
   "repository": {
     "type": "git",
@@ -14,6 +15,36 @@
     "build",
     "contracts"
   ],
+  "workspaces": {
+    "nohoist": [
+      "@ethersproject/providers",
+      "@nomicfoundation/hardhat-chai-matchers",
+      "@nomicfoundation/hardhat-network-helpers",
+      "@nomicfoundation/hardhat-toolbox",
+      "@nomiclabs/hardhat-ethers",
+      "@nomiclabs/hardhat-etherscan",
+      "@openzeppelin/hardhat-upgrades",
+      "@typechain/hardhat",
+      "@types/chai",
+      "@types/mocha",
+      "chai",
+      "dotenv",
+      "ethereumjs-util",
+      "ethers",
+      "hardhat",
+      "hardhat-abi-exporter",
+      "hardhat-gas-reporter",
+      "mocha",
+      "ncp",
+      "prettier",
+      "rimraf",
+      "solc",
+      "solidity-coverage",
+      "ts-node",
+      "typechain",
+      "typescript"
+    ]
+  },
   "dependencies": {
     "@openzeppelin/contracts": "3.4.0",
     "@uniswap/lib": "4.0.1-alpha"
