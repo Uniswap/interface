@@ -11,7 +11,7 @@ import { ExternalLink } from 'theme'
 const BannerWrapper = styled.div`
   width: 100%;
   padding: 10px 12px 10px 20px;
-  background: ${({ theme }) => theme.red};
+  background: ${({ theme }) => theme.warning};
   display: flex;
   align-items: center;
   justify-content: space-between;
