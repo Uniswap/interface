@@ -192,6 +192,8 @@ const BridgeLabel = ({ chainId }: { chainId: SupportedChainId }) => {
 }
 const ExplorerLabel = ({ chainId }: { chainId: SupportedChainId }) => {
   switch (chainId) {
+    case SupportedChainId.CLV_P_CHAIN:
+      return <Trans>CLVscan</Trans>
     case SupportedChainId.ARBITRUM_ONE:
     case SupportedChainId.ARBITRUM_RINKEBY:
       return <Trans>Arbiscan</Trans>
@@ -271,13 +273,7 @@ function Row({
   return rowContent
 }
 
-const NETWORK_SELECTOR_CHAINS = [
-  SupportedChainId.MAINNET,
-  SupportedChainId.POLYGON,
-  SupportedChainId.OPTIMISM,
-  SupportedChainId.ARBITRUM_ONE,
-  SupportedChainId.CELO,
-]
+const NETWORK_SELECTOR_CHAINS = [SupportedChainId.CLV_P_CHAIN]
 
 export default function NetworkSelector() {
   const { chainId, provider } = useWeb3React()
