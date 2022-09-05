@@ -67,7 +67,7 @@ function colors(darkMode: boolean): Colors {
     primary2: darkMode ? '#222' : '#c11d20',
     primary3: darkMode ? '#eee' : '#d9dc51',
     primary4: darkMode ? 'rgb(170, 64, 88)' : '#F6DDE8',
-    primary5: darkMode ? '#FFF' : '#FDEAF1',
+    primary5: darkMode ? '#FFF' : '#ec2023',
 
     // color text
     primaryText1: darkMode ? '#252632' : '#252632', 

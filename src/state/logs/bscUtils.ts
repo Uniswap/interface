@@ -688,18 +688,33 @@ interface TransactionResults {
 export function useBscTokenTransactions(tokenAddress: string, interval: null | number = null) {
   const { chainId } = useWeb3React()
   const pairs = useBscPairs(toChecksum(tokenAddress))
-  const queryVars = React.useMemo(() => ({
-      variables: {
-      allPairs: pairs && pairs.length ? pairs.map((pair: { id: any }) => pair.id) : []
+  
+  const queryVars = React.useMemo(() => {
+    let pairFilter = pairs?.filter((pair:any) => {
+      console.log(`pair filter.`, {pair, tokes: {0: pair.token0, 1: pair.token1}});
+      return pair.token0.symbol.toLowerCase().includes('bnb') || pair.token0.symbol.toLowerCase().includes('cake') || pair.token0.symbol.toLowerCase().includes('busd') || pair.token0.symbol.toLowerCase().includes('usdc')
+    });
+    if (pairFilter.length == 0) {
+      pairFilter = pairs
     }
-  }), [pairs])
+    return {
+      variables: {
+      allPairs: pairFilter && pairFilter.length ? pairFilter.map((pair: { id: any }) => pair.id) : []
+    }
+  }
+}, [pairs])
+
   const query = useQuery(TokenTxns, {
     ...queryVars,
     pollInterval: chainId && chainId == 56 ? 10000 : undefined
   })
-  if (!tokenAddress) 
-    return {data:[], lastFetched: new Date(), loading: false};
+
   if (chainId !== 56) query.stopPolling();
+
+  if (!tokenAddress || chainId !== 56) 
+    return {data:[], lastFetched: new Date(), loading: false};
+
+  console.log(`uscBscTokenTransactions` , query)
   return { data: query.data, lastFetched: new Date(), loading: query.loading };
 }
 

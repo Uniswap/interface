@@ -1,15 +1,18 @@
 .alert-enter {
   opacity: 0;
   transform:translateX(-100%);
+  transition: 500ms all ease-in;
 }
 .alert-enter-active {
   opacity: 1;
-  transform:translateX(0);
-  transition: opacity 300ms, transform 300ms;
+  transform:translateX(0%);
+  transition:  opacity 500ms  ease-in, 
+               transform 250ms ease-in;
 }
 .alert-exit {
   opacity: 1;
   transform:translateX(0);
+  transition: 500ms all ease-out;
 }
 .alert-exit-active {
   opacity: 0;

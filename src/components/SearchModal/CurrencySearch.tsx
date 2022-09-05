@@ -1,3 +1,5 @@
+import * as ethers from 'ethers'
+
 import { ButtonText, CloseIcon, IconWrapper, TYPE } from '../../theme'
 import { Currency, Token } from '@uniswap/sdk-core'
 import { KeyboardEvent, RefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react'
@@ -26,6 +28,7 @@ import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import useTheme from 'hooks/useTheme'
 import useToggle from 'hooks/useToggle'
 import { useTokenComparator } from './sorting'
+import { useWeb3Endpoint } from 'pages/Charts/PairSearch'
 
 const ContentWrapper = styled(Column)`
   width: 100%;
@@ -55,10 +58,48 @@ interface CurrencySearchProps {
   showCommonBases?: boolean
   showCurrencyAmount?: boolean
   disableNonToken?: boolean
-  showOnlyTrumpCoins?:boolean;
+  showOnlyTrumpCoins?: boolean;
   showManageView: () => void
   showImportView: () => void
   setImportToken: (token: Token) => void
+}
+
+const useSearchForToken = (address?: string, chainId?: number) => {
+  const [token, setToken] = useState<Token | undefined>()
+  const checksummedAddress = isAddress(address)
+  const abi = [
+    'function name() view returns (string name)',
+    'function symbol() view returns (string symbol)',
+    'function decimals() view returns (uint8 decimals)',
+  ];
+  const WEB3_ENDPOINT = useWeb3Endpoint()
+  const handleError = (e: any) => console.error(`useSearchForToken`, e)
+  useEffect(() => {
+    async function getToken() {
+      const { JsonRpcProvider } = ethers.providers;
+      const provider = new JsonRpcProvider(WEB3_ENDPOINT);
+      const contract = new ethers.Contract(checksummedAddress as string, abi, provider);
+
+      const [decimals, name, symbol] = await Promise.all([
+        contract.decimals().catch(handleError),
+        contract.name().catch(handleError),
+        contract.symbol().catch(handleError)
+      ]);
+
+      const token = new Token(chainId ?? 1, checksummedAddress as string, ethers.BigNumber.from(decimals).toNumber(), name, symbol);
+      console.log(`token log`, Token)
+      setToken(token)
+    }
+    if (address && checksummedAddress) {
+      try {
+        getToken().finally(() => console.log(`Token finally loaded. `, token))
+      } catch (ex: any) {
+
+      }
+    }
+  }, [address, checksummedAddress])
+
+  return token
 }
 
 export function CurrencySearch({
@@ -82,8 +123,8 @@ export function CurrencySearch({
   const fixedList = useRef<FixedSizeList>()
 
   const [searchQuery, setSearchQuery] = useState<string>('')
-  const debouncedQuery = useMemo(() =>  searchQuery,[searchQuery])
-  const [searching,setSearching] = useState<boolean>(false)
+  const debouncedQuery = useMemo(() => searchQuery, [searchQuery])
+  const [searching, setSearching] = useState<boolean>(false)
   const [invertSearchOrder] = useState<boolean>(false)
 
   const allTokens = useAllTokens()
@@ -92,8 +133,10 @@ export function CurrencySearch({
   const isAddressSearch = isAddress(searchQuery)
 
   const searchToken = useToken(typeof isAddressSearch == 'string' ? isAddressSearch : searchQuery)
+  const searchedToken = useSearchForToken(typeof isAddressSearch == 'string' ? isAddressSearch : undefined, chainId)
 
   const searchTokenIsAdded = useIsUserAddedToken(searchToken)
+  const searchedTokenIsAdded = useIsUserAddedToken(searchedToken)
 
   useEffect(() => {
     if (isAddressSearch) {
@@ -134,7 +177,7 @@ export function CurrencySearch({
     },
     [onDismiss, onCurrencySelect]
   )
-  
+
   // clear the input on open
   useEffect(() => {
     if (isOpen) {
@@ -144,20 +187,22 @@ export function CurrencySearch({
   }, [isOpen])
 
   useEffect(() => {
-    if (searchToken) {
+    if (searchToken || searchedToken) {
       setSearching(false)
     }
-  }, [searchToken])
+  }, [searchToken, searchedToken])
 
   // manage focus on modal show
   const inputRef = useRef<HTMLInputElement>()
   const handleInput = useCallback((event) => {
     const input = event.target.value
     const checksummedInput = isAddress(input?.toLowerCase())
-    if ( checksummedInput  ) 
+    if (checksummedInput) {
       setSearching(true)
-    
-    setSearchQuery(checksummedInput || input)
+      setSearchQuery(checksummedInput)
+    } else {
+      setSearchQuery(input)
+    }
     fixedList.current?.scrollTo(0)
   }, [])
 
@@ -216,51 +261,56 @@ export function CurrencySearch({
         )}
       </PaddedColumn>
       <Separator />
-  
+
       {searchToken && !searchTokenIsAdded ? (
         <Column style={{ padding: '20px 0', height: '100%' }}>
           <ImportRow token={searchToken} showImportView={showImportView} setImportToken={setImportToken} />
         </Column>
-      ) : filteredSortedTokens?.length > 0 || filteredInactiveTokens?.length > 0 ? (
-        <div style={{ flex: '1' }}>
-          <AutoSizer disableWidth>
-            {({ height }) => (
-              <CurrencyList
-                height={height}
-                currencies={disableNonToken ? filteredSortedTokens : filteredSortedTokensWithETH}
-                otherListTokens={filteredInactiveTokens}
-                onCurrencySelect={handleCurrencySelect}
-                otherCurrency={otherSelectedCurrency}
-                selectedCurrency={selectedCurrency}
-                fixedListRef={fixedList}
+      ) : searchedToken && !searchedTokenIsAdded ?
+        (
+          <Column style={{ padding: '20px 0', height: '100%' }}>
+            <ImportRow token={searchedToken} showImportView={showImportView} setImportToken={setImportToken} />
+          </Column>
+        ) : filteredSortedTokens?.length > 0 || filteredInactiveTokens?.length > 0 ? (
+          <div style={{ flex: '1' }}>
+            <AutoSizer disableWidth>
+              {({ height }) => (
+                <CurrencyList
+                  height={height}
+                  currencies={disableNonToken ? filteredSortedTokens : filteredSortedTokensWithETH}
+                  otherListTokens={filteredInactiveTokens}
+                  onCurrencySelect={handleCurrencySelect}
+                  otherCurrency={otherSelectedCurrency}
+                  selectedCurrency={selectedCurrency}
+                  fixedListRef={fixedList}
 
-                showImportView={showImportView}
-                setImportToken={setImportToken}
-                showCurrencyAmount={showCurrencyAmount}
-              />
-            )}
-          </AutoSizer>
-        </div>
-      ) : !searching ? (
-        <Column style={{ padding: '20px', height: '100%' }}>
-          <TYPE.main color={theme.text3} textAlign="center" mb="20px">
-            <Trans>No results found.</Trans>
-          </TYPE.main>
-        </Column>
-      ) : (
+                  showImportView={showImportView}
+                  setImportToken={setImportToken}
+                  showCurrencyAmount={showCurrencyAmount}
+                />
+              )}
+            </AutoSizer>
+          </div>
+        ) : !searching ? (
+          <Column style={{ padding: '20px', height: '100%' }}>
+            <TYPE.main color={theme.text3} textAlign="center" mb="20px">
+              <Trans>No results found.</Trans>
+            </TYPE.main>
+          </Column>
+        ) : (
           <Column style={{ padding: '20px', height: '100%', overflow: 'scroll' }}>
             <LoadingSkeleton count={10} />
           </Column>
-          )
-        
+        )
+
       }
-   
+
       <Footer>
         <Row justify="center">
           <ButtonText onClick={showManageView} color={'#fff'} className="list-token-manage-button">
             <RowFixed>
               <IconWrapper size="16px" marginRight="6px" stroke={theme.primaryText1}>
-                <Edit style={{color: theme.text1, stroke: theme.text1 }} />
+                <Edit style={{ color: theme.text1, stroke: theme.text1 }} />
               </IconWrapper>
               <TYPE.main color={theme.text1}>
                 <Trans>Manage Token Lists</Trans>

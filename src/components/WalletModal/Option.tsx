@@ -1,6 +1,6 @@
+import { ExternalLink } from '../../theme'
 import React from 'react'
 import styled from 'styled-components/macro'
-import { ExternalLink } from '../../theme'
 
 const InfoCard = styled.button<{ active?: boolean }>`
   background-color: ${({ theme, active }) => (active ? theme.bg3 : theme.bg2)};
@@ -30,9 +30,11 @@ const OptionCardLeft = styled.div`
   height: 100%;
 `
 
-const OptionCardClickable = styled(OptionCard as any)<{ clickable?: boolean }>`
+const OptionCardClickable = styled(OptionCard as any)<{active?:boolean, clickable?: boolean }>`
   margin-top: 0;
-  background: #18181E;
+  background: ${props => props.theme.bg0};
+  ${props => props.active ? `border: 1px solid ${props.theme.success};` : ``}
+  color:${props => props.theme.text1};
   &:hover {
     cursor: ${({ clickable }) => (clickable ? 'pointer' : '')};
     border: ${({ clickable, theme }) => (clickable ? `1px solid #FFF` : ``)};

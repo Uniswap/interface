@@ -217,13 +217,13 @@ export default function Pool() {
 
               {!account ? (
                 <Card padding="40px">
-                  <TYPE.white color={'#FFF'} textAlign="center">
+                  <TYPE.white  color={theme.text3}  textAlign="center">
                     <Trans>Connect to a wallet to view your liquidity.</Trans>
                   </TYPE.white>
                 </Card>
               ) : v2IsLoading ? (
                 <EmptyProposals>
-                  <TYPE.white color={'#FFF'} textAlign="center">
+                  <TYPE.white  color={theme.text3}  textAlign="center">
                     <Dots>
                       <Trans>Loading</Trans>
                     </Dots>

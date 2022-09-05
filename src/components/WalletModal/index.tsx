@@ -15,6 +15,7 @@ import Modal from '../Modal'
 import { OVERLAY_READY } from '../../connectors/Fortmatic'
 import Option from './Option'
 import PendingView from './PendingView'
+import QuestionHelper from 'components/QuestionHelper'
 import ReactGA from 'react-ga'
 import { SUPPORTED_WALLETS } from '../../constants/wallet'
 import { Trans } from '@lingui/macro'
@@ -35,8 +36,9 @@ const CloseIcon = styled.div`
 `
 
 const CloseColor = styled(Close)`
+color:${props => props.theme.text1};
   path {
-    stroke: ${({ theme }) => theme.text4};
+    stroke: ${({ theme }) => theme.text1};
   }
 `
 
@@ -53,7 +55,7 @@ const HeaderRow = styled.div`
   padding: 20px 30px 10px 30px;
   font-weight: 600;
   font-family: Open Sans;
-
+  background:${props => props.theme.bg0};
   ${({ theme }) => theme.mediaWidth.upToMedium`
     padding: 1rem;
   `};
@@ -61,7 +63,7 @@ const HeaderRow = styled.div`
 
 const InternalHeaderRow = styled.div`
   ${({ theme }) => theme.flexRowNoWrap};
-  padding: 20px;
+  padding: 5px;
   font-weight: 600;
   font-family: 'Open Sans';
 
@@ -362,29 +364,38 @@ export default function WalletModal({
         )}
 
         <ContentWrapper>
-          <LightCard style={{ marginBottom: '16px', fontFamily: 'Open Sans', lineHeight: '22px' }}>
+          <LightCard style={{ marginBottom: '12px', fontFamily: 'Open Sans'}}>
           <InternalHeaderRow style={{ justifyContent: 'center', fontFamily: 'Open Sans', fontSize: 14, letterSpacing: 1}}>
             
-            <Trans>Switching networks</Trans>
+            <Trans>Switching networks &nbsp; <QuestionHelper size={16} text={" To use BSC select Smart Chain prior to connecting. If your wallet lets you change network on the fly (MetaMask does) then you can change at any time. If your wallet does not then disconnect and reconnect to switch networks."} /></Trans>
           
         </InternalHeaderRow>
             <AutoRow style={{ flexWrap: 'nowrap' }}>
-              <TYPE.main fontSize={16}>
+              <TYPE.main textAlign="center" style={{display:'flex'}} fontSize={14}>
                 <Trans>
-                The Network you are using is controlled by your wallet.  To use BSC select Smart Chain prior to connecting. If your wallet lets you change network on the fly (MetaMask does) then you can change at any time. If your wallet does not then disconnect and reconnect to switch networks.{' '}
-                  <ExternalLink style={{color:"#F8D9C8"}} href="https://kibainu.org/networkhelp/">Click here for help.</ExternalLink> 
+                  <div style={{ width:'100%',justifyContent:'center', flexFlow: 'row',display:'flex',alignItems:'center', gap: 10}}>
+                    <div>
+                    The Network you are using is controlled by your wallet.
+                    </div>
+                    <div style={{display:'flex', alignItems:'center', gap: 10, flexFlow:'row wrap'}}>
+                    
+                    <ExternalLink href="https://kibainu.org/networkhelp/">Click here for help.</ExternalLink> 
+                    </div>
+                  </div>
                 </Trans>
               </TYPE.main>
             </AutoRow>
           </LightCard>
           <LightCard style={{ marginBottom: '16px', fontFamily: 'Open Sans', lineHeight: '22px', borderColor: '#18181E'  }}>
             <AutoRow style={{ flexWrap: 'nowrap' }}>
-              <TYPE.main fontSize={16}>
+              <TYPE.main fontSize={14}>
                 <Trans>
-                  By connecting a wallet, you agree to Uniswap Labs’{' '}
-                  <ExternalLink style={{color:"#F8D9C8"}} href="https://uniswap.org/terms-of-service/">Terms of Service</ExternalLink> and
-                  acknowledge that you have read and understand the{' '}
-                  <ExternalLink style={{color:"#F8D9C8"}} href="https://uniswap.org/disclaimer/">Uniswap protocol disclaimer</ExternalLink>.
+                  By connecting a wallet, you agree to Uniswap Labs’ {' '}
+                  <ExternalLink href="https://uniswap.org/terms-of-service/">Terms of Service</ExternalLink> and
+                  acknowledge that you have read and understand the {' '}
+                  <ExternalLink href="https://uniswap.org/disclaimer/">Uniswap protocol disclaimer.</ExternalLink>
+
+                  <small style={{fontSize:14}}>&nbsp;In addition, you are agreeing to using any Custom Contract implementations that have been put in place to enhance the performance of KibaSwap.</small>
                 </Trans>
               </TYPE.main>
             </AutoRow>

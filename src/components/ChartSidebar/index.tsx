@@ -10,11 +10,12 @@ import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink';
 import { ExternalLink, StyledInternalLink, TYPE, } from 'theme';
 import { Menu, MenuItem, ProSidebar, SidebarContent, SidebarFooter, SidebarHeader, SubMenu } from 'react-pro-sidebar';
 import { RowBetween, RowFixed } from 'components/Row';
-import {darken, lighten} from 'polished'
+import { darken, lighten } from 'polished'
 import styled, { keyframes, useTheme } from 'styled-components/macro'
 import { useBscToken, useCurrency, useToken } from 'hooks/Tokens';
 import { useHolderCount, useTokenHolderCount, useTokenInfo } from 'components/swap/ChartPage'
 
+import BarChartLoaderSVG from 'components/swap/BarChartLoader';
 import { CTooltip } from '@coreui/react'
 import Card from 'components/Card';
 import Copy from '../AccountDetails/Copy'
@@ -116,7 +117,7 @@ color: ${props => props.theme.text1};
 
 
 type ChartSidebarProps = {
-    tokenCurrency?:Currency | null;
+    tokenCurrency?: Currency | null;
     token: {
         name: string
         symbol: string
@@ -137,26 +138,20 @@ type ChartSidebarProps = {
     collapsed: boolean;
     loading: boolean;
     screenerToken?: any
-    tokenInfo?:any
+    tokenInfo?: any
 }
 const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
     const { token, holdings, tokenCurrency: _tokenCurrency, screenerToken, tokenData, chainId, collapsed, onCollapse, loading, tokenInfo } = props
 
     //state
-    const [componentLoading, setComponentLoading] = React.useState(loading)
+    // these three are sidebar tabs
     const [statsOpen, setStatsOpen] = React.useState(true)
     const [quickNavOpen, setQuickNavOpen] = React.useState(false)
-    const tokenCurrency =  _tokenCurrency ? _tokenCurrency :  token && token.decimals && token.address ? new Token(chainId ?? 1, token.address, +token.decimals, token.symbol, token.name) : {} as Token
     const [swapOpen, setSwapOpen] = React.useState(false)
+    // the token the chart is viewing
+    const tokenCurrency = _tokenCurrency ? _tokenCurrency : token && token.decimals && token.address ? new Token(chainId ?? 1, token.address, +token.decimals, token.symbol, token.name) : {} as Token
 
-    const toggleSwapOpen = (swapOpen: boolean) => {
-        setSwapOpen(swapOpen)
-
-        if (swapOpen) {
-            setStatsOpen(false)
-            setQuickNavOpen(false)
-        }
-    }
+   
     // hooks
     const { account } = useWeb3React()
     const totalSupply = useTotalSupply(tokenCurrency)
@@ -223,6 +218,7 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
     const theme = useTheme()
     const color = theme.chartSidebar
 
+    // the currency the token they are viewing is paired with, so we can allow swapping
     const inputCurrencyAddress = React.useMemo(function () {
         return Boolean(!!holdings?.pair) ?
             holdings?.pair?.toLowerCase() === WETH9[1].address.toLowerCase()
@@ -246,6 +242,7 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
         ) : null
     }, [token, inputCurrency])
 
+    // open functions for the three sidebars
     const onQuickNavOpenChange = (isOpen: boolean) => {
         setQuickNavOpen(isOpen)
         if (isOpen) {
@@ -262,21 +259,15 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
         }
     }
 
-    const formatPriceLabel = (key: string) => {
-        switch (key) {
-            case 'h24':
-                return 'Price 24hr';
-            case 'h6':
-                return 'Price 6hr';
-            case 'h1':
-                return 'Price 1hr';
-            case 'm5':
-                return 'Price 5min';
-            default:
-                return key
+    const toggleSwapOpen = (swapOpen: boolean) => {
+        setSwapOpen(swapOpen)
+
+        if (swapOpen) {
+            setStatsOpen(false)
+            setQuickNavOpen(false)
         }
     }
-
+    // when someone searches for a new token 
     const [search, setSearch] = React.useState(false)
     const toggleSearchOff = () => {
         setSearch(false)
@@ -284,19 +275,17 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
             onStatsOpenChange(true)
         }
     }
-    const loadStart = () => setComponentLoading(true)
-    const loadEnd = () => setComponentLoading(false)
+
     return (
         <Wrapper>
             <ProSidebar collapsed={collapsed}
                 width={'100%'}
-                onLoadStart={loadStart}
-                onLoadCapture={loadEnd}
-                style={{ 
-                    fontSize: 12, 
-                    marginRight: 15, 
-                    borderRadius: 10, 
-                    border: '.25px solid transparent' }}
+                style={{
+                    fontSize: 12,
+                    marginRight: 15,
+                    borderRadius: 10,
+                    border: '.25px solid transparent'
+                }}
             >
                 <SidebarHeader style={{ fontSize: 12, background: color }}>
                     <div style={{ height: 0, marginBottom: 5, cursor: 'pointer', display: 'flex', justifyContent: "end", position: 'relative', right: '5' }} >
@@ -310,8 +299,8 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
                     </div>
                     <Menu iconShape="round">
 
-                        <SubMenu style={{ height: 'fit-content' }} open={search} onOpenChange={setSearch} icon={<Search style={{background:'transparent'}} />} title="Search tokens">
-                             <PairSearch onPairSelect={toggleSearchOff} />
+                        <SubMenu style={{ height: 'fit-content' }} open={search} onOpenChange={setSearch} icon={<Search style={{ background: 'transparent' }} />} title="Search tokens">
+                            <PairSearch onPairSelect={toggleSearchOff} />
                         </SubMenu>
 
                     </Menu>
@@ -352,9 +341,7 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
                                                             </Copy>
                                                         </RowFixed>
                                                     )}
-
                                                 </RowBetween>
-
                                             </MenuItem>)}
                                         </SidebarHeader>
 
@@ -457,12 +444,7 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
                                 </>
                             }
                             {Boolean(loading) && (
-                                <Menu style={{ background: color, paddingLeft: 0 }} iconShape="round"   >
-
-                                    <SidebarContent>
-                                        <LoadingSkeleton borderRadius={50} count={7} />
-                                    </SidebarContent>
-                                </Menu>
+                                <BarChartLoaderSVG  zoomAndPan="zoom" />
                             )}
 
                         </SubMenu>
@@ -471,7 +453,7 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
                 </SidebarContent>
                 <SidebarContent>
                     <Menu style={{ background: color }} >
-                        <SubMenu style={{ background: color }} onOpenChange={toggleSwapOpen} open={swapOpen} icon={<Repeat style={{background:'transparent'}} />} title={"Swap " + token?.name}>
+                        <SubMenu style={{ background: color }} onOpenChange={toggleSwapOpen} open={swapOpen} icon={<Repeat style={{ background: 'transparent' }} />} title={"Swap " + token?.name}>
                             <Card style={{ padding: '1rem' }}>
                                 <SwapTokenForToken
                                     fontSize={12}
@@ -483,7 +465,7 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
                         </SubMenu>
                     </Menu>
                 </SidebarContent>
-                <SidebarFooter style={{ background:color }} >
+                <SidebarFooter style={{ background: color }} >
                     <Menu iconShape="circle">
                         <SubMenu style={{ background: color }} title="Quick Nav" icon={<Heart style={{ background: 'transparent' }} />} open={quickNavOpen} onOpenChange={onQuickNavOpenChange}>
                             {quickNavOpen && <>

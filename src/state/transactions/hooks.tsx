@@ -190,7 +190,6 @@ const StyledDiv = styled.div`
 
 const Table = styled.table`
 &:before {
-  background: linear-gradient(to right,red,orange)
 }
 td:last-child {
   font-size:12px;
@@ -201,7 +200,6 @@ th {
   text-align: left;
   color: white;
   &:before {
-    background: linear-gradient(to right,red,orange)
   }
 }
 border-collapse: collapse;
@@ -495,10 +493,10 @@ export const FomoPage = () => {
   const infoTipText = `KibaFomo is auto-refreshing every 30 seconds to go and fetch the latest listed tokens. \r\n\r\nEvery token listed below has been ran through our smart-contract honey pot checks, to determine if it allows for buying and selling. \r\n\r\nThis is an experimental feature. Use at your own risk.`
   const [modalShowing, setModalShowing] = React.useState<any>()
   return (
-    <DarkCard style={{ maxWidth: 1200, background: '#252632' }}>
+    <DarkCard style={{ maxWidth: 1200 }}>
       <Wrapper style={{ overflow: 'auto', padding: '9px 14px' }}>
         <div style={{ marginBottom: 10 }}>
-          <h1 style={{ fontFamily: 'Bangers', fontWeight: 'normal' }}>KibaFomo &nbsp;
+          <h1 style={{ fontFamily: 'Open Sans', fontWeight: 'normal' }}>KibaFomo &nbsp;
             <Tooltip text={infoTipText} show={showInfo}>
               <Info onMouseEnter={() => setShowInfo(true)} onMouseLeave={() => setShowInfo(false)} />
             </Tooltip>
