@@ -18,14 +18,14 @@ export default function PasteButton({ onPress }: { onPress: (text: string) => vo
   const theme = useAppTheme()
   return (
     <Button
-      backgroundColor="accentActionSoft"
+      backgroundColor="accentActiveSoft"
       borderRadius="md"
       px="sm"
       py="xs"
       onPress={onPressButton}>
       <Flex centered row gap="xxs">
-        <PasteIcon color={theme.colors.blue300} />
-        <Text color="blue300" variant="mediumLabel">
+        <PasteIcon color={theme.colors.accentActive} />
+        <Text color="accentActive" variant="mediumLabel">
           {t('Paste')}
         </Text>
       </Flex>
