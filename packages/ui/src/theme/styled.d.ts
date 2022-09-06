@@ -61,6 +61,17 @@ export interface Colors {
   textHover: Color
   textSelect: Color
   textDisable : Color
+
+  colorBlack05: Color
+  colorBlack00: Color
+
+  colorGray69: Color
+  colorGray37: Color
+
+  colorWhiteCd: Color
+  colorWhiteFF: Color
+
+  colorGreen39: Color
 }
 
 export interface Grids {

@@ -63,7 +63,7 @@ export function colors(darkMode: boolean): Colors {
     bgGreenHover: darkMode ? '#74EACF' : '#39E1BA',
     bgGreenSelect: darkMode ? '#2FB598' : '#39E1BA',
     bgGreenDisable: darkMode ? '#CCCCCC' : '#39E1BA',
-
+    
     
     bgDisable: darkMode ? '#CCCCCC' : '#CCCCCC',
 
@@ -103,6 +103,18 @@ export function colors(darkMode: boolean): Colors {
     textHover: darkMode ? '#05050E' : '#ff007a',
     textSelect: darkMode ? '#05050E' : '#ff007a',
     textDisable: darkMode ? '#05050E' : '#ff007a',
+
+    colorBlack05: darkMode ? '#05050e' : '#05050e',
+    colorBlack00: darkMode ? '#000000' : '#000000',
+    
+    colorGray69: darkMode ? '#69696e' : '#69696e',
+    colorGray37: darkMode ? '#37373e' : '#37373e',
+
+    colorWhiteCd: darkMode ? '#cdcdcf' : '#cdcdcf',
+    colorWhiteFF: darkMode ? '#FFFFFF' : '#FFFFFF',
+     
+    colorGreen39: darkMode ? '#39E1BA' : '#39E1BA',
+
   }
 }
 
@@ -244,9 +256,9 @@ html {
 export const ThemedGlobalStyle = createGlobalStyle`
 html {
   color: ${({ theme }) => theme.text1};
-  background-color: ${({ theme }) => theme.bgHtml};
-  background: url(${swapBottomBg}) center top 7rem no-repeat rgba(0,0,0,1);
-  background-size: 61%;
+  background-color: ${({ theme }) => theme.colorBlack05};
+  /* background: url(${swapBottomBg}) center top 7rem no-repeat rgba(0,0,0,1);
+  background-size: 61%; */
 }
 
 body {

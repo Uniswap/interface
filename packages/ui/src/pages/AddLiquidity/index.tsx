@@ -74,6 +74,7 @@ export default function AddLiquidity({
   const toggleWalletModal = useWalletModalToggle() // toggle wallet when disconnected
 
   const expertMode = useIsExpertMode()
+  
 
   // mint state
   const { independentField, typedValue, otherTypedValue } = useMintState()
@@ -154,25 +155,33 @@ export default function AddLiquidity({
       method: (...args: any) => Promise<TransactionResponse>,
       args: Array<string | string[] | number | { from: string | undefined; to: string | undefined; stable: boolean } | Array<any>>,
       value: BigNumber | null
-    // if (currencyA === ETHER || currencyB === ETHER) {
-    if (false) {
-      // const tokenBIsETH = currencyB === ETHER
-      // estimate = router.estimateGas.addLiquidityETH
-      // method = router.addLiquidityETH
-      // args = [
-      //   // wrappedCurrency(tokenBIsETH ? currencyA : currencyB, chainId)?.address ?? '', // token
-      //   {
-      //     from: wrappedCurrency(currencyA, chainId)?.address,
-      //     to: wrappedCurrency(currencyB, chainId)?.address,
-      //     stable: true,
-      //   },
-      //   (tokenBIsETH ? parsedAmountA : parsedAmountB).raw.toString(), // token desired
-      //   amountsMin[tokenBIsETH ? Field.CURRENCY_A : Field.CURRENCY_B].toString(), // token min
-      //   amountsMin[tokenBIsETH ? Field.CURRENCY_B : Field.CURRENCY_A].toString(), // eth min
-      //   account,
-      //   deadline.toHexString(),
-      // ]
-      // value = BigNumber.from((tokenBIsETH ? parsedAmountB : parsedAmountA).raw.toString())
+    if (currencyA === ETHER || currencyB === ETHER) {
+      const tokenBIsETH = currencyB === ETHER
+      estimate = router.estimateGas.addLiquidityETH
+      method = router.addLiquidityETH
+      args = [
+        // {
+        //   from: wrappedCurrency(currencyA, chainId)?.address,
+        //   to: wrappedCurrency(currencyB, chainId)?.address,
+        //   stable: true,
+        // },
+        // (tokenBIsETH ? parsedAmountA : parsedAmountB).raw.toString(), // token desired
+        // amountsMin[tokenBIsETH ? Field.CURRENCY_A : Field.CURRENCY_B].toString(), // token min
+        // amountsMin[tokenBIsETH ? Field.CURRENCY_B : Field.CURRENCY_A].toString(), // eth min
+        // account,
+        // deadline.toHexString(),
+        [wrappedCurrency(currencyA, chainId)?.address ?? '',
+        wrappedCurrency(currencyB, chainId)?.address ?? '', true],
+        parsedAmountA.raw.toString(),
+        parsedAmountB.raw.toString(),
+        // amountsMin[Field.CURRENCY_A].toString(),
+        // amountsMin[Field.CURRENCY_B].toString(),
+        "1",
+        "1",
+        account,
+        deadline.toHexString(),
+      ]
+      value = BigNumber.from((tokenBIsETH ? parsedAmountB : parsedAmountA).raw.toString())
     } else {
       estimate = router.estimateGas.addLiquidity
       method = router.addLiquidity
@@ -516,15 +525,15 @@ export default function AddLiquidity({
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'stretch',
-          padding: '36px 28px',
-          width: '556px',
-          maxWidth: '420px',
-          maxHeight: '638px',
-          height: 'fit-content',
+          padding: '1.2rem .9rem',
+          width: '19rem',
+          // maxWidth: '420px',
+          // maxHeight: '638px',
+          // height: 'fit-content',
           background: 'rgba(51, 51, 51, 0.5)',
           boxShadow: '0px -2px 0px #39E1BA',
           backdropFilter: 'blur(60px)',
-          borderRadius: '48px',
+          borderRadius: '1.6rem',
         }}
       >
         <TransactionConfirmationModal
@@ -544,7 +553,8 @@ export default function AddLiquidity({
           pendingText={pendingText}
           currencyToAdd={pair?.liquidityToken}
         />
-        <AutoRow justify="flex-end">
+        <AutoRow justify="space-between" style={{ marginBottom: ".9rem" }}>
+          <span style={{ fontFamily: 'Dela Gothic One', fontWeight: 400, fontSize: ".7rem", color: "#FFFFFF" }}>Add  Liquidity</span>
           <Settings />
         </AutoRow>
         <AutoColumn gap="12px">
@@ -636,6 +646,21 @@ export default function AddLiquidity({
             </>
           )} */}
         </AutoColumn>
+        <Box sx={{ marginTop: '.9rem' }}>
+          <Box sx={{ fontWeight: 600, fontSize: ".7rem", marginBottom: ".5rem" }}>
+            Pair Mode
+          </Box>
+          <Box sx={{ display: 'flex',fontWeight: 400,fontSize: ".5rem", alignItems: "center" }}>
+            <Box sx={{flex: 1}}>
+              <input type="radio" name="pairMode" id="Stable" style={{position: "relative", top:".2rem"}}/>
+              <label htmlFor="Stable" style={{margin: "0 0 0 .7rem"}}>Stable</label>
+            </Box>
+            <Box sx={{flex: 1}}>
+              <input type="radio" name="pairMode" id="Volatile" style={{position: "relative", top:".2rem"}}/>
+              <label style={{margin: "0 0 0 .7rem"}} htmlFor="Volatile">Volatile</label>
+            </Box>
+          </Box>
+        </Box>
         <Box sx={{ width: '100%', borderTop: '1px solid rgba(255,255,255,0.2)', height: '0', marginTop: '28px' }}></Box>
         <Text
           sx={{

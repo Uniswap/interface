@@ -34,6 +34,10 @@ const AppWrapper = styled.div`
   flex-flow: column;
   align-items: flex-start;
   overflow-x: hidden;
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 400;
+  font-size: .6rem;
 `
 
 const HeaderWrapper = styled.div`
@@ -46,7 +50,7 @@ const BodyWrapper = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  padding-top: 100px;
+  padding-top: 3rem;
   align-items: center;
   flex: 1;
   overflow-y: auto;
@@ -93,6 +97,8 @@ export default function App() {
               <Route exact strict path="/send" component={RedirectPathToSwapOnly} />
               <Route exact strict path="/find" component={PoolFinder} />
               <Route exact strict path="/pool" component={Pool} />
+              <Route exact strict path="/manager" component={Pool} />
+              {/* <Route exact strict path="/tele" component={Earn} /> */}
               <Route exact strict path="/vote" component={Vote} />
               <Route exact strict path="/create" component={RedirectToAddLiquidity} />
               <Route exact path="/add" component={AddLiquidity} />
