@@ -14,7 +14,8 @@ import { useHasSufficientFunds } from 'src/components/WalletConnect/RequestModal
 import { RequestMessage } from 'src/components/WalletConnect/RequestModal/RequestMessage'
 import { SpendingDetails } from 'src/components/WalletConnect/RequestModal/SpendingDetails'
 import { ChainId } from 'src/constants/chains'
-import { useGasFeeInfo } from 'src/features/gas/hooks'
+import { useTransactionGasFee } from 'src/features/gas/hooks'
+import { GasSpeed } from 'src/features/gas/types'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { NativeCurrency } from 'src/features/tokenLists/NativeCurrency'
 import { useActiveAccount, useSignerAccounts } from 'src/features/wallet/hooks'
@@ -106,22 +107,22 @@ export function WalletConnectRequestModal({ isVisible, onClose, request }: Props
       return null
     }
 
-    const { to, from, value, data, gasPrice, nonce } = request.transaction
+    const { to, from, value, data, nonce, gas } = request.transaction
 
     return {
       to,
       from,
       value,
       data,
-      gasPrice,
       nonce,
       chainId,
+      gasLimit: gas,
     }
   }, [chainId, request])
 
   const activeAccount = useActiveAccount()
   const hasMultipleAccounts = useSignerAccounts().length > 1
-  const gasFeeInfo = useGasFeeInfo(chainId, tx)
+  const gasFeeInfo = useTransactionGasFee(tx, GasSpeed.Urgent)
   const hasSufficientFunds = useHasSufficientFunds({
     account: request?.account,
     chainId,
@@ -148,26 +149,16 @@ export function WalletConnectRequestModal({ isVisible, onClose, request }: Props
   }
 
   const onConfirm = async () => {
-    if (!activeAccount) return
+    if (!activeAccount || !gasFeeInfo || !tx) return
     if (
       request.type === EthMethod.EthSignTransaction ||
       request.type === EthMethod.EthSendTransaction
     ) {
-      const { to, from, gasPrice, data, nonce, value } = request.transaction
-      const transaction: providers.TransactionRequest = {
-        to,
-        from,
-        gasPrice,
-        data,
-        nonce,
-        chainId,
-        value,
-      }
       dispatch(
         signWcRequestActions.trigger({
           requestInternalId: request.internalId,
           method: request.type,
-          transaction,
+          transaction: tx,
           account: activeAccount,
           dapp: request.dapp,
         })
@@ -209,7 +200,6 @@ export function WalletConnectRequestModal({ isVisible, onClose, request }: Props
     <BottomSheetModal isVisible={isVisible} name={ModalName.WCSignRequest} onClose={handleClose}>
       <Flex gap="lg" paddingBottom="xxl" paddingHorizontal="md" paddingTop="xl">
         <ClientDetails permitInfo={permitInfo} request={request} />
-
         <Flex gap="sm">
           <Flex
             backgroundColor="backgroundContainer"
@@ -244,7 +234,7 @@ export function WalletConnectRequestModal({ isVisible, onClose, request }: Props
             )}
 
             {methodCostsGas(request) && chainId && (
-              <NetworkFee chainId={chainId} gasFee={gasFeeInfo?.fee.urgent} />
+              <NetworkFee chainId={chainId} gasFee={gasFeeInfo?.gasFee} />
             )}
 
             {hasMultipleAccounts && (

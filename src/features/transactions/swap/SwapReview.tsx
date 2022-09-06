@@ -2,10 +2,10 @@ import { AnyAction } from '@reduxjs/toolkit'
 import React, { Dispatch } from 'react'
 import { useTranslation } from 'react-i18next'
 import { WarningAction, WarningModalType } from 'src/components/warnings/types'
+import { GasSpeed } from 'src/features/gas/types'
 import { ElementName } from 'src/features/telemetry/constants'
 import {
   DerivedSwapInfo,
-  GasSpeed,
   useAcceptedTrade,
   useSwapActionHandlers,
   useSwapCallback,

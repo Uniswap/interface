@@ -10,12 +10,11 @@ import { ChainId } from 'src/constants/chains'
 import { AssetType } from 'src/entities/assets'
 import { useNativeCurrencyBalance, useTokenBalance } from 'src/features/balances/hooks'
 import { estimateGasAction } from 'src/features/gas/estimateGasSaga'
-import { FeeInfo } from 'src/features/gas/types'
+import { FeeInfo, GasSpeed } from 'src/features/gas/types'
 import { useNFT } from 'src/features/nfts/hooks'
 import { NFTAsset } from 'src/features/nfts/types'
 import { useCurrency } from 'src/features/tokens/useCurrency'
 import { useAllTransactionsBetweenAddresses } from 'src/features/transactions/hooks'
-import { GasSpeed } from 'src/features/transactions/swap/hooks'
 import {
   CurrencyField,
   GasFeeByTransactionType,

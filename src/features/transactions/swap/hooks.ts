@@ -11,6 +11,7 @@ import { DEFAULT_SLIPPAGE_TOLERANCE } from 'src/constants/misc'
 import { AssetType } from 'src/entities/assets'
 import { useNativeCurrencyBalance, useTokenBalance } from 'src/features/balances/hooks'
 import { estimateGasAction } from 'src/features/gas/estimateGasSaga'
+import { GasSpeed } from 'src/features/gas/types'
 import {
   STABLECOIN_AMOUNT_OUT,
   useUSDCPrice,
@@ -48,12 +49,6 @@ import { useSagaStatus } from 'src/utils/useSagaStatus'
 export const DEFAULT_SLIPPAGE_TOLERANCE_PERCENT = new Percent(DEFAULT_SLIPPAGE_TOLERANCE, 100)
 const NUM_CURRENCY_SIG_FIGS = 6
 const NUM_USD_DECIMALS_DISPLAY = 2
-
-export enum GasSpeed {
-  Normal = 'normal',
-  Fast = 'fast',
-  Urgent = 'urgent',
-}
 
 export type DerivedSwapInfo<
   TInput = Currency,

@@ -1,22 +1,59 @@
+import { skipToken } from '@reduxjs/toolkit/dist/query'
 import { CurrencyAmount } from '@uniswap/sdk-core'
 import { providers } from 'ethers'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useProvider } from 'src/app/walletContext'
 import { ChainId } from 'src/constants/chains'
 import { GAS_FEE_REFRESH_INTERVAL } from 'src/constants/gas'
+import { PollingInterval } from 'src/constants/misc'
 import {
   TRANSACTION_CANCELLATION_GAS_FACTOR,
   TRANSACTION_MINIMUM_GAS,
 } from 'src/constants/transactions'
 import { getAdjustedGasFeeParams } from 'src/features/gas/adjustGasFee'
+import { useGasFeeQuery } from 'src/features/gas/api'
 import { computeGasFee } from 'src/features/gas/computeGasFee'
-import { FeeInfo } from 'src/features/gas/types'
+import { FeeInfo, FeeType, GasSpeed, TransactionGasFeeInfo } from 'src/features/gas/types'
 import { useUSDCValue } from 'src/features/routing/useUSDCPrice'
 import { NativeCurrency } from 'src/features/tokenLists/NativeCurrency'
 import { TransactionDetails } from 'src/features/transactions/types'
 import { logger } from 'src/utils/logger'
 import { useInterval } from 'src/utils/timing'
 
+export function useTransactionGasFee(
+  tx: providers.TransactionRequest | null,
+  speed: GasSpeed
+): TransactionGasFeeInfo | undefined {
+  // TODO: Handle error responses from gas endpoint
+  const { currentData } = useGasFeeQuery(tx ?? skipToken, {
+    // poll new gas fees around every block time
+    // TODO: use faster speed for Polygon, which has around ~3s block times
+    pollingInterval: PollingInterval.Fast,
+  })
+
+  return useMemo(() => {
+    if (!currentData) return undefined
+
+    const params =
+      currentData.type === FeeType.Eip1559
+        ? {
+            maxPriorityFeePerGas: currentData.maxPriorityFeePerGas[speed],
+            maxFeePerGas: currentData.maxFeePerGas[speed],
+          }
+        : {
+            gasPrice: currentData.gasPrice[speed],
+          }
+
+    return {
+      type: currentData.type,
+      speed,
+      gasFee: currentData.gasFee[speed],
+      params,
+    }
+  }, [currentData, speed])
+}
+
+// TODO: deprecate this
 export function useGasFeeInfo(
   chainId: ChainId | undefined,
   tx: providers.TransactionRequest | null,
