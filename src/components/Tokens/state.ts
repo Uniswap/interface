@@ -49,7 +49,7 @@ export function useSetSortCategory(category: Category) {
 }
 
 export function useIsFavorited(tokenAddress: string) {
-  const favoriteTokens = useAtomValue<string[]>(favoritesAtom)
+  const favoritedTokens = useAtomValue<string[]>(favoritesAtom)
 
-  return useMemo(() => favoriteTokens.includes(tokenAddress.toLocaleLowerCase()), [favoriteTokens, tokenAddress])
+  return useMemo(() => favoritedTokens.includes(tokenAddress.toLocaleLowerCase()), [favoritedTokens, tokenAddress])
 }
