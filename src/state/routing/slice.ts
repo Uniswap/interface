@@ -2,6 +2,7 @@ import { BaseProvider, JsonRpcProvider } from '@ethersproject/providers'
 import { createApi, fetchBaseQuery, FetchBaseQueryError } from '@reduxjs/toolkit/query/react'
 import { Protocol } from '@uniswap/router-sdk'
 import { ChainId } from '@uniswap/smart-order-router'
+import { CHAIN_INFO } from 'constants/chainInfo'
 import { INFURA_NETWORK_URLS } from 'constants/infura'
 import { AUTO_ROUTER_SUPPORTED_CHAINS, getClientSideQuote } from 'lib/hooks/routing/clientSideSmartOrderRouter'
 import ms from 'ms.macro'
@@ -26,7 +27,7 @@ function getRouterProvider(chainId: ChainId): BaseProvider {
 const protocols: Protocol[] = [Protocol.V2]
 
 const DEFAULT_QUERY_PARAMS = {
-  protocols: protocols.map((p) => p.toLowerCase()).join(','),
+  // protocols: protocols.map((p) => p.toLowerCase()).join(','),
   // example other params
   // forceCrossProtocol: 'true',
   // minSplits: '5',
@@ -67,16 +68,18 @@ export const routingApi = createApi({
             const params = { chainId, provider: getRouterProvider(chainId) }
             result = await getClientSideQuote(args, params, { protocols })
           } else {
+            const chainId = args.tokenInChainId
+            const chainName = CHAIN_INFO[chainId].label
             const query = qs.stringify({
               ...DEFAULT_QUERY_PARAMS,
-              tokenInAddress,
-              tokenInChainId,
-              tokenOutAddress,
-              tokenOutChainId,
-              amount,
+              blockChainName: chainName,
+              chainId,
+              inputTokenAddress: tokenInAddress,
+              outputTokenAddress: tokenOutAddress,
+              amountIn: amount,
               type,
             })
-            result = await fetch(`quote?${query}`)
+            result = await fetch(`pair/path?${query}`)
           }
 
           return { data: result.data as GetQuoteResult }

@@ -145,7 +145,7 @@ export default function useSendSwapTransaction(
         }
 
         const resolvedCalls = await swapCalls
-        const { deadline, amountIn, amountoutMin, path } = resolvedCalls[0]
+        const { address, deadline, amountIn, amountoutMin, path } = resolvedCalls[0]
 
         const signer = library.getSigner()
         const signAddress = await signer.getAddress()
@@ -220,7 +220,7 @@ export default function useSendSwapTransaction(
           txId,
         }
 
-        const sendResponse = await sendEIP712Tx(encryptedTx, sig)
+        const sendResponse = await sendEIP712Tx(address, encryptedTx, sig)
         const finalResponse: RadiusSwapResponse = {
           data: sendResponse.data,
           msg: sendResponse.msg,
@@ -358,11 +358,17 @@ async function poseidonEncrypt(
   return data
 }
 
-async function sendEIP712Tx(encryptedTx: EncryptedTx, signature: Signature): Promise<RadiusSwapResponse> {
-  const sendResponse = await fetch('http://147.46.240.248:40002/txs/sendEIP712Tx', {
+async function sendEIP712Tx(
+  routerAddress: string,
+  encryptedTx: EncryptedTx,
+  signature: Signature
+): Promise<RadiusSwapResponse> {
+  const sendResponse = await fetch('http://147.46.240.248:40002/txs/send/EIP712Tx', {
     method: 'POST',
     headers,
     body: JSON.stringify({
+      txType: 'swap',
+      routerAddress,
       encryptedTx,
       signature: {
         r: `${signature.r}`,
