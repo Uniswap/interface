@@ -25,13 +25,15 @@ const PageWrapper = styled(AutoColumn)`
 const PoolSection = styled.div`
   display: grid;
   grid-template-columns: 1fr;
-  column-gap: 10px;
-  row-gap: 15px;
+  row-gap: 24px;
   width: 100%;
   justify-self: center;
   background: #000;
   padding: 48px;
   color: #39E1BA;
+
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 24px;
 `
 
 const DataRow = styled(RowBetween)`
