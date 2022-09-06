@@ -36,9 +36,6 @@ const ErrorText = styled.span`
 
 const TotalBalanceSection = styled.div`
   height: fit-content;
-  // border-bottom: 1px solid ${({ theme }) => theme.backgroundOutline};
-  // margin-bottom: 20px;
-  // padding-bottom: 20px;
 `
 const TotalBalance = styled.div`
   display: flex;
