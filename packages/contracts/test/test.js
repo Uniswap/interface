@@ -353,8 +353,42 @@ describe('Router02', function () {
 
         })
 
-        it("removeLiquidityETHSupportingFeeOnTransferTokens",async ()=>{})
-        it("removeLiquidityETHWithPermitSupportingFeeOnTransferTokens",async ()=>{})
+        it("removeLiquidityETHSupportingFeeOnTransferTokens",async ()=>{
+
+            let ans =await loadFixture(deployContracts)
+            let liquidity =  await ans.pair.balanceOf(ans.signer.address)
+            await ans.pair.approve(ans.router.address,liquidity)
+            let params = [
+                getRoute(ans,false),
+                liquidity,
+                0,0,
+                ans.signer.address,
+                getDeadline()
+            ]
+            await ans.router.removeLiquidityETHSupportingFeeOnTransferTokens(...params)
+
+
+
+        })
+        it("removeLiquidityETHWithPermitSupportingFeeOnTransferTokens",async ()=>{
+
+            let ans = await loadFixture(deployContracts)
+            let liquidity = ans.pair.balanceOf(ans.signer.address)
+            await ans.pair.approve(ans.router.address,liquidity)
+            let args = [
+                getRoute(ans,false),
+                liquidity,
+                0,0,
+                ans.signer.address,
+                getDeadline(),
+                false,
+                await getSig(ans)
+            ]
+            await ans.router.removeLiquidityETHWithPermitSupportingFeeOnTransferTokens(...args)
+
+
+
+        })
         it("swapExactTokensForTokens", async function () {
             const ans = await loadFixture(deployContracts);
             const signer = (await ethers.getSigners())[0]
@@ -643,9 +677,44 @@ describe('Router02', function () {
         it("swapETHForExactTokens",async ()=>{
 
         })
-        it("swapExactTokensForTokensSupportingFeeOnTransferTokens",async ()=>{})
-        it("swapExactETHForTokensSupportingFeeOnTransferTokens",async ()=>{})
-        it("swapExactTokensForETHSupportingFeeOnTransferTokens",async ()=>{})
+        it("swapExactTokensForTokensSupportingFeeOnTransferTokens",async ()=>{
+
+            let ans = await loadFixture(deployContracts)
+            let args = [
+                expandTo18Decimals(1),
+                0,
+                getRoutes(ans,false),
+                ans.signer.address,
+                getDeadline()
+            ]
+            await ans.router.swapExactTokensForTokensSupportingFeeOnTransferTokens(...args)
+
+
+
+        })
+        it("swapExactETHForTokensSupportingFeeOnTransferTokens",async ()=>{
+            let ans  = await loadFixture(deployContracts)
+            let args = [
+                0,
+                [[ans.weth.address,ans.tt.address,false]],
+                ans.signer.address,
+                getDeadline()
+            ]
+            await ans.router.swapExactETHForTokensSupportingFeeOnTransferTokens(...args,{value:expandTo18Decimals(1)})
+
+        })
+        it("swapExactTokensForETHSupportingFeeOnTransferTokens",async ()=>{
+            let ans  = await loadFixture(deployContracts)
+            let args = [
+                expandTo18Decimals(1),
+                0,
+                getRoutes(ans,false),
+                ans.signer.address,
+                getDeadline()
+            ]
+            await ans.router.swapExactTokensForETHSupportingFeeOnTransferTokens(...args)
+
+        })
 
 
 
@@ -742,4 +811,37 @@ function getRoute(ans, stable){
 }
 function getRoutes(ans, stable){
     return [getRoute(ans,stable)]
+}
+
+async function getSig(ans){
+    const { chainId } = await ethers.provider.getNetwork();
+    const domain = {
+        name: 'Teleswap V2',
+        version: '1',
+        chainId: chainId,
+        verifyingContract:ans.pair.address ,
+    };
+    //Permit(address owner,address spender,uint256 value,uint256 nonce,uint256 deadline)
+    const types = {
+        Permit: [
+            {name: 'owner', type: 'address'},
+            {name: 'spender', type: 'address'},
+            {name: 'value', type: 'uint256'},
+            {name: 'nonce', type: 'uint256'},
+            {name: 'deadline', type: 'uint256'},
+        ]
+    };
+    // The data to sign
+    let dl = getDeadline()
+
+    const value = {
+        owner: ans.signer.address,
+        spender: ans.router.address,
+        value: await ans.pair.balanceOf(ans.signer.address),
+        nonce: await ans.pair.nonces(ans.signer.address),
+        deadline: dl,
+    };
+    let signature = await ans.signer._signTypedData(domain, types, value);
+    let {v,r,s} = await ethers.utils.splitSignature(signature)
+    return [v,r,s]
 }
