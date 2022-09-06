@@ -1,18 +1,18 @@
 import React, { useMemo, useState } from 'react'
 import styled from 'styled-components'
-import { TYPE, StyledInternalLink } from '../../theme'
+import { TYPE } from '../../theme'
 // import { ETHER, JSBI, TokenAmount } from '@teleswap/sdk'
 // import { StakingInfo } from '../../state/stake/hooks'
 import { useColor } from '../../hooks/useColor'
 // import { currencyId } from '../../utils/currencyId'
-// import { unwrappedToken } from '../../utils/wrappedCurrency'
+import { unwrappedToken } from '../../utils/wrappedCurrency'
 // import { useTotalSupply } from '../../data/TotalSupply'
 // import { usePair } from '../../data/Reserves'
 // import useUSDCPrice from '../../utils/useUSDCPrice'
 // import { BIG_INT_SECONDS_IN_WEEK } from '../../constants'
 import { AutoColumn } from 'components/Column'
 import { ButtonPrimary } from 'components/Button'
-// import DoubleCurrencyLogo from 'components/DoubleLogo'
+import DoubleCurrencyLogo from 'components/DoubleLogo'
 // import { Break } from 'components/earn/styled'
 // import { RowBetween } from 'components/Row'
 import StakingModal from 'components/masterchef/StakingModal'
@@ -30,6 +30,8 @@ import { Chef } from 'constants/farm/chef.enum'
 import ClaimRewardModal from 'components/masterchef/ClaimRewardModal'
 import { ReactComponent as AddIcon } from 'assets/svg/add.svg'
 import { ReactComponent as RemoveIcon } from 'assets/svg/minus.svg'
+import { useHistory } from 'react-router-dom'
+import { ChefStakingInfo } from 'hooks/farm/useChefStakingInfo'
 // import { Token } from '@teleswap/sdk'
 // import { useMasterChefPoolInfo } from 'hooks/farm/useMasterChefPoolInfo'
 
@@ -91,18 +93,23 @@ const StakingColumnTitle = ({ children }: { children: React.ReactNode }) => (
   </TYPE.gray>
 )
 
-export default function PoolCard({ pid }: { pid: number }) {
+export default function PoolCard({ pid, stakingInfo }: { pid: number; stakingInfo: ChefStakingInfo }) {
   const { chainId } = useActiveWeb3React()
   const farmingConfig = CHAINID_TO_FARMING_CONFIG[chainId || 420]
   const mchefContract = useChefContract(farmingConfig?.chefType || Chef.MINICHEF)
   // const masterChef = useMasterChef(Chef.MINICHEF)
   const positions = useChefPositions(mchefContract, undefined, chainId)
+  const history = useHistory()
   // const poolInfos = useMasterChefPoolInfo(farmingConfig?.chefType || Chef.MINICHEF)
   // const token0 = stakingInfo.tokens[0]
   // const token1 = stakingInfo.tokens[1]
 
-  // const currency0 = unwrappedToken(new Token(chainId || 420, farmingConfig?.pools[pid].stakingAsset.backedAsset?.[0] || '', 18))
-  // const currency1 = unwrappedToken(new Token(chainId || 420, farmingConfig?.pools[pid].stakingAsset.backedAsset?.[1] || '', 18))
+  const currency0 = stakingInfo.stakingAsset?.token0
+    ? new Token(chainId || 420, stakingInfo.stakingAsset.token0, 18)
+    : undefined
+  const currency1 = stakingInfo.stakingAsset?.token1
+    ? new Token(chainId || 420, stakingInfo.stakingAsset.token1, 18)
+    : undefined
 
   // const isStaking = Boolean(stakingInfo.stakedAmount.greaterThan('0'))
 
@@ -169,13 +176,18 @@ export default function PoolCard({ pid }: { pid: number }) {
   return (
     <Wrapper showBackground={isStaking} bgColor={backgroundColor}>
       <TopSection>
-        {/* <DoubleCurrencyLogo currency0={currency0} currency1={currency1} size={24} /> */}
+        <DoubleCurrencyLogo currency0={currency0} currency1={currency1} size={24} />
         <TYPE.white fontWeight={600} fontSize={18} style={{ marginLeft: '8px' }}>
           {farmingConfig?.pools[pid].stakingAsset.name}
         </TYPE.white>
 
         {farmingConfig?.pools[pid].stakingAsset.isLpToken && (
-          <TYPE.green01 marginLeft={32} fontSize={14}>
+          <TYPE.green01
+            marginLeft={32}
+            fontSize={14}
+            onClick={() => history.push(`/add/${currency0?.address}/${currency1?.address}`)}
+            style={{ cursor: 'pointer' }}
+          >
             Get {farmingConfig?.pools[pid].stakingAsset.name}
           </TYPE.green01>
         )}
