@@ -14,14 +14,14 @@ import { useAtomValue } from 'jotai/utils'
 import { darken } from 'polished'
 import { Suspense, useCallback } from 'react'
 import { useState } from 'react'
-import { ArrowLeft, Heart } from 'react-feather'
+import { ArrowLeft } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components/macro'
-import { ClickableStyle, CopyContractAddress } from 'theme'
+import { CopyContractAddress } from 'theme'
 import { formatDollarAmount } from 'utils/formatDollarAmt'
 
-import { favoritesAtom, filterNetworkAtom, useToggleFavorite } from '../state'
-import { ClickFavorited } from '../TokenTable/TokenRow'
+import { filterNetworkAtom, useIsFavorited, useToggleFavorite } from '../state'
+import { ClickFavorited, FavoriteIcon } from '../TokenTable/TokenRow'
 import LoadingTokenDetail from './LoadingTokenDetail'
 import Resource from './Resource'
 import ShareButton from './ShareButton'
@@ -81,13 +81,7 @@ const NetworkBadge = styled.div<{ networkColor?: string; backgroundColor?: strin
   color: ${({ theme, networkColor }) => networkColor ?? theme.textPrimary};
   background-color: ${({ theme, backgroundColor }) => backgroundColor ?? theme.backgroundSurface};
 `
-const FavoriteIcon = styled(Heart)<{ isFavorited: boolean }>`
-  ${ClickableStyle}
-  height: 22px;
-  width: 24px;
-  color: ${({ isFavorited, theme }) => (isFavorited ? theme.accentAction : theme.textSecondary)};
-  fill: ${({ isFavorited, theme }) => (isFavorited ? theme.accentAction : 'transparent')};
-`
+
 const NoInfoAvailable = styled.span`
   color: ${({ theme }) => theme.textTertiary};
   font-weight: 400;
@@ -181,8 +175,7 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
   const { chainId: connectedChainId } = useWeb3React()
   const token = useToken(address)
   let currency = useCurrency(address)
-  const favoriteTokens = useAtomValue<string[]>(favoritesAtom)
-  const isFavorited = favoriteTokens.includes(address)
+  const isFavorited = useIsFavorited(address)
   const toggleFavorite = useToggleFavorite(address)
   const warning = checkWarning(address)
   const navigate = useNavigate()
