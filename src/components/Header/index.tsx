@@ -299,7 +299,7 @@ export default function Header() {
         <StyledNavLink
           data-cy="pool-nav-link"
           id={`pool-nav-link`}
-          to={'/pool'}
+          to={'/pool/v2'}
           className={isPoolActive ? activeClassName : undefined}
         >
           <Trans>Pool</Trans>
