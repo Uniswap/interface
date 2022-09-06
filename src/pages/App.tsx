@@ -73,7 +73,7 @@ const HeaderWrapper = styled.div`
   justify-content: space-between;
   position: fixed;
   top: 0;
-  z-index: 2;
+  z-index: 9999;
 `
 
 const Marginer = styled.div`
