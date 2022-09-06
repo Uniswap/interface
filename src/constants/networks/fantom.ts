@@ -28,7 +28,7 @@ const fantomInfo: NetworkInfo = {
     logo: FTM,
     decimal: 18,
   },
-  rpcUrl: 'https://rpc.ftm.tools',
+  rpcUrl: 'https://fantom.kyberengineering.io',
   routerUri: `${process.env.REACT_APP_AGGREGATOR_API}/fantom/route/encode`,
   classic: {
     static: {

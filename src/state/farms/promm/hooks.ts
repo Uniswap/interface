@@ -40,8 +40,6 @@ export const useGetProMMFarms = () => {
   const dispatch = useAppDispatch()
   const { chainId, account } = useActiveWeb3React()
 
-  // TODO: revert this address belongs to user which affected by farm issue
-  // const account = '0x6f0Ca88060F91b5eF839bE5a7211293Bfc27c06C'
   const prommFarmContracts = useProMMFarmContracts()
   const tokens = useAllTokens()
 
