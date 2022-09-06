@@ -46,9 +46,9 @@ export const SectionBreak = styled.div`
 `
 
 export const BottomGrouping = styled.div`
-  margin-top: 1rem;
+  margin-top: 2rem;
   position: absolute;
-  bottom: -6rem;
+  /* bottom: -6rem; */
   width: 100%;
   left: 0;
   /* background: ${({theme }) => theme.bgGreen}; */

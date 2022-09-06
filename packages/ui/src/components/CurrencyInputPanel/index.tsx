@@ -111,6 +111,7 @@ const StyledBalanceMax = styled.button`
   height: 22px;
   margin-right: 0.5rem;
   color: black;
+  border: unset;
   :hover {
     /* border: 1px solid ${({ theme }) => theme.primary1}; */
     // background-color: ${({ theme }) => theme.bgGreenHover};

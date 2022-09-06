@@ -14,7 +14,7 @@ import { AutoRow, RowBetween } from '../../components/Row'
 import AdvancedSwapDetailsDropdown from '../../components/swap/AdvancedSwapDetailsDropdown'
 import { DefaultVersionLink } from '../../components/swap/BetterTradeLink'
 import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
-import { ArrowWrapper, BottomGrouping, SwapCallbackError, Wrapper,  StyledSwapArrow } from '../../components/swap/styleds'
+import { ArrowWrapper, BottomGrouping, SwapCallbackError, Wrapper, StyledSwapArrow } from '../../components/swap/styleds'
 import TradePrice from '../../components/swap/TradePrice'
 import TokenWarningModal from '../../components/TokenWarningModal'
 import ProgressSteps from '../../components/ProgressSteps'
@@ -382,11 +382,11 @@ export default function Swap({ history }: RouteComponentProps) {
             ) : null}
 
             {showWrap ? null : (
-              <Card padding={showWrap ? '.25rem 1rem 0 1rem' : '0px'} borderRadius={'20px'}>
+              <Card padding={showWrap ? '.25rem 1rem 0 1rem' : '0px'} sx={{ color: "#D7DCE0", fontSize: ".4rem", fontWeight: 400 }} borderRadius={'20px'}>
                 <AutoColumn gap="8px" style={{ padding: '0 16px' }}>
                   {Boolean(trade) && (
                     <RowBetween align="center">
-                      <Text fontWeight={500} fontSize={14} color={theme.text2}>
+                      <Text>
                         Price
                       </Text>
                       <TradePrice
@@ -398,10 +398,10 @@ export default function Swap({ history }: RouteComponentProps) {
                   )}
                   {allowedSlippage !== INITIAL_ALLOWED_SLIPPAGE && (
                     <RowBetween align="center">
-                      <ClickableText fontWeight={500} fontSize={14} color={theme.text2} onClick={toggleSettings}>
+                      <ClickableText onClick={toggleSettings}>
                         Slippage Tolerance
                       </ClickableText>
-                      <ClickableText fontWeight={500} fontSize={14} color={theme.text2} onClick={toggleSettings}>
+                      <ClickableText onClick={toggleSettings}>
                         {allowedSlippage / 100}%
                       </ClickableText>
                     </RowBetween>
@@ -409,6 +409,13 @@ export default function Swap({ history }: RouteComponentProps) {
                 </AutoColumn>
               </Card>
             )}
+            {
+              !swapIsUnsupported ? (
+                <AdvancedSwapDetailsDropdown trade={trade} />
+              ) : (
+                  <UnsupportedCurrencyFooter show={swapIsUnsupported} currencies={[currencies.INPUT, currencies.OUTPUT]} />
+                )
+            }
           </AutoColumn>
           <BottomGrouping>
             {swapIsUnsupported ? (
@@ -512,13 +519,7 @@ export default function Swap({ history }: RouteComponentProps) {
           </BottomGrouping>
         </Wrapper>
       </AppBody>
-      {
-        !swapIsUnsupported ? (
-          <AdvancedSwapDetailsDropdown trade={trade} />
-        ) : (
-            <UnsupportedCurrencyFooter show={swapIsUnsupported} currencies={[currencies.INPUT, currencies.OUTPUT]} />
-          )
-      }
+
     </>
   )
 }

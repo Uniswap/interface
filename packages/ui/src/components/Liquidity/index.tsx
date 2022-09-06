@@ -153,7 +153,7 @@ export default function LiquidityDetail({
 
   return (
     <>
-      <Flex alignItems={'flex-start'} width="556px" maxWidth="420px">
+      <Flex alignItems={'flex-start'}>
         <BackToMyLiquidity />
       </Flex>
       <AppBody
@@ -161,15 +161,16 @@ export default function LiquidityDetail({
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'stretch',
-          padding: '36px 28px',
-          width: '556px',
-          maxWidth: '420px',
-          maxHeight: '638px',
+          padding: '1.2rem .9rem',
+          width: '19rem',
+          // width: '556px',
+          // maxWidth: '420px',
+          // maxHeight: '638px',
           height: 'fit-content',
           background: 'rgba(51, 51, 51, 0.5)',
           boxShadow: '0px -2px 0px #39E1BA',
-          backdropFilter: 'blur(60px)',
-          borderRadius: '48px',
+          backdropFilter: 'blur(2rem)',
+          borderRadius: '1.6rem',
         }}
       >
         <TransactionConfirmationModal
@@ -378,7 +379,7 @@ export function BackToMyLiquidity() {
   const dispatch = useDispatch<AppDispatch>()
 
   return (
-    <Flex height={'22px'} marginBottom={48}>
+    <Flex height={'22px'} marginBottom={"1.6rem"}>
       <Link
         to="/pool"
         onClick={() => {

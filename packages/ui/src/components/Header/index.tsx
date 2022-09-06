@@ -67,6 +67,7 @@ const HeaderControls = styled.div`
   align-items: center;
   justify-self: flex-end;
   height: 4rem;
+  max-height: 80px;
   ${({ theme }) => theme.mediaWidth.upToMedium`
     flex-direction: row;
     justify-content: space-between;
@@ -109,6 +110,7 @@ const HeaderRow = styled(RowFixed)`
   background: #161823;
   justify-content: center;
   height: 3.5rem;
+  max-height: 70px;
   ${({ theme }) => theme.mediaWidth.upToMedium`
    width: 100%;
   `};
@@ -245,7 +247,7 @@ const StyledNavLink = styled(NavLink).attrs({
   line-height: 1rem;
   color: #FFFFFF;
   &.${activeClassName},:focus {
-    background: ${({theme }) => theme.bgGreen};
+    background: ${({ theme }) => theme.bgGreen};
     color: #000000;
   }
 
@@ -354,7 +356,7 @@ export default function Header() {
       </Modal>
       <HeaderControls>
         <HeaderElement>
-          <img style={{ width: '9rem', height: 'auto', position: 'absolute', left: '2.8rem'}} src={TeleLogo} alt="" />
+          <img style={{ width: '9rem', height: 'auto', position: 'absolute', left: '2.8rem' }} src={TeleLogo} alt="" />
           <HideSmall>
             {chainId && NETWORK_LABELS[chainId] && (
               <NetworkCard title={NETWORK_LABELS[chainId]}>{NETWORK_LABELS[chainId]}</NetworkCard>

@@ -45,6 +45,8 @@ import useThemedContext from '../../hooks/useThemedContext'
 import { ROUTER_ADDRESS } from '@teleswap/sdk'
 import styled from 'styled-components'
 import { rgba } from 'polished'
+import getRoutePairMode from 'utils/getRoutePairMode'
+import { DomainName } from '../../constants'
 
 const PageWrapper = styled(AutoColumn)`
   max-width: 1200px;
@@ -130,7 +132,7 @@ export default function RemoveLiquidity({
       { name: 'verifyingContract', type: 'address' },
     ]
     const domain = {
-      name: 'Uniswap V2',
+      name: DomainName,
       version: '1',
       chainId: chainId,
       verifyingContract: pair.liquidityToken.address,
@@ -158,7 +160,6 @@ export default function RemoveLiquidity({
       primaryType: 'Permit',
       message,
     })
-
     library
       .send('eth_signTypedData_v4', [account, data])
       .then(splitSignature)
@@ -224,7 +225,9 @@ export default function RemoveLiquidity({
 
     if (!tokenA || !tokenB) throw new Error('could not wrap')
 
-    let methodNames: string[], args: Array<string | string[] | number | boolean>
+    let methodNames: string[];
+    let args: any;
+    // Array<string | string[] | number | boolean>
     // we have approval, use normal remove liquidity
     if (approval === ApprovalState.APPROVED) {
       // removeLiquidityETH
@@ -243,8 +246,7 @@ export default function RemoveLiquidity({
       else {
         methodNames = ['removeLiquidity']
         args = [
-          tokenA.address,
-          tokenB.address,
+          [ tokenA.address,tokenB.address,getRoutePairMode()],
           liquidityAmount.raw.toString(),
           amountsMin[Field.CURRENCY_A].toString(),
           amountsMin[Field.CURRENCY_B].toString(),
@@ -275,23 +277,19 @@ export default function RemoveLiquidity({
       else {
         methodNames = ['removeLiquidityWithPermit']
         args = [
-          tokenA.address,
-          tokenB.address,
+          [tokenA.address, tokenB.address, getRoutePairMode()],
           liquidityAmount.raw.toString(),
           amountsMin[Field.CURRENCY_A].toString(),
           amountsMin[Field.CURRENCY_B].toString(),
           account,
           signatureData.deadline,
           false,
-          signatureData.v,
-          signatureData.r,
-          signatureData.s,
+          [signatureData.v, signatureData.r, signatureData.s]
         ]
       }
     } else {
       throw new Error('Attempting to confirm without approval or a signature. Please contact support.')
     }
-
     const safeGasEstimates: (BigNumber | undefined)[] = await Promise.all(
       methodNames.map((methodName) =>
         router.estimateGas[methodName](...args)
@@ -352,7 +350,7 @@ export default function RemoveLiquidity({
   function modalHeader() {
     return (
       <AutoColumn gap={'md'} style={{ marginTop: '20px' }}>
-        <div style={{fontSize: ".7rem", fontWeight: "600",color: "#FFFFFF", marginBottom: ".8rem"}}>Your will receive</div>
+        <div style={{ fontSize: ".7rem", fontWeight: "600", color: "#FFFFFF", marginBottom: ".8rem" }}>Your will receive</div>
         <RowBetween align="flex-end">
           <RowFixed gap="4px">
             <CurrencyLogo currency={currencyA} size={'1.2rem'} />
@@ -652,7 +650,7 @@ export default function RemoveLiquidity({
               </>
             )}
             {pair && (
-              <div style={{ padding: '10px 20px', fontSize: '.7rem'}}>
+              <div style={{ padding: '10px 20px', fontSize: '.7rem' }}>
                 <div style={{ width: '100%', height: '1px', backgroundColor: rgba(255, 255, 255, .2), marginBottom: ".8rem" }}></div>
                 <RowBetween>
                   Price:
@@ -672,45 +670,45 @@ export default function RemoveLiquidity({
           </AutoColumn>
         </Wrapper>
         {pair ? (
-        <AutoColumn style={{ width: '100%', marginTop: '.8rem', padding: "0 1rem" }}>
-          <MinimalPositionCard showUnwrapped={oneCurrencyIsWETH} pair={pair} />
-        </AutoColumn>
-      ) : null}
-       <div style={{ position: 'relative', marginTop: '2.3rem'}}>
-        {!account ? (
-          <ButtonLight onClick={toggleWalletModal}>Connect Wallet</ButtonLight>
-        ) : (
-            <RowBetween>
-              <ButtonConfirmed
-                onClick={onAttemptToApprove}
-                confirmed={approval === ApprovalState.APPROVED || signatureData !== null}
-                disabled={approval !== ApprovalState.NOT_APPROVED || signatureData !== null}
-                mr="0.5rem"
-                fontWeight={500}
-                fontSize={".8rem"}
-              >
-                {approval === ApprovalState.PENDING ? (
-                  <Dots>Approving</Dots>
-                ) : approval === ApprovalState.APPROVED || signatureData !== null ? (
-                  'Approved'
-                ) : (
-                      'Approve'
-                    )}
-              </ButtonConfirmed>
-              <ButtonError
-                onClick={() => {
-                  setShowConfirm(true)
-                }}
-                disabled={!isValid || (signatureData === null && approval !== ApprovalState.APPROVED)}
-                error={!isValid && !!parsedAmounts[Field.CURRENCY_A] && !!parsedAmounts[Field.CURRENCY_B]}
-              >
-                <Text fontSize={".8rem"} fontWeight={500}>
-                  {error || 'Remove'}
-                </Text>
-              </ButtonError>
-            </RowBetween>
-          )}
-      </div>
+          <AutoColumn style={{ width: '100%', marginTop: '.8rem', padding: "0 1rem" }}>
+            <MinimalPositionCard showUnwrapped={oneCurrencyIsWETH} pair={pair} />
+          </AutoColumn>
+        ) : null}
+        <div style={{ position: 'relative', marginTop: '2.3rem' }}>
+          {!account ? (
+            <ButtonLight onClick={toggleWalletModal}>Connect Wallet</ButtonLight>
+          ) : (
+              <RowBetween>
+                <ButtonConfirmed
+                  onClick={onAttemptToApprove}
+                  confirmed={approval === ApprovalState.APPROVED || signatureData !== null}
+                  disabled={approval !== ApprovalState.NOT_APPROVED || signatureData !== null}
+                  mr="0.5rem"
+                  fontWeight={500}
+                  fontSize={".8rem"}
+                >
+                  {approval === ApprovalState.PENDING ? (
+                    <Dots>Approving</Dots>
+                  ) : approval === ApprovalState.APPROVED || signatureData !== null ? (
+                    'Approved'
+                  ) : (
+                        'Approve'
+                      )}
+                </ButtonConfirmed>
+                <ButtonError
+                  onClick={() => {
+                    setShowConfirm(true)
+                  }}
+                  disabled={!isValid || (signatureData === null && approval !== ApprovalState.APPROVED)}
+                  error={!isValid && !!parsedAmounts[Field.CURRENCY_A] && !!parsedAmounts[Field.CURRENCY_B]}
+                >
+                  <Text fontSize={".8rem"} fontWeight={500}>
+                    {error || 'Remove'}
+                  </Text>
+                </ButtonError>
+              </RowBetween>
+            )}
+        </div>
       </PageWrapper>
     </>
   )

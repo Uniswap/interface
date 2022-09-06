@@ -30,10 +30,10 @@ function TradeSummary({ trade, allowedSlippage }: { trade: Trade; allowedSlippag
 
   return (
     <>
-      <AutoColumn style={{ padding: '0 16px' }}>
+      <AutoColumn style={{ padding: '0 16px', color: "#D7DCE0"}}>
         <RowBetween>
           <RowFixed>
-            <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
+            <TYPE.black fontSize={".4rem"} fontWeight={400} color={theme.text2}>
               {isExactIn ? 'Minimum received' : 'Maximum sold'}
             </TYPE.black>
             <QuestionHelper text="Your transaction will revert if there is a large, unfavorable price movement before it is confirmed." />
@@ -50,7 +50,7 @@ function TradeSummary({ trade, allowedSlippage }: { trade: Trade; allowedSlippag
         </RowBetween>
         <RowBetween>
           <RowFixed>
-            <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
+            <TYPE.black fontSize={".4rem"} fontWeight={400} color={theme.text2}>
               Price Impact
             </TYPE.black>
             <QuestionHelper text="The difference between the market price and estimated price due to trade size." />
@@ -60,12 +60,12 @@ function TradeSummary({ trade, allowedSlippage }: { trade: Trade; allowedSlippag
 
         <RowBetween>
           <RowFixed>
-            <TYPE.black fontSize={14} fontWeight={400} color={theme.text2}>
+            <TYPE.black fontSize={".4rem"} fontWeight={400} color={theme.text2}>
               Liquidity Provider Fee
             </TYPE.black>
             <QuestionHelper text="A portion of each trade (0.30%) goes to liquidity providers as a protocol incentive." />
           </RowFixed>
-          <TYPE.black fontSize={14} color={theme.text1}>
+          <TYPE.black fontSize={".4rem"} color={theme.text1}>
             {realizedLPFee ? `${realizedLPFee.toSignificant(4)} ${trade.inputAmount.currency.symbol}` : '-'}
           </TYPE.black>
         </RowBetween>
