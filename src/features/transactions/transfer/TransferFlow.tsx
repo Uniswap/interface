@@ -65,7 +65,6 @@ function TransferInnerContent({ dispatch, state, step, setStep, onClose }: Inner
           <TransferTokenForm
             derivedTransferInfo={derivedTransferInfo}
             dispatch={dispatch}
-            state={state}
             onNext={() => setStep(TransferStep.REVIEW)}
           />
         </Suspense>

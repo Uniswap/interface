@@ -13,9 +13,9 @@ import { DecimalPad } from 'src/components/input/DecimalPad'
 import { AnimatedFlex, Flex } from 'src/components/layout'
 import { Box } from 'src/components/layout/Box'
 import { LaserLoader } from 'src/components/loading/LaserLoader'
+import { getAlertColor } from 'src/components/modals/WarningModal'
 import { Text } from 'src/components/Text'
 import { WarningAction, WarningModalType } from 'src/components/warnings/types'
-import { getWarningColor } from 'src/components/warnings/utils'
 import { pushNotification } from 'src/features/notifications/notificationSlice'
 import { AppNotificationType } from 'src/features/notifications/types'
 import { ElementName, SectionName } from 'src/features/telemetry/constants'
@@ -106,7 +106,7 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo, isCompressedView }
   const actionButtonDisabled = noValidSwap || blockWarning || swapDataRefreshing
 
   const swapWarning = warnings.find(showWarningInPanel)
-  const swapWarningColor = getWarningColor(swapWarning)
+  const swapWarningColor = getAlertColor(swapWarning?.severity)
 
   const onReview = () => {
     const txId = createTransactionId()

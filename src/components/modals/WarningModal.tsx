@@ -6,7 +6,7 @@ import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { Flex } from 'src/components/layout'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { Text } from 'src/components/Text'
-import { WarningSeverity } from 'src/components/warnings/types'
+import { WarningColor, WarningSeverity } from 'src/components/warnings/types'
 import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { AccountType } from 'src/features/wallet/accounts/types'
@@ -63,6 +63,8 @@ export default function WarningModal({
   }
 
   const theme = useAppTheme()
+  const alertColor = getAlertColor(severity)
+
   return (
     <BottomSheetModal
       backgroundColor={theme.colors.backgroundSurface}
@@ -70,21 +72,8 @@ export default function WarningModal({
       name={modalName}
       onClose={onClose}>
       <Flex centered gap="md" mb="lg" p="lg">
-        <Flex
-          centered
-          borderColor={severity === WarningSeverity.High ? 'accentFailure' : 'accentWarning'}
-          borderRadius="md"
-          borderWidth={1}
-          p="sm">
-          <AlertTriangleIcon
-            color={
-              severity === WarningSeverity.High
-                ? theme.colors.accentFailure
-                : theme.colors.accentWarning
-            }
-            height={24}
-            width={24}
-          />
+        <Flex centered borderColor={alertColor.text} borderRadius="md" borderWidth={1} p="sm">
+          <AlertTriangleIcon color={theme.colors[alertColor.text]} height={24} width={24} />
         </Flex>
         <Text textAlign="center" variant="mediumLabel">
           {title}
@@ -112,7 +101,7 @@ export default function WarningModal({
               label={confirmText}
               name={ElementName.Confirm}
               testID={ElementName.Confirm}
-              variant={severity === WarningSeverity.High ? 'warningDark' : 'blue'}
+              variant={alertColor.confirmButton}
               onPress={onPressConfirm}
             />
           )}
@@ -120,4 +109,19 @@ export default function WarningModal({
       </Flex>
     </BottomSheetModal>
   )
+}
+
+export const getAlertColor = (severity?: WarningSeverity): WarningColor => {
+  switch (severity) {
+    case WarningSeverity.High:
+      return {
+        text: 'accentFailure',
+        background: 'accentFailureSoft',
+        confirmButton: 'blue',
+      }
+    case WarningSeverity.Medium:
+      return { text: 'accentWarning', background: 'accentWarningSoft', confirmButton: 'warning' }
+    default:
+      return { text: 'none', background: 'none', confirmButton: 'blue' }
+  }
 }

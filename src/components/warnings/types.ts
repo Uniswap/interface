@@ -9,6 +9,7 @@ export enum WarningSeverity {
 export type WarningColor = {
   text: keyof Theme['colors']
   background: keyof Theme['colors']
+  confirmButton: keyof Omit<Theme['primaryButtonVariants'], 'defaults'>
 }
 
 export enum WarningAction {

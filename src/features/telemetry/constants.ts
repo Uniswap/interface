@@ -43,6 +43,7 @@ export const enum ModalName {
   ICloudSkipPinWarning = 'icloud-skip-pin-warning',
   ScreenshotWarning = 'screenshot-warning',
   Send = 'send-modal',
+  SendWarning = 'send-warning-modal',
   Swap = 'swap-modal',
   SwapWarning = 'swap-warning-modal',
   TokenWarningModal = 'token-warning-modal',

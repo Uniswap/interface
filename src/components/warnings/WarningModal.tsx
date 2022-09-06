@@ -3,17 +3,16 @@ import { useTranslation } from 'react-i18next'
 import { useAppTheme } from 'src/app/hooks'
 import AlertTriangle from 'src/assets/icons/alert-triangle.svg'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
-import { Box, Flex } from 'src/components/layout'
+import { Flex } from 'src/components/layout'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
+import { getAlertColor } from 'src/components/modals/WarningModal'
 import { Text } from 'src/components/Text'
 import { Warning, WarningModalType, WarningSeverity } from 'src/components/warnings/types'
-import { getWarningColor } from 'src/components/warnings/utils'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 
 type Props = {
   cancelLabel?: string
   continueLabel?: string
-  data?: string
   warning: Warning | undefined
   warningModalType?: WarningModalType
   onClose: () => void
@@ -25,7 +24,6 @@ type Props = {
 export function WarningModal({
   cancelLabel,
   continueLabel,
-  data,
   warning,
   warningModalType,
   onClose,
@@ -47,7 +45,7 @@ export function WarningModal({
 
   if (!warning || warningModalType === WarningModalType.NONE) return null
 
-  const warningColor = getWarningColor(warning)
+  const warningColor = getAlertColor(warning.severity)
 
   return (
     <BottomSheetModal
@@ -71,13 +69,6 @@ export function WarningModal({
         <Text color="textSecondary" textAlign="center" variant="bodySmall">
           {warning.message}
         </Text>
-        {data && (
-          <Box borderColor="backgroundOutline" borderRadius="xs" borderWidth={1}>
-            <Text color="textPrimary" px="md" py="sm" textAlign="center" variant="subheadSmall">
-              {data}
-            </Text>
-          </Box>
-        )}
         {onPressContinue ? (
           <Flex row gap="xs">
             <PrimaryButton

@@ -1,6 +1,6 @@
 import { Currency } from '@uniswap/sdk-core'
 import { BigNumber } from 'ethers'
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AnyAction } from 'redux'
 import { useAppDispatch } from 'src/app/hooks'
@@ -19,7 +19,6 @@ import {
   CurrencyField,
   GasFeeByTransactionType,
   OptimismL1FeeEstimate,
-  showNewAddressWarningModal,
   TransactionState,
 } from 'src/features/transactions/transactionState/transactionState'
 import { BaseDerivedInfo } from 'src/features/transactions/transactionState/types'
@@ -330,7 +329,7 @@ export function useTransferGasFee(
 export function useIsSmartContractAddress(address: string | undefined, chainId: ChainId) {
   const provider = useProvider(chainId)
   const [state, setState] = useState<{ loading: boolean; isSmartContractAddress: boolean }>({
-    loading: false,
+    loading: true,
     isSmartContractAddress: false,
   })
 
@@ -347,25 +346,21 @@ export function useIsSmartContractAddress(address: string | undefined, chainId: 
   return state
 }
 
-export function useHandleTransferWarningModals(
-  dispatch: React.Dispatch<AnyAction>,
-  onNext: () => void,
-  recipient: string | undefined
+export function useShowTransferWarnings(
+  recipient: string | undefined,
+  chainId: ChainId | undefined
 ) {
   const activeAddress = useActiveAccountAddressWithThrow()
   const isNewRecipient = useAllTransactionsBetweenAddresses(activeAddress, recipient).length === 0
 
-  const onPressReview = useCallback(
-    () => (isNewRecipient ? dispatch(showNewAddressWarningModal()) : onNext()),
-    [isNewRecipient, dispatch, onNext]
+  const { isSmartContractAddress, loading: addressLoading } = useIsSmartContractAddress(
+    recipient,
+    chainId ?? ChainId.Mainnet
   )
 
-  const onPressWarningContinue = useCallback(() => onNext(), [onNext])
-
-  return useMemo(() => {
-    return {
-      onPressReview,
-      onPressWarningContinue,
-    }
-  }, [onPressReview, onPressWarningContinue])
+  return {
+    showNewRecipientWarning: isNewRecipient && !isSmartContractAddress,
+    showSmartContractWarning: isSmartContractAddress,
+    areWarningsLoading: addressLoading,
+  }
 }

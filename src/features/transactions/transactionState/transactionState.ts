@@ -33,7 +33,6 @@ export interface TransactionState {
   gasFeeEstimate?: GasFeeByTransactionType
   optimismL1Fee?: OptimismL1FeeEstimate // Optimism txs have a L1 fee. Not relevant for submitting txs but needs to be accounted for in SwapDetails
   exactApproveRequired?: boolean // undefined except in rare instances when infinite approve is not supported by a token
-  showNewAddressWarning?: boolean
   swapMethodParameters?: MethodParameters
   warningModalType?: WarningModalType
   selectingCurrencyField?: CurrencyField
@@ -200,12 +199,6 @@ const slice = createSlice({
     closeWarningModal: (state) => {
       state.warningModalType = WarningModalType.NONE
     },
-    showNewAddressWarningModal: (state) => {
-      state.showNewAddressWarning = true
-    },
-    closeNewAddressWarningModal: (state) => {
-      state.showNewAddressWarning = false
-    },
     setTxId: (state, action: PayloadAction<string>) => {
       state.txId = action.payload
     },
@@ -233,8 +226,6 @@ export const {
   setExactApproveRequired,
   showWarningModal,
   closeWarningModal,
-  showNewAddressWarningModal,
-  closeNewAddressWarningModal,
   setTxId,
   showTokenSelector,
   toggleShowRecipientSelector,

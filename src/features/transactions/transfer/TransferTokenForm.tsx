@@ -1,5 +1,5 @@
 import { AnyAction } from '@reduxjs/toolkit'
-import React from 'react'
+import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleSheet } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
@@ -9,23 +9,20 @@ import { CurrencyInputPanel } from 'src/components/input/CurrencyInputPanel'
 import { DecimalPad } from 'src/components/input/DecimalPad'
 import { RecipientInputPanel } from 'src/components/input/RecipientInputPanel'
 import { AnimatedFlex, Box, Flex } from 'src/components/layout'
+import WarningModal from 'src/components/modals/WarningModal'
 import { NFTTransfer } from 'src/components/NFT/NFTTransfer'
-import { WarningAction, WarningLabel, WarningSeverity } from 'src/components/warnings/types'
-import { WarningModal } from 'src/components/warnings/WarningModal'
-import { ChainId } from 'src/constants/chains'
-import { ElementName } from 'src/features/telemetry/constants'
+import { Text } from 'src/components/Text'
+import { WarningAction, WarningSeverity } from 'src/components/warnings/types'
+import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { useSwapActionHandlers, useUSDTokenUpdater } from 'src/features/transactions/swap/hooks'
 import {
   clearRecipient,
-  closeNewAddressWarningModal,
   CurrencyField,
-  TransactionState,
   transactionStateActions,
 } from 'src/features/transactions/transactionState/transactionState'
 import {
   DerivedTransferInfo,
-  useHandleTransferWarningModals,
-  useIsSmartContractAddress,
+  useShowTransferWarnings,
   useUpdateTransferGasEstimate,
 } from 'src/features/transactions/transfer/hooks'
 import { createOnToggleShowRecipientSelector } from 'src/features/transactions/transfer/utils'
@@ -33,21 +30,12 @@ import { createTransactionId } from 'src/features/transactions/utils'
 import { dimensions } from 'src/styles/sizing'
 
 interface TransferTokenProps {
-  state: TransactionState
   dispatch: React.Dispatch<AnyAction>
   derivedTransferInfo: DerivedTransferInfo
   onNext: () => void
 }
 
-export function TransferTokenForm({
-  state,
-  dispatch,
-  derivedTransferInfo,
-  onNext,
-}: TransferTokenProps) {
-  const { t } = useTranslation()
-  const { showNewAddressWarning } = state
-
+export function TransferTokenForm({ dispatch, derivedTransferInfo, onNext }: TransferTokenProps) {
   const {
     currencyAmounts,
     currencyBalances,
@@ -63,9 +51,15 @@ export function TransferTokenForm({
     chainId,
   } = derivedTransferInfo
 
-  const { onShowTokenSelector, onSetAmount, onSetMax, onToggleUSDInput } =
-    useSwapActionHandlers(dispatch)
-  const onToggleShowRecipientSelector = createOnToggleShowRecipientSelector(dispatch)
+  useUpdateTransferGasEstimate({
+    transactionStateDispatch: dispatch,
+    chainId,
+    currencyIn,
+    nftIn,
+    amount: currencyAmounts[CurrencyField.INPUT]?.quotient.toString(),
+    recipient,
+    assetType: currencyTypes[CurrencyField.INPUT],
+  })
 
   useUSDTokenUpdater(
     dispatch,
@@ -75,73 +69,75 @@ export function TransferTokenForm({
     currencyIn ?? undefined
   )
 
-  const { onPressReview, onPressWarningContinue } = useHandleTransferWarningModals(
-    dispatch,
-    () => {
-      const txId = createTransactionId()
-      dispatch(transactionStateActions.setTxId(txId))
-      onNext()
-    },
-    recipient
-  )
-  const { isSmartContractAddress, loading: addressLoading } = useIsSmartContractAddress(
-    recipient,
-    chainId ?? ChainId.Mainnet
-  )
-  const showAddressIsSmartContractError = !!recipient && !addressLoading && isSmartContractAddress
+  const [showWarningModal, setShowWarningModal] = useState(false)
+
+  const { t } = useTranslation()
+
+  const { onShowTokenSelector, onSetAmount, onSetMax, onToggleUSDInput } =
+    useSwapActionHandlers(dispatch)
+  const onToggleShowRecipientSelector = createOnToggleShowRecipientSelector(dispatch)
+
+  const { showNewRecipientWarning, showSmartContractWarning, areWarningsLoading } =
+    useShowTransferWarnings(recipient, chainId)
 
   const actionButtonDisabled =
-    warnings.some((warning) => warning.action === WarningAction.DisableReview) ||
-    addressLoading ||
-    showAddressIsSmartContractError
+    warnings.some((warning) => warning.action === WarningAction.DisableReview) || areWarningsLoading
 
-  // if action button is disabled, make amount undefined so that gas estimate doesn't run
-  const amount = !actionButtonDisabled
-    ? currencyAmounts[CurrencyField.INPUT]?.quotient.toString()
-    : undefined
+  const goToNext = useCallback(() => {
+    const txId = createTransactionId()
+    dispatch(transactionStateActions.setTxId(txId))
+    onNext()
+  }, [dispatch, onNext])
 
-  useUpdateTransferGasEstimate({
-    transactionStateDispatch: dispatch,
-    chainId,
-    currencyIn,
-    nftIn,
-    amount,
-    recipient,
-    assetType: currencyTypes[CurrencyField.INPUT],
-  })
+  const onPressReview = useCallback(() => {
+    if (showNewRecipientWarning || showSmartContractWarning) {
+      setShowWarningModal(true)
+    } else {
+      goToNext()
+    }
+  }, [goToNext, showNewRecipientWarning, showSmartContractWarning])
+
+  const onCloseSmartContractWarning = useCallback(() => {
+    dispatch(clearRecipient())
+    setShowWarningModal(false)
+  }, [dispatch])
+
+  const onCloseNewRecipientWarning = useCallback(() => setShowWarningModal(false), [])
 
   return (
     <>
-      {showNewAddressWarning && !showAddressIsSmartContractError && (
+      {showWarningModal && showNewRecipientWarning && (
         <WarningModal
-          data={recipient}
-          warning={{
-            type: WarningLabel.RecipientNewAddress,
-            severity: WarningSeverity.Medium,
-            action: WarningAction.WarnBeforeSubmit,
-            title: t('New address'),
-            message: t(
-              "You haven't transacted with this address before. Please confirm that the address is correct before continuing."
-            ),
-          }}
-          onClose={() => dispatch(closeNewAddressWarningModal())}
-          onPressContinue={onPressWarningContinue}
-        />
+          caption={t(
+            "You haven't transacted with this address before. Please confirm that the address is correct before continuing."
+          )}
+          closeText={t('Cancel')}
+          confirmText={t('Confirm')}
+          isVisible={showWarningModal && showNewRecipientWarning}
+          modalName={ModalName.SendWarning}
+          severity={WarningSeverity.Medium}
+          title={t('New address')}
+          onClose={onCloseNewRecipientWarning}
+          onConfirm={goToNext}>
+          <Box borderColor="backgroundOutline" borderRadius="xs" borderWidth={1}>
+            <Text color="textPrimary" px="md" py="sm" textAlign="center" variant="subheadSmall">
+              {recipient}
+            </Text>
+          </Box>
+        </WarningModal>
       )}
-      {showAddressIsSmartContractError && (
+      {showWarningModal && showSmartContractWarning && (
         <WarningModal
-          warning={{
-            type: WarningLabel.RecipientNewAddress,
-            severity: WarningSeverity.High,
-            action: WarningAction.DisableReview,
-            title: t('Smart contract address'),
-            message: t(
-              'This address is a smart contract. In many cases, sending tokens directly to a contract will result in the loss of your assets. Please select a different address.'
-            ),
-          }}
-          onClose={() => {
-            dispatch(clearRecipient())
-          }}
+          caption={t(
+            'This address is a smart contract. In many cases, sending tokens directly to a contract will result in the loss of your assets. Please select a different address.'
+          )}
+          confirmText={t('OK')}
+          isVisible={showWarningModal && showSmartContractWarning}
+          modalName={ModalName.SendWarning}
+          severity={WarningSeverity.High}
+          title={t('Smart contract address')}
+          onClose={onCloseSmartContractWarning}
+          onConfirm={onCloseSmartContractWarning}
         />
       )}
       <AnimatedFlex grow entering={FadeIn} exiting={FadeOut} justifyContent="space-between" p="md">

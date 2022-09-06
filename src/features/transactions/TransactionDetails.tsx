@@ -5,11 +5,11 @@ import InfoCircle from 'src/assets/icons/info-circle.svg'
 import { Button } from 'src/components/buttons/Button'
 import { Box } from 'src/components/layout/Box'
 import { Flex } from 'src/components/layout/Flex'
+import { getAlertColor } from 'src/components/modals/WarningModal'
 import { NetworkFee } from 'src/components/Network/NetworkFee'
 import { Text } from 'src/components/Text'
 import { AccountDetails } from 'src/components/WalletConnect/RequestModal/AccountDetails'
 import { Warning } from 'src/components/warnings/types'
-import { getWarningColor } from 'src/components/warnings/utils'
 import { ChainId } from 'src/constants/chains'
 import { useActiveAccountAddressWithThrow } from 'src/features/wallet/hooks'
 import { Theme } from 'src/styles/theme'
@@ -39,7 +39,7 @@ export function TransactionDetails({
 }: PropsWithChildren<TransactionDetailsProps>) {
   const theme = useAppTheme()
   const userAddress = useActiveAccountAddressWithThrow()
-  const warningColor = getWarningColor(warning)
+  const warningColor = getAlertColor(warning?.severity)
 
   return (
     <Flex backgroundColor="backgroundContainer" borderRadius="lg" gap="none">
