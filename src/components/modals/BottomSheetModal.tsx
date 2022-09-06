@@ -42,7 +42,7 @@ const HandleBar = () => {
 }
 
 const Backdrop = (props: BottomSheetBackdropProps) => {
-  return <BottomSheetBackdrop {...props} appearsOnIndex={0} disappearsOnIndex={-1} opacity={0.7} />
+  return <BottomSheetBackdrop {...props} appearsOnIndex={0} disappearsOnIndex={-1} opacity={0.4} />
 }
 
 const CONTENT_HEIGHT_SNAP_POINTS = ['CONTENT_HEIGHT']

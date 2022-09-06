@@ -29,7 +29,7 @@ export function ActionSheetModalContent(props: ActionSheetModalContentProps) {
   const { header, closeButtonLabel = t('Cancel'), options, onClose } = props
 
   return (
-    <Flex justifyContent="flex-end">
+    <Flex gap="sm" justifyContent="flex-end">
       <Flex centered bg="backgroundSurface" borderRadius="lg" gap="none" overflow="hidden">
         {typeof header === 'string' ? (
           <Flex centered gap="xxs" py="md">
