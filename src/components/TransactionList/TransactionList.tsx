@@ -120,50 +120,29 @@ export function TransactionSectionList({
       index: number
       section: SectionListData<TransactionDetails>
     }) => {
-      // Logic to render border radius and margins on groups of items.
+      // Logic to render border radius, borders and margins on items within SectionList
       const aboveItem = index > 0 ? section.data[index - 1] : undefined
-      const currentIsIsolated =
-        (section.data.length === 1 && item.status === TransactionStatus.Pending) ||
-        ((item.status === TransactionStatus.Cancelled ||
-          item?.status === TransactionStatus.Cancelling ||
-          item?.status === TransactionStatus.FailedCancel) &&
-          index === 0 &&
-          section.title === TODAY_TITLE(t))
-      const aboveIsIsolated =
-        (aboveItem?.status === TransactionStatus.Cancelled ||
-          aboveItem?.status === TransactionStatus.Cancelling ||
-          aboveItem?.status === TransactionStatus.FailedCancel) &&
-        index === 1 &&
-        section.title === TODAY_TITLE(t)
-
-      const radiusTop = aboveIsIsolated || index === 0
+      const aboveIsIsolated = aboveItem?.status === TransactionStatus.Cancelling
+      const currentIsIsolated = item?.status === TransactionStatus.Cancelling
+      const radiusTop = aboveIsIsolated || currentIsIsolated || index === 0
       const radiusBottom = currentIsIsolated || index === section.data.length - 1
-      const borderTop = currentIsIsolated
-      const borderBottom = currentIsIsolated || index !== section.data.length - 1
-
-      // Only show banner if first element in pending or daily section.
-      const showInlineWarning =
-        index !== 0 || !(section.title === TODAY_TITLE(t) || section.title === PENDING_TITLE(t))
-
+      const borderBottom = !currentIsIsolated && index !== section.data.length - 1
       return (
         <TransactionSummaryRouter
           borderBottomColor={borderBottom ? 'backgroundOutline' : 'none'}
           borderBottomLeftRadius={radiusBottom ? 'lg' : 'none'}
           borderBottomRightRadius={radiusBottom ? 'lg' : 'none'}
-          borderLeftColor={currentIsIsolated ? 'backgroundOutline' : 'none'}
-          borderRightColor={currentIsIsolated ? 'backgroundOutline' : 'none'}
-          borderTopColor={borderTop ? 'backgroundOutline' : 'none'}
+          borderBottomWidth={borderBottom ? 0.5 : 0}
           borderTopLeftRadius={radiusTop ? 'lg' : 'none'}
           borderTopRightRadius={radiusTop ? 'lg' : 'none'}
-          borderWidth={0.5}
           mb={currentIsIsolated ? 'md' : 'none'}
           readonly={readonly}
-          showInlineWarning={showInlineWarning}
+          showInlineWarning={!currentIsIsolated}
           transaction={item}
         />
       )
     }
-  }, [readonly, t])
+  }, [readonly])
 
   if (!hasTransactions) {
     return emptyStateContent
