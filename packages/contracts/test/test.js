@@ -24,12 +24,12 @@ describe('Router02', function () {
 
         let args = [
             [weth.address, tt.address],
-            expandTo18Decimals(100),
-            expandTo18Decimals(80),
+            expandTo18Decimals(10),
+            expandTo18Decimals(8),
             1,
             1,
             (await ethers.getSigners())[0].address,
-            (Math.floor(Date.now() / 1000) + 365 * 24 * 60 * 60 * 1000)
+           getDeadline()
         ]
         await router.addLiquidity(...args)
         let pair = await factory.getPair(weth.address, tt.address, false)
@@ -37,12 +37,12 @@ describe('Router02', function () {
 
         let argsStable = [
             [weth.address, tt.address, true],
-            expandTo18Decimals(100),
-            expandTo18Decimals(80),
+            expandTo18Decimals(10),
+            expandTo18Decimals(8),
             1,
             1,
             (await ethers.getSigners())[0].address,
-            (Math.floor(Date.now() / 1000) + 365 * 24 * 60 * 60 * 1000)
+            getDeadline()
         ]
         await router.addLiquidity(...argsStable)
         let pairStable = await factory.getPair(weth.address, tt.address, true)
@@ -193,21 +193,24 @@ describe('Router02', function () {
             console.log("stable calcAmount:", calcAmount.map(item => ethers.utils.formatEther(item)))
         });
 
-        it("getPair",async function(){
+        it("getPair", async function () {
             let ans = await loadFixture(deployContracts)
-            let {address0,address1} = ans.weth.address<ans.tt.address?{address0:ans.weth.address,address1:ans.tt.address}:{address0:ans.tt.address,address1:ans.weth.address}
+            let {address0, address1} = ans.weth.address < ans.tt.address ? {
+                address0: ans.weth.address,
+                address1: ans.tt.address
+            } : {address0: ans.tt.address, address1: ans.weth.address}
             let initCodeHash = ethers.utils.keccak256((await ethers.getContractFactory("TeleswapV2Pair")).bytecode)
-            let salt = await ethers.utils.solidityKeccak256(['address','address','bool'],[address0,address1,false])
-            let calcedAddress = await ethers.utils.getCreate2Address(ans.factory.address , salt ,initCodeHash )
-            console.log("calced address",calcedAddress)
-            console.log("volatile pair addr",ans.pair.address)
+            let salt = await ethers.utils.solidityKeccak256(['address', 'address', 'bool'], [address0, address1, false])
+            let calcedAddress = await ethers.utils.getCreate2Address(ans.factory.address, salt, initCodeHash)
+            console.log("calced address", calcedAddress)
+            console.log("volatile pair addr", ans.pair.address)
         })
 
     })
 
     describe('core func', function () {
 
-        it("addLiquidity",async function(){
+        it("addLiquidity", async function () {
             let ans = await loadFixture(deployContracts)
             let args = [
                 [ans.weth.address, ans.tt.address],
@@ -218,17 +221,32 @@ describe('Router02', function () {
                 ans.signer.address,
                 (Math.floor(Date.now() / 1000) + 365 * 24 * 60 * 60 * 1000)
             ]
-            console.log("reserve before",await ans.pair.getReserves())
+            console.log("reserve before", await ans.pair.getReserves())
             await ans.router.addLiquidity(...args)
             // check liquidity
-             console.log("reserve after",await ans.pair.getReserves())
+            console.log("reserve after", await ans.pair.getReserves())
+
+            let stableArgs = [
+                getRoute(ans, true),
+                expandTo18Decimals(1),
+                expandTo18Decimals(1),
+                1,
+                1,
+                ans.signer.address,
+                (Math.floor(Date.now() / 1000) + 365 * 24 * 60 * 60 * 1000)
+            ]
+            console.log("reserve before", await ans.pairStable.getReserves())
+            await ans.router.addLiquidity(...stableArgs)
+            console.log("reserve after", await ans.pairStable.getReserves())
+
+
         })
-        it("addLiquidityETH",async function(){
+        it("addLiquidityETH", async function () {
             let ans = await loadFixture(deployContracts)
             let params = [
-                getRoute(ans,false),
+                getRoute(ans, false),
                 expandTo18Decimals(1),
-                0,0,
+                0, 0,
                 ans.signer.address,
                 getDeadline()
             ]
@@ -240,17 +258,28 @@ describe('Router02', function () {
                 overrides
             )
 
+            let paramsStable = [
+                getRoute(ans, true),
+                expandTo18Decimals(1),
+                0, 0,
+                ans.signer.address,
+                getDeadline()
+            ]
+            await ans.router.addLiquidityETH(
+                ...paramsStable,
+                overrides
+            )
 
 
         })
-        it("removeLiquidity",async function(){
+        it("removeLiquidity", async function () {
             let ans = await loadFixture(deployContracts)
             let liquidity = (await ans.pair.balanceOf(ans.signer.address))
-            await ans.pair.approve(ans.router.address,liquidity)
+            await ans.pair.approve(ans.router.address, liquidity)
 
             await ans.router.removeLiquidity(
                 ...[
-                    [ans.tt.address,ans.weth.address,false],
+                    [ans.tt.address, ans.weth.address, false],
                     liquidity.div(2),
                     0,
                     0,
@@ -262,10 +291,10 @@ describe('Router02', function () {
 
             // stable
             liquidity = (await ans.pairStable.balanceOf(ans.signer.address))
-            await ans.pairStable.approve(ans.router.address,liquidity)
+            await ans.pairStable.approve(ans.router.address, liquidity)
             await ans.router.removeLiquidity(
                 ...[
-                    [ans.tt.address,ans.weth.address,true],
+                    [ans.tt.address, ans.weth.address, true],
                     liquidity,
                     0,
                     0,
@@ -276,13 +305,13 @@ describe('Router02', function () {
 
         })
 
-        it("removeLiquidityETH",async function(){
+        it("removeLiquidityETH", async function () {
             let ans = await loadFixture(deployContracts)
             let liquidity = await ans.pair.balanceOf(ans.signer.address)
-            await ans.pair.approve(ans.router.address,liquidity)
+            await ans.pair.approve(ans.router.address, liquidity)
             await ans.router.removeLiquidityETH(
                 ...[
-                    [ans.tt.address,ans.weth.address,false],
+                    [ans.tt.address, ans.weth.address, false],
                     liquidity,
                     0,
                     0,
@@ -292,102 +321,126 @@ describe('Router02', function () {
             )
 
             // stable
-
+            let liquidityStable = await ans.pairStable.balanceOf(ans.signer.address)
+            await ans.pairStable.approve(ans.router.address, liquidityStable)
+            await ans.router.removeLiquidityETH(
+                ...[
+                    getRoute(ans, true),
+                    liquidity,
+                    0,
+                    0,
+                    ans.signer.address,
+                    getDeadline()
+                ]
+            )
         })
 
-        it("removeLiquidityWithPermit",async function(){
+        it("removeLiquidityWithPermit", async function () {
             let ans = await loadFixture(deployContracts)
-            const { chainId } = await ethers.provider.getNetwork();
             // cancle approve
-            await ans.pair.approve(ans.router.address,0)
-            console.log("approve 0 to router",await ans.pair.allowance(ans.signer.address,ans.router.address))
-            const domain = {
-                name: 'Teleswap V2',
-                version: '1',
-                chainId: chainId,
-                verifyingContract:ans.pair.address ,
-            };
+            await ans.pair.approve(ans.router.address, 0)
+            console.log("approve 0 to router", await ans.pair.allowance(ans.signer.address, ans.router.address))
+
             //Permit(address owner,address spender,uint256 value,uint256 nonce,uint256 deadline)
-            const types = {
-                Permit: [
-                    {name: 'owner', type: 'address'},
-                    {name: 'spender', type: 'address'},
-                    {name: 'value', type: 'uint256'},
-                    {name: 'nonce', type: 'uint256'},
-                    {name: 'deadline', type: 'uint256'},
-                ]
-            };
+
             // The data to sign
             let dl = getDeadline()
-            let burnAmt =(await ans.pair.balanceOf(ans.signer.address)).div(2)
-            const value = {
-                owner: ans.signer.address,
-                spender: ans.router.address,
-                value: burnAmt,
-                nonce: await ans.pair.nonces(ans.signer.address),
-                deadline: dl,
-            };
-            let signature = await ans.signer._signTypedData(domain, types, value);
-            let {v,r,s} = await ethers.utils.splitSignature(signature)
+            let burnAmt = (await ans.pair.balanceOf(ans.signer.address))
+
+
 
 
             let args = [
-                getRoute(ans,false),
+                getRoute(ans, false),
                 burnAmt,
-                0,0,
+                0, 0,
                 ans.signer.address,
                 dl,
                 false,
-                [v,r,s]
+                await getSig(ans,false,dl)
             ]
-            console.log("before remove",await ans.pair.balanceOf(ans.signer.address))
-            // Transfer(from, address(0), value);
-            let tx = await ans.router.removeLiquidityWithPermit(...args)
+            console.log("before remove", await ans.pair.balanceOf(ans.signer.address))
+            await ans.router.removeLiquidityWithPermit(...args)
 
-            expect(tx)
-                .to
-                .emit(ans.pair.address,"Transfer")
-                .withArgs(ans.pair.address,ethers.constants.AddressZero,burnAmt)
 
+
+            // stable
+            console.log("stable")
+            let sig = await getSig(ans, true, dl)
+            let stableArgs = [
+                getRoute(ans, true),
+                await ans.pairStable.balanceOf(ans.signer.address),
+                0, 0,
+                ans.signer.address,
+                dl,
+                false,
+                sig
+            ]
+            await ans.router.removeLiquidityWithPermit(...stableArgs)
 
 
         })
 
-        it("removeLiquidityETHSupportingFeeOnTransferTokens",async ()=>{
+        it("removeLiquidityETHSupportingFeeOnTransferTokens", async () => {
 
-            let ans =await loadFixture(deployContracts)
-            let liquidity =  await ans.pair.balanceOf(ans.signer.address)
-            await ans.pair.approve(ans.router.address,liquidity)
+            let ans = await loadFixture(deployContracts)
+            let liquidity = await ans.pair.balanceOf(ans.signer.address)
+            await ans.pair.approve(ans.router.address, liquidity)
             let params = [
-                getRoute(ans,false),
+                getRoute(ans, false),
                 liquidity,
-                0,0,
+                0, 0,
                 ans.signer.address,
                 getDeadline()
             ]
             await ans.router.removeLiquidityETHSupportingFeeOnTransferTokens(...params)
 
-
+            //stable
+            console.log("stable")
+            let liquidityStable = await ans.pairStable.balanceOf(ans.signer.address)
+            await ans.pairStable.approve(ans.router.address, liquidityStable)
+            let stableParams = [
+                getRoute(ans, true),
+                liquidityStable,
+                0, 0,
+                ans.signer.address,
+                getDeadline()
+            ]
+            await ans.router.removeLiquidityETHSupportingFeeOnTransferTokens(...stableParams)
 
         })
-        it("removeLiquidityETHWithPermitSupportingFeeOnTransferTokens",async ()=>{
+        it("removeLiquidityETHWithPermitSupportingFeeOnTransferTokens", async () => {
 
             let ans = await loadFixture(deployContracts)
             let liquidity = ans.pair.balanceOf(ans.signer.address)
-            await ans.pair.approve(ans.router.address,liquidity)
+            let dl = getDeadline()
+            await ans.pair.approve(ans.router.address, liquidity)
             let args = [
-                getRoute(ans,false),
+                getRoute(ans, false),
                 liquidity,
-                0,0,
+                0, 0,
                 ans.signer.address,
                 getDeadline(),
                 false,
-                await getSig(ans)
+                await getSig(ans,false,dl)
             ]
             await ans.router.removeLiquidityETHWithPermitSupportingFeeOnTransferTokens(...args)
 
 
-
+            // stable
+            console.log("stable")
+            let liquidityStable = ans.pairStable.balanceOf(ans.signer.address)
+            await ans.pairStable.approve(ans.router.address, liquidityStable)
+            let stableArgs = [
+                getRoute(ans, true),
+                liquidityStable,
+                0, 0,
+                ans.signer.address,
+                getDeadline(),
+                false,
+                await getSig(ans,true,dl)
+            ]
+            await ans.router.removeLiquidityETHWithPermitSupportingFeeOnTransferTokens(...stableArgs)
         })
         it("swapExactTokensForTokens", async function () {
             const ans = await loadFixture(deployContracts);
@@ -548,7 +601,7 @@ describe('Router02', function () {
                 deadline * 2
             ]
             console.log()
-            await ans.router.swapExactETHForTokens(...args,{value:amountIn})
+            await ans.router.swapExactETHForTokens(...args, {value: amountIn})
 
             // volatile swap
             let ttBalanceAfter = await ans.tt.balanceOf(signer.address)
@@ -579,7 +632,7 @@ describe('Router02', function () {
                     deadline * 2
                 ]
 
-            await ans.router.swapExactETHForTokens(...stableArgs,{value:amountIn})
+            await ans.router.swapExactETHForTokens(...stableArgs, {value: amountIn})
             let ttAfter = await ans.tt.balanceOf(signer.address)
             let wethAfter = await ethers.provider.getBalance(signer.address)
             console.log('eth balance before', wetbefore)
@@ -656,72 +709,131 @@ describe('Router02', function () {
             let ethAfter = await ethers.provider.getBalance(signer.address)
             console.log('eth balance before', ethbefore)
             console.log('eth balance after', ethAfter)
-            console.log('eth dBalance:',ethAfter.sub(ethbefore))
+            console.log('eth dBalance:', ethAfter.sub(ethbefore))
             console.log('tt balance before', ttbefore)
             console.log('tt balance after', ttAfter)
-            console.log('tt dBalance:',  ttbefore.sub(ttAfter))
+            console.log('tt dBalance:', ttbefore.sub(ttAfter))
 
         })
-        it("swapExactTokensForETH",async ()=>{
+        it("swapExactTokensForETH", async () => {
             // function swapExactTokensForETH(uint amountIn, uint amountOutMin, route[] calldata routes, address to, uint deadline)
-            let ans  = await loadFixture(deployContracts)
+            let ans = await loadFixture(deployContracts)
             let params = [
                 expandTo18Decimals(1),
                 0,
-                getRoutes(ans,false),
+                getRoutes(ans, false),
                 ans.signer.address,
                 getDeadline()
             ]
             await ans.router.swapExactTokensForETH(...params)
-        })
-        it("swapETHForExactTokens",async ()=>{
+
+            // stable
+            let paramsStable = [
+                expandTo18Decimals(1),
+                0,
+                getRoutes(ans, true),
+                ans.signer.address,
+                getDeadline()
+            ]
+            await ans.router.swapExactTokensForETH(...paramsStable)
 
         })
-        it("swapExactTokensForTokensSupportingFeeOnTransferTokens",async ()=>{
+        it("swapETHForExactTokens", async () => {
+            // function swapETHForExactTokens(uint amountOut, route[] calldata routes, address to, uint deadline)
+            let ans = await loadFixture(deployContracts)
+            let args = [
+                expandTo18Decimals(1),
+                [[ans.weth.address,ans.tt.address,false]],
+                ans.signer.address,
+                getDeadline()
+            ]
+            await ans.router.swapETHForExactTokens(...args,{value:expandTo18Decimals(2)})
+
+
+            // stable
+            console.log("stable")
+            let stableArgs = [
+                expandTo18Decimals(1),
+                [[ans.weth.address,ans.tt.address,true]],
+                ans.signer.address,
+                getDeadline()
+            ]
+            await ans.router.swapETHForExactTokens(...stableArgs,{value:expandTo18Decimals(2)})
+
+        })
+        it("swapExactTokensForTokensSupportingFeeOnTransferTokens", async () => {
 
             let ans = await loadFixture(deployContracts)
             let args = [
                 expandTo18Decimals(1),
                 0,
-                getRoutes(ans,false),
+                getRoutes(ans, false),
                 ans.signer.address,
                 getDeadline()
             ]
             await ans.router.swapExactTokensForTokensSupportingFeeOnTransferTokens(...args)
 
-
-
-        })
-        it("swapExactETHForTokensSupportingFeeOnTransferTokens",async ()=>{
-            let ans  = await loadFixture(deployContracts)
-            let args = [
+            // stable
+            console.log("stable")
+            let stableArgs = [
+                expandTo18Decimals(1),
                 0,
-                [[ans.weth.address,ans.tt.address,false]],
+                getRoutes(ans, true),
                 ans.signer.address,
                 getDeadline()
             ]
-            await ans.router.swapExactETHForTokensSupportingFeeOnTransferTokens(...args,{value:expandTo18Decimals(1)})
+            await ans.router.swapExactTokensForTokensSupportingFeeOnTransferTokens(...stableArgs)
 
         })
-        it("swapExactTokensForETHSupportingFeeOnTransferTokens",async ()=>{
-            let ans  = await loadFixture(deployContracts)
+        it("swapExactETHForTokensSupportingFeeOnTransferTokens", async () => {
+            let ans = await loadFixture(deployContracts)
+            let args = [
+                0,
+                [[ans.weth.address, ans.tt.address, false]],
+                ans.signer.address,
+                getDeadline()
+            ]
+            await ans.router.swapExactETHForTokensSupportingFeeOnTransferTokens(...args, {value: expandTo18Decimals(1)})
+
+            // stable
+            console.log("stable")
+            let stableArgs = [
+                0,
+                [[ans.weth.address, ans.tt.address, true]],
+                ans.signer.address,
+                getDeadline()
+            ]
+            await ans.router.swapExactETHForTokensSupportingFeeOnTransferTokens(...stableArgs, {value: expandTo18Decimals(1)})
+
+
+
+        })
+        it("swapExactTokensForETHSupportingFeeOnTransferTokens", async () => {
+            let ans = await loadFixture(deployContracts)
             let args = [
                 expandTo18Decimals(1),
                 0,
-                getRoutes(ans,false),
+                getRoutes(ans, false),
                 ans.signer.address,
                 getDeadline()
             ]
             await ans.router.swapExactTokensForETHSupportingFeeOnTransferTokens(...args)
 
+        //    stable
+            let stableArgs = [
+                expandTo18Decimals(1),
+                0,
+                getRoutes(ans, true),
+                ans.signer.address,
+                getDeadline()
+            ]
+            await ans.router.swapExactTokensForETHSupportingFeeOnTransferTokens(...stableArgs)
+
+
         })
 
 
-
-
-
-
-        it("2addLiquidity",async function(){
+        it("2addLiquidity", async function () {
             let ans = await loadFixture(deployContracts)
             let args = [
                 [ans.weth.address, ans.tt.address],
@@ -732,10 +844,10 @@ describe('Router02', function () {
                 ans.signer.address,
                 (Math.floor(Date.now() / 1000) + 365 * 24 * 60 * 60 * 1000)
             ]
-            console.log("reserve before",await ans.pair.getReserves())
+            console.log("reserve before", await ans.pair.getReserves())
             await ans.router.addLiquidity(...args)
             // check liquidity
-            console.log("reserve after",await ans.pair.getReserves())
+            console.log("reserve after", await ans.pair.getReserves())
 
             // swap
             let amountIn = expandTo18Decimals(1), amountOutMin = 1, to = ans.signer.address
@@ -759,13 +871,11 @@ describe('Router02', function () {
 
             // twice add
             await ans.router.addLiquidity(...args)
-            console.log("reserve after",await ans.pair.getReserves())
+            console.log("reserve after", await ans.pair.getReserves())
         })
 
 
-
     })
-
 
 
 });
@@ -775,8 +885,8 @@ function expandTo18Decimals(n) {
     return BigNumber.from(n).mul(BigNumber.from("10").pow(18))
 }
 
-function getDeadline(){
-    return (Math.floor(Date.now() / 1000) + 365 * 24 * 60 * 60 * 1000)*2
+function getDeadline() {
+    return (Math.floor(Date.now() / 1000) + 365 * 24 * 60 * 60 * 1000) * 2
 }
 
 async function getApprovalDigest(
@@ -806,20 +916,22 @@ async function getApprovalDigest(
 }
 
 
-function getRoute(ans, stable){
-  return [ans.tt.address,ans.weth.address,stable]
-}
-function getRoutes(ans, stable){
-    return [getRoute(ans,stable)]
+function getRoute(ans, stable) {
+    return [ans.tt.address, ans.weth.address, stable]
 }
 
-async function getSig(ans){
-    const { chainId } = await ethers.provider.getNetwork();
+function getRoutes(ans, stable) {
+    return [getRoute(ans, stable)]
+}
+
+async function getSig(ans, stable, dl) {
+    const {chainId} = await ethers.provider.getNetwork();
+    let pair = stable ? ans.pairStable : ans.pair
     const domain = {
         name: 'Teleswap V2',
         version: '1',
         chainId: chainId,
-        verifyingContract:ans.pair.address ,
+        verifyingContract: pair.address,
     };
     //Permit(address owner,address spender,uint256 value,uint256 nonce,uint256 deadline)
     const types = {
@@ -832,16 +944,15 @@ async function getSig(ans){
         ]
     };
     // The data to sign
-    let dl = getDeadline()
 
     const value = {
         owner: ans.signer.address,
         spender: ans.router.address,
-        value: await ans.pair.balanceOf(ans.signer.address),
-        nonce: await ans.pair.nonces(ans.signer.address),
+        value: await pair.balanceOf(ans.signer.address),
+        nonce: await pair.nonces(ans.signer.address),
         deadline: dl,
     };
     let signature = await ans.signer._signTypedData(domain, types, value);
-    let {v,r,s} = await ethers.utils.splitSignature(signature)
-    return [v,r,s]
+    let {v, r, s} = await ethers.utils.splitSignature(signature)
+    return [v, r, s]
 }
