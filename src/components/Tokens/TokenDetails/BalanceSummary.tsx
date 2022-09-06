@@ -33,9 +33,7 @@ const ErrorText = styled.span`
   display: flex;
   flex-wrap: wrap;
 `
-// const NetworkBalancesSection = styled.div`
-//   height: fit-content;
-// `
+
 const TotalBalanceSection = styled.div`
   height: fit-content;
   // border-bottom: 1px solid ${({ theme }) => theme.backgroundOutline};
@@ -54,15 +52,7 @@ const TotalBalanceItem = styled.div`
   display: flex;
 `
 
-export default function BalanceSummary({
-  address,
-  networkBalances,
-  totalBalance,
-}: {
-  address: string
-  networkBalances: (JSX.Element | null)[] | null
-  totalBalance: number
-}) {
+export default function BalanceSummary({ address }: { address: string }) {
   const token = useToken(address)
   const { loading, error } = useNetworkTokenBalances({ address })
 
@@ -72,58 +62,27 @@ export default function BalanceSummary({
   const balanceUsd = useStablecoinValue(balance)?.toFixed(2)
   const balanceUsdNumber = balanceUsd ? parseFloat(balanceUsd) : undefined
 
-  // const { label: connectedLabel, logoUrl: connectedLogoUrl } = getChainInfoOrDefault(connectedChainId)
-  // const connectedFiatValue = 1
-  // const multipleBalances = true // for testing purposes
-
   if (loading || (!error && !balanceNumber && !balanceUsdNumber)) return null
   return (
     <BalancesCard>
-      {
-        error ? (
-          <ErrorState>
-            <AlertTriangle size={24} />
-            <ErrorText>
-              <Trans>There was an error loading your {token?.symbol} balance</Trans>
-            </ErrorText>
-          </ErrorState>
-        ) : (
-          <>
-            <TotalBalanceSection>
-              Your balance
-              <TotalBalance>
-                <TotalBalanceItem>{`${balanceNumber} ${token?.symbol}`}</TotalBalanceItem>
-                <TotalBalanceItem>{`$${balanceUsdNumber}`}</TotalBalanceItem>
-              </TotalBalance>
-            </TotalBalanceSection>
-          </>
-        )
-        //   multipleBalances ? (
-        //   <>
-        //     <TotalBalanceSection>
-        //       Your balance across all networks
-        //       <TotalBalance>
-        //         <TotalBalanceItem>{`${totalBalance} ${token?.symbol}`}</TotalBalanceItem>
-        //         <TotalBalanceItem>$4,210.12</TotalBalanceItem>
-        //       </TotalBalance>
-        //     </TotalBalanceSection>
-        //     <NetworkBalancesSection>Your balances by network</NetworkBalancesSection>
-        //     {data && networkBalances}
-        //   </>
-        // ) : (
-        //   <>
-        //     Your balance on {connectedLabel}
-        //     <NetworkBalance
-        //       logoUrl={connectedLogoUrl}
-        //       balance={'1'}
-        //       tokenSymbol={token?.symbol ?? 'XXX'}
-        //       fiatValue={connectedFiatValue}
-        //       label={connectedLabel}
-        //       networkColor={theme.textPrimary}
-        //     />
-        //   </>
-        //   )
-      }
+      {error ? (
+        <ErrorState>
+          <AlertTriangle size={24} />
+          <ErrorText>
+            <Trans>There was an error loading your {token?.symbol} balance</Trans>
+          </ErrorText>
+        </ErrorState>
+      ) : (
+        <>
+          <TotalBalanceSection>
+            Your balance
+            <TotalBalance>
+              <TotalBalanceItem>{`${balanceNumber} ${token?.symbol}`}</TotalBalanceItem>
+              <TotalBalanceItem>{`$${balanceUsdNumber}`}</TotalBalanceItem>
+            </TotalBalance>
+          </TotalBalanceSection>
+        </>
+      )}
     </BalancesCard>
   )
 }
