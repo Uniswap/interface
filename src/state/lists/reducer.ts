@@ -99,7 +99,7 @@ export default createReducer(initialState, (builder) =>
                   name: 'Gold',
                   symbol: 'GLD',
                   decimals: 18,
-                  logoURI: 'https://ethereum-optimism.github.io/data/0xBTC/logo.png',
+                  logoURI: 'https://static.optimism.io/data/wstETH/logo.svg',
                   extensions: {
                     optimismBridgeAddress: '0x99C9fc46f92E8a1c0deC1b1747d010903E884bE1',
                   },
@@ -110,7 +110,7 @@ export default createReducer(initialState, (builder) =>
                   name: 'Silver',
                   symbol: 'SLVR',
                   decimals: 18,
-                  logoURI: 'https://ethereum-optimism.github.io/data/0xBTC/logo.png',
+                  logoURI: 'https://static.optimism.io/data/wstETH/logo.svg',
                   extensions: {
                     optimismBridgeAddress: '0xE9e84b42E53A8784dF45c761aCE4d1cf4f948Eb3',
                   },
@@ -156,7 +156,7 @@ export default createReducer(initialState, (builder) =>
                 name: 'Gold',
                 symbol: 'GLD',
                 decimals: 18,
-                logoURI: 'https://ethereum-optimism.github.io/data/0xBTC/logo.png',
+                logoURI: 'https://static.optimism.io/data/wstETH/logo.svg',
                 extensions: {
                   optimismBridgeAddress: '0x99C9fc46f92E8a1c0deC1b1747d010903E884bE1',
                 },
@@ -167,7 +167,7 @@ export default createReducer(initialState, (builder) =>
                 name: 'Silver',
                 symbol: 'SLVR',
                 decimals: 18,
-                logoURI: 'https://ethereum-optimism.github.io/data/0xBTC/logo.png',
+                logoURI: 'https://static.optimism.io/data/wstETH/logo.svg',
                 extensions: {
                   optimismBridgeAddress: '0xE9e84b42E53A8784dF45c761aCE4d1cf4f948Eb3',
                 },
