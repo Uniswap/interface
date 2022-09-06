@@ -147,7 +147,7 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
 
     //state
     // these three are sidebar tabs
-    const [statsOpen, setStatsOpen] = React.useState(true)
+    const [statsOpen, setStatsOpen] = React.useState(isMobile ? false : true)
     const [quickNavOpen, setQuickNavOpen] = React.useState(false)
     const [swapOpen, setSwapOpen] = React.useState(isMobile ? true : false)
     // the token the chart is viewing
@@ -308,7 +308,6 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
                     </Menu>
 
                 </SidebarHeader>
-                {isMobile == false && (
                     <SidebarContent style={{ background: color }}>
                         <Menu>
                             <SubMenu
@@ -453,7 +452,7 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
                             </SubMenu>
                         </Menu>
 
-                    </SidebarContent>)}
+                    </SidebarContent>
                 <SidebarContent>
                     <Menu style={{ background: color }} >
                         <SubMenu style={{ background: color }} onOpenChange={toggleSwapOpen} open={swapOpen} icon={<Repeat style={{ background: 'transparent' }} />} title={"Swap " + token?.name}>

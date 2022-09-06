@@ -98,6 +98,9 @@ const WrapperCard = styled(DarkCard) <{ gridTemplateColumns: string }>`
   color ${props => props.theme.text1};
   grid-template-columns: ${props => props.gridTemplateColumns};
   border-radius: 30px;
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+  padding:1rem 0px;
+`}
 `
 
 export const SelectiveChart = () => {
