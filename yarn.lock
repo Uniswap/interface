@@ -19541,10 +19541,10 @@ wasm-dce@^1.0.0:
     babylon "^7.0.0-beta.39"
     webassembly-interpreter "0.0.30"
 
-wasm-encryptor-zkp@^0.1.2:
-  version "0.1.2"
-  resolved "https://registry.yarnpkg.com/wasm-encryptor-zkp/-/wasm-encryptor-zkp-0.1.2.tgz#b88185c45e743c8fa3a81738059c10621680624c"
-  integrity sha512-lr4sPVev6S5pYXfCEXbRigjllkvXPcIdyFYvZtsi9NoBRPhYAQ4hX4dTh+lS4fhZ7NCFxvoz7JVv0NrourxfCw==
+wasm-encryptor-zkp@^0.1.3:
+  version "0.1.3"
+  resolved "https://registry.yarnpkg.com/wasm-encryptor-zkp/-/wasm-encryptor-zkp-0.1.3.tgz#7ccd4c567d4d3ba1de8a8e7618e668e027330385"
+  integrity sha512-oLfb7w6H3foy0lGF94N33tVXH0pKhP5Fcmx9PST7yJXwuDr1bDktOfBJz+vmwgHL6/l5joRkkZzHPT5dJ2oajw==
 
 wasm-loader@^1.3.0:
   version "1.3.0"
@@ -19554,10 +19554,10 @@ wasm-loader@^1.3.0:
     loader-utils "^1.1.0"
     wasm-dce "^1.0.0"
 
-wasm-vdf-zkp@^0.1.1:
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/wasm-vdf-zkp/-/wasm-vdf-zkp-0.1.1.tgz#fcc995b02348487ae881d5bbaa41082d8bea241a"
-  integrity sha512-BpQ3z8/IiDjuYPOt+uBdhjuPe90jECA/ikDfQAWWQ5sjWMyt6Rxd8HOpGWzbic6JTwbbkfMdcNIeQGxGc7Wggg==
+wasm-vdf-zkp@^0.1.2:
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/wasm-vdf-zkp/-/wasm-vdf-zkp-0.1.2.tgz#164a8cde1ec342ea627c87848f71e0806f6225fc"
+  integrity sha512-8qL7FumqomM2Y3ieKTr4vKgeurW5CqDCHQsF19qakGslXL7+FP7E6/6uDtLtpUWMmvCMZ65Xuqseyro8Wys5cg==
 
 watchpack-chokidar2@^2.0.1:
   version "2.0.1"
