@@ -37,7 +37,7 @@ export function TokenBalances({
           isReadonly={isReadonly}
         />
       )}
-      {otherChainBalances && (
+      {otherChainBalances && otherChainBalances.length > 0 && (
         <Flex>
           <Text color="textSecondary" variant="subheadSmall">
             {isReadonly
