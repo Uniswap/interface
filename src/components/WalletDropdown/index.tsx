@@ -37,7 +37,7 @@ export enum MenuState {
 }
 
 const WalletDropdownWrapper = styled.div`
-  position: absolute;
+  position: fixed;
   top: 65px;
   right: 20px;
   z-index: ${Z_INDEX.dropdown};

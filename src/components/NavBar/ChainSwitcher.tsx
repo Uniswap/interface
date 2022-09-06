@@ -123,7 +123,7 @@ export const ChainSwitcher = ({ leftAlign }: ChainSwitcherProps) => {
         )}
         {isOpen ? <StyledChevronUp /> : <StyledChevronDown />}
       </Row>
-      {isOpen && (isMobile ? <Portal>{dropdown}</Portal> : <>{dropdown}</>)}
+      {/* {isOpen && (isMobile ? <Portal>{dropdown}</Portal> : <>{dropdown}</>)} */}
     </Box>
   )
 }
