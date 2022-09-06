@@ -79,7 +79,7 @@ export abstract class Router {
     // the router does not support both ether in and out
     invariant(!(etherIn && etherOut), 'ETHER_IN_OUT')
     invariant(!('ttl' in options) || options.ttl > 0, 'TTL')
-
+    
     const to: string = validateAndParseAddress(options.recipient)
     const amountIn: string = toHex(trade.maximumAmountIn(options.allowedSlippage))
     const amountOut: string = toHex(trade.minimumAmountOut(options.allowedSlippage))
@@ -92,7 +92,8 @@ export abstract class Router {
     const useFeeOnTransfer = Boolean(options.feeOnTransfer)
 
     let methodName: string
-    let args: (string | string[])[]
+    // let args: (string | string[])[]
+    let args: any
     let value: string
     switch (trade.tradeType) {
       case TradeType.EXACT_INPUT:
@@ -111,7 +112,7 @@ export abstract class Router {
             ? 'swapExactTokensForTokensSupportingFeeOnTransferTokens'
             : 'swapExactTokensForTokens'
           // (uint amountIn, uint amountOutMin, address[] calldata path, address to, uint deadline)
-          args = [amountIn, amountOut, path, to, deadline]
+          args = [amountIn, amountOut, [[...path, false]], to, deadline]
           value = ZERO_HEX
         }
         break
