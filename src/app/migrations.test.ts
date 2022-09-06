@@ -11,6 +11,7 @@ import {
   v13Schema,
   v14Schema,
   v15Schema,
+  v16Schema,
   v1Schema,
   v2Schema,
   v3Schema,
@@ -535,5 +536,34 @@ describe('Redux state migrations', () => {
     const v16 = migrations[16](v15Stub)
 
     expect(v16.dataApi).toBeUndefined()
+  })
+
+  it('migrates from v16 to v17', () => {
+    const TEST_ADDRESS = '0xTestAddress'
+    const ACCOUNT_NAME = 'Test Account'
+    const v16Stub = {
+      ...v16Schema,
+      wallet: {
+        ...v16Schema.wallet,
+        accounts: {
+          [TEST_ADDRESS]: {
+            type: 'native',
+            address: TEST_ADDRESS,
+            name: ACCOUNT_NAME,
+            pending: false,
+            derivationIndex: 0,
+            timeImportedMs: 123,
+            pushNotificationsEnabled: true,
+          },
+        },
+      },
+    }
+
+    const v17 = migrations[17](v16Stub)
+
+    expect(v17.wallet.accounts[TEST_ADDRESS].pushNotificationsEnabled).toEqual(false)
+    expect(v17.wallet.accounts[TEST_ADDRESS].type).toEqual('native')
+    expect(v17.wallet.accounts[TEST_ADDRESS].address).toEqual(TEST_ADDRESS)
+    expect(v17.wallet.accounts[TEST_ADDRESS].name).toEqual(ACCOUNT_NAME)
   })
 })

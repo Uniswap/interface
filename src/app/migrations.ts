@@ -201,4 +201,15 @@ export const migrations = {
     delete newState.dataApi
     return newState
   },
+
+  17: (state: any) => {
+    const accounts: Record<Address, Account> | undefined = state?.wallet?.accounts
+    for (const address in accounts) {
+      accounts[address].pushNotificationsEnabled = false
+    }
+
+    const newState = { ...state }
+    newState.wallet = { ...state.wallet, accounts }
+    return newState
+  },
 }

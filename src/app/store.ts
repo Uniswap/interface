@@ -39,7 +39,7 @@ export const persistConfig = {
     coingeckoApi.reducerPath,
     nftApi.reducerPath,
   ],
-  version: 16,
+  version: 17,
   migrate: createMigrate(migrations),
 }
 
