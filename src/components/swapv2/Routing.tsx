@@ -395,8 +395,12 @@ const RouteRow = ({ route, chainId, backgroundColor }: RouteRowProps) => {
                         const dex =
                           pool.exchange === '1inch'
                             ? { name: '1inch', logoURL: 'https://s2.coinmarketcap.com/static/img/coins/64x64/8104.png' } // Hard code for 1inch
-                            : allDexes?.find(dex => dex.id === pool.exchange)
-
+                            : allDexes?.find(
+                                dex =>
+                                  dex.id === pool.exchange ||
+                                  ((pool.exchange === 'kyberswap' || pool.exchange === 'kyberswap-static') &&
+                                    dex.id === 'kyberswapv1'), // Mapping for kyberswap classic dex
+                              )
                         const link = (i => {
                           return pool.id.length === 42 ? (
                             <StyledExchange
