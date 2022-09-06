@@ -594,7 +594,9 @@ export const TableInstance = ({ tableData, tokenSymbol, headerSymbol }: { tableD
     return (
         <div style={{
             maxHeight: 500,
-            overflow: `auto`,
+            overflowX: `scroll`,
+            overflowY:`scroll`,
+            width:'100%',
             marginTop: 5
         }}>
             <Table>

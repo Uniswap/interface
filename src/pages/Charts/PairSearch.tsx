@@ -17,7 +17,25 @@ import styled from 'styled-components/macro'
 import { useActiveWeb3React } from 'hooks/web3'
 import useDebounce from 'hooks/useDebounce'
 import { useHistory } from 'react-router'
+import { useIsMobile } from 'pages/Swap/SelectiveCharting'
 import useTheme from 'hooks/useTheme'
+
+type PluralProps = {
+  one?: React.ReactNode;
+  other?: React.ReactNode;
+  value?: number;
+}
+
+/* eslint-disable */
+const Plural: React.FC<PluralProps>  = React.memo((props: PluralProps) => {
+  const {one,other,value} = props;
+  if (!value) return null;
+  if (!one || !other) return null;
+  const renderer = <React.Fragment>{Boolean(value > 1) ? other : one}</React.Fragment>
+  return renderer
+})
+
+Plural.displayName = "PluralComponent"
 
 export const useWeb3Endpoint = () => {
   const { chainId } = useActiveWeb3React()
@@ -96,7 +114,7 @@ const Input = styled.input`
         border: 1px solid lightgreen !important;
     }
 `
-const MenuFlyout = styled.span`
+const MenuFlyout = styled.span<{isMobile?:boolean}>`
 min-width: 20.125rem;
 background-color: ${({ theme }) => theme.bg1};
 border: 1px solid ${({ theme }) => theme.bg3};
@@ -109,7 +127,7 @@ font-size: 12px;
 top: 4rem;
 left: 0rem;
 z-index: 100;
-max-height: 350px;
+max-height: ${(props) => props.isMobile ? '230px' : '350px'};
 overflow: auto;
 
 
@@ -151,6 +169,7 @@ const SearchInput = styled(CFormInput)`
 `
 
 export const PairSearch = (props: Props) => {
+  const isMobile = useIsMobile()
   const { onPairSelect, label } = props
   const labelToDisplay = label || "Search by Token Name, Symbol, or Address"
   const { chainId } = useActiveWeb3React()
@@ -229,15 +248,21 @@ export const PairSearch = (props: Props) => {
     <div style={{ display: 'flex', flexFlow: 'column wrap', alignItems: 'center' }}>
       <div style={{ position: 'relative', width: '100%', padding: '1rem' }}>
         {/* Label and search input */}
+        {Boolean(results && results?.length > 0) && (
+          <TYPE.small textAlign="center" style={{width:'fit-content', background:theme.success, borderRadius:5 , padding:'0.15rem'}} color={theme.white}>Found 
+              <Plural value={results?.length} other={<>&nbsp;{results?.length} match{(results?.length || 0) > 1 ? 'es' : ''}&nbsp;</>} one={<>&nbsp;1 match&nbsp;</>}  /> 
+            for &quot;{searchTermDebounced}&quot;
+          </TYPE.small>
+        )}
         <TYPE.small marginBottom="5px" color={theme.text1}>{labelToDisplay}</TYPE.small>
         <SearchInput autoFocus placeholder={"Search by name or address"} type="search" value={searchTerm} onChange={onTermChanged} />
-
+        
         {/* Tip: Try Searching message */}
         {!Boolean(searchTermDebounced) && (
           <AutoColumn gap="1rem">{TipMemo}</AutoColumn>
         )}
         
-        <MenuFlyout>
+        <MenuFlyout isMobile={isMobile}>
           {/* Loading */}
           {Boolean(fetching) && (
             <LoadingSkeleton borderRadius={12} count={3} />

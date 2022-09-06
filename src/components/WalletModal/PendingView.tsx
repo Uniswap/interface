@@ -1,15 +1,15 @@
 import { AbstractConnector } from '@web3-react/abstract-connector'
-import styled from 'styled-components/macro'
-import { SUPPORTED_WALLETS } from '../../constants/wallet'
-import Option from './Option'
-import { injected } from '../../connectors'
-import { darken } from 'polished'
 import Loader from '../Loader'
+import Option from './Option'
+import { SUPPORTED_WALLETS } from '../../constants/wallet'
 import { Trans } from '@lingui/macro'
+import { darken } from 'polished'
+import { injected } from '../../connectors'
+import styled from 'styled-components/macro'
 
 const PendingSection = styled.div`
   ${({ theme }) => theme.flexColumnNoWrap};
-  background: #252632;
+  background: ${props => props.theme.bg0};
   align-items: center;
   justify-content: center;
   width: 100%;

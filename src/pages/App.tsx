@@ -101,9 +101,8 @@ const BodyWrapper = styled.div`
   margin-top:${() => window.location.href.includes('charts') || window.location.href.includes('charting') ? '0.5rem' : '3rem'};
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
-    padding: ${() => window.location.href.includes('charting') || window.location.href.includes('charts') ? '6rem 0px' : 
-    '6rem 16px 16px 16px'};
-  `};
+    padding:'6rem 16px 16px 16px';
+  `}
 `
 
 const HeaderWrapper = styled.div`

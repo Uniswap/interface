@@ -54,7 +54,8 @@ const HeaderRow = styled.div`
   ${({ theme }) => theme.flexRowNoWrap};
   padding: 20px 30px 10px 30px;
   font-weight: 600;
-  font-family: Open Sans;
+  font-family: 'Open Sans';
+  color:${(props) => props.theme.text1};
   background:${props => props.theme.bg0};
   ${({ theme }) => theme.mediaWidth.upToMedium`
     padding: 1rem;
@@ -356,7 +357,7 @@ export default function WalletModal({
             </HoverText>
           </HeaderRow>
         ) : (
-          <HeaderRow style={{ fontFamily: 'Bangers', fontSize: 24, letterSpacing: 2 }}>
+          <HeaderRow style={{ fontFamily: 'Open Sans', fontSize: 24, letterSpacing: 2 }}>
             
               <Trans>Connect to a wallet</Trans>
             

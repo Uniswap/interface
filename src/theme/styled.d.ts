@@ -55,6 +55,8 @@ export interface Colors {
   error: Color
   success: Color
   warning: Color
+
+  backgroundInteractive: Color;
 }
 
 declare module 'styled-components/macro' {
@@ -66,6 +68,9 @@ declare module 'styled-components/macro' {
     //chart page
     chartTableBg:string
     chartSidebar: string
+
+    // interactive
+    backgroundInteractive: string
     // media queries
     mediaWidth: {
       upToExtraSmall: ThemedCssFunction<DefaultTheme>
