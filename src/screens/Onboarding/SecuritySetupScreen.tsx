@@ -54,7 +54,7 @@ export function SecuritySetupScreen({ navigation: { navigate } }: Props) {
   return (
     <OnboardingScreen
       subtitle={t(
-        'Make sure that you’re the only person who can access your app or make transactions by turning on FaceID.'
+        'Make sure that you’re the only person who can access your app or make transactions by turning on Face ID.'
       )}
       title={t('Protect your wallet')}>
       <Flex grow alignItems="center" justifyContent="space-between">
