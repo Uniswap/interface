@@ -108,8 +108,15 @@ export function TokenDetailsScreen({ route }: AppStackScreenProp<Screens.TokenDe
 
   const currency = useCurrency(_currencyId)
 
-  if (!currency) return null
-  return <TokenDetails currency={currency} />
+  if (!currency) {
+    return null
+  }
+
+  return (
+    <Suspense fallback={<Loading />}>
+      <TokenDetails currency={currency} />
+    </Suspense>
+  )
 }
 
 function TokenDetails({ currency }: { currency: Currency }) {
