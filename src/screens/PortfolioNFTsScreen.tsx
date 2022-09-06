@@ -74,7 +74,7 @@ export function PortfolioNFTsScreen({
         <Button activeOpacity={1} alignItems="center" flex={1} onPress={() => onPressItem(asset)}>
           <NFTViewer
             maxHeight={MAX_NFT_IMAGE_SIZE}
-            placeholderContent={asset.name}
+            placeholderContent={asset.name || asset.collection.name}
             squareGridView={true}
             uri={asset.image_url}
           />
