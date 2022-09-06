@@ -4,12 +4,13 @@ import useHttpLocations from 'hooks/useHttpLocations'
 import { useMemo } from 'react'
 import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 
+import ClvLogo from '../../assets/images/clover.svg'
 import EthereumLogo from '../../assets/images/ethereum-logo.png'
 import CeloLogo from '../../assets/svg/celo_logo.svg'
 import MaticLogo from '../../assets/svg/matic-token-icon.svg'
-import { isCelo, nativeOnChain } from '../../constants/tokens'
+import { isCelo, isClv, nativeOnChain } from '../../constants/tokens'
 
-type Network = 'ethereum' | 'arbitrum' | 'optimism' | 'polygon'
+type Network = 'ethereum' | 'arbitrum' | 'optimism' | 'polygon' | 'clv'
 
 function chainIdToNetworkName(networkId: SupportedChainId): Network {
   switch (networkId) {
@@ -21,6 +22,8 @@ function chainIdToNetworkName(networkId: SupportedChainId): Network {
       return 'optimism'
     case SupportedChainId.POLYGON:
       return 'polygon'
+    case SupportedChainId.CLV_P_CHAIN:
+      return 'clv'
     default:
       return 'ethereum'
   }
@@ -34,6 +37,8 @@ export function getNativeLogoURI(chainId: SupportedChainId = SupportedChainId.MA
     case SupportedChainId.CELO:
     case SupportedChainId.CELO_ALFAJORES:
       return CeloLogo
+    case SupportedChainId.CLV_P_CHAIN:
+      return ClvLogo
     default:
       return EthereumLogo
   }
@@ -50,6 +55,10 @@ function getTokenLogoURI(address: string, chainId: SupportedChainId = SupportedC
   if (isCelo(chainId)) {
     if (address === nativeOnChain(chainId).wrapped.address) {
       return 'https://raw.githubusercontent.com/ubeswap/default-token-list/master/assets/asset_CELO.png'
+    }
+  } else if (isClv(chainId)) {
+    if (address === nativeOnChain(chainId).wrapped.address) {
+      return 'https://raw.githubusercontent.com/clover-network/clv-network-token-lists/main/assets/clover.svg'
     }
   }
 }

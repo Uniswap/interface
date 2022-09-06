@@ -1,4 +1,5 @@
 import celoCircleLogoUrl from 'assets/images/celoCircle.png'
+import clvLogo from 'assets/images/clover.svg'
 import ethereumLogoUrl from 'assets/images/ethereum-logo.png'
 import optimismCircleLogoUrl from 'assets/images/optimismCircle.png'
 import polygonCircleLogoUrl from 'assets/images/polygonCircle.png'
@@ -10,7 +11,7 @@ import ms from 'ms.macro'
 import { colorsDark } from 'theme/colors'
 
 import { SupportedChainId, SupportedL1ChainId, SupportedL2ChainId } from './chains'
-import { ARBITRUM_LIST, CELO_LIST, OPTIMISM_LIST } from './lists'
+import { ARBITRUM_LIST, CELO_LIST, CLV_LIST, OPTIMISM_LIST } from './lists'
 
 export enum NetworkType {
   L1,
@@ -224,9 +225,9 @@ const CHAIN_INFO: ChainInfoMap = {
     explorer: 'https://clvscan.com',
     infoLink: 'https://info.uniswap.org/#/clv',
     label: 'CLV',
-    logoUrl: celoLogo,
+    logoUrl: clvLogo,
     nativeCurrency: { name: 'CLV', symbol: 'CLV', decimals: 18 },
-    defaultListUrl: CELO_LIST,
+    defaultListUrl: CLV_LIST,
   },
 }
 

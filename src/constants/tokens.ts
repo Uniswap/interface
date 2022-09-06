@@ -426,6 +426,10 @@ function isMatic(chainId: number): chainId is SupportedChainId.POLYGON | Support
   return chainId === SupportedChainId.POLYGON_MUMBAI || chainId === SupportedChainId.POLYGON
 }
 
+export function isClv(chainId: number): chainId is SupportedChainId.CLV_P_CHAIN {
+  return chainId === SupportedChainId.CLV_P_CHAIN
+}
+
 class MaticNativeCurrency extends NativeCurrency {
   equals(other: Currency): boolean {
     return other.isNative && other.chainId === this.chainId
@@ -441,6 +445,24 @@ class MaticNativeCurrency extends NativeCurrency {
   public constructor(chainId: number) {
     if (!isMatic(chainId)) throw new Error('Not matic')
     super(chainId, 18, 'MATIC', 'Polygon Matic')
+  }
+}
+
+class CLVNativeCurrency extends NativeCurrency {
+  equals(other: Currency): boolean {
+    return other.isNative && other.chainId === this.chainId
+  }
+
+  get wrapped(): Token {
+    if (!isClv(this.chainId)) throw new Error('Not CLV')
+    const wrapped = WRAPPED_NATIVE_CURRENCY[this.chainId]
+    invariant(wrapped instanceof Token)
+    return wrapped
+  }
+
+  public constructor(chainId: number) {
+    if (!isClv(chainId)) throw new Error('Not CLV')
+    super(chainId, 18, 'CLV', 'CLV')
   }
 }
 
@@ -466,6 +488,8 @@ export function nativeOnChain(chainId: number): NativeCurrency | Token {
     nativeCurrency = new MaticNativeCurrency(chainId)
   } else if (isCelo(chainId)) {
     nativeCurrency = getCeloNativeCurrency(chainId)
+  } else if (isClv(chainId)) {
+    nativeCurrency = new CLVNativeCurrency(chainId)
   } else {
     nativeCurrency = ExtendedEther.onChain(chainId)
   }
