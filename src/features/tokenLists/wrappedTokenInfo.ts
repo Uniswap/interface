@@ -8,6 +8,9 @@ type TagDetails = Tags[keyof Tags]
 interface TagInfo extends TagDetails {
   id: string
 }
+
+export type BridgeInfo = ChainIdTo<{ tokenAddress: Address }>
+
 /**
  * Token instances created from token info on a token list.
  */
@@ -67,8 +70,8 @@ export class WrappedTokenInfo implements Token {
     }))
   }
 
-  public get bridgeInfo(): ChainIdTo<{ tokenAddress: Address }> | undefined {
-    return this.tokenInfo.extensions?.bridgeInfo as ChainIdTo<{ tokenAddress: Address }> | undefined
+  public get bridgeInfo(): BridgeInfo | undefined {
+    return this.tokenInfo.extensions?.bridgeInfo as BridgeInfo | undefined
   }
 
   equals(other: Currency): boolean {
