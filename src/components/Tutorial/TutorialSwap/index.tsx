@@ -225,9 +225,9 @@ function Step3({ videoStyle = {} }: { videoStyle: CSSProperties }) {
           title="Tutorial kyberswap"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen
-        ></iframe>
+        />
         {/** because we need tracking we user click video, iframe youtube not fire any event for us. */}
-        {!playedVideo && <TouchAbleVideo onClick={playVideo} />}
+        {!playedVideo && !isMobile && <TouchAbleVideo onClick={playVideo} />}
       </div>
     </Layout>
   )
