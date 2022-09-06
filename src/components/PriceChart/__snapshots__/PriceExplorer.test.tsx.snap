@@ -15,7 +15,6 @@ exports[`renders correctly 1`] = `
       Array [
         Object {
           "display": "flex",
-          "marginBottom": 24,
           "marginHorizontal": 16,
         },
       ]
@@ -183,7 +182,7 @@ exports[`renders correctly 1`] = `
       Array [
         Object {
           "display": "flex",
-          "marginVertical": 12,
+          "marginVertical": 16,
         },
       ]
     }

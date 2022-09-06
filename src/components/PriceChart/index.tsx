@@ -1,5 +1,5 @@
 import { Currency } from '@uniswap/sdk-core'
-import React, { Suspense, useMemo } from 'react'
+import React, { ReactNode, Suspense, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex } from 'src/components/layout'
 import { Box } from 'src/components/layout/Box'
@@ -36,7 +36,13 @@ function CurrencyPriceChartInner({ currency }: { currency: Currency }) {
   return <PriceChart graphs={graphs} />
 }
 
-export function PriceChart({ graphs }: { graphs?: GraphMetadatas }) {
+export function PriceChart({
+  graphs,
+  customChartLabel,
+}: {
+  graphs?: GraphMetadatas
+  customChartLabel?: ReactNode
+}) {
   // require all graphs to be loaded before rendering the chart
   // TODO(judo): improve loading state
   const loading =
@@ -44,7 +50,11 @@ export function PriceChart({ graphs }: { graphs?: GraphMetadatas }) {
 
   return (
     <Box overflow="hidden">
-      {loading ? <PriceChartLoading /> : <PriceExplorer graphs={graphs} />}
+      {loading ? (
+        <PriceChartLoading />
+      ) : (
+        <PriceExplorer customChartLabel={customChartLabel} graphs={graphs} />
+      )}
     </Box>
   )
 }

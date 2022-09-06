@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ReactNode } from 'react'
 import { StyleSheet, View } from 'react-native'
 import Animated, {
   interpolate,
@@ -30,6 +30,7 @@ interface GraphProps {
   graphs: GraphMetadatas
   headerCustomPrice?: number
   headerCustomPercentChange?: number
+  customChartLabel?: ReactNode
 }
 
 /**
@@ -42,6 +43,7 @@ export const PriceExplorer = ({
   graphs,
   headerCustomPrice,
   headerCustomPercentChange,
+  customChartLabel,
 }: GraphProps) => {
   const theme = useAppTheme()
 
@@ -86,6 +88,11 @@ export const PriceExplorer = ({
     ],
   }))
 
+  // animates label when panning
+  const labelStyle = useAnimatedStyle(() => ({
+    opacity: withTiming(isPanning.value ? 1 : 0),
+  }))
+
   // retrieves price and formats it
   const price = useDerivedValue(() => {
     if (isPanning.value) {
@@ -128,8 +135,13 @@ export const PriceExplorer = ({
   return (
     <Box>
       <PriceHeader date={date} percentChange={percentChange} price={price} />
-      <Box my="sm">
+      <Box my="md">
         <Svg height={HEIGHT} width={WIDTH}>
+          {customChartLabel && (
+            <AnimatedBox flexDirection="row" mx="md" style={labelStyle}>
+              {customChartLabel}
+            </AnimatedBox>
+          )}
           <AnimatedPath
             animatedProps={graphTransitionAnimatedProps}
             fill="transparent"

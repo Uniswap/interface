@@ -1,9 +1,11 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
+import { NetworkLogo } from 'src/components/CurrencyLogo/NetworkLogo'
 import { Flex } from 'src/components/layout/Flex'
 import { PriceChart } from 'src/components/PriceChart'
 import { usePortfolioBalanceGraphs } from 'src/components/PriceChart/PortfolioModel'
 import { Text } from 'src/components/Text'
+import { ChainId } from 'src/constants/chains'
 
 export const PortfolioBalanceChart = ({ owner }: { owner: Address }) => {
   const graphs = usePortfolioBalanceGraphs(owner)
@@ -22,5 +24,23 @@ export const PortfolioBalanceChart = ({ owner }: { owner: Address }) => {
     )
   }
 
-  return <PriceChart graphs={graphs} />
+  return (
+    <PriceChart
+      customChartLabel={
+        <Flex
+          bg="backgroundContainer"
+          borderRadius="sm"
+          flexDirection="row"
+          gap="xxs"
+          px="xs"
+          py="xxs">
+          <NetworkLogo chainId={ChainId.Mainnet} size={16} />
+          <Text color="textTertiary" variant="smallLabel">
+            {t('Mainnet balance')}
+          </Text>
+        </Flex>
+      }
+      graphs={graphs}
+    />
+  )
 }
