@@ -77,7 +77,7 @@ export function RestoreCloudBackupPinScreen({ navigation, route: { params } }: P
           ? t('This PIN is required to recover your backed up recovery phrase from iCloud.')
           : undefined
       }
-      title={t(isTemporaryDisabled ? 'Attempts disabled' : 'Enter your iCloud backup PIN')}>
+      title={isTemporaryDisabled ? t('Attempts disabled') : t('Enter your iCloud backup PIN')}>
       <Box minHeight={30}>
         {errorMessage && (
           <Text color="accentFailure" textAlign="center" variant="body">
