@@ -6,11 +6,11 @@ import { TextInput } from 'react-native'
 import { useAppTheme } from 'src/app/hooks'
 import { InlineMaxAmountButton } from 'src/components/buttons/MaxAmountButton'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
-import { TokenSelector } from 'src/components/TokenSelector'
 import { AmountInput } from 'src/components/input/AmountInput'
 import { Box } from 'src/components/layout'
 import { Flex } from 'src/components/layout/Flex'
 import { Text } from 'src/components/Text'
+import { SelectTokenButton } from 'src/components/TokenSelector/SelectTokenButton'
 import { Warning, WarningLabel } from 'src/components/warnings/types'
 import { Theme } from 'src/styles/theme'
 import { formatCurrencyAmount } from 'src/utils/format'
@@ -136,7 +136,7 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps) {
           <Box alignItems="flex-start" flexBasis={0} flexGrow={1} />
         )}
         <Box alignItems="center">
-          <TokenSelector
+          <SelectTokenButton
             selectedCurrency={currency}
             showNonZeroBalancesOnly={showNonZeroBalancesOnly}
             onPress={onShowTokenSelector}

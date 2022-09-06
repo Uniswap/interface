@@ -7,8 +7,7 @@ import { AnimatedFlex, Flex } from 'src/components/layout'
 import { Loading } from 'src/components/loading'
 import { RecipientSelect } from 'src/components/RecipientSelect/RecipientSelect'
 import { Text } from 'src/components/Text'
-import { TokenSelectorVariation } from 'src/components/TokenSelector/SearchResults'
-import { TokenSelect } from 'src/components/TokenSelector/TokenSelect'
+import { TokenSelector, TokenSelectorVariation } from 'src/components/TokenSelector/TokenSelector'
 import { useSwapActionHandlers } from 'src/features/transactions/swap/hooks'
 import {
   CurrencyField,
@@ -123,7 +122,7 @@ export function TransferFlow({ prefilledState, onClose }: TransferFormProps) {
           />
         </Flex>
         {state.selectingCurrencyField ? (
-          <TokenSelect
+          <TokenSelector
             variation={TokenSelectorVariation.BalancesOnly}
             onBack={onHideTokenSelector}
             onSelectCurrency={(currency: Currency) =>

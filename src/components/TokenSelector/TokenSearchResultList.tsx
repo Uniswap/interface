@@ -9,6 +9,7 @@ import { filter } from 'src/components/TokenSelector/filter'
 import { useCommonBases, useFavoriteCurrencies } from 'src/components/TokenSelector/hooks'
 import { NetworkFilter } from 'src/components/TokenSelector/NetworkFilter'
 import { TokenOptionItem } from 'src/components/TokenSelector/TokenOptionItem'
+import { TokenSelectorVariation } from 'src/components/TokenSelector/TokenSelector'
 import { TokenOption } from 'src/components/TokenSelector/types'
 import { ChainId } from 'src/constants/chains'
 import { EMPTY_ARRAY } from 'src/constants/misc'
@@ -26,17 +27,6 @@ import { useDebounce } from 'src/utils/timing'
 import { TextButton } from '../buttons/TextButton'
 import { Box, Flex, Inset } from '../layout'
 import { Text } from '../Text'
-
-export enum TokenSelectorVariation {
-  // used for Send flow, only show currencies with a balance
-  BalancesOnly = 'balances-only',
-
-  // used for Swap input. tokens with balances + popular
-  BalancesAndPopular = 'balances-and-popular',
-
-  // used for Swap output. tokens with balances, favorites, common + popular
-  SuggestedAndPopular = 'suggested-and-popular',
-}
 
 interface TokenSearchResultListProps {
   onChangeChainFilter: (newChainFilter: ChainId | null) => void

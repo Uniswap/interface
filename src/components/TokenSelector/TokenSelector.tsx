@@ -7,12 +7,20 @@ import { AnimatedFlex, Flex } from 'src/components/layout'
 import { Loading } from 'src/components/loading'
 import { useFilterCallbacks } from 'src/components/TokenSelector/hooks'
 import { SearchBar } from 'src/components/TokenSelector/SearchBar'
-import {
-  TokenSearchResultList,
-  TokenSelectorVariation,
-} from 'src/components/TokenSelector/SearchResults'
+import { TokenSearchResultList } from 'src/components/TokenSelector/TokenSearchResultList'
 
-interface TokenSearchProps {
+export enum TokenSelectorVariation {
+  // used for Send flow, only show currencies with a balance
+  BalancesOnly = 'balances-only',
+
+  // used for Swap input. tokens with balances + popular
+  BalancesAndPopular = 'balances-and-popular',
+
+  // used for Swap output. tokens with balances, favorites, common + popular
+  SuggestedAndPopular = 'suggested-and-popular',
+}
+
+interface TokenSelectorProps {
   onSelectCurrency: (currency: Currency) => void
   otherCurrency?: Currency | null
   selectedCurrency?: Currency | null
@@ -20,12 +28,12 @@ interface TokenSearchProps {
   variation: TokenSelectorVariation
 }
 
-export function TokenSelect({
+export function TokenSelector({
   onSelectCurrency,
   otherCurrency,
   onBack,
   variation,
-}: TokenSearchProps) {
+}: TokenSelectorProps) {
   const { onChangeChainFilter, onChangeText, onClearSearchFilter, searchFilter, chainFilter } =
     useFilterCallbacks(otherCurrency?.chainId ?? null)
 

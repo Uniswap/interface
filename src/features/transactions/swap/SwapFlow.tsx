@@ -6,8 +6,7 @@ import { Keyboard, LayoutChangeEvent, TouchableWithoutFeedback } from 'react-nat
 import { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated'
 import { AnimatedFlex, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
-import { TokenSelectorVariation } from 'src/components/TokenSelector/SearchResults'
-import { TokenSelect } from 'src/components/TokenSelector/TokenSelect'
+import { TokenSelector, TokenSelectorVariation } from 'src/components/TokenSelector/TokenSelector'
 import { WarningAction, WarningModalType } from 'src/components/warnings/types'
 import { WarningModal } from 'src/components/warnings/WarningModal'
 import {
@@ -187,7 +186,7 @@ export function SwapFlow({ prefilledState, onClose }: SwapFormProps) {
           />
         </Flex>
         {selectingCurrencyField ? (
-          <TokenSelect
+          <TokenSelector
             otherCurrency={
               selectingCurrencyField
                 ? currencies[otherCurrencyField(selectingCurrencyField)]
