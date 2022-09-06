@@ -16,19 +16,22 @@ export function UniconWithVisibilityBadge({ address, size, showViewOnlyBadge }: 
     return <Unicon address={address} size={size} />
   }
 
+  const floatingEyeSize = size > 24 ? 20 : 16 // size changes in different usages
+  const iconEyeSize = floatingEyeSize * 0.6 // according to design 12px and 9.6px
+
   return (
     <Box position="relative">
       <Unicon address={address} size={size} />
       <Flex
         centered
-        backgroundColor="backgroundAction"
+        backgroundColor="accentTextDarkPrimary"
         borderRadius="full"
         bottom={-4}
-        height={24}
+        height={floatingEyeSize}
         position="absolute"
         right={-4}
-        width={24}>
-        <Eye color={theme.colors.textPrimary} height={12} strokeWidth={1} width={16} />
+        width={floatingEyeSize}>
+        <Eye color={theme.colors.textPrimary} height={iconEyeSize} width={iconEyeSize} />
       </Flex>
     </Box>
   )

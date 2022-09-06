@@ -14,7 +14,6 @@ import EditIcon from 'src/assets/icons/edit.svg'
 import GlobalIcon from 'src/assets/icons/global.svg'
 import PencilIcon from 'src/assets/icons/pencil.svg'
 import TrendingUpIcon from 'src/assets/icons/trending-up.svg'
-import { RemoveAccountModal } from 'src/components/accounts/RemoveAccountModal'
 import { AddressDisplay } from 'src/components/AddressDisplay'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { Switch } from 'src/components/buttons/Switch'
@@ -22,6 +21,8 @@ import { Flex } from 'src/components/layout'
 import { BackHeader } from 'src/components/layout/BackHeader'
 import { Box } from 'src/components/layout/Box'
 import { Screen } from 'src/components/layout/Screen'
+
+import WarningModal, { captionForAccountRemovalWarning } from 'src/components/modals/WarningModal'
 import {
   SettingsRow,
   SettingsSection,
@@ -29,12 +30,13 @@ import {
   SettingsSectionItemComponent,
 } from 'src/components/Settings/SettingsRow'
 import { Text } from 'src/components/Text'
+import { WarningSeverity } from 'src/components/warnings/types'
 import {
   NotificationPermission,
   useNotificationOSPermissionsEnabled,
 } from 'src/features/notifications/hooks'
 import { promptPushPermission } from 'src/features/notifications/Onesignal'
-import { ElementName } from 'src/features/telemetry/constants'
+import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { AccountType, BackupType } from 'src/features/wallet/accounts/types'
 import { EditAccountAction, editAccountActions } from 'src/features/wallet/editAccountSaga'
 import { useAccounts, useSelectAccountNotificationSetting } from 'src/features/wallet/hooks'
@@ -44,7 +46,6 @@ import {
 } from 'src/features/wallet/selectors'
 import { setShowSmallBalances } from 'src/features/wallet/walletSlice'
 import { showNotificationSettingsAlert } from 'src/screens/Onboarding/NotificationsSetupScreen'
-import { opacify } from 'src/utils/colors'
 import { Screens } from './Screens'
 
 type Props = NativeStackScreenProps<SettingsStackParamList, Screens.SettingsWallet>
@@ -238,7 +239,7 @@ export function SettingsWallet({
         />
       </BackHeader>
 
-      <Flex flex={1} px="lg" py="lg">
+      <Flex fill p="lg">
         <Box flex={1}>
           <SectionList
             ItemSeparatorComponent={() => <Flex pt="xs" />}
@@ -258,19 +259,31 @@ export function SettingsWallet({
           />
         </Box>
         <PrimaryButton
+          height={56}
           label={t('Remove wallet')}
           name={ElementName.Remove}
-          style={{ backgroundColor: opacify(15, theme.colors.accentFailure) }}
+          style={{
+            backgroundColor: theme.colors.accentFailureSoft,
+          }}
           testID={ElementName.Remove}
           textColor="accentFailure"
+          textVariant="largeLabel"
           visible={!shouldHideRemoveOption}
           width="100%"
           onPress={() => setShowRemoveWalletModal(true)}
         />
+
         {!!showRemoveWalletModal && !!currentAccount && (
-          <RemoveAccountModal
-            accountType={currentAccount.type}
-            onCancel={cancelWalletRemove}
+          <WarningModal
+            useBiometric
+            caption={captionForAccountRemovalWarning(currentAccount.type, t)}
+            closeText={t('Cancel')}
+            confirmText={t('Remove')}
+            isVisible={showRemoveWalletModal}
+            modalName={ModalName.RemoveWallet}
+            severity={WarningSeverity.High}
+            title={t('Are you sure?')}
+            onClose={cancelWalletRemove}
             onConfirm={removeWallet}
           />
         )}

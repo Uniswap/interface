@@ -15,15 +15,16 @@ import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import PlusSquareIcon from 'src/assets/icons/plus-square.svg'
 import SettingsIcon from 'src/assets/icons/settings.svg'
 import { AccountCardItem } from 'src/components/accounts/AccountCardItem'
-import { RemoveAccountModal } from 'src/components/accounts/RemoveAccountModal'
 import { Button } from 'src/components/buttons/Button'
 import { AnimatedBox, Box, Flex } from 'src/components/layout'
 import { AnimatedFlatList } from 'src/components/layout/AnimatedFlatList'
 import { Screen } from 'src/components/layout/Screen'
 import { ActionSheetModal, MenuItemProp } from 'src/components/modals/ActionSheetModal'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
+import WarningModal, { captionForAccountRemovalWarning } from 'src/components/modals/WarningModal'
 import { Text } from 'src/components/Text'
 import { WalletQRCode } from 'src/components/WalletConnect/ScanSheet/WalletQRCode'
+import { WarningSeverity } from 'src/components/warnings/types'
 import { pushNotification } from 'src/features/notifications/notificationSlice'
 import { AppNotificationType } from 'src/features/notifications/types'
 import { ImportType, OnboardingEntryPoint } from 'src/features/onboarding/utils'
@@ -409,9 +410,16 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
         onClose={onCloseAddWallet}
       />
       {!!pendingRemoveAccount && (
-        <RemoveAccountModal
-          accountType={pendingRemoveAccount.type}
-          onCancel={onPressRemoveCancel}
+        <WarningModal
+          useBiometric
+          caption={captionForAccountRemovalWarning(pendingRemoveAccount.type, t)}
+          closeText={t('Cancel')}
+          confirmText={t('Remove')}
+          isVisible={!!pendingRemoveAccount}
+          modalName={ModalName.RemoveWallet}
+          severity={WarningSeverity.High}
+          title={t('Are you sure?')}
+          onClose={onPressRemoveCancel}
           onConfirm={onPressRemoveConfirm}
         />
       )}
