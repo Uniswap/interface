@@ -114,7 +114,7 @@ export const CHAIN_INFO: ChainInfoMap = {
     docs: 'https://optimism.io/',
     explorer: 'https://kovan-optimistic.etherscan.io',
     infoLink: 'https://info.uniswap.org/#/optimism/',
-    label: 'Optimistic Kovan',
+    label: 'Optimism_kovan',
     logoUrl: optimismLogoUrl,
     statusPage: 'https://optimism.io/status',
     helpCenterUrl: 'https://help.uniswap.org/en/collections/3137778-uniswap-on-optimistic-ethereum-oξ',
