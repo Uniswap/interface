@@ -1,6 +1,6 @@
 import { FeatureFlag } from '../../src/featureFlags/flags/featureFlags'
 
-export const getTestSelector = (selectorId: string) => `[data-cy=${selectorId}]`
+export const getTestSelector = (selectorId: string) => `[data-testid=${selectorId}]`
 
 // 1. Go to featureFlags/index.tsx
 // 2. Find the FeatureFlag enum

@@ -5,7 +5,7 @@ describe('Wallet Dropdown', () => {
     cy.visit('/')
   })
 
-  it.skip('should change the theme', () => {
+  it('should change the theme', () => {
     cy.get(getTestSelector('navbar-wallet-dropdown')).click()
     cy.get(getTestSelector('wallet-select-theme')).click()
     cy.get(getTestSelector('wallet-select-theme')).contains('Light theme').should('exist')
