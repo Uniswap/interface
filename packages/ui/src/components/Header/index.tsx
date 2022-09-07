@@ -357,6 +357,36 @@ export default function Header() {
       <HeaderControls>
         <HeaderElement>
           <img style={{ width: '9rem', height: 'auto', position: 'absolute', left: '2.8rem' }} src={TeleLogo} alt="" />
+          <HeaderLinks>
+            <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
+              {t('swap')}
+            </StyledNavLink>
+            <StyledNavLink
+              id={`pool-nav-link`}
+              to={'/pool'}
+              isActive={(match, { pathname }) =>
+                Boolean(match) ||
+                pathname.startsWith('/add') ||
+                pathname.startsWith('/remove') ||
+                pathname.startsWith('/create') ||
+                pathname.startsWith('/find')
+              }
+            >
+              {t('Liquidity')}
+            </StyledNavLink>
+            <StyledNavLink id={`earn-nav-link`} to={'/farm'}>
+              {t('Earn')}
+            </StyledNavLink>
+            {/* <StyledNavLink id={`stake-nav-link`} to={'/uni'}>
+            UNI
+          </StyledNavLink> */}
+            {/* <StyledNavLink id={`stake-nav-link`} to={'/vote'}>
+            Vote
+          </StyledNavLink> */}
+            {/* <StyledExternalLink id={`stake-nav-link`} href={'https://uniswap.info'}>
+            Charts <span style={{ fontSize: '11px' }}>↗</span>
+          </StyledExternalLink> */}
+          </HeaderLinks>
           <HideSmall>
             {chainId && NETWORK_LABELS[chainId] && (
               <NetworkCard title={NETWORK_LABELS[chainId]}>{NETWORK_LABELS[chainId]}</NetworkCard>
@@ -408,49 +438,19 @@ export default function Header() {
           </AccountElement>
         </HeaderElement>
         <HeaderElementWrap>
-          {/* <StyledMenuButton onClick={() => toggleDarkMode()}>
+          <StyledMenuButton onClick={() => toggleDarkMode()}>
             {darkMode ? <Moon size={20} /> : <Sun size={20} />}
-          </StyledMenuButton> */}
+          </StyledMenuButton>
           {/* <Menu /> */}
         </HeaderElementWrap>
       </HeaderControls>
-      <HeaderRow>
-        {/* <Title href=".">
+      {/* <HeaderRow>
+        <Title href=".">
           <UniIcon>
             <img width={'24px'} src={darkMode ? LogoDark : Logo} alt="logo" />
           </UniIcon>
-        </Title> */}
-        <HeaderLinks>
-          <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
-            {t('swap')}
-          </StyledNavLink>
-          <StyledNavLink
-            id={`pool-nav-link`}
-            to={'/pool'}
-            isActive={(match, { pathname }) =>
-              Boolean(match) ||
-              pathname.startsWith('/add') ||
-              pathname.startsWith('/remove') ||
-              pathname.startsWith('/create') ||
-              pathname.startsWith('/find')
-            }
-          >
-            {t('Liquidity')}
-          </StyledNavLink>
-          <StyledNavLink id={`earn-nav-link`} to={'/farm'}>
-            {t('Earn')}
-          </StyledNavLink>
-          {/* <StyledNavLink id={`stake-nav-link`} to={'/uni'}>
-            UNI
-          </StyledNavLink> */}
-          {/* <StyledNavLink id={`stake-nav-link`} to={'/vote'}>
-            Vote
-          </StyledNavLink> */}
-          {/* <StyledExternalLink id={`stake-nav-link`} href={'https://uniswap.info'}>
-            Charts <span style={{ fontSize: '11px' }}>↗</span>
-          </StyledExternalLink> */}
-        </HeaderLinks>
-      </HeaderRow>
+        </Title>
+      </HeaderRow> */}
     </HeaderFrame>
   )
 }
