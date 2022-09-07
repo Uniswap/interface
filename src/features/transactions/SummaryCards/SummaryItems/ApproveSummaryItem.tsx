@@ -30,21 +30,18 @@ export default function ApproveSummaryItem({
     t,
   })
 
-  const approvalAmountString =
-    transaction.typeInfo.approvalAmount === 'INF'
-      ? t('Max Amount')
-      : transaction.typeInfo.approvalAmount
-
-  // Use amount if known, otherwise revert to only token symbol
-  const approvalString =
-    approvalAmountString && currency?.symbol
-      ? `${approvalAmountString} ${currency.symbol}`
-      : currency?.symbol
+  const approvalAmountCaption =
+    transaction.typeInfo.approvalAmount === 'INF' ? t('Unlimited') : undefined
+  const approvalAmountTitle = `${
+    transaction.typeInfo.approvalAmount === 'INF' ? '' : transaction.typeInfo.approvalAmount ?? ''
+  } ${currency?.symbol ?? ''}`
 
   return (
     <TransactionSummaryLayout
       caption={shortenAddress(transaction.typeInfo.spender)}
-      endAdornment={<AssetUpdateLayout title={approvalString} />}
+      endAdornment={
+        <AssetUpdateLayout caption={approvalAmountCaption} title={approvalAmountTitle} />
+      }
       icon={
         <LogoWithTxStatus
           assetType={AssetType.Currency}
