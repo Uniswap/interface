@@ -19,9 +19,10 @@ import { useActiveWeb3React } from 'hooks'
 import useInterval from 'hooks/useInterval'
 import useMixpanel, { MIXPANEL_TYPE } from 'hooks/useMixpanel'
 import useTheme from 'hooks/useTheme'
+import CampaignActions from 'pages/Campaign/CampaignActions'
 import CampaignListAndSearch from 'pages/Campaign/CampaignListAndSearch'
-import EnterNowOrClaimButton from 'pages/Campaign/EnterNowOrClaimButton'
 import LeaderboardLayout from 'pages/Campaign/LeaderboardLayout'
+import ModalRegisterCampaign from 'pages/Campaign/ModalRegisterCampaign'
 import { Loading } from 'pages/ProAmmPool/ContentLoader'
 import { AppState } from 'state'
 import { ApplicationModal } from 'state/application/actions'
@@ -286,6 +287,7 @@ export default function Campaign() {
   const selectedCampaignLeaderboardLookupAddress = useSelector(
     (state: AppState) => state.campaigns.selectedCampaignLeaderboardLookupAddress,
   )
+
   useEffect(() => {
     if (campaignsRefreshIn === 0 && selectedCampaign) {
       mutate([
@@ -349,6 +351,7 @@ export default function Campaign() {
                   />
                 </ButtonEmpty>
                 <ModalSelectCampaign />
+                <ModalRegisterCampaign />
               </Flex>
             </MediumOnly>
 
@@ -380,7 +383,7 @@ export default function Campaign() {
                 {selectedCampaign?.name}
               </Text>
               <ButtonContainer>
-                <EnterNowOrClaimButton />
+                <CampaignActions />
                 <ButtonLight
                   borderRadius="50%"
                   style={{ padding: '8px', flex: 0, minWidth: '44px', minHeight: '44px' }}
@@ -404,8 +407,8 @@ export default function Campaign() {
                   {selectedCampaign?.status === 'Upcoming'
                     ? t`Starting In`
                     : selectedCampaign?.status === 'Ongoing'
-                    ? t`Ending In`
-                    : t`Ended In`}
+                    ? t`Ended In`
+                    : t`Ended On`}
                 </Text>
                 <Clock size={20} color={theme.subText} />
                 {isSelectedCampaignMediaLoaded ? (

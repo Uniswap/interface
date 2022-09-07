@@ -106,6 +106,10 @@ export function useSelectCampaignModalToggle(): () => void {
   return useToggleModal(ApplicationModal.SELECT_CAMPAIGN)
 }
 
+export function useRegisterCampaignModalToggle(): () => void {
+  return useToggleModal(ApplicationModal.REGISTER_CAMPAIGN)
+}
+
 export function useTrueSightNetworkModalToggle(): () => void {
   return useToggleModal(ApplicationModal.TRUESIGHT_NETWORK)
 }

@@ -6,6 +6,7 @@ import { Popover, Sidetab } from '@typeform/embed-react'
 import { Suspense, lazy, useEffect } from 'react'
 import { isMobile } from 'react-device-detect'
 import { AlertTriangle } from 'react-feather'
+import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3'
 import { Route, Switch } from 'react-router-dom'
 import { Flex, Text } from 'rebass'
 import styled from 'styled-components'
@@ -183,83 +184,85 @@ export default function App() {
       )}
 
       {(!account || !BLACKLIST_WALLETS.includes(account)) && (
-        <ApolloProvider client={classicClient}>
-          <Route component={DarkModeQueryParamReader} />
-          <AppWrapper>
-            <TopBanner />
-            <HeaderWrapper>
-              <Header />
-            </HeaderWrapper>
-            <Suspense fallback={<Loader />}>
-              <BodyWrapper>
-                <Popups />
-                <Web3ReactManager>
-                  <Switch>
-                    <Route exact strict path={AppPaths.SWAP_LEGACY} component={Swap} />
+        <GoogleReCaptchaProvider reCaptchaKey="6LdOiKwhAAAAAGnf4xX5H0ZElZt9rQ2neIdL_d_o">
+          <ApolloProvider client={classicClient}>
+            <Route component={DarkModeQueryParamReader} />
+            <AppWrapper>
+              <TopBanner />
+              <HeaderWrapper>
+                <Header />
+              </HeaderWrapper>
+              <Suspense fallback={<Loader />}>
+                <BodyWrapper>
+                  <Popups />
+                  <Web3ReactManager>
+                    <Switch>
+                      <Route exact strict path={AppPaths.SWAP_LEGACY} component={Swap} />
 
-                    <Route exact strict path="/swap/:network/:fromCurrency-to-:toCurrency" component={SwapV2} />
-                    <Route exact strict path="/swap/:network/:fromCurrency" component={SwapV2} />
+                      <Route exact strict path="/swap/:network/:fromCurrency-to-:toCurrency" component={SwapV2} />
+                      <Route exact strict path="/swap/:network/:fromCurrency" component={SwapV2} />
 
-                    <Route exact strict path="/swap/:outputCurrency" component={RedirectToSwap} />
-                    <Route exact strict path="/swap" component={SwapV2} />
+                      <Route exact strict path="/swap/:outputCurrency" component={RedirectToSwap} />
+                      <Route exact strict path="/swap" component={SwapV2} />
 
-                    <Route exact strict path="/find" component={PoolFinder} />
-                    <Route exact strict path="/pools" component={Pools} />
-                    <Route exact strict path="/pools/:currencyIdA" component={Pools} />
-                    <Route exact strict path="/pools/:currencyIdA/:currencyIdB" component={Pools} />
-                    <Route exact strict path="/farms" component={Yield} />
-                    <Route exact strict path="/myPools" component={Pool} />
+                      <Route exact strict path="/find" component={PoolFinder} />
+                      <Route exact strict path="/pools" component={Pools} />
+                      <Route exact strict path="/pools/:currencyIdA" component={Pools} />
+                      <Route exact strict path="/pools/:currencyIdA/:currencyIdB" component={Pools} />
+                      <Route exact strict path="/farms" component={Yield} />
+                      <Route exact strict path="/myPools" component={Pool} />
 
-                    {/* Create new pool */}
-                    <Route exact path="/create" component={CreatePool} />
-                    <Route exact path="/create/:currencyIdA" component={RedirectOldCreatePoolPathStructure} />
-                    <Route
-                      exact
-                      path="/create/:currencyIdA/:currencyIdB"
-                      component={RedirectCreatePoolDuplicateTokenIds}
-                    />
+                      {/* Create new pool */}
+                      <Route exact path="/create" component={CreatePool} />
+                      <Route exact path="/create/:currencyIdA" component={RedirectOldCreatePoolPathStructure} />
+                      <Route
+                        exact
+                        path="/create/:currencyIdA/:currencyIdB"
+                        component={RedirectCreatePoolDuplicateTokenIds}
+                      />
 
-                    {/* Add liquidity */}
-                    <Route exact path="/add/:currencyIdA/:currencyIdB/:pairAddress" component={AddLiquidity} />
+                      {/* Add liquidity */}
+                      <Route exact path="/add/:currencyIdA/:currencyIdB/:pairAddress" component={AddLiquidity} />
 
-                    <Route
-                      exact
-                      strict
-                      path="/remove/:currencyIdA/:currencyIdB/:pairAddress"
-                      component={RemoveLiquidity}
-                    />
+                      <Route
+                        exact
+                        strict
+                        path="/remove/:currencyIdA/:currencyIdB/:pairAddress"
+                        component={RemoveLiquidity}
+                      />
 
-                    <Route exact strict path="/elastic/swap" component={ProAmmSwap} />
-                    <Route exact strict path="/elastic/remove/:tokenId" component={ProAmmRemoveLiquidity} />
-                    <Route
-                      exact
-                      strict
-                      path="/elastic/add/:currencyIdA?/:currencyIdB?/:feeAmount?"
-                      component={RedirectDuplicateTokenIds}
-                    />
+                      <Route exact strict path="/elastic/swap" component={ProAmmSwap} />
+                      <Route exact strict path="/elastic/remove/:tokenId" component={ProAmmRemoveLiquidity} />
+                      <Route
+                        exact
+                        strict
+                        path="/elastic/add/:currencyIdA?/:currencyIdB?/:feeAmount?"
+                        component={RedirectDuplicateTokenIds}
+                      />
 
-                    <Route
-                      exact
-                      strict
-                      path="/elastic/increase/:currencyIdA?/:currencyIdB?/:feeAmount?/:tokenId?"
-                      component={IncreaseLiquidity}
-                    />
+                      <Route
+                        exact
+                        strict
+                        path="/elastic/increase/:currencyIdA?/:currencyIdB?/:feeAmount?/:tokenId?"
+                        component={IncreaseLiquidity}
+                      />
 
-                    <Route exact path="/about/kyberswap" component={AboutKyberSwap} />
-                    <Route exact path="/about/knc" component={AboutKNC} />
-                    <Route exact path="/referral" component={CreateReferral} />
-                    <Route exact path="/discover" component={TrueSight} />
-                    <Route exact path="/buy-crypto" component={BuyCrypto} />
-                    <Route exact path={`${AppPaths.CAMPAIGN}/:slug?`} component={Campaign} />
+                      <Route exact path="/about/kyberswap" component={AboutKyberSwap} />
+                      <Route exact path="/about/knc" component={AboutKNC} />
+                      <Route exact path="/referral" component={CreateReferral} />
+                      <Route exact path="/discover" component={TrueSight} />
+                      <Route exact path="/buy-crypto" component={BuyCrypto} />
+                      <Route exact path={`${AppPaths.CAMPAIGN}/:slug?`} component={Campaign} />
 
-                    <Route component={RedirectPathToSwapOnly} />
-                  </Switch>
-                </Web3ReactManager>
-              </BodyWrapper>
-              {showFooter && <Footer />}
-            </Suspense>
-          </AppWrapper>
-        </ApolloProvider>
+                      <Route component={RedirectPathToSwapOnly} />
+                    </Switch>
+                  </Web3ReactManager>
+                </BodyWrapper>
+                {showFooter && <Footer />}
+              </Suspense>
+            </AppWrapper>
+          </ApolloProvider>
+        </GoogleReCaptchaProvider>
       )}
     </ErrorBoundary>
   )

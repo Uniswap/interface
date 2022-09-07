@@ -12,7 +12,6 @@ const AnimatedDialogOverlay = animated(DialogOverlay)
 const StyledDialogOverlay = styled(AnimatedDialogOverlay)<{ zindex: string | number }>`
   &[data-reach-dialog-overlay] {
     z-index: ${({ zindex }) => zindex};
-    background-color: transparent;
     overflow: hidden;
 
     display: flex;
@@ -26,7 +25,7 @@ const StyledDialogOverlay = styled(AnimatedDialogOverlay)<{ zindex: string | num
 const AnimatedDialogContent = animated(DialogContent)
 // destructure to not pass custom props to Dialog DOM element
 const StyledDialogContent = styled(
-  ({ borderRadius, minHeight, maxHeight, maxWidth, width, mobile, isOpen, ...rest }) => (
+  ({ borderRadius, minHeight, maxHeight, maxWidth, width, height, bgColor, mobile, isOpen, ...rest }) => (
     <AnimatedDialogContent {...rest} />
   ),
 ).attrs({
@@ -36,10 +35,11 @@ const StyledDialogContent = styled(
 
   &[data-reach-dialog-content] {
     margin: 0 0 2rem 0;
-    background-color: ${({ theme }) => theme.tableHeader};
+    background-color: ${({ theme, bgColor }) => bgColor || theme.tableHeader};
     box-shadow: 0 4px 8px 0 ${({ theme }) => transparentize(0.95, theme.shadow1)};
-    padding: 0px;
+    padding: 0;
     width: ${({ width }) => width || '50vw'};
+    height: ${({ height }) => height || 'auto'};
     overflow-y: ${({ mobile }) => (mobile ? 'scroll' : 'hidden')};
     overflow-x: hidden;
     align-self: ${({ mobile }) => (mobile ? 'flex-end' : 'center')};
@@ -87,6 +87,8 @@ export interface ModalProps {
   maxWidth?: number | string
   borderRadius?: number | string
   width?: string
+  height?: string
+  bgColor?: string
   zindex?: number | string
   enableInitialFocusInput?: boolean
   className?: string
@@ -101,6 +103,8 @@ export default function Modal({
   maxHeight = 90,
   maxWidth = 420,
   width,
+  height,
+  bgColor,
   enableInitialFocusInput = false,
   className,
   children,
@@ -144,6 +148,8 @@ export default function Modal({
                 maxHeight={maxHeight}
                 maxWidth={maxWidth}
                 width={width}
+                height={height}
+                bgColor={bgColor}
                 borderRadius={borderRadius}
                 mobile={isMobile}
                 className={className}
