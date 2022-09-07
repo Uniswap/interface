@@ -221,14 +221,17 @@ export function WalletConnectRequestModal({ isVisible, onClose, request }: Props
             {isPotentiallyUnsafe(request) && (
               <SectionContainer>
                 <Text color="accentWarning" variant="bodySmall">
-                  <Trans t={t}>
-                    <Text fontWeight="bold">Be careful:</Text>{' '}
-                    {isTransactionRequest(request)
-                      ? 'Accepting this request'
-                      : 'Signing this message'}{' '}
-                    could allow the requesting app to perform any action with your wallet and its
-                    contents.
-                  </Trans>
+                  {isTransactionRequest(request) ? (
+                    <Trans t={t}>
+                      <Text fontWeight="bold">Be careful:</Text> Accepting this request could allow
+                      the requesting app to perform any action with your wallet and its contents.
+                    </Trans>
+                  ) : (
+                    <Trans t={t}>
+                      <Text fontWeight="bold">Be careful:</Text> Signing this message could allow
+                      the requesting app to perform any action with your wallet and its contents.
+                    </Trans>
+                  )}
                 </Text>
               </SectionContainer>
             )}
