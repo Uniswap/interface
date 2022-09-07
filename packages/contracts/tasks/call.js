@@ -1,6 +1,3 @@
-
-
-
 task("call", "add liquidity").setAction(async (args) => {
     const factory = await ethers.getContractFactory(args.name);
     const fa = await factory.deploy()
@@ -9,7 +6,7 @@ task("call", "add liquidity").setAction(async (args) => {
 })
 
 task("minttoken", "approve tt & weth token of fixed amount to router  ,and it will be muled 1e18")
-    .setAction(async (args,hre) => {
+    .setAction(async (args, hre) => {
 
         let ans = await getFactorys()
         await ans.tt.mint()
@@ -22,9 +19,9 @@ task("approverouter", "approve tt & weth token of fixed amount to router  ,and i
         let ans = await getFactorys()
 
         let xamount = expandTo18Decimals(args.amount)
-        await ans.tt.approve(ans.router.address,xamount)
+        await ans.tt.approve(ans.router.address, xamount)
         await ans.weth.approve(ans.router.address, xamount)
-        console.log("weth allowence",await ans.weth.allowance(ans.signer.address,ans.router.address))
+        console.log("weth allowence", await ans.weth.allowance(ans.signer.address, ans.router.address))
     })
 
 task("addLiquidity", "only for weth-tt pair")
@@ -51,17 +48,19 @@ task("addLiquidity", "only for weth-tt pair")
 
 task("calcpair", "")
     .setAction(async (args) => {
-        let ans  = await getFactorys()
-        let pairAddr = await ans.factory.getPair(ans.weth.address,ans.tt.address,false)
+        let ans = await getFactorys()
+        let pairAddr = await ans.factory.getPair(ans.weth.address, ans.tt.address, false)
 
-        let {address0,address1} = ans.weth.address<ans.tt.address?{address0:ans.weth.address,address1:ans.tt.address}:{address0:ans.tt.address,address1:ans.weth.address}
+        let {address0, address1} = ans.weth.address < ans.tt.address ? {
+            address0: ans.weth.address,
+            address1: ans.tt.address
+        } : {address0: ans.tt.address, address1: ans.weth.address}
         let initCodeHash = ethers.utils.keccak256((await ethers.getContractFactory("TeleswapV2Pair")).bytecode)
-        let salt = await ethers.utils.solidityKeccak256(['address','address','bool'],[address0,address1,false])
-        let calcedAddress = await ethers.utils.getCreate2Address(ans.factory.address , salt ,initCodeHash)
-        console.log("calced address",calcedAddress)
-        console.log("volatile pair addr",pairAddr)
+        let salt = await ethers.utils.solidityKeccak256(['address', 'address', 'bool'], [address0, address1, false])
+        let calcedAddress = await ethers.utils.getCreate2Address(ans.factory.address, salt, initCodeHash)
+        console.log("calced address", calcedAddress)
+        console.log("volatile pair addr", pairAddr)
     })
-
 
 
 // test case run on testnet
@@ -70,12 +69,10 @@ async function getFactorys() {
         factory: await (await ethers.getContractFactory("TeleswapV2Factory")).attach(process.env.FACTORY),
         router: await (await ethers.getContractFactory("TeleswapV2Router02")).attach(process.env.ROUTER),
         weth: await (await ethers.getContractFactory("WETH9")).attach(process.env.WETH),
-        tt: await (await ethers.getContractFactory("ERC20")).attach(process.env.TT),
+        tt: await (await ethers.getContractFactory("TT")).attach(process.env.TT),
         signer: (await ethers.getSigners())[0]
     }
 }
-
-
 
 
 function expandTo18Decimals(n) {
