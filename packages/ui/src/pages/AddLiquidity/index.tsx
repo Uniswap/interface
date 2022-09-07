@@ -167,18 +167,10 @@ export default function AddLiquidity({
         //   to: wrappedCurrency(currencyB, chainId)?.address,
         //   stable: true,
         // },
-        // (tokenBIsETH ? parsedAmountA : parsedAmountB).raw.toString(), // token desired
-        // amountsMin[tokenBIsETH ? Field.CURRENCY_A : Field.CURRENCY_B].toString(), // token min
-        // amountsMin[tokenBIsETH ? Field.CURRENCY_B : Field.CURRENCY_A].toString(), // eth min
-        // account,
-        // deadline.toHexString(),
-        [wrappedCurrency(currencyA, chainId)?.address ?? '', wrappedCurrency(currencyB, chainId)?.address ?? '', pairModeStable],
-        parsedAmountA.raw.toString(),
-        parsedAmountB.raw.toString(),
-        amountsMin[Field.CURRENCY_A].toString(),
-        amountsMin[Field.CURRENCY_B].toString(),
-        // "1",
-        // "1",
+        [tokenBIsETH ? wrappedCurrency(currencyA, chainId)?.address ?? '' : wrappedCurrency(currencyB, chainId)?.address ?? '', tokenBIsETH ? wrappedCurrency(currencyB, chainId)?.address ?? '' : wrappedCurrency(currencyA, chainId)?.address ?? '', getRoutePairMode()],
+        (tokenBIsETH ? parsedAmountA : parsedAmountB).raw.toString(), // token desired
+        amountsMin[tokenBIsETH ? Field.CURRENCY_A : Field.CURRENCY_B].toString(), // token min
+        amountsMin[tokenBIsETH ? Field.CURRENCY_B : Field.CURRENCY_A].toString(), // eth min
         account,
         deadline.toHexString(),
       ]
@@ -192,8 +184,6 @@ export default function AddLiquidity({
         parsedAmountB.raw.toString(),
         amountsMin[Field.CURRENCY_A].toString(),
         amountsMin[Field.CURRENCY_B].toString(),
-        // "1",
-        // "1",
         account,
         deadline.toHexString(),
       ]
@@ -201,7 +191,7 @@ export default function AddLiquidity({
     }
     setAttemptingTxn(true)
     await estimate(...args, value ? { value } : {})
-      .then((estimatedGasLimit) =>
+      .then((estimatedGasLimit) => {
         method(...args, {
           ...(value ? { value } : {}),
           gasLimit: calculateGasMargin(estimatedGasLimit),
@@ -228,7 +218,7 @@ export default function AddLiquidity({
             label: [currencies[Field.CURRENCY_A]?.symbol, currencies[Field.CURRENCY_B]?.symbol].join('/'),
           })
         })
-      )
+      })
       .catch((error) => {
         setAttemptingTxn(false)
         // we only care if the error is something _other_ than the user rejected the tx
