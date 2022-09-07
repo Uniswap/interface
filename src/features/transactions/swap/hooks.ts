@@ -18,7 +18,7 @@ import {
   useUSDCValue,
 } from 'src/features/routing/useUSDCPrice'
 import { useCurrency } from 'src/features/tokens/useCurrency'
-import { swapActions, swapSagaName } from 'src/features/transactions/swap/swapSaga'
+import { swapActions } from 'src/features/transactions/swap/swapSaga'
 import { Trade, useTrade } from 'src/features/transactions/swap/useTrade'
 import { getWrapType, isWrapAction } from 'src/features/transactions/swap/utils'
 import { getSwapWarnings } from 'src/features/transactions/swap/validate'
@@ -42,7 +42,7 @@ import { TransactionType } from 'src/features/transactions/types'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { buildCurrencyId, currencyAddress } from 'src/utils/currencyId'
 import { logger } from 'src/utils/logger'
-import { SagaState, SagaStatus } from 'src/utils/saga'
+import { SagaStatus } from 'src/utils/saga'
 import { tryParseExactAmount } from 'src/utils/tryParseAmount'
 import { useSagaStatus } from 'src/utils/useSagaStatus'
 
@@ -426,19 +426,9 @@ export function useSwapCallback(
   swapMethodParameters: MethodParameters | undefined,
   onSubmit?: () => void,
   txId?: string
-): {
-  swapState: SagaState | null
-  swapCallback: () => void
-} {
+): () => void {
   const appDispatch = useAppDispatch()
   const account = useActiveAccount()
-  const swapState = useSagaStatus(swapSagaName, onSubmit, true)
-
-  useEffect(() => {
-    if (swapState.status === SagaStatus.Started) {
-      onSubmit?.()
-    }
-  }, [onSubmit, swapState])
 
   return useMemo(() => {
     if (
@@ -449,33 +439,28 @@ export function useSwapCallback(
       !gasFeeEstimate?.swap ||
       !swapMethodParameters
     ) {
-      return {
-        swapCallback: () => {
-          logger.error('hooks', 'useSwapCallback', 'Missing swapCallback parameters')
-        },
-        swapState: null,
+      return () => {
+        logger.error('hooks', 'useSwapCallback', 'Missing swapCallback parameters')
       }
     }
 
-    return {
-      swapCallback: async () => {
-        appDispatch(
-          swapActions.trigger({
-            txId,
-            account,
-            trade,
-            exactApproveRequired,
-            methodParameters: swapMethodParameters,
-            gasFeeEstimate,
-          })
-        )
-      },
-      swapState,
+    return () => {
+      appDispatch(
+        swapActions.trigger({
+          txId,
+          account,
+          trade,
+          exactApproveRequired,
+          methodParameters: swapMethodParameters,
+          gasFeeEstimate,
+        })
+      )
+      onSubmit?.()
     }
   }, [
     txId,
     account,
-    swapState,
+    onSubmit,
     appDispatch,
     trade,
     gasFeeEstimate,

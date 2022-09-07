@@ -63,7 +63,7 @@ export function SwapReview({ dispatch, onNext, onPrev, derivedSwapInfo }: SwapFo
   )
   const newTradeToAccept = requireAcceptNewTrade(acceptedTrade, trade)
 
-  const { swapCallback } = useSwapCallback(
+  const swapCallback = useSwapCallback(
     trade,
     gasFeeEstimate,
     exactApproveRequired,

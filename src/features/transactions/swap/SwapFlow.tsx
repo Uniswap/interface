@@ -103,7 +103,7 @@ export function SwapFlow({ prefilledState, onClose }: SwapFormProps) {
   const [listVariation, setListVariation] = useState<TokenSelectorVariation>(
     TokenSelectorVariation.BalancesAndPopular
   )
-  const { swapCallback } = useSwapCallbackFromDerivedSwapInfo(derivedSwapInfo)
+  const swapCallback = useSwapCallbackFromDerivedSwapInfo(derivedSwapInfo)
   const { warningModalType, warnings, selectingCurrencyField, currencies } = derivedSwapInfo
 
   // use initial content height only to determine native keyboard view

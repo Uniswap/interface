@@ -25,7 +25,6 @@ import { BaseDerivedInfo } from 'src/features/transactions/transactionState/type
 import {
   transferTokenActions,
   TransferTokenParams,
-  transferTokenSagaName,
 } from 'src/features/transactions/transfer/transferTokenSaga'
 import { getTransferWarnings } from 'src/features/transactions/transfer/validate'
 import { TransactionType } from 'src/features/transactions/types'
@@ -36,9 +35,7 @@ import {
 } from 'src/features/wallet/hooks'
 import { buildCurrencyId, currencyAddress } from 'src/utils/currencyId'
 import { logger } from 'src/utils/logger'
-import { SagaStatus } from 'src/utils/saga'
 import { tryParseExactAmount } from 'src/utils/tryParseAmount'
-import { useSagaStatus } from 'src/utils/useSagaStatus'
 
 export type DerivedTransferInfo = BaseDerivedInfo<Currency | NFTAsset.Asset> & {
   currencyTypes: { [CurrencyField.INPUT]?: AssetType }
@@ -209,21 +206,14 @@ function useTransferCallback(
 ): null | (() => void) {
   const dispatch = useAppDispatch()
 
-  const transferState = useSagaStatus(transferTokenSagaName, undefined, true)
-
-  useEffect(() => {
-    if (transferState.status === SagaStatus.Started) {
-      onSubmit?.()
-    }
-  }, [onSubmit, transferState.status])
-
   return useMemo(() => {
     return transferTokenParams
       ? () => {
           dispatch(transferTokenActions.trigger(transferTokenParams))
+          onSubmit?.()
         }
       : null
-  }, [dispatch, transferTokenParams])
+  }, [dispatch, transferTokenParams, onSubmit])
 }
 
 export function useUpdateTransferGasEstimate({
