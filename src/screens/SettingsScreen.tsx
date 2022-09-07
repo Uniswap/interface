@@ -317,7 +317,7 @@ function FooterSettings() {
   const buildVersion = DeviceInfo.getBuildNumber()
 
   return (
-    <Text color="textTertiary" fontSize={14} fontWeight="400" paddingTop="lg" variant="body">
+    <Text color="textTertiary" fontSize={14} fontWeight="400" marginTop="xs" variant="body">
       {`Version ${version}.${buildVersion}`}
     </Text>
   )
