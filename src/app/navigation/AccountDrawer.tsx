@@ -1,23 +1,13 @@
 import { DrawerContentComponentProps } from '@react-navigation/drawer'
 import { default as React, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ListRenderItemInfo } from 'react-native'
 import 'react-native-gesture-handler'
-import {
-  Extrapolate,
-  interpolate,
-  useAnimatedScrollHandler,
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-} from 'react-native-reanimated'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import PlusSquareIcon from 'src/assets/icons/plus-square.svg'
 import SettingsIcon from 'src/assets/icons/settings.svg'
-import { AccountCardItem } from 'src/components/accounts/AccountCardItem'
+import { AccountList } from 'src/components/accounts/AccountList'
 import { Button } from 'src/components/buttons/Button'
-import { AnimatedBox, Box, Flex } from 'src/components/layout'
-import { AnimatedFlatList } from 'src/components/layout/AnimatedFlatList'
+import { Box, Flex } from 'src/components/layout'
 import { Screen } from 'src/components/layout/Screen'
 import { ActionSheetModal, MenuItemProp } from 'src/components/modals/ActionSheetModal'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
@@ -40,9 +30,6 @@ import {
 import { activateAccount } from 'src/features/wallet/walletSlice'
 import { OnboardingScreens, Screens } from 'src/screens/Screens'
 import { setClipboard } from 'src/utils/clipboard'
-
-const key = (account: Account) => account.address
-const CONTENT_MAX_SCROLL_Y = 20
 
 export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
   const { t } = useTranslation()
@@ -140,47 +127,6 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
     navigation.closeDrawer()
     navigation.navigate(Screens.SettingsStack, { screen: Screens.Settings })
   }
-
-  const renderItem = useCallback(
-    () =>
-      ({ item }: ListRenderItemInfo<Account>) => {
-        return (
-          <AccountCardItem
-            account={item}
-            isActive={!!activeAccount && activeAccount.address === item.address}
-            isViewOnly={item.type === AccountType.Readonly}
-            onPress={onPressAccount()}
-            onPressEdit={onPressEdit()}
-            onPressQRCode={onPressQRCode()}
-          />
-        )
-      },
-    [onPressAccount, onPressEdit, onPressQRCode, activeAccount]
-  )
-
-  const scrollY = useSharedValue(0)
-  const scrollHandler = useAnimatedScrollHandler({
-    onScroll: (event) => {
-      scrollY.value = event.contentOffset.y
-    },
-    onEndDrag: (event) => {
-      scrollY.value = withTiming(
-        event.contentOffset.y > CONTENT_MAX_SCROLL_Y / 2 ? CONTENT_MAX_SCROLL_Y : 0
-      )
-    },
-  })
-
-  const headerBorderStyle = useAnimatedStyle(() => {
-    return {
-      opacity: interpolate(scrollY.value, [0, CONTENT_MAX_SCROLL_Y], [0, 1], Extrapolate.CLAMP),
-    }
-  }, [scrollY.value])
-
-  // useAnimatedStyle gets rebuilt on every re-render
-  // https://github.com/software-mansion/react-native-reanimated/issues/1767
-  // Make headerBorderStyle to depend only on `scrollY.value`
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const headerBorderStyleMemo = useMemo(() => headerBorderStyle, [scrollY.value])
 
   const editAccountOptions = useMemo<MenuItemProp[]>(() => {
     const onPressWalletSettings = () => {
@@ -344,32 +290,15 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
     return menuItems
   }, [hasImportedSeedPhrase, dispatch, navigation, t])
 
-  const flatList = useMemo(
-    () => (
-      <AnimatedFlatList
-        ListHeaderComponent={
-          <Flex bg="backgroundBackdrop" borderBottomColor="backgroundOutline" pt="sm">
-            <Text color="textPrimary" px="lg" variant="headlineSmall">
-              {t('Your wallets')}
-            </Text>
-            <AnimatedBox bg="backgroundOutline" height={1} style={headerBorderStyleMemo} />
-          </Flex>
-        }
-        data={accountsData}
-        keyExtractor={key}
-        renderItem={renderItem()}
-        showsHorizontalScrollIndicator={false}
-        showsVerticalScrollIndicator={false}
-        stickyHeaderIndices={[0]}
-        onScroll={scrollHandler}
-      />
-    ),
-    [t, accountsData, scrollHandler, renderItem, headerBorderStyleMemo]
-  )
-
   return (
     <Screen bg="backgroundBackdrop">
-      {flatList}
+      <AccountList
+        data={accountsData}
+        onPress={onPressAccount}
+        onPressEdit={onPressEdit}
+        onPressQRCode={onPressQRCode}
+      />
+
       <Flex>
         <Box bg="backgroundOutline" height={0.5} mb="sm" />
         <Flex gap="xl" pb="xl" px="lg">
