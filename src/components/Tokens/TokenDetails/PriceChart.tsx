@@ -5,17 +5,7 @@ import { EventType } from '@visx/event/lib/types'
 import { GlyphCircle } from '@visx/glyph'
 import { Line } from '@visx/shape'
 import { filterTimeAtom } from 'components/Tokens/state'
-import {
-  bisect,
-  curveCardinal,
-  NumberValue,
-  scaleLinear,
-  scaleTime,
-  timeDay,
-  timeHour,
-  timeMinute,
-  timeMonth,
-} from 'd3'
+import { bisect, curveCardinal, NumberValue, scaleLinear, timeDay, timeHour, timeMinute, timeMonth } from 'd3'
 import { useTokenPriceQuery } from 'graphql/data/TokenPriceQuery'
 import { TimePeriod } from 'graphql/data/TopTokenQuery'
 import { useActiveLocale } from 'hooks/useActiveLocale'
@@ -162,7 +152,7 @@ export function PriceChart({ width, height, token }: PriceChartProps) {
 
   // Defining scales
   // x scale
-  const timeScale = scaleTime().domain([startingPrice.timestamp, endingPrice.timestamp]).range([0, width])
+  const timeScale = scaleLinear().domain([startingPrice.timestamp, endingPrice.timestamp]).range([0, width])
   // y scale
   const rdScale = scaleLinear().domain(getPriceBounds(pricePoints)).range([graphInnerHeight, 0])
 
@@ -220,7 +210,7 @@ export function PriceChart({ width, height, token }: PriceChartProps) {
       const x0 = timeScale.invert(x) // get timestamp from the scalexw
       const index = bisect(
         pricePoints.map((x) => x.timestamp),
-        x0.valueOf(),
+        x0,
         1
       )
 
