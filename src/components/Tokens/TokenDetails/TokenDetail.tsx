@@ -4,18 +4,16 @@ import { useWeb3React } from '@web3-react/core'
 import CurrencyLogo from 'components/CurrencyLogo'
 import PriceChart from 'components/Tokens/TokenDetails/PriceChart'
 import { VerifiedIcon } from 'components/TokenSafety/TokenSafetyIcon'
-import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import { getChainInfo } from 'constants/chainInfo'
 import { nativeOnChain, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
-import { checkWarning, WARNING_LEVEL } from 'constants/tokenSafety'
+import { checkWarning } from 'constants/tokenSafety'
 import { chainIdToChainName, useTokenDetailQuery } from 'graphql/data/TokenDetailQuery'
-import { useCurrency, useIsUserAddedToken, useToken } from 'hooks/Tokens'
+import { useCurrency, useToken } from 'hooks/Tokens'
 import { useAtomValue } from 'jotai/utils'
 import { darken } from 'polished'
-import { Suspense, useCallback } from 'react'
+import { Suspense } from 'react'
 import { useState } from 'react'
 import { ArrowLeft } from 'react-feather'
-import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import { CopyContractAddress } from 'theme'
 import { formatDollarAmount } from 'utils/formatDollarAmt'
@@ -178,17 +176,6 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
   const isFavorited = useIsFavorited(address)
   const toggleFavorite = useToggleFavorite(address)
   const warning = checkWarning(address)
-  const navigate = useNavigate()
-  const isUserAddedToken = useIsUserAddedToken(token)
-  const [warningModalOpen, setWarningModalOpen] = useState(!!warning && !isUserAddedToken)
-
-  const handleDismissWarning = useCallback(() => {
-    setWarningModalOpen(false)
-  }, [setWarningModalOpen])
-  const handleCancel = useCallback(() => {
-    setWarningModalOpen(false)
-    warning && warning.level === WARNING_LEVEL.BLOCKED && navigate(-1)
-  }, [setWarningModalOpen, navigate, warning])
   const chainInfo = getChainInfo(token?.chainId)
   const networkLabel = chainInfo?.label
   const networkBadgebackgroundColor = chainInfo?.backgroundColor
@@ -286,12 +273,6 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
             </ContractAddress>
           </Contract>
         </ContractAddressSection>
-        <TokenSafetyModal
-          isOpen={warningModalOpen}
-          tokenAddress={address}
-          onCancel={handleCancel}
-          onContinue={handleDismissWarning}
-        />
       </TopArea>
     </Suspense>
   )
