@@ -803,7 +803,7 @@ const toggleShowChart = () => setShowChart(!showChart)
                           }
                         >
                           <AutoRow justify="space-between" style={{ flexWrap: 'nowrap' }}>
-                            <span style={{ display: 'flex-grow:1', alignItems: 'center' }}>
+                            <span style={{ display: 'flex', justifyContent:'start', gap:10, alignItems: 'center' }}>
                               <CurrencyLogo
                                 currency={currencies[Field.INPUT]}
                                 size={'20px'}
