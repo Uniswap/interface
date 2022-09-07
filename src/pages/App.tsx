@@ -12,6 +12,7 @@ import { lazy, Suspense, useEffect } from 'react'
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import { useIsDarkMode } from 'state/user/hooks'
 import styled from 'styled-components/macro'
+import { Z_INDEX } from 'theme'
 import { SpinnerSVG } from 'theme/components'
 import { getBrowser } from 'utils/browser'
 import { getCLS, getFCP, getFID, getLCP, Metric } from 'web-vitals'
@@ -73,7 +74,7 @@ const HeaderWrapper = styled.div`
   justify-content: space-between;
   position: fixed;
   top: 0;
-  z-index: 2;
+  z-index: ${Z_INDEX.absoluteTop};
 `
 
 const Marginer = styled.div`

@@ -1,12 +1,12 @@
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
-import { getChainInfoOrDefault } from 'constants/chainInfo'
+import { formatToDecimal } from 'components/AmplitudeAnalytics/utils'
 import { useToken } from 'hooks/Tokens'
 import { useNetworkTokenBalances } from 'hooks/useNetworkTokenBalances'
+import { useStablecoinValue } from 'hooks/useStablecoinPrice'
+import { useTokenBalance } from 'lib/hooks/useCurrencyBalance'
 import { AlertTriangle } from 'react-feather'
-import styled, { useTheme } from 'styled-components/macro'
-
-import NetworkBalance from './NetworkBalance'
+import styled from 'styled-components/macro'
 
 const BalancesCard = styled.div`
   width: 100%;
@@ -33,14 +33,9 @@ const ErrorText = styled.span`
   display: flex;
   flex-wrap: wrap;
 `
-const NetworkBalancesSection = styled.div`
-  height: fit-content;
-`
+
 const TotalBalanceSection = styled.div`
   height: fit-content;
-  border-bottom: 1px solid ${({ theme }) => theme.backgroundOutline};
-  margin-bottom: 20px;
-  padding-bottom: 20px;
 `
 const TotalBalance = styled.div`
   display: flex;
@@ -54,58 +49,35 @@ const TotalBalanceItem = styled.div`
   display: flex;
 `
 
-export default function BalanceSummary({
-  address,
-  networkBalances,
-  totalBalance,
-}: {
-  address: string
-  networkBalances: (JSX.Element | null)[] | null
-  totalBalance: number
-}) {
-  const theme = useTheme()
-  const tokenSymbol = useToken(address)?.symbol
-  const { loading, error, data } = useNetworkTokenBalances({ address })
+export default function BalanceSummary({ address }: { address: string }) {
+  const token = useToken(address)
+  const { loading, error } = useNetworkTokenBalances({ address })
 
-  const { chainId: connectedChainId } = useWeb3React()
+  const { account } = useWeb3React()
+  const balance = useTokenBalance(account, token ?? undefined)
+  const balanceNumber = balance ? formatToDecimal(balance, Math.min(balance.currency.decimals, 6)) : undefined
+  const balanceUsd = useStablecoinValue(balance)?.toFixed(2)
+  const balanceUsdNumber = balanceUsd ? parseFloat(balanceUsd) : undefined
 
-  const { label: connectedLabel, logoUrl: connectedLogoUrl } = getChainInfoOrDefault(connectedChainId)
-  const connectedFiatValue = 1
-  const multipleBalances = true // for testing purposes
-
-  if (loading) return null
+  if (loading || (!error && !balanceNumber && !balanceUsdNumber)) return null
   return (
     <BalancesCard>
       {error ? (
         <ErrorState>
           <AlertTriangle size={24} />
           <ErrorText>
-            <Trans>There was an error loading your {tokenSymbol} balance</Trans>
+            <Trans>There was an error loading your {token?.symbol} balance</Trans>
           </ErrorText>
         </ErrorState>
-      ) : multipleBalances ? (
-        <>
-          <TotalBalanceSection>
-            Your balance across all networks
-            <TotalBalance>
-              <TotalBalanceItem>{`${totalBalance} ${tokenSymbol}`}</TotalBalanceItem>
-              <TotalBalanceItem>$4,210.12</TotalBalanceItem>
-            </TotalBalance>
-          </TotalBalanceSection>
-          <NetworkBalancesSection>Your balances by network</NetworkBalancesSection>
-          {data && networkBalances}
-        </>
       ) : (
         <>
-          Your balance on {connectedLabel}
-          <NetworkBalance
-            logoUrl={connectedLogoUrl}
-            balance={'1'}
-            tokenSymbol={tokenSymbol ?? 'XXX'}
-            fiatValue={connectedFiatValue}
-            label={connectedLabel}
-            networkColor={theme.textPrimary}
-          />
+          <TotalBalanceSection>
+            Your balance
+            <TotalBalance>
+              <TotalBalanceItem>{`${balanceNumber} ${token?.symbol}`}</TotalBalanceItem>
+              <TotalBalanceItem>{`$${balanceUsdNumber}`}</TotalBalanceItem>
+            </TotalBalance>
+          </TotalBalanceSection>
         </>
       )}
     </BalancesCard>
