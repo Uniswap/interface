@@ -1,7 +1,7 @@
 import { AnyAction } from '@reduxjs/toolkit'
 import React, { Dispatch, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { StyleSheet } from 'react-native'
+import { StyleSheet, TextInputProps } from 'react-native'
 import { FadeIn, FadeOut, FadeOutDown } from 'react-native-reanimated'
 import { useAppDispatch, useAppTheme } from 'src/app/hooks'
 import InfoCircle from 'src/assets/icons/info-circle.svg'
@@ -129,6 +129,21 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo, isCompressedView }
 
   const ARROW_SIZE = 44
 
+  const [inputSelection, setInputSelection] = React.useState<TextInputProps['selection']>()
+  const [outputSelection, setOutputSelection] = React.useState<TextInputProps['selection']>()
+  const selection = React.useMemo(
+    () => ({
+      [CurrencyField.INPUT]: inputSelection,
+      [CurrencyField.OUTPUT]: outputSelection,
+    }),
+    [inputSelection, outputSelection]
+  )
+  const resetSelection = (start: number, end?: number) => {
+    const reset =
+      exactCurrencyField === CurrencyField.INPUT ? setInputSelection : setOutputSelection
+    reset({ start, end })
+  }
+
   return (
     <Flex grow gap="none" justifyContent="space-between">
       <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="none">
@@ -141,10 +156,12 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo, isCompressedView }
               dimTextColor={exactCurrencyField === CurrencyField.OUTPUT && swapDataRefreshing}
               focus={exactCurrencyField === CurrencyField.INPUT}
               isUSDInput={isUSDInput}
+              selection={inputSelection}
               showSoftInputOnFocus={isCompressedView}
               value={formattedAmounts[CurrencyField.INPUT]}
               warnings={warnings}
               onPressIn={onCurrencyInputPress(CurrencyField.INPUT)}
+              onSelectionChange={(start, end) => setInputSelection({ start, end })}
               onSetAmount={(value) => onSetAmount(CurrencyField.INPUT, value, isUSDInput)}
               onSetMax={onSetMax}
               onShowTokenSelector={() => onShowTokenSelector(CurrencyField.INPUT)}
@@ -188,11 +205,13 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo, isCompressedView }
                   dimTextColor={exactCurrencyField === CurrencyField.INPUT && swapDataRefreshing}
                   focus={exactCurrencyField === CurrencyField.OUTPUT}
                   isUSDInput={isUSDInput}
+                  selection={outputSelection}
                   showNonZeroBalancesOnly={false}
                   showSoftInputOnFocus={isCompressedView}
                   value={formattedAmounts[CurrencyField.OUTPUT]}
                   warnings={warnings}
                   onPressIn={onCurrencyInputPress(CurrencyField.OUTPUT)}
+                  onSelectionChange={(start, end) => setOutputSelection({ start, end })}
                   onSetAmount={(value) => onSetAmount(CurrencyField.OUTPUT, value, isUSDInput)}
                   onShowTokenSelector={() => onShowTokenSelector(CurrencyField.OUTPUT)}
                 />
@@ -228,6 +247,8 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo, isCompressedView }
       <AnimatedFlex exiting={FadeOutDown} gap="sm" justifyContent="flex-end" mb="lg" px="sm">
         {!isCompressedView ? (
           <DecimalPad
+            resetSelection={resetSelection}
+            selection={selection[exactCurrencyField]}
             setValue={(value: string) => onSetAmount(exactCurrencyField, value, isUSDInput)}
             value={formattedAmounts[exactCurrencyField]}
           />

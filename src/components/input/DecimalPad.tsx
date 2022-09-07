@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react'
+import { TextInputProps } from 'react-native'
 import { TextButton } from 'src/components/buttons/TextButton'
 import { AnimatedBox, Box } from 'src/components/layout'
 
@@ -16,6 +17,8 @@ interface DecimalPadProps {
   setValue: (newValue: string) => void
   value?: string
   disabled?: boolean
+  selection?: TextInputProps['selection']
+  resetSelection?: (start: number, end?: number) => void
 }
 
 export function DecimalPad({
@@ -23,6 +26,8 @@ export function DecimalPad({
   value = '',
   hideDecimal = false,
   disabled = false,
+  selection,
+  resetSelection,
 }: DecimalPadProps) {
   const keys: KeyProps[] = useMemo(() => {
     return [
@@ -69,7 +74,14 @@ export function DecimalPad({
         key.hidden ? (
           <Box key={i} alignItems={key.align} height="25%" width="33%" />
         ) : (
-          <KeyButton {...key} key={i} setValue={setValue} value={value} />
+          <KeyButton
+            {...key}
+            key={i}
+            resetSelection={resetSelection}
+            selection={selection}
+            setValue={setValue}
+            value={value}
+          />
         )
       )}
     </AnimatedBox>
@@ -79,6 +91,8 @@ export function DecimalPad({
 type KeyButtonProps = KeyProps & {
   setValue: (newValue: string) => void
   value: string
+  selection?: TextInputProps['selection']
+  resetSelection?: (start: number, end?: number) => void
 }
 
 function KeyButton({
@@ -89,8 +103,38 @@ function KeyButton({
   value,
   align,
   paddingTop,
+  selection,
+  resetSelection,
 }: KeyButtonProps) {
   const isDisabled = disabled?.(value) ?? false
+  const start = selection?.start
+  const end = selection?.end
+
+  const handleInsert = () => {
+    if (start === undefined || end === undefined) {
+      // has no text selection, cursor is at the end of the text input
+      setValue(value + label)
+    } else {
+      setValue(value.slice(0, start) + label + value.slice(end))
+      resetSelection && resetSelection(start + 1, start + 1)
+    }
+  }
+
+  const handleDelete = () => {
+    if (start === undefined || end === undefined) {
+      // has no text selection, cursor is at the end of the text input
+      setValue(value.slice(0, -1))
+    } else if (start < end) {
+      // has text part selected
+      setValue(value.slice(0, start) + value.slice(end))
+      resetSelection && resetSelection(start, start)
+    } else if (start > 0) {
+      // part of the text is not selected, but cursor moved
+      setValue(value.slice(0, start - 1) + value.slice(start))
+      resetSelection && resetSelection(start - 1, start - 1)
+    }
+  }
+
   return (
     <TextButton
       alignItems={align}
@@ -106,10 +150,10 @@ function KeyButton({
       onPress={() => {
         switch (action) {
           case 'insert':
-            setValue(value + label)
+            handleInsert()
             break
           case 'deleteLast':
-            setValue(value.slice(0, -1))
+            handleDelete()
         }
       }}>
       {label}

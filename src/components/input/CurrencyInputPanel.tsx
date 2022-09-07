@@ -2,7 +2,7 @@ import { backgroundColor, BackgroundColorProps, useRestyle } from '@shopify/rest
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import React, { useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { TextInput } from 'react-native'
+import { TextInput, TextInputProps } from 'react-native'
 import { useAppTheme } from 'src/app/hooks'
 import { InlineMaxAmountButton } from 'src/components/buttons/MaxAmountButton'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
@@ -37,6 +37,8 @@ type CurrentInputPanelProps = {
   onPressIn?: () => void
   warnings: Warning[]
   dimTextColor?: boolean
+  selection?: TextInputProps['selection']
+  onSelectionChange?: (start: number, end: number) => void
 } & RestyleProps
 
 /** Input panel for a single side of a transfer action. */
@@ -59,6 +61,8 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps) {
     onPressIn,
     warnings,
     dimTextColor,
+    selection,
+    onSelectionChange,
     ...rest
   } = props
 
@@ -102,6 +106,7 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps) {
           placeholderTextColor={theme.colors.textSecondary}
           px="none"
           py="none"
+          selection={selection}
           showCurrencySign={isUSDInput}
           showSoftInputOnFocus={showSoftInputOnFocus}
           testID={isOutput ? 'amount-input-out' : 'amount-input-in'}
@@ -109,6 +114,11 @@ export function CurrencyInputPanel(props: CurrentInputPanelProps) {
           value={value}
           onChangeText={(newAmount: string) => onSetAmount(newAmount)}
           onPressIn={onPressIn}
+          onSelectionChange={({
+            nativeEvent: {
+              selection: { start, end },
+            },
+          }) => onSelectionChange && onSelectionChange(start, end)}
         />
       )}
 
