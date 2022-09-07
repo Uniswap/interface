@@ -8,7 +8,7 @@ interface FeatureFlagsContextType {
   flags: Record<string, string>
 }
 
-export const FeatureFlagContext = createContext<FeatureFlagsContextType>({ isLoaded: false, flags: {} })
+const FeatureFlagContext = createContext<FeatureFlagsContextType>({ isLoaded: false, flags: {} })
 
 export function useFeatureFlagsContext(): FeatureFlagsContextType {
   const context = useContext(FeatureFlagContext)

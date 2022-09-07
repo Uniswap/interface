@@ -25,7 +25,7 @@ import {
 import { Link } from 'react-router-dom'
 import { useDarkModeManager } from 'state/user/hooks'
 import styled, { css } from 'styled-components/macro'
-import { isDevelopmentEnv, isStagingEnv } from 'utils/env'
+import { isDevelopmentEnv, isStagingEnv, isTestEnv } from 'utils/env'
 
 import { ReactComponent as MenuIcon } from '../../assets/images/menu.svg'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
@@ -292,7 +292,7 @@ export default function Menu() {
                       </div>
                       <FileText opacity={0.6} size={16} />
                     </ToggleMenuItem>
-                    {(isDevelopmentEnv() || isStagingEnv()) && (
+                    {(isDevelopmentEnv() || isStagingEnv() || isTestEnv()) && (
                       <ToggleMenuItem data-testid="feature-flags" onClick={openFeatureFlagsModal}>
                         Feature Flags <Flag opacity={0.6} size={16} />
                       </ToggleMenuItem>
