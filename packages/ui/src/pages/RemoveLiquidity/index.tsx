@@ -246,7 +246,7 @@ export default function RemoveLiquidity({
       else {
         methodNames = ['removeLiquidity']
         args = [
-          [ tokenA.address,tokenB.address,getRoutePairMode()],
+          [tokenA.address, tokenB.address, getRoutePairMode()],
           liquidityAmount.raw.toString(),
           amountsMin[Field.CURRENCY_A].toString(),
           amountsMin[Field.CURRENCY_B].toString(),
@@ -261,16 +261,18 @@ export default function RemoveLiquidity({
       if (oneCurrencyIsETH) {
         methodNames = ['removeLiquidityETHWithPermit', 'removeLiquidityETHWithPermitSupportingFeeOnTransferTokens']
         args = [
-          currencyBIsETH ? tokenA.address : tokenB.address,
+          [currencyBIsETH ? tokenA.address : tokenB.address, currencyBIsETH ? tokenB.address : tokenA.address, getRoutePairMode()],
           liquidityAmount.raw.toString(),
           amountsMin[currencyBIsETH ? Field.CURRENCY_A : Field.CURRENCY_B].toString(),
           amountsMin[currencyBIsETH ? Field.CURRENCY_B : Field.CURRENCY_A].toString(),
           account,
           signatureData.deadline,
           false,
-          signatureData.v,
-          signatureData.r,
-          signatureData.s,
+          [
+            signatureData.v,
+            signatureData.r,
+            signatureData.s
+          ]
         ]
       }
       // removeLiquidityETHWithPermit
