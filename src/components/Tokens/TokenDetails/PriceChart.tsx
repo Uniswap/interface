@@ -179,19 +179,13 @@ export function PriceChart({ width, height, token }: PriceChartProps) {
         return [
           hourFormatter(locale),
           dayHourFormatter(locale),
-          timeMinute
-            .range(startDate, endDate, 10)
-            .map((x) => x.valueOf() / 1000)
-            .slice(1),
+          timeMinute.range(startDate, endDate, 10).map((x) => x.valueOf() / 1000),
         ]
       case TimePeriod.DAY:
         return [
           hourFormatter(locale),
           dayHourFormatter(locale),
-          timeHour
-            .range(startDate, endDate, 4)
-            .map((x) => x.valueOf() / 1000)
-            .slice(1),
+          timeHour.range(startDate, endDate, 4).map((x) => x.valueOf() / 1000),
         ]
       case TimePeriod.WEEK:
         return [
