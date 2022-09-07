@@ -1,4 +1,9 @@
-import { AuthenticationType, supportedAuthenticationTypesAsync } from 'expo-local-authentication'
+import {
+  AuthenticationType,
+  hasHardwareAsync,
+  isEnrolledAsync,
+  supportedAuthenticationTypesAsync,
+} from 'expo-local-authentication'
 import { useEffect, useState } from 'react'
 import { useAppSelector } from 'src/app/hooks'
 import { BiometricAuthenticationStatus, tryLocalAuthenticate } from 'src/features/biometrics'
@@ -65,12 +70,9 @@ export function useOSFaceIdEnabled() {
   const [osFaceIdEnabled, setOsFaceIdEnabled] = useState<boolean | null>(null)
   useEffect(() => {
     const checkOsFaceIdEnabled = async () => {
-      const res = await tryLocalAuthenticate()
-      const isDisabled = [
-        BiometricAuthenticationStatus.Unsupported,
-        BiometricAuthenticationStatus.MissingEnrollment,
-      ].includes(res)
-      setOsFaceIdEnabled(!isDisabled)
+      const compatible = await hasHardwareAsync()
+      const enrolled = await isEnrolledAsync()
+      setOsFaceIdEnabled(compatible && enrolled)
     }
     checkOsFaceIdEnabled()
   }, [])
