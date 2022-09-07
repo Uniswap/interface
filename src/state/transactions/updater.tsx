@@ -4,7 +4,6 @@ import { sendAnalyticsEvent } from 'components/AmplitudeAnalytics'
 import { EventName } from 'components/AmplitudeAnalytics/constants'
 import { formatPercentInBasisPointsNumber, formatToDecimal, getTokenAddress } from 'components/AmplitudeAnalytics/utils'
 import { DEFAULT_TXN_DISMISS_MS, L2_TXN_DISMISS_MS } from 'constants/misc'
-import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import LibUpdater from 'lib/hooks/transactions/updater'
 import { useCallback, useMemo } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
@@ -22,23 +21,12 @@ interface AnalyticsEventProps {
   trade: InterfaceTrade<Currency, Currency, TradeType>
   hash: string | undefined
   allowedSlippage: Percent
-  tokenInAmountUsd: string | undefined
-  tokenOutAmountUsd: string | undefined
   succeeded: boolean
 }
 
-const formatAnalyticsEventProperties = ({
-  trade,
-  hash,
-  allowedSlippage,
-  tokenInAmountUsd,
-  tokenOutAmountUsd,
-  succeeded,
-}: AnalyticsEventProps) => ({
+const formatAnalyticsEventProperties = ({ trade, hash, allowedSlippage, succeeded }: AnalyticsEventProps) => ({
   estimated_network_fee_usd: trade.gasUseEstimateUSD ? formatToDecimal(trade.gasUseEstimateUSD, 2) : undefined,
   transaction_hash: hash,
-  token_in_amount_usd: tokenInAmountUsd ? parseFloat(tokenInAmountUsd) : undefined,
-  token_out_amount_usd: tokenOutAmountUsd ? parseFloat(tokenOutAmountUsd) : undefined,
   token_in_address: getTokenAddress(trade.inputAmount.currency),
   token_out_address: getTokenAddress(trade.outputAmount.currency),
   token_in_symbol: trade.inputAmount.currency.symbol,
@@ -65,8 +53,6 @@ export default function Updater() {
     trade: { trade },
     allowedSlippage,
   } = useDerivedSwapInfo()
-  const tokenInAmountUsd = useStablecoinValue(trade?.inputAmount)?.toFixed(2)
-  const tokenOutAmountUsd = useStablecoinValue(trade?.outputAmount)?.toFixed(2)
 
   const dispatch = useAppDispatch()
   const onCheck = useCallback(
@@ -101,8 +87,6 @@ export default function Updater() {
             trade,
             hash,
             allowedSlippage,
-            tokenInAmountUsd,
-            tokenOutAmountUsd,
             succeeded: receipt.status === 1,
           })
         )
@@ -115,7 +99,7 @@ export default function Updater() {
         isL2 ? L2_TXN_DISMISS_MS : DEFAULT_TXN_DISMISS_MS
       )
     },
-    [addPopup, allowedSlippage, dispatch, isL2, tokenInAmountUsd, tokenOutAmountUsd, trade, transactions]
+    [addPopup, allowedSlippage, dispatch, isL2, trade, transactions]
   )
 
   const pendingTransactions = useMemo(() => (chainId ? transactions[chainId] ?? {} : {}), [chainId, transactions])

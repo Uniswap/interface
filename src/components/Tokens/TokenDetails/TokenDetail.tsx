@@ -231,7 +231,7 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
         <ChartHeader>
           <TokenInfoContainer>
             <TokenNameCell>
-              <CurrencyLogo currency={currency} size={'32px'} />
+              <CurrencyLogo currency={currency} size={'32px'} symbol={tokenSymbol} />
               {tokenName ?? <Trans>Name not found</Trans>}
               <TokenSymbol>{tokenSymbol ?? <Trans>Symbol not found</Trans>}</TokenSymbol>
               {!warning && <VerifiedIcon size="20px" />}

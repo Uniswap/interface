@@ -38,4 +38,8 @@ export const mobileNavDropdown = style([
     right: '0',
     width: 'full',
   }),
+  {
+    borderRightWidth: '0px',
+    borderLeftWidth: '0px',
+  },
 ])

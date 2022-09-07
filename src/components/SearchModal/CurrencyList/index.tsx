@@ -165,7 +165,7 @@ function CurrencyRow({
         selected={otherSelected}
       >
         <Column>
-          <CurrencyLogo currency={currency} size={'24px'} />
+          <CurrencyLogo currency={currency} size={'36px'} />
         </Column>
         <AutoColumn>
           <Row>

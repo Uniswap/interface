@@ -10,7 +10,7 @@ import { putCommas } from 'nft/utils/putCommas'
 import { useCallback, useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 
-import { TokenWarningRedIcon, VerifiedIcon } from '../../nft/components/icons'
+import { VerifiedIcon } from '../../nft/components/icons'
 import * as styles from './SearchBar.css'
 
 interface CollectionRowProps {
@@ -78,14 +78,14 @@ export const CollectionRow = ({ collection, isHovered, setHoveredIndex, toggleOp
           <Box className={styles.secondaryText}>{putCommas(collection.stats.total_supply)} items</Box>
         </Column>
       </Row>
-      {collection.floorPrice && (
+      {collection.floorPrice ? (
         <Column className={styles.suggestionSecondaryContainer}>
           <Row gap="4">
             <Box className={styles.primaryText}>{ethNumberStandardFormatter(collection.floorPrice)} ETH</Box>
           </Row>
           <Box className={styles.secondaryText}>Floor</Box>
         </Column>
-      )}
+      ) : null}
     </Link>
   )
 }
@@ -151,11 +151,7 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index 
         <Column className={styles.suggestionPrimaryContainer}>
           <Row gap="4" width="full">
             <Box className={styles.primaryText}>{token.name}</Box>
-            {token.onDefaultList ? (
-              <VerifiedIcon className={styles.suggestionIcon} />
-            ) : (
-              <TokenWarningRedIcon className={styles.suggestionIcon} />
-            )}
+            {token.onDefaultList && <VerifiedIcon className={styles.suggestionIcon} />}
           </Row>
           <Box className={styles.secondaryText}>{token.symbol}</Box>
         </Column>

@@ -516,6 +516,7 @@ export default function Swap() {
             secondTokenAddress={importTokensNotInDefault[1]?.address}
             onContinue={handleConfirmTokenWarning}
             onCancel={handleDismissTokenWarning}
+            showCancel={true}
           />
         ) : (
           <TokenWarningModal
@@ -541,6 +542,8 @@ export default function Swap() {
               swapErrorMessage={swapErrorMessage}
               onDismiss={handleConfirmDismiss}
               swapQuoteReceivedDate={swapQuoteReceivedDate}
+              fiatValueInput={fiatValueInput}
+              fiatValueOutput={fiatValueOutput}
             />
 
             <AutoColumn gap={'0px'}>

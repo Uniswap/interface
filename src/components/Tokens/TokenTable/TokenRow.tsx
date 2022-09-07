@@ -149,10 +149,11 @@ const StyledHeaderRow = styled(StyledTokenRow)`
     justify-content: space-between;
   }
 `
-const ListNumberCell = styled(Cell)`
+
+const ListNumberCell = styled(Cell)<{ header: boolean }>`
   color: ${({ theme }) => theme.textSecondary};
   min-width: 32px;
-  height: 48px;
+  height: ${({ header }) => (header ? '48px' : '60px')};
 
   @media only screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
     display: none;
@@ -389,7 +390,7 @@ export function TokenRow({
 }) {
   const rowCells = (
     <>
-      <ListNumberCell>{listNumber}</ListNumberCell>
+      <ListNumberCell header={header}>{listNumber}</ListNumberCell>
       <NameCell>{tokenInfo}</NameCell>
       <PriceCell sortable={header}>{price}</PriceCell>
       <PercentChangeCell sortable={header}>{percentChange}</PercentChangeCell>
@@ -504,7 +505,7 @@ export default function LoadedRow({
         tokenInfo={
           <ClickableName>
             <LogoContainer>
-              <CurrencyLogo currency={currency} />
+              <CurrencyLogo currency={currency} symbol={tokenSymbol} />
               <L2NetworkLogo networkUrl={L2Icon} />
             </LogoContainer>
             <TokenInfoCell>

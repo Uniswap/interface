@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
 import { ElementName, Event, EventName } from 'components/AmplitudeAnalytics/constants'
 import { TraceEvent } from 'components/AmplitudeAnalytics/TraceEvent'
 import {
@@ -10,7 +10,6 @@ import {
   getDurationUntilTimestampSeconds,
   getTokenAddress,
 } from 'components/AmplitudeAnalytics/utils'
-import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import { ReactNode } from 'react'
 import { Text } from 'rebass'
@@ -30,10 +29,10 @@ interface AnalyticsEventProps {
   transactionDeadlineSecondsSinceEpoch: number | undefined
   isAutoSlippage: boolean
   isAutoRouterApi: boolean
-  tokenInAmountUsd: string | undefined
-  tokenOutAmountUsd: string | undefined
   swapQuoteReceivedDate: Date | undefined
   routes: RoutingDiagramEntry[]
+  fiatValueInput?: CurrencyAmount<Token> | null
+  fiatValueOutput?: CurrencyAmount<Token> | null
 }
 
 const formatRoutesEventProperties = (routes: RoutingDiagramEntry[]) => {
@@ -70,22 +69,22 @@ const formatAnalyticsEventProperties = ({
   transactionDeadlineSecondsSinceEpoch,
   isAutoSlippage,
   isAutoRouterApi,
-  tokenInAmountUsd,
-  tokenOutAmountUsd,
   swapQuoteReceivedDate,
   routes,
+  fiatValueInput,
+  fiatValueOutput,
 }: AnalyticsEventProps) => ({
   estimated_network_fee_usd: trade.gasUseEstimateUSD ? formatToDecimal(trade.gasUseEstimateUSD, 2) : undefined,
   transaction_hash: hash,
   transaction_deadline_seconds: getDurationUntilTimestampSeconds(transactionDeadlineSecondsSinceEpoch),
-  token_in_amount_usd: tokenInAmountUsd ? parseFloat(tokenInAmountUsd) : undefined,
-  token_out_amount_usd: tokenOutAmountUsd ? parseFloat(tokenOutAmountUsd) : undefined,
   token_in_address: getTokenAddress(trade.inputAmount.currency),
   token_out_address: getTokenAddress(trade.outputAmount.currency),
   token_in_symbol: trade.inputAmount.currency.symbol,
   token_out_symbol: trade.outputAmount.currency.symbol,
   token_in_amount: formatToDecimal(trade.inputAmount, trade.inputAmount.currency.decimals),
   token_out_amount: formatToDecimal(trade.outputAmount, trade.outputAmount.currency.decimals),
+  token_in_amount_usd: fiatValueInput ? parseFloat(fiatValueInput.toFixed(2)) : undefined,
+  token_out_amount_usd: fiatValueOutput ? parseFloat(fiatValueOutput.toFixed(2)) : undefined,
   price_impact_basis_points: formatPercentInBasisPointsNumber(computeRealizedPriceImpact(trade)),
   allowed_slippage_basis_points: formatPercentInBasisPointsNumber(allowedSlippage),
   is_auto_router_api: isAutoRouterApi,
@@ -109,6 +108,8 @@ export default function SwapModalFooter({
   swapErrorMessage,
   disabledConfirm,
   swapQuoteReceivedDate,
+  fiatValueInput,
+  fiatValueOutput,
 }: {
   trade: InterfaceTrade<Currency, Currency, TradeType>
   hash: string | undefined
@@ -117,12 +118,12 @@ export default function SwapModalFooter({
   swapErrorMessage: ReactNode | undefined
   disabledConfirm: boolean
   swapQuoteReceivedDate: Date | undefined
+  fiatValueInput?: CurrencyAmount<Token> | null
+  fiatValueOutput?: CurrencyAmount<Token> | null
 }) {
   const transactionDeadlineSecondsSinceEpoch = useTransactionDeadline()?.toNumber() // in seconds since epoch
   const isAutoSlippage = useUserSlippageTolerance()[0] === 'auto'
   const [clientSideRouter] = useClientSideRouter()
-  const tokenInAmountUsd = useStablecoinValue(trade.inputAmount)?.toFixed(2)
-  const tokenOutAmountUsd = useStablecoinValue(trade.outputAmount)?.toFixed(2)
   const routes = getTokenPath(trade)
 
   return (
@@ -139,10 +140,10 @@ export default function SwapModalFooter({
             transactionDeadlineSecondsSinceEpoch,
             isAutoSlippage,
             isAutoRouterApi: !clientSideRouter,
-            tokenInAmountUsd,
-            tokenOutAmountUsd,
             swapQuoteReceivedDate,
             routes,
+            fiatValueInput,
+            fiatValueOutput,
           })}
         >
           <ButtonError

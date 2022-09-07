@@ -61,7 +61,7 @@ export const middleContainer = style([
     flex: '1',
     flexShrink: '1',
     justifyContent: 'center',
-    display: { sm: 'none', lg: 'flex' },
+    display: { sm: 'none', xl: 'flex' },
   }),
 ])
 
@@ -81,6 +81,8 @@ const baseMenuItem = style([
     borderRadius: '12',
     transition: '250',
     height: 'min',
+    width: 'full',
+    textAlign: 'center',
   }),
   {
     lineHeight: '24px',
@@ -109,7 +111,7 @@ export const activeMenuItem = style([
 export const mobileBottomBar = style([
   sprinkles({
     position: 'fixed',
-    display: { sm: 'flex', xxl: 'none' },
+    display: { sm: 'flex', lg: 'none' },
     bottom: '0',
     right: '0',
     left: '0',

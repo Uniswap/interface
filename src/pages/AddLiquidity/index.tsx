@@ -166,6 +166,7 @@ export default function AddLiquidity() {
 
   useEffect(() => {
     if (
+      parsedQs.minPrice &&
       typeof parsedQs.minPrice === 'string' &&
       parsedQs.minPrice !== leftRangeTypedValue &&
       !isNaN(parsedQs.minPrice as any)
@@ -174,6 +175,7 @@ export default function AddLiquidity() {
     }
 
     if (
+      parsedQs.maxPrice &&
       typeof parsedQs.maxPrice === 'string' &&
       parsedQs.maxPrice !== rightRangeTypedValue &&
       !isNaN(parsedQs.maxPrice as any)
