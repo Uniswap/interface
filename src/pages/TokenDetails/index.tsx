@@ -149,7 +149,7 @@ export default function TokenDetails() {
           <RightPanel>
             <Widget defaultToken={token ?? undefined} onReviewSwapClick={onReviewSwap} />
             {tokenWarning && <TokenSafetyMessage tokenAddress={token.address} warning={tokenWarning} />}
-            <BalanceSummary address={token.address} totalBalance={totalBalance} networkBalances={balancesByNetwork} />
+            <BalanceSummary address={token.address} />
           </RightPanel>
           <Footer>
             <FooterBalanceSummary

@@ -13,6 +13,7 @@ import { darkTheme } from '../nft/themes/darkTheme'
 import { lightTheme } from '../nft/themes/lightTheme'
 import { useIsDarkMode } from '../state/user/hooks'
 import { colors as ColorsPalette, colorsDark, colorsLight } from './colors'
+import { MAX_Z_INDEX } from './components'
 import { AllColors, Colors, ThemeColors } from './styled'
 import { opacify } from './utils'
 
@@ -63,6 +64,7 @@ export enum Z_INDEX {
   modal = 1060,
   popover = 1070,
   tooltip = 1080,
+  absoluteTop = MAX_Z_INDEX,
 }
 
 const deprecated_mediaWidthTemplates: { [width in keyof typeof MEDIA_WIDTHS]: typeof css } = Object.keys(
