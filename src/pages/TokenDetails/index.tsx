@@ -5,7 +5,6 @@ import {
   MOBILE_MEDIA_BREAKPOINT,
   SMALL_MEDIA_BREAKPOINT,
 } from 'components/Tokens/constants'
-import { filterTimeAtom } from 'components/Tokens/state'
 import BalanceSummary from 'components/Tokens/TokenDetails/BalanceSummary'
 import FooterBalanceSummary from 'components/Tokens/TokenDetails/FooterBalanceSummary'
 import LoadingTokenDetail from 'components/Tokens/TokenDetails/LoadingTokenDetail'
@@ -16,12 +15,11 @@ import Widget, { WIDGET_WIDTH } from 'components/Widget'
 import { getChainInfo } from 'constants/chainInfo'
 import { L1_CHAIN_IDS, L2_CHAIN_IDS, SupportedChainId, TESTNET_CHAIN_IDS } from 'constants/chains'
 import { checkWarning } from 'constants/tokenSafety'
-import { fillTokenPriceCache } from 'graphql/data/TokenPrice'
+import { useTokenQuery } from 'graphql/data/Token'
 import { useToken } from 'hooks/Tokens'
 import { useNetworkTokenBalances } from 'hooks/useNetworkTokenBalances'
-import { useAtom } from 'jotai'
 import { useMemo } from 'react'
-import { Navigate, useLocation, useParams } from 'react-router-dom'
+import { useLocation, useParams } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
 const Footer = styled.div`
@@ -99,13 +97,7 @@ export default function TokenDetails() {
     return chainIds
   }, [connectedChainId])
 
-  const [timePeriod] = useAtom(filterTimeAtom)
-
-  // Preload token price data on first render
-  useMemo(() => {
-    if (token?.address) fillTokenPriceCache(token.address, 'ETHEREUM', timePeriod)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  const query = useTokenQuery(tokenAddress ?? '', 'ETHEREUM')
 
   const balancesByNetwork = networkData
     ? chainsToList.map((chainId) => {
@@ -130,14 +122,14 @@ export default function TokenDetails() {
     : null
 
   if (token === undefined) {
-    return <Navigate to={{ ...location, pathname: '/tokens' }} replace />
+    //return <Navigate to={{ ...location, pathname: '/tokens' }} replace />
   }
 
   return (
     <TokenDetailsLayout>
       {token && (
         <>
-          <TokenDetail address={token.address} />
+          <TokenDetail address={token.address} query={query} />
           <RightPanel>
             <Widget defaultToken={token ?? undefined} />
             {tokenWarning && <TokenSafetyMessage tokenAddress={token.address} warning={tokenWarning} />}

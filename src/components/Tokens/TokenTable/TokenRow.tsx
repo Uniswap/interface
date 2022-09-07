@@ -5,7 +5,9 @@ import { EventName } from 'components/AmplitudeAnalytics/constants'
 import SparklineChart from 'components/Charts/SparklineChart'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { getChainInfo } from 'constants/chainInfo'
-import { TimePeriod, TokenData } from 'graphql/data/TopTokenQuery'
+import { TokenQuery$data } from 'graphql/data/__generated__/TokenQuery.graphql'
+import { getDurationDetails, useTokenDetails } from 'graphql/data/Token'
+import { TimePeriod } from 'graphql/data/TopTokenQuery'
 import { useCurrency } from 'hooks/Tokens'
 import { useAtom } from 'jotai'
 import { useAtomValue } from 'jotai/utils'
@@ -446,31 +448,32 @@ export function LoadingRow() {
 
 /* Loaded State: row component with token information */
 export default function LoadedRow({
-  tokenAddress,
   tokenListIndex,
   tokenListLength,
   tokenData,
   timePeriod,
 }: {
-  tokenAddress: string
   tokenListIndex: number
   tokenListLength: number
-  tokenData: TokenData
+  tokenData: NonNullable<TokenQuery$data['tokenProjects']>[number]
   timePeriod: TimePeriod
 }) {
+  const tokenAddress = tokenData?.tokens?.[0].address
   const currency = useCurrency(tokenAddress)
-  const tokenName = tokenData.name
-  const tokenSymbol = tokenData.symbol
+  const tokenName = tokenData?.name
+  const tokenSymbol = tokenData?.tokens?.[0].symbol
   const theme = useTheme()
   const [favoriteTokens] = useAtom(favoritesAtom)
-  const isFavorited = favoriteTokens.includes(tokenAddress)
+  const isFavorited = tokenAddress && favoriteTokens.includes(tokenAddress)
   const toggleFavorite = useToggleFavorite(tokenAddress)
   const filterString = useAtomValue(filterStringAtom)
   const filterNetwork = useAtomValue(filterNetworkAtom)
   const L2Icon = getChainInfo(filterNetwork).circleLogoUrl
-  const delta = tokenData.percentChange?.[timePeriod]?.value
-  const arrow = delta ? getDeltaArrow(delta) : null
-  const formattedDelta = delta ? formatDelta(delta) : null
+  //const delta = tokenData.percentChange?.[timePeriod]?.value
+  const { tokenDetails } = useTokenDetails(tokenData?.details?.[0])
+  const { volume, pricePercentChange } = getDurationDetails(tokenDetails, timePeriod)
+  const arrow = pricePercentChange ? getDeltaArrow(pricePercentChange) : null
+  const formattedDelta = pricePercentChange ? formatDelta(pricePercentChange) : null
 
   const exploreTokenSelectedEventProperties = {
     chain_id: filterNetwork,
@@ -517,7 +520,7 @@ export default function LoadedRow({
         price={
           <ClickableContent>
             <PriceInfoCell>
-              {tokenData.price?.value ? formatDollarAmount(tokenData.price?.value) : '-'}
+              {tokenDetails?.price?.value ? formatDollarAmount(tokenDetails?.price?.value) : '-'}
               <PercentChangeInfoCell>
                 {formattedDelta}
                 {arrow}
@@ -533,16 +536,10 @@ export default function LoadedRow({
         }
         marketCap={
           <ClickableContent>
-            {tokenData.marketCap?.value ? formatDollarAmount(tokenData.marketCap?.value) : '-'}
+            {tokenDetails?.marketCap?.value ? formatDollarAmount(tokenDetails?.marketCap?.value) : '-'}
           </ClickableContent>
         }
-        volume={
-          <ClickableContent>
-            {tokenData.volume?.[timePeriod]?.value
-              ? formatDollarAmount(tokenData.volume?.[timePeriod]?.value ?? undefined)
-              : '-'}
-          </ClickableContent>
-        }
+        volume={<ClickableContent>{volume ? formatDollarAmount(volume ?? undefined) : '-'}</ClickableContent>}
         sparkLine={
           <SparkLine>
             <ParentSize>{({ width, height }) => <SparklineChart width={width} height={height} />}</ParentSize>

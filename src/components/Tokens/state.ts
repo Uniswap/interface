@@ -15,10 +15,11 @@ export const sortCategoryAtom = atom<Category>(Category.marketCap)
 export const sortDirectionAtom = atom<SortDirection>(SortDirection.decreasing)
 
 /* for favoriting tokens */
-export function useToggleFavorite(tokenAddress: string) {
+export function useToggleFavorite(tokenAddress: string | undefined | null) {
   const [favoriteTokens, updateFavoriteTokens] = useAtom(favoritesAtom)
 
   return useCallback(() => {
+    if (!tokenAddress) return
     let updatedFavoriteTokens
     if (favoriteTokens.includes(tokenAddress)) {
       updatedFavoriteTokens = favoriteTokens.filter((address: string) => {

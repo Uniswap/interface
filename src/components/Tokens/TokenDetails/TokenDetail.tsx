@@ -8,7 +8,8 @@ import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import { getChainInfo } from 'constants/chainInfo'
 import { nativeOnChain, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import { checkWarning, WARNING_LEVEL } from 'constants/tokenSafety'
-import { chainIdToChainName, useTokenDetailQuery } from 'graphql/data/TokenDetailQuery'
+import { TokenQuery$data } from 'graphql/data/__generated__/TokenQuery.graphql'
+import { checkCachedTopToken, useTokenDetails } from 'graphql/data/Token'
 import { useCurrency, useIsUserAddedToken, useToken } from 'hooks/Tokens'
 import { useAtomValue } from 'jotai/utils'
 import { darken } from 'polished'
@@ -20,7 +21,7 @@ import styled from 'styled-components/macro'
 import { ClickableStyle, CopyContractAddress } from 'theme'
 import { formatDollarAmount } from 'utils/formatDollarAmt'
 
-import { favoritesAtom, filterNetworkAtom, useToggleFavorite } from '../state'
+import { favoritesAtom, useToggleFavorite } from '../state'
 import { ClickFavorited } from '../TokenTable/TokenRow'
 import LoadingTokenDetail from './LoadingTokenDetail'
 import Resource from './Resource'
@@ -177,7 +178,7 @@ export function AboutSection({ address, tokenDetailData }: { address: string; to
   )
 }
 
-export default function LoadedTokenDetail({ address }: { address: string }) {
+export default function LoadedTokenDetail({ address, query }: { address: string; query: TokenQuery$data }) {
   const { chainId: connectedChainId } = useWeb3React()
   const token = useToken(address)
   let currency = useCurrency(address)
@@ -199,13 +200,22 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
   const chainInfo = getChainInfo(token?.chainId)
   const networkLabel = chainInfo?.label
   const networkBadgebackgroundColor = chainInfo?.backgroundColor
-  const filterNetwork = useAtomValue(filterNetworkAtom)
-  const tokenDetailData = useTokenDetailQuery(address, chainIdToChainName(filterNetwork))
-  const relevantTokenDetailData = (({ description, homepageUrl, twitterName }) => ({
-    description,
-    homepageUrl,
-    twitterName,
-  }))(tokenDetailData)
+
+  const tokenData = query.tokenProjects?.[0]
+  const { tokenDetails } = useTokenDetails(tokenData?.details?.[0])
+  console.log(checkCachedTopToken(address))
+  // useTokenDetailQuery(address, chainIdToChainName(filterNetwork))
+  const relevantTokenDetailData = {
+    description: tokenData?.description,
+    homepageUrl: tokenData?.homepageUrl,
+    twitterName: tokenData?.twitterName,
+  }
+
+  // (({ description, homepageUrl, twitterName }) => ({
+  //   description,
+  //   homepageUrl,
+  //   twitterName,
+  // }))(tokenDetailData)
 
   if (!token || !token.name || !token.symbol || !connectedChainId) {
     return <LoadingTokenDetail />
@@ -218,8 +228,9 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
     currency = nativeOnChain(connectedChainId)
   }
 
-  const tokenName = tokenDetailData.name
-  const tokenSymbol = tokenDetailData.tokens?.[0]?.symbol ?? token.symbol
+  console.log(tokenData)
+  const tokenName = tokenData?.name
+  const tokenSymbol = tokenData?.tokens?.[0]?.symbol ?? token.symbol
   return (
     <Suspense fallback={<LoadingTokenDetail />}>
       <TopArea>
@@ -249,7 +260,11 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
             </TokenActions>
           </TokenInfoContainer>
           <ChartContainer>
-            <ParentSize>{({ width, height }) => <PriceChart token={token} width={width} height={height} />}</ParentSize>
+            <ParentSize>
+              {({ width, height }) => (
+                <PriceChart token={token} width={width} height={height} priceData={tokenData?.prices?.[0]} />
+              )}
+            </ParentSize>
           </ChartContainer>
         </ChartHeader>
         <StatsSection>
@@ -257,13 +272,13 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
             <Stat>
               <Trans>Market cap</Trans>
               <StatPrice>
-                {tokenDetailData.marketCap?.value ? formatDollarAmount(tokenDetailData.marketCap?.value) : '-'}
+                {tokenDetails?.marketCap?.value ? formatDollarAmount(tokenDetails.marketCap?.value) : '-'}
               </StatPrice>
             </Stat>
             <Stat>
               24H volume
               <StatPrice>
-                {tokenDetailData.volume24h?.value ? formatDollarAmount(tokenDetailData.volume24h?.value) : '-'}
+                {tokenDetails?.volume1D?.value ? formatDollarAmount(tokenDetails.volume1D.value) : '-'}
               </StatPrice>
             </Stat>
           </StatPair>
@@ -271,13 +286,13 @@ export default function LoadedTokenDetail({ address }: { address: string }) {
             <Stat>
               52W low
               <StatPrice>
-                {tokenDetailData.priceLow52W?.value ? formatDollarAmount(tokenDetailData.priceLow52W?.value) : '-'}
+                {tokenDetails?.priceLow52W?.value ? formatDollarAmount(tokenDetails.priceLow52W?.value) : '-'}
               </StatPrice>
             </Stat>
             <Stat>
               52W high
               <StatPrice>
-                {tokenDetailData.priceHigh52W?.value ? formatDollarAmount(tokenDetailData.priceHigh52W?.value) : '-'}
+                {tokenDetails?.priceHigh52W?.value ? formatDollarAmount(tokenDetails.priceHigh52W?.value) : '-'}
               </StatPrice>
             </Stat>
           </StatPair>

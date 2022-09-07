@@ -6,7 +6,9 @@ import { GlyphCircle } from '@visx/glyph'
 import { Line } from '@visx/shape'
 import { filterTimeAtom } from 'components/Tokens/state'
 import { bisect, curveCardinal, NumberValue, scaleLinear } from 'd3'
-import { PricePoint, useTokenPriceQuery } from 'graphql/data/TokenPrice'
+import { TokenPrices$key } from 'graphql/data/__generated__/TokenPrices.graphql'
+import { usePrices } from 'graphql/data/Token'
+import { PricePoint } from 'graphql/data/Token'
 import { TimePeriod } from 'graphql/data/TopTokenQuery'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import { useAtom } from 'jotai'
@@ -151,15 +153,22 @@ interface PriceChartProps {
   width: number
   height: number
   token: Token
+  priceData?: TokenPrices$key | null
 }
 
-export function PriceChart({ width, height, token }: PriceChartProps) {
+export function PriceChart({ width, height, token, priceData }: PriceChartProps) {
   const [timePeriod, setTimePeriod] = useAtom(filterTimeAtom)
   const locale = useActiveLocale()
   const theme = useTheme()
 
   // TODO: Add network selector input, consider using backend type instead of current front end selector type
-  const { error, isLoading, prices } = useTokenPriceQuery(token.address, 'ETHEREUM', timePeriod)
+  //const { error, isLoading, prices } = useTokenPriceQuery(token.address, 'ETHEREUM', timePeriod)
+  // const { tokenPrices } = useTokenPrices(priceData)
+  const { prices } = usePrices(priceData, token.address, 'ETHEREUM', timePeriod)
+  // = useMemo(
+  //   () => (!!tokenPrices ? getDurationPrices(tokenPrices, timePeriod) : []),
+  //   [tokenPrices, timePeriod]
+  // )
 
   const startingPrice = prices?.[0] ?? DATA_EMPTY
   const endingPrice = prices?.[prices.length - 1] ?? DATA_EMPTY
@@ -217,10 +226,10 @@ export function PriceChart({ width, height, token }: PriceChartProps) {
     setDisplayPrice(endingPrice)
   }, [setCrosshair, setDisplayPrice, endingPrice])
 
-  // TODO: Display fetching data error
-  if (!!error) {
-    return null
-  }
+  // // TODO: Display fetching data error
+  // if (!!error) {
+  //   return null
+  // }
 
   // TODO: Display no data available error
   if (!prices) {
@@ -327,7 +336,7 @@ export function PriceChart({ width, height, token }: PriceChartProps) {
               key={DISPLAYS[time]}
               active={timePeriod === time}
               onClick={() => {
-                !isLoading && setTimePeriod(time)
+                setTimePeriod(time)
               }}
             >
               {DISPLAYS[time]}
