@@ -18,7 +18,7 @@ import {
   dayHourFormatter,
   hourFormatter,
   monthDayFormatter,
-  monthFormatter,
+  monthTickFormatter,
   monthYearDayFormatter,
   monthYearFormatter,
   weekFormatter,
@@ -140,7 +140,7 @@ function tickFormat(
     case TimePeriod.MONTH:
       return [monthDayFormatter(locale), dayHourFormatter(locale), getTicks(startTimestamp, endTimestamp)]
     case TimePeriod.YEAR:
-      return [monthFormatter(locale), monthYearDayFormatter(locale), getTicks(startTimestamp, endTimestamp)]
+      return [monthTickFormatter(locale), monthYearDayFormatter(locale), getTicks(startTimestamp, endTimestamp)]
     case TimePeriod.ALL:
       return [monthYearFormatter(locale), monthYearDayFormatter(locale), getTicks(startTimestamp, endTimestamp)]
   }

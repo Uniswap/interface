@@ -53,7 +53,6 @@ export interface ThemeColors {
   chain_421611: Color
   chain_80001: Color
 
-  blue200: Color
   shallowShadow: Color
   deepShadow: Color
   hoverState: Color

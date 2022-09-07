@@ -81,14 +81,13 @@ export default function TokenDetails() {
   const { tokenAddress } = useParams<{ tokenAddress?: string }>()
   const token = useToken(tokenAddress)
   const tokenWarning = tokenAddress ? checkWarning(tokenAddress) : null
-  const isBlockedToken = !!tokenWarning && !tokenWarning?.canProceed
+  const isBlockedToken = tokenWarning?.canProceed === false
   const navigate = useNavigate()
 
   const [continueSwap, setContinueSwap] = useState<{ resolve: (value: boolean | PromiseLike<boolean>) => void }>()
-  const shouldShowSpeedbump = !useIsUserAddedToken(token) && !!tokenWarning
+  const shouldShowSpeedbump = !useIsUserAddedToken(token) && tokenWarning !== null
   // Show token safety modal if Swap-reviewing a warning token, at all times if the current token is blocked
-
-  const onSpeedbump = useCallback(() => {
+  const onReviewSwap = useCallback(() => {
     return new Promise<boolean>((resolve) => {
       shouldShowSpeedbump ? setContinueSwap({ resolve }) : resolve(true)
     })
@@ -148,7 +147,7 @@ export default function TokenDetails() {
         <>
           <TokenDetail address={token.address} />
           <RightPanel>
-            <Widget defaultToken={token ?? undefined} onReviewSwapClick={onSpeedbump} />
+            <Widget defaultToken={token ?? undefined} onReviewSwapClick={onReviewSwap} />
             {tokenWarning && <TokenSafetyMessage tokenAddress={token.address} warning={tokenWarning} />}
             <BalanceSummary address={token.address} totalBalance={totalBalance} networkBalances={balancesByNetwork} />
           </RightPanel>
@@ -177,7 +176,7 @@ export function LoadingTokenDetails() {
   return (
     <TokenDetailsLayout>
       <LoadingTokenDetail />
-      <RightPanel></RightPanel>
+      <RightPanel />
       <Footer />
     </TokenDetailsLayout>
   )
