@@ -218,7 +218,7 @@ function Web3StatusInner() {
   } else if (account) {
     return (
       <Web3StatusConnected data-testid="web3-status-connected" onClick={toggleWallet} pending={hasPendingTransactions}>
-        {navbarFlagEnabled && !hasPendingTransactions && <StatusIcon connectionType={connectionType} />}
+        {navbarFlagEnabled && !hasPendingTransactions && <StatusIcon size={24} connectionType={connectionType} />}
         {hasPendingTransactions ? (
           <RowBetween>
             <Text>
