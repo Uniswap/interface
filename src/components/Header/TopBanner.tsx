@@ -62,7 +62,7 @@ const Content = styled.div`
 const banner = {
   localStorageKey: 'xss-issue',
   start: 'Thu, 17 Mar 2022 00:00:00 GMT',
-  end: 'Thu, 20 Mar 2024 00:00:00 GMT',
+  end: 'Thu, 20 Mar 2022 00:00:00 GMT',
   text: (
     <Text marginLeft="4px" marginRight="1rem" lineHeight="20px" color="#fff" fontSize="14px" flex={1}>
       Urgent Announcement: We identified a front-end issue with KyberSwap that asked a few users to approve a malicious
