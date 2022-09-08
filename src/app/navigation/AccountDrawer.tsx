@@ -68,13 +68,10 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
     }
   }, [addressToAccount])
 
-  const onPressEdit = useCallback(
-    () => (address: Address) => {
-      setShowEditAccountModal(true)
-      setPendingEditAddress(address)
-    },
-    []
-  )
+  const onPressEdit = useCallback((address: Address) => {
+    setShowEditAccountModal(true)
+    setPendingEditAddress(address)
+  }, [])
 
   const onPressEditCancel = () => {
     setShowEditAccountModal(false)
@@ -98,20 +95,18 @@ export function AccountDrawer({ navigation }: DrawerContentComponentProps) {
     onPressEditCancel() // Dismiss bottom sheet
   }
 
-  const onPressAccount = useCallback(() => {
-    return (address: Address) => {
+  const onPressAccount = useCallback(
+    (address: Address) => {
       navigation.closeDrawer()
       dispatch(activateAccount(address))
-    }
-  }, [navigation, dispatch])
-
-  const onPressQRCode = useCallback(
-    () => (address: Address) => {
-      setQRCodeAddress(address)
-      setShowQRModal(true)
     },
-    []
+    [navigation, dispatch]
   )
+
+  const onPressQRCode = useCallback((address: Address) => {
+    setQRCodeAddress(address)
+    setShowQRModal(true)
+  }, [])
 
   const onCloseQrCode = () => setShowQRModal(false)
 
