@@ -1,4 +1,3 @@
-import { Currency } from '@uniswap/sdk-core'
 import React, { ReactElement, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FlatList, ListRenderItemInfo, SectionList } from 'react-native'
@@ -11,13 +10,12 @@ import { TokenBalanceItem } from 'src/components/TokenBalanceList/TokenBalanceIt
 import { TokenBalanceListHeader } from 'src/components/TokenBalanceList/TokenBalanceListHeader'
 import { balancesToSectionListData } from 'src/components/TokenBalanceList/utils'
 import { useSortedPortfolioBalancesList } from 'src/features/dataApi/balances'
-import { PortfolioBalance } from 'src/features/dataApi/types'
+import { CurrencyInfo, PortfolioBalance } from 'src/features/dataApi/types'
 import { SectionName } from 'src/features/telemetry/constants'
 import { Trace } from 'src/features/telemetry/Trace'
 import { selectHideSmallBalances } from 'src/features/wallet/selectors'
 import { Screens } from 'src/screens/Screens'
 import { toSupportedChainId } from 'src/utils/chainId'
-import { currencyId } from 'src/utils/currencyId'
 
 export enum ViewType {
   Flat = 'flat',
@@ -38,7 +36,7 @@ type ViewProps = FlatViewProps | NetworkViewProps
 
 type TokenBalanceListProps = {
   empty?: ReactElement | null
-  onPressToken: (currency: Currency) => void
+  onPressToken: (currencyInfo: CurrencyInfo) => void
   onRefresh?: () => void
   refreshing?: boolean
   owner: Address
@@ -52,7 +50,7 @@ export function TokenBalanceList({
   count,
 }: TokenBalanceListProps) {
   const hideSmallBalances = useAppSelector(selectHideSmallBalances)
-  const balances = useSortedPortfolioBalancesList(owner, true, hideSmallBalances)
+  const balances = useSortedPortfolioBalancesList(owner, hideSmallBalances)
   const { t } = useTranslation()
   const navigation = useHomeStackNavigation()
 
@@ -80,8 +78,8 @@ export function TokenBalanceList({
   )
 }
 
-function key({ currency }: PortfolioBalance) {
-  return currencyId(currency)
+function key({ currencyInfo }: PortfolioBalance) {
+  return currencyInfo.currencyId
 }
 
 function FlatBalanceList({
@@ -101,11 +99,7 @@ function FlatBalanceList({
       data={balances}
       keyExtractor={key}
       renderItem={({ item }) => (
-        <TokenBalanceItem
-          key={currencyId(item.currency)}
-          portfolioBalance={item}
-          onPressToken={onPressToken}
-        />
+        <TokenBalanceItem portfolioBalance={item} onPressToken={onPressToken} />
       )}
       showsVerticalScrollIndicator={false}
     />

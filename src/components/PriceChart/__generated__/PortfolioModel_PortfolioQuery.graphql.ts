@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b5f24d03d51e65f059d51a0454473597>>
+ * @generated SignedSource<<f6157bb683f7ded31124b64f715d022d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -45,6 +45,9 @@ export type PortfolioModel_PortfolioQuery$data = {
         readonly relativeChange24: {
           readonly value: number | null;
         } | null;
+        readonly tokenProject: {
+          readonly logoUrl: string | null;
+        };
       } | null;
     } | null> | null;
     readonly weeklyValues: ReadonlyArray<{
@@ -196,13 +199,20 @@ v18 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
+  "name": "logoUrl",
+  "storageKey": null
+},
+v19 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v19 = [
+v20 = [
   (v3/*: any*/),
   (v4/*: any*/),
-  (v18/*: any*/)
+  (v19/*: any*/)
 ];
 return {
   "fragment": {
@@ -316,6 +326,18 @@ return {
                 "plural": false,
                 "selections": [
                   {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "TokenProject",
+                    "kind": "LinkedField",
+                    "name": "tokenProject",
+                    "plural": false,
+                    "selections": [
+                      (v18/*: any*/)
+                    ],
+                    "storageKey": null
+                  },
+                  {
                     "alias": "relativeChange24",
                     "args": (v6/*: any*/),
                     "concreteType": "Amount",
@@ -361,7 +383,7 @@ return {
             "kind": "LinkedField",
             "name": "tokensTotalDenominatedValueHistory",
             "plural": true,
-            "selections": (v19/*: any*/),
+            "selections": (v20/*: any*/),
             "storageKey": "tokensTotalDenominatedValueHistory(duration:\"HOUR\")"
           },
           {
@@ -371,7 +393,7 @@ return {
             "kind": "LinkedField",
             "name": "tokensTotalDenominatedValueHistory",
             "plural": true,
-            "selections": (v19/*: any*/),
+            "selections": (v20/*: any*/),
             "storageKey": "tokensTotalDenominatedValueHistory(duration:\"DAY\")"
           },
           {
@@ -381,7 +403,7 @@ return {
             "kind": "LinkedField",
             "name": "tokensTotalDenominatedValueHistory",
             "plural": true,
-            "selections": (v19/*: any*/),
+            "selections": (v20/*: any*/),
             "storageKey": "tokensTotalDenominatedValueHistory(duration:\"WEEK\")"
           },
           {
@@ -391,7 +413,7 @@ return {
             "kind": "LinkedField",
             "name": "tokensTotalDenominatedValueHistory",
             "plural": true,
-            "selections": (v19/*: any*/),
+            "selections": (v20/*: any*/),
             "storageKey": "tokensTotalDenominatedValueHistory(duration:\"MONTH\")"
           },
           {
@@ -401,7 +423,7 @@ return {
             "kind": "LinkedField",
             "name": "tokensTotalDenominatedValueHistory",
             "plural": true,
-            "selections": (v19/*: any*/),
+            "selections": (v20/*: any*/),
             "storageKey": "tokensTotalDenominatedValueHistory(duration:\"YEAR\")"
           },
           {
@@ -423,7 +445,7 @@ return {
                 "selections": [
                   (v11/*: any*/),
                   (v12/*: any*/),
-                  (v18/*: any*/)
+                  (v19/*: any*/)
                 ],
                 "storageKey": null
               },
@@ -440,7 +462,7 @@ return {
                   (v15/*: any*/),
                   (v16/*: any*/),
                   (v17/*: any*/),
-                  (v18/*: any*/)
+                  (v19/*: any*/)
                 ],
                 "storageKey": null
               },
@@ -453,6 +475,19 @@ return {
                 "plural": false,
                 "selections": [
                   {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "TokenProject",
+                    "kind": "LinkedField",
+                    "name": "tokenProject",
+                    "plural": false,
+                    "selections": [
+                      (v18/*: any*/),
+                      (v19/*: any*/)
+                    ],
+                    "storageKey": null
+                  },
+                  {
                     "alias": "relativeChange24",
                     "args": (v6/*: any*/),
                     "concreteType": "Amount",
@@ -461,35 +496,35 @@ return {
                     "plural": false,
                     "selections": [
                       (v12/*: any*/),
-                      (v18/*: any*/)
+                      (v19/*: any*/)
                     ],
                     "storageKey": "pricePercentChange(duration:\"DAY\")"
                   },
-                  (v18/*: any*/)
+                  (v19/*: any*/)
                 ],
                 "storageKey": null
               },
-              (v18/*: any*/)
+              (v19/*: any*/)
             ],
             "storageKey": null
           },
-          (v18/*: any*/)
+          (v19/*: any*/)
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "cacheID": "cfb12d6101565bc9e4588463dc3d7e8f",
+    "cacheID": "d866913367d9f768e3e9d2fc3a351481",
     "id": null,
     "metadata": {},
     "name": "PortfolioModel_PortfolioQuery",
     "operationKind": "query",
-    "text": "query PortfolioModel_PortfolioQuery(\n  $ownerAddress: String!\n) {\n  portfolios(ownerAddresses: [$ownerAddress]) {\n    hourlyValues: tokensTotalDenominatedValueHistory(duration: HOUR) {\n      timestamp\n      close: value\n      id\n    }\n    dailyValues: tokensTotalDenominatedValueHistory(duration: DAY) {\n      timestamp\n      close: value\n      id\n    }\n    weeklyValues: tokensTotalDenominatedValueHistory(duration: WEEK) {\n      timestamp\n      close: value\n      id\n    }\n    monthlyValues: tokensTotalDenominatedValueHistory(duration: MONTH) {\n      timestamp\n      close: value\n      id\n    }\n    yearlyValues: tokensTotalDenominatedValueHistory(duration: YEAR) {\n      timestamp\n      close: value\n      id\n    }\n    tokenBalances {\n      quantity\n      denominatedValue {\n        currency\n        value\n        id\n      }\n      token {\n        chain\n        address\n        name\n        symbol\n        decimals\n        id\n      }\n      tokenProjectMarket {\n        relativeChange24: pricePercentChange(duration: DAY) {\n          value\n          id\n        }\n        id\n      }\n      id\n    }\n    id\n  }\n}\n"
+    "text": "query PortfolioModel_PortfolioQuery(\n  $ownerAddress: String!\n) {\n  portfolios(ownerAddresses: [$ownerAddress]) {\n    hourlyValues: tokensTotalDenominatedValueHistory(duration: HOUR) {\n      timestamp\n      close: value\n      id\n    }\n    dailyValues: tokensTotalDenominatedValueHistory(duration: DAY) {\n      timestamp\n      close: value\n      id\n    }\n    weeklyValues: tokensTotalDenominatedValueHistory(duration: WEEK) {\n      timestamp\n      close: value\n      id\n    }\n    monthlyValues: tokensTotalDenominatedValueHistory(duration: MONTH) {\n      timestamp\n      close: value\n      id\n    }\n    yearlyValues: tokensTotalDenominatedValueHistory(duration: YEAR) {\n      timestamp\n      close: value\n      id\n    }\n    tokenBalances {\n      quantity\n      denominatedValue {\n        currency\n        value\n        id\n      }\n      token {\n        chain\n        address\n        name\n        symbol\n        decimals\n        id\n      }\n      tokenProjectMarket {\n        tokenProject {\n          logoUrl\n          id\n        }\n        relativeChange24: pricePercentChange(duration: DAY) {\n          value\n          id\n        }\n        id\n      }\n      id\n    }\n    id\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "412e942e87df190f95c389b48ff4500a";
+(node as any).hash = "a42e0624be4e78c43a2a826684d9fa80";
 
 export default node;

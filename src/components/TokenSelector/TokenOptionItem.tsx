@@ -4,7 +4,7 @@ import { default as React, useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Keyboard } from 'react-native'
 import { Button } from 'src/components/buttons/Button'
-import { CurrencyLogo } from 'src/components/CurrencyLogo'
+import { CurrencyInfoLogo } from 'src/components/CurrencyLogo/CurrencyInfoLogo'
 import { Box } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { TextWithFuseMatches } from 'src/components/text/TextWithFuseMatches'
@@ -29,7 +29,9 @@ interface OptionProps {
 export function TokenOptionItem({ option, onPress, tokenWarningLevelMap, matches }: OptionProps) {
   const symbolMatches = matches?.filter((m) => m.key === 'symbol')
   const nameMatches = matches?.filter((m) => m.key === 'name')
-  const { currency, quantity, balanceUSD } = option
+  const { currencyInfo, quantity, balanceUSD } = option
+  const { currency } = currencyInfo
+
   const { t } = useTranslation()
 
   const [showWarningModal, setShowWarningModal] = useState(false)
@@ -65,7 +67,7 @@ export function TokenOptionItem({ option, onPress, tokenWarningLevelMap, matches
         onPress={onPressTokenOption}>
         <Flex row alignItems="center" gap="xs" justifyContent="space-between" py="sm">
           <Flex row shrink alignItems="center" gap="sm">
-            <CurrencyLogo currency={currency} size={32} />
+            <CurrencyInfoLogo currencyInfo={currencyInfo} size={32} />
             <Flex shrink alignItems="flex-start" gap="none">
               <Flex centered row gap="xs">
                 <Flex shrink>

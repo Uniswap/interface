@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f707c440828c91070d5787e776fae091>>
+ * @generated SignedSource<<5a18d9f932f7a38b03109c747b8a4f71>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -33,6 +33,9 @@ export type balancesQuery$data = {
         readonly relativeChange24: {
           readonly value: number | null;
         } | null;
+        readonly tokenProject: {
+          readonly logoUrl: string | null;
+        };
       } | null;
     } | null> | null;
   } | null> | null;
@@ -119,14 +122,21 @@ v9 = {
   "name": "decimals",
   "storageKey": null
 },
-v10 = [
+v10 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "logoUrl",
+  "storageKey": null
+},
+v11 = [
   {
     "kind": "Literal",
     "name": "duration",
     "value": "DAY"
   }
 ],
-v11 = {
+v12 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -195,8 +205,20 @@ return {
                 "plural": false,
                 "selections": [
                   {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "TokenProject",
+                    "kind": "LinkedField",
+                    "name": "tokenProject",
+                    "plural": false,
+                    "selections": [
+                      (v10/*: any*/)
+                    ],
+                    "storageKey": null
+                  },
+                  {
                     "alias": "relativeChange24",
-                    "args": (v10/*: any*/),
+                    "args": (v11/*: any*/),
                     "concreteType": "Amount",
                     "kind": "LinkedField",
                     "name": "pricePercentChange",
@@ -252,7 +274,7 @@ return {
                 "selections": [
                   (v3/*: any*/),
                   (v4/*: any*/),
-                  (v11/*: any*/)
+                  (v12/*: any*/)
                 ],
                 "storageKey": null
               },
@@ -269,7 +291,7 @@ return {
                   (v7/*: any*/),
                   (v8/*: any*/),
                   (v9/*: any*/),
-                  (v11/*: any*/)
+                  (v12/*: any*/)
                 ],
                 "storageKey": null
               },
@@ -282,43 +304,56 @@ return {
                 "plural": false,
                 "selections": [
                   {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "TokenProject",
+                    "kind": "LinkedField",
+                    "name": "tokenProject",
+                    "plural": false,
+                    "selections": [
+                      (v10/*: any*/),
+                      (v12/*: any*/)
+                    ],
+                    "storageKey": null
+                  },
+                  {
                     "alias": "relativeChange24",
-                    "args": (v10/*: any*/),
+                    "args": (v11/*: any*/),
                     "concreteType": "Amount",
                     "kind": "LinkedField",
                     "name": "pricePercentChange",
                     "plural": false,
                     "selections": [
                       (v4/*: any*/),
-                      (v11/*: any*/)
+                      (v12/*: any*/)
                     ],
                     "storageKey": "pricePercentChange(duration:\"DAY\")"
                   },
-                  (v11/*: any*/)
+                  (v12/*: any*/)
                 ],
                 "storageKey": null
               },
-              (v11/*: any*/)
+              (v12/*: any*/)
             ],
             "storageKey": null
           },
-          (v11/*: any*/)
+          (v12/*: any*/)
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "cacheID": "c2ee3bf4710985fa1a2c7bf9f68fcc2e",
+    "cacheID": "a963068ca035b9f3656b24bc13fd1237",
     "id": null,
     "metadata": {},
     "name": "balancesQuery",
     "operationKind": "query",
-    "text": "query balancesQuery(\n  $ownerAddress: String!\n) {\n  portfolios(ownerAddresses: [$ownerAddress]) {\n    tokenBalances {\n      quantity\n      denominatedValue {\n        currency\n        value\n        id\n      }\n      token {\n        chain\n        address\n        name\n        symbol\n        decimals\n        id\n      }\n      tokenProjectMarket {\n        relativeChange24: pricePercentChange(duration: DAY) {\n          value\n          id\n        }\n        id\n      }\n      id\n    }\n    id\n  }\n}\n"
+    "text": "query balancesQuery(\n  $ownerAddress: String!\n) {\n  portfolios(ownerAddresses: [$ownerAddress]) {\n    tokenBalances {\n      quantity\n      denominatedValue {\n        currency\n        value\n        id\n      }\n      token {\n        chain\n        address\n        name\n        symbol\n        decimals\n        id\n      }\n      tokenProjectMarket {\n        tokenProject {\n          logoUrl\n          id\n        }\n        relativeChange24: pricePercentChange(duration: DAY) {\n          value\n          id\n        }\n        id\n      }\n      id\n    }\n    id\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "b983f9bf47847b62f0a94226ce1f9a11";
+(node as any).hash = "bb321a9fc2d8104d6d870a2df7dd07f5";
 
 export default node;

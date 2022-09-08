@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6b150990b036f419082e2630f2a0b7ea>>
+ * @generated SignedSource<<5fd5f78b981f9beb83b679aafc2bd7bb>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,11 +10,16 @@
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 export type Chain = "ARBITRUM" | "ETHEREUM" | "ETHEREUM_GOERLI" | "OPTIMISM" | "POLYGON" | "%future added value";
-export type topTokensQuery$variables = {};
-export type topTokensQuery$data = {
-  readonly topTokenProjects: ReadonlyArray<{
+export type ContractInput = {
+  address?: string | null;
+  chain: Chain;
+};
+export type tokenProjectsQuery$variables = {
+  contracts: ReadonlyArray<ContractInput>;
+};
+export type tokenProjectsQuery$data = {
+  readonly tokenProjects: ReadonlyArray<{
     readonly logoUrl: string | null;
-    readonly name: string | null;
     readonly tokens: ReadonlyArray<{
       readonly address: string | null;
       readonly chain: Chain;
@@ -24,62 +29,52 @@ export type topTokensQuery$data = {
     }>;
   } | null> | null;
 };
-export type topTokensQuery = {
-  response: topTokensQuery$data;
-  variables: topTokensQuery$variables;
+export type tokenProjectsQuery = {
+  response: tokenProjectsQuery$data;
+  variables: tokenProjectsQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){
 var v0 = [
   {
-    "kind": "Literal",
-    "name": "orderBy",
-    "value": "MARKET_CAP"
-  },
-  {
-    "kind": "Literal",
-    "name": "page",
-    "value": 1
-  },
-  {
-    "kind": "Literal",
-    "name": "pageSize",
-    "value": 100
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "contracts"
   }
 ],
-v1 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "name",
-  "storageKey": null
-},
+v1 = [
+  {
+    "kind": "Variable",
+    "name": "contracts",
+    "variableName": "contracts"
+  }
+],
 v2 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "logoUrl",
-  "storageKey": null
-},
-v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "chain",
   "storageKey": null
 },
-v4 = {
+v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "address",
   "storageKey": null
 },
-v5 = {
+v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "decimals",
+  "storageKey": null
+},
+v5 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "name",
   "storageKey": null
 },
 v6 = {
@@ -93,26 +88,31 @@ v7 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
+  "name": "logoUrl",
+  "storageKey": null
+},
+v8 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 };
 return {
   "fragment": {
-    "argumentDefinitions": [],
+    "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "topTokensQuery",
+    "name": "tokenProjectsQuery",
     "selections": [
       {
         "alias": null,
-        "args": (v0/*: any*/),
+        "args": (v1/*: any*/),
         "concreteType": "TokenProject",
         "kind": "LinkedField",
-        "name": "topTokenProjects",
+        "name": "tokenProjects",
         "plural": true,
         "selections": [
-          (v1/*: any*/),
-          (v2/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -121,16 +121,17 @@ return {
             "name": "tokens",
             "plural": true,
             "selections": [
+              (v2/*: any*/),
               (v3/*: any*/),
               (v4/*: any*/),
               (v5/*: any*/),
-              (v1/*: any*/),
               (v6/*: any*/)
             ],
             "storageKey": null
-          }
+          },
+          (v7/*: any*/)
         ],
-        "storageKey": "topTokenProjects(orderBy:\"MARKET_CAP\",page:1,pageSize:100)"
+        "storageKey": null
       }
     ],
     "type": "Query",
@@ -138,20 +139,18 @@ return {
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": [],
+    "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "topTokensQuery",
+    "name": "tokenProjectsQuery",
     "selections": [
       {
         "alias": null,
-        "args": (v0/*: any*/),
+        "args": (v1/*: any*/),
         "concreteType": "TokenProject",
         "kind": "LinkedField",
-        "name": "topTokenProjects",
+        "name": "tokenProjects",
         "plural": true,
         "selections": [
-          (v1/*: any*/),
-          (v2/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -160,32 +159,33 @@ return {
             "name": "tokens",
             "plural": true,
             "selections": [
+              (v2/*: any*/),
               (v3/*: any*/),
               (v4/*: any*/),
               (v5/*: any*/),
-              (v1/*: any*/),
               (v6/*: any*/),
-              (v7/*: any*/)
+              (v8/*: any*/)
             ],
             "storageKey": null
           },
-          (v7/*: any*/)
+          (v7/*: any*/),
+          (v8/*: any*/)
         ],
-        "storageKey": "topTokenProjects(orderBy:\"MARKET_CAP\",page:1,pageSize:100)"
+        "storageKey": null
       }
     ]
   },
   "params": {
-    "cacheID": "7b9c2350a3d7478340d6aadac419764c",
+    "cacheID": "831d6a26f54213f451a423e9df8c85e5",
     "id": null,
     "metadata": {},
-    "name": "topTokensQuery",
+    "name": "tokenProjectsQuery",
     "operationKind": "query",
-    "text": "query topTokensQuery {\n  topTokenProjects(orderBy: MARKET_CAP, page: 1, pageSize: 100) {\n    name\n    logoUrl\n    tokens {\n      chain\n      address\n      decimals\n      name\n      symbol\n      id\n    }\n    id\n  }\n}\n"
+    "text": "query tokenProjectsQuery(\n  $contracts: [ContractInput!]!\n) {\n  tokenProjects(contracts: $contracts) {\n    tokens {\n      chain\n      address\n      decimals\n      name\n      symbol\n      id\n    }\n    logoUrl\n    id\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "d90b6ecdd0c0ef07e49a1296c6202f29";
+(node as any).hash = "cb5201bf5a2042dbeb91557660518f2f";
 
 export default node;

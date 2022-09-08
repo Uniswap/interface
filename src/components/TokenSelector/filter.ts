@@ -9,11 +9,11 @@ const searchOptions: Fuse.IFuseOptions<TokenOption> = {
   // require matches to be close to the start of the word
   distance: 10,
   keys: [
-    'currency.chainId',
-    'currency.symbol',
-    'currency.name',
+    'currencyInfo.currency.chainId',
+    'currencyInfo.currency.symbol',
+    'currencyInfo.currency.name',
     // prioritize other fields
-    { name: 'currency.address', weight: 0.2 },
+    { name: 'currencyInfo.currency.address', weight: 0.2 },
   ],
   shouldSort: true,
   useExtendedSearch: true,
@@ -22,25 +22,25 @@ const searchOptions: Fuse.IFuseOptions<TokenOption> = {
 const getChainSearchPattern = (chain: ChainId | null) =>
   chain
     ? // exact match chain
-      { 'currency.chainId': `=${chain}` }
+      { 'currencyInfo.currency.chainId': `=${chain}` }
     : null
 
 const getAddressSearchPattern = (addressPrefix: string | null) =>
   addressPrefix && addressPrefix.startsWith('0x') && addressPrefix.length > 5
     ? // prefix-exact macth address
-      { 'currency.address': `^${addressPrefix}` }
+      { 'currencyInfo.currency.address': `^${addressPrefix}` }
     : null
 
 const getSymbolSearchPattern = (symbol: string | null) =>
   symbol
     ? // fuzzy-match symbol
-      { 'currency.symbol': symbol }
+      { 'currencyInfo.currency.symbol': symbol }
     : null
 
 const getNameSearchPattern = (name: string | null) =>
   name
     ? // fuzzy-match name
-      { 'currency.name': name }
+      { 'currencyInfo.currency.name': name }
     : null
 
 /**

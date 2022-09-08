@@ -1,12 +1,11 @@
-import { Currency } from '@uniswap/sdk-core'
+import { Currency, Token } from '@uniswap/sdk-core'
 import { graphql } from 'babel-plugin-relay/macro'
 import { useMemo } from 'react'
 import { useLazyLoadQuery } from 'react-relay'
 import { EMPTY_ARRAY } from 'src/constants/misc'
-import { gqlTokenToCurrency } from 'src/features/dataApi/topTokens'
-import { PortfolioBalance } from 'src/features/dataApi/types'
+import { CurrencyInfo, PortfolioBalance } from 'src/features/dataApi/types'
 import { balancesQuery } from 'src/features/dataApi/__generated__/balancesQuery.graphql'
-import { useAllCurrencies } from 'src/features/tokens/useTokens'
+import { NativeCurrency } from 'src/features/tokenLists/NativeCurrency'
 import { useActiveAccountAddressWithThrow } from 'src/features/wallet/hooks'
 import { HIDE_SMALL_USD_BALANCES_THRESHOLD } from 'src/features/wallet/walletSlice'
 import { fromGraphQLChain } from 'src/utils/chainId'
@@ -29,6 +28,9 @@ const query = graphql`
           decimals
         }
         tokenProjectMarket {
+          tokenProject {
+            logoUrl
+          }
           relativeChange24: pricePercentChange(duration: DAY) {
             value
           }
@@ -39,12 +41,10 @@ const query = graphql`
 `
 /** Returns all balances indexed by currencyId for a given address */
 export function usePortfolioBalances(
-  address: Address,
-  onlyKnownCurrencies?: boolean
+  address: Address
 ): Record<CurrencyId, PortfolioBalance> | undefined {
   const balancesData = useLazyLoadQuery<balancesQuery>(query, { ownerAddress: address })
   const balancesForAddress = balancesData?.portfolios?.[0]?.tokenBalances
-  const tokensByChainId = useAllCurrencies()
 
   return useMemo(() => {
     if (!balancesForAddress) return
@@ -61,38 +61,50 @@ export function usePortfolioBalances(
         !balance.denominatedValue ||
         !balance.denominatedValue.value ||
         !balance.token ||
-        !balance.token.decimals
+        !balance.token.decimals ||
+        !balance.token.symbol ||
+        !balance.token.name
       )
         return
 
-      const currencyDetails = gqlTokenToCurrency(
-        balance.token,
-        tokensByChainId,
-        onlyKnownCurrencies
-      )
-      if (!currencyDetails) return
+      const currency = balance.token.address
+        ? new Token(
+            chainId,
+            balance.token.address,
+            balance.token.decimals,
+            balance.token.symbol,
+            balance.token.name
+          )
+        : NativeCurrency.onChain(chainId)
+
+      const id = currencyId(currency)
+
+      const currencyInfo: CurrencyInfo = {
+        currency,
+        currencyId: currencyId(currency),
+        logoUrl: balance.tokenProjectMarket?.tokenProject?.logoUrl,
+      }
 
       const portfolioBalance: PortfolioBalance = {
         quantity: balance.quantity,
         balanceUSD: balance.denominatedValue.value,
-        currency: currencyDetails.currency,
+        currencyInfo: currencyInfo,
         relativeChange24: balance.tokenProjectMarket?.relativeChange24?.value ?? 0,
       }
 
-      byId[currencyDetails.currencyId] = portfolioBalance
+      byId[id] = portfolioBalance
     })
 
     return Object.keys(byId).length > 0 ? byId : undefined
-  }, [balancesForAddress, onlyKnownCurrencies, tokensByChainId])
+  }, [balancesForAddress])
 }
 
 /** Returns portfolio balances for a given address sorted by USD value. */
 export function useSortedPortfolioBalancesList(
   address: Address,
-  onlyKnownCurrencies?: boolean,
   hideSmallBalances?: boolean
 ): PortfolioBalance[] {
-  const balancesById = usePortfolioBalances(address, onlyKnownCurrencies)
+  const balancesById = usePortfolioBalances(address)
 
   return useMemo(() => {
     if (!balancesById) return EMPTY_ARRAY

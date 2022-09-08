@@ -45,7 +45,9 @@ export function TokenBalances({
               : t('Your balance on other chains')}
           </Text>
           {otherChainBalances.map((balance) => {
-            return <OtherChainBalance key={balance.currency.chainId} balance={balance} />
+            return (
+              <OtherChainBalance key={balance.currencyInfo.currency.chainId} balance={balance} />
+            )
           })}
         </Flex>
       )}
@@ -63,7 +65,6 @@ export function CurrentChainBalance({
   displayName?: string
 }) {
   const { t } = useTranslation()
-  const { currency } = balance
 
   return (
     <Flex gap="xs">
@@ -72,7 +73,7 @@ export function CurrentChainBalance({
       </Text>
       <Flex row alignItems="center" justifyContent="space-between">
         <Text variant="headlineMedium">
-          {`${formatNumberBalance(balance.quantity)}`} {currency.symbol}
+          {`${formatNumberBalance(balance.quantity)}`} {balance.currencyInfo.currency.symbol}
         </Text>
         <Text variant="body">{formatUSDPrice(balance.balanceUSD)}</Text>
       </Flex>
@@ -84,10 +85,10 @@ function OtherChainBalance({ balance }: { balance: PortfolioBalance }) {
   return (
     <Flex row alignItems="center" justifyContent="space-between">
       <Flex row alignItems="center">
-        <CurrencyLogo currency={balance.currency} />
+        <CurrencyLogo currency={balance.currencyInfo.currency} />
         <Flex alignItems="center">
           <Text variant="body">
-            {formatNumberBalance(balance.quantity)} {balance.currency.symbol}
+            {formatNumberBalance(balance.quantity)} {balance.currencyInfo.currency.symbol}
           </Text>
         </Flex>
       </Flex>

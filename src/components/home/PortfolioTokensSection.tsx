@@ -1,4 +1,3 @@
-import { Currency } from '@uniswap/sdk-core'
 import { selectionAsync } from 'expo-haptics'
 import React, { Suspense } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -8,19 +7,19 @@ import { BaseCard } from 'src/components/layout/BaseCard'
 import { Loading } from 'src/components/loading'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import { TokenBalanceList, ViewType } from 'src/components/TokenBalanceList/TokenBalanceList'
+import { CurrencyInfo } from 'src/features/dataApi/types'
 import { openModal } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
 import { removePendingSession } from 'src/features/walletConnect/walletConnectSlice'
 import { Screens } from 'src/screens/Screens'
-import { currencyId } from 'src/utils/currencyId'
 
 export function PortfolioTokensSection({ count, owner }: { count?: number; owner: string }) {
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
   const navigation = useHomeStackNavigation()
 
-  const onPressToken = (currency: Currency) =>
-    navigation.navigate(Screens.TokenDetails, { currencyId: currencyId(currency) })
+  const onPressToken = (currencyInfo: CurrencyInfo) =>
+    navigation.navigate(Screens.TokenDetails, { currencyId: currencyInfo.currencyId })
 
   // TODO: remove when buy flow ready
   const onPressScan = () => {

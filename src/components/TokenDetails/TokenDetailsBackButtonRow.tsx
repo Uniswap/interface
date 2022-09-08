@@ -17,7 +17,6 @@ import { CHAIN_INFO } from 'src/constants/chains'
 import { PortfolioBalance } from 'src/features/dataApi/types'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { Screens } from 'src/screens/Screens'
-import { currencyId } from 'src/utils/currencyId'
 
 interface TokenDetailsHeaderProps {
   currency: Currency
@@ -59,13 +58,13 @@ export function TokenDetailsBackButtonRow({
         ),
       },
       ...(otherChainBalances?.map((balance) => {
-        const chainId = balance.currency.chainId
+        const chainId = balance.currencyInfo.currency.chainId
         const info = CHAIN_INFO[chainId]
 
         return {
           key: `${ElementName.NetworkButton}-${String(chainId)}`,
           onPress: () => {
-            navigate(Screens.TokenDetails, { currencyId: currencyId(balance.currency) })
+            navigate(Screens.TokenDetails, { currencyId: balance.currencyInfo.currencyId })
             setShowActionModal(false)
           },
           render: () => (

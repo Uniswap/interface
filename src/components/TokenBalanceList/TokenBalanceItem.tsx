@@ -1,24 +1,24 @@
-import { Currency } from '@uniswap/sdk-core'
 import React from 'react'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { Button } from 'src/components/buttons/Button'
-import { CurrencyLogo } from 'src/components/CurrencyLogo'
+import { CurrencyInfoLogo } from 'src/components/CurrencyLogo/CurrencyInfoLogo'
 import { AnimatedFlex, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { RelativeChange } from 'src/components/text/RelativeChange'
-import { PortfolioBalance } from 'src/features/dataApi/types'
+import { CurrencyInfo, PortfolioBalance } from 'src/features/dataApi/types'
 import { formatNumberBalance, formatUSDPrice } from 'src/utils/format'
 
 interface TokenBalanceItemProps {
   portfolioBalance: PortfolioBalance
-  onPressToken?: (currency: Currency) => void
+  onPressToken?: (currencyInfo: CurrencyInfo) => void
 }
 
 export function TokenBalanceItem({ portfolioBalance, onPressToken }: TokenBalanceItemProps) {
-  const { quantity, currency, relativeChange24 } = portfolioBalance
+  const { quantity, currencyInfo, relativeChange24 } = portfolioBalance
+  const { currency } = currencyInfo
 
   const onPress = () => {
-    onPressToken?.(currency)
+    onPressToken?.(currencyInfo)
   }
 
   return (
@@ -39,7 +39,7 @@ export function TokenBalanceItem({ portfolioBalance, onPressToken }: TokenBalanc
         flexShrink={1}
         gap="sm"
         overflow="hidden">
-        <CurrencyLogo currency={currency} size={36} />
+        <CurrencyInfoLogo currencyInfo={currencyInfo} size={36} />
         <Flex alignItems="flex-start" flexShrink={1} gap="none">
           <Text ellipsizeMode="tail" numberOfLines={1} variant="subhead">
             {currency.name ?? currency.symbol}

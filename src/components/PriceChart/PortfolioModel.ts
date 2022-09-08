@@ -49,6 +49,9 @@ const portfolioCharts = graphql`
           decimals
         }
         tokenProjectMarket {
+          tokenProject {
+            logoUrl
+          }
           relativeChange24: pricePercentChange(duration: DAY) {
             value
           }

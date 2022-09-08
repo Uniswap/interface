@@ -1,4 +1,3 @@
-import { Currency } from '@uniswap/sdk-core'
 import React, { Suspense, useCallback } from 'react'
 import { ListRenderItemInfo } from 'react-native'
 import { useAppSelector } from 'src/app/hooks'
@@ -15,11 +14,10 @@ import { PriceChartLoading } from 'src/components/PriceChart/PriceChartLoading'
 import { TokenBalanceItem } from 'src/components/TokenBalanceList/TokenBalanceItem'
 import { TotalBalance } from 'src/features/balances/TotalBalance'
 import { useSortedPortfolioBalancesList } from 'src/features/dataApi/balances'
-import { PortfolioBalance } from 'src/features/dataApi/types'
+import { CurrencyInfo, PortfolioBalance } from 'src/features/dataApi/types'
 import { useActiveAccountAddressWithThrow } from 'src/features/wallet/hooks'
 import { selectHideSmallBalances } from 'src/features/wallet/selectors'
 import { Screens } from 'src/screens/Screens'
-import { currencyId } from 'src/utils/currencyId'
 
 export function PortfolioTokensScreen({
   route: {
@@ -44,15 +42,14 @@ function PortfolioTokensContent({ owner }: { owner?: string }) {
   const hideSmallBalances = useAppSelector(selectHideSmallBalances)
   const accountAddress = useActiveAccountAddressWithThrow()
   const activeAddress = owner ?? accountAddress
-  const balances = useSortedPortfolioBalancesList(activeAddress, true, hideSmallBalances)
+  const balances = useSortedPortfolioBalancesList(activeAddress, hideSmallBalances)
 
   const renderItem = useCallback(
     ({ item }: ListRenderItemInfo<PortfolioBalance>) => (
       <TokenBalanceItem
-        key={currencyId(item.currency)}
         portfolioBalance={item}
-        onPressToken={(currency: Currency) =>
-          navigation.navigate(Screens.TokenDetails, { currencyId: currencyId(currency) })
+        onPressToken={(currencyInfo: CurrencyInfo) =>
+          navigation.navigate(Screens.TokenDetails, { currencyId: currencyInfo.currencyId })
         }
       />
     ),
@@ -99,7 +96,7 @@ function PortfolioTokensContent({ owner }: { owner?: string }) {
         </BackHeader>
       }
       data={balances}
-      keyExtractor={(item: PortfolioBalance) => currencyId(item.currency)}
+      keyExtractor={(item: PortfolioBalance) => item.currencyInfo.currencyId}
       renderItem={renderItem}
     />
   )

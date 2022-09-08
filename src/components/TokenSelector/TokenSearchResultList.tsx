@@ -15,14 +15,13 @@ import { ChainId } from 'src/constants/chains'
 import { EMPTY_ARRAY } from 'src/constants/misc'
 import { usePortfolioBalances } from 'src/features/dataApi/balances'
 import { usePopularTokens } from 'src/features/dataApi/topTokens'
-import { PortfolioBalance } from 'src/features/dataApi/types'
+import { CurrencyInfo, PortfolioBalance } from 'src/features/dataApi/types'
 import { ElementName } from 'src/features/telemetry/constants'
 import { useCombinedTokenWarningLevelMap } from 'src/features/tokens/useTokenWarningLevel'
 import { useActiveAccountWithThrow } from 'src/features/wallet/hooks'
 import { selectHideSmallBalances } from 'src/features/wallet/selectors'
 import { HIDE_SMALL_USD_BALANCES_THRESHOLD } from 'src/features/wallet/walletSlice'
 import { differenceWith } from 'src/utils/array'
-import { currencyId } from 'src/utils/currencyId'
 import { useDebounce } from 'src/utils/timing'
 import { TextButton } from '../buttons/TextButton'
 import { Box, Flex, Inset } from '../layout'
@@ -37,8 +36,8 @@ interface TokenSearchResultListProps {
   variation: TokenSelectorVariation
 }
 
-const tokenOptionComparator = (currency: TokenOption, otherCurrency: TokenOption) => {
-  return currencyId(currency.currency) === currencyId(otherCurrency.currency)
+const tokenOptionComparator = (tokenOption: TokenOption, otherTokenOption: TokenOption) => {
+  return tokenOption.currencyInfo.currencyId === otherTokenOption.currencyInfo.currencyId
 }
 // get items in `currencies` that are not in `without`
 // e.g. difference([B, C, D], [A, B, C]) would return ([D])
@@ -51,8 +50,8 @@ type TokenSection = {
   data: TokenOption[]
 }
 
-const createEmptyBalanceOption = (currency: Currency): TokenOption => ({
-  currency,
+const createEmptyBalanceOption = (currencyInfo: CurrencyInfo): TokenOption => ({
+  currencyInfo,
   balanceUSD: null,
   quantity: null,
 })
@@ -67,7 +66,8 @@ export function useTokenSectionsByVariation(
   const hideSmallBalances = useAppSelector(selectHideSmallBalances)
 
   const popularTokens = usePopularTokens()
-  const portfolioBalancesById = usePortfolioBalances(activeAccount.address, false)
+  const portfolioBalancesById = usePortfolioBalances(activeAccount.address)
+
   const portfolioBalances: PortfolioBalance[] = useMemo(() => {
     if (!portfolioBalancesById) return EMPTY_ARRAY
 
@@ -88,28 +88,31 @@ export function useTokenSectionsByVariation(
   const popularWithoutBalances = useMemo(() => {
     return popularTokens
       .sort((a, b) => {
-        if (a.name && b.name) {
-          return a.name.localeCompare(b.name)
+        if (a.currency.name && b.currency.name) {
+          return a.currency.name.localeCompare(b.currency.name)
         }
         return 0
       })
-      .map((currency) => {
-        const id = currencyId(currency)
-        return portfolioBalancesById?.[id] ?? createEmptyBalanceOption(currency)
+      .map((currencyInfo) => {
+        return (
+          portfolioBalancesById?.[currencyInfo.currencyId] ?? createEmptyBalanceOption(currencyInfo)
+        )
       })
   }, [popularTokens, portfolioBalancesById])
 
   const favoritesWithoutBalances = useMemo(() => {
-    return favoriteCurrencies.map((currency) => {
-      const id = currencyId(currency)
-      return portfolioBalancesById?.[id] ?? createEmptyBalanceOption(currency)
+    return favoriteCurrencies.map((currencyInfo) => {
+      return (
+        portfolioBalancesById?.[currencyInfo.currencyId] ?? createEmptyBalanceOption(currencyInfo)
+      )
     })
   }, [favoriteCurrencies, portfolioBalancesById])
 
   const commonBases = useMemo(() => {
-    return commonBaseCurrencies.map((currency) => {
-      const id = currencyId(currency)
-      return portfolioBalancesById?.[id] ?? createEmptyBalanceOption(currency)
+    return commonBaseCurrencies.map((currencyInfo) => {
+      return (
+        portfolioBalancesById?.[currencyInfo.currencyId] ?? createEmptyBalanceOption(currencyInfo)
+      )
     })
   }, [commonBaseCurrencies, portfolioBalancesById])
 
@@ -193,7 +196,7 @@ export function TokenSearchResultList({
           matches={item.matches}
           option={tokenOption}
           tokenWarningLevelMap={tokenWarningLevelMap}
-          onPress={() => onSelectCurrency?.(tokenOption.currency)}
+          onPress={() => onSelectCurrency?.(tokenOption.currencyInfo.currency)}
         />
       )
     },
@@ -266,7 +269,7 @@ function Footer() {
 }
 
 function key(item: Fuse.FuseResult<TokenOption>) {
-  return currencyId(item.item.currency)
+  return item.item.currencyInfo.currencyId
 }
 
 const styles = StyleSheet.create({

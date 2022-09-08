@@ -3,22 +3,27 @@ import { TokenOption } from 'src/components/TokenSelector/types'
 import { ChainId } from 'src/constants/chains'
 import { DAI, DAI_ARBITRUM_ONE } from 'src/constants/tokens'
 import { NativeCurrency } from 'src/features/tokenLists/NativeCurrency'
+import { currencyId } from 'src/utils/currencyId'
 
 const ETH = NativeCurrency.onChain(ChainId.Mainnet)
 
 const TEST_TOKEN_INPUT: TokenOption[] = [
   {
-    currency: DAI,
+    currencyInfo: { currency: DAI, currencyId: currencyId(DAI), logoUrl: null },
     balanceUSD: null,
     quantity: null,
   },
   {
-    currency: ETH,
+    currencyInfo: { currency: ETH, currencyId: currencyId(ETH), logoUrl: null },
     balanceUSD: null,
     quantity: null,
   },
   {
-    currency: DAI_ARBITRUM_ONE,
+    currencyInfo: {
+      currency: DAI_ARBITRUM_ONE,
+      currencyId: currencyId(DAI_ARBITRUM_ONE),
+      logoUrl: null,
+    },
     balanceUSD: null,
     quantity: null,
   },
@@ -31,7 +36,7 @@ const filterAndGetCurrencies = (
 ) =>
   filter(currencies, chainFilter, searchFilter)
     .map((r) => r.item)
-    .map((cm) => cm.currency)
+    .map((cm) => cm.currencyInfo.currency)
 
 describe(filter, () => {
   it('returns the entire input flattened if chainFilter and searchFilter are null', () => {
