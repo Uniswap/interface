@@ -11,6 +11,8 @@ import { AssetType } from 'src/entities/assets'
 import { useNativeCurrencyBalance, useTokenBalance } from 'src/features/balances/hooks'
 import { estimateGasAction } from 'src/features/gas/estimateGasSaga'
 import { GasSpeed } from 'src/features/gas/types'
+import { pushNotification } from 'src/features/notifications/notificationSlice'
+import { AppNotificationType } from 'src/features/notifications/types'
 import {
   STABLECOIN_AMOUNT_OUT,
   useUSDCPrice,
@@ -40,6 +42,7 @@ import { BaseDerivedInfo } from 'src/features/transactions/transactionState/type
 import { TransactionType } from 'src/features/transactions/types'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { buildCurrencyId, currencyAddress } from 'src/utils/currencyId'
+import usePrevious from 'src/utils/hooks'
 import { logger } from 'src/utils/logger'
 import { SagaStatus } from 'src/utils/saga'
 import { tryParseExactAmount } from 'src/utils/tryParseAmount'
@@ -558,4 +561,15 @@ export function useAcceptedTrade(trade: NullUndefined<Trade>) {
   }
 
   return { onAcceptTrade, acceptedTrade }
+}
+
+export function useShowSwapNetworkNotification(chainId?: ChainId) {
+  const prevChainId = usePrevious(chainId)
+  const appDispatch = useAppDispatch()
+  useEffect(() => {
+    // don't fire notification toast for first network selection
+    if (!prevChainId || !chainId || prevChainId === chainId) return
+
+    appDispatch(pushNotification({ type: AppNotificationType.SwapNetwork, chainId }))
+  }, [chainId, prevChainId, appDispatch])
 }

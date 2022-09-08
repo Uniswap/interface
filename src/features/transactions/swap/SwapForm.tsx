@@ -1,9 +1,9 @@
 import { AnyAction } from '@reduxjs/toolkit'
-import React, { Dispatch, useEffect, useState } from 'react'
+import React, { Dispatch, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleSheet, TextInputProps } from 'react-native'
 import { FadeIn, FadeOut, FadeOutDown } from 'react-native-reanimated'
-import { useAppDispatch, useAppTheme } from 'src/app/hooks'
+import { useAppTheme } from 'src/app/hooks'
 import InfoCircle from 'src/assets/icons/info-circle.svg'
 import { Button } from 'src/components/buttons/Button'
 import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
@@ -16,12 +16,11 @@ import { LaserLoader } from 'src/components/loading/LaserLoader'
 import WarningModal, { getAlertColor } from 'src/components/modals/WarningModal'
 import { Text } from 'src/components/Text'
 import { WarningAction, WarningSeverity } from 'src/components/warnings/types'
-import { pushNotification } from 'src/features/notifications/notificationSlice'
-import { AppNotificationType } from 'src/features/notifications/types'
 import { ElementName, ModalName, SectionName } from 'src/features/telemetry/constants'
 import { Trace } from 'src/features/telemetry/Trace'
 import {
   DerivedSwapInfo,
+  useShowSwapNetworkNotification,
   useSwapActionHandlers,
   useUpdateSwapGasEstimate,
   useUSDTokenUpdater,
@@ -29,7 +28,6 @@ import {
 import { getReviewActionName, isWrapAction } from 'src/features/transactions/swap/utils'
 import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
 import { createTransactionId } from 'src/features/transactions/utils'
-import usePrevious from 'src/utils/hooks'
 
 interface SwapFormProps {
   dispatch: Dispatch<AnyAction>
@@ -57,8 +55,6 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo, isCompressedView }
     warnings,
   } = derivedSwapInfo
 
-  const prevChainId = usePrevious(chainId)
-
   const {
     onSwitchCurrencies,
     onSetAmount,
@@ -69,15 +65,14 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo, isCompressedView }
     onShowTokenSelector,
   } = useSwapActionHandlers(dispatch)
 
-  const exactCurrency = currencies[exactCurrencyField]
   useUSDTokenUpdater(
     dispatch,
     isUSDInput,
     exactAmountToken,
     exactAmountUSD,
-    exactCurrency ?? undefined
+    currencies[exactCurrencyField] ?? undefined
   )
-
+  useShowSwapNetworkNotification(chainId)
   useUpdateSwapGasEstimate(dispatch, trade.trade)
 
   const [showWarningModal, setShowWarningModal] = useState(false)
@@ -101,9 +96,9 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo, isCompressedView }
     !isWrapAction(wrapType) && (trade.isFetching || trade.loading || otherAmountNotLoaded)
 
   const noValidSwap = !isWrapAction(wrapType) && !trade
-  const blockWarning = warnings.some((warning) => warning.action === WarningAction.DisableReview)
+  const blockingWarning = warnings.some((warning) => warning.action === WarningAction.DisableReview)
 
-  const actionButtonDisabled = noValidSwap || blockWarning || swapDataRefreshing
+  const actionButtonDisabled = noValidSwap || blockingWarning || swapDataRefreshing
 
   const swapWarning = warnings.find((warning) => warning.severity >= WarningSeverity.Medium)
   const swapWarningColor = getAlertColor(swapWarning?.severity)
@@ -118,14 +113,6 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo, isCompressedView }
     const newExactAmount = formattedAmounts[currencyField]
     onUpdateExactCurrencyField(currencyField, newExactAmount)
   }
-
-  const appDispatch = useAppDispatch()
-  useEffect(() => {
-    // don't fire notification toast for first network selection
-    if (!prevChainId || !chainId || prevChainId === chainId) return
-
-    appDispatch(pushNotification({ type: AppNotificationType.SwapNetwork, chainId }))
-  }, [chainId, prevChainId, appDispatch])
 
   const ARROW_SIZE = 44
 
