@@ -1,7 +1,6 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { useAppTheme } from 'src/app/hooks'
-import { RemoteImage } from 'src/components/images/RemoteImage'
+import { DappLogoWithWCBadge } from 'src/components/CurrencyLogo/LogoWithTxStatus'
 import TransactionSummaryLayout, {
   TXN_HISTORY_ICON_SIZE,
 } from 'src/features/transactions/SummaryCards/TransactionSummaryLayout'
@@ -16,7 +15,6 @@ export default function WCSummaryItem({
   ...rest
 }: BaseTransactionSummaryProps & { transaction: { typeInfo: WCConfirmInfo } }) {
   const { t } = useTranslation()
-  const theme = useAppTheme()
   const title = formatTitleWithStatus({
     status: transaction.status,
     text: t('Contract Interaction'),
@@ -27,11 +25,9 @@ export default function WCSummaryItem({
     <TransactionSummaryLayout
       caption={transaction.typeInfo.dapp.name}
       icon={
-        <RemoteImage
-          borderRadius={theme.borderRadii.full}
-          height={TXN_HISTORY_ICON_SIZE}
-          uri={transaction.typeInfo.dapp.icon ?? ''}
-          width={TXN_HISTORY_ICON_SIZE}
+        <DappLogoWithWCBadge
+          dappImageUrl={transaction.typeInfo.dapp.icon}
+          size={TXN_HISTORY_ICON_SIZE}
         />
       }
       readonly={readonly}

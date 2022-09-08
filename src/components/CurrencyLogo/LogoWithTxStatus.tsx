@@ -7,6 +7,7 @@ import IncomingArrow from 'src/assets/icons/arrow-down-in-circle.svg'
 import OutgoingArrow from 'src/assets/icons/arrow-up-in-circle.svg'
 import UnknownStatus from 'src/assets/icons/question-in-circle.svg'
 import SlashCircleIcon from 'src/assets/icons/slash-circle.svg'
+import WalletConnectLogo from 'src/assets/icons/walletconnect.svg'
 import {
   CurrencyLogoOrPlaceholder,
   NFTLogoOrPlaceholder,
@@ -220,5 +221,47 @@ export function DappLogoWithTxStatus({
     </Box>
   ) : (
     dappImage
+  )
+}
+
+/** For displaying Dapp logo with generic WC bade icon */
+export function DappLogoWithWCBadge({
+  dappImageUrl,
+  size,
+}: {
+  dappImageUrl: string | null
+  size: number
+}) {
+  const theme = useAppTheme()
+  const fill = theme.colors.backgroundBackdrop
+  const gray = theme.colors.textSecondary
+  const dappImageSize = size
+  const statusSize = dappImageSize * (1 / 2)
+  const totalSize = dappImageSize + statusSize * (1 / 3)
+  const dappImage = dappImageUrl ? (
+    <RemoteImage
+      borderRadius={theme.borderRadii.full}
+      height={dappImageSize}
+      uri={dappImageUrl}
+      width={dappImageSize}
+    />
+  ) : (
+    <UnknownStatus color={gray} fill={fill} height={dappImageSize} width={dappImageSize} />
+  )
+
+  return (
+    <Box height={totalSize} width={totalSize}>
+      <Box left={0} position="absolute" top={0}>
+        {dappImage}
+      </Box>
+      <Box
+        backgroundColor="backgroundSurface"
+        borderRadius="full"
+        bottom={0}
+        position="absolute"
+        right={0}>
+        <WalletConnectLogo fill="red" height={statusSize} width={statusSize} />
+      </Box>
+    </Box>
   )
 }
