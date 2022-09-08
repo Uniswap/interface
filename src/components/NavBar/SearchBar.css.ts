@@ -4,7 +4,7 @@ import { buttonTextSmall, subhead, subheadSmall } from 'nft/css/common.css'
 import { breakpoints, sprinkles, vars } from '../../nft/css/sprinkles.css'
 
 const DESKTOP_NAVBAR_WIDTH = 360
-const SEARCH_MAGNIFYING_GLASS_WIDTH = 28
+const MAGNIFYING_GLASS_ICON_WIDTH = 28
 
 const baseSearchStyle = style([
   sprinkles({
@@ -33,7 +33,7 @@ export const searchBarContainer = style([
   {
     '@media': {
       [`screen and (min-width: ${breakpoints.lg}px)`]: {
-        right: `-${DESKTOP_NAVBAR_WIDTH / 2 - SEARCH_MAGNIFYING_GLASS_WIDTH}px`,
+        right: `-${DESKTOP_NAVBAR_WIDTH / 2 - MAGNIFYING_GLASS_ICON_WIDTH}px`,
       },
     },
   },
@@ -57,6 +57,7 @@ export const searchBarInput = style([
     color: { default: 'blackBlue', placeholder: 'placeholder' },
     border: 'none',
     background: 'none',
+    width: 'full',
   }),
   {
     lineHeight: '24px',
@@ -167,6 +168,9 @@ export const notFoundContainer = style([
   }),
 ])
 
+const visibilityTransition = `visibility ${vars.time[125]}, opacity ${vars.time[125]}`
+const delayedTransitionProperties = `padding 0s ${vars.time[125]}, height 0s ${vars.time[125]}`
+
 export const hidden = style([
   sprinkles({
     visibility: 'hidden',
@@ -175,7 +179,7 @@ export const hidden = style([
     height: '0',
   }),
   {
-    transition: `visibility .125s, opacity .125s, padding 0s .125s, height 0s .125s`,
+    transition: `${visibilityTransition}, ${delayedTransitionProperties}`,
     transitionTimingFunction: 'ease-in',
   },
 ])
@@ -186,12 +190,12 @@ export const visible = style([
     height: 'full',
   }),
   {
-    transition: `visibility .125s, opacity .125s`,
+    transition: `${visibilityTransition}`,
     transitionTimingFunction: 'ease-out',
   },
 ])
 
-export const searchIconCentered = style({
+export const searchContentCentered = style({
   '@media': {
     [`screen and (min-width: ${breakpoints.lg}px)`]: {
       transform: `translateX(${DESKTOP_NAVBAR_WIDTH / 4}px)`,
@@ -201,7 +205,7 @@ export const searchIconCentered = style({
   },
 })
 
-export const searchIconLeftAlign = style({
+export const searchContentLeftAlign = style({
   '@media': {
     [`screen and (min-width: ${breakpoints.lg}px)`]: {
       transform: `translateX(0)`,

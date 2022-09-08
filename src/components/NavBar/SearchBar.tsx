@@ -358,7 +358,12 @@ export const SearchBar = () => {
         >
           <Box
             className={clsx(
-              `${!isMobileOrTablet && (isOpen ? styles.searchIconLeftAlign : styles.searchIconCentered)}`
+              `${
+                !isMobileOrTablet &&
+                (isOpen || phase1Flag === NftVariant.Enabled
+                  ? styles.searchContentLeftAlign
+                  : styles.searchContentCentered)
+              }`
             )}
           >
             <Box display={{ sm: 'none', md: 'flex' }}>
@@ -371,13 +376,17 @@ export const SearchBar = () => {
           <Box
             as="input"
             placeholder={placeholderText}
-            width={isOpen || phase1Flag === NftVariant.Enabled ? 'full' : '120'}
+            // width={isOpen || phase1Flag === NftVariant.Enabled ? 'full' : '120'}
             onChange={(event: ChangeEvent<HTMLInputElement>) => {
               !isOpen && toggleOpen()
               setSearchValue(event.target.value)
             }}
             className={clsx(
-              `${styles.searchBarInput} ${isOpen ? styles.searchIconLeftAlign : styles.searchIconCentered}`
+              `${styles.searchBarInput} ${
+                isOpen || phase1Flag === NftVariant.Enabled
+                  ? styles.searchContentLeftAlign
+                  : styles.searchContentCentered
+              }`
             )}
             value={searchValue}
             ref={inputRef}
