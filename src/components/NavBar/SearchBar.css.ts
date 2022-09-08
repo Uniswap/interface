@@ -42,7 +42,6 @@ export const searchBarContainer = style([
 export const searchBar = style([
   baseSearchStyle,
   sprinkles({
-    height: 'full',
     color: 'placeholder',
     paddingX: '16',
     cursor: 'pointer',
@@ -173,9 +172,9 @@ export const hidden = style([
     visibility: 'hidden',
     opacity: '0',
     padding: '0',
+    height: '0',
   }),
   {
-    height: '0',
     transition: `visibility .125s, opacity .125s, padding 0s .125s, height 0s .125s`,
     transitionTimingFunction: 'ease-in',
   },
