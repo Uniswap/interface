@@ -1,5 +1,5 @@
-import { getTestSelector, selectFeatureFlag } from '../utils'
 import { FeatureFlag } from '../../src/featureFlags/flags/featureFlags'
+import { getTestSelector, selectFeatureFlag } from '../utils'
 
 describe('Wallet Dropdown', () => {
   before(() => {
