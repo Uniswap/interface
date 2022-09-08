@@ -4,24 +4,21 @@ import { useWeb3React } from '@web3-react/core'
 import CurrencyLogo from 'components/CurrencyLogo'
 import PriceChart from 'components/Tokens/TokenDetails/PriceChart'
 import { VerifiedIcon } from 'components/TokenSafety/TokenSafetyIcon'
-import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import { getChainInfo } from 'constants/chainInfo'
 import { nativeOnChain, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
-import { checkWarning, WARNING_LEVEL } from 'constants/tokenSafety'
+import { checkWarning } from 'constants/tokenSafety'
 import { TokenQuery$data } from 'graphql/data/__generated__/TokenQuery.graphql'
-import { useCurrency, useIsUserAddedToken, useToken } from 'hooks/Tokens'
-import { useAtomValue } from 'jotai/utils'
+import { useCurrency, useToken } from 'hooks/Tokens'
 import { darken } from 'polished'
-import { Suspense, useCallback } from 'react'
+import { Suspense } from 'react'
 import { useState } from 'react'
-import { ArrowLeft, Heart } from 'react-feather'
-import { useNavigate } from 'react-router-dom'
+import { ArrowLeft } from 'react-feather'
 import styled from 'styled-components/macro'
-import { ClickableStyle, CopyContractAddress } from 'theme'
+import { CopyContractAddress } from 'theme'
 import { formatDollarAmount } from 'utils/formatDollarAmt'
 
-import { favoritesAtom, useToggleFavorite } from '../state'
-import { ClickFavorited } from '../TokenTable/TokenRow'
+import { useIsFavorited, useToggleFavorite } from '../state'
+import { ClickFavorited, FavoriteIcon } from '../TokenTable/TokenRow'
 import LoadingTokenDetail from './LoadingTokenDetail'
 import Resource from './Resource'
 import ShareButton from './ShareButton'
@@ -81,13 +78,7 @@ const NetworkBadge = styled.div<{ networkColor?: string; backgroundColor?: strin
   color: ${({ theme, networkColor }) => networkColor ?? theme.textPrimary};
   background-color: ${({ theme, backgroundColor }) => backgroundColor ?? theme.backgroundSurface};
 `
-const FavoriteIcon = styled(Heart)<{ isFavorited: boolean }>`
-  ${ClickableStyle}
-  height: 22px;
-  width: 24px;
-  color: ${({ isFavorited, theme }) => (isFavorited ? theme.accentAction : theme.textSecondary)};
-  fill: ${({ isFavorited, theme }) => (isFavorited ? theme.accentAction : 'transparent')};
-`
+
 const NoInfoAvailable = styled.span`
   color: ${({ theme }) => theme.textTertiary};
   font-weight: 400;
@@ -181,21 +172,9 @@ export default function LoadedTokenDetail({ address, query }: { address: string;
   const { chainId: connectedChainId } = useWeb3React()
   const token = useToken(address)
   let currency = useCurrency(address)
-  const favoriteTokens = useAtomValue<string[]>(favoritesAtom)
-  const isFavorited = favoriteTokens.includes(address)
+  const isFavorited = useIsFavorited(address)
   const toggleFavorite = useToggleFavorite(address)
   const warning = checkWarning(address)
-  const navigate = useNavigate()
-  const isUserAddedToken = useIsUserAddedToken(token)
-  const [warningModalOpen, setWarningModalOpen] = useState(!!warning && !isUserAddedToken)
-
-  const handleDismissWarning = useCallback(() => {
-    setWarningModalOpen(false)
-  }, [setWarningModalOpen])
-  const handleCancel = useCallback(() => {
-    setWarningModalOpen(false)
-    warning && warning.level === WARNING_LEVEL.BLOCKED && navigate(-1)
-  }, [setWarningModalOpen, navigate, warning])
   const chainInfo = getChainInfo(token?.chainId)
   const networkLabel = chainInfo?.label
   const networkBadgebackgroundColor = chainInfo?.backgroundColor
@@ -303,12 +282,6 @@ export default function LoadedTokenDetail({ address, query }: { address: string;
             </ContractAddress>
           </Contract>
         </ContractAddressSection>
-        <TokenSafetyModal
-          isOpen={warningModalOpen}
-          tokenAddress={address}
-          onCancel={handleCancel}
-          onContinue={handleDismissWarning}
-        />
       </TopArea>
     </Suspense>
   )

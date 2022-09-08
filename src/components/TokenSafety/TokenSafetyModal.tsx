@@ -1,13 +1,8 @@
 import Modal from '../Modal'
-import TokenSafety from '.'
+import TokenSafety, { TokenSafetyProps } from '.'
 
-interface TokenSafetyModalProps {
+interface TokenSafetyModalProps extends TokenSafetyProps {
   isOpen: boolean
-  tokenAddress: string | null
-  secondTokenAddress?: string
-  onContinue: () => void
-  onCancel: () => void
-  showCancel?: boolean
 }
 
 export default function TokenSafetyModal({
@@ -16,6 +11,7 @@ export default function TokenSafetyModal({
   secondTokenAddress,
   onContinue,
   onCancel,
+  onBlocked,
   showCancel,
 }: TokenSafetyModalProps) {
   return (
@@ -23,8 +19,9 @@ export default function TokenSafetyModal({
       <TokenSafety
         tokenAddress={tokenAddress}
         secondTokenAddress={secondTokenAddress}
-        onCancel={onCancel}
         onContinue={onContinue}
+        onBlocked={onBlocked}
+        onCancel={onCancel}
         showCancel={showCancel}
       />
     </Modal>

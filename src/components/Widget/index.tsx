@@ -1,4 +1,4 @@
-import { Currency, SwapWidget } from '@uniswap/widgets'
+import { Currency, OnReviewSwapClick, SwapWidget } from '@uniswap/widgets'
 import { useWeb3React } from '@web3-react/core'
 import { RPC_URLS } from 'constants/networks'
 import { useActiveLocale } from 'hooks/useActiveLocale'
@@ -16,9 +16,10 @@ const WIDGET_ROUTER_URL = 'https://api.uniswap.org/v1/'
 
 export interface WidgetProps {
   defaultToken?: Currency
+  onReviewSwapClick?: OnReviewSwapClick
 }
 
-export default function Widget({ defaultToken }: WidgetProps) {
+export default function Widget({ defaultToken, onReviewSwapClick }: WidgetProps) {
   const locale = useActiveLocale()
   const darkMode = useIsDarkMode()
   const theme = useMemo(() => (darkMode ? DARK_THEME : LIGHT_THEME), [darkMode])
@@ -38,6 +39,7 @@ export default function Widget({ defaultToken }: WidgetProps) {
         width={WIDGET_WIDTH}
         locale={locale}
         theme={theme}
+        onReviewSwapClick={onReviewSwapClick}
         // defaultChainId is excluded - it is always inferred from the passed provider
         provider={provider}
         {...inputs}
