@@ -4,6 +4,7 @@ import { buttonTextSmall, subhead, subheadSmall } from 'nft/css/common.css'
 import { breakpoints, sprinkles, vars } from '../../nft/css/sprinkles.css'
 
 const DESKTOP_NAVBAR_WIDTH = 360
+const SEARCH_MAGNIFYING_GLASS_WIDTH = 28
 
 const baseSearchStyle = style([
   sprinkles({
@@ -31,11 +32,8 @@ export const searchBarContainer = style([
   }),
   {
     '@media': {
-      [`screen and (min-width: ${breakpoints.sm}px)`]: {
-        top: '-24px',
-      },
       [`screen and (min-width: ${breakpoints.lg}px)`]: {
-        right: `-${DESKTOP_NAVBAR_WIDTH / 2}px`,
+        right: `-${DESKTOP_NAVBAR_WIDTH / 2 - SEARCH_MAGNIFYING_GLASS_WIDTH}px`,
       },
     },
   },
@@ -61,7 +59,9 @@ export const searchBarInput = style([
     border: 'none',
     background: 'none',
   }),
-  { lineHeight: '24px' },
+  {
+    lineHeight: '24px',
+  },
 ])
 
 export const searchBarDropdown = style([
@@ -70,6 +70,7 @@ export const searchBarDropdown = style([
     borderBottomLeftRadius: '12',
     borderBottomRightRadius: '12',
     background: 'lightGray',
+    height: { sm: 'viewHeight', md: 'auto' },
   }),
   {
     borderTop: 'none',
@@ -84,7 +85,6 @@ export const suggestionRow = style([
     justifyContent: 'space-between',
     paddingY: '8',
     paddingX: '16',
-    transition: '250',
   }),
   {
     ':hover': {
@@ -167,3 +167,47 @@ export const notFoundContainer = style([
     paddingLeft: '16',
   }),
 ])
+
+export const hidden = style([
+  sprinkles({
+    visibility: 'hidden',
+    opacity: '0',
+    padding: '0',
+  }),
+  {
+    height: '0',
+    transition: `visibility .125s, opacity .125s, padding 0s .125s, height 0s .125s`,
+    transitionTimingFunction: 'ease-in',
+  },
+])
+export const visible = style([
+  sprinkles({
+    visibility: 'visible',
+    opacity: '1',
+    height: 'full',
+  }),
+  {
+    transition: `visibility .125s, opacity .125s`,
+    transitionTimingFunction: 'ease-out',
+  },
+])
+
+export const searchIconCentered = style({
+  '@media': {
+    [`screen and (min-width: ${breakpoints.lg}px)`]: {
+      transform: `translateX(${DESKTOP_NAVBAR_WIDTH / 4}px)`,
+      transition: `transform .125s`,
+      transitionTimingFunction: 'ease-out',
+    },
+  },
+})
+
+export const searchIconLeftAlign = style({
+  '@media': {
+    [`screen and (min-width: ${breakpoints.lg}px)`]: {
+      transform: `translateX(0)`,
+      transition: `transform .125s`,
+      transitionTimingFunction: 'ease-in',
+    },
+  },
+})
