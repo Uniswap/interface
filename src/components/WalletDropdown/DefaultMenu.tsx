@@ -120,7 +120,7 @@ const WalletDropdown = ({ setMenu }: { setMenu: (state: MenuState) => void }) =>
       )}
       <Divider />
       {isAuthenticated && (
-        <ToggleMenuItem onClick={() => setMenu(MenuState.TRANSACTIONS)}>
+        <ToggleMenuItem data-testid="wallet-transactions" onClick={() => setMenu(MenuState.TRANSACTIONS)}>
           <DefaultText>
             <Trans>Transactions</Trans>{' '}
             {pendingTransactions.length > 0 && (
