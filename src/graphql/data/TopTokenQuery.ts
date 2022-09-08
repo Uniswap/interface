@@ -26,6 +26,7 @@ export type TokenData = {
   marketCap: IAmount | null | undefined
   volume: Record<TimePeriod, IAmount | null | undefined>
   percentChange: Record<TimePeriod, IAmount | null | undefined>
+  loading?: boolean
 }
 
 export interface UseTopTokensResult {

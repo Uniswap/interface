@@ -364,6 +364,7 @@ function HeaderCell({
 
 /* Token Row: skeleton row component */
 export function TokenRow({
+  style,
   favorited,
   header,
   listNumber,
@@ -375,6 +376,7 @@ export function TokenRow({
   sparkLine,
   ...rest
 }: {
+  style?: CSSProperties
   favorited: ReactNode
   first?: boolean
   header: boolean
@@ -401,7 +403,11 @@ export function TokenRow({
     </>
   )
   if (header) return <StyledHeaderRow>{rowCells}</StyledHeaderRow>
-  return <StyledTokenRow {...rest}>{rowCells}</StyledTokenRow>
+  return (
+    <StyledTokenRow style={style} {...rest}>
+      {rowCells}
+    </StyledTokenRow>
+  )
 }
 
 /* Header Row: top header row component for table */
@@ -422,9 +428,10 @@ export function HeaderRow() {
 }
 
 /* Loading State: row component with loading bubbles */
-export function LoadingRow() {
+export function LoadingRow({ style }: { style?: CSSProperties }) {
   return (
     <TokenRow
+      style={style}
       favorited={null}
       header={false}
       listNumber={<SmallLoadingBubble />}

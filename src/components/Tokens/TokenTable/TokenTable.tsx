@@ -12,9 +12,10 @@ import environment from 'graphql/data/RelayEnvironment'
 import { TimePeriod, TokenData } from 'graphql/data/TopTokenQuery'
 import { TopTokenQuery as query } from 'graphql/data/TopTokenQuery'
 import { useAtomValue } from 'jotai/utils'
-import { CSSProperties, ReactNode, Suspense, useCallback, useMemo, useState } from 'react'
+import { CSSProperties, ReactNode, useCallback, useMemo, useState } from 'react'
 import { AlertTriangle } from 'react-feather'
 import { fetchQuery } from 'react-relay'
+import AutoSizer from 'react-virtualized-auto-sizer'
 import { FixedSizeList, ListOnItemsRenderedProps } from 'react-window'
 import InfiniteLoader from 'react-window-infinite-loader'
 import styled from 'styled-components/macro'
@@ -23,9 +24,14 @@ import { MAX_WIDTH_MEDIA_BREAKPOINT } from '../constants'
 import { Category, SortDirection } from '../types'
 import LoadedRow, { HeaderRow, LoadingRow } from './TokenRow'
 
+const MAX_TOKENS_TO_LOAD = 100
+const PAGE_SIZE = 20
+const MAX_PAGE = MAX_TOKENS_TO_LOAD / PAGE_SIZE
+
 const GridContainer = styled.div`
   display: flex;
   flex-direction: column;
+  height: 70vh;
   max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT};
   background-color: ${({ theme }) => theme.backgroundSurface};
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
@@ -37,6 +43,12 @@ const GridContainer = styled.div`
   align-items: center;
   border: 1px solid ${({ theme }) => theme.backgroundOutline};
 `
+
+const TokenDataContainer = styled.div`
+  height: 100%;
+  width: 100%;
+`
+
 const NoTokenDisplay = styled.div`
   display: flex;
   justify-content: center;
@@ -142,7 +154,7 @@ function NoTokensState({ message }: { message: ReactNode }) {
   )
 }
 
-const LOADING_ROWS = Array.from({ length: 100 })
+const LOADING_ROWS = Array.from({ length: MAX_TOKENS_TO_LOAD })
   .fill(0)
   .map((_item, index) => <LoadingRow key={index} />)
 
@@ -161,45 +173,33 @@ interface TokenRowProps {
   style: CSSProperties
 }
 
-enum TokenRowState {
-  LOADING,
-  LOADED,
-}
-const tokenRowStatusMap: Record<string, unknown> = {}
-
 export default function TokenTable() {
   const showFavorites = useAtomValue<boolean>(showFavoritesAtom)
   const timePeriod = useAtomValue<TimePeriod>(filterTimeAtom)
 
   const [page, setPage] = useState<number>(1)
-  const pageSize = 20
-  const [topTokens, setTopTokens] = useState<TokenData[]>([])
+  const [topTokens, setTopTokens] = useState<TokenData[]>(
+    Array.from({ length: MAX_TOKENS_TO_LOAD }).map((_) => ({ loading: true } as TokenData))
+  )
   const [error, setError] = useState<any>(undefined)
   // const filteredTokens = useFilteredTokens(data)
   // const sortedFilteredTokens = useSortedTokens(filteredTokens)
 
-  if (topTokens.length === 0) {
-    setTopTokens(Array.from({ length: 1 }).map((_) => ({} as TokenData)))
-  }
+  const isItemLoaded = (index: number) => index < topTokens.length && topTokens[index].loading === false
 
-  const isItemLoaded = (index: number) => !!tokenRowStatusMap[index]
   const loadMoreItems = (startIndex: number, stopIndex: number) => {
-    for (let index = startIndex; index <= stopIndex; index++) {
-      tokenRowStatusMap[index] = TokenRowState.LOADING
-    }
-    if (stopIndex >= page * pageSize) setPage(page + 1)
-    console.log('page', page)
+    if (stopIndex >= page * PAGE_SIZE && page < MAX_PAGE) setPage(page + 1)
     return fetchQuery<TopTokenQueryType>(environment, query, {
-      pageSize,
+      pageSize: PAGE_SIZE,
       page,
     })
       .toPromise()
       .then((data) => {
-        console.log('data returned length', data?.topTokenProjects?.length)
         const newPageTopTokens: TokenData[] = !!data?.topTokenProjects
           ? data.topTokenProjects.map((token) =>
               token?.tokens?.[0].address
                 ? {
+                    loading: false,
                     name: token?.name,
                     address: token?.tokens?.[0].address,
                     chain: token?.tokens?.[0].chain,
@@ -226,37 +226,32 @@ export default function TokenTable() {
                 : ({} as TokenData)
             )
           : []
-        setTopTokens([...topTokens, ...newPageTopTokens])
+        const currentTopTokens = [...topTokens]
+        newPageTopTokens.forEach((token, i) => {
+          if (currentTopTokens[startIndex + i].loading) currentTopTokens[startIndex + i] = token
+        })
+        setTopTokens(currentTopTokens)
       })
       .catch((e) => setError(e))
-      .finally(() => {
-        for (let index = startIndex; index <= stopIndex; index++) {
-          tokenRowStatusMap[index] = TokenRowState.LOADED
-        }
-      })
   }
 
-  const Row = useCallback(
-    function TokenRow({ data, index, style }: TokenRowProps) {
-      const tokenData = data[index]
-      if (tokenData && tokenRowStatusMap[index] === TokenRowState.LOADED) {
-        return (
-          <LoadedRow
-            style={style}
-            key={tokenData.address}
-            tokenAddress={tokenData.address}
-            tokenListIndex={index}
-            tokenListLength={data?.length ?? 0}
-            tokenData={tokenData}
-            timePeriod={timePeriod}
-          />
-        )
-      } else {
-        return <LoadingRow />
-      }
-    },
-    [timePeriod]
-  )
+  const Row = function TokenRow({ data, index, style }: TokenRowProps) {
+    const tokenData = data[index]
+    if (!tokenData || topTokens[index].loading) {
+      return <LoadingRow style={style} key={index} />
+    }
+    return (
+      <LoadedRow
+        style={style}
+        key={tokenData.address}
+        tokenAddress={tokenData.address}
+        tokenListIndex={index}
+        tokenListLength={data?.length ?? 0}
+        tokenData={tokenData}
+        timePeriod={timePeriod}
+      />
+    )
+  }
 
   /* loading and error state */
   if (error || !topTokens) {
@@ -281,26 +276,30 @@ export default function TokenTable() {
   }
 
   return (
-    <Suspense fallback={<LoadingTokenTable />}>
-      <GridContainer>
-        <HeaderRow />
-        <InfiniteLoader isItemLoaded={isItemLoaded} itemCount={topTokens.length} loadMoreItems={loadMoreItems}>
-          {({ onItemsRendered, ref }: { onItemsRendered: (props: ListOnItemsRenderedProps) => any; ref: any }) => (
-            <FixedSizeList
-              className="List"
-              height={500}
-              width={500}
-              itemCount={topTokens.length}
-              itemSize={70}
-              itemData={topTokens}
-              onItemsRendered={onItemsRendered}
-              ref={ref}
-            >
-              {Row}
-            </FixedSizeList>
+    <GridContainer>
+      <HeaderRow />
+      <TokenDataContainer>
+        <AutoSizer>
+          {({ height, width }) => (
+            <InfiniteLoader isItemLoaded={isItemLoaded} itemCount={MAX_TOKENS_TO_LOAD} loadMoreItems={loadMoreItems}>
+              {({ onItemsRendered, ref }: { onItemsRendered: (props: ListOnItemsRenderedProps) => any; ref: any }) => (
+                <FixedSizeList
+                  className="List"
+                  height={height}
+                  width={width}
+                  itemCount={MAX_TOKENS_TO_LOAD}
+                  itemData={topTokens}
+                  itemSize={70}
+                  onItemsRendered={onItemsRendered}
+                  ref={ref}
+                >
+                  {Row}
+                </FixedSizeList>
+              )}
+            </InfiniteLoader>
           )}
-        </InfiniteLoader>
-      </GridContainer>
-    </Suspense>
+        </AutoSizer>
+      </TokenDataContainer>
+    </GridContainer>
   )
 }
