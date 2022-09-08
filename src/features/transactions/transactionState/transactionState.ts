@@ -1,7 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { MethodParameters } from '@uniswap/v3-sdk'
 import { shallowEqual } from 'react-redux'
-import { WarningModalType } from 'src/components/warnings/types'
 import { NATIVE_ADDRESS } from 'src/constants/addresses'
 import { ChainId } from 'src/constants/chains'
 import { AssetType, TradeableAsset } from 'src/entities/assets'
@@ -34,7 +33,6 @@ export interface TransactionState {
   optimismL1Fee?: OptimismL1FeeEstimate // Optimism txs have a L1 fee. Not relevant for submitting txs but needs to be accounted for in SwapDetails
   exactApproveRequired?: boolean // undefined except in rare instances when infinite approve is not supported by a token
   swapMethodParameters?: MethodParameters
-  warningModalType?: WarningModalType
   selectingCurrencyField?: CurrencyField
   showRecipientSelector?: boolean
 }
@@ -54,7 +52,6 @@ export const initialState: Readonly<TransactionState> = {
   exactAmountToken: '',
   exactAmountUSD: '',
   isUSDInput: false,
-  warningModalType: WarningModalType.NONE,
   selectingCurrencyField: undefined,
   showRecipientSelector: false,
 }
@@ -193,12 +190,6 @@ const slice = createSlice({
       state.exactApproveRequired = undefined
       state.swapMethodParameters = undefined
     },
-    showWarningModal: (state, action: PayloadAction<WarningModalType>) => {
-      state.warningModalType = action.payload
-    },
-    closeWarningModal: (state) => {
-      state.warningModalType = WarningModalType.NONE
-    },
     setTxId: (state, action: PayloadAction<string>) => {
       state.txId = action.payload
     },
@@ -224,8 +215,6 @@ export const {
   updateSwapMethodParamaters,
   clearGasSwapData,
   setExactApproveRequired,
-  showWarningModal,
-  closeWarningModal,
   setTxId,
   showTokenSelector,
   toggleShowRecipientSelector,

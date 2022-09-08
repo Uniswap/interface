@@ -81,6 +81,7 @@ exports[`renders a currency logo without network logo 1`] = `
           "resizeMode": "contain",
         },
         Object {
+          "backgroundColor": undefined,
           "borderColor": undefined,
           "borderRadius": 10,
           "borderWidth": 0.5,

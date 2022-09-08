@@ -5,7 +5,6 @@ import { useTranslation } from 'react-i18next'
 import { AnyAction } from 'redux'
 import { useAppDispatch } from 'src/app/hooks'
 import { useProvider } from 'src/app/walletContext'
-import { WarningModalType } from 'src/components/warnings/types'
 import { ChainId } from 'src/constants/chains'
 import { AssetType } from 'src/entities/assets'
 import { useNativeCurrencyBalance, useTokenBalance } from 'src/features/balances/hooks'
@@ -45,7 +44,6 @@ export type DerivedTransferInfo = BaseDerivedInfo<Currency | NFTAsset.Asset> & {
   exactCurrencyField: CurrencyField.INPUT
   recipient?: string
   isUSDInput?: boolean
-  warningModalType?: WarningModalType
 }
 
 interface UpdateTransferGasEstimateParams {
@@ -65,7 +63,6 @@ export function useDerivedTransferInfo(state: TransactionState): DerivedTransfer
     exactAmountUSD,
     recipient,
     isUSDInput,
-    warningModalType,
   } = state
   const { t } = useTranslation()
 
@@ -137,7 +134,6 @@ export function useDerivedTransferInfo(state: TransactionState): DerivedTransfer
     isUSDInput,
     recipient,
     warnings,
-    warningModalType,
   }
 }
 

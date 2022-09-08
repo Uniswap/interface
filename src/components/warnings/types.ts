@@ -44,17 +44,10 @@ export enum WarningLabel {
   ViewOnlyAccount = 'view_only_account',
 }
 
-export enum WarningModalType {
-  INFORMATIONAL, // contains text that users can acknowledge
-  ACTION, // calls callback functions on cancel / confirm
-  NONE, // no warning modal
-}
-
 export interface Warning {
   type: WarningLabel
   severity: WarningSeverity
   action: WarningAction
   title?: string
   message?: string
-  warningModal?: WarningModalType
 }

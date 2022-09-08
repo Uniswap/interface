@@ -5,7 +5,6 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AnyAction } from 'redux'
 import { useAppDispatch } from 'src/app/hooks'
-import { WarningModalType } from 'src/components/warnings/types'
 import { ChainId } from 'src/constants/chains'
 import { DEFAULT_SLIPPAGE_TOLERANCE } from 'src/constants/misc'
 import { AssetType } from 'src/entities/assets'
@@ -77,7 +76,6 @@ export type DerivedSwapInfo<
   selectingCurrencyField?: CurrencyField
   swapMethodParameters?: MethodParameters
   txId?: string
-  warningModalType?: WarningModalType
 }
 
 /** Returns information derived from the current swap state */
@@ -94,7 +92,6 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
     exactApproveRequired,
     selectingCurrencyField,
     swapMethodParameters,
-    warningModalType,
     txId,
   } = state
 
@@ -271,7 +268,6 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
       swapMethodParameters,
       txId,
       warnings,
-      warningModalType,
     }
   }, [
     chainId,
@@ -293,7 +289,6 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
     trade,
     txId,
     warnings,
-    warningModalType,
     wrapType,
   ])
 }
@@ -386,9 +381,6 @@ export function useSwapActionHandlers(dispatch: React.Dispatch<AnyAction>) {
   const onToggleUSDInput = (isUSDInput: boolean) =>
     dispatch(transactionStateActions.toggleUSDInput(isUSDInput))
 
-  const onShowSwapWarning = (type: WarningModalType) =>
-    dispatch(transactionStateActions.showWarningModal(type))
-
   const onCreateTxId = (txId: string) => dispatch(transactionStateActions.setTxId(txId))
 
   const onShowTokenSelector = (field: CurrencyField) =>
@@ -402,20 +394,9 @@ export function useSwapActionHandlers(dispatch: React.Dispatch<AnyAction>) {
     onToggleUSDInput,
     onSetAmount,
     onSetMax,
-    onShowSwapWarning,
     onUpdateExactCurrencyField,
     onShowTokenSelector,
   }
-}
-
-export function useSwapCallbackFromDerivedSwapInfo(derivedSwapInfo: DerivedSwapInfo) {
-  const {
-    trade: { trade: trade },
-    gasFeeEstimate,
-    exactApproveRequired,
-    swapMethodParameters,
-  } = derivedSwapInfo
-  return useSwapCallback(trade, gasFeeEstimate, exactApproveRequired, swapMethodParameters)
 }
 
 /** Callback to submit trades and track progress */
