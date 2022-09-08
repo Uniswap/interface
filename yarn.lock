@@ -48,7 +48,7 @@
     "@amplitude/ua-parser-js" "^0.7.31"
     tslib "^2.3.1"
 
-"@amplitude/analytics-connector@^1.4.5":
+"@amplitude/analytics-connector@1.4.5", "@amplitude/analytics-connector@^1.4.5":
   version "1.4.5"
   resolved "https://registry.yarnpkg.com/@amplitude/analytics-connector/-/analytics-connector-1.4.5.tgz#07e9375101332bd8b6f15e39e70f31f287e87ad0"
   integrity sha512-ELAP6ivg+13uSk+TOirGZE/92M+tTbeiQ/i7eXgDO4Hiy00Abf/UxO/rp9WovtxCyeFYTILrujEYxPv5cRQmFw==
@@ -67,6 +67,15 @@
   version "0.6.2"
   resolved "https://registry.yarnpkg.com/@amplitude/analytics-types/-/analytics-types-0.6.2.tgz#6fd97af97414fa2c6861c30aac3e24ce22152890"
   integrity sha512-9tCIY5kF6e3nPLUZC7h3rTANK6uZJvMFmF8R59TrkTbmmsT2bpYS869LMEaZBp4AybxAi15oNkAJ4JE+CkPkFg==
+
+"@amplitude/experiment-js-client@^1.5.6":
+  version "1.5.6"
+  resolved "https://registry.yarnpkg.com/@amplitude/experiment-js-client/-/experiment-js-client-1.5.6.tgz#9a65d0734fae3eca4ab4b58d995ece30311aed04"
+  integrity sha512-usaz0ul62DUTsDRcMIX8ZzamBwz2kUUbffQvIJdCSAiCz2i3v56cONIKGvUHOA40/uFIYcHB/KcTJ6IZ7tWFeQ==
+  dependencies:
+    "@amplitude/analytics-connector" "1.4.5"
+    base64-js "1.5.1"
+    unfetch "4.1.0"
 
 "@amplitude/ua-parser-js@0.7.31", "@amplitude/ua-parser-js@^0.7.31":
   version "0.7.31"
@@ -5738,7 +5747,7 @@ base-x@^3.0.2:
   dependencies:
     safe-buffer "^5.0.1"
 
-base64-js@^1.0.2, base64-js@^1.3.1:
+base64-js@1.5.1, base64-js@^1.0.2, base64-js@^1.3.1:
   version "1.5.1"
   resolved "https://registry.yarnpkg.com/base64-js/-/base64-js-1.5.1.tgz#1b1b440160a5bf7ad40b650f095963481903930a"
   integrity sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA==
@@ -17105,6 +17114,11 @@ unbox-primitive@^1.0.2:
     has-bigints "^1.0.2"
     has-symbols "^1.0.3"
     which-boxed-primitive "^1.0.2"
+
+unfetch@4.1.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/unfetch/-/unfetch-4.1.0.tgz#6ec2dd0de887e58a4dee83a050ded80ffc4137db"
+  integrity sha512-crP/n3eAPUJxZXM9T80/yv0YhkTEx2K1D3h7D1AJM6fzsWZrxdyRuLN0JH/dkZh1LNH8LxCnBzoPFCPbb2iGpg==
 
 unherit@^1.0.4:
   version "1.1.3"
