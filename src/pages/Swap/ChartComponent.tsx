@@ -27,7 +27,7 @@ export const ChartComponent = React.memo(
       const { height, address, pairAddress: pairAddy,  symbol, tokenSymbolForChart, pairData } = props;
       
       const pairAddress = React.useMemo(() => {
-        if (!pairData?.length) {
+        if (!pairData?.length || pairAddy) {
           return pairAddy
         }
         
@@ -56,18 +56,12 @@ export const ChartComponent = React.memo(
         const network = !chainId || chainId == 1 ? 'ethereum' : chainId == 56 ? 'bsc' : 'eth'
         return `https://dexscreener.com/${network}/${pairAddress}?embed=1&trades=0&info=0`
       }, [chainId, pairAddress])
-      const heightForChart  =  height ? height : 400
-      const symbolForChart = chartKey
-        ? chartKey
-        : tokenSymbolForChart.replace("$", "");
+      const heightForChart  =  height ? height : 410
 
         const darkMode = useIsDarkMode()
-        const locale = useUserLocale()
-        const theme = darkMode ? "Dark" : "Light";
-
         if (!pairAddress) {
           return (
-            <div style={{display:'flex', alignItems:'center', justifyContent:'start', gap: 10}}>
+            <div style={{display:'flex', alignItems:'center', justifyContent:'  ', gap: 10}}>
               <Loader />
               Loading Chart..
             </div>
@@ -75,21 +69,8 @@ export const ChartComponent = React.memo(
         }
 
       return (
-        <Wrapper style={{ height: heightForChart }}>
-          {/* {symbolForChart && (
-            <TradingViewWidget
-              hide_side_toolbar={false}
-              symbol={symbolForChart}
-              theme={theme}
-              interval={60}
-              locale={locale || 'en-US'}
-              autosize={true}
-              style={'3C'}
-            />
-          )} */}
-
-          <iframe src={chartURL} style={{background:'transparent', border:'1px solid transparent', height: 450, borderRadius: 4, width: '100%'}}>
-          </iframe>
+        <Wrapper style={{overflow: 'hidden', height: heightForChart }}>
+          <iframe src={chartURL} style={{ zIndex: 1, background:'transparent', border:'1px solid transparent', height: 450, borderRadius: 4, width: '100%'}} />
         </Wrapper>
       );
     },

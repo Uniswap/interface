@@ -679,7 +679,7 @@ export const SelectiveChartBsc = () => {
                 ) ? (
                   <>
                     <ChartComponent
-                      pairAddress={pairs?.[0]?.id}
+                      pairAddress={screenerToken?.pairAddress as string}
                       pairData={pairs}
                       symbol={
                         params?.tokenSymbol ||

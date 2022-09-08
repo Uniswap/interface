@@ -67,7 +67,6 @@ const Spinner = styled.div`
 const Wrapper = styled.div`
 background: ${props => props.theme.chartSidebar};
 color: ${props => props.theme.text1};
-
 .pro-sidebar.collapsed .pro-menu > ul > .pro-menu-item.pro-sub-menu > .pro-inner-list-item {
     max-width:300px;
 }

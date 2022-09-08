@@ -108,7 +108,9 @@ export function usePairContract(pairAddress?: string, withSignerIfPossible?: boo
 
 export function useV2RouterContract(chainId?: number): Contract | null {
   let routerAddress = V2_ROUTER_ADDRESS;
-  if (chainId) routerAddress = V2_ROUTER_ADDRESS[chainId]
+  if (chainId) {
+    routerAddress = V2_ROUTER_ADDRESS[chainId]
+  }
   return useContract(routerAddress, IKibaSwapRelayerABI, false)
 }
 

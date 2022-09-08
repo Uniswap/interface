@@ -19,6 +19,8 @@ import { useIsMobile } from "./SelectiveCharting";
 const Table = styled.table<{isMobile:boolean}>`
   overflow:auto;
   width: 100%;
+  height:100%;
+  overflow-y:scroll;
   border-radius: 20px;
   background: ${(props) => `${props.theme.chartTableBg as string}`};
   td, th {font-size:${props => props.isMobile ? '9px' : '14px'};}
@@ -239,7 +241,7 @@ const areRowsEqual = (rowProps:any, newRowProps :any) => {
 
 const Row = React.memo((props: _RowProps ) => {
     const {isMobile, index,item,highlightedColor, account, chainLabel, tokenSymbol} = props;
-    const isItemSale = ['weth', 'eth'].includes(item.token0Symbol.toLowerCase())
+    const isItemSale = ['wbnb', 'bnb', 'weth', 'eth'].includes(item.token0Symbol.toLowerCase())
     if (index <= 2) {
         
         return (
@@ -592,7 +594,7 @@ export const TableInstance = ({ tableData, tokenSymbol, headerSymbol }: { tableD
     console.log(`table.data`, tableData)
     return (
         <div style={{
-            maxHeight: 500,
+            height: 500,
             overflowX: `scroll`,
             overflowY:`scroll`,
             width:'100%',

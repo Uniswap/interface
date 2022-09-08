@@ -83,7 +83,8 @@ export const TableQuery = ({ address, pairs, tokenSymbol }: { address: string, p
                 flexFlow:'column wrap',
                 gap: 5,
                 marginTop:8,
-                width:"100%"
+                width:"100%",
+                zIndex: 2
                 }}>
                 <Dots>
                     <Loader />&nbsp;Loading Transactions

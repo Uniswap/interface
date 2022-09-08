@@ -10,7 +10,7 @@ import {
 } from "react-feather";
 import { Currency, Token } from "@uniswap/sdk-core";
 import { DarkCard, LightCard } from "components/Card";
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import { StyledInternalLink, TYPE } from "theme";
 import { darken, lighten } from "polished";
 import styled, { useTheme } from "styled-components/macro";
@@ -48,23 +48,23 @@ import { useUserChartHistoryManager } from "state/user/hooks";
 import { useWeb3React } from "@web3-react/core";
 
 export const useIsMobile = () => {
-    const [width, setWidth] = useState(window.innerWidth);
-    const handleWindowSizeChange = () => {
-            setWidth(window.innerWidth);
+  const [width, setWidth] = useState(window.innerWidth);
+  const handleWindowSizeChange = () => {
+    setWidth(window.innerWidth);
+  }
+
+  useEffect(() => {
+    window.addEventListener('resize', handleWindowSizeChange);
+    return () => {
+      window.removeEventListener('resize', handleWindowSizeChange);
     }
+  }, []);
 
-    useEffect(() => {
-        window.addEventListener('resize', handleWindowSizeChange);
-        return () => {
-            window.removeEventListener('resize', handleWindowSizeChange);
-        }
-    }, []);
-
-    return (width <= 768);
+  return (width <= 768);
 }
 
-const CurrencyInputPanel = React.lazy(() =>  import("components/CurrencyInputPanel"));
-const CurrencyLogo = React.lazy(() => import( "components/CurrencyLogo"));
+const CurrencyInputPanel = React.lazy(() => import("components/CurrencyInputPanel"));
+const CurrencyLogo = React.lazy(() => import("components/CurrencyLogo"));
 
 const Badge = React.lazy(() => import("components/Badge"));
 
@@ -77,7 +77,7 @@ export function useLocationEffect(callback: (location?: any) => any) {
     callback(location);
   }, [location, callback]);
 }
-const StyledDiv = styled.div<{isMobile?:boolean}>`
+const StyledDiv = styled.div<{ isMobile?: boolean }>`
   font-family: "Open Sans";
   font-size: 14px;
   display: flex;
@@ -100,7 +100,7 @@ const WrapperCard = styled(DarkCard) <{ gridTemplateColumns: string, isMobile: b
   color ${props => props.theme.text1};
   grid-template-columns: ${props => props.gridTemplateColumns};
   border-radius: 30px;
-  padding:${(props) => props.isMobile ? '.1rem' : '1rem'}
+  padding:${(props) => props.isMobile ? '.01rem 5px' : '1rem'}
 `
 
 export const SelectiveChart = () => {
@@ -209,7 +209,7 @@ export const SelectiveChart = () => {
           ref.current.decimals = +newDecimals;
         }
       }
-      
+
       setSelectedCurrency({ type: "update", payload: ref.current });
       updateUserChartHistory([
         {
@@ -236,11 +236,11 @@ export const SelectiveChart = () => {
   }, []);
 
   // if they change chains on a chart page , need to redirect them back to the select charts page
-  const chainChanged = chainId !== lastChainId
+  const chainChanged = Boolean(chainId) && Boolean(lastChainId) && chainId !== lastChainId
   React.useEffect(() => {
-      if (chainChanged && Boolean(params?.tokenAddress)) {
-        history.push(`/selective-charts`)
-      }
+    if (chainChanged && Boolean(params?.tokenAddress)) {
+      history.push(`/selective-charts`)
+    }
   }, [chainChanged])
 
 
@@ -282,12 +282,15 @@ export const SelectiveChart = () => {
 
   const pair = React.useMemo(
     function () {
-      if (!Boolean(Array.isArray(pairs) && pairs.length)) return undefined;
+      if (!Boolean(Array.isArray(pairs) && pairs.length) && !screenerToken) return undefined
+
+      if (screenerToken && screenerToken.quoteToken && screenerToken.quoteToken.address)
+        return screenerToken.quoteToken.address
 
       return `${pairs?.[0]?.token0?.symbol?.toLowerCase() ===
-          token?.symbol?.toLowerCase()
-          ? pairs?.[0]?.token1?.id
-          : pairs?.[0]?.token0?.id
+        token?.symbol?.toLowerCase()
+        ? pairs?.[0]?.token1?.id
+        : pairs?.[0]?.token0?.id
         }`;
     },
     [tokenData, pairs, token]
@@ -338,7 +341,7 @@ export const SelectiveChart = () => {
   const [showSearch, setShowSearch] = React.useState(false);
   const toggleShowSearchOn = () => setShowSearch(true);
   const toggleShowSearchOff = () => setShowSearch(false);
-  
+
   // they can also change the current chart by selecting a token from the token dropdown.
   const onCurrencySelect = React.useCallback((currency: any) => {
     if (!currency) return;
@@ -354,28 +357,28 @@ export const SelectiveChart = () => {
   /* Memoized function to render the Double Currency Logo for the current chart */
   const LogoMemo = React.useMemo(() => {
     return Boolean(!!hasSelectedData) ? (
-      <div style={{display:'flex', alignItems:'center', gap: 20, justifyContent:'space-between'}}>
-      {Boolean(!chainId || chainId == 1) && ethPrice &&<TYPE.small fontSize={12}>ETH <Badge>${parseFloat(parseFloat(ethPrice.toString()).toFixed(2)).toLocaleString()}</Badge> </TYPE.small>}
-      <span
-        style={{
-          display: "flex",
-          alignItems: "center",
-          paddingRight: isMobile ? 0 : 15,
-          borderRight: `${!isMobile ? "1px solid #444" : "none"}`,
-        }}
-      >
-        Viewing
-        <DoubleCurrencyLogo
+      <div style={{ display: 'flex', alignItems: 'center', gap: 20, justifyContent: 'space-between' }}>
+        {Boolean(!chainId || chainId == 1) && ethPrice && <TYPE.small fontSize={12}>ETH <Badge>${parseFloat(parseFloat(ethPrice.toString()).toFixed(2)).toLocaleString()}</Badge> </TYPE.small>}
+        <span
           style={{
-            marginRight: 3,
+            display: "flex",
+            alignItems: "center",
+            paddingRight: isMobile ? 0 : 15,
+            borderRight: `${!isMobile ? "1px solid #444" : "none"}`,
           }}
-          size={30}
-          margin
-          currency0={mainnetCurrency as any}
-          currency1={pairCurrency as any}
-        />
-        on KibaCharts
-      </span>
+        >
+          Viewing
+          <DoubleCurrencyLogo
+            style={{
+              marginRight: 3,
+            }}
+            size={30}
+            margin
+            currency0={mainnetCurrency as any}
+            currency1={pairCurrency as any}
+          />
+          on KibaCharts
+        </span>
       </div>
     ) : null;
   }, [mainnetCurrency, chainId, ethPrice, pairCurrency, hasSelectedData]);
@@ -436,15 +439,15 @@ export const SelectiveChart = () => {
         retVal = "UNISWAP:";
         if (pairs && pairs.length) {
           pairSymbol = `${pairs?.[0]?.token0?.symbol?.toLowerCase() ===
-              currency?.symbol?.toLowerCase()
-              ? pairs?.[0]?.token1?.symbol
-              : pairs?.[0]?.token0?.symbol
+            currency?.symbol?.toLowerCase()
+            ? pairs?.[0]?.token1?.symbol
+            : pairs?.[0]?.token0?.symbol
             }`;
           if (pairSymbol === "DAI")
             return `DOLLAR${currency?.symbol?.replace("$", "")}DAI`;
           retVal += `${currency?.symbol}${pairs?.[0]?.token0?.symbol === currency?.symbol
-              ? pairs?.[0]?.token1?.symbol
-              : pairs?.[0]?.token0?.symbol
+            ? pairs?.[0]?.token1?.symbol
+            : pairs?.[0]?.token0?.symbol
             }`;
         } else {
           if (
@@ -500,8 +503,10 @@ export const SelectiveChart = () => {
     },
     [selectedCurrency, hasSelectedData, isMobile, params.tokenAddress, collapsed]
   );
-  
-  if (chainId && chainId == 56 ){
+
+  const pairAddress = React.useMemo(() => screenerToken?.pairAddress ? screenerToken?.pairAddress : pairs?.[0]?.id, [screenerToken, pairs])
+
+  if (chainId && chainId == 56) {
     return <SelectiveChartBsc />
   }
 
@@ -658,9 +663,9 @@ export const SelectiveChart = () => {
                           </TYPE.small>
                           <TYPE.black>
                             {screenerToken?.priceChange?.[key] < 0 ? (
-                              <TrendingDown style={{ marginRight:2, color: "red" }} />
+                              <TrendingDown style={{ marginRight: 2, color: "red" }} />
                             ) : (
-                              <TrendingUp style={{marginRight:2, color: "green" }} />
+                              <TrendingUp style={{ marginRight: 2, color: "green" }} />
                             )}
                             {screenerToken?.priceChange?.[key]}%
                           </TYPE.black>
@@ -671,7 +676,7 @@ export const SelectiveChart = () => {
                 )}
 
               {PanelMemo}
-              
+
               {Boolean(!hasSelectedData && userChartHistory.length) && (
                 <RecentlyViewedCharts />
               )}
@@ -679,51 +684,51 @@ export const SelectiveChart = () => {
             </StyledDiv>
 
             {loadingNewData ? (
-              <LoadingSkeleton count={9} borderRadius={40 } />
-            ) : 
-            (
-              <React.Fragment>
-                {isMobile == false && hasSelectedData && (
-                  <React.Fragment>
-                    <TokenStats tokenData={screenerToken} />
-                    <TopTokenHolders
-                      address={address ?? params?.tokenAddress}
-                      chainId={chainId}
-                    />
-                  </React.Fragment>
-                )}
-                <div
-                  style={{ marginTop: "0.25rem", marginBottom: "0.25rem" }}
-                />
-                {Boolean(
-                  hasSelectedData && 
-                  params?.tokenAddress &&
-                  (selectedCurrency?.selectedCurrency?.symbol ||
-                    !!prebuilt?.symbol)
-                ) ? (
-                  <>
-                    <ChartComponent
-                      pairAddress={pairs?.[0]?.id}
-                      pairData={pairs}
-                      symbol={
-                        params?.tokenSymbol ||
-                        selectedCurrency?.selectedCurrency?.symbol ||
-                        ("" as string)
-                      }
-                      address={address as string}
-                      tokenSymbolForChart={tokenSymbolForChart}
-                    />
-                    <TableQuery 
-                      tokenSymbol={
+              <LoadingSkeleton count={9} borderRadius={40} />
+            ) :
+              (
+                <React.Fragment>
+                  {isMobile == false && hasSelectedData && (
+                    <React.Fragment>
+                      <TokenStats tokenData={screenerToken} />
+                      <TopTokenHolders
+                        address={address ?? params?.tokenAddress}
+                        chainId={chainId}
+                      />
+                    </React.Fragment>
+                  )}
+                  <div
+                    style={{ marginTop: "0.25rem", marginBottom: "0.25rem" }}
+                  />
+                  {Boolean(
+                    hasSelectedData &&
+                    params?.tokenAddress &&
+                    (selectedCurrency?.selectedCurrency?.symbol ||
+                      !!prebuilt?.symbol)
+                  ) ? (
+                    <>
+                      <ChartComponent
+                        pairAddress={pairAddress}
+                        pairData={pairs}
+                        symbol={
+                          params?.tokenSymbol ||
+                          selectedCurrency?.selectedCurrency?.symbol ||
+                          ("" as string)
+                        }
+                        address={address as string}
+                        tokenSymbolForChart={tokenSymbolForChart}
+                      />
+                      <TableQuery
+                        tokenSymbol={
                           (params?.tokenSymbol ? params?.tokenSymbol : token?.symbol) as string
-                      }
-                      address={address as string}
-                      pairs={pairs} />
-                
-                  </>
-                ) : null}
-              </React.Fragment>
-            )}
+                        }
+                        address={address as string}
+                        pairs={pairs} />
+
+                    </>
+                  ) : null}
+                </React.Fragment>
+              )}
           </CardSection>
         </div>
       </WrapperCard>
