@@ -1,17 +1,14 @@
-import { AnyAction } from '@reduxjs/toolkit'
 import { Currency, TradeType } from '@uniswap/sdk-core'
-import React, { Dispatch, useState } from 'react'
+import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { Button } from 'src/components/buttons/Button'
 import { Flex } from 'src/components/layout/Flex'
 import { Text } from 'src/components/Text'
-import { Warning, WarningModalType } from 'src/components/warnings/types'
+import { Warning } from 'src/components/warnings/types'
 import { useUSDCPrice } from 'src/features/routing/useUSDCPrice'
-import { useSwapActionHandlers } from 'src/features/transactions/swap/hooks'
 import { Trade } from 'src/features/transactions/swap/useTrade'
 import { getRateToDisplay } from 'src/features/transactions/swap/utils'
-import { showWarningInPanel } from 'src/features/transactions/swap/validate'
 import {
   TransactionDetails,
   TRANSACTION_DETAILS_SPACER,
@@ -21,41 +18,36 @@ import { formatPrice } from 'src/utils/format'
 interface SwapDetailsProps {
   acceptedTrade: Trade<Currency, Currency, TradeType>
   trade: Trade<Currency, Currency, TradeType>
-  dispatch: Dispatch<AnyAction>
-  gasFee: string | undefined
+  gasFee?: string
   newTradeToAccept: boolean
-  warnings: Warning[]
+  warning?: Warning
   onAcceptTrade: () => void
+  onShowWarning?: () => void
 }
 
 export function SwapDetails({
   acceptedTrade,
-  dispatch,
   gasFee,
   newTradeToAccept,
   trade,
-  warnings,
+  warning,
   onAcceptTrade,
+  onShowWarning,
 }: SwapDetailsProps) {
   const { t } = useTranslation()
   const [showInverseRate, setShowInverseRate] = useState(false)
-  const { onShowSwapWarning } = useSwapActionHandlers(dispatch)
 
   const price = acceptedTrade.executionPrice
   const usdcPrice = useUSDCPrice(showInverseRate ? price.quoteCurrency : price.baseCurrency)
   const acceptedRate = getRateToDisplay(acceptedTrade, showInverseRate)
   const rate = getRateToDisplay(trade, showInverseRate)
 
-  const swapWarning = warnings.find(showWarningInPanel)
-  const showWarning = swapWarning && !newTradeToAccept
-  const onShowWarning = () => onShowSwapWarning(WarningModalType.INFORMATIONAL)
-
   return (
     <TransactionDetails
       chainId={acceptedTrade.inputAmount.currency.chainId}
       gasFee={gasFee}
-      showWarning={showWarning}
-      warning={swapWarning}
+      showWarning={warning && !newTradeToAccept}
+      warning={warning}
       onShowWarning={onShowWarning}>
       {newTradeToAccept && (
         <Flex

@@ -14,6 +14,7 @@ import { AccountType } from 'src/features/wallet/accounts/types'
 type WarningModalProps = {
   isVisible: boolean
   onClose?: () => void
+  onCancel?: () => void
   onConfirm?: () => void
   modalName: ModalName
   title: string
@@ -41,6 +42,7 @@ export function captionForAccountRemovalWarning(
 export default function WarningModal({
   isVisible,
   onClose,
+  onCancel,
   onConfirm,
   modalName,
   title,
@@ -91,7 +93,7 @@ export default function WarningModal({
               flex={1}
               label={closeText}
               variant="transparent"
-              onPress={onClose}
+              onPress={onCancel ?? onClose}
             />
           )}
           {confirmText && (

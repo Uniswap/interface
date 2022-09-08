@@ -7,23 +7,18 @@ import { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reani
 import { AnimatedFlex, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
 import { TokenSelector, TokenSelectorVariation } from 'src/components/TokenSelector/TokenSelector'
-import { WarningAction, WarningModalType } from 'src/components/warnings/types'
-import { WarningModal } from 'src/components/warnings/WarningModal'
 import {
   DerivedSwapInfo,
   useDerivedSwapInfo,
   useSwapActionHandlers,
-  useSwapCallbackFromDerivedSwapInfo,
 } from 'src/features/transactions/swap/hooks'
 import { SwapForm } from 'src/features/transactions/swap/SwapForm'
 import { SwapReview } from 'src/features/transactions/swap/SwapReview'
 import { SwapStatus } from 'src/features/transactions/swap/SwapStatus'
-import { showWarningInPanel } from 'src/features/transactions/swap/validate'
 import {
   CurrencyField,
   initialState as emptyState,
   TransactionState,
-  transactionStateActions,
   transactionStateReducer,
 } from 'src/features/transactions/transactionState/transactionState'
 import { ANIMATE_SPRING_CONFIG } from 'src/features/transactions/utils'
@@ -98,22 +93,16 @@ export function SwapFlow({ prefilledState, onClose }: SwapFormProps) {
   const [step, setStep] = useState<SwapStep>(SwapStep.FORM)
   const derivedSwapInfo = useDerivedSwapInfo(state)
   const { onSelectCurrency, onHideTokenSelector } = useSwapActionHandlers(dispatch)
+  const { selectingCurrencyField, currencies } = derivedSwapInfo
 
   // keep currencies list option as state so that rendered list remains stable through the slide animation
   const [listVariation, setListVariation] = useState<TokenSelectorVariation>(
     TokenSelectorVariation.BalancesAndPopular
   )
-  const swapCallback = useSwapCallbackFromDerivedSwapInfo(derivedSwapInfo)
-  const { warningModalType, warnings, selectingCurrencyField, currencies } = derivedSwapInfo
 
   // use initial content height only to determine native keyboard view
   // because show/hiding the custom keyboard will change the content height
   const [initialContentHeight, setInitialContentHeight] = useState<number | undefined>(undefined)
-
-  const warning =
-    warningModalType === WarningModalType.INFORMATIONAL
-      ? warnings.find(showWarningInPanel)
-      : warnings.find((w) => w.action === WarningAction.WarnBeforeSubmit)
 
   const onLayout = (event: LayoutChangeEvent) => {
     const totalHeight = event.nativeEvent.layout.height
@@ -161,18 +150,6 @@ export function SwapFlow({ prefilledState, onClose }: SwapFormProps) {
     <TouchableWithoutFeedback onPress={onBackgroundPress}>
       <AnimatedFlex grow row flex={1} gap="none" py="md" style={wrapperStyle}>
         <Flex grow gap="xs" width="100%" onLayout={onLayout}>
-          <WarningModal
-            cancelLabel={t('Cancel swap')}
-            continueLabel={t('Swap anyway')}
-            warning={warning}
-            warningModalType={warningModalType}
-            onClose={() => dispatch(transactionStateActions.closeWarningModal())}
-            onPressContinue={
-              derivedSwapInfo.warningModalType === WarningModalType.ACTION
-                ? swapCallback
-                : undefined
-            }
-          />
           <Text textAlign="center" variant="subhead">
             {t('Swap')}
           </Text>

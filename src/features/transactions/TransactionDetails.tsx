@@ -53,7 +53,7 @@ export function TransactionDetails({
             borderTopStartRadius="lg"
             flexGrow={1}
             gap="xs"
-            p="md">
+            p="sm">
             <AlertTriangle
               color={theme.colors[warningColor?.text]}
               height={ALERT_ICONS_SIZE}

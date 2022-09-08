@@ -1,13 +1,13 @@
 import { AnyAction } from '@reduxjs/toolkit'
-import React, { Dispatch } from 'react'
+import React, { Dispatch, useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { WarningAction, WarningModalType } from 'src/components/warnings/types'
+import WarningModal from 'src/components/modals/WarningModal'
+import { WarningAction, WarningSeverity } from 'src/components/warnings/types'
 import { GasSpeed } from 'src/features/gas/types'
-import { ElementName } from 'src/features/telemetry/constants'
+import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import {
   DerivedSwapInfo,
   useAcceptedTrade,
-  useSwapActionHandlers,
   useSwapCallback,
   useSwapGasFee,
   useUpdateSwapGasEstimate,
@@ -32,6 +32,9 @@ interface SwapFormProps {
 
 export function SwapReview({ dispatch, onNext, onPrev, derivedSwapInfo }: SwapFormProps) {
   const { t } = useTranslation()
+  const [showWarningModal, setShowWarningModal] = useState(false)
+  const [warningAcknowledged, setWarningAcknowledged] = useState(false)
+  const [shouldSubmitTx, setShouldSubmitTx] = useState(false)
 
   const {
     currencies,
@@ -48,12 +51,12 @@ export function SwapReview({ dispatch, onNext, onPrev, derivedSwapInfo }: SwapFo
     txId,
   } = derivedSwapInfo
 
+  const swapWarning = warnings.find((warning) => warning.severity >= WarningSeverity.Medium)
+
   useUpdateSwapGasEstimate(dispatch, trade)
   const gasFee = useSwapGasFee(gasFeeEstimate, GasSpeed.Urgent, optimismL1Fee)
 
   const { onAcceptTrade, acceptedTrade } = useAcceptedTrade(trade)
-
-  const { onShowSwapWarning } = useSwapActionHandlers(dispatch)
 
   const noValidSwap = !isWrapAction(wrapType) && !trade
   const blockingWarning = warnings.some(
@@ -63,7 +66,7 @@ export function SwapReview({ dispatch, onNext, onPrev, derivedSwapInfo }: SwapFo
   )
   const newTradeToAccept = requireAcceptNewTrade(acceptedTrade, trade)
 
-  const swapCallback = useSwapCallback(
+  const onSwap = useSwapCallback(
     trade,
     gasFeeEstimate,
     exactApproveRequired,
@@ -72,21 +75,45 @@ export function SwapReview({ dispatch, onNext, onPrev, derivedSwapInfo }: SwapFo
     txId
   )
 
-  const onSwap = () => {
-    if (warnings.some((warning) => warning.action === WarningAction.WarnBeforeSubmit)) {
-      onShowSwapWarning(WarningModalType.ACTION)
-      return
-    }
-
-    swapCallback()
-  }
-
   const { wrapCallback: onWrap } = useWrapCallback(
     currencyAmounts[CurrencyField.INPUT],
     wrapType,
     onNext,
     txId
   )
+
+  const onPress = useCallback(() => {
+    if (swapWarning && !showWarningModal && !warningAcknowledged) {
+      setShouldSubmitTx(true)
+      setShowWarningModal(true)
+      return
+    }
+
+    isWrapAction(wrapType) ? onWrap() : onSwap()
+  }, [warningAcknowledged, swapWarning, showWarningModal, wrapType, onWrap, onSwap])
+
+  const onConfirmWarning = useCallback(() => {
+    setWarningAcknowledged(true)
+    setShowWarningModal(false)
+
+    if (shouldSubmitTx) {
+      isWrapAction(wrapType) ? onWrap() : onSwap()
+    }
+  }, [wrapType, onWrap, onSwap, shouldSubmitTx])
+
+  const onCancelWarning = useCallback(() => {
+    setShowWarningModal(false)
+    setWarningAcknowledged(false)
+    setShouldSubmitTx(false)
+  }, [])
+
+  const onShowWarning = useCallback(() => {
+    setShowWarningModal(true)
+  }, [])
+
+  const onCloseWarning = useCallback(() => {
+    setShowWarningModal(false)
+  }, [])
 
   const actionButtonProps = {
     disabled: noValidSwap || blockingWarning || newTradeToAccept || !gasFee,
@@ -97,7 +124,7 @@ export function SwapReview({ dispatch, onNext, onPrev, derivedSwapInfo }: SwapFo
         : wrapType === WrapType.Unwrap
         ? ElementName.Unwrap
         : ElementName.Swap,
-    onPress: isWrapAction(wrapType) ? onWrap : onSwap,
+    onPress,
   }
 
   const getTransactionDetails = () => {
@@ -108,12 +135,12 @@ export function SwapReview({ dispatch, onNext, onPrev, derivedSwapInfo }: SwapFo
     return (
       <SwapDetails
         acceptedTrade={acceptedTrade}
-        dispatch={dispatch}
         gasFee={gasFee}
         newTradeToAccept={newTradeToAccept}
         trade={trade}
-        warnings={warnings}
+        warning={swapWarning}
         onAcceptTrade={onAcceptTrade}
+        onShowWarning={onShowWarning}
       />
     )
   }
@@ -131,15 +158,31 @@ export function SwapReview({ dispatch, onNext, onPrev, derivedSwapInfo }: SwapFo
   }
 
   return (
-    <TransactionReview
-      actionButtonProps={actionButtonProps}
-      currencyIn={currencyIn}
-      currencyOut={currencyOut}
-      formattedAmountIn={formattedAmounts[CurrencyField.INPUT]}
-      formattedAmountOut={formattedAmounts[CurrencyField.OUTPUT]}
-      isUSDInput={isUSDInput}
-      transactionDetails={getTransactionDetails()}
-      onPrev={onPrev}
-    />
+    <>
+      {showWarningModal && swapWarning?.title && (
+        <WarningModal
+          isVisible
+          caption={swapWarning.message}
+          closeText={blockingWarning ? undefined : t('Cancel')}
+          confirmText={blockingWarning ? t('OK') : t('Confirm')}
+          modalName={ModalName.SwapWarning}
+          severity={swapWarning.severity}
+          title={swapWarning.title}
+          onCancel={onCancelWarning}
+          onClose={onCloseWarning}
+          onConfirm={onConfirmWarning}
+        />
+      )}
+      <TransactionReview
+        actionButtonProps={actionButtonProps}
+        currencyIn={currencyIn}
+        currencyOut={currencyOut}
+        formattedAmountIn={formattedAmounts[CurrencyField.INPUT]}
+        formattedAmountOut={formattedAmounts[CurrencyField.OUTPUT]}
+        isUSDInput={isUSDInput}
+        transactionDetails={getTransactionDetails()}
+        onPrev={onPrev}
+      />
+    </>
   )
 }
