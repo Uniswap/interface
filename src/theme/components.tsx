@@ -212,6 +212,8 @@ export function ExternalLinkIcon({
   )
 }
 
+export const MAX_Z_INDEX = 9999
+
 const ToolTipWrapper = styled.div<{ isCopyContractTooltip?: boolean }>`
   display: flex;
   flex-direction: column;
@@ -219,7 +221,7 @@ const ToolTipWrapper = styled.div<{ isCopyContractTooltip?: boolean }>`
   position: ${({ isCopyContractTooltip }) => (isCopyContractTooltip ? 'relative' : 'absolute')};
   right: ${({ isCopyContractTooltip }) => isCopyContractTooltip && '50%'};
   transform: translate(5px, 32px);
-  z-index: 9999;
+  z-index: ${MAX_Z_INDEX};
 `
 
 const StyledTooltipTriangle = styled(TooltipTriangle)`

@@ -24,11 +24,13 @@ const StyledNativeLogo = styled(StyledLogo)`
 
 export default function CurrencyLogo({
   currency,
+  symbol,
   size = '24px',
   style,
   ...rest
 }: {
   currency?: Currency | null
+  symbol?: string | null
   size?: string
   style?: React.CSSProperties
 }) {
@@ -36,6 +38,7 @@ export default function CurrencyLogo({
     alt: `${currency?.symbol ?? 'token'} logo`,
     size,
     srcs: useCurrencyLogoURIs(currency),
+    symbol: symbol ?? currency?.symbol,
     style,
     ...rest,
   }
