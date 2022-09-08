@@ -1,7 +1,7 @@
 import { breakpoints } from 'nft/css/sprinkles.css'
 import { useEffect, useState } from 'react'
 
-const isClient = typeof window === 'object'
+const isClient = typeof window !== 'undefined'
 
 function getIsTablet() {
   return isClient ? window.innerWidth < breakpoints.lg && window.innerWidth >= breakpoints.sm : false
