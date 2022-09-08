@@ -9,6 +9,8 @@
 import { injected } from './ethereum'
 import assert = require('assert')
 
+import { FeatureFlag } from '../../src/featureFlags/flags/featureFlags'
+
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace Cypress {
@@ -17,6 +19,7 @@ declare global {
     }
     interface VisitOptions {
       serviceWorker?: true
+      featureFlag?: FeatureFlag
     }
   }
 }
@@ -36,6 +39,12 @@ Cypress.Commands.overwrite(
           options?.onBeforeLoad?.(win)
           win.localStorage.clear()
           win.localStorage.setItem('redux_localstorage_simple_user', '{"selectedWallet":"INJECTED"}')
+
+          if (options?.featureFlag) {
+            const option = `{"nfts":"control","${options?.featureFlag}":"enabled"}`
+            win.localStorage.setItem('featureFlags', option)
+          }
+
           win.ethereum = injected
         },
       })
