@@ -181,18 +181,11 @@ export default function LoadedTokenDetail({ address, query }: { address: string;
 
   const tokenData = query.tokenProjects?.[0]
   const tokenDetails = tokenData?.markets?.[0]
-  // useTokenDetailQuery(address, chainIdToChainName(filterNetwork))
   const relevantTokenDetailData = {
     description: tokenData?.description,
     homepageUrl: tokenData?.homepageUrl,
     twitterName: tokenData?.twitterName,
   }
-
-  // (({ description, homepageUrl, twitterName }) => ({
-  //   description,
-  //   homepageUrl,
-  //   twitterName,
-  // }))(tokenDetailData)
 
   if (!token || !token.name || !token.symbol || !connectedChainId) {
     return <LoadingTokenDetail />

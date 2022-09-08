@@ -159,15 +159,8 @@ export function PriceChart({ width, height, tokenAddress, priceData }: PriceChar
   const locale = useActiveLocale()
   const theme = useTheme()
 
-  // TODO: Add network selector input, consider using backend type instead of current front end selector type
-  //const { error, isLoading, prices } = useTokenPriceQuery(token.address, 'ETHEREUM', timePeriod)
-  // const { tokenPrices } = useTokenPrices(priceData)
   const { priceMap } = useTokenPricesCached(priceData, tokenAddress, 'ETHEREUM', timePeriod)
   const prices = priceMap.get(timePeriod)
-  // = useMemo(
-  //   () => (!!tokenPrices ? getDurationPrices(tokenPrices, timePeriod) : []),
-  //   [tokenPrices, timePeriod]
-  // )
 
   const startingPrice = prices?.[0] ?? DATA_EMPTY
   const endingPrice = prices?.[prices.length - 1] ?? DATA_EMPTY
@@ -224,11 +217,6 @@ export function PriceChart({ width, height, tokenAddress, priceData }: PriceChar
     setCrosshair(null)
     setDisplayPrice(endingPrice)
   }, [setCrosshair, setDisplayPrice, endingPrice])
-
-  // // TODO: Display fetching data error
-  // if (!!error) {
-  //   return null
-  // }
 
   // TODO: Display no data available error
   if (!prices) {
