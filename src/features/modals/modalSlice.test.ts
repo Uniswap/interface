@@ -1,5 +1,5 @@
 import { createStore, Store } from '@reduxjs/toolkit'
-import { WalletConnectModalState } from 'src/components/WalletConnect/constants'
+import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import {
   closeModal,
   initialModalState,
@@ -22,9 +22,9 @@ describe('modals reducer', () => {
   it('opens modals and sets initial state', () => {
     expect(store.getState()[modalName].isOpen).toEqual(false)
 
-    store.dispatch(openModal({ name: modalName, initialState: WalletConnectModalState.ScanQr }))
+    store.dispatch(openModal({ name: modalName, initialState: ScannerModalState.ScanQr }))
     expect(store.getState()[modalName].isOpen).toEqual(true)
-    expect(store.getState()[modalName].initialState).toEqual(WalletConnectModalState.ScanQr)
+    expect(store.getState()[modalName].initialState).toEqual(ScannerModalState.ScanQr)
   })
 
   it('closes modals', () => {
@@ -32,7 +32,7 @@ describe('modals reducer', () => {
     expect(store.getState()[modalName].isOpen).toEqual(false)
 
     // open it
-    store.dispatch(openModal({ name: modalName, initialState: WalletConnectModalState.ScanQr }))
+    store.dispatch(openModal({ name: modalName, initialState: ScannerModalState.ScanQr }))
     expect(store.getState()[modalName].isOpen).toEqual(true)
 
     // now close it

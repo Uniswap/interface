@@ -12,9 +12,9 @@ import { PrimaryButton } from 'src/components/buttons/PrimaryButton'
 import { AppBackground } from 'src/components/gradients/AppBackground'
 import { Flex } from 'src/components/layout'
 import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollScreen'
+import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import { Text } from 'src/components/Text'
 import TransactionList from 'src/components/TransactionList/TransactionList'
-import { WalletConnectModalState } from 'src/components/WalletConnect/constants'
 import SessionsButton from 'src/components/WalletConnect/SessionsButton'
 import { openModal } from 'src/features/modals/modalSlice'
 import { clearNotificationCount } from 'src/features/notifications/notificationSlice'
@@ -42,7 +42,7 @@ export function ProfileScreen({ navigation }: Props) {
     dispatch(
       openModal({
         name: ModalName.WalletConnectScan,
-        initialState: WalletConnectModalState.WalletQr,
+        initialState: ScannerModalState.WalletQr,
       })
     )
   }, [dispatch])

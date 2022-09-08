@@ -11,12 +11,12 @@ import { Button } from 'src/components/buttons/Button'
 import { Chevron } from 'src/components/icons/Chevron'
 import { Box, Flex } from 'src/components/layout'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
+import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
+import { QRCodeScanner } from 'src/components/QRCodeScanner/QRCodeScanner'
+import { WalletQRCode } from 'src/components/QRCodeScanner/WalletQRCode'
 import { Text } from 'src/components/Text'
 import { ConnectedDappsList } from 'src/components/WalletConnect/ConnectedDapps/ConnectedDappsList'
-import { WalletConnectModalState } from 'src/components/WalletConnect/constants'
 import { PendingConnection } from 'src/components/WalletConnect/ScanSheet/PendingConnection'
-import { QRCodeScanner } from 'src/components/WalletConnect/ScanSheet/QRCodeScanner'
-import { WalletQRCode } from 'src/components/WalletConnect/ScanSheet/WalletQRCode'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { useDisplayName, useWCTimeoutError } from 'src/features/wallet/hooks'
 import { selectActiveAccountAddress } from 'src/features/wallet/selectors'
@@ -29,12 +29,12 @@ const WC_TIMEOUT_DURATION_MS = 10000 // timeout after 10 seconds
 
 type Props = {
   isVisible: boolean
-  initialScreenState?: WalletConnectModalState
+  initialScreenState?: ScannerModalState
   onClose: () => void
 }
 
 export function WalletConnectModal({
-  initialScreenState = WalletConnectModalState.ScanQr,
+  initialScreenState = ScannerModalState.ScanQr,
   isVisible,
   onClose,
 }: Props) {
@@ -44,7 +44,7 @@ export function WalletConnectModal({
   const displayName = useDisplayName(activeAddress)
   const { sessions, pendingSession } = useWalletConnect(activeAddress)
   const [currentScreenState, setCurrentScreenState] =
-    useState<WalletConnectModalState>(initialScreenState)
+    useState<ScannerModalState>(initialScreenState)
   const { hasScanError, setHasScanError, shouldFreezeCamera, setShouldFreezeCamera } =
     useWCTimeoutError(pendingSession, WC_TIMEOUT_DURATION_MS)
 
@@ -80,21 +80,21 @@ export function WalletConnectModal({
 
   const onPressBottomToggle = () => {
     selectionAsync()
-    if (currentScreenState === WalletConnectModalState.ScanQr) {
-      setCurrentScreenState(WalletConnectModalState.WalletQr)
+    if (currentScreenState === ScannerModalState.ScanQr) {
+      setCurrentScreenState(ScannerModalState.WalletQr)
     } else {
-      setCurrentScreenState(WalletConnectModalState.ScanQr)
+      setCurrentScreenState(ScannerModalState.ScanQr)
     }
   }
 
   const onPressShowConnectedDapps = () => {
     selectionAsync()
-    setCurrentScreenState(WalletConnectModalState.ConnectedDapps)
+    setCurrentScreenState(ScannerModalState.ConnectedDapps)
   }
 
   const onPressShowScanQr = () => {
     selectionAsync()
-    setCurrentScreenState(WalletConnectModalState.ScanQr)
+    setCurrentScreenState(ScannerModalState.ScanQr)
   }
 
   if (!activeAddress) return null
@@ -111,7 +111,7 @@ export function WalletConnectModal({
         <PendingConnection pendingSession={pendingSession} onClose={onClose} />
       ) : (
         <>
-          {currentScreenState === WalletConnectModalState.ConnectedDapps && (
+          {currentScreenState === ScannerModalState.ConnectedDapps && (
             <ConnectedDappsList
               backButton={
                 <Button onPress={onPressShowScanQr}>
@@ -121,7 +121,7 @@ export function WalletConnectModal({
               sessions={sessions}
             />
           )}
-          {currentScreenState === WalletConnectModalState.ScanQr && (
+          {currentScreenState === ScannerModalState.ScanQr && (
             <QRCodeScanner
               numConnections={sessions.length}
               shouldFreezeCamera={shouldFreezeCamera}
@@ -129,7 +129,7 @@ export function WalletConnectModal({
               onScanCode={onScanCode}
             />
           )}
-          {currentScreenState === WalletConnectModalState.WalletQr && (
+          {currentScreenState === ScannerModalState.WalletQr && (
             <WalletQRCode address={activeAddress} />
           )}
           <Flex mb="xl" mt="md" mx="md">
@@ -142,14 +142,14 @@ export function WalletConnectModal({
               style={{ backgroundColor: theme.colors.backgroundContainer }}
               onPress={onPressBottomToggle}>
               <Flex row alignItems="center" gap="sm">
-                {currentScreenState === WalletConnectModalState.ScanQr ? (
+                {currentScreenState === ScannerModalState.ScanQr ? (
                   <Scan color={theme.colors.textSecondary} height={24} width={24} />
                 ) : (
                   <ScanQRIcon color={theme.colors.textSecondary} height={24} width={24} />
                 )}
                 <Flex shrink flexGrow={1} gap="none">
                   <Text color="textPrimary" variant="subhead">
-                    {currentScreenState === WalletConnectModalState.ScanQr
+                    {currentScreenState === ScannerModalState.ScanQr
                       ? t('Show my QR code')
                       : t('Scan a QR code')}
                   </Text>
@@ -158,7 +158,7 @@ export function WalletConnectModal({
                     color="textSecondary"
                     numberOfLines={1}
                     variant="caption">
-                    {currentScreenState === WalletConnectModalState.ScanQr
+                    {currentScreenState === ScannerModalState.ScanQr
                       ? displayName?.name
                       : t('Connect to an app with WalletConnect')}
                   </Text>

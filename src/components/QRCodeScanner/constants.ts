@@ -1,4 +1,4 @@
-export enum WalletConnectModalState {
+export enum ScannerModalState {
   ScanQr,
   ConnectedDapps,
   WalletQr,

@@ -24,21 +24,25 @@ import { openSettings } from 'src/utils/linking'
 import { Barcode, BarcodeFormat, scanBarcodes } from 'vision-camera-code-scanner'
 
 type QRCodeScannerProps = {
-  numConnections: number
-  onPressConnections: () => void
   onScanCode: (data: string) => void
   shouldFreezeCamera: boolean
+}
+interface WCScannerProps extends QRCodeScannerProps {
+  numConnections: number
+  onPressConnections: () => void
+}
+
+function isWalletConnect(props: QRCodeScannerProps | WCScannerProps): props is WCScannerProps {
+  return 'numConnections' in props
 }
 
 const SCAN_ICON_WIDTH_RATIO = 0.7
 const SCAN_ICON_MASK_OFFSET = 10 // used for mask to match spacing in CameraScan SVG
 
-export function QRCodeScanner({
-  numConnections,
-  onPressConnections,
-  onScanCode,
-  shouldFreezeCamera,
-}: QRCodeScannerProps) {
+export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps) {
+  const { onScanCode, shouldFreezeCamera } = props
+  const isWalletConnectModal = isWalletConnect(props)
+
   const { t } = useTranslation()
   const theme = useAppTheme()
 
@@ -132,7 +136,7 @@ export function QRCodeScanner({
         <Flex alignItems="center" gap="none">
           <Flex
             centered
-            gap="xs"
+            gap="sm"
             position="absolute"
             style={{
               transform: [{ translateY: infoLayout ? -infoLayout.height - theme.spacing.lg : 0 }],
@@ -143,15 +147,23 @@ export function QRCodeScanner({
             <Text color="textPrimary" variant="largeLabel">
               {t('Scan a QR code')}
             </Text>
-            <Flex centered row gap="sm">
-              <WalletConnectLogo height={16} width={16} />
+            {isWalletConnectModal ? (
+              <>
+                <Flex centered row gap="sm">
+                  <WalletConnectLogo height={16} width={16} />
+                  <Text color="textPrimary" variant="bodySmall">
+                    {t('Connect to an app with WalletConnect')}
+                  </Text>
+                </Flex>
+                <DevelopmentOnly>
+                  <PasteButton onPress={onScanCode} />
+                </DevelopmentOnly>
+              </>
+            ) : (
               <Text color="textPrimary" variant="bodySmall">
-                {t('Connect to an app with WalletConnect')}
+                {t('Scan a wallet address to send tokens')}
               </Text>
-            </Flex>
-            <DevelopmentOnly>
-              <PasteButton onPress={onScanCode} />
-            </DevelopmentOnly>
+            )}
           </Flex>
           <CameraScan
             color={theme.colors.white}
@@ -159,7 +171,7 @@ export function QRCodeScanner({
             strokeWidth={5}
             width={dimensions.fullWidth * SCAN_ICON_WIDTH_RATIO}
           />
-          {numConnections > 0 && (
+          {isWalletConnectModal && props.numConnections > 0 && (
             <Button
               bottom={0}
               position="absolute"
@@ -169,7 +181,7 @@ export function QRCodeScanner({
                 ],
               }}
               onLayout={(event: any) => setConnectionLayout(event.nativeEvent.layout)}
-              onPress={onPressConnections}>
+              onPress={props.onPressConnections}>
               <Flex
                 row
                 alignItems="center"
@@ -180,9 +192,11 @@ export function QRCodeScanner({
                 style={{ backgroundColor: opacify(40, theme.colors.black) }}>
                 <GlobalIcon color={theme.colors.white} height={20} strokeWidth={2} width={20} />
                 <Text color="white" variant="mediumLabel">
-                  {numConnections === 1
+                  {props.numConnections === 1
                     ? t('1 site connected')
-                    : t('{{numConnections}} sites connected', { numConnections })}
+                    : t('{{numConnections}} sites connected', {
+                        numConnections: props.numConnections,
+                      })}
                 </Text>
               </Flex>
             </Button>

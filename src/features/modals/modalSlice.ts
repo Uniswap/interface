@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { RootState } from 'src/app/rootReducer'
-import { WalletConnectModalState } from 'src/components/WalletConnect/constants'
+import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import { ModalName } from 'src/features/telemetry/constants'
 import { TransactionState } from 'src/features/transactions/transactionState/transactionState'
 
@@ -11,7 +11,7 @@ export interface AppModalState<T> {
 
 type WalletConnectModalParams = {
   name: ModalName.WalletConnectScan
-  initialState: WalletConnectModalState
+  initialState: ScannerModalState
 }
 type SwapModalParams = { name: ModalName.Swap; initialState?: TransactionState }
 
@@ -20,7 +20,7 @@ type SendModalParams = { name: ModalName.Send; initialState?: TransactionState }
 type OpenModalParams = WalletConnectModalParams | SwapModalParams | SendModalParams
 
 export interface ModalsState {
-  [ModalName.WalletConnectScan]: AppModalState<WalletConnectModalState>
+  [ModalName.WalletConnectScan]: AppModalState<ScannerModalState>
   [ModalName.Swap]: AppModalState<TransactionState>
   [ModalName.Send]: AppModalState<TransactionState>
 }
@@ -28,7 +28,7 @@ export interface ModalsState {
 export const initialModalState: ModalsState = {
   [ModalName.WalletConnectScan]: {
     isOpen: false,
-    initialState: WalletConnectModalState.ScanQr,
+    initialState: ScannerModalState.ScanQr,
   },
   [ModalName.Swap]: {
     isOpen: false,
@@ -65,7 +65,7 @@ export const selectSwapModalState = (state: RootState): AppModalState<Transactio
 export const selectSendModalState = (state: RootState): AppModalState<TransactionState> => {
   return state.modals[ModalName.Send]
 }
-export const selectWCModalState = (state: RootState): AppModalState<WalletConnectModalState> => {
+export const selectWCModalState = (state: RootState): AppModalState<ScannerModalState> => {
   return state.modals[ModalName.WalletConnectScan]
 }
 

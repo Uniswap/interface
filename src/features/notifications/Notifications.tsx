@@ -11,7 +11,7 @@ import {
   SwapLogoOrLogoWithTxStatus,
 } from 'src/components/CurrencyLogo/LogoWithTxStatus'
 import { NetworkLogo } from 'src/components/CurrencyLogo/NetworkLogo'
-import { WalletConnectModalState } from 'src/components/WalletConnect/constants'
+import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import { CHAIN_INFO } from 'src/constants/chains'
 import { AssetType } from 'src/entities/assets'
 import { useENS } from 'src/features/ens/useENS'
@@ -83,7 +83,7 @@ export function WCNotification({ notification }: { notification: WalletConnectNo
     dispatch(
       openModal({
         name: ModalName.WalletConnectScan,
-        initialState: WalletConnectModalState.ConnectedDapps,
+        initialState: ScannerModalState.ConnectedDapps,
       })
     )
   }

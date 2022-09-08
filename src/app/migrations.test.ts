@@ -23,7 +23,7 @@ import {
   v9Schema,
 } from 'src/app/schema'
 import { persistConfig } from 'src/app/store'
-import { WalletConnectModalState } from 'src/components/WalletConnect/constants'
+import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import { SWAP_ROUTER_ADDRESSES } from 'src/constants/addresses'
 import { ChainId } from 'src/constants/chains'
 import { initialBiometricsSettingsState } from 'src/features/biometrics/slice'
@@ -225,7 +225,7 @@ describe('Redux state migrations', () => {
       ...initialSchema,
       walletConnect: {
         ...initialSchema.wallet,
-        modalState: WalletConnectModalState.ScanQr,
+        modalState: ScannerModalState.ScanQr,
       },
     }
 

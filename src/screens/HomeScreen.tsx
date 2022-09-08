@@ -15,9 +15,9 @@ import { PortfolioNFTsSection } from 'src/components/home/PortfolioNFTsSection'
 import { PortfolioTokensSection } from 'src/components/home/PortfolioTokensSection'
 import { Box, Flex } from 'src/components/layout'
 import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollScreen'
+import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
+import { QRScannerIconButton } from 'src/components/QRCodeScanner/QRScannerIconButton'
 import { Pill } from 'src/components/text/Pill'
-import { WalletConnectModalState } from 'src/components/WalletConnect/constants'
-import { QRScannerIconButton } from 'src/components/WalletConnect/QRScannerIconButton'
 import { TotalBalance } from 'src/features/balances/TotalBalance'
 import { useBiometricCheck } from 'src/features/biometrics/useBiometricCheck'
 import { openModal } from 'src/features/modals/modalSlice'
@@ -75,10 +75,19 @@ function FixedHeader() {
 function ContentHeader() {
   const navigation = useHomeStackNavigation()
   const theme = useAppTheme()
+  const dispatch = useAppDispatch()
 
   const onPressAccountHeader = useCallback(() => {
     navigation.dispatch(DrawerActions.openDrawer())
   }, [navigation])
+
+  const onPressQRScanner = useCallback(() => {
+    // in case we received a pending session from a previous scan after closing modal
+    dispatch(removePendingSession())
+    dispatch(
+      openModal({ name: ModalName.WalletConnectScan, initialState: ScannerModalState.ScanQr })
+    )
+  }, [dispatch])
 
   const activeAccount = useActiveAccountWithThrow()
 
@@ -108,7 +117,9 @@ function ContentHeader() {
       </Flex>
       <Flex row alignItems="center" gap="sm">
         <PendingNotificationBadge />
-        {isWalletConnectSupportedAccount(activeAccount) && <QRScannerIconButton />}
+        {isWalletConnectSupportedAccount(activeAccount) && (
+          <QRScannerIconButton onPress={onPressQRScanner} />
+        )}
       </Flex>
     </Box>
   )
@@ -129,7 +140,7 @@ function QuickActions() {
     // in case we received a pending session from a previous scan after closing modal
     dispatch(removePendingSession())
     dispatch(
-      openModal({ name: ModalName.WalletConnectScan, initialState: WalletConnectModalState.ScanQr })
+      openModal({ name: ModalName.WalletConnectScan, initialState: ScannerModalState.ScanQr })
     )
   }
 
