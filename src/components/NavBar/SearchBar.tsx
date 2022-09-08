@@ -332,6 +332,7 @@ export const SearchBar = () => {
 
   const placeholderText = phase1Flag === NftVariant.Enabled ? t`Search tokens and NFT collections` : t`Search tokens`
   const isMobileOrTablet = isMobile || isTablet
+  const showCenteredSearchContent = !isOpen && phase1Flag !== NftVariant.Enabled && !isMobileOrTablet
 
   return (
     <Box position="relative">
@@ -358,12 +359,7 @@ export const SearchBar = () => {
         >
           <Box
             className={clsx(
-              `${
-                !isMobileOrTablet &&
-                (isOpen || phase1Flag === NftVariant.Enabled
-                  ? styles.searchContentLeftAlign
-                  : styles.searchContentCentered)
-              }`
+              `${showCenteredSearchContent ? styles.searchContentCentered : styles.searchContentLeftAlign}`
             )}
           >
             <Box display={{ sm: 'none', md: 'flex' }}>
@@ -382,9 +378,7 @@ export const SearchBar = () => {
             }}
             className={clsx(
               `${styles.searchBarInput} ${
-                isOpen || phase1Flag === NftVariant.Enabled
-                  ? styles.searchContentLeftAlign
-                  : styles.searchContentCentered
+                showCenteredSearchContent ? styles.searchContentCentered : styles.searchContentLeftAlign
               }`
             )}
             value={searchValue}
