@@ -20,7 +20,8 @@ import {
   useTokenData,
   useTokenTransactions,
 } from "state/logs/utils";
-import { useCurrency, useToken } from "hooks/Tokens";
+import { useBnbPrices, useBscPairs, useBscTokenData } from "state/logs/bscUtils";
+import { useBscToken, useCurrency, useToken } from "hooks/Tokens";
 import { useDexscreenerToken, useTokenInfo } from "components/swap/ChartPage";
 import { useLocation, useParams } from "react-router";
 
@@ -33,7 +34,6 @@ import { ChartSidebar } from "components/ChartSidebar";
 import { LoadingSkeleton } from "pages/Pool/styleds";
 import ReactGA from "react-ga";
 import { RecentlyViewedCharts } from "./RecentViewedCharts";
-import { SelectiveChartBsc } from "./SelectiveChartingBsc";
 import { TableQuery } from "./TableQuery";
 import TokenSocials from "./TokenSocials";
 import { TokenStats } from "./TokenStats";
@@ -42,7 +42,6 @@ import _ from "lodash";
 import { isAddress } from "utils";
 import { useConvertTokenAmountToUsdString } from "pages/Vote/VotePage";
 import { useHistory } from "react-router-dom";
-import useLast from "hooks/useLast";
 import { useTokenBalance } from "state/wallet/hooks";
 import { useUserChartHistoryManager } from "state/user/hooks";
 import { useWeb3React } from "@web3-react/core";
@@ -103,11 +102,14 @@ const WrapperCard = styled(DarkCard) <{ gridTemplateColumns: string, isMobile: b
   padding:${(props) => props.isMobile ? '.1rem' : '1rem'}
 `
 
-export const SelectiveChart = () => {
+type BscChartProps = {
+    params: any
+}
+
+export const SelectiveChartBsc = () => {
   const ref = React.useRef<any>();
   const { account, chainId } = useWeb3React();
   const history = useHistory();
-  const lastChainId = useLast(chainId)
   const params = useParams<{
     tokenAddress?: string;
     tokenSymbol?: string;
@@ -146,12 +148,12 @@ export const SelectiveChart = () => {
   const [address, setAddress] = React.useState(
     tokenAddressSupplied ? tokenAddressSupplied : ""
   );
+  const prices = useBnbPrices() 
   const tokenInfo = useTokenInfo(chainId ?? 1, address);
-  const tokenData = useTokenData(address?.toLowerCase(), 30000);
-  const { pairs } = tokenData;
-  const token = useToken(address);
+  const tokenData = useBscTokenData(address?.toLowerCase(), prices?.current, prices?.oneDay);
+  const pairs = useBscPairs(address)
+  const token = useBscToken(address);
   const tokenBalance = useTokenBalance(account ?? undefined, token as any);
-  const [ethPrice] = useEthPrice()
   const screenerToken = useDexscreenerToken(address);
   const transactionData = useTokenTransactions(address, pairs, 20000);
   const [selectedCurrency, setSelectedCurrency] = React.useReducer(
@@ -233,18 +235,11 @@ export const SelectiveChart = () => {
       setSelectedCurrency({ payload: undefined, type: "update" });
       ref.current = undefined;
     }
+    
   }, []);
 
-  // if they change chains on a chart page , need to redirect them back to the select charts page
-  const chainChanged = chainId !== lastChainId
-  React.useEffect(() => {
-      if (chainChanged && Boolean(params?.tokenAddress)) {
-        history.push(`/selective-charts`)
-      }
-  }, [chainChanged])
-
-
   useLocationEffect(locationCallback);
+
   const [userChartHistory, updateUserChartHistory] =
     useUserChartHistoryManager();
 
@@ -355,7 +350,7 @@ export const SelectiveChart = () => {
   const LogoMemo = React.useMemo(() => {
     return Boolean(!!hasSelectedData) ? (
       <div style={{display:'flex', alignItems:'center', gap: 20, justifyContent:'space-between'}}>
-      {Boolean(!chainId || chainId == 1) && ethPrice &&<TYPE.small fontSize={12}>ETH <Badge>${parseFloat(parseFloat(ethPrice.toString()).toFixed(2)).toLocaleString()}</Badge> </TYPE.small>}
+      {Boolean(!chainId || chainId == 56) && prices && prices.current && <TYPE.small fontSize={12}>BNB <Badge>${parseFloat(parseFloat(prices.current.toString()).toFixed(2)).toLocaleString()}</Badge> </TYPE.small>}
       <span
         style={{
           display: "flex",
@@ -378,7 +373,7 @@ export const SelectiveChart = () => {
       </span>
       </div>
     ) : null;
-  }, [mainnetCurrency, chainId, ethPrice, pairCurrency, hasSelectedData]);
+  }, [mainnetCurrency, chainId, prices, pairCurrency, hasSelectedData]);
   /* memoized function to render the currency input select that represents the current viewed chart's token */
   const PanelMemo = React.useMemo(() => {
     return !Boolean(chainId) || Boolean(chainId) ? (
@@ -402,22 +397,7 @@ export const SelectiveChart = () => {
               </ButtonSecondary>
             </>
           ) : null}
-          <CurrencyInputPanel
-            label={"gains"}
-            showMaxButton={false}
-            value={``}
-            showCurrencyAmount={false}
-            hideBalance={true}
-            hideInput={true}
-            currency={!hasSelectedData ? undefined : mainnetCurrency}
-            onUserInput={_.noop}
-            onMax={undefined}
-            fiatValue={undefined}
-            onCurrencySelect={onCurrencySelect}
-            otherCurrency={undefined}
-            showCommonBases={false}
-            id="chart-currency-input"
-          />
+         
         </div>
       </>
     ) : Boolean(chainId) ? (
@@ -500,10 +480,6 @@ export const SelectiveChart = () => {
     },
     [selectedCurrency, hasSelectedData, isMobile, params.tokenAddress, collapsed]
   );
-  
-  if (chainId && chainId == 56 ){
-    return <SelectiveChartBsc />
-  }
 
   return (
     <React.Suspense fallback={<BarChartLoaderSVG />}>

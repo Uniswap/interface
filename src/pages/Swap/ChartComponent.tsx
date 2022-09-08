@@ -1,9 +1,19 @@
 import { useIsDarkMode, useUserLocale } from "state/user/hooks";
 
+import Loader from "components/Loader";
 import React from "react";
 import TradingViewWidget from "react-tradingview-widget";
 import _ from "lodash";
+import styled from 'styled-components/macro'
+import { useActiveWeb3React } from "hooks/web3";
 
+const Wrapper = styled.div `
+  *, >* {
+    .css-14hxyhp {
+      display: none !important
+    }
+  }
+`
 export const ChartComponent = React.memo(
     (props: {
       symbol: string;
@@ -11,8 +21,19 @@ export const ChartComponent = React.memo(
       tokenSymbolForChart: string;
       pairData?: any[];
       height?:number;
+      pairAddress?:string;
     }) => {
-      const { height, symbol, tokenSymbolForChart, pairData } = props;
+      const {chainId} = useActiveWeb3React()
+      const { height, address, pairAddress: pairAddy,  symbol, tokenSymbolForChart, pairData } = props;
+      
+      const pairAddress = React.useMemo(() => {
+        if (!pairData?.length) {
+          return pairAddy
+        }
+        
+        const pairId = pairData?.[0]?.id
+        return pairId
+      }, [pairData, symbol, pairAddy])
       const chartKey = React.useMemo(() => {
         if (symbol && (symbol == "ETH" || symbol == "WETH")) {
           return "UNISWAP:WETHUSDT";
@@ -31,6 +52,10 @@ export const ChartComponent = React.memo(
         return tokenSymbolForChart ? tokenSymbolForChart : `pair.not.found`;
       }, [pairData, symbol]);
 
+      const chartURL = React.useMemo(() => {
+        const network = !chainId || chainId == 1 ? 'ethereum' : chainId == 56 ? 'bsc' : 'eth'
+        return `https://dexscreener.com/${network}/${pairAddress}?embed=1&trades=0&info=0`
+      }, [chainId, pairAddress])
       const heightForChart  =  height ? height : 400
       const symbolForChart = chartKey
         ? chartKey
@@ -39,9 +64,19 @@ export const ChartComponent = React.memo(
         const darkMode = useIsDarkMode()
         const locale = useUserLocale()
         const theme = darkMode ? "Dark" : "Light";
+
+        if (!pairAddress) {
+          return (
+            <div style={{display:'flex', alignItems:'center', justifyContent:'start', gap: 10}}>
+              <Loader />
+              Loading Chart..
+            </div>
+          )
+        }
+
       return (
-        <div style={{ height: heightForChart }}>
-          {symbolForChart && (
+        <Wrapper style={{ height: heightForChart }}>
+          {/* {symbolForChart && (
             <TradingViewWidget
               hide_side_toolbar={false}
               symbol={symbolForChart}
@@ -51,8 +86,11 @@ export const ChartComponent = React.memo(
               autosize={true}
               style={'3C'}
             />
-          )}
-        </div>
+          )} */}
+
+          <iframe src={chartURL} style={{background:'transparent', border:'1px solid transparent', height: 450, borderRadius: 4, width: '100%'}}>
+          </iframe>
+        </Wrapper>
       );
     },
     _.isEqual

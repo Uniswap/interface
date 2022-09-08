@@ -432,7 +432,9 @@ export const useBscTokenDataHook = (addy: string, ethPrice: any, ethPriceOld: an
   } catch (e) {
     console.error(e)
   }
-  if (!data.priceUSD) data.priceUSD = data.derivedUSD
+  if (!data?.priceUSD && data?.derivedUSD) {
+    data.priceUSD = data.derivedUSD
+  }
   return data
 }
 
@@ -521,6 +523,7 @@ export const fetchBscTokenData = async (addy: string, ethPrice: any, ethPriceOld
 
 export const useBscPairs =  (tokenAddress?: string) => {
   const defaultState: any[] = []
+  const {chainId} = useActiveWeb3React()
   const tokenAddressChecked = toChecksum(tokenAddress)
   const [pairData, setPairData] = React.useReducer(function (state: any[], action: { type: any, payload: any }) {
     switch (action.type) {
@@ -534,11 +537,11 @@ export const useBscPairs =  (tokenAddress?: string) => {
     }
   }, defaultState)
   const { data, loading, error } = useQuery(
-    TOKEN_DATA(
-      tokenAddressChecked,
+    Boolean(chainId && chainId == 56) ? TOKEN_DATA(
+      tokenAddressChecked ,
       null,
       true
-    ),
+    ) : BNB_PRICES,
     {
       onCompleted: (params) => {
         if (params && params.pairs1 && params.pairs0 && Boolean(params.pairs1.length || params.pairs0.length)) {
@@ -690,10 +693,7 @@ export function useBscTokenTransactions(tokenAddress: string, interval: null | n
   const pairs = useBscPairs(toChecksum(tokenAddress))
   
   const queryVars = React.useMemo(() => {
-    let pairFilter = pairs?.filter((pair:any) => {
-      console.log(`pair filter.`, {pair, tokes: {0: pair.token0, 1: pair.token1}});
-      return pair.token0.symbol.toLowerCase().includes('bnb') || pair.token0.symbol.toLowerCase().includes('cake') || pair.token0.symbol.toLowerCase().includes('busd') || pair.token0.symbol.toLowerCase().includes('usdc')
-    });
+    let pairFilter = pairs
     if (pairFilter.length == 0) {
       pairFilter = pairs
     }
@@ -715,7 +715,7 @@ export function useBscTokenTransactions(tokenAddress: string, interval: null | n
     return {data:[], lastFetched: new Date(), loading: false};
 
   console.log(`uscBscTokenTransactions` , query)
-  return { data: query.data, lastFetched: new Date(), loading: query.loading };
+  return { pairs, data: query.data, lastFetched: new Date(), loading: query.loading };
 }
 
 export function useBscPoocoinTransactions() {

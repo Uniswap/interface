@@ -181,7 +181,7 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
         //console.log(`trying to get price--`, tokenInfo?.price, tokenData?.priceUSD)
         if (tokenData && tokenData.priceUSD) {
             //console.info(`Using uniswap v2 price -- its always much more up - to - date`, tokenData)
-            return `$${parseFloat(parseFloat(tokenData.priceUSD).toFixed(18)).toFixed(18)}`
+            return `$${parseFloat(parseFloat(tokenData.priceUSD)?.toFixed(18))?.toFixed(18)}`
         }
         if (tokenInfo && tokenInfo.price && tokenInfo.price.rate) {
             //console.info(`Fallback to etherapi price -- not as  up - to - date, but better than nothing`, tokenData)
@@ -206,14 +206,15 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
         const hasTokenData = !!tokenData?.priceUSD
         const hasTokenInfo = !!tokenInfo?.price && !!tokenInfo?.price?.rate
         if (!hasTokenInfo && !hasTokenData) return ''
-        const price = tokenData && tokenData.priceUSD ? tokenData?.priceUSD : tokenInfo && tokenInfo.price ? tokenInfo.price.rate : '';
+        let price = tokenData && tokenData.priceUSD ? tokenData?.priceUSD : tokenInfo && tokenInfo.price ? tokenInfo.price.rate : '';
         if (price == '') return '';
         let excludingBurntValue = totalSupplyInt;
         if (amountBurnt) excludingBurntValue -= parseFloat(amountBurnt.toFixed(0))
         else if (!amountBurnt && token.name.toLowerCase().includes('kiba') && deadKiba)
             excludingBurntValue -= parseFloat(deadKiba.toFixed(0))
 
-        return Number(parseFloat(price.toFixed(18)) * excludingBurntValue)
+        if (typeof price == 'string') price = parseFloat(price)
+        return Number(parseFloat((price?.toFixed(18))) * excludingBurntValue)
     }, [totalSupplyInt, tokenInfo?.price, tokenData?.priceUSD, amountBurnt])
 
     const theme = useTheme()
@@ -347,7 +348,7 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
                                                 </MenuItem>)}
                                             </SidebarHeader>
 
-                                            {!!tokenData && !!tokenData?.priceUSD && _.isNumber(tokenData?.priceUSD) && <> <MenuItem>
+                                            {!!tokenData && !!tokenData?.priceUSD && Boolean(Number(tokenData?.priceUSD)) && <> <MenuItem>
                                                 <TYPE.subHeader>Price</TYPE.subHeader>
                                                 <TYPE.black style={{ display: 'flex', alignItems: 'center' }}>{formattedPrice}</TYPE.black>
                                             </MenuItem>
@@ -358,7 +359,7 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
                                                     </MenuItem>}
                                                 <MenuItem>
                                                     <TYPE.subHeader>Diluted Market Cap</TYPE.subHeader>
-                                                    <TYPE.black>${abbreviateNumber(Number(parseFloat(tokenData?.priceUSD?.toFixed(18)) * totalSupplyInt))}</TYPE.black>
+                                                    <TYPE.black>${abbreviateNumber(Number(parseFloat(parseFloat(tokenData?.priceUSD)?.toFixed(18)) * totalSupplyInt))}</TYPE.black>
                                                 </MenuItem></>}
 
                                             {!tokenData?.priceUSD && !!tokenInfo && !!tokenInfo.price && !!tokenInfo?.price?.rate && _.isNumber(tokenInfo.price.rate) && <>
@@ -401,15 +402,15 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
                                             {!tokenInfo || !tokenInfo?.price && tokenData?.oneDayVolumeUSD && <MenuItem>
                                                 <TYPE.subHeader>24hr Volume</TYPE.subHeader>
                                                 <TYPE.main>${chainId !== 56 ?
-                                                    parseFloat(parseFloat(tokenData?.oneDayVolumeUSD).toFixed(2)).toLocaleString()
-                                                    : (parseFloat(parseFloat(tokenData?.oneDayVolumeUSD).toFixed(2))).toLocaleString()}</TYPE.main>
+                                                    parseFloat(parseFloat(tokenData?.oneDayVolumeUSD)?.toFixed(2)).toLocaleString()
+                                                    : (parseFloat(parseFloat(tokenData?.oneDayVolumeUSD)?.toFixed(2))).toLocaleString()}</TYPE.main>
                                             </MenuItem>}
 
                                             {tokenInfo && tokenInfo.price && tokenInfo.price.volume24h && <MenuItem>
                                                 <TYPE.subHeader>24hr Volume</TYPE.subHeader>
                                                 <TYPE.main>
                                                     ${
-                                                        parseFloat(parseFloat(tokenInfo.price.volume24h.toString()).toFixed(2)).toLocaleString()
+                                                        parseFloat(parseFloat(tokenInfo.price.volume24h.toString())?.toFixed(2)).toLocaleString()
                                                     }
                                                 </TYPE.main>
                                             </MenuItem>}
@@ -457,15 +458,6 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
                     <Menu style={{ background: color }} >
                         <SubMenu style={{ background: color }} onOpenChange={toggleSwapOpen} open={swapOpen} icon={<Repeat style={{ background: 'transparent' }} />} title={"Swap " + token?.name}>
                             <Card style={{ padding: '1rem' }}>
-                                {isMobile && token?.address && (
-                                    <div style={{height: 'fit-content', display:'flex', justifyContent: 'center'}}>
-                                        <Copy toCopy={token.address}>
-                                            <span style={{ marginLeft: '4px' }}>
-                                                <TYPE.small>Copy {token?.name} ({token?.symbol}) Address</TYPE.small>
-                                            </span>
-                                        </Copy>
-                                    </div>
-                                )}
                                 <SwapTokenForToken
                                     fontSize={12}
                                     allowSwappingOtherCurrencies={![inputCurrency, tokenCurrency].every(currency => Boolean(currency) && Boolean(currency?.decimals || false) && (currency?.decimals || 0) > 0)}

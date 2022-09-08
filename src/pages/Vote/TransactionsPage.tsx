@@ -44,6 +44,8 @@ export const Transactions = ({transactions, loading, error, accountValue}:{trans
                 newTxn.token0Amount = Math.abs(netToken1)
                 newTxn.token1Amount = Math.abs(netToken0)
             }
+            newTxn.token0 = swap.pair.token0;
+            newTxn.token1 = swap.pair.token1;
             newTxn.to = swap.to;
             newTxn.sender = swap.sender;
             newTxn.from = swap.from;
