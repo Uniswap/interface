@@ -7,7 +7,7 @@ import styled from 'styled-components/macro'
 import CoinbaseWalletIcon from '../../assets/images/coinbaseWalletIcon.svg'
 import WalletConnectIcon from '../../assets/images/walletConnectIcon.svg'
 import sockImg from '../../assets/svg/socks.svg'
-//import { useHasSocks } from '../../hooks/useSocksBalance'
+import { useHasSocks } from '../../hooks/useSocksBalance'
 import Identicon from '../Identicon'
 
 const IconWrapper = styled.div<{ size?: number }>`
@@ -67,8 +67,7 @@ const useIcon = (connectionType: ConnectionType) => {
 }
 
 export default function StatusIcon({ connectionType, size }: { connectionType: ConnectionType; size?: number }) {
-  //const hasSocks = useHasSocks()
-  const hasSocks = true
+  const hasSocks = useHasSocks()
   const isNavbarEnabled = useNavBarFlag() === NavBarVariant.Enabled
   const icon = useIcon(connectionType)
 
