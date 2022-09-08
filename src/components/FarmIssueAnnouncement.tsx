@@ -1,3 +1,4 @@
+import { Trans } from '@lingui/macro'
 import { useState } from 'react'
 import { Flex, Text } from 'rebass'
 import styled from 'styled-components'
@@ -19,9 +20,132 @@ const Wrapper = styled.div`
   }
 `
 
-function FarmIssueAnnouncement() {
+export const StyledUL = styled.ul`
+  flex-shrink: 0;
+
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding-left: 24px;
+  padding-right: 8px;
+  width: 100%;
+  row-gap: 8px;
+
+  margin-block-start: 0;
+  margin-block-end: 0;
+
+  margin-inline-start: 0;
+  margin-inline-end: 0;
+
+  list-style-type: disc;
+  list-style-position: outside;
+
+  color: ${({ theme }) => theme.subText};
+
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+`
+
+export const Highlighted = styled.span`
+  font-weight: 500;
+  color: ${({ theme }) => theme.text};
+`
+
+const ContentForActiveFarms = () => {
+  const theme = useTheme()
+  return (
+    <StyledUL>
+      <li>
+        <Trans>
+          We recently discovered an issue in our Elastic farming contract where you might not be able to harvest your
+          rewards or withdraw your liquidity positions like you <Highlighted>normally</Highlighted> would.
+        </Trans>
+      </li>
+      <li>
+        <Trans>
+          Don&apos;t worry, your funds are <Highlighted>100% safe</Highlighted>. And you are still earning farming
+          rewards.
+        </Trans>
+      </li>
+      <li>
+        <Trans>
+          If you still wish to withdraw your liquidity positions from the farm, you can use the{' '}
+          <Highlighted style={{ color: theme.red }}>Force Withdraw</Highlighted> button as an emergency option. Note:
+        </Trans>
+        <StyledUL style={{ marginTop: '8px', listStyleType: 'circle' }}>
+          <li>
+            <Trans>
+              If you do this, your farming rewards will <Highlighted>not</Highlighted> be automatically harvested but we
+              can <Highlighted>manually transfer</Highlighted> your farming rewards to you.
+            </Trans>
+          </li>
+          <li>
+            <Trans>
+              After force withdrawing your liquidity position from the farm, remember <Highlighted>not</Highlighted> to
+              re-stake this in the farm.
+            </Trans>
+          </li>
+          <li>
+            <Trans>
+              If you wish to continue participating in the farm, you should remove liquidity from the{' '}
+              <Highlighted>pool</Highlighted>, create a <Highlighted>new</Highlighted> liquidity position by adding
+              liquidity into the pool, and then stake this new liquidity position into the farm.
+            </Trans>
+          </li>
+        </StyledUL>
+      </li>
+      <li>
+        <Trans>
+          You can get in touch with us by joining our{' '}
+          <ExternalLink href="https://discord.gg/H8AQVhwBz9">Discord channel ↗</ExternalLink> and we will assist you
+          with your questions or transfer of rewards.
+        </Trans>
+      </li>
+    </StyledUL>
+  )
+}
+
+const ContentForEndedFarms = () => {
+  const theme = useTheme()
+  return (
+    <StyledUL>
+      <li>
+        <Trans>
+          We recently discovered an issue in our Elastic farming contract where you might not be able to harvest your
+          rewards or withdraw your liquidity positions like you <Highlighted>normally</Highlighted> would.
+        </Trans>
+      </li>
+      <li>
+        <Trans>
+          Don&apos;t worry, your funds are <Highlighted>100% safe</Highlighted>.
+        </Trans>
+      </li>
+      <li>
+        <Trans>
+          You can use the <Highlighted style={{ color: theme.red }}>Force Withdraw</Highlighted> button as an emergency
+          option. If you do this, your farming rewards will <Highlighted>not</Highlighted> be automatically harvested
+          but we can <Highlighted>manually transfer</Highlighted> your farming rewards to you.
+        </Trans>
+      </li>
+      <li>
+        <Trans>
+          You can get in touch with us by joining our{' '}
+          <ExternalLink href="https://discord.gg/H8AQVhwBz9">Discord channel ↗</ExternalLink> and we will assist you
+          with your questions or transfer of rewards.
+        </Trans>
+      </li>
+    </StyledUL>
+  )
+}
+
+type Props = {
+  isEnded: boolean
+}
+const FarmIssueAnnouncement: React.FC<Props> = ({ isEnded }) => {
   const theme = useTheme()
   const [show, setShow] = useState(true)
+
   return (
     <Wrapper>
       <Flex justifyContent="space-between">
@@ -33,7 +157,7 @@ function FarmIssueAnnouncement() {
             />
           </svg>
           <Text fontWeight="500" color={theme.warning} marginLeft="8px">
-            Important Announcement
+            <Trans>Important Announcement</Trans>
           </Text>
         </Flex>
 
@@ -44,54 +168,10 @@ function FarmIssueAnnouncement() {
 
       {show && (
         <>
-          <Flex flexDirection="column" sx={{ gap: '10px' }} fontSize="14px" marginTop="12px">
-            <li>
-              We recently discovered an issue in our Elastic farming contract where you might not be able to harvest
-              your rewards or withdraw your liquidity positions like you{' '}
-              <Text as="span" fontWeight="500" color={theme.text}>
-                normally
-              </Text>{' '}
-              would
-            </li>
-            <li>
-              Dont worry, your funds are{' '}
-              <Text as="span" fontWeight="500" color={theme.text}>
-                100% safe
-              </Text>
-              . And you are still earning farming rewards{' '}
-            </li>
-            <li>
-              If you still wish to withdraw your liquidity positions, you can use the{' '}
-              <Text fontWeight="500" color={theme.red} as="span">
-                Force Withdraw
-              </Text>{' '}
-              button as an emergency option. (Note: If you do this, your farming rewards will{' '}
-              <Text as="span" fontWeight="500" color={theme.text}>
-                not
-              </Text>{' '}
-              be automatically harvested but we can{' '}
-              <Text as="span" fontWeight="500" color={theme.text}>
-                manually transfer
-              </Text>{' '}
-              your farming rewards to you)
-            </li>
-            <li>
-              You can get in touch with us by joining our{' '}
-              <ExternalLink href="https://discord.gg/H8AQVhwBz9">Discord channel ↗</ExternalLink> and we will assist you
-              with your questions or transfer of rewards.
-            </li>
-            <li>
-              We will soon deploy a{' '}
-              <Text as="span" fontWeight="500" color={theme.text}>
-                new
-              </Text>{' '}
-              Elastic farming contract, and you will be able to migrate your liquidity positions into this contract to
-              continue earning rewards
-            </li>
-          </Flex>
+          {isEnded ? <ContentForEndedFarms /> : <ContentForActiveFarms />}
 
           <Text fontStyle="italic" marginTop="16px">
-            We really apologize for the trouble.
+            <Trans>We really apologize for the trouble.</Trans>
           </Text>
         </>
       )}

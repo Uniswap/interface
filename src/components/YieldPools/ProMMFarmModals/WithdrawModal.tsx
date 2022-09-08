@@ -381,7 +381,7 @@ function WithdrawModal({
             disabled={forced ? false : !selectedNFTs.length}
             style={forced ? { background: theme.red, color: theme.textReverse } : undefined}
           >
-            {forced ? <Trans>Forced Withdraw</Trans> : <Trans>Withdraw Selected</Trans>}
+            {forced ? <Trans>Force Withdraw</Trans> : <Trans>Withdraw Selected</Trans>}
           </ButtonPrimary>
         </Flex>
       </ModalContentWrapper>
