@@ -151,7 +151,7 @@ const Row = ({
   onOpenModal: (modalType: 'deposit' | 'withdraw' | 'stake' | 'unstake', pid?: number) => void
   onHarvest: () => void
   onUpdateDepositedInfo: (input: {
-    pid: number
+    poolAddress: string
     usdValue: number
     token0Amount: CurrencyAmount<Token>
     token1Amount: CurrencyAmount<Token>
@@ -254,12 +254,12 @@ const Row = ({
   useEffect(() => {
     if (position)
       onUpdateDepositedInfo({
-        pid: farm.pid,
+        poolAddress: farm.poolAddress,
         usdValue: position.amountUsd || 0,
         token0Amount: position.token0Amount,
         token1Amount: position.token1Amount,
       })
-  }, [position, farm.pid, onUpdateDepositedInfo])
+  }, [position, farm.poolAddress, onUpdateDepositedInfo])
 
   // TODO: this is temporary hide target volume, an ad-hoc request from Product team. will enable soon if we have this kind of farm
 
@@ -742,21 +742,22 @@ function ProMMFarmGroup({
       setApprovalTx(tx)
     }
   }
+
   const aggreateDepositedInfo = useCallback(
     ({
-      pid,
+      poolAddress,
       usdValue,
       token0Amount,
       token1Amount,
     }: {
-      pid: string | number
+      poolAddress: string | number
       usdValue: number
       token0Amount: CurrencyAmount<Token>
       token1Amount: CurrencyAmount<Token>
     }) => {
       setUserPoolFarmInfo(prev => ({
         ...prev,
-        [pid]: {
+        [poolAddress]: {
           usdValue,
           token0Amount,
           token1Amount,
