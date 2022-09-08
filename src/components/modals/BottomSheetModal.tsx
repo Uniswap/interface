@@ -46,8 +46,8 @@ const Backdrop = (props: BottomSheetBackdropProps) => {
 }
 
 const CONTENT_HEIGHT_SNAP_POINTS = ['CONTENT_HEIGHT']
-const FULL_HEIGHT = 0.93
-const FULL_HEIGHT_SNAP_POINTS = ['93%']
+const FULL_HEIGHT = 0.91
+const FULL_HEIGHT_SNAP_POINTS = ['91%']
 
 export function BottomSheetModal({
   isVisible,
