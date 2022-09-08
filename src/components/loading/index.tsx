@@ -10,7 +10,7 @@ import { Shimmer } from 'src/components/loading/Shimmer'
 import { TokenLoader } from 'src/components/loading/TokenLoader'
 import GraphCurveArea from './graph-curve-area.svg'
 
-type SkeletonType = 'box' | 'graph' | 'header' | 'token' | 'image' | 'favorite'
+type SkeletonType = 'box' | 'graph' | 'header' | 'token' | 'image' | 'favorite' | 'grid'
 
 interface LoadingProps {
   type?: SkeletonType
@@ -65,6 +65,19 @@ const useChildFromType = (
     case 'image':
       if (repeat > 1) throw new Error('Loading placeholder for images does not support repeat')
       return <BoxLoader aspectRatio={1} borderRadius="none" />
+    case 'grid':
+      return (
+        <Box>
+          {new Array(repeat / 2).fill(null).map((_, i, {}) => (
+            <React.Fragment key={i}>
+              <Flex row gap="none">
+                <BoxLoader aspectRatio={1} borderRadius="none" m="xxs" width="50%" />
+                <BoxLoader aspectRatio={1} borderRadius="none" m="xxs" width="50%" />
+              </Flex>
+            </React.Fragment>
+          ))}
+        </Box>
+      )
     case 'box':
     default:
       return (
