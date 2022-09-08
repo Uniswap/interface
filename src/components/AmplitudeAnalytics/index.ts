@@ -7,11 +7,12 @@ import { isProductionEnv } from 'utils/env'
  * Uniswap has two Amplitude projects: test and production. You must be a
  * member of the organization on Amplitude to view details.
  */
-const API_KEY = isProductionEnv() ? process.env.REACT_APP_AMPLITUDE_KEY : process.env.REACT_APP_AMPLITUDE_TEST_KEY
+
+const AMPLITUDE_KEY_NAME = isProductionEnv() ? 'REACT_APP_AMPLITUDE_KEY' : 'REACT_APP_AMPLITUDE_TEST_KEY'
+const API_KEY = process.env[AMPLITUDE_KEY_NAME]
 
 if (typeof API_KEY === 'undefined') {
-  const keyName = isProductionEnv() ? 'REACT_APP_AMPLITUDE_KEY' : 'REACT_APP_AMPLITUDE_TEST_KEY'
-  throw new Error(`${keyName} is undefined, Amplitude analytics will not run.`)
+  throw new Error(`${AMPLITUDE_KEY_NAME} is undefined, Amplitude analytics will not run.`)
 }
 
 init(
