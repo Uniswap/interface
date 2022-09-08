@@ -376,7 +376,6 @@ export const SearchBar = () => {
           <Box
             as="input"
             placeholder={placeholderText}
-            // width={isOpen || phase1Flag === NftVariant.Enabled ? 'full' : '120'}
             onChange={(event: ChangeEvent<HTMLInputElement>) => {
               !isOpen && toggleOpen()
               setSearchValue(event.target.value)
@@ -405,11 +404,9 @@ export const SearchBar = () => {
           )}
         </Box>
       </Box>
-      <Box className={{ sm: isOpen ? styles.visible : styles.hidden, xl: styles.hidden }}>
-        <NavIcon onClick={toggleOpen}>
-          <NavMagnifyingGlassIcon width={28} height={28} />
-        </NavIcon>
-      </Box>
+      <NavIcon onClick={toggleOpen}>
+        <NavMagnifyingGlassIcon width={28} height={28} />
+      </NavIcon>
       {isOpen && <Overlay />}
     </Box>
   )
