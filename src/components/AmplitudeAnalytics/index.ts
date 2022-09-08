@@ -7,31 +7,28 @@ import { isProductionEnv } from 'utils/env'
  * Uniswap has two Amplitude projects: test and production. You must be a
  * member of the organization on Amplitude to view details.
  */
-export function initializeAnalytics() {
-  const API_KEY = isProductionEnv() ? process.env.REACT_APP_AMPLITUDE_KEY : process.env.REACT_APP_AMPLITUDE_TEST_KEY
+const API_KEY = isProductionEnv() ? process.env.REACT_APP_AMPLITUDE_KEY : process.env.REACT_APP_AMPLITUDE_TEST_KEY
 
-  if (typeof API_KEY === 'undefined') {
-    const keyName = isProductionEnv() ? 'REACT_APP_AMPLITUDE_KEY' : 'REACT_APP_AMPLITUDE_TEST_KEY'
-    console.error(`${keyName} is undefined, Amplitude analytics will not run.`)
-    return
-  }
-
-  init(
-    API_KEY,
-    /* userId= */ undefined, // User ID should be undefined to let Amplitude default to Device ID
-    /* options= */
-    {
-      // Disable tracking of private user information by Amplitude
-      trackingOptions: {
-        ipAddress: false,
-        carrier: false,
-        city: false,
-        region: false,
-        dma: false, // designated market area
-      },
-    }
-  )
+if (typeof API_KEY === 'undefined') {
+  const keyName = isProductionEnv() ? 'REACT_APP_AMPLITUDE_KEY' : 'REACT_APP_AMPLITUDE_TEST_KEY'
+  throw new Error(`${keyName} is undefined, Amplitude analytics will not run.`)
 }
+
+init(
+  API_KEY,
+  /* userId= */ undefined, // User ID should be undefined to let Amplitude default to Device ID
+  /* options= */
+  {
+    // Disable tracking of private user information by Amplitude
+    trackingOptions: {
+      ipAddress: false,
+      carrier: false,
+      city: false,
+      region: false,
+      dma: false, // designated market area
+    },
+  }
+)
 
 /** Sends an approved (finalized) event to Amplitude production project. */
 export function sendAnalyticsEvent(eventName: string, eventProperties?: Record<string, unknown>) {

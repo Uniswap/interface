@@ -1,4 +1,4 @@
-import { initializeAnalytics, sendAnalyticsEvent, user } from 'components/AmplitudeAnalytics'
+import { sendAnalyticsEvent, user } from 'components/AmplitudeAnalytics'
 import { CUSTOM_USER_PROPERTIES, EventName, PageName } from 'components/AmplitudeAnalytics/constants'
 import { Trace } from 'components/AmplitudeAnalytics/Trace'
 import Loader from 'components/Loader'
@@ -122,7 +122,6 @@ export default function App() {
   const isExpertMode = useIsExpertMode()
 
   useAnalyticsReporter()
-  initializeAnalytics()
 
   useEffect(() => {
     window.scrollTo(0, 0)
