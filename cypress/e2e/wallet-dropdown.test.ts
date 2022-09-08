@@ -31,6 +31,8 @@ describe('Wallet Dropdown', () => {
   })
 
   it('should open the wallet connect modal from the navbar', () => {
+    cy.get(getTestSelector('web3-status-connected')).click()
+    cy.get(getTestSelector('wallet-disconnect')).click()
     cy.get(getTestSelector('navbar-connect-wallet')).click()
     cy.get(getTestSelector('wallet-modal')).should('exist')
     cy.get(getTestSelector('wallet-modal-close')).click()
