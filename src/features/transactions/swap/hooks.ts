@@ -1,10 +1,11 @@
 import { Currency, CurrencyAmount, NativeCurrency, Percent, TradeType } from '@uniswap/sdk-core'
 import { MethodParameters } from '@uniswap/v3-sdk'
-import { BigNumber } from 'ethers'
+import { BigNumber, providers } from 'ethers'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AnyAction } from 'redux'
 import { useAppDispatch } from 'src/app/hooks'
+import { useProvider } from 'src/app/walletContext'
 import { ChainId } from 'src/constants/chains'
 import { DEFAULT_SLIPPAGE_TOLERANCE } from 'src/constants/misc'
 import { AssetType } from 'src/entities/assets'
@@ -24,6 +25,7 @@ import { Trade, useTrade } from 'src/features/transactions/swap/useTrade'
 import { getWrapType, isWrapAction } from 'src/features/transactions/swap/utils'
 import { getSwapWarnings } from 'src/features/transactions/swap/validate'
 import {
+  getWethContract,
   tokenWrapActions,
   tokenWrapSagaName,
   WrapType,
@@ -40,7 +42,9 @@ import {
 } from 'src/features/transactions/transactionState/transactionState'
 import { BaseDerivedInfo } from 'src/features/transactions/transactionState/types'
 import { TransactionType } from 'src/features/transactions/types'
+import { Account } from 'src/features/wallet/accounts/types'
 import { useActiveAccount } from 'src/features/wallet/hooks'
+import { toSupportedChainId } from 'src/utils/chainId'
 import { buildCurrencyId, currencyAddress } from 'src/utils/currencyId'
 import usePrevious from 'src/utils/hooks'
 import { logger } from 'src/utils/logger'
@@ -402,6 +406,61 @@ export function useSwapActionHandlers(dispatch: React.Dispatch<AnyAction>) {
   }
 }
 
+export function useTransactionRequest(
+  derivedSwapInfo: DerivedSwapInfo
+): providers.TransactionRequest | undefined {
+  const account = useActiveAccount()
+  const chainId = toSupportedChainId(derivedSwapInfo.chainId)
+  const provider = useProvider(chainId ?? ChainId.Mainnet)
+
+  const [tx, setTx] = useState<providers.TransactionRequest | undefined>(undefined)
+
+  useEffect(() => {
+    async function setTxRequest() {
+      if (!provider || !chainId) return
+
+      setTx(await getTransactionRequest(provider, chainId, account, derivedSwapInfo))
+    }
+
+    setTxRequest()
+  }, [derivedSwapInfo, account, provider, chainId])
+
+  return tx
+}
+
+const getWrapTransactionRequest = async (
+  provider: providers.Provider,
+  chainId: ChainId,
+  account: Account,
+  derivedSwapInfo: DerivedSwapInfo
+): Promise<providers.TransactionRequest | undefined> => {
+  const { currencyAmounts } = derivedSwapInfo
+  const inputAmount = currencyAmounts[CurrencyField.INPUT]
+  if (!inputAmount) return
+
+  const wethContract = await getWethContract(chainId, provider)
+  const wethTx =
+    derivedSwapInfo.wrapType === WrapType.Wrap
+      ? await wethContract.populateTransaction.deposit({
+          value: `0x${inputAmount.quotient.toString(16)}`,
+        })
+      : await wethContract.populateTransaction.withdraw(`0x${inputAmount.quotient.toString(16)}`)
+
+  return { ...wethTx, from: account.address, chainId }
+}
+
+const getTransactionRequest = async (
+  provider: providers.Provider,
+  chainId: ChainId,
+  account: Account | null,
+  derivedSwapInfo: DerivedSwapInfo
+): Promise<providers.TransactionRequest | undefined> => {
+  // TODO: also use this to get Swap transaction requests
+  if (!account || !chainId || derivedSwapInfo.wrapType === WrapType.NotApplicable) return
+
+  return getWrapTransactionRequest(provider, chainId, account, derivedSwapInfo)
+}
+
 /** Callback to submit trades and track progress */
 export function useSwapCallback(
   trade: Trade | undefined | null,
@@ -457,6 +516,7 @@ export function useWrapCallback(
   inputCurrencyAmount: CurrencyAmount<Currency> | null | undefined,
   wrapType: WrapType,
   onSuccess: () => void,
+  txRequest?: providers.TransactionRequest,
   txId?: string
 ) {
   const appDispatch = useAppDispatch()
@@ -477,13 +537,13 @@ export function useWrapCallback(
       }
     }
 
-    if (!account || !inputCurrencyAmount) {
+    if (!account || !inputCurrencyAmount || !txRequest) {
       return {
         wrapCallback: () =>
           logger.error(
             'hooks',
             'useWrapCallback',
-            'Wrap callback invoked without active account, input currency or weth contract'
+            'Wrap callback invoked without active account, input currency or valid transaction request'
           ),
       }
     }
@@ -492,14 +552,15 @@ export function useWrapCallback(
       wrapCallback: () => {
         appDispatch(
           tokenWrapActions.trigger({
-            txId,
             account,
             inputCurrencyAmount,
+            txId,
+            txRequest,
           })
         )
       },
     }
-  }, [txId, account, appDispatch, inputCurrencyAmount, wrapType])
+  }, [txId, account, appDispatch, inputCurrencyAmount, wrapType, txRequest])
 }
 
 export function useUpdateSwapGasEstimate(

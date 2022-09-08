@@ -21,8 +21,8 @@ import { logger } from 'src/utils/logger'
 import { useInterval } from 'src/utils/timing'
 
 export function useTransactionGasFee(
-  tx: providers.TransactionRequest | null,
-  speed: GasSpeed
+  tx: NullUndefined<providers.TransactionRequest>,
+  speed: GasSpeed = GasSpeed.Urgent
 ): TransactionGasFeeInfo | undefined {
   // TODO: Handle error responses from gas endpoint
   const { currentData } = useGasFeeQuery(tx ?? skipToken, {

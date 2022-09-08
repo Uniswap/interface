@@ -1,8 +1,7 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import { Contract, PopulatedTransaction, providers } from 'ethers'
+import { Contract, providers } from 'ethers'
 import { Weth } from 'src/abis/types'
 import WETH_ABI from 'src/abis/weth.json'
-import { getProviderManager } from 'src/app/walletContext'
 import { ChainId } from 'src/constants/chains'
 import { WRAPPED_NATIVE_CURRENCY } from 'src/constants/tokens'
 import { sendTransaction } from 'src/features/transactions/sendTransaction'
@@ -23,6 +22,7 @@ export enum WrapType {
 
 export type Params = {
   txId?: string
+  txRequest: providers.TransactionRequest
   account: Account
   inputCurrencyAmount: CurrencyAmount<Currency>
 }
@@ -35,33 +35,16 @@ export async function getWethContract(
 }
 
 export function* wrap(params: Params) {
-  const { account, inputCurrencyAmount, txId } = params
-  const { chainId } = inputCurrencyAmount.currency
-
-  const providerManager = yield* call(getProviderManager)
-  const provider = providerManager.getProvider(chainId)
-  // TODO(#303): use contract manager to cache contract
-  const connectedWethContract = yield* call(getWethContract, chainId, provider)
-
-  let request: PopulatedTransaction
+  const { account, inputCurrencyAmount, txRequest, txId } = params
   let typeInfo: TransactionTypeInfo
 
   if (inputCurrencyAmount.currency.isNative) {
-    request = yield* call(connectedWethContract.populateTransaction.deposit, {
-      value: `0x${inputCurrencyAmount.quotient.toString(16)}`,
-    })
-
     typeInfo = {
       type: TransactionType.Wrap,
       unwrapped: false,
       currencyAmountRaw: inputCurrencyAmount.quotient.toString(),
     }
   } else {
-    request = yield* call(
-      connectedWethContract.populateTransaction.withdraw,
-      `0x${inputCurrencyAmount.quotient.toString(16)}`
-    )
-
     typeInfo = {
       type: TransactionType.Wrap,
       unwrapped: true,
@@ -70,12 +53,12 @@ export function* wrap(params: Params) {
   }
 
   const options: TransactionOptions = {
-    request,
+    request: txRequest,
   }
 
   yield* call(sendTransaction, {
     txId,
-    chainId,
+    chainId: inputCurrencyAmount.currency.chainId,
     account,
     options,
     typeInfo,

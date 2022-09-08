@@ -3,6 +3,7 @@ import React, { Dispatch, useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { WarningAction, WarningSeverity } from 'src/components/modals/types'
 import WarningModal from 'src/components/modals/WarningModal'
+import { useTransactionGasFee } from 'src/features/gas/hooks'
 import { GasSpeed } from 'src/features/gas/types'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import {
@@ -10,6 +11,7 @@ import {
   useAcceptedTrade,
   useSwapCallback,
   useSwapGasFee,
+  useTransactionRequest,
   useUpdateSwapGasEstimate,
   useWrapCallback,
 } from 'src/features/transactions/swap/hooks'
@@ -20,6 +22,7 @@ import {
   requireAcceptNewTrade,
 } from 'src/features/transactions/swap/utils'
 import { WrapType } from 'src/features/transactions/swap/wrapSaga'
+import { TransactionDetails } from 'src/features/transactions/TransactionDetails'
 import { TransactionReview } from 'src/features/transactions/TransactionReview'
 import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
 
@@ -50,11 +53,15 @@ export function SwapReview({ dispatch, onNext, onPrev, derivedSwapInfo }: SwapFo
     warnings,
     txId,
   } = derivedSwapInfo
+  const txRequest = useTransactionRequest(derivedSwapInfo)
 
   const swapWarning = warnings.find((warning) => warning.severity >= WarningSeverity.Medium)
 
   useUpdateSwapGasEstimate(dispatch, trade)
   const gasFee = useSwapGasFee(gasFeeEstimate, GasSpeed.Urgent, optimismL1Fee)
+
+  // TODO: use useTransactionGasFee for swap gas fee as well after routing-api gasLimit integration
+  const wrapGasFeeInfo = useTransactionGasFee(isWrapAction(wrapType) ? txRequest : null)
 
   const { onAcceptTrade, acceptedTrade } = useAcceptedTrade(trade)
 
@@ -75,10 +82,15 @@ export function SwapReview({ dispatch, onNext, onPrev, derivedSwapInfo }: SwapFo
     txId
   )
 
+  const wrapTxWithGasSettings = wrapGasFeeInfo
+    ? { ...txRequest, ...wrapGasFeeInfo.params }
+    : txRequest
+
   const { wrapCallback: onWrap } = useWrapCallback(
     currencyAmounts[CurrencyField.INPUT],
     wrapType,
     onNext,
+    wrapTxWithGasSettings,
     txId
   )
 
@@ -116,7 +128,7 @@ export function SwapReview({ dispatch, onNext, onPrev, derivedSwapInfo }: SwapFo
   }, [])
 
   const actionButtonProps = {
-    disabled: noValidSwap || blockingWarning || newTradeToAccept || !gasFee,
+    disabled: noValidSwap || blockingWarning || newTradeToAccept || (!gasFee && !wrapGasFeeInfo),
     label: getActionName(t, wrapType),
     name:
       wrapType === WrapType.Wrap
@@ -128,9 +140,19 @@ export function SwapReview({ dispatch, onNext, onPrev, derivedSwapInfo }: SwapFo
   }
 
   const getTransactionDetails = () => {
-    if (isWrapAction(wrapType) || !acceptedTrade || !trade) {
-      return
+    if (isWrapAction(wrapType)) {
+      const chainId = currencies[CurrencyField.INPUT]?.chainId
+      return (
+        <TransactionDetails
+          chainId={chainId}
+          gasFee={wrapGasFeeInfo?.gasFee}
+          warning={swapWarning}
+          onShowWarning={onShowWarning}
+        />
+      )
     }
+
+    if (!acceptedTrade || !trade) return null
 
     return (
       <SwapDetails
