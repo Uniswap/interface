@@ -66,7 +66,17 @@ export function CurrencyLogoOnly({ currency, size = 40 }: CurrencyLogoProps) {
     return (
       <Image
         source={logo}
-        style={[style.image, { width: size, height: size, borderRadius: size / 2 }]}
+        style={[
+          style.image,
+          {
+            backgroundColor: theme.colors.textTertiary,
+            width: size,
+            height: size,
+            borderRadius: size / 2,
+            borderColor: theme.colors.backgroundOutline,
+            borderWidth: THIN_BORDER,
+          },
+        ]}
       />
     )
   }
@@ -82,10 +92,12 @@ export function CurrencyLogoOnly({ currency, size = 40 }: CurrencyLogoProps) {
           style={[
             style.image,
             {
+              backgroundColor: theme.colors.textTertiary,
               width: size,
               height: size,
               borderRadius: size / 2,
               borderColor: theme.colors.backgroundOutline,
+              borderWidth: THIN_BORDER,
             },
           ]}
           uri={srcs[0]}
@@ -104,6 +116,7 @@ export function CurrencyLogoOnly({ currency, size = 40 }: CurrencyLogoProps) {
           style={[
             style.image,
             {
+              backgroundColor: theme.colors.textTertiary,
               width: size,
               height: size,
               borderRadius: size / 2,

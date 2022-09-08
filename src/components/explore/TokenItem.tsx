@@ -2,7 +2,7 @@ import React, { ComponentProps, forwardRef, useCallback, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FlexAlignType, Image, ImageStyle, Pressable } from 'react-native'
 import { Swipeable } from 'react-native-gesture-handler'
-import { useAppSelector } from 'src/app/hooks'
+import { useAppSelector, useAppTheme } from 'src/app/hooks'
 import { useExploreStackNavigation } from 'src/app/navigation/types'
 import { Button } from 'src/components/buttons/Button'
 import { FavoriteButton } from 'src/components/explore/FavoriteButton'
@@ -18,10 +18,15 @@ import { Screens } from 'src/screens/Screens'
 import { formatNumber, formatUSDPrice } from 'src/utils/format'
 import { logger } from 'src/utils/logger'
 
-const boxTokenLogoStyle: ImageStyle = { width: 32, height: 32 }
+const THIN_BORDER = 0.5
+
+const BOX_TOKEN_LOGO_SIZE = 32
+const boxTokenLogoStyle: ImageStyle = { width: BOX_TOKEN_LOGO_SIZE, height: BOX_TOKEN_LOGO_SIZE }
+
+const TOKEN_LOGO_SIZE = 36
 const tokenLogoStyle: ImageStyle = {
-  width: 36,
-  height: 36,
+  width: TOKEN_LOGO_SIZE,
+  height: TOKEN_LOGO_SIZE,
   resizeMode: 'contain',
 }
 
@@ -41,6 +46,7 @@ export const TokenItem = forwardRef<Swipeable, TokenItemProps>(
   ) => {
     const { t } = useTranslation()
     const { navigate } = useExploreStackNavigation()
+    const theme = useAppTheme()
 
     const _currencyId = useCurrencyIdFromCoingeckoId(coin.id)
 
@@ -121,7 +127,18 @@ export const TokenItem = forwardRef<Swipeable, TokenItemProps>(
                   </Box>
                 )}
 
-                <Image source={{ uri: coin.image }} style={[tokenLogoStyle]} />
+                <Image
+                  source={{ uri: coin.image }}
+                  style={[
+                    tokenLogoStyle,
+                    {
+                      backgroundColor: theme.colors.textTertiary,
+                      borderRadius: TOKEN_LOGO_SIZE / 2,
+                      borderColor: theme.colors.backgroundOutline,
+                      borderWidth: THIN_BORDER,
+                    },
+                  ]}
+                />
               </Flex>
               <Flex alignItems="flex-start" flexShrink={1} gap="xxxs" marginLeft="xxs">
                 <Text variant="subhead">{coin.name ?? ''}</Text>
@@ -157,6 +174,7 @@ export const TOKEN_ITEM_BOX_MINWIDTH = 137
 
 export function TokenItemBox({ coin }: TokenItemProps) {
   const { navigate } = useExploreStackNavigation()
+  const theme = useAppTheme()
   const _currencyId = useCurrencyIdFromCoingeckoId(coin.id)
   if (!_currencyId) return null
   return (
@@ -173,7 +191,18 @@ export function TokenItemBox({ coin }: TokenItemProps) {
         <Flex p="sm">
           <Flex row alignItems="center" justifyContent="space-between">
             <Text variant="subhead">{coin.symbol.toUpperCase() ?? ''}</Text>
-            <Image source={{ uri: coin.image }} style={boxTokenLogoStyle} />
+            <Image
+              source={{ uri: coin.image }}
+              style={[
+                boxTokenLogoStyle,
+                {
+                  backgroundColor: theme.colors.textTertiary,
+                  borderRadius: BOX_TOKEN_LOGO_SIZE / 2,
+                  borderColor: theme.colors.backgroundOutline,
+                  borderWidth: THIN_BORDER,
+                },
+              ]}
+            />
           </Flex>
           <Flex row>
             <TokenMetadata
