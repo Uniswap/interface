@@ -179,7 +179,7 @@ export default function TokenTable() {
   // const sortedFilteredTokens = useSortedTokens(filteredTokens)
 
   if (topTokens.length === 0) {
-    setTopTokens(Array.from({ length: 500 }).map((_) => ({} as TokenData)))
+    setTopTokens(Array.from({ length: 1 }).map((_) => ({} as TokenData)))
   }
 
   const isItemLoaded = (index: number) => !!tokenRowStatusMap[index]
@@ -195,6 +195,7 @@ export default function TokenTable() {
     })
       .toPromise()
       .then((data) => {
+        console.log('data returned length', data?.topTokenProjects?.length)
         const newPageTopTokens: TokenData[] = !!data?.topTokenProjects
           ? data.topTokenProjects.map((token) =>
               token?.tokens?.[0].address
