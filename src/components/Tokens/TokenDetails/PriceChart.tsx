@@ -1,4 +1,3 @@
-import { Token } from '@uniswap/sdk-core'
 import { AxisBottom, TickFormatter } from '@visx/axis'
 import { localPoint } from '@visx/event'
 import { EventType } from '@visx/event/lib/types'
@@ -7,9 +6,8 @@ import { Line } from '@visx/shape'
 import { filterTimeAtom } from 'components/Tokens/state'
 import { bisect, curveCardinal, NumberValue, scaleLinear } from 'd3'
 import { TokenPrices$key } from 'graphql/data/__generated__/TokenPrices.graphql'
-import { usePrices } from 'graphql/data/Token'
-import { PricePoint } from 'graphql/data/Token'
-import { TimePeriod } from 'graphql/data/TopTokenQuery'
+import { useTokenPricesCached } from 'graphql/data/Token'
+import { PricePoint, TimePeriod } from 'graphql/data/Token'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import { useAtom } from 'jotai'
 import { useCallback, useMemo, useState } from 'react'
@@ -152,11 +150,11 @@ const crosshairDateOverhang = 80
 interface PriceChartProps {
   width: number
   height: number
-  token: Token
+  tokenAddress: string
   priceData?: TokenPrices$key | null
 }
 
-export function PriceChart({ width, height, token, priceData }: PriceChartProps) {
+export function PriceChart({ width, height, tokenAddress, priceData }: PriceChartProps) {
   const [timePeriod, setTimePeriod] = useAtom(filterTimeAtom)
   const locale = useActiveLocale()
   const theme = useTheme()
@@ -164,7 +162,8 @@ export function PriceChart({ width, height, token, priceData }: PriceChartProps)
   // TODO: Add network selector input, consider using backend type instead of current front end selector type
   //const { error, isLoading, prices } = useTokenPriceQuery(token.address, 'ETHEREUM', timePeriod)
   // const { tokenPrices } = useTokenPrices(priceData)
-  const { prices } = usePrices(priceData, token.address, 'ETHEREUM', timePeriod)
+  const { priceMap } = useTokenPricesCached(priceData, tokenAddress, 'ETHEREUM', timePeriod)
+  const prices = priceMap.get(timePeriod)
   // = useMemo(
   //   () => (!!tokenPrices ? getDurationPrices(tokenPrices, timePeriod) : []),
   //   [tokenPrices, timePeriod]

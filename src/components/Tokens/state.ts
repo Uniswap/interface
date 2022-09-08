@@ -1,5 +1,5 @@
 import { SupportedChainId } from 'constants/chains'
-import { TimePeriod } from 'graphql/data/TopTokenQuery'
+import { TimePeriod } from 'graphql/data/Token'
 import { atom, useAtom } from 'jotai'
 import { atomWithReset, atomWithStorage } from 'jotai/utils'
 import { useCallback } from 'react'

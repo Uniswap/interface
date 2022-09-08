@@ -1,10 +1,11 @@
+import ms from 'ms.macro'
 import { Variables } from 'react-relay'
 import { Environment, Network, RecordSource, RequestParameters, Store } from 'relay-runtime'
 import RelayQueryResponseCache from 'relay-runtime/lib/network/RelayQueryResponseCache'
 
 import fetchGraphQL from './fetchGraphQL'
 
-export const cache = new RelayQueryResponseCache({ size: 250, ttl: 30 * 1000 })
+export const cache = new RelayQueryResponseCache({ size: 250, ttl: ms`5m` })
 
 const fetchQuery = async function wrappedFetchQuery(params: RequestParameters, variables: Variables) {
   const queryID = params.name
@@ -16,7 +17,6 @@ const fetchQuery = async function wrappedFetchQuery(params: RequestParameters, v
     if (params.operationKind !== 'mutation') {
       cache.set(queryID, variables, data)
     }
-
     return data
   })
 }

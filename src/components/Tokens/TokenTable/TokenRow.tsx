@@ -5,9 +5,8 @@ import { EventName } from 'components/AmplitudeAnalytics/constants'
 import SparklineChart from 'components/Charts/SparklineChart'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { getChainInfo } from 'constants/chainInfo'
-import { TokenQuery$data } from 'graphql/data/__generated__/TokenQuery.graphql'
-import { getDurationDetails, useTokenDetails } from 'graphql/data/Token'
-import { TimePeriod } from 'graphql/data/TopTokenQuery'
+import { getDurationDetails, SingleTokenData } from 'graphql/data/Token'
+import { TimePeriod } from 'graphql/data/Token'
 import { useCurrency } from 'hooks/Tokens'
 import { useAtom } from 'jotai'
 import { useAtomValue } from 'jotai/utils'
@@ -455,7 +454,7 @@ export default function LoadedRow({
 }: {
   tokenListIndex: number
   tokenListLength: number
-  tokenData: NonNullable<TokenQuery$data['tokenProjects']>[number]
+  tokenData: SingleTokenData
   timePeriod: TimePeriod
 }) {
   const tokenAddress = tokenData?.tokens?.[0].address
@@ -470,8 +469,8 @@ export default function LoadedRow({
   const filterNetwork = useAtomValue(filterNetworkAtom)
   const L2Icon = getChainInfo(filterNetwork).circleLogoUrl
   //const delta = tokenData.percentChange?.[timePeriod]?.value
-  const { tokenDetails } = useTokenDetails(tokenData?.details?.[0])
-  const { volume, pricePercentChange } = getDurationDetails(tokenDetails, timePeriod)
+  const tokenDetails = tokenData?.markets?.[0]
+  const { volume, pricePercentChange } = getDurationDetails(tokenData, timePeriod)
   const arrow = pricePercentChange ? getDeltaArrow(pricePercentChange) : null
   const formattedDelta = pricePercentChange ? formatDelta(pricePercentChange) : null
 

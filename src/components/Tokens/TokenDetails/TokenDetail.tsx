@@ -9,7 +9,6 @@ import { getChainInfo } from 'constants/chainInfo'
 import { nativeOnChain, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import { checkWarning, WARNING_LEVEL } from 'constants/tokenSafety'
 import { TokenQuery$data } from 'graphql/data/__generated__/TokenQuery.graphql'
-import { checkCachedTopToken, useTokenDetails } from 'graphql/data/Token'
 import { useCurrency, useIsUserAddedToken, useToken } from 'hooks/Tokens'
 import { useAtomValue } from 'jotai/utils'
 import { darken } from 'polished'
@@ -202,8 +201,7 @@ export default function LoadedTokenDetail({ address, query }: { address: string;
   const networkBadgebackgroundColor = chainInfo?.backgroundColor
 
   const tokenData = query.tokenProjects?.[0]
-  const { tokenDetails } = useTokenDetails(tokenData?.details?.[0])
-  console.log(checkCachedTopToken(address))
+  const tokenDetails = tokenData?.markets?.[0]
   // useTokenDetailQuery(address, chainIdToChainName(filterNetwork))
   const relevantTokenDetailData = {
     description: tokenData?.description,
@@ -228,8 +226,7 @@ export default function LoadedTokenDetail({ address, query }: { address: string;
     currency = nativeOnChain(connectedChainId)
   }
 
-  console.log(tokenData)
-  const tokenName = tokenData?.name
+  const tokenName = tokenData?.name ?? token.name
   const tokenSymbol = tokenData?.tokens?.[0]?.symbol ?? token.symbol
   return (
     <Suspense fallback={<LoadingTokenDetail />}>
@@ -262,7 +259,7 @@ export default function LoadedTokenDetail({ address, query }: { address: string;
           <ChartContainer>
             <ParentSize>
               {({ width, height }) => (
-                <PriceChart token={token} width={width} height={height} priceData={tokenData?.prices?.[0]} />
+                <PriceChart tokenAddress={address} width={width} height={height} priceData={tokenData?.prices?.[0]} />
               )}
             </ParentSize>
           </ChartContainer>

@@ -5,6 +5,7 @@ import {
   MOBILE_MEDIA_BREAKPOINT,
   SMALL_MEDIA_BREAKPOINT,
 } from 'components/Tokens/constants'
+import { filterTimeAtom } from 'components/Tokens/state'
 import BalanceSummary from 'components/Tokens/TokenDetails/BalanceSummary'
 import FooterBalanceSummary from 'components/Tokens/TokenDetails/FooterBalanceSummary'
 import LoadingTokenDetail from 'components/Tokens/TokenDetails/LoadingTokenDetail'
@@ -18,6 +19,7 @@ import { checkWarning } from 'constants/tokenSafety'
 import { useTokenQuery } from 'graphql/data/Token'
 import { useToken } from 'hooks/Tokens'
 import { useNetworkTokenBalances } from 'hooks/useNetworkTokenBalances'
+import { useAtomValue } from 'jotai/utils'
 import { useMemo } from 'react'
 import { useLocation, useParams } from 'react-router-dom'
 import styled from 'styled-components/macro'
@@ -97,7 +99,8 @@ export default function TokenDetails() {
     return chainIds
   }, [connectedChainId])
 
-  const query = useTokenQuery(tokenAddress ?? '', 'ETHEREUM')
+  const timePeriod = useAtomValue(filterTimeAtom)
+  const query = useTokenQuery(tokenAddress ?? '', 'ETHEREUM', timePeriod)
 
   const balancesByNetwork = networkData
     ? chainsToList.map((chainId) => {
