@@ -22,7 +22,7 @@ import { useIsUserAddedToken, useToken } from 'hooks/Tokens'
 import { useNetworkTokenBalances } from 'hooks/useNetworkTokenBalances'
 import { useAtomValue } from 'jotai/utils'
 import { useCallback, useMemo, useState } from 'react'
-import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
 const Footer = styled.div`
@@ -80,7 +80,6 @@ function NetworkBalances(tokenAddress: string | undefined) {
 }
 
 export default function TokenDetails() {
-  const location = useLocation()
   const { tokenAddress } = useParams<{ tokenAddress?: string }>()
   const token = useToken(tokenAddress)
   const tokenWarning = tokenAddress ? checkWarning(tokenAddress) : null
@@ -143,9 +142,11 @@ export default function TokenDetails() {
       })
     : null
 
-  if (token === undefined) {
-    //return <Navigate to={{ ...location, pathname: '/tokens' }} replace />
-  }
+  // TODO: Fix this logic to not automatically redirect on refresh, yet still catch invalid addresses
+  //const location = useLocation()
+  //if (token === undefined) {
+  //  return <Navigate to={{ ...location, pathname: '/tokens' }} replace />
+  //}
 
   return (
     <TokenDetailsLayout>

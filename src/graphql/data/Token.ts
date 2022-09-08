@@ -107,6 +107,14 @@ const topTokensQuery = graphql`
     }
   }
 `
+const tokenPricesFragment = graphql`
+  fragment TokenPrices on TokenProjectMarket {
+    priceHistory(duration: $duration) {
+      timestamp
+      value
+    }
+  }
+`
 
 let cachedTopTokens: TokenTopQuery$data | null
 export function useTopTokenQuery(page: number, timePeriod: TimePeriod) {
@@ -214,23 +222,6 @@ export function useTokenQuery(address: string, chain: Chain, timePeriod: TimePer
   return !cachedTopToken ? data : { tokenProjects: [{ ...cachedTopToken }] }
 }
 
-export function useTokenPrices(data: TokenPrices$key | null | undefined) {
-  const tokenPrices = useFragment(tokenPricesFragment, data ?? null)
-  return { tokenPrices }
-}
-
-export function usePrices(
-  key: TokenPrices$key | null | undefined,
-  address: string,
-  chain: Chain,
-  timePeriod: TimePeriod
-) {
-  const { tokenPrices } = useTokenPrices(key)
-  const prices = tokenPrices?.priceHistory?.filter((p): p is PricePoint => Boolean(p && p.value))
-
-  return { prices }
-}
-
 const tokenPriceQuery = graphql`
   query TokenPriceQuery(
     $contract: ContractInput!
@@ -274,18 +265,6 @@ const tokenPriceQuery = graphql`
 
 function filterPrices(prices: TokenPrices$data['priceHistory'] | undefined) {
   return prices?.filter((p): p is PricePoint => Boolean(p && p.value))
-}
-
-export function useTokenPriceQuery(
-  key: TokenPrices$key | null | undefined,
-  address: string,
-  chain: Chain,
-  timePeriod: TimePeriod
-) {
-  const { tokenPrices } = useTokenPrices(key)
-  const prices = tokenPrices?.priceHistory?.filter((p): p is PricePoint => Boolean(p && p.value))
-
-  return { prices }
 }
 
 export function useTokenPricesCached(
@@ -336,31 +315,6 @@ export function useTokenPricesCached(
   return { priceMap }
 }
 
-// export function getDurationPrices(data: TokenPrices$data, timePeriod: TimePeriod) {
-//   let prices
-//   switch (timePeriod) {
-//     case TimePeriod.HOUR:
-//       prices = data.priceHistory1D
-//       break
-//     case TimePeriod.DAY:
-//       prices = data.priceHistory1D
-//       break
-//     case TimePeriod.WEEK:
-//       prices = data.priceHistory1D
-//       break
-//     case TimePeriod.MONTH:
-//       prices = data.priceHistory1D
-//       break
-//     case TimePeriod.YEAR:
-//       prices = data.priceHistory1D
-//       break
-//     case TimePeriod.ALL:
-//       prices = data.priceHistory1D
-//       break
-//   }
-//   return prices?.filter((p): p is PricePoint => Boolean(p && p.value))
-// }
-
 export type SingleTokenData = NonNullable<TokenQuery$data['tokenProjects']>[number]
 export function getDurationDetails(data: SingleTokenData, timePeriod: TimePeriod) {
   let volume = null
@@ -397,12 +351,3 @@ export function getDurationDetails(data: SingleTokenData, timePeriod: TimePeriod
 
   return { volume, pricePercentChange }
 }
-
-const tokenPricesFragment = graphql`
-  fragment TokenPrices on TokenProjectMarket {
-    priceHistory(duration: $duration) {
-      timestamp
-      value
-    }
-  }
-`
