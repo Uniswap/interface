@@ -242,6 +242,7 @@ export const breakpoints = {
   xxl: 1536,
   xxxl: 1920,
 }
+// tabletSm
 
 const layoutStyles = defineProperties({
   conditions: {

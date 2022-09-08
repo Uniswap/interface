@@ -1,7 +1,7 @@
-import { bodySmall, buttonTextMedium } from '../../css/common.css'
+import { bodySmall } from '../../css/common.css'
 import { shortenAddress } from '../../utils/address'
-import { BoxProps, Box } from '../Box'
-import { Row, Column } from '../Flex'
+import { Box, BoxProps } from '../Box'
+import { Column, Row } from '../Flex'
 
 const DetailItemLabel = (props: BoxProps) => <Box as="span" fontSize="14" color="darkGray" {...props} />
 
@@ -26,10 +26,8 @@ export const Details = ({
   totalSupply: number
   blockchain: string
 }) => (
-  // gap={{ tabletSm: '32', mobile: '16' }}
-  <Row width="full" justifyContent="space-between" alignItems="flex-start" flexWrap="wrap">
-    {/* width={{ mobile: 'full', tabletSm: 'auto' }} */}
-    <Column gap="10">
+  <Row gap={{ md: '32', sm: '16' }} width="full" justifyContent="space-between" alignItems="flex-start" flexWrap="wrap">
+    <Column width={{ sm: 'full', md: 'auto' }} gap="10">
       <Detail>
         <DetailItemLabel>Contract Address: </DetailItemLabel>
         <a
@@ -54,8 +52,8 @@ export const Details = ({
         </Detail>
       ) : null}
     </Column>
-    {/* width={{ mobile: 'full', tabletSm: 'auto' }} */}
-    <Column gap="10">
+
+    <Column width={{ sm: 'full', md: 'auto' }} gap="10">
       <Detail>
         <DetailItemLabel>Contract type:</DetailItemLabel>
         <DetailItemValue>{tokenType}</DetailItemValue>

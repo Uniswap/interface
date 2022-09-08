@@ -1,7 +1,8 @@
 import qs from 'query-string'
+
 import { badge } from '../../css/common.css'
 import { Box } from '../Box'
-import { Column, Row } from '../Flex'
+import { Column } from '../Flex'
 import * as styles from './Traits.css'
 
 interface TraitProps {
@@ -9,9 +10,8 @@ interface TraitProps {
   value: string
 }
 
-const Trait: React.FC<TraitProps> = ({ label, value }) => (
+const Trait: React.FC<TraitProps> = ({ label, value }: TraitProps) => (
   <Column backgroundColor="lightGray" padding="16" gap="4" borderRadius="12">
-    {/* maxWidth={{ mobile: '120', tablet: '160' }} */}
     <Box
       as="span"
       className={badge}
@@ -20,10 +20,11 @@ const Trait: React.FC<TraitProps> = ({ label, value }) => (
       overflow="hidden"
       textOverflow="ellipsis"
       style={{ textTransform: 'uppercase' }}
+      maxWidth={{ sm: '120', md: '160' }}
     >
       {label}
     </Box>
-    {/* maxWidth={{ mobile: '120', tablet: '160' }} */}
+
     <Box
       as="span"
       color="blackBlue"
@@ -32,6 +33,7 @@ const Trait: React.FC<TraitProps> = ({ label, value }) => (
       whiteSpace="nowrap"
       overflow="hidden"
       textOverflow="ellipsis"
+      maxWidth={{ sm: '120', md: '160' }}
     >
       {value}
     </Box>
