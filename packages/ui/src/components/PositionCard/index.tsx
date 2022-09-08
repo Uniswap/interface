@@ -170,6 +170,101 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
   )
 }
 
+const YourPisitonCardPart = styled(Box)`
+  /* border: 1px solid ${({ theme }) => theme.colorGray37}; */
+  /* border-radius: 0.8rem; */
+  font-size: .7rem;
+  color: #FFFFFF;
+`
+export function MinimalPositionCardPart({ pair, showUnwrapped = false, border }: PositionCardProps) {
+  const { account } = useActiveWeb3React()
+
+  const currency0 = showUnwrapped ? pair.token0 : unwrappedToken(pair.token0)
+  const currency1 = showUnwrapped ? pair.token1 : unwrappedToken(pair.token1)
+
+  const [showMore, setShowMore] = useState(false)
+
+  const userPoolBalance = useTokenBalance(account ?? undefined, pair.liquidityToken)
+  const totalPoolTokens = useTotalSupply(pair.liquidityToken)
+
+  const poolTokenPercentage =
+    !!userPoolBalance && !!totalPoolTokens && JSBI.greaterThanOrEqual(totalPoolTokens.raw, userPoolBalance.raw)
+      ? new Percent(userPoolBalance.raw, totalPoolTokens.raw)
+      : undefined
+
+  const [token0Deposited, token1Deposited] =
+    !!pair &&
+      !!totalPoolTokens &&
+      !!userPoolBalance &&
+      // this condition is a short-circuit in the case where useTokenBalance updates sooner than useTotalSupply
+      JSBI.greaterThanOrEqual(totalPoolTokens.raw, userPoolBalance.raw)
+      ? [
+        pair.getLiquidityValue(pair.token0, totalPoolTokens, userPoolBalance, false),
+        pair.getLiquidityValue(pair.token1, totalPoolTokens, userPoolBalance, false),
+      ]
+      : [undefined, undefined]
+
+  return (
+    <>
+      {userPoolBalance && JSBI.greaterThan(userPoolBalance.raw, JSBI.BigInt(0)) ? (
+        <YourPisitonCardPart>
+          <AutoColumn gap="12px">
+            <AutoColumn gap="0">
+              <FixedHeightRow>
+                <Text fontSize={".7rem"} fontWeight={600} style={{ marginBottom: "1rem" }}>
+                  Pair Liquidity Info
+                </Text>
+              </FixedHeightRow>
+              <FixedHeightRow>
+                {token0Deposited ? (
+                  <RowFixed sx={{flex: 1}}>
+                    <Text fontSize={".5rem"} fontWeight={500}>
+                      {token0Deposited?.toSignificant(6)}
+                    </Text>
+                  </RowFixed>
+                ) : (
+                    '-'
+                  )}
+
+                {token1Deposited ? (
+                  <RowFixed sx={{flex: 1}}>
+                    <Text fontSize={".5rem"} fontWeight={500}>
+                      {token1Deposited?.toSignificant(6)}
+                    </Text>
+                  </RowFixed>
+                ) : (
+                    '-'
+                  )}
+              </FixedHeightRow>
+              <FixedHeightRow>
+                <Text fontSize={".4rem"} fontWeight={400} sx={{ color: "rgba(255, 255, 255, 0.6)", flex: 1 }}>
+                  {currency0.symbol}:
+                </Text>
+                <Text fontSize={".4rem"} fontWeight={400} sx={{ color: "rgba(255, 255, 255, 0.6)", flex: 1 }}>
+                  {currency1.symbol}:
+                </Text>
+
+              </FixedHeightRow>
+            </AutoColumn>
+            <Box sx={{ width: '100%', borderTop: '1px solid rgba(255,255,255,0.2)', height: '0', marginTop: '.9rem' }}></Box>
+          </AutoColumn>
+        </YourPisitonCardPart>
+      ) : (
+          <></>
+          // <LightCard>
+          //   <TYPE.subHeader style={{ textAlign: 'center' }}>
+          //     <span role="img" aria-label="wizard-icon">
+          //       ⭐️
+          //   </span>{' '}
+          //   By adding liquidity you&apos;ll earn 0.3% of all trades on this pair proportional to your share of the pool.
+          //   Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity.
+          // </TYPE.subHeader>
+          // </LightCard>
+        )}
+    </>
+  )
+}
+
 type ViewProps = Parameters<typeof StyledPositionCard>
 
 export default function FullPositionCard({
@@ -403,7 +498,7 @@ export function LiquidityCard({
       <td>{userPoolBalance ? userPoolBalance.toSignificant(4) : '-'}</td>
       <td>xx</td>
       <td>xx</td>
-      <td style={{display: 'flex', justifyContent: 'space-between'}}>
+      <td style={{ display: 'flex', justifyContent: 'space-between' }}>
         {/* <ButtonPrimary padding={"unset"} width={"5rem"} borderRadius={".3rem"} sx={{ height: "1.3rem", fontSize: ".5rem", color: "#000000" }} as={Link} to="/manager">
           Manage
         </ButtonPrimary> */}
