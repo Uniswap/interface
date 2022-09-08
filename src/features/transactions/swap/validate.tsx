@@ -29,18 +29,12 @@ export type PartialDerivedSwapInfo = Pick<
   account?: Account
 }
 
-export function showWarningInPanel(warning: Warning) {
-  // this will return true for WarningSeverity.Medium and WarningSeverity.High
-  return warning.severity >= WarningSeverity.Medium
-}
-
 export function getSwapWarnings(t: TFunction, state: PartialDerivedSwapInfo) {
   const {
     account,
     currencyBalances,
     currencyAmounts,
     currencies,
-    exactCurrencyField,
     trade,
     nativeCurrencyBalance,
     gasFee,
@@ -71,16 +65,13 @@ export function getSwapWarnings(t: TFunction, state: PartialDerivedSwapInfo) {
     const errorData = trade.error as any
     // assume swaps with no routes available are due to low liquidity
     if (errorData?.data?.errorCode === SWAP_NO_ROUTE_ERROR) {
-      const currencyOut = currencies[CurrencyField.OUTPUT]
       warnings.push({
         type: WarningLabel.LowLiquidity,
         severity: WarningSeverity.Medium,
         action: WarningAction.DisableReview,
-        title: t('Not enough {{ tokenOut }} liquidity', {
-          tokenOut: currencyOut?.symbol,
-        }),
+        title: t('This trade cannot be completed'),
         message: t(
-          'There isn’t currently enough liquidity available between these tokens to perform a swap. Please try again later or select another token.'
+          'There is currently insufficient liquidity between these tokens to perform a swap.'
         ),
       })
     } else {
@@ -89,8 +80,10 @@ export function getSwapWarnings(t: TFunction, state: PartialDerivedSwapInfo) {
         type: WarningLabel.SwapRouterError,
         severity: WarningSeverity.Medium,
         action: WarningAction.DisableReview,
-        title: t('Swap router error'),
-        message: t('The Uniswap router is experiencing issues—please try again later.'),
+        title: t('This trade cannot be completed right now'),
+        message: t(
+          'You may have lost connection or the network may be down. If the problem persists, please try again later.'
+        ),
       })
     }
   }
@@ -124,12 +117,7 @@ export function getSwapWarnings(t: TFunction, state: PartialDerivedSwapInfo) {
   }
 
   // swap form is missing input, output fields
-  if (
-    !currencies[CurrencyField.INPUT] ||
-    !currencies[CurrencyField.OUTPUT] ||
-    (exactCurrencyField === CurrencyField.INPUT && !currencyAmounts[CurrencyField.INPUT]) ||
-    (exactCurrencyField === CurrencyField.OUTPUT && !currencyAmounts[CurrencyField.OUTPUT])
-  ) {
+  if (formIncomplete(state)) {
     warnings.push({
       type: WarningLabel.FormIncomplete,
       severity: WarningSeverity.None,
@@ -137,32 +125,12 @@ export function getSwapWarnings(t: TFunction, state: PartialDerivedSwapInfo) {
     })
   }
 
-  if (
-    priceImpact?.greaterThan(PRICE_IMPACT_THRESHOLD_MEDIUM) &&
-    priceImpact?.lessThan(PRICE_IMPACT_THRESHOLD_HIGH)
-  ) {
+  // price impact warning
+  if (priceImpact?.greaterThan(PRICE_IMPACT_THRESHOLD_MEDIUM)) {
+    const highImpact = !priceImpact.lessThan(PRICE_IMPACT_THRESHOLD_HIGH)
     warnings.push({
-      type: WarningLabel.PriceImpactMedium,
-      severity: WarningSeverity.Medium,
-      action: WarningAction.WarnBeforeSubmit,
-      title: t('Rate impacted by swap size ({{ swapSize }})', {
-        swapSize: formatPriceImpact(priceImpact),
-      }),
-      message: t(
-        'Due to the amount of {{ currencyOut }} liquidity currently available, the more {{ currencyIn }} you try to swap, the less {{ currencyOut }} you will receive.',
-        {
-          currencyIn: currencies[CurrencyField.INPUT]?.symbol,
-          currencyOut: currencies[CurrencyField.OUTPUT]?.symbol,
-        }
-      ),
-    })
-  }
-
-  // price impact >= high threshold
-  if (priceImpact && !priceImpact.lessThan(PRICE_IMPACT_THRESHOLD_HIGH)) {
-    warnings.push({
-      type: WarningLabel.PriceImpactHigh,
-      severity: WarningSeverity.High,
+      type: highImpact ? WarningLabel.PriceImpactHigh : WarningLabel.PriceImpactMedium,
+      severity: highImpact ? WarningSeverity.High : WarningSeverity.Medium,
       action: WarningAction.WarnBeforeSubmit,
       title: t('Rate impacted by swap size ({{ swapSize }})', {
         swapSize: formatPriceImpact(priceImpact),
@@ -188,4 +156,19 @@ export function getSwapWarnings(t: TFunction, state: PartialDerivedSwapInfo) {
   }
 
   return warnings
+}
+
+const formIncomplete = (state: PartialDerivedSwapInfo) => {
+  const { currencyAmounts, currencies, exactCurrencyField } = state
+
+  if (
+    !currencies[CurrencyField.INPUT] ||
+    !currencies[CurrencyField.OUTPUT] ||
+    (exactCurrencyField === CurrencyField.INPUT && !currencyAmounts[CurrencyField.INPUT]) ||
+    (exactCurrencyField === CurrencyField.OUTPUT && !currencyAmounts[CurrencyField.OUTPUT])
+  ) {
+    return true
+  }
+
+  return false
 }
