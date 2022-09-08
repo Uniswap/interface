@@ -9,9 +9,8 @@ import SearchBar from 'components/Tokens/TokenTable/SearchBar'
 import TimeSelector from 'components/Tokens/TokenTable/TimeSelector'
 import TokenTable, { LoadingTokenTable } from 'components/Tokens/TokenTable/TokenTable'
 import { TokensNetworkFilterVariant, useTokensNetworkFilterFlag } from 'featureFlags/flags/tokensNetworkFilter'
-import { useTopTokenQuery } from 'graphql/data/TopTokenQuery'
 import { useResetAtom } from 'jotai/utils'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
@@ -69,10 +68,10 @@ const FiltersWrapper = styled.div`
 `
 
 const Tokens = () => {
-  const pageSize = 100
-  const [page, setPage] = useState(1)
-  // const [loadedTokens, setLoadedTokens] = useState<TokenData[]>([])
-  const loadedTokens = useTopTokenQuery(pageSize, page)
+  // const pageSize = 100
+  // const [page, setPage] = useState(1)
+  // // const [loadedTokens, setLoadedTokens] = useState<TokenData[]>([])
+  // const loadedTokens = useTopTokenQuery(pageSize, page)
   // if (!!topTokens) {
   //   setLoadedTokens([...loadedTokens, ...topTokens])
   // }
@@ -110,7 +109,7 @@ const Tokens = () => {
         </FiltersWrapper>
 
         <TokenTableContainer>
-          <TokenTable data={loadedTokens} />
+          <TokenTable />
         </TokenTableContainer>
       </ExploreContainer>
     </Trace>

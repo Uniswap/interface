@@ -174,9 +174,13 @@ export default function TokenTable() {
   const [page, setPage] = useState<number>(1)
   const pageSize = 20
   const [topTokens, setTopTokens] = useState<TokenData[]>([])
-  const [error, setError] = useState<any>(null)
+  const [error, setError] = useState<any>(undefined)
   // const filteredTokens = useFilteredTokens(data)
   // const sortedFilteredTokens = useSortedTokens(filteredTokens)
+
+  if (topTokens.length === 0) {
+    setTopTokens(Array.from({ length: 500 }).map((_) => ({} as TokenData)))
+  }
 
   const isItemLoaded = (index: number) => !!tokenRowStatusMap[index]
   const loadMoreItems = (startIndex: number, stopIndex: number) => {
@@ -184,13 +188,14 @@ export default function TokenTable() {
       tokenRowStatusMap[index] = TokenRowState.LOADING
     }
     if (stopIndex >= page * pageSize) setPage(page + 1)
+    console.log('page', page)
     return fetchQuery<TopTokenQueryType>(environment, query, {
       pageSize,
       page,
     })
       .toPromise()
       .then((data) => {
-        const topTokens: TokenData[] = !!data?.topTokenProjects
+        const newPageTopTokens: TokenData[] = !!data?.topTokenProjects
           ? data.topTokenProjects.map((token) =>
               token?.tokens?.[0].address
                 ? {
@@ -220,7 +225,7 @@ export default function TokenTable() {
                 : ({} as TokenData)
             )
           : []
-        setTopTokens(topTokens)
+        setTopTokens([...topTokens, ...newPageTopTokens])
       })
       .catch((e) => setError(e))
       .finally(() => {
@@ -233,7 +238,7 @@ export default function TokenTable() {
   const Row = useCallback(
     function TokenRow({ data, index, style }: TokenRowProps) {
       const tokenData = data[index]
-      if (tokenRowStatusMap[index] === TokenRowState.LOADED) {
+      if (tokenData && tokenRowStatusMap[index] === TokenRowState.LOADED) {
         return (
           <LoadedRow
             style={style}
