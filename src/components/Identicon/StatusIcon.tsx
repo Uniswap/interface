@@ -3,12 +3,11 @@ import { ConnectionType } from 'connection'
 import { NavBarVariant, useNavBarFlag } from 'featureFlags/flags/navBar'
 import useENSAvatar from 'hooks/useENSAvatar'
 import styled from 'styled-components/macro'
-import { colors } from 'theme/colors'
 
 import CoinbaseWalletIcon from '../../assets/images/coinbaseWalletIcon.svg'
 import WalletConnectIcon from '../../assets/images/walletConnectIcon.svg'
 import sockImg from '../../assets/svg/socks.svg'
-import { useHasSocks } from '../../hooks/useSocksBalance'
+//import { useHasSocks } from '../../hooks/useSocksBalance'
 import Identicon from '../Identicon'
 
 const IconWrapper = styled.div<{ size?: number }>`
@@ -29,20 +28,18 @@ const IconWrapper = styled.div<{ size?: number }>`
 
 const SockContainer = styled.div`
   position: absolute;
-  background-color: ${colors.pink400};
   display: flex;
   justify-content: center;
   border-radius: 50%;
   width: 16px;
   height: 16px;
-  bottom: -5px;
-  right: -5px;
+  bottom: -4px;
+  right: -4px;
 `
 
 const SockImg = styled.img`
-  width: 7.5px;
-  height: 10px;
-  margin-top: 3px;
+  width: 16px;
+  height: 16px;
 `
 
 const Socks = () => {
@@ -70,7 +67,8 @@ const useIcon = (connectionType: ConnectionType) => {
 }
 
 export default function StatusIcon({ connectionType, size }: { connectionType: ConnectionType; size?: number }) {
-  const hasSocks = useHasSocks()
+  //const hasSocks = useHasSocks()
+  const hasSocks = true
   const isNavbarEnabled = useNavBarFlag() === NavBarVariant.Enabled
   const icon = useIcon(connectionType)
 
