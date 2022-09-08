@@ -1,11 +1,6 @@
 import { CurrencyAmount, NativeCurrency, Percent } from '@uniswap/sdk-core'
 import { TFunction } from 'react-i18next'
-import {
-  Warning,
-  WarningAction,
-  WarningLabel,
-  WarningSeverity,
-} from 'src/components/warnings/types'
+import { Warning, WarningAction, WarningLabel, WarningSeverity } from 'src/components/modals/types'
 import { SWAP_NO_ROUTE_ERROR } from 'src/features/routing/routingApi'
 import { DerivedSwapInfo } from 'src/features/transactions/swap/hooks'
 import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'

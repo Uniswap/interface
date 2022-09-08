@@ -1,8 +1,8 @@
 import { AnyAction } from '@reduxjs/toolkit'
 import React, { Dispatch, useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { WarningAction, WarningSeverity } from 'src/components/modals/types'
 import WarningModal from 'src/components/modals/WarningModal'
-import { WarningAction, WarningSeverity } from 'src/components/warnings/types'
 import { GasSpeed } from 'src/features/gas/types'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import {

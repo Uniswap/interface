@@ -1,5 +1,5 @@
 import { CurrencyAmount } from '@uniswap/sdk-core'
-import { WarningLabel } from 'src/components/warnings/types'
+import { WarningLabel } from 'src/components/modals/types'
 import { ChainId } from 'src/constants/chains'
 import { DAI } from 'src/constants/tokens'
 import { NativeCurrency } from 'src/features/tokenLists/NativeCurrency'

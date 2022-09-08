@@ -1,7 +1,7 @@
 import { AnyAction } from '@reduxjs/toolkit'
 import React, { Dispatch } from 'react'
 import { useTranslation } from 'react-i18next'
-import { WarningAction } from 'src/components/warnings/types'
+import { WarningAction } from 'src/components/modals/types'
 import { GasSpeed } from 'src/features/gas/types'
 import { ElementName } from 'src/features/telemetry/constants'
 import { TransactionReview } from 'src/features/transactions/TransactionReview'

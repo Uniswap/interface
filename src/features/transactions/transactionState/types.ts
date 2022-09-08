@@ -1,5 +1,5 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import { Warning } from 'src/components/warnings/types'
+import { Warning } from 'src/components/modals/types'
 import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
 
 export type BaseDerivedInfo<TInput = Currency> = {

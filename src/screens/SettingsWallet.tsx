@@ -22,6 +22,7 @@ import { BackHeader } from 'src/components/layout/BackHeader'
 import { Box } from 'src/components/layout/Box'
 import { Screen } from 'src/components/layout/Screen'
 
+import { WarningSeverity } from 'src/components/modals/types'
 import WarningModal, { captionForAccountRemovalWarning } from 'src/components/modals/WarningModal'
 import {
   SettingsRow,
@@ -30,7 +31,6 @@ import {
   SettingsSectionItemComponent,
 } from 'src/components/Settings/SettingsRow'
 import { Text } from 'src/components/Text'
-import { WarningSeverity } from 'src/components/warnings/types'
 import {
   NotificationPermission,
   useNotificationOSPermissionsEnabled,
