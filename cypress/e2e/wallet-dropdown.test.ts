@@ -21,7 +21,6 @@ describe('Wallet Dropdown', () => {
     cy.get(getTestSelector('wallet-back')).click()
   })
 
-  // empty-transaction-text
   it('should be able to view transactions', () => {
     cy.get(getTestSelector('wallet-transactions')).click()
     cy.get(getTestSelector('wallet-empty-transaction-text')).should('exist')

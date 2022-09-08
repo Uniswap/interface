@@ -233,7 +233,7 @@ export default function Menu() {
     <>
       {/* // https://github.com/DefinitelyTyped/DefinitelyTyped/issues/30451 */}
       <StyledMenu ref={node as any}>
-        <StyledMenuButton data-testid="menu" onClick={toggleMenu} aria-label={t`Menu`}>
+        <StyledMenuButton onClick={toggleMenu} aria-label={t`Menu`}>
           <StyledMenuIcon />
         </StyledMenuButton>
 
@@ -293,7 +293,7 @@ export default function Menu() {
                       <FileText opacity={0.6} size={16} />
                     </ToggleMenuItem>
                     {(isDevelopmentEnv() || isStagingEnv()) && (
-                      <ToggleMenuItem data-testid="feature-flags" onClick={openFeatureFlagsModal}>
+                      <ToggleMenuItem onClick={openFeatureFlagsModal}>
                         Feature Flags <Flag opacity={0.6} size={16} />
                       </ToggleMenuItem>
                     )}
