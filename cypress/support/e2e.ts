@@ -41,7 +41,7 @@ Cypress.Commands.overwrite(
           win.localStorage.setItem('redux_localstorage_simple_user', '{"selectedWallet":"INJECTED"}')
 
           if (options?.featureFlag) {
-            const option = `{"nfts":"control","${options?.featureFlag}":"enabled"}`
+            const option = `{"${options?.featureFlag}":"enabled"}`
             win.localStorage.setItem('featureFlags', option)
           }
 
