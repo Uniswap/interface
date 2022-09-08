@@ -152,7 +152,7 @@ export function PriceChart({ width, height, token }: PriceChartProps) {
 
   // Defining scales
   // x scale
-  const timeScale = scaleLinear().domain([startingPrice.timestamp, endingPrice.timestamp]).range([0, width])
+  const timeScale = scaleLinear().domain([startingPrice.timestamp, endingPrice.timestamp]).range([0, width]).nice()
   // y scale
   const rdScale = scaleLinear().domain(getPriceBounds(pricePoints)).range([graphInnerHeight, 0])
 
@@ -193,7 +193,7 @@ export function PriceChart({ width, height, token }: PriceChartProps) {
         return [
           monthTickFormatter(locale),
           monthYearDayFormatter(locale),
-          timeMonth.range(startDate, endDate, 3).map((x) => x.valueOf() / 1000),
+          timeMonth.range(startDate, endDate, 2).map((x) => x.valueOf() / 1000),
         ]
       case TimePeriod.ALL:
         return [
