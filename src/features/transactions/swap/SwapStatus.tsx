@@ -6,6 +6,7 @@ import { ChainId } from 'src/constants/chains'
 import { getFormattedCurrencyAmount } from 'src/features/notifications/utils'
 import { useSelectTransaction } from 'src/features/transactions/hooks'
 import { DerivedSwapInfo } from 'src/features/transactions/swap/hooks'
+import { WrapType } from 'src/features/transactions/swap/wrapSaga'
 import { TransactionPending } from 'src/features/transactions/TransactionPending/TransactionPending'
 import { CurrencyField } from 'src/features/transactions/transactionState/transactionState'
 import {
@@ -23,14 +24,110 @@ type SwapStatusProps = {
   onTryAgain: () => void
 }
 
+const getTextFromTxStatus = (
+  t: TFunction,
+  derivedSwapInfo: DerivedSwapInfo,
+  transactionDetails?: TransactionDetails
+) => {
+  if (derivedSwapInfo.wrapType === WrapType.NotApplicable) {
+    return getTextFromSwapStatus(t, derivedSwapInfo, transactionDetails)
+  }
+
+  return getTextFromWrapStatus(t, derivedSwapInfo, transactionDetails)
+}
+
+const getTextFromWrapStatus = (
+  t: TFunction,
+  derivedSwapInfo: DerivedSwapInfo,
+  transactionDetails?: TransactionDetails
+) => {
+  const { wrapType } = derivedSwapInfo
+
+  // transactionDetails may not been added to the store yet
+  if (!transactionDetails || transactionDetails.status === TransactionStatus.Pending) {
+    if (wrapType === WrapType.Unwrap) {
+      return {
+        title: t('Unwrap pending'),
+        description: t(
+          'We’ll notify you once your unwrap is complete. You can now safely leave this page.'
+        ),
+      }
+    }
+
+    return {
+      title: t('Wrap pending'),
+      description: t(
+        'We’ll notify you once your wrap is complete. You can now safely leave this page.'
+      ),
+    }
+  }
+
+  if (transactionDetails.typeInfo.type !== TransactionType.Wrap) {
+    throw new Error('input to getTextFromWrapStatus must be a wrap transaction type')
+  }
+
+  const status = transactionDetails.status
+  if (status === TransactionStatus.Success) {
+    const { typeInfo } = transactionDetails
+    const { currencies } = derivedSwapInfo
+
+    // input and output amounts are the same for wraps/unwraps
+    const inputAmount = getFormattedCurrencyAmount(
+      currencies[CurrencyField.INPUT],
+      typeInfo.currencyAmountRaw
+    )
+
+    if (wrapType === WrapType.Unwrap) {
+      return {
+        title: t('Unwrap successful!'),
+        description: t(
+          'You unwrapped {{ inputAmount }}{{ inputCurrency }} for {{ inputAmount }}{{ outputCurrency }}.',
+          {
+            inputAmount,
+            inputCurrency: currencies[CurrencyField.INPUT]?.symbol,
+            outputCurrency: currencies[CurrencyField.OUTPUT]?.symbol,
+          }
+        ),
+      }
+    }
+
+    return {
+      title: t('Wrap successful!'),
+      description: t(
+        'You wrapped {{ inputAmount }}{{ inputCurrency }} for {{ inputAmount }}{{ outputCurrency }}.',
+        {
+          inputAmount,
+          inputCurrency: currencies[CurrencyField.INPUT]?.symbol,
+          outputCurrency: currencies[CurrencyField.OUTPUT]?.symbol,
+        }
+      ),
+    }
+  }
+
+  if (status === TransactionStatus.Failed) {
+    if (wrapType === WrapType.Unwrap) {
+      return {
+        title: t('Unwrap failed'),
+        description: t('Keep in mind that the network fee is still charged for failed unwraps.'),
+      }
+    }
+
+    return {
+      title: t('Wrap failed'),
+      description: t('Keep in mind that the network fee is still charged for failed wraps.'),
+    }
+  }
+
+  throw new Error('wrap transaction status is in an unhandled state')
+}
+
 const getTextFromSwapStatus = (
   t: TFunction,
   derivedSwapInfo: DerivedSwapInfo,
   transactionDetails?: TransactionDetails
 ) => {
-  if (!transactionDetails || transactionDetails.typeInfo.type !== TransactionType.Swap) {
-    // TODO: should never go into this state but should probably do some
-    // error display here as well as log to sentry or amplitude
+  // transactionDetails may not been added to the store yet
+  if (!transactionDetails || transactionDetails.status === TransactionStatus.Pending) {
     return {
       title: t('Swap pending'),
       description: t(
@@ -38,6 +135,11 @@ const getTextFromSwapStatus = (
       ),
     }
   }
+
+  if (transactionDetails.typeInfo.type !== TransactionType.Swap) {
+    throw new Error('input to getTextFromSwapStatus must be a swap transaction type')
+  }
+
   const status = transactionDetails.status
 
   if (status === TransactionStatus.Success) {
@@ -83,13 +185,7 @@ const getTextFromSwapStatus = (
     }
   }
 
-  // TODO: handle TransactionStatus.Unknown state
-  return {
-    title: t('Swap pending'),
-    description: t(
-      'We’ll notify you once your swap is complete. You can now safely leave this page.'
-    ),
-  }
+  throw new Error('swap transaction status is in an unhandled state')
 }
 
 export function SwapStatus({ derivedSwapInfo, onNext, onTryAgain }: SwapStatusProps) {
@@ -100,7 +196,7 @@ export function SwapStatus({ derivedSwapInfo, onNext, onTryAgain }: SwapStatusPr
   const transaction = useSelectTransaction(activeAddress, chainId, txId)
 
   const { title, description } = useMemo(() => {
-    return getTextFromSwapStatus(t, derivedSwapInfo, transaction)
+    return getTextFromTxStatus(t, derivedSwapInfo, transaction)
   }, [t, transaction, derivedSwapInfo])
 
   return (
