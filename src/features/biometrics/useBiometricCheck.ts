@@ -1,5 +1,7 @@
 import { useEffect } from 'react'
 import { useLockScreenContext } from 'src/features/authentication/lockScreenContext'
+import { BiometricAuthenticationStatus } from 'src/features/biometrics'
+import { useBiometricContext } from 'src/features/biometrics/context'
 import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { useAppStateTrigger } from 'src/utils/useAppStateTrigger'
 
@@ -7,6 +9,7 @@ import { useAppStateTrigger } from 'src/utils/useAppStateTrigger'
 export function useBiometricCheck() {
   const { requiredForAppAccess } = useBiometricAppSettings()
   const { setIsLockScreenVisible } = useLockScreenContext()
+  const { authenticationStatus } = useBiometricContext()
   const successCallback = () => {
     setIsLockScreenVisible(false)
   }
@@ -29,6 +32,25 @@ export function useBiometricCheck() {
 
   useAppStateTrigger('inactive', 'background', () => {
     if (requiredForAppAccess) {
+      setIsLockScreenVisible(true)
+    }
+  })
+
+  useAppStateTrigger('inactive', 'active', () => {
+    if (
+      requiredForAppAccess &&
+      authenticationStatus !== BiometricAuthenticationStatus.Authenticating &&
+      authenticationStatus !== BiometricAuthenticationStatus.Rejected
+    ) {
+      setIsLockScreenVisible(false)
+    }
+  })
+
+  useAppStateTrigger('active', 'inactive', () => {
+    if (
+      requiredForAppAccess &&
+      authenticationStatus !== BiometricAuthenticationStatus.Authenticating
+    ) {
       setIsLockScreenVisible(true)
     }
   })
