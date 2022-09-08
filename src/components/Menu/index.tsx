@@ -292,7 +292,7 @@ export default function Menu() {
                       </div>
                       <FileText opacity={0.6} size={16} />
                     </ToggleMenuItem>
-                    {(isDevelopmentEnv() || isStagingEnv() || isTestEnv()) && (
+                    {(isDevelopmentEnv() || isStagingEnv()) && (
                       <ToggleMenuItem data-testid="feature-flags" onClick={openFeatureFlagsModal}>
                         Feature Flags <Flag opacity={0.6} size={16} />
                       </ToggleMenuItem>

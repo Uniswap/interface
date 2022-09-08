@@ -182,11 +182,11 @@ export const MenuDropdown = () => {
                 >
                   <Trans>Legal & Privacy</Trans> ↗
                 </SecondaryLinkedText>
-                {(isDevelopmentEnv() || isStagingEnv() || isTestEnv()) && (
+                {/* {(isDevelopmentEnv() || isStagingEnv()) && (
                   <SecondaryLinkedText onClick={openFeatureFlagsModal}>
                     <Trans>Feature Flags</Trans>
                   </SecondaryLinkedText>
-                )}
+                )} */}
               </Box>
               <IconRow>
                 <Icon href="https://discord.com/invite/FCfyBSbCU5">
