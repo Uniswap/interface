@@ -9,7 +9,7 @@ import { TimePeriod, TokenData } from 'graphql/data/TopTokenQuery'
 import { useCurrency } from 'hooks/Tokens'
 import { useAtom } from 'jotai'
 import { useAtomValue } from 'jotai/utils'
-import { ReactNode } from 'react'
+import { CSSProperties, ReactNode } from 'react'
 import { ArrowDown, ArrowUp, Heart } from 'react-feather'
 import { Link } from 'react-router-dom'
 import styled, { css, useTheme } from 'styled-components/macro'
@@ -451,12 +451,14 @@ export default function LoadedRow({
   tokenListLength,
   tokenData,
   timePeriod,
+  style,
 }: {
   tokenAddress: string
   tokenListIndex: number
   tokenListLength: number
   tokenData: TokenData
   timePeriod: TimePeriod
+  style: CSSProperties
 }) {
   const currency = useCurrency(tokenAddress)
   const tokenName = tokenData.name
@@ -486,6 +488,7 @@ export default function LoadedRow({
   // TODO: currency logo sizing mobile (32px) vs. desktop (24px)
   return (
     <StyledLink
+      style={style}
       to={`/tokens/${tokenAddress}`}
       onClick={() => sendAnalyticsEvent(EventName.EXPLORE_TOKEN_ROW_CLICKED, exploreTokenSelectedEventProperties)}
     >

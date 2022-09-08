@@ -34,86 +34,86 @@ export interface UseTopTokensResult {
   loading: boolean
 }
 
-export function useTopTokenQuery(page: number) {
-  const topTokenData = useLazyLoadQuery<TopTokenQueryType>(
-    graphql`
-      query TopTokenQuery($page: Int!) {
-        topTokenProjects(orderBy: MARKET_CAP, pageSize: 100, currency: USD, page: $page) {
-          name
-          tokens {
-            chain
-            address
-            symbol
-          }
-          markets(currencies: [USD]) {
-            price {
-              value
-              currency
-            }
-            marketCap {
-              value
-              currency
-            }
-            fullyDilutedMarketCap {
-              value
-              currency
-            }
-            volume1H: volume(duration: HOUR) {
-              value
-              currency
-            }
-            volume1D: volume(duration: DAY) {
-              value
-              currency
-            }
-            volume1W: volume(duration: WEEK) {
-              value
-              currency
-            }
-            volume1M: volume(duration: MONTH) {
-              value
-              currency
-            }
-            volume1Y: volume(duration: YEAR) {
-              value
-              currency
-            }
-            volumeAll: volume(duration: MAX) {
-              value
-              currency
-            }
-            pricePercentChange1H: pricePercentChange(duration: HOUR) {
-              currency
-              value
-            }
-            pricePercentChange24h {
-              currency
-              value
-            }
-            pricePercentChange1W: pricePercentChange(duration: WEEK) {
-              currency
-              value
-            }
-            pricePercentChange1M: pricePercentChange(duration: MONTH) {
-              currency
-              value
-            }
-            pricePercentChange1Y: pricePercentChange(duration: YEAR) {
-              currency
-              value
-            }
-            pricePercentChangeAll: pricePercentChange(duration: MAX) {
-              currency
-              value
-            }
-          }
+export const TopTokenQuery = graphql`
+  query TopTokenQuery($pageSize: Int!, $page: Int!) {
+    topTokenProjects(orderBy: MARKET_CAP, pageSize: $pageSize, currency: USD, page: $page) {
+      name
+      tokens {
+        chain
+        address
+        symbol
+      }
+      markets(currencies: [USD]) {
+        price {
+          value
+          currency
+        }
+        marketCap {
+          value
+          currency
+        }
+        fullyDilutedMarketCap {
+          value
+          currency
+        }
+        volume1H: volume(duration: HOUR) {
+          value
+          currency
+        }
+        volume1D: volume(duration: DAY) {
+          value
+          currency
+        }
+        volume1W: volume(duration: WEEK) {
+          value
+          currency
+        }
+        volume1M: volume(duration: MONTH) {
+          value
+          currency
+        }
+        volume1Y: volume(duration: YEAR) {
+          value
+          currency
+        }
+        volumeAll: volume(duration: MAX) {
+          value
+          currency
+        }
+        pricePercentChange1H: pricePercentChange(duration: HOUR) {
+          currency
+          value
+        }
+        pricePercentChange24h {
+          currency
+          value
+        }
+        pricePercentChange1W: pricePercentChange(duration: WEEK) {
+          currency
+          value
+        }
+        pricePercentChange1M: pricePercentChange(duration: MONTH) {
+          currency
+          value
+        }
+        pricePercentChange1Y: pricePercentChange(duration: YEAR) {
+          currency
+          value
+        }
+        pricePercentChangeAll: pricePercentChange(duration: MAX) {
+          currency
+          value
         }
       }
-    `,
-    {
-      page,
     }
-  )
+  }
+`
+
+export function useTopTokenQuery(pageSize: number, page: number) {
+  const topTokenData = useLazyLoadQuery<TopTokenQueryType>(TopTokenQuery, {
+    pageSize,
+    page,
+  })
 
   const topTokens: TokenData[] | undefined = topTokenData.topTokenProjects?.map((token) =>
     token?.tokens?.[0].address

@@ -11,7 +11,7 @@ import TokenTable, { LoadingTokenTable } from 'components/Tokens/TokenTable/Toke
 import { TokensNetworkFilterVariant, useTokensNetworkFilterFlag } from 'featureFlags/flags/tokensNetworkFilter'
 import { useTopTokenQuery } from 'graphql/data/TopTokenQuery'
 import { useResetAtom } from 'jotai/utils'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
@@ -69,7 +69,20 @@ const FiltersWrapper = styled.div`
 `
 
 const Tokens = () => {
-  const topTokens = useTopTokenQuery(1)
+  const pageSize = 100
+  const [page, setPage] = useState(1)
+  // const [loadedTokens, setLoadedTokens] = useState<TokenData[]>([])
+  const loadedTokens = useTopTokenQuery(pageSize, page)
+  // if (!!topTokens) {
+  //   setLoadedTokens([...loadedTokens, ...topTokens])
+  // }
+
+  // modify to not increment page after no new tokens are being loaded
+
+  // const loadMoreTokens = () => {
+  //   setPage(page + 1)
+  // }
+
   const tokensNetworkFilterFlag = useTokensNetworkFilterFlag()
   const resetFilterString = useResetAtom(filterStringAtom)
   const location = useLocation()
@@ -97,7 +110,7 @@ const Tokens = () => {
         </FiltersWrapper>
 
         <TokenTableContainer>
-          <TokenTable data={topTokens} />
+          <TokenTable data={loadedTokens} />
         </TokenTableContainer>
       </ExploreContainer>
     </Trace>
