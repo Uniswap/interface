@@ -68,20 +68,6 @@ const FiltersWrapper = styled.div`
 `
 
 const Tokens = () => {
-  // const pageSize = 100
-  // const [page, setPage] = useState(1)
-  // // const [loadedTokens, setLoadedTokens] = useState<TokenData[]>([])
-  // const loadedTokens = useTopTokenQuery(pageSize, page)
-  // if (!!topTokens) {
-  //   setLoadedTokens([...loadedTokens, ...topTokens])
-  // }
-
-  // modify to not increment page after no new tokens are being loaded
-
-  // const loadMoreTokens = () => {
-  //   setPage(page + 1)
-  // }
-
   const tokensNetworkFilterFlag = useTokensNetworkFilterFlag()
   const resetFilterString = useResetAtom(filterStringAtom)
   const location = useLocation()

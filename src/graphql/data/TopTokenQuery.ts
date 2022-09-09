@@ -119,6 +119,7 @@ export function useTopTokenQuery(pageSize: number, page: number) {
   const topTokens: TokenData[] | undefined = topTokenData.topTokenProjects?.map((token) =>
     token?.tokens?.[0].address
       ? {
+          loading: !!token ? false : true,
           name: token?.name,
           address: token?.tokens?.[0].address,
           chain: token?.tokens?.[0].chain,
