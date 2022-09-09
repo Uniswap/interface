@@ -1,8 +1,8 @@
-import styled from 'styled-components/macro'
 import { AutoColumn } from 'components/Column'
+import { BodyWrapper } from 'pages/AppBody'
 import CurrencyInputPanel from 'components/CurrencyInputPanel'
 import Input from 'components/NumericalInput'
-import { BodyWrapper } from 'pages/AppBody'
+import styled from 'styled-components/macro'
 
 export const PageWrapper = styled(BodyWrapper)<{ wide: boolean }>`
   max-width: ${({ wide }) => (wide ? '880px' : '480px')};
@@ -24,7 +24,7 @@ export const Wrapper = styled.div`
     min-width: 400px;
   `};
 
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+  ${({ theme }) => theme.mediaWidth.upToSmall`
   min-width: 340px;
 `};
 `

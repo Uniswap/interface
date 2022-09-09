@@ -1,7 +1,8 @@
 import * as axios from 'axios'
 
-import { ArrowDown, ArrowUp, ChevronDown, ChevronUp } from 'react-feather';
+import { ArrowDown, ArrowUp, ChevronDown, ChevronUp, ExternalLink as LinkIcon } from 'react-feather';
 import Badge, { BadgeVariant } from 'components/Badge';
+import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink';
 import React, { FC, useEffect, useMemo, useState } from 'react';
 
 import { DarkCard } from 'components/Card';
@@ -14,6 +15,15 @@ import { usePairs } from 'state/logs/utils';
 import useTheme from 'hooks/useTheme'
 import { useTokenInfo } from 'components/swap/ChartPage';
 
+const AddressLink = styled(ExternalLink) <{ hasENS: boolean; isENS: boolean }>`
+  font-size: 0.825rem;
+  color: ${({ theme }) => theme.text3};
+  font-size: 0.825rem;
+  display: flex;
+  :hover {
+    color: ${({ theme }) => theme.text2};
+  }
+`
 type Props = {
     address: string;
     chainId?: number;
@@ -111,33 +121,54 @@ export const TopTokenHolders: FC<Props> = (props: Props) => {
         if (chainId === 56) return `https://bscscan.com/address/${holder.address}`;
         return ``
     }
-    const theme= useTheme()
+    const theme = useTheme()
     const node = useMemo(() => isOpen ? <ChevronUp style={{ cursor: "pointer" }} /> : <ChevronDown style={{ cursor: "pointer" }} />, [isOpen]);
     if (chainId !== 1) return null
     return (
-        <DarkCard style={{ padding: '.85rem', border: `1px solid ${theme.bg6}`, background: theme.chartSidebar}}>
-            <p style={{ margin: 0, fontSize:14 }} onClick={() => setIsOpen(!isOpen)}>The top 50 holders own <Badge>{topHoldersOwnedPercentComputed}%</Badge> of the total supply. <Badge>{burntHolderOwnedPercentComputed}%</Badge> is burnt. {node}</p>
+        <DarkCard style={{ padding: '.85rem', border: `1px solid ${theme.bg6}`, background: theme.chartSidebar }}>
+            <p style={{ margin: 0, fontSize: 14 }} onClick={() => setIsOpen(!isOpen)}>The top 50 holders own <Badge>{topHoldersOwnedPercentComputed}%</Badge> of the total supply. <Badge>{burntHolderOwnedPercentComputed}%</Badge> is burnt. {node}</p>
             {isOpen && <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 {!isMobile && <>
                     <p style={{ fontSize: 12, margin: 0 }}>Address</p>
-                    <p style={{ fontSize: 12 }}>Balance <span style={{ borderLeft: '1px solid #444', paddingLeft: 10, marginLeft: 10 }}>Share (%)</span></p>
+                    <p style={{ fontSize: 12, margin: 0 }}>Balance <span style={{ borderLeft: '1px solid #444', paddingLeft: 10, marginLeft: 10 }}>Share (%)</span></p>
                 </>}
                 {isMobile && <p style={{ margin: 0 }}>Top {tokenInfo?.symbol} token holders</p>}
             </div>}
-            {isOpen && <div style={{ width: '100%', maxHeight: 370, overflow: 'auto' }}>
+            {isOpen && <div style={{ maxHeight:380, overflowY: `scroll`, width: '100%', overflow: 'auto' }}>
                 {holders && holders.slice(sliceCount.start, sliceCount.end).map((holder, i) => (
-                    <div key={holder.address} style={{ rowGap: 1, alignItems: 'center', padding: '1px 0px', marginBottom: 1, display: 'flex', gap: 10, justifyContent: isMobile ? 'stretch' : 'space-between', flexFlow: 'row wrap' }}>
-                        <ExternalLink style={{ color: theme.text1, fontSize: 12 }} href={getHolderLink(holder)}>
-                            <span style={{ marginRight: 3, color: '#FFF', background: "#444", borderRadius: 15, padding: 3 }}>{i + 1}</span> {holder?.address}
+                    <div key={holder.address} style={{ columnGap: 20, borderBottom: (i == sliceCount.end - 1) ? 'none' : `1px solid #444`, alignItems: 'center', padding: '2px 0px', marginBottom: 1, display: 'flex', rowGap: 10, justifyContent: isMobile ? 'stretch' : 'space-between', flexFlow: 'row wrap' }}>
+                        <AddressLink
+                            hasENS={false}
+                            isENS={false}
+                            href={getExplorerLink(chainId, holder.address, ExplorerDataType.ADDRESS)}
+                            style={{
+                                color: theme.text1,
+                                fontSize: 12
+                            }}>
+                            <span style={{ 
+                                display:'flex', 
+                                alignItems:'center', 
+                                justifyContent:'center', 
+                                marginRight: 3,
+                                width:25, 
+                                height:25, 
+                                color: theme.text1, 
+                                background: theme.backgroundInteractive, 
+                                borderRadius: 15
+                            }}>
+                                {i + 1}
+                            </span>
+                            <span style={{marginRight:3}}>{holder?.address?.substring(0,10)}...{holder.address?.substring(holder?.address?.length - 4, holder?.address?.length)}</span>
+                            <LinkIcon size={16} />
                             {isUniswapPair(holder.address) &&
                                 <Tooltip text={PairTooltipText(holder.address)} show={showUniTooltip} >
                                     <img onMouseEnter={() => setShowUniTooltip(true)}
                                         onMouseLeave={() => setShowUniTooltip(false)}
                                         src={'https://i2.wp.com/fastandclean.org/wp-content/uploads/2021/01/UniSwap-logo.png?ssl=1'}
-                                        style={{ maxWidth: 30 }} />
+                                        style={{ maxWidth: 30, marginTop: -8 }} />
                                 </Tooltip>
                             }
-                        </ExternalLink>
+                        </AddressLink>
 
                         <Badge style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }} variant={BadgeVariant.GREY}>
                             {tokenInfo && tokenInfo.decimals && <div style={{
@@ -155,20 +186,20 @@ export const TopTokenHolders: FC<Props> = (props: Props) => {
                             &nbsp;
                             <span style={{ paddingLeft: 10, fontSize: 12.5, color: 'lightgreen' }}>{holder.share}%</span>
                         </Badge>
-                   
+
                     </div>
                 ))}
-          
+
             </div>}
-            {!!isOpen &&  <Badge style={{ cursor: 'pointer', alignItems: 'center', color: theme.text1, position: 'relative', width: '100%', bottom: 0, display: 'flex', justifyContent: 'center' }} onClick={() => {
-                        const end = sliceCount.end == holders?.length ? 10 : holders?.length || 0;
-                        setSliceCount({ ...sliceCount, end })
-                    }}>
-                        <small style={{ fontSize: 12 }}>{
-                            holders?.length === sliceCount?.end ? 'Hide' : 'Show'} All
-                            {holders?.length !== sliceCount?.end ? <ArrowDown /> : <ArrowUp />}
-                                Top 50</small>
-                    </Badge> }
+            {!!isOpen && <Badge style={{ cursor: 'pointer', alignItems: 'center', color: theme.text1, position: 'relative', width: '100%', bottom: 0, display: 'flex', justifyContent: 'center' }} onClick={() => {
+                const end = sliceCount.end == holders?.length ? 10 : holders?.length || 0;
+                setSliceCount({ ...sliceCount, end })
+            }}>
+                <small style={{ fontSize: 12 }}>{
+                    holders?.length === sliceCount?.end ? 'Hide' : 'Show'} All
+                    {holders?.length !== sliceCount?.end ? <ArrowDown /> : <ArrowUp />}
+                    Top 50</small>
+            </Badge>}
         </DarkCard>
     )
 }

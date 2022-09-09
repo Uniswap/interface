@@ -723,7 +723,7 @@ export const SelectiveChart = () => {
                           (params?.tokenSymbol ? params?.tokenSymbol : token?.symbol) as string
                         }
                         address={address as string}
-                        pairs={pairs} />
+                        pairs={pairAddress ? [{id: pairAddress}, ...pairs] : pairs} />
 
                     </>
                   ) : null}

@@ -500,7 +500,7 @@ export function useTokenTransactions(tokenAddress: string, allPairsFormatted?:an
   const { chainId } = useWeb3React()
   const tokenTxns = useQuery(FILTERED_TRANSACTIONS, {
     variables: {
-      allPairs: allPairsFormatted && Array.isArray(allPairsFormatted) && allPairsFormatted.length ? [allPairsFormatted?.[0]?.id] : []
+      allPairs: allPairsFormatted && Array.isArray(allPairsFormatted) && allPairsFormatted.length ? [allPairsFormatted?.[0]?.id?.toLowerCase()] : []
     },
     pollInterval: interval || 10000
   });

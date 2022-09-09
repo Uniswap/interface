@@ -16,7 +16,7 @@ import { useBscTokenTransactions } from "state/logs/bscUtils";
 import { useIsDarkMode } from "state/user/hooks";
 import { useIsMobile } from "./SelectiveCharting";
 
-const Table = styled.table<{isMobile:boolean}>`
+const Table = styled.table<{ isMobile: boolean }>`
   overflow:auto;
   width: 100%;
   height:100%;
@@ -31,6 +31,7 @@ ${(props) =>
         props.item?.account?.toLowerCase() == props.account?.toLowerCase()
             ? `${props.highlight}`
             : `inherit`};
+    border-bottom:1px solid #444;
     padding-bottom: 5px;
     &:hover {
         opacity:0.8;
@@ -39,9 +40,12 @@ ${(props) =>
     }
 
     td {
-        color ${(props) => props.theme.text1};
+        color: ${(props) => props.theme.text1};
     }
-    
+    &:last-of-type,
+    &:last-child {
+        border:none;
+    }
 `;
 type TableProps = {
     LastFetchedNode?: JSX.Element | null;
@@ -189,7 +193,7 @@ const ChartTableRow = (props: RowProps) => {
                     href={"https://etherscan.io/tx/" + item?.hash}
                 >
                     {item?.hash &&
-                        item?.transaction?.id.slice(0, 6) +
+                        item?.transaction?.id.slice(0, 3) +
                         "..." +
                         item?.transaction?.id.slice(38, 42)}
                 </a>
@@ -212,9 +216,9 @@ const Thead = styled.thead`
 
 /* eslint-disable */
 
-const TableHeader = React.memo(({ headerSymbol, isMobile }: { headerSymbol: string, isMobile :boolean }) => (
+const TableHeader = React.memo(({ headerSymbol, isMobile }: { headerSymbol: string, isMobile: boolean }) => (
     <Thead>
-        <tr style={{ whiteSpace: isMobile ? "nowrap" : "normal" ,borderBottom: "1px solid #444" }}>
+        <tr style={{ whiteSpace: isMobile ? "nowrap" : "normal", borderBottom: "1px solid #444" }}>
             <th>Date</th>
             <th>Type</th>
             <th>
@@ -230,20 +234,20 @@ const TableHeader = React.memo(({ headerSymbol, isMobile }: { headerSymbol: stri
 TableHeader.displayName = "thead"
 
 type _RowProps = {
-     item: any;
-     isMobile: boolean;
-     index: any; highlightedColor: any; account: any; chainLabel: any; tokenSymbol: any; 
+    item: any;
+    isMobile: boolean;
+    index: any; highlightedColor: any; account: any; chainLabel: any; tokenSymbol: any;
 }
 
-const areRowsEqual = (rowProps:any, newRowProps :any) => {
+const areRowsEqual = (rowProps: any, newRowProps: any) => {
     return rowProps?.item?.hash === newRowProps?.item?.hash?.toLowerCase()
 }
 
-const Row = React.memo((props: _RowProps ) => {
-    const {isMobile, index,item,highlightedColor, account, chainLabel, tokenSymbol} = props;
+const Row = React.memo((props: _RowProps) => {
+    const { isMobile, index, item, highlightedColor, account, chainLabel, tokenSymbol } = props;
     const isItemSale = ['wbnb', 'bnb', 'weth', 'eth'].includes(item.token0Symbol.toLowerCase())
     if (index <= 2) {
-        
+
         return (
             <CSSTransition
                 key={`row_${index}_${item.transaction.id}`}
@@ -252,25 +256,25 @@ const Row = React.memo((props: _RowProps ) => {
                 timeout={600}
             >
                 <Tr highlight={highlightedColor} account={account} item={item}>
-                    <td style={{fontSize: isMobile ? 8 : 12}}>
+                    <td style={{ fontSize: isMobile ? 8 : 12 }}>
                         {new Date(item.timestamp * 1000).toLocaleString()}
                     </td>
                     {[item.token0Symbol, item.token1Symbol].includes(
-                    chainLabel
-                ) && (
-                        <td
-                            style={{
-                                color:
-                                isItemSale
-                                        ? "#971B1C"
-                                        : "#779681",
-                            }}
-                        >
-                            {isItemSale
-                                ? "SELL"
-                                : "BUY"}
-                        </td>
-                    )}
+                        chainLabel
+                    ) && (
+                            <td
+                                style={{
+                                    color:
+                                        isItemSale
+                                            ? "#971B1C"
+                                            : "rgb(39 165 154)",
+                                }}
+                            >
+                                {isItemSale
+                                    ? "SELL"
+                                    : "BUY"}
+                            </td>
+                        )}
                     {![item.token0Symbol, item.token1Symbol].includes(
                         chainLabel
                     ) && (
@@ -280,7 +284,7 @@ const Row = React.memo((props: _RowProps ) => {
                                         item.token1Symbol ===
                                             `${tokenSymbol == "ETH" ? "WETH" : tokenSymbol}`
                                             ? "#971B1C"
-                                            : "#779681",
+                                            : "rgb(39 165 154)",
                                 }}
                             >
                                 {item.token1Symbol ===
@@ -293,7 +297,7 @@ const Row = React.memo((props: _RowProps ) => {
                         chainLabel
                     ) && (
                             <>
-                                <td>
+                                <td style={{ whiteSpace: 'nowrap' }}>
                                     {item.token0Symbol === chainLabel && (
                                         <>
                                             {Number(
@@ -341,7 +345,7 @@ const Row = React.memo((props: _RowProps ) => {
                         chainLabel
                     ) && (
                             <>
-                                <td>
+                                <td style={{ whiteSpace: 'nowrap' }}>
                                     {item.token0Symbol !==
                                         `${tokenSymbol == "ETH" ? "WETH" : tokenSymbol}` && (
                                             <>
@@ -406,7 +410,7 @@ const Row = React.memo((props: _RowProps ) => {
                             href={"https://etherscan.io/tx/" + item?.hash}
                         >
                             {item?.hash &&
-                                item?.transaction?.id.slice(0, 6) +
+                                item?.transaction?.id.slice(0, 3) +
                                 "..." +
                                 item?.transaction?.id.slice(38, 42)}
                         </a>
@@ -418,8 +422,8 @@ const Row = React.memo((props: _RowProps ) => {
         return (
             //
             <Tr highlight={highlightedColor} account={account} item={item} key={`row_${index}_${item.transaction.id}`} >
-                <td style={{fontSize: isMobile ? 8 : 12}}>
-                    { new Date(item.timestamp * 1000).toLocaleString()}
+                <td style={{ fontSize: isMobile ? 8 : 12 }}>
+                    {new Date(item.timestamp * 1000).toLocaleString()}
                 </td>
                 {[item.token0Symbol, item.token1Symbol].includes(
                     chainLabel
@@ -427,7 +431,7 @@ const Row = React.memo((props: _RowProps ) => {
                         <td
                             style={{
                                 color:
-                                isItemSale
+                                    isItemSale
                                         ? "#971B1C"
                                         : "#779681",
                             }}
@@ -459,7 +463,7 @@ const Row = React.memo((props: _RowProps ) => {
                     chainLabel
                 ) && (
                         <>
-                            <td>
+                            <td style={{ whiteSpace: 'nowrap' }}>
                                 {item.token0Symbol === chainLabel && (
                                     <>
                                         {Number(
@@ -580,7 +584,7 @@ const Row = React.memo((props: _RowProps ) => {
             </Tr>
         )
     }
-},areRowsEqual)
+}, areRowsEqual)
 
 export const TableInstance = ({ tableData, tokenSymbol, headerSymbol }: { tableData: any[], tokenSymbol: string, headerSymbol: string }) => {
     const { account, chainId } = useActiveWeb3React()
@@ -589,24 +593,24 @@ export const TableInstance = ({ tableData, tokenSymbol, headerSymbol }: { tableD
     const chainLabel = React.useMemo(
         () => (!chainId || chainId === 1 ? `WETH` : chainId === 56 ? "WBNB" : ""),
         [chainId]
-      );
+    );
     const isMobile = useIsMobile()
     console.log(`table.data`, tableData)
     return (
         <div style={{
             height: 500,
             overflowX: `scroll`,
-            overflowY:`scroll`,
-            width:'100%',
+            overflowY: `scroll`,
+            width: '100%',
             marginTop: 5
         }}>
             <Table isMobile={isMobile}>
                 <TableHeader isMobile={isMobile} headerSymbol={headerSymbol} />
                 <ReactCSSTransitionGroup
                     component="tbody">
-                    {tableData.map((item: any, index: number) => {
+                    {tableData?.map((item: any, index: number) => {
                         return (
-                            <Row 
+                            <Row
                                 isMobile={isMobile}
                                 account={account}
                                 chainLabel={chainLabel}

@@ -299,7 +299,7 @@ export const HoneyPotBsc = () => {
   const hasInvalidPermissions = React.useMemo(() => !account || !kibaBalance || (!!kibaBalance && +kibaBalance?.toFixed(0) <= 0), [account, kibaBalance])
 
   return (
-    <DarkCard style={{opacity: '.96', maxWidth: '45%', minWidth: 480, padding: 20  }} id="honeypage">
+    <DarkCard style={{opacity: '.96', maxWidth: 600, width: '100%', padding: 20  }} id="honeypage">
       <div style={{ maxWidth: 600, display: 'flex', flexFlow: 'column wrap', margin: 'auto', paddingBottom: '1rem' }}>
         <StyledHeader style={{ fontSize: 30, paddingBottom: 20, paddingTop: 20}}>Honeypot Checker (BSC)</StyledHeader>
         <small style={{ marginTop: 3, paddingLeft: 3 }}>Disclaimer: This is an experimental service, use at your own risk and make sure to double check all contract interactions.</small>
