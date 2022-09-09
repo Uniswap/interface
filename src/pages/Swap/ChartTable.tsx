@@ -433,7 +433,7 @@ const Row = React.memo((props: _RowProps) => {
                                 color:
                                     isItemSale
                                         ? "#971B1C"
-                                        : "#779681",
+                                        : "rgb(39 165 154)",
                             }}
                         >
                             {isItemSale
@@ -450,7 +450,7 @@ const Row = React.memo((props: _RowProps) => {
                                     item.token1Symbol ===
                                         `${tokenSymbol == "ETH" ? "WETH" : tokenSymbol}`
                                         ? "#971B1C"
-                                        : "#779681",
+                                        : "rgb(39 165 154)",
                             }}
                         >
                             {item.token1Symbol ===
