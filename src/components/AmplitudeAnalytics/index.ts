@@ -30,7 +30,6 @@ init(
     },
   }
 )
-
 /** Sends an approved (finalized) event to Amplitude production project. */
 export function sendAnalyticsEvent(eventName: string, eventProperties?: Record<string, unknown>) {
   if (!isProductionEnv()) {
