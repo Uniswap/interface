@@ -54,6 +54,8 @@ export const TableQuery = ({ address, pairs, tokenSymbol }: { address: string, p
     }
 
     const { data, loading } = useTokenTransactions(address, pairs, 10000)
+    // const availablePairs = pairs?.map((pair) => ({id: pair.id, value: `${pair.token0.symbol}/${pair.token1.symbol}`}))
+    // console.log(`availablePairs?`, availablePairs)
 
     React.useEffect(() => {
         setTableData(() => [...formatTransactionData(data?.swaps)]);

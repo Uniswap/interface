@@ -29,6 +29,17 @@ import { useTokenInfo } from "components/swap/ChartPage";
 import { useWeb3Endpoint } from "./Charts/PairSearch";
 import { useWeb3React } from "@web3-react/core";
 
+type GetMaxesResponse = { BuyGas: number, BuyTax: number, Error: any, IsHoneypot: boolean, MaxTxAmount: number, MaxTxAmountBNB: number, SellGas: number, SellTax: number } | undefined
+
+export const getMaxes = async (value: string): Promise<GetMaxesResponse> => {
+    if (!value) return 
+    const response = await axios.get<{ BuyGas: number, BuyTax: number, Error: any, IsHoneypot: boolean, MaxTxAmount: number, MaxTxAmountBNB: number, SellGas: number, SellTax: number }>('https://aywt3wreda.execute-api.eu-west-1.amazonaws.com/default/IsHoneypot?chain=eth&token=' + value, {
+
+    });
+
+    return response.data
+}
+
 const Footer = styled.div`
   position: relative;
   bottom: 0;
@@ -76,10 +87,10 @@ export const HoneyPotDetector = () => {
         if (isAddress(value.toLowerCase())) {
             setMsg(value);
             setScanning(true)
-            const response = await axios.get<{ BuyGas: number, BuyTax: number, Error: any, IsHoneypot: boolean, MaxTxAmount: number, MaxTxAmountBNB: number, SellGas: number, SellTax: number }>('https://aywt3wreda.execute-api.eu-west-1.amazonaws.com/default/IsHoneypot?chain=eth&token=' + value, {
+          
+            const response = { data: (await getMaxes(value) || {}) as any }
 
-            });
-            const isHoneypot = response.data.IsHoneypot
+            const isHoneypot = response?.data?.IsHoneypot
             const tokenSymbol = '';
             const tokenDecimals = 0;
             const maxSell = 0;
@@ -88,11 +99,13 @@ export const HoneyPotDetector = () => {
             const honey_data: Record<string, any> = {}
             const maxTxBNB = null;
             honey_data['isHoneyPot'] = isHoneypot
-            honey_data['buyTax'] = response.data.BuyTax
-            honey_data['sellTax'] = response.data.SellTax
-            honey_data['maxTxAmount'] = response.data.MaxTxAmount
-            honey_data["error"] = response.data.Error
-            if (response.data.SellTax > 90) honey_data['isHoneyPot'] = true
+            honey_data['buyTax'] = response?.data?.BuyTax
+            honey_data['sellTax'] = response?.data?.SellTax
+            honey_data['maxTxAmount'] = response?.data?.MaxTxAmount
+            honey_data["error"] = response?.data?.Error
+            if (response?.data?.SellTax > 90) {
+                honey_data['isHoneyPot'] = true
+            }
             if (maxTXAmount != 0 || maxSell != 0) {
                 let n = 'Max TX';
                 let x = maxTXAmount;

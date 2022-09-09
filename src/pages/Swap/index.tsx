@@ -49,6 +49,7 @@ import { RENOUNCED_ADDRESSES } from 'components/swap/DetailsModal'
 import React from 'react'
 import ReactGA from 'react-ga'
 import { ShowSellTaxComponent } from 'components/ShowSellTax'
+import Swal from 'sweetalert2'
 import SwapHeader from '../../components/swap/SwapHeader'
 import { SwitchLocaleLink } from '../../components/SwitchLocaleLink'
 import TokenWarningModal from '../../components/TokenWarningModal'
@@ -62,6 +63,7 @@ import _ from 'lodash'
 import { borderRadius } from 'polished'
 import { computeFiatValuePriceImpact } from '../../utils/computeFiatValuePriceImpact'
 import confirmPriceImpactWithoutFee from '../../components/swap/confirmPriceImpactWithoutFee'
+import { getMaxes } from 'pages/HoneyPotDetector'
 import { getTokenTaxes } from 'pages/HoneyUtils'
 import { getTradeVersion } from '../../utils/getTradeVersion'
 import { isAddress } from '@ethersproject/address'
@@ -564,6 +566,52 @@ export default function Swap({ history }: RouteComponentProps) {
       })
     }
   }
+
+const trySetMaxTx = async () => {
+  const outputToken = currencies.OUTPUT
+  if (!outputToken) return 
+  const outputTokenAddress = ((outputToken as any)?.currency || outputToken as any).address
+  const response = { data: (await getMaxes(outputTokenAddress) || {}) as any }
+  if (response.data && response.data.MaxTxAmount) {
+    const formattedMax = response.data.MaxTxAmount / 10 ** outputToken.decimals 
+    handleTypeOutput(formattedMax.toString())
+  } else {
+    Swal.fire({
+      toast: true,
+      position: 'bottom-end',
+      timer: 3000,
+      showConfirmButton: false,
+      timerProgressBar: true,
+      icon: 'error',
+      title: `Failed to retrieve max transaction amount for ${outputToken.symbol}`
+    })
+  }
+}
+
+const showTrySetMax = React.useMemo(() => {
+  const amounts = parsedAmounts 
+  if (!amounts ) {
+    console.log(`no amounts`) 
+    return false
+  }
+  const outputCurrency = currencies.OUTPUT
+  if (!outputCurrency) {
+    console.log(`No Output`, outputCurrency)
+    return false
+  }
+
+  if (outputCurrency.isNative) {
+    console.log(`Is native output`)
+    return false
+  }
+
+  console.log(`should show `)
+  return true
+},[    
+  currencies.OUTPUT, 
+  currencies.INPUT,
+ ])
+
 const toggleShowChart = () => setShowChart(!showChart)
   const onViewChangeFn = (view:any) => setView(view)
   return (
@@ -646,7 +694,11 @@ const toggleShowChart = () => setShowChart(!showChart)
                     showCommonBases={true}  
                     id="swap-currency-output"
                   />
-          {Boolean(useDetectRenounced && currencies.OUTPUT?.symbol && !currencies?.OUTPUT?.isNative) && <Badge style={{color: '#fff', fontSize:12,  display:'flex',  margin:0}}>renounced? &nbsp;<Circle fontSize={8} fill={isOutputRenounced ? 'green' : 'red'} /></Badge>}
+                    {Boolean(useDetectRenounced && currencies.OUTPUT?.symbol && !currencies?.OUTPUT?.isNative) && <Badge style={{color: '#fff', fontSize:12,  display:'flex',  margin:0}}>renounced? &nbsp;<Circle fontSize={8} fill={isOutputRenounced ? 'green' : 'red'} /></Badge>}
+                            
+                  {isExpertMode && showTrySetMax && (
+                    <TYPE.link style={{display:'flex', justifyContent:'flex-end', cursor: 'pointer'}} onClick={trySetMaxTx}>Buy Max Tx Amount</TYPE.link>
+                  )}
                 </div>
 
                 {!cannotUseFeature && useOtherAddress && !showWrap ? (
@@ -879,7 +931,7 @@ const toggleShowChart = () => setShowChart(!showChart)
                     </ButtonError>
                   )}
                   {isExpertMode && swapErrorMessage ? <SwapCallbackError error={swapErrorMessage} /> : null}
-
+          
                 </div>
               </AutoColumn>
             </Wrapper>}

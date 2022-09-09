@@ -102,7 +102,6 @@ const CurrencyLogo = React.memo(({
 }) => {
   const uriLocations = useHttpLocations(currency instanceof WrappedTokenInfo ? currency.logoURI : undefined)
   const { chainId } = useWeb3React()
-  console.log(`currencyLogo`, currency)
   const srcs: string[] = useMemo(() => {
     if (!currency) return []
     if (currency.isNative) return []
