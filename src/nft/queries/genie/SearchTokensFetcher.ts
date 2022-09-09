@@ -1,7 +1,7 @@
 import { FungibleToken } from '../../types'
 
 export const fetchSearchTokens = async (tokenQuery: string): Promise<FungibleToken[]> => {
-  const url = `${process.env.REACT_APP_GENIE_V3_API_URL}/searchTokens?tokenQuery=${tokenQuery}`
+  const url = `${process.env.REACT_APP_TEMP_API_URL}/tokens/search?tokenQuery=${tokenQuery}`
 
   const r = await fetch(url, {
     method: 'GET',
