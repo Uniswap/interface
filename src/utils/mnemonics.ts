@@ -23,7 +23,7 @@ export function isValidWord(
   if (invalidWords.length) {
     return {
       valid: false,
-      errorText: invalidWords.length > 1 ? t('Invalid words') : t('Invalid word'),
+      errorText: t('Invalid word: {{word}}', { word: invalidWords.at(-1) }),
     }
   }
 

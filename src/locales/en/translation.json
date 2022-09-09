@@ -426,8 +426,7 @@
   "Watch": "Watch",
   "Watched wallets": "Watched wallets",
   "Enter value": "Enter value",
-  "Invalid words": "Invalid words",
-  "Invalid word": "Invalid word",
+  "Invalid word: {{word}}": "Invalid word: {{word}}",
   "Recovery phrases must be 12-24 words": "Recovery phrases must be 12-24 words",
   "Invalid phrase": "Invalid phrase"
 }
