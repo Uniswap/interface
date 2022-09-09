@@ -42,6 +42,26 @@ const CLIENT_QUERY_PARAMS = {
 }
 const PRICE_QUERY_PARAMS = {
   protocols,
+  v2PoolSelection: {
+    topN: 2,
+    topNDirectSwaps: 1,
+    topNTokenInOut: 2,
+    topNSecondHop: 1,
+    topNWithEachBaseToken: 2,
+    topNWithBaseToken: 2,
+  },
+  v3PoolSelection: {
+    topN: 2,
+    topNDirectSwaps: 1,
+    topNTokenInOut: 2,
+    topNSecondHop: 1,
+    topNWithEachBaseToken: 2,
+    topNWithBaseToken: 2,
+  },
+  maxSwapsPerPath: 2,
+  minSplits: 1,
+  maxSplits: 1,
+  distributionPercent: 100,
 }
 
 export const routingApi = createApi({
