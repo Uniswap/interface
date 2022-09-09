@@ -7,10 +7,16 @@ import {
   sortCategoryAtom,
   sortDirectionAtom,
 } from 'components/Tokens/state'
-import { TimePeriod, TokenData } from 'graphql/data/TopTokenQuery'
+import {
+  query as topTokensQuery,
+  TimePeriod,
+  TopTokenQueryType,
+  TopTokensQuery$data,
+} from 'graphql/thegraph/TopTokensQuery'
 import { useAtomValue } from 'jotai/utils'
 import { ReactNode, Suspense, useCallback, useMemo } from 'react'
 import { AlertTriangle } from 'react-feather'
+import { useLazyLoadQuery } from 'react-relay'
 import styled from 'styled-components/macro'
 
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from '../constants'
@@ -47,33 +53,40 @@ const TokenRowsContainer = styled.div`
   width: 100%;
 `
 
-function useFilteredTokens(tokens: TokenData[] | undefined) {
+function useFilteredTokens(data: TopTokensQuery$data) {
   const filterString = useAtomValue(filterStringAtom)
   const favoriteTokenAddresses = useAtomValue(favoritesAtom)
   const showFavorites = useAtomValue(showFavoritesAtom)
-  const shownTokens =
-    showFavorites && tokens ? tokens.filter((token) => favoriteTokenAddresses.includes(token.address)) : tokens
 
-  return useMemo(
+  const shownTokens =
+    showFavorites && data.tokens
+      ? data.tokens.filter((token) => favoriteTokenAddresses.includes(token.id))
+      : data.tokens
+  const tokens = useMemo(
     () =>
       (shownTokens ?? []).filter((token) => {
-        if (!token.address) {
+        if (!token.id) {
           return false
         }
         if (!filterString) {
           return true
         }
         const lowercaseFilterString = filterString.toLowerCase()
-        const addressIncludesFilterString = token?.address?.toLowerCase().includes(lowercaseFilterString)
+        const addressIncludesFilterString = token?.id?.toLowerCase().includes(lowercaseFilterString)
         const nameIncludesFilterString = token?.name?.toLowerCase().includes(lowercaseFilterString)
         const symbolIncludesFilterString = token?.symbol?.toLowerCase().includes(lowercaseFilterString)
         return nameIncludesFilterString || symbolIncludesFilterString || addressIncludesFilterString
       }),
     [shownTokens, filterString]
   )
+  return {
+    ...data,
+    tokens,
+  }
 }
 
-function useSortedTokens(tokenData: TokenData[] | null) {
+function useSortedTokens(data: TopTokensQuery$data) {
+  const tokens = [...data.tokens]
   const sortCategory = useAtomValue(sortCategoryAtom)
   const sortDirection = useAtomValue(sortDirectionAtom)
   const timePeriod = useAtomValue<TimePeriod>(filterTimeAtom)
@@ -92,9 +105,9 @@ function useSortedTokens(tokenData: TokenData[] | null) {
 
   return useMemo(
     () =>
-      tokenData &&
-      tokenData.sort((token1, token2) => {
-        if (!tokenData) {
+      tokens &&
+      tokens.sort((token1, token2) => {
+        if (!tokens) {
           return 0
         }
         // fix delta/percent change property
@@ -105,25 +118,25 @@ function useSortedTokens(tokenData: TokenData[] | null) {
         let b: number | null | undefined
         switch (sortCategory) {
           case Category.marketCap:
-            a = token1.marketCap?.value
-            b = token2.marketCap?.value
+            a = token1.totalValueLockedUSD
+            b = token2.totalValueLockedUSD
             break
-          case Category.price:
-            a = token1.price?.value
-            b = token2.price?.value
-            break
+          // case Category.price:
+          //   a = token1.price?.value
+          //   b = token2.price?.value
+          //   break
           case Category.volume:
-            a = token1.volume?.[timePeriod]?.value
-            b = token2.volume?.[timePeriod]?.value
+            a = token1.volumeUSD
+            b = token2.volumeUSD
             break
-          case Category.percentChange:
-            a = token1.percentChange?.[timePeriod]?.value
-            b = token2.percentChange?.[timePeriod]?.value
-            break
+          // case Category.percentChange:
+          //   a = token1.percentChange?.[timePeriod]?.value
+          //   b = token2.percentChange?.[timePeriod]?.value
+          //   break
         }
         return sortFn(a, b)
       }),
-    [tokenData, sortDirection, sortCategory, sortFn, timePeriod]
+    [tokens, sortDirection, sortCategory, sortFn, timePeriod]
   )
 }
 
@@ -149,14 +162,16 @@ export function LoadingTokenTable() {
   )
 }
 
-export default function TokenTable({ data }: { data: TokenData[] | undefined }) {
+interface TokenTableProps {}
+export default function TokenTable(props: TokenTableProps) {
   const showFavorites = useAtomValue<boolean>(showFavoritesAtom)
   const timePeriod = useAtomValue<TimePeriod>(filterTimeAtom)
+  const data = useLazyLoadQuery<TopTokenQueryType>(topTokensQuery, {})
   const filteredTokens = useFilteredTokens(data)
   const sortedFilteredTokens = useSortedTokens(filteredTokens)
 
   /* loading and error state */
-  if (data === null) {
+  if (!data) {
     return (
       <NoTokensState
         message={
@@ -184,11 +199,10 @@ export default function TokenTable({ data }: { data: TokenData[] | undefined }) 
         <TokenRowsContainer>
           {sortedFilteredTokens?.map((token, index) => (
             <LoadedRow
-              key={token.address}
-              tokenAddress={token.address}
+              key={token.id}
+              token={token}
               tokenListIndex={index}
               tokenListLength={sortedFilteredTokens.length}
-              tokenData={token}
               timePeriod={timePeriod}
             />
           ))}

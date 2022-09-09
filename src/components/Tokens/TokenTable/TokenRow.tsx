@@ -5,7 +5,8 @@ import { EventName } from 'components/AmplitudeAnalytics/constants'
 import SparklineChart from 'components/Charts/SparklineChart'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { getChainInfo } from 'constants/chainInfo'
-import { TimePeriod, TokenData } from 'graphql/data/TopTokenQuery'
+import { TimePeriod } from 'graphql/data/TopTokenQuery'
+import { TopTokensQuery$dataToken } from 'graphql/thegraph/TopTokensQuery'
 import { useCurrency } from 'hooks/Tokens'
 import { useAtom } from 'jotai'
 import { useAtomValue } from 'jotai/utils'
@@ -446,35 +447,33 @@ export function LoadingRow() {
 
 /* Loaded State: row component with token information */
 export default function LoadedRow({
-  tokenAddress,
+  token,
   tokenListIndex,
   tokenListLength,
-  tokenData,
   timePeriod,
 }: {
-  tokenAddress: string
+  token: TopTokensQuery$dataToken
   tokenListIndex: number
   tokenListLength: number
-  tokenData: TokenData
   timePeriod: TimePeriod
 }) {
-  const currency = useCurrency(tokenAddress)
-  const tokenName = tokenData.name
-  const tokenSymbol = tokenData.symbol
+  const currency = useCurrency(token.id)
+  const tokenName = token.name
+  const tokenSymbol = token.symbol
   const theme = useTheme()
   const [favoriteTokens] = useAtom(favoritesAtom)
-  const isFavorited = favoriteTokens.includes(tokenAddress)
-  const toggleFavorite = useToggleFavorite(tokenAddress)
+  const isFavorited = favoriteTokens.includes(token.id)
+  const toggleFavorite = useToggleFavorite(token.id)
   const filterString = useAtomValue(filterStringAtom)
   const filterNetwork = useAtomValue(filterNetworkAtom)
   const L2Icon = getChainInfo(filterNetwork).circleLogoUrl
-  const delta = tokenData.percentChange?.[timePeriod]?.value
+  const delta = 0.1 // token.percentChange?.[timePeriod]?.value
   const arrow = delta ? getDeltaArrow(delta) : null
   const formattedDelta = delta ? formatDelta(delta) : null
 
   const exploreTokenSelectedEventProperties = {
     chain_id: filterNetwork,
-    token_address: tokenAddress,
+    token_address: token.id,
     token_symbol: tokenSymbol,
     token_list_index: tokenListIndex,
     token_list_length: tokenListLength,
@@ -486,7 +485,7 @@ export default function LoadedRow({
   // TODO: currency logo sizing mobile (32px) vs. desktop (24px)
   return (
     <StyledLink
-      to={`/tokens/${tokenAddress}`}
+      to={`/tokens/${token.id}`}
       onClick={() => sendAnalyticsEvent(EventName.EXPLORE_TOKEN_ROW_CLICKED, exploreTokenSelectedEventProperties)}
     >
       <TokenRow
@@ -517,7 +516,7 @@ export default function LoadedRow({
         price={
           <ClickableContent>
             <PriceInfoCell>
-              {tokenData.price?.value ? formatDollarAmount(tokenData.price?.value) : '-'}
+              -{/* {token.price?.value ? formatDollarAmount(token.price?.value) : '-'} */}
               <PercentChangeInfoCell>
                 {formattedDelta}
                 {arrow}
@@ -533,14 +532,12 @@ export default function LoadedRow({
         }
         marketCap={
           <ClickableContent>
-            {tokenData.marketCap?.value ? formatDollarAmount(tokenData.marketCap?.value) : '-'}
+            {token.totalValueLockedUSD?.value ? formatDollarAmount(token.totalValueLockedUSD) : '-'}
           </ClickableContent>
         }
         volume={
           <ClickableContent>
-            {tokenData.volume?.[timePeriod]?.value
-              ? formatDollarAmount(tokenData.volume?.[timePeriod]?.value ?? undefined)
-              : '-'}
+            {token.volumeUSD ? formatDollarAmount(token.volumeUSD ?? undefined) : '-'}
           </ClickableContent>
         }
         sparkLine={
