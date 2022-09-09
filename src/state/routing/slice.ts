@@ -9,6 +9,12 @@ import qs from 'qs'
 
 import { GetQuoteResult } from './types'
 
+export enum RouterPreference {
+  API = 'api',
+  CLIENT = 'client',
+  PRICE = 'price',
+}
+
 const routerProviders = new Map<ChainId, BaseProvider>()
 function getRouterProvider(chainId: ChainId): BaseProvider {
   const provider = routerProviders.get(chainId)
@@ -26,12 +32,14 @@ function getRouterProvider(chainId: ChainId): BaseProvider {
 
 const protocols: Protocol[] = [Protocol.V2, Protocol.V3, Protocol.MIXED]
 
-const DEFAULT_QUERY_PARAMS = {
+const API_QUERY_PARAMS = {
   protocols: protocols.map((p) => p.toLowerCase()).join(','),
   // example other params
   // forceCrossProtocol: 'true',
   // minSplits: '5',
 }
+const CLIENT_QUERY_PARAMS = {}
+const PRICE_QUERY_PARAMS = {}
 
 export const routingApi = createApi({
   reducerPath: 'routingApi',
@@ -51,24 +59,20 @@ export const routingApi = createApi({
         tokenOutDecimals: number
         tokenOutSymbol?: string
         amount: string
-        useClientSideRouter: boolean // included in key to invalidate on change
+        routerPreference: RouterPreference
         type: 'exactIn' | 'exactOut'
       }
     >({
       async queryFn(args, _api, _extraOptions, fetch) {
-        const { tokenInAddress, tokenInChainId, tokenOutAddress, tokenOutChainId, amount, useClientSideRouter, type } =
+        const { tokenInAddress, tokenInChainId, tokenOutAddress, tokenOutChainId, amount, routerPreference, type } =
           args
 
         let result
 
         try {
-          if (useClientSideRouter) {
-            const chainId = args.tokenInChainId
-            const params = { chainId, provider: getRouterProvider(chainId) }
-            result = await getClientSideQuote(args, params, { protocols })
-          } else {
+          if (routerPreference === RouterPreference.API) {
             const query = qs.stringify({
-              ...DEFAULT_QUERY_PARAMS,
+              ...API_QUERY_PARAMS,
               tokenInAddress,
               tokenInChainId,
               tokenOutAddress,
@@ -77,6 +81,15 @@ export const routingApi = createApi({
               type,
             })
             result = await fetch(`quote?${query}`)
+          } else {
+            const chainId = args.tokenInChainId
+            const provider = getRouterProvider(chainId)
+            const params = {
+              chainId,
+              provider,
+              ...(routerPreference === RouterPreference.PRICE ? PRICE_QUERY_PARAMS : CLIENT_QUERY_PARAMS),
+            }
+            result = await getClientSideQuote(args, params, { protocols })
           }
 
           return { data: result.data as GetQuoteResult }
