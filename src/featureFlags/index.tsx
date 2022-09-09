@@ -34,8 +34,6 @@ export function useUpdateFlag() {
 }
 
 export function FeatureFlagsProvider({ children }: { children: ReactNode }) {
-  // TODO(vm): `isLoaded` to `true` so `App.tsx` will render. Later, this will be dependent on
-  // flags loading from Amplitude, with a timeout.
   const featureFlags = useAtomValue(featureFlagSettings)
   const value = {
     isLoaded: true,
