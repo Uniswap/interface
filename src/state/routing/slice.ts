@@ -1,8 +1,7 @@
-import { JsonRpcProvider } from '@ethersproject/providers'
 import { createApi, fetchBaseQuery, FetchBaseQueryError } from '@reduxjs/toolkit/query/react'
 import { Protocol } from '@uniswap/router-sdk'
 import { AlphaRouter, ChainId } from '@uniswap/smart-order-router'
-import { RPC_URLS } from 'constants/networks'
+import { RPC_PROVIDERS } from 'constants/networks'
 import { getClientSideQuote, toSupportedChainId } from 'lib/hooks/routing/clientSideSmartOrderRouter'
 import ms from 'ms.macro'
 import qs from 'qs'
@@ -22,7 +21,7 @@ function getRouter(chainId: ChainId): AlphaRouter {
 
   const supportedChainId = toSupportedChainId(chainId)
   if (supportedChainId) {
-    const provider = new JsonRpcProvider(RPC_URLS[supportedChainId])
+    const provider = RPC_PROVIDERS[supportedChainId]
     const router = new AlphaRouter({ chainId, provider })
     routers.set(chainId, router)
     return router
