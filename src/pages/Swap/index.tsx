@@ -676,7 +676,7 @@ const toggleShowChart = () => setShowChart(!showChart)
                     
                     id="swap-currency-input"
                   />
-                            {Boolean(useDetectRenounced && currencies.INPUT?.symbol && !currencies.INPUT.isNative) && <Badge style={{color: '#fff', fontSize:12, display:'flex',  margin:0}}>renounced? &nbsp;<Circle fontSize={8} fill={isInputRenounced ? 'green' : 'red'} /></Badge>}
+                            {Boolean(useDetectRenounced && currencies.INPUT?.symbol && !currencies.INPUT.isNative) && <Badge style={{color: theme.text1, fontSize:12, display:'flex',  margin:0}}>renounced? &nbsp;<Circle fontSize={8} fill={isInputRenounced ? 'green' : 'red'} /></Badge>}
 
                   <ArrowWrapper clickable>
                     < Majgic 
@@ -700,7 +700,7 @@ const toggleShowChart = () => setShowChart(!showChart)
                     showCommonBases={true}  
                     id="swap-currency-output"
                   />
-                    {Boolean(useDetectRenounced && currencies.OUTPUT?.symbol && !currencies?.OUTPUT?.isNative) && <Badge style={{color: '#fff', fontSize:12,  display:'flex',  margin:0}}>renounced? &nbsp;<Circle fontSize={8} fill={isOutputRenounced ? 'green' : 'red'} /></Badge>}
+                    {Boolean(useDetectRenounced && currencies.OUTPUT?.symbol && !currencies?.OUTPUT?.isNative) && <Badge style={{color: theme.text1, fontSize:12,  display:'flex',  margin:0}}>renounced? &nbsp;<Circle fontSize={8} fill={isOutputRenounced ? 'green' : 'red'} /></Badge>}
                             
                   {isExpertMode && showTrySetMax && (
                     <TYPE.link style={{display:'flex', justifyContent:'flex-end',  cursor: 'pointer'}} onClick={trySetMaxTx}>{!gettingMax ? 'Buy Max Tx Amount' : <>Loading maxes &nbsp; <Loader /></>} </TYPE.link>
