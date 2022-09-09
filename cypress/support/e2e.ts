@@ -41,9 +41,14 @@ Cypress.Commands.overwrite(
           win.localStorage.setItem('redux_localstorage_simple_user', '{"selectedWallet":"INJECTED"}')
 
           if (options?.featureFlags) {
-            const joinedFeatureFlags = options.featureFlags.map((featureFlag) => `"${featureFlag}":"enabled"`).join(',')
-            const featurFlagsState = `{${joinedFeatureFlags}}`
-            win.localStorage.setItem('featureFlags', featurFlagsState)
+            const featureFlags = options.featureFlags.reduce(
+              (flags, flag) => ({
+                ...flags,
+                [flag]: 'enabled',
+              }),
+              {}
+            )
+            win.localStorage.setItem('featureFlags', JSON.stringify(featureFlags))
           }
 
           win.ethereum = injected

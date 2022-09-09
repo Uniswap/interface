@@ -3,7 +3,7 @@ import { getTestSelector } from '../utils'
 
 describe('Wallet Dropdown', () => {
   before(() => {
-    cy.visit('/', { featureFlags: [FeatureFlag.navBar] })
+    cy.visit('/', { featureFlags: [FeatureFlag.navBar, FeatureFlag.tokenSafety] })
   })
 
   it('should change the theme', () => {
