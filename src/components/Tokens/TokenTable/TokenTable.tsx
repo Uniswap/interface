@@ -54,25 +54,29 @@ function useFilteredTokens(data: TokenTopQuery$data): SingleTokenData[] | undefi
   const favorites = useAtomValue(favoritesAtom)
   const showFavorites = useAtomValue(showFavoritesAtom)
 
-  return data.topTokenProjects
-    ?.filter(
-      (token) => !showFavorites || (token?.tokens?.[0].address && favorites.includes(token?.tokens?.[0].address))
-    )
-    .filter((token) => {
-      const tokenInfo = token?.tokens?.[0]
-      const address = tokenInfo?.address
-      if (!address) {
-        return false
-      } else if (!filterString) {
-        return true
-      } else {
-        const lowercaseFilterString = filterString.toLowerCase()
-        const addressIncludesFilterString = address?.toLowerCase().includes(lowercaseFilterString)
-        const nameIncludesFilterString = token?.name?.toLowerCase().includes(lowercaseFilterString)
-        const symbolIncludesFilterString = tokenInfo?.symbol?.toLowerCase().includes(lowercaseFilterString)
-        return nameIncludesFilterString || symbolIncludesFilterString || addressIncludesFilterString
-      }
-    })
+  return useMemo(
+    () =>
+      data.topTokenProjects
+        ?.filter(
+          (token) => !showFavorites || (token?.tokens?.[0].address && favorites.includes(token?.tokens?.[0].address))
+        )
+        .filter((token) => {
+          const tokenInfo = token?.tokens?.[0]
+          const address = tokenInfo?.address
+          if (!address) {
+            return false
+          } else if (!filterString) {
+            return true
+          } else {
+            const lowercaseFilterString = filterString.toLowerCase()
+            const addressIncludesFilterString = address?.toLowerCase().includes(lowercaseFilterString)
+            const nameIncludesFilterString = token?.name?.toLowerCase().includes(lowercaseFilterString)
+            const symbolIncludesFilterString = tokenInfo?.symbol?.toLowerCase().includes(lowercaseFilterString)
+            return nameIncludesFilterString || symbolIncludesFilterString || addressIncludesFilterString
+          }
+        }),
+    [data.topTokenProjects, favorites, filterString, showFavorites]
+  )
 }
 
 function useSortedTokens(tokenData: SingleTokenData[] | undefined) {
