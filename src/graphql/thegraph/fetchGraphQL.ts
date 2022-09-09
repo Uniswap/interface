@@ -32,7 +32,6 @@ const headers = {
 // and returns its results as a Promise:
 const fetchQuery = (params: RequestParameters, variables: Variables): ObservableFromValue<GraphQLResponse> => {
   const chainId = (store.getState() as AppState).application.chainId
-
   const subgraphUrl =
     chainId && CHAIN_SUBGRAPH_URL[chainId] ? CHAIN_SUBGRAPH_URL[chainId] : CHAIN_SUBGRAPH_URL[SupportedChainId.MAINNET]
 

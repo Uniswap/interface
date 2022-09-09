@@ -7,6 +7,7 @@ import {
   sortCategoryAtom,
   sortDirectionAtom,
 } from 'components/Tokens/state'
+import theGraphRelayEnvironment from 'graphql/thegraph/RelayEnvironment'
 import {
   query as topTokensQuery,
   TimePeriod,
@@ -14,9 +15,9 @@ import {
   TopTokensQuery$data,
 } from 'graphql/thegraph/TopTokensQuery'
 import { useAtomValue } from 'jotai/utils'
-import { ReactNode, Suspense, useCallback, useMemo } from 'react'
+import { ReactNode, Suspense, useCallback, useEffect, useMemo, useState } from 'react'
 import { AlertTriangle } from 'react-feather'
-import { useLazyLoadQuery } from 'react-relay'
+import { fetchQuery } from 'react-relay'
 import styled from 'styled-components/macro'
 
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from '../constants'
@@ -53,11 +54,26 @@ const TokenRowsContainer = styled.div`
   width: 100%;
 `
 
-function useFilteredTokens(data: TopTokensQuery$data) {
+function useTempTokenTableHook() {
+  const [data, setData] = useState<TopTokensQuery$data>()
+  const [error, setError] = useState<Error>()
+  const [loading, setLoading] = useState(true)
+
+  // useLazyLoadQuery<TopTokenQueryType>(topTokensQuery, {})
+  useEffect(() => {
+    fetchQuery<TopTokenQueryType>(theGraphRelayEnvironment, topTokensQuery, {}).subscribe({
+      next: setData,
+      error: setError,
+      complete: () => setLoading(false),
+    })
+  }, [setData, setError, setLoading])
+  return { data, error, loading }
+}
+
+function useFilteredTokens(data: TopTokensQuery$data = { tokens: [] }) {
   const filterString = useAtomValue(filterStringAtom)
   const favoriteTokenAddresses = useAtomValue(favoritesAtom)
   const showFavorites = useAtomValue(showFavoritesAtom)
-
   const shownTokens =
     showFavorites && data.tokens
       ? data.tokens.filter((token) => favoriteTokenAddresses.includes(token.id))
@@ -85,11 +101,11 @@ function useFilteredTokens(data: TopTokensQuery$data) {
   }
 }
 
-function useSortedTokens(data: TopTokensQuery$data) {
-  const tokens = [...data.tokens]
+function useSortedTokens(data: TopTokensQuery$data = { tokens: [] }): TopTokensQuery$data['tokens'] | undefined {
+  const tokens = useMemo(() => (data?.tokens ? [...data.tokens] : []), [data])
   const sortCategory = useAtomValue(sortCategoryAtom)
   const sortDirection = useAtomValue(sortDirectionAtom)
-  const timePeriod = useAtomValue<TimePeriod>(filterTimeAtom)
+  // const timePeriod = useAtomValue<TimePeriod>(filterTimeAtom)
 
   const sortFn = useCallback(
     (a: any, b: any) => {
@@ -136,7 +152,7 @@ function useSortedTokens(data: TopTokensQuery$data) {
         }
         return sortFn(a, b)
       }),
-    [tokens, sortDirection, sortCategory, sortFn, timePeriod]
+    [tokens, sortDirection, sortCategory, sortFn]
   )
 }
 
@@ -162,11 +178,10 @@ export function LoadingTokenTable() {
   )
 }
 
-interface TokenTableProps {}
-export default function TokenTable(props: TokenTableProps) {
+export default function TokenTable() {
   const showFavorites = useAtomValue<boolean>(showFavoritesAtom)
   const timePeriod = useAtomValue<TimePeriod>(filterTimeAtom)
-  const data = useLazyLoadQuery<TopTokenQueryType>(topTokensQuery, {})
+  const { data } = useTempTokenTableHook()
   const filteredTokens = useFilteredTokens(data)
   const sortedFilteredTokens = useSortedTokens(filteredTokens)
 

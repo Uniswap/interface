@@ -1,4 +1,5 @@
-import { graphql } from 'react-relay'
+import graphql from 'babel-plugin-relay/macro'
+
 export type { EthPricesQuery$data, EthPricesQuery as TopTokenQueryType } from './__generated__/EthPricesQuery.graphql'
 
 export const query = graphql`

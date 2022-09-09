@@ -4,7 +4,7 @@ import 'polyfills'
 import 'components/analytics'
 
 import { FeatureFlagsProvider } from 'featureFlags'
-import RelayEnvironment from 'graphql/data/RelayEnvironment'
+import RelayEnvironment from 'graphql/RelayEnvironment'
 import { BlockNumberProvider } from 'lib/hooks/useBlockNumber'
 import { MulticallUpdater } from 'lib/state/multicall'
 import { StrictMode } from 'react'

@@ -1,6 +1,7 @@
-import { graphql } from 'react-relay'
+import graphql from 'babel-plugin-relay/macro'
+
 import { TopTokensQuery$data } from './__generated__/TopTokensQuery.graphql'
-export type { TopTokensQuery$data, TopTokensQuery as TopTokenQueryType } from './__generated__/TopTokensQuery.graphql'
+export type { TopTokensQuery as TopTokenQueryType, TopTokensQuery$data } from './__generated__/TopTokensQuery.graphql'
 
 export type TopTokensQuery$dataToken = TopTokensQuery$data['tokens'][number]
 
