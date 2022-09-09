@@ -32,11 +32,9 @@ function getRouterProvider(chainId: ChainId): BaseProvider {
 
 const protocols: Protocol[] = [Protocol.V2, Protocol.V3, Protocol.MIXED]
 
+// routing API quote query params: https://github.com/Uniswap/routing-api/blob/main/lib/handlers/quote/schema/quote-schema.ts
 const API_QUERY_PARAMS = {
   protocols: protocols.map((p) => p.toLowerCase()).join(','),
-  // example other params
-  // forceCrossProtocol: 'true',
-  // minSplits: '5',
 }
 const CLIENT_QUERY_PARAMS = {}
 const PRICE_QUERY_PARAMS = {}
