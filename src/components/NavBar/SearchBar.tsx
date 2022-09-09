@@ -273,6 +273,7 @@ export const SearchBarDropdown = ({ toggleOpen, tokens, collections, hasInput, i
 
       setResultsState(currentState)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     isLoading,
     tokens,
@@ -282,6 +283,12 @@ export const SearchBarDropdown = ({ toggleOpen, tokens, collections, hasInput, i
     trendingTokens,
     trendingTokensAreLoading,
     hoveredIndex,
+    phase1Flag,
+    toggleOpen,
+    searchHistory,
+    hasInput,
+    isNFTPage,
+    isTokenPage,
   ])
 
   return (
