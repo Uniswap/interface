@@ -115,28 +115,35 @@ const tokenPricesFragment = graphql`
     }
   }
 `
+type CachedTopToken = NonNullable<NonNullable<TokenTopQuery$data>['topTokenProjects']>[number]
 
-let cachedTopTokens: TokenTopQuery$data | null
+let cachedTopTokens: Record<string, CachedTopToken> = {}
 export function useTopTokenQuery(page: number, timePeriod: TimePeriod) {
   const topTokens = useLazyLoadQuery<TokenTopQuery>(topTokensQuery, { page, duration: toHistoryDuration(timePeriod) })
 
-  cachedTopTokens = topTokens
+  cachedTopTokens =
+    topTokens.topTokenProjects?.reduce((acc, current) => {
+      const address = current?.tokens?.[0].address
+      if (address) acc[address] = current
+      return acc
+    }, {} as Record<string, CachedTopToken>) ?? {}
+  console.log(cachedTopTokens)
 
   return topTokens
 }
 
-type CachedTopToken = NonNullable<NonNullable<TokenTopQuery$data>['topTokenProjects']>[number]
-export function checkCachedTopToken(address: string): CachedTopToken {
-  let cachedTokenData: CachedTopToken = null
-  if (cachedTopTokens) {
-    cachedTopTokens.topTokenProjects?.forEach((token) => {
-      if (token?.tokens?.[0].address === address.toLowerCase()) {
-        cachedTokenData = token
-      }
-    })
-  }
-  return cachedTokenData
-}
+// export function checkCachedTopToken(address: string): CachedTopToken {
+//   let cachedTokenData: CachedTopToken = null
+//   return
+//   if (cachedTopTokens) {
+//     cachedTopTokens.topTokenProjects?.forEach((token) => {
+//       if (token?.tokens?.[0].address === address.toLowerCase()) {
+//         cachedTokenData = token
+//       }
+//     })
+//   }
+//   return cachedTokenData
+// }
 
 const tokenQuery = graphql`
   query TokenQuery($contract: ContractInput!, $duration: HistoryDuration!, $skip: Boolean = false) {
@@ -212,7 +219,7 @@ const tokenQuery = graphql`
 `
 
 export function useTokenQuery(address: string, chain: Chain, timePeriod: TimePeriod) {
-  const cachedTopToken = checkCachedTopToken(address)
+  const cachedTopToken = cachedTopTokens[address]
   const data = useLazyLoadQuery<TokenQuery>(tokenQuery, {
     contract: { address, chain },
     duration: toHistoryDuration(timePeriod),

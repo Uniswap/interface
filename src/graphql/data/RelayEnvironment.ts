@@ -5,7 +5,11 @@ import RelayQueryResponseCache from 'relay-runtime/lib/network/RelayQueryRespons
 
 import fetchGraphQL from './fetchGraphQL'
 
-export const cache = new RelayQueryResponseCache({ size: 250, ttl: ms`5m` })
+// max number of request in cache, least-recently updated entries purged first
+const size = 250
+// number in milliseconds, how long records stay valid in cache
+const ttl = ms`5m`
+export const cache = new RelayQueryResponseCache({ size, ttl })
 
 const fetchQuery = async function wrappedFetchQuery(params: RequestParameters, variables: Variables) {
   const queryID = params.name
