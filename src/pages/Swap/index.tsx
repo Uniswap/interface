@@ -567,7 +567,11 @@ export default function Swap({ history }: RouteComponentProps) {
     }
   }
 
+const [gettingMax, setGettingMax] = React.useState(false)
+
 const trySetMaxTx = async () => {
+  if (gettingMax) return
+  setGettingMax(true)
   const outputToken = currencies.OUTPUT
   if (!outputToken) return 
   const outputTokenAddress = ((outputToken as any)?.currency || outputToken as any).address
@@ -586,6 +590,8 @@ const trySetMaxTx = async () => {
       title: `Failed to retrieve max transaction amount for ${outputToken.symbol}`
     })
   }
+
+  setGettingMax(false)
 }
 
 const showTrySetMax = React.useMemo(() => {
@@ -649,7 +655,7 @@ const toggleShowChart = () => setShowChart(!showChart)
               <small style={{color: theme.text1, cursor:'pointer', display:'flex', marginBottom:5, alignItems:'center', justifyContent: 'flex-end'}} onClick={openGasSettings}>Customize Gas <ArrowUpRight /></small>
               <AutoColumn gap={'xs'}>
               {useAutoSlippage && automaticCalculatedSlippage >= 0 && <Badge  variant={BadgeVariant.DEFAULT}>
-          Using {automaticCalculatedSlippage}% Auto Slippage</Badge>}
+                Using {automaticCalculatedSlippage}% Auto Slippage</Badge>}
                 <div style={{ display: 'relative' }}>
                   <CurrencyInputPanel
                     label={
@@ -697,7 +703,7 @@ const toggleShowChart = () => setShowChart(!showChart)
                     {Boolean(useDetectRenounced && currencies.OUTPUT?.symbol && !currencies?.OUTPUT?.isNative) && <Badge style={{color: '#fff', fontSize:12,  display:'flex',  margin:0}}>renounced? &nbsp;<Circle fontSize={8} fill={isOutputRenounced ? 'green' : 'red'} /></Badge>}
                             
                   {isExpertMode && showTrySetMax && (
-                    <TYPE.link style={{display:'flex', justifyContent:'flex-end', cursor: 'pointer'}} onClick={trySetMaxTx}>Buy Max Tx Amount</TYPE.link>
+                    <TYPE.link style={{display:'flex', justifyContent:'flex-end',  cursor: 'pointer'}} onClick={trySetMaxTx}>{!gettingMax ? 'Buy Max Tx Amount' : <>Loading maxes &nbsp; <Loader /></>} </TYPE.link>
                   )}
                 </div>
 
