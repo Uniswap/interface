@@ -40,6 +40,7 @@ const API_QUERY_PARAMS = {
 const CLIENT_QUERY_PARAMS = {
   protocols,
 }
+// Price queries are tuned down to minimize the required RPCs to respond to them.
 const PRICE_QUERY_PARAMS = {
   protocols,
   v2PoolSelection: {
