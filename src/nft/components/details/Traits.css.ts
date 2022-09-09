@@ -7,10 +7,10 @@ export const grid = style([
   {
     gridTemplateColumns: 'repeat(4, 1fr)',
     '@media': {
-      '(max-width: 1512px)': {
+      '(max-width: 1536px)': {
         gridTemplateColumns: 'repeat(3, 1fr)',
       },
-      '(max-width: 515px)': {
+      '(max-width: 640px)': {
         gridTemplateColumns: 'repeat(2, 1fr)',
       },
     },
