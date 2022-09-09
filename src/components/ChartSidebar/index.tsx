@@ -221,11 +221,17 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
 
     // the currency the token they are viewing is paired with, so we can allow swapping
     const inputCurrencyAddress = React.useMemo(function () {
-        return Boolean(!!holdings?.pair) ?
-            holdings?.pair?.toLowerCase() === WETH9[1].address.toLowerCase()
-                ? 'ETH' : toChecksum(holdings?.pair)
-            : `ETH`
-    }, [holdings.pair])
+        return Boolean(screenerToken && screenerToken?.quoteToken?.address) ?
+            (
+                screenerToken?.quoteToken?.address?.toLowerCase() == WETH9[1].address.toLowerCase()
+                    ? 'ETH'
+                    : screenerToken?.quoteToken?.address
+            ) :
+            Boolean(!!holdings?.pair) ?
+                holdings?.pair?.toLowerCase() === WETH9[1].address.toLowerCase()
+                    ? 'ETH' : toChecksum(holdings?.pair)
+                : `ETH`
+    }, [holdings.pair, screenerToken])
 
     const inputCurrency = useCurrency(inputCurrencyAddress ?? undefined)
 
@@ -308,151 +314,151 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
                     </Menu>
 
                 </SidebarHeader>
-                    <SidebarContent style={{ background: color }}>
-                        <Menu>
-                            <SubMenu
-                                style={{}}
-                                open={statsOpen}
-                                onOpenChange={onStatsOpenChange}
-                                popperarrow
-                                placeholder={'loader'}
-                                icon={<PieChart style={{ background: 'transparent' }} />}
-                                title={`${token?.name ? token?.name : ''} Stats`}>
-                                {Boolean(hasData && !loading) &&
-                                    <>
-                                        <Menu style={{ background: color, paddingLeft: 0 }} iconShape="round"   >
-                                            <SidebarHeader>
-                                                <MenuItem>{token?.name} Info</MenuItem>
-                                                {token && token.address && tokenCurrency && (<MenuItem>
-                                                    <RowBetween>
-                                                        <ExternalLink href={getExplorerLink(chainId as number, token.address ? token.address : tokenData?.id ? tokenData?.id : tokenCurrency?.wrapped?.address, ExplorerDataType.TOKEN)}>
+                <SidebarContent style={{ background: color }}>
+                    <Menu>
+                        <SubMenu
+                            style={{}}
+                            open={statsOpen}
+                            onOpenChange={onStatsOpenChange}
+                            popperarrow
+                            placeholder={'loader'}
+                            icon={<PieChart style={{ background: 'transparent' }} />}
+                            title={`${token?.name ? token?.name : ''} Stats`}>
+                            {Boolean(hasData && !loading) &&
+                                <>
+                                    <Menu style={{ background: color, paddingLeft: 0 }} iconShape="round"   >
+                                        <SidebarHeader>
+                                            <MenuItem>{token?.name} Info</MenuItem>
+                                            {token && token.address && tokenCurrency && (<MenuItem>
+                                                <RowBetween>
+                                                    <ExternalLink href={getExplorerLink(chainId as number, token.address ? token.address : tokenData?.id ? tokenData?.id : tokenCurrency?.wrapped?.address, ExplorerDataType.TOKEN)}>
 
-                                                            <RowFixed>
-                                                                <CurrencyLogo currency={tokenCurrency as Currency} size={'20px'} style={{ marginRight: '0.5rem' }} />
-                                                                <TYPE.main>{token?.symbol} ↗</TYPE.main>
+                                                        <RowFixed>
+                                                            <CurrencyLogo currency={tokenCurrency as Currency} size={'20px'} style={{ marginRight: '0.5rem' }} />
+                                                            <TYPE.main>{token?.symbol} ↗</TYPE.main>
 
-                                                            </RowFixed>
-                                                        </ExternalLink>
+                                                        </RowFixed>
+                                                    </ExternalLink>
 
-                                                        {token.address && (
-                                                            <RowFixed>
-                                                                <Copy toCopy={token.address}>
-                                                                    <span style={{ marginLeft: '4px' }}>
-                                                                        <TYPE.small>Copy Address</TYPE.small>
-                                                                    </span>
-                                                                </Copy>
-                                                            </RowFixed>
-                                                        )}
-                                                    </RowBetween>
-                                                </MenuItem>)}
-                                            </SidebarHeader>
+                                                    {token.address && (
+                                                        <RowFixed>
+                                                            <Copy toCopy={token.address}>
+                                                                <span style={{ marginLeft: '4px' }}>
+                                                                    <TYPE.small>Copy Address</TYPE.small>
+                                                                </span>
+                                                            </Copy>
+                                                        </RowFixed>
+                                                    )}
+                                                </RowBetween>
+                                            </MenuItem>)}
+                                        </SidebarHeader>
 
-                                            {!!tokenData && !!tokenData?.priceUSD && Boolean(Number(tokenData?.priceUSD)) && <> <MenuItem>
+                                        {!!tokenData && !!tokenData?.priceUSD && Boolean(Number(tokenData?.priceUSD)) && <> <MenuItem>
+                                            <TYPE.subHeader>Price</TYPE.subHeader>
+                                            <TYPE.black style={{ display: 'flex', alignItems: 'center' }}>{formattedPrice}</TYPE.black>
+                                        </MenuItem>
+                                            {!!marketCap &&
+                                                <MenuItem>
+                                                    <TYPE.subHeader>Market Cap (includes burnt)</TYPE.subHeader>
+                                                    <TYPE.black>${abbreviateNumber(marketCap)}</TYPE.black>
+                                                </MenuItem>}
+                                            <MenuItem>
+                                                <TYPE.subHeader>Diluted Market Cap</TYPE.subHeader>
+                                                <TYPE.black>${abbreviateNumber(Number(parseFloat(parseFloat(tokenData?.priceUSD)?.toFixed(18)) * totalSupplyInt))}</TYPE.black>
+                                            </MenuItem></>}
+
+                                        {!tokenData?.priceUSD && !!tokenInfo && !!tokenInfo.price && !!tokenInfo?.price?.rate && _.isNumber(tokenInfo.price.rate) && <>
+                                            <MenuItem>
                                                 <TYPE.subHeader>Price</TYPE.subHeader>
                                                 <TYPE.black style={{ display: 'flex', alignItems: 'center' }}>{formattedPrice}</TYPE.black>
                                             </MenuItem>
-                                                {!!marketCap &&
-                                                    <MenuItem>
-                                                        <TYPE.subHeader>Market Cap (includes burnt)</TYPE.subHeader>
-                                                        <TYPE.black>${abbreviateNumber(marketCap)}</TYPE.black>
+                                            {!!marketCap &&
+                                                <MenuItem>
+                                                    <TYPE.subHeader>Market Cap (includes burnt)</TYPE.subHeader>
+                                                    <TYPE.black>${abbreviateNumber(marketCap)}</TYPE.black>
+                                                </MenuItem>}
+                                            <MenuItem>
+                                                <TYPE.subHeader>Diluted Market Cap</TYPE.subHeader>
+                                                <TYPE.black>${abbreviateNumber(Number(parseFloat(tokenInfo?.price?.rate?.toFixed(18)) * totalSupplyInt))}</TYPE.black>
+                                            </MenuItem>
+                                        </>
+                                        }
+                                        {totalLiquidity && <MenuItem>
+                                            <TYPE.subHeader>Total Liquidity</TYPE.subHeader>
+                                            <TYPE.black>${abbreviateNumber(totalLiquidity)}</TYPE.black>
+                                        </MenuItem>}
+                                        {token?.symbol?.toLowerCase().includes('kiba') && <MenuItem>
+                                            <TYPE.subHeader>Total Burnt</TYPE.subHeader>
+                                            <BurntKiba style={{ display: 'flex', justifyContent: 'start !important' }} />
+                                        </MenuItem>}
+                                        {!!totalSupplyInt && totalSupplyInt > 0 && <MenuItem>
+                                            <TYPE.subHeader>Total Supply</TYPE.subHeader>
+                                            <TYPE.black>{totalSupplyInt.toLocaleString()}</TYPE.black>
+                                        </MenuItem>}
+                                        {transactionCount && <MenuItem>
+                                            <TYPE.subHeader>Total Transactions</TYPE.subHeader>
+                                            <TYPE.black>{transactionCount.toLocaleString()}</TYPE.black>
+                                        </MenuItem>}
+                                        {holderCount && holderCount?.holdersCount && <MenuItem>
+                                            <TYPE.subHeader># Holders</TYPE.subHeader>
+                                            <TYPE.black style={{ display: 'flex', alignItems: 'center' }}>{parseFloat(holderCount?.holdersCount).toLocaleString()}</TYPE.black>
+                                        </MenuItem>}
+
+                                        {!tokenInfo || !tokenInfo?.price && tokenData?.oneDayVolumeUSD && <MenuItem>
+                                            <TYPE.subHeader>24hr Volume</TYPE.subHeader>
+                                            <TYPE.main>${chainId !== 56 ?
+                                                parseFloat(parseFloat(tokenData?.oneDayVolumeUSD)?.toFixed(2)).toLocaleString()
+                                                : (parseFloat(parseFloat(tokenData?.oneDayVolumeUSD)?.toFixed(2))).toLocaleString()}</TYPE.main>
+                                        </MenuItem>}
+
+                                        {tokenInfo && tokenInfo.price && tokenInfo.price.volume24h && <MenuItem>
+                                            <TYPE.subHeader>24hr Volume</TYPE.subHeader>
+                                            <TYPE.main>
+                                                ${
+                                                    parseFloat(parseFloat(tokenInfo.price.volume24h.toString())?.toFixed(2)).toLocaleString()
+                                                }
+                                            </TYPE.main>
+                                        </MenuItem>}
+
+                                        {Boolean(!!holdings) && Boolean(holdings.tokenBalance) && (
+                                            <Menu iconShape={'circle'} >
+                                                <SidebarHeader style={{ display: 'flex', flexFlow: 'row wrap', alignItems: 'center', justifyContent: 'space-between' }}>
+                                                    <MenuItem  ><span>Connected Wallet Holdings</span>  </MenuItem>
+                                                    {Boolean(SwapLink) && <MenuItem style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+                                                        {SwapLink}
                                                     </MenuItem>}
-                                                <MenuItem>
-                                                    <TYPE.subHeader>Diluted Market Cap</TYPE.subHeader>
-                                                    <TYPE.black>${abbreviateNumber(Number(parseFloat(parseFloat(tokenData?.priceUSD)?.toFixed(18)) * totalSupplyInt))}</TYPE.black>
-                                                </MenuItem></>}
+                                                </SidebarHeader>
 
-                                            {!tokenData?.priceUSD && !!tokenInfo && !!tokenInfo.price && !!tokenInfo?.price?.rate && _.isNumber(tokenInfo.price.rate) && <>
-                                                <MenuItem>
-                                                    <TYPE.subHeader>Price</TYPE.subHeader>
-                                                    <TYPE.black style={{ display: 'flex', alignItems: 'center' }}>{formattedPrice}</TYPE.black>
-                                                </MenuItem>
-                                                {!!marketCap &&
+                                                <SidebarContent>
                                                     <MenuItem>
-                                                        <TYPE.subHeader>Market Cap (includes burnt)</TYPE.subHeader>
-                                                        <TYPE.black>${abbreviateNumber(marketCap)}</TYPE.black>
-                                                    </MenuItem>}
-                                                <MenuItem>
-                                                    <TYPE.subHeader>Diluted Market Cap</TYPE.subHeader>
-                                                    <TYPE.black>${abbreviateNumber(Number(parseFloat(tokenInfo?.price?.rate?.toFixed(18)) * totalSupplyInt))}</TYPE.black>
-                                                </MenuItem>
-                                            </>
-                                            }
-                                            {totalLiquidity && <MenuItem>
-                                                <TYPE.subHeader>Total Liquidity</TYPE.subHeader>
-                                                <TYPE.black>${abbreviateNumber(totalLiquidity)}</TYPE.black>
-                                            </MenuItem>}
-                                            {token?.symbol?.toLowerCase().includes('kiba') && <MenuItem>
-                                                <TYPE.subHeader>Total Burnt</TYPE.subHeader>
-                                                <BurntKiba style={{ display: 'flex', justifyContent: 'start !important' }} />
-                                            </MenuItem>}
-                                            {!!totalSupplyInt && totalSupplyInt > 0 && <MenuItem>
-                                                <TYPE.subHeader>Total Supply</TYPE.subHeader>
-                                                <TYPE.black>{totalSupplyInt.toLocaleString()}</TYPE.black>
-                                            </MenuItem>}
-                                            {transactionCount && <MenuItem>
-                                                <TYPE.subHeader>Total Transactions</TYPE.subHeader>
-                                                <TYPE.black>{transactionCount.toLocaleString()}</TYPE.black>
-                                            </MenuItem>}
-                                            {holderCount && holderCount?.holdersCount && <MenuItem>
-                                                <TYPE.subHeader># Holders</TYPE.subHeader>
-                                                <TYPE.black style={{ display: 'flex', alignItems: 'center' }}>{parseFloat(holderCount?.holdersCount).toLocaleString()}</TYPE.black>
-                                            </MenuItem>}
-
-                                            {!tokenInfo || !tokenInfo?.price && tokenData?.oneDayVolumeUSD && <MenuItem>
-                                                <TYPE.subHeader>24hr Volume</TYPE.subHeader>
-                                                <TYPE.main>${chainId !== 56 ?
-                                                    parseFloat(parseFloat(tokenData?.oneDayVolumeUSD)?.toFixed(2)).toLocaleString()
-                                                    : (parseFloat(parseFloat(tokenData?.oneDayVolumeUSD)?.toFixed(2))).toLocaleString()}</TYPE.main>
-                                            </MenuItem>}
-
-                                            {tokenInfo && tokenInfo.price && tokenInfo.price.volume24h && <MenuItem>
-                                                <TYPE.subHeader>24hr Volume</TYPE.subHeader>
-                                                <TYPE.main>
-                                                    ${
-                                                        parseFloat(parseFloat(tokenInfo.price.volume24h.toString())?.toFixed(2)).toLocaleString()
+                                                        <TYPE.subHeader>Current {holdings.token.symbol} Balance</TYPE.subHeader>
+                                                        <TYPE.black> {Number(holdings.tokenBalance?.toFixed(2)).toLocaleString()} Tokens&nbsp;
+                                                            {Boolean(holdings?.tokenValue) && <span>(<FiatValue style={{ display: 'inline-block' }} fiatValue={holdings?.tokenValue ?? undefined} /> USD)</span>}</TYPE.black>
+                                                    </MenuItem>
+                                                    {Boolean(parseFloat(holdings?.tokenBalance?.toFixed(2)) > 0) &&
+                                                        Boolean(holdings?.formattedUsdString?.length) &&
+                                                        (<MenuItem>
+                                                            <TYPE.subHeader>Current {holdings.token.symbol} Value</TYPE.subHeader>
+                                                            <TYPE.black>
+                                                                <CurrentHoldingsComponent symbol={holdings.token.symbol} refetch={holdings?.refetchUsdValue} priceArray={holdings?.formattedUsdString} />
+                                                            </TYPE.black>
+                                                        </MenuItem>)
                                                     }
-                                                </TYPE.main>
-                                            </MenuItem>}
 
-                                            {Boolean(!!holdings) && Boolean(holdings.tokenBalance) && (
-                                                <Menu iconShape={'circle'} >
-                                                    <SidebarHeader style={{ display: 'flex', flexFlow: 'row wrap', alignItems: 'center', justifyContent: 'space-between' }}>
-                                                        <MenuItem  ><span>Connected Wallet Holdings</span>  </MenuItem>
-                                                        {Boolean(SwapLink) && <MenuItem style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
-                                                            {SwapLink}
-                                                        </MenuItem>}
-                                                    </SidebarHeader>
+                                                </SidebarContent>
+                                            </Menu>
+                                        )}
+                                    </Menu>
+                                </>
+                            }
+                            {Boolean(loading) && (
+                                <BarChartLoaderSVG zoomAndPan="zoom" />
+                            )}
 
-                                                    <SidebarContent>
-                                                        <MenuItem>
-                                                            <TYPE.subHeader>Current {holdings.token.symbol} Balance</TYPE.subHeader>
-                                                            <TYPE.black> {Number(holdings.tokenBalance?.toFixed(2)).toLocaleString()} Tokens&nbsp;
-                                                                {Boolean(holdings?.tokenValue) && <span>(<FiatValue style={{ display: 'inline-block' }} fiatValue={holdings?.tokenValue ?? undefined} /> USD)</span>}</TYPE.black>
-                                                        </MenuItem>
-                                                        {Boolean(parseFloat(holdings?.tokenBalance?.toFixed(2)) > 0) &&
-                                                            Boolean(holdings?.formattedUsdString?.length) &&
-                                                            (<MenuItem>
-                                                                <TYPE.subHeader>Current {holdings.token.symbol} Value</TYPE.subHeader>
-                                                                <TYPE.black>
-                                                                    <CurrentHoldingsComponent symbol={holdings.token.symbol} refetch={holdings?.refetchUsdValue} priceArray={holdings?.formattedUsdString} />
-                                                                </TYPE.black>
-                                                            </MenuItem>)
-                                                        }
+                        </SubMenu>
+                    </Menu>
 
-                                                    </SidebarContent>
-                                                </Menu>
-                                            )}
-                                        </Menu>
-                                    </>
-                                }
-                                {Boolean(loading) && (
-                                    <BarChartLoaderSVG zoomAndPan="zoom" />
-                                )}
-
-                            </SubMenu>
-                        </Menu>
-
-                    </SidebarContent>
+                </SidebarContent>
                 <SidebarContent>
                     <Menu style={{ background: color }} >
                         <SubMenu style={{ background: color }} onOpenChange={toggleSwapOpen} open={swapOpen} icon={<Repeat style={{ background: 'transparent' }} />} title={"Swap " + token?.name}>

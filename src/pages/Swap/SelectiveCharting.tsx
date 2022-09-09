@@ -561,7 +561,7 @@ export const SelectiveChart = () => {
         <div
           style={{
             marginLeft: isMobile ? 0 : 10,
-            borderLeft: isMobile
+            borderLeft: (isMobile || !hasSelectedData)
               ? "none"
               : Boolean(
                 params?.tokenAddress &&

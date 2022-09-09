@@ -243,7 +243,7 @@ const HoneyPotDetector = () => {
   const theme = useTheme()
 
   if (chainId === 56) return <HoneyPotBsc />
-  return (<DarkCard style={{ background: theme.bg0,color: theme.text1, opacity: '.96', maxWidth: '45%', minWidth: 480, padding: 20 }} id="honeypage">
+  return (<DarkCard style={{ background: theme.bg0,color: theme.text1, opacity: '.96', maxWidth: 600, minWidth: 480, padding: 20 }} id="honeypage">
     <div style={{ maxWidth: 600, display: 'flex', flexFlow: 'column wrap', margin: 'auto', paddingBottom: '1rem' }}>
       <StyledHeader style={{ fontSize: 15, paddingBottom: 20, paddingTop: 20 }}>Honeypot Checker (ETH)</StyledHeader>
       <small style={{ marginTop: 3, paddingLeft: 3, justifyContent: 'center', fontSize: 20, fontFamily: 'Archivo Narrow' }}>Disclaimer: This is an experimental service, use at your own risk and make sure to double check all contract interactions.</small>
