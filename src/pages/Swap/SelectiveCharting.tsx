@@ -113,6 +113,7 @@ export const SelectiveChart = () => {
     tokenSymbol?: string;
     name?: string;
     decimals?: string;
+    pairAddress?:string;
   }>();
   const isMobile = useIsMobile()
   const mainnetCurrency = useCurrency(
@@ -293,7 +294,7 @@ export const SelectiveChart = () => {
         : pairs?.[0]?.token0?.id
         }`;
     },
-    [tokenData, pairs, token]
+    [tokenData, screenerToken, pairs, token]
   );
 
   const pairCurrency = useCurrency(pair ?? undefined);
@@ -504,7 +505,10 @@ export const SelectiveChart = () => {
     [selectedCurrency, hasSelectedData, isMobile, params.tokenAddress, collapsed]
   );
 
-  const pairAddress = React.useMemo(() => screenerToken?.pairAddress ? screenerToken?.pairAddress : pairs?.[0]?.id, [screenerToken, pairs])
+  const pairAddress = React.useMemo(() => {
+    if (params?.pairAddress) return params?.pairAddress;
+    return screenerToken?.pairAddress ? screenerToken?.pairAddress : pairs?.[0]?.id
+  }, [screenerToken, pairs, params.pairAddress])
 
   if (chainId && chainId == 56) {
     return <SelectiveChartBsc />

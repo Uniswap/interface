@@ -205,7 +205,7 @@ export const PairSearch = (props: Props) => {
     ]);
     const humanReadable = ethers.BigNumber.from(decimals).toNumber()
     onPairSelect && onPairSelect(pair)
-    history.push(`/selective-charts/${pair.baseToken.address}/${pair.baseToken.symbol}/${pair.baseToken.name}/${humanReadable}`)
+    history.push(`/selective-charts/${pair.baseToken.address}/${pair.baseToken.symbol}/${pair.baseToken.name}/${humanReadable}/${pair.pairAddress}`)
     setSearchTerm('')
     setRouting(false)
   }, [onPairSelect])
