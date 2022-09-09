@@ -158,7 +158,7 @@ export const TransactionHistoryMenu = ({ onClose }: { onClose: () => void }) => 
           ))}
         </>
       ) : (
-        <EmptyTransaction>
+        <EmptyTransaction data-testid="wallet-empty-transaction-text">
           <Trans>Your transactions will appear here</Trans>
         </EmptyTransaction>
       )}

@@ -114,11 +114,13 @@ const WalletDropdown = ({ setMenu }: { setMenu: (state: MenuState) => void }) =>
       {isAuthenticated ? (
         <AuthenticatedHeader />
       ) : (
-        <ConnectButton onClick={toggleWalletModal}>Connect wallet</ConnectButton>
+        <ConnectButton data-testid="wallet-connect-wallet" onClick={toggleWalletModal}>
+          Connect wallet
+        </ConnectButton>
       )}
       <Divider />
       {isAuthenticated && (
-        <ToggleMenuItem onClick={() => setMenu(MenuState.TRANSACTIONS)}>
+        <ToggleMenuItem data-testid="wallet-transactions" onClick={() => setMenu(MenuState.TRANSACTIONS)}>
           <DefaultText>
             <Trans>Transactions</Trans>{' '}
             {pendingTransactions.length > 0 && (
@@ -132,7 +134,7 @@ const WalletDropdown = ({ setMenu }: { setMenu: (state: MenuState) => void }) =>
           </IconWrap>
         </ToggleMenuItem>
       )}
-      <ToggleMenuItem onClick={() => setMenu(MenuState.LANGUAGE)}>
+      <ToggleMenuItem data-testid="wallet-select-language" onClick={() => setMenu(MenuState.LANGUAGE)}>
         <DefaultText>
           <Trans>Language</Trans>
         </DefaultText>
@@ -145,7 +147,7 @@ const WalletDropdown = ({ setMenu }: { setMenu: (state: MenuState) => void }) =>
           </IconWrap>
         </FlexContainer>
       </ToggleMenuItem>
-      <ToggleMenuItem onClick={toggleDarkMode}>
+      <ToggleMenuItem data-testid="wallet-select-theme" onClick={toggleDarkMode}>
         <DefaultText>{darkMode ? <Trans> Light theme</Trans> : <Trans>Dark theme</Trans>}</DefaultText>
         <IconWrap>{darkMode ? <Sun size={16} /> : <Moon size={16} />}</IconWrap>
       </ToggleMenuItem>

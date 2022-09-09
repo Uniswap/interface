@@ -64,18 +64,19 @@ interface IconButtonProps {
   Icon: Icon
   onClick?: () => void
   href?: string
+  dataTestId?: string
 }
 
-const IconButton = ({ Icon, onClick, text, href }: IconButtonProps) => {
+const IconButton = ({ Icon, onClick, text, href, dataTestId }: IconButtonProps) => {
   return href ? (
-    <IconBlockLink href={href} target="_blank">
+    <IconBlockLink data-testId={dataTestId} href={href} target="_blank">
       <IconWrapper>
         <Icon strokeWidth={1.5} size={16} />
         <IconHoverText>{text}</IconHoverText>
       </IconWrapper>
     </IconBlockLink>
   ) : (
-    <IconBlockButton onClick={onClick}>
+    <IconBlockButton data-testId={dataTestId} onClick={onClick}>
       <IconWrapper>
         <Icon strokeWidth={1.5} size={16} />
         <IconHoverText>{text}</IconHoverText>

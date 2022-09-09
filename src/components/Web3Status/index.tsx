@@ -252,14 +252,22 @@ function Web3StatusInner() {
       >
         {navbarFlagEnabled ? (
           <Web3StatusConnectNavbar faded={!account}>
-            <StyledConnect onClick={toggleWalletModal}>
+            <StyledConnect data-testid="navbar-connect-wallet" onClick={toggleWalletModal}>
               <Trans>Connect</Trans>
             </StyledConnect>
             <VerticalDivider />
             {walletIsOpen ? (
-              <StyledChevronUp customColor={theme.accentAction} onClick={toggleWalletDropdown} />
+              <StyledChevronUp
+                data-testid="navbar-wallet-dropdown"
+                customColor={theme.accentAction}
+                onClick={toggleWalletDropdown}
+              />
             ) : (
-              <StyledChevronDown customColor={theme.accentAction} onClick={toggleWalletDropdown} />
+              <StyledChevronDown
+                data-testid="navbar-wallet-dropdown"
+                customColor={theme.accentAction}
+                onClick={toggleWalletDropdown}
+              />
             )}
           </Web3StatusConnectNavbar>
         ) : (
