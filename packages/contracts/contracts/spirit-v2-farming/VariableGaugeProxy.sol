@@ -5,8 +5,8 @@ import "./utils.sol";
 contract VariableGauge is ReentrancyGuard {
     using SafeERC20 for IERC20;
 
-    IERC20 public SPIRIT;
-    IERC20 public inSPIRIT;
+    IERC20 public rewardToken;
+    IERC20 public governanceToken;
 
     IERC20 public immutable TOKEN;
     address public immutable DISTRIBUTION;
@@ -45,8 +45,8 @@ contract VariableGauge is ReentrancyGuard {
         address _token, 
         address _gaugeProxy
     ) public {
-        SPIRIT = IERC20(_spirit);
-        inSPIRIT = IERC20(_inSpirit);
+        rewardToken = IERC20(_spirit);
+        governanceToken = IERC20(_inSpirit);
         TOKEN = IERC20(_token);
         gaugeProxy = _gaugeProxy;
         DISTRIBUTION = msg.sender;
@@ -107,10 +107,10 @@ contract VariableGauge is ReentrancyGuard {
     }
 
     function derivedBalance(address account) public view returns (uint256) {
-        if (inSPIRIT.totalSupply() == 0) return 0;
+        if (governanceToken.totalSupply() == 0) return 0;
         uint256 _balance = _balances[account];
         uint256 _derived = _balance * 40 / 100;
-        uint256 _adjusted = (_totalSupply * inSPIRIT.balanceOf(account) / inSPIRIT.totalSupply()) * 60 / 100;
+        uint256 _adjusted = (_totalSupply * governanceToken.balanceOf(account) / governanceToken.totalSupply()) * 60 / 100;
         return Math.min(_derived + _adjusted, _balance);
     }
 
@@ -183,7 +183,7 @@ contract VariableGauge is ReentrancyGuard {
         uint256 reward = rewards[msg.sender];
         if (reward > 0) {
             rewards[msg.sender] = 0;
-            SPIRIT.safeTransfer(msg.sender, reward);
+            rewardToken.safeTransfer(msg.sender, reward);
             emit RewardPaid(msg.sender, reward);
         }
     }
@@ -193,7 +193,7 @@ contract VariableGauge is ReentrancyGuard {
         onlyDistribution
         updateReward(address(0))
     {
-        SPIRIT.safeTransferFrom(DISTRIBUTION, address(this), reward);
+        rewardToken.safeTransferFrom(DISTRIBUTION, address(this), reward);
         if (block.timestamp >= periodFinish) {
             rewardRate = reward / DURATION;
         } else {
@@ -206,7 +206,7 @@ contract VariableGauge is ReentrancyGuard {
         // This keeps the reward rate in the right range, preventing overflows due to
         // very high values of rewardRate in the earned and rewardsPerToken functions;
         // Reward + leftover must be less than 2^256 / 10^18 to avoid overflow.
-        uint256 balance = SPIRIT.balanceOf(address(this));
+        uint256 balance = rewardToken.balanceOf(address(this));
         require(
             rewardRate <= balance / DURATION,
             "Provided reward too high"
@@ -249,8 +249,8 @@ contract VariableGaugeProxy is ProtocolGovernance, ReentrancyGuard {
     using SafeERC20 for IERC20;
 
     MasterChef public MASTER;
-    IERC20 public inSPIRIT;
-    IERC20 public SPIRIT;
+    IERC20 public governanceToken;
+    IERC20 public rewardToken;
     IERC20 public immutable TOKEN; // mInSpirit
 
     address public admin; //Admin address to manage gauges like add/deprecate/resurrect
@@ -321,8 +321,8 @@ contract VariableGaugeProxy is ProtocolGovernance, ReentrancyGuard {
         address _pairFactory
     ) public {
         MASTER = MasterChef(_masterChef);
-        SPIRIT = IERC20(_spirit);
-        inSPIRIT = IERC20(_inSpirit);
+        rewardToken = IERC20(_spirit);
+        governanceToken = IERC20(_inSpirit);
         TOKEN = IERC20(address(new MasterDill()));
         governance = msg.sender;
         admin = msg.sender;
@@ -394,7 +394,7 @@ contract VariableGaugeProxy is ProtocolGovernance, ReentrancyGuard {
         uint256 _tokenCnt = _tokenVote.length;
         uint256[] memory _weights = new uint256[](_tokenCnt);
         uint256 _prevUsedWeight = usedWeights[_owner];
-        uint256 _weight = inSPIRIT.balanceOf(_owner);
+        uint256 _weight = governanceToken.balanceOf(_owner);
 
         for (uint256 i = 0; i < _tokenCnt; i++) {
             // Need to make this reflect the value deposited into bribes, anyone should be able to call this on
@@ -414,7 +414,7 @@ contract VariableGaugeProxy is ProtocolGovernance, ReentrancyGuard {
         // _weights[i] = percentage * 100
         _reset(_owner);
         uint256 _tokenCnt = _tokenVote.length;
-        uint256 _weight = inSPIRIT.balanceOf(_owner);
+        uint256 _weight = governanceToken.balanceOf(_owner);
         uint256 _totalVoteWeight = 0;
         uint256 _usedWeight = 0;
 
@@ -469,7 +469,7 @@ contract VariableGaugeProxy is ProtocolGovernance, ReentrancyGuard {
 
         // Deploy Gauge 
         gauges[_tokenLP] = address(
-            new VariableGauge( address(SPIRIT), address(inSPIRIT), _tokenLP, address(this))
+            new VariableGauge( address(rewardToken), address(governanceToken), _tokenLP, address(this))
         );
         _tokens.push(_tokenLP);
         gaugeStatus[_tokenLP] = true;
@@ -496,11 +496,11 @@ contract VariableGaugeProxy is ProtocolGovernance, ReentrancyGuard {
         (address _token0, address _token1) = IBaseV1Pair(_tokenLP).tokens();
         require(baseTokens[_token0] && verifiedTokens[_token1] || 
                 baseTokens[_token1] && verifiedTokens[_token0], "!verified");
-        require(inSPIRIT.balanceOf(msg.sender) > inSPIRIT.totalSupply() / 100 ||
+        require(governanceToken.balanceOf(msg.sender) > governanceToken.totalSupply() / 100 ||
             msg.sender == governance || msg.sender == admin, "!supply");
         // Deploy Gauge 
         gauges[_tokenLP] = address(
-            new VariableGauge( address(SPIRIT), address(inSPIRIT), _tokenLP, address(this))
+            new VariableGauge( address(rewardToken), address(governanceToken), _tokenLP, address(this))
         );
         _tokens.push(_tokenLP);
         gaugeStatus[_tokenLP] = true;
@@ -576,17 +576,17 @@ contract VariableGaugeProxy is ProtocolGovernance, ReentrancyGuard {
         }
         collect();
         lastDistribute = block.timestamp;
-        uint256 _balance = SPIRIT.balanceOf(address(this));
+        uint256 _balance = rewardToken.balanceOf(address(this));
         lockedBalance = _balance;
         uint256 _inSpiritRewards = 0;
         if (ve) {
-            uint256 _lockedSpirit = SPIRIT.balanceOf(address(inSPIRIT));
-            uint256 _spiritSupply = SPIRIT.totalSupply();
+            uint256 _lockedSpirit = rewardToken.balanceOf(address(governanceToken));
+            uint256 _spiritSupply = rewardToken.totalSupply();
             _inSpiritRewards = _balance * _lockedSpirit / _spiritSupply;
 
             if (_inSpiritRewards > 0) {
-                SPIRIT.safeTransfer(feeDistAddr, _inSpiritRewards);
-                lockedBalance = SPIRIT.balanceOf(address(this));
+                rewardToken.safeTransfer(feeDistAddr, _inSpiritRewards);
+                lockedBalance = rewardToken.balanceOf(address(this));
             }
         }
         locktime = block.timestamp;
@@ -604,8 +604,8 @@ contract VariableGaugeProxy is ProtocolGovernance, ReentrancyGuard {
                     address _gauge = gauges[_token];
                     uint256 _reward = lockedBalance * lockedWeights[_token] / lockedTotalWeight;
                     if (_reward > 0) {
-                        SPIRIT.safeApprove(_gauge, 0);
-                        SPIRIT.safeApprove(_gauge, _reward);
+                        rewardToken.safeApprove(_gauge, 0);
+                        rewardToken.safeApprove(_gauge, _reward);
                         VariableGauge( _gauge).notifyRewardAmount(_reward);
                     }
                     hasDistributed[_token] = true;

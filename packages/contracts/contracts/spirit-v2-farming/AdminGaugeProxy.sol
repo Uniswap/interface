@@ -6,8 +6,8 @@ import "./utils.sol";
 contract AdminGauge is ReentrancyGuard {
     using SafeERC20 for IERC20;
 
-    IERC20 public SPIRIT;
-    IERC20 public inSPIRIT;
+    IERC20 public rewardToken;
+    IERC20 public governanceToken;
 
     IERC20 public immutable TOKEN;
     address public immutable DISTRIBUTION;
@@ -40,8 +40,8 @@ contract AdminGauge is ReentrancyGuard {
         address _inSpirit,
         address _token
     ) public {
-        SPIRIT = IERC20(_spirit);
-        inSPIRIT = IERC20(_inSpirit);
+        rewardToken = IERC20(_spirit);
+        governanceToken = IERC20(_inSpirit);
         TOKEN = IERC20(_token);
         DISTRIBUTION = msg.sender;
     }
@@ -93,10 +93,10 @@ contract AdminGauge is ReentrancyGuard {
     }
 
     function derivedBalance(address account) public view returns (uint256) {
-        if (inSPIRIT.totalSupply() == 0) return 0;
+        if (governanceToken.totalSupply() == 0) return 0;
         uint256 _balance = _balances[account];
         uint256 _derived = _balance * 40 / 100;
-        uint256 _adjusted = (_totalSupply * inSPIRIT.balanceOf(account) / inSPIRIT.totalSupply()) * 60 / 100;
+        uint256 _adjusted = (_totalSupply * governanceToken.balanceOf(account) / governanceToken.totalSupply()) * 60 / 100;
         return Math.min(_derived + _adjusted, _balance);
     }
 
@@ -179,7 +179,7 @@ contract AdminGauge is ReentrancyGuard {
         uint256 reward = rewards[msg.sender];
         if (reward > 0) {
             rewards[msg.sender] = 0;
-            SPIRIT.safeTransfer(msg.sender, reward);
+            rewardToken.safeTransfer(msg.sender, reward);
             emit RewardPaid(msg.sender, reward);
         }
     }
@@ -189,7 +189,7 @@ contract AdminGauge is ReentrancyGuard {
         onlyDistribution
         updateReward(address(0))
     {
-        SPIRIT.safeTransferFrom(DISTRIBUTION, address(this), reward);
+        rewardToken.safeTransferFrom(DISTRIBUTION, address(this), reward);
         if (block.timestamp >= periodFinish) {
             rewardRate = reward / DURATION;
         } else {
@@ -202,7 +202,7 @@ contract AdminGauge is ReentrancyGuard {
         // This keeps the reward rate in the right range, preventing overflows due to
         // very high values of rewardRate in the earned and rewardsPerToken functions;
         // Reward + leftover must be less than 2^256 / 10^18 to avoid overflow.
-        uint256 balance = SPIRIT.balanceOf(address(this));
+        uint256 balance = rewardToken.balanceOf(address(this));
         require(
             rewardRate <= balance / DURATION,
             "Provided reward too high"
@@ -245,8 +245,8 @@ contract AdminGaugeProxy is ProtocolGovernance {
     using SafeERC20 for IERC20;
 
     MasterChef public MASTER;
-    IERC20 public inSPIRIT;
-    IERC20 public SPIRIT;
+    IERC20 public governanceToken;
+    IERC20 public rewardToken;
     IERC20 public immutable TOKEN; // mInSpirit
 
     uint256 public pid = type(uint256).max; // -1 means 0xFFF....F and hasn't been set yet
@@ -272,8 +272,8 @@ contract AdminGaugeProxy is ProtocolGovernance {
         uint256 _depositFeeRate
     ) public {
         MASTER = MasterChef(_masterChef);
-        SPIRIT = IERC20(_spirit);
-        inSPIRIT = IERC20(_inSpirit);
+        rewardToken = IERC20(_spirit);
+        governanceToken = IERC20(_inSpirit);
         TOKEN = IERC20(address(new MasterDill()));
         governance = msg.sender;
         admin = msg.sender;
@@ -307,7 +307,7 @@ contract AdminGaugeProxy is ProtocolGovernance {
         );
         require(gauges[_token] == address(0x0), "exists");
         gauges[_token] = address(
-            new AdminGauge( address(SPIRIT), address(inSPIRIT), _token)
+            new AdminGauge( address(rewardToken), address(governanceToken), _token)
         );
         gaugeWeights[_token] = 0;
         _tokens.push(_token);
@@ -353,15 +353,15 @@ contract AdminGaugeProxy is ProtocolGovernance {
     // In this GaugeProxy the distribution will be equal amongst active gauges, irrespective of votes
     function distribute() external {
         collect();
-        uint256 _balance = SPIRIT.balanceOf(address(this));
+        uint256 _balance = rewardToken.balanceOf(address(this));
         uint256 _inSpiritRewards = 0;
         if (ve) {
-            uint256 _lockedSpirit = SPIRIT.balanceOf(address(inSPIRIT));
-            uint256 _spiritSupply = SPIRIT.totalSupply();
+            uint256 _lockedSpirit = rewardToken.balanceOf(address(governanceToken));
+            uint256 _spiritSupply = rewardToken.totalSupply();
             _inSpiritRewards = _balance * _lockedSpirit / _spiritSupply;
 
             if (_inSpiritRewards > 0) {
-                SPIRIT.safeTransfer(feeDistAddr, _inSpiritRewards);
+                rewardToken.safeTransfer(feeDistAddr, _inSpiritRewards);
                 _balance = _balance - _inSpiritRewards;
             }
         }
@@ -372,8 +372,8 @@ contract AdminGaugeProxy is ProtocolGovernance {
                     address _token = _tokens[i];
                     address _gauge = gauges[_token];
                     if (_reward > 0) {
-                        SPIRIT.safeApprove(_gauge, 0);
-                        SPIRIT.safeApprove(_gauge, _reward);
+                        rewardToken.safeApprove(_gauge, 0);
+                        rewardToken.safeApprove(_gauge, _reward);
                         AdminGauge( _gauge).notifyRewardAmount(_reward);
                     }
                 }
