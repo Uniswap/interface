@@ -83,12 +83,13 @@ export function SettingsWalletEdit({
               <TextInput
                 autoFocus
                 autoCapitalize="none"
+                color={nickname === activeAccount?.name ? 'textTertiary' : 'textPrimary'}
                 fontFamily={theme.textVariants.headlineMedium.fontFamily}
                 fontSize={theme.textVariants.headlineMedium.fontSize}
                 margin="none"
                 numberOfLines={1}
                 placeholder={shortenAddress(address)}
-                placeholderTextColor={theme.colors.textPrimary}
+                placeholderTextColor={theme.colors.textTertiary}
                 px="none"
                 py="none"
                 returnKeyType="done"
