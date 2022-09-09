@@ -1,3 +1,4 @@
+import { initializeAnalytics } from 'analytics'
 import { sendAnalyticsEvent, user } from 'components/AmplitudeAnalytics'
 import { CUSTOM_USER_PROPERTIES, EventName, PageName } from 'components/AmplitudeAnalytics/constants'
 import { Trace } from 'components/AmplitudeAnalytics/Trace'
@@ -121,6 +122,7 @@ export default function App() {
   const isDarkMode = useIsDarkMode()
   const isExpertMode = useIsExpertMode()
 
+  initializeAnalytics()
   useAnalyticsReporter()
 
   useEffect(() => {
