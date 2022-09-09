@@ -28,7 +28,7 @@ import {
 } from '../../nft/components/icons'
 import { NavIcon } from './NavIcon'
 import * as styles from './SearchBar.css'
-import { CollectionRow, TokenRow } from './SuggestionRow'
+import { CollectionRow, SkeletonRow, TokenRow } from './SuggestionRow'
 
 interface SearchBarDropdownSectionProps {
   toggleOpen: () => void
@@ -38,6 +38,7 @@ interface SearchBarDropdownSectionProps {
   hoveredIndex: number | undefined
   startingIndex: number
   setHoveredIndex: (index: number | undefined) => void
+  isLoading?: boolean
 }
 
 export const SearchBarDropdownSection = ({
@@ -48,6 +49,7 @@ export const SearchBarDropdownSection = ({
   hoveredIndex,
   startingIndex,
   setHoveredIndex,
+  isLoading,
 }: SearchBarDropdownSectionProps) => {
   return (
     <Column gap="12">
@@ -56,8 +58,10 @@ export const SearchBarDropdownSection = ({
         <Box>{header}</Box>
       </Row>
       <Column gap="12">
-        {suggestions?.map((suggestion, index) =>
-          isCollection(suggestion) ? (
+        {(isLoading ? [...Array(suggestions.length)] : suggestions).map((suggestion, index) =>
+          isLoading ? (
+            <SkeletonRow key={index} />
+          ) : isCollection(suggestion) ? (
             <CollectionRow
               key={suggestion.address}
               collection={suggestion as GenieCollection}
@@ -133,41 +137,45 @@ export const SearchBarDropdown = ({ toggleOpen, tokens, collections, hasInput, i
       )
     ) : null
 
-  const { data: trendingCollectionResults } = useQuery(['trendingCollections', 'eth', 'twenty_four_hours'], () =>
-    fetchTrendingCollections({ volumeType: 'eth', timePeriod: 'ONE_DAY' as TimePeriod, size: 3 })
+  const { data: trendingCollectionResults, isLoading: trendingCollectionsAreLoading } = useQuery(
+    ['trendingCollections', 'eth', 'twenty_four_hours'],
+    () => fetchTrendingCollections({ volumeType: 'eth', timePeriod: 'ONE_DAY' as TimePeriod, size: 3 })
   )
 
   const trendingCollections = useMemo(() => {
     return trendingCollectionResults
-      ?.map((collection) => {
-        return {
-          ...collection,
-          collectionAddress: collection.address,
-          floorPrice: formatEthPrice(collection.floor?.toString()),
-          stats: {
-            total_supply: collection.totalSupply,
-            one_day_change: collection.floorChange,
-          },
-        }
-      })
-      .slice(0, isNFTPage ? 3 : 2)
+      ? trendingCollectionResults
+          .map((collection) => {
+            return {
+              ...collection,
+              collectionAddress: collection.address,
+              floorPrice: formatEthPrice(collection.floor?.toString()),
+              stats: {
+                total_supply: collection.totalSupply,
+                one_day_change: collection.floorChange,
+              },
+            }
+          })
+          .slice(0, isNFTPage ? 3 : 2)
+      : Array<GenieCollection>(isNFTPage ? 3 : 2)
   }, [isNFTPage, trendingCollectionResults])
 
-  const showTrendingCollections: boolean = useMemo(
-    () => (trendingCollections?.length ?? 0) > 0 && !isTokenPage && phase1Flag === NftVariant.Enabled,
-    [trendingCollections?.length, isTokenPage, phase1Flag]
+  const { data: trendingTokenResults, isLoading: trendingTokensAreLoading } = useQuery(
+    [],
+    () => fetchTrendingTokens(4),
+    {
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+      refetchOnReconnect: false,
+    }
   )
-
-  const { data: trendingTokenResults } = useQuery([], () => fetchTrendingTokens(4), {
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
-    refetchOnReconnect: false,
-  })
 
   const trendingTokensLength = phase1Flag === NftVariant.Enabled ? (isTokenPage ? 3 : 2) : 4
 
   const trendingTokens = useMemo(() => {
-    return trendingTokenResults?.slice(0, trendingTokensLength)
+    return trendingTokenResults
+      ? trendingTokenResults.slice(0, trendingTokensLength)
+      : Array<FungibleToken>(trendingTokensLength)
   }, [trendingTokenResults, trendingTokensLength])
 
   const totalSuggestions = hasInput
@@ -235,18 +243,19 @@ export const SearchBarDropdown = ({ toggleOpen, tokens, collections, hasInput, i
                 headerIcon={<ClockIcon />}
               />
             )}
-            {(trendingTokens?.length ?? 0) > 0 && !isNFTPage && (
+            {!isNFTPage && (
               <SearchBarDropdownSection
                 hoveredIndex={hoveredIndex}
                 startingIndex={searchHistory.length}
                 setHoveredIndex={setHoveredIndex}
                 toggleOpen={toggleOpen}
-                suggestions={trendingTokens ?? []}
+                suggestions={trendingTokens}
                 header={<Trans>Popular tokens</Trans>}
                 headerIcon={<TrendingArrow />}
+                isLoading={trendingTokensAreLoading}
               />
             )}
-            {showTrendingCollections && (
+            {!isTokenPage && phase1Flag === NftVariant.Enabled && (
               <SearchBarDropdownSection
                 hoveredIndex={hoveredIndex}
                 startingIndex={searchHistory.length + (isNFTPage ? 0 : trendingTokens?.length ?? 0)}
@@ -255,6 +264,7 @@ export const SearchBarDropdown = ({ toggleOpen, tokens, collections, hasInput, i
                 suggestions={trendingCollections as unknown as GenieCollection[]}
                 header={<Trans>Popular NFT collections</Trans>}
                 headerIcon={<TrendingArrow />}
+                isLoading={trendingCollectionsAreLoading}
               />
             )}
           </Column>
@@ -263,7 +273,16 @@ export const SearchBarDropdown = ({ toggleOpen, tokens, collections, hasInput, i
 
       setResultsState(currentState)
     }
-  }, [isLoading, tokens, collections, trendingCollections, trendingTokens])
+  }, [
+    isLoading,
+    tokens,
+    collections,
+    trendingCollections,
+    trendingCollectionsAreLoading,
+    trendingTokens,
+    trendingTokensAreLoading,
+    hoveredIndex,
+  ])
 
   return (
     <Box
