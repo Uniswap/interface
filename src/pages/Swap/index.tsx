@@ -542,6 +542,8 @@ export default function Swap() {
               swapErrorMessage={swapErrorMessage}
               onDismiss={handleConfirmDismiss}
               swapQuoteReceivedDate={swapQuoteReceivedDate}
+              fiatValueInput={fiatValueInput}
+              fiatValueOutput={fiatValueOutput}
             />
 
             <AutoColumn gap={'0px'}>

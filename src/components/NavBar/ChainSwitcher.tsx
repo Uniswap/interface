@@ -1,4 +1,5 @@
 import { useWeb3React } from '@web3-react/core'
+import { StyledChevronDown, StyledChevronUp } from 'components/Icons'
 import { getChainInfo } from 'constants/chainInfo'
 import { SupportedChainId } from 'constants/chains'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
@@ -7,7 +8,7 @@ import useSyncChainQuery from 'hooks/useSyncChainQuery'
 import { Box } from 'nft/components/Box'
 import { Portal } from 'nft/components/common/Portal'
 import { Column, Row } from 'nft/components/Flex'
-import { CheckMarkIcon, NewChevronDownIcon, NewChevronUpIcon, TokenWarningRedIcon } from 'nft/components/icons'
+import { CheckMarkIcon, TokenWarningRedIcon } from 'nft/components/icons'
 import { subhead } from 'nft/css/common.css'
 import { themeVars, vars } from 'nft/css/sprinkles.css'
 import { useIsMobile } from 'nft/hooks'
@@ -120,11 +121,7 @@ export const ChainSwitcher = ({ leftAlign }: ChainSwitcherProps) => {
             </Box>
           </>
         )}
-        {isOpen ? (
-          <NewChevronUpIcon width={16} height={16} color="blackBlue" />
-        ) : (
-          <NewChevronDownIcon width={16} height={16} color="blackBlue" />
-        )}
+        {isOpen ? <StyledChevronUp /> : <StyledChevronDown />}
       </Row>
       {isOpen && (isMobile ? <Portal>{dropdown}</Portal> : <>{dropdown}</>)}
     </Box>

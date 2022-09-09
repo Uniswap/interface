@@ -65,6 +65,7 @@ export default function SearchBar() {
   useEffect(() => {
     setFilterString(debouncedLocalFilterString)
   }, [debouncedLocalFilterString, setFilterString])
+
   return (
     <SearchBarContainer>
       <Trans

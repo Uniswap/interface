@@ -73,11 +73,13 @@ const Buttons = ({
   warning,
   onContinue,
   onCancel,
+  onBlocked,
   showCancel,
 }: {
   warning: Warning
   onContinue: () => void
   onCancel: () => void
+  onBlocked?: () => void
   showCancel?: boolean
 }) => {
   return warning.canProceed ? (
@@ -88,7 +90,7 @@ const Buttons = ({
       {showCancel && <StyledCancelButton onClick={onCancel}>Cancel</StyledCancelButton>}
     </>
   ) : (
-    <StyledCloseButton onClick={onCancel}>
+    <StyledCloseButton onClick={onBlocked ?? onCancel}>
       <Trans>Close</Trans>
     </StyledCloseButton>
   )
@@ -184,11 +186,12 @@ const StyledExternalLink = styled(ExternalLink)`
   font-weight: 600;
 `
 
-interface TokenSafetyProps {
+export interface TokenSafetyProps {
   tokenAddress: string | null
   secondTokenAddress?: string
   onContinue: () => void
   onCancel: () => void
+  onBlocked?: () => void
   showCancel?: boolean
 }
 
@@ -197,6 +200,7 @@ export default function TokenSafety({
   secondTokenAddress,
   onContinue,
   onCancel,
+  onBlocked,
   showCancel,
 }: TokenSafetyProps) {
   const logos = []
