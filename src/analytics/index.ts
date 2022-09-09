@@ -1,3 +1,6 @@
+export * as constants from './constants'
 export { initializeAnalytics } from './initalize'
+export { Trace } from './Trace'
+export { TraceEvent } from './TraceEvent'
 export { sendAnalyticsEvent, sendTestAnalyticsEvent } from './track'
 export { user } from './UserModel'
