@@ -169,19 +169,19 @@ export function SettingsWallet({
             />
           ),
           text: t('Notifications'),
-          icon: <NotificationIcon color={theme.colors.textSecondary} {...iconProps} />,
+          icon: <NotificationIcon {...iconProps} />,
         },
         {
           action: (
             <Switch value={hideSmallBalancesEnabled} onValueChange={toggleHideSmallBalances} />
           ),
           text: t('Hide small balances'),
-          icon: <TrendingUpIcon color={theme.colors.textSecondary} {...iconProps} />,
+          icon: <TrendingUpIcon {...iconProps} />,
         },
         {
           screen: Screens.SettingsWalletManageConnection,
           text: t('Manage connections'),
-          icon: <GlobalIcon color={theme.colors.textSecondary} {...iconProps} />,
+          icon: <GlobalIcon {...iconProps} />,
           screenProps: { address },
           isHidden: readonly,
         },
@@ -194,7 +194,7 @@ export function SettingsWallet({
         {
           screen: Screens.SettingsViewSeedPhrase,
           text: t('Recovery phrase'),
-          icon: <BriefcaseIcon color={theme.colors.textSecondary} {...iconProps} />,
+          icon: <BriefcaseIcon {...iconProps} />,
           screenProps: { address },
           isHidden: readonly,
         },
@@ -204,14 +204,14 @@ export function SettingsWallet({
             : Screens.SettingsCloudBackupScreen,
           screenProps: { address },
           text: t('iCloud backup'),
-          icon: <CloudIcon color={theme.colors.textSecondary} {...iconProps} />,
+          icon: <CloudIcon {...iconProps} />,
           isHidden: readonly,
         },
         {
           screen: Screens.SettingsManualBackup,
           screenProps: { address },
           text: t('Manual backup'),
-          icon: <PencilIcon color={theme.colors.textSecondary} {...iconProps} />,
+          icon: <PencilIcon {...iconProps} />,
           isHidden: readonly,
         },
       ],

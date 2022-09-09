@@ -77,6 +77,7 @@ export function SettingsScreen() {
       color: theme.colors.textSecondary,
       height: 24,
       strokeLinecap: 'round',
+      strokeLinejoin: 'round',
       strokeWidth: '2',
       width: 24,
     }
@@ -230,7 +231,10 @@ function OnboardingRow({ iconProps }: { iconProps: SvgProps }) {
       }}>
       <Box alignItems="center" flexDirection="row" justifyContent="space-between">
         <Box alignItems="center" flexDirection="row">
-          <FlashbotsIcon {...iconProps} />
+          <Flex centered height={32} width={32}>
+            <FlashbotsIcon {...iconProps} />
+          </Flex>
+
           <Text fontWeight="500" ml="md" variant="subhead">
             {t('Onboarding')}
           </Text>

@@ -28,7 +28,7 @@ export function Switch({
     <Box {...rest}>
       <BaseSwitch
         ios_backgroundColor={theme.colors.backgroundAction}
-        thumbColor={value ? theme.colors.accentActive : theme.colors.textTertiary}
+        thumbColor={value ? theme.colors.accentActive : theme.colors.textSecondary}
         trackColor={{
           false: theme.colors.backgroundAction,
           true: theme.colors.backgroundAction,

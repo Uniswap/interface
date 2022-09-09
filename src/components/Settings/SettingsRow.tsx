@@ -49,16 +49,12 @@ export function SettingsRow({
     }
   }
   return (
-    <Button disabled={Boolean(action)} name="DEBUG_Settings_Navigate" pl="xxs" onPress={handleRow}>
-      <Flex row alignItems="center">
-        <Flex
-          grow
-          row
-          alignItems={subText ? 'flex-start' : 'center'}
-          flexBasis={0}
-          gap="md"
-          py={subText ? 'none' : 'xs'}>
-          {icon}
+    <Button disabled={Boolean(action)} name="DEBUG_Settings_Navigate" onPress={handleRow}>
+      <Flex row alignItems="center" minHeight={40}>
+        <Flex grow row alignItems={subText ? 'flex-start' : 'center'} flexBasis={0} gap="sm">
+          <Flex centered height={32} width={32}>
+            {icon}
+          </Flex>
           <Flex alignItems="stretch" gap="none">
             <Text fontWeight="500" variant="subhead">
               {text}
