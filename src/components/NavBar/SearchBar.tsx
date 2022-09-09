@@ -15,7 +15,7 @@ import { fetchSearchTokens } from 'nft/queries/genie/SearchTokensFetcher'
 import { fetchTrendingTokens } from 'nft/queries/genie/TrendingTokensFetcher'
 import { FungibleToken, GenieCollection, TimePeriod, TrendingCollection } from 'nft/types'
 import { formatEthPrice } from 'nft/utils/currency'
-import { ChangeEvent, useEffect, useMemo, useReducer, useRef, useState } from 'react'
+import { ChangeEvent, ReactNode, useEffect, useMemo, useReducer, useRef, useState } from 'react'
 import { useQuery } from 'react-query'
 import { useLocation } from 'react-router-dom'
 
@@ -99,6 +99,7 @@ export const SearchBarDropdown = ({ toggleOpen, tokens, collections, hasInput, i
   const isNFTPage = pathname.includes('/nfts')
   const isTokenPage = pathname.includes('/tokens')
   const phase1Flag = useNftFlag()
+  const [resultsState, setResultsState] = useState<ReactNode>()
 
   const tokenSearchResults =
     tokens.length > 0 ? (
@@ -202,64 +203,74 @@ export const SearchBarDropdown = ({ toggleOpen, tokens, collections, hasInput, i
     }
   }, [toggleOpen, hoveredIndex, totalSuggestions])
 
+  useEffect(() => {
+    if (!isLoading) {
+      const currentState = () => {
+        return hasInput ? (
+          // Empty or Up to 8 combined tokens and nfts
+          <Column gap="20">
+            {isNFTPage ? (
+              <>
+                {collectionSearchResults}
+                {tokenSearchResults}
+              </>
+            ) : (
+              <>
+                {tokenSearchResults}
+                {collectionSearchResults}
+              </>
+            )}
+          </Column>
+        ) : (
+          // Recent Searches, Trending Tokens, Trending Collections
+          <Column gap="20">
+            {searchHistory.length > 0 && (
+              <SearchBarDropdownSection
+                hoveredIndex={hoveredIndex}
+                startingIndex={0}
+                setHoveredIndex={setHoveredIndex}
+                toggleOpen={toggleOpen}
+                suggestions={searchHistory}
+                header={<Trans>Recent searches</Trans>}
+                headerIcon={<ClockIcon />}
+              />
+            )}
+            {(trendingTokens?.length ?? 0) > 0 && !isNFTPage && (
+              <SearchBarDropdownSection
+                hoveredIndex={hoveredIndex}
+                startingIndex={searchHistory.length}
+                setHoveredIndex={setHoveredIndex}
+                toggleOpen={toggleOpen}
+                suggestions={trendingTokens ?? []}
+                header={<Trans>Popular tokens</Trans>}
+                headerIcon={<TrendingArrow />}
+              />
+            )}
+            {showTrendingCollections && (
+              <SearchBarDropdownSection
+                hoveredIndex={hoveredIndex}
+                startingIndex={searchHistory.length + (isNFTPage ? 0 : trendingTokens?.length ?? 0)}
+                setHoveredIndex={setHoveredIndex}
+                toggleOpen={toggleOpen}
+                suggestions={trendingCollections as unknown as GenieCollection[]}
+                header={<Trans>Popular NFT collections</Trans>}
+                headerIcon={<TrendingArrow />}
+              />
+            )}
+          </Column>
+        )
+      }
+
+      setResultsState(currentState)
+    }
+  }, [isLoading, tokens, collections, trendingCollections, trendingTokens])
+
   return (
     <Box
       className={styles.searchBarDropdown}
       style={{ opacity: isLoading ? '0.3' : '1', transition: 'opacity 0.125s ease-out' }} // TODO move to styles
     >
-      {hasInput ? (
-        // Empty or Up to 8 combined tokens and nfts
-        <Column gap="20">
-          {isNFTPage ? (
-            <>
-              {collectionSearchResults}
-              {tokenSearchResults}
-            </>
-          ) : (
-            <>
-              {tokenSearchResults}
-              {collectionSearchResults}
-            </>
-          )}
-        </Column>
-      ) : (
-        // Recent Searches, Trending Tokens, Trending Collections
-        <Column gap="20">
-          {searchHistory.length > 0 && (
-            <SearchBarDropdownSection
-              hoveredIndex={hoveredIndex}
-              startingIndex={0}
-              setHoveredIndex={setHoveredIndex}
-              toggleOpen={toggleOpen}
-              suggestions={searchHistory}
-              header={<Trans>Recent searches</Trans>}
-              headerIcon={<ClockIcon />}
-            />
-          )}
-          {(trendingTokens?.length ?? 0) > 0 && !isNFTPage && (
-            <SearchBarDropdownSection
-              hoveredIndex={hoveredIndex}
-              startingIndex={searchHistory.length}
-              setHoveredIndex={setHoveredIndex}
-              toggleOpen={toggleOpen}
-              suggestions={trendingTokens ?? []}
-              header={<Trans>Popular tokens</Trans>}
-              headerIcon={<TrendingArrow />}
-            />
-          )}
-          {showTrendingCollections && (
-            <SearchBarDropdownSection
-              hoveredIndex={hoveredIndex}
-              startingIndex={searchHistory.length + (isNFTPage ? 0 : trendingTokens?.length ?? 0)}
-              setHoveredIndex={setHoveredIndex}
-              toggleOpen={toggleOpen}
-              suggestions={trendingCollections as unknown as GenieCollection[]}
-              header={<Trans>Popular NFT collections</Trans>}
-              headerIcon={<TrendingArrow />}
-            />
-          )}
-        </Column>
-      )}
+      {resultsState}
     </Box>
   )
 }
