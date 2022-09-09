@@ -39,6 +39,8 @@ const CLIENT_PARAMS = {
   protocols: [Protocol.V2, Protocol.V3, Protocol.MIXED],
 }
 // Price queries are tuned down to minimize the required RPCs to respond to them.
+// TODO(zzmp): This will be used after testing router caching.
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const PRICE_PARAMS = {
   protocols: [Protocol.V2, Protocol.V3],
   v2PoolSelection: {
@@ -108,7 +110,9 @@ export const routingApi = createApi({
             result = await getClientSideQuote(
               args,
               router,
-              routerPreference === RouterPreference.PRICE ? PRICE_PARAMS : CLIENT_PARAMS
+              // TODO(zzmp): Use PRICE_PARAMS for RouterPreference.PRICE.
+              // This change is intentionally being deferred to first see what effect router caching has.
+              CLIENT_PARAMS
             )
           }
 

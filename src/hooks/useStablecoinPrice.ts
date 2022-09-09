@@ -2,7 +2,8 @@ import { Currency, CurrencyAmount, Price, Token, TradeType } from '@uniswap/sdk-
 import { useWeb3React } from '@web3-react/core'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useMemo, useRef } from 'react'
-import { RouterPreference, useRoutingAPITrade } from 'state/routing/useRoutingAPITrade'
+import { RouterPreference } from 'state/routing/slice'
+import { useRoutingAPITrade } from 'state/routing/useRoutingAPITrade'
 
 import { SupportedChainId } from '../constants/chains'
 import { CUSD_CELO, DAI_OPTIMISM, USDC_ARBITRUM, USDC_MAINNET, USDC_POLYGON } from '../constants/tokens'
