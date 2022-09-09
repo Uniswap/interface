@@ -1,7 +1,7 @@
-import { BaseProvider, JsonRpcProvider } from '@ethersproject/providers'
+import { JsonRpcProvider } from '@ethersproject/providers'
 import { createApi, fetchBaseQuery, FetchBaseQueryError } from '@reduxjs/toolkit/query/react'
 import { Protocol } from '@uniswap/router-sdk'
-import { ChainId } from '@uniswap/smart-order-router'
+import { AlphaRouter, ChainId } from '@uniswap/smart-order-router'
 import { RPC_URLS } from 'constants/networks'
 import { getClientSideQuote, toSupportedChainId } from 'lib/hooks/routing/clientSideSmartOrderRouter'
 import ms from 'ms.macro'
@@ -15,16 +15,17 @@ export enum RouterPreference {
   PRICE = 'price',
 }
 
-const routerProviders = new Map<ChainId, BaseProvider>()
-function getRouterProvider(chainId: ChainId): BaseProvider {
-  const provider = routerProviders.get(chainId)
-  if (provider) return provider
+const routers = new Map<ChainId, AlphaRouter>()
+function getRouter(chainId: ChainId): AlphaRouter {
+  const router = routers.get(chainId)
+  if (router) return router
 
   const supportedChainId = toSupportedChainId(chainId)
   if (supportedChainId) {
     const provider = new JsonRpcProvider(RPC_URLS[supportedChainId])
-    routerProviders.set(chainId, provider)
-    return provider
+    const router = new AlphaRouter({ chainId, provider })
+    routers.set(chainId, router)
+    return router
   }
 
   throw new Error(`Router does not support this chain (chainId: ${chainId}).`)
@@ -36,8 +37,12 @@ const protocols: Protocol[] = [Protocol.V2, Protocol.V3, Protocol.MIXED]
 const API_QUERY_PARAMS = {
   protocols: protocols.map((p) => p.toLowerCase()).join(','),
 }
-const CLIENT_QUERY_PARAMS = {}
-const PRICE_QUERY_PARAMS = {}
+const CLIENT_QUERY_PARAMS = {
+  protocols,
+}
+const PRICE_QUERY_PARAMS = {
+  protocols,
+}
 
 export const routingApi = createApi({
   reducerPath: 'routingApi',
@@ -80,14 +85,12 @@ export const routingApi = createApi({
             })
             result = await fetch(`quote?${query}`)
           } else {
-            const chainId = args.tokenInChainId
-            const provider = getRouterProvider(chainId)
-            const params = {
-              chainId,
-              provider,
-              ...(routerPreference === RouterPreference.PRICE ? PRICE_QUERY_PARAMS : CLIENT_QUERY_PARAMS),
-            }
-            result = await getClientSideQuote(args, params, { protocols })
+            const router = getRouter(args.tokenInChainId)
+            result = await getClientSideQuote(
+              args,
+              router,
+              routerPreference === RouterPreference.PRICE ? PRICE_QUERY_PARAMS : CLIENT_QUERY_PARAMS
+            )
           }
 
           return { data: result.data as GetQuoteResult }
