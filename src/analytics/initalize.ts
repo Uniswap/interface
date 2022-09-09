@@ -26,6 +26,7 @@ const options = {
 
 export function initializeAnalytics() {
   if (typeof API_KEY === 'undefined') {
+    console.error(`${AMPLITUDE_KEY_NAME} is undefined, Amplitude analytics will not run.`)
     return
   }
   init(API_KEY, userId, options)
