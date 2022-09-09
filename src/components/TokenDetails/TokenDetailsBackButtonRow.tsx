@@ -100,7 +100,7 @@ export function TokenDetailsBackButtonRow({
           onClose={() => setShowActionModal(false)}
         />
       )}
-      <Flex row alignItems="center" justifyContent="space-between" pt="sm">
+      <Flex row alignItems="center" justifyContent="space-between" pt="sm" px="sm">
         <BackButton showButtonLabel />
         <Button disabled={!hasOtherBalances} onPress={() => setShowActionModal(true)}>
           <Flex centered row bg="backgroundContainer" borderRadius="sm" gap="xxs" p="xs">
