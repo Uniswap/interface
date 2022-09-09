@@ -15,21 +15,21 @@ if (typeof API_KEY === 'undefined') {
   throw new Error(`${AMPLITUDE_KEY_NAME} is undefined, Amplitude analytics will not run.`)
 }
 
-init(
-  API_KEY,
-  /* userId= */ undefined, // User ID should be undefined to let Amplitude default to Device ID
-  /* options= */
-  {
-    // Disable tracking of private user information by Amplitude
-    trackingOptions: {
-      ipAddress: false,
-      carrier: false,
-      city: false,
-      region: false,
-      dma: false, // designated market area
-    },
-  }
-)
+const userId = undefined // Should be undefined to let Amplitude default to Device ID
+
+// Disable tracking of private user information by Amplitude
+const options = {
+  trackingOptions: {
+    ipAddress: false,
+    carrier: false,
+    city: false,
+    region: false,
+    dma: false, // designated market area
+  },
+}
+
+init(API_KEY, userId, options)
+
 /** Sends an approved (finalized) event to Amplitude production project. */
 export function sendAnalyticsEvent(eventName: string, eventProperties?: Record<string, unknown>) {
   if (!isProductionEnv()) {
