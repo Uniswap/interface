@@ -7,16 +7,10 @@ import { useRoutingAPIArguments } from 'lib/hooks/routing/useRoutingAPIArguments
 import useIsValidBlock from 'lib/hooks/useIsValidBlock'
 import ms from 'ms.macro'
 import { useMemo } from 'react'
-import { useGetQuoteQuery } from 'state/routing/slice'
-import { useClientSideRouter } from 'state/user/hooks'
+import { RouterPreference, useGetQuoteQuery } from 'state/routing/slice'
 
 import { GetQuoteResult, InterfaceTrade, TradeState } from './types'
 import { computeRoutes, transformRoutesToTrade } from './utils'
-
-export enum RouterPreference {
-  CLIENT = 'client',
-  API = 'api',
-}
 
 /**
  * Returns the best trade by invoking the routing api or the smart order router on the client
@@ -26,9 +20,9 @@ export enum RouterPreference {
  */
 export function useRoutingAPITrade<TTradeType extends TradeType>(
   tradeType: TTradeType,
-  amountSpecified?: CurrencyAmount<Currency>,
-  otherCurrency?: Currency,
-  routerPreference?: RouterPreference
+  amountSpecified: CurrencyAmount<Currency> | undefined,
+  otherCurrency: Currency | undefined,
+  routerPreference: RouterPreference
 ): {
   state: TradeState
   trade: InterfaceTrade<Currency, Currency, TTradeType> | undefined
@@ -41,17 +35,12 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
     [amountSpecified, otherCurrency, tradeType]
   )
 
-  const [clientSideRouterStoredPreference] = useClientSideRouter()
-  const clientSideRouter = routerPreference
-    ? routerPreference === RouterPreference.CLIENT
-    : clientSideRouterStoredPreference
-
   const queryArgs = useRoutingAPIArguments({
     tokenIn: currencyIn,
     tokenOut: currencyOut,
     amount: amountSpecified,
     tradeType,
-    useClientSideRouter: clientSideRouter,
+    routerPreference,
   })
 
   const { isLoading, isError, data, currentData } = useGetQuoteQuery(queryArgs ?? skipToken, {
