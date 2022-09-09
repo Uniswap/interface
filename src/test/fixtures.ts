@@ -4,6 +4,7 @@ import { BigNumber, providers } from 'ethers'
 import ERC20_ABI from 'src/abis/erc20.json'
 import { Erc20, Weth } from 'src/abis/types'
 import WETH_ABI from 'src/abis/weth.json'
+import { config } from 'src/config'
 import { NATIVE_ADDRESS, SWAP_ROUTER_ADDRESSES } from 'src/constants/addresses'
 import { ChainId } from 'src/constants/chains'
 import { DAI, WRAPPED_NATIVE_CURRENCY } from 'src/constants/tokens'
@@ -204,7 +205,7 @@ export const wcNotification = {
   chainId: ChainId.Mainnet,
   event: WalletConnectEvent.Connected,
   dappName: 'Uniswap',
-  imageUrl: 'https://app.uniswap.org/images/192x192_App_Icon.png',
+  imageUrl: `${config.uniswapAppUrl}/images/192x192_App_Icon.png`,
 }
 
 export const approveNotification = {

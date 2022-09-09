@@ -13,6 +13,7 @@ import {
   SHAKE_CLIENT_SECRET,
   UNISWAP_API_KEY,
   UNISWAP_API_URL,
+  UNISWAP_APP_URL,
   UNISWAP_GAS_SERVICE_URL,
   VERSION,
   ZERION_API_KEY,
@@ -31,6 +32,7 @@ export interface Config {
   uniswapApiUrl: string
   uniswapApiKey: string
   uniswapGasServiceUrl: string
+  uniswapAppUrl: string
   infuraProjectId: string
   logBufferSize: number
   onesignalAppId: string
@@ -51,6 +53,7 @@ const _config: Config = {
   uniswapApiUrl: UNISWAP_API_URL,
   uniswapApiKey: UNISWAP_API_KEY,
   uniswapGasServiceUrl: UNISWAP_GAS_SERVICE_URL,
+  uniswapAppUrl: UNISWAP_APP_URL,
   infuraProjectId: INFURA_PROJECT_ID,
   logBufferSize: parseInt(LOG_BUFFER_SIZE, 10),
   onesignalAppId: ONESIGNAL_APP_ID,

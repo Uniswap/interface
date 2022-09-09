@@ -4,6 +4,7 @@ import React from 'react'
 import { Provider } from 'react-redux'
 import { rootReducer } from 'src/app/rootReducer'
 import { Box } from 'src/components/layout'
+import { config } from 'src/config'
 import { ChainId } from 'src/constants/chains'
 import { NotificationToastRouter } from 'src/features/notifications/NotificationToastWrapper'
 import { AppNotificationType } from 'src/features/notifications/types'
@@ -61,7 +62,7 @@ WallectConnectNotification.args = {
     address: '0x000000',
     event: WalletConnectEvent.Connected,
     dappName: 'Uniswap',
-    imageUrl: 'https://app.uniswap.org/images/192x192_App_Icon.png',
+    imageUrl: `${config.uniswapAppUrl}/images/192x192_App_Icon.png`,
     chainId: ChainId.Mainnet,
   },
 }

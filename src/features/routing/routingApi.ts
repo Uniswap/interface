@@ -1,4 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+import { config } from 'src/config'
 import { ChainId } from 'src/constants/chains'
 import { DEFAULT_DEADLINE_S, DEFAULT_SLIPPAGE_TOLERANCE } from 'src/constants/misc'
 import { QuoteResult } from 'src/features/routing/types'
@@ -25,7 +26,7 @@ export const routingApi = createApi({
     prepareHeaders: (headers) => {
       // TODO remove once routing api officially supports mobile
       // spoof origin to go around server permissions
-      headers.set('Origin', 'https://app.uniswap.org')
+      headers.set('Origin', config.uniswapAppUrl)
       return headers
     },
   }),
