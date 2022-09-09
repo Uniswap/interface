@@ -1,7 +1,10 @@
 import { TradeType } from '@uniswap/sdk-core'
 import { ChainId } from 'src/constants/chains'
 import { WRAPPED_NATIVE_CURRENCY } from 'src/constants/tokens'
-import { deriveCurrencyAmountFromAssetResponse } from 'src/features/transactions/history/conversion/utils'
+import {
+  deriveCurrencyAmountFromAssetResponse,
+  parseUSDValueFromAssetChange,
+} from 'src/features/transactions/history/conversion/utils'
 import { TransactionHistoryResponse } from 'src/features/transactions/history/transactionHistory'
 import {
   ExactInputSwapTransactionInfo,
@@ -72,6 +75,8 @@ export default function parseTradeTransaction(
       received.quantity
     )
 
+    const transactedUSDValue = parseUSDValueFromAssetChange(sent.transactedValue)
+
     // Data API marks wrap as a swap.
     if (
       (inputCurrencyId?.toLocaleLowerCase() === nativeCurrencyID &&
@@ -94,6 +99,7 @@ export default function parseTradeTransaction(
       tradeType: TradeType.EXACT_INPUT,
       inputCurrencyId,
       outputCurrencyId,
+      transactedUSDValue,
       inputCurrencyAmountRaw,
       expectedOutputCurrencyAmountRaw,
       minimumOutputCurrencyAmountRaw: expectedOutputCurrencyAmountRaw,
@@ -124,6 +130,9 @@ export default function parseTradeTransaction(
       tokenChange.quantity
     )
     const tradeType = nftChange.direction === 'IN' ? NFTTradeType.BUY : NFTTradeType.SELL
+
+    const transactedUSDValue = parseUSDValueFromAssetChange(tokenChange.transactedValue)
+
     if (
       !name ||
       !collectionName ||
@@ -145,6 +154,7 @@ export default function parseTradeTransaction(
       },
       purchaseCurrencyId,
       purchaseCurrencyAmountRaw,
+      transactedUSDValue,
     }
   }
 }

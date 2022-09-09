@@ -84,30 +84,27 @@ export default function SwapSummaryItem({
   }, [dispatch, swapFormState])
 
   const endAdornment = useMemo(() => {
-    return status === TransactionStatus.Failed ? (
-      swapFormState ? (
-        <Text color="accentAction" variant="mediumLabel" onPress={onRetry}>
-          {t('Retry')}
-        </Text>
-      ) : undefined
-    ) : outputCurrency ? (
-      <BalanceUpdate
-        amountRaw={outputAmountRaw}
-        currency={outputCurrency}
-        transactionStatus={transaction.status}
-        transactionType={transaction.typeInfo.type}
-      />
-    ) : undefined
-  }, [
-    onRetry,
-    outputAmountRaw,
-    outputCurrency,
-    status,
-    swapFormState,
-    t,
-    transaction.status,
-    transaction.typeInfo.type,
-  ])
+    if (status === TransactionStatus.Failed) {
+      if (swapFormState) {
+        return (
+          <Text color="accentAction" variant="mediumLabel" onPress={onRetry}>
+            {t('Retry')}
+          </Text>
+        )
+      } else return undefined
+    }
+    if (outputCurrency) {
+      return (
+        <BalanceUpdate
+          amountRaw={outputAmountRaw}
+          currency={outputCurrency}
+          transactedUSDValue={transaction.typeInfo.transactedUSDValue}
+          transactionStatus={transaction.status}
+          transactionType={transaction.typeInfo.type}
+        />
+      )
+    }
+  }, [onRetry, outputAmountRaw, outputCurrency, status, swapFormState, t, transaction])
 
   return (
     <TransactionSummaryLayout

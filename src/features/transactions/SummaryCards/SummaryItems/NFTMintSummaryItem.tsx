@@ -32,10 +32,11 @@ export default function NFTMintSummaryItem({
     <TransactionSummaryLayout
       caption={transaction.typeInfo.nftSummaryInfo.collectionName}
       endAdornment={
-        amountRaw && currency ? (
+        currency && amountRaw ? (
           <BalanceUpdate
             amountRaw={amountRaw}
             currency={currency}
+            transactedUSDValue={transaction.typeInfo.transactedUSDValue}
             transactionStatus={transaction.status}
             transactionType={transaction.typeInfo.type}
           />

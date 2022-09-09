@@ -181,7 +181,8 @@ interface BalanceUpdateProps {
   currency: NullUndefined<Currency>
   currencyAmountRaw: string
   spotPrice?: SpotPrice
-  nftTradeType?: NFTTradeType //
+  nftTradeType?: NFTTradeType
+  transactedUSDValue?: string | number | undefined // optional if USD amount already known
 }
 
 interface NFTTradeBalanceUpdateProps extends BalanceUpdateProps {
@@ -196,6 +197,7 @@ export const createBalanceUpdate = ({
   currencyAmountRaw,
   spotPrice,
   nftTradeType,
+  transactedUSDValue,
 }: BalanceUpdateProps | NFTTradeBalanceUpdateProps): BalanceUpdate | undefined => {
   if (
     !currency ||
@@ -214,7 +216,9 @@ export const createBalanceUpdate = ({
     (transactionType === TransactionType.NFTTrade && nftTradeType === NFTTradeType.BUY)
   return {
     assetValueChange: `${isDecrease ? '-' : '+'}${currencyAmount}${currency.symbol}`,
-    usdValueChange: getUSDValue(spotPrice, currencyAmountRaw, currency),
+    usdValueChange: transactedUSDValue
+      ? formatUSDPrice(transactedUSDValue)
+      : getUSDValue(spotPrice, currencyAmountRaw, currency),
   }
 }
 

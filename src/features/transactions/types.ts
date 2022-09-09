@@ -104,6 +104,7 @@ export enum TransactionType {
 
 export interface BaseTransactionInfo {
   type: TransactionType
+  transactedUSDValue?: number
 }
 
 export interface ApproveTransactionInfo extends BaseTransactionInfo {
@@ -134,7 +135,7 @@ export interface ExactOutputSwapTransactionInfo extends BaseSwapTransactionInfo 
   maximumInputCurrencyAmountRaw: string
 }
 
-export interface WrapTransactionInfo {
+export interface WrapTransactionInfo extends BaseTransactionInfo {
   type: TransactionType.Wrap
   unwrapped: boolean
   currencyAmountRaw: string

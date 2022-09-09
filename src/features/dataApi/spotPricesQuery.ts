@@ -14,8 +14,8 @@ export type SpotPrice = NonNullable<
 >[0]
 
 const query = graphql`
-  query spotPricesQuery($contracts: [ContractInput!]!) {
-    tokenProjects(contracts: $contracts) {
+  query spotPricesQuery($contracts: [ContractInput!]!, $skip: Boolean!) {
+    tokenProjects(contracts: $contracts) @skip(if: $skip) {
       markets(currencies: [USD]) {
         price {
           value
@@ -33,7 +33,7 @@ const query = graphql`
  * with Suspense.
  */
 
-export function useSpotPrice(currency: NullUndefined<Currency>) {
+export function useSpotPrice(currency: NullUndefined<Currency>, skip?: boolean) {
   const data = useLazyLoadQuery<spotPricesQuery>(
     query,
     {
@@ -43,6 +43,7 @@ export function useSpotPrice(currency: NullUndefined<Currency>) {
           address: currency?.wrapped.address.toLowerCase(),
         },
       ],
+      skip: Boolean(skip),
     },
     { networkCacheConfig: { poll: PollingInterval.Slow } }
   )

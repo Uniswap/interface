@@ -39,6 +39,7 @@ export default function NFTTradeSummaryItem({
             amountRaw={purchaseAmountRaw}
             currency={purchaseCurrency}
             nftTradeType={transaction.typeInfo.tradeType}
+            transactedUSDValue={transaction.typeInfo.transactedUSDValue}
             transactionStatus={transaction.status}
             transactionType={transaction.typeInfo.type}
           />

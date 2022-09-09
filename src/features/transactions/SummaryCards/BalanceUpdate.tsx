@@ -11,6 +11,7 @@ interface BalanceUpdateProps {
   transactionType: TransactionType
   transactionStatus: TransactionStatus
   nftTradeType?: NFTTradeType
+  transactedUSDValue?: number // Overrides API request for spot price if USD value already known
 }
 
 export default function BalanceUpdate({
@@ -19,6 +20,7 @@ export default function BalanceUpdate({
   transactionType,
   transactionStatus,
   nftTradeType,
+  transactedUSDValue,
 }: BalanceUpdateProps) {
   return (
     <Suspense fallback={null}>
@@ -26,6 +28,7 @@ export default function BalanceUpdate({
         amountRaw={amountRaw}
         currency={currency}
         nftTradeType={nftTradeType}
+        transactedUSDValue={transactedUSDValue}
         transactionStatus={transactionStatus}
         transactionType={transactionType}
       />
@@ -39,8 +42,11 @@ function BalanceUpdateInner({
   transactionType,
   transactionStatus,
   nftTradeType,
+  transactedUSDValue,
 }: BalanceUpdateProps) {
-  const spotPrice = useSpotPrice(currency)
+  // Skip fetching spot price if known USD transacted value
+  const skipQuery = !!transactedUSDValue
+  const spotPrice = useSpotPrice(currency, skipQuery)
 
   const balanceUpdate = useMemo(() => {
     if (!amountRaw) {
@@ -53,8 +59,17 @@ function BalanceUpdateInner({
       currencyAmountRaw: amountRaw,
       spotPrice,
       nftTradeType,
+      transactedUSDValue,
     })
-  }, [amountRaw, currency, nftTradeType, spotPrice, transactionStatus, transactionType])
+  }, [
+    amountRaw,
+    currency,
+    nftTradeType,
+    spotPrice,
+    transactedUSDValue,
+    transactionStatus,
+    transactionType,
+  ])
 
   return (
     <AssetUpdateLayout

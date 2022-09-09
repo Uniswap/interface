@@ -67,16 +67,21 @@ export default function ReceiveSummaryItem({
   const { name: ensName } = useENS(ChainId.Mainnet, transaction.typeInfo.sender, true)
   const senderName = ensName ?? shortenAddress(transaction.typeInfo.sender)
 
-  const getEndAdornment = () => {
-    if (transaction.typeInfo.assetType === AssetType.Currency) {
-      return currency && transaction.typeInfo.currencyAmountRaw ? (
+  const endAdornment = useMemo(() => {
+    if (
+      transaction.typeInfo.assetType === AssetType.Currency &&
+      currency &&
+      transaction.typeInfo.currencyAmountRaw
+    ) {
+      return (
         <BalanceUpdate
           amountRaw={transaction.typeInfo.currencyAmountRaw}
           currency={currency}
+          transactedUSDValue={transaction.typeInfo.transactedUSDValue}
           transactionStatus={transaction.status}
           transactionType={transaction.typeInfo.type}
         />
-      ) : undefined
+      )
     }
     if (
       transaction.typeInfo.assetType === AssetType.ERC1155 ||
@@ -89,12 +94,21 @@ export default function ReceiveSummaryItem({
         />
       )
     }
-  }
+  }, [
+    currency,
+    transaction.status,
+    transaction.typeInfo.assetType,
+    transaction.typeInfo.currencyAmountRaw,
+    transaction.typeInfo.nftSummaryInfo?.collectionName,
+    transaction.typeInfo.nftSummaryInfo?.name,
+    transaction.typeInfo.transactedUSDValue,
+    transaction.typeInfo.type,
+  ])
 
   return (
     <TransactionSummaryLayout
       caption={senderName}
-      endAdornment={getEndAdornment()}
+      endAdornment={endAdornment}
       icon={icon}
       readonly={readonly}
       showInlineWarning={showInlineWarning}

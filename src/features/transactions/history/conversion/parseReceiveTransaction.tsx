@@ -1,5 +1,8 @@
 import { AssetType } from 'src/entities/assets'
-import { deriveCurrencyAmountFromAssetResponse } from 'src/features/transactions/history/conversion/utils'
+import {
+  deriveCurrencyAmountFromAssetResponse,
+  parseUSDValueFromAssetChange,
+} from 'src/features/transactions/history/conversion/utils'
 import { TransactionHistoryResponse } from 'src/features/transactions/history/transactionHistory'
 import { ReceiveTokenTransactionInfo, TransactionType } from 'src/features/transactions/types'
 
@@ -46,6 +49,9 @@ export default function parseReceiveTransaction(
       change.asset,
       change.quantity
     )
+
+    const transactedUSDValue = parseUSDValueFromAssetChange(change.transactedValue)
+
     if (!(sender && tokenAddress)) return undefined
     return {
       type: TransactionType.Receive,
@@ -53,6 +59,7 @@ export default function parseReceiveTransaction(
       tokenAddress,
       sender,
       currencyAmountRaw,
+      transactedUSDValue,
     }
   }
 

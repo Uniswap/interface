@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { SwapLogoOrLogoWithTxStatus } from 'src/components/CurrencyLogo/LogoWithTxStatus'
 import { nativeOnChain } from 'src/constants/tokens'
@@ -38,19 +38,31 @@ export default function WrapSummaryItem({
     ? `${wrappedNativeCurrency.symbol} → ${nativeCurrency.symbol}`
     : `${nativeCurrency.symbol} → ${wrappedNativeCurrency.symbol}`
 
+  const endAdornment = useMemo(() => {
+    if (nativeCurrency && transaction.typeInfo.currencyAmountRaw) {
+      return (
+        <BalanceUpdate
+          amountRaw={transaction.typeInfo.currencyAmountRaw}
+          currency={outputCurrency}
+          transactedUSDValue={transaction.typeInfo.transactedUSDValue}
+          transactionStatus={transaction.status}
+          transactionType={transaction.typeInfo.type}
+        />
+      )
+    }
+  }, [
+    nativeCurrency,
+    outputCurrency,
+    transaction.status,
+    transaction.typeInfo.currencyAmountRaw,
+    transaction.typeInfo.transactedUSDValue,
+    transaction.typeInfo.type,
+  ])
+
   return (
     <TransactionSummaryLayout
       caption={caption}
-      endAdornment={
-        outputCurrency && transaction.typeInfo.currencyAmountRaw ? (
-          <BalanceUpdate
-            amountRaw={transaction.typeInfo.currencyAmountRaw}
-            currency={outputCurrency}
-            transactionStatus={transaction.status}
-            transactionType={transaction.typeInfo.type}
-          />
-        ) : undefined
-      }
+      endAdornment={endAdornment}
       icon={
         <SwapLogoOrLogoWithTxStatus
           inputCurrency={transaction.typeInfo.unwrapped ? wrappedNativeCurrency : nativeCurrency}

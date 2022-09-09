@@ -8,7 +8,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { ConcreteRequest, Query } from 'relay-runtime';
+import { ConcreteRequest } from 'relay-runtime';
 export type Chain = "ARBITRUM" | "ETHEREUM" | "ETHEREUM_GOERLI" | "OPTIMISM" | "POLYGON" | "%future added value";
 export type ContractInput = {
   address?: string | null;
@@ -16,6 +16,7 @@ export type ContractInput = {
 };
 export type spotPricesQuery$variables = {
   contracts: ReadonlyArray<ContractInput>;
+  skip: Boolean
 };
 export type spotPricesQuery$data = {
   readonly tokenProjects: ReadonlyArray<{

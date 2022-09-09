@@ -38,3 +38,17 @@ export function deriveCurrencyAmountFromAssetResponse(
       : undefined
   ).toString()
 }
+
+/**
+ *
+ * @param transactedValue Transacted value amount from TokenTransfer API response
+ * @returns parsed USD value as a number if currency is of type USD
+ */
+export function parseUSDValueFromAssetChange(
+  transactedValue: {
+    currency: string | null
+    value: number | null
+  } | null
+) {
+  return transactedValue?.currency === 'USD' ? transactedValue.value ?? undefined : undefined
+}

@@ -2,6 +2,7 @@ import { BigNumber } from 'ethers'
 import { parseUnits } from 'ethers/lib/utils'
 import { ChainId } from 'src/constants/chains'
 import { nativeOnChain } from 'src/constants/tokens'
+import { parseUSDValueFromAssetChange } from 'src/features/transactions/history/conversion/utils'
 import { TransactionHistoryResponse } from 'src/features/transactions/history/transactionHistory'
 import { NFTMintTransactionInfo, TransactionType } from 'src/features/transactions/types'
 import { buildCurrencyId, buildNativeCurrencyId } from 'src/utils/currencyId'
@@ -22,6 +23,7 @@ export default function parseNFTMintTransction(
   const collectionName = nftChange.asset.collection?.name
   const imageURL = nftChange.asset.imageUrl
   const tokenId = nftChange.asset.tokenId
+  let transactedUSDValue: number | undefined
 
   if (!name || !collectionName || !imageURL || !tokenId) return undefined
 
@@ -42,6 +44,8 @@ export default function parseNFTMintTransction(
           : tokenChange.asset.decimals
       )
     ).toString()
+
+    transactedUSDValue = parseUSDValueFromAssetChange(tokenChange.transactedValue)
   }
 
   return {
@@ -54,5 +58,6 @@ export default function parseNFTMintTransction(
     },
     purchaseCurrencyId,
     purchaseCurrencyAmountRaw,
+    transactedUSDValue,
   }
 }
