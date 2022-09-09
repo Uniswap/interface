@@ -102,7 +102,7 @@ export function UserScreen({
                   <EyeIcon
                     color={theme.colors.textPrimary}
                     height={20}
-                    strokeWidth={2}
+                    strokeWidth={1.5}
                     width={20}
                   />
                 )
