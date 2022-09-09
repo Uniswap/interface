@@ -19,7 +19,7 @@ declare global {
     }
     interface VisitOptions {
       serviceWorker?: true
-      featureFlag?: FeatureFlag
+      featureFlags?: Array<FeatureFlag>
     }
   }
 }
@@ -40,9 +40,10 @@ Cypress.Commands.overwrite(
           win.localStorage.clear()
           win.localStorage.setItem('redux_localstorage_simple_user', '{"selectedWallet":"INJECTED"}')
 
-          if (options?.featureFlag) {
-            const option = `{"${options?.featureFlag}":"enabled"}`
-            win.localStorage.setItem('featureFlags', option)
+          if (options?.featureFlags) {
+            const joinedFeatureFlags = options.featureFlags.map((featureFlag) => `"${featureFlag}":"enabled"`).join(',')
+            const featurFlagsState = `{${joinedFeatureFlags}}`
+            win.localStorage.setItem('featureFlags', featurFlagsState)
           }
 
           win.ethereum = injected
