@@ -7,7 +7,6 @@ import {
   sortCategoryAtom,
   sortDirectionAtom,
 } from 'components/Tokens/state'
-import theGraphRelayEnvironment from 'graphql/thegraph/RelayEnvironment'
 import {
   query as topTokensQuery,
   TimePeriod,
@@ -15,9 +14,9 @@ import {
   TopTokensQuery$data,
 } from 'graphql/thegraph/TopTokensQuery'
 import { useAtomValue } from 'jotai/utils'
-import { ReactNode, Suspense, useCallback, useEffect, useMemo, useState } from 'react'
+import { ReactNode, Suspense, useCallback, useMemo } from 'react'
 import { AlertTriangle } from 'react-feather'
-import { fetchQuery } from 'react-relay'
+import { useLazyLoadQuery } from 'react-relay'
 import styled from 'styled-components/macro'
 
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from '../constants'
@@ -53,22 +52,6 @@ const NoTokenDisplay = styled.div`
 const TokenRowsContainer = styled.div`
   width: 100%;
 `
-
-function useTempTokenTableHook() {
-  const [data, setData] = useState<TopTokensQuery$data>()
-  const [error, setError] = useState<Error>()
-  const [loading, setLoading] = useState(true)
-
-  // useLazyLoadQuery<TopTokenQueryType>(topTokensQuery, {})
-  useEffect(() => {
-    fetchQuery<TopTokenQueryType>(theGraphRelayEnvironment, topTokensQuery, {}).subscribe({
-      next: setData,
-      error: setError,
-      complete: () => setLoading(false),
-    })
-  }, [setData, setError, setLoading])
-  return { data, error, loading }
-}
 
 function useFilteredTokens(data: TopTokensQuery$data = { tokens: [] }) {
   const filterString = useAtomValue(filterStringAtom)
@@ -181,11 +164,11 @@ export function LoadingTokenTable() {
 export default function TokenTable() {
   const showFavorites = useAtomValue<boolean>(showFavoritesAtom)
   const timePeriod = useAtomValue<TimePeriod>(filterTimeAtom)
-  const { data } = useTempTokenTableHook()
+  const data = useLazyLoadQuery<TopTokenQueryType>(topTokensQuery, {})
+  console.log('TokenTable data', data)
   const filteredTokens = useFilteredTokens(data)
   const sortedFilteredTokens = useSortedTokens(filteredTokens)
 
-  /* loading and error state */
   if (!data) {
     return (
       <NoTokensState

@@ -9,8 +9,10 @@ import SearchBar from 'components/Tokens/TokenTable/SearchBar'
 import TimeSelector from 'components/Tokens/TokenTable/TimeSelector'
 import TokenTable, { LoadingTokenTable } from 'components/Tokens/TokenTable/TokenTable'
 import { TokensNetworkFilterVariant, useTokensNetworkFilterFlag } from 'featureFlags/flags/tokensNetworkFilter'
+import RelayEnvironment from 'graphql/thegraph/RelayEnvironment'
 import { useResetAtom } from 'jotai/utils'
 import { useEffect } from 'react'
+import { RelayEnvironmentProvider } from 'react-relay'
 import { useLocation } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import { ThemedText } from 'theme'
@@ -77,28 +79,30 @@ const Tokens = () => {
 
   return (
     <Trace page={PageName.TOKENS_PAGE} shouldLogImpression>
-      <ExploreContainer>
-        <TitleContainer>
-          <ThemedText.LargeHeader>
-            <Trans>Explore Tokens</Trans>
-          </ThemedText.LargeHeader>
-        </TitleContainer>
-        <FiltersWrapper>
-          <FiltersContainer>
-            <FavoriteButton />
-            {tokensNetworkFilterFlag === TokensNetworkFilterVariant.Enabled && <NetworkFilter />}
+      <RelayEnvironmentProvider environment={RelayEnvironment}>
+        <ExploreContainer>
+          <TitleContainer>
+            <ThemedText.LargeHeader>
+              <Trans>Explore Tokens</Trans>
+            </ThemedText.LargeHeader>
+          </TitleContainer>
+          <FiltersWrapper>
+            <FiltersContainer>
+              <FavoriteButton />
+              {tokensNetworkFilterFlag === TokensNetworkFilterVariant.Enabled && <NetworkFilter />}
 
-            <TimeSelector />
-          </FiltersContainer>
-          <SearchContainer>
-            <SearchBar />
-          </SearchContainer>
-        </FiltersWrapper>
+              <TimeSelector />
+            </FiltersContainer>
+            <SearchContainer>
+              <SearchBar />
+            </SearchContainer>
+          </FiltersWrapper>
 
-        <TokenTableContainer>
-          <TokenTable />
-        </TokenTableContainer>
-      </ExploreContainer>
+          <TokenTableContainer>
+            <TokenTable />
+          </TokenTableContainer>
+        </ExploreContainer>
+      </RelayEnvironmentProvider>
     </Trace>
   )
 }
