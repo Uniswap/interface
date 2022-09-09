@@ -74,10 +74,6 @@ export const searchBarDropdown = style([
   {
     borderTop: 'none',
     opacity: '1',
-    // transitionProperty: 'opacity',
-    // transitionTimingFunction: 'ease-out',
-    // transitionDuration: '125ms',
-    // transition: 'opacity 3s ease-out',
   },
 ])
 

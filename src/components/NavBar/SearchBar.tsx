@@ -285,11 +285,10 @@ export const SearchBarDropdown = ({ toggleOpen, tokens, collections, hasInput, i
   ])
 
   return (
-    <Box
-      className={styles.searchBarDropdown}
-      style={{ opacity: isLoading ? '0.3' : '1', transition: 'opacity 0.125s ease-out' }} // TODO move to styles
-    >
-      {resultsState}
+    <Box className={styles.searchBarDropdown}>
+      <Box opacity={isLoading ? '0.3' : '1'} transition="125">
+        {resultsState}
+      </Box>
     </Box>
   )
 }
