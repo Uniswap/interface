@@ -16,7 +16,7 @@ import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { ElementName } from 'src/features/telemetry/constants'
 import { useAccounts } from 'src/features/wallet/hooks'
 import { OnboardingScreens } from 'src/screens/Screens'
-import { isValidAddress } from 'src/utils/addresses'
+import { getValidAddress } from 'src/utils/addresses'
 import { normalizeTextInput } from 'src/utils/string'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.WatchWallet>
@@ -46,7 +46,7 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props) {
   // ENS and address parsing.
   const normalizedValue = normalizeTextInput(value ?? '')
   const { address: resolvedAddress, name } = useENS(ChainId.Mainnet, normalizedValue, true)
-  const isAddress = isValidAddress(normalizedValue)
+  const isAddress = getValidAddress(normalizedValue, true)
 
   // Form validation.
   const walletExists =

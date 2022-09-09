@@ -26,7 +26,7 @@ import {
   TokenSearchResult,
   WalletSearchResult,
 } from 'src/features/explore/searchHistorySlice'
-import { isValidAddress } from 'src/utils/addresses'
+import { getValidAddress } from 'src/utils/addresses'
 
 // TODO: Update fixed trending wallets
 const TRENDING_WALLETS: WalletSearchResult[] = [
@@ -162,7 +162,7 @@ export function SearchQueryResultsSection({ searchQuery }: SearchResultsSectionP
   } = useENS(ChainId.Mainnet, searchQuery, true)
 
   // TODO: Check if address matches to a token on our token list
-  const etherscanAddress: Address | null = isValidAddress(searchQuery) ? searchQuery : null
+  const etherscanAddress: Address | null = getValidAddress(searchQuery, true) ? searchQuery : null
 
   const noTokenResults = !tokensLoading && tokens?.length === 0
   const noENSResults = !ensLoading && !ensName && !ensAddress

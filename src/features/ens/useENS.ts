@@ -18,7 +18,7 @@ export function useENS(
   address: string | null
   name: string | null
 } {
-  const validated = getValidAddress(nameOrAddress)
+  const validated = getValidAddress(nameOrAddress, true)
   const reverseLookup = useENSName(chainId, validated ? validated : undefined)
   const lookup = useENSAddress(
     chainId,

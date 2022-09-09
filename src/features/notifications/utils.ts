@@ -7,7 +7,7 @@ import { NFTAsset } from 'src/features/nfts/types'
 import { WalletConnectNotification } from 'src/features/notifications/types'
 import { NFTTradeType, TransactionStatus, TransactionType } from 'src/features/transactions/types'
 import { WalletConnectEvent } from 'src/features/walletConnect/saga'
-import { isValidAddress, shortenAddress } from 'src/utils/addresses'
+import { getValidAddress, shortenAddress } from 'src/utils/addresses'
 import { currencyIdToAddress } from 'src/utils/currencyId'
 import { formatCurrencyAmount, formatUSDPrice } from 'src/utils/format'
 import { logger } from 'src/utils/logger'
@@ -291,9 +291,9 @@ export const getCurrencySymbol = (
 ) =>
   currency?.symbol
     ? currency.symbol
-    : tokenAddressString && isValidAddress(tokenAddressString)
+    : tokenAddressString && getValidAddress(tokenAddressString, true)
     ? shortenAddress(tokenAddressString)
     : tokenAddressString
 
 const getShortenedAddressOrEns = (addressOrENS: string) =>
-  isValidAddress(addressOrENS) ? shortenAddress(addressOrENS) : addressOrENS
+  getValidAddress(addressOrENS, true) ? shortenAddress(addressOrENS) : addressOrENS

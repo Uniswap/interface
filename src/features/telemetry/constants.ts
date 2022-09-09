@@ -154,6 +154,7 @@ export const enum ElementName {
 export const enum LogContext {
   ErrorBoundary = 'ErrorBoundary',
   ImageUtils = 'ImageUtils',
+  ValidateAddress = 'ValidateAddress',
   ProviderManager = 'ProviderManager',
   SecurityConcern = 'SecurityConcern',
   AppBackground = 'AppBackground',

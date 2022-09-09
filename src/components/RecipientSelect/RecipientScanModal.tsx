@@ -17,7 +17,7 @@ import { Text } from 'src/components/Text'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { useDisplayName } from 'src/features/wallet/hooks'
 import { selectActiveAccountAddress } from 'src/features/wallet/selectors'
-import { isValidAddress } from 'src/utils/addresses'
+import { getValidAddress } from 'src/utils/addresses'
 
 type Props = {
   isVisible: boolean
@@ -41,7 +41,7 @@ export function RecipientScanModal({ isVisible, onSelectRecipient, onClose }: Pr
     if (hasScanError || shouldFreezeCamera) return
     selectionAsync()
 
-    if (isValidAddress(uri)) {
+    if (getValidAddress(uri)) {
       setShouldFreezeCamera(true)
       onSelectRecipient(uri)
       onClose()

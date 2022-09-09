@@ -32,7 +32,7 @@ export function useENSName(
 
   const debouncedAddress = useDebounce(address)
   const ensNodeArgument = useMemo(() => {
-    const validAddress = getValidAddress(debouncedAddress)
+    const validAddress = getValidAddress(debouncedAddress, true)
     if (validAddress === null) {
       return [undefined]
     }

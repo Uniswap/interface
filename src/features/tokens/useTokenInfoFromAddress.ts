@@ -19,7 +19,7 @@ export function useTokenInfoFromAddress(
   currencyId?: string | null
 ): Token | undefined | null {
   const tokenAddress = currencyId ? currencyIdToAddress(currencyId) : null
-  const address = getValidAddress(tokenAddress)
+  const address = getValidAddress(tokenAddress, true)
 
   const tokenContract = useTokenContract(chainId, address ? address : undefined)
   const tokenContractBytes32 = useBytes32TokenContract(chainId, address ? address : undefined)

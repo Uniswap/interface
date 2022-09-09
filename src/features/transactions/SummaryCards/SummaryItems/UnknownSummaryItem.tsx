@@ -8,7 +8,7 @@ import TransactionSummaryLayout, {
 import { BaseTransactionSummaryProps } from 'src/features/transactions/SummaryCards/TransactionSummaryRouter'
 import { formatTitleWithStatus } from 'src/features/transactions/SummaryCards/utils'
 import { UnknownTransactionInfo } from 'src/features/transactions/types'
-import { isValidAddress, shortenAddress } from 'src/utils/addresses'
+import { getValidAddress, shortenAddress } from 'src/utils/addresses'
 
 export default function UnknownSummaryItem({
   transaction,
@@ -27,7 +27,8 @@ export default function UnknownSummaryItem({
   })
 
   const caption = useMemo(() => {
-    return transaction.typeInfo.tokenAddress && isValidAddress(transaction.typeInfo.tokenAddress)
+    return transaction.typeInfo.tokenAddress &&
+      getValidAddress(transaction.typeInfo.tokenAddress, true)
       ? shortenAddress(transaction.typeInfo.tokenAddress)
       : undefined
   }, [transaction.typeInfo.tokenAddress])

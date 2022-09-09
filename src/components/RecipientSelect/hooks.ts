@@ -15,7 +15,7 @@ const MAX_RECENT_RECIPIENTS = 15
 export function useFullAddressRecipient(searchTerm: string | null) {
   const { loading, address: ensAddress, name } = useENS(ChainId.Mainnet, searchTerm, true)
   return useMemo(() => {
-    const address = getValidAddress(searchTerm) || getValidAddress(ensAddress)
+    const address = getValidAddress(searchTerm, true) || getValidAddress(ensAddress, true)
     const validatedRecipient = address ? { address, name } : null
     const recipient = validatedRecipient ? [validatedRecipient] : []
     return { recipient, loading }

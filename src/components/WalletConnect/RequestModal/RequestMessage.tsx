@@ -15,7 +15,7 @@ import {
   WalletConnectRequest,
 } from 'src/features/walletConnect/walletConnectSlice'
 import { Theme } from 'src/styles/theme'
-import { isValidAddress, shortenAddress } from 'src/utils/addresses'
+import { getValidAddress, shortenAddress } from 'src/utils/addresses'
 import { opacify } from 'src/utils/colors'
 import { ExplorerDataType, getExplorerLink } from 'src/utils/linking'
 import { logger } from 'src/utils/logger'
@@ -85,7 +85,7 @@ const getParsedObjectDisplay = (chainId: number, obj: any, depth = 0) => {
                 {objKey}
               </Text>
               <Flex flexShrink={1}>
-                {isValidAddress(childValue) ? (
+                {getValidAddress(childValue, true) ? (
                   <AddressButton address={childValue} chainId={chainId} textVariant="code" />
                 ) : (
                   <Text py="xxs" variant="code">

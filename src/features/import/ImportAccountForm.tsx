@@ -18,7 +18,7 @@ import {
   PendingAccountActions,
   pendingAccountActions,
 } from 'src/features/wallet/pendingAcccountsSaga'
-import { isValidAddress } from 'src/utils/addresses'
+import { getValidAddress } from 'src/utils/addresses'
 import { getClipboard } from 'src/utils/clipboard'
 import { isValidMnemonic } from 'src/utils/mnemonics'
 import { SagaStatus } from 'src/utils/saga'
@@ -199,7 +199,7 @@ function validateForm(t: TFunction) {
 
 function validateInput(input: string, resolvedAddress: string | null, t: TFunction) {
   if (!input) return false
-  if (isValidAddress(input)) return ImportAccountInputType.Address
+  if (getValidAddress(input, true)) return ImportAccountInputType.Address
   if (isValidEnsName(input) && resolvedAddress) return ImportAccountInputType.ENS
   if (isValidMnemonic(input, t)) return ImportAccountInputType.Mnemonic
   return false

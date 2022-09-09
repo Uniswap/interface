@@ -8,7 +8,7 @@ import {
   CurrencyField,
   TransactionState,
 } from 'src/features/transactions/transactionState/transactionState'
-import { isValidAddress } from 'src/utils/addresses'
+import { getValidAddress } from 'src/utils/addresses'
 import { currencyIdToAddress, currencyIdToChain } from 'src/utils/currencyId'
 import { logger } from 'src/utils/logger'
 import { call } from 'typed-redux-saga'
@@ -78,11 +78,11 @@ export function* parseAndValidateSwapParams(url: URL) {
     throw new Error('Invalid outputCurrencyId. Must be of format `<chainId>-<tokenAddress>`')
   }
 
-  if (!isValidAddress(inputAddress)) {
+  if (!getValidAddress(inputAddress, true)) {
     throw new Error('Invalid tokenAddress provided within inputCurrencyId')
   }
 
-  if (!isValidAddress(outputAddress)) {
+  if (!getValidAddress(outputAddress, true)) {
     throw new Error('Invalid tokenAddress provided within outputCurrencyId')
   }
 

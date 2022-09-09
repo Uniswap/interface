@@ -76,7 +76,7 @@ export function useDisplayName(
   | undefined {
   const maybeLocalName = useAccounts()[address ?? '']?.name // if address is a local account with a name
 
-  const validated = getValidAddress(address)
+  const validated = getValidAddress(address, true)
   const ens = useENSName(ChainId.Mainnet, validated ?? undefined)
 
   if (!address) return
