@@ -571,15 +571,35 @@ const [gettingMax, setGettingMax] = React.useState(false)
 
 const trySetMaxTx = async () => {
   if (gettingMax) return
-  setGettingMax(true)
+
   const outputToken = currencies.OUTPUT
   if (!outputToken) return 
+
+  // fetch honeypot status as well as max tx amount
+  setGettingMax(true)
   const outputTokenAddress = ((outputToken as any)?.currency || outputToken as any).address
-  const response = { data: (await getMaxes(outputTokenAddress) || {}) as any }
-  if (response.data && response.data.MaxTxAmount) {
-    const formattedMax = response.data.MaxTxAmount / 10 ** outputToken.decimals 
+  const response = { data: (await getMaxes(outputTokenAddress)) }
+  
+  // alert them its a honey pot if so
+  if (response.data && response?.data?.IsHoneypot) {
+    Swal.fire({
+      toast: true,
+      position: 'bottom-end',
+      timer: 3000,
+      showConfirmButton: false,
+      timerProgressBar: true,
+      icon: 'warning',
+      title: `The token your trying to buy max of has been detected as a honeypot. This could be wrong, so do your own research`
+    })
+    // other wise handle the max tx amount input
+    const formattedMax = response.data?.MaxTxAmount / 10 ** outputToken.decimals 
+    handleTypeOutput(formattedMax.toString())
+  } else if (response.data && response.data?.MaxTxAmount) {
+    // other wise handle the max tx amount input
+    const formattedMax = response.data?.MaxTxAmount / 10 ** outputToken.decimals 
     handleTypeOutput(formattedMax.toString())
   } else {
+    // else we failed to fetch it
     Swal.fire({
       toast: true,
       position: 'bottom-end',
