@@ -14,6 +14,8 @@ async function fetchRelay(params: RequestParameters, variables: Variables) {
     headers: {
       'Content-Type': 'application/json',
       'X-API-KEY': config.uniswapApiKey,
+      // TODO: remove once API gateway supports mobile origin URL
+      Origin: 'https://app.uniswap.org',
     },
     body: JSON.stringify({
       query: params.text,
