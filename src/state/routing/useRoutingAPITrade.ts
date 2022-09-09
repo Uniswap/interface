@@ -45,7 +45,6 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
 
   const { isLoading, isError, data, currentData } = useGetQuoteQuery(queryArgs ?? skipToken, {
     pollingInterval: ms`15s`,
-    refetchOnFocus: true,
   })
 
   const quoteResult: GetQuoteResult | undefined = useIsValidBlock(Number(data?.blockNumber) || 0) ? data : undefined
