@@ -73,7 +73,6 @@ export const searchBarDropdown = style([
   }),
   {
     borderTop: 'none',
-    opacity: '1',
   },
 ])
 
