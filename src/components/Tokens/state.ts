@@ -1,8 +1,8 @@
 import { SupportedChainId } from 'constants/chains'
 import { TimePeriod } from 'graphql/data/TopTokenQuery'
 import { atom, useAtom } from 'jotai'
-import { atomWithReset, atomWithStorage } from 'jotai/utils'
-import { useCallback } from 'react'
+import { atomWithReset, atomWithStorage, useAtomValue } from 'jotai/utils'
+import { useCallback, useMemo } from 'react'
 
 import { Category, SortDirection } from './types'
 
@@ -20,12 +20,12 @@ export function useToggleFavorite(tokenAddress: string) {
 
   return useCallback(() => {
     let updatedFavoriteTokens
-    if (favoriteTokens.includes(tokenAddress)) {
+    if (favoriteTokens.includes(tokenAddress.toLocaleLowerCase())) {
       updatedFavoriteTokens = favoriteTokens.filter((address: string) => {
-        return address !== tokenAddress
+        return address !== tokenAddress.toLocaleLowerCase()
       })
     } else {
-      updatedFavoriteTokens = [...favoriteTokens, tokenAddress]
+      updatedFavoriteTokens = [...favoriteTokens, tokenAddress.toLocaleLowerCase()]
     }
     updateFavoriteTokens(updatedFavoriteTokens)
   }, [favoriteTokens, tokenAddress, updateFavoriteTokens])
@@ -46,4 +46,10 @@ export function useSetSortCategory(category: Category) {
       setDirectionCategory(SortDirection.decreasing)
     }
   }, [category, sortCategory, setSortCategory, sortDirection, setDirectionCategory])
+}
+
+export function useIsFavorited(tokenAddress: string) {
+  const favoritedTokens = useAtomValue<string[]>(favoritesAtom)
+
+  return useMemo(() => favoritedTokens.includes(tokenAddress.toLocaleLowerCase()), [favoritedTokens, tokenAddress])
 }

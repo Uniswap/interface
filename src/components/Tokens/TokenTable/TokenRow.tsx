@@ -7,12 +7,12 @@ import CurrencyLogo from 'components/CurrencyLogo'
 import { getChainInfo } from 'constants/chainInfo'
 import { TimePeriod, TokenData } from 'graphql/data/TopTokenQuery'
 import { useCurrency } from 'hooks/Tokens'
-import { useAtom } from 'jotai'
 import { useAtomValue } from 'jotai/utils'
 import { ReactNode } from 'react'
 import { ArrowDown, ArrowUp, Heart } from 'react-feather'
 import { Link } from 'react-router-dom'
 import styled, { css, useTheme } from 'styled-components/macro'
+import { ClickableStyle } from 'theme'
 import { formatDollarAmount } from 'utils/formatDollarAmt'
 
 import {
@@ -23,12 +23,12 @@ import {
 } from '../constants'
 import { LoadingBubble } from '../loading'
 import {
-  favoritesAtom,
   filterNetworkAtom,
   filterStringAtom,
   filterTimeAtom,
   sortCategoryAtom,
   sortDirectionAtom,
+  useIsFavorited,
   useSetSortCategory,
   useToggleFavorite,
 } from '../state'
@@ -107,6 +107,14 @@ export const ClickFavorited = styled.span`
   &:hover {
     opacity: 60%;
   }
+`
+
+export const FavoriteIcon = styled(Heart)<{ isFavorited: boolean }>`
+  ${ClickableStyle}
+  height: 22px;
+  width: 24px;
+  color: ${({ isFavorited, theme }) => (isFavorited ? theme.accentAction : theme.textSecondary)};
+  fill: ${({ isFavorited, theme }) => (isFavorited ? theme.accentAction : 'transparent')};
 `
 
 const ClickableContent = styled.div`
@@ -461,9 +469,7 @@ export default function LoadedRow({
   const currency = useCurrency(tokenAddress)
   const tokenName = tokenData.name
   const tokenSymbol = tokenData.symbol
-  const theme = useTheme()
-  const [favoriteTokens] = useAtom(favoritesAtom)
-  const isFavorited = favoriteTokens.includes(tokenAddress)
+  const isFavorited = useIsFavorited(tokenAddress)
   const toggleFavorite = useToggleFavorite(tokenAddress)
   const filterString = useAtomValue(filterStringAtom)
   const filterNetwork = useAtomValue(filterNetworkAtom)
@@ -482,7 +488,6 @@ export default function LoadedRow({
     search_token_address_input: filterString,
   }
 
-  const heartColor = isFavorited ? theme.accentActive : undefined
   // TODO: currency logo sizing mobile (32px) vs. desktop (24px)
   return (
     <StyledLink
@@ -498,7 +503,7 @@ export default function LoadedRow({
               toggleFavorite()
             }}
           >
-            <Heart size={18} color={heartColor} fill={heartColor} />
+            <FavoriteIcon isFavorited={isFavorited} />
           </ClickFavorited>
         }
         listNumber={tokenListIndex + 1}

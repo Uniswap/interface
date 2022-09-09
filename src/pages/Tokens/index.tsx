@@ -87,8 +87,9 @@ const Tokens = () => {
         </TitleContainer>
         <FiltersWrapper>
           <FiltersContainer>
-            {tokensNetworkFilterFlag === TokensNetworkFilterVariant.Enabled && <NetworkFilter />}
             <FavoriteButton />
+            {tokensNetworkFilterFlag === TokensNetworkFilterVariant.Enabled && <NetworkFilter />}
+
             <TimeSelector />
           </FiltersContainer>
           <SearchContainer>
@@ -116,8 +117,8 @@ export const LoadingTokens = () => {
       </TitleContainer>
       <FiltersWrapper>
         <FiltersContainer>
-          {tokensNetworkFilterFlag === TokensNetworkFilterVariant.Enabled && <NetworkFilter />}
           <FavoriteButton />
+          {tokensNetworkFilterFlag === TokensNetworkFilterVariant.Enabled && <NetworkFilter />}
           <TimeSelector />
         </FiltersContainer>
         <SearchContainer>

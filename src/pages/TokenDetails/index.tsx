@@ -11,14 +11,15 @@ import LoadingTokenDetail from 'components/Tokens/TokenDetails/LoadingTokenDetai
 import NetworkBalance from 'components/Tokens/TokenDetails/NetworkBalance'
 import TokenDetail from 'components/Tokens/TokenDetails/TokenDetail'
 import TokenSafetyMessage from 'components/TokenSafety/TokenSafetyMessage'
+import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import Widget, { WIDGET_WIDTH } from 'components/Widget'
 import { getChainInfo } from 'constants/chainInfo'
 import { L1_CHAIN_IDS, L2_CHAIN_IDS, SupportedChainId, TESTNET_CHAIN_IDS } from 'constants/chains'
 import { checkWarning } from 'constants/tokenSafety'
-import { useToken } from 'hooks/Tokens'
+import { useIsUserAddedToken, useToken } from 'hooks/Tokens'
 import { useNetworkTokenBalances } from 'hooks/useNetworkTokenBalances'
-import { useMemo } from 'react'
-import { Navigate, useLocation, useParams } from 'react-router-dom'
+import { useCallback, useMemo, useState } from 'react'
+import { Navigate, useLocation, useNavigate, useParams } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
 const Footer = styled.div`
@@ -79,10 +80,28 @@ export default function TokenDetails() {
   const location = useLocation()
   const { tokenAddress } = useParams<{ tokenAddress?: string }>()
   const token = useToken(tokenAddress)
+  const tokenWarning = tokenAddress ? checkWarning(tokenAddress) : null
+  const isBlockedToken = tokenWarning?.canProceed === false
+  const navigate = useNavigate()
 
-  const tokenWarning = token ? checkWarning(token.address) : null
+  const [continueSwap, setContinueSwap] = useState<{ resolve: (value: boolean | PromiseLike<boolean>) => void }>()
+  const shouldShowSpeedbump = !useIsUserAddedToken(token) && tokenWarning !== null
+  // Show token safety modal if Swap-reviewing a warning token, at all times if the current token is blocked
+  const onReviewSwap = useCallback(() => {
+    return new Promise<boolean>((resolve) => {
+      shouldShowSpeedbump ? setContinueSwap({ resolve }) : resolve(true)
+    })
+  }, [shouldShowSpeedbump])
+
+  const onResolveSwap = useCallback(
+    (value: boolean) => {
+      continueSwap?.resolve(value)
+      setContinueSwap(undefined)
+    },
+    [continueSwap, setContinueSwap]
+  )
+
   /* network balance handling */
-
   const { data: networkData } = NetworkBalances(token?.address)
   const { chainId: connectedChainId } = useWeb3React()
   const totalBalance = 4.3 // dummy data
@@ -128,7 +147,7 @@ export default function TokenDetails() {
         <>
           <TokenDetail address={token.address} />
           <RightPanel>
-            <Widget defaultToken={token ?? undefined} />
+            <Widget defaultToken={token ?? undefined} onReviewSwapClick={onReviewSwap} />
             {tokenWarning && <TokenSafetyMessage tokenAddress={token.address} warning={tokenWarning} />}
             <BalanceSummary address={token.address} />
           </RightPanel>
@@ -139,6 +158,14 @@ export default function TokenDetails() {
               networkBalances={balancesByNetwork}
             />
           </Footer>
+          <TokenSafetyModal
+            isOpen={isBlockedToken || !!continueSwap}
+            tokenAddress={token.address}
+            onContinue={() => onResolveSwap(true)}
+            onBlocked={() => navigate(-1)}
+            onCancel={() => onResolveSwap(false)}
+            showCancel={true}
+          />
         </>
       )}
     </TokenDetailsLayout>
