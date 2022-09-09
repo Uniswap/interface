@@ -28,7 +28,7 @@ import {
 } from '../../nft/components/icons'
 import { NavIcon } from './NavIcon'
 import * as styles from './SearchBar.css'
-import { CollectionRow, SkeletonRow, TokenRow } from './SuggestionRow'
+import { CollectionRow, TokenRow } from './SuggestionRow'
 
 interface SearchBarDropdownSectionProps {
   toggleOpen: () => void
@@ -87,9 +87,10 @@ interface SearchBarDropdownProps {
   tokens: FungibleToken[]
   collections: GenieCollection[]
   hasInput: boolean
+  isLoading: boolean
 }
 
-export const SearchBarDropdown = ({ toggleOpen, tokens, collections, hasInput }: SearchBarDropdownProps) => {
+export const SearchBarDropdown = ({ toggleOpen, tokens, collections, hasInput, isLoading }: SearchBarDropdownProps) => {
   const [hoveredIndex, setHoveredIndex] = useState<number | undefined>(0)
   const searchHistory = useSearchHistory(
     (state: { history: (FungibleToken | GenieCollection)[] }) => state.history
@@ -202,7 +203,10 @@ export const SearchBarDropdown = ({ toggleOpen, tokens, collections, hasInput }:
   }, [toggleOpen, hoveredIndex, totalSuggestions])
 
   return (
-    <Box className={styles.searchBarDropdown}>
+    <Box
+      className={styles.searchBarDropdown}
+      style={{ opacity: isLoading ? '0.3' : '1', transition: 'opacity 0.125s ease-out' }} // TODO move to styles
+    >
       {hasInput ? (
         // Empty or Up to 8 combined tokens and nfts
         <Column gap="20">
@@ -375,17 +379,15 @@ export const SearchBar = () => {
             <NavMagnifyingGlassIcon width={28} height={28} />
           </NavIcon>
         </Box>
-        {isOpen &&
-          (debouncedSearchValue.length > 0 && (tokensAreLoading || collectionsAreLoading) ? (
-            <SkeletonRow />
-          ) : (
-            <SearchBarDropdown
-              toggleOpen={toggleOpen}
-              tokens={reducedTokens}
-              collections={reducedCollections}
-              hasInput={debouncedSearchValue.length > 0}
-            />
-          ))}
+        {isOpen && (
+          <SearchBarDropdown
+            toggleOpen={toggleOpen}
+            tokens={reducedTokens}
+            collections={reducedCollections}
+            hasInput={debouncedSearchValue.length > 0} // TODO can this be deprecated?
+            isLoading={tokensAreLoading || collectionsAreLoading}
+          />
+        )}
       </Box>
       {isOpen && <Overlay />}
     </Box>

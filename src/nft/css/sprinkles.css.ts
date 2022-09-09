@@ -209,6 +209,7 @@ export const vars = createGlobalTheme(':root', {
     black: '900',
   },
   time: {
+    '125': '125ms',
     '250': '250ms',
     '500': '500ms',
   },
