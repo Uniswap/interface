@@ -31,18 +31,16 @@ function getRouter(chainId: ChainId): AlphaRouter {
   throw new Error(`Router does not support this chain (chainId: ${chainId}).`)
 }
 
-const protocols: Protocol[] = [Protocol.V2, Protocol.V3, Protocol.MIXED]
-
-// routing API quote query params: https://github.com/Uniswap/routing-api/blob/main/lib/handlers/quote/schema/quote-schema.ts
+// routing API quote params: https://github.com/Uniswap/routing-api/blob/main/lib/handlers/quote/schema/quote-schema.ts
 const API_QUERY_PARAMS = {
-  protocols: protocols.map((p) => p.toLowerCase()).join(','),
+  protocols: 'v2,v3,mixed',
 }
-const CLIENT_QUERY_PARAMS = {
-  protocols,
+const CLIENT_PARAMS = {
+  protocols: [Protocol.V2, Protocol.V3, Protocol.MIXED],
 }
 // Price queries are tuned down to minimize the required RPCs to respond to them.
-const PRICE_QUERY_PARAMS = {
-  protocols,
+const PRICE_PARAMS = {
+  protocols: [Protocol.V2, Protocol.V3],
   v2PoolSelection: {
     topN: 2,
     topNDirectSwaps: 1,
@@ -110,7 +108,7 @@ export const routingApi = createApi({
             result = await getClientSideQuote(
               args,
               router,
-              routerPreference === RouterPreference.PRICE ? PRICE_QUERY_PARAMS : CLIENT_QUERY_PARAMS
+              routerPreference === RouterPreference.PRICE ? PRICE_PARAMS : CLIENT_PARAMS
             )
           }
 
