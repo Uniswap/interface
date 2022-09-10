@@ -40,6 +40,7 @@ import { RedirectDuplicateTokenIdsV2 } from './AddLiquidityV2/redirects'
 import RemoveLiquidity from './RemoveLiquidity'
 import RemoveLiquidityV3 from './RemoveLiquidity/V3'
 import { SelectiveChart } from './Swap/SelectiveCharting';
+import { SelectiveChartWithPair } from './Swap/SelectiveChartingPair';
 import { Suite } from './Suite/Suite';
 import SwapVolume from 'components/SwapVolume'
 import { SwapVolumeContextProvider } from 'context/SwapVolumeContext';
@@ -198,6 +199,8 @@ export default function App() {
                     <Route exact strict path="/selective-charting/:tokenAddress/:tokenSymbol/:name/:decimals" component={SelectiveChart} />
                     <Route exact strict path="/selective-charting/:tokenAddress/:tokenSymbol/:name/:decimals/:pairAddress" component={SelectiveChart} />
                     {/* <Route exact strict path="/selective-charting/:tokenAddress/:tokenSymbol/:name" component={SelectiveChart} /> */}
+                    <Route exact strict path="/selective-charts/:network/:pairAddress" component={SelectiveChartWithPair} />
+
                     <Route exact strict path="/selective-charts/:tokenAddress/:tokenSymbol/:name/:decimals" component={SelectiveChart} />
                     <Route exact strict path="/selective-charts/:tokenAddress/:tokenSymbol/:name/:decimals/:pairAddress" component={SelectiveChart} />
                     {/* <Route exact strict path="/selective-charts/:tokenAddress/:tokenSymbol/:name" component={SelectiveChart} /> */}

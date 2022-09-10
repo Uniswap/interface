@@ -72,7 +72,10 @@ export const RecentlyViewedCharts = () => {
                     <StyledInternalLink
                         key={item?.token?.address}
                         color={"#fff"}
-                        to={`/selective-charts/${item?.token?.address}/${item?.token?.symbol
+                        to={item?.pair ?
+                            item?.network ? `selective-charts/${item.network}/${item.pair}` :   
+                            `/selective-charts/${item.chainId == 1 ? 'ethereum' : item?.chainId == 56 ? 'bsc' : 'ethereum'}/${item.pair}` :
+                            `/selective-charts/${item?.token?.address}/${item?.token?.symbol
                             }/${item?.token?.name
                                 ? item?.token?.name
                                 : item?.token?.symbol

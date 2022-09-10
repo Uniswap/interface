@@ -18,17 +18,17 @@ const Wrapper = styled.div`
 type ChartProps = {
   symbol: string;
   address: string;
-  tokenSymbolForChart: string;
   pairData?: any[];
   height?: number;
   pairAddress?: string;
+  tokenSymbolForChart?:string;
 }
 
 const areChartPropsEqual = (oldProps: ChartProps, newProps: ChartProps) => newProps.symbol == oldProps.symbol && newProps.pairAddress?.toLowerCase() == oldProps.pairAddress?.toLowerCase() && newProps.address?.toLowerCase() == oldProps.address?.toLowerCase()
 export const ChartComponent = React.memo(
   (props: ChartProps) => {
     const { chainId } = useActiveWeb3React()
-    const { height, address, pairAddress: pairAddy, symbol, tokenSymbolForChart, pairData } = props;
+    const { height, address, pairAddress: pairAddy, symbol, pairData } = props;
 
     const pairAddress = React.useMemo(() => {
       if (pairAddy) return pairAddy

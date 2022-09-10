@@ -10,7 +10,7 @@ import {
 } from "react-feather";
 import { Currency, Token } from "@uniswap/sdk-core";
 import { DarkCard, LightCard } from "components/Card";
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import { StyledInternalLink, TYPE } from "theme";
 import { darken, lighten } from "polished";
 import styled, { useTheme } from "styled-components/macro";
@@ -20,9 +20,8 @@ import {
   useTokenData,
   useTokenTransactions,
 } from "state/logs/utils";
-import { useBnbPrices, useBscPairs, useBscTokenData, useBscTokenTransactions } from "state/logs/bscUtils";
-import { useBscToken, useCurrency, useToken } from "hooks/Tokens";
-import { useDexscreenerToken, useTokenInfo } from "components/swap/ChartPage";
+import { useCurrency, useToken } from "hooks/Tokens";
+import { useDexscreenerPair, useDexscreenerToken, useTokenInfo } from "components/swap/ChartPage";
 import { useLocation, useParams } from "react-router";
 
 import BarChartLoaderSVG from "components/swap/BarChartLoader";
@@ -34,36 +33,40 @@ import { ChartSidebar } from "components/ChartSidebar";
 import { LoadingSkeleton } from "pages/Pool/styleds";
 import ReactGA from "react-ga";
 import { RecentlyViewedCharts } from "./RecentViewedCharts";
+import { Redirect } from "./redirects";
+import { SelectiveChartWithPairBsc } from "./SelectiveChartingPairBsc";
 import { TableQuery } from "./TableQuery";
 import TokenSocials from "./TokenSocials";
 import { TokenStats } from "./TokenStats";
 import { TopTokenHolders } from "components/TopTokenHolders/TopTokenHolders";
 import _ from "lodash";
 import { isAddress } from "utils";
+import { useBscTokenTransactions } from "state/logs/bscUtils";
 import { useConvertTokenAmountToUsdString } from "pages/Vote/VotePage";
 import { useHistory } from "react-router-dom";
+import useLast from "hooks/useLast";
 import { useTokenBalance } from "state/wallet/hooks";
 import { useUserChartHistoryManager } from "state/user/hooks";
 import { useWeb3React } from "@web3-react/core";
 
 export const useIsMobile = () => {
-    const [width, setWidth] = useState(window.innerWidth);
-    const handleWindowSizeChange = () => {
-            setWidth(window.innerWidth);
+  const [width, setWidth] = useState(window.innerWidth);
+  const handleWindowSizeChange = () => {
+    setWidth(window.innerWidth);
+  }
+
+  useEffect(() => {
+    window.addEventListener('resize', handleWindowSizeChange);
+    return () => {
+      window.removeEventListener('resize', handleWindowSizeChange);
     }
+  }, []);
 
-    useEffect(() => {
-        window.addEventListener('resize', handleWindowSizeChange);
-        return () => {
-            window.removeEventListener('resize', handleWindowSizeChange);
-        }
-    }, []);
-
-    return (width <= 768);
+  return (width <= 768);
 }
 
-const CurrencyInputPanel = React.lazy(() =>  import("components/CurrencyInputPanel"));
-const CurrencyLogo = React.lazy(() => import( "components/CurrencyLogo"));
+const CurrencyInputPanel = React.lazy(() => import("components/CurrencyInputPanel"));
+const CurrencyLogo = React.lazy(() => import("components/CurrencyLogo"));
 
 const Badge = React.lazy(() => import("components/Badge"));
 
@@ -76,7 +79,7 @@ export function useLocationEffect(callback: (location?: any) => any) {
     callback(location);
   }, [location, callback]);
 }
-const StyledDiv = styled.div<{isMobile?:boolean}>`
+const StyledDiv = styled.div<{ isMobile?: boolean }>`
   font-family: "Open Sans";
   font-size: 14px;
   display: flex;
@@ -99,64 +102,51 @@ const WrapperCard = styled(DarkCard) <{ gridTemplateColumns: string, isMobile: b
   color ${props => props.theme.text1};
   grid-template-columns: ${props => props.gridTemplateColumns};
   border-radius: 30px;
-  padding:${(props) => props.isMobile ? '.1rem' : '1rem'}
+  padding:${(props) => props.isMobile ? '.01rem 5px' : '1rem'}
 `
 
-type BscChartProps = {
-    params: any
-}
-
-export const SelectiveChartBsc = () => {
+export const SelectiveChartWithPair = () => {
   const ref = React.useRef<any>();
   const { account, chainId } = useWeb3React();
   const history = useHistory();
+  const lastChainId = useLast(chainId)
   const params = useParams<{
-    tokenAddress?: string;
-    tokenSymbol?: string;
-    name?: string;
-    decimals?: string;
+    pairAddress?:string;
+    network?:string;
   }>();
+  const screenerPair = useDexscreenerPair(params?.pairAddress || '', chainId)
   const isMobile = useIsMobile()
   const mainnetCurrency = useCurrency(
-    !chainId || chainId === 1 ? params?.tokenAddress : undefined
+    !chainId || chainId === 1 ? screenerPair?.baseToken?.address : undefined
   );
-  const prebuilt = React.useMemo(
-    () =>
-    ({
-      address: params?.tokenAddress,
-      chainId,
-      name: params?.name,
-      symbol: params?.tokenSymbol,
-      isNative: false,
-      isToken: true,
-    } as Currency),
-    [params]
-  );
+  const bscTransactionData = useBscTokenTransactions(params?.network == 'bsc' ? screenerPair?.baseToken?.address : '', 5000)
   const prebuiltCurrency = React.useMemo(
-    () => (!chainId || chainId === 1 ? mainnetCurrency : prebuilt),
-    [mainnetCurrency, chainId, prebuilt]
+    () => mainnetCurrency,
+    [mainnetCurrency, chainId]
   );
   const tokenAddressSupplied = React.useMemo(
     () =>
-      ref?.current?.address &&
-        isAddress(ref?.current?.address) &&
-        ref.current?.address != params?.tokenAddress
-        ? toChecksum(ref.current?.address)
-        : toChecksum(params?.tokenAddress),
-    [params?.tokenAddress, ref.current]
+      toChecksum(screenerPair?.baseToken?.address),
+    [screenerPair?.baseToken?.address]
   );
   const [address, setAddress] = React.useState(
     tokenAddressSupplied ? tokenAddressSupplied : ""
   );
-  const { data: bscData, loading: bscLoading } = useBscTokenTransactions(address?.toLowerCase(), 5000)
-  const prices = useBnbPrices() 
+
+  useEffect(() => {
+    if (screenerPair?.baseToken?.address && !_.isEqual(screenerPair?.baseToken?.address, address)) {
+        setAddress(screenerPair?.baseToken?.address)
+    }
+  }, [screenerPair?.baseToken?.address])
+
   const tokenInfo = useTokenInfo(chainId ?? 1, address);
-  const tokenData = useBscTokenData(address?.toLowerCase(), prices?.current, prices?.oneDay);
-  const pairs = useBscPairs(address)
-  const token = useBscToken(address);
+  const tokenData = useTokenData(address?.toLowerCase(), 10000);
+  const { pairs } = tokenData;
+  const token = useToken(address);
   const tokenBalance = useTokenBalance(account ?? undefined, token as any);
+  const [ethPrice] = useEthPrice()
   const screenerToken = useDexscreenerToken(address);
-  const transactionData = useTokenTransactions(address, pairs, 20000);
+  const transactionData = useTokenTransactions(address, pairs, 5000);
   const [selectedCurrency, setSelectedCurrency] = React.useReducer(
     function (
       state: { selectedCurrency: Currency | null | undefined },
@@ -176,7 +166,7 @@ export const SelectiveChartBsc = () => {
       selectedCurrency: prebuiltCurrency,
     }
   );
-  const hasSelectedData = Boolean(params?.tokenAddress && selectedCurrency?.selectedCurrency?.name);
+  const hasSelectedData = Boolean(params?.pairAddress );
   const theme = useTheme()
   const [loadingNewData, setLoadingNewData] = React.useState(false);
 
@@ -186,7 +176,7 @@ export const SelectiveChartBsc = () => {
     const newSymbol = location.pathname.split("/")[3];
     const newName = location.pathname.split("/")[4];
     const newDecimals = location.pathname.split("/")[5];
-    if (newAddress && newSymbol) {
+    if (newAddress && newSymbol && newName && newDecimals) {
       setLoadingNewData(true);
       const checksummed = toChecksum(newAddress);
       setAddress(checksummed);
@@ -212,7 +202,7 @@ export const SelectiveChartBsc = () => {
           ref.current.decimals = +newDecimals;
         }
       }
-      
+
       setSelectedCurrency({ type: "update", payload: ref.current });
       updateUserChartHistory([
         {
@@ -236,11 +226,18 @@ export const SelectiveChartBsc = () => {
       setSelectedCurrency({ payload: undefined, type: "update" });
       ref.current = undefined;
     }
-    
   }, []);
 
-  useLocationEffect(locationCallback);
+  // if they change chains on a chart page , need to redirect them back to the select charts page
+  const chainChanged = Boolean(chainId) && Boolean(lastChainId) && chainId !== lastChainId
+  React.useEffect(() => {
+    if (chainChanged && Boolean(params?.pairAddress)) {
+      history.push(`/selective-charts`)
+    }
+  }, [chainChanged])
 
+
+  useLocationEffect(locationCallback);
   const [userChartHistory, updateUserChartHistory] =
     useUserChartHistoryManager();
 
@@ -249,22 +246,23 @@ export const SelectiveChartBsc = () => {
       setSelectedCurrency({ payload: undefined, type: "update" });
       ref.current = undefined;
     } else if (
-      params.tokenAddress &&
-      params.name &&
-      params.tokenSymbol &&
-      params.decimals
+      params.pairAddress &&
+      mainnetCurrency || screenerPair?.baseToken &&
+      !userChartHistory.some((toke) => toke?.token?.symbol == screenerPair.baseToken.symbol && screenerPair.pairAddress !== toke?.pairAddress)
     ) {
       updateUserChartHistory([
         {
           time: new Date().getTime(),
           data: [],
-          token: { ...prebuilt, wrapped: undefined },
-          summary: `Viewing ${prebuilt.name} token chart`,
-          chainId
+          token: { ...screenerPair?.baseToken, ...mainnetCurrency, wrapped: undefined },
+          summary: `Viewing ${screenerPair?.baseToken?.name} token chart`,
+          chainId,
+          network: screenerPair?.chainId,
+          pair: params.pairAddress
         },
       ]);
     }
-  }, []);
+  }, [screenerPair?.baseToken]);
 
   const usdcAndEthFormatted = useConvertTokenAmountToUsdString(
     token as Token,
@@ -278,15 +276,18 @@ export const SelectiveChartBsc = () => {
 
   const pair = React.useMemo(
     function () {
-      if (!Boolean(Array.isArray(pairs) && pairs.length)) return undefined;
+      if (!Boolean(Array.isArray(pairs) && pairs.length) && !screenerToken) return undefined
+
+      if (screenerToken && screenerToken.quoteToken && screenerToken.quoteToken.address)
+        return screenerToken.quoteToken.address
 
       return `${pairs?.[0]?.token0?.symbol?.toLowerCase() ===
-          token?.symbol?.toLowerCase()
-          ? pairs?.[0]?.token1?.id
-          : pairs?.[0]?.token0?.id
+        token?.symbol?.toLowerCase()
+        ? pairs?.[0]?.token1?.id
+        : pairs?.[0]?.token0?.id
         }`;
     },
-    [tokenData, pairs, token]
+    [tokenData, screenerToken, pairs, token]
   );
 
   const pairCurrency = useCurrency(pair ?? undefined);
@@ -334,7 +335,7 @@ export const SelectiveChartBsc = () => {
   const [showSearch, setShowSearch] = React.useState(false);
   const toggleShowSearchOn = () => setShowSearch(true);
   const toggleShowSearchOff = () => setShowSearch(false);
-  
+
   // they can also change the current chart by selecting a token from the token dropdown.
   const onCurrencySelect = React.useCallback((currency: any) => {
     if (!currency) return;
@@ -350,31 +351,31 @@ export const SelectiveChartBsc = () => {
   /* Memoized function to render the Double Currency Logo for the current chart */
   const LogoMemo = React.useMemo(() => {
     return Boolean(!!hasSelectedData) ? (
-      <div style={{display:'flex', alignItems:'center', gap: 20, justifyContent:'space-between'}}>
-      {Boolean(!chainId || chainId == 56) && prices && prices?.current && <TYPE.small fontSize={12}>BNB <Badge>${parseFloat(parseFloat(prices.current.toString()).toFixed(2)).toLocaleString()}</Badge> </TYPE.small>}
-      <span
-        style={{
-          display: "flex",
-          alignItems: "center",
-          paddingRight: isMobile ? 0 : 15,
-          borderRight: `${!isMobile ? "1px solid #444" : "none"}`,
-        }}
-      >
-        Viewing
-        <DoubleCurrencyLogo
+      <div style={{ display: 'flex', alignItems: 'center', gap: 20, justifyContent: 'space-between' }}>
+        {Boolean(!chainId || chainId == 1) && ethPrice && <TYPE.small fontSize={12}>ETH <Badge>${parseFloat(parseFloat(ethPrice.toString()).toFixed(2)).toLocaleString()}</Badge> </TYPE.small>}
+        <span
           style={{
-            marginRight: 3,
+            display: "flex",
+            alignItems: "center",
+            paddingRight: isMobile ? 0 : 15,
+            borderRight: `${!isMobile ? "1px solid #444" : "none"}`,
           }}
-          size={30}
-          margin
-          currency0={mainnetCurrency as any}
-          currency1={pairCurrency as any}
-        />
-        on KibaCharts
-      </span>
+        >
+          Viewing
+          <DoubleCurrencyLogo
+            style={{
+              marginRight: 3,
+            }}
+            size={30}
+            margin
+            currency0={mainnetCurrency as any}
+            currency1={pairCurrency as any}
+          />
+          on KibaCharts
+        </span>
       </div>
     ) : null;
-  }, [mainnetCurrency, chainId, prices, pairCurrency, hasSelectedData]);
+  }, [mainnetCurrency, chainId, ethPrice, pairCurrency, hasSelectedData]);
   /* memoized function to render the currency input select that represents the current viewed chart's token */
   const PanelMemo = React.useMemo(() => {
     return !Boolean(chainId) || Boolean(chainId) ? (
@@ -398,7 +399,22 @@ export const SelectiveChartBsc = () => {
               </ButtonSecondary>
             </>
           ) : null}
-         
+          <CurrencyInputPanel
+            label={"gains"}
+            showMaxButton={false}
+            value={``}
+            showCurrencyAmount={false}
+            hideBalance={true}
+            hideInput={true}
+            currency={!hasSelectedData ? undefined : mainnetCurrency}
+            onUserInput={_.noop}
+            onMax={undefined}
+            fiatValue={undefined}
+            onCurrencySelect={onCurrencySelect}
+            otherCurrency={undefined}
+            showCommonBases={false}
+            id="chart-currency-input"
+          />
         </div>
       </>
     ) : Boolean(chainId) ? (
@@ -417,72 +433,78 @@ export const SelectiveChartBsc = () => {
         retVal = "UNISWAP:";
         if (pairs && pairs.length) {
           pairSymbol = `${pairs?.[0]?.token0?.symbol?.toLowerCase() ===
-              currency?.symbol?.toLowerCase()
-              ? pairs?.[0]?.token1?.symbol
-              : pairs?.[0]?.token0?.symbol
+            currency?.symbol?.toLowerCase()
+            ? pairs?.[0]?.token1?.symbol
+            : pairs?.[0]?.token0?.symbol
             }`;
           if (pairSymbol === "DAI")
             return `DOLLAR${currency?.symbol?.replace("$", "")}DAI`;
           retVal += `${currency?.symbol}${pairs?.[0]?.token0?.symbol === currency?.symbol
-              ? pairs?.[0]?.token1?.symbol
-              : pairs?.[0]?.token0?.symbol
+            ? pairs?.[0]?.token1?.symbol
+            : pairs?.[0]?.token0?.symbol
             }`;
         } else {
           if (
-            params.tokenAddress &&
-            params.tokenSymbol &&
-            params.tokenSymbol !== "WETH"
+            screenerPair?.baseToken?.address &&
+            screenerPair?.baseToken?.symbol &&
+            screenerPair?.baseToken?.symbol !== "WETH"
           )
-            retVal = `${retVal}${params.tokenSymbol}WETH`;
+            retVal = `${retVal}${screenerPair?.baseToken?.symbol}WETH`;
           else if (currency && currency.symbol && currency.symbol !== "WETH")
             retVal = `UNISWAP:${currency.symbol}WETH`;
           else if (currency && currency.symbol && currency.symbol === "WETH")
             retVal = chainId == 1 ? "UNISWAP:WETHUSDT" : chainId == 56 ? "WETHWBNB" : `UNISWAP:WETHUSDT`;
 
           if (
-            (retVal == "UNISWAP:" && params?.tokenSymbol) ||
-            prebuilt?.symbol
+            (retVal == "UNISWAP:" && screenerPair?.baseToken?.symbol) ||
+            mainnetCurrency?.symbol
           ) {
-            retVal = `UNISWAP:${params?.tokenSymbol ? params?.tokenSymbol : prebuilt?.symbol
+            retVal = `UNISWAP:${screenerPair?.baseToken?.symbol ? screenerPair?.baseToken?.symbol : mainnetCurrency?.symbol
               }WETH`;
           }
         }
       } else if (chainId && chainId === 56) {
-        if (params?.tokenSymbol == "BNB" || params?.tokenSymbol == "WBNB") {
+        if (screenerPair?.baseToken?.symbol == "BNB" || screenerPair?.baseToken?.symbol == "WBNB") {
           return "WBNBBUSD"
         }
-        retVal = "PANCAKESWAP:" + pairSymbol + params?.tokenSymbol;
+        retVal = "PANCAKESWAP:" + pairSymbol + screenerPair?.baseToken?.symbol;
       }
       return retVal;
     },
     [
-      params?.tokenSymbol,
+    screenerPair?.baseToken?.symbol,
       pairs,
       selectedCurrency.selectedCurrency,
-      params?.tokenAddress,
       selectedCurrency,
-      prebuilt,
+      mainnetCurrency,
     ]
   );
   const deps = [
     selectedCurrency,
     pairs,
     getRetVal,
-    params?.tokenSymbol,
-    prebuilt?.symbol,
+    screenerPair?.baseToken?.symbol,
     chainId,
   ];
   const tokenSymbolForChart = React.useMemo(() => getRetVal, deps);
   const [collapsed, setCollapsed] = React.useState(false);
   const gridTemplateColumns = React.useMemo(
     function () {
-      if (!hasSelectedData || !selectedCurrency || !params?.tokenAddress) return `100%`;
+      if (!hasSelectedData || !selectedCurrency || !params.pairAddress) return `100%`;
       return isMobile ? "100%" : collapsed ? "5.5% 95.5%" : "25% 75%";
     },
-    [selectedCurrency, hasSelectedData, isMobile, params.tokenAddress, collapsed]
+    [selectedCurrency, hasSelectedData, isMobile, collapsed]
   );
 
-  return (
+  const pairAddress = React.useMemo(() => {
+    if (params?.pairAddress) return params?.pairAddress;
+    return screenerToken?.pairAddress ? screenerToken?.pairAddress : pairs?.[0]?.id
+  }, [screenerToken, pairs, params.pairAddress])
+
+
+  if (params?.network == 'bsc' ) {
+      return <Redirect to={`/selective-charts/p/${params?.network}/${params?.pairAddress}`} />
+  } else return (
     <React.Suspense fallback={<BarChartLoaderSVG />}>
       <ChartSearchModal isOpen={showSearch} onDismiss={toggleShowSearchOff} />
       <WrapperCard
@@ -500,25 +522,25 @@ export const SelectiveChartBsc = () => {
               onCollapse={setCollapsed}
               token={{
                 name:
-                  params?.name ??
+                screenerPair?.baseToken?.name  ??
                   (((selectedCurrency.selectedCurrency as Currency)
                     ? (selectedCurrency.selectedCurrency as Currency)
                     : (ref.current as Currency)
                   )?.name as string),
                 symbol:
-                  params?.tokenSymbol ??
+                screenerPair?.baseToken?.symbol  ??
                   (((selectedCurrency.selectedCurrency as Currency)
                     ? (selectedCurrency.selectedCurrency as Currency)
                     : (ref.current as Currency)
                   )?.symbol as string),
                 decimals:
-                  params?.decimals ??
+                  mainnetCurrency?.decimals?.toString() ??
                   ((selectedCurrency.selectedCurrency as Currency)
                     ? (selectedCurrency.selectedCurrency as Currency)
                     : (ref.current as Currency)
                   )?.decimals?.toString(),
                 address:
-                  params?.tokenAddress ??
+                screenerPair?.baseToken?.address ??
                   ((selectedCurrency.selectedCurrency as Currency)
                     ? (selectedCurrency.selectedCurrency as Currency)
                     : (ref.current as Currency)
@@ -533,11 +555,11 @@ export const SelectiveChartBsc = () => {
         <div
           style={{
             marginLeft: isMobile ? 0 : 10,
-            borderLeft: isMobile
+            borderLeft: (isMobile || !hasSelectedData)
               ? "none"
               : Boolean(
-                params?.tokenAddress &&
-                (selectedCurrency || !!prebuilt?.symbol)
+                params?.pairAddress &&
+                (selectedCurrency || !!mainnetCurrency?.symbol)
               )
                 ? "1px solid #444"
                 : "none",
@@ -587,7 +609,7 @@ export const SelectiveChartBsc = () => {
                 <span style={{ margin: 0 }}>
                   <TokenSocials
                     theme={theme}
-                    tokenSymbol={params?.tokenSymbol || ''}
+                    tokenSymbol={screenerPair?.baseToken?.symbol  || ''}
                     tokenInfo={tokenInfo} />
                 </span>
               )}
@@ -635,9 +657,9 @@ export const SelectiveChartBsc = () => {
                           </TYPE.small>
                           <TYPE.black>
                             {screenerToken?.priceChange?.[key] < 0 ? (
-                              <TrendingDown style={{ marginRight:2, color: "red" }} />
+                              <TrendingDown style={{ marginRight: 2, color: "red" }} />
                             ) : (
-                              <TrendingUp style={{marginRight:2, color: "green" }} />
+                              <TrendingUp style={{ marginRight: 2, color: "green" }} />
                             )}
                             {screenerToken?.priceChange?.[key]}%
                           </TYPE.black>
@@ -648,7 +670,7 @@ export const SelectiveChartBsc = () => {
                 )}
 
               {PanelMemo}
-              
+
               {Boolean(!hasSelectedData && userChartHistory.length) && (
                 <RecentlyViewedCharts />
               )}
@@ -656,52 +678,52 @@ export const SelectiveChartBsc = () => {
             </StyledDiv>
 
             {loadingNewData ? (
-              <LoadingSkeleton count={9} borderRadius={40 } />
-            ) : 
-            (
-              <React.Fragment>
-                {isMobile == false && hasSelectedData && (
-                  <React.Fragment>
-                    <TokenStats tokenData={screenerToken} />
-                    <TopTokenHolders
-                      address={address ?? params?.tokenAddress}
-                      chainId={chainId}
-                    />
-                  </React.Fragment>
-                )}
-                <div
-                  style={{ marginTop: "0.25rem", marginBottom: "0.25rem" }}
-                />
-                {Boolean(
-                  hasSelectedData && 
-                  params?.tokenAddress &&
-                  (selectedCurrency?.selectedCurrency?.symbol ||
-                    !!prebuilt?.symbol)
-                ) ? (
-                  <>
-                    <ChartComponent
-                      pairAddress={screenerToken?.pairAddress as string}
-                      pairData={pairs}
-                      symbol={
-                        params?.tokenSymbol ||
-                        selectedCurrency?.selectedCurrency?.symbol ||
-                        ("" as string)
-                      }
-                      address={address as string}
-                      tokenSymbolForChart={tokenSymbolForChart}
-                    />
-                    <TableQuery 
-                      transactionData={{data: bscData, loading: bscLoading}}
-                      tokenSymbol={
-                          (params?.tokenSymbol ? params?.tokenSymbol : token?.symbol) as string
-                      }
-                      address={address as string}
-                      pairs={pairs} />
-                
-                  </>
-                ) : null}
-              </React.Fragment>
-            )}
+              <LoadingSkeleton count={9} borderRadius={40} />
+            ) :
+              (
+                <React.Fragment>
+                  {isMobile == false && hasSelectedData && (
+                    <React.Fragment>
+                      <TokenStats tokenData={screenerToken} />
+                      <TopTokenHolders
+                        address={address ?? screenerPair?.baseToken?.address }
+                        chainId={chainId}
+                      />
+                    </React.Fragment>
+                  )}
+                  <div
+                    style={{ marginTop: "0.25rem", marginBottom: "0.25rem" }}
+                  />
+                  {Boolean(
+                    hasSelectedData &&
+                    params?.pairAddress  &&
+                    (selectedCurrency?.selectedCurrency?.symbol ||
+                      !! screenerPair?.baseToken?.symbol )
+                  ) ? (
+                    <>
+                      <ChartComponent
+                        pairAddress={pairAddress}
+                        pairData={pairs}
+                        symbol={
+                            screenerPair?.baseToken?.symbol ||
+                          selectedCurrency?.selectedCurrency?.symbol ||
+                          ("" as string)
+                        }
+                        address={address as string}
+                        tokenSymbolForChart={tokenSymbolForChart}
+                      />
+                      <TableQuery
+                        transactionData={params?.network == 'bsc' ? bscTransactionData : transactionData}
+                        tokenSymbol={
+                          ( screenerPair?.baseToken?.symbol  ?  screenerPair?.baseToken?.symbol  : token?.symbol) as string
+                        }
+                        address={address as string}
+                        pairs={pairAddress ? [{id: pairAddress}, ...pairs] : pairs} />
+
+                    </>
+                  ) : null}
+                </React.Fragment>
+              )}
           </CardSection>
         </div>
       </WrapperCard>

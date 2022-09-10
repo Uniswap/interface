@@ -152,6 +152,25 @@ export const useDexscreenerToken = (address?:string) => {
     return data
 }
 
+export const useDexscreenerPair = (pairAddress: string, chainId?: number) => {
+    const [data,setData] = React.useState<any>()
+
+    React.useEffect(() => {
+        if (pairAddress && chainId) {
+            console.log(`useDexscreenerToken hook fetch it`)
+            const network = chainId == 1 ? 'ethereum' : chainId == 56 ? 'bsc' : 'ethereum';
+            axios.get(`https://api.dexscreener.com/latest/dex/pairs/${network}/${pairAddress}`)
+                .then((response) => {
+                    console.log(`useDexscreenerPair hook set it`, response.data)
+                    setData(response.data?.pairs?.[0])
+                })
+        }
+    }, [pairAddress,chainId])
+
+    if (!pairAddress) return 
+    return data
+}
+
 export const useTokenInfo = (chainId: number | undefined, tokenAddress: string | undefined) => {
     const [tokenInfo, setTokenInfo] = React.useState<TokenInfo>()
     const [etherscanTokeninfo, setEtherscanTokeninfo] = React.useState<any>({})

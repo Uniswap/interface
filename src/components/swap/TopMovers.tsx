@@ -1,25 +1,22 @@
 import Badge, { BadgeVariant } from 'components/Badge'
 import { TrendingDown as ChevronDown, TrendingUp as ChevronUp } from 'react-feather'
-import { CustomLightSpinner, StyledInternalLink, TYPE } from 'theme'
 import { DarkGreyCard, GreyCard } from 'components/Card'
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { RowFixed, RowFlat } from 'components/Row'
-import { fetchBscTokenData, getBlocksFromTimestamps, getDeltaTimestamps, useBlocksFromTimestamps, useBnbPrices } from 'state/logs/bscUtils'
-import { getBlockFromTimestamp, getTokenData, useCulturePairData, useEthPrice, useKibaPairData, useTopPairData } from 'state/logs/utils'
-import { useCurrency, useToken } from 'hooks/Tokens'
+import React, { useCallback, useMemo } from 'react'
+import { StyledInternalLink, TYPE } from 'theme'
+import { fetchBscTokenData, getDeltaTimestamps, useBlocksFromTimestamps, useBnbPrices } from 'state/logs/bscUtils'
+import { getTokenData, useEthPrice, useKibaPairData, useTopPairData } from 'state/logs/utils'
 
-import { AnyAsyncThunk } from '@reduxjs/toolkit/dist/matchers'
 import { AutoColumn } from 'components/Column'
 import CurrencyLogo from 'components/CurrencyLogo'
 import HoverInlineText from 'components/HoverInlineText'
-import { LoadingRows } from 'pages/Pool/styleds'
 import Marquee from "react-fast-marquee";
+import { RowFixed } from 'components/Row'
 import _ from 'lodash'
 import cultureTokens from '../../../src/trending.json'
 import styled from 'styled-components/macro'
-import useInterval from 'hooks/useInterval'
 import { useIsDarkMode } from 'state/user/hooks'
 import useTheme from 'hooks/useTheme'
+import { useToken } from 'hooks/Tokens'
 import { useWeb3React } from '@web3-react/core'
 
 const CardWrapper = styled(StyledInternalLink)`
@@ -196,14 +193,13 @@ DataCard.displayName = 'DataCard';
     if (kibaPair.loading) return;
     if (!hasEffectRan &&
       !cancelled &&
-      allTokenData &&
       timestampsFromBlocks?.blocks &&
       allTokenData?.data?.pairs &&
       kibaPair?.data?.pairs &&
-      ((!chainId || chainId === 1) &&
+      (((!chainId || chainId === 1) &&
         ethPriceOld &&
         ethPrice) ||
-      (chainId === 56 && bnbPrices?.current && bnbPrices?.oneDay)
+      (chainId === 56 && bnbPrices?.current && bnbPrices?.oneDay))
     ) {
       fn(false)
     }
