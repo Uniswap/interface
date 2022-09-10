@@ -192,7 +192,8 @@ export default function App() {
                     <Route exact strict path="/details" component={AccountPage} />
                     <Route exact strict path="/details/:account" component={AccountPageWithAccount} />
                     <Route exact strict path="/limit" component={LimitOrders} />
-                    {/* Chart page can allow for different entry points hence multiple routes */}
+                    
+                    {/* Chart Pages Routes */}
                     <Route exact strict path="/selective-charting" component={SelectiveChart} />
                     <Route exact strict path="/selective-charting/:tokenAddress/:tokenSymbol/:name/:decimals" component={SelectiveChart} />
                     <Route exact strict path="/selective-charting/:tokenAddress/:tokenSymbol/:name/:decimals/:pairAddress" component={SelectiveChart} />
@@ -200,8 +201,9 @@ export default function App() {
                     <Route exact strict path="/selective-charts/:tokenAddress/:tokenSymbol/:name/:decimals" component={SelectiveChart} />
                     <Route exact strict path="/selective-charts/:tokenAddress/:tokenSymbol/:name/:decimals/:pairAddress" component={SelectiveChart} />
                     <Route exact strict path="/selective-charts" component={SelectiveChart} />
-
                     <Route exact strict path="/selective-charts/:network/:pairAddress" component={SelectiveChartWithPair} />
+                    {/* End Chart Pages Routes */}
+
                     <Route exact strict path="/fomo" component={FomoPage} />
                     <Route exact strict path="/donation-tracker" component={DonationTracker} />
                     <Route exact strict path="/tracker" component={GainsTracker} />

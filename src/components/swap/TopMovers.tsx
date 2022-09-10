@@ -91,7 +91,11 @@ const DataCard = React.memo(({ tokenData, index }: { tokenData: any, index: numb
   const { chainId } = useWeb3React()
   const theme =useTheme()
   const darkMode = useIsDarkMode()
-  const route = '/selective-charts/' + tokenData.id + '/' + tokenData.symbol + '/' + tokenData.name + '/' + tokenData?.decimals
+  const network = chainId == 1 ? 'ethereum' : chainId == 56 ? 'bsc' : 'ethereum'
+  const route = tokenData?.pairAddress ? 
+               '/selective-charts/' + network + '/' + tokenData?.pairAddress :
+               '/selective-charts/' + tokenData?.id + '/' + tokenData?.symbol + '/' + tokenData?.name + '/' + tokenData?.decimals
+
   return !tokenData?.id ? null : (
     <CardWrapper to={route}>
       <GreyCard padding="3px">
@@ -177,7 +181,10 @@ DataCard.displayName = 'DataCard';
             }
           ].map(async (pair: any) => {
             const value = (!chainId || chainId === 1) ? await getTokenData(pair.token0.id, ethPrice, ethPriceOld, blockOne, blockTwo) as any : await fetchBscTokenData(pair.token0.id, bnbPrices?.current, bnbPrices?.oneDay, blockOne, blockTwo)
-            if (value) value.chainId = chainId ? chainId : 1;
+            if (value) {
+              value.chainId = chainId ? chainId : 1;
+              value.pairAddress = pair.id;
+            }
             return value;
           })
         );

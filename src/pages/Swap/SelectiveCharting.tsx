@@ -8,6 +8,7 @@ import {
   TrendingDown,
   TrendingUp,
 } from "react-feather";
+import { ButtonOutlined, ButtonSecondary } from "components/Button"
 import { Currency, Token } from "@uniswap/sdk-core";
 import { DarkCard, LightCard } from "components/Card";
 import React, { useEffect, useState } from "react";
@@ -25,7 +26,6 @@ import { useDexscreenerToken, useTokenInfo } from "components/swap/ChartPage";
 import { useLocation, useParams } from "react-router";
 
 import BarChartLoaderSVG from "components/swap/BarChartLoader";
-import { ButtonSecondary } from "components/Button"
 import { CardSection } from "components/earn/styled";
 import { ChartComponent } from "./ChartComponent";
 import { ChartSearchModal } from "pages/Charts/ChartSearchModal";
@@ -34,6 +34,7 @@ import { LoadingSkeleton } from "pages/Pool/styleds";
 import ReactGA from "react-ga";
 import { RecentlyViewedCharts } from "./RecentViewedCharts";
 import { SelectiveChartBsc } from "./SelectiveChartingBsc";
+import Swal from 'sweetalert2'
 import { TableQuery } from "./TableQuery";
 import TokenSocials from "./TokenSocials";
 import { TokenStats } from "./TokenStats";
@@ -41,6 +42,7 @@ import { TopTokenHolders } from "components/TopTokenHolders/TopTokenHolders";
 import _ from "lodash";
 import { isAddress } from "utils";
 import { useConvertTokenAmountToUsdString } from "pages/Vote/VotePage";
+import useCopyClipboard from 'hooks/useCopyClipboard'
 import { useHistory } from "react-router-dom";
 import useLast from "hooks/useLast";
 import { useTokenBalance } from "state/wallet/hooks";
@@ -308,6 +310,8 @@ export const SelectiveChart = () => {
     pair,
   };
 
+  const [copied, copy] = useCopyClipboard()
+
   const backClick = React.useCallback(() => {
     console.log("~history", history)
     ref.current = {
@@ -323,6 +327,29 @@ export const SelectiveChart = () => {
     history.goBack();
   }, [ref.current]);
 
+  const shareClick = () => {
+    if (navigator && navigator.share) {
+        navigator.share({
+            title: `KibaCharts - ${token?.symbol} / ${pairCurrency?.symbol}`,
+            url: window.location.href
+        }).then(() => {
+            console.log(`[navigator.share]`, 'Thanks for sharing!');
+        })
+            .catch(console.error);
+    } else {
+        copy(window.location.href)
+
+        Swal.fire({
+            toast: true,
+            position: isMobile ? 'top-start' : 'bottom-end',
+            timer: 5000,
+            showConfirmButton: false,
+            timerProgressBar: true,
+            icon: 'success',
+            title: `Successfully copied link to clipboard`
+        })
+    }
+}
   const formatPriceLabel = (key: string) => {
     switch (key) {
       case "h24":
@@ -597,16 +624,8 @@ export const SelectiveChart = () => {
               >
                 {!loadingNewData && (
                   <>
-                    <BackLink style={{ cursor: "pointer" }} onClick={backClick}>
-                      <span
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                        }}
-                      >
-                        <ChevronLeft /> Go Back
-                      </span>
-                    </BackLink>
+                      <ButtonOutlined padding={`3px`} style={{padding: '3px !important', marginRight: 16}} size={'sm'} onClick={shareClick}>Share</ButtonOutlined>
+
                   </>
                 )}
               </span>

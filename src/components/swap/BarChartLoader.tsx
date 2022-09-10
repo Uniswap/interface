@@ -1,8 +1,11 @@
 import React, { SVGProps } from 'react'
 
+import { useIsDarkMode } from 'state/user/hooks'
+
 const BarChartLoaderSVG: React.FC<SVGProps<any>> = React.memo((props) => {
+  const darkMode = useIsDarkMode()
   return React.useMemo(() => (
-    <svg width="100%" height="100%" viewBox="0 0 50 25" preserveAspectRatio="none" opacity="0.07" {...props}>
+    <svg width="100%" height="100%" viewBox="0 0 50 25" preserveAspectRatio="none" opacity={darkMode?"0.07":"0.5"} {...props}>
       <rect width="8%" fill="#1FC7D4">
         <animate
           attributeName="height"
@@ -176,7 +179,7 @@ const BarChartLoaderSVG: React.FC<SVGProps<any>> = React.memo((props) => {
         <animate attributeName="y" dur="0.9s" values="85%; 10%; 85%" keyTimes="0; 0.55; 1" repeatCount="indefinite" />
       </rect>
     </svg>
-  ), [])
-}, () => true)
+  ), [darkMode])
+})
 BarChartLoaderSVG.displayName = "Loader";
 export default BarChartLoaderSVG

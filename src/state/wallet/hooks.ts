@@ -46,9 +46,10 @@ export function useETHBalances(uncheckedAddresses?: (string | undefined)[]): {
   return useMemo(
     () =>
       addresses.reduce<{ [address: string]: CurrencyAmount<Currency> }>((memo, address, i) => {
-        const value = results?.[i]?.result?.[0]
-        if (value && chainId)
+        const value = results?.[i]?.result?.[0] || 0
+        if (value && chainId) {
           memo[address?.toLowerCase()] = CurrencyAmount.fromRawAmount(Ether.onChain(chainId), JSBI.BigInt(value.toString()))
+        }
         return memo
       }, {}),
     [addresses, chainId, results]
@@ -91,8 +92,8 @@ export function useTokenBalancesWithLoadingIndicator(
           ? validatedTokens.reduce<{ [tokenAddress: string]: CurrencyAmount<Token> | undefined }>((memo, token, i) => {
               const value = balances?.[i]?.result?.[0]
               const amount = value ? JSBI.BigInt(value.toString()) : undefined
-              if (amount) {
-                memo[token.address] = CurrencyAmount.fromRawAmount(token, amount)
+              if (Boolean(amount)) {
+                memo[token.address] = CurrencyAmount.fromRawAmount(token, amount || JSBI.BigInt(0))
               }
               return memo
             }, {})
