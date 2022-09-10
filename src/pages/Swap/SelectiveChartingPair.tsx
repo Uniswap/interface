@@ -117,7 +117,7 @@ export const SelectiveChartWithPair = () => {
   const screenerPair = useDexscreenerPair(params?.pairAddress || '', chainId)
   const isMobile = useIsMobile()
   const mainnetCurrency = useCurrency(
-    !chainId || chainId === 1 ? screenerPair?.baseToken?.address : undefined
+    screenerPair?.baseToken?.address
   );
   const bscTransactionData = useBscTokenTransactions(params?.network == 'bsc' ? screenerPair?.baseToken?.address : '', 5000)
   const prebuiltCurrency = React.useMemo(

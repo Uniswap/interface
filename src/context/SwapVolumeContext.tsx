@@ -44,6 +44,7 @@ export const SwapVolumeContextProvider = ({children, chainId}: {children:any, ch
       let interval: NodeJS.Timeout;
       React.useEffect(( ) => {
         const needsRefetch = chainId && chainId != priorChainId;
+        if (initialized && !needsRefetch) return
         
         if (needsRefetch) 
             console.log(`Refetch swapVolume due to chainId change, prior: ${priorChainId}, current: ${chainId}`);
@@ -54,7 +55,7 @@ export const SwapVolumeContextProvider = ({children, chainId}: {children:any, ch
             // this will keep the swap volume consistently updating, every 5 minutes or so.
             if (null == interval)
                 interval = setInterval(async () => {
-                await intervalledFunction()
+                await intervalledFunction().finally(finished)
             }, 5 * 60000)
         }
         return () => {

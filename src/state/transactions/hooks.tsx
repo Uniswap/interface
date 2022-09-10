@@ -1,11 +1,17 @@
 import './limit.css'
+import '../../pages/Swap/transitions.css'
 
 import * as axios from 'axios'
 
-import { AlertCircle, BarChart2, CheckCircle, ChevronDown, ChevronUp, Circle, DollarSign, Info, Loader } from 'react-feather'
+import { AlertCircle, BarChart2, CheckCircle, ChevronDown, ChevronUp, Circle, DollarSign, Info } from 'react-feather'
 import Badge, { BadgeVariant } from 'components/Badge'
+import {
+  CSSTransition,
+  TransitionGroup as ReactCSSTransitionGroup,
+} from "react-transition-group";
 import { ExternalLink, ExternalLinkIcon, LinkStyledButton, StyledInternalLink } from 'theme'
 import { GelatoLimitOrderPanel, GelatoLimitOrdersHistoryPanel } from '@gelatonetwork/limit-orders-react'
+import { LoadingRows, LoadingSkeleton } from 'pages/Pool/styleds'
 import { fetchBscTokenData, useBnbPrices } from 'state/logs/bscUtils'
 import { getTaxesForBscToken, getTokenTaxes } from 'pages/HoneyUtils'
 import { getTokenData, useEthPrice } from 'state/logs/utils'
@@ -14,13 +20,14 @@ import { useCallback, useMemo } from 'react'
 
 import { DarkCard } from 'components/Card'
 import { DetailsModal } from 'components/swap/DetailsModal'
-import { LoadingRows } from 'pages/Pool/styleds'
+import Loader from 'components/Loader'
 import React from 'react'
 import Swal from 'sweetalert2'
 import Tooltip from 'components/Tooltip'
 import { TransactionDetails } from './reducer'
 import { TransactionResponse } from '@ethersproject/providers'
 import { Wrapper } from 'components/swap/styleds'
+import _ from 'lodash'
 import { addTransaction } from './actions'
 import moment from 'moment'
 import { orderBy } from 'lodash'
@@ -199,7 +206,7 @@ th {
   padding-top: 12px;
   padding-bottom: 12px;
   text-align: left;
-  color: white;
+  color: ${props => props.theme.text1};
   &:before {
   }
 }
@@ -227,18 +234,13 @@ export const LockedLiquidity = ({ symbol, ...rest }: NewToken) => {
 
 export const FomoPage = () => {
   const { chainId, account, library } = useWeb3React();
-  const [data, setData] = React.useState<NewToken[]>()
+  const [data, setData] = React.useState<NewToken[] | undefined>([])
   const theme = useTheme()
 
   const networkDefaultValue = React.useMemo(() =>
     chainId === 1 ? 'eth' : chainId === 56 ? 'bsc' : 'eth'
     , [chainId]);
   const [network, setNetwork] = React.useState<'bsc' | 'eth' | 'poly' | 'ftm' | 'kcc' | 'avax'>(networkDefaultValue)
-  const authHeader = {
-    headers: {
-      Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoic3BhY2VtYW5fbGl2ZXMiLCJpYXQiOjE2Mzc1NDg1NTUsImV4cCI6MTY3NDcwMDU1NX0.b_O-i7Srfv1tEYOMGiea9DQ7S9x9tq7Azq1LSwylHUY`
-    }
-  }
   const networkMap: Record<number, string> = {
     1: 'eth',
     56: 'bsc'
@@ -272,7 +274,7 @@ export const FomoPage = () => {
 
   const bnbPrice = useBnbPrices()
 
-  const getPaginationGroup = () => {
+  const getPaginationGroup = React.useCallback(() => {
     if (!data?.length) return []
     let sorted = data?.filter(a => searchValue ? a?.addr?.toLowerCase().includes(searchValue.toLowerCase()) || a.name?.toLowerCase().includes(searchValue?.toLowerCase()) || a?.symbol.toLowerCase().includes(searchValue?.toLowerCase()) : true)
     if (shouldFlagSafe) sorted = sorted?.filter(item => item?.safe === true)
@@ -283,7 +285,7 @@ export const FomoPage = () => {
       retVal.push(i);
     }
     return retVal.length === 0 ? [1] : retVal;
-  };
+  }, [data, shouldFlagSafe]);
 
   React.useEffect(() => {
     if (data &&
@@ -310,8 +312,8 @@ export const FomoPage = () => {
             sellTax: isSafe?.sell,
           }
         })) as Array<NewToken>;
-        const alreadyFlagged = data?.filter(i => i.safe !== undefined);
-        setData([...safe.concat(alreadyFlagged)])
+        const alreadyFlagged = data?.filter(i => i.safe !== undefined) || [];
+        setData([...alreadyFlagged.concat(safe)])
       } else {
         safe = await Promise.all(items?.map(async item => {
           const isHoneyPotFn = item?.network?.toLowerCase() === 'bsc' ? getTaxesForBscToken : item.network?.toLowerCase() === 'eth' ? getTokenTaxes : (add: string) => Promise.resolve({ honeypot: false, buy: null, sell: null });
@@ -334,24 +336,27 @@ export const FomoPage = () => {
     } catch (err) {
       console.error(err)
     }
-  }, [network, data, ethPrice, ethPriceOld, bnbPrice, chainId, library, shouldFlagSafe, flagSafe])
+  }, [
+    network, 
+    data, 
+    ethPrice, 
+    ethPriceOld, 
+    bnbPrice, 
+    chainId, 
+    library, 
+    shouldFlagSafe, 
+  ])
   const [loading, setLoading] = React.useState(false)
   const [error, setError] = React.useState(false)
   const [retryCount, setRetryCount] = React.useState(0);
-  const getData = React.useCallback((networkPassed?: string) => {
+  const getData = React.useCallback((networkPassed?: "eth" | "bsc" | "poly" | "ftm" | "kcc" | "avax") => {
     if (error) return
-    const networkChanged = !!networkPassed;
-    const loading = !data;
-    setLoading(loading);
-    let networkString: "eth" | "bsc" | "poly" | "ftm" | "kcc" | "avax" = network;
-    //reset retry count on network change
-    if (networkChanged && networkPassed) {
-      setRetryCount(0);
-      setData(undefined);
-      setPage(1);
-      setLoading(true);
-      networkString = networkPassed as "eth" | "bsc" | "poly" | "ftm" | "kcc" | "avax";
+
+    if (networkPassed?.toLowerCase() !== network?.toLowerCase()) {
+      setLoading(true)
     }
+    const networkString: "eth" | "bsc" | "poly" | "ftm" | "kcc" | "avax" = networkPassed || network;
+
     const finallyClause = () => {
       setLastFetched(new Date())
       setTimeout(() => setLoading(false), 1000)
@@ -361,13 +366,14 @@ export const FomoPage = () => {
 
       setError(true)
     }
-    return axios.default.get(`https://tokenfomo.io/api/tokens/${networkString}?limit=500&APIKEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoic3BhY2VtYW5fbGl2ZXMiLCJpYXQiOjE2Mzc1NDg1NTUsImV4cCI6MTY3NDcwMDU1NX0.b_O-i7Srfv1tEYOMGiea9DQ7S9x9tq7Azq1LSwylHUY`,
-      { method: "GET", headers: authHeader.headers }
+    return fetch(`https://tokenfomo.io/api/tokens/${networkString}?limit=500&apikey=9fc79d0c27451ea57effb62ca206529c3d9a0586`,
+      { method: "GET", redirect: 'follow' }
     )
       .then(async (response) => {
-        const json = response.data;
+        const dataV = await response.json()
+        const json = dataV;
         const dataNew = json.filter((a: NewToken) => moment(new Date()).diff(moment(new Date(+a.timestamp * 1000)), 'hours') <= 23);
-        const sorted = orderBy(data, i => new Date(+i.timestamp * 1000), 'desc')
+        const sorted = orderBy(dataNew, i => new Date(+i.timestamp * 1000), 'desc')
         const startIndex = page * AMT_PER_PAGE - AMT_PER_PAGE;
         const endIndex = startIndex + AMT_PER_PAGE;
         const pagedSet = sorted.slice(startIndex, endIndex);
@@ -375,17 +381,18 @@ export const FomoPage = () => {
         const shouldFlagCallback = data && data.length;
         const newDataValue = orderBy(
           [
-            ...(data ? data : [])?.filter((item) => item?.network?.toLowerCase() === networkString?.toLowerCase()),
-            ...dataNew.filter((item: any) => item.network?.toLowerCase() === networkString?.toLowerCase() && !data?.some(i => item?.addr === i?.addr))
+            ...sorted.filter((item: any) => item.network?.toLowerCase() === networkString?.toLowerCase() && !data?.some((i: any) => item?.addr === i?.addr))
           ],
           item => new Date(+item.timestamp * 1000),
           'desc'
         );
-        setData(newDataValue)
+
+        const newestData = _.orderBy(newDataValue.concat(data).filter(({network}) => network?.toLowerCase() === networkString?.toLowerCase()), i => +i.timestamp, 'desc')
+        setData(newestData)
         if (shouldFlagCallback) {
           await flagAllCallback(
             orderBy(
-              newDataValue,
+              newestData,
               i => activeSort && activeSort?.key ? i[activeSort.key as keyof NewToken] : new Date(+i.timestamp * 1000),
               activeSort && activeSort.direction ? activeSort.direction : 'desc'
             )
@@ -394,12 +401,20 @@ export const FomoPage = () => {
       })
       .finally(finallyClause)
       .catch(finallyErrorClause)
-  }, [network, page, data, library, flagAllCallback])
+  }, [network, page, data, setData, flagAllCallback])
 
-  useInterval(async () => {
-    if (!data) await getData('eth')
-    else await getData();
-  }, 30000, false)
+  useInterval(
+    useCallback(async () => {
+      if (!data?.length) {
+        setLoading(true)
+        await getData('eth')
+        setLoading(false)
+      }
+      else await getData();
+    }, [data]),
+    30000,
+    false
+  )
 
   const fetchedText = React.useMemo(() => lastFetched ? moment(lastFetched).fromNow() : undefined, [moment(lastFetched).fromNow()])
 
@@ -422,7 +437,7 @@ export const FomoPage = () => {
     setSortState(initialSortState)
     setFlagSafe(false)
     getData(network)
-  }, [network, account, chainId])
+  }, [network])
 
   const [showInfo, setShowInfo] = React.useState(false)
   const kibaBalance = useKiba(account)
@@ -497,8 +512,8 @@ export const FomoPage = () => {
   const [modalShowing, setModalShowing] = React.useState<any>()
   return (
     <DarkCard style={{ maxWidth: 1200 }}>
-      <Wrapper style={{color:theme.text1, overflow: 'auto', padding: '9px 14px' }}>
-        <div style={{  marginBottom: 10 }}>
+      <Wrapper style={{ color: theme.text1, overflow: 'auto', padding: '9px 14px' }}>
+        <div style={{ marginBottom: 10 }}>
           <h1 style={{ fontFamily: 'Open Sans', fontWeight: 'normal' }}>KibaFomo &nbsp;
             <Tooltip text={infoTipText} show={showInfo}>
               <Info onMouseEnter={() => setShowInfo(true)} onMouseLeave={() => setShowInfo(false)} />
@@ -515,7 +530,7 @@ export const FomoPage = () => {
             <Badge style={{ marginRight: 5, cursor: 'pointer' }} onClick={() => setNetwork('kcc')} variant={network === 'kcc' ? BadgeVariant.BLUE : BadgeVariant.PRIMARY}>KCC</Badge>
           </div>
           {accessDenied === false && ['bsc', 'eth'].includes(network) && <div>
-            <label>Only Show Safe Listings</label>
+            <label>Only Show Safe Listings</label> &nbsp;
             <input type="checkbox" checked={flagSafe} onChange={e => {
               setFlagSafe(e.target.checked)
               setPage(1)
@@ -547,19 +562,26 @@ export const FomoPage = () => {
             type={'search'}
           />
         </div>
-
+        {accessDenied === false && <ul style={{ display: 'flex', flexFlow: 'row wrap', justifyContent: 'center', alignItems: 'center', listStyle: 'none' }}>
+          {getPaginationGroup().map((number) => (
+            <li style={{
+              color: number === page ? theme.secondary1 : theme.text1,
+              textDecoration: number === page ? 600 : 500,
+              backgroundColor: number === page ? theme.backgroundInteractive : '',
+              fontWeight: number === page ? 600 : 500,
+              cursor: 'pointer',
+              marginRight: 10,
+              fontSize: 24
+            }} key={number} onClick={() => {
+              {
+                setPage(number)
+              }
+            }
+            }>{number}</li>
+          ))}
+        </ul>}
         {fetchedText && <small>Last updated {fetchedText}</small>}
-
-        {accessDenied === false && !!loading && <LoadingRows>
-          <div />
-          <div />
-          <div />
-          <div />
-          <div />
-          <div />
-          <div />
-        </LoadingRows>}
-
+        {accessDenied === false && !!loading && <LoadingSkeleton count={8} />}
         {!loading && accessDenied === false && <Table style={{ fontSize: 12, background: 'transparent', color: theme.text1, width: "100%" }}>
           <tr style={{ textAlign: 'left' }}>
             <th onClick={() => onSortClick('name')} style={{ width: '5%', justifyContent: 'space-between', cursor: 'pointer', textAlign: 'left' }}>
@@ -570,7 +592,6 @@ export const FomoPage = () => {
                   {getActiveSort()?.direction === 'desc' && <ChevronDown />}
                 </>}
               </div>
-
             </th>
             <th onClick={() => onSortClick('symbol')} style={{ display: 'table-cell', justifyContent: 'space-between', cursor: 'pointer', textAlign: 'left' }}>
               <div >
@@ -580,20 +601,16 @@ export const FomoPage = () => {
                   {getActiveSort()?.direction === 'desc' && <ChevronDown />}
                 </>}
               </div>
-
             </th>
             <th onClick={() => onSortClick('addr')} style={{ display: 'table-cell', justifyContent: 'space-between', cursor: 'pointer', textAlign: 'left' }}>
               <div  >
                 <span>Contract Address</span>
-
               </div>
               {getActiveSort()?.key === 'addr' && <>
                 {getActiveSort()?.direction === 'asc' && <ChevronUp />}
                 {getActiveSort()?.direction === 'desc' && <ChevronDown />}
               </>}
             </th>
-
-
             {<th style={{ display: 'table-cell', justifyContent: 'space-between', textAlign: 'left' }}>
               HP Check&nbsp;
               <Tooltip text={helpTipText} show={showHpInfo}>
@@ -626,89 +643,94 @@ export const FomoPage = () => {
                 {getActiveSort()?.direction === 'asc' && <ChevronUp />}
                 {getActiveSort()?.direction === 'desc' && <ChevronDown />}
               </>}</th>
-
           </tr>
-          <tbody>
+          <ReactCSSTransitionGroup component="tbody">
             {pagedData.length === 0 && !loading && <tr><td colSpan={9}>{!error && 'No data available at this time.'} {error && <Badge variant={BadgeVariant.NEGATIVE_OUTLINE}>Tokenfomo is currently syncing their data. Please check back again soon.</Badge>}</td></tr>}
-            {!loading && !!pagedData?.length && pagedData.map((item) => (
-              <tr key={item.addr}>
-                <td style={{ fontSize: 12 }}>
-                  <span>{item.name}</span>
-                </td>
-                <td style={{ width: '3%' }}>{item.symbol}</td>
-                {/* CONTRACT ADDRESS AND LINKS */}
-                <td>
-                  <div style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between'
-                  }}>
-                    <small>{item.addr}</small>
-                    {/* Etherscan / Explorer Link */}
-                    <ExternalLinkIcon
-                      style={{ fill: theme.text1 }}
-                      href={getNetworkLink(item)} />
-
-                    {/* Chart Link */}
-                    {network === 'eth' && <StyledInternalLink to={`/selective-charts/${item.addr}/${item.symbol}/${item.name}/18`}>
-                      <BarChart2 style={{ color: '#F76C1D' }} />
-                    </StyledInternalLink>}
-
-                    {/* Buy Link */}
-                    {network === 'eth' && <StyledInternalLink to={`/swap?outputCurrency=${item.addr}`}>
-                      <DollarSign style={{ color: '#779681' }} />
-                    </StyledInternalLink>}
-                    {network === 'bsc' &&
-                      <ExternalLink href={`https://kibaswapbsc.app/#/swap?outputCurrency=${item.addr}`}>
-                        <DollarSign style={{ color: '#779681' }} />
-                      </ExternalLink>}
-                  </div>
-                </td>
-
-                {['eth'].includes(network) && item?.liquidity && <td>
-                  <Badge variant={BadgeVariant.PRIMARY}>{`${item.liquidity !== '?' ? `$${item.liquidity}` : '?'}`}</Badge></td>}
-                {(<td>
-                  {['bsc', 'eth'].includes(network) && <>
-                    {item?.safe === undefined && <Loader />}
-                    {item?.safe === true && <CheckCircle fontSize={'18px'} fill={'green'} fillOpacity={0.7} />}
-                    {item?.safe === false && <AlertCircle fontSize={'18px'} fill={'red'} fillOpacity={0.7} />}
-                  </>}
-                  {!['bsc', 'eth'].includes(item.network?.toLowerCase()) && <p>Switch networks to use this feature</p>}
-                </td>)}
-                {accessDenied === false && network === 'eth' && (
+            {!loading && !!pagedData?.length && pagedData.map((item, index) => (
+              <CSSTransition
+                key={`row_${index}_${item.addr}`}
+                in={index <= 3}
+                classNames={"alert"}
+                timeout={600}
+              >
+                <tr>
+                  <td style={{ fontSize: 12 }}>
+                    <span>{item.name}</span>
+                  </td>
+                  <td style={{ width: '3%' }}>{item.symbol}</td>
+                  {/* CONTRACT ADDRESS AND LINKS */}
                   <td>
-                    <div style={{ alignItems: 'center', display: 'flex', justifyContent: 'space-between' }}>
-                      <Liquidity addr={item.addr} ethPrice={ethPrice} ethPriceOld={ethPriceOld} bnbPrice={bnbPrice} network={item.network} />
-                      {['bsc', 'eth'].includes(item.network.toLowerCase()) && <>{!modalShowing && <LinkStyledButton style={{ fontSize: 10, fontFamily: 'Archivo Narrow', borderRadius: 10, fontWeight: 600, padding: 8, color: '#4F4F62' }} onClick={(e: any) => { e.stopPropagation(); e.preventDefault(); setModalShowing(item); }}>More</LinkStyledButton>}
-                        {!!modalShowing && modalShowing?.addr === item.addr && <DetailsModal address={item.addr} isOpen={modalShowing} onDismiss={() => setModalShowing(undefined)} network={item.network.toLowerCase() as 'bsc' | 'eth'} symbol={item.symbol} />}</>}
+                    <div style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between'
+                    }}>
+                      <small>{item.addr}</small>
+                      {/* Etherscan / Explorer Link */}
+                      <ExternalLinkIcon
+                        style={{ fill: theme.backgroundInteractive }}
+                        href={getNetworkLink(item)} />
+
+                      {/* Chart Link */}
+                      {network === 'eth' && <StyledInternalLink to={`/selective-charts/${item.addr}/${item.symbol}/${item.name}/18`}>
+                        <BarChart2 style={{ color: '#F76C1D' }} />
+                      </StyledInternalLink>}
+
+                      {/* Buy Link */}
+                      {network === 'eth' && <StyledInternalLink to={`/swap?outputCurrency=${item.addr}`}>
+                        <DollarSign style={{ color: '#779681' }} />
+                      </StyledInternalLink>}
+                      {network === 'bsc' &&
+                        <ExternalLink href={`https://kibaswapbsc.app/#/swap?outputCurrency=${item.addr}`}>
+                          <DollarSign style={{ color: '#779681' }} />
+                        </ExternalLink>}
                     </div>
                   </td>
-                )}
-                {['bsc', 'eth'].includes(network) && (
-                  <td>
-                    {(item?.buyTax || item?.buyTax === 0) && <Badge style={{ fontSize: 14 }} variant={BadgeVariant.POSITIVE}>
 
-                      {<small>{item.buyTax}% buy</small>}
-                    </Badge>}
-                    {(!item.buyTax && item?.buyTax !== 0 && <AlertCircle fontSize={'18px'} fill={'red'} fillOpacity={0.7} />)}
-                  </td>
-                )}
-                {['bsc', 'eth'].includes(network) && (
-                  <td>
-                    {(item?.sellTax || item?.sellTax === 0) && <Badge style={{ fontSize: 14, color: theme.text1 }} color={theme.text1} variant={BadgeVariant.NEGATIVE}>
+                  {['eth'].includes(network) && item?.liquidity && <td>
+                    <Badge variant={BadgeVariant.PRIMARY}>{`${item.liquidity !== '?' ? `$${item.liquidity}` : '?'}`}</Badge></td>}
+                  {(<td style={{ textAlign: "center" }}>
+                    {['bsc', 'eth'].includes(network) && <>
+                      {item?.safe === undefined && <Loader />}
+                      {item?.safe === true && <CheckCircle fontSize={'18px'} fill={'green'} fillOpacity={0.7} />}
+                      {item?.safe === false && <AlertCircle fontSize={'18px'} fill={'red'} fillOpacity={0.7} />}
+                    </>}
+                    {!['bsc', 'eth'].includes(item.network?.toLowerCase()) && <p>Switch networks to use this feature</p>}
+                  </td>)}
+                  {accessDenied === false && network === 'eth' && (
+                    <td>
+                      <div style={{ alignItems: 'center', display: 'flex', justifyContent: 'space-between' }}>
+                        <Liquidity addr={item.addr} ethPrice={ethPrice} ethPriceOld={ethPriceOld} bnbPrice={bnbPrice} network={item.network} />
+                        {['bsc', 'eth'].includes(item.network.toLowerCase()) && <>{!modalShowing && <LinkStyledButton style={{ fontSize: 10, fontFamily: 'Archivo Narrow', borderRadius: 10, fontWeight: 600, padding: 8, color: '#4F4F62' }} onClick={(e: any) => { e.stopPropagation(); e.preventDefault(); setModalShowing(item); }}>More</LinkStyledButton>}
+                          {!!modalShowing && modalShowing?.addr === item.addr && <DetailsModal address={item.addr} isOpen={modalShowing} onDismiss={() => setModalShowing(undefined)} network={item.network.toLowerCase() as 'bsc' | 'eth'} symbol={item.symbol} />}</>}
+                      </div>
+                    </td>
+                  )}
+                  {['bsc', 'eth'].includes(network) && (
+                    <td>
+                      {(item?.buyTax || item?.buyTax === 0) && <Badge style={{ fontSize: 14 }} variant={BadgeVariant.POSITIVE}>
 
-                      {<small>{item.sellTax}% sell</small>}
+                        {<small>{item.buyTax}% buy</small>}
+                      </Badge>}
+                      {(!item.buyTax && item?.buyTax !== 0 && <AlertCircle fontSize={'18px'} fill={'red'} fillOpacity={0.7} />)}
+                    </td>
+                  )}
+                  {['bsc', 'eth'].includes(network) && (
+                    <td>
+                      {(item?.sellTax || item?.sellTax === 0) && <Badge style={{ fontSize: 14, color: theme.text1 }} color={theme.text1} variant={BadgeVariant.NEGATIVE}>
 
-                    </Badge>}
-                    {(!item?.sellTax && item?.sellTax !== 0 && <AlertCircle fontSize={'18px'} fill={'red'} fillOpacity={0.7} />)}
-                  </td>
-                )}
-                <td>{moment(+item.timestamp * 1000).fromNow()}</td>
-              </tr>
+                        {<small>{item.sellTax}% sell</small>}
+
+                      </Badge>}
+                      {(!item?.sellTax && item?.sellTax !== 0 && <AlertCircle fontSize={'18px'} fill={'red'} fillOpacity={0.7} />)}
+                    </td>
+                  )}
+                  <td>{moment(+item.timestamp * 1000).fromNow()}</td>
+                </tr>
+              </CSSTransition>
             ))}
-          </tbody>
+          </ReactCSSTransitionGroup>
         </Table>}
-
         {accessDenied === false && <ul style={{ display: 'flex', flexFlow: 'row wrap', justifyContent: 'center', alignItems: 'center', listStyle: 'none' }}>
           {getPaginationGroup().map((number) => (
             <li style={{
@@ -725,7 +747,6 @@ export const FomoPage = () => {
             }>{number}</li>
           ))}
         </ul>}
-
         {accessDenied && <p style={{ height: 400, width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
           You must hold Kiba Inu tokens to use this feature.
         </p>}

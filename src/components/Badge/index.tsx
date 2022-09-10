@@ -84,9 +84,9 @@ function pickFontColor(variant: BadgeVariant | undefined, theme: DefaultTheme): 
       return theme.warning
     case BadgeVariant.RED_WHITE:
     case BadgeVariant.GREY:
-      return '#FFF';
+      return theme.text1;
     case BadgeVariant.HOLLOW:
-      return '#FFF';
+      return theme.text1;
       case BadgeVariant.BLUE:
         return '#FFF';
       default:
