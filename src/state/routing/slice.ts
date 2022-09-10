@@ -6,6 +6,7 @@ import { getClientSideQuote, toSupportedChainId } from 'lib/hooks/routing/client
 import ms from 'ms.macro'
 import qs from 'qs'
 
+import { MulticallProvider } from './multicall'
 import { GetQuoteResult } from './types'
 
 export enum RouterPreference {
@@ -22,7 +23,9 @@ function getRouter(chainId: ChainId): AlphaRouter {
   const supportedChainId = toSupportedChainId(chainId)
   if (supportedChainId) {
     const provider = RPC_PROVIDERS[supportedChainId]
-    const router = new AlphaRouter({ chainId, provider })
+    const multicall2Provider = new MulticallProvider(chainId, provider, 375000)
+    // TODO(zzmp): Cache call to eth_feeHistory (using gasPriceProvider?)
+    const router = new AlphaRouter({ chainId, provider, multicall2Provider })
     routers.set(chainId, router)
     return router
   }
