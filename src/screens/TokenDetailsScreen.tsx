@@ -39,9 +39,10 @@ import { formatUSDPrice } from 'src/utils/format'
 
 interface TokenDetailsHeaderProps {
   currency: Currency
+  initialSendState: TransactionState
 }
 
-function TokenDetailsHeader({ currency }: TokenDetailsHeaderProps) {
+function TokenDetailsHeader({ currency, initialSendState }: TokenDetailsHeaderProps) {
   const { t } = useTranslation()
 
   const isFavoriteToken = useAppSelector(selectFavoriteTokensSet).has(currencyId(currency))
@@ -59,7 +60,13 @@ function TokenDetailsHeader({ currency }: TokenDetailsHeaderProps) {
         </Box>
       </Flex>
       <Flex row gap="none">
-        <SendButton iconOnly bg="none" iconColor="textPrimary" iconSize={24} />
+        <SendButton
+          iconOnly
+          bg="none"
+          iconColor="textPrimary"
+          iconSize={24}
+          initialState={initialSendState}
+        />
         <IconButton
           icon={<Heart active={isFavoriteToken} size={24} />}
           px="none"
@@ -82,7 +89,7 @@ function HeaderPriceLabel({ currency }: Pick<TokenDetailsHeaderProps, 'currency'
   )
 }
 
-function HeaderTitleElement({ currency }: TokenDetailsHeaderProps) {
+function HeaderTitleElement({ currency }: Pick<TokenDetailsHeaderProps, 'currency'>) {
   const { t } = useTranslation()
 
   return (
@@ -207,7 +214,7 @@ function TokenDetails({ currency }: { currency: Currency }) {
           </BackHeader>
         }>
         <Flex gap="md" mb="xxl" mt="lg" pb="xxl">
-          <TokenDetailsHeader currency={currency} />
+          <TokenDetailsHeader currency={currency} initialSendState={initialSendState} />
           <CurrencyPriceChart currency={currency} />
           <TokenBalances
             currentChainBalance={currentChainBalance}
