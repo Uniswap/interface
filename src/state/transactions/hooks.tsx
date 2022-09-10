@@ -405,13 +405,13 @@ export const FomoPage = () => {
 
   useInterval(
     useCallback(async () => {
-      if (!data?.length) {
+      if (!Boolean(data?.length) && !searchValue) {
         setLoading(true)
         await getData('eth')
         setLoading(false)
       }
       else await getData();
-    }, [data]),
+    }, [data?.length, searchValue]),
     30000,
     false
   )
