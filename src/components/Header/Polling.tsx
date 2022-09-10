@@ -91,12 +91,12 @@ export default function Polling() {
   )
 
   return (
-    <ExternalLink
+    <ExternalLink style={{zIndex: 199, color:'#F76C1D'}}
       href={chainId && blockNumber ? getExplorerLink(chainId, blockNumber.toString(), ExplorerDataType.BLOCK) : ''}
     >
       <StyledPolling onMouseEnter={() => setIsHover(true)} onMouseLeave={() => setIsHover(false)}>
         <StyledPollingNumber breathe={false} hovering={isHover}>
-        <span style={{zIndex: 99, color:'#F76C1D'}}>Last Synced Block &nbsp;</span>
+        <span >Last Synced Block &nbsp;</span>
           {blockNumber}
         </StyledPollingNumber>
         <StyledPollingDot>{isMounting && <Spinner />}</StyledPollingDot>

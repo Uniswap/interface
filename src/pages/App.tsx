@@ -194,14 +194,21 @@ export default function App() {
                     <Route exact strict path="/limit" component={LimitOrders} />
                     
                     {/* Chart Pages Routes */}
+
+                    {/* Entry page routes, this will show the search / select and recently viewed. All uses same component */}
                     <Route exact strict path="/selective-charting" component={SelectiveChart} />
+                    <Route exact strict path="/selective-charts" component={SelectiveChart} />
+
+                    {/* Longer routes, with more parameters, kind of bad for users to have to share. Working on removing these */}
                     <Route exact strict path="/selective-charting/:tokenAddress/:tokenSymbol/:name/:decimals" component={SelectiveChart} />
                     <Route exact strict path="/selective-charting/:tokenAddress/:tokenSymbol/:name/:decimals/:pairAddress" component={SelectiveChart} />
-
                     <Route exact strict path="/selective-charts/:tokenAddress/:tokenSymbol/:name/:decimals" component={SelectiveChart} />
                     <Route exact strict path="/selective-charts/:tokenAddress/:tokenSymbol/:name/:decimals/:pairAddress" component={SelectiveChart} />
-                    <Route exact strict path="/selective-charts" component={SelectiveChart} />
+
+                    {/* Simpler route, takes only the pair address, the rest is computed from that */}
+                    <Route exact strict path="/selective-charting/:network/:pairAddress" component={SelectiveChartWithPair} />
                     <Route exact strict path="/selective-charts/:network/:pairAddress" component={SelectiveChartWithPair} />
+                    
                     {/* End Chart Pages Routes */}
 
                     <Route exact strict path="/fomo" component={FomoPage} />
