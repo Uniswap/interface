@@ -178,7 +178,8 @@ export const TopTokenHolders: FC<Props> = (props: Props) => {
                                 display: 'flex',
                                 gap: 15,
                                 justifyContent: 'space-between',
-                                alignItems: 'center'
+                                alignItems: 'center',
+                                color: theme.white
                             }}>
                                 <span>{Number(holder.balance / 10 ** tokenInfo?.decimals).toLocaleString()}</span>
                                 <span> {tokenInfo?.symbol}</span>

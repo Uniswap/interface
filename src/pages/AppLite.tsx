@@ -277,8 +277,8 @@ const [priceDetailsOpen, setPriceDetailsOpen] = React.useState(!!tokenInfo?.pric
           honey_data['sellExpected'] = sellExpectedOut;
           honey_data['sellActual'] = sellActualOut;
 
-          honey_data['buyTax'] = taxes.buy;
-          honey_data['sellTax'] = taxes.sell;
+          honey_data['buyTax'] = taxes?.buy;
+          honey_data['sellTax'] = taxes?.sell;
           let maxdiv = '';
           if (maxTXAmount != 0 || maxSell != 0) {
             let n = 'Max TX';

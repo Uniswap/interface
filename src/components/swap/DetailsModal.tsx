@@ -86,7 +86,7 @@ export const DetailsModal = ({
 
     return (
         <Modal isOpen={isOpen} onDismiss={onDismiss}>
-            <DarkCard style={{ color: theme.text1 }}>
+            <DarkCard style={{ height:'100%', color: theme.text1 }}>
                 {!loadedTokenData && <LoadingSkeleton count={6}/>}
                 {!!loadedTokenData && (
                     <>
@@ -98,49 +98,49 @@ export const DetailsModal = ({
                         </div>
 
                         <TopTokenHolders address={address} chainId={chainId} />
-                        <div style={{ maxWidth: 600, padding: '9px 14px', display: 'flex', flexFlow: 'column wrap' }}>
-                            <div style={{ display: 'grid', gridTemplateColumns: 'auto auto', columnGap: 35, justifyContent: 'center' }}>
+                        <div style={{ maxWidth: '100%', marginTop: '.25rem', display: 'flex', flexFlow: 'column wrap' }}>
+                            <div style={{ display: 'grid', justifyContent:'space-between', gridTemplateColumns: 'auto auto', columnGap: 35 }}>
                                 <ul style={{ listStyle: 'none', padding: 3 }}>
-                                    {owner && owner !== '?' && <li style={{ marginBottom: 10 }}>
+                                    {owner && owner !== '?' && <li style={{ borderBottom: '1px solid #444', paddingLeft: 0, marginBottom: 10 }}>
                                         <StyledHeader style={{ display: 'flex', flexFlow: 'column wrap' }}>Contract Owner &nbsp; <small>
-                                            <Badge style={{ marginBottom: 10 }} variant={isRenounced ? BadgeVariant.POSITIVE_OUTLINE : BadgeVariant.WARNING_OUTLINE}>{isRenounced ? 'Renounced' : 'Not Renounced'}</Badge>
+                                            <Badge style={{ marginBottom: 10, marginRight:5  }} variant={isRenounced ? BadgeVariant.POSITIVE_OUTLINE : BadgeVariant.WARNING_OUTLINE}>{isRenounced ? 'Renounced' : 'Not Renounced'}</Badge>
                                             <Badge variant={BadgeVariant.DEFAULT}><ExternalLink style={{ color: theme.text1 }} href={`${network.toLowerCase() === 'bsc' ? 'https://bscscan.com/address/' : 'https://etherscan.io/address/'}${owner}`}> {owner !== '?' && owner.substring(0, 8) + '...' + owner.substring(34, 42)} </ExternalLink>  <ExternalLinkIcon href={`${network.toLowerCase() === 'bsc' ? 'https://bscscan.com/address/' : 'https://etherscan.io/address/'}${owner}`} style={{ display: 'inline-block' }} /></Badge></small> </StyledHeader>
 
                                     </li>}
-                                    {!!tokenData?.totalLiquidityUSD && tokenData?.totalLiquidityUSD > 0 && <li style={{ marginBottom: 10 }}>
+                                    {!!tokenData?.totalLiquidityUSD && tokenData?.totalLiquidityUSD > 0 && <li style={{ paddingLeft: 0, marginBottom: 10 }}>
                                         <StyledHeader>Liquidity (USD)</StyledHeader>
                                         <Badge variant={BadgeVariant.HOLLOW}>${Number(tokenData?.totalLiquidityUSD * 2).toLocaleString()}</Badge>
                                     </li>}
-                                    {MARKET_CAP && <li style={{ marginBottom: 10 }}><StyledHeader>MarketCap</StyledHeader> <Badge variant={BadgeVariant.HOLLOW}>{MARKET_CAP}</Badge></li>}
+                                    {MARKET_CAP && <li style={{borderBottom: '1px solid #444', marginBottom: 10 }}><StyledHeader>MarketCap</StyledHeader> <Badge variant={BadgeVariant.HOLLOW}>{MARKET_CAP}</Badge></li>}
 
-                                    {lockedMap && <li style={{ marginBottom: 10 }}><StyledHeader>Circulating Supply</StyledHeader> <Badge variant={BadgeVariant.HOLLOW}>{Number(lockedMap?.token?.tokenCirculatingSupply).toLocaleString()}</Badge>
+                                    {lockedMap && <li style={{ borderBottom: '1px solid #444',marginBottom: 10 }}><StyledHeader>Circulating Supply</StyledHeader> <Badge variant={BadgeVariant.HOLLOW}>{Number(lockedMap?.token?.tokenCirculatingSupply).toLocaleString()}</Badge>
                                     </li>}
-                                    {[NaN, 0].includes(Number(tokenData?.priceUSD)) === false && <li style={{ marginBottom: 10 }}>
+                                    {[NaN, 0].includes(Number(tokenData?.priceUSD)) === false && <li style={{ paddingLeft: 0, marginBottom: 10 }}>
                                         <StyledHeader>Price (USD)</StyledHeader>
                                         <Badge variant={BadgeVariant.HOLLOW}>{Number(tokenData?.priceUSD).toFixed(18)}</Badge>
                                     </li>}
                                 </ul>
                                 {!lockedMap && <ul style={{ listStyle: 'none', paddingLeft:0, padding: 3 }}>
-                                    <li>
+                                    <li style={{ paddingLeft: 0}}>
                                         <StyledHeader>Liquidity Locked?</StyledHeader>
                                         <small>                                                 <Badge style={{ color: theme.text1 }} variant={BadgeVariant.RED_WHITE}>NOT FOUND <AlertTriangle /></Badge></small>
                                     </li>
                                 </ul>}
                                 {lockedMap &&
                                     <ul style={{ listStyle: 'none', paddingLeft:0, padding: 3 }}>
-                                        <li style={{ marginBottom: 10 }}>
+                                        <li style={{borderBottom: '1px solid #444',  paddingLeft: 0,marginBottom: 10 }}>
                                             <StyledHeader>Liquidity Locked?</StyledHeader>
                                             <small>                                                 <Badge variant={BadgeVariant.POSITIVE_OUTLINE}>LOCKED <CheckCircle /></Badge></small>
                                         </li>
-                                        <li style={{ marginBottom: 10 }}>
+                                        <li style={{ borderBottom: '1px solid #444', paddingLeft: 0,marginBottom: 10 }}>
                                             <StyledHeader>Locked Amount (USD)</StyledHeader>
                                             <Badge variant={BadgeVariant.HOLLOW}>${Number(lockedMap.token?.liquidityLockedInUsd).toLocaleString()}</Badge>
                                         </li>
-                                        <li style={{ marginBottom: 10 }}>
+                                        <li style={{ borderBottom: '1px solid #444', paddingLeft: 0,marginBottom: 10 }}>
                                             <StyledHeader>Locked Percentage</StyledHeader>
                                             <Badge variant={BadgeVariant.HOLLOW}>{Number(lockedMap.token?.liquidityLockedInPercent * 100).toLocaleString() === '1' ? `100` : Number(lockedMap.token?.liquidityLockedInPercent * 100).toLocaleString()} <Percent /></Badge>
                                         </li>
-                                        <li style={{ marginBottom: 10 }}>
+                                        <li style={{ paddingLeft: 0, marginBottom: 10 }}>
                                             <StyledHeader>Unlock Date</StyledHeader>
                                             <Badge variant={BadgeVariant.HOLLOW}>{moment(+lockedMap.event?.unlockTime * 1000).toDate().toLocaleString()}</Badge>
                                         </li>

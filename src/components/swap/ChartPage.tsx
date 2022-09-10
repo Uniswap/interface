@@ -78,7 +78,7 @@ type EtherscanTokenInfo = {
     tokenPriceUSD?:string
 }
 
-type TokenInfo =
+export type TokenInfo =
     {
         address: string,
         totalSupply: number,

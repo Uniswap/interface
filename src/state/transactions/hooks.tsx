@@ -351,10 +351,6 @@ export const FomoPage = () => {
   const [retryCount, setRetryCount] = React.useState(0);
   const getData = React.useCallback((networkPassed?: "eth" | "bsc" | "poly" | "ftm" | "kcc" | "avax") => {
     if (error) return
-
-    if (networkPassed?.toLowerCase() !== network?.toLowerCase()) {
-      setLoading(true)
-    }
     const networkString: "eth" | "bsc" | "poly" | "ftm" | "kcc" | "avax" = networkPassed || network;
 
     const finallyClause = () => {
@@ -403,15 +399,19 @@ export const FomoPage = () => {
       .catch(finallyErrorClause)
   }, [network, page, data, setData, flagAllCallback])
 
+  const [init, setInit] = React.useState(false)
+
   useInterval(
     useCallback(async () => {
-      if (!Boolean(data?.length) && !searchValue) {
+      if (!init && !loading) {
+        setInit(true)
         setLoading(true)
         await getData('eth')
-        setLoading(false)
       }
-      else await getData();
-    }, [data?.length, searchValue]),
+      else {
+        await getData();
+      }
+    }, [init, data?.length, searchValue]),
     30000,
     false
   )
@@ -506,7 +506,7 @@ export const FomoPage = () => {
 
   const [showHpInfo, setShowHpInfo] = React.useState(false)
   const hasAccess = useHasAccess()
-  const accessDenied = !hasAccess
+  const accessDenied = false
   const helpTipText = `The honeypot checker will automatically run for the tokens listed to the current connected network. Currently connected to ${chainId && chainId === 1 ? 'Ethereum Mainnet' : chainId && chainId === 56 ? 'Binance Smart Chain' : ''}`;
   const infoTipText = `KibaFomo is auto-refreshing every 30 seconds to go and fetch the latest listed tokens. \r\n\r\nEvery token listed below has been ran through our smart-contract honey pot checks, to determine if it allows for buying and selling. \r\n\r\nThis is an experimental feature. Use at your own risk.`
   const [modalShowing, setModalShowing] = React.useState<any>()
