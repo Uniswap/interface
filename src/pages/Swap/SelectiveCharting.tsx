@@ -12,6 +12,7 @@ import { ButtonOutlined, ButtonSecondary } from "components/Button"
 import { Currency, Token } from "@uniswap/sdk-core";
 import { DarkCard, LightCard } from "components/Card";
 import React, { useEffect, useState } from "react";
+import { Redirect, useHistory } from "react-router-dom";
 import { StyledInternalLink, TYPE } from "theme";
 import { darken, lighten } from "polished";
 import styled, { useTheme } from "styled-components/macro";
@@ -43,7 +44,6 @@ import _ from "lodash";
 import { isAddress } from "utils";
 import { useConvertTokenAmountToUsdString } from "pages/Vote/VotePage";
 import useCopyClipboard from 'hooks/useCopyClipboard'
-import { useHistory } from "react-router-dom";
 import useLast from "hooks/useLast";
 import { useTokenBalance } from "state/wallet/hooks";
 import { useUserChartHistoryManager } from "state/user/hooks";
@@ -543,6 +543,7 @@ export const SelectiveChart = () => {
 
   return (
     <React.Suspense fallback={<BarChartLoaderSVG />}>
+      {pairAddress && <Redirect to={`/selective-charts/${screenerToken?.chainId ? screenerToken?.chainId : 'ethereum'}/${pairAddress}`} />}
       <ChartSearchModal isOpen={showSearch} onDismiss={toggleShowSearchOff} />
       <WrapperCard
         isMobile={isMobile}
