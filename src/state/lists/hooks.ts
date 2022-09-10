@@ -1,21 +1,26 @@
-import DEFAULT_TOKEN_LIST from '@uniswap/default-token-list'
-import { TokenList } from '@uniswap/token-lists'
-import { IS_ON_APP_URL } from 'constants/misc'
-import { useMemo } from 'react'
-import { useAppSelector } from 'state/hooks'
-import sortByListPriority from 'utils/listSort'
-import UNSUPPORTED_TOKEN_LIST from '../../constants/tokenLists/unsupported.tokenlist.json'
-import BROKEN_LIST from '../../constants/tokenLists/broken.tokenlist.json'
 import { AppState } from '../index'
+import BROKEN_LIST from '../../constants/tokenLists/broken.tokenlist.json'
+import DEFAULT_TOKEN_LIST from '@uniswap/default-token-list'
+import { IS_ON_APP_URL } from 'constants/misc'
+import { TokenList } from '@uniswap/token-lists'
 import { UNSUPPORTED_LIST_URLS } from './../../constants/lists'
+import UNSUPPORTED_TOKEN_LIST from '../../constants/tokenLists/unsupported.tokenlist.json'
 import { WrappedTokenInfo } from './wrappedTokenInfo'
-
+import _ from 'lodash'
+import defaultPancakeList from './default-pancake-list.json'
+import sortByListPriority from 'utils/listSort'
+import { useActiveWeb3React } from 'hooks/web3'
+import { useAppSelector } from 'state/hooks'
+import { useMemo } from 'react'
 export type TokenAddressMap = Readonly<{
   [chainId: number]: Readonly<{ [tokenAddress: string]: { token: WrappedTokenInfo; list: TokenList } }>
 }>
 
 type Mutable<T> = {
   -readonly [P in keyof T]: Mutable<T[P]>
+}
+function enumKeys<O extends Record<string, unknown>, K extends keyof O = keyof O>(obj: O): K[] {
+  return Object.keys(obj).filter((k) => Number.isNaN(+k)) as K[]
 }
 
 const listCache: WeakMap<TokenList, TokenAddressMap> | null =
@@ -43,6 +48,12 @@ function listToTokenMap(list: TokenList): TokenAddressMap {
 }
 
 const TRANSFORMED_DEFAULT_TOKEN_LIST = listToTokenMap(DEFAULT_TOKEN_LIST)
+const TRANSFORMED_PANCAKE_TOKEN_LIST = listToTokenMap(defaultPancakeList as TokenList)
+
+const defaultMap: Record<number, any> = {
+  1: TRANSFORMED_DEFAULT_TOKEN_LIST,
+  56: TRANSFORMED_PANCAKE_TOKEN_LIST
+}
 
 export function useAllLists(): AppState['lists']['byUrl'] {
   return useAppSelector((state) => state.lists.byUrl)
@@ -110,9 +121,11 @@ export function useInactiveListUrls(): string[] {
 
 // get all the tokens from active lists, combine with local default tokens
 export function useCombinedActiveList(): TokenAddressMap {
+  const {chainId} = useActiveWeb3React()
   const activeListUrls = useActiveListUrls()
   const activeTokens = useCombinedTokenMapFromUrls(activeListUrls)
-  return combineMaps(activeTokens, TRANSFORMED_DEFAULT_TOKEN_LIST)
+  const list = defaultMap[chainId ? chainId : 1]
+  return combineMaps(activeTokens, list)
 }
 
 // list of tokens not supported on interface, used to show warnings and prevent swaps and adds

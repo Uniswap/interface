@@ -148,13 +148,13 @@ export const SelectiveChart = () => {
     tokenAddressSupplied ? tokenAddressSupplied : ""
   );
   const tokenInfo = useTokenInfo(chainId ?? 1, address);
-  const tokenData = useTokenData(address?.toLowerCase(), 30000);
+  const tokenData = useTokenData(address?.toLowerCase(), 10000);
   const { pairs } = tokenData;
   const token = useToken(address);
   const tokenBalance = useTokenBalance(account ?? undefined, token as any);
   const [ethPrice] = useEthPrice()
   const screenerToken = useDexscreenerToken(address);
-  const transactionData = useTokenTransactions(address, pairs, 20000);
+  const transactionData = useTokenTransactions(address, pairs, 5000);
   const [selectedCurrency, setSelectedCurrency] = React.useReducer(
     function (
       state: { selectedCurrency: Currency | null | undefined },
@@ -723,6 +723,7 @@ export const SelectiveChart = () => {
                         tokenSymbolForChart={tokenSymbolForChart}
                       />
                       <TableQuery
+                        transactionData={transactionData}
                         tokenSymbol={
                           (params?.tokenSymbol ? params?.tokenSymbol : token?.symbol) as string
                         }

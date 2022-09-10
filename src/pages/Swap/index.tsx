@@ -591,9 +591,11 @@ const trySetMaxTx = async () => {
       icon: 'warning',
       title: `The token your trying to buy max of has been detected as a honeypot. This could be wrong, so do your own research`
     })
-    // other wise handle the max tx amount input
-    const formattedMax = response.data?.MaxTxAmount / 10 ** outputToken.decimals 
-    handleTypeOutput(formattedMax.toString())
+    if (response.data && response.data?.MaxTxAmount) {
+      // other wise handle the max tx amount input
+      const formattedMax = response.data?.MaxTxAmount / 10 ** outputToken.decimals 
+      handleTypeOutput(formattedMax.toString())
+    }
   } else if (response.data && response.data?.MaxTxAmount) {
     // other wise handle the max tx amount input
     const formattedMax = response.data?.MaxTxAmount / 10 ** outputToken.decimals 

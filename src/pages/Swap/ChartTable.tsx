@@ -222,7 +222,7 @@ const TableHeader = React.memo(({ headerSymbol, isMobile }: { headerSymbol: stri
             <th>Date</th>
             <th>Type</th>
             <th>
-                Amt{" "} {headerSymbol}
+                Amt{" "} {headerSymbol || "ETH"}
             </th>
             <th>Amt USD</th>
             <th>Amt Tokens</th>
@@ -230,7 +230,7 @@ const TableHeader = React.memo(({ headerSymbol, isMobile }: { headerSymbol: stri
             <th>Tx</th>
         </tr>
     </Thead>
-))
+))  
 TableHeader.displayName = "thead"
 
 type _RowProps = {

@@ -20,7 +20,7 @@ import {
   useTokenData,
   useTokenTransactions,
 } from "state/logs/utils";
-import { useBnbPrices, useBscPairs, useBscTokenData } from "state/logs/bscUtils";
+import { useBnbPrices, useBscPairs, useBscTokenData, useBscTokenTransactions } from "state/logs/bscUtils";
 import { useBscToken, useCurrency, useToken } from "hooks/Tokens";
 import { useDexscreenerToken, useTokenInfo } from "components/swap/ChartPage";
 import { useLocation, useParams } from "react-router";
@@ -148,6 +148,7 @@ export const SelectiveChartBsc = () => {
   const [address, setAddress] = React.useState(
     tokenAddressSupplied ? tokenAddressSupplied : ""
   );
+  const { data: bscData, loading: bscLoading } = useBscTokenTransactions(address?.toLowerCase(), 5000)
   const prices = useBnbPrices() 
   const tokenInfo = useTokenInfo(chainId ?? 1, address);
   const tokenData = useBscTokenData(address?.toLowerCase(), prices?.current, prices?.oneDay);
@@ -690,6 +691,7 @@ export const SelectiveChartBsc = () => {
                       tokenSymbolForChart={tokenSymbolForChart}
                     />
                     <TableQuery 
+                      transactionData={{data: bscData, loading: bscLoading}}
                       tokenSymbol={
                           (params?.tokenSymbol ? params?.tokenSymbol : token?.symbol) as string
                       }

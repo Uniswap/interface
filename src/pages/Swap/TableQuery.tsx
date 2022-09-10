@@ -7,13 +7,10 @@ import React from 'react'
 import { TableInstance } from './ChartTable';
 import _ from 'lodash'
 import { useActiveWeb3React } from 'hooks/web3';
-import { useBscTokenTransactions } from 'state/logs/bscUtils';
 
-export const TableQuery = ({ address, pairs, tokenSymbol }: { address: string, pairs: any[], tokenSymbol: string }) => {
+export const TableQuery = ({ address, pairs, tokenSymbol, transactionData }: { address: string, pairs: any[], tokenSymbol: string, transactionData: { data: any, loading: boolean } }) => {
     const { chainId } = useActiveWeb3React()
     const [tableData, setTableData] = React.useState<any[]>();
-    const [bscTableData, setBscTableData] = React.useState<any[]>();
-    const { data: bscData, loading: bscLoading } = useBscTokenTransactions(address?.toLowerCase())
     const formatTransactionData = (swaps: any[]) => {
         const newSwaps = swaps?.map((swap: any) => {
             const netToken0 = swap.amount0In - swap.amount0Out;
@@ -53,20 +50,12 @@ export const TableQuery = ({ address, pairs, tokenSymbol }: { address: string, p
             );
     }
 
-    const { data, loading } = useTokenTransactions(address, pairs, 10000)
     // const availablePairs = pairs?.map((pair) => ({id: pair.id, value: `${pair.token0.symbol}/${pair.token1.symbol}`}))
     // console.log(`availablePairs?`, availablePairs)
-
+    const { data, loading } = transactionData
     React.useEffect(() => {
         setTableData(() => [...formatTransactionData(data?.swaps)]);
     }, [data])
-
-    React.useEffect(() => {
-        if (chainId && chainId == 56) {
-            setBscTableData(() => [...formatTransactionData(bscData?.swaps)])
-        }
-    }, [bscData, chainId])
-
 
     const headerSymbol = !chainId || chainId === 1
         ? pairs && pairs?.length
@@ -74,10 +63,9 @@ export const TableQuery = ({ address, pairs, tokenSymbol }: { address: string, p
                 ? pairs[0]?.token1?.symbol
                 : pairs[0]?.token0?.symbol
             : "WETH"
-        : "BNB";
+        : chainId == 56 ? "BNB" : 'WETH';
 
-    if (((!chainId || chainId == 1) && (loading)) ||
-        (chainId == 56 && (bscLoading || !bscTableData))) {
+    if (loading) {
         return (
             <>
                 <div style={{
@@ -113,6 +101,8 @@ export const TableQuery = ({ address, pairs, tokenSymbol }: { address: string, p
     }
 
     return (
-        <TableInstance headerSymbol={headerSymbol} tokenSymbol={tokenSymbol} tableData={(chainId == 56 && bscTableData ? bscTableData : tableData) as any[]} />
+        <TableInstance headerSymbol={headerSymbol} 
+                       tokenSymbol={tokenSymbol} 
+                       tableData={tableData || []} />
     );
 }

@@ -625,14 +625,14 @@ const getEthPrice = async () => {
 export function useTokenData(tokenAddress: string, interval: null | number = null) {
   const [ethPrice, ethPriceOld, ethPricePercent] = useEthPrice()
   const [t24h, t48h] = getDeltaTimestamps()
-  const blocks = useBlocksFromTimestamps([t24h, t48h])
-  const tokenDataQ = useQuery(TOKEN_DATA(tokenAddress?.toLowerCase(), null), {
+  const blocks = useBlocksFromTimestamps([new Date().valueOf(), t24h, t48h])
+  const tokenDataQ = useQuery(TOKEN_DATA(tokenAddress?.toLowerCase(), blocks?.blocks?.[0] ?? null), {
     fetchPolicy: 'cache-and-network',
     pollInterval: interval || 30000
   })
  
-  const token1DayQ = useQuery(TOKEN_DATA(tokenAddress?.toLowerCase(), blocks?.blocks?.[0]), { fetchPolicy: 'cache-and-network' })
-  const token2DayQ = useQuery(TOKEN_DATA(tokenAddress?.toLowerCase(), blocks?.blocks?.[1]), { fetchPolicy: 'cache-and-network' })
+  const token1DayQ = useQuery(TOKEN_DATA(tokenAddress?.toLowerCase(), blocks?.blocks?.[1]), { fetchPolicy: 'cache-and-network' })
+  const token2DayQ = useQuery(TOKEN_DATA(tokenAddress?.toLowerCase(), blocks?.blocks?.[2]), { fetchPolicy: 'cache-and-network' })
 
   return React.useMemo(() => {
     return mapTokenData(tokenDataQ.data, token1DayQ.data, token2DayQ.data, ethPrice as any, ethPriceOld as any)
