@@ -5,6 +5,7 @@ import {
     ArrowDownRight,
     ArrowUpRight,
     ChevronLeft,
+    Code,
     TrendingDown,
     TrendingUp,
 } from "react-feather";
@@ -23,6 +24,7 @@ import {
 } from "state/logs/utils";
 import { useCurrency, useToken } from "hooks/Tokens";
 import { useDexscreenerPair, useDexscreenerToken, useTokenInfo } from "components/swap/ChartPage";
+import { useIsDarkMode, useUserChartHistoryManager } from "state/user/hooks";
 import { useLocation, useParams } from "react-router";
 
 import BarChartLoaderSVG from "components/swap/BarChartLoader";
@@ -34,6 +36,7 @@ import { LoadingSkeleton } from "pages/Pool/styleds";
 import ReactGA from "react-ga";
 import { RecentlyViewedCharts } from "./RecentViewedCharts";
 import { Redirect } from "./redirects";
+import {SelectiveChartEmbedModal} from './SelectiveChartEmbed'
 import { SelectiveChartWithPairBsc } from "./SelectiveChartingPairBsc";
 import Swal from 'sweetalert2'
 import { TableQuery } from "./TableQuery";
@@ -46,9 +49,9 @@ import { useBscTokenTransactions } from "state/logs/bscUtils";
 import { useConvertTokenAmountToUsdString } from "pages/Vote/VotePage";
 import useCopyClipboard from 'hooks/useCopyClipboard'
 import { useHistory } from "react-router-dom";
+import { useIsEmbedMode } from "components/Header";
 import useLast from "hooks/useLast";
 import { useTokenBalance } from "state/wallet/hooks";
-import { useUserChartHistoryManager } from "state/user/hooks";
 import { useWeb3React } from "@web3-react/core";
 
 export const useIsMobile = () => {
@@ -97,8 +100,8 @@ const BackLink = styled(StyledDiv)`
   }
 `;
 
-const WrapperCard = styled(DarkCard) <{ gridTemplateColumns: string, isMobile: boolean }>`
-  background: ${props => props.theme.chartTableBg};
+const WrapperCard = styled(DarkCard) <{darkMode?:boolean, gridTemplateColumns: string, isMobile: boolean }>`
+  background: ${props => props.darkMode ? props.theme.chartBgDark : !props.darkMode ? props.theme.chartBgLight : props.theme.chartTableBg};
   max-width: 100%;
   display: grid;
   color ${props => props.theme.text1};
@@ -143,6 +146,7 @@ export const SelectiveChartWithPair = () => {
     }, [screenerPair?.baseToken?.address])
 
     const tokenInfo = useTokenInfo(chainId ?? 1, address);
+    const embedModel = useIsEmbedMode()
     const tokenData = useTokenData(address?.toLowerCase(), 10000);
     const { pairs } = tokenData;
     const token = useToken(address);
@@ -517,9 +521,10 @@ export const SelectiveChartWithPair = () => {
     const gridTemplateColumns = React.useMemo(
         function () {
             if (!hasSelectedData || !selectedCurrency || !params.pairAddress) return `100%`;
+            if (embedModel.embedMode && !embedModel.showChartInfo) return '100%';
             return isMobile ? "100%" : collapsed ? "5.5% 95.5%" : "25% 75%";
         },
-        [selectedCurrency, hasSelectedData, isMobile, collapsed]
+        [selectedCurrency, embedModel, hasSelectedData, isMobile, collapsed]
     );
 
     const pairAddress = React.useMemo(() => {
@@ -527,17 +532,25 @@ export const SelectiveChartWithPair = () => {
         return screenerToken?.pairAddress ? screenerToken?.pairAddress : pairs?.[0]?.id
     }, [screenerToken, pairs, params.pairAddress])
 
+    const [showEmbedChartModal, setShowEmbedChartModal] = React.useState(false)
+
+    const dismissEmbedModal = () => setShowEmbedChartModal(false)
+    const embedClick = () => {
+        setShowEmbedChartModal(true)
+    }
+    const darkMode = useIsDarkMode()
 
     return (
         <React.Suspense fallback={<BarChartLoaderSVG />}>
             <ChartSearchModal isOpen={showSearch} onDismiss={toggleShowSearchOff} />
+            <SelectiveChartEmbedModal title={`${token?.symbol}/${pairCurrency?.symbol} Chart`} chartLink={window.location.href} isOpen={showEmbedChartModal} onDismiss={dismissEmbedModal} />
             <WrapperCard
+                darkMode={darkMode || embedModel.embedMode && embedModel.theme == 'dark'}
                 isMobile={isMobile}
                 gridTemplateColumns={gridTemplateColumns}
             >
-                {hasSelectedData && (
-                    <div>
-                        <ChartSidebar
+                {hasSelectedData &&(embedModel.embedMode == false || embedModel.showChartInfo) && (   <div>
+<ChartSidebar
                             tokenCurrency={mainnetCurrency}
                             holdings={holdings}
                             loading={loadingNewData}
@@ -578,8 +591,8 @@ export const SelectiveChartWithPair = () => {
                 )}
                 <div
                     style={{
-                        marginLeft: isMobile ? 0 : 10,
-                        borderLeft: (isMobile || !hasSelectedData)
+                        marginLeft:(embedModel.embedMode && !embedModel.showChartInfo) || isMobile ? 0 : 10,
+                        borderLeft: ((embedModel.embedMode && !embedModel.showChartInfo) || isMobile || !hasSelectedData)
                             ? "none"
                             : Boolean(
                                 params?.pairAddress &&
@@ -738,7 +751,10 @@ export const SelectiveChartWithPair = () => {
                                         </>
                                     ) : null}
                                 </React.Fragment>
+                                
                             )}
+                                                                        {embedModel.embedMode == false && isMobile == false && <TYPE.link style={{alignItems:'center', display:'flex', justifyContent:'flex-end',cursor: 'pointer'}} onClick={embedClick}><Code style={{fontSize:12}} /> &nbsp; Embed this chart</TYPE.link>}
+
                     </CardSection>
                 </div>
             </WrapperCard>

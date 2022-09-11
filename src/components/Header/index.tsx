@@ -1,10 +1,10 @@
 import { AlertOctagon, CheckCircle, Eye, EyeOff } from 'react-feather'
+import { NavLink, useLocation } from 'react-router-dom'
 import React, { useState } from 'react'
 
 import { BurntKiba } from 'components/BurntKiba'
 import { ExternalLink } from '../../theme'
 import Menu from '../Menu'
-import { NavLink } from 'react-router-dom'
 import NetworkCard from './NetworkCard'
 import Row from '../Row'
 import { SupportedChainId } from 'constants/chains'
@@ -20,6 +20,38 @@ import { useDarkModeManager } from 'state/user/hooks'
 import { useETHBalances } from 'state/wallet/hooks'
 import useInterval from 'hooks/useInterval'
 import useTheme from 'hooks/useTheme'
+
+export type EmbedModel = {
+  showTrending?: boolean
+  showChartInfo?: boolean
+  showChartTrades?:boolean
+  embedMode:boolean
+  theme?: string
+}
+
+export const useIsEmbedMode = (): EmbedModel => {
+  const location = useLocation()
+  const params = new URLSearchParams(location.search)
+  const isEmbedMode = Boolean(params.get('embed'))
+  if (isEmbedMode) {
+    const trades = params.get('trades') || '1'
+    const info = params.get('info') || '1'
+    const trending = params.get('trending') || '1'
+    const theme = params.get('theme') || 'dark'
+    const model = {
+      showChartInfo: info == '0' ? false : Boolean(info),
+      showTrending: trending == '0' ? false : Boolean(trending),
+      showChartTrades: trades =='0' ? false : Boolean(trades),
+      embedMode: true,
+      theme
+    }
+
+    return model
+  }
+  return {
+    embedMode: false,
+  }
+}
 
 const HeaderFrame = styled.div<{ showBackground: boolean }>`
   display: grid;
@@ -134,6 +166,47 @@ const UNIAmount = styled(AccountElement)`
   background-color: ${({ theme }) => theme.bg3};
   background: #252632;
 `
+
+const getQuery = () => {
+  if (typeof window !== 'undefined') {
+    return new URLSearchParams(window.location.search);
+  }
+  return new URLSearchParams();
+};
+
+const getQueryStringVal = (key: string): string | null => {
+  return getQuery().get(key);
+};
+
+
+export const useQueryParam = (
+  key: string,
+  defaultVal: string
+): [string, (val: string) => void] => {
+  const [query, setQuery] = useState(getQueryStringVal(key) || defaultVal);
+
+  const updateUrl = (newVal: string) => {
+    setQuery(newVal);
+
+    const query = getQuery();
+
+    if (newVal.trim() !== '') {
+      query.set(key, newVal);
+    } else {
+      query.delete(key);
+    }
+
+    // This check is necessary if using the hook with Gatsby
+    if (typeof window !== 'undefined') {
+      const { protocol, pathname, host } = window.location;
+      const newUrl = `${protocol}//${host}${pathname}?${query.toString()}`;
+      window.history.pushState({}, '', newUrl);
+    }
+  };
+
+  return [query, updateUrl];
+};
+
 
 const UNIWrapper = styled.span`
   width: fit-content;
@@ -369,6 +442,7 @@ export default function Header() {
   const userEthBalance = useETHBalances(account ? [account] : [])?.[account?.toLowerCase() ?? '']
   const [darkMode] = useDarkModeManager()
   const theme =useTheme()
+
   return (
     <>
       <HeaderFrame showBackground={scrollY > 45}>

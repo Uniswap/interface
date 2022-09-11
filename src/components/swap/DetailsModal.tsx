@@ -124,7 +124,7 @@ export const DetailsModal = ({
                                     </li>}
 
 
-                                    {Object.keys(tokenData)?.filter((key) =>  !['symbol','name','decimals','typename', '_typename', 'id'].includes(key.toLowerCase()) && !key?.toLowerCase()?.includes('type') &&  Boolean(key) && !Number.isNaN(tokenData?.[key]) && Boolean(tokenData?.[key]) && parseFloat(tokenData?.[key])?.toFixed(0) != '0').map((key) => (
+                                    {Object.keys(tokenData)?.filter((key) =>  !['symbol','name','decimals','typename', '__typename', 'id'].includes(key.toLowerCase()) && !key?.toLowerCase()?.includes('type') &&  Boolean(key) && !Number.isNaN(tokenData?.[key]) && Boolean(tokenData?.[key]) && parseFloat(tokenData?.[key])?.toFixed(0) != '0').map((key) => (
                                         <li key={key} style={{ paddingLeft: 0, marginBottom: 10 }}>
                                             <StyledHeader>{_.startCase(key)}</StyledHeader>
                                             <Badge variant={BadgeVariant.HOLLOW}>{parseFloat(tokenData?.[key]).toFixed(2)}</Badge>

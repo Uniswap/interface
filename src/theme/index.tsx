@@ -115,6 +115,9 @@ function theme(darkMode: boolean): DefaultTheme {
     shadow1: darkMode ? '#000' : '#2F80ED',
     chartTableBg: darkMode ? 'linear-gradient(rgb(35 40 55),rgb(17 19 32))': 'linear-gradient(white, rgb(255 255 255))', 
     chartSidebar: darkMode ? 'linear-gradient(rgb(27 31 42),rgb(17 19 32))': 'linear-gradient(#f5f5f5,rgb(255 255 255))',
+    
+    chartBgLight: '#f5f5f5',
+    chartBgDark: 'linear-gradient(rgb(35 40 55),rgb(17 19 32))',
     // media queries
     mediaWidth: mediaWidthTemplates,
 

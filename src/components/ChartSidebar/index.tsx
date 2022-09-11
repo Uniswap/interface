@@ -29,6 +29,7 @@ import { SwapTokenForToken } from 'pages/Swap/SwapTokenForToken';
 import { Trans } from '@lingui/macro'
 import _ from 'lodash'
 import { toChecksum } from 'state/logs/utils';
+import { useIsEmbedMode } from 'components/Header';
 import { useIsMobile } from 'pages/Swap/SelectiveCharting';
 import { useKiba } from 'pages/Vote/VotePage';
 import { useTokenBalance } from 'state/wallet/hooks';
@@ -283,6 +284,7 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
             onStatsOpenChange(true)
         }
     }
+
 
     return (
         <Wrapper>

@@ -66,6 +66,9 @@ declare module 'styled-components/macro' {
     // shadows
     shadow1: string
     //chart page
+    chartBgDark: string
+    chartBgLight:string
+    
     chartTableBg:string
     chartSidebar: string
 

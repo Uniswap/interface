@@ -9,7 +9,7 @@ import {
   CSSTransition,
   TransitionGroup as ReactCSSTransitionGroup,
 } from "react-transition-group";
-import { ExternalLink, ExternalLinkIcon, LinkStyledButton, StyledInternalLink } from 'theme'
+import { ExternalLink, ExternalLinkIcon, LinkStyledButton, StyledInternalLink, TYPE } from 'theme'
 import { GelatoLimitOrderPanel, GelatoLimitOrdersHistoryPanel } from '@gelatonetwork/limit-orders-react'
 import { LoadingRows, LoadingSkeleton } from 'pages/Pool/styleds'
 import { fetchBscTokenData, useBnbPrices } from 'state/logs/bscUtils'
@@ -389,6 +389,13 @@ export const FomoPage = () => {
 
   const getData = React.useCallback((networkPassed?: "eth" | "bsc" | "poly" | "ftm" | "kcc" | "avax") => {
     if (error) return
+    if (stateMap.current.get('nextRefetch')) {
+      const refetchTime = stateMap.current.get('nextRefetch') as any
+      if (new Date().getTime() <= refetchTime) {
+        console.log(`[getData] - avoiding refetching due to not past the refetch time`)
+        return
+      }
+    }
     const networkString: "eth" | "bsc" | "poly" | "ftm" | "kcc" | "avax" = networkPassed || network;
 
     const finallyClause = () => {
@@ -398,6 +405,7 @@ export const FomoPage = () => {
 
     const finallyErrorClause = (err: any) => {
       console.error(`error in fetching for token data`, err)
+      stateMap.current.set('nextRefetch', moment().add(2,'minutes').toDate().getTime())
       stateMap.current.set('count', (stateMap.current.get('count') as any || 0) + 1)
       if (stateMap.current.get('count') > 6) {
         setError(true)
@@ -424,6 +432,24 @@ export const FomoPage = () => {
         const nonExistingItems = newDataValue.filter(item => !data?.some(dataItem => dataItem.addr == item.addr))
         const shouldFlagCallback = !data?.length || nonExistingItems?.length > 0
 
+        if (!!data?.length) {
+          setData(data =>
+            _.uniqBy
+              (
+                _.orderBy
+                  (
+                    data?.concat(newDataValue.filter((newItem) => !data?.some((orginal) => orginal.addr === newItem.addr)))
+                      .filter(({ network }) => network?.toLowerCase() === networkString?.toLowerCase()),
+                    i => +i.timestamp,
+                    'desc'
+                  ),
+                a => a.addr
+              )
+          )
+        } else {
+          setData(data => newDataValue)
+        }
+        
         if (shouldFlagCallback) {
           await flagAllCallback(
             _.orderBy(
@@ -433,24 +459,19 @@ export const FomoPage = () => {
             )
           )
         }
-
-        setData(data =>
-          _.uniqBy
-            (
-              _.orderBy
-                (
-                  data?.concat(newDataValue.filter((newItem) => !data?.some((orginal) => orginal.addr === newItem.addr)))
-                    .filter(({ network }) => network?.toLowerCase() === networkString?.toLowerCase()),
-                  i => +i.timestamp,
-                  'desc'
-                ),
-              a => a.addr
-            )
-        )
+        
       })
       .finally(finallyClause)
       .catch(finallyErrorClause)
-  }, [network, page, getActiveSort(), data, setData, flagAllCallback])
+  }, [
+    network, 
+    page, 
+    stateMap.current,
+    getActiveSort(), 
+    data, 
+    error,
+    flagAllCallback
+  ])
 
   useInterval(
     useCallback(async () => {
@@ -500,7 +521,21 @@ export const FomoPage = () => {
         [key]: sortState[key] !== undefined && sortState[key] === 'asc' ? 'desc' : 'asc',
       })
     }
-  }
+  } 
+
+  const RefetchNode = React.useMemo(() => !Boolean(stateMap.current?.get('nextRefetch')) ? null : (
+    <tr>
+      <td colSpan={4} style={{borderRight: 'none'}}>
+        <TYPE.small>
+          Encountered an <span style={{color: theme.error }}> error </span> 
+          while fetching data. Automated refetch&apos;s will occur every 2 minutes
+        </TYPE.small>
+      </td>
+      <td colSpan={4}>
+        <TYPE.small>Next refetch: <span>{moment(stateMap.current.get('nextRefetch')).fromNow()}</span></TYPE.small>
+      </td>
+    </tr>
+  ), [stateMap.current?.get('nextRefetch') as any])
 
   const getNetworkLink = function (item: NewToken) {
     switch (item.network.toLowerCase()) {
@@ -515,7 +550,7 @@ export const FomoPage = () => {
   }
 
   const TableMemo = React.useMemo(() => (
-    !data?.length && !pagedData?.length && !searchValue && !loading ? null : !loading && !!pagedData?.length && pagedData.map((item, index) => (
+    !data?.length && !pagedData?.length && !searchValue && !loading ? RefetchNode : !loading && !!pagedData?.length && pagedData.map((item, index) => (
       <CSSTransition
         key={`row_${index}_${item.addr}`}
         in={index <= 3}
@@ -615,7 +650,7 @@ export const FomoPage = () => {
           <td>{moment(+item.timestamp * 1000).fromNow()}</td>
         </tr>
       </CSSTransition>
-    ))), [data, modalShowing, setModalShowing, pagedData, error, searchValue, loading])
+    ))), [data, modalShowing, RefetchNode, setModalShowing, pagedData, error, searchValue, loading])
 
   React.useEffect(() => {
     const active = getActiveSort()

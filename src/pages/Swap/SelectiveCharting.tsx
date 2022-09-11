@@ -749,7 +749,6 @@ export const SelectiveChart = () => {
                         }
                         address={address as string}
                         pairs={pairAddress ? [{id: pairAddress}, ...pairs] : pairs} />
-
                     </>
                   ) : null}
                 </React.Fragment>

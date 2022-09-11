@@ -1,6 +1,7 @@
 import { AccountPage, AccountPageWithAccount } from './Account/AccountPage'
 import { FomoPage, LimitOrders } from 'state/transactions/hooks'
 import { HashRouter, Route, Switch } from 'react-router-dom'
+import Header, { useIsEmbedMode } from 'components/Header';
 import React, { useState } from 'react'
 import { RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects';
 import Swap, { CardWrapper, FixedContainer, ScrollableRow } from './Swap'
@@ -12,6 +13,7 @@ import {
   ApolloProvider
 } from "@apollo/client";
 import AppBody from './AppBody'
+import Badge from 'components/Badge';
 import { ChartPage } from 'components/swap/ChartPage'
 import CreateProposal from './CreateProposal'
 import { DarkGreyCard } from 'components/Card'
@@ -21,7 +23,6 @@ import ErrorBoundary from '../components/ErrorBoundary'
 import { Flex } from 'rebass'
 import { GainsTracker } from './GainsTracker/GainsTracker'
 import { GelatoProvider } from "@gelatonetwork/limit-orders-react";
-import Header from 'components/Header';
 import { HoneyPotDetector } from './HoneyPotDetector'
 import { KibaNftAlert } from 'components/NetworkAlert/AddLiquidityNetworkAlert';
 import { LifetimeReflections } from './Swap/LifetimeReflections'
@@ -77,15 +78,15 @@ const AppWrapper = styled.div`
   }
 `
 
-const BodyWrapper = styled.div`
+const BodyWrapper = styled.div<{embed:boolean}>`
   display: flex;
   flex-direction: column;
   width: 100%;
-  padding: 120px 16px 0px 16px;
+  padding: ${props => props.embed ? '0px' : '120px 16px 0px 16px'};
   align-items: center;
   flex: 1;
   z-index: 1;
-  margin-top:${() => window.location.href.includes('charts') || window.location.href.includes('charting') ? '0.5rem' : '3rem'};
+  margin-top:${(props) => props.embed ? '0px' : window.location.href.includes('charts') || window.location.href.includes('charting') ? '0.5rem' : '3rem'};
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
     padding:6rem 16px 16px 16px;
@@ -138,6 +139,7 @@ export default function App() {
       </VideoWrapper>
     )
   }, [])
+  const embedModel = useIsEmbedMode()
   const { chainId, account, library } = useWeb3React()
   const noop = () => { return };
   const innerWidth = window.innerWidth;
@@ -163,9 +165,9 @@ export default function App() {
           >
             <ApolloProvider client={(!chainId || chainId && chainId === 1) ? client : chainId && chainId === 56 ? bscClient : client}>
               <AppWrapper>
-                <HeaderWrapper>
-                  <TopTokenMovers />
-                  <Header />
+               <HeaderWrapper>
+                  {(embedModel.embedMode == false || embedModel.showTrending) &&  <TopTokenMovers />}
+                  {embedModel.embedMode == false && <Header />}
                 </HeaderWrapper>
 
                 {/* 
@@ -176,7 +178,7 @@ export default function App() {
                       <img style={{maxWidth:200}} src={'https://kibainu.space/wp-content/uploads/2021/11/photo_2021-11-07-22.25.47.jpeg'} />
                   </div> 
                 */}
-                <BodyWrapper>
+                <BodyWrapper embed={embedModel.embedMode}>
                   <Popups />
                   {!isMobile && <>
                     <Polling />
@@ -254,6 +256,7 @@ export default function App() {
 
                     <Route component={RedirectPathToSwapOnly} />
                   </Switch>
+                  {embedModel.embedMode == false && (
                   <AppBody style={{
                     boxShadow:
                       'rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px',
@@ -325,7 +328,20 @@ export default function App() {
                         </ScrollableRow>
                       </FixedContainer>
                     </Marquee>
-                  </AppBody>
+                  </AppBody>)}
+
+                  {embedModel.embedMode == true && (
+                    <Badge style={{marginTop: 5, width:'100%', background: embedModel?.theme == 'dark' ? "#222" : '#fff'}}>
+                      <a href={'https://kiba.app'}>
+                      <div style={{display:'flex', columnGap:2.5, alignItems:'center', justifyContent:"center", flexFlow: 'row wrap'}}>
+                      <TYPE.italic>Tracked by </TYPE.italic>
+                      <img src={'https://kiba.app/static/media/download.e893807d.png'} style={{maxWidth:40}} />
+                      <TYPE.main>KIBA</TYPE.main>
+                      <TYPE.italic style={{color:theme.white}}>CHARTS</TYPE.italic>
+                      </div>
+                      </a>
+                      </Badge>
+                  )}
 
 
                 </BodyWrapper>

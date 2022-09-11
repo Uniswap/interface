@@ -7,9 +7,11 @@ import React from 'react'
 import { TableInstance } from './ChartTable';
 import _ from 'lodash'
 import { useActiveWeb3React } from 'hooks/web3';
+import { useIsEmbedMode } from 'components/Header';
 
 export const TableQuery = ({ address, pairs, tokenSymbol, transactionData }: { address: string, pairs: any[], tokenSymbol: string, transactionData: { data: any, loading: boolean } }) => {
     const { chainId } = useActiveWeb3React()
+    const embedModel = useIsEmbedMode()
     const [tableData, setTableData] = React.useState<any[]>();
     const formatTransactionData = (swaps: any[]) => {
         const newSwaps = swaps?.map((swap: any) => {
@@ -64,6 +66,8 @@ export const TableQuery = ({ address, pairs, tokenSymbol, transactionData }: { a
                 : pairs[0]?.token0?.symbol
             : "WETH"
         : chainId == 56 ? "BNB" : 'WETH';
+
+    if (embedModel.embedMode && embedModel.showChartTrades == false) return null
 
     if (loading) {
         return (
