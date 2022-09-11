@@ -534,6 +534,8 @@ export const SelectiveChartWithPair = () => {
     const embedClick = () => {
         setShowEmbedChartModal(true)
     }
+
+    const sidebarPaddingTop = embedModel.embedMode && embedModel.showTrending ? '1.2rem' : ''
     const darkMode = useIsDarkMode()
 
     return (
@@ -545,8 +547,8 @@ export const SelectiveChartWithPair = () => {
                 isMobile={isMobile}
                 gridTemplateColumns={gridTemplateColumns}
             >
-                {hasSelectedData &&(embedModel.embedMode == false || embedModel.showChartInfo) && (   <div>
-<ChartSidebar
+                {hasSelectedData &&(embedModel.embedMode == false || embedModel.showChartInfo) && (   <div style={{paddingTop: sidebarPaddingTop}}>
+                    <ChartSidebar
                             tokenCurrency={mainnetCurrency}
                             holdings={holdings}
                             loading={loadingNewData}
