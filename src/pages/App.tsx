@@ -1,7 +1,7 @@
 import { AccountPage, AccountPageWithAccount } from './Account/AccountPage'
 import { FomoPage, LimitOrders } from 'state/transactions/hooks'
 import { HashRouter, Route, Switch } from 'react-router-dom'
-import Header, { useIsEmbedMode } from 'components/Header';
+import Header, { EmbedModel, useIsEmbedMode } from 'components/Header';
 import React, { useState } from 'react'
 import { RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects';
 import Swap, { CardWrapper, FixedContainer, ScrollableRow } from './Swap'
@@ -62,13 +62,13 @@ import { useDarkModeManager } from 'state/user/hooks'
 import useTheme from 'hooks/useTheme'
 import { useWeb3React } from '@web3-react/core'
 
-const AppWrapper = styled.div`
+const AppWrapper = styled.div<{embedModel: EmbedModel}>`
   display: flex;
   flex-flow: column;
   background-size: cover;
   background-repeat: no-repeat;
   position: absolute;
-  height: 150vh; 
+  height: ${props => props.embedModel.embedMode ? 'auto' : '150vh'}; 
   width: 100%;
   background: url(${bg4}) ;
 
@@ -164,7 +164,7 @@ export default function App() {
             useDarkMode
           >
             <ApolloProvider client={(!chainId || chainId && chainId === 1) ? client : chainId && chainId === 56 ? bscClient : client}>
-              <AppWrapper>
+              <AppWrapper embedModel={embedModel}>
                <HeaderWrapper>
                   {(embedModel.embedMode == false || embedModel.showTrending) &&  <TopTokenMovers />}
                   {embedModel.embedMode == false && <Header />}

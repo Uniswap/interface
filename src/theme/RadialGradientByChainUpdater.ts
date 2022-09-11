@@ -2,6 +2,7 @@ import { SupportedChainId } from '../constants/chains'
 import { useActiveWeb3React } from 'hooks/web3'
 import { useDarkModeManager } from 'state/user/hooks'
 import { useEffect } from 'react'
+import { useIsEmbedMode } from 'components/Header'
 
 const initialStyles = {
   width: '200vw',
@@ -23,14 +24,21 @@ const setBackground = (newValues: TargetBackgroundStyles) =>
       backgroundRadialGradientElement.style[key as keyof typeof backgroundResetStyles] = value
     }
   })
+const setHeight = (newHeight: string) => {
+  if (backgroundRadialGradientElement) {
+    backgroundRadialGradientElement.style.height = newHeight;
+  }
+}
 export default function RadialGradientByChainUpdater(): null {
   const { chainId } = useActiveWeb3React()
   const [darkMode] = useDarkModeManager()
+  const embedModel = useIsEmbedMode()
   // manage background color
   useEffect(() => {
     if (!backgroundRadialGradientElement) {
       return
     }
+
 
     switch (chainId) {
       case SupportedChainId.ARBITRUM_ONE:
@@ -50,6 +58,10 @@ export default function RadialGradientByChainUpdater(): null {
       default:
         setBackground(initialStyles)
         backgroundRadialGradientElement.style.background = ''
+    }
+
+    if (embedModel.embedMode) {
+      setHeight('100px')
     }
   }, [darkMode, chainId])
   return null

@@ -408,7 +408,7 @@ export const SelectiveChartWithPair = () => {
     }, [mainnetCurrency, chainId, ethPrice, pairCurrency, hasSelectedData]);
     /* memoized function to render the currency input select that represents the current viewed chart's token */
     const PanelMemo = React.useMemo(() => {
-        return !Boolean(chainId) || Boolean(chainId) ? (
+        return embedModel.embedMode ? null :  !Boolean(chainId) || Boolean(chainId) ? (
             <>
                 <div
                     style={{
@@ -447,12 +447,8 @@ export const SelectiveChartWithPair = () => {
                     />
                 </div>
             </>
-        ) : Boolean(chainId) ? (
-            <TYPE.small>
-                {chainId && chainId == 56 ? "BSC" : `${chainId}`} support coming soon
-            </TYPE.small>
         ) : null;
-    }, [mainnetCurrency, hasSelectedData, isMobile, chainId]);
+    }, [mainnetCurrency, embedModel.embedMode, hasSelectedData, isMobile, chainId]);
 
     const getRetVal = React.useMemo(
         function () {

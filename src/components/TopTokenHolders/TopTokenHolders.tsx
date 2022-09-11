@@ -123,7 +123,7 @@ export const TopTokenHolders: FC<Props> = (props: Props) => {
     }
     const theme = useTheme()
     const node = useMemo(() => isOpen ? <ChevronUp style={{ cursor: "pointer" }} /> : <ChevronDown style={{ cursor: "pointer" }} />, [isOpen]);
-    if (chainId !== 1) return null
+    if (chainId && chainId !== 1) return null
     return (
         <DarkCard style={{ padding: '.85rem', border: `1px solid ${theme.bg6}`, background: theme.chartSidebar }}>
             <p style={{ margin: 0, fontSize: 14 }} onClick={() => setIsOpen(!isOpen)}>The top 50 holders own <Badge>{topHoldersOwnedPercentComputed}%</Badge> of the total supply. <Badge>{burntHolderOwnedPercentComputed}%</Badge> is burnt. {node}</p>
@@ -140,7 +140,7 @@ export const TopTokenHolders: FC<Props> = (props: Props) => {
                         <AddressLink
                             hasENS={false}
                             isENS={false}
-                            href={getExplorerLink(chainId, holder.address, ExplorerDataType.ADDRESS)}
+                            href={getExplorerLink(chainId || 1, holder.address, ExplorerDataType.ADDRESS)}
                             style={{
                                 color: theme.text1,
                                 fontSize: 12

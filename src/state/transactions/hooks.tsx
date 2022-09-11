@@ -248,6 +248,7 @@ export const FomoPage = () => {
   const [lastFetched, setLastFetched] = React.useState<Date | undefined>()
   const [showInfo, setShowInfo] = React.useState(false)
   const [showHpInfo, setShowHpInfo] = React.useState(false)
+  const [flaggin,setFlaggin] = React.useState(false)
 
   const theme = useTheme()
   const hasAccess = useHasAccess()
@@ -340,12 +341,15 @@ export const FomoPage = () => {
 
   const flagAllCallback = React.useCallback(async (items: any[]) => {
     try {
+      if (flaggin) return;
       if (!items?.length || !library?.provider) return;
+      setFlaggin(true)
+
       let safe: any[] = [];
       if (shouldFlagSafe) {
         safe = await Promise.all((data ?? [])?.filter(item => item.safe === undefined).map(async item => {
           const isHoneyPotFn = item.network?.toLowerCase() === 'bsc' ? getTaxesForBscToken : item.network?.toLowerCase() === 'eth' ? getTokenTaxes : (add: string) => Promise.resolve({ honeypot: false, buy: null, sell: null });
-          const isSafe = await isHoneyPotFn(item.addr, library?.provider)
+          const [isSafe] = await Promise.all([isHoneyPotFn(item.addr, library?.provider)])
           return {
             ...item,
             safe: !isSafe.honeypot,
@@ -354,11 +358,12 @@ export const FomoPage = () => {
           }
         })) as Array<NewToken>;
         setData(curr => _.uniqBy([...(curr || [])?.filter(i => i.safe !== undefined)?.concat(safe)], a => a.addr))
+        setFlaggin(false)
       } else {
         safe = await Promise.all(
           items?.map(async item => {
             const isHoneyPotFn = item?.network?.toLowerCase() === 'bsc' ? getTaxesForBscToken : item.network?.toLowerCase() === 'eth' ? getTokenTaxes : (add: string) => Promise.resolve({ honeypot: false, buy: null, sell: null });
-            const isSafe = await isHoneyPotFn(item.addr, library?.provider)
+            const [isSafe] = await Promise.all([isHoneyPotFn(item.addr, library?.provider)])
             return {
               ...item,
               safe: !isSafe.honeypot,
@@ -368,23 +373,24 @@ export const FomoPage = () => {
           })) as Array<NewToken>;
         setData(data =>
           _.uniqBy(
-            data?.concat(safe?.filter((safeItem) => !data?.some(dataItem => dataItem.addr == safeItem.addr))),
+            data?.map((item) => safe?.some(safeItem => safeItem.addr == item.addr) ? safe.find((safeItem) => safeItem.addr == item.addr) : item),
             a => a.addr
           )
         )
+        setFlaggin(false)
       }
     } catch (err) {
       console.error(err)
+      setFlaggin(false)
     }
   }, [
     network,
     data,
-    ethPrice,
-    ethPriceOld,
-    bnbPrice,
     chainId,
     library,
     shouldFlagSafe,
+    flaggin,
+    setFlaggin
   ])
 
   const getData = React.useCallback((networkPassed?: "eth" | "bsc" | "poly" | "ftm" | "kcc" | "avax") => {
@@ -410,6 +416,7 @@ export const FomoPage = () => {
       if (stateMap.current.get('count') > 6) {
         setError(true)
       }
+      setLoading(false)
     }
 
     return fetch
@@ -430,7 +437,7 @@ export const FomoPage = () => {
           'desc'
         );
         const nonExistingItems = newDataValue.filter(item => !data?.some(dataItem => dataItem.addr == item.addr))
-        const shouldFlagCallback = !data?.length || nonExistingItems?.length > 0
+        const shouldFlagCallback = nonExistingItems?.length > 0
 
         if (!!data?.length) {
           setData(data =>
@@ -548,6 +555,7 @@ export const FomoPage = () => {
       default: return ``;
     }
   }
+
 
   const TableMemo = React.useMemo(() => (
     !data?.length && !pagedData?.length && !searchValue && !loading ? RefetchNode : !loading && !!pagedData?.length && pagedData.map((item, index) => (
@@ -672,12 +680,12 @@ export const FomoPage = () => {
   }, [pagedData])
 
   
-  React.useEffect(() => {
-    if (data &&
-      !data?.every(a => a.safe !== undefined)
-    )
-      flagAllCallback(data?.filter(a => a?.safe === undefined))
-  }, [data])
+  // React.useEffect(() => {
+  //   if (data &&
+  //     !data?.every(a => a.safe !== undefined)
+  //   )
+  //     flagAllCallback(data?.filter(a => a?.safe === undefined))
+  // }, [data])
 
   return (
     <DarkCard style={{ maxWidth: 1200 }}>
