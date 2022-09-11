@@ -337,7 +337,7 @@ export default function App() {
                       <TYPE.italic>Tracked by </TYPE.italic>
                       <img src={'https://kiba.app/static/media/download.e893807d.png'} style={{maxWidth:40}} />
                       <TYPE.main>KIBA</TYPE.main>
-                      <TYPE.italic style={{color:theme.white}}>CHARTS</TYPE.italic>
+                      <TYPE.italic style={{color:theme.text1}}>CHARTS</TYPE.italic>
                       </div>
                       </a>
                       </Badge>

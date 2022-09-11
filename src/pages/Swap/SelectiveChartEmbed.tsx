@@ -73,6 +73,8 @@ export const SelectiveChartEmbedModal = (props: EmbedProps) => {
                             <CFormSwitch checked={options.showChartTrades} label={<CFormLabel>Show Trades</CFormLabel>} onChange={value => setOptions({ ...options, showChartTrades: value.currentTarget.checked })} />
                             <CFormSwitch checked={options.showChartInfo} label={<CFormLabel>Show Info</CFormLabel>} onChange={value => setOptions({ ...options, showChartInfo: value.currentTarget.checked })} />
                             <CFormSwitch checked={options.showTrending} label={<CFormLabel>Show Trending</CFormLabel>} onChange={value => setOptions({ ...options, showTrending: value.currentTarget.checked })} />
+                            <CFormSwitch checked={options.theme == 'dark'} label={<CFormLabel>Darkmode</CFormLabel>} onChange={value => setOptions({ ...options, theme: value.currentTarget.checked ? 'dark' : 'light'})} />
+
                         </div>
                         </div>
                         <div style={{display:'flex', marginLeft:10, alignItems:'center', justifyContent:'flex-end'}}>
