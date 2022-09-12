@@ -186,7 +186,7 @@ export const SearchBarDropdown = ({ toggleOpen, tokens, collections, hasInput, i
       (isNFTPage || !isTokenPage ? trendingCollections?.length ?? 0 : 0) +
       (isTokenPage || !isNFTPage ? trendingTokens?.length ?? 0 : 0)
 
-  // Close the modal on escape
+  // Navigate search results via arrow keys
   useEffect(() => {
     const keyDownHandler = (event: KeyboardEvent) => {
       if (event.key === 'ArrowUp') {
@@ -344,6 +344,7 @@ export const SearchBar = () => {
 
   const [reducedTokens, reducedCollections] = organizeSearchResults(isNFTPage, tokens ?? [], collections ?? [])
 
+  // close dropdown on escape
   useEffect(() => {
     const escapeKeyDownHandler = (event: KeyboardEvent) => {
       if (event.key === 'Escape' && isOpen) {
@@ -394,7 +395,6 @@ export const SearchBar = () => {
           borderTopRightRadius={isOpen && !isMobile ? '12' : undefined}
           borderTopLeftRadius={isOpen && !isMobile ? '12' : undefined}
           borderBottomWidth={isOpen || isMobileOrTablet ? '0px' : '1px'}
-          onFocus={() => !isOpen && toggleOpen()}
           onClick={() => !isOpen && toggleOpen()}
           gap="12"
         >
