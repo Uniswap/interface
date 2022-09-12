@@ -85,7 +85,7 @@ function TransactionSummaryLayout({
           bg={bg ?? 'backgroundContainer'}
           gap="md"
           justifyContent="space-between"
-          px="md"
+          px="sm"
           py="sm">
           <Flex row alignItems="center" gap="xs" height="100%" justifyContent="flex-start">
             {icon && (
