@@ -303,7 +303,7 @@ export const SearchBar = () => {
 
   const [reducedTokens, reducedCollections] = organizeSearchResults(isNFTPage, tokens ?? [], collections ?? [])
 
-  // close drodown on escape
+  // close dropdown on escape
   useEffect(() => {
     const escapeKeyDownHandler = (event: KeyboardEvent) => {
       if (event.key === 'Escape' && isOpen) {
