@@ -16,6 +16,7 @@ import { useBscToken, useCurrency, useToken } from 'hooks/Tokens';
 import { useHolderCount, useTokenHolderCount, useTokenInfo } from 'components/swap/ChartPage'
 
 import BarChartLoaderSVG from 'components/swap/BarChartLoader';
+import { BuySellTax } from 'pages/Charts/BuySellTax';
 import { CTooltip } from '@coreui/react'
 import Card from 'components/Card';
 import Copy from '../AccountDetails/Copy'
@@ -140,9 +141,10 @@ type ChartSidebarProps = {
     loading: boolean;
     screenerToken?: any
     tokenInfo?: any
+    buySellTax?:any
 }
 const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
-    const { token, holdings, tokenCurrency: _tokenCurrency, screenerToken, tokenData, chainId, collapsed, onCollapse, loading, tokenInfo } = props
+    const { token, holdings, buySellTax, tokenCurrency: _tokenCurrency, screenerToken, tokenData, chainId, collapsed, onCollapse, loading, tokenInfo } = props
     const isMobile = useIsMobile()
 
     //state
@@ -210,12 +212,14 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
         if (price == '') return '';
         let excludingBurntValue = totalSupplyInt;
         if (amountBurnt) excludingBurntValue -= parseFloat(amountBurnt.toFixed(0))
-        else if (!amountBurnt && token.name.toLowerCase().includes('kiba') && deadKiba)
+        else if (!amountBurnt && token?.name?.toLowerCase().includes('kiba') && deadKiba)
             excludingBurntValue -= parseFloat(deadKiba.toFixed(0))
 
-        if (typeof price == 'string') price = parseFloat(price)
+        if (typeof price == 'string') 
+            price = parseFloat(price)
+            
         return Number(parseFloat((price?.toFixed(18))) * excludingBurntValue)
-    }, [totalSupplyInt, tokenInfo?.price, tokenData?.priceUSD, amountBurnt])
+    }, [totalSupplyInt, token?.name, tokenInfo?.price, tokenData?.priceUSD, amountBurnt])
 
     const theme = useTheme()
     const color = theme.chartSidebar
@@ -465,6 +469,7 @@ const _ChartSidebar = React.memo(function (props: ChartSidebarProps) {
                     <Menu style={{ background: color }} >
                         <SubMenu style={{ background: color }} onOpenChange={toggleSwapOpen} open={swapOpen} icon={<Repeat style={{ background: 'transparent' }} />} title={"Swap " + token?.name}>
                             <Card style={{ padding: '1rem' }}>
+                                <BuySellTax buySellTax={buySellTax} />
                                 <SwapTokenForToken
                                     fontSize={12}
                                     allowSwappingOtherCurrencies={![inputCurrency, tokenCurrency].every(currency => Boolean(currency) && Boolean(currency?.decimals || false) && (currency?.decimals || 0) > 0)}

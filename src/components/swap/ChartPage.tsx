@@ -1,8 +1,11 @@
+import * as ethers from 'ethers'
+
 import Badge, { BadgeVariant } from 'components/Badge';
 import { BarChart, ChevronDown, ChevronRight, ChevronUp, Filter, Percent, X } from 'react-feather';
 import TradingViewWidget, { Themes } from 'react-tradingview-widget';
 import { fetchBscHolders, fetchBscTokenData, useBnbPrices, useBscPoocoinTransactions, useBscTokenData, useBscTokenTransactions } from 'state/logs/bscUtils';
 import { getTokenData, useEthPrice, usePairs, useTokenData, useTokenDataHook, useTokenTransactions } from 'state/logs/utils';
+import { useBscToken, useToken } from 'hooks/Tokens';
 import { useConvertTokenAmountToUsdString, useKiba } from 'pages/Vote/VotePage';
 
 import BarChartLoaderSVG from './BarChartLoader';
@@ -16,13 +19,13 @@ import { StyledInternalLink } from 'theme';
 import Tooltip from 'components/Tooltip';
 import _ from 'lodash';
 import axios from 'axios'
+import { getBep20Contract } from 'utils/binance.utils';
 import moment from 'moment';
 import { number } from '@lingui/core/cjs/formats';
 import styled from 'styled-components/macro';
 import { system } from 'styled-system';
 import { useHasAccess } from 'pages/Account/AccountPage';
 import useInterval from 'hooks/useInterval';
-import { useToken } from 'hooks/Tokens';
 import { useUSDCValue } from 'hooks/useUSDCPrice';
 import { useUserLocale } from 'state/user/hooks';
 import { useWeb3React } from '@web3-react/core';
@@ -176,7 +179,7 @@ export const useTokenInfo = (chainId: number | undefined, tokenAddress: string |
     const [tokenInfo, setTokenInfo] = React.useState<TokenInfo>()
     const [etherscanTokeninfo, setEtherscanTokeninfo] = React.useState<any>({})
     const [loading, updateLoading] = React.useState(false)
-    const handleE = (e:any) => console.error(e) 
+    const handleE = (e:any) => console.error(`[useTokenInfo]`, e) 
     const intervalCallback = React.useCallback(function () {
         if (loading) return;
         updateLoading(true)
@@ -186,14 +189,37 @@ export const useTokenInfo = (chainId: number | undefined, tokenAddress: string |
                 setTokenInfo(response.data)
             }).finally(() => {
                 updateLoading(false)
-            })
+            }).catch(handleE)
     }, [tokenAddress, loading])
 
     React.useEffect(() => {
+        const asyncFunc = async () => {
+            const contract = getBep20Contract(tokenAddress as string)
+            const [name,symbol,decimals] = await Promise.all(
+                [
+                 contract.name(),
+                 contract.symbol(),
+                 contract.decimals()   
+                ]
+            )
+
+            const model = {
+                name,
+                symbol,
+                decimals: ethers.BigNumber.from(decimals).toNumber()
+            }
+            setTokenInfo(model as any)
+        }
+
         if (Boolean(!chainId || (chainId && chainId == 1)) && tokenAddress) {
             intervalCallback()
+        } else {
+            if (chainId == 56 && tokenAddress) {
+                asyncFunc()
+            }
         }
     }, [chainId, tokenAddress])
+
     
     if (!tokenAddress) return
     return { ...tokenInfo, ...etherscanTokeninfo}
@@ -481,7 +507,7 @@ export const Chart = () => {
     const pairs = usePairs('0x005d1123878fc55fbd56b54c73963b234a64af3c')
     const transactionData = useTokenTransactions('0x005d1123878fc55fbd56b54c73963b234a64af3c'.toLowerCase(), pairs, 60000)
     const isBinance = React.useMemo(() => chainId && chainId === 56, [chainId])
-    const binanceTransactionData = useBscTokenTransactions('0xc3afde95b6eb9ba8553cdaea6645d45fb3a7faf5'.toLowerCase(), 60000)
+    const binanceTransactionData = useBscTokenTransactions('0xc3afde95b6eb9ba8553cdaea6645d45fb3a7faf5'.toLowerCase(), chainId == 56 ? 'bsc' : 'ethereum',60000)
     const prices = useBnbPrices()
     const hasAccess = useHasAccess()
     const accessDenied = !hasAccess

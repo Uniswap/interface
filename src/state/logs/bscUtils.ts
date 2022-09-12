@@ -1,4 +1,4 @@
-import { BSC_TOKEN_DATA, BSC_TOKEN_DATA_BY_BLOCK_ONE, BSC_TOKEN_DATA_BY_BLOCK_TWO, TOKEN_DATA, get2DayPercentChange, getBlockFromTimestamp, getPercentChange, toChecksum } from './utils'
+import { BSC_TOKEN_DATA, BSC_TOKEN_DATA_BY_BLOCK_ONE, BSC_TOKEN_DATA_BY_BLOCK_TWO, TOKEN_DATA, bscClient, get2DayPercentChange, getBlockFromTimestamp, getPercentChange, toChecksum } from './utils'
 import { startOfMinute, subDays, subWeeks } from 'date-fns'
 
 import React, {  } from 'react'
@@ -341,27 +341,28 @@ export const useBscTokenDataHook = (addy: string, ethPrice: any, ethPriceOld: an
   const QUERY_THREE = BSC_TOKEN_DATA_BY_BLOCK_TWO(address, (payload.blocks?.[1]?.number?.toString()));
 
   // initialize data arrays
-  const queryOne = useQuery(QUERY_ONE, { fetchPolicy: 'network-only' });
-  const queryTwo = useQuery(QUERY_TWO, { fetchPolicy: 'cache-first' });
-  const queryThree = useQuery(QUERY_THREE, { fetchPolicy: 'cache-first' });
+  const queryOne = useQuery(QUERY_ONE, { fetchPolicy: 'network-only', client: bscClient });
+  const queryTwo = useQuery(QUERY_TWO, { fetchPolicy: 'cache-first', client: bscClient });
+  const queryThree = useQuery(QUERY_THREE, { fetchPolicy: 'cache-first', client: bscClient });
 
   const one = React.useMemo(() => queryOne.data, [queryOne.data]);
   const two = React.useMemo(() => queryTwo.data, [queryTwo.data]);
   const three = React.useMemo(() => queryThree.data, [queryThree.data]);
   const { chainId } = useWeb3React();
 
-  if (chainId && chainId !== 56) {
+  if (!address || chainId && chainId !== 56) {
     queryOne.stopPolling();
     setIsPolling(false)
     return undefined;
-  } else if (chainId &&
+  } else if (
+    chainId &&
     chainId === 56 &&
     !isPolling &&
     queryOne.data &&
     queryTwo.data &&
     queryThree.data) {
     setIsPolling(true)
-    queryOne.startPolling(15000)
+    queryOne.startPolling(5000)
   }
 
 
@@ -523,7 +524,6 @@ export const fetchBscTokenData = async (addy: string, ethPrice: any, ethPriceOld
 
 export const useBscPairs =  (tokenAddress?: string) => {
   const defaultState: any[] = []
-  const {chainId} = useActiveWeb3React()
   const tokenAddressChecked = toChecksum(tokenAddress)
   const [pairData, setPairData] = React.useReducer(function (state: any[], action: { type: any, payload: any }) {
     switch (action.type) {
@@ -537,12 +537,13 @@ export const useBscPairs =  (tokenAddress?: string) => {
     }
   }, defaultState)
   const { data, loading, error } = useQuery(
-    Boolean(chainId && chainId == 56) ? TOKEN_DATA(
+    TOKEN_DATA(
       tokenAddressChecked ,
       null,
       true
-    ) : BNB_PRICES,
+    ),
     {
+      client: bscClient,
       onCompleted: (params) => {
         if (params && params.pairs1 && params.pairs0 && Boolean(params.pairs1.length || params.pairs0.length)) {
           const pairs = [...params.pairs0, ...params.pairs1];
@@ -688,7 +689,7 @@ interface TransactionResults {
 
 
 
-export function useBscTokenTransactions(tokenAddress: string, interval: null | number = null) {
+export function useBscTokenTransactions(tokenAddress: string, network?: string, interval: null | number = null, pair?: string | null) {
   const { chainId } = useWeb3React()
   const pairs = useBscPairs(toChecksum(tokenAddress))
   
@@ -697,23 +698,27 @@ export function useBscTokenTransactions(tokenAddress: string, interval: null | n
     if (pairFilter.length == 0) {
       pairFilter = pairs
     }
+
+    if (pair) {
+      pairFilter =[{id: pair}]
+    }
     return {
       variables: {
       allPairs: pairFilter && pairFilter.length ? pairFilter.map((pair: { id: any }) => pair.id) : []
     }
   }
-}, [pairs])
+}, [pairs, pair])
 
   const query = useQuery(TokenTxns, {
     ...queryVars,
-    pollInterval: chainId && chainId == 56 ? 10000 : undefined
+    pollInterval: chainId == 56 || network === 'bsc' ? interval ? interval : 10000 : undefined,
+    client: bscClient
   })
 
-  if (chainId !== 56) query.stopPolling();
-
-  if (!tokenAddress || chainId !== 56) 
-    return {data:[], lastFetched: new Date(), loading: false};
-
+  if (network !== 'bsc' || !tokenAddress) {
+     query.stopPolling()
+     return {data:[], lastFetched: new Date(), loading: false};
+  }
   console.log(`uscBscTokenTransactions` , query)
   return { pairs, data: query.data, lastFetched: new Date(), loading: query.loading };
 }

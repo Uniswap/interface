@@ -8,9 +8,12 @@ import { TableInstance } from './ChartTable';
 import _ from 'lodash'
 import { useActiveWeb3React } from 'hooks/web3';
 import { useIsEmbedMode } from 'components/Header';
+import { useParams } from 'react-router-dom';
 
-export const TableQuery = ({ address, pairs, tokenSymbol, transactionData }: { address: string, pairs: any[], tokenSymbol: string, transactionData: { data: any, loading: boolean } }) => {
+export const TableQuery = ({  address, pairs, tokenSymbol, transactionData }: {  address: string, pairs: any[], tokenSymbol: string, transactionData: { data: any, loading: boolean } }) => {
     const { chainId } = useActiveWeb3React()
+    const params=useParams<{network:string}>()
+    const network = params?.network
     const embedModel = useIsEmbedMode()
     const [tableData, setTableData] = React.useState<any[]>();
     const formatTransactionData = (swaps: any[]) => {
@@ -105,7 +108,8 @@ export const TableQuery = ({ address, pairs, tokenSymbol, transactionData }: { a
     }
 
     return (
-        <TableInstance headerSymbol={headerSymbol} 
+        <TableInstance network={network as string} 
+                       headerSymbol={headerSymbol} 
                        tokenSymbol={tokenSymbol} 
                        tableData={tableData || []} />
     );

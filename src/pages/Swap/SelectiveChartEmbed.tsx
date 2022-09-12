@@ -51,7 +51,7 @@ export const SelectiveChartEmbedModal = (props: EmbedProps) => {
     }
 
     const copyEmbedCodeToClipboard = () => {
-        const code = `<style>#kibaswap-embed{position:relative;width:100%;padding-bottom:125%;}@media(min-width:1400px){#kibaswap-embed{padding-bottom:65%;}}#kibaswap-embed iframe{position:absolute;width:100%;height:100%;top:0;left:0;border:0;}</style><div id="dexscreener-embed"><iframe src="${generateLinkFromOpts()}"></iframe></div>`
+        const code = `<style>#kibaswap-embed{position:relative;width:100%;padding-bottom:125%;}@media(min-width:1400px){#kibaswap-embed{padding-bottom:65%;}}#kibaswap-embed iframe{position:absolute;width:100%;height:100%;top:0;left:0;border:0;}</style><div id="kibaswap-embed"><iframe src="${generateLinkFromOpts()}"></iframe></div>`
         return code
     }
 

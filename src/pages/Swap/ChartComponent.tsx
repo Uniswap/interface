@@ -6,6 +6,7 @@ import TradingViewWidget from "react-tradingview-widget";
 import _ from "lodash";
 import styled from 'styled-components/macro'
 import { useActiveWeb3React } from "hooks/web3";
+import { useParams } from "react-router-dom";
 import useTheme from 'hooks/useTheme'
 
 const Wrapper = styled.div`
@@ -22,13 +23,14 @@ type ChartProps = {
   height?: number;
   pairAddress?: string;
   tokenSymbolForChart?:string;
+  networkProvided?:string
 }
 
 const areChartPropsEqual = (oldProps: ChartProps, newProps: ChartProps) => newProps.symbol == oldProps.symbol && newProps.pairAddress?.toLowerCase() == oldProps.pairAddress?.toLowerCase() && newProps.address?.toLowerCase() == oldProps.address?.toLowerCase()
 export const ChartComponent = React.memo(
   (props: ChartProps) => {
     const { chainId } = useActiveWeb3React()
-    const { height, address, pairAddress: pairAddy, symbol, pairData } = props;
+    const { height, networkProvided, address, pairAddress: pairAddy, symbol, pairData } = props;
 
     const pairAddress = React.useMemo(() => {
       if (pairAddy) return pairAddy
@@ -38,9 +40,10 @@ export const ChartComponent = React.memo(
     }, [pairData, symbol, pairAddy])
 
     const chartURL = React.useMemo(() => {
-      const network = !chainId || chainId == 1 ? 'ethereum' : chainId == 56 ? 'bsc' : 'ethereum'
+      const network = networkProvided ? networkProvided : !chainId || chainId == 1 ? 'ethereum' : chainId == 56 ? 'bsc' : 'ethereum'
+      console.log(`[chartURL]`, network)
       return `https://dexscreener.com/${network}/${pairAddress}?embed=1&trades=0&info=0`
-    }, [chainId, pairAddress])
+    }, [chainId, networkProvided, pairAddress])
 
     const heightForChart = height ? height : 410
     const darkMode = useIsDarkMode()

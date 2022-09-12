@@ -1,5 +1,6 @@
 import { RowBetween, RowFixed } from "components/Row";
 
+import Badge from "components/Badge";
 import QuestionHelper from "components/QuestionHelper";
 import React from 'react'
 import { TYPE } from "theme";
@@ -170,6 +171,7 @@ return showStats ? (
               ))}
           </VolumeContainer>
         </VolumePanelWrapper>
+     
       </StatsWrapper>
     </div>
   ) : (

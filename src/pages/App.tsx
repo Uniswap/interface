@@ -88,13 +88,13 @@ const BodyWrapper = styled.div<{embed:boolean}>`
   z-index: 1;
   margin-top:${(props) => props.embed ? '0px' : window.location.href.includes('charts') || window.location.href.includes('charting') ? '0.5rem' : '3rem'};
 
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    padding:6rem 16px 16px 16px;
+  ${({ theme,embed }) => theme.mediaWidth.upToSmall`
+    padding:${embed ? '1px' :  '6rem 16px 16px 16px'};
   `}
 
 
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-    padding:6rem 16px 16px 16px;
+  ${({ theme, embed }) => theme.mediaWidth.upToExtraSmall`
+  padding:${embed ? '1px' :  '6rem 16px 16px 16px'};
   `}
 `
 
@@ -331,7 +331,7 @@ export default function App() {
                   </AppBody>)}
 
                   {embedModel.embedMode == true && (
-                    <Badge style={{marginTop: 5, width:'100%', background: embedModel?.theme == 'dark' ? "#222" : '#fff'}}>
+                    <Badge style={{ borderRadius: 0,width:'100%', background: embedModel?.theme == 'dark' ? "#222" : '#fff'}}>
                       <a href={'https://kiba.app'}>
                       <div style={{display:'flex', columnGap:2.5, alignItems:'center', justifyContent:"center", flexFlow: 'row wrap'}}>
                       <TYPE.italic>Tracked by </TYPE.italic>

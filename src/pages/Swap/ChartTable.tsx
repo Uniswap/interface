@@ -586,16 +586,19 @@ const Row = React.memo((props: _RowProps) => {
     }
 }, areRowsEqual)
 
-export const TableInstance = ({ tableData, tokenSymbol, headerSymbol }: { tableData: any[], tokenSymbol: string, headerSymbol: string }) => {
+export const TableInstance = ({ network, tableData, tokenSymbol, headerSymbol }: { network: string,tableData: any[], tokenSymbol: string, headerSymbol: string }) => {
     const { account, chainId } = useActiveWeb3React()
     const darkMode = useIsDarkMode()
     const highlightedColor = React.useMemo(() => darkMode ? "#15223a" : "#afd9bd", [darkMode]);
     const chainLabel = React.useMemo(
-        () => (!chainId || chainId === 1 ? `WETH` : chainId === 56 ? "WBNB" : ""),
-        [chainId]
+        () => {
+            if (network && network == 'ethereum') return 'WETH'
+            if (network && network == 'bsc') return 'WBNB'
+            return (!chainId || chainId === 1 ? `WETH` : chainId === 56 ? "WBNB" : "")
+        },
+        [chainId, network]
     );
     const isMobile = useIsMobile()
-    console.log(`table.data`, tableData)
     return (
         <div style={{
             height: 500,

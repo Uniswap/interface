@@ -135,7 +135,7 @@ export const SelectiveChartWithPairBsc = React.memo(() => {
     const [address, setAddress] = React.useState(
         tokenAddressSupplied ? tokenAddressSupplied : ""
     );
-    const { data: bscData, loading: bscLoading } = useBscTokenTransactions(address?.toLowerCase(), 5000)
+    const { data: bscData, loading: bscLoading } = useBscTokenTransactions(address?.toLowerCase(), 'bsc', 5000)
     const prices = useBnbPrices()
     const tokenInfo = useTokenInfo(56, address);
     const tokenData = useBscTokenData(address?.toLowerCase(), prices?.current, prices?.oneDay);

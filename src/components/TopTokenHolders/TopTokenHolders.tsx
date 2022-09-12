@@ -5,6 +5,7 @@ import Badge, { BadgeVariant } from 'components/Badge';
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink';
 import React, { FC, useEffect, useMemo, useState } from 'react';
 
+import { CImage } from '@coreui/react';
 import { DarkCard } from 'components/Card';
 import { ExternalLink } from 'theme';
 import Tooltip from 'components/Tooltip'
@@ -44,6 +45,17 @@ const StyledSpan = styled.span`
     }
 `
 
+type BscScanHolder = {
+    TokenHolderAddress: string
+    TokenHolderQuantity: string
+}
+
+const fetchBscscanTopHolders = async (tokenAddress: string) => {
+    const retVal: BscScanHolder[] = []
+    const response = await axios.default.get<{ result: BscScanHolder[] }>(`https://api.bscscan.com/api?module=token&action=tokenholderlist&contractaddress=${tokenAddress}&page=1&offset=10&apikey=G5GE5FR37HCTS1UZ957PRB9DYUBGV4SU75`)
+    return response.data.result
+}
+
 export const TopTokenHolders: FC<Props> = (props: Props) => {
     const { address, chainId } = props;
     const [holders, setHolders] = useState<TopHolder[]>()
@@ -51,42 +63,52 @@ export const TopTokenHolders: FC<Props> = (props: Props) => {
     const URL = useMemo(() => {
         if (!address) return ``
         if (!chainId || chainId === 1) return `https://api.ethplorer.io/getTopTokenHolders/${address}?apiKey=EK-htz4u-dfTvjqu-7YmJq&limit=50`;
-        if (chainId === 56) return `https://api.covalenthq.com/v1/56/tokens/${address}/token_holders/?&key=ckey_3e8b37ddebbf418d9f829e4dddb&page-size=2199&page-number=1`;
+        if (chainId === 56) return `https://api.covalenthq.com/v1/56/tokens/${address}/token_holders/?&key=ckey_3e8b37ddebbf418d9f829e4dddb&page-size=15000&page-number=1`;
         return ``
     }, [address, chainId])
     const tokenInfo = useTokenInfo(chainId, address)
     const deadAddresses = ['0xdEAD000000000000000042069420694206942069'?.toLowerCase(), '0x000000000000000000000000000000000000dead'?.toLowerCase()]
-
+    const [token,setToken] = React.useState<{name:string; symbol:string;logo:string;decimals:number}>()
     useEffect(() => {
-        if (URL && chainId === 1) {
+        if (URL && (!chainId || chainId === 1)) {
             axios.default.get<{ holders: TopHolder[] }>(URL).then((response) => {
                 setHolders(response.data.holders);
             });
         }
 
         if (URL && chainId === 56) {
-            axios.default.get<{ data: { updatedAt: string, items: TopHolder[] } }>(URL).then((response) => {
-                let mappedData = response.data.data.items.map((holder) => {
-                    if (holder.balance && holder.total_supply) {
-                        holder.share = parseFloat(holder?.balance.toString()) / (parseFloat(holder?.total_supply))
-                        holder.balance = parseFloat(holder?.balance?.toString())
-                    }
-                    return holder;
-                });
-                axios.default.get<{ data: { updatedAt: string, items: TopHolder[] } }>(URL.replace('page-number=1', 'page-number=2')).then((response) => {
-                    mappedData = [
-                        ...mappedData,
-                        ...response.data.data.items.map((holder) => {
-                            if (holder.balance && holder.total_supply) {
-                                holder.share = parseFloat(holder?.balance.toString()) / (parseFloat(holder?.total_supply))
-                                holder.balance = parseFloat(holder?.balance?.toString())
-                            }
-                            return holder;
-                        })
-                    ];
-                    setHolders(_.orderBy(mappedData, m => m.balance, 'desc').slice(0, 50))
-                });
+
+            axios.default.get<{
+                data: {
+                    items: {logo_url:string, total_supply:string, address: string, contract_name:string, contract_ticker_symbol:string, contract_decimals: number, balance: string }[]
+                }
+            }>(URL).then((response) => {
+                const trueTotalSupply = +response.data.data.items?.[0]?.total_supply / 10 ** response.data.data.items?.[0]?.contract_decimals
+                setToken({
+                    decimals: response.data.data.items?.[0]?.contract_decimals,
+                    logo: response.data.data.items?.[0]?.logo_url,
+                    name: response.data.data.items?.[0]?.contract_name,
+                    symbol: response.data.data.items?.[0]?.contract_ticker_symbol,
+                })
+                setHolders(
+                    _.orderBy(
+                        [
+                            ...response.data.data.items,
+                        ],
+                        a => +a.balance,
+                        "desc"
+                    ).slice(0, 50).map((item) => ({
+                        address: item.address,
+                        balance: +item.balance / 10 ** item.contract_decimals,
+                        share: trueTotalSupply / +item.balance / 10 ** item.contract_decimals,
+                        total_supply: trueTotalSupply.toString()
+                    })))
+ 
             }).catch(console.error)
+            // fetchBscscanTopHolders(address).then((response) => setHolders(response.map((item) => ({
+            //     address: item.TokenHolderAddress,
+            //     balance: +item.TokenHolderQuantity
+            // }))))
         }
     }, [URL, chainId, address])
 
@@ -122,11 +144,14 @@ export const TopTokenHolders: FC<Props> = (props: Props) => {
         return ``
     }
     const theme = useTheme()
+    console.log(`[useTopTokenHolders]`, holders)
     const node = useMemo(() => isOpen ? <ChevronUp style={{ cursor: "pointer" }} /> : <ChevronDown style={{ cursor: "pointer" }} />, [isOpen]);
-    if (chainId && chainId !== 1) return null
-    return (
+    return topHoldersOwnedPercentComputed > 0 ? (
         <DarkCard style={{ padding: '.85rem', border: `1px solid ${theme.bg6}`, background: theme.chartSidebar }}>
-            <p style={{ margin: 0, fontSize: 14 }} onClick={() => setIsOpen(!isOpen)}>The top 50 holders own <Badge>{topHoldersOwnedPercentComputed}%</Badge> of the total supply. <Badge>{burntHolderOwnedPercentComputed}%</Badge> is burnt. {node}</p>
+            <div style={{display:'flex', justifyContent:'stretch', alignItems:'center', gap:10}}>
+                {Boolean(token) && token?.logo && <CImage style={{maxWidth:30}} fluid  src={token.logo} /> }
+                <p style={{ margin: 0, fontSize: 14 }} onClick={() => setIsOpen(!isOpen)}>The top 50 holders own <Badge>{topHoldersOwnedPercentComputed}%</Badge> of the total supply. <Badge>{burntHolderOwnedPercentComputed}%</Badge> is burnt. {node}</p>
+            </div>
             {isOpen && <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 {!isMobile && <>
                     <p style={{ fontSize: 12, margin: 0 }}>Address</p>
@@ -134,31 +159,31 @@ export const TopTokenHolders: FC<Props> = (props: Props) => {
                 </>}
                 {isMobile && <p style={{ margin: 0 }}>Top {tokenInfo?.symbol} token holders</p>}
             </div>}
-            {isOpen && <div style={{ maxHeight:380, overflowY: `scroll`, width: '100%', overflow: 'auto' }}>
+            {isOpen && <div style={{ maxHeight: 380, overflowY: `scroll`, width: '100%', overflow: 'auto' }}>
                 {holders && holders.slice(sliceCount.start, sliceCount.end).map((holder, i) => (
                     <div key={holder.address} style={{ columnGap: 20, borderBottom: (i == sliceCount.end - 1) ? 'none' : `1px solid #444`, alignItems: 'center', padding: '2px 0px', marginBottom: 1, display: 'flex', rowGap: 10, justifyContent: isMobile ? 'stretch' : 'space-between', flexFlow: 'row wrap' }}>
                         <AddressLink
                             hasENS={false}
                             isENS={false}
-                            href={getExplorerLink(chainId || 1, holder.address, ExplorerDataType.ADDRESS)}
+                            href={chainId == 56 ? getHolderLink(holder) : getExplorerLink(chainId || 1, holder.address, ExplorerDataType.ADDRESS)}
                             style={{
                                 color: theme.text1,
                                 fontSize: 12
                             }}>
-                            <span style={{ 
-                                display:'flex', 
-                                alignItems:'center', 
-                                justifyContent:'center', 
+                            <span style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
                                 marginRight: 3,
-                                width:25, 
-                                height:25, 
-                                color: theme.text1, 
-                                background: theme.backgroundInteractive, 
+                                width: 25,
+                                height: 25,
+                                color: theme.text1,
+                                background: theme.backgroundInteractive,
                                 borderRadius: 15
                             }}>
                                 {i + 1}
                             </span>
-                            <span style={{marginRight:3}}>{holder?.address?.substring(0,10)}...{holder.address?.substring(holder?.address?.length - 4, holder?.address?.length)}</span>
+                            <span style={{ marginRight: 3 }}>{holder?.address?.substring(0, 10)}...{holder.address?.substring(holder?.address?.length - 4, holder?.address?.length)}</span>
                             <LinkIcon size={16} />
                             {isUniswapPair(holder.address) &&
                                 <Tooltip text={PairTooltipText(holder.address)} show={showUniTooltip} >
@@ -171,7 +196,7 @@ export const TopTokenHolders: FC<Props> = (props: Props) => {
                         </AddressLink>
 
                         <Badge style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }} variant={BadgeVariant.GREY}>
-                            {tokenInfo && tokenInfo.decimals && <div style={{
+                             <div style={{
                                 fontSize: 12,
                                 paddingRight: 10,
                                 borderRight: '1px solid #444',
@@ -181,9 +206,10 @@ export const TopTokenHolders: FC<Props> = (props: Props) => {
                                 alignItems: 'center',
                                 color: theme.white
                             }}>
-                                <span>{Number(holder.balance / 10 ** tokenInfo?.decimals).toLocaleString()}</span>
-                                <span> {tokenInfo?.symbol}</span>
-                            </div>}
+                                {chainId == 1 && tokenInfo?.decimals && <span>{Number(holder.balance / 10 ** tokenInfo?.decimals).toLocaleString()}</span>}
+                                {chainId == 56 && <span>{Number(holder.balance).toLocaleString()}</span>}
+                                {((tokenInfo && tokenInfo.symbol) || token && token?.symbol) && <span> {tokenInfo?.symbol}</span>}
+                            </div>
                             &nbsp;
                             <span style={{ paddingLeft: 10, fontSize: 12.5, color: 'lightgreen' }}>{holder.share}%</span>
                         </Badge>
@@ -202,5 +228,5 @@ export const TopTokenHolders: FC<Props> = (props: Props) => {
                     Top 50</small>
             </Badge>}
         </DarkCard>
-    )
+    ) : null
 }

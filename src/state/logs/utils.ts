@@ -41,12 +41,14 @@ export const bscClient = new ApolloClient({
 export const client = new ApolloClient({
 
   uri: 'https://api.thegraph.com/subgraphs/name/ianlapham/uniswapv2',
-  cache: new InMemoryCache() as any
+  cache: new InMemoryCache() as any,
+  assumeImmutableResults: true
 })
 
 export const blockClient = new ApolloClient({
   uri: 'https://api.thegraph.com/subgraphs/name/blocklytics/ethereum-blocks',
-  cache: new InMemoryCache() as any
+  cache: new InMemoryCache() as any,
+  assumeImmutableResults: true
 })
 
 
@@ -1087,8 +1089,6 @@ export const useCulturePairData = function () {
     if (chainId === 56) return TOP_TOKENS_BSC
     return CULTURE_TOKENS
   }, [chainId])
-
-  console.log(tokenQuery)
 
   const { data, loading, error } = useQuery(tokenQuery,
     {
