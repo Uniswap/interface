@@ -89,7 +89,6 @@ const AssetView = ({
 
 const Asset = () => {
   const { tokenId = '', contractAddress = '' } = useParams()
-
   const { data } = useQuery(['assetDetail', contractAddress, tokenId], () =>
     fetchSingleAsset({ contractAddress, tokenId })
   )
@@ -97,19 +96,26 @@ const Asset = () => {
   const navigate = useNavigate()
   const bagExpanded = useBag((state) => state.bagExpanded)
   const [creatorAddress, setCreatorAddress] = useState('')
+  const [ownerAddress, setOwnerAddress] = useState('')
   const [dominantColor] = useState<[number, number, number]>([0, 0, 0])
   const creatorEnsName = useENSName(creatorAddress)
+  const ownerEnsName = useENSName(ownerAddress)
   const parsed = qs.parse(search)
   const asset = useMemo(() => (data ? data[0] : ({} as GenieAsset)), [data])
   const collection = useMemo(() => (data ? data[1] : ({} as CollectionInfoForAsset)), [data])
-
   const { gridWidthOffset } = useSpring({
     gridWidthOffset: bagExpanded ? 324 : 0,
   })
 
   useEffect(() => {
     if (asset.creator) setCreatorAddress(asset.creator.address)
+
+    // @ts-ignore
+    if (asset.owner) setOwnerAddress(asset.owner)
   }, [asset])
+
+  console.log(ownerAddress)
+  console.log(asset.owner)
 
   const { rarityProvider, rarityLogo } = useMemo(
     () =>
@@ -134,188 +140,187 @@ const Asset = () => {
   }, [asset])
 
   return (
-    <div>
-      <AnimatedBox
-        style={{
-          // @ts-ignore
-          width: gridWidthOffset.to((x) => `calc(100% - ${x}px)`),
-        }}
-        className={styles.container}
-      >
-        <div className={styles.columns}>
-          <Column className={styles.column}>
-            {assetMediaType === 'image' ? (
-              <img
-                className={styles.image}
-                src={asset.imageUrl}
-                alt={asset.name || collection.collectionName}
-                style={{ ['--shadow' as string]: `rgba(${dominantColor.join(', ')}, 0.5)` }}
-              />
-            ) : (
-              <AssetView asset={asset} mediaType={assetMediaType} dominantColor={dominantColor} />
-            )}
-          </Column>
-          <Column className={clsx(styles.column, styles.columnRight)} width="full">
-            <Column>
-              <Row marginBottom="8" alignItems="center" justifyContent={rarityProvider ? 'space-between' : 'flex-end'}>
-                {rarityProvider ? (
-                  <AssetToolTip
-                    prompt={
-                      <Center
-                        paddingLeft="6"
-                        paddingRight="4"
-                        className={badge}
-                        backgroundColor="lightGray"
-                        color="blackBlue"
-                        borderRadius="4"
-                      >
-                        #{rarityProvider.rank}{' '}
-                        <img src="/nft/svgs/rarity.svg" height={15} width={15} alt="Rarity rank" />
-                      </Center>
-                    }
-                    tooltipPrompt={
-                      <Row gap="4">
-                        <img src={rarityLogo} width={16} alt={rarityProvider.provider} />
-                        Ranking by{' '}
-                        {asset.rarity?.primaryProvider === 'Genie' ? fallbackProvider : asset.rarity?.primaryProvider}
-                      </Row>
-                    }
-                  />
-                ) : null}
-                <Row gap="12">
-                  <Center
-                    as="button"
-                    padding="0"
-                    border="none"
-                    background="transparent"
-                    onClick={async () => {
-                      await navigator.clipboard.writeText(window.location.hostname + pathname)
-                    }}
-                  >
-                    <ShareIcon />
-                  </Center>
-
-                  <Center
-                    as="button"
-                    border="none"
-                    width="32"
-                    height="32"
-                    padding="0"
-                    background="transparent"
-                    cursor="pointer"
-                    onClick={() => {
-                      if (!parsed.origin || parsed.origin === 'collection')
-                        navigate(`/nft/collection/${asset.address}`, undefined)
-                      else if (parsed.origin === 'sell') navigate('/nft/sell', undefined)
-                      else if (parsed.origin === 'explore') navigate(`/nft`, undefined)
-                      else if (parsed.origin === 'activity') {
-                        navigate(`/nft/collection/${asset.address}/activity`, undefined)
-                      }
-                    }}
-                  >
-                    {parsed.origin ? (
-                      <CornerDownLeftIcon width="28" height="28" />
-                    ) : (
-                      <CloseDropDownIcon color={themeVars.colors.darkGray} />
-                    )}
-                  </Center>
-                </Row>
-              </Row>
-              <Row as="h1" marginTop="0" marginBottom="12" gap="2" className={header2}>
-                {asset.openseaSusFlag ? (
-                  <AssetToolTip
-                    prompt={<SuspiciousIcon height="30" width="30" viewBox="0 0 16 17" />}
-                    tooltipPrompt={<Box fontWeight="normal">Reported for suspicious activity on OpenSea</Box>}
-                  />
-                ) : null}
-                {asset.name || `${collection.collectionName} #${asset.tokenId}`}
-              </Row>
-              {collection.collectionDescription ? (
-                <ExpandableText>
-                  <ReactMarkdown
-                    allowedTypes={['link', 'paragraph', 'strong', 'code', 'emphasis', 'text']}
-                    source={collection.collectionDescription}
-                  />
-                </ExpandableText>
+    <AnimatedBox
+      style={{
+        // @ts-ignore
+        width: gridWidthOffset.to((x) => `calc(100% - ${x}px)`),
+      }}
+      className={styles.container}
+    >
+      <div className={styles.columns}>
+        <Column className={styles.column}>
+          {assetMediaType === 'image' ? (
+            <img
+              className={styles.image}
+              src={asset.imageUrl}
+              alt={asset.name || collection.collectionName}
+              style={{ ['--shadow' as string]: `rgba(${dominantColor.join(', ')}, 0.5)` }}
+            />
+          ) : (
+            <AssetView asset={asset} mediaType={assetMediaType} dominantColor={dominantColor} />
+          )}
+        </Column>
+        <Column className={clsx(styles.column, styles.columnRight)} width="full">
+          <Column>
+            <Row marginBottom="8" alignItems="center" justifyContent={rarityProvider ? 'space-between' : 'flex-end'}>
+              {rarityProvider ? (
+                <AssetToolTip
+                  prompt={
+                    <Center
+                      paddingLeft="6"
+                      paddingRight="4"
+                      className={badge}
+                      backgroundColor="lightGray"
+                      color="blackBlue"
+                      borderRadius="4"
+                    >
+                      #{rarityProvider.rank} <img src="/nft/svgs/rarity.svg" height={15} width={15} alt="Rarity rank" />
+                    </Center>
+                  }
+                  tooltipPrompt={
+                    <Row gap="4">
+                      <img src={rarityLogo} width={16} alt={rarityProvider.provider} />
+                      Ranking by{' '}
+                      {asset.rarity?.primaryProvider === 'Genie' ? fallbackProvider : asset.rarity?.primaryProvider}
+                    </Row>
+                  }
+                />
               ) : null}
-              <Row
-                justifyContent={{
-                  sm: 'space-between',
-                  // mobile: 'flex-start',
-                }}
-                gap={{
-                  // mobile: '64',
-                  sm: 'unset',
-                }}
-                marginBottom="36"
-              >
+              <Row gap="12">
+                <Center
+                  as="button"
+                  padding="0"
+                  border="none"
+                  background="transparent"
+                  onClick={async () => {
+                    await navigator.clipboard.writeText(window.location.hostname + pathname)
+                  }}
+                >
+                  <ShareIcon />
+                </Center>
+
+                <Center
+                  as="button"
+                  border="none"
+                  width="32"
+                  height="32"
+                  padding="0"
+                  background="transparent"
+                  cursor="pointer"
+                  onClick={() => {
+                    if (!parsed.origin || parsed.origin === 'collection')
+                      navigate(`/nft/collection/${asset.address}`, undefined)
+                    else if (parsed.origin === 'sell') navigate('/nft/sell', undefined)
+                    else if (parsed.origin === 'explore') navigate(`/nft`, undefined)
+                    else if (parsed.origin === 'activity') {
+                      navigate(`/nft/collection/${asset.address}/activity`, undefined)
+                    }
+                  }}
+                >
+                  {parsed.origin ? (
+                    <CornerDownLeftIcon width="28" height="28" />
+                  ) : (
+                    <CloseDropDownIcon color={themeVars.colors.darkGray} />
+                  )}
+                </Center>
+              </Row>
+            </Row>
+            <Row as="h1" marginTop="0" marginBottom="12" gap="2" className={header2}>
+              {asset.openseaSusFlag ? (
+                <AssetToolTip
+                  prompt={<SuspiciousIcon height="30" width="30" viewBox="0 0 16 17" />}
+                  tooltipPrompt={<Box fontWeight="normal">Reported for suspicious activity on OpenSea</Box>}
+                />
+              ) : null}
+              {asset.name || `${collection.collectionName} #${asset.tokenId}`}
+            </Row>
+            {collection.collectionDescription ? (
+              <ExpandableText>
+                <ReactMarkdown
+                  allowedTypes={['link', 'paragraph', 'strong', 'code', 'emphasis', 'text']}
+                  source={collection.collectionDescription}
+                />
+              </ExpandableText>
+            ) : null}
+            <Row
+              justifyContent={{
+                sm: 'space-between',
+                // mobile: 'flex-start',
+              }}
+              gap={{
+                // mobile: '64',
+                sm: 'unset',
+              }}
+              marginBottom="36"
+            >
+              {ownerAddress.length > 0 && (
                 <a
                   target="_blank"
                   rel="noreferrer"
                   href={`https://etherscan.io/address/${asset.owner?.address}`}
                   style={{ textDecoration: 'none' }}
                 >
-                  {/* <CollectionProfile
+                  <CollectionProfile
                     label="Owner"
                     avatarUrl={asset.owner?.profile_img_url}
                     name={ownerEnsName.ENSName ?? shortenAddress(ownerAddress, 0, 4)}
-                  /> */}
+                  />
                 </a>
+              )}
 
-                <a href={`/collection/${asset.address}`} style={{ textDecoration: 'none' }}>
+              <a href={`/collection/${asset.address}`} style={{ textDecoration: 'none' }}>
+                <CollectionProfile
+                  label="Collection"
+                  avatarUrl={collection.collectionImageUrl}
+                  name={collection.collectionName}
+                  isVerified={collection.isVerified}
+                />
+              </a>
+
+              {creatorAddress ? (
+                <a
+                  target="_blank"
+                  rel="noreferrer"
+                  href={`https://etherscan.io/address/${creatorAddress}`}
+                  style={{ textDecoration: 'none' }}
+                >
                   <CollectionProfile
-                    label="Collection"
-                    avatarUrl={collection.collectionImageUrl}
-                    name={collection.collectionName}
-                    isVerified={collection.isVerified}
+                    label="Creator"
+                    avatarUrl={asset.creator.profile_img_url}
+                    name={creatorEnsName.ENSName ?? shortenAddress(creatorAddress, 0, 4)}
+                    isVerified
+                    className={styles.creator}
                   />
                 </a>
-
-                {creatorAddress ? (
-                  <a
-                    target="_blank"
-                    rel="noreferrer"
-                    href={`https://etherscan.io/address/${creatorAddress}`}
-                    style={{ textDecoration: 'none' }}
-                  >
-                    <CollectionProfile
-                      label="Creator"
-                      avatarUrl={asset.creator.profile_img_url}
-                      name={creatorEnsName.ENSName ?? shortenAddress(creatorAddress, 0, 4)}
-                      isVerified
-                      className={styles.creator}
-                    />
-                  </a>
-                ) : null}
+              ) : null}
+            </Row>
+            <Tabs>
+              <Row gap="32" marginBottom="20">
+                <Tab>
+                  <button className={styles.tab}>Traits</button>
+                </Tab>
+                <Tab>
+                  <button className={styles.tab}>Details</button>
+                </Tab>
               </Row>
-              <Tabs>
-                <Row gap="32" marginBottom="20">
-                  <Tab>
-                    <button className={styles.tab}>Traits</button>
-                  </Tab>
-                  <Tab>
-                    <button className={styles.tab}>Details</button>
-                  </Tab>
-                </Row>
-                <Panel>
-                  <Traits collectionAddress={asset.address} traits={asset.traits ? asset.traits : []} />
-                </Panel>
-                <Panel>
-                  <Details
-                    contractAddress={contractAddress}
-                    tokenId={tokenId}
-                    tokenType={asset.tokenType}
-                    blockchain="Ethereum"
-                    metadataUrl={asset.externalLink}
-                    totalSupply={collection.totalSupply}
-                  />
-                </Panel>
-              </Tabs>
-            </Column>
+              <Panel>
+                <Traits collectionAddress={asset.address} traits={asset.traits ? asset.traits : []} />
+              </Panel>
+              <Panel>
+                <Details
+                  contractAddress={contractAddress}
+                  tokenId={tokenId}
+                  tokenType={asset.tokenType}
+                  blockchain="Ethereum"
+                  metadataUrl={asset.externalLink}
+                  totalSupply={collection.totalSupply}
+                />
+              </Panel>
+            </Tabs>
           </Column>
-        </div>{' '}
-      </AnimatedBox>
-    </div>
+        </Column>
+      </div>
+    </AnimatedBox>
   )
 }
 
