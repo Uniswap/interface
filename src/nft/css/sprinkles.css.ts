@@ -24,6 +24,7 @@ const themeContractValues = {
     magicGradient: '',
     placeholder: '',
     lightGrayButton: '',
+    loading: '',
 
     // Opacities of black and white
     white95: '',
@@ -55,6 +56,7 @@ const dimensions = {
   '2': '2',
   '4': '4px',
   '8': '8px',
+  '12': '12px',
   '16': '16px',
   '18': '18px',
   '20': '20px',
@@ -142,7 +144,6 @@ export const vars = createGlobalTheme(':root', {
     transculent: '#7F7F7F',
     transparent: 'transparent',
     none: 'none',
-    loading: '#7C85A24D',
 
     // new uniswap colors:
     blue400: '#4C82FB',
@@ -153,6 +154,7 @@ export const vars = createGlobalTheme(':root', {
     green200: '#5CFE9D',
     green400: '#1A9550',
     grey900: '#0E111A',
+    grey800: '#141B2B',
     grey700: '#293249',
     grey500: '#5E6887',
     grey400: '#7C85A2',
@@ -298,7 +300,7 @@ const layoutStyles = defineProperties({
     position: ['absolute', 'fixed', 'relative', 'sticky', 'static'],
     objectFit: ['contain', 'cover'],
     order: [0, 1],
-    opacity: ['auto', '0', '1'],
+    opacity: ['auto', '0', '0.3', '0.5', '0.7', '1'],
   } as const,
   shorthands: {
     paddingX: ['paddingLeft', 'paddingRight'],
