@@ -1,31 +1,32 @@
-import { useMemo, useEffect, useState } from 'react'
-import { useQuery } from 'react-query'
 import { useSpring } from '@react-spring/web'
 import clsx from 'clsx'
-import { useNavigate, useParams } from 'react-router-dom'
-import ReactMarkdown from 'react-markdown'
+import useENSName from 'hooks/useENSName'
 import qs from 'query-string'
+import { useEffect, useMemo, useState } from 'react'
+import ReactMarkdown from 'react-markdown'
+import { useQuery } from 'react-query'
+import { useNavigate, useParams } from 'react-router-dom'
+
 import { useTimeout } from '../../../hooks/usetimeout'
 import AssetToolTip from '../../components/badge/AssetToolTip'
 import { AnimatedBox, Box } from '../../components/Box'
-import { Details } from '../../components/details/Details'
 import { CollectionProfile } from '../../components/details/CollectionProfile'
+import { Details } from '../../components/details/Details'
+import { Traits } from '../../components/details/Traits'
+import { Center, Column, Row } from '../../components/Flex'
+import { CloseDropDownIcon, CornerDownLeftIcon, ShareIcon, SuspiciousIcon } from '../../components/icons'
+import { ExpandableText } from '../../components/layout/ExpandableText'
+import { Panel, Tab, Tabs } from '../../components/layout/Tabs'
+import { badge, caption, header2 } from '../../css/common.css'
+import { themeVars } from '../../css/sprinkles.css'
+import { useBag } from '../../hooks'
 import { fetchSingleAsset } from '../../queries'
 import { CollectionInfoForAsset, GenieAsset, SellOrder } from '../../types'
-import * as styles from './Asset.css'
-import { useBag } from '../../hooks'
-import { Center, Column, Row } from '../../components/Flex'
+import { shortenAddress } from '../../utils/address'
 import { isAudio } from '../../utils/isAudio'
 import { isVideo } from '../../utils/isVideo'
 import { fallbackProvider, rarityProviderLogo } from '../../utils/rarity'
-import { caption, header2, badge } from '../../css/common.css'
-import { shortenAddress } from '../../utils/address'
-import { CloseDropDownIcon, CornerDownLeftIcon, ShareIcon, SuspiciousIcon } from '../../components/icons'
-import { themeVars } from '../../css/sprinkles.css'
-import { ExpandableText } from '../../components/layout/ExpandableText'
-import useENSName from 'hooks/useENSName'
-import { Panel, Tab, Tabs } from '../../components/layout/Tabs'
-import { Traits } from '../../components/details/Traits'
+import * as styles from './Asset.css'
 
 const formatter = Intl.DateTimeFormat('en-GB', { dateStyle: 'full', timeStyle: 'short' })
 
@@ -137,6 +138,8 @@ const Asset = () => {
     collection = data[1] || {}
   }
   const navigate = useNavigate()
+
+  // @ts-ignore
   const parsed = qs.parse(location.search)
   const [creatorAddress, setCreatorAddress] = useState('')
   const [ownerAddress, setOwnerAddress] = useState('')
@@ -223,6 +226,7 @@ const Asset = () => {
                     border="none"
                     background="transparent"
                     onClick={async () => {
+                      // @ts-ignore
                       await navigator.clipboard.writeText(window.location.hostname + location.pathname)
                     }}
                   >

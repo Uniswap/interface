@@ -1,6 +1,6 @@
+import { v4 as uuidv4 } from 'uuid'
 import create from 'zustand'
 import { devtools } from 'zustand/middleware'
-import { v4 as uuidv4 } from 'uuid'
 
 import { BagItem, BagItemStatus, BagStatus, UpdatedGenieAsset } from '../types'
 
@@ -64,7 +64,7 @@ export const useBag = create<BagState>()(
         })),
       addAssetToBag: (asset) =>
         set(({ itemsInBag }) => {
-          if (get().isLocked) return { itemsInBag: itemsInBag }
+          if (get().isLocked) return { itemsInBag }
           const assetWithId = { asset: { id: uuidv4(), ...asset }, status: BagItemStatus.ADDED_TO_BAG }
           if (itemsInBag.length === 0)
             return {
@@ -79,13 +79,13 @@ export const useBag = create<BagState>()(
         }),
       removeAssetFromBag: (asset) => {
         set(({ itemsInBag }) => {
-          if (get().isLocked) return { itemsInBag: itemsInBag }
+          if (get().isLocked) return { itemsInBag }
           if (itemsInBag.length === 0) return { itemsInBag: [] }
           const itemsCopy = [...itemsInBag]
           const index = itemsCopy.findIndex((n) =>
             asset.id ? n.asset.id === asset.id : n.asset.tokenId === asset.tokenId && n.asset.address === asset.address
           )
-          if (index === -1) return { itemsInBag: itemsInBag }
+          if (index === -1) return { itemsInBag }
           itemsCopy.splice(index, 1)
           return { itemsInBag: itemsCopy }
         })
