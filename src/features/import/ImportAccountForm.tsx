@@ -8,10 +8,9 @@ import { TextButton } from 'src/components/buttons/TextButton'
 import { TextInput } from 'src/components/input/TextInput'
 import { CenterBox } from 'src/components/layout/CenterBox'
 import { Text } from 'src/components/Text'
-import { ChainId } from 'src/constants/chains'
 import { useBiometricPrompt } from 'src/features/biometrics/hooks'
+import { useAddressFromEns } from 'src/features/ens/api'
 import { isValidEnsName } from 'src/features/ens/parseENSAddress'
-import { useENSAddress } from 'src/features/ens/useENSAddress'
 import { importAccountActions, importAccountSagaName } from 'src/features/import/importAccountSaga'
 import { ImportAccountInputType, ImportAccountType } from 'src/features/import/types'
 import {
@@ -171,15 +170,15 @@ function ENSResolver() {
   const { values, setFieldValue } = useFormikContext<FormValues>()
   const input = normalizeTextInput(values.input)
   const name = isValidEnsName(input) ? input : undefined
-  const { address, loading } = useENSAddress(ChainId.Mainnet, name)
+  const { data: address, isLoading } = useAddressFromEns(name)
 
   useEffect(() => {
-    if (!loading && address) {
+    if (!isLoading && address) {
       setFieldValue('resolvedAddress', address, true)
     } else {
       setFieldValue('resolvedAddress', null, true)
     }
-  }, [address, loading, setFieldValue])
+  }, [address, isLoading, setFieldValue])
 
   return null
 }

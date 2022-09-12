@@ -12,6 +12,7 @@ import { coingeckoApi } from 'src/features/dataApi/coingecko/enhancedApi'
 import { zerionApi } from 'src/features/dataApi/zerion/api'
 import { gasApi } from 'src/features/gas/api'
 import { nftApi } from 'src/features/nfts/api'
+import { ens } from 'src/features/ens/api'
 import { routingApi } from 'src/features/routing/routingApi'
 
 const sagaMiddleware = createSagaMiddleware({
@@ -73,6 +74,7 @@ export const store = configureStore({
       routingApi.middleware,
       zerionApi.middleware,
       gasApi.middleware,
+      ens.middleware,
       ...middlewares
     ),
   devTools: config.debug,

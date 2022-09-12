@@ -2,8 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert } from 'react-native'
 import { useAppSelector } from 'src/app/hooks'
-import { ChainId } from 'src/constants/chains'
-import { useENSName } from 'src/features/ens/useENSName'
+import { useENSName } from 'src/features/ens/api'
 import { Account } from 'src/features/wallet/accounts/types'
 import {
   makeSelectAccountNotificationSetting,
@@ -76,15 +75,15 @@ export function useDisplayName(
   | undefined {
   const maybeLocalName = useAccounts()[address ?? '']?.name // if address is a local account with a name
 
-  const validated = getValidAddress(address, true)
-  const ens = useENSName(ChainId.Mainnet, validated ?? undefined)
+  const validated = getValidAddress(address)
+  const ens = useENSName(validated ?? undefined)
 
   if (!address) return
 
   if (maybeLocalName) return { name: maybeLocalName, type: 'local' }
-  if (ens.ENSName)
+  if (ens.data)
     return {
-      name: showShortenedEns ? trimToLength(ens.ENSName, ENS_TRIM_LENGTH) : ens.ENSName,
+      name: showShortenedEns ? trimToLength(ens.data, ENS_TRIM_LENGTH) : ens.data,
       type: 'ens',
     }
   return { name: `${sanitizeAddressText(shortenAddress(address))}`, type: 'address' }

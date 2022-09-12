@@ -6,6 +6,7 @@ import { chainsReducer } from 'src/features/chains/chainsSlice'
 import { cloudBackupReducer } from 'src/features/CloudBackup/cloudBackupSlice'
 import { coingeckoApi } from 'src/features/dataApi/coingecko/enhancedApi'
 import { zerionApi } from 'src/features/dataApi/zerion/api'
+import { ens } from 'src/features/ens/api'
 import { ensReducer } from 'src/features/ens/ensSlice'
 import { searchHistoryReducer } from 'src/features/explore/searchHistorySlice'
 import { favoritesReducer } from 'src/features/favorites/slice'
@@ -28,6 +29,7 @@ export const rootReducer = combineReducers({
   [routingApi.reducerPath]: routingApi.reducer,
   [zerionApi.reducerPath]: zerionApi.reducer,
   [gasApi.reducerPath]: gasApi.reducer,
+  [ens.reducerPath]: ens.reducer,
   biometricSettings: biometricSettingsReducer,
   blocks: blocksReducer,
   chains: chainsReducer,

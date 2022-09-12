@@ -1,9 +1,9 @@
 // Copied from https://github.com/Uniswap/interface/blob/main/src/hooks/useENS.ts
 
 import { ChainId } from 'src/constants/chains'
-import { useENSAddress } from 'src/features/ens/useENSAddress'
-import { useENSName } from 'src/features/ens/useENSName'
+import { useAddressFromEns, useENSName } from 'src/features/ens/api'
 import { getValidAddress } from 'src/utils/addresses'
+import { useDebounce } from 'src/utils/timing'
 
 /**
  * Given a name or address, does a lookup to resolve to an address and name
@@ -15,24 +15,24 @@ export function useENS(
   autocompleteDomain?: boolean
 ): {
   loading: boolean
-  address: string | null
+  address?: string | null
   name: string | null
 } {
-  const validated = getValidAddress(nameOrAddress, true)
-  const reverseLookup = useENSName(chainId, validated ? validated : undefined)
-  const lookup = useENSAddress(
-    chainId,
-    autocompleteDomain ? getCompletedENSName(nameOrAddress) : nameOrAddress
+  const debouncedNameOrAddress = useDebounce(nameOrAddress)
+
+  const validated = getValidAddress(debouncedNameOrAddress)
+  const { data: name, isLoading: nameLoading } = useENSName(validated ?? undefined, chainId)
+  const { data: address, isLoading: addressLoading } = useAddressFromEns(
+    autocompleteDomain ? getCompletedENSName(nameOrAddress) : nameOrAddress,
+    chainId
   )
 
   return {
-    loading: reverseLookup.loading || lookup.loading,
-    address: validated ? validated : lookup.address,
-    name: reverseLookup.ENSName
-      ? reverseLookup.ENSName
-      : !validated && lookup.address
-      ? lookup.name
-      : null,
+    loading: nameLoading || addressLoading,
+    address: validated ?? address,
+
+    // if nameOrAddress is a name and there's a valid address resolution, it must be a valid ENS
+    name: name ?? (address && nameOrAddress) ?? null,
   }
 }
 
