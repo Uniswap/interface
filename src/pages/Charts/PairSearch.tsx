@@ -310,11 +310,6 @@ export const PairSearch = (props: Props) => {
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
 
                       <span style={{display:'flex', flexFlow:'row wrap', gap: 10, alignItems:'center'}}>
-                          <TYPE.small style={{color: result?.priceChange.h24 < 0 ? 'red' : 'green'}}>
-                            {result?.priceChange.h24 < 0 ? <TrendingDown style={{color:'red'}} /> : <TrendingUp style={{color:'green'}} />} &nbsp;
-                            {result.priceChange.h24}% &nbsp;
-
-                          </TYPE.small>
                           <ArrowUpRight />
                         </span>
                     </div>
