@@ -395,6 +395,7 @@ export function TokenRow({
   tokenInfo: ReactNode
   volume: ReactNode
   last?: boolean
+  style?: CSSProperties
 }) {
   const rowCells = (
     <>
@@ -433,7 +434,6 @@ export function HeaderRow() {
 export function LoadingRow({ style }: { style?: CSSProperties }) {
   return (
     <TokenRow
-      style={style}
       favorited={null}
       header={false}
       listNumber={<SmallLoadingBubble />}
@@ -449,6 +449,7 @@ export function LoadingRow({ style }: { style?: CSSProperties }) {
       marketCap={<LoadingBubble />}
       volume={<LoadingBubble />}
       sparkLine={<SparkLineLoadingBubble />}
+      style={style}
     />
   )
 }
@@ -462,7 +463,7 @@ export default function LoadedRow({
   timePeriod,
   style,
 }: {
-  tokenAddress: string
+  tokenAddress: string | undefined | null
   tokenListIndex: number
   tokenListLength: number
   tokenData: TokenData

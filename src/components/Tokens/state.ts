@@ -15,10 +15,11 @@ export const sortCategoryAtom = atom<Category>(Category.marketCap)
 export const sortDirectionAtom = atom<SortDirection>(SortDirection.decreasing)
 
 /* for favoriting tokens */
-export function useToggleFavorite(tokenAddress: string) {
+export function useToggleFavorite(tokenAddress: string | null | undefined) {
   const [favoriteTokens, updateFavoriteTokens] = useAtom(favoritesAtom)
 
   return useCallback(() => {
+    if (!tokenAddress) return
     let updatedFavoriteTokens
     if (favoriteTokens.includes(tokenAddress.toLocaleLowerCase())) {
       updatedFavoriteTokens = favoriteTokens.filter((address: string) => {
@@ -48,8 +49,11 @@ export function useSetSortCategory(category: Category) {
   }, [category, sortCategory, setSortCategory, sortDirection, setDirectionCategory])
 }
 
-export function useIsFavorited(tokenAddress: string) {
+export function useIsFavorited(tokenAddress: string | undefined | null) {
   const favoritedTokens = useAtomValue<string[]>(favoritesAtom)
 
-  return useMemo(() => favoritedTokens.includes(tokenAddress.toLocaleLowerCase()), [favoritedTokens, tokenAddress])
+  return useMemo(
+    () => (!!tokenAddress ? favoritedTokens.includes(tokenAddress.toLocaleLowerCase()) : false),
+    [favoritedTokens, tokenAddress]
+  )
 }
