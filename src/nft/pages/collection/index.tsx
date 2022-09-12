@@ -1,6 +1,5 @@
 import { AnimatedBox, Box } from 'nft/components/Box'
-import { CollectionNfts } from 'nft/components/collection/CollectionNfts'
-import { CollectionStats } from 'nft/components/collection/CollectionStats'
+import { CollectionNfts, CollectionStats, Filters } from 'nft/components/collection'
 import { Column, Row } from 'nft/components/Flex'
 import { useIsMobile } from 'nft/hooks/useIsMobile'
 import * as styles from 'nft/pages/collection/index.css'
@@ -34,7 +33,8 @@ const Collection = () => {
           <CollectionStats stats={collectionStats} isMobile={isMobile} />
         </Row>
       )}
-      <Row alignItems="flex-start" position="relative" paddingLeft="32" paddingRight="32">
+      <Row alignItems="flex-start" position="relative" paddingX="48">
+        <Filters />
         <AnimatedBox width="full">
           {contractAddress && <CollectionNfts contractAddress={contractAddress} />}
         </AnimatedBox>
