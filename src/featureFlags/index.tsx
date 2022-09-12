@@ -1,3 +1,4 @@
+import { Experiment } from '@amplitude/experiment-js-client'
 import { useAtom } from 'jotai'
 import { atomWithStorage, useAtomValue } from 'jotai/utils'
 import { createContext, ReactNode, useCallback, useContext } from 'react'
@@ -33,8 +34,18 @@ export function useUpdateFlag() {
   )
 }
 
+const DEPLOYMENT = process.env.REACT_APP_AMPLITUDE_EXPERIMENT_DEPLOYMENT
+
 export function FeatureFlagsProvider({ children }: { children: ReactNode }) {
-  const featureFlags = useAtomValue(featureFlagSettings)
+  const localFeatureFlags = useAtomValue(featureFlagSettings)
+  let featureFlags
+  if (DEPLOYMENT) {
+    const experiment = Experiment.initializeWithAmplitudeAnalytics(DEPLOYMENT)
+    console.log(experiment.all())
+    featureFlags = localFeatureFlags
+  } else {
+    featureFlags = localFeatureFlags
+  }
   const value = {
     isLoaded: true,
     flags: featureFlags,
