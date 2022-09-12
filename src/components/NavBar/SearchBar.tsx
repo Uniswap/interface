@@ -422,7 +422,7 @@ export const SearchBar = () => {
             tokens={reducedTokens}
             collections={reducedCollections}
             hasInput={debouncedSearchValue.length > 0} // TODO can this be deprecated?
-            isLoading={tokensAreLoading || collectionsAreLoading}
+            isLoading={tokensAreLoading || (collectionsAreLoading && phase1Flag === NftVariant.Enabled)}
           />
         )}
       </Box>
