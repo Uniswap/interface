@@ -45,7 +45,7 @@ function LanguageMenuItem({ locale, isActive }: { locale: SupportedLocale; isAct
 
   return (
     <InternalLinkMenuItem onClick={onClick} to={to}>
-      <Text fontSize={16} fontWeight={400} lineHeight="24px">
+      <Text data-testid="wallet-language-item" fontSize={16} fontWeight={400} lineHeight="24px">
         {LOCALE_LABEL[locale]}
       </Text>
       {isActive && <Check color={theme.accentActive} opacity={1} size={20} />}

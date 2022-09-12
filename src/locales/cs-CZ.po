@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-26 17:08\n"
+"PO-Revision-Date: 2022-09-09 20:05\n"
 "Last-Translator: \n"
 "Language: cs_CZ\n"
 "Language-Team: Czech\n"
@@ -226,6 +226,10 @@ msgstr "Povoleno"
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Amount"
 msgstr "Částka"
+
+#: src/components/Tokens/TokenTable/TokenTable.tsx
+msgid "An error occured loading tokens. Please try again."
+msgstr "Při načítání tokenů došlo k chybě. Prosím zkuste to znovu."
 
 #: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
@@ -584,6 +588,10 @@ msgstr "Spojen s"
 msgid "Connecting..."
 msgstr "Spojovací..."
 
+#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+msgid "Contract address"
+msgstr "Adresa smlouvy"
+
 #: src/components/WalletDropdown/AuthenticatedHeader.tsx
 #: src/theme/components.tsx
 msgid "Copied!"
@@ -596,6 +604,10 @@ msgstr "kopírovat"
 #: src/components/AccountDetails/index.tsx
 msgid "Copy Address"
 msgstr "Zkopírovat adresu"
+
+#: src/components/Tokens/TokenDetails/ShareButton.tsx
+msgid "Copy Link"
+msgstr "Kopírovat odkaz"
 
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 msgid "Create"
@@ -902,6 +914,10 @@ msgstr "Prozkoumejte Uniswap Analytics."
 msgid "Failed to switch networks from the Uniswap Interface. In order to use Uniswap on {0}, you must change the network in your wallet."
 msgstr "Nepodařilo se přepnout sítě z rozhraní Uniswap. Abyste mohli používat Uniswap na {0}, musíte změnit síť ve své peněžence."
 
+#: src/components/Tokens/TokenTable/FavoriteButton.tsx
+msgid "Favorites"
+msgstr "Oblíbené"
+
 #: src/components/NavBar/MenuDropdown.tsx
 msgid "Feature Flags"
 msgstr "Příznaky funkcí"
@@ -1162,6 +1178,10 @@ msgstr "Spravovat seznamy žetonů"
 msgid "Manage this pool."
 msgstr "Spravovat tento fond."
 
+#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+msgid "Market cap"
+msgstr "Tržní kapitalizace"
+
 #: src/components/CurrencyInputPanel/SwapCurrencyInputPanel.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Max"
@@ -1306,6 +1326,10 @@ msgstr "Nebyly nalezeny žádné výsledky."
 #: src/components/Tokens/TokenDetails/TokenDetail.tsx
 msgid "No token information available"
 msgstr "Nejsou k dispozici žádné informace o tokenu"
+
+#: src/components/Tokens/TokenTable/TokenTable.tsx
+msgid "No tokens found"
+msgstr "Nebyly nalezeny žádné tokeny"
 
 #: src/components/NavBar/SearchBar.tsx
 msgid "No tokens found."
@@ -1709,6 +1733,10 @@ msgstr "Podíl na fondu"
 msgid "Share of Pool:"
 msgstr "Podíl na fondu:"
 
+#: src/components/Tokens/TokenDetails/ShareButton.tsx
+msgid "Share to Twitter"
+msgstr "Sdílejte na Twitteru"
+
 #: src/pages/Vote/Landing.tsx
 msgid "Show Cancelled"
 msgstr "Zobrazit zrušeno"
@@ -1770,6 +1798,7 @@ msgstr "Dodávání {0} {1} a {2} {3}"
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/Header/index.tsx
 #: src/components/NavBar/Navbar.tsx
+#: src/components/Tokens/TokenDetails/FooterBalanceSummary.tsx
 #: src/components/swap/SwapHeader.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
@@ -1925,9 +1954,13 @@ msgstr "Transakci nebylo možno odeslat, protože uplynula lhůta. Zkontrolujte,
 msgid "There is no liquidity data."
 msgstr "Neexistují žádné údaje o likviditě."
 
+#: src/components/Tokens/TokenDetails/FooterBalanceSummary.tsx
+msgid "There was an error fetching your balance"
+msgstr "Při načítání vašeho zůstatku došlo k chybě"
+
 #: src/components/Tokens/TokenDetails/BalanceSummary.tsx
-msgid "There was an error loading your {tokenSymbol} balance"
-msgstr "Při načítání vašeho zůstatku {tokenSymbol} došlo k chybě"
+msgid "There was an error loading your {0} balance"
+msgstr "Při načítání vašeho zůstatku {0} došlo k chybě"
 
 #: src/components/ConnectedAccountBlocked/index.tsx
 msgid "This address is blocked on the Uniswap Labs interface because it is associated with one or more"
@@ -2423,6 +2456,10 @@ msgstr "Nemáte dostatek hlasů k odeslání návrhu"
 msgid "You don’t have liquidity in this pool yet."
 msgstr "V tomto fondu zatím nemáte likviditu."
 
+#: src/components/Tokens/TokenTable/TokenTable.tsx
+msgid "You have no favorited tokens"
+msgstr "Nemáte žádné oblíbené žetony"
+
 #: src/components/Header/ChainConnectivityWarning.tsx
 msgid "You may have lost your network connection, or {label} might be down right now."
 msgstr "Možná jste ztratili připojení k síti nebo {label} může být právě mimo provoz."
@@ -2467,6 +2504,10 @@ msgstr "Vaše likvidita V2"
 #: src/pages/Pool/index.tsx
 msgid "Your active V3 liquidity positions will appear here."
 msgstr "Zde se zobrazí vaše aktivní pozice likvidity V3."
+
+#: src/components/Tokens/TokenDetails/FooterBalanceSummary.tsx
+msgid "Your balances by network"
+msgstr "Vaše zůstatky podle sítě"
 
 #: src/pages/Pool/index.tsx
 msgid "Your connected network is unsupported."
@@ -2704,6 +2745,10 @@ msgstr "{0} dostupných žetonů UNI-V2 LP"
 #: src/components/vote/VoteModal.tsx
 msgid "{0} Votes"
 msgstr "{0} hlasů"
+
+#: src/components/Tokens/TokenDetails/FooterBalanceSummary.tsx
+msgid "{0} all balances"
+msgstr "{0} všechny zůstatky"
 
 #: src/components/PositionPreview/index.tsx
 #: src/components/PositionPreview/index.tsx

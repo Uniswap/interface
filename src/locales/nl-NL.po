@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-26 17:08\n"
+"PO-Revision-Date: 2022-09-09 20:05\n"
 "Last-Translator: \n"
 "Language: nl_NL\n"
 "Language-Team: Dutch\n"
@@ -226,6 +226,10 @@ msgstr "Toegestaan"
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Amount"
 msgstr "Bedrag"
+
+#: src/components/Tokens/TokenTable/TokenTable.tsx
+msgid "An error occured loading tokens. Please try again."
+msgstr "Er is een fout opgetreden bij het laden van tokens. Probeer het opnieuw."
 
 #: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
@@ -584,6 +588,10 @@ msgstr "Verbonden met"
 msgid "Connecting..."
 msgstr "Verbinden..."
 
+#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+msgid "Contract address"
+msgstr "Contractadres"
+
 #: src/components/WalletDropdown/AuthenticatedHeader.tsx
 #: src/theme/components.tsx
 msgid "Copied!"
@@ -596,6 +604,10 @@ msgstr "Kopiëren"
 #: src/components/AccountDetails/index.tsx
 msgid "Copy Address"
 msgstr "Adres kopiëren"
+
+#: src/components/Tokens/TokenDetails/ShareButton.tsx
+msgid "Copy Link"
+msgstr "Kopieer link"
 
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 msgid "Create"
@@ -902,6 +914,10 @@ msgstr "Ontdek Uniswap Analytics."
 msgid "Failed to switch networks from the Uniswap Interface. In order to use Uniswap on {0}, you must change the network in your wallet."
 msgstr "Kan niet van netwerk wisselen vanaf de Uniswap-interface. Om Uniswap op {0}, moet u het netwerk in uw portemonnee wijzigen."
 
+#: src/components/Tokens/TokenTable/FavoriteButton.tsx
+msgid "Favorites"
+msgstr "Favorieten"
+
 #: src/components/NavBar/MenuDropdown.tsx
 msgid "Feature Flags"
 msgstr "Functievlaggen"
@@ -1162,6 +1178,10 @@ msgstr "Beheer tokenlijsten"
 msgid "Manage this pool."
 msgstr "Beheer deze pool."
 
+#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+msgid "Market cap"
+msgstr "Marktkapitalisatie"
+
 #: src/components/CurrencyInputPanel/SwapCurrencyInputPanel.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Max"
@@ -1306,6 +1326,10 @@ msgstr "Geen resultaten gevonden."
 #: src/components/Tokens/TokenDetails/TokenDetail.tsx
 msgid "No token information available"
 msgstr "Geen tokeninformatie beschikbaar"
+
+#: src/components/Tokens/TokenTable/TokenTable.tsx
+msgid "No tokens found"
+msgstr "Geen tokens gevonden"
 
 #: src/components/NavBar/SearchBar.tsx
 msgid "No tokens found."
@@ -1709,6 +1733,10 @@ msgstr "Aandeel in pool"
 msgid "Share of Pool:"
 msgstr "Aandeel in pool:"
 
+#: src/components/Tokens/TokenDetails/ShareButton.tsx
+msgid "Share to Twitter"
+msgstr "Deel op Twitter"
+
 #: src/pages/Vote/Landing.tsx
 msgid "Show Cancelled"
 msgstr "Toon Geannuleerd"
@@ -1770,6 +1798,7 @@ msgstr "{0} {1} en {2} {3} aanbieden"
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/Header/index.tsx
 #: src/components/NavBar/Navbar.tsx
+#: src/components/Tokens/TokenDetails/FooterBalanceSummary.tsx
 #: src/components/swap/SwapHeader.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
@@ -1925,9 +1954,13 @@ msgstr "De transactie kan niet worden verzonden omdat de deadline is verstreken.
 msgid "There is no liquidity data."
 msgstr "Er zijn geen liquiditeitsgegevens."
 
+#: src/components/Tokens/TokenDetails/FooterBalanceSummary.tsx
+msgid "There was an error fetching your balance"
+msgstr "Er is een fout opgetreden bij het ophalen van uw saldo"
+
 #: src/components/Tokens/TokenDetails/BalanceSummary.tsx
-msgid "There was an error loading your {tokenSymbol} balance"
-msgstr "Er is een fout opgetreden bij het laden van uw {tokenSymbol} -saldo"
+msgid "There was an error loading your {0} balance"
+msgstr "Er is een fout opgetreden bij het laden van uw {0} -saldo"
 
 #: src/components/ConnectedAccountBlocked/index.tsx
 msgid "This address is blocked on the Uniswap Labs interface because it is associated with one or more"
@@ -2423,6 +2456,10 @@ msgstr "Je hebt niet genoeg stemmen om een voorstel in te dienen"
 msgid "You don’t have liquidity in this pool yet."
 msgstr "U heeft nog geen liquiditeit in deze pool."
 
+#: src/components/Tokens/TokenTable/TokenTable.tsx
+msgid "You have no favorited tokens"
+msgstr "Je hebt geen favoriete tokens"
+
 #: src/components/Header/ChainConnectivityWarning.tsx
 msgid "You may have lost your network connection, or {label} might be down right now."
 msgstr "Mogelijk bent u uw netwerkverbinding kwijtgeraakt of is {label} momenteel mogelijk niet beschikbaar."
@@ -2467,6 +2504,10 @@ msgstr "Uw V2-liquiditeit"
 #: src/pages/Pool/index.tsx
 msgid "Your active V3 liquidity positions will appear here."
 msgstr "Uw actieve V3-liquiditeitsposities verschijnen hier."
+
+#: src/components/Tokens/TokenDetails/FooterBalanceSummary.tsx
+msgid "Your balances by network"
+msgstr "Uw saldi per netwerk"
 
 #: src/pages/Pool/index.tsx
 msgid "Your connected network is unsupported."
@@ -2704,6 +2745,10 @@ msgstr "{0} UNI-V2 LP tokens beschikbaar"
 #: src/components/vote/VoteModal.tsx
 msgid "{0} Votes"
 msgstr "{0} stemmen"
+
+#: src/components/Tokens/TokenDetails/FooterBalanceSummary.tsx
+msgid "{0} all balances"
+msgstr "{0} alle saldi"
 
 #: src/components/PositionPreview/index.tsx
 #: src/components/PositionPreview/index.tsx
