@@ -1,6 +1,6 @@
-# Deep Links
+# Universal Links
 
-Deep links allow 3rd parties to prompt the app to open to specific screens. All deep links must use the the prefix `uniswap://`.
+Universal links allow 3rd parties to prompt the app to open to specific screens when it is installed on their device. If the app isn't installed it will open that page in Safari (a 404 on uniswap.org in this case). All universal links must use the the prefix `https://uniswap.org/app`.
 
 ## Supported Screens
 
@@ -15,7 +15,7 @@ When routing to the transaction screen, including the `txHash` query parameter w
 Example:
 
 ```
-uniswap://?screen=transaction&userAddress=0x123...789$txHash=0xabc...123
+https://uniswap.org/app?screen=transaction&userAddress=0x123...789$txHash=0xabc...123
 ```
 
 ### Swap Screen
@@ -32,11 +32,11 @@ Parameters:
 Example (swap 100 Ethereum mainnet DAI for Ethereum mainnet UNI):
 
 ```
-uniswap://?screen=swap&userAddress=0x123...789&inputCurrencyId=1-0x6B175474E89094C44Da98b954EedeAC495271d0F&outputCurrencyId=1-0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984&currencyField=input&amount=100
+https://uniswap.org/app?screen=swap&userAddress=0x123...789&inputCurrencyId=1-0x6B175474E89094C44Da98b954EedeAC495271d0F&outputCurrencyId=1-0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984&currencyField=input&amount=100
 ```
 
 Example (swap Polygon DAI for 100 Polygon UNI):
 
 ```
-uniswap://?screen=swap&userAddress=0x123...789&inputCurrencyId=137-0x6B175474E89094C44Da98b954EedeAC495271d0F&outputCurrencyId=137-0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984&currencyField=output&amount=100
+https://uniswap.org/app?screen=swap&userAddress=0x123...789&inputCurrencyId=137-0x6B175474E89094C44Da98b954EedeAC495271d0F&outputCurrencyId=137-0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984&currencyField=output&amount=100
 ```

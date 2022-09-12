@@ -23,7 +23,7 @@ const formSwapUrl = (
   amount?: string
 ) =>
   new URL(
-    `uniswap://?screen=swap
+    `https://uniswap.org/app?screen=swap
 &userAddress=${userAddress}
 &inputCurrencyId=${chain}-${inputAddress}
 &outputCurrencyId=${chain}-${outputAddress}

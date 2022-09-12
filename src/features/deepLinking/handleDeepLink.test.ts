@@ -11,14 +11,14 @@ import { logEvent } from 'src/features/telemetry'
 import { activateAccount } from 'src/features/wallet/walletSlice'
 import { account } from 'src/test/fixtures'
 
-const swapUrl = `uniswap://?screen=swap&userAddress=${account.address}`
-const transactionUrl = `uniswap://?screen=transaction&userAddress=${account.address}`
+const swapUrl = `https://uniswap.org/app?screen=swap&userAddress=${account.address}`
+const transactionUrl = `https://uniswap.org/app?screen=transaction&userAddress=${account.address}`
 const swapUrlObj = new URL(swapUrl)
 const transactionUrlObj = new URL(transactionUrl)
 const swapDeepLinkPayload = { url: swapUrl, coldStart: false }
 const transactionDeepLinkPayload = { url: transactionUrl, coldStart: false }
 const unsupportedScreenDeepLinkPayload = {
-  url: `uniswap://?screen=send&userAddress=${account.address}`,
+  url: `https://uniswap.org/app?screen=send&userAddress=${account.address}`,
   coldStart: false,
 }
 

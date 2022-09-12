@@ -9,7 +9,7 @@ import { account } from 'src/test/fixtures'
 
 const formTransactionUrl = (userAddress?: Address, txHash?: string) =>
   new URL(
-    `uniswap://?screen=transaction
+    `https://uniswap.org/app?screen=transaction
 &userAddress=${userAddress}
 &txHash=${txHash}`.trim()
   )
