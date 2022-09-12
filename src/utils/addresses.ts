@@ -107,8 +107,8 @@ export function sanitizeAddressText(address?: string): NullUndefined<string> {
 }
 
 export function areAddressesEqual(a1: Nullable<Address>, a2: Nullable<Address>) {
-  const validA1 = getValidAddress(a1, true)
-  const validA2 = getValidAddress(a2, true)
+  const validA1 = getValidAddress(a1)
+  const validA2 = getValidAddress(a2)
   return validA1 !== null && validA2 !== null && validA1 === validA2
 }
 

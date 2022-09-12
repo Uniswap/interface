@@ -3,6 +3,7 @@ import { createApi, FetchArgs, fetchBaseQuery, skipToken } from '@reduxjs/toolki
 import { providers } from 'ethers'
 import { useProvider } from 'src/app/walletContext'
 import { ChainId } from 'src/constants/chains'
+import { areAddressesEqual } from 'src/utils/addresses'
 
 export type EnslookupParams = {
   nameOrAddress: string
@@ -36,7 +37,8 @@ export const ens = createApi({
           see: https://docs.ens.domains/dapp-developer-guide/resolving-names#reverse-resolution
         */
         const fwdAddr = name ? await provider.resolveName(name) : null
-        const checkedName = address === fwdAddr ? name : null
+        // Normalize data as provider response is checksummed
+        const checkedName = areAddressesEqual(fwdAddr, address) ? name : null
         return { data: checkedName }
       },
     }),
