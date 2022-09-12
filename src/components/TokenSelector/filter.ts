@@ -5,9 +5,6 @@ import { ChainId } from 'src/constants/chains'
 const searchOptions: Fuse.IFuseOptions<TokenOption> = {
   includeMatches: true,
   isCaseSensitive: false,
-  threshold: 0.5,
-  // require matches to be close to the start of the word
-  distance: 10,
   keys: [
     'currencyInfo.currency.chainId',
     'currencyInfo.currency.symbol',
@@ -25,37 +22,37 @@ const getChainSearchPattern = (chain: ChainId | null) =>
       { 'currencyInfo.currency.chainId': `=${chain}` }
     : null
 
-const getAddressSearchPattern = (addressPrefix: string | null) =>
+const getAddressSearchPattern = (addressPrefix?: string) =>
   addressPrefix && addressPrefix.startsWith('0x') && addressPrefix.length > 5
-    ? // prefix-exact macth address
+    ? // prefix-exact match address
       { 'currencyInfo.currency.address': `^${addressPrefix}` }
     : null
 
-const getSymbolSearchPattern = (symbol: string | null) =>
+const getSymbolSearchPattern = (symbol?: string) =>
   symbol
-    ? // fuzzy-match symbol
-      { 'currencyInfo.currency.symbol': symbol }
+    ? // include-match symbol
+      { 'currencyInfo.currency.symbol': `'${symbol}` }
     : null
 
-const getNameSearchPattern = (name: string | null) =>
+const getNameSearchPattern = (name?: string) =>
   name
-    ? // fuzzy-match name
-      { 'currencyInfo.currency.name': name }
+    ? // include-match name
+      { 'currencyInfo.currency.name': `'${name}` }
     : null
 
 /**
- * Returns a flat list of `Currency`s filtered by chainFilter and searchFilter
- * @param currencies
+ * Returns a flat list of `TokenOption`s filtered by chainFilter and searchFilter
+ * @param tokenOptions list of `TokenOption`s to filter
  * @param chainFilter chain id to keep
- * @param searchFilter filter to apply to currency adddress and symbol
+ * @param searchFilter filter to apply to currency adddress, name, and symbol
  */
 export function filter(
   tokenOptions: TokenOption[] | null,
   chainFilter: ChainId | null,
-  searchFilter: string | null
-): Fuse.FuseResult<TokenOption>[] {
+  searchFilter?: string
+): TokenOption[] {
   if (!tokenOptions || !tokenOptions.length) return []
-  if (!chainFilter && !searchFilter) return tokenOptions.map((t) => ({ item: t, refIndex: -1 }))
+  if (!chainFilter && !searchFilter) return tokenOptions
 
   let andPatterns: Fuse.Expression[] = []
   let orPatterns: Fuse.Expression[] = []
@@ -88,5 +85,5 @@ export function filter(
   const fuse = new Fuse(tokenOptions, searchOptions)
 
   const r = fuse.search(searchPattern)
-  return r
+  return r.map((result) => result.item)
 }

@@ -32,24 +32,17 @@ const TEST_TOKEN_INPUT: TokenOption[] = [
 const filterAndGetCurrencies = (
   currencies: TokenOption[],
   chainFilter: ChainId | null,
-  searchFilter: string | null
-) =>
-  filter(currencies, chainFilter, searchFilter)
-    .map((r) => r.item)
-    .map((cm) => cm.currencyInfo.currency)
+  searchFilter?: string
+) => filter(currencies, chainFilter, searchFilter).map((cm) => cm.currencyInfo.currency)
 
 describe(filter, () => {
   it('returns the entire input flattened if chainFilter and searchFilter are null', () => {
-    expect(filterAndGetCurrencies(TEST_TOKEN_INPUT, null, null)).toEqual([
-      DAI,
-      ETH,
-      DAI_ARBITRUM_ONE,
-    ])
+    expect(filterAndGetCurrencies(TEST_TOKEN_INPUT, null)).toEqual([DAI, ETH, DAI_ARBITRUM_ONE])
     expect(filterAndGetCurrencies(TEST_TOKEN_INPUT, null, '')).toEqual([DAI, ETH, DAI_ARBITRUM_ONE])
   })
 
   it('filters by single chain', () => {
-    expect(filterAndGetCurrencies(TEST_TOKEN_INPUT, ChainId.Mainnet, null)).toEqual([DAI, ETH])
+    expect(filterAndGetCurrencies(TEST_TOKEN_INPUT, ChainId.Mainnet)).toEqual([DAI, ETH])
   })
 
   it('filters by partial token symbol', () => {
@@ -59,8 +52,12 @@ describe(filter, () => {
     expect(filterAndGetCurrencies(TEST_TOKEN_INPUT, null, 'ETH')).toEqual([ETH])
   })
 
-  it('fuzzy matches on symbol', () => {
-    expect(filterAndGetCurrencies(TEST_TOKEN_INPUT, null, 'DAI2')).toEqual([DAI, DAI_ARBITRUM_ONE])
+  it('filters by partial token name', () => {
+    expect(filterAndGetCurrencies(TEST_TOKEN_INPUT, null, 'th')).toEqual([ETH])
+    expect(filterAndGetCurrencies(TEST_TOKEN_INPUT, null, 'stable')).toEqual([
+      DAI,
+      DAI_ARBITRUM_ONE,
+    ])
   })
 
   it('filters by first characters of token address', () => {

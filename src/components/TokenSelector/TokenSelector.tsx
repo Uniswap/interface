@@ -1,5 +1,5 @@
 import { Currency } from '@uniswap/sdk-core'
-import React, { Suspense, useCallback } from 'react'
+import React, { Suspense } from 'react'
 import { useTranslation } from 'react-i18next'
 import { KeyboardAvoidingView } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
@@ -34,15 +34,11 @@ export function TokenSelector({
   onBack,
   variation,
 }: TokenSelectorProps) {
-  const { onChangeChainFilter, onChangeText, onClearSearchFilter, searchFilter, chainFilter } =
-    useFilterCallbacks(otherCurrency?.chainId ?? null)
+  const { onChangeChainFilter, onChangeText, searchFilter, chainFilter } = useFilterCallbacks(
+    otherCurrency?.chainId ?? null
+  )
 
   const { t } = useTranslation()
-
-  const onClearFilters = useCallback(() => {
-    onClearSearchFilter()
-    onChangeChainFilter(null)
-  }, [onChangeChainFilter, onClearSearchFilter])
 
   return (
     <AnimatedFlex
@@ -67,7 +63,6 @@ export function TokenSelector({
             searchFilter={searchFilter}
             variation={variation}
             onChangeChainFilter={onChangeChainFilter}
-            onClearSearchFilter={onClearFilters}
             onSelectCurrency={onSelectCurrency}
           />
         </KeyboardAvoidingView>

@@ -1,13 +1,11 @@
-import { Currency } from '@uniswap/sdk-core'
-import Fuse from 'fuse.js'
-import { default as React, useCallback, useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Keyboard } from 'react-native'
 import { Button } from 'src/components/buttons/Button'
 import { CurrencyInfoLogo } from 'src/components/CurrencyLogo/CurrencyInfoLogo'
-import { Box } from 'src/components/layout'
+import { Box, Flex } from 'src/components/layout'
 import { Text } from 'src/components/Text'
-import { TextWithFuseMatches } from 'src/components/text/TextWithFuseMatches'
+
 import TokenWarningModal from 'src/components/tokens/TokenWarningModal'
 import WarningIcon from 'src/components/tokens/WarningIcon'
 import { TokenOption } from 'src/components/TokenSelector/types'
@@ -18,17 +16,14 @@ import {
 } from 'src/features/tokens/useTokenWarningLevel'
 import { currencyId } from 'src/utils/currencyId'
 import { formatNumberBalance, formatUSDPrice } from 'src/utils/format'
-import { Flex } from '../layout'
+
 interface OptionProps {
   option: TokenOption
   onPress: () => void
   tokenWarningLevelMap: TokenWarningLevelMap
-  matches: Fuse.FuseResult<Currency>['matches']
 }
 
-export function TokenOptionItem({ option, onPress, tokenWarningLevelMap, matches }: OptionProps) {
-  const symbolMatches = matches?.filter((m) => m.key === 'symbol')
-  const nameMatches = matches?.filter((m) => m.key === 'name')
+export function TokenOptionItem({ option, onPress, tokenWarningLevelMap }: OptionProps) {
   const { currencyInfo, quantity, balanceUSD } = option
   const { currency } = currencyInfo
 
@@ -71,20 +66,16 @@ export function TokenOptionItem({ option, onPress, tokenWarningLevelMap, matches
             <Flex shrink alignItems="flex-start" gap="none">
               <Flex centered row gap="xs">
                 <Flex shrink>
-                  <TextWithFuseMatches
-                    matches={nameMatches}
-                    text={currency.name ?? ''}
-                    variant="subhead"
-                  />
+                  <Text color="textPrimary" numberOfLines={1} variant="subhead">
+                    {currency.name}
+                  </Text>
                 </Flex>
                 <WarningIcon tokenWarningLevel={tokenWarningLevel} />
               </Flex>
               <Flex row>
-                <TextWithFuseMatches
-                  matches={symbolMatches}
-                  text={currency.symbol ?? ''}
-                  variant="caption"
-                />
+                <Text color="textPrimary" numberOfLines={1} variant="caption">
+                  {currency.symbol}
+                </Text>
               </Flex>
             </Flex>
           </Flex>

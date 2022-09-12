@@ -1,10 +1,11 @@
 import { Currency } from '@uniswap/sdk-core'
-import Fuse from 'fuse.js'
 import React, { useCallback, useEffect, useMemo, useRef } from 'react'
-import { useTranslation } from 'react-i18next'
+import { Trans, useTranslation } from 'react-i18next'
 import { ListRenderItemInfo, SectionList, StyleSheet } from 'react-native'
 import { useAppSelector } from 'src/app/hooks'
+import { AnimatedBox, Box, Flex, Inset } from 'src/components/layout'
 import { Separator } from 'src/components/layout/Separator'
+import { Text } from 'src/components/Text'
 import { filter } from 'src/components/TokenSelector/filter'
 import { useCommonBases, useFavoriteCurrencies } from 'src/components/TokenSelector/hooks'
 import { NetworkFilter } from 'src/components/TokenSelector/NetworkFilter'
@@ -16,20 +17,15 @@ import { EMPTY_ARRAY } from 'src/constants/misc'
 import { usePortfolioBalances } from 'src/features/dataApi/balances'
 import { usePopularTokens } from 'src/features/dataApi/topTokens'
 import { CurrencyInfo, PortfolioBalance } from 'src/features/dataApi/types'
-import { ElementName } from 'src/features/telemetry/constants'
 import { useCombinedTokenWarningLevelMap } from 'src/features/tokens/useTokenWarningLevel'
 import { useActiveAccountWithThrow } from 'src/features/wallet/hooks'
 import { selectHideSmallBalances } from 'src/features/wallet/selectors'
 import { HIDE_SMALL_USD_BALANCES_THRESHOLD } from 'src/features/wallet/walletSlice'
 import { differenceWith } from 'src/utils/array'
 import { useDebounce } from 'src/utils/timing'
-import { TextButton } from '../buttons/TextButton'
-import { Box, Flex, Inset } from '../layout'
-import { Text } from '../Text'
 
 interface TokenSearchResultListProps {
   onChangeChainFilter: (newChainFilter: ChainId | null) => void
-  onClearSearchFilter: () => void
   onSelectCurrency: (currency: Currency) => void
   searchFilter: string | null
   chainFilter: ChainId | null
@@ -59,7 +55,8 @@ const createEmptyBalanceOption = (currencyInfo: CurrencyInfo): TokenOption => ({
 // TODO: alphabetically sort each of these token sections
 export function useTokenSectionsByVariation(
   variation: TokenSelectorVariation,
-  chainFilter: ChainId | null
+  chainFilter: ChainId | null,
+  searchFilter: string | null
 ): TokenSection[] {
   const { t } = useTranslation()
   const activeAccount = useActiveAccountWithThrow()
@@ -116,12 +113,25 @@ export function useTokenSectionsByVariation(
     })
   }, [commonBaseCurrencies, portfolioBalancesById])
 
-  return useMemo(() => {
+  const sections = useMemo(() => {
+    if (searchFilter && searchFilter?.length > 0) {
+      // TODO: Use GraphQL API search query for variations BalancesAndPopular and SuggestedAndPopular
+      const results = filter(portfolioBalances, chainFilter, searchFilter)
+      return results.length > 0
+        ? [
+            {
+              title: t('Search results'),
+              data: results,
+            },
+          ]
+        : []
+    }
+
     if (variation === TokenSelectorVariation.BalancesOnly) {
       return [
         {
           title: t('Your tokens'),
-          data: portfolioBalances,
+          data: filter(portfolioBalances, chainFilter),
         },
       ]
     }
@@ -131,11 +141,11 @@ export function useTokenSectionsByVariation(
       return [
         {
           title: t('Your tokens'),
-          data: portfolioBalances,
+          data: filter(portfolioBalances, chainFilter),
         },
         {
           title: t('Popular tokens'),
-          data: popularMinusBalances,
+          data: filter(popularMinusBalances, chainFilter),
         },
       ]
     }
@@ -148,11 +158,11 @@ export function useTokenSectionsByVariation(
     return [
       {
         title: t('Suggested'),
-        data: balancesAndFavorites,
+        data: filter(balancesAndFavorites, chainFilter),
       },
       {
         title: t('Popular tokens'),
-        data: difference(popularWithoutBalances, balancesAndFavorites),
+        data: filter(difference(popularWithoutBalances, balancesAndFavorites), chainFilter),
       },
     ]
   }, [
@@ -162,41 +172,35 @@ export function useTokenSectionsByVariation(
     favoritesWithoutBalances,
     t,
     variation,
+    chainFilter,
+    searchFilter,
   ])
+
+  return sections
 }
 
 export function TokenSearchResultList({
   onChangeChainFilter,
-  onClearSearchFilter,
   onSelectCurrency,
   chainFilter,
   searchFilter,
   variation,
 }: TokenSearchResultListProps) {
   const { t } = useTranslation()
-  const sectionListRef = useRef<SectionList<Fuse.FuseResult<TokenOption>>>(null)
+  const sectionListRef = useRef<SectionList<TokenOption>>(null)
 
-  const sections = useTokenSectionsByVariation(variation, chainFilter)
   const debouncedSearchFilter = useDebounce(searchFilter)
-
-  const filteredSections = useMemo(() => {
-    return sections.map(({ title, data }) => ({
-      title,
-      data: filter(data, chainFilter, debouncedSearchFilter),
-    }))
-  }, [chainFilter, debouncedSearchFilter, sections])
+  const sections = useTokenSectionsByVariation(variation, chainFilter, debouncedSearchFilter)
 
   const tokenWarningLevelMap = useCombinedTokenWarningLevelMap()
 
   const renderItem = useCallback(
-    ({ item }: ListRenderItemInfo<Fuse.FuseResult<TokenOption>>) => {
-      const tokenOption = item.item
+    ({ item }: ListRenderItemInfo<TokenOption>) => {
       return (
         <TokenOptionItem
-          matches={item.matches}
-          option={tokenOption}
+          option={item}
           tokenWarningLevelMap={tokenWarningLevelMap}
-          onPress={() => onSelectCurrency?.(tokenOption.currencyInfo.currency)}
+          onPress={() => onSelectCurrency?.(item.currencyInfo.currency)}
         />
       )
     },
@@ -205,12 +209,14 @@ export function TokenSearchResultList({
 
   useEffect(() => {
     // when changing lists to show, resume at the top of the list
-    sectionListRef.current?.scrollToLocation({
-      itemIndex: 0,
-      sectionIndex: 0,
-      animated: false,
-    })
-  }, [variation])
+    if (sections.length > 0) {
+      sectionListRef.current?.scrollToLocation({
+        itemIndex: 0,
+        sectionIndex: 0,
+        animated: false,
+      })
+    }
+  }, [variation, sections])
 
   return (
     <Box>
@@ -218,19 +224,12 @@ export function TokenSearchResultList({
         ref={sectionListRef}
         ItemSeparatorComponent={() => <Separator mx="xs" />}
         ListEmptyComponent={
-          <Flex centered gap="sm" px="lg">
-            <Text variant="mediumLabel">😔</Text>
-            <Text color="textTertiary" textAlign="center" variant="mediumLabel">
-              {searchFilter
-                ? t('No tokens found for ”{{searchFilter}}”', { searchFilter })
-                : t('No tokens found')}
+          <Flex my="xs">
+            <Text color="textTertiary" variant="subheadSmall">
+              <Trans t={t}>
+                No results found for <Text color="textPrimary">"{searchFilter}"</Text>
+              </Trans>
             </Text>
-            <TextButton
-              name={ElementName.ClearSearch}
-              textColor="accentActive"
-              onPress={onClearSearchFilter}>
-              {t('Clear search')}
-            </TextButton>
           </Flex>
         }
         ListFooterComponent={Footer}
@@ -238,14 +237,16 @@ export function TokenSearchResultList({
         keyboardShouldPersistTaps="always"
         renderItem={renderItem}
         renderSectionHeader={({ section: { title } }) => <SectionHeader title={title} />}
-        sections={filteredSections}
+        sections={sections}
         showsVerticalScrollIndicator={false}
         style={styles.list}
         windowSize={1}
       />
-      <Box position="absolute" right={0}>
-        <NetworkFilter selectedChain={chainFilter} onPressChain={onChangeChainFilter} />
-      </Box>
+      {sections.length > 0 && (
+        <AnimatedBox position="absolute" right={0}>
+          <NetworkFilter selectedChain={chainFilter} onPressChain={onChangeChainFilter} />
+        </AnimatedBox>
+      )}
     </Box>
   )
 }
@@ -268,8 +269,8 @@ function Footer() {
   )
 }
 
-function key(item: Fuse.FuseResult<TokenOption>) {
-  return item.item.currencyInfo.currencyId
+function key(item: TokenOption) {
+  return item.currencyInfo.currencyId
 }
 
 const styles = StyleSheet.create({
