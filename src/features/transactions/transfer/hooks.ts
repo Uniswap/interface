@@ -13,7 +13,6 @@ import { FeeInfo, GasSpeed } from 'src/features/gas/types'
 import { useNFT } from 'src/features/nfts/hooks'
 import { NFTAsset } from 'src/features/nfts/types'
 import { useCurrency } from 'src/features/tokens/useCurrency'
-import { useAllTransactionsBetweenAddresses } from 'src/features/transactions/hooks'
 import {
   CurrencyField,
   GasFeeByTransactionType,
@@ -27,11 +26,7 @@ import {
 } from 'src/features/transactions/transfer/transferTokenSaga'
 import { getTransferWarnings } from 'src/features/transactions/transfer/validate'
 import { TransactionType } from 'src/features/transactions/types'
-import {
-  useActiveAccount,
-  useActiveAccountAddressWithThrow,
-  useActiveAccountWithThrow,
-} from 'src/features/wallet/hooks'
+import { useActiveAccount, useActiveAccountWithThrow } from 'src/features/wallet/hooks'
 import { buildCurrencyId, currencyAddress } from 'src/utils/currencyId'
 import { logger } from 'src/utils/logger'
 import { tryParseExactAmount } from 'src/utils/tryParseAmount'
@@ -330,23 +325,4 @@ export function useIsSmartContractAddress(address: string | undefined, chainId: 
     })
   }, [address, provider])
   return state
-}
-
-export function useShowTransferWarnings(
-  recipient: string | undefined,
-  chainId: ChainId | undefined
-) {
-  const activeAddress = useActiveAccountAddressWithThrow()
-  const isNewRecipient = useAllTransactionsBetweenAddresses(activeAddress, recipient).length === 0
-
-  const { isSmartContractAddress, loading: addressLoading } = useIsSmartContractAddress(
-    recipient,
-    chainId ?? ChainId.Mainnet
-  )
-
-  return {
-    showNewRecipientWarning: isNewRecipient && !isSmartContractAddress,
-    showSmartContractWarning: isSmartContractAddress,
-    areWarningsLoading: addressLoading,
-  }
 }

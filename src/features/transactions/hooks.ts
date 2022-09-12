@@ -91,21 +91,7 @@ export function useCreateSwapFormState(
   }, [chainId, inputCurrency, outputCurrency, transaction, txId])
 }
 
-export interface AllFormattedTransactions {
-  combinedTransactionList: TransactionDetails[]
-  todayTransactionList: TransactionDetails[]
-  monthTransactionList: TransactionDetails[]
-  yearTransactionList: TransactionDetails[]
-  // Maps year <-> TransactionSummaryInfo[] for all priors years
-  priorByYearTransactionList: Record<string, TransactionDetails[]>
-  pending: TransactionDetails[]
-}
-
-/**
- * @param address Account address for lookup
- * @returns Combined arrays of local and external txns, split into time periods.
- */
-export function useAllFormattedTransactions(address: Address): AllFormattedTransactions {
+export function useAllTransactions(address: Address): TransactionDetails[] {
   const remoteTransactions = useTransactionHistoryForOwner(address)
   const localTransactions = useSelectAddressTransactions(address)
 
@@ -127,6 +113,26 @@ export function useAllFormattedTransactions(address: Address): AllFormattedTrans
       .concat(formattedRemote)
       .sort((a, b) => (a.addedTime > b.addedTime ? -1 : 1))
   }, [address, localTransactions, remoteTransactions.assetActivities])
+
+  return combinedTransactionList
+}
+
+export interface AllFormattedTransactions {
+  combinedTransactionList: TransactionDetails[]
+  todayTransactionList: TransactionDetails[]
+  monthTransactionList: TransactionDetails[]
+  yearTransactionList: TransactionDetails[]
+  // Maps year <-> TransactionSummaryInfo[] for all priors years
+  priorByYearTransactionList: Record<string, TransactionDetails[]>
+  pending: TransactionDetails[]
+}
+
+/**
+ * @param address Account address for lookup
+ * @returns Combined arrays of local and external txns, split into time periods.
+ */
+export function useAllFormattedTransactions(address: Address): AllFormattedTransactions {
+  const combinedTransactionList = useAllTransactions(address)
 
   // Segement by time periods.
   const [
@@ -226,12 +232,12 @@ export function useAllTransactionsBetweenAddresses(
   sender: Address,
   recipient: string | undefined | null
 ): TransactionDetails[] {
-  const txnsToSearch = useAllFormattedTransactions(sender ?? null)
+  const txnsToSearch = useAllTransactions(sender)
   return useMemo(() => {
     if (!sender || !recipient) return EMPTY_ARRAY
-    const commonTxs = txnsToSearch.combinedTransactionList.filter(
+    const commonTxs = txnsToSearch.filter(
       (tx) => tx.typeInfo.type === TransactionType.Send && tx.typeInfo.recipient === recipient
     )
     return commonTxs.length ? commonTxs : EMPTY_ARRAY
-  }, [recipient, sender, txnsToSearch.combinedTransactionList])
+  }, [recipient, sender, txnsToSearch])
 }

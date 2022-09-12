@@ -1,5 +1,5 @@
 import { AnyAction } from '@reduxjs/toolkit'
-import React, { useCallback, useState } from 'react'
+import React, { Suspense, useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleSheet } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
@@ -9,22 +9,20 @@ import { CurrencyInputPanel } from 'src/components/input/CurrencyInputPanel'
 import { DecimalPad } from 'src/components/input/DecimalPad'
 import { RecipientInputPanel } from 'src/components/input/RecipientInputPanel'
 import { AnimatedFlex, Box, Flex } from 'src/components/layout'
-import { WarningAction, WarningSeverity } from 'src/components/modals/types'
-import WarningModal from 'src/components/modals/WarningModal'
+import { Loading } from 'src/components/loading'
+import { WarningAction } from 'src/components/modals/types'
 import { NFTTransfer } from 'src/components/NFT/NFTTransfer'
-import { Text } from 'src/components/Text'
-import { ElementName, ModalName } from 'src/features/telemetry/constants'
+import { ElementName } from 'src/features/telemetry/constants'
 import { useSwapActionHandlers, useUSDTokenUpdater } from 'src/features/transactions/swap/hooks'
 import {
-  clearRecipient,
   CurrencyField,
   transactionStateActions,
 } from 'src/features/transactions/transactionState/transactionState'
 import {
   DerivedTransferInfo,
-  useShowTransferWarnings,
   useUpdateTransferGasEstimate,
 } from 'src/features/transactions/transfer/hooks'
+import { TransferFormWarnings } from 'src/features/transactions/transfer/TransferFormWarnings'
 import { createOnToggleShowRecipientSelector } from 'src/features/transactions/transfer/utils'
 import { createTransactionId } from 'src/features/transactions/utils'
 import { dimensions } from 'src/styles/sizing'
@@ -33,6 +31,11 @@ interface TransferTokenProps {
   dispatch: React.Dispatch<AnyAction>
   derivedTransferInfo: DerivedTransferInfo
   onNext: () => void
+}
+
+export interface TransferWarning {
+  hasWarning: boolean
+  loading: boolean
 }
 
 export function TransferTokenForm({ dispatch, derivedTransferInfo, onNext }: TransferTokenProps) {
@@ -70,6 +73,10 @@ export function TransferTokenForm({ dispatch, derivedTransferInfo, onNext }: Tra
   )
 
   const [showWarningModal, setShowWarningModal] = useState(false)
+  const [transferWarning, setTransferWarning] = useState<TransferWarning>({
+    loading: true,
+    hasWarning: false,
+  })
 
   const { t } = useTranslation()
 
@@ -77,11 +84,9 @@ export function TransferTokenForm({ dispatch, derivedTransferInfo, onNext }: Tra
     useSwapActionHandlers(dispatch)
   const onToggleShowRecipientSelector = createOnToggleShowRecipientSelector(dispatch)
 
-  const { showNewRecipientWarning, showSmartContractWarning, areWarningsLoading } =
-    useShowTransferWarnings(recipient, chainId)
-
   const actionButtonDisabled =
-    warnings.some((warning) => warning.action === WarningAction.DisableReview) || areWarningsLoading
+    warnings.some((warning) => warning.action === WarningAction.DisableReview) ||
+    transferWarning.loading
 
   const goToNext = useCallback(() => {
     const txId = createTransactionId()
@@ -90,56 +95,34 @@ export function TransferTokenForm({ dispatch, derivedTransferInfo, onNext }: Tra
   }, [dispatch, onNext])
 
   const onPressReview = useCallback(() => {
-    if (showNewRecipientWarning || showSmartContractWarning) {
+    if (transferWarning.hasWarning) {
       setShowWarningModal(true)
     } else {
       goToNext()
     }
-  }, [goToNext, showNewRecipientWarning, showSmartContractWarning])
+  }, [goToNext, transferWarning.hasWarning])
 
-  const onCloseSmartContractWarning = useCallback(() => {
-    dispatch(clearRecipient())
-    setShowWarningModal(false)
-  }, [dispatch])
+  const onSetTransferWarning = useCallback(({ hasWarning, loading }: TransferWarning) => {
+    setTransferWarning({ hasWarning, loading })
+  }, [])
 
-  const onCloseNewRecipientWarning = useCallback(() => setShowWarningModal(false), [])
+  const onSetShowWarningModal = useCallback((showModal: boolean) => {
+    setShowWarningModal(showModal)
+  }, [])
 
   return (
     <>
-      {showWarningModal && showNewRecipientWarning && (
-        <WarningModal
-          caption={t(
-            "You haven't transacted with this address before. Please confirm that the address is correct before continuing."
-          )}
-          closeText={t('Cancel')}
-          confirmText={t('Confirm')}
-          isVisible={showWarningModal && showNewRecipientWarning}
-          modalName={ModalName.SendWarning}
-          severity={WarningSeverity.Medium}
-          title={t('New address')}
-          onClose={onCloseNewRecipientWarning}
-          onConfirm={goToNext}>
-          <Box borderColor="backgroundOutline" borderRadius="xs" borderWidth={1}>
-            <Text color="textPrimary" px="md" py="sm" textAlign="center" variant="subheadSmall">
-              {recipient}
-            </Text>
-          </Box>
-        </WarningModal>
-      )}
-      {showWarningModal && showSmartContractWarning && (
-        <WarningModal
-          caption={t(
-            'This address is a smart contract. In many cases, sending tokens directly to a contract will result in the loss of your assets. Please select a different address.'
-          )}
-          confirmText={t('OK')}
-          isVisible={showWarningModal && showSmartContractWarning}
-          modalName={ModalName.SendWarning}
-          severity={WarningSeverity.High}
-          title={t('Smart contract address')}
-          onClose={onCloseSmartContractWarning}
-          onConfirm={onCloseSmartContractWarning}
+      <Suspense fallback={null}>
+        <TransferFormWarnings
+          chainId={chainId}
+          dispatch={dispatch}
+          recipient={recipient}
+          setShowWarningModal={onSetShowWarningModal}
+          setTransferWarning={onSetTransferWarning}
+          showWarningModal={showWarningModal}
+          onNext={goToNext}
         />
-      )}
+      </Suspense>
       <AnimatedFlex grow entering={FadeIn} exiting={FadeOut} justifyContent="space-between" p="md">
         <Flex gap="sm">
           {nftIn ? (
@@ -178,10 +161,12 @@ export function TransferTokenForm({ dispatch, derivedTransferInfo, onNext }: Tra
               </Box>
             </Box>
             <Flex pb="xl" pt="xl" px="md">
-              <RecipientInputPanel
-                recipientAddress={recipient}
-                onToggleShowRecipientSelector={onToggleShowRecipientSelector}
-              />
+              <Suspense fallback={<Loading type="image" />}>
+                <RecipientInputPanel
+                  recipientAddress={recipient}
+                  onToggleShowRecipientSelector={onToggleShowRecipientSelector}
+                />
+              </Suspense>
             </Flex>
           </Flex>
         </Flex>

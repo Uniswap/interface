@@ -1,10 +1,9 @@
 import { AnyAction } from '@reduxjs/toolkit'
 import { Currency } from '@uniswap/sdk-core'
-import React, { Dispatch, Suspense, useEffect, useReducer, useState } from 'react'
+import React, { Dispatch, useEffect, useReducer, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated'
 import { AnimatedFlex, Flex } from 'src/components/layout'
-import { Loading } from 'src/components/loading'
 import { RecipientSelect } from 'src/components/RecipientSelect/RecipientSelect'
 import { Text } from 'src/components/Text'
 import { TokenSelector, TokenSelectorVariation } from 'src/components/TokenSelector/TokenSelector'
@@ -60,13 +59,11 @@ function TransferInnerContent({ dispatch, state, step, setStep, onClose }: Inner
       )
     case TransferStep.FORM:
       return (
-        <Suspense fallback={<Loading repeat={3} />}>
-          <TransferTokenForm
-            derivedTransferInfo={derivedTransferInfo}
-            dispatch={dispatch}
-            onNext={() => setStep(TransferStep.REVIEW)}
-          />
-        </Suspense>
+        <TransferTokenForm
+          derivedTransferInfo={derivedTransferInfo}
+          dispatch={dispatch}
+          onNext={() => setStep(TransferStep.REVIEW)}
+        />
       )
     case TransferStep.REVIEW:
       return (
