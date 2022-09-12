@@ -57,10 +57,7 @@ export function QuickDetails(props: QuickDetailsProps) {
               width={20}
             />
           )}
-          <Text
-            color={label ? 'textSecondary' : 'textPrimary'}
-            fontWeight="500"
-            variant="bodySmall">
+          <Text color={label ? 'textSecondary' : 'textPrimary'} variant="bodySmall">
             {label || formatExecutionPrice(trade?.executionPrice)}
           </Text>
         </Flex>

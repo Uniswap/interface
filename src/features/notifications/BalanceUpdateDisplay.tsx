@@ -54,20 +54,10 @@ function BalanceUpdateInner({
     }
     return (
       <>
-        <Text
-          adjustsFontSizeToFit
-          color="accentSuccess"
-          fontWeight="600"
-          numberOfLines={1}
-          variant="smallLabel">
+        <Text adjustsFontSizeToFit color="accentSuccess" numberOfLines={1} variant="smallLabel">
           {balanceUpdate.assetValueChange}
         </Text>
-        <Text
-          adjustsFontSizeToFit
-          color="textSecondary"
-          fontWeight="500"
-          numberOfLines={1}
-          variant="badge">
+        <Text adjustsFontSizeToFit color="textSecondary" numberOfLines={1} variant="badge">
           {balanceUpdate.usdValueChange}
         </Text>
       </>

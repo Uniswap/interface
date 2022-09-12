@@ -43,7 +43,7 @@ function TotalBalanceInner({ owner, showRelativeChange, variant }: TotalBalanceV
 
   return (
     <Flex gap="xxs">
-      <Text fontWeight="400" variant={variant}>{`${formatUSDPrice(
+      <Text variant={variant}>{`${formatUSDPrice(
         balance?.portfolio?.assetsValueUSD ?? undefined
       )}`}</Text>
       {showRelativeChange && (

@@ -10,17 +10,13 @@ const data = Array.from(Array(10).keys())
 
 const ContentHeader = (
   <Flex row alignItems="center" gap="xs" my="xs">
-    <Text fontWeight="600" variant="headlineLarge">
-      Screen Title
-    </Text>
+    <Text variant="headlineLarge">Screen Title</Text>
   </Flex>
 )
 
 const FixedHeader = (
   <Flex row alignItems="center" gap="xs" my="xs">
-    <Text fontWeight="600" variant="headlineLarge">
-      Fixed Screen Title
-    </Text>
+    <Text variant="headlineLarge">Fixed Screen Title</Text>
   </Flex>
 )
 

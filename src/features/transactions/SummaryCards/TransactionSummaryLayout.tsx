@@ -98,7 +98,7 @@ function TransactionSummaryLayout({
             )}
             <Flex grow gap="xxxs">
               <Flex row alignItems="center" gap="xxs">
-                <Text fontWeight="500" numberOfLines={1} variant="mediumLabel">
+                <Text numberOfLines={1} variant="mediumLabel">
                   {title}
                 </Text>
                 {chainId !== ChainId.Mainnet && <InlineNetworkPill chainId={chainId} height={16} />}

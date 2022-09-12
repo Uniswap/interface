@@ -45,11 +45,7 @@ export function TransactionPending({
             {description}
           </Text>
           {transaction?.status === TransactionStatus.Failed ? (
-            <TextButton
-              fontWeight="600"
-              textColor="accentAction"
-              textVariant="body"
-              onPress={onTryAgain}>
+            <TextButton textColor="accentAction" textVariant="body" onPress={onTryAgain}>
               {t('Try again')}
             </TextButton>
           ) : null}

@@ -229,7 +229,7 @@ export function SwapForm({ dispatch, onNext, derivedSwapInfo, isCompressedView }
                       flexGrow={1}
                       gap="xs"
                       p="sm">
-                      <Text color={swapWarningColor.text} fontWeight="600" variant="caption">
+                      <Text color={swapWarningColor.text} variant="badge">
                         {swapWarning.title}
                       </Text>
                       <InfoCircle

@@ -71,7 +71,7 @@ ExampleRedWithParagraph.args = {
   ...ExampleRed.args,
   children: (
     <>
-      <Text color="accentFailure" fontWeight="800" variant="headlineLarge">
+      <Text color="accentFailure" variant="headlineLarge">
         Scary red text!
       </Text>
       <Text color="accentFailure" variant="body">

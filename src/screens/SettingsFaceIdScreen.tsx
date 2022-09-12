@@ -100,10 +100,8 @@ export function SettingsFaceIdScreen() {
       <Box alignItems="center" flexDirection="row" justifyContent="space-between" px="sm">
         <Flex row>
           <Flex gap="none">
-            <Text fontWeight="500" variant="subhead">
-              {text}
-            </Text>
-            <Text color="textSecondary" fontWeight="400" variant="smallLabel">
+            <Text variant="subhead">{text}</Text>
+            <Text color="textSecondary" variant="smallLabel">
               {subText}
             </Text>
           </Flex>

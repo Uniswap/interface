@@ -200,7 +200,7 @@ export function SettingsScreen() {
           renderSectionFooter={() => <Flex pt="lg" />}
           renderSectionHeader={({ section: { subTitle } }) => (
             <Box bg="backgroundBackdrop" pb="sm">
-              <Text color="textSecondary" fontWeight="500" variant="body">
+              <Text color="textSecondary" variant="subhead">
                 {subTitle}
               </Text>
             </Box>
@@ -235,7 +235,7 @@ function OnboardingRow({ iconProps }: { iconProps: SvgProps }) {
             <FlashbotsIcon {...iconProps} />
           </Flex>
 
-          <Text fontWeight="500" ml="md" variant="subhead">
+          <Text ml="md" variant="subhead">
             {t('Onboarding')}
           </Text>
         </Box>
@@ -280,7 +280,7 @@ function WalletSettings() {
   return (
     <Box flexDirection="column" mb="md">
       <Flex row justifyContent="space-between">
-        <Text color="textSecondary" fontWeight="500" variant="body">
+        <Text color="textSecondary" variant="subhead">
           {t('Wallet settings')}
         </Text>
         {allAccounts.length > DEFAULT_ACCOUNTS_TO_DISPLAY && (
@@ -321,7 +321,7 @@ function FooterSettings() {
   const buildVersion = DeviceInfo.getBuildNumber()
 
   return (
-    <Text color="textTertiary" fontSize={14} fontWeight="400" marginTop="xs" variant="body">
+    <Text color="textTertiary" marginTop="xs" variant="caption">
       {`Version ${version}.${buildVersion}`}
     </Text>
   )

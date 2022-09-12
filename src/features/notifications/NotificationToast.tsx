@@ -159,7 +159,7 @@ export function NotificationContent({
           justifyContent="flex-start">
           {icon}
           <Flex row shrink alignItems="center">
-            <Text adjustsFontSizeToFit fontWeight="500" numberOfLines={2} variant="bodySmall">
+            <Text adjustsFontSizeToFit numberOfLines={2} variant="bodySmall">
               {title}
             </Text>
           </Flex>
@@ -192,7 +192,7 @@ export function NotificationContentSmall({ title, icon, onPress }: NotificationC
         onPress={onPress}>
         <Flex row alignItems="center" gap="xxs" justifyContent="flex-start">
           {icon}
-          <Text adjustsFontSizeToFit fontWeight="500" numberOfLines={1} variant="bodySmall">
+          <Text adjustsFontSizeToFit numberOfLines={1} variant="bodySmall">
             {title}
           </Text>
         </Flex>

@@ -79,7 +79,7 @@ export default function TokenWarningModal({
               borderColor: opacify(60, theme.colors[warningColor]),
             }}>
             <AlertTriangle color={theme.colors[warningColor]} height={14} />
-            <Text color={warningColor} fontWeight="700" variant="caption">
+            <Text color={warningColor} variant="caption">
               {getTokenWarningHeaderText(tokenWarningLevel, t)}
             </Text>
           </Flex>

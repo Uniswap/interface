@@ -37,7 +37,6 @@ exports[`renders correctly 1`] = `
               "color": "#0E111A",
               "fontFamily": "Inter-Regular",
               "fontSize": 36,
-              "fontWeight": "300",
               "lineHeight": 44,
             },
           ],

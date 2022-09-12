@@ -98,7 +98,7 @@ function EmptyState({
   return (
     <Flex centered gap="sm" p="sm" width="100%">
       {title && (
-        <Text fontWeight="600" textAlign="center" variant="subhead">
+        <Text textAlign="center" variant="subhead">
           {title}
         </Text>
       )}

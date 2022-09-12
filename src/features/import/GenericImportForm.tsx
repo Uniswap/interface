@@ -135,7 +135,7 @@ export function GenericImportForm({
           {error && value && (liveCheck || !focused) && (
             <Flex centered row gap="sm">
               <AlertTriangle color={theme.colors.accentFailure} />
-              <Text color="accentFailure" fontWeight="600" variant="body">
+              <Text color="accentFailure" variant="body">
                 {error}
               </Text>
             </Flex>

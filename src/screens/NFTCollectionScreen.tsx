@@ -100,7 +100,7 @@ function NFTCollectionHeader({ collection, collectionName }: Props) {
                 name={ElementName.NFTCollectionWebsite}
                 testID={ElementName.NFTCollectionWebsite}
                 onPress={() => openUri(collection.external_url)}>
-                <Text color="accentAction" fontWeight="600" variant="caption">
+                <Text color="accentAction" variant="badge">
                   {t('Website ↗')}
                 </Text>
               </Button>
@@ -111,7 +111,7 @@ function NFTCollectionHeader({ collection, collectionName }: Props) {
                 name={ElementName.NFTCollectionTwitter}
                 testID={ElementName.NFTCollectionTwitter}
                 onPress={() => openUri(`https://twitter.com/${collection?.twitter_username}`)}>
-                <Text color="accentAction" fontWeight="600" variant="caption">
+                <Text color="accentAction" variant="badge">
                   {t('Twitter ↗')}
                 </Text>
               </Button>
@@ -122,7 +122,7 @@ function NFTCollectionHeader({ collection, collectionName }: Props) {
                 name={ElementName.NFTCollectionDiscord}
                 testID={ElementName.NFTCollectionDiscord}
                 onPress={() => openUri(collection.discord_url)}>
-                <Text color="accentAction" fontWeight="600" variant="caption">
+                <Text color="accentAction" variant="badge">
                   {t('Discord ↗')}
                 </Text>
               </Button>
@@ -138,9 +138,7 @@ function NFTCollectionHeader({ collection, collectionName }: Props) {
             onPress={() => openUri(`https://opensea.io/collection/${collection?.slug}`)}>
             <Flex alignItems="center" flexDirection="row" gap="xs" justifyContent="center">
               <OpenSeaIcon color={appTheme.colors.textPrimary} height={20} width={20} />
-              <Text fontWeight="600" variant="mediumLabel">
-                {t('View Collection on Opensea')}
-              </Text>
+              <Text variant="mediumLabel">{t('View Collection on Opensea')}</Text>
             </Flex>
           </Button>
         </Flex>
