@@ -94,50 +94,43 @@ const Asset = () => {
     fetchSingleAsset({ contractAddress, tokenId })
   )
   const { pathname, search } = useLocation()
-
+  const navigate = useNavigate()
   const bagExpanded = useBag((state) => state.bagExpanded)
+  const [creatorAddress, setCreatorAddress] = useState('')
+  const [dominantColor] = useState<[number, number, number]>([0, 0, 0])
+  const creatorEnsName = useENSName(creatorAddress)
+  const parsed = qs.parse(search)
+  const asset = useMemo(() => (data ? data[0] : ({} as GenieAsset)), [data])
+  const collection = useMemo(() => (data ? data[1] : ({} as CollectionInfoForAsset)), [data])
 
   const { gridWidthOffset } = useSpring({
     gridWidthOffset: bagExpanded ? 324 : 0,
   })
 
-  let asset = useMemo(() => {
-    return {} as GenieAsset
-  }, [])
-
-  let collection = {} as CollectionInfoForAsset
-
-  if (data) {
-    asset = data[0] || {}
-    collection = data[1] || {}
-  }
-  const navigate = useNavigate()
-
-  const parsed = qs.parse(search)
-  const [creatorAddress, setCreatorAddress] = useState('')
-  const [dominantColor] = useState<[number, number, number]>([0, 0, 0])
-  const creatorEnsName = useENSName(creatorAddress)
-  const { rarityProvider, rarityLogo } = useMemo(() => {
-    if (asset.rarity) {
-      return {
-        rarityProvider: asset.rarity?.providers.find(
-          ({ provider: _provider }) => _provider === asset.rarity?.primaryProvider
-        ),
-        rarityLogo: rarityProviderLogo[asset.rarity.primaryProvider] || '',
-      }
-    } else return {}
-  }, [asset.rarity])
-
   useEffect(() => {
     if (asset.creator) setCreatorAddress(asset.creator.address)
   }, [asset])
+
+  const { rarityProvider, rarityLogo } = useMemo(
+    () =>
+      asset.rarity
+        ? {
+            rarityProvider: asset.rarity.providers.find(
+              ({ provider: _provider }) => _provider === asset.rarity?.primaryProvider
+            ),
+            rarityLogo: rarityProviderLogo[asset.rarity.primaryProvider] || '',
+          }
+        : {},
+    [asset.rarity]
+  )
 
   const assetMediaType = useMemo(() => {
     if (isAudio(asset.animationUrl)) {
       return 'audio'
     } else if (isVideo(asset.animationUrl)) {
       return 'video'
-    } else return 'image'
+    }
+    return 'image'
   }, [asset])
 
   return (
