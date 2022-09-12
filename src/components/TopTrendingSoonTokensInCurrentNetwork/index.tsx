@@ -1,6 +1,7 @@
 import { Trans, t } from '@lingui/macro'
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { ChevronRight } from 'react-feather'
+import { useDispatch } from 'react-redux'
 import { useMedia } from 'react-use'
 import { Box, Flex, Text } from 'rebass'
 import styled from 'styled-components'
@@ -23,8 +24,11 @@ import TrendingSoonTokenItem from 'pages/TrueSight/components/TrendingSoonLayout
 import useGetCoinGeckoChartData from 'pages/TrueSight/hooks/useGetCoinGeckoChartData'
 import { TrueSightTokenData } from 'pages/TrueSight/hooks/useGetTrendingSoonData'
 import { TextTooltip } from 'pages/TrueSight/styled'
+import { AppDispatch } from 'state'
 import { ApplicationModal } from 'state/application/actions'
 import { useModalOpen, useToggleModal } from 'state/application/hooks'
+import { setTrendingSoonShowed } from 'state/swap/actions'
+import { useSwapState } from 'state/swap/hooks'
 import { useShowTopTrendingSoonTokens } from 'state/user/hooks'
 import { ExternalLink } from 'theme'
 
@@ -63,7 +67,22 @@ const TopTrendingSoonTokensInCurrentNetwork = () => {
 
   const marqueeContainerRef = useMarquee(topTrendingSoonTokens)
 
-  if (isLoadingTrendingSoonTokens) return above768 ? <Box height="66px" /> : <Box height="83px" />
+  const { trendingSoonShowed } = useSwapState()
+  const dispatch = useDispatch<AppDispatch>()
+
+  useEffect(() => {
+    let sto: NodeJS.Timeout
+    if (!trendingSoonShowed) {
+      sto = setTimeout(() => {
+        dispatch(setTrendingSoonShowed())
+      }, 1000)
+    }
+    return () => {
+      sto && clearTimeout(sto)
+    }
+  }, [dispatch, trendingSoonShowed])
+
+  if (isLoadingTrendingSoonTokens) return above768 ? <Box height="61px" /> : <Box height="83px" />
 
   if (!isShowTopTrendingTokens || topTrendingSoonTokens.length === 0) return null
 
@@ -89,7 +108,7 @@ const TopTrendingSoonTokensInCurrentNetwork = () => {
             />
           )}
         </Modal>
-        <FadeInAnimation>
+        <FadeInAnimation $isAnimate={!trendingSoonShowed}>
           <TrendingSoonTokensAndNoteContainer>
             <TrendingSoonTokensContainer>
               <Flex

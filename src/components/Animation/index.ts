@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-export const FadeInAnimation = styled.div`
+export const FadeInAnimation = styled.div<{ $isAnimate?: boolean }>`
   @keyframes fadeIn {
     0% {
       opacity: 0;
@@ -14,5 +14,5 @@ export const FadeInAnimation = styled.div`
   animation-name: fadeIn;
   animation-iteration-count: 1;
   animation-timing-function: ease-in-out;
-  animation-duration: 0.5s;
+  animation-duration: ${({ $isAnimate }) => ($isAnimate ? '0.5s' : 0)};
 `

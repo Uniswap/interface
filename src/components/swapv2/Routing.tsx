@@ -1,5 +1,5 @@
 import { ChainId, Currency, CurrencyAmount } from '@kyberswap/ks-sdk-core'
-import React, { useCallback, useEffect, useMemo, useRef } from 'react'
+import React, { memo, useCallback, useEffect, useMemo, useRef } from 'react'
 import ScrollContainer from 'react-indiana-drag-scroll'
 import styled, { css } from 'styled-components'
 
@@ -547,4 +547,4 @@ const Routing = ({ trade, currencies, formattedAmounts, maxHeight }: RoutingProp
   )
 }
 
-export default Routing
+export default memo(Routing)

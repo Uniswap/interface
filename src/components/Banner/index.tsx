@@ -103,39 +103,46 @@ function Banner({
   const theme = useTheme()
   const { mixpanelHandler } = useMixpanel()
 
-  const ALL_BANNERS = [
-    {
-      // KyberSwap Trading Campaign ATH
-      id: 'kyberSwap-trading-campaign-polygon',
-      name: 'KyberSwap Trading Campaign ATH',
-      start: new Date('2022-08-15T11:00:00.000Z'),
-      end: new Date('2022-08-30T23:59:59.000Z'),
-      img: isInModal
-        ? KyberSwapTradingCampaignMobile
-        : w > 768
-        ? KyberSwapTradingCampaignDesktop
-        : w > 500
-        ? KyberSwapTradingCampaignTablet
-        : KyberSwapTradingCampaignMobile,
-      link: 'https://kyberswap.com/campaigns/kyberswap-trading-campaigns-with-polygon-chain-5?networkId=137&utm_source=partner&utm_medium=banner&utm_campaign=polygontradingcontest&utm_content=onsite',
-    },
-    {
-      // Polygon LM
-      id: 'polygon-lm',
-      name: 'Polygon LM',
-      start: new Date('2022-08-17T00:00:00.000Z'),
-      end: new Date('2022-09-17T00:00:00.000Z'),
-      img: isInModal ? PolygonMobile : w > 768 ? PolygonDesktop : w > 500 ? PolygonTablet : PolygonMobile,
-      link: 'https://kyberswap.com/farms?tab=elastic&networkId=137',
-    },
-  ]
+  const ALL_BANNERS = useMemo(
+    () => [
+      {
+        // KyberSwap Trading Campaign ATH
+        id: 'kyberSwap-trading-campaign-polygon',
+        name: 'KyberSwap Trading Campaign ATH',
+        start: new Date('2022-08-15T11:00:00.000Z'),
+        end: new Date('2022-08-30T23:59:59.000Z'),
+        img: isInModal
+          ? KyberSwapTradingCampaignMobile
+          : w > 768
+          ? KyberSwapTradingCampaignDesktop
+          : w > 500
+          ? KyberSwapTradingCampaignTablet
+          : KyberSwapTradingCampaignMobile,
+        link: 'https://kyberswap.com/campaigns/kyberswap-trading-campaigns-with-polygon-chain-5?networkId=137&utm_source=partner&utm_medium=banner&utm_campaign=polygontradingcontest&utm_content=onsite',
+      },
+      {
+        // Polygon LM
+        id: 'polygon-lm',
+        name: 'Polygon LM',
+        start: new Date('2022-08-17T00:00:00.000Z'),
+        end: new Date('2022-09-17T00:00:00.000Z'),
+        img: isInModal ? PolygonMobile : w > 768 ? PolygonDesktop : w > 500 ? PolygonTablet : PolygonMobile,
+        link: 'https://kyberswap.com/farms?tab=elastic&networkId=137',
+      },
+    ],
+    [isInModal, w],
+  )
 
   const [_showBanner, setShowBanner] = useLocalStorage('show-banner-' + ALL_BANNERS[0].id, true)
-  const banners = ALL_BANNERS.filter(b => {
-    const date = new Date()
-    return date >= b.start && date <= b.end
-  })
-  const showBanner = useMemo(() => _showBanner && banners.length, [_showBanner, banners.length])
+  const banners = useMemo(
+    () =>
+      ALL_BANNERS.filter(b => {
+        const date = new Date()
+        return date >= b.start && date <= b.end
+      }),
+    [ALL_BANNERS],
+  )
+  const showBanner = _showBanner && banners.length
 
   if (!showBanner) return null
 

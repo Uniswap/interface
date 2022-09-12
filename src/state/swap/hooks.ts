@@ -23,6 +23,7 @@ import {
   resetSelectCurrency,
   selectCurrency,
   setRecipient,
+  setTrade,
   switchCurrencies,
   switchCurrenciesV2,
   typeInput,
@@ -31,6 +32,7 @@ import { SwapState } from 'state/swap/reducer'
 import { useExpertModeManager, useUserSlippageTolerance } from 'state/user/hooks'
 import { useCurrencyBalances } from 'state/wallet/hooks'
 import { isAddress } from 'utils'
+import { Aggregator } from 'utils/aggregator'
 import { computeSlippageAdjustedAmounts } from 'utils/prices'
 
 export function useSwapState(): AppState['swap'] {
@@ -45,6 +47,7 @@ export function useSwapActionHandlers(): {
   onChangeRecipient: (recipient: string | null) => void
   onChooseToSaveGas: (saveGas: boolean) => void
   onResetSelectCurrency: (field: Field) => void
+  onChangeTrade: (trade: Aggregator | undefined) => void
 } {
   const { chainId } = useActiveWeb3React()
   const dispatch = useDispatch<AppDispatch>()
@@ -106,6 +109,13 @@ export function useSwapActionHandlers(): {
     [dispatch],
   )
 
+  const onChangeTrade = useCallback(
+    (trade: Aggregator | undefined) => {
+      dispatch(setTrade({ trade }))
+    },
+    [dispatch],
+  )
+
   return {
     onSwitchTokens,
     onSwitchTokensV2,
@@ -114,6 +124,7 @@ export function useSwapActionHandlers(): {
     onChangeRecipient,
     onChooseToSaveGas,
     onResetSelectCurrency, // deselect token in select input: (use cases: remove "imported token")
+    onChangeTrade,
   }
 }
 

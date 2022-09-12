@@ -111,11 +111,9 @@ const getTimeFrameText = (timeFrame: LiveDataTimeframeEnum) => {
 function LiveChart({
   currencies,
   onRotateClick,
-  mobileCloseButton,
 }: {
   currencies: { [field in Field]?: Currency }
   onRotateClick?: () => void
-  mobileCloseButton?: React.ReactNode
 }) {
   const { chainId } = useActiveWeb3React()
   const theme = useTheme()
@@ -150,6 +148,7 @@ function LiveChart({
   }, [chartData])
 
   useEffect(() => {
+    if (!currencies.INPUT || !currencies.OUTPUT) return
     setStateProChart({ hasProChart: false, pairAddress: '', apiVersion: '', loading: true })
     checkPairHasDextoolsData(currencies, chainId)
       .then((res: any) => {
@@ -177,6 +176,7 @@ function LiveChart({
     let timeout: NodeJS.Timeout
     if (showProChartStore && stateProChart.loading) {
       timeout = setTimeout(() => {
+        // Switch to Basic chart after loading over 5 seconds
         toggleProLiveChart()
       }, 5000)
     }

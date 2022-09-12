@@ -36,6 +36,14 @@
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
 
+    <link rel="preload" as="image" href="/logo-dark.svg" />
+    <link rel="preload" as="image" href="/logo.svg" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;500;600&display=swap"
+      rel="preload"
+      as="style"
+    />
     <link
       href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;500;600&display=swap"
       rel="stylesheet"
@@ -56,7 +64,7 @@
         left: 0;
         right: 0;
         bottom: 0;
-        font-family: 'Work Sans', 'Inter', sans-serif;
+        font-family: 'Work Sans', 'Inter var', sans-serif;
       }
       [data-theme='dark'] .preloadhtml {
         background-color: #0f0f0f;
@@ -94,9 +102,10 @@
       }
 
       .preloadhtml-header-link-item {
-        padding: 10px 12px;
+        padding: 8px 12px;
         width: max-content;
         font-weight: 500;
+        font-size: 16px;
       }
       [data-theme='dark'] .preloadhtml-header-link-item {
         color: rgb(169, 169, 169);
@@ -116,6 +125,11 @@
       .preloadhtml-header-link-item-icon * {
         color: #a9a9a9;
         fill: currentColor;
+      }
+
+      .preloadhtml-logo {
+        width: 140px;
+        height: 51.38px;
       }
 
       [data-theme='dark'] .onlyVisibleInLightMode {
@@ -141,18 +155,12 @@
     </style>
     <div class="preloadhtml">
       <div class="preloadhtml-header">
-        <div>
-          <img
-            class="onlyVisibleInDarkMode"
-            style="margin-top: 1px;"
-            width="140px"
-            src="/logo-dark.svg"
-            alt="DmmLogo"
-          />
-          <img class="onlyVisibleInLightMode" style="margin-top: 1px;" width="140px" src="/logo.svg" alt="DmmLogo" />
+        <div class="preloadhtml-logo">
+          <img class="onlyVisibleInDarkMode" style="margin-top: 1px" width="140px" src="/logo-dark.svg" alt="DmmLogo" />
+          <img class="onlyVisibleInLightMode" style="margin-top: 1px" width="140px" src="/logo.svg" alt="DmmLogo" />
         </div>
         <div class="preloadhtml-header-link">
-          <div style="color: #31cb9e;" class="preloadhtml-header-link-item">Swap</div>
+          <div style="color: #31cb9e" class="preloadhtml-header-link-item">Swap</div>
           <div class="preloadhtml-header-link-item">Earn</div>
           <div class="preloadhtml-header-link-item">Farm</div>
           <div class="preloadhtml-header-link-item">Campaigns</div>
@@ -199,14 +207,14 @@
       <div style="height: 180px; display: flex">
         <img
           class="onlyVisibleInDarkMode"
-          style="animation: pulse 800ms linear infinite; margin: auto;"
+          style="animation: pulse 800ms linear infinite; margin: auto"
           width="160px"
           src="/logo-dark.svg"
           alt="DmmLogo"
         />
         <img
           class="onlyVisibleInLightMode"
-          style="animation: pulse 800ms linear infinite; margin: auto;"
+          style="animation: pulse 800ms linear infinite; margin: auto"
           width="160px"
           src="/logo.svg"
           alt="DmmLogo"

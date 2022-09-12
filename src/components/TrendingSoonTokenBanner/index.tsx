@@ -1,7 +1,7 @@
 import { ChainId, Currency, Token } from '@kyberswap/ks-sdk-core'
 import { Trans } from '@lingui/macro'
 import { rgba } from 'polished'
-import React, { CSSProperties, useMemo } from 'react'
+import { CSSProperties, memo, useMemo } from 'react'
 import { Flex } from 'rebass'
 import styled, { keyframes } from 'styled-components'
 
@@ -95,13 +95,7 @@ const DiscoverIconWrapper = styled.div`
 `
 
 const BannerText = styled.div`
-  //display: flex;
-  //align-items: center;
   font-size: 12px;
-
-  //> * {
-  //  margin-right: 4px;
-  //}
 `
 
-export default TrendingSoonTokenBanner
+export default memo(TrendingSoonTokenBanner)

@@ -1,6 +1,7 @@
 import { createAction } from '@reduxjs/toolkit'
 
 import { FeeConfig } from 'hooks/useSwapV2Callback'
+import { Aggregator } from 'utils/aggregator'
 
 export enum Field {
   INPUT = 'INPUT',
@@ -24,3 +25,5 @@ export const replaceSwapState = createAction<{
 }>('swap/replaceSwapState')
 export const setRecipient = createAction<{ recipient: string | null }>('swap/setRecipient')
 export const setFeeConfig = createAction<{ feeConfig: FeeConfig | undefined }>('swap/setFeeConfig')
+export const setTrendingSoonShowed = createAction('swap/setTrendingSoonShowed')
+export const setTrade = createAction<{ trade: Aggregator | undefined }>('swap/setTrade')
