@@ -1,6 +1,7 @@
 import clsx, { ClassValue } from 'clsx'
 import * as React from 'react'
-import { animated, AnimatedComponent } from 'react-spring'
+import { animated } from 'react-spring'
+import { AnimatedComponent } from '@react-spring/web'
 
 import { Atoms, atoms } from '../css/atoms'
 import { sprinkles } from '../css/sprinkles.css'
