@@ -142,11 +142,11 @@ export const SearchBarDropdown = ({ toggleOpen, tokens, collections, hasInput, i
     () => fetchTrendingCollections({ volumeType: 'eth', timePeriod: 'ONE_DAY' as TimePeriod, size: 3 })
   )
 
-  const trendingCollections = useMemo(() => {
-    return trendingCollectionResults
-      ? trendingCollectionResults
-          .map((collection) => {
-            return {
+  const trendingCollections = useMemo(
+    () =>
+      trendingCollectionResults
+        ? trendingCollectionResults
+            .map((collection) => ({
               ...collection,
               collectionAddress: collection.address,
               floorPrice: formatEthPrice(collection.floor?.toString()),
@@ -154,14 +154,14 @@ export const SearchBarDropdown = ({ toggleOpen, tokens, collections, hasInput, i
                 total_supply: collection.totalSupply,
                 one_day_change: collection.floorChange,
               },
-            }
-          })
-          .slice(0, isNFTPage ? 3 : 2)
-      : Array<GenieCollection>(isNFTPage ? 3 : 2)
-  }, [isNFTPage, trendingCollectionResults])
+            }))
+            .slice(0, isNFTPage ? 3 : 2)
+        : Array<GenieCollection>(isNFTPage ? 3 : 2),
+    [isNFTPage, trendingCollectionResults]
+  )
 
   const { data: trendingTokenResults, isLoading: trendingTokensAreLoading } = useQuery(
-    [],
+    ['trendingTokens'],
     () => fetchTrendingTokens(4),
     {
       refetchOnWindowFocus: false,
@@ -172,11 +172,13 @@ export const SearchBarDropdown = ({ toggleOpen, tokens, collections, hasInput, i
 
   const trendingTokensLength = phase1Flag === NftVariant.Enabled ? (isTokenPage ? 3 : 2) : 4
 
-  const trendingTokens = useMemo(() => {
-    return trendingTokenResults
-      ? trendingTokenResults.slice(0, trendingTokensLength)
-      : Array<FungibleToken>(trendingTokensLength)
-  }, [trendingTokenResults, trendingTokensLength])
+  const trendingTokens = useMemo(
+    () =>
+      trendingTokenResults
+        ? trendingTokenResults.slice(0, trendingTokensLength)
+        : Array<FungibleToken>(trendingTokensLength),
+    [trendingTokenResults, trendingTokensLength]
+  )
 
   const totalSuggestions = hasInput
     ? tokens.length + collections.length
@@ -213,8 +215,8 @@ export const SearchBarDropdown = ({ toggleOpen, tokens, collections, hasInput, i
 
   useEffect(() => {
     if (!isLoading) {
-      const currentState = () => {
-        return hasInput ? (
+      const currentState = () =>
+        hasInput ? (
           // Empty or Up to 8 combined tokens and nfts
           <Column gap="20">
             {isNFTPage ? (
@@ -269,7 +271,6 @@ export const SearchBarDropdown = ({ toggleOpen, tokens, collections, hasInput, i
             )}
           </Column>
         )
-      }
 
       setResultsState(currentState)
     }
