@@ -106,3 +106,68 @@ export const carouselIndicator = sprinkles({
   borderRadius: 'round',
   display: 'inline-block',
 })
+
+/* Value Prop Styles */
+export const valuePropWrap = style([
+  {},
+  sprinkles({
+    width: 'full',
+    borderWidth: '1px',
+    borderStyle: 'solid',
+    borderColor: 'grey700',
+    borderRadius: '12',
+    paddingLeft: '16',
+    paddingRight: '16',
+    marginTop: '60',
+    position: 'relative',
+  }),
+])
+
+export const valuePropOverlay = style([
+  {
+    opacity: '0.85',
+    height: '135px',
+    '@media': {
+      [`(min-width: ${breakpoints.lg}px)`]: {
+        opacity: '0.2',
+      },
+    },
+  },
+  sprinkles({
+    position: 'absolute',
+    zIndex: '0',
+    width: 'full',
+    backgroundColor: 'grey900',
+    left: '0',
+    top: '0',
+  }),
+])
+
+export const valuePropContent = style([
+  sprinkles({
+    position: 'relative',
+    zIndex: '1',
+    paddingLeft: '20',
+    paddingBottom: '18',
+    fontSize: '20',
+    paddingTop: '28',
+  }),
+  {
+    lineHeight: '28px',
+    '@media': {
+      [`(max-width: 400px)`]: { width: '88%' },
+      [`(min-width: 400px)`]: { width: '67%' },
+      [`(min-width: ${breakpoints.sm}px)`]: {
+        width: '74%',
+        paddingLeft: '36px',
+        fontSize: '28px',
+        lineHeight: '36px',
+        paddingTop: '32px',
+      },
+      // Extra breakpoint for text wrapping
+      [`(min-width: 800px)`]: { width: '60%' },
+      [`(min-width: ${breakpoints.md}px)`]: { width: '58%' },
+      [`(min-width: ${breakpoints.lg}px)`]: { width: '50%' },
+    },
+  },
+])
