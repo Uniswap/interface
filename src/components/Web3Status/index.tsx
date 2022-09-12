@@ -218,7 +218,7 @@ function Web3StatusInner() {
   } else if (account) {
     return (
       <Web3StatusConnected data-testid="web3-status-connected" onClick={toggleWallet} pending={hasPendingTransactions}>
-        {navbarFlagEnabled && !hasPendingTransactions && <StatusIcon connectionType={connectionType} />}
+        {navbarFlagEnabled && !hasPendingTransactions && <StatusIcon size={24} connectionType={connectionType} />}
         {hasPendingTransactions ? (
           <RowBetween>
             <Text>
@@ -252,14 +252,22 @@ function Web3StatusInner() {
       >
         {navbarFlagEnabled ? (
           <Web3StatusConnectNavbar faded={!account}>
-            <StyledConnect onClick={toggleWalletModal}>
+            <StyledConnect data-testid="navbar-connect-wallet" onClick={toggleWalletModal}>
               <Trans>Connect</Trans>
             </StyledConnect>
             <VerticalDivider />
             {walletIsOpen ? (
-              <StyledChevronUp customColor={theme.accentAction} onClick={toggleWalletDropdown} />
+              <StyledChevronUp
+                data-testid="navbar-wallet-dropdown"
+                customColor={theme.accentAction}
+                onClick={toggleWalletDropdown}
+              />
             ) : (
-              <StyledChevronDown customColor={theme.accentAction} onClick={toggleWalletDropdown} />
+              <StyledChevronDown
+                data-testid="navbar-wallet-dropdown"
+                customColor={theme.accentAction}
+                onClick={toggleWalletDropdown}
+              />
             )}
           </Web3StatusConnectNavbar>
         ) : (

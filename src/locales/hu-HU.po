@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-26 17:08\n"
+"PO-Revision-Date: 2022-09-09 20:05\n"
 "Last-Translator: \n"
 "Language: hu_HU\n"
 "Language-Team: Hungarian\n"
@@ -226,6 +226,10 @@ msgstr "Engedélyezve"
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Amount"
 msgstr "Összeg"
+
+#: src/components/Tokens/TokenTable/TokenTable.tsx
+msgid "An error occured loading tokens. Please try again."
+msgstr "Hiba történt a tokenek betöltésekor. Kérlek próbáld újra."
 
 #: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
@@ -584,6 +588,10 @@ msgstr "Kapcsolatban"
 msgid "Connecting..."
 msgstr "Csatlakozás..."
 
+#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+msgid "Contract address"
+msgstr "Szerződés címe"
+
 #: src/components/WalletDropdown/AuthenticatedHeader.tsx
 #: src/theme/components.tsx
 msgid "Copied!"
@@ -596,6 +604,10 @@ msgstr "Másolat"
 #: src/components/AccountDetails/index.tsx
 msgid "Copy Address"
 msgstr "Cím másolása"
+
+#: src/components/Tokens/TokenDetails/ShareButton.tsx
+msgid "Copy Link"
+msgstr "Link másolása"
 
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 msgid "Create"
@@ -903,6 +915,10 @@ msgstr "Fedezze fel az Uniswap Analytics szolgáltatást."
 msgid "Failed to switch networks from the Uniswap Interface. In order to use Uniswap on {0}, you must change the network in your wallet."
 msgstr "Nem sikerült hálózatot váltani az Uniswap interfészről. Az Uniswap {0}történő használatához meg kell változtatnia a hálózatot a pénztárcájában."
 
+#: src/components/Tokens/TokenTable/FavoriteButton.tsx
+msgid "Favorites"
+msgstr "Kedvencek"
+
 #: src/components/NavBar/MenuDropdown.tsx
 msgid "Feature Flags"
 msgstr "Jellemző zászlók"
@@ -1163,6 +1179,10 @@ msgstr "Tokenlisták kezelése"
 msgid "Manage this pool."
 msgstr "Kezelje ezt a Poolt."
 
+#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+msgid "Market cap"
+msgstr "Piac sapka"
+
 #: src/components/CurrencyInputPanel/SwapCurrencyInputPanel.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Max"
@@ -1307,6 +1327,10 @@ msgstr "Nincs találat."
 #: src/components/Tokens/TokenDetails/TokenDetail.tsx
 msgid "No token information available"
 msgstr "Nem áll rendelkezésre token információ"
+
+#: src/components/Tokens/TokenTable/TokenTable.tsx
+msgid "No tokens found"
+msgstr "Nem található token"
 
 #: src/components/NavBar/SearchBar.tsx
 msgid "No tokens found."
@@ -1710,6 +1734,10 @@ msgstr "Pool részesedése"
 msgid "Share of Pool:"
 msgstr "Pool részesedése:"
 
+#: src/components/Tokens/TokenDetails/ShareButton.tsx
+msgid "Share to Twitter"
+msgstr "Megosztás a Twitteren"
+
 #: src/pages/Vote/Landing.tsx
 msgid "Show Cancelled"
 msgstr "Show Canceled"
@@ -1771,6 +1799,7 @@ msgstr "{0} {1} és {2} {3} kínálása"
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/Header/index.tsx
 #: src/components/NavBar/Navbar.tsx
+#: src/components/Tokens/TokenDetails/FooterBalanceSummary.tsx
 #: src/components/swap/SwapHeader.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
@@ -1926,9 +1955,13 @@ msgstr "A tranzakciót nem sikerült elküldeni, mert a határidő lejárt. Kér
 msgid "There is no liquidity data."
 msgstr "Nincs likviditási adat."
 
+#: src/components/Tokens/TokenDetails/FooterBalanceSummary.tsx
+msgid "There was an error fetching your balance"
+msgstr "Hiba történt az egyenlegének lekérésekor"
+
 #: src/components/Tokens/TokenDetails/BalanceSummary.tsx
-msgid "There was an error loading your {tokenSymbol} balance"
-msgstr "Hiba történt a {tokenSymbol} egyenlegének betöltésekor"
+msgid "There was an error loading your {0} balance"
+msgstr "Hiba történt a {0} egyenlegének betöltésekor"
 
 #: src/components/ConnectedAccountBlocked/index.tsx
 msgid "This address is blocked on the Uniswap Labs interface because it is associated with one or more"
@@ -2424,6 +2457,10 @@ msgstr "Nincs elég szavazata a javaslat benyújtásához"
 msgid "You don’t have liquidity in this pool yet."
 msgstr "Ebben a poolban még nincs likviditása."
 
+#: src/components/Tokens/TokenTable/TokenTable.tsx
+msgid "You have no favorited tokens"
+msgstr "Nincsenek kedvenc tokenjei"
+
 #: src/components/Header/ChainConnectivityWarning.tsx
 msgid "You may have lost your network connection, or {label} might be down right now."
 msgstr "Lehet, hogy elvesztette a hálózati kapcsolatot, vagy a {label} jelenleg nem működik."
@@ -2468,6 +2505,10 @@ msgstr "Saját V2 likviditása"
 #: src/pages/Pool/index.tsx
 msgid "Your active V3 liquidity positions will appear here."
 msgstr "Itt jelennek meg aktív V3 likviditási pozíciói."
+
+#: src/components/Tokens/TokenDetails/FooterBalanceSummary.tsx
+msgid "Your balances by network"
+msgstr "Egyenlegei hálózatonként"
 
 #: src/pages/Pool/index.tsx
 msgid "Your connected network is unsupported."
@@ -2705,6 +2746,10 @@ msgstr "{0} UNI-V2 LP token érhető el"
 #: src/components/vote/VoteModal.tsx
 msgid "{0} Votes"
 msgstr "{0} szavazat"
+
+#: src/components/Tokens/TokenDetails/FooterBalanceSummary.tsx
+msgid "{0} all balances"
+msgstr "{0} minden egyenleg"
 
 #: src/components/PositionPreview/index.tsx
 #: src/components/PositionPreview/index.tsx

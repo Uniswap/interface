@@ -1,6 +1,7 @@
 import { nanoid } from '@reduxjs/toolkit'
 import { TokenList } from '@uniswap/token-lists'
-import { MAINNET_PROVIDER } from 'constants/networks'
+import { SupportedChainId } from 'constants/chains'
+import { RPC_PROVIDERS } from 'constants/networks'
 import getTokenList from 'lib/hooks/useTokenList/fetchTokenList'
 import resolveENSContentHash from 'lib/utils/resolveENSContentHash'
 import { useCallback } from 'react'
@@ -16,7 +17,9 @@ export function useFetchListCallback(): (listUrl: string, sendDispatch?: boolean
     async (listUrl: string, sendDispatch = true) => {
       const requestId = nanoid()
       sendDispatch && dispatch(fetchTokenList.pending({ requestId, url: listUrl }))
-      return getTokenList(listUrl, (ensName: string) => resolveENSContentHash(ensName, MAINNET_PROVIDER))
+      return getTokenList(listUrl, (ensName: string) =>
+        resolveENSContentHash(ensName, RPC_PROVIDERS[SupportedChainId.MAINNET])
+      )
         .then((tokenList) => {
           sendDispatch && dispatch(fetchTokenList.fulfilled({ url: listUrl, tokenList, requestId }))
           return tokenList

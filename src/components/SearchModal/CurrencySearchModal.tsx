@@ -8,6 +8,7 @@ import { WrappedTokenInfo } from 'state/lists/wrappedTokenInfo'
 import { useUserAddedTokens } from 'state/user/hooks'
 
 import useLast from '../../hooks/useLast'
+import { useWindowSize } from '../../hooks/useWindowSize'
 import Modal from '../Modal'
 import { CurrencySearch } from './CurrencySearch'
 import { ImportList } from './ImportList'
@@ -97,11 +98,16 @@ export default memo(function CurrencySearchModal({
     [setModalView, prevView]
   )
 
+  const { height: windowHeight } = useWindowSize()
   // change min height if not searching
-  let minHeight: number | undefined = 80
+  let modalHeight: number | undefined = 80
   let content = null
   switch (modalView) {
     case CurrencyModalView.search:
+      if (windowHeight) {
+        // Converts pixel units to vh for Modal component
+        modalHeight = Math.min(Math.round((680 / windowHeight) * 100), 80)
+      }
       content = (
         <CurrencySearch
           isOpen={isOpen}
@@ -119,7 +125,7 @@ export default memo(function CurrencySearchModal({
       )
       break
     case CurrencyModalView.tokenSafety:
-      minHeight = undefined
+      modalHeight = undefined
       if (tokenSafetyFlag === TokenSafetyVariant.Enabled && warningToken) {
         content = (
           <TokenSafety
@@ -133,7 +139,7 @@ export default memo(function CurrencySearchModal({
       break
     case CurrencyModalView.importToken:
       if (importToken) {
-        minHeight = undefined
+        modalHeight = undefined
         if (tokenSafetyFlag === TokenSafetyVariant.Enabled) {
           showTokenSafetySpeedbump(importToken)
         }
@@ -149,7 +155,7 @@ export default memo(function CurrencySearchModal({
       }
       break
     case CurrencyModalView.importList:
-      minHeight = 40
+      modalHeight = 40
       if (importList && listURL) {
         content = <ImportList list={importList} listURL={listURL} onDismiss={onDismiss} setModalView={setModalView} />
       }
@@ -167,7 +173,7 @@ export default memo(function CurrencySearchModal({
       break
   }
   return (
-    <Modal isOpen={isOpen} onDismiss={onDismiss} maxHeight={80} minHeight={minHeight}>
+    <Modal isOpen={isOpen} onDismiss={onDismiss} maxHeight={modalHeight} minHeight={modalHeight}>
       {content}
     </Modal>
   )

@@ -1,9 +1,8 @@
 import { useWeb3React } from '@web3-react/core'
-import { CHAIN_IDS_TO_NAMES, SupportedChainId } from 'constants/chains'
+import { CHAIN_IDS_TO_NAMES } from 'constants/chains'
 import { ParsedQs } from 'qs'
-import { useCallback, useEffect, useState } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
-import { replaceURLParam } from 'utils/routes'
+import { useEffect, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 
 import useParsedQueryString from './useParsedQueryString'
 import usePrevious from './usePrevious'
@@ -22,15 +21,8 @@ function getParsedChainId(parsedQs?: ParsedQs) {
   return getChainIdFromName(chain)
 }
 
-function getChainNameFromId(id: string | number) {
-  // casting here may not be right but fine to return undefined if it's not a supported chain ID
-  return CHAIN_IDS_TO_NAMES[id as SupportedChainId] || ''
-}
-
 export default function useSyncChainQuery() {
   const { chainId, isActive } = useWeb3React()
-  const navigate = useNavigate()
-  const { search } = useLocation()
   const parsedQs = useParsedQueryString()
 
   const urlChainId = getParsedChainId(parsedQs)
@@ -46,35 +38,16 @@ export default function useSyncChainQuery() {
     }
   }, [chainId, previousChainId])
 
-  const replaceURLChainParam = useCallback(() => {
-    if (chainId) {
-      navigate({ search: replaceURLParam(search, 'chain', getChainNameFromId(chainId)) }, { replace: true })
-    }
-  }, [chainId, search, navigate])
+  const [searchParams, setSearchParams] = useSearchParams()
 
-  const chainQueryUnpopulated = !urlChainId && chainId
-  const chainChanged = chainId !== previousChainId
-  const chainQueryStale = urlChainId !== chainId
   const chainQueryManuallyUpdated = urlChainId && urlChainId !== previousUrlChainId && isActive
 
   return useEffect(() => {
-    if (chainQueryUnpopulated) {
-      // If there is no chain query param, set it to the current chain
-      replaceURLChainParam()
-    } else if (chainChanged && chainQueryStale) {
-      // If the chain changed but the query param is stale, update to the current chain
-      replaceURLChainParam()
-    } else if (chainQueryManuallyUpdated) {
+    if (chainQueryManuallyUpdated) {
       // If the query param changed, and the chain didn't change, then activate the new chain
       selectChain(urlChainId)
+      searchParams.delete('chain')
+      setSearchParams(searchParams)
     }
-  }, [
-    chainQueryUnpopulated,
-    chainChanged,
-    chainQueryStale,
-    chainQueryManuallyUpdated,
-    urlChainId,
-    selectChain,
-    replaceURLChainParam,
-  ])
+  }, [chainQueryManuallyUpdated, urlChainId, selectChain, searchParams, setSearchParams])
 }
