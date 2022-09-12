@@ -55,10 +55,10 @@ export function SettingsRow({
           <Flex centered height={32} width={32}>
             {icon}
           </Flex>
-          <Flex alignItems="stretch" gap="none">
+          <Flex alignItems="stretch" flex={1} gap="none">
             <Text variant="subhead">{text}</Text>
             {subText && (
-              <Text color="textSecondary" variant="caption">
+              <Text color="textSecondary" numberOfLines={1} variant="caption">
                 {subText}
               </Text>
             )}
