@@ -11,6 +11,19 @@ import { getBlocksPerFetchForChainId } from 'lib/state/multicall'
 let hits = 0
 let misses = 0
 
+function record(hit: boolean) {
+  if (hit) {
+    hits += 1
+  } else {
+    misses += 1
+  }
+  console.log(
+    `MULTICALL:${hit ? 'hit' : 'miss'}`,
+    `${Math.floor((hits / (hits + misses)) * 100)}%`,
+    `requests: ${hits + misses}`
+  )
+}
+
 interface SameFunctionOnMultipleContractsEntry {
   blockNumber: number
   // Results should only be fetched once per block per address,
@@ -64,7 +77,7 @@ export class MulticallProvider extends UniswapMulticallProvider {
     }
 
     if (entry && addresses.every((address) => entry.addresses.has(address))) {
-      console.log('MULTICALL:', 'hit', ++hits / (hits + misses))
+      record(/*hit=*/ true)
       return {
         blockNumber: BigNumber.from(entry.blockNumber),
         results: (await Promise.all(addresses.map((address) => entry.addresses.get(address)))) as Result<TReturn>[],
@@ -72,7 +85,7 @@ export class MulticallProvider extends UniswapMulticallProvider {
     } else if (entry && addresses.some((address) => entry.addresses.has(address))) {
       // NB: Dealing with partial hits may be a future optimization.
     }
-    console.log('MULTICALL:', 'miss', hits / (hits + ++misses))
+    record(/*hit=*/ false)
 
     const update = this.sameFunctionOnMultipleContractsResults.get(key) || {
       blockNumber,
