@@ -1,7 +1,7 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 
 // modified from https://usehooks.com/usePrevious/
-export default function usePrevious<T>(value: T) {
+export function usePrevious<T>(value: T) {
   // The ref object is a generic container whose current property is mutable ...
   // ... and can hold any value, similar to an instance property on a class
   const ref = useRef<T>()
@@ -13,4 +13,25 @@ export default function usePrevious<T>(value: T) {
 
   // Return previous value (happens before update in useEffect above)
   return ref.current
+}
+
+// adapted from https://usehooks.com/useAsync/ but simplified
+// above link contains example on how to add delayed execution if ever needed
+export function useAsyncData<T>(asyncCallback: () => Promise<T> | undefined) {
+  const [data, setData] = useState<T | undefined>(undefined)
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    setIsLoading(true)
+
+    async function runCallback() {
+      const res = await asyncCallback()
+      setIsLoading(false)
+      setData(res)
+    }
+
+    runCallback()
+  }, [asyncCallback])
+
+  return useMemo(() => ({ isLoading, data }), [isLoading, data])
 }

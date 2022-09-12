@@ -46,7 +46,7 @@ import { Account } from 'src/features/wallet/accounts/types'
 import { useActiveAccount } from 'src/features/wallet/hooks'
 import { toSupportedChainId } from 'src/utils/chainId'
 import { buildCurrencyId, currencyAddress } from 'src/utils/currencyId'
-import usePrevious from 'src/utils/hooks'
+import { useAsyncData, usePrevious } from 'src/utils/hooks'
 import { logger } from 'src/utils/logger'
 import { SagaStatus } from 'src/utils/saga'
 import { tryParseExactAmount } from 'src/utils/tryParseAmount'
@@ -413,19 +413,13 @@ export function useTransactionRequest(
   const chainId = toSupportedChainId(derivedSwapInfo.chainId)
   const provider = useProvider(chainId ?? ChainId.Mainnet)
 
-  const [tx, setTx] = useState<providers.TransactionRequest | undefined>(undefined)
+  const transactionFetcher = useCallback(() => {
+    if (!provider) return undefined
 
-  useEffect(() => {
-    async function setTxRequest() {
-      if (!provider || !chainId) return
+    return getTransactionRequest(provider, chainId, account, derivedSwapInfo)
+  }, [account, chainId, derivedSwapInfo, provider])
 
-      setTx(await getTransactionRequest(provider, chainId, account, derivedSwapInfo))
-    }
-
-    setTxRequest()
-  }, [derivedSwapInfo, account, provider, chainId])
-
-  return tx
+  return useAsyncData(transactionFetcher).data
 }
 
 const getWrapTransactionRequest = async (
@@ -451,7 +445,7 @@ const getWrapTransactionRequest = async (
 
 const getTransactionRequest = async (
   provider: providers.Provider,
-  chainId: ChainId,
+  chainId: ChainId | null,
   account: Account | null,
   derivedSwapInfo: DerivedSwapInfo
 ): Promise<providers.TransactionRequest | undefined> => {
