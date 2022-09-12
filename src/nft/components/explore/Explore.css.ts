@@ -131,7 +131,7 @@ export const valuePropOverlay = style([
     backgroundColor: 'grey900',
     left: '0',
     top: '0',
-    opacity: { sm: '0.7', xl: '0.3' },
+    opacity: { sm: '0.7', xl: '0.1' },
   }),
 ])
 
