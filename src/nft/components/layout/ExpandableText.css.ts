@@ -1,4 +1,5 @@
 import { globalStyle, style } from '@vanilla-extract/css'
+
 import { sprinkles } from '../../css/sprinkles.css'
 
 export const hiddenText = style([

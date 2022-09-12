@@ -1,6 +1,7 @@
 import clsx from 'clsx'
 import { useState } from 'react'
-import { BoxProps, Box } from '../Box'
+
+import { Box, BoxProps } from '../Box'
 import * as styles from './ExpandableText.css'
 
 const RevealButton = (props: BoxProps) => (

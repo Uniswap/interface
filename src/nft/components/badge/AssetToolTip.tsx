@@ -1,6 +1,7 @@
-import { AnimatedBox, Box } from '../Box'
-import { ReactNode, useState, useRef } from 'react'
+import { ReactNode, useRef, useState } from 'react'
+
 import { useIsMobile } from '../../hooks'
+import { AnimatedBox, Box } from '../Box'
 
 const MIN_DISTANCE_FROM_EDGE = 40
 

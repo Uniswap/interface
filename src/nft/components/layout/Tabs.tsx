@@ -1,12 +1,12 @@
 import React, {
-  createContext,
-  useState,
-  useMemo,
-  useContext,
   cloneElement,
+  createContext,
+  HTMLAttributes,
   isValidElement,
   ReactNode,
-  HTMLAttributes,
+  useContext,
+  useMemo,
+  useState,
 } from 'react'
 
 function useConstant<T>(fn: () => T): T {
@@ -26,6 +26,9 @@ const Elements = createContext<{ tabs: React.ReactNode[]; panels: React.ReactNod
 export const Tabs: React.FC<{ children: ReactNode; state?: [number, (n: number) => void] }> = ({
   state: outerState,
   children,
+}: {
+  children: ReactNode
+  state?: [number, (n: number) => void]
 }) => {
   const innerState = useState(1)
   const state = outerState || innerState
