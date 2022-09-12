@@ -12,11 +12,11 @@ export const image = style([
     maxWidth: '678px',
     boxShadow: `0px 20px 50px var(--shadow), 0px 10px 50px rgba(70, 115, 250, 0.2)`,
     '@media': {
-      '(max-width: 1095px)': {
+      '(max-width: 1024px)': {
         maxHeight: '64vh',
         maxWidth: '64vh',
       },
-      '(max-width: 656px)': {
+      '(max-width: 640px)': {
         maxHeight: '56vh',
         maxWidth: '56vh',
       },
@@ -51,7 +51,7 @@ export const tab = style([
 
 export const creator = style({
   '@media': {
-    '(max-width: 656px)': {
+    '(max-width: 640px)': {
       display: 'none',
     },
   },
@@ -72,7 +72,7 @@ export const columns = style([
   {
     boxSizing: 'border-box',
     '@media': {
-      '(max-width: 1095px)': {
+      '(max-width: 1024px)': {
         flexDirection: 'column',
         alignItems: 'center',
       },
@@ -85,7 +85,7 @@ export const column = style({
   width: '50%',
   alignSelf: 'center',
   '@media': {
-    '(max-width: 1095px)': {
+    '(max-width: 1024px)': {
       maxWidth: 'calc(100% - 12%)',
       width: 'calc(100% - 12%)',
     },
@@ -96,7 +96,7 @@ export const columnRight = style({
   maxHeight: 'calc(100vh - 165px)',
   overflow: 'scroll',
   '@media': {
-    '(max-width: 1095px)': {
+    '(max-width: 1024px)': {
       maxHeight: '100%',
     },
   },
