@@ -357,11 +357,7 @@ export const SearchBar = () => {
           onClick={() => !isOpen && toggleOpen()}
           gap="12"
         >
-          <Box
-            className={clsx(
-              `${showCenteredSearchContent ? styles.searchContentCentered : styles.searchContentLeftAlign}`
-            )}
-          >
+          <Box className={showCenteredSearchContent ? styles.searchContentCentered : styles.searchContentLeftAlign}>
             <Box display={{ sm: 'none', md: 'flex' }}>
               <MagnifyingGlassIcon />
             </Box>
@@ -376,11 +372,9 @@ export const SearchBar = () => {
               !isOpen && toggleOpen()
               setSearchValue(event.target.value)
             }}
-            className={clsx(
-              `${styles.searchBarInput} ${
-                showCenteredSearchContent ? styles.searchContentCentered : styles.searchContentLeftAlign
-              }`
-            )}
+            className={`${styles.searchBarInput} ${
+              showCenteredSearchContent ? styles.searchContentCentered : styles.searchContentLeftAlign
+            }`}
             value={searchValue}
             ref={inputRef}
           />
