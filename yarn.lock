@@ -2840,52 +2840,6 @@
     "@react-hook/event" "^1.2.1"
     "@react-hook/throttle" "^2.2.0"
 
-"@react-spring/animated@~9.5.3":
-  version "9.5.3"
-  resolved "https://registry.yarnpkg.com/@react-spring/animated/-/animated-9.5.3.tgz#776467b0da017e3b870e5f5d7f8ffbe78eacf50c"
-  integrity sha512-szc9p8/Krt4snU3lQvCt+p9lV8dc8GZEhQ3+MLhUHIvtNk+ppF97X0RmuRFFF7sbzKsqCKh5k37CzLjc4hP/7Q==
-  dependencies:
-    "@react-spring/shared" "~9.5.3"
-    "@react-spring/types" "~9.5.3"
-
-"@react-spring/core@~9.5.3":
-  version "9.5.3"
-  resolved "https://registry.yarnpkg.com/@react-spring/core/-/core-9.5.3.tgz#b9eea5f5c68b07073adae589ad0483b4743caffe"
-  integrity sha512-j4jsgOcBX+jjqEcKq31C7K/gEqoSVg7HbeN4jNiyyxZNlZIUV+UKMC3U68SzpisPjccRT4zuauvgLz/9aesxCg==
-  dependencies:
-    "@react-spring/animated" "~9.5.3"
-    "@react-spring/rafz" "~9.5.3"
-    "@react-spring/shared" "~9.5.3"
-    "@react-spring/types" "~9.5.3"
-
-"@react-spring/rafz@~9.5.3":
-  version "9.5.3"
-  resolved "https://registry.yarnpkg.com/@react-spring/rafz/-/rafz-9.5.3.tgz#adcc2be902bb7a7da5c14405cf54b36ce1886a94"
-  integrity sha512-F2YOfyph8lTDcfu0cRvg8+N/rtq7xghx25fE5v6mkn2b0Rw4ZitXdTsjzTDTc6raJl8juGSSAyEALCPBFHpHHw==
-
-"@react-spring/shared@~9.5.3":
-  version "9.5.3"
-  resolved "https://registry.yarnpkg.com/@react-spring/shared/-/shared-9.5.3.tgz#032328be53f176e7898353989bbb003481b6f8db"
-  integrity sha512-nxXJRhbmER6XSBkmKsBpFcDgtGiupioOC00ZP8eqcE1wNqVILo30UCn6Dm9HGW1QNt9S6oEqF7JxiO4xMq/9eQ==
-  dependencies:
-    "@react-spring/rafz" "~9.5.3"
-    "@react-spring/types" "~9.5.3"
-
-"@react-spring/types@^9.5.3", "@react-spring/types@~9.5.3":
-  version "9.5.3"
-  resolved "https://registry.yarnpkg.com/@react-spring/types/-/types-9.5.3.tgz#3c39221395cb72f495f848bf807134a42236ebee"
-  integrity sha512-4ljjcVAOIzFdHhmXPag/9yvd7sX4Lf0p8DYFU8ITuEUXDIi4aQbMKgbylQrweEXKeWNrSyAg6UoBCYrwQdolPg==
-
-"@react-spring/web@^9.4.5":
-  version "9.5.3"
-  resolved "https://registry.yarnpkg.com/@react-spring/web/-/web-9.5.3.tgz#08df37569d4f36caf31851352d5a6d5fed745c5c"
-  integrity sha512-eLHwLjzISaQ6uOrpn36uSrm8sG00VnQiU1txz8Gt/OXxj6mh+xslV4ezBM5oEnVBgjQX9kLpcIl9/5IuPV8Jbw==
-  dependencies:
-    "@react-spring/animated" "~9.5.3"
-    "@react-spring/core" "~9.5.3"
-    "@react-spring/shared" "~9.5.3"
-    "@react-spring/types" "~9.5.3"
-
 "@reduxjs/toolkit@^1.6.1":
   version "1.8.0"
   resolved "https://registry.yarnpkg.com/@reduxjs/toolkit/-/toolkit-1.8.0.tgz#8ae875e481ed97e4a691aafa034f876bfd0413c4"
@@ -4125,10 +4079,10 @@
     tiny-invariant "^1.1.0"
     toformat "^2.0.0"
 
-"@uniswap/smart-order-router@^2.5.26", "@uniswap/smart-order-router@^2.9.2":
-  version "2.9.2"
-  resolved "https://registry.yarnpkg.com/@uniswap/smart-order-router/-/smart-order-router-2.9.2.tgz#3c9296b5b3821e191b6759a870330e4b10a9e9df"
-  integrity sha512-t+ruGvZTOvOJcVjxNPSU4o3GuPU/RYHr8KSKZlAHkZfusjbWrOLrO/aHzy/ncoRMNQz1UMBWQ2n3LDzqBxbTkA==
+"@uniswap/smart-order-router@^2.10.0", "@uniswap/smart-order-router@^2.5.26":
+  version "2.10.0"
+  resolved "https://registry.yarnpkg.com/@uniswap/smart-order-router/-/smart-order-router-2.10.0.tgz#f9f13bd9a940fc2ee123a6dbe6c64a6fab19a365"
+  integrity sha512-7dfFlPbg36goZOWlRowTDDrRc1vWwKLhAuhftf6sN+ECJ4CeqRgDDZgxw/ZJhfDSl1RC6IYN71CfEcmhnbRDlw==
   dependencies:
     "@uniswap/default-token-list" "^2.0.0"
     "@uniswap/router-sdk" "^1.3.0"
