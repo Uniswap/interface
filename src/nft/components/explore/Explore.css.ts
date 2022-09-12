@@ -108,30 +108,21 @@ export const carouselIndicator = sprinkles({
 })
 
 /* Value Prop Styles */
-export const valuePropWrap = style([
-  {},
-  sprinkles({
-    width: 'full',
-    borderWidth: '1px',
-    borderStyle: 'solid',
-    borderColor: 'grey700',
-    borderRadius: '12',
-    paddingLeft: '16',
-    paddingRight: '16',
-    marginTop: '60',
-    position: 'relative',
-  }),
-])
+export const valuePropWrap = sprinkles({
+  width: 'full',
+  borderWidth: '1px',
+  borderStyle: 'solid',
+  borderColor: 'grey700',
+  borderRadius: '12',
+  paddingLeft: '16',
+  paddingRight: '16',
+  marginTop: '60',
+  position: 'relative',
+})
 
 export const valuePropOverlay = style([
   {
-    opacity: '0.85',
     height: '135px',
-    '@media': {
-      [`(min-width: ${breakpoints.lg}px)`]: {
-        opacity: '0.2',
-      },
-    },
   },
   sprinkles({
     position: 'absolute',
@@ -140,6 +131,7 @@ export const valuePropOverlay = style([
     backgroundColor: 'grey900',
     left: '0',
     top: '0',
+    opacity: { sm: '0.7', xl: '0.3' },
   }),
 ])
 
