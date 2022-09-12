@@ -1,5 +1,7 @@
+import { useMemo } from 'react'
 import { useQuery } from 'react-query'
 import { useParams } from 'react-router-dom'
+import { animated, useSpring } from '@react-spring/web'
 
 import { useTimeout } from '../../../hooks/usetimeout'
 import AssetToolTip from '../../components/badge/AssetToolTip'
@@ -9,6 +11,7 @@ import { caption } from '../../css/common.css'
 import { fetchSingleAsset } from '../../queries'
 import { CollectionInfoForAsset, GenieAsset, SellOrder } from '../../types'
 import * as styles from './Asset.css'
+import { useBag } from '../../hooks'
 
 const formatter = Intl.DateTimeFormat('en-GB', { dateStyle: 'full', timeStyle: 'short' })
 
@@ -106,6 +109,12 @@ const Asset = () => {
     fetchSingleAsset({ contractAddress, tokenId })
   )
 
+  const bagExpanded = useBag((state) => state.bagExpanded)
+
+  const { gridWidthOffset } = useSpring({
+    gridWidthOffset: bagExpanded ? 324 : 0,
+  })
+
   let asset = {} as GenieAsset
   let collection = {} as CollectionInfoForAsset
 
@@ -116,15 +125,22 @@ const Asset = () => {
 
   return (
     <div>
-      {' '}
-      <Details
-        contractAddress={contractAddress}
-        tokenId={tokenId}
-        tokenType={asset.tokenType}
-        blockchain="Ethereum"
-        metadataUrl={asset.externalLink}
-        totalSupply={collection.totalSupply}
-      />
+      <animated.div
+        style={{
+          width: gridWidthOffset.to((x) => `calc(100% - ${x}px)`),
+        }}
+        className={styles.container}
+      >
+        {' '}
+        <Details
+          contractAddress={contractAddress}
+          tokenId={tokenId}
+          tokenType={asset.tokenType}
+          blockchain="Ethereum"
+          metadataUrl={asset.externalLink}
+          totalSupply={collection.totalSupply}
+        />
+      </animated.div>
     </div>
   )
 }

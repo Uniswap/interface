@@ -1,8 +1,6 @@
-import { useSpring } from '@react-spring/web'
-import { ReactNode, useRef, useState } from 'react'
-
-import { useIsMobile } from '../../hooks'
 import { AnimatedBox, Box } from '../Box'
+import { ReactNode, useState, useRef } from 'react'
+import { useIsMobile } from '../../hooks'
 
 const MIN_DISTANCE_FROM_EDGE = 40
 
@@ -35,15 +33,11 @@ export const AssetToolTip = ({
   const [isOpen, setIsOpen] = useState(false)
   const cardRef = useRef<HTMLInputElement>(null)
   const toolTipRef = useRef<HTMLInputElement>(null)
-  const cardSpring = useSpring({
-    opacity: isOpen ? 1 : 0,
-  })
 
   return (
     <Box position={'relative'}>
-      {/* 
-      // @ts-ignore */}
       <AnimatedBox
+        background="pink400"
         position="absolute"
         ref={toolTipRef}
         display="flex"
@@ -60,9 +54,7 @@ export const AssetToolTip = ({
         borderRadius="4"
         cursor="default"
         zIndex="2"
-        // @ts-ignore
         style={{
-          ...cardSpring,
           left:
             cardRef && cardRef.current && toolTipRef && toolTipRef.current
               ? isLeftOutOfBounds(
@@ -86,7 +78,6 @@ export const AssetToolTip = ({
                   )
               : -MIN_DISTANCE_FROM_EDGE,
           top: toolTipRef && toolTipRef.current ? -12 - toolTipRef.current.getBoundingClientRect().height : -37,
-          // visibility: cardSpring.opacity.to((x) => (x === 0 ? 'hidden' : 'visible')),
         }}
       >
         {tooltipPrompt}
