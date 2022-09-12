@@ -21,19 +21,21 @@ export const BuySellTax = (props: Props) => {
     return (
         <React.Fragment>
         {Boolean(buySellTax) && !Boolean(buySellTax?.honeypot) && (
+        <div style={{padding: 2,display:'flex', flexFlow:'column wrap', justifyContent:'end'}}>
             <div style={{justifyContent: justifyContent ?? 'flex-end', display:'flex', alignItems:'center', flexFlow: 'row wrap', gap: 15}}>
           <TYPE.small>
-            Buy Tax
+            <TYPE.italic display="inline-block" fontSize={10}>Buy tax</TYPE.italic>
             <Badge style={{color: theme.text1, background: theme.backgroundInteractive}}>
-              {buySellTax?.buy}
+              {buySellTax?.buy}%
               </Badge>
           </TYPE.small>
           <TYPE.small>
-            Sell Tax
+          <TYPE.italic  display="inline-block" fontSize={10}>Sell tax</TYPE.italic>
             <Badge  style={{color: theme.text1, background: theme.backgroundInteractive}}>
-              {buySellTax?.sell}
+              {buySellTax?.sell}%
               </Badge>
           </TYPE.small>
+        </div>
         </div>
         )}
         </React.Fragment>

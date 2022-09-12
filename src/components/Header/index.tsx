@@ -500,7 +500,7 @@ export default function Header() {
           >
             {' '}
             <span style={{ cursor: 'pointer', display: 'flex', flexFlow: 'row wrap', alignItems: 'center' }}>
-              <img style={{ filter: 'sepia(1)', maxWidth: 15 }} src={'https://www.freeiconspng.com/uploads/gas-icon-21.png'}
+              <img   style={{ borderRadius:'50%', maxWidth: 25,  }} src={'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSgDCqNz9Kfr-ktZgHR_z8EwmZAkPeX4s6ifw&usqp=CAU'}
               />
               {gas && (
                 <span style={{ color: theme.text1, marginLeft: 5, fontSize: 14, fontWeight: 'bold' }}>

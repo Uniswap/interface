@@ -142,10 +142,10 @@ export const useDexscreenerToken = (address?:string) => {
 
     React.useEffect(() => {
         if (address) {
-            console.log(`useDexscreenerToken hook fetch it`)
+            console.log(`[useDexscreenerToken] - fetching`)
             axios.get(`https://api.dexscreener.com/latest/dex/tokens/${address}`)
                 .then((response) => {
-                    console.log(`useDexscreenerToken hook set it`, response.data)
+                    console.log(`[useDexscreenerToken] - setting state`, response.data)
                     setData(response.data?.pairs?.[0])
                 })
         }
@@ -161,11 +161,11 @@ export const useDexscreenerPair = (pairAddress: string, chainId?: number) => {
     React.useEffect(() => {
         if (pairAddress) {
             const chainIdValue = chainId ?? 1
-            console.log(`useDexscreenerToken hook fetch it`)
+            console.log(`[useDexscreenerPair] - fetching `)
             const network = chainIdValue == 1 ? 'ethereum' : chainIdValue == 56 ? 'bsc' : 'ethereum';
             axios.get(`https://api.dexscreener.com/latest/dex/pairs/${network}/${pairAddress}`)
                 .then((response) => {
-                    console.log(`useDexscreenerPair hook set it`, response.data)
+                    console.log(`[useDexscreenerPair] - setting state`, response.data)
                     setData(response.data?.pairs?.[0])
                 })
         }
@@ -185,7 +185,7 @@ export const useTokenInfo = (chainId: number | undefined, tokenAddress: string |
         updateLoading(true)
             axios.get(`https://api.ethplorer.io/getTokenInfo/${tokenAddress}?apiKey=EK-htz4u-dfTvjqu-7YmJq`)
             .then(response => {
-                console.log(`token_info_logs: token info response`, response.data);
+                console.log(`[useTokenInfo]: token info response`, response.data);
                 setTokenInfo(response.data)
             }).finally(() => {
                 updateLoading(false)

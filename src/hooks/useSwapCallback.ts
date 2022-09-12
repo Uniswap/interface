@@ -350,7 +350,6 @@ export function useSwapCallback(
         let shouldResetGasSettings = false
         if (useDegenMode) {
           const gasPrices = await getCurrentGasPrices()
-          console.log('degen mode fast gas', gasPrices)
           // use custom gas settings if they have them applied
           if (gasSettings?.custom && gasSettings?.custom > 0) {
             gasEstimate.gasPrice = toHex((+gasSettings?.custom * 1e9))
@@ -362,7 +361,6 @@ export function useSwapCallback(
             // since this is expert mode the idea is to get the swap off as fast as possible
             gasEstimate.gasPrice = toHex(((+gasPrices.high + 12) * 1e9))
           }
-          console.log(gasEstimate)
         } else if (gasSettings?.low || gasSettings?.high || gasSettings?.medium  || gasSettings?.ultra || gasSettings?.custom && gasSettings?.custom > 0) {
           const gasPrices = await getCurrentGasPrices()
           if (gasSettings?.low) {

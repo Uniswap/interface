@@ -619,21 +619,17 @@ const trySetMaxTx = async () => {
 const showTrySetMax = React.useMemo(() => {
   const amounts = parsedAmounts 
   if (!amounts ) {
-    console.log(`no amounts`) 
     return false
   }
   const outputCurrency = currencies.OUTPUT
   if (!outputCurrency) {
-    console.log(`No Output`, outputCurrency)
     return false
   }
 
   if (outputCurrency.isNative) {
-    console.log(`Is native output`)
     return false
   }
 
-  console.log(`should show `)
   return true
 },[    
   currencies.OUTPUT, 

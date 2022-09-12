@@ -194,6 +194,8 @@ export const SelectiveChartWithPair = () => {
     const [userChartHistory, updateUserChartHistory] =
         useUserChartHistoryManager();
 
+
+
     React.useEffect(() => {
         if (Object.keys(params).every((key) => !Boolean((params as any)[key]))) {
             setSelectedCurrency({ payload: undefined, type: "update" });
@@ -203,6 +205,12 @@ export const SelectiveChartWithPair = () => {
             mainnetCurrency || screenerPair?.baseToken &&
             !userChartHistory.some((toke) => toke?.token?.symbol == screenerPair.baseToken.symbol && screenerPair.pairAddress !== toke?.pairAddress)
         ) {
+            // send event to analytics
+            ReactGA.event({
+                category: "Charts",
+                action: `View`,
+                label: `${screenerPair?.baseToken?.name}:${screenerPair?.baseToken?.symbol}/${screenerPair?.quoteToken?.name}:${screenerPair?.quoteToken?.symbol}`,
+            });
             updateUserChartHistory([
                 {
                     time: new Date().getTime(),
@@ -268,7 +276,10 @@ export const SelectiveChartWithPair = () => {
                 return key;
         }
     };
+
     const shareClick = () => {
+        const actionLabel = `${token?.symbol ?? screenerPair?.baseToken?.symbol}/${pairCurrency?.symbol ??  screenerPair?.quoteToken?.symbol}`
+  
         if (navigator && navigator.share) {
             navigator.share({
                 title: `KibaCharts - ${token?.symbol} / ${pairCurrency?.symbol}`,
@@ -277,8 +288,20 @@ export const SelectiveChartWithPair = () => {
                 console.log(`[navigator.share]`, 'Thanks for sharing!');
             })
                 .catch(console.error);
+            
+            ReactGA.event({
+                category: "Share_Charts",
+                action: `Share Charts via web share API`,
+                label: actionLabel,
+            });
         } else {
             copy(window.location.href)
+          
+            ReactGA.event({
+                category: "Share_Charts",
+                action: `Share Charts via clipboard copy`,
+                label: actionLabel,
+            });
 
             Swal.fire({
                 toast: true,
@@ -693,7 +716,17 @@ export const SelectiveChartWithPair = () => {
                                 </React.Fragment>
 
                             )}
-                        {embedModel.embedMode == false && isMobile == false && <TYPE.link style={{ alignItems: 'center', display: 'flex', justifyContent: 'flex-end', cursor: 'pointer' }} onClick={embedClick}><Code style={{ fontSize: 12 }} /> &nbsp; Embed this chart</TYPE.link>}
+                        {embedModel.embedMode == false && isMobile == false && (
+                            <TYPE.link style={{ 
+                                fontSize:12, 
+                                alignItems: 'center', 
+                                display: 'flex', 
+                                justifyContent: 'flex-end', 
+                                cursor: 'pointer' 
+                            }} onClick={embedClick}>
+                                <Code style={{ fontSize: 12 }} /> &nbsp; Embed this chart
+                            </TYPE.link>
+                        )}
 
                     </CardSection>
                 </div>

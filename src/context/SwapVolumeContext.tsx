@@ -47,7 +47,7 @@ export const SwapVolumeContextProvider = ({children, chainId}: {children:any, ch
         if (initialized && !needsRefetch) return
         
         if (needsRefetch) 
-            console.log(`Refetch swapVolume due to chainId change, prior: ${priorChainId}, current: ${chainId}`);
+            console.log(`[SwapVolumeContextProvider] - Refetch swapVolume due to chainId change, prior: ${priorChainId}, current: ${chainId}`);
         
         if ((relayer && !initialized) || needsRefetch) {
             const finished = () => setInitialized(true)

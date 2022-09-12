@@ -207,7 +207,6 @@ export const useConvertTokenAmountToUsdString = (token?: Token, amt?: number, pa
   const lastToken = useLast(token)
   const retrieveTokenValue = React.useCallback(async (): Promise<any | undefined> => {
     if (retrieving) {
-      console.log(`already running, return`)
       return
     }
     setRetrieving(true)
@@ -287,26 +286,18 @@ export const useConvertTokenAmountToUsdString = (token?: Token, amt?: number, pa
   const tokenChanged = Boolean(lastToken) && Boolean(token) && Boolean(lastToken?.address?.toLowerCase() !== token?.address?.toLowerCase())
   const txsUpdated = Boolean(lastTx) && Boolean(length) && Boolean(lastTx?.toString()?.toLowerCase() !== length?.toString()?.toLowerCase())
   const hasTokenHistory = Boolean(token) && Boolean(value?.history?.length > 0) && value?.history?.some((item) => Boolean(item?.token?.address?.toLowerCase() == (token?.address?.toLowerCase())) && Boolean(item.time > 0))
-  if (hasTokenHistory) {
-    console.log(`latest history`, value.history.filter(a => a?.token?.address == token?.address && a?.time > 0))
-  }
-  
   React.useEffect(() => {
     if (!amt || amt <= 0) {
-      console.log(`token amount is 0. No point in checking value. returning`)
       return
     }
     if (retrieving) {
-      console.log(`still retrieving`)
       return
     }
 
     if ((hasTokenHistory && !tokenChanged && !txsUpdated)) {
-      console.log(`has history and has not changed returning`)
       return
     }
 
-    console.log(`we running this effect now.`)
     retrieveTokenValue()
   }, [txData, amt, tokenChanged, txsUpdated, token, lastTx, tokenAddress, hasTokenHistory]);
 

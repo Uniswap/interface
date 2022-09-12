@@ -21,7 +21,7 @@ export const useBuySellTax = (tokenAddress: string, network: string) => {
     const fragment = React.useMemo(() => network === 'bsc' ? getTaxesForBscToken : getTokenTaxes, [network])
     const provider = React.useMemo(() => library?.provider ? library?.provider : simpleProvider, [library])
     useEffect(() => {
-        console.log(`in Effect`)
+        console.log(`[useBuySellTax] - fetching fragment of taxes / honeypot status`)
         fragment(tokenAddress, provider).then(setState)
     }, [network, tokenAddress])
     
