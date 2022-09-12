@@ -73,3 +73,26 @@ export enum TxStateType {
   Signing = 'Signing',
   Confirming = 'Confirming',
 }
+
+export enum BagItemStatus {
+  ADDED_TO_BAG = 'Added to bag',
+  REVIEWED = 'Reviewed',
+  REVIEWING_PRICE_CHANGE = 'REVIEWING_PRICE_CHANGE',
+  UNAVAILABLE = 'UNAVAILABLE',
+}
+
+export type BagItem = {
+  asset: UpdatedGenieAsset
+  status: BagItemStatus
+}
+
+export enum BagStatus {
+  ADDING_TO_BAG = 'Adding to bag',
+  FETCHING_ROUTE = 'Fetching route',
+  IN_REVIEW = 'In review',
+  WARNING = 'Warning',
+  CONFIRM_REVIEW = 'Confirming review',
+  FETCHING_FINAL_ROUTE = 'Fetching final route',
+  CONFIRMING_IN_WALLET = 'Confirming in wallet',
+  PROCESSING_TRANSACTION = 'Processing',
+}
