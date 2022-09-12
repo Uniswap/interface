@@ -1,7 +1,6 @@
 import clsx, { ClassValue } from 'clsx'
 import * as React from 'react'
 import { animated } from 'react-spring'
-import { AnimatedComponent } from '@react-spring/web'
 
 import { Atoms, atoms } from '../css/atoms'
 import { sprinkles } from '../css/sprinkles.css'
@@ -41,7 +40,7 @@ export const Box = React.forwardRef<HTMLElement, Props>(({ as = 'div', className
   })
 })
 
-export const AnimatedBox = animated(Box) as AnimatedComponent<typeof animated.div> & typeof Box
+export const AnimatedBox = animated(Box)
 
 export type BoxProps = Parameters<typeof Box>[0]
 
