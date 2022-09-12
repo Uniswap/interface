@@ -65,15 +65,17 @@ export function DappConnectionItem({
           borderColor="backgroundOutline"
           borderRadius="lg"
           borderWidth={1}
-          gap="sm"
+          gap="none"
           justifyContent="space-between"
           p="xs">
           {chainId ? (
-            <Flex row shrink gap="xs">
+            <Flex fill row shrink gap="xs">
               <NetworkLogo chainId={chainId} size={20} />
-              <Text color="textSecondary" variant="bodySmall">
-                {CHAIN_INFO[chainId].label}
-              </Text>
+              <Flex shrink>
+                <Text color="textSecondary" numberOfLines={1} variant="bodySmall">
+                  {CHAIN_INFO[chainId].label}
+                </Text>
+              </Flex>
             </Flex>
           ) : (
             <Text color="textSecondary" style={flex.shrink} variant="bodySmall">
