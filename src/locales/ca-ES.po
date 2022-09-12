@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-26 17:08\n"
+"PO-Revision-Date: 2022-09-09 20:05\n"
 "Last-Translator: \n"
 "Language: ca_ES\n"
 "Language-Team: Catalan\n"
@@ -226,6 +226,10 @@ msgstr "Es permet"
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Amount"
 msgstr "Import"
+
+#: src/components/Tokens/TokenTable/TokenTable.tsx
+msgid "An error occured loading tokens. Please try again."
+msgstr "S'ha produït un error en carregar fitxes. Siusplau torna-ho a provar."
 
 #: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
@@ -584,6 +588,10 @@ msgstr "Connectat amb"
 msgid "Connecting..."
 msgstr "Connectant..."
 
+#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+msgid "Contract address"
+msgstr "Adreça del contracte"
+
 #: src/components/WalletDropdown/AuthenticatedHeader.tsx
 #: src/theme/components.tsx
 msgid "Copied!"
@@ -596,6 +604,10 @@ msgstr "Còpia"
 #: src/components/AccountDetails/index.tsx
 msgid "Copy Address"
 msgstr "Copia l'adreça"
+
+#: src/components/Tokens/TokenDetails/ShareButton.tsx
+msgid "Copy Link"
+msgstr "Copia l'enllaç"
 
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 msgid "Create"
@@ -902,6 +914,10 @@ msgstr "Exploreu Uniswap Analytics."
 msgid "Failed to switch networks from the Uniswap Interface. In order to use Uniswap on {0}, you must change the network in your wallet."
 msgstr "No s'ha pogut canviar de xarxa des de la interfície Uniswap. Per utilitzar Uniswap a {0}, heu de canviar la xarxa de la vostra cartera."
 
+#: src/components/Tokens/TokenTable/FavoriteButton.tsx
+msgid "Favorites"
+msgstr "Preferits"
+
 #: src/components/NavBar/MenuDropdown.tsx
 msgid "Feature Flags"
 msgstr "Característiques Banderes"
@@ -1162,6 +1178,10 @@ msgstr "Gestiona les llistes de fitxes"
 msgid "Manage this pool."
 msgstr "Gestioneu aquest fons."
 
+#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+msgid "Market cap"
+msgstr "Capitalització de mercat"
+
 #: src/components/CurrencyInputPanel/SwapCurrencyInputPanel.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Max"
@@ -1306,6 +1326,10 @@ msgstr "Sense resultats."
 #: src/components/Tokens/TokenDetails/TokenDetail.tsx
 msgid "No token information available"
 msgstr "No hi ha informació de testimoni disponible"
+
+#: src/components/Tokens/TokenTable/TokenTable.tsx
+msgid "No tokens found"
+msgstr "No s'han trobat fitxes"
 
 #: src/components/NavBar/SearchBar.tsx
 msgid "No tokens found."
@@ -1709,6 +1733,10 @@ msgstr "Quota de grup"
 msgid "Share of Pool:"
 msgstr "Quota de grup:"
 
+#: src/components/Tokens/TokenDetails/ShareButton.tsx
+msgid "Share to Twitter"
+msgstr "Comparteix a Twitter"
+
 #: src/pages/Vote/Landing.tsx
 msgid "Show Cancelled"
 msgstr "Mostra cancel·lada"
@@ -1770,6 +1798,7 @@ msgstr "Subministrant {0} {1} i {2} {3}"
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/Header/index.tsx
 #: src/components/NavBar/Navbar.tsx
+#: src/components/Tokens/TokenDetails/FooterBalanceSummary.tsx
 #: src/components/swap/SwapHeader.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
@@ -1925,9 +1954,13 @@ msgstr "No s'ha pogut enviar la transacció perquè s'ha acabat el termini. Comp
 msgid "There is no liquidity data."
 msgstr "No hi ha dades de liquiditat."
 
+#: src/components/Tokens/TokenDetails/FooterBalanceSummary.tsx
+msgid "There was an error fetching your balance"
+msgstr "S'ha produït un error en recuperar el vostre saldo"
+
 #: src/components/Tokens/TokenDetails/BalanceSummary.tsx
-msgid "There was an error loading your {tokenSymbol} balance"
-msgstr "S'ha produït un error en carregar el vostre saldo {tokenSymbol}"
+msgid "There was an error loading your {0} balance"
+msgstr "S'ha produït un error en carregar el vostre saldo {0}"
 
 #: src/components/ConnectedAccountBlocked/index.tsx
 msgid "This address is blocked on the Uniswap Labs interface because it is associated with one or more"
@@ -2423,6 +2456,10 @@ msgstr "No teniu prou vots per enviar una proposta"
 msgid "You don’t have liquidity in this pool yet."
 msgstr "Encara no teniu liquiditat en aquest grup."
 
+#: src/components/Tokens/TokenTable/TokenTable.tsx
+msgid "You have no favorited tokens"
+msgstr "No tens fitxes preferides"
+
 #: src/components/Header/ChainConnectivityWarning.tsx
 msgid "You may have lost your network connection, or {label} might be down right now."
 msgstr "És possible que hàgiu perdut la connexió de xarxa o que {label} estigui inactiu en aquest moment."
@@ -2467,6 +2504,10 @@ msgstr "La vostra liquiditat V2"
 #: src/pages/Pool/index.tsx
 msgid "Your active V3 liquidity positions will appear here."
 msgstr "Les vostres posicions de liquiditat V3 actives apareixeran aquí."
+
+#: src/components/Tokens/TokenDetails/FooterBalanceSummary.tsx
+msgid "Your balances by network"
+msgstr "Els teus saldos per xarxa"
 
 #: src/pages/Pool/index.tsx
 msgid "Your connected network is unsupported."
@@ -2704,6 +2745,10 @@ msgstr "{0} fitxes UNI-V2 LP disponibles"
 #: src/components/vote/VoteModal.tsx
 msgid "{0} Votes"
 msgstr "{0} vVots"
+
+#: src/components/Tokens/TokenDetails/FooterBalanceSummary.tsx
+msgid "{0} all balances"
+msgstr "{0} tots els saldos"
 
 #: src/components/PositionPreview/index.tsx
 #: src/components/PositionPreview/index.tsx

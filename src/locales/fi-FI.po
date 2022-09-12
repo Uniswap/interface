@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-26 17:08\n"
+"PO-Revision-Date: 2022-09-09 20:05\n"
 "Last-Translator: \n"
 "Language: fi_FI\n"
 "Language-Team: Finnish\n"
@@ -226,6 +226,10 @@ msgstr "Sallittu"
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Amount"
 msgstr "Määrä"
+
+#: src/components/Tokens/TokenTable/TokenTable.tsx
+msgid "An error occured loading tokens. Please try again."
+msgstr "Tunnuksia ladattaessa tapahtui virhe. Yritä uudelleen."
 
 #: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
@@ -584,6 +588,10 @@ msgstr "Yhdistetty"
 msgid "Connecting..."
 msgstr "Yhdistetään..."
 
+#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+msgid "Contract address"
+msgstr "Sopimusosoite"
+
 #: src/components/WalletDropdown/AuthenticatedHeader.tsx
 #: src/theme/components.tsx
 msgid "Copied!"
@@ -596,6 +604,10 @@ msgstr "Kopio"
 #: src/components/AccountDetails/index.tsx
 msgid "Copy Address"
 msgstr "Kopioi osoite"
+
+#: src/components/Tokens/TokenDetails/ShareButton.tsx
+msgid "Copy Link"
+msgstr "Kopioi linkki"
 
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 msgid "Create"
@@ -902,6 +914,10 @@ msgstr "Tutustu Uniswap Analyticsiin."
 msgid "Failed to switch networks from the Uniswap Interface. In order to use Uniswap on {0}, you must change the network in your wallet."
 msgstr "Verkkojen vaihtaminen Uniswap-liittymästä epäonnistui. Jotta voit käyttää Uniswapia {0}, sinun on vaihdettava verkko lompakossasi."
 
+#: src/components/Tokens/TokenTable/FavoriteButton.tsx
+msgid "Favorites"
+msgstr "Suosikit"
+
 #: src/components/NavBar/MenuDropdown.tsx
 msgid "Feature Flags"
 msgstr "Ominaisuusliput"
@@ -1162,6 +1178,10 @@ msgstr "Hallitse rahakeluetteloita"
 msgid "Manage this pool."
 msgstr "Hallitse tätä poolia."
 
+#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+msgid "Market cap"
+msgstr "Markkina-arvo"
+
 #: src/components/CurrencyInputPanel/SwapCurrencyInputPanel.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Max"
@@ -1306,6 +1326,10 @@ msgstr "Tuloksia ei löytynyt."
 #: src/components/Tokens/TokenDetails/TokenDetail.tsx
 msgid "No token information available"
 msgstr "Tunnustietoja ei ole saatavilla"
+
+#: src/components/Tokens/TokenTable/TokenTable.tsx
+msgid "No tokens found"
+msgstr "Tunnuksia ei löytynyt"
 
 #: src/components/NavBar/SearchBar.tsx
 msgid "No tokens found."
@@ -1709,6 +1733,10 @@ msgstr "Poolin osuus"
 msgid "Share of Pool:"
 msgstr "Poolin osuus:"
 
+#: src/components/Tokens/TokenDetails/ShareButton.tsx
+msgid "Share to Twitter"
+msgstr "Jaa Twitterissä"
+
 #: src/pages/Vote/Landing.tsx
 msgid "Show Cancelled"
 msgstr "Esitys peruutettu"
@@ -1770,6 +1798,7 @@ msgstr "Toimitetaan {0} {1} ja {2} {3}"
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/Header/index.tsx
 #: src/components/NavBar/Navbar.tsx
+#: src/components/Tokens/TokenDetails/FooterBalanceSummary.tsx
 #: src/components/swap/SwapHeader.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
@@ -1925,9 +1954,13 @@ msgstr "Tapahtumaa ei voitu lähettää, koska määräaika on ohi. Tarkista, et
 msgid "There is no liquidity data."
 msgstr "Likviditeettitietoja ei ole."
 
+#: src/components/Tokens/TokenDetails/FooterBalanceSummary.tsx
+msgid "There was an error fetching your balance"
+msgstr "Saldoasi noudettaessa tapahtui virhe"
+
 #: src/components/Tokens/TokenDetails/BalanceSummary.tsx
-msgid "There was an error loading your {tokenSymbol} balance"
-msgstr "{tokenSymbol} -saldoasi ladattaessa tapahtui virhe"
+msgid "There was an error loading your {0} balance"
+msgstr "{0} -saldoasi ladattaessa tapahtui virhe"
 
 #: src/components/ConnectedAccountBlocked/index.tsx
 msgid "This address is blocked on the Uniswap Labs interface because it is associated with one or more"
@@ -2423,6 +2456,10 @@ msgstr "Sinulla ei ole tarpeeksi ääniä ehdotuksen lähettämiseen"
 msgid "You don’t have liquidity in this pool yet."
 msgstr "Sinulla ei ole vielä likviditeettiä tässä poolissa."
 
+#: src/components/Tokens/TokenTable/TokenTable.tsx
+msgid "You have no favorited tokens"
+msgstr "Sinulla ei ole suosikkimerkkejä"
+
 #: src/components/Header/ChainConnectivityWarning.tsx
 msgid "You may have lost your network connection, or {label} might be down right now."
 msgstr "Olet saattanut menettää verkkoyhteytesi tai {label} voi olla katkennut juuri nyt."
@@ -2467,6 +2504,10 @@ msgstr "Sinun V2-likviditeettisi"
 #: src/pages/Pool/index.tsx
 msgid "Your active V3 liquidity positions will appear here."
 msgstr "Aktiiviset V3-likviditeettipositiosi näkyvät täällä."
+
+#: src/components/Tokens/TokenDetails/FooterBalanceSummary.tsx
+msgid "Your balances by network"
+msgstr "Saldosi verkon mukaan"
 
 #: src/pages/Pool/index.tsx
 msgid "Your connected network is unsupported."
@@ -2704,6 +2745,10 @@ msgstr "{0} UNI-V2 LP -rahaketta saatavilla"
 #: src/components/vote/VoteModal.tsx
 msgid "{0} Votes"
 msgstr "{0} ääntä"
+
+#: src/components/Tokens/TokenDetails/FooterBalanceSummary.tsx
+msgid "{0} all balances"
+msgstr "{0} kaikki saldot"
 
 #: src/components/PositionPreview/index.tsx
 #: src/components/PositionPreview/index.tsx
