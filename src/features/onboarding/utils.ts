@@ -23,6 +23,7 @@ const FLOWS: Record<ImportType, OnboardingScreens[]> = {
   [ImportType.SeedPhrase]: [
     OnboardingScreens.SeedPhraseInput,
     OnboardingScreens.SelectWallet,
+    OnboardingScreens.Backup,
     OnboardingScreens.Notifications,
     OnboardingScreens.Security,
   ],
@@ -46,7 +47,7 @@ export function getFlow(
     flows = flows.filter((screen) => screen !== OnboardingScreens.Security)
   }
 
-  if (hasSeedPhrase) {
+  if (importType !== ImportType.SeedPhrase && hasSeedPhrase) {
     flows = flows.filter((screen) => screen !== OnboardingScreens.Backup)
   }
   return flows

@@ -15,6 +15,7 @@ import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { OnboardingEntryPoint } from 'src/features/onboarding/utils'
 import { ElementName } from 'src/features/telemetry/constants'
 import { EditAccountAction, editAccountActions } from 'src/features/wallet/editAccountSaga'
+import { useNativeAccountExists } from 'src/features/wallet/hooks'
 import { selectAccounts } from 'src/features/wallet/selectors'
 import { OnboardingScreens } from 'src/screens/Screens'
 
@@ -43,6 +44,7 @@ export function NotificationsSetupScreen({ navigation, route: { params } }: Prop
   const accounts = useAppSelector(selectAccounts)
   const dispatch = useAppDispatch()
   const addresses = Object.keys(accounts)
+  const hasSeedPhrase = useNativeAccountExists()
 
   const onPressNext = () => {
     navigateToNextScreen()
@@ -64,7 +66,10 @@ export function NotificationsSetupScreen({ navigation, route: { params } }: Prop
   }
 
   const navigateToNextScreen = () => {
-    if (isBiometricAuthEnabled || params?.entryPoint === OnboardingEntryPoint.Sidebar) {
+    if (
+      isBiometricAuthEnabled ||
+      (params?.entryPoint === OnboardingEntryPoint.Sidebar && hasSeedPhrase)
+    ) {
       navigation.navigate({ name: OnboardingScreens.Outro, params, merge: true })
     } else {
       navigation.navigate({ name: OnboardingScreens.Security, params, merge: true })

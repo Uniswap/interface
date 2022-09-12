@@ -136,7 +136,7 @@ function WalletPreviewList({
         }
       }
     })
-    navigation.navigate({ name: OnboardingScreens.Notifications, params, merge: true })
+    navigation.navigate({ name: OnboardingScreens.Backup, params, merge: true })
   }, [dispatch, addresses, accounts, navigation, selectedAddresses, isFirstAccountActive, params])
 
   return (

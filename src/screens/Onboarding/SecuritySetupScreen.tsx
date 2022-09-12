@@ -18,13 +18,13 @@ import { openSettings } from 'src/utils/linking'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.Security>
 
-export function SecuritySetupScreen({ navigation: { navigate } }: Props) {
+export function SecuritySetupScreen({ navigation, route: { params } }: Props) {
   const { t } = useTranslation()
   const theme = useAppTheme()
   const dispatch = useAppDispatch()
 
   const onPressNext = () => {
-    navigate(OnboardingScreens.Outro)
+    navigation.navigate({ name: OnboardingScreens.Outro, params, merge: true })
   }
 
   const onPressEnableSecurity = async () => {
