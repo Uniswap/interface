@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-26 17:08\n"
+"PO-Revision-Date: 2022-09-09 20:05\n"
 "Last-Translator: \n"
 "Language: ja_JP\n"
 "Language-Team: Japanese\n"
@@ -226,6 +226,10 @@ msgstr "許可"
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Amount"
 msgstr "数量"
+
+#: src/components/Tokens/TokenTable/TokenTable.tsx
+msgid "An error occured loading tokens. Please try again."
+msgstr "トークンの読み込み中にエラーが発生しました。もう一度やり直してください。"
 
 #: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
@@ -584,6 +588,10 @@ msgstr "つながっている"
 msgid "Connecting..."
 msgstr "接続中..."
 
+#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+msgid "Contract address"
+msgstr "契約住所"
+
 #: src/components/WalletDropdown/AuthenticatedHeader.tsx
 #: src/theme/components.tsx
 msgid "Copied!"
@@ -596,6 +604,10 @@ msgstr "コピー"
 #: src/components/AccountDetails/index.tsx
 msgid "Copy Address"
 msgstr "アドレスをコピー"
+
+#: src/components/Tokens/TokenDetails/ShareButton.tsx
+msgid "Copy Link"
+msgstr "リンクをコピーする"
 
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 msgid "Create"
@@ -902,6 +914,10 @@ msgstr "Uniswap Analyticsをご覧ください。"
 msgid "Failed to switch networks from the Uniswap Interface. In order to use Uniswap on {0}, you must change the network in your wallet."
 msgstr "Uniswapのインターフェイスからのネットワークの切り替えに失敗しました。 {0} でUniswapを使用するには、ウォレットのネットワークを変更する必要があります。"
 
+#: src/components/Tokens/TokenTable/FavoriteButton.tsx
+msgid "Favorites"
+msgstr "お気に入り"
+
 #: src/components/NavBar/MenuDropdown.tsx
 msgid "Feature Flags"
 msgstr "機能フラグ"
@@ -1162,6 +1178,10 @@ msgstr "トークンリストを管理"
 msgid "Manage this pool."
 msgstr "プールを管理"
 
+#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+msgid "Market cap"
+msgstr "時価総額"
+
 #: src/components/CurrencyInputPanel/SwapCurrencyInputPanel.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Max"
@@ -1306,6 +1326,10 @@ msgstr "結果が見つかりませんでした。"
 #: src/components/Tokens/TokenDetails/TokenDetail.tsx
 msgid "No token information available"
 msgstr "トークン情報がありません"
+
+#: src/components/Tokens/TokenTable/TokenTable.tsx
+msgid "No tokens found"
+msgstr "トークンが見つかりません"
 
 #: src/components/NavBar/SearchBar.tsx
 msgid "No tokens found."
@@ -1709,6 +1733,10 @@ msgstr "プールのシェア"
 msgid "Share of Pool:"
 msgstr "プールのシェア:"
 
+#: src/components/Tokens/TokenDetails/ShareButton.tsx
+msgid "Share to Twitter"
+msgstr "Twitter で共有"
+
 #: src/pages/Vote/Landing.tsx
 msgid "Show Cancelled"
 msgstr "キャンセルされた表示"
@@ -1770,6 +1798,7 @@ msgstr "{0} {1} と {2} {3} を追加中"
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/Header/index.tsx
 #: src/components/NavBar/Navbar.tsx
+#: src/components/Tokens/TokenDetails/FooterBalanceSummary.tsx
 #: src/components/swap/SwapHeader.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
@@ -1925,9 +1954,13 @@ msgstr "期限が過ぎたため、取引を送信できませんでした。期
 msgid "There is no liquidity data."
 msgstr "流動性データはありません。"
 
+#: src/components/Tokens/TokenDetails/FooterBalanceSummary.tsx
+msgid "There was an error fetching your balance"
+msgstr "残高の取得中にエラーが発生しました"
+
 #: src/components/Tokens/TokenDetails/BalanceSummary.tsx
-msgid "There was an error loading your {tokenSymbol} balance"
-msgstr "残高 {tokenSymbol} の読み込み中にエラーが発生しました"
+msgid "There was an error loading your {0} balance"
+msgstr "残高 {0} の読み込み中にエラーが発生しました"
 
 #: src/components/ConnectedAccountBlocked/index.tsx
 msgid "This address is blocked on the Uniswap Labs interface because it is associated with one or more"
@@ -2423,6 +2456,10 @@ msgstr "提案を提出するのに十分な票がありません"
 msgid "You don’t have liquidity in this pool yet."
 msgstr "プールにはまだ流動性がありません。"
 
+#: src/components/Tokens/TokenTable/TokenTable.tsx
+msgid "You have no favorited tokens"
+msgstr "お気に入りのトークンはありません"
+
 #: src/components/Header/ChainConnectivityWarning.tsx
 msgid "You may have lost your network connection, or {label} might be down right now."
 msgstr "ネットワーク接続が失われたか、 {label} がダウンしている可能性があります。"
@@ -2467,6 +2504,10 @@ msgstr "V2の流動性"
 #: src/pages/Pool/index.tsx
 msgid "Your active V3 liquidity positions will appear here."
 msgstr "V3の流動性ポジションはこちらに表示されます。"
+
+#: src/components/Tokens/TokenDetails/FooterBalanceSummary.tsx
+msgid "Your balances by network"
+msgstr "ネットワーク別の残高"
 
 #: src/pages/Pool/index.tsx
 msgid "Your connected network is unsupported."
@@ -2704,6 +2745,10 @@ msgstr "{0} UNI-V2 LPトークンが利用可能"
 #: src/components/vote/VoteModal.tsx
 msgid "{0} Votes"
 msgstr "{0} の投票"
+
+#: src/components/Tokens/TokenDetails/FooterBalanceSummary.tsx
+msgid "{0} all balances"
+msgstr "{0} すべての残高"
 
 #: src/components/PositionPreview/index.tsx
 #: src/components/PositionPreview/index.tsx
