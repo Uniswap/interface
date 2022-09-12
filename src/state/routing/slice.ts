@@ -24,7 +24,6 @@ function getRouter(chainId: ChainId): AlphaRouter {
   if (supportedChainId) {
     const provider = RPC_PROVIDERS[supportedChainId]
     const multicall2Provider = new MulticallProvider(chainId, provider, 375000)
-    // TODO(zzmp): Cache call to eth_feeHistory (using gasPriceProvider?)
     const router = new AlphaRouter({ chainId, provider, multicall2Provider })
     routers.set(chainId, router)
     return router

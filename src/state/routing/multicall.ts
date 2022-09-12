@@ -1,40 +1,66 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { BaseProvider } from '@ethersproject/providers'
 import {
+  CallSameFunctionOnContractWithMultipleParams,
   CallSameFunctionOnMultipleContractsParams,
   ChainId,
   Result,
+  UniswapMulticallConfig,
   UniswapMulticallProvider,
 } from '@uniswap/smart-order-router'
 import { getBlocksPerFetchForChainId } from 'lib/state/multicall'
 
-let hits = 0
-let misses = 0
-
-function record(hit: boolean) {
-  if (hit) {
-    hits += 1
-  } else {
-    misses += 1
-  }
-  console.log(
-    `MULTICALL:${hit ? 'hit' : 'miss'}`,
-    `${Math.floor((hits / (hits + misses)) * 100)}%`,
-    `requests: ${hits + misses}`
-  )
+const stats = {
+  params: { hits: 0, misses: 0 },
+  contracts: { hits: 0, misses: 0 },
+  total: { hits: 0, misses: 0 },
 }
 
-interface SameFunctionOnMultipleContractsEntry {
+function record(cache: 'params' | 'contracts', hit: boolean) {
+  if (hit) {
+    stats[cache].hits += 1
+    stats.total.hits += 1
+  } else {
+    stats[cache].misses += 1
+    stats.total.misses += 1
+  }
+  console.table({
+    params: {
+      'hit percentage': `${Math.floor((stats.params.hits / (stats.params.hits + stats.params.misses)) * 100)}%`,
+      'requests sent': `${stats.params.misses} / ${stats.params.hits + stats.params.misses}`,
+    },
+    contracts: {
+      'hit percentage': `${Math.floor(
+        (stats.contracts.hits / (stats.contracts.hits + stats.contracts.misses)) * 100
+      )}%`,
+      'requests sent': `${stats.contracts.misses} / ${stats.contracts.hits + stats.contracts.misses}`,
+    },
+    'total (multicall)': {
+      'hit percentage': `${Math.floor((stats.total.hits / (stats.total.hits + stats.total.misses)) * 100)}%`,
+      'requests sent': `${stats.total.misses} / ${stats.total.hits + stats.total.misses}`,
+    },
+  })
+}
+
+interface Entry {
   blockNumber: number
-  // Results should only be fetched once per block per address,
+  // Results should only be fetched once per block per result,
   // so the pending result is stored as a Promise to avoid re-fetching.
-  addresses: Map<string, Promise<Result<any>>>
+  results: Map<string, Promise<Result<any>>>
+}
+
+interface BoundEntryCache {
+  name: 'params' | 'contracts'
+  get: () => Entry | undefined
+  set: (entry: Entry) => void
+  delete: () => void
 }
 
 /** A caching MulticallProvider to optimize smart-order routing. */
 export class MulticallProvider extends UniswapMulticallProvider {
   private blocksPerFetch: number
-  private sameFunctionOnMultipleContractsResults = new Map<string, SameFunctionOnMultipleContractsEntry>()
+  private multipleContractsResults = new Map<string, Entry>()
+  private multipleParamsResults = new Map<string, Entry>()
 
   constructor(chainId: ChainId, provider: BaseProvider, gasLimitPerCall?: number) {
     super(chainId, provider, gasLimitPerCall)
@@ -52,62 +78,95 @@ export class MulticallProvider extends UniswapMulticallProvider {
     }
   }
 
-  async callSameFunctionOnMultipleContracts<TFunctionParams extends any[] | undefined, TReturn = any>(
-    params: CallSameFunctionOnMultipleContractsParams<TFunctionParams>
-  ): Promise<{
-    blockNumber: BigNumber
-    results: Result<TReturn>[]
-  }> {
-    const { addresses, contractInterface, functionName, functionParams, providerConfig } = params
-    if (functionParams) {
-      console.log('MULTICALL:', 'skip(functionParams)')
-      return super.callSameFunctionOnMultipleContracts(params)
-    }
-
-    const key = `${functionName}:${contractInterface.format('json')}`
-    const entry = this.sameFunctionOnMultipleContractsResults.get(key)
-
+  async getCachedEntry<
+    TParams extends { providerConfig?: { blockNumber?: number | Promise<number> } },
+    TResult extends { results: Result<any>[] }
+  >(params: TParams, fetch: (params: TParams) => Promise<TResult>, cache: BoundEntryCache, keys: string[]) {
+    const entry = cache.get()
     const blockNumber = this.getBlockNumber(entry)
-    if (blockNumber !== entry?.blockNumber) this.sameFunctionOnMultipleContractsResults.delete(key)
+    const configBlockNumber = await params.providerConfig?.blockNumber
+    if (configBlockNumber && blockNumber !== configBlockNumber) return fetch(params)
 
-    const configBlockNumber = await providerConfig?.blockNumber
-    if (configBlockNumber && blockNumber !== configBlockNumber) {
-      console.log('MULTICALL:', 'skip(blockNumber)')
-      return super.callSameFunctionOnMultipleContracts(params)
-    }
-
-    if (entry && addresses.every((address) => entry.addresses.has(address))) {
-      record(/*hit=*/ true)
-      return {
-        blockNumber: BigNumber.from(entry.blockNumber),
-        results: (await Promise.all(addresses.map((address) => entry.addresses.get(address)))) as Result<TReturn>[],
+    if (blockNumber === entry?.blockNumber) {
+      if (keys.every((key) => entry.results.has(key))) {
+        record(cache.name, /*hit=*/ true)
+        return {
+          blockNumber: BigNumber.from(entry.blockNumber),
+          results: (await Promise.all(keys.map((key) => entry.results.get(key)))) as Result<any>[],
+        }
+      } else if (keys.some((key) => entry.results.has(key))) {
+        // NB: Dealing with partial hits may be a future optimization.
       }
-    } else if (entry && addresses.some((address) => entry.addresses.has(address))) {
-      // NB: Dealing with partial hits may be a future optimization.
+    } else {
+      cache.delete()
     }
-    record(/*hit=*/ false)
+    record(cache.name, /*hit=*/ false)
 
-    const update = this.sameFunctionOnMultipleContractsResults.get(key) || {
+    const update = cache.get() || {
       blockNumber,
-      addresses: new Map<string, Promise<any>>(),
+      results: new Map<string, Promise<Result<any>>>(),
     }
-    const resolvers: ((value: any) => void)[] = []
-    addresses.forEach((address, i) => {
-      if (update.addresses.has(address)) return
+    const resolvers: ((value: Result<any>) => void)[] = []
+    keys.forEach((key, i) => {
+      if (update.results.has(key)) return
 
-      update.addresses.set(
-        address,
+      update.results.set(
+        key,
         new Promise((resolve) => {
           resolvers[i] = resolve
         })
       )
     })
-    this.sameFunctionOnMultipleContractsResults.set(key, update)
+    cache.set(update)
 
-    const results = await super.callSameFunctionOnMultipleContracts({ ...params, providerConfig: { blockNumber } })
-    addresses.forEach((address, i) => resolvers[i]?.(results.results[i]))
+    const results = await fetch({ ...params, providerConfig: { blockNumber } })
+    keys.forEach((key, i) => resolvers[i]?.(results.results[i]))
     return results
   }
 
-  // TODO(zzmp): Add caching layer for the other used method?
+  async callSameFunctionOnMultipleContracts<TFunctionParams extends any[] | undefined, TReturn>(
+    params: CallSameFunctionOnMultipleContractsParams<TFunctionParams>
+  ): Promise<{
+    blockNumber: BigNumber
+    results: Result<TReturn>[]
+  }> {
+    const { addresses, contractInterface, functionName, functionParams } = params
+    const fragment = contractInterface.getFunction(functionName)
+    const callData = contractInterface.encodeFunctionData(fragment, functionParams)
+    const key = `${functionName}:${contractInterface.format('json')}:${callData}`
+    return this.getCachedEntry(
+      params,
+      (params) => super.callSameFunctionOnMultipleContracts<TFunctionParams, TReturn>(params),
+      {
+        name: 'contracts',
+        get: () => this.multipleContractsResults.get(key),
+        set: (entry) => this.multipleContractsResults.set(key, entry),
+        delete: () => this.multipleContractsResults.delete(key),
+      },
+      addresses
+    )
+  }
+
+  async callSameFunctionOnContractWithMultipleParams<TFunctionParams extends any[] | undefined, TReturn>(
+    params: CallSameFunctionOnContractWithMultipleParams<TFunctionParams, UniswapMulticallConfig>
+  ) {
+    const { address, contractInterface, functionName, functionParams, additionalConfig } = params
+    const key = `${functionName}:${address}:${additionalConfig?.gasLimitPerCallOverride}}`
+    const fragment = contractInterface.getFunction(functionName)
+    const callData = functionParams.map((param) => contractInterface.encodeFunctionData(fragment, param))
+    return {
+      approxGasUsedPerSuccessCall: 0,
+      ...(await this.getCachedEntry(
+        params,
+        (params) => super.callSameFunctionOnContractWithMultipleParams<TFunctionParams, TReturn>(params),
+        {
+          name: 'params',
+          get: () => this.multipleParamsResults.get(key),
+          set: (entry) => this.multipleParamsResults.set(key, entry),
+          delete: () => this.multipleParamsResults.delete(key),
+        },
+        callData
+      )),
+    }
+  }
 }
