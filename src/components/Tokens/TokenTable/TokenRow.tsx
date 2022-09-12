@@ -12,7 +12,7 @@ import { ReactNode } from 'react'
 import { ArrowDown, ArrowUp, Heart } from 'react-feather'
 import { Link } from 'react-router-dom'
 import styled, { css, useTheme } from 'styled-components/macro'
-import { ClickableStyle } from 'theme'
+import { ClickableStyle, TRANSITION_TIME } from 'theme'
 import { formatDollarAmount } from 'utils/formatDollarAmt'
 
 import {
@@ -60,6 +60,7 @@ const StyledTokenRow = styled.div<{ first?: boolean; last?: boolean; loading?: b
     },
   }) => css`background-color ${duration.medium} ${timing.ease}`};
   width: 100%;
+  transition: ${TRANSITION_TIME};
 
   &:hover {
     ${({ loading, theme }) =>
@@ -224,15 +225,12 @@ const SortArrowCell = styled(Cell)`
 `
 const HeaderCellWrapper = styled.span<{ onClick?: () => void }>`
   align-items: center;
+  ${ClickableStyle}
   cursor: ${({ onClick }) => (onClick ? 'pointer' : 'unset')};
   display: flex;
   height: 100%;
   justify-content: flex-end;
   width: 100%;
-
-  &:hover {
-    opacity: 60%;
-  }
 `
 const SparkLineCell = styled(Cell)`
   padding: 0px 24px;

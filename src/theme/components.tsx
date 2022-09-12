@@ -66,6 +66,7 @@ export const LinkStyledButton = styled.button<{ disabled?: boolean }>`
 
 export const OPACITY_HOVER = 0.6
 export const OPACITY_CLICK = 0.4
+export const TRANSITION_TIME = '0.125s'
 
 export const ButtonText = styled.button`
   outline: none;
@@ -75,6 +76,7 @@ export const ButtonText = styled.button`
   margin: 0;
   background: none;
   cursor: pointer;
+  transition: ${TRANSITION_TIME};
 
   :hover {
     opacity: ${OPACITY_HOVER};
@@ -88,6 +90,7 @@ export const ButtonText = styled.button`
 export const ClickableStyle = css`
   text-decoration: none;
   cursor: pointer;
+  transition: ${TRANSITION_TIME};
 
   :hover {
     opacity: ${OPACITY_HOVER};
@@ -135,6 +138,7 @@ const CopyIcon = styled(Copy)`
 `
 
 export const TrashIcon = styled(Trash)`
+  ${ClickableStyle}
   ${IconStyle}
   stroke: ${({ theme }) => theme.deprecated_text3};
 
@@ -142,10 +146,6 @@ export const TrashIcon = styled(Trash)`
   align-items: center;
   justify-content: center;
   display: flex;
-
-  :hover {
-    opacity: ${OPACITY_HOVER};
-  }
 `
 
 const rotateImg = keyframes`
