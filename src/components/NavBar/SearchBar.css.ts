@@ -4,6 +4,7 @@ import { buttonTextSmall, subhead, subheadSmall } from 'nft/css/common.css'
 import { breakpoints, sprinkles, vars } from '../../nft/css/sprinkles.css'
 
 const DESKTOP_NAVBAR_WIDTH = 360
+const MAGNIFYING_GLASS_ICON_WIDTH = 28
 
 const baseSearchStyle = style([
   sprinkles({
@@ -31,11 +32,8 @@ export const searchBarContainer = style([
   }),
   {
     '@media': {
-      [`screen and (min-width: ${breakpoints.sm}px)`]: {
-        top: '-24px',
-      },
       [`screen and (min-width: ${breakpoints.lg}px)`]: {
-        right: `-${DESKTOP_NAVBAR_WIDTH / 2}px`,
+        right: `-${DESKTOP_NAVBAR_WIDTH / 2 - MAGNIFYING_GLASS_ICON_WIDTH}px`,
       },
     },
   },
@@ -44,7 +42,6 @@ export const searchBarContainer = style([
 export const searchBar = style([
   baseSearchStyle,
   sprinkles({
-    height: 'full',
     color: 'placeholder',
     paddingX: '16',
     cursor: 'pointer',
@@ -60,8 +57,11 @@ export const searchBarInput = style([
     color: { default: 'blackBlue', placeholder: 'placeholder' },
     border: 'none',
     background: 'none',
+    width: 'full',
   }),
-  { lineHeight: '24px' },
+  {
+    lineHeight: '24px',
+  },
 ])
 
 export const searchBarDropdown = style([
@@ -70,6 +70,7 @@ export const searchBarDropdown = style([
     borderBottomLeftRadius: '12',
     borderBottomRightRadius: '12',
     background: 'lightGray',
+    height: { sm: 'viewHeight', md: 'auto' },
   }),
   {
     borderTop: 'none',
@@ -84,7 +85,6 @@ export const suggestionRow = style([
     justifyContent: 'space-between',
     paddingY: '8',
     paddingX: '16',
-    transition: '250',
   }),
   {
     ':hover': {
@@ -167,3 +167,50 @@ export const notFoundContainer = style([
     paddingLeft: '16',
   }),
 ])
+
+const visibilityTransition = `visibility ${vars.time[125]}, opacity ${vars.time[125]}`
+const delayedTransitionProperties = `padding 0s ${vars.time[125]}, height 0s ${vars.time[125]}`
+
+export const hidden = style([
+  sprinkles({
+    visibility: 'hidden',
+    opacity: '0',
+    padding: '0',
+    height: '0',
+  }),
+  {
+    transition: `${visibilityTransition}, ${delayedTransitionProperties}`,
+    transitionTimingFunction: 'ease-in',
+  },
+])
+export const visible = style([
+  sprinkles({
+    visibility: 'visible',
+    opacity: '1',
+    height: 'full',
+  }),
+  {
+    transition: `${visibilityTransition}`,
+    transitionTimingFunction: 'ease-out',
+  },
+])
+
+export const searchContentCentered = style({
+  '@media': {
+    [`screen and (min-width: ${breakpoints.lg}px)`]: {
+      transform: `translateX(${DESKTOP_NAVBAR_WIDTH / 4}px)`,
+      transition: `transform ${vars.time[125]}`,
+      transitionTimingFunction: 'ease-out',
+    },
+  },
+})
+
+export const searchContentLeftAlign = style({
+  '@media': {
+    [`screen and (min-width: ${breakpoints.lg}px)`]: {
+      transform: 'translateX(0)',
+      transition: `transform ${vars.time[125]}`,
+      transitionTimingFunction: 'ease-in',
+    },
+  },
+})
