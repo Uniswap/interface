@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: uniswap-interface\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2022-08-26 17:08\n"
+"PO-Revision-Date: 2022-09-09 20:05\n"
 "Last-Translator: \n"
 "Language: id_ID\n"
 "Language-Team: Indonesian\n"
@@ -226,6 +226,10 @@ msgstr "Diizinkan"
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Amount"
 msgstr "Jumlah"
+
+#: src/components/Tokens/TokenTable/TokenTable.tsx
+msgid "An error occured loading tokens. Please try again."
+msgstr "Terjadi kesalahan saat memuat token. Silakan coba lagi."
 
 #: src/utils/swapErrorToUserReadableMessage.tsx
 msgid "An error occurred when trying to execute this swap. You may need to increase your slippage tolerance. If that does not work, there may be an incompatibility with the token you are trading. Note: fee on transfer and rebase tokens are incompatible with Uniswap V3."
@@ -584,6 +588,10 @@ msgstr "Terhubung dengan"
 msgid "Connecting..."
 msgstr "Menghubungkan..."
 
+#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+msgid "Contract address"
+msgstr "Alamat kontrak"
+
 #: src/components/WalletDropdown/AuthenticatedHeader.tsx
 #: src/theme/components.tsx
 msgid "Copied!"
@@ -596,6 +604,10 @@ msgstr "Salinan"
 #: src/components/AccountDetails/index.tsx
 msgid "Copy Address"
 msgstr "Salin Alamat"
+
+#: src/components/Tokens/TokenDetails/ShareButton.tsx
+msgid "Copy Link"
+msgstr "Salin tautan"
 
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 msgid "Create"
@@ -902,6 +914,10 @@ msgstr "Jelajahi Uniswap Analytics."
 msgid "Failed to switch networks from the Uniswap Interface. In order to use Uniswap on {0}, you must change the network in your wallet."
 msgstr "Gagal berpindah jaringan dari Antarmuka Uniswap. Untuk menggunakan Uniswap pada {0}, Anda harus mengubah jaringan di dompet Anda."
 
+#: src/components/Tokens/TokenTable/FavoriteButton.tsx
+msgid "Favorites"
+msgstr "Favorit"
+
 #: src/components/NavBar/MenuDropdown.tsx
 msgid "Feature Flags"
 msgstr "Fitur Bendera"
@@ -1162,6 +1178,10 @@ msgstr "Kelola Daftar Token"
 msgid "Manage this pool."
 msgstr "Kelola pangkalan ini."
 
+#: src/components/Tokens/TokenDetails/TokenDetail.tsx
+msgid "Market cap"
+msgstr "Kapitalisasi pasar"
+
 #: src/components/CurrencyInputPanel/SwapCurrencyInputPanel.tsx
 #: src/pages/RemoveLiquidity/V3.tsx
 msgid "Max"
@@ -1306,6 +1326,10 @@ msgstr "Hasil tidak ditemukan."
 #: src/components/Tokens/TokenDetails/TokenDetail.tsx
 msgid "No token information available"
 msgstr "Tidak ada informasi token yang tersedia"
+
+#: src/components/Tokens/TokenTable/TokenTable.tsx
+msgid "No tokens found"
+msgstr "Tidak ada token yang ditemukan"
 
 #: src/components/NavBar/SearchBar.tsx
 msgid "No tokens found."
@@ -1709,6 +1733,10 @@ msgstr "Bagian dari Pool"
 msgid "Share of Pool:"
 msgstr "Bagian dari Pool:"
 
+#: src/components/Tokens/TokenDetails/ShareButton.tsx
+msgid "Share to Twitter"
+msgstr "Bagikan ke Twitter"
+
 #: src/pages/Vote/Landing.tsx
 msgid "Show Cancelled"
 msgstr "Tampilkan Dibatalkan"
@@ -1770,6 +1798,7 @@ msgstr "Memasok {0} {1} dan {2} {3}"
 #: src/components/AccountDetailsV2/TransactionBody.tsx
 #: src/components/Header/index.tsx
 #: src/components/NavBar/Navbar.tsx
+#: src/components/Tokens/TokenDetails/FooterBalanceSummary.tsx
 #: src/components/swap/SwapHeader.tsx
 #: src/pages/Swap/index.tsx
 #: src/pages/Swap/index.tsx
@@ -1925,9 +1954,13 @@ msgstr "Transaksi tidak dapat dikirim karena tenggat waktu telah berlalu. Harap 
 msgid "There is no liquidity data."
 msgstr "Tidak ada data likuiditas."
 
+#: src/components/Tokens/TokenDetails/FooterBalanceSummary.tsx
+msgid "There was an error fetching your balance"
+msgstr "Terjadi kesalahan saat mengambil saldo Anda"
+
 #: src/components/Tokens/TokenDetails/BalanceSummary.tsx
-msgid "There was an error loading your {tokenSymbol} balance"
-msgstr "Terjadi kesalahan saat memuat saldo {tokenSymbol} Anda"
+msgid "There was an error loading your {0} balance"
+msgstr "Terjadi kesalahan saat memuat saldo {0} Anda"
 
 #: src/components/ConnectedAccountBlocked/index.tsx
 msgid "This address is blocked on the Uniswap Labs interface because it is associated with one or more"
@@ -2423,6 +2456,10 @@ msgstr "Anda tidak memiliki cukup suara untuk mengirimkan proposal"
 msgid "You don’t have liquidity in this pool yet."
 msgstr "Anda belum memiliki likuiditas di pool ini."
 
+#: src/components/Tokens/TokenTable/TokenTable.tsx
+msgid "You have no favorited tokens"
+msgstr "Anda tidak memiliki token favorit"
+
 #: src/components/Header/ChainConnectivityWarning.tsx
 msgid "You may have lost your network connection, or {label} might be down right now."
 msgstr "Anda mungkin kehilangan koneksi jaringan Anda, atau {label} mungkin sedang down sekarang."
@@ -2467,6 +2504,10 @@ msgstr "Likuiditas V2 Anda"
 #: src/pages/Pool/index.tsx
 msgid "Your active V3 liquidity positions will appear here."
 msgstr "Posisi likuiditas V3 aktif Anda akan muncul di sini."
+
+#: src/components/Tokens/TokenDetails/FooterBalanceSummary.tsx
+msgid "Your balances by network"
+msgstr "Saldo Anda berdasarkan jaringan"
 
 #: src/pages/Pool/index.tsx
 msgid "Your connected network is unsupported."
@@ -2704,6 +2745,10 @@ msgstr "{0} token LP UNI-V2 yang tersedia"
 #: src/components/vote/VoteModal.tsx
 msgid "{0} Votes"
 msgstr "{0} Suara"
+
+#: src/components/Tokens/TokenDetails/FooterBalanceSummary.tsx
+msgid "{0} all balances"
+msgstr "{0} semua saldo"
 
 #: src/components/PositionPreview/index.tsx
 #: src/components/PositionPreview/index.tsx
