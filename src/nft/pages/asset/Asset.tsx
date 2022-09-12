@@ -5,7 +5,7 @@ import { animated, useSpring } from '@react-spring/web'
 
 import { useTimeout } from '../../../hooks/usetimeout'
 import AssetToolTip from '../../components/badge/AssetToolTip'
-import { Box } from '../../components/Box'
+import { AnimatedBox, Box } from '../../components/Box'
 import { Details } from '../../components/details/Details'
 import { caption } from '../../css/common.css'
 import { fetchSingleAsset } from '../../queries'
@@ -125,7 +125,7 @@ const Asset = () => {
 
   return (
     <div>
-      <animated.div
+      <AnimatedBox
         style={{
           width: gridWidthOffset.to((x) => `calc(100% - ${x}px)`),
         }}
@@ -140,7 +140,7 @@ const Asset = () => {
           metadataUrl={asset.externalLink}
           totalSupply={collection.totalSupply}
         />
-      </animated.div>
+      </AnimatedBox>
     </div>
   )
 }
