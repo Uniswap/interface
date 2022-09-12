@@ -5,9 +5,8 @@ import qs from 'query-string'
 import { useEffect, useMemo, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
 import { useQuery } from 'react-query'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 
-import { useTimeout } from '../../../hooks/usetimeout'
 import AssetToolTip from '../../components/badge/AssetToolTip'
 import { AnimatedBox, Box } from '../../components/Box'
 import { CollectionProfile } from '../../components/details/CollectionProfile'
@@ -17,45 +16,16 @@ import { Center, Column, Row } from '../../components/Flex'
 import { CloseDropDownIcon, CornerDownLeftIcon, ShareIcon, SuspiciousIcon } from '../../components/icons'
 import { ExpandableText } from '../../components/layout/ExpandableText'
 import { Panel, Tab, Tabs } from '../../components/layout/Tabs'
-import { badge, caption, header2 } from '../../css/common.css'
+import { badge, header2 } from '../../css/common.css'
 import { themeVars } from '../../css/sprinkles.css'
 import { useBag } from '../../hooks'
 import { fetchSingleAsset } from '../../queries'
-import { CollectionInfoForAsset, GenieAsset, SellOrder } from '../../types'
+import { CollectionInfoForAsset, GenieAsset } from '../../types'
 import { shortenAddress } from '../../utils/address'
 import { isAudio } from '../../utils/isAudio'
 import { isVideo } from '../../utils/isVideo'
 import { fallbackProvider, rarityProviderLogo } from '../../utils/rarity'
 import * as styles from './Asset.css'
-
-const formatter = Intl.DateTimeFormat('en-GB', { dateStyle: 'full', timeStyle: 'short' })
-
-const CountdownTimer = ({ sellOrder }: { sellOrder: SellOrder }) => {
-  const { date, expires } = useMemo(() => {
-    const date = new Date(sellOrder.orderClosingDate)
-    return {
-      date,
-      expires: formatter.format(date),
-    }
-  }, [sellOrder])
-  const [days, hours, minutes, seconds] = useTimeout(date)
-
-  return (
-    <AssetToolTip
-      prompt={
-        <Box as="span" fontWeight="normal" className={caption} color="darkGray">
-          Expires: {days !== 0 ? `${days} days` : ''} {hours !== 0 ? `${hours} hours` : ''} {minutes} minutes {seconds}{' '}
-          seconds
-        </Box>
-      }
-      tooltipPrompt={
-        <Box height="16" width="full">
-          Expires {expires}
-        </Box>
-      }
-    />
-  )
-}
 
 const AudioPlayer = ({
   imageUrl,
@@ -123,6 +93,7 @@ const Asset = () => {
   const { data } = useQuery(['assetDetail', contractAddress, tokenId], () =>
     fetchSingleAsset({ contractAddress, tokenId })
   )
+  const { pathname, search } = useLocation()
 
   const bagExpanded = useBag((state) => state.bagExpanded)
 
@@ -130,7 +101,10 @@ const Asset = () => {
     gridWidthOffset: bagExpanded ? 324 : 0,
   })
 
-  let asset = {} as GenieAsset
+  let asset = useMemo(() => {
+    return {} as GenieAsset
+  }, [])
+
   let collection = {} as CollectionInfoForAsset
 
   if (data) {
@@ -139,12 +113,9 @@ const Asset = () => {
   }
   const navigate = useNavigate()
 
-  // @ts-ignore
-  const parsed = qs.parse(location.search)
+  const parsed = qs.parse(search)
   const [creatorAddress, setCreatorAddress] = useState('')
-  const [ownerAddress, setOwnerAddress] = useState('')
   const [dominantColor] = useState<[number, number, number]>([0, 0, 0])
-  const ownerEnsName = useENSName(ownerAddress)
   const creatorEnsName = useENSName(creatorAddress)
   const { rarityProvider, rarityLogo } = useMemo(() => {
     if (asset.rarity) {
@@ -158,7 +129,6 @@ const Asset = () => {
   }, [asset.rarity])
 
   useEffect(() => {
-    if (asset.owner) setOwnerAddress(asset.owner.address)
     if (asset.creator) setCreatorAddress(asset.creator.address)
   }, [asset])
 
@@ -226,8 +196,7 @@ const Asset = () => {
                     border="none"
                     background="transparent"
                     onClick={async () => {
-                      // @ts-ignore
-                      await navigator.clipboard.writeText(window.location.hostname + location.pathname)
+                      await navigator.clipboard.writeText(window.location.hostname + pathname)
                     }}
                   >
                     <ShareIcon />
