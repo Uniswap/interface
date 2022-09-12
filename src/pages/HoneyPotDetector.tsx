@@ -31,9 +31,9 @@ import { useWeb3React } from "@web3-react/core";
 
 type GetMaxesResponse = { BuyGas: number, BuyTax: number, Error: any, IsHoneypot: boolean, MaxTxAmount: number, MaxTxAmountBNB: number, SellGas: number, SellTax: number } | undefined
 
-export const getMaxes = async (value: string): Promise<GetMaxesResponse> => {
+export const getMaxes = async (value: string, chain = 'eth'): Promise<GetMaxesResponse> => {
     if (!value) return 
-    const response = await axios.get<{ BuyGas: number, BuyTax: number, Error: any, IsHoneypot: boolean, MaxTxAmount: number, MaxTxAmountBNB: number, SellGas: number, SellTax: number }>('https://aywt3wreda.execute-api.eu-west-1.amazonaws.com/default/IsHoneypot?chain=eth&token=' + value, {
+    const response = await axios.get<{ BuyGas: number, BuyTax: number, Error: any, IsHoneypot: boolean, MaxTxAmount: number, MaxTxAmountBNB: number, SellGas: number, SellTax: number }>(`https://aywt3wreda.execute-api.eu-west-1.amazonaws.com/default/IsHoneypot?chain=${chain}&token=${value}` , {
 
     });
 

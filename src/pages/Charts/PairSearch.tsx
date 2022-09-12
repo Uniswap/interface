@@ -1,6 +1,6 @@
 import * as ethers from 'ethers'
 
-import { ArrowUpRight, CheckCircle } from 'react-feather'
+import { ArrowUpRight, CheckCircle, TrendingDown, TrendingUp } from 'react-feather'
 
 import { AutoColumn } from 'components/Column'
 import { BlueCard } from 'components/Card'
@@ -297,7 +297,7 @@ export const PairSearch = (props: Props) => {
 
               {/* Render results */}
               {!routing && results?.map((result) => (
-                <div style={{ cursor: 'pointer' }} key={result.pairAddress} onClick={() => onPairClick(result)}>
+                <div style={{ alignItems:'center', cursor: 'pointer' }} key={result.pairAddress} onClick={() => onPairClick(result)}>
                   <MenuItemStyled style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }} >
                     <div style={{ display: 'flex', alignItems: 'center' }}>
                       <img src={(chainImageMap as any)[result.chainId] as string} style={{ marginRight: 10, width: 20, background: 'transparent', borderRadius: 25, border: "1px solid #444" }} />
@@ -309,7 +309,14 @@ export const PairSearch = (props: Props) => {
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
 
-                      <span><ArrowUpRight /></span>
+                      <span style={{display:'flex', flexFlow:'row wrap', gap: 10, alignItems:'center'}}>
+                          <TYPE.small style={{color: result?.priceChange.h24 < 0 ? 'red' : 'green'}}>
+                            {result?.priceChange.h24 < 0 ? <TrendingDown style={{color:'red'}} /> : <TrendingUp style={{color:'green'}} />} &nbsp;
+                            {result.priceChange.h24}% &nbsp;
+
+                          </TYPE.small>
+                          <ArrowUpRight />
+                        </span>
                     </div>
                   </MenuItemStyled>
                 </div>

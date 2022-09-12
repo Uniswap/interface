@@ -704,14 +704,14 @@ export function useBscTokenTransactions(tokenAddress: string, network?: string, 
     }
     return {
       variables: {
-      allPairs: pairFilter && pairFilter.length ? pairFilter.map((pair: { id: any }) => pair.id) : []
+      allPairs: pairFilter && pairFilter.length ? pairFilter.map((pair: { id: any }) => pair.id?.toLowerCase()) : []
     }
   }
 }, [pairs, pair])
 
   const query = useQuery(TokenTxns, {
     ...queryVars,
-    pollInterval: chainId == 56 || network === 'bsc' ? interval ? interval : 10000 : undefined,
+    pollInterval: (chainId && chainId == 56 || network === 'bsc') ? 10000 : undefined,
     client: bscClient
   })
 
