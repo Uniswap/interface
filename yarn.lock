@@ -18287,4 +18287,3 @@ zustand@^4.0.0-rc.0, zustand@^4.0.0-rc.1:
   integrity sha512-OrsfQTnRXF1LZ9/vR/IqN9ws5EXUhb149xmPjErZnUrkgxS/gAHGy2dPNIVkVvoxrVe1sIydn4JjF0dYHmGeeQ==
   dependencies:
     use-sync-external-store "1.2.0"
-    
