@@ -1,4 +1,4 @@
-import { configureStore } from '@reduxjs/toolkit'
+import { configureStore, isPlain } from '@reduxjs/toolkit'
 import { setupListeners } from '@reduxjs/toolkit/query/react'
 import multicall from 'lib/state/multicall'
 import { load, save } from 'redux-localstorage-simple'
@@ -39,7 +39,16 @@ const store = configureStore({
     [routingApi.reducerPath]: routingApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({ thunk: true })
+    getDefaultMiddleware({
+      thunk: true,
+      serializableCheck: {
+        isSerializable: (value: any) => {
+          // Ignore Errors; this occurs if eg a quote fails (from the routingApi)
+          if (value instanceof Error) return true
+          return isPlain(value)
+        },
+      },
+    })
       .concat(routingApi.middleware)
       .concat(save({ states: PERSISTED_KEYS, debounce: 1000 })),
   preloadedState: load({ states: PERSISTED_KEYS, disableWarnings: isTestEnv() }),
