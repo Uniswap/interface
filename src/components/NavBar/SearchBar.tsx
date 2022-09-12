@@ -58,7 +58,7 @@ export const SearchBarDropdownSection = ({
         <Box>{header}</Box>
       </Row>
       <Column gap="12">
-        {(isLoading ? [...Array(suggestions.length)] : suggestions).map((suggestion, index) =>
+        {suggestions.map((suggestion, index) =>
           isLoading ? (
             <SkeletonRow key={index} />
           ) : isCollection(suggestion) ? (
@@ -156,7 +156,7 @@ export const SearchBarDropdown = ({ toggleOpen, tokens, collections, hasInput, i
               },
             }))
             .slice(0, isNFTPage ? 3 : 2)
-        : Array<GenieCollection>(isNFTPage ? 3 : 2),
+        : [...Array<GenieCollection>(isNFTPage ? 3 : 2)],
     [isNFTPage, trendingCollectionResults]
   )
 
@@ -176,7 +176,7 @@ export const SearchBarDropdown = ({ toggleOpen, tokens, collections, hasInput, i
     () =>
       trendingTokenResults
         ? trendingTokenResults.slice(0, trendingTokensLength)
-        : Array<FungibleToken>(trendingTokensLength),
+        : [...Array<FungibleToken>(trendingTokensLength)],
     [trendingTokenResults, trendingTokensLength]
   )
 
