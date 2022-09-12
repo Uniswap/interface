@@ -1,6 +1,9 @@
 import { graphql } from 'babel-plugin-relay/macro'
-import { useLazyLoadQuery } from 'react-relay'
-import { transactionHistoryQuery as transactionHistoryQueryShape } from 'src/features/transactions/history/__generated__/transactionHistoryQuery.graphql'
+import { useLazyLoadQuery } from 'react-relay-offline'
+import {
+  transactionHistoryQuery as transactionHistoryQueryShape,
+  transactionHistoryQuery$data,
+} from 'src/features/transactions/history/__generated__/transactionHistoryQuery.graphql'
 
 const transactionHistoryQuery = graphql`
   query transactionHistoryQuery($address: String!, $ps: Int, $page: Int) {
@@ -73,11 +76,9 @@ export function useTransactionHistoryForOwner(owner: Nullable<Address>) {
     address: owner ?? '',
     ps: 50,
     page: 1,
-  })
+  }).data
 }
 
 // Derive the type of return data from history query
 type ArrElement<ArrType> = ArrType extends readonly (infer ElementType)[] ? ElementType : never
-export type TransactionHistoryResponse = ArrElement<
-  ReturnType<typeof useTransactionHistoryForOwner>['assetActivities']
->
+export type TransactionHistoryResponse = ArrElement<transactionHistoryQuery$data['assetActivities']>

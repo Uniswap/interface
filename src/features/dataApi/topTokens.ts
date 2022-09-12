@@ -1,7 +1,7 @@
 import { Token } from '@uniswap/sdk-core'
 import { graphql } from 'babel-plugin-relay/macro'
 import { useMemo } from 'react'
-import { useLazyLoadQuery } from 'react-relay'
+import { useLazyLoadQuery } from 'react-relay-offline'
 import { EMPTY_ARRAY } from 'src/constants/misc'
 import { CurrencyInfo } from 'src/features/dataApi/types'
 import { topTokensQuery } from 'src/features/dataApi/__generated__/topTokensQuery.graphql'
@@ -26,7 +26,7 @@ const query = graphql`
 `
 
 export function usePopularTokens(): CurrencyInfo[] {
-  const data = useLazyLoadQuery<topTokensQuery>(query, {})
+  const { data } = useLazyLoadQuery<topTokensQuery>(query, {})
 
   return useMemo(() => {
     if (!data || !data.topTokenProjects) return EMPTY_ARRAY

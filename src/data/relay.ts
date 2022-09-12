@@ -1,11 +1,5 @@
-import {
-  Environment,
-  Network,
-  RecordSource,
-  RequestParameters,
-  Store,
-  Variables,
-} from 'relay-runtime'
+import { Environment, RecordSource, Store } from 'react-relay-offline'
+import { Network, RequestParameters, Variables } from 'relay-runtime'
 import { config } from 'src/config'
 
 async function fetchRelay(params: RequestParameters, variables: Variables) {
@@ -32,7 +26,7 @@ if (__DEV__) {
   require('react-native-flipper-relay-devtools').addPlugin()
 }
 
-export default new Environment({
+export const RelayEnvironment = new Environment({
   network: Network.create(fetchRelay),
   store: new Store(new RecordSource()),
 })

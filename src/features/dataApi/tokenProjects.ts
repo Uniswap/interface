@@ -1,7 +1,7 @@
 import { Token } from '@uniswap/sdk-core'
 import { graphql } from 'babel-plugin-relay/macro'
 import { useMemo } from 'react'
-import { useLazyLoadQuery } from 'react-relay'
+import { useLazyLoadQuery } from 'react-relay-offline'
 import { ChainId } from 'src/constants/chains'
 import { EMPTY_ARRAY } from 'src/constants/misc'
 import { CurrencyInfo } from 'src/features/dataApi/types'
@@ -43,7 +43,7 @@ export function useTokenProjects(currencyIds: CurrencyId[]): CurrencyInfo[] {
     }
   })
 
-  const data = useLazyLoadQuery<tokenProjectsQuery>(query, {
+  const { data } = useLazyLoadQuery<tokenProjectsQuery>(query, {
     contracts,
   })
 

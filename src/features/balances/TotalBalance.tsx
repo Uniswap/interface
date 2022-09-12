@@ -1,6 +1,6 @@
 import { graphql } from 'babel-plugin-relay/macro'
 import React, { Suspense } from 'react'
-import { useLazyLoadQuery } from 'react-relay'
+import { useLazyLoadQuery } from 'react-relay-offline'
 import { Flex } from 'src/components/layout'
 import { Loading } from 'src/components/loading'
 import { Text } from 'src/components/Text'
@@ -28,7 +28,7 @@ export function TotalBalance({
 }
 
 function TotalBalanceInner({ owner, showRelativeChange, variant }: TotalBalanceViewProps) {
-  const balance = useLazyLoadQuery<TotalBalanceQuery>(
+  const { data: balance } = useLazyLoadQuery<TotalBalanceQuery>(
     graphql`
       query TotalBalanceQuery($owner: String!) {
         portfolio(ownerAddress: $owner) {
@@ -49,7 +49,7 @@ function TotalBalanceInner({ owner, showRelativeChange, variant }: TotalBalanceV
       {showRelativeChange && (
         <RelativeChange
           absoluteChange={balance?.portfolio?.absoluteChange24H ?? undefined}
-          change={balance.portfolio?.relativeChange24H ?? undefined}
+          change={balance?.portfolio?.relativeChange24H ?? undefined}
           variant="bodySmall"
         />
       )}

@@ -4,8 +4,8 @@ import React, { StrictMode } from 'react'
 import { StatusBar, useColorScheme } from 'react-native'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { Provider } from 'react-redux'
-import { RelayEnvironmentProvider } from 'react-relay'
 import { PersistGate } from 'redux-persist/integration/react'
+import { RelayEnvironmentProvider as RelayHooksEnvironmentProvider } from 'relay-hooks'
 import { ErrorBoundary } from 'src/app/ErrorBoundary'
 import { AppModals } from 'src/app/modals/AppModals'
 import { DrawerNavigator } from 'src/app/navigation/navigation'
@@ -13,7 +13,7 @@ import { NavigationContainer } from 'src/app/navigation/NavigationContainer'
 import { persistor, store } from 'src/app/store'
 import { WalletContextProvider } from 'src/app/walletContext'
 import { config } from 'src/config'
-import RelayEnvironment from 'src/data/relay'
+import { RelayEnvironment } from 'src/data/relay'
 import { LockScreenContextProvider } from 'src/features/authentication/lockScreenContext'
 import { BiometricContextProvider } from 'src/features/biometrics/context'
 import { TransactionHistoryUpdater } from 'src/features/dataApi/zerion/updater'
@@ -55,7 +55,7 @@ function App() {
     <StrictMode>
       <SafeAreaProvider>
         <Provider store={store}>
-          <RelayEnvironmentProvider environment={RelayEnvironment}>
+          <RelayHooksEnvironmentProvider environment={RelayEnvironment}>
             <PersistGate loading={null} persistor={persistor}>
               <DynamicThemeProvider>
                 <ErrorBoundary>
@@ -73,7 +73,7 @@ function App() {
                 </ErrorBoundary>
               </DynamicThemeProvider>
             </PersistGate>
-          </RelayEnvironmentProvider>
+          </RelayHooksEnvironmentProvider>
         </Provider>
       </SafeAreaProvider>
     </StrictMode>

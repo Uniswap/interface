@@ -798,6 +798,8 @@ PODS:
     - glog
   - react-native-get-random-values (1.7.0):
     - React-Core
+  - react-native-netinfo (9.3.0):
+    - React-Core
   - react-native-onesignal (4.3.7):
     - OneSignalXCFramework (= 3.10.1)
     - React (< 1.0.0, >= 0.13.0)
@@ -1033,6 +1035,7 @@ DEPENDENCIES:
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
   - react-native-get-random-values (from `../node_modules/react-native-get-random-values`)
+  - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
   - react-native-onesignal (from `../node_modules/react-native-onesignal`)
   - react-native-restart (from `../node_modules/react-native-restart`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
@@ -1191,6 +1194,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/logger"
   react-native-get-random-values:
     :path: "../node_modules/react-native-get-random-values"
+  react-native-netinfo:
+    :path: "../node_modules/@react-native-community/netinfo"
   react-native-onesignal:
     :path: "../node_modules/react-native-onesignal"
   react-native-restart:
@@ -1299,7 +1304,7 @@ SPEC CHECKSUMS:
   FirebaseInstallations: 60edbf7e11d91ae4c751d26c200dfd037099abe0
   FirebaseRemoteConfig: f6365883d7950d784ee97bcdbbf1e442d4fa6119
   fmt: ff9d55029c625d3757ed641535fd4a75fedc7ce9
-  glog: 5337263514dd6f09803962437687240c5dc39aa4
+  glog: 85ecdd10ee8d8ec362ef519a6a45ff9aa27b2e85
   GoogleAppMeasurement: 5ba1164e3c844ba84272555e916d0a6d3d977e91
   GoogleDataTransport: 629c20a4d363167143f30ea78320d5a7eb8bd940
   GoogleMLKit: 755661c46990a85e42278015f26400286d98ad95
@@ -1326,7 +1331,7 @@ SPEC CHECKSUMS:
   Permission-Notifications: 7f2a467ab97a130a847519705340830d52cfc5f0
   PromisesObjC: 68159ce6952d93e17b2dfe273b8c40907db5ba58
   Protobuf: 235750e4696ff59fb07d949a9dbbc92b3c0700fe
-  RCT-Folly: a21c126816d8025b547704b777a2ba552f3d9fa9
+  RCT-Folly: 803a9cfd78114b2ec0f140cfa6fa2a6bafb2d685
   RCTRequired: b8caca023d386d43740dfb94c2cf68f695fa5e77
   RCTTypeSafety: ec44ea1d6ad1e5cd6447b22159ff40c2ebbd23b1
   React: 9f8c8afb9a9d61b7a1b01a1c6fb7f0d4f902988f
@@ -1341,6 +1346,7 @@ SPEC CHECKSUMS:
   React-jsinspector: 86e89b9f135787a2e8eb74b3fc00ec61e9a80ae1
   React-logger: f790bd10f86b38012e108fb4b564023602702270
   react-native-get-random-values: 237bffb1c7e05fb142092681531810a29ba53015
+  react-native-netinfo: 129bd99f607a2dc5bb096168f3e5c150fd1f1c95
   react-native-onesignal: 7643517fe655b94cfda8e697ec16f9b9135648b8
   react-native-restart: 45c8dca02491980f2958595333cbccd6877cb57e
   react-native-safe-area-context: 584dc04881deb49474363f3be89e4ca0e854c057

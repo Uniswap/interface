@@ -1,7 +1,7 @@
 import { Currency, Token } from '@uniswap/sdk-core'
 import { graphql } from 'babel-plugin-relay/macro'
 import { useMemo } from 'react'
-import { useLazyLoadQuery } from 'react-relay'
+import { useLazyLoadQuery } from 'react-relay-offline'
 import { EMPTY_ARRAY } from 'src/constants/misc'
 import { CurrencyInfo, PortfolioBalance } from 'src/features/dataApi/types'
 import { balancesQuery } from 'src/features/dataApi/__generated__/balancesQuery.graphql'
@@ -43,7 +43,7 @@ const query = graphql`
 export function usePortfolioBalances(
   address: Address
 ): Record<CurrencyId, PortfolioBalance> | undefined {
-  const balancesData = useLazyLoadQuery<balancesQuery>(query, { ownerAddress: address })
+  const { data: balancesData } = useLazyLoadQuery<balancesQuery>(query, { ownerAddress: address })
   const balancesForAddress = balancesData?.portfolios?.[0]?.tokenBalances
 
   return useMemo(() => {

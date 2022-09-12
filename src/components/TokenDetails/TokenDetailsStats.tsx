@@ -2,7 +2,7 @@ import { Currency } from '@uniswap/sdk-core'
 import { graphql } from 'babel-plugin-relay/macro'
 import React, { Suspense } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useLazyLoadQuery } from 'react-relay'
+import { useLazyLoadQuery } from 'react-relay-offline'
 import { LinkButton } from 'src/components/buttons/LinkButton'
 import { Flex } from 'src/components/layout'
 import { Loading } from 'src/components/loading'
@@ -67,7 +67,7 @@ function TokenDetailsStatsInner({ currency }: { currency: Currency }) {
 
   const { address, chain } = graphQLCurrencyInfo(currency)
   const graphQLChain = toGraphQLChain(chain)
-  const data = useLazyLoadQuery<TokenDetailsStatsQuery>(tokenDetailsStatsQuery, {
+  const { data } = useLazyLoadQuery<TokenDetailsStatsQuery>(tokenDetailsStatsQuery, {
     contract: {
       address,
       chain: graphQLChain ?? 'ETHEREUM',
@@ -76,9 +76,9 @@ function TokenDetailsStatsInner({ currency }: { currency: Currency }) {
 
   if (
     !graphQLChain ||
-    !data.tokenProjects ||
-    data.tokenProjects.length < 1 ||
-    !data.tokenProjects[0]
+    !data?.tokenProjects ||
+    data?.tokenProjects.length < 1 ||
+    !data?.tokenProjects[0]
   )
     return null
 

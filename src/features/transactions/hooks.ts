@@ -102,7 +102,7 @@ export function useAllTransactions(address: Address): TransactionDetails[] {
     localTransactions?.map((t) => {
       localHashes.add(t.hash)
     })
-    const formattedRemote = remoteTransactions.assetActivities
+    const formattedRemote = remoteTransactions?.assetActivities
       ? remoteTransactions.assetActivities.reduce((accum: TransactionDetails[], t) => {
           const txn = extractTransactionDetails(t)
           if (txn && !localHashes.has(txn.hash)) accum.push(txn) // dedupe
@@ -112,7 +112,7 @@ export function useAllTransactions(address: Address): TransactionDetails[] {
     return (localTransactions ?? [])
       .concat(formattedRemote)
       .sort((a, b) => (a.addedTime > b.addedTime ? -1 : 1))
-  }, [address, localTransactions, remoteTransactions.assetActivities])
+  }, [address, localTransactions, remoteTransactions?.assetActivities])
 
   return combinedTransactionList
 }
