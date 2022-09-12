@@ -20,7 +20,6 @@ export const mobileSellWrapper = style([
     position: { sm: 'fixed', md: 'static' },
     top: { sm: '0', md: 'unset' },
     zIndex: { sm: '3', md: 'auto' },
-    background: 'white',
     height: { sm: 'full', md: 'auto' },
     width: { sm: 'full', md: 'auto' },
     overflowY: 'scroll',
